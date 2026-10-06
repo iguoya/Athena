@@ -133,6 +133,17 @@ fn get_manifest(state: State<AppState>) -> Result<Value, String> {
     read_content(&state.content_root, "demos.json")
 }
 
+/// 官方节页的对照翻译稿（content/chapters/<章>/<节>.md，应用 ADR 0002）。
+#[tauri::command]
+fn get_page_content(state: State<AppState>, chapter_id: String, page_id: String) -> Result<String, String> {
+    let path = state
+        .content_root
+        .join("chapters")
+        .join(&chapter_id)
+        .join(format!("{page_id}.md"));
+    fs::read_to_string(&path).map_err(|error| format!("读 {} 失败：{}", path.display(), error))
+}
+
 #[tauri::command]
 fn record_attempt(
     state: State<AppState>,
@@ -281,6 +292,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             get_curriculum,
             get_manifest,
+            get_page_content,
             record_attempt,
             get_attempts,
             launch_demo,

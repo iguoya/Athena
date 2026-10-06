@@ -10,6 +10,7 @@ import {
   Terminal,
 } from "lucide-react";
 import { BlockView } from "./blocks";
+import { PageView } from "./page-view";
 import type {
   Curriculum,
   DemoEvent,
@@ -26,6 +27,7 @@ const MASTERY_LABEL: Record<string, string> = {
 
 type View =
   | { kind: "kp"; sectionId: string; kpId: string | null }
+  | { kind: "page"; sectionId: string; pageId: string }
   | { kind: "lab"; expId: string }
   | { kind: "ref"; refId: string };
 
@@ -70,8 +72,9 @@ export default function App() {
     [manifest],
   );
 
-  const section = curriculum?.sections.find((s) => s.id === (view?.kind === "kp" ? view.sectionId : null)) ?? null;
+  const section = curriculum?.sections.find((s) => s.id === (view?.kind === "kp" || view?.kind === "page" ? view.sectionId : null)) ?? null;
   const kp = section?.knowledge_points.find((k) => k.id === (view?.kind === "kp" ? view.kpId : null)) ?? null;
+  const page = section?.pages.find((p) => p.id === (view?.kind === "page" ? view.pageId : null)) ?? null;
   const labExp = view?.kind === "lab" ? experiments.get(view.expId) : undefined;
   const refEntry = view?.kind === "ref"
     ? curriculum?.reference.find((r) => r.id === view.refId)
@@ -87,8 +90,14 @@ export default function App() {
     invoke("record_attempt", { knowledgeId: kp?.id ?? "", itemId, correct }).catch(() => {});
   };
 
+  // 在类型收窄之前提取，供侧栏展开块比较（那里 view 已被收窄为 kp）
+  const activePageId = view?.kind === "page" ? view.pageId : null;
+  const activeKpId = view?.kind === "kp" ? view.kpId : null;
+  const activeSectionId = view?.kind === "kp" || view?.kind === "page" ? view.sectionId : null;
+
   const viewKey =
     view?.kind === "kp" ? `${view.sectionId}:${view.kpId}`
+    : view?.kind === "page" ? `${view.sectionId}:${view.pageId}`
     : view?.kind === "lab" ? view.expId
     : view?.kind === "ref" ? view.refId
     : "empty";
@@ -122,7 +131,7 @@ export default function App() {
           </p>
           <ul>
             {curriculum.sections.map((s) => {
-              const active = view?.kind === "kp" && view.sectionId === s.id;
+              const active = activeSectionId === s.id && (activeKpId != null || activePageId != null);
               return (
                 <li key={s.id}>
                   <button
@@ -152,12 +161,43 @@ export default function App() {
                   </button>
                   {active && (
                     <ul className="ml-6 border-l border-line pl-2">
+                      {/* 官方节页：严格跟随上游分页（应用 ADR 0002） */}
+                      <li className="px-2 pt-1.5 pb-0.5 text-[10px] font-semibold tracking-wide text-muted/70">
+                        官方节页
+                      </li>
+                      {s.pages.map((p) => {
+                        const pageActive = activeSectionId === s.id && activePageId === p.id;
+                        return (
+                          <li key={p.id}>
+                            <button
+                              onClick={() => setView({ kind: "page", sectionId: s.id, pageId: p.id })}
+                              className={`flex w-full items-center gap-1.5 rounded px-2 py-1 text-left text-xs transition-colors ${
+                                pageActive
+                                  ? "bg-accent-soft font-medium text-accent"
+                                  : "text-muted hover:bg-surface-2 hover:text-fg"
+                              }`}
+                            >
+                              <span
+                                className={`size-1 shrink-0 rounded-full ${
+                                  p.status === "translated" ? "bg-accent-deep" : "bg-line"
+                                }`}
+                              />
+                              <span className="flex-1 truncate">{p.title}</span>
+                            </button>
+                          </li>
+                        );
+                      })}
+                      {s.knowledge_points.length > 0 && (
+                        <li className="px-2 pt-2 pb-0.5 text-[10px] font-semibold tracking-wide text-muted/70">
+                          知识点
+                        </li>
+                      )}
                       {s.knowledge_points.map((k) => (
                         <li key={k.id}>
                           <button
                             onClick={() => setView({ kind: "kp", sectionId: s.id, kpId: k.id })}
                             className={`w-full rounded px-2 py-1.5 text-left text-xs transition-colors ${
-                              view.kpId === k.id
+                              activeSectionId === s.id && activeKpId === k.id
                                 ? "bg-accent-soft font-medium text-accent"
                                 : "text-muted hover:bg-surface-2 hover:text-fg"
                             }`}
@@ -267,6 +307,32 @@ export default function App() {
                     回到原文
                   </a>
                 </p>
+                <p className="mt-6 mb-3 text-xs font-semibold tracking-wide text-muted">
+                  官方节页（分页严格跟随上游仓库）
+                </p>
+                <ul className="grid gap-2">
+                  {section.pages.map((p) => (
+                    <li key={p.id}>
+                      <button
+                        onClick={() => setView({ kind: "page", sectionId: section.id, pageId: p.id })}
+                        className="flex w-full items-center gap-3 rounded-xl bg-surface px-4 py-3 text-left shadow-card ring-1 ring-line transition-all hover:-translate-y-0.5 hover:ring-accent/40"
+                      >
+                        <span
+                          className={`size-2 shrink-0 rounded-full ${
+                            p.status === "translated" ? "bg-accent-deep" : "bg-line"
+                          }`}
+                        />
+                        <span className="flex-1">
+                          <span className="block text-sm font-medium text-fg">{p.title}</span>
+                          <span className="block font-mono text-[11px] text-muted">{p.id}</span>
+                        </span>
+                        <span className="text-xs text-muted">
+                          {p.status === "translated" ? "已译 · 点击阅读对照稿" : "待译"}
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
                 {section.checkpoint.map((item, index) => (
                   <BlockView
                     key={index}
@@ -309,6 +375,37 @@ export default function App() {
                     scopeId={kp.id}
                   />
                 ))}
+              </>
+            )}
+
+            {view?.kind === "page" && section && page && (
+              <>
+                <p className="text-sm text-muted">
+                  {section.order}. {section.title} · 教程第{" "}
+                  {section.translation_ref.chapter} 章
+                </p>
+                <h2 className="mt-1 font-display text-3xl font-semibold">{page.title}</h2>
+                <div className="mt-2 flex items-center gap-3 text-xs text-muted">
+                  <span className="rounded-full bg-surface-2 px-2.5 py-1 font-mono ring-1 ring-line">
+                    {page.id}
+                  </span>
+                  <span
+                    className={`rounded-full px-2.5 py-1 ring-1 ${
+                      page.status === "translated"
+                        ? "bg-accent-soft text-accent ring-accent/25"
+                        : "bg-surface-2 ring-line"
+                    }`}
+                  >
+                    {page.status === "translated" ? "已译 · 原文对照" : "待译"}
+                  </span>
+                  <button
+                    onClick={() => setView({ kind: "kp", sectionId: section.id, kpId: null })}
+                    className="text-accent hover:underline"
+                  >
+                    ← 本章节页
+                  </button>
+                </div>
+                <PageView chapterId={section.id} pageId={page.id} />
               </>
             )}
 
