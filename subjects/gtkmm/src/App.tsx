@@ -10,7 +10,6 @@ import {
   Settings,
   Sparkles,
   Terminal,
-  BookA,
   X,
 } from "lucide-react";
 import { BlockView } from "./blocks";
@@ -69,7 +68,6 @@ export default function App() {
     () => window.localStorage.getItem("zh-training") !== "off",
   );
   const [vocabData, setVocabData] = useState<{ vocab: VocabEntry[]; patterns: PatternEntry[] } | null>(null);
-  const [showVocabPanel, setShowVocabPanel] = useState(false);
   const [sentenceMode, setSentenceMode] = useState(
     () => window.localStorage.getItem("zh-sentence-mode") === "on",
   );
@@ -247,41 +245,6 @@ export default function App() {
     });
   }, []);
 
-  // SRS（Leitner 盒）：连续答对 n 次后按 [1,3,7,14] 天间隔到期复习；
-  // 生词（最近一次不认识）始终立即到期。词条与「待复习段落」同一套账。
-  const srs = useMemo(() => {
-    const DAY = 86400;
-    const intervals = [0, 1, 3, 7, 14];
-    const now = Date.now() / 1000;
-    const groups = new Map<string, AttemptRow[]>();
-    for (const a of attempts) {
-      if (a.knowledge_id !== "vocab.training" && a.knowledge_id !== "i18n.training") continue;
-      if (!groups.has(a.item_id)) groups.set(a.item_id, []);
-      groups.get(a.item_id)!.push(a);
-    }
-    const dueWords: { term: string; known: boolean; streak: number }[] = [];
-    let dueParas = 0;
-    for (const [itemId, rows] of groups) {
-      let streak = 0;
-      for (let i = rows.length - 1; i >= 0; i--) {
-        if (rows[i].correct) streak += 1;
-        else break;
-      }
-      const known = rows[rows.length - 1].correct;
-      const lastAt = Math.max(...rows.map((r) => r.answered_at));
-      const interval = intervals[Math.min(streak, intervals.length - 1)] * DAY;
-      const due = !known || lastAt + interval <= now;
-      if (!due) continue;
-      if (itemId.startsWith("word:")) {
-        dueWords.push({ term: itemId.replace(/^word:/, ""), known, streak });
-      } else {
-        dueParas += 1;
-      }
-    }
-    dueWords.sort((a, b) => Number(a.known) - Number(b.known));
-    return { dueWords, dueParas };
-  }, [attempts]);
-
   const rateVocab = (term: string, known: boolean) => {
     invoke("record_attempt", {
       knowledgeId: "vocab.training",
@@ -368,19 +331,6 @@ export default function App() {
             <p className="text-xs text-muted">Programming with gtkmm 4</p>
           </div>
         </header>
-        <div className="border-b border-line px-4 py-3">
-          <button
-            onClick={() => setShowVocabPanel(true)}
-            className="flex w-full items-center justify-between rounded-lg bg-surface-2 px-3 py-1.5 text-[20px] text-muted ring-1 ring-line transition-colors hover:text-fg"
-          >
-            <span className="flex items-center gap-1.5">
-              <BookA className="size-5" /> 复习中心（词 · 句 · 段）
-            </span>
-            <span className={srs.dueWords.length + srs.dueParas > 0 ? "font-medium text-amber-700" : ""}>
-              {srs.dueWords.length + srs.dueParas}
-            </span>
-          </button>
-        </div>
 
         <div className="flex flex-1 flex-col px-2 pb-4">
           {/* 一、教程章节（原文）；右侧数字是全课程章末通过计数 */}
@@ -797,73 +747,6 @@ export default function App() {
           )}
         </ul>
       </aside>
-      )}
-
-      {showVocabPanel && vocabData && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30" onClick={() => setShowVocabPanel(false)}>
-          <div
-            className="max-h-[80vh] w-[560px] overflow-y-auto rounded-card bg-surface p-6 shadow-card ring-1 ring-line"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="mb-4 flex items-center justify-between">
-              <h3 className="font-display text-[26px] font-semibold text-accent">复习中心</h3>
-              <button onClick={() => setShowVocabPanel(false)} className="text-muted hover:text-fg">
-                <X className="size-6" />
-              </button>
-            </div>
-            <p className="text-[20px] text-muted">
-              间隔复习（Leitner 盒）：答对 → 1/3/7/14 天后到期重现；答错 → 立即到期。
-              词表按高中以上门槛筛选（{vocabData.vocab.length} 词 + {vocabData.patterns.length} 句型）。
-            </p>
-            <h4 className="mt-5 text-[22px] font-semibold text-fg">到期复习（{srs.dueWords.length} 词）</h4>
-            {srs.dueWords.length === 0 ? (
-              <p className="mt-2 rounded-card bg-surface-2 p-4 text-[22px] text-muted">
-                队列空——阅读时点击带虚线的词，用「认识 / 不认识」喂给复习队列。
-              </p>
-            ) : (
-              <ul className="mt-2 space-y-2">
-                {srs.dueWords.map(({ term, streak }) => {
-                  const entry = vocabData.vocab.find((v) => v.term.toLowerCase() === term);
-                  const pattern = vocabData.patterns.find((pt) => pt.pattern.toLowerCase() === term);
-                  return (
-                    <li key={term} className="rounded-xl bg-surface-2 px-4 py-2.5">
-                      <div className="flex items-baseline justify-between gap-3">
-                        <span>
-                          <span className="font-serif text-[24px] font-semibold">{entry?.term ?? pattern?.pattern ?? term}</span>
-                          {entry?.pos && <span className="ml-2 text-[20px] italic text-muted">{entry.pos}</span>}
-                          <span className="ml-3 text-[22px] text-accent-deep">{entry?.cn ?? pattern?.cn}</span>
-                        </span>
-                        <span className="flex shrink-0 gap-2">
-                          <button
-                            onClick={() => rateVocab(term, true)}
-                            className="rounded-lg border border-green-500/40 px-3 py-1 text-[20px] text-green-700 hover:bg-green-50"
-                          >
-                            认识
-                          </button>
-                          <button
-                            onClick={() => rateVocab(term, false)}
-                            className="rounded-lg border border-amber-500/40 px-3 py-1 text-[20px] text-amber-700 hover:bg-amber-50"
-                          >
-                            不认识
-                          </button>
-                        </span>
-                      </div>
-                      <p className="mt-0.5 text-[20px] text-muted">
-                        连续答对 {streak} 次 · 下一间隔 [1/3/7/14 天]
-                      </p>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-            <h4 className="mt-6 text-[22px] font-semibold text-fg">
-              待复习段落（{srs.dueParas}）
-            </h4>
-            <p className="mt-1 text-[20px] text-muted">
-              阅读时点「📋 标记复习」的段落按同样间隔到期；重读对应节页时会再遇到它们。
-            </p>
-          </div>
-        </div>
       )}
 
       {/* 右上角设置入口 */}
