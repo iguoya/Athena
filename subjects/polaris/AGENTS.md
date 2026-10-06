@@ -33,8 +33,7 @@
   的输出，不自己推导。**开放地图的定义**（`OPEN_VIEW_KINDS`）在 `contract.py` 与
   `src/content/catalog.ts` 各有一份，有测试防止漂移。
 - 主题：晴空 / 暖纸两套明亮主题，颜色只走 `src/styles.css` 里的 CSS 变量；不做暗色。
-- `legacy-qt/`：旧 Qt 版，原样保留、不再构建；基线是 tag `pre-web-polaris`。等你在 macOS / Windows
-  上验收了新界面，再单独一个提交删除（ADR 0015 决策 8）。
+- 旧 Qt 版已删除（ADR 0015 决策 8），基线是 tag `pre-web-polaris`；需要时从 tag 取回。
 - `content/sources/reference/roadmaps/`：路线图对照原料（MIT / CC0，带许可证与 commit，见
   `MANIFEST.json`），由 `scripts/fetch_references.py` 下载。对照不进界面，也不被搬进节点正文。
 

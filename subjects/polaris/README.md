@@ -25,4 +25,4 @@ python3 scripts/check.py              # 在 subjects/polaris 下
 ```
 
 规则与内容模型见 [AGENTS.md](AGENTS.md)，架构决策见 [docs/decisions/](docs/decisions/README.md)。
-旧的 Qt 版暂存在 `legacy-qt/`，不再构建。
+旧的 Qt 版已删除，基线是 tag `pre-web-polaris`。

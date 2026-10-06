@@ -165,8 +165,8 @@ def check_absorption() -> None:
 def check_contract() -> None:
     """内容契约（ADR 0015 决策 2）：规则本身和它的反例测试各跑一遍。
 
-    这是内容契约的唯一入口：C++ 的 validateDocument 已随 Qt 版移入 legacy-qt/，
-    不再被构建；新增规则只改 scripts/contract.py，并在 test_contract.py 里配反例。
+    这是内容契约的唯一入口：C++ 的 validateDocument 已随 Qt 版一起删除
+    （基线 tag pre-web-polaris），不再被构建；新增规则只改 scripts/contract.py，并在 test_contract.py 里配反例。
     """
     run([sys.executable, str(PROJECT_ROOT / "scripts" / "contract.py")], "内容契约校验")
     run([sys.executable, "-m", "unittest", "discover", "-s", str(PROJECT_ROOT / "scripts"),

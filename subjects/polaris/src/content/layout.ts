@@ -8,7 +8,7 @@ import type { PolarisEdge, PolarisMap, PolarisNode, Stage } from "./types";
  * 列是通用的：底盘图的列是阶段（初级 → 中级 → 资深，ADR 0014 决策 5），路线的列是路线自己的阶段
  * （ADR 0016）。列内按「同一列里的依赖深度」排——先修在上、被依赖者在下，同一列里连线基本只向下走；
  * 深度相同的，保持调用方给的顺序（底盘图里是必要程度再原顺序，路线里是路线里写的顺序）。
- * 旧 Qt 版（legacy-qt）是纵向分层，阶段内只按必要程度排；其余不变。
+ * 旧 Qt 版（tag pre-web-polaris）是纵向分层，阶段内只按必要程度排；其余不变。
  */
 export interface LayoutMetrics {
   nodeWidth: number;

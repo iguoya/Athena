@@ -16,7 +16,7 @@ export default defineConfig({
   // Tauri 用自定义协议加载前端：必须用相对资源路径，否则发行包里是白屏。
   base: "./",
   clearScreen: false,
-  server: { port: 1470, strictPort: true, watch: { ignored: ["**/src-tauri/**", "**/legacy-qt/**"] } },
+  server: { port: 1470, strictPort: true, watch: { ignored: ["**/src-tauri/**"] } },
   envPrefix: ["VITE_", "TAURI_ENV_"],
   // 内容（polaris.json）按设计打进主包：应用本地运行，不需要为它拆分加载。
   build: { target: "es2022", sourcemap: false, chunkSizeWarningLimit: 1500 },
