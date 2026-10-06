@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Polaris 的独立验证入口：内容 JSON、原料覆盖、内容契约；前端构建与测试见 check_frontend。"""
+"""Polaris 的独立验证入口：内容 JSON、原料覆盖、内容契约，再前端构建、单元测试与 Rust 侧检查。"""
 
 from __future__ import annotations
 
@@ -173,12 +173,40 @@ def check_contract() -> None:
          "-p", "test_*.py"], "内容契约反例测试")
 
 
+def ensure_dependencies() -> None:
+    if (PROJECT_ROOT / "node_modules").is_dir():
+        return
+    # 有 lock 就按 lock 装：CI 上每次拿到的依赖要和本地一致。
+    npm = tool("npm")
+    if (PROJECT_ROOT / "package-lock.json").is_file():
+        run([npm, "ci"], "安装前端依赖（按 lock）")
+    else:
+        run([npm, "install"], "安装前端依赖")
+
+
 def main() -> int:
     force_utf8()
-    argparse.ArgumentParser(description="验证 Polaris：内容、原料覆盖与内容契约").parse_args()
+    parser = argparse.ArgumentParser(description="验证 Polaris：内容、前端与壳")
+    parser.add_argument(
+        "--skip-rust",
+        action="store_true",
+        help="跳过 Rust 侧检查（只改了内容或前端时用它，能省几分钟）",
+    )
+    arguments = parser.parse_args()
+
     check_json()
     check_absorption()
     check_contract()
+    ensure_dependencies()
+    npm = tool("npm")
+    # npm run build = tsc -b + vite build，类型和打包一次过。
+    run([npm, "run", "build"], "前端类型检查与构建")
+    run([npm, "test"], "前端单元测试（布局、目录索引）")
+    if not arguments.skip_rust:
+        run(
+            [tool("cargo"), "check", "--manifest-path", "src-tauri/Cargo.toml", "--all-targets"],
+            "Rust 侧检查",
+        )
     return 0
 
 

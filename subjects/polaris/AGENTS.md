@@ -20,18 +20,22 @@
 
 ## 技术与目录
 
-- **壳与视图**：Qt 6 Quick / QML；业务和布局：C++20；构建：CMake。
-- `src/single_instance.*` 保证**运行时只有一个 Polaris 进程**（ADR 0007）：第二次启动
-  只请第一份把窗口举到前面，然后自己退出。不做 QML / 内容热重载——改了就重开应用，
-  所以 `app.json` 的 `dev.prepare` 必须保持增量构建，不得清空 `build/`。
-- `content/polaris.json` 是路线图的唯一内容来源；不得把节点、边或来源再硬编码进 QML。
-- 课程知识图谱（ADR 0010）是技术体系层的两章：`computer-science`（计算机科学与技术）
-  与 `electronic-information`（电子信息技术）。28 个节点、34 条依赖、入门起点、
-  验证方式和虚线来路来自原 C++ 学习首页那张图，不要再拆成碎片图。
-- `src/` 只负责读取、校验、确定性分层布局与向 QML 暴露只读模型；不得依赖别的应用。
-- `qml/` 决定可视化、交互与当前选择态。节点保持 QML 控件；边可走 Canvas 或场景图。
-  按 ADR 0013 用满 Qt 6 桌面能力（粒子、多层效果、形状、镜头、原生暗色窗口），特效必须解释读图关系。
-- `content/sources/catalog.json` 保存来源目录；每个节点与每条边都要引用它。
+- **壳与视图**：Tauri 2 + React 19 + TypeScript（Vite 8），样式 Tailwind 4，动效 Motion；
+  图面以 SVG + DOM 承载（ADR 0015）。Rust 端只做壳：`tauri-plugin-single-instance`
+  保证**运行时只有一个北极星窗口**，第二次启动只请第一份把窗口举到前面。
+- **开发与热更新**：`app.json` 的 `dev` 块跑 `npm run tauri:dev`（端口 1470），前端改动由
+  Vite 热更新，不再需要重开应用。
+- `content/polaris.json` 是路线图的唯一内容来源，前端用 `@content` 别名直接导入，**不复制**、
+  不得把节点、边或来源再硬编码进代码；`content/sources/catalog.json` 保存来源目录，每个节点
+  与每条边都要引用它。
+- **内容契约只在 `scripts/contract.py` 里**（ADR 0015 决策 2）：运行时不校验。新增规则只改
+  这一个文件，并在 `scripts/test_contract.py` 里配一个会真失败的反例。
+- `src/content/`：类型（`types.ts`）、目录索引（`catalog.ts`）、确定性布局（`layout.ts`），
+  都是与视图无关的纯 TypeScript，带 Vitest 单测。视图只读它们的输出，不自己推导。
+- `legacy-qt/`：旧 Qt 版，原样保留、不再构建；基线是 tag `pre-web-polaris`。等新版覆盖了
+  4 张学术图和节点专页后单独一个提交删除（ADR 0015 决策 8）。
+- `content/sources/reference/roadmaps/`：路线图对照原料（MIT / CC0，带许可证与 commit，见
+  `MANIFEST.json`），由 `scripts/fetch_references.py` 下载。它们是对照，不进界面，也不被搬进节点正文。
 
 ## 两套地图
 
@@ -76,8 +80,10 @@
 
 ```sh
 cd subjects/polaris
-python3 scripts/check.py
+python3 scripts/check.py              # 内容 JSON、原料覆盖、内容契约、前端构建与单测、Rust 侧
+python3 scripts/check.py --skip-rust  # 只改了内容或前端时用，省掉 Rust 编译
 ```
 
-检查器先校验内容契约、来源和强先修 DAG，再配置、构建并运行 C++ 单元测试。QML 的实际
-视觉与交互仍需在 macOS / Windows 上打开应用验收（ADR 0013）；构建通过不等于读图成立。
+检查器依次：解析内容 JSON → 原料覆盖 → 内容契约（`contract.py` 及其反例测试）→ 前端
+`tsc -b` 与 `vite build` → Vitest → `cargo check`。界面的实际视觉与交互仍需在 macOS /
+Windows 上打开应用验收（ADR 0013）；构建通过不等于读图成立。

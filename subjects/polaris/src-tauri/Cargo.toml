@@ -1,0 +1,30 @@
+[package]
+name = "athena-polaris"
+version = "0.2.0"
+description = "北极星：计算机与电子信息的路线图与指南针"
+authors = ["Athena"]
+edition = "2021"
+
+[lib]
+name = "athena_polaris_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+# 保证只有一个北极星窗口（ADR 0007 的要求，ADR 0015 决策 4 换了机制）。
+tauri-plugin-single-instance = "2"
+
+[profile.dev]
+# 少带调试信息，链接明显快一截；断到行号仍够用
+debug = 1
+incremental = true
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true

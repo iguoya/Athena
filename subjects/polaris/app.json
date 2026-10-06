@@ -17,44 +17,27 @@
   },
   "dev": {
     "env": {
-      "POLARIS_ROOT": "${dir}",
-      "CMAKE_PREFIX_PATH": {
-        "first_existing": [
-          "/opt/homebrew/opt/qt@6",
-          "/usr/local/opt/qt@6",
-          "/usr/local/opt/qt6",
-          "C:/Qt/6.8.1/msvc2022_64"
-        ]
-      }
+      "POLARIS_ROOT": "${dir}"
     },
     "prepare": [
       {
+        "when_missing": "node_modules",
         "run": [
-          "cmake",
-          "-S",
-          ".",
-          "-B",
-          "build",
-          "-DCMAKE_BUILD_TYPE=Debug"
+          "npm",
+          "install"
         ],
-        "label": "配置北极星 CMake"
-      },
-      {
-        "run": [
-          "cmake",
-          "--build",
-          "build",
-          "--target",
-          "athena-polaris"
-        ],
-        "label": "编译北极星"
+        "label": "安装前端依赖"
       }
     ],
     "run": [
-      "build/athena-polaris"
+      "npm",
+      "run",
+      "tauri:dev"
     ],
-    "ready": "process",
-    "match": "build",
+    "ready": {
+      "http": "http://localhost:1470"
+    },
+    "match": "src-tauri/target",
     "binary": "athena-polaris"
   }
 }
