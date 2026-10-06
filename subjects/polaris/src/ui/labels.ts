@@ -1,4 +1,4 @@
-import type { Contract, Priority, RouteBalance, RouteLens, Stage } from "@/content/types";
+import type { Contract, Current, Discipline, Priority, RouteBalance, RouteLens, Stage } from "@/content/types";
 
 // 界面上所有枚举的中文名与颜色变量，集中在这里，组件里不散落字符串。
 
@@ -104,3 +104,29 @@ export const APP_LABEL: Record<string, string> = {
   dsa: "数据结构与算法",
   machine: "C 与机器",
 };
+
+// 四个工科专业类与跨专业类（ADR 0021）。
+export const DISCIPLINE_LABEL: Record<Discipline, string> = {
+  cs: "计算机类",
+  ei: "电子信息类",
+  ee: "电气类",
+  auto: "自动化类",
+  cross: "跨专业类",
+};
+
+export const DISCIPLINE_HINT: Record<Discipline, string> = {
+  cs: "软件、系统、数据与安全",
+  ei: "电路、信号、嵌入式与通信",
+  ee: "电源、电机与电力系统，弱电优先",
+  auto: "测量、建模、控制与智能系统",
+  cross: "软硬结合与跨专业的主线",
+};
+
+// 弱电、强电、兼有（ADR 0021 决策 2）。
+export const CURRENT_LABEL: Record<Current, string> = {
+  weak: "弱电",
+  strong: "强电",
+  both: "弱强兼有",
+};
+
+export const currentVar = (current: Current): string => `var(--current-${current})`;

@@ -2,7 +2,7 @@
 
 ## 定位
 
-北极星是其他学习应用的**路线图与指南针**（ADR 0012）：让人先看见计算机、电子信息两门学科的
+北极星是其他学习应用的**路线图与指南针**（ADR 0012）：让人先看见计算机类、电子信息类、电气类、自动化类四个专业类（ADR 0021，弱电优先）的
 全局、主次和去向，再决定进哪一个应用练细节。它培养的是技术工程师的大局意识——必要性、能
 掌握什么能力、能交出哪一类技术产出——不是又一本教程，也不是课程播放器、招聘聚合器或启动器。
 课程图对照 ACM CS2023、ACM/IEEE CE2016、OSSU、工程教育认证等公开标准校准，**不以个人经验或
@@ -12,7 +12,7 @@
 两层结构（ADR 0016）：**底盘**（`maps`，知识本身，节点 id 全局唯一）与**路线**（`routes`，从
 某个角度走过底盘的顺序，只引用节点 id、不复制节点）。**软硬结合是主线**：`hw-sw-interface`
 一张图把「软件看见的硬件、硬件承诺给软件的东西」按六份跨层契约讲清楚。**不偏科**由能力域衡量（ADR 0018）：
-路线的均衡度由它引用的节点的能力域算出，**通才阶梯**（`route.generalist-ladder`）保证十二个能力域一个不缺，
+路线的均衡度由它引用的节点的能力域算出，**通才阶梯**（`route.generalist-ladder`）保证十四个能力域一个不缺；每个专业类另有自己的主干阶梯（`route.<cs|ei|ee|auto>-ladder`），
 方向类路线是在它之上选的纵深。
 
 不要在未另行决定前加入学习进度、知识掌握度、岗位匹配分数、账号、网络同步，或启动其他 Athena
@@ -50,11 +50,14 @@
   章节按学习顺序排，课内先修只指向排在前面的章，可选的 `ref` 必须是该节点自己引用过的来源，最后一章是做出来的验收。
 - 每个节点必须写明 `stable_definition`、`engineering_role`、`practice`、`validation`、`volatility` 和至少
   一条 `source_refs`（至少一条**内容来源**：adapted / verbatim / quoted / authored；`see_also` 等只是
-  补充说明）。开放地图的节点另须 `pitfall`、`priority`、`priority_reason`；`academic` 另须 `targets`；
+  补充说明）。开放地图的节点另须 `pitfall`、`priority`、`priority_reason`；`academic` 的 `targets` 不再必填，写了必须指向有效的目标图（ADR 0021 决策 6）；
   `codesign` 另须 `stage`、`contract`（timing / memory / bus / power / boot / verify）以及**同时**写清
   的 `hw_side` 与 `sw_side`——只写一侧的不属于软硬接口图。
-- 开放地图的每个节点必须有 `domain`（十二个能力域之一：foundations、programming、algorithms、systems、
-  acceleration、security、assurance、embedded、architecture、digital、circuits、signals）；`frontier` 节点另须 `stage`。
+- **专业类与弱电 / 强电**（ADR 0021）：开放地图与全部路线必须写 `discipline`（`cs`、`ei`、`ee`、`auto`，或跨专业的 `cross`）；
+  电气类图（`electrical-engineering`）的每个节点必须写 `current`（`weak` 弱电、`strong` 强电、`both` 兼有）。弱电优先：该图弱电与兼有的节点多于强电，
+  入门级不放强电。各专业类共用的知识（电路、信号与系统、反馈控制、电机控制）只有一个节点，其他专业类用跨图关联引用，不重复造节点。
+- 开放地图的每个节点必须有 `domain`（十四个能力域之一：foundations、programming、algorithms、systems、
+  acceleration、security、assurance、embedded、architecture、digital、circuits、signals、control、power）；`frontier` 节点另须 `stage`。
 - `requires` 只表达强先修，限同一张图内，且不得指向更高阶段；两端在不同图里的关系放顶层
   `cross_edges`。每条边都要有理由和出处；`enables` 是虚线来路，不写进目标节点的 `requires`。
 - **路线**（`routes`）必须写 `lens`（direction / stack / artifact）、`balance`（software / balanced /

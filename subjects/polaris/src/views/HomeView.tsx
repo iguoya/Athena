@@ -1,12 +1,13 @@
+import { useState } from "react";
 import { motion } from "motion/react";
 import { ArrowUpRight, Flag, Footprints } from "lucide-react";
 import type { Catalog } from "@/content/catalog";
 import { coveredDomains, DOMAINS, LADDER_ID } from "@/content/coverage";
-import { BALANCES, LENSES, routeChapterCount, routeMatrix, routeNodeCount } from "@/content/routes";
-import type { Route } from "@/content/types";
+import { BALANCES, DISCIPLINES, LENSES, disciplineLadderId, mapsByDiscipline, routeChapterCount, routeMatrix, routeNodeCount } from "@/content/routes";
+import type { Discipline, Route } from "@/content/types";
 import { openExternal } from "@/ui/external";
 import { useApp } from "@/state/store";
-import { BALANCE_LABEL, LENS_HINT, LENS_LABEL, balanceVar } from "@/ui/labels";
+import { BALANCE_LABEL, DISCIPLINE_HINT, DISCIPLINE_LABEL, LENS_HINT, LENS_LABEL, balanceVar } from "@/ui/labels";
 
 function RouteCard({ catalog, route, index }: { catalog: Catalog; route: Route; index: number }) {
   const go = useApp((s) => s.go);
@@ -38,7 +39,8 @@ function RouteCard({ catalog, route, index }: { catalog: Catalog; route: Route; 
 
 export function HomeView({ catalog }: { catalog: Catalog }) {
   const go = useApp((s) => s.go);
-  const matrix = routeMatrix(catalog);
+  const [discipline, setDiscipline] = useState<Discipline | "all">("all");
+  const matrix = routeMatrix(catalog, discipline === "all" ? undefined : discipline);
   const codesign = catalog.allMaps.find((map) => map.view_kind === "codesign");
   const ladder = catalog.routes.find((r) => r.id === LADDER_ID);
   let counter = 0;
@@ -88,14 +90,59 @@ export function HomeView({ catalog }: { catalog: Catalog }) {
             <span className="hidden shrink-0 text-right text-[12px] text-muted md:block">
               {ladder.stages.length} 个阶段 · {routeNodeCount(ladder)} 个知识点
               <br />
-              十二个能力域一个不缺
+              {DOMAINS.length} 个能力域一个不缺
             </span>
             <ArrowUpRight size={20} className="shrink-0 text-accent" />
           </button>
         )}
 
+        {/* 四个专业类各有一条主干阶梯（ADR 0021）；弱电优先，强电同样写全 */}
+        <h2 className="mt-8 text-[15px] font-semibold">按专业类走：每类一条主干阶梯</h2>
+        <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          {DISCIPLINES.filter((d) => d !== "cross").map((d) => {
+            const ladderRoute = catalog.routes.find((r) => r.id === disciplineLadderId(d));
+            if (!ladderRoute) return null;
+            return (
+              <button
+                key={d}
+                type="button"
+                onClick={() => go({ view: "route", routeId: ladderRoute.id })}
+                className="group flex flex-col rounded-2xl border border-line bg-surface p-4 text-left shadow-[var(--shadow-card)] transition-[transform,box-shadow,border-color] hover:-translate-y-0.5 hover:border-accent hover:shadow-[var(--shadow-lift)]"
+              >
+                <span className="text-[12px] font-semibold tracking-wide text-accent">{DISCIPLINE_LABEL[d]}</span>
+                <span className="mt-0.5 text-[15px] font-semibold leading-snug">{ladderRoute.title}</span>
+                <span className="mt-1 text-[12px] leading-snug text-muted">{DISCIPLINE_HINT[d]}</span>
+                <span className="mt-3 text-[11.5px] text-faint">
+                  {ladderRoute.stages.length} 个阶段 · {routeNodeCount(ladderRoute)} 个知识点
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="mt-8 flex flex-wrap items-center gap-2" role="group" aria-label="按专业类筛选路线">
+          <span className="text-[12.5px] font-semibold text-muted">路线按专业类：</span>
+          {(["all", ...DISCIPLINES] as const).map((d) => {
+            const count = d === "all" ? catalog.routes.length : catalog.routes.filter((r) => r.discipline === d).length;
+            if (count === 0) return null;
+            const active = discipline === d;
+            return (
+              <button
+                key={d}
+                type="button"
+                aria-pressed={active}
+                onClick={() => setDiscipline(d)}
+                className={`rounded-full px-3 py-1 text-[12.5px] font-medium transition-colors ${active ? "bg-accent text-accent-ink" : "bg-surface text-muted shadow-[var(--shadow-card)] hover:text-ink"}`}
+              >
+                {d === "all" ? "全部" : DISCIPLINE_LABEL[d]}
+                <span className={`ml-1.5 text-[11px] ${active ? "opacity-80" : "text-faint"}`}>{count}</span>
+              </button>
+            );
+          })}
+        </div>
+
         {/* 软硬权重轴：路线按「偏软件 ↔ 偏硬件」放在三列里，行是划分角度 */}
-        <div className="mt-8 grid grid-cols-[168px_repeat(3,minmax(0,1fr))] gap-x-5 gap-y-5">
+        <div className="mt-4 grid grid-cols-[168px_repeat(3,minmax(0,1fr))] gap-x-5 gap-y-5">
           <div />
           {BALANCES.map((balance) => (
             <div key={balance} className="flex flex-col gap-2">
@@ -165,17 +212,22 @@ export function HomeView({ catalog }: { catalog: Catalog }) {
         )}
 
         <h2 className="mb-3 mt-12 text-[15px] font-semibold">想直接看全景？底盘里的图</h2>
-        <div className="flex flex-wrap gap-2.5">
-          {catalog.maps.map((map) => (
-            <button
-              key={map.id}
-              type="button"
-              onClick={() => go({ view: "base", mapId: map.id })}
-              className="rounded-xl border border-line bg-surface px-4 py-2.5 text-left text-[13px] transition-[border-color,box-shadow] hover:border-accent hover:shadow-[var(--shadow-card)]"
-            >
-              <span className="font-medium">{map.title}</span>
-              <span className="ml-2 text-faint">{map.nodes.length} 个</span>
-            </button>
+        <div className="flex flex-col gap-3">
+          {mapsByDiscipline(catalog.maps).map((group) => (
+            <div key={group.discipline} className="flex flex-wrap items-center gap-2.5">
+              <span className="w-[84px] shrink-0 text-[12px] font-semibold text-muted">{DISCIPLINE_LABEL[group.discipline]}</span>
+              {group.maps.map((map) => (
+                <button
+                  key={map.id}
+                  type="button"
+                  onClick={() => go({ view: "base", mapId: map.id })}
+                  className="rounded-xl border border-line bg-surface px-4 py-2.5 text-left text-[13px] transition-[border-color,box-shadow] hover:border-accent hover:shadow-[var(--shadow-card)]"
+                >
+                  <span className="font-medium">{map.title}</span>
+                  <span className="ml-2 text-faint">{map.nodes.length} 个</span>
+                </button>
+              ))}
+            </div>
           ))}
         </div>
       </div>

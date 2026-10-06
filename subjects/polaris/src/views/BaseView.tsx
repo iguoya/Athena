@@ -3,10 +3,12 @@ import { AnimatePresence } from "motion/react";
 import { BookOpen, ChevronDown } from "lucide-react";
 import { STAGES, type Catalog } from "@/content/catalog";
 import { layoutByStage } from "@/content/layout";
+import { mapsByDiscipline } from "@/content/routes";
 import { GraphCanvas, type ColumnNote } from "@/graph/GraphCanvas";
 import { EdgeCard } from "@/panels/EdgeCard";
 import { NodeDrawer } from "@/panels/NodeDrawer";
 import { useApp } from "@/state/store";
+import { DISCIPLINE_LABEL } from "@/ui/labels";
 import { useDrawerWidth } from "@/ui/useDrawerWidth";
 
 export function BaseView({ catalog, mapId, nodeId }: { catalog: Catalog; mapId: string; nodeId?: string }) {
@@ -40,18 +42,23 @@ export function BaseView({ catalog, mapId, nodeId }: { catalog: Catalog; mapId: 
   return (
     <div className="flex h-full flex-col">
       <div className="shrink-0 border-b border-line bg-surface px-6 py-3">
-        <div className="flex flex-wrap items-center gap-2">
-          {catalog.maps.map((m) => (
-            <button
-              key={m.id}
-              type="button"
-              aria-current={m.id === mapId ? "page" : undefined}
-              onClick={() => go({ view: "base", mapId: m.id })}
-              className={`rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors ${m.id === mapId ? "bg-accent text-accent-ink" : "bg-surface-2 text-muted hover:text-ink"}`}
-            >
-              {m.title}
-              <span className={`ml-1.5 text-[11px] ${m.id === mapId ? "opacity-80" : "text-faint"}`}>{m.nodes.length}</span>
-            </button>
+        <div className="flex flex-wrap items-start gap-x-5 gap-y-2">
+          {mapsByDiscipline(catalog.maps).map((group) => (
+            <div key={group.discipline} className="flex flex-wrap items-center gap-2" role="group" aria-label={DISCIPLINE_LABEL[group.discipline]}>
+              <span className="text-[11.5px] font-semibold tracking-wide text-faint">{DISCIPLINE_LABEL[group.discipline]}</span>
+              {group.maps.map((m) => (
+                <button
+                  key={m.id}
+                  type="button"
+                  aria-current={m.id === mapId ? "page" : undefined}
+                  onClick={() => go({ view: "base", mapId: m.id })}
+                  className={`rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors ${m.id === mapId ? "bg-accent text-accent-ink" : "bg-surface-2 text-muted hover:text-ink"}`}
+                >
+                  {m.title}
+                  <span className={`ml-1.5 text-[11px] ${m.id === mapId ? "opacity-80" : "text-faint"}`}>{m.nodes.length}</span>
+                </button>
+              ))}
+            </div>
           ))}
         </div>
         <p className="mt-2 max-w-[1100px] text-[12.5px] leading-relaxed text-muted">{map.summary}</p>

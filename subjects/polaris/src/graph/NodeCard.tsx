@@ -3,7 +3,7 @@ import { Star } from "lucide-react";
 import type { PlacedNode } from "@/content/layout";
 import { STAGE_LABEL } from "@/content/catalog";
 import type { PolarisNode } from "@/content/types";
-import { CONTRACT_LABEL, PRIORITY_LABEL, TRACK_LABEL, contractVar, stageVar } from "@/ui/labels";
+import { CONTRACT_LABEL, CURRENT_LABEL, PRIORITY_LABEL, TRACK_LABEL, contractVar, currentVar, stageVar } from "@/ui/labels";
 
 export type CardState = "idle" | "selected" | "near" | "dim";
 
@@ -78,6 +78,14 @@ export function NodeCard({ node, placed, state, delay, onSelect, onHover }: Prop
           </span>
         ) : (
           <span>{TRACK_LABEL[node.track] ?? node.track}</span>
+        )}
+        {node.current && (
+          <span
+            className="rounded-md px-1.5 py-[2px] font-medium"
+            style={{ color: currentVar(node.current), background: `color-mix(in srgb, ${currentVar(node.current)} 12%, transparent)` }}
+          >
+            {CURRENT_LABEL[node.current]}
+          </span>
         )}
         {node.chapters && node.chapters.length > 0 && <span className="ml-auto tabular-nums text-faint">{node.chapters.length} 章</span>}
       </span>

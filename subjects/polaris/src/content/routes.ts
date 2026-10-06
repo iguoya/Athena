@@ -1,9 +1,21 @@
 import type { Catalog } from "./catalog";
 import { layoutColumns, type ColumnSpec, type Layout, type LayoutMetrics, DEFAULT_METRICS } from "./layout";
-import type { PolarisEdge, Route, RouteBalance, RouteLens } from "./types";
+import type { Discipline, PolarisEdge, PolarisMap, Route, RouteBalance, RouteLens } from "./types";
 
 export const LENSES: readonly RouteLens[] = ["direction", "stack", "artifact"];
 export const BALANCES: readonly RouteBalance[] = ["software", "balanced", "hardware"];
+/** 界面上的专业类顺序；cross 放最后（ADR 0021）。 */
+export const DISCIPLINES: readonly Discipline[] = ["cs", "ei", "ee", "auto", "cross"];
+
+/** 某个专业类的主干阶梯路线 id；cross 的阶梯是通才阶梯，不走这条命名。 */
+export const disciplineLadderId = (discipline: Discipline): string => `route.${discipline}-ladder`;
+
+/** 开放地图按专业类分组，保持内容里的顺序；没有地图的专业类不出现。 */
+export function mapsByDiscipline(maps: readonly PolarisMap[]): { discipline: Discipline; maps: PolarisMap[] }[] {
+  return DISCIPLINES.map((discipline) => ({ discipline, maps: maps.filter((map) => map.discipline === discipline) })).filter(
+    (group) => group.maps.length > 0,
+  );
+}
 
 /** 路线的列就是路线自己的阶段；列内顺序是路线里写的顺序（依赖深度只在同一列内微调）。 */
 export function routeColumns(route: Route): ColumnSpec[] {
@@ -45,11 +57,14 @@ export function routesOfNode(catalog: Catalog, nodeId: string): Route[] {
 }
 
 /** 路线总览的矩阵：行是角度，列是软硬权重。空格子也在，界面据此看出哪里还没有路线。 */
-export function routeMatrix(catalog: Catalog): Record<RouteLens, Record<RouteBalance, Route[]>> {
+export function routeMatrix(catalog: Catalog, discipline?: Discipline): Record<RouteLens, Record<RouteBalance, Route[]>> {
   const matrix = Object.fromEntries(
     LENSES.map((lens) => [lens, Object.fromEntries(BALANCES.map((balance) => [balance, [] as Route[]]))]),
   ) as Record<RouteLens, Record<RouteBalance, Route[]>>;
-  for (const route of catalog.routes) matrix[route.lens][route.balance].push(route);
+  for (const route of catalog.routes) {
+    if (discipline && route.discipline !== discipline) continue;
+    matrix[route.lens][route.balance].push(route);
+  }
   return matrix;
 }
 

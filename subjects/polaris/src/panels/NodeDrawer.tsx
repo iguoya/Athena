@@ -16,6 +16,8 @@ import {
   PRIORITY_LABEL,
   RELATION_LABEL,
   TRACK_LABEL,
+  CURRENT_LABEL,
+  currentVar,
   VALIDATION_LABEL,
   VERIFY_LABEL,
   VOLATILITY_LABEL,
@@ -118,6 +120,7 @@ export function NodeDrawer({ catalog, node, width, onClose }: Props) {
               {node.stage && <Chip color={stageColor}>{STAGE_LABEL[node.stage]}</Chip>}
               {node.priority && <Chip>{PRIORITY_LABEL[node.priority]}</Chip>}
               {node.contract && <Chip color={contractVar(node.contract)}>{CONTRACT_LABEL[node.contract]}契约</Chip>}
+              {node.current && <Chip color={currentVar(node.current)}>{CURRENT_LABEL[node.current]}</Chip>}
               {node.domain && <Chip>{DOMAINS.find((d) => d.id === node.domain)?.label ?? node.domain}</Chip>}
               {node.entry && (
                 <span className="flex items-center gap-1 text-[11.5px] text-muted">

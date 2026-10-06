@@ -11,7 +11,7 @@ interface Props {
 }
 
 /**
- * 十二个能力域的覆盖雷达（ADR 0018）。半径取覆盖率的平方根，免得小域被大域压扁；
+ * 全部能力域的覆盖雷达（ADR 0018）。半径取覆盖率的平方根，免得小域被大域压扁；
  * 没碰到的域在轴端画一个空心点，并不只靠颜色——旁边的列表也会写出来。
  */
 export function RadarChart({ coverage, size = 260 }: Props) {
@@ -26,7 +26,7 @@ export function RadarChart({ coverage, size = 260 }: Props) {
     .join(" ");
 
   return (
-    <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} role="img" aria-label="十二个能力域的覆盖雷达" className="shrink-0">
+    <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} role="img" aria-label="能力域覆盖雷达" className="shrink-0">
       {[0.25, 0.5, 0.75, 1].map((ring) => (
         <polygon
           key={ring}

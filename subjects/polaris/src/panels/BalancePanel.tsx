@@ -61,7 +61,7 @@ export function BalancePanel({ catalog, route, onClose }: Props) {
 
         {isLadder ? (
           <p className="mt-3 rounded-xl bg-accent-soft/60 p-3 text-[12.5px] leading-relaxed">
-            这条阶梯保证十二个能力域一个不缺——选定纵深方向之前，先走完它，就不会营养不良。
+            这条阶梯保证全部能力域一个不缺——选定纵深方向之前，先走完它，就不会营养不良。
           </p>
         ) : spots.length > 0 ? (
           <div className="mt-3">
@@ -105,7 +105,7 @@ export function BalancePanel({ catalog, route, onClose }: Props) {
             )}
           </div>
         ) : (
-          <p className="mt-3 text-[12.5px] text-muted">十二个域都碰到了。</p>
+          <p className="mt-3 text-[12.5px] text-muted">全部能力域都碰到了。</p>
         )}
 
         {route.pitfalls && route.pitfalls.length > 0 && (

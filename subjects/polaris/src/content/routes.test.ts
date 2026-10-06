@@ -1,6 +1,18 @@
 import { describe, expect, it } from "vitest";
 import { loadCatalog } from "./load";
-import { BALANCES, LENSES, layoutRoute, routeChapterCount, routeEdges, routeMatrix, routeNodeCount, routesOfNode } from "./routes";
+import {
+  BALANCES,
+  DISCIPLINES,
+  LENSES,
+  disciplineLadderId,
+  layoutRoute,
+  mapsByDiscipline,
+  routeChapterCount,
+  routeEdges,
+  routeMatrix,
+  routeNodeCount,
+  routesOfNode,
+} from "./routes";
 
 const catalog = loadCatalog();
 
@@ -83,5 +95,32 @@ describe("路线", () => {
     for (const map of catalog.maps) {
       for (const node of map.nodes) expect(node.chapters?.length ?? 0, node.id).toBeGreaterThanOrEqual(3);
     }
+  });
+
+  it("四个专业类各有一张课程图与一条主干阶梯，开放地图按专业类分组且不丢图（ADR 0021）", () => {
+    const groups = mapsByDiscipline(catalog.maps);
+    expect(groups.flatMap((g) => g.maps.map((m) => m.id)).sort()).toEqual(catalog.maps.map((m) => m.id).sort());
+    expect(groups.map((g) => g.discipline)).toEqual(DISCIPLINES.filter((d) => groups.some((g) => g.discipline === d)));
+    for (const discipline of ["cs", "ei", "ee", "auto"] as const) {
+      expect(groups.find((g) => g.discipline === discipline), discipline).toBeDefined();
+      const ladder = catalog.routes.find((r) => r.id === disciplineLadderId(discipline));
+      expect(ladder?.discipline, discipline).toBe(discipline);
+      expect(ladder?.lens).toBe("stack");
+    }
+  });
+
+  it("按专业类筛选路线：矩阵里只剩这一类，各类合起来等于全部", () => {
+    const count = (discipline?: (typeof DISCIPLINES)[number]) =>
+      LENSES.flatMap((lens) => BALANCES.flatMap((balance) => routeMatrix(catalog, discipline)[lens][balance])).length;
+    expect(DISCIPLINES.reduce((sum, d) => sum + count(d), 0)).toBe(catalog.routes.length);
+    expect(count()).toBe(catalog.routes.length);
+    for (const route of LENSES.flatMap((lens) => BALANCES.flatMap((balance) => routeMatrix(catalog, "ee")[lens][balance]))) {
+      expect(route.discipline).toBe("ee");
+    }
+  });
+
+  it("电气类图的节点都标了弱电 / 强电 / 兼有", () => {
+    const ee = catalog.maps.find((m) => m.id === "electrical-engineering")!;
+    for (const node of ee.nodes) expect(["weak", "strong", "both"], node.id).toContain(node.current);
   });
 });

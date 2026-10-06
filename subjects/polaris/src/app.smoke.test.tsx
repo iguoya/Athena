@@ -72,6 +72,22 @@ describe("界面冒烟", () => {
     });
   }
 
+  it("总览按专业类：四类阶梯入口与筛选；切到电气类后只剩电气类的路线", () => {
+    let html = render({ view: "home" });
+    for (const name of ["计算机类主干阶梯", "电子信息类主干阶梯", "电气类主干阶梯", "自动化类主干阶梯"]) expect(html).toContain(name);
+    const button = [...container.querySelectorAll("button")].find((b) => b.textContent?.startsWith("电气类") && b.getAttribute("aria-pressed") !== null)!;
+    act(() => button.click());
+    html = container.innerHTML;
+    for (const route of catalog.routes.filter((r) => r.discipline === "ee")) expect(html).toContain(route.title);
+    expect(html).not.toContain("实时控制与半实物仿真");
+  });
+
+  it("电气类的节点卡片与抽屉标出弱电 / 强电", () => {
+    const html = render({ view: "base", mapId: "electrical-engineering", nodeId: "polaris.ee.electric_machines" });
+    expect(html).toContain("强电");
+    expect(html).toContain("弱电");
+  });
+
   it("节点抽屉：软硬接口节点同时显示硬件一侧与软件一侧，出处可见", () => {
     const html = render({ view: "base", mapId: "hw-sw-interface", nodeId: "polaris.codesign.dma_cache" });
     expect(html).toContain("硬件一侧");
