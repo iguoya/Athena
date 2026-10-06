@@ -100,7 +100,8 @@
           ],
           "stage": "intermediate",
           "stage_reason": "中级支撑：需要读懂机器时再补，不是日常写程序的主语言。",
-          "industry_reason": "崩溃现场、启动代码和最坏执行时间要能读寄存器与栈帧。"
+          "industry_reason": "崩溃现场、启动代码和最坏执行时间要能读寄存器与栈帧。",
+          "domain": "architecture"
         },
         {
           "id": "polaris.cs.computer_systems",
@@ -206,7 +207,8 @@
           ],
           "stage": "intermediate",
           "stage_reason": "中级主干：程序在机器上怎么跑，要在这一层说清。",
-          "industry_reason": "总线数据、中断和存储层次从这里判读；交叉编译产物也在这一层看。"
+          "industry_reason": "总线数据、中断和存储层次从这里判读；交叉编译产物也在这一层看。",
+          "domain": "architecture"
         },
         {
           "id": "polaris.cs.da",
@@ -313,7 +315,8 @@
           ],
           "stage": "intermediate",
           "stage_reason": "中级主干：不会量复杂度，选结构和算法就没有尺子。",
-          "industry_reason": "有界队列、调度和搜索的最坏延迟，都要先会量复杂度。"
+          "industry_reason": "有界队列、调度和搜索的最坏延迟，都要先会量复杂度。",
+          "domain": "algorithms"
         },
         {
           "id": "polaris.cs.engineering_practice",
@@ -412,7 +415,8 @@
           ],
           "stage": "junior",
           "stage_reason": "初级主干：进实验室就要能复现构建、测试和版本；完整性检查也折在这里。",
-          "industry_reason": "产品保证要求每次提交可复核；交叉编译和完整性检查也折在这里。"
+          "industry_reason": "产品保证要求每次提交可复核；交叉编译和完整性检查也折在这里。",
+          "domain": "programming"
         },
         {
           "id": "polaris.cs.python",
@@ -494,7 +498,8 @@
           ],
           "stage": "junior",
           "stage_reason": "初级选修：先用脚本把实验步骤写成可重跑的程序，再进系统语言。",
-          "industry_reason": "试验数据、仿真批跑和事后对比常用它；嵌入式实时路径不靠它运行。"
+          "industry_reason": "试验数据、仿真批跑和事后对比常用它；嵌入式实时路径不靠它运行。",
+          "domain": "programming"
         },
         {
           "id": "polaris.cs.c_lang",
@@ -598,7 +603,8 @@
           ],
           "stage": "junior",
           "stage_reason": "初级主干：先看见内存、指针和寿命，后面的系统课才有落点。",
-          "industry_reason": "固件、总线驱动和实时接口仍然用它描述内存与资源上界。"
+          "industry_reason": "固件、总线驱动和实时接口仍然用它描述内存与资源上界。",
+          "domain": "programming"
         },
         {
           "id": "polaris.cs.operating_systems",
@@ -703,7 +709,8 @@
           ],
           "stage": "intermediate",
           "stage_reason": "中级主干：调度、内存和隔离是系统课的核心，不是某一款内核的说明书。",
-          "industry_reason": "裁剪实时内核、判断隔离和抖动时，用的就是这里的概念。"
+          "industry_reason": "裁剪实时内核、判断隔离和抖动时，用的就是这里的概念。",
+          "domain": "systems"
         },
         {
           "id": "polaris.cs.model_dev",
@@ -786,7 +793,8 @@
           ],
           "stage": "senior",
           "stage_reason": "资深台阶：方向选修，服务分析与检索，不是系统主干。",
-          "industry_reason": "只服务地面分析与受控问答，不进入实时控制闭环。"
+          "industry_reason": "只服务地面分析与受控问答，不进入实时控制闭环。",
+          "domain": "acceleration"
         },
         {
           "id": "polaris.cs.cpp",
@@ -891,7 +899,8 @@
           ],
           "stage": "intermediate",
           "stage_reason": "中级主干：对象、寿命和抽象已经要能撑起比玩具更大的程序。",
-          "industry_reason": "地面处理、实时软件和数字后端工具链里，它仍是既能快又能长大的主力。"
+          "industry_reason": "地面处理、实时软件和数字后端工具链里，它仍是既能快又能长大的主力。",
+          "domain": "programming"
         },
         {
           "id": "polaris.cs.linux_sysprog",
@@ -985,7 +994,8 @@
           ],
           "stage": "intermediate",
           "stage_reason": "中级支撑：Unix 进程与文件是系统编程的常规作业环境。",
-          "industry_reason": "地面站、试验台和处理机大量跑在 Linux 上。"
+          "industry_reason": "地面站、试验台和处理机大量跑在 Linux 上。",
+          "domain": "systems"
         },
         {
           "id": "polaris.cs.dp",
@@ -1064,7 +1074,8 @@
           ],
           "stage": "intermediate",
           "stage_reason": "中级台阶：大型软件结构用得着，不是计科核心课。",
-          "industry_reason": "大型地面工具用得着；实时路径更忌讳多一层间接。"
+          "industry_reason": "大型地面工具用得着；实时路径更忌讳多一层间接。",
+          "domain": "programming"
         },
         {
           "id": "polaris.cs.concurrency",
@@ -1159,7 +1170,8 @@
           ],
           "stage": "intermediate",
           "stage_reason": "中级主干：多执行流共享状态，这一层才能判断对不对。",
-          "industry_reason": "控制周期里任务同步和队列交接出不出错，取决于这一层。"
+          "industry_reason": "控制周期里任务同步和队列交接出不出错，取决于这一层。",
+          "domain": "systems"
         },
         {
           "id": "polaris.cs.computer_networks",
@@ -1270,7 +1282,8 @@
           ],
           "stage": "intermediate",
           "stage_reason": "中级支撑：分层、延迟和可靠性是网络课本身要建立的判断。",
-          "industry_reason": "试验网和测控要能判断延迟出在哪一层；现场总线是另一套时序。"
+          "industry_reason": "试验网和测控要能判断延迟出在哪一层；现场总线是另一套时序。",
+          "domain": "systems"
         },
         {
           "id": "polaris.cs.network_programming",
@@ -1354,7 +1367,8 @@
           ],
           "stage": "intermediate",
           "stage_reason": "中级台阶：套接字是网络课的实践面，需要写长期运行的端时再补。",
-          "industry_reason": "上位机和试验台需要长期运行的套接字程序时再补。"
+          "industry_reason": "上位机和试验台需要长期运行的套接字程序时再补。",
+          "domain": "systems"
         },
         {
           "id": "polaris.cs.practice",
@@ -1449,7 +1463,8 @@
           ],
           "stage": "senior",
           "stage_reason": "资深支撑：把前面的课收成别人能复现的作品。",
-          "industry_reason": "分系统交付仍然要别人能复现、能评审。"
+          "industry_reason": "分系统交付仍然要别人能复现、能评审。",
+          "domain": "programming"
         }
       ],
       "edges": [
@@ -1762,7 +1777,8 @@
           ],
           "stage": "junior",
           "stage_reason": "初级主干：先会用仪器判电平，后面的电路课才有判据。",
-          "industry_reason": "电气联调和传感前端每一步都要能用仪器把电平判清楚。"
+          "industry_reason": "电气联调和传感前端每一步都要能用仪器把电平判清楚。",
+          "domain": "circuits"
         },
         {
           "id": "polaris.ei.mcu_8051",
@@ -1846,7 +1862,8 @@
           ],
           "stage": "junior",
           "stage_reason": "初级台阶：建立寄存器与中断的手感，不挡住后续微控制器。",
-          "industry_reason": "不挡住后续微控制器，只用来建立手册和时序图的习惯。"
+          "industry_reason": "不挡住后续微控制器，只用来建立手册和时序图的习惯。",
+          "domain": "embedded"
         },
         {
           "id": "polaris.ei.fpga",
@@ -1946,7 +1963,8 @@
           ],
           "stage": "intermediate",
           "stage_reason": "中级主干：把数字逻辑焊成可综合的并行通路。",
-          "industry_reason": "高速采集和数字后端要把逻辑做成并行通路。"
+          "industry_reason": "高速采集和数字后端要把逻辑做成并行通路。",
+          "domain": "digital"
         },
         {
           "id": "polaris.ei.sensors",
@@ -2041,7 +2059,8 @@
           ],
           "stage": "intermediate",
           "stage_reason": "中级主干：物理量采不干净，后面处理只是放大误差。",
-          "industry_reason": "探测、试验和状态监测都要求采进来的数对得上物理量。"
+          "industry_reason": "探测、试验和状态监测都要求采进来的数对得上物理量。",
+          "domain": "circuits"
         },
         {
           "id": "polaris.ei.linux_driver",
@@ -2124,7 +2143,8 @@
           ],
           "stage": "senior",
           "stage_reason": "资深台阶：用户态到硬件的另一侧契约，做板级适配时再深入。",
-          "industry_reason": "板级适配才深入；硬实时岗位更常面对裸机外设。"
+          "industry_reason": "板级适配才深入；硬实时岗位更常面对裸机外设。",
+          "domain": "embedded"
         },
         {
           "id": "polaris.ei.stm32",
@@ -2231,7 +2251,8 @@
           ],
           "stage": "intermediate",
           "stage_reason": "中级主干：讲这类 MCU 与接口，料号只是教学实例。",
-          "industry_reason": "嵌入式计算和接口实验的常见底座，不把某一颗料号当成学科。"
+          "industry_reason": "嵌入式计算和接口实验的常见底座，不把某一颗料号当成学科。",
+          "domain": "embedded"
         },
         {
           "id": "polaris.ei.protocols_bus",
@@ -2331,7 +2352,8 @@
           ],
           "stage": "intermediate",
           "stage_reason": "中级主干：分系统之间怎么按时序说话，是电子系统课的接口面。",
-          "industry_reason": "分系统联调的核心是极性、地址、应答与仲裁能对照手册判读。"
+          "industry_reason": "分系统联调的核心是极性、地址、应答与仲裁能对照手册判读。",
+          "domain": "embedded"
         },
         {
           "id": "polaris.ei.pcb_design",
@@ -2432,7 +2454,8 @@
           ],
           "stage": "intermediate",
           "stage_reason": "中级支撑：原理图变成可打样的板，联调才能在下一块板上重现。",
-          "industry_reason": "从台架走到可复现硬件，板子必须能打样、能过完整性检查。"
+          "industry_reason": "从台架走到可复现硬件，板子必须能打样、能过完整性检查。",
+          "domain": "circuits"
         },
         {
           "id": "polaris.ei.freertos",
@@ -2527,7 +2550,8 @@
           ],
           "stage": "intermediate",
           "stage_reason": "中级主干：截止期内的调度要在真实内核上测，产品名只是对照物。",
-          "industry_reason": "截止期内的最坏抖动要在真实调度器上测，不能只在裸机循环里估。"
+          "industry_reason": "截止期内的最坏抖动要在真实调度器上测，不能只在裸机循环里估。",
+          "domain": "embedded"
         },
         {
           "id": "polaris.ei.dsp",
@@ -2625,7 +2649,8 @@
           ],
           "stage": "senior",
           "stage_reason": "资深主干：把信号变成可用特征，并说清计算量。",
-          "industry_reason": "采集变成可用特征时，定点与耗时决定链路能不能跑完。"
+          "industry_reason": "采集变成可用特征时，定点与耗时决定链路能不能跑完。",
+          "domain": "signals"
         },
         {
           "id": "polaris.ei.motor_control",
@@ -2721,7 +2746,8 @@
           ],
           "stage": "senior",
           "stage_reason": "资深台阶：机电伺服的一种落地，不是控制课本身。",
-          "industry_reason": "转台、舵机和天线伺服用得着，主干仍是通用控制。"
+          "industry_reason": "转台、舵机和天线伺服用得着，主干仍是通用控制。",
+          "domain": "signals"
         },
         {
           "id": "polaris.ei.embedded_linux",
@@ -2802,7 +2828,8 @@
           ],
           "stage": "senior",
           "stage_reason": "资深台阶：带 MMU 的嵌入式系统，不是硬实时的唯一入口。",
-          "industry_reason": "处理机、试验台和网关常见；硬实时闭环通常另选内核。"
+          "industry_reason": "处理机、试验台和网关常见；硬实时闭环通常另选内核。",
+          "domain": "embedded"
         },
         {
           "id": "polaris.ei.edge_ai",
@@ -2885,7 +2912,8 @@
           ],
           "stage": "senior",
           "stage_reason": "资深台阶：把模型放到受限设备上，是方向选修。",
-          "industry_reason": "地面监测可以部署；实时控制不以模型推理为闭环。"
+          "industry_reason": "地面监测可以部署；实时控制不以模型推理为闭环。",
+          "domain": "acceleration"
         },
         {
           "id": "polaris.ei.analog",
@@ -2979,7 +3007,8 @@
               "hands_on": false
             }
           ],
-          "industry_reason": "传感前端、电源和接收通道都建立在连续量设计上。"
+          "industry_reason": "传感前端、电源和接收通道都建立在连续量设计上。",
+          "domain": "circuits"
         },
         {
           "id": "polaris.ei.digital",
@@ -3075,7 +3104,8 @@
               "hands_on": false
             }
           ],
-          "industry_reason": "FPGA 和总线控制器写的就是时序电路。"
+          "industry_reason": "FPGA 和总线控制器写的就是时序电路。",
+          "domain": "digital"
         },
         {
           "id": "polaris.ei.signals_systems",
@@ -3167,7 +3197,8 @@
               "hands_on": false
             }
           ],
-          "industry_reason": "探测、通信和闭环都要能在频域上说话。"
+          "industry_reason": "探测、通信和闭环都要能在频域上说话。",
+          "domain": "signals"
         },
         {
           "id": "polaris.ei.matlab",
@@ -3264,7 +3295,8 @@
               "hands_on": false
             }
           ],
-          "industry_reason": "半实物和控制律之前，先在模型里把周期和接口跑通。"
+          "industry_reason": "半实物和控制律之前，先在模型里把周期和接口跑通。",
+          "domain": "signals"
         },
         {
           "id": "polaris.ei.communications",
@@ -3360,7 +3392,8 @@
               "hands_on": true
             }
           ],
-          "industry_reason": "试验、测控和分系统数据要从噪声里捡回来。"
+          "industry_reason": "试验、测控和分系统数据要从噪声里捡回来。",
+          "domain": "signals"
         },
         {
           "id": "polaris.ei.control",
@@ -3455,7 +3488,8 @@
               "hands_on": true
             }
           ],
-          "industry_reason": "转台、舵面和天线是落地；稳定裕度本身要能判断。"
+          "industry_reason": "转台、舵面和天线是落地；稳定裕度本身要能判断。",
+          "domain": "signals"
         },
         {
           "id": "polaris.ei.electromagnetics",
@@ -3540,7 +3574,8 @@
               "hands_on": false
             }
           ],
-          "industry_reason": "高速数字和测控走线到了一定边沿速率就必须用场的语言。"
+          "industry_reason": "高速数字和测控走线到了一定边沿速率就必须用场的语言。",
+          "domain": "circuits"
         }
       ],
       "edges": [
@@ -3971,7 +4006,8 @@
           ],
           "app": "",
           "stage": "junior",
-          "stage_reason": "初级主干：每次改动都可复现，后面的验证都站在构建与调试上。"
+          "stage_reason": "初级主干：每次改动都可复现，后面的验证都站在构建与调试上。",
+          "domain": "programming"
         },
         {
           "id": "polaris.cs.data-concurrency",
@@ -4002,7 +4038,8 @@
           ],
           "app": "",
           "stage": "intermediate",
-          "stage_reason": "中级主干：并发交接要有上界，队列深度就是延迟。"
+          "stage_reason": "中级主干：并发交接要有上界，队列深度就是延迟。",
+          "domain": "systems"
         },
         {
           "id": "polaris.cs.os-network",
@@ -4033,7 +4070,8 @@
           ],
           "app": "",
           "stage": "intermediate",
-          "stage_reason": "中级支撑：处理机和试验台上的数据链接口。"
+          "stage_reason": "中级支撑：处理机和试验台上的数据链接口。",
+          "domain": "systems"
         },
         {
           "id": "polaris.cs.data-pipeline",
@@ -4066,7 +4104,8 @@
           ],
           "app": "",
           "stage": "intermediate",
-          "stage_reason": "中级主干：端到端带时标，才能说清时间花在哪一段。"
+          "stage_reason": "中级主干：端到端带时标，才能说清时间花在哪一段。",
+          "domain": "systems"
         },
         {
           "id": "polaris.cs.observability",
@@ -4098,7 +4137,8 @@
           ],
           "app": "",
           "stage": "senior",
-          "stage_reason": "资深主干：最坏行为要用实测验收，不能凭体感改系统。"
+          "stage_reason": "资深主干：最坏行为要用实测验收，不能凭体感改系统。",
+          "domain": "assurance"
         },
         {
           "id": "polaris.cs.integration",
@@ -4129,7 +4169,8 @@
           ],
           "app": "",
           "stage": "senior",
-          "stage_reason": "资深支撑：他人可复现、可评审的收口，不是起步课。"
+          "stage_reason": "资深支撑：他人可复现、可评审的收口，不是起步课。",
+          "domain": "assurance"
         }
       ],
       "edges": [
@@ -4246,7 +4287,8 @@
           ],
           "app": "",
           "stage": "junior",
-          "stage_reason": "初级主干：电气联调的每一步都依赖可重复的测量。"
+          "stage_reason": "初级主干：电气联调的每一步都依赖可重复的测量。",
+          "domain": "circuits"
         },
         {
           "id": "polaris.ei.mcu-interfaces",
@@ -4278,7 +4320,8 @@
           ],
           "app": "",
           "stage": "intermediate",
-          "stage_reason": "中级主干：外设与总线是软硬件接口面。"
+          "stage_reason": "中级主干：外设与总线是软硬件接口面。",
+          "domain": "embedded"
         },
         {
           "id": "polaris.ei.power-signal",
@@ -4309,7 +4352,8 @@
           ],
           "app": "",
           "stage": "intermediate",
-          "stage_reason": "中级支撑：电源分区和完整性决定联调能不能重现。"
+          "stage_reason": "中级支撑：电源分区和完整性决定联调能不能重现。",
+          "domain": "circuits"
         },
         {
           "id": "polaris.ei.sensor-chain",
@@ -4340,7 +4384,8 @@
           ],
           "app": "",
           "stage": "intermediate",
-          "stage_reason": "中级主干：采集链给出的数字必须能对上物理量。"
+          "stage_reason": "中级主干：采集链给出的数字必须能对上物理量。",
+          "domain": "signals"
         },
         {
           "id": "polaris.ei.dsp-fpga",
@@ -4372,7 +4417,8 @@
           ],
           "app": "",
           "stage": "senior",
-          "stage_reason": "资深支撑：板级数据通路接到可验收的特征与吞吐。"
+          "stage_reason": "资深支撑：板级数据通路接到可验收的特征与吞吐。",
+          "domain": "digital"
         },
         {
           "id": "polaris.ei.board-system",
@@ -4403,7 +4449,8 @@
           ],
           "app": "",
           "stage": "senior",
-          "stage_reason": "资深支撑：合机后看最坏行为，而不是单板均值。"
+          "stage_reason": "资深支撑：合机后看最坏行为，而不是单板均值。",
+          "domain": "assurance"
         }
       ],
       "edges": [
@@ -4528,7 +4575,8 @@
           "stage_reason": "入门级：只需要 C 语言的指针与位运算，就能把「软件在控制硬件」这件事做实。",
           "contract": "memory",
           "hw_side": "外设把控制位、状态位、数据寄存器映射到固定地址，并规定访问宽度、读写属性（只读、写 1 清零、读清除）与复位值。",
-          "sw_side": "软件通过指针按正确宽度读写这些地址，并用 volatile 与内存屏障保证每次访问真的发生、按序发生。"
+          "sw_side": "软件通过指针按正确宽度读写这些地址，并用 volatile 与内存屏障保证每次访问真的发生、按序发生。",
+          "domain": "embedded"
         },
         {
           "id": "polaris.codesign.firmware_image",
@@ -4567,7 +4615,8 @@
           "stage_reason": "入门级：只依赖 C 语言与对内存映射的理解，不需要先学操作系统或总线。",
           "contract": "boot",
           "hw_side": "芯片规定复位后从哪个地址取向量表与第一条指令，以及闪存与 RAM 各自的地址范围和访问特性。",
-          "sw_side": "链接脚本、启动代码与编译选项把代码和数据安置到这些地址，并在进入 main 之前建立 C 运行环境。"
+          "sw_side": "链接脚本、启动代码与编译选项把代码和数据安置到这些地址，并在进入 main 之前建立 C 运行环境。",
+          "domain": "embedded"
         },
         {
           "id": "polaris.codesign.clock_reset",
@@ -4599,7 +4648,8 @@
           "stage_reason": "中级：需要数字逻辑中触发器与时序的基础，并要接触具体芯片的时钟树。",
           "contract": "timing",
           "hw_side": "晶振与锁相环产生时钟，时钟树把它分频到各外设；触发器对建立/保持时间有硬性要求，复位有同步与异步释放之分。",
-          "sw_side": "软件配置时钟源与分频、等待时钟稳定标志，据此推出定时器、波特率与延时常数；复位之后检查并恢复状态。"
+          "sw_side": "软件配置时钟源与分频、等待时钟稳定标志，据此推出定时器、波特率与延时常数；复位之后检查并恢复状态。",
+          "domain": "digital"
         },
         {
           "id": "polaris.codesign.isa_microarch",
@@ -4641,7 +4691,8 @@
           "stage_reason": "中级：需要汇编、数字逻辑和计算机系统基础的铺垫。",
           "contract": "timing",
           "hw_side": "处理器按指令集语义取指、译码、执行；流水线与分支预测等微架构机制在不改变语义的前提下影响周期数。",
-          "sw_side": "编译器与手写汇编只能依赖指令集语义；性能与时序分析要借助微架构模型或实测，不能假设每条指令周期固定。"
+          "sw_side": "编译器与手写汇编只能依赖指令集语义；性能与时序分析要借助微架构模型或实测，不能假设每条指令周期固定。",
+          "domain": "architecture"
         },
         {
           "id": "polaris.codesign.memory_hierarchy",
@@ -4683,7 +4734,8 @@
           "stage_reason": "中级：需要先理解指令执行与程序的内存访问。",
           "contract": "memory",
           "hw_side": "多级缓存、内存控制器与总线按缓存行搬运数据，容量、延迟和带宽逐级变化。",
-          "sw_side": "数据结构布局、遍历顺序与分块大小决定命中率与有效带宽；软件要用性能计数器或基准去度量，而不是凭感觉。"
+          "sw_side": "数据结构布局、遍历顺序与分块大小决定命中率与有效带宽；软件要用性能计数器或基准去度量，而不是凭感觉。",
+          "domain": "architecture"
         },
         {
           "id": "polaris.codesign.interrupts",
@@ -4728,7 +4780,8 @@
           "stage_reason": "中级：依赖对寄存器、向量表与启动代码的理解。",
           "contract": "timing",
           "hw_side": "中断控制器按优先级仲裁请求，硬件自动压栈并取向量；响应时间还受流水线冲刷与总线等待影响。",
-          "sw_side": "软件配置使能、优先级与向量，保证处理函数短小、可重入，并用临界区与原子操作保护共享数据。"
+          "sw_side": "软件配置使能、优先级与向量，保证处理函数短小、可重入，并用临界区与原子操作保护共享数据。",
+          "domain": "embedded"
         },
         {
           "id": "polaris.codesign.dma_cache",
@@ -4769,7 +4822,8 @@
           "stage_reason": "中级：需要先理解存储层次、中断与寄存器级控制。",
           "contract": "memory",
           "hw_side": "DMA 控制器按配置的源、目的与长度搬运数据并发出完成事件；缓存与 DMA 之间是否自动一致取决于芯片，常常需要软件介入。",
-          "sw_side": "软件划定缓冲区属性（不可缓存，或手动维护）、保证对齐，在传输前后做清理与失效，并用中断或轮询确认完成。"
+          "sw_side": "软件划定缓冲区属性（不可缓存，或手动维护）、保证对齐，在传输前后做清理与失效，并用中断或轮询确认完成。",
+          "domain": "architecture"
         },
         {
           "id": "polaris.codesign.peripheral_driver",
@@ -4815,7 +4869,8 @@
           "stage_reason": "中级：需要寄存器、中断与 DMA 作铺垫。",
           "contract": "bus",
           "hw_side": "控制器按总线协议产生并检查帧，向软件暴露状态位、FIFO 与错误标志，并能在完成或出错时发出中断或 DMA 请求。",
-          "sw_side": "驱动用状态机管理一次传输的全过程：启动、等待、超时、错误处理与资源释放，并选与吞吐、实时性相称的搬运方式。"
+          "sw_side": "驱动用状态机管理一次传输的全过程：启动、等待、超时、错误处理与资源释放，并选与吞吐、实时性相称的搬运方式。",
+          "domain": "embedded"
         },
         {
           "id": "polaris.codesign.debug_interfaces",
@@ -4859,7 +4914,8 @@
           "stage_reason": "中级：需要固件映像与寄存器级的基础。",
           "contract": "verify",
           "hw_side": "芯片内置调试访问端口与跟踪单元，可在运行或暂停时访问寄存器、存储器与事件，但带宽与可见范围有限。",
-          "sw_side": "调试器与固件配合：符号信息、断点与观察点、跟踪事件的定义与时间戳，决定了能看到什么，以及观测本身对时序的干扰。"
+          "sw_side": "调试器与固件配合：符号信息、断点与观察点、跟踪事件的定义与时间戳，决定了能看到什么，以及观测本身对时序的干扰。",
+          "domain": "assurance"
         },
         {
           "id": "polaris.codesign.power_thermal",
@@ -4898,7 +4954,8 @@
           "stage_reason": "中级：需要时钟与复位，以及中断（作为唤醒源）的铺垫。",
           "contract": "power",
           "hw_side": "芯片提供多级休眠、时钟门控与电压调节，各唤醒源的唤醒延迟不同；温度传感器与热限制由硬件触发。",
-          "sw_side": "软件按任务占空比选择频率与休眠深度，管理外设时钟与唤醒源，把「能耗预算」当作与时间同级的设计量。"
+          "sw_side": "软件按任务占空比选择频率与休眠深度，管理外设时钟与唤醒源，把「能耗预算」当作与时间同级的设计量。",
+          "domain": "circuits"
         },
         {
           "id": "polaris.codesign.realtime_timing",
@@ -4943,7 +5000,8 @@
           "stage_reason": "中级：需要中断与存储层次的基础，才看得懂最坏情况从哪来。",
           "contract": "timing",
           "hw_side": "中断控制器、流水线、缓存与总线仲裁带来可变的延迟；硬件定时器提供计时基准。",
-          "sw_side": "调度器的优先级与抢占策略、临界区长度与任务划分决定最坏响应时间；软件要用可靠的时间戳测量，而不是凭印象。"
+          "sw_side": "调度器的优先级与抢占策略、临界区长度与任务划分决定最坏响应时间；软件要用可靠的时间戳测量，而不是凭印象。",
+          "domain": "assurance"
         },
         {
           "id": "polaris.codesign.boot_trust",
@@ -4982,7 +5040,8 @@
           "stage_reason": "资深：需要固件映像、外设驱动与调试的完整经验，并要在系统层面做取舍。",
           "contract": "boot",
           "hw_side": "芯片固化引导 ROM 与可信根，提供一次性可编程的密钥与锁定位，以及闪存的分区与写保护。",
-          "sw_side": "引导程序校验并加载镜像、管理版本与回滚，应用只在被信任的环境里运行；更新协议要对中途失败有明确定义。"
+          "sw_side": "引导程序校验并加载镜像、管理版本与回滚，应用只在被信任的环境里运行；更新协议要对中途失败有明确定义。",
+          "domain": "security"
         },
         {
           "id": "polaris.codesign.hw_sw_partition",
@@ -5027,7 +5086,8 @@
           "stage_reason": "资深：要同时掌握存储层次、实时与外设接口，才能做出有依据的划分。",
           "contract": "memory",
           "hw_side": "可编程逻辑与加速器提供并行计算与确定性延迟，但片上存储、带宽与互连有限，改动代价高。",
-          "sw_side": "软件提供灵活性与生态，处理器负责控制与不规则任务；两侧之间要有明确的数据通路、同步方式与接口规格。"
+          "sw_side": "软件提供灵活性与生态，处理器负责控制与不规则任务；两侧之间要有明确的数据通路、同步方式与接口规格。",
+          "domain": "architecture"
         },
         {
           "id": "polaris.codesign.hil_verification",
@@ -5073,7 +5133,8 @@
           "stage_reason": "资深：依赖实时、外设驱动与观测手段三方面的经验。",
           "contract": "verify",
           "hw_side": "被测硬件或其高保真模型，加上能产生激励、采集响应并注入故障的台架接口。",
-          "sw_side": "被测软件与测试脚本：可重复的激励、自动化的判据与记录，让仿真与实机的结果可以对账。"
+          "sw_side": "被测软件与测试脚本：可重复的激励、自动化的判据与记录，让仿真与实机的结果可以对账。",
+          "domain": "assurance"
         },
         {
           "id": "polaris.codesign.device_tree_bsp",
@@ -5119,7 +5180,8 @@
           "stage_reason": "资深：需要驱动、中断与启动链的完整经验，并要在系统层面做板级取舍。",
           "contract": "boot",
           "hw_side": "板级硬件固定了每个外设的地址、中断线、时钟与引脚复用，这些是驱动无法自己发现的，只能由板级描述告知。",
-          "sw_side": "引导程序把设备树传给内核，内核按 compatible 匹配驱动并取参数；BSP 把引导程序、内核配置、设备树与驱动统一维护。"
+          "sw_side": "引导程序把设备树传给内核，内核按 compatible 匹配驱动并取参数；BSP 把引导程序、内核配置、设备树与驱动统一维护。",
+          "domain": "embedded"
         },
         {
           "id": "polaris.codesign.heterogeneous_soc",
@@ -5159,7 +5221,8 @@
           "stage_reason": "资深：要同时用到存储、DMA、划分与驱动的经验，并要读懂片上互连。",
           "contract": "bus",
           "hw_side": "片上互连连接 CPU、可编程逻辑与内存控制器，提供寄存器接口、DMA 通道与（部分接口上的）缓存一致性，带宽由互连与内存控制器共享。",
-          "sw_side": "驱动经内存映射寄存器配置加速器，用 DMA 或共享缓冲区交换数据，处理中断与缓存维护，并通过设备树把加速器接入系统。"
+          "sw_side": "驱动经内存映射寄存器配置加速器，用 DMA 或共享缓冲区交换数据，处理中断与缓存维护，并通过设备树把加速器接入系统。",
+          "domain": "architecture"
         },
         {
           "id": "polaris.codesign.side_channel_security",
@@ -5199,7 +5262,8 @@
           "stage_reason": "资深：需要存储层次、启动链与观测手段的完整经验，才看得懂泄露从哪来、怎么堵。",
           "contract": "boot",
           "hw_side": "硬件的时序、缓存、功耗与电磁特征会泄露内部状态；调试口、启动模式与存储器接口是物理攻击面，硬件可提供锁定位、屏蔽与随机化。",
-          "sw_side": "软件用恒定时间实现、避免依赖秘密的分支与访存、清除密钥残留，并在启动阶段锁定调试与受保护区域。"
+          "sw_side": "软件用恒定时间实现、避免依赖秘密的分支与访存、清除密钥残留，并在启动阶段锁定调试与受保护区域。",
+          "domain": "security"
         }
       ],
       "edges": [
@@ -5694,6 +5758,536 @@
               "relation": "informed",
               "source_id": "openocd",
               "locator": "JTAG 与 SWD 调试传输"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "frontier-depth",
+      "title": "纵深与补全 · 高端方向所需的知识",
+      "summary": "底盘里原先缺的那一部分：数学地基，以及走向高端方向（处理器与 SoC 架构、数字芯片、AI 加速器、固件与可信、高可靠系统）绕不过去的纵深知识。每个节点都归入一个能力域，并依据公开的工程文档与课程标准校准；高端岗位的招聘页只作时效性样本，不构成「学完即可入职」的承诺。尚未覆盖：模拟与射频集成电路、先进封装与存储器设计、编译器后端的细节，后续按需新增，不在这里假装已经齐全。",
+      "view_kind": "frontier",
+      "nodes": [
+        {
+          "id": "polaris.frontier.math_for_computing",
+          "title": "离散数学、概率与线性代数",
+          "track": "theory",
+          "stable_definition": "离散结构（集合、关系、图、归纳与计数）、概率与统计、线性代数，是算法、信号、通信、控制与机器学习共同使用的判断语言。",
+          "engineering_role": "让「这个算法为什么对、这条链路误码率多大、这个滤波器为什么稳定」都能写成可推导、可检验的论证，而不是凭经验。",
+          "practice": "用归纳法证明一个递归算法的正确性；用概率估算一条带噪声链路的误码率并与仿真对照；用矩阵运算推一遍一个二阶滤波器的状态方程。",
+          "validation": "analysis",
+          "validation_note": "推导结果与程序或仿真的数值吻合，偏差能用假设不成立来解释。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "mit-6042",
+              "locator": "Mathematics for Computer Science：证明、归纳、图、计数与概率"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "teachyourselfcs",
+              "locator": "Mathematics for Computer Science 一节"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-DSC Discrete Structures；CE-LAL Linear Algebra；CE-PRS Probability and Statistics"
+            }
+          ],
+          "pitfall": "把数学当成考试科目：会算题，却不会用它给设计定一个指标与误差界，到了信号处理、控制和机器学习就只能套公式。",
+          "priority": "essential",
+          "priority_reason": "几乎所有后续领域的论证都用到它；缺了它，进阶阶段会不断撞墙，而且难以自学补回。",
+          "stage": "junior",
+          "stage_reason": "地基：越早建立越省力，而且它是后面所有阶段的共同前提。",
+          "domain": "foundations"
+        },
+        {
+          "id": "polaris.frontier.open_isa_riscv",
+          "title": "开放指令集与处理器核设计",
+          "track": "compute",
+          "stable_definition": "开放指令集（如 RISC-V）把软件与硬件之间的契约公开成标准，任何人都可以实现、扩展与验证；处理器核设计就是在这份契约之下，决定流水线、存储与扩展指令，并用仿真和 FPGA 验证它能跑真实软件。",
+          "engineering_role": "让人能亲手实现一台处理器并看它跑起程序，也让软硬协同有了可以动手改的那一层——比如为某个领域加一条自定义指令。",
+          "practice": "在 FPGA 或仿真里实现一个能通过基础指令集测试的流水线核，再给它加一条自定义指令，让汇编器或编译器用上它，并测前后性能。",
+          "validation": "simulation",
+          "validation_note": "通过指令集的一致性测试，能启动并运行一个最小程序；自定义指令的收益与成本都有实测。",
+          "volatility": "evolving",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "riscv-specs",
+              "locator": "非特权与特权指令集规范"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "riscv-reader",
+              "locator": "The RISC-V Reader：指令集的设计原则与实现"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "harris-ddca",
+              "locator": "微架构：单周期、多周期与流水线处理器"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "learn-fpga",
+              "locator": "在 FPGA 上逐步实现 RISC-V 核"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "hp-golden-age",
+              "locator": "开放指令集与敏捷芯片开发"
+            }
+          ],
+          "pitfall": "只会背流水线五个阶段：没有亲手实现过，遇到冒险、异常与访存的真实细节就讲不清，也不知道一条自定义指令的代价。",
+          "priority": "important",
+          "priority_reason": "体系结构的核心是亲手把契约落成实现；开放指令集让这件事个人也能做。",
+          "stage": "senior",
+          "stage_reason": "资深：需要数字设计、汇编与微架构的扎实基础，并要读规范。",
+          "domain": "architecture"
+        },
+        {
+          "id": "polaris.frontier.perf_modeling",
+          "title": "性能建模与微架构探索",
+          "track": "compute",
+          "stable_definition": "用周期精确或功能级的模拟器与分析模型，在设计定型之前评估微架构与系统方案的性能、功耗与面积（PPA）；把模型的预测与真实实现的测量对账，是架构决策可信的前提。",
+          "engineering_role": "让「改这个缓存大小、加这条流水线、换这个划分方案值不值」成为可量化的权衡，而不是凭直觉。",
+          "practice": "在 gem5 里为一个核函数建立基准，改变缓存与分支预测配置，画出性能与代价的曲线，用 Roofline 解释拐点，再与真实硬件的计数器数据对照。",
+          "validation": "benchmark",
+          "validation_note": "模型预测与实测的偏差有来源分析（模型缺了哪些机制），结论在换一个工作负载后依然经得起复核。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "gem5",
+              "locator": "模拟器的配置、统计与实验方法"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "hennessy-patterson-ca",
+              "locator": "Fundamentals of Quantitative Design and Analysis"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "roofline-williams",
+              "locator": "Roofline 模型"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "arm-uarch-job",
+              "locator": "性能建模、PPA 权衡与周期精确仿真的岗位要求（时效性样本）"
+            }
+          ],
+          "pitfall": "只看单一基准的平均值：模型没有和实测对账，换一个工作负载就失灵，却拿来支撑结论。",
+          "priority": "important",
+          "priority_reason": "高端架构岗位的日常就是建模、对账与权衡（见 Arm 的招聘样本）；没有它，所谓架构只是经验之谈。",
+          "stage": "senior",
+          "stage_reason": "资深：需要体系结构、存储层次与基准测量的扎实基础。",
+          "domain": "architecture"
+        },
+        {
+          "id": "polaris.frontier.rtl_to_gds",
+          "title": "数字芯片实现流程：从 RTL 到版图",
+          "track": "hardware",
+          "stable_definition": "把可综合的 RTL 经过逻辑综合、布局布线、时序收敛与物理验证，变成可制造的版图（GDSII）；每一步都有约束与签核，设计的时序、功耗与面积都在这条流程里被检验。",
+          "engineering_role": "让人知道一行 HDL 最终会变成什么样的电路，以及为什么「能仿真」远远不等于「能流片」。",
+          "practice": "用开放的流程把一个小型设计从 RTL 做到版图：写时序约束，看综合与布局后的时序报告，修一次建立时间违例，并做完整的签核检查或提交到共享流片项目。",
+          "validation": "integration",
+          "validation_note": "时序、设计规则与版图对原理图的检查全部通过；能解释每一次违例的根因。",
+          "volatility": "evolving",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "openroad",
+              "locator": "RTL 到 GDSII 的自动化流程与时序签核"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "skywater-pdk",
+              "locator": "工艺设计套件：标准单元库、设计规则与工艺参数"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "tiny-tapeout",
+              "locator": "把设计提交到共享流片"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "zero-to-asic",
+              "locator": "开源数字 ASIC 入门路径"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-DIG-9 Design with programmable logic；CE-DIG-10 System design constraints"
+            }
+          ],
+          "pitfall": "只做仿真与 FPGA：设计在仿真里正确，却没有时序约束的概念，一到综合与布局就出现无法收敛的时序与功耗问题。",
+          "priority": "important",
+          "priority_reason": "数字设计的最终产物是电路而不是代码；不走完这条流程，就不知道约束从哪来。",
+          "stage": "senior",
+          "stage_reason": "资深：需要数字设计、HDL 与时钟复位的扎实基础。",
+          "domain": "digital"
+        },
+        {
+          "id": "polaris.frontier.verification_methodology",
+          "title": "硬件验证方法学",
+          "track": "assurance",
+          "stable_definition": "验证在芯片总工作量里占大头：用可重用的测试平台、受约束的随机激励、参考模型与覆盖率，系统地证明设计符合规格；验证的目标是发现设计没想到的情形，而不是证明它能工作。",
+          "engineering_role": "把「我测过了」变成「覆盖了哪些场景、还剩哪些没覆盖」，是数字设计可信度的来源。",
+          "practice": "为一个小型设计（FIFO 或简单总线外设）写带参考模型的测试平台，用随机激励与覆盖率目标驱动，故意在设计里埋一个边角错误，看验证能否抓出它；用 cocotb 与 SystemVerilog 各做一遍。",
+          "validation": "simulation",
+          "validation_note": "覆盖率收敛，埋入的缺陷能被发现并定位；参考模型与设计的差异都有解释。",
+          "volatility": "evolving",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "accellera-uvm",
+              "locator": "UVM：测试平台架构、序列与覆盖率"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "cocotb",
+              "locator": "用 Python 写硬件验证测试平台"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ieee-1364-verilog",
+              "locator": "IEEE 1800 SystemVerilog 中与验证相关的特性"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-DIG-11 Fault models, testing, and design for testability"
+            }
+          ],
+          "pitfall": "只写定向测试：手写几个用例通过就收工，缺陷全藏在没想到的组合里，到后期才爆发。",
+          "priority": "important",
+          "priority_reason": "验证与设计同等重要，往往人手更多；它也是软件工程的测试思想在硬件里的对应。",
+          "stage": "senior",
+          "stage_reason": "资深：需要数字设计与软件测试两方面的基础。",
+          "domain": "assurance"
+        },
+        {
+          "id": "polaris.frontier.parallel_accelerators",
+          "title": "并行编程与 GPU、加速器",
+          "track": "compute",
+          "stable_definition": "GPU 与各类加速器靠大规模并行与专用数据通路取得吞吐；要用好它们，必须理解线程层次、内存层次、数据搬运与同步，并用性能模型判断瓶颈在算力还是带宽。",
+          "engineering_role": "是软硬协同落到真实硬件的主战场：同一个算法在加速器上快慢能差百倍，差别几乎全在内存与并行的组织上。",
+          "practice": "把矩阵乘或卷积分别写成朴素版与分块版 GPU 核函数，测不同块大小的性能，用 Roofline 与性能剖析工具判断瓶颈，并说明优化后的版本为什么更接近硬件上限。",
+          "validation": "benchmark",
+          "validation_note": "优化前后的性能与剖析指标变化一致，能指出限制性能的是哪一级存储或哪类指令。",
+          "volatility": "evolving",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "cuda-docs",
+              "locator": "编程模型、内存层次与性能指南"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "hennessy-patterson-ca",
+              "locator": "Data-Level Parallelism in Vector, SIMD, and GPU Architectures"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "roofline-williams",
+              "locator": "Roofline 模型"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-CAL-7 Parallel algorithms and multi-threading；CE-CAO-10 Multi/Many-core architectures"
+            }
+          ],
+          "pitfall": "只会调用库：不知道线程、内存层次与访存合并，遇到库覆盖不到的算子就无从优化，也无法判断硬件到底被用到几成。",
+          "priority": "important",
+          "priority_reason": "AI 与高性能计算的算力都在这里；理解它也是判断软硬划分是否合理的前提。",
+          "stage": "senior",
+          "stage_reason": "资深：需要存储层次、并发与性能测量的扎实基础。",
+          "domain": "acceleration"
+        },
+        {
+          "id": "polaris.frontier.ml_compile_inference",
+          "title": "模型编译与推理优化",
+          "track": "compute",
+          "stable_definition": "把训练好的模型变成在目标硬件上高效运行的程序：用中间表示做算子融合、布局与内存规划，用量化降低精度与带宽，再针对芯片生成或选择内核；性能、精度与功耗必须一起衡量。",
+          "engineering_role": "连接算法与芯片的那一层，决定一个模型在资源受限设备或加速器上能不能用、值不值得用。",
+          "practice": "取一个小模型做训练后量化并比较精度；用编译器的中间表示观察算子融合前后的访存次数；在目标设备上测延迟与能耗，并与 Roofline 的预测对照。",
+          "validation": "benchmark",
+          "validation_note": "量化与融合后的精度损失、延迟与能耗三项实测齐全，瓶颈归因与预测一致。",
+          "volatility": "evolving",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "mlir-docs",
+              "locator": "多层中间表示与方言"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "tvm-docs",
+              "locator": "深度学习编译器：算子调度与自动调优"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "tflite-micro",
+              "locator": "微控制器上的推理与量化"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "cmsis-nn",
+              "locator": "CMSIS-NN：神经网络算子库"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "ai-hardware-engineer-roadmap",
+              "locator": "推理优化与边缘部署的阶段顺序"
+            }
+          ],
+          "pitfall": "只看精度或只看延迟：量化后精度不降就上线，却没测内存带宽与能耗，换一块设备就跑不动。",
+          "priority": "important",
+          "priority_reason": "AI 系统工程的核心环节，也是软硬协同在今天最活跃的方向之一。",
+          "stage": "senior",
+          "stage_reason": "资深：需要存储层次、并行与模型本身的基础。",
+          "domain": "acceleration"
+        },
+        {
+          "id": "polaris.frontier.safety_critical",
+          "title": "高可靠软件与功能安全",
+          "track": "assurance",
+          "stable_definition": "安全关键系统（航空、航天、汽车、医疗）的软件要在失效会造成人身或任务损失的前提下被证明足够可靠：靠受限的编码规则、需求到代码到测试的双向追溯、独立评审与按等级划分的保证过程，而不是靠「测试通过」。",
+          "engineering_role": "把可靠性从口号变成可审核的证据链，是进入航空航天、汽车电子与医疗设备领域的通行证。",
+          "practice": "用一套受限编码规则（NASA/JPL 的十条规则或 MISRA）改造一段与中断相关的代码；为它写需求、追溯到测试用例，并做一次独立评审，列出每条规则带来的约束与理由。",
+          "validation": "review",
+          "validation_note": "每条需求都能追到代码与测试，静态分析零违规或有书面豁免，评审意见都有处理记录。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nasa-power-of-10",
+              "locator": "十条安全关键代码规则"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "misra-c",
+              "locator": "编码准则的结构与偏离流程"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "faa-ac-20-115d",
+              "locator": "机载软件保证：以 DO-178C 为依据的过程与证据"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "nasa-se-handbook",
+              "locator": "系统工程中的验证与确认"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-SPE-5 Risk, dependability, safety and fault tolerance"
+            }
+          ],
+          "pitfall": "只做测试：没有需求追溯与规则约束，覆盖率再高也说不清缺了什么，审核时给不出证据。",
+          "priority": "important",
+          "priority_reason": "高可靠领域的硬性门槛；也能反过来提升任何系统的工程纪律。",
+          "stage": "senior",
+          "stage_reason": "资深：需要实时、驱动与测试的完整经验，并要在过程层面做取舍。",
+          "domain": "assurance"
+        },
+        {
+          "id": "polaris.frontier.firmware_engineering",
+          "title": "固件工程化",
+          "track": "software",
+          "stable_definition": "把固件当作需要长期维护的软件来做：把硬件访问隔离在可替换的接口之后，使大部分逻辑能在主机上做单元测试；用模拟器或仿真做集成测试，用持续集成、静态分析与版本化的构建把质量固定下来。",
+          "engineering_role": "让固件的迭代速度与可靠性不被「必须上板才能测」拖住，也是硬件改版时代码能被复用的前提。",
+          "practice": "把一个含寄存器访问的驱动拆成「硬件抽象接口 + 纯逻辑」两层，在主机上用桩替换硬件做单元测试；再用仿真器跑一次集成测试，并把它们接进持续集成。",
+          "validation": "integration",
+          "validation_note": "不上板就能跑完大部分测试，缺陷在主机阶段被发现；仿真与真实硬件的差异被记录下来。",
+          "volatility": "evolving",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "interrupt-embedded-roadmap",
+              "locator": "测试驱动、对硬件交互做桩与模拟、持续集成"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "renode",
+              "locator": "仿真与自动化测试"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "qemu-docs",
+              "locator": "系统仿真：在不上板的情况下运行固件"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "tenstorrent-firmware-job",
+              "locator": "固件生命周期、测试策略与工程标准的岗位要求（时效性样本）"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "ganssle-embedded-geek",
+              "locator": "项目由小到大，以及对调试能力的要求"
+            }
+          ],
+          "pitfall": "所有测试都靠上板手点：硬件与逻辑纠缠在一起，改一行就要重新烧写验证，缺陷积累到后期才暴露。",
+          "priority": "important",
+          "priority_reason": "资深固件岗位强调可靠的生产软件与测试策略（见招聘样本）；没有工程化，规模一上去就失控。",
+          "stage": "intermediate",
+          "stage_reason": "中级：要先会写驱动与读寄存器，才谈得上让它们可测。",
+          "domain": "programming"
+        },
+        {
+          "id": "polaris.frontier.systems_engineering",
+          "title": "系统工程与接口管理",
+          "track": "assurance",
+          "stable_definition": "系统工程把一个复杂系统拆成需求、功能、架构与接口，并在整个生命周期里管理变更、风险与验证；接口控制文件把软、硬、机、电的边界写成各方共同遵守的契约。",
+          "engineering_role": "让由多个团队、多种学科做出来的东西最终能装在一起并按预期工作——这是高端岗位区别于单点专家的地方。",
+          "practice": "为一个小系统（如带传感器的电机控制器）写需求、接口控制文件与验证矩阵，并在一次联调中用它定位一个由接口歧义引起的故障。",
+          "validation": "review",
+          "validation_note": "每条需求都有验证方法与结果，接口文件被各方评审，并能解释联调中的一处失配。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nasa-se-handbook",
+              "locator": "需求、架构与接口定义；验证与确认"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-SPE-7 Requirements analysis and elicitation；CE-SPE-9 System architectural design and evaluation"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "tenstorrent-firmware-job",
+              "locator": "「架构、实现、调试与系统层面的思考」（时效性样本）"
+            }
+          ],
+          "pitfall": "跳过需求与接口：各模块各自「做完了」，联调时才发现单位、时序、字节序与故障处理各说各话。",
+          "priority": "important",
+          "priority_reason": "系统层面的思考是资深岗位反复强调的能力；没有它，软硬结合只剩拼接。",
+          "stage": "senior",
+          "stage_reason": "资深：需要对软、硬两侧都有足够的实践，才知道接口里该写什么。",
+          "domain": "assurance"
+        },
+        {
+          "id": "polaris.frontier.trusted_hardware",
+          "title": "可信硬件与开放根信任",
+          "track": "assurance",
+          "stable_definition": "可信硬件把「信任从哪里开始」固化在芯片里：不可更改的启动代码、安全存储与密钥、加密加速器和受控的调试访问，形成可被验证的根信任；开放的实现让这条信任链可以被公开审查。",
+          "engineering_role": "为启动链、固件更新、密钥管理与身份认证提供绕不过去的硬件基础，是安全产品与高可靠系统的地基。",
+          "practice": "阅读一个开放根信任芯片的架构文档，画出从复位到应用的信任链与每一步的校验；在开发板上用安全启动流程验证被篡改的镜像会被拒绝。",
+          "validation": "review",
+          "validation_note": "能指出信任链每一环由谁校验、密钥存在哪、失败时如何处理；篡改镜像被拒绝并留下可查的记录。",
+          "volatility": "evolving",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "opentitan",
+              "locator": "架构、信任链与安全启动文档"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "mcuboot",
+              "locator": "镜像校验与更新流程"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "acm-ieee-ce2016",
+              "locator": "CE-SEC-10 Trusted computing"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "hp-golden-age",
+              "locator": "增强安全作为体系结构的新机遇"
+            }
+          ],
+          "pitfall": "把安全当成软件功能：只调用加密算法，不理解根信任从哪里来、谁来校验，一旦硬件层被绕过就全部失效。",
+          "priority": "optional",
+          "priority_reason": "安全产品与带密钥设备的方向必需；其他方向理解其原理即可，所以排在后面。",
+          "stage": "senior",
+          "stage_reason": "资深：需要启动链、侧信道与存储安全的完整经验。",
+          "domain": "security"
+        }
+      ],
+      "edges": [
+        {
+          "from": "polaris.frontier.open_isa_riscv",
+          "to": "polaris.frontier.perf_modeling",
+          "relation": "enables",
+          "rationale": "亲手实现过一个处理器核，再去建模，才知道模型里省掉了哪些机制、会在哪里和实测不一致。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "gem5",
+              "locator": "模型与真实实现的差距"
+            }
+          ]
+        },
+        {
+          "from": "polaris.frontier.verification_methodology",
+          "to": "polaris.frontier.rtl_to_gds",
+          "relation": "enables",
+          "rationale": "签核之前设计必须先被充分验证；验证里发现的问题越晚修，代价越大。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "openroad",
+              "locator": "流程中的检查与签核"
+            }
+          ]
+        },
+        {
+          "from": "polaris.frontier.parallel_accelerators",
+          "to": "polaris.frontier.ml_compile_inference",
+          "relation": "enables",
+          "rationale": "推理编译最终要生成能在并行硬件上高效运行的内核，懂并行才看得懂编译器在优化什么。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "cuda-docs",
+              "locator": "内存层次与性能指南"
+            }
+          ]
+        },
+        {
+          "from": "polaris.frontier.firmware_engineering",
+          "to": "polaris.frontier.safety_critical",
+          "relation": "enables",
+          "rationale": "可测试、可追溯的工程化做法，是高可靠软件所需证据链的基础。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "nasa-power-of-10",
+              "locator": "规则对可验证性的要求"
+            }
+          ]
+        },
+        {
+          "from": "polaris.frontier.systems_engineering",
+          "to": "polaris.frontier.safety_critical",
+          "relation": "enables",
+          "rationale": "安全保证从需求与接口出发，没有系统层面的需求与追溯，就没有安全论证。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "nasa-se-handbook",
+              "locator": "验证与确认"
             }
           ]
         }
@@ -9122,9 +9716,370 @@
           "locator": "Vivado 综合：把 HDL 变成可编程逻辑"
         }
       ]
+    },
+    {
+      "from": "polaris.codesign.isa_microarch",
+      "to": "polaris.frontier.open_isa_riscv",
+      "relation": "requires",
+      "rationale": "实现一台处理器之前，要先懂指令集与微架构各自管什么。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "harris-ddca",
+          "locator": "微架构"
+        }
+      ],
+      "strong": true
+    },
+    {
+      "from": "polaris.ei.digital",
+      "to": "polaris.frontier.open_isa_riscv",
+      "relation": "requires",
+      "rationale": "处理器核就是一个大的同步数字系统，需要数字逻辑与时序的基础。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "harris-ddca",
+          "locator": "数字设计基础"
+        }
+      ],
+      "strong": true
+    },
+    {
+      "from": "polaris.codesign.isa_microarch",
+      "to": "polaris.frontier.perf_modeling",
+      "relation": "requires",
+      "rationale": "建模的对象就是微架构，先要懂它的各个机制。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "hennessy-patterson-ca",
+          "locator": "流水线与指令级并行"
+        }
+      ],
+      "strong": true
+    },
+    {
+      "from": "polaris.codesign.memory_hierarchy",
+      "to": "polaris.frontier.perf_modeling",
+      "relation": "requires",
+      "rationale": "性能结论几乎总是落在存储层次与带宽上。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "roofline-williams",
+          "locator": "Roofline 模型"
+        }
+      ],
+      "strong": true
+    },
+    {
+      "from": "polaris.ei.digital",
+      "to": "polaris.frontier.rtl_to_gds",
+      "relation": "requires",
+      "rationale": "实现流程处理的是数字电路，需要数字逻辑的基础。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "openroad",
+          "locator": "数字实现流程"
+        }
+      ],
+      "strong": true
+    },
+    {
+      "from": "polaris.ei.fpga",
+      "to": "polaris.frontier.rtl_to_gds",
+      "relation": "requires",
+      "rationale": "要先会写可综合的 HDL，并在 FPGA 上走过一遍综合与时序。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "zero-to-asic",
+          "locator": "开源数字 ASIC 入门路径"
+        }
+      ],
+      "strong": true
+    },
+    {
+      "from": "polaris.codesign.clock_reset",
+      "to": "polaris.frontier.rtl_to_gds",
+      "relation": "requires",
+      "rationale": "时序收敛处理的正是时钟、建立保持与复位。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "openroad",
+          "locator": "时序约束与签核"
+        }
+      ],
+      "strong": true
+    },
+    {
+      "from": "polaris.ei.digital",
+      "to": "polaris.frontier.verification_methodology",
+      "relation": "requires",
+      "rationale": "验证的对象是数字设计，要先懂它。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "accellera-uvm",
+          "locator": "测试平台与被测设计"
+        }
+      ],
+      "strong": true
+    },
+    {
+      "from": "polaris.codesign.memory_hierarchy",
+      "to": "polaris.frontier.parallel_accelerators",
+      "relation": "requires",
+      "rationale": "并行性能的上限几乎都由内存层次与带宽决定。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "hennessy-patterson-ca",
+          "locator": "Data-Level Parallelism in Vector, SIMD, and GPU Architectures"
+        }
+      ],
+      "strong": true
+    },
+    {
+      "from": "polaris.cs.concurrency",
+      "to": "polaris.frontier.parallel_accelerators",
+      "relation": "requires",
+      "rationale": "加速器上的同步与数据竞争，是并发问题的放大版。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "cuda-docs",
+          "locator": "线程层次与同步"
+        }
+      ],
+      "strong": true
+    },
+    {
+      "from": "polaris.codesign.memory_hierarchy",
+      "to": "polaris.frontier.ml_compile_inference",
+      "relation": "requires",
+      "rationale": "算子融合与内存规划的目的就是减少对各级存储的访问。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "tvm-docs",
+          "locator": "算子调度与内存规划"
+        }
+      ],
+      "strong": true
+    },
+    {
+      "from": "polaris.codesign.realtime_timing",
+      "to": "polaris.frontier.safety_critical",
+      "relation": "requires",
+      "rationale": "安全关键系统的核心证据之一就是最坏情况下的时间行为。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "nasa-power-of-10",
+          "locator": "对循环、动态内存与可验证性的规则"
+        }
+      ],
+      "strong": true
+    },
+    {
+      "from": "polaris.codesign.peripheral_driver",
+      "to": "polaris.frontier.firmware_engineering",
+      "relation": "requires",
+      "rationale": "要先会写驱动，才谈得上把它做成可测试、可替换硬件的结构。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "interrupt-embedded-roadmap",
+          "locator": "对硬件交互做桩与模拟"
+        }
+      ],
+      "strong": true
+    },
+    {
+      "from": "polaris.codesign.boot_trust",
+      "to": "polaris.frontier.trusted_hardware",
+      "relation": "requires",
+      "rationale": "根信任是启动链信任的起点，先懂启动链，才看得懂根信任在保护什么。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "opentitan",
+          "locator": "启动与信任链"
+        }
+      ],
+      "strong": true
+    },
+    {
+      "from": "polaris.codesign.hw_sw_partition",
+      "to": "polaris.frontier.systems_engineering",
+      "relation": "enables",
+      "rationale": "软硬划分是系统工程里最典型的接口决策，系统工程给它方法与记录方式。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "nasa-se-handbook",
+          "locator": "架构与接口定义"
+        }
+      ]
+    },
+    {
+      "from": "polaris.frontier.math_for_computing",
+      "to": "polaris.ei.signals_systems",
+      "relation": "enables",
+      "rationale": "信号与系统的推导大量使用线性代数与概率。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "mit-6042",
+          "locator": "概率与线性代数的基础"
+        }
+      ]
+    },
+    {
+      "from": "polaris.frontier.math_for_computing",
+      "to": "polaris.cs.da",
+      "relation": "enables",
+      "rationale": "算法的正确性与复杂度分析，就是离散数学里归纳与计数的应用。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "mit-6042",
+          "locator": "归纳与计数"
+        }
+      ]
+    },
+    {
+      "from": "polaris.frontier.math_for_computing",
+      "to": "polaris.ei.control",
+      "relation": "enables",
+      "rationale": "反馈控制的稳定性分析建立在线性代数与动态系统之上。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "acm-ieee-ce2016",
+          "locator": "CE-LAL Linear Algebra"
+        }
+      ]
     }
   ],
   "routes": [
+    {
+      "id": "route.generalist-ladder",
+      "title": "软硬通才阶梯",
+      "summary": "整座底盘的主干：从地基到「能独立做出跨层作品」，五个阶段、十二个能力域一个不缺。它不教你成为某一方向的专家，而是保证你在选纵深之前没有营养不良。",
+      "lens": "stack",
+      "balance": "balanced",
+      "audience": "想进入软硬结合的高端方向、又不想偏科的人——不论你现在更强的是软件还是硬件。",
+      "artifact": "一件自己能讲清、也做出来的端到端作品：从一个传感器的物理量，到固件，到操作系统接口，再到一次带测量记录的联调，并写明每一层的接口与取舍。",
+      "stages": [
+        {
+          "title": "地基：能写、能算、能量",
+          "goal": "把最基础的三件事练到不再是障碍：写代码、做推导、量电路。",
+          "nodes": [
+            "polaris.frontier.math_for_computing",
+            "polaris.cs.c_lang",
+            "polaris.cs.engineering_practice",
+            "polaris.cs.toolchain",
+            "polaris.ei.electronics_basics",
+            "polaris.ei.measurement",
+            "polaris.ei.digital"
+          ],
+          "checkpoint": "用 C 写一个带单元测试的小工具；用示波器测一个数字电路的波形并解释；用归纳法证明一个小算法。"
+        },
+        {
+          "title": "机器：把计算机从门电路讲到操作系统",
+          "goal": "能讲清一条语句怎样变成指令、怎样访问存储、怎样被操作系统调度。",
+          "nodes": [
+            "polaris.cs.assembly",
+            "polaris.cs.computer_systems",
+            "polaris.cs.da",
+            "polaris.codesign.isa_microarch",
+            "polaris.codesign.memory_hierarchy",
+            "polaris.cs.operating_systems"
+          ],
+          "checkpoint": "对照反汇编解释一段循环的周期与访存；写出一个缓存拐点实验；说明一次系统调用在内核里经过什么。"
+        },
+        {
+          "title": "接缝：软硬接口与嵌入式",
+          "goal": "能让一块真实的板子按你的意图工作，并看得见它内部发生了什么。",
+          "nodes": [
+            "polaris.codesign.mmio",
+            "polaris.codesign.firmware_image",
+            "polaris.codesign.clock_reset",
+            "polaris.codesign.interrupts",
+            "polaris.ei.stm32",
+            "polaris.ei.protocols_bus",
+            "polaris.codesign.dma_cache",
+            "polaris.codesign.peripheral_driver",
+            "polaris.codesign.debug_interfaces"
+          ],
+          "checkpoint": "用寄存器点亮并读回一个外设；用中断加总线驱动采集一个传感器；用调试器和示波器解释一次丢帧。"
+        },
+        {
+          "title": "系统：时序、并发与信号",
+          "goal": "把「够快、够稳」变成可测的数字，并处理真实的信号与并发。",
+          "nodes": [
+            "polaris.ei.freertos",
+            "polaris.codesign.realtime_timing",
+            "polaris.cs.concurrency",
+            "polaris.cs.computer_networks",
+            "polaris.ei.signals_systems",
+            "polaris.ei.sensors"
+          ],
+          "checkpoint": "测出多任务固件的端到端延迟直方图并分解来源；解释一次数据竞争；对一个传感器信号做采样与滤波并核对频谱。"
+        },
+        {
+          "title": "体检：选纵深之前，补齐盲区",
+          "goal": "把还没碰到的域都碰一遍，再决定把哪里做深。",
+          "nodes": [
+            "polaris.codesign.power_thermal",
+            "polaris.frontier.firmware_engineering",
+            "polaris.codesign.boot_trust",
+            "polaris.codesign.hw_sw_partition",
+            "polaris.frontier.parallel_accelerators",
+            "polaris.codesign.hil_verification",
+            "polaris.frontier.systems_engineering"
+          ],
+          "checkpoint": "为同一功能给出软件、加速两种实现并对账预测与实测；演示断电更新后能恢复；写一份带接口控制文件的联调记录。"
+        }
+      ],
+      "pitfalls": [
+        "只啃自己喜欢的那一段：软件强的人绕开电路与测量，硬件强的人绕开操作系统与工程方法，结果两边都够不到高端岗位要的「跨界面」能力。",
+        "把阶梯当清单打钩：每个阶段的验收是做出来的东西，没有作品就算没过，不要用「看过了」代替。",
+        "急着进纵深：体检阶段暴露出的盲区，在方向类路线里会被放大，越晚补越贵。"
+      ],
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "teachyourselfcs",
+          "locator": "广度作为底座、重心在系统，专精放在之后"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "acm-ieee-ce2016",
+          "locator": "十二个知识领域与核心学时的分配"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "interrupt-embedded-roadmap",
+          "locator": "硬件、软件与二者交集的分区方式"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "norvig-ten-years",
+          "locator": "刻意练习与十年的时间尺度"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "ganssle-embedded-geek",
+          "locator": "项目由小到大，以及对调试能力的要求"
+        }
+      ]
+    },
     {
       "id": "route.codesign-spine",
       "title": "软硬接口主线",
@@ -9203,6 +10158,10 @@
           "source_id": "ai-hardware-engineer-roadmap",
           "locator": "按终点产物与跨层契约组织路线的做法"
         }
+      ],
+      "pitfalls": [
+        "只做软件一侧：把寄存器与时序当黑箱，遇到硬件相关的问题就只能求助别人。",
+        "只做硬件一侧：不写驱动、不看测量，设计出来的接口软件很难用对。"
       ]
     },
     {
@@ -9278,6 +10237,10 @@
           "source_id": "embedded-engineering-roadmap",
           "locator": "嵌入式岗位偏重软件还是硬件的区分"
         }
+      ],
+      "pitfalls": [
+        "只会调库：不理解寄存器、中断与时钟，换芯片就重来。",
+        "只会点亮不会测：没有延迟与抖动的数字，「实时」就只是一句话。"
       ]
     },
     {
@@ -9349,6 +10312,10 @@
           "source_id": "ai-hardware-engineer-roadmap",
           "locator": "数字设计、体系结构到 FPGA 的阶段顺序"
         }
+      ],
+      "pitfalls": [
+        "只在仿真里正确：没有时序约束与上板验证，到真实硬件上才发现问题。",
+        "不懂软件接口：设计做得很快，却没有人能写驱动去用它。"
       ]
     },
     {
@@ -9424,6 +10391,10 @@
           "source_id": "embedded-engineering-roadmap",
           "locator": "硬件一侧的技能划分：测试设备、原型、PCB 与 EMC"
         }
+      ],
+      "pitfalls": [
+        "只会画板不会测：没有测量与调试能力，板子出问题时无从定位。",
+        "不看软件一侧：不知道固件会怎样使用这些外设，引脚与时序留不出余地。"
       ]
     },
     {
@@ -9501,6 +10472,10 @@
           "source_id": "acm-ieee-ce2016",
           "locator": "CE-SRM Systems Resource Management"
         }
+      ],
+      "pitfalls": [
+        "只会应用层：不懂设备、中断与启动，驱动与 BSP 就无从谈起。",
+        "只会裸机：不懂操作系统的调度与内存管理，进入 Linux 后概念对不上。"
       ]
     },
     {
@@ -9573,6 +10548,10 @@
           "source_id": "acm-ieee-ce2016",
           "locator": "CE-SGP Signal Processing 与 CE-SPE Systems and Project Engineering"
         }
+      ],
+      "pitfalls": [
+        "只会仿真：没有在真实时序与量化误差下验证，算法一落地就不稳。",
+        "数学薄弱：不会做稳定性与误差分析，调参全靠运气。"
       ]
     },
     {
@@ -9646,6 +10625,10 @@
           "source_id": "ai-hardware-engineer-roadmap",
           "locator": "从模型到机器：推理优化与边缘部署的阶段"
         }
+      ],
+      "pitfalls": [
+        "只看精度：不测功耗与带宽，端侧设备上无法落地。",
+        "忽视硬件：不懂存储层次与数据搬运，部署后的瓶颈归因不了。"
       ]
     },
     {
@@ -9717,6 +10700,10 @@
           "source_id": "teachyourselfcs",
           "locator": "计算机体系结构、操作系统等领域的教材推荐"
         }
+      ],
+      "pitfalls": [
+        "停在底层：搭完处理器就收工，没有回到真实软件与工程方法。",
+        "只做一遍理想情况：不测、不对照实测，容易以为「懂了」。"
       ]
     },
     {
@@ -9786,6 +10773,10 @@
           "source_id": "open-source-cs",
           "locator": "系统与应用领域的课程分组"
         }
+      ],
+      "pitfalls": [
+        "只往下看一层：没有用仪器验证最后一步，结论停留在推理上。",
+        "绕开电路：把电平当成抽象，遇到信号完整性问题无从判断。"
       ]
     },
     {
@@ -9864,6 +10855,543 @@
           "relation": "see_also",
           "source_id": "ossu-computer-science",
           "locator": "Core programming 与 Core systems"
+        }
+      ],
+      "pitfalls": [
+        "完全不碰硬件：不懂存储层次与中断，性能与可靠性问题只能靠猜。",
+        "只学语言不学系统：不懂操作系统与网络，服务一上规模就失控。"
+      ]
+    },
+    {
+      "id": "route.cpu-soc-architecture",
+      "title": "CPU 与 SoC 架构、性能建模",
+      "summary": "从数字逻辑与指令集出发，亲手实现一个处理器核，再学会建模与对账，最后落到异构 SoC 的划分。偏硬件的纵深，但要求软件一侧的建模与剖析功底。",
+      "lens": "direction",
+      "balance": "hardware",
+      "audience": "已走完通才阶梯、想做处理器、SoC 与性能架构的人。",
+      "profile": "公开的高端架构岗位（如 Arm 的首席微架构探索工程师，2026-10 读取）要求十余年以上的 CPU 微架构与性能建模经历、对性能功耗面积（PPA）权衡的深刻理解、周期精确仿真器的实战，以及 C++、Python 与性能剖析的软件工程能力——它们依赖的是建模与对账，而不只是写 RTL。这是时效性样本，不构成录用承诺。",
+      "artifact": "一个自己实现并验证的处理器核（含一条自定义指令），配一份性能建模报告：模型预测与实测对账，并给出性能、功耗、面积的权衡。",
+      "stages": [
+        {
+          "title": "数字与机器",
+          "goal": "把数字逻辑、时序与指令集打牢。",
+          "nodes": [
+            "polaris.ei.digital",
+            "polaris.codesign.clock_reset",
+            "polaris.cs.assembly",
+            "polaris.codesign.isa_microarch"
+          ],
+          "checkpoint": "画出一个同步数字系统的时序约束；对照反汇编解释一段循环的周期。"
+        },
+        {
+          "title": "存储与实现",
+          "goal": "弄清数据怎样流动，并亲手实现一个核。",
+          "nodes": [
+            "polaris.codesign.memory_hierarchy",
+            "polaris.codesign.dma_cache",
+            "polaris.ei.fpga",
+            "polaris.frontier.open_isa_riscv"
+          ],
+          "checkpoint": "一个流水线核通过指令集一致性测试，并在 FPGA 或仿真里运行最小程序。"
+        },
+        {
+          "title": "建模与权衡",
+          "goal": "用模型回答「值不值」，并与实测对账。",
+          "nodes": [
+            "polaris.frontier.perf_modeling",
+            "polaris.codesign.hw_sw_partition",
+            "polaris.frontier.parallel_accelerators"
+          ],
+          "checkpoint": "对一个核函数建立模型，预测与实测的偏差有来源分析。"
+        },
+        {
+          "title": "系统落地",
+          "goal": "把核放进系统，并管理接口。",
+          "nodes": [
+            "polaris.codesign.heterogeneous_soc",
+            "polaris.frontier.systems_engineering"
+          ],
+          "checkpoint": "一份 SoC 级的接口控制文件与带数字的划分方案。"
+        }
+      ],
+      "pitfalls": [
+        "只会写 RTL：没有性能建模与剖析的能力，架构讨论里拿不出可量化的论据。",
+        "只会背微架构术语：没有亲手实现过一个核，遇到冒险、异常与访存的细节就讲不清。",
+        "忽视软件：不会用 C++ 与脚本写模型和分析工具，进入团队后无法与建模、验证同事协作。"
+      ],
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "hennessy-patterson-ca",
+          "locator": "Fundamentals、Memory Hierarchy Design 与 Domain-Specific Architectures"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "harris-ddca",
+          "locator": "从数字设计到处理器微架构"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "arm-uarch-job",
+          "locator": "高端微架构岗位的能力要求（时效性样本）"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "hp-golden-age",
+          "locator": "领域专用架构、开放指令集与敏捷芯片开发"
+        }
+      ]
+    },
+    {
+      "id": "route.digital-ic-verification",
+      "title": "数字芯片设计与验证",
+      "summary": "从数字逻辑与 FPGA，到验证方法学，再到从 RTL 到版图的完整实现流程。偏硬件的纵深，验证与设计并重。",
+      "lens": "direction",
+      "balance": "hardware",
+      "audience": "已走完通才阶梯、想做数字 IC 设计或验证的人。",
+      "artifact": "一个小型数字设计：带验证平台与覆盖率，并走完从 RTL 到版图的开放流程（或提交到共享流片），附时序与签核报告。",
+      "stages": [
+        {
+          "title": "数字基础",
+          "goal": "把逻辑、时序与测量打牢。",
+          "nodes": [
+            "polaris.ei.electronics_basics",
+            "polaris.ei.digital",
+            "polaris.codesign.clock_reset"
+          ],
+          "checkpoint": "画出一个同步时序电路并指出它的建立、保持约束。"
+        },
+        {
+          "title": "HDL 与 FPGA",
+          "goal": "把设计写成可综合、可仿真的 HDL，并在 FPGA 上跑通。",
+          "nodes": [
+            "polaris.ei.fpga",
+            "polaris.codesign.isa_microarch",
+            "polaris.ei.dsp-fpga"
+          ],
+          "checkpoint": "一个数据通路通过仿真与时序收敛，并上板运行。"
+        },
+        {
+          "title": "验证",
+          "goal": "系统地证明设计符合规格。",
+          "nodes": [
+            "polaris.frontier.verification_methodology",
+            "polaris.frontier.open_isa_riscv"
+          ],
+          "checkpoint": "为设计写带参考模型的测试平台，覆盖率收敛，并抓出埋入的缺陷。"
+        },
+        {
+          "title": "实现与签核",
+          "goal": "走完从 RTL 到版图的流程。",
+          "nodes": [
+            "polaris.frontier.rtl_to_gds"
+          ],
+          "checkpoint": "时序、设计规则与版图对原理图的检查全部通过，并能解释每次违例。"
+        }
+      ],
+      "pitfalls": [
+        "只做设计不做验证：芯片团队里验证人手往往更多，缺陷全藏在没想到的组合里。",
+        "只停在仿真与 FPGA：没有时序约束与签核的概念，一到物理实现就收敛不了。",
+        "忽视软件：脚本、测试框架与持续集成是验证与实现流程的日常工具。"
+      ],
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "openroad",
+          "locator": "RTL 到 GDSII 的自动化流程"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "accellera-uvm",
+          "locator": "验证方法学"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "harris-ddca",
+          "locator": "数字设计与处理器实现"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "tiny-tapeout",
+          "locator": "个人也能提交流片的共享平台"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "zero-to-asic",
+          "locator": "开源数字 ASIC 入门路径"
+        }
+      ]
+    },
+    {
+      "id": "route.ai-accelerator-systems",
+      "title": "AI 加速器与推理系统",
+      "summary": "从存储层次与并行编程出发，到模型编译与量化，再到软硬划分与异构 SoC。软硬各半：算法在软件里，指标由数据搬运与硬件结构决定。",
+      "lens": "direction",
+      "balance": "balanced",
+      "audience": "已走完通才阶梯、想做推理优化、加速器软件栈或端侧部署的人。",
+      "artifact": "一个在目标硬件上部署的量化模型，给出延迟、功耗与精度三项实测，并用 Roofline 解释瓶颈在算力还是带宽，附软硬划分的依据。",
+      "stages": [
+        {
+          "title": "机器与存储",
+          "goal": "建立算力、带宽与搬运的直觉。",
+          "nodes": [
+            "polaris.cs.computer_systems",
+            "polaris.codesign.isa_microarch",
+            "polaris.codesign.memory_hierarchy",
+            "polaris.cs.concurrency"
+          ],
+          "checkpoint": "用 Roofline 判断一个算子是算力受限还是带宽受限。"
+        },
+        {
+          "title": "并行与加速",
+          "goal": "把计算映射到并行硬件上。",
+          "nodes": [
+            "polaris.frontier.parallel_accelerators",
+            "polaris.codesign.dma_cache"
+          ],
+          "checkpoint": "同一核函数的朴素版与分块版性能对比，并解释差异。"
+        },
+        {
+          "title": "模型编译与部署",
+          "goal": "把模型变成目标硬件上的高效程序。",
+          "nodes": [
+            "polaris.cs.model_dev",
+            "polaris.ei.edge_ai",
+            "polaris.frontier.ml_compile_inference"
+          ],
+          "checkpoint": "量化与算子融合后的精度、延迟、能耗三项实测齐全。"
+        },
+        {
+          "title": "软硬划分",
+          "goal": "决定哪部分放进加速器，并落到真实芯片。",
+          "nodes": [
+            "polaris.codesign.hw_sw_partition",
+            "polaris.codesign.heterogeneous_soc",
+            "polaris.codesign.power_thermal"
+          ],
+          "checkpoint": "给出带数字的划分方案，预测与实测对账。"
+        }
+      ],
+      "pitfalls": [
+        "只会调用框架：不知道内存层次与数据搬运，库覆盖不到的算子就无从优化。",
+        "只看精度或只看延迟：没有同时测功耗与带宽，换一块设备就跑不动。",
+        "忽视硬件：不懂加速器的片上存储与互连，划分方案落不到真实芯片。"
+      ],
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "hennessy-patterson-ca",
+          "locator": "Domain-Specific Architectures"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "roofline-williams",
+          "locator": "Roofline 模型"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "mlir-docs",
+          "locator": "多层中间表示"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "ai-hardware-engineer-roadmap",
+          "locator": "从模型到机器：推理优化与边缘部署"
+        }
+      ]
+    },
+    {
+      "id": "route.firmware-trusted",
+      "title": "系统固件与可信",
+      "summary": "从寄存器与启动链出发，到固件工程化、实时与嵌入式 Linux，再到可信启动与可信硬件。偏软件的纵深，但处处踩在软硬交界处。",
+      "lens": "direction",
+      "balance": "software",
+      "audience": "已走完通才阶梯、想做芯片与板级的系统固件、BSP 与安全启动的人。",
+      "profile": "公开的高端固件岗位（如 Tenstorrent 的资深固件工程师，2026-10 读取）要求 C/C++、MCU 与 SoC 平台、RTOS 与嵌入式 Linux，负责启动、电源与复位序列，用实验室工具定位软硬件交界处的问题，并强调「架构、实现、调试与系统层面的思考」。这是时效性样本，不构成录用承诺。",
+      "artifact": "一套可信的板级固件：带签名校验与回滚的启动链，可在主机上测试的驱动层，以及一次只改设备树就换板运行的演示。",
+      "stages": [
+        {
+          "title": "寄存器与映像",
+          "goal": "从最底层读懂芯片与映像。",
+          "nodes": [
+            "polaris.cs.c_lang",
+            "polaris.ei.electronics_basics",
+            "polaris.codesign.mmio",
+            "polaris.codesign.firmware_image"
+          ],
+          "checkpoint": "对照数据手册只用寄存器点亮并读回一个引脚，能讲清 map 文件里每个段在哪。"
+        },
+        {
+          "title": "接口与观测",
+          "goal": "让外设稳定工作，并看得见内部状态。",
+          "nodes": [
+            "polaris.codesign.clock_reset",
+            "polaris.codesign.interrupts",
+            "polaris.codesign.peripheral_driver",
+            "polaris.codesign.debug_interfaces"
+          ],
+          "checkpoint": "用中断加 DMA 采集一个传感器，并用调试器解释一次异常。"
+        },
+        {
+          "title": "工程化与系统",
+          "goal": "让固件可测、可维护，并进入操作系统。",
+          "nodes": [
+            "polaris.frontier.firmware_engineering",
+            "polaris.ei.freertos",
+            "polaris.codesign.realtime_timing",
+            "polaris.codesign.device_tree_bsp",
+            "polaris.ei.embedded_linux"
+          ],
+          "checkpoint": "驱动在主机上可测；测出延迟直方图；只改设备树就让同一份驱动在另一块板上工作。"
+        },
+        {
+          "title": "可信",
+          "goal": "让只有被认可的代码能运行。",
+          "nodes": [
+            "polaris.codesign.boot_trust",
+            "polaris.frontier.trusted_hardware",
+            "polaris.codesign.side_channel_security"
+          ],
+          "checkpoint": "更新中途断电后能恢复；被篡改的镜像被拒绝；说明哪些侧信道与调试口被封堵。"
+        }
+      ],
+      "pitfalls": [
+        "只会调用厂商库：不理解启动与寄存器，换芯片或遇到启动问题就无从下手。",
+        "所有测试都靠上板：没有可测试的结构，规模一大质量就失控。",
+        "把安全当成软件功能：不懂根信任与物理攻击面，硬件层一被绕过就全部失效。"
+      ],
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "interrupt-embedded-roadmap",
+          "locator": "固件工程化与测试"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "opentitan",
+          "locator": "根信任与安全启动"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "devicetree-spec",
+          "locator": "板级描述"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "tenstorrent-firmware-job",
+          "locator": "高端固件岗位的能力要求（时效性样本）"
+        }
+      ]
+    },
+    {
+      "id": "route.highrel-aerospace",
+      "title": "高可靠与航天航电系统",
+      "summary": "从实时与总线出发，到受限编码规则与追溯，再到系统工程与在环验证。软硬各半：失效代价高，证据链与最坏情况才是主角。",
+      "lens": "direction",
+      "balance": "balanced",
+      "audience": "已走完通才阶梯、想做航天、航空、汽车等高可靠系统的人。",
+      "artifact": "一个可追溯的小型高可靠控制软件：需求到代码到测试的追溯矩阵，受限编码规则的静态检查零违规，并附台架故障注入记录。",
+      "stages": [
+        {
+          "title": "语言与数学",
+          "goal": "把推导与受限的语言用法打牢。",
+          "nodes": [
+            "polaris.frontier.math_for_computing",
+            "polaris.cs.c_lang",
+            "polaris.cs.engineering_practice",
+            "polaris.ei.electronics_basics"
+          ],
+          "checkpoint": "用受限子集写一个小控制算法，并推出它的稳定条件。"
+        },
+        {
+          "title": "接口与总线",
+          "goal": "让软件可靠地与硬件和其他系统对话。",
+          "nodes": [
+            "polaris.codesign.mmio",
+            "polaris.codesign.firmware_image",
+            "polaris.codesign.clock_reset",
+            "polaris.codesign.interrupts",
+            "polaris.ei.protocols_bus"
+          ],
+          "checkpoint": "一条总线通信在注入错误帧时仍能报错并恢复。"
+        },
+        {
+          "title": "实时与控制",
+          "goal": "把最坏情况写成可检验的数字。",
+          "nodes": [
+            "polaris.ei.freertos",
+            "polaris.codesign.realtime_timing",
+            "polaris.frontier.firmware_engineering",
+            "polaris.ei.signals_systems",
+            "polaris.ei.control"
+          ],
+          "checkpoint": "闭环的最坏延迟与抖动测得出，并小于控制周期的一小部分。"
+        },
+        {
+          "title": "证据链与在环验证",
+          "goal": "让可靠性成为可审核的证据。",
+          "nodes": [
+            "polaris.frontier.safety_critical",
+            "polaris.frontier.systems_engineering",
+            "polaris.codesign.debug_interfaces",
+            "polaris.codesign.hil_verification"
+          ],
+          "checkpoint": "追溯矩阵完整，静态检查零违规，台架上注入故障后降级符合预期。"
+        }
+      ],
+      "pitfalls": [
+        "只靠测试：没有需求追溯与编码规则，覆盖率再高也说不清缺了什么。",
+        "只看平均性能：长期运行才出现的最坏情况被忽略，正是高可靠系统最怕的。",
+        "忽视系统工程：各模块各自做完，联调时才发现接口里单位、时序与故障处理各说各话。"
+      ],
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "nasa-power-of-10",
+          "locator": "十条安全关键代码规则"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "nasa-se-handbook",
+          "locator": "需求、接口、验证与确认"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "faa-ac-20-115d",
+          "locator": "机载软件保证"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "px4-simulation",
+          "locator": "SITL 与 HITL 仿真层级"
+        }
+      ]
+    }
+  ],
+  "principles": [
+    {
+      "id": "principle.breadth-first",
+      "title": "广度是底座，纵深放在之后",
+      "body": "先把每个必修领域都走到「能用、能讲清」的程度，再选一个方向做深。资深的自学指南把体系结构列为第二门必修，并明确主张广度的回报最高、专精（如 AI、图形）在其后。",
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "teachyourselfcs",
+          "locator": "九个必修领域与广度的论述"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "acm-ieee-ce2016",
+          "locator": "十二个知识领域"
+        }
+      ]
+    },
+    {
+      "id": "principle.ten-years",
+      "title": "专业靠刻意练习，没有速成",
+      "body": "成为某个领域的专家，大约要十年量级的刻意练习：做略高于当前能力的事，分析表现，系统纠错。只读书不够，要做项目、读别人的代码、学不同范式的语言并懂硬件的性能特征。",
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "norvig-ten-years",
+          "locator": "十年与刻意练习"
+        }
+      ]
+    },
+    {
+      "id": "principle.ask-the-problem",
+      "title": "先问：我此刻要解决什么具体问题",
+      "body": "资料永远学不完。每个阶段只带着一个具体问题去学，用做出来的东西验收，而不是囤积资料。",
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "interrupt-embedded-roadmap",
+          "locator": "选资料时先问此刻要解决的具体问题"
+        }
+      ]
+    },
+    {
+      "id": "principle.debugging-first",
+      "title": "调试与观测是一等能力",
+      "body": "不会调试就做不出东西：要懂 JTAG、示波器与逻辑分析仪，要能画出计算机的框图并会汇编。观测手段决定你能看见多少，也决定你能不能把软硬件的问题分开。",
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "ganssle-embedded-geek",
+          "locator": "调试能力与对硬件的理解"
+        }
+      ]
+    },
+    {
+      "id": "principle.practice-at-the-boundary",
+      "title": "软硬要在交界处练",
+      "body": "多数人进入这个领域时只强一边。把硬件、软件各自的路线分开，再单独练二者的交集——启动、电源、复位、中断、驱动与观测——这正是高端固件与系统岗位在招聘里反复强调的部分。",
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "interrupt-embedded-roadmap",
+          "locator": "硬件、软件与交集的分区"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "tenstorrent-firmware-job",
+          "locator": "软硬件交界处的工作（时效性样本）"
+        }
+      ]
+    },
+    {
+      "id": "principle.small-to-large",
+      "title": "项目由小到大，逐级加码",
+      "body": "不要一上来就做最难的。让项目的规模与复杂度逐级增加，经验里提到的量级是做到五千到一万行代码，每一级都要能独立调通。",
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "ganssle-embedded-geek",
+          "locator": "项目由小到大"
+        }
+      ]
+    },
+    {
+      "id": "principle.system-thinking",
+      "title": "高端要的是跨界面的系统思维与建模",
+      "body": "高端岗位强调架构、实现、调试与系统层面的思考，以及对性能、功耗、面积的权衡和用模型与实测对账。软硬件协同的领域专用架构、开放指令集与安全，是当下体系结构的主要机会。",
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "hp-golden-age",
+          "locator": "领域专用的软硬件协同设计"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "arm-uarch-job",
+          "locator": "架构岗位的建模与 PPA 权衡（时效性样本）"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "tenstorrent-firmware-job",
+          "locator": "系统层面的思考（时效性样本）"
+        }
+      ]
+    },
+    {
+      "id": "principle.open-tools",
+      "title": "开放的工具让个人也能走完全流程",
+      "body": "从 RTL 到可流片的数字芯片、开放的可信根硬件、FPGA 上的处理器核，现在个人都能亲手做完一遍。用做出来的东西检验理解，比只读更牢。",
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "tiny-tapeout",
+          "locator": "个人可参与的共享流片"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "opentitan",
+          "locator": "开放的根信任硬件"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "learn-fpga",
+          "locator": "循序渐进的 FPGA 教程"
         }
       ]
     }

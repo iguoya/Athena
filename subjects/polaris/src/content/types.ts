@@ -1,7 +1,7 @@
 // `content/polaris.json` 的形状。内容契约由 scripts/contract.py 守（ADR 0015 决策 2），
 // 这里只描述形状，运行时不再校验，也不再声明契约里没有的字段。
 
-export type ViewKind = "academic" | "codesign" | "career" | "engineering" | "target";
+export type ViewKind = "academic" | "codesign" | "frontier" | "career" | "engineering" | "target";
 export type Stage = "junior" | "intermediate" | "senior";
 export type Priority = "essential" | "important" | "optional";
 export type Relation = "requires" | "enables";

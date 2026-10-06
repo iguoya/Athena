@@ -15,7 +15,7 @@ import type {
  * 其余的 career / engineering / target 是参考层，一个节点也不删，但不进界面、不被路线引用。
  * scripts/contract.py 里有同一份定义，改这里要同步改那里。
  */
-export const OPEN_VIEW_KINDS: readonly ViewKind[] = ["academic", "codesign"];
+export const OPEN_VIEW_KINDS: readonly ViewKind[] = ["academic", "codesign", "frontier"];
 
 export const STAGES: readonly Stage[] = ["junior", "intermediate", "senior"];
 

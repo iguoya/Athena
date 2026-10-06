@@ -35,8 +35,11 @@ META_RELATIONS = {"selection_basis", "exam_alignment", "see_also"}
 KNOWN_CONTRACT = {"timing", "memory", "bus", "power", "boot", "verify"}  # 软硬接口的六份跨层契约（ADR 0016 决策 4）
 KNOWN_LENS = {"direction", "stack", "artifact"}
 KNOWN_BALANCE = {"software", "balanced", "hardware"}
-# 开放地图：界面可打开、路线可引用的底盘（ADR 0012、ADR 0016 决策 3）。src/content/catalog.ts 里有同一份定义。
-OPEN_VIEW_KINDS = {"academic", "codesign"}
+# 开放地图：界面可打开、路线可引用的底盘（ADR 0012、ADR 0016 决策 3、ADR 0018 决策 4）。src/content/catalog.ts 里有同一份定义。
+OPEN_VIEW_KINDS = {"academic", "codesign", "frontier"}
+# 十二个能力域（ADR 0018 决策 1）：开放地图的每个节点必须归入一个，路线的均衡度据此统计。
+KNOWN_DOMAIN = {"foundations", "programming", "algorithms", "architecture", "systems", "digital",
+                "circuits", "signals", "embedded", "assurance", "security", "acceleration"}
 
 NODE_FIELDS = ["id", "title", "track", "stable_definition", "engineering_role",
                "practice", "validation", "volatility"]
@@ -119,6 +122,7 @@ def validate(document: dict[str, Any], root: Path = PROJECT_ROOT) -> list[Violat
 
     _validate_cross_edges(report, document, source_ids, global_node_ids, map_of_node)
     _validate_routes(report, document, source_ids, view_kind_by_map, map_of_node)
+    _validate_principles(report, document, source_ids)
     return report.violations
 
 
@@ -160,6 +164,8 @@ def _validate_map(report: _Report, entry: dict, root: Path, source_ids: set[str]
 
     academic = entry.get("view_kind") == "academic"
     codesign = entry.get("view_kind") == "codesign"
+    frontier = entry.get("view_kind") == "frontier"
+    open_map = entry.get("view_kind") in OPEN_VIEW_KINDS
     course = entry.get("graph_kind") == "course"
     node_ids: set[str] = set()
     requirements: dict[str, set[str]] = {}
@@ -169,7 +175,7 @@ def _validate_map(report: _Report, entry: dict, root: Path, source_ids: set[str]
         node = node if isinstance(node, dict) else {}
         node_id = node.get("id")
         nwhere = f"节点 {node_id}"
-        fields = NODE_FIELDS + (ACADEMIC_NODE_FIELDS if academic or codesign else [])
+        fields = NODE_FIELDS + (ACADEMIC_NODE_FIELDS if open_map else [])
         report.require_text("node.fields", nwhere, node, fields)
         if node_id in node_ids or node_id in global_node_ids:
             report.add("node.duplicate_id", nwhere, f"节点 ID 必须全局唯一：{node_id}")
@@ -183,8 +189,10 @@ def _validate_map(report: _Report, entry: dict, root: Path, source_ids: set[str]
         if node.get("volatility") not in KNOWN_VOLATILITY:
             report.add("node.volatility", nwhere, "volatility 只能是 stable、evolving 或 volatile。")
 
-        if academic or codesign:
-            _validate_graded_node(report, node, nwhere, node_stage, require_stage=codesign)
+        if open_map:
+            _validate_graded_node(report, node, nwhere, node_stage, require_stage=codesign or frontier)
+            if node.get("domain") not in KNOWN_DOMAIN:
+                report.add("node.domain", nwhere, f"domain 只能是十二个能力域之一，现在是 {node.get('domain')!r}。")
         if academic:
             _validate_academic_node(report, node, nwhere, root, view_kind_by_map)
         if codesign:
@@ -217,7 +225,7 @@ def _validate_graded_node(report: _Report, node: dict, nwhere: str, node_stage: 
     if stage in (None, ""):
         # 软硬接口图按阶段分列，没有阶段的节点没处放（ADR 0016 决策 4）；学术图历史上允许缺省。
         if require_stage:
-            report.add("node.stage_required", nwhere, "软硬接口图的节点必须写 stage。")
+            report.add("node.stage_required", nwhere, "软硬接口图与高端纵深图的节点必须写 stage。")
     elif stage not in STAGE_RANK:
         report.add("node.stage", nwhere, "stage 只能是 junior、intermediate 或 senior。")
     else:
@@ -394,6 +402,12 @@ def _validate_routes(report: _Report, document: dict, source_ids: set[str], view
         if route.get("balance") not in KNOWN_BALANCE:
             report.add("route.balance", where, "balance 只能是 software、balanced 或 hardware。")
         report.require_source_refs("route.source_refs", where, route.get("source_refs"), source_ids)
+        # 可选字段：写了就不能是空壳（ADR 0018 决策 3、5）。
+        if "pitfalls" in route and not (isinstance(route["pitfalls"], list) and route["pitfalls"]
+                                        and all(_text(item) for item in route["pitfalls"])):
+            report.add("route.pitfalls", where, "pitfalls 写了就必须是非空的文字列表。")
+        if "profile" in route and not _text(route["profile"]):
+            report.add("route.profile", where, "profile 写了就不能是空的。")
 
         stages = route.get("stages") if isinstance(route.get("stages"), list) else []
         if len(stages) < 2:
@@ -422,6 +436,20 @@ def _validate_routes(report: _Report, document: dict, source_ids: set[str], view
                 if required in stage_of and stage_of[required] > index:
                     report.add("route.order", where,
                                f"{node_id} 强先修 {required}，但 {required} 排在更晚的阶段。")
+
+
+def _validate_principles(report: _Report, document: dict, source_ids: set[str]) -> None:
+    """学习原则是数据，必须带出处：原则里的话要能在引用的来源里找到依据（ADR 0018 决策 6）。"""
+    seen: set[str] = set()
+    for principle in document.get("principles") or []:
+        principle = principle if isinstance(principle, dict) else {}
+        pid = principle.get("id")
+        where = f"原则 {pid}"
+        report.require_text("principle.fields", where, principle, ["id", "title", "body"])
+        if pid in seen:
+            report.add("principle.duplicate_id", where, "原则 ID 重复。")
+        seen.add(pid)
+        report.require_source_refs("principle.source_refs", where, principle.get("source_refs"), source_ids)
 
 
 def main(argv: list[str] | None = None) -> int:

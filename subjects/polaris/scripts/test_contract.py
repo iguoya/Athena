@@ -64,13 +64,14 @@ class RealContent(unittest.TestCase):
         self.assertEqual(sum(len(maps[i]["edges"]) for i in self.ORIGINAL_MAP_IDS), 138)
 
     def test_map_inventory(self) -> None:
-        self.assertEqual(len(DOC["maps"]), 18)
+        self.assertEqual(len(DOC["maps"]), 19)
         by_kind: dict[str, int] = {}
         for m in DOC["maps"]:
             by_kind[m["view_kind"]] = by_kind.get(m["view_kind"], 0) + 1
         # 课程知识图谱恢复为两章，实践主干两张仍在（ADR 0010）；开放 4 张学术图（ADR 0012）加 1 张软硬接口图（ADR 0016）。
         self.assertEqual(by_kind["academic"], 4)
         self.assertEqual(by_kind["codesign"], 1)
+        self.assertEqual(by_kind["frontier"], 1)
         self.assertEqual(by_kind["target"], 8)
         self.assertEqual(by_kind.get("career", 0) + by_kind.get("engineering", 0), 5)
         self.assertEqual(DOC["maps"][0]["id"], "computer-science")
@@ -169,6 +170,8 @@ class Counterexamples(unittest.TestCase):
         self.expect("node.validation", lambda d: first_academic_node(d).update(validation="bogus"))
         self.expect("node.volatility", lambda d: first_academic_node(d).update(volatility="bogus"))
         self.expect("node.priority", lambda d: first_academic_node(d).update(priority="bogus"))
+        self.expect("node.domain", lambda d: first_academic_node(d).update(domain="bogus"))
+        self.expect("node.domain", lambda d: first_academic_node(d).pop("domain"))
         self.expect("node.stage", lambda d: first_academic_node(d).update(stage="bogus"))
         self.expect("node.stage_reason", lambda d: first_academic_node(d).update(stage_reason=""))
         self.expect("node.targets_missing", lambda d: first_academic_node(d).update(targets=[]))
@@ -261,7 +264,7 @@ def _node(node_id: str, stage: str, requires: list[str] | None = None) -> dict:
         "id": node_id, "title": node_id, "track": "hardware", "stable_definition": "x", "engineering_role": "x",
         "practice": "x", "validation": "measurement", "volatility": "stable", "pitfall": "x",
         "priority": "essential", "priority_reason": "x", "stage": stage, "stage_reason": "x",
-        "contract": "timing", "hw_side": "硬件一侧提供什么", "sw_side": "软件一侧依赖什么",
+        "contract": "timing", "hw_side": "硬件一侧提供什么", "sw_side": "软件一侧依赖什么", "domain": "embedded",
         "requires": requires or [], "source_refs": [{"relation": "adapted", "source_id": "csapp", "locator": "x"}],
     }
 
@@ -346,6 +349,62 @@ class CodesignAndRoutes(unittest.TestCase):
         match = re.search(r"OPEN_VIEW_KINDS: readonly ViewKind\[\] = \[(.*?)\]", text)
         self.assertIsNotNone(match)
         self.assertEqual(set(re.findall(r'"(\w+)"', match.group(1))), contract.OPEN_VIEW_KINDS)
+
+
+class DepthAndBalance(unittest.TestCase):
+    """ADR 0018：十二个能力域、通才阶梯、纵深图、学习原则。"""
+
+    def test_every_open_node_has_a_domain_and_every_domain_is_used(self) -> None:
+        used = {n["domain"] for m in DOC["maps"] if m["view_kind"] in contract.OPEN_VIEW_KINDS for n in m["nodes"]}
+        self.assertEqual(used, contract.KNOWN_DOMAIN)
+
+    def test_the_ladder_leaves_no_domain_out(self) -> None:
+        # 通才阶梯是「不偏科」的承诺：十二个能力域一个都不缺，有测试守着。
+        ladder = next(r for r in DOC["routes"] if r["id"] == "route.generalist-ladder")
+        node_domain = {n["id"]: n["domain"] for m in DOC["maps"] for n in m["nodes"] if "domain" in n}
+        covered = {node_domain[i] for st in ladder["stages"] for i in st["nodes"]}
+        self.assertEqual(sorted(contract.KNOWN_DOMAIN - covered), [])
+        self.assertEqual(len(ladder["stages"]), 5)
+
+    def test_every_frontier_node_is_on_some_route(self) -> None:
+        used = {n for r in DOC["routes"] for s in r["stages"] for n in s["nodes"]}
+        orphans = [n["id"] for n in find_map(DOC, "frontier-depth")["nodes"] if n["id"] not in used]
+        self.assertEqual(orphans, [])
+
+    def test_every_route_has_pitfalls_and_depth_routes_are_after_the_ladder(self) -> None:
+        for r in DOC["routes"]:
+            self.assertTrue(r.get("pitfalls"), r["id"])
+        self.assertEqual(DOC["routes"][0]["id"], "route.generalist-ladder")
+
+    def test_profiles_are_sourced_samples_not_promises(self) -> None:
+        profiled = [r for r in DOC["routes"] if "profile" in r]
+        self.assertGreaterEqual(len(profiled), 2)
+        for r in profiled:
+            self.assertIn("时效性样本", r["profile"])
+            self.assertIn("不构成录用承诺", r["profile"])
+            self.assertTrue(any(ref["source_id"].endswith("-job") for ref in r["source_refs"]), r["id"])
+
+    def test_principles_are_sourced(self) -> None:
+        principles = DOC["principles"]
+        self.assertGreaterEqual(len(principles), 7)
+        for p in principles:
+            self.assertTrue(p["source_refs"], p["id"])
+            self.assertTrue(any(r["relation"] == "adapted" for r in p["source_refs"]), p["id"])
+
+    def test_counterexamples_for_the_new_rules(self) -> None:
+        def expect(code, mutate):
+            with self.subTest(code=code):
+                self.assertIn(code, codes_after(mutate))
+
+        expect("principle.fields", lambda d: d["principles"][0].update(body=""))
+        expect("principle.duplicate_id", lambda d: d["principles"].append(copy.deepcopy(d["principles"][0])))
+        expect("principle.source_refs", lambda d: d["principles"][0].update(source_refs=[]))
+        expect("route.pitfalls", lambda d: d["routes"][0].update(pitfalls=[]))
+        expect("route.pitfalls", lambda d: d["routes"][0].update(pitfalls=["", "x"]))
+        expect("route.profile", lambda d: next(r for r in d["routes"] if "profile" in r).update(profile=""))
+        # frontier 节点同样必须有 stage 与 domain
+        expect("node.stage_required", lambda d: find_map(d, "frontier-depth")["nodes"][0].pop("stage"))
+        expect("node.domain", lambda d: find_map(d, "frontier-depth")["nodes"][0].pop("domain"))
 
 
 if __name__ == "__main__":
