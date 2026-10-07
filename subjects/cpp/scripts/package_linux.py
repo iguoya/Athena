@@ -59,16 +59,17 @@ def verify_build_prefix(build_dir: Path) -> None:
         )
 
 
-def find_license(project_root: Path) -> Path:
-    """许可证属于整个仓库，不在应用目录里（ADR 0045 之后 subjects/cpp 只放自己的东西）。
+def find_repository_file(project_root: Path, name: str) -> Path:
+    """许可证与更新日志属于整个仓库，不在应用目录里（ADR 0045 之后 subjects/cpp
+    只放自己的东西；Athena 统一发版后版本史只有根 CHANGELOG 一份）。
 
-    从应用目录往上找，找不到就报错——DEB 的 copyright 文件不能缺。
+    从应用目录往上找，找不到就报错——DEB 的 copyright 与 changelog 文件不能缺。
     """
     for candidate in (project_root, *project_root.parents):
-        license_file = candidate / "LICENSE"
-        if license_file.is_file():
-            return license_file
-    raise RuntimeError(f"从 {project_root} 往上找不到 LICENSE")
+        found = candidate / name
+        if found.is_file():
+            return found
+    raise RuntimeError(f"从 {project_root} 往上找不到 {name}")
 
 
 def install_tree(build_dir: Path, destination: Path) -> None:
@@ -113,8 +114,8 @@ def build_deb(project_root: Path, installed_root: Path, output_dir: Path, versio
 
     documentation_directory = package_root / "usr/share/doc" / PACKAGE_NAME
     documentation_directory.mkdir(parents=True)
-    shutil.copy2(find_license(project_root), documentation_directory / "copyright")
-    shutil.copy2(project_root / "CHANGELOG.md", documentation_directory / "changelog")
+    shutil.copy2(find_repository_file(project_root, "LICENSE"), documentation_directory / "copyright")
+    shutil.copy2(find_repository_file(project_root, "CHANGELOG.md"), documentation_directory / "changelog")
 
     output_path = output_dir / f"{PACKAGE_NAME}_{version}_{DEB_ARCHITECTURE}.deb"
     run(["dpkg-deb", "--build", "--root-owner-group", str(package_root), str(output_path)])

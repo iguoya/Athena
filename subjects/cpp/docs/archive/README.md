@@ -34,7 +34,7 @@ GitHub Release 正文统一改为 `CHANGELOG.md` 对应版本节之前的原文�
 
 | 归档文件 | 当时作用 | 现在看哪里 |
 |---|---|---|
-| [release-notes/](2026-09-26/release-notes/) | v0.1.0–v7.0.0 八个 Release 的替换前正文 | [CHANGELOG](../../CHANGELOG.md) 与各版本 Release 页 |
+| [release-notes/](2026-09-26/release-notes/) | v0.1.0–v7.0.0 八个 Release 的替换前正文 | 仓库根 [CHANGELOG](../../../../CHANGELOG.md) 与各版本 Release 页 |
 
 ## 2026-10-07
 

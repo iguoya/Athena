@@ -167,7 +167,7 @@ Windows Runner 在 MSYS2 UCRT64 里构建、测试并生成 MSI 与 zip。
 
 1. `meson.build` 和目标标签使用同一个 `MAJOR.MINOR.PATCH` 版本；`Info.plist`
    版本由模板按 `meson.build` 生成，打包器与 Release 工作流都会拒绝不一致的版本。
-2. 在 `CHANGELOG.md` 中记录该版本的显著变化。
+2. 在仓库根 `CHANGELOG.md` 中记录该版本的显著变化（这一节就是 Release 正文）。
 3. `main` 已通过 CI，工作区没有未提交内容。
 4. 标签必须指向准备发布的提交。
 
