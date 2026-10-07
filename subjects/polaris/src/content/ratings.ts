@@ -1,4 +1,5 @@
 import polaris from "@content/polaris.json";
+import type { Catalog } from "./catalog";
 import type { PolarisDocument, RatingDim, RatingDimDef, RatingScheme, Ratings, Route, Verdict } from "./types";
 
 // 评级口径（ADR 0022）唯一来源是内容里的 rating_scheme；这里只读它、不在代码里硬编码维度名与级别名。
@@ -55,4 +56,27 @@ export function routesByVerdict(routes: readonly Route[]): Record<Verdict, Route
   const result: Record<Verdict, Route[]> = { priority: [], recommended: [], optional: [], advanced: [] };
   for (const route of routes) if (route.assessment) result[route.assessment.verdict].push(route);
   return result;
+}
+
+/** 路线在某个维度上的节点均值（去重后的算术平均）；路线的评级等级就是它四舍五入的结果，这里留着小数用来排序。 */
+export function routeDimMean(catalog: Catalog, route: Route, dim: RatingDim): number {
+  const ids = new Set(route.stages.flatMap((stage) => stage.nodes));
+  const levels: number[] = [];
+  for (const id of ids) {
+    const level = catalog.nodeById.get(id)?.ratings?.[dim]?.level;
+    if (level !== undefined) levels.push(level);
+  }
+  return levels.length === 0 ? 0 : levels.reduce((sum, level) => sum + level, 0) / levels.length;
+}
+
+/** 技术前景最好的方向：路线的技术前景汇总评级 ≥4，按均值从高到低，同值按推荐等级（ADR 0023 决策 6）。只是已有评级的另一种排列。 */
+export function routesByOutlook(catalog: Catalog, routes: readonly Route[]): { route: Route; mean: number }[] {
+  return routes
+    .filter((route) => (route.ratings?.outlook?.level ?? 0) >= 4)
+    .map((route) => ({ route, mean: routeDimMean(catalog, route, "outlook") }))
+    .sort(
+      (a, b) =>
+        b.mean - a.mean ||
+        VERDICTS.indexOf(a.route.assessment?.verdict ?? "advanced") - VERDICTS.indexOf(b.route.assessment?.verdict ?? "advanced"),
+    );
 }

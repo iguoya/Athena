@@ -88,11 +88,17 @@ describe("界面冒烟", () => {
     expect(html).toContain("弱电");
   });
 
-  it("总览有推荐发展方向（按推荐等级分组），路线卡片带推荐等级与六维迷你条", () => {
+  it("总览有推荐发展方向（按推荐等级分组），路线卡片带推荐等级与各维迷你条", () => {
     const html = render({ view: "home" });
     expect(html).toContain("推荐发展方向");
     for (const label of ["优先推荐", "推荐", "可选", "进阶"]) expect(html).toContain(label);
-    expect(html).toContain('aria-label="六个维度的评级"');
+    expect(html).toContain('aria-label="各维度的评级"');
+  });
+
+  it("总览单列「技术前景最好的方向」，每条路线带前景均值", () => {
+    const html = render({ view: "home" });
+    expect(html).toContain("技术前景最好的方向");
+    expect(html).toContain("市场需求");
   });
 
   it("路线页有评估面板：六维评级、优劣与推荐的后续方向，可以点过去", () => {

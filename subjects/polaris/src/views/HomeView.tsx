@@ -7,7 +7,7 @@ import { BALANCES, DISCIPLINES, LENSES, disciplineLadderId, mapsByDiscipline, ro
 import type { Discipline, Route } from "@/content/types";
 import { openExternal } from "@/ui/external";
 import { useApp } from "@/state/store";
-import { VERDICTS, VERDICT_HINT, VERDICT_LABEL, routesByVerdict, verdictVar } from "@/content/ratings";
+import { VERDICTS, VERDICT_HINT, VERDICT_LABEL, routesByOutlook, routesByVerdict, verdictVar } from "@/content/ratings";
 import { MiniStrip } from "@/ui/RatingParts";
 import { BALANCE_LABEL, DISCIPLINE_HINT, DISCIPLINE_LABEL, LENS_HINT, LENS_LABEL, balanceVar } from "@/ui/labels";
 
@@ -44,7 +44,7 @@ function RouteCard({ catalog, route, index }: { catalog: Catalog; route: Route; 
       {route.ratings && (
         <span className="mt-3 flex items-center gap-2 text-[11px] text-faint">
           <MiniStrip ratings={route.ratings} />
-          <span>评级：实用 · 实践 · 理论 · 验证 · 骨干 · 需求</span>
+          <span>评级：实用 · 实践 · 理论 · 验证 · 骨干 · 需求 · 前景</span>
         </span>
       )}
       <span className="mt-2 flex items-center gap-2 text-[11.5px] text-faint">
@@ -162,7 +162,7 @@ export function HomeView({ catalog }: { catalog: Catalog }) {
         <section className="mt-6" aria-label="推荐发展方向">
           <h2 className="text-[15px] font-semibold">推荐发展方向</h2>
           <p className="mt-1 text-[12.5px] text-muted">
-            推荐等级是编辑评估，参照路线的六维评级、起步门槛与时效性，不是评级算出的分数；弱电方向的推荐不低于强电方向。点开路线看优劣与后续方向。
+            推荐等级是编辑评估，参照路线的各维评级（含市场需求与技术前景）、起步门槛与时效性，不是评级算出的分数；弱电方向的推荐不低于强电方向。点开路线看优劣与后续方向。
           </p>
           <div className="mt-3 grid gap-3">
             {VERDICTS.map((verdict) => {
@@ -198,6 +198,46 @@ export function HomeView({ catalog }: { catalog: Catalog }) {
             })}
           </div>
         </section>
+
+        {/* 技术前景最好的方向：按路线的技术前景汇总评级排序，是已有评级的另一种排列（ADR 0023 决策 6） */}
+        {(() => {
+          const list = routesByOutlook(catalog, catalog.routes.filter((r) => discipline === "all" || r.discipline === discipline));
+          if (list.length === 0) return null;
+          return (
+            <section className="mt-6" aria-label="技术前景最好的方向">
+              <h2 className="text-[15px] font-semibold">技术前景最好的方向</h2>
+              <p className="mt-1 text-[12.5px] text-muted">
+                按各路线所含知识的「技术发展前景」评级（评估日期当时的判断）从高到低排列。前景好不等于好学，也不是对个人的建议；
+                前置多的方向仍标「进阶」，先看它的推荐等级与评估。
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {list.map(({ route, mean }) => (
+                  <button
+                    key={route.id}
+                    type="button"
+                    onClick={() => go({ view: "route", routeId: route.id })}
+                    title={route.ratings?.outlook.reason}
+                    className="flex items-center gap-2 rounded-xl border border-line bg-surface px-3 py-1.5 text-left text-[12.5px] transition-[border-color,box-shadow] hover:border-accent hover:shadow-[var(--shadow-card)]"
+                  >
+                    <span className="grid h-[18px] min-w-[30px] place-items-center rounded-md px-1 text-[10.5px] font-semibold text-white" style={{ background: "var(--rate-" + (mean >= 4.25 ? 5 : 4) + ")" }}>
+                      {mean.toFixed(2)}
+                    </span>
+                    <span className="font-medium">{route.title}</span>
+                    <span className="text-faint">{DISCIPLINE_LABEL[route.discipline]}</span>
+                    {route.assessment && (
+                      <span
+                        className="rounded-full px-1.5 py-[1px] text-[10.5px] font-medium text-ink"
+                        style={{ background: `color-mix(in srgb, ${verdictVar(route.assessment.verdict)} 24%, transparent)` }}
+                      >
+                        {VERDICT_LABEL[route.assessment.verdict]}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </section>
+          );
+        })()}
 
         {/* 软硬权重轴：路线按「偏软件 ↔ 偏硬件」放在三列里，行是划分角度 */}
         <div className="mt-4 grid grid-cols-[168px_repeat(3,minmax(0,1fr))] gap-x-5 gap-y-5">

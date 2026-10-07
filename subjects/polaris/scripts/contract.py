@@ -45,8 +45,8 @@ KNOWN_DISCIPLINE = {"cs", "ei", "ee", "auto", "cross"}
 # 弱电、强电、兼有（ADR 0021 决策 2）：电气类（ee）图的每个节点必须写。
 KNOWN_CURRENT = {"weak", "strong", "both"}
 
-# 评级（ADR 0022）：六个维度、五个等级。前三项由内容推导、契约重算；后三项是带依据的编辑评估。
-RATING_DIMENSIONS = ["utility", "hands_on", "theory", "verifiable", "core", "demand"]
+# 评级（ADR 0022、0023）：七个维度、五个等级。实践性、可验证性、学科核心骨干由内容推导、契约重算；其余四项是带依据的编辑评估。
+RATING_DIMENSIONS = ["utility", "hands_on", "theory", "verifiable", "core", "demand", "outlook"]
 RATING_DERIVED_NODE = {"hands_on", "verifiable", "core"}
 RATING_LEVELS = 5
 # 路线的推荐等级（ADR 0022 决策 7）：优先推荐、推荐、可选、进阶（有明确前置，不宜作起点）。
@@ -576,7 +576,7 @@ def _validate_ratings(report: _Report, document: dict[str, Any], view_kind_by_ma
             where = f"节点 {node.get('id')} 的 ratings"
             ratings = node.get("ratings") if isinstance(node.get("ratings"), dict) else None
             if ratings is None or set(ratings) != set(RATING_DIMENSIONS):
-                report.add("rating.fields", where, f"开放地图的节点必须写齐六个维度：{RATING_DIMENSIONS}。")
+                report.add("rating.fields", where, f"开放地图的节点必须写齐全部评级维度：{RATING_DIMENSIONS}。")
                 continue
             derived = derive_node_ratings(node, dependents.get(node.get("id"), 0))
             levels: dict[str, int] = {}
@@ -600,7 +600,7 @@ def _validate_ratings(report: _Report, document: dict[str, Any], view_kind_by_ma
                     members.append(nid)
         ratings = route.get("ratings") if isinstance(route.get("ratings"), dict) else None
         if ratings is None or set(ratings) != set(RATING_DIMENSIONS):
-            report.add("rating.fields", where, f"路线必须写齐六个维度的 ratings：{RATING_DIMENSIONS}。")
+            report.add("rating.fields", where, f"路线必须写齐全部评级维度的 ratings：{RATING_DIMENSIONS}。")
         else:
             for dim in RATING_DIMENSIONS:
                 item = ratings[dim] if isinstance(ratings[dim], dict) else {}

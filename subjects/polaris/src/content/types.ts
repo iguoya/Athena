@@ -77,7 +77,7 @@ export interface PolarisNode {
   domain?: Domain;
   /** 电气类图的节点必有：弱电、强电或兼有。 */
   current?: Current;
-  /** 开放地图的节点必有：六个维度的评级（ADR 0022）。 */
+  /** 开放地图的节点必有：各维度的评级（ADR 0022、0023）。 */
   ratings?: Ratings;
   // 软硬接口节点（view_kind 为 codesign）
   contract?: Contract;
@@ -85,8 +85,8 @@ export interface PolarisNode {
   sw_side?: string;
 }
 
-/** 评级（ADR 0022）：六个维度、五个等级。 */
-export type RatingDim = "utility" | "hands_on" | "theory" | "verifiable" | "core" | "demand";
+/** 评级（ADR 0022、0023）：七个维度、五个等级。 */
+export type RatingDim = "utility" | "hands_on" | "theory" | "verifiable" | "core" | "demand" | "outlook";
 
 export interface Rating {
   level: number;
@@ -180,7 +180,7 @@ export interface Route {
   /** 高端岗位能力画像：来自公开招聘的时效性样本，不构成录用承诺。 */
   profile?: string;
   source_refs: SourceRef[];
-  /** 由所含节点汇总的六个维度评级（ADR 0022）。 */
+  /** 由所含节点汇总的各维度评级（ADR 0022）。 */
   ratings?: Ratings;
   /** 优劣与推荐方向（编辑评估，ADR 0022）。 */
   assessment?: RouteAssessment;

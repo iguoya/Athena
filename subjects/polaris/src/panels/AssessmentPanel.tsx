@@ -12,7 +12,7 @@ interface Props {
   onClose(): void;
 }
 
-/** 路线评估：六个维度的汇总评级、优劣与推荐的后续方向（ADR 0022）。评级由节点汇总，优劣与推荐是编辑评估。 */
+/** 路线评估：各维度的汇总评级、优劣与推荐的后续方向（ADR 0022）。评级由节点汇总，优劣与推荐是编辑评估。 */
 export function AssessmentPanel({ catalog, route, onClose }: Props) {
   const go = useApp((s) => s.go);
   const assessment = route.assessment;
@@ -39,7 +39,7 @@ export function AssessmentPanel({ catalog, route, onClose }: Props) {
         <p className="text-[13px] leading-relaxed">{assessment.verdict_reason}</p>
         <p className="mt-1 text-[11px] text-faint">编辑评估：参照下面的评级、起步门槛与方向的时效性，不是由评级算出的分数。</p>
 
-        <h3 className="mb-2 mt-4 text-[11.5px] font-semibold tracking-[0.08em] text-faint">六个维度（由所含知识点汇总）</h3>
+        <h3 className="mb-2 mt-4 text-[11.5px] font-semibold tracking-[0.08em] text-faint">各维度（由所含知识点汇总）</h3>
         <RatingRows ratings={route.ratings} showReason={false} />
         {(strong.length > 0 || weak.length > 0) && (
           <p className="mt-2 text-[12px] leading-relaxed text-muted">

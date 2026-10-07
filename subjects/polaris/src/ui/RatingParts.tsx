@@ -33,10 +33,10 @@ export function LevelBadge({ dim, level }: { dim: RatingDim; level: number }) {
   );
 }
 
-/** 六个维度的迷你条：卡片上用，悬停看每一项。 */
+/** 各维度的迷你条：卡片上用，悬停看每一项。 */
 export function MiniStrip({ ratings }: { ratings: Ratings }) {
   return (
-    <span className="inline-flex gap-[2px]" role="img" aria-label="六个维度的评级">
+    <span className="inline-flex gap-[2px]" role="img" aria-label="各维度的评级">
       {RATING_DIMS.map((dim) => {
         const item = ratings[dim];
         return (
