@@ -855,7 +855,7 @@ export default function App() {
               <div>
                 <p className="text-[22px] font-medium text-fg">翻译单元划分</p>
                 <p className="text-[20px] text-muted">
-                  连续短段合并为一个翻译单元的词数上限，一次「看懂了」覆盖的范围
+                  正文单元优先按官网 PO 条目划分（对齐映射）；此项只对未对齐的段落生效
                 </p>
               </div>
               <div className="flex gap-1.5">

@@ -431,6 +431,35 @@ def check_alignment() -> None:
                 )
 
 
+def check_po_units() -> None:
+    """PO 翻译单元映射（应用 ADR 0005）引用的段落 sha 必须存在于对应快照。"""
+    units_dir = CONTENT_DIR / "po-units"
+    if not units_dir.is_dir():
+        return
+    total = 0
+    for path in sorted(units_dir.glob("*.json")):
+        pages = load_json(path)
+        if not pages:
+            continue
+        chapter = path.stem
+        for page, units in pages.items():
+            snapshot = load_json(CONTENT_DIR / "chapters" / chapter / f"{page}.json")
+            shas = {
+                b.get("sha")
+                for b in (snapshot or {}).get("blocks", [])
+                if b["type"] in ("para", "listitem")
+            }
+            for unit in units:
+                total += 1
+                for sha in unit.get("shas", []):
+                    if sha not in shas:
+                        fail(
+                            f"po-units/{chapter}: 单元引用的段落 sha 不在快照里"
+                            f"（sync_upstream 后需重跑 scripts/align_po.py）：{sha[:12]}"
+                        )
+    print(f"PO 单元映射校验通过：{total} 个单元（{units_dir.name}/）")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="验证 gtkmm 学习应用")
     parser.add_argument("--skip-rust", action="store_true", help="跳过 cargo check")
@@ -444,6 +473,7 @@ def main() -> int:
     manifest = load_json(CONTENT_DIR / "demos.json")
     check_manifest(manifest or {}, kp_ids, course_refs, lab_refs)
     check_alignment()
+    check_po_units()
     check_license_pages()
 
     contract = PROJECT_ROOT / "content-contract.json"

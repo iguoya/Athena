@@ -36,7 +36,7 @@ from datetime import datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from apply_po import parse_po, po_to_plain, snapshot_plain  # noqa: E402
+from apply_po import po_to_plain, snapshot_plain  # noqa: E402
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 REF_PO = PROJECT_ROOT / "po" / "reference.zh_CN.po"
@@ -182,13 +182,18 @@ def main() -> int:
         snap_plain_txt = snapshot_plain(snap)
         source = snap_source.get(key, "snapshot")
 
-        # 条目头注释（上方连续 # 行）里是否标了 fuzzy
+        # 条目头注释（上方连续 # 行）里是否标了 fuzzy；摘除时保留同行其他标志
+        # （上游可能写 `#, fuzzy, no-wrap`，整行删会误伤）
         s = i - 1
         fuzzy_at = None
         while s >= 0 and lines[s].startswith("#"):
             if lines[s].startswith("#,") and "fuzzy" in lines[s]:
                 fuzzy_at = s
             s -= 1
+
+        def strip_fuzzy_flag(line: str) -> str:
+            flags = [f.strip() for f in line[2:].split(",") if f.strip() and f.strip() != "fuzzy"]
+            return "#, " + ", ".join(flags) if flags else ""
 
         def replace_msgstr(new_zh: str) -> None:
             lines[mstr_at] = "msgstr " + po_quote(new_zh)
@@ -197,7 +202,10 @@ def main() -> int:
 
         entry_report = {"msgid": raw_mid[:80], "action": None, "source": source}
         if fuzzy_at is not None:
-            drop.add(fuzzy_at)
+            if stripped := strip_fuzzy_flag(lines[fuzzy_at]):
+                lines[fuzzy_at] = stripped  # 保留其余标志
+            else:
+                drop.add(fuzzy_at)
             if snapshot_plain(snap) == po_to_plain(raw_mstr).strip():
                 # fuzzy 复核成果：快照译文与 fuzzy 译文一致 → 摘 fuzzy 保留译文
                 entry_report["action"] = "fuzzy-reviewed"
@@ -229,8 +237,8 @@ def main() -> int:
 
     out_text = "\n".join(line for idx, line in enumerate(lines) if idx not in drop) + "\n"
 
-    # ---- 头部元数据更新：修订时间与贡献者署名 ----
-    now = datetime.now().strftime("%Y-%m-%d %H:%M+0000")
+    # ---- 头部元数据更新：修订时间、贡献者署名与复数规则 ----
+    now = datetime.now().astimezone().strftime("%Y-%m-%d %H:%M%z")
     out_text = re.sub(
         r'"PO-Revision-Date: [^"]*"',
         f'"PO-Revision-Date: {now}"',
@@ -239,6 +247,12 @@ def main() -> int:
         r'"Last-Translator: [^"]*"',
         '"Last-Translator: tiger <375478250@qq.com>"',
         out_text, count=1)
+    if '"Plural-Forms:' not in out_text:
+        # zh_CN 无复数变化；Damned Lies 的合规检查期望这个头部
+        out_text = out_text.replace(
+            '"Content-Transfer-Encoding: 8bit\\n"',
+            '"Content-Transfer-Encoding: 8bit\\n"\n"Plural-Forms: nplurals=1; plural=0;\\n"',
+            1)
 
     OUT_PO.write_text(out_text, encoding="utf-8")
     OUT_REPORT.write_text(

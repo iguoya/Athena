@@ -7,13 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkmm-documentation master\n"
 "POT-Creation-Date: 2026-09-10 17:05+0000\n"
-"PO-Revision-Date: 2026-10-07 21:18+0000"
+"PO-Revision-Date: 2026-10-07 21:46+0800"
 "Last-Translator: tiger <375478250@qq.com>"
 "Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
 msgctxt "_"
@@ -803,13 +804,7 @@ msgid ""
 "(somewhat outdated) or the <link linkend=\"sec-windows-"
 "installation\"><application>gtkmm</application> and Win32</link> appendix "
 "for Windows-specific installation instructions and notes."
-msgstr ""虽然上面给出了简单示例的编译命令，但实际开发应该使用 Meson 构建系统。本书的示例都收录在 gtkmm-documentation 包里，并带有相应的构建文件，所以之后不再罗列构建命令。gtkmm-documentation 的 README 文件描述了如何构建这些示例。""
-"GTK和<application>gtkmm</application>被设计成在Microsoft Windows上也能很好地"
-"工作，而且开发者们鼓励在win32平台上使用它们。但是目前还有没为Windows平台的开"
-"发库提供标准的安装方法。请参阅 <ulink url=\"https://wiki.gnome.org/Projects/"
-"gtkmm/MSWindows\">Windows Intallation</ulink>或者<link linkend=\"sec-windows-"
-"installation\"><application>gtkmm</application>和Win32</link>以得到关于"
-"Windows相关的安装方法和注意事项。"
+msgstr "GTK和<application>gtkmm</application>被设计成在Microsoft Windows上也能很好地工作，而且开发者们鼓励在win32平台上使用它们。但是目前还有没为Windows平台的开发库提供标准的安装方法。请参阅 <ulink url=\"https://wiki.gnome.org/Projects/gtkmm/MSWindows\">Windows Intallation</ulink>或者<link linkend=\"sec-windows-installation\"><application>gtkmm</application>和Win32</link>以得到关于Windows相关的安装方法和注意事项。"
 
 #. (itstool) path: chapter/title
 #: C/index-in.docbook:328
@@ -843,11 +838,7 @@ msgid ""
 "classes to behave like any other <phrase role=\"nowrap\">C++</phrase> class, "
 "and you can expect to use your existing <phrase role=\"nowrap\">C++</phrase> "
 "techniques with <application>gtkmm</application> classes."
-msgstr ""如果你想先做一个自用的小应用练手，直接参考「Building applications」一章里的 meson.build 文件来起步会更容易。""
-"你现有的 C++ 知识将会帮助你使用 <application>gtkmm</application>，因为它可以"
-"和任何库一同工作。除非我们额外声明，你可以期待 <application>gtkmm</"
-"application> 类会像任何其它 C++ 类一样，并且你可以期待在 <application>gtkmm</"
-"application> 类上使用你现有的知识。"
+msgstr "你现有的 C++ 知识将会帮助你使用 <application>gtkmm</application>，因为它可以和任何库一同工作。除非我们额外声明，你可以期待 <application>gtkmm</application> 类会像任何其它 C++ 类一样，并且你可以期待在 <application>gtkmm</application> 类上使用你现有的知识。"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:338 C/index-in.docbook:3946
@@ -938,18 +929,7 @@ msgid ""
 "  set_title(\"Basic application\");\n"
 "  set_default_size(200, 200);\n"
 "}</code>"
-msgstr ""在此步骤中，我们使用 Gtk::Builder 实例把 .ui 文件与应用窗口类关联起来。""
-"class MyWindow : public Gtk::Window\n"
-"{\n"
-"public:\n"
-"  MyWindow();\n"
-"};\n"
-"\n"
-"MyWindow::MyWindow()\n"
-"{\n"
-"  set_title(\"Basic application\");\n"
-"  set_default_size(200, 200);\n"
-"}"
+msgstr "<code>class MyWindow : public Gtk::Window\n{\npublic:\n  MyWindow();\n};\n\nMyWindow::MyWindow()\n{\n  set_title(\"Basic application\");\n  set_default_size(200, 200);\n}</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:368
@@ -1007,7 +987,7 @@ msgstr ""
 #: C/index-in.docbook:386, no-wrap
 #| msgid "return app-&gt;make_window_and_run&lt;MyWindow&gt;(argc, argv);"
 msgid "<code>return app-&gt;make_window_and_run&lt;MyWindow&gt;(argc, argv);</code>"
-msgstr ""虽然可以用 C++ 代码指定窗口和控件的布局与外观，但用 .ui XML 文件设计界面、运行时经 Gtk::Builder 加载，通常更方便。参见 Gtk::Builder 一章。""
+msgstr "<code>return app-&gt;make_window_and_run&lt;MyWindow&gt;(argc, argv);</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:388
@@ -1231,14 +1211,7 @@ msgid ""
 "to arrange other widgets. Here is some example code that adds 2 "
 "<classname>Gtk::Button</classname> widgets to a <classname>Gtk::Box</"
 "classname> container widget:"
-msgstr ""
-"部件被安置在褚如 frame、notebook 这样的容器部件中，以一种部件包含部件的层次结"
-"构的形式。其中一些容器部件，像 <classname>Gtk::Grid</classname> 这样的容器部"
-"件是不可见的，它们只是被用来安置其它部件的。这里有一些示例代码，将两个 "
-"<classname>Gtk::Button</classname> 部件放到一个 <classname>Box</classname> 容"
-"器部件中：<_:programlisting-1/> 接下来是如何把这个包含两个按钮的 "
-"<classname>Gtk::Box</classname> 添加到一个 <classname>Gtk::Frame</classname> "
-"中，它包含一个可视的边框和标题：<_:programlisting-2/>"
+msgstr "控件放在容器控件里（比如 frame 和 notebook），形成「控件套控件」的层次结构。有些容器控件（比如 Gtk::Grid）本身不可见——它们存在的意义就是排列其他控件。下面的示例代码把 2 个 Gtk::Button 控件加进 Gtk::Box 容器控件："
 
 #. (itstool) path: section/programlisting
 #: C/index-in.docbook:465, no-wrap
@@ -3069,9 +3042,7 @@ msgstr ""
 msgid ""
 "<link xlink:href=\"https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/"
 "master/examples/book/buttons/checkbutton\">Source Code</link>"
-msgstr ""标签文本可以使用 set_justify() 方法对齐。该部件还支持自动换行，可用 set_wrap() 开启。""
-"<ulink url=\"https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/"
-"examples/book/buttons/checkbutton\">源代码</ulink>"
+msgstr "<ulink url=\"https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/master/examples/book/buttons/checkbutton\">源代码</ulink>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:1069
@@ -17312,7 +17283,7 @@ msgstr ""
 #. (itstool) path: section/title
 #: C/index-in.docbook:7572
 msgid "Unusual words"
-msgstr "\"黑话\""
+msgstr "不常见的词"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7574

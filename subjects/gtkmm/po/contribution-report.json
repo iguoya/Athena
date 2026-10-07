@@ -1,9 +1,9 @@
 {
- "generated_at": "2026-10-07 21:18+0000",
+ "generated_at": "2026-10-07 21:46+0800",
  "counts": {
-  "filled_empty": 31,
+  "filled_empty": 32,
   "fuzzy_fixed": 270,
-  "differs_for_manual_review": 42
+  "differs_for_manual_review": 40
  },
  "entries": [
   {
@@ -68,15 +68,8 @@
    "msgid": "GTK and <application>gtkmm</application> were designed to work well with Microso",
    "action": "differs",
    "source": "snapshot",
-   "ref_zh": "\"虽然上面给出了简单示例的编译命令，但实际开发应该使用 Meson 构建系统。本书的示例都收录在 gtkmm-documentation 包里，并带有相应的构建文件，所以之后不再罗列构建命令。gtkmm-documentation 的 README 文件描述了如何构建这些示例。\"GTK和<application>gtkmm</application>被设计成在Microsoft Windows上也能很好地工作，而且开发者们鼓励在win32平台上使用它们。但是目前还有没为Windows平台的开发库提供标准的安装方法。请参阅 <ulink url=\\\"https://wiki.gnome.org/Projects/gtkmm/MSWindows\\\">Windows Intallation</ulink>或者<link linkend=\\\"sec-windows-installation\\\"><application>gtkmm</application>和Win32</link>以得到关于Windows相关的安装方法和注意事项。",
+   "ref_zh": "GTK和<application>gtkmm</application>被设计成在Microsoft Windows上也能很好地工作，而且开发者们鼓励在win32平台上使用它们。但是目前还有没为Windows平台的开发库提供标准的安装方法。请参阅 <ulink url=\\\"https://wiki.gnome.org/Projects/gtkmm/MSWindows\\\">Windows Intallation</ulink>或者<link linkend=\\\"sec-windows-installation\\\"><application>gtkmm</application>和Win32</link>以得到关于Windows相关的安装方法和注意事项。",
    "our_zh": "GTK 和 gtkmm 的设计就考虑了与 Microsoft Windows 良好协作，开发者们也鼓励在 win32 平台上使用。不过 Windows 没有标准的开发库安装体系。Windows 专属的安装说明与注意事项，请看 Windows Installation 页面（已有些过时）或附录「gtkmm and Win32」。"
-  },
-  {
-   "msgid": "Your existing knowledge of <phrase role=\\\"nowrap\\\">C++</phrase> will help you wi",
-   "action": "differs",
-   "source": "snapshot",
-   "ref_zh": "\"如果你想先做一个自用的小应用练手，直接参考「Building applications」一章里的 meson.build 文件来起步会更容易。\"你现有的 C++ 知识将会帮助你使用 <application>gtkmm</application>，因为它可以和任何库一同工作。除非我们额外声明，你可以期待 <application>gtkmm</application> 类会像任何其它 C++ 类一样，并且你可以期待在 <application>gtkmm</application> 类上使用你现有的知识。",
-   "our_zh": "你现有的 C++ 知识将会帮助你使用 gtkmm，因为它可以和任何库一同工作。除非我们额外声明，你可以期待 gtkmm 类会像任何其它 C++ 类一样，并且你可以期待在 gtkmm 类上使用你现有的知识。"
   },
   {
    "msgid": "After putting the source code in <filename>base.cc</filename> you can compile th",
@@ -133,10 +126,9 @@
   },
   {
    "msgid": "Widgets are arranged inside container widgets such as frames and notebooks, in a",
-   "action": "differs",
+   "action": "filled",
    "source": "snapshot",
-   "ref_zh": "部件被安置在褚如 frame、notebook 这样的容器部件中，以一种部件包含部件的层次结构的形式。其中一些容器部件，像 <classname>Gtk::Grid</classname> 这样的容器部件是不可见的，它们只是被用来安置其它部件的。这里有一些示例代码，将两个 <classname>Gtk::Button</classname> 部件放到一个 <classname>Box</classname> 容器部件中：<_:programlisting-1/> 接下来是如何把这个包含两个按钮的 <classname>Gtk::Box</classname> 添加到一个 <classname>Gtk::Frame</classname> 中，它包含一个可视的边框和标题：<_:programlisting-2/>",
-   "our_zh": "控件放在容器控件里（比如 frame 和 notebook），形成「控件套控件」的层次结构。有些容器控件（比如 Gtk::Grid）本身不可见——它们存在的意义就是排列其他控件。下面的示例代码把 2 个 Gtk::Button 控件加进 Gtk::Box 容器控件："
+   "zh": "控件放在容器控件里（比如 frame 和 notebook），形成「控件套控件」的层次结构。有些容器控件（比如 Gtk::Grid）本身不可见——它们存在的意义就是排列其他控件。下面的示例代码把 2 个 Gtk::Button 控件加进 Gtk::Box 容器控件："
   },
   {
    "msgid": "and here is how to add the <classname>Gtk::Box</classname>, containing those but",
