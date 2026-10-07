@@ -46,7 +46,8 @@
 
 ## 验证
 
-- `python3 scripts/check.py`:app.json 合法性 + `vue-tsc` 类型检查 + `vite build`。
+- `python3 scripts/check.py`:app.json 合法性 + `vue-tsc` 类型检查 + `vite build`;
+  缺 `node_modules` 时先按 lock `npm ci`,不跳过。
 - 根目录 `python3 scripts/check.py math-tools` 透传到本脚本。
 
 ## 约定

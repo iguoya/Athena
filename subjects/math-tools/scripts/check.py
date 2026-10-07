@@ -38,9 +38,11 @@ def run_npm(args: list[str]) -> None:
 def main() -> int:
     check_app_json()
 
+    # 缺依赖就按 lock 装上再查，而不是跳过报通过：CI 每次都是干净检出，
+    # 跳过等于这一项从没被验证过。
     if not (ROOT / "node_modules").exists():
-        print("skip: 前端依赖未安装(node_modules 缺失),先运行 npm install")
-        return 0
+        run_npm(["ci"])
+        print("ok: npm ci(按 lock 安装前端依赖)")
 
     run_npm(["run", "typecheck"])
     print("ok: vue-tsc 类型检查")
