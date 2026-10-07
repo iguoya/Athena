@@ -75,6 +75,45 @@ SymbolStatus statusOfIds({
   return total > 0 && answered == total ? SymbolStatus.mastered : SymbolStatus.fresh;
 }
 
+/// 一组自测卡里「已掌握」的张数与总张数（ADR 0113）：答过且没有未移出错题库的错才算一张。
+/// 组圆只有整组测完才绿，进度靠这个「掌握 a/b」看。
+({int done, int total}) masteryOf({
+  required Iterable<String> ids,
+  required HistorySet histories,
+}) {
+  var total = 0;
+  var done = 0;
+  for (final id in ids) {
+    total++;
+    final h = histories.byQuestion[id];
+    if (h != null && !(h.wrong > 0 && !h.retiredFromWrongPool)) done++;
+  }
+  return (done: done, total: total);
+}
+
+/// 组标题行里的「掌握 a/b」。
+class MasteryTag extends StatelessWidget {
+  const MasteryTag({super.key, required this.ids, required this.histories});
+
+  final List<String> ids;
+  final HistorySet histories;
+
+  @override
+  Widget build(BuildContext context) {
+    final m = masteryOf(ids: ids, histories: histories);
+    return Padding(
+      padding: const EdgeInsets.only(left: 12, top: 6),
+      child: Text(
+        "掌握 ${m.done}/${m.total}",
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: m.done == m.total && m.total > 0 ? const Color(0xFF2ECC71) : Colors.grey.shade600,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+}
+
 /// 一张速记卡现在属于哪一档（ADR 0094；ADR 0112 收敛为只看这张卡自己）。**只看作答记录**
 /// ——速记卡对应一道有稳定编号的速记题，自测的每次作答和练习、模拟考一样记进作答记录，
 /// 错题本、考前复习、强化练习用的是同一份记录；关联真题的作答不参与判档：

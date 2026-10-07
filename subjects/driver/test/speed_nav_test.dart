@@ -7,6 +7,7 @@ import "package:athena_driver/ui/look.dart";
 import "package:athena_driver/core/models.dart";
 import "package:athena_driver/core/progress.dart";
 import "package:athena_driver/speed/recall_cards.dart";
+import "package:athena_driver/speed/recall_status.dart";
 import "package:athena_driver/speed/speed_topics.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
@@ -69,9 +70,11 @@ void main() {
 
   testWidgets("专题与分组左边的状态圆：没测完灰、答错红、只答对一张仍是灰", (tester) async {
     final (_, store, dir) = await boot(tester);
-    const gray = "这个专题还没测完";
-    const red = "这个专题的自测题最近答错过，还没掌握";
-    const green = "这个专题的自测题全部答对过";
+    // 侧栏圆的悬停说明形如「这个专题掌握 0/12 · 还没测完」（ADR 0113），按后半句认颜色。
+    Finder tip(String tail) => find.byWidgetPredicate((w) => w is Tooltip && (w.message ?? "").contains(" · $tail"));
+    final gray = tip("还没测完");
+    final red = tip("有自测题答错过");
+    final green = tip("自测题全部答对过");
 
     Future<void> reload() async {
       await tester.pump(const Duration(milliseconds: 1000));
@@ -96,9 +99,9 @@ void main() {
     }
 
     await showTopic(tester, "手势速记");
-    expect(find.byTooltip(gray), findsWidgets);
-    expect(find.byTooltip(red), findsNothing);
-    expect(find.byTooltip(green), findsNothing);
+    expect(gray, findsWidgets);
+    expect(red, findsNothing);
+    expect(green, findsNothing);
 
     // 手势自测答错一张：专题和它所在的分组都变红。
     await openRecall("手势速记");
@@ -110,7 +113,7 @@ void main() {
     await tester.pump();
     await closeDialog();
     await reload();
-    expect(find.byTooltip(red), findsWidgets, reason: "答错过的专题与分组变红");
+    expect(red, findsWidgets, reason: "答错过的专题与分组变红");
 
     // 标志自测答对一张：标志专题还没测完，仍是灰。
     await openRecall("标志速记");
@@ -120,7 +123,28 @@ void main() {
     await closeDialog();
     await reload();
     // 只答对一张不算测完（ADR 0113）：标志专题仍是灰，不能写「已掌握」。
-    expect(find.byTooltip(green), findsNothing, reason: "只测了一部分：不变绿");
+    expect(green, findsNothing, reason: "只测了一部分：不变绿");
+    await showTopic(tester, "标志速记");
+    await tester.tap(find.text("标志速记").first);
+    await reload();
+    expect(find.textContaining("掌握 1/"), findsOneWidget, reason: "进度写成「掌握 a/b」，只有答对的那一张算 1");
+    await teardown(tester, store, dir);
+  });
+
+  testWidgets("要点类专题（记分证照速记）每个条目左侧都有状态点，没测过是灰", (tester) async {
+    final (bank, store, dir) = await boot(tester);
+    await showTopic(tester, "记分证照速记");
+    await tester.tap(find.text("记分证照速记").first);
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump(const Duration(milliseconds: 400));
+    final topic = speedTopics.firstWhere((t) => t.id == "s1.license-notes");
+    final cards = recallCardsOfTopic(topic, bank).length;
+    final dots = find.byType(StatusDot, skipOffstage: false);
+    expect(dots, findsWidgets, reason: "条目左侧应有状态点");
+    // 一张卡对应一个条目，条目数 = 自测卡数（懒加载列表只会建出可见的一部分，所以只要求非空且不超过卡数）。
+    expect(dots.evaluate().length, lessThanOrEqualTo(cards));
+    final grays = find.byWidgetPredicate((w) => w is StatusDot && w.status == SymbolStatus.fresh, skipOffstage: false);
+    expect(grays.evaluate().length, dots.evaluate().length, reason: "从没测过：全灰，不能有绿");
     await teardown(tester, store, dir);
   });
 

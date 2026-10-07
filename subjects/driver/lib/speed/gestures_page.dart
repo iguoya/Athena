@@ -55,10 +55,8 @@ class GesturesPage extends StatelessWidget {
     final related = [for (final q in questions) if (relatedIds.contains(q.id)) q];
     final pending = [for (final q in related) if (!mastered.contains(q.id)) q];
     // 状态只看自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 自测卡全部答对过、灰 = 没测完。
-    final status = statusOfIds(
-      ids: [for (final g in actions) recallQuestionId(recallPage, g.id)],
-      histories: histories,
-    );
+    final ids = [for (final g in actions) recallQuestionId(recallPage, g.id)];
+    final status = statusOfIds(ids: ids, histories: histories);
     return ListView(
       padding: const EdgeInsets.fromLTRB(36, 28, 36, 32),
       children: [
@@ -112,6 +110,7 @@ class GesturesPage extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 6),
                     child: Text("每个动作都是规范的交警动画，点开看大图", style: muted),
                   ),
+                  MasteryTag(ids: ids, histories: histories),
                   const Spacer(),
                   FilledButton.icon(
                     style: practiceButtonStyle(status),

@@ -165,7 +165,8 @@ class NumbersPage extends StatelessWidget {
     final pending = pendingOf(related);
     final maxAmount = group.maxAmount;
     // 组状态只看这一组的自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 自测卡全部答对过、灰 = 没测完。
-    final status = statusOfIds(ids: [for (final q in related) q.id], histories: histories);
+    final ids = [for (final q in related) q.id];
+    final status = statusOfIds(ids: ids, histories: histories);
     return BsCard(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
       child: Column(
@@ -188,6 +189,7 @@ class NumbersPage extends StatelessWidget {
                 const SizedBox(width: 10),
                 Text(group.unit, style: muted),
               ],
+              MasteryTag(ids: ids, histories: histories),
               const Spacer(),
               FilledButton.icon(
                 style: practiceButtonStyle(status),

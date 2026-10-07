@@ -135,10 +135,8 @@ class GaugesPage extends StatelessWidget {
     final related = [for (final q in questions) if (relatedIds.contains(q.id)) q];
     final pending = [for (final q in related) if (!mastered.contains(q.id)) q];
     // 组状态只看这一组的自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 自测卡全部答对过、灰 = 没测完。
-    final status = statusOfIds(
-      ids: [for (final gauge in inGroup) recallQuestionId(recallPage, gauge.id)],
-      histories: histories,
-    );
+    final ids = [for (final gauge in inGroup) recallQuestionId(recallPage, gauge.id)];
+    final status = statusOfIds(ids: ids, histories: histories);
     return Padding(
       padding: const EdgeInsets.only(top: 28),
       child: BsCard(
@@ -165,6 +163,7 @@ class GaugesPage extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 6),
                   child: Text("${inGroup.length} 种", style: muted),
                 ),
+                MasteryTag(ids: ids, histories: histories),
                 const Spacer(),
                 FilledButton.icon(
                   style: practiceButtonStyle(status),

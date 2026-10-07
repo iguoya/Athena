@@ -141,12 +141,10 @@ class NotesPage extends StatelessWidget {
     final related = group.related(questions);
     final pending = [for (final q in related) if (!mastered.contains(q.id)) q];
     // 组状态只看这一组的自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 自测卡全部答对过、灰 = 没测完。
-    final status = statusOfIds(
-      ids: [
+    final ids = [
         for (final i in group.items) recallQuestionId(recallPage, "${group.id}/${i.scenario}"),
-      ],
-      histories: histories,
-    );
+      ];
+    final status = statusOfIds(ids: ids, histories: histories);
     return Padding(
       padding: const EdgeInsets.only(top: 28),
       child: BsCard(
@@ -169,6 +167,7 @@ class NotesPage extends StatelessWidget {
                 Text(group.title, style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(width: 10),
                 Text("${group.items.length} 条", style: muted),
+                MasteryTag(ids: ids, histories: histories),
                 const Spacer(),
                 FilledButton.icon(
                   style: practiceButtonStyle(status),
@@ -188,14 +187,31 @@ class NotesPage extends StatelessWidget {
               const SizedBox(height: 6),
               Text(group.note, style: muted),
             ],
-            for (final (i, item) in group.items.indexed) _noteRow(context, item, muted, first: i == 0),
+            for (final (i, item) in group.items.indexed)
+              _noteRow(
+                context,
+                item,
+                muted,
+                first: i == 0,
+                // 条目左侧的状态点：这一条自己那张自测卡的作答（ADR 0101、0112、0113）。
+                status: statusOfIds(
+                  ids: [recallQuestionId(recallPage, "${group.id}/${item.scenario}")],
+                  histories: histories,
+                ),
+              ),
           ],
         ),
       ),
     );
   }
 
-  Widget _noteRow(BuildContext context, NoteItem item, TextStyle? muted, {required bool first}) {
+  Widget _noteRow(
+    BuildContext context,
+    NoteItem item,
+    TextStyle? muted, {
+    required bool first,
+    required SymbolStatus status,
+  }) {
     final source = [
       Bs.sourceShort(item.sourceId),
       if (item.locator.isNotEmpty) item.locator,
@@ -211,6 +227,8 @@ class NotesPage extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            StatusDot(status: status),
+            const SizedBox(width: 10),
             Expanded(
               child: Text(
                 item.scenario,
@@ -226,7 +244,8 @@ class NotesPage extends StatelessWidget {
         const SizedBox(height: 4),
         for (final point in item.points)
           Padding(
-            padding: const EdgeInsets.only(top: 2),
+            // 左缩进 38 = 状态点 28 + 间距 10，要点与情景文字对齐。
+            padding: const EdgeInsets.only(top: 2, left: 38),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

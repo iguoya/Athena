@@ -549,7 +549,7 @@ class _HomePageState extends State<HomePage> {
             selected: false,
             label: "${group.title} · ${group.topics.length}",
             indent: true,
-            leading: _topicDot([for (final t in group.topics) _topicStatus(t)], size: 18, tooltip: "这一组专题里的自测作答情况"),
+            leading: _topicDot([for (final t in group.topics) ..._topicIds(t)], size: 18, scope: "这一组专题"),
             onTap: () => setState(() {
               if (!_expandedTopicGroups.remove(key)) _expandedTopicGroups.add(key);
             }),
@@ -562,39 +562,34 @@ class _HomePageState extends State<HomePage> {
               selected: _place == topic.id && _session == null,
               label: topic.title,
               indent2: true,
-              leading: _topicDot([_topicStatus(topic)], size: 16),
+              leading: _topicDot(_topicIds(topic), size: 16, scope: "这个专题"),
               onTap: () => _go(topic.id),
             ),
       ],
     ];
   }
 
-  /// 专题（或一组专题）的状态圆：几个专题里有红取红，否则有绿取绿，全灰才灰。
-  Widget _topicDot(List<SymbolStatus> statuses, {required double size, String? tooltip}) {
-    final status = statuses.contains(SymbolStatus.wrong)
-        ? SymbolStatus.wrong
-        : statuses.contains(SymbolStatus.mastered)
-            ? SymbolStatus.mastered
-            : SymbolStatus.fresh;
+  /// 专题（或一组专题）的状态圆：把范围内**所有**自测卡当一整组判（ADR 0113）——有答错未移出
+  /// 的取红，整组每张都答对过才绿，其余（含只测了其中一个专题）灰。悬停说明带「掌握 a/b」。
+  Widget _topicDot(List<String> ids, {required double size, required String scope}) {
+    final status = statusOfIds(ids: ids, histories: _histories);
+    final m = masteryOf(ids: ids, histories: _histories);
     return TopicDot(
       status: status,
       size: size,
-      tooltip: tooltip ??
-          switch (status) {
-            SymbolStatus.wrong => "这个专题的自测题最近答错过，还没掌握",
-            SymbolStatus.mastered => "这个专题的自测题全部答对过",
-            _ => "这个专题还没测完",
-          },
+      tooltip: "$scope掌握 ${m.done}/${m.total} · ${switch (status) {
+        SymbolStatus.wrong => "有自测题答错过，还没掌握",
+        SymbolStatus.mastered => "自测题全部答对过",
+        SymbolStatus.fresh => "还没测完",
+      }}",
     );
   }
 
-  /// 专题的状态（三态，同易混数字的行点，ADR 0101、0112）：自测题有答错过且还在错题库的 → 红；
-  /// 全部答对过 → 绿；没测完 → 灰。只看这个专题自己的自测作答，日常练习不参与。
-  SymbolStatus _topicStatus(SpeedTopic topic) {
-    final ids = (_topicQuestionIds ??= {
+  /// 专题的自测卡题号（只看这个专题自己的自测作答，日常练习不参与，ADR 0112）。
+  List<String> _topicIds(SpeedTopic topic) {
+    return (_topicQuestionIds ??= {
       for (final t in speedTopics) t.id: [for (final c in recallCardsOfTopic(t, widget.bank)) c.questionId],
     })[topic.id]!;
-    return statusOfIds(ids: ids, histories: _histories);
   }
 
   List<Widget> _subjectBranch(String id, {required IconData icon, required String label}) {
