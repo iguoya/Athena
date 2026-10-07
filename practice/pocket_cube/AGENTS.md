@@ -16,7 +16,7 @@
 
 - **头文件相对 `practice/` 解析**：写 `#include "pocket_cube/state.h"`，不写
   `"state.h"`。留这层前缀，是为了 `practice/` 下以后再加小项目时同名头文件不冲突。
-- **测试在 `practice/tests/`**，由本目录的 `meson.build` 引用。纯逻辑（`state`、
+- **测试在本目录的 `tests/`**，由 `meson.build` 引用。纯逻辑（`state`、
   `pocket_cube`）的测试不依赖 GTK，渲染（`view`）单独一个测试可执行文件。
 - **不引用别的应用的文件。** `compat/glib_final_type_shim.h` 是从 `subjects/cpp` 复制
   来的同一份垫片，因为应用之间不互相 include（根 `AGENTS.md`「独立应用」）。上游

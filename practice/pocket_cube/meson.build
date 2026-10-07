@@ -57,7 +57,7 @@ executable('pocket-cube', 'main.cc', 'state.cc', 'view.cc', resources,
 # 和渲染（view，要起 Cairo/GTK 才能测）各一个可执行文件。
 core_test_exe = executable(
   'pocket-cube-core-tests',
-  files('../tests/pocket_cube_state_test.cc', '../tests/pocket_cube_test.cc'),
+  files('tests/pocket_cube_state_test.cc', 'tests/pocket_cube_test.cc'),
   'state.cc',
   include_directories: [practice_root],
   dependencies: [gtest_main_dep],
@@ -66,7 +66,7 @@ test('pocket-cube-core', core_test_exe)
 
 gtk_test_exe = executable(
   'pocket-cube-gtk-tests',
-  files('../tests/pocket_cube_view_test.cc'),
+  files('tests/pocket_cube_view_test.cc'),
   'state.cc', 'view.cc',
   include_directories: [practice_root],
   dependencies: [gtest_dep, gtkmm_dep, gtk4_dep],

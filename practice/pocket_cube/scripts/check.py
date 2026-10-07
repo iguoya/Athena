@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """PocketCube 的验证入口：构建与测试。
 
-测试源码在 practice/tests/，由本目录的 meson.build 引用（头文件带 pocket_cube/
+测试源码在本应用的 tests/，由 meson.build 引用（头文件带 pocket_cube/
 前缀，见 meson.build 里 practice_root 的注释），所以这里只需要跑 Meson。
 
 用 Python 而不是 shell：验证每天都要跑，不该要求 Windows 上先装 Git Bash
