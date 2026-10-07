@@ -4,7 +4,6 @@ import "recall_status.dart";
 import "../ui/glyphs.dart";
 import "../ui/look.dart";
 import "../core/models.dart";
-import "recall.dart";
 import "../study/reinforce.dart";
 import "recall_cards.dart";
 /// 考点速记页（ADR 0064）：灯光、让行、高速、恶劣天气、应急避险、伤员急救的
@@ -20,10 +19,8 @@ class NotesPage extends StatelessWidget {
   const NotesPage({
     super.key,
     required this.groups,
-    required this.questions,
-    required this.onRecallAnswer,
     required this.histories,
-    required this.onStartPractice,
+    required this.onStartRecall,
     this.recallPage = "s1.keypoints",
     this.subjectLabel = "科目一",
     this.title = "考点速记",
@@ -34,12 +31,9 @@ class NotesPage extends StatelessWidget {
 
   final List<NoteGroup> groups;
 
-  /// 本科目的全部题（含偏难，ADR 0112 一视同仁）：自测收尾「去做这几个的题」从这里取题。
-  final List<Question> questions;
-  final void Function(List<Question> questions, String title) onStartPractice;
-
-  /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
-  final RecallAnswerRecorder onRecallAnswer;
+  
+  /// 组里的「自测」：交出这一组卡的题号，首页按条目内容现场出题、起一轮做题（ADR 0118）。
+  final void Function(List<String> questionIds, String title) onStartRecall;
 
   /// 作答历史：自测按它判断哪些卡还要考（ADR 0094）。
   final HistorySet histories;
@@ -82,53 +76,6 @@ class NotesPage extends StatelessWidget {
     );
   }
 
-  /// 自测（ADR 0080，ADR 0085 改四选一）：每个「情景」是一张卡，正面只给情景，从四条
-  /// 要点里选一条对的（该情景有多条要点时每次抽一条），答后看完整要点；干扰项取同组其他
-  /// 情景的要点。每轮抽 5 张。收尾深链练全部相关题。
-  void _startRecall(BuildContext context, Set<String> questionIds, String label) {
-    final cards = recallCardsOfNotes(recallPage, groups);
-    RecallSession.show(
-      context,
-      onAnswer: onRecallAnswer,
-      histories: histories,
-      only: questionIds,
-      prompt: "想一想：碰到这个情景该怎么做？选一条对的。",
-      entries: [
-        for (final (i, e) in [for (final group in groups) for (final item in group.items) (group, item)].indexed)
-          RecallEntry.fromCard(
-            cards[i],
-            front: _scenarioFront(context, e.$1.title, e.$2.scenario),
-            // 关联真题只能到「组」一级：同一组的条目共用（ADR 0083）。
-            related: e.$1.related(questions),
-          ),
-      ],
-      onStartPractice: (questions) => onStartPractice(questions, "$title · $label · 自测"),
-    );
-  }
-
-  Widget _scenarioFront(BuildContext context, String groupTitle, String scenario) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 520, minHeight: 120),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            groupTitle,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            scenario,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, height: 1.4),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _noteGroup(BuildContext context, NoteGroup group, TextStyle? muted) {
     // 组状态只看这一组的自测卡（ADR 0112）：给组内「自测」按钮上色——红 = 有答错未掌握、绿 = 全部答对过、灰 = 没测完。
     final ids = [
@@ -149,7 +96,12 @@ class NotesPage extends StatelessWidget {
                 Text("${group.items.length} 条", style: muted),
                 MasteryTag(ids: ids, histories: histories),
                 const Spacer(),
-                GroupRecallButton(status: status, onPressed: () => _startRecall(context, ids.toSet(), group.title)),
+                GroupRecallButton(
+                  status: status,
+                  ids: ids,
+                  histories: histories,
+                  onStart: () => onStartRecall(ids, "$title · ${group.title} · 自测"),
+                ),
               ],
             ),
             if (group.note.isNotEmpty) ...[

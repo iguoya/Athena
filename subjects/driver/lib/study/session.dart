@@ -30,6 +30,7 @@ class SessionLaunch {
     this.attemptKind,
     this.sessionId,
     this.reasons,
+    this.recordChosen = true,
   });
 
   final String title;
@@ -58,6 +59,10 @@ class SessionLaunch {
 
   /// 强化练习的选题理由：题号 -> retest/weak/due/fill。其余场合为空（主仓库 ADR 0076）。
   final Map<String, String>? reasons;
+
+  /// 作答记不记所选选项。速记自测每次现场出题（ADR 0118），选项字母对不上错题本里的固定题面，不记，
+  /// 免得「选错的方式」把不同的卷当成同一个错选项。
+  final bool recordChosen;
 }
 
 /// 嵌在工作台主区里的做题台：左题右据，不用整页路由。
@@ -1085,7 +1090,7 @@ class _SessionStageState extends State<SessionStage> {
       kind: _launch.attemptKind ?? (_isExam ? "exam" : "practice"),
       // 归因字段（主仓库 ADR 0076）：所选选项（多选排序后逗号拼接）、会话、选题理由。
       at: attemptTime,
-      chosen: ([...chosen]..sort()).join(","),
+      chosen: _launch.recordChosen ? ([...chosen]..sort()).join(",") : null,
       sessionId: _sessionId,
       reason: _launch.reasons?[question.id],
     );

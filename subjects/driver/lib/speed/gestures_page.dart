@@ -7,7 +7,6 @@ import "gesture_painter.dart";
 import "../ui/glyphs.dart";
 import "../ui/look.dart";
 import "../core/models.dart";
-import "recall.dart";
 import "../study/reinforce.dart";
 import "recall_cards.dart";
 /// 手势速记页（ADR 0073）：8 个法定手势动作加「手势的效力」总则，每条配一句
@@ -18,11 +17,9 @@ class GesturesPage extends StatelessWidget {
     super.key,
     required this.gestures,
     required this.histories,
-    required this.questions,
-    required this.onRecallAnswer,
     this.recallPage = "s1.gestures",
     this.subjectLabel = "科目一",
-    required this.onStartPractice,
+    required this.onStartRecall,
   });
 
   final List<TrafficGesture> gestures;
@@ -30,16 +27,12 @@ class GesturesPage extends StatelessWidget {
   /// 作答历史：格子微点由它现算——只看这一条自己的自测卡（ADR 0077 决策 3、0112）。
   final HistorySet histories;
 
-  /// 本科目的全部题（含偏难，ADR 0112 一视同仁）：自测收尾「去做这几个的题」按反向映射的题 id 从这里取题。
-  final List<Question> questions;
-
-  /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
-  final RecallAnswerRecorder onRecallAnswer;
-
   /// 本专题的页键（`s1.signs` 这样，作答记录里的题号带它）与所属科目的名称（ADR 0096）。
   final String recallPage;
   final String subjectLabel;
-  final void Function(List<Question> questions, String title) onStartPractice;
+  
+  /// 组里的「自测」：交出这一组卡的题号，首页按条目内容现场出题、起一轮做题（ADR 0118）。
+  final void Function(List<String> questionIds, String title) onStartRecall;
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +84,12 @@ class GesturesPage extends StatelessWidget {
                   ),
                   MasteryTag(ids: ids, histories: histories),
                   const Spacer(),
-                  GroupRecallButton(status: status, onPressed: () => _startRecall(context, ids.toSet(), "法定动作")),
+                  GroupRecallButton(
+                    status: status,
+                    ids: ids,
+                    histories: histories,
+                    onStart: () => onStartRecall(ids, "手势速记 · 法定动作 · 自测"),
+                  ),
                 ],
               ),
               const SizedBox(height: 14),
@@ -125,18 +123,6 @@ class GesturesPage extends StatelessWidget {
     );
   }
 
-  RecallEntry _recallEntryOf(TrafficGesture g, RecallCard card) {
-    final other = g.confuseWith == null
-        ? null
-        : gestures.where((x) => x.id == g.confuseWith).firstOrNull;
-    return RecallEntry.fromCard(
-      card,
-      front: _gestureImage(g, 288),
-      related: [for (final q in questions) if (g.questions.contains(q.id)) q],
-      confuseView: other == null ? null : _gestureImage(other, 144),
-    );
-  }
-
   /// 手势动画（ADR 0080）：规范的交警手势 GIF，循环自己播；GIF 读不出来时
   /// 退回应用内绘制的示意动画（ADR 0078，那套代码保留作兜底）。
   static Widget _gestureImage(TrafficGesture g, double size) => CheatImage(
@@ -144,20 +130,6 @@ class GesturesPage extends StatelessWidget {
     width: size,
     fallback: (side) => GestureAnimation(id: g.id, size: side),
   );
-
-  /// 自测：把没认得的手势逐张过完，收尾深链练相关题（ADR 0077、0090）。
-  void _startRecall(BuildContext context, Set<String> questionIds, String label) {
-    final cards = {for (final c in recallCardsOfGestures(recallPage, gestures)) c.id: c};
-    RecallSession.show(
-      context,
-      onAnswer: onRecallAnswer,
-      histories: histories,
-      only: questionIds,
-      // 「手势的效力」是总则、没有规范动画，不进自测；它的相关题仍并入深链。
-      entries: [for (final g in gestures) if (g.kind != "general") _recallEntryOf(g, cards[g.id]!)],
-      onStartPractice: (questions) => onStartPractice(questions, "手势速记 · $label · 自测"),
-    );
-  }
 
   Widget _generalCard(BuildContext context, TrafficGesture g, TextStyle? muted) {
     return BsCard(

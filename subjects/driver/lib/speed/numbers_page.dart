@@ -5,12 +5,11 @@ import "../ui/glyphs.dart";
 import "../ui/look.dart";
 import "../core/models.dart";
 import "recall_status.dart";
-import "recall.dart";
 import "recall_cards.dart";
 import "../study/reinforce.dart";
 import "speed_topics.dart";
 /// 易混数字一行的状态微点：与速记格子的微点（[StatusDot]）同一套样式，只换悬停措辞
-/// ——口径是这一行自己的自测卡（填数、选择、反向），不是关联真题（ADR 0095、0101、0112）。
+/// ——口径是这一行自己的自测卡（正向、反向），不是关联真题（ADR 0095、0101、0112）。
 class RecallRowDot extends StatelessWidget {
   const RecallRowDot({super.key, required this.status});
 
@@ -37,8 +36,7 @@ class NumbersPage extends StatelessWidget {
     required this.bank,
     required this.topic,
     required this.histories,
-    required this.onRecallAnswer,
-    required this.onStartPractice,
+    required this.onStartRecall,
   });
 
   final Bank bank;
@@ -47,9 +45,9 @@ class NumbersPage extends StatelessWidget {
   final SpeedTopic topic;
   final HistorySet histories;
 
-  /// 每次自测作答记一条作答记录（ADR 0094）。
-  final RecallAnswerRecorder onRecallAnswer;
-  final void Function(List<Question> questions, String title) onStartPractice;
+  
+  /// 组里的「自测」：交出这一组卡的题号，首页按条目内容现场出题、起一轮做题（ADR 0118）。
+  final void Function(List<String> questionIds, String title) onStartRecall;
 
   List<CheatGroup> get _groups => cheatGroupsOf(bank, topic);
 
@@ -77,53 +75,6 @@ class NumbersPage extends StatelessWidget {
     ids: _rowQuestionIds(group, row, groupIds),
     histories: histories,
   );
-
-  /// 易混数字的自测（ADR 0095）：每行情形拆成单条，数值题手输（题干把数字挖成括号），非数值的值选择，
-  /// 每个数值再出一张反向题（「12 分」对应哪一项）。作答记成普通作答记录，错题本、强化练习随之更新。
-  void _recall(BuildContext context, Set<String> questionIds, String label) {
-    final cards = recallCardsOfNumbers(topic.id, _groups);
-    RecallSession.show(
-      context,
-      onAnswer: onRecallAnswer,
-      histories: histories,
-      only: questionIds,
-      entries: [
-        // 关联题就是这张卡自己（ADR 0102）：收尾的「去做这几个的题」练的是答错的卡，
-        // 行与题一对一，不再指向组级正则捞出来的真题。
-        for (final c in cards)
-          RecallEntry.fromCard(
-            c,
-            front: _front(context, c),
-            related: c.stem == null ? const [] : [recallQuestionOf(c, cards)],
-          ),
-      ],
-      onStartPractice: (questions) => onStartPractice(questions, "易混数字 · $label · 自测"),
-    );
-  }
-
-  /// 易混数字卡的正面：组名（小）加题干（大）。
-  Widget _front(BuildContext context, RecallCard card) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 560, minHeight: 100),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            card.inputLabel ?? "",
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            card.stem ?? "",
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, height: 1.4),
-          ),
-        ],
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +127,12 @@ class NumbersPage extends StatelessWidget {
               ],
               MasteryTag(ids: ids, histories: histories),
               const Spacer(),
-              GroupRecallButton(status: status, onPressed: () => _recall(context, ids.toSet(), group.title)),
+              GroupRecallButton(
+                status: status,
+                ids: ids,
+                histories: histories,
+                onStart: () => onStartRecall(ids, "${topic.title} · ${group.title} · 自测"),
+              ),
             ],
           ),
           if (group.note.isNotEmpty) ...[

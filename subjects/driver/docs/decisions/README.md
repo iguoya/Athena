@@ -122,3 +122,4 @@
 | [0115](0115-group-practice-pending-by-wrong-pool.md) | 「练这组」待练含偏难、做过一次即止，无待练给「再练一遍」；按钮颜色只看自测；「再测一遍」只在整组全对后出现 | 已接受 |
 | [0116](0116-group-self-test-no-group-title-dots.md) | 自测只在组内、页头不再有全页自测；速记组标题左侧不放掌握圆点 | 已接受 |
 | [0117](0117-remove-group-practice-keep-self-test.md) | 去掉速记组的「练这组」，组里只留「自测」，按钮颜色挪到「自测」上 | 已接受 |
+| [0118](0118-self-test-in-session-fresh-questions.md) | 自测改用做题界面、全是四选一，按条目内容现场出题，不依赖练习题库 | 已接受 |

@@ -7,6 +7,7 @@ import "package:athena_driver/home.dart";
 import "package:athena_driver/core/models.dart";
 import "package:athena_driver/core/progress.dart";
 import "package:flutter/material.dart";
+import "package:athena_driver/speed/recall_status.dart";
 import "package:flutter_test/flutter_test.dart";
 
 import "nav_helpers.dart";
@@ -74,7 +75,7 @@ void main() {
     expect(find.text("手势的效力"), findsWidgets);
     expect(find.text("8 个法定动作"), findsOneWidget);
     expect(find.textContaining("练手势"), findsNothing, reason: "组里只有自测（ADR 0117）");
-    expect(find.text("自测"), findsOneWidget);
+    expect(find.byType(GroupRecallButton), findsOneWidget);
     // 高频徽章与方向提醒都在
     expect(find.text("高频"), findsWidgets);
     expect(find.textContaining("他的左右和你看到的相反"), findsOneWidget);

@@ -7,7 +7,9 @@ import "package:athena_driver/ui/look.dart";
 import "package:athena_driver/core/models.dart";
 import "package:athena_driver/core/progress.dart";
 import "package:flutter/material.dart";
-import "package:flutter/services.dart";
+import "package:athena_driver/speed/recall_status.dart";
+import "package:athena_driver/speed/recall_cards.dart";
+import "package:athena_driver/speed/speed_topics.dart";
 import "package:flutter_test/flutter_test.dart";
 
 import "nav_helpers.dart";
@@ -67,7 +69,7 @@ void main() {
     }
     // 组里只有「自测」，没有「练这组」（ADR 0117）。
     expect(find.textContaining("练这组"), findsNothing);
-    expect(find.text("自测"), findsWidgets);
+    expect(find.byType(GroupRecallButton), findsWidgets);
     expect(tester.takeException(), isNull);
 
     await tester.pumpWidget(const SizedBox());
@@ -79,7 +81,7 @@ void main() {
 
   // 组标题左侧的状态圆（ADR 0112）：每个子标题一枚，只看这一组自测卡的作答——
   // 没自测过全灰，自测答错一张后那一组变红，全程没碰过任何真题。
-  testWidgets("考点速记组标题左侧不放状态圆；组内自测答错一张，那一条变红、组的「自测」按钮变红（不看关联真题，ADR 0116、0117）", (tester) async {
+  testWidgets("考点速记组标题左侧不放状态圆；第一组一张卡自测答错，那一条变红、组的「自测」按钮变红（不看关联真题，ADR 0116～0118）", (tester) async {
     late Directory dir;
     late ProgressStore store;
     late Bank bank;
@@ -87,6 +89,14 @@ void main() {
       bank = await ContentLoader.load();
       dir = await Directory.systemTemp.createTemp("athena-driver-notesdot-");
       store = await ProgressStore.open(suite: "notes_page_dot_test");
+      // 第一组第一张卡自测答错一次（不碰任何真题）。
+      final card = recallCardsOfTopic(speedTopicById("s1.keypoints")!, bank).first;
+      await store.recordAttempt(
+        questionId: card.questionId,
+        topicId: "$recallTopicPrefix${card.page}",
+        subjectId: "subject1",
+        correct: false,
+      );
     });
     await tester.binding.setSurfaceSize(const Size(1600, 2600));
     final ready = Completer<void>();
@@ -98,45 +108,15 @@ void main() {
       await tester.pump();
     }
 
-    const gray = "这一组还没测完";
-    const red = "这一组的自测卡有答错过，还没掌握";
-
     await showTopic(tester, "考点速记");
     await tester.tap(find.text("考点速记").first);
     await tester.pump();
-    // 组标题（一级标题）左侧不放掌握圆点：没测完、答错都不出组级的圆（ADR 0116）。
-    expect(find.byTooltip(gray), findsNothing, reason: "组标题不放状态圆");
-    expect(find.byTooltip(red), findsNothing);
-    expect(find.text("自测"), findsWidgets, reason: "每组标题行都有自己的自测");
-
-    // 第一组的自测里答错一张（不碰任何真题），退出。
-    await showTopic(tester, "自测");
-    await tester.tap(find.text("自测").first);
-    await tester.pump();
-    await tester.tap(
-      find
-          .byWidgetPredicate((w) => w.key is ValueKey<String> && (w.key! as ValueKey<String>).value.startsWith("recall-option-"))
-          .first,
-    );
-    await tester.pump();
-    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-    await tester.pump(const Duration(milliseconds: 400));
-    await tester.pump(const Duration(milliseconds: 400));
-    // 等首页去抖重读作答记录。
-    await tester.pump(const Duration(milliseconds: 1000));
-    for (var i = 0; i < 100; i++) {
-      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
-      await tester.pump();
-    }
-
-    await showTopic(tester, "考点速记");
-    await tester.tap(find.text("考点速记").first);
-    await tester.pump();
-    // 答错的是第一组的卡：那一条的状态点变红，组的「自测」按钮也变红；组标题仍不放圆。
+    // 组标题（一级标题）左侧不放掌握圆点（ADR 0116）。
+    expect(find.byTooltip("这一组还没测完"), findsNothing, reason: "组标题不放状态圆");
+    expect(find.byTooltip("这一组的自测卡有答错过，还没掌握"), findsNothing);
     expect(find.byTooltip("这一条的自测题答错过，还没掌握"), findsOneWidget, reason: "自测答错的那一条变红（全程没碰过真题）");
-    expect(find.byTooltip(red), findsNothing, reason: "组标题不放状态圆");
     final button = tester.widget<FilledButton>(
-      find.ancestor(of: find.text("自测").first, matching: find.bySubtype<FilledButton>()).first,
+      find.descendant(of: find.byType(GroupRecallButton).first, matching: find.bySubtype<FilledButton>()),
     );
     expect(button.style?.backgroundColor?.resolve(<WidgetState>{}), Bs.danger, reason: "组的自测按钮随自测结果变红");
 

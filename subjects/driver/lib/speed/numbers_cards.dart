@@ -7,10 +7,10 @@ import "quiz_options.dart";
 // 蒙都能蒙对一半；而且只考了一个方向，易混数字最要紧的「这个数对应哪几种情形」从没考过。重新规划成
 // 三类卡：
 //
-// 1. 填数（[NumberCardKind.typed]）：题干把数字挖空，下面一个输入框，前后带值自己的前缀和单位
-//    （「小于 [　] 米」「记 [　] 分」），自己把数敲进去，不给选项——这才是想起来。
+// 1. 填数（[NumberCardKind.typed]）：题干把数字挖空（「小于 [　] 米」「记 [　] 分」）。原来下面一个输入框
+//    自己敲数，ADR 0118 起改成四选一——手输太慢，选项从同组别的数值里取。
 // 2. 选择（[NumberCardKind.choice]）：值不是一个数（终生、拘役并处罚金、「6 年 / 10 年 / 长期」）
-//    没法打字，退回同组选择。
+//    挖不成数字空，题干补一个括号，同样同组选择。
 // 3. 反向（[NumberCardKind.reverse]）：「12 分」对应的是哪一项？四个选项是同组**别的数值**的单条
 //    情形，所以没有也算对的选项。数值种类少于 4 个的组（高速低能见度、血液酒精含量）不出反向卡。
 
@@ -50,7 +50,7 @@ class NumberCard {
   final String sourceId;
   final String locator;
 
-  /// 填数卡的手输答案；其余为空。
+  /// 填数卡的值结构（前缀、数字、单位）；其余为空。
   final TypedAnswer? typed;
 
   /// 手工指定的干扰项（ADR 0104）。
@@ -80,8 +80,8 @@ List<NumberCard> planNumberCards(List<CheatGroup> groups) {
     for (final row in group.rows) {
       final typed = typedAnswerOf(row.value, groupUnit: group.unit);
       // 问法：行模板优先，组模板次之；都没有走老路（挖数字、挖不中句尾补）。
-      // 手输题同样用模板——括号留在题干里标出空位，答案在下面的输入框里填。
-      // 没有模板的手输题题干保持情形原句（appendBlank 为假，输入框就是空）。
+      // 数值卡同样用模板——括号留在题干里标出空位。没有模板的数值卡题干保持情形原句
+      // （appendBlank 为假），出题时没挖中数字再在句尾补「→（ ）」（recallQuestionOf）。
       final ask = row.ask ?? group.ask;
       for (final single in splitCase(row.caseText)) {
         cards.add(

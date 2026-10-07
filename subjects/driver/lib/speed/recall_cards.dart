@@ -83,7 +83,7 @@ class RecallCard {
   final String? stem;
   final String? imagePath;
 
-  /// 数值题的手输答案（易混数字）；非空时自测出输入框，题库里的速记题仍是四选一。
+  /// 数值卡（易混数字）的值结构：只用来决定题干怎么挖空；自测与题库里都是四选一（ADR 0118 起不再手输）。
   final TypedAnswer? typed;
 
   /// 干扰项来源的种类与是否只用同组，见 [QuizSource]。
@@ -226,7 +226,7 @@ List<RecallCard> recallCardsOfNumbers(String page, List<CheatGroup> groups) {
         typed: c.typed,
         distractors: c.distractors,
         prompt: switch (c.kind) {
-          NumberCardKind.typed => "想一想：括号里该是几？把数字填进下面的框。",
+          NumberCardKind.typed => "想一想：括号里该是几？选一个。",
           NumberCardKind.choice => "想一想：括号里该填什么？选一个。",
           NumberCardKind.reverse => "想一想：下面哪一项对应它？选一个。",
         },
@@ -236,14 +236,33 @@ List<RecallCard> recallCardsOfNumbers(String page, List<CheatGroup> groups) {
 
 // ------------------------------------------------------------ 速记题
 
+/// 没有题图的符号卡（仪表里的胎压、ESC 故障灯）改用文字问：说明写成「外观：含义」的，取冒号前的外观描述当题干
+/// （「看到『黄色蹄形加感叹号』，这是什么？」）。说明里没有外观描述的出不了题，返回 null（ADR 0118）。
+String? textStemOf(RecallCard card) {
+  if (card.imagePath != null || card.stem != null) return null;
+  final cut = card.meaning.indexOf("：");
+  if (cut <= 0 || cut > 30) return null;
+  return "看到「${card.meaning.substring(0, cut)}」，这是什么？";
+}
+
+/// 这张卡出不出得了题：有题图、有题干，或能用文字问（[textStemOf]）。
+bool askable(RecallCard card) => card.imagePath != null || card.stem != null || textStemOf(card) != null;
+
 /// 一张卡对应的题：四选一，选项由 [buildQuiz] 按题号做种子**确定地**生成（同一张卡每次打开
-/// 都是同样的题，作答记录、错题本、强化练习里看到的和自测里一致）。
-Question recallQuestionOf(RecallCard card, List<RecallCard> pagePool, {Map<String, String> sourceUrls = const {}}) {
-  final seed = int.parse(_fnv(card.questionId), radix: 16);
-  final quiz = buildQuiz(card.source, [for (final c in pagePool) c.source], random: _SeededRandom(seed));
+/// 都是同样的题，错题本、强化练习里看到的都一致）。自测不用这份，现场另出（[freshRecallQuestionOf]）。
+Question recallQuestionOf(RecallCard card, List<RecallCard> pagePool, {Map<String, String> sourceUrls = const {}}) =>
+    _questionOf(card, pagePool, _SeededRandom(int.parse(_fnv(card.questionId), radix: 16)), sourceUrls[card.sourceId] ?? "");
+
+/// 自测现场出题（ADR 0118）：按这张卡（条目）自己的内容出，**不依赖练习题库**——正确项从条目的要点里随机抽一条，
+/// 干扰项从同页别的条目随机取，每次自测都重新出。题号沿用这张卡的，作答记录、错题库、掌握判定照旧对得上。
+Question freshRecallQuestionOf(RecallCard card, List<RecallCard> pagePool, Random random, {String sourceUrl = ""}) =>
+    _questionOf(card, pagePool, random, sourceUrl);
+
+Question _questionOf(RecallCard card, List<RecallCard> pagePool, Random random, String sourceUrl) {
+  final quiz = buildQuiz(card.source, [for (final c in pagePool) c.source], random: random);
   const letters = ["A", "B", "C", "D"];
-  // 手输题在题库里是四选一，题干得有个括号标出填哪里。
-  var stem = card.stem;
+  // 数值题（易混数字）在题里也是四选一，题干得有个括号标出填哪里。
+  var stem = card.stem ?? textStemOf(card);
   if (stem != null && card.typed != null && !stem.contains(clozeBlank)) stem = "$stem →$clozeBlank";
   final prompt = switch ((stem, card.inputLabel)) {
     (final s?, final label?) => "$label：$s",
@@ -264,7 +283,7 @@ Question recallQuestionOf(RecallCard card, List<RecallCard> pagePool, {Map<Strin
         sourceId: card.sourceId,
         relation: "authored",
         locator: card.locator,
-        url: sourceUrls[card.sourceId] ?? "",
+        url: sourceUrl,
         note: "速记卡按内容文件出题，选项取自同页其他条目",
       ),
     ],
@@ -283,14 +302,14 @@ List<RecallCard> recallCardsOfTopic(SpeedTopic topic, Bank bank) => switch (topi
   SpeedKind.notes => recallCardsOfNotes(topic.id, noteGroupsOf(bank, topic)),
 };
 
-/// 全部速记题：每个专题一份卡，选项在本专题的卡里取。没有题图的图片卡（题库里没有图的符号）出不了题，
-/// 跳过——它们照样能在自测里考、作答照样记，只是不进错题本。
+/// 全部速记题：每个专题一份卡，选项在本专题的卡里取。错题本、强化练习、考前复习按题号从这里找题面；
+/// 出不了题的卡（[askable] 为假）跳过。
 List<Question> recallQuestionsOf(Bank bank, {Map<String, String> sourceUrls = const {}}) {
   final out = <Question>[];
   for (final topic in speedTopics) {
     final cards = recallCardsOfTopic(topic, bank);
     for (final card in cards) {
-      if (card.imagePath != null || card.stem != null) out.add(recallQuestionOf(card, cards, sourceUrls: sourceUrls));
+      if (askable(card)) out.add(recallQuestionOf(card, cards, sourceUrls: sourceUrls));
     }
   }
   return out;

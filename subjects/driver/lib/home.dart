@@ -19,7 +19,6 @@ import "core/models.dart";
 import "speed/notes_page.dart";
 import "speed/numbers_page.dart";
 import "core/progress.dart";
-import "speed/recall.dart";
 import "study/reinforce.dart";
 import "study/reinforce_page.dart";
 import "speed/recall_cards.dart";
@@ -79,9 +78,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  /// 自测作答写成作答记录后，隔一会儿重读一次进度（ADR 0094）：错题本、强化练习、考前复习随之更新；
-  /// 连着答的几张合并成一次，免得每答一张就重算一遍。
-  Timer? _recallReloadTimer;
+  /// 题库里的全部速记题（题号 → 题）：自测现场出题时只借它的出处链接（ADR 0118）。
+  late final Map<String, Question> _recallById = {
+    for (final q in widget.bank.questions)
+      if (isRecallQuestionId(q.id)) q.id: q,
+  };
 
 
   static const _wrongId = "wrong";
@@ -248,7 +249,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    _recallReloadTimer?.cancel();
     widget.syncStatus?.removeListener(_onSyncChanged);
     super.dispose();
   }
@@ -1668,63 +1668,50 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// 一个速记专题的页面（ADR 0096）：专题属于某个科目，相关题、练习、自测作答都只用本科目的。
-  /// 传给各页的是**全部**题——偏难题在速记页一视同仁，不再单独排除（ADR 0112）。
+  /// 一个速记专题的页面（ADR 0096）：专题属于某个科目，自测的作答记在本科目下。各组的「自测」
+  /// 把这一组的速记题交给 [practice]，用错题本那套做题界面考（ADR 0118）。
   Widget _speedTopicPage(BuildContext context, SpeedTopic topic) {
     final subject = widget.bank.curriculum.subject(topic.subjectId);
-    final questions = widget.bank.forSubject(topic.subjectId);
-    void practice(List<Question> questions, String title) =>
-        _startPractice(subject, questions, title, shuffleQueue: true);
+    void recall(List<String> ids, String title) => _startRecall(subject, topic, ids, title);
     return switch (topic.kind) {
       SpeedKind.numbers => NumbersPage(
         bank: widget.bank,
         topic: topic,
         histories: _histories,
-        onRecallAnswer: _recordRecall,
-        onStartPractice: practice,
+        onStartRecall: recall,
       ),
       SpeedKind.signs => SignsPage(
         signs: widget.bank.signs,
         histories: _histories,
-        questions: questions,
-        onRecallAnswer: _recordRecall,
         recallPage: topic.id,
         subjectLabel: subject.code,
-        onStartPractice: practice,
+        onStartRecall: recall,
       ),
       SpeedKind.markings => MarkingsPage(
         markings: widget.bank.markings,
         histories: _histories,
-        questions: questions,
-        onRecallAnswer: _recordRecall,
         recallPage: topic.id,
         subjectLabel: subject.code,
-        onStartPractice: practice,
+        onStartRecall: recall,
       ),
       SpeedKind.gauges => GaugesPage(
         gauges: widget.bank.gauges,
         histories: _histories,
-        questions: questions,
-        onRecallAnswer: _recordRecall,
         recallPage: topic.id,
         subjectLabel: subject.code,
-        onStartPractice: practice,
+        onStartRecall: recall,
       ),
       SpeedKind.gestures => GesturesPage(
         gestures: gesturesOf(widget.bank, topic),
         histories: _histories,
-        questions: questions,
-        onRecallAnswer: _recordRecall,
         recallPage: topic.id,
         subjectLabel: subject.code,
-        onStartPractice: practice,
+        onStartRecall: recall,
       ),
       SpeedKind.notes => NotesPage(
         groups: noteGroupsOf(widget.bank, topic),
-        questions: questions,
-        onRecallAnswer: _recordRecall,
         histories: _histories,
-        onStartPractice: practice,
+        onStartRecall: recall,
         recallPage: topic.id,
         subjectLabel: subject.code,
         title: topic.title,
@@ -1733,21 +1720,6 @@ class _HomePageState extends State<HomePage> {
         footnote: topic.footnote ?? NotesPage.defaultFootnote,
       ),
     };
-  }
-
-  /// 自测每判一张，写一条普通作答记录（ADR 0094）：题号是速记题的编号，知识点是 `drive.recall.<页>`，
-  /// 场合是练习。不记所选选项——自测的选项每次打乱，字母对不上固定的题面。
-  Future<void> _recordRecall(RecallEntry entry, {required bool correct}) async {
-    await widget.store.recordAttempt(
-      questionId: entry.questionId,
-      topicId: recallTopicOf(entry.questionId),
-      subjectId: recallSubjectOf(entry.questionId) ?? "subject1",
-      correct: correct,
-    );
-    _recallReloadTimer?.cancel();
-    _recallReloadTimer = Timer(const Duration(milliseconds: 800), () {
-      if (mounted) unawaited(_reload());
-    });
   }
 
   /// 跨机器同步：日常走云盘文件夹（iCloud Drive 这类），GitHub 那条留着当
@@ -1927,7 +1899,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// 起一轮练习。[shuffleQueue] 给速记页自测收尾的「去做这几个的题」用，出题见 [_speedGroupQueue]：
+  /// 起一轮练习。[shuffleQueue] 给速记组的「自测」用（ADR 0118），出题见 [_speedGroupQueue]：
   /// 洗牌出题——速记卡全是常规档、没有全国错误率，走 [practiceQueue] 的分档排序会退化成
   /// 内容顺序（12→9→6→3→1），规律性毁掉考试价值。
   void _startPractice(
@@ -1935,6 +1907,7 @@ class _HomePageState extends State<HomePage> {
     List<Question> questions,
     String title, {
     bool shuffleQueue = false,
+    bool recordChosen = true,
   }) {
     if (_locked(subject.id)) return;
     final List<Question> queue;
@@ -1951,14 +1924,36 @@ class _HomePageState extends State<HomePage> {
         questions: queue,
         timed: false,
         revealImmediately: true,
+        recordChosen: recordChosen,
       ),
     );
   }
 
-  /// 自测收尾「去做这几个的题」的出题（ADR 0115、0117）：只出 [speedPending] 筛出的待练题——
-  /// 错题库里的在前、没做过的其次，各自洗牌；没有待练就是空队列，不起练习。
+  /// 速记组的「自测」（ADR 0118）：按这一组条目的内容**现场出题**（[freshRecallQuestionOf]），不依赖练习题库——
+  /// 正确项从条目要点里随机抽、干扰项从同页别的条目随机取，每次都重新出；用错题本那套做题界面考，
+  /// 出题顺序见 [_speedGroupQueue]。题号沿用卡的，作答照旧进错题库、决定掌握状态；选项每次不同，不记所选选项。
+  void _startRecall(Subject subject, SpeedTopic topic, List<String> ids, String title) {
+    final pool = recallCardsOfTopic(topic, widget.bank);
+    final wanted = ids.toSet();
+    final random = Random();
+    final questions = [
+      for (final card in pool)
+        if (wanted.contains(card.questionId) && askable(card))
+          freshRecallQuestionOf(
+            card,
+            pool,
+            random,
+            sourceUrl: _recallById[card.questionId]?.sourceRefs.firstOrNull?.url ?? "",
+          ),
+    ];
+    _startPractice(subject, questions, title, shuffleQueue: true, recordChosen: false);
+  }
+
+  /// 速记组「自测」的出题（ADR 0118）：这一组的速记题里，答错还在错题库里的先出、没测过的其次，各自洗牌
+  /// （[speedPending]）；整组都答对过了才整组洗牌重考——「再测一遍」（ADR 0099、0115）。
   List<Question> _speedGroupQueue(List<Question> questions) {
     final pending = speedPending(questions, _histories);
+    if (pending.isEmpty) return [...questions]..shuffle();
     final wrong = [for (final q in pending) if (classifyOwn(q.id, _histories) == RecallBucket.wrong) q]..shuffle();
     final fresh = [for (final q in pending) if (classifyOwn(q.id, _histories) != RecallBucket.wrong) q]..shuffle();
     return [...wrong, ...fresh];

@@ -6,11 +6,11 @@ import "../ui/look.dart";
 import "../study/reinforce.dart";
 // 速记条目、专题与速记组的「作答状态」（ADR 0077、0094、0101、0109、0112）：状态枚举、
 // 由作答记录判档的纯函数，以及按状态上色的小部件（状态圆、组内「自测」按钮）。
-// 自测的界面（卡片流、输入、收尾）在 recall.dart，这里不碰界面流程。
+// 自测没有自己的界面：组里的「自测」按条目现场出题，交给首页起一轮做题（ADR 0118），与错题本同一个做题台。
 //
 // 口径（ADR 0112）：专题掌握只由**专题自测**的作答决定——判一张卡、一个条目、一组、
 // 一个专题，都只看速记题（`drive.recall.*`）自己的作答记录；关联真题（日常练习）的
-// 作答不参与任何掌握判定，真题只是「去做这几个的题」的练习入口。
+// 作答不参与任何掌握判定。
 
 /// 格子条目的状态微点（ADR 0077 决策 3 起用；ADR 0101 统一为三态、放大为实心圆加黑心，
 /// 放在图标下方、条目文字左侧）：红 = 这条的自测题答错过、还在错题库里；绿 = 答对过；
@@ -147,9 +147,9 @@ RecallBucket? classifyOwn(String questionId, HistorySet histories) {
   return RecallBucket.done;
 }
 
-/// 自测收尾「去做这几个的题」的待练题（ADR 0115、0117）：关联题里**没做过**的，加上**答错过且还在错题库里**的
-/// （判档同 [classifyOwn]，移出规则同 ADR 0079）。不看难度档——偏难题一视同仁（ADR 0112）；
-/// 没答错过的题答过一次就不再算待练。错题库里的在前、没做过的其次，各自保持原序（出题时再各自洗牌）。
+/// 一轮自测里这次要考的题（ADR 0115、0118）：**没测过**的，加上**答错过且还在错题库里**的
+/// （判档同 [classifyOwn]，移出规则同 ADR 0079）。答对过的不再出。错题库里的在前、没测过的其次，
+/// 各自保持原序（出题时再各自洗牌）。按钮上的道数与点下去出的题都由它算。
 List<Question> speedPending(Iterable<Question> questions, HistorySet histories) {
   final wrong = <Question>[];
   final fresh = <Question>[];
@@ -166,28 +166,55 @@ List<Question> speedPending(Iterable<Question> questions, HistorySet histories) 
   return [...wrong, ...fresh];
 }
 
-/// 速记组标题行里的「自测」（ADR 0116、0117）：只考这一组的卡，是组里唯一的按钮。颜色就是这一组
-/// 自测卡的结果（[statusOfIds]）：有答错过且还在错题库里 → 红；每张都答对过 → 绿；没测完 → 灰。
+/// 一组卡里这次自测要考的张数：没测过的，加上答错过且还在错题库里的（与 [speedPending] 同一判据）。
+int recallPendingCount(Iterable<String> ids, HistorySet histories) =>
+    ids.where((id) => classifyOwn(id, histories) != RecallBucket.done).length;
+
+/// 速记组标题行里的「自测」（ADR 0116～0118）：组里唯一的按钮。点下去按这一组条目的内容现场出题，
+/// 用错题本那套做题界面考。颜色是这一组的结果（[statusOfIds]）：有答错过且还在错题库里 → 红；每张都答对过 → 绿；
+/// 没测完 → 灰。文字写这次要考几题；整组都答对了写「再测一遍」，点了整组重考（ADR 0099、0115）。
 class GroupRecallButton extends StatelessWidget {
-  const GroupRecallButton({super.key, required this.status, required this.onPressed});
+  const GroupRecallButton({
+    super.key,
+    required this.status,
+    required this.ids,
+    required this.histories,
+    required this.onStart,
+  });
 
   final SymbolStatus status;
-  final VoidCallback onPressed;
+
+  /// 这一组卡的题号。
+  final List<String> ids;
+  final HistorySet histories;
+  final VoidCallback onStart;
 
   @override
-  Widget build(BuildContext context) => FilledButton.icon(
-    style: FilledButton.styleFrom(
-      backgroundColor: switch (status) {
-        SymbolStatus.wrong => Bs.danger,
-        SymbolStatus.mastered => const Color(0xFF2ECC71),
-        SymbolStatus.fresh => const Color(0xFF8A939B),
-      },
-      foregroundColor: Colors.white,
-    ),
-    onPressed: onPressed,
-    icon: const Icon(Glyph.question, size: 18),
-    label: const Text("自测"),
-  );
+  Widget build(BuildContext context) {
+    final pending = recallPendingCount(ids, histories);
+    final color = switch (status) {
+      SymbolStatus.wrong => Bs.danger,
+      SymbolStatus.mastered => const Color(0xFF2ECC71),
+      SymbolStatus.fresh => const Color(0xFF8A939B),
+    };
+    return FilledButton.icon(
+      style: FilledButton.styleFrom(
+        backgroundColor: color,
+        foregroundColor: Colors.white,
+        disabledBackgroundColor: color.withValues(alpha: 0.55),
+        disabledForegroundColor: Colors.white,
+      ),
+      onPressed: ids.isEmpty ? null : onStart,
+      icon: const Icon(Glyph.question, size: 18),
+      label: Text(
+        ids.isEmpty
+            ? "没有可自测的卡"
+            : pending > 0
+            ? "自测 $pending 题"
+            : "再测一遍 ${ids.length} 题",
+      ),
+    );
+  }
 }
 
 /// 侧栏里专题与专题分组左边的状态圆（ADR 0109）：样式同 [StatusDot]（实心圆加黑心、三态色），

@@ -6,7 +6,6 @@ import "gauge.dart";
 import "../ui/glyphs.dart";
 import "../ui/look.dart";
 import "../core/models.dart";
-import "recall.dart";
 import "../study/reinforce.dart";
 import "recall_cards.dart";
 /// 仪表速记页（ADR 0067）：手绘车内符号按「报警灯 / 指示灯 / 仪表表盘 /
@@ -18,11 +17,9 @@ class GaugesPage extends StatelessWidget {
     super.key,
     required this.gauges,
     required this.histories,
-    required this.questions,
-    required this.onRecallAnswer,
     this.recallPage = "s1.gauges",
     this.subjectLabel = "科目一",
-    required this.onStartPractice,
+    required this.onStartRecall,
   });
 
   final List<Gauge> gauges;
@@ -30,16 +27,12 @@ class GaugesPage extends StatelessWidget {
   /// 作答历史：格子微点由它现算——只看这一条自己的自测卡（ADR 0077 决策 3、0112）。
   final HistorySet histories;
 
-  /// 本科目的全部题（含偏难，ADR 0112 一视同仁）：自测收尾「去做这几个的题」按反向映射的题 id 从这里取题。
-  final List<Question> questions;
-
-  /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
-  final RecallAnswerRecorder onRecallAnswer;
-
   /// 本专题的页键（`s1.signs` 这样，作答记录里的题号带它）与所属科目的名称（ADR 0096）。
   final String recallPage;
   final String subjectLabel;
-  final void Function(List<Question> questions, String title) onStartPractice;
+  
+  /// 组里的「自测」：交出这一组卡的题号，首页按条目内容现场出题、起一轮做题（ADR 0118）。
+  final void Function(List<String> questionIds, String title) onStartRecall;
 
   /// 组的顺序与每组的读法口诀；分组本身由 json 的 `kind` 决定。
   static const _groups = [
@@ -85,18 +78,6 @@ class GaugesPage extends StatelessWidget {
     );
   }
 
-  RecallEntry _recallEntryOf(Gauge gauge, RecallCard card) {
-    final other = gauge.confuseWith == null
-        ? null
-        : gauges.where((x) => x.id == gauge.confuseWith).firstOrNull;
-    return RecallEntry.fromCard(
-      card,
-      front: _gaugeImage(gauge, 360),
-      related: [for (final q in questions) if (gauge.questions.contains(q.id)) q],
-      confuseView: other == null ? null : _gaugeImage(other, 168),
-    );
-  }
-
   /// 仪表图（ADR 0080）：题库官方题图（报警灯/指示灯裁成方图，表盘与座舱图原样），
   /// 按 4:3 取框；胎压、ESC 灯题库没有图，退回手绘符号。
   static Widget _gaugeImage(Gauge gauge, double width) => CheatImage(
@@ -105,19 +86,6 @@ class GaugesPage extends StatelessWidget {
     height: width * 3 / 4,
     fallback: (side) => GaugeView(id: gauge.id, size: side),
   );
-
-  /// 自测：把没认得的符号逐张过完，收尾深链练相关题（ADR 0077、0090）。
-  void _startRecall(BuildContext context, Set<String> questionIds, String label) {
-    final cards = {for (final c in recallCardsOfGauges(recallPage, gauges)) c.id: c};
-    RecallSession.show(
-      context,
-      onAnswer: onRecallAnswer,
-      histories: histories,
-      only: questionIds,
-      entries: [for (final g in gauges) _recallEntryOf(g, cards[g.id]!)],
-      onStartPractice: (questions) => onStartPractice(questions, "仪表速记 · $label · 自测"),
-    );
-  }
 
   Widget _gaugeGroup(BuildContext context, String kind, String hint, TextStyle? muted) {
     final inGroup = [for (final gauge in gauges) if (gauge.kind == kind) gauge];
@@ -144,7 +112,12 @@ class GaugesPage extends StatelessWidget {
                 ),
                 MasteryTag(ids: ids, histories: histories),
                 const Spacer(),
-                GroupRecallButton(status: status, onPressed: () => _startRecall(context, ids.toSet(), label)),
+                GroupRecallButton(
+                  status: status,
+                  ids: ids,
+                  histories: histories,
+                  onStart: () => onStartRecall(ids, "仪表速记 · $label · 自测"),
+                ),
               ],
             ),
             const SizedBox(height: 6),

@@ -6,7 +6,6 @@ import "../ui/glyphs.dart";
 import "../ui/look.dart";
 import "marking.dart";
 import "../core/models.dart";
-import "recall.dart";
 import "../study/reinforce.dart";
 import "recall_cards.dart";
 /// 标线速记页（ADR 0065）：手绘标线按「指示 / 禁止 / 警告」三组摊开，每条配一句
@@ -17,11 +16,9 @@ class MarkingsPage extends StatelessWidget {
     super.key,
     required this.markings,
     required this.histories,
-    required this.questions,
-    required this.onRecallAnswer,
     this.recallPage = "s1.markings",
     this.subjectLabel = "科目一",
-    required this.onStartPractice,
+    required this.onStartRecall,
   });
 
   final List<Marking> markings;
@@ -29,16 +26,12 @@ class MarkingsPage extends StatelessWidget {
   /// 作答历史：格子微点由它现算——只看这一条自己的自测卡（ADR 0077 决策 3、0112）。
   final HistorySet histories;
 
-  /// 本科目的全部题（含偏难，ADR 0112 一视同仁）：自测收尾「去做这几个的题」从这里按 `Question.marking` 取题。
-  final List<Question> questions;
-
-  /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
-  final RecallAnswerRecorder onRecallAnswer;
-
   /// 本专题的页键（`s1.signs` 这样，作答记录里的题号带它）与所属科目的名称（ADR 0096）。
   final String recallPage;
   final String subjectLabel;
-  final void Function(List<Question> questions, String title) onStartPractice;
+  
+  /// 组里的「自测」：交出这一组卡的题号，首页按条目内容现场出题、起一轮做题（ADR 0118）。
+  final void Function(List<String> questionIds, String title) onStartRecall;
 
   /// 组的顺序与每组的读法口诀；分组本身由 json 的 `kind` 决定，三分法与题库一致
   /// （s1.signals.055/476、s1.signals.266 的口径）。
@@ -84,18 +77,6 @@ class MarkingsPage extends StatelessWidget {
     );
   }
 
-  RecallEntry _recallEntryOf(Marking marking, RecallCard card) {
-    final other = marking.confuseWith == null
-        ? null
-        : markings.where((x) => x.id == marking.confuseWith).firstOrNull;
-    return RecallEntry.fromCard(
-      card,
-      front: _markingImage(marking, 400),
-      related: [for (final q in questions) if (q.marking == marking.id) q],
-      confuseView: other == null ? null : _markingImage(other, 168),
-    );
-  }
-
   /// 标线图（ADR 0080）：题库官方题图，横向场景，按 4:3 取框；读不出来时退回
   /// 手绘俯视图。
   static Widget _markingImage(Marking marking, double width) => CheatImage(
@@ -104,19 +85,6 @@ class MarkingsPage extends StatelessWidget {
     height: width * 3 / 4,
     fallback: (side) => MarkingView(id: marking.id, size: side),
   );
-
-  /// 自测：把没认得的标线逐张过完，收尾深链练相关题（ADR 0077、0090）。
-  void _startRecall(BuildContext context, Set<String> questionIds, String label) {
-    final cards = {for (final c in recallCardsOfMarkings(recallPage, markings)) c.id: c};
-    RecallSession.show(
-      context,
-      onAnswer: onRecallAnswer,
-      histories: histories,
-      only: questionIds,
-      entries: [for (final m in markings) _recallEntryOf(m, cards[m.id]!)],
-      onStartPractice: (questions) => onStartPractice(questions, "标线速记 · $label · 自测"),
-    );
-  }
 
   Widget _markingGroup(BuildContext context, String kind, String hint, TextStyle? muted) {
     final inGroup = [for (final marking in markings) if (marking.kind == kind) marking];
@@ -143,7 +111,12 @@ class MarkingsPage extends StatelessWidget {
                 ),
                 MasteryTag(ids: ids, histories: histories),
                 const Spacer(),
-                GroupRecallButton(status: status, onPressed: () => _startRecall(context, ids.toSet(), label)),
+                GroupRecallButton(
+                  status: status,
+                  ids: ids,
+                  histories: histories,
+                  onStart: () => onStartRecall(ids, "标线速记 · $label · 自测"),
+                ),
               ],
             ),
             const SizedBox(height: 6),

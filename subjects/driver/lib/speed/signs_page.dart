@@ -5,7 +5,6 @@ import "cheat_image.dart";
 import "../ui/glyphs.dart";
 import "../ui/look.dart";
 import "../core/models.dart";
-import "recall.dart";
 import "../study/reinforce.dart";
 import "recall_cards.dart";
 import "sign.dart";
@@ -19,11 +18,9 @@ class SignsPage extends StatelessWidget {
     super.key,
     required this.signs,
     required this.histories,
-    required this.questions,
-    required this.onRecallAnswer,
     this.recallPage = "s1.signs",
     this.subjectLabel = "科目一",
-    required this.onStartPractice,
+    required this.onStartRecall,
   });
 
   final List<RoadSign> signs;
@@ -31,16 +28,12 @@ class SignsPage extends StatelessWidget {
   /// 作答历史：格子微点由它现算——只看这一条自己的自测卡（ADR 0077 决策 3、0112）。
   final HistorySet histories;
 
-  /// 本科目的全部题（含偏难，ADR 0112 一视同仁）：自测收尾「去做这几个的题」从这里按 `Question.sign` 取题。
-  final List<Question> questions;
-
-  /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
-  final RecallAnswerRecorder onRecallAnswer;
-
   /// 本专题的页键（`s1.signs` 这样，作答记录里的题号带它）与所属科目的名称（ADR 0096）。
   final String recallPage;
   final String subjectLabel;
-  final void Function(List<Question> questions, String title) onStartPractice;
+  
+  /// 组里的「自测」：交出这一组卡的题号，首页按条目内容现场出题、起一轮做题（ADR 0118）。
+  final void Function(List<String> questionIds, String title) onStartRecall;
 
   /// 组的顺序与每组的形状口诀；分组本身由 json 的 `kind` 决定。
   static const _groups = [
@@ -89,37 +82,12 @@ class SignsPage extends StatelessWidget {
     );
   }
 
-  RecallEntry _recallEntryOf(RoadSign sign, RecallCard card) {
-    final other = sign.confuseWith == null
-        ? null
-        : signs.where((x) => x.id == sign.confuseWith).firstOrNull;
-    return RecallEntry.fromCard(
-      card,
-      front: _signImage(sign, 288),
-      related: [for (final q in questions) if (q.signId == sign.id) q],
-      confuseView: other == null ? null : _signImage(other, 144),
-    );
-  }
-
   /// 标志规范图（ADR 0080）；文件读不出来时退回手绘标志。
   static Widget _signImage(RoadSign sign, double size) => CheatImage(
     path: sign.image,
     width: size,
     fallback: (side) => SignView(id: sign.id, size: side),
   );
-
-  /// 自测：把没认得的标志逐张过完，收尾深链练相关题（ADR 0077、0090）。
-  void _startRecall(BuildContext context, Set<String> questionIds, String label) {
-    final cards = {for (final c in recallCardsOfSigns(recallPage, signs)) c.id: c};
-    RecallSession.show(
-      context,
-      onAnswer: onRecallAnswer,
-      histories: histories,
-      only: questionIds,
-      entries: [for (final s in signs) _recallEntryOf(s, cards[s.id]!)],
-      onStartPractice: (questions) => onStartPractice(questions, "标志速记 · $label · 自测"),
-    );
-  }
 
   Widget _signGroup(BuildContext context, String kind, String hint, TextStyle? muted) {
     final inGroup = [for (final sign in signs) if (sign.kind == kind) sign];
@@ -146,7 +114,12 @@ class SignsPage extends StatelessWidget {
                 ),
                 MasteryTag(ids: ids, histories: histories),
                 const Spacer(),
-                GroupRecallButton(status: status, onPressed: () => _startRecall(context, ids.toSet(), label)),
+                GroupRecallButton(
+                  status: status,
+                  ids: ids,
+                  histories: histories,
+                  onStart: () => onStartRecall(ids, "标志速记 · $label · 自测"),
+                ),
               ],
             ),
             const SizedBox(height: 6),
