@@ -6,7 +6,6 @@ import "package:athena_driver/speed/gauge.dart";
 import "package:athena_driver/home.dart";
 import "package:athena_driver/core/models.dart";
 import "package:athena_driver/core/progress.dart";
-import "package:athena_driver/study/session.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
@@ -30,7 +29,7 @@ void main() {
   });
 
   // 反向映射契约（ADR 0067 决策 3）：映射里的题 id 都真实存在，每条至少挂一道
-  // 题，「练这组」才有得练；题库 JSON 不因此加字段。
+  // 题，「自测答错后去做题」才有得练；题库 JSON 不因此加字段。
   test("反向映射的题 id 都存在，每条符号都挂着题", () async {
     final bank = await ContentLoader.load();
     final byId = {for (final q in bank.questions) q.id: q};
@@ -84,37 +83,4 @@ void main() {
     });
   });
 
-  // 组级练习入口：进页面首屏就是报警灯组，「练这组」一点就起一轮练习。
-  testWidgets("点「练这组」起一轮相关题练习", (tester) async {
-    late Directory dir;
-    late ProgressStore store;
-    late Bank bank;
-    await tester.runAsync(() async {
-      bank = await ContentLoader.load();
-      dir = await Directory.systemTemp.createTemp("athena-driver-gauges-");
-      store = await ProgressStore.open(suite: "gauges_page_test_practice");
-    });
-    await tester.binding.setSurfaceSize(const Size(1600, 2600));
-    final ready = Completer<void>();
-    await tester.pumpWidget(
-      MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)),
-    );
-    for (var i = 0; i < 2000 && !ready.isCompleted; i++) {
-      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
-      await tester.pump();
-    }
-    await showTopic(tester, "仪表速记");
-    await tester.tap(find.text("仪表速记").first);
-    await tester.pump();
-    await tester.tap(find.textContaining("练这组").first);
-    await tester.pump();
-    expect(find.byType(SessionStage), findsOneWidget);
-    await tester.pump(const Duration(seconds: 30));
-
-    await tester.pumpWidget(const SizedBox());
-    await tester.runAsync(() async {
-      await store.close();
-      await dir.delete(recursive: true);
-    });
-  });
 }

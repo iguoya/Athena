@@ -43,7 +43,7 @@ void main() {
     );
   });
 
-  test("速记组待练题 speedPending：没做过的与错题库里的，偏难一视同仁，做对过一次就不再出（ADR 0115）", () async {
+  test("自测收尾的待练题 speedPending：没做过的与错题库里的，偏难一视同仁，做对过一次就不再出（ADR 0115）", () async {
     final bank = await ContentLoader.load();
     final rare = bank.questions.firstWhere((q) => q.isRare);
     final plain = bank.questions.firstWhere((q) => q.isRegular && q.id != rare.id);

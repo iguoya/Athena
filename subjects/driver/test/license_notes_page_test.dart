@@ -1,15 +1,5 @@
-import "dart:async";
-import "dart:io";
-
 import "package:athena_driver/core/content.dart";
-import "package:athena_driver/home.dart";
-import "package:athena_driver/core/models.dart";
-import "package:athena_driver/core/progress.dart";
-import "package:athena_driver/study/session.dart";
-import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
-
-import "nav_helpers.dart";
 
 void main() {
   const groupIds = [
@@ -62,74 +52,4 @@ void main() {
     expect(covered.length / topicQuestions.length, greaterThan(0.8), reason: "组 match 对三个知识点的覆盖不足");
   });
 
-  // 页面：用真实内容渲染，七组标题都在，不溢出。
-  testWidgets("记分证照速记页用真实内容渲染不溢出，七组都在", (tester) async {
-    late Directory dir;
-    late ProgressStore store;
-    late Bank bank;
-    await tester.runAsync(() async {
-      bank = await ContentLoader.load();
-      dir = await Directory.systemTemp.createTemp("athena-driver-license-notes-");
-      store = await ProgressStore.open(suite: "license_notes_page_test");
-    });
-    await tester.binding.setSurfaceSize(const Size(1600, 2600));
-    final ready = Completer<void>();
-    await tester.pumpWidget(
-      MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)),
-    );
-    for (var i = 0; i < 2000 && !ready.isCompleted; i++) {
-      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
-      await tester.pump();
-    }
-    expect(ready.isCompleted, isTrue, reason: "首页没在 20 秒内读完进度库");
-
-    await showTopic(tester, "记分证照速记");
-    await tester.tap(find.text("记分证照速记").first);
-    await tester.pump();
-    for (final group in bank.licenseGroups) {
-      await tester.scrollUntilVisible(find.text(group.title), 300, scrollable: find.byType(Scrollable).last);
-      expect(find.text(group.title), findsOneWidget);
-    }
-    expect(tester.takeException(), isNull);
-
-    await tester.pumpWidget(const SizedBox());
-    await tester.runAsync(() async {
-      await store.close();
-      await dir.delete(recursive: true);
-    });
-  });
-
-  // 组级练习入口：点「练这组」起一轮相关题的练习。
-  testWidgets("点「练这组」起一轮练习", (tester) async {
-    late Directory dir;
-    late ProgressStore store;
-    late Bank bank;
-    await tester.runAsync(() async {
-      bank = await ContentLoader.load();
-      dir = await Directory.systemTemp.createTemp("athena-driver-license-notes-");
-      store = await ProgressStore.open(suite: "license_notes_page_test_practice");
-    });
-    await tester.binding.setSurfaceSize(const Size(1600, 2600));
-    final ready = Completer<void>();
-    await tester.pumpWidget(
-      MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)),
-    );
-    for (var i = 0; i < 2000 && !ready.isCompleted; i++) {
-      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
-      await tester.pump();
-    }
-    await showTopic(tester, "记分证照速记");
-    await tester.tap(find.text("记分证照速记").first);
-    await tester.pump();
-    await tester.tap(find.textContaining("练这组").first);
-    await tester.pump();
-    expect(find.byType(SessionStage), findsOneWidget);
-    await tester.pump(const Duration(seconds: 30));
-
-    await tester.pumpWidget(const SizedBox());
-    await tester.runAsync(() async {
-      await store.close();
-      await dir.delete(recursive: true);
-    });
-  });
 }

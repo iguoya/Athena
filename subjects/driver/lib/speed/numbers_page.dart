@@ -29,7 +29,7 @@ class RecallRowDot extends StatelessWidget {
   }
 }
 
-/// 易混数字页（ADR 0028）：同类数字并排，配横条比大小，每行指到条文，每组能直接练专属题。
+/// 易混数字页（ADR 0028）：同类数字并排，配横条比大小，每行指到条文，每组能直接自测。
 /// 与标志、标线、仪表、手势、考点各页同构：页面只管呈现与起练习，作答记录、练习队列由首页接上。
 class NumbersPage extends StatelessWidget {
   const NumbersPage({
@@ -158,7 +158,7 @@ class NumbersPage extends StatelessWidget {
     // 组按钮练的是本组的专属题——组内自测卡对应的题，行与题一对一（ADR 0102）。
     final related = _groupQuestions(group);
     final maxAmount = group.maxAmount;
-    // 组状态只看这一组的自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 自测卡全部答对过、灰 = 没测完。
+    // 组状态只看这一组的自测卡（ADR 0112）：给组内「自测」按钮上色——红 = 有答错未掌握、绿 = 全部答对过、灰 = 没测完。
     final ids = [for (final q in related) q.id];
     final groupIds = ids.toSet();
     final status = statusOfIds(ids: ids, histories: histories);
@@ -176,14 +176,7 @@ class NumbersPage extends StatelessWidget {
               ],
               MasteryTag(ids: ids, histories: histories),
               const Spacer(),
-              GroupRecallButton(onPressed: () => _recall(context, ids.toSet(), group.title)),
-              const SizedBox(width: 10),
-              GroupPracticeButton(
-                status: status,
-                related: related,
-                histories: histories,
-                onStart: (questions) => onStartPractice(questions, "${topic.title} · ${group.title}"),
-              ),
+              GroupRecallButton(status: status, onPressed: () => _recall(context, ids.toSet(), group.title)),
             ],
           ),
           if (group.note.isNotEmpty) ...[

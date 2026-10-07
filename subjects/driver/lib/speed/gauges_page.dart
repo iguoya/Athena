@@ -11,7 +11,7 @@ import "../study/reinforce.dart";
 import "recall_cards.dart";
 /// 仪表速记页（ADR 0067）：手绘车内符号按「报警灯 / 指示灯 / 仪表表盘 /
 /// 开关与操纵件」四组摊开，每条配一句「亮了怎么办 / 这是什么」，每组能直接
-/// 练相关的题。内容源是 `content/gauges.json`（文件级出处 GB 4094），相关题
+/// 自测。内容源是 `content/gauges.json`（文件级出处 GB 4094），相关题
 /// 由每条的反向映射声明（决策 3），页面只负责呈现与起练习。
 class GaugesPage extends StatelessWidget {
   const GaugesPage({
@@ -30,7 +30,7 @@ class GaugesPage extends StatelessWidget {
   /// 作答历史：格子微点由它现算——只看这一条自己的自测卡（ADR 0077 决策 3、0112）。
   final HistorySet histories;
 
-  /// 本科目的全部题（含偏难，ADR 0112 一视同仁）：「练这组」按反向映射的题 id 从这里取题。
+  /// 本科目的全部题（含偏难，ADR 0112 一视同仁）：自测收尾「去做这几个的题」按反向映射的题 id 从这里取题。
   final List<Question> questions;
 
   /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
@@ -70,7 +70,7 @@ class GaugesPage extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           "车也在跟你说话：红黄是报警，蓝绿是指示，表盘给读数，开关看符号。"
-          "每张卡都写着「亮了怎么办」，每组都能直接练相关的题。",
+          "每张卡都写着「亮了怎么办」，每组都能直接自测。",
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         for (final group in _groups)
@@ -123,9 +123,7 @@ class GaugesPage extends StatelessWidget {
     final inGroup = [for (final gauge in gauges) if (gauge.kind == kind) gauge];
     if (inGroup.isEmpty) return const SizedBox.shrink();
     final label = inGroup.first.kindLabel;
-    final relatedIds = {for (final gauge in inGroup) ...gauge.questions};
-    final related = [for (final q in questions) if (relatedIds.contains(q.id)) q];
-    // 组状态只看这一组的自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 自测卡全部答对过、灰 = 没测完。
+    // 组状态只看这一组的自测卡（ADR 0112）：给组内「自测」按钮上色——红 = 有答错未掌握、绿 = 全部答对过、灰 = 没测完。
     final ids = [for (final gauge in inGroup) recallQuestionId(recallPage, gauge.id)];
     final status = statusOfIds(ids: ids, histories: histories);
     return Padding(
@@ -146,14 +144,7 @@ class GaugesPage extends StatelessWidget {
                 ),
                 MasteryTag(ids: ids, histories: histories),
                 const Spacer(),
-                GroupRecallButton(onPressed: () => _startRecall(context, ids.toSet(), label)),
-                const SizedBox(width: 10),
-                GroupPracticeButton(
-                  status: status,
-                  related: related,
-                  histories: histories,
-                  onStart: (questions) => onStartPractice(questions, "仪表速记 · $label"),
-                ),
+                GroupRecallButton(status: status, onPressed: () => _startRecall(context, ids.toSet(), label)),
               ],
             ),
             const SizedBox(height: 6),

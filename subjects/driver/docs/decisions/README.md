@@ -121,3 +121,4 @@
 | [0114](0114-group-practice-only-pending.md) | 「练这组」只出没做过或做错的题，没有待练题算通过，不再整组重来 | 已接受 |
 | [0115](0115-group-practice-pending-by-wrong-pool.md) | 「练这组」待练含偏难、做过一次即止，无待练给「再练一遍」；按钮颜色只看自测；「再测一遍」只在整组全对后出现 | 已接受 |
 | [0116](0116-group-self-test-no-group-title-dots.md) | 自测只在组内、页头不再有全页自测；速记组标题左侧不放掌握圆点 | 已接受 |
+| [0117](0117-remove-group-practice-keep-self-test.md) | 去掉速记组的「练这组」，组里只留「自测」，按钮颜色挪到「自测」上 | 已接受 |

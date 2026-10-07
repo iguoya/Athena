@@ -10,7 +10,7 @@ import "../study/reinforce.dart";
 import "recall_cards.dart";
 import "sign.dart";
 /// 标志速记页（ADR 0059）：标志按「禁令 / 警告 / 指示 / 指路」四组摊开，
-/// 每条配一句「看到之后怎么开」，每组能直接练相关的题。内容源是
+/// 每条配一句「看到之后怎么开」，每组能直接自测。内容源是
 /// `content/signs.json`（文件级出处 GB 5768.2），页面只负责呈现与起练习。
 /// 图用 Wikimedia Commons 上的国标标志规范图（ADR 0080），手绘 `SignView`
 /// 只在图读不出来时兜底。
@@ -31,7 +31,7 @@ class SignsPage extends StatelessWidget {
   /// 作答历史：格子微点由它现算——只看这一条自己的自测卡（ADR 0077 决策 3、0112）。
   final HistorySet histories;
 
-  /// 本科目的全部题（含偏难，ADR 0112 一视同仁）：「练这组」从这里按 `Question.sign` 取题。
+  /// 本科目的全部题（含偏难，ADR 0112 一视同仁）：自测收尾「去做这几个的题」从这里按 `Question.sign` 取题。
   final List<Question> questions;
 
   /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
@@ -74,7 +74,7 @@ class SignsPage extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           "标志是路上的语言：先认形状，再记含义。红圈禁、黄三角警、蓝盘指、绿牌路；"
-          "每张卡都写着「看到之后怎么开」，每组都能直接练相关的题。",
+          "每张卡都写着「看到之后怎么开」，每组都能直接自测。",
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         for (final group in _groups)
@@ -125,12 +125,7 @@ class SignsPage extends StatelessWidget {
     final inGroup = [for (final sign in signs) if (sign.kind == kind) sign];
     if (inGroup.isEmpty) return const SizedBox.shrink();
     final label = inGroup.first.kindLabel;
-    final related = [
-      for (final sign in inGroup)
-        for (final q in questions)
-          if (q.signId == sign.id) q,
-    ];
-    // 组状态只看这一组的自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 自测卡全部答对过、灰 = 没测完。
+    // 组状态只看这一组的自测卡（ADR 0112）：给组内「自测」按钮上色——红 = 有答错未掌握、绿 = 全部答对过、灰 = 没测完。
     final ids = [for (final sign in inGroup) recallQuestionId(recallPage, sign.id)];
     final status = statusOfIds(ids: ids, histories: histories);
     return Padding(
@@ -151,14 +146,7 @@ class SignsPage extends StatelessWidget {
                 ),
                 MasteryTag(ids: ids, histories: histories),
                 const Spacer(),
-                GroupRecallButton(onPressed: () => _startRecall(context, ids.toSet(), label)),
-                const SizedBox(width: 10),
-                GroupPracticeButton(
-                  status: status,
-                  related: related,
-                  histories: histories,
-                  onStart: (questions) => onStartPractice(questions, "标志速记 · $label"),
-                ),
+                GroupRecallButton(status: status, onPressed: () => _startRecall(context, ids.toSet(), label)),
               ],
             ),
             const SizedBox(height: 6),

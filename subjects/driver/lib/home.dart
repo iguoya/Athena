@@ -1927,7 +1927,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// 起一轮练习。[shuffleQueue] 给速记组的组按钮与自测收尾用，出题见 [_speedGroupQueue]：
+  /// 起一轮练习。[shuffleQueue] 给速记页自测收尾的「去做这几个的题」用，出题见 [_speedGroupQueue]：
   /// 洗牌出题——速记卡全是常规档、没有全国错误率，走 [practiceQueue] 的分档排序会退化成
   /// 内容顺序（12→9→6→3→1），规律性毁掉考试价值。
   void _startPractice(
@@ -1955,12 +1955,10 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// 速记组「练这组」的出题（ADR 0115）：有待练题（[speedPending]：错题库里的、没做过的，偏难一视同仁）
-  /// 就只出待练的，错题库里的在前、没做过的其次，各自洗牌；一道待练都没有，才是使用者主动「再练一遍」，
-  /// 整组洗牌重出。按钮上的道数用的是同一个函数，点下去不会和写的对不上。
+  /// 自测收尾「去做这几个的题」的出题（ADR 0115、0117）：只出 [speedPending] 筛出的待练题——
+  /// 错题库里的在前、没做过的其次，各自洗牌；没有待练就是空队列，不起练习。
   List<Question> _speedGroupQueue(List<Question> questions) {
     final pending = speedPending(questions, _histories);
-    if (pending.isEmpty) return [...questions]..shuffle();
     final wrong = [for (final q in pending) if (classifyOwn(q.id, _histories) == RecallBucket.wrong) q]..shuffle();
     final fresh = [for (final q in pending) if (classifyOwn(q.id, _histories) != RecallBucket.wrong) q]..shuffle();
     return [...wrong, ...fresh];

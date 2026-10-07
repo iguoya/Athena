@@ -9,11 +9,11 @@ import "../study/reinforce.dart";
 import "recall_cards.dart";
 /// 考点速记页（ADR 0064）：灯光、让行、高速、恶劣天气、应急避险、伤员急救的
 /// 「情景 → 要点」对照。内容源是 `content/notes.json`，条级挂出处，每组能直接
-/// 练相关的题。页面语言与易混数字、标志速记一致；没有横条比大小——那是数字
+/// 自测。页面语言与易混数字、标志速记一致；没有横条比大小——那是数字
 /// 组的表达。
 class NotesPage extends StatelessWidget {
   static const defaultLead = "考场上没时间回想整章的内容，记得住的是「什么情景该做什么」这一句。"
-      "灯光、让行、高速、恶劣天气、应急、急救——先看速记，再练相关的题。";
+      "灯光、让行、高速、恶劣天气、应急、急救——先看速记，再按组自测。";
   static const defaultFootnote = "条目依据《道路交通安全法》《道路交通安全法实施条例》与 2022 版考试大纲，"
       "每题的完整解释在答题时给出。";
 
@@ -34,7 +34,7 @@ class NotesPage extends StatelessWidget {
 
   final List<NoteGroup> groups;
 
-  /// 本科目的全部题（含偏难，ADR 0112 一视同仁）：「练这组」与自测收尾深链从这里取题。
+  /// 本科目的全部题（含偏难，ADR 0112 一视同仁）：自测收尾「去做这几个的题」从这里取题。
   final List<Question> questions;
   final void Function(List<Question> questions, String title) onStartPractice;
 
@@ -130,8 +130,7 @@ class NotesPage extends StatelessWidget {
   }
 
   Widget _noteGroup(BuildContext context, NoteGroup group, TextStyle? muted) {
-    final related = group.related(questions);
-    // 组状态只看这一组的自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 自测卡全部答对过、灰 = 没测完。
+    // 组状态只看这一组的自测卡（ADR 0112）：给组内「自测」按钮上色——红 = 有答错未掌握、绿 = 全部答对过、灰 = 没测完。
     final ids = [
         for (final i in group.items) recallQuestionId(recallPage, "${group.id}/${i.scenario}"),
       ];
@@ -150,14 +149,7 @@ class NotesPage extends StatelessWidget {
                 Text("${group.items.length} 条", style: muted),
                 MasteryTag(ids: ids, histories: histories),
                 const Spacer(),
-                GroupRecallButton(onPressed: () => _startRecall(context, ids.toSet(), group.title)),
-                const SizedBox(width: 10),
-                GroupPracticeButton(
-                  status: status,
-                  related: related,
-                  histories: histories,
-                  onStart: (questions) => onStartPractice(questions, "$title · ${group.title}"),
-                ),
+                GroupRecallButton(status: status, onPressed: () => _startRecall(context, ids.toSet(), group.title)),
               ],
             ),
             if (group.note.isNotEmpty) ...[

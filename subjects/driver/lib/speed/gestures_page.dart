@@ -11,7 +11,7 @@ import "recall.dart";
 import "../study/reinforce.dart";
 import "recall_cards.dart";
 /// 手势速记页（ADR 0073）：8 个法定手势动作加「手势的效力」总则，每条配一句
-/// 「看到之后怎么开」，反向映射的 29 道题能直接练。内容源是
+/// 「看到之后怎么开」，反向映射的 29 道题供自测答错后去做。内容源是
 /// `content/gestures.json`（文件级出处：实施条例），页面只负责呈现与起练习。
 class GesturesPage extends StatelessWidget {
   const GesturesPage({
@@ -30,7 +30,7 @@ class GesturesPage extends StatelessWidget {
   /// 作答历史：格子微点由它现算——只看这一条自己的自测卡（ADR 0077 决策 3、0112）。
   final HistorySet histories;
 
-  /// 本科目的全部题（含偏难，ADR 0112 一视同仁）：「练手势」按反向映射的题 id 从这里取题。
+  /// 本科目的全部题（含偏难，ADR 0112 一视同仁）：自测收尾「去做这几个的题」按反向映射的题 id 从这里取题。
   final List<Question> questions;
 
   /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
@@ -49,8 +49,6 @@ class GesturesPage extends StatelessWidget {
     );
     final general = gestures.where((g) => g.kind == "general").toList();
     final actions = gestures.where((g) => g.kind != "general").toList();
-    final relatedIds = {for (final g in gestures) ...g.questions};
-    final related = [for (final q in questions) if (relatedIds.contains(q.id)) q];
     // 状态只看自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 自测卡全部答对过、灰 = 没测完。
     final ids = [for (final g in actions) recallQuestionId(recallPage, g.id)];
     final status = statusOfIds(ids: ids, histories: histories);
@@ -93,15 +91,7 @@ class GesturesPage extends StatelessWidget {
                   ),
                   MasteryTag(ids: ids, histories: histories),
                   const Spacer(),
-                  GroupRecallButton(onPressed: () => _startRecall(context, ids.toSet(), "法定动作")),
-                  const SizedBox(width: 10),
-                  GroupPracticeButton(
-                    status: status,
-                    related: related,
-                    histories: histories,
-                    onStart: (questions) => onStartPractice(questions, "手势速记"),
-                    verb: "练手势",
-                  ),
+                  GroupRecallButton(status: status, onPressed: () => _startRecall(context, ids.toSet(), "法定动作")),
                 ],
               ),
               const SizedBox(height: 14),

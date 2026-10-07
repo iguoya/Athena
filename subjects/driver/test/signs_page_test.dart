@@ -5,7 +5,6 @@ import "package:athena_driver/core/content.dart";
 import "package:athena_driver/home.dart";
 import "package:athena_driver/core/models.dart";
 import "package:athena_driver/core/progress.dart";
-import "package:athena_driver/study/session.dart";
 import "package:athena_driver/speed/sign.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
@@ -31,7 +30,7 @@ void main() {
   });
 
   // 题与标志的关联（ADR 0100）：sign_ref 指到的标志必须存在；每个标志至少有一道相关题，
-  // 否则「练这组」「自测答错后去练题」对它是空的（ADR 0091）。
+  // 否则「自测答错后去练题」对它是空的（ADR 0091）。
   test("题目的 sign_ref 都指到存在的标志，每个标志都有相关题", () async {
     final bank = await ContentLoader.load();
     final ids = {for (final s in bank.signs) s.id};
@@ -88,38 +87,4 @@ void main() {
     });
   });
 
-  // 组级练习入口：进页面首屏就是禁令组，「练这组」一点就起一轮练习。
-  testWidgets("点「练这组」起一轮相关题练习", (tester) async {
-    late Directory dir;
-    late ProgressStore store;
-    late Bank bank;
-    await tester.runAsync(() async {
-      bank = await ContentLoader.load();
-      dir = await Directory.systemTemp.createTemp("athena-driver-signs-");
-      store = await ProgressStore.open(suite: "signs_page_test_practice");
-    });
-    await tester.binding.setSurfaceSize(const Size(1600, 2600));
-    final ready = Completer<void>();
-    await tester.pumpWidget(
-      MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)),
-    );
-    for (var i = 0; i < 2000 && !ready.isCompleted; i++) {
-      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
-      await tester.pump();
-    }
-    await showTopic(tester, "标志速记");
-    await tester.tap(find.text("标志速记").first);
-    await tester.pump();
-    await tester.tap(find.textContaining("练这组").first);
-    await tester.pump();
-    expect(find.byType(SessionStage), findsOneWidget);
-    // SessionStage 挂着停留计时之类的 Timer；假时钟推走，不给收尾留 pending timer。
-    await tester.pump(const Duration(seconds: 30));
-
-    await tester.pumpWidget(const SizedBox());
-    await tester.runAsync(() async {
-      await store.close();
-      await dir.delete(recursive: true);
-    });
-  });
 }

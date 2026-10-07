@@ -6,7 +6,6 @@ import "package:athena_driver/speed/gesture_painter.dart";
 import "package:athena_driver/home.dart";
 import "package:athena_driver/core/models.dart";
 import "package:athena_driver/core/progress.dart";
-import "package:athena_driver/study/session.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
@@ -74,7 +73,8 @@ void main() {
     expect(find.text("手势速记"), findsWidgets);
     expect(find.text("手势的效力"), findsWidgets);
     expect(find.text("8 个法定动作"), findsOneWidget);
-    expect(find.textContaining("练手势"), findsOneWidget);
+    expect(find.textContaining("练手势"), findsNothing, reason: "组里只有自测（ADR 0117）");
+    expect(find.text("自测"), findsOneWidget);
     // 高频徽章与方向提醒都在
     expect(find.text("高频"), findsWidgets);
     expect(find.textContaining("他的左右和你看到的相反"), findsOneWidget);
@@ -87,37 +87,4 @@ void main() {
     });
   });
 
-  // 组级练习入口：起的一轮全部是手势题（科目一与科目四的都有）。
-  testWidgets("点「练手势」起一轮手势题练习", (tester) async {
-    late Directory dir;
-    late ProgressStore store;
-    late Bank bank;
-    await tester.runAsync(() async {
-      bank = await ContentLoader.load();
-      dir = await Directory.systemTemp.createTemp("athena-driver-gestures-");
-      store = await ProgressStore.open(suite: "gestures_page_test_practice");
-    });
-    await tester.binding.setSurfaceSize(const Size(1600, 2600));
-    final ready = Completer<void>();
-    await tester.pumpWidget(
-      MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)),
-    );
-    for (var i = 0; i < 2000 && !ready.isCompleted; i++) {
-      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
-      await tester.pump();
-    }
-    await showTopic(tester, "手势速记");
-    await tester.tap(find.text("手势速记").first);
-    await tester.pump();
-    await tester.tap(find.textContaining("练手势").first);
-    await tester.pump();
-    expect(find.byType(SessionStage), findsOneWidget);
-    await tester.pump(const Duration(seconds: 30));
-
-    await tester.pumpWidget(const SizedBox());
-    await tester.runAsync(() async {
-      await store.close();
-      await dir.delete(recursive: true);
-    });
-  });
 }

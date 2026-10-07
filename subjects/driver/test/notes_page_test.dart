@@ -65,9 +65,9 @@ void main() {
       await tester.scrollUntilVisible(find.text(group.title), 300, scrollable: find.byType(Scrollable).last);
       expect(find.text(group.title), findsOneWidget);
     }
-    // 组级练习入口可点，起一轮相关题练习。
-    await tester.scrollUntilVisible(find.textContaining("练这组").first, 300, scrollable: find.byType(Scrollable).last);
-    expect(find.textContaining("练这组"), findsWidgets);
+    // 组里只有「自测」，没有「练这组」（ADR 0117）。
+    expect(find.textContaining("练这组"), findsNothing);
+    expect(find.text("自测"), findsWidgets);
     expect(tester.takeException(), isNull);
 
     await tester.pumpWidget(const SizedBox());
@@ -79,7 +79,7 @@ void main() {
 
   // 组标题左侧的状态圆（ADR 0112）：每个子标题一枚，只看这一组自测卡的作答——
   // 没自测过全灰，自测答错一张后那一组变红，全程没碰过任何真题。
-  testWidgets("考点速记组标题左侧不放状态圆；组内自测答错一张，那一条变红、组按钮变红（不看关联真题，ADR 0116）", (tester) async {
+  testWidgets("考点速记组标题左侧不放状态圆；组内自测答错一张，那一条变红、组的「自测」按钮变红（不看关联真题，ADR 0116、0117）", (tester) async {
     late Directory dir;
     late ProgressStore store;
     late Bank bank;
@@ -132,13 +132,13 @@ void main() {
     await showTopic(tester, "考点速记");
     await tester.tap(find.text("考点速记").first);
     await tester.pump();
-    // 答错的是第一组的卡：那一条的状态点变红，组按钮也变红；组标题仍不放圆。
+    // 答错的是第一组的卡：那一条的状态点变红，组的「自测」按钮也变红；组标题仍不放圆。
     expect(find.byTooltip("这一条的自测题答错过，还没掌握"), findsOneWidget, reason: "自测答错的那一条变红（全程没碰过真题）");
     expect(find.byTooltip(red), findsNothing, reason: "组标题不放状态圆");
     final button = tester.widget<FilledButton>(
-      find.ancestor(of: find.textContaining("练这组").first, matching: find.bySubtype<FilledButton>()).first,
+      find.ancestor(of: find.text("自测").first, matching: find.bySubtype<FilledButton>()).first,
     );
-    expect(button.style?.backgroundColor?.resolve(<WidgetState>{}), Bs.danger, reason: "组按钮随自测变红");
+    expect(button.style?.backgroundColor?.resolve(<WidgetState>{}), Bs.danger, reason: "组的自测按钮随自测结果变红");
 
     await tester.pumpWidget(const SizedBox());
     await tester.runAsync(() async {

@@ -5,7 +5,7 @@ import "../ui/glyphs.dart";
 import "../ui/look.dart";
 import "../study/reinforce.dart";
 // 速记条目、专题与速记组的「作答状态」（ADR 0077、0094、0101、0109、0112）：状态枚举、
-// 由作答记录判档的纯函数，以及按状态上色的小部件（状态圆、「练这组」按钮样式）。
+// 由作答记录判档的纯函数，以及按状态上色的小部件（状态圆、组内「自测」按钮）。
 // 自测的界面（卡片流、输入、收尾）在 recall.dart，这里不碰界面流程。
 //
 // 口径（ADR 0112）：专题掌握只由**专题自测**的作答决定——判一张卡、一个条目、一组、
@@ -59,7 +59,7 @@ enum SymbolStatus { wrong, mastered, fresh }
 /// 由一组自测题号算状态（ADR 0109、0112、0113）：有答错过且还在错题库里（累计答对没到答错的
 /// 2 倍，ADR 0079）→ 红；**每一张都答对过**（整组测完）→ 绿；其余（一张没答过，或只测了一
 /// 部分）→ 灰。只答对一部分不算掌握——没测完的组不能写「已掌握」。**只看这些题号自己的
-/// 作答**，关联真题（日常练习）不参与。侧栏专题圆、组标题圆、条目微点、「练这组」按钮
+/// 作答**，关联真题（日常练习）不参与。侧栏专题圆、条目微点、组内「自测」按钮
 /// 都用它，全站一个口径。
 SymbolStatus statusOfIds({
   required Iterable<String> ids,
@@ -147,10 +147,9 @@ RecallBucket? classifyOwn(String questionId, HistorySet histories) {
   return RecallBucket.done;
 }
 
-/// 速记组「练这组」的待练题（ADR 0115）：关联题里**没做过**的，加上**答错过且还在错题库里**的
+/// 自测收尾「去做这几个的题」的待练题（ADR 0115、0117）：关联题里**没做过**的，加上**答错过且还在错题库里**的
 /// （判档同 [classifyOwn]，移出规则同 ADR 0079）。不看难度档——偏难题一视同仁（ADR 0112）；
 /// 没答错过的题答过一次就不再算待练。错题库里的在前、没做过的其次，各自保持原序（出题时再各自洗牌）。
-/// 按钮上的道数与点下去出的题都由它算，两边不会对不上。
 List<Question> speedPending(Iterable<Question> questions, HistorySet histories) {
   final wrong = <Question>[];
   final fresh = <Question>[];
@@ -167,71 +166,24 @@ List<Question> speedPending(Iterable<Question> questions, HistorySet histories) 
   return [...wrong, ...fresh];
 }
 
-/// 速记组右上角「练这组」按钮的颜色（ADR 0109、0112、0115）：**只看这一组自测卡**——
-/// 有答错过且还在错题库里 → 红；每张都答对过 → 绿；没测完 → 灰。真题练没练完不影响颜色。
-ButtonStyle practiceButtonStyle(SymbolStatus status) {
-  final color = switch (status) {
-    SymbolStatus.wrong => Bs.danger,
-    SymbolStatus.mastered => const Color(0xFF2ECC71),
-    SymbolStatus.fresh => const Color(0xFF8A939B),
-  };
-  return FilledButton.styleFrom(
-    backgroundColor: color,
-    foregroundColor: Colors.white,
-    // 没有相关题时按钮置灰但保持原色调，不另起一种灰。
-    disabledBackgroundColor: color.withValues(alpha: 0.55),
-    disabledForegroundColor: Colors.white,
-  );
-}
-
-/// 速记组的练题按钮（ADR 0114、0115）。颜色是 [status]（自测的账）；文字与能不能点看真题（练习的账）：
-/// 有待练题写「练这组 N 题」，没有了写「再练一遍 M 题」——使用者主动整组重练的唯一入口；
-/// 本组没有关联题写「没有相关题」、不可点。点下去总是把整组关联题交给 [onStart]，
-/// 出题方再用同一个 [speedPending] 决定：有待练只出待练，没有才整组。
-class GroupPracticeButton extends StatelessWidget {
-  const GroupPracticeButton({
-    super.key,
-    required this.status,
-    required this.related,
-    required this.histories,
-    required this.onStart,
-    this.verb = "练这组",
-  });
+/// 速记组标题行里的「自测」（ADR 0116、0117）：只考这一组的卡，是组里唯一的按钮。颜色就是这一组
+/// 自测卡的结果（[statusOfIds]）：有答错过且还在错题库里 → 红；每张都答对过 → 绿；没测完 → 灰。
+class GroupRecallButton extends StatelessWidget {
+  const GroupRecallButton({super.key, required this.status, required this.onPressed});
 
   final SymbolStatus status;
-  final List<Question> related;
-  final HistorySet histories;
-  final void Function(List<Question> questions) onStart;
-
-  /// 有待练题时的动词（手势页写「练手势」）。
-  final String verb;
-
-  @override
-  Widget build(BuildContext context) {
-    final pending = speedPending(related, histories).length;
-    return FilledButton.icon(
-      style: practiceButtonStyle(status),
-      onPressed: related.isEmpty ? null : () => onStart(related),
-      icon: const Icon(Glyph.practice, size: 20),
-      label: Text(
-        related.isEmpty
-            ? "没有相关题"
-            : pending > 0
-            ? "$verb $pending 题"
-            : "再练一遍 ${related.length} 题",
-      ),
-    );
-  }
-}
-
-/// 速记组标题行里的「自测」（ADR 0116）：只考这一组的卡。专题页没有全页的自测入口，自测都从组里进。
-class GroupRecallButton extends StatelessWidget {
-  const GroupRecallButton({super.key, required this.onPressed});
-
   final VoidCallback onPressed;
 
   @override
-  Widget build(BuildContext context) => FilledButton.tonalIcon(
+  Widget build(BuildContext context) => FilledButton.icon(
+    style: FilledButton.styleFrom(
+      backgroundColor: switch (status) {
+        SymbolStatus.wrong => Bs.danger,
+        SymbolStatus.mastered => const Color(0xFF2ECC71),
+        SymbolStatus.fresh => const Color(0xFF8A939B),
+      },
+      foregroundColor: Colors.white,
+    ),
     onPressed: onPressed,
     icon: const Icon(Glyph.question, size: 18),
     label: const Text("自测"),

@@ -379,8 +379,7 @@ class _RecallSessionState extends State<RecallSession> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _focusCurrent());
   }
 
-  /// 收尾「去做这几个的题」：这次答错的条目的关联真题去重后，只留还要练的（[speedPending]，
-  /// 与「练这组」同一个判据，ADR 0115）。
+  /// 收尾「去做这几个的题」：这次答错的条目的关联真题去重后，只留还要练的（[speedPending]，ADR 0115）。
   List<Question> _focusQuestions() {
     final seen = <String>{};
     return speedPending([

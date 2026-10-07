@@ -15,7 +15,7 @@ import "package:flutter_test/flutter_test.dart";
 
 import "nav_helpers.dart";
 
-/// 侧栏专题分组折叠与状态圆、速记组「练这组」按钮的三色（ADR 0109）。
+/// 侧栏专题分组折叠与状态圆、速记组「自测」按钮的三色（ADR 0109、0117）。
 void main() {
   Future<(Bank, ProgressStore, Directory)> boot(WidgetTester tester) async {
     late Directory dir;
@@ -150,7 +150,7 @@ void main() {
     await teardown(tester, store, dir);
   });
 
-  testWidgets("速记组「练这组」按钮（跟自测卡走）：没做过灰、有答错红（全部掌握为绿，见 statusOf）", (tester) async {
+  testWidgets("速记组「自测」按钮（跟自测卡走）：没做过灰、有答错红，组里没有「练这组」（ADR 0117）", (tester) async {
     late Directory dir;
     late ProgressStore store;
     late Bank bank;
@@ -179,7 +179,8 @@ void main() {
     await tester.pump();
     Color? colorOf(Finder button) =>
         (tester.widget<FilledButton>(button).style?.backgroundColor)?.resolve(<WidgetState>{});
-    final buttons = find.ancestor(of: find.textContaining("练这组"), matching: find.bySubtype<FilledButton>());
+    expect(find.textContaining("练这组"), findsNothing, reason: "「练这组」已去掉，组里只有自测");
+    final buttons = find.ancestor(of: find.text("自测"), matching: find.bySubtype<FilledButton>());
     expect(buttons.evaluate().length, greaterThan(1));
     // 禁令组（第一组）有答错：红；其余组没做过：灰。
     expect(colorOf(buttons.first), Bs.danger, reason: "禁令组的自测卡答错 → 红");
@@ -192,48 +193,4 @@ void main() {
     });
   });
 
-  testWidgets("「练这组」只练没做过或做错的：关联题都做对后写「再练一遍」、可点，颜色仍随自测（ADR 0114、0115）", (tester) async {
-    late Directory dir;
-    late ProgressStore store;
-    late Bank bank;
-    late int firstGroupCount;
-    await tester.runAsync(() async {
-      bank = await ContentLoader.load();
-      dir = await Directory.systemTemp.createTemp("athena-driver-speednav3-");
-      store = await ProgressStore.open(suite: "speed_nav_pass_test");
-      final topic = speedTopics.firstWhere((t) => t.id == "s1.license-notes");
-      final group = noteGroupsOf(bank, topic).first;
-      final related = group.related(bank.forSubject("subject1"));
-      firstGroupCount = related.length;
-      for (final q in related) {
-        await store.recordAttempt(questionId: q.id, topicId: q.topicId, subjectId: "subject1", correct: true);
-      }
-    });
-    expect(firstGroupCount, greaterThan(0));
-    await tester.binding.setSurfaceSize(const Size(1600, 2600));
-    final ready = Completer<void>();
-    await tester.pumpWidget(MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)));
-    for (var i = 0; i < 2000 && !ready.isCompleted; i++) {
-      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
-      await tester.pump();
-    }
-    await showTopic(tester, "记分证照速记");
-    await tester.tap(find.text("记分证照速记").first);
-    await tester.pump();
-    FilledButton button(Finder label) => tester.widget<FilledButton>(
-      find.ancestor(of: label, matching: find.bySubtype<FilledButton>()).first,
-    );
-    expect(find.textContaining("已通过"), findsNothing, reason: "真题练完不再写「已通过」");
-    final again = find.text("再练一遍 $firstGroupCount 题");
-    expect(again, findsOneWidget, reason: "第一组关联题全做对：没有待练题，给整组重练的入口");
-    final b = button(again);
-    expect(b.onPressed, isNotNull, reason: "再练一遍是使用者主动重练，可以点");
-    expect(b.style?.backgroundColor?.resolve(<WidgetState>{}), const Color(0xFF8A939B), reason: "自测卡没测过：仍是灰");
-    await tester.pump(const Duration(seconds: 30));
-    await tester.pumpWidget(const SizedBox());
-    await tester.runAsync(() async {
-      await store.close();
-      await dir.delete(recursive: true);
-    });
-  });
 }

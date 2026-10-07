@@ -5,7 +5,6 @@ import "package:athena_driver/core/content.dart";
 import "package:athena_driver/home.dart";
 import "package:athena_driver/core/models.dart";
 import "package:athena_driver/core/progress.dart";
-import "package:athena_driver/study/session.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
@@ -91,37 +90,4 @@ void main() {
     });
   });
 
-  // 组级练习入口：进页面首屏就是罚款组，「练这组」一点就起一轮河南题练习。
-  testWidgets("点「练这组」起一轮河南题练习", (tester) async {
-    late Directory dir;
-    late ProgressStore store;
-    late Bank bank;
-    await tester.runAsync(() async {
-      bank = await ContentLoader.load();
-      dir = await Directory.systemTemp.createTemp("athena-driver-henan-");
-      store = await ProgressStore.open(suite: "henan_page_test_practice");
-    });
-    await tester.binding.setSurfaceSize(const Size(1600, 2600));
-    final ready = Completer<void>();
-    await tester.pumpWidget(
-      MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)),
-    );
-    for (var i = 0; i < 2000 && !ready.isCompleted; i++) {
-      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
-      await tester.pump();
-    }
-    await showTopic(tester, "河南速记");
-    await tester.tap(find.text("河南速记").first);
-    await tester.pump();
-    await tester.tap(find.textContaining("练这组").first);
-    await tester.pump();
-    expect(find.byType(SessionStage), findsOneWidget);
-    await tester.pump(const Duration(seconds: 30));
-
-    await tester.pumpWidget(const SizedBox());
-    await tester.runAsync(() async {
-      await store.close();
-      await dir.delete(recursive: true);
-    });
-  });
 }
