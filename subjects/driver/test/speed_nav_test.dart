@@ -56,6 +56,34 @@ void main() {
     expect(groups.expand((g) => g.topics).length, speedTopicsOf("subject1").length);
   });
 
+  test("专题的大类数与页面上的组数一致（ADR 0122）", () async {
+    final bank = await ContentLoader.load();
+    expect(recallGroupsOfTopic(speedTopicById("s1.numbers")!, bank), hasLength(cheatGroupsOf(bank, speedTopicById("s1.numbers")!).length));
+    expect(recallGroupsOfTopic(speedTopicById("s1.license-notes")!, bank), hasLength(noteGroupsOf(bank, speedTopicById("s1.license-notes")!).length));
+    expect(recallGroupsOfTopic(speedTopicById("s1.gestures")!, bank), hasLength(1), reason: "手势页只有「8 个法定动作」一组");
+    expect(recallGroupsOfTopic(speedTopicById("s1.signs")!, bank), hasLength({for (final s in bank.signs) s.kind}.length));
+    for (final topic in speedTopics) {
+      final groups = recallGroupsOfTopic(topic, bank);
+      expect(groups.every((g) => g.isNotEmpty), isTrue, reason: "${topic.id} 有空的大类");
+      expect({for (final g in groups) ...g}, {for (final c in recallCardsOfTopic(topic, bank)) c.questionId}, reason: "${topic.id}：大类要盖住全部卡");
+    }
+  });
+
+  testWidgets("侧栏专题右侧写「a/b」：b 是大类数，整组自测通过的才算进 a（ADR 0122）", (tester) async {
+    final (bank, store, dir) = await boot(tester, seed: (bank, store) async {
+      // 手势只有一组：每张卡都自测答对，这个专题就是 1/1。
+      for (final c in recallCardsOfTopic(speedTopicById("s1.gestures")!, bank)) {
+        await store.recordAttempt(questionId: c.questionId, topicId: "$recallTopicPrefix${c.page}", subjectId: "subject1", correct: true);
+      }
+    });
+    await showTopic(tester, "易混数字");
+    final numbers = recallGroupsOfTopic(speedTopicById("s1.numbers")!, bank).length;
+    expect(find.text("0/$numbers"), findsWidgets, reason: "易混数字一组都没通过");
+    await showTopic(tester, "手势速记");
+    expect(find.text("1/1"), findsWidgets, reason: "手势整组自测答对：1/1");
+    await teardown(tester, store, dir);
+  });
+
   testWidgets("专题默认折叠在分组下，点分组展开，点专题时它所在的组自动展开", (tester) async {
     final (_, store, dir) = await boot(tester);
     expect(find.text("易混数字"), findsNothing, reason: "默认折叠");

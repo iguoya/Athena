@@ -339,6 +339,24 @@ List<List<String>> recallEntriesOfTopic(SpeedTopic topic, Bank bank) {
   ];
 }
 
+/// 一个专题页面上的大类（ADR 0122）：每项是这一大类名下全部卡的题号，顺序同卡的顺序。易混数字、要点类按组，
+/// 标志、标线、仪表按种类（禁令、警告……），手势页只有「8 个法定动作」一组。侧栏专题右侧的「a/b」数的就是它。
+List<List<String>> recallGroupsOfTopic(SpeedTopic topic, Bank bank) {
+  final cards = recallCardsOfTopic(topic, bank);
+  if (topic.kind == SpeedKind.gestures) return [if (cards.isNotEmpty) [for (final c in cards) c.questionId]];
+  if (topic.kind == SpeedKind.numbers) {
+    return [
+      for (final g in cheatGroupsOf(bank, topic))
+        [for (final c in cards) if (c.group != null && c.group!.substring(2) == g.id) c.questionId],
+    ];
+  }
+  final byGroup = <String, List<String>>{};
+  for (final c in cards) {
+    byGroup.putIfAbsent(c.group ?? "", () => []).add(c.questionId);
+  }
+  return byGroup.values.toList();
+}
+
 /// 易混数字一个组的专属题（ADR 0102）：组内每条情形的正向卡加每个值的反向卡，
 /// 各自就是一道有稳定题号的题——行与题因此一对一，组按钮与自测深链练的是它们，
 /// 不再是组级正则捞出来的一锅真题。

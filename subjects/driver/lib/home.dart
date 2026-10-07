@@ -142,6 +142,7 @@ class _HomePageState extends State<HomePage> {
 
   /// 每个专题的自测题题号（按专题 id），由速记卡现算一次：专题状态点按这些题的作答记录上色。
   Map<String, List<List<String>>>? _topicEntries;
+  Map<String, List<List<String>>>? _topicGroups;
 
 
   Set<String> get _wrongIds => {for (final q in _wrongQuestions) q.id};
@@ -569,6 +570,7 @@ class _HomePageState extends State<HomePage> {
               label: topic.title,
               indent2: true,
               leading: _topicDot(_entriesOf(topic), size: 16, scope: "这个专题"),
+              trailing: _topicPassTag(topic),
               onTap: () => _go(topic.id),
             ),
       ],
@@ -588,6 +590,26 @@ class _HomePageState extends State<HomePage> {
         SymbolStatus.mastered => "自测题全部答对过",
         SymbolStatus.fresh => "还没测完",
       }}",
+    );
+  }
+
+  /// 侧栏专题右侧的「a/b」（ADR 0122）：b 是这个专题页面上的大类数，a 是其中整组自测都通过（组按钮变绿）的。
+  Widget _topicPassTag(SpeedTopic topic) {
+    final groups = (_topicGroups ??= {
+      for (final t in speedTopics) t.id: recallGroupsOfTopic(t, widget.bank),
+    })[topic.id]!;
+    final passed = groups.where((ids) => statusOfIds(ids: ids, histories: _recallHistories) == SymbolStatus.mastered).length;
+    final done = passed == groups.length && groups.isNotEmpty;
+    return Tooltip(
+      message: "这个专题 ${groups.length} 个大类，自测全部通过 $passed 个",
+      child: Text(
+        "$passed/${groups.length}",
+        style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w600,
+          color: done ? const Color(0xFF2ECC71) : Skins.current.navText.withValues(alpha: 0.7),
+        ),
+      ),
     );
   }
 
