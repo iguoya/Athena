@@ -67,6 +67,8 @@ export default function App() {
       : null;
   const activeIsCheckpoint = view?.kind === "checkpoint";
   const [attempts, setAttempts] = useState<AttemptRow[]>([]);
+  // 学习者自译（段落 sha → 译文）：官方快照待译/待复核段落上由学习者写下的译文
+  const [myTranslations, setMyTranslations] = useState<Record<string, string>>({});
   const [trainingMode, setTrainingMode] = useState(
     () => window.localStorage.getItem("zh-training") !== "off",
   );
@@ -93,6 +95,11 @@ export default function App() {
     });
     loadContent<Manifest>("get_manifest", "/content/demos.json").then(setManifest);
     invoke<AttemptRow[]>("get_attempts").then(setAttempts).catch(() => {});
+    invoke<{ sha: string; text: string }[]>("get_my_translations")
+      .then((rows) =>
+        setMyTranslations(Object.fromEntries(rows.map((r) => [r.sha, r.text]))),
+      )
+      .catch(() => {});
     (async () => {
       let data: { vocab: VocabEntry[]; patterns: PatternEntry[] } | null = null;
       try {
@@ -216,6 +223,17 @@ export default function App() {
       ...prev,
       { knowledge_id: "i18n.training", item_id: `para:${sha}`, correct: understood, answered_at: 0 },
     ]);
+  };
+
+  // 保存学习者自译：存空文本即删除；UI 先行更新，写库失败静默（与作答记录同策略）
+  const saveMyTranslation = (sha: string, text: string) => {
+    invoke("save_my_translation", { sha, text }).catch(() => {});
+    setMyTranslations((prev) => {
+      const next = { ...prev };
+      if (text.trim()) next[sha] = text;
+      else delete next[sha];
+      return next;
+    });
   };
 
   // 补正机制：重置某章全部测验作答（DB + 本地 UI 状态），可重新作答
@@ -619,6 +637,8 @@ export default function App() {
                   knownParas={knownParas}
                   hardParas={hardParas}
                   onRate={ratePara}
+                  myTranslations={myTranslations}
+                  onSaveMyTranslation={saveMyTranslation}
                 />
                 <PageAssessments
                   section={section}
@@ -694,6 +714,8 @@ export default function App() {
                   knownParas={knownParas}
                   hardParas={hardParas}
                   onRate={ratePara}
+                  myTranslations={myTranslations}
+                  onSaveMyTranslation={saveMyTranslation}
                   optional
                 />
               </>

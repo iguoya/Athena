@@ -35,6 +35,13 @@ struct AttemptRow {
     answered_at: u64,
 }
 
+#[derive(Clone, Serialize)]
+struct MyTranslationRow {
+    sha: String,
+    text: String,
+    updated_at: u64,
+}
+
 fn content_root() -> PathBuf {
     if let Ok(root) = std::env::var("ATHENA_GTKMM_ROOT") {
         return PathBuf::from(root).join("content");
@@ -121,6 +128,18 @@ fn init_store(path: &Path) -> rusqlite::Connection {
             [],
         )
         .expect("建 attempts 表失败");
+    connection
+        .execute(
+            // 学习者自己的译文：按段落 sha 存（快照块的稳定标识），
+            // 官方译文是内容、这里是个人产物，随进度库走（ADR 0037、0053）
+            "CREATE TABLE IF NOT EXISTS my_translations (
+                sha TEXT PRIMARY KEY,
+                text TEXT NOT NULL,
+                updated_at INTEGER NOT NULL
+            )",
+            [],
+        )
+        .expect("建 my_translations 表失败");
     connection
 }
 
@@ -248,6 +267,54 @@ fn get_attempts(state: State<AppState>) -> Result<Vec<AttemptRow>, String> {
         .map_err(|error| error.to_string())
 }
 
+/// 学习者自译：保存一段自己的译文；text 为空即删除该条。
+#[tauri::command]
+fn save_my_translation(state: State<AppState>, sha: String, text: String) -> Result<(), String> {
+    let connection = rusqlite::Connection::open(&state.store_path)
+        .map_err(|error| error.to_string())?;
+    let now = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|d| d.as_secs())
+        .unwrap_or(0);
+    if text.trim().is_empty() {
+        connection
+            .execute("DELETE FROM my_translations WHERE sha = ?1", rusqlite::params![sha])
+            .map_err(|error| error.to_string())?;
+    } else {
+        connection
+            .execute(
+                "INSERT INTO my_translations (sha, text, updated_at) VALUES (?1, ?2, ?3)
+                 ON CONFLICT(sha) DO UPDATE SET text = ?2, updated_at = ?3",
+                rusqlite::params![sha, text, now],
+            )
+            .map_err(|error| error.to_string())?;
+    }
+    Ok(())
+}
+
+#[tauri::command]
+fn get_my_translations(state: State<AppState>) -> Result<Vec<MyTranslationRow>, String> {
+    if !state.store_path.exists() {
+        return Ok(vec![]);
+    }
+    let connection = rusqlite::Connection::open(&state.store_path)
+        .map_err(|error| error.to_string())?;
+    let mut statement = connection
+        .prepare("SELECT sha, text, updated_at FROM my_translations ORDER BY updated_at")
+        .map_err(|error| error.to_string())?;
+    let rows = statement
+        .query_map([], |row| {
+            Ok(MyTranslationRow {
+                sha: row.get(0)?,
+                text: row.get(1)?,
+                updated_at: row.get(2)?,
+            })
+        })
+        .map_err(|error| error.to_string())?;
+    rows.collect::<Result<Vec<_>, _>>()
+        .map_err(|error| error.to_string())
+}
+
 #[tauri::command]
 fn launch_demo(app: AppHandle, state: State<AppState>, demo_id: String) -> LaunchResult {
     let Ok(manifest) = read_content(&state.content_root, "demos.json") else {
@@ -356,6 +423,8 @@ pub fn run() {
             record_attempt,
             reset_attempts,
             get_attempts,
+            save_my_translation,
+            get_my_translations,
             launch_demo,
             stop_demo
         ])

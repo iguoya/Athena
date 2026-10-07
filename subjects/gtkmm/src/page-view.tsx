@@ -244,6 +244,86 @@ function TranslatedText({ text }: { text: string }) {
   return <p className="text-[29px] leading-loose text-fg/90">{renderInline(flow(text))}</p>;
 }
 
+/** 学习者自译：官方快照待译/待复核的段落允许写下自己的译文并保存
+ *  （learning.db my_translations，按段落 sha 存，随进度库走）。
+ *  保存空内容即清除自译，回到「此段待译」。 */
+function SelfTranslation({
+  sha,
+  text,
+  onSave,
+}: {
+  sha: string;
+  text?: string;
+  onSave: (sha: string, text: string) => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState("");
+  const start = () => {
+    setDraft(text ?? "");
+    setEditing(true);
+  };
+  if (editing) {
+    return (
+      <div className="mt-2 rounded-xl bg-surface p-4 ring-1 ring-accent/40">
+        <textarea
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          rows={Math.min(10, Math.max(3, Math.ceil(draft.length / 40)))}
+          autoFocus
+          placeholder="写下你自己的译文…（清空后保存即删除）"
+          className="w-full resize-y rounded-lg bg-surface-2 p-3 text-[24px] leading-relaxed text-fg outline-none ring-1 ring-line focus:ring-accent/50"
+        />
+        <div className="mt-2 flex gap-2">
+          <button
+            onClick={() => {
+              onSave(sha, draft);
+              setEditing(false);
+            }}
+            className="rounded-lg bg-accent px-4 py-1.5 text-[20px] font-medium text-on-accent transition-colors hover:bg-accent/90"
+          >
+            保存译文
+          </button>
+          <button
+            onClick={() => setEditing(false)}
+            className="rounded-lg border border-line px-4 py-1.5 text-[20px] text-muted transition-colors hover:text-fg"
+          >
+            取消
+          </button>
+        </div>
+      </div>
+    );
+  }
+  if (text) {
+    return (
+      <div className="mt-2 rounded-r-xl border-l-4 border-accent-deep/60 bg-accent-soft/40 py-3 pl-4 pr-3">
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-[20px] font-medium text-accent-deep">我的译文</span>
+          <button
+            onClick={start}
+            className="text-[20px] text-muted transition-colors hover:text-accent"
+          >
+            ✎ 编辑
+          </button>
+        </div>
+        <p className="mt-1 text-[27px] leading-loose text-fg/90">{renderInline(text)}</p>
+      </div>
+    );
+  }
+  return (
+    <p className="mt-2">
+      <span className="inline-flex items-center gap-1 rounded-full bg-surface-2 px-2 py-0.5 text-[20px] text-muted ring-1 ring-line">
+        此段待译
+      </span>
+      <button
+        onClick={start}
+        className="ml-2 rounded-lg border border-dashed border-accent/40 px-3 py-0.5 text-[20px] text-accent transition-colors hover:bg-accent-soft"
+      >
+        ✍️ 自己译
+      </button>
+    </p>
+  );
+}
+
 /** 自评行：看懂了 / 标记复习（或状态徽章）。 */
 function RatingRow({
   sha,
@@ -364,6 +444,8 @@ function ReadUnit({
   sentenceMode,
   knownParas,
   hardParas,
+  myTranslations,
+  onSaveMyTranslation,
   onRevealAll,
   onRate,
 }: {
@@ -372,6 +454,8 @@ function ReadUnit({
   sentenceMode: boolean;
   knownParas: Set<string>;
   hardParas: Set<string>;
+  myTranslations: Record<string, string>;
+  onSaveMyTranslation: (sha: string, text: string) => void;
   onRevealAll: () => void;
   onRate: (sha: string, understood: boolean) => void;
 }) {
@@ -416,15 +500,20 @@ function ReadUnit({
               原文已更新 · 译文待复核 <CircleAlert className="size-5" />
             </span>
           </p>
+          <SelfTranslation
+            sha={block.sha}
+            text={myTranslations[block.sha]}
+            onSave={onSaveMyTranslation}
+          />
         </>
       );
     }
     return (
-      <p className="mt-2">
-        <span className="inline-flex items-center gap-1 rounded-full bg-surface-2 px-2 py-0.5 text-[20px] text-muted ring-1 ring-line">
-          此段待译
-        </span>
-      </p>
+      <SelfTranslation
+        sha={block.sha}
+        text={myTranslations[block.sha]}
+        onSave={onSaveMyTranslation}
+      />
     );
   };
 
@@ -562,6 +651,8 @@ export function PageView({
   unitWords,
   knownParas,
   hardParas,
+  myTranslations,
+  onSaveMyTranslation,
   onRate,
   optional,
 }: {
@@ -573,6 +664,9 @@ export function PageView({
   unitWords: number;
   knownParas: Set<string>;
   hardParas: Set<string>;
+  /** 学习者自译（段落 sha → 译文），只作用于待译/待复核段落 */
+  myTranslations: Record<string, string>;
+  onSaveMyTranslation: (sha: string, text: string) => void;
   onRate: (sha: string, understood: boolean) => void;
   /** 快照不存在时静默不渲染（参考层的多节条目没有单页快照，属预期） */
   optional?: boolean;
@@ -683,6 +777,8 @@ export function PageView({
                 sentenceMode={sentenceMode}
                 knownParas={knownParas}
                 hardParas={hardParas}
+                myTranslations={myTranslations}
+                onSaveMyTranslation={onSaveMyTranslation}
                 onRevealAll={() => reveal(unitKey)}
                 onRate={onRate}
               />
