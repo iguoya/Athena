@@ -10,17 +10,20 @@
 ```
 subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完全平级
   cpp/         C++ 教程（GTK4 / gtkmm，原来的"主程序"）
-  c/           C 语言（Qt Quick / QML）
+  machine/     C 与机器（Qt Quick / QML，原 c/，ADR 0005）
   dsa/         数据结构与算法（Tauri）
   english/     磨砚（考研英语二，Tauri）
   ascent/      拾阶（英语师范生四六级、专四专八，Tauri）
   mathematics/ 数学学习（Tauri）
   math-tools/  数学工具（Tauri）——数学学习的配套工具，图谱/参考类，不是学习应用（ADR 0084）
   driver/      驾考学习（Flutter 桌面，科目一 / 科目四）
-  polaris/       技术体系图谱（Qt Quick / QML）——不是学习应用，见下文
+  gtkmm/       gtkmm 官方教程精读（Tauri 2 + React）
+  polaris/       技术体系图谱（Tauri 2 + React，原 Qt 壳已退役，ADR 0015）——不是学习应用，见下文
   design-patterns/  设计模式素材坑——连应用都不是，见下文
 practice/<id>/ 项目应用：动手做的独立小项目，不接掌握度体系（ADR 0060）
   pocket_cube/ 2 阶魔方（GTK4 / gtkmm）
+  nas_admin/   驾考中心服务后台（Flask-AppBuilder，部署在软路由）
+  c-gui-lab/   C 语言 GUI 框架对比实验室（Electron 母体收编各框架官方 demo）
 launcher/      启动器：macos/（Swift 菜单栏常驻）、core/、gui/
 docs/decisions/  跨应用的架构决策记录（ADR）
 scripts/       仓库级脚本：统一验证入口 check.py、跨应用内容出处检查
@@ -41,9 +44,11 @@ archive/       历史归档，不参与构建
 | `machine` | C 与机器（原 `c`，ADR 0005） | `athena-machine` | `machine.` |
 | `dsa` | 数据结构与算法 | `athena-dsa` | `dsa.` |
 | `english` | 磨砚 | `athena-english` | `en.` |
-| `ascent` | 拾阶 | `athena-ascent` | 无（进度在用户数据目录，见 ADR 0066） |
+| `ascent` | 拾阶 | `lumi`（发行名 Lumi，历史品牌，未用 `athena-` 前缀） | 无（进度在用户数据目录，见 ADR 0066） |
 | `mathematics` | 数学学习 | `athena-math` | `math.` |
+| `math-tools` | 数学工具 | `athena-math-tools` | （无进度库） |
 | `driver` | 驾考学习 | `athena-driver` | `drive.` |
+| `gtkmm` | gtkmm 官方教程精读 | `athena-gtkmm` | `gtkmm.` |
 | `polaris` | 北极星 | `athena-polaris` | （无进度库） |
 
 `driver` 是机动车理论考试，不是设备驱动；Dart 包名仍是 `athena_driver`（包名不能有连字符）。

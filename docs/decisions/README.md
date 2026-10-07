@@ -48,16 +48,19 @@
 | [0049](0049-portability-is-a-cost-benefit-call.md) | 跨平台是成本收益判断，成本过高的整体排除 | 已接受；限定 0047 的边界 |
 | [0050](0050-ci-runs-on-release-not-every-push.md) | 跨平台稳定之前，CI 推送即跑 | 已被 0064 取代 |
 | [0064](0064-ci-explicit-trigger.md) | CI 改为显式触发，不再推送即跑 | 已接受；取代 0050 |
-| [0081](0081-unified-release.md) | 统一发版：一个 v* tag 全量构建 cpp、driver、拾阶，发一个 Athena Release | 已接受；修订 ascent 应用级 0018 的发版入口描述；回退 `c115dd4` 的 driver 独立发版 |
+| [0081](0081-unified-release.md) | 统一发版：一个 v* tag 全量构建 cpp、driver、拾阶，发一个 Athena Release | 已接受；修订 ascent 应用级 0018 的发版入口描述；回退 `c115dd4` 的 driver 独立发版；北极星、磨砚、数学工具随后加入同台矩阵（v9.0.0 起） |
 | [0083](0083-launcher-mind-map.md) | 启动器的学习应用面板改为放射状思维导图，关系由 app.json 的 group / related 声明 | 已接受 |
 | [0084](0084-math-tools-joins-subjects.md) | math-tools 从 practice/ 迁入 subjects/，作为数学学习的配套工具 | 已接受；修订 0060 对 math-tools 的归类 |
 | [0085](0085-reinforce-draws-from-all-wrong.md) | 强化练习从历史上全部错题里按权重抽取，每轮重抽并可「换一批」 | 已接受；修订 0076 第 7 条的选题规则；决策 2 由 0086 修订 |
 | [0086](0086-reinforce-coverage-then-fade.md) | 错题必须在强化练习里测过且没出错才能移出备选库，没测过的优先覆盖 | 已接受；修订 0085 决策 2 |
+| [0087](0087-reinforce-round-size.md) | 强化练习一轮默认 50 题，页面把备选库总题数摆在最前 | 已接受；修订 0076 决策 7 |
+| [0088](0088-cluster-variant-counts-as-acceptance.md) | 同考点变式在强化练习里答对，同簇错题也算验收 | 已接受；修订 0086 决策 1 |
 | [0051](0051-platform-priority-macos-windows-first.md) | 平台优先级：macOS 与 Windows 优先，Linux 降级 | 已接受；`subjects/cpp` 的选型冲突已解决 |
 | [0053](0053-progress-travels-with-the-repository.md) | 进度库随仓库走，换机器 clone 下来进度还在 | 已接受；修订 0037 第 1 条；对已迁移中心 PG 的应用由 0067 修订 |
 | [0054](0054-prefer-adding-over-deleting.md) | 内容工作宁增勿删，参考不得用来重划结构 | 已接受；推翻 polaris ADR 0004、0005 的主干重划；第 2、3 条由 0080 限定 |
 | [0080](0080-reorg-exemption-when-intent-changes.md) | 应用意图整体改变时，可由应用级 ADR 声明重组豁免 | 已接受；限定 0054 第 2、3 条；首例 `subjects/machine` |
 | [0055](0055-no-institute-names-in-product-content.md) | 软件内容不出现具体院所名，一律用「某所」 | 已被 0082 撤销，相关内容与条款已清除 |
+| [0082](0082-drop-institute-redaction.md) | 撤销 0055 的院所名脱敏规则，清除全部相关痕迹 | 已接受；0055 原文保留仅作历史记录 |
 | [0056](0056-visualization-and-interaction-first.md) | 可视化与交互是学习内容本身，不是装饰 | 已接受（强制方针） |
 | [0057](0057-assume-a-developer-machine.md) | 基线是一台开发机——依赖自行安装，不写兜底 | 已接受 |
 | [0061](0061-agent-instructions-single-source.md) | 代理指令以 AGENTS.md 为唯一真源，且只放规则 | 已接受；`subjects/cpp` 应用级已同日瘦身到预算内 |

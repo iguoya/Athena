@@ -5,14 +5,25 @@
 
 ## 应用
 
+`subjects/` 是课程学科（学习应用 + 图谱/参考类），`practice/` 是项目应用（ADR 0060）。
+分类判据见 [`AGENTS.md`](AGENTS.md)：要不要教会人什么、要不要证明学习者进步了。
+
 | 目录 | 应用 | 技术 |
 | --- | --- | --- |
 | [`subjects/cpp`](subjects/cpp) | C++ 教程 | GTK4 / gtkmm、Meson |
 | [`subjects/machine`](subjects/machine) | C 与机器（C 与汇编） | Qt Quick / QML、CMake |
 | [`subjects/dsa`](subjects/dsa) | 数据结构与算法 | Tauri + Vite |
-| [`subjects/english`](subjects/english) | 英语学习 | Tauri + Vite |
-| [`subjects/mathematics`](subjects/mathematics) | 数学学习 | Tauri + Vite |
+| [`subjects/english`](subjects/english) | 磨砚（英语学习） | Tauri + Vite |
+| [`subjects/ascent`](subjects/ascent) | 拾阶（四六级 / 专四专八） | Tauri + Vite |
+| [`subjects/mathematics`](subjects/mathematics) | 数学学习 | Tauri + Vite（Python sidecar） |
+| [`subjects/math-tools`](subjects/math-tools) | 数学工具（图谱/参考类） | Tauri + Vue 3 |
 | [`subjects/driver`](subjects/driver) | 驾考学习 | Flutter 桌面 |
+| [`subjects/gtkmm`](subjects/gtkmm) | gtkmm 官方教程精读 | Tauri 2 + React |
+| [`subjects/polaris`](subjects/polaris) | 北极星（技术体系图谱） | Tauri 2 + React |
+| [`subjects/design-patterns`](subjects/design-patterns) | 设计模式素材坑 | 尚未开工 |
+| [`practice/pocket_cube`](practice/pocket_cube) | 2 阶魔方 | GTK4 / gtkmm |
+| [`practice/nas_admin`](practice/nas_admin) | 驾考中心服务后台 | Flask-AppBuilder |
+| [`practice/c-gui-lab`](practice/c-gui-lab) | C 语言 GUI 框架对比实验室 | Electron + GTK/ImGui/LVGL |
 
 每个应用怎么构建、怎么启动、怎么算就绪，都写在自己的 `app.json` 里；执行统一由
 [`launcher/core`](launcher/core) 的编排器负责，没有一份应用自己的启动脚本（ADR 0046）。
@@ -49,7 +60,8 @@ python3 scripts/check.py cpp        # 只跑某个应用，余下参数透传给
 python3 scripts/check.py dsa --skip-rust   # Tauri 应用可以跳过较慢的 Rust 那段
 ```
 
-CI 跑的是同一条命令，每个应用各一个 job。
+CI 跑的是同一条命令（显式触发，ADR 0064）：每个应用各占矩阵位，另有跨应用检查；
+打版本 tag 时全量跑。
 
 ## 文档
 
