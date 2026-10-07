@@ -33,8 +33,8 @@ class StatusDot extends StatelessWidget {
       message: tooltip ??
           switch (status) {
             SymbolStatus.wrong => "这一条的自测题答错过，还没掌握",
-            SymbolStatus.mastered => "这一条的自测题答对过",
-            SymbolStatus.fresh => "这一条还没自测过",
+            SymbolStatus.mastered => "这一条的自测题全部答对过",
+            SymbolStatus.fresh => "这一条还没测完",
           },
       child: Container(
         width: 28,
@@ -54,22 +54,25 @@ class StatusDot extends StatelessWidget {
 /// 条目自测题的作答状态。
 enum SymbolStatus { wrong, mastered, fresh }
 
-/// 由一组自测题号算状态（ADR 0109、0112）：有答错过且还在错题库里（累计答对没到答错的
-/// 2 倍，ADR 0079）→ 红；答对过（哪怕只答对一部分）→ 绿；一张没答过 → 灰。**只看这些
-/// 题号自己的作答**，关联真题（日常练习）不参与。侧栏专题圆、组标题圆、条目微点、
-/// 「练这组」按钮都用它，全站一个口径。
+/// 由一组自测题号算状态（ADR 0109、0112、0113）：有答错过且还在错题库里（累计答对没到答错的
+/// 2 倍，ADR 0079）→ 红；**每一张都答对过**（整组测完）→ 绿；其余（一张没答过，或只测了一
+/// 部分）→ 灰。只答对一部分不算掌握——没测完的组不能写「已掌握」。**只看这些题号自己的
+/// 作答**，关联真题（日常练习）不参与。侧栏专题圆、组标题圆、条目微点、「练这组」按钮
+/// 都用它，全站一个口径。
 SymbolStatus statusOfIds({
   required Iterable<String> ids,
   required HistorySet histories,
 }) {
-  var touched = false;
+  var total = 0;
+  var answered = 0;
   for (final id in ids) {
+    total++;
     final h = histories.byQuestion[id];
     if (h == null) continue;
-    touched = true;
+    answered++;
     if (h.wrong > 0 && !h.retiredFromWrongPool) return SymbolStatus.wrong;
   }
-  return touched ? SymbolStatus.mastered : SymbolStatus.fresh;
+  return total > 0 && answered == total ? SymbolStatus.mastered : SymbolStatus.fresh;
 }
 
 /// 一张速记卡现在属于哪一档（ADR 0094；ADR 0112 收敛为只看这张卡自己）。**只看作答记录**

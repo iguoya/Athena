@@ -22,8 +22,8 @@ class RecallRowDot extends StatelessWidget {
       status: status,
       tooltip: switch (status) {
         SymbolStatus.wrong => "这一行的自测题最近答错过，还没掌握",
-        SymbolStatus.mastered => "这一行的自测题答对过",
-        SymbolStatus.fresh => "这一行还没自测过",
+        SymbolStatus.mastered => "这一行的自测题全部答对过",
+        SymbolStatus.fresh => "这一行还没测完",
       },
     );
   }
@@ -71,7 +71,7 @@ class NumbersPage extends StatelessWidget {
   ];
 
   /// 行的状态微点档位（ADR 0101，三态）：这一行有答错过且未掌握的自测卡 → 红；
-  /// 答对过（哪怕只答对了一部分卡）→ 绿；一张都没答过 → 灰。只看这一行自己的卡（ADR 0112）。
+  /// 这一行的卡全部答对过 → 绿；没测完（含只测了一部分）→ 灰。只看这一行自己的卡（ADR 0112）。
   SymbolStatus _rowStatus(CheatGroup group, CheatRow row) => statusOfIds(
     ids: _rowQuestionIds(group, row),
     histories: histories,
@@ -164,7 +164,7 @@ class NumbersPage extends StatelessWidget {
     final related = _groupQuestions(group);
     final pending = pendingOf(related);
     final maxAmount = group.maxAmount;
-    // 组状态只看这一组的自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 答对过、灰 = 没自测过。
+    // 组状态只看这一组的自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 自测卡全部答对过、灰 = 没测完。
     final status = statusOfIds(ids: [for (final q in related) q.id], histories: histories);
     return BsCard(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
@@ -178,8 +178,8 @@ class NumbersPage extends StatelessWidget {
                 size: 20,
                 tooltip: switch (status) {
                   SymbolStatus.wrong => "这一组的自测卡有答错过，还没掌握",
-                  SymbolStatus.mastered => "这一组的自测卡答对过",
-                  SymbolStatus.fresh => "这一组还没自测过",
+                  SymbolStatus.mastered => "这一组的自测卡全部答对过",
+                  SymbolStatus.fresh => "这一组还没测完",
                 },
               ),
               const SizedBox(width: 10),

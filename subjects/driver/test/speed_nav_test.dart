@@ -67,11 +67,11 @@ void main() {
     await teardown(tester, store, dir);
   });
 
-  testWidgets("专题与分组左边的状态圆：没做过灰、答错红、答对绿", (tester) async {
+  testWidgets("专题与分组左边的状态圆：没测完灰、答错红、只答对一张仍是灰", (tester) async {
     final (_, store, dir) = await boot(tester);
-    const gray = "这个专题还没自测过";
+    const gray = "这个专题还没测完";
     const red = "这个专题的自测题最近答错过，还没掌握";
-    const green = "这个专题的自测题答对过";
+    const green = "这个专题的自测题全部答对过";
 
     Future<void> reload() async {
       await tester.pump(const Duration(milliseconds: 1000));
@@ -112,14 +112,15 @@ void main() {
     await reload();
     expect(find.byTooltip(red), findsWidgets, reason: "答错过的专题与分组变红");
 
-    // 标志自测答对一张：标志专题变绿，分组仍因手势答错而是红。
+    // 标志自测答对一张：标志专题还没测完，仍是灰。
     await openRecall("标志速记");
     await tester.tap(find.byKey(const ValueKey("recall-correct")));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 1000));
     await closeDialog();
     await reload();
-    expect(find.byTooltip(green), findsWidgets, reason: "答对过的专题变绿");
+    // 只答对一张不算测完（ADR 0113）：标志专题仍是灰，不能写「已掌握」。
+    expect(find.byTooltip(green), findsNothing, reason: "只测了一部分：不变绿");
     await teardown(tester, store, dir);
   });
 

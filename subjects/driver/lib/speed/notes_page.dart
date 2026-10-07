@@ -140,7 +140,7 @@ class NotesPage extends StatelessWidget {
   Widget _noteGroup(BuildContext context, NoteGroup group, TextStyle? muted) {
     final related = group.related(questions);
     final pending = [for (final q in related) if (!mastered.contains(q.id)) q];
-    // 组状态只看这一组的自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 答对过、灰 = 没自测过。
+    // 组状态只看这一组的自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 自测卡全部答对过、灰 = 没测完。
     final status = statusOfIds(
       ids: [
         for (final i in group.items) recallQuestionId(recallPage, "${group.id}/${i.scenario}"),
@@ -161,8 +161,8 @@ class NotesPage extends StatelessWidget {
                   size: 20,
                   tooltip: switch (status) {
                     SymbolStatus.wrong => "这一组的自测卡有答错过，还没掌握",
-                    SymbolStatus.mastered => "这一组的自测卡答对过",
-                    SymbolStatus.fresh => "这一组还没自测过",
+                    SymbolStatus.mastered => "这一组的自测卡全部答对过",
+                    SymbolStatus.fresh => "这一组还没测完",
                   },
                 ),
                 const SizedBox(width: 10),

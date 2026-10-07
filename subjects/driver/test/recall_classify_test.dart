@@ -43,6 +43,23 @@ void main() {
     );
   });
 
+  test("组状态 statusOfIds：整组每张卡都答对才算掌握，只测了一部分是灰（ADR 0113）", () {
+    const a = "drive.recall.signs.a";
+    const b = "drive.recall.signs.b";
+    SymbolStatus status(List<AttemptView> attempts) =>
+        statusOfIds(ids: [a, b], histories: HistorySet.build(attempts));
+
+    expect(status([]), SymbolStatus.fresh);
+    expect(status([attempt(a, true, 0)]), SymbolStatus.fresh, reason: "只答对一张：没测完");
+    expect(status([attempt(a, true, 0), attempt(b, true, 1)]), SymbolStatus.mastered);
+    expect(status([attempt(a, true, 0), attempt(b, false, 1)]), SymbolStatus.wrong);
+    expect(
+      statusOfIds(ids: const [], histories: HistorySet.build([])),
+      SymbolStatus.fresh,
+      reason: "空组不算掌握",
+    );
+  });
+
   test("关联真题的作答不影响判档（ADR 0112）：练得再熟，没在自测里测过的卡照样要考", () {
     final a = related[0];
     final b = related[1];

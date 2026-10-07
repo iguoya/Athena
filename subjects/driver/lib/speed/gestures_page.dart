@@ -54,7 +54,7 @@ class GesturesPage extends StatelessWidget {
     final relatedIds = {for (final g in gestures) ...g.questions};
     final related = [for (final q in questions) if (relatedIds.contains(q.id)) q];
     final pending = [for (final q in related) if (!mastered.contains(q.id)) q];
-    // 状态只看自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 答对过、灰 = 没自测过。
+    // 状态只看自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 自测卡全部答对过、灰 = 没测完。
     final status = statusOfIds(
       ids: [for (final g in actions) recallQuestionId(recallPage, g.id)],
       histories: histories,
@@ -101,8 +101,8 @@ class GesturesPage extends StatelessWidget {
                     size: 20,
                     tooltip: switch (status) {
                       SymbolStatus.wrong => "这些动作的自测卡有答错过，还没掌握",
-                      SymbolStatus.mastered => "这些动作的自测卡答对过",
-                      SymbolStatus.fresh => "这些动作还没自测过",
+                      SymbolStatus.mastered => "这些动作的自测卡全部答对过",
+                      SymbolStatus.fresh => "这些动作还没测完",
                     },
                   ),
                   const SizedBox(width: 10),

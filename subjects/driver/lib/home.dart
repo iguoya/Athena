@@ -528,7 +528,7 @@ class _HomePageState extends State<HomePage> {
   /// 一个科目在侧栏里的一枝：科目本身一行，展开时下面缩进挂模拟考、待练和各章节。
   /// 锁着的科目没有子项——题干都不该先看到（ADR 0006 后果、ADR 0047）。
   /// 一个科目底下的速记专题（ADR 0096、0109）：小标题「专题」，下面按内容分成几组，组可以折叠；
-  /// 组和专题左边各有一个状态圆，按自测的作答记录上色（红 = 答错过未掌握、绿 = 答对过、灰 = 没做过）。
+  /// 组和专题左边各有一个状态圆，按自测的作答记录上色（红 = 答错过未掌握、绿 = 全部答对过、灰 = 没测完）。
   List<Widget> _speedTopicLines(String subjectId) {
     final groups = speedTopicGroupsOf(subjectId);
     if (groups.isEmpty) return const [];
@@ -582,14 +582,14 @@ class _HomePageState extends State<HomePage> {
       tooltip: tooltip ??
           switch (status) {
             SymbolStatus.wrong => "这个专题的自测题最近答错过，还没掌握",
-            SymbolStatus.mastered => "这个专题的自测题答对过",
-            _ => "这个专题还没自测过",
+            SymbolStatus.mastered => "这个专题的自测题全部答对过",
+            _ => "这个专题还没测完",
           },
     );
   }
 
   /// 专题的状态（三态，同易混数字的行点，ADR 0101、0112）：自测题有答错过且还在错题库的 → 红；
-  /// 答对过 → 绿；一道没答过 → 灰。只看这个专题自己的自测作答，日常练习不参与。
+  /// 全部答对过 → 绿；没测完 → 灰。只看这个专题自己的自测作答，日常练习不参与。
   SymbolStatus _topicStatus(SpeedTopic topic) {
     final ids = (_topicQuestionIds ??= {
       for (final t in speedTopics) t.id: [for (final c in recallCardsOfTopic(t, widget.bank)) c.questionId],

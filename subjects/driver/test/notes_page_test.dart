@@ -98,14 +98,14 @@ void main() {
       await tester.pump();
     }
 
-    const gray = "这一组还没自测过";
+    const gray = "这一组还没测完";
     const red = "这一组的自测卡有答错过，还没掌握";
 
     await showTopic(tester, "考点速记");
     await tester.tap(find.text("考点速记").first);
     await tester.pump();
     // ListView 懒渲染，屏外的组不在树里：断言首屏的组全是灰圆即可。
-    expect(find.byTooltip(gray), findsWidgets, reason: "还没自测过：组都是灰圆");
+    expect(find.byTooltip(gray), findsWidgets, reason: "还没测完：组都是灰圆");
     expect(find.byTooltip(red), findsNothing);
 
     // 自测里答错一张（不碰任何真题），退出。
