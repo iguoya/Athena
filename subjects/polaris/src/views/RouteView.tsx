@@ -1,15 +1,18 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence } from "motion/react";
-import { ChevronDown, ChevronLeft, Flag, Radar, Users } from "lucide-react";
+import { ChevronDown, ChevronLeft, ClipboardCheck, Flag, Radar, Users } from "lucide-react";
 import type { Catalog } from "@/content/catalog";
 import { coveredDomains, DOMAINS } from "@/content/coverage";
 import { layoutRoute, routeChapterCount } from "@/content/routes";
 import { GraphCanvas, type ColumnNote } from "@/graph/GraphCanvas";
 import { EdgeCard } from "@/panels/EdgeCard";
+import { AssessmentPanel } from "@/panels/AssessmentPanel";
 import { BalancePanel } from "@/panels/BalancePanel";
 import { NodeDrawer } from "@/panels/NodeDrawer";
 import { useApp } from "@/state/store";
+import { VERDICT_LABEL, verdictVar } from "@/content/ratings";
 import { BALANCE_LABEL, LENS_LABEL, balanceVar } from "@/ui/labels";
+import { RateBar } from "@/ui/RatingParts";
 import { useDrawerWidth } from "@/ui/useDrawerWidth";
 
 export function RouteView({ catalog, routeId, nodeId }: { catalog: Catalog; routeId: string; nodeId?: string }) {
@@ -18,6 +21,7 @@ export function RouteView({ catalog, routeId, nodeId }: { catalog: Catalog; rout
   const drawerWidth = useDrawerWidth();
   const [open, setOpen] = useState(true);
   const [balanceOpen, setBalanceOpen] = useState(false);
+  const [assessOpen, setAssessOpen] = useState(false);
 
   const route = catalog.routes.find((r) => r.id === routeId);
   const layout = useMemo(() => (route ? layoutRoute(catalog, route) : null), [catalog, route]);
@@ -68,11 +72,33 @@ export function RouteView({ catalog, routeId, nodeId }: { catalog: Catalog; rout
               细化到 {routeChapterCount(catalog, route)} 章
             </span>
           )}
+          {route.assessment && (
+            <button
+              type="button"
+              onClick={() => {
+                setAssessOpen((v) => !v);
+                setBalanceOpen(false);
+              }}
+              aria-expanded={assessOpen}
+              className={`ml-auto flex items-center gap-1.5 rounded-full border px-3 py-1 text-[12px] font-medium transition-colors ${assessOpen ? "border-accent bg-accent-soft text-accent" : "border-line text-muted hover:border-accent hover:text-accent"}`}
+            >
+              <ClipboardCheck size={13} /> 评估
+              <span
+                className="rounded-full px-1.5 py-[1px] text-[10.5px] font-semibold text-ink"
+                style={{ background: `color-mix(in srgb, ${verdictVar(route.assessment.verdict)} 26%, transparent)` }}
+              >
+                {VERDICT_LABEL[route.assessment.verdict]}
+              </span>
+            </button>
+          )}
           <button
             type="button"
-            onClick={() => setBalanceOpen((v) => !v)}
+            onClick={() => {
+              setBalanceOpen((v) => !v);
+              setAssessOpen(false);
+            }}
             aria-expanded={balanceOpen}
-            className={`ml-auto flex items-center gap-1.5 rounded-full border px-3 py-1 text-[12px] font-medium transition-colors ${balanceOpen ? "border-accent bg-accent-soft text-accent" : "border-line text-muted hover:border-accent hover:text-accent"}`}
+            className={`${route.assessment ? "" : "ml-auto "}flex items-center gap-1.5 rounded-full border px-3 py-1 text-[12px] font-medium transition-colors ${balanceOpen ? "border-accent bg-accent-soft text-accent" : "border-line text-muted hover:border-accent hover:text-accent"}`}
           >
             <Radar size={13} /> 均衡度 {coveredDomains(catalog, route)}/{DOMAINS.length}
           </button>
@@ -86,6 +112,7 @@ export function RouteView({ catalog, routeId, nodeId }: { catalog: Catalog; rout
             <ChevronDown size={14} className={`transition-transform ${open ? "rotate-180" : ""}`} />
           </button>
         </div>
+        <RateBar />
         {open && (
           <div className="mt-2.5 grid grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_minmax(0,1.1fr)] gap-5 text-[12.5px] leading-relaxed">
             <p className="text-muted">{route.summary}</p>
@@ -125,6 +152,7 @@ export function RouteView({ catalog, routeId, nodeId }: { catalog: Catalog; rout
           onSelect={selectNode}
         />
         {balanceOpen && <BalancePanel catalog={catalog} route={route} onClose={() => setBalanceOpen(false)} />}
+        {assessOpen && <AssessmentPanel catalog={catalog} route={route} onClose={() => setAssessOpen(false)} />}
         <AnimatePresence>
           {selected && (
             <NodeDrawer key={selected.id} catalog={catalog} node={selected} width={drawerWidth} onClose={() => selectNode(null)} />

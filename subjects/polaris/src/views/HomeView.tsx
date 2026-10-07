@@ -7,6 +7,8 @@ import { BALANCES, DISCIPLINES, LENSES, disciplineLadderId, mapsByDiscipline, ro
 import type { Discipline, Route } from "@/content/types";
 import { openExternal } from "@/ui/external";
 import { useApp } from "@/state/store";
+import { VERDICTS, VERDICT_HINT, VERDICT_LABEL, routesByVerdict, verdictVar } from "@/content/ratings";
+import { MiniStrip } from "@/ui/RatingParts";
 import { BALANCE_LABEL, DISCIPLINE_HINT, DISCIPLINE_LABEL, LENS_HINT, LENS_LABEL, balanceVar } from "@/ui/labels";
 
 function RouteCard({ catalog, route, index }: { catalog: Catalog; route: Route; index: number }) {
@@ -23,6 +25,15 @@ function RouteCard({ catalog, route, index }: { catalog: Catalog; route: Route; 
       <span className="absolute inset-x-0 top-0 h-1" style={{ background: balanceVar(route.balance) }} />
       <span className="flex items-start gap-2">
         <span className="flex-1 text-[15.5px] font-semibold leading-snug">{route.title}</span>
+        {route.assessment && (
+          <span
+            className="mt-0.5 shrink-0 rounded-full px-2 py-[2px] text-[10.5px] font-semibold text-ink"
+            style={{ background: `color-mix(in srgb, ${verdictVar(route.assessment.verdict)} 26%, transparent)`, boxShadow: `inset 0 0 0 1px ${verdictVar(route.assessment.verdict)}` }}
+            title={VERDICT_HINT[route.assessment.verdict]}
+          >
+            {VERDICT_LABEL[route.assessment.verdict]}
+          </span>
+        )}
         <ArrowUpRight size={16} className="mt-0.5 shrink-0 text-faint transition-colors group-hover:text-accent" />
       </span>
       <span className="mt-1.5 line-clamp-3 text-[12.5px] leading-relaxed text-muted">{route.summary}</span>
@@ -30,7 +41,13 @@ function RouteCard({ catalog, route, index }: { catalog: Catalog; route: Route; 
         <Flag size={12} className="mt-0.5 shrink-0 text-gold" fill="currentColor" />
         <span className="line-clamp-2">{route.artifact}</span>
       </span>
-      <span className="mt-3 flex items-center gap-2 text-[11.5px] text-faint">
+      {route.ratings && (
+        <span className="mt-3 flex items-center gap-2 text-[11px] text-faint">
+          <MiniStrip ratings={route.ratings} />
+          <span>评级：实用 · 实践 · 理论 · 验证 · 骨干 · 需求</span>
+        </span>
+      )}
+      <span className="mt-2 flex items-center gap-2 text-[11.5px] text-faint">
         <span>{route.stages.length} 个阶段</span>·<span>{routeNodeCount(route)} 个知识点</span>·<span>碰到 {coveredDomains(catalog, route)}/{DOMAINS.length} 个域</span>{routeChapterCount(catalog, route) > 0 && <>·<span>{routeChapterCount(catalog, route)} 章</span></>}
       </span>
     </motion.button>
@@ -140,6 +157,47 @@ export function HomeView({ catalog }: { catalog: Catalog }) {
             );
           })}
         </div>
+
+        {/* 推荐发展方向：按推荐等级分组，受上面的专业类筛选影响（ADR 0022） */}
+        <section className="mt-6" aria-label="推荐发展方向">
+          <h2 className="text-[15px] font-semibold">推荐发展方向</h2>
+          <p className="mt-1 text-[12.5px] text-muted">
+            推荐等级是编辑评估，参照路线的六维评级、起步门槛与时效性，不是评级算出的分数；弱电方向的推荐不低于强电方向。点开路线看优劣与后续方向。
+          </p>
+          <div className="mt-3 grid gap-3">
+            {VERDICTS.map((verdict) => {
+              const list = routesByVerdict(catalog.routes.filter((r) => discipline === "all" || r.discipline === discipline))[verdict];
+              if (list.length === 0) return null;
+              const color = verdictVar(verdict);
+              return (
+                <div key={verdict} className="flex flex-wrap items-start gap-2">
+                  <span
+                    className="mt-1 w-[78px] shrink-0 rounded-full px-2.5 py-[3px] text-center text-[12px] font-semibold text-ink"
+                    style={{ background: `color-mix(in srgb, ${color} 26%, transparent)`, boxShadow: `inset 0 0 0 1.5px ${color}` }}
+                    title={VERDICT_HINT[verdict]}
+                  >
+                    {VERDICT_LABEL[verdict]}
+                  </span>
+                  <div className="flex min-w-0 flex-1 flex-wrap gap-2">
+                    {list.map((route) => (
+                      <button
+                        key={route.id}
+                        type="button"
+                        onClick={() => go({ view: "route", routeId: route.id })}
+                        title={route.assessment?.verdict_reason}
+                        className="flex items-center gap-2 rounded-xl border border-line bg-surface px-3 py-1.5 text-left text-[12.5px] transition-[border-color,box-shadow] hover:border-accent hover:shadow-[var(--shadow-card)]"
+                      >
+                        <span className="font-medium">{route.title}</span>
+                        <span className="text-faint">{DISCIPLINE_LABEL[route.discipline]}</span>
+                        {route.ratings && <MiniStrip ratings={route.ratings} />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
 
         {/* 软硬权重轴：路线按「偏软件 ↔ 偏硬件」放在三列里，行是划分角度 */}
         <div className="mt-4 grid grid-cols-[168px_repeat(3,minmax(0,1fr))] gap-x-5 gap-y-5">

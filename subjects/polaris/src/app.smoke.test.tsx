@@ -88,6 +88,39 @@ describe("界面冒烟", () => {
     expect(html).toContain("弱电");
   });
 
+  it("总览有推荐发展方向（按推荐等级分组），路线卡片带推荐等级与六维迷你条", () => {
+    const html = render({ view: "home" });
+    expect(html).toContain("推荐发展方向");
+    for (const label of ["优先推荐", "推荐", "可选", "进阶"]) expect(html).toContain(label);
+    expect(html).toContain('aria-label="六个维度的评级"');
+  });
+
+  it("路线页有评估面板：六维评级、优劣与推荐的后续方向，可以点过去", () => {
+    const route = catalog.routes.find((r) => r.id === "route.board-hardware")!;
+    render({ view: "route", routeId: route.id });
+    const button = [...container.querySelectorAll("button")].find((b) => b.textContent?.includes("评估"))!;
+    act(() => button.click());
+    const html = container.innerHTML;
+    expect(html).toContain("路线评估");
+    expect(html).toContain(route.assessment!.verdict_reason.slice(0, 12));
+    expect(html).toContain("推荐的后续方向");
+    expect(html).toContain("代价与局限");
+    for (const next of route.assessment!.next) expect(html).toContain(catalog.routes.find((r) => r.id === next.route_id)!.title);
+  });
+
+  it("节点抽屉有评级区；选择着色维度后，卡片显示该维度的等级名", () => {
+    const html = render({ view: "base", mapId: "electrical-engineering", nodeId: "polaris.ee.switching_converters" });
+    expect(html).toContain("评级");
+    expect(html).toContain("由内容推导");
+    expect(html).toContain("编辑评估");
+    const button = [...container.querySelectorAll("button")].find((b) => b.textContent === "实用性" && b.getAttribute("aria-pressed") !== null)!;
+    act(() => button.click());
+    // 仪器使用与板级调试的实用性是 5 级「日常必备」，卡片上要显示出来（不是只靠图例）。
+    expect(container.querySelector('[data-node-id="polaris.ee.instruments_bringup"]')?.textContent).toContain("日常必备");
+    act(() => useApp.getState().setRateBy(null));
+    expect(container.querySelector('[data-node-id="polaris.ee.instruments_bringup"]')?.textContent).not.toContain("日常必备");
+  });
+
   it("节点抽屉：软硬接口节点同时显示硬件一侧与软件一侧，出处可见", () => {
     const html = render({ view: "base", mapId: "hw-sw-interface", nodeId: "polaris.codesign.dma_cache" });
     expect(html).toContain("硬件一侧");

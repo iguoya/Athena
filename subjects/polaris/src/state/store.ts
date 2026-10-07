@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import type { RatingDim } from "@/content/types";
 import { formatHash, HOME, parseHash, type Location } from "./router";
 
 export type ThemeId = "sky" | "paper";
@@ -31,6 +32,20 @@ function applyTheme(theme: ThemeId): void {
   }
 }
 
+const RATE_KEY = "polaris.rateBy";
+const RATE_DIMS: readonly string[] = ["utility", "hands_on", "theory", "verifiable", "core", "demand"];
+
+// 着色维度同样是个人的显示偏好，存在本机浏览器里；读不到就当没选。
+function readRateBy(): RatingDim | null {
+  try {
+    const stored = localStorage.getItem(RATE_KEY);
+    if (stored && RATE_DIMS.includes(stored)) return stored as RatingDim;
+  } catch {
+    /* 没有存储也能用 */
+  }
+  return null;
+}
+
 interface AppState {
   loc: Location;
   /** 悬停预览与选中是同一个「聚焦」概念的两档：悬停是临时的，选中是钉住的。 */
@@ -39,6 +54,8 @@ interface AppState {
   edgeKey: string | null;
   theme: ThemeId;
   drawerWide: boolean;
+  /** 按哪个评级维度给节点着色；null 是默认外观（ADR 0022）。 */
+  rateBy: RatingDim | null;
 
   go(loc: Location, replace?: boolean): void;
   selectNode(id: string | null): void;
@@ -46,6 +63,7 @@ interface AppState {
   setEdge(key: string | null): void;
   setTheme(theme: ThemeId): void;
   toggleDrawerWide(): void;
+  setRateBy(dim: RatingDim | null): void;
 }
 
 export const useApp = create<AppState>((set, get) => ({
@@ -54,6 +72,7 @@ export const useApp = create<AppState>((set, get) => ({
   edgeKey: null,
   theme: readTheme(),
   drawerWide: false,
+  rateBy: readRateBy(),
 
   go(loc, replace = false) {
     const hash = formatHash(loc);
@@ -73,6 +92,15 @@ export const useApp = create<AppState>((set, get) => ({
     set({ theme });
   },
   toggleDrawerWide: () => set((state) => ({ drawerWide: !state.drawerWide })),
+  setRateBy(dim) {
+    try {
+      if (dim) localStorage.setItem(RATE_KEY, dim);
+      else localStorage.removeItem(RATE_KEY);
+    } catch {
+      /* 同上 */
+    }
+    set({ rateBy: dim });
+  },
 }));
 
 // 初始主题在首屏渲染前就要生效，避免闪一下默认主题。

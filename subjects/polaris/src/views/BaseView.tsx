@@ -9,6 +9,7 @@ import { EdgeCard } from "@/panels/EdgeCard";
 import { NodeDrawer } from "@/panels/NodeDrawer";
 import { useApp } from "@/state/store";
 import { DISCIPLINE_LABEL } from "@/ui/labels";
+import { RateBar } from "@/ui/RatingParts";
 import { useDrawerWidth } from "@/ui/useDrawerWidth";
 
 export function BaseView({ catalog, mapId, nodeId }: { catalog: Catalog; mapId: string; nodeId?: string }) {
@@ -61,6 +62,7 @@ export function BaseView({ catalog, mapId, nodeId }: { catalog: Catalog; mapId: 
             </div>
           ))}
         </div>
+        <RateBar />
         <p className="mt-2 max-w-[1100px] text-[12.5px] leading-relaxed text-muted">{map.summary}</p>
         {map.theory && map.theory.length > 0 && (
           <div className="mt-2">

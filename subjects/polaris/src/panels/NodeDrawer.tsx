@@ -26,6 +26,8 @@ import {
   stageVar,
 } from "@/ui/labels";
 
+import { RatingRows } from "@/ui/RatingParts";
+
 interface Props {
   catalog: Catalog;
   node: PolarisNode;
@@ -194,6 +196,12 @@ export function NodeDrawer({ catalog, node, width, onClose }: Props) {
             </p>
           )}
         </Section>
+
+        {node.ratings && (
+          <Section title="评级">
+            <RatingRows ratings={node.ratings} />
+          </Section>
+        )}
 
         {node.hw_side && node.sw_side && (
           <Section title="软硬两侧">

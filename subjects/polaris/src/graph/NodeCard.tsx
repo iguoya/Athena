@@ -3,6 +3,9 @@ import { Star } from "lucide-react";
 import type { PlacedNode } from "@/content/layout";
 import { STAGE_LABEL } from "@/content/catalog";
 import type { PolarisNode } from "@/content/types";
+import { useApp } from "@/state/store";
+import { LevelBadge, MiniStrip } from "@/ui/RatingParts";
+import { ratingVar } from "@/content/ratings";
 import { CONTRACT_LABEL, CURRENT_LABEL, PRIORITY_LABEL, TRACK_LABEL, contractVar, currentVar, stageVar } from "@/ui/labels";
 
 export type CardState = "idle" | "selected" | "near" | "dim";
@@ -26,6 +29,9 @@ const PRIORITY_STYLE = {
 export function NodeCard({ node, placed, state, delay, onSelect, onHover }: Props) {
   const stageColor = stageVar(node.stage);
   const selected = state === "selected";
+  const rateBy = useApp((s) => s.rateBy);
+  const rated = rateBy && node.ratings ? node.ratings[rateBy] : undefined;
+  const tint = rated ? ratingVar(rated.level) : undefined;
   return (
     <motion.button
       type="button"
@@ -44,7 +50,15 @@ export function NodeCard({ node, placed, state, delay, onSelect, onHover }: Prop
       onMouseLeave={() => onHover(false)}
       onFocus={() => onHover(true)}
       onBlur={() => onHover(false)}
-      style={{ left: placed.x, top: placed.y, width: placed.w, height: placed.h }}
+      style={{
+        left: placed.x,
+        top: placed.y,
+        width: placed.w,
+        height: placed.h,
+        ...(tint
+          ? { background: `color-mix(in srgb, ${tint} 17%, var(--surface))`, borderColor: selected ? undefined : tint }
+          : {}),
+      }}
       className={[
         "absolute overflow-hidden rounded-2xl border bg-surface p-3 pl-[18px] text-left",
         "shadow-[var(--shadow-card)] transition-[box-shadow,transform,border-color] duration-200",
@@ -67,6 +81,11 @@ export function NodeCard({ node, placed, state, delay, onSelect, onHover }: Prop
           </span>
         )}
       </span>
+      {node.ratings && (
+        <span className="absolute right-2.5 top-2.5">
+          {rateBy && rated ? <LevelBadge dim={rateBy} level={rated.level} /> : <MiniStrip ratings={node.ratings} />}
+        </span>
+      )}
       <span className="mt-2 line-clamp-2 text-[15px] font-semibold leading-snug">{node.title}</span>
       <span className="absolute inset-x-0 bottom-0 flex items-center gap-1.5 px-[18px] pb-2.5 text-[11px] text-muted">
         {node.contract ? (
