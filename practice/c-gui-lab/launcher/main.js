@@ -11,7 +11,7 @@ const fs = require("fs");
 const MSYS2_BIN = "C:\\msys64\\ucrt64\\bin";
 const PROJECT_ROOT = path.join(__dirname, "..");
 
-// 自研样式程序：CMake 产物
+// 自研样式程序：CMake 产物。args 用于同一 exe 的不同形态（如 LVGL 官方 demo）。
 const APPS = {
   gtk: {
     title: "GTK4 + Adwaita + CSS",
@@ -21,15 +21,30 @@ const APPS = {
     title: "Dear ImGui",
     exe: path.join(PROJECT_ROOT, "build", "apps", "imgui-style", "imgui-style.exe"),
   },
+  "imgui-demo": {
+    title: "ImGui ShowDemoWindow()",
+    exe: path.join(PROJECT_ROOT, "build", "apps", "imgui-style", "imgui-style.exe"),
+    args: ["--demo"],
+  },
   lvgl: {
     title: "LVGL + SDL2",
     exe: path.join(PROJECT_ROOT, "build", "apps", "lvgl-style", "lvgl-style.exe"),
+  },
+  raygui: {
+    title: "raygui 控件套件",
+    exe: path.join(PROJECT_ROOT, "build", "apps", "raygui-demo", "raygui-demo.exe"),
+  },
+  nuklear: {
+    title: "Nuklear 演示",
+    exe: path.join(PROJECT_ROOT, "build", "apps", "nuklear-demo", "nuklear-demo.exe"),
   },
 };
 
 // 官方 demo：随 MSYS2 安装，探测到才给入口
 const OFFICIAL = {
   "gtk4-demo": path.join(MSYS2_BIN, "gtk4-demo.exe"),
+  "gtk4-widget-factory": path.join(MSYS2_BIN, "gtk4-widget-factory.exe"),
+  "gtk4-node-editor": path.join(MSYS2_BIN, "gtk4-node-editor.exe"),
   "adwaita-1-demo": path.join(MSYS2_BIN, "adwaita-1-demo.exe"),
 };
 
@@ -43,7 +58,7 @@ function childEnv() {
 
 const running = new Map(); // key -> ChildProcess
 
-function launch(key, args = []) {
+function launch(key) {
   const conf = APPS[key];
   if (!conf) return { ok: false, message: `未知程序：${key}` };
   if (!fs.existsSync(conf.exe))
@@ -52,7 +67,7 @@ function launch(key, args = []) {
     return { ok: false, message: `${conf.title} 已在运行（窗口可能被挡住了）` };
 
   try {
-    const child = spawn(conf.exe, args, {
+    const child = spawn(conf.exe, conf.args || [], {
       cwd: path.dirname(conf.exe),
       env: childEnv(),
       detached: true,
@@ -90,8 +105,7 @@ function probe() {
 }
 
 ipcMain.handle("lab:launch", (_ev, key) => launch(key));
-ipcMain.handle("lab:launch-demo-window", () => launch("imgui", ["--demo"]));
-ipcMain.handle("lab:launch-official", (_ev, name) => launchOfficial(name));
+ipcMain.handle("lab:launch-demo-window", () => launch("imgui-demo"));ipcMain.handle("lab:launch-official", (_ev, name) => launchOfficial(name));
 ipcMain.handle("lab:probe", () => probe());
 
 function createWindow() {

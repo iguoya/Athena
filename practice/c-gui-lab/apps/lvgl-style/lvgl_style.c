@@ -238,14 +238,15 @@ on_theme_toggle(lv_event_t *e)
 }
 
 int
-main(void)
+main(int argc, char **argv)
 {
+  (void)argc;
+  (void)argv;
   lv_init();
   lv_tick_set_cb(SDL_GetTicks);
   cjk_font = cjk_font_load();
 
   lv_display_t *disp = lv_sdl_window_create(1000, 760);
-  lv_sdl_mouse_create();
   lv_sdl_mouse_create();
 
   lv_theme_default_init(disp, lv_palette_main(LV_PALETTE_BLUE),

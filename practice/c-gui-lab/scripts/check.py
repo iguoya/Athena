@@ -52,6 +52,11 @@ REQUIRED_FILES = [
     "apps/imgui-style/imgui_style.cpp",
     "apps/lvgl-style/lvgl_style.c",
     "apps/lvgl-style/lv_conf.h",
+    "apps/lvgl-style/cjk_font.c",
+    "apps/lvgl-style/font_cn_20.c",
+    "apps/lvgl-style/font_cn_28.c",
+    "apps/raygui-demo/CMakeLists.txt",
+    "apps/nuklear-demo/CMakeLists.txt",
 ]
 
 
@@ -94,6 +99,8 @@ def check_build() -> None:
         "build/apps/gtk-style/gtk-style.exe",
         "build/apps/imgui-style/imgui-style.exe",
         "build/apps/lvgl-style/lvgl-style.exe",
+        "build/apps/raygui-demo/raygui-demo.exe",
+        "build/apps/nuklear-demo/nuklear-demo.exe",
     ):
         if not (PROJECT_ROOT / exe).is_file():
             fail(f"产物缺失：{exe}")

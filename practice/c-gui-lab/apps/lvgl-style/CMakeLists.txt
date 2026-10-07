@@ -1,6 +1,7 @@
 set(LVGL ${CMAKE_SOURCE_DIR}/third_party/lvgl)
 
-# LVGL 全量编译为静态库；SDL 驱动由 lv_conf.h 的 LV_USE_SDL 打开
+# LVGL 全量编译为静态库；SDL 驱动由 lv_conf.h 的 LV_USE_SDL 打开。
+# 官方 demos 不编译：lv_demo_widgets 在本环境死锁（见 lv_conf.h）。
 file(GLOB_RECURSE LVGL_SOURCES CONFIGURE_DEPENDS ${LVGL}/src/*.c)
 add_library(lvgl_ext STATIC ${LVGL_SOURCES})
 target_include_directories(lvgl_ext PUBLIC ${LVGL} ${CMAKE_CURRENT_SOURCE_DIR})

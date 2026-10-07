@@ -10,10 +10,16 @@
 #define LV_USE_SDL 1
 
 /* 界面用到的内置字体 */
+#define LV_FONT_MONTSERRAT_12 1
+#define LV_FONT_MONTSERRAT_14 1
 #define LV_FONT_MONTSERRAT_16 1
 #define LV_FONT_MONTSERRAT_20 1
+#define LV_FONT_MONTSERRAT_22 1
 #define LV_FONT_MONTSERRAT_28 1
 #define LV_FONT_DEFAULT &lv_font_montserrat_20
+
+/* 已知限制：lv_demo_widgets（LVGL 官方 demo）在本环境死锁（灰屏未响应），
+ * 故不开 LV_USE_DEMO_WIDGETS，官方合集未集成进母体；自建橱窗承担对比任务。 */
 
 /* 中文显示用 lv_font_conv 预生成的子集字体（cjk_font.c），构建期编译进
  * 可执行文件，不需要任何运行时字体渲染器——tiny_ttf 与 FreeType 在这台

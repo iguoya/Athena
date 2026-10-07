@@ -11,9 +11,20 @@ launcher/     Electron 母体启动器（画廊 UI，spawn 三个原生程序与
 apps/
   gtk-style/    GTK4 + libadwaita + CSS 样式程序（纯 C）
   imgui-style/  Dear ImGui 样式程序（C++，原因见下）
-  lvgl-style/   LVGL + SDL2 样式程序（纯 C）
-third_party/   imgui / lvgl / cimgui 源码（不进版本库，.gitignore）
+  lvgl-style/   LVGL + SDL2 样式程序（纯 C）；--demo 进入官方 widgets 合集
+  raygui-demo/  raygui 官方控件套件（vendor 单头文件 + raylib）
+  nuklear-demo/ Nuklear 官方 SDL2/OpenGL2 演示（vendor 单头文件）
+third_party/   imgui / lvgl / cimgui / raygui / nuklear 源码（不进版本库）
 ```
+
+母体可调起的官方演示程序：
+- **GTK 生态**（随 MSYS2 包安装，探测到才亮）：gtk4-demo、gtk4-widget-factory、
+  gtk4-node-editor、adwaita-1-demo；
+- **即时模式框架**：ImGui 的 ShowDemoWindow（imgui-style --demo）、
+  raygui controls_test_suite、Nuklear SDL2 演示（后两个是 vendor 源码编译的
+  官方 demo，样式头与 overview 组件一并 vendor）。
+- **LVGL 官方 widgets 合集未集成**：lv_demo_widgets 在本环境死锁（灰屏未响应，
+  与中文渲染死锁同为该环境的 LVGL 兼容问题），对比任务由自建橱窗承担。
 
 ## 取舍说明
 
