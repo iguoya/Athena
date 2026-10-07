@@ -259,12 +259,39 @@ def tidy_changelog(target: str, dry_run: bool) -> None:
     print(f"  CHANGELOG 已规整 [{target}] 的标题写法与对比链接", flush=True)
 
 
+def check_version_level(target: str) -> None:
+    """对照 CHANGELOG 文件头的约定：有 ⚠️ 条目升主版本，没有就升次版本或修订号。
+
+    只提醒不拦：⚠️ 是人写的判断，机械底稿里不会有，拦下来反而逼人乱标。
+    """
+    text = CHANGELOG.read_text(encoding="utf-8")
+    versions = CHANGELOG_SECTION_RE.findall(text)
+    if target not in versions or versions.index(target) + 1 >= len(versions):
+        return
+    previous = versions[versions.index(target) + 1]
+    body = next((m.group(2) for m in SECTION_BLOCK_RE.finditer(text) if m.group(1) == target), "")
+    is_major = target.split(".")[0] != previous.split(".")[0]
+    breaking = "⚠️" in body
+    if is_major and not breaking:
+        print(
+            f"  ⚠ {previous} → {target} 升了主版本，但本节没有 ⚠️ 条目：要么补上不兼容变更的标记，"
+            "要么改发次版本（--minor）或修订号（--patch）",
+            flush=True,
+        )
+    elif breaking and not is_major:
+        print(
+            f"  ⚠ 本节有 ⚠️ 条目（不兼容变更），按约定 {previous} 之后应升主版本（--major）",
+            flush=True,
+        )
+
+
 def prepare(target: str, model: str, dry_run: bool) -> None:
     print(f"发版准备 {target}：", flush=True)
     check_prerequisites(target)
     bump_meson(target, dry_run)
     ensure_changelog(target, model, dry_run)
     tidy_changelog(target, dry_run)
+    check_version_level(target)
     if dry_run:
         print("dry-run 结束，未做任何改动。")
         return
