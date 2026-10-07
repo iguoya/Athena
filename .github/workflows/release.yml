@@ -528,11 +528,19 @@ jobs:
           # 再抽出正文。写回只影响本 job 工作树，真正入库靠发版前提交。
           python3 scripts/changelog_notes.py "$version" ../../CHANGELOG.md --write \
             > "${GITHUB_WORKSPACE}/release-notes.md"
+          # 页脚链接钉在本标签上，文件日后搬家也不失效；对比链接与 GitHub
+          # 自动生成的 Full Changelog 同格式，首个版本没有上一标签就省掉。
+          repo_url="https://github.com/${GITHUB_REPOSITORY}"
+          prev_tag="$(git describe --tags --abbrev=0 --match 'v*.*.*' "${GITHUB_REF_NAME}^" 2>/dev/null || true)"
           {
             echo
             echo "---"
             echo
-            echo "完整更新日志见仓库 \`CHANGELOG.md\`。"
+            echo "完整更新日志见仓库 [\`CHANGELOG.md\`](${repo_url}/blob/${GITHUB_REF_NAME}/CHANGELOG.md)。"
+            if [ -n "$prev_tag" ]; then
+              echo
+              echo "**Full Changelog**: ${repo_url}/compare/${prev_tag}...${GITHUB_REF_NAME}"
+            fi
           } >> "${GITHUB_WORKSPACE}/release-notes.md"
 
       - name: Publish release

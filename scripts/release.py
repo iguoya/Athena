@@ -53,7 +53,7 @@ VERSION_RE = re.compile(r"^\d+\.\d+\.\d+$")
 MESON_VERSION_RE = re.compile(r"(^  version: ')(\d+\.\d+\.\d+)(')", re.MULTILINE)
 CHANGELOG_SECTION_RE = re.compile(r"^## \[(\d+\.\d+\.\d+)\]", re.MULTILINE)
 SECTION_BLOCK_RE = re.compile(
-    r"^## \[(\d+\.\d+\.\d+)\][^\n]*\n(.*?)(?=^## \[|\Z)", re.MULTILINE | re.DOTALL
+    r"^## \[(\d+\.\d+\.\d+)\][^\n]*\n(.*?)(?=^## |\Z)", re.MULTILINE | re.DOTALL
 )
 ZAI_ENDPOINT = "https://open.bigmodel.cn/api/paas/v4/chat/completions"
 DEFAULT_MODEL = "glm-4.7-flash"

@@ -18,12 +18,13 @@ import argparse
 import re
 import subprocess
 import sys
+import unicodedata
 from datetime import date
 from pathlib import Path
 
 
 SECTION_RE = re.compile(
-    r"^## \[(\d+\.\d+\.\d+)\][^\n]*\n(.*?)(?=^## \[|\Z)",
+    r"^## \[(\d+\.\d+\.\d+)\][^\n]*\n(.*?)(?=^## |\Z)",
     flags=re.MULTILINE | re.DOTALL,
 )
 
@@ -52,7 +53,7 @@ def parse_version(version: str) -> tuple[int, int, int]:
 
 
 def extract_section(changelog: str, version: str) -> str | None:
-    pattern = rf"^## \[{re.escape(version)}\][^\n]*\n(.*?)(?=^## \[|\Z)"
+    pattern = rf"^## \[{re.escape(version)}\][^\n]*\n(.*?)(?=^## |\Z)"
     match = re.search(pattern, changelog, flags=re.MULTILINE | re.DOTALL)
     if match is None:
         return None
@@ -232,6 +233,49 @@ def notes_body(section: str, from_git: bool) -> str:
     return section if section.endswith("\n") else section + "\n"
 
 
+# 新块的起点：标题、列表项、引用、表格、围栏、分隔线。
+BLOCK_START_RE = re.compile(r"^(#{1,6}\s|[-*+]\s|\d+[.)]\s|>|\||```|~~~|(?:[-*_]\s*){3,}$)")
+
+
+def _is_wide(ch: str) -> bool:
+    return unicodedata.east_asian_width(ch) in ("W", "F")
+
+
+def unwrap_for_release(text: str) -> str:
+    """把段落与列表项里的手动折行接回一行。
+
+    CHANGELOG.md 按约 80 列折行，仓库里渲染文件时单个换行会被合并；
+    但 GitHub 的 Release 正文把单个换行当 <br>，原样贴进去每行都会
+    在源码折行处断开。接行规则与浏览器渲染一致：两侧都是中日韩宽
+    字符时直接拼接，否则补一个空格。围栏代码块内原样保留。
+    """
+    out: list[str] = []
+    in_fence = False
+    joinable = False  # 上一行是否为可被续接的段落或列表项文本
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith(("```", "~~~")):
+            in_fence = not in_fence
+            out.append(line)
+            joinable = False
+            continue
+        if in_fence or not stripped:
+            out.append(line)
+            joinable = False
+            continue
+        is_block_start = BLOCK_START_RE.match(stripped) is not None
+        prev = out[-1] if out else ""
+        hard_break = prev.endswith(("  ", "\\"))
+        if joinable and not is_block_start and not hard_break:
+            sep = "" if _is_wide(prev.rstrip()[-1]) and _is_wide(stripped[0]) else " "
+            out[-1] = prev.rstrip() + sep + stripped
+            continue
+        out.append(line)
+        # 标题、表格、分隔线自成一行，后面的行不往上接。
+        joinable = not (is_block_start and not re.match(r"^([-*+]|\d+[.)])\s", stripped))
+    return "\n".join(out) + ("\n" if text.endswith("\n") else "")
+
+
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("version", help="MAJOR.MINOR.PATCH")
@@ -290,7 +334,7 @@ def main(argv: list[str]) -> int:
             if args.from_git and extract_section(text, args.version) is not None:
                 # 替换已有节
                 text = re.sub(
-                    rf"^## \[{re.escape(args.version)}\][^\n]*\n.*?(?=^## \[|\Z)",
+                    rf"^## \[{re.escape(args.version)}\][^\n]*\n.*?(?=^## |\Z)",
                     section + ("\n" if not section.endswith("\n") else ""),
                     text,
                     count=1,
@@ -308,7 +352,9 @@ def main(argv: list[str]) -> int:
             file=sys.stderr,
         )
 
-    sys.stdout.write(notes_body(section, from_git))
+    # 正文要重定向进 release-notes.md；Windows 控制台默认 GBK，不固定就会乱码或报错。
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stdout.write(unwrap_for_release(notes_body(section, from_git)))
     return 0
 
 
