@@ -86,7 +86,7 @@
    "type": "para",
    "text": "When the application runs, the `gettext`\n      library checks the system-wide directory to see if there is a\n      `.mo` file for the user's locale environment\n      (you can set the locale with, for instance, \"export LANG=de_DE.UTF-8\"\n      from a bash console). Later, when the program reaches a\n      `gettext` call, it looks for a translation of a\n      particular string. If none is found, the original string is used.",
    "sha": "e4eb3caf8d3f6807",
-   "zh": null
+   "zh": "当应用程序运行时，gettext将检查系统目录是否存在与用户语言环境对应的.mo文件（你可以使用以下命令指定语言环境，例如：在bash控制台上输入export LANG=de_DE.UTF-8）。稍后在程序到达gettext调用时，它将从中寻找特定字符串的翻译，如果未找到则使用原始字符串。"
   },
   {
    "type": "heading",
@@ -122,6 +122,7 @@
    "type": "para",
    "text": "It's possible that certain strings will be marked as\n      `fuzzy` in the `.po` file.\n      These translations will not substitute the original string. To make\n      them appear, simply remove the `fuzzy` tag.\n      A `fuzzy` tag appears if a string content changed,\n      but the location is still the same.",
    "sha": "5bab9914f442e474",
+   "admonition": "note",
    "zh": ".po文件中有些字符串可能被标记为fuzzy。这些翻译将不会替代原始字符串。如果要使其显示，只需要将fuzzy标记删除即可（通常该标记意味着翻译需要更新，不检查翻译直接删除标记是不对的）。"
   },
   {
@@ -132,9 +133,9 @@
   },
   {
    "type": "para",
-   "text": "More information about what lies behind the internationalization and localization process\n      is presented and demonstrated in:\n\n      \n        \n          \n            [\n              L10N Guidelines for Developers](https://wiki.gnome.org/TranslationProject/DevGuidelines)\n          \n        \n\n        \n          \n            [Intltool README](http://bazaar.launchpad.net/~intltool/intltool/trunk/view/head:/README)\n          \n        \n\n        \n          \n            [How to use Git for GNOME translators](https://wiki.gnome.org/TranslationProject/GitHowTo)\n          \n        \n\n        \n          \n            [gettext manual](http://www.gnu.org/software/gettext/manual/gettext.html)",
-   "sha": "1f7731798526f9f4",
-   "zh": null
+   "text": "More information about what lies behind the internationalization and localization process\n      is presented and demonstrated in:",
+   "sha": "da6eb1ced3e1e6f7",
+   "zh": "更多与国际化与本地化有关的信息，请参阅以下内容："
   },
   {
    "type": "listitem",

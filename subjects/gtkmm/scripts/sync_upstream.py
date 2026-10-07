@@ -33,6 +33,7 @@ from extract_source import (  # noqa: E402
     code_text,
     direct_children,
     docbook_entities,
+    element_close,
     element_text,
     expand_entities,
     figure_ref,
@@ -62,8 +63,107 @@ def sha(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
 
 
+def inner_xml(fragment: str, element: str) -> str:
+    """完整元素片段的内部 XML（element_text 的返回值本就是原始片段）。"""
+    text, _ = element_text(element, fragment, 0)
+    return text
+
+
+def chapter_span(source: str, chapter_id: str) -> str | None:
+    """章/附录元素的完整片段（含开闭标签）；找不到返回 None。"""
+    m = re.search(rf'<(?:chapter|appendix)(?:\s[^>]*)?xml:id="{re.escape(chapter_id)}"', source)
+    if m is None:
+        return None
+    end = element_close(source, m.start(), "chapter")
+    if end == len(source):
+        # element_close 按 "chapter" 扫描；附录元素名不同则再试
+        end = element_close(source, m.start(), "appendix")
+    return source[m.start():end]
+
+
+def drop_first_title(fragment: str) -> str:
+    """去掉片段中第一个 <title>…</title>（章标题不进正文块流）。"""
+    m = re.search(r"<title(?:\s[^>]*)?>.*?</title>", fragment, re.S)
+    return fragment[:m.start()] + fragment[m.end():] if m else fragment
+
+
+def xref_titles(structure: list[dict], source: str) -> dict[str, str]:
+    """linkend → 官网渲染文本（目标标题）：章节标题 + bridgehead 文本。"""
+    titles: dict[str, str] = {}
+    for chapter in structure:
+        titles[chapter["id"]] = chapter["title"]
+        for sec in chapter["sections"]:
+            titles[sec["id"]] = sec["title"]
+    for m in re.finditer(r"<bridgehead[^>]*xml:id=\"([^\"]+)\"[^>]*>(.*?)</bridgehead>",
+                         source, re.S):
+        titles[m.group(1)] = re.sub(r"\s+", " ", strip_tags(m.group(2))).strip()
+    return titles
+
+
+# 块级元素：官网渲染为独立结构。DocBook 允许它们嵌在 para 内部（SGML 遗留的
+# 内容模型），XSLT 渲染时拆开——提取时同样拆出：混在 para 里的 screen 文本会被
+# flow() 折叠成一坨，footnote 会被双重提取（所在 para 的文本含脚注 + 脚注 para
+# 又独立成段），para 内嵌的列表会连同列表项一起并成一坨纯文本。
+SPECIAL_RE = re.compile(
+    r"<(screen|footnote|note|tip|warning|important|caution"
+    r"|itemizedlist|orderedlist|variablelist|segmentedlist"
+    r"|figure|screenshot|programlisting|literallayout)(?:\s[^>]*)?>")
+ADMONITIONS = {"note", "tip", "warning", "important", "caution"}
+FLOW_KINDS = {"itemizedlist", "orderedlist", "variablelist", "segmentedlist",
+              "figure", "screenshot", "programlisting", "literallayout"}
+
+
+def split_special(source: str) -> list[tuple[str | None, str]]:
+    """把块级元素按文档顺序拆出：[(None, 普通片段) | (kind, 完整片段)]。
+
+    拆分点落在 para 内部时，所在 para 按拆分点切开并补齐开闭标签——
+    普通片段永远是平衡的 para（或非 para 内容），emit_flow 可以直接处理。
+    """
+    parts: list[tuple[str | None, str]] = []
+    cursor, pos = 0, 0
+    para_tail = False  # cursor 处于某个已被拆开的 para 的尾部（缺开标签）
+    while True:
+        m = SPECIAL_RE.search(source, pos)
+        if m is None:
+            break
+        text, end = element_text(m.group(1), source, m.start())
+        if not text:
+            pos = m.end()  # 找不到闭合：当普通文本放行
+            continue
+        pre = source[cursor:m.start()]
+        if para_tail:
+            stop = pre.find("</para>")
+            tail_text, rest = (pre[:stop], pre[stop + len("</para>"):]) \
+                if stop != -1 else (pre, "")
+            if tail_text.strip():
+                parts.append((None, f"<para>{tail_text}</para>"))
+            para_tail = False
+            if rest:
+                opens = len(re.findall(r"<para(?:\s[^>]*)?>", rest))
+                if opens > rest.count("</para>"):
+                    open_tag = re.search(r"<para(?:\s[^>]*)?>", rest)
+                    parts.append((None, rest[:open_tag.end()] + "</para>"))
+                    para_tail = True
+                else:
+                    parts.append((None, rest))
+        elif len(re.findall(r"<para(?:\s[^>]*)?>", pre)) > pre.count("</para>"):
+            parts.append((None, pre + "</para>"))
+            para_tail = True
+        elif pre:
+            parts.append((None, pre))
+        parts.append((m.group(1), source[m.start():end]))
+        cursor = pos = end
+    tail = source[cursor:]
+    if para_tail:
+        if tail.strip():
+            parts.append((None, f"<para>{tail}</para>"))
+    elif tail:
+        parts.append((None, tail))
+    return parts
+
+
 def extract_blocks(fragment: str) -> list[dict]:
-    """把节内容切成有序段流：para / listitem / code / heading（子节标题）。"""
+    """把节内容切成有序段流：para / listitem / code / heading / figure。"""
     blocks: list[dict] = []
 
     def walk(source: str) -> None:
@@ -71,35 +171,64 @@ def extract_blocks(fragment: str) -> list[dict]:
         sections = direct_children("section", source)
         cursor = 0
         for sec_id, sec_frag in sections:
-            sec_open = re.search(rf'<section(?:\s[^>]*)?xml:id="{re.escape(sec_id)}"', source[cursor:])
-            if sec_open:
-                sec_start = cursor + sec_open.start()
+            if sec_id is not None:
+                sec_open = re.search(
+                    rf'<section(?:\s[^>]*)?xml:id="{re.escape(sec_id)}"', source[cursor:])
             else:
-                sec_start = cursor
+                sec_open = re.search(r"<section(?:\s[^>]*)?>", source[cursor:])
+            sec_start = cursor + sec_open.start() if sec_open else cursor
             emit_content(source[cursor:sec_start])
             heading_text = strip_tags(element_text("title", sec_frag, 0)[0])
             blocks.append({"type": "heading", "text": heading_text, "sha": sha(heading_text)})
             walk(sec_frag)
-            sec_close = source.find("</section>", sec_start)
-            cursor = sec_close + len("</section>") if sec_close != -1 else len(source)
+            # 该 child 自己的闭合：深度扫描定位——find 找第一个 </section> 会
+            # 停在嵌套子节的闭合，导致剩余内容被下一轮重复处理（重复块）
+            cursor = element_close(source, sec_start, "section")
         emit_content(source[cursor:])
 
     def emit_content(source: str) -> None:
-        tag_re = re.compile(r"<(para|itemizedlist|programlisting|literallayout|figure)(?:\s[^>]*)?>")
-        # 先收集列表区间：列表项内部的 para 由 itemizedlist 分支统一处理，避免重复成块
-        list_spans: list[tuple[int, int]] = []
+        for kind, part in split_special(source):
+            if kind is None:
+                emit_flow(part)
+            elif kind == "screen":
+                inner = inner_xml(part, "screen")
+                clean = code_text(inner)
+                if clean:
+                    blocks.append({"type": "code", "text": clean, "sha": sha(clean)})
+            elif kind == "footnote":
+                emit_content(inner_xml(part, "footnote"))
+            elif kind in ADMONITIONS:
+                # admonition：内部照常提取，产出的块统一打上类型（渲染成提示框）
+                start = len(blocks)
+                emit_content(inner_xml(part, kind))
+                for block in blocks[start:]:
+                    block["admonition"] = kind
+            else:
+                # 提升/顶层的列表、图、程序清单：按原有 emit_flow 分支处理
+                emit_flow(part)
+
+    def emit_flow(source: str) -> None:
+        tag_re = re.compile(
+            r"<(para|simpara|itemizedlist|orderedlist|variablelist|segmentedlist"
+            r"|programlisting|literallayout|figure|screenshot|bridgehead)(?:\s[^>]*)?>")
+        # 先收集区间：列表项内部的 para 由列表分支统一处理；figure 内的
+        # screenshot 不再单独成块（figure 分支已提取同一张图）
+        spans: list[tuple[int, int, str]] = []
         for m in tag_re.finditer(source):
-            if m.group(1) == "itemizedlist":
-                _, list_end = element_text("itemizedlist", source, m.start())
-                list_spans.append((m.start(), list_end))
-        in_list = lambda pos: any(a <= pos < b for a, b in list_spans)
+            if m.group(1) in ("itemizedlist", "orderedlist", "variablelist",
+                              "segmentedlist", "figure"):
+                _, span_end = element_text(m.group(1), source, m.start())
+                spans.append((m.start(), span_end, m.group(1)))
+        def inside(pos: int, *kinds: str) -> bool:
+            return any(a <= pos < b and k in kinds for a, b, k in spans)
         for m in tag_re.finditer(source):
             kind = m.group(1)
-            if kind == "para" and in_list(m.start()):
+            if kind in ("para", "simpara") and inside(m.start(),
+                    "itemizedlist", "orderedlist", "variablelist", "segmentedlist"):
                 continue
-            if kind in ("para", "programlisting", "literallayout"):
+            if kind in ("para", "simpara", "programlisting", "literallayout"):
                 text, _ = element_text(kind, source, m.start())
-                if kind == "para":
+                if kind in ("para", "simpara"):
                     # 正文保留内联格式（粗/斜/行内代码/链接）；指纹严格沿用旧口径
                     # （strip_tags 纯文本）——已有翻译不因格式升级而失效（ADR 0002）
                     key = sha(strip_tags(text).strip())
@@ -111,21 +240,67 @@ def extract_blocks(fragment: str) -> list[dict]:
                 if not clean:
                     continue
                 blocks.append({
-                    "type": "code" if kind != "para" else "para",
+                    "type": "code" if kind not in ("para", "simpara") else "para",
                     "text": clean,
                     "sha": key,
                 })
-            elif kind == "itemizedlist":
-                list_text, list_end = element_text("itemizedlist", source, m.start())
-                for _, li_frag in direct_children("listitem", list_text):
+            elif kind in ("itemizedlist", "orderedlist"):
+                list_text, _ = element_text(kind, source, m.start())
+                for index, (_, li_frag) in enumerate(direct_children("listitem", list_text), 1):
                     li_text, _ = element_text("para", li_frag, 0)
+                    if not li_text:
+                        li_text, _ = element_text("simpara", li_frag, 0)
                     raw = li_text if li_text else li_frag
                     # 列表项同样保留内联格式（链接/粗斜体/行内代码）；
-                    # 指纹沿用纯文本口径，已有翻译不因格式升级丢失
+                    # 无序列表项沿用列表项指纹口径；有序列表项沿用段落口径——
+                    # 这批段此前被当作 para 提取，口径一致才不丢已有翻译
                     clean = inline_md(expand_md(raw)).strip()
-                    key = sha(normalize(strip_tags(raw)))
+                    if not clean:
+                        continue
+                    block = {"type": "listitem", "text": clean}
+                    if kind == "itemizedlist":
+                        block["sha"] = sha(normalize(strip_tags(raw)))
+                    else:
+                        block["sha"] = sha(strip_tags(raw).strip())
+                        block["marker"] = f"{index}."
+                    blocks.append(block)
+            elif kind == "variablelist":
+                # 官网渲染：term 加粗行 + 缩进描述。受限块模型下 term 走 marker
+                # （纯文本，渲染在项首加粗位），desc 走 text 且沿用段落指纹口径——
+                # 这批描述此前被当作 para 提取，口径一致才不丢已有翻译
+                list_text, _ = element_text("variablelist", source, m.start())
+                for _, entry_frag in direct_children("varlistentry", list_text):
+                    term_text, _ = element_text("term", entry_frag, 0)
+                    li_frags = direct_children("listitem", entry_frag)
+                    li_frag = li_frags[0][1] if li_frags else entry_frag
+                    desc, _ = element_text("para", li_frag, 0)
+                    if not desc:
+                        desc, _ = element_text("simpara", li_frag, 0)
+                    raw = desc if desc else li_frag
+                    clean = inline_md(expand_md(raw)).strip()
+                    if not clean:
+                        continue
+                    blocks.append({"type": "listitem", "text": clean,
+                                   "sha": sha(strip_tags(raw).strip()),
+                                   "marker": strip_tags(term_text).strip()})
+            elif kind == "segmentedlist":
+                # 官网渲染为两列表格（segtitle 为表头）：受限块模型下每行一块；
+                # seg 的内容是代码标识符，inline_md 已序列化为行内代码，直接拼接
+                list_text, _ = element_text("segmentedlist", source, m.start())
+                titles = [inline_md(expand_md(strip_tags(t)))
+                          for t in re.findall(r"<segtitle(?:\s[^>]*)?>(.*?)</segtitle>",
+                                              list_text, re.S)]
+                header = " → ".join(titles)
+                if header:
+                    blocks.append({"type": "listitem", "text": header,
+                                   "sha": sha(normalize(header))})
+                for _, item_frag in direct_children("seglistitem", list_text):
+                    segs = [inline_md(expand_md(strip_tags(s))) for s in
+                            re.findall(r"<seg(?:\s[^>]*)?>(.*?)</seg>", item_frag, re.S)]
+                    clean = " → ".join(s for s in segs if s)
                     if clean:
-                        blocks.append({"type": "listitem", "text": clean, "sha": key})
+                        blocks.append({"type": "listitem", "text": clean,
+                                       "sha": sha(normalize(strip_tags(item_frag)))})
             elif kind == "figure":
                 fig_text, fig_end = element_text("figure", source, m.start())
                 title = strip_tags(element_text("title", fig_text, 0)[0])
@@ -133,6 +308,20 @@ def extract_blocks(fragment: str) -> list[dict]:
                     ref = figure_ref(expand_md(fig_text))
                     blocks.append({"type": "figure", "text": title,
                                    "ref": ref, "sha": sha(title)})
+            elif kind == "screenshot":
+                # 不在 figure 里的游离截图（cairo 时钟、文件对话框）：无题注
+                if inside(m.start(), "figure"):
+                    continue
+                shot_text, _ = element_text("screenshot", source, m.start())
+                ref = figure_ref(expand_md(shot_text))
+                if ref:
+                    blocks.append({"type": "figure", "text": "",
+                                   "ref": ref, "sha": sha("screenshot:" + ref)})
+            elif kind == "bridgehead":
+                head_text, _ = element_text("bridgehead", source, m.start())
+                text = strip_tags(head_text)
+                if text:
+                    blocks.append({"type": "heading", "text": text, "sha": sha(text)})
 
     def normalize(text: str) -> str:
         return re.sub(r"\s+", " ", text).strip()
@@ -237,11 +426,26 @@ def align(old_blocks: list[dict] | None, new_blocks: list[dict],
     return new_blocks, stats
 
 
-def chapter_preamble_blocks(source: str, chapter_id: str) -> list[dict]:
-    """章导语块：章标题之后、第一个 section 之前的 para 流（官网章页头部）。"""
+def preamble_blocks(source: str, chapter_id: str) -> list[dict]:
+    """章导语块：与正文同一套提取机制（列表/提示框/终端块全覆盖），
+    但 para 指纹沿用导语通道的历史口径（折叠全部空白）——已有导语译文
+    不因通道合并而变 stale。"""
+    from inline_md import strip_inline_md
+    fragment = chapter_preamble_fragment(source, chapter_id)
+    if not fragment:
+        return []
+    blocks = extract_blocks(fragment)
+    for block in blocks:
+        if block["type"] == "para":
+            block["sha"] = sha(re.sub(r"\s+", " ", strip_inline_md(block["text"])).strip())
+    return blocks
+
+
+def chapter_preamble_fragment(source: str, chapter_id: str) -> str:
+    """章导语片段：章标题之后、第一个 section 之前的 XML（官网章页头部）。"""
     m = re.search(rf'<chapter(?:\s[^>]*)?xml:id="{re.escape(chapter_id)}"', source)
     if m is None:
-        return []
+        return ""
     depth, inner_start = 1, m.end()
     tag_re = re.compile(r"</?chapter(?:\s[^>]*)?>")
     end = len(source)
@@ -256,23 +460,7 @@ def chapter_preamble_blocks(source: str, chapter_id: str) -> list[dict]:
     title_end = head.find("</title>")
     if title_end != -1:
         head = head[title_end + len("</title>"):]
-    blocks: list[dict] = []
-    tag_re = re.compile(r"<(para|programlisting|literallayout|itemizedlist)(?:\s[^>]*)?>")
-    for t in tag_re.finditer(head):
-        kind = t.group(1)
-        text_, _ = element_text(kind, head, t.start())
-        if kind == "para":
-            clean = inline_md(expand_md(text_)).strip()
-            key = sha(re.sub(r"\s+", " ", strip_tags(text_)).strip())
-        elif kind == "itemizedlist":
-            continue  # 导语中罕见列表，跳过以免嵌套处理
-        else:
-            clean = code_text(text_)
-            key = sha(clean)
-        if clean:
-            blocks.append({"type": "para" if kind == "para" else "code",
-                           "text": clean, "sha": key})
-    return blocks
+    return head
 
 
 def strip_meta_labels(blocks: list[dict]) -> list[dict]:
@@ -336,7 +524,8 @@ def sync_section(chapter_id: str, section_id: str, section_title: str,
         return snapshot, stats
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(
-        json.dumps(snapshot, ensure_ascii=False, indent=1), encoding="utf-8")
+        json.dumps(snapshot, ensure_ascii=False, indent=1),
+        encoding="utf-8", newline="\n")
     return snapshot, stats
 
 
@@ -355,6 +544,13 @@ def main() -> int:
     synced = 0
     source = DOCBOOK.read_text(encoding="utf-8")
     source = re.sub(r"<!--.*?-->", "", source, flags=re.S)
+    # <xref linkend="X"/> 官网渲染为指向目标的链接（文本 = 目标标题）；
+    # 提取前替换成受限 markdown 链接，正文不留「剥标签后的空洞」
+    titles = xref_titles(structure, source)
+    source = re.sub(
+        r"<xref\s+linkend=\"([^\"]+)\"\s*/>",
+        lambda m: f"[{titles.get(m.group(1), m.group(1))}](#{m.group(1)})",
+        source)
     for chapter in structure:
         chapter_id = chapter["id"]
         for sec in chapter["sections"]:
@@ -363,15 +559,23 @@ def main() -> int:
             # 重新定位该节的原始片段（load_structure 只回了摘要）
             frag_match = re.search(
                 rf'<section(?:\s[^>]*)?xml:id="{re.escape(sec["id"])}"', source)
-            if frag_match is None:
-                continue
-            # 章导语：章标题之后、第一个节之前的段流，并入第一节（官网章页行为）
             preamble: list[dict] = []
-            if sec["id"] == chapter["sections"][0]["id"]:
-                preamble = chapter_preamble_blocks(source, chapter_id)
-            _, frag = next(
-                (sid, f) for sid, f in direct_children("section", source[frag_match.start():])
-                if sid == sec["id"])
+            if frag_match is not None:
+                # 章导语：章标题之后、第一个节之前的段流，并入第一节（官网章页行为）
+                if sec["id"] == chapter["sections"][0]["id"]:
+                    preamble = preamble_blocks(source, chapter_id)
+                _, frag = next(
+                    (sid, f) for sid, f in direct_children("section", source[frag_match.start():])
+                    if sid == sec["id"])
+            elif sec["id"] == chapter_id:
+                # 单页章：节 id = 章 id，没有 section 分页——整章即内容，
+                # 导语已在其中，不再叠加 preamble（会重复）
+                whole = chapter_span(source, chapter_id)
+                if whole is None:
+                    continue
+                frag = drop_first_title(whole)
+            else:
+                continue
             snapshot, stats = sync_section(
                 chapter_id, sec["id"], re.sub(r"&(\w+);", "gtkmm", sec["title"]),
                 frag, pinned["pinned_commit"], preamble)

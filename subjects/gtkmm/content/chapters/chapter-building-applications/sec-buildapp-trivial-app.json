@@ -12,38 +12,43 @@
   },
   {
    "type": "para",
-   "text": "An application consists of a number of files:\n\n  \n    The binary file\n    This gets installed in `/usr/bin`.\n  \n  \n    A desktop file\n    The desktop file provides important information about the application\n      to the desktop shell, such as its name, icon, D-Bus name, commandline to launch it,\n      etc. It is installed in `/usr/share/applications`.\n  \n  \n    An icon\n    The icon gets installed in `/usr/share/icons/hicolor/48x48/apps`,\n      where it will be found regardless of the current theme.\n  \n  \n    A settings schema\n    If the application uses `Gio::Settings`,\n      it will install its schema in `/usr/share/glib-2.0/schemas`,\n      so that tools like dconf-editor can find it.\n  \n  \n    Other resources\n    Other files, such as `Gtk::Builder` ui files,\n      are best loaded from resources stored in the application binary itself. This\n      eliminates the need for most of the files that would traditionally be installed\n      in an application-specific location in `/usr/share`.",
-   "sha": "26688db8616c6100",
-   "zh": null
+   "text": "An application consists of a number of files:",
+   "sha": "113575f4515ae9db",
+   "zh": "一个应用程序由许多文件组成："
   },
   {
-   "type": "para",
+   "type": "listitem",
    "text": "This gets installed in `/usr/bin`.",
    "sha": "57c97c8f3e24bc3c",
+   "marker": "The binary file",
    "zh": "这将被安装在/usr/bin。"
   },
   {
-   "type": "para",
+   "type": "listitem",
    "text": "The desktop file provides important information about the application\n      to the desktop shell, such as its name, icon, D-Bus name, commandline to launch it,\n      etc. It is installed in `/usr/share/applications`.",
-   "sha": "1dbbc59b3111fda0",
+   "sha": "047d85f69460068f",
+   "marker": "A desktop file",
    "zh": "桌面文件为桌面shell提供了于应用程序有关的重要信息，例如应用程序的名称、图标D-Bus名、启动时的命令行等。此文件将安装在/usr/share/applications。"
   },
   {
-   "type": "para",
+   "type": "listitem",
    "text": "The icon gets installed in `/usr/share/icons/hicolor/48x48/apps`,\n      where it will be found regardless of the current theme.",
-   "sha": "e6e197f279791ee8",
+   "sha": "46c1cda64cd39167",
+   "marker": "An icon",
    "zh": "图标将被安装在/usr/share/icons/hicolor/48x48/apps，无论当前主题是什么你都可以在其中找到图标。"
   },
   {
-   "type": "para",
+   "type": "listitem",
    "text": "If the application uses `Gio::Settings`,\n      it will install its schema in `/usr/share/glib-2.0/schemas`,\n      so that tools like dconf-editor can find it.",
-   "sha": "19ab78262419e73d",
+   "sha": "c9ed2977602dd8aa",
+   "marker": "A settings schema",
    "zh": "如果应用程序使用了Gio::Settings，它需要将它的模式安装到/usr/share/glib-2.0/schemas，以便dconf-editor之类的工具可以找到它。"
   },
   {
-   "type": "para",
+   "type": "listitem",
    "text": "Other files, such as `Gtk::Builder` ui files,\n      are best loaded from resources stored in the application binary itself. This\n      eliminates the need for most of the files that would traditionally be installed\n      in an application-specific location in `/usr/share`.",
-   "sha": "82c73560bb311c37",
+   "sha": "bb442a36e4b53b16",
+   "marker": "Other resources",
    "zh": "像Gtk::BuilderUI文件这样的其他文件，最好从储存应用程序自身的二进制中加载。这样就不需要按照传统将大多数文件安装在/usr/share中特定应用程序的位置。"
   },
   {

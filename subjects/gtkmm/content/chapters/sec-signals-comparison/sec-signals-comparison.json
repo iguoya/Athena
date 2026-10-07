@@ -1,0 +1,32 @@
+{
+ "chapter": "sec-signals-comparison",
+ "section": "sec-signals-comparison",
+ "title": "Comparison with other signalling systems",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "(An aside: `GTK` calls this scheme \"signalling\"; the\nsharp-eyed reader with GUI toolkit experience will note that this same design\nis often\nseen under the name of \"broadcaster-listener\" (e.g., in Metrowerks'\nPowerPlant framework for the Macintosh). It works in much the same\nway: one sets up `broadcasters`, and then connects\n`listeners` to them; the broadcaster keeps a list of the\nobjects listening to it, and when someone gives the broadcaster a\nmessage, it calls all of its objects in its list with the message. In\ngtkmm, signal objects play the role of broadcasters, and slots\nplay the role of listeners - sort of. More on this later.)",
+   "sha": "3bec6c379bcb6cd6",
+   "zh": "GTK将自己的信号系统方案称为\"信号传递\"；有使用其他GUI工具包经验的读者可能会注意到，这种设计经常会被称作\"广播者-监听者\"。它的工作方式大致为：先设置广播者(broadcasters)，然后将监听者(listeners)与它连接。广播者会保留一个监听者对象列表，当有某人向广播者发送消息时，它将向列表中所有对象发送消息。在gtkmm中，信号对象扮演广播者的角色，而槽扮演监听者的角色。"
+  },
+  {
+   "type": "para",
+   "text": "gtkmm signal handlers are strongly-typed, whereas\n`GTK` C code allows you to connect a callback with\nthe wrong number and type of arguments, leading to a segfault at runtime. And,\nunlike `Qt`, gtkmm achieves this without modifying\nthe C++ language.",
+   "sha": "73ad997796c6266a",
+   "zh": "gtkmm的信号处理函数是强类型的，而gtk的C代码啊运行你连接到一个使用错误参数数量和类型的回调函数，这会导致运行时出现段错误。并且和Qt不同，gtkmm不需要对C++语言进行修改即可达到此目的。"
+  },
+  {
+   "type": "para",
+   "text": "Re. Overriding signal handlers: You can do this in the straight-C world of GTK too; that's what GTK's\nobject system is for. But in GTK, you have to go through some\ncomplicated procedures to get object-oriented features like\ninheritance and overloading. In C++, it's simple, since those\nfeatures are supported in the language itself; you can let the\ncompiler do the dirty work.",
+   "sha": "df96cd4a3dcc99f3",
+   "zh": "虽然你也能在C语言中覆写信号处理函数（这是GTK使用对象系统的目的），但是由于语言对于高级特性的支持特别弱，你需要编写一系列复杂的代码才能做到继承和重载。而在C++中，因为语言本身就支持这些特性，所以你可以让编译器代为完成肮脏的工作。"
+  },
+  {
+   "type": "para",
+   "text": "This is one of the places where the beauty of C++ really comes out.\nOne wouldn't think of subclassing a GTK widget simply to override its\naction method; it's just too much trouble. In GTK, you almost always\nuse signals to get things done, unless you're writing a new widget.\nBut because overriding methods is so easy in C++, it's entirely\npractical - and sensible - to subclass a button for that purpose.",
+   "sha": "f526d9f0820dd378",
+   "zh": "这是真正体现C++魅力的地方之一。没有人会只为了覆写GTK部件的成员函数就将其子类化，这过于麻烦。除非是为了编写新的部件否则基本上都是利用信号完成任务。而在C++中覆写成员函数非常简单，因此为了修改部件的某个行为而将其子类化是完全可行且明智的。"
+  }
+ ]
+}

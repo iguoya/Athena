@@ -6,9 +6,15 @@
  "blocks": [
   {
    "type": "para",
-   "text": "To set up `jhbuild`, follow the basic\n      installation instructions from the [jhbuild manual](https://gnome.pages.gitlab.gnome.org/jhbuild/).\n      After you have installed `jhbuild`, you\n      should copy the sample `jhbuild` configuration\n      file into your home directory by executing the following command from the\n      `jhbuild` directory:\n      $ cp examples/sample.jhbuildrc ~/.config/jhbuildrc",
-   "sha": "4ce6f99922628184",
-   "zh": null
+   "text": "To set up `jhbuild`, follow the basic\n      installation instructions from the [jhbuild manual](https://gnome.pages.gitlab.gnome.org/jhbuild/).\n      After you have installed `jhbuild`, you\n      should copy the sample `jhbuild` configuration\n      file into your home directory by executing the following command from the\n      `jhbuild` directory:",
+   "sha": "4cabd49ac0c07d06",
+   "zh": "要设置jhbuild，请遵循jhbuild手册中的基本安装说明。安装jhbuild后，应通过在jhbuild目录执行以下命令将示例jhbuild配置文件复制到你的主目录中："
+  },
+  {
+   "type": "code",
+   "text": "$ cp examples/sample.jhbuildrc ~/.config/jhbuildrc",
+   "sha": "7b7950ffafd47466",
+   "zh": ""
   },
   {
    "type": "para",
@@ -44,6 +50,7 @@
    "type": "para",
    "text": "By default, `jhbuild`'s configuration is\n        configured to install all software built with\n        `jhbuild` under the\n        `~/jhbuild/install` prefix. You can choose a different\n        prefix, but it is recommended that you keep this prefix different from\n        other software that you've installed (don't set it to\n        `/usr`!) If you've followed the jhbuild instructions\n        then this prefix belongs to your user, so you don't need to run jhbuild\n        as `root`.",
    "sha": "8f5f974ac7e7695a",
+   "admonition": "important",
    "zh": "在默认情况下，jhbuild被配置为在~/jhbuild/install前缀安装所有由jhbuild构建的软件。你可以选择其他的前缀，但建议你选择的新前缀与旧前缀保持不同，且不将前缀设置为/usr。如果你遵循jhbuild的说明进行操作，该前缀属于你的用户，你将无需以root用户权限运行jhbuild。"
   },
   {

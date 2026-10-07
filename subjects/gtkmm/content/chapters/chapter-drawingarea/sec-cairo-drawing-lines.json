@@ -6,14 +6,15 @@
  "blocks": [
   {
    "type": "para",
-   "text": "Now that we understand the basics of the Cairo graphics library, we're\n        almost ready to start drawing. We'll start with the simplest of\n        drawing elements: the straight line. But first you need to know a\n        little bit about Cairo's coordinate system. The origin of the Cairo\n        coordinate system is located in the upper-left corner of the window\n        with positive x values to the right and positive y values going down.\n        \n            Since the Cairo graphics library was written with support for\n            multiple output targets (the X window system, PNG images, OpenGL,\n            etc), there is a distinction between user-space and device-space\n            coordinates. The mapping between these two coordinate systems\n            defaults to one-to-one so that integer values map roughly to pixels\n            on the screen, but this setting can be adjusted if desired.\n            Sometimes it may be useful to scale the coordinates so that the\n            full width and height of a window both range from 0 to 1 (the 'unit\n            square') or some other mapping that works for your application.\n            This can be done with the\n            Cairo::Context::scale() function.",
-   "sha": "37aaf71f61c2ad37",
-   "zh": null
+   "text": "Now that we understand the basics of the Cairo graphics library, we're\n        almost ready to start drawing. We'll start with the simplest of\n        drawing elements: the straight line. But first you need to know a\n        little bit about Cairo's coordinate system. The origin of the Cairo\n        coordinate system is located in the upper-left corner of the window\n        with positive x values to the right and positive y values going down.",
+   "sha": "e88141fd9535484d",
+   "zh": "现在我们已经了解了开罗图形库的基本知识，是时候开始画图了。我们将从画最简单的元素：直线 开始。但是在此之前你需要对开罗的坐标系有所了解。开罗的坐标系原点在窗口的左上角，从左向右X的值逐渐增大，从上往下Y的值逐渐增大。"
   },
   {
    "type": "para",
    "text": "Since the Cairo graphics library was written with support for\n            multiple output targets (the X window system, PNG images, OpenGL,\n            etc), there is a distinction between user-space and device-space\n            coordinates. The mapping between these two coordinate systems\n            defaults to one-to-one so that integer values map roughly to pixels\n            on the screen, but this setting can be adjusted if desired.\n            Sometimes it may be useful to scale the coordinates so that the\n            full width and height of a window both range from 0 to 1 (the 'unit\n            square') or some other mapping that works for your application.\n            This can be done with the\n            Cairo::Context::scale() function.",
    "sha": "cc4d88616411e4b7",
+   "admonition": "tip",
    "zh": "由于开罗图形库是为了支持多个输出目标（X window系统、PNG图片、OpenGL等）编写的，因此用户空间坐标和设备空间坐标存在一些区别。默认情况下这两个坐标系是一对一的，这样可以将整数值大致映射为屏幕上的像素值，不过有需要时可以通过Cairo::Context::scale()函数对此行为进行调整。例如：你可能会需要使一个窗口的宽和高在调整比例后的坐标系中取值范围均处于0到1之间（单位正方形）。"
   },
   {
@@ -38,6 +39,7 @@
    "type": "para",
    "text": "Many Cairo drawing functions have a _preserve()\n            variant. Normally drawing functions such as\n            clip(), fill(), or\n            stroke() will clear the current path. If you\n            use the _preserve() variant, the current path\n            will be retained so that you can use the same path with the next\n            drawing function.",
    "sha": "5e6d2762858596dc",
+   "admonition": "tip",
    "zh": "多数的开罗绘图函数都拥有一个_preserve()变体。通常情况下clip()、fill()、stroke()函数会清除当前的路径。如果你使用他们的_preserve()变体，则当前路径会被保留，以便下一个绘图函数能继续在一样的路径上绘制。"
   },
   {
@@ -57,6 +59,7 @@
    "type": "para",
    "text": "In the example above we drew everything using absolute coordinates. You can also draw using\n        relative coordinates. For a straight line, this is done with the\n        function Cairo::Context::rel_line_to().",
    "sha": "a65fee99915f40fd",
+   "admonition": "tip",
    "zh": "在上面的例子中，我们使用绝对坐标进行绘图。你也可以使用相对坐标进行绘图。对于直线而言，你可以通过Cairo::Context::rel_line_to()完成用相对坐标绘图。"
   },
   {
@@ -98,7 +101,7 @@
   },
   {
    "type": "para",
-   "text": "There are other things you can customize as well, including\n            creating dashed lines and other things. For more information, see\n            the Cairo API documentation. Dashed lines are shown in the example\n            in the [Drawing Curved Lines]()\n            section.",
+   "text": "There are other things you can customize as well, including\n            creating dashed lines and other things. For more information, see\n            the Cairo API documentation. Dashed lines are shown in the example\n            in the [Drawing Curved Lines](#cairo-example-curves)\n            section.",
    "sha": "1fdbc10498f6f6dd",
    "zh": "你还可以自定义其他内容，比如创建虚线等。更多有关信息请参阅开罗API文档。"
   },

@@ -1,7 +1,7 @@
 {
  "chapter": "chapter-menus-and-toolbars",
  "section": "sec-gio-resource",
- "title": "Gio::Resource 与 glib-compile-resources",
+ "title": "Gio::Resource and glib-compile-resources",
  "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
  "blocks": [
   {
@@ -42,9 +42,9 @@
   },
   {
    "type": "para",
-   "text": "This will create a resource bundle with the files\n\n  `/toolbar/toolbar.ui`\n  `/toolbar/rain.png`",
-   "sha": "9863e3bfb0cdd8e3",
-   "zh": "这会创建一个资源包，包含 /toolbar/toolbar.ui 与 /toolbar/rain.png 两个文件。"
+   "text": "This will create a resource bundle with the files",
+   "sha": "208c1f2ac1e3a041",
+   "zh": "一个示例： 这将创建一个包含以下文件的资源包:"
   },
   {
    "type": "listitem",
@@ -59,10 +59,10 @@
    "zh": "/toolbar/rain.png"
   },
   {
-   "type": "para",
-   "text": "You can then use `glib-compile-resources` to compile the xml to a binary bundle\nthat you can load with Gio::Resource::create_from_file().\nHowever, it's more common to use the `--generate-source`\nargument to create a C source file to link directly into your application. E.g.\n$ glib-compile-resources --target=resources.c --generate-source toolbar.gresource.xml",
-   "sha": "a18d0cfcb1a271d1",
-   "zh": "随后用 `glib-compile-resources` 把该 xml 编译成二进制资源包，用 Gio::Resource::create_from_file() 加载。不过更常见的做法是加 `--generate-source` 参数，让它生成一个 C 源文件直接链进你的应用，例如 $ glib-compile-resources --generate-source"
+   "type": "code",
+   "text": "$ glib-compile-resources --target=resources.c --generate-source toolbar.gresource.xml",
+   "sha": "296a66eb1fd9ace7",
+   "zh": ""
   },
   {
    "type": "para",

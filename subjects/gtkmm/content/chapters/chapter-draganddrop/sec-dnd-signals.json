@@ -12,9 +12,9 @@
   },
   {
    "type": "para",
-   "text": "The source widget will emit these `DragSource` signals:\n\n`drag_begin`: Provides a `Gdk::Drag`.\n`prepare`: Shall return a `Gdk::ContentProvider`,\n  with the data to use for the drag that is about to start.\n`drag_end`: Provides a `Gdk::Drag`,\n  and a `bool` that tells if the drag was performing a `move`\n  and the data should be deleted.\n`drag_cancel`: Emitted on the drag source when a drag has failed.",
-   "sha": "99e6b459ea1feb09",
-   "zh": null
+   "text": "The source widget will emit these `DragSource` signals:",
+   "sha": "2d8e480c609b0125",
+   "zh": "源部件将按以下顺序发出这些信号："
   },
   {
    "type": "listitem",
@@ -38,12 +38,6 @@
    "type": "listitem",
    "text": "`drag_cancel`: Emitted on the drag source when a drag has failed.",
    "sha": "f1e18c5ad74d19c5",
-   "zh": null
-  },
-  {
-   "type": "para",
-   "text": "The target widget will emit these `DropTarget` signals:\n\n`enter`: Provides coordinates.\n  Shall return the preferred `Gdk::DragAction`.\n`motion`: Provides coordinates.\n  Shall return the preferred `Gdk::DragAction`.\n`leave`: Emitted on the drop site when the pointer\n  leaves the widget.\n`accept`: Provides a `Gdk::Drop`.\n  You can call the status() method of the\n  `Gdk::Drop` to indicate which actions will be accepted.\n`drop`: Provides the data being dropped and coordinates.\n  Shall return a `bool` indicating whether the drop was accepted.",
-   "sha": "fe7d2e70a7ae4709",
    "zh": null
   },
   {
@@ -74,12 +68,6 @@
    "type": "listitem",
    "text": "`drop`: Provides the data being dropped and coordinates.\n  Shall return a `bool` indicating whether the drop was accepted.",
    "sha": "e1621e93cae0a0ee",
-   "zh": null
-  },
-  {
-   "type": "para",
-   "text": "The following signals call only one signal handler when emitted. When you connect\n  a handler to such a signal, your signal handler must be called before (instead of)\n  the default handler, otherwise it won't be called. Set the `after`\n  parameter in connect() to `false`.\n\nGtk::DragSource::signal_prepare()\nGtk::DropTarget::signal_enter()\nGtk::DropTarget::signal_motion()\nGtk::DropTarget::signal_accept()\nGtk::DropTarget::signal_drop()",
-   "sha": "4baded6300f57145",
    "zh": null
   },
   {

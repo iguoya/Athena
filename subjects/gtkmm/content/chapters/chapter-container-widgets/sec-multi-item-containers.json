@@ -109,7 +109,7 @@
   },
   {
    "type": "para",
-   "text": "After building and running this program, try resizing the window to see the\nbehavior. Also, try playing with set_expand(),\nset_hexpand(), set_vexpand(),\nset_halign() and set_valign()\nwhile reading the [Boxes]() section.",
+   "text": "After building and running this program, try resizing the window to see the\nbehavior. Also, try playing with set_expand(),\nset_hexpand(), set_vexpand(),\nset_halign() and set_valign()\nwhile reading the [Boxes](#sec-boxes) section.",
    "sha": "12723f5444eefb55",
    "zh": "构建并运行该程序后，试着调整窗口大小观察行为；再结合 Boxes 一节，试验 set_expand()、set_hexpand()、set_vexpand()、set_halign() 和 set_valign() 的效果。"
   },
@@ -213,37 +213,6 @@
    "zh": ""
   },
   {
-   "type": "para",
-   "text": "Here's the constructor for the `Box` widget,\nand methods that set per-container packing options:",
-   "sha": "a048e12ae83f090f-1",
-   "zh": "下面是 `Box` 控件的构造函数，以及设置各容器打包选项的方法："
-  },
-  {
-   "type": "code",
-   "text": "Gtk::Box(Gtk::Orientation orientation = Gtk::Orientation::HORIZONTAL, int spacing = 0);\nvoid set_orientation(Gtk::Orientation orientation);\nvoid set_spacing(int spacing);\nvoid set_homogeneous(bool homogeneous = true);",
-   "sha": "009504742cc16654-1",
-   "zh": ""
-  },
-  {
-   "type": "para",
-   "text": "Passing `true` to set_homogeneous() will\ncause all of the contained widgets to be the same size.\n`spacing` is a (minimum) number of pixels to leave between\neach widget.",
-   "sha": "b8d8e02b25d29ed9-1",
-   "zh": "给 set_homogeneous() 传 `true` 会让所有子控件尺寸相同；`spacing` 是每个控件之间保留的（最小）像素数。"
-  },
-  {
-   "type": "para",
-   "text": "What's the difference between spacing (set when the box is created)\nand margins (set separately for each child widget)? Spacing is added between\nobjects, and margins are added on one or more sides of a widget. The following\nfigure should make it clearer. The shown margins are the left and right margins\nof each button in the row.",
-   "sha": "fbd52b4e2177803c-1",
-   "zh": "间距（创建盒的时候设置）与边距（为每个子部件分别设置）的区别是：在对象之间添加间距，在部件的一侧或多侧添加边距。下图能使你更清楚的理解这一点。所显示的边距是该行中每个按钮的左右边距。"
-  },
-  {
-   "type": "figure",
-   "text": "Box Packing 2",
-   "ref": "figures/box_packing2.png",
-   "sha": "5aeb019524f16834-1",
-   "zh": ""
-  },
-  {
    "type": "heading",
    "text": "Gtk::Application and command-line options",
    "sha": "eb144fad160e1edd",
@@ -277,62 +246,6 @@
    "type": "para",
    "text": "Here is the source code for the example that produced the screenshots above. When you run this example, provide a number between 1 and 3 as a command-line option, to see different packing options in use.",
    "sha": "c6aa28a5727072fd",
-   "zh": "这是上述截图所运行示例的源代码。在运行此示例时请提供1到3之间的数字作为命令行选项以查看正在使用不同装填选项的行为。"
-  },
-  {
-   "type": "para",
-   "text": "Here's the constructor for the `Box` widget,\nand methods that set per-container packing options:",
-   "sha": "a048e12ae83f090f-2",
-   "zh": "下面是 `Box` 控件的构造函数，以及设置各容器打包选项的方法："
-  },
-  {
-   "type": "code",
-   "text": "Gtk::Box(Gtk::Orientation orientation = Gtk::Orientation::HORIZONTAL, int spacing = 0);\nvoid set_orientation(Gtk::Orientation orientation);\nvoid set_spacing(int spacing);\nvoid set_homogeneous(bool homogeneous = true);",
-   "sha": "009504742cc16654-2",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/box",
-   "zh": ""
-  },
-  {
-   "type": "para",
-   "text": "Passing `true` to set_homogeneous() will\ncause all of the contained widgets to be the same size.\n`spacing` is a (minimum) number of pixels to leave between\neach widget.",
-   "sha": "b8d8e02b25d29ed9-2",
-   "zh": "给 set_homogeneous() 传 `true` 会让所有子控件尺寸相同；`spacing` 是每个控件之间保留的（最小）像素数。"
-  },
-  {
-   "type": "para",
-   "text": "What's the difference between spacing (set when the box is created)\nand margins (set separately for each child widget)? Spacing is added between\nobjects, and margins are added on one or more sides of a widget. The following\nfigure should make it clearer. The shown margins are the left and right margins\nof each button in the row.",
-   "sha": "fbd52b4e2177803c-2",
-   "zh": "间距（创建盒的时候设置）与边距（为每个子部件分别设置）的区别是：在对象之间添加间距，在部件的一侧或多侧添加边距。下图能使你更清楚的理解这一点。所显示的边距是该行中每个按钮的左右边距。"
-  },
-  {
-   "type": "figure",
-   "text": "Box Packing 2",
-   "ref": "figures/box_packing2.png",
-   "sha": "5aeb019524f16834-2",
-   "zh": ""
-  },
-  {
-   "type": "para",
-   "text": "The following example program requires a command-line option.\nThe source code shows two ways of handling command-line options in combination\nwith `Gtk::Application`.",
-   "sha": "8e3c1fe089fe084e-1",
-   "zh": "下面的示例程序需要一个命令行选项。源代码展示了两种Gtk::Application处理命令行选项的方式。"
-  },
-  {
-   "type": "listitem",
-   "text": "Handle the options in `main()` and hide them from\n`Gtk::Application` by setting `argc = 1`\nin the call to Gtk::Application::run().",
-   "sha": "d9e9efb60c9e8eeb-1",
-   "zh": "在main()中处理选项并且通过设置argc = 1将他们从Gtk::Application中隐藏，然后调用Gtk::Application::run()。"
-  },
-  {
-   "type": "listitem",
-   "text": "Give all command-line options to Gtk::Application::run()\nand add the flag `Gio::Application::Flags::HANDLES_COMMAND_LINE`\nto Gtk::Application::create().\nConnect a signal handler to the `command_line` signal, and\nhandle the command-line options in the signal handler.",
-   "sha": "d1950f69a7d2399e-1",
-   "zh": "将所有的命令行选项传递给Gtk::Application::run()并为Gtk::Application::create()方法设置标志Gio::Application::Flags::HANDLES_COMMAND_LINE。"
-  },
-  {
-   "type": "para",
-   "text": "Here is the source code for the example that produced the screenshots above. When you run this example, provide a number between 1 and 3 as a command-line option, to see different packing options in use.",
-   "sha": "c6aa28a5727072fd-1",
    "zh": "这是上述截图所运行示例的源代码。在运行此示例时请提供1到3之间的数字作为命令行选项以查看正在使用不同装填选项的行为。"
   },
   {
@@ -443,6 +356,7 @@
    "type": "para",
    "text": "`Gtk::Assistant` is deprecated since gtkmm 4.10.\nThere is no replacement in gtkmm. libadwaita (a C library) has replacement parts\n(like AdwCarousel). In some cases, a `Gtk::Notebook` might\nbe an acceptable replacement.",
    "sha": "ad7fddbd1f11aa9b",
+   "admonition": "note",
    "zh": "`Gtk::Assistant` 自 gtkmm 4.10 起已弃用，gtkmm 中没有替代品。libadwaita（一个 C 库）提供了部分替代（如 AdwCarousel）；某些场景下 `Gtk::Notebook` 也可以作为可接受的替代。"
   },
   {

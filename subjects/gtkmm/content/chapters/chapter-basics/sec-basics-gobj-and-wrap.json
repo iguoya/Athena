@@ -1,7 +1,7 @@
 {
  "chapter": "chapter-basics",
  "section": "sec-basics-gobj-and-wrap",
- "title": "混用 C 与 C++ API",
+ "title": "Mixing C and C++ APIs",
  "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
  "blocks": [
   {
@@ -36,9 +36,9 @@
   },
   {
    "type": "para",
-   "text": "The C++ wrapper shall be explicitly deleted if\n\nit's a widget or other class that inherits from `Gtk::Object`, and\nthe C instance has a floating reference when the wrapper is created, and\n`Gtk::manage()` has not been called on it (which includes if it was created with `Gtk::make_managed()`), or\n`Gtk::manage()` was called on it, but it was never added to a parent.\n\n`Glib::wrap()` binds the C and C++ instances to each other.\nDon't delete the C++ instance before you want the C instance to die.",
-   "sha": "87024628b2a8435b",
-   "zh": "满足以下条件时必须显式删除 C++ 包装对象：它是控件或别的继承自 Gtk::Object 的类，且创建包装对象时 C 实例带浮动引用（floating reference），且没有对它调用过 Gtk::manage()（包括用 Gtk::make_managed() 创建的情况），或者调用过 Gtk::manage() 但从未把它加进任何父容器。"
+   "text": "The C++ wrapper shall be explicitly deleted if",
+   "sha": "d1f739d08dbc8857",
+   "zh": "在以下情况下，应显式删除 C++ 封装实例："
   },
   {
    "type": "listitem",
@@ -63,6 +63,12 @@
    "text": "`Gtk::manage()` was called on it, but it was never added to a parent.",
    "sha": "d7ecc64fc15be9d0",
    "zh": "在其上调用了Gtk::manage()，但是从未将其加入到父项中。"
+  },
+  {
+   "type": "para",
+   "text": "`Glib::wrap()` binds the C and C++ instances to each other.\nDon't delete the C++ instance before you want the C instance to die.",
+   "sha": "38143d71aca37616",
+   "zh": "`Glib::wrap()` 把 C 实例与 C++ 实例相互绑定。在还希望 C 实例存续期间，不要删除 C++ 实例。"
   },
   {
    "type": "para",

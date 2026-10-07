@@ -38,18 +38,21 @@
    "type": "para",
    "text": "In the instructions below we will assume that you will not be using\n        `gettext` directly, but\n        `intltool`, which was written specifically for\n        `GNOME`. `intltool` uses\n        `gettext()`, which extracts strings from source code,\n        but `intltool` can also combine strings from\n        other files, for example from desktop menu details, and GUI resource\n        files such as `.ui` files, into standard\n        `gettext` `.pot/.po` files.",
    "sha": "44802ef0194a52d6",
+   "admonition": "note",
    "zh": "在下面的说明中我们假定你不直接使用gettext，而是使用专门为GNOME编写的intltool。intltool使用gettext()从源代码中提取字符串，但是intltool也从其他文件（例如桌面菜单详情、glade的GUI资源文件）中提取字符串写入到标准的gettext.pot/.po文件中。"
   },
   {
    "type": "para",
    "text": "We also assume that you are using autotools (`automake`\n        and `autoconf`) to build your project (although\n        autotools is not recommended for new applications), and\n        that you are using [\n          `./autogen.sh` from `gnome-common`](https://gitlab.gnome.org/Archive/gnome-common/-/blob/master/autogen.sh)\n        or a similar `autogen.sh` file, which, among other\n        things, takes care of some `intltool`\n        initialization.",
    "sha": "d2a7538450843995",
+   "admonition": "note",
    "zh": "我们还假设你正在使用自动构建工具（例如：automake和autoconf）构建你的项目，并且你正在使用来自gnome-common的./autogen.sh或与之类似的autogen.sh文件，在这里它负责初始化intltool。"
   },
   {
    "type": "para",
    "text": "If you are using `meson` (recommended), see the\n        [Localisation](https://mesonbuild.com/Localisation.html)\n        chapter in Meson's manual. You can then skip this section.",
    "sha": "7b345da5753e2e65",
+   "admonition": "note",
    "zh": null
   },
   {
@@ -132,9 +135,9 @@
   },
   {
    "type": "para",
-   "text": "In the top-level Makefile.am:\n      \n        \n          Add `po` to the `SUBDIRS`\n            variable. Without this, your translations won't get built and\n            installed when you build the program\n        \n        \n          \n            Define `INTLTOOL_FILES` as:\n            `INTLTOOL_FILES = intltool-extract.in \\\n                 intltool-merge.in \\\n                 intltool-update.in`\n        \n        \n          \n            Add `INTLTOOL_FILES` to the\n            `EXTRA_DIST` list of files. This ensures that when\n            you do a `make dist`, these files will be\n            included in the source tarball.\n          \n        \n        \n          \n            Update your `DISTCLEANFILES`:\n            `DISTCLEANFILES = ... intltool-extract \\\n                 intltool-merge \\\n                 intltool-update \\\n                 po/.intltool-merge-cache`\n        \n        \n          \n            Depending on the types of files that contain translatable strings,\n            add code such as\n            `desktopdir = $(datadir)/applications\ndesktop_in_files = programname.desktop.in\ndesktop_DATA = $(desktop_in_files:.desktop.in=.desktop)\n@INTLTOOL_DESKTOP_RULE@`",
-   "sha": "7386456c2b3d9d63",
-   "zh": null
+   "text": "In the top-level Makefile.am:",
+   "sha": "5facd107d210fd8f",
+   "zh": "在顶层Makefile.am中："
   },
   {
    "type": "listitem",

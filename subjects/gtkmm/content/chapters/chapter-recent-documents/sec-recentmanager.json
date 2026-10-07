@@ -56,7 +56,7 @@
    "type": "listitem",
    "text": "`app_exec`: The command line to be used to launch\n            this resource. This string may contain the \"f\" and \"u\" escape\n            characters which will be expanded to the resource file path and URI\n            respectively",
    "sha": "f387e1e5cecbd703",
-   "zh": null
+   "zh": "app_exec：用于启动此资源的命令行。此字符串可以包含\"f\"和\"u\"转义字符，它们将分别扩展为资源文件路径和URI"
   },
   {
    "type": "listitem",
@@ -80,7 +80,7 @@
    "type": "listitem",
    "text": "`groups`: A list of groups associated with this\n            item. Groups are essentially arbitrary strings associated with a\n            particular resource. They can be thought of as 'categories' (such\n            as \"email\", \"graphics\", etc) or tags for the resource.",
    "sha": "315f3e7ba40bb1a7",
-   "zh": null
+   "zh": "groups：与该项相关联的组列表。组本质上是与特定资源相关联的任意字符串。可以将它们视为资源的类别（例如：电子邮件、图形等）或标签"
   },
   {
    "type": "listitem",
@@ -120,7 +120,7 @@
   },
   {
    "type": "para",
-   "text": "A `RecentInfo` object is essentially an object\n        containing all of the metadata about a single recently-used file. You\n        can use this object to look up any of the properties listed\n        [above]().",
+   "text": "A `RecentInfo` object is essentially an object\n        containing all of the metadata about a single recently-used file. You\n        can use this object to look up any of the properties listed\n        [above](#list-file-metadata).",
    "sha": "554d83e123db5a04",
    "zh": "本质上，RecentInfo是个包含了一个最近使用文件的所有元数据的对象。你可以使用该对象查找这里所列出的任何属性。"
   },
@@ -164,6 +164,7 @@
    "type": "para",
    "text": "The functions move_item(),\n        remove_item() and\n        purge_items() have no effect on the actual files\n        that are referred to by the URIs, they only modify the list of recent\n        files.",
    "sha": "ccdeb3ac2d14a2fb",
+   "admonition": "note",
    "zh": "move_item()、remove_item()和purge_items()并不影响URI所引用的真实文件，它们只是对最近文件列表进行修改。"
   }
  ]

@@ -11,6 +11,13 @@
    "zh": "既然我们已经将使用开罗画图的基础知识介绍完了，那么现在让我们尝试将所有的内容放在一起，创建一个可以执行某些操作的简单应用程序。以下示例使用开罗创建一个自定义的Clock部件。这个时钟有秒针、分针、时针，并且每一秒更新一次。"
   },
   {
+   "type": "figure",
+   "text": "",
+   "ref": "figures/cairo_clock.png",
+   "sha": "48480263e7cf1d20",
+   "zh": ""
+  },
+  {
    "type": "para",
    "text": "As before, almost all of the interesting stuff is done in the draw\n          function on_draw(). Before we dig\n          into the draw function, notice that the constructor for the\n          `Clock` widget connects a handler function\n          on_timeout() to a timer with a timeout\n          period of 1000 milliseconds (1 second). This means that\n          on_timeout() will get called once per\n          second. The sole responsibility of this function is to invalidate\n          the window so that gtkmm will be forced to redraw it.",
    "sha": "5a2deb1e9e071a47",

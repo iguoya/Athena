@@ -36,9 +36,9 @@
   },
   {
    "type": "para",
-   "text": "This provides a directory structure for the source .hg and .ccg files and the hand-written\n  .h and .cc files, with `meson.build` files that can specify the\n  various files in use, in terms of Meson variables. The directory structure usually\n  looks like this, after we have renamed the directories appropriately:\n\n    `libsomethingmm`: The top-level directory.\n     \n         `libsomething`: Contains the main include file and the pkg-config .pc file.\n         \n             `src`: Contains .hg and .ccg source files.\n             `libsomethingmm`: Contains hand-written .h and .cc files.",
-   "sha": "52e664954737367f",
-   "zh": null
+   "text": "This provides a directory structure for the source .hg and .ccg files and the hand-written\n  .h and .cc files, with `meson.build` files that can specify the\n  various files in use, in terms of Meson variables. The directory structure usually\n  looks like this, after we have renamed the directories appropriately:",
+   "sha": "a879580bec83dde8",
+   "zh": "这为源.hg和.ccg文件、手写的.h和.cc文件提供了目录结构，meson.build文件可以通过各种变量指定Meson使用哪些文件进行编译。适当的重命名目录后，目录结构将如下所示："
   },
   {
    "type": "listitem",
@@ -110,7 +110,7 @@
    "type": "para",
    "text": "All mentions of `skeleton` should be replaced by the correct name of the C\n  library you are wrapping, such as \"something\" or \"libsomething\". In the same manner, all\n  instances of `SKELETON` should be replaced by \"SOMETHING\" or \"LIBSOMETHING\", and\n  all occurrences of `Skeleton` changed to \"Something\".",
    "sha": "31e876b0e6744608",
-   "zh": null
+   "zh": "所有提到skeleton的地方都应该替换成你想要封装的C库的名称，例如替换成\"something\"或\"libsomething\"。同样的，所有的SKELETON都应该被替换成\"SOMETHING\"或\"LIBSOMETHING\"，以及所有的Skeleton都应该被替换为\"Something\"。"
   },
   {
    "type": "para",
@@ -122,12 +122,6 @@
    "type": "heading",
    "text": "meson.build in the top-level directory",
    "sha": "158e84e3eae09fac",
-   "zh": null
-  },
-  {
-   "type": "para",
-   "text": "It is common for binding modules to track the version number\n        of the library they are wrapping. So, for instance, if the C library is\n        at version 1.23.4, then the initial version of the binding module would\n        be 1.23.0. However, avoid starting with an even minor version number as\n        that usually indicates a stable release.\n    In the `project()` function, change the\n    license and the C++ version, if necessary.\n    You probably need to add more required modules than\n    `glibmm` and `skeleton`\n    (`libsomething`).",
-   "sha": "c295b4d90a9767f4",
    "zh": null
   },
   {
@@ -156,9 +150,9 @@
   },
   {
    "type": "para",
-   "text": "Next we must adapt the other `meson.build` files:\n  \n    `skeleton/meson.build`: Perhaps not much\n    to change here more than the global name substitutions.\n    \n    `skeleton/skeletonmm/meson.build`\n      \n        \n          `defs_basefiles`\n          If we have more .defs and docs.xml files,\n          we add them here.\n        \n        \n          `hg_ccg_basenames`\n          We must mention all of our `.hg` and\n          `.ccg` files here.\n        \n        \n          `extra_cc_files, extra_h_files`\n          Any additional hand-written `.h` and\n          `.cc` source files go here.",
-   "sha": "0de571dc42ac15b3",
-   "zh": null
+   "text": "Next we must adapt the other `meson.build` files:",
+   "sha": "de21faab076a0229",
+   "zh": "接下来我们必须对其他的meson.build文件进行修改："
   },
   {
    "type": "listitem",
@@ -171,6 +165,27 @@
    "text": "`skeleton/skeletonmm/meson.build`",
    "sha": "ab2b9c2ae57948d5",
    "zh": "skeleton/skeletonmm/meson.build"
+  },
+  {
+   "type": "listitem",
+   "text": "If we have more .defs and docs.xml files,\n          we add them here.",
+   "sha": "903942860e0dc6a3",
+   "marker": "defs_basefiles",
+   "zh": "在这添加额外的.defs和docs.xml文件"
+  },
+  {
+   "type": "listitem",
+   "text": "We must mention all of our `.hg` and\n          `.ccg` files here.",
+   "sha": "ae6d8b3f8a0a986f",
+   "marker": "hg_ccg_basenames",
+   "zh": "必须在这里提及所有的.hg和.ccg。"
+  },
+  {
+   "type": "listitem",
+   "text": "Any additional hand-written `.h` and\n          `.cc` source files go here.",
+   "sha": "4c790f09cda99a10",
+   "marker": "extra_cc_files, extra_h_files",
+   "zh": "所有手写的.h和.cc源文件都需要写在这。"
   },
   {
    "type": "heading",
@@ -186,38 +201,8 @@
   },
   {
    "type": "para",
-   "text": "In the [.hg and .ccg files]()\n  section you can learn about the syntax used in these files.",
+   "text": "In the [.hg and .ccg files](#sec-wrapping-hg-files)\n  section you can learn about the syntax used in these files.",
    "sha": "6144ba1328ca39b5",
-   "zh": "在.hg和.ccg文件小节你可以学到这些文件使用的语法。"
-  },
-  {
-   "type": "para",
-   "text": "Next we must adapt the other `meson.build` files:\n  \n    `skeleton/meson.build`: Perhaps not much\n    to change here more than the global name substitutions.\n    \n    `skeleton/skeletonmm/meson.build`\n      \n        \n          `defs_basefiles`\n          If we have more .defs and docs.xml files,\n          we add them here.\n        \n        \n          `hg_ccg_basenames`\n          We must mention all of our `.hg` and\n          `.ccg` files here.\n        \n        \n          `extra_cc_files, extra_h_files`\n          Any additional hand-written `.h` and\n          `.cc` source files go here.",
-   "sha": "0de571dc42ac15b3-1",
-   "zh": null
-  },
-  {
-   "type": "listitem",
-   "text": "`skeleton/meson.build`: Perhaps not much\n    to change here more than the global name substitutions.",
-   "sha": "8a0dd5a9f722c48e-1",
-   "zh": "skeleton/meson.build：在这除了全局替换以外基本上不需要做什么。"
-  },
-  {
-   "type": "listitem",
-   "text": "`skeleton/skeletonmm/meson.build`",
-   "sha": "ab2b9c2ae57948d5-1",
-   "zh": "skeleton/skeletonmm/meson.build"
-  },
-  {
-   "type": "para",
-   "text": "We should now create our first `.hg` and `.ccg` files,\n  to wrap one of the objects in the C library. One pair of example source files already exists:\n  `skeleton.ccg` and `skeleton.hg`. Create copies of these\n  files as necessary.",
-   "sha": "886502c254070882-1",
-   "zh": "现在我们应该创建第一个.hg和.ccg，用以对一个C库中的对象进行封装。存在一对可供参考的示例源文件：skeleton.ccg和skeleton.hg。请根据需要创建这些文件的副本。"
-  },
-  {
-   "type": "para",
-   "text": "In the [.hg and .ccg files]()\n  section you can learn about the syntax used in these files.",
-   "sha": "6144ba1328ca39b5-1",
    "zh": "在.hg和.ccg文件小节你可以学到这些文件使用的语法。"
   }
  ]

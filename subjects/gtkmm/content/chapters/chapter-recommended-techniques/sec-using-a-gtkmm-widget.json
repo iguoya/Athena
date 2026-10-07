@@ -11,33 +11,31 @@
    "zh": "我们的示例都倾向于使用相同的结构。它们按以下步骤使用Widget："
   },
   {
-   "type": "para",
-   "text": "Declare a variable of the type of `Widget` you wish to\nuse, generally as member variable of a derived container class. You could also\ndeclare a pointer to the widget type, and then create it with\n`new` or `Gtk::make_managed()` in your code.\n\n\n\n\n\n Set the attributes of the widget. If the widget has no default constructor,\n then you will need to initialize the widget in the initializer list of your\n container class's constructor.\n\n\n\n\n\nConnect any signals you wish to use to the appropriate handlers.\n\n\n\n\n\nPack the widget into a container using the appropriate call,\ne.g. Gtk::Box::append().",
-   "sha": "e99e49853439a44e",
-   "zh": null
-  },
-  {
-   "type": "para",
+   "type": "listitem",
    "text": "Declare a variable of the type of `Widget` you wish to\nuse, generally as member variable of a derived container class. You could also\ndeclare a pointer to the widget type, and then create it with\n`new` or `Gtk::make_managed()` in your code.",
    "sha": "f4931bf982762f19",
+   "marker": "1.",
    "zh": "声明一个你想要使用的Widget类型变量，通常是作为容器派生类的成员变量。你还可以声明一个指向部件类型的指针，然后在你的代码中使用new创建它。即使通过指针使用部件，也应该使该指针成为容器类的成员变量，以便你后续访问它。"
   },
   {
-   "type": "para",
+   "type": "listitem",
    "text": "Set the attributes of the widget. If the widget has no default constructor,\n then you will need to initialize the widget in the initializer list of your\n container class's constructor.",
    "sha": "c52dc1fd735ce043",
+   "marker": "2.",
    "zh": "设置部件的属性。如果部件没有默认构造函数，则你需要在容器类的构造函数的初始化列表中初始化部件。"
   },
   {
-   "type": "para",
+   "type": "listitem",
    "text": "Connect any signals you wish to use to the appropriate handlers.",
    "sha": "fd2789e29b2b528d",
+   "marker": "3.",
    "zh": "为所以你需要使用的信号连接合适的信号处理函数。"
   },
   {
-   "type": "para",
+   "type": "listitem",
    "text": "Pack the widget into a container using the appropriate call,\ne.g. Gtk::Box::append().",
    "sha": "c194edf03b258159",
+   "marker": "4.",
    "zh": "调用适当的函数将部件装入容器中，例如：Gtk::Box::append()。"
   },
   {

@@ -6,7 +6,7 @@
  "blocks": [
   {
    "type": "para",
-   "text": "Event signals differ in some ways from other signals. These differences are described\n    in the [Event signals]() section in\n    the appendix. Here we will use keyboard events and mouse events to show how\n    events can be used in a program.",
+   "text": "Event signals differ in some ways from other signals. These differences are described\n    in the [Event signals](#sec-eventsignals) section in\n    the appendix. Here we will use keyboard events and mouse events to show how\n    events can be used in a program.",
    "sha": "9cf5a9099416156a",
    "zh": "X事件与其他信号在某些方面有所不同。这些差异在附录的X事件信号小节中说明。在这，我们将使用键盘事件说明如何在程序中使用X事件。"
   },
@@ -18,7 +18,7 @@
   },
   {
    "type": "para",
-   "text": "The event signal handler will receive arguments that depend on the type of event.\n      For key press events the arguments are (`guint` `keyval`,\n      `guint` `keycode`, `Gdk::ModifierType` `state`).\n      As described in the [appendix](),\n      the key press event signal handler returns a `bool` value, to indicate that\n      the signal is fully handled (`true`) or allow event propagation\n      (`false`).",
+   "text": "The event signal handler will receive arguments that depend on the type of event.\n      For key press events the arguments are (`guint` `keyval`,\n      `guint` `keycode`, `Gdk::ModifierType` `state`).\n      As described in the [appendix](#sec-eventsignals),\n      the key press event signal handler returns a `bool` value, to indicate that\n      the signal is fully handled (`true`) or allow event propagation\n      (`false`).",
    "sha": "1043aa73a65e766c",
    "zh": "事件处理函数接受的参数取决于事件的类型。对于键盘事件，它接受一个GdkEventKey*参数。如附录中所述，事件处理函数返回一个bool值，以表示信号已经被完全处理（返回true）或允许事件传播（false）。"
   },

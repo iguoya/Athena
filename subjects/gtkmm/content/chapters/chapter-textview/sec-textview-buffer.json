@@ -1,7 +1,7 @@
 {
  "chapter": "chapter-textview",
  "section": "sec-textview-buffer",
- "title": "缓冲区",
+ "title": "The Buffer",
  "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
  "blocks": [
   {
@@ -155,60 +155,6 @@
    "zh": "你可以多次使用apply_tag()或insert_with_tags()将不同的Tag应用于同一文本。Tag可能会为同一属性指定不同的值，但你可以使用Tag::set_priority()解决这些冲突。"
   },
   {
-   "type": "para",
-   "text": "Each `Gtk::TextBuffer` uses a\n`Gtk::TextBuffer::TagTable`, which contains the\n`Tag`s for that buffer. 2 or more\n`TextBuffer`s may share the same\n`TagTable`. When you create `Tag`s\nyou should add them to the `TagTable`. For instance:",
-   "sha": "079a1b2964e92793-1",
-   "zh": "每个Gtk::TextBuffer使用一个Gtk::TextBuffer::TagTable，其中包含了该缓冲区的Tag。复数个TextBuffer可以共享一个TagTable。当你创建Tag的时候，你应该将其加入TagTable。例如："
-  },
-  {
-   "type": "code",
-   "text": "auto refTagTable = Gtk::TextBuffer::TagTable::create();\nrefTagTable->add(refTagMatch);\n//Hopefully a future version of gtkmm will have a set_tag_table() method,\n//for use after creation of the buffer.\nauto refBuffer = Gtk::TextBuffer::create(refTagTable);",
-   "sha": "c52877bfd3db8c42-1",
-   "zh": ""
-  },
-  {
-   "type": "para",
-   "text": "You can also use get_tag_table() to get, and maybe modify,\nthe `TextBuffer`'s default `TagTable`\ninstead of creating one explicitly.",
-   "sha": "67124e322098f2be-1",
-   "zh": "你也可以使用get_tag_table()获取并修改TextBuffer的默认TagTable，而不是显示创建一个。"
-  },
-  {
-   "type": "para",
-   "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1TextTagTable.html)",
-   "sha": "71bf90935fc231d2-4",
-   "zh": "参考"
-  },
-  {
-   "type": "para",
-   "text": "If you have created a `Tag` and added it to the\n`TagTable`, you may apply that tag to part of the\n`TextBuffer` so that some of the text is displayed with that\nformatting. You define the start and end of the range of text by specifying\n`Gtk::TextBuffer::iterator`s. For instance:",
-   "sha": "99b50726009f26c7-1",
-   "zh": "如果你创建了一个Tag并将其加入到TagTable，则可以将其应用于TextBuffer的一部分，以便使用该格式显示某些文本。你可以通过使用Gtk::TextBuffer::iterator指示文本的开始和结束范围。例如："
-  },
-  {
-   "type": "code",
-   "text": "refBuffer->apply_tag(refTagMatch, iterRangeStart, iterRangeStop);",
-   "sha": "fd8f52ffb6f12efe-1",
-   "zh": ""
-  },
-  {
-   "type": "para",
-   "text": "Or you could specify the tag when first inserting the text:",
-   "sha": "40bf6e55ff530666-1",
-   "zh": "或者你可以在首次插入文本的时候指定标签："
-  },
-  {
-   "type": "code",
-   "text": "refBuffer->insert_with_tag(iter, \"Some text\", refTagMatch);",
-   "sha": "c1acc6894b5a0780-1",
-   "zh": ""
-  },
-  {
-   "type": "para",
-   "text": "You can apply more than one `Tag` to the same text, by\nusing apply_tag() more than once, or by using\ninsert_with_tags(). The `Tag`s might\nspecify different values for the same properties, but you can resolve these\nconflicts by using Tag::set_priority().",
-   "sha": "e92729bff47493ef-1",
-   "zh": "你可以多次使用apply_tag()或insert_with_tags()将不同的Tag应用于同一文本。Tag可能会为同一属性指定不同的值，但你可以使用Tag::set_priority()解决这些冲突。"
-  },
-  {
    "type": "heading",
    "text": "Marks",
    "sha": "65479e3e408a6e35",
@@ -241,7 +187,7 @@
   {
    "type": "para",
    "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1TextMark.html)",
-   "sha": "71bf90935fc231d2-5",
+   "sha": "71bf90935fc231d2-4",
    "zh": "参考"
   },
   {
@@ -265,7 +211,7 @@
   {
    "type": "para",
    "text": "[Reference](&url_refdocs_base_gtk_html;classGtk_1_1TextView.html)",
-   "sha": "71bf90935fc231d2-6",
+   "sha": "71bf90935fc231d2-5",
    "zh": "参考"
   },
   {
@@ -290,12 +236,6 @@
    "type": "para",
    "text": "`Gtk::TextView` has various\nscroll_to() methods. These allow you to ensure that a\nparticular part of the text buffer is visible. For instance, your application's\nFind feature might use Gtk::TextView::scroll_to() to\nshow the found text.",
    "sha": "7634b76a9e528527",
-   "zh": "Gtk::TextView有多种scroll_to()方法。这些可以确保你能看到缓冲区中的特定部分。例如你的应用程序可能会使用Gtk::TextView::scroll_to()方法显示找到的文本。"
-  },
-  {
-   "type": "para",
-   "text": "`Gtk::TextView` has various\nscroll_to() methods. These allow you to ensure that a\nparticular part of the text buffer is visible. For instance, your application's\nFind feature might use Gtk::TextView::scroll_to() to\nshow the found text.",
-   "sha": "7634b76a9e528527-1",
    "zh": "Gtk::TextView有多种scroll_to()方法。这些可以确保你能看到缓冲区中的特定部分。例如你的应用程序可能会使用Gtk::TextView::scroll_to()方法显示找到的文本。"
   }
  ]

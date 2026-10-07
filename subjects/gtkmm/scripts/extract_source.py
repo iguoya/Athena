@@ -58,6 +58,7 @@ def strip_tags(raw: str) -> str:
     # DocBook 实体（html.unescape 覆盖常用集；docbook 自定义实体从文件头解析）
     entities = {"&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": '"',
                 "&apos;": "'", "&mdash;": "—", "&nbsp;": " ",
+                "&#160;": "\u00a0",
                 "&uuml;": "ü", "&szlig;": "ß", "&copy;": "©",
                 "&nbhy;": "‑"}
     entities.update({f"&{name};": value for name, value in docbook_entities().items()})
@@ -130,6 +131,21 @@ def element_text(element: str, source: str, start: int) -> tuple[str, int]:
     return source[cursor:], len(source)
 
 
+def element_close(source: str, open_start: int, element: str) -> int:
+    """给定开标签位置，返回该元素闭合标签的结束位置（同名嵌套不误判）。
+
+    用 find 找第一个闭合标签会在有嵌套子元素时提前截断——上层区间被
+    重复处理（重复块、顺序错乱），必须按深度扫描。"""
+    depth = 1
+    for m in re.finditer(rf"</?{element}(?:\s[^>]*)?>", source):
+        if m.start() <= open_start:
+            continue
+        depth += 1 if not m.group(0).startswith("</") else -1
+        if depth == 0:
+            return m.end()
+    return len(source)
+
+
 def direct_children(element: str, source: str) -> list[tuple[str | None, str]]:
     """source 里 element 的直接子元素（同名嵌套不误判），返回 [(xml_id, 内容)]。"""
     children: list[tuple[str | None, str]] = []
@@ -199,23 +215,37 @@ def load_structure() -> list[dict]:
         head_text = body_text(head)
         if head_text:
             preamble = head_text
-        units = []
-        for index, (sec_id, sec_frag) in enumerate(first_section):
-            text = body_text(sec_frag)
-            if index == 0 and preamble:
-                text = preamble + "\n" + text
-            units.append({
-                "id": sec_id,
-                "title": title_of(sec_frag),
-                "sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
-            })
+        if first_section:
+            units = []
+            for index, (sec_id, sec_frag) in enumerate(first_section):
+                text = body_text(sec_frag)
+                if index == 0 and preamble:
+                    text = preamble + "\n" + text
+                units.append({
+                    "id": sec_id,
+                    "title": title_of(sec_frag),
+                    "sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
+                })
+        else:
+            # 单页章（官网渲染为章页即正文，无节分页）：章本身是一个分页单元。
+            # changes-gtkmm3、多个附录都属此类——不生成伪节则整章内容无从同步。
+            units = [{
+                "id": xml_id,
+                "title": title_of(fragment),
+                "sha256": hashlib.sha256(body_text(fragment).encode("utf-8")).hexdigest(),
+            }]
         structure.append({"id": xml_id, "title": title_of(fragment), "sections": units})
     for xml_id, fragment in direct_children("appendix", source):
         if xml_id is None:
             continue
-        units = [{"id": sid, "title": title_of(frag),
-                  "sha256": hashlib.sha256(body_text(frag).encode("utf-8")).hexdigest()}
-                 for sid, frag in direct_children("section", fragment)]
+        first_section = direct_children("section", fragment)
+        if first_section:
+            units = [{"id": sid, "title": title_of(frag),
+                      "sha256": hashlib.sha256(body_text(frag).encode("utf-8")).hexdigest()}
+                     for sid, frag in first_section]
+        else:
+            units = [{"id": xml_id, "title": title_of(fragment),
+                      "sha256": hashlib.sha256(body_text(fragment).encode("utf-8")).hexdigest()}]
         structure.append({"id": xml_id, "title": title_of(fragment),
                           "sections": units, "appendix": True})
     return structure

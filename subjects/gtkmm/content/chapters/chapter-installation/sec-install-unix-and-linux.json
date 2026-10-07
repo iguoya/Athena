@@ -1,7 +1,7 @@
 {
  "chapter": "chapter-installation",
  "section": "sec-install-unix-and-linux",
- "title": "Unix 与 Linux",
+ "title": "Unix and Linux",
  "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
  "blocks": [
   {
@@ -26,6 +26,7 @@
    "type": "para",
    "text": "The package names will not change when new API/ABI-compatible versions of gtkmm\nare released. Otherwise they would not be API/ABI-compatible. So don't be\nsurprised, for instance, to find gtkmm 4.8 supplied by Debian's\n`libgtkmm-4.0-dev` package.",
    "sha": "29b86b24ab3e66a3",
+   "admonition": "note",
    "zh": "当新的 API/ABI 兼容的 gtkmm 版本发布后，其包的名称将不会改变。否则的话，就说明 API/ABI 不兼容。所以，如果在 Debian 的 libgtkmm-4.0-dev 包中发现提供的实际上是 gtkmm 4.8 的话不要太惊讶。"
   },
   {
@@ -36,7 +37,7 @@
   },
   {
    "type": "para",
-   "text": "If your distribution does not provide a pre-built gtkmm package, or if you\nwant to install a different version than the one provided by your distribution,\nyou can also install gtkmm from source. The source code for gtkmm can\nbe downloaded from .",
+   "text": "If your distribution does not provide a pre-built gtkmm package, or if you\nwant to install a different version than the one provided by your distribution,\nyou can also install gtkmm from source. The source code for gtkmm can\nbe downloaded from [https://download.gnome.org/sources/gtkmm/](https://download.gnome.org/sources/gtkmm/).",
    "sha": "06cad7ad17690661",
    "zh": "如果你的发行版没提供预编译的 gtkmm 包，或者如果你想安装一个和发行版所提供的不同的版本，那么你也可以从源代码安装 gtkmm。可以从 中下载 gtkmm 的源代码。"
   },
@@ -50,6 +51,7 @@
    "type": "para",
    "text": "Remember that on a Unix or Linux operating system, you will probably need to\n  be `root` to install software. The `su` or `sudo`\n  command will allow you to enter the `root` password and have\n  `root` status temporarily.",
    "sha": "87eeb32bb157bf25",
+   "admonition": "note",
    "zh": "记住，在 Unix 或 Linux 操作系统上，你也许需要 root 权限以安装软件。su或者sudo 命令允许你输入 root 密码，并且临时拥有 root 权限。"
   },
   {
@@ -60,19 +62,26 @@
   },
   {
    "type": "para",
-   "text": "By default, gtkmm if built with Meson or Autotools, will be installed under the\n    `/usr/local` directory. On some systems you may need to\n    install to a different location. For instance, on Red Hat Linux systems\n    you might use the `--prefix` option with configure, like\n    one of:\n\n# meson setup --prefix=/usr  \n# meson configure --prefix=/usr\n# ./configure --prefix=/usr",
-   "sha": "0e34065180759387",
-   "zh": "用 Meson 或 Autotools 构建的 gtkmm 默认安装到 /usr/local 目录下。在某些系统上你可能需要装到别的位置——比如在 Red Hat Linux 系统上，可以在 configure 时用 --prefix 选项。"
+   "text": "By default, gtkmm if built with Meson or Autotools, will be installed under the\n    `/usr/local` directory. On some systems you may need to\n    install to a different location. For instance, on Red Hat Linux systems\n    you might use the `--prefix` option with configure, like\n    one of:",
+   "sha": "a3c95609197da77b",
+   "zh": "默认情况下，如果使用Autotools构建gtkmm 则其将会被安装在 /usr/local 目录。在有些系统中，你也许需要安装到不同的位置。比如，在 Red Hat Linux 系统中，你也许需要使用 --prefix 选项进行配置，例如："
+  },
+  {
+   "type": "code",
+   "text": "# meson setup --prefix=/usr <builddir> <srcdir>\n# meson configure --prefix=/usr\n# ./configure --prefix=/usr",
+   "sha": "fe5bd1cd074d72a1",
+   "zh": ""
   },
   {
    "type": "para",
    "text": "You should be very careful when installing to standard system prefixes\n        such as `/usr`. Linux distributions install software\n        packages to `/usr`, so installing a source package\n        to this prefix could corrupt or conflict with software installed using\n        your distribution's package-management system. Ideally, you should use\n        a separate prefix for all software you install from source.",
    "sha": "0c722438d0ea6765",
+   "admonition": "warning",
    "zh": "在安装到标准系统前缀时，如 /usr，你必须非常小心。Linux 发行版会安装软件到 /usr，所以安装源代码包到这个位置可能会破坏或与使用软件包管理器安装的软件冲突。理想情况下，你应当将从源代码安装的软件都安装到一个独立位置。"
   },
   {
    "type": "para",
-   "text": "If you want to help develop gtkmm or experiment with new features, you can\n  also install gtkmm from git. Most users will never need to do this, but if\n  you're interested in helping with gtkmm development, see the [Working with gtkmm's Source Code]() appendix.",
+   "text": "If you want to help develop gtkmm or experiment with new features, you can\n  also install gtkmm from git. Most users will never need to do this, but if\n  you're interested in helping with gtkmm development, see the [Working with gtkmm's Source Code](#chapter-working-with-source) appendix.",
    "sha": "b196205cc0db0850",
    "zh": "如果你想帮助开发 gtkmm，或实验一些新的功能，你也可以直接从 Git 安装 gtkmm。大多数用户绝对不需要这么做，但是如果你对帮助 gtkmm 开发感兴趣，请看附录：使用 gtkmm 源代码。"
   }

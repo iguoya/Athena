@@ -1,7 +1,7 @@
 {
  "chapter": "chapter-treeview",
  "section": "sec-treeview",
- "title": "视图",
+ "title": "The View",
  "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
  "blocks": [
   {
@@ -188,54 +188,6 @@
    "type": "para",
    "text": "In your signal handler, you should examine the new value and then\nstore it in the Model if that is appropriate for your application.",
    "sha": "3cd95b0235c2c88a",
-   "zh": "在你的信号处理函数中，你应该检查新值如果其对于你的应用程序而言是合适的则将其储存到你的模型中。"
-  },
-  {
-   "type": "para",
-   "text": "However, you might not want the new values to be stored\nimmediately. For instance, maybe you want to restrict the input to\ncertain characters or ranges of values.",
-   "sha": "4cfa21eda9ae0374-1",
-   "zh": "但是你可能不希望立刻储存新的值。例如你可能希望对输入进行检测，符合预期的范围才储存。"
-  },
-  {
-   "type": "para",
-   "text": "To achieve this, you should use the normal `Gtk::TreeView`\ninsert_column() and append_column()\nmethods, then use get_column_cell_renderer() to get the\n`Gtk::CellRenderer` used by that column.",
-   "sha": "4a524c8e05e34834-1",
-   "zh": "为此，你应该使用常规的Gtk::TreeView::insert_column()和Gtk::TreeView::append_column()方法，然后使用get_column_cell_renderer()方法获取该列使用的Gtk::CellRenderer。"
-  },
-  {
-   "type": "para",
-   "text": "You should then cast that `Gtk::CellRenderer*` to the\nspecific `CellRenderer` that you expect, so you can use specific API.",
-   "sha": "5ba5062f801139bf-1",
-   "zh": "随后应把这个 `Gtk::CellRenderer*` 向下转型为你预期的具体 CellRenderer 类型，以便使用其专属 API。"
-  },
-  {
-   "type": "para",
-   "text": "For instance, for a CellRendererText, you would set the cell's *editable* property to true, like\nso:",
-   "sha": "884b3cfd40c1d555-1",
-   "zh": "例如，对于CellRendererText，你应该将单元格的editable属性设置为true，如下所示："
-  },
-  {
-   "type": "code",
-   "text": "cell->property_editable() = true;",
-   "sha": "625075d3afc9fcac-1",
-   "zh": ""
-  },
-  {
-   "type": "para",
-   "text": "For a CellRendererToggle, you would set the *activatable*\nproperty instead.",
-   "sha": "26ad2971d8b2e100-1",
-   "zh": "对于CellRendererToggle，你应该改为设置activatable属性。"
-  },
-  {
-   "type": "para",
-   "text": "You can then connect\nto the appropriate \"edited\" signal. For instance, connect to\nGtk::CellRendererText::signal_edited(), or\nGtk::CellRendererToggle::signal_toggled(). If the column\ncontains more than one `CellRenderer` then you will need\nto use Gtk::TreeView::get_column() and then call\nget_cells() on that view Column.",
-   "sha": "bd91dceddca3c099-1",
-   "zh": "接着连接相应的「edited」信号，例如 Gtk::CellRendererText::signal_edited() 或 Gtk::CellRendererToggle::signal_toggled()。如果一列里有不止一个 `CellRenderer`，需要先用 Gtk::TreeView::get_column() 取得视图列，再对其调用 get_cells()。"
-  },
-  {
-   "type": "para",
-   "text": "In your signal handler, you should examine the new value and then\nstore it in the Model if that is appropriate for your application.",
-   "sha": "3cd95b0235c2c88a-1",
    "zh": "在你的信号处理函数中，你应该检查新值如果其对于你的应用程序而言是合适的则将其储存到你的模型中。"
   }
  ]

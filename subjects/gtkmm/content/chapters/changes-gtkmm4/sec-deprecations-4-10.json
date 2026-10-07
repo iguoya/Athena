@@ -20,7 +20,7 @@
    "type": "para",
    "text": "gtkmm-4.0 is used in combination with `glibmm-2.68`,\nwhich sets the global locale for your program. The older `glibmm-2.4`\ndoes not do that, and gtkmm-3.0 does it only to some extent. What this means is\nbriefly that if your gtkmm-3.0 program contains a call to\n`std::locale::global(std::locale(\"\"))`, you can probably remove it.\nIf you don't want `glibmm` or gtkmm\nto set the global locale for you, you should add a call to\n`Glib::set_init_to_users_preferred_locale(false)` before any call to\n`Glib::init()` or Gtk::Application::create().\nSee the `glibmm` [\nreference](https://gnome.pages.gitlab.gnome.org/glibmm/namespaceGlib.html).",
    "sha": "98e03a06004326df",
-   "zh": null
+   "zh": "gtkmm-4.0与glibmm-2.68结合使用，将设置程序的全局语言环境。较旧的glibmm-2.4不会这样做，而gtkmm-3.0只在一定程度上做到了。简而言之，如果你的gtkmm-3.0应用包含了对std::locale::global(std::locale(\"\"))的调用，则你大概率可以直接将其删除。如果你不希望glibmm或者gtkmm为你设置程序的全局语言环境，则应该在调用任何Glib::init()函数或Gtk::Application::create()方法之前添加对Glib::set_init_to_users_preferred_locale(false)的调用。"
   },
   {
    "type": "para",
@@ -35,7 +35,7 @@
    "zh": null
   },
   {
-   "type": "para",
+   "type": "listitem",
    "text": "Whereas in gtkmm-3.0, destruction of a non-managed C++ widget wrapper caused the wrapped GtkWidget\nto be destroyed, changes in GTK4 mean that in gtkmm-4.0 this canʼt always be the case. GTK4 has no\nuniform way to remove a widget from a parent, as GTK3 did with Gtk::Container::remove(),\nso gtkmm-4.0 canʼt do the removal for you as gtkmm-3.0 did. Hence, if a non-managed C++ widget\ninstance is destructed while the widget is a child of another, gtkmm-4.0 wonʼt remove it from the\nparent, the parent retains a ref that stops the child being disposed, and the GtkWidget stays alive.\nThe end result is that to destroy a non-managed widget with its C++ wrapper you must first remove it\nfrom its parent (however that parent allows) so the C++ wrapperʼs dtor can drop the final reference.",
    "sha": "39469c16e96430be",
    "zh": null
@@ -47,16 +47,157 @@
    "zh": "在gtkmm 4和glibmm 2.68中添加了一些新的类："
   },
   {
+   "type": "listitem",
+   "text": "`Glib::ExtraClassInit` and `Gtk::Snapshot`:\n  These classes are needed only for writing custom widgets. See the\n  [Custom Widgets](#sec-custom-widgets) section.",
+   "sha": "23676af778c86e9a",
+   "marker": "1.",
+   "zh": "Glib::ExtraClassInit和Gtk::Snapshot：这些类只用于编写自定义的窗口小部件。参见自定义部件小节。"
+  },
+  {
+   "type": "listitem",
+   "text": "`Gtk::EventControllerKey`,\n  `Gtk::EventControllerMotion`, `Gtk::EventControllerScroll`\n  and `Gtk::GestureStylus`",
+   "sha": "145b09710bf8bf6f",
+   "marker": "2.",
+   "zh": "Gtk::EventControllerKey, Gtk::EventControllerMotion, Gtk::EventControllerScroll和Gtk::GestureStylus"
+  },
+  {
+   "type": "listitem",
+   "text": "`Gdk::Paintable`, `Gdk::Texture`,\n  `Gtk::Picture` and `Gtk::WidgetPaintable`",
+   "sha": "d9cb0129baaa1136",
+   "marker": "3.",
+   "zh": "Gdk::Paintable, Gdk::Texture, Gtk::Picture和Gtk::WidgetPaintable"
+  },
+  {
+   "type": "listitem",
+   "text": "`Gdk::Window` has been renamed to `Gdk::Surface`.\n  (`Gtk::Window` keeps its name.)",
+   "sha": "8ac5679798c9498a",
+   "marker": "4.",
+   "zh": "Gdk::Window被重命名为Gdk::Surface(Gtk::Window名称保持不变)。"
+  },
+  {
+   "type": "listitem",
+   "text": "`Gdk::DrawContext` and `Gdk::CairoContext`\n  are new. `Gdk::DrawingContext` has been removed.",
+   "sha": "6c8a027c64fc8b3f",
+   "marker": "5.",
+   "zh": "新添加了Gdk::DrawContext和Gdk::CairoContext。Gdk::DrawingContext已被删除。"
+  },
+  {
+   "type": "listitem",
+   "text": "`Gtk::Clipboard` has been replaced by the new\n  `Gdk::Clipboard`.",
+   "sha": "18d1b7ccd8094f27",
+   "marker": "6.",
+   "zh": "Gtk::Clipboard被新的Gdk::Clipboard替换。"
+  },
+  {
+   "type": "listitem",
+   "text": "`Gdk::DragContext` has been split into\n  `Gdk::Drag` and `Gdk::Drop`.",
+   "sha": "31e770a1642df07e",
+   "marker": "7.",
+   "zh": "Gdk::DragContext现在被拆分为Gdk::Drag和Gdk::Drop。"
+  },
+  {
    "type": "para",
    "text": "There have also been several changes to the API, which you will probably encounter\nwhen porting code that used gtkmm-3.0 and `glibmm`-2.4. Here is a short list:",
    "sha": "006d6feb4b3c5bf7",
    "zh": "API也进行了一些更改，在移植gtkmm-3.0和glibmm-2.4代码时你可能会遇到这些更改。以下是一个简短的变更列表："
   },
   {
-   "type": "para",
-   "text": "A C++17 compiler is required.\n`Gtk::Button`, `Gtk::ToolButton`,\n  `Gtk::MenuItem` and `Gtk::Switch`\n  implement the `Gtk::Actionable` interface instead of the removed\n  `Gtk::Activatable` interface.\n`Gtk::FontButton` implements the `Gtk::FontChooser` interface.\n`Gtk::Widget`: The get_preferred_*_vfunc()s\n  have been replaced by measure_vfunc(). This change only affects\n  custom widgets.\n`sigc::slot`s use the `sigc::slot` syntax.\n  Example: `sigc::slot` instead of `sigc::slot`.\n`Gtk::DrawingArea` uses a draw function instead of the draw signal.\n`Glib::ArrayHandle`, `Glib::StringArrayHandle`,\n  `Glib::ListHandle` and `Glib::SListHandle` have been removed.\n  They were used in `glibmm`-2.4, but not used in gtkmm-3.0.\n  If you've ever used these classes, replace them with a standard C++ container, such as `std::vector`.\n`Gtk::Container` has been removed.\nGtk::Widget::show_all() has been removed. The default value\n  of Gtk::Widget::property_visible() has been changed from\n  `false` to `true`.\nAll event signals have been removed from `Gtk::Widget`.\n  In most cases you can use one of the subclasses of `Gtk::EventController`\n  as a replacement. For instance, use `Gtk::GestureMultiPress`\n  instead of signal_button_press_event() and\n  signal_button_release_event(), and `Gtk::EventControllerKey`\n  instead of signal_key_press_event() and\n  signal_key_release_event().\n`Glib::RefPtr` is an alias for `std::shared_ptr`.\n  If you make your own `Glib::ObjectBase`-derived classes with\n  create() methods that return a `Glib::RefPtr`,\n  you must use Glib::make_refptr_for_instance() in your\n  create() methods.\nGtk::Box::pack_start() and Gtk::Box::pack_end()\n  have been removed. Use the new `Gtk::Box` methods\n  append(), prepend(),\n  insert_child_after() and insert_child_at_start().\n  \n`Gtk::ButtonBox` has been removed.\n`Gtk::RadioButton` and `Gtk::RadioButtonGroup`\n  have been removed. Use `Gtk::CheckButton` or `Gtk::ToggleButton`\n  with set_group().",
-   "sha": "512696f4d8deaf0e",
+   "type": "listitem",
+   "text": "A C++17 compiler is required.",
+   "sha": "4ceb9ecd192789ea",
+   "marker": "1.",
+   "zh": "需要支持C++17的编译器"
+  },
+  {
+   "type": "listitem",
+   "text": "`Gtk::Button`, `Gtk::ToolButton`,\n  `Gtk::MenuItem` and `Gtk::Switch`\n  implement the `Gtk::Actionable` interface instead of the removed\n  `Gtk::Activatable` interface.",
+   "sha": "f4e762292cb7151f",
+   "marker": "2.",
+   "zh": "Gtk::Button，Gtk::ToolButton，Gtk::MenuItem和Gtk::Switch 实现了Gtk::Actionable接口而不是已被删除的Gtk::Activatable接口。"
+  },
+  {
+   "type": "listitem",
+   "text": "`Gtk::FontButton` implements the `Gtk::FontChooser` interface.",
+   "sha": "dbd48ad15a03e67e",
+   "marker": "3.",
+   "zh": "Gtk::FontButton实现了Gtk::FontChooser接口。"
+  },
+  {
+   "type": "listitem",
+   "text": "`Gtk::Widget`: The get_preferred_*_vfunc()s\n  have been replaced by measure_vfunc(). This change only affects\n  custom widgets.",
+   "sha": "a7bed7cd9aed3021",
+   "marker": "4.",
    "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "`sigc::slot`s use the `sigc::slot` syntax.\n  Example: `sigc::slot` instead of `sigc::slot`.",
+   "sha": "b9a3783bd393b389",
+   "marker": "5.",
+   "zh": "sigc::slot使用sigc::slot语法。 例如： sigc::slot而不是使用sigc::slot。"
+  },
+  {
+   "type": "listitem",
+   "text": "`Gtk::DrawingArea` uses a draw function instead of the draw signal.",
+   "sha": "ad8d067922340486",
+   "marker": "6.",
+   "zh": "Gtk::DrawingArea使用绘制函数替代绘制信号。"
+  },
+  {
+   "type": "listitem",
+   "text": "`Glib::ArrayHandle`, `Glib::StringArrayHandle`,\n  `Glib::ListHandle` and `Glib::SListHandle` have been removed.\n  They were used in `glibmm`-2.4, but not used in gtkmm-3.0.\n  If you've ever used these classes, replace them with a standard C++ container, such as `std::vector`.",
+   "sha": "2a6665c34b8b5550",
+   "marker": "7.",
+   "zh": "Glib::ArrayHandle, Glib::StringArrayHandle, Glib::ListHandle和Glib::SListHandle已被删除。他们曾在glibmm-2.4中被使用，而gtkmm-3.0并未使用他们。如果你曾经使用过他们，则将他们替换为标准C++容器，例如std::vector。"
+  },
+  {
+   "type": "listitem",
+   "text": "`Gtk::Container` has been removed.",
+   "sha": "85d5b00e73dd5b1c",
+   "marker": "8.",
+   "zh": "Gtk::Container已被删除。"
+  },
+  {
+   "type": "listitem",
+   "text": "Gtk::Widget::show_all() has been removed. The default value\n  of Gtk::Widget::property_visible() has been changed from\n  `false` to `true`.",
+   "sha": "c05a2e5c086c1a9d",
+   "marker": "9.",
+   "zh": "Gtk::Widget::show_all()已被删除。Gtk::Widget::property_visible()的默认值从false改为true。"
+  },
+  {
+   "type": "listitem",
+   "text": "All event signals have been removed from `Gtk::Widget`.\n  In most cases you can use one of the subclasses of `Gtk::EventController`\n  as a replacement. For instance, use `Gtk::GestureMultiPress`\n  instead of signal_button_press_event() and\n  signal_button_release_event(), and `Gtk::EventControllerKey`\n  instead of signal_key_press_event() and\n  signal_key_release_event().",
+   "sha": "0e3caf9eb9754704",
+   "marker": "10.",
+   "zh": "Gtk::Widget上的所有事件信号均已被删除。 大多数时候你可以使用Gtk::EventController的子类之一进行替换。例如, 使用Gtk::GestureMultiPress替代signal_button_press_event()以及signal_button_release_event()，使用Gtk::EventControllerKey替代signal_key_press_event()和signal_key_release_event()。"
+  },
+  {
+   "type": "listitem",
+   "text": "`Glib::RefPtr` is an alias for `std::shared_ptr`.\n  If you make your own `Glib::ObjectBase`-derived classes with\n  create() methods that return a `Glib::RefPtr`,\n  you must use Glib::make_refptr_for_instance() in your\n  create() methods.",
+   "sha": "14495fb8f984855c",
+   "marker": "11.",
+   "zh": "Glib::RefPtr是std::shared_ptr的别名。如果你使用返回Glib::RefPtr的create()方法用以创建派生自Glib::ObjectBase的类，则你必须在你的create()方法中调用Glib::make_refptr_for_instance()。"
+  },
+  {
+   "type": "listitem",
+   "text": "Gtk::Box::pack_start() and Gtk::Box::pack_end()\n  have been removed. Use the new `Gtk::Box` methods\n  append(), prepend(),\n  insert_child_after() and insert_child_at_start().",
+   "sha": "6c793c8dec9be3b6",
+   "marker": "12.",
+   "zh": "Gtk::Box::pack_start()和Gtk::Box::pack_end()已被删除。现在Gtk::Box使用新的append()，prepend()，insert_child_after()和insert_child_at_start()方法。"
+  },
+  {
+   "type": "listitem",
+   "text": "`Gtk::ButtonBox` has been removed.",
+   "sha": "b393490bd3041f28",
+   "marker": "13.",
+   "zh": "Gtk::ButtonBox已被删除"
+  },
+  {
+   "type": "listitem",
+   "text": "`Gtk::RadioButton` and `Gtk::RadioButtonGroup`\n  have been removed. Use `Gtk::CheckButton` or `Gtk::ToggleButton`\n  with set_group().",
+   "sha": "d0abe224421295d0",
+   "marker": "14.",
+   "zh": "Gtk::RadioButton和Gtk::RadioButtonGroup已被删除。改为使用Gtk::CheckButton或者是Gtk::ToggleButton的set_group()。"
   },
   {
    "type": "para",

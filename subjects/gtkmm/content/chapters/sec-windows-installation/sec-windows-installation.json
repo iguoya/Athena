@@ -1,0 +1,56 @@
+{
+ "chapter": "sec-windows-installation",
+ "section": "sec-windows-installation",
+ "title": "gtkmm and Win32",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "One of the major advantages of gtkmm is that it is crossplatform. gtkmm programs written on other platforms such as\n      GNU/Linux can generally be transferred to Windows (and vice\n      versa) with few modifications to the source.",
+   "sha": "b44fb54a608388a0",
+   "zh": "gtkmm的主要优点之一是它是跨平台的。在其他平台编写的gtkmm程序只需要修改很少一部分的源代码就可以从GNU/Linux移植到Windows，当然反之亦然。"
+  },
+  {
+   "type": "para",
+   "text": "gtkmm currently works with the\n      [MinGW/GCC compiler](http://mingw.org/) with a compiler version\n      that supports C++17, such as gcc 7 or later. It also works with Microsoft\n      Visual C++ 2017 15.7.x or later (including the freely available express/community\n      editions) on the Windows platform. There is an\n      [installer](https://download.gnome.org/binaries/win32/gtkmm)\n      available for gtkmm on Microsoft Windows, but as of this writing\n      (December 2024) it only contains an installer for gtkmm2.\n      Please be aware that although normally it is fine to mix builds done with\n      Visual Studio 2017 and 2019, please do not do so when building\n      gtkmm with its -mm dependencies.",
+   "sha": "266021681413742c",
+   "zh": "gtkmm当前可以与支持C++17的MinGW/GCC编译器一起使用。也可以与VS 2017 15.7.X或更高版本一起使用（免费提供的Express/Community版本也可以）。在Windows平台上有一个gtkmm的安装器，不过到撰写本章时（2020年10月），这个安装器已经很久没有人维护了（译注：朋友，MSYS2了解一下）。值得注意的是，尽管通常情况下可以混合使用VS2017和2019完成构建，但是在构建带有-mm依赖的gtkmm时千万不要如此做。"
+  },
+  {
+   "type": "para",
+   "text": "There are README files, describing how to build gtkmm and its dependencies\n      on Windows:",
+   "sha": "a0ef177bca40ca40",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "libsigc++: [MSVC_NMake/MSVC-Builds.md](https://github.com/libsigcplusplus/libsigcplusplus/blob/master/MSVC_NMake/MSVC-Builds.md)",
+   "sha": "9fa42cf26f3c0ed5",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "glibmm: [README.win32.md](https://gitlab.gnome.org/GNOME/glibmm/tree/master/README.win32.md)",
+   "sha": "4443a8a985b817e9",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "cairomm: [MSVC_NMake/MSVC-Builds.md](https://gitlab.freedesktop.org/cairo/cairomm/-/blob/master/MSVC_NMake/MSVC-Builds.md)",
+   "sha": "42dbf01e46fb84b4",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "pangomm: [README.win32.md](https://gitlab.gnome.org/GNOME/pangomm/tree/master/README.win32.md)",
+   "sha": "8db316b08a321a55",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "gtkmm: [README.win32.md](https://gitlab.gnome.org/GNOME/gtkmm/tree/&url_examples_branch;/README.win32.md),\n      [MSVC_NMake/README](https://gitlab.gnome.org/GNOME/gtkmm/tree/&url_examples_branch;/MSVC_NMake/README)",
+   "sha": "0a744620fe1bc2f1",
+   "zh": "请参阅README.win32以及此自述文件中关于如何在WIndwos上构建gtkmm的说明。"
+  }
+ ]
+}

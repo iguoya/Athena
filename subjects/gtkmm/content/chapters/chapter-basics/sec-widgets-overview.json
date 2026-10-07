@@ -1,7 +1,7 @@
 {
  "chapter": "chapter-basics",
  "section": "sec-widgets-overview",
- "title": "控件",
+ "title": "Widgets",
  "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
  "blocks": [
   {
@@ -36,19 +36,19 @@
   },
   {
    "type": "para",
-   "text": "Most of the chapters in this book deal with specific widgets. See the [Container Widgets]() section for more details about adding widgets to container widgets.",
+   "text": "Most of the chapters in this book deal with specific widgets. See the [Container Widgets](#chapter-container-widgets) section for more details about adding widgets to container widgets.",
    "sha": "8645570820bca2a7",
    "zh": "本书中的大部分章节都是讲解特定的部件。要得到更多关于添加部件到容器部件的信息，请看 容器部件 这一章。"
   },
   {
    "type": "para",
-   "text": "Although you can specify the layout and appearance of windows and widgets with C++ code,\nyou will probably find it more convenient to design your user interfaces with\n`.ui` XML files and load them at runtime with\n`Gtk::Builder`. See the [Gtk::Builder]() chapter.",
+   "text": "Although you can specify the layout and appearance of windows and widgets with C++ code,\nyou will probably find it more convenient to design your user interfaces with\n`.ui` XML files and load them at runtime with\n`Gtk::Builder`. See the [Gtk::Builder](#chapter-builder) chapter.",
    "sha": "4a79ba7dc444fb5c",
    "zh": "虽然可以用 C++ 代码指定窗口和控件的布局与外观，但用 .ui XML 文件设计界面、运行时经 Gtk::Builder 加载，通常更方便。参见 Gtk::Builder 一章。"
   },
   {
    "type": "para",
-   "text": "Although gtkmm widget instances have lifetimes and scopes just like\nthose of other C++ classes, gtkmm has an optional time-saving feature that you\nwill see in some of the examples. The `Gtk::make_managed()`\nallows you to create a new widget and state that it will become owned by the\ncontainer into which you place it. This allows you to create the widget, add it\nto the container and not be concerned about deleting it, since that will occur\nwhen the parent container (which may itself be managed) is deleted. You can\nlearn more about gtkmm memory management techniques in the\n[Memory Management chapter]().",
+   "text": "Although gtkmm widget instances have lifetimes and scopes just like\nthose of other C++ classes, gtkmm has an optional time-saving feature that you\nwill see in some of the examples. The `Gtk::make_managed()`\nallows you to create a new widget and state that it will become owned by the\ncontainer into which you place it. This allows you to create the widget, add it\nto the container and not be concerned about deleting it, since that will occur\nwhen the parent container (which may itself be managed) is deleted. You can\nlearn more about gtkmm memory management techniques in the\n[Memory Management chapter](#chapter-memory).",
    "sha": "07d978746f8d0b69",
    "zh": "尽管 gtkmm 部件实例拥有像其它 C++ 类那样的生存时间和作用域，gtkmm 还是有一些可选的节省时间的特性，接下来你会在接下来的一些例子中看到。Gtk::make_managed() 允许你创建一个新的部件并声明该部件由放置它的容器部件所拥有。这将允许你创建部件然后将其添加到容器中，而不必承担记住删除它的心智负担，因为当它的父容器被删除时它将被一并删除。如果你需要了解更多关于 gtkmm 内存管理技术的话，请看 内存管理 章节。"
   }

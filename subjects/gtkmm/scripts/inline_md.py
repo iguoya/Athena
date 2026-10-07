@@ -16,7 +16,7 @@ _MD_CODE_TAGS = {
 
 _ENTITIES = {
     "&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": '"',
-    "&apos;": "'", "&nbsp;": " ",
+    "&apos;": "'", "&nbsp;": " ", "&#160;": "\u00a0",
 }
 
 
@@ -40,6 +40,14 @@ def _innermost(tag: str, source: str):
 
 def inline_md(source: str) -> str:
     result = source
+    # 自闭合 <link .../>（无子内容）：官网以目标本身作为链接文本渲染，
+    # 不展开则剥标签后正文留下空洞
+    result = re.sub(
+        r'<link\s+xlink:href="([^"]+)"\s*/>', lambda m: f"[{m.group(1)}]({m.group(1)})", result
+    )
+    result = re.sub(
+        r'<link\s+linkend="([^"]+)"\s*/>', lambda m: f"[{m.group(1)}](#{m.group(1)})", result
+    )
     for _ in range(50):  # 收敛保护
         changed = False
         for tag in sorted(_MD_CODE_TAGS, key=len, reverse=True):
@@ -64,7 +72,13 @@ def inline_md(source: str) -> str:
         ).search(result)
         if link:
             href = re.search(r'xlink:href="([^"]+)"|href="([^"]+)"', link.group(2))
-            url = (href.group(1) or href.group(2)) if href else ""
+            if href:
+                url = href.group(1) or href.group(2)
+            else:
+                # 无 href 的 <link linkend="X">：指向本教程内部章节（官网渲染为
+                # 页间链接），序列化为 # 锚点保住链接语义，由前端决定怎么呈现
+                anchor = re.search(r'linkend="([^"]+)"', link.group(2))
+                url = f"#{anchor.group(1)}" if anchor else ""
             inner = inline_md(link.group(3))
             result = result[: link.start()] + "[" + inner + "](" + url + ")" + result[link.end():]
             changed = True

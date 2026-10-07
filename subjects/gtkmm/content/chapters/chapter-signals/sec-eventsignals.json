@@ -20,7 +20,7 @@
    "type": "para",
    "text": "Some event controller signals behave slightly differently. The value returned from\nthe signal handler indicates whether it has fully \"handled\" the event. If the value\nis `false` then gtkmm will pass the event on to the next\nsignal handler. If the value is `true` then no other signal handlers\nwill need to be called.",
    "sha": "45196c44653082b2",
-   "zh": null
+   "zh": "这些信号的行为有所不同。它们的信号处理函数将通过返回值指示有没有完全处理事件。如果返回值为false，则gtkmm将会把事件再次发送到下一个信号处理函数。如果返回值为true则不再传播信号不再调用其他的信号处理函数。"
   },
   {
    "type": "para",
@@ -72,8 +72,29 @@
   },
   {
    "type": "para",
-   "text": "The event is propagated between widgets in 3 phases.\n\nCapture phase - runs from the toplevel down to the event widget.\nTarget phase - runs only on the event widget.\nBubble phase - runs from the event widget up to the toplevel.",
-   "sha": "b82c0855fdeb0c71",
+   "text": "The event is propagated between widgets in 3 phases.",
+   "sha": "8df069b6e6a8da01",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Capture phase - runs from the toplevel down to the event widget.",
+   "sha": "89060f648f95b67e",
+   "marker": "1.",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Target phase - runs only on the event widget.",
+   "sha": "4e59bd6e948e39af",
+   "marker": "2.",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Bubble phase - runs from the event widget up to the toplevel.",
+   "sha": "57b6189454342ec5",
+   "marker": "3.",
    "zh": null
   },
   {

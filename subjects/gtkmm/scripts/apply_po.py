@@ -61,6 +61,12 @@ def parse_po(text: str) -> dict[str, str]:
 def po_to_plain(raw: str) -> str:
     """po 的 msgid（含 DocBook 标签）→ 与快照指纹同口径的纯文本。"""
     text = expand_entities(raw)
+    # po 字符串里的 \" 是转义引号（parse_po 不解转义）；不还原则标签属性
+    # 匹配不上，剥标签后与快照口径漂移
+    text = text.replace('\\"', '"')
+    # 自闭合 <link xlink:href="U"/> 与 inline_md 的展开规则一致（URL 即链接文本），
+    # 否则 po 侧剥标签后丢 URL，与快照的 markdown 文本对不齐
+    text = re.sub(r'<link\s+xlink:href="([^"]+)"\s*/>', r"\1", text)
     text = re.sub(r"<[^>]+>", "", text)
     return re.sub(r"\s+", " ", text).strip()
 

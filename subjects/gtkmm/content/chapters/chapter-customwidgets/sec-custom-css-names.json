@@ -18,13 +18,13 @@
   },
   {
    "type": "para",
-   "text": "There are three ways of referring from a widget to data in a CSS file:\n  \n    gtk_widget_class_set_css_name()\n    can only be called from the class init function. It sets the CSS node name\n    of all instances of a class (a GType). See the [\n    Class Init and Instance Init Functions]() section.\n    Gtk::Widget::set_name()\n    can be called from a C++ constructor. It sets the name of\n    a widget instance.\n    Gtk::Widget::add_class_name()\n    can be called from a C++ constructor. It adds the name of a CSS class,\n    used by a widget instance.\n  \nThe following example shows a button with its own CSS node name, a label with\na widget name and a label that uses its own CSS class.",
-   "sha": "7982ada5c1b2e2e0",
+   "text": "There are three ways of referring from a widget to data in a CSS file:",
+   "sha": "ec68bcef9414e76a",
    "zh": null
   },
   {
    "type": "listitem",
-   "text": "gtk_widget_class_set_css_name()\n    can only be called from the class init function. It sets the CSS node name\n    of all instances of a class (a GType). See the [\n    Class Init and Instance Init Functions]() section.",
+   "text": "gtk_widget_class_set_css_name()\n    can only be called from the class init function. It sets the CSS node name\n    of all instances of a class (a GType). See the [\n    Class Init and Instance Init Functions](#custom-init-functions) section.",
    "sha": "f312cc1234b85a8f",
    "zh": null
   },
@@ -38,6 +38,12 @@
    "type": "listitem",
    "text": "Gtk::Widget::add_class_name()\n    can be called from a C++ constructor. It adds the name of a CSS class,\n    used by a widget instance.",
    "sha": "30634c57d9d2c0f1",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "The following example shows a button with its own CSS node name, a label with\na widget name and a label that uses its own CSS class.",
+   "sha": "79809b7c6f2652b7",
    "zh": null
   },
   {

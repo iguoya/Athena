@@ -18,7 +18,7 @@
   },
   {
    "type": "para",
-   "text": "An important difference in gtkmm-4.0 vs. older versions is that a C++ widgetʼs\ndestruction no longer causes the widget to be destroyed if itʼs within a parent;\nin that case the C GtkWidget stays alive. If you had relied on that behavior in\nan older version, in gtkmm-4.0 you must now remove the widget from its parent\nfirst. See [Changes in gtkmm-4.0]().",
+   "text": "An important difference in gtkmm-4.0 vs. older versions is that a C++ widgetʼs\ndestruction no longer causes the widget to be destroyed if itʼs within a parent;\nin that case the C GtkWidget stays alive. If you had relied on that behavior in\nan older version, in gtkmm-4.0 you must now remove the widget from its parent\nfirst. See [Changes in gtkmm-4.0](#changes-gtkmm4).",
    "sha": "a5f9077a00019b84",
    "zh": null
   },
@@ -98,42 +98,6 @@
    "type": "para",
    "text": "Here, the programmer deletes `pButton` to prevent a memory leak.",
    "sha": "ca6c3840065bf4db",
-   "zh": null
-  },
-  {
-   "type": "para",
-   "text": "If a programmer does not need a class scope widget, a function scope widget\nmay also be used. The advantages to function scope over class scope are the\nincreased data hiding and reduced dependencies.",
-   "sha": "67d417b79e247839-1",
-   "zh": "如果程序员不需要类作用域部件，那么也可以使用函数作用域部件。函数作用域相比于类作用域的优点是增加了数据的隐蔽性和隐藏了依赖。"
-  },
-  {
-   "type": "code",
-   "text": "{\n  Gtk::Button aButton;\n  aButton.set_visible(true);\n  ...\n  app->run();\n}",
-   "sha": "45e6caaea9ede212-1",
-   "zh": ""
-  },
-  {
-   "type": "para",
-   "text": "However, this technique is rarely useful. Most widgets can't safely be created\nbefore the application has been registered or activated. They can't safely be\ndeleted after Gtk::Application::run() or\nGtk::Application::make_window_and_run() returns.",
-   "sha": "629190fa649839db-1",
-   "zh": null
-  },
-  {
-   "type": "para",
-   "text": "Usually, the programmer will prefer to allow containers to automatically destroy\ntheir children by creating them using `Gtk::make_managed()`\n(see below). This is not strictly required, as the `new` and\n`delete` operators may also be used, but modern C++ style\ndiscourages those in favor of safer models of memory management, so it is\nbetter to create widgets using `Gtk::make_managed()` and\nlet their parent destroy them, than to manually perform dynamic allocation.",
-   "sha": "555d794c74fb65dc-1",
-   "zh": "通常，程序员更喜欢使用Gtk::make_managed()（参见下文）创建允许容器自动销毁的子部件。这并非强制性的要求，你也可以使用new和delete操作符，但是现代C++风格鼓励使用更安全的内存管理模型，因此最好使用Gtk::make_managed()创建部件，并让他们的父部件销毁它们，而不是手动执行动态内存分配。 在这，程序员删除pButton以防止内存泄漏。"
-  },
-  {
-   "type": "code",
-   "text": "auto pButton = new Gtk::Button(\"Test\");\n// do something useful with pButton\ndelete pButton;",
-   "sha": "b155d9a1189cb723-1",
-   "zh": ""
-  },
-  {
-   "type": "para",
-   "text": "Here, the programmer deletes `pButton` to prevent a memory leak.",
-   "sha": "ca6c3840065bf4db-1",
    "zh": null
   },
   {

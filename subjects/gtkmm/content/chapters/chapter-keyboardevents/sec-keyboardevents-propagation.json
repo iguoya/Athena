@@ -6,8 +6,29 @@
  "blocks": [
   {
    "type": "para",
-   "text": "As described in the [appendix]()\n      event signals are propagated in 3 phases:\n      \n      Capture phase - runs from the toplevel down to the event widget.\n      Target phase - runs only on the event widget.\n      Bubble phase - runs from the event widget up to the toplevel.",
-   "sha": "286f463bf9ff516b",
+   "text": "As described in the [appendix](#signal-handler-sequence)\n      event signals are propagated in 3 phases:",
+   "sha": "0626f875674a325c",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Capture phase - runs from the toplevel down to the event widget.",
+   "sha": "89060f648f95b67e",
+   "marker": "1.",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Target phase - runs only on the event widget.",
+   "sha": "4e59bd6e948e39af",
+   "marker": "2.",
+   "zh": null
+  },
+  {
+   "type": "listitem",
+   "text": "Bubble phase - runs from the event widget up to the toplevel.",
+   "sha": "57b6189454342ec5",
+   "marker": "3.",
    "zh": null
   },
   {

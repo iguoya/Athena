@@ -12,9 +12,9 @@
   },
   {
    "type": "para",
-   "text": "When deriving from `Gtk::Widget`, you should\n        override the following virtual methods. The methods marked (optional)\n        need not be overridden in all custom widgets. The base class's methods\n        may be appropriate.\n    \n      get_request_mode_vfunc(): (optional) Return what `Gtk::SizeRequestMode` is preferred by the widget.\n      measure_vfunc(): Calculate the minimum and natural width or height of the widget.\n      size_allocate_vfunc(): (optional) Position the widget, given the height and width that it has actually been given.\n      on_realize():  (optional)\n      on_unrealize(): (optional)\n      on_map(): (optional)\n      on_unmap(): (optional)\n      snapshot_vfunc(): Create a render node, e.g. a `Cairo::Context` node, and draw on it.",
-   "sha": "645b4b0cfd2b5276",
-   "zh": null
+   "text": "When deriving from `Gtk::Widget`, you should\n        override the following virtual methods. The methods marked (optional)\n        need not be overridden in all custom widgets. The base class's methods\n        may be appropriate.",
+   "sha": "19a34466b028e618",
+   "zh": "当你从Gtk::Widget派生部件时，你应该覆写以下虚函数。其中标记为可选的的虚函数不必在所有自定义部件中都进行覆写。它们的基类方法通常情况下已经很合适。"
   },
   {
    "type": "listitem",
@@ -66,7 +66,7 @@
   },
   {
    "type": "para",
-   "text": "The first 3 methods in the previous table are also overridden in custom\n        containers. They are briefly described in the\n        [Custom Containers]() section.",
+   "text": "The first 3 methods in the previous table are also overridden in custom\n        containers. They are briefly described in the\n        [Custom Containers](#sec-custom-containers) section.",
    "sha": "7ada619e01a1e082",
    "zh": "上述前三个函数在自定义容器中也被覆写。它们在自定义容器小节做了简要说明。"
   },
@@ -78,7 +78,7 @@
   },
   {
    "type": "para",
-   "text": "Some `GTK` functions, if called at all, must be\ncalled from the class init function. Some other `GTK`\nfunctions, if called, must be called from the instance init function.\nIf your custom widget must call any of those functions, you can derive a class\nfrom `Glib::ExtraClassInit` and derive your custom class\nfrom that class. The [custom CSS name example]()\nshows how that's done.",
+   "text": "Some `GTK` functions, if called at all, must be\ncalled from the class init function. Some other `GTK`\nfunctions, if called, must be called from the instance init function.\nIf your custom widget must call any of those functions, you can derive a class\nfrom `Glib::ExtraClassInit` and derive your custom class\nfrom that class. The [custom CSS name example](#custom-css-name-example)\nshows how that's done.",
    "sha": "ee9c2fafe16f1ea7",
    "zh": "一些GTK函数必须在类的init函数中才能调用。另一些GTK函数必须在实例的init函数中才能调用。如果你的自定义部件必须调用这些函数中的任意一个，那么你可以从Glib::ExtraClassInit派生一个类，并从该类派生你的自定义类。以下示例演示了如何完成这些操作。"
   },

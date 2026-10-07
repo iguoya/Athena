@@ -1,0 +1,142 @@
+{
+ "chapter": "changes-gtkmm3",
+ "section": "changes-gtkmm3",
+ "title": "Changes in gtkmm 3",
+ "upstream_commit": "b89295e22598db8697d1aa22dd528a103d956c9b",
+ "blocks": [
+  {
+   "type": "para",
+   "text": "gtkmm-3.0 is an old version of the gtkmm API that installs in parallel with the still older gtkmm-2.4 API and the new gtkmm-4.0 API. The last version of the gtkmm-2.4 API was gtkmm 2.24. gtkmm 3 has no major fundamental differences to gtkmm 2 but does make several small changes that were not possible while maintaining binary compatibility. If you never used the gtkmm-2.4 API then you can safely ignore this chapter.",
+   "sha": "df2d6748a0dd9fa7",
+   "zh": "gtkmm-3.0是gtkmm API的旧版本它依旧能与gtkmm-2.4和新的gtkmm-4.0 API并行安装。gtkmm-2.4 API的最新版本是gtkmm 2.24。gtkmm3于gtkmm2之间并没有重大的改变，但确实存在一些微小的变动，这些变动导致无法做到令他们保持二进制兼容。如果你从未用过gtkmm-2.4 API 则你可以放心的忽略本章。"
+  },
+  {
+   "type": "para",
+   "text": "gtkmm 3's library is called `libgtkmm-3.0` rather than `libgtkmm-2.4` and installs its headers in a similarly-versioned directory, so your pkg-config check should ask for `gtkmm-3.0`  rather than `gtkmm-2.4`.",
+   "sha": "7bb1573232d93bf8",
+   "zh": "gtkmm3库调用libgtkmm-3.0而不是libgtkmm-2.4 并将其的头文件安装于类似的目录下，所以你的pkg-config应该检索gtkmm-3.0而不是gtkmm-2.4。"
+  },
+  {
+   "type": "para",
+   "text": "gtkmm 3 added some new classes:",
+   "sha": "90c15ea8a4ea2640",
+   "zh": "gtkmm3添加了一些新的类："
+  },
+  {
+   "type": "listitem",
+   "text": "`Gtk::AppChooser`, `Gtk::AppChooserButton`, `Gtk::AppChooserDialog` allow the user to select an installed application to open a particular type of content.",
+   "sha": "61a69afa11c43d29",
+   "marker": "1.",
+   "zh": "Gtk::AppChooser，Gtk::AppChooserButton,Gtk::AppChooserDialog允许用户选择已安装的应用程序用以打开特定类型的内容。"
+  },
+  {
+   "type": "listitem",
+   "text": "`Gtk::Grid` is a new container widget that will eventually replace `Gtk::Box` and `Gtk::Table`. It arranges its children according to properties of those children rather than its own layout details.",
+   "sha": "003b631978b2f595",
+   "marker": "2.",
+   "zh": "Gtk::Grid是一个新的容器部件他将在未来完全替换Gtk::Box和Gtk::Table。它根据它的子项的属性而不是自身的布局属性对子项进行排列。"
+  },
+  {
+   "type": "listitem",
+   "text": "`Gtk::Switch` displays On/Off states more explicitly than `Gtk::CheckButton`. It may be useful, for instance, when allowing users to activate hardware.",
+   "sha": "f2fce197ee7cc7b9",
+   "marker": "3.",
+   "zh": "与Gtk::CheckButton相比Gtk::Switch更明确的显示开/关状态。例如，在允许用户激活硬件的时候，他可能很有用。"
+  },
+  {
+   "type": "para",
+   "text": "gtkmm 3 also made several small changes to the API, which you will probably encounter when porting code that used gtkmm-2.4. Here is a short list:",
+   "sha": "d9fb795dc65ac34e",
+   "zh": "gtkmm3还对API进行了一些小的变更，在移植gtkmm-2.4的代码的时候你可能会遇到这些变更。这是一个简短的清单："
+  },
+  {
+   "type": "listitem",
+   "text": "`Gtk::CellLayout`, used by `Gtk::IconView`, `Gtk::TreeView::Column` and `Gtk::ComboBox`, now has a `Gtk::CellArea` which can be used to specify more details of how the `CellRenderer`s are arranged and aligned.",
+   "sha": "912c33903ead55bd",
+   "marker": "1.",
+   "zh": "Gtk::IconView， Gtk::TreeView::Column和Gtk::ComboBox使用Gtk::CellLayout，现在有Gtk::CellArea可以用于指示CellRenderer的排列与对齐方式的详情。"
+  },
+  {
+   "type": "listitem",
+   "text": "Gtk::ComboBox now derives from CellLayout, allowing easier layout and alignment of its `Gtk::CellRenderer`s.",
+   "sha": "7ce9f6ac588db5d6",
+   "marker": "2.",
+   "zh": "Gtk::ComboBox现在从CellLayout派生，从而使更容易对Gtk::CellRenderer进行布局与对齐。"
+  },
+  {
+   "type": "listitem",
+   "text": "`Gtk::Adjustment` and `IconSet` and `Gdk::Cursor` are now used via `Glib::RefPtr`.",
+   "sha": "96636261eac67add",
+   "marker": "3.",
+   "zh": "Gtk::Adjustment和Gtk::IconSet类和Gdk::Cursor类现在通过Glib::RefPtr使用。"
+  },
+  {
+   "type": "listitem",
+   "text": "`Gtk::Box`, `Gtk::ButtonBox`, `Gtk::IconView`, `Gtk::Paned`, `Gtk::ProgressBar`, `Gtk::ScaleButton`, `Gtk::Scrollbar` and `Gtk::Separator` now derive from `Gtk::Orientable`, allowing their\norientation (vertical or horizontal) to be specified without requiring the use of a derived class such as `Gtk::HBox`.",
+   "sha": "79f56ae31d5a81de",
+   "marker": "4.",
+   "zh": "Gtk::Box, Gtk::ButtonBox,Gtk::IconView, Gtk::Paned, Gtk::ProgressBar, Gtk::ScaleButton, Gtk::Scrollbar和Gtk::Separator现在从Gtk::Orientable派生，允许在不使用派生类(例如Gtk::HBox)的情况指定其方向(垂直或者水平)。"
+  },
+  {
+   "type": "listitem",
+   "text": "`Gtk::IconView`, `Gtk::TextView`, `Gtk::TreeView` and other widgets derive from Scrollable instead of having their own methods such as get_vadjustment() and instead of having their own set_scroll_adjustments signal.",
+   "sha": "e5d522d52bffcb30",
+   "marker": "5.",
+   "zh": "Gtk::IconView, Gtk::TextView, Gtk::TreeView和其他部件派生自Scrollable而不使用他们自己的方法，例如get_vadjustment()拥有自己的set_scroll_adjustments信号。"
+  },
+  {
+   "type": "listitem",
+   "text": "`Gtk::Style` and `Gtk::Rc` were removed, replaced by `Gtk::StyleContext`, and `Gtk::StyleProvider`s, such as `Gtk::CssProvider`.",
+   "sha": "a5fe11150c0ddc40",
+   "marker": "6.",
+   "zh": "Gtk::Style和Gtk::Rc已被删除，由Gtk::StyleContext和Gtk::StyleProvider替换，例如Gtk::CssProvider。"
+  },
+  {
+   "type": "listitem",
+   "text": "Widget::on_expose_event() was replaced by Widget::on_draw(), which assumes that cairomm is used for drawing, via the provided `Cairo::Context` and does not require you to call Cairo::Context::clip().",
+   "sha": "37fc3d7541859148",
+   "marker": "7.",
+   "zh": "Widget::on_expose_event()被Widget::on_draw()取代，通过提供的Cairo::Context使用cairomm进行绘制，并且不需要你自己调用Cairo::Context::clip()。"
+  },
+  {
+   "type": "listitem",
+   "text": "`Gdk::RGBA` replaces `Color`, adding an alpha component for opacity. `Colormap` was removed, along with its awkward use to allocate colors.",
+   "sha": "84fa6351013623ea",
+   "marker": "8.",
+   "zh": "Color被Gdk::RGBA替代，添加alpha分量以支持透明度。Colormap与其笨拙的颜色分配方式一并被删除。"
+  },
+  {
+   "type": "listitem",
+   "text": "`Gdk::Pixmap` and `Gdk::Bitmap` were removed in favor of `Gdk::Pixbuf`.",
+   "sha": "4d523d66021e1dec",
+   "marker": "9.",
+   "zh": "Gdk::Pixmap和Gdk::Bitmap现在被Gdk::Pixbuf所取代。"
+  },
+  {
+   "type": "listitem",
+   "text": "`Gdk::Drawable` was removed, with its methods moving into `Gdk::Window`.",
+   "sha": "c8ed0f87531be5ea",
+   "marker": "10.",
+   "zh": "Gdk::Drawable被删除，与其有关的方法被移动到了Gdk::Window。"
+  },
+  {
+   "type": "listitem",
+   "text": "We now use std::vector in several methods instead of the intermediate *Handle types to make the API clearer.",
+   "sha": "9bd38d65b402bec3",
+   "marker": "11.",
+   "zh": null
+  },
+  {
+   "type": "para",
+   "text": "All deprecated API was removed in gtkmm 3.0, though there have been new deprecations in later gtkmm 3.x versions.",
+   "sha": "fefd4be0e5010a47",
+   "zh": "在gtkmm 3.0中我们删除了所有弃用的API，尽管在gtkmm 3.x版本中出现了新的被弃用的API。"
+  },
+  {
+   "type": "para",
+   "text": "As a first step to porting your source code to gtkmm-3.0 you should probably ensure that your application builds with the deprecated gtkmm-2.4 API disabled, by defining macro such as GTKMM_DISABLE_DEPRECATED. There are some autotools macros that can help with this by defining them optionally at build time. See the [gtkmm 3 porting wiki page](https://wiki.gnome.org/Projects/gtkmm/PortingToGtkmm3) for more details.",
+   "sha": "499562c945642376",
+   "zh": "将源代码迁移到gtkmm-3.0的第一步，你应该通过定义GTKMM_DISABLE_DEPRECATED宏以检查你是否使用了在gtkmm-2.4中被弃用的API,然后删除他们。有一些autotools宏可以在编译时帮助你通过构建。访问gtkmm3移植Wiki了解更多详情。"
+  }
+ ]
+}

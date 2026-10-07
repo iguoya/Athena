@@ -26,6 +26,7 @@
    "type": "para",
    "text": "Although Cairo can render text, it's not meant to be a replacement for\n      Pango. Pango is a better choice if you need to perform more advanced\n      text rendering such as wrapping or ellipsizing text. Drawing text with\n      Cairo should only be done if the text is part of a graphic.",
    "sha": "6133a694770d3f27",
+   "admonition": "note",
    "zh": "虽然开罗可以用于渲染文本，但不意味着它能替代Pango。如果你需要进行更高级的文本渲染（例如环绕和省略文本）则Pango会是更好的选择。只有当文本是图形的一部分的时候才应该使用开罗绘制文本。"
   },
   {
@@ -72,20 +73,22 @@
   },
   {
    "type": "para",
-   "text": "The current state of a `Cairo::Context` can be\n        saved to an internal stack of saved states and later be restored to the\n        state it was in when you saved it. To do this, use the\n        save()\n        method and the restore() method. This can be\n        useful if you need to temporarily change the line width and color (or\n        any other graphics setting) in order to draw something and then return\n        to the previous settings. In this situation, you could call\n        Cairo::Context::save(), change the graphics\n        settings, draw the lines, and then call\n        Cairo::Context::restore() to restore the original\n        graphics state. Multiple calls to save() and\n        restore() can be nested; each call to\n        restore() restores the state from the\n        matching paired save().\n        \n            It is good practice to put all modifications to the graphics state\n            between save()/restore()\n            function calls. For example, if you have a function that takes a\n            `Cairo::Context` reference as an argument, you\n            might implement it as follows:\n          \n          `void doSomething(const Cairo::RefPtr& context, int x)\n{\n    context->save();\n    // change graphics state\n    // perform drawing operations\n    context->restore();\n}`",
-   "sha": "b9bdd930364eb9bb",
-   "zh": null
+   "text": "The current state of a `Cairo::Context` can be\n        saved to an internal stack of saved states and later be restored to the\n        state it was in when you saved it. To do this, use the\n        save()\n        method and the restore() method. This can be\n        useful if you need to temporarily change the line width and color (or\n        any other graphics setting) in order to draw something and then return\n        to the previous settings. In this situation, you could call\n        Cairo::Context::save(), change the graphics\n        settings, draw the lines, and then call\n        Cairo::Context::restore() to restore the original\n        graphics state. Multiple calls to save() and\n        restore() can be nested; each call to\n        restore() restores the state from the\n        matching paired save().",
+   "sha": "61358e59cc3a8fc5",
+   "zh": "可以将Cairo::Context当前的状态保存到其内部用于保存状态的栈中，并在之后将状态还原为保存时的状态。要做到这个请调用save()和restore()方法。当你需要临时更改某些图形设置（例如线宽和颜色）以绘制某些内容然后又退回到之前的状态时这将很有用。在这种情况下，你可以先调用Cairo::Context::save()，然后修改图形设置并绘制图形，再调用Cairo::Context::restore()恢复之前的图形状态。你可以多次嵌套调用save()和restore()；每次restore()调用都会将恢复状态到与之相对应的save()所保存的状态。"
   },
   {
    "type": "para",
    "text": "It is good practice to put all modifications to the graphics state\n            between save()/restore()\n            function calls. For example, if you have a function that takes a\n            `Cairo::Context` reference as an argument, you\n            might implement it as follows:",
    "sha": "3461557a2c24fe77",
+   "admonition": "tip",
    "zh": "好的做法是在一组save()/restore()调用之间进行所有对图形状态的更改。例如，如果你有一个将Cairo::Context的引用作为参数的函数，你可以这样实现它："
   },
   {
    "type": "code",
    "text": "void doSomething(const Cairo::RefPtr<Cairo::Context>& context, int x)\n{\n    context->save();\n    // change graphics state\n    // perform drawing operations\n    context->restore();\n}",
    "sha": "3a60d8ba7e702088",
+   "admonition": "tip",
    "zh": ""
   },
   {

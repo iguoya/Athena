@@ -44,13 +44,13 @@
    "type": "para",
    "text": "Here  we define a new class called `OverriddenButton`,\nwhich inherits from `Gtk::Button`. The only thing we\nchange is the on_clicked() method, which is called\nwhenever `Gtk::Button` emits the\n`clicked` signal. This method prints \"Hello World\" to\n`stdout`, and then calls the original, overridden method, to\nlet `Gtk::Button` do what it would have done had we not\noverridden.",
    "sha": "0f95bb1d11dd9fc7",
-   "zh": null
+   "zh": "在这我们定义了一个名为OverriddenButton的新类，该类继承自Gtk::Button。我们对其唯一的更改是on_clicked()成员函数，只要Gtk::Button发出clicked信号该成员函数就会被调用。这个成员函数将字符串\"Hello World\"打印到stdout，然后调用Gtk::Button已被覆写本该被调用的成员函数。"
   },
   {
    "type": "para",
    "text": "You don't always need to call the parent's method; there are times\nwhen you might not want to. Note that we called the parent method\n*after* writing \"Hello World\", but we could have called it before.\nIn this simple example, it hardly matters much, but there are times\nwhen it will. With connected signal handlers, it's not quite so easy to change details\nlike this, and you can do something here which you can't do at all\nwith connected signal handlers: you can call the parent method in the *middle* of\nyour custom code.",
    "sha": "1b2dff298588b405",
-   "zh": null
+   "zh": "调用父方法不是必须的，你可以在不想做的时候不调用它。请注意在此我们在做完了想做的事情之后调用了父方法，而你当然可以在此函数的中间或是任何你想调用父方法的位置调用它。这对于通过连接到信号调用的信号处理函数是无法做到的。"
   }
  ]
 }
