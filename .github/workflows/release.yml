@@ -492,7 +492,7 @@ jobs:
   # 器、macOS DMG、Linux DEB（AppImage 的 linuxdeploy 在无头 CI 上还有 fuse 依赖
   # 坑，先不发）。产物统一改名为 athena-<app>-<版本>-<平台>。北极星的 productName
   # 是中文「北极星」（窗口标题与开始菜单用），打包二进制名由 mainBinaryName
-  # 固定为 athena-polaris。
+  # 定为 polaris，避免 /usr/bin 与安装器里出现中文二进制名。
   tauri-apps:
     name: Build ${{ matrix.app }} (${{ matrix.platform }})
     strategy:
@@ -643,7 +643,7 @@ jobs:
             Linux)
               dpkg-deb --info "dist/athena-${{ matrix.app }}_$version_amd64.deb"
               listing=$(dpkg-deb --contents "dist/athena-${{ matrix.app }}_$version_amd64.deb")
-              [[ "$listing" == *usr/bin/athena* ]] || { echo 'deb 缺 usr/bin/athena-*'; exit 1; } ;;
+              [[ "$listing" == *usr/bin/* ]] || { echo 'deb 缺 usr/bin 主二进制'; exit 1; } ;;
           esac
 
       - name: Upload release assets
