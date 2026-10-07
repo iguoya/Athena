@@ -136,6 +136,7 @@ class MarkingsPage extends StatelessWidget {
                       ids: [recallQuestionId(recallPage, marking.id)],
                       histories: histories,
                     ),
+                    remaining: recallRetireGap([recallQuestionId(recallPage, marking.id)], histories),
                   ),
               ],
             ),
@@ -149,10 +150,13 @@ class MarkingsPage extends StatelessWidget {
 /// 标线速记的一个格子：手绘俯视图 + 名称 + 「怎么开」。交互与标志格一致：
 /// 悬停上浮，点开玻璃浮层看大图（ADR 0061）。
 class _MarkingCell extends StatefulWidget {
-  const _MarkingCell({required this.marking, required this.status, this.other});
+  const _MarkingCell({required this.marking, required this.status, this.remaining = 0, this.other});
 
   final Marking marking;
   final SymbolStatus status;
+
+  /// 还要再答对几次才算掌握，写在红点里（ADR 0119）。
+  final int remaining;
 
   /// 易混对（ADR 0077 决策 2）：浮层里双图对照。
   final Marking? other;
@@ -196,7 +200,7 @@ class _MarkingCellState extends State<_MarkingCell> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  StatusDot(status: widget.status),
+                  StatusDot(status: widget.status, remaining: widget.remaining),
                   const SizedBox(width: 8),
                   Flexible(
                     child: Text(

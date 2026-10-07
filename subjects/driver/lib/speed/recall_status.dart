@@ -27,9 +27,12 @@ HistorySet selfTestHistories(Iterable<AttemptView> attempts) =>
 /// 放在图标下方、条目文字左侧）：红 = 这条的自测题答错过、还在错题库里；绿 = 答对过；
 /// 灰 = 没自测过。与易混数字的行点同一套样式。
 class StatusDot extends StatelessWidget {
-  const StatusDot({super.key, required this.status, this.tooltip});
+  const StatusDot({super.key, required this.status, this.tooltip, this.remaining = 0});
 
   final SymbolStatus status;
+
+  /// 还要再答对几次才算掌握（[recallRetireGap]）：红点中间直接写这个数，不用悬停也看得见（ADR 0119）。
+  final int remaining;
 
   /// 覆盖悬停说明的措辞（易混数字的行点写「这一行」，格子默认写「这一条」）。
   final String? tooltip;
@@ -45,7 +48,7 @@ class StatusDot extends StatelessWidget {
     return Tooltip(
       message: tooltip ??
           switch (status) {
-            SymbolStatus.wrong => "这一条的自测题答错过，还没掌握",
+            SymbolStatus.wrong => remaining > 0 ? "这一条的自测题答错过，还要再对 $remaining 次才算掌握" : "这一条的自测题答错过，还没掌握",
             SymbolStatus.mastered => "这一条的自测题全部答对过",
             SymbolStatus.fresh => "这一条还没测完",
           },
@@ -54,14 +57,30 @@ class StatusDot extends StatelessWidget {
         height: 28,
         decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         alignment: Alignment.center,
-        child: Container(
-          width: 10,
-          height: 10,
-          decoration: const BoxDecoration(color: Colors.black, shape: BoxShape.circle),
-        ),
+        child: status == SymbolStatus.wrong && remaining > 0
+            ? Text(
+                "$remaining",
+                style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w800, height: 1),
+              )
+            : Container(
+                width: 10,
+                height: 10,
+                decoration: const BoxDecoration(color: Colors.black, shape: BoxShape.circle),
+              ),
       ),
     );
   }
+}
+
+/// 这些卡离掌握还差几次答对（ADR 0079、0119）：答错过且还在错题库里的卡，各自还要再对的次数相加
+/// （累计答对要到答错的 2 倍）。没答错过、已移出的卡不算。
+int recallRetireGap(Iterable<String> ids, HistorySet histories) {
+  var gap = 0;
+  for (final id in ids) {
+    final h = histories.byQuestion[id];
+    if (h != null && h.wrong > 0 && !h.retiredFromWrongPool) gap += h.correctsToRetire;
+  }
+  return gap;
 }
 
 /// 条目自测题的作答状态。

@@ -33,6 +33,15 @@ void main() {
     expect(m, (done: 1, total: 1));
   });
 
+  test("还要再对几次：错 1 次要对 2 次，已对 1 次还差 1；已移出、没错过的不算（ADR 0079、0119）", () {
+    final t0 = DateTime(2026, 10, 7);
+    AttemptView at(String id, bool ok, int m) => AttemptView(questionId: id, topicId: "t", correct: ok, at: t0.add(Duration(minutes: m)));
+    final h = HistorySet.build([at("a", false, 0), at("a", true, 1), at("b", true, 2), at("c", false, 3), at("c", true, 4), at("c", true, 5)]);
+    expect(recallRetireGap(["a"], h), 1);
+    expect(recallRetireGap(["b", "c"], h), 0);
+    expect(recallRetireGap(["a", "x"], h), 1, reason: "没答过的卡不算差几次");
+  });
+
   test("专题掌握只认自测里的作答：普通做题（记了所选选项）里答速记卡不算（ADR 0119）", () {
     final t0 = DateTime(2026, 10, 7);
     const card = "drive.recall.s1.numbers.deadbeef";

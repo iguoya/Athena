@@ -114,7 +114,8 @@ void main() {
     // 组标题（一级标题）左侧不放掌握圆点（ADR 0116）。
     expect(find.byTooltip("这一组还没测完"), findsNothing, reason: "组标题不放状态圆");
     expect(find.byTooltip("这一组的自测卡有答错过，还没掌握"), findsNothing);
-    expect(find.byTooltip("这一条的自测题答错过，还没掌握"), findsOneWidget, reason: "自测答错的那一条变红（全程没碰过真题）");
+    expect(find.byTooltip("这一条的自测题答错过，还要再对 2 次才算掌握"), findsOneWidget, reason: "自测答错的那一条变红，写明还要再对几次（全程没碰过真题）");
+    expect(find.descendant(of: find.byType(StatusDot), matching: find.text("2")), findsOneWidget, reason: "红点里直接写还要再对 2 次（ADR 0119）");
     final button = tester.widget<FilledButton>(
       find.descendant(of: find.byType(GroupRecallButton).first, matching: find.bySubtype<FilledButton>()),
     );

@@ -139,6 +139,7 @@ class SignsPage extends StatelessWidget {
                       ids: [recallQuestionId(recallPage, sign.id)],
                       histories: histories,
                     ),
+                    remaining: recallRetireGap([recallQuestionId(recallPage, sign.id)], histories),
                   ),
               ],
             ),
@@ -152,10 +153,13 @@ class SignsPage extends StatelessWidget {
 /// 标志速记的一个格子：手绘图 + 名称 + 「怎么开」。悬停上浮是唯一的动效，
 /// 复用 BsCard 的语言与令牌（ADR 0059 决策 5）。
 class _SignCell extends StatefulWidget {
-  const _SignCell({required this.sign, required this.status, this.other});
+  const _SignCell({required this.sign, required this.status, this.remaining = 0, this.other});
 
   final RoadSign sign;
   final SymbolStatus status;
+
+  /// 还要再答对几次才算掌握，写在红点里（ADR 0119）。
+  final int remaining;
 
   /// 易混对（ADR 0077 决策 2）：浮层里双图对照。
   final RoadSign? other;
@@ -199,7 +203,7 @@ class _SignCellState extends State<_SignCell> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  StatusDot(status: widget.status),
+                  StatusDot(status: widget.status, remaining: widget.remaining),
                   const SizedBox(width: 8),
                   Flexible(
                     child: Text(

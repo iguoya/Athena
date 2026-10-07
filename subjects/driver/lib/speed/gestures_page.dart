@@ -107,6 +107,7 @@ class GesturesPage extends StatelessWidget {
                       ids: [recallQuestionId(recallPage, g.id)],
                       histories: histories,
                     ),
+                    remaining: recallRetireGap([recallQuestionId(recallPage, g.id)], histories),
                   ),
               ],
               ),
@@ -158,10 +159,13 @@ class GesturesPage extends StatelessWidget {
 /// 手势速记的一个格子：手绘图 + 名称 + 「看到之后怎么开」。交互与标志、标线、
 /// 仪表格一致：悬停上浮，点开玻璃浮层看大图。
 class _GestureCell extends StatefulWidget {
-  const _GestureCell({required this.gesture, required this.status, this.other});
+  const _GestureCell({required this.gesture, required this.status, this.remaining = 0, this.other});
 
   final TrafficGesture gesture;
   final SymbolStatus status;
+
+  /// 还要再答对几次才算掌握，写在红点里（ADR 0119）。
+  final int remaining;
 
   /// 易混对（ADR 0077 决策 2）：浮层里双图对照。
   final TrafficGesture? other;
@@ -205,7 +209,7 @@ class _GestureCellState extends State<_GestureCell> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  StatusDot(status: widget.status),
+                  StatusDot(status: widget.status, remaining: widget.remaining),
                   const SizedBox(width: 8),
                   Flexible(
                     child: Text(

@@ -119,6 +119,7 @@ class NotesPage extends StatelessWidget {
                   ids: [recallQuestionId(recallPage, "${group.id}/${item.scenario}")],
                   histories: histories,
                 ),
+                remaining: recallRetireGap([recallQuestionId(recallPage, "${group.id}/${item.scenario}")], histories),
               ),
           ],
         ),
@@ -132,6 +133,7 @@ class NotesPage extends StatelessWidget {
     TextStyle? muted, {
     required bool first,
     required SymbolStatus status,
+    int remaining = 0,
   }) {
     final source = [
       Bs.sourceShort(item.sourceId),
@@ -148,7 +150,7 @@ class NotesPage extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            StatusDot(status: status),
+            StatusDot(status: status, remaining: remaining),
             const SizedBox(width: 10),
             Expanded(
               child: Text(

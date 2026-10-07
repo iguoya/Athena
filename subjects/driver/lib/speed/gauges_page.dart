@@ -137,6 +137,7 @@ class GaugesPage extends StatelessWidget {
                       ids: [recallQuestionId(recallPage, gauge.id)],
                       histories: histories,
                     ),
+                    remaining: recallRetireGap([recallQuestionId(recallPage, gauge.id)], histories),
                   ),
               ],
             ),
@@ -150,10 +151,13 @@ class GaugesPage extends StatelessWidget {
 /// 仪表速记的一个格子：手绘符号 + 名称 + 「亮了怎么办」。交互与标志、标线格
 /// 一致：悬停上浮，点开玻璃浮层看大图。
 class _GaugeCell extends StatefulWidget {
-  const _GaugeCell({required this.gauge, required this.status, this.other});
+  const _GaugeCell({required this.gauge, required this.status, this.remaining = 0, this.other});
 
   final Gauge gauge;
   final SymbolStatus status;
+
+  /// 还要再答对几次才算掌握，写在红点里（ADR 0119）。
+  final int remaining;
 
   /// 易混对（ADR 0077 决策 2）：浮层里双图对照。
   final Gauge? other;
@@ -197,7 +201,7 @@ class _GaugeCellState extends State<_GaugeCell> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  StatusDot(status: widget.status),
+                  StatusDot(status: widget.status, remaining: widget.remaining),
                   const SizedBox(width: 8),
                   Flexible(
                     child: Text(

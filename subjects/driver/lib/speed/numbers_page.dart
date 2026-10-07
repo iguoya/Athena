@@ -10,16 +10,20 @@ import "speed_topics.dart";
 /// 易混数字一行的状态微点：与速记格子的微点（[StatusDot]）同一套样式，只换悬停措辞
 /// ——口径是这一行自己的自测卡（正向、反向），不是关联真题（ADR 0095、0101、0112）。
 class RecallRowDot extends StatelessWidget {
-  const RecallRowDot({super.key, required this.status});
+  const RecallRowDot({super.key, required this.status, this.remaining = 0});
 
   final SymbolStatus status;
+
+  /// 这一行还要再答对几次才算掌握，写在红点里（ADR 0119）。
+  final int remaining;
 
   @override
   Widget build(BuildContext context) {
     return StatusDot(
       status: status,
+      remaining: remaining,
       tooltip: switch (status) {
-        SymbolStatus.wrong => "这一行的自测题最近答错过，还没掌握",
+        SymbolStatus.wrong => remaining > 0 ? "这一行的自测题答错过，还要再对 $remaining 次才算掌握" : "这一行的自测题答错过，还没掌握",
         SymbolStatus.mastered => "这一行的自测题全部答对过",
         SymbolStatus.fresh => "这一行还没测完",
       },
@@ -149,7 +153,10 @@ class NumbersPage extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 2),
-            child: RecallRowDot(status: _rowStatus(group, row, groupIds)),
+            child: RecallRowDot(
+              status: _rowStatus(group, row, groupIds),
+              remaining: recallRetireGap(_rowQuestionIds(group, row, groupIds), histories),
+            ),
           ),
           const SizedBox(width: 12),
           SizedBox(
