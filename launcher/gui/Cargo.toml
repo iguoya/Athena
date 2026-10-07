@@ -7,7 +7,9 @@ rust-version.workspace = true
 
 [dependencies]
 launcher-core = { path = "../core" }
-slint = "1.17"
+# unstable-winit-030：Windows 任务栏要的大图标（ICON_BIG）Slint 不会设，得拿到底层
+# winit 窗口自己补（见 src/app_icon.rs）。
+slint = { version = "1.17", features = ["unstable-winit-030"] }
 # 托盘与菜单：三平台同一套 API（macOS NSStatusItem、Windows Shell_NotifyIcon、
 # Linux StatusNotifierItem / AppIndicator）。事件走全局 channel，所以不必和
 # Slint 的事件循环做深度集成，在定时器里 try_recv 就行。
@@ -18,10 +20,11 @@ resvg = "0.45"
 opener = "0.8.5"
 
 [target.'cfg(target_os = "macos")'.dependencies]
-# 只为一件事：把窗口带到眼前。macOS 不会自动把别的 Space 上的窗口移过来，
-# 应用不 activate 的话，点了托盘菜单像是没反应。
+# 两件事：把窗口带到眼前（macOS 不会自动把别的 Space 上的窗口移过来，应用不
+# activate 的话，点了托盘菜单像是没反应）；给裸二进制设 Dock 图标（没有 .app
+# bundle 就没有 Info.plist 指路，Dock 只会显示通用的 exec 图标）。
 objc2 = "0.6"
-objc2-app-kit = { version = "0.3", features = ["NSApplication", "NSResponder"] }
+objc2-app-kit = { version = "0.3", features = ["NSApplication", "NSImage", "NSResponder"] }
 objc2-foundation = "0.3"
 
 [target.'cfg(target_os = "linux")'.dependencies]

@@ -9,6 +9,7 @@
 
 #![windows_subsystem = "windows"]
 
+mod app_icon;
 mod icon;
 mod tray;
 
@@ -66,6 +67,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             .collect::<Vec<_>>(),
     ));
 
+    app_icon::prepare();
     let window = LauncherWindow::new()?;
     window.set_ui_font(ui_font().into());
     {
@@ -193,6 +195,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // 应用时就像是没起来。事件循环必须用 until_quit：托盘走的是 tray-icon，
     // Slint 看不见它，最后一扇窗藏起来时普通 run() 会把进程结束掉。
     window.show()?;
+    // 底层窗口要等事件循环转起来才拿得到，所以排进循环的第一拍。
+    {
+        let handle = window.as_weak();
+        slint::invoke_from_event_loop(move || {
+            if let Some(window) = handle.upgrade() {
+                app_icon::install(window.window());
+            }
+        })?;
+    }
     bring_to_front();
     slint::run_event_loop_until_quit()?;
     Ok(())

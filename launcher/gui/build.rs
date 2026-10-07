@@ -13,6 +13,13 @@ fn main() {
     write_icon("tray-icon.rgba", render(&tree, 64));
     write_icon("window-icon.rgba", render(&tree, 256));
     write_window_png(&tree);
+    // Dock 图标：macOS 裸二进制没有 bundle，运行时用 NSImage 读这张 PNG。
+    let dock = render(&tree, 512).encode_png().expect("PNG 编码失败");
+    std::fs::write(
+        Path::new(&std::env::var("OUT_DIR").expect("没有 OUT_DIR")).join("dock-icon.png"),
+        dock,
+    )
+    .expect("写不出 dock-icon.png");
 
     #[cfg(target_os = "windows")]
     embed_windows_icon(&tree);
