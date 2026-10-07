@@ -136,10 +136,10 @@ jobs:
         run: python scripts/check.py cpp --build-dir build --buildtype debugoptimized
 
   # Qt Quick / CMake 应用：各自跑自己的 scripts/check.py。
-  # Polaris 与 C 语言教程共享 Qt 安装环境，但不共享运行时、内容或构建目录。
+  # （polaris 已随 ADR 0015 迁到 Tauri 2，见下面的 tauri 矩阵。）
   qt-quick:
     name: ${{ matrix.app }}（${{ matrix.os }}）
-    if: contains(fromJSON('["all","machine","polaris"]'), inputs.app || 'all')
+    if: contains(fromJSON('["all","machine"]'), inputs.app || 'all')
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     strategy:
@@ -147,7 +147,7 @@ jobs:
       matrix:
         os: [macos-15, ubuntu-26.04]
         # 手动只选一个应用时矩阵只留它；tag 触发时 inputs 为空，按全量。
-        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["machine","polaris"]' || format('["{0}"]', inputs.app)) }}
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["machine"]' || format('["{0}"]', inputs.app)) }}
     # Linux 降级（ADR 0051）。macOS 这一档仍是正式门槛，Windows 见下一个 job。
     continue-on-error: ${{ matrix.os == 'ubuntu-26.04' }}
     env:
@@ -185,7 +185,7 @@ jobs:
   # Windows 是优先平台（ADR 0051），它的 job 就该是正式门槛。
   qt-quick-windows:
     name: ${{ matrix.app }}（Windows）
-    if: contains(fromJSON('["all","machine","polaris"]'), inputs.app || 'all')
+    if: contains(fromJSON('["all","machine"]'), inputs.app || 'all')
     runs-on: windows-latest
     timeout-minutes: 45
     env:
@@ -193,7 +193,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["machine","polaris"]' || format('["{0}"]', inputs.app)) }}
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["machine"]' || format('["{0}"]', inputs.app)) }}
 
     steps:
       - name: Check out source
@@ -240,17 +240,17 @@ jobs:
         env:
           CMAKE_PREFIX_PATH: ${{ github.workspace }}\Qt\6.8.1\msvc2022_64
 
-  # 三个 Tauri 应用：前端 + Rust 壳。每个应用跑自己的 scripts/check.py，
-  # 和本地是同一条命令（ADR 0007）。
+  # 四个 Tauri 应用：前端 + Rust 壳。每个应用跑自己的 scripts/check.py，
+  # 和本地是同一条命令（ADR 0007）。polaris 随 ADR 0015 从 Qt 矩阵迁入。
   tauri:
     name: ${{ matrix.app }}（${{ matrix.os }}）
-    if: contains(fromJSON('["all","dsa","english","mathematics"]'), inputs.app || 'all')
+    if: contains(fromJSON('["all","polaris","dsa","english","mathematics"]'), inputs.app || 'all')
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
-        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["dsa","english","mathematics"]' || format('["{0}"]', inputs.app)) }}
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["polaris","dsa","english","mathematics"]' || format('["{0}"]', inputs.app)) }}
         os: [macos-15, windows-latest, ubuntu-26.04]
     # Linux 降级：回归了报出来，但不阻塞整体结论（ADR 0051）
     continue-on-error: ${{ matrix.os == 'ubuntu-26.04' }}
