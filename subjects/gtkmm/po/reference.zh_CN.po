@@ -1220,9 +1220,7 @@ msgstr ""
 msgid ""
 "<code>m_box.append(m_Button1);\n"
 "m_box.append(m_Button2);</code>"
-msgstr ""
-"m_box.append(m_Button1);\n"
-"m_box.append(m_Button2);"
+msgstr "<code>m_box.append(m_Button1);\nm_box.append(m_Button2);</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:467
@@ -1352,9 +1350,7 @@ msgstr ""
 msgid ""
 "<code>m_button1.signal_clicked().connect( sigc::mem_fun(*this,\n"
 "  &amp;HelloWorld::on_button_clicked) );</code>"
-msgstr ""
-"m_button1.signal_clicked().connect( sigc::mem_fun(*this,\n"
-"  &amp;HelloWorld::on_button_clicked) );"
+msgstr "<code>m_button1.signal_clicked().connect( sigc::mem_fun(*this,\n  &amp;HelloWorld::on_button_clicked) );</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:508
@@ -1562,10 +1558,7 @@ msgid ""
 "<code>Gtk::Button button(\"example\");\n"
 "gtk_button_do_something_that_gtkmm_cannot(button.gobj());\n"
 "</code>"
-msgstr ""
-"\n"
-"Gtk::Button button(\"example\");\n"
-"gtk_button_do_something_that_gtkmm_cannot(button.gobj());\n"
+msgstr "<code>Gtk::Button button(\"example\");\ngtk_button_do_something_that_gtkmm_cannot(button.gobj());\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:553
@@ -1605,11 +1598,7 @@ msgid ""
 "Gtk::Button* button = Glib::wrap(cbutton);\n"
 "button-&gt;set_label(\"Now I speak C++ too!\");\n"
 "</code>"
-msgstr ""
-"\n"
-"GtkButton* cbutton = get_a_button();\n"
-"Gtk::Button* button = Glib::wrap(cbutton);\n"
-"button-&gt;set_label(\"Now I speak C++ too!\");\n"
+msgstr "<code>GtkButton* cbutton = get_a_button();\nGtk::Button* button = Glib::wrap(cbutton);\nbutton-&gt;set_label(\"Now I speak C++ too!\");\n</code>"
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:565
@@ -1758,20 +1747,7 @@ msgid ""
 "  //Member widgets:\n"
 "  Gtk::Button m_button;\n"
 "};</code>"
-msgstr ""
-"class HelloWorld : public Gtk::Window\n"
-"{\n"
-"public:\n"
-"  HelloWorld();\n"
-"  ~HelloWorld() override;\n"
-"\n"
-"protected:\n"
-"  //Signal handlers:\n"
-"  void on_button_clicked();\n"
-"\n"
-"  //Member widgets:\n"
-"  Gtk::Button m_button;\n"
-"};"
+msgstr "<code>class HelloWorld : public Gtk::Window\n{\npublic:\n  HelloWorld();\n  ~HelloWorld() override;\n\nprotected:\n  //Signal handlers:\n  void on_button_clicked();\n\n  //Member widgets:\n  Gtk::Button m_button;\n};</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:619
@@ -1812,15 +1788,7 @@ msgid ""
 "    &amp;HelloWorld::on_button_clicked));\n"
 "  set_child(m_button);\n"
 "}</code>"
-msgstr ""
-"HelloWorld::HelloWorld()\n"
-": m_button(\"Hello World\")\n"
-"{\n"
-"  m_button.set_margin(10);\n"
-"  m_button.signal_clicked().connect(sigc::mem_fun(*this,\n"
-"    &amp;HelloWorld::on_button_clicked));\n"
-"  set_child(m_button);\n"
-"}"
+msgstr "<code>HelloWorld::HelloWorld()\n: m_button(\"Hello World\")\n{\n  m_button.set_margin(10);\n  m_button.signal_clicked().connect(sigc::mem_fun(*this,\n    &amp;HelloWorld::on_button_clicked));\n  set_child(m_button);\n}</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:637
@@ -1886,12 +1854,7 @@ msgid ""
 "  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n"
 "  return app-&gt;make_window_and_run&lt;HelloWorld&gt;(argc, argv);\n"
 "}</code>"
-msgstr ""
-"int main(int argc, char* argv[])\n"
-"{\n"
-"  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n"
-"  return app-&gt;make_window_and_run&lt;HelloWorld&gt;(argc, argv);\n"
-"}"
+msgstr "<code>int main(int argc, char* argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n  return app-&gt;make_window_and_run&lt;HelloWorld&gt;(argc, argv);\n}</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:669
@@ -3088,13 +3051,7 @@ msgid ""
 "rb2-&gt;set_group(*rb1);\n"
 "rb3-&gt;set_group(*rb1);\n"
 "</code>"
-msgstr ""
-"\n"
-"auto rb1 = Gtk::make_managed&lt;Gtk::CheckButton&gt;(\"button1\");\n"
-"auto rb2 = Gtk::make_managed&lt;Gtk::CheckButton&gt;(\"button2\");\n"
-"auto rb3 = Gtk::make_managed&lt;Gtk::CheckButton&gt;(\"button3\");\n"
-"rb2-&gt;set_group(*rb1);\n"
-"rb3-&gt;set_group(*rb1);\n"
+msgstr "<code>auto rb1 = Gtk::make_managed&lt;Gtk::CheckButton&gt;(\"button1\");\nauto rb2 = Gtk::make_managed&lt;Gtk::CheckButton&gt;(\"button2\");\nauto rb3 = Gtk::make_managed&lt;Gtk::CheckButton&gt;(\"button3\");\nrb2-&gt;set_group(*rb1);\nrb3-&gt;set_group(*rb1);\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:1091
@@ -5180,11 +5137,7 @@ msgid ""
 "void set_orientation(Gtk::Orientation orientation);\n"
 "void set_spacing(int spacing);\n"
 "void set_homogeneous(bool homogeneous = true);</code>"
-msgstr ""
-"Gtk::Box(Gtk::Orientation orientation = Gtk::Orientation::HORIZONTAL, int spacing = 0);\n"
-"void set_orientation(Gtk::Orientation orientation);\n"
-"void set_spacing(int spacing);\n"
-"void set_homogeneous(bool homogeneous = true);"
+msgstr "<code>Gtk::Box(Gtk::Orientation orientation = Gtk::Orientation::HORIZONTAL, int spacing = 0);\nvoid set_orientation(Gtk::Orientation orientation);\nvoid set_spacing(int spacing);\nvoid set_homogeneous(bool homogeneous = true);</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2129
@@ -6613,19 +6566,7 @@ msgid ""
 "};\n"
 "\n"
 "ModelColumns m_Columns;</code>"
-msgstr ""
-"class ModelColumns : public Gtk::TreeModelColumnRecord\n"
-"{\n"
-"public:\n"
-"\n"
-"  ModelColumns()\n"
-"    { add(m_col_text); add(m_col_number); }\n"
-"\n"
-"  Gtk::TreeModelColumn&lt;Glib::ustring&gt; m_col_text;\n"
-"  Gtk::TreeModelColumn&lt;int&gt; m_col_number;\n"
-"};\n"
-"\n"
-"ModelColumns m_Columns;"
+msgstr "<code>class ModelColumns : public Gtk::TreeModelColumnRecord\n{\npublic:\n\n  ModelColumns()\n    { add(m_col_text); add(m_col_number); }\n\n  Gtk::TreeModelColumn&lt;Glib::ustring&gt; m_col_text;\n  Gtk::TreeModelColumn&lt;int&gt; m_col_number;\n};\n\nModelColumns m_Columns;</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2741
@@ -6644,9 +6585,7 @@ msgstr ""
 msgid ""
 "<code>Glib::RefPtr&lt;Gtk::ListStore&gt; refListStore =\n"
 "    Gtk::ListStore::create(m_Columns);</code>"
-msgstr ""
-"Glib::RefPtr&lt;Gtk::ListStore&gt; refListStore =\n"
-"    Gtk::ListStore::create(m_Columns);"
+msgstr "<code>Glib::RefPtr&lt;Gtk::ListStore&gt; refListStore =\n    Gtk::ListStore::create(m_Columns);</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2747
@@ -6724,9 +6663,7 @@ msgstr ""
 msgid ""
 "<code>auto iter_child =\n"
 "    m_refTreeStore-&gt;append(row.children());</code>"
-msgstr ""
-"auto iter_child =\n"
-"    m_refTreeStore-&gt;append(row.children());"
+msgstr "<code>auto iter_child =\n    m_refTreeStore-&gt;append(row.children());</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:2783
@@ -6774,9 +6711,7 @@ msgstr ""
 msgid ""
 "<code>auto strText = row[m_Columns.m_col_text];\n"
 "auto number = row[m_Columns.m_col_number];</code>"
-msgstr ""
-"auto strText = row[m_Columns.m_col_text];\n"
-"auto number = row[m_Columns.m_col_number];"
+msgstr "<code>auto strText = row[m_Columns.m_col_text];\nauto number = row[m_Columns.m_col_number];</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2803
@@ -6795,9 +6730,7 @@ msgstr ""
 msgid ""
 "<code>//compiler error - no conversion from ustring to int.\n"
 "int number = row[m_Columns.m_col_text];</code>"
-msgstr ""
-"//compiler error - no conversion from ustring to int.\n"
-"int number = row[m_Columns.m_col_text];"
+msgstr "<code>//compiler error - no conversion from ustring to int.\nint number = row[m_Columns.m_col_text];</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:2812
@@ -6970,16 +6903,7 @@ msgid ""
 "pColumn-&gt;pack_start(m_columns.iconname);\n"
 "\n"
 "m_TreeView.append_column(*pColumn);</code>"
-msgstr ""
-"\n"
-"auto pColumn = Gtk::make_managed&lt;Gtk::TreeView::Column&gt;(\"Icon Name\");\n"
-"\n"
-"// m_columns.icon and m_columns.iconname are columns in the model.\n"
-"// pColumn is the column in the TreeView:\n"
-"pColumn-&gt;pack_start(m_columns.icon, /* expand= */ false);\n"
-"pColumn-&gt;pack_start(m_columns.iconname);\n"
-"\n"
-"m_TreeView.append_column(*pColumn);"
+msgstr "<code>auto pColumn = Gtk::make_managed&lt;Gtk::TreeView::Column&gt;(\"Icon Name\");\n\n// m_columns.icon and m_columns.iconname are columns in the model.\n// pColumn is the column in the TreeView:\npColumn-&gt;pack_start(m_columns.icon, /* expand= */ false);\npColumn-&gt;pack_start(m_columns.iconname);\n\nm_TreeView.append_column(*pColumn);</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:2899
@@ -7031,14 +6955,7 @@ msgid ""
 "  auto pRenderer = static_cast&lt;Gtk::CellRendererToggle*&gt;(pColumn-&gt;get_first_cell());\n"
 "  pColumn-&gt;add_attribute(pRenderer-&gt;property_visible(), m_columns.visible);\n"
 "  pColumn-&gt;add_attribute(pRenderer-&gt;property_activatable(), m_columns.world);</code>"
-msgstr ""
-"auto cols_count = m_TreeView.append_column_editable(\"Alex\", m_columns.alex);\n"
-"auto pColumn = m_TreeView.get_column(cols_count-1);\n"
-"if(pColumn)\n"
-"{\n"
-"  auto pRenderer = static_cast&lt;Gtk::CellRendererToggle*&gt;(pColumn-&gt;get_first_cell());\n"
-"  pColumn-&gt;add_attribute(pRenderer-&gt;property_visible(), m_columns.visible);\n"
-"  pColumn-&gt;add_attribute(pRenderer-&gt;property_activatable(), m_columns.world);"
+msgstr "<code>auto cols_count = m_TreeView.append_column_editable(\"Alex\", m_columns.alex);\nauto pColumn = m_TreeView.get_column(cols_count-1);\nif(pColumn)\n{\n  auto pRenderer = static_cast&lt;Gtk::CellRendererToggle*&gt;(pColumn-&gt;get_first_cell());\n  pColumn-&gt;add_attribute(pRenderer-&gt;property_visible(), m_columns.visible);\n  pColumn-&gt;add_attribute(pRenderer-&gt;property_activatable(), m_columns.world);</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2917
@@ -7065,13 +6982,7 @@ msgid ""
 "    sigc::bind( sigc::mem_fun(*this,\n"
 "        &amp;Example_TreeView_TreeStore::on_cell_toggled), m_columns.dave)\n"
 ");</code>"
-msgstr ""
-"\n"
-"auto pRenderer = Gtk::make_managed&lt;Gtk::CellRendererToggle&gt;();\n"
-"pRenderer-&gt;signal_toggled().connect(\n"
-"    sigc::bind( sigc::mem_fun(*this,\n"
-"        &amp;Example_TreeView_TreeStore::on_cell_toggled), m_columns.dave)\n"
-");"
+msgstr "<code>auto pRenderer = Gtk::make_managed&lt;Gtk::CellRendererToggle&gt;();\npRenderer-&gt;signal_toggled().connect(\n    sigc::bind( sigc::mem_fun(*this,\n        &amp;Example_TreeView_TreeStore::on_cell_toggled), m_columns.dave)\n);</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:2929 C/index-in.docbook:3293
@@ -7243,14 +7154,7 @@ msgid ""
 "  auto row = *iter;\n"
 "  //Do something with the row - see above for set/get.\n"
 "}</code>"
-msgstr ""
-"\n"
-"auto children = refModel-&gt;children();\n"
-"for (auto iter = children.begin(), end = children.end(); iter != end; ++iter)\n"
-"{\n"
-"  auto row = *iter;\n"
-"  //Do something with the row - see above for set/get.\n"
-"}"
+msgstr "<code>auto children = refModel-&gt;children();\nfor (auto iter = children.begin(), end = children.end(); iter != end; ++iter)\n{\n  auto row = *iter;\n  //Do something with the row - see above for set/get.\n}</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3004
@@ -7280,12 +7184,7 @@ msgid ""
 "{\n"
 "  //Do something with the row - see above for set/get.\n"
 "}</code>"
-msgstr ""
-"\n"
-"for (auto row: refModel-&gt;children())\n"
-"{\n"
-"  //Do something with the row - see above for set/get.\n"
-"}"
+msgstr "<code>for (auto row: refModel-&gt;children())\n{\n  //Do something with the row - see above for set/get.\n}</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:3014
@@ -7383,13 +7282,7 @@ msgid ""
 "  auto row = *iter;\n"
 "  //Do something with the row.\n"
 "}</code>"
-msgstr ""
-"auto iter = refTreeSelection-&gt;get_selected();\n"
-"if(iter) //If anything is selected\n"
-"{\n"
-"  auto row = *iter;\n"
-"  //Do something with the row.\n"
-"}"
+msgstr "<code>auto iter = refTreeSelection-&gt;get_selected();\nif(iter) //If anything is selected\n{\n  auto row = *iter;\n  //Do something with the row.\n}</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3060
@@ -7428,16 +7321,7 @@ msgid ""
 "  auto row = *iter;\n"
 "  //Do something with the row.\n"
 "}</code>"
-msgstr ""
-"refTreeSelection-&gt;selected_foreach_iter(\n"
-"    sigc::mem_fun(*this, &amp;TheClass::selected_row_callback) );\n"
-"\n"
-"void TheClass::selected_row_callback(\n"
-"    const Gtk::TreeModel::const_iterator&amp; iter)\n"
-"{\n"
-"  auto row = *iter;\n"
-"  //Do something with the row.\n"
-"}"
+msgstr "<code>refTreeSelection-&gt;selected_foreach_iter(\n    sigc::mem_fun(*this, &amp;TheClass::selected_row_callback) );\n\nvoid TheClass::selected_row_callback(\n    const Gtk::TreeModel::const_iterator&amp; iter)\n{\n  auto row = *iter;\n  //Do something with the row.\n}</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:3080
@@ -7462,10 +7346,7 @@ msgid ""
 "<code>refTreeSelection-&gt;signal_changed().connect(\n"
 "    sigc::mem_fun(*this, &amp;Example_IconTheme::on_selection_changed)\n"
 ");</code>"
-msgstr ""
-"refTreeSelection-&gt;signal_changed().connect(\n"
-"    sigc::mem_fun(*this, &amp;Example_IconTheme::on_selection_changed)\n"
-");"
+msgstr "<code>refTreeSelection-&gt;signal_changed().connect(\n    sigc::mem_fun(*this, &amp;Example_IconTheme::on_selection_changed)\n);</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:3092
@@ -7501,9 +7382,7 @@ msgstr ""
 msgid ""
 "<code>m_refTreeSelection-&gt;set_select_function( sigc::mem_fun(*this,\n"
 "    &amp;DemoWindow::select_function) );</code>"
-msgstr ""
-"m_refTreeSelection-&gt;set_select_function( sigc::mem_fun(*this,\n"
-"    &amp;DemoWindow::select_function) );"
+msgstr "<code>m_refTreeSelection-&gt;set_select_function( sigc::mem_fun(*this,\n    &amp;DemoWindow::select_function) );</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3106
@@ -7529,14 +7408,7 @@ msgid ""
 "  const auto iter = model-&gt;get_iter(path);\n"
 "  return iter-&gt;children().empty(); // only allow leaf nodes to be selected\n"
 "}</code>"
-msgstr ""
-"bool DemoWindow::select_function(\n"
-"    const Glib::RefPtr&lt;Gtk::TreeModel&gt;&amp; model,\n"
-"    const Gtk::TreeModel::Path&amp; path, bool)\n"
-"{\n"
-"  const auto iter = model-&gt;get_iter(path);\n"
-"  return iter-&gt;children().empty(); // only allow leaf nodes to be selected\n"
-"}"
+msgstr "<code>bool DemoWindow::select_function(\n    const Glib::RefPtr&lt;Gtk::TreeModel&gt;&amp; model,\n    const Gtk::TreeModel::Path&amp; path, bool)\n{\n  const auto iter = model-&gt;get_iter(path);\n  return iter-&gt;children().empty(); // only allow leaf nodes to be selected\n}</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:3119
@@ -7563,10 +7435,7 @@ msgid ""
 "<code>auto row = m_refModel-&gt;children()[5]; //The sixth row.\n"
 "if(row)\n"
 "  refTreeSelection-&gt;select(row.get_iter());</code>"
-msgstr ""
-"auto row = m_refModel-&gt;children()[5]; //The sixth row.\n"
-"if(row)\n"
-"  refTreeSelection-&gt;select(row.get_iter());"
+msgstr "<code>auto row = m_refModel-&gt;children()[5]; //The sixth row.\nif(row)\n  refTreeSelection-&gt;select(row.get_iter());</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3129
@@ -7584,10 +7453,7 @@ msgid ""
 "<code>auto iter = m_refModel-&gt;children().begin()\n"
 "if(iter)\n"
 "  refTreeSelection-&gt;select(iter);</code>"
-msgstr ""
-"auto iter = m_refModel-&gt;children().begin()\n"
-"if(iter)\n"
-"  refTreeSelection-&gt;select(iter);"
+msgstr "<code>auto iter = m_refModel-&gt;children().begin()\nif(iter)\n  refTreeSelection-&gt;select(iter);</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3141
@@ -7649,10 +7515,7 @@ msgid ""
 "<code>auto pColumn = treeview.get_column(0);\n"
 "if(pColumn)\n"
 "  pColumn-&gt;set_sort_column(m_columns.m_col_id);</code>"
-msgstr ""
-"auto pColumn = treeview.get_column(0);\n"
-"if(pColumn)\n"
-"  pColumn-&gt;set_sort_column(m_columns.m_col_id);"
+msgstr "<code>auto pColumn = treeview.get_column(0);\nif(pColumn)\n  pColumn-&gt;set_sort_column(m_columns.m_col_id);</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:3159
@@ -7691,10 +7554,7 @@ msgid ""
 "<code>auto sorted_model = Gtk::TreeModelSort::create(model);\n"
 "sorted_model-&gt;set_sort_column(columns.m_col_name, Gtk::SortType::ASCENDING);\n"
 "treeview.set_model(sorted_model);</code>"
-msgstr ""
-"auto sorted_model = Gtk::TreeModelSort::create(model);\n"
-"sorted_model-&gt;set_sort_column(columns.m_col_name, Gtk::SORT_ASCENDING);\n"
-"treeview.set_model(sorted_model);"
+msgstr "<code>auto sorted_model = Gtk::TreeModelSort::create(model);\nsorted_model-&gt;set_sort_column(columns.m_col_name, Gtk::SortType::ASCENDING);\ntreeview.set_model(sorted_model);</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3173
@@ -7737,20 +7597,7 @@ msgid ""
 "    }\n"
 "  }\n"
 "}</code>"
-msgstr ""
-"void ExampleWindow::on_button_delete()\n"
-"{\n"
-"  auto refTreeSelection = m_treeview.get_selection();\n"
-"  if(refTreeSelection)\n"
-"  {\n"
-"    auto sorted_iter = m_refTreeSelection-&gt;get_selected();\n"
-"    if(sorted_iter)\n"
-"    {\n"
-"      auto iter = m_refModelSort-&gt;convert_iter_to_child_iter(sorted_iter);\n"
-"      m_refModel-&gt;erase(iter);\n"
-"    }\n"
-"  }\n"
-"}"
+msgstr "<code>void ExampleWindow::on_button_delete()\n{\n  auto refTreeSelection = m_treeview.get_selection();\n  if(refTreeSelection)\n  {\n    auto sorted_iter = m_refTreeSelection-&gt;get_selected();\n    if(sorted_iter)\n    {\n      auto iter = m_refModelSort-&gt;convert_iter_to_child_iter(sorted_iter);\n      m_refModel-&gt;erase(iter);\n    }\n  }\n}</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3189
@@ -8282,19 +8129,7 @@ msgid ""
 "else\n"
 "  set_nothing_chosen(); // Your own function.\n"
 "</code>"
-msgstr ""
-"Gtk::TreeModel::iterator iter = m_Combo.get_active();\n"
-"if(iter)\n"
-"{\n"
-"  auto row = *iter;\n"
-"\n"
-"  //Get the data for the selected row, using our knowledge\n"
-"  //of the tree model:\n"
-"  auto id = row[m_Columns.m_col_id];\n"
-"  set_something_id_chosen(id); //Your own function.\n"
-"}\n"
-"else\n"
-"  set_nothing_chosen(); //Your own function."
+msgstr "<code>unsigned int sel = m_DropDown.get_selected();\nif (sel != GTK_INVALID_LIST_POSITION)\n{\n  // Get the data for the selected row, using our knowledge of the list model:\n  auto id = m_ListStore-&gt;get_item(sel).m_col_id;\n  set_some_id_chosen(id); // Your own function.\n}\nelse\n  set_nothing_chosen(); // Your own function.\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:3446 C/index-in.docbook:3597 C/index-in.docbook:3658
@@ -8327,9 +8162,7 @@ msgid ""
 "<code>m_DropDown.property_selected().signal_changed().connect(\n"
 "  sigc::mem_fun(*this, &amp;ExampleWindow::on_dropdown_changed));\n"
 "</code>"
-msgstr ""
-"m_combo.signal_changed().connect( sigc::mem_fun(*this,\n"
-"      &amp;ExampleWindow::on_combo_changed) );"
+msgstr "<code>m_DropDown.property_selected().signal_changed().connect(\n  sigc::mem_fun(*this, &amp;ExampleWindow::on_dropdown_changed));\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:3458
@@ -8643,18 +8476,7 @@ msgid ""
 "};\n"
 "\n"
 "ModelColumns m_columns;</code>"
-msgstr ""
-"class ModelColumns : public Gtk::TreeModel::ColumnRecord\n"
-"{\n"
-"public:\n"
-"  ModelColumns()\n"
-"  { add(m_col_id); add(m_col_name); }\n"
-"\n"
-"  Gtk::TreeModelColumn&lt;int&gt; m_col_id;\n"
-"  Gtk::TreeModelColumn&lt;Glib::ustring&gt; m_col_name;\n"
-"};\n"
-"\n"
-"ModelColumns m_columns;"
+msgstr "<code>class ModelColumns : public Gtk::TreeModel::ColumnRecord\n{\npublic:\n  ModelColumns()\n  { add(m_col_id); add(m_col_name); }\n\n  Gtk::TreeModelColumn&lt;int&gt; m_col_id;\n  Gtk::TreeModelColumn&lt;Glib::ustring&gt; m_col_name;\n};\n\nModelColumns m_columns;</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3574
@@ -8731,19 +8553,7 @@ msgid ""
 "}\n"
 "else\n"
 "  set_nothing_chosen(); //Your own function.</code>"
-msgstr ""
-"Gtk::TreeModel::iterator iter = m_Combo.get_active();\n"
-"if(iter)\n"
-"{\n"
-"  auto row = *iter;\n"
-"\n"
-"  //Get the data for the selected row, using our knowledge\n"
-"  //of the tree model:\n"
-"  auto id = row[m_Columns.m_col_id];\n"
-"  set_something_id_chosen(id); //Your own function.\n"
-"}\n"
-"else\n"
-"  set_nothing_chosen(); //Your own function."
+msgstr "<code>Gtk::TreeModel::iterator iter = m_Combo.get_active();\nif(iter)\n{\n  auto row = *iter;\n\n  //Get the data for the selected row, using our knowledge\n  //of the tree model:\n  auto id = row[m_Columns.m_col_id];\n  set_something_id_chosen(id); //Your own function.\n}\nelse\n  set_nothing_chosen(); //Your own function.</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3599
@@ -8764,9 +8574,7 @@ msgstr ""
 msgid ""
 "<code>m_combo.signal_changed().connect( sigc::mem_fun(*this,\n"
 "      &amp;ExampleWindow::on_combo_changed) );</code>"
-msgstr ""
-"m_combo.signal_changed().connect( sigc::mem_fun(*this,\n"
-"      &amp;ExampleWindow::on_combo_changed) );"
+msgstr "<code>m_combo.signal_changed().connect( sigc::mem_fun(*this,\n      &amp;ExampleWindow::on_combo_changed) );</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:3607 C/index-in.docbook:3693
@@ -8976,20 +8784,7 @@ msgid ""
 "    sigc::mem_fun(*this, &amp;ExampleWindow::on_entry_focus_leave));\n"
 "  entry-&gt;add_controller(controller);\n"
 "}</code>"
-msgstr ""
-"auto entry = m_Combo.get_entry();\n"
-"if (entry)\n"
-"{\n"
-"  // Alternatively you can connect to m_Combo.signal_changed().\n"
-"  entry-&gt;signal_changed().connect(sigc::mem_fun(*this,\n"
-"    &amp;ExampleWindow::on_entry_changed) );\n"
-"\n"
-"  entry-&gt;signal_activate().connect(sigc::mem_fun(*this,\n"
-"    &amp;ExampleWindow::on_entry_activate) );\n"
-"\n"
-"  entry-&gt;signal_focus_out_event().connect(sigc::mem_fun(*this,\n"
-"    &amp;ExampleWindow::on_entry_focus_out_event) );\n"
-"}"
+msgstr "<code>auto entry = m_Combo.get_entry();\nif (entry)\n{\n  // Alternatively you can connect to m_Combo.signal_changed().\n  entry-&gt;signal_changed().connect(sigc::mem_fun(*this,\n    &amp;ExampleWindow::on_entry_changed));\n  entry-&gt;signal_activate().connect(sigc::mem_fun(*this,\n    &amp;ExampleWindow::on_entry_activate));\n  // The Entry shall receive focus-leave events.\n  auto controller = Gtk::EventControllerFocus::create();\n  m_ConnectionFocusLeave = controller-&gt;signal_leave().connect(\n    sigc::mem_fun(*this, &amp;ExampleWindow::on_entry_focus_leave));\n  entry-&gt;add_controller(controller);\n}</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3684
@@ -9194,9 +8989,7 @@ msgstr ""
 msgid ""
 "<code>auto refTagMatch = Gtk::TextBuffer::Tag::create();\n"
 "refTagMatch-&gt;property_background() = \"orange\";</code>"
-msgstr ""
-"auto refTagMatch = Gtk::TextBuffer::Tag::create();\n"
-"refTagMatch-&gt;property_background() = \"orange\";"
+msgstr "<code>auto refTagMatch = Gtk::TextBuffer::Tag::create();\nrefTagMatch-&gt;property_background() = \"orange\";</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3778
@@ -9261,12 +9054,7 @@ msgid ""
 "//Hopefully a future version of gtkmm will have a set_tag_table() method,\n"
 "//for use after creation of the buffer.\n"
 "auto refBuffer = Gtk::TextBuffer::create(refTagTable);</code>"
-msgstr ""
-"auto refTagTable = Gtk::TextBuffer::TagTable::create();\n"
-"refTagTable-&gt;add(refTagMatch);\n"
-"//Hopefully a future version of <application>gtkmm</application> will have a set_tag_table() method,\n"
-"//for use after creation of the buffer.\n"
-"auto refBuffer = Gtk::TextBuffer::create(refTagTable);"
+msgstr "<code>auto refTagTable = Gtk::TextBuffer::TagTable::create();\nrefTagTable-&gt;add(refTagMatch);\n//Hopefully a future version of gtkmm will have a set_tag_table() method,\n//for use after creation of the buffer.\nauto refBuffer = Gtk::TextBuffer::create(refTagTable);</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3808
@@ -9682,15 +9470,7 @@ msgid ""
 "\n"
 "insert_action_group(\"example\", m_refActionGroup);\n"
 "</code>"
-msgstr ""
-"\n"
-"m_refActionGroup = Gio::SimpleActionGroup::create();\n"
-"\n"
-"m_refActionGroup-&gt;add_action(\"new\", sigc::mem_fun(*this, &amp;ExampleWindow::on_action_file_new));\n"
-"m_refActionGroup-&gt;add_action(\"open\", sigc::mem_fun(*this, &amp;ExampleWindow::on_action_file_open));\n"
-"m_refActionGroup-&gt;add_action(\"quit\", sigc::mem_fun(*this, &amp;ExampleWindow::on_action_file_quit));\n"
-"\n"
-"insert_action_group(\"example\", m_refActionGroup);\n"
+msgstr "<code>m_refActionGroup = Gio::SimpleActionGroup::create();\n\nm_refActionGroup-&gt;add_action(\"new\", sigc::mem_fun(*this, &amp;ExampleWindow::on_action_file_new));\nm_refActionGroup-&gt;add_action(\"open\", sigc::mem_fun(*this, &amp;ExampleWindow::on_action_file_open));\nm_refActionGroup-&gt;add_action(\"quit\", sigc::mem_fun(*this, &amp;ExampleWindow::on_action_file_quit));\n\ninsert_action_group(\"example\", m_refActionGroup);\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4020
@@ -9747,14 +9527,7 @@ msgid ""
 "app-&gt;set_accel_for_action(\"example.copy\", \"&lt;Primary&gt;c\");\n"
 "app-&gt;set_accel_for_action(\"example.paste\", \"&lt;Primary&gt;v\");\n"
 "</code>"
-msgstr ""
-"\n"
-"m_refBuilder = Gtk::Builder::create();\n"
-"\n"
-"app-&gt;set_accel_for_action(\"example.new\", \"&lt;Primary&gt;n\");\n"
-"app-&gt;set_accel_for_action(\"example.quit\", \"&lt;Primary&gt;q\");\n"
-"app-&gt;set_accel_for_action(\"example.copy\", \"&lt;Primary&gt;c\");\n"
-"app-&gt;set_accel_for_action(\"example.paste\", \"&lt;Primary&gt;v\");\n"
+msgstr "<code>m_refBuilder = Gtk::Builder::create();\n\napp-&gt;set_accel_for_action(\"example.new\", \"&lt;Primary&gt;n\");\napp-&gt;set_accel_for_action(\"example.quit\", \"&lt;Primary&gt;q\");\napp-&gt;set_accel_for_action(\"example.copy\", \"&lt;Primary&gt;c\");\napp-&gt;set_accel_for_action(\"example.paste\", \"&lt;Primary&gt;v\");\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4059
@@ -9847,46 +9620,7 @@ msgid ""
 "m_refBuilder-&gt;add_from_string(ui_info);\n"
 "m_refBuilder-&gt;add_from_resource(\"/toolbar/toolbar.ui\");\n"
 "</code>"
-msgstr ""
-"\n"
-"Glib::ustring ui_info =\n"
-"  \"&lt;interface&gt;\"\n"
-"  \"  &lt;menu id='menubar'&gt;\"\n"
-"  \"    &lt;submenu&gt;\"\n"
-"  \"      &lt;attribute name='label' translatable='yes'&gt;_File&lt;/attribute&gt;\"\n"
-"  \"      &lt;section&gt;\"\n"
-"  \"        &lt;item&gt;\"\n"
-"  \"          &lt;attribute name='label' translatable='yes'&gt;_New&lt;/attribute&gt;\"\n"
-"  \"          &lt;attribute name='action'&gt;example.new&lt;/attribute&gt;\"\n"
-"  \"          &lt;attribute name='accel'&gt;&amp;lt;Primary&amp;gt;n&lt;/attribute&gt;\"\n"
-"  \"        &lt;/item&gt;\"\n"
-"  \"      &lt;/section&gt;\"\n"
-"  \"      &lt;section&gt;\"\n"
-"  \"        &lt;item&gt;\"\n"
-"  \"          &lt;attribute name='label' translatable='yes'&gt;_Quit&lt;/attribute&gt;\"\n"
-"  \"          &lt;attribute name='action'&gt;example.quit&lt;/attribute&gt;\"\n"
-"  \"          &lt;attribute name='accel'&gt;&amp;lt;Primary&amp;gt;q&lt;/attribute&gt;\"\n"
-"  \"        &lt;/item&gt;\"\n"
-"  \"      &lt;/section&gt;\"\n"
-"  \"    &lt;/submenu&gt;\"\n"
-"  \"    &lt;submenu&gt;\"\n"
-"  \"      &lt;attribute name='label' translatable='yes'&gt;_Edit&lt;/attribute&gt;\"\n"
-"  \"      &lt;item&gt;\"\n"
-"  \"        &lt;attribute name='label' translatable='yes'&gt;_Copy&lt;/attribute&gt;\"\n"
-"  \"        &lt;attribute name='action'&gt;example.copy&lt;/attribute&gt;\"\n"
-"  \"        &lt;attribute name='accel'&gt;&amp;lt;Primary&amp;gt;c&lt;/attribute&gt;\"\n"
-"  \"      &lt;/item&gt;\"\n"
-"  \"      &lt;item&gt;\"\n"
-"  \"        &lt;attribute name='label' translatable='yes'&gt;_Paste&lt;/attribute&gt;\"\n"
-"  \"        &lt;attribute name='action'&gt;example.paste&lt;/attribute&gt;\"\n"
-"  \"        &lt;attribute name='accel'&gt;&amp;lt;Primary&amp;gt;v&lt;/attribute&gt;\"\n"
-"  \"      &lt;/item&gt;\"\n"
-"  \"    &lt;/submenu&gt;\"\n"
-"  \"  &lt;/menu&gt;\"\n"
-"  \"&lt;/interface&gt;\";\n"
-"\n"
-"m_refBuilder-&gt;add_from_string(ui_info);\n"
-"m_refBuilder-&gt;add_from_resource(\"/toolbar/toolbar.glade\");\n"
+msgstr "<code>Glib::ustring ui_info =\n  \"&lt;interface&gt;\"\n  \"  &lt;menu id='menubar'&gt;\"\n  \"    &lt;submenu&gt;\"\n  \"      &lt;attribute name='label' translatable='yes'&gt;_File&lt;/attribute&gt;\"\n  \"      &lt;section&gt;\"\n  \"        &lt;item&gt;\"\n  \"          &lt;attribute name='label' translatable='yes'&gt;_New&lt;/attribute&gt;\"\n  \"          &lt;attribute name='action'&gt;example.new&lt;/attribute&gt;\"\n  \"        &lt;/item&gt;\"\n  \"      &lt;/section&gt;\"\n  \"      &lt;section&gt;\"\n  \"        &lt;item&gt;\"\n  \"          &lt;attribute name='label' translatable='yes'&gt;_Quit&lt;/attribute&gt;\"\n  \"          &lt;attribute name='action'&gt;example.quit&lt;/attribute&gt;\"\n  \"        &lt;/item&gt;\"\n  \"      &lt;/section&gt;\"\n  \"    &lt;/submenu&gt;\"\n  \"    &lt;submenu&gt;\"\n  \"      &lt;attribute name='label' translatable='yes'&gt;_Edit&lt;/attribute&gt;\"\n  \"      &lt;item&gt;\"\n  \"        &lt;attribute name='label' translatable='yes'&gt;_Copy&lt;/attribute&gt;\"\n  \"        &lt;attribute name='action'&gt;example.copy&lt;/attribute&gt;\"\n  \"      &lt;/item&gt;\"\n  \"      &lt;item&gt;\"\n  \"        &lt;attribute name='label' translatable='yes'&gt;_Paste&lt;/attribute&gt;\"\n  \"        &lt;attribute name='action'&gt;example.paste&lt;/attribute&gt;\"\n  \"      &lt;/item&gt;\"\n  \"    &lt;/submenu&gt;\"\n  \"  &lt;/menu&gt;\"\n  \"&lt;/interface&gt;\";\n\nm_refBuilder-&gt;add_from_string(ui_info);\nm_refBuilder-&gt;add_from_resource(\"/toolbar/toolbar.ui\");\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4101
@@ -9938,14 +9672,7 @@ msgid ""
 "auto toolbar = m_refBuilder-&gt;get_widget&lt;Gtk::Box&gt;(\"toolbar\");\n"
 "m_Box.append(*toolbar);\n"
 "</code>"
-msgstr ""
-"\n"
-"auto gmenu = m_refBuilder-&gt;get_object&lt;Gio::Menu&gt;(\"menubar\");\n"
-"auto pMenuBar = Gtk::make_managed&lt;Gtk::MenuBar&gt;(gmenu);\n"
-"m_Box.append(*pMenuBar);\n"
-"\n"
-"auto toolbar = m_refBuilder-&gt;get_widget&lt;Gtk::Toolbar&gt;(\"toolbar\");\n"
-"m_Box.append(*toolbar);\n"
+msgstr "<code>auto gmenu = m_refBuilder-&gt;get_object&lt;Gio::Menu&gt;(\"menubar\");\nauto pMenuBar = Gtk::make_managed&lt;Gtk::PopoverMenuBar&gt;(gmenu);\nm_Box.append(*pMenuBar);\n\nauto toolbar = m_refBuilder-&gt;get_widget&lt;Gtk::Box&gt;(\"toolbar\");\nm_Box.append(*toolbar);\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:4124
@@ -10024,32 +9751,7 @@ msgid ""
 "auto gmenu = m_refBuilder-&gt;get_object&lt;Gio::Menu&gt;(\"menu-examplepopup\");\n"
 "m_MenuPopup.set_menu_model(gmenu);\n"
 "</code>"
-msgstr ""
-"\n"
-"Glib::ustring ui_info =\n"
-"  \"&lt;interface&gt;\"\n"
-"  \"  &lt;menu id='menu-examplepopup'&gt;\"\n"
-"  \"    &lt;section&gt;\"\n"
-"  \"      &lt;item&gt;\"\n"
-"  \"        &lt;attribute name='label' translatable='yes'&gt;Edit&lt;/attribute&gt;\"\n"
-"  \"        &lt;attribute name='action'&gt;examplepopup.edit&lt;/attribute&gt;\"\n"
-"  \"      &lt;/item&gt;\"\n"
-"  \"      &lt;item&gt;\"\n"
-"  \"        &lt;attribute name='label' translatable='yes'&gt;Process&lt;/attribute&gt;\"\n"
-"  \"        &lt;attribute name='action'&gt;examplepopup.process&lt;/attribute&gt;\"\n"
-"  \"      &lt;/item&gt;\"\n"
-"  \"      &lt;item&gt;\"\n"
-"  \"        &lt;attribute name='label' translatable='yes'&gt;Remove&lt;/attribute&gt;\"\n"
-"  \"        &lt;attribute name='action'&gt;examplepopup.remove&lt;/attribute&gt;\"\n"
-"  \"      &lt;/item&gt;\"\n"
-"  \"    &lt;/section&gt;\"\n"
-"  \"  &lt;/menu&gt;\"\n"
-"  \"&lt;/interface&gt;\";\n"
-"\n"
-"m_refBuilder-&gt;add_from_string(ui_info);\n"
-"\n"
-"auto gmenu = m_refBuilder-&gt;get_object&lt;Gio::Menu&gt;(\"menu-examplepopup\");\n"
-"m_pMenuPopup = std::make_unique&lt;Gtk::Menu&gt;(gmenu);\n"
+msgstr "<code>Glib::ustring ui_info =\n  \"&lt;interface&gt;\"\n  \"  &lt;menu id='menu-examplepopup'&gt;\"\n  \"    &lt;section&gt;\"\n  \"      &lt;item&gt;\"\n  \"        &lt;attribute name='label' translatable='yes'&gt;Edit&lt;/attribute&gt;\"\n  \"        &lt;attribute name='action'&gt;examplepopup.edit&lt;/attribute&gt;\"\n  \"      &lt;/item&gt;\"\n  \"      &lt;item&gt;\"\n  \"        &lt;attribute name='label' translatable='yes'&gt;Process&lt;/attribute&gt;\"\n  \"        &lt;attribute name='action'&gt;examplepopup.process&lt;/attribute&gt;\"\n  \"      &lt;/item&gt;\"\n  \"      &lt;item&gt;\"\n  \"        &lt;attribute name='label' translatable='yes'&gt;Remove&lt;/attribute&gt;\"\n  \"        &lt;attribute name='action'&gt;examplepopup.remove&lt;/attribute&gt;\"\n  \"      &lt;/item&gt;\"\n  \"    &lt;/section&gt;\"\n  \"  &lt;/menu&gt;\"\n  \"&lt;/interface&gt;\";\n\nm_refBuilder-&gt;add_from_string(ui_info);\n\nauto gmenu = m_refBuilder-&gt;get_object&lt;Gio::Menu&gt;(\"menu-examplepopup\");\nm_MenuPopup.set_menu_model(gmenu);\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4160
@@ -10186,15 +9888,7 @@ msgid ""
 "  &lt;/gresource&gt;\n"
 "&lt;/gresources&gt;\n"
 "</code>"
-msgstr ""
-"\n"
-"&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;\n"
-"&lt;gresources&gt;\n"
-"  &lt;gresource prefix=\"/toolbar\"&gt;\n"
-"    &lt;file preprocess=\"xml-stripblanks\"&gt;toolbar.glade&lt;/file&gt;\n"
-"    &lt;file&gt;rain.png&lt;/file&gt;\n"
-"  &lt;/gresource&gt;\n"
-"&lt;/gresources&gt;\n"
+msgstr "<code>&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;\n&lt;gresources&gt;\n  &lt;gresource prefix=\"/toolbar\"&gt;\n    &lt;file preprocess=\"xml-stripblanks\"&gt;toolbar.ui&lt;/file&gt;\n    &lt;file&gt;rain.png&lt;/file&gt;\n  &lt;/gresource&gt;\n&lt;/gresources&gt;\n</code>"
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:4215
@@ -10465,14 +10159,7 @@ msgid ""
 "  double step_increment = 1,\n"
 "  double page_increment = 10,\n"
 "  double page_size = 0);</code>"
-msgstr ""
-"Glib::RefPtr&lt;Gtk::Adjustment&gt; Gtk::Adjustment::create(\n"
-"  double value,\n"
-"  double lower,\n"
-"  double upper,\n"
-"  double step_increment = 1,\n"
-"  double page_increment = 10,\n"
-"  double page_size = 0);"
+msgstr "<code>Glib::RefPtr&lt;Gtk::Adjustment&gt; Gtk::Adjustment::create(\n  double value,\n  double lower,\n  double upper,\n  double step_increment = 1,\n  double page_increment = 10,\n  double page_size = 0);</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4336
@@ -10570,11 +10257,7 @@ msgid ""
 "Gtk::TextView textview;\n"
 "// uses the newly-created adjustment for the scrollbar as well\n"
 "Gtk::Scrollbar vscrollbar(textview.get_vadjustment(), Gtk::Orientation::VERTICAL);</code>"
-msgstr ""
-"// creates its own adjustments\n"
-"Gtk::TextView textview;\n"
-"// uses the newly-created adjustment for the scrollbar as well\n"
-"Gtk::Scrollbar vscrollbar (textview.get_vadjustment(), Gtk::ORIENTATION_VERTICAL);"
+msgstr "<code>// creates its own adjustments\nGtk::TextView textview;\n// uses the newly-created adjustment for the scrollbar as well\nGtk::Scrollbar vscrollbar(textview.get_vadjustment(), Gtk::Orientation::VERTICAL);</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:4396
@@ -10635,11 +10318,7 @@ msgid ""
 "{\n"
 "  picture-&gt;set_rotation(adj-&gt;get_value());\n"
 "...</code>"
-msgstr ""
-"void cb_rotate_picture (MyPicture* picture)\n"
-"{\n"
-"  picture-&gt;set_rotation(adj-&gt;get_value());\n"
-"..."
+msgstr "<code>void cb_rotate_picture(MyPicture* picture)\n{\n  picture-&gt;set_rotation(adj-&gt;get_value());\n...</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4424
@@ -10655,9 +10334,7 @@ msgstr "并且将其连接到比例部件的调整对象上，如下所示："
 msgid ""
 "<code>adj-&gt;signal_value_changed().connect(sigc::bind&lt;MyPicture*&gt;(sigc::mem_fun(*this,\n"
 "    &amp;cb_rotate_picture), picture));</code>"
-msgstr ""
-"adj-&gt;signal_value_changed().connect(sigc::bind&lt;MyPicture*&gt;(sigc::mem_fun(*this,\n"
-"    &amp;cb_rotate_picture), picture));"
+msgstr "<code>adj-&gt;signal_value_changed().connect(sigc::bind&lt;MyPicture*&gt;(sigc::mem_fun(*this,\n    &amp;cb_rotate_picture), picture));</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4430
@@ -11432,14 +11109,7 @@ msgid ""
 "myContext-&gt;set_source_rgb(1.0, 0.0, 0.0);\n"
 "myContext-&gt;set_line_width(2.0);\n"
 "    </code>"
-msgstr ""
-"\n"
-"Gtk::DrawingArea myArea;\n"
-"auto gdkCairoContext = myArea.get_surface()-&gt;create_cairo_context();\n"
-"auto myContext = gdkCairoContext-&gt;cairo_create();\n"
-"myContext-&gt;set_source_rgb(1.0, 0.0, 0.0);\n"
-"myContext-&gt;set_line_width(2.0);\n"
-"    "
+msgstr "<code>Gtk::DrawingArea myArea;\nauto gdkCairoContext = myArea.get_surface()-&gt;create_cairo_context();\nauto myContext = gdkCairoContext-&gt;cairo_create();\nmyContext-&gt;set_source_rgb(1.0, 0.0, 0.0);\nmyContext-&gt;set_line_width(2.0);\n    </code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4753
@@ -11532,14 +11202,7 @@ msgid ""
 "    // perform drawing operations\n"
 "    context-&gt;restore();\n"
 "}</code>"
-msgstr ""
-"void doSomething(const Cairo::RefPtr&lt;Cairo::Context&gt;&amp; context, int x)\n"
-"{\n"
-"    context-&gt;save();\n"
-"    // change graphics state\n"
-"    // perform drawing operations\n"
-"    context-&gt;restore();\n"
-"}"
+msgstr "<code>void doSomething(const Cairo::RefPtr&lt;Cairo::Context&gt;&amp; context, int x)\n{\n    context-&gt;save();\n    // change graphics state\n    // perform drawing operations\n    context-&gt;restore();\n}</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4776
@@ -12074,12 +11737,7 @@ msgid ""
 "context-&gt;scale(width / 2.0, height / 2.0);\n"
 "context-&gt;arc(0.0, 0.0, 1.0, 0.0, 2 * M_PI);\n"
 "context-&gt;restore();</code>"
-msgstr ""
-"context-&gt;save();\n"
-"context-&gt;translate(x, y);\n"
-"context-&gt;scale(width / 2.0, height / 2.0);\n"
-"context-&gt;arc(0.0, 0.0, 1.0, 0.0, 2 * M_PI);\n"
-"context-&gt;restore();"
+msgstr "<code>context-&gt;save();\ncontext-&gt;translate(x, y);\ncontext-&gt;scale(width / 2.0, height / 2.0);\ncontext-&gt;arc(0.0, 0.0, 1.0, 0.0, 2 * M_PI);\ncontext-&gt;restore();</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:5073
@@ -12335,15 +11993,7 @@ msgid ""
 "  cr-&gt;rectangle(110, 90, image-&gt;get_width()-20, image-&gt;get_height()-20);\n"
 "  cr-&gt;fill();\n"
 "}</code>"
-msgstr ""
-"void MyArea::on_draw(const Cairo::RefPtr&lt;Cairo::Context&gt;&amp; cr, int width, int height)\n"
-"{\n"
-"  auto image = Gdk::Pixbuf::create_from_file(\"myimage.png\");\n"
-"  // Draw the image at 110, 90, except for the outermost 10 pixels.\n"
-"  Gdk::Cairo::set_source_pixbuf(cr, image, 100, 80);\n"
-"  cr-&gt;rectangle(110, 90, image-&gt;get_width()-20, image-&gt;get_height()-20);\n"
-"  cr-&gt;fill();\n"
-"}"
+msgstr "<code>void MyArea::on_draw(const Cairo::RefPtr&lt;Cairo::Context&gt;&amp; cr, int width, int height)\n{\n  auto image = Gdk::Pixbuf::create_from_file(\"myimage.png\");\n  // Draw the image at 110, 90, except for the outermost 10 pixels.\n  Gdk::Cairo::set_source_pixbuf(cr, image, 100, 80);\n  cr-&gt;rectangle(110, 90, image-&gt;get_width()-20, image-&gt;get_height()-20);\n  cr-&gt;fill();\n}</code>"
 
 #. (itstool) path: para/screen
 #: C/index-in.docbook:5219
@@ -13022,11 +12672,7 @@ msgid ""
 "{\n"
 "  get_clipboard()-&gt;set_text(\"example_custom_target\");\n"
 "}</code>"
-msgstr ""
-"void ExampleWindow::on_button_copy()\n"
-"{\n"
-"  get_clipboard()-&gt;set_text(\"example_custom_target\");\n"
-"}"
+msgstr "<code>void ExampleWindow::on_button_copy()\n{\n  get_clipboard()-&gt;set_text(\"example_custom_target\");\n}</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:5538
@@ -13058,12 +12704,7 @@ msgid ""
 "  get_clipboard()-&gt;read_text_async(sigc::mem_fun(*this,\n"
 "              &amp;ExampleWindow::on_clipboard_received));\n"
 "}</code>"
-msgstr ""
-"void ExampleWindow::on_button_paste()\n"
-"{\n"
-"  get_clipboard()-&gt;read_text_async(sigc::mem_fun(*this,\n"
-"              &amp;ExampleWindow::on_clipboard_received));\n"
-"}"
+msgstr "<code>void ExampleWindow::on_button_paste()\n{\n  get_clipboard()-&gt;read_text_async(sigc::mem_fun(*this,\n              &amp;ExampleWindow::on_clipboard_received));\n}</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:5551
@@ -13085,12 +12726,7 @@ msgid ""
 "  auto text = get_clipboard()-&gt;read_text_finish(result);\n"
 "  //Do something with the pasted data.\n"
 "}</code>"
-msgstr ""
-"void ExampleWindow::on_clipboard_received(Glib::RefPtr&lt;Gio::AsyncResult&gt;&amp; result)\n"
-"{\n"
-"  auto text = get_clipboard()-&gt;read_text_finish(result);\n"
-"  //Do something with the pasted data.\n"
-"}"
+msgstr "<code>void ExampleWindow::on_clipboard_received(Glib::RefPtr&lt;Gio::AsyncResult&gt;&amp; result)\n{\n  auto text = get_clipboard()-&gt;read_text_finish(result);\n  //Do something with the pasted data.\n}</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:5560
@@ -13429,12 +13065,7 @@ msgid ""
 "auto new_page_setup = Gtk::run_page_setup_dialog(*this, m_refPageSetup, m_refSettings);\n"
 "m_refPageSetup = new_page_setup;\n"
 "</code>"
-msgstr ""
-"\n"
-"// Within a class that inherits from Gtk::Window and keeps m_refPageSetup\n"
-"// and m_refSettings as members...\n"
-"auto new_page_setup = Gtk::run_page_setup_dialog(*this, m_refPageSetup, m_refSettings);\n"
-"m_refPageSetup = new_page_setup;\n"
+msgstr "<code>// Within a class that inherits from Gtk::Window and keeps m_refPageSetup\n// and m_refSettings as members...\nauto new_page_setup = Gtk::run_page_setup_dialog(*this, m_refPageSetup, m_refSettings);\nm_refPageSetup = new_page_setup;\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:5758
@@ -13561,14 +13192,7 @@ msgid ""
 "  *this, &amp;ExampleWindow::on_printoperation_done), op));\n"
 "// run the op\n"
 "</code>"
-msgstr ""
-"\n"
-"// in class ExampleWindow's method...\n"
-"auto op = PrintOperation::create();\n"
-"// ...set up op...\n"
-"op-&gt;signal_done().connect(sigc::bind(sigc::mem_fun(\n"
-"  *this, &amp;ExampleWindow::on_printoperation_done), op));\n"
-"// run the op\n"
+msgstr "<code>// in class ExampleWindow's method...\nauto op = PrintOperation::create();\n// ...set up op...\nop-&gt;signal_done().connect(sigc::bind(sigc::mem_fun(\n  *this, &amp;ExampleWindow::on_printoperation_done), op));\n// run the op\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:5824
@@ -13608,20 +13232,7 @@ msgid ""
 "      *this, &amp;ExampleWindow::on_printoperation_status_changed), op));\n"
 "}\n"
 "</code>"
-msgstr ""
-"\n"
-"void ExampleWindow::on_printoperation_done(Gtk::PrintOperationResult result,\n"
-"  const Glib::RefPtr&lt;PrintOperation&gt;&amp; op)\n"
-"{\n"
-"  if (result == Gtk::PrintOperation::Result::ERROR)\n"
-"    //notify user\n"
-"  else if (result == Gtk::PrintOperation::Result::APPLY)\n"
-"    //Update PrintSettings with the ones used in this PrintOperation\n"
-"\n"
-"  if (! op-&gt;is_finished())\n"
-"    op-&gt;signal_status_changed().connect(sigc::bind(sigc::mem_fun(\n"
-"      *this, &amp;ExampleWindow::on_printoperation_status_changed), op));\n"
-"}\n"
+msgstr "<code>void ExampleWindow::on_printoperation_done(Gtk::PrintOperation::Result result,\n  const Glib::RefPtr&lt;PrintOperation&gt;&amp; op)\n{\n  if (result == Gtk::PrintOperation::Result::ERROR)\n    //notify user\n  else if (result == Gtk::PrintOperation::Result::APPLY)\n    //Update PrintSettings with the ones used in this PrintOperation\n\n  if (! op-&gt;is_finished())\n    op-&gt;signal_status_changed().connect(sigc::bind(sigc::mem_fun(\n      *this, &amp;ExampleWindow::on_printoperation_status_changed), op));\n}\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:5840
@@ -13653,17 +13264,7 @@ msgid ""
 "  //update UI\n"
 "}\n"
 "</code>"
-msgstr ""
-"\n"
-"void ExampleWindow::on_printoperation_status_changed(const Glib::RefPtr&lt;PrintOperation&gt;&amp; op)\n"
-"{\n"
-"  if (op-&gt;is_finished())\n"
-"    //the print job is finished\n"
-"  else\n"
-"    //get the status with get_status() or get_status_string()\n"
-"\n"
-"  //update UI\n"
-"}\n"
+msgstr "<code>void ExampleWindow::on_printoperation_status_changed(const Glib::RefPtr&lt;PrintOperation&gt;&amp; op)\n{\n  if (op-&gt;is_finished())\n    //the print job is finished\n  else\n    //get the status with get_status() or get_status_string()\n\n  //update UI\n}\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:5855
@@ -13695,12 +13296,7 @@ msgid ""
 "op-&gt;set_export_filename(\"test.pdf\");\n"
 "auto res = op-&gt;run(Gtk::PrintOperation::Action::EXPORT);\n"
 "</code>"
-msgstr ""
-"\n"
-"auto op = Gtk::PrintOperation::create();\n"
-"// ...set up op...\n"
-"op-&gt;set_export_filename(\"test.pdf\");\n"
-"auto res = op-&gt;run(Gtk::PrintOperation::Action::EXPORT);\n"
+msgstr "<code>auto op = Gtk::PrintOperation::create();\n// ...set up op...\nop-&gt;set_export_filename(\"test.pdf\");\nauto res = op-&gt;run(Gtk::PrintOperation::Action::EXPORT);\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:5869
@@ -13795,28 +13391,7 @@ msgid ""
 "  //...\n"
 "}\n"
 "</code>"
-msgstr ""
-"\n"
-"Gtk::Widget* CustomPrintOperation::on_create_custom_widget()\n"
-"{\n"
-"  set_custom_tab_label(\"My custom tab\");\n"
-"\n"
-"  auto hbox = new Gtk::Box(Gtk::Orientation::HORIZONTAL, 8);\n"
-"  hbox-&gt;set_margin(6);\n"
-"\n"
-"  auto label = Gtk::make_managed&lt;Gtk::Label&gt;(\"Enter some text: \");\n"
-"  hbox-&gt;append(*label);\n"
-"\n"
-"  hbox-&gt;append(m_Entry);\n"
-"\n"
-"  return hbox;\n"
-"}\n"
-"\n"
-"void CustomPrintOperation::on_custom_widget_apply(Gtk::Widget* /* widget */)\n"
-"{\n"
-"  auto user_input = m_Entry.get_text();\n"
-"  //...\n"
-"}\n"
+msgstr "<code>Gtk::Widget* CustomPrintOperation::on_create_custom_widget()\n{\n  set_custom_tab_label(\"My custom tab\");\n\n  auto hbox = new Gtk::Box(Gtk::Orientation::HORIZONTAL, 8);\n  hbox-&gt;set_margin(6);\n\n  auto label = Gtk::make_managed&lt;Gtk::Label&gt;(\"Enter some text: \");\n  hbox-&gt;append(*label);\n\n  hbox-&gt;append(m_Entry);\n\n  return hbox;\n}\n\nvoid CustomPrintOperation::on_custom_widget_apply(Gtk::Widget* /* widget */)\n{\n  auto user_input = m_Entry.get_text();\n  //...\n}\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:5923
@@ -13851,12 +13426,7 @@ msgid ""
 "// ...set up op...\n"
 "op-&gt;run(Gtk::PrintOperation::Action::PREVIEW, *this);\n"
 "</code>"
-msgstr ""
-"\n"
-"// in a class that inherits from Gtk::Window...\n"
-"auto op = PrintOperation::create();\n"
-"// ...set up op...\n"
-"op-&gt;run(Gtk::PrintOperation::Action::PREVIEW, *this);\n"
+msgstr "<code>// in a class that inherits from Gtk::Window...\nauto op = PrintOperation::create();\n// ...set up op...\nop-&gt;run(Gtk::PrintOperation::Action::PREVIEW, *this);\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:5942
@@ -14070,9 +13640,7 @@ msgstr ""
 msgid ""
 "<code>auto recent_manager = Gtk::RecentManager::get_default();\n"
 "recent_manager-&gt;add_item(uri);</code>"
-msgstr ""
-"auto recent_manager = Gtk::RecentManager::get_default();\n"
-"recent_manager-&gt;add_item(uri);"
+msgstr "<code>auto recent_manager = Gtk::RecentManager::get_default();\nrecent_manager-&gt;add_item(uri);</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6048
@@ -14200,20 +13768,7 @@ msgid ""
 "{\n"
 "  // item was found\n"
 "}</code>"
-msgstr ""
-"Glib::RefPtr&lt;Gtk::RecentInfo&gt; info;\n"
-"try\n"
-"{\n"
-"  info = recent_manager-&gt;lookup_item(uri);\n"
-"}\n"
-"catch(const Gtk::RecentManagerError&amp; ex)\n"
-"{\n"
-"  std::cerr &lt;&lt; \"RecentManagerError: \" &lt;&lt; ex.what() &lt;&lt; std::endl;\n"
-"}\n"
-"if (info)\n"
-"{\n"
-"  // item was found\n"
-"}"
+msgstr "<code>Glib::RefPtr&lt;Gtk::RecentInfo&gt; info;\ntry\n{\n  info = recent_manager-&gt;lookup_item(uri);\n}\ncatch(const Gtk::RecentManagerError&amp; ex)\n{\n  std::cerr &lt;&lt; \"RecentManagerError: \" &lt;&lt; ex.what() &lt;&lt; std::endl;\n}\nif (info)\n{\n  // item was found\n}</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6117
@@ -14933,10 +14488,7 @@ msgid ""
 "<code>sigc::connection Glib::SignalTimeout::connect(const sigc::slot&lt;bool()&gt;&amp; slot,\n"
 "                                      unsigned int interval, int priority = Glib::PRIORITY_DEFAULT);\n"
 "</code>"
-msgstr ""
-"\n"
-"sigc::connection Glib::SignalTimeout::connect(const sigc::slot&lt;bool()&gt;&amp; slot,\n"
-"                                      unsigned int interval, int priority = Glib::PRIORITY_DEFAULT);\n"
+msgstr "<code>sigc::connection Glib::SignalTimeout::connect(const sigc::slot&lt;bool()&gt;&amp; slot,\n                                      unsigned int interval, int priority = Glib::PRIORITY_DEFAULT);\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6447
@@ -14961,9 +14513,7 @@ msgstr ""
 msgid ""
 "<code>my_connection.disconnect();\n"
 "</code>"
-msgstr ""
-"\n"
-"my_connection.disconnect();\n"
+msgstr "<code>my_connection.disconnect();\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6458
@@ -14987,9 +14537,7 @@ msgstr ""
 msgid ""
 "<code>bool MyCallback() { std::cout &lt;&lt; \"Hello World!\\n\" &lt;&lt; std::endl; return true; }\n"
 "</code>"
-msgstr ""
-"\n"
-"bool MyCallback() { std::cout &lt;&lt; \"Hello World!\\n\" &lt;&lt; std::endl; return true; }\n"
+msgstr "<code>bool MyCallback() { std::cout &lt;&lt; \"Hello World!\\n\" &lt;&lt; std::endl; return true; }\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6469
@@ -15050,11 +14598,7 @@ msgid ""
 "                                 Glib::PollFD::fd_t fd, Glib::IOCondition condition,\n"
 "                                 int priority = Glib::PRIORITY_DEFAULT);\n"
 "</code>"
-msgstr ""
-"\n"
-"sigc::connection Glib::SignalIO::connect(const sigc::slot&lt;bool(Glib::IOCondition)&gt;&amp; slot,\n"
-"                                 Glib::PollFD::fd_t fd, Glib::IOCondition condition,\n"
-"                                 int priority = Glib::PRIORITY_DEFAULT);\n"
+msgstr "<code>sigc::connection Glib::SignalIO::connect(const sigc::slot&lt;bool(Glib::IOCondition)&gt;&amp; slot,\n                                 Glib::PollFD::fd_t fd, Glib::IOCondition condition,\n                                 int priority = Glib::PRIORITY_DEFAULT);\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6498
@@ -15145,9 +14689,7 @@ msgstr ""
 msgid ""
 "<code>bool input_callback(Glib::IOCondition condition);\n"
 "</code>"
-msgstr ""
-"\n"
-"bool input_callback(Glib::IOCondition condition);\n"
+msgstr "<code>bool input_callback(Glib::IOCondition condition);\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6544
@@ -15220,10 +14762,7 @@ msgid ""
 "<code>sigc::connection  Glib::SignalIdle::connect(const sigc::slot&lt;bool()&gt;&amp; slot,\n"
 "                                    int priority = Glib::PRIORITY_DEFAULT_IDLE);\n"
 "</code>"
-msgstr ""
-"\n"
-"sigc::connection  Glib::SignalIdle::connect(const sigc::slot&lt;bool()&gt;&amp; slot,\n"
-"                                    int priority = Glib::PRIORITY_DEFAULT_IDLE);\n"
+msgstr "<code>sigc::connection  Glib::SignalIdle::connect(const sigc::slot&lt;bool()&gt;&amp; slot,\n                                    int priority = Glib::PRIORITY_DEFAULT_IDLE);\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6577
@@ -15250,9 +14789,7 @@ msgstr ""
 msgid ""
 "<code>bool idleFunc();\n"
 "</code>"
-msgstr ""
-"\n"
-"bool idleFunc();\n"
+msgstr "<code>bool idleFunc();\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6589
@@ -15409,16 +14946,7 @@ msgid ""
 "  // will be destroyed when the Foo object is destroyed\n"
 "};\n"
 "</code>"
-msgstr ""
-"\n"
-"#include &lt;gtkmm/button.h&gt;\n"
-"#include &lt;gtkmm/window.h&gt;\n"
-"class Foo : public Gtk::Window\n"
-"{\n"
-"private:\n"
-"  Gtk::Button theButton;\n"
-"  // will be destroyed when the Foo object is destroyed\n"
-"};\n"
+msgstr "<code>#include &lt;gtkmm/button.h&gt;\n#include &lt;gtkmm/window.h&gt;\nclass Foo : public Gtk::Window\n{\nprivate:\n  Gtk::Button theButton;\n  // will be destroyed when the Foo object is destroyed\n};\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:6666
@@ -15454,14 +14982,7 @@ msgid ""
 "  app-&gt;run();\n"
 "}\n"
 "</code>"
-msgstr ""
-"\n"
-"{\n"
-"  Gtk::Button aButton;\n"
-"  aButton.show();\n"
-"  ...\n"
-"  app-&gt;run();\n"
-"}\n"
+msgstr "<code>{\n  Gtk::Button aButton;\n  aButton.set_visible(true);\n  ...\n  app-&gt;run();\n}\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6679
@@ -15523,13 +15044,7 @@ msgid ""
 "// do something useful with pButton\n"
 "delete pButton;\n"
 "</code>"
-msgstr ""
-"\n"
-"auto pButton = new Gtk::Button(\"Test\");\n"
-"\n"
-"// do something useful with pButton\n"
-"\n"
-"delete pButton;\n"
+msgstr "<code>auto pButton = new Gtk::Button(\"Test\");\n// do something useful with pButton\ndelete pButton;\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6703
@@ -15645,13 +15160,7 @@ msgid ""
 "  append(*pButton); //add *pButton to MyContainer\n"
 "}\n"
 "</code>"
-msgstr ""
-"\n"
-"MyContainer::MyContainer()\n"
-"{\n"
-"  auto pButton = Gtk::make_managed&lt;Gtk::Button&gt;(\"Test\");\n"
-"  append(*pButton); //add *pButton to MyContainer\n"
-"}\n"
+msgstr "<code>MyContainer::MyContainer()\n{\n  auto pButton = Gtk::make_managed&lt;Gtk::Button&gt;(\"Test\");\n  append(*pButton); //add *pButton to MyContainer\n}\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6757
@@ -15734,9 +15243,7 @@ msgstr ""
 msgid ""
 "<code>auto pixbuf = Gdk::Pixbuf::create_from_file(filename);\n"
 "</code>"
-msgstr ""
-"\n"
-"auto pixbuf = Gdk::Pixbuf::create_from_file(filename);\n"
+msgstr "<code>auto pixbuf = Gdk::Pixbuf::create_from_file(filename);\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6802
@@ -15765,13 +15272,7 @@ msgid ""
 "  width = pixbuf-&gt;get_width();\n"
 "}\n"
 "</code>"
-msgstr ""
-"\n"
-"auto width = 0;\n"
-"if(pixbuf)\n"
-"{\n"
-"  width = pixbuf-&gt;get_width();\n"
-"}\n"
+msgstr "<code>auto width = 0;\nif(pixbuf)\n{\n  width = pixbuf-&gt;get_width();\n}\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6814
@@ -15805,9 +15306,7 @@ msgstr ""
 msgid ""
 "<code>auto pixbuf2 = pixbuf;\n"
 "</code>"
-msgstr ""
-"\n"
-"auto pixbuf2 = pixbuf;\n"
+msgstr "<code>auto pixbuf2 = pixbuf;\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6824
@@ -15975,9 +15474,7 @@ msgstr ""
 msgid ""
 "<code>auto builder = Gtk::Builder::create_from_file(\"basic.ui\");\n"
 "</code>"
-msgstr ""
-"\n"
-"auto builder = Gtk::Builder::create_from_file(\"basic.glade\");\n"
+msgstr "<code>auto builder = Gtk::Builder::create_from_file(\"basic.ui\");\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6890
@@ -16004,9 +15501,7 @@ msgstr ""
 msgid ""
 "<code>auto builder = Gtk::Builder::create_from_file(\"basic.ui\", \"treeview_products\");\n"
 "</code>"
-msgstr ""
-"\n"
-"auto builder = Gtk::Builder::create_from_file(\"basic.glade\", \"treeview_products\");\n"
+msgstr "<code>auto builder = Gtk::Builder::create_from_file(\"basic.ui\", \"treeview_products\");\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:6901
@@ -16059,9 +15554,7 @@ msgstr ""
 msgid ""
 "<code>auto pDialog = builder-&gt;get_widget&lt;Gtk::Window&gt;(\"DialogBasic\");\n"
 "</code>"
-msgstr ""
-"\n"
-"auto pDialog = builder-&gt;get_widget&lt;Gtk::Dialog&gt;(\"DialogBasic\");\n"
+msgstr "<code>auto pDialog = builder-&gt;get_widget&lt;Gtk::Window&gt;(\"DialogBasic\");\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6917
@@ -16208,9 +15701,7 @@ msgstr "像这样用<methodname>Gtk::Builder::get_widget_derived()</methodname>�
 msgid ""
 "<code>auto pDialog = Gtk::Builder::get_widget_derived&lt;DerivedDialog&gt;(builder, \"DialogDerived\");\n"
 "</code>"
-msgstr ""
-"\n"
-"auto pDialog = Gtk::Builder::get_widget_derived&lt;DerivedDialog&gt;(builder, \"DialogDerived\");\n"
+msgstr "<code>auto pDialog = Gtk::Builder::get_widget_derived&lt;DerivedDialog&gt;(builder, \"DialogDerived\");\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6974
@@ -16258,12 +15749,7 @@ msgid ""
 "{\n"
 "}\n"
 "</code>"
-msgstr ""
-"\n"
-"DerivedDialog::DerivedDialog(BaseObjectType* cobject, const Glib::RefPtr&lt;Gtk::Builder&gt;&amp; builder)\n"
-": Gtk::Dialog(cobject)\n"
-"{\n"
-"}\n"
+msgstr "<code>DerivedDialog::DerivedDialog(BaseObjectType* cobject, const Glib::RefPtr&lt;Gtk::Builder&gt;&amp; builder)\n: Gtk::Window(cobject)\n{\n}\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6991
@@ -16306,19 +15792,7 @@ msgid ""
 "  }\n"
 "}\n"
 "</code>"
-msgstr ""
-"\n"
-"DerivedDialog::DerivedDialog(BaseObjectType* cobject, const Glib::RefPtr&lt;Gtk::Builder&gt;&amp; builder)\n"
-": Gtk::Dialog(cobject),\n"
-"  m_builder(builder),\n"
-"  //Get the Glade-instantiated Button, and connect a signal handler:\n"
-"  m_pButton(m_builder-&gt;get_widget&lt;Gtk::Button&gt;(\"quit_button\"))\n"
-"{\n"
-"  if(m_pButton)\n"
-"  {\n"
-"    m_pButton-&gt;signal_clicked().connect( sigc::mem_fun(*this, &amp;DerivedDialog::on_button_quit) );\n"
-"  }\n"
-"}\n"
+msgstr "<code>DerivedDialog::DerivedDialog(BaseObjectType* cobject, const Glib::RefPtr&lt;Gtk::Builder&gt;&amp; builder)\n: Gtk::Window(cobject),\n  m_builder(builder),\n  // Get the GtkBuilder-instantiated Button, and connect a signal handler:\n  m_pButton(m_builder-&gt;get_widget&lt;Gtk::Button&gt;(\"quit_button\"))\n{\n  if (m_pButton)\n  {\n    m_pButton-&gt;signal_clicked().connect( sigc::mem_fun(*this, &amp;DerivedDialog::on_button_quit) );\n  }\n}\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7009
@@ -16348,9 +15822,7 @@ msgstr ""
 msgid ""
 "<code>auto pDialog = Gtk::Builder::get_widget_derived&lt;DerivedDialog&gt;(builder, \"DialogDerived\", true);\n"
 "</code>"
-msgstr ""
-"\n"
-"auto pDialog = Gtk::Builder::get_widget_derived&lt;DerivedDialog&gt;(builder, \"DialogDerived\", true);\n"
+msgstr "<code>auto pDialog = Gtk::Builder::get_widget_derived&lt;DerivedDialog&gt;(builder, \"DialogDerived\", true);\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7016
@@ -16381,15 +15853,7 @@ msgid ""
 "  // ....\n"
 "}\n"
 "</code>"
-msgstr ""
-"\n"
-"DerivedDialog::DerivedDialog(BaseObjectType* cobject, const Glib::RefPtr&lt;Gtk::Builder&gt;&amp; builder, bool warning)\n"
-": Gtk::Dialog(cobject),\n"
-"  m_builder(builder),\n"
-"  m_pButton(m_builder-&gt;get_widget&lt;Gtk::Button&gt;(\"quit_button\"))\n"
-"{\n"
-"  // ....\n"
-"}\n"
+msgstr "<code>DerivedDialog::DerivedDialog(BaseObjectType* cobject,\n  const Glib::RefPtr&lt;Gtk::Builder&gt;&amp; builder, bool warning)\n: Gtk::Window(cobject),\n  m_builder(builder),\n  m_pButton(m_builder-&gt;get_widget&lt;Gtk::Button&gt;(\"quit_button\"))\n{\n  // ....\n}\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:7029
@@ -16443,16 +15907,7 @@ msgid ""
 "  // ....\n"
 "}\n"
 "</code>"
-msgstr ""
-"\n"
-"DerivedButton::DerivedButton(BaseObjectType* cobject, const Glib::RefPtr&lt;Gtk::Builder&gt;&amp; builder)\n"
-": Glib::ObjectBase(\"MyButton\"), // The GType name will be gtkmm__CustomObject_MyButton.\n"
-"  Gtk::Button(cobject),\n"
-"  prop_ustring(*this, \"button-ustring\"),\n"
-"  prop_int(*this, \"button-int\", 10)\n"
-"{\n"
-"  // ....\n"
-"}\n"
+msgstr "<code>DerivedButton::DerivedButton(BaseObjectType* cobject, const Glib::RefPtr&lt;Gtk::Builder&gt;&amp; builder)\n: Glib::ObjectBase(\"MyButton\"), // The GType name will be gtkmm__CustomObject_MyButton.\n  Gtk::Button(cobject),\n  prop_ustring(*this, \"button-ustring\"),\n  prop_int(*this, \"button-int\", 10)\n{\n  // ....\n}\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7051
@@ -16681,15 +16136,7 @@ msgid ""
 "echo \"Running intltoolize --copy --force --automake\"\n"
 "intltoolize --copy --force --automake\n"
 "test -n \"$NOCONFIGURE\" || \"$srcdir/configure\" \"$@\"</code>"
-msgstr ""
-"#! /bin/sh -e\n"
-"test -n \"$srcdir\" || srcdir=`dirname \"$0\"`\n"
-"test -n \"$srcdir\" || srcdir=.\n"
-"\n"
-"autoreconf --force --install --verbose --warnings=all \"$srcdir\"\n"
-"echo \"Running intltoolize --copy --force --automake\"\n"
-"intltoolize --copy --force --automake\n"
-"test -n \"$NOCONFIGURE\" || \"$srcdir/configure\" \"$@\""
+msgstr "<code>#! /bin/sh -e\ntest -n \"$srcdir\" || srcdir=`dirname \"$0\"`\ntest -n \"$srcdir\" || srcdir=.\n\nautoreconf --force --install --verbose --warnings=all \"$srcdir\"\necho \"Running intltoolize --copy --force --automake\"\nintltoolize --copy --force --automake\ntest -n \"$NOCONFIGURE\" || \"$srcdir/configure\" \"$@\"</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7163
@@ -16740,10 +16187,7 @@ msgid ""
 "<code># keep this file sorted alphabetically, one language code per line\n"
 "de\n"
 "ja</code>"
-msgstr ""
-"# keep this file sorted alphabetically, one language code per line\n"
-"de\n"
-"ja"
+msgstr "<code># keep this file sorted alphabetically, one language code per line\nde\nja</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7182
@@ -16784,9 +16228,7 @@ msgstr ""
 msgid ""
 "<code>src/main.cc\n"
 "src/other.cc</code>"
-msgstr ""
-"src/main.cc\n"
-"src/other.cc"
+msgstr "<code>src/main.cc\nsrc/other.cc</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7201
@@ -16860,18 +16302,7 @@ msgid ""
 "\n"
 "PROGRAMNAME_LOCALEDIR=[${datadir}/locale]\n"
 "AC_SUBST(PROGRAMNAME_LOCALEDIR)</code>"
-msgstr ""
-"IT_PROG_INTLTOOL([0.35.0])\n"
-"\n"
-"GETTEXT_PACKAGE=programname\n"
-"AC_SUBST(GETTEXT_PACKAGE)\n"
-"AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], [\"$GETTEXT_PACKAGE\"],\n"
-"                   [The domain to use with gettext])\n"
-"AM_GNU_GETTEXT([external])\n"
-"AM_GNU_GETTEXT_VERSION([0.17])\n"
-"\n"
-"PROGRAMNAME_LOCALEDIR=[${datadir}/locale]\n"
-"AC_SUBST(PROGRAMNAME_LOCALEDIR)"
+msgstr "<code>IT_PROG_INTLTOOL([0.35.0])\n\nGETTEXT_PACKAGE=programname\nAC_SUBST(GETTEXT_PACKAGE)\nAC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], [\"$GETTEXT_PACKAGE\"],\n                   [The domain to use with gettext])\nAM_GNU_GETTEXT([external])\nAM_GNU_GETTEXT_VERSION([0.17])\n\nPROGRAMNAME_LOCALEDIR=[${datadir}/locale]\nAC_SUBST(PROGRAMNAME_LOCALEDIR)</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7233
@@ -16924,10 +16355,7 @@ msgid ""
 "<code>INTLTOOL_FILES = intltool-extract.in \\\n"
 "                 intltool-merge.in \\\n"
 "                 intltool-update.in</code>"
-msgstr ""
-"INTLTOOL_FILES = intltool-extract.in \\\n"
-"                 intltool-merge.in \\\n"
-"                 intltool-update.in"
+msgstr "<code>INTLTOOL_FILES = intltool-extract.in \\\n                 intltool-merge.in \\\n                 intltool-update.in</code>"
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:7263
@@ -16959,11 +16387,7 @@ msgid ""
 "                 intltool-merge \\\n"
 "                 intltool-update \\\n"
 "                 po/.intltool-merge-cache</code>"
-msgstr ""
-"DISTCLEANFILES = ... intltool-extract \\\n"
-"                 intltool-merge \\\n"
-"                 intltool-update \\\n"
-"                 po/.intltool-merge-cache"
+msgstr "<code>DISTCLEANFILES = ... intltool-extract \\\n                 intltool-merge \\\n                 intltool-update \\\n                 po/.intltool-merge-cache</code>"
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:7279
@@ -16989,11 +16413,7 @@ msgid ""
 "desktop_in_files = programname.desktop.in\n"
 "desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)\n"
 "@INTLTOOL_DESKTOP_RULE@</code>"
-msgstr ""
-"desktopdir = $(datadir)/applications\n"
-"desktop_in_files = programname.desktop.in\n"
-"desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)\n"
-"@INTLTOOL_DESKTOP_RULE@"
+msgstr "<code>desktopdir = $(datadir)/applications\ndesktop_in_files = programname.desktop.in\ndesktop_DATA = $(desktop_in_files:.desktop.in=.desktop)\n@INTLTOOL_DESKTOP_RULE@</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7247
@@ -17131,10 +16551,7 @@ msgid ""
 "<code>bindtextdomain(GETTEXT_PACKAGE, PROGRAMNAME_LOCALEDIR);\n"
 "bind_textdomain_codeset(GETTEXT_PACKAGE, \"UTF-8\");\n"
 "textdomain(GETTEXT_PACKAGE);</code>"
-msgstr ""
-"bindtextdomain(GETTEXT_PACKAGE, PROGRAMNAME_LOCALEDIR);\n"
-"bind_textdomain_codeset(GETTEXT_PACKAGE, \"UTF-8\");\n"
-"textdomain(GETTEXT_PACKAGE);"
+msgstr "<code>bindtextdomain(GETTEXT_PACKAGE, PROGRAMNAME_LOCALEDIR);\nbind_textdomain_codeset(GETTEXT_PACKAGE, \"UTF-8\");\ntextdomain(GETTEXT_PACKAGE);</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:7350
@@ -17421,13 +16838,7 @@ msgid ""
 "std::ostringstream output;\n"
 "output &lt;&lt; percentage &lt;&lt; \" % done\";\n"
 "label-&gt;set_text(Glib::locale_to_utf8(output.str()));</code>"
-msgstr ""
-"std::locale::global(std::locale(\"\")); // Set the global locale to the user's preferred locale.\n"
-"                                      // Usually unnecessary here, because Glib::init()\n"
-"                                      // or Gtk::Application::create() does it for you.\n"
-"std::ostringstream output;\n"
-"output &lt;&lt; percentage &lt;&lt; \" % done\";\n"
-"label-&gt;set_text(Glib::locale_to_utf8(output.str()));"
+msgstr "<code>std::locale::global(std::locale(\"\")); // Set the global locale to the user's preferred locale.\n                                      // Usually unnecessary here, because Glib::init()\n                                      // or Gtk::Application::create() does it for you.\nstd::ostringstream output;\noutput &lt;&lt; percentage &lt;&lt; \" % done\";\nlabel-&gt;set_text(Glib::locale_to_utf8(output.str()));</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:7505
@@ -17484,10 +16895,7 @@ msgid ""
 "<code>// note to translators: don't translate the \"[noun]\" part - it is\n"
 "// just here to distinguish the string from another \"jumps\" string\n"
 "text = strip(gettext(\"jumps[noun]\"), \"[noun]\");</code>"
-msgstr ""
-"// note to translators: don't translate the \"[noun]\" part - it is\n"
-"// just here to distinguish the string from another \"jumps\" string\n"
-"text = strip(gettext(\"jumps[noun]\"), \"[noun]\");"
+msgstr "<code>// note to translators: don't translate the \"[noun]\" part - it is\n// just here to distinguish the string from another \"jumps\" string\ntext = strip(gettext(\"jumps[noun]\"), \"[noun]\");</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7529
@@ -17549,11 +16957,7 @@ msgid ""
 "          &lt;&lt; _(\" Future: \") &lt;&lt; future &lt;&lt; std::endl;\n"
 "\n"
 "label.set_text(_(\"Really delete \") + filename + _(\" now?\"));</code>"
-msgstr ""
-"std::cout &lt;&lt; _(\"Current amount: \") &lt;&lt; amount\n"
-"          &lt;&lt; _(\" Future: \") &lt;&lt; future &lt;&lt; std::endl;\n"
-"\n"
-"label.set_text(_(\"Really delete \") + filename + _(\" now?\"));"
+msgstr "<code>std::cout &lt;&lt; _(\"Current amount: \") &lt;&lt; amount\n          &lt;&lt; _(\" Future: \") &lt;&lt; future &lt;&lt; std::endl;\n\nlabel.set_text(_(\"Really delete \") + filename + _(\" now?\"));</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7554
@@ -17587,11 +16991,7 @@ msgid ""
 "             _(\"Current amount: %1 Future: %2\"), amount, future) &lt;&lt; std::endl;\n"
 "\n"
 "label.set_text(Glib::ustring::compose(_(\"Really delete %1 now?\"), filename));</code>"
-msgstr ""
-"std::cout &lt;&lt; Glib::ustring::compose(\n"
-"             _(\"Current amount: %1 Future: %2\"), amount, future) &lt;&lt; std::endl;\n"
-"\n"
-"label.set_text(Glib::ustring::compose(_(\"Really delete %1 now?\"), filename));"
+msgstr "<code>std::cout &lt;&lt; Glib::ustring::compose(\n             _(\"Current amount: %1 Future: %2\"), amount, future) &lt;&lt; std::endl;\n\nlabel.set_text(Glib::ustring::compose(_(\"Really delete %1 now?\"), filename));</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:7566
@@ -19540,10 +18940,7 @@ msgid ""
 "<code>m_settings = Gio::Settings::create(\"org.gtkmm.exampleapp\");\n"
 "m_settings-&gt;bind(\"transition\", m_stack-&gt;property_transition_type());\n"
 "</code>"
-msgstr ""
-"\n"
-"m_settings = Gio::Settings::create(\"org.gtkmm.exampleapp\");\n"
-"m_settings-&gt;bind(\"transition\", m_stack-&gt;property_transition_type());\n"
+msgstr "<code>m_settings = Gio::Settings::create(\"org.gtkmm.exampleapp\");\nm_settings-&gt;bind(\"transition\", m_stack-&gt;property_transition_type());\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:8502
@@ -19570,11 +18967,7 @@ msgid ""
 "m_settings-&gt;bind(\"font\", tag-&gt;property_font());\n"
 "buffer-&gt;apply_tag(tag, buffer-&gt;begin(), buffer-&gt;end());\n"
 "</code>"
-msgstr ""
-"\n"
-"auto tag = buffer-&gt;create_tag();\n"
-"m_settings-&gt;bind(\"font\", tag-&gt;property_font());\n"
-"buffer-&gt;apply_tag(tag, buffer-&gt;begin(), buffer-&gt;end());\n"
+msgstr "<code>auto tag = buffer-&gt;create_tag();\nm_settings-&gt;bind(\"font\", tag-&gt;property_font());\nbuffer-&gt;apply_tag(tag, buffer-&gt;begin(), buffer-&gt;end());\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:8512
@@ -19632,10 +19025,7 @@ msgid ""
 "<code>auto prefs_dialog = ExampleAppPrefs::create(*get_active_window());\n"
 "prefs_dialog-&gt;present();\n"
 "</code>"
-msgstr ""
-"\n"
-"auto prefs_dialog = ExampleAppPrefs::create(*get_active_window());\n"
-"prefs_dialog-&gt;present();\n"
+msgstr "<code>auto prefs_dialog = ExampleAppPrefs::create(*get_active_window());\nprefs_dialog-&gt;present();\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:8534
@@ -19752,25 +19142,7 @@ msgid ""
 "  }\n"
 "}\n"
 "</code>"
-msgstr ""
-"\n"
-"void ExampleAppWindow::on_search_text_changed()\n"
-"{\n"
-"  const auto text = m_searchentry-&gt;get_text();\n"
-"  auto tab = dynamic_cast&lt;Gtk::ScrolledWindow*&gt;(m_stack-&gt;get_visible_child());\n"
-"  auto view = dynamic_cast&lt;Gtk::TextView*&gt;(tab-&gt;get_child());\n"
-"\n"
-"  // Very simple-minded search implementation.\n"
-"  auto buffer = view-&gt;get_buffer();\n"
-"  Gtk::TextIter match_start;\n"
-"  Gtk::TextIter match_end;\n"
-"  if (buffer-&gt;begin().forward_search(text, Gtk::TextSearchFlags::CASE_INSENSITIVE,\n"
-"      match_start, match_end))\n"
-"  {\n"
-"    buffer-&gt;select_range(match_start, match_end);\n"
-"    view-&gt;scroll_to(match_start);\n"
-"  }\n"
-"}\n"
+msgstr "<code>void ExampleAppWindow::on_search_text_changed()\n{\n  const auto text = m_searchentry-&gt;get_text();\n  auto tab = dynamic_cast&lt;Gtk::ScrolledWindow*&gt;(m_stack-&gt;get_visible_child());\n  auto view = dynamic_cast&lt;Gtk::TextView*&gt;(tab-&gt;get_child());\n\n  // Very simple-minded search implementation.\n  auto buffer = view-&gt;get_buffer();\n  Gtk::TextIter match_start;\n  Gtk::TextIter match_end;\n  if (buffer-&gt;begin().forward_search(text, Gtk::TextSearchFlags::CASE_INSENSITIVE,\n      match_start, match_end))\n  {\n    buffer-&gt;select_range(match_start, match_end);\n    view-&gt;scroll_to(match_start);\n  }\n}\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:8587
@@ -19865,15 +19237,7 @@ msgid ""
 "m_gears-&gt;set_menu_model(menu);\n"
 "add_action(m_settings-&gt;create_action(\"show-words\"));\n"
 "</code>"
-msgstr ""
-"\n"
-"// Connect the menu to the MenuButton m_gears, and bind the show-words setting\n"
-"// to the win.show-words action and the \"Words\" menu item.\n"
-"// (The connection between action and menu item is specified in gears_menu.ui.)\n"
-"auto menu_builder = Gtk::Builder::create_from_resource(\"/org/gtkmm/exampleapp/gears_menu.ui\");\n"
-"auto menu = menu_builder-&gt;get_object&lt;Gio::MenuModel&gt;(\"menu\");\n"
-"m_gears-&gt;set_menu_model(menu);\n"
-"add_action(m_settings-&gt;create_action(\"show-words\"));\n"
+msgstr "<code>// Connect the menu to the MenuButton m_gears, and bind the show-words setting\n// to the win.show-words action and the \"Words\" menu item.\n// (The connection between action and menu item is specified in gears_menu.ui.)\nauto menu_builder = Gtk::Builder::create_from_resource(\"/org/gtkmm/exampleapp/gears_menu.ui\");\nauto menu = menu_builder-&gt;get_object&lt;Gio::MenuModel&gt;(\"menu\");\nm_gears-&gt;set_menu_model(menu);\nadd_action(m_settings-&gt;create_action(\"show-words\"));\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:8632
@@ -19971,11 +19335,7 @@ msgid ""
 "  m_lines_label-&gt;property_visible());\n"
 "\n"
 "</code>"
-msgstr ""
-"add_action(Gio::PropertyAction::create(\"show-lines\", m_lines-&gt;property_visible()));\n"
-"m_binding_lines_visible = Glib::Binding::bind_property(m_lines-&gt;property_visible(),\n"
-"  m_lines_label-&gt;property_visible());\n"
-"\n"
+msgstr "<code>add_action(Gio::PropertyAction::create(\"show-lines\", m_lines-&gt;property_visible()));\nm_binding_lines_visible = Glib::Binding::bind_property(m_lines-&gt;property_visible(),\n  m_lines_label-&gt;property_visible());\n\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:8680
@@ -20062,10 +19422,7 @@ msgid ""
 "set_icon_name(\"exampleapp\");\n"
 "\n"
 "</code>"
-msgstr ""
-"Gtk::IconTheme::get_for_display(get_display())-&gt;add_resource_path(\"/org/gtkmm/exampleapp\");\n"
-"set_icon_name(\"exampleapp\");\n"
-"\n"
+msgstr "<code>Gtk::IconTheme::get_for_display(get_display())-&gt;add_resource_path(\"/org/gtkmm/exampleapp\");\nset_icon_name(\"exampleapp\");\n\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:8722
@@ -20304,10 +19661,7 @@ msgid ""
 "<code>auto refPixbuf = Gdk::Pixbuf::create_from_file(filename);\n"
 "auto refPixbuf2 = refPixbuf;\n"
 "</code>"
-msgstr ""
-"\n"
-"auto refPixbuf = Gdk::Pixbuf::create_from_file(filename);\n"
-"auto refPixbuf2 = refPixbuf;\n"
+msgstr "<code>auto refPixbuf = Gdk::Pixbuf::create_from_file(filename);\nauto refPixbuf2 = refPixbuf;\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:8816
@@ -20332,11 +19686,7 @@ msgid ""
 "auto refPixbuf = Gdk::Pixbuf::create_from_file(filename);\n"
 "listPixbufs.push_back(refPixbuf);\n"
 "</code>"
-msgstr ""
-"\n"
-"std::list&lt;Glib::RefPtr&lt;Gdk::Pixbuf&gt;&gt; listPixbufs;\n"
-"auto refPixbuf = Gdk::Pixbuf::create_from_file(filename);\n"
-"listPixbufs.push_back(refPixbuf);\n"
+msgstr "<code>std::list&lt;Glib::RefPtr&lt;Gdk::Pixbuf&gt;&gt; listPixbufs;\nauto refPixbuf = Gdk::Pixbuf::create_from_file(filename);\nlistPixbufs.push_back(refPixbuf);\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:8827
@@ -20362,10 +19712,7 @@ msgid ""
 "<code>auto refPixbuf = Gdk::Pixbuf::create_from_file(filename);\n"
 "auto width = refPixbuf-&gt;get_width();\n"
 "</code>"
-msgstr ""
-"\n"
-"auto refPixbuf = Gdk::Pixbuf::create_from_file(filename);\n"
-"auto width = refPixbuf-&gt;get_width();\n"
+msgstr "<code>auto refPixbuf = Gdk::Pixbuf::create_from_file(filename);\nauto width = refPixbuf-&gt;get_width();\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:8834
@@ -20390,10 +19737,7 @@ msgid ""
 "<code>auto refPixbuf = Gdk::Pixbuf::create_from_file(filename);\n"
 "auto&amp; underlying = *refPixbuf; // Possible, but not recommended\n"
 "</code>"
-msgstr ""
-"\n"
-"auto refPixbuf = Gdk::Pixbuf::create_from_file(filename);\n"
-"auto&amp; underlying = *refPixbuf; // Possible, but not recommended\n"
+msgstr "<code>auto refPixbuf = Gdk::Pixbuf::create_from_file(filename);\nauto&amp; underlying = *refPixbuf; // Possible, but not recommended\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:8845
@@ -20420,10 +19764,7 @@ msgid ""
 "<code>auto refStore = Gtk::TreeStore::create(columns);\n"
 "Glib::RefPtr&lt;Gtk::TreeModel&gt; refModel = refStore;\n"
 "</code>"
-msgstr ""
-"\n"
-"auto refStore = Gtk::TreeStore::create(columns);\n"
-"Glib::RefPtr&lt;Gtk::TreeModel&gt; refModel = refStore;\n"
+msgstr "<code>auto refStore = Gtk::TreeStore::create(columns);\nGlib::RefPtr&lt;Gtk::TreeModel&gt; refModel = refStore;\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:8853
@@ -20455,10 +19796,7 @@ msgid ""
 "<code>auto refStore = std::dynamic_pointer_cast&lt;Gtk::TreeStore&gt;(refModel);\n"
 "auto refStore2 = std::static_pointer_cast&lt;Gtk::TreeStore&gt;(refModel);\n"
 "</code>"
-msgstr ""
-"\n"
-"auto refStore = std::dynamic_pointer_cast&lt;Gtk::TreeStore&gt;(refModel);\n"
-"auto refStore2 = std::static_pointer_cast&lt;Gtk::TreeStore&gt;(refModel);\n"
+msgstr "<code>auto refStore = std::dynamic_pointer_cast&lt;Gtk::TreeStore&gt;(refModel);\nauto refStore2 = std::static_pointer_cast&lt;Gtk::TreeStore&gt;(refModel);\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:8866
@@ -20492,14 +19830,7 @@ msgid ""
 "  ...\n"
 "}\n"
 "</code>"
-msgstr ""
-"\n"
-"auto refModel = m_TreeView.get_model();\n"
-"if (refModel)\n"
-"{\n"
-"  auto cols_count = refModel-&gt;get_n_columns();\n"
-"  ...\n"
-"}\n"
+msgstr "<code>auto refModel = m_TreeView.get_model();\nif (refModel)\n{\n  auto cols_count = refModel-&gt;get_n_columns();\n  ...\n}\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:8878
@@ -20626,20 +19957,7 @@ msgid ""
 "  Gtk::Button button {\"Hello World\"};\n"
 "};\n"
 "</code>"
-msgstr ""
-"\n"
-"#include &lt;gtkmm/button.h&gt;\n"
-"\n"
-"void on_button_clicked()\n"
-"{\n"
-"    std::cout &lt;&lt; \"Hello World\" &lt;&lt; std::endl;\n"
-"}\n"
-"\n"
-"int main()\n"
-"{\n"
-"    Gtk::Button button(\"Hello World\");\n"
-"    button.signal_clicked().connect(sigc::ptr_fun(&amp;on_button_clicked));\n"
-"}\n"
+msgstr "<code>\n#include &lt;gtkmm/button.h&gt;\n\nvoid on_button_clicked()\n{\n  std::cout &lt;&lt; \"Hello World\" &lt;&lt; std::endl;\n}\n\nclass some_class\n{\npublic:\n  some_class\n  {\n    button.signal_clicked().connect(sigc::ptr_fun(&amp;on_button_clicked));\n  }\nprivate:\n  Gtk::Button button {\"Hello World\"};\n};\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:8949
@@ -20689,11 +20007,7 @@ msgid ""
 "    button.signal_clicked().connect(sigc::ptr_fun(&amp;on_button_clicked));\n"
 "    ...\n"
 "</code>"
-msgstr ""
-"\n"
-"    ...\n"
-"    button.signal_clicked().connect(sigc::ptr_fun(&amp;on_button_clicked));\n"
-"    ...\n"
+msgstr "<code>    ...\n    button.signal_clicked().connect(sigc::ptr_fun(&amp;on_button_clicked));\n    ...\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:8987
@@ -20779,20 +20093,7 @@ msgid ""
 "  Gtk::Button button {\"Hello World\"};\n"
 "};\n"
 "</code>"
-msgstr ""
-"\n"
-"#include &lt;gtkmm/button.h&gt;\n"
-"\n"
-"void on_button_clicked()\n"
-"{\n"
-"    std::cout &lt;&lt; \"Hello World\" &lt;&lt; std::endl;\n"
-"}\n"
-"\n"
-"int main()\n"
-"{\n"
-"    Gtk::Button button(\"Hello World\");\n"
-"    button.signal_clicked().connect(sigc::ptr_fun(&amp;on_button_clicked));\n"
-"}\n"
+msgstr "<code>\n#include &lt;gtkmm/button.h&gt;\n\nvoid on_button_clicked()\n{\n  std::cout &lt;&lt; \"Hello World\" &lt;&lt; std::endl;\n}\n\nclass some_class\n{\npublic:\n  some_class\n  {\n    button.signal_clicked().connect(sigc::ptr_fun(&amp;on_button_clicked));\n    button.signal_clicked().connect(sigc::mem_fun(*this, &amp;some_class::on_button_clicked));\n  }\n  void on_button_clicked();\nprivate:\n  Gtk::Button button {\"Hello World\"};\n};\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9038
@@ -20882,9 +20183,7 @@ msgstr ""
 msgid ""
 "<code>Glib::SignalProxy&lt;bool(Gtk::DirectionType)&gt; signal_focus()\n"
 "</code>"
-msgstr ""
-"\n"
-"Glib::SignalProxy&lt;bool(Gtk::DirectionType)&gt; signal_focus()\n"
+msgstr "<code>Glib::SignalProxy&lt;bool(Gtk::DirectionType)&gt; signal_focus()\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9080
@@ -20919,9 +20218,7 @@ msgstr ""
 msgid ""
 "<code>Glib::SignalProxy&lt;void(TextBuffer::iterator&amp;, const Glib::ustrin&amp;, int)&gt; signal_insert();\n"
 "</code>"
-msgstr ""
-"\n"
-"Glib::SignalProxy&lt;void(TextBuffer::iterator&amp;, const Glib::ustrin&amp;, int)&gt; signal_insert();\n"
+msgstr "<code>Glib::SignalProxy&lt;void(TextBuffer::iterator&amp;, const Glib::ustrin&amp;, int)&gt; signal_insert();\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9097
@@ -20944,9 +20241,7 @@ msgstr ""
 msgid ""
 "<code>void on_insert(TextBuffer::iterator&amp; pos, const Glib::ustring&amp; text, int bytes)\n"
 "</code>"
-msgstr ""
-"\n"
-"void on_insert(TextBuffer::iterator&amp; pos, const Glib::ustring&amp; text, int bytes)\n"
+msgstr "<code>void on_insert(TextBuffer::iterator&amp; pos, const Glib::ustring&amp; text, int bytes)\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:9109
@@ -20968,9 +20263,7 @@ msgstr "让我们再来看看信号的<literal>connect</literal>成员函数："
 msgid ""
 "<code>sigc::connection signal&lt;void(int)&gt;::connect(const sigc::slot&lt;void(int)&gt;&amp;);\n"
 "</code>"
-msgstr ""
-"\n"
-"sigc::connection signal&lt;void(int)&gt;::connect(const sigc::slot&lt;void(int)&gt;&amp;);\n"
+msgstr "<code>sigc::connection signal&lt;void(int)&gt;::connect(const sigc::slot&lt;void(int)&gt;&amp;);\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9118
@@ -21077,23 +20370,7 @@ msgid ""
 "  Gtk::Button::on_clicked();\n"
 "}\n"
 "</code>"
-msgstr ""
-"\n"
-"#include &lt;gtkmm/button.h&gt;\n"
-"\n"
-"class OverriddenButton : public Gtk::Button\n"
-"{\n"
-"protected:\n"
-"  void on_clicked() override;\n"
-"}\n"
-"\n"
-"void OverriddenButton::on_clicked()\n"
-"{\n"
-"  std::cout &lt;&lt; \"Hello World\" &lt;&lt; std::endl;\n"
-"\n"
-"  // call the base class's version of the method:\n"
-"  Gtk::Button::on_clicked();\n"
-"}\n"
+msgstr "<code>#include &lt;gtkmm/button.h&gt;\n\nclass OverriddenButton : public Gtk::Button\n{\nprotected:\n  void on_clicked() override;\n}\n\nvoid OverriddenButton::on_clicked()\n{\n  std::cout &lt;&lt; \"Hello World\" &lt;&lt; std::endl;\n\n  // call the base class's version of the method:\n  Gtk::Button::on_clicked();\n}\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9173
@@ -21176,9 +20453,7 @@ msgstr ""
 msgid ""
 "<code>m_button1.signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &amp;HelloWorld::on_button_clicked), \"button 1\"));\n"
 "</code>"
-msgstr ""
-"\n"
-"m_button1.signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &amp;HelloWorld::on_button_clicked), \"button 1\"));\n"
+msgstr "<code>m_button1.signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &amp;HelloWorld::on_button_clicked), \"button 1\"));\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9208
@@ -21198,9 +20473,7 @@ msgstr ""
 msgid ""
 "<code>void on_button_clicked(const Glib::ustring&amp; data);\n"
 "</code>"
-msgstr ""
-"\n"
-"void on_button_clicked(const Glib::ustring&amp; data);\n"
+msgstr "<code>void on_button_clicked(const Glib::ustring&amp; data);\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9215
@@ -21389,9 +20662,7 @@ msgstr ""
 msgid ""
 "<code>key_controller-&gt;signal_key_pressed().connect(sigc::ptr_fun(&amp;on_mywindow_key_pressed), false);\n"
 "</code>"
-msgstr ""
-"\n"
-"button.signal_button_press_event().connect( sigc::ptr_fun(&amp;on_mywindow_button_press), false );\n"
+msgstr "<code>key_controller-&gt;signal_key_pressed().connect(sigc::ptr_fun(&amp;on_mywindow_key_pressed), false);\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9299
@@ -21488,23 +20759,7 @@ msgid ""
 "  return app-&gt;run();\n"
 "}\n"
 "</code>"
-msgstr ""
-"\n"
-"// without_signal.cc\n"
-"#include &lt;gtkmm.h&gt;\n"
-"\n"
-"bool throwSomething()\n"
-"{\n"
-"  throw \"Something\";\n"
-"  return true;\n"
-"}\n"
-"\n"
-"int main(int argc, char** argv)\n"
-"{\n"
-"  throwSomething();\n"
-"  auto app = Gtk::Application::create(\"org.gtkmm.without_signal\");\n"
-"  return app-&gt;run();\n"
-"}\n"
+msgstr "<code>// without_signal.cc\n#include &lt;gtkmm.h&gt;\n\nbool throwSomething()\n{\n  throw \"Something\";\n  return true;\n}\n\nint main(int argc, char** argv)\n{\n  throwSomething();\n  auto app = Gtk::Application::create(\"org.gtkmm.without_signal\");\n  return app-&gt;run();\n}\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9346
@@ -21546,16 +20801,7 @@ msgid ""
 "#7  0x08048864 in throwSomething () at without_signal.cc:6\n"
 "#8  0x0804887d in main (argc=1, argv=0xbfffecd4) at without_signal.cc:12\n"
 "</code>"
-msgstr ""
-"\n"
-"&gt; gdb without_signal\n"
-"(gdb) run\n"
-"terminate called after throwing an instance of 'char const*'\n"
-"\n"
-"Program received signal SIGABRT, Aborted.\n"
-"(gdb) backtrace\n"
-"#7  0x08048864 in throwSomething () at without_signal.cc:6\n"
-"#8  0x0804887d in main (argc=1, argv=0xbfffecd4) at without_signal.cc:12\n"
+msgstr "<code>&gt; gdb without_signal\n(gdb) run\nterminate called after throwing an instance of 'char const*'\n\nProgram received signal SIGABRT, Aborted.\n(gdb) backtrace\n#7  0x08048864 in throwSomething () at without_signal.cc:6\n#8  0x0804887d in main (argc=1, argv=0xbfffecd4) at without_signal.cc:12\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9359
@@ -21620,24 +20866,7 @@ msgid ""
 "  return app-&gt;run();\n"
 "}\n"
 "</code>"
-msgstr ""
-"\n"
-"// with_signal.cc\n"
-"#include &lt;gtkmm.h&gt;\n"
-"\n"
-"bool throwSomething()\n"
-"{\n"
-"  throw \"Something\";\n"
-"  return true;\n"
-"}\n"
-"\n"
-"int main(int argc, char** argv)\n"
-"{\n"
-"  Glib::signal_timeout().connect(sigc::ptr_fun(throwSomething), 500);\n"
-"  auto app = Gtk::Application::create(\"org.gtkmm.with_signal\");\n"
-"  app-&gt;hold();\n"
-"  return app-&gt;run();\n"
-"}\n"
+msgstr "<code>// with_signal.cc\n#include &lt;gtkmm.h&gt;\n\nbool throwSomething()\n{\n  throw \"Something\";\n  return true;\n}\n\nint main(int argc, char** argv)\n{\n  Glib::signal_timeout().connect(sigc::ptr_fun(throwSomething), 500);\n  auto app = Gtk::Application::create(\"org.gtkmm.with_signal\");\n  app-&gt;hold();\n  return app-&gt;run();\n}\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9383
@@ -21677,20 +20906,7 @@ msgid ""
 "#13 0x002e1b31 in Gtk::Application::run (this=0x804f300) at application.cc:178\n"
 "#14 0x08048ccc in main (argc=1, argv=0xbfffecd4) at with_signal.cc:16\n"
 "</code>"
-msgstr ""
-"\n"
-"&gt; gdb with_signal\n"
-"(gdb) run\n"
-"(with_signal:2703): glibmm-ERROR **:\n"
-"unhandled exception (type unknown) in signal handler\n"
-"\n"
-"Program received signal SIGTRAP, Trace/breakpoint trap.\n"
-"(gdb) backtrace\n"
-"#2  0x0063c6ab in glibmm_unexpected_exception () at exceptionhandler.cc:77\n"
-"#3  Glib::exception_handlers_invoke () at exceptionhandler.cc:150\n"
-"#4  0x0063d370 in glibmm_source_callback (data=0x804d620) at main.cc:212\n"
-"#13 0x002e1b31 in Gtk::Application::run (this=0x804f300) at application.cc:178\n"
-"#14 0x08048ccc in main (argc=1, argv=0xbfffecd4) at with_signal.cc:16\n"
+msgstr "<code>&gt; gdb with_signal\n(gdb) run\n(with_signal:2703): glibmm-ERROR **:\nunhandled exception (type unknown) in signal handler\n\nProgram received signal SIGTRAP, Trace/breakpoint trap.\n(gdb) backtrace\n#2  0x0063c6ab in glibmm_unexpected_exception () at exceptionhandler.cc:77\n#3  Glib::exception_handlers_invoke () at exceptionhandler.cc:150\n#4  0x0063d370 in glibmm_source_callback (data=0x804d620) at main.cc:212\n#13 0x002e1b31 in Gtk::Application::run (this=0x804f300) at application.cc:178\n#14 0x08048ccc in main (argc=1, argv=0xbfffecd4) at with_signal.cc:16\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9399
@@ -21761,22 +20977,7 @@ msgid ""
 "\n"
 "Program received signal SIGTRAP, Trace/breakpoint trap.\n"
 "</code>"
-msgstr ""
-"\n"
-"&gt; gdb with_signal\n"
-"(gdb) catch throw\n"
-"Catchpoint 1 (throw)\n"
-"(gdb) run\n"
-"Catchpoint 1 (exception thrown), 0x00714ff0 in __cxa_throw ()\n"
-"(gdb) backtrace\n"
-"#0  0x00714ff0 in __cxa_throw () from /usr/lib/i386-linux-gnu/libstdc++.so.6\n"
-"#1  0x08048bd4 in throwSomething () at with_signal.cc:6\n"
-"(gdb) continue\n"
-"Continuing.\n"
-"(with_signal:2375): glibmm-ERROR **\n"
-"unhandled exception (type unknown) in signal handler\n"
-"\n"
-"Program received signal SIGTRAP, Trace/breakpoint trap.\n"
+msgstr "<code>&gt; gdb with_signal\n(gdb) catch throw\nCatchpoint 1 (throw)\n(gdb) run\nCatchpoint 1 (exception thrown), 0x00714ff0 in __cxa_throw ()\n(gdb) backtrace\n#0  0x00714ff0 in __cxa_throw () from /usr/lib/i386-linux-gnu/libstdc++.so.6\n#1  0x08048bd4 in throwSomething () at with_signal.cc:6\n(gdb) continue\nContinuing.\n(with_signal:2375): glibmm-ERROR **\nunhandled exception (type unknown) in signal handler\n\nProgram received signal SIGTRAP, Trace/breakpoint trap.\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9424
@@ -21819,15 +21020,7 @@ msgid ""
 "(gdb) set pagination off\n"
 "(gdb) run\n"
 "</code>"
-msgstr ""
-"\n"
-"(gdb) catch throw\n"
-"(gdb) commands\n"
-"(gdb)   backtrace\n"
-"(gdb)   continue\n"
-"(gdb)   end\n"
-"(gdb) set pagination off\n"
-"(gdb) run\n"
+msgstr "<code>(gdb) catch throw\n(gdb) commands\n(gdb)   backtrace\n(gdb)   continue\n(gdb)   end\n(gdb) set pagination off\n(gdb) run\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9437
@@ -21909,9 +21102,7 @@ msgstr ""
 msgid ""
 "<code>sigc::signal&lt;void(bool, int)&gt; signal_something;\n"
 "</code>"
-msgstr ""
-"\n"
-"sigc::signal&lt;void(bool, int)&gt; signal_something;\n"
+msgstr "<code>sigc::signal&lt;void(bool, int)&gt; signal_something;\n</code>"
 
 #. (itstool) path: appendix/para
 #: C/index-in.docbook:9468
@@ -21960,23 +21151,7 @@ msgid ""
 "  return m_signal_something;\n"
 "}\n"
 "</code>"
-msgstr ""
-"\n"
-"class Server\n"
-"{\n"
-"public:\n"
-"  //signal accessor:\n"
-"  using type_signal_something = sigc::signal&lt;void(bool, int)&gt;;\n"
-"  type_signal_something signal_something();\n"
-"\n"
-"protected:\n"
-"  type_signal_something m_signal_something;\n"
-"};\n"
-"\n"
-"Server::type_signal_something Server::signal_something()\n"
-"{\n"
-"  return m_signal_something;\n"
-"}\n"
+msgstr "<code>class Server\n{\npublic:\n  //signal accessor:\n  using type_signal_something = sigc::signal&lt;void(bool, int)&gt;;\n  type_signal_something signal_something();\n\nprotected:\n  type_signal_something m_signal_something;\n};\n\nServer::type_signal_something Server::signal_something()\n{\n  return m_signal_something;\n}\n</code>"
 
 #. (itstool) path: appendix/para
 #: C/index-in.docbook:9490
@@ -21998,10 +21173,7 @@ msgid ""
 "<code>server.signal_something().connect(\n"
 "  sigc::mem_fun(client, &amp;Client::on_server_something) );\n"
 "</code>"
-msgstr ""
-"\n"
-"server.signal_something().connect(\n"
-"  sigc::mem_fun(client, &amp;Client::on_server_something) );\n"
+msgstr "<code>server.signal_something().connect(\n  sigc::mem_fun(client, &amp;Client::on_server_something) );\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9501
@@ -22698,10 +21870,7 @@ msgid ""
 "<code>  $ git clone https://gitlab.gnome.org/GNOME/mm-common.git\n"
 "  $ cp -a mm-common/skeletonmm libsomethingmm\n"
 "</code>"
-msgstr ""
-"\n"
-"  $ git clone https://gitlab.gnome.org/GNOME/mm-common.git\n"
-"  $ cp -a mm-common/skeletonmm libsomethingmm\n"
+msgstr "<code>  $ git clone https://gitlab.gnome.org/GNOME/mm-common.git\n  $ cp -a mm-common/skeletonmm libsomethingmm\n</code>"
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:9808
@@ -22768,11 +21937,7 @@ msgid ""
 "    d=\"${f%/*}\"; b=\"${f##*/}\"; mv \"$f\" \"$d/${b//skeleton/libsomething}\"; \\\n"
 "  done\n"
 "</code>"
-msgstr ""
-"\n"
-"$ for f in $(find libsomethingmm -depth -name '*skeleton*'); do \\\n"
-"    d=\"${f%/*}\"; b=\"${f##*/}\"; mv \"$f\" \"$d/${b//skeleton/libsomething}\"; \\\n"
-"  done\n"
+msgstr "<code>$ for f in $(find libsomethingmm -depth -name '*skeleton*'); do \\\n    d=\"${f%/*}\"; b=\"${f##*/}\"; mv \"$f\" \"$d/${b//skeleton/libsomething}\"; \\\n  done\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9828
@@ -23154,9 +22319,7 @@ msgstr ""
 msgid ""
 "<code>$ ./h2def.py /usr/include/gtk-4.0/gtk/*.h &gt; gtk_methods.defs\n"
 "</code>"
-msgstr ""
-"\n"
-"$ ./h2def.py /usr/include/gtk-4.0/gtk/*.h &gt; gtk_methods.defs\n"
+msgstr "<code>$ ./h2def.py /usr/include/gtk-4.0/gtk/*.h &gt; gtk_methods.defs\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:9980
@@ -23190,9 +22353,7 @@ msgstr ""
 msgid ""
 "<code>$ ./enumextract.py /usr/include/gtk-4.0/gtk/*.h &gt; gtk_enums.defs\n"
 "</code>"
-msgstr ""
-"\n"
-"$ ./enum.pl /usr/include/gtk-4.0/gtk/*.h &gt; gtk_enums.defs\n"
+msgstr "<code>$ ./enumextract.py /usr/include/gtk-4.0/gtk/*.h &gt; gtk_enums.defs\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:9991
@@ -23222,10 +22383,7 @@ msgid ""
 "<code>$ cd tools/extra_defs_gen\n"
 "$ ./generate_extra_defs &gt; gtk_signals.defs\n"
 "</code>"
-msgstr ""
-"\n"
-"$ cd tools/extra_defs_gen\n"
-"$ ./generate_extra_defs &gt; gtk_signals.defs\n"
+msgstr "<code>$ cd tools/extra_defs_gen\n$ ./generate_extra_defs &gt; gtk_signals.defs\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10001
@@ -23285,20 +22443,7 @@ msgid ""
 "  return 0;\n"
 "}\n"
 "</code>"
-msgstr ""
-"\n"
-"#include &lt;glibmm_generate_extra_defs/generate_extra_defs.h&gt;\n"
-"#include &lt;libsomething.h&gt;\n"
-"#include &lt;iostream&gt;\n"
-"\n"
-"int main(int, char**)\n"
-"{\n"
-"  something_init();\n"
-"\n"
-"  std::cout &lt;&lt; get_defs(SOME_TYPE_WIDGET)\n"
-"            &lt;&lt; get_defs(SOME_TYPE_STUFF);\n"
-"  return 0;\n"
-"}\n"
+msgstr "<code>#include &lt;glibmm_generate_extra_defs/generate_extra_defs.h&gt;\n#include &lt;libsomething.h&gt;\n#include &lt;iostream&gt;\n\nint main(int, char**)\n{\n  something_init();\n\n  std::cout &lt;&lt; get_defs(SOME_TYPE_WIDGET)\n            &lt;&lt; get_defs(SOME_TYPE_STUFF);\n  return 0;\n}\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:10027
@@ -23477,39 +22622,7 @@ msgid ""
 "\n"
 "} // namespace Gtk\n"
 "</code>"
-msgstr ""
-"\n"
-"#include &lt;gtkmm/widget.h&gt;\n"
-"#include &lt;gtkmm/actionable.h&gt;\n"
-"_DEFS(gtkmm,gtk)\n"
-"_PINCLUDE(gtkmm/private/widget_p.h)\n"
-"\n"
-"namespace Gtk\n"
-"{\n"
-"\n"
-"class Button\n"
-"  : public Widget,\n"
-"    public Actionable\n"
-"{\n"
-"  _CLASS_GTKOBJECT(Button, GtkButton, GTK_BUTTON, Gtk::Widget, GtkWidget)\n"
-"  _IMPLEMENTS_INTERFACE(Actionable)\n"
-"public:\n"
-"\n"
-"  _CTOR_DEFAULT\n"
-"  explicit Button(const Glib::ustring&amp; label, bool mnemonic = false);\n"
-"\n"
-"  _WRAP_METHOD(void set_label(const Glib::ustring&amp; label), gtk_button_set_label)\n"
-"\n"
-"  ...\n"
-"\n"
-"  _WRAP_SIGNAL(void clicked(), \"clicked\")\n"
-"\n"
-"  ...\n"
-"\n"
-"  _WRAP_PROPERTY(\"label\", Glib::ustring)\n"
-"};\n"
-"\n"
-"} // namespace Gtk\n"
+msgstr "<code>#include &lt;gtkmm/widget.h&gt;\n#include &lt;gtkmm/actionable.h&gt;\n_DEFS(gtkmm,gtk)\n_PINCLUDE(gtkmm/private/widget_p.h)\n\nnamespace Gtk\n{\n\nclass GTKMM_API Button\n  : public Widget,\n    public Actionable\n{\n  _CLASS_GTKOBJECT(Button, GtkButton, GTK_BUTTON, Gtk::Widget, GtkWidget, , , GTKMM_API)\n  _IMPLEMENTS_INTERFACE(Actionable)\npublic:\n\n  _CTOR_DEFAULT\n  explicit Button(const Glib::ustring&amp; label, bool mnemonic = false);\n\n  _WRAP_METHOD(void set_label(const Glib::ustring&amp; label), gtk_button_set_label)\n\n  ...\n\n  _WRAP_SIGNAL(void clicked(), \"clicked\")\n\n  ...\n\n  _WRAP_PROPERTY(\"label\", Glib::ustring)\n};\n\n} // namespace Gtk\n</code>"
 
 #. (itstool) path: varlistentry/term
 #: C/index-in.docbook:10109
@@ -23615,10 +22728,7 @@ msgid ""
 "<code>$ cd gtk/src\n"
 "$ /usr/lib/glibmm-2.68/proc/gmmproc -I ../../tools/m4 --defs . button . ./../gtkmm\n"
 "</code>"
-msgstr ""
-"\n"
-"$ cd gtk/src\n"
-"$ /usr/lib/glibmm-2.68/proc/gmmproc -I ../../tools/m4 --defs . button . ./../gtkmm\n"
+msgstr "<code>$ cd gtk/src\n$ /usr/lib/glibmm-2.68/proc/gmmproc -I ../../tools/m4 --defs . button . ./../gtkmm\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10143
@@ -23696,9 +22806,7 @@ msgstr ""
 msgid ""
 "<code>_CONVERSION(`GtkTreeView*',`TreeView*',`Glib::wrap($3)')\n"
 "</code>"
-msgstr ""
-"\n"
-"_CONVERSION(`GtkTreeView*',`TreeView*',`Glib::wrap($3)')\n"
+msgstr "<code>_CONVERSION(`GtkTreeView*',`TreeView*',`Glib::wrap($3)')\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10167
@@ -23731,11 +22839,7 @@ msgid ""
 "_CONVERSION(`const PrintSettings&amp;',`GtkPrintSettings*',__FCR2P)\n"
 "_CONVERSION(`const Glib::RefPtr&lt;Printer&gt;&amp;',`GtkPrinter*',__CONVERT_REFPTR_TO_P($3))\n"
 "</code>"
-msgstr ""
-"\n"
-"_CONVERSION(`PrintSettings&amp;',`GtkPrintSettings*',__FR2P)\n"
-"_CONVERSION(`const PrintSettings&amp;',`GtkPrintSettings*',__FCR2P)\n"
-"_CONVERSION(`const Glib::RefPtr&lt;Printer&gt;&amp;',`GtkPrinter*',__CONVERT_REFPTR_TO_P($3))\n"
+msgstr "<code>_CONVERSION(`PrintSettings&amp;',`GtkPrintSettings*',__FR2P)\n_CONVERSION(`const PrintSettings&amp;',`GtkPrintSettings*',__FCR2P)\n_CONVERSION(`const Glib::RefPtr&lt;Printer&gt;&amp;',`GtkPrinter*',__CONVERT_REFPTR_TO_P($3))\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:10182
@@ -23800,9 +22904,7 @@ msgstr ""
 msgid ""
 "<code>_INITIALIZATION(`Gtk::Widget&amp;',`GtkWidget*',`$3 = Glib::wrap($4)')\n"
 "</code>"
-msgstr ""
-"\n"
-"_INITIALIZATION(`Gtk::Widget&amp;',`GtkWidget*',`$3 = Glib::wrap($4)')\n"
+msgstr "<code>_INITIALIZATION(`Gtk::Widget&amp;',`GtkWidget*',`$3 = Glib::wrap($4)')\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10203
@@ -23912,9 +23014,7 @@ msgstr ""
 msgid ""
 "<code>_CLASS_GOBJECT(Adjustment, GtkAdjustment, GTK_ADJUSTMENT, Glib::Object, GObject, , , GTKMM_API)\n"
 "</code>"
-msgstr ""
-"\n"
-"_CLASS_GOBJECT(Adjustment, GtkAdjustment, GTK_ADJUSTMENT, Glib::Object, GObject)\n"
+msgstr "<code>_CLASS_GOBJECT(Adjustment, GtkAdjustment, GTK_ADJUSTMENT, Glib::Object, GObject, , , GTKMM_API)\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:10243
@@ -23960,9 +23060,7 @@ msgstr ""
 msgid ""
 "<code>_CLASS_GTKOBJECT(Button, GtkButton, GTK_BUTTON, Gtk::Widget, GtkWidget, , , GTKMM_API)\n"
 "</code>"
-msgstr ""
-"\n"
-"_CLASS_GTKOBJECT(Button, GtkButton, GTK_BUTTON, Gtk::Widget, GtkWidget)\n"
+msgstr "<code>_CLASS_GTKOBJECT(Button, GtkButton, GTK_BUTTON, Gtk::Widget, GtkWidget, , , GTKMM_API)\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10253
@@ -24034,9 +23132,7 @@ msgstr "示例来自<classname>Gdk::RGBA</classname>："
 msgid ""
 "<code>_CLASS_BOXEDTYPE(RGBA, GdkRGBA, NONE, gdk_rgba_copy, gdk_rgba_free, GDKMM_API)\n"
 "</code>"
-msgstr ""
-"\n"
-"_CLASS_BOXEDTYPE(RGBA, GdkRGBA, NONE, gdk_rgba_copy, gdk_rgba_free)\n"
+msgstr "<code>_CLASS_BOXEDTYPE(RGBA, GdkRGBA, NONE, gdk_rgba_copy, gdk_rgba_free, GDKMM_API)\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:10280
@@ -24078,9 +23174,7 @@ msgstr "示例来自<classname>Gdk::Rectangle</classname>："
 msgid ""
 "<code>_CLASS_BOXEDTYPE_STATIC(Rectangle, GdkRectangle, GDKMM_API)\n"
 "</code>"
-msgstr ""
-"\n"
-"_CLASS_BOXEDTYPE_STATIC(Rectangle, GdkRectangle)\n"
+msgstr "<code>_CLASS_BOXEDTYPE_STATIC(Rectangle, GdkRectangle, GDKMM_API)\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:10293
@@ -24124,9 +23218,7 @@ msgstr "示例来自<classname>Glib::Checksum</classname>："
 msgid ""
 "<code>_CLASS_OPAQUE_COPYABLE(VariantType, GVariantType, NONE, g_variant_type_copy, g_variant_type_free, GLIBMM_API)\n"
 "</code>"
-msgstr ""
-"\n"
-"_CLASS_OPAQUE_COPYABLE(VariantType, GVariantType, NONE, g_variant_type_copy, g_variant_type_free)\n"
+msgstr "<code>_CLASS_OPAQUE_COPYABLE(VariantType, GVariantType, NONE, g_variant_type_copy, g_variant_type_free, GLIBMM_API)\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:10306
@@ -24175,9 +23267,7 @@ msgstr "示例来自<classname>Gdk::Rectangle</classname>："
 msgid ""
 "<code>_CLASS_OPAQUE_REFCOUNTED(CssSection, GtkCssSection, NONE, gtk_css_section_ref, gtk_css_section_unref, GTKMM_API)\n"
 "</code>"
-msgstr ""
-"\n"
-"_CLASS_OPAQUE_REFCOUNTED(CssSection, GtkCssSection, NONE, gtk_css_section_ref, gtk_css_section_unref)\n"
+msgstr "<code>_CLASS_OPAQUE_REFCOUNTED(CssSection, GtkCssSection, NONE, gtk_css_section_ref, gtk_css_section_unref, GTKMM_API)\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:10319
@@ -24214,9 +23304,7 @@ msgstr "示例来自<classname>Gdk::Rectangle</classname>："
 msgid ""
 "<code>_CLASS_GENERIC(TimeCoord, GdkTimeCoord)\n"
 "</code>"
-msgstr ""
-"\n"
-"_CLASS_GENERIC(TimeCoord, GdkTimeCoord)\n"
+msgstr "<code>_CLASS_GENERIC(TimeCoord, GdkTimeCoord)\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:10331
@@ -24260,9 +23348,7 @@ msgstr "示例来自与<filename>celleditable.hg</filename>："
 msgid ""
 "<code>_CLASS_INTERFACE(CellEditable, GtkCellEditable, GTK_CELL_EDITABLE, GtkCellEditableIface, , , GTKMM_API)\n"
 "</code>"
-msgstr ""
-"\n"
-"_CLASS_INTERFACE(CellEditable, GtkCellEditable, GTK_CELL_EDITABLE, GtkCellEditableIface)\n"
+msgstr "<code>_CLASS_INTERFACE(CellEditable, GtkCellEditable, GTK_CELL_EDITABLE, GtkCellEditableIface, , , GTKMM_API)\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10342
@@ -24288,9 +23374,7 @@ msgstr ""
 msgid ""
 "<code>_CLASS_INTERFACE(LoadableIcon, GLoadableIcon, G_LOADABLE_ICON, GLoadableIconIface, Icon, GIcon, GIOMM_API)\n"
 "</code>"
-msgstr ""
-"\n"
-"_CLASS_INTERFACE(LoadableIcon, GLoadableIcon, G_LOADABLE_ICON, GLoadableIconIface, Icon, GIcon)\n"
+msgstr "<code>_CLASS_INTERFACE(LoadableIcon, GLoadableIcon, G_LOADABLE_ICON, GLoadableIconIface, Icon, GIcon, GIOMM_API)\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:10355
@@ -24357,17 +23441,7 @@ msgid ""
 "public:\n"
 "  _WRAP_CREATE(const Glib::ustring&amp; name, bool left_gravity = true)\n"
 "</code>"
-msgstr ""
-"\n"
-"class TextMark : public Glib::Object\n"
-"{\n"
-"  _CLASS_GOBJECT(TextMark, GtkTextMark, GTK_TEXT_MARK, Glib::Object, GObject)\n"
-"\n"
-"protected:\n"
-"  _WRAP_CTOR(TextMark(const Glib::ustring&amp; name, bool left_gravity = true), gtk_text_mark_new)\n"
-"\n"
-"public:\n"
-"  _WRAP_CREATE(const Glib::ustring&amp; name, bool left_gravity = true)\n"
+msgstr "<code>class GTKMM_API TextMark : public Glib::Object\n{\n  _CLASS_GOBJECT(TextMark, GtkTextMark, GTK_TEXT_MARK, Glib::Object, GObject, , , GTKMM_API)\n\nprotected:\n  _WRAP_CTOR(TextMark(const Glib::ustring&amp; name, bool left_gravity = true), gtk_text_mark_new)\n\npublic:\n  _WRAP_CREATE(const Glib::ustring&amp; name, bool left_gravity = true)\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:10384
@@ -24463,12 +23537,7 @@ msgid ""
 "  _CONSTRUCT(\"label\", label.c_str(), \"use_underline\", gboolean(mnemonic))\n"
 "{}\n"
 "</code>"
-msgstr ""
-"\n"
-"Button::Button(const Glib::ustring&amp; label, bool mnemonic)\n"
-":\n"
-"  _CONSTRUCT(\"label\", label.c_str(), \"use_underline\", gboolean(mnemonic))\n"
-"{}\n"
+msgstr "<code>Button::Button(const Glib::ustring&amp; label, bool mnemonic)\n:\n  _CONSTRUCT(\"label\", label.c_str(), \"use_underline\", gboolean(mnemonic))\n{}\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:10434
@@ -24604,19 +23673,7 @@ msgid ""
 "  // ...\n"
 "};\n"
 "</code>"
-msgstr ""
-"\n"
-"class Derived : public Glib::Object\n"
-"{\n"
-"  _CLASS_GOBJECT(Derived, GDerived, G_DERIVED, Glib::Object, GObject)\n"
-"\n"
-"  _CUSTOM_MOVE_OPERATIONS\n"
-"\n"
-"public:\n"
-"  Derived(Derived&amp;&amp; src) noexcept;\n"
-"  Derived&amp; operator=(Derived&amp;&amp; src) noexcept;\n"
-"  // ...\n"
-"};\n"
+msgstr "<code>class Derived : public Glib::Object\n{\n  _CLASS_GOBJECT(Derived, GDerived, G_DERIVED, Glib::Object, GObject)\n\n  _CUSTOM_MOVE_OPERATIONS\n\npublic:\n  Derived(Derived&amp;&amp; src) noexcept;\n  Derived&amp; operator=(Derived&amp;&amp; src) noexcept;\n  // ...\n};\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:10499
@@ -24706,9 +23763,7 @@ msgstr "示例来自于<filename>entry.hg</filename>："
 msgid ""
 "<code>_WRAP_METHOD(void set_text(const Glib::ustring&amp; text), gtk_entry_set_text)\n"
 "</code>"
-msgstr ""
-"\n"
-"_WRAP_METHOD(void set_text(const Glib::ustring&amp; text), gtk_entry_set_text)\n"
+msgstr "<code>_WRAP_METHOD(void set_text(const Glib::ustring&amp; text), gtk_entry_set_text)\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10537
@@ -25038,9 +24093,7 @@ msgstr "示例来自于<filename>container.hg</filename>："
 msgid ""
 "<code>_WRAP_METHOD_DOCS_ONLY(gtk_recent_info_get_applications)\n"
 "</code>"
-msgstr ""
-"\n"
-"_WRAP_METHOD_DOCS_ONLY(gtk_recent_info_get_applications)\n"
+msgstr "<code>_WRAP_METHOD_DOCS_ONLY(gtk_recent_info_get_applications)\n</code>"
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:10685
@@ -25129,10 +24182,7 @@ msgid ""
 "<code>_IGNORE(gtk_flow_box_set_filter_func, gtk_flow_box_set_sort_func)\n"
 "_IGNORE_SIGNAL(activate-cursor-child, toggle-cursor-child, move-cursor)\n"
 "</code>"
-msgstr ""
-"\n"
-"_IGNORE(gtk_flow_box_set_filter_func, gtk_flow_box_set_sort_func)\n"
-"_IGNORE_SIGNAL(activate-cursor-child, toggle-cursor-child, move-cursor)\n"
+msgstr "<code>_IGNORE(gtk_flow_box_set_filter_func, gtk_flow_box_set_sort_func)\n_IGNORE_SIGNAL(activate-cursor-child, toggle-cursor-child, move-cursor)\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:10736
@@ -25183,9 +24233,7 @@ msgstr "来自<filename>button.hg</filename>文件中的例子："
 msgid ""
 "<code>_WRAP_SIGNAL(void clicked(),\"clicked\")\n"
 "</code>"
-msgstr ""
-"\n"
-"_WRAP_SIGNAL(void clicked(),\"clicked\")\n"
+msgstr "<code>_WRAP_SIGNAL(void clicked(),\"clicked\")\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10748
@@ -25347,9 +24395,7 @@ msgstr "<function>_WRAP_PROPERTY(C属性名, C++类型)</function>"
 msgid ""
 "<code>_WRAP_PROPERTY(\"label\", Glib::ustring)\n"
 "</code>"
-msgstr ""
-"\n"
-"_WRAP_PROPERTY(\"label\", Glib::ustring)\n"
+msgstr "<code>_WRAP_PROPERTY(\"label\", Glib::ustring)\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:10873
@@ -25385,9 +24431,7 @@ msgstr "示例来自于<filename>widget.hg</filename>："
 msgid ""
 "<code>_WRAP_VFUNC(SizeRequestMode get_request_mode() const, get_request_mode)\n"
 "</code>"
-msgstr ""
-"\n"
-"_WRAP_VFUNC(SizeRequestMode get_request_mode() const, get_request_mode)\n"
+msgstr "<code>_WRAP_VFUNC(SizeRequestMode get_request_mode() const, get_request_mode)\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10880
@@ -25578,9 +24622,7 @@ msgstr "示例来自于<filename>grid.hg</filename>："
 msgid ""
 "<code>_IMPLEMENTS_INTERFACE(Orientable)\n"
 "</code>"
-msgstr ""
-"\n"
-"_IMPLEMENTS_INTERFACE(Orientable)\n"
+msgstr "<code>_IMPLEMENTS_INTERFACE(Orientable)\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11020
@@ -25619,9 +24661,7 @@ msgstr "示例来自于<filename>enums.hg</filename>："
 msgid ""
 "<code>_WRAP_ENUM(Orientation, GtkOrientation, decl_prefix GTKMM_API)\n"
 "</code>"
-msgstr ""
-"\n"
-"_WRAP_ENUM(Orientation, GtkOrientation)\n"
+msgstr "<code>_WRAP_ENUM(Orientation, GtkOrientation, decl_prefix GTKMM_API)\n</code>"
 
 #. (itstool) path: varlistentry/term
 #: C/index-in.docbook:11043
@@ -25667,10 +24707,7 @@ msgstr "示例来自于<filename>icontheme.hg</filename>："
 msgid ""
 "<code>_WRAP_ENUM(IconLookupFlags, GtkIconLookupFlags, NO_GTYPE, decl_prefix GTKMM_API)\n"
 "      </code>"
-msgstr ""
-"\n"
-"_WRAP_ENUM(IconLookupFlags, GtkIconLookupFlags, NO_GTYPE)\n"
-"      "
+msgstr "<code>_WRAP_ENUM(IconLookupFlags, GtkIconLookupFlags, NO_GTYPE, decl_prefix GTKMM_API)\n      </code>"
 
 #. (itstool) path: varlistentry/term
 #: C/index-in.docbook:11059
@@ -25702,10 +24739,7 @@ msgstr "示例来自于glibmm的<filename>dbusproxy.hg</filename>："
 msgid ""
 "<code>_WRAP_ENUM(ProxyFlags, GDBusProxyFlags, gtype_func g_dbus_proxy_flags_get_type, decl_prefix GIOMM_API)\n"
 "      </code>"
-msgstr ""
-"\n"
-"_WRAP_ENUM(ProxyFlags, GDBusProxyFlags, gtype_func g_dbus_proxy_flags_get_type)\n"
-"      "
+msgstr "<code>_WRAP_ENUM(ProxyFlags, GDBusProxyFlags, gtype_func g_dbus_proxy_flags_get_type, decl_prefix GIOMM_API)\n      </code>"
 
 #. (itstool) path: varlistentry/term
 #: C/index-in.docbook:11070
@@ -25737,10 +24771,7 @@ msgstr "示例来自于<filename>dialog.hg</filename>："
 msgid ""
 "<code>_WRAP_ENUM(ResponseType, GtkResponseType, CONV_TO_INT, decl_prefix GTKMM_API)\n"
 "      </code>"
-msgstr ""
-"\n"
-"_WRAP_ENUM(ResponseType, GtkResponseType, CONV_TO_INT)\n"
-"      "
+msgstr "<code>_WRAP_ENUM(ResponseType, GtkResponseType, CONV_TO_INT, decl_prefix GTKMM_API)\n      </code>"
 
 #. (itstool) path: varlistentry/term
 #: C/index-in.docbook:11081
@@ -25863,9 +24894,7 @@ msgstr "示例来自于<filename>pixbuf.hg</filename>："
 msgid ""
 "<code>_WRAP_GERROR(PixbufError, GdkPixbufError, GDK_PIXBUF_ERROR, decl_prefix GDKMM_API)\n"
 "</code>"
-msgstr ""
-"\n"
-"_WRAP_GERROR(PixbufError, GdkPixbufError, GDK_PIXBUF_ERROR)\n"
+msgstr "<code>_WRAP_GERROR(PixbufError, GdkPixbufError, GDK_PIXBUF_ERROR, decl_prefix GDKMM_API)\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11143
@@ -25961,10 +24990,7 @@ msgid ""
 "<code>// _MEMBER_GET_PTR(engine_lang, lang_engine, EngineLang*, PangoEngineLang*)\n"
 "// It's just a comment. It's difficult to find a real-world example.\n"
 "</code>"
-msgstr ""
-"\n"
-"// _MEMBER_GET_PTR(engine_lang, lang_engine, EngineLang*, PangoEngineLang*)\n"
-"// It's just a comment. It's difficult to find a real-world example.\n"
+msgstr "<code>// _MEMBER_GET_PTR(engine_lang, lang_engine, EngineLang*, PangoEngineLang*)\n// It's just a comment. It's difficult to find a real-world example.\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:11179
@@ -26007,9 +25033,7 @@ msgstr "示例来自于Pangomm中的<filename>layoutline.hg</filename>："
 msgid ""
 "<code>_MEMBER_GET_GOBJECT(layout, layout, Pango::Layout, PangoLayout*)\n"
 "</code>"
-msgstr ""
-"\n"
-"_MEMBER_GET_GOBJECT(layout, layout, Pango::Layout, PangoLayout*)\n"
+msgstr "<code>_MEMBER_GET_GOBJECT(layout, layout, Pango::Layout, PangoLayout*)\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:11195
@@ -26055,10 +25079,7 @@ msgid ""
 "<code>void gtk_widget_set_device_events(GtkWidget* widget, GdkDevice* device,\n"
 "  GdkEventMask events);\n"
 "</code>"
-msgstr ""
-"\n"
-"void gtk_widget_set_device_events(GtkWidget* widget, GdkDevice* device,\n"
-"  GdkEventMask events);\n"
+msgstr "<code>void gtk_widget_set_device_events(GtkWidget* widget, GdkDevice* device,\n  GdkEventMask events);\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11214
@@ -26082,11 +25103,7 @@ msgid ""
 "  const Glib::RefPtr&lt;const Gdk::Device&gt;&amp; device{device}),\n"
 "  gtk_widget_set_device_events)\n"
 "</code>"
-msgstr ""
-"\n"
-"_WRAP_METHOD(void set_device_events(Gdk::EventMask events{events},\n"
-"  const Glib::RefPtr&lt;const Gdk::Device&gt;&amp; device{device}),\n"
-"  gtk_widget_set_device_events)\n"
+msgstr "<code>_WRAP_METHOD(void set_device_events(Gdk::EventMask events{events},\n  const Glib::RefPtr&lt;const Gdk::Device&gt;&amp; device{device}),\n  gtk_widget_set_device_events)\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11222
@@ -26111,11 +25128,7 @@ msgid ""
 "  const Glib::RefPtr&lt;const Gdk::Device&gt;&amp; device{.}),\n"
 "  gtk_widget_set_device_events)\n"
 "</code>"
-msgstr ""
-"\n"
-"_WRAP_METHOD(void set_device_events(Gdk::EventMask events{.},\n"
-"  const Glib::RefPtr&lt;const Gdk::Device&gt;&amp; device{.}),\n"
-"  gtk_widget_set_device_events)\n"
+msgstr "<code>_WRAP_METHOD(void set_device_events(Gdk::EventMask events{.},\n  const Glib::RefPtr&lt;const Gdk::Device&gt;&amp; device{.}),\n  gtk_widget_set_device_events)\n</code>"
 
 #. (itstool) path: warning/para
 #: C/index-in.docbook:11232
@@ -26157,9 +25170,7 @@ msgstr ""
 msgid ""
 "<code>GtkToolItem* gtk_tool_button_new(GtkWidget* icon_widget, const gchar* label);\n"
 "</code>"
-msgstr ""
-"\n"
-"GtkToolItem* gtk_tool_button_new(GtkWidget* icon_widget, const gchar* label);\n"
+msgstr "<code>GtkToolItem* gtk_tool_button_new(GtkWidget* icon_widget, const gchar* label);\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11256
@@ -26183,10 +25194,7 @@ msgid ""
 "<code>_WRAP_CTOR(ToolButton(Widget&amp; icon_widget, const Glib::ustring&amp; label{?}),\n"
 "  gtk_tool_button_new)\n"
 "</code>"
-msgstr ""
-"\n"
-"_WRAP_CTOR(ToolButton(Widget&amp; icon_widget, const Glib::ustring&amp; label{?}),\n"
-"  gtk_tool_button_new)\n"
+msgstr "<code>_WRAP_CTOR(ToolButton(Widget&amp; icon_widget, const Glib::ustring&amp; label{?}),\n  gtk_tool_button_new)\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11265
@@ -26223,9 +25231,7 @@ msgstr ""
 msgid ""
 "<code>GtkSizeRequestMode gtk_widget_get_request_mode(GtkWidget* widget);\n"
 "</code>"
-msgstr ""
-"\n"
-"GtkSizeRequestMode gtk_widget_get_request_mode(GtkWidget* widget);\n"
+msgstr "<code>GtkSizeRequestMode gtk_widget_get_request_mode(GtkWidget* widget);\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11284
@@ -26246,10 +25252,7 @@ msgid ""
 "<code>_WRAP_METHOD(void get_request_mode(SizeRequestMode&amp; mode{OUT}) const,\n"
 "  gtk_widget_get_request_mode)\n"
 "</code>"
-msgstr ""
-"\n"
-"_WRAP_METHOD(void get_request_mode(SizeRequestMode&amp; mode{OUT}) const,\n"
-"  gtk_widget_get_request_mode)\n"
+msgstr "<code>_WRAP_METHOD(void get_request_mode(SizeRequestMode&amp; mode{OUT}) const,\n  gtk_widget_get_request_mode)\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11290
@@ -26270,9 +25273,7 @@ msgstr ""
 msgid ""
 "<code>_INITIALIZATION(`SizeRequestMode&amp;',`GtkSizeRequestMode',`$3 = (SizeRequestMode)($4)')\n"
 "</code>"
-msgstr ""
-"\n"
-"_INITIALIZATION(`SizeRequestMode&amp;',`GtkSizeRequestMode',`$3 = (SizeRequestMode)($4)')\n"
+msgstr "<code>_INITIALIZATION(`SizeRequestMode&amp;',`GtkSizeRequestMode',`$3 = (SizeRequestMode)($4)')\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11297
@@ -26288,9 +25289,7 @@ msgstr ""
 msgid ""
 "<code>_INITIALIZATION(`SizeRequestMode&amp;',`GtkSizeRequestMode',`$3 = ($1)($4)')\n"
 "</code>"
-msgstr ""
-"\n"
-"_INITIALIZATION(`SizeRequestMode&amp;',`GtkSizeRequestMode',`$3 = ($1)($4)')\n"
+msgstr "<code>_INITIALIZATION(`SizeRequestMode&amp;',`GtkSizeRequestMode',`$3 = ($1)($4)')\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11300
@@ -26388,9 +25387,7 @@ msgid ""
 "<code>\n"
 "_INITIALIZATION(`Glib::ustring&amp;',`const char*',`$3 = Glib::convert_const_gchar_ptr_to_ustring($4)')\n"
 "</code>"
-msgstr ""
-"\n"
-"_INITIALIZATION(`Gtk::Widget&amp;',`GtkWidget*',`$3 = Glib::wrap($4)')\n"
+msgstr "<code>\n_INITIALIZATION(`Glib::ustring&amp;',`const char*',`$3 = Glib::convert_const_gchar_ptr_to_ustring($4)')\n</code>"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:11334
@@ -26609,13 +25606,7 @@ msgid ""
 "  wrap_init(); //Tells the Glib::wrap() table about the libsomethingmm classes.\n"
 "}\n"
 "</code>"
-msgstr ""
-"\n"
-"void init()\n"
-"{\n"
-"  Gtk::init_gtkmm_internals(); //Sets up the g type system and the Glib::wrap() table.\n"
-"  wrap_init(); //Tells the Glib::wrap() table about the libsomethingmm classes.\n"
-"}\n"
+msgstr "<code>void init()\n{\n  Gtk::init_gtkmm_internals(); //Sets up the g type system and the Glib::wrap() table.\n  wrap_init(); //Tells the Glib::wrap() table about the libsomethingmm classes.\n}\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11414
@@ -26689,14 +25680,7 @@ msgid ""
 "  ...\n"
 "};\n"
 "</code>"
-msgstr ""
-"\n"
-"typedef struct _ExampleWidget ExampleWidget;\n"
-"\n"
-"struct _ExampleWidget\n"
-"{\n"
-"  ...\n"
-"};\n"
+msgstr "<code>typedef struct _ExampleWidget ExampleWidget;\n\nstruct _ExampleWidget\n{\n  ...\n};\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11437
@@ -26741,11 +25725,7 @@ msgid ""
 "../../libexample/libexamplemm/example-widget.h:34: error: 'ExampleWidget' has a previous declaration here\n"
 "make[4]: *** [example-widget.lo] Error 1\n"
 "</code>"
-msgstr ""
-"\n"
-"example-widget.h:56: error: using typedef-name 'ExampleWidget' after 'struct'\n"
-"../../libexample/libexamplemm/example-widget.h:34: error: 'ExampleWidget' has a previous declaration here\n"
-"make[4]: *** [example-widget.lo] Error 1\n"
+msgstr "<code>example-widget.h:56: error: using typedef-name 'ExampleWidget' after 'struct'\n../../libexample/libexamplemm/example-widget.h:34: error: 'ExampleWidget' has a previous declaration here\nmake[4]: *** [example-widget.lo] Error 1\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11448
@@ -26763,10 +25743,7 @@ msgid ""
 "<code>example-widget.h:60: error: '_ExampleWidget ExampleWidget' redeclared as different kind of symbol\n"
 "../../libexample/libexamplemm/example-widget.h:34: error: previous declaration of 'typedef struct _ExampleWidget ExampleWidget'\n"
 "</code>"
-msgstr ""
-"\n"
-"example-widget.h:60: error: '_ExampleWidget ExampleWidget' redeclared as different kind of symbol\n"
-"../../libexample/libexamplemm/example-widget.h:34: error: previous declaration of 'typedef struct _ExampleWidget ExampleWidget'\n"
+msgstr "<code>example-widget.h:60: error: '_ExampleWidget ExampleWidget' redeclared as different kind of symbol\n../../libexample/libexamplemm/example-widget.h:34: error: previous declaration of 'typedef struct _ExampleWidget ExampleWidget'\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11452
@@ -26810,12 +25787,7 @@ msgid ""
 "        return g_object_new (EXAMPLE_TYPE_WIDGET, \"something\", something, \"thing\", thing, NULL);\n"
 "}\n"
 "</code>"
-msgstr ""
-"\n"
-"GtkWidget* example_widget_new(int something, const char* thing)\n"
-"{\n"
-"        return g_object_new (EXAMPLE_TYPE_WIDGET, \"something\", something, \"thing\", thing, NULL);\n"
-"}\n"
+msgstr "<code>GtkWidget* example_widget_new(int something, const char* thing)\n{\n        return g_object_new (EXAMPLE_TYPE_WIDGET, \"something\", something, \"thing\", thing, NULL);\n}\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11469
@@ -26897,21 +25869,7 @@ msgid ""
 "        do_something(something);\n"
 "}\n"
 "</code>"
-msgstr ""
-"\n"
-"GtkWidget* example_widget_new(int something, const char* thing)\n"
-"{\n"
-"        ExampleWidget* widget;\n"
-"        widget = g_object_new (EXAMPLE_TYPE_WIDGET, NULL);\n"
-"        example_widget_construct(widget, \"something\", something, \"thing\", thing);\n"
-"}\n"
-"\n"
-"void example_widget_construct(ExampleWidget* widget, int something, const char* thing)\n"
-"{\n"
-"        //Do stuff that uses private API:\n"
-"        widget-&gt;priv-&gt;thing = thing;\n"
-"        do_something(something);\n"
-"}\n"
+msgstr "<code>GtkWidget* example_widget_new(int something, const char* thing)\n{\n        ExampleWidget* widget;\n        widget = g_object_new (EXAMPLE_TYPE_WIDGET, NULL);\n        example_widget_construct(widget, \"something\", something, \"thing\", thing);\n}\n\nvoid example_widget_construct(ExampleWidget* widget, int something, const char* thing)\n{\n        //Do stuff that uses private API:\n        widget-&gt;priv-&gt;thing = thing;\n        do_something(something);\n}\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11495
@@ -26988,7 +25946,7 @@ msgstr ""
 msgid ""
 "<code>./docextract_to_xml.py -s ~/checkout/gnome/gtk/gtk/ &gt; gtk_docs.xml\n"
 "</code>"
-msgstr "./docextract_to_xml.py -s ~/checkout/gnome/gtk/gtk/ &gt; gtk_docs.xml\n"
+msgstr "<code>./docextract_to_xml.py -s ~/checkout/gnome/gtk/gtk/ &gt; gtk_docs.xml\n</code>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11522

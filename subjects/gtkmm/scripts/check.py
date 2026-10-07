@@ -460,6 +460,31 @@ def check_po_units() -> None:
     print(f"PO 单元映射校验通过：{total} 个单元（{units_dir.name}/）")
 
 
+def check_po_gnu() -> None:
+    """GNU msgfmt 官方校验（装了 gettext 才跑）：贡献文件上传前的最后一道关。
+    msgfmt -c 检查字符串转义、msgid/msgstr 换行对称等 PO 规范，行级解析
+    覆盖不了这些。缺失时给出安装指引而不是静默跳过。"""
+    msgfmt = shutil.which("msgfmt")
+    if msgfmt is None:
+        print("提示：未装 GNU gettext，PO 文件未经官方校验。"
+              "安装：winget install mlocati.GetText")
+        return
+    for name in ("po/contribution.zh_CN.po", "po/reference.zh_CN.po"):
+        path = PROJECT_ROOT / name
+        if not path.is_file():
+            continue
+        result = subprocess.run(
+            [msgfmt, "-c", "--statistics", "-o", os.devnull, str(path)],
+            capture_output=True, text=True,
+        )
+        output = (result.stderr or result.stdout or "").strip().splitlines()
+        stats = output[-1] if output else ""
+        if result.returncode != 0:
+            fail(f"{name}: GNU msgfmt 校验未通过：{'；'.join(output)}")
+        else:
+            print(f"{name}: GNU msgfmt 校验通过（{stats}）")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="验证 gtkmm 学习应用")
     parser.add_argument("--skip-rust", action="store_true", help="跳过 cargo check")
@@ -474,6 +499,7 @@ def main() -> int:
     check_manifest(manifest or {}, kp_ids, course_refs, lab_refs)
     check_alignment()
     check_po_units()
+    check_po_gnu()
     check_license_pages()
 
     contract = PROJECT_ROOT / "content-contract.json"

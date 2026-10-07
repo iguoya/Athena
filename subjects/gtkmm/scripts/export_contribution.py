@@ -238,14 +238,17 @@ def main() -> int:
     out_text = "\n".join(line for idx, line in enumerate(lines) if idx not in drop) + "\n"
 
     # ---- 头部元数据更新：修订时间、贡献者署名与复数规则 ----
+    # 注意两点：PO 字符串里的 \n 是字面两字符，替换串要原样补回；
+    # re.sub 的替换串会解释反斜杠转义，必须走 lambda（返回值不再转义），
+    # 否则字面 \n 变真换行、header 字符串被拦腰截断
     now = datetime.now().astimezone().strftime("%Y-%m-%d %H:%M%z")
     out_text = re.sub(
         r'"PO-Revision-Date: [^"]*"',
-        f'"PO-Revision-Date: {now}"',
+        lambda m: f'"PO-Revision-Date: {now}\\n"',
         out_text, count=1)
     out_text = re.sub(
         r'"Last-Translator: [^"]*"',
-        '"Last-Translator: tiger <375478250@qq.com>"',
+        lambda m: '"Last-Translator: tiger <375478250@qq.com>\\n"',
         out_text, count=1)
     if '"Plural-Forms:' not in out_text:
         # zh_CN 无复数变化；Damned Lies 的合规检查期望这个头部
