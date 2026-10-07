@@ -244,17 +244,21 @@ function TranslatedText({ text }: { text: string }) {
   return <p className="text-[29px] leading-loose text-fg/90">{renderInline(flow(text))}</p>;
 }
 
-/** 学习者自译：官方快照待译/待复核的段落允许写下自己的译文并保存
- *  （learning.db my_translations，按段落 sha 存，随进度库走）。
- *  保存空内容即清除自译，回到「此段待译」。 */
+/** 学习者自译：官方快照待译/待复核/已有译文（订正候选）的段落都允许
+ *  写下自己的译文并保存（learning.db my_translations，按段落 sha 存，
+ *  随进度库走）。保存空内容即清除。已有官方译文时官方译文照旧显示，
+ *  自译只是并排的订正候选，不覆盖内容层（应用 ADR 0004）。 */
 function SelfTranslation({
   sha,
   text,
   onSave,
+  actionLabel = "✍️ 自己译",
 }: {
   sha: string;
   text?: string;
   onSave: (sha: string, text: string) => void;
+  /** 入口按钮文案：待译段「✍️ 自己译」，官方译文段「✎ 我的译法」 */
+  actionLabel?: string;
 }) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState("");
@@ -318,7 +322,7 @@ function SelfTranslation({
         onClick={start}
         className="ml-2 rounded-lg border border-dashed border-accent/40 px-3 py-0.5 text-[20px] text-accent transition-colors hover:bg-accent-soft"
       >
-        ✍️ 自己译
+        {actionLabel}
       </button>
     </p>
   );
@@ -463,32 +467,47 @@ function ReadUnit({
   const unitKnown = knownParas.has(unitSha);
   const zhOf = (block: SnapshotBlock) => {
     if (block.zh) {
-      if (sentenceMode) {
-        const enSents = splitSentences(flow(block.text), "en");
-        const zhSents = splitSentences(block.zh, "zh");
-        const rows: { en: string; zh?: string }[] = enSents.map((s) => ({ en: s }));
-        zhSents.forEach((s, i) => {
-          if (rows[i]) rows[i].zh = s;
-          else rows.push({ en: "", zh: s });
-        });
-        return (
-          <div className="mt-1 divide-y divide-line/60">
-            {rows.map((row, i) => (
-              <div key={i} className="py-1">
-                {row.en && (
-                  <p className="font-serif text-[24px] leading-relaxed text-fg/60">
-                    {renderInline(row.en)}
-                  </p>
-                )}
-                {row.zh && (
-                  <p className="text-[27px] leading-loose text-fg/90">{renderInline(row.zh)}</p>
-                )}
-              </div>
-            ))}
-          </div>
-        );
-      }
-      return <TranslatedText text={block.zh} />;
+      const zhBody = sentenceMode ? (
+        (() => {
+          const enSents = splitSentences(flow(block.text), "en");
+          const zhSents = splitSentences(block.zh, "zh");
+          const rows: { en: string; zh?: string }[] = enSents.map((s) => ({ en: s }));
+          zhSents.forEach((s, i) => {
+            if (rows[i]) rows[i].zh = s;
+            else rows.push({ en: "", zh: s });
+          });
+          return (
+            <div className="mt-1 divide-y divide-line/60">
+              {rows.map((row, i) => (
+                <div key={i} className="py-1">
+                  {row.en && (
+                    <p className="font-serif text-[24px] leading-relaxed text-fg/60">
+                      {renderInline(row.en)}
+                    </p>
+                  )}
+                  {row.zh && (
+                    <p className="text-[27px] leading-loose text-fg/90">{renderInline(row.zh)}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          );
+        })()
+      ) : (
+        <TranslatedText text={block.zh} />
+      );
+      // 官方译文照旧显示；学习者的订正候选并排其下，不覆盖内容层（应用 ADR 0004）
+      return (
+        <>
+          {zhBody}
+          <SelfTranslation
+            sha={block.sha}
+            text={myTranslations[block.sha]}
+            onSave={onSaveMyTranslation}
+            actionLabel="✎ 我的译法"
+          />
+        </>
+      );
     }
     if (block.stale_from) {
       return (

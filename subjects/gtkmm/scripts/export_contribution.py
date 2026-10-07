@@ -8,6 +8,11 @@ msgid/位置/注释全部保留原样——只把「我们有更好译文」的�
 - 质量修订：基准已有译文但与快照译文不同 → 默认保留基准（尊重上游社区译文），
   我们的译文写入随附的「贡献清单」供人工对照，人工确认更优的可手工替换。
 
+译文输入源（应用 ADR 0004）：快照 `zh`（现行译文）为主；应用内保存的自译
+草稿（progress/learning.db 的 my_translations，按段落 sha）为辅——有自译
+的段自译优先：待译段按填空处理，已有译文的段进 differs 清单供人工确认。
+草稿永不自动成为贡献 PO 里的正式译文。
+
 输出：
   po/contribution.zh_CN.po   可直接上传 Damned Lies / 提 MR 的贡献文件
   po/contribution-report.json 条目级清单（本批改了哪些条目、改动类型），供人工过目
@@ -21,6 +26,7 @@ from __future__ import annotations
 
 import json
 import re
+import sqlite3
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -31,6 +37,7 @@ from apply_po import parse_po, po_to_plain, snapshot_plain  # noqa: E402
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 REF_PO = PROJECT_ROOT / "po" / "reference.zh_CN.po"
 CHAPTERS = PROJECT_ROOT / "content" / "chapters"
+DB = PROJECT_ROOT / "progress" / "learning.db"
 OUT_PO = PROJECT_ROOT / "po" / "contribution.zh_CN.po"
 OUT_REPORT = PROJECT_ROOT / "po" / "contribution-report.json"
 
@@ -62,14 +69,29 @@ def main() -> int:
     force_utf8()
     ref_text = REF_PO.read_text(encoding="utf-8")
 
-    # ---- 快照译文集合（纯文本指纹 → 中文）----
+    # ---- 学习者自译草稿（应用 ADR 0004）：sha → 译文；库不存在时为空 ----
+    my_zh: dict[str, str] = {}
+    if DB.is_file():
+        connection = sqlite3.connect(DB)
+        try:
+            my_zh = dict(connection.execute("SELECT sha, text FROM my_translations"))
+        finally:
+            connection.close()
+
+    # ---- 快照译文集合（纯文本指纹 → 中文）；有自译的段自译优先（订正候选）----
     snap_zh: dict[str, str] = {}
+    snap_source: dict[str, str] = {}
     for f in sorted(CHAPTERS.rglob("*.json")):
         data = json.loads(f.read_text(encoding="utf-8"))
         for block in data["blocks"]:
-            if block["type"] in ("para", "listitem") and block.get("zh"):
-                key = snapshot_plain(block["text"])
-                snap_zh.setdefault(key, block["zh"])
+            if block["type"] not in ("para", "listitem"):
+                continue
+            key = snapshot_plain(block["text"])
+            mine = my_zh.get(block.get("sha") or "")
+            zh = mine or block.get("zh")
+            if zh:
+                snap_zh.setdefault(key, zh)
+                snap_source.setdefault(key, "self-translation" if mine else "snapshot")
 
     # ---- 逐块改写 ref po：只动 msgstr ----
     blocks = re.split(r"(\n\s*\n)", ref_text)
@@ -93,7 +115,11 @@ def main() -> int:
             continue
         snap_plain_txt = snapshot_plain(snap)
 
-        entry_report = {"msgid": raw_mid[:80], "action": None}
+        entry_report = {
+            "msgid": raw_mid[:80],
+            "action": None,
+            "source": snap_source.get(key, "snapshot"),
+        }
 
         if "#, fuzzy" in block:
             # fuzzy 复核成果：若快照译文与 fuzzy 译文一致 → 摘 fuzzy 保留译文
