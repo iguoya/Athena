@@ -36,6 +36,9 @@ def run_npm(args: list[str]) -> None:
 
 
 def main() -> int:
+    # CI 上 stdout 是管道,Windows 默认 cp1252,打印中文直接抛 UnicodeEncodeError(ADR 0047)。
+    for stream in (sys.stdout, sys.stderr):
+        stream.reconfigure(encoding="utf-8", errors="replace")
     check_app_json()
 
     # 缺依赖就按 lock 装上再查，而不是跳过报通过：CI 每次都是干净检出，

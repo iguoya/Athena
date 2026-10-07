@@ -490,8 +490,15 @@ def main() -> int:
     parser.add_argument("--skip-rust", action="store_true", help="跳过 cargo check")
     parser.add_argument("--skip-native", action="store_true", help="跳过演示/实验编译与自检")
     args = parser.parse_args()
+    # CI 上 stdout 是管道，Windows 默认 cp1252，打印中文直接抛 UnicodeEncodeError（ADR 0047）。
+    for stream in (sys.stdout, sys.stderr):
+        stream.reconfigure(encoding="utf-8", errors="replace")
 
     check_json_all()
+    # 结构核对以官方 DocBook 为准，它在 gitignore 的 upstream/ 里，新机器与 CI 先拉。
+    if not (PROJECT_ROOT / "upstream" / "gtkmm-documentation").is_dir():
+        raise SystemExit("缺官方教程源 upstream/gtkmm-documentation，结构核对跑不了。"
+                         "先运行：python3 scripts/fetch_upstream.py（按 upstream.json 的钉点拉取）")
     official = {c["id"]: {s["id"]: s for s in c["sections"]} for c in load_structure()}
     course = load_json(CONTENT_DIR / "curriculum.json")
     kp_ids, course_refs, lab_refs = check_curriculum(course or {}, official)

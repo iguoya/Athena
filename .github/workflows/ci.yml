@@ -318,6 +318,11 @@ jobs:
             subjects/${{ matrix.app }}/src-tauri/target
           key: tauri-${{ matrix.app }}-${{ matrix.os }}-${{ hashFiles(format('subjects/{0}/src-tauri/Cargo.lock', matrix.app)) }}
 
+      - name: Fetch gtkmm upstream docs
+        # 结构核对要官方 DocBook（gitignore 的 upstream/），按 upstream.json 的钉点拉取
+        if: matrix.app == 'gtkmm'
+        run: python3 subjects/gtkmm/scripts/fetch_upstream.py
+
       - name: Verify
         run: python3 scripts/check.py ${{ matrix.app }} ${{ matrix.app == 'gtkmm' && '--skip-native' || '' }}
 
@@ -338,6 +343,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends             cmake ninja-build pkg-config g++ libgtkmm-4.0-dev xvfb gettext
+
+      - name: Fetch gtkmm upstream docs
+        run: python3 subjects/gtkmm/scripts/fetch_upstream.py
 
       - name: Verify
         run: xvfb-run -a python3 scripts/check.py gtkmm --skip-rust
