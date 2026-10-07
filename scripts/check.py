@@ -3,9 +3,10 @@
 
 检查逻辑归各应用自己（subjects/<id>/ 与 practice/<id>/ 下的 scripts/check.py），
 这里只负责依次调用，
-外加三项跨应用检查：内容必须有出处（ADR 0043），项目 skill 在 .agents/ 与
-.claude/ 两处一致（ADR 0061），GitHub 工作流过 actionlint 与变量粘连检查。新增应用放一份自己的 check.py 就会被带上，不用改这个文件，
-也不用改 CI。
+外加四项跨应用检查：内容必须有出处（ADR 0043），项目 skill 在 .agents/ 与
+.claude/ 两处一致（ADR 0061），GitHub 工作流过 actionlint 与变量粘连检查，
+结构卫生（文档树对账、应用四件套、ADR 索引覆盖）。新增应用放一份自己的
+check.py 就会被带上，不用改这个文件，也不用改 CI。
 
 用 Python 而不是 shell：验证每天都要跑，不该要求 Windows 上先装 Git Bash
 或 WSL（ADR 0047）。
@@ -13,7 +14,7 @@
 用法：
     python3 scripts/check.py                  跨应用检查 + 每个应用自己的检查
     python3 scripts/check.py cpp [参数...]    只跑某个应用，余下参数透传给它
-    python3 scripts/check.py --sources-only   只跑跨应用检查（skill 两处一致 + 出处 + 工作流）
+    python3 scripts/check.py --sources-only   只跑跨应用检查（skill 两处一致 + 出处 + 工作流 + 结构卫生）
 """
 
 from __future__ import annotations
@@ -199,6 +200,82 @@ def run_source_check() -> None:
         raise SystemExit(completed.returncode)
 
 
+# 没开工的素材坑连 app.json 都没有（REPOSITORY.md「三类判据」），只要求 README。
+_EMPTY_PLOT_MINIMUM = ("README.md",)
+# 开工的应用四件套：规则入口、代理入口、验证入口、导航入口。
+_APP_MINIMUM = ("AGENTS.md", "CLAUDE.md", "README.md", "scripts/check.py")
+
+_STRUCTURE_TREE_RE = re.compile(r"^  (\S+)/")
+_GROUP_RE = re.compile(r"^(subjects|practice)/")
+
+
+def run_structure_check() -> None:
+    """结构卫生：文档与目录对账、应用四件套、ADR 索引覆盖。
+
+    项目变大后混乱都不是突然来的，是「加了一个东西、忘了另外三处」攒出来的：
+    c 改名 machine 时 REPOSITORY.md 没跟上，gtkmm 进仓库时结构树没写它，
+    0082/0087/0088 三篇 ADR 落库时索引漏了行——每处单看都是小事，叠起来就是
+    「文档还能不能信」的问题。这里把三类对账变成检查，再犯就在本地拦下。
+    """
+    print("== 跨应用检查：结构卫生 ==", flush=True)
+    problems: list[str] = []
+
+    # 1. REPOSITORY.md 的结构树必须与实际目录一致：树里多写的是幻觉，
+    #    少写的是新应用忘了登记——两个方向都算文档漂移。
+    #    只解析 ``` 围栏内的树，正文里两空格缩进的普通段落不算数。
+    repository_doc = REPO_ROOT / "docs" / "REPOSITORY.md"
+    tree: dict[str, set[str]] = {"subjects": set(), "practice": set()}
+    group = None
+    in_tree_block = False
+    for line in repository_doc.read_text(encoding="utf-8").splitlines():
+        if line.lstrip().startswith("```"):
+            in_tree_block = not in_tree_block
+            group = None
+            continue
+        if not in_tree_block:
+            continue
+        head = _GROUP_RE.match(line)
+        if head:
+            group = head.group(1)
+            continue
+        entry = _STRUCTURE_TREE_RE.match(line)
+        if entry and group:
+            tree[group].add(entry.group(1))
+    for root in ("subjects", "practice"):
+        actual = {p.name for p in (REPO_ROOT / root).iterdir() if p.is_dir()}
+        for ghost in sorted(tree[root] - actual):
+            problems.append(f"  {repository_doc.relative_to(REPO_ROOT)} 结构树写了 {root}/{ghost}/，实际没有这个目录")
+        for unlisted in sorted(actual - tree[root]):
+            problems.append(f"  实际存在 {root}/{unlisted}/，结构树没有登记（加进 docs/REPOSITORY.md）")
+
+    # 2. 应用四件套：有 app.json 的目录是开工的应用，四个人口缺一不可；
+    #    没有 app.json 的按素材坑对待，至少要有一份 README 说明它是什么。
+    for root in APP_ROOTS:
+        for entry in sorted((REPO_ROOT / root).iterdir()):
+            if not entry.is_dir():
+                continue
+            required = _APP_MINIMUM if (entry / "app.json").is_file() else _EMPTY_PLOT_MINIMUM
+            for missing in (name for name in required if not (entry / name).is_file()):
+                problems.append(f"  {root}/{entry.name} 缺 {missing}")
+
+    # 3. 仓库级 ADR 索引覆盖：落在 docs/decisions/ 的每一篇都必须能从 README
+    #    走到（0082/0087/0088 就曾三篇同时漏行，索引成了不全的地图）。
+    decisions = REPO_ROOT / "docs" / "decisions"
+    index_text = (decisions / "README.md").read_text(encoding="utf-8")
+    for adr in sorted(decisions.glob("*.md")):
+        if adr.name != "README.md" and f"]({adr.name})" not in index_text:
+            problems.append(f"  docs/decisions/{adr.name} 没有出现在索引 README.md 里")
+
+    if problems:
+        print("\n".join(problems), flush=True)
+        raise SystemExit(f"结构卫生没通过（{len(problems)} 处），见上方。")
+    print(
+        f"结构树与 {sum(len(v) for v in tree.values())} 个应用目录一致，"
+        f"四件套齐备，ADR 索引全覆盖",
+        flush=True,
+    )
+
+
 def main(argv: list[str]) -> int:
     _force_utf8_output()
     # CI 把跨应用检查和各应用检查拆成不同的 job 并行跑，需要单独触发前者；
@@ -207,6 +284,7 @@ def main(argv: list[str]) -> int:
         run_skill_mirror_check()
         run_source_check()
         run_workflow_check()
+        run_structure_check()
         return 0
 
     if argv:
@@ -216,6 +294,7 @@ def main(argv: list[str]) -> int:
     run_skill_mirror_check()
     run_source_check()
     run_workflow_check()
+    run_structure_check()
     for root in APP_ROOTS:
         for entry in sorted((REPO_ROOT / root).iterdir()):
             if (entry / "scripts" / "check.py").is_file():

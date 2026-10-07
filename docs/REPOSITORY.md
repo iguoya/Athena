@@ -180,3 +180,28 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
 
 **现状**：目前只有 `subjects/driver` 接入（`lib/users.dart`、`lib/user_directory.dart`）。
 中心侧接口见 `practice/nas_admin/docs/user-api.md`。
+
+## 新增一个应用时动哪些地方
+
+加应用是最容易攒下混乱的操作——v9.0.0 前后的一次结构侦查发现，几乎每一类
+「文档与实际不符」都是加东西时忘了同步别处。清单如下，按顺序走一遍：
+
+1. **目录与四件套**：`subjects/<id>/` 或 `practice/<id>/`，内放 `app.json`（`dev`
+   块声明怎么启动，ADR 0046）、`AGENTS.md`（本应用规则）、`CLAUDE.md`（只写
+   `@AGENTS.md`）、`README.md`（一段定位与入口）、`scripts/check.py`（本应用
+   验证入口，ADR 0007）。`check.py --sources-only` 的结构卫生检查会核对这份清单。
+2. **分类对号**：按上面的三类判据写明自己是学习应用 / 图谱参考 / 素材坑；
+   学习应用按 ADR 0037/0053 建 `progress/learning.db`。
+3. **登记进文档**：本文的结构树与名字表各加一行（结构卫生检查会与实际目录
+   对账）、根 `README.md` 应用表加一行。
+4. **进 CI**：`.github/workflows/ci.yml` 的对应 job 或矩阵，以及
+   `workflow_dispatch` 的 `options` 列表——工作流改动本地先过
+   `check.py --sources-only` 的工作流检查（actionlint + 变量粘连）。
+5. **要进发布矩阵的话**：`release.yml` 加构建 job，`publish` 的校验和清单与
+   资产通配两处都要覆盖到（ADR 0081）；产物名遵守 `athena-<id>` 约定。
+6. **内容有出处**（可选，学习应用建议）：一份 `content-contract.json` 就会把
+   该应用纳入跨应用出处检查（ADR 0043）。
+7. **图标**：一份彩色图标，启动器、任务栏、应用界面三处同源（ADR 0065）。
+
+启动器不需要改代码——`launcher` 从 `subjects/*` 与 `practice/*` 自动发现应用
+（ADR 0046）。

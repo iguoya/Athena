@@ -55,8 +55,8 @@
 | [0084](0084-math-tools-joins-subjects.md) | math-tools 从 practice/ 迁入 subjects/，作为数学学习的配套工具 | 已接受；修订 0060 对 math-tools 的归类 |
 | [0085](0085-reinforce-draws-from-all-wrong.md) | 强化练习从历史上全部错题里按权重抽取，每轮重抽并可「换一批」 | 已接受；修订 0076 第 7 条的选题规则；决策 2 由 0086 修订 |
 | [0086](0086-reinforce-coverage-then-fade.md) | 错题必须在强化练习里测过且没出错才能移出备选库，没测过的优先覆盖 | 已接受；修订 0085 决策 2 |
-| [0087](0087-reinforce-round-size.md) | 强化练习一轮默认 50 题，页面把备选库总题数摆在最前 | 已接受；修订 0076 决策 7 |
-| [0088](0088-cluster-variant-counts-as-acceptance.md) | 同考点变式在强化练习里答对，同簇错题也算验收 | 已接受；修订 0086 决策 1 |
+| [0087](0087-reinforce-round-size-50.md) | 强化练习一轮默认 50 题，页面把备选库总题数摆在最前 | 已接受；修订 0076 决策 7 |
+| [0088](0088-reinforce-variant-pass-counts.md) | 同考点变式在强化练习里答对，同簇错题也算验收 | 已接受；修订 0086 决策 1 |
 | [0051](0051-platform-priority-macos-windows-first.md) | 平台优先级：macOS 与 Windows 优先，Linux 降级 | 已接受；`subjects/cpp` 的选型冲突已解决 |
 | [0053](0053-progress-travels-with-the-repository.md) | 进度库随仓库走，换机器 clone 下来进度还在 | 已接受；修订 0037 第 1 条；对已迁移中心 PG 的应用由 0067 修订 |
 | [0054](0054-prefer-adding-over-deleting.md) | 内容工作宁增勿删，参考不得用来重划结构 | 已接受；推翻 polaris ADR 0004、0005 的主干重划；第 2、3 条由 0080 限定 |
