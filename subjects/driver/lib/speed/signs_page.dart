@@ -19,8 +19,7 @@ class SignsPage extends StatelessWidget {
     super.key,
     required this.signs,
     required this.histories,
-    required this.daily,
-    required this.all,
+    required this.questions,
     required this.mastered,
     required this.onRecallAnswer,
     this.recallPage = "s1.signs",
@@ -30,14 +29,11 @@ class SignsPage extends StatelessWidget {
 
   final List<RoadSign> signs;
 
-  /// 作答历史：格子微点由它现算（ADR 0077 决策 3）。
+  /// 作答历史：格子微点由它现算——只看这一条自己的自测卡（ADR 0077 决策 3、0112）。
   final HistorySet histories;
 
-  /// 科目一的日常题（非偏难）：「练这组」从这里按 `Question.sign` 取题。
-  final List<Question> daily;
-
-  /// 科目一全部题：算「还有几题在偏难里没进来」。
-  final List<Question> all;
+  /// 本科目的全部题（含偏难，ADR 0112 一视同仁）：「练这组」从这里按 `Question.sign` 取题。
+  final List<Question> questions;
   final Set<String> mastered;
 
   /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
@@ -108,7 +104,7 @@ class SignsPage extends StatelessWidget {
     return RecallEntry.fromCard(
       card,
       front: _signImage(sign, 288),
-      related: [for (final q in daily) if (q.signId == sign.id) q],
+      related: [for (final q in questions) if (q.signId == sign.id) q],
       confuseView: other == null ? null : _signImage(other, 144),
     );
   }
@@ -139,16 +135,15 @@ class SignsPage extends StatelessWidget {
     final label = inGroup.first.kindLabel;
     final related = [
       for (final sign in inGroup)
-        for (final q in daily)
+        for (final q in questions)
           if (q.signId == sign.id) q,
     ];
     final pending = [for (final q in related) if (!mastered.contains(q.id)) q];
-    final allRelated = [
-      for (final sign in inGroup)
-        for (final q in all)
-          if (q.signId == sign.id) q,
-    ];
-    final locked = allRelated.length - related.length;
+    // 组状态只看这一组的自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 答对过、灰 = 没自测过。
+    final status = statusOfIds(
+      ids: [for (final sign in inGroup) recallQuestionId(recallPage, sign.id)],
+      histories: histories,
+    );
     return Padding(
       padding: const EdgeInsets.only(top: 28),
       child: BsCard(
@@ -159,6 +154,16 @@ class SignsPage extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                TopicDot(
+                  status: status,
+                  size: 20,
+                  tooltip: switch (status) {
+                    SymbolStatus.wrong => "这一组的自测卡有答错过，还没掌握",
+                    SymbolStatus.mastered => "这一组的自测卡答对过",
+                    SymbolStatus.fresh => "这一组还没自测过",
+                  },
+                ),
+                const SizedBox(width: 10),
                 Text(label, style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(width: 10),
                 Padding(
@@ -167,25 +172,21 @@ class SignsPage extends StatelessWidget {
                 ),
                 const Spacer(),
                 FilledButton.icon(
-                  style: practiceButtonStyle(
-                    groupStatus(
-                      ids: [for (final q in related) q.id, for (final s in inGroup) recallQuestionId(recallPage, s.id)],
-                      mastered: mastered,
-                      histories: histories,
-                    ),
-                  ),
-                  onPressed: () => onStartPractice(related, "标志速记 · $label", pending.isEmpty),
+                  style: practiceButtonStyle(status),
+                  onPressed: () => onStartPractice(related, "标志速记 · $label", status == SymbolStatus.mastered),
                   icon: const Icon(Glyph.practice, size: 20),
-                  label: Text(pending.isEmpty ? "这组已掌握 · 再练一遍" : "练这组 ${pending.length} 题"),
+                  label: Text(
+                    status == SymbolStatus.mastered
+                        ? "这组已掌握 · 再练一遍"
+                        : pending.isEmpty
+                        ? "练这组"
+                        : "练这组 ${pending.length} 题",
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 6),
             Text(hint, style: muted),
-            if (locked > 0) ...[
-              const SizedBox(height: 4),
-              Text("还有 $locked 道相关题在偏难里，不挡过关。", style: muted),
-            ],
             const SizedBox(height: 14),
             Wrap(
               spacing: 14,
@@ -197,9 +198,8 @@ class SignsPage extends StatelessWidget {
                     other: sign.confuseWith == null
                         ? null
                         : signs.where((s) => s.id == sign.confuseWith).firstOrNull,
-                    status: statusOf(
-                      related: [for (final q in daily) if (q.signId == sign.id) q],
-                      mastered: mastered,
+                    status: statusOfIds(
+                      ids: [recallQuestionId(recallPage, sign.id)],
                       histories: histories,
                     ),
                   ),

@@ -588,19 +588,13 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// 专题的状态（三态，同易混数字的行点，ADR 0101）：自测题有答错过且未掌握的 → 红；答对过 → 绿；一道没答过 → 灰。
+  /// 专题的状态（三态，同易混数字的行点，ADR 0101、0112）：自测题有答错过且还在错题库的 → 红；
+  /// 答对过 → 绿；一道没答过 → 灰。只看这个专题自己的自测作答，日常练习不参与。
   SymbolStatus _topicStatus(SpeedTopic topic) {
     final ids = (_topicQuestionIds ??= {
       for (final t in speedTopics) t.id: [for (final c in recallCardsOfTopic(t, widget.bank)) c.questionId],
     })[topic.id]!;
-    var touched = false;
-    for (final id in ids) {
-      final h = _histories.byQuestion[id];
-      if (h == null) continue;
-      touched = true;
-      if (h.wrong > 0 && !_mastered.contains(id)) return SymbolStatus.wrong;
-    }
-    return touched ? SymbolStatus.mastered : SymbolStatus.fresh;
+    return statusOfIds(ids: ids, histories: _histories);
   }
 
   List<Widget> _subjectBranch(String id, {required IconData icon, required String label}) {
@@ -1680,10 +1674,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// 一个速记专题的页面（ADR 0096）：专题属于某个科目，相关题、练习、自测作答都只用本科目的。
+  /// 传给各页的是**全部**题——偏难题在速记页一视同仁，不再单独排除（ADR 0112）。
   Widget _speedTopicPage(BuildContext context, SpeedTopic topic) {
     final subject = widget.bank.curriculum.subject(topic.subjectId);
-    final all = widget.bank.forSubject(topic.subjectId);
-    final daily = dailyQuestions(all);
+    final questions = widget.bank.forSubject(topic.subjectId);
     void practice(List<Question> questions, String title, bool again) =>
         _startPractice(subject, questions, title, includeMastered: again, shuffleQueue: true);
     return switch (topic.kind) {
@@ -1699,8 +1693,7 @@ class _HomePageState extends State<HomePage> {
       SpeedKind.signs => SignsPage(
         signs: widget.bank.signs,
         histories: _histories,
-        daily: daily,
-        all: all,
+        questions: questions,
         mastered: _mastered,
         onRecallAnswer: _recordRecall,
         recallPage: topic.id,
@@ -1710,8 +1703,7 @@ class _HomePageState extends State<HomePage> {
       SpeedKind.markings => MarkingsPage(
         markings: widget.bank.markings,
         histories: _histories,
-        daily: daily,
-        all: all,
+        questions: questions,
         mastered: _mastered,
         onRecallAnswer: _recordRecall,
         recallPage: topic.id,
@@ -1721,7 +1713,7 @@ class _HomePageState extends State<HomePage> {
       SpeedKind.gauges => GaugesPage(
         gauges: widget.bank.gauges,
         histories: _histories,
-        daily: daily,
+        questions: questions,
         mastered: _mastered,
         onRecallAnswer: _recordRecall,
         recallPage: topic.id,
@@ -1731,7 +1723,7 @@ class _HomePageState extends State<HomePage> {
       SpeedKind.gestures => GesturesPage(
         gestures: gesturesOf(widget.bank, topic),
         histories: _histories,
-        daily: daily,
+        questions: questions,
         mastered: _mastered,
         onRecallAnswer: _recordRecall,
         recallPage: topic.id,
@@ -1740,7 +1732,7 @@ class _HomePageState extends State<HomePage> {
       ),
       SpeedKind.notes => NotesPage(
         groups: noteGroupsOf(widget.bank, topic),
-        daily: daily,
+        questions: questions,
         mastered: _mastered,
         onRecallAnswer: _recordRecall,
         histories: _histories,

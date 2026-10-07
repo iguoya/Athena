@@ -10,7 +10,7 @@ import "recall_cards.dart";
 import "../study/reinforce.dart";
 import "speed_topics.dart";
 /// 易混数字一行的状态微点：与速记格子的微点（[StatusDot]）同一套样式，只换悬停措辞
-/// ——口径是这一行自己的自测卡（填数、选择、反向），不是组级关联真题（ADR 0095、0101）。
+/// ——口径是这一行自己的自测卡（填数、选择、反向），不是关联真题（ADR 0095、0101、0112）。
 class RecallRowDot extends StatelessWidget {
   const RecallRowDot({super.key, required this.status});
 
@@ -23,7 +23,7 @@ class RecallRowDot extends StatelessWidget {
       tooltip: switch (status) {
         SymbolStatus.wrong => "这一行的自测题最近答错过，还没掌握",
         SymbolStatus.mastered => "这一行的自测题答对过",
-        SymbolStatus.partial || SymbolStatus.fresh => "这一行还没自测过",
+        SymbolStatus.fresh => "这一行还没自测过",
       },
     );
   }
@@ -71,16 +71,11 @@ class NumbersPage extends StatelessWidget {
   ];
 
   /// 行的状态微点档位（ADR 0101，三态）：这一行有答错过且未掌握的自测卡 → 红；
-  /// 答对过（哪怕只答对了一部分卡）→ 绿；一张都没答过 → 灰。只看这一行自己的卡。
-  SymbolStatus _rowStatus(CheatGroup group, CheatRow row) {
-    final ids = _rowQuestionIds(group, row);
-    final touched = [for (final id in ids) if (histories.byQuestion.containsKey(id)) id];
-    if (touched.isEmpty) return SymbolStatus.fresh;
-    if (touched.any((id) => (histories.byQuestion[id]?.wrong ?? 0) > 0 && !mastered.contains(id))) {
-      return SymbolStatus.wrong;
-    }
-    return SymbolStatus.mastered;
-  }
+  /// 答对过（哪怕只答对了一部分卡）→ 绿；一张都没答过 → 灰。只看这一行自己的卡（ADR 0112）。
+  SymbolStatus _rowStatus(CheatGroup group, CheatRow row) => statusOfIds(
+    ids: _rowQuestionIds(group, row),
+    histories: histories,
+  );
 
   /// 易混数字的自测（ADR 0095）：每行情形拆成单条，数值题手输（题干把数字挖成括号），非数值的值选择，
   /// 每个数值再出一张反向题（「12 分」对应哪一项）。作答记成普通作答记录，错题本、强化练习随之更新。
@@ -169,6 +164,8 @@ class NumbersPage extends StatelessWidget {
     final related = _groupQuestions(group);
     final pending = pendingOf(related);
     final maxAmount = group.maxAmount;
+    // 组状态只看这一组的自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 答对过、灰 = 没自测过。
+    final status = statusOfIds(ids: [for (final q in related) q.id], histories: histories);
     return BsCard(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
       child: Column(
@@ -176,6 +173,16 @@ class NumbersPage extends StatelessWidget {
         children: [
           Row(
             children: [
+              TopicDot(
+                status: status,
+                size: 20,
+                tooltip: switch (status) {
+                  SymbolStatus.wrong => "这一组的自测卡有答错过，还没掌握",
+                  SymbolStatus.mastered => "这一组的自测卡答对过",
+                  SymbolStatus.fresh => "这一组还没自测过",
+                },
+              ),
+              const SizedBox(width: 10),
               Text(group.title, style: Theme.of(context).textTheme.titleLarge),
               if (group.unit.isNotEmpty) ...[
                 const SizedBox(width: 10),
@@ -183,10 +190,16 @@ class NumbersPage extends StatelessWidget {
               ],
               const Spacer(),
               FilledButton.icon(
-                style: practiceButtonStyle(statusOf(related: related, mastered: mastered, histories: histories)),
-                onPressed: () => onStartPractice(related, "易混数字 · ${group.title}", pending.isEmpty),
+                style: practiceButtonStyle(status),
+                onPressed: () => onStartPractice(related, "${topic.title} · ${group.title}", status == SymbolStatus.mastered),
                 icon: const Icon(Glyph.practice, size: 20),
-                label: Text(pending.isEmpty ? "这组已掌握 · 再练一遍" : "练这组 ${pending.length} 题"),
+                label: Text(
+                  status == SymbolStatus.mastered
+                      ? "这组已掌握 · 再练一遍"
+                      : pending.isEmpty
+                      ? "练这组"
+                      : "练这组 ${pending.length} 题",
+                ),
               ),
             ],
           ),

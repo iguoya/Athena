@@ -20,7 +20,7 @@ class NotesPage extends StatelessWidget {
   const NotesPage({
     super.key,
     required this.groups,
-    required this.daily,
+    required this.questions,
     required this.mastered,
     required this.onRecallAnswer,
     required this.histories,
@@ -34,7 +34,9 @@ class NotesPage extends StatelessWidget {
   });
 
   final List<NoteGroup> groups;
-  final List<Question> daily;
+
+  /// 本科目的全部题（含偏难，ADR 0112 一视同仁）：「练这组」与自测收尾深链从这里取题。
+  final List<Question> questions;
   final Set<String> mastered;
   final void Function(List<Question> questions, String title, bool again) onStartPractice;
 
@@ -105,7 +107,7 @@ class NotesPage extends StatelessWidget {
             cards[i],
             front: _scenarioFront(context, e.$1.title, e.$2.scenario),
             // 关联真题只能到「组」一级：同一组的条目共用（ADR 0083）。
-            related: e.$1.related(daily),
+            related: e.$1.related(questions),
           ),
       ],
       onStartPractice: (questions) => onStartPractice(questions, "$title · 自测", false),
@@ -136,8 +138,15 @@ class NotesPage extends StatelessWidget {
   }
 
   Widget _noteGroup(BuildContext context, NoteGroup group, TextStyle? muted) {
-    final related = group.related(daily);
+    final related = group.related(questions);
     final pending = [for (final q in related) if (!mastered.contains(q.id)) q];
+    // 组状态只看这一组的自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 答对过、灰 = 没自测过。
+    final status = statusOfIds(
+      ids: [
+        for (final i in group.items) recallQuestionId(recallPage, "${group.id}/${i.scenario}"),
+      ],
+      histories: histories,
+    );
     return Padding(
       padding: const EdgeInsets.only(top: 28),
       child: BsCard(
@@ -147,24 +156,31 @@ class NotesPage extends StatelessWidget {
           children: [
             Row(
               children: [
+                TopicDot(
+                  status: status,
+                  size: 20,
+                  tooltip: switch (status) {
+                    SymbolStatus.wrong => "这一组的自测卡有答错过，还没掌握",
+                    SymbolStatus.mastered => "这一组的自测卡答对过",
+                    SymbolStatus.fresh => "这一组还没自测过",
+                  },
+                ),
+                const SizedBox(width: 10),
                 Text(group.title, style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(width: 10),
                 Text("${group.items.length} 条", style: muted),
                 const Spacer(),
                 FilledButton.icon(
-                  style: practiceButtonStyle(
-                    groupStatus(
-                      ids: [
-                        for (final q in related) q.id,
-                        for (final i in group.items) recallQuestionId(recallPage, "${group.id}/${i.scenario}"),
-                      ],
-                      mastered: mastered,
-                      histories: histories,
-                    ),
-                  ),
-                  onPressed: () => onStartPractice(related, "考点速记 · ${group.title}", pending.isEmpty),
+                  style: practiceButtonStyle(status),
+                  onPressed: () => onStartPractice(related, "$title · ${group.title}", status == SymbolStatus.mastered),
                   icon: const Icon(Glyph.practice, size: 20),
-                  label: Text(pending.isEmpty ? "这组已掌握 · 再练一遍" : "练这组 ${pending.length} 题"),
+                  label: Text(
+                    status == SymbolStatus.mastered
+                        ? "这组已掌握 · 再练一遍"
+                        : pending.isEmpty
+                        ? "练这组"
+                        : "练这组 ${pending.length} 题",
+                  ),
                 ),
               ],
             ),

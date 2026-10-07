@@ -183,7 +183,7 @@ void main() {
     await tester.tap(find.text("自测").first);
     await tester.pump();
     expect(find.text("这一页全部答对了"), findsOneWidget);
-    expect(find.textContaining("没有要考的了"), findsOneWidget);
+    expect(find.textContaining("都已经答对过"), findsOneWidget, reason: "全部答对过：收尾说明没有自动要考的了");
     expect(find.text("已答对 $n / $n"), findsOneWidget);
     await closeDialog(tester);
 

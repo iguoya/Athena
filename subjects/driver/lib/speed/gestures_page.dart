@@ -18,7 +18,7 @@ class GesturesPage extends StatelessWidget {
     super.key,
     required this.gestures,
     required this.histories,
-    required this.daily,
+    required this.questions,
     required this.mastered,
     required this.onRecallAnswer,
     this.recallPage = "s1.gestures",
@@ -28,11 +28,11 @@ class GesturesPage extends StatelessWidget {
 
   final List<TrafficGesture> gestures;
 
-  /// 作答历史：格子微点由它现算（ADR 0077 决策 3）。
+  /// 作答历史：格子微点由它现算——只看这一条自己的自测卡（ADR 0077 决策 3、0112）。
   final HistorySet histories;
 
-  /// 科目一与科目四的日常题：「练这组」按反向映射的题 id 从这里取题。
-  final List<Question> daily;
+  /// 本科目的全部题（含偏难，ADR 0112 一视同仁）：「练手势」按反向映射的题 id 从这里取题。
+  final List<Question> questions;
   final Set<String> mastered;
 
   /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
@@ -52,8 +52,13 @@ class GesturesPage extends StatelessWidget {
     final general = gestures.where((g) => g.kind == "general").toList();
     final actions = gestures.where((g) => g.kind != "general").toList();
     final relatedIds = {for (final g in gestures) ...g.questions};
-    final related = [for (final q in daily) if (relatedIds.contains(q.id)) q];
+    final related = [for (final q in questions) if (relatedIds.contains(q.id)) q];
     final pending = [for (final q in related) if (!mastered.contains(q.id)) q];
+    // 状态只看自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 答对过、灰 = 没自测过。
+    final status = statusOfIds(
+      ids: [for (final g in actions) recallQuestionId(recallPage, g.id)],
+      histories: histories,
+    );
     return ListView(
       padding: const EdgeInsets.fromLTRB(36, 28, 36, 32),
       children: [
@@ -91,6 +96,16 @@ class GesturesPage extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  TopicDot(
+                    status: status,
+                    size: 20,
+                    tooltip: switch (status) {
+                      SymbolStatus.wrong => "这些动作的自测卡有答错过，还没掌握",
+                      SymbolStatus.mastered => "这些动作的自测卡答对过",
+                      SymbolStatus.fresh => "这些动作还没自测过",
+                    },
+                  ),
+                  const SizedBox(width: 10),
                   Text("8 个法定动作", style: Theme.of(context).textTheme.titleLarge),
                   const SizedBox(width: 10),
                   Padding(
@@ -99,11 +114,16 @@ class GesturesPage extends StatelessWidget {
                   ),
                   const Spacer(),
                   FilledButton.icon(
-                    onPressed: pending.isEmpty
-                        ? null
-                        : () => onStartPractice(related, "手势速记", false),
+                    style: practiceButtonStyle(status),
+                    onPressed: () => onStartPractice(related, "手势速记", status == SymbolStatus.mastered),
                     icon: const Icon(Glyph.practice, size: 20),
-                    label: Text(pending.isEmpty ? "已全部掌握" : "练手势 ${pending.length} 题"),
+                    label: Text(
+                      status == SymbolStatus.mastered
+                          ? "已全部掌握 · 再练一遍"
+                          : pending.isEmpty
+                          ? "练手势"
+                          : "练手势 ${pending.length} 题",
+                    ),
                   ),
                 ],
               ),
@@ -118,9 +138,8 @@ class GesturesPage extends StatelessWidget {
                     other: g.confuseWith == null
                         ? null
                         : actions.where((x) => x.id == g.confuseWith).firstOrNull,
-                    status: statusOf(
-                      related: [for (final q in daily) if (g.questions.contains(q.id)) q],
-                      mastered: mastered,
+                    status: statusOfIds(
+                      ids: [recallQuestionId(recallPage, g.id)],
                       histories: histories,
                     ),
                   ),
@@ -146,7 +165,7 @@ class GesturesPage extends StatelessWidget {
     return RecallEntry.fromCard(
       card,
       front: _gestureImage(g, 288),
-      related: [for (final q in daily) if (g.questions.contains(q.id)) q],
+      related: [for (final q in questions) if (g.questions.contains(q.id)) q],
       confuseView: other == null ? null : _gestureImage(other, 144),
     );
   }

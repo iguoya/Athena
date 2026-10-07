@@ -18,7 +18,7 @@ class GaugesPage extends StatelessWidget {
     super.key,
     required this.gauges,
     required this.histories,
-    required this.daily,
+    required this.questions,
     required this.mastered,
     required this.onRecallAnswer,
     this.recallPage = "s1.gauges",
@@ -28,11 +28,11 @@ class GaugesPage extends StatelessWidget {
 
   final List<Gauge> gauges;
 
-  /// 作答历史：格子微点由它现算（ADR 0077 决策 3）。
+  /// 作答历史：格子微点由它现算——只看这一条自己的自测卡（ADR 0077 决策 3、0112）。
   final HistorySet histories;
 
-  /// 科目一的日常题（非偏难）：「练这组」按反向映射的题 id 从这里取题。
-  final List<Question> daily;
+  /// 本科目的全部题（含偏难，ADR 0112 一视同仁）：「练这组」按反向映射的题 id 从这里取题。
+  final List<Question> questions;
   final Set<String> mastered;
 
   /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
@@ -100,7 +100,7 @@ class GaugesPage extends StatelessWidget {
     return RecallEntry.fromCard(
       card,
       front: _gaugeImage(gauge, 360),
-      related: [for (final q in daily) if (gauge.questions.contains(q.id)) q],
+      related: [for (final q in questions) if (gauge.questions.contains(q.id)) q],
       confuseView: other == null ? null : _gaugeImage(other, 168),
     );
   }
@@ -132,8 +132,13 @@ class GaugesPage extends StatelessWidget {
     if (inGroup.isEmpty) return const SizedBox.shrink();
     final label = inGroup.first.kindLabel;
     final relatedIds = {for (final gauge in inGroup) ...gauge.questions};
-    final related = [for (final q in daily) if (relatedIds.contains(q.id)) q];
+    final related = [for (final q in questions) if (relatedIds.contains(q.id)) q];
     final pending = [for (final q in related) if (!mastered.contains(q.id)) q];
+    // 组状态只看这一组的自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 答对过、灰 = 没自测过。
+    final status = statusOfIds(
+      ids: [for (final gauge in inGroup) recallQuestionId(recallPage, gauge.id)],
+      histories: histories,
+    );
     return Padding(
       padding: const EdgeInsets.only(top: 28),
       child: BsCard(
@@ -144,6 +149,16 @@ class GaugesPage extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                TopicDot(
+                  status: status,
+                  size: 20,
+                  tooltip: switch (status) {
+                    SymbolStatus.wrong => "这一组的自测卡有答错过，还没掌握",
+                    SymbolStatus.mastered => "这一组的自测卡答对过",
+                    SymbolStatus.fresh => "这一组还没自测过",
+                  },
+                ),
+                const SizedBox(width: 10),
                 Text(label, style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(width: 10),
                 Padding(
@@ -152,16 +167,16 @@ class GaugesPage extends StatelessWidget {
                 ),
                 const Spacer(),
                 FilledButton.icon(
-                  style: practiceButtonStyle(
-                    groupStatus(
-                      ids: [for (final q in related) q.id, for (final g in inGroup) recallQuestionId(recallPage, g.id)],
-                      mastered: mastered,
-                      histories: histories,
-                    ),
-                  ),
-                  onPressed: () => onStartPractice(related, "仪表速记 · $label", pending.isEmpty),
+                  style: practiceButtonStyle(status),
+                  onPressed: () => onStartPractice(related, "仪表速记 · $label", status == SymbolStatus.mastered),
                   icon: const Icon(Glyph.practice, size: 20),
-                  label: Text(pending.isEmpty ? "这组已掌握 · 再练一遍" : "练这组 ${pending.length} 题"),
+                  label: Text(
+                    status == SymbolStatus.mastered
+                        ? "这组已掌握 · 再练一遍"
+                        : pending.isEmpty
+                        ? "练这组"
+                        : "练这组 ${pending.length} 题",
+                  ),
                 ),
               ],
             ),
@@ -178,9 +193,8 @@ class GaugesPage extends StatelessWidget {
                     other: gauge.confuseWith == null
                         ? null
                         : inGroup.where((g) => g.id == gauge.confuseWith).firstOrNull,
-                    status: statusOf(
-                      related: [for (final q in daily) if (gauge.questions.contains(q.id)) q],
-                      mastered: mastered,
+                    status: statusOfIds(
+                      ids: [recallQuestionId(recallPage, gauge.id)],
                       histories: histories,
                     ),
                   ),

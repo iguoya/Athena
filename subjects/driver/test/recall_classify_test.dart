@@ -4,9 +4,10 @@ import "package:athena_driver/speed/recall_status.dart";
 import "package:athena_driver/study/reinforce.dart";
 import "package:flutter_test/flutter_test.dart";
 
-/// 自测里一张卡还要不要考（ADR 0094）：只看作答记录。速记卡对应一道有稳定编号的题，自测作答
-/// 和练习、模拟考一样是作答记录；答错过的卡和错题一个规矩（累计答对达到答错的 2 倍才移出错题库，
-/// ADR 0079），答对的不再出现。没有这张卡自己的记录时，再看它关联的真题答得怎么样。
+/// 自测里一张卡还要不要考（ADR 0094、0112）：只看这张速记卡**自己**的作答记录。
+/// 速记卡对应一道有稳定编号的题，自测作答和练习、模拟考一样是作答记录；答错过的卡和错题
+/// 一个规矩（累计答对达到答错的 2 倍才移出错题库，ADR 0079），答对的不再出现。
+/// 关联真题（日常练习）的作答**不参与**判档——专题掌握只由专题自测写入（ADR 0112）。
 void main() {
   late List<Question> related;
   setUpAll(() async {
@@ -20,13 +21,8 @@ void main() {
   AttemptView attempt(String id, bool ok, int minute) =>
       AttemptView(questionId: id, topicId: "t", correct: ok, at: t0.add(Duration(minutes: minute)));
 
-  RecallBucket classify(List<AttemptView> attempts, {List<Question> rel = const [], Set<String> mastered = const {}}) =>
-      classifyEntry(
-        questionId: card,
-        related: rel,
-        mastered: mastered,
-        histories: HistorySet.build(attempts),
-      );
+  RecallBucket classify(List<AttemptView> attempts) =>
+      classifyEntry(questionId: card, histories: HistorySet.build(attempts));
 
   test("这张卡自己的记录：没考过 fresh，答对过且没答错 done", () {
     expect(classify([]), RecallBucket.fresh);
@@ -47,22 +43,18 @@ void main() {
     );
   });
 
-  test("没有这张卡自己的记录时看关联真题：答错的 wrong、全掌握的 done、做了一部分 partial、没做过 fresh", () {
+  test("关联真题的作答不影响判档（ADR 0112）：练得再熟，没在自测里测过的卡照样要考", () {
     final a = related[0];
     final b = related[1];
-    expect(classify([], rel: related), RecallBucket.fresh);
-    expect(classify([attempt(a.id, true, 0)], rel: related), RecallBucket.partial);
-    expect(classify([attempt(a.id, false, 0)], rel: related), RecallBucket.wrong);
+    // 真题只答对过一部分（未掌握）：卡没自己的记录 → fresh，照样出。
+    expect(classify([attempt(a.id, true, 0)]), RecallBucket.fresh);
+    // 真题答错过：卡不受牵连 → fresh。
+    expect(classify([attempt(a.id, false, 0)]), RecallBucket.fresh);
+    // 真题全部掌握：卡没在自测里测过 → 还是 fresh，只有自测能证明掌握。
     expect(
-      classify([attempt(a.id, true, 0), attempt(b.id, true, 1)], rel: related, mastered: {a.id, b.id}),
-      RecallBucket.done,
+      classify([attempt(a.id, true, 0), attempt(b.id, true, 1)]),
+      RecallBucket.fresh,
     );
-  });
-
-  test("这张卡自己的记录优先于关联真题：卡答对过就不再出现，卡答错过就在错题库里", () {
-    final a = related[0];
-    expect(classify([attempt(card, true, 0), attempt(a.id, false, 1)], rel: related), RecallBucket.done);
-    expect(classify([attempt(card, false, 0), attempt(a.id, true, 1)], rel: related, mastered: {a.id}), RecallBucket.wrong);
   });
 
   test("速记题的作答记录就是普通作答记录：能进强化练习的错题库", () async {

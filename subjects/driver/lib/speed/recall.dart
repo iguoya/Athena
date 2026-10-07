@@ -40,8 +40,10 @@ class RecallSession extends StatefulWidget {
   /// 参与自测的全部条目；[RecallEntry] 是页面内容的轻量视图。
   final List<RecallEntry> entries;
 
-  /// 作答历史与已掌握集合：判断哪些卡还要考（ADR 0094）。
+  /// 作答历史：判断哪些卡还要考——只看速记题自己的记录（ADR 0094、0112）。
   final HistorySet histories;
+
+  /// 已掌握的真题集合：只给收尾「去做这几个的题」过滤已掌握的真题，不参与判档。
   final Set<String> mastered;
 
   /// 每次作答记一条作答记录。
@@ -149,8 +151,8 @@ class RecallEntry {
   final String name;
   final String meaning;
 
-  /// 这个条目关联的真题（符号页按条目反向映射，数字、要点页到「组」一级）：自测先考关联真题答错过的，
-  /// 收尾「去做这几个的题」也用它。没有关联真题的条目为空。
+  /// 这个条目关联的真题（符号页按条目反向映射，数字、要点页到「组」一级）：只作收尾
+  /// 「去做这几个的题」的练习入口，不参与判档与掌握判定（ADR 0112）。没有关联真题的条目为空。
   final List<Question> related;
 
   /// 易混对撞卡（ADR 0077 决策 2）：对方名称、差异口诀与大图。
@@ -217,8 +219,6 @@ class _RecallSessionState extends State<RecallSession> {
 
   RecallBucket _bucketOf(RecallEntry e) => classifyEntry(
     questionId: e.questionId,
-    related: e.related,
-    mastered: widget.mastered,
     histories: widget.histories,
   );
 
@@ -227,11 +227,6 @@ class _RecallSessionState extends State<RecallSession> {
   /// 不把关联真题的掌握算进来（classifyOwn 的注释说明了为什么）。
   int get _correctCount => widget.entries
       .where((e) => classifyOwn(e.questionId, widget.histories) == RecallBucket.done || _doneThisSession.contains(e.id))
-      .length;
-
-  /// 还能抽的（排除这次已经答对过的）。
-  int get _drawable => widget.entries
-      .where((e) => recallDrawOrder.contains(_bucketOf(e)) && !_doneThisSession.contains(e.id))
       .length;
 
   @override
@@ -722,23 +717,22 @@ class _RecallSessionState extends State<RecallSession> {
       color: Theme.of(context).colorScheme.onSurfaceVariant,
       height: 1.5,
     );
-    final allCorrect = _drawable == 0;
-    // 「全部答对」只数自己答过的卡（_correctCount 的口径）。关联真题都掌握也会让抽不出卡，
-    // 那不叫「全部答对」，标题和文案要分开说，免得以为都测过了（ADR 0099 之后的实际反馈）。
+    // 「全部答对」只数自己答过的卡（_correctCount 的口径）。掌握只由自测写入（ADR 0112），
+    // 所以「抽不出卡」就等于「每张都答对过」，不存在「真题都掌握了所以不出卡」的第三种情况。
     final ownAllCorrect = _correctCount == widget.entries.length && widget.entries.isNotEmpty;
     final focus = _focusQuestions();
-    final title = ownAllCorrect
+    final title = widget.entries.isEmpty
+        ? "这一页没有可自测的卡"
+        : ownAllCorrect
         ? "这一页全部答对了"
-        : allCorrect
-        ? "没有要自动出的卡了"
         : "考完了";
     final String message;
     if (_missedNames.isNotEmpty) {
       message = "答错的：${_missedNames.join("、")}。它们已经进了错题库，下次自测、强化练习会再考；答对的不会再出现。";
-    } else if (_round.isEmpty && !ownAllCorrect && allCorrect) {
-      message = "没考过的卡，因为关联的真题都已掌握，不再自动出。想自己过一遍，点「再测一遍」。";
+    } else if (widget.entries.isEmpty) {
+      message = "这一页还没有可自测的卡。";
     } else if (_round.isEmpty) {
-      message = "没有要考的了：没考过的都考过，答错的也都答对到了移出错题库的次数。想再过一遍，点「再测一遍」。";
+      message = "这一页的卡都已经答对过（答错的也都对到了移出错题库的次数）。想再过一遍，点「再测一遍」。";
     } else {
       message = "全都一次答对了，答对的不会再出现。";
     }
@@ -761,7 +755,7 @@ class _RecallSessionState extends State<RecallSession> {
           spacing: 12,
           runSpacing: 10,
           children: [
-            if (allCorrect)
+            if (ownAllCorrect)
               FilledButton(
                 onPressed: _retestAll,
                 child: const Text("再测一遍"),

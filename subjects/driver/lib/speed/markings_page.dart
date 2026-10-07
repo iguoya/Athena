@@ -17,8 +17,7 @@ class MarkingsPage extends StatelessWidget {
     super.key,
     required this.markings,
     required this.histories,
-    required this.daily,
-    required this.all,
+    required this.questions,
     required this.mastered,
     required this.onRecallAnswer,
     this.recallPage = "s1.markings",
@@ -28,14 +27,11 @@ class MarkingsPage extends StatelessWidget {
 
   final List<Marking> markings;
 
-  /// 作答历史：格子微点由它现算（ADR 0077 决策 3）。
+  /// 作答历史：格子微点由它现算——只看这一条自己的自测卡（ADR 0077 决策 3、0112）。
   final HistorySet histories;
 
-  /// 科目一的日常题（非偏难）：「练这组」从这里按 `Question.marking` 取题。
-  final List<Question> daily;
-
-  /// 科目一全部题：算「还有几题在偏难里没进来」。
-  final List<Question> all;
+  /// 本科目的全部题（含偏难，ADR 0112 一视同仁）：「练这组」从这里按 `Question.marking` 取题。
+  final List<Question> questions;
   final Set<String> mastered;
 
   /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
@@ -103,7 +99,7 @@ class MarkingsPage extends StatelessWidget {
     return RecallEntry.fromCard(
       card,
       front: _markingImage(marking, 400),
-      related: [for (final q in daily) if (q.marking == marking.id) q],
+      related: [for (final q in questions) if (q.marking == marking.id) q],
       confuseView: other == null ? null : _markingImage(other, 168),
     );
   }
@@ -136,16 +132,15 @@ class MarkingsPage extends StatelessWidget {
     final label = inGroup.first.kindLabel;
     final related = [
       for (final marking in inGroup)
-        for (final q in daily)
+        for (final q in questions)
           if (q.marking == marking.id) q,
     ];
     final pending = [for (final q in related) if (!mastered.contains(q.id)) q];
-    final allRelated = [
-      for (final marking in inGroup)
-        for (final q in all)
-          if (q.marking == marking.id) q,
-    ];
-    final locked = allRelated.length - related.length;
+    // 组状态只看这一组的自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 答对过、灰 = 没自测过。
+    final status = statusOfIds(
+      ids: [for (final marking in inGroup) recallQuestionId(recallPage, marking.id)],
+      histories: histories,
+    );
     return Padding(
       padding: const EdgeInsets.only(top: 28),
       child: BsCard(
@@ -156,6 +151,16 @@ class MarkingsPage extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                TopicDot(
+                  status: status,
+                  size: 20,
+                  tooltip: switch (status) {
+                    SymbolStatus.wrong => "这一组的自测卡有答错过，还没掌握",
+                    SymbolStatus.mastered => "这一组的自测卡答对过",
+                    SymbolStatus.fresh => "这一组还没自测过",
+                  },
+                ),
+                const SizedBox(width: 10),
                 Text(label, style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(width: 10),
                 Padding(
@@ -164,25 +169,21 @@ class MarkingsPage extends StatelessWidget {
                 ),
                 const Spacer(),
                 FilledButton.icon(
-                  style: practiceButtonStyle(
-                    groupStatus(
-                      ids: [for (final q in related) q.id, for (final m in inGroup) recallQuestionId(recallPage, m.id)],
-                      mastered: mastered,
-                      histories: histories,
-                    ),
-                  ),
-                  onPressed: () => onStartPractice(related, "标线速记 · $label", pending.isEmpty),
+                  style: practiceButtonStyle(status),
+                  onPressed: () => onStartPractice(related, "标线速记 · $label", status == SymbolStatus.mastered),
                   icon: const Icon(Glyph.practice, size: 20),
-                  label: Text(pending.isEmpty ? "这组已掌握 · 再练一遍" : "练这组 ${pending.length} 题"),
+                  label: Text(
+                    status == SymbolStatus.mastered
+                        ? "这组已掌握 · 再练一遍"
+                        : pending.isEmpty
+                        ? "练这组"
+                        : "练这组 ${pending.length} 题",
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 6),
             Text(hint, style: muted),
-            if (locked > 0) ...[
-              const SizedBox(height: 4),
-              Text("还有 $locked 道相关题在偏难里，不挡过关。", style: muted),
-            ],
             const SizedBox(height: 14),
             Wrap(
               spacing: 14,
@@ -194,9 +195,8 @@ class MarkingsPage extends StatelessWidget {
                     other: marking.confuseWith == null
                         ? null
                         : inGroup.where((m) => m.id == marking.confuseWith).firstOrNull,
-                    status: statusOf(
-                      related: [for (final q in daily) if (q.marking == marking.id) q],
-                      mastered: mastered,
+                    status: statusOfIds(
+                      ids: [recallQuestionId(recallPage, marking.id)],
                       histories: histories,
                     ),
                   ),

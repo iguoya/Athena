@@ -1,21 +1,24 @@
 import "package:flutter/material.dart";
 
 import "../ui/look.dart";
-import "../core/models.dart";
 import "../study/reinforce.dart";
-// 速记条目、专题与速记组的「作答状态」（ADR 0077、0094、0101、0109、0110）：状态枚举、
+// 速记条目、专题与速记组的「作答状态」（ADR 0077、0094、0101、0109、0112）：状态枚举、
 // 由作答记录判档的纯函数，以及按状态上色的小部件（状态圆、「练这组」按钮样式）。
 // 自测的界面（卡片流、输入、收尾）在 recall.dart，这里不碰界面流程。
+//
+// 口径（ADR 0112）：专题掌握只由**专题自测**的作答决定——判一张卡、一个条目、一组、
+// 一个专题，都只看速记题（`drive.recall.*`）自己的作答记录；关联真题（日常练习）的
+// 作答不参与任何掌握判定，真题只是「去做这几个的题」的练习入口。
 
 /// 格子条目的状态微点（ADR 0077 决策 3 起用；ADR 0101 统一为三态、放大为实心圆加黑心，
-/// 放在图标下方、条目文字左侧）：红 = 相关题最近答错过、未掌握；绿 = 答对过（哪怕只
-/// 答对一部分）；灰 = 没作答过。与易混数字的行点同一套样式。
+/// 放在图标下方、条目文字左侧）：红 = 这条的自测题答错过、还在错题库里；绿 = 答对过；
+/// 灰 = 没自测过。与易混数字的行点同一套样式。
 class StatusDot extends StatelessWidget {
   const StatusDot({super.key, required this.status, this.tooltip});
 
   final SymbolStatus status;
 
-  /// 覆盖悬停说明的措辞（易混数字的行点写「这一行」，格子默认写「相关题」）。
+  /// 覆盖悬停说明的措辞（易混数字的行点写「这一行」，格子默认写「这一条」）。
   final String? tooltip;
 
   @override
@@ -23,16 +26,15 @@ class StatusDot extends StatelessWidget {
     final color = switch (status) {
       // 答对用亮翠绿：全局 success 色在小圆点上偏暗（使用者反馈）。
       SymbolStatus.wrong => Bs.danger,
-      SymbolStatus.mastered || SymbolStatus.partial => const Color(0xFF2ECC71),
+      SymbolStatus.mastered => const Color(0xFF2ECC71),
       SymbolStatus.fresh => const Color(0xFFADB5BD),
     };
     return Tooltip(
       message: tooltip ??
           switch (status) {
-            SymbolStatus.wrong => "相关题最近答错过，还没掌握",
-            SymbolStatus.mastered => "相关题已答对掌握",
-            SymbolStatus.partial => "相关题答对过一部分",
-            SymbolStatus.fresh => "相关题还没做过",
+            SymbolStatus.wrong => "这一条的自测题答错过，还没掌握",
+            SymbolStatus.mastered => "这一条的自测题答对过",
+            SymbolStatus.fresh => "这一条还没自测过",
           },
       child: Container(
         width: 28,
@@ -49,58 +51,50 @@ class StatusDot extends StatelessWidget {
   }
 }
 
-/// 条目相关题的作答状态。
-enum SymbolStatus { wrong, partial, mastered, fresh }
+/// 条目自测题的作答状态。
+enum SymbolStatus { wrong, mastered, fresh }
 
-/// 由相关题集合算微点状态：答错优先红，全掌握绿，其余黄，没做过灰。
-SymbolStatus statusOf({
-  required List<Question> related,
-  required Set<String> mastered,
+/// 由一组自测题号算状态（ADR 0109、0112）：有答错过且还在错题库里（累计答对没到答错的
+/// 2 倍，ADR 0079）→ 红；答对过（哪怕只答对一部分）→ 绿；一张没答过 → 灰。**只看这些
+/// 题号自己的作答**，关联真题（日常练习）不参与。侧栏专题圆、组标题圆、条目微点、
+/// 「练这组」按钮都用它，全站一个口径。
+SymbolStatus statusOfIds({
+  required Iterable<String> ids,
   required HistorySet histories,
 }) {
-  if (related.isEmpty) return SymbolStatus.fresh;
-  final touched = [for (final q in related) if (histories.byQuestion.containsKey(q.id)) q];
-  if (touched.isEmpty) return SymbolStatus.fresh;
-  if (touched.any((q) => (histories.byQuestion[q.id]?.wrong ?? 0) > 0 && !mastered.contains(q.id))) {
-    return SymbolStatus.wrong;
+  var touched = false;
+  for (final id in ids) {
+    final h = histories.byQuestion[id];
+    if (h == null) continue;
+    touched = true;
+    if (h.wrong > 0 && !h.retiredFromWrongPool) return SymbolStatus.wrong;
   }
-  return related.every((q) => mastered.contains(q.id)) ? SymbolStatus.mastered : SymbolStatus.partial;
+  return touched ? SymbolStatus.mastered : SymbolStatus.fresh;
 }
 
-/// 一张速记卡现在属于哪一档（ADR 0094）。**只看作答记录**——速记卡对应一道有稳定编号的速记题，
-/// 自测的每次作答和练习、模拟考一样记进作答记录，错题本、考前复习、强化练习用的是同一份记录：
-/// - [wrong]：这张卡的题答错过、且还在错题库里（累计答对没达到答错的 2 倍，ADR 0079）；或者它关联的
-///   真题答错过——最该考；
+/// 一张速记卡现在属于哪一档（ADR 0094；ADR 0112 收敛为只看这张卡自己）。**只看作答记录**
+/// ——速记卡对应一道有稳定编号的速记题，自测的每次作答和练习、模拟考一样记进作答记录，
+/// 错题本、考前复习、强化练习用的是同一份记录；关联真题的作答不参与判档：
+/// - [wrong]：这张卡的题答错过、且还在错题库里（累计答对没达到答错的 2 倍，ADR 0079）——最该考；
 /// - [fresh]：没有任何记录——还没考过；
-/// - [partial]：关联的真题只做了一部分、没答错——次之；
-/// - [done]：这张卡答对过且没答错过，或错题已经移出错题库，或关联的真题全部答对掌握——不再出现。
-enum RecallBucket { wrong, fresh, partial, done }
+/// - [done]：这张卡答对过且没答错过，或错题已经移出错题库——不再出现。
+enum RecallBucket { wrong, fresh, done }
 
 /// 自测会抽的档位，按先后顺序。
-const recallDrawOrder = [RecallBucket.wrong, RecallBucket.fresh, RecallBucket.partial];
+const recallDrawOrder = [RecallBucket.wrong, RecallBucket.fresh];
 
-/// 判一张卡的档位：先看这张卡自己的作答记录，没有再看关联真题的记录。
+/// 判一张卡的档位：只看这张卡自己的作答记录，没答过就是 [RecallBucket.fresh]。
 RecallBucket classifyEntry({
   required String questionId,
-  required List<Question> related,
-  required Set<String> mastered,
   required HistorySet histories,
 }) {
-  final own = classifyOwn(questionId, histories);
-  if (own != null) return own;
-  if (related.isEmpty) return RecallBucket.fresh;
-  return switch (statusOf(related: related, mastered: mastered, histories: histories)) {
-    SymbolStatus.wrong => RecallBucket.wrong,
-    SymbolStatus.mastered => RecallBucket.done,
-    SymbolStatus.partial => RecallBucket.partial,
-    SymbolStatus.fresh => RecallBucket.fresh,
-  };
+  return classifyOwn(questionId, histories) ?? RecallBucket.fresh;
 }
 
 /// 只按这张卡**自己**的作答记录判档：答错过且还在错题库里（[RecallBucket.wrong]）、
-/// 答对过或已移出错题库（[RecallBucket.done]）、没答过返回 null——不看关联真题。
-/// 进度反馈用它计数：关联真题的掌握是「这组内容你会」，不是「这张卡你测过」，
-/// 混进来会把「已答对」灌成满格（ADR 0097 分科目后易混数字页实际发生过）。
+/// 答对过或已移出错题库（[RecallBucket.done]）、没答过返回 null。
+/// 专题掌握只由专题自测写入（ADR 0112）：练习里把关联真题全做对不算这张卡掌握，
+/// 那是「这组内容你会」，不是「这张卡你在专题里测过」。
 RecallBucket? classifyOwn(String questionId, HistorySet histories) {
   final own = histories.byQuestion[questionId];
   if (own == null || own.attempts == 0) return null;
@@ -109,13 +103,13 @@ RecallBucket? classifyOwn(String questionId, HistorySet histories) {
   return RecallBucket.done;
 }
 
-/// 速记组右上角「练这组」按钮的颜色（ADR 0109）：随这一组相关题的作答结果变——
-/// 有答错过且还没掌握的 → 红；全部掌握 → 绿；其余（没做过、只做了一部分）→ 灰。
+/// 速记组右上角「练这组」按钮的颜色（ADR 0109、0112）：随这一组自测卡的作答结果变——
+/// 有答错过且还在错题库里 → 红；全部不在错题库（答对过）→ 绿；一张没做过 → 灰。
 ButtonStyle practiceButtonStyle(SymbolStatus status) {
   final color = switch (status) {
     SymbolStatus.wrong => Bs.danger,
     SymbolStatus.mastered => const Color(0xFF2ECC71),
-    SymbolStatus.partial || SymbolStatus.fresh => const Color(0xFF8A939B),
+    SymbolStatus.fresh => const Color(0xFF8A939B),
   };
   return FilledButton.styleFrom(backgroundColor: color, foregroundColor: Colors.white);
 }
@@ -133,7 +127,7 @@ class TopicDot extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = switch (status) {
       SymbolStatus.wrong => Bs.danger,
-      SymbolStatus.mastered || SymbolStatus.partial => const Color(0xFF2ECC71),
+      SymbolStatus.mastered => const Color(0xFF2ECC71),
       SymbolStatus.fresh => const Color(0xFFADB5BD),
     };
     return Tooltip(
@@ -151,21 +145,4 @@ class TopicDot extends StatelessWidget {
       ),
     );
   }
-}
-
-/// 一组的「练这组」按钮状态：相关真题与这一组的自测卡**一起**看（ADR 0110）。
-/// 任何一道有答错过且最近还没答对 → 红；全部最近答对 → 绿；一道没碰过 → 灰；其余（做了一部分）→ 灰。
-SymbolStatus groupStatus({
-  required Iterable<String> ids,
-  required Set<String> mastered,
-  required HistorySet histories,
-}) {
-  final all = ids.toList();
-  if (all.isEmpty) return SymbolStatus.fresh;
-  final touched = [for (final id in all) if (histories.byQuestion.containsKey(id)) id];
-  if (touched.isEmpty) return SymbolStatus.fresh;
-  if (touched.any((id) => (histories.byQuestion[id]?.wrong ?? 0) > 0 && !mastered.contains(id))) {
-    return SymbolStatus.wrong;
-  }
-  return all.every(mastered.contains) ? SymbolStatus.mastered : SymbolStatus.partial;
 }
