@@ -29,10 +29,10 @@
 完整说明（名字对照表、三类判据的全文）见 [docs/REPOSITORY.md](docs/REPOSITORY.md)。
 
 ```
-subjects/<id>/  课程学科：cpp machine dsa english mathematics driver（学习应用）
+subjects/<id>/  课程学科：cpp machine dsa english mathematics driver gtkmm ascent（学习应用）
                 polaris、math-tools（图谱/参考类，math-tools 是数学学习的配套工具，ADR 0084）
                 design-patterns（素材坑）
-practice/<id>/  项目应用：pocket_cube（ADR 0060）
+practice/<id>/  项目应用：pocket_cube nas_admin c-gui-lab（ADR 0060）
 launcher/       启动器：core/ gui/ macos/
 docs/           跨应用 ADR（decisions/）与本文件各节的完整阐述
 scripts/        统一验证入口 check.py、跨应用检查
