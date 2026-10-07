@@ -486,9 +486,177 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
+  # 北极星、英语、数学工具三个 Tauri 应用进独立发布矩阵（ADR 0081 的同台延伸，
+  # 与 athena-cpp、athena-driver 同版同发）。tauri build 先跑 beforeBuildCommand
+  # 构建前端，再编 Rust 出 bundle；每平台取一种最省事的格式：Windows NSIS 安装
+  # 器、macOS DMG、Linux DEB（AppImage 的 linuxdeploy 在无头 CI 上还有 fuse 依赖
+  # 坑，先不发）。产物统一改名为 athena-<app>-<版本>-<平台>。北极星的 productName
+  # 是中文「北极星」（窗口标题与开始菜单用），打包二进制名由 mainBinaryName
+  # 固定为 athena-polaris。
+  tauri-apps:
+    name: Build ${{ matrix.app }} (${{ matrix.platform }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - app: polaris
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: polaris
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: polaris
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: polaris
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
+          - app: english
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: english
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: english
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: english
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
+          - app: math-tools
+            os: windows-latest
+            platform: windows-x64
+            bundles: nsis
+          - app: math-tools
+            os: macos-15
+            platform: macos-arm64
+            bundles: app,dmg
+          - app: math-tools
+            os: macos-15-intel
+            platform: macos-x86_64
+            bundles: app,dmg
+          - app: math-tools
+            os: ubuntu-26.04
+            platform: linux-x86_64
+            bundles: deb
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    steps:
+      - name: Resolve version
+        id: version
+        shell: bash
+        run: |
+          v="${GITHUB_REF_NAME#v}"
+          if ! echo "$v" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::版本号 '$v' 不是 x.y.z 形式"; exit 1
+          fi
+          echo "value=$v" >> "$GITHUB_OUTPUT"
+
+      - name: Check out tagged source
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: subjects/${{ matrix.app }}/package-lock.json
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            subjects/${{ matrix.app }}/src-tauri/target
+          key: tauri-release-${{ matrix.app }}-${{ matrix.os }}-${{ hashFiles(format('subjects/{0}/src-tauri/Cargo.lock', matrix.app)) }}
+
+      - name: Install Linux bundle dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libwebkit2gtk-4.1-dev libsoup-3.0-dev \
+            libjavascriptcoregtk-4.1-dev librsvg2-dev \
+            libgtk-3-dev libayatana-appindicator3-dev patchelf
+
+      # 版本号由 tag 决定写入 tauri.conf.json（ADR 0081 决策 3，与 driver 同法）
+      - name: Set version
+        working-directory: subjects/${{ matrix.app }}
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+        shell: bash
+        run: |
+          node -e "const f='src-tauri/tauri.conf.json';const c=require('./'+f);c.version=process.env.VERSION;require('fs').writeFileSync(f,JSON.stringify(c,null,2))"
+
+      - name: Install frontend dependencies
+        working-directory: subjects/${{ matrix.app }}
+        run: npm ci
+
+      - name: Build and bundle
+        working-directory: subjects/${{ matrix.app }}
+        shell: bash
+        run: npx tauri build --bundles "${{ matrix.bundles }}"
+
+      - name: Collect and rename artifacts
+        working-directory: subjects/${{ matrix.app }}
+        shell: bash
+        run: |
+          version="${{ steps.version.outputs.value }}"
+          platform="${{ matrix.platform }}"
+          mkdir -p dist
+          case "$RUNNER_OS" in
+            Windows)
+              cp src-tauri/target/release/bundle/nsis/*-setup.exe \
+                "dist/athena-${{ matrix.app }}-$version-$platform-setup.exe" ;;
+            macOS)
+              cp src-tauri/target/release/bundle/dmg/*.dmg \
+                "dist/athena-${{ matrix.app }}-$version-$platform.dmg" ;;
+            Linux)
+              cp src-tauri/target/release/bundle/deb/*.deb \
+                "dist/athena-${{ matrix.app }}_$version_amd64.deb" ;;
+          esac
+          ls -l dist
+
+      - name: Verify package
+        working-directory: subjects/${{ matrix.app }}
+        shell: bash
+        run: |
+          version="${{ steps.version.outputs.value }}"
+          platform="${{ matrix.platform }}"
+          case "$RUNNER_OS" in
+            Windows)
+              test -f "dist/athena-${{ matrix.app }}-$version-$platform-setup.exe" ;;
+            macOS)
+              hdiutil verify "dist/athena-${{ matrix.app }}-$version-$platform.dmg" ;;
+            Linux)
+              dpkg-deb --info "dist/athena-${{ matrix.app }}_$version_amd64.deb"
+              listing=$(dpkg-deb --contents "dist/athena-${{ matrix.app }}_$version_amd64.deb")
+              [[ "$listing" == *usr/bin/athena* ]] || { echo 'deb 缺 usr/bin/athena-*'; exit 1; } ;;
+          esac
+
+      - name: Upload release assets
+        uses: actions/upload-artifact@v7
+        with:
+          name: athena-${{ matrix.app }}-${{ matrix.platform }}
+          path: subjects/${{ matrix.app }}/dist/athena-${{ matrix.app }}-*
+          if-no-files-found: error
+          retention-days: 7
+
   publish:
     name: Publish GitHub Release
-    needs: [macos, linux, windows, driver, ascent]
+    needs: [macos, linux, windows, driver, ascent, tauri-apps]
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -517,6 +685,9 @@ jobs:
           files=(athena-cpp-*.dmg athena-cpp-*.AppImage athena-cpp_*.deb
             athena-cpp-*-windows-x64.zip athena-cpp-*-windows-x64.msi
             athena-driver-*.zip athena-driver-*.dmg athena-driver-*.tar.gz
+            athena-polaris-* athena-polaris_*
+            athena-english-* athena-english_*
+            athena-math-tools-* athena-math-tools_*
             Lumi_*.exe)
           sha256sum "${files[@]}" > SHA256SUMS.txt
 
@@ -553,6 +724,9 @@ jobs:
           assets=(dist/athena-cpp-*.dmg dist/athena-cpp-*.AppImage dist/athena-cpp_*.deb
             dist/athena-cpp-*-windows-x64.zip dist/athena-cpp-*-windows-x64.msi
             dist/athena-driver-*.zip dist/athena-driver-*.dmg dist/athena-driver-*.tar.gz
+            dist/athena-polaris-* dist/athena-polaris_*
+            dist/athena-english-* dist/athena-english_*
+            dist/athena-math-tools-* dist/athena-math-tools_*
             dist/Lumi_*.exe
             dist/SHA256SUMS.txt)
           if gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
