@@ -7351,7 +7351,7 @@
     {
       "id": "automation",
       "title": "自动化类 · 控制与智能系统",
-      "summary": "自动化类的技术体系：测量、建模、控制、执行与系统。推荐入门起点是「可编程控制器与工业控制编程」，它不需要控制理论就能做出可验证的作品。自动控制原理（反馈控制）与电机控制、信号与系统、传感器与信号调理是几个专业类共用的知识，仍在电子信息图里，这里通过跨图关联引用，不重复造节点。弱电侧已补深：经典控制设计（根轨迹与频域）、工业现场 I/O 与隔离、离散事件与顺序控制、实时以太网与 TSN、非线性与鲁棒控制、仿真与半实物验证、工控网络安全、飞行控制、机器视觉与视觉伺服。尚未覆盖：运筹与调度、系统工程与可靠性理论、预测性维护与设备健康管理，后续按需新增，不在这里假装已经齐全。",
+      "summary": "自动化类的技术体系：测量、建模、控制、执行与系统。推荐入门起点是「可编程控制器与工业控制编程」，它不需要控制理论就能做出可验证的作品。自动控制原理（反馈控制）与电机控制、信号与系统、传感器与信号调理是几个专业类共用的知识，仍在电子信息图里，这里通过跨图关联引用，不重复造节点。弱电侧已补深：经典控制设计（根轨迹与频域）、工业现场 I/O 与隔离、离散事件与顺序控制、实时以太网与 TSN、非线性与鲁棒控制、仿真与半实物验证、工控网络安全、飞行控制、机器视觉与视觉伺服。另有优化建模与生产调度、预测性维护与设备健康管理。尚未覆盖：系统工程与可靠性理论的深化、过程工业的先进过程控制与软测量，后续按需新增，不在这里假装已经齐全。",
       "view_kind": "academic",
       "discipline": "auto",
       "graph_kind": "course",
@@ -10101,6 +10101,229 @@
               "hands_on": true
             }
           ]
+        },
+        {
+          "id": "polaris.auto.predictive_maintenance",
+          "title": "预测性维护与设备健康管理",
+          "track": "assurance",
+          "stable_definition": "预测与健康管理（PHM）从传感数据里判断设备的健康状态：状态监测采集振动、电流、温度等量，特征提取把原始信号变成可比较的指标，异常检测发现偏离，剩余使用寿命（RUL）预测给出还能用多久；评价看误报、漏报与预测提前量，而不是单点的准确率。",
+          "engineering_role": "让维护从「坏了再修、到点就换」变成按状态决策，是智能制造与高价值设备运维的核心应用。",
+          "practice": "在 NASA 公开的退化数据集上做特征提取、异常检测与剩余寿命预测，按提前量与误差评价，并与简单基线（固定寿命阈值）对比。",
+          "validation": "analysis",
+          "validation_note": "预测的误差与提前量在留出的设备上评估，与简单基线对比，误报与漏报被统计，没有用测试数据调参。",
+          "volatility": "evolving",
+          "requires": [
+            "polaris.auto.instrumentation",
+            "polaris.auto.fault_safety"
+          ],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "nasa-pcoe-data",
+              "locator": "退化与寿命预测的公开数据集"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "nasa-cmapss",
+              "locator": "喷气发动机退化仿真数据"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "phm-society",
+              "locator": "预测与健康管理的方法与评价"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "sklearn-outlier",
+              "locator": "异常检测方法"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "scipy-signal",
+              "locator": "时频域特征的信号处理"
+            }
+          ],
+          "pitfall": "把训练集上的拟合当成预测：同一台设备的数据既训练又评估，上线后换一台设备就失效。",
+          "priority": "important",
+          "priority_reason": "设备运维数字化的主要落点，把检测、信号处理与机器学习接到工程价值上。",
+          "stage": "senior",
+          "stage_reason": "资深：需要检测技术与功能安全的基础，并会用基本的机器学习。",
+          "domain": "assurance",
+          "entry": false,
+          "verify": "code",
+          "chapters": [
+            {
+              "id": "pdm.monitor",
+              "title": "状态监测与故障特征",
+              "summary": "振动、电流、温度等监测量，以及常见故障在其中的表现。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "pdm.feature",
+              "title": "特征提取：时域与频域",
+              "summary": "把原始信号变成可比较的健康指标。",
+              "requires": [
+                "pdm.monitor"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "pdm.anomaly",
+              "title": "异常检测",
+              "summary": "用统计或模型方法发现偏离正常的状态。",
+              "requires": [
+                "pdm.feature"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "pdm.rul",
+              "title": "剩余使用寿命预测",
+              "summary": "RUL 的定义与几类预测方法的思路。",
+              "requires": [
+                "pdm.feature"
+              ],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "pdm.metric",
+              "title": "评价指标与基线",
+              "summary": "误报、漏报与提前量，为什么必须与简单基线对比。",
+              "requires": [
+                "pdm.anomaly",
+                "pdm.rul"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "pdm.dataset",
+              "title": "在公开数据集上做完整流程",
+              "summary": "在退化数据集上完成特征、检测与寿命预测，按留出设备评价并与基线对比。",
+              "requires": [
+                "pdm.metric"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
+        },
+        {
+          "id": "polaris.auto.optimization_scheduling",
+          "title": "优化建模与生产调度",
+          "track": "control",
+          "stable_definition": "很多自动化决策是在约束下求最好：线性规划与对偶给出资源分配的最优解及其价格含义，整数规划与约束规划处理「做或不做」「先后顺序」这类离散决策，作业车间调度是它们在生产线上的典型问题；建模的质量比求解器的选择更决定结果，灵敏度分析说明解对参数有多敏感。",
+          "engineering_role": "把排产、配送与资源分配变成可计算、可复核的问题，也是模型预测控制背后的优化工具。",
+          "practice": "为一个小型车间（几台机器、几种工件、有交期与换产时间）建立调度模型，用开源求解器求出排产，与人工经验排产对比总完工时间与延误，并对加工时间扰动做灵敏度分析。",
+          "validation": "analysis",
+          "validation_note": "模型约束与目标逐条对应实际规则，求得的排产在仿真中可行，与手工排产对比有数据，扰动下的变化被分析。",
+          "volatility": "stable",
+          "requires": [],
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "source_id": "mit-15053-optimization",
+              "locator": "线性规划、整数规划与建模"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ortools-lp",
+              "locator": "线性优化的建模与求解"
+            },
+            {
+              "relation": "adapted",
+              "source_id": "ortools-jobshop",
+              "locator": "作业车间调度问题的约束建模"
+            },
+            {
+              "relation": "see_also",
+              "source_id": "boyd-cvx",
+              "locator": "凸优化的理论与建模"
+            }
+          ],
+          "pitfall": "只追求最优：模型漏掉一条现场规则，求出的「最优排产」现场根本执行不了；或不看灵敏度，加工时间一变计划就作废。",
+          "priority": "important",
+          "priority_reason": "生产调度、资源分配与 MPC 的共同基础，运筹方法进入自动化的主要入口。",
+          "stage": "intermediate",
+          "stage_reason": "中级：需要线性代数与基本编程，不依赖控制理论。",
+          "domain": "algorithms",
+          "entry": false,
+          "verify": "code",
+          "chapters": [
+            {
+              "id": "opt.lp",
+              "title": "线性规划与对偶",
+              "summary": "资源分配的线性模型，对偶变量的经济含义。",
+              "requires": [],
+              "mastery": "familiarity",
+              "kind": "theory"
+            },
+            {
+              "id": "opt.mip",
+              "title": "整数规划与约束规划",
+              "summary": "离散决策与逻辑约束的建模方式。",
+              "requires": [
+                "opt.lp"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "opt.jobshop",
+              "title": "作业车间调度",
+              "summary": "工序、机器与先后约束，用约束规划建模与求解。",
+              "requires": [
+                "opt.mip"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "opt.solver",
+              "title": "建模技巧与求解器",
+              "summary": "把现场规则写成约束，认识求解时间与规模的关系。",
+              "requires": [
+                "opt.lp"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "opt.sensitivity",
+              "title": "灵敏度与鲁棒性",
+              "summary": "参数变化下最优解怎样变化，怎样让计划对扰动不那么脆弱。",
+              "requires": [
+                "opt.solver"
+              ],
+              "mastery": "usage",
+              "kind": "practice",
+              "hands_on": true
+            },
+            {
+              "id": "opt.case",
+              "title": "为一个小车间排产并对比",
+              "summary": "建模、求解，与人工排产对比总完工时间与延误，并做灵敏度分析。",
+              "requires": [
+                "opt.jobshop",
+                "opt.sensitivity"
+              ],
+              "mastery": "assessment",
+              "kind": "practice",
+              "hands_on": true
+            }
+          ]
         }
       ],
       "edges": [
@@ -10706,6 +10929,86 @@
               "relation": "informed",
               "source_id": "ieee-tsn",
               "locator": "工业网络融合"
+            }
+          ]
+        },
+        {
+          "from": "polaris.auto.instrumentation",
+          "to": "polaris.auto.predictive_maintenance",
+          "relation": "requires",
+          "rationale": "健康管理的输入是传感数据，先要知道测量的质量与局限。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "phm-society",
+              "locator": "状态监测"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.auto.fault_safety",
+          "to": "polaris.auto.predictive_maintenance",
+          "relation": "requires",
+          "rationale": "故障模式、诊断与残差检测是预测的前提。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "phm-society",
+              "locator": "诊断与预测"
+            }
+          ],
+          "strong": true
+        },
+        {
+          "from": "polaris.auto.predictive_maintenance",
+          "to": "polaris.auto.smart_manufacturing",
+          "relation": "enables",
+          "rationale": "设备健康管理是工厂数据最有价值的应用之一。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "phm-society",
+              "locator": "设备运维"
+            }
+          ]
+        },
+        {
+          "from": "polaris.auto.optimization_scheduling",
+          "to": "polaris.auto.optimal_mpc",
+          "relation": "enables",
+          "rationale": "MPC 每一步求解的就是带约束的优化问题。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "boyd-cvx",
+              "locator": "约束优化"
+            }
+          ]
+        },
+        {
+          "from": "polaris.auto.optimization_scheduling",
+          "to": "polaris.auto.process_control",
+          "relation": "enables",
+          "rationale": "生产调度与批处理排程决定过程控制的运行计划。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ortools-jobshop",
+              "locator": "调度"
+            }
+          ]
+        },
+        {
+          "from": "polaris.auto.optimization_scheduling",
+          "to": "polaris.auto.smart_manufacturing",
+          "relation": "enables",
+          "rationale": "工厂级优化是智能制造里把数据变成决策的一环。",
+          "evidence_refs": [
+            {
+              "relation": "informed",
+              "source_id": "ortools-jobshop",
+              "locator": "生产调度"
             }
           ]
         }
@@ -22722,6 +23025,72 @@
           "locator": "识别"
         }
       ]
+    },
+    {
+      "from": "polaris.frontier.math_for_computing",
+      "to": "polaris.auto.optimization_scheduling",
+      "relation": "requires",
+      "rationale": "线性规划与对偶建立在线性代数之上，整数规划用到离散数学。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "mit-15053-optimization",
+          "locator": "线性规划基础"
+        }
+      ],
+      "strong": true
+    },
+    {
+      "from": "polaris.cs.machine_learning",
+      "to": "polaris.auto.predictive_maintenance",
+      "relation": "enables",
+      "rationale": "异常检测与寿命预测使用机器学习的方法，评估纪律同样适用。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "sklearn-outlier",
+          "locator": "异常检测"
+        }
+      ]
+    },
+    {
+      "from": "polaris.ei.dsp",
+      "to": "polaris.auto.predictive_maintenance",
+      "relation": "enables",
+      "rationale": "时频域特征提取是数字信号处理的直接应用。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "scipy-signal",
+          "locator": "频谱与滤波"
+        }
+      ]
+    },
+    {
+      "from": "polaris.ee.hardware_reliability",
+      "to": "polaris.auto.predictive_maintenance",
+      "relation": "enables",
+      "rationale": "失效模式分析给健康管理指出该监测什么。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "phm-society",
+          "locator": "失效与健康管理"
+        }
+      ]
+    },
+    {
+      "from": "polaris.cs.da",
+      "to": "polaris.auto.optimization_scheduling",
+      "relation": "enables",
+      "rationale": "图、动态规划与复杂度的知识有助于理解求解的代价。",
+      "evidence_refs": [
+        {
+          "relation": "informed",
+          "source_id": "ortools-jobshop",
+          "locator": "组合优化"
+        }
+      ]
     }
   ],
   "routes": [
@@ -24365,9 +24734,11 @@
             "polaris.auto.flight_control",
             "polaris.auto.machine_vision",
             "polaris.auto.realtime_ethernet_tsn",
-            "polaris.auto.ot_security"
+            "polaris.auto.ot_security",
+            "polaris.auto.predictive_maintenance",
+            "polaris.auto.optimization_scheduling"
           ],
-          "checkpoint": "选一个方向交出作品：新息检验通过的卡尔曼滤波、带约束的 MPC、机器人导航、故障注入验证，或工厂数据看板。；选一个方向交出作品：非线性或鲁棒控制的对比、整定过的飞控、视觉引导闭环、带背景流量的延迟测量，或工控网络分区与监测"
+          "checkpoint": "选一个方向交出作品：新息检验通过的卡尔曼滤波、带约束的 MPC、机器人导航、故障注入验证，或工厂数据看板。；选一个方向交出作品：非线性或鲁棒控制的对比、整定过的飞控、视觉引导闭环、带背景流量的延迟测量，或工控网络分区与监测；或在公开退化数据集上完成寿命预测，并与简单基线对比"
         }
       ],
       "source_refs": [
@@ -24712,9 +25083,11 @@
           "nodes": [
             "polaris.auto.fault_safety",
             "polaris.auto.smart_manufacturing",
-            "polaris.auto.ot_security"
+            "polaris.auto.ot_security",
+            "polaris.auto.predictive_maintenance",
+            "polaris.auto.optimization_scheduling"
           ],
-          "checkpoint": "故障注入验证进入安全状态；做一个带数据质量检查的设备看板。；为一个小控制网络做分区与被动监测"
+          "checkpoint": "故障注入验证进入安全状态；做一个带数据质量检查的设备看板。；为一个小控制网络做分区与被动监测；为一个小车间排产并与人工对比；在公开退化数据集上完成寿命预测"
         }
       ],
       "source_refs": [
@@ -25596,6 +25969,85 @@
       "pitfalls": [
         "把视觉当成瞬时传感器：不测延迟与时间同步，回路总是慢半拍。",
         "只会调库：不会标定与坐标变换，换一个相机就全部作废。"
+      ]
+    },
+    {
+      "id": "route.smart-factory",
+      "title": "智能制造：数据、调度与设备健康",
+      "summary": "从 PLC 与现场接口，到工业通信与过程控制、数据库，再到调度优化、设备健康管理与工控安全。把工厂的数据变成决策。",
+      "lens": "direction",
+      "balance": "balanced",
+      "discipline": "auto",
+      "audience": "想做工厂数字化、产线数据、设备运维与排产优化的人。",
+      "artifact": "一个小产线的数字化方案：现场数据采集、设备状态看板与异常预警、排产模型与对比、一份工控网络分区方案。",
+      "stages": [
+        {
+          "title": "现场与接口",
+          "goal": "能让控制器可靠地接触现场设备。",
+          "nodes": [
+            "polaris.auto.plc_basics",
+            "polaris.auto.instrumentation",
+            "polaris.auto.industrial_io"
+          ],
+          "checkpoint": "做带互锁的 PLC 控制，并搭一路隔离的模拟量输入。"
+        },
+        {
+          "title": "通信、过程与数据",
+          "goal": "把设备联网并保存数据。",
+          "nodes": [
+            "polaris.auto.industrial_networks",
+            "polaris.auto.process_control",
+            "polaris.cs.database_systems"
+          ],
+          "checkpoint": "测出通信周期与抖动；把现场数据写入数据库并做查询调优。"
+        },
+        {
+          "title": "数据价值：看板、调度与健康",
+          "goal": "把数据变成决策。",
+          "nodes": [
+            "polaris.auto.smart_manufacturing",
+            "polaris.auto.optimization_scheduling",
+            "polaris.auto.fault_safety",
+            "polaris.auto.predictive_maintenance"
+          ],
+          "checkpoint": "做设备状态看板；为小车间排产并与人工对比；在公开退化数据集上完成寿命预测并与基线对比。"
+        },
+        {
+          "title": "安全与规模化",
+          "goal": "让系统可信并能扩展。",
+          "nodes": [
+            "polaris.auto.ot_security",
+            "polaris.auto.realtime_ethernet_tsn"
+          ],
+          "checkpoint": "为一个小控制网络做分区与被动监测；测量带背景流量下的延迟与抖动。"
+        }
+      ],
+      "source_refs": [
+        {
+          "relation": "adapted",
+          "source_id": "opc-ua",
+          "locator": "工厂信息模型"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "ortools-jobshop",
+          "locator": "生产调度"
+        },
+        {
+          "relation": "adapted",
+          "source_id": "nasa-pcoe-data",
+          "locator": "设备健康管理的数据集"
+        },
+        {
+          "relation": "see_also",
+          "source_id": "nist-sp-800-82",
+          "locator": "工业控制系统的体系结构与安全"
+        }
+      ],
+      "pitfalls": [
+        "只做大屏：数据质量与时间同步没保证，分析与排产建立在错位的数据上。",
+        "把训练集上的拟合当成预测：同一台设备既训练又评估，换设备就失效。",
+        "模型漏掉现场规则：求出的最优排产现场无法执行。"
       ]
     }
   ],
