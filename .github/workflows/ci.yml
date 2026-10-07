@@ -17,7 +17,7 @@ on:
         description: 只跑哪个应用（all 为全量，sources 只跑跨应用检查）
         type: choice
         default: all
-        options: [all, sources, cpp, machine, polaris, dsa, english, mathematics, driver, launcher]
+        options: [all, sources, cpp, pocket_cube, machine, polaris, dsa, english, mathematics, ascent, math-tools, gtkmm, driver, nas_admin, launcher, c-gui-lab]
 
 permissions:
   contents: read
@@ -53,12 +53,17 @@ jobs:
       - name: Verify
         run: python3 scripts/check.py --sources-only
 
-  # C++ 教程：GTK4 + Meson。三个平台各装各的依赖，跑的是同一条 Python 入口。
+  # GTK4 + gtkmm + Meson 的应用：C++ 教程与魔方（pocket_cube）。魔方的依赖是 C++ 教程的
+  # 子集，同一套安装步骤；三个平台各装各的依赖，跑的是同一条 Python 入口。
   cpp-macos:
-    name: C++ 教程（macOS）
-    if: contains(fromJSON('["all","cpp"]'), inputs.app || 'all')
+    name: ${{ matrix.app == 'cpp' && 'C++ 教程' || matrix.app }}（macOS）
+    if: contains(fromJSON('["all","cpp","pocket_cube"]'), inputs.app || 'all')
     runs-on: macos-15
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["cpp","pocket_cube"]' || format('["{0}"]', inputs.app)) }}
     env:
       HOMEBREW_NO_AUTO_UPDATE: "1"
 
@@ -74,16 +79,20 @@ jobs:
           blueprint-compiler librsvg
 
       - name: Verify
-        run: python3 scripts/check.py cpp --build-dir build --buildtype debugoptimized
+        run: python3 scripts/check.py ${{ matrix.app }} --build-dir build --buildtype debugoptimized
 
   # 这一档不按 ADR 0051 降级：subjects/cpp 的 Windows 已经被 ADR 0049 排除，
   # macOS 与 Ubuntu 是它仅有的两个支持平台。再把 Ubuntu 放松，就只剩一个平台
   # 在验证了——声明支持就要验证（ADR 0047），这跟优先级排序不冲突。
   cpp-ubuntu:
-    name: C++ 教程（Ubuntu）
-    if: contains(fromJSON('["all","cpp"]'), inputs.app || 'all')
+    name: ${{ matrix.app == 'cpp' && 'C++ 教程' || matrix.app }}（Ubuntu）
+    if: contains(fromJSON('["all","cpp","pocket_cube"]'), inputs.app || 'all')
     runs-on: ubuntu-26.04
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["cpp","pocket_cube"]' || format('["{0}"]', inputs.app)) }}
 
     steps:
       - name: Check out source
@@ -101,17 +110,21 @@ jobs:
 
       - name: Verify
         # GTK 资源测试要构造控件，需要一个显示后端；无头 CI 用 xvfb 提供。
-        run: xvfb-run -a python3 scripts/check.py cpp --build-dir build --buildtype debugoptimized
+        run: xvfb-run -a python3 scripts/check.py ${{ matrix.app }} --build-dir build --buildtype debugoptimized
 
   # 2026-09-15 打通并转正。曾经卡住的那三个 conflicting declaration 是 glib 2.90
   # 与 MSYS2 现有 glibmm 2.86 的名字冲突，由 compat/glib_final_type_shim.h 绕开；
   # 同批修掉的还有我们自己的两处 POSIX 专有写法（LC_MESSAGES、M_PI）和缺失的
   # .gitattributes（CRLF 让按字节匹配的测试挂了）。详见 ADR 0049。
   cpp-windows:
-    name: C++ 教程（Windows）
-    if: contains(fromJSON('["all","cpp"]'), inputs.app || 'all')
+    name: ${{ matrix.app == 'cpp' && 'C++ 教程' || matrix.app }}（Windows）
+    if: contains(fromJSON('["all","cpp","pocket_cube"]'), inputs.app || 'all')
     runs-on: windows-latest
     timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["cpp","pocket_cube"]' || format('["{0}"]', inputs.app)) }}
     defaults:
       run:
         shell: msys2 {0}
@@ -141,7 +154,7 @@ jobs:
             mingw-w64-ucrt-x86_64-python
 
       - name: Verify
-        run: python scripts/check.py cpp --build-dir build --buildtype debugoptimized
+        run: python scripts/check.py ${{ matrix.app }} --build-dir build --buildtype debugoptimized
 
   # Qt Quick / CMake 应用：各自跑自己的 scripts/check.py。
   # （polaris 已随 ADR 0015 迁到 Tauri 2，见下面的 tauri 矩阵。）
@@ -248,17 +261,21 @@ jobs:
         env:
           CMAKE_PREFIX_PATH: ${{ github.workspace }}\Qt\6.8.1\msvc2022_64
 
-  # 四个 Tauri 应用：前端 + Rust 壳。每个应用跑自己的 scripts/check.py，
+  # Tauri 应用：前端 + Rust 壳。每个应用跑自己的 scripts/check.py，
   # 和本地是同一条命令（ADR 0007）。polaris 随 ADR 0015 从 Qt 矩阵迁入。
+  # 应用间的差异按 matrix.app 写成表达式，不用 include：app 列表会被 inputs.app
+  # 过滤，合并不进去的 include 条目会被当成新组合追加，单跑一个应用时冒出别的。
+  # 拾阶用 pnpm（它的 lock 依赖 pnpm 的版本约束）；gtkmm 的原生演示要 gtkmm C++
+  # 工具链，交给下面的 gtkmm-native，这里跳过。
   tauri:
     name: ${{ matrix.app }}（${{ matrix.os }}）
-    if: contains(fromJSON('["all","polaris","dsa","english","mathematics"]'), inputs.app || 'all')
+    if: contains(fromJSON('["all","polaris","dsa","english","mathematics","ascent","math-tools","gtkmm"]'), inputs.app || 'all')
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
-        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["polaris","dsa","english","mathematics"]' || format('["{0}"]', inputs.app)) }}
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["polaris","dsa","english","mathematics","ascent","math-tools","gtkmm"]' || format('["{0}"]', inputs.app)) }}
         os: [macos-15, windows-latest, ubuntu-26.04]
     # Linux 降级：回归了报出来，但不阻塞整体结论（ADR 0051）
     continue-on-error: ${{ matrix.os == 'ubuntu-26.04' }}
@@ -267,12 +284,18 @@ jobs:
       - name: Check out source
         uses: actions/checkout@v7
 
+      - name: Set up pnpm
+        if: matrix.app == 'ascent'
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Set up Node
         uses: actions/setup-node@v6
         with:
           node-version: "22"
-          cache: npm
-          cache-dependency-path: subjects/${{ matrix.app }}/package-lock.json
+          cache: ${{ matrix.app == 'ascent' && 'pnpm' || 'npm' }}
+          cache-dependency-path: subjects/${{ matrix.app }}/${{ matrix.app == 'ascent' && 'pnpm-lock.yaml' || 'package-lock.json' }}
 
       - name: Install Tauri system dependencies (Ubuntu)
         # Linux 上 Tauri 的 WebView 是系统 WebKitGTK，得先装；macOS 与 Windows
@@ -296,7 +319,28 @@ jobs:
           key: tauri-${{ matrix.app }}-${{ matrix.os }}-${{ hashFiles(format('subjects/{0}/src-tauri/Cargo.lock', matrix.app)) }}
 
       - name: Verify
-        run: python3 scripts/check.py ${{ matrix.app }}
+        run: python3 scripts/check.py ${{ matrix.app }} ${{ matrix.app == 'gtkmm' && '--skip-native' || '' }}
+
+  # gtkmm 的演示与实验是 gtkmm-4.0 的 C++ CMake 工程，check.py 编译后跑 --self-check
+  # （构造控件树即退出，不弹窗）。Linux 一档先验证可编译可加载；Windows 走 MSYS2
+  # MINGW64、macOS 走 Homebrew 的验证留待补上。
+  gtkmm-native:
+    name: gtkmm 原生演示（ubuntu-26.04）
+    if: contains(fromJSON('["all","gtkmm"]'), inputs.app || 'all')
+    runs-on: ubuntu-26.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends             cmake ninja-build pkg-config g++ libgtkmm-4.0-dev xvfb gettext
+
+      - name: Verify
+        run: xvfb-run -a python3 scripts/check.py gtkmm --skip-rust
 
   # 驾考学习：Flutter 桌面。三个平台各编各的桌面目标，入口仍是应用自己的
   # scripts/check.py（ADR 0007）。
@@ -372,3 +416,59 @@ jobs:
 
       - name: Build
         run: cargo build --manifest-path launcher/Cargo.toml --all-targets
+
+  # 驾考后台：Flask 服务，check.py 自建 .venv 装依赖后用 test_client 打健康检查、登录页
+  # 与仪表盘壳。应用启动就 create_all，必须连上 PostgreSQL：CI 起一个与生产同大版本
+  # （17）的空库，账号只在这台 runner 上存在。服务容器只有 Linux runner 支持；生产本来
+  # 就在软路由（Linux）上，Windows 开发机走本地 check.py。
+  nas-admin:
+    name: 驾考后台（ubuntu-26.04）
+    if: contains(fromJSON('["all","nas_admin"]'), inputs.app || 'all')
+    runs-on: ubuntu-26.04
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: nas_admin
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U ci" --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      NAS_ADMIN_DATABASE_URL: postgresql://ci:ci@localhost:5432/nas_admin
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Verify
+        run: python scripts/check.py nas_admin
+
+  # C GUI Lab 的原生程序是 Windows 专用（ucrt64 预设、GDI 演示），CI 不编译它们；
+  # 这里只验证跨平台成立的部分：目录结构完整与 Electron 主进程语法。名字写明，
+  # 不冒充完整验证。
+  c-gui-lab:
+    name: C GUI Lab（结构与 Electron 语法，不含原生编译）
+    if: contains(fromJSON('["all","c-gui-lab"]'), inputs.app || 'all')
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+
+      - name: Verify
+        run: python3 scripts/check.py c-gui-lab --skip-build
