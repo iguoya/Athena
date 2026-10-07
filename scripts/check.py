@@ -3,8 +3,8 @@
 
 检查逻辑归各应用自己（subjects/<id>/ 与 practice/<id>/ 下的 scripts/check.py），
 这里只负责依次调用，
-外加两项跨应用检查：内容必须有出处（ADR 0043），项目 skill 在 .agents/ 与
-.claude/ 两处一致（ADR 0061）。新增应用放一份自己的 check.py 就会被带上，不用改这个文件，
+外加三项跨应用检查：内容必须有出处（ADR 0043），项目 skill 在 .agents/ 与
+.claude/ 两处一致（ADR 0061），GitHub 工作流过 actionlint 与变量粘连检查。新增应用放一份自己的 check.py 就会被带上，不用改这个文件，
 也不用改 CI。
 
 用 Python 而不是 shell：验证每天都要跑，不该要求 Windows 上先装 Git Bash
@@ -13,11 +13,12 @@
 用法：
     python3 scripts/check.py                  跨应用检查 + 每个应用自己的检查
     python3 scripts/check.py cpp [参数...]    只跑某个应用，余下参数透传给它
-    python3 scripts/check.py --sources-only   只跑跨应用检查（skill 两处一致 + 出处）
+    python3 scripts/check.py --sources-only   只跑跨应用检查（skill 两处一致 + 出处 + 工作流）
 """
 
 from __future__ import annotations
 
+import re
 import shutil
 import subprocess
 import sys
@@ -97,6 +98,92 @@ def run_skill_mirror_check() -> None:
         )
 
 
+_RUN_BLOCK_RE = re.compile(r"^(?P<indent>\s*)(?:- )?run:\s*(?P<inline>[|>]-?\s*$|.+$)")
+_ASSIGN_RE = re.compile(
+    r"(?:^|[\s;(&|])(?:(?:export|local|readonly|declare)\s+(?:-\w+\s+)?)?([A-Za-z_]\w*)\+?="
+    r"|\bfor\s+([A-Za-z_]\w*)\s+in\b"
+    r"|\bread\s+(?:-\w+\s+)*([A-Za-z_]\w*(?:\s+[A-Za-z_]\w*)*)"
+)
+_PLAIN_REF_RE = re.compile(r"\$([A-Za-z_]\w*)")
+_YAML_KEY_RE = re.compile(r"^\s+([A-Za-z_]\w*):", re.MULTILINE)
+
+
+def _run_blocks(text: str) -> list[tuple[int, str]]:
+    """按缩进切出工作流里每个 run 脚本（行号从 1 起），不引入 YAML 解析依赖。"""
+    lines = text.splitlines()
+    blocks, i = [], 0
+    while i < len(lines):
+        m = _RUN_BLOCK_RE.match(lines[i])
+        if not m:
+            i += 1
+            continue
+        start, body = i + 1, []
+        if m.group("inline").strip()[:1] in "|>":
+            base = len(m.group("indent"))
+            i += 1
+            while i < len(lines) and (not lines[i].strip() or len(lines[i]) - len(lines[i].lstrip()) > base):
+                body.append(lines[i])
+                i += 1
+        else:
+            body.append(m.group("inline"))
+            i += 1
+        blocks.append((start, "\n".join(body)))
+    return blocks
+
+
+def find_variable_glue(text: str) -> list[str]:
+    """找 "$version_amd64" 这类粘连：脚本给 version 赋过值，却引用了从没出现过的
+    version_amd64——本意是 ${version}_amd64。actionlint 调 shellcheck 时关掉了
+    SC2154（未赋值变量），因为 env: 注入的变量它看不见，这一类就漏了过去。
+
+    只在「整体从没定义、但某个下划线前缀被赋过值」时报，误报很少。
+    """
+    known = set(_YAML_KEY_RE.findall(text))  # env: 与 with: 的键，粗放地都算已定义
+    problems = []
+    for start, script in _run_blocks(text):
+        assigned = {name for groups in _ASSIGN_RE.findall(script) for g in groups for name in g.split() if name}
+        for offset, line in enumerate(script.splitlines()):
+            for ref in _PLAIN_REF_RE.findall(line):
+                if ref in assigned or ref in known or ref.startswith(("GITHUB_", "RUNNER_")) or "_" not in ref:
+                    continue
+                parts = ref.split("_")
+                prefix = next(
+                    ("_".join(parts[:k]) for k in range(len(parts) - 1, 0, -1) if "_".join(parts[:k]) in assigned),
+                    None,
+                )
+                if prefix:
+                    rest = ref[len(prefix):]
+                    problems.append(f"第 {start + offset} 行：${ref} 从没赋值，本意多半是 ${{{prefix}}}{rest}")
+    return problems
+
+
+def run_workflow_check() -> None:
+    """GitHub 工作流：actionlint（含 shellcheck）加变量粘连检查。
+
+    工作流只在 CI 上真跑，写错了要等一轮全量构建才暴露——v9.0.0 的 Linux deb 就是
+    "_$version_amd64.deb" 改名失败、上传找不到文件。本地先拦一道。
+    """
+    print("== 跨应用检查：GitHub 工作流 ==", flush=True)
+    missing = [tool for tool in ("actionlint", "shellcheck") if shutil.which(tool) is None]
+    if missing:
+        raise SystemExit(
+            f"缺 {'、'.join(missing)}，工作流检查跑不了。安装：\n"
+            "  Windows: winget install rhysd.actionlint；winget install koalaman.shellcheck\n"
+            "  macOS:   brew install actionlint shellcheck\n"
+            "  Linux:   sudo apt-get install shellcheck；actionlint 用 "
+            "go install github.com/rhysd/actionlint/cmd/actionlint@latest"
+        )
+    workflows = sorted((REPO_ROOT / ".github" / "workflows").glob("*.yml"))
+    completed = subprocess.run(["actionlint", *map(str, workflows)], cwd=REPO_ROOT)
+    problems = [
+        f"  {wf.relative_to(REPO_ROOT)} {p}" for wf in workflows for p in find_variable_glue(wf.read_text(encoding="utf-8"))
+    ]
+    if problems:
+        print("\n".join(problems), flush=True)
+    if completed.returncode != 0 or problems:
+        raise SystemExit("工作流检查没通过，见上方。")
+
+
 def run_source_check() -> None:
     print("== 跨应用检查：内容必须有出处 ==", flush=True)
     node = shutil.which("node")
@@ -119,6 +206,7 @@ def main(argv: list[str]) -> int:
     if argv[:1] == ["--sources-only"]:
         run_skill_mirror_check()
         run_source_check()
+        run_workflow_check()
         return 0
 
     if argv:
@@ -127,6 +215,7 @@ def main(argv: list[str]) -> int:
 
     run_skill_mirror_check()
     run_source_check()
+    run_workflow_check()
     for root in APP_ROOTS:
         for entry in sorted((REPO_ROOT / root).iterdir()):
             if (entry / "scripts" / "check.py").is_file():

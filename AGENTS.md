@@ -148,7 +148,7 @@ archive/        历史归档，不参与构建
 ```sh
 python3 scripts/check.py                  # 跨应用检查 + 每个应用自己的检查
 python3 scripts/check.py cpp              # 只跑某个应用，余下参数原样透传给它
-python3 scripts/check.py --sources-only   # 只跑跨应用检查（skill 两处一致、出处）
+python3 scripts/check.py --sources-only   # 只跑跨应用检查（skill 两处一致、出处、工作流）
 ```
 
 检查逻辑归各应用自己的 `scripts/check.py`（`subjects/` 与 `practice/` 下都扫）。**每个应用都

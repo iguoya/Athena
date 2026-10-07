@@ -352,8 +352,8 @@ jobs:
             # Release 目录自含:athena-driver.exe、dll 与 data/ 同层,压缩即用
             powershell -NoProfile -Command "Compress-Archive -Path 'build/windows/x64/runner/Release/*' -DestinationPath 'dist/athena-driver-$version-$platform.zip' -Force"
           elif [ "$RUNNER_OS" = "macOS" ]; then
-            app=$(ls build/macos/Build/Products/Release | grep '\.app$' | head -1)
-            hdiutil create -volname "athena-driver" -srcfolder "build/macos/Build/Products/Release/$app" -ov -format UDZO "dist/athena-driver-$version-$platform.dmg"
+            apps=(build/macos/Build/Products/Release/*.app)
+            hdiutil create -volname "athena-driver" -srcfolder "${apps[0]}" -ov -format UDZO "dist/athena-driver-$version-$platform.dmg"
           else
             tar -czf "dist/athena-driver-$version-$platform.tar.gz" -C build/linux/x64/release/bundle .
           fi

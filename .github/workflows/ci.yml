@@ -14,10 +14,10 @@ on:
   workflow_dispatch:
     inputs:
       app:
-        description: 只跑哪个应用（all 为全量）
+        description: 只跑哪个应用（all 为全量，sources 只跑跨应用检查）
         type: choice
         default: all
-        options: [all, cpp, machine, polaris, dsa, english, mathematics, driver, launcher]
+        options: [all, sources, cpp, machine, polaris, dsa, english, mathematics, driver, launcher]
 
 permissions:
   contents: read
@@ -27,9 +27,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # 跨应用的内容出处检查（ADR 0043）：纯文本规则，和平台无关，跑一个就够。
+  # 跨应用检查：内容出处（ADR 0043）、skill 两处一致、GitHub 工作流。纯文本规则，
+  # 和平台无关，跑一个就够。
   sources:
-    name: 内容出处
+    name: 跨应用检查
     runs-on: ubuntu-26.04
     timeout-minutes: 10
 
@@ -41,6 +42,13 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: "22"
+
+      # 版本与本地 winget 装的一致；官方脚本把可执行文件下到当前目录
+      - name: Install actionlint and shellcheck
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+          bash <(curl -sSfL https://raw.githubusercontent.com/rhysd/actionlint/v1.7.12/scripts/download-actionlint.bash) 1.7.12 "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
 
       - name: Verify
         run: python3 scripts/check.py --sources-only
