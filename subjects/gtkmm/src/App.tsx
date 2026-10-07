@@ -660,6 +660,19 @@ export default function App() {
                     : `附录 ${refEntry.translation_ref.appendix}`}{" "}
                   · {refEntry.translation_ref.title}
                 </p>
+                {/* 参考条目对应官方单页章（迁移指南、附录等）：内容完整呈现。
+                    快照不存在时 PageView 自行显示读不到的提示，元信息卡保留。 */}
+                <PageView
+                  key={refEntry.id}
+                  chapterId={refEntry.id}
+                  pageId={refEntry.id}
+                  zhHidden={trainingMode}
+                  sentenceMode={sentenceMode}
+                  unitWords={unitWords}
+                  knownParas={knownParas}
+                  hardParas={hardParas}
+                  onRate={ratePara}
+                />
               </>
             )}
           </motion.div>

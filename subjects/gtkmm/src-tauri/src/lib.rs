@@ -3,6 +3,7 @@
 
 use serde::Serialize;
 use serde_json::{json, Value};
+use base64::Engine as _;
 use std::collections::HashMap;
 use std::fs;
 use std::io::{BufRead, BufReader, Write};
@@ -149,6 +150,43 @@ fn get_page_content(state: State<AppState>, chapter_id: String, page_id: String)
         .join(&chapter_id)
         .join(format!("{page_id}.json"));
     fs::read_to_string(&path).map_err(|error| format!("读 {} 失败：{}", path.display(), error))
+}
+
+/// 官方教程插图：读 content/ 下的图片文件，返回 data URL。
+/// 图片与快照 JSON 走同一条 command 通道——开发模式不赌 vite 对仓库根的
+/// 静态服务，发行包也不受资源目录在 webview HTTP 空间里的布局影响；
+/// 这条链路在任何启动形态下（dev / build / 打包）行为都一致。
+#[tauri::command]
+fn get_figure(state: State<AppState>, image_ref: String) -> Result<String, String> {
+    // 路径安全：只接受 content/ 内的相对引用，拒绝目录穿越、绝对路径与盘符
+    if image_ref.is_empty()
+        || image_ref.contains("..")
+        || image_ref.contains('\\')
+        || image_ref.starts_with('/')
+        || image_ref.contains(':')
+    {
+        return Err(format!("非法图片引用：{image_ref}"));
+    }
+    let path = state.content_root.join(&image_ref);
+    let bytes = fs::read(&path)
+        .map_err(|error| format!("读 {} 失败：{}", path.display(), error))?;
+    let mime = match path
+        .extension()
+        .and_then(|ext| ext.to_str())
+        .map(|ext| ext.to_ascii_lowercase())
+        .as_deref()
+    {
+        Some("png") => "image/png",
+        Some("jpg" | "jpeg") => "image/jpeg",
+        Some("gif") => "image/gif",
+        Some("svg") => "image/svg+xml",
+        Some("webp") => "image/webp",
+        _ => return Err(format!("不支持的图片格式：{}", path.display())),
+    };
+    Ok(format!(
+        "data:{mime};base64,{}",
+        base64::engine::general_purpose::STANDARD.encode(bytes)
+    ))
 }
 
 #[tauri::command]
@@ -313,6 +351,7 @@ pub fn run() {
             get_curriculum,
             get_manifest,
             get_page_content,
+            get_figure,
             get_vocab,
             record_attempt,
             reset_attempts,

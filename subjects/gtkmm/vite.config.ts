@@ -22,8 +22,9 @@ export default defineConfig(() => ({
         }
       : undefined,
     watch: {
-      // 演示工程与 Rust 侧变更不走前端 HMR
-      ignored: ["**/src-tauri/**", "**/demos/**"],
+      // 演示工程、学习者工作集（VS2022 会在里面锁 .vs 索引文件，watcher
+      // 撞上 EBUSY 会直接把 dev server 崩掉）与 Rust 侧变更不走前端 HMR
+      ignored: ["**/src-tauri/**", "**/demos/**", "**/workspace/**"],
     },
   },
 }));

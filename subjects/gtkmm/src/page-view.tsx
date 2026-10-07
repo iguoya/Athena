@@ -19,6 +19,10 @@ interface SnapshotBlock {
   ref?: string | null;
   file?: string | null;
   source_url?: string | null;
+  /** 有序列表项的编号前缀（"1."）；variablelist 项为 term 原文 */
+  marker?: string;
+  /** 提示框类型（note/tip/warning/important/caution），来自官网 admonition */
+  admonition?: string;
   key?: boolean;
   status?: "stale" | "untranslated";
   stale_from?: string | null;
@@ -220,17 +224,27 @@ function renderInline(text: string): ReactNode[] {
         </code>,
       );
     } else if (match[4] !== undefined) {
-      nodes.push(
-        <a
-          key={key++}
-          href={match[5]}
-          target="_blank"
-          rel="noreferrer"
-          className="font-semibold text-link hover:underline"
-        >
-          {match[4]}
-        </a>,
-      );
+      // 官网内部链接（linkend → # 锚点）：应用有自己的左侧目录导航，
+      // 锚点无处跳转，降级为不可点的强调文本，语义（引用关系）仍在
+      if (match[5].startsWith("#")) {
+        nodes.push(
+          <span key={key++} className="font-semibold text-link">
+            {match[4]}
+          </span>,
+        );
+      } else {
+        nodes.push(
+          <a
+            key={key++}
+            href={match[5]}
+            target="_blank"
+            rel="noreferrer"
+            className="font-semibold text-link hover:underline"
+          >
+            {match[4]}
+          </a>,
+        );
+      }
     }
     cursor = pattern.lastIndex;
   }
@@ -360,6 +374,63 @@ function ExampleArea({
   );
 }
 
+/** 官方插图：走 Tauri command 通道读图（data URL，模块级缓存）。
+ *
+ * 与快照 JSON 同一条路：开发模式不依赖 vite 对仓库根的静态服务，
+ * 发行包不受资源目录布局影响。command 不在（纯浏览器模式）时降级
+ * 到 /content/ 静态路径；仍失败时显示占位框并报出文件名，不再静默裂图。 */
+const FIGURE_CACHE = new Map<string, string>();
+
+function FigureImage({ imageRef, alt }: { imageRef: string; alt: string }) {
+  const [src, setSrc] = useState<string | null>(FIGURE_CACHE.get(imageRef) ?? null);
+  const [staticFallback, setStaticFallback] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    if (FIGURE_CACHE.has(imageRef) || staticFallback) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const dataUrl = await invoke<string>("get_figure", { imageRef });
+        FIGURE_CACHE.set(imageRef, dataUrl);
+        if (!cancelled) setSrc(dataUrl);
+      } catch {
+        if (!cancelled) setStaticFallback(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [imageRef, staticFallback]);
+
+  if (failed) {
+    return (
+      <div className="mx-auto flex max-w-3xl flex-col items-center gap-1 rounded-card border border-dashed border-line bg-surface-2 px-6 py-8 text-center">
+        <span className="text-[22px] text-muted">图片加载失败</span>
+        <span className="font-mono text-[20px] text-muted/70">{imageRef}</span>
+      </div>
+    );
+  }
+  return (
+    <img
+      src={src ?? (staticFallback ? `/content/${imageRef}` : undefined)}
+      alt={alt}
+      loading="lazy"
+      onError={() => setFailed(true)}
+      className="mx-auto max-w-3xl rounded-card bg-white p-3 shadow-card ring-1 ring-line"
+    />
+  );
+}
+
+/** 官网 admonition 的提示框样式（应用配色体系内）。 */
+const ADMONITION_STYLE: Record<string, { icon: string; label: string; box: string; text: string }> = {
+  note: { icon: "ℹ️", label: "说明", box: "border-blue-500/50 bg-blue-50/70", text: "text-blue-700" },
+  tip: { icon: "💡", label: "技巧", box: "border-green-500/50 bg-green-50/70", text: "text-green-700" },
+  warning: { icon: "⚠️", label: "警告", box: "border-amber-500/60 bg-amber-50/70", text: "text-amber-700" },
+  important: { icon: "❗", label: "重要", box: "border-violet-500/50 bg-violet-50/70", text: "text-violet-700" },
+  caution: { icon: "🚫", label: "注意", box: "border-red-500/50 bg-red-50/70", text: "text-red-700" },
+};
+
 /** 阅读单元：连续短文字段合并（一个显示译文按钮），长段独立成单元。 */
 function ReadUnit({
   blocks,
@@ -436,6 +507,14 @@ function ReadUnit({
       {blocks.map((block) => {
         const isKnown = unitKnown;
         if (block.type === "listitem") {
+          const marker = block.marker ? (
+            // marker 是官网原文的纯文本（编号或 term），不参与 markdown 解析
+            <span className="mr-1.5 inline-block min-w-8 font-semibold text-accent-deep">
+              {block.marker}
+            </span>
+          ) : (
+            <span className="mr-1.5">•</span>
+          );
           return (
             <div key={block.sha} className="mb-3">
               <span
@@ -443,11 +522,31 @@ function ReadUnit({
                   isKnown ? "bg-green-50/80 text-fg/55" : "text-fg/60"
                 }`}
               >
-                • {renderInline(flow(block.text))}
+                {marker}
+                {renderInline(flow(block.text))}
               </span>
               {!hidden && block.zh && (
                 <div className="pl-5">{zhOf(block)}</div>
               )}
+            </div>
+          );
+        }
+        if (block.admonition) {
+          const style = ADMONITION_STYLE[block.admonition] ?? ADMONITION_STYLE.note;
+          return (
+            <div
+              key={block.sha}
+              className={`my-5 rounded-r-xl border-l-4 px-5 py-3 ${style.box} ${
+                isKnown ? "opacity-60" : ""
+              }`}
+            >
+              <span className={`flex items-center gap-1.5 text-[20px] font-medium ${style.text}`}>
+                {style.icon} {style.label}
+              </span>
+              <p className="font-serif text-[28px] leading-relaxed text-fg/70">
+                {renderInline(flow(block.text))}
+              </p>
+              {!hidden && zhOf(block)}
             </div>
           );
         }
@@ -634,17 +733,13 @@ export function PageView({
             const block = group.blocks[0];
             return (
               <figure key={index} className="my-6">
-                {block.ref && (
-                  <img
-                    src={`/content/${block.ref}`}
-                    alt={block.text}
-                    loading="lazy"
-                    className="mx-auto max-w-3xl rounded-card bg-white p-3 shadow-card ring-1 ring-line"
-                  />
+                {block.ref && <FigureImage imageRef={block.ref} alt={block.text} />}
+                {/* 游离 screenshot 没有题注（官网行为），不渲染空「图 ·」行 */}
+                {block.text && (
+                  <figcaption className="mt-2 text-center text-[20px] text-muted">
+                    图 · {flow(block.text)}
+                  </figcaption>
                 )}
-                <figcaption className="mt-2 text-center text-[20px] text-muted">
-                  图 · {flow(block.text)}
-                </figcaption>
               </figure>
             );
           }
