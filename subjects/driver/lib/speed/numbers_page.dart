@@ -80,12 +80,13 @@ class NumbersPage extends StatelessWidget {
 
   /// 易混数字的自测（ADR 0095）：每行情形拆成单条，数值题手输（题干把数字挖成括号），非数值的值选择，
   /// 每个数值再出一张反向题（「12 分」对应哪一项）。作答记成普通作答记录，错题本、强化练习随之更新。
-  void _recall(BuildContext context) {
+  void _recall(BuildContext context, Set<String> questionIds, String label) {
     final cards = recallCardsOfNumbers(topic.id, _groups);
     RecallSession.show(
       context,
       onAnswer: onRecallAnswer,
       histories: histories,
+      only: questionIds,
       entries: [
         // 关联题就是这张卡自己（ADR 0102）：收尾的「去做这几个的题」练的是答错的卡，
         // 行与题一对一，不再指向组级正则捞出来的真题。
@@ -96,7 +97,7 @@ class NumbersPage extends StatelessWidget {
             related: c.stem == null ? const [] : [recallQuestionOf(c, cards)],
           ),
       ],
-      onStartPractice: (questions) => onStartPractice(questions, "易混数字 · 自测"),
+      onStartPractice: (questions) => onStartPractice(questions, "易混数字 · $label · 自测"),
     );
   }
 
@@ -141,12 +142,6 @@ class NumbersPage extends StatelessWidget {
             Text(topic.title, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
             const SizedBox(width: 12),
             BsBadge(text: subject.code, color: Bs.primary),
-            const Spacer(),
-            FilledButton.tonalIcon(
-              onPressed: () => _recall(context),
-              icon: const Icon(Glyph.question, size: 18),
-              label: const Text("自测"),
-            ),
           ],
         ),
         const SizedBox(height: 8),
@@ -174,16 +169,6 @@ class NumbersPage extends StatelessWidget {
         children: [
           Row(
             children: [
-              TopicDot(
-                status: status,
-                size: 20,
-                tooltip: switch (status) {
-                  SymbolStatus.wrong => "这一组的自测卡有答错过，还没掌握",
-                  SymbolStatus.mastered => "这一组的自测卡全部答对过",
-                  SymbolStatus.fresh => "这一组还没测完",
-                },
-              ),
-              const SizedBox(width: 10),
               Text(group.title, style: Theme.of(context).textTheme.titleLarge),
               if (group.unit.isNotEmpty) ...[
                 const SizedBox(width: 10),
@@ -191,6 +176,8 @@ class NumbersPage extends StatelessWidget {
               ],
               MasteryTag(ids: ids, histories: histories),
               const Spacer(),
+              GroupRecallButton(onPressed: () => _recall(context, ids.toSet(), group.title)),
+              const SizedBox(width: 10),
               GroupPracticeButton(
                 status: status,
                 related: related,

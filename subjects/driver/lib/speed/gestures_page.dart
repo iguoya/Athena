@@ -64,12 +64,6 @@ class GesturesPage extends StatelessWidget {
             Text("手势速记", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
             const SizedBox(width: 12),
             BsBadge(text: subjectLabel, color: Bs.primary),
-            const Spacer(),
-            FilledButton.tonalIcon(
-              onPressed: () => _startRecall(context),
-              icon: const Icon(Glyph.question, size: 18),
-              label: const Text("自测"),
-            ),
           ],
         ),
         const SizedBox(height: 8),
@@ -91,16 +85,6 @@ class GesturesPage extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TopicDot(
-                    status: status,
-                    size: 20,
-                    tooltip: switch (status) {
-                      SymbolStatus.wrong => "这些动作的自测卡有答错过，还没掌握",
-                      SymbolStatus.mastered => "这些动作的自测卡全部答对过",
-                      SymbolStatus.fresh => "这些动作还没测完",
-                    },
-                  ),
-                  const SizedBox(width: 10),
                   Text("8 个法定动作", style: Theme.of(context).textTheme.titleLarge),
                   const SizedBox(width: 10),
                   Padding(
@@ -109,6 +93,8 @@ class GesturesPage extends StatelessWidget {
                   ),
                   MasteryTag(ids: ids, histories: histories),
                   const Spacer(),
+                  GroupRecallButton(onPressed: () => _startRecall(context, ids.toSet(), "法定动作")),
+                  const SizedBox(width: 10),
                   GroupPracticeButton(
                     status: status,
                     related: related,
@@ -170,15 +156,16 @@ class GesturesPage extends StatelessWidget {
   );
 
   /// 自测：把没认得的手势逐张过完，收尾深链练相关题（ADR 0077、0090）。
-  void _startRecall(BuildContext context) {
+  void _startRecall(BuildContext context, Set<String> questionIds, String label) {
     final cards = {for (final c in recallCardsOfGestures(recallPage, gestures)) c.id: c};
     RecallSession.show(
       context,
       onAnswer: onRecallAnswer,
       histories: histories,
+      only: questionIds,
       // 「手势的效力」是总则、没有规范动画，不进自测；它的相关题仍并入深链。
       entries: [for (final g in gestures) if (g.kind != "general") _recallEntryOf(g, cards[g.id]!)],
-      onStartPractice: (questions) => onStartPractice(questions, "手势速记 · 自测"),
+      onStartPractice: (questions) => onStartPractice(questions, "手势速记 · $label · 自测"),
     );
   }
 

@@ -64,12 +64,6 @@ class MarkingsPage extends StatelessWidget {
             Text("标线速记", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
             const SizedBox(width: 12),
             BsBadge(text: subjectLabel, color: Bs.primary),
-            const Spacer(),
-            FilledButton.tonalIcon(
-              onPressed: () => _startRecall(context),
-              icon: const Icon(Glyph.question, size: 18),
-              label: const Text("自测"),
-            ),
           ],
         ),
         const SizedBox(height: 8),
@@ -112,14 +106,15 @@ class MarkingsPage extends StatelessWidget {
   );
 
   /// 自测：把没认得的标线逐张过完，收尾深链练相关题（ADR 0077、0090）。
-  void _startRecall(BuildContext context) {
+  void _startRecall(BuildContext context, Set<String> questionIds, String label) {
     final cards = {for (final c in recallCardsOfMarkings(recallPage, markings)) c.id: c};
     RecallSession.show(
       context,
       onAnswer: onRecallAnswer,
       histories: histories,
+      only: questionIds,
       entries: [for (final m in markings) _recallEntryOf(m, cards[m.id]!)],
-      onStartPractice: (questions) => onStartPractice(questions, "标线速记 · 自测"),
+      onStartPractice: (questions) => onStartPractice(questions, "标线速记 · $label · 自测"),
     );
   }
 
@@ -145,16 +140,6 @@ class MarkingsPage extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TopicDot(
-                  status: status,
-                  size: 20,
-                  tooltip: switch (status) {
-                    SymbolStatus.wrong => "这一组的自测卡有答错过，还没掌握",
-                    SymbolStatus.mastered => "这一组的自测卡全部答对过",
-                    SymbolStatus.fresh => "这一组还没测完",
-                  },
-                ),
-                const SizedBox(width: 10),
                 Text(label, style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(width: 10),
                 Padding(
@@ -163,6 +148,8 @@ class MarkingsPage extends StatelessWidget {
                 ),
                 MasteryTag(ids: ids, histories: histories),
                 const Spacer(),
+                GroupRecallButton(onPressed: () => _startRecall(context, ids.toSet(), label)),
+                const SizedBox(width: 10),
                 GroupPracticeButton(
                   status: status,
                   related: related,

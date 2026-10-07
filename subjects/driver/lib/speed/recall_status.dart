@@ -224,6 +224,20 @@ class GroupPracticeButton extends StatelessWidget {
   }
 }
 
+/// 速记组标题行里的「自测」（ADR 0116）：只考这一组的卡。专题页没有全页的自测入口，自测都从组里进。
+class GroupRecallButton extends StatelessWidget {
+  const GroupRecallButton({super.key, required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) => FilledButton.tonalIcon(
+    onPressed: onPressed,
+    icon: const Icon(Glyph.question, size: 18),
+    label: const Text("自测"),
+  );
+}
+
 /// 侧栏里专题与专题分组左边的状态圆（ADR 0109）：样式同 [StatusDot]（实心圆加黑心、三态色），
 /// 只是小一号。红 = 答错过未掌握，绿 = 答对过，灰 = 没做过。
 class TopicDot extends StatelessWidget {

@@ -79,7 +79,7 @@ void main() {
 
   // 组标题左侧的状态圆（ADR 0112）：每个子标题一枚，只看这一组自测卡的作答——
   // 没自测过全灰，自测答错一张后那一组变红，全程没碰过任何真题。
-  testWidgets("考点速记组标题左侧有状态圆：没自测过灰，自测答错后变红（不看关联真题）", (tester) async {
+  testWidgets("考点速记组标题左侧不放状态圆；组内自测答错一张，那一条变红、组按钮变红（不看关联真题，ADR 0116）", (tester) async {
     late Directory dir;
     late ProgressStore store;
     late Bank bank;
@@ -104,11 +104,12 @@ void main() {
     await showTopic(tester, "考点速记");
     await tester.tap(find.text("考点速记").first);
     await tester.pump();
-    // ListView 懒渲染，屏外的组不在树里：断言首屏的组全是灰圆即可。
-    expect(find.byTooltip(gray), findsWidgets, reason: "还没测完：组都是灰圆");
+    // 组标题（一级标题）左侧不放掌握圆点：没测完、答错都不出组级的圆（ADR 0116）。
+    expect(find.byTooltip(gray), findsNothing, reason: "组标题不放状态圆");
     expect(find.byTooltip(red), findsNothing);
+    expect(find.text("自测"), findsWidgets, reason: "每组标题行都有自己的自测");
 
-    // 自测里答错一张（不碰任何真题），退出。
+    // 第一组的自测里答错一张（不碰任何真题），退出。
     await showTopic(tester, "自测");
     await tester.tap(find.text("自测").first);
     await tester.pump();
@@ -131,9 +132,13 @@ void main() {
     await showTopic(tester, "考点速记");
     await tester.tap(find.text("考点速记").first);
     await tester.pump();
-    // 答错那张卡所在的组变红；滚到它才算构建出来。
-    await tester.scrollUntilVisible(find.byTooltip(red), 300, scrollable: find.byType(Scrollable).last);
-    expect(find.byTooltip(red), findsOneWidget, reason: "自测答错的组变红（全程没碰过真题）");
+    // 答错的是第一组的卡：那一条的状态点变红，组按钮也变红；组标题仍不放圆。
+    expect(find.byTooltip("这一条的自测题答错过，还没掌握"), findsOneWidget, reason: "自测答错的那一条变红（全程没碰过真题）");
+    expect(find.byTooltip(red), findsNothing, reason: "组标题不放状态圆");
+    final button = tester.widget<FilledButton>(
+      find.ancestor(of: find.textContaining("练这组").first, matching: find.bySubtype<FilledButton>()).first,
+    );
+    expect(button.style?.backgroundColor?.resolve(<WidgetState>{}), Bs.danger, reason: "组按钮随自测变红");
 
     await tester.pumpWidget(const SizedBox());
     await tester.runAsync(() async {

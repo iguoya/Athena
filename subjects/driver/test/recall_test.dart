@@ -175,7 +175,7 @@ void main() {
     expect(find.text("已答对 ${n - 1} / $n"), findsOneWidget);
     expect(find.textContaining("剩 1 张"), findsOneWidget, reason: "第二次只考答错的");
     await answer(tester, remembered: true);
-    expect(find.text("这一页全部答对了"), findsOneWidget);
+    expect(find.text("这一组全部答对了"), findsOneWidget);
     expect(find.text("再测一遍"), findsOneWidget, reason: "错 1 对 2 移出错题库，整页都答对了才给再测一遍");
 
     // 又答对一次（累计答对 2 次 ≥ 答错 1 次的 2 倍）：移出错题库，再开已经没有要考的了。
@@ -184,7 +184,7 @@ void main() {
     await showTopic(tester, "自测");
     await tester.tap(find.text("自测").first);
     await tester.pump();
-    expect(find.text("这一页全部答对了"), findsOneWidget);
+    expect(find.text("这一组全部答对了"), findsOneWidget);
     expect(find.textContaining("都已经答对过"), findsOneWidget, reason: "全部答对过：收尾说明没有自动要考的了");
     expect(find.text("已答对 $n / $n"), findsOneWidget);
     await closeDialog(tester);
@@ -294,20 +294,34 @@ void main() {
     await teardown(tester, store, dir);
   });
 
-  testWidgets("自测：侧栏里全部 15 个速记页都有入口，都把没考过的卡逐张排出来", (tester) async {
-    final (_, store, dir) = await boot(tester);
+  testWidgets("自测：侧栏里全部 15 个速记页每组都有入口，页头没有全页自测，组内自测只考这一组（ADR 0116）", (tester) async {
+    final (bank, store, dir) = await boot(tester);
     for (final page in ["易混数字", "标志速记", "标线速记", "仪表速记", "手势速记", "考点速记", "河南速记", "记分证照速记", "事故处理与时限", "停车与违停", "乘员与安全带", "信号灯与铁路道口", "超车会车与掉头倒车", "车辆基础与操作", "电动汽车"]) {
       await showTopic(tester, page);
       await tester.tap(find.text(page).first);
       await tester.pump();
-      expect(find.text("自测"), findsOneWidget, reason: "$page 缺自测入口");
+      expect(find.text("自测"), findsWidgets, reason: "$page 缺组内自测入口");
       await showTopic(tester, "自测");
-      await tester.tap(find.text("自测"));
+      await tester.tap(find.text("自测").first);
       await tester.pump();
-      expect(remaining(), greaterThanOrEqualTo(7), reason: "$page 应把没考过的卡都排出来");
-      expect(find.textContaining("认得"), findsNothing, reason: "$page：界面里没有「认得」这个概念");
+      expect(remaining(), greaterThanOrEqualTo(1), reason: "$page 应把这一组没考过的卡都排出来");
+      expect(
+        find.descendant(of: find.byType(RecallSession), matching: find.textContaining("认得")),
+        findsNothing,
+        reason: "$page：自测界面里没有「认得」这个概念",
+      );
       await closeDialog(tester);
     }
+    // 组内自测只考这一组：记分证照第一组有几条，就排几张。
+    final license = noteGroupsOf(bank, speedTopicById("s1.license-notes")!).first;
+    await showTopic(tester, "记分证照速记");
+    await tester.tap(find.text("记分证照速记").first);
+    await tester.pump();
+    await showTopic(tester, "自测");
+    await tester.tap(find.text("自测").first);
+    await tester.pump();
+    expect(find.textContaining("剩 ${license.items.length} 张"), findsOneWidget, reason: "第一组「${license.title}」只考自己的卡");
+    await closeDialog(tester);
     await teardown(tester, store, dir);
   });
 

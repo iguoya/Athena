@@ -71,12 +71,6 @@ class NotesPage extends StatelessWidget {
             Text(title, style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
             const SizedBox(width: 12),
             BsBadge(text: subjectLabel, color: Bs.primary),
-            const Spacer(),
-            FilledButton.tonalIcon(
-              onPressed: () => _startRecall(context),
-              icon: const Icon(Glyph.question, size: 18),
-              label: const Text("自测"),
-            ),
           ],
         ),
         const SizedBox(height: 8),
@@ -91,12 +85,13 @@ class NotesPage extends StatelessWidget {
   /// 自测（ADR 0080，ADR 0085 改四选一）：每个「情景」是一张卡，正面只给情景，从四条
   /// 要点里选一条对的（该情景有多条要点时每次抽一条），答后看完整要点；干扰项取同组其他
   /// 情景的要点。每轮抽 5 张。收尾深链练全部相关题。
-  void _startRecall(BuildContext context) {
+  void _startRecall(BuildContext context, Set<String> questionIds, String label) {
     final cards = recallCardsOfNotes(recallPage, groups);
     RecallSession.show(
       context,
       onAnswer: onRecallAnswer,
       histories: histories,
+      only: questionIds,
       prompt: "想一想：碰到这个情景该怎么做？选一条对的。",
       entries: [
         for (final (i, e) in [for (final group in groups) for (final item in group.items) (group, item)].indexed)
@@ -107,7 +102,7 @@ class NotesPage extends StatelessWidget {
             related: e.$1.related(questions),
           ),
       ],
-      onStartPractice: (questions) => onStartPractice(questions, "$title · 自测"),
+      onStartPractice: (questions) => onStartPractice(questions, "$title · $label · 自测"),
     );
   }
 
@@ -150,21 +145,13 @@ class NotesPage extends StatelessWidget {
           children: [
             Row(
               children: [
-                TopicDot(
-                  status: status,
-                  size: 20,
-                  tooltip: switch (status) {
-                    SymbolStatus.wrong => "这一组的自测卡有答错过，还没掌握",
-                    SymbolStatus.mastered => "这一组的自测卡全部答对过",
-                    SymbolStatus.fresh => "这一组还没测完",
-                  },
-                ),
-                const SizedBox(width: 10),
                 Text(group.title, style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(width: 10),
                 Text("${group.items.length} 条", style: muted),
                 MasteryTag(ids: ids, histories: histories),
                 const Spacer(),
+                GroupRecallButton(onPressed: () => _startRecall(context, ids.toSet(), group.title)),
+                const SizedBox(width: 10),
                 GroupPracticeButton(
                   status: status,
                   related: related,

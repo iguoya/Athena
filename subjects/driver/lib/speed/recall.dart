@@ -31,13 +31,17 @@ class RecallSession extends StatefulWidget {
     required this.onStartPractice,
     required this.onAnswer,
     required this.histories,
+    List<RecallEntry>? pool,
     this.prompt = defaultPrompt,
-  });
+  }) : pool = pool ?? entries;
 
   static const defaultPrompt = "想一想：这是什么？选一个。";
 
-  /// 参与自测的全部条目；[RecallEntry] 是页面内容的轻量视图。
+  /// 这次自测考的条目（ADR 0116：只考一组）；[RecallEntry] 是页面内容的轻量视图。
   final List<RecallEntry> entries;
+
+  /// 出干扰项用的条目：整页的。组里的卡可能不到四张，干扰项要从全页凑，卷子才和以前一样难。
+  final List<RecallEntry> pool;
 
   /// 作答历史：判断哪些卡还要考——只看速记题自己的记录（ADR 0094、0112）。
   final HistorySet histories;
@@ -57,8 +61,11 @@ class RecallSession extends StatefulWidget {
     required void Function(List<Question> questions) onStartPractice,
     required RecallAnswerRecorder onAnswer,
     required HistorySet histories,
+    Set<String>? only,
     String prompt = defaultPrompt,
   }) {
+    // [only] 是这一组卡的题号（ADR 0116）：只考它们，干扰项仍从整页 [entries] 出。
+    final picked = only == null ? entries : [for (final e in entries) if (only.contains(e.questionId)) e];
     return showDialog<void>(
       context: context,
       barrierColor: Colors.transparent,
@@ -69,7 +76,8 @@ class RecallSession extends StatefulWidget {
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1180),
           child: RecallSession(
-            entries: entries,
+            entries: picked,
+            pool: entries,
             onStartPractice: onStartPractice,
             onAnswer: onAnswer,
             histories: histories,
@@ -286,7 +294,7 @@ class _RecallSessionState extends State<RecallSession> {
       _optionsById[e.id] = const [];
       return;
     }
-    final quiz = buildQuiz(_sourceOf(e), [for (final o in widget.entries) _sourceOf(o)], random: _random);
+    final quiz = buildQuiz(_sourceOf(e), [for (final o in widget.pool) _sourceOf(o)], random: _random);
     _answerById[e.id] = quiz.answer;
     _optionsById[e.id] = quiz.options;
   }
@@ -719,25 +727,25 @@ class _RecallSessionState extends State<RecallSession> {
       color: Theme.of(context).colorScheme.onSurfaceVariant,
       height: 1.5,
     );
-    // 「全部答对」是整页每张卡都过了 [_cleared]（ADR 0115），不是「这次没答错」：原来在错题库里的卡
-    // 这次对一次未必够移出。只有全部答对才给「再测一遍」整页重考；没全对就不整页重来，下次照旧只考没过的。
+    // 「全部答对」是这一组每张卡都过了 [_cleared]（ADR 0115），不是「这次没答错」：原来在错题库里的卡
+    // 这次对一次未必够移出。只有全部答对才给「再测一遍」整组重考；没全对就不整组重来，下次照旧只考没过的。
     final ownAllCorrect = _correctCount == widget.entries.length && widget.entries.isNotEmpty;
     final short = widget.entries.length - _correctCount;
     final focus = _focusQuestions();
     final title = widget.entries.isEmpty
-        ? "这一页没有可自测的卡"
+        ? "这一组没有可自测的卡"
         : ownAllCorrect
-        ? "这一页全部答对了"
+        ? "这一组全部答对了"
         : "考完了";
     final String message;
     if (_missedNames.isNotEmpty) {
       message = "答错的：${_missedNames.join("、")}。它们已经进了错题库，下次自测、强化练习会再考；答对的不会再出现。";
     } else if (widget.entries.isEmpty) {
-      message = "这一页还没有可自测的卡。";
+      message = "这一组还没有可自测的卡。";
     } else if (_round.isEmpty) {
-      message = "这一页的卡都已经答对过（答错的也都对到了移出错题库的次数）。想再过一遍，点「再测一遍」。";
+      message = "这一组的卡都已经答对过（答错的也都对到了移出错题库的次数）。想再过一遍，点「再测一遍」。";
     } else if (ownAllCorrect) {
-      message = "全都一次答对了，这一页每张卡都答对过。想再过一遍，点「再测一遍」。";
+      message = "全都一次答对了，这一组每张卡都答对过。想再过一遍，点「再测一遍」。";
     } else {
       message = "这次都答对了，还有 $short 张原来答错过、要再对几次才移出错题库，下次自测接着考。";
     }
@@ -783,8 +791,8 @@ class _RecallSessionState extends State<RecallSession> {
     );
   }
 
-  /// 全部答对后的「再测一遍」（ADR 0099、0115）：绕开档位把整页卡重新考一遍，作答照写——
-  /// 只在整页每张卡都答对时出现，是全对之后唯一的重考入口；平时抽卡仍然只出没答对过的。
+  /// 全部答对后的「再测一遍」（ADR 0099、0115、0116）：绕开档位把这一组卡重新考一遍，作答照写——
+  /// 只在这一组每张卡都答对时出现，是全对之后唯一的重考入口；平时抽卡仍然只出没答对过的。
   /// 这次的计数不清：重考的作答照样叠加，判「答对」不能丢掉前一遍的。
   void _retestAll() {
     setState(() {

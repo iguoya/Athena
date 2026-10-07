@@ -65,12 +65,6 @@ class GaugesPage extends StatelessWidget {
             Text("仪表速记", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600)),
             const SizedBox(width: 12),
             BsBadge(text: subjectLabel, color: Bs.primary),
-            const Spacer(),
-            FilledButton.tonalIcon(
-              onPressed: () => _startRecall(context),
-              icon: const Icon(Glyph.question, size: 18),
-              label: const Text("自测"),
-            ),
           ],
         ),
         const SizedBox(height: 8),
@@ -113,14 +107,15 @@ class GaugesPage extends StatelessWidget {
   );
 
   /// 自测：把没认得的符号逐张过完，收尾深链练相关题（ADR 0077、0090）。
-  void _startRecall(BuildContext context) {
+  void _startRecall(BuildContext context, Set<String> questionIds, String label) {
     final cards = {for (final c in recallCardsOfGauges(recallPage, gauges)) c.id: c};
     RecallSession.show(
       context,
       onAnswer: onRecallAnswer,
       histories: histories,
+      only: questionIds,
       entries: [for (final g in gauges) _recallEntryOf(g, cards[g.id]!)],
-      onStartPractice: (questions) => onStartPractice(questions, "仪表速记 · 自测"),
+      onStartPractice: (questions) => onStartPractice(questions, "仪表速记 · $label · 自测"),
     );
   }
 
@@ -143,16 +138,6 @@ class GaugesPage extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TopicDot(
-                  status: status,
-                  size: 20,
-                  tooltip: switch (status) {
-                    SymbolStatus.wrong => "这一组的自测卡有答错过，还没掌握",
-                    SymbolStatus.mastered => "这一组的自测卡全部答对过",
-                    SymbolStatus.fresh => "这一组还没测完",
-                  },
-                ),
-                const SizedBox(width: 10),
                 Text(label, style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(width: 10),
                 Padding(
@@ -161,6 +146,8 @@ class GaugesPage extends StatelessWidget {
                 ),
                 MasteryTag(ids: ids, histories: histories),
                 const Spacer(),
+                GroupRecallButton(onPressed: () => _startRecall(context, ids.toSet(), label)),
+                const SizedBox(width: 10),
                 GroupPracticeButton(
                   status: status,
                   related: related,
