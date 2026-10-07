@@ -540,7 +540,9 @@ function ReadUnit({
                 {marker}
                 {renderInline(flow(block.text))}
               </span>
-              {!hidden && block.zh && (
+              {/* 三种译态（官方译文/旧译文待复核/待译）都交 zhOf 统一处理，
+                  此前误加 block.zh 条件导致列表项待译段落整段静默 */}
+              {!hidden && (
                 <div className="pl-5">{zhOf(block)}</div>
               )}
             </div>
