@@ -1,0 +1,466 @@
+{
+ "sec-treeview-model": [
+  {
+   "id": "3af634b25ea873c8",
+   "shas": [
+    "3af634b25ea873c8"
+   ],
+   "zh": "Gdk::DragContext现在被拆分为Gdk::Drag和Gdk::Drop。"
+  },
+  {
+   "id": "224383b984311350",
+   "shas": [
+    "224383b984311350"
+   ],
+   "zh": "Gtk::TreeView部件的每一行都可以包含数据列表或数据树。"
+  },
+  {
+   "id": "ef225702e11cbd8d",
+   "shas": [
+    "ef225702e11cbd8d"
+   ],
+   "zh": "每一个Gtk::TreeView都有一个与之关联的Gtk::TreeModel，模型中包含了TreeView将要显示的数据。每个Gtk::TreeModel都可以被多个Gtk::TreeView使用。例如，这将允许以多种不同的方式同时显示和编辑一致的数据。也允许不同的视图显示同一个模型的不同列的数据，就像是多个SQL查询（或“视图”）显示同一个数据库表的不同字段一样。"
+  },
+  {
+   "id": "0b91ce7e85c293f9",
+   "shas": [
+    "0b91ce7e85c293f9"
+   ],
+   "zh": "理论上你可以实现自己的模型，但通常情况直接使用ListStore或TreeStore可以省略很多麻烦。"
+  },
+  {
+   "id": "4bb44ed644dfecd7",
+   "shas": [
+    "4bb44ed644dfecd7"
+   ],
+   "zh": "ListStore包含简单的数据行，每个行都没有孩子。"
+  },
+  {
+   "id": "5e1e4559df5c50e5",
+   "shas": [
+    "5e1e4559df5c50e5"
+   ],
+   "zh": "TreeStore包含数据行，并且每一行都可能有子行。"
+  },
+  {
+   "id": "5cb2b5ed37f582ea",
+   "shas": [
+    "5cb2b5ed37f582ea"
+   ],
+   "zh": "TreeModelColumnRecord用于跟踪列和它们的数据类型。你TreeModelColumn实例添加到ColumnRecord，然后使用那些TreeModelColumns获取和设置模型列中的数据。你可能会发现，派生一个你自己的包含有TreeModelColumn数据成员的TreeModelColumnRecord会更方便。"
+  },
+  {
+   "id": "24f8464c6ad769b0",
+   "shas": [
+    "24f8464c6ad769b0"
+   ],
+   "zh": "你可以在创建模型的时候指定ColumnRecord，如下所示："
+  },
+  {
+   "id": "613f7dbd3cd8427c",
+   "shas": [
+    "613f7dbd3cd8427c"
+   ],
+   "zh": "TreeModelColumnRecord描述的是结构而不是数据，它可以在多个模型之间共享，这样效率更高。但是实例（例如此处的m_Columns）通常不是静态的，因为通常需要在glibmm初始化后示例化它。最好的解决方案是使他成为惰性初始化的单例，以便在第一个模型访问他的时候按需构造。"
+  },
+  {
+   "id": "d3bff5fbbf58e43d",
+   "shas": [
+    "d3bff5fbbf58e43d"
+   ],
+   "zh": "使用append()、prepend()或insert()方法可以向模型添加行。"
+  },
+  {
+   "id": "464e452b48e8f7b2",
+   "shas": [
+    "464e452b48e8f7b2"
+   ],
+   "zh": "你可以通过解引用迭代器获得行："
+  },
+  {
+   "id": "3fb27d661f4db37e",
+   "shas": [
+    "3fb27d661f4db37e"
+   ],
+   "zh": "Gtk::TreeStore模型可以存在子物件。可以通过append()、prepend()或insert()方法添加，如下所示："
+  },
+  {
+   "id": "c18961369a3827de",
+   "shas": [
+    "c18961369a3827de"
+   ],
+   "zh": "你可以使用operator[]重载设置行中的特定列的数据，你需要使用创建模型时的TreeModelColumn指定列。"
+  },
+  {
+   "id": "67b7c704f83f4707",
+   "shas": [
+    "67b7c704f83f4707"
+   ],
+   "zh": "你可以使用operator[]重载获取行中特定列的数据，你需要使用创建模型时的TreeModelColumn指定列。"
+  },
+  {
+   "id": "99a6ed71592efa07",
+   "shas": [
+    "99a6ed71592efa07"
+   ],
+   "zh": "如果你使用了不合适的类型，编译器会报错。例如，编译器将生成一个编译错误："
+  },
+  {
+   "id": "f137a192543608fc",
+   "shas": [
+    "f137a192543608fc"
+   ],
+   "zh": "你可能想要将额外的数据和每一行关联。如果是这样，你只需要将其添加到模型的一个行中而不将其添加到视图中即可。"
+  }
+ ],
+ "sec-treeview": [
+  {
+   "id": "3ba280cdb29c441b",
+   "shas": [
+    "3ba280cdb29c441b"
+   ],
+   "zh": "视图实际上是一个用于显示模型(Gtk::TreeModel)数据并允许用户与其交互的部件(Gtk::TreeView)。视图可以显示模型的所有列也可以只显示一部分列还可以以不同的方式显示列。"
+  },
+  {
+   "id": "13eb46a5790ab20d",
+   "shas": [
+    "13eb46a5790ab20d"
+   ],
+   "zh": "你可以在构造Gtk::TreeView的时候为其指定一个Gtk::TreeModel，也可以构筑完成后使用set_model()方法指定，如下所示："
+  },
+  {
+   "id": "4ae8f427573d1acc",
+   "shas": [
+    "4ae8f427573d1acc"
+   ],
+   "zh": "你可以使用append_column()方法告知视图以一定的顺序于某个列标题下显示模型的某个列。"
+  },
+  {
+   "id": "9b3a5f6ae7c4f278",
+   "shas": [
+    "9b3a5f6ae7c4f278"
+   ],
+   "zh": "当使用这种简单的append_column()重载的时候，TreeView将会使用适当的CellRenderer显示模型数据。例如将字符串和数字显示在简单的Gtk::Entry部件中，布尔量使用Gtk::CheckButton显示。这通常是你所希望的行为。对于其他类型的行，你必须使用TreeViewColumn::set_cell_data_func()连接一个将你的类型转换为字符串表示形式的回调，或者是从CellRenderer派生一个合适的类。请注意，默认情况下(unsigned) short不被支持 - 作为替代你可以使用(unsigned) int或者(unsigned) long作为行类型。"
+  },
+  {
+   "id": "80fabafdd5a1dbc4",
+   "shas": [
+    "80fabafdd5a1dbc4"
+   ],
+   "zh": "要在一个视图列中呈现多个模型列，你需要手动创建TreeView::Column部件，并使用pack_start()方法向其添加模型列。"
+  },
+  {
+   "id": "da00524cef4ec2c5",
+   "shas": [
+    "da00524cef4ec2c5"
+   ],
+   "zh": "然后使用append_column()将视图列添加到视图中。请注意，Gtk::TreeView::append_column()被重载为接受预建的Gtk::TreeView::Column部件，或者只接受由TreeModelColumn生成的合适的Gtk::TreeView::Column部件。"
+  },
+  {
+   "id": "bee80ee5c3209c7e",
+   "shas": [
+    "bee80ee5c3209c7e"
+   ],
+   "zh": "这是一些示例代码，在同一列中有一个像素缓冲区(pixbuf)图标和一个文本名："
+  },
+  {
+   "id": "c254b55d6e2c7b90",
+   "shas": [
+    "c254b55d6e2c7b90"
+   ],
+   "zh": "默认的CellRenderers及其默认行为通常已经足够好了，但是有时你需要更精细的控制它。例如来自gtkmm/demos/gtk-demo/example_treeview_treestore.cc的示例代码，附加一个Gtk::CellRenderer部件并指示其各个模型列的外观的各个方面来呈现数据。"
+  },
+  {
+   "id": "00596cc941e0a30c",
+   "shas": [
+    "00596cc941e0a30c"
+   ],
+   "zh": "你还可以通过连接到CellRenderer的信号以检测用户的操作。例如："
+  },
+  {
+   "id": "5d1c874fce853d88",
+   "shas": [
+    "5d1c874fce853d88"
+   ],
+   "zh": "用户可以就地编辑TreeView中的单元格。若要如此，请使用Gtk::TreeView的insert_column_editable()和append_column_editable()方法而不是insert_column()和append_column()方法。编辑单元格后新的值将立刻储存在模型中。请注意，这些方法是模版，只能为简单的列类型实例化（例如，Glib::ustring、int和long）。"
+  },
+  {
+   "id": "4cfa21eda9ae0374",
+   "shas": [
+    "4cfa21eda9ae0374"
+   ],
+   "zh": "但是你可能不希望立刻储存新的值。例如你可能希望对输入进行检测，符合预期的范围才储存。"
+  },
+  {
+   "id": "4a524c8e05e34834",
+   "shas": [
+    "4a524c8e05e34834"
+   ],
+   "zh": "为此，你应该使用常规的Gtk::TreeView::insert_column()和Gtk::TreeView::append_column()方法，然后使用get_column_cell_renderer()方法获取该列使用的Gtk::CellRenderer。"
+  },
+  {
+   "id": "884b3cfd40c1d555",
+   "shas": [
+    "884b3cfd40c1d555"
+   ],
+   "zh": "例如，对于CellRendererText，你应该将单元格的editable属性设置为true，如下所示："
+  },
+  {
+   "id": "26ad2971d8b2e100",
+   "shas": [
+    "26ad2971d8b2e100"
+   ],
+   "zh": "对于CellRendererToggle，你应该改为设置activatable属性。"
+  },
+  {
+   "id": "bd91dceddca3c099",
+   "shas": [
+    "bd91dceddca3c099"
+   ],
+   "zh": "你可以连接到适当的\"edited\"信号。例如，连接到Gtk::CellRendererText::signal_edited()或者是Gtk::CellRendererToggle::signal_toggled()。如果该列包含多个CellRenderer，则你需要在视图上使用Gtk::TreeView::get_column()方法然后再调用get_cells()获取目标单元格。"
+  },
+  {
+   "id": "3cd95b0235c2c88a",
+   "shas": [
+    "3cd95b0235c2c88a"
+   ],
+   "zh": "在你的信号处理函数中，你应该检查新值如果其对于你的应用程序而言是合适的则将其储存到你的模型中。"
+  }
+ ],
+ "sec-iterating-over-model-rows": [
+  {
+   "id": "9de9e66df402d463",
+   "shas": [
+    "9de9e66df402d463"
+   ],
+   "zh": "Gtk::TreeModel通过children()方法提供了标准C++容器库风格的子代迭代器。你可以使用熟悉的begin()和end()方法递增迭代器，如下所示："
+  },
+  {
+   "id": "34f230d8de5666a7",
+   "shas": [
+    "34f230d8de5666a7"
+   ],
+   "zh": "如果你总是想迭代整个范围，则可以使用C++基于范围的更简洁的for循环语法："
+  },
+  {
+   "id": "ee7d660d3e68c1d7",
+   "shas": [
+    "ee7d660d3e68c1d7"
+   ],
+   "zh": "在使用Gtk::TreeStore的时候，其行可以存在子行，子行也可以存在子行。使用Gtk::TreeModel::Row::children()方法可以获取Row的子行："
+  }
+ ],
+ "sec-treeview-selection": [
+  {
+   "id": "a3144bba71acd687",
+   "shas": [
+    "a3144bba71acd687"
+   ],
+   "zh": "要找出用户选择了那些行，请从TreeView的Gtk::TreeView::Selection对象获取。"
+  },
+  {
+   "id": "a5016016e5cfdd44",
+   "shas": [
+    "a5016016e5cfdd44"
+   ],
+   "zh": "默认情况下，只能选定一行，但是你可以通过设置选择模式选择多行，如下所示："
+  },
+  {
+   "id": "5af99ce218d6cbaa",
+   "shas": [
+    "5af99ce218d6cbaa"
+   ],
+   "zh": "对于单选模式，你可以如下所示调用get_selected()："
+  },
+  {
+   "id": "46e5de4662b06362",
+   "shas": [
+    "46e5de4662b06362"
+   ],
+   "zh": "对于多选模式，你需要调用get_selected_rows()或者定义一个回调然后将其传递给selected_foreach()、selected_foreach_path()或selected_foreach_iter()，如下所示："
+  },
+  {
+   "id": "5c8c67b7c4ed5a10",
+   "shas": [
+    "5c8c67b7c4ed5a10"
+   ],
+   "zh": "要响应用户单击某行或者某个范围的行，请按以下方式连接信号："
+  },
+  {
+   "id": "62f06b45488e8336",
+   "shas": [
+    "62f06b45488e8336"
+   ],
+   "zh": "或许用户不应该能选择列表或树中的每个项目。例如在gtk-demo中，你可以选择一个演示来查看他的源代码，但是你选一个演示类别没有意义。"
+  },
+  {
+   "id": "d78a76cd4e2d981b",
+   "shas": [
+    "d78a76cd4e2d981b"
+   ],
+   "zh": "要控制一个行是否能被选择，请使用set_select_function()方法为其提供一个sigc::slot回调。例如："
+  },
+  {
+   "id": "819745c14ca2e6da",
+   "shas": [
+    "819745c14ca2e6da"
+   ],
+   "zh": "接着"
+  },
+  {
+   "id": "33d5672f722ccc16",
+   "shas": [
+    "33d5672f722ccc16"
+   ],
+   "zh": "要更改选择，请指定Gtk::TreeModel::iterator或Gtk::TreeModel::Row，然后如下所示："
+  },
+  {
+   "id": "7175517a370b5cd2",
+   "shas": [
+    "7175517a370b5cd2"
+   ],
+   "zh": "或者"
+  }
+ ],
+ "sec-treeview-sort": [
+  {
+   "id": "b5c9737558adabc5",
+   "shas": [
+    "b5c9737558adabc5"
+   ],
+   "zh": "标准树模型（TreeStore和ListStore）派生自TreeSortable，因此它们提供了排序功能。例如，调用set_sort_column()按指定的列对模型进行排序。或者向set_sort_func()提供一个回调函数以实现更复杂的排序算法。"
+  },
+  {
+   "id": "f5ace9227604d698",
+   "shas": [
+    "f5ace9227604d698"
+   ],
+   "zh": "可排序树参考"
+  },
+  {
+   "id": "e2abbc7ec213d011",
+   "shas": [
+    "e2abbc7ec213d011"
+   ],
+   "zh": "为了使用户可以点击TreeView的列标题以对TreeView内容进行排序，请在需要此功能的列上调用Gtk::TreeView::Column::set_sort_column()，以提供此功能。如下所示："
+  },
+  {
+   "id": "2bd9131e7a6727e1",
+   "shas": [
+    "2bd9131e7a6727e1"
+   ],
+   "zh": "TreeView可以让你用两个TreeView部件显示同一个TreeModel。如果你需要让这这些树形视图对模型进行不同的排序，则你应该使用TreeModelSort而不仅仅是使用Gtk::TreeViewColumn::set_sort_column()。TreeModelSort是一个包含其他模型的模型，其提供了该模型的将已排序版本。你可以如下所示的将已排序版本模型添加到TreeView："
+  },
+  {
+   "id": "ff4021037e355936",
+   "shas": [
+    "ff4021037e355936"
+   ],
+   "zh": "请注意，这样做树形视图将会提供已排序模型的迭代器。你必须将其转换为基础的子模型迭代器以便对这个模型进行操作。例如："
+  },
+  {
+   "id": "508ab5dc7e05b6e6",
+   "shas": [
+    "508ab5dc7e05b6e6"
+   ],
+   "zh": "树模型排序参考"
+  }
+ ],
+ "sec-treeview-draganddrop": [
+  {
+   "id": "c0d78d3b2cfcf970",
+   "shas": [
+    "c0d78d3b2cfcf970"
+   ],
+   "zh": "当使用Gtk::ListStore或者Gtk::TreeStore模型时Gtk::TreeView已经实现了简单的拖放。如果有必要，它还允许你使用常规的拖放API实现更复杂的拖放行为。"
+  },
+  {
+   "id": "94e5451c2535e6c6",
+   "shas": [
+    "94e5451c2535e6c6"
+   ],
+   "zh": "如果调用Gtk::TreeView::set_reorderable()则你可以在树视图中移动其本身的项目。TreeStore的示例对此进行了演示。"
+  },
+  {
+   "id": "af069112e544fa86",
+   "shas": [
+    "af069112e544fa86"
+   ],
+   "zh": "但是，这不允许你控制哪些项目可以拖动以及可以将他们拖动到哪里。如果你想做到这些，你需要从Gtk::TreeStore或Gtk::ListStore创建派生的Gtk::TreeModel，然后覆盖Gtk::TreeDragSource::row_draggable_vfunc()和Gtk::TreeDragDest::row_drop_possible_vfunc()虚方法。你可以检查提供的Gtk::TreeModel::Path并返回true或false来允许或禁止拖放。"
+  },
+  {
+   "id": "dfe0a0a38eddf833",
+   "shas": [
+    "dfe0a0a38eddf833"
+   ],
+   "zh": "在drag_and_drop示例中对此进行了演示。"
+  }
+ ],
+ "sec-treeview-contextmenu": [
+  {
+   "id": "87ec1e9089d74ef7",
+   "shas": [
+    "87ec1e9089d74ef7"
+   ],
+   "zh": "很多人认为需要为TreeView实现右键单击上下文菜单，因此我们在这里说明如何做到这个以节省你的时间。其与普通的上下文菜单只有一两点不同，如菜单章节所述。"
+  },
+  {
+   "id": "3910a9cf735c28b9",
+   "shas": [
+    "3910a9cf735c28b9"
+   ],
+   "zh": null
+  }
+ ],
+ "sec-treeview-examples": [
+  {
+   "id": "25250e8d6e4889ed",
+   "shas": [
+    "25250e8d6e4889ed"
+   ],
+   "zh": "这里显示了一些TreeView的示例。gtkmm文档示例中的树形视图文件夹还有更多的示例。"
+  },
+  {
+   "id": "b01dfdab6d0dfef1",
+   "shas": [
+    "b01dfdab6d0dfef1"
+   ],
+   "zh": "如果ListStore和TreeStore都不适合你的应用程序，请查看自定义树模型示例。它向你展示了如何实现自己的TreeModel接口"
+  },
+  {
+   "id": "e97cddedbdde14bf",
+   "shas": [
+    "e97cddedbdde14bf"
+   ],
+   "zh": "这个例子有一个使用Gtk::ListStore模型的Gtk::TreeView部件。"
+  },
+  {
+   "id": "b01997d21e51f41a",
+   "shas": [
+    "b01997d21e51f41a"
+   ],
+   "zh": "这个示例和ListStore示例非常的相似，但是使用的是Gtk::TreeStore模型并且添加了子行。"
+  },
+  {
+   "id": "6199d2da09dd7799",
+   "shas": [
+    "6199d2da09dd7799"
+   ],
+   "zh": "这个示例与ListStore示例相同，但是使用TreeView::append_column_editable()代替TreeView::append_column()。"
+  },
+  {
+   "id": "110b8a342c6d265e",
+   "shas": [
+    "110b8a342c6d265e"
+   ],
+   "zh": "这个示例和TreeStore示例十分相似，但是额外有两个用于指示行是否可以进行拖放和接受拖放的列。它通过从Gtk::TreeStore来覆盖虚函数，如拖放树视图小节所述。"
+  },
+  {
+   "id": "956091b71ef43697",
+   "shas": [
+    "956091b71ef43697"
+   ],
+   "zh": "这个示例和ListStore示例十分相似，但是它牌手了一个自定义的TreeView以覆盖button_press_event，并将树模型代码封装在派生类代码中，请参阅树形视图弹出上下文菜单小节。"
+  }
+ ]
+}

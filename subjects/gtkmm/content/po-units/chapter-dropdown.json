@@ -1,0 +1,82 @@
+{
+ "sec-dropdown-model": [
+  {
+   "id": "ec573a1125528520",
+   "shas": [
+    "ec573a1125528520"
+   ],
+   "zh": null
+  },
+  {
+   "id": "5fdfa01b2bae82f9",
+   "shas": [
+    "5fdfa01b2bae82f9"
+   ],
+   "zh": "ComboBox部件在下拉菜单中提供了选项列表（或树）。如果需要它可以为每个项目显示额外的信息，例如文本、图片、复选按钮或是进度条。ComboBox部件通常将显示用户的可选项，但是它可以有一个Entry以允许用户在没有合适的选项的时候输入任意文本。"
+  },
+  {
+   "id": "be925735c93cddc7",
+   "shas": [
+    "be925735c93cddc7"
+   ],
+   "zh": "这个列表通过TreeModel提供，这个模型的列通过ComboBox::pack_start()方法添加到组合框的视图中。这提供了灵活性和编译时的类型安全，在不需要灵活性的情况下，ComboBoxText类提供了更简单的基于文本的特化支持。"
+  },
+  {
+   "id": "11294c5acfc8d54b",
+   "shas": [
+    "11294c5acfc8d54b"
+   ],
+   "zh": "可以像TreeView一样定义和填充组合框的模型。你可以与如下所示的一样派生具有一个整数行和一个文本行的组合框类："
+  },
+  {
+   "id": "e86efbdb5c5216c5",
+   "shas": [
+    "e86efbdb5c5216c5"
+   ],
+   "zh": null
+  }
+ ],
+ "sec-dropdown-get": [
+  {
+   "id": "016ee23ed60c0131",
+   "shas": [
+    "016ee23ed60c0131"
+   ],
+   "zh": "要了解用户从组合框中选择了哪一项可以调用ComboBox::get_active()。这将返回一个TreeModel::iterator，你可以解引用它得到一个Row，然后从其中读取该列的值。例如，你可以在组合框中只显示人类可读的描述，然后你可以读取模型中储存于该行的整数ID值（于并未被显示的列）。例如："
+  }
+ ],
+ "sec-dropdown-changes": [
+  {
+   "id": "56ad92eab4d27c38",
+   "shas": [
+    "56ad92eab4d27c38"
+   ],
+   "zh": "你可能需要对组合框中每个选择的变更进行响应，例如更新其他的部件。为此你应该处理changed。例如："
+  }
+ ],
+ "sec-dropdown-search": [
+  {
+   "id": "506290d58415a0cc",
+   "shas": [
+    "506290d58415a0cc"
+   ],
+   "zh": "Gtk::Grid将其子部件按行和列排列。使用attach()和attach_next_to()方法向网格(Grid)部件中插入子部件。"
+  },
+  {
+   "id": "ddd95fe034534456",
+   "shas": [
+    "ddd95fe034534456"
+   ],
+   "zh": "Gtk::Button，Gtk::ToolButton，Gtk::MenuItem和Gtk::Switch 实现了Gtk::Actionable接口而不是已被删除的Gtk::Activatable接口。"
+  }
+ ],
+ "sec-dropdown-complex": [
+  {
+   "id": "2b49696d543a04da",
+   "shas": [
+    "2b49696d543a04da"
+   ],
+   "zh": null
+  }
+ ]
+}

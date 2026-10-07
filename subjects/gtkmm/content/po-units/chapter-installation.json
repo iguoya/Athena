@@ -1,0 +1,176 @@
+{
+ "sec-installation-dependencies": [
+  {
+   "id": "f22dc186b7a44a73",
+   "shas": [
+    "f22dc186b7a44a73"
+   ],
+   "zh": "在试图安装 gtkmm-4.0之前，你必须已经安装了这些包。"
+  },
+  {
+   "id": "46fb407799b08bb9",
+   "shas": [
+    "46fb407799b08bb9"
+   ],
+   "zh": "sigc++-3.0"
+  },
+  {
+   "id": "dbc88c0eaf19a1a9",
+   "shas": [
+    "dbc88c0eaf19a1a9"
+   ],
+   "zh": "gtkmm4"
+  },
+  {
+   "id": "5590b8b1b40945a8",
+   "shas": [
+    "5590b8b1b40945a8"
+   ],
+   "zh": "glibmm-2.68"
+  },
+  {
+   "id": "b586aeeb2b08c8bf",
+   "shas": [
+    "b586aeeb2b08c8bf"
+   ],
+   "zh": "cairomm-1.16"
+  },
+  {
+   "id": "112011e0d12c91b4",
+   "shas": [
+    "112011e0d12c91b4"
+   ],
+   "zh": "pangomm-2.48"
+  },
+  {
+   "id": "b3b31bf7cd907388",
+   "shas": [
+    "b3b31bf7cd907388"
+   ],
+   "zh": "这些依赖有它们自己所依赖的软件包，包括下列应用程序和软件库："
+  },
+  {
+   "id": "d43373514e274895",
+   "shas": [
+    "d43373514e274895"
+   ],
+   "zh": "pkg-config"
+  },
+  {
+   "id": "c206114fc9df26cc",
+   "shas": [
+    "c206114fc9df26cc"
+   ],
+   "zh": "glib-2.0"
+  },
+  {
+   "id": "82b5c0ca13a4b7b1",
+   "shas": [
+    "82b5c0ca13a4b7b1"
+   ],
+   "zh": "pango"
+  },
+  {
+   "id": "6d2805b8ba496887",
+   "shas": [
+    "6d2805b8ba496887"
+   ],
+   "zh": "cairo"
+  },
+  {
+   "id": "16ecf9014cfa9ce8",
+   "shas": [
+    "16ecf9014cfa9ce8"
+   ],
+   "zh": "gdk-pixbuf-2.0"
+  },
+  {
+   "id": "2e81a330ef6796af",
+   "shas": [
+    "2e81a330ef6796af"
+   ],
+   "zh": "graphene-1.0"
+  }
+ ],
+ "sec-install-unix-and-linux": [
+  {
+   "id": "e8bcb7860086dfba",
+   "shas": [
+    "e8bcb7860086dfba"
+   ],
+   "zh": "gtkmm 最新的版本的软件包几乎存在于今天每一个主流的 Linux 发布版本中。所以，如果你使用 Linux，你可能只需要从官方的软件库安装相应的软件包，然后就可以开始使用 gtkmm 了。已经在它们的软件库里面包含了 gtkmm 的发布版本有：Debian、Ubuntu、Red Hat、Fedora、Mandriva、SuSE 等等。"
+  },
+  {
+   "id": "1f020e8746085e0e",
+   "shas": [
+    "1f020e8746085e0e"
+   ],
+   "zh": "gtkmm 软件包的名字可能在不同的发行版中所不同 (例如，在 Debian 和 Ubuntu 上的名字是libgtkmm-4.0-dev，而在 Red Hat Fedora 上则是 gtkmm40-devel)，因此，在你的发行版的软件包管理程序中查一下正确的名字，然后像其它软件包一样的安装它。"
+  },
+  {
+   "id": "29b86b24ab3e66a3",
+   "shas": [
+    "29b86b24ab3e66a3"
+   ],
+   "zh": "当新的 API/ABI 兼容的 gtkmm 版本发布后，其包的名称将不会改变。否则的话，就说明 API/ABI 不兼容。所以，如果在 Debian 的 libgtkmm-4.0-dev 包中发现提供的实际上是 gtkmm 4.8 的话不要太惊讶。"
+  },
+  {
+   "id": "06cad7ad17690661",
+   "shas": [
+    "06cad7ad17690661"
+   ],
+   "zh": "如果你的发行版没提供预编译的 gtkmm 包，或者如果你想安装一个和发行版所提供的不同的版本，那么你也可以从源代码安装 gtkmm。可以从 中下载 gtkmm 的源代码。"
+  },
+  {
+   "id": "0216c7290362ce7e",
+   "shas": [
+    "0216c7290362ce7e"
+   ],
+   "zh": "在安装了所有依赖的库后，下载 gtkmm 源代码、解压缩，并且切换到新创建的目录。gtkmm可以使用Meson构建。 参见你所下载的gtkmm源代码中的README。"
+  },
+  {
+   "id": "87eeb32bb157bf25",
+   "shas": [
+    "87eeb32bb157bf25"
+   ],
+   "zh": "记住，在 Unix 或 Linux 操作系统上，你也许需要 root 权限以安装软件。su或者sudo 命令允许你输入 root 密码，并且临时拥有 root 权限。"
+  },
+  {
+   "id": "1bb387de2b1ca85c",
+   "shas": [
+    "1bb387de2b1ca85c"
+   ],
+   "zh": "configure脚本或者meson将会检查以确认所有必须的依赖软件包都已经正确的安装了。如果你遗漏了某个依赖软件包的话，它会退出并提示错误信息。"
+  },
+  {
+   "id": "a3c95609197da77b",
+   "shas": [
+    "a3c95609197da77b"
+   ],
+   "zh": "默认情况下，如果使用Autotools构建gtkmm 则其将会被安装在 /usr/local 目录。在有些系统中，你也许需要安装到不同的位置。比如，在 Red Hat Linux 系统中，你也许需要使用 --prefix 选项进行配置，例如："
+  },
+  {
+   "id": "0c722438d0ea6765",
+   "shas": [
+    "0c722438d0ea6765"
+   ],
+   "zh": "在安装到标准系统前缀时，如 /usr，你必须非常小心。Linux 发行版会安装软件到 /usr，所以安装源代码包到这个位置可能会破坏或与使用软件包管理器安装的软件冲突。理想情况下，你应当将从源代码安装的软件都安装到一个独立位置。"
+  },
+  {
+   "id": "b196205cc0db0850",
+   "shas": [
+    "b196205cc0db0850"
+   ],
+   "zh": "如果你想帮助开发 gtkmm，或实验一些新的功能，你也可以直接从 Git 安装 gtkmm。大多数用户绝对不需要这么做，但是如果你对帮助 gtkmm 开发感兴趣，请看附录：使用 gtkmm 源代码。"
+  }
+ ],
+ "sec-packages-windows": [
+  {
+   "id": "6eb09a91da220f63",
+   "shas": [
+    "6eb09a91da220f63"
+   ],
+   "zh": "\"虽然上面给出了简单示例的编译命令，但实际开发应该使用 Meson 构建系统。本书的示例都收录在 gtkmm-documentation 包里，并带有相应的构建文件，所以之后不再罗列构建命令。gtkmm-documentation 的 README 文件描述了如何构建这些示例。\"GTK和gtkmm被设计成在Microsoft Windows上也能很好地工作，而且开发者们鼓励在win32平台上使用它们。但是目前还有没为Windows平台的开发库提供标准的安装方法。请参阅 Windows Intallation或者gtkmm和Win32以得到关于Windows相关的安装方法和注意事项。"
+  }
+ ]
+}

@@ -1,0 +1,90 @@
+{
+ "sec-setting-up-jhbuild": [
+  {
+   "id": "4cabd49ac0c07d06",
+   "shas": [
+    "4cabd49ac0c07d06"
+   ],
+   "zh": "要设置jhbuild，请遵循jhbuild手册中的基本安装说明。安装jhbuild后，应通过在jhbuild目录执行以下命令将示例jhbuild配置文件复制到你的主目录中："
+  },
+  {
+   "id": "3bee5ed57d184d51",
+   "shas": [
+    "3bee5ed57d184d51"
+   ],
+   "zh": "gtkmm模块在文件gnome-suites-core-deps-latest.modules中的模块组(moduleset)定义。因此你需要按以下方式编辑你的jhbuildrc文件并设置你的模块组："
+  },
+  {
+   "id": "6180be827a3514fe",
+   "shas": [
+    "6180be827a3514fe"
+   ],
+   "zh": "正确设置模块组之后，你需要告诉jhbuild哪些模块需要构建。想要构建gtkmm以及所有相关的依赖项，请按如下所示设置modules："
+  },
+  {
+   "id": "bbc1a14d395ec8ed",
+   "shas": [
+    "bbc1a14d395ec8ed"
+   ],
+   "zh": "你可以通过设置modules为元包(meta-package)来构建多个模块。当你未在命令行上指定任何内容的时候，modules变量将指定构建哪些模块。你始终可以用命令行指定其他模块组来构建其他模块组（例如：jhbuild build gtkmm）。"
+  },
+  {
+   "id": "8f5f974ac7e7695a",
+   "shas": [
+    "8f5f974ac7e7695a"
+   ],
+   "zh": "在默认情况下，jhbuild被配置为在~/jhbuild/install前缀安装所有由jhbuild构建的软件。你可以选择其他的前缀，但建议你选择的新前缀与旧前缀保持不同，且不将前缀设置为/usr。如果你遵循jhbuild的说明进行操作，该前缀属于你的用户，你将无需以root用户权限运行jhbuild。"
+  },
+  {
+   "id": "a74c2505c1f8a2d9",
+   "shas": [
+    "a74c2505c1f8a2d9"
+   ],
+   "zh": null
+  },
+  {
+   "id": "4121d87cc2e60f81",
+   "shas": [
+    "4121d87cc2e60f81"
+   ],
+   "zh": "当你从git仓库下载jhbuild时，你会得到许多的.modules文件，这些文件指定了模块之间的依赖关系。在默认情况下jhbuild不使用这些文件的下载版本，而是从git仓库中读取最新的版本。这通常是你想要的行为，如果你不想要如此做，你可以在.jhbuildrc文件中定义use_local_modulesets以修改此行为。"
+  }
+ ],
+ "sec-installing-jhbuild": [
+  {
+   "id": "ae00b6539d77f170",
+   "shas": [
+    "ae00b6539d77f170"
+   ],
+   "zh": "如上所述，配置好jhbuild后，构建gtkmm会非常简单。首次运行jhbuild时，你应运行以下命令序列，以确保jhbuild拥有所有所需的工具以及验证设置是否正确："
+  },
+  {
+   "id": "bdc1557dca4d7bc4",
+   "shas": [
+    "bdc1557dca4d7bc4"
+   ],
+   "zh": "如果一切正常，你应该已经可以通过执行jhbuild build（如果你没有在modules变量中指定gtkmm，那也可以使用命令jhbuild build gtkmm来进行构建）来从git构建gtkmm以及所有有关的依赖项。"
+  },
+  {
+   "id": "0ce1cace87d1444c",
+   "shas": [
+    "0ce1cace87d1444c"
+   ],
+   "zh": "此命令将构建并安装一系列模块，第一次运行可能需要很长的时间。但是之后运行就会快很多，因为之后他只会重新编译自上次构建依赖变更过的文件。在第一次构建并安装gtkmm后你可以使用命令jhbuild buildone gtkmm重新构建gtkmm（不需要重新构建相关依赖）。"
+  },
+  {
+   "id": "fc563c97e69e437f",
+   "shas": [
+    "fc563c97e69e437f"
+   ],
+   "zh": "安装git版本的gtkmm后，你就可以开始使用并进行试验了。为了使用刚安装的新版本gtkmm，你需要设置一些环境变量以便你的configure或meson.build脚本可以找到新的库。jhbuild为此提供了一个简单的解决方案。执行命令jhbuild shell将启动一个设置好了所有环境变量的shell。现在如果你和往常一样重新配置并构建你的项目，它应该链接到新的库。要返回之前的环境你只需要jhbuild shell即可。"
+  },
+  {
+   "id": "1761e113c7556de2",
+   "shas": [
+    "1761e113c7556de2"
+   ],
+   "zh": "构建完你的软件后，你还需要在jhbuild环境中运行你的程序。为此，你可以再次使用jhbuild shell命令在设置了jhbuild环境的情况下启动新的shell。或者你可以用以下命令在jhbuild环境下执行单次命令：jhbuild run command-name。在这种情况下，命令将在设置了正确的环境变量的环境中运行，命令退出后，环境将恢复到之前的状态。"
+  }
+ ]
+}

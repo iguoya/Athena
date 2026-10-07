@@ -1,0 +1,227 @@
+{
+ "sec-dnd-sources-targets": [
+  {
+   "id": "464dc55c87a2b038",
+   "shas": [
+    "464dc55c87a2b038"
+   ],
+   "zh": "Gtk::Widget提供了几个带有\"drag_\"前缀的方法和信号用以支持拖放。"
+  },
+  {
+   "id": "9c68b91fbe7159ba",
+   "shas": [
+    "9c68b91fbe7159ba"
+   ],
+   "zh": "物件从sources被拖放到destinations。每个源与目的地都拥有由Gdk::ContentFormats提供的它们所能发送或接受的数据格式的相关信息。放置目的地只会在拖动项与其具有共同的兼容类型时才会接受它们。然后将会发出适当的信号，告诉信号处理函数使用了那种格式。"
+  },
+  {
+   "id": "30b1dd1961ab690b",
+   "shas": [
+    "30b1dd1961ab690b"
+   ],
+   "zh": "Gdk::ContentFormats对象包含了可用的GType和MIME类型（媒体类型）的相关信息。"
+  }
+ ],
+ "sec-dnd-methods": [
+  {
+   "id": "fe03a5ff2c7b79b6",
+   "shas": [
+    "fe03a5ff2c7b79b6"
+   ],
+   "zh": "Gtk::Widget的以下方法可以将Widget作为源或者目标："
+  },
+  {
+   "id": "1dea1eee1b2a1b0f",
+   "shas": [
+    "1dea1eee1b2a1b0f"
+   ],
+   "zh": null
+  },
+  {
+   "id": "70ebd0e73d3f0e07",
+   "shas": [
+    "70ebd0e73d3f0e07"
+   ],
+   "zh": null
+  },
+  {
+   "id": "fc640c22142963f7",
+   "shas": [
+    "fc640c22142963f7"
+   ],
+   "zh": null
+  },
+  {
+   "id": "e510d1c6b0bb5895",
+   "shas": [
+    "e510d1c6b0bb5895"
+   ],
+   "zh": "示例来自Pango::Coverage："
+  },
+  {
+   "id": "f5c6362cda862579",
+   "shas": [
+    "f5c6362cda862579"
+   ],
+   "zh": null
+  },
+  {
+   "id": "a800c664025448c0",
+   "shas": [
+    "a800c664025448c0"
+   ],
+   "zh": null
+  },
+  {
+   "id": "bceae72c7aad689e",
+   "shas": [
+    "bceae72c7aad689e"
+   ],
+   "zh": "drag_end：提供一个Gdk::Drag。"
+  },
+  {
+   "id": "918906f12bb6c787",
+   "shas": [
+    "918906f12bb6c787"
+   ],
+   "zh": null
+  },
+  {
+   "id": "58b2e0cd749d01ae",
+   "shas": [
+    "58b2e0cd749d01ae"
+   ],
+   "zh": "示例来自Pango::Coverage："
+  }
+ ],
+ "sec-dnd-signals": [
+  {
+   "id": "5e2699cc17d914c9",
+   "shas": [
+    "5e2699cc17d914c9"
+   ],
+   "zh": "当一个放置目的地接受了拖动项，根据被选择的动作，将发出响应的信号。例如，用户可能按住Shift键指定进行move而不是copy。请注意，用户只能选择你在调用drag_dest_set()和drag_source_set()时所指定的动作。"
+  },
+  {
+   "id": "359a2098c8283409",
+   "shas": [
+    "359a2098c8283409"
+   ],
+   "zh": "drag_begin：提供一个Gdk::Drag。"
+  },
+  {
+   "id": "51831ea940acf1c1",
+   "shas": [
+    "51831ea940acf1c1"
+   ],
+   "zh": null
+  },
+  {
+   "id": "635c7414c316d5c9",
+   "shas": [
+    "635c7414c316d5c9"
+   ],
+   "zh": "drag_data_get：提供一个Gdk::Drag和一个Gtk::SelectionData对象，你应该在其中放入所请求的数据。"
+  },
+  {
+   "id": "f1e18c5ad74d19c5",
+   "shas": [
+    "f1e18c5ad74d19c5"
+   ],
+   "zh": null
+  },
+  {
+   "id": "2d8e480c609b0125",
+   "shas": [
+    "2d8e480c609b0125"
+   ],
+   "zh": "源部件将按以下顺序发出这些信号："
+  },
+  {
+   "id": "f5c08057e03861e9",
+   "shas": [
+    "f5c08057e03861e9"
+   ],
+   "zh": null
+  },
+  {
+   "id": "e5d01f85b1fdae4c",
+   "shas": [
+    "e5d01f85b1fdae4c"
+   ],
+   "zh": null
+  },
+  {
+   "id": "c86c4cdb6dddade1",
+   "shas": [
+    "c86c4cdb6dddade1"
+   ],
+   "zh": null
+  },
+  {
+   "id": "5d5b585469c5f9cd",
+   "shas": [
+    "5d5b585469c5f9cd"
+   ],
+   "zh": "drag_motion：提供一个Gdk::Drop以及坐标。你可以调用Gdk::Drop的status()方法来指示要接受的动作。"
+  },
+  {
+   "id": "e1621e93cae0a0ee",
+   "shas": [
+    "e1621e93cae0a0ee"
+   ],
+   "zh": null
+  },
+  {
+   "id": "ef86fb6d883ee489",
+   "shas": [
+    "ef86fb6d883ee489"
+   ],
+   "zh": "drag_source_add_text_targets()"
+  },
+  {
+   "id": "f53340f77b92211b",
+   "shas": [
+    "f53340f77b92211b"
+   ],
+   "zh": "drag_dest_add_text_targets()"
+  },
+  {
+   "id": "f34a72a1476a6a55",
+   "shas": [
+    "f34a72a1476a6a55"
+   ],
+   "zh": "drag_dest_add_image_targets()"
+  },
+  {
+   "id": "1523a354d790f75e",
+   "shas": [
+    "1523a354d790f75e"
+   ],
+   "zh": "drag_dest_add_image_targets()"
+  },
+  {
+   "id": "c6477bafb6cf58ef",
+   "shas": [
+    "c6477bafb6cf58ef"
+   ],
+   "zh": "drag_dest_add_image_targets()"
+  }
+ ],
+ "sec-dnd-example": [
+  {
+   "id": "34a38e5d1ebec1ba",
+   "shas": [
+    "34a38e5d1ebec1ba"
+   ],
+   "zh": "这是一个非常简单的示例，演示了拖放的Copy操作："
+  },
+  {
+   "id": "54470a5a78cae08c",
+   "shas": [
+    "54470a5a78cae08c"
+   ],
+   "zh": "在examples/others/dnd中有一个更复杂的示例。"
+  }
+ ]
+}

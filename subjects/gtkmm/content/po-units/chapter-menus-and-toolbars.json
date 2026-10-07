@@ -1,0 +1,187 @@
+{
+ "sec-actions": [
+  {
+   "id": "5dacb11465b6b2b1",
+   "shas": [
+    "5dacb11465b6b2b1"
+   ],
+   "zh": "菜单和工具栏都有特有的API，但是通常你应该创建在菜单和工具栏都可以引用的Gio::SimpleAction以便一并处理它们。这样你可以响应动作被激活而不需要分别响应菜单和工具栏。你可以通过动作启用或者禁用菜单和工具栏项。Gtk::Builder可以创建菜单和工具栏。"
+  },
+  {
+   "id": "5b333cf3d44cafae",
+   "shas": [
+    "5b333cf3d44cafae"
+   ],
+   "zh": "这涉及到了Gio::SimpleActionGroup、Gio::SimpleAction和Gtk::Builder类的使用，所有的这些类都需要通过返回RefPtr的create()方法进行实例化。"
+  },
+  {
+   "id": "c6df0e384a32dd1f",
+   "shas": [
+    "c6df0e384a32dd1f"
+   ],
+   "zh": "首先创建Gio::SimpleAction并使用Gio::ActionMap::add_action()方法将其加入Gio::SimpleActionGroup中（Gio::ActionMap是Gio::SimpleActionGroup的基类。）。然后将动作组使用Gtk::Widget::insert_action_group()加入到你的窗口中。"
+  },
+  {
+   "id": "ec85369ba3b5ffc8",
+   "shas": [
+    "ec85369ba3b5ffc8"
+   ],
+   "zh": "add_action()的参数用于指定动作名，该名称由菜单项和工具栏按钮使用。你还可以在调用add_action()时指定信号处理函数。在菜单项或工具栏按钮被激活的时候此信号处理函数被调用。"
+  },
+  {
+   "id": "e7fa29a18b75e39f",
+   "shas": [
+    "e7fa29a18b75e39f"
+   ],
+   "zh": "例如："
+  },
+  {
+   "id": "489a0b43da609826",
+   "shas": [
+    "489a0b43da609826"
+   ],
+   "zh": "如果你使用Gtk::ApplicationWindow，则你不需要自己创建动作组。因为Gio::ActionGroup和Gio::ActionMap是Gtk::ApplicationWindow的基类。"
+  }
+ ],
+ "sec-menubar-and-toolbar": [
+  {
+   "id": "d73873feed6c8f00",
+   "shas": [
+    "d73873feed6c8f00"
+   ],
+   "zh": "接下来你应该创建一个Gtk::Builder。此时使用Gtk::Application::set_accel_for_action()告诉应用程序响应键盘快捷键也是一个好主意。"
+  },
+  {
+   "id": "580ef7c3ff8e8ffb",
+   "shas": [
+    "580ef7c3ff8e8ffb"
+   ],
+   "zh": "例如："
+  },
+  {
+   "id": "32a69dbbca14abbc",
+   "shas": [
+    "32a69dbbca14abbc"
+   ],
+   "zh": "然后，你可以定义菜单和工具栏的实际可见布局，并将这个UI布局添加到Builder。这个\"UI字符串\"使用XML格式，你应该在其中使用你已经创建的动作的名称。例如："
+  },
+  {
+   "id": "73a8bca5980acb9b",
+   "shas": [
+    "73a8bca5980acb9b"
+   ],
+   "zh": "这里我们指定菜单项的名称，因为用户可以在菜单中看到它们。因此你应该添加translatable='yes'使这些的字符串可以被翻译。"
+  },
+  {
+   "id": "b1a8c83e89ade249",
+   "shas": [
+    "b1a8c83e89ade249"
+   ],
+   "zh": "要实例化Gtk::MenuBar和Gtk::Toolbar并可以实际显示他们，应该使用Builder::get_object()和Builder::get_widget()方法，然后将部件加入容器中。例如："
+  }
+ ],
+ "sec-menus-popup": [
+  {
+   "id": "2a9c5679465cdc53",
+   "shas": [
+    "2a9c5679465cdc53"
+   ],
+   "zh": "Menus通常将直接被加入到窗口中，但也可以通过鼠标单击来临时显示他们。例如当用户单击鼠标右键的时候，可能需要显示上下文菜单。"
+  },
+  {
+   "id": "6b6383a5945174bd",
+   "shas": [
+    "6b6383a5945174bd"
+   ],
+   "zh": null
+  }
+ ],
+ "sec-gio-resource": [
+  {
+   "id": "2cabad3644eda93a",
+   "shas": [
+    "2cabad3644eda93a"
+   ],
+   "zh": "应用程序和库经常包含是应用程序的一部分的二进制或文本数据，而不是用户数据。例如Gtk::Builder使用的.glade文件、启动画面、Gio::Menu标记XML、CSS文件、图标等。这些通常这些文件放于$datadir/appname目录下，也可以将其转换为文本字面量手动包含在代码中。"
+  },
+  {
+   "id": "0bd947df313cfe96",
+   "shas": [
+    "0bd947df313cfe96"
+   ],
+   "zh": "Gio::ResourceAPI和glib-compile-resources程序提供了一个方便且有效的替代方案，这个方案有一些良好的性质。你可以将这些文件作为普通文件进行维护，因此你可以轻松的编辑它们，在构建过程中，这些文件将会被组合成一个二进制捆绑包，并将其链接到可执行文件中。这意味着加载资源文件会很高效（因为他们在启动时已经被加载到了内存中，并与其他实例共享）且很简单（无需对IO错误进行检查和在文件系统中查找文件）。这也使得创建可重定位应用程序变得更为简单。"
+  },
+  {
+   "id": "2d9125dca66a45be",
+   "shas": [
+    "2d9125dca66a45be"
+   ],
+   "zh": "资源包是由glib-compile-resources程序创建的，该程序使用一个XML文件描述资源包并由该XML文件指示资源包引用了那些文件。被引用的文件和XML文件将被组合为一个二进制的资源包。"
+  },
+  {
+   "id": "62a97c8d5a234db2",
+   "shas": [
+    "62a97c8d5a234db2"
+   ],
+   "zh": "Gio::Resource参考"
+  },
+  {
+   "id": "53b34f6388cdf7fe",
+   "shas": [
+    "53b34f6388cdf7fe"
+   ],
+   "zh": "例如："
+  },
+  {
+   "id": "e38fcb831b64a939",
+   "shas": [
+    "e38fcb831b64a939"
+   ],
+   "zh": "/toolbar/toolbar.glade"
+  },
+  {
+   "id": "6850ce1a04bcbcd3",
+   "shas": [
+    "6850ce1a04bcbcd3"
+   ],
+   "zh": "/toolbar/rain.png"
+  },
+  {
+   "id": "208c1f2ac1e3a041",
+   "shas": [
+    "208c1f2ac1e3a041"
+   ],
+   "zh": "一个示例： 这将创建一个包含以下文件的资源包:"
+  },
+  {
+   "id": "51894429101538a4",
+   "shas": [
+    "51894429101538a4"
+   ],
+   "zh": "一旦创建并注册了Gio::Resource，就可以使用API调用（例如：Gio::Resource::open_stream_from_global_resources()流式获取数据或是Gio::Resource::lookup_data_in_global_resources()直接获取指向数据的指针）在进程的全局访问数据。你还可以使用类似于resource:///toolbar/rain.png的URI通过Gio::File访问资源数据。"
+  },
+  {
+   "id": "aaad925686c74165",
+   "shas": [
+    "aaad925686c74165"
+   ],
+   "zh": "通常你不需要Gio::Resource实例，因为可以使用Gdk::Pixbuf::create_from_resource()、Gtk::Builder::add_from_resource()和Gtk::Image::set_from_resource()直接加载资源数据。"
+  }
+ ],
+ "sec-menus-examples": [
+  {
+   "id": "63c446cb5722fbfa",
+   "shas": [
+    "63c446cb5722fbfa"
+   ],
+   "zh": "该程序拥有一个应用程序菜单，一个菜单栏和一个工具栏。这个类是自Gtk::Application和Gtk::ApplicationWindow派生而来的。"
+  },
+  {
+   "id": "5f6e22b493ee1900",
+   "shas": [
+    "5f6e22b493ee1900"
+   ],
+   "zh": "该程序包含一个菜单栏和一个工具栏。一个从Gtk::Window派生的类。"
+  }
+ ]
+}

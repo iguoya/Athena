@@ -8,7 +8,8 @@ import { highlightCode } from "./highlight";
  * - 原文段落保留官方内联格式（粗体/斜体/行内代码/链接，受限 markdown）
  * - 代码块逐字照录（应用 ADR 0002：代码不翻译不改写）
  * - figure 渲染官方图片；key 段落重点强调；划词即查；英译训练模式
- * - 连续短文字段合并为一个「阅读单元」：一个显示译文按钮，减少点击负担
+ * - 阅读单元优先按 PO 翻译单元分组（应用 ADR 0005，scripts/align_po.py 对齐）；
+ *   未对齐的段按词数兜底聚合
  */
 
 interface SnapshotBlock {
@@ -34,6 +35,15 @@ interface Snapshot {
   title: string;
   upstream_commit: string;
   blocks: SnapshotBlock[];
+}
+
+/** PO 翻译单元（content/po-units/<章>.json，scripts/align_po.py 生成）：
+ *  官网 PO 的一条翻译单元 ↔ 本节连续若干段落；id 锚定首段 sha，
+ *  与「看懂了」的 unitSha、自译存储键同口径（应用 ADR 0005）。 */
+export interface PoUnit {
+  id: string;
+  shas: string[];
+  zh: string | null;
 }
 
 /** 标注数据（content/vocab.json，App 启动时注入）。 */
@@ -245,18 +255,21 @@ function TranslatedText({ text }: { text: string }) {
 }
 
 /** 学习者自译：官方快照待译/待复核/已有译文（订正候选）的段落都允许
- *  写下自己的译文并保存（learning.db my_translations，按段落 sha 存，
+ *  写下自己的译文并保存（learning.db my_translations，按单元锚点存，
  *  随进度库走）。保存空内容即清除。已有官方译文时官方译文照旧显示，
- *  自译只是并排的订正候选，不覆盖内容层（应用 ADR 0004）。 */
+ *  自译只是并排的订正候选，不覆盖内容层（应用 ADR 0004、0005）。 */
 function SelfTranslation({
   sha,
   text,
   onSave,
+  hasOfficial = false,
   actionLabel = "✍️ 自己译",
 }: {
   sha: string;
   text?: string;
   onSave: (sha: string, text: string) => void;
+  /** 该位置已有官方译文（整条或单段）：空文本态只显示订正入口，不再标「待译」 */
+  hasOfficial?: boolean;
   /** 入口按钮文案：待译段「✍️ 自己译」，官方译文段「✎ 我的译法」 */
   actionLabel?: string;
 }) {
@@ -311,6 +324,18 @@ function SelfTranslation({
         </div>
         <p className="mt-1 text-[27px] leading-loose text-fg/90">{renderInline(text)}</p>
       </div>
+    );
+  }
+  if (hasOfficial) {
+    return (
+      <p className="mt-2">
+        <button
+          onClick={start}
+          className="rounded-lg border border-dashed border-accent/40 px-3 py-0.5 text-[20px] text-accent transition-colors hover:bg-accent-soft"
+        >
+          {actionLabel}
+        </button>
+      </p>
     );
   }
   return (
@@ -441,9 +466,10 @@ const ADMONITION_STYLE: Record<string, { icon: string; label: string; box: strin
   caution: { icon: "🚫", label: "注意", box: "border-red-500/50 bg-red-50/70", text: "text-red-700" },
 };
 
-/** 阅读单元：连续短文字段合并（一个显示译文按钮），长段独立成单元。 */
+/** 阅读单元：优先按 PO 翻译单元分组（unit），无映射的段按词数兜底聚合。 */
 function ReadUnit({
   blocks,
+  unit,
   hidden,
   sentenceMode,
   knownParas,
@@ -454,6 +480,8 @@ function ReadUnit({
   onRate,
 }: {
   blocks: SnapshotBlock[];
+  /** PO 翻译单元；未对齐的兜底组没有 */
+  unit?: PoUnit;
   hidden: boolean;
   sentenceMode: boolean;
   knownParas: Set<string>;
@@ -463,8 +491,11 @@ function ReadUnit({
   onRevealAll: () => void;
   onRate: (sha: string, understood: boolean) => void;
 }) {
-  const unitSha = blocks[0].sha; // 整个单元一次「看懂了」
+  const unitSha = blocks[0].sha; // 整个单元一次「看懂了」；多段 PO 单元即其首段
   const unitKnown = knownParas.has(unitSha);
+  // 多段 PO 单元：译文按单元整条呈现（官方整条 msgstr / 单元级自译），
+  // 段级不再逐段显示译文（应用 ADR 0005）
+  const isMulti = !!unit && unit.shas.length > 1;
   const zhOf = (block: SnapshotBlock) => {
     if (block.zh) {
       const zhBody = sentenceMode ? (
@@ -504,6 +535,7 @@ function ReadUnit({
             sha={block.sha}
             text={myTranslations[block.sha]}
             onSave={onSaveMyTranslation}
+            hasOfficial
             actionLabel="✎ 我的译法"
           />
         </>
@@ -559,9 +591,9 @@ function ReadUnit({
                 {marker}
                 {renderInline(flow(block.text))}
               </span>
-              {/* 三种译态（官方译文/旧译文待复核/待译）都交 zhOf 统一处理，
-                  此前误加 block.zh 条件导致列表项待译段落整段静默 */}
-              {!hidden && (
+              {/* 三种译态（官方译文/旧译文待复核/待译）都交 zhOf 统一处理；
+                  多段 PO 单元的译文按单元整条呈现，段级不显示 */}
+              {!hidden && !isMulti && (
                 <div className="pl-5">{zhOf(block)}</div>
               )}
             </div>
@@ -582,7 +614,7 @@ function ReadUnit({
               <p className="font-serif text-[28px] leading-relaxed text-fg/70">
                 {renderInline(flow(block.text))}
               </p>
-              {!hidden && zhOf(block)}
+              {!hidden && !isMulti && zhOf(block)}
             </div>
           );
         }
@@ -606,10 +638,22 @@ function ReadUnit({
                 </span>
               )}
             </blockquote>
-            {!hidden && zhOf(block)}
+            {!hidden && !isMulti && zhOf(block)}
           </div>
         );
       })}
+      {!hidden && isMulti && (
+        <div className="mt-3">
+          {unit.zh ? <TranslatedText text={unit.zh} /> : null}
+          <SelfTranslation
+            sha={unitSha}
+            text={myTranslations[unitSha]}
+            onSave={onSaveMyTranslation}
+            hasOfficial={!!unit.zh}
+            actionLabel={unit.zh ? "✎ 我的译法" : "✍️ 自己译"}
+          />
+        </div>
+      )}
       {!hidden && (
         <RatingRow
           sha={unitSha}
@@ -630,10 +674,11 @@ function ReadUnit({
   );
 }
 
-/** 阅读单元分组：连续文字块合并到设定词数为止；标题/代码/图打断。 */
+/** 阅读单元分组：优先按 PO 翻译单元（应用 ADR 0005，官网口径）；
+ *  未对齐的段按词数兜底聚合。标题/代码/图打断。 */
 type RenderGroup =
   | { kind: "heading" | "code" | "figure"; blocks: SnapshotBlock[] }
-  | { kind: "read"; blocks: SnapshotBlock[] };
+  | { kind: "read"; blocks: SnapshotBlock[]; unit?: PoUnit };
 
 /** 词数：英文按空格分词，CJK 每字记一词。 */
 function wordCount(text: string): number {
@@ -643,23 +688,48 @@ function wordCount(text: string): number {
   );
 }
 
-function groupBlocks(blocks: SnapshotBlock[], unitLimit: number): RenderGroup[] {
+function groupBlocks(
+  blocks: SnapshotBlock[],
+  unitLimit: number,
+  unitOf: Map<string, PoUnit>,
+): RenderGroup[] {
   const groups: RenderGroup[] = [];
-  let unitWords = 0;
-  for (const block of blocks) {
+  let pendingWords = 0;
+  let i = 0;
+  while (i < blocks.length) {
+    const block = blocks[i];
     if (block.type === "para" || block.type === "listitem") {
+      const unit = unitOf.get(block.sha);
+      // PO 单元由首段触发整组消费；各段必须紧邻（映射过期则放弃该组走兜底）
+      if (unit && unit.id === block.sha) {
+        const segs = blocks.slice(i, i + unit.shas.length);
+        if (segs.length === unit.shas.length && segs.every((b, k) => b.sha === unit.shas[k])) {
+          groups.push({ kind: "read", blocks: segs, unit });
+          i += segs.length;
+          pendingWords = 0;
+          continue;
+        }
+      }
+      if (unit) {
+        // 单元的非首段（首段没能成组）：独立成组，不混入兜底聚合
+        groups.push({ kind: "read", blocks: [block], unit });
+        i += 1;
+        pendingWords = 0;
+        continue;
+      }
       const last = groups[groups.length - 1];
-      // 聚合到设定词数为一个翻译单元：一次「看懂了」
-      if (last?.kind === "read" && unitWords < unitLimit) {
+      if (last?.kind === "read" && !last.unit && pendingWords < unitLimit) {
         last.blocks.push(block);
-        unitWords += wordCount(block.text);
+        pendingWords += wordCount(block.text);
       } else {
         groups.push({ kind: "read", blocks: [block] });
-        unitWords = wordCount(block.text);
+        pendingWords = wordCount(block.text);
       }
+      i += 1;
       continue;
     }
     groups.push({ kind: block.type, blocks: [block] });
+    i += 1;
   }
   return groups;
 }
@@ -695,7 +765,35 @@ export function PageView({
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [revealed, setRevealed] = useState<Set<string>>(new Set());
+  /** 当前节各段所属的 PO 翻译单元（sha → unit）；null = 未加载或未对齐 */
+  const [unitOf, setUnitOf] = useState<Map<string, PoUnit> | null>(null);
   const reveal = (sha: string) => setRevealed((prev) => new Set(prev).add(sha));
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const ingest = (pages: Record<string, PoUnit[]> | null) => {
+        const map = new Map<string, PoUnit>();
+        for (const u of pages?.[pageId] ?? []) for (const sha of u.shas) map.set(sha, u);
+        if (!cancelled) setUnitOf(map);
+      };
+      try {
+        ingest(await invoke<Record<string, PoUnit[]> | null>("get_po_units", { chapterId }));
+      } catch {
+        // 纯浏览器模式：读静态文件；读不到视为该章未对齐
+        try {
+          const response = await fetch(`/content/po-units/${chapterId}.json`);
+          if (!response.ok) throw new Error(String(response.status));
+          ingest((await response.json()) as Record<string, PoUnit[]>);
+        } catch {
+          if (!cancelled) setUnitOf(null);
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [chapterId, pageId]);
 
   useEffect(() => {
     let cancelled = false;
@@ -720,8 +818,8 @@ export function PageView({
   }, [chapterId, pageId]);
 
   const groups = useMemo(
-    () => (snapshot ? groupBlocks(snapshot.blocks, unitWords) : []),
-    [snapshot, unitWords],
+    () => (snapshot ? groupBlocks(snapshot.blocks, unitWords, unitOf ?? new Map()) : []),
+    [snapshot, unitWords, unitOf],
   );
 
   if (error) return optional ? null : <p className="text-sm text-red-700">{error}</p>;
@@ -794,6 +892,7 @@ export function PageView({
               <ReadUnit
                 key={index}
                 blocks={group.blocks}
+                unit={group.unit}
                 hidden={hidden}
                 sentenceMode={sentenceMode}
                 knownParas={knownParas}

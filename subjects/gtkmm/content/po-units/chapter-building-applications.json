@@ -1,0 +1,433 @@
+{
+ "sec-buildapp-trivial-app": [
+  {
+   "id": "a9aa30ed86399658",
+   "shas": [
+    "a9aa30ed86399658"
+   ],
+   "zh": "本章节与GTK4参考文档的\"Building applications\"章节十分类似。"
+  },
+  {
+   "id": "57c97c8f3e24bc3c",
+   "shas": [
+    "57c97c8f3e24bc3c"
+   ],
+   "zh": "这将被安装在/usr/bin。"
+  },
+  {
+   "id": "047d85f69460068f",
+   "shas": [
+    "047d85f69460068f"
+   ],
+   "zh": "桌面文件为桌面shell提供了于应用程序有关的重要信息，例如应用程序的名称、图标D-Bus名、启动时的命令行等。此文件将安装在/usr/share/applications。"
+  },
+  {
+   "id": "46c1cda64cd39167",
+   "shas": [
+    "46c1cda64cd39167"
+   ],
+   "zh": "图标将被安装在/usr/share/icons/hicolor/48x48/apps，无论当前主题是什么你都可以在其中找到图标。"
+  },
+  {
+   "id": "c9ed2977602dd8aa",
+   "shas": [
+    "c9ed2977602dd8aa"
+   ],
+   "zh": "如果应用程序使用了Gio::Settings，它需要将它的模式安装到/usr/share/glib-2.0/schemas，以便dconf-editor之类的工具可以找到它。"
+  },
+  {
+   "id": "bb442a36e4b53b16",
+   "shas": [
+    "bb442a36e4b53b16"
+   ],
+   "zh": "像Gtk::BuilderUI文件这样的其他文件，最好从储存应用程序自身的二进制中加载。这样就不需要按照传统将大多数文件安装在/usr/share中特定应用程序的位置。"
+  },
+  {
+   "id": "113575f4515ae9db",
+   "shas": [
+    "113575f4515ae9db"
+   ],
+   "zh": "一个应用程序由许多文件组成："
+  },
+  {
+   "id": "ca1833eddc8d6e5d",
+   "shas": [
+    "ca1833eddc8d6e5d"
+   ],
+   "zh": "gtkmm包括构建在Gio::Application上的应用程序支持。在本章中我们将从头开始构建一个简单的应用程序。然后逐渐向其中添加更多内容。在此过程中我们将学习Gtk::Application、Gtk::Builder、资源、菜单、设置、Gtk::HeaderBar、Gtk::Stack、Gtk::SearchBar、Gtk::ListBox等内容。"
+  },
+  {
+   "id": "2227c85de2e7b188",
+   "shas": [
+    "2227c85de2e7b188"
+   ],
+   "zh": "这些示例的完整可构建源代码可以从gtkmm-documentation源目录的examples/book/buildapp文件夹中找到，或者在gtkmm-documentationgit仓库可以找到。你可以通过meson.build文件使用meson和ninja，或是通过Makefile.example文件使用make以编译每一个示例。更多有关信息，请参见buildapp目录中包含的README文件。"
+  },
+  {
+   "id": "1184067eb7118ed0",
+   "shas": [
+    "1184067eb7118ed0"
+   ],
+   "zh": "使用Gtk::Application时，main()函数可以非常简单。我们只是在应用程序类实例上调用Gtk::Application::run()。"
+  },
+  {
+   "id": "5dc190bc341e7b29",
+   "shas": [
+    "5dc190bc341e7b29"
+   ],
+   "zh": "应用程序的所有逻辑都在应用程序类中，该类是Gtk::Application的子类。现在在我们的示例中还没有任何很有趣的功能。它要做的事就是在没有参数的情况下打开一个窗口，或在有参数的启动状态下打开给定的文件（准确的说我们的应用程序类尝试打开文件，但是应用程序的窗口子类并没有执行应执行的操作）。"
+  },
+  {
+   "id": "4d387933d5b6702a",
+   "shas": [
+    "4d387933d5b6702a"
+   ],
+   "zh": "为了处理这两种情况，我们覆写了signal_activate()和signal_open()的默认处理函数，在没有命令行参数时前者的处理函数被调用，有命令行参数时后者的处理函数被调用。"
+  },
+  {
+   "id": "fb6113831966abd3",
+   "shas": [
+    "fb6113831966abd3"
+   ],
+   "zh": "Gio::Application参考"
+  },
+  {
+   "id": "53ffb85c1c34017c",
+   "shas": [
+    "53ffb85c1c34017c"
+   ],
+   "zh": "Gtk::Application参考"
+  },
+  {
+   "id": "bd68236a0eb3f679",
+   "shas": [
+    "bd68236a0eb3f679"
+   ],
+   "zh": "作为gtkmm应用程序支持的另一个重要的类是Gtk::ApplicationWindow。通常我们也会将其子类化。此时我们的子类还没有做任何事，所以我们只会得到一个空白的窗口。"
+  },
+  {
+   "id": "6420b329491858fe",
+   "shas": [
+    "6420b329491858fe"
+   ],
+   "zh": "作为应用程序初始设置的一部分，我们还为其创建了一个图标和桌面文件。请注意在使用这个桌面文件之前你还需要将文件中的@bindir@替换为应用程序二进制的实际路径。"
+  },
+  {
+   "id": "21b837200a277915",
+   "shas": [
+    "21b837200a277915"
+   ],
+   "zh": "到目前为止我们做到了："
+  },
+  {
+   "id": "89bf54770bb25d8f",
+   "shas": [
+    "89bf54770bb25d8f"
+   ],
+   "zh": "这看起来还无法让人印象深刻，但是我们的应用程序已经在会话总线上展示了自己。现在它具有单实例语义，并且接受命令行参数作为文件路径。"
+  }
+ ],
+ "sec-buildapp-populating-window": [
+  {
+   "id": "119d1c4beeae7d61",
+   "shas": [
+    "119d1c4beeae7d61"
+   ],
+   "zh": "再次步骤中，我们使用Gtk::Builder实例将Gtk::Builder UI文件和我们的应用程序窗口类相关联。"
+  },
+  {
+   "id": "1d877ea00274f8da",
+   "shas": [
+    "1d877ea00274f8da"
+   ],
+   "zh": "我们的简单UI文件为窗口设定了一个标题，并将一个Gtk::Stack文件放入了窗口中。"
+  },
+  {
+   "id": "292569bdc337d4a3",
+   "shas": [
+    "292569bdc337d4a3"
+   ],
+   "zh": "为了在我们的应用程序中使用这个文件，我们重访Gtk::ApplicationWindow子类，并在ExampleAppWindow::create()成员函数中调用Gtk::Builder::create_from_resource()和Gtk::Builder::get_widget_derived()以获取我们的Gtk::ApplicationWindow子类的实例。更多有关的get_widget_derived()的信息，请参见使用派生部件小节。"
+  },
+  {
+   "id": "f4a228f7e22d056f",
+   "shas": [
+    "f4a228f7e22d056f"
+   ],
+   "zh": "我们的应用程序现在看起来像这样："
+  }
+ ],
+ "sec-buildapp-opening-files": [
+  {
+   "id": "885048ac3d41a8d8",
+   "shas": [
+    "885048ac3d41a8d8"
+   ],
+   "zh": "在这一步中，我们使我们的应用程序显示由命令行参数给定的文件的所有内容。"
+  },
+  {
+   "id": "3129d0535ce63a90",
+   "shas": [
+    "3129d0535ce63a90"
+   ],
+   "zh": "为此，我们向我们的应用程序窗口中添加一个数据成员，此保持一个指向Gtk::Stack的指针。我们通过在应用程序窗口的构造函数中调用Gtk::Builder::get_widget()获得指向该子部件的指针。"
+  },
+  {
+   "id": "402ed7369f1904a2",
+   "shas": [
+    "402ed7369f1904a2"
+   ],
+   "zh": "现在我们重访对每个命令行参数都会调用的ExampleAppWindow::open_file_view()成员函数，并构造一个Gtk::TextView然后将其作为页面添加到Gtk::Stack中。"
+  },
+  {
+   "id": "bdc79451bd58579e",
+   "shas": [
+    "bdc79451bd58579e"
+   ],
+   "zh": "最后，我们将Gtk::StackSwitcher添加到UI文件的标题栏区域，并告诉它如何显示Gtk::Stack的相关信息。"
+  },
+  {
+   "id": "2e3552d86d65b0c8",
+   "shas": [
+    "2e3552d86d65b0c8"
+   ],
+   "zh": "堆切换器(StackSwitcher)从其所属的堆(Stack)中获取其所需的关于显示选项卡的相关信息。在这，作为Gtk::Stack::add()方法的最后一个参数，我们为每个显示的文件传递一个标签。"
+  },
+  {
+   "id": "f7f4bd99df6f7fb9",
+   "shas": [
+    "f7f4bd99df6f7fb9"
+   ],
+   "zh": "我们的应用程序开始成形："
+  }
+ ],
+ "sec-buildapp-menu": [
+  {
+   "id": "54d78d574a64b1ef",
+   "shas": [
+    "54d78d574a64b1ef"
+   ],
+   "zh": "菜单显示在标题栏的右侧。它旨在放置所有应用程序不常用的动作。"
+  },
+  {
+   "id": "75eacf0210aca178",
+   "shas": [
+    "75eacf0210aca178"
+   ],
+   "zh": "就像应用程序窗口一样，我们在UI文件中指定一个菜单，并将其作为资源添加到二进制中。"
+  },
+  {
+   "id": "663085a31c2f7308",
+   "shas": [
+    "663085a31c2f7308"
+   ],
+   "zh": "为了使菜单出现，我们必须加载UI文件，并将生成的菜单模型与添加到标题栏右侧的菜单按钮相关联。由于菜单通过激活Gio::Action工作，我们还需要向应用程序中添加一组合适的动作。"
+  },
+  {
+   "id": "fa21af974d15f0fa",
+   "shas": [
+    "fa21af974d15f0fa"
+   ],
+   "zh": "最好在on_startup()的默认信号处理函数中完成添加动作，并确保每个应用程序实例都只调用一次。"
+  },
+  {
+   "id": "84b3ce5b17f67c2f",
+   "shas": [
+    "84b3ce5b17f67c2f"
+   ],
+   "zh": "现在我们的首选项菜单还什么都不做，但是退出菜单项是有效的。也可以用常用的Ctrl-Q快捷键激活它。快捷键通过Gtk::Application::set_accel_for_action()添加。"
+  },
+  {
+   "id": "9d180f9712b455d3",
+   "shas": [
+    "9d180f9712b455d3"
+   ],
+   "zh": "菜单如下所示"
+  }
+ ],
+ "sec-buildapp-pref-dialog": [
+  {
+   "id": "ca5f097d0a5bd832",
+   "shas": [
+    "ca5f097d0a5bd832"
+   ],
+   "zh": "经典的应用程序会有一些首选项，它们应该被记住而不需要在下次运行时在进行设置。即使对于我们这个简单的应用程序示例，我们可能也想改变用于文本内容的字体。"
+  },
+  {
+   "id": "7a3bdadde18755f7",
+   "shas": [
+    "7a3bdadde18755f7"
+   ],
+   "zh": "我们将使用Gio::Settings来储存我们的首选项。Gio::Settings需要一个用于描述我们的设置的模式，在本例中为org.gtkmm.exampleapp.gschema.xml文件。"
+  },
+  {
+   "id": "8e8b2586ce4c1e29",
+   "shas": [
+    "8e8b2586ce4c1e29"
+   ],
+   "zh": "在我们应用程序使用模式之前，我们需要将其编译为Gio::Settings能期望的二进制格式。GUI为此提供了基于autotools项目的宏来执行此操作。具体信息请参阅GSettings。而Meson在GNOME模块中提供了compile_schemas()执行此操作。"
+  },
+  {
+   "id": "5b3cdfbe8bdb3fe4",
+   "shas": [
+    "5b3cdfbe8bdb3fe4"
+   ],
+   "zh": "接下来，我们需要将设置连接到应该被控制的部件上。一种很方便的方法是使用Gio::Settings::bind()将对象的属性和设置键相互绑定，就像我们在ExampleAppWindow的构造函数中做的过渡设置一样。"
+  },
+  {
+   "id": "cde82f3f0ef811cf",
+   "shas": [
+    "cde82f3f0ef811cf"
+   ],
+   "zh": "字体设置的连接要麻烦的多，因为我们需要先创建对应的对象属性的Gtk::TextTag。以下代码在ExampleAppWindow::open_file_view()函数中。"
+  },
+  {
+   "id": "056a7615e75105bf",
+   "shas": [
+    "056a7615e75105bf"
+   ],
+   "zh": "此时，如果你更改其中一项设置（例如：使用gsettings命令行工具。），则应用程序会做出反应。当然，我们会希望应用程序为这些首选项提供一个对话框。所以我们现在就如此做。我们的首选项对话框将是Gtk::Dialog的子类，并且使用我们之前已经在ExampleAppWindow中看到的技术：Gtk::Builder UI文件和设置绑定。"
+  },
+  {
+   "id": "da9c0f2683f65270",
+   "shas": [
+    "da9c0f2683f65270"
+   ],
+   "zh": "我们创建prefs.ui文件和ExampleAppPrefs子类之后，我们重访ExampleApplication::on_action_preferences()成员函数，并使其打开一个新的首选项对话框。"
+  },
+  {
+   "id": "1d1cc31718b309f3",
+   "shas": [
+    "1d1cc31718b309f3"
+   ],
+   "zh": "完成所有工作后，我们的应用程序现在可以显示如下所示的首选项对话框："
+  }
+ ],
+ "sec-buildapp-search-bar": [
+  {
+   "id": "757a8ebf125ec598",
+   "shas": [
+    "757a8ebf125ec598"
+   ],
+   "zh": "我们将继续充实我们的应用程序的功能。现在，我们向其中添加搜索功能。gtkmm通过Gtk::SearchEntry和Gtk::SearchBar对此提供了支持。搜索栏是一个部件，可以从从顶部滑入以显示搜索条目。"
+  },
+  {
+   "id": "addfc902167ed3e1",
+   "shas": [
+    "addfc902167ed3e1"
+   ],
+   "zh": "我们向标题栏添加了一个开关按钮，可以用于滑出位于标题栏下方的搜索栏。新的部件将添加到window.ui文件中。"
+  },
+  {
+   "id": "a073e6c3682a882f",
+   "shas": [
+    "a073e6c3682a882f"
+   ],
+   "zh": "实现搜索需要进行大量的代码更改，在此我们不对其进行详细的介绍。实现搜索的核心部分是一个信号处理函数，它监听搜索条目的变更，此处显示的示例没有进行错误处理。"
+  },
+  {
+   "id": "6cb1060c623d4c3e",
+   "shas": [
+    "6cb1060c623d4c3e"
+   ],
+   "zh": "有了搜索栏后，我们的应用程序看起来像这样："
+  }
+ ],
+ "sec-buildapp-side-bar": [
+  {
+   "id": "96ca8e60ed052916",
+   "shas": [
+    "96ca8e60ed052916"
+   ],
+   "zh": "作为另一项功能，我们向应用程序中添加了侧边栏，用于演示Gtk::Revealer和Gtk::ListBox。新的部件将被添加到window.ui文件中。"
+  },
+  {
+   "id": "0f232012ff17b9e6",
+   "shas": [
+    "0f232012ff17b9e6"
+   ],
+   "zh": "在每个文件中用找到的单词生成按钮填充侧边栏的代码很复杂，这里我们不进行介绍。我们将对为菜单中添加新功能的多选按钮的代码进行介绍。菜单项将被添加到gears_menu.ui UI文件中。"
+  },
+  {
+   "id": "5c2e5edf19c918b8",
+   "shas": [
+    "5c2e5edf19c918b8"
+   ],
+   "zh": "我们使用Gio::Action与给定的Gio::Settings键相关联，以使菜单项与新的show-words设置向连接。在ExampleAppWindow构造函数中："
+  },
+  {
+   "id": "fccb7d23b9f5553d",
+   "shas": [
+    "fccb7d23b9f5553d"
+   ],
+   "zh": "现在我们的应用程序看起来像这样："
+  }
+ ],
+ "sec-buildapp-properties": [
+  {
+   "id": "abd1425541071a63",
+   "shas": [
+    "abd1425541071a63"
+   ],
+   "zh": "部件和其他对象有很多有用的属性。在这里，我们通过一些新颖的使用方法展示了使用它们的方法。例如，将它们包装在Gio::PropertyAction动作中或将它们与Glib::Binding绑定。"
+  },
+  {
+   "id": "ad544ee1e8f9dd92",
+   "shas": [
+    "ad544ee1e8f9dd92"
+   ],
+   "zh": "我们在window.ui文件中的标题栏中添加了两个标签，分别命名为lines_label和lines，并在应用程序窗口的构造函数中获取指向它们的指针。接着我们向齿轮菜单中添加了一个新的\"Lines\"菜单项，该菜单项会触发show-lines动作。"
+  },
+  {
+   "id": "53f7a4eae79e74cb",
+   "shas": [
+    "53f7a4eae79e74cb"
+   ],
+   "zh": "为了使此菜单项能执行某些操作，我们为lines标签的visible属性创建了一个属性动作，并将其添加到窗口动作中。这样做的效果是，每当动作被激活，标签的可见性就会改变。由于我们希望两个标签的可见性一致，因此我们将lines_label部件的visible属性绑定到lines部件的相同属性上。在ExampleAppWindow的构造函数中："
+  },
+  {
+   "id": "91a92d980149a159",
+   "shas": [
+    "91a92d980149a159"
+   ],
+   "zh": "我们还需要一个函数对当前标签页的行进行计数，并更新lines标签。如果你对此感兴趣请阅读完整源代码。"
+  },
+  {
+   "id": "c24e65f6bf3b1931",
+   "shas": [
+    "c24e65f6bf3b1931"
+   ],
+   "zh": "现在我们的示例应用程序看起来如下："
+  }
+ ],
+ "sec-buildapp-header-bar": [
+  {
+   "id": "9a3cb0729ee80da7",
+   "shas": [
+    "9a3cb0729ee80da7"
+   ],
+   "zh": "我们的应用程序使用了Gtk::HeaderBar而不是普通的窗口标题栏。标题栏是窗口的直接子项，其类型为titlebar。这些由window.ui文件进行设置。"
+  },
+  {
+   "id": "7ab524c06aee6218",
+   "shas": [
+    "7ab524c06aee6218"
+   ],
+   "zh": "在这里我们对标题栏进行了两个小的更改。decoration-layout属性在window.ui文件中设置，使标题栏只显示关闭按钮，并隐藏最小化和最大化按钮。我们还在资源文件中包含了一个图标，并将其设置为窗口图标。在ExampleAppWindow的构造函数中："
+  },
+  {
+   "id": "d9e1f7748b8fda65",
+   "shas": [
+    "d9e1f7748b8fda65"
+   ],
+   "zh": "现在应用程序看起来如下所示："
+  },
+  {
+   "id": "f2e7f3cfdc1fa57b",
+   "shas": [
+    "f2e7f3cfdc1fa57b"
+   ],
+   "zh": "window.ui文件设置了标题栏标题，但是此标题未显示。这是因为堆切换器是title的子类型。此时堆切换器成为了自定义标题并将正常的标题标签隐藏。"
+  }
+ ]
+}

@@ -1,0 +1,169 @@
+{
+ "sec-textview-buffer": [
+  {
+   "id": "e98bdbbf712cf489",
+   "shas": [
+    "e98bdbbf712cf489"
+   ],
+   "zh": "TextView部件可以用于显示和编辑大量的格式化文本。与TreeView一样，它具有模型/视图设计。TextBuffer是它预期的模型。"
+  },
+  {
+   "id": "aff7eff2cc695cf1",
+   "shas": [
+    "aff7eff2cc695cf1"
+   ],
+   "zh": "Gtk::TextBuffer是一个包含Gtk::TextView数据的模型，和Gtk::TreeView所使用的Gtk::TreeModel类似。这允许复数个Gtk::TextView共享同一个TextBuffer，并允许以不同方式显示文本缓冲区。你也可以维护多个Gtk::TextBuffer并让同一个Gtk::TextView部件于不同时候分别显示它们。"
+  },
+  {
+   "id": "4f6735e2970fe784",
+   "shas": [
+    "4f6735e2970fe784"
+   ],
+   "zh": "TextView会创建一个由它拥有的默认TextBuffer，你可以通过get_buffer()方法访问这个缓冲区。"
+  },
+  {
+   "id": "666c9158adce240f",
+   "shas": [
+    "666c9158adce240f"
+   ],
+   "zh": "Gtk::TextBuffer::iterator和Gtk::TextBuffer::const_iterator表示文本缓冲区中两个字符之间的位置。只要以影响缓冲区中字符数量的方式修改了缓冲区，所有越过修改范围的迭代器都将失效。因此，迭代器不能用于保存越过缓冲区被修改部分的位置。如果想保存位置，请使用Gtk::TextBuffer::Mark。"
+  },
+  {
+   "id": "ff4a8930637301e5",
+   "shas": [
+    "ff4a8930637301e5"
+   ],
+   "zh": "要指定缓冲区中的一些文本具有特定的格式，你需要定义一个标签来保存格式信息，并将该标签应用于文本区域。例如，定义标签及其属性："
+  },
+  {
+   "id": "4550bd89c441de5d",
+   "shas": [
+    "4550bd89c441de5d"
+   ],
+   "zh": "你可以在使用Tag的create()方法时为其指定一个名称，但这不是必须的。"
+  },
+  {
+   "id": "3d3ee25234a7b7e8",
+   "shas": [
+    "3d3ee25234a7b7e8"
+   ],
+   "zh": "Tag类还有许多其他的特性。"
+  },
+  {
+   "id": "079a1b2964e92793",
+   "shas": [
+    "079a1b2964e92793"
+   ],
+   "zh": "每个Gtk::TextBuffer使用一个Gtk::TextBuffer::TagTable，其中包含了该缓冲区的Tag。复数个TextBuffer可以共享一个TagTable。当你创建Tag的时候，你应该将其加入TagTable。例如："
+  },
+  {
+   "id": "67124e322098f2be",
+   "shas": [
+    "67124e322098f2be"
+   ],
+   "zh": "你也可以使用get_tag_table()获取并修改TextBuffer的默认TagTable，而不是显示创建一个。"
+  },
+  {
+   "id": "99b50726009f26c7",
+   "shas": [
+    "99b50726009f26c7"
+   ],
+   "zh": "如果你创建了一个Tag并将其加入到TagTable，则可以将其应用于TextBuffer的一部分，以便使用该格式显示某些文本。你可以通过使用Gtk::TextBuffer::iterator指示文本的开始和结束范围。例如："
+  },
+  {
+   "id": "40bf6e55ff530666",
+   "shas": [
+    "40bf6e55ff530666"
+   ],
+   "zh": "或者你可以在首次插入文本的时候指定标签："
+  },
+  {
+   "id": "e92729bff47493ef",
+   "shas": [
+    "e92729bff47493ef"
+   ],
+   "zh": "你可以多次使用apply_tag()或insert_with_tags()将不同的Tag应用于同一文本。Tag可能会为同一属性指定不同的值，但你可以使用Tag::set_priority()解决这些冲突。"
+  },
+  {
+   "id": "2f34a8d6e3b3f914",
+   "shas": [
+    "2f34a8d6e3b3f914"
+   ],
+   "zh": "当文本发生更改的时候TextBuffer迭代器通常会失效，但是你可以使用Gtk::TextBuffer::Mark记住位置，例如："
+  },
+  {
+   "id": "1491e9385df9ed26",
+   "shas": [
+    "1491e9385df9ed26"
+   ],
+   "zh": "你可以在之后使用get_iter()方法为Mark的新位置创建迭代器。"
+  },
+  {
+   "id": "92125f070efa73fe",
+   "shas": [
+    "92125f070efa73fe"
+   ],
+   "zh": "有两个内置的Mark - insert和selection_bound，你可以使用TextBuffer的get_insert()和get_selection_bound()方法访问它们。"
+  },
+  {
+   "id": "a3c0af301f4d7c68",
+   "shas": [
+    "a3c0af301f4d7c68"
+   ],
+   "zh": "如上所述，每个TextView都有一个TextBuffer，并且多个TextView可以共享同一个TextBuffer。"
+  },
+  {
+   "id": "5965ee63165da6d0",
+   "shas": [
+    "5965ee63165da6d0"
+   ],
+   "zh": "和TreeView一样，你可以将TextView放入ScrolledWindow中以允许用户使用滚动条查看并在整个文本区域中移动。"
+  },
+  {
+   "id": "840ee839be13e397",
+   "shas": [
+    "840ee839be13e397"
+   ],
+   "zh": "TextView具有多种可以让你修改特定视图中缓冲区的显示方式的方法。如果它们指定同一区域，则其中一些可能会覆写缓冲区中的Gtk::TextTag。例如：set_left_margin()、set_right_margin()、set_indent()等。"
+  },
+  {
+   "id": "7634b76a9e528527",
+   "shas": [
+    "7634b76a9e528527"
+   ],
+   "zh": "Gtk::TextView有多种scroll_to()方法。这些可以确保你能看到缓冲区中的特定部分。例如你的应用程序可能会使用Gtk::TextView::scroll_to()方法显示找到的文本。"
+  }
+ ],
+ "sec-widgets-and-childanchors": [
+  {
+   "id": "e68cd229eb621a93",
+   "shas": [
+    "e68cd229eb621a93"
+   ],
+   "zh": "你可以在文本中嵌入小部件，例如Gtk::Button。每一个这样的子部件都需要一个ChildAnchor。子锚与迭代器相关联。例如，使用Gtk::TextBuffer::create_child_anchor()于特定位置创建子锚："
+  },
+  {
+   "id": "d10024a75f3fa103",
+   "shas": [
+    "d10024a75f3fa103"
+   ],
+   "zh": "然后使用Gtk::TextView::add_child_at_anchor()将部件添加到该位置："
+  }
+ ],
+ "sec-textview-examples": [
+  {
+   "id": "ab2e49618782d321",
+   "shas": [
+    "ab2e49618782d321"
+   ],
+   "zh": null
+  },
+  {
+   "id": "43b9490d951542b6",
+   "shas": [
+    "43b9490d951542b6"
+   ],
+   "zh": null
+  }
+ ]
+}

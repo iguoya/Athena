@@ -1,0 +1,155 @@
+{
+ "sec-keyboardevents-overview": [
+  {
+   "id": "9cf5a9099416156a",
+   "shas": [
+    "9cf5a9099416156a"
+   ],
+   "zh": "X事件与其他信号在某些方面有所不同。这些差异在附录的X事件信号小节中说明。在这，我们将使用键盘事件说明如何在程序中使用X事件。"
+  },
+  {
+   "id": "c130d507b322a8f0",
+   "shas": [
+    "c130d507b322a8f0"
+   ],
+   "zh": "每当你按下或放开一个按键，就会发出一个事件。你可以连接到信号处理函数来处理此类事件。"
+  },
+  {
+   "id": "1043aa73a65e766c",
+   "shas": [
+    "1043aa73a65e766c"
+   ],
+   "zh": "事件处理函数接受的参数取决于事件的类型。对于键盘事件，它接受一个GdkEventKey*参数。如附录中所述，事件处理函数返回一个bool值，以表示信号已经被完全处理（返回true）或允许事件传播（false）。"
+  },
+  {
+   "id": "852883a0183bc4aa",
+   "shas": [
+    "852883a0183bc4aa"
+   ],
+   "zh": "要确定哪个键被按下或放开，你需要读取GdkEventKey::keyval的值并将其与头文件中的常量进行比较。GdkEventKey::state的位标志可以用作表示修饰键（shift、ctrl等）的状态。"
+  },
+  {
+   "id": "8467c290c086bf5d",
+   "shas": [
+    "8467c290c086bf5d"
+   ],
+   "zh": "这是一个简单的例子："
+  },
+  {
+   "id": "351c3a8995fa1674",
+   "shas": [
+    "351c3a8995fa1674"
+   ],
+   "zh": "在此示例中，有三个键盘快捷键：Alt+1选择第一个单选按钮、Alt+2选择第二个单选按钮、Esc隐藏（关闭）窗口。默认信号处理程序被覆盖如附录中覆盖默认信号处理程序小节所述。"
+  }
+ ],
+ "sec-keyboardevents-propagation": [
+  {
+   "id": "89060f648f95b67e",
+   "shas": [
+    "89060f648f95b67e"
+   ],
+   "zh": null
+  },
+  {
+   "id": "4e59bd6e948e39af",
+   "shas": [
+    "4e59bd6e948e39af"
+   ],
+   "zh": null
+  },
+  {
+   "id": "57b6189454342ec5",
+   "shas": [
+    "57b6189454342ec5"
+   ],
+   "zh": null
+  },
+  {
+   "id": "0626f875674a325c",
+   "shas": [
+    "0626f875674a325c"
+   ],
+   "zh": null
+  },
+  {
+   "id": "b29484f6d226180f",
+   "shas": [
+    "b29484f6d226180f"
+   ],
+   "zh": "与其他事件相反，键盘事件首先被发送到顶级窗口（Gtk::Window），在此检查任何可能被设置的键盘快捷键（用于从键盘选择菜单项的快捷键、助记符）。然后（假设事件没有被处理）将其发送到焦点部件，然后从此部件开始传播。"
+  },
+  {
+   "id": "9e418c6f313dffe2",
+   "shas": [
+    "9e418c6f313dffe2"
+   ],
+   "zh": "请注意，取消事件之后，不再会调用其他函数（哪怕它来自同一个部件）。"
+  },
+  {
+   "id": "281db7510d9ab9ad",
+   "shas": [
+    "281db7510d9ab9ad"
+   ],
+   "zh": "在此示例中，Gtk::Window在默认事件处理程序之后调用了三个事件处理程序，一个在Gtk::Entry中、一个在Gtk::Grid中、一个在Gtk::Window中。"
+  },
+  {
+   "id": "acc0660efa9f1b19",
+   "shas": [
+    "acc0660efa9f1b19"
+   ],
+   "zh": "本示例的目的是显示事件发出时进行的步骤。"
+  },
+  {
+   "id": "16e870fbd04fde97",
+   "shas": [
+    "16e870fbd04fde97"
+   ],
+   "zh": "当你在条目中写入的时候，将发出一个按键放开事件，该事件将先进入顶层窗口（Gtk::Window），因为我们之前设置了一个事件处理程序，所以windowKeyReleaseBefore()将先被调用。然后调用已被覆盖的默认信号处理程序，然后将事件传播到具有焦点的部件，也就是示例中的Entry，根据事件处理程序的返回值，该事件可以被传播到Grid和Window。如果该事件被传播，你写入的文本将出现在Entry上方的Label中。"
+  }
+ ],
+ "sec-keyboardevents-mouse": [
+  {
+   "id": "74ceafcc9ae4db30",
+   "shas": [
+    "74ceafcc9ae4db30"
+   ],
+   "zh": "Gtk::FontButton实现了Gtk::FontChooser接口。"
+  },
+  {
+   "id": "5a2a385e017bc0ab",
+   "shas": [
+    "5a2a385e017bc0ab"
+   ],
+   "zh": "Gtk::EventControllerKey, Gtk::EventControllerMotion, Gtk::EventControllerScroll和Gtk::GestureStylus"
+  },
+  {
+   "id": "5885fd59a372e1c0",
+   "shas": [
+    "5885fd59a372e1c0"
+   ],
+   "zh": null
+  },
+  {
+   "id": "237b98fddc4bd079",
+   "shas": [
+    "237b98fddc4bd079"
+   ],
+   "zh": null
+  },
+  {
+   "id": "7ec8596e97d50001",
+   "shas": [
+    "7ec8596e97d50001"
+   ],
+   "zh": null
+  },
+  {
+   "id": "bc1f1d2842a07821",
+   "shas": [
+    "bc1f1d2842a07821"
+   ],
+   "zh": null
+  }
+ ]
+}

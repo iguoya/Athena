@@ -1,0 +1,137 @@
+{
+ "changes-gtkmm3": [
+  {
+   "id": "df2d6748a0dd9fa7",
+   "shas": [
+    "df2d6748a0dd9fa7"
+   ],
+   "zh": "gtkmm-3.0是gtkmm API的旧版本它依旧能与gtkmm-2.4和新的gtkmm-4.0 API并行安装。gtkmm-2.4 API的最新版本是gtkmm 2.24。gtkmm3于gtkmm2之间并没有重大的改变，但确实存在一些微小的变动，这些变动导致无法做到令他们保持二进制兼容。如果你从未用过gtkmm-2.4 API 则你可以放心的忽略本章。"
+  },
+  {
+   "id": "7bb1573232d93bf8",
+   "shas": [
+    "7bb1573232d93bf8"
+   ],
+   "zh": "gtkmm3库调用libgtkmm-3.0而不是libgtkmm-2.4 并将其的头文件安装于类似的目录下，所以你的pkg-config应该检索gtkmm-3.0而不是gtkmm-2.4。"
+  },
+  {
+   "id": "90c15ea8a4ea2640",
+   "shas": [
+    "90c15ea8a4ea2640"
+   ],
+   "zh": "gtkmm3添加了一些新的类："
+  },
+  {
+   "id": "61a69afa11c43d29",
+   "shas": [
+    "61a69afa11c43d29"
+   ],
+   "zh": "Gtk::AppChooser，Gtk::AppChooserButton,Gtk::AppChooserDialog允许用户选择已安装的应用程序用以打开特定类型的内容。"
+  },
+  {
+   "id": "003b631978b2f595",
+   "shas": [
+    "003b631978b2f595"
+   ],
+   "zh": "Gtk::Grid是一个新的容器部件他将在未来完全替换Gtk::Box和Gtk::Table。它根据它的子项的属性而不是自身的布局属性对子项进行排列。"
+  },
+  {
+   "id": "f2fce197ee7cc7b9",
+   "shas": [
+    "f2fce197ee7cc7b9"
+   ],
+   "zh": "与Gtk::CheckButton相比Gtk::Switch更明确的显示开/关状态。例如，在允许用户激活硬件的时候，他可能很有用。"
+  },
+  {
+   "id": "d9fb795dc65ac34e",
+   "shas": [
+    "d9fb795dc65ac34e"
+   ],
+   "zh": "gtkmm3还对API进行了一些小的变更，在移植gtkmm-2.4的代码的时候你可能会遇到这些变更。这是一个简短的清单："
+  },
+  {
+   "id": "912c33903ead55bd",
+   "shas": [
+    "912c33903ead55bd"
+   ],
+   "zh": "Gtk::IconView， Gtk::TreeView::Column和Gtk::ComboBox使用Gtk::CellLayout，现在有Gtk::CellArea可以用于指示CellRenderer的排列与对齐方式的详情。"
+  },
+  {
+   "id": "7ce9f6ac588db5d6",
+   "shas": [
+    "7ce9f6ac588db5d6"
+   ],
+   "zh": "Gtk::ComboBox现在从CellLayout派生，从而使更容易对Gtk::CellRenderer进行布局与对齐。"
+  },
+  {
+   "id": "96636261eac67add",
+   "shas": [
+    "96636261eac67add"
+   ],
+   "zh": "Gtk::Adjustment和Gtk::IconSet类和Gdk::Cursor类现在通过Glib::RefPtr使用。"
+  },
+  {
+   "id": "79f56ae31d5a81de",
+   "shas": [
+    "79f56ae31d5a81de"
+   ],
+   "zh": "Gtk::Box, Gtk::ButtonBox,Gtk::IconView, Gtk::Paned, Gtk::ProgressBar, Gtk::ScaleButton, Gtk::Scrollbar和Gtk::Separator现在从Gtk::Orientable派生，允许在不使用派生类(例如Gtk::HBox)的情况指定其方向(垂直或者水平)。"
+  },
+  {
+   "id": "e5d522d52bffcb30",
+   "shas": [
+    "e5d522d52bffcb30"
+   ],
+   "zh": "Gtk::IconView, Gtk::TextView, Gtk::TreeView和其他部件派生自Scrollable而不使用他们自己的方法，例如get_vadjustment()拥有自己的set_scroll_adjustments信号。"
+  },
+  {
+   "id": "a5fe11150c0ddc40",
+   "shas": [
+    "a5fe11150c0ddc40"
+   ],
+   "zh": "Gtk::Style和Gtk::Rc已被删除，由Gtk::StyleContext和Gtk::StyleProvider替换，例如Gtk::CssProvider。"
+  },
+  {
+   "id": "37fc3d7541859148",
+   "shas": [
+    "37fc3d7541859148"
+   ],
+   "zh": "Widget::on_expose_event()被Widget::on_draw()取代，通过提供的Cairo::Context使用cairomm进行绘制，并且不需要你自己调用Cairo::Context::clip()。"
+  },
+  {
+   "id": "84fa6351013623ea",
+   "shas": [
+    "84fa6351013623ea"
+   ],
+   "zh": "Color被Gdk::RGBA替代，添加alpha分量以支持透明度。Colormap与其笨拙的颜色分配方式一并被删除。"
+  },
+  {
+   "id": "4d523d66021e1dec",
+   "shas": [
+    "4d523d66021e1dec"
+   ],
+   "zh": "Gdk::Pixmap和Gdk::Bitmap现在被Gdk::Pixbuf所取代。"
+  },
+  {
+   "id": "c8ed0f87531be5ea",
+   "shas": [
+    "c8ed0f87531be5ea"
+   ],
+   "zh": "Gdk::Drawable被删除，与其有关的方法被移动到了Gdk::Window。"
+  },
+  {
+   "id": "fefd4be0e5010a47",
+   "shas": [
+    "fefd4be0e5010a47"
+   ],
+   "zh": "在gtkmm 3.0中我们删除了所有弃用的API，尽管在gtkmm 3.x版本中出现了新的被弃用的API。"
+  },
+  {
+   "id": "499562c945642376",
+   "shas": [
+    "499562c945642376"
+   ],
+   "zh": "将源代码迁移到gtkmm-3.0的第一步，你应该通过定义GTKMM_DISABLE_DEPRECATED宏以检查你是否使用了在gtkmm-2.4中被弃用的API,然后删除他们。有一些autotools宏可以在编译时帮助你通过构建。访问gtkmm3移植Wiki了解更多详情。"
+  }
+ ]
+}

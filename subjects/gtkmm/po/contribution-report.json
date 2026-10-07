@@ -1,155 +1,1893 @@
 {
- "generated_at": "2026-10-07 00:41+0000",
+ "generated_at": "2026-10-07 21:18+0000",
  "counts": {
-  "filled_empty": 29,
-  "fuzzy_fixed": 0,
-  "differs_for_manual_review": 0
+  "filled_empty": 31,
+  "fuzzy_fixed": 270,
+  "differs_for_manual_review": 42
  },
  "entries": [
   {
+   "msgid": "This book explains key concepts of the <application>gtkmm</application> <phrase ",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "本书说明了使用<application>gtkmm</application> C++ API 创建用户界面的重要概念，并且介绍了主要的用户界面元素(“widget”)。虽然提到了类、构造函数和方法，但是并不会深入其细节。因此，如果需要完整的 API 信息，您应当顺着链接访问参考文档。",
+   "our_zh": "本书讲解使用 gtkmm C++ API 创建用户界面的关键概念，并介绍主要的用户界面元素（「控件」，widget）。书中会提到类、构造函数和方法，但不做深入细节展开；完整的 API 信息请顺着链接查阅参考文档。"
+  },
+  {
+   "msgid": "<application>gtkmm</application> allows you to write code using normal <phrase r",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "<application>gtkmm</application> 允许你使用常用的 C++ 技术来撰写代码，比如封装、继承和多态。作为一个 C++ 程序员，你可能已经意识到这会让代码更加清晰、更加良好的管理代码。",
+   "our_zh": "gtkmm 让你用普通的 C++ 技术写代码——封装、派生、多态。作为 C++ 程序员你大概已经明白，这会让代码更清晰、组织得更好。"
+  },
+  {
+   "msgid": "<application>gtkmm</application> developers tend to prefer <application>gtkmm</a",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "<application>gtkmm</application> 开发人员更倾向于使用 <application>gtkmm</application> 而不是 Qt，因为 <application>gtkmm</application> 的使用更加符合 C++ 的方式。Qt 是诞生自 C++ 及其库尚未标准化或尚未被大多数编译器所支持的年代。它重复了大量的现存于标准库中的东西，比如容器、类型信息等等。最重要的是，Trolltech 修改了 C++ 语言以提供信号的功能，这样 Qt 的类无法很容易的与非 Qt 类共同使用。<application>gtkmm</application> 则可以使用标准 C++ 提供信号功能，而无需修改 C++ 语言。请看<ulink url=\\\"https://wiki.gnome.org/Projects/gtkmm/FAQ\\\">常见问题</ulink>以了解具体差异。",
+   "our_zh": "gtkmm 的开发者们更偏爱 gtkmm，因为它做事的方式更「C++」。Qt 诞生于 C++ 和标准库尚未标准化、编译器支持也不完善的年代，于是重复造了大量如今标准库里已有的东西，比如容器和类型信息。最关键的是，Trolltech 修改了 C++ 语言本身来提供信号机制，导致 Qt 类很难与非 Qt 类混用；gtkmm 则用标准 C++（libsigc++）实现了信号，无需改动语言。更详细的差异见 FAQ。"
+  },
+  {
    "msgid": "Useful links:",
    "action": "filled",
+   "source": "snapshot",
    "zh": "有用的链接："
   },
   {
    "msgid": "<link xlink:href=\\\"https://en.wikipedia.org/wiki/C%2B%2B\\\">Wikipedia C++</link>:",
    "action": "filled",
+   "source": "snapshot",
    "zh": "Wikipedia C++：C++ 入门与大量链接。"
   },
   {
    "msgid": "<link xlink:href=\\\"https://en.cppreference.com/w/\\\">C++ reference</link>: A conv",
    "action": "filled",
+   "source": "snapshot",
    "zh": "C++ reference：C 与 C++ 标准的便捷查阅版。"
   },
   {
    "msgid": "<link xlink:href=\\\"https://cplusplus.com/\\\">The C++ Resources Network</link>",
    "action": "filled",
+   "source": "snapshot",
    "zh": "The C++ Resources Network（cplusplus.com）。"
   },
   {
    "msgid": "<link xlink:href=\\\"https://www.stroustrup.com/\\\">Bjarne Stroustrup's homepage</l",
    "action": "filled",
+   "source": "snapshot",
    "zh": "Bjarne Stroustrup 的个人主页。"
+  },
+  {
+   "msgid": "The names of the <application>gtkmm</application> packages vary from distributio",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "<application>gtkmm</application> 软件包的名字可能在不同的发行版中所不同 (例如，在 Debian 和 Ubuntu 上的名字是<application>libgtkmm-4.0-dev</application>，而在 Red Hat Fedora 上则是 <application>gtkmm40-devel</application>)，因此，在你的发行版的软件包管理程序中查一下正确的名字，然后像其它软件包一样的安装它。",
+   "our_zh": "gtkmm 包的名字因发行版而异（比如 Debian 和 Ubuntu 上是 libgtkmm-4.0-dev，Red Hat 和 Fedora 上是 gtkmm4.0-devel），请用发行版的包管理器查一下正确的包名，然后像安装其他包一样安装即可。"
+  },
+  {
+   "msgid": "GTK and <application>gtkmm</application> were designed to work well with Microso",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "\"虽然上面给出了简单示例的编译命令，但实际开发应该使用 Meson 构建系统。本书的示例都收录在 gtkmm-documentation 包里，并带有相应的构建文件，所以之后不再罗列构建命令。gtkmm-documentation 的 README 文件描述了如何构建这些示例。\"GTK和<application>gtkmm</application>被设计成在Microsoft Windows上也能很好地工作，而且开发者们鼓励在win32平台上使用它们。但是目前还有没为Windows平台的开发库提供标准的安装方法。请参阅 <ulink url=\\\"https://wiki.gnome.org/Projects/gtkmm/MSWindows\\\">Windows Intallation</ulink>或者<link linkend=\\\"sec-windows-installation\\\"><application>gtkmm</application>和Win32</link>以得到关于Windows相关的安装方法和注意事项。",
+   "our_zh": "GTK 和 gtkmm 的设计就考虑了与 Microsoft Windows 良好协作，开发者们也鼓励在 win32 平台上使用。不过 Windows 没有标准的开发库安装体系。Windows 专属的安装说明与注意事项，请看 Windows Installation 页面（已有些过时）或附录「gtkmm and Win32」。"
+  },
+  {
+   "msgid": "Your existing knowledge of <phrase role=\\\"nowrap\\\">C++</phrase> will help you wi",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "\"如果你想先做一个自用的小应用练手，直接参考「Building applications」一章里的 meson.build 文件来起步会更容易。\"你现有的 C++ 知识将会帮助你使用 <application>gtkmm</application>，因为它可以和任何库一同工作。除非我们额外声明，你可以期待 <application>gtkmm</application> 类会像任何其它 C++ 类一样，并且你可以期待在 <application>gtkmm</application> 类上使用你现有的知识。",
+   "our_zh": "你现有的 C++ 知识将会帮助你使用 gtkmm，因为它可以和任何库一同工作。除非我们额外声明，你可以期待 gtkmm 类会像任何其它 C++ 类一样，并且你可以期待在 gtkmm 类上使用你现有的知识。"
+  },
+  {
+   "msgid": "After putting the source code in <filename>base.cc</filename> you can compile th",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "将源代码放入<literal>simple.cc</literal>后你可以使用以下<application>gcc</application>命令编译上述程序：",
+   "our_zh": "把源码存为 base.cc 之后，可以用 gcc 这样编译："
+  },
+  {
+   "msgid": "Note that you must surround the <application>pkg-config</application> invocation",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "注意，你必须将 <literal>pkg-config</literal> 的调用包含在一对反单引号中。反单引号会导致其内的命令由 shell 执行，并且将命令的输出做为该命令行的一部分来使用。另外请注意，在命令行中<literal>simple.cc</literal>必须位于<literal>pkg-config</literal>调用之前。<literal>-std=c++17</literal>只在你的编译器默认不启用C++17标准的时候才需要。",
+   "our_zh": "注意：pkg-config 的调用必须用反引号包起来——反引号让 shell 先执行其中的命令，并把命令的输出拼进命令行。还要注意 base.cc 必须写在 pkg-config 调用之前。只有当编译器默认不遵循 C++17 时才需要 -std=c++17。"
+  },
+  {
+   "msgid": "Although we have shown the compilation command for the simple example, you reall",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "虽然我们已经给出了这个简单的例子的编译命令，但是你最好还是使用 automake 和 autoconf 工具，就像 G. V. Vaughan 等在《Autoconf, Automake, Libtool》中所描述的那样。本书中用到的例子都包含在 <application>gtkmm-documentation</application> 包内，同时附有适当的编译构建的文件，所以我们以后不会再给出任何编译命令。你只需要找到恰当的目录然后键入 <literal>make</literal>。",
+   "our_zh": "虽然上面给出了简单示例的编译命令，但实际开发应该使用 Meson 构建系统。本书的示例都收录在 gtkmm-documentation 包里，并带有相应的构建文件，所以之后不再罗列构建命令。gtkmm-documentation 的 README 文件描述了如何构建这些示例。"
   },
   {
    "msgid": "However, this is even simpler when using the <function>dependency()</function> f",
    "action": "filled",
+   "source": "snapshot",
    "zh": "而用 Meson 时，在 meson.build 文件里调用 dependency() 函数还要更简单。例如："
   },
   {
    "msgid": "This checks for the presence of gtkmm and defines <literal>gtkmm_dep</literal> f",
    "action": "filled",
+   "source": "snapshot",
    "zh": "这一句会检查 gtkmm 是否可用，并定义出 gtkmm_dep 供 meson.build 使用。例如："
+  },
+  {
+   "msgid": "If you start by experimenting with a small application that you plan to use just",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "如果你打算自己从小型应用程序开始试验，那么使用<link linkend=\\\"chapter-building-applications\\\">构建应用程序</link>章节的<filename>Makefile.example</filename>文件从MakeFile开始比较容易。",
+   "our_zh": "如果你想先做一个自用的小应用练手，直接参考「Building applications」一章里的 meson.build 文件来起步会更容易。"
+  },
+  {
+   "msgid": "If you use the older Autotools build system, see also the GNU site. It has more ",
+   "action": "filled",
+   "source": "snapshot",
+   "zh": "如果你用的是更老的 Autotools 构建系统，另请参阅 GNU 网站，那里有关于 autoconf 和 automake 的更多信息。也有几本书专门讲 Autotools：Gary Vaughan 等人的《GNU Autoconf, Automake, and Libtool》，以及 John Calcote 的《Autotools, A Practitioner's Guide to GNU Autoconf, Automake, and Libtool》。"
+  },
+  {
+   "msgid": "<application>gtkmm</application> applications consist of windows containing widg",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "<application>gtkmm</application> 应用程序由一系列包含了如按钮、文本框之类部件的窗口构成。在一些其它的系统上，部件可能被称为“控件”。对于你的应用程序窗口中的每个部件，在你的代码里就会有一个对应的 C++ 对象。所以当你想控制部件行为的时候，只需要调用这个部件对象的相应方法即可。",
+   "our_zh": "gtkmm 应用由窗口组成，窗口里放着控件（widget），比如按钮和文本框。在某些别的系统里，控件被叫作「control」。应用窗口里的每个控件，都对应应用代码里的一个 C++ 对象——想改变屏幕上看到的控件，只需调用该控件类的方法。"
+  },
+  {
+   "msgid": "Widgets are arranged inside container widgets such as frames and notebooks, in a",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "部件被安置在褚如 frame、notebook 这样的容器部件中，以一种部件包含部件的层次结构的形式。其中一些容器部件，像 <classname>Gtk::Grid</classname> 这样的容器部件是不可见的，它们只是被用来安置其它部件的。这里有一些示例代码，将两个 <classname>Gtk::Button</classname> 部件放到一个 <classname>Box</classname> 容器部件中：<_:programlisting-1/> 接下来是如何把这个包含两个按钮的 <classname>Gtk::Box</classname> 添加到一个 <classname>Gtk::Frame</classname> 中，它包含一个可视的边框和标题：<_:programlisting-2/>",
+   "our_zh": "控件放在容器控件里（比如 frame 和 notebook），形成「控件套控件」的层次结构。有些容器控件（比如 Gtk::Grid）本身不可见——它们存在的意义就是排列其他控件。下面的示例代码把 2 个 Gtk::Button 控件加进 Gtk::Box 容器控件："
+  },
+  {
+   "msgid": "and here is how to add the <classname>Gtk::Box</classname>, containing those but",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "再次步骤中，我们使用<classname>Gtk::Builder</classname>实例将<classname>Gtk::Builder</classname> UI文件和我们的应用程序窗口类相关联。",
+   "our_zh": "下面这行把装着这两个按钮的 Gtk::Box 加进 Gtk::Frame——一个带可见边框和标题的容器："
+  },
+  {
+   "msgid": "Although you can specify the layout and appearance of windows and widgets with <",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "尽管你可以使用 C++ 代码来指定窗口和部件的外观和布局，但你可能会发现使用 Glade 来设计你的界面，并且使用 <literal>Gtk::Builder</literal> 在运行时动态加载界面是更方便。请参考 <link linkend=\\\"chapter-builder\\\">Glade 与 Gtk::Builder</link> 这一章。",
+   "our_zh": "虽然可以用 C++ 代码指定窗口和控件的布局与外观，但用 .ui XML 文件设计界面、运行时经 Gtk::Builder 加载，通常更方便。参见 Gtk::Builder 一章。"
+  },
+  {
+   "msgid": "<application>gtkmm</application>, like most GUI toolkits, is <emphasis>event-dri",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "像大多数GUI工具包一样，<application>gtkmm</application> 是<emphasis>事件驱动</emphasis>的。当一个事件发生时，比如说一个鼠标按键被按下，那么所点击的部件就会<emphasis>发出</emphasis>一个合适的信号。每种部件都可以发出一套不同的信号。为了使这个按钮点击产生一个动作，我们可以设置一个<emphasis>信号处理函数(signal handler)</emphasis>来捕捉这个“clicked”信号。",
+   "our_zh": "与大多数 GUI 工具集一样，gtkmm 是事件驱动的。事件发生时——比如按下鼠标键——被按下的 Widget 会发出相应的信号。每种 Widget 能发出的信号各不相同。要让一次按钮点击触发一个动作，我们设置一个信号处理器（signal handler）来捕获按钮的「clicked」信号。"
+  },
+  {
+   "msgid": "<application>gtkmm</application> uses the libsigc++ library to implement signals",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "<application>gtkmm</application> 使用 libsigc++ 来实现信号操作。下面这个例子演示怎样把 Gtk::Button 的“clicked” 信号连接到命名为“on_button_clicked”的信号处理函数上：",
+   "our_zh": "gtkmm 用 libsigc++ 库实现信号。下面这行示例代码把 Gtk::Button 的「clicked」信号连接到名为 on_button_clicked 的信号处理器："
+  },
+  {
+   "msgid": "std::string uses 8 bits per character, but 8 bits aren't enough to encode langua",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "std::string 对每个字符使用8位编码，但是这对于像阿拉伯语、汉语和日语这样的语言来说，8位是不够的。尽管<ulink url=\\\"http://www.unicode.org/\\\">Unicode 协会</ulink>已经详细定义了这些语言的编码，但是C和C++尚未为UTF-8编码提供任何标准化的Unicode支持。GTK 和 GNOME 采用 UTF-8 编码来实现 Unicode，这就是 Glib::ustring 所包装的东西。它提供了和 std::string 几乎相同的接口，以及和 std::string 的自动类型转换的功能。",
+   "our_zh": "std::string 每个字符 8 个比特，而 8 个比特不足以编码阿拉伯文、中文、日文这些语言。这些语言的编码虽已由 Unicode 联盟制定，但 C 和 C++ 语言至今没有为 UTF-8 编码提供标准化的 Unicode 支持。GTK 和 GNOME 选择用 UTF-8 实现 Unicode，Glib::ustring 包装的正是它。它提供的接口与 std::string 几乎完全一致，并带有与 std::string 的双向自动转换。"
+  },
+  {
+   "msgid": "To obtain a <application>gtkmm</application> instance from a C <classname>GObjec",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "要从C的<classname>GObject</classname>实例获得一个<application>gtkmm</application>，请使用许多个<function>Glib::wrap()</function>函数的其中一个重载。除非你将可选的<parameter>take_copy</parameter>参数设置为<literal>true</literal>，否则C实例的引用计数将不会增加。例如：<_:programlisting-1/> 如果<_:itemizedlist-2/> <function>Glib::wrap()</function>将C和C++示例相互绑定，则应明确删除C++包装器。请不要在C示例死亡前删除C++实例。",
+   "our_zh": "反过来，要从 C GObject 实例得到 gtkmm 实例，用众多重载的 Glib::wrap() 函数之一。除非把可选的 take_copy 参数设为 true，C 实例的引用计数不会增加。例如："
+  },
+  {
+   "msgid": "This class implements the \\\"Hello World\\\" window. It's derived from <classname>G",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "这个类实现了“Hello World”窗口。它由 <classname>Gtk::Window</classname> 派生，并且只有一个 <classname>Gtk::Button</classname> 成员。我们已经使用构造函数为该窗口完成了所有的初始化工作，包括挂接消息。在这，已经去掉注释的代码：",
+   "our_zh": "这个类实现「Hello World」窗口：派生自 Gtk::Window，有一个 Gtk::Button 成员。我们选择在构造函数里完成窗口的全部初始化工作，包括设置信号。以下是省略注释后的构造函数："
+  },
+  {
+   "msgid": "Notice that we've used an initializer statement to give the <literal>m_button</l",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "注意，我们使用初始化列表的方式给 <literal>m_button</literal> 对象添加了一个“Hello World”的标签。",
+   "our_zh": "注意我们用了初始化列表，把标签「Hello World」交给 m_button 对象。"
+  },
+  {
+   "msgid": "To retrieve the state of the <classname>ToggleButton</classname>, you can use th",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "要得到 <classname>ToggleButton</classname> 的状态，你可以使用 <methodname>get_active()</methodname> 方法。如果按钮被按下了，就返回 true。当然，你也可以通过 <methodname>set_active()</methodname> 来设置开关按钮的状态。请注意，如果你这样做了，并且它的状态的确改变了，那么这将会引发“clicked”信号。当然，一般来说，这就是你希望看到的结果。",
+   "our_zh": "读取 `ToggleButton` 的状态可以用 get_active() 方法：按钮按下时返回 `true`，弹起时返回 `false`。也可以用 set_active() 设置开关按钮的状态。注意：这样做时如果状态确实发生了变化，控件会发出 toggled 信号。"
+  },
+  {
+   "msgid": "<classname>CheckButton</classname>s and <classname>ToggleButton</classname>s are",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "当<classname>CheckButton</classname>和<classname>ToggleButton</classname>创建后默认是未选中的，也就是说当你第一次创建一组单选按钮的时候，它们都会是未选中的。所以别忘了使用<methodname>set_active()</methodname>来选中一个。",
+   "our_zh": "`CheckButton` 和 `ToggleButton` 在创建之初都是「未选中」状态；因此刚建好一组按钮时，它们全都处于弹起状态。别忘了用 set_active() 打开其中一个。"
+  },
+  {
+   "msgid": "<classname>Gtk::Scale</classname> inherits from <classname>Gtk::Range</classname",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "<classname>Gtk::Scale</classname> 和 <classname>Gtk::Scrollbar</classname> 都是继承自 <classname>Gtk::Range</classname>，并且共享了很多功能。他们都有一个“滑轨(trough)”和“滑块(slider)”(在其它 GUI 环境中可能被称为“指轮(thumbwheel)”)。在滑轨内可以用鼠标拖动滑块，而在滑轨上点击的话则会让滑块向点击的位置移动，可能是移动到终点，也可能是移动一段距离，这取决于你用的是鼠标的哪个按键。这和滚动条的行为很类似。",
+   "our_zh": "`Gtk::Scale` 继承自 `Gtk::Range`；`Gtk::Scrollbar` 虽不继承自 `Gtk::Range`，但与 `Gtk::Scale` 共享大量功能——两者都把控件的「调整」委托给一个 `Adjustment`，并都会响应 `adjust_bounds`、`change_value` 与 `move_slider` 信号。"
+  },
+  {
+   "msgid": "As will be explained in the <link linkend=\\\"chapter-adjustment\\\">Adjustments</li",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "就象将在后面的<link linkend=\\\"chapter-adjustment\\\">调整</link>小节要谈到的那样，所有的 Range 部件都有一个关联的 <classname>Adjustment</classname> 对象。如果你想修改部件的最小值、最大值以及当前值，你需要调用该部件关联的 <classname>Adjustment</classname> 对象的方法，该对象可以通过调用 <methodname>get_adjustment()</methodname> 方法来得到。<classname>Range</classname> 部件默认构造函数会自动的创建一个 <classname>Adjustment</classname>，当然，你也可以指定一个现有的 <classname>Adjustment</classname>，而且还可以和其它部件共享。请参看 <link linkend=\\\"chapter-adjustment\\\">调整</link>部分以得到更详细的信息。",
+   "our_zh": "如「Adjustments」一节将要讲到的，所有范围控件都关联一个 `Adjustment` 对象。要改变范围的下限、上限和当前值，或改变步长，对该 `Adjustment` 的字段调用相应方法即可，控件自会随之更新。"
+  },
+  {
+   "msgid": "<classname>Gtk::Scale</classname> widgets (or \\\"sliders\\\") allow the user to vis",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "<classname>Gtk::Scale</classname> 部件 (或者说“滑块”) 可以让用户在指定范围内直观地调节它的值。例如，你可以用它来调节一副预览图片的放大率、或者控制颜色的亮度，或者指定多少分钟后执行屏幕保护。",
+   "our_zh": "`Gtk::Scale` 控件（也称「滑块」）让用户以可视化的方式在给定范围内选取和调整数值。比如可以用它调节图片缩放预览的放大级别，或控制亮度。"
+  },
+  {
+   "msgid": "As with <classname>Scrollbar</classname>s, the orientation can be either horizon",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "像 <classname>Scrollbar</classname> 一样，也分别有水平和垂直两种方向。默认构造函数会创建一个 <classname>Adjustment</classname>，并且所有值都设为 <literal>0.0</literal>。当然，这显然没有意义，所以你需要设置一些 <classname>Adjustment</classname> 的细节来让它获得有意义的行为。",
+   "our_zh": "与 `Scrollbar` 一样，方向可以是水平或垂直。默认构造函数创建的 `Adjustment` 所有值都是 0.0——这没什么用，你需要设置一些 Adjustment 细节才有意义。"
+  },
+  {
+   "msgid": "The label text can be justified using the <methodname>set_justify()</methodname>",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "标签文本可以使用<methodname>set_justify()</methodname>方法进行对齐。这个部件还具有自动换行功能，你可以使用<methodname>set_line_wrap()</methodname>激活它。",
+   "our_zh": "标签文字的对齐方式可用 set_justify() 设置；控件还支持自动换行（word-wrapping），用 set_wrap() 开启。"
+  },
+  {
+   "msgid": "You might want to be notified whenever the user types in a text entry widget. <c",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "当用户在条目部件上输入文本时你可能想要收到通知。为此<classname>Gtk::Entry</classname>提供了两个信号，他们分别是<literal>activate</literal>和<literal>changed</literal>。当用户在条目部件上按下<keycap>Enter</keycap>键时，部件将发出<literal>activate</literal>信号；当部件上的文本发生更改的时候，部件将会发出<literal>changed</literal>信号。你可以利用这些信号对用户的输入进行校验或者是过滤。将键盘焦点移动到其他的部件可能表示用户已经完成了文本输入。这种时候<classname>Gtk::Entry</classname>将会发出继承自<classname>Gtk::Widget</classname>的<literal>focus_out_event</literal>信号提醒你。<link linkend=\\\"sec-comboboxentry\\\">带有条目的组合框</link>小结包含了使用这些信号的示例程序。",
+   "our_zh": "你可能希望在用户于文本输入控件中键入时得到通知。`Gtk::Entry` 提供两个信号：`activate`（自 gtkmm 4.8 起）和 `changed`。用户在输入框中按下回车时发出 `activate`；控件中的文字变化时发出 `changed`。可以用它们校验或过滤用户的输入。在控件内移动光标不会发出这两个信号。"
+  },
+  {
+   "msgid": "If you pass <literal>true</literal> to the <methodname>set_activates_default()</",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "如果你将<literal>true</literal>传递给<methodname>set_activates_default()</methodname>方法，那么当你在<classname>Gtk::Entry</classname>中按下<keycap>Enter</keycap>的时候包含这个<classname>Gtk::Entry</classname>的窗口将会激活其默认部件。这在对话框中特别的有用。默认部件通常会是对话框的按钮之一，例如对话框的关闭按钮。若你想主动的将某个部件设置为默认部件，请使用<methodname>Gtk::Widget::set_can_default()</methodname>和<methodname>Gtk::Widget::grab_default()</methodname>。",
+   "our_zh": "若给 set_activates_default() 传入 `true`，在 `Gtk::Entry` 中按下回车将激活所在窗口的默认控件。这在对话框里尤其有用——默认控件通常是对话按钮之一，比如关闭对话框的那个。把某个控件设为默认控件用 Gtk::Window::set_default_widget()。"
+  },
+  {
+   "msgid": "<classname>Gtk::EntryCompletion</classname> is deprecated since <application>gtk",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "在<application>gtkmm</application> 4和<application>glibmm</application> 2.68中添加了一些新的类：",
+   "our_zh": "`Gtk::EntryCompletion` 自 gtkmm 4.10 起已弃用，gtkmm 中没有替代品。"
+  },
+  {
+   "msgid": "An <classname>Entry</classname> widget can show an icon at the start or end of t",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "<classname>Entry</classname>部件可以在文本区域的开头或结尾显示一个图标。可以使用<methodname>set_icon_from_pixbuf()</methodname>或<methodname>set_icon_from_icon_name()</methodname>之类的方法指定要显示的图标。应用程序可以通过响应<methodname>signal_icon_press</methodname>信号来处理用户按下图标事件。",
+   "our_zh": "`Entry` 控件可以在文本区开头或末尾显示一个图标。图标可用 set_icon_from_paintable()、set_icon_from_icon_name() 等方法指定。应用要响应用户点击图标，可处理 signal_icon_press 信号。"
+  },
+  {
+   "msgid": "Besides indicating the amount of progress that has occurred, the progress bar ca",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "除了用于表示已经达成的进度，进度条还可以用于表示任务处于活动状态；只需要将进度条的行为模式设置为<emphasis>activity mode</emphasis>即可。在这个模式下，进度条显示一个小矩形，该矩形可以在进度条内前后移动。活动模式在无法确定操作的进度的时候很有用（例如，接受一个长度未知的文件）。",
+   "our_zh": "除了显示进度多少，进度条还能表达「程序正在活动」：把进度条置于 *活动模式*（activity mode），它会显示一个来回移动的小矩形。当操作的进度无法表示为一段取值范围时（例如网络传输中不知道总量），活动模式就派上用场。"
   },
   {
    "msgid": "The <classname>InfoBar</classname> widget is deprecated since <application>gtkmm",
    "action": "filled",
+   "source": "snapshot",
    "zh": "`InfoBar` 控件自 gtkmm 4.10 起已弃用。示例展示的信息条由一个 `Box` 搭配 `Label` 和 `Button` 构成。"
+  },
+  {
+   "msgid": "We also discuss the <classname>Gtk::Paned</classname> widget, which allows you t",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "我们还讨论了<classname>Gtk::Paned</classname>部件，它允许你将窗口分为两个单独的\\\"窗格\\\"，这个部件实际上可以包含两个子部件，但是他只能包含固定数量的部件，因此也将其称为单项容器。",
+   "our_zh": "我们还会讲到 `Gtk::Paned` 控件，它把窗口分成两个独立的「窗格」。这个控件其实包含两个子控件，只是数目固定，所以归入单子控件容器。"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/maste",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "You've probably noticed that <application>gtkmm</application> windows seem \\\"ela",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "你可能已经注意到了<application>gtkmm</application>窗口看起来是“弹性”的 -他们通常可以以不同方式进行拉伸。这是<emphasis>部件装填(widget packing)</emphasis>系统在起作用。",
+   "our_zh": "你可能已经注意到，gtkmm 的窗口看起来是「有弹性」的——通常可以沿多种方式拉伸。这要归功于 *控件打包*（widget packing）系统。"
+  },
+  {
+   "msgid": "Changing the layout of a window \\\"on the fly\\\", to make some extra widgets appea",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "即时更改窗口布局以显示额外的部件将会很复杂，这需要对每个部件的位置进行繁琐的重新计算。",
+   "our_zh": "「动态」改变窗口布局（比如让一些额外的控件临时出现）很复杂，需要对每个控件的位置做繁琐的重新计算。"
+  },
+  {
+   "msgid": "<application>gtkmm</application> arranges widgets hierarchically, using <emphasi",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "gtkmm 用 *容器*（container）按层次组织控件：容器控件包含其他控件，而大多数 gtkmm 控件都是容器——窗口、笔记本标签页、按钮都是容器控件。容器分两类：单子控件容器与多子控件容器。gtkmm 的大多数容器是单子控件容器，包括 `Gtk::Window`。"
+  },
+  {
+   "msgid": "After building and running this program, try resizing the window to see the beha",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "构建并运行该程序后，试着调整窗口大小观察行为；再结合 Boxes 一节，试验 set_expand()、set_hexpand()、set_vexpand()、set_halign() 和 set_valign() 的效果。"
+  },
+  {
+   "msgid": "There are several options governing how widgets are to be packed, and this can b",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "控制打包的选项不少，初学时容易混淆。可以在子控件上用 set_expand()、set_hexpand()、set_vexpand()、set_halign()、set_valign() 与 set_margin() 调整打包行为。遇到困难时，不妨用 `Cambalache` 界面设计器把玩一下，看看有哪些可能。"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Box.ht",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
   },
   {
    "msgid": "Here's the constructor for the <classname>Box</classname> widget, and methods th",
    "action": "filled",
+   "source": "snapshot",
    "zh": "下面是 `Box` 控件的构造函数，以及设置各容器打包选项的方法："
+  },
+  {
+   "msgid": "Passing <literal>true</literal> to <methodname>set_homogeneous()</methodname> wi",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "给 set_homogeneous() 传 `true` 会让所有子控件尺寸相同；`spacing` 是每个控件之间保留的（最小）像素数。"
+  },
+  {
+   "msgid": "You can set the <emphasis>margin</emphasis> and <emphasis>expand</emphasis> prop",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "可以设置子 `Widget` 的 *margin* 与 *expand* 属性来控制间距，以及 Grid 被调整大小时它们的行为。"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Grid.h",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Notebo",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
   },
   {
    "msgid": "<classname>Gtk::Assistant</classname> is deprecated since <application>gtkmm</ap",
    "action": "filled",
+   "source": "snapshot",
    "zh": "`Gtk::Assistant` 自 gtkmm 4.10 起已弃用，gtkmm 中没有替代品。libadwaita（一个 C 库）提供了部分替代（如 AdwCarousel）；某些场景下 `Gtk::Notebook` 也可以作为可接受的替代。"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Assist",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/maste",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/maste",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
   },
   {
    "msgid": "Lists are intended to be used whenever developers want to display many objects i",
    "action": "filled",
+   "source": "snapshot",
    "zh": "凡是想以大致相同的方式展示大量对象时，都适合用列表——极短的列表也完全没问题。"
   },
   {
    "msgid": "Lists are meant to be used with changing data, both with the items themselves ch",
    "action": "filled",
+   "source": "snapshot",
    "zh": "列表为「会变化的数据」而生：无论是条目自身内容变化，还是列表增删条目，都能胜任；静态数据同样工作正常。"
   },
   {
    "msgid": "The <link xlink:href=\\\"https://docs.gtk.org/gtk4/section-list-widget.html\\\">List",
    "action": "filled",
+   "source": "snapshot",
    "zh": "GTK 文档的「List Widget Overview」一章包含关于列表控件的更多信息。"
+  },
+  {
+   "msgid": "Some examples are shown in this chapter. There are more examples in the <link xl",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "本章展示了若干示例；gtkmm-documentation 仓库的 listmodelviews 目录里还有更多。"
   },
   {
    "msgid": "The data model is a class that implements the <classname>Gio::ListModel</classna",
    "action": "filled",
+   "source": "snapshot",
    "zh": "数据模型是实现 `Gio::ListModel` 接口的类。这类类的例子有 `Gio::ListStore`（不要与已弃用的 `Gtk::ListStore` 混淆）、`Gtk::StringList`、`Gtk::DirectoryList` 与 `Pango::FontMap`。"
+  },
+  {
+   "msgid": "The elements in a model are called <emphasis>items</emphasis>. All items are ins",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "模型中的元素称为 *条目*（item）。所有条目都是 `Glib::Object` 某个子类的实例。比如你可以有一个 `ColumnView`，其中包含一列整数和一列文本，如下所示："
   },
   {
    "msgid": "Every item in a model has a position which is the unsigned integer that describe",
    "action": "filled",
+   "source": "snapshot",
    "zh": "模型中的每个条目都有一个位置（position）：一个无符号整数，描述条目位于模型何处。模型的第一个条目位于位置 0。当然，随着其他条目被加入或移除，条目的位置也会变化。"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/glibmm/classGio_1_1ListS",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "Gio::ListStore 参考文档"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1String",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "StringList 参考文档"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Direct",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "DirectoryList 参考文档"
+  },
+  {
+   "msgid": "The selection model is a class that implements the <classname>Gtk::SelectionMode",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "选择模型是实现 `Gtk::SelectionModel` 接口的类。可以在 `NoSelection`、`SingleSelection` 与 `MultiSelection` 之间选择。"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1NoSele",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "NoSelection 参考文档"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Single",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "SingleSelection 参考文档"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1MultiS",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "MultiSelection 参考文档"
   },
   {
    "msgid": "Data from the data model is added to the view by a factory, which is a subclass ",
    "action": "filled",
+   "source": "snapshot",
    "zh": "数据模型中的数据由工厂（factory）添加到视图。工厂是 `ListItemFactory` 的子类；gtkmm 中只有一个这样的子类——`SignalListItemFactory`。模型数据通过连接到 `SignalListItemFactory` 的信号处理函数添加进视图。"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Signal",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "SignalListItemFactory 参考文档"
+  },
+  {
+   "msgid": "The View is the widget that displays the model data and allows the user to inter",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "视图（View）是显示模型数据并允许用户与之交互的控件。视图可以显示模型的全部列，也可以只显示部分列，并能以多种方式呈现。"
   },
   {
    "msgid": "An important requirement for views (especially views of long lists) is that they",
    "action": "filled",
+   "source": "snapshot",
    "zh": "视图（尤其是长列表视图）的一个重要需求是：必须知道哪些条目当前不可见，以便回收复用。视图通过实现 `Scrollable` 接口做到这一点，并期望被直接放进 `ScrolledWindow` 中。"
   },
   {
    "msgid": "There are different view widgets to choose from.",
    "action": "filled",
+   "source": "snapshot",
    "zh": "有多种视图控件可供选择。"
+  },
+  {
+   "msgid": "The <classname>ListView</classname> shows a 1-dimensional list with one column.",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "`ListView` 显示带单列的一维列表。"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1ListVi",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "The <classname>GridView</classname> shows a 2-dimensional grid.",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "`GridView` 显示二维网格。"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1GridVi",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "The <classname>ColumnView</classname> shows a 1-dimensional list with one or mor",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "`ColumnView` 显示带一列或多列的一维列表。"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Column",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
   },
   {
    "msgid": "The list can be sorted by wrapping it in a <classname>SortListModel</classname>.",
    "action": "filled",
+   "source": "snapshot",
    "zh": "把列表包进 `SortListModel` 即可排序。有两种做法。"
   },
   {
    "msgid": "In a <classname>ColumnView</classname>, get the <classname>ColumnViewSorter</cla",
    "action": "filled",
+   "source": "snapshot",
    "zh": "在 `ColumnView` 中，从 ColumnView 取得 `ColumnViewSorter` 设给 `SortListModel`，再给每个 `ColumnViewColumn` 设置一个 `Sorter`。这样，应用的用户点击列标题即可排序条目。"
+  },
+  {
+   "msgid": "In any view, set a <classname>Sorter</classname> such as a <classname>StringSort",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "在任意视图中，给 `SortListModel` 设置一个 `Sorter`（如 `StringSorter` 或 `NumericSorter`）。"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1SortLi",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "SortListModel 参考文档"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1String",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "StringSorter 参考文档"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Numeri",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "NumericSorter 参考文档"
+  },
+  {
+   "msgid": "The list can be filtered by wrapping it in a <classname>FilterListModel</classna",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "把列表包进 `FilterListModel` 即可过滤。给 `FilterListModel` 设置一个 `Filter`（如 `StringFilter` 或 `BoolFilter`）。"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Filter",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "FilterListModel 参考文档"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1String",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "StringFilter 参考文档"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1BoolFi",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "BoolFilter 参考文档"
   },
   {
    "msgid": "While the deprecated <classname>TreeView</classname> provided built-in support f",
    "action": "filled",
+   "source": "snapshot",
    "zh": "已弃用的 `TreeView` 内建了树形支持，而新的列表控件（尤其 `Gio::ListModel`）没有。不过，仍想展示树形结构的人可以用 gtkmm 提供的功能让树「看起来像列表」：用 `TreeListModel` 把树拍平成列表，再在 listitem 内使用 `TreeExpander` 控件展开/收起。"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TreeLi",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "TreeListModel 参考文档"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TreeEx",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "TreeExpander 参考文档"
+  },
+  {
+   "msgid": "<classname>Gtk::TreeView</classname> is deprecated since <application>gtkmm</app",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "`Gtk::TreeView` 自 gtkmm 4.10 起已弃用：新代码里，列表用 `Gtk::ListView`，表格式列表用 `Gtk::ColumnView`。"
+  },
+  {
+   "msgid": "Each <classname>Gtk::TreeView</classname> has an associated <classname>Gtk::Tree",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "每一个<classname>Gtk::TreeView</classname>都有一个与之关联的<classname>Gtk::TreeModel</classname>，模型中包含了<classname>TreeView</classname>将要显示的数据。每个<classname>Gtk::TreeModel</classname>都可以被多个<classname>Gtk::TreeView</classname>使用。例如，这将允许以多种不同的方式同时显示和编辑一致的数据。也允许不同的视图显示同一个模型的不同列的数据，就像是多个SQL查询（或“视图”）显示同一个数据库表的不同字段一样。",
+   "our_zh": "每个 `Gtk::TreeView` 都有一个关联的 `Gtk::TreeModel`，存放 `TreeView` 显示的数据。同一个 `Gtk::TreeModel` 可以被多个 `Gtk::TreeView` 使用：同一份数据可同时以两种不同方式显示与编辑，或两个视图显示同一 Model 数据的不同列——就像两条 SQL 查询访问同一个数据库。"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TreeMo",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1ListSt",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TreeSt",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "The <classname>TreeModelColumnRecord</classname> class is used to keep track of ",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TreeVi",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "The default <classname>CellRenderer</classname>s and their default behavior will",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "默认的 `CellRenderer` 及其默认行为通常够用，但偶尔需要更细的控制。例如下面这段来自 `gtkmm/demos/gtk-demo/example_treeview_treestore.cc` 的示例代码，追加了一个 `Gtk::CellRenderer`，并指示它把来自多个模型列的数据渲染到外观的多个方面上。"
+  },
+  {
+   "msgid": "You can then connect to the appropriate \\\"edited\\\" signal. For instance, connect",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "你可以连接到适当的\\\"edited\\\"信号。例如，连接到<methodname>Gtk::CellRendererText::signal_edited()</methodname>或者是<methodname>Gtk::CellRendererToggle::signal_toggled()</methodname>。如果该列包含多个<classname>CellRenderer</classname>，则你需要在视图上使用<methodname>Gtk::TreeView::get_column()</methodname>方法然后再调用<methodname>get_cells()</methodname>获取目标单元格。",
+   "our_zh": "接着连接相应的「edited」信号，例如 Gtk::CellRendererText::signal_edited() 或 Gtk::CellRendererToggle::signal_toggled()。如果一列里有不止一个 `CellRenderer`，需要先用 Gtk::TreeView::get_column() 取得视图列，再对其调用 get_cells()。"
+  },
+  {
+   "msgid": "<classname>Gtk::TreeModel</classname> provides a <phrase role=\\\"nowrap\\\">C++</ph",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "If you always want to iterate across the entire range, much more succinct syntax",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TreeSo",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TreeMo",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<classname>Gtk::TreeView</classname> already implements simple drag-and-drop whe",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "`Gtk::TreeView` 与 `Gtk::ListStore` 或 `Gtk::TreeStore` 模型配合时（自 gtk 4.8 起）已内建简单的拖放；必要时也可以用常规的拖放 API 实现更复杂的条目拖放行为。"
+  },
+  {
+   "msgid": "Lots of people need to implement right-click context menus for <classname>TreeVi",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "很多人需要为 `TreeView` 实现右键上下文菜单，这里专门讲一下，帮你省点时间。做法与菜单章描述的普通上下文菜单基本相同：用一个 `Gtk::GestureClick` 检测鼠标点击。"
   },
   {
    "msgid": "This is demonstrated in the Popup Context Menu example. In that example a derive",
    "action": "filled",
+   "source": "snapshot",
    "zh": "Popup Context Menu 示例演示了这一做法。该示例用了派生的 `TreeView`，但这并非必需。"
+  },
+  {
+   "msgid": "Some <classname>TreeView</classname> examples are shown here. There are more exa",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "If neither <classname>ListStore</classname> nor <classname>TreeStore</classname>",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "This example is much like the <classname>ListStore</classname> example, but deri",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "这个例子与 `ListStore` 示例很相似，但派生了一个自定义 `TreeView`，把树模型代码与弹出菜单代码封装进派生类。参见 TreeView Popup Context Menu 一节。"
   },
   {
    "msgid": "The <classname>DropDown</classname> widget is an alternative to the deprecated <",
    "action": "filled",
+   "source": "snapshot",
    "zh": "`DropDown` 控件是已弃用的 `ComboBox` 的替代者：它使用列表模型而非树模型，内容用 listitem 内的控件展示，可以是任意内容——文字、图片，乃至更复杂的复合控件。"
+  },
+  {
+   "msgid": "The <classname>DropDown</classname> widget offers a list of choices in a dropdow",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "`DropDown` 在下拉菜单中提供一组选项；合适的话，还能为每个条目显示额外信息，如文字、图片或更复杂的复合控件。"
+  },
+  {
+   "msgid": "The list is provided via a <classname>Gio::ListModel</classname>, and data from ",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "列表由一个 `Gio::ListModel` 提供，模型数据通过连接到 `SignalListItemFactory` 的信号处理函数添加到 `DropDown` 的视图。"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1DropDo",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "The model for a <classname>DropDown</classname> can be defined and filled exactl",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "`DropDown` 的模型可以按与 `ListView` 或 `ColumnView` 完全相同的方式定义和填充。它必须是 `Glib::Object` 的子类。比如你可以有一个 `DropDown`，其中包含一列整数和一列文本，如下所示："
   },
   {
    "msgid": "After appending rows to this model, you should provide the model to the <classna",
    "action": "filled",
+   "source": "snapshot",
    "zh": "向模型追加行之后，用 set_model() 方法把模型交给 `DropDown`。除非你用的是 `StringList` 模型，否则还需要用 set_factory() 设置一个 `ListItemFactory`。如果想让下拉菜单条目的外观与 `DropDown` 控件上显示的不同，还要用 set_list_factory() 另设一个 `ListItemFactory`。"
+  },
+  {
+   "msgid": "To discover what item, if any, the user has selected from the <classname>DropDow",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "要知道用户在 `DropDown` 中选中了哪个条目（如果有的话），调用 DropDown::get_selected()。它返回一个 `unsigned int`，可用它从模型中取出所选数据。比如模型里可以存一个整数 ID 值，而你在 `DropDown` 中只选择展示人类可读的描述文字。例如："
+  },
+  {
+   "msgid": "You might need to react to every change of selection in the <classname>DropDown<",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "你可能需要对 `DropDown` 中每次选择变化作出反应，比如更新其他控件。为此应连接 property_selected().signal_changed()。例如："
+  },
+  {
+   "msgid": "The dropdown menu may contain an <classname>Entry</classname> that allows to sea",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "下拉菜单里可以放一个用于搜索列表条目的 `Entry`：调用 set_enable_search() 与 set_expression()。例如："
+  },
+  {
+   "msgid": "This example uses a <classname>Pango::FontMap</classname> as its model. This is ",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "该示例用 `Pango::FontMap` 作为模型——这可行，因为 `Pango::FontMap` 实现了 `Gio::ListModel` 接口。当然，你也可以改用 `FontDialogButton`。"
   },
   {
    "msgid": "This is a more complex example with two <classname>SignalListItemFactory</classn",
    "action": "filled",
+   "source": "snapshot",
    "zh": "这是一个更复杂的示例，带两个 `SignalListItemFactory` 及其信号处理函数。如果去掉下拉菜单中的对勾标记，这个例子会简单一些。"
+  },
+  {
+   "msgid": "<classname>Gtk::ComboBox</classname> and <classname>Gtk::ComboBoxText</classname",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "`Gtk::ComboBox` 与 `Gtk::ComboBoxText` 自 gtkmm 4.10 起已弃用：新代码请使用 `Gtk::DropDown`。"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1ComboB",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "When the user enters arbitrary text, it may not be enough to connect to the <lit",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "用户输入任意文字时，只连接 `changed` 信号可能不够——它每敲一个字符就发出一次，用户按下回车时却不会发出。按下回车、或把键盘焦点移到别的控件，往往才意味着用户已经输入完毕。"
   },
   {
    "msgid": "The <literal>changed</literal> signals of <classname>ComboBox</classname> and <c",
    "action": "filled",
+   "source": "snapshot",
    "zh": "`ComboBox` 和 `Entry` 的 `changed` 信号对每次变化都会发出，连接哪一个都可以；但 `EventControllerFocus` 必须添加到 `Entry` 上。"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TextBu",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TextIt",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TextTa",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TextTa",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TextMa",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TextVi",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "You can embed widgets, such as <classname>Gtk::Button</classname>s, in the text.",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TextCh",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
   },
   {
    "msgid": "The example in the <link linkend=\\\"sec-i18n-example\\\"> Internationalization and ",
    "action": "filled",
+   "source": "snapshot",
    "zh": "「国际化与本地化」一章的示例用到了 `TextView`。"
   },
   {
    "msgid": "There is a more complicated example among <link xlink:href=\\\"https://gitlab.gnom",
    "action": "filled",
+   "source": "snapshot",
    "zh": "在 gtkmm 的演示程序里还有一个更复杂的例子（example_textview.cc）。"
+  },
+  {
+   "msgid": "Then, you can define the actual visible layout of the menus and toolbars, and ad",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "然后，你可以定义菜单和工具栏的实际可见布局，并将这个UI布局添加到<classname>Builder</classname>。这个\\\"UI字符串\\\"使用XML格式，你应该在其中使用你已经创建的动作的名称。例如：",
+   "our_zh": "接下来定义菜单与工具栏实际可见的布局，并把这份 UI 布局加进 `Builder`。这段「ui 字符串」采用 XML 格式，其中要写明你已经创建的动作（action）的名称。例如："
+  },
+  {
+   "msgid": "To instantiate a <classname>Gtk::PopoverMenuBar</classname> and toolbar (a horiz",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "要实例化真正可显示的 `Gtk::PopoverMenuBar` 与工具栏（一个水平 `Gtk::Box`），应使用 Builder::get_object() 与 Builder::get_widget() 方法取得控件，再把它们加进容器。例如："
+  },
+  {
+   "msgid": "<classname>Menu</classname>s are normally just added to a window, but they can a",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
   },
   {
    "msgid": "To show the popup menu, use a <classname>Gtk::GestureClick</classname> and conne",
    "action": "filled",
+   "source": "snapshot",
    "zh": "显示弹出菜单：用一个 `Gtk::GestureClick` 并连接它的 `pressed` 信号；在信号处理函数里调用 `Gtk::PopoverMenu` 的 popup() 方法。例如："
+  },
+  {
+   "msgid": "Applications and libraries often contain binary or textual data that is really p",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "应用和库常常包含一些其实属于程序本身（而非用户数据）的二进制或文本数据，比如 `Gtk::Builder` 的 .ui 文件、启动画面图片、`Gio::Menu` 的标记 XML、CSS 文件、图标等。它们通常以文件形式放在 $datadir/appname 下，或者手动打包进程序。"
+  },
+  {
+   "msgid": "Resource bundles are created by the <application>glib-compile-resources</applica",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/glibmm/classGio_1_1Resou",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "An example:",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "示例："
+  },
+  {
+   "msgid": "<filename>/toolbar/toolbar.ui</filename>",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "/toolbar/toolbar.ui"
+  },
+  {
+   "msgid": "This will create a resource bundle with the files <_:itemizedlist-1/>",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "The group which treats the values as arbitrary numbers includes the <classname>R",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "将<parameter>value</parameter>视作任意数的部件组包括<classname>Range</classname>（<classname>Scrollbar</classname>和<classname>Scale</classname>）、<classname>ScaleButton</classname>、<classname>SpinButton</classname>。这些部件通常由用户使用鼠标和键盘直接进行\\\"调整\\\"。他们会将<parameter>lower</parameter>和<parameter>upper</parameter>视为用户可以操纵调整的<parameter>value</parameter>的范围。默认情况下它们只会修改调整的<parameter>value</parameter>。",
+   "our_zh": "把值当作普通数字来用的一组控件包括 `Range` 系（`Scrollbar` 和 `Scale`）、`ScaleButton` 和 `SpinButton`。这些控件通常由用户用鼠标或键盘直接「调整」。它们会把 `lower` 与 `upper` 值当作范围的上下限，把 `step_increment` 作为单击步长。"
+  },
+  {
+   "msgid": "Dialogs are used as secondary windows, to provide specific information or to ask",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "The <literal>response</literal> signal handler receives an <literal>int</literal",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Dialog",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1AlertD",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Messag",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Most of the useful member methods for <classname>FileChooserDialog</classname> a",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1FileDi",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1FileCh",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1ColorD",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1ColorC",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1FontDi",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1FontCh",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1AboutD",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Window",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "GTK uses the <link xlink:href=\\\"http://cairographics.org\\\">Cairo</link> drawing ",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "There are a number of graphics state variables that can be set for a Cairo conte",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "There are other things you can customize as well, including creating dashed line",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "The trick is to position in the middle of the pixel where you want the line to b",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "We make a call to <methodname>Cairo::Context::scale()</methodname>, passing in t",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "我们调用<methodname>Cairo::Context::scale()</methodname>并传入绘图区域的宽和高，这将使用户空间坐标系被缩放为\\\"1个单位\\\"（宽高的范围变成[0.0,1.0]）。在这其实并没有什么特别的要对坐标系进行缩放的理由，只是为了使绘图操作有时候更易用。",
+   "our_zh": "我们调用Cairo::Context::scale()并传入绘图区域的宽和高，这将使用户空间坐标系被缩放为\\\"1个单位\\\"（宽高的范围变成[0.0,1.0]）。在这其实并没有什么特别的要对坐标系进行缩放的理由，只是为了使绘图操作有时候更易用。"
+  },
+  {
+   "msgid": "Here is an example of a program that draws some text, some of it upside-down. Th",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Here is an example of a simple program that draws an image. The program loads th",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "The <classname>Gtk::DragSource</classname> and <classname>Gtk::DropTarget</class",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "Gtk::Widget提供了几个带有\\\"drag_\\\"前缀的方法和信号用以支持拖放。"
+  },
+  {
+   "msgid": "Things are dragged from <literal>sources</literal> to be dropped on <literal>tar",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<classname>Widget</classname>s can be identified as sources or targets using <cl",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Some <classname>DragSource</classname> methods: <_:itemizedlist-1/>",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<literal>Glib::ValueBase get_value() const</literal>: Gets the current drop data",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Some <classname>DropTarget</classname> methods: <_:itemizedlist-1/>",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "When a drop target has accepted a dragged item, certain signals will be emitted,",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<literal>drag_end</literal>: Provides a <classname>Gdk::Drag</classname>, and a ",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "The source widget will emit these <classname>DragSource</classname> signals: <_:",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<literal>accept</literal>: Provides a <classname>Gdk::Drop</classname>. You can ",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<methodname>Gtk::DragSource::signal_prepare()</methodname>",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<methodname>Gtk::DropTarget::signal_enter()</methodname>",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<methodname>Gtk::DropTarget::signal_motion()</methodname>",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<methodname>Gtk::DropTarget::signal_accept()</methodname>",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<methodname>Gtk::DropTarget::signal_drop()</methodname>",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGdk_1_1Clipbo",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<literal>done</literal>: This signal is emitted when printing is finished, meani",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1PrintO",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1PageSe",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "See <link linkend=\\\"sec-printing-examples-simple\\\">an example</link> of exactly ",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "The 'Print to file' option is available in the print dialog, without the need fo",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "\\\"打印到文件\\\"选项在打印对话框可用，不需要额外实现。但是有时候从代码直接生成PDF文件会很有用。例如：",
+   "our_zh": "\\\"打印到文件\\\"选项在打印对话框可用，不需要额外实现。但是有时候从代码直接生成PDF文件会很有用。例如："
+  },
+  {
+   "msgid": "On Unix, the default preview handler uses an external viewer program. On Windows",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "The following example demonstrates how to print some input from a user interface",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "The following example demonstrates how to print some input from a user interface",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Shown below is a simple example of how to use the <classname>FileDialog</classna",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "After selecting the <guimenuitem>File Dialog</guimenuitem> menu item and the <gu",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Event signals differ in some ways from other signals. These differences are desc",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Whenever you press or release a key, an event is emitted. You can add an event c",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "The event signal handler will receive arguments that depend on the type of event",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "事件处理函数接受的参数取决于事件的类型。对于键盘事件，它接受一个GdkEventKey*参数。如附录中所述，事件处理函数返回一个bool值，以表示信号已经被完全处理（返回true）或允许事件传播（false）。"
+  },
+  {
+   "msgid": "To determine which key was pressed or released, you read the value of the <varna",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "In this example there are three keyboard shortcuts: <keycap>Alt</keycap>+<keycap",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "A keyboard event is first sent to the toplevel window (<classname>Gtk::Window</c",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "In this example there are 9 <classname>EventControllerKey</classname>s, 3 in eac",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "When you write in the label, a key press event will be emitted, which will go fi",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "You use <classname>Gtk::GestureClick</classname> instead of <classname>Gtk::Even",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "There are other event classes that can be used for handling mouse events, for in",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1EventC",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Glib::IOCondition::IO_IN - Call your method when there is data ready for reading",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Glib::IOCondition::IO_OUT - Call your method when the file descriptor is ready f",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Glib::IOCondition::IO_PRI - Call your method when the file descriptor has urgent",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Glib::IOCondition::IO_ERR - Call your method when an error has occurred on the f",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Glib::IOCondition::IO_HUP - Call your method when hung up (the connection has be",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "where <parameter>condition</parameter> is as specified above. As usual the slot ",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<application>gtkmm</application> allows the programmer to control the lifetime (",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Here are some examples of normal <phrase role=\\\"nowrap\\\">C++</phrase> memory man",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Usually, the programmer will prefer to allow containers to automatically destroy",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "However, usually, when you create such a widget, you will already know that its ",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Of course, a top-level container will not be added to another container. The pro",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "If you copy a <classname>RefPtr</classname>, for instance",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "or if you pass it as a method argument or a return type, then <classname>RefPtr<",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Bjarne Stroustrup, \\\"The C++ Programming Language\\\" Fourth Edition - section 34.",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Although you can use <phrase role=\\\"nowrap\\\">C++</phrase> code to instantiate an",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "You still need <phrase role=\\\"nowrap\\\">C++</phrase> code to deal with User Inter",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<classname>Gtk::Builder</classname> must be used via a <classname>Glib::RefPtr</",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "To access a widget, for instance to show a dialog, use the <methodname>get_widge",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "The dialogs in this chapter are derived from <classname>Gtk::Window</classname> ",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<classname>Gtk::Builder</classname> checks for a null pointer, and checks that t",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<methodname>get_widget()</methodname> returns child widgets that are <function>m",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Builde",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "This simple example shows how to load a <filename class=\\\"extension\\\">.ui</filen",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "You can use <application>Cambalache</application> and <classname>Gtk::Builder</c",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Your derived class must have a constructor that takes a pointer to the underlyin",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "It's possible to pass additional arguments from <methodname>get_widget_derived()",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "can invoke this constructor",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "It is possible also to specify properties of derived widgets, declared in <phras",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "This example shows how to load a <filename class=\\\"extension\\\">.ui</filename> fi",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "In the instructions below we will assume that you will not be using <application",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "We also assume that you are using autotools (<application>automake</application>",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Create a sub-directory named <literal>po</literal> in your project's root direct",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "(In addition, you'd have the files <literal>de.po</literal> and <literal>ja.po</",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "If you are using <application>gettext</application> directly, you can only mark ",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Now that there is a place to put your translations, you need to initialize <appl",
+   "action": "differs",
+   "source": "snapshot",
+   "ref_zh": "现在已经有了放置翻译的地方，你需要初始化<application>intltool</application>和<application>gettext</application>。将一下代码添加到你的<literal>configure.ac</literal>，将\\\"programname\\\"替换为你的程序的名称：",
+   "our_zh": "现在已经有了放置翻译的地方，你需要初始化intltool和gettext。将一下代码添加到你的configure.ac，将\\\"programname\\\"替换为你的程序的名称："
+  },
+  {
+   "msgid": "Define <literal>INTLTOOL_FILES</literal> as:",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Update your <literal>DISTCLEANFILES</literal>:",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Depending on the types of files that contain translatable strings, add code such",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "However, <application>Glib</application> defines <function>gettext()</function> ",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "That will create a file named <filename>programname.pot</filename>. Now copy tha",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "It's possible that certain strings will be marked as <literal>fuzzy</literal> in",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://wiki.gnome.org/TranslationProject/DevGuidelines\\\"> L1",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"http://bazaar.launchpad.net/~intltool/intltool/trunk/view/hea",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://wiki.gnome.org/TranslationProject/GitHowTo\\\">How to u",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"http://www.gnu.org/software/gettext/manual/gettext.html\\\">get",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "C programmers use <function>sprintf()</function> to compose and concatenate stri",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "So you should either avoid this situation or use <link xlink:href=\\\"https://gnom",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "You should avoid cryptic abbreviations, slang, or jargon. They are usually diffi",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "你应该避免使用不常见的用于例如缩写、俚语、行话。通常它们对于译者来说很难翻译，甚至将该语言作为母语的译者也无法理解。例如，最好使用\\\"application\\\"而不是\\\"app\\\""
+  },
+  {
+   "msgid": "If your program is free software, there is a whole <literal>GNOME</literal> subp",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "The way it works is that you upload your source code to a git repository where t",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Then you make sure you update the file <filename>POTFILES.in</filename> in the <",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<application>gtkmm</application> makes it very easy to derive new widgets by inh",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<methodname>size_allocate_vfunc()</methodname>: Position the child widgets, give",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "The <methodname>get_request_mode_vfunc()</methodname>, <methodname>measure_vfunc",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<methodname>size_allocate_vfunc()</methodname> receives the actual height and wi",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "This example implements a container with child widgets, one above the other. Of ",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<methodname>size_allocate_vfunc()</methodname>: (optional) Position the widget, ",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<methodname>on_realize()</methodname>: (optional)",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<methodname>on_unrealize()</methodname>: (optional)",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Some <application>GTK</application> functions, if called at all, must be called ",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Use <application>Meson</application>! It is your friend :) It examines C and <ph",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Create your own signals instead of passing pointers around. Objects can communic",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Declare a variable of the type of <classname>Widget</classname> you wish to use,",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Set the attributes of the widget. If the widget has no default constructor, then",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "If you don't want all widgets to be shown, call <methodname>Gtk::Widget::set_vis",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "This chapter is similar to <emphasis>Building applications</emphasis> and follow",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "本章节与GTK4参考文档的\\\"Building applications\\\"章节十分类似。"
+  },
+  {
+   "msgid": "The full, buildable sources for these examples can be found in the <filename>exa",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/glibmm/classGio_1_1Appli",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Applic",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Before we can make use of this schema in our application, we need to compile it ",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "At this point, the application will already react if you change one of the setti",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Ideally, we would like you to <link xlink:href=\\\"https://gitlab.gnome.org/GNOME/",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "If you do decide to contribute, please post your contribution as an issue or mer",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<link xlink:href=\\\"https://gnome.pages.gitlab.gnome.org/glibmm/group__RefPtr.htm",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "If you use one signal handler to catch the same signal from several widgets, you",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "如果你想使用一个信号处理函数从多个部件捕获同一个信号，你可能希望信号处理函数能收到一些额外的信息。例如，你可能想知道那个按钮被点击了。你可以使用sigc::bind()。这是helloworld2示例的部分代码： 这表示我们希望信号向信号处理函数发送一个额外的Glib::ustring参数，并且该参数的值为\\\"button 1\\\"。当然，我们将会需要向信号处理函数的声明中添加额外的参数:。当然，正常的\\\"clicked\\\"信号处理函数是没有参数的。"
+  },
+  {
+   "msgid": "You might occasionally find it useful to handle events when there's something yo",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Some event controller signals behave slightly differently. The value returned fr",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Handling an event doesn't affect the Widget's other signals. If you handle <meth",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "By default, signal handlers that return <type>void</type> are called after any p",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "When a program is aborted because of an unhandled <phrase role=\\\"nowrap\\\">C++</p",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "This section describes primarily what you can expect on a Linux system, when you",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Here is an excerpt from a <application>gdb</application> session. Only the most ",
+   "action": "fuzzy-revised",
+   "source": "snapshot",
+   "zh": "这是gdb会话的摘要。只显示输出中最有趣的部分： 你可以看到在without_signal.cc的第六行抛出了异常(throw \\\"Something\\\";)。"
+  },
+  {
+   "msgid": "You can see that the exception was thrown from <filename>without_signal.cc</file",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "And here's an excerpt from a <application>gdb</application> session.",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "The exception is caught in <application>glibmm</application>, and the program en",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "If there are many caught exceptions before the interesting uncaught one, this me",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "These commands will print a backtrace from each <code>throw</code> and continue.",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<application>gtkmm</application> signal handlers are strongly-typed, whereas <ap",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Re. Overriding signal handlers: You can do this in the straight-C world of GTK t",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "This is one of the places where the beauty of <phrase role=\\\"nowrap\\\">C++</phras",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<application>gtkmm</application> currently works with the <link xlink:href=\\\"htt",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "gtkmm: <link xlink:href=\\\"https://gitlab.gnome.org/GNOME/gtkmm/tree/master/READM",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "To set up <application>jhbuild</application>, follow the basic installation inst",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "When you downloaded <application>jhbuild</application> from the git repository, ",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Typically our wrapper library would be called libsomethingmm. We can start by co",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "As well as renaming the directories, we should rename some of the source files. ",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "A number of the skeleton files must still be filled in with project-specific con",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "In the <function>project()</function> function, change the license and the <phra",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "This <filename>.defs</filename> file describes enum types and their possible val",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<command>mmgir</command> can generate all the <filename>.defs</filename> files. ",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "The .hg and .ccg source files are very much like .h and .cc <phrase role=\\\"nowra",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "A .hg file will typically include some headers and then declare a class, using s",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "You should avoid including the C header from your <phrase role=\\\"nowrap\\\">C++</p",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "The macros that you use in the .hg and .ccg files often need to know how to conv",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Often when wrapping methods, it is desirable to store the return of the C functi",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<literal>$3</literal> will be replaced by the output parameter name of the <phra",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<function>_CLASS_GOBJECT( C++ class, C class, C casting macro, C++ base class, C",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<function>_CLASS_GTKOBJECT( C++ class, C class, C casting macro, C++ base class,",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<function>_CLASS_BOXEDTYPE( C++ class, C class, new function, copy function, fre",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<function>_CLASS_BOXEDTYPE_STATIC( C++ class, C class, declaration prefix )</fun",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<function>_CLASS_OPAQUE_COPYABLE( C++ class, C class, new function, copy functio",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "This macro declares a wrapper for a reference-counted opaque struct. The <phrase",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<function>_CLASS_OPAQUE_REFCOUNTED( C++ class, C class, new function, ref functi",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Note: No <parameter>declaration prefix</parameter> argument. For instance, for <",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "<function>_CLASS_INTERFACE( C++ class, C class, C casting macro, C interface str",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "This macro generates the <phrase role=\\\"nowrap\\\">C++</phrase> method to wrap a C",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Puts the generated code in the .cc file in a G_GNUC_BEGIN_IGNORE_DEPRECATIONS / ",
+   "action": "filled",
+   "source": "snapshot",
+   "zh": "把生成的代码放进 .cc 文件中的 G_GNUC_BEGIN_IGNORE_DEPRECATIONS / G_GNUC_END_IGNORE_DEPRECATIONS 代码块里。（仅限 glibmm >= 2.70.1）"
+  },
+  {
+   "msgid": "This macro is like <function>_WRAP_METHOD()</function>, but it generates only th",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Don't include a @return Doxygen command in the documentation. Useful if the wrap",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "This macro generates the <phrase role=\\\"nowrap\\\">C++</phrase> libsigc++-style si",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "This macro generates the <phrase role=\\\"nowrap\\\">C++</phrase> method to wrap a C",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "This macro generates the <phrase role=\\\"nowrap\\\">C++</phrase> method to wrap a v",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Defines a non-default return value, used only if the <phrase role=\\\"nowrap\\\">C++",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "A rule to which there may be exceptions: If the virtual C function returns a poi",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "This macro generates a <phrase role=\\\"nowrap\\\">C++</phrase> enum to wrap a C enu",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "This macro just generates a Doxygen documentation block for the enum. This is us",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "This macro generates a <phrase role=\\\"nowrap\\\">C++</phrase> exception class, der",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Some of the basic types that are used in C APIs have better alternatives in <phr",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "The implementation of the <function>wrap_init()</function> method in <filename>w",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "The extra typedef allows the struct to be used in a header without including its",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "This compiler error might look like this:",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "In general, gtkmm-style projects use Doxygen, which reads specially formatted <p",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "You might wish to reuse documentation that exists for the C library that you are",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
+  },
+  {
+   "msgid": "Permission is granted to copy, distribute and/or modify this document under the ",
+   "action": "fuzzy-reviewed",
+   "source": "snapshot"
   }
  ]
 }

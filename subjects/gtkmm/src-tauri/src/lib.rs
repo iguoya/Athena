@@ -171,6 +171,23 @@ fn get_page_content(state: State<AppState>, chapter_id: String, page_id: String)
     fs::read_to_string(&path).map_err(|error| format!("读 {} 失败：{}", path.display(), error))
 }
 
+/// PO 翻译单元映射（content/po-units/<章>.json，scripts/align_po.py 生成——
+/// 应用 ADR 0005：显示/自译/导出都以官网 PO 翻译单元为准）。章没有映射时
+/// 返回 null（对齐是渐进的，前端按节兜底词数聚合）。
+#[tauri::command]
+fn get_po_units(state: State<AppState>, chapter_id: String) -> Result<Value, String> {
+    let path = state
+        .content_root
+        .join("po-units")
+        .join(format!("{chapter_id}.json"));
+    match fs::read_to_string(&path) {
+        Ok(text) => {
+            serde_json::from_str(&text).map_err(|error| format!("{} 不是合法 JSON：{}", path.display(), error))
+        }
+        Err(_) => Ok(Value::Null),
+    }
+}
+
 /// 官方教程插图：读 content/ 下的图片文件，返回 data URL。
 /// 图片与快照 JSON 走同一条 command 通道——开发模式不赌 vite 对仓库根的
 /// 静态服务，发行包也不受资源目录在 webview HTTP 空间里的布局影响；
@@ -418,6 +435,7 @@ pub fn run() {
             get_curriculum,
             get_manifest,
             get_page_content,
+            get_po_units,
             get_figure,
             get_vocab,
             record_attempt,

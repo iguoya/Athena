@@ -8,10 +8,14 @@ msgid/位置/注释全部保留原样——只把「我们有更好译文」的�
 - 质量修订：基准已有译文但与快照译文不同 → 默认保留基准（尊重上游社区译文），
   我们的译文写入随附的「贡献清单」供人工对照，人工确认更优的可手工替换。
 
-译文输入源（应用 ADR 0004）：快照 `zh`（现行译文）为主；应用内保存的自译
-草稿（progress/learning.db 的 my_translations，按段落 sha）为辅——有自译
-的段自译优先：待译段按填空处理，已有译文的段进 differs 清单供人工确认。
-草稿永不自动成为贡献 PO 里的正式译文。
+译文输入源（应用 ADR 0004、0005）：
+- 单元级（主）：content/po-units/ 的对齐映射（scripts/align_po.py 生成）把
+  PO 翻译单元对应到快照连续段落——指纹 = 各段指纹拼接，与 msgid 精确匹配；
+  我们的译文取应用内自译草稿（progress/learning.db 的 my_translations，
+  按单元锚点 sha 存，自译优先），无自译时取各段 zh 拼接（须全段有译文，
+  残缺不猜）；
+- 段级（兜底）：未对齐的段按单段指纹匹配（旧口径）。
+草稿永不自动成为贡献 PO 里的正式译文；与上游译文不同的进 differs 清单。
 
 输出：
   po/contribution.zh_CN.po   可直接上传 Damned Lies / 提 MR 的贡献文件
@@ -37,6 +41,7 @@ from apply_po import parse_po, po_to_plain, snapshot_plain  # noqa: E402
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 REF_PO = PROJECT_ROOT / "po" / "reference.zh_CN.po"
 CHAPTERS = PROJECT_ROOT / "content" / "chapters"
+PO_UNITS_DIR = PROJECT_ROOT / "content" / "po-units"
 DB = PROJECT_ROOT / "progress" / "learning.db"
 OUT_PO = PROJECT_ROOT / "po" / "contribution.zh_CN.po"
 OUT_REPORT = PROJECT_ROOT / "po" / "contribution-report.json"
@@ -69,7 +74,7 @@ def main() -> int:
     force_utf8()
     ref_text = REF_PO.read_text(encoding="utf-8")
 
-    # ---- 学习者自译草稿（应用 ADR 0004）：sha → 译文；库不存在时为空 ----
+    # ---- 学习者自译草稿（应用 ADR 0004）：单元锚点 sha → 译文；库不存在时为空 ----
     my_zh: dict[str, str] = {}
     if DB.is_file():
         connection = sqlite3.connect(DB)
@@ -78,9 +83,46 @@ def main() -> int:
         finally:
             connection.close()
 
-    # ---- 快照译文集合（纯文本指纹 → 中文）；有自译的段自译优先（订正候选）----
+    # ---- 快照块索引（sha → block），供单元对齐 ----
+    blocks_by_sha: dict[str, dict] = {}
+    for f in sorted(CHAPTERS.rglob("*.json")):
+        data = json.loads(f.read_text(encoding="utf-8"))
+        for block in data["blocks"]:
+            if block["type"] in ("para", "listitem") and block.get("sha"):
+                blocks_by_sha.setdefault(block["sha"], block)
+
+    # ---- 快照译文集合（纯文本指纹 → 中文）----
+    # 单元级优先（应用 ADR 0005）：映射把 PO 翻译单元对应到连续段落区间，
+    # 指纹 = 各段指纹拼接；译文 = 自译优先，否则各段 zh 拼接（须全段有译文）。
+    # 未对齐段回退段级指纹（旧口径）。先到先得：单元级先登记。
     snap_zh: dict[str, str] = {}
     snap_source: dict[str, str] = {}
+
+    def record(key: str, zh: str, source: str) -> None:
+        snap_zh.setdefault(key, zh)
+        snap_source.setdefault(key, source)
+
+    for units_path in sorted(PO_UNITS_DIR.glob("*.json")):
+        pages = json.loads(units_path.read_text(encoding="utf-8"))
+        for units in pages.values():
+            for unit in units:
+                segs = [blocks_by_sha.get(sha) for sha in unit.get("shas", [])]
+                if not segs or any(s is None for s in segs):
+                    continue
+                mine = my_zh.get(unit.get("id") or "")
+                if mine:
+                    zh, source = mine, "self-translation"
+                else:
+                    zhs = [s.get("zh") for s in segs]
+                    if not all(zhs):
+                        continue  # 单元有段缺译文：残缺不猜，留待译流程
+                    zh, source = " ".join(zhs), "snapshot"
+                record(
+                    " ".join(snapshot_plain(s["text"]) for s in segs),
+                    zh,
+                    source,
+                )
+
     for f in sorted(CHAPTERS.rglob("*.json")):
         data = json.loads(f.read_text(encoding="utf-8"))
         for block in data["blocks"]:
@@ -90,73 +132,102 @@ def main() -> int:
             mine = my_zh.get(block.get("sha") or "")
             zh = mine or block.get("zh")
             if zh:
-                snap_zh.setdefault(key, zh)
-                snap_source.setdefault(key, "self-translation" if mine else "snapshot")
+                record(key, zh, "self-translation" if mine else "snapshot")
 
-    # ---- 逐块改写 ref po：只动 msgstr ----
-    blocks = re.split(r"(\n\s*\n)", ref_text)
+    # ---- 行级解析 ref po 并按条目改写 msgstr ----
+    # 旧实现用正则从块里提取 msgid：\n 交替分支绕过负前瞻，msgid 会把
+    # msgstr 内容一并吞进去——所有非空条目的指纹全错，differs/fuzzy
+    # 通道从未生效过。改为行级状态机（与 parse_po 同口径），msgid 即 msgid。
+    lines = ref_text.splitlines()
     improved = fuzzy_fixed = 0
     report: list[dict] = []
+    drop: set[int] = set()  # 待删除的行号：摘除的 #, fuzzy 行、被重写的 msgstr 续行
 
-    for block in blocks:
-        if "msgid" not in block:
+    def po_quote(text: str) -> str:
+        return '"' + text.replace("\\", "\\\\").replace('"', '\\"') + '"'
+
+    def read_field(prefix: str, i: int) -> tuple[str, int]:
+        first = lines[i][len(prefix):]
+        if first.endswith('"'):
+            first = first[:-1]
+        parts = [first]
+        j = i + 1
+        while j < len(lines) and lines[j].startswith('"'):
+            cont = lines[j]
+            parts.append(cont[1:-1] if cont.endswith('"') else cont[1:])
+            j += 1
+        return "".join(parts), j
+
+    i = 0
+    while i < len(lines):
+        if not lines[i].startswith('msgid "'):
+            i += 1
             continue
-        mid_m = re.search(r'msgid ((?:(?!\nmsgstr).|\n)+)', block)
-        mstr_m = re.search(r'msgstr ((?:(?!\nmsgstr).|\n)+)', block)
-        if not mid_m or not mstr_m:
-            continue
-        raw_mid = "".join(re.findall(r'"((?:[^"\\]|\\.)*)"', mid_m.group(1)))
-        raw_mstr = "".join(re.findall(r'"((?:[^"\\]|\\.)*)"', mstr_m.group(1)))
+        raw_mid, j = read_field('msgid "', i)
+        raw_mstr = ""
+        mstr_at = None
+        mstr_end = j
+        if j < len(lines) and lines[j].startswith('msgstr "'):
+            raw_mstr, mstr_end = read_field('msgstr "', j)
+            mstr_at = j
+            j = mstr_end
         if not raw_mid.strip():
+            i = j
             continue
         key = po_to_plain(raw_mid)
         snap = snap_zh.get(key)
         if not snap:
+            i = j
             continue
         snap_plain_txt = snapshot_plain(snap)
+        source = snap_source.get(key, "snapshot")
 
-        entry_report = {
-            "msgid": raw_mid[:80],
-            "action": None,
-            "source": snap_source.get(key, "snapshot"),
-        }
+        # 条目头注释（上方连续 # 行）里是否标了 fuzzy
+        s = i - 1
+        fuzzy_at = None
+        while s >= 0 and lines[s].startswith("#"):
+            if lines[s].startswith("#,") and "fuzzy" in lines[s]:
+                fuzzy_at = s
+            s -= 1
 
-        if "#, fuzzy" in block:
-            # fuzzy 复核成果：若快照译文与 fuzzy 译文一致 → 摘 fuzzy 保留译文
+        def replace_msgstr(new_zh: str) -> None:
+            lines[mstr_at] = "msgstr " + po_quote(new_zh)
+            for k in range(mstr_at + 1, mstr_end):
+                drop.add(k)  # 旧多行译文的续行一并丢弃
+
+        entry_report = {"msgid": raw_mid[:80], "action": None, "source": source}
+        if fuzzy_at is not None:
+            drop.add(fuzzy_at)
             if snapshot_plain(snap) == po_to_plain(raw_mstr).strip():
-                block = block.replace("\n#, fuzzy", "").replace("#, fuzzy\n", "")
+                # fuzzy 复核成果：快照译文与 fuzzy 译文一致 → 摘 fuzzy 保留译文
                 entry_report["action"] = "fuzzy-reviewed"
-                fuzzy_fixed += 1
             else:
                 # fuzzy 但我们有更好的译文 → 替换并摘 fuzzy
-                block = block.replace("\n#, fuzzy", "").replace("#, fuzzy\n", "")
-                new_mstr = json.dumps(snap, ensure_ascii=False)
-                block = re.sub(r'(msgstr ")(?:(?!"\n|").)*("?)',
-                               lambda m: m.group(1) + new_mstr + m.group(2),
-                               block, count=1, flags=re.S)
+                replace_msgstr(snap)
                 entry_report["action"] = "fuzzy-revised"
-                fuzzy_fixed += 1
-            entry_report["zh"] = snap
+                entry_report["zh"] = snap
+            fuzzy_fixed += 1
             report.append(entry_report)
         elif not raw_mstr.strip():
             # 空条目：填入我们的译文
-            new_mstr = json.dumps(snap, ensure_ascii=False)
-            block = re.sub(r'(msgstr ")(?:(?!"\n|").)*("?)',
-                           lambda m: m.group(1) + new_mstr + m.group(2),
-                           block, count=1, flags=re.S)
+            replace_msgstr(snap)
             entry_report["action"] = "filled"
             entry_report["zh"] = snap
             report.append(entry_report)
             improved += 1
-        elif po_to_plain(raw_mstr).strip() != snap_plain_txt and snapshot_plain(snap) != po_to_plain(raw_mstr).strip():
+        elif (
+            mstr_at is not None
+            and po_to_plain(raw_mstr).strip() != snap_plain_txt
+            and snapshot_plain(snap) != po_to_plain(raw_mstr).strip()
+        ):
             # 两者都有译文但不同 → 记入清单供人工对照（不自动覆盖上游社区译文）
             entry_report["action"] = "differs"
             entry_report["ref_zh"] = raw_mstr
             entry_report["our_zh"] = snap
             report.append(entry_report)
+        i = j
 
-    # 重拼接（block 本身就是列表元素引用，原地改写 msgstr 后顺序不变）
-    out_text = "".join(blocks)
+    out_text = "\n".join(line for idx, line in enumerate(lines) if idx not in drop) + "\n"
 
     # ---- 头部元数据更新：修订时间与贡献者署名 ----
     now = datetime.now().strftime("%Y-%m-%d %H:%M+0000")

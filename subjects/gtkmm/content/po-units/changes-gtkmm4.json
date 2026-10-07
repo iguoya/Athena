@@ -1,0 +1,249 @@
+{
+ "sec-deprecations-4-10": [
+  {
+   "id": "38ad1b214927b967",
+   "shas": [
+    "38ad1b214927b967"
+   ],
+   "zh": "gtkmm-4.0是gtkmm API的新版本。它可以与较早发行的gtkmm-2.4和gtkmm-3.0并行安装。gtkmm-3.0 API的最新版本是gtkmm 3.24。gtkmm 4与gtkmm 3没有根本性的区别，虽然有些变更但是保持了二进制兼容。如果你从未使用过gtkmm-3.0 API则你可以放心的忽略本章。"
+  },
+  {
+   "id": "e4771121cc288dd8",
+   "shas": [
+    "e4771121cc288dd8"
+   ],
+   "zh": "gtkmm 4库调用libgtkmm-4.0而不是libgtkmm-3.0，并将其的头文件安装于类似的目录下，所以你的pkg-config应该检索gtkmm-4.0而不是gtkmm-3.0。"
+  },
+  {
+   "id": "98e03a06004326df",
+   "shas": [
+    "98e03a06004326df"
+   ],
+   "zh": "gtkmm-4.0与glibmm-2.68结合使用，将设置程序的全局语言环境。较旧的glibmm-2.4不会这样做，而gtkmm-3.0只在一定程度上做到了。简而言之，如果你的gtkmm-3.0应用包含了对std::locale::global(std::locale(\"\"))的调用，则你大概率可以直接将其删除。如果你不希望glibmm或者gtkmm为你设置程序的全局语言环境，则应该在调用任何Glib::init()函数或Gtk::Application::create()方法之前添加对Glib::set_init_to_users_preferred_locale(false)的调用。"
+  },
+  {
+   "id": "d68be5118b91911f",
+   "shas": [
+    "d68be5118b91911f"
+   ],
+   "zh": "gtkmm-3.0和gtkmm-4.0之间有很多不同之处。以下是不完整的列表。"
+  },
+  {
+   "id": "44dd6189a58c92ab",
+   "shas": [
+    "44dd6189a58c92ab"
+   ],
+   "zh": null
+  },
+  {
+   "id": "39469c16e96430be",
+   "shas": [
+    "39469c16e96430be"
+   ],
+   "zh": null
+  },
+  {
+   "id": "06b93b95dc777508",
+   "shas": [
+    "06b93b95dc777508"
+   ],
+   "zh": "在gtkmm 4和glibmm 2.68中添加了一些新的类："
+  },
+  {
+   "id": "23676af778c86e9a",
+   "shas": [
+    "23676af778c86e9a"
+   ],
+   "zh": "Glib::ExtraClassInit和Gtk::Snapshot：这些类只用于编写自定义的窗口小部件。参见自定义部件小节。"
+  },
+  {
+   "id": "145b09710bf8bf6f",
+   "shas": [
+    "145b09710bf8bf6f"
+   ],
+   "zh": "Gtk::EventControllerKey, Gtk::EventControllerMotion, Gtk::EventControllerScroll和Gtk::GestureStylus"
+  },
+  {
+   "id": "d9cb0129baaa1136",
+   "shas": [
+    "d9cb0129baaa1136"
+   ],
+   "zh": "Gdk::Paintable, Gdk::Texture, Gtk::Picture和Gtk::WidgetPaintable"
+  },
+  {
+   "id": "8ac5679798c9498a",
+   "shas": [
+    "8ac5679798c9498a"
+   ],
+   "zh": "Gdk::Window被重命名为Gdk::Surface(Gtk::Window名称保持不变)。"
+  },
+  {
+   "id": "6c8a027c64fc8b3f",
+   "shas": [
+    "6c8a027c64fc8b3f"
+   ],
+   "zh": "新添加了Gdk::DrawContext和Gdk::CairoContext。Gdk::DrawingContext已被删除。"
+  },
+  {
+   "id": "18d1b7ccd8094f27",
+   "shas": [
+    "18d1b7ccd8094f27"
+   ],
+   "zh": "Gtk::Clipboard被新的Gdk::Clipboard替换。"
+  },
+  {
+   "id": "31e770a1642df07e",
+   "shas": [
+    "31e770a1642df07e"
+   ],
+   "zh": "Gdk::DragContext现在被拆分为Gdk::Drag和Gdk::Drop。"
+  },
+  {
+   "id": "006d6feb4b3c5bf7",
+   "shas": [
+    "006d6feb4b3c5bf7"
+   ],
+   "zh": "API也进行了一些更改，在移植gtkmm-3.0和glibmm-2.4代码时你可能会遇到这些更改。以下是一个简短的变更列表："
+  },
+  {
+   "id": "4ceb9ecd192789ea",
+   "shas": [
+    "4ceb9ecd192789ea"
+   ],
+   "zh": "需要支持C++17的编译器"
+  },
+  {
+   "id": "f4e762292cb7151f",
+   "shas": [
+    "f4e762292cb7151f"
+   ],
+   "zh": "Gtk::Button，Gtk::ToolButton，Gtk::MenuItem和Gtk::Switch 实现了Gtk::Actionable接口而不是已被删除的Gtk::Activatable接口。"
+  },
+  {
+   "id": "dbd48ad15a03e67e",
+   "shas": [
+    "dbd48ad15a03e67e"
+   ],
+   "zh": "Gtk::FontButton实现了Gtk::FontChooser接口。"
+  },
+  {
+   "id": "b9a3783bd393b389",
+   "shas": [
+    "b9a3783bd393b389"
+   ],
+   "zh": "sigc::slot使用sigc::slot语法。 例如： sigc::slot而不是使用sigc::slot。"
+  },
+  {
+   "id": "ad8d067922340486",
+   "shas": [
+    "ad8d067922340486"
+   ],
+   "zh": "Gtk::DrawingArea使用绘制函数替代绘制信号。"
+  },
+  {
+   "id": "2a6665c34b8b5550",
+   "shas": [
+    "2a6665c34b8b5550"
+   ],
+   "zh": "Glib::ArrayHandle, Glib::StringArrayHandle, Glib::ListHandle和Glib::SListHandle已被删除。他们曾在glibmm-2.4中被使用，而gtkmm-3.0并未使用他们。如果你曾经使用过他们，则将他们替换为标准C++容器，例如std::vector。"
+  },
+  {
+   "id": "85d5b00e73dd5b1c",
+   "shas": [
+    "85d5b00e73dd5b1c"
+   ],
+   "zh": "Gtk::Container已被删除。"
+  },
+  {
+   "id": "c05a2e5c086c1a9d",
+   "shas": [
+    "c05a2e5c086c1a9d"
+   ],
+   "zh": "Gtk::Widget::show_all()已被删除。Gtk::Widget::property_visible()的默认值从false改为true。"
+  },
+  {
+   "id": "0e3caf9eb9754704",
+   "shas": [
+    "0e3caf9eb9754704"
+   ],
+   "zh": "Gtk::Widget上的所有事件信号均已被删除。 大多数时候你可以使用Gtk::EventController的子类之一进行替换。例如, 使用Gtk::GestureMultiPress替代signal_button_press_event()以及signal_button_release_event()，使用Gtk::EventControllerKey替代signal_key_press_event()和signal_key_release_event()。"
+  },
+  {
+   "id": "14495fb8f984855c",
+   "shas": [
+    "14495fb8f984855c"
+   ],
+   "zh": "Glib::RefPtr是std::shared_ptr的别名。如果你使用返回Glib::RefPtr的create()方法用以创建派生自Glib::ObjectBase的类，则你必须在你的create()方法中调用Glib::make_refptr_for_instance()。"
+  },
+  {
+   "id": "6c793c8dec9be3b6",
+   "shas": [
+    "6c793c8dec9be3b6"
+   ],
+   "zh": "Gtk::Box::pack_start()和Gtk::Box::pack_end()已被删除。现在Gtk::Box使用新的append()，prepend()，insert_child_after()和insert_child_at_start()方法。"
+  },
+  {
+   "id": "b393490bd3041f28",
+   "shas": [
+    "b393490bd3041f28"
+   ],
+   "zh": "Gtk::ButtonBox已被删除"
+  },
+  {
+   "id": "d0abe224421295d0",
+   "shas": [
+    "d0abe224421295d0"
+   ],
+   "zh": "Gtk::RadioButton和Gtk::RadioButtonGroup已被删除。改为使用Gtk::CheckButton或者是Gtk::ToggleButton的set_group()。"
+  },
+  {
+   "id": "50d6f4890054cd20",
+   "shas": [
+    "50d6f4890054cd20"
+   ],
+   "zh": "gtkmm和glibmm 2.68移除了所有之前标记为弃用的API，未来还会有新的API被标记为弃用。"
+  },
+  {
+   "id": "37550758aaa7f264",
+   "shas": [
+    "37550758aaa7f264"
+   ],
+   "zh": "将源代码移植到gtkmm-4.0的第一步，通过定义GTKMM_DISABLE_DEPRECATED，GDKMM_DISABLE_DEPRECATED，GLIBMM_DISABLE_DEPRECATED和GIOMM_DISABLE_DEPRECATED宏禁用所有在gtkmm-3.0和glibmm-2.4中弃用的API，有一些autotools宏可以帮助你在编译时定义他们。更多有关详情请参见从gtkmm-2.4迁移到gtkmm-3.0Wiki页面。"
+  },
+  {
+   "id": "b20d6cfd6417554d",
+   "shas": [
+    "b20d6cfd6417554d"
+   ],
+   "zh": "另请参见从GTK3.X迁移到GTK 4。"
+  },
+  {
+   "id": "4a6e1792b1f50f38",
+   "shas": [
+    "4a6e1792b1f50f38"
+   ],
+   "zh": null
+  },
+  {
+   "id": "85a29aaef49be299",
+   "shas": [
+    "85a29aaef49be299"
+   ],
+   "zh": null
+  },
+  {
+   "id": "04d2b3b90bf9f7d6",
+   "shas": [
+    "04d2b3b90bf9f7d6"
+   ],
+   "zh": null
+  },
+  {
+   "id": "2e1a06f01680979b",
+   "shas": [
+    "2e1a06f01680979b"
+   ],
+   "zh": null
+  }
+ ]
+}

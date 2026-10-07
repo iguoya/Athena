@@ -1,0 +1,357 @@
+{
+ "sec-labels": [
+  {
+   "id": "f6f7b4c6a16562dc",
+   "shas": [
+    "f6f7b4c6a16562dc"
+   ],
+   "zh": "标签是用于在窗口中放置不可编辑文本的主要方法，例如将标题放于Entry部件旁。你可以直接在构造函数中指定文本，也可以于稍后调用set_text()或set_markup()方法设置想要显示的文本。"
+  },
+  {
+   "id": "c16ac868f8d7547d",
+   "shas": [
+    "c16ac868f8d7547d"
+   ],
+   "zh": "标签文本可以使用set_justify()方法进行对齐。这个部件还具有自动换行功能，你可以使用set_line_wrap()激活它。"
+  },
+  {
+   "id": "11836c1508c254af",
+   "shas": [
+    "11836c1508c254af"
+   ],
+   "zh": "Gtk::Label支持简单的格式，例如，允许你将某些文本设置成粗体，彩色，或者更大的字号。你也可以使用Pango 标记语法。例如， bold text and strikethrough text 。"
+  },
+  {
+   "id": "d59ecd9085f0e7ea",
+   "shas": [
+    "d59ecd9085f0e7ea"
+   ],
+   "zh": "下面是一个用于说明这些功能的简短示例。这个样例使用框架(Frame)部件以更好的演示标签样式。(框架部件的教程: 框架(Frame)部件)仅当你按Alt键时，m_Label_Normal的第一个字符才显示为下划线的样式。"
+  }
+ ],
+ "sec-text-entry": [
+  {
+   "id": "40ec235ec4ce908f",
+   "shas": [
+    "40ec235ec4ce908f"
+   ],
+   "zh": "条目部件允许用户输入文本。你可以使用set_text()方法更改部件当前的内容，还可以使用get_text()方法读取当前的内容。"
+  },
+  {
+   "id": "04784553436da27e",
+   "shas": [
+    "04784553436da27e"
+   ],
+   "zh": "有时你可能想使Entry部件变为只读的。你可以通过向set_editable()方法传递false做到这点。"
+  },
+  {
+   "id": "e3c90043435e0811",
+   "shas": [
+    "e3c90043435e0811"
+   ],
+   "zh": "对于不想在屏幕上回显的密码、密语或者其他信息，你可以通过向set_visibility()方法传递false使输入文本被隐藏。"
+  },
+  {
+   "id": "44433cefaf995201",
+   "shas": [
+    "44433cefaf995201"
+   ],
+   "zh": "当用户在条目部件上输入文本时你可能想要收到通知。为此Gtk::Entry提供了两个信号，他们分别是activate和changed。当用户在条目部件上按下Enter键时，部件将发出activate信号；当部件上的文本发生更改的时候，部件将会发出changed信号。你可以利用这些信号对用户的输入进行校验或者是过滤。将键盘焦点移动到其他的部件可能表示用户已经完成了文本输入。这种时候Gtk::Entry将会发出继承自Gtk::Widget的focus_out_event信号提醒你。带有条目的组合框小结包含了使用这些信号的示例程序。"
+  },
+  {
+   "id": "b8ad01687b6e65c5",
+   "shas": [
+    "b8ad01687b6e65c5"
+   ],
+   "zh": "如果你将true传递给set_activates_default()方法，那么当你在Gtk::Entry中按下Enter的时候包含这个Gtk::Entry的窗口将会激活其默认部件。这在对话框中特别的有用。默认部件通常会是对话框的按钮之一，例如对话框的关闭按钮。若你想主动的将某个部件设置为默认部件，请使用Gtk::Widget::set_can_default()和Gtk::Widget::grab_default()。"
+  },
+  {
+   "id": "cffa582024213430",
+   "shas": [
+    "cffa582024213430"
+   ],
+   "zh": "本示例使用Gtk::Entry。他还有两个CheckButton，你可以使用他们切换条目部件的可见性和可编辑性标志。"
+  },
+  {
+   "id": "fd3e07350e335c97",
+   "shas": [
+    "fd3e07350e335c97"
+   ],
+   "zh": "在gtkmm 4和glibmm 2.68中添加了一些新的类："
+  },
+  {
+   "id": "e84b62514bbbf650",
+   "shas": [
+    "e84b62514bbbf650"
+   ],
+   "zh": "Entry条目组件可以通过用户输入的前几个字符提供预先准备好选项的下拉列表。例如，在搜索对话框中提供以前输入过的文本作为建议。"
+  },
+  {
+   "id": "0cbd39e3e4bcaea6",
+   "shas": [
+    "0cbd39e3e4bcaea6"
+   ],
+   "zh": "要启用此功能，你需要创建一个EntryCompletion对象，然后使用Entry部件的set_completion()方法将其提供给条目部件。"
+  },
+  {
+   "id": "e2eb65672f961665",
+   "shas": [
+    "e2eb65672f961665"
+   ],
+   "zh": "EntryCompletion可以用set_model()指定一个包含所有可能的条目的TreeModel。你应该调用set_text_column()指定该模型的那一行用以匹配可能的文本条目。"
+  },
+  {
+   "id": "d865f1a1b8dc2234",
+   "shas": [
+    "d865f1a1b8dc2234"
+   ],
+   "zh": "或是在不方便生成补全条目列表的时候(太大或者生成太麻烦)，也可以使用set_match_func()指定一个回调槽。这在你想匹配字符串中开头以外的部分的时候这会很有用。"
+  },
+  {
+   "id": "c7ae24ea98f9f5aa",
+   "shas": [
+    "c7ae24ea98f9f5aa"
+   ],
+   "zh": "这个示例创建一个Gtk::EntryCompletion并将其与Gtk::Entry相关联。补全使用了一个包含了可能条目的Gtk::TreeModel以及一些其他的额外的操作。"
+  },
+  {
+   "id": "cda4f6a69d62e79e",
+   "shas": [
+    "cda4f6a69d62e79e"
+   ],
+   "zh": "Entry部件可以在文本区域的开头或结尾显示一个图标。可以使用set_icon_from_pixbuf()或set_icon_from_icon_name()之类的方法指定要显示的图标。应用程序可以通过响应signal_icon_press信号来处理用户按下图标事件。"
+  },
+  {
+   "id": "e41b5811dc508503",
+   "shas": [
+    "e41b5811dc508503"
+   ],
+   "zh": "这个示例显示带有具名搜索图标的Gtk::Entry部件，并且在按下这个图标的时候将该名称打印到终端上。"
+  },
+  {
+   "id": "8f60fc75ac6ef63c",
+   "shas": [
+    "8f60fc75ac6ef63c"
+   ],
+   "zh": "Entry部件可以在输入的文本之下显示一个进度条。当部件的set_progress_fraction()或set_progress_pulse_step()方法被调用的时候进度条将显示出来。"
+  },
+  {
+   "id": "da198762f1be3245",
+   "shas": [
+    "da198762f1be3245"
+   ],
+   "zh": "这个示例显示一个带有进度条的Gtk::Entry部件。"
+  }
+ ],
+ "sec-spinbutton": [
+  {
+   "id": "758d0be2a767f1ef",
+   "shas": [
+    "758d0be2a767f1ef"
+   ],
+   "zh": "SpinButton允许用户从一个数值范围内选择一个值。它包含了一个Entry部件在其侧边有递增和递减按钮。单击按钮会使得值在可能的范围内“旋转”。你也可以直接在Entry部件中输入一个值。"
+  },
+  {
+   "id": "5c87bc1bdbb86e4d",
+   "shas": [
+    "5c87bc1bdbb86e4d"
+   ],
+   "zh": "这个值的小数位可以进行调整，步长也可以进行配置。SpinButton具有“自动重复”功能：长按递增、递减按钮该值的变化速度会越来越快。"
+  },
+  {
+   "id": "a26f0b21bfa7a1f5",
+   "shas": [
+    "a26f0b21bfa7a1f5"
+   ],
+   "zh": "value：微调按钮的值"
+  },
+  {
+   "id": "a8747b069f777ec0",
+   "shas": [
+    "a8747b069f777ec0"
+   ],
+   "zh": "lower：微调按钮允许的最小值"
+  },
+  {
+   "id": "b756917525e5826b",
+   "shas": [
+    "b756917525e5826b"
+   ],
+   "zh": "upper：微调按钮允许的最大值"
+  },
+  {
+   "id": "c71d9d4e6f0d9ec5",
+   "shas": [
+    "c71d9d4e6f0d9ec5"
+   ],
+   "zh": "step_increment：鼠标键1(通常是左键)点击一下递增/递减的值"
+  },
+  {
+   "id": "4605fd9403053751",
+   "shas": [
+    "4605fd9403053751"
+   ],
+   "zh": "page_increment：鼠标键2(通常是右键)点击一下递增/递减的值"
+  },
+  {
+   "id": "f8e581a869f3130f",
+   "shas": [
+    "f8e581a869f3130f"
+   ],
+   "zh": "page_size：目前没作用"
+  },
+  {
+   "id": "3e007fd8578041cb",
+   "shas": [
+    "3e007fd8578041cb"
+   ],
+   "zh": "SpinButton使用调整(Adjustment)对象保存值的范围信息。下述调整属性由微调按钮使用："
+  },
+  {
+   "id": "98bf7229adbcc037",
+   "shas": [
+    "98bf7229adbcc037"
+   ],
+   "zh": "另外，鼠标键3(通常是中键)用于直接跳到upper或lower values。"
+  },
+  {
+   "id": "41d61d371fe3fce2",
+   "shas": [
+    "41d61d371fe3fce2"
+   ],
+   "zh": "SpinButton可以创建一个默认状态的Adjustment，然后你可以调用get_adjustment()方法访问这个Adjustment，也可以通过SpinButton的构造函数直接使用一个已经存在的Adjustment。"
+  },
+  {
+   "id": "8182442327a74013",
+   "shas": [
+    "8182442327a74013"
+   ],
+   "zh": "数值的小数位可以使用set_digits()方法进行调整。"
+  },
+  {
+   "id": "4a0ec0cf73dcc9a0",
+   "shas": [
+    "4a0ec0cf73dcc9a0"
+   ],
+   "zh": "你可以使用set_value()方法设置微调按钮的值，也可以使用get_value()方法获得微调按钮的值。"
+  },
+  {
+   "id": "5e9415a60bbabb40",
+   "shas": [
+    "5e9415a60bbabb40"
+   ],
+   "zh": "spin()方法的行为和手动点击递增/递减按钮一样。你需要传递一个Gtk::SpinType对象给该方法以指定是递增还是递减。"
+  },
+  {
+   "id": "d1d9600d23bec273",
+   "shas": [
+    "d1d9600d23bec273"
+   ],
+   "zh": "将true传递给set_numeric()方法可以阻止用户在条目框内输入非数字字符。"
+  },
+  {
+   "id": "308f29961be24f90",
+   "shas": [
+    "308f29961be24f90"
+   ],
+   "zh": "使用set_wrap()方法指定SpinButton的值到达上下限的时候是否绕回。"
+  },
+  {
+   "id": "d20b8a673eeb013c",
+   "shas": [
+    "d20b8a673eeb013c"
+   ],
+   "zh": "使用set_snap_to_ticks()方法可以在向微调按钮设置了无效值的时候强制校正到最接近step_increment策略可达到的有效值。"
+  },
+  {
+   "id": "de787ef442486ad0",
+   "shas": [
+    "de787ef442486ad0"
+   ],
+   "zh": "这是一个使用SpinButton的示例："
+  }
+ ],
+ "sec-progressbar": [
+  {
+   "id": "a491829f0173db3d",
+   "shas": [
+    "a491829f0173db3d"
+   ],
+   "zh": "进度条用于显示正在进行的操作的状态。例如，ProgressBar可以用于显示已经有多少任务被完成。"
+  },
+  {
+   "id": "8cd8ed8d8c6b1070",
+   "shas": [
+    "8cd8ed8d8c6b1070"
+   ],
+   "zh": "要修改显示的值，请调用set_fraction()方法，向该方法传递一个0.0到1.0之间的double值。"
+  },
+  {
+   "id": "5ed1e13168a5c6a0",
+   "shas": [
+    "5ed1e13168a5c6a0"
+   ],
+   "zh": "ProgressBar默认是水平且从左向右的，但是你可以使用set_orientation()方法来改变这个行为。"
+  },
+  {
+   "id": "271c754831a5d440",
+   "shas": [
+    "271c754831a5d440"
+   ],
+   "zh": "除了用于表示已经达成的进度，进度条还可以用于表示任务处于活动状态；只需要将进度条的行为模式设置为activity mode即可。在这个模式下，进度条显示一个小矩形，该矩形可以在进度条内前后移动。活动模式在无法确定操作的进度的时候很有用（例如，接受一个长度未知的文件）。"
+  },
+  {
+   "id": "0787838a3a34e096",
+   "shas": [
+    "0787838a3a34e096"
+   ],
+   "zh": "为此，你还需要定时调用pulse()方法。你还可以使用set_pulse_step()方法控制矩形的移动步长。"
+  },
+  {
+   "id": "2dee859fbc1c2492",
+   "shas": [
+    "2dee859fbc1c2492"
+   ],
+   "zh": "进度条还可以使用set_text()方法来在其边上显示可配置的文本字符串。"
+  }
+ ],
+ "sec-infobar": [
+  {
+   "id": "d2ab315a295365f5",
+   "shas": [
+    "d2ab315a295365f5"
+   ],
+   "zh": "InfoBar可用于显示一些信息、小物品或者简短的问题。他显示在窗口的顶部而不是和Dialog一样打开一个新的窗口。但是他的API和Gtk::Dialog的API十分相似。"
+  },
+  {
+   "id": "ea9ebda35e8a4a8b",
+   "shas": [
+    "ea9ebda35e8a4a8b"
+   ],
+   "zh": null
+  }
+ ],
+ "sec-tooltips": [
+  {
+   "id": "70aa5dcbdc5a9da4",
+   "shas": [
+    "70aa5dcbdc5a9da4"
+   ],
+   "zh": "工具提示框是将鼠标悬停于部件上几秒后弹出的信息窗口。使用set_tooltip_text()可以为任意的Widget设置一个文本字符串作为提示。Gtk::Tooltip被用作更高级的提示工具，例如显示图像和文本。"
+  },
+  {
+   "id": "633226156ed4d8b5",
+   "shas": [
+    "633226156ed4d8b5"
+   ],
+   "zh": "部件参考"
+  },
+  {
+   "id": "3be3170e10d5c6ff",
+   "shas": [
+    "3be3170e10d5c6ff"
+   ],
+   "zh": "工具提示框参考"
+  }
+ ]
+}

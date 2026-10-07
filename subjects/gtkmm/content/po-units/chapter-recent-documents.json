@@ -1,0 +1,209 @@
+{
+ "sec-recentmanager": [
+  {
+   "id": "26370152d9e62795",
+   "shas": [
+    "26370152d9e62795"
+   ],
+   "zh": "gtkmm提供了一种管理最近使用文件的简便方法。该功能在Gtk::RecentManager类中实现。"
+  },
+  {
+   "id": "fdf2fbc4f02c862c",
+   "shas": [
+    "fdf2fbc4f02c862c"
+   ],
+   "zh": "最近使用文件列表中的每一项都由其URI进行标识，并可以具有相关的元数据。元数据可以用于指定如何显示文件、如何描述文件、及其它的MIME类型、哪个应用程序注册了它、对于注册的应用程序是不是私有的等。"
+  },
+  {
+   "id": "6686c1099d0dd50a",
+   "shas": [
+    "6686c1099d0dd50a"
+   ],
+   "zh": "RecentManager充当最近使用文件的数据库。你可以使用此类注册新文件、从列表中删除文件、查找最近使用文件。每个用户都拥有一个最近使用的文件列表。"
+  },
+  {
+   "id": "2b6bf2253856c67d",
+   "shas": [
+    "2b6bf2253856c67d"
+   ],
+   "zh": "你可以创建一个新的RecentManager，但你可能只想用默认的那个。你可以通过get_default()获取默认RecentManager的引用。"
+  },
+  {
+   "id": "a06f3438e360288e",
+   "shas": [
+    "a06f3438e360288e"
+   ],
+   "zh": "在最简单的情况下，要添加项目到最近文件列表只需要提供一个URI即可。例如："
+  },
+  {
+   "id": "95f1cffa3b3ae864",
+   "shas": [
+    "95f1cffa3b3ae864"
+   ],
+   "zh": "如果你想要使用元数据注册一个文件，你可以将RecentManager::Data参数传递给add_item()。可以在特定的文件项上设置的元数据如下所示："
+  },
+  {
+   "id": "f387e1e5cecbd703",
+   "shas": [
+    "f387e1e5cecbd703"
+   ],
+   "zh": "app_exec：用于启动此资源的命令行。此字符串可以包含\"f\"和\"u\"转义字符，它们将分别扩展为资源文件路径和URI"
+  },
+  {
+   "id": "f79d3abaaa2a0c61",
+   "shas": [
+    "f79d3abaaa2a0c61"
+   ],
+   "zh": "app_name：此资源注册的应用程序名"
+  },
+  {
+   "id": "170a16306015c3ec",
+   "shas": [
+    "170a16306015c3ec"
+   ],
+   "zh": "description：资源的简单描述（UTF-8编码字符串）"
+  },
+  {
+   "id": "8ba1b3c68cc99eb0",
+   "shas": [
+    "8ba1b3c68cc99eb0"
+   ],
+   "zh": "display_name：用于显示的资源名（UTF-8编码字符串）"
+  },
+  {
+   "id": "315f3e7ba40bb1a7",
+   "shas": [
+    "315f3e7ba40bb1a7"
+   ],
+   "zh": "groups：与该项相关联的组列表。组本质上是与特定资源相关联的任意字符串。可以将它们视为资源的类别（例如：电子邮件、图形等）或标签"
+  },
+  {
+   "id": "4039c9e8d7843629",
+   "shas": [
+    "4039c9e8d7843629"
+   ],
+   "zh": "is_private：此资源是否仅对已注册该资源的应用程序可见"
+  },
+  {
+   "id": "8f6d2dd4ef876787",
+   "shas": [
+    "8f6d2dd4ef876787"
+   ],
+   "zh": "mime_type：此资源的MIME类型"
+  },
+  {
+   "id": "aa82d50472272a33",
+   "shas": [
+    "aa82d50472272a33"
+   ],
+   "zh": "除了向列表中添加项目以外，你还可以从列表项中删除、修改、查找项目。"
+  },
+  {
+   "id": "8f1d2b46073eba14",
+   "shas": [
+    "8f1d2b46073eba14"
+   ],
+   "zh": "RecentManager提供了几个函数用以查找最近使用过的文件。你可以使用lookup_item()函数通过URI来查找特定项目，该函数将返回一个RecentInfo类对象。如果指定的URI于最近文件列表中不存在，则lookup_item()将抛出一个RecentManagerError异常。例如："
+  },
+  {
+   "id": "554d83e123db5a04",
+   "shas": [
+    "554d83e123db5a04"
+   ],
+   "zh": "本质上，RecentInfo是个包含了一个最近使用文件的所有元数据的对象。你可以使用该对象查找这里所列出的任何属性。"
+  },
+  {
+   "id": "f8e2513622d175d2",
+   "shas": [
+    "f8e2513622d175d2"
+   ],
+   "zh": "如果你不想要查找一个特定的URI，而是想获取整个最近使用的项目列表，RecentManager为此提供了get_items()函数。这个函数返回值是一个std::vector，其包含了所有最近使用的文件。以下代码演示了你该如何获取最近使用文件列表："
+  },
+  {
+   "id": "250aaa8286d804a5",
+   "shas": [
+    "250aaa8286d804a5"
+   ],
+   "zh": "可以使用Gtk::Settings::property_gtk_recent_files_max_age()设置最近使用文件列表中项目的最长使用期限。默认时长是：30天。"
+  },
+  {
+   "id": "f9920cf038c95a9f",
+   "shas": [
+    "f9920cf038c95a9f"
+   ],
+   "zh": "有时候你会需要修改最近使用文件列表。例如，当一个文件被移动或重命名，你需要更新该文件在最近使用文件列表中的位置，以使其不会指向错误的位置。你可以使用move_item()来更新项目的位置。"
+  },
+  {
+   "id": "1fb62b70b2b01993",
+   "shas": [
+    "1fb62b70b2b01993"
+   ],
+   "zh": "除了更改文件的URI以外，你还可以从列表中删除项目或是一次性清除所有项目。前者使用remove_item()，后者使用purge_items()。"
+  },
+  {
+   "id": "ccdeb3ac2d14a2fb",
+   "shas": [
+    "ccdeb3ac2d14a2fb"
+   ],
+   "zh": "move_item()、remove_item()和purge_items()并不影响URI所引用的真实文件，它们只是对最近文件列表进行修改。"
+  }
+ ],
+ "sec-filechooser-filedialog": [
+  {
+   "id": "606fd739896ecdd0",
+   "shas": [
+    "606fd739896ecdd0"
+   ],
+   "zh": "FileChooser是一个可以由用于显示文件列表的部件实现的接口。gtkmm提供了三种用于选择最近文件或其他文件的内置实现：FileChooserWidget、FileChooserDialog、FileChooserNative。"
+  },
+  {
+   "id": "0062e85c3f32c664",
+   "shas": [
+    "0062e85c3f32c664"
+   ],
+   "zh": "FileChooserWidget是一个用于显示最近使用文件列表或其他文件的简单部件。FileChooserWidget是FileChooserDialog的基本构建块，但是你根据需要可以将其嵌入到用户界面中。"
+  },
+  {
+   "id": "43e23a35de136918",
+   "shas": [
+    "43e23a35de136918"
+   ],
+   "zh": null
+  },
+  {
+   "id": "0a68429ff06cdf2c",
+   "shas": [
+    "0a68429ff06cdf2c"
+   ],
+   "zh": "下面显示的是一个如何在程序中使用FileChooserDialog类的简单示例。这个简单示例程序有一个带有File Chooser Dialog菜单项的菜单栏。选择此菜单项时，将弹出一个显示文件列表的对话框。如果你选中侧边栏的Recent，则对话框将显示最近使用文件列表。"
+  },
+  {
+   "id": "d87ba7d9680956bf",
+   "shas": [
+    "d87ba7d9680956bf"
+   ],
+   "zh": "如果这是你第一次使用使用了最近文件框架的应用程序，那么对话框最初可能是空的。否则它应该显示其他应用程序注册的最近使用文件列表。"
+  },
+  {
+   "id": "b072da63d193bde1",
+   "shas": [
+    "b072da63d193bde1"
+   ],
+   "zh": "选择File Chooser Dialog菜单项和Recent侧边项后，你将看到与下方窗口类似的内容。"
+  },
+  {
+   "id": "61e2e36f948d7894",
+   "shas": [
+    "61e2e36f948d7894"
+   ],
+   "zh": "对于任意FileChooser类，如果你不想显示文件列表中的所有项目，你可以筛选列表以仅显示所需的项目。你可以使用FileFilter帮助你对列表进行筛选。这个类允许你按文件名（add_pattern()）或MIME类型（add_mime_type()）筛选文件。"
+  },
+  {
+   "id": "c796c0a77248e66b",
+   "shas": [
+    "c796c0a77248e66b"
+   ],
+   "zh": "创建并设置筛选器以使其只匹配你所需项目之后，你可以使用FileChooser::add_filter()函数将筛选器应用于你所选的部件。"
+  }
+ ]
+}

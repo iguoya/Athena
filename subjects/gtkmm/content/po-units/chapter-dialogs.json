@@ -1,0 +1,182 @@
+{
+ "sec-dialogs-alertdialog": [
+  {
+   "id": "d6409d61557916c0",
+   "shas": [
+    "d6409d61557916c0"
+   ],
+   "zh": null
+  },
+  {
+   "id": "100f29a99df9137a",
+   "shas": [
+    "100f29a99df9137a"
+   ],
+   "zh": null
+  },
+  {
+   "id": "dbd6062a5e80042f",
+   "shas": [
+    "dbd6062a5e80042f"
+   ],
+   "zh": "对话框被用作辅助窗口，以提供特定的信息或者提出问题。Gtk::Dialog窗口包含了一些预装部件以确保一致性，且有一个run()方法可以阻塞到用户关闭对话框。"
+  },
+  {
+   "id": "87bcb1d727ae5859",
+   "shas": [
+    "87bcb1d727ae5859"
+   ],
+   "zh": "有几个派生自Dialog的类可能对你而言很有用。Gtk::MessageDialog多被用于简单的通知。但有时候你也需要派生自己的对话框类以提供更为复杂的功能。"
+  },
+  {
+   "id": "0eccae11b0449329",
+   "shas": [
+    "0eccae11b0449329"
+   ],
+   "zh": "若要将部件添加到自定义的对话框中，你需要将其装入通过get_content_area()获得的Gtk::Box中。如果你只需要向Dialog的底部添加一个Button，那么你可以直接使用add_button()方法。"
+  },
+  {
+   "id": "24459c42bc99fe1d",
+   "shas": [
+    "24459c42bc99fe1d"
+   ],
+   "zh": "run()方法返回一个int。如果用户是通过单击标准按钮关闭的对话框，则该值可能是Gtk::ResponseType中的一个也可能是使用add_button()时你所指定的值。"
+  },
+  {
+   "id": "fd426713f317ecd5",
+   "shas": [
+    "fd426713f317ecd5"
+   ],
+   "zh": null
+  },
+  {
+   "id": "a5b491e77ecf9c8b",
+   "shas": [
+    "a5b491e77ecf9c8b"
+   ],
+   "zh": null
+  },
+  {
+   "id": "1c302b08f375d676",
+   "shas": [
+    "1c302b08f375d676"
+   ],
+   "zh": "参考"
+  },
+  {
+   "id": "69788f0abccb048d",
+   "shas": [
+    "69788f0abccb048d"
+   ],
+   "zh": "参考"
+  }
+ ],
+ "sec-dialogs-filedialog": [
+  {
+   "id": "1559b4ce5c97cce6",
+   "shas": [
+    "1559b4ce5c97cce6"
+   ],
+   "zh": null
+  },
+  {
+   "id": "28433ecdfb062369",
+   "shas": [
+    "28433ecdfb062369"
+   ],
+   "zh": "该类的大部分有用的成员函数都在其基类Gtk::FileChooser中。"
+  },
+  {
+   "id": "bc84fc53b8948b13",
+   "shas": [
+    "bc84fc53b8948b13"
+   ],
+   "zh": "参考"
+  },
+  {
+   "id": "4fa5eed6e7057102",
+   "shas": [
+    "4fa5eed6e7057102"
+   ],
+   "zh": "参考"
+  }
+ ],
+ "sec-dialogs-colordialog": [
+  {
+   "id": "238f9efcadd90033",
+   "shas": [
+    "238f9efcadd90033"
+   ],
+   "zh": null
+  },
+  {
+   "id": "1b13ecfe0cdb0854",
+   "shas": [
+    "1b13ecfe0cdb0854"
+   ],
+   "zh": "参考"
+  },
+  {
+   "id": "cbdb0039a6bb8b95",
+   "shas": [
+    "cbdb0039a6bb8b95"
+   ],
+   "zh": "参考"
+  }
+ ],
+ "sec-dialogs-fontdialog": [
+  {
+   "id": "3600b59146fea121",
+   "shas": [
+    "3600b59146fea121"
+   ],
+   "zh": null
+  },
+  {
+   "id": "cc855f4abc185466",
+   "shas": [
+    "cc855f4abc185466"
+   ],
+   "zh": "参考"
+  },
+  {
+   "id": "cb0219f4a252b361",
+   "shas": [
+    "cb0219f4a252b361"
+   ],
+   "zh": "参考"
+  }
+ ],
+ "sec-about-dialog": [
+  {
+   "id": "948160da38871194",
+   "shas": [
+    "948160da38871194"
+   ],
+   "zh": "AboutDialog提供了一个简单的显示程序有关信息（例如标志、名称、版权、网站、许可证）的方式。"
+  },
+  {
+   "id": "7d9b79897d766722",
+   "shas": [
+    "7d9b79897d766722"
+   ],
+   "zh": "本章中的大部分对话框都是模态的，也就是说在显示它们的时候应用程序的其他部分是被冻结的。你也可以创建一个非模态的对话框，这样的对话框不会冻结应用程序的其他窗口。下面的示例显示了一个非模态的AboutDialog。通常你不会想要将该对话框做成非模态，但这不表示非模态对话框在其它情况下没有用。例如：在gedit中搜索和替换对话框就是非模态的。"
+  }
+ ],
+ "sec-dialogs-windowdialog": [
+  {
+   "id": "3b031d0ed36d3837",
+   "shas": [
+    "3b031d0ed36d3837"
+   ],
+   "zh": null
+  },
+  {
+   "id": "c5f9bf7ac60835fe",
+   "shas": [
+    "c5f9bf7ac60835fe"
+   ],
+   "zh": "部件参考"
+  }
+ ]
+}

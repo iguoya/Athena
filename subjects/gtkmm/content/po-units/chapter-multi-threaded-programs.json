@@ -1,0 +1,120 @@
+{
+ "sec-the-constraints": [
+  {
+   "id": "362c0a91cee214c7",
+   "shas": [
+    "362c0a91cee214c7"
+   ],
+   "zh": "这些交互产生了以下事实：从sigc::trackable继承的类将从该继承获得一个std::list对象，该对象用于对调用sigc::mem_fun()所创建的槽（它表示任意非静态成员函数）进行跟踪（更特别的是它还保留了一个回调列表，在其被销毁时将已连接的槽置空）。每个sigc::slot通过sigc::slot_rep保留其自己的sigc::trackable对象，用以跟踪任何它需要通知其已消亡的sigc::connection对象，并且具有在任何sigc::trackable断开连接或销毁时注销自身的能力。sigc::signal对象还保留了槽列表，这个列表将通过调用它的connect()方法或任何与该连接有关的sigc::connection对象进行更新。"
+  },
+  {
+   "id": "68d346757238445a",
+   "shas": [
+    "68d346757238445a"
+   ],
+   "zh": "由于libsigc++（尤其是sigc::trackable）不是线程安全的，所以在编写基于gtkmm的多线程程序时需要格外小心。这是因为使用libsigc++时在幕后发生的复杂交互不受互斥量或其他同步方式的保护。"
+  },
+  {
+   "id": "6b3700e78fdd5fc7",
+   "shas": [
+    "6b3700e78fdd5fc7"
+   ],
+   "zh": "在使用gtkmm编写多线程程序时需要遵守许多规则。这些规则下下面列出，但要注意的一点是从sigc::trackable派生类时需要格外小心，因为效果很不直观（特别是下述4、5条）。"
+  },
+  {
+   "id": "0e9b4200920f8884",
+   "shas": [
+    "0e9b4200920f8884"
+   ],
+   "zh": "使用Glib::Dispatcher在工作线程中调用gtkmm函数（这点将在下一节详细介绍）"
+  },
+  {
+   "id": "ce2e18f629aff84a",
+   "shas": [
+    "ce2e18f629aff84a"
+   ],
+   "zh": "sigc::signal对象被创建其的线程所拥有。只有该线程应该将sigc::slot对象连接到信号对象，并且只有该线程应该在emit()信号或在信号上调用operator()()或是将已连接的sigc::slot对象置空。因此任何由gtkmm部件提供的信号对象都只应该在主GUI线程进行操作，以及任何从sigc::trackable派生的对象（其非静态方法由连接到信号对象的槽引用）都应该在该线程中销毁。"
+  },
+  {
+   "id": "38b974ca7607d159",
+   "shas": [
+    "38b974ca7607d159"
+   ],
+   "zh": "任何sigc::connection对象都应视线程的拥有者在此线程调用了返回sigc::connection对象的方法。只有该线程才应在此对象上调用sigc::connection方法。"
+  },
+  {
+   "id": "2302b5d4f70f4a8f",
+   "shas": [
+    "2302b5d4f70f4a8f"
+   ],
+   "zh": "通过调用sigc::mem_fun()函数创建的sigc::slot对象具有由sigc::trackable所派生类的成员函数的引用，请勿将其复制到另一个线程中，也不要让除创建线程以外的线程销毁它。"
+  },
+  {
+   "id": "1476629a8d7e78c4",
+   "shas": [
+    "1476629a8d7e78c4"
+   ],
+   "zh": "如果从sigc::trackable派生一个特定的类对象，只应有一个线程通过调用sigc::mem_fun()创建代表该类任意非静态成员函数的sigc::slot对象。第一个创建这样的槽的线程被视为拥有相关对象的线程。这个线程可以对该类的任意非静态成员函数使用该函数以创建槽，或者在sigc::trackable对象断开连接和被销毁时将那些槽无效化。"
+  },
+  {
+   "id": "df0af9b9db1d895c",
+   "shas": [
+    "df0af9b9db1d895c"
+   ],
+   "zh": "尽管glib自身是线程安全的，但是任何使用了libsigc++的glibmm封装都不会是线程安全的。因此只有在运行主循环的线程的主循环中才能调用Glib::SignalIdle::connect()、Glib::SignalIO::connect()、Glib::SignalTimeout::connect()、Glib::SignalTimeout::connect_seconds或是处理由它们返回的sigc::connection对象。"
+  }
+ ],
+ "sec-using-glib-dispatcher": [
+  {
+   "id": "a47f6afc125ac020",
+   "shas": [
+    "a47f6afc125ac020"
+   ],
+   "zh": "连接到sigc::signal对象的槽将会在调用信号emit()、operator()()方法的线程被调用。而Glib::Dispatcher的行为与此相反：与其连接的槽将在构造Glib::Dispatcher对象的线程执行（该线程必须正在运行Glib主循环）。如果在GUI主线程上构造了Glib::Dispatcher，任何工作线程都可以在其上调用emit()并让槽安全的执行连接的gtkmm函数。"
+  },
+  {
+   "id": "f9ffebc5cd882034",
+   "shas": [
+    "f9ffebc5cd882034"
+   ],
+   "zh": "一些线程安全规则对于Glib::Dispatcher依旧适用。如前所述，必须在接收器线程（将在该线程的主循环中执行连接的槽）构造Glib::Dispatcher对象。默认情况下接收器线程应该是程序的主进程，尽管Glib::Dispatcher有一个可以接受Glib::MainContext对象为参数并且可以在任何运行Glib主循环的线程中调用的构造函数。只有接受者线程才应该在Glib::Dispatcher对象上调用connect()或操纵相关的sigc::connection对象，除非你为此提供了额外的同步措施。一旦接收器线程连接了槽，任何工作现场都可以不加锁直接在Glib::Dispatcher对象上调用emit()，但前提是该对象是在工作线程启动前构造的，如果不是则需要进行额外的同步以确保可见性。"
+  },
+  {
+   "id": "3287e91a64880dbb",
+   "shas": [
+    "3287e91a64880dbb"
+   ],
+   "zh": "除了连接的槽在接收者线程执行以外，Glib::Dispatcher对象的行为与sigc::signal对象十分相似。因此它们不能传递未绑定的参数，也不能返回值。要传递未绑定参数最好的方法是使用线程安全的（同步）队列。尽管大多数编写多线程代码的人都会有一个可用的多线程代码，但是编写glibmm时没有（尽管线程安全与强异常安全结合有些微妙，但编写它们相对容易）。"
+  },
+  {
+   "id": "ed921b169fac039c",
+   "shas": [
+    "ed921b169fac039c"
+   ],
+   "zh": "接收者线程和工作线程都可以调用Glib::Dispatcher的emit()方法，虽然此操作需要在合理的范围内进行。在类Unix系统上Glib::Dispatcher共享同一个公共管道，从理论上讲在一个负载很大的系统上运行使用很大数量Dispatcher对象的程序至少可以填满系统。如果在接收者线程的主循环有机会读取并清空管道之前，管道已填满且接收器线程在此时尝试对Dispatcher调用emit()并因此对管道进行写入，这样会导致死锁。当然在接收者线程想要发出信号可以使用普通的sigc::signal对象。"
+  }
+ ],
+ "sec-multithread-example": [
+  {
+   "id": "61dd8e72a7780b6d",
+   "shas": [
+    "61dd8e72a7780b6d"
+   ],
+   "zh": "这是一个具有两个线程的示例程序，一个与所有gtkmm程序一样的GUI线程，和一个工作线程。当你按下Start work按钮时将创建工作线程，当工作完成或你按下Stop work按钮或是你按下Quit按钮时该线程将被删除。"
+  },
+  {
+   "id": "ecb1eb15cad8f3ea",
+   "shas": [
+    "ecb1eb15cad8f3ea"
+   ],
+   "zh": "Glib::Dispatcher被用于工作线程向GUI线程发送通知。ExampleWorker包含两个线程都可以访问的数据。该数据被一个std::mutex保护。只有GUI线程对GUI进行更新。"
+  },
+  {
+   "id": "ad52303bf5378b06",
+   "shas": [
+    "ad52303bf5378b06"
+   ],
+   "zh": "编译和链接多线程程序可能需要特殊的编译和链接参数。如果你使用g++编译器你需要添加-pthread选项。其他编译器可能会要求使用其他选项。如果你使用meson构建程序，如果你在构建脚本中添加了dependency('threads')，它会帮你处理多线程的复杂性。"
+  }
+ ]
+}

@@ -1,0 +1,1472 @@
+{
+ "sec-wrapping-build-structure": [
+  {
+   "id": "105ff38ab83c5295",
+   "shas": [
+    "105ff38ab83c5295"
+   ],
+   "zh": "要生成gtkmm风格的API封装源代码需要使用包含在glibmm的工具，例如gmmproc和generate_wrap_init.pl。理论上来说你可以自己编写构建文本以更好的使用它们，不过更好的选择是利用mm-common模块提供的构建基础设施。选择一个已经存在绑定的模块作为示例对于开始使用gmmproc很有帮助。"
+  },
+  {
+   "id": "fbb5987366a49471",
+   "shas": [
+    "fbb5987366a49471"
+   ],
+   "zh": "假设，我们封装了一个名为libsomething的C库。它提供了基于GObject API的具名类型，例如类型名为：SomeWidget和SomeStuff。"
+  },
+  {
+   "id": "c6ae19ffbe86ee4f",
+   "shas": [
+    "c6ae19ffbe86ee4f"
+   ],
+   "zh": "我们封装的库名为libsomethingmm。我们可以从在mm-common模块中复制skeleton源代码树开始。自mm-common 1.0.0开始skeleton应用程序使用Meson构建系统进行构建。"
+  },
+  {
+   "id": "ad0ddc7a6c782ca7",
+   "shas": [
+    "ad0ddc7a6c782ca7"
+   ],
+   "zh": "libsomethingmm：顶级目录。"
+  },
+  {
+   "id": "7e52815a4631adab",
+   "shas": [
+    "7e52815a4631adab"
+   ],
+   "zh": "libsomething：包含主要的被包含文件(被#include的文件)和由pkg-config所需的.pc文件。"
+  },
+  {
+   "id": "bd6e0b1080ab6215",
+   "shas": [
+    "bd6e0b1080ab6215"
+   ],
+   "zh": "src：包含.hg和.ccg源文件。"
+  },
+  {
+   "id": "db4b02a6f15f6571",
+   "shas": [
+    "db4b02a6f15f6571"
+   ],
+   "zh": "libsomethingmm：包含手写的.h和.cc文件。"
+  },
+  {
+   "id": "a879580bec83dde8",
+   "shas": [
+    "a879580bec83dde8"
+   ],
+   "zh": "这为源.hg和.ccg文件、手写的.h和.cc文件提供了目录结构，meson.build文件可以通过各种变量指定Meson使用哪些文件进行编译。适当的重命名目录后，目录结构将如下所示："
+  },
+  {
+   "id": "4244a1331c45e6bf",
+   "shas": [
+    "4244a1331c45e6bf"
+   ],
+   "zh": "除了重命名目录外，我们还应该重命名一些源文件。例如：然后，还有些skeleton文件需要在特定项目内容完成后填写。"
+  },
+  {
+   "id": "cfcf8d544eebbf53",
+   "shas": [
+    "cfcf8d544eebbf53"
+   ],
+   "zh": "除了重命名目录外，我们还应该重命名一些源文件。例如：然后，还有些skeleton文件需要在特定项目内容完成后填写。"
+  },
+  {
+   "id": "427be9a92f757b2f",
+   "shas": [
+    "427be9a92f757b2f"
+   ],
+   "zh": "请注意，在配置阶段中某些变量将会替换为实际值，这将会生成与.in相同名称但不带.in后缀的文件。"
+  },
+  {
+   "id": "fbbd097e5d2643dc",
+   "shas": [
+    "fbbd097e5d2643dc"
+   ],
+   "zh": "生成的文件被保存在构建树中，当使用meson和ninja时构建树会与源树分离。"
+  },
+  {
+   "id": "c1daf9095952318b",
+   "shas": [
+    "c1daf9095952318b"
+   ],
+   "zh": "现在我们修改构建文件以适应我们的需求。在这个时候你可能喜欢使用类似于regexxer这样的多文件搜索替换工具。请注意，skeleton源代码树提供的所有文件几乎都包含了占位符。因此，应该进行全局替换而不是仅对Meson文件替换。"
+  },
+  {
+   "id": "31e876b0e6744608",
+   "shas": [
+    "31e876b0e6744608"
+   ],
+   "zh": "所有提到skeleton的地方都应该替换成你想要封装的C库的名称，例如替换成\"something\"或\"libsomething\"。同样的，所有的SKELETON都应该被替换成\"SOMETHING\"或\"LIBSOMETHING\"，以及所有的Skeleton都应该被替换为\"Something\"。"
+  },
+  {
+   "id": "bc07f14aa56facbe",
+   "shas": [
+    "bc07f14aa56facbe"
+   ],
+   "zh": "同样的，将所有的Joe Hacker替换为预期的版权所有者的名称，也就是你的名称。然后对joe@example.com邮件地址进行同样的操作。"
+  },
+  {
+   "id": "3ead32513ffddc99",
+   "shas": [
+    "3ead32513ffddc99"
+   ],
+   "zh": "使绑定模块的版本跟踪被封装的库的版本很常见。例如，C库版本是1.23.4，则绑定模块的初始版本为1.23.0。但是请尽量避免以偶数次要版本开始，因为这通常意味着该版本是稳定版本。"
+  },
+  {
+   "id": "fa08f035eeb0a43a",
+   "shas": [
+    "fa08f035eeb0a43a"
+   ],
+   "zh": "如果有必要，请在project()函数中修改许可证和C++版本。"
+  },
+  {
+   "id": "3a86eb084454e0ff",
+   "shas": [
+    "3a86eb084454e0ff"
+   ],
+   "zh": "你可能需要添加除glibmm和skeleton(libsomething)以外的必需模块。"
+  },
+  {
+   "id": "8a0dd5a9f722c48e",
+   "shas": [
+    "8a0dd5a9f722c48e"
+   ],
+   "zh": "skeleton/meson.build：在这除了全局替换以外基本上不需要做什么。"
+  },
+  {
+   "id": "ab2b9c2ae57948d5",
+   "shas": [
+    "ab2b9c2ae57948d5"
+   ],
+   "zh": "skeleton/skeletonmm/meson.build"
+  },
+  {
+   "id": "903942860e0dc6a3",
+   "shas": [
+    "903942860e0dc6a3"
+   ],
+   "zh": "在这添加额外的.defs和docs.xml文件"
+  },
+  {
+   "id": "ae6d8b3f8a0a986f",
+   "shas": [
+    "ae6d8b3f8a0a986f"
+   ],
+   "zh": "必须在这里提及所有的.hg和.ccg。"
+  },
+  {
+   "id": "4c790f09cda99a10",
+   "shas": [
+    "4c790f09cda99a10"
+   ],
+   "zh": "所有手写的.h和.cc源文件都需要写在这。"
+  },
+  {
+   "id": "de21faab076a0229",
+   "shas": [
+    "de21faab076a0229"
+   ],
+   "zh": "接下来我们必须对其他的meson.build文件进行修改："
+  },
+  {
+   "id": "886502c254070882",
+   "shas": [
+    "886502c254070882"
+   ],
+   "zh": "现在我们应该创建第一个.hg和.ccg，用以对一个C库中的对象进行封装。存在一对可供参考的示例源文件：skeleton.ccg和skeleton.hg。请根据需要创建这些文件的副本。"
+  },
+  {
+   "id": "6144ba1328ca39b5",
+   "shas": [
+    "6144ba1328ca39b5"
+   ],
+   "zh": "在.hg和.ccg文件小节你可以学到这些文件使用的语法。"
+  }
+ ],
+ "sec-wrapping-defs-files": [
+  {
+   "id": "6fb74f767ca246df",
+   "shas": [
+    "6fb74f767ca246df"
+   ],
+   "zh": "对象(GObjects、部件、接口、装箱类型、普通结构体)"
+  },
+  {
+   "id": "ef7d009c7e812da1",
+   "shas": [
+    "ef7d009c7e812da1"
+   ],
+   "zh": "函数"
+  },
+  {
+   "id": "c2b210b6539aa642",
+   "shas": [
+    "c2b210b6539aa642"
+   ],
+   "zh": "枚举"
+  },
+  {
+   "id": "c1d2c1df9eabd696",
+   "shas": [
+    "c1d2c1df9eabd696"
+   ],
+   "zh": "信号"
+  },
+  {
+   "id": "96adb92452863058",
+   "shas": [
+    "96adb92452863058"
+   ],
+   "zh": "属性"
+  },
+  {
+   "id": "ef6683b2990dd489",
+   "shas": [
+    "ef6683b2990dd489"
+   ],
+   "zh": "虚函数(vfuncs)"
+  },
+  {
+   "id": "73199e87a7b19ba9",
+   "shas": [
+    "73199e87a7b19ba9"
+   ],
+   "zh": ".defs是一种使用lisp格式的文本文件，它描述了C库的API，其中包括了以下内容："
+  },
+  {
+   "id": "dc0b11026e2b44ac",
+   "shas": [
+    "dc0b11026e2b44ac"
+   ],
+   "zh": "包含其他文件。"
+  },
+  {
+   "id": "676b1d6e239912ea",
+   "shas": [
+    "676b1d6e239912ea"
+   ],
+   "zh": "对象和函数。"
+  },
+  {
+   "id": "b93a03ddd056ce25",
+   "shas": [
+    "b93a03ddd056ce25"
+   ],
+   "zh": "枚举。"
+  },
+  {
+   "id": "1c9287310322c0a5",
+   "shas": [
+    "1c9287310322c0a5"
+   ],
+   "zh": "信号和属性。"
+  },
+  {
+   "id": "6f654f9270db1ad6",
+   "shas": [
+    "6f654f9270db1ad6"
+   ],
+   "zh": "虚函数(结构体中的函数指针字段)，手动编写。"
+  },
+  {
+   "id": "58fd0ef56b72913a",
+   "shas": [
+    "58fd0ef56b72913a"
+   ],
+   "zh": "这个.defs文件描述了对象及其函数。它是由h2def.py脚本生成的，你可以在glibmm的tools/defs_gen文件夹中找到该脚本。例如："
+  },
+  {
+   "id": "74aefe08911ea1a1",
+   "shas": [
+    "74aefe08911ea1a1"
+   ],
+   "zh": "这个.defs文件描述了枚举类型及其可能的值。它是由enum.pl脚本生成的，你可以在glibmm的tools文件夹中找到该脚本。例如："
+  },
+  {
+   "id": "f97d02295054aae4",
+   "shas": [
+    "f97d02295054aae4"
+   ],
+   "zh": "这个.defs文件描述了信号和属性。它是由封装项目自有的generate_extra_defs实用程序生成的，你可以在类似于gtkmm/tools/extra_defs_gen/的目录下找到它。例如："
+  },
+  {
+   "id": "a7091cd5717d9dc6",
+   "shas": [
+    "a7091cd5717d9dc6"
+   ],
+   "zh": "你必须编辑自己的generate_extra_defs工具的源代码才能为需要封装的GObject C类型生成.defs文件。在skeleton源代码树中，源文件名为tools/extra_defs_gen/generate_defs_skeleton.cc。你需要将文件重命名为正确的文件名（按前一小节所述），然后在tools/extra_defs_gen/meson.build文件中提到新的源文件名。"
+  },
+  {
+   "id": "10e5f45769b6a9d3",
+   "shas": [
+    "10e5f45769b6a9d3"
+   ],
+   "zh": "然后编辑.cc以指定正确的类型。例如，你的main()函数可能如下所示："
+  },
+  {
+   "id": "62a20febcaf9242a",
+   "shas": [
+    "62a20febcaf9242a"
+   ],
+   "zh": ".defs文件描述了虚函数（vfuncs）。它必须手写。你可以从skeleton/src/skeleton_vfunc.defs文件开始进行修改。你也可以从gtkmm的gtk/src/gtk_vfuncs.defs文件开始。"
+  },
+  {
+   "id": "153359c8db0a1c79",
+   "shas": [
+    "153359c8db0a1c79"
+   ],
+   "zh": null
+  },
+  {
+   "id": "c245653ea0904bb3",
+   "shas": [
+    "c245653ea0904bb3"
+   ],
+   "zh": "告诉gmmproc在生成的文件中包含private/button_p.h头文件。"
+  }
+ ],
+ "sec-wrapping-hg-files": [
+  {
+   "id": "a7b1649a5b16dc06",
+   "shas": [
+    "a7b1649a5b16dc06"
+   ],
+   "zh": ".hg和.ccg源文件与C++的.h和.cc源文件非常相似，但是它们包含额外的宏，例如_CLASS_GOBJECT()和_WRAP_METHOD()，gmmproc会使用这些宏在头文件中的相同位置生成合适的C++源代码。而所有其他的C++源代码会按原样复制到相应的.h或.cc文件中。"
+  },
+  {
+   "id": "cf901e1c0baeeb45",
+   "shas": [
+    "cf901e1c0baeeb45"
+   ],
+   "zh": ".hg文件通常包含了一些头文件和声明一个类，并使用一些宏向类中添加API或行为。例如，gtkmm的button.hg文件看起来大概这样："
+  },
+  {
+   "id": "597eacddb2a8ccaf",
+   "shas": [
+    "597eacddb2a8ccaf"
+   ],
+   "zh": "指定所生成源代码的目标目录，以及gmmproc应该解析的主要.defs文件的名称。"
+  },
+  {
+   "id": "07cfeaa20cdbabcd",
+   "shas": [
+    "07cfeaa20cdbabcd"
+   ],
+   "zh": "告诉gmmproc在生成的文件中包含private/button_p.h头文件。"
+  },
+  {
+   "id": "30dea3e449c8a743",
+   "shas": [
+    "30dea3e449c8a743"
+   ],
+   "zh": "告诉gmmproc在封装部件类时在类中添加一些类型定义(typedef)、构造函数、标准方法。"
+  },
+  {
+   "id": "44df4f334d7a2f64",
+   "shas": [
+    "44df4f334d7a2f64"
+   ],
+   "zh": "告诉gmmproc为接口添加初始化代码。"
+  },
+  {
+   "id": "04ee586f336b2798",
+   "shas": [
+    "04ee586f336b2798"
+   ],
+   "zh": "添加默认构造函数。"
+  },
+  {
+   "id": "cf2563d0e2a31a49",
+   "shas": [
+    "cf2563d0e2a31a49"
+   ],
+   "zh": "添加用于封装C API的一部分的方法。"
+  },
+  {
+   "id": "c508b3f8994f151e",
+   "shas": [
+    "c508b3f8994f151e"
+   ],
+   "zh": "本示例中的宏执行下述操作："
+  },
+  {
+   "id": "459b6be37147ae60",
+   "shas": [
+    "459b6be37147ae60"
+   ],
+   "zh": "通过这样使用gmmproc处理.hg和.ccg文件，可以从.hg和.ccg文件生成.h和.cc文件，尽管这在使用上述的构建结构时会自动进行："
+  },
+  {
+   "id": "d5721fbc31902267",
+   "shas": [
+    "d5721fbc31902267"
+   ],
+   "zh": "请注意我们为gmmproc提供了.m4转换文件、.defs文件路径、.hg文件名、源代码目录、目标目录。"
+  },
+  {
+   "id": "1cbf8711e8b820b4",
+   "shas": [
+    "1cbf8711e8b820b4"
+   ],
+   "zh": "你应该避免在C++头文件中包含C头文件，以免污染全局名称空间，以免导出不必要的公共API。但是你需要在你的.ccg文件中包含必要的C头文件。"
+  },
+  {
+   "id": "a059c3a862f0e9a6",
+   "shas": [
+    "a059c3a862f0e9a6"
+   ],
+   "zh": "以下各节将对宏进行详细说明。"
+  },
+  {
+   "id": "c5a7732f42b1585f",
+   "shas": [
+    "c5a7732f42b1585f"
+   ],
+   "zh": "在.hg和.ccg文件中使用的宏通常需要知道如何将C++类型转换为C类型，反之亦然。gmmproc会从你的tools/m4/或codegen/m4/目录的.m4文件读取此信息。这样它就可以在C++方法的实现中调用C函数，并将适当的参数传递给该C函数。例如：这告诉gmmproc如何将GtkTreeView指针转换为Gtk::TreeView指针："
+  },
+  {
+   "id": "eabee9d2477b7e51",
+   "shas": [
+    "eabee9d2477b7e51"
+   ],
+   "zh": "当此转换被gmmproc使用时，$3将会被参数名称替换。"
+  },
+  {
+   "id": "975039cdff005ade",
+   "shas": [
+    "975039cdff005ade"
+   ],
+   "zh": "使用一些额外的宏可以使其变得更简单和一致。例如gtkmm中的.m4文件："
+  },
+  {
+   "id": "4c1e83fb799ad46c",
+   "shas": [
+    "4c1e83fb799ad46c"
+   ],
+   "zh": "在封装方法时，通常最好将C函数的返回值储存在被称为输出参数的参数中。在本例中，C++方法返回void但是有一个用于储存C函数值的输出参数。gmmproc支持此功能，但是必须使用适当的初始化宏来告诉gmmproc如何从C函数的返回值初始化C++参数。"
+  },
+  {
+   "id": "7f6b548d4c3b79ff",
+   "shas": [
+    "7f6b548d4c3b79ff"
+   ],
+   "zh": "$3将被C++方法的输出参数名替换，$4将在此初始化被gmmproc使用时被C函数的返回值替代。为了方便起见，$1也将被不带&符的C++类型替换，而$2将被替换为C类型。"
+  },
+  {
+   "id": "a2ca675ab3f1c7d3",
+   "shas": [
+    "a2ca675ab3f1c7d3"
+   ],
+   "zh": "类宏声明了类本身与其底层C类型的关系。它会生成一些内部构造函数、gobject_成员、类型定义(typedef)、gobj()访问器、Glib::wrap()成员函数、并进行类型注册等。"
+  },
+  {
+   "id": "706e86a92440f047",
+   "shas": [
+    "706e86a92440f047"
+   ],
+   "zh": null
+  },
+  {
+   "id": "88eb058d5ad61508",
+   "shas": [
+    "88eb058d5ad61508"
+   ],
+   "zh": "这个宏为从GObject派生的类型声明了一个类型包装器，但是此包装器并不会派生自Gtk::Object。"
+  },
+  {
+   "id": "5843fe91f7fb1f30",
+   "shas": [
+    "5843fe91f7fb1f30"
+   ],
+   "zh": "_CLASS_GOBJECT( C++类, C类, C转换宏, C++基类, C基类 )"
+  },
+  {
+   "id": "d54f002cc76adf10",
+   "shas": [
+    "d54f002cc76adf10"
+   ],
+   "zh": null
+  },
+  {
+   "id": "42903dbe652be5b0",
+   "shas": [
+    "42903dbe652be5b0"
+   ],
+   "zh": "这个宏为类型声明了一个类型派生包装器，此包装器将派生自Gtk::Object，例如部件(Widget)和对话框(Dialog)。"
+  },
+  {
+   "id": "ac1bda51d1047a76",
+   "shas": [
+    "ac1bda51d1047a76"
+   ],
+   "zh": "_CLASS_GTKOBJECT( C++类, C类, C转换宏, C++基类, C基类 )"
+  },
+  {
+   "id": "a71255b87a1610c2",
+   "shas": [
+    "a71255b87a1610c2"
+   ],
+   "zh": null
+  },
+  {
+   "id": "dcc90bff63da014c",
+   "shas": [
+    "dcc90bff63da014c"
+   ],
+   "zh": "当类已从Gtk::Object派生时，你通常会使用此宏。例如：你将在封装GTK部件时使用它，因为Gtk::Widget派生自Gtk::Object。"
+  },
+  {
+   "id": "72847a86ed18d25b",
+   "shas": [
+    "72847a86ed18d25b"
+   ],
+   "zh": "你还可以从Gtk::Object派生非部件类，这样你就可以在不通过Glib::RefPtr直接使用它们。例如：它们将可以使用Gtk::make_managed()实例化也可以作为成员变量在栈上实例化。这样你可以自行决定是否对它们使用引用计数。我们认为对部件使用引用计数很有用。"
+  },
+  {
+   "id": "9137f5c8d1add0a9",
+   "shas": [
+    "9137f5c8d1add0a9"
+   ],
+   "zh": "这个宏声明了一个非GObject结构体类型的包装器，并使用g_boxed_type_register_static()对该类型进行注册。"
+  },
+  {
+   "id": "45a6dfa075cc41f8",
+   "shas": [
+    "45a6dfa075cc41f8"
+   ],
+   "zh": "_CLASS_BOXEDTYPE( C++类, C类, new函数, copy函数, free函数 )"
+  },
+  {
+   "id": "5e5421e0b460f1c6",
+   "shas": [
+    "5e5421e0b460f1c6"
+   ],
+   "zh": "示例来自Gdk::RGBA："
+  },
+  {
+   "id": "6d89fff4d5b875de",
+   "shas": [
+    "6d89fff4d5b875de"
+   ],
+   "zh": "这个宏为类似于GdkRectangle这样的简单可赋值结构体声明了一个包装器。它和_CLASS_BOXEDTYPE类似，不过其包装的C结构体不是动态分配的。"
+  },
+  {
+   "id": "a5dc24da447b0053",
+   "shas": [
+    "a5dc24da447b0053"
+   ],
+   "zh": "_CLASS_BOXEDTYPE_STATIC( C++类, C类 )"
+  },
+  {
+   "id": "a6a917d2454a0434",
+   "shas": [
+    "a6a917d2454a0434"
+   ],
+   "zh": "示例来自Gdk::Rectangle："
+  },
+  {
+   "id": "5acb8143bae5ad32",
+   "shas": [
+    "5acb8143bae5ad32"
+   ],
+   "zh": "这个宏为具有复制和释放函数的不透明结构体声明了一个包装器。新建(new)、复制(copy)、释放(free)函数将用于实例化默认构造函数、复制构造函数、析构函数。"
+  },
+  {
+   "id": "a4d70dd9e48c99a4",
+   "shas": [
+    "a4d70dd9e48c99a4"
+   ],
+   "zh": "_CLASS_OPAQUE_COPYABLE( C++类, C类, new函数, copy函数, free函数 )"
+  },
+  {
+   "id": "7a5a29399598c6c5",
+   "shas": [
+    "7a5a29399598c6c5"
+   ],
+   "zh": "示例来自Glib::Checksum："
+  },
+  {
+   "id": "d2ac4055efe17210",
+   "shas": [
+    "d2ac4055efe17210"
+   ],
+   "zh": "这个宏为使用引用计数的不透明结构体声明了一个包装器。C++包装器将不能直接实例化，需要与Glib::RefPtr一起使用。"
+  },
+  {
+   "id": "0794e68d8b113da2",
+   "shas": [
+    "0794e68d8b113da2"
+   ],
+   "zh": "_CLASS_OPAQUE_REFCOUNTED( C++函数, C函数, new函数, ref函数, unref函数 )"
+  },
+  {
+   "id": "3a34a7aa6bb4256b",
+   "shas": [
+    "3a34a7aa6bb4256b"
+   ],
+   "zh": "示例来自Gdk::Rectangle："
+  },
+  {
+   "id": "eb4e943d259f3a2a",
+   "shas": [
+    "eb4e943d259f3a2a"
+   ],
+   "zh": "这个宏用于包装任何不属于专用包装宏的结构体。"
+  },
+  {
+   "id": "097e1ed27bf9a97b",
+   "shas": [
+    "097e1ed27bf9a97b"
+   ],
+   "zh": "_CLASS_GENERIC( C++类, C类 )"
+  },
+  {
+   "id": "8e8851f29449daf3",
+   "shas": [
+    "8e8851f29449daf3"
+   ],
+   "zh": "示例来自Gdk::Rectangle："
+  },
+  {
+   "id": "432be72bde89d7f1",
+   "shas": [
+    "432be72bde89d7f1"
+   ],
+   "zh": "这个宏为派生自GTypeInterface的类型声明了一个包装器。"
+  },
+  {
+   "id": "33365fb6b4e599c6",
+   "shas": [
+    "33365fb6b4e599c6"
+   ],
+   "zh": "_CLASS_INTERFACE( C++类, C类, C转换宏, C接口结构体, C++基类(可选的), C基类(可选的) )"
+  },
+  {
+   "id": "cd7e9a75a30261e0",
+   "shas": [
+    "cd7e9a75a30261e0"
+   ],
+   "zh": "示例来自与celleditable.hg："
+  },
+  {
+   "id": "480fa97e41072de0",
+   "shas": [
+    "480fa97e41072de0"
+   ],
+   "zh": "对于接口是从其他接口派生的情况，两个附加参数是可选的，GInterface有另一个GInterface作为先决条件时属于此情况。示例来自于loadableicon.hg："
+  },
+  {
+   "id": "4a4afe9d745e7510",
+   "shas": [
+    "4a4afe9d745e7510"
+   ],
+   "zh": "在使用_CLASS_GOBJECT()时，其构造函数应该是保护(protected)的而不是公有(public)。并且每个公有(public)的构造函数都应该有_WRAP_CREATE()。这样可以防止在不使用RefPtr的情况下直接实例化这个类。例如："
+  },
+  {
+   "id": "3906f2bef2b14ab9",
+   "shas": [
+    "3906f2bef2b14ab9"
+   ],
+   "zh": "这个宏创建一个不接受参数的默认构造函数"
+  },
+  {
+   "id": "39d1c3d4abe54978",
+   "shas": [
+    "39d1c3d4abe54978"
+   ],
+   "zh": "他还有需要额外的可选参数："
+  },
+  {
+   "id": "7d08da25817dcde3",
+   "shas": [
+    "7d08da25817dcde3"
+   ],
+   "zh": "抑制_CLASS_BOXEDTYPE、_CLASS_BOXEDTYPE_STATIC、_CLASS_OPAQUE_COPYABLE生成默认构造函数的声明和定义。"
+  },
+  {
+   "id": "eabebc25dd0b5082",
+   "shas": [
+    "eabebc25dd0b5082"
+   ],
+   "zh": "抑制_CLASS_BOXEDTYPE和_CLASS_BOXEDTYPE_STATIC生成接受指向其所包装的C类型的指针的构造函数的声明和定义。"
+  },
+  {
+   "id": "a49ce46489fb90b7",
+   "shas": [
+    "a49ce46489fb90b7"
+   ],
+   "zh": "抑制_CLASS_INTERFACE和_CLASS_OPAQUE_COPYABLE生成接受指向其所包装的C类型的指针的构造函数的定义。"
+  },
+  {
+   "id": "3922b243f8c3fcaf",
+   "shas": [
+    "3922b243f8c3fcaf"
+   ],
+   "zh": "抑制_CLASS_GOBJECT和_CLASS_GTKOBJECT生成接受指向其所包装的C类型的指针且接受其他构造参数的构造函数的定义。"
+  },
+  {
+   "id": "4d4956877e50f2e6",
+   "shas": [
+    "4d4956877e50f2e6"
+   ],
+   "zh": "抑制_CLASS_GOBJECT和_CLASS_GTKOBJECT生成析构函数的定义"
+  },
+  {
+   "id": "9b9315de287fdfc1",
+   "shas": [
+    "9b9315de287fdfc1"
+   ],
+   "zh": "抑制_CLASS_GOBJECT_CLASS_GTKOBJECT生成移动构造函数和移动赋值运算符的声明和定义。"
+  },
+  {
+   "id": "652744a2ab28954b",
+   "shas": [
+    "652744a2ab28954b"
+   ],
+   "zh": "例如："
+  },
+  {
+   "id": "0ed0cdfa30a3ab1d",
+   "shas": [
+    "0ed0cdfa30a3ab1d"
+   ],
+   "zh": "抑制_CLASS_GOBJECT生成Glib::wrap_new()的定义。"
+  },
+  {
+   "id": "e43a9599de271f80",
+   "shas": [
+    "e43a9599de271f80"
+   ],
+   "zh": "抑制_CLASS_GOBJECT和_CLASS_GTKOBJECT生成Glib::wrap()函数的定义。"
+  },
+  {
+   "id": "bd06d298085dff55",
+   "shas": [
+    "bd06d298085dff55"
+   ],
+   "zh": "抑制_CLASS_GOBJECT、_CLASS_BOXEDTYPE、_CLASS_BOXEDTYPE_STATIC、_CLASS_OPAQUE_COPYABLE、_CLASS_INTERFACE和_CLASS_GTKOBJECT生成Glib::wrap()函数的声明和定义。"
+  },
+  {
+   "id": "bc3ce86690390805",
+   "shas": [
+    "bc3ce86690390805"
+   ],
+   "zh": "这个宏用于生成封装C函数的C++方法。"
+  },
+  {
+   "id": "c152d9d9a53d0501",
+   "shas": [
+    "c152d9d9a53d0501"
+   ],
+   "zh": "_WRAP_METHOD( C++方法签名, C函数名)"
+  },
+  {
+   "id": "e9e6f115fa0d1f4c",
+   "shas": [
+    "e9e6f115fa0d1f4c"
+   ],
+   "zh": "示例来自于entry.hg："
+  },
+  {
+   "id": "fc4e29ff2f0f8067",
+   "shas": [
+    "fc4e29ff2f0f8067"
+   ],
+   "zh": "在C函数不提供引用时，对其返回值额外调用一次reference()。"
+  },
+  {
+   "id": "6515030738997641",
+   "shas": [
+    "6515030738997641"
+   ],
+   "zh": "将生成的代码放入#ifdef块中。text是可选参数，用于提供与弃用有关的文本信息。"
+  },
+  {
+   "id": "c87191fdc6c557a3",
+   "shas": [
+    "c87191fdc6c557a3"
+   ],
+   "zh": null
+  },
+  {
+   "id": "68edf7b76fe9153e",
+   "shas": [
+    "68edf7b76fe9153e"
+   ],
+   "zh": "直接调用同一个函数的非const版本，而不是生成几乎相同的代码。"
+  },
+  {
+   "id": "a71d413117229c01",
+   "shas": [
+    "a71d413117229c01"
+   ],
+   "zh": "在文档中添加@newin Doxygen命令，或替换从C文档中生成的@newin命令。"
+  },
+  {
+   "id": "58ede39138b86515",
+   "shas": [
+    "58ede39138b86515"
+   ],
+   "zh": "将生成的代码放入ifdef 块中。"
+  },
+  {
+   "id": "e2e8ca2fd2bfa062",
+   "shas": [
+    "e2e8ca2fd2bfa062"
+   ],
+   "zh": "如果方法存在一个槽参数，指定该槽参数的名称。这使得gmmproc可以生成用于复制槽并将其复制传递给C函数的gpointer user_data参数的代码。slot_callback参数需要使用此选项指定的名称。"
+  },
+  {
+   "id": "294979bae0c582d1",
+   "shas": [
+    "294979bae0c582d1"
+   ],
+   "zh": "与slot_name选项一起使用。用slot_name所指定的胶水回调函数处理提取槽然后调用它。这个回调函数的函数指针也将被传递给封装此C函数的方法。"
+  },
+  {
+   "id": "78923f19bd5a2289",
+   "shas": [
+    "78923f19bd5a2289"
+   ],
+   "zh": "告知gmmproc如果此方法有槽，不要将槽的副本传递给C函数。而是直接传递槽本身。槽的参数名和胶水回调函数必须分别使用slot_name和slot_callback选项指定。"
+  },
+  {
+   "id": "7fe217db90d13706",
+   "shas": [
+    "7fe217db90d13706"
+   ],
+   "zh": "有一些可选的额外参数："
+  },
+  {
+   "id": "ad6b4b2756f4b833",
+   "shas": [
+    "ad6b4b2756f4b833"
+   ],
+   "zh": "通过RefPtr使用的对象：传递RefPtr的const引用。例如：const Glib::RefPtr& filter。"
+  },
+  {
+   "id": "410cb8ddb870cc12",
+   "shas": [
+    "410cb8ddb870cc12"
+   ],
+   "zh": "通过RefPtr使用的const对象：如果函数不应该修改此对象，即使对象已经是const的，也应该确保对象的RefPtr是const的。例如：const Glib::RefPtr& filter。"
+  },
+  {
+   "id": "e49f588ad969e113",
+   "shas": [
+    "e49f588ad969e113"
+   ],
+   "zh": "这个宏类似于_WRAP_METHOD()，但是它只生成封装C函数的C++方法的文档。当你需要手动编写该方法又不想手动编写文档时，请使用这个宏。"
+  },
+  {
+   "id": "9712414ab31c51e5",
+   "shas": [
+    "9712414ab31c51e5"
+   ],
+   "zh": "_WRAP_METHOD_DOCS_ONLY(C function name)"
+  },
+  {
+   "id": "d3b8c6f9cff22926",
+   "shas": [
+    "d3b8c6f9cff22926"
+   ],
+   "zh": "示例来自于container.hg："
+  },
+  {
+   "id": "4bb64ad840405517",
+   "shas": [
+    "4bb64ad840405517"
+   ],
+   "zh": "不要再文档中包含@return Doxygen命令。如果被封装的C函数有返回而封装它的C++方法返回void，这将很有用。"
+  },
+  {
+   "id": "cd7e9d76a2b74b4b",
+   "shas": [
+    "cd7e9d76a2b74b4b"
+   ],
+   "zh": "gmmproc会在stdout上警告你忘了封装相关的函数、信号、属性、子属性，这有助于确保API被完整的封装。但有时候你会不想对某些函数、信号、属性、子属性封装，或者你想要手动编写一些函数，那么你可以使用_IGNORE()、_IGNORE_SIGNAL()、_IGNORE_PROPERTY()宏使gmmproc停止发出部分警告。"
+  },
+  {
+   "id": "7ea01302a0ca1771",
+   "shas": [
+    "7ea01302a0ca1771"
+   ],
+   "zh": "示例来自flowbox.hg："
+  },
+  {
+   "id": "d5d2e38d91b7e30f",
+   "shas": [
+    "d5d2e38d91b7e30f"
+   ],
+   "zh": "这个宏生成用来封装C GObject信号的C++ libsigc++风格的信号。实际上它会生成一个公有访问器方法，例如signal_clicked()，它返回一个代理对象。gmmproc使用.defs文件寻找C参数类型并使用.m4转换文件查找如何将其转换为适当的类型。"
+  },
+  {
+   "id": "407253b93c02ed9a",
+   "shas": [
+    "407253b93c02ed9a"
+   ],
+   "zh": "_WRAP_SIGNAL( C++信号处理函数签名, C信号名)"
+  },
+  {
+   "id": "af7e59b360234ab5",
+   "shas": [
+    "af7e59b360234ab5"
+   ],
+   "zh": "来自button.hg文件中的例子："
+  },
+  {
+   "id": "9bfa24198eccc21f",
+   "shas": [
+    "9bfa24198eccc21f"
+   ],
+   "zh": "信号通常在GTK结构体中具有函数指针，在.c文件中有对应的枚举值和g_signal_new()函数。"
+  },
+  {
+   "id": "c4e2306cd7caf917",
+   "shas": [
+    "c4e2306cd7caf917"
+   ],
+   "zh": "不要生成on_something()虚成员函数以允许简单的覆写默认信号处理函数。可以在添加一个具有默认信号处理函数的信号会使虚函数表尺寸变大以至于破坏ABI的时候，或是在需要添加一个非公共C默认处理函数的时候，使用此可选参数。"
+  },
+  {
+   "id": "bfd29f34847805ca",
+   "shas": [
+    "bfd29f34847805ca"
+   ],
+   "zh": "在.h文件中生成on_something()虚成员函数的声明，但不在.cc文件中生成该函数的定义。请在你需要手动编写函数定义的时候使用此可选参数。"
+  },
+  {
+   "id": "898e8bd5c152a5df",
+   "shas": [
+    "898e8bd5c152a5df"
+   ],
+   "zh": "不要为信号生成C回调函数。请在你需要手动编写回调函数的时候使用此可选参数。"
+  },
+  {
+   "id": "e463d2da65b46941",
+   "shas": [
+    "e463d2da65b46941"
+   ],
+   "zh": "当C函数没有提供引用的时候，在on_something()虚成员函数的返回值上额外调用一次reference()。"
+  },
+  {
+   "id": "77b9c5261e67ec86",
+   "shas": [
+    "77b9c5261e67ec86"
+   ],
+   "zh": "允许使用自定义异常处理函数而不是使用默认异常处理函数。如果异常被用户自定义的处理函数程序抛出，则该异常将被默认异常处理函数捕获。"
+  },
+  {
+   "id": "759ea92d17575fce",
+   "shas": [
+    "759ea92d17575fce"
+   ],
+   "zh": "向signal_something()成员函数添加一个const Glib::ustring&参数。如果信号接受详细信号名，也就是说底层C代码使用了G_SIGNAL_DETAILED标志注册这个信号，则使用该参数作为详细信号名。"
+  },
+  {
+   "id": "141bc3f9b2763ec6",
+   "shas": [
+    "141bc3f9b2763ec6"
+   ],
+   "zh": "需与detail_name选项一起使用。生成两个signal_something()成员函数，其中一个不带任何参数，而另一个接受一个参数但该参数没有默认值。如果只使用detail_name选项，则只生成一个成员函数，此成员函数将接受一个参数且此参数有默认值。请再需要保持ABI不变的情况下使用此选项。"
+  },
+  {
+   "id": "9039c6c72d3e08e3",
+   "shas": [
+    "9039c6c72d3e08e3"
+   ],
+   "zh": "这个宏生成用于包装C GObject属性的C++方法。你需要为该属性指定属性名以及其值所需的C++类型。gmmproc使用.defs文件寻找C参数类型并使用.m4转换文件查找如何将其转换为适当的类型。"
+  },
+  {
+   "id": "370fd9cb64e4ac20",
+   "shas": [
+    "370fd9cb64e4ac20"
+   ],
+   "zh": "_WRAP_PROPERTY(C属性名, C++类型)"
+  },
+  {
+   "id": "1a5f6898b767a4aa",
+   "shas": [
+    "1a5f6898b767a4aa"
+   ],
+   "zh": "这个宏生成用于封装C虚函数的C++成员函数。"
+  },
+  {
+   "id": "cfd67f2cf4a0f44e",
+   "shas": [
+    "cfd67f2cf4a0f44e"
+   ],
+   "zh": "_WRAP_VFUNC( C++成员函数签名, C函数名)"
+  },
+  {
+   "id": "11fc1c771d44ae97",
+   "shas": [
+    "11fc1c771d44ae97"
+   ],
+   "zh": "示例来自于widget.hg："
+  },
+  {
+   "id": "8cf12726cddb9e5a",
+   "shas": [
+    "8cf12726cddb9e5a"
+   ],
+   "zh": "当C虚函数没有提供引用的时候，在something_vfunc()函数的返回值上额外调用一次reference()。"
+  },
+  {
+   "id": "01ac304b56a0c3a7",
+   "shas": [
+    "01ac304b56a0c3a7"
+   ],
+   "zh": "当被调用的C函数期望其提供一个引用的时候，在C回调函数当中，对被覆写的something_vfunc()函数的返回值额外调用一次reference()。"
+  },
+  {
+   "id": "ecb83394158de9a6",
+   "shas": [
+    "ecb83394158de9a6"
+   ],
+   "zh": "当被调用的C函数不想要得到属于它的引用的时候，在C回调函数中保留一份返回值的副本。"
+  },
+  {
+   "id": "fc47533b1d400188",
+   "shas": [
+    "fc47533b1d400188"
+   ],
+   "zh": "不在.cc文件中生成虚函数的定义。请在你需要手写虚函数的时候使用此可选参数。"
+  },
+  {
+   "id": "51db5b265dab1d88",
+   "shas": [
+    "51db5b265dab1d88"
+   ],
+   "zh": "不为虚函数生成C回调函数。请在你需要手写回调函数时使用此可选参数。"
+  },
+  {
+   "id": "c29ea020e3a98e8b",
+   "shas": [
+    "c29ea020e3a98e8b"
+   ],
+   "zh": "定义非默认的返回值。"
+  },
+  {
+   "id": "5bcb247db966781e",
+   "shas": [
+    "5bcb247db966781e"
+   ],
+   "zh": "定义一个只在C++ something_vfunc()函数抛出异常，且传播到了C回调函数中的时候才使用的非默认返回值。如果指定了return_value但没有指定err_return_value，则将err_return_value的值视作return_value的值。"
+  },
+  {
+   "id": "8b8ff9b8d3fe0892",
+   "shas": [
+    "8b8ff9b8d3fe0892"
+   ],
+   "zh": "一个可能有例外的规则：如果一个C虚函数返回了指向派生自GObject的对象的指针，也即一个引用计数对象的指针，那么C++虚函数应该返回Glib::RefPtr<>对象。且需要refreturn或refreturn_ctype额外参数。"
+  },
+  {
+   "id": "06571e137d26a80c",
+   "shas": [
+    "06571e137d26a80c"
+   ],
+   "zh": "这个宏为接口生成初始化代码"
+  },
+  {
+   "id": "dff278989d7622d2",
+   "shas": [
+    "dff278989d7622d2"
+   ],
+   "zh": "_IMPLEMENTS_INTERFACE(C++接口名)"
+  },
+  {
+   "id": "43858ae648a3cee2",
+   "shas": [
+    "43858ae648a3cee2"
+   ],
+   "zh": "示例来自于grid.hg："
+  },
+  {
+   "id": "bcbeaaecb4c86582",
+   "shas": [
+    "bcbeaaecb4c86582"
+   ],
+   "zh": "有一个可选的额外参数："
+  },
+  {
+   "id": "0d46a12c4e1da537",
+   "shas": [
+    "0d46a12c4e1da537"
+   ],
+   "zh": "这个宏生成一个C++枚举以包装C枚举。你必须指定所需的C++名称和底层C枚举的名称。"
+  },
+  {
+   "id": "6efa3035259b2ea4",
+   "shas": [
+    "6efa3035259b2ea4"
+   ],
+   "zh": "示例来自于enums.hg："
+  },
+  {
+   "id": "65792693e5080072",
+   "shas": [
+    "65792693e5080072"
+   ],
+   "zh": "在一个类中生成普通枚举而不是生成枚举类。这将允许该枚举类型的值可以直接转换为int类型的值，且这样的枚举还拥有与枚举类类似的作用域。"
+  },
+  {
+   "id": "b72a9158907ca732",
+   "shas": [
+    "b72a9158907ca732"
+   ],
+   "zh": "替换一个或多个枚举常量名称的全部或一部分。你可以添加任意数量的替换。"
+  },
+  {
+   "id": "3dc8e28d25358677",
+   "shas": [
+    "3dc8e28d25358677"
+   ],
+   "zh": null
+  },
+  {
+   "id": "4e97906b87f25ecd",
+   "shas": [
+    "4e97906b87f25ecd"
+   ],
+   "zh": "这个宏只是为枚举生成一个Doxygen文档块。这对于因为过于复杂（这通常是因为使用了C宏）而无法使用_WRAP_ENUM()包装，且依然需要包含为枚举生成的文档的枚举类型很有用。它与_WRAP_ENUM()使用同一语法，也处理一样的参数（尽管有些额外参数因为没有作用会被忽略）"
+  },
+  {
+   "id": "be1ce4192f96ebe2",
+   "shas": [
+    "be1ce4192f96ebe2"
+   ],
+   "zh": "这个宏会生成一个C++异常类，生成的类派生自Glib::Error，并具有一个Code枚举成员变量和一个code()成员函数。你必须指定所需的C++名称、以及与其对应的C枚举名、C枚举值前缀。"
+  },
+  {
+   "id": "7bdccdbdbf0d38e0",
+   "shas": [
+    "7bdccdbdbf0d38e0"
+   ],
+   "zh": "然后可以由带有errthrow选项的_WRAP_METHOD()生成的成员函数抛出此异常。"
+  },
+  {
+   "id": "a35f79ce094e64ab",
+   "shas": [
+    "a35f79ce094e64ab"
+   ],
+   "zh": "示例来自于pixbuf.hg："
+  },
+  {
+   "id": "68170f209b142f02",
+   "shas": [
+    "68170f209b142f02"
+   ],
+   "zh": "_WRAP_GERROR()接受与_WRAP_ENUM()一样的可选参数（尽管CONV_TO_INT参数因为没有作用而被忽略）。"
+  },
+  {
+   "id": "ae3d43940a35ec7c",
+   "shas": [
+    "ae3d43940a35ec7c"
+   ],
+   "zh": "如果要包装可以被直接访问其数据成员的简单结构体或装箱类型，请使用这些宏。这些宏会为其数据成员创建访问器成员函数（getter和setter）。"
+  },
+  {
+   "id": "6a080d42b22b6e69",
+   "shas": [
+    "6a080d42b22b6e69"
+   ],
+   "zh": "_MEMBER_GET(C++名, C名, C++类型, C类型)"
+  },
+  {
+   "id": "20d0fab1c8e8d791",
+   "shas": [
+    "20d0fab1c8e8d791"
+   ],
+   "zh": "_MEMBER_SET(C++名, C名, C++类型, C类型)"
+  },
+  {
+   "id": "1bc9e83eca1c0c7d",
+   "shas": [
+    "1bc9e83eca1c0c7d"
+   ],
+   "zh": "示例来自于rectangle.hg："
+  },
+  {
+   "id": "c4cecd81eae32f61",
+   "shas": [
+    "c4cecd81eae32f61"
+   ],
+   "zh": "使用这些宏可以自动为指针类型的数据成员提供访问器（getter和setter）。对于getter函数，将创建两个版本，一个const版本一个非const版本。"
+  },
+  {
+   "id": "6f8b56054e07fc5c",
+   "shas": [
+    "6f8b56054e07fc5c"
+   ],
+   "zh": "_MEMBER_GET_PTR(C++名, C名, C++类型, C类型)"
+  },
+  {
+   "id": "eb4b1f0800559a6f",
+   "shas": [
+    "eb4b1f0800559a6f"
+   ],
+   "zh": "_MEMBER_GET_PTR(C++名, C名, C++类型, C类型)"
+  },
+  {
+   "id": "b93dd7e747586732",
+   "shas": [
+    "b93dd7e747586732"
+   ],
+   "zh": "示例来自于item.hg文件中的Pango::Analysis："
+  },
+  {
+   "id": "c7d8adaab659fd83",
+   "shas": [
+    "c7d8adaab659fd83"
+   ],
+   "zh": "使用这些宏可以为返回之前必须被引用的GObject类型数据成员提供访问器（getters和setters）。"
+  },
+  {
+   "id": "83db8c92dad40b60",
+   "shas": [
+    "83db8c92dad40b60"
+   ],
+   "zh": "_MEMBER_GET_GOBJECT(C++名, C名, C++类型, C类型)"
+  },
+  {
+   "id": "dd5ca246b0a67720",
+   "shas": [
+    "dd5ca246b0a67720"
+   ],
+   "zh": "_MEMBER_SET_GOBJECT(C++名, C名, C++类型, C类型)"
+  },
+  {
+   "id": "dfa077c2281b82a4",
+   "shas": [
+    "dfa077c2281b82a4"
+   ],
+   "zh": "示例来自于Pangomm中的layoutline.hg："
+  },
+  {
+   "id": "1c503d4f92c571b0",
+   "shas": [
+    "1c503d4f92c571b0"
+   ],
+   "zh": "gmmproc允许以各种方式为处理成员函数签名的宏（如_WRAP_METHOD()、_WRAP_CTOR()、_WRAP_CREATE()）处理成员函数签名中的参数："
+  },
+  {
+   "id": "a35ef37cbd5959c9",
+   "shas": [
+    "a35ef37cbd5959c9"
+   ],
+   "zh": null
+  },
+  {
+   "id": "f2071e524c0326f4",
+   "shas": [
+    "f2071e524c0326f4"
+   ],
+   "zh": null
+  },
+  {
+   "id": "4aae293ee4765c59",
+   "shas": [
+    "4aae293ee4765c59"
+   ],
+   "zh": null
+  },
+  {
+   "id": "9b57ac050ef171bd",
+   "shas": [
+    "9b57ac050ef171bd"
+   ],
+   "zh": "请注意，当为使用_WRAP_SIGNAL()的成员函数签名重排参数时，C参数名总是p0、p1等。因为这些参数名由generate_extra_defs实用工具使用，而该实用工具不在乎C API中的参数名是什么。"
+  },
+  {
+   "id": "306ca259c84891d1",
+   "shas": [
+    "306ca259c84891d1"
+   ],
+   "zh": null
+  },
+  {
+   "id": "6b9fd28c70aa1235",
+   "shas": [
+    "6b9fd28c70aa1235"
+   ],
+   "zh": null
+  },
+  {
+   "id": "6d4d1c1d0bf97323",
+   "shas": [
+    "6d4d1c1d0bf97323"
+   ],
+   "zh": null
+  },
+  {
+   "id": "8b7be4a0a2472fe6",
+   "shas": [
+    "8b7be4a0a2472fe6"
+   ],
+   "zh": null
+  },
+  {
+   "id": "41fe881b8ebb6cdb",
+   "shas": [
+    "41fe881b8ebb6cdb"
+   ],
+   "zh": null
+  },
+  {
+   "id": "1e47ea40a7e74939",
+   "shas": [
+    "1e47ea40a7e74939"
+   ],
+   "zh": null
+  },
+  {
+   "id": "77797d5d9f86ae50",
+   "shas": [
+    "77797d5d9f86ae50"
+   ],
+   "zh": null
+  },
+  {
+   "id": "5df2e17c7895ede8",
+   "shas": [
+    "5df2e17c7895ede8"
+   ],
+   "zh": null
+  },
+  {
+   "id": "c31d551abce1f7a4",
+   "shas": [
+    "c31d551abce1f7a4"
+   ],
+   "zh": "对于带有或不带有默认值的强制性参数：空字符串到空字符串"
+  },
+  {
+   "id": "eb5dfd609b5ee06f",
+   "shas": [
+    "eb5dfd609b5ee06f"
+   ],
+   "zh": "对于附加了{?}的可选参数：空字符串到nullptr。"
+  },
+  {
+   "id": "a8be59e8364fb90a",
+   "shas": [
+    "a8be59e8364fb90a"
+   ],
+   "zh": "C API中使用的一些基本类型在C++中有更好的替代类型。例如，C++中有bool类型，所以不需要gboolean类型。以下列表显示了C API中的一些常用类型，以及你可以在C++封装库中将它们转换为哪些类型。"
+  }
+ ],
+ "sec-wrapping-hand-coded-files": [
+  {
+   "id": "81881eea4ea57836",
+   "shas": [
+    "81881eea4ea57836"
+   ],
+   "zh": "你可能想包括gmmproc不会从.hg和.ccg文件中生成的额外源文件。你可以将它们放到你的libsomething/libsomethingmm文件夹中，并在meson.build的extra_h_files和extra_cc_files变量提到它们。"
+  }
+ ],
+ "sec-wrapping-initialization": [
+  {
+   "id": "a34141a1396b20f6",
+   "shas": [
+    "a34141a1396b20f6"
+   ],
+   "zh": "你必须初始化你的库，以便注册库提供给的新类型，这样你才能使用它。另外你所封装的C库可能有自己需要调用的初始化函数。你可以将其放在手动编码的init.h和init.cc文件中的init()函数中完成此操作。这个函数应该初始化你的依赖项和调用你生成的wrap_init()函数。例如："
+  },
+  {
+   "id": "20c8473745d9f10b",
+   "shas": [
+    "20c8473745d9f10b"
+   ],
+   "zh": "wrap_init.cc文件中的wrap_init()方法是由generate_wrap_init.pl生成的，但是它的声明所在的wrap_init.h文件需要手动编码。因此你需要调整wrap_init.h文件以使wrap_init()函数出现在正确的C++命名空间中。"
+  }
+ ],
+ "sec-wrapping-problems": [
+  {
+   "id": "bc59086231aadd7a",
+   "shas": [
+    "bc59086231aadd7a"
+   ],
+   "zh": "你可能会在封装库的过程中遇到一些问题。特别是它是一个新项目的时候。以下是一些常见问题以及解决方案。"
+  },
+  {
+   "id": "67fb78487dde1a60",
+   "shas": [
+    "67fb78487dde1a60"
+   ],
+   "zh": "按照约定，glib/GTK风格的头文件中结构体声明应如下所示："
+  },
+  {
+   "id": "92880a0214b5173f",
+   "shas": [
+    "92880a0214b5173f"
+   ],
+   "zh": "额外的typedef允许在头文件中使用该结构体而不需要包含其完整定义，只需要通过重复这个typedef预先声明它即可。这意味着你不需要在你的C++头文件中包含C库的头文件。，从而将其排除在你的公共API之外。gmmproc假定使用了这个技术，因此如果没使用这种技术就会遇到编译错误。"
+  },
+  {
+   "id": "430d624211517dd8",
+   "shas": [
+    "430d624211517dd8"
+   ],
+   "zh": "菜单如下所示"
+  },
+  {
+   "id": "00e269fe0c17ad9f",
+   "shas": [
+    "00e269fe0c17ad9f"
+   ],
+   "zh": null
+  },
+  {
+   "id": "818aef21b3d9639b",
+   "shas": [
+    "818aef21b3d9639b"
+   ],
+   "zh": "这很容易在C库中修复，你可以向相关库的维护者发送补丁。"
+  },
+  {
+   "id": "e8c0c63f922aabbc",
+   "shas": [
+    "e8c0c63f922aabbc"
+   ],
+   "zh": "_new()函数不应该使用任何只在.c文件中的私有API。即使没有对应的函数，有时我们也可以在_new()函数中重新实现2到3行代码，只要这些行使用的API是可用的。"
+  },
+  {
+   "id": "123613e13ed4fc66",
+   "shas": [
+    "123613e13ed4fc66"
+   ],
+   "zh": "在C库中，添加属性并确保它们之间正确的进行交互相对来说比较困难。但还是能做到的。若你发现了一个bug请联系相关的维护人员并向其提供相关信息以便尽快修复该bug。"
+  }
+ ],
+ "sec-wrapping-documentation": [
+  {
+   "id": "4804a5927b2faeb9",
+   "shas": [
+    "4804a5927b2faeb9"
+   ],
+   "zh": "通常，gtkmm风格项目使用Doxygen生成文档，它会读取特殊格式的C++注释并生成HTML文档。你可以直接将这些doxygen可读的注释写到头文件中。"
+  },
+  {
+   "id": "66d01e28423cd0de",
+   "shas": [
+    "66d01e28423cd0de"
+   ],
+   "zh": "你可能想重用所封装C库的现有文档。GTK风格的C库通常直接使用gtk-doc，因此在.sgml和.xml文件中有一些gtk-doc格式的源代码注释和一些额外的文档。在glibmm的tools/defs_gen目录中的docextract_to_xml.py脚本，可以读取这些文件并生成一个.xml文件，gmmproc可以使用这个文件生成doxygen注释。gmmproc甚至会尝试转换文档以使其更适合C++ API。"
+  },
+  {
+   "id": "ea8fa3366034f06b",
+   "shas": [
+    "ea8fa3366034f06b"
+   ],
+   "zh": "由于此自动转换并不总是合适的，所以你可能希望对特定的方法提供手写的文本。为此可以将函数的XML节点从something_docs.xml文件复制到something_docs_override.xml文件并更改其内容。你也可以在.hg文件中编写自己的文档。"
+  },
+  {
+   "id": "09ccf46685283da0",
+   "shas": [
+    "09ccf46685283da0"
+   ],
+   "zh": "如果你已经从mm-common中复制skeleton源代码树并替换占位文本，那么在doc/reference/目录中已经拥有了合适的meson.build和Doxyfile.in文件。你可能需要修改meson.build文件中的tag_file_modules变量，虽然在mm-common构建设置中，Doxygen输入文件不是通过Doxygen配置文件定义的，而是由meson/ninja传递文件内容到doxygen的标准输入。"
+  }
+ ]
+}

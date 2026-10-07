@@ -1,0 +1,75 @@
+{
+ "sec-refptr-copying": [
+  {
+   "id": "7ce154b8d35f8e2d",
+   "shas": [
+    "7ce154b8d35f8e2d"
+   ],
+   "zh": "你可以像复制普通指针一样复制RefPtr，你不需要担心删除底层实例。"
+  },
+  {
+   "id": "fc39726f051dc5a9",
+   "shas": [
+    "fc39726f051dc5a9"
+   ],
+   "zh": "这意味着你可以将RefPtr储存于标准容器中，例如：std::vector或std::list。"
+  }
+ ],
+ "sec-refptr-dereferencing": [
+  {
+   "id": "61b6747e3248525a",
+   "shas": [
+    "61b6747e3248525a"
+   ],
+   "zh": "你可以使用->操作符解引用智能指针，就像使用普通指针访问底层实例的方法一样。"
+  }
+ ],
+ "sec-refptr-casting": [
+  {
+   "id": "17cd5745a73a4336",
+   "shas": [
+    "17cd5745a73a4336"
+   ],
+   "zh": "你可以像对正常指针进行类型转换一样，将RefPtr转换到基础类型。"
+  },
+  {
+   "id": "d0c9cfc9403fe084",
+   "shas": [
+    "d0c9cfc9403fe084"
+   ],
+   "zh": "这意味着任何接受const Glib::RefPtr&参数的函数也能接受const Glib::RefPtr&对象。此转换和普通指针一样是隐式的。"
+  },
+  {
+   "id": "9c746eac56cd0829",
+   "shas": [
+    "9c746eac56cd0829"
+   ],
+   "zh": "你还可以将其转换为派生类型，但是语法和普通指针的语法略有不同。"
+  }
+ ],
+ "sec-refptr-checking-for-null": [
+  {
+   "id": "cfcd1f803cfa3934",
+   "shas": [
+    "cfcd1f803cfa3934"
+   ],
+   "zh": "就像普通指针一样，你可以检查RefPtr是否指向了任何东西。"
+  },
+  {
+   "id": "6b2016f6636f8798",
+   "shas": [
+    "6b2016f6636f8798"
+   ],
+   "zh": "和普通指针不一样的是，RefPtr将会自动初始化为nullptr，不需要你自己进行置空。"
+  }
+ ],
+ "sec-refptr-constness": [
+  {
+   "id": "4b314c1401b1ac75",
+   "shas": [
+    "4b314c1401b1ac75"
+   ],
+   "zh": "用const ... &包围是处于效率考虑，就像在方法参数中使用const std::string&而不是用std::string一样，这是为了避免不必要的复制。"
+  }
+ ]
+}

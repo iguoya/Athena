@@ -1,0 +1,230 @@
+{
+ "sec-printoperation": [
+  {
+   "id": "8b0722134faab9ad",
+   "shas": [
+    "8b0722134faab9ad"
+   ],
+   "zh": "在应用程序级开发，gtkmm的打印API提供了跨应用程序兼容的对话框，并允许使用开罗通用绘制API和Pango驱动的文本渲染。在此通用API实现中，使用了特定平台的后端和特定打印机的驱动。"
+  },
+  {
+   "id": "70817b2bac2b613f",
+   "shas": [
+    "70817b2bac2b613f"
+   ],
+   "zh": "主要对象是分配给每个打印操作的Gtk::PrintOperation。要处理绘制页请连接到它的信号，或从其继承并覆盖默认的虚信号处理函数。PrintOperation将自动处理所有影响打印循环的设置。"
+  },
+  {
+   "id": "20d3c68d5425b5d4",
+   "shas": [
+    "20d3c68d5425b5d4"
+   ],
+   "zh": "begin_print：你必须处理该信号，因为这是你使用提供的Gtk::PrintContext创建和设置Pango::Layout的地方，以及对你的打印输出进行分页的地方。"
+  },
+  {
+   "id": "b6c3ba8d3dcbf6d0",
+   "shas": [
+    "b6c3ba8d3dcbf6d0"
+   ],
+   "zh": "paginate：分页可能很慢，所以如果需要监视它，你可以调用PrintOperation::set_show_progress()方法并处理此信号。"
+  },
+  {
+   "id": "393b9d66320764b3",
+   "shas": [
+    "393b9d66320764b3"
+   ],
+   "zh": "request_page_setup：提供一个PrintContext、页码和Gtk::PageSetup。如果你需要逐页的修改页面设置，请处理此信号。"
+  },
+  {
+   "id": "2882fb1713cc97cc",
+   "shas": [
+    "2882fb1713cc97cc"
+   ],
+   "zh": "draw_page：你必须处理此信号，该信号提供一个PrintContext和页码。你应该使用PrintContext创建一个Cairo::Context，并将提供的页面绘制到其中。要渲染文本，请遍历你在begin_print处理程序中创建的Pango::Layout。"
+  },
+  {
+   "id": "c4731a8d1d939353",
+   "shas": [
+    "c4731a8d1d939353"
+   ],
+   "zh": "end_print：它的处理程序是用于释放与PrintOperation相关的所有资源的安全场所。如果你通过继承PrintOperation创建了自定义类，则直接在自定义类的析构函数中进行此操作会更简单。"
+  },
+  {
+   "id": "c1401f98b8b68a79",
+   "shas": [
+    "c1401f98b8b68a79"
+   ],
+   "zh": "done：该信号于打印完成时（当打印数据假脱机）被发出。请注意，所提供的Gtk::PrintOperationResult可能表明发生了错误。无论如何你都应该让用户知道最终的状态。"
+  },
+  {
+   "id": "5173ea9b4602f59d",
+   "shas": [
+    "5173ea9b4602f59d"
+   ],
+   "zh": "status_changed: 直到打印作业完成，只要打印作业状态发生了更改就会发出此信号。假脱机后可以调用PrintOperation::set_track_print_status()监视作业状态。要查看状态请调用get_status()或get_status_string()。"
+  },
+  {
+   "id": "bbd037586cc50862",
+   "shas": [
+    "bbd037586cc50862"
+   ],
+   "zh": "PrintOperation::run()方法启动打印循环，在此期间会发出以下信号："
+  }
+ ],
+ "sec-page-setup": [
+  {
+   "id": "7ab6cba299e1057e",
+   "shas": [
+    "7ab6cba299e1057e"
+   ],
+   "zh": "PrintOperation类有一个叫做set_default_page_setup()的方法，其用于选择默认的纸张尺寸、方向和页边距。要在你的应用程序中显示页面设置对话框，请使用Gtk::run_page_setup_dialog()方法，该方法返回一个Gtk::PageSetup对象，这个对象保存了所选的设置。使用这个对象更新PrintOperation并访问所选的Gtk::PaperSize、Gtk::PageOrientation和特定打印机的边距。"
+  },
+  {
+   "id": "7bb31475de4ff102",
+   "shas": [
+    "7bb31475de4ff102"
+   ],
+   "zh": "你应该保存所选的Gtk::PageSetup以便在下次打开页面设置对话框的时候使用。"
+  },
+  {
+   "id": "49b0f3db609e804f",
+   "shas": [
+    "49b0f3db609e804f"
+   ],
+   "zh": "在draw_page处理程序中，开罗坐标系会自动旋转到当前页的方向。它通常在打印机的页边距之内，不过你可以使用PrintOperation::set_use_full_page()方法来更改它。默认的度量单位是设备像素。要选择其他单位请使用PrintOperation::set_unit()方法。"
+  }
+ ],
+ "sec-printing-rendering-text": [
+  {
+   "id": "a3ffbc4f84e09130",
+   "shas": [
+    "a3ffbc4f84e09130"
+   ],
+   "zh": "文本渲染是使用Pango完成的。Pango::Layout对象应通过调用PrintContext::create_pango_layout()方法来创建。PrintContext对象还通过get_width()和get_height()方法提供了页面范围。页数可以通过调用PrintOperation::set_n_pages()进行设置。要在on_draw_page中渲染文本，请使用PrintContext::get_cairo_context()获取Cairo::Context并显示在请求的页码中出现的Pango::LayoutLine。"
+  },
+  {
+   "id": "8a58a5fbd06a6b41",
+   "shas": [
+    "8a58a5fbd06a6b41"
+   ],
+   "zh": "请看具体示例如何做到这点。"
+  }
+ ],
+ "sec-async-printing-ops": [
+  {
+   "id": "232848054ebc8c6b",
+   "shas": [
+    "232848054ebc8c6b"
+   ],
+   "zh": "在默认情况下，PrintOperation::run()在打印操作完成时返回。如果你需要运行非阻塞的打印操作，请调用PrintOperation::set_allow_async()。请注意，并非所有平台都支持set_allow_async()，但done信号仍然会被发出。"
+  },
+  {
+   "id": "a0edafd92c460c78",
+   "shas": [
+    "a0edafd92c460c78"
+   ],
+   "zh": "run()可能会返回PrintOperation::Result::IN_PROGRESS。要跟踪状态并处理结果或错误，你需要实现done和status_changed信号的信号处理函数。"
+  },
+  {
+   "id": "1418fa8a145e4bc0",
+   "shas": [
+    "1418fa8a145e4bc0"
+   ],
+   "zh": "然后，检查错误并连接到status_changed信号，例如："
+  },
+  {
+   "id": "c7e2dd7106854873",
+   "shas": [
+    "c7e2dd7106854873"
+   ],
+   "zh": "最后检查状态。例如："
+  }
+ ],
+ "sec-printing-export-to-pdf": [
+  {
+   "id": "10e6f3c40e5d8496",
+   "shas": [
+    "10e6f3c40e5d8496"
+   ],
+   "zh": "\"打印到文件\"选项在打印对话框可用，不需要额外实现。但是有时候从代码直接生成PDF文件会很有用。例如："
+  }
+ ],
+ "sec-extending-print-dialog": [
+  {
+   "id": "603d91d0c875ec5f",
+   "shas": [
+    "603d91d0c875ec5f"
+   ],
+   "zh": "通过PrintOperation::set_custom_tab_label()设置标签的标题，创建一个新的部件然后从create_custom_widget的信号处理函数中返回它。你可能希望它是一个容器部件，在其中包含一些其他部件。"
+  },
+  {
+   "id": "987da3ef8cc605b0",
+   "shas": [
+    "987da3ef8cc605b0"
+   ],
+   "zh": "从部件的custom_widget_apply的信号处理函数中获取数据。"
+  },
+  {
+   "id": "32a1b4663275d342",
+   "shas": [
+    "32a1b4663275d342"
+   ],
+   "zh": "你可以在打印对话框中添加自定义标签："
+  },
+  {
+   "id": "e5524805e216c06e",
+   "shas": [
+    "e5524805e216c06e"
+   ],
+   "zh": "尽管custom_widget_apply信号提供了你之前创建的部件，但是为了简化操作，你可以保存一些用户输入作为部件类的成员。例如，你可能希望你有一个叫做m_Entry的Gtk::Entry拥有CustomPrintOperation作为类成员："
+  },
+  {
+   "id": "d62e1be3def55778",
+   "shas": [
+    "d62e1be3def55778"
+   ],
+   "zh": "examples/book/printing/advanced示例对此进行了演示。"
+  }
+ ],
+ "sec-printing-preview": [
+  {
+   "id": "610c8a94db49170a",
+   "shas": [
+    "610c8a94db49170a"
+   ],
+   "zh": "原生的GTK打印对话框有一个预览按钮，但是你也可以自己从应用程序开始预览："
+  },
+  {
+   "id": "df79ace8f0f29021",
+   "shas": [
+    "df79ace8f0f29021"
+   ],
+   "zh": "在Unix上，默认的预览处理程序将使用外部查看器程序。在Windows上将显示原生预览对话框。如果有必要，你可以覆盖此默认行为并为此提供一个自定义的预览对话框。请参阅位于/examples/book/printing/advanced的示例。"
+  }
+ ],
+ "sec-printing-printdialog": [
+  {
+   "id": "035b452f3a7f65d2",
+   "shas": [
+    "035b452f3a7f65d2"
+   ],
+   "zh": null
+  }
+ ],
+ "sec-printing-examples": [
+  {
+   "id": "c8ebb20ec276cfa7",
+   "shas": [
+    "c8ebb20ec276cfa7"
+   ],
+   "zh": "以下示例演示了如何从用户界面打印一些输出。它显示了如何实现on_begin_print和on_draw_page，以及如何跟踪打印状态和更新打印设置。"
+  },
+  {
+   "id": "8bc4bec807de9e83",
+   "shas": [
+    "8bc4bec807de9e83"
+   ],
+   "zh": "以下示例演示了如何从用户界面打印一些输出。它显示了如何实现on_begin_print和on_draw_page，以及如何跟踪打印状态和更新打印设置。"
+  }
+ ]
+}

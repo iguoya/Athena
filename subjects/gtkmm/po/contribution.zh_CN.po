@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gtkmm-documentation master\n"
 "POT-Creation-Date: 2026-09-10 17:05+0000\n"
-"PO-Revision-Date: 2026-10-07 00:41+0000"
+"PO-Revision-Date: 2026-10-07 21:18+0000"
 "Last-Translator: tiger <375478250@qq.com>"
 "Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -477,7 +477,7 @@ msgstr "资源"
 #. (itstool) path: section/para
 #: C/index-in.docbook:182
 msgid "Useful links:"
-msgstr ""
+msgstr "有用的链接："
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:184
@@ -485,7 +485,7 @@ msgid ""
 "<link xlink:href=\"https://en.wikipedia.org/wiki/C%2B%2B\">Wikipedia C++</"
 "link>: An introduction to <phrase role=\"nowrap\">C++</phrase>, and many "
 "links."
-msgstr ""
+msgstr "Wikipedia C++：C++ 入门与大量链接。"
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:185
@@ -493,20 +493,20 @@ msgid ""
 "<link xlink:href=\"https://en.cppreference.com/w/\">C++ reference</link>: A "
 "convenient version of the C and <phrase role=\"nowrap\">C++</phrase> "
 "standards."
-msgstr ""
+msgstr "C++ reference：C 与 C++ 标准的便捷查阅版。"
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:186
 msgid ""
 "<link xlink:href=\"https://cplusplus.com/\">The C++ Resources Network</link>"
-msgstr ""
+msgstr "The C++ Resources Network（cplusplus.com）。"
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:187
 msgid ""
 "<link xlink:href=\"https://www.stroustrup.com/\">Bjarne Stroustrup's "
 "homepage</link>"
-msgstr ""
+msgstr "Bjarne Stroustrup 的个人主页。"
 
 #. (itstool) path: chapter/title
 #: C/index-in.docbook:194
@@ -1110,7 +1110,7 @@ msgid ""
 "However, this is even simpler when using the <function>dependency()</"
 "function> function in a <filename>meson.build</filename> file with Meson. "
 "For instance:"
-msgstr ""
+msgstr "而用 Meson 时，在 meson.build 文件里调用 dependency() 函数还要更简单。例如："
 
 #. (itstool) path: section/programlisting
 #: C/index-in.docbook:428
@@ -1124,7 +1124,7 @@ msgid ""
 "This checks for the presence of gtkmm and defines <literal>gtkmm_dep</"
 "literal> for use in your <filename>meson.build</filename> files. For "
 "instance:"
-msgstr ""
+msgstr "这一句会检查 gtkmm 是否可用，并定义出 gtkmm_dep 供 meson.build 使用。例如："
 
 #. (itstool) path: section/programlisting
 #: C/index-in.docbook:433
@@ -1183,7 +1183,7 @@ msgid ""
 "Autotools: \"GNU Autoconf, Automake, and Libtool\" by Gary Vaughan et al. "
 "and \"Autotools, A Practitioner's Guide to GNU Autoconf, Automake, and "
 "Libtool\" by John Calcote."
-msgstr ""
+msgstr "如果你用的是更老的 Autotools 构建系统，另请参阅 GNU 网站，那里有关于 autoconf 和 automake 的更多信息。也有几本书专门讲 Autotools：Gary Vaughan 等人的《GNU Autoconf, Automake, and Libtool》，以及 John Calcote 的《Autotools, A Practitioner's Guide to GNU Autoconf, Automake, and Libtool》。"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:460 C/index-in.docbook:6617
@@ -4343,7 +4343,7 @@ msgid ""
 "<application>gtkmm</application> 4.10. The example shows an info bar "
 "consisting of a <classname>Box</classname> with a <classname>Label</"
 "classname> and a <classname>Button</classname>."
-msgstr ""
+msgstr "`InfoBar` 控件自 gtkmm 4.10 起已弃用。示例展示的信息条由一个 `Box` 搭配 `Label` 和 `Button` 构成。"
 
 #. (itstool) path: imageobject/imagedata
 #. This is a reference to an external file such as an image or video. When
@@ -4795,7 +4795,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:1927
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/"
 #| "master/examples/book/popover\">Source Code, Popover</ulink>"
@@ -4913,7 +4912,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:1983
-#, fuzzy
 #| msgid ""
 #| "<application>gtkmm</application> arranges widgets hierarchically, using "
 #| "<emphasis>containers</emphasis>. A container widget contains other "
@@ -4930,13 +4928,7 @@ msgid ""
 "of containers: single-child containers and multiple-child containers. Most "
 "container widgets in <application>gtkmm</application> are single-child "
 "containers, including <classname>Gtk::Window</classname>."
-msgstr ""
-"<application>gtkmm</application>使用<emphasis>containers</emphasis>分层排布部"
-"件。容器部件包含其他部件。大多数的<application>gtkmm</application>部件都是容"
-"器部件。窗口(Windows)部件、笔记本选项卡(Notebook tabs)部件、按钮(Buttons)部件"
-"都是容器部件。容器有两种类型：单项容器和多项容器。<application>gtkmm</"
-"application>中包括<classname>Gtk::Window</classname>在内的多数容器部件都是单"
-"项部件。"
+msgstr "gtkmm 用 *容器*（container）按层次组织控件：容器控件包含其他控件，而大多数 gtkmm 控件都是容器——窗口、笔记本标签页、按钮都是容器控件。容器分两类：单子控件容器与多子控件容器。gtkmm 的大多数容器是单子控件容器，包括 `Gtk::Window`。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:1992
@@ -5029,7 +5021,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2048
-#, fuzzy
 #| msgid ""
 #| "After building and running this program, try resizing the window to see "
 #| "the behaviour. Also, try playing with <methodname>set_expand()</"
@@ -5044,13 +5035,7 @@ msgid ""
 "methodname>, <methodname>set_halign()</methodname> and "
 "<methodname>set_valign()</methodname> while reading the <link linkend=\"sec-"
 "boxes\">Boxes</link> section."
-msgstr ""
-"生成并运行这个程序后，请尝试调整窗口的大小查看其行为。此外在阅读<link "
-"linkend=\"sec-boxes\">盒子(Boxes)</link>小节时请尝试使用"
-"<methodname>set_expand()</methodname>、<methodname>set_hexpand()</"
-"methodname>、<methodname>set_vexpand()</methodname>、"
-"<methodname>set_halign()</methodname>和<methodname>set_valign()</methodname>"
-"方法。"
+msgstr "构建并运行该程序后，试着调整窗口大小观察行为；再结合 Boxes 一节，试验 set_expand()、set_hexpand()、set_vexpand()、set_halign() 和 set_valign() 的效果。"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:2059
@@ -5102,7 +5087,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2084
-#, fuzzy
 #| msgid ""
 #| "There are several options governing how widgets are to be packed, and "
 #| "this can be confusing at first. You can modify the packing by using "
@@ -5125,14 +5109,7 @@ msgid ""
 "<application>Cambalache</application> GUI designer to see what is possible. "
 "You can then use the <classname>Gtk::Builder</classname> API to load your "
 "GUI at runtime."
-msgstr ""
-"有几个选项可以控制部件的打包方式，但是初次使用可能会难以理清效果。你可以在子"
-"部件上使用<methodname>set_expand()</methodname>、<methodname>set_hexpand()</"
-"methodname>、<methodname>set_vexpand()</methodname>、"
-"<methodname>set_halign()</methodname>、<methodname>set_valign()</methodname>"
-"方法修改装填策略。如果你感到困难，可以试试<application>glade</application>GUI"
-"设计器，看看能不能对你有所帮助。你甚至可以使用<classname>Gtk::Builder</"
-"classname>API在运行时加载GUI。"
+msgstr "控制打包的选项不少，初学时容易混淆。可以在子控件上用 set_expand()、set_hexpand()、set_vexpand()、set_halign()、set_valign() 与 set_margin() 调整打包行为。遇到困难时，不妨用 `Cambalache` 界面设计器把玩一下，看看有哪些可能。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2095
@@ -5174,7 +5151,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2116
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1Box.html\">Reference</ulink>"
@@ -5195,7 +5171,7 @@ msgstr "容器装填选项"
 msgid ""
 "Here's the constructor for the <classname>Box</classname> widget, and "
 "methods that set per-container packing options:"
-msgstr ""
+msgstr "下面是 `Box` 控件的构造函数，以及设置各容器打包选项的方法："
 
 #. (itstool) path: section/programlisting
 #: C/index-in.docbook:2125
@@ -5218,7 +5194,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2129
-#, fuzzy
 #| msgid ""
 #| "Here's the constructor for the <classname>Box</classname> widget, and "
 #| "methods that set per-container packing options: <_:programlisting-1/> "
@@ -5231,12 +5206,7 @@ msgid ""
 "methodname> will cause all of the contained widgets to be the same size. "
 "<parameter>spacing</parameter> is a (minimum) number of pixels to leave "
 "between each widget."
-msgstr ""
-"这是<classname>Box</classname>部件的构造函数，以及设置每个容器的打包选项的方"
-"法：<_:programlisting-1/> 将<literal>true</literal>传递给"
-"<methodname>set_homogeneous()</methodname>方法将导致容器部件所包含的所有部件"
-"都有一样的大小。<parameter>spacing</parameter>是每个部件之间要保留的最小像素"
-"数。"
+msgstr "给 set_homogeneous() 传 `true` 会让所有子控件尺寸相同；`spacing` 是每个控件之间保留的（最小）像素数。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2135
@@ -5383,7 +5353,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2212
-#, fuzzy
 #| msgid ""
 #| "You can set the <emphasis>margin</emphasis> and <emphasis>expand</"
 #| "emphasis> properties of the child <classname>Widget</classname>s to "
@@ -5392,13 +5361,10 @@ msgid ""
 "You can set the <emphasis>margin</emphasis> and <emphasis>expand</emphasis> "
 "properties of the child <classname>Widget</classname>s to control their "
 "spacing and their behavior when the Grid is resized."
-msgstr ""
-"你可以设置子部件的<emphasis>margin</emphasis>和<emphasis>expand</emphasis>属"
-"性用以控制调整网格大小时它们之间的间距。"
+msgstr "可以设置子 `Widget` 的 *margin* 与 *expand* 属性来控制间距，以及 Grid 被调整大小时它们的行为。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2216
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1Grid.html\">Reference</ulink>"
@@ -5497,7 +5463,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2270
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1Notebook.html\">Reference</ulink>"
@@ -5546,7 +5511,7 @@ msgid ""
 "<application>gtkmm</application>. libadwaita (a C library) has replacement "
 "parts (like AdwCarousel). In some cases, a <classname>Gtk::Notebook</"
 "classname> might be an acceptable replacement."
-msgstr ""
+msgstr "`Gtk::Assistant` 自 gtkmm 4.10 起已弃用，gtkmm 中没有替代品。libadwaita（一个 C 库）提供了部分替代（如 AdwCarousel）；某些场景下 `Gtk::Notebook` 也可以作为可接受的替代。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2297
@@ -5609,7 +5574,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2317
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1Assistant.html\">Reference</ulink>"
@@ -5661,7 +5625,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2344
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/"
 #| "master/examples/book/actionbar\">Source Code, ActionBar</ulink>"
@@ -5674,7 +5637,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2345
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/"
 #| "master/examples/book/flowbox\">Source Code, FlowBox</ulink>"
@@ -5697,7 +5659,7 @@ msgid ""
 "objects in roughly the same way. They are perfectly fine to be used for very "
 "short lists of only 2 or 3 items, but generally scale fine to thousands of "
 "items."
-msgstr ""
+msgstr "凡是想以大致相同的方式展示大量对象时，都适合用列表——极短的列表也完全没问题。"
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:2360
@@ -5705,7 +5667,7 @@ msgid ""
 "Lists are meant to be used with changing data, both with the items "
 "themselves changing as well as the list adding and removing items. Of "
 "course, they work just as well with static data."
-msgstr ""
+msgstr "列表为「会变化的数据」而生：无论是条目自身内容变化，还是列表增删条目，都能胜任；静态数据同样工作正常。"
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:2366
@@ -5713,11 +5675,10 @@ msgid ""
 "The <link xlink:href=\"https://docs.gtk.org/gtk4/section-list-"
 "widget.html\">List Widget Overview</link> chapter in the GTK documentation "
 "contains more information about list widgets."
-msgstr ""
+msgstr "GTK 文档的「List Widget Overview」一章包含关于列表控件的更多信息。"
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:2371
-#, fuzzy
 #| msgid ""
 #| "Some <classname>TreeView</classname> examples are shown here. There are "
 #| "more examples in the <ulink url=\"https://gitlab.gnome.org/GNOME/gtkmm-"
@@ -5728,11 +5689,7 @@ msgid ""
 "<link xlink:href=\"https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/"
 "master/examples/book/listmodelviews/\">listmodelviews directory</link> in "
 "<application>gtkmm-documentation</application>'s examples."
-msgstr ""
-"这里显示了一些<classname>TreeView</classname>的示例。<application>gtkmm文档</"
-"application>示例中的<ulink url=\"https://gitlab.gnome.org/GNOME/gtkmm-"
-"documentation/tree/master/examples/book/treeview/\">树形视图文件夹</ulink>还"
-"有更多的示例。"
+msgstr "本章展示了若干示例；gtkmm-documentation 仓库的 listmodelviews 目录里还有更多。"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:2377
@@ -5750,11 +5707,10 @@ msgid ""
 "deprecated <classname>Gtk::ListStore</classname>), "
 "<classname>Gtk:StringList</classname>, <classname>Gtk:DirectoryList</"
 "classname> and <classname>Pango::FontMap</classname>."
-msgstr ""
+msgstr "数据模型是实现 `Gio::ListModel` 接口的类。这类类的例子有 `Gio::ListStore`（不要与已弃用的 `Gtk::ListStore` 混淆）、`Gtk::StringList`、`Gtk::DirectoryList` 与 `Pango::FontMap`。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2387
-#, fuzzy
 #| msgid ""
 #| "The model for a ComboBox can be defined and filled exactly as for a "
 #| "<classname>TreeView</classname>. For instance, you might derive a "
@@ -5764,9 +5720,7 @@ msgid ""
 "instances of a subclass of <classname>Glib::Object</classname>. For "
 "instance, you might have a <classname>ColumnView</classname> with one "
 "integer and one text column, like so:"
-msgstr ""
-"可以像<classname>TreeView</classname>一样定义和填充组合框的模型。你可以与如下"
-"所示的一样派生具有一个整数行和一个文本行的组合框类："
+msgstr "模型中的元素称为 *条目*（item）。所有条目都是 `Glib::Object` 某个子类的实例。比如你可以有一个 `ColumnView`，其中包含一列整数和一列文本，如下所示："
 
 #. (itstool) path: section/programlisting
 #: C/index-in.docbook:2393 C/index-in.docbook:3391
@@ -5802,46 +5756,37 @@ msgid ""
 "describes where in the model the item is located. The first item in a model "
 "is at position 0. The position of an item can of course change as other "
 "items are added to or removed from the model."
-msgstr ""
+msgstr "模型中的每个条目都有一个位置（position）：一个无符号整数，描述条目位于模型何处。模型的第一个条目位于位置 0。当然，随着其他条目被加入或移除，条目的位置也会变化。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2421
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/glibmm/unstable/"
 #| "classGio_1_1Resource.html\">Gio::Resource Reference</ulink>"
 msgid ""
 "<link xlink:href=\"https://gnome.pages.gitlab.gnome.org/glibmm/"
 "classGio_1_1ListStore.html\">Gio::ListStore Reference</link>"
-msgstr ""
-"<ulink url=\"http://developer.gnome.org/glibmm/unstable/"
-"classGio_1_1Resource.html\">Gio::Resource参考</ulink>"
+msgstr "Gio::ListStore 参考文档"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2422
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1Widget.html\">Widget Reference</ulink>"
 msgid ""
 "<link xlink:href=\"https://gnome.pages.gitlab.gnome.org/gtkmm/"
 "classGtk_1_1StringList.html\">StringList Reference</link>"
-msgstr ""
-"<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
-"classGtk_1_1Widget.html\">部件参考</ulink>"
+msgstr "StringList 参考文档"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2423
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1Widget.html\">Widget Reference</ulink>"
 msgid ""
 "<link xlink:href=\"https://gnome.pages.gitlab.gnome.org/gtkmm/"
 "classGtk_1_1DirectoryList.html\">DirectoryList Reference</link>"
-msgstr ""
-"<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
-"classGtk_1_1Widget.html\">部件参考</ulink>"
+msgstr "DirectoryList 参考文档"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:2427
@@ -5852,7 +5797,6 @@ msgstr "选择"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2429
-#, fuzzy
 #| msgid ""
 #| "If you use an <classname>Gtk::ApplicationWindow</classname>, you don't "
 #| "have to create your own action group. <classname>Gio::ActionGroup</"
@@ -5863,50 +5807,37 @@ msgid ""
 "<classname>Gtk::SelectionModel</classname> interface. You can choose between "
 "<classname>NoSelection</classname>, <classname>SingleSelection</classname> "
 "and <classname>MultiSelection</classname>."
-msgstr ""
-"如果你使用<classname>Gtk::ApplicationWindow</classname>，则你不需要自己创建动"
-"作组。因为<classname>Gio::ActionGroup</classname>和"
-"<classname>Gio::ActionMap</classname>是<classname>Gtk::ApplicationWindow</"
-"classname>的基类。"
+msgstr "选择模型是实现 `Gtk::SelectionModel` 接口的类。可以在 `NoSelection`、`SingleSelection` 与 `MultiSelection` 之间选择。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2434
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1Tooltip.html\">Tooltip Reference</ulink>"
 msgid ""
 "<link xlink:href=\"https://gnome.pages.gitlab.gnome.org/gtkmm/"
 "classGtk_1_1NoSelection.html\">NoSelection Reference</link>"
-msgstr ""
-"<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
-"classGtk_1_1Tooltip.html\">工具提示框参考</ulink>"
+msgstr "NoSelection 参考文档"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2435
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1Widget.html\">Widget Reference</ulink>"
 msgid ""
 "<link xlink:href=\"https://gnome.pages.gitlab.gnome.org/gtkmm/"
 "classGtk_1_1SingleSelection.html\">SingleSelection Reference</link>"
-msgstr ""
-"<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
-"classGtk_1_1Widget.html\">部件参考</ulink>"
+msgstr "SingleSelection 参考文档"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2436
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1Application.html\">Gtk::Application Reference</ulink>"
 msgid ""
 "<link xlink:href=\"https://gnome.pages.gitlab.gnome.org/gtkmm/"
 "classGtk_1_1MultiSelection.html\">MultiSelection Reference</link>"
-msgstr ""
-"<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
-"classGtk_1_1Application.html\">Gtk::Application参考</ulink>"
+msgstr "MultiSelection 参考文档"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:2440
@@ -5924,11 +5855,10 @@ msgid ""
 "<classname>SignalListItemFactory</classname>. Data from the model is added "
 "to the view with signal handlers connected to a "
 "<classname>SignalListItemFactory</classname>."
-msgstr ""
+msgstr "数据模型中的数据由工厂（factory）添加到视图。工厂是 `ListItemFactory` 的子类；gtkmm 中只有一个这样的子类——`SignalListItemFactory`。模型数据通过连接到 `SignalListItemFactory` 的信号处理函数添加进视图。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2448
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1Widget.html\">Widget Reference</ulink>"
@@ -5936,9 +5866,7 @@ msgid ""
 "<link xlink:href=\"https://gnome.pages.gitlab.gnome.org/gtkmm/"
 "classGtk_1_1SignalListItemFactory.html\">SignalListItemFactory Reference</"
 "link>"
-msgstr ""
-"<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
-"classGtk_1_1Widget.html\">部件参考</ulink>"
+msgstr "SignalListItemFactory 参考文档"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:2452 C/index-in.docbook:2823 C/index-in.docbook:3872
@@ -5947,7 +5875,6 @@ msgstr "视图"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2454
-#, fuzzy
 #| msgid ""
 #| "The View is the actual widget (<classname>Gtk::TreeView</classname>) that "
 #| "displays the model (<classname>Gtk::TreeModel</classname>) data and "
@@ -5957,10 +5884,7 @@ msgid ""
 "The View is the widget that displays the model data and allows the user to "
 "interact with it. The View can show all of the model's columns, or just "
 "some, and it can show them in various ways."
-msgstr ""
-"视图实际上是一个用于显示模型(<classname>Gtk::TreeModel</classname>)数据并允许"
-"用户与其交互的部件(<classname>Gtk::TreeView</classname>)。视图可以显示模型的"
-"所有列也可以只显示一部分列还可以以不同的方式显示列。"
+msgstr "视图（View）是显示模型数据并允许用户与之交互的控件。视图可以显示模型的全部列，也可以只显示部分列，并能以多种方式呈现。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2460
@@ -5970,12 +5894,12 @@ msgid ""
 "achieve that by implementing the <classname>Scrollable</classname> interface "
 "and expecting to be placed directly into a <classname>ScrolledWindow</"
 "classname>."
-msgstr ""
+msgstr "视图（尤其是长列表视图）的一个重要需求是：必须知道哪些条目当前不可见，以便回收复用。视图通过实现 `Scrollable` 接口做到这一点，并期望被直接放进 `ScrolledWindow` 中。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2467
 msgid "There are different view widgets to choose from."
-msgstr ""
+msgstr "有多种视图控件可供选择。"
 
 #. (itstool) path: section/title
 #. (itstool) path: figure/title
@@ -5987,19 +5911,16 @@ msgstr "文本视图(TextView)"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2474
-#, fuzzy
 #| msgid ""
 #| "The <classname>Gtk::TreeView</classname> widget can contain lists or "
 #| "trees of data, in columns."
 msgid ""
 "The <classname>ListView</classname> shows a 1-dimensional list with one "
 "column."
-msgstr ""
-" <classname>Gtk::TreeView</classname>部件的每一行都可以包含数据列表或数据树。"
+msgstr "`ListView` 显示带单列的一维列表。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2478
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1TextView.html\">Reference</ulink>"
@@ -6045,14 +5966,12 @@ msgstr "网格(Grid)"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2498
-#, fuzzy
 #| msgid "The <classname>Tag</classname> class has many other properties."
 msgid "The <classname>GridView</classname> shows a 2-dimensional grid."
-msgstr "<classname>Tag</classname>类还有许多其他的特性。"
+msgstr "`GridView` 显示二维网格。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2502
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1Grid.html\">Reference</ulink>"
@@ -6096,19 +6015,16 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2522
-#, fuzzy
 #| msgid ""
 #| "The <classname>Gtk::TreeView</classname> widget can contain lists or "
 #| "trees of data, in columns."
 msgid ""
 "The <classname>ColumnView</classname> shows a 1-dimensional list with one or "
 "more columns."
-msgstr ""
-" <classname>Gtk::TreeView</classname>部件的每一行都可以包含数据列表或数据树。"
+msgstr "`ColumnView` 显示带一列或多列的一维列表。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2526
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1TreeView.html\">Reference</ulink>"
@@ -6154,7 +6070,7 @@ msgstr "排序"
 msgid ""
 "The list can be sorted by wrapping it in a <classname>SortListModel</"
 "classname>. There are two ways to do this."
-msgstr ""
+msgstr "把列表包进 `SortListModel` 即可排序。有两种做法。"
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:2552
@@ -6164,11 +6080,10 @@ msgid ""
 "<classname>SortListModel</classname>. Set a <classname>Sorter</classname> to "
 "each <classname>ColumnViewColumn</classname>. Then the user of your app can "
 "sort the items by clicking on a column heading."
-msgstr ""
+msgstr "在 `ColumnView` 中，从 ColumnView 取得 `ColumnViewSorter` 设给 `SortListModel`，再给每个 `ColumnViewColumn` 设置一个 `Sorter`。这样，应用的用户点击列标题即可排序条目。"
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:2557
-#, fuzzy
 #| msgid ""
 #| "As mentioned above, each <classname>TextView</classname> has a "
 #| "<classname>TextBuffer</classname>, and one or more <classname>TextView</"
@@ -6177,49 +6092,37 @@ msgid ""
 "In any view, set a <classname>Sorter</classname> such as a "
 "<classname>StringSorter</classname> or a <classname>NumericSorter</"
 "classname> to the <classname>SortListModel</classname>."
-msgstr ""
-"如上所述，每个<classname>TextView</classname>都有一个<classname>TextBuffer</"
-"classname>，并且多个<classname>TextView</classname>可以共享同一个"
-"<classname>TextBuffer</classname>。"
+msgstr "在任意视图中，给 `SortListModel` 设置一个 `Sorter`（如 `StringSorter` 或 `NumericSorter`）。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2562
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1TreeModelSort.html\">TreeModelSort Reference</ulink>"
 msgid ""
 "<link xlink:href=\"https://gnome.pages.gitlab.gnome.org/gtkmm/"
 "classGtk_1_1SortListModel.html\">SortListModel Reference</link>"
-msgstr ""
-"<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
-"classGtk_1_1TreeModelSort.html\">树模型排序参考</ulink>"
+msgstr "SortListModel 参考文档"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2563
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1TreeSortable.html\">TreeSortable Reference</ulink>"
 msgid ""
 "<link xlink:href=\"https://gnome.pages.gitlab.gnome.org/gtkmm/"
 "classGtk_1_1StringSorter.html\">StringSorter Reference</link>"
-msgstr ""
-"<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
-"classGtk_1_1TreeSortable.html\">可排序树参考</ulink>"
+msgstr "StringSorter 参考文档"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2564
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1TreeSortable.html\">TreeSortable Reference</ulink>"
 msgid ""
 "<link xlink:href=\"https://gnome.pages.gitlab.gnome.org/gtkmm/"
 "classGtk_1_1NumericSorter.html\">NumericSorter Reference</link>"
-msgstr ""
-"<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
-"classGtk_1_1TreeSortable.html\">可排序树参考</ulink>"
+msgstr "NumericSorter 参考文档"
 
 #. (itstool) path: figure/title
 #: C/index-in.docbook:2570
@@ -6260,7 +6163,6 @@ msgstr "筛选文件"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2584
-#, fuzzy
 #| msgid ""
 #| "<classname>Gtk::Style</classname> and <classname>Gtk::Rc</classname> were "
 #| "removed, replaced by <classname>Gtk::StyleContext</classname>, and "
@@ -6271,49 +6173,37 @@ msgid ""
 "classname>. Set a <classname>Filter</classname> such as a "
 "<classname>StringFilter</classname> or a <classname>BoolFilter</classname> "
 "to the <classname>FilterListModel</classname>."
-msgstr ""
-"<classname>Gtk::Style</classname>和<classname>Gtk::Rc</classname>已被删除，由"
-"<classname>Gtk::StyleContext</classname>和<classname>Gtk::StyleProvider</"
-"classname>替换，例如<classname>Gtk::CssProvider</classname>。"
+msgstr "把列表包进 `FilterListModel` 即可过滤。给 `FilterListModel` 设置一个 `Filter`（如 `StringFilter` 或 `BoolFilter`）。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2590
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1TreeModelSort.html\">TreeModelSort Reference</ulink>"
 msgid ""
 "<link xlink:href=\"https://gnome.pages.gitlab.gnome.org/gtkmm/"
 "classGtk_1_1FilterListModel.html\">FilterListModel Reference</link>"
-msgstr ""
-"<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
-"classGtk_1_1TreeModelSort.html\">树模型排序参考</ulink>"
+msgstr "FilterListModel 参考文档"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2591
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1Widget.html\">Widget Reference</ulink>"
 msgid ""
 "<link xlink:href=\"https://gnome.pages.gitlab.gnome.org/gtkmm/"
 "classGtk_1_1StringFilter.html\">StringFilter Reference</link>"
-msgstr ""
-"<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
-"classGtk_1_1Widget.html\">部件参考</ulink>"
+msgstr "StringFilter 参考文档"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2592
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1Tooltip.html\">Tooltip Reference</ulink>"
 msgid ""
 "<link xlink:href=\"https://gnome.pages.gitlab.gnome.org/gtkmm/"
 "classGtk_1_1BoolFilter.html\">BoolFilter Reference</link>"
-msgstr ""
-"<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
-"classGtk_1_1Tooltip.html\">工具提示框参考</ulink>"
+msgstr "BoolFilter 参考文档"
 
 #. (itstool) path: figure/title
 #: C/index-in.docbook:2598
@@ -6363,33 +6253,27 @@ msgid ""
 "the <classname>TreeListModel</classname> to flatten a tree into a list. The "
 "<classname>TreeExpander</classname> widget can then be used inside a "
 "listitem to allow users to expand and collapse rows."
-msgstr ""
+msgstr "已弃用的 `TreeView` 内建了树形支持，而新的列表控件（尤其 `Gio::ListModel`）没有。不过，仍想展示树形结构的人可以用 gtkmm 提供的功能让树「看起来像列表」：用 `TreeListModel` 把树拍平成列表，再在 listitem 内使用 `TreeExpander` 控件展开/收起。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2622
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1TreeModelSort.html\">TreeModelSort Reference</ulink>"
 msgid ""
 "<link xlink:href=\"https://gnome.pages.gitlab.gnome.org/gtkmm/"
 "classGtk_1_1TreeListModel.html\">TreeListModel Reference</link>"
-msgstr ""
-"<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
-"classGtk_1_1TreeModelSort.html\">树模型排序参考</ulink>"
+msgstr "TreeListModel 参考文档"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2623
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1TreeModelSort.html\">TreeModelSort Reference</ulink>"
 msgid ""
 "<link xlink:href=\"https://gnome.pages.gitlab.gnome.org/gtkmm/"
 "classGtk_1_1TreeExpander.html\">TreeExpander Reference</link>"
-msgstr ""
-"<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
-"classGtk_1_1TreeModelSort.html\">树模型排序参考</ulink>"
+msgstr "TreeExpander 参考文档"
 
 #. (itstool) path: figure/title
 #: C/index-in.docbook:2629
@@ -6430,7 +6314,6 @@ msgstr "树形视图(TreeView)部件"
 
 #. (itstool) path: note/para
 #: C/index-in.docbook:2645
-#, fuzzy
 #| msgid ""
 #| "<classname>Gdk::DragContext</classname> has been split into "
 #| "<classname>Gdk::Drag</classname> and <classname>Gdk::Drop</classname>."
@@ -6438,9 +6321,7 @@ msgid ""
 "<classname>Gtk::TreeView</classname> is deprecated since <application>gtkmm</"
 "application> 4.10. In new code, use <classname>Gtk::ListView</classname> for "
 "lists and <classname>Gtk::ColumnView</classname> for tabular lists."
-msgstr ""
-"<classname>Gdk::DragContext</classname>现在被拆分为<classname>Gdk::Drag</"
-"classname>和<classname>Gdk::Drop</classname>。"
+msgstr "`Gtk::TreeView` 自 gtkmm 4.10 起已弃用：新代码里，列表用 `Gtk::ListView`，表格式列表用 `Gtk::ColumnView`。"
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:2650
@@ -6487,7 +6368,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2674
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1TreeModel.html\">Reference</ulink>"
@@ -6529,7 +6409,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2691
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1ListStore.html\">Reference</ulink>"
@@ -6571,7 +6450,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2710
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1TreeStore.html\">Reference</ulink>"
@@ -6589,7 +6467,6 @@ msgstr "模型列"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2717
-#, fuzzy
 #| msgid ""
 #| "The <classname>TreeModelColumnRecord</classname> class is used to keep "
 #| "track of the columns and their data types. You add "
@@ -6857,7 +6734,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2832
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1TreeView.html\">Reference</ulink>"
@@ -7018,7 +6894,6 @@ msgstr "指定单元格渲染器(CellRenderer)详情"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2901
-#, fuzzy
 #| msgid ""
 #| "The default <classname>CellRenderers</classname> and their default "
 #| "behaviour will normally suffice, but you might occasionally need finer "
@@ -7035,12 +6910,7 @@ msgid ""
 "<classname>Gtk::CellRenderer</classname> widget and instructs it to render "
 "the data from various model columns through various aspects of its "
 "appearance."
-msgstr ""
-"默认的<classname>CellRenderers</classname>及其默认行为通常已经足够好了，但是"
-"有时你需要更精细的控制它。例如来自<filename>gtkmm/demos/gtk-demo/"
-"example_treeview_treestore.cc</filename>的示例代码，附加一个"
-"<classname>Gtk::CellRenderer</classname>部件并指示其各个模型列的外观的各个方"
-"面来呈现数据。"
+msgstr "默认的 `CellRenderer` 及其默认行为通常够用，但偶尔需要更细的控制。例如下面这段来自 `gtkmm/demos/gtk-demo/example_treeview_treestore.cc` 的示例代码，追加了一个 `Gtk::CellRenderer`，并指示它把来自多个模型列的数据渲染到外观的多个方面上。"
 
 #. (itstool) path: section/programlisting
 #: C/index-in.docbook:2909
@@ -7236,7 +7106,6 @@ msgstr "遍历模型行"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:2992
-#, fuzzy
 #| msgid ""
 #| "<classname>Gtk::TreeModel</classname> provides a C++ Standard Library-"
 #| "style container of its children, via the <methodname>children()</"
@@ -7284,7 +7153,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3004
-#, fuzzy
 #| msgid ""
 #| "If you always want to iterate across the entire range, much more succinct "
 #| "syntax is possible using C++'s range-based <literal>for</literal> loop:"
@@ -7638,7 +7506,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3145
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1TreeSortable.html\">TreeSortable Reference</ulink>"
@@ -7784,7 +7651,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3189
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1TreeModelSort.html\">TreeModelSort Reference</ulink>"
@@ -7805,7 +7671,6 @@ msgstr "拖放"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3197
-#, fuzzy
 #| msgid ""
 #| "<classname>Gtk::TreeView</classname> already implements simple drag-and-"
 #| "drop when used with the <classname>Gtk::ListStore</classname> or "
@@ -7820,11 +7685,7 @@ msgid ""
 "it also allows you to implement more complex behavior when items are dragged "
 "and dropped, using the normal <link linkend=\"chapter-draganddrop\">Drag and "
 "Drop</link> API."
-msgstr ""
-"当使用<classname>Gtk::ListStore</classname>或者<classname>Gtk::TreeStore</"
-"classname>模型时<classname>Gtk::TreeView</classname>已经实现了简单的拖放。如"
-"果有必要，它还允许你使用常规的<link linkend=\"chapter-draganddrop\">拖放</"
-"link>API实现更复杂的拖放行为。"
+msgstr "`Gtk::TreeView` 与 `Gtk::ListStore` 或 `Gtk::TreeStore` 模型配合时（自 gtk 4.8 起）已内建简单的拖放；必要时也可以用常规的拖放 API 实现更复杂的条目拖放行为。"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:3206
@@ -7875,7 +7736,6 @@ msgstr "弹出上下文菜单"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3228
-#, fuzzy
 #| msgid ""
 #| "Lots of people need to implement right-click context menus for "
 #| "<classname>TreeView</classname>'s so we will explain how to do that here "
@@ -7888,17 +7748,14 @@ msgid ""
 "save you some time. It's much the same as a normal context menu, as "
 "described in the <link linkend=\"sec-menus-popup\">menus chapter</link>. You "
 "use a <classname>Gtk::GestureClick</classname> to detect the mouse click."
-msgstr ""
-"很多人认为需要为<classname>TreeView</classname>实现右键单击上下文菜单，因此我"
-"们在这里说明如何做到这个以节省你的时间。其与普通的上下文菜单只有一两点不同，"
-"如<link linkend=\"sec-menus-popup\">菜单章节</link>所述。"
+msgstr "很多人需要为 `TreeView` 实现右键上下文菜单，这里专门讲一下，帮你省点时间。做法与菜单章描述的普通上下文菜单基本相同：用一个 `Gtk::GestureClick` 检测鼠标点击。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3235
 msgid ""
 "This is demonstrated in the Popup Context Menu example. In that example a "
 "derived <classname>TreeView</classname> is used, but that's not necessary."
-msgstr ""
+msgstr "Popup Context Menu 示例演示了这一做法。该示例用了派生的 `TreeView`，但这并非必需。"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:3242 C/index-in.docbook:3943 C/index-in.docbook:4245
@@ -7908,7 +7765,6 @@ msgstr "示例"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3244
-#, fuzzy
 #| msgid ""
 #| "Some <classname>TreeView</classname> examples are shown here. There are "
 #| "more examples in the <ulink url=\"https://gitlab.gnome.org/GNOME/gtkmm-"
@@ -7927,7 +7783,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3248
-#, fuzzy
 #| msgid ""
 #| "If neither <classname>ListStore</classname> nor <classname>TreeStore</"
 #| "classname> is suitable for your application, look at the <ulink "
@@ -8092,7 +7947,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3338
-#, fuzzy
 #| msgid ""
 #| "This example is much like the <classname>ListStore</classname> example, "
 #| "but derives a custom <classname>TreeView</classname> in order to override "
@@ -8105,11 +7959,7 @@ msgid ""
 "model code and popup menu code in our derived class. See the <link "
 "linkend=\"sec-treeview-contextmenu\">TreeView Popup Context Menu</link> "
 "section."
-msgstr ""
-"这个示例和<classname>ListStore</classname>示例十分相似，但是它牌手了一个自定"
-"义的<classname>TreeView</classname>以覆盖<literal>button_press_event</"
-"literal>，并将树模型代码封装在派生类代码中，请参阅<link linkend=\"sec-"
-"treeview-contextmenu\">树形视图弹出上下文菜单</link>小节。"
+msgstr "这个例子与 `ListStore` 示例很相似，但派生了一个自定义 `TreeView`，把树模型代码与弹出菜单代码封装进派生类。参见 TreeView Popup Context Menu 一节。"
 
 #. (itstool) path: figure/title
 #: C/index-in.docbook:3346
@@ -8155,11 +8005,10 @@ msgid ""
 "deprecated <classname>ComboBox</classname>. It uses list models instead of "
 "tree models, and the content is displayed using widgets instead of cell "
 "renderers."
-msgstr ""
+msgstr "`DropDown` 控件是已弃用的 `ComboBox` 的替代者：它使用列表模型而非树模型，内容用 listitem 内的控件展示，可以是任意内容——文字、图片，乃至更复杂的复合控件。"
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:3366
-#, fuzzy
 #| msgid ""
 #| "The <classname>ComboBox</classname> widget offers a list (or tree) of "
 #| "choices in a dropdown menu. If appropriate, it can show extra information "
@@ -8174,15 +8023,10 @@ msgid ""
 "item, such as text, a picture, or a check button. The <classname>DropDown</"
 "classname> widget can optionally have an <classname>Entry</classname> in the "
 "dropdown menu, allowing the user to search in a long list."
-msgstr ""
-"<classname>ComboBox</classname>部件在下拉菜单中提供了选项列表（或树）。如果需"
-"要它可以为每个项目显示额外的信息，例如文本、图片、复选按钮或是进度条。"
-"<classname>ComboBox</classname>部件通常将显示用户的可选项，但是它可以有一个"
-"<classname>Entry</classname>以允许用户在没有合适的选项的时候输入任意文本。"
+msgstr "`DropDown` 在下拉菜单中提供一组选项；合适的话，还能为每个条目显示额外信息，如文字、图片或更复杂的复合控件。"
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:3373
-#, fuzzy
 #| msgid ""
 #| "The list is provided via a <classname>TreeModel</classname>, and columns "
 #| "from this model are added to the ComboBox's view with the "
@@ -8197,15 +8041,10 @@ msgid ""
 "This provides flexibility, but the <classname>StringList</classname> class "
 "provides a simpler text-based specialization in case that flexibility is not "
 "required."
-msgstr ""
-"这个列表通过<classname>TreeModel</classname>提供，这个模型的列通过"
-"<methodname>ComboBox::pack_start()</methodname>方法添加到组合框的视图中。这提"
-"供了灵活性和编译时的类型安全，在不需要灵活性的情况下，"
-"<classname>ComboBoxText</classname>类提供了更简单的基于文本的特化支持。"
+msgstr "列表由一个 `Gio::ListModel` 提供，模型数据通过连接到 `SignalListItemFactory` 的信号处理函数添加到 `DropDown` 的视图。"
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:3380
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1Box.html\">Reference</ulink>"
@@ -8223,7 +8062,6 @@ msgstr "模型"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3385
-#, fuzzy
 #| msgid ""
 #| "The model for a ComboBox can be defined and filled exactly as for a "
 #| "<classname>TreeView</classname>. For instance, you might derive a "
@@ -8234,9 +8072,7 @@ msgid ""
 "classname>. It must be a subclass of <classname>Glib::Object</classname>. "
 "For instance, you might have a <classname>DropDown</classname> with one "
 "integer and one text column, like so:"
-msgstr ""
-"可以像<classname>TreeView</classname>一样定义和填充组合框的模型。你可以与如下"
-"所示的一样派生具有一个整数行和一个文本行的组合框类："
+msgstr "`DropDown` 的模型可以按与 `ListView` 或 `ColumnView` 完全相同的方式定义和填充。它必须是 `Glib::Object` 的子类。比如你可以有一个 `DropDown`，其中包含一列整数和一列文本，如下所示："
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3413
@@ -8250,7 +8086,7 @@ msgid ""
 "classname> widget, you also need to set a separate "
 "<classname>ListItemFactory</classname> with <methodname>set_list_factory()</"
 "methodname>."
-msgstr ""
+msgstr "向模型追加行之后，用 set_model() 方法把模型交给 `DropDown`。除非你用的是 `StringList` 模型，否则还需要用 set_factory() 设置一个 `ListItemFactory`。如果想让下拉菜单条目的外观与 `DropDown` 控件上显示的不同，还要用 set_list_factory() 另设一个 `ListItemFactory`。"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:3424
@@ -8261,7 +8097,6 @@ msgstr "选定的行"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3426
-#, fuzzy
 #| msgid ""
 #| "To discover what item, if any, the user has chosen from the ComboBox, "
 #| "call <methodname>ComboBox::get_active()</methodname>. This returns a "
@@ -8278,12 +8113,7 @@ msgid ""
 "integer ID value from the model, even though you have chosen only to show "
 "the human-readable description in the <classname>DropDown</classname>. For "
 "instance:"
-msgstr ""
-"要了解用户从组合框中选择了哪一项可以调用<methodname>ComboBox::get_active()</"
-"methodname>。这将返回一个<classname>TreeModel::iterator</classname>，你可以解"
-"引用它得到一个<classname>Row</classname>，然后从其中读取该列的值。例如，你可"
-"以在组合框中只显示人类可读的描述，然后你可以读取模型中储存于该行的整数ID值"
-"（于并未被显示的列）。例如："
+msgstr "要知道用户在 `DropDown` 中选中了哪个条目（如果有的话），调用 DropDown::get_selected()。它返回一个 `unsigned int`，可用它从模型中取出所选数据。比如模型里可以存一个整数 ID 值，而你在 `DropDown` 中只选择展示人类可读的描述文字。例如："
 
 #. (itstool) path: section/programlisting
 #: C/index-in.docbook:3433
@@ -8333,7 +8163,6 @@ msgstr "响应变更"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3448
-#, fuzzy
 #| msgid ""
 #| "You might need to react to every change of selection in the ComboBox, for "
 #| "instance to update other widgets. To do so, you should handle the "
@@ -8343,9 +8172,7 @@ msgid ""
 "<classname>DropDown</classname>, for instance to update other widgets. To do "
 "so, you should connect to <methodname>property_selected().signal_changed()</"
 "methodname>. For instance:"
-msgstr ""
-"你可能需要对组合框中每个选择的变更进行响应，例如更新其他的部件。为此你应该处"
-"理<literal>changed</literal>。例如："
+msgstr "你可能需要对 `DropDown` 中每次选择变化作出反应，比如更新其他控件。为此应连接 property_selected().signal_changed()。例如："
 
 #. (itstool) path: section/programlisting
 #: C/index-in.docbook:3452
@@ -8405,7 +8232,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3473
-#, fuzzy
 #| msgid ""
 #| "<classname>Gtk::Grid</classname> arranges its child widgets in rows and "
 #| "columns. Use <methodname>attach()</methodname> and "
@@ -8414,10 +8240,7 @@ msgid ""
 "The dropdown menu may contain an <classname>Entry</classname> that allows to "
 "search for items in the list. Call <methodname>set_enable_search()</"
 "methodname> and <methodname>set_expression()</methodname>. For instance:"
-msgstr ""
-"<classname>Gtk::Grid</classname>将其子部件按行和列排列。使用"
-"<methodname>attach()</methodname>和<methodname>attach_next_to()</methodname>"
-"方法向网格(Grid)部件中插入子部件。"
+msgstr "下拉菜单里可以放一个用于搜索列表条目的 `Entry`：调用 set_enable_search() 与 set_expression()。例如："
 
 #. (itstool) path: section/programlisting
 #: C/index-in.docbook:3477
@@ -8483,7 +8306,6 @@ msgstr "完整例子"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3506
-#, fuzzy
 #| msgid ""
 #| "<classname>Gtk::Button</classname>, <classname>Gtk::ToolButton</"
 #| "classname>, <classname>Gtk::MenuItem</classname> and "
@@ -8495,11 +8317,7 @@ msgid ""
 "is possible because <classname>Pango::FontMap</classname> implements the "
 "<classname>Gio::ListModel</classname> interface. Of course you can use a "
 "<classname>FontDialogButton</classname> instead."
-msgstr ""
-"<classname>Gtk::Button</classname>，<classname>Gtk::ToolButton</classname>，"
-"<classname>Gtk::MenuItem</classname>和<classname>Gtk::Switch</classname> 实现"
-"了<classname>Gtk::Actionable</classname>接口而不是已被删除的"
-"<classname>Gtk::Activatable</classname>接口。"
+msgstr "该示例用 `Pango::FontMap` 作为模型——这可行，因为 `Pango::FontMap` 实现了 `Gio::ListModel` 接口。当然，你也可以改用 `FontDialogButton`。"
 
 #. (itstool) path: figure/title
 #: C/index-in.docbook:3513 C/index-in.docbook:3532
@@ -8544,7 +8362,7 @@ msgid ""
 "This is a more complex example with two <classname>SignalListItemFactory</"
 "classname> objects and their signal handlers. This example would be simpler "
 "without the checkmark in the dropdown menu."
-msgstr ""
+msgstr "这是一个更复杂的示例，带两个 `SignalListItemFactory` 及其信号处理函数。如果去掉下拉菜单中的对勾标记，这个例子会简单一些。"
 
 #. (itstool) path: imageobject/imagedata
 #. This is a reference to an external file such as an image or video. When
@@ -8578,7 +8396,6 @@ msgstr "组合框(Combo Boxes)"
 
 #. (itstool) path: note/para
 #: C/index-in.docbook:3545
-#, fuzzy
 #| msgid ""
 #| "<classname>Gdk::DrawContext</classname> and <classname>Gdk::CairoContext</"
 #| "classname> are new. <classname>Gdk::DrawingContext</classname> has been "
@@ -8587,10 +8404,7 @@ msgid ""
 "<classname>Gtk::ComboBox</classname> and <classname>Gtk::ComboBoxText</"
 "classname> are deprecated since <application>gtkmm</application> 4.10. Use "
 "<classname>Gtk::DropDown</classname> in new code."
-msgstr ""
-"新添加了<classname>Gdk::DrawContext</classname>和"
-"<classname>Gdk::CairoContext</classname>。<classname>Gdk::DrawingContext</"
-"classname>已被删除。"
+msgstr "`Gtk::ComboBox` 与 `Gtk::ComboBoxText` 自 gtkmm 4.10 起已弃用：新代码请使用 `Gtk::DropDown`。"
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:3549
@@ -8625,7 +8439,6 @@ msgstr ""
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:3555
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1ComboBox.html\">Reference</ulink>"
@@ -8938,7 +8751,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3660
-#, fuzzy
 #| msgid ""
 #| "When the user enters arbitrary text, it may not be enough to connect to "
 #| "the <literal>changed</literal> signal, which is emitted for every typed "
@@ -8963,16 +8775,7 @@ msgid ""
 "<application>gtkmm</application> 4.8), and add a "
 "<classname>Gtk::EventControllerFocus</classname> and connect to its "
 "<literal>leave</literal> signal, like so"
-msgstr ""
-"当用户输入任意文本时，只连接到为每个键入字符而发出的<literal>changed</"
-"literal>信号可能是不够的。当用户按下<keycap>Enter</keycap>键的时候，这个信号"
-"不会被发出。而按下<keycap>Enter</keycap>或是键盘焦点被移动到另一个部件的时"
-"候，可以表示用户已经完成了输入。为了收到这些事件的通知，你需要连接到"
-"<classname>Entry</classname>的<literal>activate</literal>和"
-"<literal>focus_out_event</literal>信号像是这样<_:programlisting-1/> 每次更改"
-"<classname>ComboBox</classname>和<classname>Entry</classname>都会发出"
-"<literal>changed</literal>信号，你可以连接它们中的任意一个。但是在这里只有"
-"<classname>Entry</classname>的<literal>focus_out_event</literal>信号才有用。"
+msgstr "用户输入任意文字时，只连接 `changed` 信号可能不够——它每敲一个字符就发出一次，用户按下回车时却不会发出。按下回车、或把键盘焦点移到别的控件，往往才意味着用户已经输入完毕。"
 
 #. (itstool) path: section/programlisting
 #: C/index-in.docbook:3670
@@ -9029,7 +8832,7 @@ msgid ""
 "doesn't matter which one you connect to. But the "
 "<classname>EventControllerFocus</classname> must be added to the "
 "<classname>Entry</classname>."
-msgstr ""
+msgstr "`ComboBox` 和 `Entry` 的 `changed` 信号对每次变化都会发出，连接哪一个都可以；但 `EventControllerFocus` 必须添加到 `Entry` 上。"
 
 #. (itstool) path: figure/title
 #: C/index-in.docbook:3696
@@ -9148,7 +8951,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3752
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1TextBuffer.html\">Reference</ulink>"
@@ -9183,7 +8985,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3764
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1TextIter.html\">Reference</ulink>"
@@ -9244,7 +9045,6 @@ msgstr "<classname>Tag</classname>类还有许多其他的特性。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3787
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1TextTag.html\">Reference</ulink>"
@@ -9311,7 +9111,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3814
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1TextTagTable.html\">Reference</ulink>"
@@ -9420,7 +9219,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3867
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1TextMark.html\">Reference</ulink>"
@@ -9456,7 +9254,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3888
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1TextView.html\">Reference</ulink>"
@@ -9513,7 +9310,6 @@ msgstr "部件和子锚(ChildAnchors)"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3923
-#, fuzzy
 #| msgid ""
 #| "You can embed widgets, such as <classname>Gtk::Button</classname>s, in "
 #| "the text. Each such child widget needs a <classname>ChildAnchor</"
@@ -9558,7 +9354,6 @@ msgstr "m_TextView.add_child_at_anchor(m_Button, refAnchor);"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3938
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1TextChildAnchor.html\">Reference</ulink>"
@@ -9605,7 +9400,7 @@ msgstr "示例"
 msgid ""
 "The example in the <link linkend=\"sec-i18n-example\"> Internationalization "
 "and Localization</link> chapter uses <classname>TextView</classname>."
-msgstr ""
+msgstr "「国际化与本地化」一章的示例用到了 `TextView`。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:3965
@@ -9614,7 +9409,7 @@ msgid ""
 "gitlab.gnome.org/GNOME/gtkmm/tree/master/demos/gtk-demo/"
 "example_textview.cc\"><application>gtkmm</application>'s demo programs</"
 "link>."
-msgstr ""
+msgstr "在 gtkmm 的演示程序里还有一个更复杂的例子（example_textview.cc）。"
 
 #. (itstool) path: chapter/title
 #: C/index-in.docbook:3973
@@ -9930,7 +9725,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4105
-#, fuzzy
 #| msgid ""
 #| "To instantiate a <classname>Gtk::MenuBar</classname> and "
 #| "<classname>Gtk::Toolbar</classname> which you can actually show, you "
@@ -9943,11 +9737,7 @@ msgid ""
 "should use the <methodname>Builder::get_object()</methodname> and "
 "<methodname>Builder::get_widget()</methodname> methods, and then add the "
 "widgets to a container. For instance:"
-msgstr ""
-"要实例化<classname>Gtk::MenuBar</classname>和<classname>Gtk::Toolbar</"
-"classname>并可以实际显示他们，应该使用<methodname>Builder::get_object()</"
-"methodname>和<methodname>Builder::get_widget()</methodname>方法，然后将部件加"
-"入容器中。例如："
+msgstr "要实例化真正可显示的 `Gtk::PopoverMenuBar` 与工具栏（一个水平 `Gtk::Box`），应使用 Builder::get_object() 与 Builder::get_widget() 方法取得控件，再把它们加进容器。例如："
 
 #. (itstool) path: section/programlisting
 #: C/index-in.docbook:4112
@@ -9984,7 +9774,6 @@ msgstr "弹出菜单"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4125
-#, fuzzy
 #| msgid ""
 #| "<classname>Menus</classname> are normally just added to a window, but "
 #| "they can also be displayed temporarily as the result of a mouse button "
@@ -10088,7 +9877,7 @@ msgid ""
 "connect to its <literal>pressed</literal> signal. In the signal handler, use "
 "<classname>Gtk::PopoverMenu</classname>'s <methodname>popup()</methodname> "
 "method. For instance:"
-msgstr ""
+msgstr "显示弹出菜单：用一个 `Gtk::GestureClick` 并连接它的 `pressed` 信号；在信号处理函数里调用 `Gtk::PopoverMenu` 的 popup() 方法。例如："
 
 #. (itstool) path: section/programlisting
 #: C/index-in.docbook:4166
@@ -10109,7 +9898,6 @@ msgstr "Gio::Resource和glib-compile-resources"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4178
-#, fuzzy
 #| msgid ""
 #| "Applications and libraries often contain binary or textual data that is "
 #| "really part of the application, rather than user data. For instance "
@@ -10126,13 +9914,7 @@ msgid ""
 "markup xml, CSS files, icons, etc. These are often shipped as files in "
 "<filename class=\"directory\">$datadir/appname</filename>, or manually "
 "included as literal strings in the code."
-msgstr ""
-"应用程序和库经常包含是应用程序的一部分的二进制或文本数据，而不是用户数据。例"
-"如<classname>Gtk::Builder</classname>使用的<filename "
-"class=\"extension\">.glade</filename>文件、启动画面、<classname>Gio::Menu</"
-"classname>标记XML、CSS文件、图标等。这些通常这些文件放于<filename "
-"class=\"directory\">$datadir/appname</filename>目录下，也可以将其转换为文本字"
-"面量手动包含在代码中。"
+msgstr "应用和库常常包含一些其实属于程序本身（而非用户数据）的二进制或文本数据，比如 `Gtk::Builder` 的 .ui 文件、启动画面图片、`Gio::Menu` 的标记 XML、CSS 文件、图标等。它们通常以文件形式放在 $datadir/appname 下，或者手动打包进程序。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4186
@@ -10157,7 +9939,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4198
-#, fuzzy
 #| msgid ""
 #| "Resource bundles are created by the <ulink url=\"https://"
 #| "developer.gnome.org/gio/stable/glib-compile-resources.html\">glib-compile-"
@@ -10177,7 +9958,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4203
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/glibmm/unstable/"
 #| "classGio_1_1Resource.html\">Gio::Resource Reference</ulink>"
@@ -10190,10 +9970,9 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4204
-#, fuzzy
 #| msgid "For example:"
 msgid "An example:"
-msgstr "例如："
+msgstr "示例："
 
 #. (itstool) path: section/programlisting
 #: C/index-in.docbook:4205
@@ -10228,10 +10007,9 @@ msgstr ""
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:4215
-#, fuzzy
 #| msgid "<filename>/toolbar/toolbar.glade</filename>"
 msgid "<filename>/toolbar/toolbar.ui</filename>"
-msgstr "<filename>/toolbar/toolbar.glade</filename>"
+msgstr "/toolbar/toolbar.ui"
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:4216
@@ -10240,7 +10018,6 @@ msgstr "<filename>/toolbar/rain.png</filename>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4213
-#, fuzzy
 #| msgid ""
 #| "An example: <_:programlisting-1/> This will create a resource bundle with "
 #| "the files <_:itemizedlist-2/>"
@@ -10758,7 +10535,6 @@ msgstr ""
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:4470
-#, fuzzy
 #| msgid ""
 #| "Dialogs are used as secondary windows, to provide specific information or "
 #| "to ask questions. <classname>Gtk::Dialog</classname> windows contain a "
@@ -10803,7 +10579,6 @@ msgstr ""
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:4492
-#, fuzzy
 #| msgid ""
 #| "The <methodname>run()</methodname> method returns an <literal>int</"
 #| "literal>. This may be a value from the <literal>Gtk::ResponseType</"
@@ -10835,7 +10610,6 @@ msgstr ""
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:4508
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1Dialog.html\">Reference</ulink>"
@@ -10865,7 +10639,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4519
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1AboutDialog.html\">Reference</ulink>"
@@ -10878,7 +10651,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4520
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1MessageDialog.html\">Reference</ulink>"
@@ -10939,7 +10711,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4543
-#, fuzzy
 #| msgid ""
 #| "Most of the useful member methods for this class are actually in the "
 #| "<classname>Gtk::FileChooser</classname> base class."
@@ -10953,7 +10724,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4548
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1FileChooserDialog.html\">Reference</ulink>"
@@ -10966,7 +10736,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4549
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1FileChooserDialog.html\">Reference</ulink>"
@@ -11031,7 +10800,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4575
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1ColorChooserDialog.html\">Reference</ulink>"
@@ -11044,7 +10812,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4576
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1ColorChooserDialog.html\">Reference</ulink>"
@@ -11108,7 +10875,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4602
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1AboutDialog.html\">Reference</ulink>"
@@ -11121,7 +10887,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4603
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1FontChooserDialog.html\">Reference</ulink>"
@@ -11198,7 +10963,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4635
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1AboutDialog.html\">Reference</ulink>"
@@ -11256,7 +11020,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4659
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1Widget.html\">Widget Reference</ulink>"
@@ -11326,7 +11089,6 @@ msgstr ""
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:4691
-#, fuzzy
 #| msgid ""
 #| "GTK uses the <ulink url=\"http://cairographics.org\">Cairo</ulink> "
 #| "drawing API. With <application>gtkmm</application>, you may use the "
@@ -11489,7 +11251,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4761
-#, fuzzy
 #| msgid ""
 #| "There are a number of graphics state variables that can be set for a "
 #| "Cairo context. The most common context attributes are color (using "
@@ -11849,7 +11610,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4940
-#, fuzzy
 #| msgid ""
 #| "There are other things you can customize as well, including creating "
 #| "dashed lines and other things. For more information, see the Cairo API "
@@ -11887,7 +11647,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:4961
-#, fuzzy
 #| msgid ""
 #| "The trick is to position in the middle of the pixel where you want the "
 #| "line to be drawn, and thus guaranteeing you get the desired results. See "
@@ -12240,7 +11999,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:5146
-#, fuzzy
 #| msgid ""
 #| "Here is an example of a program that draws some text, some of it upside-"
 #| "down. The Printing chapter contains another <link linkend=\"sec-printing-"
@@ -12383,7 +12141,6 @@ msgstr "$ glib-compile-resources --target=resources.c --generate-source image.gr
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:5213
-#, fuzzy
 #| msgid ""
 #| "Here is an example of a simple program that draws an image. The program "
 #| "loads the image from a resource file. See the <link linkend=\"sec-gio-"
@@ -12546,7 +12303,6 @@ msgstr ""
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:5300
-#, fuzzy
 #| msgid ""
 #| "<classname>Gtk::Widget</classname> has several methods and signals which "
 #| "are prefixed with \"drag_\". These are used for Drag and Drop."
@@ -12554,9 +12310,7 @@ msgid ""
 "The <classname>Gtk::DragSource</classname> and <classname>Gtk::DropTarget</"
 "classname> event controllers have methods and signals which are used for "
 "Drag and Drop."
-msgstr ""
-"<classname>Gtk::Widget</classname>提供了几个带有\"drag_\"前缀的方法和信号用以"
-"支持拖放。"
+msgstr "Gtk::Widget提供了几个带有\\\"drag_\\\"前缀的方法和信号用以支持拖放。"
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:5306
@@ -12567,7 +12321,6 @@ msgstr "源与目的地"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:5307
-#, fuzzy
 #| msgid ""
 #| "Things are dragged from <literal>sources</literal> to be dropped on "
 #| "<literal>destinations</literal>. Each source and destination has "
@@ -12600,7 +12353,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:5325
-#, fuzzy
 #| msgid ""
 #| "<classname>Widget</classname>s can be identified as sources or "
 #| "destinations using these <classname>Gtk::Widget</classname> methods:"
@@ -12646,7 +12398,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:5333
-#, fuzzy
 #| msgid ""
 #| "For instance, for <classname>Pango::Coverage</classname>: "
 #| "<_:programlisting-1/>"
@@ -12677,7 +12428,6 @@ msgstr ""
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:5377
-#, fuzzy
 #| msgid ""
 #| "<literal>drag_end</literal>: Provides a <classname>Gdk::Drag</classname>."
 msgid ""
@@ -12696,7 +12446,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:5361
-#, fuzzy
 #| msgid ""
 #| "For instance, for <classname>Pango::Coverage</classname>: "
 #| "<_:programlisting-1/>"
@@ -12705,7 +12454,6 @@ msgstr "示例来自<classname>Pango::Coverage</classname>：<_:programlisting-1
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:5397
-#, fuzzy
 #| msgid ""
 #| "When a drop destination has accepted a dragged item, certain signals will "
 #| "be emitted, depending on what action has been selected. For instance, the "
@@ -12745,7 +12493,6 @@ msgstr ""
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:5413
-#, fuzzy
 #| msgid ""
 #| "<literal>drag_data_get</literal>: Provides a <classname>Gdk::Drag</"
 #| "classname>, and a <classname>Gtk::SelectionData</classname> object, in "
@@ -12768,7 +12515,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:5407
-#, fuzzy
 #| msgid ""
 #| "The source widget will emit these signals, in this order: "
 #| "<_:itemizedlist-1/>"
@@ -12800,7 +12546,6 @@ msgstr ""
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:5428
-#, fuzzy
 #| msgid ""
 #| "<literal>drag_motion</literal>: Provides a <classname>Gdk::Drop</"
 #| "classname> and coordinates. You can call the <methodname>status()</"
@@ -12835,35 +12580,30 @@ msgstr "源部件将按以下顺序发出这些信号：<_:itemizedlist-1/>"
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:5441
-#, fuzzy
 #| msgid "<methodname>drag_source_add_text_targets()</methodname>"
 msgid "<methodname>Gtk::DragSource::signal_prepare()</methodname>"
 msgstr "<methodname>drag_source_add_text_targets()</methodname>"
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:5442
-#, fuzzy
 #| msgid "<methodname>drag_dest_add_text_targets()</methodname>"
 msgid "<methodname>Gtk::DropTarget::signal_enter()</methodname>"
 msgstr "<methodname>drag_dest_add_text_targets()</methodname>"
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:5443
-#, fuzzy
 #| msgid "<methodname>drag_dest_add_image_targets()</methodname>"
 msgid "<methodname>Gtk::DropTarget::signal_motion()</methodname>"
 msgstr "<methodname>drag_dest_add_image_targets()</methodname>"
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:5444
-#, fuzzy
 #| msgid "<methodname>drag_dest_add_image_targets()</methodname>"
 msgid "<methodname>Gtk::DropTarget::signal_accept()</methodname>"
 msgstr "<methodname>drag_dest_add_image_targets()</methodname>"
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:5445
-#, fuzzy
 #| msgid "<methodname>drag_dest_add_image_targets()</methodname>"
 msgid "<methodname>Gtk::DropTarget::signal_drop()</methodname>"
 msgstr "<methodname>drag_dest_add_image_targets()</methodname>"
@@ -12961,7 +12701,6 @@ msgstr ""
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:5495
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGdk_1_1Clipboard.html\">Reference</ulink>"
@@ -13353,7 +13092,6 @@ msgstr ""
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:5704
-#, fuzzy
 #| msgid ""
 #| "<literal>done</literal>: This signal is emitted when printing is "
 #| "finished, meaning when the print data is spooled. Note that the provided "
@@ -13398,7 +13136,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:5727
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1PrintOperation.html\">Reference</ulink>"
@@ -13468,7 +13205,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:5758
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1PageSetup.html\">Reference</ulink>"
@@ -13528,7 +13264,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:5791
-#, fuzzy
 #| msgid ""
 #| "See <link linkend=\"sec-printing-example-simple\">an example</link> of "
 #| "exactly how this can be done."
@@ -13890,7 +13625,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:5942
-#, fuzzy
 #| msgid ""
 #| "On Unix, the default preview handler uses an external viewer program. On "
 #| "Windows, the native preview dialog will be shown. If necessary you may "
@@ -13926,7 +13660,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:5970
-#, fuzzy
 #| msgid ""
 #| "The following example demonstrates how to print some input from a user "
 #| "interface. It shows how to implement <literal>on_begin_print</literal> "
@@ -13974,7 +13707,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:5991
-#, fuzzy
 #| msgid ""
 #| "The following example demonstrates how to print some input from a user "
 #| "interface. It shows how to implement <literal>on_begin_print</literal> "
@@ -14385,7 +14117,6 @@ msgstr "简单的文件选择对话框示例"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6193
-#, fuzzy
 #| msgid ""
 #| "Shown below is a simple example of how to use the "
 #| "<classname>FileChooserDialog</classname> class in a program. This simple "
@@ -14419,7 +14150,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6210
-#, fuzzy
 #| msgid ""
 #| "After selecting the <guimenuitem>File Chooser Dialog</guimenuitem> menu "
 #| "item and the <guimenuitem>Recent</guimenuitem> sidebar item, you should "
@@ -14510,7 +14240,6 @@ msgstr "键盘事件"
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:6248
-#, fuzzy
 #| msgid ""
 #| "X events differ in some ways from other signals. These differences are "
 #| "described in the <link linkend=\"sec-xeventsignals\">X Event signals</"
@@ -14533,7 +14262,6 @@ msgstr "总览"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6257
-#, fuzzy
 #| msgid ""
 #| "Whenever you press or release a key, an event is emitted. You can connect "
 #| "a signal handler to handle such events."
@@ -14546,7 +14274,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6261
-#, fuzzy
 #| msgid ""
 #| "The event signal handler will receive an argument that depends on the "
 #| "type of event. For keyboard events it's a <type>GdkEventKey*</type>. As "
@@ -14563,15 +14290,10 @@ msgid ""
 "signal handler returns a <type>bool</type> value, to indicate that the "
 "signal is fully handled (<literal>true</literal>) or allow event propagation "
 "(<literal>false</literal>)."
-msgstr ""
-"事件处理函数接受的参数取决于事件的类型。对于键盘事件，它接受一个"
-"<type>GdkEventKey*</type>参数。如<link linkend=\"sec-xeventsignals\">附录</"
-"link>中所述，事件处理函数返回一个<type>bool</type>值，以表示信号已经被完全处"
-"理（返回<literal>true</literal>）或允许事件传播（<literal>false</literal>）。"
+msgstr "事件处理函数接受的参数取决于事件的类型。对于键盘事件，它接受一个GdkEventKey*参数。如附录中所述，事件处理函数返回一个bool值，以表示信号已经被完全处理（返回true）或允许事件传播（false）。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6270
-#, fuzzy
 #| msgid ""
 #| "To determine which key was pressed or released, you read the value of "
 #| "<varname>GdkEventKey::keyval</varname> and compare it with a constant in "
@@ -14623,7 +14345,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6304
-#, fuzzy
 #| msgid ""
 #| "In this example there are three keyboard shortcuts: <keycap>Alt</"
 #| "keycap>+<keycap>1</keycap> selects the first radio button, <keycap>Alt</"
@@ -14703,7 +14424,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6334
-#, fuzzy
 #| msgid ""
 #| "Contrary to other events, keyboard events are first sent to the toplevel "
 #| "window (<classname>Gtk::Window</classname>), where it will be checked for "
@@ -14735,7 +14455,6 @@ msgstr "请注意，取消事件之后，不再会调用其他函数（哪怕它
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6352
-#, fuzzy
 #| msgid ""
 #| "In this example there are three event handlers that are called after "
 #| "<classname>Gtk::Window</classname>'s default event handler, one in the "
@@ -14761,7 +14480,6 @@ msgstr "本示例的目的是显示事件发出时进行的步骤。"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6361
-#, fuzzy
 #| msgid ""
 #| "When you write in the entry, a key release event will be emitted, which "
 #| "will go first to the toplevel window (<classname>Gtk::Window</"
@@ -14833,7 +14551,6 @@ msgstr ""
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:6392
-#, fuzzy
 #| msgid ""
 #| "<classname>Gtk::FontButton</classname> implements the "
 #| "<classname>Gtk::FontChooser</classname> interface."
@@ -14846,7 +14563,6 @@ msgstr ""
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:6394
-#, fuzzy
 #| msgid ""
 #| "<classname>Gtk::EventControllerKey</classname>, "
 #| "<classname>Gtk::EventControllerMotion</classname>, "
@@ -14890,7 +14606,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6411
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1Entry.html\">Reference</ulink>"
@@ -15101,7 +14816,6 @@ msgstr ""
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:6507
-#, fuzzy
 #| msgid ""
 #| "Glib::IO_IN - Call your method when there is data ready for reading on "
 #| "your file descriptor."
@@ -15112,7 +14826,6 @@ msgstr "Glib::IO_IN - 当你提供的文件描述符有数据准备好被读取�
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:6513
-#, fuzzy
 #| msgid ""
 #| "Glib::IO_OUT - Call your method when the file descriptor is ready for "
 #| "writing."
@@ -15123,7 +14836,6 @@ msgstr "Glib::IO_OUT - 当提供的文件描述符准备好被写入时调用你
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:6519
-#, fuzzy
 #| msgid ""
 #| "Glib::IO_PRI - Call your method when the file descriptor has urgent data "
 #| "to be read."
@@ -15134,7 +14846,6 @@ msgstr "Glib::IO_PRI - 当提供的文件描述符有紧急数据要读取时调
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:6524
-#, fuzzy
 #| msgid ""
 #| "Glib::IO_ERR - Call your method when an error has occurred on the file "
 #| "descriptor."
@@ -15145,7 +14856,6 @@ msgstr "Glib::IO_ERR - 当提供的文件描述符上发生错误的时候调用
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:6529
-#, fuzzy
 #| msgid ""
 #| "Glib::IO_HUP - Call your method when hung up (the connection has been "
 #| "broken usually for pipes and sockets)."
@@ -15181,7 +14891,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6544
-#, fuzzy
 #| msgid ""
 #| "where <parameter>condition</parameter> is as specified above. As usual "
 #| "the slot is created with <function>sigc::mem_fun()</function> (for a "
@@ -15339,7 +15048,6 @@ msgstr "标准C++内存管理"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6622
-#, fuzzy
 #| msgid ""
 #| "<application>gtkmm</application> allows the programmer to control the "
 #| "lifetime (that is, the construction and destruction) of any widget in the "
@@ -15383,7 +15091,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6640
-#, fuzzy
 #| msgid "Here are some examples of normal C++ memory management:"
 msgid ""
 "Here are some examples of normal <phrase role=\"nowrap\">C++</phrase> memory "
@@ -15509,7 +15216,6 @@ msgstr "使用new和delete进行动态分配"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6690
-#, fuzzy
 #| msgid ""
 #| "Usually, the programmer will prefer to allow containers to automatically "
 #| "destroy their children by creating them using "
@@ -15627,7 +15333,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6740
-#, fuzzy
 #| msgid ""
 #| "However, usually, when you create such a widget, you will already know "
 #| "that its parent container should be responsible for destroying it, In "
@@ -15706,7 +15411,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6771
-#, fuzzy
 #| msgid ""
 #| "Of course, a top-level container will not be added to another container. "
 #| "The programmer is responsible for destroying the top-level container "
@@ -15817,7 +15521,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6820
-#, fuzzy
 #| msgid ""
 #| "You can cast <classname>RefPtr</classname>s to base types, just like "
 #| "normal pointers."
@@ -15841,7 +15544,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6824
-#, fuzzy
 #| msgid ""
 #| "If you copy a <classname>RefPtr</classname>, for instance "
 #| "<_:programlisting-1/> , or if you pass it as a method argument or a "
@@ -15869,7 +15571,6 @@ msgstr ""
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:6834
-#, fuzzy
 #| msgid ""
 #| "Bjarne Stroustrup, \"The C++ Programming Language\" Forth Edition - "
 #| "section 34.3"
@@ -15900,7 +15601,6 @@ msgstr "Glade和Gtk::Builder"
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:6850
-#, fuzzy
 #| msgid ""
 #| "Although you can use C++ code to instantiate and arrange widgets, this "
 #| "can soon become tedious and repetitive. And it requires a recompilation "
@@ -15947,7 +15647,6 @@ msgstr "这具有以下优点：<_:orderedlist-1/>"
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:6869
-#, fuzzy
 #| msgid ""
 #| "You still need C++ code to deal with User Interface changes triggered by "
 #| "user actions, but using <application>Gtk::Builder</application> for the "
@@ -15979,7 +15678,6 @@ msgstr "加载.glade文件"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6884
-#, fuzzy
 #| msgid ""
 #| "<classname>Gtk::Builder</classname> must be used via a "
 #| "<classname>Glib::RefPtr</classname>. Like all such classes, you need to "
@@ -16045,7 +15743,6 @@ msgstr "访问部件"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6903
-#, fuzzy
 #| msgid ""
 #| "To access a widget, for instance to <methodname>show()</methodname> a "
 #| "dialog, use the <methodname>get_widget()</methodname> method, providing "
@@ -16067,7 +15764,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6910
-#, fuzzy
 #| msgid ""
 #| "In this step, we use a <classname>Gtk::Builder</classname> instance to "
 #| "associate a <classname>Gtk::Builder</classname> ui file with our "
@@ -16095,7 +15791,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6917
-#, fuzzy
 #| msgid ""
 #| "<application>Gtk::Builder</application> checks for a null pointer, and "
 #| "checks that the widget is of the expected type, and will show warnings on "
@@ -16127,7 +15822,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6932
-#, fuzzy
 #| msgid ""
 #| "<methodname>get_widget()</methodname> returns child widgets that are "
 #| "<function>manage()</function>ed (see the <link linkend=\"chapter-"
@@ -16156,7 +15850,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6942
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1Builder.html\">Reference</ulink>"
@@ -16169,7 +15862,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6947
-#, fuzzy
 #| msgid ""
 #| "This simple example shows how to load a <application>Glade</application> "
 #| "file at runtime and access the widgets with <application>Gtk::Builder</"
@@ -16202,7 +15894,6 @@ msgstr "使用派生部件"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6961
-#, fuzzy
 #| msgid ""
 #| "You can use <classname>Gtk::Builder</classname> and <application>Glade</"
 #| "application> to layout your own custom widgets derived from "
@@ -16244,7 +15935,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:6974
-#, fuzzy
 #| msgid ""
 #| "Your derived class must have a constructor that takes a pointer to the "
 #| "underlying C type, and the <classname>Gtk::Builder</classname> instance. "
@@ -16352,7 +16042,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7009
-#, fuzzy
 #| msgid ""
 #| "It's possible to pass additional arguments from "
 #| "<methodname>get_widget_derived()</methodname> to the constructor of the "
@@ -16384,7 +16073,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7016
-#, fuzzy
 #| msgid "Hand-coding constructors"
 msgid "can invoke this constructor"
 msgstr "手工编码构造函数"
@@ -16486,7 +16174,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7051
-#, fuzzy
 #| msgid ""
 #| "When using <application>gtkmm</application> with a version of "
 #| "<application>glibmm</application> from 2.62 onwards, it is possible also "
@@ -16518,7 +16205,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7065
-#, fuzzy
 #| msgid ""
 #| "This example shows how to load a <application>Glade</application> file at "
 #| "runtime and access the widgets via derived classes."
@@ -16616,7 +16302,6 @@ msgstr "准备你的项目"
 
 #. (itstool) path: note/para
 #: C/index-in.docbook:7120
-#, fuzzy
 #| msgid ""
 #| "In the instructions below we will assume that you will not be using "
 #| "<application>gettext</application> directly, but <application>intltool</"
@@ -16647,7 +16332,6 @@ msgstr ""
 
 #. (itstool) path: note/para
 #: C/index-in.docbook:7131
-#, fuzzy
 #| msgid ""
 #| "We also assume that you are using autotools (e.g. <application>automake</"
 #| "application> and <application>autoconf</application>) to build your "
@@ -16723,7 +16407,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7163
-#, fuzzy
 #| msgid ""
 #| "Create a sub-directory named <literal>po</literal> in your project's root "
 #| "directory. This directory will eventually contain all of your "
@@ -16777,7 +16460,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7182
-#, fuzzy
 #| msgid ""
 #| "(In addition, you'd have the files <literal>ja.po</literal> and "
 #| "<literal>de.po</literal> in your <literal>po</literal> directory which "
@@ -16820,7 +16502,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7201
-#, fuzzy
 #| msgid ""
 #| "If you are using <application>gettext</application> directly, you can "
 #| "only mark strings for translation if they are in source code file. "
@@ -16938,7 +16619,6 @@ msgstr ""
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:7256
-#, fuzzy
 #| msgid "Define <literal>INTLTOOL_FILES</literal> as: <_:programlisting-1/>"
 msgid "Define <literal>INTLTOOL_FILES</literal> as:"
 msgstr "定义<literal>INTLTOOL_FILES</literal>为：<_:programlisting-1/>"
@@ -16971,7 +16651,6 @@ msgstr ""
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:7271
-#, fuzzy
 #| msgid "Update your <literal>DISTCLEANFILES</literal>: <_:programlisting-1/>"
 msgid "Update your <literal>DISTCLEANFILES</literal>:"
 msgstr "更新你的<literal>DISTCLEANFILES</literal>：<_:programlisting-1/>"
@@ -16997,7 +16676,6 @@ msgstr ""
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:7279
-#, fuzzy
 #| msgid ""
 #| "Depending on the types of files that contain translatable strings, add "
 #| "code such as <_:programlisting-1/>"
@@ -17083,7 +16761,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7319
-#, fuzzy
 #| msgid ""
 #| "However, <application>Glib</application> defines <function>gettext()</"
 #| "function> support macros which are shorter wrappers in an easy-to-use "
@@ -17246,7 +16923,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7395
-#, fuzzy
 #| msgid ""
 #| "That will create a file named <filename>programname.pot</filename>. Now "
 #| "copy that file to <filename>languagecode.po</filename>, such as "
@@ -17280,7 +16956,6 @@ msgstr ""
 
 #. (itstool) path: note/para
 #: C/index-in.docbook:7408
-#, fuzzy
 #| msgid ""
 #| "It's possible that certain strings will be marked as <literal>fuzzy</"
 #| "literal> in the <filename>.po</filename> file. These translations will "
@@ -17305,7 +16980,6 @@ msgstr "资源"
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:7428
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"https://wiki.gnome.org/TranslationProject/DevGuidelines\"> "
 #| "L10N Guidelines for Developers</ulink>"
@@ -17318,7 +16992,6 @@ msgstr ""
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:7435
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://bazaar.launchpad.net/~intltool/intltool/trunk/view/"
 #| "head:/README\">Intltool README</ulink>"
@@ -17331,7 +17004,6 @@ msgstr ""
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:7441
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"https://wiki.gnome.org/TranslationProject/GitHowTo\">How to "
 #| "use Git for GNOME translators</ulink>"
@@ -17344,7 +17016,6 @@ msgstr ""
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:7447
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://www.gnu.org/software/gettext/manual/"
 #| "gettext.html\">gettext manual</ulink>"
@@ -17543,7 +17214,6 @@ msgstr "合成字符串"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7540
-#, fuzzy
 #| msgid ""
 #| "C programmers use <function>sprintf()</function> to compose and "
 #| "concatenate strings. C++ favours streams, but unfortunately, this "
@@ -17587,7 +17257,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7554
-#, fuzzy
 #| msgid ""
 #| "So you should either avoid this situation or use <ulink url=\"http://"
 #| "developer.gnome.org/glibmm/unstable/"
@@ -17647,7 +17316,6 @@ msgstr "\"黑话\""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7574
-#, fuzzy
 #| msgid ""
 #| "You should avoid cryptic abbreviations, slang, or jargon. They are "
 #| "usually difficult to translate, and are often difficult for even native "
@@ -17656,10 +17324,7 @@ msgid ""
 "You should avoid cryptic abbreviations, slang, or jargon. They are usually "
 "difficult to translate, and are often difficult for even native speakers to "
 "understand."
-msgstr ""
-"你应该避免使用不常见的用于例如缩写、俚语、行话。通常它们对于译者来说很难翻"
-"译，甚至将该语言作为母语的译者也无法理解。例如，最好使用\"application\"而不是"
-"\"app\""
+msgstr "你应该避免使用不常见的用于例如缩写、俚语、行话。通常它们对于译者来说很难翻译，甚至将该语言作为母语的译者也无法理解。例如，最好使用\\\"application\\\"而不是\\\"app\\\""
 
 #. (itstool) path: section/title
 #: C/index-in.docbook:7580
@@ -17695,7 +17360,6 @@ msgstr "获取翻译帮助"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7598
-#, fuzzy
 #| msgid ""
 #| "If your program is free software, there is a whole <literal>GNOME</"
 #| "literal> subproject devoted to helping you make translations, the <ulink "
@@ -17713,7 +17377,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7603
-#, fuzzy
 #| msgid ""
 #| "The way it works is that you upload your source code to a git repository "
 #| "where translators can access it, then contact the gnome-i18n mailing list "
@@ -17733,7 +17396,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7609
-#, fuzzy
 #| msgid ""
 #| "Then you make sure you update the file <filename>POTFILES.in</filename> "
 #| "in the <filename>po/</filename> subdirectory (<command>intltool-update "
@@ -17826,7 +17488,6 @@ msgstr "自定义部件"
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:7656
-#, fuzzy
 #| msgid ""
 #| "<application>gtkmm</application> makes it very easy to derive new widgets "
 #| "by inheriting from an existing widget class, either by deriving from a "
@@ -17870,7 +17531,6 @@ msgstr ""
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:7670
-#, fuzzy
 #| msgid ""
 #| "<methodname>on_size_allocate()</methodname>: Position the child widgets, "
 #| "given the height and width that the container has actually been given."
@@ -17893,7 +17553,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7674
-#, fuzzy
 #| msgid ""
 #| "The <methodname>get_request_mode_vfunc()</methodname>, "
 #| "<methodname>measure_vfunc()</methodname>, and "
@@ -17953,7 +17612,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7698
-#, fuzzy
 #| msgid ""
 #| "<methodname>on_size_allocate()</methodname> receives the actual height "
 #| "and width that the parent container has decided to give to your widget. "
@@ -17993,7 +17651,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7719
-#, fuzzy
 #| msgid ""
 #| "This example implements a container with two child widgets, one above the "
 #| "other. Of course, in this case it would be far simpler just to use a "
@@ -18069,7 +17726,6 @@ msgstr ""
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:7751
-#, fuzzy
 #| msgid ""
 #| "<methodname>on_size_allocate()</methodname>: Position the widget, given "
 #| "the height and width that it has actually been given."
@@ -18082,14 +17738,12 @@ msgstr ""
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:7752
-#, fuzzy
 #| msgid "<methodname>on_map()</methodname>: (optional)"
 msgid "<methodname>on_realize()</methodname>: (optional)"
 msgstr "<methodname>on_map()</methodname>：覆写此虚函数是可选的。"
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:7753
-#, fuzzy
 #| msgid "<methodname>on_unmap()</methodname>: (optional)"
 msgid "<methodname>on_unrealize()</methodname>: (optional)"
 msgstr "<methodname>on_unmap()</methodname>：覆写此虚函数是可选的。"
@@ -18142,7 +17796,6 @@ msgstr "类初始化和实例初始化函数"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:7768
-#, fuzzy
 #| msgid ""
 #| "Some <application>GTK</application> functions, if called at all, must be "
 #| "called from the class init function. Some other <application>GTK</"
@@ -18705,7 +18358,6 @@ msgstr ""
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:8107
-#, fuzzy
 #| msgid ""
 #| "Use GNU <application>autoconf</application> and <application>automake</"
 #| "application>! They are your friends :) <application>Automake</"
@@ -18740,7 +18392,6 @@ msgstr ""
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:8120
-#, fuzzy
 #| msgid ""
 #| "Create your own signals instead of passing pointers around. Objects can "
 #| "communicate with each other via signals and signal handlers. This is much "
@@ -18825,7 +18476,6 @@ msgstr ""
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:8154
-#, fuzzy
 #| msgid ""
 #| "Declare a variable of the type of <classname>Widget</classname> you wish "
 #| "to use, generally as member variable of a derived container class. You "
@@ -18847,7 +18497,6 @@ msgstr ""
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:8163
-#, fuzzy
 #| msgid ""
 #| "Set the attributes of the widget. If the widget has no default "
 #| "constructor, then you will need to initialize the widget in the "
@@ -18876,7 +18525,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:8187
-#, fuzzy
 #| msgid ""
 #| "If you don't want all widgets to be shown, call "
 #| "<methodname>Gtk::Widget::hide()</methodname> on the widgets that you "
@@ -18902,7 +18550,6 @@ msgstr "构建应用程序"
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:8200
-#, fuzzy
 #| msgid ""
 #| "This chapter is similar to the \"Building applications\" chapter in the "
 #| "<ulink url=\"https://developer.gnome.org/gtk4/unstable/\">GTK4 Reference "
@@ -18914,9 +18561,7 @@ msgid ""
 "getting_started.html\">Getting Started</link> chapter in the GTK "
 "documentation. The same application is built, but <application>gtkmm</"
 "application> is used instead of <application>GTK</application>."
-msgstr ""
-"本章节与<ulink url=\"https://developer.gnome.org/gtk4/unstable/\">GTK4参考文"
-"档</ulink>的\"Building applications\"章节十分类似。"
+msgstr "本章节与GTK4参考文档的\\\"Building applications\\\"章节十分类似。"
 
 #. (itstool) path: varlistentry/term
 #: C/index-in.docbook:8210
@@ -19019,7 +18664,6 @@ msgstr ""
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:8249
-#, fuzzy
 #| msgid ""
 #| "The full, buildable sources for these examples can be found in the "
 #| "<filename>examples/book/buildapp</filename> directory of the "
@@ -19105,7 +18749,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:8286
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/glibmm/unstable/"
 #| "classGio_1_1Application.html\">Gio::Application Reference</ulink>"
@@ -19118,7 +18761,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:8287
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/gtkmm/unstable/"
 #| "classGtk_1_1Application.html\">Gtk::Application Reference</ulink>"
@@ -19520,7 +19162,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:8483
-#, fuzzy
 #| msgid ""
 #| "Before we can make use of this schema in our application, we need to "
 #| "compile it into the binary form that <classname>Gio::Settings</classname> "
@@ -19608,7 +19249,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:8512
-#, fuzzy
 #| msgid ""
 #| "At this point, the application will already react if you change one of "
 #| "the settings, e.g. using the <command>gsettings</command> commandline "
@@ -20158,7 +19798,6 @@ msgstr ""
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:8754
-#, fuzzy
 #| msgid ""
 #| "Ideally, we would like you to <ulink url=\"https://gitlab.gnome.org/GNOME/"
 #| "gtkmm-documentation/-/merge_requests\"> provide a merge request</ulink> "
@@ -20177,7 +19816,6 @@ msgstr ""
 
 #. (itstool) path: chapter/para
 #: C/index-in.docbook:8760
-#, fuzzy
 #| msgid ""
 #| "If you do decide to contribute, please post your contribution to the "
 #| "<application>gtkmm</application> mailing list at <ulink "
@@ -20291,7 +19929,6 @@ msgstr ""
 
 #. (itstool) path: appendix/para
 #: C/index-in.docbook:8802
-#, fuzzy
 #| msgid ""
 #| "<ulink url=\"http://developer.gnome.org/glibmm/unstable/"
 #| "classGlib_1_1RefPtr.html\">Reference</ulink>"
@@ -21168,7 +20805,6 @@ msgstr "绑定额外参数"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9200
-#, fuzzy
 #| msgid ""
 #| "If you use one signal handler to catch the same signal from several "
 #| "widgets, you might like that signal handler to receive some extra "
@@ -21187,15 +20823,7 @@ msgid ""
 "instance, you might want to know which button was clicked. You can do this "
 "with <function>sigc::bind()</function>. Here's some code from the <link "
 "linkend=\"sec-helloworld2\">helloworld2</link> example."
-msgstr ""
-"如果你想使用一个信号处理函数从多个部件捕获同一个信号，你可能希望信号处理函数"
-"能收到一些额外的信息。例如，你可能想知道那个按钮被点击了。你可以使用"
-"<function>sigc::bind()</function>。这是<link linkend=\"sec-"
-"helloworld2\">helloworld2</link>示例的部分代码：<_:programlisting-1/> 这表示"
-"我们希望信号向信号处理函数发送一个额外的<classname>Glib::ustring</classname>"
-"参数，并且该参数的值为\"button 1\"。当然，我们将会需要向信号处理函数的声明中"
-"添加额外的参数:<_:programlisting-2/>。当然，正常的\"clicked\"信号处理函数是没"
-"有参数的。"
+msgstr "如果你想使用一个信号处理函数从多个部件捕获同一个信号，你可能希望信号处理函数能收到一些额外的信息。例如，你可能想知道那个按钮被点击了。你可以使用sigc::bind()。这是helloworld2示例的部分代码： 这表示我们希望信号向信号处理函数发送一个额外的Glib::ustring参数，并且该参数的值为\\\"button 1\\\"。当然，我们将会需要向信号处理函数的声明中添加额外的参数:。当然，正常的\\\"clicked\\\"信号处理函数是没有参数的。"
 
 #. (itstool) path: section/programlisting
 #: C/index-in.docbook:9206
@@ -21278,7 +20906,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9238
-#, fuzzy
 #| msgid ""
 #| "You might occasionally find it useful to handle X events when there's "
 #| "something you can't accomplish with normal signals. "
@@ -21302,7 +20929,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9248
-#, fuzzy
 #| msgid ""
 #| "These signals behave slightly differently. The value returned from the "
 #| "signal handler indicates whether it has fully \"handled\" the event. If "
@@ -21325,7 +20951,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9256
-#, fuzzy
 #| msgid ""
 #| "Handling an X event doesn't affect the Widget's other signals. If you "
 #| "handle <literal>button_press_event</literal> for <classname>Gtk::Button</"
@@ -21382,7 +21007,6 @@ msgstr "信号处理函数序列"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9287
-#, fuzzy
 #| msgid ""
 #| "By default, your signal handlers are called after any previously-"
 #| "connected signal handlers. However, this can be a problem with the X "
@@ -21443,7 +21067,6 @@ msgstr "信号处理函数中的异常"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9317
-#, fuzzy
 #| msgid ""
 #| "When a program is aborted because of an unhandled C++ exception, it's "
 #| "sometimes possible to use a debugger to find the location where the "
@@ -21460,7 +21083,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9322
-#, fuzzy
 #| msgid ""
 #| "This section describes primarily what you can expect on a Linux system, "
 #| "when you use <ulink url=\"http://www.gnu.org/software/gdb/\">the gdb "
@@ -21538,7 +21160,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9346
-#, fuzzy
 #| msgid ""
 #| "Here is an excerpt from a <application>gdb</application> session. Only "
 #| "the most interesting parts of the output are shown. <_:programlisting-1/> "
@@ -21548,10 +21169,7 @@ msgstr ""
 msgid ""
 "Here is an excerpt from a <application>gdb</application> session. Only the "
 "most interesting parts of the output are shown."
-msgstr ""
-"这是<application>gdb</application>会话的摘要。只显示输出中最有趣的部分："
-"<_:programlisting-1/> 你可以看到在<filename>without_signal.cc</filename>的第"
-"六行抛出了异常(<code>throw \"Something\";</code>)。"
+msgstr "这是gdb会话的摘要。只显示输出中最有趣的部分： 你可以看到在without_signal.cc的第六行抛出了异常(throw \\\"Something\\\";)。"
 
 #. (itstool) path: section/programlisting
 #: C/index-in.docbook:9350
@@ -21589,7 +21207,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9359
-#, fuzzy
 #| msgid ""
 #| "Here is an excerpt from a <application>gdb</application> session. Only "
 #| "the most interesting parts of the output are shown. <_:programlisting-1/> "
@@ -21671,7 +21288,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9383
-#, fuzzy
 #| msgid "Using the git version of <application>gtkmm</application>"
 msgid "And here's an excerpt from a <application>gdb</application> session."
 msgstr "使用git版本的<application>gtkmm</application>"
@@ -21724,7 +21340,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9399
-#, fuzzy
 #| msgid ""
 #| "And here's an excerpt from a <application>gdb</application> session. "
 #| "<_:programlisting-1/> The exception is caught in <application>glibmm</"
@@ -21810,7 +21425,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9424
-#, fuzzy
 #| msgid ""
 #| "If there are many caught exceptions before the interesting uncaught one, "
 #| "this method can be tedious. It can be automated with the following "
@@ -21861,7 +21475,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9437
-#, fuzzy
 #| msgid ""
 #| "If there are many caught exceptions before the interesting uncaught one, "
 #| "this method can be tedious. It can be automated with the following "
@@ -22081,7 +21694,6 @@ msgstr ""
 
 #. (itstool) path: appendix/para
 #: C/index-in.docbook:9529
-#, fuzzy
 #| msgid ""
 #| "<application>gtkmm</application> signal handlers are strongly-typed, "
 #| "whereas <application>GTK</application> C code allows you to connect a "
@@ -22104,7 +21716,6 @@ msgstr ""
 
 #. (itstool) path: appendix/para
 #: C/index-in.docbook:9535
-#, fuzzy
 #| msgid ""
 #| "Re. Overriding signal handlers: You can do this in the straight-C world "
 #| "of GTK too; that's what GTK's object system is for. But in GTK, you have "
@@ -22126,7 +21737,6 @@ msgstr ""
 
 #. (itstool) path: appendix/para
 #: C/index-in.docbook:9543
-#, fuzzy
 #| msgid ""
 #| "This is one of the places where the beauty of C++ really comes out. One "
 #| "wouldn't think of subclassing a GTK widget simply to override its action "
@@ -22167,7 +21777,6 @@ msgstr ""
 
 #. (itstool) path: appendix/para
 #: C/index-in.docbook:9560
-#, fuzzy
 #| msgid ""
 #| "<application>gtkmm</application> currently works with the <ulink "
 #| "url=\"http://mingw.org/\">MinGW/GCC compiler</ulink> with a compiler "
@@ -22241,7 +21850,6 @@ msgstr ""
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:9590
-#, fuzzy
 #| msgid ""
 #| "Refer to the <ulink url=\"https://gitlab.gnome.org/GNOME/gtkmm/tree/"
 #| "master/README.win32\">README.win32</ulink>, as well as the <ulink "
@@ -22364,7 +21972,6 @@ msgstr "$ cp examples/sample.jhbuildrc ~/.config/jhbuildrc"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9632
-#, fuzzy
 #| msgid ""
 #| "To set up <application>jhbuild</application>, follow the basic "
 #| "installation instructions from the <ulink url=\"http://"
@@ -22481,7 +22088,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9687
-#, fuzzy
 #| msgid ""
 #| "When you downloaded <application>jhbuild</application> from the git "
 #| "repository, you got a number of <filename>.modules</filename> files, "
@@ -22694,7 +22300,6 @@ msgstr "复制skeleton项目"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9794
-#, fuzzy
 #| msgid ""
 #| "Typically our wrapper library would be called libsomethingmm. We can "
 #| "start by copying the <ulink url=\"https://gitlab.gnome.org/GNOME/mm-"
@@ -22773,7 +22378,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9822
-#, fuzzy
 #| msgid ""
 #| "As well as renaming the directories, we should rename some of the source "
 #| "files. For instance: <_:programlisting-1/> A number of the skeleton files "
@@ -22806,7 +22410,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9828
-#, fuzzy
 #| msgid ""
 #| "As well as renaming the directories, we should rename some of the source "
 #| "files. For instance: <_:programlisting-1/> A number of the skeleton files "
@@ -22902,7 +22505,6 @@ msgstr ""
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:9862
-#, fuzzy
 #| msgid ""
 #| "In the <function>project()</function> function, change the license and "
 #| "the C++ version, if necessary."
@@ -23195,7 +22797,6 @@ msgstr "生成_enums.defs文件"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:9982
-#, fuzzy
 #| msgid ""
 #| "This <filename>.defs</filename> file describes enum types and their "
 #| "possible values. It is generated by the <filename>enum.pl</filename> "
@@ -23367,7 +22968,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10045
-#, fuzzy
 #| msgid ""
 #| "Tells <command>gmmproc</command> to include a header in the generated "
 #| "<filename>private/button_p.h</filename> file."
@@ -23398,7 +22998,6 @@ msgstr ".hg和.ccg文件"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10061
-#, fuzzy
 #| msgid ""
 #| "The .hg and .ccg source files are very much like .h and .cc C++ source "
 #| "files, but they contain extra macros, such as <function>_CLASS_GOBJECT()</"
@@ -23422,7 +23021,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10069
-#, fuzzy
 #| msgid ""
 #| "A .hg file will typically include some headers and then declare a class, "
 #| "using some macros to add API or behaviour to this class. For instance, "
@@ -23662,7 +23260,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10146
-#, fuzzy
 #| msgid ""
 #| "You should avoid including the C header from your C++ header, to avoid "
 #| "polluting the global namespace, and to avoid exporting unnecessary public "
@@ -23689,7 +23286,6 @@ msgstr "m4转换"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10156
-#, fuzzy
 #| msgid ""
 #| "The macros that you use in the .hg and .ccg files often need to know how "
 #| "to convert a C++ type to a C type, or vice-versa. <command>gmmproc</"
@@ -23774,7 +23370,6 @@ msgstr "安装m4"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10184
-#, fuzzy
 #| msgid ""
 #| "Often when wrapping methods, it is desirable to store the return of the C "
 #| "function in what is called an output parameter. In this case, the C++ "
@@ -23836,7 +23431,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10203
-#, fuzzy
 #| msgid ""
 #| "<literal>$3</literal> will be replaced by the output parameter name of "
 #| "the C++ method and <literal>$4</literal> will be replaced by the return "
@@ -23914,7 +23508,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10234
-#, fuzzy
 #| msgid ""
 #| "<function>_CLASS_GOBJECT( C++ class, C class, C casting macro, C++ base "
 #| "class, C base class )</function>"
@@ -23962,7 +23555,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10247
-#, fuzzy
 #| msgid ""
 #| "<function>_CLASS_GTKOBJECT( C++ class, C class, C casting macro, C++ base "
 #| "class, C base class )</function>"
@@ -24039,7 +23631,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10272
-#, fuzzy
 #| msgid ""
 #| "<function>_CLASS_BOXEDTYPE( C++ class, C class, new function, copy "
 #| "function, free function )</function>"
@@ -24087,7 +23678,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10286
-#, fuzzy
 #| msgid "<function>_CLASS_BOXEDTYPE_STATIC( C++ class, C class )</function>"
 msgid ""
 "<function>_CLASS_BOXEDTYPE_STATIC( C++ class, C class, declaration prefix )</"
@@ -24129,7 +23719,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10298
-#, fuzzy
 #| msgid ""
 #| "<function>_CLASS_OPAQUE_COPYABLE( C++ class, C class, new function, copy "
 #| "function, free function )</function>"
@@ -24165,7 +23754,6 @@ msgstr "_CLASS_OPAQUE_REFCOUNTED"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10308
-#, fuzzy
 #| msgid ""
 #| "This macro declares a wrapper for a reference-counted opaque struct. The "
 #| "C++ wrapper cannot be directly instantiated and can only be used with "
@@ -24180,7 +23768,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10311
-#, fuzzy
 #| msgid ""
 #| "<function>_CLASS_OPAQUE_REFCOUNTED( C++ class, C class, new function, ref "
 #| "function, unref function )</function>"
@@ -24228,7 +23815,6 @@ msgstr "<function>_CLASS_GENERIC( C++类, C类 )</function>"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10324
-#, fuzzy
 #| msgid "For instance, for <classname>Gdk::TimeCoord</classname>:"
 msgid ""
 "Note: No <parameter>declaration prefix</parameter> argument. For instance, "
@@ -24263,7 +23849,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10336
-#, fuzzy
 #| msgid ""
 #| "<function>_CLASS_INTERFACE( C++ class, C class, C casting macro, C "
 #| "interface struct, Base C++ class (optional), Base C class (optional) )</"
@@ -24709,7 +24294,6 @@ msgstr "_WRAP_METHOD"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10532
-#, fuzzy
 #| msgid "This macro generates the C++ method to wrap a C function."
 msgid ""
 "This macro generates the <phrase role=\"nowrap\">C++</phrase> method to wrap "
@@ -24823,7 +24407,7 @@ msgid ""
 "Puts the generated code in the .cc file in a "
 "G_GNUC_BEGIN_IGNORE_DEPRECATIONS / G_GNUC_END_IGNORE_DEPRECATIONS block. "
 "(Only in glibmm &gt;= 2.70.1)"
-msgstr ""
+msgstr "把生成的代码放进 .cc 文件中的 G_GNUC_BEGIN_IGNORE_DEPRECATIONS / G_GNUC_END_IGNORE_DEPRECATIONS 代码块里。（仅限 glibmm >= 2.70.1）"
 
 #. (itstool) path: varlistentry/term
 #: C/index-in.docbook:10582
@@ -25033,7 +24617,6 @@ msgstr "_WRAP_METHOD_DOCS_ONLY"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10672
-#, fuzzy
 #| msgid ""
 #| "This macro is like <function>_WRAP_METHOD()</function>, but it generates "
 #| "only the documentation for a C++ method that wraps a C function. Use this "
@@ -25097,7 +24680,6 @@ msgstr "voidreturn"
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:10705
-#, fuzzy
 #| msgid ""
 #| "Don't include a @return Doxygen command in the documentation. Useful if "
 #| "the wrapped C function returns a value, but the corresponding C++ method "
@@ -25171,7 +24753,6 @@ msgstr "_WRAP_SIGNAL"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10738
-#, fuzzy
 #| msgid ""
 #| "This macro generates the C++ libsigc++-style signal to wrap a C GObject "
 #| "signal. It actually generates a public accessor method, such as "
@@ -25346,7 +24927,6 @@ msgstr "_WRAP_PROPERTY"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10844
-#, fuzzy
 #| msgid ""
 #| "This macro generates the C++ method to wrap a C GObject property. You "
 #| "must specify the property name and the wanted C++ type for the property. "
@@ -25388,7 +24968,6 @@ msgstr "_WRAP_VFUNC"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10875
-#, fuzzy
 #| msgid "This macro generates the C++ method to wrap a virtual C function."
 msgid ""
 "This macro generates the <phrase role=\"nowrap\">C++</phrase> method to wrap "
@@ -25533,7 +25112,6 @@ msgstr "err_return_value &lt;value&gt;"
 
 #. (itstool) path: listitem/para
 #: C/index-in.docbook:10982
-#, fuzzy
 #| msgid ""
 #| "Defines a non-default return value, used only if the C++ "
 #| "<function>something_vfunc()</function> function throws an exception which "
@@ -25553,7 +25131,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:10999
-#, fuzzy
 #| msgid ""
 #| "A rule to which there may be exceptions: If the virtual C function "
 #| "returns a pointer to an object derived from <classname>GObject</"
@@ -25624,7 +25201,6 @@ msgstr "_WRAP_ENUM"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11035
-#, fuzzy
 #| msgid ""
 #| "This macro generates a C++ enum to wrap a C enum. You must specify the "
 #| "desired C++ name and the name of the underlying C enum."
@@ -25822,7 +25398,6 @@ msgstr "_WRAP_ENUM_DOCS_ONLY"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11121
-#, fuzzy
 #| msgid ""
 #| "This macro just generates a Doxygen documentationn block for the enum. "
 #| "This is useful for enums that can't be wrapped with "
@@ -25854,7 +25429,6 @@ msgstr "_WRAP_GERROR"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11135
-#, fuzzy
 #| msgid ""
 #| "This macro generates a C++ exception class, derived from "
 #| "<classname>Glib::Error</classname>, with a <type>Code</type> enum and a "
@@ -26496,7 +26070,6 @@ msgstr "基本类型"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11366
-#, fuzzy
 #| msgid ""
 #| "Some of the basic types that are used in C APIs have better alternatives "
 #| "in C++. For example, there's no need for a <type>gboolean</type> type "
@@ -26649,7 +26222,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11414
-#, fuzzy
 #| msgid ""
 #| "The implementation of the <function>wrap_init()</function> method in "
 #| "<filename>wrap_init.cc</filename> is generated by "
@@ -26730,7 +26302,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11437
-#, fuzzy
 #| msgid ""
 #| "The extra typedef allows the struct to be used in a header without "
 #| "including its full definition, simply by predeclaring it, by repeating "
@@ -26753,7 +26324,6 @@ msgstr ""
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11442
-#, fuzzy
 #| msgid "The menu looks like this:"
 msgid "This compiler error might look like this:"
 msgstr "菜单如下所示"
@@ -26961,7 +26531,6 @@ msgstr "文档"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11505
-#, fuzzy
 #| msgid ""
 #| "In general, gtkmm-style projects use Doxygen, which reads specially "
 #| "formatted C++ comments and generates HTML documentation. You may write "
@@ -26982,7 +26551,6 @@ msgstr "重用C文档"
 
 #. (itstool) path: section/para
 #: C/index-in.docbook:11510
-#, fuzzy
 #| msgid ""
 #| "You might wish to reuse documentation that exists for the C library that "
 #| "you are wrapping. GTK-style C libraries typically use gtk-doc and "
@@ -27693,7 +27261,6 @@ msgstr ""
 
 #. (itstool) path: blockquote/para
 #: C/index-in.docbook:12019
-#, fuzzy
 #| msgid ""
 #| "Permission is granted to copy, distribute and/or modify this document "
 #| "under the terms of the GNU Free Documentation License, Version 1.2 or any "
