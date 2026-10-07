@@ -129,6 +129,25 @@ class RealContent(unittest.TestCase):
             if r["discipline"] == "ee" and r["id"] != "route.power-grid" and r["lens"] == "direction":
                 self.assertLessEqual(rank[r["assessment"]["verdict"]], rank[grid["assessment"]["verdict"]], r["id"])
 
+    def test_policy_scheme_covers_the_headline_directions(self) -> None:
+        # ADR 0024：使用者点名的目标方向（大模型、机器人、无人机、卫星互联网、半导体、PCB）都在，且每个领域至少核实到规划点名。
+        fields = {f["id"]: f for f in DOC["policy_scheme"]["fields"]}
+        headline = {fid for fid, f in fields.items() if f["headline"]}
+        self.assertEqual(headline, {"ai", "robot", "uav", "satcom", "chip", "pcb"})
+        for fid, f in fields.items():
+            self.assertIn("plan", {s["kind"] for s in f["signals"]}, fid)
+        # 集成电路的国家投入信号最全（规划、基金、税收优惠、专门政策），支持度最高。
+        self.assertEqual(fields["chip"]["support"]["level"], 5)
+        self.assertEqual(max(f["support"]["level"] for f in fields.values()), 5)
+
+    def test_new_directions_have_nodes_and_routes(self) -> None:
+        for nid in ("polaris.cs.llm_engineering", "polaris.auto.embodied_ai", "polaris.ei.satcom_systems",
+                    "polaris.ei.semiconductor_devices", "polaris.ei.advanced_packaging", "polaris.ei.chip_application_design"):
+            self.assertGreaterEqual(len(find_node(DOC, nid)["chapters"]), 6, nid)
+        routes = {r["id"] for r in DOC["routes"]}
+        for rid in ("route.llm-engineering", "route.embodied-ai", "route.satcom-leo", "route.semiconductor-chip", "route.chip-application-pcb"):
+            self.assertIn(rid, routes)
+
     def test_codesign_map_covers_every_contract(self) -> None:
         nodes = find_map(DOC, "hw-sw-interface")["nodes"]
         self.assertEqual(len(nodes), 17)
@@ -303,8 +322,8 @@ class Counterexamples(unittest.TestCase):
         from pathlib import Path
 
         source = Path(contract.__file__).read_text(encoding="utf-8")
-        declared = set(re.findall(r'"((?:doc|source|map|node|course|requires|edge|cross|codesign|route|rating|assessment)\.[a-z_]+)"', source))
-        tested = set(re.findall(r'"((?:doc|source|map|node|course|requires|edge|cross|codesign|route|rating|assessment)\.[a-z_]+)"',
+        declared = set(re.findall(r'"((?:doc|source|map|node|course|requires|edge|cross|codesign|route|rating|assessment|policy|fields)\.[a-z_]+)"', source))
+        tested = set(re.findall(r'"((?:doc|source|map|node|course|requires|edge|cross|codesign|route|rating|assessment|policy|fields)\.[a-z_]+)"',
                                 Path(__file__).read_text(encoding="utf-8")))
         self.assertEqual(sorted(declared - tested), [])
 
@@ -367,6 +386,15 @@ def with_codesign_and_route(document: dict) -> dict:
             level, reason = contract.aggregate_route_rating([levels[nid][dim] for nid in members])
             route["ratings"][dim] = {"level": level, "reason": reason}
         other = "route.fixture-2" if route["id"] == "route.fixture" else "route.fixture"
+        fields = {}
+        for fid in [f["id"] for f in document["policy_scheme"]["fields"]]:
+            vals = []
+            for nid in members:
+                node = next((n for e in document["maps"] for n in e["nodes"] if n["id"] == nid), {})
+                vals.append((node.get("fields") or {}).get(fid, {"level": 1})["level"])
+            level, reason = contract.aggregate_route_field(vals)
+            fields[fid] = {"level": level, "reason": reason}
+        route["fields"] = fields
         route["assessment"] = {"verdict": "optional", "verdict_reason": "夹具", "strengths": ["x"], "weaknesses": ["x"],
                                "next": [{"route_id": other, "reason": "x"}]}
     return document
@@ -528,6 +556,24 @@ class DepthAndBalance(unittest.TestCase):
         expect("rating.derived", lambda d: d["routes"][0]["ratings"]["utility"].update(level=1))
         expect("rating.derived", lambda d: d["routes"][0]["stages"][0]["nodes"].append("polaris.cs.python")
                if "polaris.cs.python" not in d["routes"][0]["stages"][0]["nodes"] else d["routes"][0]["stages"][0]["nodes"].remove("polaris.cs.python"))
+        # 国家重点领域与前景约束（ADR 0024）
+        expect("policy.scheme", lambda d: d["policy_scheme"]["signal_kinds"].pop())
+        expect("policy.scheme", lambda d: d["policy_scheme"]["fields"][0]["signals"].clear())
+        expect("policy.scheme", lambda d: d["policy_scheme"]["fields"][0]["signals"][0].update(source_id="ghost"))
+        expect("policy.scheme", lambda d: d["policy_scheme"]["fields"][0]["signals"][0].update(kind="bogus"))
+        expect("policy.support", lambda d: d["policy_scheme"]["fields"][0]["support"].update(level=1))
+        # AI 领域没有财税让利类信号；补一条后，推导出的支持度变了而存档值没变，必须被发现
+        expect("policy.support", lambda d: next(f for f in d["policy_scheme"]["fields"] if f["id"] == "ai")["signals"].append(
+            {"kind": "tax", "source_id": "cn-nev-tax", "locator": "x", "text": "x"}))
+        expect("fields.node", lambda d: find_node(d, "polaris.ee.battery_bms")["fields"]["nev"].update(level=9))
+        expect("fields.node", lambda d: find_node(d, "polaris.ee.battery_bms")["fields"].update(ghost={"level": 3, "reason": "x"}))
+        expect("fields.node", lambda d: find_node(d, "polaris.ee.battery_bms")["fields"]["nev"].update(reason=""))
+        expect("fields.route", lambda d: d["routes"][0].pop("fields"))
+        expect("fields.route", lambda d: d["routes"][0]["fields"]["chip"].update(level=1 if d["routes"][0]["fields"]["chip"]["level"] != 1 else 2))
+        # 前景必须与国家投入一致：没有对应领域不能评 ≥4；非最高支持度领域不能评 5；有强支持领域的不能评 ≤2
+        expect("rating.outlook", lambda d: find_node(d, "polaris.ei.mcu_8051")["ratings"]["outlook"].update(level=4))
+        expect("rating.outlook", lambda d: find_node(d, "polaris.auto.robotics")["ratings"]["outlook"].update(level=5))
+        expect("rating.outlook", lambda d: find_node(d, "polaris.ee.battery_bms")["ratings"]["outlook"].update(level=1))
         expect("assessment.fields", lambda d: d["routes"][0]["assessment"].update(verdict="bogus"))
         expect("assessment.fields", lambda d: d["routes"][0]["assessment"].update(strengths=[]))
         expect("assessment.fields", lambda d: d["routes"][0]["assessment"].update(next=[]))

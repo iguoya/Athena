@@ -52,6 +52,11 @@ RATING_LEVELS = 5
 # 路线的推荐等级（ADR 0022 决策 7）：优先推荐、推荐、可选、进阶（有明确前置，不宜作起点）。
 KNOWN_VERDICT = {"priority", "recommended", "optional", "advanced"}
 
+# 国家重点领域与支持信号（ADR 0024）：支持度 = 1 + 已有信号的不同类别数，由契约重算。
+POLICY_SIGNAL_KINDS = ["plan", "fund", "tax", "policy"]
+POLICY_KIND_ZH = {"plan": "规划点名", "fund": "专项资金与基金", "tax": "财税让利", "policy": "专门政策"}
+FIT_LEVELS = [2, 3, 4, 5]
+
 NODE_FIELDS = ["id", "title", "track", "stable_definition", "engineering_role",
                "practice", "validation", "volatility"]
 ACADEMIC_NODE_FIELDS = ["pitfall", "priority", "priority_reason"]
@@ -135,6 +140,7 @@ def validate(document: dict[str, Any], root: Path = PROJECT_ROOT) -> list[Violat
     _validate_routes(report, document, source_ids, view_kind_by_map, map_of_node)
     _validate_principles(report, document, source_ids)
     _validate_ratings(report, document, view_kind_by_map)
+    _validate_policy(report, document, source_ids, view_kind_by_map)
     return report.violations
 
 
@@ -627,6 +633,122 @@ def _validate_assessment(report: _Report, route: dict, where: str, route_ids: se
         item = item if isinstance(item, dict) else {}
         if item.get("route_id") not in route_ids or item.get("route_id") == route.get("id") or not _text(item.get("reason")):
             report.add("assessment.fields", where, "next 的每一项要指向另一条存在的路线，并写出理由。")
+
+
+# —— 国家重点领域与前景约束（ADR 0024）——
+
+def derive_policy_support(field: dict[str, Any]) -> tuple[int, str]:
+    kinds = {sig.get("kind") for sig in field.get("signals") or [] if isinstance(sig, dict)}
+    present = [k for k in POLICY_SIGNAL_KINDS if k in kinds]
+    return 1 + len(present), f"已核实 {len(present)} 类国家投入信号：" + ("、".join(POLICY_KIND_ZH[k] for k in present) or "无")
+
+
+def aggregate_route_field(levels: list[int]) -> tuple[int, str]:
+    mean = sum(levels) / len(levels) if levels else 1.0
+    return _round_half_up(mean), f"汇总 {len(levels)} 个知识点（未对应的按 1 计），均值 {mean:.2f}"
+
+
+def _validate_policy(report: _Report, document: dict[str, Any], source_ids: set[str], view_kind_by_map: dict) -> None:
+    scheme = document.get("policy_scheme") if isinstance(document.get("policy_scheme"), dict) else {}
+    report.require_text("policy.scheme", "政策口径 policy_scheme", scheme, ["as_of", "note"])
+    kinds = scheme.get("signal_kinds") if isinstance(scheme.get("signal_kinds"), list) else []
+    if [k.get("id") if isinstance(k, dict) else None for k in kinds] != POLICY_SIGNAL_KINDS:
+        report.add("policy.scheme", "政策口径 policy_scheme", f"signal_kinds 必须按顺序恰好是 {POLICY_SIGNAL_KINDS}。")
+    for k in kinds:
+        report.require_text("policy.scheme", "信号类别", k if isinstance(k, dict) else {}, ["id", "title", "question"])
+    fits = scheme.get("fit_levels") if isinstance(scheme.get("fit_levels"), list) else []
+    if [f.get("level") if isinstance(f, dict) else None for f in fits] != FIT_LEVELS:
+        report.add("policy.scheme", "政策口径 policy_scheme", f"fit_levels 必须是 {FIT_LEVELS}，按顺序各一条。")
+    for f in fits:
+        report.require_text("policy.scheme", "支撑等级", f if isinstance(f, dict) else {}, ["name", "criterion"])
+    fields = scheme.get("fields") if isinstance(scheme.get("fields"), list) else []
+    if not fields:
+        report.add("policy.scheme", "政策口径 policy_scheme", "至少要有一个国家重点领域。")
+    field_ids: list[str] = []
+    support: dict[str, int] = {}
+    for field in fields:
+        field = field if isinstance(field, dict) else {}
+        where = f"国家重点领域 {field.get('id')}"
+        report.require_text("policy.scheme", where, field, ["id", "title", "scope", "business"])
+        if field.get("id") in field_ids:
+            report.add("policy.scheme", where, "领域 id 重复。")
+        if isinstance(field.get("id"), str):
+            field_ids.append(field["id"])
+        if not isinstance(field.get("headline"), bool):
+            report.add("policy.scheme", where, "headline 必须是布尔值。")
+        signals = field.get("signals") if isinstance(field.get("signals"), list) else []
+        if not signals:
+            report.add("policy.scheme", where, "至少要有一条来自官方文件的支持信号。")
+        for sig in signals:
+            sig = sig if isinstance(sig, dict) else {}
+            if sig.get("kind") not in POLICY_SIGNAL_KINDS:
+                report.add("policy.scheme", where, f"信号类别只能是 {POLICY_SIGNAL_KINDS}。")
+            report.require_text("policy.scheme", where, sig, ["text", "source_id", "locator"])
+            if _text(sig.get("source_id")) and sig["source_id"] not in source_ids:
+                report.add("policy.scheme", where, f"信号引用了不存在的来源：{sig['source_id']}。")
+        expected = derive_policy_support(field)
+        got = field.get("support") if isinstance(field.get("support"), dict) else {}
+        if (got.get("level"), got.get("reason")) != expected:
+            report.add("policy.support", where, f"支持度应由信号推导为 {expected[0]} 级（{expected[1]}），与内容不一致。")
+        support[field.get("id")] = expected[0]
+
+    fit_of_node: dict[str, dict[str, int]] = {}
+    outlook_of_node: dict[str, int] = {}
+    for entry in document.get("maps") or []:
+        entry = entry if isinstance(entry, dict) else {}
+        if view_kind_by_map.get(entry.get("id")) not in OPEN_VIEW_KINDS:
+            continue
+        for node in entry.get("nodes") or []:
+            node = node if isinstance(node, dict) else {}
+            nid = node.get("id")
+            where = f"节点 {nid} 的 fields"
+            fits: dict[str, int] = {}
+            if "fields" in node:
+                if not isinstance(node["fields"], dict):
+                    report.add("fields.node", where, "fields 必须是 {领域 id: {level, reason}}。")
+                else:
+                    for fid, item in node["fields"].items():
+                        item = item if isinstance(item, dict) else {}
+                        if fid not in field_ids:
+                            report.add("fields.node", where, f"未知的领域 {fid}。")
+                        elif item.get("level") not in FIT_LEVELS or isinstance(item.get("level"), bool) or not _text(item.get("reason")):
+                            report.add("fields.node", where, f"{fid} 需要 {FIT_LEVELS} 之一的 level 与非空 reason（未对应的不要写）。")
+                        else:
+                            fits[fid] = item["level"]
+            fit_of_node[nid] = fits
+            outlook = ((node.get("ratings") or {}).get("outlook") or {}).get("level") if isinstance(node.get("ratings"), dict) else None
+            if isinstance(outlook, int) and not isinstance(outlook, bool):
+                outlook_of_node[nid] = outlook
+
+    # 前景必须与国家投入一致（ADR 0024 决策 4）
+    for nid, level in outlook_of_node.items():
+        pairs = [(fit, support.get(fid, 0)) for fid, fit in fit_of_node.get(nid, {}).items()]
+        where = f"节点 {nid} 的前景评级"
+        if level >= 4 and not any(fit >= 3 and sup >= 3 for fit, sup in pairs):
+            report.add("rating.outlook", where, "前景 ≥4 级必须至少对应一个领域：支撑度 ≥3 且领域支持度 ≥3。")
+        if level == 5 and not any(fit >= 4 and sup == 5 for fit, sup in pairs):
+            report.add("rating.outlook", where, "前景为 5 级必须至少对应一个领域：支撑度 ≥4 且领域支持度为 5。")
+        if level <= 2 and any(fit >= 3 and sup >= 4 for fit, sup in pairs):
+            report.add("rating.outlook", where, "前景 ≤2 级的节点不得对应「支撑度 ≥3 且领域支持度 ≥4」的领域。")
+
+    for route in document.get("routes") or []:
+        route = route if isinstance(route, dict) else {}
+        where = f"路线 {route.get('id')} 的 fields"
+        members: list[str] = []
+        for stg in route.get("stages") or []:
+            for nid in _strings(stg.get("nodes")) if isinstance(stg, dict) else []:
+                if nid not in members:
+                    members.append(nid)
+        got = route.get("fields") if isinstance(route.get("fields"), dict) else None
+        if got is None or set(got) != set(field_ids):
+            report.add("fields.route", where, f"路线必须写齐全部领域的 fields：{field_ids}。")
+            continue
+        for fid in field_ids:
+            levels = [fit_of_node.get(n, {}).get(fid, 1) for n in members if n in fit_of_node]
+            expected = aggregate_route_field(levels)
+            item = got[fid] if isinstance(got[fid], dict) else {}
+            if (item.get("level"), item.get("reason")) != expected:
+                report.add("fields.route", where, f"{fid} 应由节点汇总为 {expected[0]} 级（{expected[1]}）。")
 
 
 def main(argv: list[str] | None = None) -> int:
