@@ -57,7 +57,9 @@ def extract_section(changelog: str, version: str) -> str | None:
     match = re.search(pattern, changelog, flags=re.MULTILINE | re.DOTALL)
     if match is None:
         return None
-    body = match.group(1).strip()
+    # 最后一节会连带文末的版本对比链接定义（[X.Y.Z]: url），它们属于整份文件。
+    body = re.sub(r"^\[\d+\.\d+\.\d+\]:[ \t]+\S+[ \t]*$", "", match.group(1), flags=re.MULTILINE)
+    body = body.strip()
     return body + "\n" if body else None
 
 

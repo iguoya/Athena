@@ -220,11 +220,51 @@ def ensure_changelog(target: str, model: str, dry_run: bool) -> None:
         print(f"  CHANGELOG [{target}] 节保留机械底稿，可手工或由 agent 会话改写", flush=True)
 
 
+def github_slug() -> str | None:
+    # 兼容 https 与 ssh 两种 remote 写法；识别不了就不猜 URL
+    match = re.search(r"github\.com[/:](.+?)(?:\.git)?/?$", git("remote", "get-url", "origin"))
+    return match.group(1) if match else None
+
+
+def tidy_changelog(target: str, dry_run: bool) -> None:
+    """把本版标题与对比链接收成 Keep a Changelog 的写法。
+
+    手写或 agent 改写时常把标题写成 ``## [X.Y.Z](日期)``——那是 Markdown 链接
+    语法，渲染出来是一个指向日期的坏链接；文末的 ``[X.Y.Z]: compare`` 定义也
+    总被漏掉，标题就成了带方括号的纯文本。两处都是机械规则，发版时顺手补齐。
+    """
+    text = CHANGELOG.read_text(encoding="utf-8")
+    fixed = re.sub(
+        r"^## \[(\d+\.\d+\.\d+)\]\((\d{4}-\d{2}-\d{2})\)[ \t]*$", r"## [\1] - \2", text, flags=re.MULTILINE
+    )
+    slug = github_slug()
+    if slug and not re.search(rf"^\[{re.escape(target)}\]: ", fixed, flags=re.MULTILINE):
+        versions = CHANGELOG_SECTION_RE.findall(fixed)  # 文件里新版在前
+        older = versions[versions.index(target) + 1 :] if target in versions else []
+        base = f"https://github.com/{slug}"
+        url = f"{base}/compare/v{older[0]}...v{target}" if older else f"{base}/releases/tag/v{target}"
+        definition = f"[{target}]: {url}\n"
+        first = re.search(r"^\[\d+\.\d+\.\d+\]: ", fixed, flags=re.MULTILINE)
+        fixed = (
+            fixed[: first.start()] + definition + fixed[first.start() :]
+            if first
+            else fixed.rstrip("\n") + "\n\n" + definition
+        )
+    if fixed == text:
+        return
+    if dry_run:
+        print(f"  [dry] CHANGELOG 规整 [{target}] 的标题写法与对比链接", flush=True)
+        return
+    CHANGELOG.write_text(fixed, encoding="utf-8", newline="\n")
+    print(f"  CHANGELOG 已规整 [{target}] 的标题写法与对比链接", flush=True)
+
+
 def prepare(target: str, model: str, dry_run: bool) -> None:
     print(f"发版准备 {target}：", flush=True)
     check_prerequisites(target)
     bump_meson(target, dry_run)
     ensure_changelog(target, model, dry_run)
+    tidy_changelog(target, dry_run)
     if dry_run:
         print("dry-run 结束，未做任何改动。")
         return
@@ -249,11 +289,10 @@ def push(target: str | None) -> None:
     if ahead == "0":
         die(f"{tag} 已经在远端；无需推送")
     git("push", "origin", "main", tag)
-    # 兼容 https 与 ssh 两种 remote 写法；识别不了就不猜 URL
-    match = re.search(r"github\.com[/:](.+?)(?:\.git)?/?$", git("remote", "get-url", "origin"))
+    slug = github_slug()
     where = (
-        f"完成后 Release 在 https://github.com/{match.group(1)}/releases/latest"
-        if match
+        f"完成后 Release 在 https://github.com/{slug}/releases/latest"
+        if slug
         else "完成后 Release 见仓库的 Releases 页"
     )
     print(
