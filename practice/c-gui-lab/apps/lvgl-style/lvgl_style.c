@@ -8,6 +8,7 @@
  */
 
 #include "lvgl.h"
+#include "demos/lv_demos.h"
 #include "cjk_font.h"
 #define SDL_MAIN_HANDLED /* 我们自己写 main，不要 SDL_main.h 的劫持 */
 #include <SDL.h>
@@ -251,15 +252,24 @@ main(int argc, char **argv)
 
   lv_theme_default_init(disp, lv_palette_main(LV_PALETTE_BLUE),
                         lv_palette_main(LV_PALETTE_RED), true, LV_FONT_DEFAULT);
-  build_page();
 
-  /* 主题切换按钮悬浮在右上角 */
-  lv_obj_t *btn = lv_button_create(lv_screen_active());
-  lv_obj_align(btn, LV_ALIGN_TOP_RIGHT, -28, 26);
-  lv_obj_add_event_cb(btn, on_theme_toggle, LV_EVENT_CLICKED, NULL);
-  lv_obj_t *bl = lv_label_create(btn);
-  lv_label_set_text(bl, "亮 / 暗");
-  set_cn_font(bl, false);
+  /* --demo：LVGL 官方 widgets 合集（母体一键调起） */
+  if (argc > 1 && strcmp(argv[1], "--demo") == 0)
+    {
+      lv_demo_widgets();
+    }
+  else
+    {
+      build_page();
+
+      /* 主题切换按钮悬浮在右上角 */
+      lv_obj_t *btn = lv_button_create(lv_screen_active());
+      lv_obj_align(btn, LV_ALIGN_TOP_RIGHT, -28, 26);
+      lv_obj_add_event_cb(btn, on_theme_toggle, LV_EVENT_CLICKED, NULL);
+      lv_obj_t *bl = lv_label_create(btn);
+      lv_label_set_text(bl, "亮 / 暗");
+      set_cn_font(bl, false);
+    }
 
   bool running = true;
   while (running)

@@ -30,6 +30,11 @@ const APPS = {
     title: "LVGL + SDL2",
     exe: path.join(PROJECT_ROOT, "build", "apps", "lvgl-style", "lvgl-style.exe"),
   },
+  "lvgl-demo": {
+    title: "LVGL 官方 widgets 合集",
+    exe: path.join(PROJECT_ROOT, "build", "apps", "lvgl-style", "lvgl-style.exe"),
+    args: ["--demo"],
+  },
   raygui: {
     title: "raygui 控件套件",
     exe: path.join(PROJECT_ROOT, "build", "apps", "raygui-demo", "raygui-demo.exe"),

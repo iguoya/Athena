@@ -24,8 +24,11 @@ third_party/   imgui / lvgl / cimgui / raygui / nuklear 源码（不进版本库
   raygui controls_test_suite、Nuklear SDL2 演示、Nuklear GDI 原生版（纯
   Win32 渲染）、microui 官方 demo（后三者的源码 vendor 于 third_party/，
   include 已就地修正；Nuklear GDI 与 microui 用 lld 链接，见下）。
-- **LVGL 官方 widgets 合集未集成**：lv_demo_widgets 在本环境死锁（灰屏未响应，
-  与中文渲染死锁同为该环境的 LVGL 兼容问题），对比任务由自建橱窗承担。
+  **LVGL 官方 widgets 合集**（lvgl-style --demo，9.2.2 实测可跑）。
+- **LVGL 版本**：9.2.2（third_party/lvgl-9.2.2，与 machine 学科对齐）。9.3.0 的
+  lv_demo_widgets 在本机死循环，9.2.2 的段错误根因是其默认**内置静态内存池**
+  被 demo 对象量耗尽（lv_obj_create 返回 NULL）——lv_conf.h 已改用系统 malloc
+  （LV_STDLIB_CLIB），桌面模拟的正确姿势。中文仍走预生成子集字体。
 
 ## 候选清单（暂未收编）
 
@@ -33,7 +36,6 @@ third_party/   imgui / lvgl / cimgui / raygui / nuklear 源码（不进版本库
   网络下长期挂起，待网络可用时 vendor 并 meson 构建。
 - **IUP** sample 画廊：无 MSYS2 包，只能 SourceForge 第三方二进制（供应链信任）
   或自建其 makefile 体系；原生控件维度的空缺可先由 libui-ng 补。
-- **LVGL 官方 lv_demos**：本环境死锁（见 lv_conf.h），换 9.2.2 或 Linux 再试。
 
 ## 取舍说明
 
