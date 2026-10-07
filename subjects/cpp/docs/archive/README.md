@@ -35,3 +35,14 @@ GitHub Release 正文统一改为 `CHANGELOG.md` 对应版本节之前的原文�
 | 归档文件 | 当时作用 | 现在看哪里 |
 |---|---|---|
 | [release-notes/](2026-09-26/release-notes/) | v0.1.0–v7.0.0 八个 Release 的替换前正文 | [CHANGELOG](../../CHANGELOG.md) 与各版本 Release 页 |
+
+## 2026-10-07
+
+版本史从 `subjects/cpp/CHANGELOG.md` 并入仓库根 `CHANGELOG.md`，格式统一、表述修订后，
+GitHub Release 正文再次统一为根 CHANGELOG 对应版本节。替换前的正文有三处问题：源码折行
+在 Release 页面上显示成硬断行；v8.0.0 是 `cebf51b` 概要化之前的详细稿，且误带进了下一个
+二级标题；页脚的路径与比较链接各版不一。
+
+| 归档文件 | 当时作用 | 现在看哪里 |
+|---|---|---|
+| [release-notes/](2026-10-07/release-notes/) | v0.1.0–v8.0.0 九个 Release 的替换前正文 | 仓库根 [CHANGELOG](../../../../CHANGELOG.md) 与各版本 Release 页 |
