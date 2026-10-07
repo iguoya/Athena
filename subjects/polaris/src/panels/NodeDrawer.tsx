@@ -26,7 +26,8 @@ import {
   stageVar,
 } from "@/ui/labels";
 
-import { RatingRows } from "@/ui/RatingParts";
+import { fieldDef, fieldKey } from "@/content/ratings";
+import { LevelBadge, RatingRows } from "@/ui/RatingParts";
 
 interface Props {
   catalog: Catalog;
@@ -200,6 +201,34 @@ export function NodeDrawer({ catalog, node, width, onClose }: Props) {
         {node.ratings && (
           <Section title="评级">
             <RatingRows ratings={node.ratings} />
+          </Section>
+        )}
+
+        {node.fields && Object.keys(node.fields).length > 0 && (
+          <Section title="对应的国家重点领域">
+            <div className="grid gap-2">
+              {Object.entries(node.fields)
+                .sort((a, b) => b[1].level - a[1].level)
+                .map(([fid, item]) => {
+                  const def = fieldDef(fid);
+                  if (!def) return null;
+                  return (
+                    <div key={fid} className="rounded-xl border border-line bg-surface px-3 py-2.5">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-[12.5px] font-semibold">{def.title}</span>
+                        <LevelBadge dim={fieldKey(fid)} level={item.level} />
+                        <span className="ml-auto rounded-full bg-surface-2 px-2 py-[2px] text-[10.5px] text-faint" title={def.support.reason}>
+                          国家支持度 {def.support.level}/5
+                        </span>
+                      </div>
+                      <p className="mt-1.5 text-[12px] leading-relaxed text-muted">{item.reason}</p>
+                    </div>
+                  );
+                })}
+              <p className="text-[11px] leading-relaxed text-faint">
+                技术前景评级以国家投入为基准（ADR 0024）：支持度是官方文件里核实到的支持信号类别数，不是预算金额。各领域的信号与来源见总览。
+              </p>
+            </div>
           </Section>
         )}
 

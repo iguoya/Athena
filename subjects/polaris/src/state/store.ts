@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { RatingDim } from "@/content/types";
+import { FIELD_IDS, fieldKey, isFieldKey, type LensKey } from "@/content/ratings";
 import { formatHash, HOME, parseHash, type Location } from "./router";
 
 export type ThemeId = "sky" | "paper";
@@ -33,13 +33,14 @@ function applyTheme(theme: ThemeId): void {
 }
 
 const RATE_KEY = "polaris.rateBy";
-const RATE_DIMS: readonly string[] = ["utility", "hands_on", "theory", "verifiable", "core", "demand"];
+const RATE_DIMS: readonly string[] = ["utility", "hands_on", "theory", "verifiable", "core", "demand", "outlook"];
 
 // 着色维度同样是个人的显示偏好，存在本机浏览器里；读不到就当没选。
-function readRateBy(): RatingDim | null {
+function readRateBy(): LensKey | null {
   try {
     const stored = localStorage.getItem(RATE_KEY);
-    if (stored && RATE_DIMS.includes(stored)) return stored as RatingDim;
+    if (stored && RATE_DIMS.includes(stored)) return stored as LensKey;
+    if (stored && isFieldKey(stored) && FIELD_IDS.includes(stored.slice(6))) return fieldKey(stored.slice(6));
   } catch {
     /* 没有存储也能用 */
   }
@@ -55,7 +56,7 @@ interface AppState {
   theme: ThemeId;
   drawerWide: boolean;
   /** 按哪个评级维度给节点着色；null 是默认外观（ADR 0022）。 */
-  rateBy: RatingDim | null;
+  rateBy: LensKey | null;
 
   go(loc: Location, replace?: boolean): void;
   selectNode(id: string | null): void;
@@ -63,7 +64,7 @@ interface AppState {
   setEdge(key: string | null): void;
   setTheme(theme: ThemeId): void;
   toggleDrawerWide(): void;
-  setRateBy(dim: RatingDim | null): void;
+  setRateBy(dim: LensKey | null): void;
 }
 
 export const useApp = create<AppState>((set, get) => ({

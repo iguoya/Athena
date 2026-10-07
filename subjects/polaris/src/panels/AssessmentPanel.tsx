@@ -1,10 +1,10 @@
 import { ArrowRight, ThumbsDown, ThumbsUp, X } from "lucide-react";
 import type { Catalog } from "@/content/catalog";
-import { VERDICT_HINT, VERDICT_LABEL, dimDef, levelName, strongAndWeak, verdictVar } from "@/content/ratings";
+import { fieldDef, fieldKey, VERDICT_HINT, VERDICT_LABEL, dimDef, levelName, strongAndWeak, verdictVar } from "@/content/ratings";
 import type { Route } from "@/content/types";
 import { useApp } from "@/state/store";
 import { DISCIPLINE_LABEL } from "@/ui/labels";
-import { RatingRows } from "@/ui/RatingParts";
+import { LevelBadge, RatingRows } from "@/ui/RatingParts";
 
 interface Props {
   catalog: Catalog;
@@ -57,6 +57,31 @@ export function AssessmentPanel({ catalog, route, onClose }: Props) {
               </span>
             )}
           </p>
+        )}
+
+        {route.fields && (
+          <>
+            <h3 className="mb-2 mt-4 text-[11.5px] font-semibold tracking-[0.08em] text-faint">对应的国家重点领域</h3>
+            <ul className="grid gap-1.5">
+              {Object.entries(route.fields)
+                .filter(([, item]) => item.level >= 3)
+                .sort((a, b) => b[1].level - a[1].level)
+                .map(([fid, item]) => {
+                  const def = fieldDef(fid);
+                  if (!def) return null;
+                  return (
+                    <li key={fid} className="flex items-center gap-2 rounded-xl border border-line bg-surface px-3 py-2 text-[12.5px]" title={item.reason}>
+                      <span className="font-medium">{def.title}</span>
+                      <LevelBadge dim={fieldKey(fid)} level={item.level} />
+                      <span className="ml-auto text-[11px] text-faint">国家支持度 {def.support.level}/5</span>
+                    </li>
+                  );
+                })}
+              {Object.values(route.fields).every((item) => item.level < 3) && (
+                <li className="text-[12px] text-muted">没有汇总到「相关」以上的国家重点领域（基础性路线）。</li>
+              )}
+            </ul>
+          </>
         )}
 
         <div className="mt-4 grid grid-cols-2 gap-2.5">

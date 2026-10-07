@@ -5,7 +5,7 @@ import { STAGE_LABEL } from "@/content/catalog";
 import type { PolarisNode } from "@/content/types";
 import { useApp } from "@/state/store";
 import { LevelBadge, MiniStrip } from "@/ui/RatingParts";
-import { ratingVar } from "@/content/ratings";
+import { lensLevel, ratingVar } from "@/content/ratings";
 import { CONTRACT_LABEL, CURRENT_LABEL, PRIORITY_LABEL, TRACK_LABEL, contractVar, currentVar, stageVar } from "@/ui/labels";
 
 export type CardState = "idle" | "selected" | "near" | "dim";
@@ -30,8 +30,8 @@ export function NodeCard({ node, placed, state, delay, onSelect, onHover }: Prop
   const stageColor = stageVar(node.stage);
   const selected = state === "selected";
   const rateBy = useApp((s) => s.rateBy);
-  const rated = rateBy && node.ratings ? node.ratings[rateBy] : undefined;
-  const tint = rated ? ratingVar(rated.level) : undefined;
+  const rated = rateBy ? lensLevel(node, rateBy) : undefined;
+  const tint = rated !== undefined ? ratingVar(rated) : undefined;
   return (
     <motion.button
       type="button"
@@ -83,7 +83,7 @@ export function NodeCard({ node, placed, state, delay, onSelect, onHover }: Prop
       </span>
       {node.ratings && (
         <span className="absolute right-2.5 top-2.5">
-          {rateBy && rated ? <LevelBadge dim={rateBy} level={rated.level} /> : <MiniStrip ratings={node.ratings} />}
+          {rateBy && rated !== undefined ? <LevelBadge dim={rateBy} level={rated} /> : <MiniStrip ratings={node.ratings} />}
         </span>
       )}
       <span className="mt-2 line-clamp-2 text-[15px] font-semibold leading-snug">{node.title}</span>

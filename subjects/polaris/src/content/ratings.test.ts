@@ -1,6 +1,26 @@
 import { describe, expect, it } from "vitest";
 import { loadCatalog } from "./load";
-import { RATING_DIMS, RATING_SCHEME, VERDICTS, levelName, ratingVar, routeDimMean, routesByOutlook, routesByVerdict, strongAndWeak } from "./ratings";
+import {
+  FIELD_IDS,
+  POLICY_SCHEME,
+  RATING_DIMS,
+  RATING_SCHEME,
+  VERDICTS,
+  fieldDef,
+  fieldKey,
+  isFieldKey,
+  levelName,
+  lensLevel,
+  lensLevels,
+  lensTitle,
+  ratingVar,
+  routeDimMean,
+  routeFieldMean,
+  routesByField,
+  routesByOutlook,
+  routesByVerdict,
+  strongAndWeak,
+} from "./ratings";
 
 const catalog = loadCatalog();
 
@@ -80,6 +100,54 @@ describe("评级（ADR 0022）", () => {
       for (const next of route.assessment!.next) {
         expect(ids.has(next.route_id), `${route.id} → ${next.route_id}`).toBe(true);
         expect(next.route_id).not.toBe(route.id);
+      }
+    }
+  });
+
+  it("国家重点领域：九个领域，使用者点名的六个是目标方向；支持度 = 1 + 信号类别数，每条信号都有出处", () => {
+    expect(FIELD_IDS.length).toBe(9);
+    expect(POLICY_SCHEME.fields.filter((f) => f.headline).map((f) => f.id).sort()).toEqual(["ai", "chip", "pcb", "robot", "satcom", "uav"]);
+    for (const field of POLICY_SCHEME.fields) {
+      expect(field.support.level, field.id).toBe(1 + new Set(field.signals.map((s) => s.kind)).size);
+      for (const signal of field.signals) expect(catalog.sources.has(signal.source_id), `${field.id}/${signal.source_id}`).toBe(true);
+    }
+    expect(fieldDef("chip")?.support.level).toBe(5);
+  });
+
+  it("视角工具：领域视角是「1 无关」加 2–5 级；节点没写的领域按 1；参考层节点没有评级", () => {
+    const key = fieldKey("nev");
+    expect(isFieldKey(key)).toBe(true);
+    expect(isFieldKey("utility")).toBe(false);
+    expect(lensTitle(key)).toBe("新能源汽车");
+    expect(lensLevels(key).map((l) => l.level)).toEqual([1, 2, 3, 4, 5]);
+    expect(levelName(key, 5)).toBe("核心支撑");
+    expect(levelName(key, 1)).toBe("无关");
+    const battery = catalog.nodeById.get("polaris.ee.battery_bms")!;
+    expect(lensLevel(battery, key)).toBe(5);
+    expect(lensLevel(battery, fieldKey("satcom"))).toBe(2);
+    expect(lensLevel(catalog.nodeById.get("polaris.ee.circuit_analysis")!, fieldKey("ai"))).toBe(1);
+    const reference = catalog.allMaps.find((m) => !catalog.isOpenMap(m.id))!.nodes[0];
+    expect(lensLevel(reference, key)).toBeUndefined();
+  });
+
+  it("每个领域最契合的路线：均值从高到低，且是该领域里最相关的方向", () => {
+    for (const fid of FIELD_IDS) {
+      const top = routesByField(catalog, catalog.routes, fid, 3);
+      expect(top.length).toBe(3);
+      for (let i = 1; i < top.length; i++) expect(top[i - 1].mean).toBeGreaterThanOrEqual(top[i].mean);
+      expect(top[0].mean).toBe(routeFieldMean(catalog, top[0].route, fid));
+    }
+    expect(routesByField(catalog, catalog.routes, "chip", 1)[0].route.id).toBe("route.semiconductor-chip");
+    expect(routesByField(catalog, catalog.routes, "satcom", 1)[0].route.id).toBe("route.satcom-leo");
+    expect(routesByField(catalog, catalog.routes, "ai", 1)[0].route.id).toBe("route.ml-foundations");
+  });
+
+  it("前景与国家投入一致：前景为 5 级的节点都至少对应一个支持度为 5 的领域", () => {
+    for (const map of catalog.maps) {
+      for (const node of map.nodes) {
+        if (node.ratings?.outlook.level !== 5) continue;
+        const strong = Object.entries(node.fields ?? {}).some(([fid, item]) => item.level >= 4 && fieldDef(fid)?.support.level === 5);
+        expect(strong, node.id).toBe(true);
       }
     }
   });

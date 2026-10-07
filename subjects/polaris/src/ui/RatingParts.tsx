@@ -1,5 +1,18 @@
-import { RATING_DIMS, RATING_SCHEME, dimDef, levelName, ratingVar } from "@/content/ratings";
-import type { RatingDim, Ratings } from "@/content/types";
+import {
+  POLICY_SCHEME,
+  RATING_DIMS,
+  RATING_SCHEME,
+  dimDef,
+  fieldKey,
+  isFieldKey,
+  levelName,
+  lensLevels,
+  lensQuestion,
+  lensTitle,
+  ratingVar,
+  type LensKey,
+} from "@/content/ratings";
+import type { Ratings } from "@/content/types";
 import { useApp } from "@/state/store";
 
 /** 五格等级条：填满到该级为止，颜色随等级变化；旁边总有数字与名称，不只靠颜色。 */
@@ -18,7 +31,7 @@ export function Pips({ level, size = 9 }: { level: number; size?: number }) {
 }
 
 /** 一个维度一个等级的小徽章：色块里是数字，旁边是等级名。 */
-export function LevelBadge({ dim, level }: { dim: RatingDim; level: number }) {
+export function LevelBadge({ dim, level }: { dim: LensKey; level: number }) {
   const color = ratingVar(level);
   return (
     <span
@@ -84,44 +97,59 @@ export function RatingRows({ ratings, showReason = true }: { ratings: Ratings; s
   );
 }
 
-/** 「按哪个维度着色」的选择条，带当前维度的图例。选择记在本机浏览器里，是个人偏好。 */
+/** 「按哪个视角着色」的选择条：评级维度，或国家重点领域（节点对该领域的支撑程度）。选择记在本机浏览器里，是个人偏好。 */
 export function RateBar() {
   const rateBy = useApp((s) => s.rateBy);
   const setRateBy = useApp((s) => s.setRateBy);
-  const active = rateBy ? dimDef(rateBy) : undefined;
+  const levels = rateBy ? lensLevels(rateBy) : [];
+  const fields = [...POLICY_SCHEME.fields].sort((a, b) => Number(b.headline) - Number(a.headline));
+  const pill = (active: boolean) =>
+    `rounded-full px-2.5 py-[3px] text-[12px] font-medium transition-colors ${active ? "bg-accent text-accent-ink" : "bg-surface-2 text-muted hover:text-ink"}`;
   return (
-    <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5" role="group" aria-label="按评级着色">
-      <span className="text-[12px] font-semibold text-muted">着色</span>
-      <div className="flex flex-wrap gap-1">
-        <button
-          type="button"
-          aria-pressed={rateBy === null}
-          onClick={() => setRateBy(null)}
-          className={`rounded-full px-2.5 py-[3px] text-[12px] font-medium transition-colors ${rateBy === null ? "bg-accent text-accent-ink" : "bg-surface-2 text-muted hover:text-ink"}`}
-        >
-          默认
-        </button>
-        {RATING_SCHEME.dimensions.map((def) => (
-          <button
-            key={def.id}
-            type="button"
-            aria-pressed={rateBy === def.id}
-            title={def.question}
-            onClick={() => setRateBy(def.id)}
-            className={`rounded-full px-2.5 py-[3px] text-[12px] font-medium transition-colors ${rateBy === def.id ? "bg-accent text-accent-ink" : "bg-surface-2 text-muted hover:text-ink"}`}
-          >
-            {def.title}
+    <div className="mt-2 flex flex-col gap-1.5" role="group" aria-label="按评级或国家重点领域着色">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+        <span className="text-[12px] font-semibold text-muted">着色</span>
+        <div className="flex flex-wrap gap-1">
+          <button type="button" aria-pressed={rateBy === null} onClick={() => setRateBy(null)} className={pill(rateBy === null)}>
+            默认
           </button>
-        ))}
+          {RATING_SCHEME.dimensions.map((def) => (
+            <button key={def.id} type="button" aria-pressed={rateBy === def.id} title={def.question} onClick={() => setRateBy(def.id)} className={pill(rateBy === def.id)}>
+              {def.title}
+            </button>
+          ))}
+        </div>
       </div>
-      {active && (
-        <div className="flex flex-wrap items-center gap-1.5" aria-label={`${active.title}的图例`}>
-          {active.levels.map((lv) => (
+      {fields.length > 0 && (
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+          <span className="text-[12px] font-semibold text-muted" title="按节点对国家重点领域的支撑程度着色">国家重点领域</span>
+          <div className="flex flex-wrap gap-1">
+            {fields.map((field) => (
+              <button
+                key={field.id}
+                type="button"
+                aria-pressed={rateBy === fieldKey(field.id)}
+                title={field.scope}
+                onClick={() => setRateBy(fieldKey(field.id))}
+                className={pill(rateBy === fieldKey(field.id))}
+              >
+                {field.title}
+                {field.headline && <span className={`ml-1 text-[10px] ${rateBy === fieldKey(field.id) ? "opacity-80" : "text-faint"}`}>★</span>}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+      {rateBy && (
+        <div className="flex flex-wrap items-center gap-1.5" aria-label={`${lensTitle(rateBy)}的图例`}>
+          {levels.map((lv) => (
             <span key={lv.level} title={lv.criterion} className="inline-flex">
-              <LevelBadge dim={active.id} level={lv.level} />
+              <LevelBadge dim={rateBy} level={lv.level} />
             </span>
           ))}
-          <span className="text-[11px] text-faint">{active.basis === "derived" ? "由内容推导" : "编辑评估"} · {active.question}</span>
+          <span className="text-[11px] text-faint">
+            {isFieldKey(rateBy) ? "节点对该领域的支撑程度（编辑评估）" : dimDef(rateBy)?.basis === "derived" ? "由内容推导" : "编辑评估"} · {lensQuestion(rateBy)}
+          </span>
         </div>
       )}
     </div>

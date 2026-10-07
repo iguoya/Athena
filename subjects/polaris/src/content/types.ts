@@ -79,6 +79,8 @@ export interface PolarisNode {
   current?: Current;
   /** 开放地图的节点必有：各维度的评级（ADR 0022、0023）。 */
   ratings?: Ratings;
+  /** 对国家重点领域的支撑程度（稀疏，2–5 级；未写按 1 无关，ADR 0024）。 */
+  fields?: Record<string, Rating>;
   // 软硬接口节点（view_kind 为 codesign）
   contract?: Contract;
   hw_side?: string;
@@ -125,6 +127,37 @@ export interface RouteAssessment {
   strengths: string[];
   weaknesses: string[];
   next: { route_id: string; reason: string }[];
+}
+
+/** 国家重点领域与支持信号（ADR 0024）。 */
+export type SignalKind = "plan" | "fund" | "tax" | "policy";
+
+export interface PolicySignal {
+  kind: SignalKind;
+  text: string;
+  source_id: string;
+  locator: string;
+}
+
+export interface PolicyField {
+  id: string;
+  title: string;
+  /** 使用者点名的目标方向。 */
+  headline: boolean;
+  scope: string;
+  /** 商业模式说明：编辑说明，不计入支持度。 */
+  business: string;
+  signals: PolicySignal[];
+  /** 由信号类别数推导：1 + 类别数。不是预算金额。 */
+  support: Rating;
+}
+
+export interface PolicyScheme {
+  as_of: string;
+  note: string;
+  signal_kinds: { id: SignalKind; title: string; question: string }[];
+  fit_levels: RatingLevelDef[];
+  fields: PolicyField[];
 }
 
 export interface PolarisEdge {
@@ -184,6 +217,8 @@ export interface Route {
   ratings?: Ratings;
   /** 优劣与推荐方向（编辑评估，ADR 0022）。 */
   assessment?: RouteAssessment;
+  /** 由所含节点汇总的对各国家重点领域的契合（ADR 0024）。 */
+  fields?: Record<string, Rating>;
 }
 
 export interface Principle {
@@ -208,4 +243,5 @@ export interface PolarisDocument {
   routes?: Route[];
   principles?: Principle[];
   rating_scheme?: RatingScheme;
+  policy_scheme?: PolicyScheme;
 }

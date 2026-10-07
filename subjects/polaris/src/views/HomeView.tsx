@@ -7,8 +7,8 @@ import { BALANCES, DISCIPLINES, LENSES, disciplineLadderId, mapsByDiscipline, ro
 import type { Discipline, Route } from "@/content/types";
 import { openExternal } from "@/ui/external";
 import { useApp } from "@/state/store";
-import { VERDICTS, VERDICT_HINT, VERDICT_LABEL, routesByOutlook, routesByVerdict, verdictVar } from "@/content/ratings";
-import { MiniStrip } from "@/ui/RatingParts";
+import { POLICY_SCHEME, VERDICTS, VERDICT_HINT, VERDICT_LABEL, fieldKey, routesByField, routesByOutlook, routesByVerdict, verdictVar } from "@/content/ratings";
+import { LevelBadge, MiniStrip, Pips } from "@/ui/RatingParts";
 import { BALANCE_LABEL, DISCIPLINE_HINT, DISCIPLINE_LABEL, LENS_HINT, LENS_LABEL, balanceVar } from "@/ui/labels";
 
 function RouteCard({ catalog, route, index }: { catalog: Catalog; route: Route; index: number }) {
@@ -158,6 +158,76 @@ export function HomeView({ catalog }: { catalog: Catalog }) {
           })}
         </div>
 
+        {/* 前景的判断基准：国家重点领域与支持信号（ADR 0024） */}
+        <section className="mt-6" aria-label="国家重点领域与目标方向">
+          <h2 className="text-[15px] font-semibold">国家重点领域与目标方向——技术前景的判断基准</h2>
+          <p className="mt-1 max-w-[980px] text-[12.5px] leading-relaxed text-muted">{POLICY_SCHEME.note}</p>
+          <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            {[...POLICY_SCHEME.fields]
+              .sort((a, b) => Number(b.headline) - Number(a.headline))
+              .map((field) => {
+                const kinds = POLICY_SCHEME.signal_kinds.filter((kind) => field.signals.some((signal) => signal.kind === kind.id));
+                const routes = routesByField(catalog, catalog.routes, field.id, 3);
+                return (
+                  <div key={field.id} className="flex flex-col rounded-2xl border border-line bg-surface p-4 shadow-[var(--shadow-card)]">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-[14.5px] font-semibold">{field.title}</span>
+                      {field.headline && <span className="rounded-full bg-accent-soft px-2 py-[2px] text-[10.5px] font-semibold text-accent">目标方向</span>}
+                    </div>
+                    <div className="mt-1.5 flex items-center gap-2 text-[12px]" title={field.support.reason}>
+                      <Pips level={field.support.level} />
+                      <span className="font-medium">国家支持度 {field.support.level}/5</span>
+                      <span className="text-faint">已核实 {kinds.length} 类信号</span>
+                    </div>
+                    <p className="mt-1.5 text-[12px] leading-relaxed text-muted">{field.scope}</p>
+                    <ul className="mt-2 grid gap-1.5">
+                      {field.signals.map((signal) => {
+                        const source = catalog.sources.get(signal.source_id);
+                        const kind = POLICY_SCHEME.signal_kinds.find((k) => k.id === signal.kind);
+                        return (
+                          <li key={`${signal.kind}-${signal.source_id}-${signal.locator}`} className="flex items-start gap-1.5 text-[12px] leading-snug">
+                            <span className="mt-[1px] shrink-0 rounded-md bg-surface-2 px-1.5 py-[1px] text-[10.5px] font-medium text-muted">{kind?.title}</span>
+                            <span className="min-w-0">
+                              {signal.text}
+                              {source && (
+                                <button
+                                  type="button"
+                                  title={`${source.title} · ${signal.locator}`}
+                                  onClick={() => void openExternal(source.url)}
+                                  className="ml-1 text-accent underline-offset-2 hover:underline"
+                                >
+                                  出处
+                                </button>
+                              )}
+                            </span>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                    <p className="mt-2 text-[11.5px] leading-relaxed text-faint">
+                      <span className="font-semibold text-muted">商业模式　</span>
+                      {field.business}
+                    </p>
+                    <div className="mt-2.5 flex flex-wrap items-center gap-1.5 border-t border-line pt-2.5">
+                      <span className="text-[11px] font-semibold text-muted">最契合的路线</span>
+                      {routes.map(({ route }) => (
+                        <button
+                          key={route.id}
+                          type="button"
+                          onClick={() => go({ view: "route", routeId: route.id })}
+                          className="flex items-center gap-1.5 rounded-lg border border-line px-2 py-1 text-[11.5px] transition-colors hover:border-accent"
+                        >
+                          {route.title}
+                          <LevelBadge dim={fieldKey(field.id)} level={route.fields?.[field.id]?.level ?? 1} />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </section>
+
         {/* 推荐发展方向：按推荐等级分组，受上面的专业类筛选影响（ADR 0022） */}
         <section className="mt-6" aria-label="推荐发展方向">
           <h2 className="text-[15px] font-semibold">推荐发展方向</h2>
@@ -207,7 +277,7 @@ export function HomeView({ catalog }: { catalog: Catalog }) {
             <section className="mt-6" aria-label="技术前景最好的方向">
               <h2 className="text-[15px] font-semibold">技术前景最好的方向</h2>
               <p className="mt-1 text-[12.5px] text-muted">
-                按各路线所含知识的「技术发展前景」评级（评估日期当时的判断）从高到低排列。前景好不等于好学，也不是对个人的建议；
+                按各路线所含知识的「技术发展前景」评级从高到低排列；前景以国家投入为基准（见上面的国家重点领域）。前景好不等于好学，也不是对个人的建议；
                 前置多的方向仍标「进阶」，先看它的推荐等级与评估。
               </p>
               <div className="mt-3 flex flex-wrap gap-2">

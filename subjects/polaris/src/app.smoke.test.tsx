@@ -95,6 +95,36 @@ describe("界面冒烟", () => {
     expect(html).toContain('aria-label="各维度的评级"');
   });
 
+  it("总览有「国家重点领域与目标方向」：支持度、官方信号与出处、最契合的路线", () => {
+    const html = render({ view: "home" });
+    expect(html).toContain("国家重点领域与目标方向");
+    for (const title of ["人工智能与大模型", "机器人", "无人机与低空经济", "卫星互联网与商业航天", "集成电路与半导体", "电子硬件与 PCB"]) expect(html).toContain(title);
+    expect(html).toContain("国家支持度");
+    expect(html).toContain("规划点名");
+    expect(html).toContain("最契合的路线");
+  });
+
+  it("节点抽屉有「对应的国家重点领域」；按领域着色后卡片显示支撑等级", () => {
+    let html = render({ view: "base", mapId: "electrical-engineering", nodeId: "polaris.ee.battery_bms" });
+    expect(html).toContain("对应的国家重点领域");
+    expect(html).toContain("新能源汽车");
+    const button = [...container.querySelectorAll("button")].find((b) => b.textContent?.startsWith("新能源汽车") && b.getAttribute("aria-pressed") !== null)!;
+    act(() => button.click());
+    expect(container.querySelector('[data-node-id="polaris.ee.battery_bms"]')?.textContent).toContain("核心支撑");
+    expect(container.querySelector('[data-node-id="polaris.ee.circuit_analysis"]')?.textContent).toContain("相关");
+    act(() => useApp.getState().setRateBy(null));
+    html = container.innerHTML;
+    expect(container.querySelector('[data-node-id="polaris.ee.battery_bms"]')?.textContent).not.toContain("核心支撑");
+  });
+
+  it("路线评估面板列出对应的国家重点领域", () => {
+    render({ view: "route", routeId: "route.satcom-leo" });
+    const button = [...container.querySelectorAll("button")].find((b) => b.textContent?.includes("评估"))!;
+    act(() => button.click());
+    expect(container.innerHTML).toContain("对应的国家重点领域");
+    expect(container.innerHTML).toContain("卫星互联网与商业航天");
+  });
+
   it("总览单列「技术前景最好的方向」，每条路线带前景均值", () => {
     const html = render({ view: "home" });
     expect(html).toContain("技术前景最好的方向");
