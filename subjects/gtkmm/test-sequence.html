@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>序列测试</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      const log = [];
+      window.__log = log;
+      const push = (s) => { log.push(String(s).slice(0, 150)); };
+      window.addEventListener("error", (e) => push("GLOBAL:" + String(e.message)));
+      import("/src/index.css")
+        .then(() => push("css OK"))
+        .catch((e) => push("css FAIL:" + String(e).slice(0, 150)));
+      import("/src/main.tsx")
+        .then(() => push("main OK"))
+        .catch((e) => push("main FAIL:" + String(e).slice(0, 200)));
+      setTimeout(() => {
+        push("root children=" + document.getElementById("root").childElementCount);
+        push("body text len=" + document.body.textContent.length);
+      }, 5000);
+    </script>
+  </body>
+</html>

@@ -56,6 +56,16 @@ export default function App() {
   const [view, setView] = useState<View | null>(null);
   const [events, setEvents] = useState<DemoEvent[]>([]);
   const [notice, setNotice] = useState<string | null>(null);
+
+
+  // 在类型收窄之前提取，供下方与侧栏展开块比较（那里 view 已被收窄为 kp）
+  const activePageId = view?.kind === "page" ? view.pageId : null;
+  const activeKpId = view?.kind === "kp" ? view.kpId : null;
+  const activeSectionId =
+    view?.kind === "kp" || view?.kind === "page" || view?.kind === "checkpoint"
+      ? view.sectionId
+      : null;
+  const activeIsCheckpoint = view?.kind === "checkpoint";
   const [attempts, setAttempts] = useState<AttemptRow[]>([]);
   const [trainingMode, setTrainingMode] = useState(
     () => window.localStorage.getItem("zh-training") !== "off",
@@ -116,15 +126,6 @@ export default function App() {
     () => new Map((manifest?.experiments ?? []).map((e) => [e.id as string, e])),
     [manifest],
   );
-
-  // 在类型收窄之前提取，供下方与侧栏展开块比较（那里 view 已被收窄为 kp）
-  const activePageId = view?.kind === "page" ? view.pageId : null;
-  const activeKpId = view?.kind === "kp" ? view.kpId : null;
-  const activeSectionId =
-    view?.kind === "kp" || view?.kind === "page" || view?.kind === "checkpoint"
-      ? view.sectionId
-      : null;
-  const activeIsCheckpoint = view?.kind === "checkpoint";
 
   const section = curriculum?.sections.find((s) => s.id === activeSectionId) ?? null;
   const kp = section?.knowledge_points.find((k) => k.id === (view?.kind === "kp" ? view.kpId : null)) ?? null;

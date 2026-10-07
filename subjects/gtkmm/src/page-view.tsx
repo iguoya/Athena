@@ -118,12 +118,10 @@ let annotationMatcher: RegExp | null = null;
 
 function AnnotatedTerm({
   kind,
-  term,
   display,
   entry,
 }: {
   kind: "vocab" | "pattern";
-  term: string;
   display: string;
   entry: VocabEntry & PatternEntry;
 }) {
@@ -149,16 +147,7 @@ function AnnotatedTerm({
           {note && (
             <span className="mt-1 block text-[20px] leading-relaxed text-muted">{note}</span>
           )}
-          {(entry.example || !/\s/.test(term)) && (
-            <ExampleArea
-              term={term}
-              curated={
-                entry.example
-                  ? { en: entry.example, cn: entry.example_cn ?? "" }
-                  : undefined
-              }
-            />
-          )}
+          {entry.example && <ExampleArea curated={{ en: entry.example, cn: entry.example_cn ?? "" }} />}
         </span>
       )}
     </span>
@@ -188,7 +177,6 @@ function renderInline(text: string): ReactNode[] {
           <AnnotatedTerm
             key={`ann-${key++}`}
             kind={hit.kind}
-            term={hit.base}
             display={m[0]}
             entry={hit.entry}
           />,
@@ -301,75 +289,13 @@ function RatingRow({
   );
 }
 
-/** 例句区：词表精选例句优先；否则在线拉取（dictionaryapi.dev，模块级缓存）。 */
-const EXAMPLE_CACHE = new Map<
-  string,
-  { phonetic?: string; examples: string[]; defs: string[] }
->();
-
-function ExampleArea({
-  term,
-  curated,
-}: {
-  term: string;
-  curated?: { en: string; cn: string };
-}) {
-  const [data, setData] = useState(EXAMPLE_CACHE.get(term.toLowerCase()) ?? null);
-  const [failed, setFailed] = useState(false);
-
-  useEffect(() => {
-    if (EXAMPLE_CACHE.has(term.toLowerCase()) || /\s/.test(term)) return;
-    let cancelled = false;
-    (async () => {
-      try {
-        const response = await fetch(
-          `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(term)}`,
-        );
-        if (!response.ok) throw new Error(String(response.status));
-        const entries = await response.json();
-        const phonetic =
-          entries[0]?.phonetic ??
-          entries[0]?.phonetics?.find((ph: { text?: string }) => ph.text)?.text;
-        const examples: string[] = [];
-        const defs: string[] = [];
-        for (const meaning of entries[0]?.meanings ?? []) {
-          for (const def of meaning.definitions ?? []) {
-            if (def.example && examples.length < 2) examples.push(def.example);
-            if (defs.length < 2) defs.push(`[${meaning.partOfSpeech}] ${def.definition}`);
-          }
-        }
-        const payload = { phonetic, examples, defs };
-        EXAMPLE_CACHE.set(term.toLowerCase(), payload);
-        if (!cancelled) setData(payload);
-      } catch {
-        if (!cancelled) setFailed(true);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [term]);
-
+/** 例句区：只展示词表内置的精选例句（content/vocab.json），不联网拉取——
+ *  在线词典接口慢且不稳定，卡住的是整个弹卡。 */
+function ExampleArea({ curated }: { curated: { en: string; cn: string } }) {
   return (
     <div className="mt-2 border-t border-line pt-2">
-      {curated && (
-        <div className="mb-1">
-          <p className="text-[20px] leading-relaxed text-fg/80">例句：{curated.en}</p>
-          <p className="text-[20px] leading-relaxed text-muted">{curated.cn}</p>
-        </div>
-      )}
-      {data?.examples.map((ex, i) => (
-        <p key={i} className="font-serif text-[20px] italic leading-relaxed text-fg/75">
-          {ex}
-        </p>
-      ))}
-      {data?.phonetic && !curated && (
-        <p className="font-mono text-[20px] text-muted">{data.phonetic}</p>
-      )}
-      {failed && !curated && (
-        <p className="text-[20px] text-muted">例句需联网获取（当前不可用）。</p>
-      )}
-      {!curated && !data && !failed && <p className="text-[20px] text-muted">正在获取例句……</p>}
+      <p className="text-[20px] leading-relaxed text-fg/80">例句：{curated.en}</p>
+      <p className="text-[20px] leading-relaxed text-muted">{curated.cn}</p>
     </div>
   );
 }

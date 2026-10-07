@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>模块链测试</title>
+  </head>
+  <body>
+    <div id="testroot"></div>
+    <script type="module">
+      const log = [];
+      window.__log = log;
+      const push = (s) => { log.push(s); document.title = log.length + ":" + (s.length > 40 ? s.slice(0, 40) : s); };
+      window.addEventListener("error", (e) => push("GLOBAL:" + String(e.message)));
+      import("/src/App.tsx")
+        .then((m) => push("OK:App exports=" + Object.keys(m).length))
+        .catch((e) => push("FAIL:App " + String(e).slice(0, 200)));
+    </script>
+  </body>
+</html>

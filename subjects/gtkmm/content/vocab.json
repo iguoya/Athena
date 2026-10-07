@@ -1,1278 +1,1574 @@
 {
- "_": "英译训练标注词表。门槛：中国高中毕业词汇（约 3500）以上才收录；GTK/gtkmm 领域词全部收录。词表供正文自动标注（点击看释义、认识/不认识入学习库）。",
- "vocab": [
-  {
-   "term": "wrapper",
-   "pos": "n.",
-   "cn": "包装器；封装层",
-   "note": "gtkmm 就是 GTK 的 C++ wrapper",
-   "example": "A thin wrapper around the C API.",
-   "example_cn": "C API 的一层薄封装。",
-   "domain": true
-  },
-  {
-   "term": "encapsulation",
-   "pos": "n.",
-   "cn": "封装",
-   "note": "面向对象基本特性",
-   "example": "Encapsulation hides the implementation details.",
-   "example_cn": "封装隐藏实现细节。",
-   "domain": true
-  },
-  {
-   "term": "derivation",
-   "pos": "n.",
-   "cn": "派生；继承推导",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "derive",
-   "pos": "v.",
-   "cn": "派生；继承",
-   "note": "derive from = 继承自",
-   "example": "MyWindow derives from Gtk::Window.",
-   "example_cn": "MyWindow 继承自 Gtk::Window。",
-   "domain": true
-  },
-  {
-   "term": "polymorphism",
-   "pos": "n.",
-   "cn": "多态",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "type-safe",
-   "pos": "adj.",
-   "cn": "类型安全的",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "deprecated",
-   "pos": "adj.",
-   "cn": "已弃用的",
-   "note": "官方术语：不建议再用的旧 API",
-   "example": "This widget is deprecated since 4.10.",
-   "example_cn": "该控件自 4.10 起已弃用。"
-  },
-  {
-   "term": "deprecation",
-   "pos": "n.",
-   "cn": "弃用",
-   "note": ""
-  },
-  {
-   "term": "propagate",
-   "pos": "v.",
-   "cn": "传播；传导",
-   "note": "事件传播 event propagation",
-   "example": "The event propagates to the parent widget.",
-   "example_cn": "事件向父控件传播。",
-   "domain": true
-  },
-  {
-   "term": "emit",
-   "pos": "v.",
-   "cn": "发出；触发",
-   "note": "信号被 emit = 信号被发出",
-   "example": "The button emits a signal when clicked.",
-   "example_cn": "按钮被点击时发出一个信号。",
-   "domain": true
-  },
-  {
-   "term": "instantiate",
-   "pos": "v.",
-   "cn": "实例化",
-   "note": "",
-   "example": "Instantiate the window before showing it.",
-   "example_cn": "显示窗口前先实例化它。",
-   "domain": true
-  },
-  {
-   "term": "allocation",
-   "pos": "n.",
-   "cn": "分配",
-   "note": "内存/空间分配",
-   "domain": true
-  },
-  {
-   "term": "allocate",
-   "pos": "v.",
-   "cn": "分配",
-   "note": "",
-   "example": "The container allocates space for each child.",
-   "example_cn": "容器为每个子控件分配空间。",
-   "domain": true
-  },
-  {
-   "term": "retrieve",
-   "pos": "v.",
-   "cn": "获取；取回",
-   "note": "",
-   "example": "Call get_active() to retrieve the state.",
-   "example_cn": "调用 get_active() 获取状态。"
-  },
-  {
-   "term": "callback",
-   "pos": "n.",
-   "cn": "回调",
-   "note": "信号处理函数本质上是回调",
-   "example": "The signal handler is just a callback.",
-   "example_cn": "信号处理函数本质就是回调。",
-   "domain": true
-  },
-  {
-   "term": "overhead",
-   "pos": "n.",
-   "cn": "开销",
-   "note": ""
-  },
-  {
-   "term": "boilerplate",
-   "pos": "n.",
-   "cn": "样板代码",
-   "note": "重复性的固定写法"
-  },
-  {
-   "term": "succinct",
-   "pos": "adj.",
-   "cn": "简洁的",
-   "note": ""
-  },
-  {
-   "term": "caveat",
-   "pos": "n.",
-   "cn": "注意事项；警告",
-   "note": ""
-  },
-  {
-   "term": "mandatory",
-   "pos": "adj.",
-   "cn": "强制的",
-   "note": ""
-  },
-  {
-   "term": "optional",
-   "pos": "adj.",
-   "cn": "可选的",
-   "note": ""
-  },
-  {
-   "term": "redundant",
-   "pos": "adj.",
-   "cn": "冗余的",
-   "note": ""
-  },
-  {
-   "term": "tedious",
-   "pos": "adj.",
-   "cn": "繁琐的",
-   "note": ""
-  },
-  {
-   "term": "cumbersome",
-   "pos": "adj.",
-   "cn": "笨重的；麻烦的",
-   "note": ""
-  },
-  {
-   "term": "traverse",
-   "pos": "v.",
-   "cn": "遍历",
-   "note": "",
-   "example": "Iterate over the model to traverse all rows.",
-   "example_cn": "遍历模型即可走完所有行。",
-   "domain": true
-  },
-  {
-   "term": "iterator",
-   "pos": "n.",
-   "cn": "迭代器",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "namespace",
-   "pos": "n.",
-   "cn": "命名空间",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "dereference",
-   "pos": "v.",
-   "cn": "解引用",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "overflow",
-   "pos": "n.",
-   "cn": "溢出",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "widget",
-   "pos": "n.",
-   "cn": "控件；部件",
-   "note": "GTK 核心概念，也叫 control",
-   "domain": true
-  },
-  {
-   "term": "packing",
-   "pos": "n.",
-   "cn": "打包；排布",
-   "note": "widget packing = 控件排布系统",
-   "domain": true
-  },
-  {
-   "term": "container",
-   "pos": "n.",
-   "cn": "容器",
-   "note": "容纳其他控件的控件",
-   "domain": true
-  },
-  {
-   "term": "adjustment",
-   "pos": "n.",
-   "cn": "调整对象",
-   "note": "Adjustment：保存范围与当前值"
-  },
-  {
-   "term": "trough",
-   "pos": "n.",
-   "cn": "滑槽；凹槽",
-   "note": "滑块/滚动条的轨道",
-   "domain": true
-  },
-  {
-   "term": "mnemonic",
-   "pos": "n./adj.",
-   "cn": "助记符（的）",
-   "note": "标签里的 _C 即 Alt 快捷键",
-   "example": "An underscore marks the mnemonic character.",
-   "example_cn": "下划线标出助记符字符。",
-   "domain": true
-  },
-  {
-   "term": "accelerator",
-   "pos": "n.",
-   "cn": "加速键；快捷键",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "viewport",
-   "pos": "n.",
-   "cn": "视口",
-   "note": "可见区域",
-   "domain": true
-  },
-  {
-   "term": "lifetime",
-   "pos": "n.",
-   "cn": "生命周期",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "scope",
-   "pos": "n.",
-   "cn": "作用域",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "heap",
-   "pos": "n.",
-   "cn": "堆",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "stack",
-   "pos": "n.",
-   "cn": "栈",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "flatten",
-   "pos": "v.",
-   "cn": "拍平；展平",
-   "note": "TreeListModel 把树展平成列表",
-   "example": "TreeListModel flattens a tree into a list.",
-   "example_cn": "TreeListModel 把树拍平成列表。",
-   "domain": true
-  },
-  {
-   "term": "recycle",
-   "pos": "v.",
-   "cn": "回收复用",
-   "note": "列表视图回收不可见条目",
-   "example": "Views recycle items that scroll out of sight.",
-   "example_cn": "视图会回收滚出视野的条目。",
-   "domain": true
-  },
-  {
-   "term": "hierarchy",
-   "pos": "n.",
-   "cn": "层次结构",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "hierarchical",
-   "pos": "adj.",
-   "cn": "分层的",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "orientation",
-   "pos": "n.",
-   "cn": "方向",
-   "note": "水平/垂直",
-   "example": "The orientation can be horizontal or vertical.",
-   "example_cn": "方向可以是水平或垂直。"
-  },
-  {
-   "term": "horizontal",
-   "pos": "adj.",
-   "cn": "水平的",
-   "note": ""
-  },
-  {
-   "term": "vertical",
-   "pos": "adj.",
-   "cn": "垂直的",
-   "note": ""
-  },
-  {
-   "term": "integer",
-   "pos": "n.",
-   "cn": "整数",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "unsigned",
-   "pos": "adj.",
-   "cn": "无符号的",
-   "note": "unsigned int 非负整数",
-   "domain": true
-  },
-  {
-   "term": "string",
-   "pos": "n.",
-   "cn": "字符串",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "column",
-   "pos": "n.",
-   "cn": "列",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "row",
-   "pos": "n.",
-   "cn": "行",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "append",
-   "pos": "v.",
-   "cn": "追加；添加到末尾",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "preceding",
-   "pos": "adj.",
-   "cn": "在前的",
-   "note": ""
-  },
-  {
-   "term": "succeeding",
-   "pos": "adj.",
-   "cn": "随后的",
-   "note": ""
-  },
-  {
-   "term": "explicitly",
-   "pos": "adv.",
-   "cn": "显式地",
-   "note": ""
-  },
-  {
-   "term": "implicitly",
-   "pos": "adv.",
-   "cn": "隐式地",
-   "note": ""
-  },
-  {
-   "term": "corresponding",
-   "pos": "adj.",
-   "cn": "对应的",
-   "note": ""
-  },
-  {
-   "term": "appropriate",
-   "pos": "adj.",
-   "cn": "合适的",
-   "note": ""
-  },
-  {
-   "term": "specified",
-   "pos": "adj.",
-   "cn": "指定的",
-   "note": ""
-  },
-  {
-   "term": "invoke",
-   "pos": "v.",
-   "cn": "调用",
-   "note": ""
-  },
-  {
-   "term": "cast",
-   "pos": "n./v.",
-   "cn": "强制转换",
-   "note": "cast to = 转型为",
-   "domain": true
-  },
-  {
-   "term": "underlying",
-   "pos": "adj.",
-   "cn": "底层的",
-   "note": "underlying C object = 底层 C 对象"
-  },
-  {
-   "term": "mechanism",
-   "pos": "n.",
-   "cn": "机制",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "flexible",
-   "pos": "adj.",
-   "cn": "灵活的",
-   "note": ""
-  },
-  {
-   "term": "elastic",
-   "pos": "adj.",
-   "cn": "有弹性的",
-   "note": ""
-  },
-  {
-   "term": "truncate",
-   "pos": "v.",
-   "cn": "截断",
-   "note": "",
-   "example": "Long text is truncated with an ellipsis.",
-   "example_cn": "过长文本以省略号截断。"
-  },
-  {
-   "term": "parentheses",
-   "pos": "n.",
-   "cn": "圆括号",
-   "note": ""
-  },
-  {
-   "term": "backquote",
-   "pos": "n.",
-   "cn": "反引号",
-   "note": "shell 里先执行其中命令"
-  },
-  {
-   "term": "backtick",
-   "pos": "n.",
-   "cn": "反引号",
-   "note": ""
-  },
-  {
-   "term": "invocation",
-   "pos": "n.",
-   "cn": "调用；执行",
-   "note": ""
-  },
-  {
-   "term": "shell",
-   "pos": "n.",
-   "cn": "Shell（命令行解释器）",
-   "note": ""
-  },
-  {
-   "term": "prefix",
-   "pos": "n.",
-   "cn": "前缀；安装前缀",
-   "note": "--prefix 安装目录",
-   "domain": true
-  },
-  {
-   "term": "repository",
-   "pos": "n.",
-   "cn": "仓库；软件源",
-   "note": ""
-  },
-  {
-   "term": "distribution",
-   "pos": "n.",
-   "cn": "发行版",
-   "note": "Linux 发行版"
-  },
-  {
-   "term": "unpack",
-   "pos": "v.",
-   "cn": "解压",
-   "note": ""
-  },
-  {
-   "term": "grant",
-   "pos": "v.",
-   "cn": "授予",
-   "note": ""
-  },
-  {
-   "term": "suppress",
-   "pos": "v.",
-   "cn": "抑制",
-   "note": ""
-  },
-  {
-   "term": "ambiguity",
-   "pos": "n.",
-   "cn": "歧义",
-   "note": ""
-  },
-  {
-   "term": "ambiguous",
-   "pos": "adj.",
-   "cn": "有歧义的",
-   "note": ""
-  },
-  {
-   "term": "mutually",
-   "pos": "adv.",
-   "cn": "相互地",
-   "note": "mutually exclusive = 互斥"
-  },
-  {
-   "term": "exclusive",
-   "pos": "adj.",
-   "cn": "排他的；独有的",
-   "note": ""
-  },
-  {
-   "term": "precedence",
-   "pos": "n.",
-   "cn": "优先级",
-   "note": ""
-  },
-  {
-   "term": "roughly",
-   "pos": "adv.",
-   "cn": "大致地",
-   "note": ""
-  },
-  {
-   "term": "whereas",
-   "pos": "conj.",
-   "cn": "然而；反之",
-   "note": "对比连词"
-  },
-  {
-   "term": "nonetheless",
-   "pos": "adv.",
-   "cn": "尽管如此",
-   "note": ""
-  },
-  {
-   "term": "nevertheless",
-   "pos": "adv.",
-   "cn": "然而",
-   "note": ""
-  },
-  {
-   "term": "suffice",
-   "pos": "v.",
-   "cn": "足够",
-   "note": "will suffice = 就够用了",
-   "example": "The default renderer will suffice.",
-   "example_cn": "默认渲染器就够用了。"
-  },
-  {
-   "term": "occasionally",
-   "pos": "adv.",
-   "cn": "偶尔",
-   "note": ""
-  },
-  {
-   "term": "aspects",
-   "pos": "n.",
-   "cn": "方面；外观维度",
-   "note": ""
-  },
-  {
-   "term": "instruct",
-   "pos": "v.",
-   "cn": "指示",
-   "note": ""
-  },
-  {
-   "term": "override",
-   "pos": "v.",
-   "cn": "覆盖；重写",
-   "note": "",
-   "example": "Override this method to handle the event.",
-   "example_cn": "重写此方法即可处理该事件。",
-   "domain": true
-  },
-  {
-   "term": "overload",
-   "pos": "v./n.",
-   "cn": "重载",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "subclass",
-   "pos": "n.",
-   "cn": "子类",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "superclass",
-   "pos": "n.",
-   "cn": "基类；父类",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "derived",
-   "pos": "adj.",
-   "cn": "派生的",
-   "note": "derived class = 派生类"
-  },
-  {
-   "term": "nested",
-   "pos": "adj.",
-   "cn": "嵌套的",
-   "note": ""
-  },
-  {
-   "term": "shorthand",
-   "pos": "n.",
-   "cn": "简写",
-   "note": ""
-  },
-  {
-   "term": "idiomatic",
-   "pos": "adj.",
-   "cn": "地道的；符合惯例的",
-   "note": ""
-  },
-  {
-   "term": "idiom",
-   "pos": "n.",
-   "cn": "惯用写法；习语",
-   "note": ""
-  },
-  {
-   "term": "inefficient",
-   "pos": "adj.",
-   "cn": "低效的",
-   "note": ""
-  },
-  {
-   "term": "efficient",
-   "pos": "adj.",
-   "cn": "高效的",
-   "note": ""
-  },
-  {
-   "term": "compatibility",
-   "pos": "n.",
-   "cn": "兼容性",
-   "note": ""
-  },
-  {
-   "term": "compatible",
-   "pos": "adj.",
-   "cn": "兼容的",
-   "note": ""
-  },
-  {
-   "term": "parallel",
-   "pos": "adj.",
-   "cn": "并行的；并存的",
-   "note": "parallel installation 并行安装"
-  },
-  {
-   "term": "interchangeably",
-   "pos": "adv.",
-   "cn": "可互换地",
-   "note": ""
-  },
-  {
-   "term": "straightforward",
-   "pos": "adj.",
-   "cn": "直截了当的",
-   "note": ""
-  },
-  {
-   "term": "elaborate",
-   "pos": "v./adj.",
-   "cn": "详述；精细的",
-   "note": ""
-  },
-  {
-   "term": "convenient",
-   "pos": "adj.",
-   "cn": "方便的",
-   "note": ""
-  },
-  {
-   "term": "prefer",
-   "pos": "v.",
-   "cn": "更倾向于",
-   "note": ""
-  },
-  {
-   "term": "preferable",
-   "pos": "adj.",
-   "cn": "更可取的",
-   "note": ""
-  },
-  {
-   "term": "indentation",
-   "pos": "n.",
-   "cn": "缩进",
-   "note": ""
-  },
-  {
-   "term": "preprocessor",
-   "pos": "n.",
-   "cn": "预处理器",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "compiler",
-   "pos": "n.",
-   "cn": "编译器",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "linker",
-   "pos": "n.",
-   "cn": "链接器",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "verbatim",
-   "pos": "adj.",
-   "cn": "逐字的",
-   "note": ""
-  },
-  {
-   "term": "restrict",
-   "pos": "v.",
-   "cn": "限制",
-   "note": ""
-  },
-  {
-   "term": "guarantee",
-   "pos": "v./n.",
-   "cn": "保证",
-   "note": ""
-  },
-  {
-   "term": "ownership",
-   "pos": "n.",
-   "cn": "所有权",
-   "note": "容器拥有子控件的所有权"
-  },
-  {
-   "term": "floating reference",
-   "pos": "n.",
-   "cn": "浮动引用",
-   "note": "GObject 术语",
-   "domain": true
-  },
-  {
-   "term": "reference counting",
-   "pos": "n.",
-   "cn": "引用计数",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "smart pointer",
-   "pos": "n.",
-   "cn": "智能指针",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "buffer",
-   "pos": "n.",
-   "cn": "缓冲区",
-   "note": "TextView 的数据存放处",
-   "domain": true
-  },
-  {
-   "term": "clipboard",
-   "pos": "n.",
-   "cn": "剪贴板",
-   "note": ""
-  },
-  {
-   "term": "asynchronous",
-   "pos": "adj.",
-   "cn": "异步的",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "synchronous",
-   "pos": "adj.",
-   "cn": "同步的",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "thread",
-   "pos": "n.",
-   "cn": "线程",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "concurrent",
-   "pos": "adj.",
-   "cn": "并发的",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "deadline",
-   "pos": "n.",
-   "cn": "截止期",
-   "note": ""
-  },
-  {
-   "term": "idle",
-   "pos": "adj.",
-   "cn": "空闲的",
-   "note": "idle function 空闲函数",
-   "domain": true
-  },
-  {
-   "term": "locale",
-   "pos": "n.",
-   "cn": "区域设置",
-   "note": "i18n 语境",
-   "domain": true
-  },
-  {
-   "term": "collate",
-   "pos": "v.",
-   "cn": "排序比对（按语言规则）",
-   "note": ""
-  },
-  {
-   "term": "literal",
-   "pos": "n./adj.",
-   "cn": "字面量；字面的",
-   "note": "string literal 字符串字面量",
-   "domain": true
-  },
-  {
-   "term": "byte",
-   "pos": "n.",
-   "cn": "字节",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "encoding",
-   "pos": "n.",
-   "cn": "编码",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "uniformly",
-   "pos": "adv.",
-   "cn": "统一地",
-   "note": ""
-  },
-  {
-   "term": "expose",
-   "pos": "v.",
-   "cn": "暴露；提供访问",
-   "note": ""
-  },
-  {
-   "term": "underline",
-   "pos": "n./v.",
-   "cn": "下划线",
-   "note": ""
-  },
-  {
-   "term": "emphasize",
-   "pos": "v.",
-   "cn": "强调",
-   "note": ""
-  },
-  {
-   "term": "specify",
-   "pos": "v.",
-   "cn": "指定",
-   "note": ""
-  },
-  {
-   "term": "manipulate",
-   "pos": "v.",
-   "cn": "操纵；操作",
-   "note": ""
-  },
-  {
-   "term": "visualize",
-   "pos": "v.",
-   "cn": "可视化",
-   "note": ""
-  },
-  {
-   "term": "rounded",
-   "pos": "adj.",
-   "cn": "取整的；圆角的",
-   "note": "rounded to = 四舍五入到"
-  },
-  {
-   "term": "decimal",
-   "pos": "adj./n.",
-   "cn": "小数的；小数",
-   "note": "decimal point 小数点"
-  },
-  {
-   "term": "increment",
-   "pos": "n./v.",
-   "cn": "增量；递增",
-   "note": ""
-  },
-  {
-   "term": "decrement",
-   "pos": "n./v.",
-   "cn": "减量；递减",
-   "note": ""
-  },
-  {
-   "term": "spin button",
-   "pos": "n.",
-   "cn": "微调按钮",
-   "note": "SpinButton",
-   "domain": true
-  },
-  {
-   "term": "justified",
-   "pos": "adj.",
-   "cn": "两端对齐的",
-   "note": "set_justify",
-   "domain": true
-  },
-  {
-   "term": "ellipsize",
-   "pos": "v.",
-   "cn": "省略显示（加省略号）",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "gesture",
-   "pos": "n.",
-   "cn": "手势",
-   "note": "GestureClick 手势点击",
-   "domain": true
-  },
-  {
-   "term": "overlay",
-   "pos": "n.",
-   "cn": "覆盖层",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "pane",
-   "pos": "n.",
-   "cn": "窗格",
-   "note": "Gtk::Paned",
-   "domain": true
-  },
-  {
-   "term": "tab",
-   "pos": "n.",
-   "cn": "标签页",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "modal",
-   "pos": "adj.",
-   "cn": "模态的",
-   "note": "非模态 = 不阻塞交互",
-   "domain": true
-  },
-  {
-   "term": "transient",
-   "pos": "adj.",
-   "cn": "暂态的",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "preview",
-   "pos": "n.",
-   "cn": "预览",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "render",
-   "pos": "v.",
-   "cn": "渲染",
-   "note": ""
-  },
-  {
-   "term": "resource",
-   "pos": "n.",
-   "cn": "资源",
-   "note": "Gio::Resource",
-   "domain": true
-  },
-  {
-   "term": "compile",
-   "pos": "v.",
-   "cn": "编译",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "declaration",
-   "pos": "n.",
-   "cn": "声明",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "definition",
-   "pos": "n.",
-   "cn": "定义",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "constructor",
-   "pos": "n.",
-   "cn": "构造函数",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "destructor",
-   "pos": "n.",
-   "cn": "析构函数",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "initializer",
-   "pos": "n.",
-   "cn": "初始化器",
-   "note": "",
-   "domain": true
-  },
-  {
-   "term": "smartpointers",
-   "pos": "n.",
-   "cn": "智能指针（复数语境）",
-   "note": "",
-   "domain": true
-  }
- ],
- "patterns": [
-  {
-   "pattern": "be referred to as",
-   "cn": "被称为；称作"
-  },
-  {
-   "pattern": "referred to as",
-   "cn": "被称为"
-  },
-  {
-   "pattern": "correspond to",
-   "cn": "对应于"
-  },
-  {
-   "pattern": "consist of",
-   "cn": "由……构成"
-  },
-  {
-   "pattern": "be wrapped in",
-   "cn": "被包裹在……里"
-  },
-  {
-   "pattern": "act as",
-   "cn": "充当；起……作用"
-  },
-  {
-   "pattern": "serve as",
-   "cn": "用作；充当"
-  },
-  {
-   "pattern": "on the fly",
-   "cn": "动态地；即席（边运行边进行）"
-  },
-  {
-   "pattern": "keep track of",
-   "cn": "跟踪；掌握……的动向"
-  },
-  {
-   "pattern": "make use of",
-   "cn": "利用"
-  },
-  {
-   "pattern": "take care of",
-   "cn": "处理；照料"
-  },
-  {
-   "pattern": "be aware that",
-   "cn": "注意到；意识到"
-  },
-  {
-   "pattern": "as mentioned earlier",
-   "cn": "如前所述"
-  },
-  {
-   "pattern": "in response to",
-   "cn": "响应；作为对……的反应"
-  },
-  {
-   "pattern": "with respect to",
-   "cn": "关于；相对于"
-  },
-  {
-   "pattern": "as opposed to",
-   "cn": "与……相对／相反"
-  },
-  {
-   "pattern": "in place of",
-   "cn": "代替"
-  },
-  {
-   "pattern": "be likely to",
-   "cn": "很可能"
-  },
-  {
-   "pattern": "note that",
-   "cn": "注意……（提示重点）"
-  },
-  {
-   "pattern": "it is worth",
-   "cn": "值得……"
-  },
-  {
-   "pattern": "be supposed to",
-   "cn": "本应；按规定应当"
-  },
-  {
-   "pattern": "make sure",
-   "cn": "确保"
-  },
-  {
-   "pattern": "in practice",
-   "cn": "实际上；在实践中"
-  },
-  {
-   "pattern": "in general",
-   "cn": "一般而言"
-  },
-  {
-   "pattern": "as follows",
-   "cn": "如下"
-  },
-  {
-   "pattern": "no longer",
-   "cn": "不再"
-  },
-  {
-   "pattern": "in turn",
-   "cn": "反过来；依次"
-  },
-  {
-   "pattern": "even if",
-   "cn": "即使（让步）"
-  },
-  {
-   "pattern": "as long as",
-   "cn": "只要（条件）"
-  },
-  {
-   "pattern": "rather than",
-   "cn": "而不是（取舍）"
-  },
-  {
-   "pattern": "in most cases",
-   "cn": "在多数情况下"
-  },
-  {
-   "pattern": "for instance",
-   "cn": "例如"
-  },
-  {
-   "pattern": "such as",
-   "cn": "例如（列举）"
-  },
-  {
-   "pattern": "look like",
-   "cn": "看起来像"
-  },
-  {
-   "pattern": "deal with",
-   "cn": "处理；论及"
-  },
-  {
-   "pattern": "be based on",
-   "cn": "基于"
-  },
-  {
-   "pattern": "come with",
-   "cn": "自带；附带"
-  },
-  {
-   "pattern": "be responsible for",
-   "cn": "负责；是……的原因"
-  },
-  {
-   "pattern": "at least",
-   "cn": "至少"
-  },
-  {
-   "pattern": "so that",
-   "cn": "以便（目的）"
-  }
- ]
+  "_": "英译训练标注词表。门槛：中国高中毕业词汇（约 3500）以上才收录；GTK/gtkmm 领域词全部收录。词表供正文自动标注（点击看释义、认识/不认识入学习库）。",
+  "vocab": [
+    {
+      "term": "wrapper",
+      "pos": "n.",
+      "cn": "包装器；封装层",
+      "note": "gtkmm 就是 GTK 的 C++ wrapper",
+      "example": "A thin wrapper around the C API.",
+      "example_cn": "C API 的一层薄封装。",
+      "domain": true
+    },
+    {
+      "term": "encapsulation",
+      "pos": "n.",
+      "cn": "封装",
+      "note": "面向对象基本特性",
+      "example": "Encapsulation hides the implementation details.",
+      "example_cn": "封装隐藏实现细节。",
+      "domain": true
+    },
+    {
+      "term": "derivation",
+      "pos": "n.",
+      "cn": "派生；继承推导",
+      "note": "",
+      "domain": true,
+      "example": "Multiple inheritance makes the derivation chain longer.",
+      "example_cn": "多重继承会让派生链变长。"
+    },
+    {
+      "term": "derive",
+      "pos": "v.",
+      "cn": "派生；继承",
+      "note": "derive from = 继承自",
+      "example": "MyWindow derives from Gtk::Window.",
+      "example_cn": "MyWindow 继承自 Gtk::Window。",
+      "domain": true
+    },
+    {
+      "term": "polymorphism",
+      "pos": "n.",
+      "cn": "多态",
+      "note": "",
+      "domain": true,
+      "example": "Polymorphism lets one interface drive many widget implementations.",
+      "example_cn": "多态让一个接口驱动多种控件实现。"
+    },
+    {
+      "term": "type-safe",
+      "pos": "adj.",
+      "cn": "类型安全的",
+      "note": "",
+      "domain": true,
+      "example": "Glib::ustring offers type-safe string handling in C++.",
+      "example_cn": "Glib::ustring 在 C++ 中提供类型安全的字符串处理。"
+    },
+    {
+      "term": "deprecated",
+      "pos": "adj.",
+      "cn": "已弃用的",
+      "note": "官方术语：不建议再用的旧 API",
+      "example": "This widget is deprecated since 4.10.",
+      "example_cn": "该控件自 4.10 起已弃用。"
+    },
+    {
+      "term": "deprecation",
+      "pos": "n.",
+      "cn": "弃用",
+      "note": "",
+      "example": "The deprecation of pack_start() forced a rewrite of old code.",
+      "example_cn": "pack_start() 的弃用迫使旧代码重写。"
+    },
+    {
+      "term": "propagate",
+      "pos": "v.",
+      "cn": "传播；传导",
+      "note": "事件传播 event propagation",
+      "example": "The event propagates to the parent widget.",
+      "example_cn": "事件向父控件传播。",
+      "domain": true
+    },
+    {
+      "term": "emit",
+      "pos": "v.",
+      "cn": "发出；触发",
+      "note": "信号被 emit = 信号被发出",
+      "example": "The button emits a signal when clicked.",
+      "example_cn": "按钮被点击时发出一个信号。",
+      "domain": true
+    },
+    {
+      "term": "instantiate",
+      "pos": "v.",
+      "cn": "实例化",
+      "note": "",
+      "example": "Instantiate the window before showing it.",
+      "example_cn": "显示窗口前先实例化它。",
+      "domain": true
+    },
+    {
+      "term": "allocation",
+      "pos": "n.",
+      "cn": "分配",
+      "note": "内存/空间分配",
+      "domain": true,
+      "example": "Every widget allocation must be paired with proper disposal.",
+      "example_cn": "每次控件分配都必须配对妥善的释放。"
+    },
+    {
+      "term": "allocate",
+      "pos": "v.",
+      "cn": "分配",
+      "note": "",
+      "example": "The container allocates space for each child.",
+      "example_cn": "容器为每个子控件分配空间。",
+      "domain": true
+    },
+    {
+      "term": "retrieve",
+      "pos": "v.",
+      "cn": "获取；取回",
+      "note": "",
+      "example": "Call get_active() to retrieve the state.",
+      "example_cn": "调用 get_active() 获取状态。"
+    },
+    {
+      "term": "callback",
+      "pos": "n.",
+      "cn": "回调",
+      "note": "信号处理函数本质上是回调",
+      "example": "The signal handler is just a callback.",
+      "example_cn": "信号处理函数本质就是回调。",
+      "domain": true
+    },
+    {
+      "term": "overhead",
+      "pos": "n.",
+      "cn": "开销",
+      "note": "",
+      "example": "Reference counting adds only a little runtime overhead.",
+      "example_cn": "引用计数只带来少量运行时开销。"
+    },
+    {
+      "term": "boilerplate",
+      "pos": "n.",
+      "cn": "样板代码",
+      "note": "重复性的固定写法",
+      "example": "gtkmm removes much of the boilerplate that plain GTK code needs.",
+      "example_cn": "gtkmm 免掉了裸写 GTK 代码所需的大量样板。"
+    },
+    {
+      "term": "succinct",
+      "pos": "adj.",
+      "cn": "简洁的",
+      "note": "",
+      "example": "The connect() call is a succinct way to attach a handler.",
+      "example_cn": "connect() 调用是挂接处理器的简洁写法。"
+    },
+    {
+      "term": "caveat",
+      "pos": "n.",
+      "cn": "注意事项；警告",
+      "note": "",
+      "example": "One caveat: never delete a widget while it is on screen.",
+      "example_cn": "注意一点：绝不要删除还在屏幕上的控件。"
+    },
+    {
+      "term": "mandatory",
+      "pos": "adj.",
+      "cn": "强制的",
+      "note": "",
+      "example": "The first argument is mandatory; the rest are optional.",
+      "example_cn": "第一个参数是必填的，其余可选。"
+    },
+    {
+      "term": "optional",
+      "pos": "adj.",
+      "cn": "可选的",
+      "note": "",
+      "example": "The filename parameter is optional and defaults to the resource path.",
+      "example_cn": "filename 参数可选，默认是资源路径。"
+    },
+    {
+      "term": "redundant",
+      "pos": "adj.",
+      "cn": "冗余的",
+      "note": "",
+      "example": "Manual memory management is redundant in gtkmm.",
+      "example_cn": "在 gtkmm 里手动管理内存是多余的。"
+    },
+    {
+      "term": "tedious",
+      "pos": "adj.",
+      "cn": "繁琐的",
+      "note": "",
+      "example": "Writing signal handlers for every widget by hand is tedious.",
+      "example_cn": "为每个控件手写信号处理器很繁琐。"
+    },
+    {
+      "term": "cumbersome",
+      "pos": "adj.",
+      "cn": "笨重的；麻烦的",
+      "note": "",
+      "example": "The old API made even simple layouts cumbersome to write.",
+      "example_cn": "旧 API 让简单布局都写得很费劲。"
+    },
+    {
+      "term": "traverse",
+      "pos": "v.",
+      "cn": "遍历",
+      "note": "",
+      "example": "Iterate over the model to traverse all rows.",
+      "example_cn": "遍历模型即可走完所有行。",
+      "domain": true
+    },
+    {
+      "term": "iterator",
+      "pos": "n.",
+      "cn": "迭代器",
+      "note": "",
+      "domain": true,
+      "example": "Use an iterator to walk over the model rows.",
+      "example_cn": "用迭代器遍历模型的行。"
+    },
+    {
+      "term": "namespace",
+      "pos": "n.",
+      "cn": "命名空间",
+      "note": "",
+      "domain": true,
+      "example": "All gtkmm classes live in the Gtk namespace.",
+      "example_cn": "所有 gtkmm 类都位于 Gtk 命名空间。"
+    },
+    {
+      "term": "dereference",
+      "pos": "v.",
+      "cn": "解引用",
+      "note": "",
+      "domain": true,
+      "example": "Dereference the RefPtr to call methods on the widget.",
+      "example_cn": "解引用 RefPtr 才能在控件上调用方法。"
+    },
+    {
+      "term": "overflow",
+      "pos": "n.",
+      "cn": "溢出",
+      "note": "",
+      "domain": true,
+      "example": "A 16-bit integer overflows beyond 32767.",
+      "example_cn": "16 位整数超过 32767 就会溢出。"
+    },
+    {
+      "term": "widget",
+      "pos": "n.",
+      "cn": "控件；部件",
+      "note": "GTK 核心概念，也叫 control",
+      "domain": true,
+      "example": "A button is the simplest interactive widget.",
+      "example_cn": "按钮是最简单的交互控件。"
+    },
+    {
+      "term": "packing",
+      "pos": "n.",
+      "cn": "打包；排布",
+      "note": "widget packing = 控件排布系统",
+      "domain": true,
+      "example": "Packing decides how children fill a box container.",
+      "example_cn": "打包决定子控件如何填充盒容器。"
+    },
+    {
+      "term": "container",
+      "pos": "n.",
+      "cn": "容器",
+      "note": "容纳其他控件的控件",
+      "domain": true,
+      "example": "A window is a container that holds one child widget.",
+      "example_cn": "窗口是容纳单个子控件的容器。"
+    },
+    {
+      "term": "adjustment",
+      "pos": "n.",
+      "cn": "调整对象",
+      "note": "Adjustment：保存范围与当前值",
+      "example": "The scrollbar shares its adjustment with the slider.",
+      "example_cn": "滚动条与滑块共享同一个调整对象。"
+    },
+    {
+      "term": "trough",
+      "pos": "n.",
+      "cn": "滑槽；凹槽",
+      "note": "滑块/滚动条的轨道",
+      "domain": true,
+      "example": "The trough shows the full range of the scale.",
+      "example_cn": "滑槽显示了滑块的完整取值范围。"
+    },
+    {
+      "term": "mnemonic",
+      "pos": "n./adj.",
+      "cn": "助记符（的）",
+      "note": "标签里的 _C 即 Alt 快捷键",
+      "example": "An underscore marks the mnemonic character.",
+      "example_cn": "下划线标出助记符字符。",
+      "domain": true
+    },
+    {
+      "term": "accelerator",
+      "pos": "n.",
+      "cn": "加速键；快捷键",
+      "note": "",
+      "domain": true,
+      "example": "Press Ctrl+Q, the accelerator for quitting.",
+      "example_cn": "按 Ctrl+Q 这个退出快捷键。"
+    },
+    {
+      "term": "viewport",
+      "pos": "n.",
+      "cn": "视口",
+      "note": "可见区域",
+      "domain": true,
+      "example": "The viewport clips widgets larger than the visible area.",
+      "example_cn": "视口会裁掉超出可视区域的控件。"
+    },
+    {
+      "term": "lifetime",
+      "pos": "n.",
+      "cn": "生命周期",
+      "note": "",
+      "domain": true,
+      "example": "The window owns the button and controls its lifetime.",
+      "example_cn": "窗口拥有按钮并控制其生命周期。"
+    },
+    {
+      "term": "scope",
+      "pos": "n.",
+      "cn": "作用域",
+      "note": "",
+      "domain": true,
+      "example": "The pointer is only valid within this scope.",
+      "example_cn": "该指针只在这个作用域内有效。"
+    },
+    {
+      "term": "heap",
+      "pos": "n.",
+      "cn": "堆",
+      "note": "",
+      "domain": true,
+      "example": "Widgets are created on the heap and managed by smart pointers.",
+      "example_cn": "控件创建在堆上，由智能指针管理。"
+    },
+    {
+      "term": "stack",
+      "pos": "n.",
+      "cn": "栈",
+      "note": "",
+      "domain": true,
+      "example": "Integer variables usually live on the stack.",
+      "example_cn": "整数变量通常存放在栈上。"
+    },
+    {
+      "term": "flatten",
+      "pos": "v.",
+      "cn": "拍平；展平",
+      "note": "TreeListModel 把树展平成列表",
+      "example": "TreeListModel flattens a tree into a list.",
+      "example_cn": "TreeListModel 把树拍平成列表。",
+      "domain": true
+    },
+    {
+      "term": "recycle",
+      "pos": "v.",
+      "cn": "回收复用",
+      "note": "列表视图回收不可见条目",
+      "example": "Views recycle items that scroll out of sight.",
+      "example_cn": "视图会回收滚出视野的条目。",
+      "domain": true
+    },
+    {
+      "term": "hierarchy",
+      "pos": "n.",
+      "cn": "层次结构",
+      "note": "",
+      "domain": true,
+      "example": "The widget hierarchy mirrors the window layout.",
+      "example_cn": "控件层次结构对应窗口布局。"
+    },
+    {
+      "term": "hierarchical",
+      "pos": "adj.",
+      "cn": "分层的",
+      "note": "",
+      "domain": true,
+      "example": "The tree view displays hierarchical data.",
+      "example_cn": "树视图展示分层数据。"
+    },
+    {
+      "term": "orientation",
+      "pos": "n.",
+      "cn": "方向",
+      "note": "水平/垂直",
+      "example": "The orientation can be horizontal or vertical.",
+      "example_cn": "方向可以是水平或垂直。"
+    },
+    {
+      "term": "horizontal",
+      "pos": "adj.",
+      "cn": "水平的",
+      "note": "",
+      "example": "The box packs its children horizontally.",
+      "example_cn": "该盒容器水平排布子控件。"
+    },
+    {
+      "term": "vertical",
+      "pos": "adj.",
+      "cn": "垂直的",
+      "note": "",
+      "example": "Use a vertical scrollbar for long text.",
+      "example_cn": "长文本用垂直滚动条。"
+    },
+    {
+      "term": "integer",
+      "pos": "n.",
+      "cn": "整数",
+      "note": "",
+      "domain": true,
+      "example": "The method takes an integer width in pixels.",
+      "example_cn": "该方法接受以像素为单位的整数宽度。"
+    },
+    {
+      "term": "unsigned",
+      "pos": "adj.",
+      "cn": "无符号的",
+      "note": "unsigned int 非负整数",
+      "domain": true,
+      "example": "Sizes are passed as unsigned values and can't be negative.",
+      "example_cn": "尺寸以无符号值传入，不能为负。"
+    },
+    {
+      "term": "string",
+      "pos": "n.",
+      "cn": "字符串",
+      "note": "",
+      "domain": true,
+      "example": "Set the label from a UTF-8 string.",
+      "example_cn": "用 UTF-8 字符串设置标签。"
+    },
+    {
+      "term": "column",
+      "pos": "n.",
+      "cn": "列",
+      "note": "",
+      "domain": true,
+      "example": "Each column of the tree view has its own renderer.",
+      "example_cn": "树视图的每一列都有自己的渲染器。"
+    },
+    {
+      "term": "row",
+      "pos": "n.",
+      "cn": "行",
+      "note": "",
+      "domain": true,
+      "example": "Selecting a row triggers the changed signal.",
+      "example_cn": "选中一行会触发 changed 信号。"
+    },
+    {
+      "term": "append",
+      "pos": "v.",
+      "cn": "追加；添加到末尾",
+      "note": "",
+      "domain": true,
+      "example": "Append the button to the end of the box.",
+      "example_cn": "把按钮追加到盒容器末尾。"
+    },
+    {
+      "term": "preceding",
+      "pos": "adj.",
+      "cn": "在前的",
+      "note": "",
+      "example": "The preceding chapter introduced signals.",
+      "example_cn": "前一章介绍了信号。"
+    },
+    {
+      "term": "succeeding",
+      "pos": "adj.",
+      "cn": "随后的",
+      "note": "",
+      "example": "The succeeding sections build on this example.",
+      "example_cn": "后续几节都基于这个例子展开。"
+    },
+    {
+      "term": "explicitly",
+      "pos": "adv.",
+      "cn": "显式地",
+      "note": "",
+      "example": "Call show() explicitly to display the window.",
+      "example_cn": "显式调用 show() 来显示窗口。"
+    },
+    {
+      "term": "implicitly",
+      "pos": "adv.",
+      "cn": "隐式地",
+      "note": "",
+      "example": "The compiler implicitly converts the enum to int.",
+      "example_cn": "编译器隐式地把枚举转成 int。"
+    },
+    {
+      "term": "corresponding",
+      "pos": "adj.",
+      "cn": "对应的",
+      "note": "",
+      "example": "Each C function has a corresponding C++ method.",
+      "example_cn": "每个 C 函数都有对应的 C++ 方法。"
+    },
+    {
+      "term": "appropriate",
+      "pos": "adj.",
+      "cn": "合适的",
+      "note": "",
+      "example": "Choose the container appropriate for your layout.",
+      "example_cn": "为你的布局选合适的容器。"
+    },
+    {
+      "term": "specified",
+      "pos": "adj.",
+      "cn": "指定的",
+      "note": "",
+      "example": "The dialog opens in the specified directory.",
+      "example_cn": "对话框在指定目录中打开。"
+    },
+    {
+      "term": "invoke",
+      "pos": "v.",
+      "cn": "调用",
+      "note": "",
+      "example": "The signal invokes every connected handler.",
+      "example_cn": "信号会调用每一个已连接的处理器。"
+    },
+    {
+      "term": "cast",
+      "pos": "n./v.",
+      "cn": "强制转换",
+      "note": "cast to = 转型为",
+      "domain": true,
+      "example": "Avoid a C-style cast in modern C++ code.",
+      "example_cn": "现代 C++ 代码里避免用 C 风格强制转换。"
+    },
+    {
+      "term": "underlying",
+      "pos": "adj.",
+      "cn": "底层的",
+      "note": "underlying C object = 底层 C 对象",
+      "example": "The RefPtr wraps the underlying GObject.",
+      "example_cn": "RefPtr 包装了底层的 GObject。"
+    },
+    {
+      "term": "mechanism",
+      "pos": "n.",
+      "cn": "机制",
+      "note": "",
+      "domain": true,
+      "example": "Signals are the core mechanism of event handling.",
+      "example_cn": "信号是事件处理的核心机制。"
+    },
+    {
+      "term": "flexible",
+      "pos": "adj.",
+      "cn": "灵活的",
+      "note": "",
+      "example": "Grid is more flexible than Box for complex layouts.",
+      "example_cn": "复杂布局下 Grid 比 Box 更灵活。"
+    },
+    {
+      "term": "elastic",
+      "pos": "adj.",
+      "cn": "有弹性的",
+      "note": "",
+      "example": "The elastic expansion lets the window resize smoothly.",
+      "example_cn": "弹性伸展让窗口缩放平滑。"
+    },
+    {
+      "term": "truncate",
+      "pos": "v.",
+      "cn": "截断",
+      "note": "",
+      "example": "Long text is truncated with an ellipsis.",
+      "example_cn": "过长文本以省略号截断。"
+    },
+    {
+      "term": "parentheses",
+      "pos": "n.",
+      "cn": "圆括号",
+      "note": "",
+      "example": "The type is wrapped in parentheses.",
+      "example_cn": "类型用圆括号包起来。"
+    },
+    {
+      "term": "backquote",
+      "pos": "n.",
+      "cn": "反引号",
+      "note": "shell 里先执行其中命令",
+      "example": "Old shell scripts use the backquote for substitution.",
+      "example_cn": "旧 Shell 脚本用反引号做替换。"
+    },
+    {
+      "term": "backtick",
+      "pos": "n.",
+      "cn": "反引号",
+      "note": "",
+      "example": "Names in this document are marked with a backtick.",
+      "example_cn": "本文档中的名字用反引号标注。"
+    },
+    {
+      "term": "invocation",
+      "pos": "n.",
+      "cn": "调用；执行",
+      "note": "",
+      "example": "The invocation of the program starts the main loop.",
+      "example_cn": "程序的执行会启动主循环。"
+    },
+    {
+      "term": "shell",
+      "pos": "n.",
+      "cn": "Shell（命令行解释器）",
+      "note": "",
+      "example": "Run pkg-config from the shell to list the flags.",
+      "example_cn": "在 Shell 里运行 pkg-config 列出编译参数。"
+    },
+    {
+      "term": "prefix",
+      "pos": "n.",
+      "cn": "前缀；安装前缀",
+      "note": "--prefix 安装目录",
+      "domain": true,
+      "example": "Files are installed under the installation prefix /usr.",
+      "example_cn": "文件安装在 /usr 这个安装前缀之下。"
+    },
+    {
+      "term": "repository",
+      "pos": "n.",
+      "cn": "仓库；软件源",
+      "note": "",
+      "example": "Clone the gtkmm repository from GNOME GitLab.",
+      "example_cn": "从 GNOME GitLab 克隆 gtkmm 仓库。"
+    },
+    {
+      "term": "distribution",
+      "pos": "n.",
+      "cn": "发行版",
+      "note": "Linux 发行版",
+      "example": "Your distribution may ship an older gtkmm package.",
+      "example_cn": "你的发行版自带的 gtkmm 包可能较旧。"
+    },
+    {
+      "term": "unpack",
+      "pos": "v.",
+      "cn": "解压",
+      "note": "",
+      "example": "Unpack the source tarball before configuring.",
+      "example_cn": "配置之前先解开源码包。"
+    },
+    {
+      "term": "grant",
+      "pos": "v.",
+      "cn": "授予",
+      "note": "",
+      "example": "The GFDL grants the right to copy and modify the text.",
+      "example_cn": "GFDL 授予复制和修改文本的权利。"
+    },
+    {
+      "term": "suppress",
+      "pos": "v.",
+      "cn": "抑制",
+      "note": "",
+      "example": "Suppress the warnings with a compiler flag.",
+      "example_cn": "用编译器开关抑制警告。"
+    },
+    {
+      "term": "ambiguity",
+      "pos": "n.",
+      "cn": "歧义",
+      "note": "",
+      "example": "The ambiguity between the two overloads confuses the compiler.",
+      "example_cn": "两个重载之间的歧义让编译器犯难。"
+    },
+    {
+      "term": "ambiguous",
+      "pos": "adj.",
+      "cn": "有歧义的",
+      "note": "",
+      "example": "The term 'widget' is ambiguous without context.",
+      "example_cn": "离开上下文，widget 这个词有歧义。"
+    },
+    {
+      "term": "mutually",
+      "pos": "adv.",
+      "cn": "相互地",
+      "note": "mutually exclusive = 互斥",
+      "example": "The two flags are mutually exclusive.",
+      "example_cn": "这两个开关互相排斥。"
+    },
+    {
+      "term": "exclusive",
+      "pos": "adj.",
+      "cn": "排他的；独有的",
+      "note": "",
+      "example": "Radio buttons form an exclusive group.",
+      "example_cn": "单选按钮构成一个互斥组。"
+    },
+    {
+      "term": "precedence",
+      "pos": "n.",
+      "cn": "优先级",
+      "note": "",
+      "example": "Signal handlers run in connection order, not in precedence.",
+      "example_cn": "信号处理器按连接顺序运行，不分优先级。"
+    },
+    {
+      "term": "roughly",
+      "pos": "adv.",
+      "cn": "大致地",
+      "note": "",
+      "example": "The chapter takes roughly an hour to read.",
+      "example_cn": "这一章读完大约要一小时。"
+    },
+    {
+      "term": "whereas",
+      "pos": "conj.",
+      "cn": "然而；反之",
+      "note": "对比连词",
+      "example": "Box stacks children in one direction, whereas Grid places them in cells.",
+      "example_cn": "Box 沿一个方向堆叠子控件，而 Grid 把它们放进单元格。"
+    },
+    {
+      "term": "nonetheless",
+      "pos": "adv.",
+      "cn": "尽管如此",
+      "note": "",
+      "example": "The API is deprecated; nonetheless, it still works.",
+      "example_cn": "这个 API 已弃用，尽管如此它仍能工作。"
+    },
+    {
+      "term": "nevertheless",
+      "pos": "adv.",
+      "cn": "然而",
+      "note": "",
+      "example": "Nevertheless, the old signals remain useful for ported code.",
+      "example_cn": "尽管如此，旧信号对移植过来的代码仍有用。"
+    },
+    {
+      "term": "suffice",
+      "pos": "v.",
+      "cn": "足够",
+      "note": "will suffice = 就够用了",
+      "example": "The default renderer will suffice.",
+      "example_cn": "默认渲染器就够用了。"
+    },
+    {
+      "term": "occasionally",
+      "pos": "adv.",
+      "cn": "偶尔",
+      "note": "",
+      "example": "The clock occasionally skips a frame under load.",
+      "example_cn": "高负载时时钟偶尔会跳过一帧。"
+    },
+    {
+      "term": "aspects",
+      "pos": "n.",
+      "cn": "方面；外观维度",
+      "note": "",
+      "example": "The tutorial covers all aspects of widget lifetime.",
+      "example_cn": "教程涵盖了控件生命周期的方方面面。"
+    },
+    {
+      "term": "instruct",
+      "pos": "v.",
+      "cn": "指示",
+      "note": "",
+      "example": "The comment instructs you not to edit the file.",
+      "example_cn": "注释指示你不要编辑这个文件。"
+    },
+    {
+      "term": "override",
+      "pos": "v.",
+      "cn": "覆盖；重写",
+      "note": "",
+      "example": "Override this method to handle the event.",
+      "example_cn": "重写此方法即可处理该事件。",
+      "domain": true
+    },
+    {
+      "term": "overload",
+      "pos": "v./n.",
+      "cn": "重载",
+      "note": "",
+      "domain": true,
+      "example": "Overload the method to accept a filename.",
+      "example_cn": "重载该方法以接受文件名。"
+    },
+    {
+      "term": "subclass",
+      "pos": "n.",
+      "cn": "子类",
+      "note": "",
+      "domain": true,
+      "example": "Subclass Gtk::Window to create your own window.",
+      "example_cn": "继承 Gtk::Window 来创建自己的窗口。"
+    },
+    {
+      "term": "superclass",
+      "pos": "n.",
+      "cn": "基类；父类",
+      "note": "",
+      "domain": true,
+      "example": "Call the superclass constructor from your class.",
+      "example_cn": "在你的类里调用基类构造函数。"
+    },
+    {
+      "term": "derived",
+      "pos": "adj.",
+      "cn": "派生的",
+      "note": "derived class = 派生类",
+      "example": "MyWindow is derived from Gtk::Window.",
+      "example_cn": "MyWindow 派生自 Gtk::Window。"
+    },
+    {
+      "term": "nested",
+      "pos": "adj.",
+      "cn": "嵌套的",
+      "note": "",
+      "example": "Boxes can be nested to build richer layouts.",
+      "example_cn": "盒容器可以嵌套出更丰富的布局。"
+    },
+    {
+      "term": "shorthand",
+      "pos": "n.",
+      "cn": "简写",
+      "note": "",
+      "example": "The @newin tag is shorthand for a version note.",
+      "example_cn": "@newin 标记是版本说明的简写。"
+    },
+    {
+      "term": "idiomatic",
+      "pos": "adj.",
+      "cn": "地道的；符合惯例的",
+      "note": "",
+      "example": "Range-based for is the idiomatic loop in modern C++.",
+      "example_cn": "基于范围的 for 是现代 C++ 的地道写法。"
+    },
+    {
+      "term": "idiom",
+      "pos": "n.",
+      "cn": "惯用写法；习语",
+      "note": "",
+      "example": "RAII is a common C++ idiom for resource safety.",
+      "example_cn": "RAII 是 C++ 保障资源安全的惯用手法。"
+    },
+    {
+      "term": "inefficient",
+      "pos": "adj.",
+      "cn": "低效的",
+      "note": "",
+      "example": "Copying the whole list is inefficient.",
+      "example_cn": "复制整个列表很低效。"
+    },
+    {
+      "term": "efficient",
+      "pos": "adj.",
+      "cn": "高效的",
+      "note": "",
+      "example": "The iterator keeps row access efficient.",
+      "example_cn": "迭代器让行访问保持高效。"
+    },
+    {
+      "term": "compatibility",
+      "pos": "n.",
+      "cn": "兼容性",
+      "note": "",
+      "example": "The ABI compatibility promise holds within a stable series.",
+      "example_cn": "ABI 兼容承诺在稳定系列内成立。"
+    },
+    {
+      "term": "compatible",
+      "pos": "adj.",
+      "cn": "兼容的",
+      "note": "",
+      "example": "gtkmm-4.0 is not compatible with gtkmm-3.0 code.",
+      "example_cn": "gtkmm-4.0 与 gtkmm-3.0 的代码不兼容。"
+    },
+    {
+      "term": "parallel",
+      "pos": "adj.",
+      "cn": "并行的；并存的",
+      "note": "parallel installation 并行安装",
+      "example": "gtkmm-3.0 and gtkmm-4.0 install in parallel.",
+      "example_cn": "gtkmm-3.0 与 gtkmm-4.0 可并行安装。"
+    },
+    {
+      "term": "interchangeably",
+      "pos": "adv.",
+      "cn": "可互换地",
+      "note": "",
+      "example": "The terms 'widget' and 'control' are used interchangeably.",
+      "example_cn": "widget 与 control 两个词可互换使用。"
+    },
+    {
+      "term": "straightforward",
+      "pos": "adj.",
+      "cn": "直截了当的",
+      "note": "",
+      "example": "The build is straightforward with Meson.",
+      "example_cn": "用 Meson 构建非常直接。"
+    },
+    {
+      "term": "elaborate",
+      "pos": "v./adj.",
+      "cn": "详述；精细的",
+      "note": "",
+      "example": "The reference manual elaborates on each signal.",
+      "example_cn": "参考手册对每个信号都有详述。"
+    },
+    {
+      "term": "convenient",
+      "pos": "adj.",
+      "cn": "方便的",
+      "note": "",
+      "example": "The append() method is a convenient shorthand.",
+      "example_cn": "append() 方法是个方便的简写。"
+    },
+    {
+      "term": "prefer",
+      "pos": "v.",
+      "cn": "更倾向于",
+      "note": "",
+      "example": "Prepend the label; we prefer it on the left.",
+      "example_cn": "把标签放前面，我们更希望它在左边。"
+    },
+    {
+      "term": "preferable",
+      "pos": "adj.",
+      "cn": "更可取的",
+      "note": "",
+      "example": "Explicit lifetimes are preferable for shared resources.",
+      "example_cn": "共享资源最好显式声明生命周期。"
+    },
+    {
+      "term": "indentation",
+      "pos": "n.",
+      "cn": "缩进",
+      "note": "",
+      "example": "Keep the indentation consistent across the file.",
+      "example_cn": "缩进在整个文件里保持一致。"
+    },
+    {
+      "term": "preprocessor",
+      "pos": "n.",
+      "cn": "预处理器",
+      "note": "",
+      "domain": true,
+      "example": "The preprocessor expands the include directives.",
+      "example_cn": "预处理器展开 include 指令。"
+    },
+    {
+      "term": "compiler",
+      "pos": "n.",
+      "cn": "编译器",
+      "note": "",
+      "domain": true,
+      "example": "The compiler enforces the const-correctness rules.",
+      "example_cn": "编译器强制执行 const 正确性规则。"
+    },
+    {
+      "term": "linker",
+      "pos": "n.",
+      "cn": "链接器",
+      "note": "",
+      "domain": true,
+      "example": "The linker needs the gtkmm-4.0 library.",
+      "example_cn": "链接器需要 gtkmm-4.0 库。"
+    },
+    {
+      "term": "verbatim",
+      "pos": "adj.",
+      "cn": "逐字的",
+      "note": "",
+      "example": "Copy the example verbatim before changing it.",
+      "example_cn": "改动示例之前先原样照抄一遍。"
+    },
+    {
+      "term": "restrict",
+      "pos": "v.",
+      "cn": "限制",
+      "note": "",
+      "example": "Restrict access to the widget with a RefPtr.",
+      "example_cn": "用 RefPtr 限制对控件的访问。"
+    },
+    {
+      "term": "guarantee",
+      "pos": "v./n.",
+      "cn": "保证",
+      "note": "",
+      "example": "The library guarantees that handlers run in order.",
+      "example_cn": "库保证处理器按顺序运行。"
+    },
+    {
+      "term": "ownership",
+      "pos": "n.",
+      "cn": "所有权",
+      "note": "容器拥有子控件的所有权",
+      "example": "The container takes ownership of its children.",
+      "example_cn": "容器取得子控件的所有权。"
+    },
+    {
+      "term": "floating reference",
+      "pos": "n.",
+      "cn": "浮动引用",
+      "note": "GObject 术语",
+      "domain": true,
+      "example": "A floating reference lets a parent adopt the widget later.",
+      "example_cn": "浮动引用让父容器可以稍后收养控件。"
+    },
+    {
+      "term": "reference counting",
+      "pos": "n.",
+      "cn": "引用计数",
+      "note": "",
+      "domain": true,
+      "example": "Reference counting frees the widget when the last ref drops.",
+      "example_cn": "引用计数在最后一个引用消失时释放控件。"
+    },
+    {
+      "term": "smart pointer",
+      "pos": "n.",
+      "cn": "智能指针",
+      "note": "",
+      "domain": true,
+      "example": "Use a smart pointer instead of raw new.",
+      "example_cn": "用智能指针代替裸 new。"
+    },
+    {
+      "term": "buffer",
+      "pos": "n.",
+      "cn": "缓冲区",
+      "note": "TextView 的数据存放处",
+      "domain": true,
+      "example": "The text buffer stores the characters you type.",
+      "example_cn": "文本缓冲区保存你输入的字符。"
+    },
+    {
+      "term": "clipboard",
+      "pos": "n.",
+      "cn": "剪贴板",
+      "note": "",
+      "example": "Copy the selection to the clipboard.",
+      "example_cn": "把选区复制到剪贴板。"
+    },
+    {
+      "term": "asynchronous",
+      "pos": "adj.",
+      "cn": "异步的",
+      "note": "",
+      "domain": true,
+      "example": "File dialogs return asynchronously in GTK4.",
+      "example_cn": "GTK4 里文件对话框是异步返回的。"
+    },
+    {
+      "term": "synchronous",
+      "pos": "adj.",
+      "cn": "同步的",
+      "note": "",
+      "domain": true,
+      "example": "The old API blocked in a synchronous call.",
+      "example_cn": "旧 API 在同步调用中阻塞。"
+    },
+    {
+      "term": "thread",
+      "pos": "n.",
+      "cn": "线程",
+      "note": "",
+      "domain": true,
+      "example": "Update the UI only from the main thread.",
+      "example_cn": "只在主线程更新界面。"
+    },
+    {
+      "term": "concurrent",
+      "pos": "adj.",
+      "cn": "并发的",
+      "note": "",
+      "domain": true,
+      "example": "Concurrent access to a widget is not allowed.",
+      "example_cn": "不允许对控件的并发访问。"
+    },
+    {
+      "term": "deadline",
+      "pos": "n.",
+      "cn": "截止期",
+      "note": "",
+      "example": "The timeout fires close to its deadline.",
+      "example_cn": "定时器接近截止期时触发。"
+    },
+    {
+      "term": "idle",
+      "pos": "adj.",
+      "cn": "空闲的",
+      "note": "idle function 空闲函数",
+      "domain": true,
+      "example": "Idle functions run when the main loop is idle.",
+      "example_cn": "空闲函数在主循环空闲时运行。"
+    },
+    {
+      "term": "locale",
+      "pos": "n.",
+      "cn": "区域设置",
+      "note": "i18n 语境",
+      "domain": true,
+      "example": "Numbers are formatted according to the locale.",
+      "example_cn": "数字按区域设置格式化。"
+    },
+    {
+      "term": "collate",
+      "pos": "v.",
+      "cn": "排序比对（按语言规则）",
+      "note": "",
+      "example": "Collate the list before displaying it.",
+      "example_cn": "显示之前先按语言规则排序列表。"
+    },
+    {
+      "term": "literal",
+      "pos": "n./adj.",
+      "cn": "字面量；字面的",
+      "note": "string literal 字符串字面量",
+      "domain": true,
+      "example": "A string literal is enclosed in double quotes.",
+      "example_cn": "字符串字面量用双引号包住。"
+    },
+    {
+      "term": "byte",
+      "pos": "n.",
+      "cn": "字节",
+      "note": "",
+      "domain": true,
+      "example": "A UTF-8 character may span several bytes.",
+      "example_cn": "一个 UTF-8 字符可能占多个字节。"
+    },
+    {
+      "term": "encoding",
+      "pos": "n.",
+      "cn": "编码",
+      "note": "",
+      "domain": true,
+      "example": "Save the file with UTF-8 encoding.",
+      "example_cn": "用 UTF-8 编码保存文件。"
+    },
+    {
+      "term": "uniformly",
+      "pos": "adv.",
+      "cn": "统一地",
+      "note": "",
+      "example": "The margins apply uniformly to all four sides.",
+      "example_cn": "边距统一应用于四边。"
+    },
+    {
+      "term": "expose",
+      "pos": "v.",
+      "cn": "暴露；提供访问",
+      "note": "",
+      "example": "The class exposes only the methods you need.",
+      "example_cn": "这个类只暴露你需要的方法。"
+    },
+    {
+      "term": "underline",
+      "pos": "n./v.",
+      "cn": "下划线",
+      "note": "",
+      "example": "Underline the accelerator letter in the label.",
+      "example_cn": "在标签里给快捷键字母加下划线。"
+    },
+    {
+      "term": "emphasize",
+      "pos": "v.",
+      "cn": "强调",
+      "note": "",
+      "example": "Bold text emphasizes the key term.",
+      "example_cn": "粗体强调关键术语。"
+    },
+    {
+      "term": "specify",
+      "pos": "v.",
+      "cn": "指定",
+      "note": "",
+      "example": "Specify the icon name as a string.",
+      "example_cn": "用字符串指定图标名。"
+    },
+    {
+      "term": "manipulate",
+      "pos": "v.",
+      "cn": "操纵；操作",
+      "note": "",
+      "example": "Manipulate the model, not the view.",
+      "example_cn": "操纵模型，而不是视图。"
+    },
+    {
+      "term": "visualize",
+      "pos": "v.",
+      "cn": "可视化",
+      "note": "",
+      "example": "The diagram visualizes the signal flow.",
+      "example_cn": "这张图把信号流可视化了。"
+    },
+    {
+      "term": "rounded",
+      "pos": "adj.",
+      "cn": "取整的；圆角的",
+      "note": "rounded to = 四舍五入到",
+      "example": "The value is rounded to two digits.",
+      "example_cn": "数值取整到两位小数。"
+    },
+    {
+      "term": "decimal",
+      "pos": "adj./n.",
+      "cn": "小数的；小数",
+      "note": "decimal point 小数点",
+      "example": "The spin button shows two decimal places.",
+      "example_cn": "微调按钮显示两位小数。"
+    },
+    {
+      "term": "increment",
+      "pos": "n./v.",
+      "cn": "增量；递增",
+      "note": "",
+      "example": "Each click of the arrow is an increment.",
+      "example_cn": "点一下箭头就是一次递增。"
+    },
+    {
+      "term": "decrement",
+      "pos": "n./v.",
+      "cn": "减量；递减",
+      "note": "",
+      "example": "Decrement the counter when a task finishes.",
+      "example_cn": "任务结束时递减计数器。"
+    },
+    {
+      "term": "spin button",
+      "pos": "n.",
+      "cn": "微调按钮",
+      "note": "SpinButton",
+      "domain": true,
+      "example": "A spin button constrains input to a numeric range.",
+      "example_cn": "微调按钮把输入限制在数值区间内。"
+    },
+    {
+      "term": "justified",
+      "pos": "adj.",
+      "cn": "两端对齐的",
+      "note": "set_justify",
+      "domain": true,
+      "example": "Justified text lines up on both margins.",
+      "example_cn": "两端对齐的文本在两侧都对齐。"
+    },
+    {
+      "term": "ellipsize",
+      "pos": "v.",
+      "cn": "省略显示（加省略号）",
+      "note": "",
+      "domain": true,
+      "example": "Ellipsize long labels instead of wrapping them.",
+      "example_cn": "长标签用省略号截断而不是换行。"
+    },
+    {
+      "term": "gesture",
+      "pos": "n.",
+      "cn": "手势",
+      "note": "GestureClick 手势点击",
+      "domain": true,
+      "example": "A swipe gesture can navigate between pages.",
+      "example_cn": "滑动手势可以在页面间导航。"
+    },
+    {
+      "term": "overlay",
+      "pos": "n.",
+      "cn": "覆盖层",
+      "note": "",
+      "domain": true,
+      "example": "The overlay stacks widgets on top of each other.",
+      "example_cn": "覆盖层把控件叠放在一起。"
+    },
+    {
+      "term": "pane",
+      "pos": "n.",
+      "cn": "窗格",
+      "note": "Gtk::Paned",
+      "domain": true,
+      "example": "Drag the divider to resize each pane.",
+      "example_cn": "拖动分隔条来调整每个窗格的大小。"
+    },
+    {
+      "term": "tab",
+      "pos": "n.",
+      "cn": "标签页",
+      "note": "",
+      "domain": true,
+      "example": "Each tab holds one child widget.",
+      "example_cn": "每个标签页容纳一个子控件。"
+    },
+    {
+      "term": "modal",
+      "pos": "adj.",
+      "cn": "模态的",
+      "note": "非模态 = 不阻塞交互",
+      "domain": true,
+      "example": "A modal dialog blocks the rest of the window.",
+      "example_cn": "模态对话框会挡住窗口的其余部分。"
+    },
+    {
+      "term": "transient",
+      "pos": "adj.",
+      "cn": "暂态的",
+      "note": "",
+      "domain": true,
+      "example": "The dialog is transient for the main window.",
+      "example_cn": "该对话框依附于主窗口（暂态）。"
+    },
+    {
+      "term": "preview",
+      "pos": "n.",
+      "cn": "预览",
+      "note": "",
+      "domain": true,
+      "example": "The print preview shows the page layout.",
+      "example_cn": "打印预览显示页面布局。"
+    },
+    {
+      "term": "render",
+      "pos": "v.",
+      "cn": "渲染",
+      "note": "",
+      "example": "The cell renderer draws each column value.",
+      "example_cn": "单元格渲染器绘制每列的值。"
+    },
+    {
+      "term": "resource",
+      "pos": "n.",
+      "cn": "资源",
+      "note": "Gio::Resource",
+      "domain": true,
+      "example": "Bundle the ui file as a compiled resource.",
+      "example_cn": "把 ui 文件打包成编译好的资源。"
+    },
+    {
+      "term": "compile",
+      "pos": "v.",
+      "cn": "编译",
+      "note": "",
+      "domain": true,
+      "example": "Compile the program with pkg-config flags.",
+      "example_cn": "用 pkg-config 参数编译程序。"
+    },
+    {
+      "term": "declaration",
+      "pos": "n.",
+      "cn": "声明",
+      "note": "",
+      "domain": true,
+      "example": "The declaration lives in the header file.",
+      "example_cn": "声明放在头文件里。"
+    },
+    {
+      "term": "definition",
+      "pos": "n.",
+      "cn": "定义",
+      "note": "",
+      "domain": true,
+      "example": "The definition of main() comes last.",
+      "example_cn": "main() 的定义放在最后。"
+    },
+    {
+      "term": "constructor",
+      "pos": "n.",
+      "cn": "构造函数",
+      "note": "",
+      "domain": true,
+      "example": "The constructor takes no arguments in this example.",
+      "example_cn": "本例的构造函数不带参数。"
+    },
+    {
+      "term": "destructor",
+      "pos": "n.",
+      "cn": "析构函数",
+      "note": "",
+      "domain": true,
+      "example": "The destructor drops the last reference.",
+      "example_cn": "析构函数释放最后一个引用。"
+    },
+    {
+      "term": "initializer",
+      "pos": "n.",
+      "cn": "初始化器",
+      "note": "",
+      "domain": true,
+      "example": "Use an initializer list to set the members.",
+      "example_cn": "用初始化列表设置成员。"
+    },
+    {
+      "term": "smartpointers",
+      "pos": "n.",
+      "cn": "智能指针（复数语境）",
+      "note": "",
+      "domain": true,
+      "example": "Smartpointers keep widget memory management safe.",
+      "example_cn": "智能指针让控件内存管理安全。"
+    }
+  ],
+  "patterns": [
+    {
+      "pattern": "be referred to as",
+      "cn": "被称为；称作"
+    },
+    {
+      "pattern": "referred to as",
+      "cn": "被称为"
+    },
+    {
+      "pattern": "correspond to",
+      "cn": "对应于"
+    },
+    {
+      "pattern": "consist of",
+      "cn": "由……构成"
+    },
+    {
+      "pattern": "be wrapped in",
+      "cn": "被包裹在……里"
+    },
+    {
+      "pattern": "act as",
+      "cn": "充当；起……作用"
+    },
+    {
+      "pattern": "serve as",
+      "cn": "用作；充当"
+    },
+    {
+      "pattern": "on the fly",
+      "cn": "动态地；即席（边运行边进行）"
+    },
+    {
+      "pattern": "keep track of",
+      "cn": "跟踪；掌握……的动向"
+    },
+    {
+      "pattern": "make use of",
+      "cn": "利用"
+    },
+    {
+      "pattern": "take care of",
+      "cn": "处理；照料"
+    },
+    {
+      "pattern": "be aware that",
+      "cn": "注意到；意识到"
+    },
+    {
+      "pattern": "as mentioned earlier",
+      "cn": "如前所述"
+    },
+    {
+      "pattern": "in response to",
+      "cn": "响应；作为对……的反应"
+    },
+    {
+      "pattern": "with respect to",
+      "cn": "关于；相对于"
+    },
+    {
+      "pattern": "as opposed to",
+      "cn": "与……相对／相反"
+    },
+    {
+      "pattern": "in place of",
+      "cn": "代替"
+    },
+    {
+      "pattern": "be likely to",
+      "cn": "很可能"
+    },
+    {
+      "pattern": "note that",
+      "cn": "注意……（提示重点）"
+    },
+    {
+      "pattern": "it is worth",
+      "cn": "值得……"
+    },
+    {
+      "pattern": "be supposed to",
+      "cn": "本应；按规定应当"
+    },
+    {
+      "pattern": "make sure",
+      "cn": "确保"
+    },
+    {
+      "pattern": "in practice",
+      "cn": "实际上；在实践中"
+    },
+    {
+      "pattern": "in general",
+      "cn": "一般而言"
+    },
+    {
+      "pattern": "as follows",
+      "cn": "如下"
+    },
+    {
+      "pattern": "no longer",
+      "cn": "不再"
+    },
+    {
+      "pattern": "in turn",
+      "cn": "反过来；依次"
+    },
+    {
+      "pattern": "even if",
+      "cn": "即使（让步）"
+    },
+    {
+      "pattern": "as long as",
+      "cn": "只要（条件）"
+    },
+    {
+      "pattern": "rather than",
+      "cn": "而不是（取舍）"
+    },
+    {
+      "pattern": "in most cases",
+      "cn": "在多数情况下"
+    },
+    {
+      "pattern": "for instance",
+      "cn": "例如"
+    },
+    {
+      "pattern": "such as",
+      "cn": "例如（列举）"
+    },
+    {
+      "pattern": "look like",
+      "cn": "看起来像"
+    },
+    {
+      "pattern": "deal with",
+      "cn": "处理；论及"
+    },
+    {
+      "pattern": "be based on",
+      "cn": "基于"
+    },
+    {
+      "pattern": "come with",
+      "cn": "自带；附带"
+    },
+    {
+      "pattern": "be responsible for",
+      "cn": "负责；是……的原因"
+    },
+    {
+      "pattern": "at least",
+      "cn": "至少"
+    },
+    {
+      "pattern": "so that",
+      "cn": "以便（目的）"
+    }
+  ]
 }
