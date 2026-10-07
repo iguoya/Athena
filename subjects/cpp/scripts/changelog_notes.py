@@ -354,8 +354,9 @@ def main(argv: list[str]) -> int:
             file=sys.stderr,
         )
 
-    # 正文要重定向进 release-notes.md；Windows 控制台默认 GBK，不固定就会乱码或报错。
-    sys.stdout.reconfigure(encoding="utf-8")
+    # 正文要重定向进 release-notes.md；Windows 默认 GBK 编码、CRLF 换行，
+    # 不固定就会乱码或报错，换行也会和后面追加的页脚混成两种。
+    sys.stdout.reconfigure(encoding="utf-8", newline="\n")
     sys.stdout.write(unwrap_for_release(notes_body(section, from_git)))
     return 0
 
