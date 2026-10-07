@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>C GUI Lab</title>
+  <link rel="stylesheet" href="renderer.css" />
+</head>
+<body>
+  <header class="hero">
+    <h1>C GUI Lab</h1>
+    <p>同一个任务「样式橱窗」，三种 C 生态的外观引擎各做一遍——启动下面三个程序并排对比显示效果。</p>
+  </header>
+
+  <main>
+    <section class="grid">
+      <article class="card" style="--accent:#3584e4">
+        <div class="card-top">
+          <span class="badge">纯 C · 声明式</span>
+          <h2>GTK4 + Adwaita + CSS</h2>
+        </div>
+        <p>设计语言开箱即美，圆角与渐变写在 CSS 子集里；深色模式与强调色运行时切换。</p>
+        <div class="chips">
+          <span>CSS 样式表</span><span>libadwaita 设计语言</span><span>GSK 渲染器</span>
+        </div>
+        <button data-launch="gtk">启动样式橱窗</button>
+      </article>
+
+      <article class="card" style="--accent:#8b5cf6">
+        <div class="card-top">
+          <span class="badge">C++ · 参数化</span>
+          <h2>Dear ImGui</h2>
+        </div>
+        <p>没有样式表，样式即代码：四套色板一键换装，DrawList 手绘渐变与仪表盘。</p>
+        <div class="chips">
+          <span>程序化样式</span><span>GPU 即时绘制</span><span>DrawList 手绘</span>
+        </div>
+        <button data-launch="imgui">启动样式橱窗</button>
+      </article>
+
+      <article class="card" style="--accent:#26a269">
+        <div class="card-top">
+          <span class="badge">纯 C · 属性样式</span>
+          <h2>LVGL + SDL2</h2>
+        </div>
+        <p>嵌入式出身的外观引擎：属性式样粒、内置亮暗主题、lv_anim 驱动的呼吸光晕。</p>
+        <div class="chips">
+          <span>样式属性</span><span>lv_anim 动画</span><span>手机级观感</span>
+        </div>
+        <button data-launch="lvgl">启动样式橱窗</button>
+      </article>
+    </section>
+
+    <section class="official">
+      <h3>官方 demo 合集</h3>
+      <p class="hint">gtk-demo 与 adwaita-1-demo 随 MSYS2 安装；检测到才会亮起。</p>
+      <div class="official-row">
+        <button id="btn-gtk-demo" data-official="gtk4-demo" disabled>gtk-demo（控件画廊）</button>
+        <button id="btn-adw-demo" data-official="adwaita-1-demo" disabled>adwaita-1-demo（设计语言）</button>
+        <button id="btn-imgui-demo">ImGui ShowDemoWindow()</button>
+      </div>
+    </section>
+
+    <footer id="status" class="status">就绪。先在仓库根执行 <code>cmake --preset ucrt64 &amp;&amp; cmake --build --preset ucrt64</code> 编译三个原生程序。</footer>
+  </main>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

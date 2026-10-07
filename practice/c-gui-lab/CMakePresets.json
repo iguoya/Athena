@@ -1,0 +1,25 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "ucrt64",
+      "displayName": "MSYS2 UCRT64 (GCC 15)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "C:/msys64/ucrt64/bin/gcc.exe",
+        "CMAKE_CXX_COMPILER": "C:/msys64/ucrt64/bin/g++.exe",
+        "CMAKE_BUILD_TYPE": "Release"
+      },
+      "environment": {
+        "PKG_CONFIG_PATH": "C:/msys64/ucrt64/lib/pkgconfig;C:/msys64/ucrt64/share/pkgconfig"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "ucrt64",
+      "configurePreset": "ucrt64"
+    }
+  ]
+}

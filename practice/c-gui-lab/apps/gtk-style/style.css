@@ -1,0 +1,35 @@
+/* GTK4 样式橱窗的自定义样式：全部观感改动集中在这一个文件。 */
+
+/* Hero 渐变横幅：背景色由程序内的动态 provider 运行时替换 */
+.hero {
+  padding: 32px;
+  border-radius: 24px;
+  transition: background 400ms ease;
+}
+
+.hero-title {
+  font-size: 30px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.hero-sub {
+  font-size: 15px;
+  color: alpha(#ffffff, 0.88);
+}
+
+.card-pad {
+  padding: 20px;
+  border-radius: 18px;
+}
+
+.dimmed {
+  font-size: 13px;
+  color: alpha(currentColor, 0.6);
+}
+
+/* 让按钮与卡片都带上柔和的圆角语言，与 libadwaita 的设计基调一致 */
+button.pill {
+  border-radius: 9999px;
+  padding: 8px 20px;
+}
