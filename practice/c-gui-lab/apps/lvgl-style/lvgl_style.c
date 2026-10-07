@@ -4,10 +4,11 @@
  * 动画系统（lv_anim 驱动的呼吸与数据流动）。GTK 讲声明式、ImGui 讲参数化，
  * LVGL 的路线是「属性即布局的一部分」。
  *
- * 文本用英文：内置 Montserrat 不含 CJK，tiny_ttf 有 CJK 死锁缺陷（见 lv_conf.h）。
+ * 中文显示走 cjk_font（tiny_ttf create_data 方案，参考 machine 学科的成熟做法）。
  */
 
 #include "lvgl.h"
+#include "cjk_font.h"
 #define SDL_MAIN_HANDLED /* 我们自己写 main，不要 SDL_main.h 的劫持 */
 #include <SDL.h>
 #include <math.h>
@@ -19,6 +20,17 @@ static lv_chart_series_t *ser;
 static lv_obj_t *breath_card;
 static lv_obj_t *root_page;
 static lv_timer_t *data_timer; /* 只删这一个；全局 timer 链里还有 SDL 事件泵 */
+static CjkFont cjk_font;
+
+/* 中文可用就用中文字体（tiny_ttf create_data 方案，见 cjk_font.c）；
+ * 加载失败时保持内置字体，中文会缺字但不至于崩溃。 */
+static void
+set_cn_font(lv_obj_t *label, bool large)
+{
+  lv_font_t *font = large ? cjk_font.title : cjk_font.body;
+  if (font)
+    lv_obj_set_style_text_font(label, font, 0);
+}
 
 /* ---------- 各卡片 ---------- */
 
@@ -34,7 +46,7 @@ make_card(lv_obj_t *parent, const char *title)
 
   lv_obj_t *label = lv_label_create(card);
   lv_label_set_text(label, title);
-  lv_obj_set_style_text_font(label, &lv_font_montserrat_16, 0);
+  set_cn_font(label, false);
   lv_obj_align(label, LV_ALIGN_TOP_LEFT, 0, 0);
   return card;
 }
@@ -42,7 +54,7 @@ make_card(lv_obj_t *parent, const char *title)
 static void
 arc_card(lv_obj_t *parent)
 {
-  lv_obj_t *card = make_card(parent, "Gauge: Arc");
+  lv_obj_t *card = make_card(parent, "仪表 Arc");
   lv_obj_t *arc = lv_arc_create(card);
   lv_obj_set_size(arc, 150, 150);
   lv_obj_align(arc, LV_ALIGN_BOTTOM_MID, 0, -4);
@@ -58,7 +70,7 @@ arc_card(lv_obj_t *parent)
   lv_obj_set_style_arc_opa(arc, LV_OPA_30, LV_PART_MAIN);
 
   arc_label = lv_label_create(arc);
-  lv_obj_set_style_text_font(arc_label, &lv_font_montserrat_28, 0);
+  set_cn_font(arc_label, true);
   lv_label_set_text(arc_label, "62%");
   lv_obj_center(arc_label);
 }
@@ -66,7 +78,7 @@ arc_card(lv_obj_t *parent)
 static void
 controls_card(lv_obj_t *parent)
 {
-  lv_obj_t *card = make_card(parent, "Controls: Slider & Switch");
+  lv_obj_t *card = make_card(parent, "控件 Slider · Switch");
   lv_obj_set_scroll_dir(card, LV_DIR_VER);
 
   lv_obj_t *slider = lv_slider_create(card);
@@ -85,14 +97,15 @@ controls_card(lv_obj_t *parent)
   lv_obj_set_size(sw, 64, 34);
 
   lv_obj_t *cb = lv_checkbox_create(card);
-  lv_checkbox_set_text(cb, "Auto sync");
+  lv_checkbox_set_text(cb, "自动同步");
+  set_cn_font(cb, false);
   lv_obj_align(cb, LV_ALIGN_TOP_MID, 0, 165);
 }
 
 static void
 chart_card(lv_obj_t *parent)
 {
-  lv_obj_t *card = make_card(parent, "Realtime Chart");
+  lv_obj_t *card = make_card(parent, "实时图表 Chart");
   chart = lv_chart_create(card);
   lv_obj_set_size(chart, 250, 170);
   lv_obj_align(chart, LV_ALIGN_BOTTOM_MID, 0, 0);
@@ -133,13 +146,14 @@ make_breath_banner(lv_obj_t *parent)
   lv_obj_set_style_shadow_color(breath_card, lv_palette_main(LV_PALETTE_PURPLE), 0);
 
   lv_obj_t *title = lv_label_create(breath_card);
-  lv_label_set_text(title, "Animation-driven look");
-  lv_obj_set_style_text_font(title, &lv_font_montserrat_28, 0);
+  lv_label_set_text(title, "动画驱动的观感");
+  set_cn_font(title, true);
   lv_obj_set_style_text_color(title, lv_color_white(), 0);
   lv_obj_align(title, LV_ALIGN_LEFT_MID, 0, 0);
 
   lv_obj_t *sub = lv_label_create(breath_card);
-  lv_label_set_text(sub, "lv_anim breathes opacity & glow - style is the UI");
+  lv_label_set_text(sub, "lv_anim 让透明度与光晕一起呼吸——属性就是界面");
+  set_cn_font(sub, false);
   lv_obj_set_style_text_color(sub, lv_color_hex(0xE0D7FF), 0);
   lv_obj_align(sub, LV_ALIGN_LEFT_MID, 0, 34);
 
@@ -228,8 +242,10 @@ main(void)
 {
   lv_init();
   lv_tick_set_cb(SDL_GetTicks);
+  cjk_font = cjk_font_load();
 
   lv_display_t *disp = lv_sdl_window_create(1000, 760);
+  lv_sdl_mouse_create();
   lv_sdl_mouse_create();
 
   lv_theme_default_init(disp, lv_palette_main(LV_PALETTE_BLUE),
@@ -241,7 +257,8 @@ main(void)
   lv_obj_align(btn, LV_ALIGN_TOP_RIGHT, -28, 26);
   lv_obj_add_event_cb(btn, on_theme_toggle, LV_EVENT_CLICKED, NULL);
   lv_obj_t *bl = lv_label_create(btn);
-  lv_label_set_text(bl, "Light / Dark");
+  lv_label_set_text(bl, "亮 / 暗");
+  set_cn_font(bl, false);
 
   bool running = true;
   while (running)

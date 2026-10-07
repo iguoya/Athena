@@ -32,12 +32,14 @@ third_party/   imgui / lvgl / cimgui 源码（不进版本库，.gitignore）
 - `cmake --preset ucrt64 && cmake --build --preset ucrt64`，产物在 `build/apps/`。
 - 运行期 GTK/SDL 的 DLL 在 `C:\msys64\ucrt64\bin`，母体 spawn 时会把它注入 PATH。
 
-## 已知限制
+## 已知限制与取舍
 
-- **lvgl-style 的文本是英文**：LVGL 内置 Montserrat 字体不含 CJK；tiny_ttf 渲染器
-  在 Windows 上栅格化首个 CJK 字形会死锁（等线/黑体/雅黑都复现，见 lv_conf.h 注释）。
-  要中文需集成 FreeType，留待真需要时再做。
 - **imgui-style 是 C++**（见上方取舍说明），gtk-style 与 lvgl-style 是纯 C。
+- **lvgl-style 的中文用 lv_font_conv 预生成子集**（font_cn_20/28.c 编译进 exe，
+  文本变更后重跑 scripts/gen-cjk-font.sh）：LVGL 的 tiny_ttf 与 FreeType 集成
+  在这台 Windows 上栅格化首个 CJK 字形都会死循环（tiny_ttf 的 data 模式即
+  subjects/machine playground 的方案，mac/Linux 成熟但同样复现）。预生成子集
+  是 LVGL 社区标准做法，零运行时依赖、行为确定；代价是字符集固定。
 
 ## 验证
 

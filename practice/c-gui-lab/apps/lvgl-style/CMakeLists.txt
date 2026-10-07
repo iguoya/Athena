@@ -11,7 +11,8 @@ pkg_check_modules(SDL2 REQUIRED sdl2)
 target_include_directories(lvgl_ext PUBLIC ${SDL2_INCLUDE_DIRS})
 target_compile_options(lvgl_ext PRIVATE ${SDL2_CFLAGS_OTHER})
 
-add_executable(lvgl-style lvgl_style.c)
+add_executable(lvgl-style lvgl_style.c cjk_font.c font_cn_20.c font_cn_28.c)
 target_link_libraries(lvgl-style PRIVATE lvgl_ext ${SDL2_LIBRARIES})
-target_include_directories(lvgl-style PRIVATE ${SDL2_INCLUDE_DIRS} ${LVGL})
+target_include_directories(lvgl-style PRIVATE ${SDL2_INCLUDE_DIRS} ${LVGL}
+  ${CMAKE_SOURCE_DIR}/third_party) # 生成的 font_cn_*.c include "lvgl/lvgl.h"
 target_link_directories(lvgl-style PRIVATE ${SDL2_LIBRARY_DIRS})
