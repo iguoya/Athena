@@ -33,10 +33,15 @@ archive/       历史归档，不参与构建
 **C++ 教程没有特权**（ADR 0045）：它和别的学科一样住在 `subjects/` 下，仓库根不再有它的
 源码、构建文件、脚本和文档。任何"以主程序为中心"的假设都是过时的。
 
+**归档**。不参与构建与检查的历史按「离它最近的归档位」放：仓库级的前身与旧数据进根
+`archive/`（如前身 computer 仓库、driver 迁中心 PG 前的最后一个本地进度库），应用
+自己的历史档进应用目录内的 `archive/`（如 `subjects/ascent/archive/` 的 vuepress 旧站）。
+
 **名字**。仓库叫 Athena。打开应用的终端命令是 `launcher open <id>`（二进制在
 `launcher/target/`，名字是 `launcher`；旧文档里的 `athena-dev` 是同一个编排器）。
 进程名用 `athena-<id>`，连字符。目录、界面标题、知识点前缀不必是同一个词；
-已经写进进度库的前缀不改。
+已经写进进度库的前缀不改。目录名允许下划线的历史遗留（`practice/nas_admin`、
+`practice/pocket_cube`），但 id 与进程名一律连字符；新目录起名跟 id 一致。
 
 | 目录 / id | 界面 | 进程 | 知识点前缀 |
 |---|---|---|---|
