@@ -51,3 +51,7 @@ launcher/.build/
 subjects/*/progress/*.db-wal
 subjects/*/progress/*.db-shm
 subjects/*/progress/*.db-journal
+
+# Python 虚拟环境是 dev 准备步骤的产物（ADR 0046），哪个应用都不入库——
+# nas_admin 的 .venv 曾一百多 MB 裸奔在磁盘上没有任何规则覆盖。
+.venv/

@@ -208,6 +208,39 @@ _APP_MINIMUM = ("AGENTS.md", "CLAUDE.md", "README.md", "scripts/check.py")
 _STRUCTURE_TREE_RE = re.compile(r"^  (\S+)/")
 _GROUP_RE = re.compile(r"^(subjects|practice)/")
 
+# 仓库根只认这些条目：文档、代理与编辑器配置、六大功能区。别的出现在根下
+# 要么登记进来，要么进 .gitignore，要么删——launcher_list_out.txt、
+# __pycache__、dist-driver 三次杂物全都堆在根，不是巧合，根是随手一放的地方。
+_ROOT_ALLOW = {
+    "AGENTS.md", "CLAUDE.md", "README.md", "CHANGELOG.md", "LICENSE",
+    ".git", ".gitignore", ".gitattributes", ".zcodeignore",
+    ".agents", ".claude", ".cursor", ".gemini", ".vscode", ".github",
+    "subjects", "practice", "launcher", "docs", "scripts", "archive",
+}
+
+# 本机构建产物：存在就必须被 .gitignore 覆盖。一个新 Tauri 应用的 target 是
+# 几个 GB，漏写一行 ignore 就是把磁盘灌进 git 历史，永远删不干净。
+_ARTIFACT_PATHS = (
+    "src-tauri/target", "node_modules", "target", "build", ".dart_tool",
+    ".venv", "engine/.venv", "third_party", "workspace/.vs", "upstream",
+)
+
+
+def _git_ignored(*paths: Path) -> set[Path]:
+    """批量问 git 哪些路径被忽略。check-ignore 对被忽略的路径正常输出、退出码 0。
+
+    git 输出的是正斜杠路径，Windows 上 pathlib 的 str() 是反斜杠，直接比对
+    字符串会全部判成「未忽略」——先统一成 posix 风格。
+    """
+    if not paths:
+        return set()
+    completed = subprocess.run(
+        ["git", "check-ignore", "--", *(p.as_posix() for p in paths)],
+        cwd=REPO_ROOT, capture_output=True, text=True,
+    )
+    reported = {line for line in completed.stdout.splitlines() if line}
+    return {p for p in paths if p.as_posix() in reported}
+
 
 def run_structure_check() -> None:
     """结构卫生：文档与目录对账、应用四件套、ADR 索引覆盖。
@@ -269,9 +302,56 @@ def run_structure_check() -> None:
     if problems:
         print("\n".join(problems), flush=True)
         raise SystemExit(f"结构卫生没通过（{len(problems)} 处），见上方。")
+
+    # 4. 仓库根白名单：根下出现既不在白名单、也没被 .gitignore 接管的条目就报。
+    #    不直接拒绝白名单外的东西，是给「确实该住根下」的新条目留一条显式登记的路。
+    root_entries = {p.name for p in REPO_ROOT.iterdir()}
+    strangers = root_entries - _ROOT_ALLOW
+    if strangers:
+        ignored = _git_ignored(*(REPO_ROOT / name for name in strangers))
+        problems += [
+            f"  仓库根下的 {name} 既不在白名单也没被忽略——登记进 check.py 的 "
+            "_ROOT_ALLOW、写进 .gitignore，或删掉"
+            for name in sorted(strangers - {p.name for p in ignored})
+        ]
+
+    # 5. 构建产物必须被忽略：每个应用目录下真实存在的产物路径，逐个过
+    #    git check-ignore。新应用忘写 .gitignore，几个 GB 的 target 就会等在
+    #    第一次 git add 的路上。
+    for root in (*APP_ROOTS, "launcher"):
+        for app_dir in sorted((REPO_ROOT / root).iterdir()):
+            if not app_dir.is_dir():
+                continue
+            candidates = {
+                app_dir / rel
+                for rel in _ARTIFACT_PATHS
+                if (app_dir / rel).exists()
+            }
+            unprotected = candidates - _git_ignored(*candidates)
+            problems += [
+                f"  {p.relative_to(REPO_ROOT)} 是构建产物却没有被 .gitignore 覆盖"
+                for p in sorted(unprotected)
+            ]
+
+    # 6. 发布矩阵必须先过 CI：release.yml 里构建的每个应用都要能在 ci.yml 的
+    #    手动选择清单里找到对应验证。「发出去但从来没人验证过」就是 v9.0.0 之前
+    #    六个应用的状态，不允许再来一次。
+    release_text = (REPO_ROOT / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")
+    ci_text = (REPO_ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    options = re.search(r"options:\s*\[([^\]]+)\]", ci_text)
+    ci_apps = {name.strip() for name in options.group(1).split(",")} if options else set()
+    released = set(re.findall(r"^\s+- app: (\S+)$", release_text, re.MULTILINE))
+    released |= set(re.findall(r"^  (driver|ascent):$", release_text, re.MULTILINE))
+    for name in sorted(released - ci_apps):
+        problems.append(f"  release.yml 构建应用 {name}，但 ci.yml 的 choices 里没有它——发布必须先有验证")
+
+    if problems:
+        print("\n".join(problems), flush=True)
+        raise SystemExit(f"结构卫生没通过（{len(problems)} 处），见上方。")
     print(
         f"结构树与 {sum(len(v) for v in tree.values())} 个应用目录一致，"
-        f"四件套齐备，ADR 索引全覆盖",
+        f"四件套齐备，ADR 索引全覆盖，根目录干净，产物全被忽略，"
+        f"发布矩阵 {len(released)} 个应用全部有 CI",
         flush=True,
     )
 
