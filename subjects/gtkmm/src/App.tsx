@@ -661,7 +661,7 @@ export default function App() {
                   · {refEntry.translation_ref.title}
                 </p>
                 {/* 参考条目对应官方单页章（迁移指南、附录等）：内容完整呈现。
-                    快照不存在时 PageView 自行显示读不到的提示，元信息卡保留。 */}
+                    多节条目没有单页快照，optional 下静默跳过，元信息卡保留。 */}
                 <PageView
                   key={refEntry.id}
                   chapterId={refEntry.id}
@@ -672,6 +672,7 @@ export default function App() {
                   knownParas={knownParas}
                   hardParas={hardParas}
                   onRate={ratePara}
+                  optional
                 />
               </>
             )}

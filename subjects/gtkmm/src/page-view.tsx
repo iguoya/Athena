@@ -637,6 +637,7 @@ export function PageView({
   knownParas,
   hardParas,
   onRate,
+  optional,
 }: {
   chapterId: string;
   pageId: string;
@@ -647,6 +648,8 @@ export function PageView({
   knownParas: Set<string>;
   hardParas: Set<string>;
   onRate: (sha: string, understood: boolean) => void;
+  /** 快照不存在时静默不渲染（参考层的多节条目没有单页快照，属预期） */
+  optional?: boolean;
 }) {
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -680,7 +683,7 @@ export function PageView({
     [snapshot, unitWords],
   );
 
-  if (error) return <p className="text-sm text-red-700">{error}</p>;
+  if (error) return optional ? null : <p className="text-sm text-red-700">{error}</p>;
   if (snapshot == null) return <p className="text-muted">正在读取段落快照……</p>;
 
   return (
