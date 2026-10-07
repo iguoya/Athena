@@ -153,6 +153,7 @@ void main() {
     expect(find.textContaining("认得"), findsNothing, reason: "界面里没有「认得」这个概念");
     expect(find.textContaining("再来"), findsNothing, reason: "没有「再来一轮」");
     expect(find.textContaining("去做这几个的题"), findsOneWidget);
+    expect(find.text("再测一遍"), findsNothing, reason: "没有全部答对：不给整页重考（ADR 0115）");
 
     // 每次作答都是一条作答记录：8 张各一次，加上答错那张重现的一次，共 9 条，其中 1 条答错。
     final attempts = await recallAttempts(store);
@@ -175,6 +176,7 @@ void main() {
     expect(find.textContaining("剩 1 张"), findsOneWidget, reason: "第二次只考答错的");
     await answer(tester, remembered: true);
     expect(find.text("这一页全部答对了"), findsOneWidget);
+    expect(find.text("再测一遍"), findsOneWidget, reason: "错 1 对 2 移出错题库，整页都答对了才给再测一遍");
 
     // 又答对一次（累计答对 2 次 ≥ 答错 1 次的 2 倍）：移出错题库，再开已经没有要考的了。
     await closeDialog(tester);

@@ -192,7 +192,7 @@ void main() {
     });
   });
 
-  testWidgets("「练这组」只练没做过或做错的：这组关联题都做对了就算通过，按钮变绿置灰（ADR 0114）", (tester) async {
+  testWidgets("「练这组」只练没做过或做错的：关联题都做对后写「再练一遍」、可点，颜色仍随自测（ADR 0114、0115）", (tester) async {
     late Directory dir;
     late ProgressStore store;
     late Bank bank;
@@ -223,11 +223,12 @@ void main() {
     FilledButton button(Finder label) => tester.widget<FilledButton>(
       find.ancestor(of: label, matching: find.bySubtype<FilledButton>()).first,
     );
-    final passed = find.textContaining("已通过");
-    expect(passed, findsWidgets, reason: "第一组关联题全做对：没有待练题，算通过");
-    final b = button(passed.first);
-    expect(b.onPressed, isNull, reason: "没有待练题不起整组重练");
-    expect(b.style?.backgroundColor?.resolve(<WidgetState>{}), const Color(0xFF2ECC71), reason: "通过是绿色");
+    expect(find.textContaining("已通过"), findsNothing, reason: "真题练完不再写「已通过」");
+    final again = find.text("再练一遍 $firstGroupCount 题");
+    expect(again, findsOneWidget, reason: "第一组关联题全做对：没有待练题，给整组重练的入口");
+    final b = button(again);
+    expect(b.onPressed, isNotNull, reason: "再练一遍是使用者主动重练，可以点");
+    expect(b.style?.backgroundColor?.resolve(<WidgetState>{}), const Color(0xFF8A939B), reason: "自测卡没测过：仍是灰");
     await tester.pump(const Duration(seconds: 30));
     await tester.pumpWidget(const SizedBox());
     await tester.runAsync(() async {

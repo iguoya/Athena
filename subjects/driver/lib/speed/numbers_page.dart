@@ -37,9 +37,7 @@ class NumbersPage extends StatelessWidget {
     required this.bank,
     required this.topic,
     required this.histories,
-    required this.mastered,
     required this.onRecallAnswer,
-    required this.pendingOf,
     required this.onStartPractice,
   });
 
@@ -48,13 +46,9 @@ class NumbersPage extends StatelessWidget {
   /// 本页所属的专题（页键、科目、标题、导语都取自它）。
   final SpeedTopic topic;
   final HistorySet histories;
-  final Set<String> mastered;
 
   /// 每次自测作答记一条作答记录（ADR 0094）。
   final RecallAnswerRecorder onRecallAnswer;
-
-  /// 这些题里还要练的：首页按练习的出题规则筛（答对到答错 2 倍才算移出，ADR 0079）。
-  final List<Question> Function(List<Question> questions) pendingOf;
   final void Function(List<Question> questions, String title) onStartPractice;
 
   List<CheatGroup> get _groups => cheatGroupsOf(bank, topic);
@@ -92,7 +86,6 @@ class NumbersPage extends StatelessWidget {
       context,
       onAnswer: onRecallAnswer,
       histories: histories,
-      mastered: mastered,
       entries: [
         // 关联题就是这张卡自己（ADR 0102）：收尾的「去做这几个的题」练的是答错的卡，
         // 行与题一对一，不再指向组级正则捞出来的真题。
@@ -169,7 +162,6 @@ class NumbersPage extends StatelessWidget {
   Widget _groupCard(BuildContext context, CheatGroup group, TextStyle? muted) {
     // 组按钮练的是本组的专属题——组内自测卡对应的题，行与题一对一（ADR 0102）。
     final related = _groupQuestions(group);
-    final pending = pendingOf(related);
     final maxAmount = group.maxAmount;
     // 组状态只看这一组的自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 自测卡全部答对过、灰 = 没测完。
     final ids = [for (final q in related) q.id];
@@ -199,15 +191,11 @@ class NumbersPage extends StatelessWidget {
               ],
               MasteryTag(ids: ids, histories: histories),
               const Spacer(),
-              FilledButton.icon(
-                style: practiceButtonStyle(related.isNotEmpty && pending.isEmpty ? SymbolStatus.mastered : status),
-                onPressed: pending.isEmpty ? null : () => onStartPractice(pending, "${topic.title} · ${group.title}"),
-                icon: const Icon(Glyph.practice, size: 20),
-                label: Text(
-                  pending.isEmpty
-                      ? (related.isEmpty ? "没有相关题" : "已通过 · 没有待练的题")
-                      : "练这组 ${pending.length} 题",
-                ),
+              GroupPracticeButton(
+                status: status,
+                related: related,
+                histories: histories,
+                onStart: (questions) => onStartPractice(questions, "${topic.title} · ${group.title}"),
               ),
             ],
           ),

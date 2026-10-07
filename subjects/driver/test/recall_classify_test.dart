@@ -43,6 +43,24 @@ void main() {
     );
   });
 
+  test("速记组待练题 speedPending：没做过的与错题库里的，偏难一视同仁，做对过一次就不再出（ADR 0115）", () async {
+    final bank = await ContentLoader.load();
+    final rare = bank.questions.firstWhere((q) => q.isRare);
+    final plain = bank.questions.firstWhere((q) => q.isRegular && q.id != rare.id);
+    final missed = bank.questions.firstWhere((q) => q.isHot);
+    final retired = bank.questions.firstWhere((q) => q.isCommon);
+    final histories = HistorySet.build([
+      attempt(plain.id, true, 0),
+      attempt(missed.id, false, 1),
+      attempt(missed.id, true, 2),
+      attempt(retired.id, false, 3),
+      attempt(retired.id, true, 4),
+      attempt(retired.id, true, 5),
+    ]);
+    final pending = speedPending([rare, plain, missed, retired], histories);
+    expect(pending.map((q) => q.id), [missed.id, rare.id], reason: "错题库里的在前、没做过的偏难题其次；做对过的与已移出的不出");
+  });
+
   test("组状态 statusOfIds：整组每张卡都答对才算掌握，只测了一部分是灰（ADR 0113）", () {
     const a = "drive.recall.signs.a";
     const b = "drive.recall.signs.b";

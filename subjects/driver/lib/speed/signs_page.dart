@@ -20,7 +20,6 @@ class SignsPage extends StatelessWidget {
     required this.signs,
     required this.histories,
     required this.questions,
-    required this.mastered,
     required this.onRecallAnswer,
     this.recallPage = "s1.signs",
     this.subjectLabel = "科目一",
@@ -34,7 +33,6 @@ class SignsPage extends StatelessWidget {
 
   /// 本科目的全部题（含偏难，ADR 0112 一视同仁）：「练这组」从这里按 `Question.sign` 取题。
   final List<Question> questions;
-  final Set<String> mastered;
 
   /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
   final RecallAnswerRecorder onRecallAnswer;
@@ -123,7 +121,6 @@ class SignsPage extends StatelessWidget {
       context,
       onAnswer: onRecallAnswer,
       histories: histories,
-      mastered: mastered,
       entries: [for (final s in signs) _recallEntryOf(s, cards[s.id]!)],
       onStartPractice: (questions) => onStartPractice(questions, "标志速记 · 自测"),
     );
@@ -138,7 +135,6 @@ class SignsPage extends StatelessWidget {
         for (final q in questions)
           if (q.signId == sign.id) q,
     ];
-    final pending = [for (final q in related) if (!mastered.contains(q.id)) q];
     // 组状态只看这一组的自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 自测卡全部答对过、灰 = 没测完。
     final ids = [for (final sign in inGroup) recallQuestionId(recallPage, sign.id)];
     final status = statusOfIds(ids: ids, histories: histories);
@@ -170,15 +166,11 @@ class SignsPage extends StatelessWidget {
                 ),
                 MasteryTag(ids: ids, histories: histories),
                 const Spacer(),
-                FilledButton.icon(
-                  style: practiceButtonStyle(related.isNotEmpty && pending.isEmpty ? SymbolStatus.mastered : status),
-                  onPressed: pending.isEmpty ? null : () => onStartPractice(pending, "标志速记 · $label"),
-                  icon: const Icon(Glyph.practice, size: 20),
-                  label: Text(
-                    pending.isEmpty
-                        ? (related.isEmpty ? "没有相关题" : "已通过 · 没有待练的题")
-                        : "练这组 ${pending.length} 题",
-                  ),
+                GroupPracticeButton(
+                  status: status,
+                  related: related,
+                  histories: histories,
+                  onStart: (questions) => onStartPractice(questions, "标志速记 · $label"),
                 ),
               ],
             ),

@@ -31,7 +31,6 @@ class RecallSession extends StatefulWidget {
     required this.onStartPractice,
     required this.onAnswer,
     required this.histories,
-    required this.mastered,
     this.prompt = defaultPrompt,
   });
 
@@ -42,9 +41,6 @@ class RecallSession extends StatefulWidget {
 
   /// 作答历史：判断哪些卡还要考——只看速记题自己的记录（ADR 0094、0112）。
   final HistorySet histories;
-
-  /// 已掌握的真题集合：只给收尾「去做这几个的题」过滤已掌握的真题，不参与判档。
-  final Set<String> mastered;
 
   /// 每次作答记一条作答记录。
   final RecallAnswerRecorder onAnswer;
@@ -61,7 +57,6 @@ class RecallSession extends StatefulWidget {
     required void Function(List<Question> questions) onStartPractice,
     required RecallAnswerRecorder onAnswer,
     required HistorySet histories,
-    required Set<String> mastered,
     String prompt = defaultPrompt,
   }) {
     return showDialog<void>(
@@ -78,7 +73,6 @@ class RecallSession extends StatefulWidget {
             onStartPractice: onStartPractice,
             onAnswer: onAnswer,
             histories: histories,
-            mastered: mastered,
             prompt: prompt,
           ),
         ),
@@ -186,8 +180,9 @@ class _RecallSessionState extends State<RecallSession> {
   /// 这次排进队的条目。
   List<RecallEntry> _round = [];
 
-  /// 这次打开期间第一次就答对的条目 id：作答记录是打开时的快照，同一次里不再重复抽它们。
-  final Set<String> _doneThisSession = {};
+  /// 这次打开期间每个条目答对、答错的次数：[HistorySet] 是打开时的快照，判「答对」要把这次的叠上去。
+  final Map<String, int> _rightNow = {};
+  final Map<String, int> _wrongNow = {};
 
   final FocusNode _focus = FocusNode();
   final FocusNode _inputFocus = FocusNode();
@@ -222,12 +217,19 @@ class _RecallSessionState extends State<RecallSession> {
     histories: widget.histories,
   );
 
-  /// 已经答对的卡数：作答记录里答对过的，加上这次第一次就答对的。
-  /// 已答对的卡数：只数**自己答对过**的（最近一次作答答对、已移出错题库，或这次第一次就答对），
-  /// 不把关联真题的掌握算进来（classifyOwn 的注释说明了为什么）。
-  int get _correctCount => widget.entries
-      .where((e) => classifyOwn(e.questionId, widget.histories) == RecallBucket.done || _doneThisSession.contains(e.id))
-      .length;
+  /// 一张卡现在算不算答对（ADR 0115）：与组圆 [statusOfIds] 同一把尺子——答过，且没有未移出错题库的错
+  /// （累计答对到答错的 2 倍，ADR 0079）；这次的作答叠加到打开时的记录上再判。所以原来在错题库里的卡，
+  /// 这次答对一次不一定够；这次答错过的，通常也还差几次。只看自己的记录，关联真题不算（ADR 0112）。
+  bool _cleared(RecallEntry e) {
+    final own = widget.histories.byQuestion[e.questionId];
+    final wrong = (own?.wrong ?? 0) + (_wrongNow[e.id] ?? 0);
+    final right = (own?.correct ?? 0) + (_rightNow[e.id] ?? 0);
+    if (wrong + right == 0) return false;
+    return wrong == 0 || right >= QuestionHistory.retireRatio * wrong;
+  }
+
+  /// 已答对的卡数，口径见 [_cleared]。
+  int get _correctCount => widget.entries.where(_cleared).length;
 
   @override
   void initState() {
@@ -257,12 +259,11 @@ class _RecallSessionState extends State<RecallSession> {
     }
   }
 
-  /// 排一队：按 [recallDrawOrder] 逐档取，每档内先打乱、档位顺序保留——答错过的先考，没考过的次之；
-  /// 这次答对过的不再抽。抽到的条目都出一张卷（重现时沿用）。
+  /// 排一队：按 [recallDrawOrder] 逐档取，每档内先打乱、档位顺序保留——答错过的先考，没考过的次之。
+  /// 抽到的条目都出一张卷（重现时沿用）。
   List<RecallEntry> _draw() {
     final byBucket = {for (final b in recallDrawOrder) b: <RecallEntry>[]};
     for (final e in widget.entries) {
-      if (_doneThisSession.contains(e.id)) continue;
       byBucket[_bucketOf(e)]?.add(e);
     }
     final picked = <RecallEntry>[];
@@ -325,9 +326,9 @@ class _RecallSessionState extends State<RecallSession> {
 
   /// 判定一张：对错当场出，**记一条作答记录**（错题本、强化练习随之更新），中途退出也不丢。
   void _judge(RecallEntry current, {required String selected, required bool correct}) {
-    final firstTry = !_missedIds.contains(current.id);
     unawaited(widget.onAnswer(current, correct: correct));
-    if (correct && firstTry) _doneThisSession.add(current.id);
+    final tally = correct ? _rightNow : _wrongNow;
+    tally[current.id] = (tally[current.id] ?? 0) + 1;
     setState(() {
       _asked++;
       _revealed = true;
@@ -370,15 +371,16 @@ class _RecallSessionState extends State<RecallSession> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _focusCurrent());
   }
 
-  /// 收尾「去做这几个的题」：这次答错的条目的关联真题（去重、排除已掌握的）。
+  /// 收尾「去做这几个的题」：这次答错的条目的关联真题去重后，只留还要练的（[speedPending]，
+  /// 与「练这组」同一个判据，ADR 0115）。
   List<Question> _focusQuestions() {
     final seen = <String>{};
-    return [
+    return speedPending([
       for (final e in widget.entries)
         if (_missedIds.contains(e.id))
           for (final q in e.related)
-            if (!widget.mastered.contains(q.id) && seen.add(q.id)) q,
-    ];
+            if (seen.add(q.id)) q,
+    ], widget.histories);
   }
 
   KeyEventResult _onKey(FocusNode node, KeyEvent event) {
@@ -717,9 +719,10 @@ class _RecallSessionState extends State<RecallSession> {
       color: Theme.of(context).colorScheme.onSurfaceVariant,
       height: 1.5,
     );
-    // 「全部答对」只数自己答过的卡（_correctCount 的口径）。掌握只由自测写入（ADR 0112），
-    // 所以「抽不出卡」就等于「每张都答对过」，不存在「真题都掌握了所以不出卡」的第三种情况。
+    // 「全部答对」是整页每张卡都过了 [_cleared]（ADR 0115），不是「这次没答错」：原来在错题库里的卡
+    // 这次对一次未必够移出。只有全部答对才给「再测一遍」整页重考；没全对就不整页重来，下次照旧只考没过的。
     final ownAllCorrect = _correctCount == widget.entries.length && widget.entries.isNotEmpty;
+    final short = widget.entries.length - _correctCount;
     final focus = _focusQuestions();
     final title = widget.entries.isEmpty
         ? "这一页没有可自测的卡"
@@ -733,8 +736,10 @@ class _RecallSessionState extends State<RecallSession> {
       message = "这一页还没有可自测的卡。";
     } else if (_round.isEmpty) {
       message = "这一页的卡都已经答对过（答错的也都对到了移出错题库的次数）。想再过一遍，点「再测一遍」。";
+    } else if (ownAllCorrect) {
+      message = "全都一次答对了，这一页每张卡都答对过。想再过一遍，点「再测一遍」。";
     } else {
-      message = "全都一次答对了，答对的不会再出现。";
+      message = "这次都答对了，还有 $short 张原来答错过、要再对几次才移出错题库，下次自测接着考。";
     }
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -778,11 +783,11 @@ class _RecallSessionState extends State<RecallSession> {
     );
   }
 
-  /// 全部答对后的「再测一遍」（ADR 0099）：绕开档位把整页卡重新考一遍，作答照写——
-  /// 这是全对之后唯一的重考入口；平时抽卡仍然只出没答对过的。
+  /// 全部答对后的「再测一遍」（ADR 0099、0115）：绕开档位把整页卡重新考一遍，作答照写——
+  /// 只在整页每张卡都答对时出现，是全对之后唯一的重考入口；平时抽卡仍然只出没答对过的。
+  /// 这次的计数不清：重考的作答照样叠加，判「答对」不能丢掉前一遍的。
   void _retestAll() {
     setState(() {
-      _doneThisSession.clear();
       _queue = [...widget.entries]..shuffle();
       _round = [..._queue];
       for (final e in _queue) {

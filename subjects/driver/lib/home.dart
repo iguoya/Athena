@@ -1680,16 +1680,13 @@ class _HomePageState extends State<HomePage> {
         bank: widget.bank,
         topic: topic,
         histories: _histories,
-        mastered: _mastered,
         onRecallAnswer: _recordRecall,
-        pendingOf: _pending,
         onStartPractice: practice,
       ),
       SpeedKind.signs => SignsPage(
         signs: widget.bank.signs,
         histories: _histories,
         questions: questions,
-        mastered: _mastered,
         onRecallAnswer: _recordRecall,
         recallPage: topic.id,
         subjectLabel: subject.code,
@@ -1699,7 +1696,6 @@ class _HomePageState extends State<HomePage> {
         markings: widget.bank.markings,
         histories: _histories,
         questions: questions,
-        mastered: _mastered,
         onRecallAnswer: _recordRecall,
         recallPage: topic.id,
         subjectLabel: subject.code,
@@ -1709,7 +1705,6 @@ class _HomePageState extends State<HomePage> {
         gauges: widget.bank.gauges,
         histories: _histories,
         questions: questions,
-        mastered: _mastered,
         onRecallAnswer: _recordRecall,
         recallPage: topic.id,
         subjectLabel: subject.code,
@@ -1719,7 +1714,6 @@ class _HomePageState extends State<HomePage> {
         gestures: gesturesOf(widget.bank, topic),
         histories: _histories,
         questions: questions,
-        mastered: _mastered,
         onRecallAnswer: _recordRecall,
         recallPage: topic.id,
         subjectLabel: subject.code,
@@ -1728,7 +1722,6 @@ class _HomePageState extends State<HomePage> {
       SpeedKind.notes => NotesPage(
         groups: noteGroupsOf(widget.bank, topic),
         questions: questions,
-        mastered: _mastered,
         onRecallAnswer: _recordRecall,
         histories: _histories,
         onStartPractice: practice,
@@ -1934,10 +1927,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// 起一轮练习。没有「整组重来」：队列只含还要练的题，空了就不起（速记页的按钮此时置灰）。
-  /// [shuffleQueue] 给速记组的组按钮用：洗牌出题——速记卡全是常规档、没有全国错误率，
-  /// 走 [practiceQueue] 的分档排序会退化成内容顺序（12→9→6→3→1），规律性毁掉考试价值；
-  /// 但只洗还要练的题（错题在前、没做过的其次），见 [_speedGroupQueue]。
+  /// 起一轮练习。[shuffleQueue] 给速记组的组按钮与自测收尾用，出题见 [_speedGroupQueue]：
+  /// 洗牌出题——速记卡全是常规档、没有全国错误率，走 [practiceQueue] 的分档排序会退化成
+  /// 内容顺序（12→9→6→3→1），规律性毁掉考试价值。
   void _startPractice(
     Subject subject,
     List<Question> questions,
@@ -1963,12 +1955,14 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// 速记组「练这组」的出题（ADR 0114）：只出还要练的——答错还没移出错题库的先出，没做过的其次，
-  /// 各自洗牌；答对掌握了的不出。没有待练题就是空队列，不退回整组。
+  /// 速记组「练这组」的出题（ADR 0115）：有待练题（[speedPending]：错题库里的、没做过的，偏难一视同仁）
+  /// 就只出待练的，错题库里的在前、没做过的其次，各自洗牌；一道待练都没有，才是使用者主动「再练一遍」，
+  /// 整组洗牌重出。按钮上的道数用的是同一个函数，点下去不会和写的对不上。
   List<Question> _speedGroupQueue(List<Question> questions) {
-    final pending = _pending(questions);
-    final wrong = [for (final q in pending) if (_wrongIds.contains(q.id)) q]..shuffle();
-    final fresh = [for (final q in pending) if (!_wrongIds.contains(q.id)) q]..shuffle();
+    final pending = speedPending(questions, _histories);
+    if (pending.isEmpty) return [...questions]..shuffle();
+    final wrong = [for (final q in pending) if (classifyOwn(q.id, _histories) == RecallBucket.wrong) q]..shuffle();
+    final fresh = [for (final q in pending) if (classifyOwn(q.id, _histories) != RecallBucket.wrong) q]..shuffle();
     return [...wrong, ...fresh];
   }
 

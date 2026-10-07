@@ -21,7 +21,6 @@ class NotesPage extends StatelessWidget {
     super.key,
     required this.groups,
     required this.questions,
-    required this.mastered,
     required this.onRecallAnswer,
     required this.histories,
     required this.onStartPractice,
@@ -37,7 +36,6 @@ class NotesPage extends StatelessWidget {
 
   /// 本科目的全部题（含偏难，ADR 0112 一视同仁）：「练这组」与自测收尾深链从这里取题。
   final List<Question> questions;
-  final Set<String> mastered;
   final void Function(List<Question> questions, String title) onStartPractice;
 
   /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
@@ -99,7 +97,6 @@ class NotesPage extends StatelessWidget {
       context,
       onAnswer: onRecallAnswer,
       histories: histories,
-      mastered: mastered,
       prompt: "想一想：碰到这个情景该怎么做？选一条对的。",
       entries: [
         for (final (i, e) in [for (final group in groups) for (final item in group.items) (group, item)].indexed)
@@ -139,7 +136,6 @@ class NotesPage extends StatelessWidget {
 
   Widget _noteGroup(BuildContext context, NoteGroup group, TextStyle? muted) {
     final related = group.related(questions);
-    final pending = [for (final q in related) if (!mastered.contains(q.id)) q];
     // 组状态只看这一组的自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 自测卡全部答对过、灰 = 没测完。
     final ids = [
         for (final i in group.items) recallQuestionId(recallPage, "${group.id}/${i.scenario}"),
@@ -169,15 +165,11 @@ class NotesPage extends StatelessWidget {
                 Text("${group.items.length} 条", style: muted),
                 MasteryTag(ids: ids, histories: histories),
                 const Spacer(),
-                FilledButton.icon(
-                  style: practiceButtonStyle(related.isNotEmpty && pending.isEmpty ? SymbolStatus.mastered : status),
-                  onPressed: pending.isEmpty ? null : () => onStartPractice(pending, "$title · ${group.title}"),
-                  icon: const Icon(Glyph.practice, size: 20),
-                  label: Text(
-                    pending.isEmpty
-                        ? (related.isEmpty ? "没有相关题" : "已通过 · 没有待练的题")
-                        : "练这组 ${pending.length} 题",
-                  ),
+                GroupPracticeButton(
+                  status: status,
+                  related: related,
+                  histories: histories,
+                  onStart: (questions) => onStartPractice(questions, "$title · ${group.title}"),
                 ),
               ],
             ),
