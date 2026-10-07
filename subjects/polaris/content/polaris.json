@@ -102,7 +102,33 @@
           "stage": "intermediate",
           "stage_reason": "中级支撑：需要读懂机器时再补，不是日常写程序的主语言。",
           "industry_reason": "崩溃现场、启动代码和最坏执行时间要能读寄存器与栈帧。",
-          "domain": "architecture"
+          "domain": "architecture",
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "读反汇编、写启动代码与内联汇编时用，不是日常写法"
+            },
+            "hands_on": {
+              "level": 4,
+              "reason": "5 章里 4 章是动手实践（80%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "指令与寄存器模型有明确方法，可迁移到各体系结构"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为实测（基础 3）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 2 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "嵌入式、系统与安全方向的核心要求，其他方向较少"
+            }
+          }
         },
         {
           "id": "polaris.cs.computer_systems",
@@ -209,7 +235,33 @@
           "stage": "intermediate",
           "stage_reason": "中级主干：程序在机器上怎么跑，要在这一层说清。",
           "industry_reason": "总线数据、中断和存储层次从这里判读；交叉编译产物也在这一层看。",
-          "domain": "architecture"
+          "domain": "architecture",
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "排查性能、内存与链接问题时反复用到的底层模型"
+            },
+            "hands_on": {
+              "level": 2,
+              "reason": "6 章里 3 章是动手实践（50%）"
+            },
+            "theory": {
+              "level": 5,
+              "reason": "数据表示、存储层次、链接与并发的统一框架"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为实测（基础 3）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "后端、系统与嵌入式岗位默认的基础"
+            }
+          }
         },
         {
           "id": "polaris.cs.da",
@@ -317,7 +369,33 @@
           "stage": "intermediate",
           "stage_reason": "中级主干：不会量复杂度，选结构和算法就没有尺子。",
           "industry_reason": "有界队列、调度和搜索的最坏延迟，都要先会量复杂度。",
-          "domain": "algorithms"
+          "domain": "algorithms",
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "选数据结构、估复杂度几乎每个项目都在做"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 5,
+              "reason": "复杂度与正确性论证是所有编程共同的理论"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为基准对比（基础 3）"
+            },
+            "core": {
+              "level": 4,
+              "reason": "优先级必要（基础 3）；被 4 个节点列为强先修（+1）"
+            },
+            "demand": {
+              "level": 5,
+              "reason": "几乎所有软件岗位的基本要求与面试内容"
+            }
+          }
         },
         {
           "id": "polaris.cs.engineering_practice",
@@ -417,7 +495,33 @@
           "stage": "junior",
           "stage_reason": "初级主干：进实验室就要能复现构建、测试和版本；完整性检查也折在这里。",
           "industry_reason": "产品保证要求每次提交可复核；交叉编译和完整性检查也折在这里。",
-          "domain": "programming"
+          "domain": "programming",
+          "ratings": {
+            "utility": {
+              "level": 5,
+              "reason": "版本管理、构建与调试是每天的工作"
+            },
+            "hands_on": {
+              "level": 4,
+              "reason": "5 章里 4 章是动手实践（80%）"
+            },
+            "theory": {
+              "level": 2,
+              "reason": "以方法与工具为主，理论成分少"
+            },
+            "verifiable": {
+              "level": 2,
+              "reason": "验证方式为联调（基础 2）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 5,
+              "reason": "所有技术岗位的基本要求"
+            }
+          }
         },
         {
           "id": "polaris.cs.python",
@@ -500,7 +604,33 @@
           "stage": "junior",
           "stage_reason": "初级选修：先用脚本把实验步骤写成可重跑的程序，再进系统语言。",
           "industry_reason": "试验数据、仿真批跑和事后对比常用它；嵌入式实时路径不靠它运行。",
-          "domain": "programming"
+          "domain": "programming",
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "脚本、数据处理与自动化的日常语言"
+            },
+            "hands_on": {
+              "level": 4,
+              "reason": "4 章里 3 章是动手实践（75%）"
+            },
+            "theory": {
+              "level": 2,
+              "reason": "语言本身理论少，价值在生态"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为基准对比（基础 3）"
+            },
+            "core": {
+              "level": 1,
+              "reason": "优先级可选（基础 1）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 5,
+              "reason": "数据、测试、运维与 AI 方向普遍要求"
+            }
+          }
         },
         {
           "id": "polaris.cs.c_lang",
@@ -605,7 +735,33 @@
           "stage": "junior",
           "stage_reason": "初级主干：先看见内存、指针和寿命，后面的系统课才有落点。",
           "industry_reason": "固件、总线驱动和实时接口仍然用它描述内存与资源上界。",
-          "domain": "programming"
+          "domain": "programming",
+          "ratings": {
+            "utility": {
+              "level": 5,
+              "reason": "嵌入式、系统与内核开发的第一语言"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 6 章是动手实践（100%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "指针与内存模型是理解底层的基础"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为实测（基础 3）"
+            },
+            "core": {
+              "level": 4,
+              "reason": "优先级必要（基础 3）；被 3 个节点列为强先修（+1）"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "嵌入式、系统、驱动与安全方向的基本要求"
+            }
+          }
         },
         {
           "id": "polaris.cs.operating_systems",
@@ -711,7 +867,33 @@
           "stage": "intermediate",
           "stage_reason": "中级主干：调度、内存和隔离是系统课的核心，不是某一款内核的说明书。",
           "industry_reason": "裁剪实时内核、判断隔离和抖动时，用的就是这里的概念。",
-          "domain": "systems"
+          "domain": "systems",
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "进程、内存与 I/O 模型是排查系统问题的常用工具"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 5,
+              "reason": "调度、虚拟内存与同步是一套通用理论"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为实测（基础 3）"
+            },
+            "core": {
+              "level": 4,
+              "reason": "优先级必要（基础 3）；被 4 个节点列为强先修（+1）"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "后端、系统与嵌入式方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.cs.model_dev",
@@ -795,7 +977,33 @@
           "stage": "senior",
           "stage_reason": "资深台阶：方向选修，服务分析与检索，不是系统主干。",
           "industry_reason": "只服务地面分析与受控问答，不进入实时控制闭环。",
-          "domain": "acceleration"
+          "domain": "acceleration",
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "训练与评估流程在 AI 项目里常用，不是通用技能"
+            },
+            "hands_on": {
+              "level": 4,
+              "reason": "4 章里 3 章是动手实践（75%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "优化与泛化有明确方法与判据"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为基准对比（基础 3）"
+            },
+            "core": {
+              "level": 1,
+              "reason": "优先级可选（基础 1）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "AI 方向岗位需求大，但集中在这一个方向"
+            }
+          }
         },
         {
           "id": "polaris.cs.cpp",
@@ -901,7 +1109,33 @@
           "stage": "intermediate",
           "stage_reason": "中级主干：对象、寿命和抽象已经要能撑起比玩具更大的程序。",
           "industry_reason": "地面处理、实时软件和数字后端工具链里，它仍是既能快又能长大的主力。",
-          "domain": "programming"
+          "domain": "programming",
+          "ratings": {
+            "utility": {
+              "level": 5,
+              "reason": "系统、嵌入式与高性能方向的主力语言"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "对象模型与资源管理有明确规则"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为实测（基础 3）"
+            },
+            "core": {
+              "level": 4,
+              "reason": "优先级必要（基础 3）；被 3 个节点列为强先修（+1）"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "系统、嵌入式、游戏与高性能方向大量要求"
+            }
+          }
         },
         {
           "id": "polaris.cs.linux_sysprog",
@@ -996,7 +1230,33 @@
           "stage": "intermediate",
           "stage_reason": "中级支撑：Unix 进程与文件是系统编程的常规作业环境。",
           "industry_reason": "地面站、试验台和处理机大量跑在 Linux 上。",
-          "domain": "systems"
+          "domain": "systems",
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "文件、进程与信号接口是后端与嵌入式的常用手段"
+            },
+            "hands_on": {
+              "level": 4,
+              "reason": "5 章里 4 章是动手实践（80%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "系统调用语义有规范可依"
+            },
+            "verifiable": {
+              "level": 2,
+              "reason": "验证方式为联调（基础 2）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级重要（基础 2）；被 4 个节点列为强先修（+1）"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "后端、嵌入式与运维方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.cs.dp",
@@ -1076,7 +1336,33 @@
           "stage": "intermediate",
           "stage_reason": "中级台阶：大型软件结构用得着，不是计科核心课。",
           "industry_reason": "大型地面工具用得着；实时路径更忌讳多一层间接。",
-          "domain": "programming"
+          "domain": "programming",
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "读框架与重构时用得到，不必逐个背诵"
+            },
+            "hands_on": {
+              "level": 1,
+              "reason": "4 章里 1 章是动手实践（25%）"
+            },
+            "theory": {
+              "level": 2,
+              "reason": "是经验归纳出的命名，不是严格理论"
+            },
+            "verifiable": {
+              "level": 1,
+              "reason": "验证方式为评审（基础 1）"
+            },
+            "core": {
+              "level": 1,
+              "reason": "优先级可选（基础 1）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 2,
+              "reason": "很少作为独立要求，多出现在面试里"
+            }
+          }
         },
         {
           "id": "polaris.cs.concurrency",
@@ -1172,7 +1458,33 @@
           "stage": "intermediate",
           "stage_reason": "中级主干：多执行流共享状态，这一层才能判断对不对。",
           "industry_reason": "控制周期里任务同步和队列交接出不出错，取决于这一层。",
-          "domain": "systems"
+          "domain": "systems",
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "多线程与异步是服务端与嵌入式的常见难点"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "5 章里 3 章是动手实践（60%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "同步、内存模型与死锁有成体系的理论"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为基准对比（基础 3）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 2 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "后端、系统与嵌入式岗位的高频要求"
+            }
+          }
         },
         {
           "id": "polaris.cs.computer_networks",
@@ -1284,7 +1596,33 @@
           "stage": "intermediate",
           "stage_reason": "中级支撑：分层、延迟和可靠性是网络课本身要建立的判断。",
           "industry_reason": "试验网和测控要能判断延迟出在哪一层；现场总线是另一套时序。",
-          "domain": "systems"
+          "domain": "systems",
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "排查连接与延迟问题时常用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "分层与协议构成统一的分析模型"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为实测（基础 3）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级重要（基础 2）；被 3 个节点列为强先修（+1）"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "后端、运维与联网嵌入式方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.cs.network_programming",
@@ -1369,7 +1707,33 @@
           "stage": "intermediate",
           "stage_reason": "中级台阶：套接字是网络课的实践面，需要写长期运行的端时再补。",
           "industry_reason": "上位机和试验台需要长期运行的套接字程序时再补。",
-          "domain": "systems"
+          "domain": "systems",
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "写服务与客户端时用，常被框架封装"
+            },
+            "hands_on": {
+              "level": 4,
+              "reason": "4 章里 3 章是动手实践（75%）"
+            },
+            "theory": {
+              "level": 2,
+              "reason": "以接口用法为主"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为基准对比（基础 3）"
+            },
+            "core": {
+              "level": 1,
+              "reason": "优先级可选（基础 1）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "后端与联网嵌入式方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.cs.practice",
@@ -1465,7 +1829,33 @@
           "stage": "senior",
           "stage_reason": "资深支撑：把前面的课收成别人能复现的作品。",
           "industry_reason": "分系统交付仍然要别人能复现、能评审。",
-          "domain": "programming"
+          "domain": "programming",
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "把前面各项串成可交付的作品，是真实工作的缩影"
+            },
+            "hands_on": {
+              "level": 4,
+              "reason": "5 章里 4 章是动手实践（80%）"
+            },
+            "theory": {
+              "level": 2,
+              "reason": "综合练习，不是理论"
+            },
+            "verifiable": {
+              "level": 1,
+              "reason": "验证方式为评审（基础 1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "各方向都看重作品，但不是单独的岗位要求"
+            }
+          }
         },
         {
           "id": "polaris.cs.database_systems",
@@ -1571,7 +1961,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "几乎所有应用都落在数据库上，写 SQL 与调优常用"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "关系模型、事务与恢复有成体系的理论"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 5,
+              "reason": "后端、数据与多数业务软件岗位的基本要求"
+            }
+          }
         },
         {
           "id": "polaris.cs.compilers",
@@ -1676,7 +2092,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 2,
+              "reason": "自己写编译器的人少，读中间表示与优化行为才常用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 5,
+              "reason": "形式语言与程序分析是完整的理论体系"
+            },
+            "verifiable": {
+              "level": 2,
+              "reason": "验证方式为分析（基础 1）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 2,
+              "reason": "编译器、工具链与虚拟机方向的少数岗位"
+            }
+          }
         },
         {
           "id": "polaris.cs.software_engineering",
@@ -1780,7 +2222,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 5,
+              "reason": "测试、评审与持续集成是每天的工作"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "有方法与度量，理论化程度中等"
+            },
+            "verifiable": {
+              "level": 2,
+              "reason": "验证方式为评审（基础 1）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 5,
+              "reason": "所有软件岗位的基本要求"
+            }
+          }
         },
         {
           "id": "polaris.cs.distributed_systems",
@@ -1884,7 +2352,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "大规模服务才面对，中小系统用得少"
+            },
+            "hands_on": {
+              "level": 2,
+              "reason": "6 章里 3 章是动手实践（50%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "共识与一致性有严格的理论"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "云、平台与数据基础设施岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.cs.machine_learning",
@@ -1989,7 +2483,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "做 AI 与数据的人常用，其他方向偶尔用到"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "经验风险与泛化构成统一的理论"
+            },
+            "verifiable": {
+              "level": 2,
+              "reason": "验证方式为分析（基础 1）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "AI 与数据方向需求高"
+            }
+          }
         },
         {
           "id": "polaris.cs.information_security",
@@ -2093,7 +2613,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "安全编码与威胁建模人人需要，深入的是专门岗位"
+            },
+            "hands_on": {
+              "level": 2,
+              "reason": "6 章里 3 章是动手实践（50%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "密码学与威胁模型自成体系"
+            },
+            "verifiable": {
+              "level": 2,
+              "reason": "验证方式为评审（基础 1）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "安全岗位的核心要求，其他岗位作为基本素养"
+            }
+          }
         }
       ],
       "edges": [
@@ -2601,7 +3147,33 @@
           "stage": "junior",
           "stage_reason": "初级主干：先会用仪器判电平，后面的电路课才有判据。",
           "industry_reason": "电气联调和传感前端每一步都要能用仪器把电平判清楚。",
-          "domain": "circuits"
+          "domain": "circuits",
+          "ratings": {
+            "utility": {
+              "level": 5,
+              "reason": "硬件工作每天要用的电路识读与测量"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "5 章里 5 章是动手实践（100%）"
+            },
+            "theory": {
+              "level": 5,
+              "reason": "欧姆、基尔霍夫与 RC 是所有电路的起点"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为实测（基础 3）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 5,
+              "reason": "优先级必要（基础 3）；被 10 个节点列为强先修（+2）"
+            },
+            "demand": {
+              "level": 5,
+              "reason": "所有硬件与嵌入式岗位的基本要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.mcu_8051",
@@ -2686,7 +3258,33 @@
           "stage": "junior",
           "stage_reason": "初级台阶：建立寄存器与中断的手感，不挡住后续微控制器。",
           "industry_reason": "不挡住后续微控制器，只用来建立手册和时序图的习惯。",
-          "domain": "embedded"
+          "domain": "embedded",
+          "ratings": {
+            "utility": {
+              "level": 2,
+              "reason": "教学与老产品维护用，新项目少选"
+            },
+            "hands_on": {
+              "level": 4,
+              "reason": "4 章里 3 章是动手实践（75%）"
+            },
+            "theory": {
+              "level": 2,
+              "reason": "概念可迁移，但本身架构特殊"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为联调（基础 2）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 1,
+              "reason": "优先级可选（基础 1）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 2,
+              "reason": "老产品维护与教学场景"
+            }
+          }
         },
         {
           "id": "polaris.ei.fpga",
@@ -2787,7 +3385,33 @@
           "stage": "intermediate",
           "stage_reason": "中级主干：把数字逻辑焊成可综合的并行通路。",
           "industry_reason": "高速采集和数字后端要把逻辑做成并行通路。",
-          "domain": "digital"
+          "domain": "digital",
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "接口、时序与硬件加速的常用平台"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "5 章里 3 章是动手实践（60%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "同步数字设计与时序分析有成体系的方法"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为联调（基础 2）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 2 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "通信、图像、芯片验证与加速方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.sensors",
@@ -2883,7 +3507,33 @@
           "stage": "intermediate",
           "stage_reason": "中级主干：物理量采不干净，后面处理只是放大误差。",
           "industry_reason": "探测、试验和状态监测都要求采进来的数对得上物理量。",
-          "domain": "circuits"
+          "domain": "circuits",
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "采集链路设计时常用"
+            },
+            "hands_on": {
+              "level": 4,
+              "reason": "5 章里 4 章是动手实践（80%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "信号调理有明确的方法与指标"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为实测（基础 3）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 2 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "嵌入式、测控与物联网方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.linux_driver",
@@ -2967,7 +3617,33 @@
           "stage": "senior",
           "stage_reason": "资深台阶：用户态到硬件的另一侧契约，做板级适配时再深入。",
           "industry_reason": "板级适配才深入；硬实时岗位更常面对裸机外设。",
-          "domain": "embedded"
+          "domain": "embedded",
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "做嵌入式 Linux 的人常写，其他方向少"
+            },
+            "hands_on": {
+              "level": 4,
+              "reason": "4 章里 3 章是动手实践（75%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "内核框架有明确的接口模型"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为联调（基础 2）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 1,
+              "reason": "优先级可选（基础 1）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "嵌入式 Linux 与系统方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.stm32",
@@ -3075,7 +3751,33 @@
           "stage": "intermediate",
           "stage_reason": "中级主干：讲这类 MCU 与接口，料号只是教学实例。",
           "industry_reason": "嵌入式计算和接口实验的常见底座，不把某一颗料号当成学科。",
-          "domain": "embedded"
+          "domain": "embedded",
+          "ratings": {
+            "utility": {
+              "level": 5,
+              "reason": "嵌入式开发的主力平台与外设"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "外设与中断模型有规律，但主要靠实践"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为联调（基础 2）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 5,
+              "reason": "优先级必要（基础 3）；被 7 个节点列为强先修（+2）"
+            },
+            "demand": {
+              "level": 5,
+              "reason": "嵌入式岗位的基本要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.protocols_bus",
@@ -3176,7 +3878,33 @@
           "stage": "intermediate",
           "stage_reason": "中级主干：分系统之间怎么按时序说话，是电子系统课的接口面。",
           "industry_reason": "分系统联调的核心是极性、地址、应答与仲裁能对照手册判读。",
-          "domain": "embedded"
+          "domain": "embedded",
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "UART、SPI、I2C、CAN 是日常联调的内容"
+            },
+            "hands_on": {
+              "level": 4,
+              "reason": "5 章里 4 章是动手实践（80%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "协议与时序规范明确"
+            },
+            "verifiable": {
+              "level": 5,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 2 个节点列为强先修"
+            },
+            "demand": {
+              "level": 5,
+              "reason": "嵌入式与工控岗位的基本要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.pcb_design",
@@ -3278,7 +4006,33 @@
           "stage": "intermediate",
           "stage_reason": "中级支撑：原理图变成可打样的板，联调才能在下一块板上重现。",
           "industry_reason": "从台架走到可复现硬件，板子必须能打样、能过完整性检查。",
-          "domain": "circuits"
+          "domain": "circuits",
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "做板必用的原理图与布线"
+            },
+            "hands_on": {
+              "level": 4,
+              "reason": "5 章里 4 章是动手实践（80%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "规则与方法为主，理论成分少"
+            },
+            "verifiable": {
+              "level": 2,
+              "reason": "验证方式为评审（基础 1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "硬件工程岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.freertos",
@@ -3374,7 +4128,33 @@
           "stage": "intermediate",
           "stage_reason": "中级主干：截止期内的调度要在真实内核上测，产品名只是对照物。",
           "industry_reason": "截止期内的最坏抖动要在真实调度器上测，不能只在裸机循环里估。",
-          "domain": "embedded"
+          "domain": "embedded",
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "多任务嵌入式的常用内核"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "5 章里 5 章是动手实践（100%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "调度与同步的理论可迁移到所有实时内核"
+            },
+            "verifiable": {
+              "level": 5,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "嵌入式岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.dsp",
@@ -3473,7 +4253,33 @@
           "stage": "senior",
           "stage_reason": "资深主干：把信号变成可用特征，并说清计算量。",
           "industry_reason": "采集变成可用特征时，定点与耗时决定链路能不能跑完。",
-          "domain": "signals"
+          "domain": "signals",
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "滤波、频谱与采样在测控与通信里常用"
+            },
+            "hands_on": {
+              "level": 4,
+              "reason": "5 章里 4 章是动手实践（80%）"
+            },
+            "theory": {
+              "level": 5,
+              "reason": "傅里叶与线性系统是奠基理论"
+            },
+            "verifiable": {
+              "level": 5,
+              "reason": "验证方式为基准对比（基础 3）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "通信、音视频、雷达与测控方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.motor_control",
@@ -3570,7 +4376,33 @@
           "stage": "senior",
           "stage_reason": "资深台阶：机电伺服的一种落地，不是控制课本身。",
           "industry_reason": "转台、舵机和天线伺服用得着，主干仍是通用控制。",
-          "domain": "control"
+          "domain": "control",
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "做驱动与机器人时用"
+            },
+            "hands_on": {
+              "level": 4,
+              "reason": "5 章里 4 章是动手实践（80%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "坐标变换与电流环有成熟理论"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为实测（基础 3）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 1,
+              "reason": "优先级可选（基础 1）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "电机驱动、机器人与新能源方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.embedded_linux",
@@ -3652,7 +4484,33 @@
           "stage": "senior",
           "stage_reason": "资深台阶：带 MMU 的嵌入式系统，不是硬实时的唯一入口。",
           "industry_reason": "处理机、试验台和网关常见；硬实时闭环通常另选内核。",
-          "domain": "embedded"
+          "domain": "embedded",
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "做复杂嵌入式系统时常用"
+            },
+            "hands_on": {
+              "level": 2,
+              "reason": "4 章里 2 章是动手实践（50%）"
+            },
+            "theory": {
+              "level": 2,
+              "reason": "以系统搭建流程为主"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为联调（基础 2）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 1,
+              "reason": "优先级可选（基础 1）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "嵌入式 Linux 岗位需求大而稳定"
+            }
+          }
         },
         {
           "id": "polaris.ei.edge_ai",
@@ -3736,7 +4594,33 @@
           "stage": "senior",
           "stage_reason": "资深台阶：把模型放到受限设备上，是方向选修。",
           "industry_reason": "地面监测可以部署；实时控制不以模型推理为闭环。",
-          "domain": "acceleration"
+          "domain": "acceleration",
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "把模型放到端侧时才用"
+            },
+            "hands_on": {
+              "level": 2,
+              "reason": "4 章里 2 章是动手实践（50%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "量化与推理优化有方法可循"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为基准对比（基础 3）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 1,
+              "reason": "优先级可选（基础 1）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "AI 落地与边缘计算方向"
+            }
+          }
         },
         {
           "id": "polaris.ei.analog",
@@ -3831,7 +4715,33 @@
             }
           ],
           "industry_reason": "传感前端、电源和接收通道都建立在连续量设计上。",
-          "domain": "circuits"
+          "domain": "circuits",
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "放大、滤波与偏置是模拟设计的日常"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "5 章里 3 章是动手实践（60%）"
+            },
+            "theory": {
+              "level": 5,
+              "reason": "放大器与反馈是奠基理论"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为实测（基础 3）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 5,
+              "reason": "优先级必要（基础 3）；被 6 个节点列为强先修（+2）"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "硬件与模拟设计岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.digital",
@@ -3928,7 +4838,33 @@
             }
           ],
           "industry_reason": "FPGA 和总线控制器写的就是时序电路。",
-          "domain": "digital"
+          "domain": "digital",
+          "ratings": {
+            "utility": {
+              "level": 5,
+              "reason": "组合、时序与状态机是数字设计的日常"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "5 章里 3 章是动手实践（60%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "布尔代数与时序分析理论成熟"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为实测（基础 3）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 4,
+              "reason": "优先级必要（基础 3）；被 5 个节点列为强先修（+1）"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "硬件、FPGA 与芯片方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.signals_systems",
@@ -4021,7 +4957,33 @@
             }
           ],
           "industry_reason": "探测、通信和闭环都要能在频域上说话。",
-          "domain": "signals"
+          "domain": "signals",
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "频域与系统分析是测控与通信的语言"
+            },
+            "hands_on": {
+              "level": 4,
+              "reason": "5 章里 4 章是动手实践（80%）"
+            },
+            "theory": {
+              "level": 5,
+              "reason": "线性时不变系统是奠基理论"
+            },
+            "verifiable": {
+              "level": 1,
+              "reason": "验证方式为分析（基础 1）"
+            },
+            "core": {
+              "level": 5,
+              "reason": "优先级必要（基础 3）；被 7 个节点列为强先修（+2）"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "通信、控制、信号处理与测控的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.matlab",
@@ -4119,7 +5081,33 @@
             }
           ],
           "industry_reason": "半实物和控制律之前，先在模型里把周期和接口跑通。",
-          "domain": "signals"
+          "domain": "signals",
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "建模、仿真与数据分析的常用工具"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "5 章里 3 章是动手实践（60%）"
+            },
+            "theory": {
+              "level": 2,
+              "reason": "工具为主，理论少"
+            },
+            "verifiable": {
+              "level": 2,
+              "reason": "验证方式为仿真（基础 2）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "控制、信号与算法岗位的常见要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.communications",
@@ -4216,7 +5204,33 @@
             }
           ],
           "industry_reason": "试验、测控和分系统数据要从噪声里捡回来。",
-          "domain": "signals"
+          "domain": "signals",
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "做通信与数据链的人用，其他方向间接用到"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "5 章里 3 章是动手实践（60%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "调制、信道与编码自成体系"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为实测（基础 3）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "通信与测控方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.control",
@@ -4312,7 +5326,33 @@
             }
           ],
           "industry_reason": "转台、舵面和天线是落地；稳定裕度本身要能判断。",
-          "domain": "control"
+          "domain": "control",
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "PID 与稳定裕度是控制工程的日常"
+            },
+            "hands_on": {
+              "level": 4,
+              "reason": "5 章里 4 章是动手实践（80%）"
+            },
+            "theory": {
+              "level": 5,
+              "reason": "反馈与稳定性理论是控制的奠基"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级重要（基础 2）；被 3 个节点列为强先修（+1）"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "控制、机器人、自动化与电机方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.electromagnetics",
@@ -4398,7 +5438,33 @@
             }
           ],
           "industry_reason": "高速数字和测控走线到了一定边沿速率就必须用场的语言。",
-          "domain": "circuits"
+          "domain": "circuits",
+          "ratings": {
+            "utility": {
+              "level": 2,
+              "reason": "高速与射频设计时间接使用"
+            },
+            "hands_on": {
+              "level": 2,
+              "reason": "4 章里 2 章是动手实践（50%）"
+            },
+            "theory": {
+              "level": 5,
+              "reason": "麦克斯韦方程是电磁现象的奠基"
+            },
+            "verifiable": {
+              "level": 2,
+              "reason": "验证方式为分析（基础 1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级重要（基础 2）；被 4 个节点列为强先修（+1）"
+            },
+            "demand": {
+              "level": 2,
+              "reason": "射频、天线、EMC 与高速设计的细分岗位"
+            }
+          }
         },
         {
           "id": "polaris.ei.rf_microwave",
@@ -4502,7 +5568,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "射频与无线工程师的日常"
+            },
+            "hands_on": {
+              "level": 2,
+              "reason": "6 章里 3 章是动手实践（50%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "传输线与 S 参数有成体系的方法"
+            },
+            "verifiable": {
+              "level": 5,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "无线通信、雷达与射频岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.analog_ic_design",
@@ -4606,7 +5698,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 2,
+              "reason": "做芯片的少数工程师才用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "从器件到电路有成体系的方法"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为仿真（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 1,
+              "reason": "优先级可选（基础 1）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 2,
+              "reason": "模拟芯片设计的专门岗位，数量少而门槛高"
+            }
+          }
         },
         {
           "id": "polaris.ei.wireless_comm",
@@ -4711,7 +5829,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "做无线链路与物联网的人用"
+            },
+            "hands_on": {
+              "level": 2,
+              "reason": "6 章里 3 章是动手实践（50%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "信道与调制理论成熟"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为仿真（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "物联网与无线通信方向需求高"
+            }
+          }
         },
         {
           "id": "polaris.ei.signal_integrity",
@@ -4823,7 +5967,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "高速板设计时必用"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "传输线理论成熟"
+            },
+            "verifiable": {
+              "level": 5,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "高速硬件设计的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.data_converters",
@@ -4943,7 +6113,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "采集与测量通路的入口与出口"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "采样与量化理论清晰"
+            },
+            "verifiable": {
+              "level": 5,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "测控、传感与通信硬件的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.phy_interfaces",
@@ -5048,7 +6244,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "做工业与车载接口时常用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "标准与端接规则明确"
+            },
+            "verifiable": {
+              "level": 5,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "工业与车载嵌入式的核心要求"
+            }
+          }
         }
       ],
       "edges": [
@@ -5811,7 +7033,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 5,
+              "reason": "构建与调试每天都在做"
+            },
+            "hands_on": {
+              "level": 4,
+              "reason": "7 章里 5 章是动手实践（71%）"
+            },
+            "theory": {
+              "level": 2,
+              "reason": "以工具与流程为主"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 2 个节点列为强先修"
+            },
+            "demand": {
+              "level": 5,
+              "reason": "所有技术岗位的基本要求"
+            }
+          }
         },
         {
           "id": "polaris.cs.data-concurrency",
@@ -5934,7 +7182,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "手写数据结构与并发是常见实务与面试题"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "复杂度与同步有成体系的理论"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为基准对比（基础 3）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "后端、系统与嵌入式岗位的高频要求"
+            }
+          }
         },
         {
           "id": "polaris.cs.os-network",
@@ -6068,7 +7342,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "系统与网络接口是服务端与嵌入式的常用手段"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "接口语义有规范可依"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "后端与联网嵌入式岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.cs.data-pipeline",
@@ -6191,7 +7491,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "端到端数据管线是后端与数据岗位的日常"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "有明确的设计模式与度量"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为基准对比（基础 3）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "后端与数据方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.cs.observability",
@@ -6313,7 +7639,33 @@
                 "locator": "端到端基准、CUDA Events 与剖析的测量方法"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "性能剖析与排错是日常工作"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "有成熟的度量与分析方法"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "后端、系统与嵌入式岗位的高频要求"
+            }
+          }
         },
         {
           "id": "polaris.cs.integration",
@@ -6433,7 +7785,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "把部件集成交付是各岗位的常态"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 2,
+              "reason": "以流程与实践为主"
+            },
+            "verifiable": {
+              "level": 2,
+              "reason": "验证方式为评审（基础 1）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "多数工程岗位要求能集成交付"
+            }
+          }
         }
       ],
       "edges": [
@@ -6635,7 +8013,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 5,
+              "reason": "仪器测量与故障定位是硬件基本功"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "测量方法与误差分析有明确规则"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 2 个节点列为强先修"
+            },
+            "demand": {
+              "level": 5,
+              "reason": "所有硬件岗位的基本要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.mcu-interfaces",
@@ -6763,7 +8167,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 5,
+              "reason": "外设与总线联调是嵌入式的日常"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "时序与接口规范明确"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 5,
+              "reason": "嵌入式岗位的基本要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.power-signal",
@@ -6909,7 +8339,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "做板时电源与信号质量问题常遇"
+            },
+            "hands_on": {
+              "level": 4,
+              "reason": "7 章里 5 章是动手实践（71%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "有明确的设计规则"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "硬件工程岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.sensor-chain",
@@ -7049,7 +8505,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "传感到采集的整条链路是测控系统的日常"
+            },
+            "hands_on": {
+              "level": 4,
+              "reason": "7 章里 5 章是动手实践（71%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "误差与噪声预算有方法"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "测控、物联网方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.dsp-fpga",
@@ -7145,7 +8627,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "高速数据通路的专门场景"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "流水线与定点实现有成体系的方法"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为基准对比（基础 3）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "通信、图像与加速方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ei.board-system",
@@ -7264,7 +8772,33 @@
                 "locator": "调试能力与逐级加大的项目"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "软硬件联调是产品开发的常态"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 2,
+              "reason": "以流程与经验为主"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "硬件与嵌入式岗位的高频要求"
+            }
+          }
         }
       ],
       "edges": [
@@ -7456,7 +8990,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "工业现场逻辑控制的主力"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 2,
+              "reason": "以语言与流程为主"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 4,
+              "reason": "优先级必要（基础 3）；被 4 个节点列为强先修（+1）"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "工业自动化岗位的基本要求"
+            }
+          }
         },
         {
           "id": "polaris.auto.instrumentation",
@@ -7561,7 +9121,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "任何测控系统都要用到传感与标定"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "测量与不确定度理论成熟"
+            },
+            "verifiable": {
+              "level": 5,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 4,
+              "reason": "优先级必要（基础 3）；被 4 个节点列为强先修（+1）"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "测控与自动化岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.auto.modeling",
@@ -7668,7 +9254,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "控制设计的前期工作，常做但不是每天"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 5,
+              "reason": "微分方程与状态空间是控制的奠基"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为仿真（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 4,
+              "reason": "优先级必要（基础 3）；被 5 个节点列为强先修（+1）"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "控制算法与仿真方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.auto.digital_control",
@@ -7772,7 +9384,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "数字 PID 在 MCU 与 PLC 上天天用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "离散化与采样理论成熟"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 4,
+              "reason": "优先级必要（基础 3）；被 4 个节点列为强先修（+1）"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "控制、机器人与嵌入式方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.auto.industrial_networks",
@@ -7876,7 +9514,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "设备联网与联调的日常"
+            },
+            "hands_on": {
+              "level": 1,
+              "reason": "6 章里 2 章是动手实践（33%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "协议规范明确"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级重要（基础 2）；被 3 个节点列为强先修（+1）"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "工业自动化岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.auto.process_control",
@@ -7989,7 +9653,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "流程工业专用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "7 章里 4 章是动手实践（57%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "串级、前馈有明确的整定方法"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 2 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "流程工业与能源行业的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.auto.motion_control",
@@ -8091,7 +9781,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "设备与机器人的运动执行常用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "三环整定与轨迹规划有明确方法"
+            },
+            "verifiable": {
+              "level": 5,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "设备、机器人与机床方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.auto.control_software",
@@ -8199,7 +9915,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "控制产品化时用，规模小的项目少"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 2,
+              "reason": "以工程方法为主"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 2 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "控制软件与嵌入式方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.auto.modern_control",
@@ -8303,7 +10045,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "高阶与多变量对象的设计语言"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 5,
+              "reason": "状态空间是现代控制的奠基"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为仿真（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级重要（基础 2）；被 5 个节点列为强先修（+1）"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "控制算法与导航方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.auto.state_estimation",
@@ -8407,7 +10175,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "导航、机器人与传感融合常用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 5,
+              "reason": "贝叶斯滤波是估计的统一理论"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为仿真（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 2 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "导航、机器人与无人系统方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.auto.optimal_mpc",
@@ -8511,7 +10305,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "约束重要的系统才用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 5,
+              "reason": "最优控制与优化是统一的理论"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为仿真（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "高端控制、汽车与能源方向的要求，增长中"
+            }
+          }
         },
         {
           "id": "polaris.auto.robotics",
@@ -8611,7 +10431,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "机械臂与机器人方向用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 5,
+              "reason": "运动学与动力学自成完整体系"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为仿真（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "机器人方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.auto.robot_nav",
@@ -8715,7 +10561,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "移动机器人与无人系统的日常"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "有成熟的算法与框架"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "机器人与无人系统方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.auto.intelligent_control",
@@ -8813,7 +10685,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 2,
+              "reason": "多数工业场景仍用经典与模型控制"
+            },
+            "hands_on": {
+              "level": 2,
+              "reason": "6 章里 3 章是动手实践（50%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "强化学习有成体系的方法"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为仿真（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 1,
+              "reason": "优先级可选（基础 1）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 2,
+              "reason": "前沿研究与少数岗位"
+            }
+          }
         },
         {
           "id": "polaris.auto.fault_safety",
@@ -8918,7 +10816,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "涉及人身与设备安全的项目才用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "有成体系的标准与方法"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为评审（基础 1）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "工业、汽车与轨交安全相关岗位的要求"
+            }
+          }
         },
         {
           "id": "polaris.auto.smart_manufacturing",
@@ -9023,7 +10947,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "工厂数字化项目用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 2,
+              "reason": "以架构与实践为主"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 1,
+              "reason": "优先级可选（基础 1）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "工业数字化方向的要求"
+            }
+          }
         },
         {
           "id": "polaris.auto.frequency_design",
@@ -9131,7 +11081,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "工业调参至今仍按裕度与带宽进行"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "频域方法成熟，可推出设计判据"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为仿真（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "控制工程岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.auto.industrial_io",
@@ -9242,7 +11218,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "控制器接触现场设备时必经"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 2,
+              "reason": "以接口设计规则与经验为主"
+            },
+            "verifiable": {
+              "level": 5,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "工业自动化与仪表岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.auto.discrete_event",
@@ -9346,7 +11348,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "顺序与批处理逻辑的分析工具"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "自动机与 Petri 网理论成熟"
+            },
+            "verifiable": {
+              "level": 2,
+              "reason": "验证方式为分析（基础 1）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 2,
+              "reason": "主要体现在 PLC 与流程控制岗位的隐含要求"
+            }
+          }
         },
         {
           "id": "polaris.auto.realtime_ethernet_tsn",
@@ -9459,7 +11487,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "工业网络升级与车载网络里用"
+            },
+            "hands_on": {
+              "level": 2,
+              "reason": "6 章里 3 章是动手实践（50%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "标准与时间同步机制明确"
+            },
+            "verifiable": {
+              "level": 5,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "工业网络与车载以太网方向的要求"
+            }
+          }
         },
         {
           "id": "polaris.auto.nonlinear_control",
@@ -9564,7 +11618,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 2,
+              "reason": "线性化失效的场合才用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 5,
+              "reason": "李雅普诺夫理论是非线性分析的奠基"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为仿真（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 2,
+              "reason": "机器人、飞行器与研究岗位"
+            }
+          }
         },
         {
           "id": "polaris.auto.robust_adaptive",
@@ -9669,7 +11749,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 2,
+              "reason": "对象变化大的场合用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "灵敏度与小增益理论成熟"
+            },
+            "verifiable": {
+              "level": 2,
+              "reason": "验证方式为分析（基础 1）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 2,
+              "reason": "高端控制与研究岗位"
+            }
+          }
         },
         {
           "id": "polaris.auto.control_simulation_hil",
@@ -9780,7 +11886,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "控制软件验证的常规做法"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 2,
+              "reason": "以工程方法为主"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为仿真（基础 2）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "航空、汽车与工业控制验证岗位的要求"
+            }
+          }
         },
         {
           "id": "polaris.auto.ot_security",
@@ -9885,7 +12017,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "工业联网项目里逐渐成为必选"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "有标准化的体系"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为评审（基础 1）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "工控安全与工业互联网方向"
+            }
+          }
         },
         {
           "id": "polaris.auto.flight_control",
@@ -9996,7 +12154,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "无人机飞控方向的日常"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "有成熟的结构与整定方法"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "无人机与无人系统方向"
+            }
+          }
         },
         {
           "id": "polaris.auto.machine_vision",
@@ -10100,7 +12284,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "检测、引导与分拣系统常用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "相机模型与几何有明确方法"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "工业检测、机器人与自动驾驶方向需求大"
+            }
+          }
         },
         {
           "id": "polaris.auto.predictive_maintenance",
@@ -10215,7 +12425,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "设备运维数字化项目用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "有特征与评价方法"
+            },
+            "verifiable": {
+              "level": 2,
+              "reason": "验证方式为分析（基础 1）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "工业数字化与设备运维方向"
+            }
+          }
         },
         {
           "id": "polaris.auto.optimization_scheduling",
@@ -10323,7 +12559,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "排产与资源分配时用"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "线性规划与对偶理论成熟"
+            },
+            "verifiable": {
+              "level": 2,
+              "reason": "验证方式为分析（基础 1）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "供应链、制造与运筹相关岗位"
+            }
+          }
         }
       ],
       "edges": [
@@ -11123,7 +13385,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "电路定律与相量是硬件与电源工作的基础工具"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 5,
+              "reason": "基尔霍夫与相量是电路理论的奠基"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为分析（基础 1）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 5,
+              "reason": "优先级必要（基础 3）；被 7 个节点列为强先修（+2）"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "电气与电子类岗位的基础要求"
+            }
+          }
         },
         {
           "id": "polaris.ee.circuit_simulation",
@@ -11212,7 +13500,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "设计前先仿真是通行做法"
+            },
+            "hands_on": {
+              "level": 4,
+              "reason": "5 章里 4 章是动手实践（80%）"
+            },
+            "theory": {
+              "level": 2,
+              "reason": "工具为主，理论少"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为仿真（基础 2）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 2 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "硬件与电源设计岗位的常见要求"
+            }
+          }
         },
         {
           "id": "polaris.ee.power_supply_basics",
@@ -11317,7 +13631,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 5,
+              "reason": "任何电路都有电源，选型与验证每个项目都要做"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "指标与热设计有明确的方法"
+            },
+            "verifiable": {
+              "level": 5,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 5,
+              "reason": "优先级必要（基础 3）；被 6 个节点列为强先修（+2）"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "硬件与电源岗位的基本要求"
+            }
+          }
         },
         {
           "id": "polaris.ee.switching_converters",
@@ -11434,7 +13774,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "现代设备供电的核心"
+            },
+            "hands_on": {
+              "level": 4,
+              "reason": "7 章里 5 章是动手实践（71%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "伏秒与电荷平衡是成体系的分析方法"
+            },
+            "verifiable": {
+              "level": 5,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 4,
+              "reason": "优先级必要（基础 3）；被 5 个节点列为强先修（+1）"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "电源工程师是稳定而大量的岗位"
+            }
+          }
         },
         {
           "id": "polaris.ee.magnetics",
@@ -11523,7 +13889,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "做电源与电机类产品时用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "5 章里 3 章是动手实践（60%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "磁路理论成熟"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为分析（基础 1）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "电源与电机设计岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ee.power_semiconductors",
@@ -11628,7 +14020,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "选开关管与驱动时用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "损耗与驱动有明确的方法"
+            },
+            "verifiable": {
+              "level": 5,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 2 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "电源、驱动与新能源岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ee.power_integrity_emc",
@@ -11733,7 +14151,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "产品过认证与稳定性的关键"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "有明确的设计规则，理论部分较少"
+            },
+            "verifiable": {
+              "level": 5,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "硬件工程岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ee.battery_bms",
@@ -11832,7 +14276,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "便携与电动设备用"
+            },
+            "hands_on": {
+              "level": 2,
+              "reason": "6 章里 3 章是动手实践（50%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "有明确的估算与保护方法"
+            },
+            "verifiable": {
+              "level": 5,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "电动车、储能与便携设备方向需求大"
+            }
+          }
         },
         {
           "id": "polaris.ee.low_power_design",
@@ -11939,7 +14409,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "电池供电设备的硬指标"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "能量预算有明确方法"
+            },
+            "verifiable": {
+              "level": 5,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "物联网与可穿戴设备方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ee.electrical_safety",
@@ -12044,7 +14540,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "任何带电产品都绕不开的合规底线"
+            },
+            "hands_on": {
+              "level": 2,
+              "reason": "6 章里 3 章是动手实践（50%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "标准与方法明确"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为评审（基础 1）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 2 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "硬件产品与认证相关岗位的要求"
+            }
+          }
         },
         {
           "id": "polaris.ee.power_electronics_control",
@@ -12149,7 +14671,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "电源性能提升时用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "小信号建模是成熟理论"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为仿真（基础 2）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "电源与新能源变换器岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ee.electric_machines",
@@ -12246,7 +14794,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "电机与驱动方向用"
+            },
+            "hands_on": {
+              "level": 2,
+              "reason": "6 章里 3 章是动手实践（50%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "磁场与等效电路理论成熟"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为分析（基础 1）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "电机、驱动与电力设备岗位"
+            }
+          }
         },
         {
           "id": "polaris.ee.power_systems",
@@ -12351,7 +14925,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "电网与新能源方向用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "潮流与稳定性理论成熟"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为仿真（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级重要（基础 2）；被 4 个节点列为强先修（+1）"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "电网与新能源行业岗位"
+            }
+          }
         },
         {
           "id": "polaris.ee.motor_drives",
@@ -12463,7 +15063,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "电机驱动与机器人方向用"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "坐标变换与电流环有成熟理论"
+            },
+            "verifiable": {
+              "level": 5,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "电动车、机器人与工业驱动岗位需求大"
+            }
+          }
         },
         {
           "id": "polaris.ee.grid_inverters",
@@ -12570,7 +15196,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "新能源并网设备开发用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "锁相与电流控制有成熟理论"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为仿真（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "新能源与储能变流器岗位"
+            }
+          }
         },
         {
           "id": "polaris.ee.protection_substation",
@@ -12675,7 +15327,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "电网保护与变电站岗位用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "整定与配合有明确的方法"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "电网与电力设备行业岗位"
+            }
+          }
         },
         {
           "id": "polaris.ee.high_voltage",
@@ -12775,7 +15453,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 2,
+              "reason": "输变电设备与防雷专门岗位用"
+            },
+            "hands_on": {
+              "level": 2,
+              "reason": "6 章里 3 章是动手实践（50%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "放电与绝缘理论成体系"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为分析（基础 1）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 1,
+              "reason": "优先级可选（基础 1）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 2,
+              "reason": "输变电设备的少数岗位"
+            }
+          }
         },
         {
           "id": "polaris.ee.renewables_storage",
@@ -12880,7 +15584,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "光储系统设计用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "容量配置有明确方法"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为仿真（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "新能源行业岗位需求大"
+            }
+          }
         },
         {
           "id": "polaris.ee.smart_grid",
@@ -12984,7 +15714,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 2,
+              "reason": "电网信息化方向用"
+            },
+            "hands_on": {
+              "level": 2,
+              "reason": "6 章里 3 章是动手实践（50%）"
+            },
+            "theory": {
+              "level": 2,
+              "reason": "以架构与标准为主"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 1,
+              "reason": "优先级可选（基础 1）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 2,
+              "reason": "电网信息化的少数岗位"
+            }
+          }
         },
         {
           "id": "polaris.ee.instruments_bringup",
@@ -13090,7 +15846,33 @@
               "hands_on": true
             }
           ],
-          "current": "weak"
+          "current": "weak",
+          "ratings": {
+            "utility": {
+              "level": 5,
+              "reason": "每次调试板子都要用"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 2,
+              "reason": "以方法与经验为主"
+            },
+            "verifiable": {
+              "level": 5,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 5,
+              "reason": "所有硬件岗位的基本要求"
+            }
+          }
         },
         {
           "id": "polaris.ee.precision_analog_noise",
@@ -13201,7 +15983,33 @@
               "hands_on": true
             }
           ],
-          "current": "weak"
+          "current": "weak",
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "做精密测量与传感前端时用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "噪声与误差预算有成体系的方法"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为分析（基础 1）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "测量仪器与传感前端岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ee.power_architecture",
@@ -13312,7 +16120,33 @@
               "hands_on": true
             }
           ],
-          "current": "weak"
+          "current": "weak",
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "多路供电的板子都要设计"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "有明确的预算与时序方法"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "硬件系统设计岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.ee.thermal_design",
@@ -13417,7 +16251,33 @@
               "hands_on": true
             }
           ],
-          "current": "both"
+          "current": "both",
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "发热器件的可靠性前提"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "热阻网络是成熟理论"
+            },
+            "verifiable": {
+              "level": 5,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "电源、功放与处理器硬件岗位的要求"
+            }
+          }
         },
         {
           "id": "polaris.ee.hardware_reliability",
@@ -13524,7 +16384,33 @@
               "hands_on": true
             }
           ],
-          "current": "both"
+          "current": "both",
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "产品化与高可靠场合用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "失效分析与降额有明确方法"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为评审（基础 1）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "工业、汽车与航天硬件岗位的要求"
+            }
+          }
         },
         {
           "id": "polaris.ee.dfm_production_test",
@@ -13631,7 +16517,33 @@
               "hands_on": true
             }
           ],
-          "current": "weak"
+          "current": "weak",
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "产品走向量产时用"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 2,
+              "reason": "以规则与流程为主"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为评审（基础 1）；末章是动手的验收（+1）；用仪器或板上测量取证（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "硬件产品化与测试岗位的要求"
+            }
+          }
         }
       ],
       "edges": [
@@ -14342,7 +17254,33 @@
                 "locator": "CE-CAO-8 Input/Output interfacing and communication"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 5,
+              "reason": "驱动与固件的日常"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "5 章里 3 章是动手实践（60%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "访问属性与屏障有明确规则"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 4,
+              "reason": "优先级必要（基础 3）；被 5 个节点列为强先修（+1）"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "嵌入式与驱动岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.codesign.firmware_image",
@@ -14467,7 +17405,33 @@
                 "locator": "CE-ESY-4 Basic software techniques for embedded applications"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "解释启动与链接问题时用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "链接与段布局有明确的规则"
+            },
+            "verifiable": {
+              "level": 2,
+              "reason": "验证方式为分析（基础 1）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 4,
+              "reason": "优先级必要（基础 3）；被 4 个节点列为强先修（+1）"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "嵌入式与固件岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.codesign.clock_reset",
@@ -14583,7 +17547,33 @@
                 "locator": "CE-CAE-6 MOS transistor circuits, timing, and power"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "排查偶发问题的常见根因"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "同步与亚稳态有明确的判据"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 2 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "数字与嵌入式方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.codesign.isa_microarch",
@@ -14713,7 +17703,33 @@
                 "locator": "CE-CAO-4 Measuring performance"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "性能分析与体系结构岗位用"
+            },
+            "hands_on": {
+              "level": 2,
+              "reason": "6 章里 3 章是动手实践（50%）"
+            },
+            "theory": {
+              "level": 5,
+              "reason": "指令集与流水线是体系结构的奠基"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为基准对比（基础 3）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 2 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "体系结构与芯片方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.codesign.memory_hierarchy",
@@ -14840,7 +17856,33 @@
                 "locator": "CE-CAO-7 Memory system organization and architectures"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "性能优化的核心"
+            },
+            "hands_on": {
+              "level": 2,
+              "reason": "6 章里 3 章是动手实践（50%）"
+            },
+            "theory": {
+              "level": 5,
+              "reason": "局部性与带宽模型是普适理论"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为基准对比（基础 3）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 5,
+              "reason": "优先级必要（基础 3）；被 7 个节点列为强先修（+2）"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "高性能与系统方向的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.codesign.interrupts",
@@ -14967,7 +18009,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 5,
+              "reason": "嵌入式与驱动的日常"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "中断模型有明确的规则"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 4,
+              "reason": "优先级必要（基础 3）；被 4 个节点列为强先修（+1）"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "嵌入式岗位的基本要求"
+            }
+          }
         },
         {
           "id": "polaris.codesign.dma_cache",
@@ -15092,7 +18160,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "高吞吐驱动的常见难点"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "一致性有明确的模型"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 2 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "驱动与高性能嵌入式方向"
+            }
+          }
         },
         {
           "id": "polaris.codesign.peripheral_driver",
@@ -15218,7 +18312,33 @@
                 "locator": "CE-ESY-6 Asynchronous and synchronous serial communication"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "写驱动时用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "控制器与驱动的模型明确"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 2 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "嵌入式与驱动岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.codesign.debug_interfaces",
@@ -15353,7 +18473,33 @@
                 "locator": "CE-DIG-11 Fault models, testing, and design for testability"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "调试器与跟踪是日常工具"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 2,
+              "reason": "以工具与方法为主"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "嵌入式与硬件岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.codesign.power_thermal",
@@ -15468,7 +18614,33 @@
                 "locator": "CE-ESY-10 Techniques for low-power operation"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "功耗敏感的系统用"
+            },
+            "hands_on": {
+              "level": 2,
+              "reason": "6 章里 3 章是动手实践（50%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "功耗模型有明确方法"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "移动与嵌入式功耗敏感方向"
+            }
+          }
         },
         {
           "id": "polaris.codesign.realtime_timing",
@@ -15595,7 +18767,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "实时系统验收的核心指标"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "可调度性分析有成熟理论"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 4,
+              "reason": "优先级必要（基础 3）；被 4 个节点列为强先修（+1）"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "嵌入式与控制岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.codesign.boot_trust",
@@ -15720,7 +18918,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "涉及更新与安全的产品用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "信任链模型明确"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 2 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "嵌入式安全与固件方向"
+            }
+          }
         },
         {
           "id": "polaris.codesign.hw_sw_partition",
@@ -15846,7 +19070,33 @@
                 "locator": "CE-SPE-10 Concurrent hardware and software design"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "系统架构设计时用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "有明确的取舍方法"
+            },
+            "verifiable": {
+              "level": 2,
+              "reason": "验证方式为分析（基础 1）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 1 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "SoC 与系统架构方向"
+            }
+          }
         },
         {
           "id": "polaris.codesign.hil_verification",
@@ -15974,7 +19224,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "产品验证阶段用"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "有明确的验证方法"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为仿真（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "汽车、航空与工业验证岗位"
+            }
+          }
         },
         {
           "id": "polaris.codesign.device_tree_bsp",
@@ -16109,7 +19385,33 @@
                 "locator": "CE-ESY-13 Computing platforms for embedded systems"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "嵌入式 Linux 移植时用"
+            },
+            "hands_on": {
+              "level": 2,
+              "reason": "6 章里 3 章是动手实践（50%）"
+            },
+            "theory": {
+              "level": 2,
+              "reason": "以格式与流程为主"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "嵌入式 Linux 与 BSP 岗位"
+            }
+          }
         },
         {
           "id": "polaris.codesign.heterogeneous_soc",
@@ -16231,7 +19533,33 @@
                 "locator": "CE-SPE-10 Concurrent hardware and software design"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "异构平台开发时用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "接口与一致性模型明确"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为基准对比（基础 3）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "FPGA SoC 与加速方向"
+            }
+          }
         },
         {
           "id": "polaris.codesign.side_channel_security",
@@ -16353,7 +19681,33 @@
               "kind": "practice",
               "hands_on": true
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 2,
+              "reason": "硬件安全的专门场景"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "攻击模型有成体系的理论"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为实测（基础 3）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 1,
+              "reason": "优先级可选（基础 1）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 2,
+              "reason": "硬件安全的少数岗位"
+            }
+          }
         }
       ],
       "edges": [
@@ -16980,7 +20334,33 @@
                 "locator": "Mathematics for Computer Science 一节"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "算法、AI 与密码里直接用到，但不是每天"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 5,
+              "reason": "离散、概率与线性代数是计算机科学的奠基"
+            },
+            "verifiable": {
+              "level": 2,
+              "reason": "验证方式为分析（基础 1）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 3,
+              "reason": "优先级必要（基础 3）；被 2 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "算法、AI 与密码方向的基础要求"
+            }
+          }
         },
         {
           "id": "polaris.frontier.open_isa_riscv",
@@ -17114,7 +20494,33 @@
                 "locator": "开放指令集与敏捷芯片开发"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 2,
+              "reason": "处理器核设计的专门场景"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "指令集与微架构理论成熟"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为仿真（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "RISC-V 与处理器设计方向，增长中"
+            }
+          }
         },
         {
           "id": "polaris.frontier.perf_modeling",
@@ -17238,7 +20644,33 @@
                 "locator": "性能建模与对账的岗位要求（时效性样本）"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "体系结构探索与性能分析用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "排队与屋顶线等模型成熟"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为基准对比（基础 3）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "体系结构与性能工程岗位"
+            }
+          }
         },
         {
           "id": "polaris.frontier.rtl_to_gds",
@@ -17372,7 +20804,33 @@
                 "locator": "把设计提交到共享流片"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 2,
+              "reason": "芯片后端的专门场景"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "流程与方法明确"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "数字芯片实现岗位"
+            }
+          }
         },
         {
           "id": "polaris.frontier.verification_methodology",
@@ -17501,7 +20959,33 @@
                 "locator": "用 Python 写硬件验证测试平台"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "芯片验证岗位的日常"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 4,
+              "reason": "覆盖与形式验证有成体系的方法"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为仿真（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "芯片公司中验证岗位占比大"
+            }
+          }
         },
         {
           "id": "polaris.frontier.parallel_accelerators",
@@ -17630,7 +21114,33 @@
                 "locator": "CE-CAO-10 Multi/Many-core architectures"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "高性能与 AI 加速方向用"
+            },
+            "hands_on": {
+              "level": 3,
+              "reason": "6 章里 4 章是动手实践（67%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "并行模型有明确方法"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为基准对比（基础 3）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "AI 与高性能计算方向需求大"
+            }
+          }
         },
         {
           "id": "polaris.frontier.ml_compile_inference",
@@ -17763,7 +21273,33 @@
                 "locator": "推理优化与边缘部署的阶段顺序"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "模型部署与推理优化方向用"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "编译与量化有成体系的方法"
+            },
+            "verifiable": {
+              "level": 4,
+              "reason": "验证方式为基准对比（基础 3）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "AI 基础设施方向"
+            }
+          }
         },
         {
           "id": "polaris.frontier.safety_critical",
@@ -17896,7 +21432,33 @@
                 "locator": "过程与证据"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "高可靠项目才用"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "有标准化的体系与方法"
+            },
+            "verifiable": {
+              "level": 2,
+              "reason": "验证方式为评审（基础 1）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "汽车、航空与工业安全相关岗位"
+            }
+          }
         },
         {
           "id": "polaris.frontier.firmware_engineering",
@@ -18027,7 +21589,33 @@
                 "locator": "项目由小到大，以及对调试能力的要求"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 4,
+              "reason": "固件开发的日常工程方法"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "有成熟的方法与度量"
+            },
+            "verifiable": {
+              "level": 3,
+              "reason": "验证方式为联调（基础 2）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 4,
+              "reason": "嵌入式与固件岗位的核心要求"
+            }
+          }
         },
         {
           "id": "polaris.frontier.systems_engineering",
@@ -18152,7 +21740,33 @@
                 "locator": "系统层面的思考（时效性样本）"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 3,
+              "reason": "大型系统项目用"
+            },
+            "hands_on": {
+              "level": 5,
+              "reason": "6 章里 5 章是动手实践（83%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "接口管理与需求分解有方法"
+            },
+            "verifiable": {
+              "level": 2,
+              "reason": "验证方式为评审（基础 1）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 2,
+              "reason": "优先级重要（基础 2）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 3,
+              "reason": "航空航天与大型系统岗位"
+            }
+          }
         },
         {
           "id": "polaris.frontier.trusted_hardware",
@@ -18279,7 +21893,33 @@
                 "locator": "CE-SEC-10 Trusted computing"
               }
             }
-          ]
+          ],
+          "ratings": {
+            "utility": {
+              "level": 2,
+              "reason": "可信硬件的专门场景"
+            },
+            "hands_on": {
+              "level": 2,
+              "reason": "6 章里 3 章是动手实践（50%）"
+            },
+            "theory": {
+              "level": 3,
+              "reason": "信任根模型明确"
+            },
+            "verifiable": {
+              "level": 2,
+              "reason": "验证方式为评审（基础 1）；末章是动手的验收（+1）"
+            },
+            "core": {
+              "level": 1,
+              "reason": "优先级可选（基础 1）；被 0 个节点列为强先修"
+            },
+            "demand": {
+              "level": 2,
+              "reason": "硬件安全的少数岗位"
+            }
+          }
         }
       ],
       "edges": [
@@ -23208,7 +26848,59 @@
           "source_id": "ganssle-embedded-geek",
           "locator": "项目由小到大，以及对调试能力的要求"
         }
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 37 个知识点的评级，均值 4.03"
+        },
+        "hands_on": {
+          "level": 4,
+          "reason": "汇总 37 个知识点的评级，均值 3.54"
+        },
+        "theory": {
+          "level": 4,
+          "reason": "汇总 37 个知识点的评级，均值 3.54"
+        },
+        "verifiable": {
+          "level": 3,
+          "reason": "汇总 37 个知识点的评级，均值 3.32"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 37 个知识点的评级，均值 3.30"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 37 个知识点的评级，均值 3.92"
+        }
+      },
+      "assessment": {
+        "verdict": "priority",
+        "verdict_reason": "不确定方向时的起点：它保证十四个能力域不缺，后面选哪条纵深都不会有硬伤。",
+        "strengths": [
+          "覆盖全部能力域，不偏科；每个阶段都有可检查的作品",
+          "软件与硬件的接缝被当作主线来讲"
+        ],
+        "weaknesses": [
+          "篇幅长，各域只到入门深度，不替代专业类的深入路线",
+          "对第一阶段的数学与动手有一定要求"
+        ],
+        "next": [
+          {
+            "route_id": "route.codesign-spine",
+            "reason": "把走过的接缝专门深入一遍，最能体现跨界能力"
+          },
+          {
+            "route_id": "route.embedded-realtime",
+            "reason": "需求高、动手多，是体验软硬结合最直接的方向"
+          },
+          {
+            "route_id": "route.board-hardware",
+            "reason": "弱电的硬件基本功，补足板级与测量能力"
+          }
+        ]
+      }
     },
     {
       "id": "route.codesign-spine",
@@ -23293,7 +26985,59 @@
       "pitfalls": [
         "只做软件一侧：把寄存器与时序当黑箱，遇到硬件相关的问题就只能求助别人。",
         "只做硬件一侧：不写驱动、不看测量，设计出来的接口软件很难用对。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 17 个知识点的评级，均值 3.59"
+        },
+        "hands_on": {
+          "level": 3,
+          "reason": "汇总 17 个知识点的评级，均值 3.00"
+        },
+        "theory": {
+          "level": 3,
+          "reason": "汇总 17 个知识点的评级，均值 3.24"
+        },
+        "verifiable": {
+          "level": 3,
+          "reason": "汇总 17 个知识点的评级，均值 3.47"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 17 个知识点的评级，均值 2.88"
+        },
+        "demand": {
+          "level": 3,
+          "reason": "汇总 17 个知识点的评级，均值 3.35"
+        }
+      },
+      "assessment": {
+        "verdict": "recommended",
+        "verdict_reason": "软硬接口是北极星的主线，跨专业价值高；但要求先有 C 与电路基础，所以不宜作最初的起点。",
+        "strengths": [
+          "把寄存器、中断、DMA、启动等接缝讲成一套契约",
+          "每个节点都同时写清硬件与软件两侧"
+        ],
+        "weaknesses": [
+          "偏接口原理，应用场景要靠别的路线补",
+          "需要板子与调试器等实验条件"
+        ],
+        "next": [
+          {
+            "route_id": "route.embedded-realtime",
+            "reason": "接口之后进入实时多任务的应用开发"
+          },
+          {
+            "route_id": "route.firmware-trusted",
+            "reason": "沿启动与可信更新做深"
+          },
+          {
+            "route_id": "route.system-linux",
+            "reason": "向上走到操作系统与驱动"
+          }
+        ]
+      }
     },
     {
       "id": "route.embedded-realtime",
@@ -23373,7 +27117,59 @@
       "pitfalls": [
         "只会调库：不理解寄存器、中断与时钟，换芯片就重来。",
         "只会点亮不会测：没有延迟与抖动的数字，「实时」就只是一句话。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 19 个知识点的评级，均值 4.16"
+        },
+        "hands_on": {
+          "level": 4,
+          "reason": "汇总 19 个知识点的评级，均值 3.74"
+        },
+        "theory": {
+          "level": 3,
+          "reason": "汇总 19 个知识点的评级，均值 3.21"
+        },
+        "verifiable": {
+          "level": 4,
+          "reason": "汇总 19 个知识点的评级，均值 3.53"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 19 个知识点的评级，均值 3.37"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 19 个知识点的评级，均值 3.95"
+        }
+      },
+      "assessment": {
+        "verdict": "priority",
+        "verdict_reason": "需求高且稳定、动手比重大、验证用仪器与计时数据，门槛适中，是电子信息类最稳妥的就业向方向。",
+        "strengths": [
+          "MCU、总线与实时内核都能做出可测量的作品",
+          "与自动化、电气（电池与低功耗）方向接口多，迁移面广"
+        ],
+        "weaknesses": [
+          "要持续跟进厂商平台与工具链的变化",
+          "深入到系统层要补操作系统与体系结构"
+        ],
+        "next": [
+          {
+            "route_id": "route.board-hardware",
+            "reason": "向硬件一侧延伸，会做板才能真正定位问题"
+          },
+          {
+            "route_id": "route.realtime-control",
+            "reason": "加上控制算法，进入测控与设备方向"
+          },
+          {
+            "route_id": "route.firmware-trusted",
+            "reason": "向固件工程化与安全更新做深"
+          }
+        ]
+      }
     },
     {
       "id": "route.fpga-digital",
@@ -23449,7 +27245,59 @@
       "pitfalls": [
         "只在仿真里正确：没有时序约束与上板验证，到真实硬件上才发现问题。",
         "不懂软件接口：设计做得很快，却没有人能写驱动去用它。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 10 个知识点的评级，均值 3.70"
+        },
+        "hands_on": {
+          "level": 3,
+          "reason": "汇总 10 个知识点的评级，均值 3.20"
+        },
+        "theory": {
+          "level": 4,
+          "reason": "汇总 10 个知识点的评级，均值 3.90"
+        },
+        "verifiable": {
+          "level": 4,
+          "reason": "汇总 10 个知识点的评级，均值 3.60"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 10 个知识点的评级，均值 3.20"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 10 个知识点的评级，均值 3.50"
+        }
+      },
+      "assessment": {
+        "verdict": "recommended",
+        "verdict_reason": "数字设计、时序与硬件加速的入口，需求稳定；验证靠仿真与时序报告，客观。",
+        "strengths": [
+          "时序与同步设计的思维可迁移到所有数字系统",
+          "与芯片验证、体系结构方向衔接自然"
+        ],
+        "weaknesses": [
+          "工具链重、学习曲线陡",
+          "综合与布局布线的结果依赖具体厂商工具"
+        ],
+        "next": [
+          {
+            "route_id": "route.digital-ic-verification",
+            "reason": "往芯片设计与验证方向做深"
+          },
+          {
+            "route_id": "route.cpu-soc-architecture",
+            "reason": "往处理器与 SoC 架构方向走"
+          },
+          {
+            "route_id": "route.ai-accelerator-systems",
+            "reason": "往硬件加速与推理系统方向走"
+          }
+        ]
+      }
     },
     {
       "id": "route.board-hardware",
@@ -23529,7 +27377,59 @@
       "pitfalls": [
         "只会画板不会测：没有测量与调试能力，板子出问题时无从定位。",
         "不看软件一侧：不知道固件会怎样使用这些外设，引脚与时序留不出余地。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 14 个知识点的评级，均值 4.29"
+        },
+        "hands_on": {
+          "level": 4,
+          "reason": "汇总 14 个知识点的评级，均值 3.64"
+        },
+        "theory": {
+          "level": 3,
+          "reason": "汇总 14 个知识点的评级，均值 3.21"
+        },
+        "verifiable": {
+          "level": 4,
+          "reason": "汇总 14 个知识点的评级，均值 3.71"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 14 个知识点的评级，均值 3.14"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 14 个知识点的评级，均值 4.07"
+        }
+      },
+      "assessment": {
+        "verdict": "priority",
+        "verdict_reason": "弱电的硬件基本功：做板、测量、调试，几乎所有硬件岗位都要，需求高、验证客观。",
+        "strengths": [
+          "每一步都有仪器测量作为证据",
+          "与电源、EMC、高速设计的深入路线直接衔接"
+        ],
+        "weaknesses": [
+          "要有仪器与打样的条件",
+          "理论深度中等，需要后续路线补信号与电磁基础"
+        ],
+        "next": [
+          {
+            "route_id": "route.high-speed-board",
+            "reason": "往高速、电源架构与量产方向做深"
+          },
+          {
+            "route_id": "route.data-acquisition",
+            "reason": "往精密模拟与数据采集方向做深"
+          },
+          {
+            "route_id": "route.power-electronics",
+            "reason": "往电源与电力电子方向做深"
+          }
+        ]
+      }
     },
     {
       "id": "route.system-linux",
@@ -23611,7 +27511,55 @@
       "pitfalls": [
         "只会应用层：不懂设备、中断与启动，驱动与 BSP 就无从谈起。",
         "只会裸机：不懂操作系统的调度与内存管理，进入 Linux 后概念对不上。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 16 个知识点的评级，均值 3.81"
+        },
+        "hands_on": {
+          "level": 3,
+          "reason": "汇总 16 个知识点的评级，均值 3.00"
+        },
+        "theory": {
+          "level": 3,
+          "reason": "汇总 16 个知识点的评级，均值 3.44"
+        },
+        "verifiable": {
+          "level": 3,
+          "reason": "汇总 16 个知识点的评级，均值 3.12"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 16 个知识点的评级，均值 2.94"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 16 个知识点的评级，均值 3.62"
+        }
+      },
+      "assessment": {
+        "verdict": "recommended",
+        "verdict_reason": "后端、嵌入式与运维都用得到，需求稳定；验证以基准与联调为主，需要一台 Linux 环境。",
+        "strengths": [
+          "系统调用、驱动与设备树构成完整的系统软件视野",
+          "与后端和嵌入式两个方向都相通"
+        ],
+        "weaknesses": [
+          "内核与驱动的细节随版本变化较快",
+          "抽象层多，容易只会用不理解"
+        ],
+        "next": [
+          {
+            "route_id": "route.firmware-trusted",
+            "reason": "往固件与启动链方向做深"
+          },
+          {
+            "route_id": "route.data-backend",
+            "reason": "往服务端与数据系统方向走"
+          }
+        ]
+      }
     },
     {
       "id": "route.realtime-control",
@@ -23688,7 +27636,59 @@
       "pitfalls": [
         "只会仿真：没有在真实时序与量化误差下验证，算法一落地就不稳。",
         "数学薄弱：不会做稳定性与误差分析，调参全靠运气。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 11 个知识点的评级，均值 4.00"
+        },
+        "hands_on": {
+          "level": 4,
+          "reason": "汇总 11 个知识点的评级，均值 4.00"
+        },
+        "theory": {
+          "level": 4,
+          "reason": "汇总 11 个知识点的评级，均值 3.55"
+        },
+        "verifiable": {
+          "level": 4,
+          "reason": "汇总 11 个知识点的评级，均值 3.55"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 11 个知识点的评级，均值 3.18"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 11 个知识点的评级，均值 3.91"
+        }
+      },
+      "assessment": {
+        "verdict": "recommended",
+        "verdict_reason": "控制、嵌入式与验证三者结合，需求稳定，验证闭环延迟与抖动，客观。",
+        "strengths": [
+          "闭环延迟与抖动可测量",
+          "与嵌入式、自动化两个方向共享"
+        ],
+        "weaknesses": [
+          "要有被控对象或半实物条件",
+          "数学基础要求中等偏高"
+        ],
+        "next": [
+          {
+            "route_id": "route.uav-flight-control",
+            "reason": "往飞控方向走"
+          },
+          {
+            "route_id": "route.robot-motion",
+            "reason": "往运动与机器人方向走"
+          },
+          {
+            "route_id": "route.advanced-control",
+            "reason": "往控制算法方向走"
+          }
+        ]
+      }
     },
     {
       "id": "route.edge-ai-systems",
@@ -23766,7 +27766,55 @@
       "pitfalls": [
         "只看精度：不测功耗与带宽，端侧设备上无法落地。",
         "忽视硬件：不懂存储层次与数据搬运，部署后的瓶颈归因不了。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 12 个知识点的评级，均值 3.67"
+        },
+        "hands_on": {
+          "level": 3,
+          "reason": "汇总 12 个知识点的评级，均值 3.08"
+        },
+        "theory": {
+          "level": 4,
+          "reason": "汇总 12 个知识点的评级，均值 3.75"
+        },
+        "verifiable": {
+          "level": 4,
+          "reason": "汇总 12 个知识点的评级，均值 3.50"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 12 个知识点的评级，均值 2.75"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 12 个知识点的评级，均值 3.58"
+        }
+      },
+      "assessment": {
+        "verdict": "recommended",
+        "verdict_reason": "把模型放进资源受限的设备，是 AI 落地的主要形态；需要嵌入式与模型两头的基础。",
+        "strengths": [
+          "延迟、功耗与精度的取舍可以实测",
+          "与嵌入式、AI 两个方向都接得上"
+        ],
+        "weaknesses": [
+          "两头基础都要，起步成本高",
+          "工具链更新快，易过时"
+        ],
+        "next": [
+          {
+            "route_id": "route.ai-accelerator-systems",
+            "reason": "往加速器与推理系统做深"
+          },
+          {
+            "route_id": "route.embedded-realtime",
+            "reason": "补强嵌入式实时基础"
+          }
+        ]
+      }
     },
     {
       "id": "route.stack-bottom-up",
@@ -23842,7 +27890,55 @@
       "pitfalls": [
         "停在底层：搭完处理器就收工，没有回到真实软件与工程方法。",
         "只做一遍理想情况：不测、不对照实测，容易以为「懂了」。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 10 个知识点的评级，均值 4.20"
+        },
+        "hands_on": {
+          "level": 3,
+          "reason": "汇总 10 个知识点的评级，均值 3.40"
+        },
+        "theory": {
+          "level": 4,
+          "reason": "汇总 10 个知识点的评级，均值 4.30"
+        },
+        "verifiable": {
+          "level": 4,
+          "reason": "汇总 10 个知识点的评级，均值 3.50"
+        },
+        "core": {
+          "level": 4,
+          "reason": "汇总 10 个知识点的评级，均值 3.80"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 10 个知识点的评级，均值 4.00"
+        }
+      },
+      "assessment": {
+        "verdict": "optional",
+        "verdict_reason": "教学视角的阶梯：适合想把原理串起来的人，但不是就业向的方向，主干阶梯已涵盖大部分内容。",
+        "strengths": [
+          "从逻辑门到操作系统一条线讲通，原理完整",
+          "理论实用性与可验证性都较高"
+        ],
+        "weaknesses": [
+          "与主干阶梯重叠较多",
+          "应用场景要靠方向路线补"
+        ],
+        "next": [
+          {
+            "route_id": "route.generalist-ladder",
+            "reason": "要覆盖全部能力域时用通才阶梯"
+          },
+          {
+            "route_id": "route.codesign-spine",
+            "reason": "往软硬接口深入"
+          }
+        ]
+      }
     },
     {
       "id": "route.stack-top-down",
@@ -23916,7 +28012,55 @@
       "pitfalls": [
         "只往下看一层：没有用仪器验证最后一步，结论停留在推理上。",
         "绕开电路：把电平当成抽象，遇到信号完整性问题无从判断。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 13 个知识点的评级，均值 4.38"
+        },
+        "hands_on": {
+          "level": 3,
+          "reason": "汇总 13 个知识点的评级，均值 3.38"
+        },
+        "theory": {
+          "level": 3,
+          "reason": "汇总 13 个知识点的评级，均值 3.38"
+        },
+        "verifiable": {
+          "level": 3,
+          "reason": "汇总 13 个知识点的评级，均值 3.38"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 13 个知识点的评级，均值 3.46"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 13 个知识点的评级，均值 4.00"
+        }
+      },
+      "assessment": {
+        "verdict": "optional",
+        "verdict_reason": "从应用往下追到硬件的视角，适合软件背景的人建立硬件直觉，但不是就业向的方向。",
+        "strengths": [
+          "软件背景的人容易进入",
+          "能把一行代码追到电平，直观"
+        ],
+        "weaknesses": [
+          "与主干阶梯重叠较多",
+          "硬件细节只到概念层"
+        ],
+        "next": [
+          {
+            "route_id": "route.codesign-spine",
+            "reason": "把追到的接缝专门深入"
+          },
+          {
+            "route_id": "route.board-hardware",
+            "reason": "补上硬件基本功"
+          }
+        ]
+      }
     },
     {
       "id": "route.software-systems",
@@ -24000,7 +28144,55 @@
       "pitfalls": [
         "完全不碰硬件：不懂存储层次与中断，性能与可靠性问题只能靠猜。",
         "只学语言不学系统：不懂操作系统与网络，服务一上规模就失控。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 13 个知识点的评级，均值 4.31"
+        },
+        "hands_on": {
+          "level": 4,
+          "reason": "汇总 13 个知识点的评级，均值 4.08"
+        },
+        "theory": {
+          "level": 3,
+          "reason": "汇总 13 个知识点的评级，均值 3.23"
+        },
+        "verifiable": {
+          "level": 3,
+          "reason": "汇总 13 个知识点的评级，均值 2.92"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 13 个知识点的评级，均值 3.08"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 13 个知识点的评级，均值 4.31"
+        }
+      },
+      "assessment": {
+        "verdict": "recommended",
+        "verdict_reason": "C/C++、并发与网络是系统程序员的主干，需求高；各环节都有基准与排错记录。",
+        "strengths": [
+          "并发与网络问题可以做出可复现的基准",
+          "与后端、系统与嵌入式方向都共用"
+        ],
+        "weaknesses": [
+          "调试难度大，需要耐心",
+          "容易停留在写代码，不看系统层面的度量"
+        ],
+        "next": [
+          {
+            "route_id": "route.data-backend",
+            "reason": "加上数据库与分布式，进入服务端"
+          },
+          {
+            "route_id": "route.system-linux",
+            "reason": "往操作系统与驱动方向走"
+          }
+        ]
+      }
     },
     {
       "id": "route.cpu-soc-architecture",
@@ -24081,7 +28273,55 @@
           "source_id": "hp-golden-age",
           "locator": "领域专用架构、开放指令集与敏捷芯片开发"
         }
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 3,
+          "reason": "汇总 13 个知识点的评级，均值 3.38"
+        },
+        "hands_on": {
+          "level": 3,
+          "reason": "汇总 13 个知识点的评级，均值 3.08"
+        },
+        "theory": {
+          "level": 4,
+          "reason": "汇总 13 个知识点的评级，均值 3.69"
+        },
+        "verifiable": {
+          "level": 3,
+          "reason": "汇总 13 个知识点的评级，均值 3.38"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 13 个知识点的评级，均值 2.62"
+        },
+        "demand": {
+          "level": 3,
+          "reason": "汇总 13 个知识点的评级，均值 3.31"
+        }
+      },
+      "assessment": {
+        "verdict": "advanced",
+        "verdict_reason": "体系结构与性能建模理论价值高，但需求集中在少数公司，需要先有系统与数字设计基础。",
+        "strengths": [
+          "屋顶线与排队等模型迁移面广",
+          "能解释软件性能问题的根源"
+        ],
+        "weaknesses": [
+          "岗位少而专，前置多",
+          "模拟器与仿真工具的搭建成本高"
+        ],
+        "next": [
+          {
+            "route_id": "route.digital-ic-verification",
+            "reason": "往芯片验证方向走"
+          },
+          {
+            "route_id": "route.ai-accelerator-systems",
+            "reason": "往加速器架构方向走"
+          }
+        ]
+      }
     },
     {
       "id": "route.digital-ic-verification",
@@ -24162,7 +28402,55 @@
           "source_id": "zero-to-asic",
           "locator": "开源数字 ASIC 入门路径"
         }
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 3,
+          "reason": "汇总 9 个知识点的评级，均值 3.44"
+        },
+        "hands_on": {
+          "level": 3,
+          "reason": "汇总 9 个知识点的评级，均值 3.33"
+        },
+        "theory": {
+          "level": 4,
+          "reason": "汇总 9 个知识点的评级，均值 4.00"
+        },
+        "verifiable": {
+          "level": 4,
+          "reason": "汇总 9 个知识点的评级，均值 3.56"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 9 个知识点的评级，均值 2.89"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 9 个知识点的评级，均值 3.56"
+        }
+      },
+      "assessment": {
+        "verdict": "advanced",
+        "verdict_reason": "芯片公司里验证岗位占比大、需求高，但要先有数字设计与硬件描述语言的基础，不适合作起点。",
+        "strengths": [
+          "验证方法学有成体系的理论，覆盖率可量化",
+          "与软件工程方法相通，软件背景的人也容易进入"
+        ],
+        "weaknesses": [
+          "必须先会数字设计，前置明确",
+          "岗位集中在少数芯片公司与地域"
+        ],
+        "next": [
+          {
+            "route_id": "route.cpu-soc-architecture",
+            "reason": "理解被验证对象的体系结构"
+          },
+          {
+            "route_id": "route.ai-accelerator-systems",
+            "reason": "把验证能力用到加速器方向"
+          }
+        ]
+      }
     },
     {
       "id": "route.ai-accelerator-systems",
@@ -24241,7 +28529,55 @@
           "source_id": "ai-hardware-engineer-roadmap",
           "locator": "从模型到机器：推理优化与边缘部署"
         }
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 3,
+          "reason": "汇总 12 个知识点的评级，均值 3.33"
+        },
+        "hands_on": {
+          "level": 3,
+          "reason": "汇总 12 个知识点的评级，均值 2.83"
+        },
+        "theory": {
+          "level": 4,
+          "reason": "汇总 12 个知识点的评级，均值 3.67"
+        },
+        "verifiable": {
+          "level": 4,
+          "reason": "汇总 12 个知识点的评级，均值 3.50"
+        },
+        "core": {
+          "level": 2,
+          "reason": "汇总 12 个知识点的评级，均值 2.33"
+        },
+        "demand": {
+          "level": 3,
+          "reason": "汇总 12 个知识点的评级，均值 3.42"
+        }
+      },
+      "assessment": {
+        "verdict": "advanced",
+        "verdict_reason": "AI 硬件与推理优化需求高，但要求并行、体系结构与编译等多项前置，且技术栈变化快。",
+        "strengths": [
+          "软硬协同的收益容易量化（吞吐、延迟、能效）",
+          "与边缘部署、芯片方向相通"
+        ],
+        "weaknesses": [
+          "前置多，技术栈演进快",
+          "高端硬件实验条件要求高"
+        ],
+        "next": [
+          {
+            "route_id": "route.edge-ai-systems",
+            "reason": "先在端侧把软硬协同做通"
+          },
+          {
+            "route_id": "route.cpu-soc-architecture",
+            "reason": "补足体系结构基础"
+          }
+        ]
+      }
     },
     {
       "id": "route.firmware-trusted",
@@ -24325,7 +28661,55 @@
           "source_id": "tenstorrent-firmware-job",
           "locator": "高端固件岗位的能力要求（时效性样本）"
         }
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 16 个知识点的评级，均值 3.81"
+        },
+        "hands_on": {
+          "level": 3,
+          "reason": "汇总 16 个知识点的评级，均值 3.44"
+        },
+        "theory": {
+          "level": 3,
+          "reason": "汇总 16 个知识点的评级，均值 3.06"
+        },
+        "verifiable": {
+          "level": 3,
+          "reason": "汇总 16 个知识点的评级，均值 3.44"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 16 个知识点的评级，均值 2.88"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 16 个知识点的评级，均值 3.62"
+        }
+      },
+      "assessment": {
+        "verdict": "advanced",
+        "verdict_reason": "固件工程化与可信更新是产品化的关键能力，需要先有嵌入式与接口基础。",
+        "strengths": [
+          "启动链、更新与回滚都有可演示的验证",
+          "兼顾工程方法与安全"
+        ],
+        "weaknesses": [
+          "前置多：嵌入式、接口与基础安全",
+          "合规与安全评估要跟进标准变化"
+        ],
+        "next": [
+          {
+            "route_id": "route.highrel-aerospace",
+            "reason": "往高可靠与功能安全方向做深"
+          },
+          {
+            "route_id": "route.security-engineering",
+            "reason": "补足通用的威胁建模与密码基础"
+          }
+        ]
+      }
     },
     {
       "id": "route.highrel-aerospace",
@@ -24410,7 +28794,55 @@
           "source_id": "px4-simulation",
           "locator": "SITL 与 HITL 仿真层级"
         }
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 18 个知识点的评级，均值 4.06"
+        },
+        "hands_on": {
+          "level": 4,
+          "reason": "汇总 18 个知识点的评级，均值 4.11"
+        },
+        "theory": {
+          "level": 3,
+          "reason": "汇总 18 个知识点的评级，均值 3.44"
+        },
+        "verifiable": {
+          "level": 3,
+          "reason": "汇总 18 个知识点的评级，均值 3.22"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 18 个知识点的评级，均值 3.33"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 18 个知识点的评级，均值 3.89"
+        }
+      },
+      "assessment": {
+        "verdict": "advanced",
+        "verdict_reason": "高可靠与航天航电需要嵌入式、控制与过程素养的综合，前置多，不宜作起点。",
+        "strengths": [
+          "实时、总线与可靠性被放在同一条线上",
+          "过程素养（评审、接口控制）可迁移到所有大型系统"
+        ],
+        "weaknesses": [
+          "前置多，涉及的标准与工具多半不公开",
+          "公开可复现的实验有限"
+        ],
+        "next": [
+          {
+            "route_id": "route.firmware-trusted",
+            "reason": "固件工程化与可信更新方向"
+          },
+          {
+            "route_id": "route.realtime-control",
+            "reason": "补足实时控制基础"
+          }
+        ]
+      }
     },
     {
       "id": "route.cs-ladder",
@@ -24491,7 +28923,59 @@
         "只写代码不看系统：数据库、并发与网络当成黑盒，遇到性能与一致性问题无从下手。",
         "过早进纵深：基础两层没有打牢，就去学分布式或编译器，细节理解不了。",
         "把阶梯当课程打钩：每一阶段的验收是做出来的东西，没有作品就不算通过。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 19 个知识点的评级，均值 3.74"
+        },
+        "hands_on": {
+          "level": 4,
+          "reason": "汇总 19 个知识点的评级，均值 3.74"
+        },
+        "theory": {
+          "level": 4,
+          "reason": "汇总 19 个知识点的评级，均值 3.74"
+        },
+        "verifiable": {
+          "level": 3,
+          "reason": "汇总 19 个知识点的评级，均值 2.63"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 19 个知识点的评级，均值 2.68"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 19 个知识点的评级，均值 3.89"
+        }
+      },
+      "assessment": {
+        "verdict": "priority",
+        "verdict_reason": "计算机类的主干：从语言与工程到系统、并发、网络与数据，需求高、稳定，适合作为本专业类的起点。",
+        "strengths": [
+          "核心内容都有自动化测试与基准作为验证",
+          "顺序稳妥，纵深阶段可按兴趣选"
+        ],
+        "weaknesses": [
+          "偏软件，硬件接口要靠别的路线补",
+          "纵深阶段每个方向只到入门"
+        ],
+        "next": [
+          {
+            "route_id": "route.data-backend",
+            "reason": "最常见的就业向纵深"
+          },
+          {
+            "route_id": "route.software-systems",
+            "reason": "系统程序员方向"
+          },
+          {
+            "route_id": "route.security-engineering",
+            "reason": "安全方向"
+          }
+        ]
+      }
     },
     {
       "id": "route.ei-ladder",
@@ -24576,7 +29060,59 @@
         "只会调库：不会量电路也不会看波形，板子一出问题就无从下手。",
         "数学与信号偏弱：在 DSP 与通信阶段才发现跟不上，补课代价大。",
         "做板子不留测量记录：改了什么、测到了什么没有留存，下一次无法复现。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 23 个知识点的评级，均值 3.70"
+        },
+        "hands_on": {
+          "level": 4,
+          "reason": "汇总 23 个知识点的评级，均值 3.52"
+        },
+        "theory": {
+          "level": 4,
+          "reason": "汇总 23 个知识点的评级，均值 3.91"
+        },
+        "verifiable": {
+          "level": 4,
+          "reason": "汇总 23 个知识点的评级，均值 3.61"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 23 个知识点的评级，均值 3.00"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 23 个知识点的评级，均值 3.74"
+        }
+      },
+      "assessment": {
+        "verdict": "priority",
+        "verdict_reason": "电子信息类的主干：从电路到嵌入式再到纵深，各阶段都有仪器验证，适合作为本专业类的起点。",
+        "strengths": [
+          "先模拟数字、再嵌入式，再选纵深，顺序稳妥",
+          "每个阶段的验收是做出来的板子或测量"
+        ],
+        "weaknesses": [
+          "节点多，纵深阶段每个方向只到入门",
+          "硬件实验需要一定的开销"
+        ],
+        "next": [
+          {
+            "route_id": "route.embedded-realtime",
+            "reason": "最常见的就业向纵深"
+          },
+          {
+            "route_id": "route.board-hardware",
+            "reason": "硬件一侧的纵深"
+          },
+          {
+            "route_id": "route.rf-wireless",
+            "reason": "信号与通信方向的纵深"
+          }
+        ]
+      }
     },
     {
       "id": "route.ee-ladder",
@@ -24668,7 +29204,59 @@
         "只算不测：仿真漂亮，却不实测纹波、效率与温升，板子一做就出问题。",
         "弱电与强电各走各的：不理解电机与电网的基本量，到驱动与并网就接不上。",
         "忽略安全与 EMC：直到认证阶段才发现要改板，甚至在带电时操作不加保护。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 3,
+          "reason": "汇总 25 个知识点的评级，均值 3.40"
+        },
+        "hands_on": {
+          "level": 3,
+          "reason": "汇总 25 个知识点的评级，均值 3.20"
+        },
+        "theory": {
+          "level": 3,
+          "reason": "汇总 25 个知识点的评级，均值 3.32"
+        },
+        "verifiable": {
+          "level": 4,
+          "reason": "汇总 25 个知识点的评级，均值 3.88"
+        },
+        "core": {
+          "level": 2,
+          "reason": "汇总 25 个知识点的评级，均值 2.40"
+        },
+        "demand": {
+          "level": 3,
+          "reason": "汇总 25 个知识点的评级，均值 3.40"
+        }
+      },
+      "assessment": {
+        "verdict": "recommended",
+        "verdict_reason": "电气类的主干，弱电在前、强电在后；因为包含强电节点，整体需求与核心度的汇总低于弱电方向路线，适合想完整了解电气类的人。",
+        "strengths": [
+          "弱电侧的电源、变换器与低功耗每一步都有实测验收",
+          "强电侧同样给出主干，能看见全貌"
+        ],
+        "weaknesses": [
+          "强电部分需求更窄，且深度只到主干",
+          "实验需要仪器与打样条件"
+        ],
+        "next": [
+          {
+            "route_id": "route.power-electronics",
+            "reason": "弱电电源方向的纵深，需求高"
+          },
+          {
+            "route_id": "route.battery-lowpower",
+            "reason": "电池与低功耗设备方向"
+          },
+          {
+            "route_id": "route.power-grid",
+            "reason": "想走强电再选电力系统方向"
+          }
+        ]
+      }
     },
     {
       "id": "route.auto-ladder",
@@ -24762,7 +29350,59 @@
         "只会仿真：没在真实的采样与量化下验证，算法落地就不稳。",
         "只会 PLC 不懂反馈：遇到连续对象只能凭经验调参。",
         "忽略安全：没有故障注入与安全状态的设计，设备一出异常就失控。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 3,
+          "reason": "汇总 32 个知识点的评级，均值 3.28"
+        },
+        "hands_on": {
+          "level": 3,
+          "reason": "汇总 32 个知识点的评级，均值 3.22"
+        },
+        "theory": {
+          "level": 4,
+          "reason": "汇总 32 个知识点的评级，均值 3.62"
+        },
+        "verifiable": {
+          "level": 3,
+          "reason": "汇总 32 个知识点的评级，均值 3.28"
+        },
+        "core": {
+          "level": 2,
+          "reason": "汇总 32 个知识点的评级，均值 2.44"
+        },
+        "demand": {
+          "level": 3,
+          "reason": "汇总 32 个知识点的评级，均值 3.19"
+        }
+      },
+      "assessment": {
+        "verdict": "recommended",
+        "verdict_reason": "自动化类的主干：从逻辑控制与测量，到建模、数字控制，再到纵深；理论价值高，但节点多、周期长。",
+        "strengths": [
+          "理论（反馈、状态空间、估计）可迁移到机器人、飞行器与电机",
+          "每个阶段都有闭环实测或仿真对账"
+        ],
+        "weaknesses": [
+          "节点多，纵深每个方向只到入门",
+          "部分纵深（非线性、鲁棒、MPC）数学门槛高"
+        ],
+        "next": [
+          {
+            "route_id": "route.industrial-automation",
+            "reason": "最常见的就业向纵深"
+          },
+          {
+            "route_id": "route.robot-motion",
+            "reason": "机器人与运动方向"
+          },
+          {
+            "route_id": "route.advanced-control",
+            "reason": "控制算法方向"
+          }
+        ]
+      }
     },
     {
       "id": "route.power-electronics",
@@ -24837,7 +29477,55 @@
         "只算稳态：不考虑开关节点的寄生与布局，EMI 与振铃问题一做板就暴露。",
         "只信仿真：不做实测对账，也不看磁性元件的饱和。",
         "把电机驱动与并网当成换个壳子的变换器：不补电机学与电网基础，到应用阶段无从判断。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 13 个知识点的评级，均值 3.54"
+        },
+        "hands_on": {
+          "level": 3,
+          "reason": "汇总 13 个知识点的评级，均值 3.15"
+        },
+        "theory": {
+          "level": 4,
+          "reason": "汇总 13 个知识点的评级，均值 3.54"
+        },
+        "verifiable": {
+          "level": 4,
+          "reason": "汇总 13 个知识点的评级，均值 4.08"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 13 个知识点的评级，均值 2.85"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 13 个知识点的评级，均值 3.62"
+        }
+      },
+      "assessment": {
+        "verdict": "priority",
+        "verdict_reason": "弱电里需求稳定而大量的方向：电源与变换器几乎所有电子产品都需要，实测验证客观。",
+        "strengths": [
+          "效率、纹波与环路增益都能量化验证",
+          "与电池、电机驱动与并网方向直接衔接"
+        ],
+        "weaknesses": [
+          "要有仪器与做板条件",
+          "磁性元件与热的细节要靠经验补"
+        ],
+        "next": [
+          {
+            "route_id": "route.high-speed-board",
+            "reason": "把电源放进整板设计与量产"
+          },
+          {
+            "route_id": "route.battery-lowpower",
+            "reason": "往电池供电设备方向走"
+          }
+        ]
+      }
     },
     {
       "id": "route.battery-lowpower",
@@ -24912,7 +29600,55 @@
         "只看睡眠电流：忽略唤醒与射频发射的尖峰，续航只有预算的一半。",
         "不验证保护：电池过放、过充或过温保护没有注入故障测试。",
         "只写固件不懂电源：电源纹波与启动时序问题被当成软件 bug。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 13 个知识点的评级，均值 4.15"
+        },
+        "hands_on": {
+          "level": 4,
+          "reason": "汇总 13 个知识点的评级，均值 3.77"
+        },
+        "theory": {
+          "level": 3,
+          "reason": "汇总 13 个知识点的评级，均值 3.38"
+        },
+        "verifiable": {
+          "level": 4,
+          "reason": "汇总 13 个知识点的评级，均值 4.31"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 13 个知识点的评级，均值 3.46"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 13 个知识点的评级，均值 4.23"
+        }
+      },
+      "assessment": {
+        "verdict": "priority",
+        "verdict_reason": "物联网、可穿戴与电动设备的硬指标是续航与安全，需求高，实践比重大。",
+        "strengths": [
+          "能量预算与实测续航可逐项对账",
+          "把电源、固件与电池管理串起来"
+        ],
+        "weaknesses": [
+          "要有电流分析仪等测量条件",
+          "电池安全要求高，实验需谨慎"
+        ],
+        "next": [
+          {
+            "route_id": "route.power-electronics",
+            "reason": "往变换器设计做深"
+          },
+          {
+            "route_id": "route.embedded-realtime",
+            "reason": "补强固件与实时基础"
+          }
+        ]
+      }
     },
     {
       "id": "route.rf-wireless",
@@ -24973,7 +29709,55 @@
       "pitfalls": [
         "只做理想信道：不加同步误差与衰落，实际信道下解不出信号。",
         "忽略射频的物理：把射频当成数字模块，匹配与噪声问题无从下手。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 3,
+          "reason": "汇总 7 个知识点的评级，均值 3.29"
+        },
+        "hands_on": {
+          "level": 3,
+          "reason": "汇总 7 个知识点的评级，均值 2.86"
+        },
+        "theory": {
+          "level": 5,
+          "reason": "汇总 7 个知识点的评级，均值 4.57"
+        },
+        "verifiable": {
+          "level": 3,
+          "reason": "汇总 7 个知识点的评级，均值 3.29"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 7 个知识点的评级，均值 3.14"
+        },
+        "demand": {
+          "level": 3,
+          "reason": "汇总 7 个知识点的评级，均值 3.43"
+        }
+      },
+      "assessment": {
+        "verdict": "optional",
+        "verdict_reason": "理论价值很高，但岗位偏窄、门槛高、实验设备贵，适合明确要做无线与射频的人。",
+        "strengths": [
+          "传输线与信道理论迁移面广，也解释高速板的问题",
+          "软件无线电让不少实验可以在计算机上完成"
+        ],
+        "weaknesses": [
+          "射频测量需要昂贵仪器",
+          "数学与电磁基础要求高"
+        ],
+        "next": [
+          {
+            "route_id": "route.analog-ic",
+            "reason": "往模拟与射频芯片方向走"
+          },
+          {
+            "route_id": "route.high-speed-board",
+            "reason": "把传输线与匹配用到高速板设计"
+          }
+        ]
+      }
     },
     {
       "id": "route.analog-ic",
@@ -25034,7 +29818,55 @@
       "pitfalls": [
         "只在典型条件下仿真：不看工艺角与失配，实际性能大幅偏离。",
         "只会画版图不理解原理：设计无法定位问题。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 7 个知识点的评级，均值 3.71"
+        },
+        "hands_on": {
+          "level": 4,
+          "reason": "汇总 7 个知识点的评级，均值 3.57"
+        },
+        "theory": {
+          "level": 4,
+          "reason": "汇总 7 个知识点的评级，均值 3.86"
+        },
+        "verifiable": {
+          "level": 4,
+          "reason": "汇总 7 个知识点的评级，均值 3.86"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 7 个知识点的评级，均值 3.43"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 7 个知识点的评级，均值 3.71"
+        }
+      },
+      "assessment": {
+        "verdict": "advanced",
+        "verdict_reason": "模拟芯片设计岗位少而门槛高，需要先有模拟电路与仿真的扎实基础。",
+        "strengths": [
+          "从器件到电路有成体系的设计方法",
+          "与精密测量、电源方向共享模拟基础"
+        ],
+        "weaknesses": [
+          "岗位集中、入门门槛高",
+          "开源工艺与流片机会有限"
+        ],
+        "next": [
+          {
+            "route_id": "route.data-acquisition",
+            "reason": "把模拟功底用到采集与测量系统"
+          },
+          {
+            "route_id": "route.power-electronics",
+            "reason": "往电源与功率芯片方向走"
+          }
+        ]
+      }
     },
     {
       "id": "route.industrial-automation",
@@ -25111,7 +29943,55 @@
         "把 PLC 当普通单片机：不处理扫描周期、互锁与急停。",
         "只会单回路 PID：对大滞后与耦合对象无从下手。",
         "只做大屏不管数据质量：时间戳与数据丢失被忽略。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 3,
+          "reason": "汇总 15 个知识点的评级，均值 3.40"
+        },
+        "hands_on": {
+          "level": 3,
+          "reason": "汇总 15 个知识点的评级，均值 3.20"
+        },
+        "theory": {
+          "level": 3,
+          "reason": "汇总 15 个知识点的评级，均值 2.87"
+        },
+        "verifiable": {
+          "level": 4,
+          "reason": "汇总 15 个知识点的评级，均值 3.67"
+        },
+        "core": {
+          "level": 2,
+          "reason": "汇总 15 个知识点的评级，均值 2.33"
+        },
+        "demand": {
+          "level": 3,
+          "reason": "汇总 15 个知识点的评级，均值 3.27"
+        }
+      },
+      "assessment": {
+        "verdict": "recommended",
+        "verdict_reason": "工业现场的 PLC、仪表、总线与安全，需求稳定；评级里核心度偏低是因为纵深内容较分散。",
+        "strengths": [
+          "各环节都有现场化的验证（互锁、隔离、网络分区）",
+          "与电气、电子信息方向接口多"
+        ],
+        "weaknesses": [
+          "节点分散，学习路径容易发散",
+          "部分内容依赖现场设备与行业经验"
+        ],
+        "next": [
+          {
+            "route_id": "route.industrial-io-networks",
+            "reason": "往工业接口与总线的纵深走"
+          },
+          {
+            "route_id": "route.smart-factory",
+            "reason": "往工厂数据与调度走"
+          }
+        ]
+      }
     },
     {
       "id": "route.robot-motion",
@@ -25184,7 +30064,55 @@
       "pitfalls": [
         "只会跑现成的包：不懂坐标系与时间同步，换传感器就漂移。",
         "只会正运动学：逆解的多解与奇异位形没处理。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 3,
+          "reason": "汇总 12 个知识点的评级，均值 3.25"
+        },
+        "hands_on": {
+          "level": 3,
+          "reason": "汇总 12 个知识点的评级，均值 3.25"
+        },
+        "theory": {
+          "level": 4,
+          "reason": "汇总 12 个知识点的评级，均值 4.17"
+        },
+        "verifiable": {
+          "level": 3,
+          "reason": "汇总 12 个知识点的评级，均值 3.33"
+        },
+        "core": {
+          "level": 2,
+          "reason": "汇总 12 个知识点的评级，均值 2.33"
+        },
+        "demand": {
+          "level": 3,
+          "reason": "汇总 12 个知识点的评级，均值 3.25"
+        }
+      },
+      "assessment": {
+        "verdict": "recommended",
+        "verdict_reason": "机器人与运动控制需求在增长；要同时掌握控制、机构数学与软件框架，门槛偏高。",
+        "strengths": [
+          "运动学、估计与导航构成完整的技术栈",
+          "仿真与实物都能量化验证"
+        ],
+        "weaknesses": [
+          "数学与软件栈的前置多",
+          "实物平台成本高"
+        ],
+        "next": [
+          {
+            "route_id": "route.machine-vision-servo",
+            "reason": "加上视觉，进入视觉引导"
+          },
+          {
+            "route_id": "route.uav-flight-control",
+            "reason": "往飞行器方向走"
+          }
+        ]
+      }
     },
     {
       "id": "route.advanced-control",
@@ -25248,7 +30176,55 @@
       "pitfalls": [
         "只套公式：不检查可控可观性与饱和，设计无法实现。",
         "只看仿真：不测求解时间与不确定性下的表现。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 3,
+          "reason": "汇总 10 个知识点的评级，均值 3.10"
+        },
+        "hands_on": {
+          "level": 3,
+          "reason": "汇总 10 个知识点的评级，均值 3.10"
+        },
+        "theory": {
+          "level": 5,
+          "reason": "汇总 10 个知识点的评级，均值 4.60"
+        },
+        "verifiable": {
+          "level": 3,
+          "reason": "汇总 10 个知识点的评级，均值 2.80"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 10 个知识点的评级，均值 2.70"
+        },
+        "demand": {
+          "level": 3,
+          "reason": "汇总 10 个知识点的评级，均值 3.00"
+        }
+      },
+      "assessment": {
+        "verdict": "advanced",
+        "verdict_reason": "控制算法方向理论价值高、需求偏窄，需要建模与线性代数的扎实基础。",
+        "strengths": [
+          "理论体系完整，迁移到估计、优化与机器人",
+          "仿真对比很容易做得客观"
+        ],
+        "weaknesses": [
+          "岗位偏少而门槛高",
+          "容易停留在仿真，不看实时与实机"
+        ],
+        "next": [
+          {
+            "route_id": "route.robot-motion",
+            "reason": "把算法用到机器人上"
+          },
+          {
+            "route_id": "route.uav-flight-control",
+            "reason": "把算法用到飞控上"
+          }
+        ]
+      }
     },
     {
       "id": "route.power-grid",
@@ -25321,7 +30297,55 @@
         "把电网当电路：不用标幺值，也不区分有功与无功。",
         "不做上下级配合：保护越级跳闸扩大停电范围。",
         "只看额定容量：忽略电池衰减与功率限制。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 3,
+          "reason": "汇总 11 个知识点的评级，均值 3.09"
+        },
+        "hands_on": {
+          "level": 3,
+          "reason": "汇总 11 个知识点的评级，均值 2.64"
+        },
+        "theory": {
+          "level": 4,
+          "reason": "汇总 11 个知识点的评级，均值 3.55"
+        },
+        "verifiable": {
+          "level": 3,
+          "reason": "汇总 11 个知识点的评级，均值 3.45"
+        },
+        "core": {
+          "level": 2,
+          "reason": "汇总 11 个知识点的评级，均值 2.45"
+        },
+        "demand": {
+          "level": 3,
+          "reason": "汇总 11 个知识点的评级，均值 3.27"
+        }
+      },
+      "assessment": {
+        "verdict": "optional",
+        "verdict_reason": "强电方向，岗位集中于电网与新能源行业；弱电优先的前提下列为可选，想进入电力行业时再选。",
+        "strengths": [
+          "电力系统分析的理论成体系",
+          "新能源与储能方向需求增长"
+        ],
+        "weaknesses": [
+          "实验多依赖仿真，缺少可动手的低成本实物",
+          "岗位集中在特定行业"
+        ],
+        "next": [
+          {
+            "route_id": "route.power-electronics",
+            "reason": "与新能源变换器相通，回到弱电电源方向"
+          },
+          {
+            "route_id": "route.battery-lowpower",
+            "reason": "往储能电池方向走"
+          }
+        ]
+      }
     },
     {
       "id": "route.data-backend",
@@ -25394,7 +30418,55 @@
         "假设网络可靠：不处理超时、重复与乱序。",
         "只会 ORM 不看执行计划。",
         "安全放到最后：没有威胁模型，上线后才补。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 11 个知识点的评级，均值 4.00"
+        },
+        "hands_on": {
+          "level": 4,
+          "reason": "汇总 11 个知识点的评级，均值 3.73"
+        },
+        "theory": {
+          "level": 4,
+          "reason": "汇总 11 个知识点的评级，均值 3.64"
+        },
+        "verifiable": {
+          "level": 3,
+          "reason": "汇总 11 个知识点的评级，均值 2.73"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 11 个知识点的评级，均值 2.82"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 11 个知识点的评级，均值 4.18"
+        }
+      },
+      "assessment": {
+        "verdict": "priority",
+        "verdict_reason": "需求最高的软件方向之一，各环节都能做成可测的服务；与其他方向共享的基础多。",
+        "strengths": [
+          "数据库、并发与分布式有成体系的理论",
+          "作品（服务）容易演示与评估"
+        ],
+        "weaknesses": [
+          "与硬件距离远，软硬结合要另补",
+          "技术栈演进快，要持续学习"
+        ],
+        "next": [
+          {
+            "route_id": "route.security-engineering",
+            "reason": "为服务补上威胁建模与安全"
+          },
+          {
+            "route_id": "route.ml-foundations",
+            "reason": "往数据与机器学习方向走"
+          }
+        ]
+      }
     },
     {
       "id": "route.compilers-tooling",
@@ -25456,7 +30528,55 @@
       "pitfalls": [
         "只背理论：不动手实现。",
         "没有测试语料：优化后行为变了也不知道。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 8 个知识点的评级，均值 4.12"
+        },
+        "hands_on": {
+          "level": 4,
+          "reason": "汇总 8 个知识点的评级，均值 4.12"
+        },
+        "theory": {
+          "level": 4,
+          "reason": "汇总 8 个知识点的评级，均值 3.62"
+        },
+        "verifiable": {
+          "level": 3,
+          "reason": "汇总 8 个知识点的评级，均值 2.62"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 8 个知识点的评级，均值 3.12"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 8 个知识点的评级，均值 4.00"
+        }
+      },
+      "assessment": {
+        "verdict": "advanced",
+        "verdict_reason": "编译与语言工具链的理论价值高，岗位少而专，要有较好的数据结构与系统基础。",
+        "strengths": [
+          "形式语言与程序分析自成体系",
+          "理解语言实现，对所有编程都有帮助"
+        ],
+        "weaknesses": [
+          "岗位数量有限",
+          "投入大、短期难见成果"
+        ],
+        "next": [
+          {
+            "route_id": "route.system-linux",
+            "reason": "往系统软件方向走"
+          },
+          {
+            "route_id": "route.software-systems",
+            "reason": "用语言知识提升系统开发能力"
+          }
+        ]
+      }
     },
     {
       "id": "route.ml-foundations",
@@ -25517,7 +30637,55 @@
       "pitfalls": [
         "数据泄漏：划分与评估不规范，上线后效果相差很远。",
         "只调库不懂优化：训练失败时无从判断。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 3,
+          "reason": "汇总 7 个知识点的评级，均值 3.43"
+        },
+        "hands_on": {
+          "level": 4,
+          "reason": "汇总 7 个知识点的评级，均值 4.00"
+        },
+        "theory": {
+          "level": 4,
+          "reason": "汇总 7 个知识点的评级，均值 3.71"
+        },
+        "verifiable": {
+          "level": 3,
+          "reason": "汇总 7 个知识点的评级，均值 2.86"
+        },
+        "core": {
+          "level": 2,
+          "reason": "汇总 7 个知识点的评级，均值 2.00"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 7 个知识点的评级，均值 4.14"
+        }
+      },
+      "assessment": {
+        "verdict": "recommended",
+        "verdict_reason": "数据与 AI 方向需求高，基础扎实比追热点更重要；评估与可复现是主要纪律。",
+        "strengths": [
+          "评估纪律（划分、泄漏、对照基线）可迁移到所有数据工作",
+          "与数据库、边缘部署相接"
+        ],
+        "weaknesses": [
+          "数学基础要求较高",
+          "技术栈与热点变化快"
+        ],
+        "next": [
+          {
+            "route_id": "route.edge-ai-systems",
+            "reason": "把模型落到设备上"
+          },
+          {
+            "route_id": "route.data-backend",
+            "reason": "补足数据系统工程"
+          }
+        ]
+      }
     },
     {
       "id": "route.security-engineering",
@@ -25577,7 +30745,55 @@
       "pitfalls": [
         "自己发明加密方案。",
         "把所有信任放在客户端。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 6 个知识点的评级，均值 3.50"
+        },
+        "hands_on": {
+          "level": 3,
+          "reason": "汇总 6 个知识点的评级，均值 3.17"
+        },
+        "theory": {
+          "level": 4,
+          "reason": "汇总 6 个知识点的评级，均值 3.67"
+        },
+        "verifiable": {
+          "level": 3,
+          "reason": "汇总 6 个知识点的评级，均值 3.00"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 6 个知识点的评级，均值 2.67"
+        },
+        "demand": {
+          "level": 3,
+          "reason": "汇总 6 个知识点的评级，均值 3.33"
+        }
+      },
+      "assessment": {
+        "verdict": "optional",
+        "verdict_reason": "安全是所有软件的素养，但专门岗位偏少；适合作为已有方向的加深，而非单独的起点。",
+        "strengths": [
+          "威胁建模与密码构件可迁移到所有联网系统",
+          "与固件、工控安全相通"
+        ],
+        "weaknesses": [
+          "专门岗位较少",
+          "需要持续跟进漏洞与标准"
+        ],
+        "next": [
+          {
+            "route_id": "route.firmware-trusted",
+            "reason": "往固件与启动链安全走"
+          },
+          {
+            "route_id": "route.data-backend",
+            "reason": "回到服务端，把安全用在具体系统上"
+          }
+        ]
+      }
     },
     {
       "id": "route.data-acquisition",
@@ -25658,7 +30874,59 @@
         "只看位数不看噪声：16 位的转换器只用出 12 位的效果。",
         "只在仿真里设计：不做实测对账，通路里的寄生与漏电被忽略。",
         "忽略仪器本身：探头与接地带来的伪影被当成电路问题。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 14 个知识点的评级，均值 4.14"
+        },
+        "hands_on": {
+          "level": 4,
+          "reason": "汇总 14 个知识点的评级，均值 3.93"
+        },
+        "theory": {
+          "level": 4,
+          "reason": "汇总 14 个知识点的评级，均值 3.86"
+        },
+        "verifiable": {
+          "level": 4,
+          "reason": "汇总 14 个知识点的评级，均值 4.00"
+        },
+        "core": {
+          "level": 4,
+          "reason": "汇总 14 个知识点的评级，均值 3.71"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 14 个知识点的评级，均值 4.21"
+        }
+      },
+      "assessment": {
+        "verdict": "priority",
+        "verdict_reason": "弱电里最贴近传感与测量的方向：评级在各维度都靠前，每个环节都有可量化的实测。",
+        "strengths": [
+          "信噪比、有效位数与标定都能量化验证",
+          "通路思维可迁移到任何传感与测控系统"
+        ],
+        "weaknesses": [
+          "要有信号源与示波器等仪器",
+          "需要同时补模拟与信号处理基础"
+        ],
+        "next": [
+          {
+            "route_id": "route.high-speed-board",
+            "reason": "往高速与电源完整性做深"
+          },
+          {
+            "route_id": "route.industrial-io-networks",
+            "reason": "接入工业现场，处理隔离与总线"
+          },
+          {
+            "route_id": "route.machine-vision-servo",
+            "reason": "把测量扩展到视觉"
+          }
+        ]
+      }
     },
     {
       "id": "route.high-speed-board",
@@ -25740,7 +31008,55 @@
         "只在原型上跑通：没有测试点与测试脚本，量产时不良无法定位。",
         "把高速信号当低速布：不看参考平面与回流，板子出来才发现不可用。",
         "只算不测：热与电源时序只在手册里估算，没有实测对账。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 15 个知识点的评级，均值 4.00"
+        },
+        "hands_on": {
+          "level": 4,
+          "reason": "汇总 15 个知识点的评级，均值 3.80"
+        },
+        "theory": {
+          "level": 3,
+          "reason": "汇总 15 个知识点的评级，均值 3.27"
+        },
+        "verifiable": {
+          "level": 4,
+          "reason": "汇总 15 个知识点的评级，均值 4.20"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 15 个知识点的评级，均值 2.93"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 15 个知识点的评级，均值 3.87"
+        }
+      },
+      "assessment": {
+        "verdict": "recommended",
+        "verdict_reason": "把一块板从能用做到能交付：高速、电源、热与量产，需求高，但前置是调通过板子的基本功。",
+        "strengths": [
+          "覆盖信号完整性、电源架构、热、可靠性与量产的全流程",
+          "每个环节都有实测或验收材料"
+        ],
+        "weaknesses": [
+          "要有打样、仪器与较多时间投入",
+          "部分内容（量产测试）依赖具体工厂条件"
+        ],
+        "next": [
+          {
+            "route_id": "route.power-electronics",
+            "reason": "深入电源与变换器"
+          },
+          {
+            "route_id": "route.data-acquisition",
+            "reason": "补足精密模拟与采集"
+          }
+        ]
+      }
     },
     {
       "id": "route.industrial-io-networks",
@@ -25818,7 +31134,55 @@
         "把实验室的接法带到现场：不隔离、不滤波，读数被干扰击穿。",
         "把以太网当成实时：不测延迟与抖动。",
         "用办公网的办法保护生产网：主动扫描让设备停机。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 11 个知识点的评级，均值 3.82"
+        },
+        "hands_on": {
+          "level": 3,
+          "reason": "汇总 11 个知识点的评级，均值 2.73"
+        },
+        "theory": {
+          "level": 3,
+          "reason": "汇总 11 个知识点的评级，均值 3.18"
+        },
+        "verifiable": {
+          "level": 4,
+          "reason": "汇总 11 个知识点的评级，均值 4.27"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 11 个知识点的评级，均值 3.09"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 11 个知识点的评级，均值 3.91"
+        }
+      },
+      "assessment": {
+        "verdict": "recommended",
+        "verdict_reason": "自动化里偏弱电的接口与通信主线，需求稳定；隔离、总线与网络都有可量化的验证。",
+        "strengths": [
+          "隔离、总线边界与延迟抖动都能实测",
+          "与电子信息的物理层、电气的安全接口相通"
+        ],
+        "weaknesses": [
+          "需要现场设备或接口板，实验条件要求较高",
+          "实时以太网与工控安全的细节变化较快"
+        ],
+        "next": [
+          {
+            "route_id": "route.industrial-automation",
+            "reason": "回到工业控制系统整体"
+          },
+          {
+            "route_id": "route.smart-factory",
+            "reason": "往工厂数据与设备健康方向走"
+          }
+        ]
+      }
     },
     {
       "id": "route.uav-flight-control",
@@ -25897,7 +31261,55 @@
         "先调外环：内环没整好就去调位置环，持续振荡找不到来源。",
         "只在仿真里整定：不看传感器延迟与电机的实际响应。",
         "忽略故障：没有传感器或电机故障下的降级设计。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 12 个知识点的评级，均值 3.50"
+        },
+        "hands_on": {
+          "level": 4,
+          "reason": "汇总 12 个知识点的评级，均值 3.75"
+        },
+        "theory": {
+          "level": 4,
+          "reason": "汇总 12 个知识点的评级，均值 3.75"
+        },
+        "verifiable": {
+          "level": 3,
+          "reason": "汇总 12 个知识点的评级，均值 3.42"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 12 个知识点的评级，均值 2.58"
+        },
+        "demand": {
+          "level": 3,
+          "reason": "汇总 12 个知识点的评级，均值 3.33"
+        }
+      },
+      "assessment": {
+        "verdict": "optional",
+        "verdict_reason": "无人机飞控是控制、估计与嵌入式的综合题，适合有兴趣做无人系统的人，岗位偏窄。",
+        "strengths": [
+          "嵌套回路、估计与整定能在仿真里完整练习",
+          "对暴露控制与嵌入式短板很有效"
+        ],
+        "weaknesses": [
+          "岗位偏窄",
+          "实飞需要场地与安全条件"
+        ],
+        "next": [
+          {
+            "route_id": "route.robot-motion",
+            "reason": "往机器人方向做更通用的拓展"
+          },
+          {
+            "route_id": "route.advanced-control",
+            "reason": "往控制算法深入"
+          }
+        ]
+      }
     },
     {
       "id": "route.machine-vision-servo",
@@ -25969,7 +31381,55 @@
       "pitfalls": [
         "把视觉当成瞬时传感器：不测延迟与时间同步，回路总是慢半拍。",
         "只会调库：不会标定与坐标变换，换一个相机就全部作废。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 4,
+          "reason": "汇总 11 个知识点的评级，均值 3.55"
+        },
+        "hands_on": {
+          "level": 3,
+          "reason": "汇总 11 个知识点的评级，均值 3.09"
+        },
+        "theory": {
+          "level": 4,
+          "reason": "汇总 11 个知识点的评级，均值 4.27"
+        },
+        "verifiable": {
+          "level": 3,
+          "reason": "汇总 11 个知识点的评级，均值 3.09"
+        },
+        "core": {
+          "level": 3,
+          "reason": "汇总 11 个知识点的评级，均值 3.00"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 11 个知识点的评级，均值 3.55"
+        }
+      },
+      "assessment": {
+        "verdict": "recommended",
+        "verdict_reason": "工业检测与机器人感知需求大；要同时补视觉、控制与几何，延迟与同步是关键。",
+        "strengths": [
+          "相机标定与定位精度可量化",
+          "与机器人、检测方向都相通"
+        ],
+        "weaknesses": [
+          "数学与编程要求较高",
+          "算法热点更新快"
+        ],
+        "next": [
+          {
+            "route_id": "route.robot-motion",
+            "reason": "进入机器人与运动控制"
+          },
+          {
+            "route_id": "route.ml-foundations",
+            "reason": "补学习型视觉的基础"
+          }
+        ]
+      }
     },
     {
       "id": "route.smart-factory",
@@ -26048,7 +31508,55 @@
         "只做大屏：数据质量与时间同步没保证，分析与排产建立在错位的数据上。",
         "把训练集上的拟合当成预测：同一台设备既训练又评估，换设备就失效。",
         "模型漏掉现场规则：求出的最优排产现场无法执行。"
-      ]
+      ],
+      "ratings": {
+        "utility": {
+          "level": 3,
+          "reason": "汇总 12 个知识点的评级，均值 3.42"
+        },
+        "hands_on": {
+          "level": 3,
+          "reason": "汇总 12 个知识点的评级，均值 3.08"
+        },
+        "theory": {
+          "level": 3,
+          "reason": "汇总 12 个知识点的评级，均值 3.00"
+        },
+        "verifiable": {
+          "level": 4,
+          "reason": "汇总 12 个知识点的评级，均值 3.67"
+        },
+        "core": {
+          "level": 2,
+          "reason": "汇总 12 个知识点的评级，均值 2.42"
+        },
+        "demand": {
+          "level": 4,
+          "reason": "汇总 12 个知识点的评级，均值 3.50"
+        }
+      },
+      "assessment": {
+        "verdict": "optional",
+        "verdict_reason": "工厂数字化方向，需求稳定但偏工程与行业经验，适合已有自动化或后端基础的人。",
+        "strengths": [
+          "把现场数据、调度与设备健康放在同一条线上",
+          "评估强调留出设备与基线，纪律好"
+        ],
+        "weaknesses": [
+          "依赖行业场景与真实数据",
+          "技术栈跨度大，易流于概念"
+        ],
+        "next": [
+          {
+            "route_id": "route.industrial-io-networks",
+            "reason": "补足现场接口与网络"
+          },
+          {
+            "route_id": "route.data-backend",
+            "reason": "补足数据系统工程"
+          }
+        ]
+      }
     }
   ],
   "principles": [
@@ -26178,5 +31686,209 @@
         }
       ]
     }
-  ]
+  ],
+  "rating_scheme": {
+    "as_of": "2026-10",
+    "note": "评级只用来强调与比较，不用来取舍：不因评级低而删节点，也不合成总分。推导型三项由内容按规则算出，编辑型三项是带依据的评估；就业需求度是评估日期当时的估计，不是统计，不构成录用承诺。",
+    "dimensions": [
+      {
+        "id": "utility",
+        "title": "实用性",
+        "basis": "editorial",
+        "question": "学完能直接用于日常工程工作的程度。",
+        "levels": [
+          {
+            "level": 1,
+            "name": "储备",
+            "criterion": "背景知识，工作中几乎不直接用到。"
+          },
+          {
+            "level": 2,
+            "name": "辅助",
+            "criterion": "偶尔用到，多半是间接帮助判断。"
+          },
+          {
+            "level": 3,
+            "name": "常用",
+            "criterion": "特定任务或特定方向里经常用到。"
+          },
+          {
+            "level": 4,
+            "name": "高频",
+            "criterion": "多数项目里都会反复用到。"
+          },
+          {
+            "level": 5,
+            "name": "日常必备",
+            "criterion": "几乎每天的工作都离不开。"
+          }
+        ]
+      },
+      {
+        "id": "hands_on",
+        "title": "实践性",
+        "basis": "derived",
+        "question": "学习过程里动手实践所占的比重。",
+        "levels": [
+          {
+            "level": 1,
+            "name": "偏讲授",
+            "criterion": "动手章节不超过 40%。"
+          },
+          {
+            "level": 2,
+            "name": "讲练偏讲",
+            "criterion": "动手章节占 40%–55%。"
+          },
+          {
+            "level": 3,
+            "name": "讲练并重",
+            "criterion": "动手章节占 55%–70%。"
+          },
+          {
+            "level": 4,
+            "name": "偏实操",
+            "criterion": "动手章节占 70%–80%。"
+          },
+          {
+            "level": 5,
+            "name": "全程实操",
+            "criterion": "动手章节超过 80%。"
+          }
+        ]
+      },
+      {
+        "id": "theory",
+        "title": "理论实用性",
+        "basis": "editorial",
+        "question": "理论内容能转化成判据、设计方法，并迁移到多个场景的程度。",
+        "levels": [
+          {
+            "level": 1,
+            "name": "零散",
+            "criterion": "以经验规则与操作步骤为主，理论成分很少。"
+          },
+          {
+            "level": 2,
+            "name": "局部",
+            "criterion": "理论只在局部场景有用，迁移面窄。"
+          },
+          {
+            "level": 3,
+            "name": "较强",
+            "criterion": "有明确的方法与判据，在本方向内可直接套用。"
+          },
+          {
+            "level": 4,
+            "name": "很强",
+            "criterion": "有成体系的理论，能推出设计判据，并迁移到相邻方向。"
+          },
+          {
+            "level": 5,
+            "name": "奠基级",
+            "criterion": "一套理论撑起多个领域，是后续大量内容的推导起点。"
+          }
+        ]
+      },
+      {
+        "id": "verifiable",
+        "title": "可验证性",
+        "basis": "derived",
+        "question": "学没学会、做得对不对，能被客观、独立地检查的程度。",
+        "levels": [
+          {
+            "level": 1,
+            "name": "主观评审",
+            "criterion": "主要靠人的评审或分析判断。"
+          },
+          {
+            "level": 2,
+            "name": "间接检验",
+            "criterion": "有检验手段，但依赖环境或评审者。"
+          },
+          {
+            "level": 3,
+            "name": "可复现",
+            "criterion": "有可复现的实测、基准或联调，或有可交的验收。"
+          },
+          {
+            "level": 4,
+            "name": "可量化",
+            "criterion": "有客观量化指标，并有动手验收或仪器取证。"
+          },
+          {
+            "level": 5,
+            "name": "独立实测",
+            "criterion": "客观量化、有动手验收，并用仪器或板上测量独立取证。"
+          }
+        ]
+      },
+      {
+        "id": "core",
+        "title": "学科核心骨干",
+        "basis": "derived",
+        "question": "在学科知识结构里是不是承重的那一部分。",
+        "levels": [
+          {
+            "level": 1,
+            "name": "拓展",
+            "criterion": "优先级为可选，且很少有节点把它列为强先修。"
+          },
+          {
+            "level": 2,
+            "name": "支撑",
+            "criterion": "重要但很少有节点依赖，或可选但被多个节点依赖。"
+          },
+          {
+            "level": 3,
+            "name": "重要",
+            "criterion": "必要但很少有节点依赖，或重要且被多个节点依赖，或可选而被大量节点依赖。"
+          },
+          {
+            "level": 4,
+            "name": "核心",
+            "criterion": "必要且被多个（3 个以上）节点依赖，或重要且被大量（6 个以上）节点依赖。"
+          },
+          {
+            "level": 5,
+            "name": "骨干",
+            "criterion": "必要，并被大量（6 个以上）节点列为强先修，是知识结构的枢纽。"
+          }
+        ]
+      },
+      {
+        "id": "demand",
+        "title": "就业需求度",
+        "basis": "editorial",
+        "question": "在典型技术岗位的公开要求里出现得有多普遍（评估日期当时的估计）。",
+        "levels": [
+          {
+            "level": 1,
+            "name": "小众",
+            "criterion": "个别岗位或研究导向才要求。"
+          },
+          {
+            "level": 2,
+            "name": "偏少",
+            "criterion": "少数细分岗位要求。"
+          },
+          {
+            "level": 3,
+            "name": "一般",
+            "criterion": "某一个主流方向的核心要求。"
+          },
+          {
+            "level": 4,
+            "name": "较高",
+            "criterion": "多个主流方向的核心要求。"
+          },
+          {
+            "level": 5,
+            "name": "很高",
+            "criterion": "几乎所有相关方向岗位的基本要求。"
+          }
+        ]
+      }
+    ]
+  }
 }

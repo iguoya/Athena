@@ -45,6 +45,13 @@ KNOWN_DISCIPLINE = {"cs", "ei", "ee", "auto", "cross"}
 # 弱电、强电、兼有（ADR 0021 决策 2）：电气类（ee）图的每个节点必须写。
 KNOWN_CURRENT = {"weak", "strong", "both"}
 
+# 评级（ADR 0022）：六个维度、五个等级。前三项由内容推导、契约重算；后三项是带依据的编辑评估。
+RATING_DIMENSIONS = ["utility", "hands_on", "theory", "verifiable", "core", "demand"]
+RATING_DERIVED_NODE = {"hands_on", "verifiable", "core"}
+RATING_LEVELS = 5
+# 路线的推荐等级（ADR 0022 决策 7）：优先推荐、推荐、可选、进阶（有明确前置，不宜作起点）。
+KNOWN_VERDICT = {"priority", "recommended", "optional", "advanced"}
+
 NODE_FIELDS = ["id", "title", "track", "stable_definition", "engineering_role",
                "practice", "validation", "volatility"]
 ACADEMIC_NODE_FIELDS = ["pitfall", "priority", "priority_reason"]
@@ -127,6 +134,7 @@ def validate(document: dict[str, Any], root: Path = PROJECT_ROOT) -> list[Violat
     _validate_cross_edges(report, document, source_ids, global_node_ids, map_of_node)
     _validate_routes(report, document, source_ids, view_kind_by_map, map_of_node)
     _validate_principles(report, document, source_ids)
+    _validate_ratings(report, document, view_kind_by_map)
     return report.violations
 
 
@@ -474,6 +482,151 @@ def _validate_principles(report: _Report, document: dict, source_ids: set[str]) 
             report.add("principle.duplicate_id", where, "原则 ID 重复。")
         seen.add(pid)
         report.require_source_refs("principle.source_refs", where, principle.get("source_refs"), source_ids)
+
+
+# —— 评级（ADR 0022）——
+
+_VALIDATION_BASE = {"measurement": 3, "benchmark": 3, "integration": 2, "simulation": 2, "analysis": 1, "review": 1}
+_VALIDATION_ZH = {"measurement": "实测", "benchmark": "基准对比", "integration": "联调", "simulation": "仿真",
+                  "analysis": "分析", "review": "评审"}
+_PRIORITY_BASE = {"essential": 3, "important": 2, "optional": 1}
+_PRIORITY_ZH = {"essential": "必要", "important": "重要", "optional": "可选"}
+
+
+def _round_half_up(x: float) -> int:
+    return int(x + 0.5)
+
+
+def _dependents(document: dict[str, Any]) -> dict[str, int]:
+    """被依赖数：图内 requires 与跨图 requires 边合计。"""
+    count: dict[str, int] = {}
+    for entry in document.get("maps") or []:
+        for node in (entry.get("nodes") or []) if isinstance(entry, dict) else []:
+            for required in _strings(node.get("requires")) if isinstance(node, dict) else []:
+                count[required] = count.get(required, 0) + 1
+    for edge in document.get("cross_edges") or []:
+        if isinstance(edge, dict) and edge.get("relation", "requires") == "requires" and isinstance(edge.get("from"), str):
+            count[edge["from"]] = count.get(edge["from"], 0) + 1
+    return count
+
+
+def derive_node_ratings(node: dict[str, Any], dependents: int) -> dict[str, tuple[int, str]]:
+    """推导型三个维度：实践性、可验证性、学科核心骨干。返回 {维度: (等级, 依据)}。"""
+    chapters = [c for c in (node.get("chapters") or []) if isinstance(c, dict)]
+    practice = sum(1 for c in chapters if c.get("kind") == "practice")
+    ratio = practice / len(chapters) if chapters else 0.0
+    hands_on = 1 if ratio <= 0.4 else 2 if ratio <= 0.55 else 3 if ratio <= 0.7 else 4 if ratio <= 0.8 else 5
+    hands_on_reason = f"{len(chapters)} 章里 {practice} 章是动手实践（{round(ratio * 100)}%）"
+
+    base = _VALIDATION_BASE.get(node.get("validation"), 1)
+    last = chapters[-1] if chapters else {}
+    accept = 1 if last.get("mastery") == "assessment" and last.get("hands_on") else 0
+    physical = 1 if node.get("verify") in ("board", "bench") else 0
+    verifiable = base + accept + physical
+    parts = [f"验证方式为{_VALIDATION_ZH.get(node.get('validation'), '未知')}（基础 {base}）"]
+    if accept:
+        parts.append("末章是动手的验收（+1）")
+    if physical:
+        parts.append("用仪器或板上测量取证（+1）")
+    verifiable_reason = "；".join(parts)
+
+    core_base = _PRIORITY_BASE.get(node.get("priority"), 1)
+    hub = 2 if dependents >= 6 else 1 if dependents >= 3 else 0
+    core = core_base + hub
+    core_reason = f"优先级{_PRIORITY_ZH.get(node.get('priority'), '可选')}（基础 {core_base}）；被 {dependents} 个节点列为强先修" + (f"（+{hub}）" if hub else "")
+    return {"hands_on": (hands_on, hands_on_reason), "verifiable": (verifiable, verifiable_reason), "core": (core, core_reason)}
+
+
+def aggregate_route_rating(levels: list[int]) -> tuple[int, str]:
+    mean = sum(levels) / len(levels) if levels else 0.0
+    return _round_half_up(mean), f"汇总 {len(levels)} 个知识点的评级，均值 {mean:.2f}"
+
+
+def _valid_level(value: Any) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool) and 1 <= value <= RATING_LEVELS
+
+
+def _validate_ratings(report: _Report, document: dict[str, Any], view_kind_by_map: dict) -> None:
+    scheme = document.get("rating_scheme") if isinstance(document.get("rating_scheme"), dict) else {}
+    report.require_text("rating.scheme", "评级口径 rating_scheme", scheme, ["as_of"])
+    dims = scheme.get("dimensions") if isinstance(scheme.get("dimensions"), list) else []
+    if [d.get("id") if isinstance(d, dict) else None for d in dims] != RATING_DIMENSIONS:
+        report.add("rating.scheme", "评级口径 rating_scheme", f"dimensions 必须按顺序恰好是 {RATING_DIMENSIONS}。")
+    for dim in dims:
+        dim = dim if isinstance(dim, dict) else {}
+        where = f"评级维度 {dim.get('id')}"
+        report.require_text("rating.scheme", where, dim, ["id", "title", "question"])
+        derived = dim.get("id") in RATING_DERIVED_NODE
+        if dim.get("basis") != ("derived" if derived else "editorial"):
+            report.add("rating.scheme", where, "basis 必须与推导型 / 编辑型的划分一致（derived 或 editorial）。")
+        levels = dim.get("levels") if isinstance(dim.get("levels"), list) else []
+        if [lv.get("level") if isinstance(lv, dict) else None for lv in levels] != list(range(1, RATING_LEVELS + 1)):
+            report.add("rating.scheme", where, f"levels 必须是 1 到 {RATING_LEVELS} 级，按顺序各一条。")
+        for lv in levels:
+            report.require_text("rating.scheme", where, lv if isinstance(lv, dict) else {}, ["name", "criterion"])
+
+    dependents = _dependents(document)
+    node_levels: dict[str, dict[str, int]] = {}
+    for entry in document.get("maps") or []:
+        entry = entry if isinstance(entry, dict) else {}
+        if view_kind_by_map.get(entry.get("id")) not in OPEN_VIEW_KINDS:
+            continue
+        for node in entry.get("nodes") or []:
+            node = node if isinstance(node, dict) else {}
+            where = f"节点 {node.get('id')} 的 ratings"
+            ratings = node.get("ratings") if isinstance(node.get("ratings"), dict) else None
+            if ratings is None or set(ratings) != set(RATING_DIMENSIONS):
+                report.add("rating.fields", where, f"开放地图的节点必须写齐六个维度：{RATING_DIMENSIONS}。")
+                continue
+            derived = derive_node_ratings(node, dependents.get(node.get("id"), 0))
+            levels: dict[str, int] = {}
+            for dim in RATING_DIMENSIONS:
+                item = ratings[dim] if isinstance(ratings[dim], dict) else {}
+                if not _valid_level(item.get("level")) or not _text(item.get("reason")):
+                    report.add("rating.fields", where, f"{dim} 需要 1–{RATING_LEVELS} 的整数 level 与非空 reason。")
+                    continue
+                levels[dim] = item["level"]
+                if dim in derived and (item["level"], item["reason"]) != derived[dim]:
+                    report.add("rating.derived", where, f"{dim} 是推导型，应为 {derived[dim][0]} 级（{derived[dim][1]}），与内容不一致。")
+            node_levels[node.get("id")] = levels
+
+    for route in document.get("routes") or []:
+        route = route if isinstance(route, dict) else {}
+        where = f"路线 {route.get('id')}"
+        members = []
+        for stage in route.get("stages") or []:
+            for nid in _strings(stage.get("nodes")) if isinstance(stage, dict) else []:
+                if nid not in members:
+                    members.append(nid)
+        ratings = route.get("ratings") if isinstance(route.get("ratings"), dict) else None
+        if ratings is None or set(ratings) != set(RATING_DIMENSIONS):
+            report.add("rating.fields", where, f"路线必须写齐六个维度的 ratings：{RATING_DIMENSIONS}。")
+        else:
+            for dim in RATING_DIMENSIONS:
+                item = ratings[dim] if isinstance(ratings[dim], dict) else {}
+                values = [node_levels[n][dim] for n in members if n in node_levels and dim in node_levels[n]]
+                expected = aggregate_route_rating(values)
+                if (item.get("level"), item.get("reason")) != expected:
+                    report.add("rating.derived", where, f"{dim} 应由节点汇总为 {expected[0]} 级（{expected[1]}）。")
+        _validate_assessment(report, route, where, {r.get("id") for r in document.get("routes") or [] if isinstance(r, dict)})
+
+
+def _validate_assessment(report: _Report, route: dict, where: str, route_ids: set) -> None:
+    assessment = route.get("assessment") if isinstance(route.get("assessment"), dict) else {}
+    if assessment.get("verdict") not in KNOWN_VERDICT or not _text(assessment.get("verdict_reason")):
+        report.add("assessment.fields", where, f"assessment 需要 verdict（{sorted(KNOWN_VERDICT)}）与非空 verdict_reason。")
+    for key in ("strengths", "weaknesses"):
+        items = assessment.get(key)
+        if not (isinstance(items, list) and 1 <= len(items) <= 3 and all(_text(i) for i in items)):
+            report.add("assessment.fields", where, f"{key} 需要 1–3 条非空文字。")
+    nxt = assessment.get("next")
+    if not (isinstance(nxt, list) and 1 <= len(nxt) <= 3):
+        report.add("assessment.fields", where, "next 需要 1–3 条推荐的后续方向。")
+        return
+    for item in nxt:
+        item = item if isinstance(item, dict) else {}
+        if item.get("route_id") not in route_ids or item.get("route_id") == route.get("id") or not _text(item.get("reason")):
+            report.add("assessment.fields", where, "next 的每一项要指向另一条存在的路线，并写出理由。")
 
 
 def main(argv: list[str] | None = None) -> int:

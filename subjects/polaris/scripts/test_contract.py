@@ -108,6 +108,27 @@ class RealContent(unittest.TestCase):
         for slug in ("industrial_io", "realtime_ethernet_tsn", "control_simulation_hil", "ot_security", "frequency_design"):
             find_node(DOC, f"polaris.auto.{slug}")
 
+    def test_ratings_cover_every_open_node_and_route(self) -> None:
+        # ADR 0022：开放地图的每个节点、每条路线都有六个维度的评级；参考层不评级。
+        open_nodes = [n for m in DOC["maps"] if m["view_kind"] in contract.OPEN_VIEW_KINDS for n in m["nodes"]]
+        self.assertGreaterEqual(len(open_nodes), 140)
+        for n in open_nodes:
+            self.assertEqual(set(n["ratings"]), set(contract.RATING_DIMENSIONS), n["id"])
+        for m in DOC["maps"]:
+            if m["view_kind"] not in contract.OPEN_VIEW_KINDS:
+                for n in m["nodes"]:
+                    self.assertNotIn("ratings", n, n["id"])
+        for r in DOC["routes"]:
+            self.assertEqual(set(r["ratings"]), set(contract.RATING_DIMENSIONS), r["id"])
+
+    def test_weak_current_routes_are_never_ranked_below_strong_current_ones(self) -> None:
+        # ADR 0021 / 0022：弱电优先——电气类里弱电为主的路线，推荐等级不低于强电方向的路线。
+        rank = {"priority": 0, "recommended": 1, "optional": 2, "advanced": 3}
+        grid = next(r for r in DOC["routes"] if r["id"] == "route.power-grid")
+        for r in DOC["routes"]:
+            if r["discipline"] == "ee" and r["id"] != "route.power-grid" and r["lens"] == "direction":
+                self.assertLessEqual(rank[r["assessment"]["verdict"]], rank[grid["assessment"]["verdict"]], r["id"])
+
     def test_codesign_map_covers_every_contract(self) -> None:
         nodes = find_map(DOC, "hw-sw-interface")["nodes"]
         self.assertEqual(len(nodes), 17)
@@ -282,8 +303,8 @@ class Counterexamples(unittest.TestCase):
         from pathlib import Path
 
         source = Path(contract.__file__).read_text(encoding="utf-8")
-        declared = set(re.findall(r'"((?:doc|source|map|node|course|requires|edge|cross|codesign|route)\.[a-z_]+)"', source))
-        tested = set(re.findall(r'"((?:doc|source|map|node|course|requires|edge|cross|codesign|route)\.[a-z_]+)"',
+        declared = set(re.findall(r'"((?:doc|source|map|node|course|requires|edge|cross|codesign|route|rating|assessment)\.[a-z_]+)"', source))
+        tested = set(re.findall(r'"((?:doc|source|map|node|course|requires|edge|cross|codesign|route|rating|assessment)\.[a-z_]+)"',
                                 Path(__file__).read_text(encoding="utf-8")))
         self.assertEqual(sorted(declared - tested), [])
 
@@ -321,6 +342,33 @@ def with_codesign_and_route(document: dict) -> dict:
         ],
         "source_refs": [{"relation": "adapted", "source_id": "csapp", "locator": "x"}],
     }]
+    # 评级（ADR 0022）：夹具的节点与路线也要带评级，否则夹具本身就不干净。
+    dependents = contract._dependents(document)
+    levels = {}
+    for entry in document["maps"]:
+        if entry["view_kind"] not in contract.OPEN_VIEW_KINDS:
+            continue
+        for n in entry["nodes"]:
+            if "ratings" in n:
+                levels[n["id"]] = {k: v["level"] for k, v in n["ratings"].items()}
+                continue
+            derived = contract.derive_node_ratings(n, dependents.get(n["id"], 0))
+            n["ratings"] = {dim: ({"level": derived[dim][0], "reason": derived[dim][1]} if dim in derived else {"level": 3, "reason": "夹具"})
+                            for dim in contract.RATING_DIMENSIONS}
+            levels[n["id"]] = {k: v["level"] for k, v in n["ratings"].items()}
+    first = document["routes"][0]
+    second = copy.deepcopy(first)
+    second["id"] = "route.fixture-2"
+    document["routes"] = [first, second]
+    for route in document["routes"]:
+        members = list(dict.fromkeys(nid for st in route["stages"] for nid in st["nodes"]))
+        route["ratings"] = {}
+        for dim in contract.RATING_DIMENSIONS:
+            level, reason = contract.aggregate_route_rating([levels[nid][dim] for nid in members])
+            route["ratings"][dim] = {"level": level, "reason": reason}
+        other = "route.fixture-2" if route["id"] == "route.fixture" else "route.fixture"
+        route["assessment"] = {"verdict": "optional", "verdict_reason": "夹具", "strengths": ["x"], "weaknesses": ["x"],
+                               "next": [{"route_id": other, "reason": "x"}]}
     return document
 
 
@@ -464,6 +512,27 @@ class DepthAndBalance(unittest.TestCase):
         expect("route.discipline", lambda d: d["routes"][0].pop("discipline"))
         expect("node.current", lambda d: find_map(d, "electrical-engineering")["nodes"][0].update(current="bogus"))
         expect("node.current_required", lambda d: find_map(d, "electrical-engineering")["nodes"][0].pop("current"))
+        # 评级（ADR 0022）
+        expect("rating.scheme", lambda d: d["rating_scheme"]["dimensions"].pop())
+        expect("rating.scheme", lambda d: d["rating_scheme"]["dimensions"][0]["levels"].pop())
+        expect("rating.scheme", lambda d: d["rating_scheme"]["dimensions"][1].update(basis="editorial"))
+        expect("rating.fields", lambda d: find_node(d, "polaris.cs.c_lang")["ratings"].pop("demand"))
+        expect("rating.fields", lambda d: find_node(d, "polaris.cs.c_lang")["ratings"]["utility"].update(level=6))
+        expect("rating.fields", lambda d: find_node(d, "polaris.cs.c_lang")["ratings"]["utility"].update(reason=""))
+        expect("rating.fields", lambda d: d["routes"][0].pop("ratings"))
+        # 推导型维度改了等级、或者内容变了而评级没跟着变，都要被发现
+        expect("rating.derived", lambda d: find_node(d, "polaris.cs.c_lang")["ratings"]["core"].update(level=1))
+        expect("rating.derived", lambda d: find_node(d, "polaris.cs.c_lang").update(priority="optional"))
+        expect("rating.derived", lambda d: find_node(d, "polaris.cs.c_lang")["chapters"][0].update(kind="practice", hands_on=True)
+               if find_node(d, "polaris.cs.c_lang")["chapters"][0]["kind"] != "practice" else find_node(d, "polaris.cs.c_lang")["chapters"].pop())
+        expect("rating.derived", lambda d: d["routes"][0]["ratings"]["utility"].update(level=1))
+        expect("rating.derived", lambda d: d["routes"][0]["stages"][0]["nodes"].append("polaris.cs.python")
+               if "polaris.cs.python" not in d["routes"][0]["stages"][0]["nodes"] else d["routes"][0]["stages"][0]["nodes"].remove("polaris.cs.python"))
+        expect("assessment.fields", lambda d: d["routes"][0]["assessment"].update(verdict="bogus"))
+        expect("assessment.fields", lambda d: d["routes"][0]["assessment"].update(strengths=[]))
+        expect("assessment.fields", lambda d: d["routes"][0]["assessment"].update(next=[]))
+        expect("assessment.fields", lambda d: d["routes"][0]["assessment"]["next"][0].update(route_id="route.ghost"))
+        expect("assessment.fields", lambda d: d["routes"][0]["assessment"]["next"][0].update(route_id=d["routes"][0]["id"]))
         expect("principle.fields", lambda d: d["principles"][0].update(body=""))
         expect("principle.duplicate_id", lambda d: d["principles"].append(copy.deepcopy(d["principles"][0])))
         expect("principle.source_refs", lambda d: d["principles"][0].update(source_refs=[]))
