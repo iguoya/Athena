@@ -14,7 +14,7 @@ class RecallRowDot extends StatelessWidget {
 
   final SymbolStatus status;
 
-  /// 这一行还要再答对几次才算掌握，写在红点里（ADR 0119）。
+  /// 这一行还要再答对几次才算掌握（最近一次答错的卡数），写在红点里（ADR 0120、0121）。
   final int remaining;
 
   @override
@@ -23,7 +23,7 @@ class RecallRowDot extends StatelessWidget {
       status: status,
       remaining: remaining,
       tooltip: switch (status) {
-        SymbolStatus.wrong => remaining > 0 ? "这一行的自测题答错过，还要再对 $remaining 次才算掌握" : "这一行的自测题答错过，还没掌握",
+        SymbolStatus.wrong => "这一行有 ${remaining > 0 ? remaining : 1} 张自测卡最近一次答错，各再答对一次就算掌握",
         SymbolStatus.mastered => "这一行的自测题全部答对过",
         SymbolStatus.fresh => "这一行还没测完",
       },

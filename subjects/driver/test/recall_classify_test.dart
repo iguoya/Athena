@@ -30,20 +30,23 @@ void main() {
     expect(classify([attempt(card, true, 0), attempt(card, true, 1)]), RecallBucket.done);
   });
 
-  test("答错过的卡和错题一个规矩：累计答对达到答错的 2 倍才移出，之后再错又回来", () {
+  test("专题自测不套 2 倍规则：最近一次答对就算掌握，再答错又回来（ADR 0121）", () {
     expect(classify([attempt(card, false, 0)]), RecallBucket.wrong);
-    // 答错一次、重现后答对一次：1 < 2 倍，还在错题库里，下次自测还要再考。
-    expect(classify([attempt(card, false, 0), attempt(card, true, 1)]), RecallBucket.wrong);
-    // 再答对一次：2 ≥ 2 倍，移出，不再出现。
-    expect(classify([attempt(card, false, 0), attempt(card, true, 1), attempt(card, true, 2)]), RecallBucket.done);
-    // 移出之后又答错：比例掉下去，自动回来。
+    // 答错一次、再答对一次：最近一次对了，就算掌握，不再出现。
+    expect(classify([attempt(card, false, 0), attempt(card, true, 1)]), RecallBucket.done);
+    // 错 3 次后答对 1 次：同样算掌握，不用对到 6 次。
+    expect(
+      classify([attempt(card, false, 0), attempt(card, false, 1), attempt(card, false, 2), attempt(card, true, 3)]),
+      RecallBucket.done,
+    );
+    // 掌握之后又答错：最近一次错了，回来再考。
     expect(
       classify([attempt(card, false, 0), attempt(card, true, 1), attempt(card, true, 2), attempt(card, false, 3)]),
       RecallBucket.wrong,
     );
   });
 
-  test("自测收尾的待练题 speedPending：没做过的与错题库里的，偏难一视同仁，做对过一次就不再出（ADR 0115）", () async {
+  test("自测要考的题 speedPending：没做过的与最近一次答错的，偏难一视同仁，最近一次答对的不出（ADR 0115、0121）", () async {
     final bank = await ContentLoader.load();
     final rare = bank.questions.firstWhere((q) => q.isRare);
     final plain = bank.questions.firstWhere((q) => q.isRegular && q.id != rare.id);
@@ -51,14 +54,14 @@ void main() {
     final retired = bank.questions.firstWhere((q) => q.isCommon);
     final histories = HistorySet.build([
       attempt(plain.id, true, 0),
-      attempt(missed.id, false, 1),
-      attempt(missed.id, true, 2),
+      attempt(missed.id, true, 1),
+      attempt(missed.id, false, 2),
       attempt(retired.id, false, 3),
       attempt(retired.id, true, 4),
       attempt(retired.id, true, 5),
     ]);
     final pending = speedPending([rare, plain, missed, retired], histories);
-    expect(pending.map((q) => q.id), [missed.id, rare.id], reason: "错题库里的在前、没做过的偏难题其次；做对过的与已移出的不出");
+    expect(pending.map((q) => q.id), [missed.id, rare.id], reason: "最近一次答错的在前、没做过的偏难题其次；最近一次答对的不出");
   });
 
   test("组状态 statusOfIds：整组每张卡都答对才算掌握，只测了一部分是灰（ADR 0113）", () {

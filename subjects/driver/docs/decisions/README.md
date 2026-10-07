@@ -125,3 +125,4 @@
 | [0118](0118-self-test-in-session-fresh-questions.md) | 自测改用做题界面、全是四选一，按条目内容现场出题，不依赖练习题库 | 已接受 |
 | [0119](0119-mastery-by-entries-self-test-only.md) | 「掌握 a/b」按页面条目数计；专题掌握只认专题自测里的作答 | 已接受 |
 | [0120](0120-retire-gap-in-status-dot.md) | 还在错题库里的条目，红点里写「还要再对几次」 | 已接受 |
+| [0121](0121-self-test-last-answer-rule.md) | 专题自测去掉「答对到答错的 2 倍」，最近一次答对就算掌握 | 已接受 |

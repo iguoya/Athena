@@ -97,18 +97,18 @@ void main() {
     await teardown(tester, store, dir);
   });
 
-  testWidgets("自测：答错还在错题库里的先出、没测过的其次，答对过的不再出", (tester) async {
+  testWidgets("自测：最近一次答错的先出、没测过的其次，最近一次答对的不再出", (tester) async {
     late List<RecallCard> cards;
     final (_, store, dir) = await boot(tester, seed: (bank, store) async {
       cards = gestureCards(bank);
       await record(store, cards[0], correct: true); // 答对过：不再出
-      await record(store, cards[1], correct: false); // 错 1 对 1：还在错题库里
-      await record(store, cards[1], correct: true);
+      await record(store, cards[1], correct: true); // 对过又错：最近一次答错，要再考
+      await record(store, cards[1], correct: false);
     });
     await openTopic(tester, "手势速记");
     expect(find.text("自测 ${cards.length - 1} 题"), findsOneWidget);
     final launched = await startRecall(tester);
-    expect(launched.first.id, cards[1].questionId, reason: "错题库里的先出");
+    expect(launched.first.id, cards[1].questionId, reason: "最近一次答错的先出");
     expect(launched.any((q) => q.id == cards[0].questionId), isFalse, reason: "答对过的不再出");
     expect(launched, hasLength(cards.length - 1));
     await teardown(tester, store, dir);

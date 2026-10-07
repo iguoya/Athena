@@ -24,7 +24,7 @@ HistorySet selfTestHistories(Iterable<AttemptView> attempts) =>
     HistorySet.build([for (final a in attempts) if (isSelfTestAttempt(a)) a]);
 
 /// 格子条目的状态微点（ADR 0077 决策 3 起用；ADR 0101 统一为三态、放大为实心圆加黑心，
-/// 放在图标下方、条目文字左侧）：红 = 这条的自测题答错过、还在错题库里；绿 = 答对过；
+/// 放在图标下方、条目文字左侧）：红 = 这条的自测题最近一次答错；绿 = 答对过；
 /// 灰 = 没自测过。与易混数字的行点同一套样式。
 class StatusDot extends StatelessWidget {
   const StatusDot({super.key, required this.status, this.tooltip, this.remaining = 0});
@@ -48,7 +48,7 @@ class StatusDot extends StatelessWidget {
     return Tooltip(
       message: tooltip ??
           switch (status) {
-            SymbolStatus.wrong => remaining > 0 ? "这一条的自测题答错过，还要再对 $remaining 次才算掌握" : "这一条的自测题答错过，还没掌握",
+            SymbolStatus.wrong => "这一条的自测题最近一次答错，再答对 ${remaining > 0 ? remaining : 1} 次就算掌握",
             SymbolStatus.mastered => "这一条的自测题全部答对过",
             SymbolStatus.fresh => "这一条还没测完",
           },
@@ -72,13 +72,16 @@ class StatusDot extends StatelessWidget {
   }
 }
 
-/// 这些卡离掌握还差几次答对（ADR 0079、0119）：答错过且还在错题库里的卡，各自还要再对的次数相加
-/// （累计答对要到答错的 2 倍）。没答错过、已移出的卡不算。
+/// 一张自测卡现在算不算「还错着」（ADR 0121）：答过，且**最近一次**自测答错。专题自测不套错题库的
+/// 2 倍移出规则（ADR 0079 只管错题本、强化练习、考前复习）——再答对一次就算掌握。
+bool _stillWrong(QuestionHistory h) => h.attempts > 0 && !h.lastCorrect;
+
+/// 这些卡离掌握还差几次答对（ADR 0120、0121）：最近一次自测答错的卡，各差一次。
 int recallRetireGap(Iterable<String> ids, HistorySet histories) {
   var gap = 0;
   for (final id in ids) {
     final h = histories.byQuestion[id];
-    if (h != null && h.wrong > 0 && !h.retiredFromWrongPool) gap += h.correctsToRetire;
+    if (h != null && _stillWrong(h)) gap++;
   }
   return gap;
 }
@@ -86,8 +89,8 @@ int recallRetireGap(Iterable<String> ids, HistorySet histories) {
 /// 条目自测题的作答状态。
 enum SymbolStatus { wrong, mastered, fresh }
 
-/// 由一组自测题号算状态（ADR 0109、0112、0113）：有答错过且还在错题库里（累计答对没到答错的
-/// 2 倍，ADR 0079）→ 红；**每一张都答对过**（整组测完）→ 绿；其余（一张没答过，或只测了一
+/// 由一组自测题号算状态（ADR 0109、0112、0113、0121）：有卡最近一次自测答错 → 红；
+/// **每一张最近一次都答对**（整组测完）→ 绿；其余（一张没答过，或只测了一
 /// 部分）→ 灰。只答对一部分不算掌握——没测完的组不能写「已掌握」。**只看这些题号自己的
 /// 作答**，关联真题（日常练习）不参与。侧栏专题圆、条目微点、组内「自测」按钮
 /// 都用它，全站一个口径。
@@ -102,21 +105,21 @@ SymbolStatus statusOfIds({
     final h = histories.byQuestion[id];
     if (h == null) continue;
     answered++;
-    if (h.wrong > 0 && !h.retiredFromWrongPool) return SymbolStatus.wrong;
+    if (_stillWrong(h)) return SymbolStatus.wrong;
   }
   return total > 0 && answered == total ? SymbolStatus.mastered : SymbolStatus.fresh;
 }
 
 /// 一组条目里「已掌握」的条数与总条数（ADR 0113、0119）：**按页面上的条目数**，不按背后的卡数——
-/// 易混数字一行可能拆成好几张卡（按「；」拆的情形、反向卡），这一行的卡**都**答过且没有未移出错题库的错，
-/// 才算掌握一条。其余页面一条一张卡，[entries] 每项就是一个题号。
+/// 易混数字一行可能拆成好几张卡（按「；」拆的情形、反向卡），这一行的卡**都**答过、最近一次都答对，
+/// 才算掌握一条（ADR 0121）。其余页面一条一张卡，[entries] 每项就是一个题号。
 ({int done, int total}) masteryOf({
   required List<List<String>> entries,
   required HistorySet histories,
 }) {
   bool cleared(String id) {
     final h = histories.byQuestion[id];
-    return h != null && !(h.wrong > 0 && !h.retiredFromWrongPool);
+    return h != null && !_stillWrong(h);
   }
 
   var done = 0;
@@ -156,9 +159,9 @@ class MasteryTag extends StatelessWidget {
 /// 一张速记卡现在属于哪一档（ADR 0094；ADR 0112 收敛为只看这张卡自己）。**只看作答记录**
 /// ——速记卡对应一道有稳定编号的速记题，自测的每次作答和练习、模拟考一样记进作答记录，
 /// 错题本、考前复习、强化练习用的是同一份记录；关联真题的作答不参与判档：
-/// - [wrong]：这张卡的题答错过、且还在错题库里（累计答对没达到答错的 2 倍，ADR 0079）——最该考；
+/// - [wrong]：这张卡最近一次自测答错（ADR 0121）——最该考；
 /// - [fresh]：没有任何记录——还没考过；
-/// - [done]：这张卡答对过且没答错过，或错题已经移出错题库——不再出现。
+/// - [done]：这张卡最近一次自测答对——不再出现。
 enum RecallBucket { wrong, fresh, done }
 
 /// 自测会抽的档位，按先后顺序。
@@ -172,20 +175,19 @@ RecallBucket classifyEntry({
   return classifyOwn(questionId, histories) ?? RecallBucket.fresh;
 }
 
-/// 只按这张卡**自己**的作答记录判档：答错过且还在错题库里（[RecallBucket.wrong]）、
-/// 答对过或已移出错题库（[RecallBucket.done]）、没答过返回 null。
+/// 只按这张卡**自己**的作答记录判档：最近一次自测答错（[RecallBucket.wrong]）、最近一次答对
+/// （[RecallBucket.done]）、没答过返回 null。
 /// 专题掌握只由专题自测写入（ADR 0112）：练习里把关联真题全做对不算这张卡掌握，
 /// 那是「这组内容你会」，不是「这张卡你在专题里测过」。
 RecallBucket? classifyOwn(String questionId, HistorySet histories) {
   final own = histories.byQuestion[questionId];
   if (own == null || own.attempts == 0) return null;
-  // 答错过的卡和错题一个规矩：累计答对达到答错的 2 倍才移出错题库（ADR 0079）。
-  if (own.wrong > 0) return own.retiredFromWrongPool ? RecallBucket.done : RecallBucket.wrong;
-  return RecallBucket.done;
+  // 专题自测不套错题库的 2 倍移出规则（ADR 0121）：最近一次答对就算掌握，答错就再考。
+  return own.lastCorrect ? RecallBucket.done : RecallBucket.wrong;
 }
 
-/// 一轮自测里这次要考的题（ADR 0115、0118）：**没测过**的，加上**答错过且还在错题库里**的
-/// （判档同 [classifyOwn]，移出规则同 ADR 0079）。答对过的不再出。错题库里的在前、没测过的其次，
+/// 一轮自测里这次要考的题（ADR 0115、0118）：**没测过**的，加上**最近一次答错**的
+/// （判档同 [classifyOwn]，ADR 0121）。答对过的不再出。答错的在前、没测过的其次，
 /// 各自保持原序（出题时再各自洗牌）。按钮上的道数与点下去出的题都由它算。
 List<Question> speedPending(Iterable<Question> questions, HistorySet histories) {
   final wrong = <Question>[];
@@ -203,12 +205,12 @@ List<Question> speedPending(Iterable<Question> questions, HistorySet histories) 
   return [...wrong, ...fresh];
 }
 
-/// 一组卡里这次自测要考的张数：没测过的，加上答错过且还在错题库里的（与 [speedPending] 同一判据）。
+/// 一组卡里这次自测要考的张数：没测过的，加上最近一次答错的（与 [speedPending] 同一判据）。
 int recallPendingCount(Iterable<String> ids, HistorySet histories) =>
     ids.where((id) => classifyOwn(id, histories) != RecallBucket.done).length;
 
 /// 速记组标题行里的「自测」（ADR 0116～0118）：组里唯一的按钮。点下去按这一组条目的内容现场出题，
-/// 用错题本那套做题界面考。颜色是这一组的结果（[statusOfIds]）：有答错过且还在错题库里 → 红；每张都答对过 → 绿；
+/// 用错题本那套做题界面考。颜色是这一组的结果（[statusOfIds]）：有卡最近一次答错 → 红；每张最近一次都答对 → 绿；
 /// 没测完 → 灰。文字写这次要考几题；整组都答对了写「再测一遍」，点了整组重考（ADR 0099、0115）。
 class GroupRecallButton extends StatelessWidget {
   const GroupRecallButton({
