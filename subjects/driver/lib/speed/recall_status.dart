@@ -153,7 +153,13 @@ ButtonStyle practiceButtonStyle(SymbolStatus status) {
     SymbolStatus.mastered => const Color(0xFF2ECC71),
     SymbolStatus.fresh => const Color(0xFF8A939B),
   };
-  return FilledButton.styleFrom(backgroundColor: color, foregroundColor: Colors.white);
+  return FilledButton.styleFrom(
+    backgroundColor: color,
+    foregroundColor: Colors.white,
+    // 没有待练题时按钮置灰但保持原色调，不另起一种灰。
+    disabledBackgroundColor: color.withValues(alpha: 0.55),
+    disabledForegroundColor: Colors.white,
+  );
 }
 
 /// 侧栏里专题与专题分组左边的状态圆（ADR 0109）：样式同 [StatusDot]（实心圆加黑心、三态色），

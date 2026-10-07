@@ -38,7 +38,7 @@ class NotesPage extends StatelessWidget {
   /// 本科目的全部题（含偏难，ADR 0112 一视同仁）：「练这组」与自测收尾深链从这里取题。
   final List<Question> questions;
   final Set<String> mastered;
-  final void Function(List<Question> questions, String title, bool again) onStartPractice;
+  final void Function(List<Question> questions, String title) onStartPractice;
 
   /// 每次自测作答记一条作答记录（ADR 0094）：首页接上，写进进度库。
   final RecallAnswerRecorder onRecallAnswer;
@@ -110,7 +110,7 @@ class NotesPage extends StatelessWidget {
             related: e.$1.related(questions),
           ),
       ],
-      onStartPractice: (questions) => onStartPractice(questions, "$title · 自测", false),
+      onStartPractice: (questions) => onStartPractice(questions, "$title · 自测"),
     );
   }
 
@@ -170,14 +170,12 @@ class NotesPage extends StatelessWidget {
                 MasteryTag(ids: ids, histories: histories),
                 const Spacer(),
                 FilledButton.icon(
-                  style: practiceButtonStyle(status),
-                  onPressed: () => onStartPractice(related, "$title · ${group.title}", status == SymbolStatus.mastered),
+                  style: practiceButtonStyle(related.isNotEmpty && pending.isEmpty ? SymbolStatus.mastered : status),
+                  onPressed: pending.isEmpty ? null : () => onStartPractice(pending, "$title · ${group.title}"),
                   icon: const Icon(Glyph.practice, size: 20),
                   label: Text(
-                    status == SymbolStatus.mastered
-                        ? "这组已掌握 · 再练一遍"
-                        : pending.isEmpty
-                        ? "练这组"
+                    pending.isEmpty
+                        ? (related.isEmpty ? "没有相关题" : "已通过 · 没有待练的题")
                         : "练这组 ${pending.length} 题",
                   ),
                 ),

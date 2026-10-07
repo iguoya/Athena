@@ -127,6 +127,8 @@ void main() {
     await showTopic(tester, "标志速记");
     await tester.tap(find.text("标志速记").first);
     await reload();
+    // 自测抽到哪一张是随机的，那一组可能在屏幕外（列表懒加载），先滚到它再断言。
+    await tester.scrollUntilVisible(find.textContaining("掌握 1/"), 600, scrollable: find.byType(Scrollable).last);
     expect(find.textContaining("掌握 1/"), findsOneWidget, reason: "进度写成「掌握 a/b」，只有答对的那一张算 1");
     await teardown(tester, store, dir);
   });
@@ -182,6 +184,50 @@ void main() {
     // 禁令组（第一组）有答错：红；其余组没做过：灰。
     expect(colorOf(buttons.first), Bs.danger, reason: "禁令组的自测卡答错 → 红");
     expect(colorOf(buttons.at(1)), const Color(0xFF8A939B), reason: "警告组没做过 → 灰");
+    await tester.pump(const Duration(seconds: 30));
+    await tester.pumpWidget(const SizedBox());
+    await tester.runAsync(() async {
+      await store.close();
+      await dir.delete(recursive: true);
+    });
+  });
+
+  testWidgets("「练这组」只练没做过或做错的：这组关联题都做对了就算通过，按钮变绿置灰（ADR 0114）", (tester) async {
+    late Directory dir;
+    late ProgressStore store;
+    late Bank bank;
+    late int firstGroupCount;
+    await tester.runAsync(() async {
+      bank = await ContentLoader.load();
+      dir = await Directory.systemTemp.createTemp("athena-driver-speednav3-");
+      store = await ProgressStore.open(suite: "speed_nav_pass_test");
+      final topic = speedTopics.firstWhere((t) => t.id == "s1.license-notes");
+      final group = noteGroupsOf(bank, topic).first;
+      final related = group.related(bank.forSubject("subject1"));
+      firstGroupCount = related.length;
+      for (final q in related) {
+        await store.recordAttempt(questionId: q.id, topicId: q.topicId, subjectId: "subject1", correct: true);
+      }
+    });
+    expect(firstGroupCount, greaterThan(0));
+    await tester.binding.setSurfaceSize(const Size(1600, 2600));
+    final ready = Completer<void>();
+    await tester.pumpWidget(MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)));
+    for (var i = 0; i < 2000 && !ready.isCompleted; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
+      await tester.pump();
+    }
+    await showTopic(tester, "记分证照速记");
+    await tester.tap(find.text("记分证照速记").first);
+    await tester.pump();
+    FilledButton button(Finder label) => tester.widget<FilledButton>(
+      find.ancestor(of: label, matching: find.bySubtype<FilledButton>()).first,
+    );
+    final passed = find.textContaining("已通过");
+    expect(passed, findsWidgets, reason: "第一组关联题全做对：没有待练题，算通过");
+    final b = button(passed.first);
+    expect(b.onPressed, isNull, reason: "没有待练题不起整组重练");
+    expect(b.style?.backgroundColor?.resolve(<WidgetState>{}), const Color(0xFF2ECC71), reason: "通过是绿色");
     await tester.pump(const Duration(seconds: 30));
     await tester.pumpWidget(const SizedBox());
     await tester.runAsync(() async {

@@ -40,7 +40,7 @@ class MarkingsPage extends StatelessWidget {
   /// 本专题的页键（`s1.signs` 这样，作答记录里的题号带它）与所属科目的名称（ADR 0096）。
   final String recallPage;
   final String subjectLabel;
-  final void Function(List<Question> questions, String title, bool again) onStartPractice;
+  final void Function(List<Question> questions, String title) onStartPractice;
 
   /// 组的顺序与每组的读法口诀；分组本身由 json 的 `kind` 决定，三分法与题库一致
   /// （s1.signals.055/476、s1.signals.266 的口径）。
@@ -122,7 +122,7 @@ class MarkingsPage extends StatelessWidget {
       histories: histories,
       mastered: mastered,
       entries: [for (final m in markings) _recallEntryOf(m, cards[m.id]!)],
-      onStartPractice: (questions) => onStartPractice(questions, "标线速记 · 自测", false),
+      onStartPractice: (questions) => onStartPractice(questions, "标线速记 · 自测"),
     );
   }
 
@@ -168,14 +168,12 @@ class MarkingsPage extends StatelessWidget {
                 MasteryTag(ids: ids, histories: histories),
                 const Spacer(),
                 FilledButton.icon(
-                  style: practiceButtonStyle(status),
-                  onPressed: () => onStartPractice(related, "标线速记 · $label", status == SymbolStatus.mastered),
+                  style: practiceButtonStyle(related.isNotEmpty && pending.isEmpty ? SymbolStatus.mastered : status),
+                  onPressed: pending.isEmpty ? null : () => onStartPractice(pending, "标线速记 · $label"),
                   icon: const Icon(Glyph.practice, size: 20),
                   label: Text(
-                    status == SymbolStatus.mastered
-                        ? "这组已掌握 · 再练一遍"
-                        : pending.isEmpty
-                        ? "练这组"
+                    pending.isEmpty
+                        ? (related.isEmpty ? "没有相关题" : "已通过 · 没有待练的题")
                         : "练这组 ${pending.length} 题",
                   ),
                 ),

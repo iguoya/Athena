@@ -55,7 +55,7 @@ class NumbersPage extends StatelessWidget {
 
   /// 这些题里还要练的：首页按练习的出题规则筛（答对到答错 2 倍才算移出，ADR 0079）。
   final List<Question> Function(List<Question> questions) pendingOf;
-  final void Function(List<Question> questions, String title, bool again) onStartPractice;
+  final void Function(List<Question> questions, String title) onStartPractice;
 
   List<CheatGroup> get _groups => cheatGroupsOf(bank, topic);
 
@@ -65,15 +65,22 @@ class NumbersPage extends StatelessWidget {
   /// 一行易混数字对应的自测卡题号：每条情形一张填数/选择卡（f/），这个值一张反向卡（r/）。
   /// 与 [recallCardsOfNumbers] 的卡 id 同构（ADR 0094）；反向卡按值合并，同值的行共用一张。
   /// 页键是专题 id——自测作答记的题号用它（ADR 0097 分科目后页键不再是 "numbers"）。
-  List<String> _rowQuestionIds(CheatGroup group, CheatRow row) => [
-    for (final single in splitCase(row.caseText)) recallQuestionId(topic.id, "f/${group.id}/$single|${row.value}"),
-    recallQuestionId(topic.id, "r/${group.id}/${row.value}"),
+  ///
+  /// 反向卡不是每个值都有：组里不同的值不足 4 个（急救数字只有两个）、或区间值挖完整条都是括号，
+  /// 都不出反向卡（`planNumberCards`）。所以只取组里**真实存在**的卡（[groupIds]）；
+  /// 否则这一行永远有一张测不到的幽灵卡，圆就永远是灰，整行答对也绿不了。
+  List<String> _rowQuestionIds(CheatGroup group, CheatRow row, Set<String> groupIds) => [
+    for (final id in [
+      for (final single in splitCase(row.caseText)) recallQuestionId(topic.id, "f/${group.id}/$single|${row.value}"),
+      recallQuestionId(topic.id, "r/${group.id}/${row.value}"),
+    ])
+      if (groupIds.contains(id)) id,
   ];
 
   /// 行的状态微点档位（ADR 0101，三态）：这一行有答错过且未掌握的自测卡 → 红；
   /// 这一行的卡全部答对过 → 绿；没测完（含只测了一部分）→ 灰。只看这一行自己的卡（ADR 0112）。
-  SymbolStatus _rowStatus(CheatGroup group, CheatRow row) => statusOfIds(
-    ids: _rowQuestionIds(group, row),
+  SymbolStatus _rowStatus(CheatGroup group, CheatRow row, Set<String> groupIds) => statusOfIds(
+    ids: _rowQuestionIds(group, row, groupIds),
     histories: histories,
   );
 
@@ -96,7 +103,7 @@ class NumbersPage extends StatelessWidget {
             related: c.stem == null ? const [] : [recallQuestionOf(c, cards)],
           ),
       ],
-      onStartPractice: (questions) => onStartPractice(questions, "易混数字 · 自测", false),
+      onStartPractice: (questions) => onStartPractice(questions, "易混数字 · 自测"),
     );
   }
 
@@ -166,6 +173,7 @@ class NumbersPage extends StatelessWidget {
     final maxAmount = group.maxAmount;
     // 组状态只看这一组的自测卡（ADR 0112）：红 = 有答错未掌握、绿 = 自测卡全部答对过、灰 = 没测完。
     final ids = [for (final q in related) q.id];
+    final groupIds = ids.toSet();
     final status = statusOfIds(ids: ids, histories: histories);
     return BsCard(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
@@ -192,14 +200,12 @@ class NumbersPage extends StatelessWidget {
               MasteryTag(ids: ids, histories: histories),
               const Spacer(),
               FilledButton.icon(
-                style: practiceButtonStyle(status),
-                onPressed: () => onStartPractice(related, "${topic.title} · ${group.title}", status == SymbolStatus.mastered),
+                style: practiceButtonStyle(related.isNotEmpty && pending.isEmpty ? SymbolStatus.mastered : status),
+                onPressed: pending.isEmpty ? null : () => onStartPractice(pending, "${topic.title} · ${group.title}"),
                 icon: const Icon(Glyph.practice, size: 20),
                 label: Text(
-                  status == SymbolStatus.mastered
-                      ? "这组已掌握 · 再练一遍"
-                      : pending.isEmpty
-                      ? "练这组"
+                  pending.isEmpty
+                      ? (related.isEmpty ? "没有相关题" : "已通过 · 没有待练的题")
                       : "练这组 ${pending.length} 题",
                 ),
               ),
@@ -210,13 +216,20 @@ class NumbersPage extends StatelessWidget {
             Text(group.note, style: muted),
           ],
           const SizedBox(height: 12),
-          for (final row in group.rows) _row(context, group, row, maxAmount, muted),
+          for (final row in group.rows) _row(context, group, row, maxAmount, muted, groupIds),
         ],
       ),
     );
   }
 
-  Widget _row(BuildContext context, CheatGroup group, CheatRow row, double maxAmount, TextStyle? muted) {
+  Widget _row(
+    BuildContext context,
+    CheatGroup group,
+    CheatRow row,
+    double maxAmount,
+    TextStyle? muted,
+    Set<String> groupIds,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -224,7 +237,7 @@ class NumbersPage extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 2),
-            child: RecallRowDot(status: _rowStatus(group, row)),
+            child: RecallRowDot(status: _rowStatus(group, row, groupIds)),
           ),
           const SizedBox(width: 12),
           SizedBox(

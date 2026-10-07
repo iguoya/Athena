@@ -1673,8 +1673,8 @@ class _HomePageState extends State<HomePage> {
   Widget _speedTopicPage(BuildContext context, SpeedTopic topic) {
     final subject = widget.bank.curriculum.subject(topic.subjectId);
     final questions = widget.bank.forSubject(topic.subjectId);
-    void practice(List<Question> questions, String title, bool again) =>
-        _startPractice(subject, questions, title, includeMastered: again, shuffleQueue: true);
+    void practice(List<Question> questions, String title) =>
+        _startPractice(subject, questions, title, shuffleQueue: true);
     return switch (topic.kind) {
       SpeedKind.numbers => NumbersPage(
         bank: widget.bank,
@@ -1934,23 +1934,20 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// 起一轮练习。[includeMastered] 给「这组已掌握 · 再练一遍」用：不过滤已掌握的题，
-  /// 全组重练——否则组全掌握时队列是空的，按钮按了没反应（使用者反馈）。
-  /// [shuffleQueue] 给速记组的组按钮用：整体洗牌出题——速记卡全是常规档、没有全国错误率，
-  /// 走 [practiceQueue] 的分档排序会退化成内容顺序（12→9→6→3→1），规律性毁掉考试价值。
+  /// 起一轮练习。没有「整组重来」：队列只含还要练的题，空了就不起（速记页的按钮此时置灰）。
+  /// [shuffleQueue] 给速记组的组按钮用：洗牌出题——速记卡全是常规档、没有全国错误率，
+  /// 走 [practiceQueue] 的分档排序会退化成内容顺序（12→9→6→3→1），规律性毁掉考试价值；
+  /// 但只洗还要练的题（错题在前、没做过的其次），见 [_speedGroupQueue]。
   void _startPractice(
     Subject subject,
     List<Question> questions,
     String title, {
-    bool includeMastered = false,
     bool shuffleQueue = false,
   }) {
     if (_locked(subject.id)) return;
     final List<Question> queue;
     if (shuffleQueue) {
-      queue = [...questions]..shuffle();
-    } else if (includeMastered) {
-      queue = practiceQueue(questions, _wrongIds);
+      queue = _speedGroupQueue(questions);
     } else {
       queue = _practiceQueue(questions);
     }
@@ -1964,6 +1961,15 @@ class _HomePageState extends State<HomePage> {
         revealImmediately: true,
       ),
     );
+  }
+
+  /// 速记组「练这组」的出题（ADR 0114）：只出还要练的——答错还没移出错题库的先出，没做过的其次，
+  /// 各自洗牌；答对掌握了的不出。没有待练题就是空队列，不退回整组。
+  List<Question> _speedGroupQueue(List<Question> questions) {
+    final pending = _pending(questions);
+    final wrong = [for (final q in pending) if (_wrongIds.contains(q.id)) q]..shuffle();
+    final fresh = [for (final q in pending) if (!_wrongIds.contains(q.id)) q]..shuffle();
+    return [...wrong, ...fresh];
   }
 
   void _openSession(SessionLaunch launch) {
