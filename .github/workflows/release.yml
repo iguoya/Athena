@@ -625,7 +625,7 @@ jobs:
                 "dist/athena-${{ matrix.app }}-$version-$platform.dmg" ;;
             Linux)
               cp src-tauri/target/release/bundle/deb/*.deb \
-                "dist/athena-${{ matrix.app }}_$version_amd64.deb" ;;
+                "dist/athena-${{ matrix.app }}_${version}_amd64.deb" ;;
           esac
           ls -l dist
 
@@ -641,8 +641,8 @@ jobs:
             macOS)
               hdiutil verify "dist/athena-${{ matrix.app }}-$version-$platform.dmg" ;;
             Linux)
-              dpkg-deb --info "dist/athena-${{ matrix.app }}_$version_amd64.deb"
-              listing=$(dpkg-deb --contents "dist/athena-${{ matrix.app }}_$version_amd64.deb")
+              dpkg-deb --info "dist/athena-${{ matrix.app }}_${version}_amd64.deb"
+              listing=$(dpkg-deb --contents "dist/athena-${{ matrix.app }}_${version}_amd64.deb")
               [[ "$listing" == *usr/bin/* ]] || { echo 'deb 缺 usr/bin 主二进制'; exit 1; } ;;
           esac
 
@@ -650,7 +650,10 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: athena-${{ matrix.app }}-${{ matrix.platform }}
-          path: subjects/${{ matrix.app }}/dist/athena-${{ matrix.app }}-*
+          # deb 按 Debian 惯例用下划线（athena-<app>_<版本>_amd64.deb），只写 -* 会漏掉它
+          path: |
+            subjects/${{ matrix.app }}/dist/athena-${{ matrix.app }}-*
+            subjects/${{ matrix.app }}/dist/athena-${{ matrix.app }}_*
           if-no-files-found: error
           retention-days: 7
 
