@@ -60,6 +60,7 @@ function QuizView({
               disabled={reveal}
               onClick={() => {
                 window.localStorage.setItem(`answer:${itemId}`, String(index));
+                setAnswer(String(index));
                 onAnswer(itemId, isAnswer);
               }}
               className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-left transition-colors ${
