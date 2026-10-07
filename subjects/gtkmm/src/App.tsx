@@ -154,10 +154,14 @@ export default function App() {
     [attempts],
   );
   const quizIndex = useMemo(() => {
-    const map = new Map<string, { byPage: Map<string, string[]>; all: string[] }>();
+    const map = new Map<
+      string,
+      { byPage: Map<string, string[]>; all: string[]; checkpoint: string[] }
+    >();
     for (const s of curriculum?.sections ?? []) {
       const byPage = new Map<string, string[]>();
       const all: string[] = [];
+      const checkpoint: string[] = [];
       for (const kp of s.knowledge_points)
         for (const b of kp.blocks)
           if ((b.type === "quiz" || b.type === "observation_quiz") && b.id) {
@@ -169,11 +173,13 @@ export default function App() {
           }
       for (const c of s.checkpoint)
         if (c.id) {
-          all.push(`quiz:${c.id}`);
+          const id = `quiz:${c.id}`;
+          all.push(id);
+          checkpoint.push(id);
           if (!byPage.has("__checkpoint__")) byPage.set("__checkpoint__", []);
-          byPage.get("__checkpoint__")!.push(`quiz:${c.id}`);
+          byPage.get("__checkpoint__")!.push(id);
         }
-      map.set(s.id, { byPage, all });
+      map.set(s.id, { byPage, all, checkpoint });
     }
     return map;
   }, [curriculum]);
@@ -231,9 +237,13 @@ export default function App() {
     const ids = quizIndex.get(sectionId)?.byPage.get(pageId) ?? [];
     return ids.length > 0 && ids.every((id) => correctItems.has(id));
   };
+  // 「通过章末考核」按字面语义：本章考核题全对（考核覆盖全部节页，通过即整章
+  // 点亮——pageLit 的承诺）。不要求页内随堂题也答对；页内题点亮各自节页。
   const chapterPassed = (sectionId: string) => {
     const entry = quizIndex.get(sectionId);
-    return !!entry && entry.all.length > 0 && entry.all.every((id) => correctItems.has(id));
+    return (
+      !!entry && entry.checkpoint.length > 0 && entry.checkpoint.every((id) => correctItems.has(id))
+    );
   };
   const quizSections = (curriculum?.sections ?? []).filter(
     (s) => (quizIndex.get(s.id)?.all.length ?? 0) > 0,
@@ -401,12 +411,23 @@ export default function App() {
                         <li>
                           <button
                             onClick={() => setView({ kind: "checkpoint", sectionId: s.id })}
-                            className={`w-full rounded px-2 py-1.5 text-left text-[20px] transition-colors ${
+                            className={`flex w-full items-center gap-1.5 rounded px-2 py-1.5 text-left text-[20px] transition-colors ${
                               activeIsCheckpoint && activeSectionId === s.id
                                 ? "bg-accent-soft font-medium text-accent"
-                                : "text-muted hover:bg-surface-2 hover:text-fg"
+                                : chapterPassed(s.id)
+                                  ? "font-medium text-green-700 hover:bg-surface-2"
+                                  : "text-muted hover:bg-surface-2 hover:text-fg"
                             }`}
                           >
+                            <motion.span
+                              animate={
+                                chapterPassed(s.id) ? { scale: [1, 1.6, 1] } : { scale: 1 }
+                              }
+                              transition={{ duration: 0.4 }}
+                              className={`mt-1 block size-2 shrink-0 rounded-full ${
+                                chapterPassed(s.id) ? "bg-green-500" : "bg-accent-deep"
+                              }`}
+                            />
                             章末考核（{s.checkpoint.length} 题）
                           </button>
                         </li>
