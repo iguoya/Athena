@@ -101,6 +101,8 @@ def check_build() -> None:
         "build/apps/lvgl-style/lvgl-style.exe",
         "build/apps/raygui-demo/raygui-demo.exe",
         "build/apps/nuklear-demo/nuklear-demo.exe",
+        "build/apps/nuklear-gdi-demo/nuklear-gdi-demo.exe",
+        "build/apps/microui-demo/microui-demo.exe",
     ):
         if not (PROJECT_ROOT / exe).is_file():
             fail(f"产物缺失：{exe}")

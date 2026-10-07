@@ -21,10 +21,19 @@ third_party/   imgui / lvgl / cimgui / raygui / nuklear 源码（不进版本库
 - **GTK 生态**（随 MSYS2 包安装，探测到才亮）：gtk4-demo、gtk4-widget-factory、
   gtk4-node-editor、adwaita-1-demo；
 - **即时模式框架**：ImGui 的 ShowDemoWindow（imgui-style --demo）、
-  raygui controls_test_suite、Nuklear SDL2 演示（后两个是 vendor 源码编译的
-  官方 demo，样式头与 overview 组件一并 vendor）。
+  raygui controls_test_suite、Nuklear SDL2 演示、Nuklear GDI 原生版（纯
+  Win32 渲染）、microui 官方 demo（后三者的源码 vendor 于 third_party/，
+  include 已就地修正；Nuklear GDI 与 microui 用 lld 链接，见下）。
 - **LVGL 官方 widgets 合集未集成**：lv_demo_widgets 在本环境死锁（灰屏未响应，
   与中文渲染死锁同为该环境的 LVGL 兼容问题），对比任务由自建橱窗承担。
+
+## 候选清单（暂未收编）
+
+- **libui-ng** `examples/controlgallery`（原生控件画廊）：gitee 镜像克隆在本机
+  网络下长期挂起，待网络可用时 vendor 并 meson 构建。
+- **IUP** sample 画廊：无 MSYS2 包，只能 SourceForge 第三方二进制（供应链信任）
+  或自建其 makefile 体系；原生控件维度的空缺可先由 libui-ng 补。
+- **LVGL 官方 lv_demos**：本环境死锁（见 lv_conf.h），换 9.2.2 或 Linux 再试。
 
 ## 取舍说明
 

@@ -8,3 +8,5 @@ add_subdirectory(apps/lvgl-style)
 # 官方控件合集演示：raygui 与 Nuklear 的即时代码没有自研橱窗，直接编译官方 demo。
 add_subdirectory(apps/raygui-demo)
 add_subdirectory(apps/nuklear-demo)
+add_subdirectory(apps/nuklear-gdi-demo)
+add_subdirectory(apps/microui-demo)

@@ -38,6 +38,14 @@ const APPS = {
     title: "Nuklear 演示",
     exe: path.join(PROJECT_ROOT, "build", "apps", "nuklear-demo", "nuklear-demo.exe"),
   },
+  "nuklear-gdi": {
+    title: "Nuklear GDI 原生",
+    exe: path.join(PROJECT_ROOT, "build", "apps", "nuklear-gdi-demo", "nuklear-gdi-demo.exe"),
+  },
+  microui: {
+    title: "microui 演示",
+    exe: path.join(PROJECT_ROOT, "build", "apps", "microui-demo", "microui-demo.exe"),
+  },
 };
 
 // 官方 demo：随 MSYS2 安装，探测到才给入口
