@@ -10,6 +10,7 @@ import "package:athena_driver/core/progress.dart";
 import "package:athena_driver/speed/recall_status.dart";
 import "package:athena_driver/speed/recall_cards.dart";
 import "package:athena_driver/speed/speed_topics.dart";
+import "package:athena_driver/study/reinforce.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
@@ -17,6 +18,33 @@ import "nav_helpers.dart";
 
 void main() {
   // 易混数字页（ADR 0028）：用真实内容渲染一遍，布局溢出这类问题只在渲染时暴露。
+  test("掌握 a/b 按条目数：一行名下的卡都答对才算掌握一条（ADR 0119）", () async {
+    final bank = await ContentLoader.load();
+    final topic = speedTopicById("s1.numbers")!;
+    final entries = recallEntriesOfTopic(topic, bank);
+    final rows = [for (final g in cheatGroupsOf(bank, topic)) ...g.rows];
+    expect(entries, hasLength(rows.length), reason: "条目数就是行数");
+    final multi = entries.firstWhere((e) => e.length > 1);
+    final t0 = DateTime(2026, 10, 7);
+    // 只答对这一行的一张卡：这一行还不算掌握。
+    var m = masteryOf(entries: [multi], histories: HistorySet.build([AttemptView(questionId: multi.first, topicId: "t", correct: true, at: t0)]));
+    expect(m, (done: 0, total: 1));
+    m = masteryOf(entries: [multi], histories: HistorySet.build([for (final id in multi) AttemptView(questionId: id, topicId: "t", correct: true, at: t0)]));
+    expect(m, (done: 1, total: 1));
+  });
+
+  test("专题掌握只认自测里的作答：普通做题（记了所选选项）里答速记卡不算（ADR 0119）", () {
+    final t0 = DateTime(2026, 10, 7);
+    const card = "drive.recall.s1.numbers.deadbeef";
+    final inPractice = AttemptView(questionId: card, topicId: "t", correct: false, at: t0, chosen: "B");
+    final inSelfTest = AttemptView(questionId: card, topicId: "t", correct: true, at: t0.add(const Duration(minutes: 1)));
+    expect(isSelfTestAttempt(inPractice), isFalse);
+    expect(isSelfTestAttempt(inSelfTest), isTrue);
+    expect(isSelfTestAttempt(AttemptView(questionId: "drive.s1.rules.1", topicId: "t", correct: true, at: t0)), isFalse, reason: "真题不是自测");
+    final h = selfTestHistories([inPractice, inSelfTest]);
+    expect(statusOfIds(ids: [card], histories: h), SymbolStatus.mastered, reason: "错题本里答错那次不拖累专题掌握");
+  });
+
   testWidgets("易混数字页用真实内容渲染不溢出，每组都有练习按钮", (tester) async {
     late Directory dir;
     late ProgressStore store;
@@ -44,6 +72,9 @@ void main() {
     await tester.tap(find.text("易混数字").first);
     await tester.pump();
     expect(find.text("记分分值"), findsOneWidget);
+    // 「掌握 a/b」按页面上的行数计，不按背后的卡数（ADR 0119）：记分分值有几行就是 /几。
+    final score = cheatGroupsOf(bank, speedTopicById("s1.numbers")!).firstWhere((g) => g.title == "记分分值");
+    expect(find.text("掌握 0/${score.rows.length}"), findsWidgets, reason: "分母是行数 ${score.rows.length}");
     // 一屏放不下全部分组，滚到底检查每组都渲染出来了（页面的组来自专题，ADR 0097）。
     for (final group in cheatGroupsOf(bank, speedTopics.firstWhere((t) => t.id == "s1.numbers"))) {
       await tester.scrollUntilVisible(find.text(group.title), 300, scrollable: find.byType(Scrollable).last);

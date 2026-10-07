@@ -4,6 +4,7 @@ import "../core/models.dart";
 import "../ui/glyphs.dart";
 import "../ui/look.dart";
 import "../study/reinforce.dart";
+import "recall_cards.dart";
 // 速记条目、专题与速记组的「作答状态」（ADR 0077、0094、0101、0109、0112）：状态枚举、
 // 由作答记录判档的纯函数，以及按状态上色的小部件（状态圆、组内「自测」按钮）。
 // 自测没有自己的界面：组里的「自测」按条目现场出题，交给首页起一轮做题（ADR 0118），与错题本同一个做题台。
@@ -11,6 +12,16 @@ import "../study/reinforce.dart";
 // 口径（ADR 0112）：专题掌握只由**专题自测**的作答决定——判一张卡、一个条目、一组、
 // 一个专题，都只看速记题（`drive.recall.*`）自己的作答记录；关联真题（日常练习）的
 // 作答不参与任何掌握判定。
+
+/// 这条作答是不是**专题自测**里答的（ADR 0119）：速记卡的题号、且没记所选选项。自测（旧的对话框与
+/// ADR 0118 的做题台）都不记所选选项，普通做题（错题本、强化练习、以前易混数字的「练这组」）一定记，
+/// 所以这一条就能把两类分开，不用另加场合标记（场合标记会同步到中心库）。
+bool isSelfTestAttempt(AttemptView a) => isRecallQuestionId(a.questionId) && a.chosen == null;
+
+/// 专题掌握用的作答历史：只收专题自测里的作答（[isSelfTestAttempt]）。在错题本、强化练习里答速记卡
+/// 照样进错题本，但不算专题掌握——「我确实通过自测做过」才算。
+HistorySet selfTestHistories(Iterable<AttemptView> attempts) =>
+    HistorySet.build([for (final a in attempts) if (isSelfTestAttempt(a)) a]);
 
 /// 格子条目的状态微点（ADR 0077 决策 3 起用；ADR 0101 统一为三态、放大为实心圆加黑心，
 /// 放在图标下方、条目文字左侧）：红 = 这条的自测题答错过、还在错题库里；绿 = 答对过；
@@ -77,32 +88,39 @@ SymbolStatus statusOfIds({
   return total > 0 && answered == total ? SymbolStatus.mastered : SymbolStatus.fresh;
 }
 
-/// 一组自测卡里「已掌握」的张数与总张数（ADR 0113）：答过且没有未移出错题库的错才算一张。
-/// 组圆只有整组测完才绿，进度靠这个「掌握 a/b」看。
+/// 一组条目里「已掌握」的条数与总条数（ADR 0113、0119）：**按页面上的条目数**，不按背后的卡数——
+/// 易混数字一行可能拆成好几张卡（按「；」拆的情形、反向卡），这一行的卡**都**答过且没有未移出错题库的错，
+/// 才算掌握一条。其余页面一条一张卡，[entries] 每项就是一个题号。
 ({int done, int total}) masteryOf({
-  required Iterable<String> ids,
+  required List<List<String>> entries,
   required HistorySet histories,
 }) {
-  var total = 0;
-  var done = 0;
-  for (final id in ids) {
-    total++;
+  bool cleared(String id) {
     final h = histories.byQuestion[id];
-    if (h != null && !(h.wrong > 0 && !h.retiredFromWrongPool)) done++;
+    return h != null && !(h.wrong > 0 && !h.retiredFromWrongPool);
   }
-  return (done: done, total: total);
+
+  var done = 0;
+  for (final ids in entries) {
+    if (ids.isNotEmpty && ids.every(cleared)) done++;
+  }
+  return (done: done, total: entries.length);
 }
 
-/// 组标题行里的「掌握 a/b」。
-class MasteryTag extends StatelessWidget {
-  const MasteryTag({super.key, required this.ids, required this.histories});
+/// 一条一张卡的页面：每个题号自成一条。
+List<List<String>> singleEntries(Iterable<String> ids) => [for (final id in ids) [id]];
 
-  final List<String> ids;
+/// 组标题行里的「掌握 a/b」：a/b 是条目数（[masteryOf]）。
+class MasteryTag extends StatelessWidget {
+  const MasteryTag({super.key, required this.entries, required this.histories});
+
+  /// 这一组的条目，每条是它名下的卡的题号。
+  final List<List<String>> entries;
   final HistorySet histories;
 
   @override
   Widget build(BuildContext context) {
-    final m = masteryOf(ids: ids, histories: histories);
+    final m = masteryOf(entries: entries, histories: histories);
     return Padding(
       padding: const EdgeInsets.only(left: 12, top: 6),
       child: Text(

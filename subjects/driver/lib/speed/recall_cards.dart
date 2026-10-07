@@ -315,6 +315,30 @@ List<Question> recallQuestionsOf(Bank bank, {Map<String, String> sourceUrls = co
   return out;
 }
 
+/// 易混数字一行名下的卡（ADR 0101、0119）：每条情形一张正向卡（f/），这个值一张反向卡（r/）；
+/// 反向卡按值合并，同值的行共用一张。反向卡不是每个值都有（组里不同的值不足 4 个、或区间值挖完整条
+/// 都是括号，`planNumberCards` 不出），所以只取 [existing] 里**真实存在**的卡——否则这一行永远有一张
+/// 测不到的幽灵卡，整行答对也算不上掌握。
+List<String> numberRowIds(String page, CheatGroup group, CheatRow row, Set<String> existing) => [
+  for (final id in [
+    for (final single in splitCase(row.caseText)) recallQuestionId(page, "f/${group.id}/$single|${row.value}"),
+    recallQuestionId(page, "r/${group.id}/${row.value}"),
+  ])
+    if (existing.contains(id)) id,
+];
+
+/// 一个专题的条目（ADR 0119）：每条是它名下的卡的题号。易混数字按行（一行可能有好几张卡），
+/// 其余页面一条一张卡。「掌握 a/b」的分母就是这里的条数，与页面上看到的条目数一致。
+List<List<String>> recallEntriesOfTopic(SpeedTopic topic, Bank bank) {
+  final cards = recallCardsOfTopic(topic, bank);
+  if (topic.kind != SpeedKind.numbers) return [for (final c in cards) [c.questionId]];
+  final existing = {for (final c in cards) c.questionId};
+  return [
+    for (final group in cheatGroupsOf(bank, topic))
+      for (final row in group.rows) numberRowIds(topic.id, group, row, existing),
+  ];
+}
+
 /// 易混数字一个组的专属题（ADR 0102）：组内每条情形的正向卡加每个值的反向卡，
 /// 各自就是一道有稳定题号的题——行与题因此一对一，组按钮与自测深链练的是它们，
 /// 不再是组级正则捞出来的一锅真题。

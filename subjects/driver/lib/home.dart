@@ -110,6 +110,10 @@ class _HomePageState extends State<HomePage> {
   // 强化练习（主仓库 ADR 0076）：全部由作答记录派生，不另存。
   HistorySet _histories = HistorySet.build(const []);
 
+  /// 专题掌握用的历史：只收专题自测里的作答（ADR 0119）。速记页、侧栏专题圆、自测出题都用它，
+  /// 错题本、强化练习、考前复习仍用全部作答 [_histories]。
+  HistorySet _recallHistories = HistorySet.build(const []);
+
   ReinforcePlan _reinforcePlan = const ReinforcePlan([]);
 
   /// 强化练习每轮抽取的题量（ADR 0069）：默认 50，界面上可调，只在本会话生效。
@@ -137,7 +141,7 @@ class _HomePageState extends State<HomePage> {
   final Set<String> _expandedTopicGroups = {};
 
   /// 每个专题的自测题题号（按专题 id），由速记卡现算一次：专题状态点按这些题的作答记录上色。
-  Map<String, List<String>>? _topicQuestionIds;
+  Map<String, List<List<String>>>? _topicEntries;
 
 
   Set<String> get _wrongIds => {for (final q in _wrongQuestions) q.id};
@@ -310,6 +314,7 @@ class _HomePageState extends State<HomePage> {
     // 强化练习：错题、薄弱章节、间隔到期合成一张题单（主仓库 ADR 0076）。
     final allAttempts = await widget.store.allAttempts();
     final histories = HistorySet.build(allAttempts);
+    final recallHistories = selfTestHistories(allAttempts);
     final diagnosis = DiagnosisData.build(allAttempts, (id) => _questionIndex[id]);
     final theoryPool = [
       for (final q in widget.bank.questions)
@@ -337,6 +342,7 @@ class _HomePageState extends State<HomePage> {
     // 作答数比上次看到的还多，说明这段时间人真的在做题，刷新一下活动时间戳。
     setState(() {
       _histories = histories;
+      _recallHistories = recallHistories;
       _diagnosis = diagnosis;
       _reinforcePlan = reinforcePlan;
       _reinforcePool = theoryPool;
@@ -549,7 +555,7 @@ class _HomePageState extends State<HomePage> {
             selected: false,
             label: "${group.title} · ${group.topics.length}",
             indent: true,
-            leading: _topicDot([for (final t in group.topics) ..._topicIds(t)], size: 18, scope: "这一组专题"),
+            leading: _topicDot([for (final t in group.topics) ..._entriesOf(t)], size: 18, scope: "这一组专题"),
             onTap: () => setState(() {
               if (!_expandedTopicGroups.remove(key)) _expandedTopicGroups.add(key);
             }),
@@ -562,7 +568,7 @@ class _HomePageState extends State<HomePage> {
               selected: _place == topic.id && _session == null,
               label: topic.title,
               indent2: true,
-              leading: _topicDot(_topicIds(topic), size: 16, scope: "这个专题"),
+              leading: _topicDot(_entriesOf(topic), size: 16, scope: "这个专题"),
               onTap: () => _go(topic.id),
             ),
       ],
@@ -570,10 +576,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// 专题（或一组专题）的状态圆：把范围内**所有**自测卡当一整组判（ADR 0113）——有答错未移出
-  /// 的取红，整组每张都答对过才绿，其余（含只测了其中一个专题）灰。悬停说明带「掌握 a/b」。
-  Widget _topicDot(List<String> ids, {required double size, required String scope}) {
-    final status = statusOfIds(ids: ids, histories: _histories);
-    final m = masteryOf(ids: ids, histories: _histories);
+  /// 的取红，整组每张都答对过才绿，其余（含只测了其中一个专题）灰。悬停说明带「掌握 a/b」，按条目数计（ADR 0119）。
+  Widget _topicDot(List<List<String>> entries, {required double size, required String scope}) {
+    final status = statusOfIds(ids: [for (final e in entries) ...e], histories: _recallHistories);
+    final m = masteryOf(entries: entries, histories: _recallHistories);
     return TopicDot(
       status: status,
       size: size,
@@ -585,10 +591,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// 专题的自测卡题号（只看这个专题自己的自测作答，日常练习不参与，ADR 0112）。
-  List<String> _topicIds(SpeedTopic topic) {
-    return (_topicQuestionIds ??= {
-      for (final t in speedTopics) t.id: [for (final c in recallCardsOfTopic(t, widget.bank)) c.questionId],
+  /// 专题的条目（每条是它名下的自测卡题号，[recallEntriesOfTopic]）：只看这个专题自己的自测作答，
+  /// 日常练习不参与（ADR 0112）。
+  List<List<String>> _entriesOf(SpeedTopic topic) {
+    return (_topicEntries ??= {
+      for (final t in speedTopics) t.id: recallEntriesOfTopic(t, widget.bank),
     })[topic.id]!;
   }
 
@@ -1677,40 +1684,40 @@ class _HomePageState extends State<HomePage> {
       SpeedKind.numbers => NumbersPage(
         bank: widget.bank,
         topic: topic,
-        histories: _histories,
+        histories: _recallHistories,
         onStartRecall: recall,
       ),
       SpeedKind.signs => SignsPage(
         signs: widget.bank.signs,
-        histories: _histories,
+        histories: _recallHistories,
         recallPage: topic.id,
         subjectLabel: subject.code,
         onStartRecall: recall,
       ),
       SpeedKind.markings => MarkingsPage(
         markings: widget.bank.markings,
-        histories: _histories,
+        histories: _recallHistories,
         recallPage: topic.id,
         subjectLabel: subject.code,
         onStartRecall: recall,
       ),
       SpeedKind.gauges => GaugesPage(
         gauges: widget.bank.gauges,
-        histories: _histories,
+        histories: _recallHistories,
         recallPage: topic.id,
         subjectLabel: subject.code,
         onStartRecall: recall,
       ),
       SpeedKind.gestures => GesturesPage(
         gestures: gesturesOf(widget.bank, topic),
-        histories: _histories,
+        histories: _recallHistories,
         recallPage: topic.id,
         subjectLabel: subject.code,
         onStartRecall: recall,
       ),
       SpeedKind.notes => NotesPage(
         groups: noteGroupsOf(widget.bank, topic),
-        histories: _histories,
+        histories: _recallHistories,
         onStartRecall: recall,
         recallPage: topic.id,
         subjectLabel: subject.code,
@@ -1952,10 +1959,10 @@ class _HomePageState extends State<HomePage> {
   /// 速记组「自测」的出题（ADR 0118）：这一组的速记题里，答错还在错题库里的先出、没测过的其次，各自洗牌
   /// （[speedPending]）；整组都答对过了才整组洗牌重考——「再测一遍」（ADR 0099、0115）。
   List<Question> _speedGroupQueue(List<Question> questions) {
-    final pending = speedPending(questions, _histories);
+    final pending = speedPending(questions, _recallHistories);
     if (pending.isEmpty) return [...questions]..shuffle();
-    final wrong = [for (final q in pending) if (classifyOwn(q.id, _histories) == RecallBucket.wrong) q]..shuffle();
-    final fresh = [for (final q in pending) if (classifyOwn(q.id, _histories) != RecallBucket.wrong) q]..shuffle();
+    final wrong = [for (final q in pending) if (classifyOwn(q.id, _recallHistories) == RecallBucket.wrong) q]..shuffle();
+    final fresh = [for (final q in pending) if (classifyOwn(q.id, _recallHistories) != RecallBucket.wrong) q]..shuffle();
     return [...wrong, ...fresh];
   }
 

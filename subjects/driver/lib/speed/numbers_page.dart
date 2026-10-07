@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 
-import "cloze.dart";
 import "../ui/glyphs.dart";
 import "../ui/look.dart";
 import "../core/models.dart";
@@ -54,20 +53,9 @@ class NumbersPage extends StatelessWidget {
   /// 一个数字组的专属题（ADR 0102）：组内自测卡对应的题，行与题一对一。
   List<Question> _groupQuestions(CheatGroup group) => recallQuestionsOfNumberGroup(topic.id, _groups, group.id);
 
-  /// 一行易混数字对应的自测卡题号：每条情形一张填数/选择卡（f/），这个值一张反向卡（r/）。
-  /// 与 [recallCardsOfNumbers] 的卡 id 同构（ADR 0094）；反向卡按值合并，同值的行共用一张。
-  /// 页键是专题 id——自测作答记的题号用它（ADR 0097 分科目后页键不再是 "numbers"）。
-  ///
-  /// 反向卡不是每个值都有：组里不同的值不足 4 个（急救数字只有两个）、或区间值挖完整条都是括号，
-  /// 都不出反向卡（`planNumberCards`）。所以只取组里**真实存在**的卡（[groupIds]）；
-  /// 否则这一行永远有一张测不到的幽灵卡，圆就永远是灰，整行答对也绿不了。
-  List<String> _rowQuestionIds(CheatGroup group, CheatRow row, Set<String> groupIds) => [
-    for (final id in [
-      for (final single in splitCase(row.caseText)) recallQuestionId(topic.id, "f/${group.id}/$single|${row.value}"),
-      recallQuestionId(topic.id, "r/${group.id}/${row.value}"),
-    ])
-      if (groupIds.contains(id)) id,
-  ];
+  /// 一行易混数字名下的卡（[numberRowIds]）。
+  List<String> _rowQuestionIds(CheatGroup group, CheatRow row, Set<String> groupIds) =>
+      numberRowIds(topic.id, group, row, groupIds);
 
   /// 行的状态微点档位（ADR 0101，三态）：这一行有答错过且未掌握的自测卡 → 红；
   /// 这一行的卡全部答对过 → 绿；没测完（含只测了一部分）→ 灰。只看这一行自己的卡（ADR 0112）。
@@ -125,7 +113,7 @@ class NumbersPage extends StatelessWidget {
                 const SizedBox(width: 10),
                 Text(group.unit, style: muted),
               ],
-              MasteryTag(ids: ids, histories: histories),
+              MasteryTag(entries: [for (final row in group.rows) _rowQuestionIds(group, row, groupIds)], histories: histories),
               const Spacer(),
               GroupRecallButton(
                 status: status,

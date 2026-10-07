@@ -112,7 +112,7 @@ class SignsPage extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 6),
                   child: Text("${inGroup.length} 种", style: muted),
                 ),
-                MasteryTag(ids: ids, histories: histories),
+                MasteryTag(entries: singleEntries(ids), histories: histories),
                 const Spacer(),
                 GroupRecallButton(
                   status: status,

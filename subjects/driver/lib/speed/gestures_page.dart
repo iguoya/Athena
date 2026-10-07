@@ -82,7 +82,7 @@ class GesturesPage extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 6),
                     child: Text("每个动作都是规范的交警动画，点开看大图", style: muted),
                   ),
-                  MasteryTag(ids: ids, histories: histories),
+                  MasteryTag(entries: singleEntries(ids), histories: histories),
                   const Spacer(),
                   GroupRecallButton(
                     status: status,
