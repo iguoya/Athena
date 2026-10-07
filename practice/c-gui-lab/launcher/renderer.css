@@ -1,18 +1,19 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* 默认亮色主题 */
 body {
-  background: #0e0f13;
-  color: #e6e9ef;
+  background: #f5f6f8;
+  color: #22252b;
   font-family: "Segoe UI", "Noto Sans SC", "Microsoft YaHei", sans-serif;
   min-height: 100vh;
 }
 
 .hero {
   padding: 44px 48px 28px;
-  background: linear-gradient(135deg, #14101e 0%, #1d1730 55%, #3b1d4e 100%);
+  background: linear-gradient(135deg, #f7f5fb 0%, #ece7f6 60%, #e0e9f8 100%);
 }
 .hero h1 { font-size: 34px; font-weight: 800; letter-spacing: 0.5px; }
-.hero p { margin-top: 10px; color: rgba(230, 233, 239, 0.72); font-size: 15px; }
+.hero p { margin-top: 10px; color: rgba(34, 37, 43, 0.65); font-size: 15px; }
 
 main { padding: 26px 48px 40px; display: flex; flex-direction: column; gap: 26px; }
 
@@ -20,8 +21,8 @@ main { padding: 26px 48px 40px; display: flex; flex-direction: column; gap: 26px
 
 .card {
   --accent: #3584e4;
-  background: #171a21;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: #ffffff;
+  border: 1px solid rgba(17, 24, 39, 0.08);
   border-radius: 18px;
   padding: 22px;
   display: flex;
@@ -38,20 +39,20 @@ main { padding: 26px 48px 40px; display: flex; flex-direction: column; gap: 26px
   align-self: flex-start;
   font-size: 12px;
   color: var(--accent);
-  border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
   border-radius: 999px;
   padding: 3px 12px;
 }
 .card h2 { font-size: 20px; font-weight: 700; }
-.card > p { font-size: 14px; line-height: 1.65; color: rgba(230, 233, 239, 0.68); }
+.card > p { font-size: 14px; line-height: 1.65; color: rgba(34, 37, 43, 0.68); }
 
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chips span {
   font-size: 12px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(17, 24, 39, 0.05);
   border-radius: 999px;
   padding: 4px 12px;
-  color: rgba(230, 233, 239, 0.75);
+  color: rgba(34, 37, 43, 0.72);
 }
 
 .card button {
@@ -63,34 +64,34 @@ main { padding: 26px 48px 40px; display: flex; flex-direction: column; gap: 26px
   font-weight: 600;
   color: #fff;
   cursor: pointer;
-  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 55%, #14101e));
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 60%, #1c2333));
   transition: filter 140ms ease;
 }
-.card button:hover { filter: brightness(1.15); }
+.card button:hover { filter: brightness(1.12); }
 .card button:disabled { filter: grayscale(0.9); cursor: not-allowed; }
 
 .official h3 { font-size: 16px; margin-bottom: 6px; }
-.official .hint { font-size: 13px; color: rgba(230, 233, 239, 0.55); margin-bottom: 14px; }
+.official .hint { font-size: 13px; color: rgba(34, 37, 43, 0.55); margin-bottom: 14px; }
 .official-row { display: flex; gap: 12px; }
 .official-row button {
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.04);
-  color: #e6e9ef;
+  border: 1px solid rgba(17, 24, 39, 0.14);
+  background: rgba(17, 24, 39, 0.03);
+  color: inherit;
   border-radius: 12px;
   padding: 11px 18px;
   font-size: 14px;
   cursor: pointer;
   transition: background 140ms ease;
 }
-.official-row button:hover:not(:disabled) { background: rgba(255, 255, 255, 0.1); }
+.official-row button:hover:not(:disabled) { background: rgba(17, 24, 39, 0.07); }
 .official-row button:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .status {
   font-size: 13px;
-  color: rgba(230, 233, 239, 0.6);
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  color: rgba(34, 37, 43, 0.55);
+  border-top: 1px solid rgba(17, 24, 39, 0.08);
   padding-top: 14px;
 }
-.status.ok { color: #7ec97e; }
-.status.err { color: #ef7d7d; }
-.status code { background: rgba(255, 255, 255, 0.06); border-radius: 6px; padding: 1px 7px; }
+.status.ok { color: #2f8a40; }
+.status.err { color: #c93b3b; }
+.status code { background: rgba(17, 24, 39, 0.06); border-radius: 6px; padding: 1px 7px; }

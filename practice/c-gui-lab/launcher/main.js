@@ -98,7 +98,7 @@ function createWindow() {
   const win = new BrowserWindow({
     width: 1400,
     height: 920,
-    backgroundColor: "#0e0f13",
+    backgroundColor: "#f5f6f8", // 与 renderer.css 的亮色主题一致，避免启动闪暗
     title: "C GUI Lab",
     autoHideMenuBar: true,
     webPreferences: {
