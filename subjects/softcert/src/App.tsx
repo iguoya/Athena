@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { GraduationCap, ScrollText, Gauge, Home } from "lucide-react";
-import { courses, registry } from "./content";
+import { registry } from "./content";
+import { Sidebar } from "./components/sidebar";
 import { HomePage } from "./pages/home";
 import { CoursePage } from "./pages/course";
 import { TopicPage } from "./pages/topic";
@@ -24,42 +24,11 @@ export default function App() {
     window.scrollTo({ top: 0 });
   }, [view]);
 
-  const navBtn = (active: boolean) =>
-    `flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[13.5px] font-medium transition-colors ${
-      active ? "bg-brand-500 text-white shadow-sm" : "text-ink/60 hover:bg-brand-50 hover:text-brand-700"
-    }`;
-
   return (
-    <div className="min-h-screen">
-      <header className="glass-nav sticky top-0 z-20 border-b border-black/5">
-        <div className="mx-auto flex h-14 max-w-[1500px] items-center gap-2 px-5">
-          <img src="/icon.svg" alt="" width={30} height={30} className="rounded-lg" />
-          <span className="mr-2 text-[15px] font-bold">软考</span>
-          <button type="button" className={navBtn(view.kind === "home")} onClick={() => setView({ kind: "home" })}>
-            <Home size={15} /> 首页
-          </button>
-          {courses.map((c) => (
-            <button
-              key={c.id}
-              type="button"
-              className={navBtn(view.kind === "course" && view.courseId === c.id || view.kind === "topic" && view.courseId === c.id || view.kind === "quiz" && view.courseId === c.id)}
-              onClick={() => setView({ kind: "course", courseId: c.id })}
-            >
-              <GraduationCap size={15} /> {c.title}
-            </button>
-          ))}
-          <div className="ml-auto flex items-center gap-1">
-            <button type="button" className={navBtn(view.kind === "past")} onClick={() => setView({ kind: "past" })}>
-              <ScrollText size={15} /> 真题演练
-            </button>
-            <button type="button" className={navBtn(view.kind === "dashboard")} onClick={() => setView({ kind: "dashboard" })}>
-              <Gauge size={15} /> 战况
-            </button>
-          </div>
-        </div>
-      </header>
+    <div className="flex min-h-screen">
+      <Sidebar view={view} go={setView} />
 
-      <main className="mx-auto max-w-[1500px] px-5 pb-16">
+      <main className="min-w-0 flex-1 px-6 pb-16 pt-4">
         {view.kind === "home" && <HomePage go={setView} />}
         {view.kind === "course" && <CoursePage courseId={view.courseId} go={setView} />}
         {view.kind === "topic" && (
@@ -77,9 +46,9 @@ export default function App() {
         {view.kind === "dashboard" && <DashboardPage />}
       </main>
 
-      <footer className="border-t border-black/5 py-6 text-center text-[12px] text-ink/40">
+      <footer className="fixed bottom-0 right-0 left-64 border-t border-black/5 bg-white/70 py-3 text-center text-[11.5px] text-ink/35 backdrop-blur">
         {registry.exam.full_name} · 两科同时 ≥{registry.exam.passing_score} 分通过 ·
-        菜单目录对齐官方教材,出处在 content/sources.json,真题导入见 content/past-exams/README.md
+        菜单目录对齐官方教材,出处在 content/sources.json
       </footer>
     </div>
   );

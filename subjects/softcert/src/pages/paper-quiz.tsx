@@ -60,7 +60,7 @@ export function PaperRunner({
   return (
     <div className="pt-6">
       {/* 顶部 sticky 工具条 */}
-      <div className="glass-nav sticky top-14 z-10 -mx-5 mb-6 border-b border-black/5 px-5 py-3">
+      <div className="glass-nav sticky top-0 z-10 -mx-6 mb-6 border-b border-black/5 px-6 py-3">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3">
           <h1 className="text-[16px] font-bold">{title}</h1>
           <span className="text-[13px] text-ink/50">
