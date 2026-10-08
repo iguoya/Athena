@@ -1,7 +1,7 @@
 import { ScrollText, FileDown, ShieldCheck, Play } from "lucide-react";
 import type { PastPaperFile } from "../types";
 import type { View } from "../App";
-import { QuizRunner } from "./quiz";
+import { PaperRunner } from "./paper-quiz";
 
 // 卷子文件由 scripts/import-past-exam.py 生成,构建期收集——导入即出现在列表里。
 const paperModules = import.meta.glob<{ default: PastPaperFile }>(
@@ -91,7 +91,7 @@ function Step({ icon, text }: { icon: React.ReactNode; text: string }) {
   );
 }
 
-/** 真题卷练习:与随堂考核同一个作答器,mode=past-exam。 */
+/** 真题卷练习:整卷铺开 + 答题卡,与随堂考核共用进度库(mode=past-exam)。 */
 export function PastPaperQuizPage({ paperId, go }: { paperId: string; go: (v: View) => void }) {
   const paper = paperFiles.find((p) => p.id === paperId);
   if (!paper) {
@@ -102,7 +102,7 @@ export function PastPaperQuizPage({ paperId, go }: { paperId: string; go: (v: Vi
     );
   }
   return (
-    <QuizRunner
+    <PaperRunner
       title={paper.title}
       questions={paper.questions}
       mode="past-exam"
