@@ -2,7 +2,8 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { CheckCircle2, XCircle, ArrowRight, RotateCcw, Award } from "lucide-react";
-import { findSection, quizOf } from "../content";
+import { findSection, pastExamQuestions, quizOf } from "../content";
+import { PaperRunner } from "./paper-quiz";
 import { recordAttempt } from "../db";
 import { inline } from "../components/blocks";
 import type { Question } from "../types";
@@ -204,6 +205,26 @@ function AnswerReview({ answered, index }: { answered: Answered; index: number }
 
 export function QuizPage({ courseId, sectionId, go }: { courseId: string; sectionId: string; go: (v: View) => void }) {
   const { course, section } = findSection(courseId, sectionId);
+  const pattern = section.past_exam_knowledge;
+
+  // 配置了知识点筛选的节:随堂考核 = 该知识点历年真题精选(verbatim,整卷作答)
+  if (pattern) {
+    const questions = pastExamQuestions(pattern);
+    if (questions.length > 0) {
+      return (
+        <PaperRunner
+          title={`${section.title} · 历年真题精选(${questions.length} 题)`}
+          questions={questions}
+          mode="chapter"
+          course={course.id}
+          chapterId={section.id}
+          kpId={section.kp?.id ?? section.id}
+          onExit={() => go({ kind: "topic", courseId, sectionId })}
+        />
+      );
+    }
+  }
+
   const quiz = quizOf(sectionId);
   return (
     <QuizRunner

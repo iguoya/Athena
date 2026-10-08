@@ -136,10 +136,11 @@ def check_content() -> None:
                     fail(f"节 {sid} 掌握目标非法:{kp.get('mastery_goal')}")
                 if kp.get("knowledge_type") not in KNOWLEDGE_TYPES:
                     fail(f"节 {sid} 知识类型非法:{kp.get('knowledge_type')}")
-                # 评级只给已写出教学内容的章节:有评级就必须有内容,内容必须有题。
+                # 评级只给已写出教学内容的章节:有评级就必须有内容;考核题两条路:
+                # 本地 quizzes 文件,或配置 past_exam_knowledge 直接使用历年真题。
                 if not (content / cid / "chapters" / f"{sid}.json").is_file():
                     fail(f"节 {sid} 有评级但没有教学内容文件")
-                if not (content / cid / "quizzes" / f"{sid}.json").is_file():
+                if not sec.get("past_exam_knowledge") and not (content / cid / "quizzes" / f"{sid}.json").is_file():
                     fail(f"节 {sid} 有评级但没有考核题文件")
         referenced_sections[cid] = refs
 

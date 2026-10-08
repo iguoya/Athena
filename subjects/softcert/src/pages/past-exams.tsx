@@ -1,16 +1,9 @@
 import { ScrollText, FileDown, ShieldCheck, Play } from "lucide-react";
-import type { PastPaperFile } from "../types";
 import type { View } from "../App";
+import { pastPaperFiles } from "../content";
 import { PaperRunner } from "./paper-quiz";
 
-// 卷子文件由 scripts/import-past-exam.py 生成,构建期收集——导入即出现在列表里。
-const paperModules = import.meta.glob<{ default: PastPaperFile }>(
-  "../../content/past-exams/papers/*.json",
-  { eager: true },
-);
-const paperFiles: PastPaperFile[] = Object.values(paperModules)
-  .map((m) => m.default)
-  .sort((a, b) => b.year - a.year || b.session.localeCompare(a.session));
+const paperFiles = pastPaperFiles;
 
 export function PastExamsPage({ go }: { go: (v: View) => void }) {
   const papers = paperFiles;

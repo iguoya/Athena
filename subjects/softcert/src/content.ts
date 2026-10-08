@@ -27,6 +27,7 @@ import osRtosLesson from "../content/esd/chapters/os-rtos.json";
 import esdMcuLesson from "../content/esd/chapters/esd-mcu.json";
 import esdMemoryLesson from "../content/esd/chapters/esd-memory.json";
 import esdBusLesson from "../content/esd/chapters/esd-bus.json";
+import esdTaskMgmtLesson from "../content/esd/chapters/esd-task-mgmt.json";
 
 import csNumberQuiz from "../content/swd/quizzes/cs-number.json";
 import csCpuQuiz from "../content/swd/quizzes/cs-cpu.json";
@@ -61,6 +62,7 @@ const lessons: Record<string, ChapterLesson> = Object.fromEntries(
     esdMcuLesson,
     esdMemoryLesson,
     esdBusLesson,
+    esdTaskMgmtLesson,
   ].map((l) => [l.section_id, l as unknown as ChapterLesson]),
 );
 
@@ -92,6 +94,24 @@ export const courses: Course[] = [
 ];
 
 export const pastPapers = papersJson as unknown as PastPaperRegistry;
+
+// 卷子文件由 scripts/import-past-exam.py 生成,构建期收集——导入即生效。
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const paperModules = import.meta.glob<any>("../../content/past-exams/papers/*.json", {
+  eager: true,
+});
+export const pastPaperFiles = Object.values(paperModules)
+  .map((m) => m.default as import("./types").PastPaperFile)
+  .sort((a, b) => b.year - a.year || b.session.localeCompare(a.session));
+
+/** 按知识点正则筛选历年真题(verbatim)。 */
+export function pastExamQuestions(pattern: string): import("./types").PastExamQuestion[] {
+  const re = new RegExp(pattern);
+  return pastPaperFiles
+    .filter((p) => p.subject.includes("综合知识"))
+    .flatMap((p) => p.questions)
+    .filter((q) => re.test(q.knowledge ?? "") || re.test(q.stem));
+}
 
 export function courseById(id: string): Course {
   const found = courses.find((c) => c.id === id);

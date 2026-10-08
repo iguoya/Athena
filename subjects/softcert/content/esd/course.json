@@ -52,7 +52,8 @@
             "knowledge_type": "concept",
             "requires": [],
             "guide_line": "CISC/RISC 对比、CPU 三构成、ARM 数据类型与 7 种运行模式是上午卷的常客;7 种模式要能给场景选模式。"
-          }
+          },
+          "past_exam_knowledge": "嵌入式微处理器"
         },
         {
           "id": "esd-memory",
@@ -66,7 +67,8 @@
             "knowledge_type": "concept",
             "requires": [],
             "guide_line": "RAM/ROM 谱系对号入座、Flash 特征纠错、Cache 回写式与写通式——年年见面的送分区。"
-          }
+          },
+          "past_exam_knowledge": "存储"
         },
         {
           "id": "esd-bus",
@@ -80,7 +82,8 @@
             "knowledge_type": "concept",
             "requires": [],
             "guide_line": "每种接口记三件事:线数、速率、谁用在哪;SPI/I²C 的线数与地址、RS-485 的半双工是高频辨析。"
-          }
+          },
+          "past_exam_knowledge": "接口|总线|通信"
         }
       ]
     },
@@ -103,8 +106,23 @@
         "sourceId": "textbook-esd-2ed",
         "locator": "第 4 章"
       },
-      "note": "教材小节:4.1 嵌入式软件基础 / 4.2 嵌入式操作系统概述 / 4.3 任务管理 / 4.4 存储管理 / 4.5 设备管理 / 4.6 文件系统 / 4.7 嵌入式数据库。通用 OS 原理与软设第 4 章共学,这里只放实时方向的延伸节。",
+      "note": "教材小节:4.1 嵌入式软件基础 / 4.2 嵌入式操作系统概述 / 4.3 任务管理 / 4.4 存储管理 / 4.5 设备管理 / 4.6 文件系统 / 4.7 嵌入式数据库。通用 OS 原理与软设第 4 章共学,这里聚焦教材的嵌入式与实时视角。",
       "sections": [
+        {
+          "id": "esd-task-mgmt",
+          "title": "任务管理",
+          "weight": 3,
+          "grade": "S",
+          "kp": {
+            "id": "sc.esd.task",
+            "difficulty": 3,
+            "mastery_goal": "proficient",
+            "knowledge_type": "skill",
+            "requires": [],
+            "guide_line": "本章核心:三状态与 TCB、调度方式与算法、RMS 与可调度上限;考核直接使用历年真题精选。"
+          },
+          "past_exam_knowledge": "进程（任务）管理|任务调度|优先级"
+        },
         {
           "id": "os-rtos",
           "title": "从通用 OS 到实时系统",
@@ -120,7 +138,8 @@
               "sc.os.sched"
             ],
             "guide_line": "这是通往嵌入式专有课程的桥:实时性怎么改变调度与同步的取舍,概念级掌握即可。"
-          }
+          },
+          "past_exam_knowledge": "实时|任务"
         }
       ]
     },

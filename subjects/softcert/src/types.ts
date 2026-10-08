@@ -57,6 +57,8 @@ export interface Section {
   grade: Grade;
   /** 教学内容还没写的节不评级(TEACHING:评级只给已写出内容的章节)。 */
   kp?: KnowledgePoint;
+  /** 知识点筛选正则:配置后随堂考核直接使用匹配的历年真题(verbatim)整卷作答。 */
+  past_exam_knowledge?: string;
 }
 
 export interface TextbookRef {
@@ -143,6 +145,28 @@ export interface PastPaperMeta {
   session: string;
   subject: string;
   source_note: string;
+}
+
+export interface PastExamQuestion {
+  id: string;
+  no: number;
+  stem: string;
+  options: string[];
+  answer: number;
+  explanation: string;
+  knowledge: string;
+  source: SourceRef;
+}
+
+export interface PastPaperFile {
+  id: string;
+  title: string;
+  year: number;
+  session: string;
+  subject: string;
+  source_note: string;
+  source_ref: SourceRef;
+  questions: PastExamQuestion[];
 }
 
 export interface PastPaperRegistry {
