@@ -1,0 +1,52 @@
+{
+  "section_id": "esd-memory",
+  "questions": [
+    {
+      "id": "sc.esd.memory.q1",
+      "stem": "关于 Flash 存储器,下列叙述中错误的是( )。",
+      "options": [
+        "掉电后信息不会丢失,属于非易失性存储器",
+        "以块为单位进行删除操作",
+        "采用随机访问方式,常用来代替主存",
+        "在嵌入式系统中可以用来代替 ROM 存储器"
+      ],
+      "answer": 2,
+      "explanation": "Flash 不能像 DRAM 那样按字节随机访问和改写,代替主存的是 DRAM;Flash 的定位是非易失的块设备存储,嵌入式系统中代替 ROM 存放固件。A、B、D 都是 Flash 的正确特征。",
+      "source": { "relation": "adapted", "sourceId": "textbook-esd-2ed", "why": "教材 §2.3 对 ROM 族与 Flash 特征的条目式描述改编为辨析题,错误项取自常见考题干扰项。", "locator": "嵌入式教材 §2.3 嵌入式系统的存储体系·ROM 与 Flash" }
+    },
+    {
+      "id": "sc.esd.memory.q2",
+      "stem": "某 Cache 采用回写式(Write-back)写策略,当 CPU 执行写数据操作时,正确的说法是( )。",
+      "options": [
+        "数据同时写入 Cache 和内存",
+        "数据只写入 Cache,块被替换且修改位为 1 时才回写内存",
+        "数据只写入内存,Cache 仅作读缓存",
+        "数据写入内存,写 Cache 由操作系统决定"
+      ],
+      "answer": 1,
+      "explanation": "回写式只写 Cache,块中设修改位;替换时修改位为 1 则先回写内存再覆盖。A 是写通式的行为;C、D 与两种策略的机制都不符。",
+      "source": { "relation": "adapted", "sourceId": "textbook-esd-2ed", "why": "回写式/写通式的机制对比是 §2.3 Cache 部分的核心考点,自教材描述改编为辨析题。", "locator": "嵌入式教材 §2.3 Cache 的工作机制·回写式与写通式" }
+    },
+    {
+      "id": "sc.esd.memory.q3",
+      "stem": "需要用紫外线照射擦除、用电重新编程写入的只读存储器是( )。",
+      "options": ["PROM", "EEPROM", "EPROM", "Flash"],
+      "answer": 2,
+      "explanation": "EPROM 用高压电写入、紫外线照射擦除,封装上留石英窗;PROM 只能写一次(OTP);EEPROM 用电擦除;Flash 是电擦写、按块操作。关键词「紫外线」对应 EPROM。",
+      "source": { "relation": "adapted", "sourceId": "textbook-esd-2ed", "why": "ROM 族按擦写方式的分类是存储体系考点的记忆主干,自教材谱系条目改编为对号入座题。", "locator": "嵌入式教材 §2.3 ROM 的分类(PROM/EPROM/EEPROM)" }
+    },
+    {
+      "id": "sc.esd.memory.q4",
+      "stem": "CPU 访问数据时,Cache 地址变换逻辑未命中且无空闲 Cache 块时,系统的处理是( )。",
+      "options": [
+        "CPU 直接访问外存获取数据",
+        "由替换逻辑找出一个 Cache 块,把内存块装入替换",
+        "等待直到有空闲 Cache 块出现",
+        "清空全部 Cache 后重新装入"
+      ],
+      "answer": 1,
+      "explanation": "按教材图 2-13 的机制:未命中且无空闲块时,由 Cache 块替换逻辑选出一个块用于替换,把目标内存块装入该位置(回写式下被替换块若修改位为 1 需先回写)。A、C、D 都不是 Cache 硬件的工作方式。",
+      "source": { "relation": "adapted", "sourceId": "textbook-esd-2ed", "why": "Cache 未命中处理流程是 §2.3 图 2-13 描述的机制,改编为流程辨析题。", "locator": "嵌入式教材 §2.3 图 2-13 Cache 工作机制示意图" }
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "section_id": "esd-bus",
+  "questions": [
+    {
+      "id": "sc.esd.bus.q1",
+      "stem": "I²C 总线上外围器件的 7 位地址由( )构成。",
+      "options": [
+        "器件地址与引脚地址",
+        "设备类型码与随机数",
+        "主机地址与从机地址",
+        "厂商代码与序列号"
+      ],
+      "answer": 0,
+      "explanation": "7 位地址 = 器件地址(出厂固化,不可更改)+ 引脚地址(由 A2、A1、A0 引脚在电路中的接法决定)。这也是同一型号器件挂同一总线时靠引脚地址区分的机制。",
+      "source": { "relation": "adapted", "sourceId": "textbook-esd-2ed", "why": "I²C 地址构成是 §2.6 中 I²C 小节的记忆型考点,自教材接口特点条目改编。", "locator": "嵌入式教材 §2.6.2 I²C 接口特点" }
+    },
+    {
+      "id": "sc.esd.bus.q2",
+      "stem": "SPI 接口中,主机输出/从机输入的数据线是( )。",
+      "options": ["MISO", "MOSI", "SCLK", "NSS"],
+      "answer": 1,
+      "explanation": "MOSI(Master Output Slave Input)= 主器件数据输出、从器件输入;MISO 则相反;SCLK 是主器件产生的时钟;NSS 是低电平有效的从器件使能线(即 CS)。",
+      "source": { "relation": "adapted", "sourceId": "textbook-esd-2ed", "why": "SPI 四线信号方向是 §2.6 SPI 小节的高频混淆点,自教材接口信号特点条目改编。", "locator": "嵌入式教材 §2.6 SPI 接口特点" }
+    },
+    {
+      "id": "sc.esd.bus.q3",
+      "stem": "关于 RS-485 与 RS-232 的比较,正确的是( )。",
+      "options": [
+        "RS-485 采用单端信号,RS-232 采用差分信号",
+        "RS-485 采用平衡发送差分接收,可抑制共模干扰,通信距离可达千米级",
+        "RS-485 为全双工,同一时刻可双向同时发送",
+        "RS-232 的通信距离可达千米级"
+      ],
+      "answer": 1,
+      "explanation": "RS-485 平衡发送、差分接收,总线收发器灵敏度高(可检测低至 200mV),信号千米外可恢复;它是半双工,同一时刻只能有一方处于发送状态。RS-232 单端信号,一般用于 20m 以内。",
+      "source": { "relation": "adapted", "sourceId": "textbook-esd-2ed", "why": "RS-485 与 RS-232 的对比是 §2.6 串口小节的辨析主干,自教材条目改编。", "locator": "嵌入式教材 §2.6 串口·RS-232C 与 RS-485" }
+    },
+    {
+      "id": "sc.esd.bus.q4",
+      "stem": "关于 CAN 总线,下列说法错误的是( )。",
+      "options": [
+        "可用多主方式工作,任意节点可在任意时刻向其他节点发起通信",
+        "采用差分传输,具有高抗电磁干扰能力并可检错",
+        "速率可达 1Mb/s,信号传输距离达 10km 时仍可提供 50kb/s",
+        "同一网络中节点数目可以无限扩展"
+      ],
+      "answer": 3,
+      "explanation": "CAN 的节点数目受网络硬件电气特性限制(如 Philips 82C250 收发器下同一网络最多 110 个节点),并非无限扩展。A、B、C 都是教材给出的 CAN 正确特征。",
+      "source": { "relation": "adapted", "sourceId": "textbook-esd-2ed", "why": "CAN 的特征条目与节点限制是 §2.6 CAN 小节的考点,自教材描述改编为找错题。", "locator": "嵌入式教材 §2.6 CAN 总线" }
+    }
+  ]
+}
