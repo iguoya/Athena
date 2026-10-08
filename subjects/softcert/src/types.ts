@@ -149,3 +149,26 @@ export interface PastPaperRegistry {
   about: string;
   papers: PastPaperMeta[];
 }
+
+/** 卷子文件(content/past-exams/papers/*.json,由 import-past-exam.py 生成)。 */
+export interface PastExamQuestion {
+  id: string;
+  no: number;
+  stem: string;
+  options: string[];
+  answer: number;
+  explanation: string;
+  knowledge: string;
+  source: SourceRef;
+}
+
+export interface PastPaperFile {
+  id: string;
+  title: string;
+  year: number;
+  session: string;
+  subject: string;
+  source_note: string;
+  source_ref: SourceRef;
+  questions: PastExamQuestion[];
+}

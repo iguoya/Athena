@@ -4,7 +4,7 @@ import { courses, registry } from "./content";
 import { HomePage } from "./pages/home";
 import { CoursePage } from "./pages/course";
 import { TopicPage } from "./pages/topic";
-import { PastExamsPage } from "./pages/past-exams";
+import { PastExamsPage, PastPaperQuizPage } from "./pages/past-exams";
 import { DashboardPage } from "./pages/dashboard";
 import { QuizPage } from "./pages/quiz";
 
@@ -14,6 +14,7 @@ export type View =
   | { kind: "topic"; courseId: string; sectionId: string }
   | { kind: "quiz"; courseId: string; sectionId: string }
   | { kind: "past" }
+  | { kind: "past-quiz"; paperId: string }
   | { kind: "dashboard" };
 
 export default function App() {
@@ -71,7 +72,8 @@ export default function App() {
         {view.kind === "quiz" && (
           <QuizPage courseId={view.courseId} sectionId={view.sectionId} go={setView} />
         )}
-        {view.kind === "past" && <PastExamsPage />}
+        {view.kind === "past" && <PastExamsPage go={setView} />}
+        {view.kind === "past-quiz" && <PastPaperQuizPage paperId={view.paperId} go={setView} />}
         {view.kind === "dashboard" && <DashboardPage />}
       </main>
 
