@@ -551,7 +551,13 @@ void main() {
     SyncEngine both({Duration probe = const Duration(minutes: 10)}) {
       final e = SyncEngine(
         store: store,
-        config: ApiConfig(lanBase: lan.base, wanBase: api.base),
+        // 外网凭据齐全：外网端点才进候选（ADR 0123）。
+        config: ApiConfig(
+          lanBase: lan.base,
+          wanBase: api.base,
+          cfClientId: "id.access",
+          cfClientSecret: "secret",
+        ),
         user: "tiger",
         draftKeys: const [],
         lanProbeInterval: probe,
@@ -588,6 +594,21 @@ void main() {
       await e.syncNow();
       expect(lan.rowCount("attempts"), 1, reason: "内网通了，新记录直接送内网");
       expect(api.rowCount("attempts"), 1);
+    });
+
+    test("外网凭据没配齐：外网端点不进候选（ADR 0123），数据留在本地队列", () async {
+      lan.setDrop(true);
+      final e = SyncEngine(
+        store: store,
+        config: ApiConfig(lanBase: lan.base, wanBase: api.base),
+        user: "tiger",
+        draftKeys: const [],
+      );
+      addTearDown(e.stop);
+      await store.recordAttempt(questionId: "a", topicId: "t", subjectId: "s", correct: true);
+      await e.syncNow();
+      expect(api.requests, isEmpty, reason: "没配凭据就不去敲外网的门，完全本地");
+      expect(store.pendingCount(), 1, reason: "记录留在本机队列，下次连上内网补发");
     });
   });
 }

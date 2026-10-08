@@ -35,6 +35,12 @@ class ApiConfig {
   final String? cfClientId;
   final String? cfClientSecret;
 
+  /// 外网端点只有在凭据齐全时才参与（ADR 0123）：外网的门是 Cloudflare Access，
+  /// 没有凭据去敲门必然被拦。没配凭据的机器离开内网就是完全本地——不出站、不报错。
+  /// 凭据填了却被拦（SyncAuthError）仍是配置错误，要人来修，报错保留。
+  String? get wanUsableBase =>
+      wanBase != null && cfClientId != null && cfClientSecret != null ? wanBase : null;
+
   Map<String, Object?> toJson() => {
         "lan_base": lanBase,
         "wan_base": wanBase,
@@ -445,13 +451,14 @@ class SyncEngine {
   /// 其余状态码按临时失败处理。
   Future<Map<String, Object?>> _send(String method, String path, Map<String, Object?>? body) async {
     // 上次用活的端点优先；但正走着外网时，隔一阵先试一次内网，回到家里就能自动切回直连。
+    // 外网没配凭据时不进候选（wanUsableBase 为 null，ADR 0123）。
     final lan = _config.lanBase;
     final probeLan = _activeBase != null && _activeBase != lan && !DateTime.now().isBefore(_lanProbeAfter);
     final bases = [
       if (probeLan) lan,
       ?_activeBase,
       lan,
-      ?_config.wanBase,
+      ?_config.wanUsableBase,
     ];
     final tried = <String>{};
     Object? lastNetworkError;

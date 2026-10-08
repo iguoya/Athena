@@ -137,12 +137,17 @@ class _BootstrapGateState extends State<BootstrapGate> {
   }
 
   /// 新建学习者后的提示：编号用一条不挡路的提示条告诉他（ADR 0078 决策 2）。
+  /// 本地学习者的提示另说清楚「不同步」（ADR 0123）。
   /// 等进入应用的那一帧画完再弹，提示条才挂得上。
   void _showWelcome(UserProfile profile) {
+    final content = profile.isLocal
+        ? "已在这台电脑上新建本地学习者「${profile.name}」，编号 ${profile.id}。"
+            "记录只保存在这台电脑上，不会同步到其他设备。"
+        : "已新建学习者「${profile.name}」，编号 ${profile.id}。在别的电脑登录时如果遇到同名，会问这个编号。";
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _messengerKey.currentState?.showSnackBar(
         SnackBar(
-          content: Text("已新建学习者「${profile.name}」，编号 ${profile.id}。在别的电脑登录时如果遇到同名，会问这个编号。"),
+          content: Text(content),
           duration: const Duration(seconds: 15),
           showCloseIcon: true,
         ),
@@ -151,14 +156,15 @@ class _BootstrapGateState extends State<BootstrapGate> {
   }
 
   /// 以某个学习者身份打开应用：换人就是换一份空白历史（ADR 0071）。
-  /// 身份认编号（ADR 0075）；侧栏显示的是名字。
+  /// 身份认编号（ADR 0075）；侧栏显示的是名字。本地学习者（ADR 0123，编号 1000 起）
+  /// 不启动同步引擎——它只存这台电脑，永不出站。
   Future<void> _openAs(UserProfile profile) async {
     try {
       _engine?.stop();
       await _store?.close();
       final store = await ProgressStore.open(user: profile.id);
       _registry?.setLast(profile.id);
-      _engine = _startEngine(store, _bank!, ApiConfig.load(), profile.id);
+      _engine = profile.isLocal ? null : _startEngine(store, _bank!, ApiConfig.load(), profile.id);
       setState(() {
         _store = store;
         _profile = profile;
@@ -290,6 +296,7 @@ class _BootstrapGateState extends State<BootstrapGate> {
             messengerKey: _messengerKey,
             onSwitchUser: _switchUser,
             syncStatus: _engine?.status,
+            localOnly: _profile!.isLocal,
             onOpenConfig: _openConfig,
           ),
           navigatorKey: _navigatorKey,
@@ -339,6 +346,7 @@ class DriverApp extends StatelessWidget {
     this.navigatorKey,
     this.messengerKey,
     this.syncStatus,
+    this.localOnly = false,
     this.onOpenConfig,
     this.onSwitchUser,
   });
@@ -355,6 +363,10 @@ class DriverApp extends StatelessWidget {
   /// 应用内的提示条（新建学习者后告诉编号等）。
   final GlobalKey<ScaffoldMessengerState>? messengerKey;
   final ValueListenable<SyncStatus>? syncStatus;
+
+  /// 本地学习者（ADR 0123）：没有同步引擎，侧栏如实写「本地模式」。
+  final bool localOnly;
+
   final VoidCallback? onOpenConfig;
   final VoidCallback? onSwitchUser;
 
@@ -366,6 +378,7 @@ class DriverApp extends StatelessWidget {
       store: store,
       currentUser: currentUser,
       syncStatus: syncStatus,
+      localOnly: localOnly,
       onOpenConfig: onOpenConfig,
       onSwitchUser: onSwitchUser,
     );

@@ -78,39 +78,21 @@ class _ApiConfigScreenState extends State<ApiConfigScreen> {
       _pingResult = "";
     });
     // 内网和外网各测各的、逐行显示：以前内网通了就停，「已连上」只说明内网通，外网通不通
-    // 看不出来，容易误以为外网也配好了。
+    // 看不出来，容易误以为外网也配好了。外网没配凭据时不去敲门（发了也必然被拦，ADR 0123），
+    // 直接说明这就是完全本地模式。
     final lines = <String>[];
     final client = http.Client();
-    final endpoints = [("内网", config.lanBase, false), if (config.wanBase != null) ("外网", config.wanBase!, true)];
-    for (final (label, base, external) in endpoints) {
+    final hasWan = config.wanUsableBase != null;
+    final endpoints = [
+      ("内网", config.lanBase, false),
+      if (config.wanBase != null) ("外网", config.wanBase!, !hasWan),
+    ];
+    for (final (label, base, skipProbe) in endpoints) {
       String outcome;
-      try {
-        final request = http.Request("GET", Uri.parse("$base/api/driver/v1/ping"))
-          ..followRedirects = false
-          ..headers.addAll({
-            // 外网访问凭据只发给外网端点，不发给内网地址。
-            if (external && config.cfClientId != null && config.cfClientSecret != null) ...{
-              "CF-Access-Client-Id": config.cfClientId!,
-              "CF-Access-Client-Secret": config.cfClientSecret!,
-            },
-          });
-        final response = await client.send(request).timeout(const Duration(seconds: 10));
-        final body = await response.stream.bytesToString();
-        if (blockedByCloudflare(response.statusCode, response.headers, body)) {
-          outcome = (config.cfClientId == null)
-              ? "被 Cloudflare 访问规则拦住了（没填外网访问凭据）"
-              : "被 Cloudflare 访问规则拦住了：检查凭据，以及 Cloudflare 里是否给这个令牌加了 Service Auth 策略";
-        } else if (response.statusCode == 401) {
-          outcome = "后台是旧版本，要先部署新版";
-        } else if (response.statusCode == 200) {
-          outcome = "已连上";
-        } else {
-          outcome = "返回 ${response.statusCode}";
-        }
-      } on TimeoutException {
-        outcome = "超时";
-      } catch (_) {
-        outcome = "连不上";
+      if (skipProbe) {
+        outcome = "没填外网访问凭据：外网不参与同步，离开内网就是完全本地（不同步）";
+      } else {
+        outcome = await _probe(client, base, config);
       }
       lines.add("$label（$base）：$outcome");
     }
@@ -120,6 +102,33 @@ class _ApiConfigScreenState extends State<ApiConfigScreen> {
         _pingResult = lines.join("\n");
         _pinging = false;
       });
+    }
+  }
+
+  /// 对一个端点发 ping，返回给人看的结果行。
+  Future<String> _probe(http.Client client, String base, ApiConfig config) async {
+    try {
+      final request = http.Request("GET", Uri.parse("$base/api/driver/v1/ping"))
+        ..followRedirects = false
+        ..headers.addAll({
+          // 外网访问凭据只发给外网端点，不发给内网地址。
+          if (base == config.wanBase && config.cfClientId != null && config.cfClientSecret != null) ...{
+            "CF-Access-Client-Id": config.cfClientId!,
+            "CF-Access-Client-Secret": config.cfClientSecret!,
+          },
+        });
+      final response = await client.send(request).timeout(const Duration(seconds: 10));
+      final body = await response.stream.bytesToString();
+      if (blockedByCloudflare(response.statusCode, response.headers, body)) {
+        return "被 Cloudflare 访问规则拦住了：检查凭据，以及 Cloudflare 里是否给这个令牌加了 Service Auth 策略";
+      }
+      if (response.statusCode == 401) return "后台是旧版本，要先部署新版";
+      if (response.statusCode == 200) return "已连上";
+      return "返回 ${response.statusCode}";
+    } on TimeoutException {
+      return "超时";
+    } catch (_) {
+      return "连不上";
     }
   }
 
@@ -184,7 +193,9 @@ class _ApiConfigScreenState extends State<ApiConfigScreen> {
                   const Text(
                     "做题记录先存在本机，后台自动和家里的软路由保持同一份；断网也能照常做题，"
                     "联网后自动补上。在家里内网用什么都不用改；离开内网时填外网端点，"
-                    "以及 Cloudflare 给的外网访问凭据（一对 ID 和密钥，全家共用）。",
+                    "以及 Cloudflare 给的外网访问凭据（一对 ID 和密钥，全家共用）。"
+                    "外网访问凭据不填的话，外网就不参与同步——离开内网就是完全本地，"
+                    "记录只存这台电脑（本地新建的学习者也永远只存这台电脑）。",
                     style: TextStyle(height: 1.5),
                   ),
                   const SizedBox(height: 20),

@@ -155,7 +155,7 @@ void main() {
     await typeName(tester, "小王");
     await tester.tap(find.text("进入"));
     await tester.pumpAndSettle();
-    await tester.enterText(find.widgetWithText(TextField, "学习者编号（1～999）"), "9");
+    await tester.enterText(find.widgetWithText(TextField, "学习者编号"), "9");
     await tester.tap(find.text("进入"));
     await tester.pumpAndSettle();
     expect(picked, isNull);
@@ -170,15 +170,15 @@ void main() {
     await tester.tap(find.text("进入"));
     await tester.pumpAndSettle();
     expect(picked, isNull);
-    expect(find.text("学习者编号（1～999）"), findsOneWidget);
+    expect(find.text("学习者编号"), findsOneWidget);
 
-    await tester.enterText(find.widgetWithText(TextField, "学习者编号（1～999）"), "9");
+    await tester.enterText(find.widgetWithText(TextField, "学习者编号"), "9");
     await tester.tap(find.text("进入"));
     await tester.pumpAndSettle();
     expect(picked, isNull);
     expect(find.textContaining("名字和编号对不上"), findsOneWidget);
 
-    await tester.enterText(find.widgetWithText(TextField, "学习者编号（1～999）"), "2");
+    await tester.enterText(find.widgetWithText(TextField, "学习者编号"), "2");
     await tester.tap(find.text("进入"));
     await tester.pumpAndSettle();
     expect(picked?.id, "2");
@@ -271,6 +271,91 @@ void main() {
     await tester.tap(find.text("进入"));
     await tester.pumpAndSettle();
     expect(picked?.id, "3");
+  });
+
+  testWidgets("连不上目录：出现「在这台电脑上新建（不同步）」，建出的本地学习者编号 1000 起（ADR 0123）", (tester) async {
+    directory.down = true;
+    await open(tester);
+    await typeName(tester, "本地新人");
+    await tester.tap(find.text("进入"));
+    await tester.pumpAndSettle();
+    expect(find.text("在这台电脑上新建（不同步）"), findsOneWidget);
+
+    final callsAfterFailedEnter = directory.calls;
+    await tester.tap(find.text("在这台电脑上新建（不同步）"));
+    await tester.pumpAndSettle();
+    expect(picked?.id, "1000", reason: "本地段从 1000 起，不与中心目录的 1～999 重叠");
+    expect(picked?.isLocal, isTrue);
+    expect(createdFlag, isTrue);
+    expect(directory.calls, callsAfterFailedEnter, reason: "本地新建本身不再碰目录");
+    expect(registry.byId("1000")?.name, "本地新人", reason: "记进本机缓存，下次离线也能进");
+  });
+
+  testWidgets("本地新建遇到本机同名的本地学习者：先确认，取消就不建（ADR 0123）", (tester) async {
+    registry.remember(const UserProfile(id: "1000", name: "老王"));
+    directory.down = true;
+    await open(tester);
+    await typeName(tester, "老王");
+    // 显式新建在目录不可达时失败（本机已有同名先确认一次，确认后 register 碰壁），
+    // 失败后出现本地新建的出路。
+    await tester.tap(find.text("我是另一个同名的人，新建"));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("仍要新建"));
+    await tester.pumpAndSettle();
+    expect(find.textContaining("连不上学习者目录"), findsOneWidget);
+
+    await tester.tap(find.text("在这台电脑上新建（不同步）"));
+    await tester.pumpAndSettle();
+    expect(find.text("这台电脑上已有同名的本地学习者"), findsOneWidget);
+    await tester.tap(find.text("取消"));
+    await tester.pumpAndSettle();
+    expect(picked, isNull);
+    expect(registry.users, hasLength(1), reason: "取消就没有新建");
+
+    await tester.tap(find.text("在这台电脑上新建（不同步）"));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("仍要新建"));
+    await tester.pumpAndSettle();
+    expect(picked?.id, "1001", reason: "编号不复用，取已有最大值加一");
+    expect(picked?.isLocal, isTrue);
+  });
+
+  testWidgets("连不上目录：本地新建过一次，缓存里的人下次直接进，不再碰目录", (tester) async {
+    directory.down = true;
+    await open(tester);
+    await typeName(tester, "本地新人");
+    await tester.tap(find.text("进入"));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("在这台电脑上新建（不同步）"));
+    await tester.pumpAndSettle();
+    expect(picked?.id, "1000");
+
+    // 重开登录页：缓存命中，直接进。
+    picked = null;
+    await open(tester);
+    await typeName(tester, "本地新人");
+    await tester.tap(find.text("进入"));
+    await tester.pumpAndSettle();
+    expect(picked?.id, "1000");
+    expect(directory.calls, 1, reason: "只有第一次「进入」那次失败的登录尝试；缓存命中不再碰目录");
+  });
+
+  testWidgets("本地学习者改自己的名字：只写本机缓存，不碰目录（ADR 0123）", (tester) async {
+    final me = const UserProfile(id: "1000", name: "本地人");
+    registry.remember(me);
+    await open(tester, current: me);
+    expect(find.text("现在是：本地人（编号 1000）"), findsOneWidget);
+
+    await tester.tap(find.text("改我的名字"));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.descendant(of: find.byType(AlertDialog), matching: find.byType(TextField)), "离线老司机");
+    await tester.tap(find.text("保存"));
+    await tester.pumpAndSettle();
+
+    expect(directory.calls, 0, reason: "本地学习者改名不问中心目录");
+    expect(registry.byId("1000")?.name, "离线老司机");
+    expect(renamed?.name, "离线老司机");
+    expect(find.text("现在是：离线老司机（编号 1000）"), findsOneWidget);
   });
 
   testWidgets("本机有单用户时代的旧记录：登录后问一句归不归他", (tester) async {

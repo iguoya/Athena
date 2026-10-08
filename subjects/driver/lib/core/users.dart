@@ -12,6 +12,10 @@ class UserProfile {
   final String id;
   final String name;
 
+  /// 编号 ≥1000 的是**本地学习者**（ADR 0123）：目录不可达时在无服务器的机器上新建，
+  /// 只存这台电脑、永不参与同步；中心目录不用这个编号段，由编号段本身派生，不另设标志。
+  bool get isLocal => (int.tryParse(id) ?? 0) >= UserRegistry.localIdBase;
+
   /// 注册表文件里本版本不认识的字段，原样带回去（见 [UserRegistry] 的读写约定）。
   final Map<String, dynamic> extra;
 
@@ -54,8 +58,8 @@ class UserRegistry {
 
   static String get _path => fileOverride ?? p.join(globalDataDir(), "users.json");
 
-  /// 读缓存。文件不存在、损坏都当「还没有学习者」；编号不是 1～999 数字串的条目（旧草稿
-  /// 结构留下的）直接忽略，不崩。
+  /// 读缓存。文件不存在、损坏都当「还没有学习者」；编号不是合法数字串（1～999 服务器段、
+  /// 1000～9999 本地段，旧草稿结构留下的）的条目直接忽略，不崩。
   static UserRegistry load() {
     final file = File(_path);
     if (!file.existsSync()) return UserRegistry._([], null, {});
@@ -151,15 +155,34 @@ class UserRegistry {
 
   static String nameKey(String name) => name.trim().toLowerCase();
 
-  static bool _isValidId(String id) {
-    final number = int.tryParse(id);
-    return number != null && number >= 1 && number <= 999 && id == "$number";
+  /// 中心目录分配的服务器编号段上限（不含）。
+  static const serverIdLimit = 1000;
+
+  /// 本地学习者的编号段（ADR 0123）：1000～9999，本机自分配；中心目录只发 1～999，
+  /// 两个段永不重叠，本地编号也不会发给任何服务端。
+  static const localIdBase = 1000;
+  static const localIdLimit = 10000;
+
+  /// 下一个可用的本地学习者编号：本机已有本地段学习者取最大值加一，否则从 1000 起。
+  /// 编号不复用：没有「删除本地学习者回收编号」这回事。
+  int nextLocalId() {
+    var next = localIdBase;
+    for (final profile in users) {
+      final number = int.tryParse(profile.id);
+      if (number != null && number >= next) next = number + 1;
+    }
+    return next;
   }
 
-  /// 用户输入的编号：1～999 的数字。
+  static bool _isValidId(String id) {
+    final number = int.tryParse(id);
+    return number != null && number >= 1 && number < localIdLimit && id == "$number";
+  }
+
+  /// 用户输入的编号：1～9999 的数字（服务器段 1～999，本地段 1000～9999）。
   static void validateId(String id) {
     if (!_isValidId(id.trim())) {
-      throw const FormatException("学习者编号是 1～999 的数字");
+      throw const FormatException("学习者编号是 1～9999 的数字");
     }
   }
 

@@ -77,13 +77,13 @@ void main() {
     expect(first["name"], "老司机");
   });
 
-  test("编号不是 1～999 数字串的旧条目被忽略，不崩（0071~0073 的草稿结构从未发行）", () {
+  test("编号不是合法数字串的条目被忽略，不崩（0071~0073 的草稿结构从未发行）", () {
     file().writeAsStringSync(jsonEncode({
       "users": [
         "tiger",
         {"id": "u_d4d3f8fd73531202", "name": "旧草稿"},
         {"id": "0", "name": "零号"},
-        {"id": "1000", "name": "超限"},
+        {"id": "10000", "name": "越界"},
         {"id": "007", "name": "前导零"},
         {"id": 4, "name": "数字型编号也认"},
       ],
@@ -92,6 +92,23 @@ void main() {
     final registry = UserRegistry.load();
     expect(registry.users.map((p) => p.id), ["4"]);
     expect(registry.last, isNull, reason: "last 指向被忽略的条目时作废");
+  });
+
+  test("本地学习者：编号从本机已有最大值加一、1000 起；isLocal 由编号段派生（ADR 0123）", () {
+    final registry = UserRegistry.load();
+    registry.remember(const UserProfile(id: "3", name: "小王"));
+    expect(registry.nextLocalId(), 1000, reason: "服务器段的学习者不参与本地编号");
+    registry.remember(const UserProfile(id: "1000", name: "本地一"));
+    expect(registry.nextLocalId(), 1001);
+    registry.remember(const UserProfile(id: "1005", name: "本地二"));
+    expect(registry.nextLocalId(), 1006);
+
+    expect(registry.byId("3")!.isLocal, isFalse);
+    expect(registry.byId("1005")!.isLocal, isTrue);
+
+    final reopened = UserRegistry.load();
+    expect(reopened.users.map((p) => p.id), containsAll(["3", "1000", "1005"]));
+    expect(reopened.byId("1000")!.name, "本地一", reason: "本地段编号照常在 users.json 里往返");
   });
 
   test("文件损坏当作还没有学习者", () {
@@ -115,10 +132,12 @@ void main() {
     expect(() => UserRegistry.validateName("x" * 65), throwsFormatException);
     UserRegistry.validateName("小王");
 
-    for (final bad in ["", "0", "1000", "abc", "-1", "1.5", "u_1"]) {
+    for (final bad in ["", "0", "10000", "abc", "-1", "1.5", "u_1"]) {
       expect(() => UserRegistry.validateId(bad), throwsFormatException, reason: bad);
     }
     UserRegistry.validateId("1");
     UserRegistry.validateId(" 999 ");
+    // 本地段编号也合法（ADR 0123）。
+    UserRegistry.validateId("1000");
   });
 }

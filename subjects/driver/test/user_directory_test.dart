@@ -198,7 +198,13 @@ void main() {
     final deadBase = "http://127.0.0.1:${dead.port}";
     await dead.close(force: true);
 
-    final fallback = HttpUserDirectory(ApiConfig(lanBase: deadBase, wanBase: server.base));
+    // 外网凭据齐全，外网端点才进候选（ADR 0123）。
+    final fallback = HttpUserDirectory(ApiConfig(
+      lanBase: deadBase,
+      wanBase: server.base,
+      cfClientId: "id.access",
+      cfClientSecret: "secret",
+    ));
     expect((await fallback.register("tiger")).id, "1");
 
     final none = HttpUserDirectory(ApiConfig(lanBase: deadBase, wanBase: null));

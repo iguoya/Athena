@@ -78,7 +78,8 @@ class HttpUserDirectory implements UserDirectory {
   }
 
   Future<Map<String, Object?>> _send(String method, String path, Map<String, Object?> body, {String? acting}) async {
-    final bases = [?_activeBase, _config.lanBase, ?_config.wanBase];
+    // 外网没配凭据时不进候选（wanUsableBase 为 null，ADR 0123）。
+    final bases = [?_activeBase, _config.lanBase, ?_config.wanUsableBase];
     final tried = <String>{};
     Object? lastNetworkError;
     for (final base in bases) {
