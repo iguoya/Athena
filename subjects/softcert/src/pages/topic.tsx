@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { ArrowLeft, ArrowRight, Link2, BookOpen } from "lucide-react";
 import { findSection, lessonOf, courses } from "../content";
+import { textbookTextOf } from "../textbook-text";
 import { saveSetting } from "../db";
 import { LessonBlocks } from "../components/blocks";
 import { GradeBadge, WeightStars, DifficultyDots, MasteryGoalBadge, KnowledgeTypeBadge } from "../components/ui";
@@ -29,6 +30,7 @@ export function TopicPage({
   const prev = idx > 0 ? flat[idx - 1] : null;
   const next = idx < flat.length - 1 ? flat[idx + 1] : null;
   const requires = section.kp?.requires ?? [];
+  const textbookText = textbookTextOf(sectionId);
 
   // 续读:每次进入章节就记下位置,首页据此放「接着学」入口。
   useEffect(() => {
@@ -79,6 +81,15 @@ export function TopicPage({
       <article className="card mx-auto max-w-[980px] px-6 py-7 md:px-9 md:py-9">
         <LessonBlocks blocks={lesson.blocks} />
       </article>
+
+      {textbookText && (
+        <details className="card px-6 py-4">
+          <summary className="cursor-pointer select-none text-[13.5px] font-semibold text-ink/60">
+            教材原文({chapter.textbook_ref.locator},《{course.textbook.title}》忠实转录,OCR 可能有个别识别误差)
+          </summary>
+          <pre className="mt-4 max-h-[500px] overflow-y-auto whitespace-pre-wrap font-sans text-[13.5px] leading-7 text-ink/75">{textbookText}</pre>
+        </details>
+      )}
 
       <div className="mx-auto flex max-w-[980px] items-center justify-between gap-3">
         {prev ? (

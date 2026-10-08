@@ -1,0 +1,29 @@
+112
+软件设计师教程（第5版）
+i = pos-1;
+j = -1;
+slen = strlen(s); plen = strlen(p);
+while (i< slen && j <plen) 
+if (i = -1 II s[i = p[il) (++i;++j;}
+else j = next[il];
++/*while*/
+if (i>-plen) return i - plen;
+else return -1;
+/*Index_KMP*/
+例如，设主串为“abacbcabababbcbc”，模式串为“abababb”，且模式串的next函数值如下
+表所示，则KMP算法的匹配过程如图3-10所示。其中，i是主串字符的下标，j是模式串字符
+的下标。
+模式串
+-1
+next[i]
+10 11 12 13 14 15
+主串 S
+模式串 P
+模式串 P
+模式串 P
+(a)
+10 11 12 13 14 15
+主串 S
+模式串 P
+(b).
+图3-10KMP模式匹配过程示意图

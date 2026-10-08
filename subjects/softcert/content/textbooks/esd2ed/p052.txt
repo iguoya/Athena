@@ -1,0 +1,67 @@
+第1章
+计算机系统基础知识
+43
+2．计算机体系结构分类
+（1）从宏观上按处理机的数量进行分类，分为单处理系统、并行处理与多处理系统
+和分布式处理系统。
+单处理系统（uni-processing system）。利用一个处理单元与其他外部设备结合起来，
+实现存储、计算、通信、输入与输出等功能的系统。
+并行处理与多处理系统
+(parallel processing and multiprocessing system)。为了充分
+发挥问题求解过程中处理的并行性，将两个以上的处理机互连起来，彼此进行通
+信协调，以便共同求解一个大问题的计算机系统
+分布式处理系统
+（distributed processing system）。指物理上远距离而松耦合的多计
+算机系统。其中，物理上的远距离意味着通信时间与处理时间相比已不可忽略，
+在通信线路上的数据传输速率要比在处理机内部总线上传输慢得多，这也正是松
+耦合的含义。
+（2）从微观上按并行程度分类，有Flymn分类法、冯泽云分类法、Handler分类法和
+Kuck 分类法
+Flynn 分类法。1966 年，M.J.Flynn #
+提出按指令流和数据流的多少进行分类。指
+令流为机器执行的指令序列，数据流是由指令调用的数据序列。Flymn把计算机系
+统的结构分为单指令流、单数据流
+ (Single Instruction stream Single Data stream,
+SISD），单指令流、多数据流（Single Instruction stream Multiple Data stream,SIMID），
+多指令流、单数据流
+( Multiple Instruction stream Single Data stream,
+MISD）和多
+指令流、多数据流
+(Multiple Instruction stream Multiple Data stream, MIMD) 4 类。
+年，美籍华人冯泽云（Tse-yun
+冯泽云分类法。1972
+Feng)
+提出按并行度对各种
+计算机系统进行结构分类。所谓最大并行度
+Pm
+是指计算机系统在单位时间内能
+够处理的最大二进制位数。冯泽云把计算机系统分成字串行位串行
+(WSBS）计
+算机、字并行位串行
+：（WPBS）计算机、字串行位并行
+（WSBP)
+计算机和字并行
+位并行
+CWPBP)
+计算机4类
+Handler分类法。1977年，德国的汉德勒
+（Wolfgang Handler）#
+提出一个基于硬件
+并行程度计算并行度的方法，把计算机的硬件结构分为3个层次：处理机级、每
+个处理机中的算逻单元级、每个算逻单元中的逻辑门电路级。分别计算这三级中
+可以并行或流水处理的程序，即可算出某系统的并行度。
+Kuck分类法。1978年，美国的库克
+(David J. Kuck)
+提出与Flynn分类法类似的
+方法，用指令流和执行流
+(execution stream)
+及其多重性来描述计算机系统控制
+结构的特征。Kuck 扌
+把系统结构分为单指令流单执行流
+（SISE）、单指令流多执行
+流（SIMIE）、多指令流单执行流
+（MISE）和多指令流多执行流
+（MIME）4类。
+3.指令系统
+·个处理器支持的指令和指令的字节级编码称为其指令集体系结构
+(Instruction Set

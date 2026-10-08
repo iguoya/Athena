@@ -1,0 +1,44 @@
+第3章数据结构
+1155
+while (p && p->data!=key) {
+*father = p;
+d=d(pd  )!
+else p=p->rchild;
++/*while*/
+return p;
++/*SearchBST*/
+3）在二又排序树中插入结点的操作
+二叉排序树是通过依次输入数据元素并把它们插入到二叉树的适当位置构造起来的，具体
+的过程是：每读入一个元素，建立一个新结点。若二叉排序树非空，则将新结点的值与根结点
+的值相比较，如果小于根结点的值，则插入到左子树中，否则插入到右子树中；若二叉排序树
+为空，则新结点作为二又排序树的根结点。设关键字序列为{46，25，54，13，29，91)，则整
+个二叉排序树的构造过程如图3-47所示。
+46
+29
+(b)
+(a)
+(c)
+(d)
+(e)
+()
+图3-47
+二叉排序树的构造过程
+【函数】二叉排序树的插入算法。
+int InsertBST(BSTree *root, int newkey)
+/*在*root指向根的二又排序树中插入一个键值为newkey的结点，插入成功则返回0，否则返回-1*/
+BSTree s,p,f;
+s = (BSTree)malloc(sizeof(BSTnode);
+if (!s) return -1;
+s->data = newkey; s->lchild = NULL; s->rchild = NULL;
+p = SearchBST(*root,newkey,&f);
+/*寻找插入位置*/
+if (p) return -1;
+/*键值为newkey的结点已在树中，不再插入*/
+if(f)*root = s;
+/*若为空树，键值为newkey的结点为树根*/
+else if (newkey < f->data) f->lchild = s; 
+/*作为父结点的左孩子插入*/
+else f->rchild = s;
+/*作为父结点的右孩子插入*/
+retuirn 0;
++/*InsertBST*/

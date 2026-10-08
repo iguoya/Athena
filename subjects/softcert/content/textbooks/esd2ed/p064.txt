@@ -1,0 +1,58 @@
+第1章
+计算机系统基础知识
+55
+(3)
+基准程序
+Benchmark. SPEC
+CSPEC
+（System
+SPEC
+Performance
+Eyaluation
+是由几十家世界知名的计算机厂商所支持的非盈利的合作组织，
+Cooperation )
+旨在开发
+共同认可的标准基准程序，目前已更名为Standard Performance Evaluation Cooperation。
+SPEC最初于1989年建立了重点面向处理器性能的基准程序集（现在称为SPEC89），
+主要版本有
+SPEC CPU89 SPEC CPU92 SPEC CPU95 SPEC CPU2000- SPEC CPU2006
+等，SPEC
+5包括12
+个整数基准程序集
+（CINT2006） 和 17 
+个浮点基准程序集
+CPU2006
+（CFP2006）。CINT2006包括C编译程序、量子计算机仿真、下象棋程序等，CFP2006包
+括有限元模型结构化网格法、分子动力学质点法、流体动力学稀疏线性代数法等。
+为了简化测试结果，SPEC决定使用单一的数字来归纳12种整数基准程序。具体方法
+是将被测计算机的执行时间标准化，
+即将被测计算机的执行时间除以一个参考处理器的执
+行时间，
+SPECratio。SPECratio 值越大，表示性能越快
+（因为
+结果称为
+SPECratio
+是执行
+时间的倒数）。CINT2006或CFP2006的综合测试结果是取SPECratio的几何平均值。
+SPEC原来主要测试CPU性能，现在则强调开发能反映真实应用的基准测试程序集，
+并已推广至测试高性能计算机系统、网络服务器上商业应用服务器等
+（4）TPC基准程序。事务处理委员会
+(Transaction Processing Council, TPC)
+基准程
+序是由TPC开发的评价计算机事务处理性能的测试程序，用于评测计算机在事务处理、
+数据库处理、企业管理与决策支持系统等方面的性能。其中，TPC-C是在线事务处理（On
+line Transaction Processing.
+OLTPS
+的基准程序，TPC-D是决策支持的基准程序。TPC-E
+作为大型企业信息服务的基准程序。与TPC-C一样，TPC-E的测试结果也主要有两个指
+标：
+性能指标
+(tpsE
+和性价比（美元/tpsE）。其中，前者是
+transactions per second E)
+指系统在执行多种交易时，每秒钟可以处理多少交易，其指标值越大越好；后者则是指
+系统价格与前一指标的比值，
+数值越小越好
+TPC 
+基准测试程序在商业界范围内建立了用于衡量机器性能以及性能价格比的标准。但
+是，任何一种测试程序都有一定的适用范围，TPC也不例外

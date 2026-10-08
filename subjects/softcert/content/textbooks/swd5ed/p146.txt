@@ -1,0 +1,19 @@
+136
+软件设计师教程（第5版）
+图3-31
+有向图和无向图及其邻接矩阵
+图3-32所示的是一个网及其邻接矩阵C。
+V2
+V6
+图3-32一个网及其邻接矩阵表示
+若用邻接矩阵表示图，则对应的数据类型可定义为：
+/*图中顶点数目的最大值*/
+#define MaxN30
+typedef int AdjMatrix[MaxN][MaxN];
+/*邻接矩阵*/
+typedef double AdjMatrix[MaxN][MaxN];
+typedef struct {
+/*图中的顶点数目*/
+int Vnum;
+AdjMatrix Arcs;
+ Graph;

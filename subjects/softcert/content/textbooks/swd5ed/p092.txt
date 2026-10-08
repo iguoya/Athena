@@ -1,0 +1,45 @@
+82
+软件设计师教程（第5版）
+P ={E→TE+T, T→FT*F, F→(E)lid)
+可以证明，id+id*id是该文法的句子。下面用最右推导的方式从文法的开始符号出发推导
+出该句子。为了表示推导过程中相同符号的不同出现，给符号加一个下标。
+E=→ E +T =→ E, +T,*F → E +T, *id, =→ E +F,*id, → E, +id,*id3
+= T, +id,* id, =→ F, +id, *id, =→ id, +id, *id,
+该推导过程可以用树型结构进行描述，如图2-15所示。
+E 二
+E.
+T2
+T2
+T2
+F2
+id3
+id3
+T3
+T2
+T2
+T3
+T2
+T3
+T2
+F2
+id3
+F3
+F2
+F2
+id
+id3
+ids
+F3
+F2
+idi
+id2
+id2
+id2
+id2
+图2-15推导过程示意图
+由于E→E, +T,*ids，且T²→id²，所以id2是句型 Ei+id2*ids 的相对于非终结符 T的短语。
+由于 E→F +id,*ids，且F,→idi，所以idi 是句型 id*id2+id, 相对于非终结符 F的短语，
+也是相对于产生式F→id 的直接短语。
+由于E→E,+T，且T=→id,*ids，所以 id2*ids 是句型Ei+id2*id 的相对于非终结符 T的
+短语。
+由于E→id *id+id,，所以idi*id+ids是句型id*id+ids的相对于非终结符E的短语。

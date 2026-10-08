@@ -1,0 +1,51 @@
+第2章程序设计语言基础知识
+91
+件时的翻译方法（采用短路计算方式）。
+布尔表达式的形式定义（文法）为：
+E→E and E|E or Enot E I (E) | id | id relop id
+其中，relop 代表关系运算符（<、>、≤、≥、二、≠)，运算符的优先级和结合律遵照通常的
+习惯。E→E(1)and E(2)，E→E()or E(2)的代码结构如图 2-19（a）和图 2-19（b）所示。
+E().tc
+E(1).code
+E).fc
+E(1).fc
+E).code
+E(),tc
+E(2).code
+E(2),fc
+E(2)code
+E(2),tc
+E(2),tc
+E(2)fc
+E.tc = E(2),tc
+E.fc = E(1),fc+ E(2),fc
+E.fc = E(2),fc
+E.tc = E(1).tc+ E(2).tc
+(拉链)
+(拉链)
+（a）E→E(I)and E(2)的代码结构
+（b）E-→E(1)orE(2)的代码结构
+图 2-19and 与 or 的代码结构示意图
+改写文法并编写语义子程序如下。
+对于 E→E(I)and E(2)，为记住 E(2)的第一条四元式的地址，需改写为：
+E^→E()and ( Backpatch(E(I),tc, NXQ); E^.fc := E(l),fc)
+//回填真出口，传假出口
+E→E^E(2)( E.tc := E(2),tc; E.fc := Merg(E^.fc, E(2)fc) )
+//传真出口，合并假出口
+对于 E→E()or E(2)，为记住 E(2)的第一条四元式的地址，需改写为：
+E'-→E()or{ Backpatch(E()fc, NXQ); EY.tc := E().tc)
+1/回填假出口，传真出口
+E→E'E(2) ( E.tc := Merg(E'.tc, E(2),tc); E.fc :=E(2).fc)
+//合并真出口，传假出口
+E→not E() { E.tc := E(I)fc; E.fc := E(),tc )
+//交换真、假出口
+E→(E(I)
+( E.tc := E(I),tc; E.fc := E(l).fc )
+1/传真、假出口
+E→id
+{ E.tc := NXQ;E.fc := NXQ+1; GEN(jnz, Entry(id), -, O); GEN(j, -, -, O);)
+E→id() relop id(2){ E.tc := NXQ;  E.fc := NXQ+1;
+GEN(irelop, Entry(id(), Entry(id(2), O); GEN(j, -, -, 0)
+（3）常见语句的翻译。下面简单说明if语句和while语句的翻译方法，其形式定义为：
+S-→AlifE then s(I) I ifE then s(I) else s(2) I while E do s()
+用语义变量 S.chain 记录语句结束后的转向地址。回填工作将在处理 S 的外层环境的某个

@@ -1,0 +1,45 @@
+第4章操作系统知识
+191
+阻塞状态（因为无可用资源)，并将其插入阻塞队列。
+P操作可用如下过程表示，其中，Semaphore表示所定义的变量是信号量。
+Procedure P(Var S:Semaphore);
+Begin
+S:=$-1;
+If S<0 then W(S)
+{执行P操作的进程插入等待队列}
+End;
+V操作定义：S：=S+1，若 S>0，则执行V操作的进程继续执行；若 S<0，则从阻塞状态唤
+醒一个进程，并将其插入就绪队列，然后执行V操作的进程继续。
+V操作可用如下过程表示。
+Procedure V(Var S:Semaphore);
+Begin
+S:=$+1;
+If S≤0 then R(S)
+(从阻塞队列中唤醒一个进程}
+End;
+2）利用PV操作实现进程的互斥
+令信号量mutex的初值为1，当进入临界区时执行P操作，退出临界区时执行V操作。这
+样，利用PV操作实现进程互斥的代码段如下：
+P(mutex)
+临界区
+V(mutex)
+【例 4.1】
+将交通流量统计程序改写如下，可实现P1和P2间的互斥。
+P2
+Ll:if 有车通过 then
+L2: begin
+begin
+P(mutex)
+P(mutex)
+PRINT COUNT;
+COUNT:=COUNT+1;
+COUNT:=0;
+V(mutex)
+V(mutex)
+end
+end
+GOTO L1;
+GOTO L2;
+3）利用PV操作实现进程的同步
+进程的同步是由于进程间合作引起的相互制约的问题，要实现进程的同步可用一个信号量
+与消息联系起来，当信号量的值为0时表示希望的消息未产生，当信号量的值为非0时表示希

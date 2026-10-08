@@ -1,0 +1,75 @@
+第2章
+71
+嵌入式系统硬件基础知识
+图2-9所示。
+Processing System
+Flash ControllerNOR
+Multiport DRAM Controller
+NANDSRANOuadSPI
+DDR3.DDR3LDDR2
+2x
+AMBAInterconnect
+AMBAInterconnect
+SPI
+2x
+12C
+MPCore
+2x
+Processor /O Mux
+CAN
+NEONTMSIMDandFPU
+2X
+ARMCortexTM-A9
+UART
+Snoop Control Unit
+GPIO
+512KBL2Cache
+256KBOn-ChipMemory
+2x SDIO
+With DMA
+GIC
+JTAGandTraceContfiguration
+Timers
+DMA
+2xUSB
+WithDMA
+2x Gig W
+AMBAInterconnect
+With DMA
+AMBAInterconnect
+Security
+AES.SHA.RSA
+EMIO
+ACP High Performance
+General Purpose
+AxIPorts
+AxI Ports
+XADC
+Programmable Logic
+PCEe Gen2
+2x ADC, Mux.
+(System Gates, DSP, RAM)
+1-8 Lanes
+Thermal Sensor
+MultiStandards/Os(3.3V&HighSpeed1.8V)
+Multi Gigabit Transceivers
+注: Processing System:
+处理系统; Flash Controller NOR, NAND, SRAM, Quad SPI: NOR, NAND, SRAM, Quad SPI
+的控制器；Multiport DRAM Controller DDR3,DDR3L,DDR2：DDR3，DDR3LDDR2 的内存控制器；AMBA Interconmnect:
+AMBA总线：SPI：串行外设接口：GPIO：通用的输入/输出接口：UART：通用异步收发传输器：SDIOWithDMA：带DMA
+的 SD 卡接：USB with DMA：带DMA 的 USB接口：GigE with DMA：带DMA 的千兆网口：Processor IO Mux：I/O接
+口复用控制：GIC：通用的中断控制器：JTAGand Trace：JTAG跟踪调试：Configuration：配置器：Timers:
+定时器：On-Chip
+Memory：片上存储：EMIO：扩展的多用途IO接口：General PurposeAXIPorts：通用的AXI接口：SecurityAES,SHA,RSA：
+AES，SHA和 RSA加密；ACP：加速一致性接：High PerformanceAXI Ports:
+高性能AXI接口；Programmable Logic：可
+编程逻辑：XADC,ADC,Mux,Thermal Sensor：AD、复用接口、热敏元件；PCEe Gen2 1-8 Lanes：Gen2硬核；Multi Standards
+多电压标准的IO接口：MultiGigabit Transceivers:
+IOS: 3
+多个千兆口收发器
+图 2-9
+Zynq-7000S器件架构图
+嵌人式微处理器的异常与中断
+2.2.2
+1．异常
+异常是一种形式的异常控制流，它一部分是由硬件实现的，一部分是由操作系统实

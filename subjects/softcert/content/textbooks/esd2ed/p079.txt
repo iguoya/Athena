@@ -1,0 +1,100 @@
+70
+欣入式系统设计师教程
+（第2版）
+把一个可编程
+x86CPU和一个GPU的矢量处理架构连为一体，双方都能直接读取高速内
+存。AMIDAPU中还包含其他一些系统成分，例如内存控制器、I/O控制器、专用视频解
+码器、显
+显示输出和总线接口等。
+(2)TI OMAP/Davinci处理器系列。Davinci
+数字媒体处理器，典型的包括OMAP3530
+Davinci DM64xx
+系列等。通过集成ARM和DSP内核可实现许多系统优点，包括成本、
+功耗和面积节省。TIARM+DSP解决方案经过优化，适用于嵌入式系统，
+侧重于节能和
+实时性能。ARM端完成外设驱动，Linux/Android OS 运行，用户控制，网络传输应用程
+序；DSP
+端完成音视频编解码等信号处理算法
+TI 双核异构平台
+、TMIS320DM6467，其架构图见图2-8。这是一种基于 DSP
+的超强性能
+SoC，为实时、多种格式的高清视频转换码进行了专门的设计。DM6467
+数字媒体处理器集
+的 C64x+DSP
+核与
+成了一个
+核，并采用高清视频/影像协处理器
+ARM926EJ-S
+600MIHz
+等。在执行同步多格式高清编码方面，实现了超过3GHz的DSP处理能力。
+(HD-VICP)
+ITAGInterface
+ARM Subsystem
+System Control
+DSP Subsystem
+High Difinition
+Input
+Video-Imaging
+PLLs/Clock
+ARM926EJ-S CPU
+C64xTM DSP CPU
+Coprocessor
+Clock (s)
+Generator
+16 KB
+8KB
+128KB L2RAM
+CHDVICPO
+Power/Sleep
+I-Cache
+D-Cache
+32KB
+32 KB
+Controller
+High Difinition
+L1 Pgm
+L1 Data
+32KBRAM
+Video-Imaging
+Pin
+Coprocessor
+Multiplexing
+8 KB ROM
+CHDVICP1
+Switch Central Resourse (SCR)
+注: JTAG Interface: JTAG
+调试器接口；System Control：系统控制器：PLLs/Clock Generator:
+锁相环/时钟发生器：
+电源控制器：Pin Multiplexing:
+管脚复用控制器：ARMSubsystem：
+Power/Sleep Controller:
+ARM 子系统：16KB I-Cache:
+16KB指令缓冲；16KBD-Cache：16KB数据缓冲；DSPSubsystem：DSP子系统；128KBL2RAM：128KB二级缓冲；32KB
+L1 Pgm:32KB一级程序缓冲；32KB L1Data:32KB一级数据缓冲；High Difinition Video-Image Coprocessor:
+高性能视频
+图像协处理器
+图 2-8
+TMS320DM6467平台架构
+(3) Xilinx
+处理器。Xilinx
+K公司生产的 Zynq-7000 全可编程 SoC(AP SoC)系列
+Zynq 多
+处理器的软件可编程性与FPGA自
+处理器集成了
+ARM
+的硬件可编程性，不仅可实现重要
+分析与硬件加速，
+同时还在单个器件上高度集成CPU、DSP、ASSP以及混合信号功能。
+器件配备双核
+处理器，该处理器与基于
+Artix-7 或
+Zynq-7000
+ARM
+Cortex-A9
+28nm
+Kintex?-7的可编程逻辑集成，可实现优异的性能功耗比和最大的设计灵活性。Zynq-7000
+具有高达6.25MB
+的逻辑单元以及从6.6Gb/s到12.5Gb/s的收发器，可为多摄像头驾驶员
+辅助系统和
+4K2K
+超高清电视等大量嵌入式应用实现高度差异化的设计。处理器架构如

@@ -1,0 +1,40 @@
+第3章数据结构
+173 :
+所谓“归并”，是将两个或两个以上的有序文件合并成为一个新的有序文件。归并排序的
+一种实现方法是把一个有n个记录的无序文件看成是由n个长度为1的有序子文件组成的文件，
+然后进行两两归并，得到
+个长度为2或1的有序文件，再两两归并，如此重复，直到最后
+形成包含n个记录的有序文件为止。这种反复将两个有序文件归并成一个有序文件的排序方法
+称为两路归并排序。
+两路归并排序的核心操作是将一维数组中前后相邻的两个有序序列归并为一个有序序列。
+【算法】将分别有序的 data[s..m]和 data[m+1..n]归并为有序的data[s.n]。
+void Merge(int datall, int s, int m, int n)
+int i, start = s, k = O;
+int *temp;
+temp = (int *)malloc(n-s+1)*sizeof(int);
+/*辅助空间*/
+for(i = m+1; s <= m &&i<= n; ++k)
+/*将 data[s..m]与 data[m+1..n]归并后存入 temp*/
+if (data[s] < data[i] temp[k] = data[s++];
+else temp[k] = data[i++];
+for(; s <= m; ++k)
+/*将剩余的 data[s..m]复制到 temp*/
+temp[k] = data[s++];
+for(; i <= n; ++k)
+/*将剩余的data[i..n]复制到temp*/
+temp[k] = data[i++];
+for(i=0; i<k; i++)
+data[start++] - temp[i];
+free(temp);
+ /*Merge*/
+一趟归并排序的操作是：调用「n/2h|次Merge算法，将数组datal[0..n-1]中前后相邻且长
+度为h 的有序段进行两两归并，得到前后相邻、长度为2h 的有序段，并存放在data2[0.n-1]中，
+整个归并排序需进行「1og2n趟。归并排序需要辅助空间n个（与待排记录数量相等），时间复
+杂度为O(nlogn)。
+【算法】递归形式的两路归并。
+void MSort(int data[I, int s, int t)
+/*对 data[s..t]进行归并排序*/
+I intm;
+if(s <t) 
+m = (s+t)/2;
+/*将 data[s..t]均分为 data[s..m]和 data[m+1..t)*/

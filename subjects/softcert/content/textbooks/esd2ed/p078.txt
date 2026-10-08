@@ -1,0 +1,91 @@
+第2章
+嵌入式系统硬件基础知识
+69
+TMS320C6678
+C6678
+Memory Subsystem
+4MB
+64-Bit
+MSM
+DDR3 EMIF
+SRAM
+MSMC
+Debug&Trace
+BootROM
+Semaphore
+C66xTM
+Power
+CorePac
+Management
+PLL
+32KBL1
+32KBL1
+P-Cache
+D-Cache
+X3
+512KBL2Cache
+EDMA
+8Cores@upto1.25GHz
+HyperLink
+TeraNet
+Multicore Navigator
+Queue
+Packet
+Manager
+DMA
+SRIO x4
+PCIe ×2
+TSIP ×2
+Ethernet
+GPIO
+UART
+Switch
+Security
+Switch
+Accelerator
+Packet
+Accelerator
+SGM
+Network Coprocessor
+注: Memory Subsystem:
+存储子系统：64-BitDDR3EMIF：64位的DDR3外部存储器接口：4MBMSMSRAM：4MB
+系统启动的只读ROM；Semaphore:
+的片E SRAM; Debug&Trace:
+调试跟踪：Boot ROM：
+信号量：Power Management:
+32KBL1数据缓冲：EMIF：外部存储访问接口：GPIO：通用的输入输出接口：UART：
+通用异步收发传输器：SPI：串行外
+设接口；TSIP：
+电信串行接口：SRIO：串行的快速IO接口：EthernetSwitch：以太网交换机：SGMII：串行的千兆媒体独立
+交换机：Security Accelerator:
+安全加速器：PacketAccelerator:
+接： Switch:
+包加速器：NetworkCoprocessor:
+网络协处
+理器： Queue Manager:
+队列管理器：Packet DMA：包DMA；Multicore Navigator:
+多核导航器
+图 2-7
+TI的TMS320C6678平台架构
+异构多核处理器
+（1）AMD核显。APU其实就是“加速处理器”（Accelerated Processing Unit）
+的英文
+缩写，是
+处理核心的新型
+推出的整合了
+处理核心和
+ CPU
+GPU
+融聚
+AMD
+x86/x64
+处理器。APU
+将通用运算
+(Fusion)
+x86架构CPU核心和可编程矢量处理弓擎相融合，
+把CPU擅长的精密标量运算与传统上只有GPU才具备的大规模并行矢量运算结合起来
+设计综合了CPU 和 GPU
+的优势，为软件开发者带来前所未有的灵活性，能够
+AMD APU 
+任意采用最适合的方式开发新的应用。AMIDAPU
+通过一个高性能总线，在单个硅片上

@@ -1,0 +1,40 @@
+122.
+软件设计师教程（第5版）
+设结点中的数据元素为整型，则二叉链表的结点类型定义如下：
+typedef struct BiTnode ?
+int
+data;
+struct BiTnode *lchild,*rchild;
+BiTnode,*BiTree;
+在不同的存储结构中，实现二叉树的运算方法也不同，具体应采用什么存储结构，除考虑
+二叉树的形态外还应考虑需要进行的运算特点。
+3.3.3二叉树的遍历
+遍历是按某种策略访问树中的每个结点，且仅访问一次的过程。由于二叉树所具有的递归
+性质，一棵非空的二叉树是由根结点、左子树和右子树三部分构成的，因此若能依次遍历这三
+部分，也就遍历了整棵二叉树。按照先遍历左子树后遍历右子树的约定，根据访问根结点位置
+的不同，可得到二又树的先序、中序和后序3种遍历方法。此外，对二叉树还可进行层序遍历。
+【函数】二叉树的先序遍历。
+void PreOrder(BiTree root)
+if (root != NULL) {
+printf("%d", root->data);
+/*访问根结点*/
+PreOrder(root->lchild);
+/*先序遍历根结点的左子树*/
+PreOrder(root->rchild);
+/*先序遍历根结点的右子树*/
+7/*if*/
++/*PreOrder*/
+【函数】二叉树的中序遍历。
+void InOrder(BiTree root)
+if (root != NULL) (
+InOrder(root->lchild);
+/*中序遍历根结点的左子树*/
+printf("%d", root->data);
+/*访问根结点*/
+InOrder(root->rchild);
+/*中序遍历根结点的右子树*/
+$/*if*/
++/*InOrder*/
+【函数】二叉树的后序遍历。
+void PostOrder(BiTree root)
+if (root I= NULL) {

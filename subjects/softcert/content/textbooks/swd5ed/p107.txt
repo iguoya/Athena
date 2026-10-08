@@ -1,0 +1,34 @@
+第2章程序设计语言基础知识
+97
+1．解释程序的基本结构
+解释程序通常可以分成两部分：第一部分是分析部分，包括通常的词法分析、语法分析和
+语义分析程序，经语义分析后把源程序翻译成中间代码，中间代码常采用逆波兰表示形式。第
+二部分是解释部分，用来对第一部分产生的中间代码进行解释执行。下面简要介绍第二部分的
+工作原理。
+设用数组MEM模拟计算机的内存，源程序的中间代码和解释部分的各个子程序都存放在
+数组 MEM 中。全局变量 PC 是一个程序计数器，它记录了当前正在执行的中间代码的位置。
+这种解释部分的常见结构可以由下面两部分组成。
+(1) PC:=PC+1。
+（2）执行位于opcode-table[MEM[PC]的子程序（解释子程序执行后返回到前面）。
+下面用一个简单的例子来说明其工作原理。设两个实型变量A和B进行相加的中间代码是：
+start:
+Ipush
+Ipush
+Iaddreal
+其中，中间代码Ipush 和 Iaddreal实际上都是opcode-table 表的索引值（即位移），而该表的单
+元中存放的值就是对应的解释子程序的起始地址，A和B都是MEM中的索引值。解释部分开
+始执行时，PC 的值为 start-1。
+opcode-table [Ipush]-push
+opcode-table[addreal]=addreal 
+解释部分可表示如下：
+interpreter-loop:
+PC:=PC+1;
+goto opcode-table[MEM[PC];
+push:
+PC:=PC+1;
+stackreal(MEM[MEM[PCI]);
+goto interpreter-loop;
+addreal: stackreal(poprealO+poprealO);
+goto interpreter-loop;
+（其余各解释子程序，此处省略）
+其中，stackrealO表示把相应值压入栈中，而poprealO表示取得栈顶元素值并弹出栈顶元素。上

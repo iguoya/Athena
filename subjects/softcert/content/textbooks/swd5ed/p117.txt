@@ -1,0 +1,48 @@
+第3章数据结构
+107
+根据Q.rear 和Q.front之间的关系无法断定队列的状态。为了区别队空和队满的情况，可采用以
+下两种处理方式：其一是设置一个标志，以区别头、尾指针的值相同时队列是空还是满；其二
+是牺牲一个存储单元，约定以“队列的尾指针所指位置的下一个位置是队头指针时”表示队列
+满，如图3-8（f）所示，而头、尾指针的值相同时表示队列为空。
+ Q.rear
+Q.front
+Q.front
+Qrear
+Q.front
+Q.rear
+（a）空队列
+(b）元素 e6、e7、eg入队列后
+（c）元素e出队列后
+Q.front
+Q.rear
+Q.rear
+Q.front
+Q.front
+e10
+Q.rear
+e10
+（d）空队列
+（e）队列满
+（f）队列满
+图3-8循环队列的头、尾指针示意图
+设队列中的元素类型为整型，则循环队列的类型定义如下。
+#define
+MAXQSIZE
+100
+typedef
+struct 
+int
+*base;
+/*循环队列的存储空间，假设队列中存放的是整型数*/
+int
+front;
+/*指示队头，称为队头指针*/
+int
+rear;
+/*指示队尾，称为队尾指针*/
++SqQueue;
+【函数】创建一个空的循环队列。
+/*创建容量为MAXQSIZE的空队列，若成功返回0，否则返回-1*/
+if (!Q->base) return -1;
+Q->front = 0; Q->rear = 0; return 0;
++ /*InitQueue*/
