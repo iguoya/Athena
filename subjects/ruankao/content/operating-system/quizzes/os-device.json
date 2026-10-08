@@ -1,0 +1,42 @@
+{
+  "chapter_id": "os-device",
+  "questions": [
+    {
+      "id": "rk.os.device.q1",
+      "stem": "SPOOLing 技术的核心作用是( )。",
+      "options": [
+        "把独占设备改造成可共享使用的逻辑设备",
+        "提高磁盘的旋转速度",
+        "用 DMA 替代中断方式",
+        "把慢速设备的数据压缩后传输"
+      ],
+      "answer": 0,
+      "explanation": "SPOOLing(假脱机)用磁盘上的输入/输出井排队,让打印机这类独占设备在用户看来可同时使用。B、C、D 与 SPOOLing 机制无关。",
+      "source": { "relation": "authored", "sourceId": "self-authored", "why": "SPOOLing「独占改共享」一句话定义是设备管理考点的核心,自造辨析题。", "locator": "依据考纲「操作系统·设备管理」考点" }
+    },
+    {
+      "id": "rk.os.device.q2",
+      "stem": "磁道请求序列 98, 183, 37, 122, 14, 124, 65, 67,磁头当前在 53、沿增大方向移动。按 SCAN(到最远请求折返)调度,磁头先服务的第一个请求是( )。",
+      "options": ["65", "67", "37", "98"],
+      "answer": 0,
+      "explanation": "沿增大方向,离 53 最近的正向请求是 65(58),然后 67、98……37 在反方向,要等折返后。这是经典教材例题的变体,结论只有「先看清方向」这一条。",
+      "source": { "relation": "authored", "sourceId": "self-authored", "why": "SCAN 的方向判定是磁盘调度计算题的第一步,自造起步变式。", "locator": "依据考纲「操作系统·磁盘调度」考点" }
+    },
+    {
+      "id": "rk.os.device.q3",
+      "stem": "磁盘转速 6000 rpm,平均旋转延迟约为( )。",
+      "options": ["10 ms", "5 ms", "2.5 ms", "0.5 ms"],
+      "answer": 1,
+      "explanation": "每转 60000/6000 = 10ms,平均延迟按半圈 = 5ms。A 是一整圈;C 把 6000 当 12000;D 数量级错。",
+      "source": { "relation": "authored", "sourceId": "self-authored", "why": "旋转延迟按半圈折算是存取时间公式的固定步骤,自造数值题。", "locator": "依据考纲「操作系统·磁盘存取」考点" }
+    },
+    {
+      "id": "rk.os.device.q4",
+      "stem": "可能导致远端磁道请求长期得不到服务的磁盘调度算法是( )。",
+      "options": ["FCFS", "SSTF 最短寻道优先", "SCAN 电梯算法", "C-SCAN 单向扫描"],
+      "answer": 1,
+      "explanation": "SSTF 每次挑最近,若持续有近端请求到达,远端请求可能无限推迟(饿死)。FCFS 按到达序、SCAN/C-SCAN 周期性扫过全盘,都不会饿死远端。",
+      "source": { "relation": "authored", "sourceId": "self-authored", "why": "「饿死」是区分四种磁盘调度算法性格的考点,自造辨析题。", "locator": "依据考纲「操作系统·磁盘调度」考点" }
+    }
+  ]
+}

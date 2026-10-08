@@ -1,0 +1,11 @@
+{
+  "_": "跨应用「内容必须有出处」检查的接入声明(主仓库 ADR 0043)。判分条目是题目(带 options 的对象);教学正文块不是判分条目。当前为「只报告」模式(english/dsa 先例):真题整卷尚未取得再分发授权,阶段内所有题目都是 authored(每题带考纲 locator、落盘可审查),必然触发「一节内自造过半」配额;这不是疏漏而是已声明的过渡状态。导入 past-exams 真题后把 blocking 改回 true,配额自然回到过半以内。",
+  "_items": "题目(stem+options+answer)是判分条目;每题必有 source:自造 authored + why + locator,真题 verbatim + 卷 id + 题号。",
+  "contentDir": "content",
+  "catalog": "sources.json",
+  "sourceField": "source",
+  "itemMarkers": ["options"],
+  "idFields": ["id"],
+  "blocking": false,
+  "legacyUnsourced": []
+}

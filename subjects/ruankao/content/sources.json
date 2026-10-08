@@ -1,0 +1,43 @@
+{
+  "about": "内容来源登记(ADR 0043)。每道判分题目都要能对应到这里的一个来源;authored 必须写明为什么没有现成材料。考纲与教材给出处锚点,真题整卷取得授权后按 past-exams 流程登记。",
+  "sources": [
+    {
+      "id": "self-authored",
+      "name": "本应用自造考点题",
+      "use": "bundle",
+      "notes": "市面没有开放许可、可机读入库的软考题库;历年真题整卷在取得再分发授权前不进仓库。自造题一律 authored + why + locator,locator 指到 2019 版考纲的具体节,保证每道题可对照官方考纲核对。"
+    },
+    {
+      "id": "syllabus-cit-2019",
+      "name": "计算机技术与软件专业技术资格(水平)考试大纲·嵌入式系统设计师(2019 版)",
+      "publisher": "全国计算机专业技术资格考试办公室",
+      "year": 2019,
+      "use": "bundle",
+      "notes": "考纲结构与考点划分的权威依据;章内 locator 用 § 节号引用。"
+    },
+    {
+      "id": "textbook-os-xidian",
+      "name": "《计算机操作系统》(汤小丹等,西安电子科技大学出版社)",
+      "use": "bundle",
+      "notes": "进程、调度、存储、文件、设备五大部分的概念框架与术语参照。"
+    },
+    {
+      "id": "textbook-computer-organization",
+      "name": "《计算机组成与结构》(软考指定教程体系,清华大学出版社)",
+      "use": "bundle",
+      "notes": "数制、组成、流水线、可靠性计算等考点口径参照。"
+    },
+    {
+      "id": "real-exam-stat",
+      "name": "近五年软考真题分值统计(公开培训资料汇总)",
+      "use": "bundle",
+      "notes": "各章 exam_weight 与 grade 的取值依据:综合知识各知识域历年题量的公开统计区间。统计是派生数字,不是学习内容本身。"
+    },
+    {
+      "id": "official-exam-records",
+      "name": "全国软考历年真题(官方试题及分析)",
+      "use": "local-only",
+      "notes": "真题整卷尚未取得再分发授权,content/past-exams/ 为空是预期状态。导入时每卷登记一个 id(如 past-exam-2021a),题目 relation 用 verbatim。"
+    }
+  ]
+}

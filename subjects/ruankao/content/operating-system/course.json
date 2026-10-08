@@ -1,0 +1,98 @@
+{
+  "id": "operating-system",
+  "title": "操作系统",
+  "tagline": "上午卷通用 OS 4–6 分,也是下午 RTOS 大题的地基:进程并发、调度、存储、文件、设备,最后望向实时系统。",
+  "accent": "#0E8A6D",
+  "exam": {
+    "subject": "综合知识(上午卷)",
+    "score_range": "4–6 分/75(通用 OS)+ RTOS 部分",
+    "grade": "S",
+    "note": "进程并发与调度是双科共用知识里权重最高的一章;RTOS 一章是通往嵌入式专有课程的桥。"
+  },
+  "chapters": [
+    {
+      "id": "os-process",
+      "title": "进程与并发",
+      "weight": 3,
+      "grade": "S",
+      "kp": {
+        "id": "rk.os.process",
+        "difficulty": 3,
+        "mastery_goal": "proficient",
+        "knowledge_type": "skill",
+        "requires": [],
+        "guide_line": "三态图要能默画,PV 操作要能手推,死锁四条件与银行家算法要会按步骤判安全。"
+      }
+    },
+    {
+      "id": "os-sched",
+      "title": "处理机调度",
+      "weight": 2,
+      "grade": "S",
+      "kp": {
+        "id": "rk.os.sched",
+        "difficulty": 2,
+        "mastery_goal": "proficient",
+        "knowledge_type": "skill",
+        "requires": ["rk.os.process"],
+        "guide_line": "四种算法按「是否抢占、对谁友好」记;周转时间计算跟着甘特图走一遍就会。"
+      }
+    },
+    {
+      "id": "os-memory",
+      "title": "存储管理",
+      "weight": 2,
+      "grade": "A",
+      "kp": {
+        "id": "rk.os.memory",
+        "difficulty": 3,
+        "mastery_goal": "proficient",
+        "knowledge_type": "skill",
+        "requires": [],
+        "guide_line": "分页分段一张对比表立住;地址转换与置换算法各练一套步骤。"
+      }
+    },
+    {
+      "id": "os-file",
+      "title": "文件管理",
+      "weight": 2,
+      "grade": "B",
+      "kp": {
+        "id": "rk.os.file",
+        "difficulty": 2,
+        "mastery_goal": "understand",
+        "knowledge_type": "concept",
+        "requires": ["rk.os.memory"],
+        "guide_line": "物理结构三种、位示图一道算术、索引节点一道算术,合起来就是全部考点。"
+      }
+    },
+    {
+      "id": "os-device",
+      "title": "设备管理",
+      "weight": 1,
+      "grade": "B",
+      "kp": {
+        "id": "rk.os.device",
+        "difficulty": 2,
+        "mastery_goal": "understand",
+        "knowledge_type": "concept",
+        "requires": [],
+        "guide_line": "SPOOLing 一个概念、磁盘调度一道算术、存取时间一个公式。"
+      }
+    },
+    {
+      "id": "os-rtos",
+      "title": "从通用 OS 到实时系统",
+      "weight": 2,
+      "grade": "A",
+      "kp": {
+        "id": "rk.os.rtos",
+        "difficulty": 3,
+        "mastery_goal": "understand",
+        "knowledge_type": "strategy",
+        "requires": ["rk.os.process", "rk.os.sched"],
+        "guide_line": "这是通往嵌入式专有课程的桥:实时性怎么改变调度与同步的取舍,概念级掌握即可,深入留给嵌入式课程。"
+      }
+    }
+  ]
+}

@@ -18,6 +18,7 @@
 | [`subjects/mathematics`](subjects/mathematics) | 数学学习 | Tauri + Vite（Python sidecar） |
 | [`subjects/math-tools`](subjects/math-tools) | 数学工具（图谱/参考类） | Tauri + Vue 3 |
 | [`subjects/driver`](subjects/driver) | 驾考学习 | Flutter 桌面 |
+| [`subjects/ruankao`](subjects/ruankao) | 软考（中级备考：计算机系统基础 + 操作系统） | Tauri 2 + React |
 | [`subjects/gtkmm`](subjects/gtkmm) | gtkmm 官方教程精读 | Tauri 2 + React |
 | [`subjects/polaris`](subjects/polaris) | 北极星（技术体系图谱） | Tauri 2 + React |
 | [`subjects/design-patterns`](subjects/design-patterns) | 设计模式素材坑 | 尚未开工 |
