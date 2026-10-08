@@ -49,7 +49,7 @@ archive/       历史归档，不参与构建
 | `machine` | C 与机器（原 `c`，ADR 0005） | `athena-machine` | `machine.` |
 | `dsa` | 数据结构与算法 | `athena-dsa` | `dsa.` |
 | `english` | 磨砚 | `athena-english` | `en.` |
-| `ascent` | 拾阶 | `lumi`（发行名 Lumi，历史品牌，未用 `athena-` 前缀） | 无（进度在用户数据目录，见 ADR 0066） |
+| `ascent` | 拾阶 | `athena-ascent`（v9.0.0 及之前发行名 Lumi，改名见 ascent ADR 0021） | 无（进度在用户数据目录，见 ADR 0066） |
 | `mathematics` | 数学学习 | `athena-math` | `math.` |
 | `math-tools` | 数学工具 | `athena-math-tools` | （无进度库） |
 | `driver` | 驾考学习 | `athena-driver` | `drive.` |

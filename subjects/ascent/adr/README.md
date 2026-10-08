@@ -26,6 +26,7 @@
 | [0017](0017-chapter-roadmap-high-school-first.md)  | 章节路线：先夯实高中英语，再逐级备考   |
 | [0018](0018-auto-update.md)                        | 启动时自动更新；发版触发与入口由仓库级 ADR 0081 修订 |
 | [0019](0019-open-content-sources.md)               | 开放内容来源和版权规则                 |
-| [0020](0020-merged-into-athena.md)                 | 并入 Athena 仓库，作为独立应用 subjects/lumi（取代 0001） |
+| [0020](0020-merged-into-athena.md)                 | 并入 Athena 仓库，作为独立应用 subjects/ascent（取代 0001） |
+| [0021](0021-binary-rename-athena-ascent.md)        | 发布名与二进制名改用 athena-ascent，窗口品牌保持「拾阶」 |
 
 完整的第一版功能范围见：https://claude.ai/code/artifact/93687992-8596-41b3-9acf-87199ac80580

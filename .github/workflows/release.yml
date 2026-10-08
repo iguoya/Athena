@@ -695,7 +695,7 @@ jobs:
           path: dist
           merge-multiple: true
 
-      # 拾阶的签名 key 未配置时没有 Lumi_*.exe，nullglob 让空通配直接消失
+      # 拾阶的签名 key 未配置时没有 athena-ascent_*.exe，nullglob 让空通配直接消失
       - name: Create checksums
         working-directory: dist
         shell: bash
@@ -707,7 +707,7 @@ jobs:
             athena-polaris-* athena-polaris_*
             athena-english-* athena-english_*
             athena-math-tools-* athena-math-tools_*
-            Lumi_*.exe)
+            athena-ascent*)
           sha256sum "${files[@]}" > SHA256SUMS.txt
 
       - name: Build release notes from CHANGELOG
@@ -746,7 +746,7 @@ jobs:
             dist/athena-polaris-* dist/athena-polaris_*
             dist/athena-english-* dist/athena-english_*
             dist/athena-math-tools-* dist/athena-math-tools_*
-            dist/Lumi_*.exe
+            dist/athena-ascent*
             dist/SHA256SUMS.txt)
           if gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
             # 拾阶 tauri-action 以 draft 建的 Release 落到这里:补齐资产后 --draft=false 转正;

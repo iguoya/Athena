@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Lumi 英语学习应用的验证入口：内容出处、lint、类型与构建、前端测试、Rust 侧。
+"""拾阶英语学习应用的验证入口：内容出处、lint、类型与构建、前端测试、Rust 侧。
 
 用 Python 而不是 shell：验证是每天都要跑的环节，不该要求 Windows 上先装
 Git Bash 或 WSL（ADR 0047）。
@@ -49,7 +49,7 @@ def run(command: list[str], step: str) -> None:
 
 def main() -> int:
     _force_utf8_output()
-    parser = argparse.ArgumentParser(description="验证 Lumi 英语学习应用")
+    parser = argparse.ArgumentParser(description="验证拾阶英语学习应用")
     parser.add_argument(
         "--skip-rust",
         action="store_true",

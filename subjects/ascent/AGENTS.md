@@ -52,7 +52,7 @@
 - 字体全部本地打包（@fontsource），不联网加载。
 - 三套皮肤已定版：晨光（柔和渐变）、极光（夜间霓虹）、手账（纸张贴纸），共用一套组件，只换 `src/styles/index.css` 里的设计变量（`data-style` = dawn / night / journal）。
 - 旧的 2020 年 VuePress 作文站在 `archive/vuepress-2020/`，新软件不使用。
-- 自动更新（ADR 0018）：推送 master 后 GitHub Actions（`.github/workflows/release.yml`）编译签名安装包并发布 Release；软件启动时用 updater 插件检查并静默更新。tiger 开发用“启动 Lumi（开发版）.cmd”一键拉代码、编译、运行。签名密钥还没设：需要 tiger 生成密钥、把公钥填进 `tauri.conf.json` 的 `plugins.updater.pubkey`、把私钥存进 GitHub Secrets `TAURI_SIGNING_PRIVATE_KEY`，步骤见 ADR 0018。私钥永远不进仓库。
+- 自动更新（ADR 0018）：打 v* tag 后由仓库级 Release 工作流编译签名安装包并发布 Release（统一发版，主仓库 ADR 0081；应用内 `.github/` 死工作流已删）；软件启动时用 updater 插件检查并静默更新。签名密钥已配置在 GitHub Secrets（`TAURI_SIGNING_PRIVATE_KEY`），私钥永远不进仓库。本地开发走 `launcher open ascent`（`app.json` 的 `dev` 块声明，ADR 0046），不再用独立时代的「启动 Lumi（开发版）.cmd」一键脚本（已删，ADR 0021）。
 - 内容来源和版权（ADR 0019，待 tiger 确认）：仓库和安装包都是公开的，真题和课本只放本机 `content/private/`（git 忽略）。开放来源登记在 `content/sources.json`；`pnpm content:ecdict` 生成高中、四级、六级三个词库草稿（`content/vocab/{hs,cet4,cet6}/`），`pnpm content:tatoeba` 给每个词挑真实例句（需要能访问 downloads.tatoeba.org），`pnpm content:cet4` 把四级真题句子导入本机并统计各词库的词在真题里的频次。选资源以中国英语考试为准，真题句优先于通用句库。
 - master 上的每次推送都会发布新版本，推送前确认 `pnpm lint`、`pnpm build` 通过。
 
@@ -61,7 +61,7 @@
 - 里程碑 1 已完成：工程骨架、三套皮肤切换、自定义标题栏、左侧导航、首页（示例数据，今日一句是乔布斯斯坦福演讲的真实句子）。`pnpm build`、`pnpm lint`、`cargo check` 通过（在 Linux 上验证）。
 - 下一步（里程碑 2）：今日句组页面，按读、写、听、说走完一组句子；第一章诊断、单元句组、回顾卡和知识地图；点词收录、换句复习、学习小结卡和打卡。
 - 之后：听力与错题本 → AI 批改（大模型厂商待定，需国内稳定可用）→ 句群和短文阶段。
-- 待定：大模型选哪家；词库和真题音频的来源与授权；她的笔记本是 Windows 10 还是 11（毛玻璃需要 11）；软件名是否就叫 Lumi。
+- 待定：大模型选哪家；词库和真题音频的来源与授权；她的笔记本是 Windows 10 还是 11（毛玻璃需要 11）。软件名定论：工程与发布名 `athena-ascent`（ADR 0021），界面与品牌仍叫「拾阶」。
 
 ## 在这台电脑上运行
 
