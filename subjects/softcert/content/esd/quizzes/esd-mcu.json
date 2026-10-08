@@ -1,0 +1,42 @@
+{
+  "section_id": "esd-mcu",
+  "questions": [
+    {
+      "id": "sc.esd.mcu.q1",
+      "stem": "ARM 处理器中,当操作系统需要运行具有特权的任务时,应进入的运行模式是( )。",
+      "options": ["系统模式(SYS)", "管理模式(SVC)", "用户模式(USR)", "快速中断模式(FIQ)"],
+      "answer": 1,
+      "explanation": "管理模式(SVC)是操作系统使用的保护模式;系统模式(SYS)运行的是具有特权的操作系统任务——两者的区别在于 SVC 是进入异常(如复位、软中断)时的保护模式,SYS 则在不需要异常开销的情况下运行特权任务。USR 是正常程序状态,FIQ 服务于高速数据传输。",
+      "source": { "relation": "adapted", "sourceId": "textbook-esd-2ed", "why": "教材 §2.2 以条目列出 7 种运行模式的用途,未配选择题;将原文用途描述改编为情景辨析题供课后考核。", "locator": "嵌入式教材 §2.2 嵌入式微处理器基础·ARM 的运行模式" }
+    },
+    {
+      "id": "sc.esd.mcu.q2",
+      "stem": "关于 RISC 与 CISC 的比较,下列说法正确的是( )。",
+      "options": [
+        "RISC 指令系统复杂,指令数目多达 200~3000 条",
+        "RISC 大多采用微程序控制器实现",
+        "RISC 只设使用频度高的简单指令,采用大量的通用寄存器",
+        "CISC 用流水线降低指令执行周期数"
+      ],
+      "answer": 2,
+      "explanation": "对照教材表 2-1:RISC 只设使用频度高的简单指令、复杂指令由多条简单指令组合,通用寄存器数量大。A 说的恰是 CISC;B 说反了,CISC 多用微程序控制器、RISC 用组合逻辑硬件实现;D 是 RISC 的特征。",
+      "source": { "relation": "adapted", "sourceId": "textbook-esd-2ed", "why": "教材表 2-1 是对比表,改编为四选项辨析题供课后考核。", "locator": "嵌入式教材 §2.2 表 2-1 复杂指令集和精简指令集的比较" }
+    },
+    {
+      "id": "sc.esd.mcu.q3",
+      "stem": "DSP 芯片采用程序与数据总线分开的总线结构,这种结构称为( )。",
+      "options": ["冯·诺依曼结构", "哈佛结构", "片上系统结构", "多核同构结构"],
+      "answer": 1,
+      "explanation": "哈佛结构的特征是程序存储器与数据存储器分开、各有独立总线,使 DSP 在同一个时钟周期内进行多次访存——取一条指令同时取一个或两个操作数。冯·诺依曼结构则程序与数据共用一条总线。",
+      "source": { "relation": "adapted", "sourceId": "textbook-esd-2ed", "why": "教材 §2.2 对 DSP 哈佛结构的描述改编为术语辨析题。", "locator": "嵌入式教材 §2.2 DSP 的体系结构特点" }
+    },
+    {
+      "id": "sc.esd.mcu.q4",
+      "stem": "在 ARM 体系结构中,半字(Half-Word)的长度是( )位。",
+      "options": ["8", "16", "32", "64"],
+      "answer": 1,
+      "explanation": "ARM 中:字(Word)32 位、半字(Half-Word)16 位、字节(Byte)8 位。注意与 8/16 位处理器体系结构中「字一般为 16 位」的口径区分,这是考题爱设的对比点。",
+      "source": { "relation": "adapted", "sourceId": "textbook-esd-2ed", "why": "ARM 数据类型三件套是 §2.2 的记忆型考点,自教材数据类型条目改编为数值题。", "locator": "嵌入式教材 §2.2 ARM 的数据类型" }
+    }
+  ]
+}

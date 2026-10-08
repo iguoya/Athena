@@ -24,6 +24,7 @@ import osMemoryLesson from "../content/swd/chapters/os-memory.json";
 import osFileLesson from "../content/swd/chapters/os-file.json";
 import osDeviceLesson from "../content/swd/chapters/os-device.json";
 import osRtosLesson from "../content/esd/chapters/os-rtos.json";
+import esdMcuLesson from "../content/esd/chapters/esd-mcu.json";
 
 import csNumberQuiz from "../content/swd/quizzes/cs-number.json";
 import csCpuQuiz from "../content/swd/quizzes/cs-cpu.json";
@@ -37,6 +38,7 @@ import osMemoryQuiz from "../content/swd/quizzes/os-memory.json";
 import osFileQuiz from "../content/swd/quizzes/os-file.json";
 import osDeviceQuiz from "../content/swd/quizzes/os-device.json";
 import osRtosQuiz from "../content/esd/quizzes/os-rtos.json";
+import esdMcuQuiz from "../content/esd/quizzes/esd-mcu.json";
 
 const lessons: Record<string, ChapterLesson> = Object.fromEntries(
   [
@@ -52,6 +54,7 @@ const lessons: Record<string, ChapterLesson> = Object.fromEntries(
     osFileLesson,
     osDeviceLesson,
     osRtosLesson,
+    esdMcuLesson,
   ].map((l) => [l.section_id, l as unknown as ChapterLesson]),
 );
 
@@ -69,6 +72,7 @@ const quizzes: Record<string, ChapterQuiz> = Object.fromEntries(
     osFileQuiz,
     osDeviceQuiz,
     osRtosQuiz,
+    esdMcuQuiz,
   ].map((q) => [q.section_id, q as unknown as ChapterQuiz]),
 );
 
