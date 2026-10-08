@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Flame, CalendarCheck } from "lucide-react";
-import { allKps } from "../content";
+import { allSections } from "../content";
 import { attemptsSummary, todayStats, type KpSummary, type TodayStats } from "../db";
 import { ProgressRing, DifficultyDots, MasteryGoalBadge } from "../components/ui";
 
@@ -17,7 +17,8 @@ export function DashboardPage() {
   const totalAnswered = summary.reduce((s, x) => s + x.total, 0);
   const totalCorrect = summary.reduce((s, x) => s + x.correct, 0);
   const bestStreak = Math.max(0, ...summary.map((s) => s.streak));
-  const mastery = (kpId: string) => {
+  const mastery = (kpId?: string) => {
+    if (!kpId) return 0;
     const s = byKp.get(kpId);
     if (!s || s.total === 0) return 0;
     return Math.min(1, s.correct / s.total) * Math.min(1, s.total / 8);
@@ -62,26 +63,33 @@ export function DashboardPage() {
       <section className="card overflow-hidden">
         <div className="border-b border-black/5 px-5 py-3.5 text-[14px] font-bold">知识点掌握一览</div>
         <div className="divide-y divide-black/5">
-          {allKps().map(({ course, chapter, kp }) => {
-            const s = byKp.get(kp.id);
-            const m = mastery(kp.id);
+          {allSections().map(({ course, chapter, section }) => {
+            const kp = section.kp;
+            const s = kp ? byKp.get(kp.id) : undefined;
+            const m = mastery(kp?.id);
             return (
-              <div key={kp.id} className="flex items-center gap-4 px-5 py-3.5">
+              <div key={`${course.id}-${section.id}`} className="flex items-center gap-4 px-5 py-3.5">
                 <span className="h-8 w-1.5 shrink-0 rounded-full" style={{ background: course.accent }} />
                 <div className="min-w-0 flex-1">
                   <div className="text-[14px] font-semibold">
-                    {chapter.title}
-                    <span className="ml-2 text-[11.5px] font-normal text-ink/40">{course.title}</span>
+                    {section.title}
+                    <span className="ml-2 text-[11.5px] font-normal text-ink/40">{course.title} · 第 {chapter.no} 章</span>
                   </div>
                   <div className="mt-1 flex flex-wrap items-center gap-2.5 text-[12px] text-ink/50">
-                    <DifficultyDots difficulty={kp.difficulty} />
-                    <MasteryGoalBadge goal={kp.mastery_goal} />
-                    {s ? (
-                      <span className="font-mono">
-                        {s.correct}/{s.total} 对 · 连对 {s.streak}
-                      </span>
+                    {kp ? (
+                      <>
+                        <DifficultyDots difficulty={kp.difficulty} />
+                        <MasteryGoalBadge goal={kp.mastery_goal} />
+                        {s ? (
+                          <span className="font-mono">
+                            {s.correct}/{s.total} 对 · 连对 {s.streak}
+                          </span>
+                        ) : (
+                          <span>还没作答过——先去随堂考核</span>
+                        )}
+                      </>
                     ) : (
-                      <span>还没作答过——先去随堂考核</span>
+                      <span>本章待建</span>
                     )}
                   </div>
                 </div>

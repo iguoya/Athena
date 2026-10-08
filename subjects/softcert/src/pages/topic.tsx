@@ -1,35 +1,42 @@
 import { useEffect } from "react";
-import { ArrowLeft, ArrowRight, Link2 } from "lucide-react";
-import { courseById, lessonOf } from "../content";
+import { ArrowLeft, ArrowRight, Link2, BookOpen } from "lucide-react";
+import { findSection, lessonOf, courses } from "../content";
 import { saveSetting } from "../db";
 import { LessonBlocks } from "../components/blocks";
 import { GradeBadge, WeightStars, DifficultyDots, MasteryGoalBadge, KnowledgeTypeBadge } from "../components/ui";
 import type { View } from "../App";
 
+/** 全部有内容的节,按课程顺序平铺:上一节/下一节导航用。 */
+function flatSections() {
+  return courses.flatMap((c) =>
+    c.chapters.flatMap((ch) => ch.sections.map((s) => ({ courseId: c.id, sectionId: s.id, title: s.title }))),
+  );
+}
+
 export function TopicPage({
   courseId,
-  chapterId,
+  sectionId,
   go,
 }: {
   courseId: string;
-  chapterId: string;
+  sectionId: string;
   go: (v: View) => void;
 }) {
-  const course = courseById(courseId);
-  const idx = course.chapters.findIndex((c) => c.id === chapterId);
-  const chapter = course.chapters[idx];
-  const lesson = lessonOf(chapterId);
-  const prev = idx > 0 ? course.chapters[idx - 1] : null;
-  const next = idx < course.chapters.length - 1 ? course.chapters[idx + 1] : null;
-  const requires = chapter.kp.requires;
+  const { course, chapter, section } = findSection(courseId, sectionId);
+  const lesson = lessonOf(sectionId);
+  const flat = flatSections();
+  const idx = flat.findIndex((s) => s.courseId === courseId && s.sectionId === sectionId);
+  const prev = idx > 0 ? flat[idx - 1] : null;
+  const next = idx < flat.length - 1 ? flat[idx + 1] : null;
+  const requires = section.kp?.requires ?? [];
 
   // 续读:每次进入章节就记下位置,首页据此放「接着学」入口。
   useEffect(() => {
     saveSetting(
       "last-read",
-      JSON.stringify({ courseId, chapterId, courseTitle: course.title, chapterTitle: chapter.title }),
+      JSON.stringify({ courseId, sectionId, courseTitle: course.title, chapterTitle: section.title }),
     ).catch(() => {});
-  }, [courseId, chapterId, course.title, chapter.title]);
+  }, [courseId, sectionId, course.title, section.title]);
 
   return (
     <div className="space-y-6">
@@ -44,19 +51,29 @@ export function TopicPage({
       </div>
 
       <header className="space-y-3">
-        <h1 className="text-[26px] font-bold tracking-tight">{chapter.title}</h1>
+        <p className="text-[13px] font-medium text-ink/45">
+          第 {chapter.no} 章 · {chapter.title}
+        </p>
+        <h1 className="text-[26px] font-bold tracking-tight">{section.title}</h1>
         <div className="flex flex-wrap items-center gap-2.5">
-          <GradeBadge grade={chapter.grade} />
-          <WeightStars weight={chapter.weight} />
-          <DifficultyDots difficulty={chapter.kp.difficulty} />
-          <MasteryGoalBadge goal={chapter.kp.mastery_goal} />
-          <KnowledgeTypeBadge type={chapter.kp.knowledge_type} />
+          <GradeBadge grade={section.grade} />
+          <WeightStars weight={section.weight} />
+          {section.kp && (
+            <>
+              <DifficultyDots difficulty={section.kp.difficulty} />
+              <MasteryGoalBadge goal={section.kp.mastery_goal} />
+              <KnowledgeTypeBadge type={section.kp.knowledge_type} />
+            </>
+          )}
         </div>
         {requires.length > 0 && (
           <p className="flex items-center gap-1.5 text-[12.5px] text-ink/45">
             <Link2 size={13} /> 先修:{requires.join("、")}——没学过的先回去过一遍
           </p>
         )}
+        <p className="flex items-center gap-1.5 text-[12px] text-ink/40">
+          <BookOpen size={13} /> 出处:{chapter.textbook_ref.locator},《{course.textbook.title}》
+        </p>
       </header>
 
       <article className="card px-6 py-7 md:px-9 md:py-9">
@@ -67,7 +84,7 @@ export function TopicPage({
         {prev ? (
           <button
             type="button"
-            onClick={() => go({ kind: "topic", courseId, chapterId: prev.id })}
+            onClick={() => go({ kind: "topic", courseId: prev.courseId, sectionId: prev.sectionId })}
             className="inline-flex items-center gap-1.5 rounded-full border border-black/10 px-4 py-2 text-[13px] text-ink/60 hover:border-brand-300 hover:text-brand-600"
           >
             <ArrowLeft size={14} /> {prev.title}
@@ -76,7 +93,7 @@ export function TopicPage({
         {next ? (
           <button
             type="button"
-            onClick={() => go({ kind: "topic", courseId, chapterId: next.id })}
+            onClick={() => go({ kind: "topic", courseId: next.courseId, sectionId: next.sectionId })}
             className="inline-flex items-center gap-1.5 rounded-full border border-black/10 px-4 py-2 text-[13px] text-ink/60 hover:border-brand-300 hover:text-brand-600"
           >
             {next.title} <ArrowRight size={14} />
@@ -86,10 +103,10 @@ export function TopicPage({
 
       <button
         type="button"
-        onClick={() => go({ kind: "quiz", courseId, chapterId })}
+        onClick={() => go({ kind: "quiz", courseId, sectionId })}
         className="w-full rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 py-4 text-[16px] font-bold text-white shadow-lg shadow-emerald-500/25 transition-transform hover:scale-[1.01] active:scale-[0.99]"
       >
-        开始随堂考核({chapter.title})
+        开始随堂考核({section.title})
       </button>
     </div>
   );

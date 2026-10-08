@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { ArrowRight, ScrollText, Gauge, CalendarClock, Target, BookOpen } from "lucide-react";
-import { courses, registry, allKps } from "../content";
+import { courses, registry, allSections } from "../content";
 import { attemptsSummary, loadSetting, type KpSummary } from "../db";
 import { ProgressRing, GradeBadge } from "../components/ui";
 import type { View } from "../App";
 
 interface LastRead {
   courseId: string;
-  chapterId: string;
+  sectionId: string;
   courseTitle: string;
   chapterTitle: string;
 }
@@ -25,7 +25,8 @@ export function HomePage({ go }: { go: (v: View) => void }) {
       .catch(() => {});
   }, []);
 
-  const mastery = (kpId: string) => {
+  const mastery = (kpId?: string) => {
+    if (!kpId) return 0;
     const s = summary.find((x) => x.kp_id === kpId);
     if (!s || s.total === 0) return 0;
     return Math.min(1, s.correct / s.total) * Math.min(1, s.total / 8);
@@ -64,7 +65,7 @@ export function HomePage({ go }: { go: (v: View) => void }) {
           type="button"
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          onClick={() => go({ kind: "topic", courseId: last.courseId, chapterId: last.chapterId })}
+          onClick={() => go({ kind: "topic", courseId: last.courseId, sectionId: last.sectionId })}
           className="card card-hover flex w-full items-center gap-3 border-brand-200/70 bg-gradient-to-r from-brand-50/80 to-white px-5 py-3.5 text-left"
         >
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-500 text-white shadow">
@@ -81,8 +82,12 @@ export function HomePage({ go }: { go: (v: View) => void }) {
       {/* 课程卡 */}
       <section className="grid gap-5 md:grid-cols-2">
         {courses.map((c, i) => {
-          const avg = c.chapters.reduce((s, ch) => s + mastery(ch.kp.id), 0) / c.chapters.length;
-          const done = c.chapters.filter((ch) => mastery(ch.kp.id) >= 0.6).length;
+          const sections = c.chapters.flatMap((ch) => ch.sections);
+          const graded = sections.filter((s) => s.kp);
+          const avg = graded.length
+            ? graded.reduce((acc, s) => acc + mastery(s.kp!.id), 0) / graded.length
+            : 0;
+          const done = graded.filter((s) => mastery(s.kp!.id) >= 0.6).length;
           return (
             <motion.button
               key={c.id}
@@ -107,9 +112,9 @@ export function HomePage({ go }: { go: (v: View) => void }) {
                     {c.title}
                   </h2>
                   <p className="mt-1.5 text-[13.5px] leading-relaxed text-ink/60">{c.tagline}</p>
-                  <div className="mt-3 text-[12.5px] text-ink/50">
-                    分值 <b style={{ color: c.accent }}>{c.exam.score_range}</b> · {c.chapters.length} 章 ·
-                    已拿下 {done} 章
+                  <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12.5px] text-ink/50">
+                    <span>依据《{c.textbook.title}》</span>
+                    <span>· {c.textbook.chapters_total} 章 {sections.length} 节 · 已拿下 {done} 节</span>
                   </div>
                 </div>
                 <ProgressRing value={avg} size={64} stroke={7} color={c.accent}>
@@ -144,7 +149,7 @@ export function HomePage({ go }: { go: (v: View) => void }) {
           <span>
             <span className="block font-bold">掌握度战况</span>
             <span className="block text-[13px] text-ink/55">
-              共 {allKps().length} 个知识点 · 全部由作答记录派生
+              共 {allSections().length} 节 · 全部由作答记录派生
             </span>
           </span>
         </button>

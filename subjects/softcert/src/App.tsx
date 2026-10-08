@@ -11,8 +11,8 @@ import { QuizPage } from "./pages/quiz";
 export type View =
   | { kind: "home" }
   | { kind: "course"; courseId: string }
-  | { kind: "topic"; courseId: string; chapterId: string }
-  | { kind: "quiz"; courseId: string; chapterId: string }
+  | { kind: "topic"; courseId: string; sectionId: string }
+  | { kind: "quiz"; courseId: string; sectionId: string }
   | { kind: "past" }
   | { kind: "dashboard" };
 
@@ -64,12 +64,12 @@ export default function App() {
         {view.kind === "topic" && (
           <TopicPage
             courseId={view.courseId}
-            chapterId={view.chapterId}
+            sectionId={view.sectionId}
             go={setView}
           />
         )}
         {view.kind === "quiz" && (
-          <QuizPage courseId={view.courseId} chapterId={view.chapterId} go={setView} />
+          <QuizPage courseId={view.courseId} sectionId={view.sectionId} go={setView} />
         )}
         {view.kind === "past" && <PastExamsPage />}
         {view.kind === "dashboard" && <DashboardPage />}
@@ -77,7 +77,7 @@ export default function App() {
 
       <footer className="border-t border-black/5 py-6 text-center text-[12px] text-ink/40">
         {registry.exam.full_name} · 两科同时 ≥{registry.exam.passing_score} 分通过 ·
-        内容出处在 content/sources.json,真题导入见 content/past-exams/README.md
+        菜单目录对齐官方教材,出处在 content/sources.json,真题导入见 content/past-exams/README.md
       </footer>
     </div>
   );

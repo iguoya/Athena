@@ -5,8 +5,9 @@
 跨应用的出处检查由根 scripts/check-app-sources.mjs 按 content-contract.json
 接管,这里不重复,只查本应用内容结构的自洽性。
 
-用 Python 而不是 shell:验证是每天都要跑的环节,不该要求 Windows 上先装
-Git Bash 或 WSL(ADR 0047)。
+内容结构是两层:章(chapter)= 官方教材的章,节(section)= 菜单里的
+可学习单元。空章(sections 为空)是「待建」占位,合法;节一旦评级,
+就必须有教学内容和考核题(TEACHING:评级只给已写出内容的章节)。
 
 用法:
     python3 scripts/check.py [--skip-rust] [--content-only]
@@ -66,7 +67,7 @@ def load_json(path: Path):
 
 
 def check_content() -> None:
-    """内容结构自洽:课程注册、章节块、知识点评级、题目与出处。"""
+    """内容结构自洽:课程注册、教材章树、节评级、题目与出处、孤儿文件对账。"""
     print("== 内容结构校验 ==", flush=True)
     content = PROJECT_ROOT / "content"
 
@@ -76,8 +77,9 @@ def check_content() -> None:
         fail("courses.json 没有注册任何课程")
 
     all_kp_ids: set[str] = set()
-    chapter_ids: set[str] = set()
-    course_jsons: dict[str, dict] = {}
+    section_ids: set[str] = set()  # 全部节 id(含未评级)
+    referenced_sections: dict[str, set[str]] = {}  # 课程 id -> course.json 引用的节 id
+    course_dirs: set[str] = set()
 
     for entry in courses:
         cid = entry.get("id")
@@ -86,51 +88,80 @@ def check_content() -> None:
         course_path = content / cid / "course.json"
         if not course_path.is_file():
             fail(f"课程 {cid} 缺 course.json")
+        course_dirs.add(cid)
         course = load_json(course_path)
-        course_jsons[cid] = course
         if course.get("id") != cid:
             fail(f"{cid}/course.json 的 id 与注册名不一致")
+        tb = course.get("textbook", {})
+        if not tb.get("id") or not tb.get("title"):
+            fail(f"课程 {cid} 缺教材信息(textbook)")
+
         chapters = course.get("chapters", [])
         if not chapters:
-            fail(f"课程 {cid} 没有章节")
+            fail(f"课程 {cid} 没有章")
+        last_no = 0
+        refs = set()
         for ch in chapters:
             ch_id = ch.get("id", "")
-            if ch_id in chapter_ids:
-                fail(f"章节 id 重复:{ch_id}")
-            chapter_ids.add(ch_id)
-            kp = ch.get("kp", {})
-            all_kp_ids.add(kp.get("id", ""))
-            grade = ch.get("grade")
-            if grade not in GRADE_VALUES:
-                fail(f"章节 {ch_id} 的 grade 非法:{grade}")
-            if ch.get("weight") not in (1, 2, 3):
-                fail(f"章节 {ch_id} 的 weight 必须是 1–3")
-            if kp.get("difficulty") not in (1, 2, 3, 4, 5):
-                fail(f"章节 {ch_id} 难度必须是 1–5")
-            if kp.get("mastery_goal") not in MASTERY_GOALS:
-                fail(f"章节 {ch_id} 掌握目标非法:{kp.get('mastery_goal')}")
-            if kp.get("knowledge_type") not in KNOWLEDGE_TYPES:
-                fail(f"章节 {ch_id} 知识类型非法:{kp.get('knowledge_type')}")
-            # 评级只给已写出教学内容的章节:有评级就必须有内容,内容必须有题。
-            if not (content / cid / "chapters" / f"{ch_id}.json").is_file():
-                fail(f"章节 {ch_id} 有评级但没有教学内容文件")
-            if not (content / cid / "quizzes" / f"{ch_id}.json").is_file():
-                fail(f"章节 {ch_id} 有评级但没有考核题文件")
+            no = ch.get("no")
+            if not isinstance(no, int) or no != last_no + 1:
+                fail(f"{cid} 章 {ch_id} 的 no 必须从 1 连续递增(当前 {no},期望 {last_no + 1})")
+            last_no = no
+            if not ch.get("title"):
+                fail(f"章 {ch_id} 缺标题")
+            tb_ref = ch.get("textbook_ref", {})
+            if tb_ref.get("sourceId") != tb.get("id") or not tb_ref.get("locator"):
+                fail(f"章 {ch_id} 的 textbook_ref 必须指向本课程教材并带 locator")
+
+            for sec in ch.get("sections", []):
+                sid = sec.get("id", "")
+                if sid in section_ids:
+                    fail(f"节 id 重复:{sid}")
+                section_ids.add(sid)
+                refs.add(sid)
+                if sec.get("grade") not in GRADE_VALUES:
+                    fail(f"节 {sid} 的 grade 非法:{sec.get('grade')}")
+                if sec.get("weight") not in (1, 2, 3):
+                    fail(f"节 {sid} 的 weight 必须是 1–3")
+                kp = sec.get("kp")
+                if kp is None:
+                    # 有内容但还没评级的过渡态允许;但必须有 lesson 文件才说得过去。
+                    if not (content / cid / "chapters" / f"{sid}.json").is_file():
+                        fail(f"节 {sid} 未评级且无教学内容:要么补评级,要么删掉条目")
+                    continue
+                all_kp_ids.add(kp.get("id", ""))
+                if kp.get("difficulty") not in (1, 2, 3, 4, 5):
+                    fail(f"节 {sid} 难度必须是 1–5")
+                if kp.get("mastery_goal") not in MASTERY_GOALS:
+                    fail(f"节 {sid} 掌握目标非法:{kp.get('mastery_goal')}")
+                if kp.get("knowledge_type") not in KNOWLEDGE_TYPES:
+                    fail(f"节 {sid} 知识类型非法:{kp.get('knowledge_type')}")
+                # 评级只给已写出教学内容的章节:有评级就必须有内容,内容必须有题。
+                if not (content / cid / "chapters" / f"{sid}.json").is_file():
+                    fail(f"节 {sid} 有评级但没有教学内容文件")
+                if not (content / cid / "quizzes" / f"{sid}.json").is_file():
+                    fail(f"节 {sid} 有评级但没有考核题文件")
+        referenced_sections[cid] = refs
 
     # requires 引用必须存在,防止先修链悬空(ADR 0030)。
-    for cid, course in course_jsons.items():
+    for cid in course_dirs:
+        course = load_json(content / cid / "course.json")
         for ch in course.get("chapters", []):
-            for req in ch.get("kp", {}).get("requires", []):
-                if req not in all_kp_ids:
-                    fail(f"章节 {ch['id']} 的 requires 引用了不存在的知识点:{req}")
+            for sec in ch.get("sections", []):
+                kp = sec.get("kp") or {}
+                for req in kp.get("requires", []):
+                    if req not in all_kp_ids:
+                        fail(f"节 {sec['id']} 的 requires 引用了不存在的知识点:{req}")
 
     # viz 组件引用必须在注册表里(解析 src/viz/index.tsx 的 key 列表)。
     viz_index = (PROJECT_ROOT / "src" / "viz" / "index.tsx").read_text(encoding="utf-8")
     registered = set(re.findall(r'"([a-z0-9-]+)":\s', viz_index))
     question_count = 0
-    for course_file in sorted((content).glob("*/chapters/*.json")):
+    lesson_files: set[str] = set()
+    for course_file in sorted(content.glob("*/chapters/*.json")):
         lesson = load_json(course_file)
         rel = course_file.relative_to(PROJECT_ROOT)
+        lesson_files.add(course_file.stem)
         blocks = lesson.get("blocks", [])
         if not blocks:
             fail(f"{rel} 没有任何内容块")
@@ -143,7 +174,7 @@ def check_content() -> None:
                 if comp not in registered:
                     fail(f"{rel} 第 {i} 块引用了未注册的可视化组件:{comp}")
 
-    for quiz_file in sorted((content).glob("*/quizzes/*.json")):
+    for quiz_file in sorted(content.glob("*/quizzes/*.json")):
         quiz = load_json(quiz_file)
         rel = quiz_file.relative_to(PROJECT_ROOT)
         questions = quiz.get("questions", [])
@@ -164,10 +195,16 @@ def check_content() -> None:
             if src.get("relation") == "authored" and not src.get("why"):
                 fail(f"{rel} 题目 {q.get('id')} 是 authored 却没写为什么没有现成材料")
 
-    # 真题注册表里的卷必须有对应文件目录可查(文件本身可以在后续导入)。
+    # 孤儿文件对账:chapters/ 里的每个文件都必须被 course.json 引用——
+    # 改名/迁移后残留的旧文件就是文档与内容漂移的起点。
+    for cid in course_dirs:
+        orphans = {p.stem for p in (content / cid / "chapters").glob("*.json")} - referenced_sections[cid]
+        for orphan in sorted(orphans):
+            fail(f"{cid}/chapters/{orphan}.json 没有被 course.json 引用(孤儿文件,删除或挂回)")
+
     papers = load_json(content / "past-exams" / "papers.json").get("papers", [])
     print(
-        f"{len(course_jsons)} 门课、{len(chapter_ids)} 章、{question_count} 题、"
+        f"{len(course_dirs)} 门课、{len(section_ids)} 节、{question_count} 题、"
         f"{len(papers)} 份真题卷,结构自洽",
         flush=True,
     )

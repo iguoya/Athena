@@ -6,13 +6,37 @@
       "两科同时 ≥45 分(满分 75)才通过,单科过线无效",
       "科目一 综合知识:75 空单项选择,机考",
       "科目二 案例分析:约 5 道大题,机考",
-      "公共共用课程学一遍,两科上午卷都拿分——这是双证路线最大的杠杆"
+      "报考无门槛:不设学历、资历、年龄、专业限制"
     ],
     "passing_score": 45,
     "full_score": 75
   },
   "courses": [
-    { "id": "computer-system", "title": "计算机系统基础", "accent": "#6D5AE6" },
-    { "id": "operating-system", "title": "操作系统", "accent": "#0E8A6D" }
+    {
+      "id": "swd",
+      "title": "软件设计师",
+      "accent": "#6D5AE6",
+      "track": "swd",
+      "textbook": {
+        "id": "textbook-swd-5ed",
+        "title": "软件设计师教程(第 5 版)",
+        "publisher": "清华大学出版社",
+        "year": 2018,
+        "chapters_total": 12
+      }
+    },
+    {
+      "id": "esd",
+      "title": "嵌入式系统设计师",
+      "accent": "#0E8A6D",
+      "track": "esd",
+      "textbook": {
+        "id": "textbook-esd-2ed",
+        "title": "嵌入式系统设计师教程(第 2 版)",
+        "publisher": "清华大学出版社",
+        "year": 2019,
+        "chapters_total": 11
+      }
+    }
   ]
 }

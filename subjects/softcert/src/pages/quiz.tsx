@@ -2,7 +2,7 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { CheckCircle2, XCircle, ArrowRight, RotateCcw, Award } from "lucide-react";
-import { courseById, quizOf } from "../content";
+import { findSection, quizOf } from "../content";
 import { recordAttempt } from "../db";
 import { inline } from "../components/blocks";
 import type { Question } from "../types";
@@ -202,19 +202,18 @@ function AnswerReview({ answered, index }: { answered: Answered; index: number }
   );
 }
 
-export function QuizPage({ courseId, chapterId, go }: { courseId: string; chapterId: string; go: (v: View) => void }) {
-  const course = courseById(courseId);
-  const chapter = course.chapters.find((c) => c.id === chapterId)!;
-  const quiz = quizOf(chapterId);
+export function QuizPage({ courseId, sectionId, go }: { courseId: string; sectionId: string; go: (v: View) => void }) {
+  const { course, section } = findSection(courseId, sectionId);
+  const quiz = quizOf(sectionId);
   return (
     <QuizRunner
-      title={`${chapter.title} · 随堂考核`}
+      title={`${section.title} · 随堂考核`}
       questions={quiz.questions}
       mode="chapter"
       course={course.id}
-      chapterId={chapter.id}
-      kpId={chapter.kp.id}
-      onExit={() => go({ kind: "topic", courseId, chapterId })}
+      chapterId={section.id}
+      kpId={section.kp?.id ?? section.id}
+      onExit={() => go({ kind: "topic", courseId, sectionId })}
     />
   );
 }

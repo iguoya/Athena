@@ -1,0 +1,78 @@
+{
+  "id": "swd",
+  "title": "软件设计师",
+  "tagline": "对齐《软件设计师教程(第 5 版)》全部 12 章:菜单即教材目录,每节锚定教材章节号,配合历年真题演练。",
+  "accent": "#6D5AE6",
+  "track": "swd",
+  "textbook": {
+    "id": "textbook-swd-5ed",
+    "title": "软件设计师教程(第 5 版)",
+    "publisher": "清华大学出版社",
+    "year": 2018,
+    "isbn": "9787302491224",
+    "chapters_total": 12
+  },
+  "exam": {
+    "subject": "软考中级·软件设计师",
+    "score_range": "两科各 75 分,同时 ≥45 通过",
+    "grade": "S",
+    "note": "一年两考(上半年 5 月、下半年 11 月);综合知识 75 空单选,案例分析约 5 道大题(数据流图/数据库/UML/算法/设计模式)。"
+  },
+  "chapters": [
+    {
+      "id": "swd-ch01",
+      "no": 1,
+      "title": "计算机系统知识",
+      "textbook_ref": { "sourceId": "textbook-swd-5ed", "locator": "第 1 章" },
+      "sections": [
+        { "id": "cs-number", "title": "数制与数据表示", "weight": 3, "grade": "S",
+          "kp": { "id": "sc.cs.number", "difficulty": 2, "mastery_goal": "proficient", "knowledge_type": "skill", "requires": [], "guide_line": "先会换算,再会补码,最后是海明码位数——三步都是套步骤的题,熟练是唯一目标。" } },
+        { "id": "cs-cpu", "title": "中央处理器与指令系统", "weight": 3, "grade": "S",
+          "kp": { "id": "sc.cs.cpu", "difficulty": 3, "mastery_goal": "proficient", "knowledge_type": "concept", "requires": [], "guide_line": "认得寄存器各管什么、寻址方式差在哪,流水线三个公式要能默算。" } },
+        { "id": "cs-memory", "title": "存储体系与 Cache", "weight": 2, "grade": "S",
+          "kp": { "id": "sc.cs.memory", "difficulty": 3, "mastery_goal": "understand", "knowledge_type": "concept", "requires": ["sc.cs.cpu"], "guide_line": "层次结构靠局部性立住;命中率公式和三种映射方式的取舍是考点。" } },
+        { "id": "cs-io", "title": "总线与 I/O 控制方式", "weight": 2, "grade": "A",
+          "kp": { "id": "sc.cs.io", "difficulty": 2, "mastery_goal": "understand", "knowledge_type": "concept", "requires": ["sc.cs.cpu"], "guide_line": "三种 I/O 方式按「CPU 介入程度」一条线记住,中断与 DMA 各认一个流程。" } },
+        { "id": "cs-reliability", "title": "可靠性与系统性能", "weight": 2, "grade": "S",
+          "kp": { "id": "sc.cs.reliability", "difficulty": 2, "mastery_goal": "proficient", "knowledge_type": "skill", "requires": [], "guide_line": "串并联两个公式加 MTBF/可用性,每年必有、公式固定,是性价比最高的送分题。" } }
+      ]
+    },
+    { "id": "swd-ch02", "no": 2, "title": "程序设计语言基础", "textbook_ref": { "sourceId": "textbook-swd-5ed", "locator": "第 2 章" }, "sections": [] },
+    { "id": "swd-ch03", "no": 3, "title": "数据结构", "textbook_ref": { "sourceId": "textbook-swd-5ed", "locator": "第 3 章" }, "sections": [] },
+    {
+      "id": "swd-ch04",
+      "no": 4,
+      "title": "操作系统知识",
+      "textbook_ref": { "sourceId": "textbook-swd-5ed", "locator": "第 4 章" },
+      "sections": [
+        { "id": "os-process", "title": "进程与并发", "weight": 3, "grade": "S",
+          "kp": { "id": "sc.os.process", "difficulty": 3, "mastery_goal": "proficient", "knowledge_type": "skill", "requires": [], "guide_line": "三态图要能默画,PV 操作要能手推,死锁四条件与银行家算法要会按步骤判安全。" } },
+        { "id": "os-sched", "title": "处理机调度", "weight": 2, "grade": "S",
+          "kp": { "id": "sc.os.sched", "difficulty": 2, "mastery_goal": "proficient", "knowledge_type": "skill", "requires": ["sc.os.process"], "guide_line": "四种算法按「是否抢占、对谁友好」记;周转时间计算跟着甘特图走一遍就会。" } },
+        { "id": "os-memory", "title": "存储管理", "weight": 2, "grade": "A",
+          "kp": { "id": "sc.os.memory", "difficulty": 3, "mastery_goal": "proficient", "knowledge_type": "skill", "requires": [], "guide_line": "分页分段一张对比表立住;地址转换与置换算法各练一套步骤。" } },
+        { "id": "os-file", "title": "文件管理", "weight": 2, "grade": "B",
+          "kp": { "id": "sc.os.file", "difficulty": 2, "mastery_goal": "understand", "knowledge_type": "concept", "requires": ["sc.os.memory"], "guide_line": "物理结构三种、位示图一道算术、索引节点一道算术,合起来就是全部考点。" } },
+        { "id": "os-device", "title": "设备管理", "weight": 1, "grade": "B",
+          "kp": { "id": "sc.os.device", "difficulty": 2, "mastery_goal": "understand", "knowledge_type": "concept", "requires": [], "guide_line": "SPOOLing 一个概念、磁盘调度一道算术、存取时间一个公式。" } }
+      ]
+    },
+    { "id": "swd-ch05", "no": 5, "title": "软件工程基础知识", "textbook_ref": { "sourceId": "textbook-swd-5ed", "locator": "第 5 章" }, "sections": [] },
+    { "id": "swd-ch06", "no": 6, "title": "结构化开发方法", "textbook_ref": { "sourceId": "textbook-swd-5ed", "locator": "第 6 章" }, "sections": [] },
+    { "id": "swd-ch07", "no": 7, "title": "面向对象技术", "textbook_ref": { "sourceId": "textbook-swd-5ed", "locator": "第 7 章" }, "sections": [] },
+    { "id": "swd-ch08", "no": 8, "title": "算法设计与分析", "textbook_ref": { "sourceId": "textbook-swd-5ed", "locator": "第 8 章" }, "sections": [] },
+    { "id": "swd-ch09", "no": 9, "title": "数据库技术基础", "textbook_ref": { "sourceId": "textbook-swd-5ed", "locator": "第 9 章" }, "sections": [] },
+    { "id": "swd-ch10", "no": 10, "title": "网络基础", "textbook_ref": { "sourceId": "textbook-swd-5ed", "locator": "第 10 章" }, "sections": [] },
+    {
+      "id": "swd-ch11",
+      "no": 11,
+      "title": "安全性知识",
+      "textbook_ref": { "sourceId": "textbook-swd-5ed", "locator": "第 11 章" },
+      "sections": [
+        { "id": "cs-security", "title": "信息安全基础", "weight": 1, "grade": "B",
+          "kp": { "id": "sc.cs.security", "difficulty": 2, "mastery_goal": "understand", "knowledge_type": "concept", "requires": [], "guide_line": "概念辨析为主:对称非对称各管什么、签名和加密用哪把钥匙,不要陷进算法细节。" } }
+      ]
+    },
+    { "id": "swd-ch12", "no": 12, "title": "知识产权与标准化", "textbook_ref": { "sourceId": "textbook-swd-5ed", "locator": "第 12 章" }, "sections": [] }
+  ]
+}
