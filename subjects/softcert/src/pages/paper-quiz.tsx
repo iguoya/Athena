@@ -104,7 +104,7 @@ export function PaperRunner({
                       <XCircle size={18} className="mt-1 shrink-0 text-rose-400" />
                     ))}
                 </div>
-                <div className="mt-3.5 grid gap-2 md:grid-cols-2">
+                <div className="mt-3.5 grid gap-2 md:grid-cols-2 2xl:grid-cols-3">
                   {q.options.map((opt, i) => {
                     const isAnswer = i === q.answer;
                     const isPicked = judged && a.picked === i;
@@ -147,7 +147,7 @@ export function PaperRunner({
         </div>
 
         {/* 答题卡 */}
-        <aside className="hidden w-44 shrink-0 lg:block">
+        <aside className="hidden w-44 shrink-0 lg:block 2xl:w-60">
           <div className="card sticky top-32 p-4">
             <div className="mb-3 text-[13px] font-bold">答题卡</div>
             <div className="grid grid-cols-6 gap-1.5">

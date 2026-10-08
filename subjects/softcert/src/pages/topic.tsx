@@ -76,11 +76,11 @@ export function TopicPage({
         </p>
       </header>
 
-      <article className="card px-6 py-7 md:px-9 md:py-9">
+      <article className="card mx-auto max-w-[980px] px-6 py-7 md:px-9 md:py-9">
         <LessonBlocks blocks={lesson.blocks} />
       </article>
 
-      <div className="flex items-center justify-between gap-3">
+      <div className="mx-auto flex max-w-[980px] items-center justify-between gap-3">
         {prev ? (
           <button
             type="button"
@@ -104,7 +104,7 @@ export function TopicPage({
       <button
         type="button"
         onClick={() => go({ kind: "quiz", courseId, sectionId })}
-        className="w-full rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 py-4 text-[16px] font-bold text-white shadow-lg shadow-emerald-500/25 transition-transform hover:scale-[1.01] active:scale-[0.99]"
+        className="mx-auto max-w-[980px] w-full rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 py-4 text-[16px] font-bold text-white shadow-lg shadow-emerald-500/25 transition-transform hover:scale-[1.01] active:scale-[0.99]"
       >
         开始随堂考核({section.title})
       </button>

@@ -32,7 +32,7 @@ export default function App() {
   return (
     <div className="min-h-screen">
       <header className="glass-nav sticky top-0 z-20 border-b border-black/5">
-        <div className="mx-auto flex h-14 max-w-6xl items-center gap-2 px-5">
+        <div className="mx-auto flex h-14 max-w-[1500px] items-center gap-2 px-5">
           <img src="/icon.svg" alt="" width={30} height={30} className="rounded-lg" />
           <span className="mr-2 text-[15px] font-bold">软考</span>
           <button type="button" className={navBtn(view.kind === "home")} onClick={() => setView({ kind: "home" })}>
@@ -59,7 +59,7 @@ export default function App() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-5 pb-16">
+      <main className="mx-auto max-w-[1500px] px-5 pb-16">
         {view.kind === "home" && <HomePage go={setView} />}
         {view.kind === "course" && <CoursePage courseId={view.courseId} go={setView} />}
         {view.kind === "topic" && (
