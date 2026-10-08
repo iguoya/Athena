@@ -1,0 +1,490 @@
+{
+  "id": "past-exam-201711",
+  "title": "201711软设上午真题",
+  "year": 2017,
+  "session": "下半年",
+  "subject": "综合知识",
+  "source_note": "软考真题电子书(qicoder)整理,题目与答案 verbatim",
+  "source_ref": {
+    "relation": "verbatim",
+    "sourceId": "past-exam-web-qicoder",
+    "locator": "notes/201711软设上午真题.html"
+  },
+  "questions": [
+    {
+      "id": "past-exam-201711.q3",
+      "no": 3,
+      "stem": "内存按字节编址。若用存储容量为32K×8bit的存储器芯片构成地址从A0000H到DFFFFH的内存，则至少需要（ ）片芯片。",
+      "options": [
+        "4",
+        "8",
+        "16",
+        "32"
+      ],
+      "answer": 1,
+      "explanation": "地址范围内的存储单元个数：DFFFFH – A0000H + 1 = 40000H=4×164=218； 按字节编址则存储容量为218B； 所选芯片单位容量：32K×8bit=32KB=25×210B=215B； 需要芯片数量=总容量/单位容量=218B/215B=23=8片。",
+      "knowledge": "计算机组成与体系结构>主存编址计算",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 3 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q4",
+      "no": 4,
+      "stem": "计算机系统的主存主要是由（ ）构成的。",
+      "options": [
+        "DRAM",
+        "SRAM",
+        "Cache",
+        "EEPROM"
+      ],
+      "answer": 0,
+      "explanation": "DRAM：动态随机存取存储器； SRAM: 静态随机存取存储器； Cache: 高速缓存； EEPROM: 电可擦可编程只读存储器。",
+      "knowledge": "计算机组成与体系结构>层次化存储体系",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 4 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q6",
+      "no": 6,
+      "stem": "计算机运行过程中，CPU需要与外设进行数据交换。采用（ ）控制技术时，CPU与外设可并行工作。",
+      "options": [
+        "程序查询方式和中断方式",
+        "中断方式和DMA方式",
+        "程序查询方式和DMA方式",
+        "程序查询方式、中断方式和DMA方式"
+      ],
+      "answer": 1,
+      "explanation": "程序控制（查询）方式：CPU需要不断查询I/O是否完成，因此一直占用CPU。 程序中断方式：与程序控制方式相比，中断方式因为CPU无需等待而提高了传输请求的响应速度。 DMA方式：DMA方式是为了在主存与外设之间实现高速、批量数据交换而设置的。DMA方式比程序控制方式与中断方式都高效。CPU只负责初始化，不参与具体传输过程。 本题DMA和程序中断方式，是可以让外设与CPU并行的。",
+      "knowledge": "计算机组成与体系结构>输入/输出技术",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 6 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q8",
+      "no": 8,
+      "stem": "下列攻击行为中，属于典型被动攻击的是（ ）。",
+      "options": [
+        "拒绝服务攻击",
+        "会话拦截",
+        "系统干涉",
+        "修改数据命令"
+      ],
+      "answer": 2,
+      "explanation": "A选项拒绝服务（DOS）： 对信息或其它资源的合法访问被无条件地阻止。 B选项会话拦截：未授权使用一个已经建立的会话。D选项修改数据命令：截获并修改网络中传输的数据命令。ABD为主动攻击。 C选项系统干涉：指的是攻击者获取系统访问权，从而干涉系统的正常运行，一般可以归于被动攻击。",
+      "knowledge": "信息安全>网络攻击",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 8 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q9",
+      "no": 9,
+      "stem": "（ ）不属于入侵检测技术。",
+      "options": [
+        "专家系统",
+        "模型检测",
+        "简单匹配",
+        "漏洞扫描"
+      ],
+      "answer": 3,
+      "explanation": "漏洞扫描为另一种安全防护策略。",
+      "knowledge": "信息安全>其他网络安全控制技术",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 9 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q12",
+      "no": 12,
+      "stem": "《中华人民共和国商标法》规定了申请注册的商标不得使用的文字和图形，其中包括县级以上行政区的地名（文字）。以下商标注册申请，经审查，能获准注册的商标是（ ）。",
+      "options": [
+        "青岛（市）",
+        "黄山（市）",
+        "海口（市）",
+        "长沙（市）"
+      ],
+      "answer": 1,
+      "explanation": "《中华人民共和国商标法》第8条规定了以下几种禁止用作商标的文字、图形：①同中华人民共和国的国家名称、国旗、国徽、军旗、勋章相同或者近似的文字、图形；②同外国的国家名称、国旗、国徽、军旗相同或者近似的文字、图形；③同政府间国际组织的旗帜、徽记、名称相同或者近似的文字、图形；④同“红十字”、“红新月”的标志、名称相同或者近似的文字、图形；⑤本商品的通用名称和图形；⑥直接表示商品的质量、主要原料、功能、用途、重量、数量及其他特点的文字、图形；⑦带有民族歧视性的文字、图形；⑧夸大宣传并带有欺骗性的文字、图形；⑨有害于社会主义道德风尚或者有其他不良影响的文字、图形；⑩县级以上行政区划的地名或公众知晓的外国地名。但是，地名具有其他含义的除外，已经注册的使用地名的商标继续有效。 本题黄山具有其他含义。",
+      "knowledge": "法律法规与标准化>保护范围与对象",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 12 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q13",
+      "no": 13,
+      "stem": "李某购买了一张有注册商标的应用软件光盘，则李某享有（ ）。",
+      "options": [
+        "注册商标专用权",
+        "该光盘的所有权",
+        "该软件的著作权",
+        "该软件的所有权"
+      ],
+      "answer": 1,
+      "explanation": "具有使用权、所有权。",
+      "knowledge": "法律法规与标准化>保护范围与对象",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 13 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q19",
+      "no": 19,
+      "stem": "将高级语言源程序通过编译或解释方式进行翻译时，可以先生成与源程序等价的某种中间代码。以下关于中间代码的叙述中，正确的是（ ）。",
+      "options": [
+        "中间代码常采用符号表来表示",
+        "后缀式和三地址码是常用的中间代码",
+        "对中间代码进行优化要依据运行程序的机器特性",
+        "中间代码不能跨平台"
+      ],
+      "answer": 1,
+      "explanation": "后缀和三地址码是常用的中间代码， CD与具体的机器无关。",
+      "knowledge": "程序设计语言基础>中间代码",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 19 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q22",
+      "no": 22,
+      "stem": "某文件系统采用多级索引结构。若磁盘块的大小为1K字节，每个块号占3字节，那么采用二级索引时的文件最大长度为（ ）K字节。",
+      "options": [
+        "1024",
+        "2048",
+        "116281",
+        "232562"
+      ],
+      "answer": 2,
+      "explanation": "由题中磁盘块的大小为1K字节，每个块号占3字节可知，一个磁盘块有1024/3个块号，即每块能存储1024/3个地址，采用二级间接地址索引，可得2级间接地址索引的地址大小为(1024/3)× (1024/3)×1KB。",
+      "knowledge": "操作系统>索引文件",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 22 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q27",
+      "no": 27,
+      "stem": "以下关于管道过滤器体系结构的叙述中，不正确的是（ ）。",
+      "options": [
+        "软件构件具有良好的高内聚、低耦合的特点",
+        "支持重用",
+        "支持并行执行",
+        "提高性能"
+      ],
+      "answer": 3,
+      "explanation": "管道过滤器风格具有许多很好的特点： （1）使得软件构件具有良好的隐蔽性和高内聚、低耦合的特点； （2）允许设计者将整个系统的输入/输出行为看成是多个过滤器的行为的简单合成； （3）支持软件重用； （4）支持并行执行； （5）允许对一些如吞吐量、死锁等属性的分析。 不能提高性能。",
+      "knowledge": "软件工程>架构设计",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 27 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q28",
+      "no": 28,
+      "stem": "模块A将学生信息，即学生姓名、学号、手机号等放到一个结构体中，传递给模块B。模块A和B之间的耦合类型为（ ）耦合。",
+      "options": [
+        "数据",
+        "标记",
+        "控制",
+        "内容"
+      ],
+      "answer": 1,
+      "explanation": "数据耦合：两个模块彼此间通过数据参数交换信息。 标记耦合：一组模块通过参数表传递记录信息，这个记录是某一个数据结构的子结构，而不是简单变量。 控制耦合：两个模块彼此间传递的信息中有控制信息。 内容耦合：一个模块需要涉及到另一个模块的内部信息。 本题应该选择B选项。",
+      "knowledge": "软件工程>耦合性",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 28 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q30",
+      "no": 30,
+      "stem": "系统交付用户使用后，为了改进系统的图形输出而对系统进行修改的维护行为属于（ ）维护。",
+      "options": [
+        "改正性",
+        "适应性",
+        "改善性",
+        "预防性"
+      ],
+      "answer": 2,
+      "explanation": "改善系统的功能和性能。",
+      "knowledge": "软件工程>软件维护类型",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 30 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q33",
+      "no": 33,
+      "stem": "面向对象分析过程中，从给定需求描述中选择（ ）来识别对象。",
+      "options": [
+        "动词短语",
+        "名词短语",
+        "形容词",
+        "副词"
+      ],
+      "answer": 1,
+      "explanation": "名词短语暗示类及其属性 动词和动词短语暗示对职责或操作。",
+      "knowledge": "面向对象技术>面向对象开发各阶段划分及任务",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 33 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q38",
+      "no": 38,
+      "stem": "函数main()、f()的定义如下所示。调用函数f()时，第一个参数采用传值（call by value）方式，第二个参数采用传引用（call by reference）方式，则函数main()执行后输出的值为（ ）。",
+      "options": [
+        "10",
+        "19",
+        "20",
+        "29"
+      ],
+      "answer": 3,
+      "explanation": "传值调用中，形参取的是实参的值，形参的改变不会导致调用点所传的实参的值发生改变；而引用（传址）调用中，形参取的是实参的地址，即相当于实参存储单元的地址引用，因此其值的改变同时就改变了实参的值。 x = 2*10-1=19； a是引用传递，所以a=a+x=10+19=29，结果为29。",
+      "knowledge": "程序设计语言基础>传值与传址",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 38 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q39",
+      "no": 39,
+      "stem": "采用三级结构/两级映像的数据库体系结构，如果对数据库的一张表创建聚簇索引，改变的是数据库的（ ）。",
+      "options": [
+        "用户模式",
+        "外模式",
+        "模式",
+        "内模式"
+      ],
+      "answer": 3,
+      "explanation": "对表的操作是模式级进行的操作，创建索引是内模式。AB是同一个概念。",
+      "knowledge": "数据库系统>数据库三级模式结构",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 39 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q42",
+      "no": 42,
+      "stem": "在基于Web 的电子商务应用中，访问存储于数据库中的业务对象的常用方式之一是（ ）。",
+      "options": [
+        "JDBC",
+        "XML",
+        "CGI",
+        "COM"
+      ],
+      "answer": 0,
+      "explanation": "数据库访问是JDBC（Java Database Connectivity,java数据库连接）。",
+      "knowledge": "软件工程>其它",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 42 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q43",
+      "no": 43,
+      "stem": "设S 是一个长度为n的非空字符串，其中的字符各不相同，则其互异的非平凡子串（非空且不同于S本身）个数为（ ）。",
+      "options": [
+        "2n-1",
+        "n²",
+        "n(n+1)/2",
+        "(n+2) (n-1)/2"
+      ],
+      "answer": 3,
+      "explanation": "比如S字串为“abcdefg”，长度为7，则S中的包含的互不相同的字串有如下一些： 1.长度为6的个数为2：“abcdef”和“bcdefg” 2.长度为5的个数为3：“abcde”,“bcdef”,“cdefg” . 3.长度为1的个数为7：“a”,“b”,“c”,“d”,“e”,“f”,“g” 个数总和就是2+3+4+5+6+7 =（2+7）×（7-2+1）/2 同理，字符串长度为n，一个字符的字符串个数为n，除原字符串外最长的字符串为n-1个字符，个数有2个，按照推理，共有：2+3+……+n=（2+n）（n-1）/2个。 其中： 等差数列{an}的通项公式为：an=a1+(n-1)d。 前n项和公式为：Sn=n×a1+n(n-1)d/2或Sn=n(a1+an)/2。",
+      "knowledge": "数据结构与算法基础>字符串",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 43 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q44",
+      "no": 44,
+      "stem": "假设某消息中只包含7个字符{a，b，c，d，e，f，g}，这7个字符在消息中出现的次数为{5，24，8，17，34，4，13}，利用哈夫曼树（最优二叉树）为该消息中的字符构造符合前缀编码要求的不等长编码。各字符的编码长度分别为（ ）。",
+      "options": [
+        "a:4，b:2，c:3，d:3，e:2，f:4，g:3",
+        "a:6，b:2，c:5，d:3，e:1，f:6，g:4",
+        "a:3，b:3，c:3，d:3，e:3，f:2，g:3",
+        "a:2，b:6，c:3，d:5，e:6，f:1，g:4"
+      ],
+      "answer": 0,
+      "explanation": "构造哈夫曼树有两种形式，能够找到符合选项的只有一种，如下所示：",
+      "knowledge": "数据结构与算法基础>最优二叉树（哈夫曼树）",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 44 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q45",
+      "no": 45,
+      "stem": "设某二叉树采用二叉链表表示（即结点的两个指针分别指示左、右孩子）。当该二叉树包含k个结点时，其二叉链表结点中必有（ ）个空的孩子指针。",
+      "options": [
+        "k-1",
+        "k",
+        "k+1",
+        "2k"
+      ],
+      "answer": 2,
+      "explanation": "二叉树的二叉链表存储结构中每个结点有2个指针。每个结点有0个、1个或者2个空指针对应有2个、1个、0个非空指针。 二叉树中边的个数等于非空指针的个数。 假设二叉树中节点的总个数为N 假设二叉树中边的个数为M 假设二叉树中度为0的结点的个数为n0 假设二叉树中度为1的结点的个数为n1 假设二叉树中度为2的结点的个数为n2 所以有 n0+n1+n2=N -------------（1） 二叉树中除了根结点之外，其他的结点都有一条便进入该结点，所以二叉树中边的总个数为M=N-1；-------（2） 又 M=n1+2×n2;-------------------------（3） 所以由 （1）（2）（3）可得 n0=n2+1;--------------------（4） 设空节点的 个数为 K，则K=2×n0+n1-------------------（5） 结合（1）（4）（5）可以得到 K=N+1（空指针的个数比结点总个数多1） 由（2）可以知道边数M=N-1；（二叉树的边数为结点个数减1） 由（4）可以知道度为0的结点的个数（叶子结点个数）=度为2的结点个数+1（n0=n2+1;）。",
+      "knowledge": "数据结构与算法基础>树与二叉树的特性",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 45 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q46",
+      "no": 46,
+      "stem": "以下关于无向连通图G 的叙述中，不正确的是（ ）。",
+      "options": [
+        "G中任意两个顶点之间均有边存在",
+        "G中任意两个顶点之间存在路径",
+        "从G中任意顶点出发可遍历图中所有顶点",
+        "G的邻接矩阵是对称矩阵"
+      ],
+      "answer": 0,
+      "explanation": "无向连通图不一定有边，但两个顶点之间有路径。",
+      "knowledge": "数据结构与算法基础>图的定义及存储",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 46 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q47",
+      "no": 47,
+      "stem": "两个递增序列A和B的长度分别为m和n（m<n且m与n接近），将二者归并为一个长度为m+n的递增序列。当关系为（ ）时，归并过程中元素的比较次数最少。",
+      "options": [
+        "a12m-1m12n-1n",
+        "b12n-1n12m-1m",
+        "a1122m-1m-1mmm+1n-1n",
+        "b12m-1m12m-1mm+1n-1n"
+      ],
+      "answer": 0,
+      "explanation": "对于本题，求解归并比较次数最少。可分为3种情况： 1）A[m]数值全小于B[n]，取A[1] 2）A[m]数值全大于B[n]，取B[1] 3）A[m]数值与B[n]数值大小交叉，则归并排序过程，对于R[1]~R[k]位置上数值的确定会比较>=1次，最终复制剩余序列时，长度也会小于m（因为交叉排序，有部分序列会经过比较插入结果数列），此时复制序列所缩减的比较次数会体现在前面交叉排序的过程中，总的比较次数会较大。 因此，比较次数最少的情况是第一种A[m]数值全小于B[n]。",
+      "knowledge": "数据结构与算法基础>排序",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 47 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q50",
+      "no": 50,
+      "stem": "相比于TCP ，UDP的优势为（ ）。",
+      "options": [
+        "可靠传输",
+        "开销较小",
+        "拥塞控制",
+        "流量控制"
+      ],
+      "answer": 1,
+      "explanation": "TCP与UDP区别：1、TCP面向连接（如打电话要先拨号建立连接）；UDP是无连接的，即发送数据之前不需要建立连接；2、TCP提供可靠的服务。也就是说，通过TCP连接传送的数据，无差错，不丢失，不重复，且按序到达；UDP尽最大努力交付，即不保证可靠交付；3、TCP面向字节流，实际上是TCP把数据看成一连串无结构的字节流；UDP是面向报文的；UDP没有拥塞控制，因此网络出现拥塞不会使源主机的发送速率降低（对实时应用很有用，如IP电话，实时视频会议等）；4、每一条TCP连接只能是点到点的；UDP支持一对一，一对多，多对一和多对多的交互通信；5、TCP首部开销20字节；UDP的首部开销小，只有8个字节；6、TCP的逻辑通信信道是全双工的可靠信道，UDP则是不可靠信道，整体来看UDP开销较小。",
+      "knowledge": "计算机网络>TCP与UDP",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 50 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q51",
+      "no": 51,
+      "stem": "若一台服务器只开放了25和110两个端口，那么这台服务器可以提供（ ）服务。",
+      "options": [
+        "E-Mail",
+        "WEB",
+        "DNS",
+        "FTP"
+      ],
+      "answer": 0,
+      "explanation": "25端口为SMTP（Simple Mail Transfer Protocol，简单邮件传输协议）服务器所开放，主要用于发送邮件。110端口为POP3（Post Office Protocol - Version 3，邮件协议版本3）负责邮件收取。",
+      "knowledge": "计算机网络>常见TCP/IP协议基础",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 51 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q53",
+      "no": 53,
+      "stem": "在一台安装好TCP/IP协议的计算机上，当网络连接不可用时，为了测试编写好的网络程序，通常使用的目的主机IP地址为（ ）。",
+      "options": [
+        "0.0.0.0",
+        "127.0.0.1",
+        "10.0.0.1",
+        "210.225.21.255/24"
+      ],
+      "answer": 1,
+      "explanation": "127.0.0.1是回送地址，指本地机，一般用来测试使用。回送地址（127.x.x.x）是本机回送地址（Loopback Address）， 即主机IP堆栈内部的IP地址，主要用于网络软件测试以及本地机进程间通信，无论什么程序，一旦使用回送地址发送数据， 协议软件立即返回，不进行任何网络传输。",
+      "knowledge": "计算机网络>IP地址分类与特殊的IP地址",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 53 题"
+      }
+    },
+    {
+      "id": "past-exam-201711.q54",
+      "no": 54,
+      "stem": "测试网络连通性通常采用的命令是（ ）。",
+      "options": [
+        "Netstat",
+        "Ping",
+        "Msconfig",
+        "Cmd"
+      ],
+      "answer": 1,
+      "explanation": "Ping是Windows、Unix和Linux系统下的一个命令。ping也属于一个通信协议，是TCP/IP协议的一部分。利用“ping”命令可以检查网络是否连通，可以很好地帮助我们分析和判定网络故障。",
+      "knowledge": "计算机网络>网络故障诊断及常用命令",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201711 第 54 题"
+      }
+    }
+  ]
+}

@@ -1,0 +1,452 @@
+{
+  "id": "past-exam-201605",
+  "title": "201605软设上午真题",
+  "year": 2016,
+  "session": "上半年",
+  "subject": "综合知识",
+  "source_note": "软考真题电子书(qicoder)整理,题目与答案 verbatim",
+  "source_ref": {
+    "relation": "verbatim",
+    "sourceId": "past-exam-web-qicoder",
+    "locator": "notes/201605软设上午真题.html"
+  },
+  "questions": [
+    {
+      "id": "past-exam-201605.q3",
+      "no": 3,
+      "stem": "如果“2X”的补码是“90H”，那么X的真值是（ ）。",
+      "options": [
+        "72",
+        "-56",
+        "56",
+        "111"
+      ],
+      "answer": 1,
+      "explanation": "90H 即为二进制的：10010000。说明此数为负数，其反码为：1000 1111，其原码为：1111 0000，即－112，2X=－112，所以X=-56。",
+      "knowledge": "计算机组成与体系结构>进制转换",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 3 题"
+      }
+    },
+    {
+      "id": "past-exam-201605.q5",
+      "no": 5,
+      "stem": "内存按字节编址，从A1000H到B13FFH的区域的存储容量为（ ）KB。",
+      "options": [
+        "32",
+        "34",
+        "65",
+        "67"
+      ],
+      "answer": 2,
+      "explanation": "题干指出本题为按字节编址，因此每个存储单元对应1B容量。 而地址范围内的存储单元个数为：（B13FF-A1000H+1）/1024=65K。（注意单位转换为K） 对应存储容量为65KB。",
+      "knowledge": "计算机组成与体系结构>主存编址计算",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 5 题"
+      }
+    },
+    {
+      "id": "past-exam-201605.q9",
+      "no": 9,
+      "stem": "为了攻击远程主机，通常利用（ ）技术检测远程主机状态。",
+      "options": [
+        "病毒查杀",
+        "端口扫描",
+        "QQ聊天",
+        "身份认证"
+      ],
+      "answer": 1,
+      "explanation": "端口扫描器通过选用远程 TCP/IP不同的端口的服务，并记录目标给予的回答，通过这种方法，可以搜集到很多关于目标主机的各种有用的信息。",
+      "knowledge": "信息安全>网络攻击",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 9 题"
+      }
+    },
+    {
+      "id": "past-exam-201605.q10",
+      "no": 10,
+      "stem": "某软件公司参与开发管理系统软件的程序员张某，辞职到另一公司任职，于是该项目负责人将该管理系统软件上开发者的署名更改为李某（接张某工作）。该项目负责人的行为（ ）。",
+      "options": [
+        "侵犯了张某开发者身份权（署名权）",
+        "不构成侵权，因为程序员张某不是软件著作权人",
+        "只是行使管理者的权利，不构成侵权",
+        "不构成侵权，因为程序员张某现已不是项目组成员"
+      ],
+      "answer": 0,
+      "explanation": "根据《中华人民共和国著作权法》第9条和《计算机软件保护条例》第8条的规定，软件著作权人享有发表权和开发者身份权，这两项权利与著作权人的人身是不可分离的主体。其中，开发者的身份权，不随软件开发者的消亡而丧失，且无时间限制。张某参加某软件公司开发管理系统软件的工作，属于职务行为，该管理系统软件的著作权归属公司所有，但张某拥有该管理系统软件的署名权。而该项目负责人将作为软件系统开发者之一的张某的署名更改为他人，根据《计算机软件保护条例》第23条第4款的规定，项目负责人的行为侵犯了张某的开发者身份权及署名权。",
+      "knowledge": "法律法规与标准化>侵权判断",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 10 题"
+      }
+    },
+    {
+      "id": "past-exam-201605.q12",
+      "no": 12,
+      "stem": "以下媒体文件格式中，（ ）是视频文件格式。",
+      "options": [
+        "WAV",
+        "BMP",
+        "MP3",
+        "MOV"
+      ],
+      "answer": 3,
+      "explanation": "WAV为微软公司（Microsoft）开发的一种声音文件格式，它符合RIFF（Resource Interchange File Format）文件规范，用于保存Windows平台的音频信息资源，被Windows平台及其应用程序所广泛支持，该格式也支持MSADPCM，CCITT A LAW等多种压缩运算法，支持多种音频数字，取样频率和声道，标准格式化的WAV文件和CD格式一样，也是44.1K的取样频率，16位量化数字，因此在声音文件质量和CD相差无几。 BMP（全称Bitmap）是Windows操作系统中的标准图像文件格式，可以分成两类：设备相关位图（DDB）和设备无关位图（DIB），使用非常广。它采用位映射存储格式，除了图像深度可选以外，不采用其他任何压缩，因此，BMP文件所占用的空间很大。 MP3是一种音频压缩技术,其全称是动态影像专家压缩标准音频层面3（Moving Picture Experts Group Audio Layer III），简称为MP3。 MOV即QuickTime影片格式，它是Apple公司开发的一种音频、视频文件格式，用于存储常用数字媒体类型。",
+      "knowledge": "多媒体基础>多媒体技术基本概念",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 12 题"
+      }
+    },
+    {
+      "id": "past-exam-201605.q13",
+      "no": 13,
+      "stem": "以下软件产品中，属于图像编辑处理工具的软件是（ ）。",
+      "options": [
+        "Powerpoint",
+        "Photoshop",
+        "Premiere",
+        "Acrobat"
+      ],
+      "answer": 1,
+      "explanation": "Microsoft Office PowerPoint，是微软公司的演示文稿软件。用户可以在投影仪或者计算机上进行演示，也可以将演示文稿打印出来，制作成胶片，以便应用到更广泛的领域中。利用Microsoft Office PowerPoint不仅可以创建演示文稿，还可以在互联网上召开面对面会议、远程会议或在网上给观众展示演示文稿。 Adobe Photoshop，简称“PS”，是由Adobe Systems开发和发行的图像处理软件。Photoshop主要处理以像素所构成的数字图像。使用其众多的编修与绘图工具，可以有效地进行图片编辑工作。 一款常用的视频编辑软件，由Adobe公司推出。现在常用的有CS4、CS5、CS6、CC、CC 2014及CC 2015版本。是一款编辑画面质量比较好的软件，有较好的兼容性，且可以与Adobe公司推出的其他软件相互协作。目前这款软件广泛应用于广告制作和电视节目制作中。 Adobe Acrobat 是由Adobe公司开发的一款PDF（Portable Document Format，便携式文档格式）编辑软件，借助它，您可以以PDF格式制作和保存你的文档 ，以便于浏览和打印，或使用更高级的功能。",
+      "knowledge": "多媒体基础>多媒体技术基本概念",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 13 题"
+      }
+    },
+    {
+      "id": "past-exam-201605.q18",
+      "no": 18,
+      "stem": "以下关于高级程序设计语言实现的编译和解释方式的叙述中，正确的是（ ）。",
+      "options": [
+        "编译程序不参与用户程序的运行控制，而解释程序则参与",
+        "编译程序可以用高级语言编写，而解释程序只能用汇编语言编写",
+        "编译方式处理源程序时不进行优化，而解释方式则进行优化",
+        "编译方式不生成源程序的目标程序，而解释方式则生成"
+      ],
+      "answer": 0,
+      "explanation": "编译程序的功能是把用高级语言书写的源程序翻译成与之等价的目标程序。编译过程划分成词法分析、语法分析、语义分析、中间代码生成、代码优化和目标代码生成6个阶段。目标程序可以独立于源程序运行。 解释程序是一种语言处理程序，在词法、语法和语义分析方面与编译程序的工作原理基本相同，但在运行用户程序时，它是直接执行源程序或源程序的内部形式（中间代码）。因此，解释程序并不产生目标程序，这是它和编译程序的主要区别。",
+      "knowledge": "程序设计语言基础>编译与解释",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 18 题"
+      }
+    },
+    {
+      "id": "past-exam-201605.q20",
+      "no": 20,
+      "stem": "将高级语言源程序先转化为一种中间代码是现代编译器的常见处理方式。常用的中间代码有后缀式、（ ）、树等。",
+      "options": [
+        "前缀码",
+        "三地址码",
+        "符号表",
+        "补码和移码"
+      ],
+      "answer": 1,
+      "explanation": "中间代码的表达形式有语法树，后缀式，三地址代码。",
+      "knowledge": "程序设计语言基础>中间代码",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 20 题"
+      }
+    },
+    {
+      "id": "past-exam-201605.q21",
+      "no": 21,
+      "stem": "当用户通过键盘或鼠标进入某应用系统时，通常最先获得键盘或鼠标输入信息的是（ ）程序。",
+      "options": [
+        "命令解释",
+        "中断处理",
+        "用户登录",
+        "系统调用"
+      ],
+      "answer": 1,
+      "explanation": "",
+      "knowledge": "操作系统>I/O管理软件",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 21 题"
+      }
+    },
+    {
+      "id": "past-exam-201605.q22",
+      "no": 22,
+      "stem": "在Windows操作系统中，当用户双击“IMG_20160122_103.jpg”文件名时，系统会自动通过建立的（ ）来决定使用什么程序打开该图像文件。",
+      "options": [
+        "文件",
+        "文件关联",
+        "文件目录",
+        "临时文件"
+      ],
+      "answer": 1,
+      "explanation": "本题考查Windows操作系统文件管理方面的基础知识。 当用户双击一个文件名时，Windows系统通过建立的文件关联来决定使用什么程序打开该文件。例如系统建立了“记事本”或“写字板”程序打开扩展名为.TXT的文件关联，那么当用户双击Wang.TXT文件时，Windows先执行“记事本”或“写字板”程序，然后打开Wang．TXT文件。",
+      "knowledge": "操作系统>文件相关概念",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 22 题"
+      }
+    },
+    {
+      "id": "past-exam-201605.q23",
+      "no": 23,
+      "stem": "某磁盘有100个磁道，磁头从一个磁道移至另一个磁道需要6ms。文件在磁盘上非连续存放，逻辑上相邻数据块的平均距离为10个磁道，每块的旋转延迟时间及传输时间分别为100ms和20ms，则读取一个100块的文件需要（ ）ms。",
+      "options": [
+        "12060",
+        "12600",
+        "18000",
+        "186000"
+      ],
+      "answer": 2,
+      "explanation": "存取时间=寻道时间+等待时间，寻道时间是指磁头移动到磁道所需的时间；等待时间为等待读写的扇区转到磁头下方所用的旋转延迟时间。 本题存取时间如下：寻道时间为6×10，等待时间为100；数据传输时间为20。则读取100个数据块，需要时间为： （6×10+100+20）×100=18000",
+      "knowledge": "操作系统>磁盘管理",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 23 题"
+      }
+    },
+    {
+      "id": "past-exam-201605.q25",
+      "no": 25,
+      "stem": "如下图所示，模块A和模块B都访问相同的全局变量和数据结构，则这两个模块之间的耦合类型为（ ）耦合。",
+      "options": [
+        "公共",
+        "控制",
+        "标记",
+        "数据"
+      ],
+      "answer": 0,
+      "explanation": "公共耦合指通过一个公共数据环境相互作用的那些模块间的耦合。 控制耦合：两个模块彼此间传递的信息中有控制信息。 数据耦合：两个模块彼此间通过数据参数交换信息。 标记耦合：一组模块通过参数表传递记录信息，这个记录是某一个数据结构的子结构，而不是简单变量。 本题应该选择A选项公共耦合。",
+      "knowledge": "软件工程>耦合性",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 25 题"
+      }
+    },
+    {
+      "id": "past-exam-201605.q30",
+      "no": 30,
+      "stem": "采用McCabe度量法计算下图所示程序的环路复杂性为（ ）。",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "answer": 2,
+      "explanation": "环形复杂度V（G）=E-N+2，其中，E是流图中边的条数，N是结点数。 V（G）=E-N+2=11-10+2=3。",
+      "knowledge": "软件工程>McCabe复杂度计算",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 30 题"
+      }
+    },
+    {
+      "id": "past-exam-201605.q35",
+      "no": 35,
+      "stem": "为图形用户界面（GUI）组件定义不同平台的并行类层次结构，适合采用（ ）模式。",
+      "options": [
+        "享元（Flyweight）",
+        "抽象工厂（Abstract Factory）",
+        "外观（Facade））",
+        "装饰器（Decorator）"
+      ],
+      "answer": 1,
+      "explanation": "抽象工厂模式（Abstract Factory）：提供一个接口，可以创建一系列相关或相互依赖的对象，而无需指定它们具体的类。 享元模式（Flyweight）：提供支持大量细粒度对象共享的有效方法。 装饰模式（Decorator）：动态地给一个对象添加一些额外的职责。它提供了用子类扩展功能的一个灵活的替代，比派生一个子类更加灵活。 外观模式（Facade）：定义一个高层接口，为子系统中的一组接口提供一个一致的外观，从而简化了该子系统的使用。 本题是针对不同的平台定义一系列的组件，因此，选择抽象工厂模式。",
+      "knowledge": "面向对象技术>设计模式的应用场景",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 35 题"
+      }
+    },
+    {
+      "id": "past-exam-201605.q38",
+      "no": 38,
+      "stem": "因使用大量的对象而造成很大的存储开销时，适合采用（ ）模式进行对象共享，以减少对象数量从而达到较少的内存占用并提升性能。",
+      "options": [
+        "组合（Composite）",
+        "享元（Flyweight）",
+        "迭代器（Iterator）",
+        "备忘（Memento）"
+      ],
+      "answer": 1,
+      "explanation": "享元模式提供支持大量细粒度对象共享的有效方法。 组合模式（Composite）：将对象组合成树型结构以表示“整体-部分”的层次结构，使得用户对单个对象和组合对象的使用具有一致性。 迭代器模式（Iterator）：提供一种方法来顺序访问一个聚合对象中的各个元素，而不需要暴露该对象的内部表示。备忘录模式（Memento）在不破坏封装性的前提下，捕获一个对象的内部状态，并在该对象之外保存这个状态，从而可以在以后将该对象恢复到原先保存的状态。",
+      "knowledge": "面向对象技术>设计模式的应用场景",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 38 题"
+      }
+    },
+    {
+      "id": "past-exam-201605.q39",
+      "no": 39,
+      "stem": "移进-归约分析法是编译程序（或解释程序）对高级语言源程序进行语法分析的一种方法，属于（ ）的语法分析方法。",
+      "options": [
+        "自顶向下（或自上而下）",
+        "自底向上（或自下而上）",
+        "自左向右",
+        "自右向左"
+      ],
+      "answer": 1,
+      "explanation": "归约分析是自底向上方法中的典型。先分析词，即词法分析。而分析词的组合，即语法分析。",
+      "knowledge": "程序设计语言基础>编译器工作过程",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 39 题"
+      }
+    },
+    {
+      "id": "past-exam-201605.q40",
+      "no": 40,
+      "stem": "某确定的有限自动机（DFA）的状态转换图如下图所示（A是初态，C是终态），则该DFA能识别（ ）。",
+      "options": [
+        "aabb",
+        "abab",
+        "baba",
+        "abba"
+      ],
+      "answer": 1,
+      "explanation": "对于该有限自动机，A为初态，C为终态，因此能识别的串一定是a开始b结束的串，可以排除C、D选项。 并且，对于该自动机能识别的串，经过初始a到达B状态后，只能识别b字符，因此A选项也错误。 本题只能选择D选项abab，识别顺序如下图所示：",
+      "knowledge": "程序设计语言基础>有限自动机",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 40 题"
+      }
+    },
+    {
+      "id": "past-exam-201605.q44",
+      "no": 44,
+      "stem": "若给定的关系模式为R，U={A，B，C}，F = {AB→C，C→B}，则关系R（ ）。",
+      "options": [
+        "有2个候选关键字AC和BC，并且有3个主属性",
+        "有2个候选关键字AC和AB，并且有3个主属性",
+        "只有一个候选关键字AC，并且有1个非主属性和2个主属性",
+        "只有一个候选关键字AB，并且有1个非主属性和2个主属性"
+      ],
+      "answer": 1,
+      "explanation": "将本题关系模式R的函数依赖关系表达为图示为：",
+      "knowledge": "数据库系统>规范化理论基本概念",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 44 题"
+      }
+    },
+    {
+      "id": "past-exam-201605.q46",
+      "no": 46,
+      "stem": "若元素以a，b，c，d，e的顺序进入一个初始为空的栈中，每个元素进栈、出栈各1次，要求出栈的第一个元素为d，则合法的出栈序列共有（ ）种。",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "24"
+      ],
+      "answer": 0,
+      "explanation": "一共5个元素a，b，c，d，e，而d被要求作为第一个元素出栈。当d出栈后的情况应为： 有一个元素e还未入栈，而栈中已有a，b，c。栈中的a，b，c出栈顺序是已无可变性，必须是：c，b，a，此时，只是分析e在什么位置出栈即可。 c，b，a，三个元素，有四个空位，所以可以产生的序列可能为： （1）d，e，c，b，a （2）d，c，e，b，a （3）d，c，b，e，a （4）d，c，b，a，e",
+      "knowledge": "数据结构与算法基础>队列与栈",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 46 题"
+      }
+    },
+    {
+      "id": "past-exam-201605.q47",
+      "no": 47,
+      "stem": "设有二叉排序树（或二叉查找树）如下图所示，建立该二叉树的关键码序列不可能是（ ）。",
+      "options": [
+        "23 31 17 19 11 27 13 90 61",
+        "23 17 19 31 27 90 61 11 13",
+        "23 17 27 19 31 13 11 90 61",
+        "23 31 90 61 27 17 19 11 13"
+      ],
+      "answer": 2,
+      "explanation": "本题考查的是二叉排序树的构造过程。构造时，是按给出的关键字序列依次进行构造的。本题由于C序列，在构造过程中，关键字23出现时直接作为根结点，接着输入17，比较后作为左子树根结点，然后输入的是27，此时，27比较后作为右子树的根结点，与题干图示的位置不符，因此C选项错误。",
+      "knowledge": "数据结构与算法基础>二叉排序树",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 47 题"
+      }
+    },
+    {
+      "id": "past-exam-201605.q50",
+      "no": 50,
+      "stem": "以下关于图的遍历的叙述中，正确的是（ ）。",
+      "options": [
+        "图的遍历是从给定的源点出发对每一个顶点仅访问一次的过程",
+        "图的深度优先遍历方法不适用于无向图",
+        "使用队列对图进行广度优先遍历",
+        "图中有回路时则无法进行遍历"
+      ],
+      "answer": 2,
+      "explanation": "图的遍历是指，从某一个顶点出发，沿着某条搜索路径对图中的所有顶点进行访问且仅访问一次的过程，所以回路不影响遍历，D选项错误。这里的访问是沿着某条搜索路径，并不是任意的。A选项错误。图的深度优先可以用于有向图，也可以用于无向图，B选项错误。广度优先遍历的特点是尽可能横向搜索，即最先访问的顶点的邻接顶点也先被访问。为此，引入队列来保存，能够先进先出，即当一个顶点被访问后，就将其放入队中，当队头顶点出队时，就访问其未被访问的邻接顶点并让这些顶点入队。队列的特点是先进先出，广度优先刚好合适， C选项正确。",
+      "knowledge": "数据结构与算法基础>图的遍历",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 50 题"
+      }
+    },
+    {
+      "id": "past-exam-201605.q53",
+      "no": 53,
+      "stem": "使用ping命令可以进行网络检测，在进行一系列检测时，按照由近及远原则，首先执行的是（ ）。",
+      "options": [
+        "ping默认网关",
+        "ping本地IP",
+        "ping127.0.0.1",
+        "ping远程主机"
+      ],
+      "answer": 2,
+      "explanation": "检查错误时，使用由近及远的原则意味着先要确认本机协议栈有没有问题，所以可以用ping127.0.0.1来检查本机TCP/IP协议栈，能PING通，说明本机协议栈无问题。",
+      "knowledge": "计算机网络>网络故障诊断及常用命令",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 53 题"
+      }
+    },
+    {
+      "id": "past-exam-201605.q55",
+      "no": 55,
+      "stem": "在下图的SNMP配置中，能够响应Manager2的getRequest请求的是（ ）。",
+      "options": [
+        "Agent1",
+        "Agent2",
+        "Agent3",
+        "Agent4"
+      ],
+      "answer": 0,
+      "explanation": "SNMP最重要的指导思想就是要尽可能的简单。其基本功能就包括监视网络性能、检测分析网络差错和配置网络设备等。在网络正常工作时，SNMP可实现统计、配置和测试等功能。当网络出现故障时，可实现各种差错检测和恢复功能。经过二十多年的使用，SNMP不断的修订完善，现在最新的版本是SNMPv3。其最大的改进就在于安全性。也就是说，只有被授权的人员才有资格执行网络管理的功能和读取有关网络管理的信息。 在SNMPv1版本，只验证团体名，在SNMP协议中，团体名相当于一个组，在进行管理时，是以团体名为单位进行管理的，其作用域也在相同团体名之内。属于同一团体的管理站和被管理站才能互相作用。 SNMP v1、SNMP v2C采用团体名（Community Name）认证，非设备认可团体名的SNMP报文将被丢弃。SNMP团体名用来定义SNMP NMS和SNMP Agent的关系。团体名起到了类似于密码的作用，可以限制SNMP NMS访问设备上的SNMP Agent。用户可以选择指定以下一个或者多个与团体名相关的特性： 1．定义团体名可以访问的MIB视图。 2．设置团体名对MIB对象的访问权限为读写权限（write）或者只读权限（read）。具有只读权限的团体名只能对设备信息进行查询，而具有读写权限的团体名还可以对设备进行配置。 3．设置团体名指定的基本访问控制列表。 本题中和Manager2在同一团体名中的只有Agent1。",
+      "knowledge": "计算机网络>协议应用提升",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-201605 第 55 题"
+      }
+    }
+  ]
+}

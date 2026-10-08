@@ -1,0 +1,851 @@
+{
+  "id": "past-exam-202005",
+  "title": "2020年软件设计师考试上午真题（专业解析+参考答案）",
+  "year": 2020,
+  "session": "上半年",
+  "subject": "综合知识",
+  "source_note": "软考真题电子书(qicoder)整理,题目与答案 verbatim",
+  "source_ref": {
+    "relation": "verbatim",
+    "sourceId": "past-exam-web-qicoder",
+    "locator": "notes/2020年软件设计师考试上午真题（专业解析+参考答案）.html"
+  },
+  "questions": [
+    {
+      "id": "past-exam-202005.q1",
+      "no": 1,
+      "stem": "在程序执行过程中，高速缓存（Cache）与主存间的地址映射由（ ）",
+      "options": [
+        "操作系统进行管理",
+        "存储管理软件进行管理",
+        "程序员自行安排",
+        "硬件自动完成"
+      ],
+      "answer": 3,
+      "explanation": "Cache的概念考查：Cache与主存地址映射由硬件完成。",
+      "knowledge": "计算机组成与体系结构>Cache",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 1 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q2",
+      "no": 2,
+      "stem": "计算机中提供指令地址的程序计数器PC在（ ）中。",
+      "options": [
+        "控制器",
+        "运算器",
+        "存储器",
+        "I/O设备"
+      ],
+      "answer": 0,
+      "explanation": "CPU子部件分类考查，PC是控制器中的子部件。",
+      "knowledge": "计算机组成与体系结构>CPU的组成（运算器与控制器）",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 2 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q3",
+      "no": 3,
+      "stem": "以下关于两个浮点数相加运算的叙述中，正确的是（ ）。",
+      "options": [
+        "首先进行对阶，阶码大的向阶码小的对齐",
+        "首先进行对阶，阶码小的向阶码大的对齐",
+        "不需要对阶，直接将尾数相加",
+        "不需要对阶，直接将阶码相加"
+      ],
+      "answer": 1,
+      "explanation": "浮点数运算的过程：对阶→尾数运算→规格化。 其中对阶的过程：小数向大数看齐，尾数右移。",
+      "knowledge": "计算机组成与体系结构>浮点数的表示",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 3 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q5",
+      "no": 5,
+      "stem": "中断向量提供（ ）。",
+      "options": [
+        "函数调用结束后的返回地址",
+        "I/O设备的接口地址",
+        "主程序的入口地址",
+        "中断服务程序入口地址"
+      ],
+      "answer": 3,
+      "explanation": "中断向量就是指中断服务程序的入口地址，它存放着一条跳转到中断服务程序入口地址的跳转指令。",
+      "knowledge": "计算机组成与体系结构>输入/输出技术",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 5 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q6",
+      "no": 6,
+      "stem": "以下关于认证和加密的叙述中，错误的是（ ）。",
+      "options": [
+        "加密用以确保数据的保密性",
+        "认证用以确保报文发送者和接收者的真实性",
+        "认证和加密都可以阻止对手进行被动攻击",
+        "身份认证的目的在于识别用户的合法性，阻止非法用户访问系统"
+      ],
+      "answer": 2,
+      "explanation": "认证一般有账户名/口令认证、使用摘要算法认证和基于PKI的认证。 认证只能阻止主动攻击，不能阻止被动攻击。",
+      "knowledge": "信息安全>信息摘要与数字签名",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 6 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q7",
+      "no": 7,
+      "stem": "访问控制是对信息系统资源进行保护的重要措施，适当的访问控制能够阻止未经授权的用户有意或者无意地获取资源。计算机系统中，访问控制的任务不包括（ ）。",
+      "options": [
+        "审计",
+        "授权",
+        "确定存取权限",
+        "实施存取权限"
+      ],
+      "answer": 0,
+      "explanation": "安全审计对主体访问和适用客体的情况进行记录和审查，以保证安全规则被正确执行，并帮助分析安全事故产生的原因。与访问控制无关。",
+      "knowledge": "信息安全>其他网络安全控制技术",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 7 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q8",
+      "no": 8,
+      "stem": "路由协议称为内部网关协议，自治系统之间的协议称为外部网关协议，以下属于外部网关协议的是（ ）。",
+      "options": [
+        "RIP",
+        "OSPF",
+        "BGP",
+        "UDP"
+      ],
+      "answer": 2,
+      "explanation": "RIP：RIP（Routing Information Protocol，路由信息协议）是一种内部网关协议（IGP），是一种动态路由选择协议，用于自治系统（AS）内的路由信息的传递。 OSPF：OSPF（Open Shortest Path First，开放式最短路径优先）是一个内部网关协议（Interior Gateway Protocol，简称IGP），用于在单一自治系统（autonomous system,AS）内决策路由。是对链路状态路由协议的一种实现，隶属内部网关协议（IGP），故运作于自治系统内部。 BGP：边界网关协议（BGP）是运行于 TCP 上的一种自治系统的路由协议。 BGP 是唯一一个用来处理像因特网大小的网络的协议，也是唯一能够妥善处理好不相关路由域间的多路连接的协议。 UDP：传输层协议。",
+      "knowledge": "计算机网络>路由配置",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 8 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q9",
+      "no": 9,
+      "stem": "所有资源只能由授权方或以授权的方式进行修改，即信息未经授权不能进行改变的特性是指信息的（ ）。",
+      "options": [
+        "完整性",
+        "可用性",
+        "保密性",
+        "不可抵赖性"
+      ],
+      "answer": 0,
+      "explanation": "数据的机密性（保密性）是指数据在传输过程中不能被非授权者偷看； 数据的完整性是指数据在传输过程中不能被非法篡改，本题涉及到修改的只有完整性； 数据的真实性（不可抵赖性）是指信息的发送者身份的确认或系统中有关主体的身份确认，这样可以保证信息的可信度； 可用性指的是发送者和接受者双方的通信方式正常。",
+      "knowledge": "信息安全>其它",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 9 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q10",
+      "no": 10,
+      "stem": "在Windows操作系统下，要获取某个网络开放端口所对应的应用程序信息，可以使用命令（ ）。",
+      "options": [
+        "ipconfig",
+        "traceroute",
+        "netstat",
+        "nslookup"
+      ],
+      "answer": 2,
+      "explanation": "ipconfig （ linux: ifconfig） （显示TCP/IP网络配置值，如：IP地址，MAC地址，网关地址等）。 tracert（linux: traceroute）：用于确定 IP数据包访问目标所采取的路径，若网络不通，能定位到具体哪个结点不通。 netstat：用于显示网络连接、路由表和网络接口信息。 nslookup（查询DNS记录）。",
+      "knowledge": "计算机网络>网络故障诊断及常用命令",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 10 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q11",
+      "no": 11,
+      "stem": "甲、 乙两个申请人分别就相同内容的计算机软件发明创造，向国务院专利行政部门门提出专利申请，甲先于乙一日提出，则（ ）。",
+      "options": [
+        "甲获得该项专利申请权",
+        "乙获得该项专利申请权",
+        "甲和乙都获得该项专利申请权",
+        "甲和乙都不能获得该项专利申请权"
+      ],
+      "answer": 0,
+      "explanation": "专利权是谁先申请则属于谁。",
+      "knowledge": "法律法规与标准化>知识产权人确定",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 11 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q12",
+      "no": 12,
+      "stem": "小王是某高校的非全日制在读研究生，目前在甲公司实习，负责了该公司某软件项目的开发工作并撰写相关的软件文档。以下叙述中，正确的是（ ）。",
+      "options": [
+        "该软件文档属于职务作品，但小王享有该软件著作权的全部权利",
+        "该软件文档属于职务作品，甲公司享有该软件著作权的全部权利",
+        "该软件文档不属于职务作品，小王享有该软件著作权的全部权利",
+        "该软件文档不属于职务作品，甲公司和小王共同享有该著作权的全部权利"
+      ],
+      "answer": 1,
+      "explanation": "本题是典型的职务作品，软件著作权属于公司所有。",
+      "knowledge": "法律法规与标准化>知识产权人确定",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 12 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q13",
+      "no": 13,
+      "stem": "按照我国著作权法的权利保护期，以下权利中，（ ）受到永久保护。",
+      "options": [
+        "发表权",
+        "修改权",
+        "复制权",
+        "发行权"
+      ],
+      "answer": 1,
+      "explanation": "著作权中修改权、署名权、保护作品完整权都是永久保护的。",
+      "knowledge": "法律法规与标准化>保护期限",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 13 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q14",
+      "no": 14,
+      "stem": "结构化分析方法中，数据流图中的元素在（ ）中进行定义。",
+      "options": [
+        "加工逻辑",
+        "实体联系图",
+        "流程图",
+        "数据字典"
+      ],
+      "answer": 3,
+      "explanation": "数据字典会对数据流图中元素进行定义说明。",
+      "knowledge": "软件工程>数据流图与数据字典",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 14 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q15",
+      "no": 15,
+      "stem": "良好的启发式设计原则上不包括（ ）。",
+      "options": [
+        "提高模块独立性",
+        "模块规模越小越好",
+        "模块作用域在其控制域之内",
+        "降低模块接口复杂性"
+      ],
+      "answer": 1,
+      "explanation": "1、模块化设计要求高内聚、低耦合，模块独立体现的就是高内聚低耦合。A选项正确。 2、在结构化设计中，系统由多个逻辑上相对独立的模块组成，在模块划分时需要遵循如下原则： （1）模块的大小要适中。系统分解时需要考虑模块的规模，过大的模块可能导致系统分解不充分，其内部可能包括不同类型的功能，需要进一步划分，尽量使得各个模块的功能单一；过小的模块将导致系统的复杂度增加，模块之间的调用过于频繁，反而降低了模块的独立性。不是越小越好。B选项错误。 （2）模块的扇入和扇出要合理。模块的扇入指模块直接上级模块的个数。模块的直属下级模块个数即为模块的扇出。 （3）深度和宽度适当。深度表示软件结构中模块的层数，如果层数过多，则应考虑是否有些模块设计过于简单，看能否适当合并。宽度是软件结构中同一个层次上的模块总数的最大值，一般说来，宽度越大系统越复杂，对宽度影响最大的因素是模块的扇出。在系统设计时，需要权衡系统的深度和宽度，尽量降低系统的复杂性，减少实施过程的难度，提高开发和维护的效率。需要控制模块接口的复杂性。D选项正确。 3、尽力使模块的作用域在其控制域之内。模块控制域：这个模块本身以及所有直接或间接从属于它的模块的集合。模块作用域：指受该模块内一个判定所影响的所有模块的集合。C选项正确。",
+      "knowledge": "软件工程>模块设计原则",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 15 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q17",
+      "no": 17,
+      "stem": "软件项目成本估算模型COCOM01I中，体系结构阶段模型基于（ ）进行估算。",
+      "options": [
+        "应用程序点数量",
+        "功能点数量",
+        "复用或生成的代码行数",
+        "源代码的行数"
+      ],
+      "answer": 3,
+      "explanation": "COCOMO II模型也需要使用规模估算信息，体系结构阶段，在模型层次结构中有3种不同规模估算选择，即：对象点、功能点和代码行。应用组装模型使用的是对象点；早期设计阶段模型使用的是功能点，功能点可以转换为代码行。体系结构模型把工作量表示为代码行数。",
+      "knowledge": "项目管理>软件项目估算",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 17 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q18",
+      "no": 18,
+      "stem": "某表达式的语法树如下图所示，其后缀式(逆波兰式)是（ ）。",
+      "options": [
+        "abcd-+*",
+        "ab-c+d*",
+        "abc-d*+",
+        "ab-cd+*"
+      ],
+      "answer": 2,
+      "explanation": "对图示的语法树做后序遍历即可，结果为C选项。",
+      "knowledge": "程序设计语言基础>后缀表达式",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 18 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q19",
+      "no": 19,
+      "stem": "用C/C++语言为某个应用编写的程序，经过（ ）后形成可执行程序。",
+      "options": [
+        "预处理、编译、汇编、链接",
+        "编译、预处理、汇编、链接",
+        "汇编、预处理、链接、编译",
+        "链接、预处理、编译、汇编"
+      ],
+      "answer": 0,
+      "explanation": "本题4个选项都不太恰当，对于编译型语言，处理过程为：预处理-编译-链接，没有汇编过程，对比来看，A选项最合适。",
+      "knowledge": "程序设计语言基础>编译与解释",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 19 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q20",
+      "no": 20,
+      "stem": "在程序的执行过程中，系统用（ ）实现嵌套调用（递归调用）函数的正确返回。",
+      "options": [
+        "队列",
+        "优先队列",
+        "栈",
+        "散列表"
+      ],
+      "answer": 2,
+      "explanation": "在递归调用中，需要在前期存储某些数据，并在后面又以存储的逆序恢复这些数据，以提供之后使用的需求，因此，需要用到栈来实现递归。简单的说，就是在前行阶段，对于每一层递归，函数的局部变量、参数值以及返回地址都被压入栈中。在退回阶段，位于栈顶的局部变量、参数值和返回地址被弹出，用于返回调用层次中执行代码的其余部分，也就是恢复了调用的状态。",
+      "knowledge": "程序设计语言基础>其它",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 20 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q21",
+      "no": 21,
+      "stem": "假设系统中有三个进程P1、P2和P3，两种资源R1、R2。如果进程资源图如图①和图②所示，那么（ ）。",
+      "options": [
+        "图①和图②都可化简",
+        "图①和图②都不可化简",
+        "图①可化简，图②不可化简",
+        "图①不可化简，图②可化简"
+      ],
+      "answer": 2,
+      "explanation": "图①当前状态下： R1：已分配2个，剩余1个。 R2：已分配3个，剩余0个。 P1：已获得1个R1，1个R2，无其他资源需求，可化简，化简后释放当前1个R1，1个R2。 P2：已获得1个R2，仍需2个R1，此时R1资源不足，P2是阻塞结点。等待P1释放后可化简。 P3：已获得1个R1，1个R2，仍需1个R2，此时R2资源不足，P3是阻塞结点。等待P1释放后可化简。 图②当前状态下： R1：已分配3个，剩余0个。 R2：已分配2个，剩余0个。 P1：已获得1个R1，仍需1个R2，此时R2资源不足，P1是阻塞结点。 P2：已获得1个R1，1个R2，仍需1个R1，此时R1资源不足，P2是阻塞结点。 P3：已获得1个R1，1个R2，仍需1个R2，此时R2资源不足，P3是阻塞结点。 所有结点均阻塞，无法化简。",
+      "knowledge": "操作系统>进程资源图",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 21 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q22",
+      "no": 22,
+      "stem": "假设计算机系统的页面大小为4K，进程P的页面变换表如下表所示。若P要动问的逻辑地址为十六进制3C20H，那么该逻辑地址经过地址变换后，其物理地址应为（ ）。",
+      "options": [
+        "2048H",
+        "3C20H",
+        "5C20H",
+        "6C20H"
+      ],
+      "answer": 3,
+      "explanation": "1、根据页面大小4K（=212）可知，页内地址长度需要12位二进制表示。 2、根据逻辑地址3C20H，其中第12位二进制为页内地址，即对应十六进制第3位C20H为页内地址，剩余高位3H为页号，转换为十进制结果为3。 3、查表可得，页号3对应的物理块号为6（即十六进制6H），再拼接原页内地址C20H，即为最终的物理地址6C20H。",
+      "knowledge": "操作系统>页式存储与页面置换",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 22 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q24",
+      "no": 24,
+      "stem": "假设系统有n (n≥5) 个进程共享资源R，且资源R的可用数为5。若采用PV操作，则相应的信号量S的取值范围应为（ ）。",
+      "options": [
+        "-1~n-1",
+        "-5~5",
+        "-(n-1)~1",
+        "-(n-5)~5"
+      ],
+      "answer": 3,
+      "explanation": "PV信息量的取值表示资源数，最大值为初始可用资源5； 当信号量取值小于0时，可表示排队进程数，此时n个进程，最大排队数为n-5，信号量最小取值为-（n-5）。 希赛点拨：资源数是5，被进程使用。没进程使用的时候，资源数是5，来一个进程使用，就是5-1，再来一个进程使用就是（5-1）-1，以此类推，当有n个进程使用时，就是5-n，也就是-（n-5）",
+      "knowledge": "操作系统>信号量的取值范围",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 24 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q25",
+      "no": 25,
+      "stem": "在支持多线程的操作系统中，假设进程P创建了线程T1、T2和T3， 那么以下叙述中错误的是（ ）。",
+      "options": [
+        "线程T1、 T2和T3可以共享进程P的代码",
+        "线程T1、T2可以共享P进程中T3的栈指针",
+        "线程T1、T2和T3可以共享进程P打开的文件",
+        "线程T1、T2和T3可以共享进程P的全局变量"
+      ],
+      "answer": 1,
+      "explanation": "线程共享的内容包括：进程代码段、进程的公有数据（利用这些共享的数据，线程很容易的实现相互之间的通讯）、进程打开的文件描述符、信号的处理器、进程的当前目录、进程用户ID与进程组ID 。 线程独有的内容包括：线程ID、寄存器组的值、线程的堆栈、错误返回码、线程的信号屏蔽码。",
+      "knowledge": "操作系统>线程的概念",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 25 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q27",
+      "no": 27,
+      "stem": "若某模块内所有处理元素都在同一个数据结构上操作，则该模块的内聚类型为（ ）。",
+      "options": [
+        "逻辑",
+        "过程",
+        "通信",
+        "功能"
+      ],
+      "answer": 2,
+      "explanation": "",
+      "knowledge": "软件工程>内聚性",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 27 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q28",
+      "no": 28,
+      "stem": "软件质量属性中，（ ）是指软件每分钟可以处理多少个请求。",
+      "options": [
+        "响应时间",
+        "吞吐量",
+        "负载",
+        "容量"
+      ],
+      "answer": 1,
+      "explanation": "吞吐量：指在给定的时间内，系统所能处理的任务的数量。 响应时间：指系统对请求作出响应的时间。 容量：存储器所能存储的全部信息量称为该存储器的容量。",
+      "knowledge": "计算机组成与体系结构>计算机指标",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 28 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q29",
+      "no": 29,
+      "stem": "提高程序执行效率的方法一般不包括（ ）。",
+      "options": [
+        "设计更好的算法",
+        "采用不同的数据结构",
+        "采用不同的程序设计语言",
+        "改写代码使其更紧凑"
+      ],
+      "answer": 3,
+      "explanation": "改写代码仅使其结构上更紧凑，并不能提高执行效率问题。其他方式可以。",
+      "knowledge": "软件工程>其它",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 29 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q30",
+      "no": 30,
+      "stem": "软件可靠性是指系统在给定的时间间隔内、在给定条件下无失效运行的概率。若MTTF和MTTR分别表示平均无故障时间和平均修复时间，则公式（ ）可用于计算软件可靠性。",
+      "options": [
+        "MTTF/(1+MTTF)",
+        "1/(1+MTTF)",
+        "MTTR/(1+MTTR)",
+        "1/(1+MTTR)"
+      ],
+      "answer": 0,
+      "explanation": "可靠性可以用MTTF/（1+MTTF）来度量。",
+      "knowledge": "计算机组成与体系结构>可靠性与可用性",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 30 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q32",
+      "no": 32,
+      "stem": "面向对象程序设计语言C++、 JAVA中， 关键字（ ）可以用于区分同名的对象属性和局部变量名。",
+      "options": [
+        "private",
+        "protected",
+        "public",
+        "this"
+      ],
+      "answer": 3,
+      "explanation": "this可以区分同名的对象属性和局部变量名。",
+      "knowledge": "面向对象技术>其它",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 32 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q33",
+      "no": 33,
+      "stem": "采用面向对象方法进行系统开发时，以下与新型冠状病毒有关的对象中，存在“一般-特殊“关系的是（ ）。",
+      "options": [
+        "确诊病人和治愈病人",
+        "确诊病人和疑似病人",
+        "医生和病人",
+        "发热病人和确诊病人"
+      ],
+      "answer": 3,
+      "explanation": "发热病人是一般对象，确诊病人是发热病人的特殊化。",
+      "knowledge": "面向对象技术>面向对象的基本概念",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 33 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q34",
+      "no": 34,
+      "stem": "进行面向对象系统设计时，针对包中的所有类对于同一类性质的变化；一个变化若对一个包产生影响，则将对该包中的所有类产生影响，而对于其他的包不造成任何影响。这属于（ ）设计原则。",
+      "options": [
+        "共同重用",
+        "开放-封闭",
+        "接口分离",
+        "共同封闭"
+      ],
+      "answer": 3,
+      "explanation": "共同封闭原则：包中的所有类对于同一种性质的变化应该是共同封闭的。一个变化若对一个封闭的包产生影响，则将对该包中的所有类产生影响，而对于其他包则不造成任何影响。面向对象设计的原则之一。 共同重用原则：面向对象编程术语，指一个包中的所有类应该是共同重用的。如果重用了包中的一个类，那么也就相当于重用了包中的所有类。 开放-封闭原则：对扩展开放，对修改封闭。 接口隔离原则：使用多个专门的接口比使用单一的总接口要好。",
+      "knowledge": "面向对象技术>面向对象设计原则",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 34 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q35",
+      "no": 35,
+      "stem": "多态有不同的形式，（ ）的多态是指同一个名字在不同上下文中所代表的含义不同。",
+      "options": [
+        "参数",
+        "包含",
+        "过载",
+        "强制"
+      ],
+      "answer": 2,
+      "explanation": "参数多态：应用广泛、最纯的多态。 包含多态：同样的操作可用于一个类型及其子类型。包含多态一般需要进行运行时的类型检查。包含多态在许多语言中都存在，最常见的例子就是子类型化，即一个类型是另外一个类型的子类型。 强制多态：编译程序通过语义操作，把操作对象的类型强行加以变换，以符合函数或操作符的要求。 过载多态：同一个名（操作符﹑函数名）在不同的上下文中有不同的类型。 目前软设考查比较多的是过载多态。",
+      "knowledge": "面向对象技术>面向对象的基本概念",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 35 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q36",
+      "no": 36,
+      "stem": "某类图如图所示，下列选项错误的是（ ）。",
+      "options": [
+        "一个A1的对象可能与一个A2的对象关联",
+        "一个A的非直接对象可能与一个A1 的对象关联",
+        "类B1的对象可能通过A2与C1的对象关联",
+        "有可能A的直接对象与B1的对象关联"
+      ],
+      "answer": 3,
+      "explanation": "A是抽象类，不能直接产生对象，所以D错误。",
+      "knowledge": "面向对象技术>UML图的图示",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 36 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q39",
+      "no": 39,
+      "stem": "函数foo()、hoo0定义如下，调用函数hoo()时，第-个参数采用传值(call by value)方式，第二个参数采用传引用(call by reference)方式。设有函数调(函数foo(5)，那么\"print(x)”执行后输出的值为（ ）。",
+      "options": [
+        "24",
+        "25",
+        "30",
+        "36"
+      ],
+      "answer": 0,
+      "explanation": "根据题干描述的调用过程，hoo()第一个参数是传值调用，第二个参数是引用调用，因此，在hoo()中对a的修改最终会影响到原foo()函数中传递的参数x，也就是最终x打印的值。 根据hoo()函数过程，x初始传参为原args=5，此时x=x-1=4（注意这里的x是局部变量，只在hoo()使用），a初始传参为原x=6，此时a=a*x=6*4=24，最终全局变量x值为24。（注意这里的原x是全局变量，在hoo()参数中可以理解为别名为a，现x是局部变量，也就是之前求取的4）。",
+      "knowledge": "程序设计语言基础>传值与传址",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 39 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q40",
+      "no": 40,
+      "stem": "程序设计语言的大多数语法现象可以用CFG (上 下文无关文法)表示。下面的CFG产生式集用于描述简单算术表达式，其中+、-、*表示加、减、乘运算，id表示单个字母表示的变量，那么符合该文法的表达式为（ ）。",
+      "options": [
+        "a+-b-c",
+        "a*(b+c)",
+        "a*-b+2",
+        "-a/b+c"
+      ],
+      "answer": 0,
+      "explanation": "根据本题的语法推导式，可以发现，这里没有终结符“(”、\")\"、\"/\"，因此选项B和D错误。 在推导的过程中，会发现\"*\"只能通过T推导，此时必定经过了E+T或E-T，不可能出现数字2。因此C错误。 只有A能够被推导，推导过程如下： （1）通过E→E-T，从起始符E得到E-T； （2）通过E→E+T，将上面的E展开为E+T，得到E+T-T； （3）通过E→T→F→id→单个字母a； （4）通过T→F→-F→-id→单个字母-b； （5）通过T→F→id→单个字母c。 综上，可以从起始符E得到a+-b-c，即为A选项。",
+      "knowledge": "程序设计语言基础>文法",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 40 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q41",
+      "no": 41,
+      "stem": "某有限自动机的状态转换图如下图所示，该自动机可识别（ ）。",
+      "options": [
+        "1001",
+        "1100",
+        "1010",
+        "0101"
+      ],
+      "answer": 1,
+      "explanation": "A选项从s0出发，1001到达s1，没有到达终态s2，不能被自动机识别。 B选项从s0出发，1100成功到达终态s2，可以被自动机识别。 C选项从s0出发，1010到达s0，没有到达终态s2，不能被自动机识别。 A选项从s0出发，0101到达s1，没有到达终态s2，不能被自动机识别。",
+      "knowledge": "程序设计语言基础>有限自动机",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 41 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q43",
+      "no": 43,
+      "stem": "假设关系R, U={A,B,C,D,E}, F= {A→BC,AC→D,B→D}，那么在关系R中（ ）。",
+      "options": [
+        "不存在传递依赖，候选关键字A",
+        "不存在传递依赖，候选关键字AC",
+        "存在传递依赖A→D，候选关键字A",
+        "存在传递依赖B→D，候选关键字C"
+      ],
+      "answer": 2,
+      "explanation": "本题根据函数依赖，首先找到入度为0的属性集合A，又根据A→BC，这里根据amstrong公理中的分解规则，可以得到A→B，A→C，同时存在B→D，此时有传递函数依赖A→D，可以通过A遍历全图，因此候选键为A。本题选择C选项。",
+      "knowledge": "数据库系统>规范化理论基本概念",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 43 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q45",
+      "no": 45,
+      "stem": "某企业信息系统采用分布式数据库系统。“当某一场地故障时， 系统可以使用其他场地上的副本而不至于使整个系统瘫痪”称为分布式数据库的（ ）。",
+      "options": [
+        "共享性",
+        "自治性",
+        "可用性",
+        "分布性"
+      ],
+      "answer": 2,
+      "explanation": "分布式数据库是由一组数据组成的，这组数据分布在计算机网络的不同计算机上，网络中的每个节点具有独立处理的能力（称为场地自治），它可以执行局部应用，同时，每个节点也能通过网络通信子系统执行全局应用。分布式数据库系统是在集中式数据库系统技术的基础上发展起来的，具有如下特点： （1）数据独立性。在分布式数据库系统中，数据独立性这一特性更加重要，并具有更多的内容。除了数据的逻辑独立性与物理独立性外，还有数据分布独立性（分布透明性）。 （2）集中与自治共享结合的控制结构。各局部的DBMS可以独立地管理局部数据库，具有自治的功能。同时，系统又设有集中控制机制，协调各局部DBMS的工作，执行全局应用。 （3）适当增加数据冗余度。在不同的场地存储同一数据的多个副本，这样，可以提高系统的可靠性和可用性，同时也能提高系统性能。 （4）全局的一致性、可串行性和可恢复性。 本题描述的是可用性。",
+      "knowledge": "数据库系统>分布式数据库",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 45 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q46",
+      "no": 46,
+      "stem": "以下关于Huffman (哈夫曼)树的叙述中，错误的是（ ）。",
+      "options": [
+        "权值越大的叶子离根结点越近",
+        "Huffman（哈夫曼）树中不存在只有一个子树的结点",
+        "Huffman（哈夫曼）树中的结点总数一定为奇数",
+        "权值相同的结点到树根的路径长度一定相同"
+      ],
+      "answer": 3,
+      "explanation": "本题选择的是错误的选项。对于D选项，权值相同的结点可能会因为构造的形态不同，导致构造结果不一样，权值不一样，所以描述是错误的。 对于C选项，二叉树存在一个特定度为0的结点（叶子结点）记作n0，度为2的结点记作n2，满足n2+1=",
+      "knowledge": "数据结构与算法基础>最优二叉树（哈夫曼树）",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 46 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q47",
+      "no": 47,
+      "stem": "通过元素在存储空间中的相对位置来表示数据元素之间的逻辑关系，是（ ）的特点。",
+      "options": [
+        "顺序存储",
+        "链表存储",
+        "索引存储",
+        "哈希存储"
+      ],
+      "answer": 0,
+      "explanation": "顺序存储时，元素的逻辑相对位置与物理相对位置是一致的。",
+      "knowledge": "数据结构与算法基础>顺序表与链表",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 47 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q48",
+      "no": 48,
+      "stem": "在线性表L中进行二分查找，要求L（ ）。",
+      "options": [
+        "顺序存储，元素随机排列",
+        "双向链表存储，元素随机排列",
+        "顺序存储，元素有序排列",
+        "双向链表存储，元素有序排列"
+      ],
+      "answer": 2,
+      "explanation": "二分查找的前提条件是顺序存储，且有序排列。",
+      "knowledge": "数据结构与算法基础>二分查找",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 48 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q51",
+      "no": 51,
+      "stem": "某简单无向连通图G的顶点数为n，则图G最少和最多分别有（ ）条边。",
+      "options": [
+        "n,n2/2",
+        "n-1,n*(n-1)/2",
+        "n,n*(n-1)/2",
+        "n-1,n2/2"
+      ],
+      "answer": 1,
+      "explanation": "本题可以简单画出一个无相连通图，比如两个顶点相连接，此时结点n=2，边最少为1，最多也为1，满足要求的只有B选项。",
+      "knowledge": "数据结构与算法基础>图的定义及存储",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 51 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q52",
+      "no": 52,
+      "stem": "根据渐进分析，表达式序列：n4, lgn, 2n, 1000n, n2/3, n!从低到高排序为（ ）。",
+      "options": [
+        "Ign,1000n, n2/3, n4, n!, 2n",
+        "n2/3,1000n, lgn, n4, n!, 2n",
+        "lgn,1000n, n2/3, 2n, n4, n!",
+        "Ign, n2/3, 1000n, n4, 2n, n!"
+      ],
+      "answer": 3,
+      "explanation": "根据选项来看，1000n的渐进表示就是O(n)。因此lgn规模是小于1000n的，所以B选项错误，n2/3小于n，因此D选项正确。",
+      "knowledge": "数据结构与算法基础>时间复杂度与空间复杂度",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 52 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q53",
+      "no": 53,
+      "stem": "采用DHCP动态分配IP地址，如果某主机开机后没有得到DHCP服务器的响应。则该主机获取的IP地址属于网络（ ）。",
+      "options": [
+        "202.117.0.0/24",
+        "192.168.1.0/24",
+        "172.16.0.0/16",
+        "169.254.0.0/16"
+      ],
+      "answer": 3,
+      "explanation": "无效的IP地址：169.254.X.X（windows） 和 0.0.0.0（linux）。",
+      "knowledge": "计算机网络>协议应用提升",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 53 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q54",
+      "no": 54,
+      "stem": "在浏览器的地址栏中输入xxxyftp.abc.can.cn，在该URL中（ ）是要访问的主机名。",
+      "options": [
+        "xxxftp",
+        "abc",
+        "can",
+        "cn"
+      ],
+      "answer": 0,
+      "explanation": "",
+      "knowledge": "计算机网络>URL",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 54 题"
+      }
+    },
+    {
+      "id": "past-exam-202005.q56",
+      "no": 56,
+      "stem": "因特网中的域名系统（Domain Name System）是一个分层的域名，在根域下面是顶级域，以下顶级域中，（ ）属于国家顶级域。",
+      "options": [
+        "NET",
+        "EDU",
+        "COM",
+        "UK"
+      ],
+      "answer": 3,
+      "explanation": "",
+      "knowledge": "计算机网络>URL",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-202005 第 56 题"
+      }
+    }
+  ]
+}

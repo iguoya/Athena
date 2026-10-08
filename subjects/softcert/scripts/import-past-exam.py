@@ -32,6 +32,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 PAST_EXAMS = PROJECT_ROOT / "content" / "past-exams"
 BASE = "https://ebook.qicoder.com"
+GITEE_RAW = "https://gitee.com/wf_code/soft-test---software-designer/raw/master"
 
 LETTERS = {"A": 0, "B": 1, "C": 2, "D": 3}
 
@@ -181,11 +182,133 @@ def import_paper(arguments) -> None:
     print(f"已登记 {reg_path.relative_to(PROJECT_ROOT)}", flush=True)
 
 
+def parse_pdf_paper(pdf_path: Path) -> tuple[list[dict], list[int]]:
+    """解析 Gitee 答案详解 PDF(2009–2019):按【答案】切块,四选一收入。"""
+    import pypdf
+
+    reader = pypdf.PdfReader(str(pdf_path))
+    full = "\n".join((p.extract_text() or "") for p in reader.pages)
+    full = re.sub(r"[ \u3000]+", " ", full)
+    # 按【答案】切块:每块 = 一道题的答案+解析+下一题的题干选项
+    blocks = re.split(r"【答案】", full)
+    questions: list[dict] = []
+    skipped: list[int] = []
+    for prev, block in zip(blocks[:-1], blocks[1:]):
+        # 前块尾部是本题的题干+选项;取最后一个「（N）选项段」
+        tail = prev[-1500:]
+        qno_m = list(re.finditer(r"（(\d{1,2})）", tail))
+        if not qno_m:
+            continue
+        no = int(qno_m[-1].group(1))
+        ans_m = re.match(r"\s*([A-D])\b", block)
+        if not ans_m:
+            skipped.append(no)
+            continue
+        # 选项:从题干尾部找 A. … B. … C. … D. … 序列(允许跨行)。
+        # 起点是第一个「A.」;真题 PDF 常有选项字母印刷错误(如 D 印成 C),
+        # 所以按位置映射 A–D,不校验字母序列;只要求切出 4 个非空段。
+        opt_m = re.search(r"(?<![A-Za-z])A[.、]", tail)
+        seg = tail[opt_m.start():] if opt_m else ""
+        opts_raw = re.split(r"\s*[ABCD][.、]\s*", seg)
+        opts = [re.sub(r"\s+", " ", o).strip(" .;；") for o in opts_raw[1:]]
+        if len(opts) < 4 or any(not o for o in opts[:4]):
+            skipped.append(no)
+            continue
+        options = opts[:4]
+        expl_m = re.search(r"【解析】(.*?)(?=【|$)", block, re.S)
+        # 题干:选项序列之前、上一个答案解析之后的文本
+        stem = strip_tags(tail[:opt_m.start()])
+        stem = re.sub(r"^\d+[.、、．]\s*", "", stem)
+        stem = stem[:400].strip()
+        if not stem:
+            skipped.append(no)
+            continue
+        questions.append({
+            "id": f"q{no}",
+            "no": no,
+            "stem": stem,
+            "options": options,
+            "answer": LETTERS[ans_m.group(1)],
+            "explanation": strip_tags(expl_m.group(1)) if expl_m else "",
+            "knowledge": "",
+        })
+    return questions, skipped
+
+
+def import_pdf(arguments) -> None:
+    pdf_path = Path(arguments.pdf)
+    if not pdf_path.is_file():
+        # 从 Gitee raw 拉取(相对仓库根路径)
+        url = f"{GITEE_RAW}/{urllib.parse.quote(arguments.pdf)}"
+        print(f"拉取 {url}", flush=True)
+        pdf_path = Path("/tmp/import-exam.pdf")
+        for attempt in range(6):
+            subprocess_run_curl(url, pdf_path)
+            if pdf_path.is_file() and pdf_path.read_bytes()[:5] == b"%PDF-":
+                break
+        else:
+            raise SystemExit("PDF 下载多次失败,稍后重试或手动下载后用 --pdf 指向本地文件")
+
+    questions, skipped = parse_pdf_paper(pdf_path)
+    if not questions:
+        raise SystemExit("没有解析出任何题目:PDF 可能是扫描版或格式变化,先人工看一眼")
+    print(f"解析出 {len(questions)} 题,跳过 {len(skipped)} 道:{skipped[:30]}", flush=True)
+
+    paper = {
+        "id": arguments.paper_id,
+        "title": arguments.title or f"{arguments.year} 年{arguments.session} {arguments.subject}",
+        "year": arguments.year,
+        "session": arguments.session,
+        "subject": arguments.subject,
+        "source_note": "软考历年真题答案详解(Gitee soft-test---software-designer 仓库),题目与答案 verbatim",
+        "source_ref": {"relation": "verbatim", "sourceId": "past-exam-repo-gitee-wfcode",
+                        "locator": arguments.pdf},
+        "questions": [
+            {
+                "id": f"{arguments.paper_id}.{q['id']}",
+                "no": q["no"],
+                "stem": q["stem"],
+                "options": q["options"],
+                "answer": q["answer"],
+                "explanation": q["explanation"],
+                "knowledge": q["knowledge"],
+                "source": {"relation": "verbatim", "sourceId": "past-exam-repo-gitee-wfcode",
+                            "locator": f"{arguments.paper_id} 第 {q['no']} 题"},
+            }
+            for q in questions
+        ],
+    }
+
+    papers_dir = PAST_EXAMS / "papers"
+    papers_dir.mkdir(exist_ok=True)
+    out = papers_dir / f"{arguments.paper_id}.json"
+    out.write_text(json.dumps(paper, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"已写入 {out.relative_to(PROJECT_ROOT)}({len(paper['questions'])} 题)", flush=True)
+
+    reg_path = PAST_EXAMS / "papers.json"
+    reg = json.loads(reg_path.read_text(encoding="utf-8"))
+    meta = {k: paper[k] for k in ("id", "title", "year", "session", "subject", "source_note")}
+    reg["papers"] = [m for m in reg.get("papers", []) if m["id"] != meta["id"]]
+    reg["papers"].append(meta)
+    reg["papers"].sort(key=lambda m: (m["year"], m["session"]), reverse=True)
+    reg_path.write_text(json.dumps(reg, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"已登记 {reg_path.relative_to(PROJECT_ROOT)}", flush=True)
+
+
+def subprocess_run_curl(url: str, out: Path) -> None:
+    import subprocess
+    subprocess.run(
+        ["curl", "-sL", "-C", "-", "--retry", "3", "--retry-delay", "2", "-o", str(out), url],
+        check=False,
+    )
+
+
 def main() -> int:
     _force_utf8_output()
-    parser = argparse.ArgumentParser(description="导入软考历年真题(qicoder 电子书源)")
+    parser = argparse.ArgumentParser(description="导入软考历年真题(qicoder 电子书 / Gitee 答案详解 PDF)")
     parser.add_argument("--list", action="store_true", help="列出可导入的卷子")
     parser.add_argument("--from-url", help="卷子页面路径(notes/xxx.html)或完整 URL")
+    parser.add_argument("--pdf", help="答案详解 PDF(Gitee 仓库相对路径或本地文件)")
     parser.add_argument("--paper-id", help="卷子 id,如 past-exam-2021a")
     parser.add_argument("--year", type=int)
     parser.add_argument("--session", default="上半年")
@@ -195,6 +318,9 @@ def main() -> int:
 
     if arguments.list:
         list_papers()
+        return 0
+    if arguments.pdf and arguments.paper_id and arguments.year:
+        import_pdf(arguments)
         return 0
     if arguments.from_url and arguments.paper_id and arguments.year:
         import_paper(arguments)
