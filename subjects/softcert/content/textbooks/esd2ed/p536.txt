@@ -1,0 +1,83 @@
+第11章
+嵌入式系统设计案例分析
+527
+数据读出缓冲区的接口服务为Read Buffer，1
+Write Buffer，将当前有效的 512KB
+假设双
+端口存储器中不提供硬件信号量，两个缓冲区间的互操作由软件标记实现，
+软件对双
+端口存储器的单次操作
+（读写一个字的操作）为原子操作。
+下面是用C语言设计的一组对双缓冲区的管理程序代码，请填补该程序代码中的
+空缺
+int
+0表示无有效数据，0xf士
+*BufferFlag[2:
+表示有新数据
+int
+软件锁，0表示未锁定，0xff
+表示锁定
+*Mutex[2 ;
+int
+*data):
+id, char
+Read Buffer(int
+从缓冲区读数据，用于数据处理模块
+id表示缓冲的序列号，0表示缓冲区1，
+1 表示缓冲区 2，data
+为存放读取数据的
+缓冲，返回值表示读取到有效数据的长
+度＊/
+ Buffer(int id, char
+*data） /★
+向缓冲区写数据，用于信号处理模块
+void I
+Write
+id表示缓冲的序列号，0表示缓冲区1，
+1 表示缓冲区 2,data
+为待写入数据的缓
+数据处理模块端的初始化，
+int
+缓冲区起始地址为0xffffc000。
+INITPPC（）
+BufferFlag
+（int
+OxffffcOOO:
+（int
+Mutex
+OxffffcO1O:
+*BufferFlag［O]=O 
+*BufferFlag［l］=0 ;
+*Mutex[01=0;
+*Mutex[11=0;
+return
+:(0)
+int
+*Data)
+数据处理模块读数据程序段
+PPC Read Data (char
+int
+len = 0:
+if
+无新数据
+(0) 
+return
+if
+(*BufferFlag［O]）{
+if
+(1)
+*Mutex[O]
+Oxff:
+len = Read Buffer(O,
+Data) :
+*BufferFlag[O]
+ = 0x00:
+(2)
+else
+if
+(*BufferFlag［l]）［
+if
+(!（*Mutex［l}))）
+*Mutex[1
+1 = Oxff:
+(3)

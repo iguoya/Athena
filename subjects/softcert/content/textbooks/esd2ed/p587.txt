@@ -1,0 +1,120 @@
+578
+嵌入式系统设计师教程
+（第2版）
+/★定义宏
+芯片的基地址★／：
+FLASH
+BASE
+ADDRESS
+FLASH
+#define
+（此处代码略）
+BASE
+FTASH
+ADDRESS
+/★定义向
+空间写一个命令的宏＊／
+FLASH
+(addr,data)
+# define
+BYTE
+（此处代码略）
+FASH
+WRITE
+/+Reset
+: Flash*/
+Void ResetFlash (void)
+BYTE
+(FLASH
+FLASH
+WRITE
+BASE
+ADDRESS. OXFO) :
+return:
+的擦除是按扇区进行的，SectorErase
+FLASH
+函数每次可擦除一个扇区。假设某扇区的
+偏移地址为 offset addr，下面 sectorErase 
+函数体为擦除该扇区的命令序列
+void SectorErase (int
+offset addr)
+ADDRESS+0x555.
+(FLASH
+FLASH
+WRITE
+BYTE
+BASE
+OXAA):
+(1)
+BYTE
+FLASH
+(FLASH
+BASE
+WRITE
+ ADDRESS+
+0x55);
+ADDRESS+0x555
+（2）_）;
+FLASH
+(FLASH
+WRTTE
+BYTE
+BASE
+BYTE
+FLASH
+WRITE
+(FLASH
+BASE
+ADDRESS+0X555.
+0xAA) :
+ADDRESS+OX2AA.
+FLASH
+WRITE
+BYTE
+(FLASH
+BASE
+0x55)
+(3)
+4）
+BYTE
+FLASH
+(FLASH
+WRITE
+BASE
+ADDRESS
+return:
+【问题3】
+该嵌入式系统对处理的性能要求较高，沈工在完成软件设计后，需要对每一个函数
+的执行性能进行测试，检测其是否满足系统设计的要求。沈工通过PowerPC处理器内部
+的高精度时钟寄存器
+(TimeBase)
+进行计时，该寄存器由高低两个32位的寄存器组成，
+根据总线频率自动递增，当低32位寄存器递增到
+OXFFFFFFFF
+时，向高32位寄存器进
+位。计数值可以换算成时间值，米
+精确到微秒级
+在功能函数
+functionlO的执行体前后进行时间统计，最后计算出该函数的执行时间
+值，请在
+（1）～（2）
+处将对应的C代码补全
+struct
+timeBase
+unsigned
+ int
+upper:
+ int
+unsigned
+lower:
+void
+functionl (void)
+timeBase
+struct
+tb0.tbl.tb2:
+long
+value:
+获取 TimeBase
+寄存器中的计数值
+TimeBaseGet (&tbo.upper, 
+&tbo.lower): /

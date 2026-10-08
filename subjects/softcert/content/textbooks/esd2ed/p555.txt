@@ -1,0 +1,65 @@
+546
+嵌入式系统设计师教程
+（第2版）
+/状态寄存器定义
+#define
+*( volatile
+I2C DATA
+ unsigned int
+0x48028080
+ + 0x28 )
+/数据寄存器定义
+int
+I2C READ(unsigned char
+*pdata)
+int delaycnt
+I2C CON
+/／配置为主模式、读模式、使能I²c，并开启I²c
+0xC003:
+for
+( delay cnt
+O; delay cnt< looo: delay cnt++
+if
+（I2C STAT
+& 0x80
+（1）／／从I2C DATA
+寄存器读数据放置在pdata指针里面，并退出
+return
+0:
+return
+int
+I2C 1
+WRITE(unsigned
+ char
+wdata)
+int c
+delaycnt
+(2）_:
+I2C CON
+／配置为主模式、写模式、使能并开启工²c
+(3)
+向 I2C DATA
+寄存器写
+ wdata
+for
+( delay cnt
+ = O; delay cnt< looo; delay cnt++
+(4)
+）／／判断是否写完成，
+如果完成，
+if
+则正确退出
+return
+0:
+return
+-11
+案例3问题分析与解答
+【问题1】
+本题主要考查嵌入式系统软硬件协同设计中外设控制器TVP5146（IC设备）的操作
+访问以及串口配置的基本软硬件应用知识。
+IC总线是一种由飞利浦公司开发的两线式串行总线，用于连接微控制器及其外围
+设备。IC 总线产生于在上世纪80年代，最初为音频和视频设备开发，如今主要在服
+以管理系统的配置或掌握组件的功能状态，如电源和系统风扇。
+可随时监控内存、硬
+盘、网络、系统温度等多个参数，增加了系统的安全性，方便了管理。IC 总线最主要
+的优点是其简单性和有效性。由于接口直接在组件之上，因此 IC 总线占用的空间非

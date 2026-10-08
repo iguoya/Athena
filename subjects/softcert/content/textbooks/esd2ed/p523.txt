@@ -1,0 +1,80 @@
+514
+嵌入式系统设计师教程
+（第2版）
+表 11-3
+报文通信协议说明表
+名称
+字节序
+备注
+报文头
+AA
+指令号
+数据1
+PM2.5低字节
+数据2
+PM2.5高节
+数据3
+PM10低字节
+数据4
+PM10
+高字节
+数据5
+ID字节1
+数据6
+ID字节2
+校验和
+数据1到数据6的字节加和
+报文尾
+AB
+王工根据数据报文通信协议，用C语言编写了对应的数据接收和校验程序，请根据
+注释要求补全程序。
+程序段如下：
+#define
+uintl6 t
+unsigned
+ short
+#define
+uint8 t
+unsigned
+ char
+uintl6 t
+Pm25 :
+uintl6 t
+Pm10:
+void
+ ProcessserialData 0
+uint8 t mData
+uint8 t i = 0:
+uint8 t
+mPkt 10
+mcheck = O:
+uint8 t
+while
+(serial.available() > 0)
+mData
+Serial.readO:
+delay(2):
+延迟
+2ms
+(1）
+if (mData
+／等待直到有效数据包接收到
+mPkt[01
+mData:
+mData
+Serial.read():
+if (mData
+(2)
+mPkt[11
+mData:
+mCheck = 0;
+for(i=0:i < 6:i++)
+，／接收数据并进行校验计算
+mPkt［i+2]
+= serial.read;
+delay(2) :
+(3)
+mCheck
+=+ 
+mPkt81
+l = Serial-read():

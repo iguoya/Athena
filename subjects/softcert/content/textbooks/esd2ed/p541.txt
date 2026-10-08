@@ -1,0 +1,78 @@
+532
+嵌入式系统设计师教程
+（第2版）
+【问题3】
+田工负责编写信号处理模块与数据处理模块的通信程序，约定好的数据组织方式如
+表 11-5 所示。
+表 11-5
+网络数据结构
+数据域A（1字节）
+数据域B（4字节）
+数据域C（2字节）
+数据域D（16字节）
+以下是信号处理模块端的一段程序：
+ int msgid = Oxol:
+，／表示从信号处理模块发送到数据处理模块2的消息工D
+unsigned
+typedef
+struct
+FCSND
+ Data struct
+ char
+unsigned
+unsigned
+ int B:
+unsigned
+short
+unsigned
+char
+DL161:
+FCSND
+DATA:
+FCSND
+DATA
+sendData :
+／将待发送数据赋值到
+FillfcData(&sendData):
+数据结构中
+sendData
+sendfc((msgid,
+&sendData. sizeof (FCsND
+DATA)）:
+／发送数据
+以下是数据处理模块2端的一段程序：
+0x00:
+unsigned int
+msgid
+接收到的消息工D
+typedef
+struct
+FcRcv Data struct
+char
+unsigned
+A:
+int B;
+unsigned
+unsigned
+short
+unsigned
+char
+DT161:
+FCRCV
+DATA:
+FCRCV
+DATA
+recvData:
+/接收数据
+recvfc((msgid
+&recvData, sizeof (FCRCV
+DATA
+请问以上程序是否存在问题？如果存在问题，请分析原因
+案例7分析与解答
+【问题1】
+A/D转换器的量化间隔为A/D转换器最低有效位1位所代表的模拟电压值，当前A/D
+转换器的模拟电压最大为5.115V，表示A/D输出的最大值为3FFH，
+因此，A/D转换器
+的量化间隔为5.115V/3FFH=5mV。
+根据A/D转换器的量化间隔，可以根据需要控制的模拟电压来计算出对应的数字值
+按照题意，如果当前的阅值为4.092V，则可以计算出要产生中断时候配置的A/D转换器
