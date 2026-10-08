@@ -1,0 +1,52 @@
+{
+  "chapter_id": "cs-io",
+  "questions": [
+    {
+      "id": "sc.cs.io.q1",
+      "stem": "DMA 方式下,数据传送的基本单位是( )。",
+      "options": ["位", "字节", "数据块", "文件"],
+      "answer": 2,
+      "explanation": "DMA 面向块设备,一次传送一整块;字节/位级的零散传送走中断或程序查询;「文件」是操作系统的逻辑概念,不是 I/O 硬件的传送单位。",
+      "source": { "relation": "authored", "sourceId": "self-authored", "why": "三种 I/O 方式的传送单位是 I/O 控制考点的对照辨析,自造速查题。", "locator": "依据考纲「计算机系统基础·I/O 方式」考点" }
+    },
+    {
+      "id": "sc.cs.io.q2",
+      "stem": "CPU 响应(可屏蔽)中断的时机是( )。",
+      "options": [
+        "任意一条指令的执行过程中",
+        "一条指令执行结束时",
+        "时钟周期的上升沿",
+        "总线空闲的任意时刻"
+      ],
+      "answer": 1,
+      "explanation": "CPU 只在**一条指令执行结束时**检查中断请求——指令内部的原子性不被打断。A 违反指令原子性;C、D 是编造的时机。",
+      "source": { "relation": "authored", "sourceId": "self-authored", "why": "中断响应时机是中断流程考点的高频细节,自造对照题。", "locator": "依据考纲「计算机系统基础·中断」考点" }
+    },
+    {
+      "id": "sc.cs.io.q3",
+      "stem": "程序查询方式的主要缺点是( )。",
+      "options": [
+        "需要专用的 DMA 控制器",
+        "CPU 与外设完全串行,忙等轮询",
+        "只能连接高速块设备",
+        "无法处理多个设备"
+      ],
+      "answer": 1,
+      "explanation": "查询方式 CPU 原地轮询状态位,设备不就绪就一直等,完全不能并行——这是它被中断方式取代的原因。A 恰是 DMA 的硬件;C 恰相反它适合低速设备;D 不是它的独有缺陷。",
+      "source": { "relation": "authored", "sourceId": "self-authored", "why": "三种方式按「CPU 介入程度」对比是 I/O 考点主线,自造辨析题。", "locator": "依据考纲「计算机系统基础·I/O 方式」考点" }
+    },
+    {
+      "id": "sc.cs.io.q4",
+      "stem": "DMA 传送中「周期挪用」指的是( )。",
+      "options": [
+        "CPU 停机等待 DMA 传送完成",
+        "DMA 控制器窃取存储周期传送一个字",
+        "外设挪用 CPU 的中断向量",
+        "操作系统挪用用户程序的内存页"
+      ],
+      "answer": 1,
+      "explanation": "周期挪用(窃取)是 DMA 与主存协调的方式:DMA 借用一个存储周期传一个字,CPU 在此期间让出总线。A 是「停止 CPU 访存」的另一种方式且描述失实;C、D 与 DMA 无关。",
+      "source": { "relation": "authored", "sourceId": "self-authored", "why": "DMA 与 CPU 的存储周期协调方式是 I/O 考点里概念最细的一处,自造辨析题。", "locator": "依据考纲「计算机系统基础·I/O 方式」考点" }
+    }
+  ]
+}

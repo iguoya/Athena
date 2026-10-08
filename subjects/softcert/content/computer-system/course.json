@@ -1,0 +1,98 @@
+{
+  "id": "computer-system",
+  "title": "计算机系统基础",
+  "tagline": "上午卷 6–10 分的核心拿分区,也是下午硬件题的地基:数制、组成、存储、I/O、可靠性、安全。",
+  "accent": "#6D5AE6",
+  "exam": {
+    "subject": "综合知识(上午卷)",
+    "score_range": "6–10 分/75",
+    "grade": "S",
+    "note": "分值区间取近五年真题公开统计(见 sources.json real-exam-stat);下午硬件大题也以本课为地基。"
+  },
+  "chapters": [
+    {
+      "id": "cs-number",
+      "title": "数制与数据表示",
+      "weight": 3,
+      "grade": "S",
+      "kp": {
+        "id": "sc.cs.number",
+        "difficulty": 2,
+        "mastery_goal": "proficient",
+        "knowledge_type": "skill",
+        "requires": [],
+        "guide_line": "先会换算,再会补码,最后是海明码位数——三步都是套步骤的题,熟练是唯一目标。"
+      }
+    },
+    {
+      "id": "cs-cpu",
+      "title": "中央处理器与指令系统",
+      "weight": 3,
+      "grade": "S",
+      "kp": {
+        "id": "sc.cs.cpu",
+        "difficulty": 3,
+        "mastery_goal": "proficient",
+        "knowledge_type": "concept",
+        "requires": [],
+        "guide_line": "认得寄存器各管什么、寻址方式差在哪,流水线三个公式要能默算。"
+      }
+    },
+    {
+      "id": "cs-memory",
+      "title": "存储体系与 Cache",
+      "weight": 2,
+      "grade": "S",
+      "kp": {
+        "id": "sc.cs.memory",
+        "difficulty": 3,
+        "mastery_goal": "understand",
+        "knowledge_type": "concept",
+        "requires": ["sc.cs.cpu"],
+        "guide_line": "层次结构靠局部性立住;命中率公式和三种映射方式的取舍是考点。"
+      }
+    },
+    {
+      "id": "cs-io",
+      "title": "总线与 I/O 控制方式",
+      "weight": 2,
+      "grade": "A",
+      "kp": {
+        "id": "sc.cs.io",
+        "difficulty": 2,
+        "mastery_goal": "understand",
+        "knowledge_type": "concept",
+        "requires": ["sc.cs.cpu"],
+        "guide_line": "三种 I/O 方式按「CPU 介入程度」一条线记住,中断与 DMA 各认一个流程。"
+      }
+    },
+    {
+      "id": "cs-reliability",
+      "title": "可靠性与系统性能",
+      "weight": 2,
+      "grade": "S",
+      "kp": {
+        "id": "sc.cs.reliability",
+        "difficulty": 2,
+        "mastery_goal": "proficient",
+        "knowledge_type": "skill",
+        "requires": [],
+        "guide_line": "串并联两个公式加 MTBF/可用性,每年必有、公式固定,是性价比最高的送分题。"
+      }
+    },
+    {
+      "id": "cs-security",
+      "title": "信息安全基础",
+      "weight": 1,
+      "grade": "B",
+      "kp": {
+        "id": "sc.cs.security",
+        "difficulty": 2,
+        "mastery_goal": "understand",
+        "knowledge_type": "concept",
+        "requires": [],
+        "guide_line": "概念辨析为主:对称非对称各管什么、签名和加密用哪把钥匙,不要陷进算法细节。"
+      }
+    }
+  ]
+}
