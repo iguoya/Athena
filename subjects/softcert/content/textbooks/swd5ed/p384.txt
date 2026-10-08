@@ -1,0 +1,32 @@
+372
+软件设计师教程（第5版）
+活动都是交互发生。
+sd Enroll in Seminar lifelines student: Student, seminar: Seminar
+ref
+student.selectSeminarO)
+[Ineligible]
+{0.7
+ref
+seminar.determineEligibility(student)
+msec)
+[Eligible]
+[No seat]
+ref
+seminar.determineSeatAvailabilityO
+[Seat available]
+ref
+ref
+seminar.enrollStuent(student)
+ seminar.addTo WaitingList(student)
+图7-16交互概览图
+4）计时图
+计时图（Timing Diagram）是另一种新增的、特别适合实时和嵌入式系统建模的交互图，
+关注沿着线性时间轴、生命线内部和生命线之间的条件改变。它描述对象状态随着时间改变的
+情况，很像示波器，如图7-17所示，适合分析周期和非周期性任务。
+Cloud
+Watercycle
+Lake
+图7-17UML计时图（离散时序）
+5.状态图
+状态图（State Diagram）展现了-一个状态机，它由状态、转换、事件和活动组成。状态图
+关注系统的动态视图，对于接口、类和协作的行为建模尤为重要，强调对象行为的事件顺序。

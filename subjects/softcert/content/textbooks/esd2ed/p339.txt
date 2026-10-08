@@ -1,0 +1,72 @@
+330
+嵌入式系统设计师教程
+（第2版）
+this->height
+ = this->width = width:
+/类Triangle是 Figure
+Triangle : public Figure
+class
+的派生类
+double
+la:
+double
+1b:
+double
+public:
+Triangle(double
+ la.
+double lb, double lc) 
+ = lai
+this->la
+1b:
+this->lc = lc;
+this->lb = 
+double
+getArea( (
+double
+(la+lb+lc)/2.0:
+return
+sgrt(s★(s-la)(s-lb)★(s-lc)）:
+1 :
+void mainO)
+Figure*
+figures［3] = {
+Triangle(2,3.3).
+Rectangle(5.8) r
+new
+new
+new
+sguare(5) 1:
+(int
+for
+i=0:i<3i++){
+<< "fiqures["<< i <<
+cout
+(figures［il)->getArea()
+area
+endl:
+6.4.5
+异常处理
+异常（exception）
+是程序可能检测到的运行时刻不正常的情况，如
+无法取得
+new
+所需内存、除数为0、运算溢出、数组越界访问或函数参数无效等，这样的异常存在
+于程序的正常函数功能之外，但是要求程序立即处理。C十十提供了一些内置的语言特
+性来产生并处理异常，以提高程序的容错能力，使程序更健壮。异常机制使一个函数
+可以在发现自已无法处理的错误时抛出一个异常，希望其调用者可以直接或者间接处
+理这个问题
+传统的错误处理技术在检查到一个局部无法处理的问题时，常用以下方式：
+(1)
+终止程序
+(2）
+返回一个表示错误的值。
+(3）
+返回一个合法值，让程序处于某种非法的状态
+调用一个预先准备好在出现
+“错误”
+(4):
+的情况下的函数
+第一种情况经常是不允许的，无条件终止程序的方式不适合应用到不能当机的程序
+中。第二种情况比较常用，但有时会带来不便，例如返回错误码是int型，每个调用都要
+检查错误值。第三种情况很容易误导调用者，如果调用者没有去检查表示错误码的全局

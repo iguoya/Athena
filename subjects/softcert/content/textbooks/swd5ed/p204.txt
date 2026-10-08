@@ -1,0 +1,38 @@
+194
+软件设计师教程（第5版）
+notfull.signal操作仅仅是启动一个被挂起的进程，如无挂起进程，则notfull.signal操作相当于空
+操作，不改变notfull 状态，这不同于V操作。
+2．管程的结构
+每一个管程都要有一个名字以供标识，用语言来写一个管程的形式如下：
+Type <管程名>=monitor
+<管程变量说明>;
+define<(能被其他模块引用的)过程名列表>;
+procedure<过程名>(<形式参数表>)
+begin
+<过程体>;
+end;
+procedure<过程名>(<形式参数表>)
+begin
+<过程体>;
+end;
+begin
+<管程的局部数据初始化语句>;
+end.
+3．利用管程解决生产者一消费者问题
+【例4.4】建立一个管程Producer-Consumer，它包括两个过程 put（item）和get（item），
+分别执行将生产的消息放入缓冲池和从缓冲池取出消息的操作，设置变量count 表示缓冲池已
+存消息的数目。管程描述如下：
+Type Producer-Consumer-monitor
+var buffer : array [0, ... ,n-1] of item ; {定义缓冲区}
+in , out , count : integer ;
+(in out为存取指针，count为缓冲区产品个数)
+{条件变量}
+notfull ,notempty :condition ;
+procedure entry put (item)
+begin
+if count >=n then notfullwait ;
+{缓冲区已满}
+buffer (in ) : = nextp ;
+in := (in+1) mod n ;
+count = count + 1 ;
+if notempty.queue·then notempty.signal；{唤醒等待者}

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { ChevronRight, FileQuestion, BookOpen, Hammer } from "lucide-react";
 import { courseById } from "../content";
+import { textbookTextOfChapter } from "../textbook-text";
 import { attemptsSummary, type KpSummary } from "../db";
 import { GradeBadge, WeightStars, DifficultyDots, MasteryGoalBadge, KnowledgeTypeBadge, ProgressRing } from "../components/ui";
 import type { View } from "../App";
@@ -107,8 +108,18 @@ export function CoursePage({ courseId, go }: { courseId: string; go: (v: View) =
                   })}
                 </div>
               ) : (
-                <div className="rounded-2xl border border-dashed border-black/10 px-4 py-5 text-center text-[13px] text-ink/40">
-                  教学内容建设中——教材章节位置已留好,作答与掌握度在内容就位后接入
+                <div className="space-y-2">
+                  <div className="rounded-2xl border border-dashed border-black/10 px-4 py-4 text-center text-[13px] text-ink/40">
+                    教学内容建设中——以下可直接阅读本章教材原文
+                  </div>
+                  {textbookTextOfChapter(ch.id) && (
+                    <details className="card px-4 py-3">
+                      <summary className="cursor-pointer select-none text-[13px] font-semibold text-ink/60">
+                        教材原文({ch.textbook_ref.locator},《{course.textbook.title}》忠实转录)
+                      </summary>
+                      <pre className="mt-3 max-h-[480px] overflow-y-auto whitespace-pre-wrap font-sans text-[13px] leading-7 text-ink/75">{textbookTextOfChapter(ch.id)}</pre>
+                    </details>
+                  )}
                 </div>
               )}
             </motion.div>

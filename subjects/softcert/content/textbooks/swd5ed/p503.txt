@@ -1,0 +1,29 @@
+第9章‧数据库技术基础
+489
+（3）全外连接（FullOuter Jion）X。完成左外连接和右外连接的操作。即填充左侧关系
+中所有与右侧关系中任一元组都不匹配的元组，并填充右侧关系中所有与左侧关系中任一元组
+都不匹配的元组，将产生的新元组加入自然连接的结果中。
+【例 9.10】 设有关系 R、S 如图 9-27 所示，求 RXS、RXLS 和 RLS。
+(a）关系R
+(b）关系 S
+图 9-27关系 R、S
+对于图 9-27 所示的 R、S 关系，当对其进行左外连接 RIXS，右外连接 RXLS，全外连接
+RXLS 时，其结果分别如图9-28（a)、图9-28（b）和图9-28（c）所示。
+null
+null
+null
+null
+null
+null
+(a） 左外连接 R X S
+(b）右外连接R  S
+（c）全外连接R X S
+图 9-28RXS、R LS 和 RXS
+9.4
+关系数据库SQL语言简介
+SQL（StructuredQueryLanguage）早已确立起自己作为关系数据库标准语言的地位，已被
+众多商用DBMS 产品（如DB2、ORACLE、INGRES、SYSBASE、SQL SerVer和VFP 等）所
+采用，使得它已成为关系数据库领域中的一个主流语言。SQL是在1974年由Boyce和Chamberlin
+提出的，它是关系数据库中最普遍使用的语言，包括数据查询（Query）、数据操纵（Manipulation）、
+数据定义（Definition）和数据控制（Control）功能，是一种通用的、功能强大的关系数据库的
+标准语言。

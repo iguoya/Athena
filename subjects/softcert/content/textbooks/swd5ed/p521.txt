@@ -1,0 +1,28 @@
+第9章数据库技术基础
+507
+句如下：
+GRANT INSERT ON TABLE S TO User1 WITH GRANT OPTION;
+（3）DBA把数据库SPJ中建立表的权限赋给用户User1，其授权语句如下：
+GRANT CREATETAB ON DATABASE SPJ TO Userl;
+2．收回权限语句格式
+REVOKE<权限>[,<权限>][ON<对象类型><对象名>]
+FROM<用户>[,<用户>}";
+【例9.36】要求回收用户对数据库SPJ中供应商S、零件P、项目J表的操作权限。
+（1）将用户Userl及User2对供应商 S、零件P、项目J的所有操作权限收回。
+REVOKE ALL PRIVILEGES ON TABLE S,PJ FROM User1, User2;
+（2）将所有用户对供应商S的所有查询权限收回。
+REVOKE SELECT ON TABLE S FROM PUBLIC;
+（3）将User1用户对供应商S的供应商编号Sno的修改权限收回。
+REVOKE UPDATE(Sno) ON TABLE S FROM User1;
+9.4.7
+嵌人式 SQL
+SQL 提供了将SQL语句嵌入到某种高级语言中的使用方式，通常采用预编译的方法识别
+嵌入到高级语言中的SQL语句。该方法的关键问题是必须区分主语言中嵌入的SQL语句，以
+及主语言和SQL间的通信问题。为了区分主语言与SQL语言，需要在所有的SQL语句前加前
+缀EXEC SQL，而 SQL的结束标志随主语言的不同而不同。
+例如，PL/I和C语言的引用格式为：
+EXEC SQL<SQL 语句>;
+文如，COBOL语言的引用格式为：
+EXEC SQL<SQL 语句>END-EXEC
+嵌入式SQL与主语言之间的通信通常有以下3种方式。
+态信息，使主语言能够根据此信息控制程序流程。

@@ -1,0 +1,36 @@
+第7章　面向对象技术
+405
+问它。
+Client
+Visitor
+VisitConcreteElementA(ConcreElementA)
+VisitConcreteElementB(ConcreElementB)
+ConcreteVisitorl
+ConcreteVisitor2
+VisitConcreteElementA(ConcreElementA)
+VisitConcreteElementA(ConcreElementA)
+VisitConcreteElementB(ConcreElementB)
+VisitConcreteElementB(ConcreElementB)
+ObjectStructure
+Element
+Accept(Visitor)
+ConcreteElementA
+ConcreteElementB
+Accept(Visitor v)
+Accept(Visitor v)
+OperationAO
+OperationBO
+V->VisitConcreteElementA(this)
+V->VisitConcreteElementB(this)
+图7-48访问者模式结构图
+ConcreteVisitor（具体访问者）实现每个有Visitor声明的操作，每个操作实现本算法
+的一部分，而该算法片段乃是对应于结构中对象的类。ConcreteVisitor 为该算法提供
+了上下文并存储它的局部状态。这一状态常常在遍历该结构的过程中累积结果。
+Element（元素）定义以一个访问者为参数的Accept操作。
+ConcreteElement（具体元素）实现以一个访问者为参数的Accept操作。
+ObjectStructure（对象结构）能枚举它的元素；可以提供一个高层的接口以允许该访问
+者访问它的元素；可以是一个组合或者一个集合，如一个列表或一个无序集合。
+3）适用性
+Visitor模式适用于：
+一个对象结构包含很多类对象，它们有不同的接口，而用户想对这些对象实施一些依
+赖于其具体类的操作。

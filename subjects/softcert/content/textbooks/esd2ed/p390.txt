@@ -1,0 +1,53 @@
+第7章
+嵌入式系统的项目开发与维护知识
+381
+Target
+Client
+Adaptee
+RequestO
+SpecificRequesto
+adaptee
+Adapter
+RequestO
+adaptee-+SpecificRequesto
+图 7-37
+对象适配器结构图
+(3)
+适用性。Adapter
+模式适用于：
+想使用一个已经存在的类，而它的接口不符合要求
+想创建一个可以服用的类，该类可以与其他不相关的类或不可预见的类
+（即那些
+接口可能不一定兼容的类）
+协同工作。
+（仅适用于对象
+想使用一个已经存在的子类，但是不可能对每一个都进
+Adapter)
+行子类化以匹配它们的接口。对象适配器可以适配它的父类接口。
+（代理）
+模式
+Proxy
+(1)
+意图。为其他对象提供一种代理以控制对这个对象的访问
+(2)
+结构。代理模式的结构如图7-38所示。
+Client
+Subject
+Requesto
+realSubject
+realSubject
+Proxy
+realSubjectReguestO;
+Requesto
+Reguesto
+图7-38
+代理模式结构图
+其中:
+ 保存一个引用使得代理可以访问实体；提供一个与 Subject的接口相同的接
+Proxy
+口，使代理可以用来代替实体；控制对实体的存取，并可能负责创建和册删除它；
+其他功能依赖于代理的类型：Remote Proxy ↑
+负责对请求及其参数进行编码，并向
+不同地址空间中的实体发送已编码的请求；Virtual Proxy
+可以缓存实体的附加信
+息，以便延迟对它的访问；Protection Proxy检查调用者是否具有实现一个请求所

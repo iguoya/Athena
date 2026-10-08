@@ -1,0 +1,31 @@
+第9章数据库技术基础
+493
+Qty NUMERIC(9),
+PRIMARY KEY(Sno,Pno),
+FOREIGN KEY(Sno) REFERENCES S(Sno),
+FOREIGN KEY(Pno) REFERENCES P(Pno);
+从上述定义可以看出，Sno CHAR(5)NOT NULLUNIQUE语句定义了 Sno 的列级完整性约
+束条件，取值唯一，不能取空值。
+需要说明如下。
+(1)PRIMARY KEY(Sno) 已经定义了 Sno 为主码,所以 Sno CHAR(5) NOT NULL UNIQUE
+语句中的NOT NULLUNIQUE可以省略。
+(2）FOREIGN KEY(Sno)REFERENCES S(Sno)定义了在 SP关系中 Sno 为外码，其取值必
+须来自 S关系的 Sno 域。同理，在 SP关系中 Pno 也定义为外码。
+2．修改和删除表
+1）修改表（ALTER TABLE)
+语句格式：ALTER TABLE<表名>[ADD<新列名><数据类型>[完整性约束条件]
+[DROP<完整性约束名>]
+[MODIFY<列名><数据类型>];
+例如，向“供应商”表S增加Zap“邮政编码”可用如下语句：
+ALTER TABLE S ADD Zap CHAR(6);
+注意：不论基本表中原来是否已有数据，新增加的列一律为空。
+又如，将Status字段改为整型可用如下语句：
+ALTER TABLE S MODIFY Status INT;
+2）删除表（DROPTABLE）
+语句格式：DROPTABLE<表名>
+例如执行DROPTABLE Student，此后关系Student不再是数据库模式的一部分，关系中的
+元组也无法访问。
+3. 索引建立与删除
+数据库中的索引与书籍中的索引类似，在一本书中，利用索引可以快速地查找所需信息，
+而无须阅读整本书。在数据库中，索引使数据库程序无须对整个表进行扫描，就可以在其中找
+到所需数据。书中的索引是一个词语列表，其中注明了包含各个词的页码。而数据库中的索引

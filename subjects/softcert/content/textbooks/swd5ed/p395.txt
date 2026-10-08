@@ -1,0 +1,36 @@
+第7章‧面向对象技术
+383
+Client
+prototype
+Prototype
+OperationO
+CloneO
+p=prototype >CloneO
+ConcretePrototypel
+ConcretePrototype2
+Clone0
+Clone0)
+return copy of self
+return copy of self
+图 7-28
+原型模式结构图
+3）适用性
+Prototype模式适用于：
+当一个系统应该独立于它的产品创建、构成和表示时。
+当要实例化的类是在运行时刻指定时，例如，通过动态装载。
+为了避免创建一个与产品类层次平行的工厂类层次时。
+们，可能比每次用合适的状态手工实例化该类更方便一些。
+5. Singleton （单例)
+1）意图
+保证一个类仅有一个实例，并提供一个访问它的全局访问点。
+2）结构
+单例模式的结构如图7-29所示。
+Singleton
+static Instance0
+return uniquelnstance
+SingletonOperationO
+GetSingletonDataO
+static uniquelnstance
+singletonData
+图7-29
+单例模式结构图

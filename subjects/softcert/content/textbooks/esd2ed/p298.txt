@@ -1,0 +1,61 @@
+第6章
+嵌入式程序设计
+289
+switch语句的一般形式如下：
+（表达式）［
+switch
+常量表达式1：
+case
+语句1;
+常量表达式2：
+case
+语句2;
+常量表达式n:
+case
+语句 n;
+default :
+语句n+l;
+语句的执行过程可以理解为：首先计算表达式卫的值，然后自上而下地将其
+switch
+结果值依次与每一个常量表达式的值进行匹配（常量表达式的值的类型必须与“表达式”
+的类型相同）。如果匹配成功，则执行该常量表达式后的语句系列。
+当遇到 break 时，则
+立即结束
+switch语句，否则顺序热行到
+switch 中的最后一条语句。default 是可选的，如
+果没有常量表达式的值与“表达式”
+的值匹配，
+则热行default后的语句系列。
+需要注意
+的是，表达式β的值必须是字符型或整型
+编译时通常根据
+switch语句中各case后面的常量表达式来构造一个跳转表，从而在
+确定表达式 P的值之后可以快速定位到相应的语句位置开始执行，而不是逐一与各常量
+表达式的值进行比较。
+【例6-3】
+switch语句中的break
+#include<stdio.h>
+int
+main ()
+int
+rank:
+scanf(n%d".&rank) :
+switch (rank)
+1:F
+printf("Ace!tn"): break:
+case
+printf("Jack!^n"):
+case
+12: 
+printf("Queen!"n"):break:
+case
+13: 1
+printf("King!^n"):
+case
+default: 1
+printf("unknown: %dyn", 
+rank) :
+return
+上面程序运行时，如果输入11，贝
+则输出“Jack!”和“Queen!”；如果输入13，则输
+出“King!”和“unknown: 13”

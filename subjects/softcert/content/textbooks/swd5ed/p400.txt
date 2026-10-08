@@ -1,0 +1,35 @@
+388
+软件设计师教程（第5版）
+和组合对象的使用具有一致性。
+2）结构
+组合模式的结构如图7-33所示。
+Client
+Component
+OperationO
+Add(Component)
+Remove(Component)
+GetChild(int)
+children
+Leaf
+Composite
+forall g in children
+OperationO
+g.OperationO);
+OperationO)
+Add(Component)
+Remove(Component)
+GetChild(int)
+图7-33
+组合模式结构图
+其中:
+Component为组合中的对象声明接口；在适当情况下实现所有类共有接口的默认行为；
+声明一个接口用于访问和管理Component 的子组件；（可选）在递归结构中定义一个
+接口，用于访问一个父组件，并在合适的情况下实现它。
+Leaf在组合中表示叶结点对象，叶结点没有子结点；在组合中定义图元对象的行为。
+Composite 定义有子组件的那些组件的行为；存储子组件；在Component 接口中实现
+与子组件有关的操作。
+Client通过 Component接口操纵组合组件的对象。
+3）适用性
+Composite模式适用于：
+想表示对象的部分-整体层次结构。
+希望用户忽略组合对象与单个对象的不同，用户将统一地使用组合结构中的所有对象。

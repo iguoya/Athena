@@ -1,0 +1,79 @@
+第6章
+嵌入式程序设计
+327
+访问说明符
+e或protected 控制数据成员和成员函数在类内和类外如何
+public、private
+定义为 private，它仅能在类内访问，不能被它的派生类访问。当一个成员定义为 protected,
+它能在类内和其派生类内被访问。当一个成员没有指定访问说明符时，默认为
+private .
+在定义派生类时，访问说明符也能出现在基类的前面，它控制基类的数据成员和成员函
+数在派生类中的访问方法。当访问说明符为 public 时，基
+基类的公有成员变为派生类的公
+有成员，基类的保护成员变为派生类的保护成员；当访问说明符为
+protected 时，基类的
+公有和保护成员均变为派生类的保护成员；而当访问说明符为private时，基类的公有和
+保护成员均变为派生类的私有成员
+【例6-16】定义一个元素顺序存储的线性表类，派生出队列和栈，如图6-23所示。
+LinearList
+Queue
+Stack
+图6-23
+Queue、Stack 继承 LinearList
+LinearList
+class
+int
++buffer:
+int
+slze:
+public:
+LinearList(int
+num
+size =
+num: 10:
+(num
+>10?
+buffer
+intlsizel:
+new
+ LinearList (delete
+buffer:t
+bool insert(int
+ x,int
+，／在线性表第i个元素后插入新元素
+／返回值表示操作成功或失败
+&x, int i);
+boo1
+／删除线性表的第i个元素，返回值表示操作成
+remove (int
+功或失败
+int
+element(int
+i)
+／返回线性表的第i个元素
+const:
+int
+，／查找值为x的元素并返回其位置序号，未找到
+search (int
+const:
+时返回0
+int length()
+返回线性表的长度
+const:
+（即元素数自）
+class
+LinearList
+是LinearList的派生类
+Queue:private
+/Queue
+public:
+enQueue(int x)
+bool
+／元素x入队，返回值表示操作成功或失败
+( return
+insert(x,length)):1
+&x)
+bool deQueue(int
+／元素出队，由x带回队头元素
+return
+remove(x.1) :)

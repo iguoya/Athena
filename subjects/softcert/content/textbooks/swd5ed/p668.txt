@@ -1,0 +1,40 @@
+654
+软件设计师教程（第5版）
+typedef struct Node 
+/*栈中的数据元素*/
+int data;
+/*上次入栈的数据元素结点的地址*/
+struct Node* next;
+$Node;
+/*栈的类型定义*/
+typedef struct Stack 
+/*栈顶指针*/
+Node * pTop;
++Stack;
+Stack* NewStackO{
+return (Stack*)calloc(1,sizeof(Stack);
+/*判断栈是否为空栈，为空时返回1，否则返回0*/
+int IsEmpty(Stack* S)
+if(S -- NULL IIS->pTop =- NULL) return 1;
+return 0;
+/*获取栈顶数据*/
+int Top(Stack* S)
+if( IsEmpty(S) )
+/*若栈为空，则返回机器可表示的最小整数*/
+return INT_MIN;
+return S->pTop->data;
+/*将数据元素theData压栈*/
+void Push(Stack* S, int theData)
+Node* newNodePtr;
+newNodePtr = (Node *)malloc(sizeof(Node);
+newNodePtr->data = theData;
+newNodePtr->next = S->pTop;
+S->pTop = newNodePtr;
+/*非空栈的栈顶元素出栈*/
+void Pop(Stack* S)
+Node* lastTop;
+if( IsEmpty(S) ) return;
+lastTop = S->pTop;
+S->pTop = S->pTop->next;
+free(lastTop);
+#define MD(a)

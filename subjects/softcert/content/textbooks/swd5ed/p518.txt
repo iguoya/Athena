@@ -1,0 +1,36 @@
+504
+软件设计师教程（第5.版）
+AS SELECT Sno,Sname,Sage,Sex
+FROM Student
+WHERE SD-'CS'
+WITH CHECK OPTION;
+此时查询计算机系年龄小于20岁的学生的学号及年龄的SQL语句如下：
+SELECT Sno, Age FORM CS-STUDENT WHERE SD='CS' AND Age<20;
+系统执行该语句时，通常先将其转换成等价的对基本表的查询，然后执行查询语句。即当
+查询视图表时，系统先从数据字典中取出该视图的定义，然后将定义中的查询语句和对该视图
+的查询语句结合起来，形成一个修正的查询语句。对上例修正之后的查询语句为：
+SELECT Sno,Age FORM Student WHERE SD='CS' AND Age<20;
+9.4.5
+SQL数据更新
+1．插入
+如果要在关系数据库中插入数据，可以指定被插入的元组，或者用查询语句选出一批待插
+入的元组。插入语句的基本格式如下：
+INSERTINTO基本表名（字段名[,字段名}）
+VALUES(常量[,常量})；查询语句
+INSERT INTO 基本表名（列表名）
+SELECT查询语句
+【例9.29】将学号为3002、课程号为C4、成绩为98的元组插入SC关系中。其语句如下：
+INSERTINTO
+ SC
+VALUES(3002', 'C4′,98)
+【例9.30】
+创建了一个新的视图v_employees，该视图基于表employees 创建。
+CREATE
+VIEW V_employees(number, name, age, sex, salary)
+AS
+SELECT
+number, name, age, sex, salary
+FROM employees
+WHERE name-'张三'
+通过执行以下语句使用v_employees视图向表employees中添加-一条新的数据记录。
+INSERT INTO v_employees

@@ -1,0 +1,32 @@
+666
+软件设计师教程（第5版）
+循环赛日程安排算法的关键在于寻找这四部分元素之间的对应关系，其C代码如下：
+int ** GameTable(int k)(
+/*为矩阵A分配空间，且不使用下标包含0的元素，即下标从1开始计算。
+矩阵A的第一列为选手的编号*/
+int** A = (int **) malloc( sizeof(int *)*( (int)pow(2,k) + 1);
+int ij,t;
+for (i = 1 ; i <= (int)pow(2,k) ; i++)(
+A[ij = (int *) malloc( sizeof(int)*( (int)pow(2,k) + 1);
+int n = 2;
+A[1][1] = 1;
+A[1][2] = 2;
+A[2][1] = 2;
+A[2]|2] = 1;
+for(t = 1 ; t <k ; t++)(
+/*以分治法填充日程表*/
+int temp = n;
+n *= 2;
+/*扩展左下角*/
+for(i = temp + 1 ; i<= n ; i++)
+for(j = 1 ;j <= temp ; j++)
+A[il[i] = A[i - templlj] + temp;
+/*扩展右上角*/
+for(i = 1 ; i<= temp ; i++)
+for(j = temp + 1 ;j <= n ; j++)
+A[ijli] = A[ilj - temp] + temp;
+/*扩展右下角*/
+for(i = temp+1 ; i <-n ; i++)
+for(j = temp + 1 ; j <= n ; j++)
+A[illi] = A[i - temp]li - temp];
+return A;

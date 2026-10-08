@@ -1,0 +1,39 @@
+第8章算法设计与分析
+435
+经分析，该问题具有最优子结构，可以用动态规划法求解。但同时该问题还具有贪心选择
+性质，,因此可以用贪心法更简单地求解。
+定义集合 S，={akεS:fi≤S<fi≤sj。为了完整地表示问题，加入两个虚拟活动 αo 和
+an+1，其中，fo=0，Sn+1=o，这样 S-So,n+1。
+【定理8.3】对于任意非空子问题Si，设am是S,中具有最早结束时间的活动。
+那么，（1）活动am在S;的某个最大兼容活动子集中。
+（2）子问题 Sim为空，所以选择αm将使Smj为唯一可能非空的子问题。
+（证明略）
+假设对 n 个活动按其结束时间单调递增进行了排序，排序的时间复杂度为O(nlgn)。下面
+给出解决活动选择问题的贪心算法的递归形式和迭代形式。
+递归贪心算法：
+int OptimalSubset[100];
+/*递归贪心算法*/
+intRecursiveActivitySelector(int*s,int*fintindex,intn)/*s[O]和fO]为0，活动开始时间和结束时间从
+下标1开始存储*/
+int m = index + 1;
+static int activity_number = O;
+while(m <= n && s[m] <= f[index])
+/*寻找开始时间晚于index结束的活动*/
+m++;
+if(m <= n)(
+OptimalSubset[activity_number++] = m;
+/*选择找到的活动*/
+RecursiveActivitySelector(s,f,m,n);
+/*以活动m的结束时间为基准继续寻找*/
+else
+return activity_number;
+送迭代贪心算法：
+int GreedyActivitySelector(int *s,int *f,int n)
+int activity_number = O;
+OptimalSubset[activity_number++] = 1;
+/*选择活动1*/
+int index = 1;
+int m;
+for(m = 2;m <= n;m++)[
+if(s[m] >= f[index])[
+/*寻找开始时间晚于index结束的活动*/

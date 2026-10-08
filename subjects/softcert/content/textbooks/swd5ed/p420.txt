@@ -1,0 +1,32 @@
+408
+软件设计师教程（第5版）
+Library
+LibraryVisitor
+LibraryItemInterface
+Book
+Article
+LibrarySumPrintVisitor
+图7-49
+馆藏文献统计访问者模式类图
+C++程序如下：
+class LibraryVisitor;
+class LibraryItemInterface {
+public:
+virtual void accept(LibraryVisitor* visitor) = O;
+class Article : public LibraryItemInterface 
+private:
+m_title;
+string
+1论文名
+string
+m_author;
+1/论文作者
+int
+m_start page;
+int
+m_end_ page;
+public:
+Article(string p_author, string p_title, int p_start _page,int p_end_page );
+int getNumberOfPagesO;
+void accept(LibraryVisitor* visitor);
+class Book : public Libraryltemlnterface 

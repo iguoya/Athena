@@ -1,0 +1,34 @@
+第8章算法设计与分析
+441
+不可能产生最大价值呢？考虑贪心策略，先对所有物品按其单位重量价值从大到小排序，对搜
+索空间树中的某个结点，如 F，已经确定了某些 X(i)，1≤i<k，而其他的 X(i)，k+1<in 待定。
+此时可以将0-1背包问题松弛为背包问题，求从F结点扩展下去，计算能获得的最大价值。若
+该价值比当前已经得到的某个可行解的值要小，则该结点不必再扩展。
+若所有物品已经按其单位重量价值从大到小排序。假设前k（包含k）个物品是否放入背
+包已经确定，现在考虑在当前背包的剩余容量下，若是背包问题，那么能获得的最大价值是多
+少？即求背包中物品的价值上界。C代码如下：
+float Bound(float *Values,int* Weights,float * VW,int n,int W,float Profit_Gained,int Weight_ Used,int k)
+/*Profit_Gained、Weight_Used、k分别为当前已经获得的价值、背包的重量、已经确定的物品*/
+int i;
+for(i = k + 1;i < n;i++)
+if(Weight_ Used+Weights [i] <= W)
+Profit_Gained += Values[i];
+Weight_Used += Weights[il];
+elsel
+Profit_Gained += VW[i]*(W - Weight_Used);
+Weight_ Used = W;
+return Profit_Gained;
+return Profit_Gained;
+/*Values为物品的价值数组，Weights为物品的重量数组，VW为物品Values/Weights的数组，W为
+背包的最大容量*/
+int current_weight = O;
+float current _profit = O;
+int Weight = O;
+float Profit = -1;
+int index = O;
+/*为数组X、Y分配空间*/
+int* X = (int*)malloc(sizeof(int)*n);
+int* Y = int*)malloc(sizeof(int)*n);
+while(1)
+while(index < n && current_weight + Weights[index] <- W)f
+current _profit += Values[index];

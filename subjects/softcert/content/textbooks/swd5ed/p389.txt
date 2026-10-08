@@ -1,0 +1,37 @@
+第7章‧面向对象技术
+377
+9．部署图
+部署图（Deployment Diagram）是用来对面向对象系统的物理方面建模的方法，展现了运
+行时处理结点以及其中构件（制品）的配置。部署图对系统的静态部署视图进行建模，它与构件图
+相关。通常，一个结点是一个在运行时存在并代表一项计算资源的物理元素，至少拥有一些内容，
+常常具有处理能力，包含一个或多个构件。部署图如图7-23所示，其中，<<artifact>>表示制品。
+:DB Server
+《artifact》
+MySQL
+Web Server
+artifact
+Website
+https:80
+:User Client
+:Browser
+《artifact》
+HTML5
+图7-23UML部署图
+10．包图
+包图（PackageDiagram）是用于把模型本身组织成层次结构的通用机制，不能执行，展现
+由模型本身分解而成的组织单元以及其间的依赖关系。
+包可以拥有其他元素，可以是类、接口、构件、结点、协作、用例和图，甚至是嵌套的其
+他包，如图7-24所示。拥有是一种组成关系，是一种按规模来处理问题的重要机制，也意味着
+元素被声明在包中，一个元素只能被一个包所拥有，拥有关系的包形成了一个命名空间，其中
+同一种元素的名称必须唯一。
+BusinessA
+Accounting
+Bank
+Ordering
+Shipping
+Dependency
+DataMgmt
+UserDB
+BusinessDB
+图7-24
+UML包图

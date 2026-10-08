@@ -1,0 +1,31 @@
+674
+软件设计师教程（第5版）
+延迟到子类中，使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤。
+AbstractClass
+TemplateMethodO
+PrimitiveOperation10
+PrimitiveOperation10
+PrimitiveOperation20
+PrimitiveOperation20
+ConcreteClass
+PrimitiveOperation10
+PrimitiveOperation20
+图12-35
+模板方法类图
+4．能够将现实问题中所描述的各种职责映射到类图中具体的类
+在提出的具体问题中，已经告知了Application类中的 openDocument方法采用了模板方法，
+而openDocument方法的步骤都已经给出，因此，很容易将Application类对应为模板方法类图
+中的AbstractClass 类，openDocument方法映射为模板方法类图中的TemplateMethod 方法，而
+主要步骤对应PrimitiveOperation1O等基本操作。由此可推出，在各种主要的步骤中；应该存在
+某些步骤是由 Application 的子类实现的。
+5．能够使用一种面向对象语言实现设计
+一旦分析清楚实际问题的设计结果和原始的设计模式类图中类的对应关系，便可采用一种
+面向对象语言实现。下面分别采用C++和Java语言实现给出的设计。
+【C++代码】
+#include<iostream>
+#include <vector>
+using namespace std;
+class Document!
+public:
+voidsaveO(/*存储文档数据；此处代码省略*/}
+void open(string docName)/*打开文档，此处代码省略*/

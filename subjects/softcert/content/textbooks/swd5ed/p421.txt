@@ -1,0 +1,40 @@
+第7章面向对象技术
+409
+private:
+string
+m_title;
+1/书名
+string
+m_author;
+1/作者
+int
+m pages;
+1/页数
+public:
+Book(string p_author, string p_title, int p_pages);
+int getNumberOfPagesO;
+void accept(LibraryVisitor* visitor);
+3;
+class LibraryVisitor {
+public:
+virtual void visit(Book* p_book) = 0;
+virtual void visit(Article* p_article) = O;
+virtual void printSumO = O;
+3;
+class LibrarySumPrintVisitor : public LibraryVisitor 
+//打印总页数
+private:
+int sum;
+public:
+LibrarySumPrintVisitorO;
+void visit(Book* p_book);
+void visit(Article* p_article);
+void printSumO;
+// visitor.cpp
+int Article:getNumberOfPagesO
+return m_end_ page - m_start page;
+void Article:accept(LibraryVisitor* visitor) visitor->visit(this); 
+Book:Book(string P_author, string p_title, int p_ pages )
+m_title =- p_title;
+m_author = p_author;
+m_pages = p_pages;

@@ -1,0 +1,99 @@
+278
+嵌入式系统设计师教程
+（第2版）
+【例6-2】下面是一个简单的C程序
+#include
+<stdio.h>
+#include
+<assert.h>
+#define
+/宏定义
+PI
+3.1415926
+int
+main ()
+double
+radlus.
+area r
+#ifdef
+条件编译
+TEST
+printf("testn"):
+#endif
+printf("input
+the radius
+ the circle:")
+scanf("%lf"
+&radius) :
+assert (radius>=0):
+★ PI:
+radius
+radius
+宏引用
+area
+:%lf
+%lftn"t
+printf("radius
+radius.
+area
+area):
+return
+0:
+2. 3
+基本数据类型
+在C程序中，数据都具有类型，通过数据类型定义了数值范围以及可进行的运算，
+的数据类型可分为基本数据类型
+（内置的类型）
+和复合数据类型
+（用户定义的类
+型）。内置的类型是指C语言直接规定的类型，用户定义的类型在使用以前必须先定义，
+枚举、结构体和共用体类型都是用户定义类型
+（char）、整型
+C的基本数据类型有字符型
+int）、浮点型
+（float、double），如表6-3所示。
+表 6-3
+C基本数据类型
+类型名
+字节
+表示范围
+char
+字符型
+字符型
+-128-127
+(char)
+无符号字符型
+unsigned char
+0~255
+整型
+int
+与机器有关
+无符号整型
+与机器有关
+unsigned int
+短整型
+short int
+32 76832 767
+整型
+(int)
+无符号短整型
+unsigned short int
+065 535
+long int
+长整型
+2 147483 648-2 147 483 647
+unsigned long int
+无符号长整型
+0~4 294 967 295
+float
+单精度浮点型
+3.4E±38（7位有效数字）
+浮点型
+双精度浮点型
+double
+1.7E±308（15位有效数字）
+长双精度型
+10
+long double
+1.2E ± 4932
+（19位有效数字）

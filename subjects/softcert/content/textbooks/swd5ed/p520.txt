@@ -1,0 +1,41 @@
+506
+软件设计师教程（第5版）
+据具有何种权利，是个政策问题而不是技术问题。DBMS 的功能就是保证这些决定的执行。因
+此，DBMS数据控制应具有以下功能。
+（1）通过GRANT和REVOKE将授权通知系统，并存入数据字典。
+（2）当用户提出请求时，根据授权情况检查是否执行操作请求。
+SQL标准包括DELETE、INSERT、SELECT和 UPDATE权限。SELECT权限对应于 READ
+权限，SQL还包括了REFERENCES权限，用来限制用户在创建关系时定义外码的能力。
+1．授权的语句格式
+GRANT<权限>[,<权限>][ON<对象类型><对象名>]TO<用户>[,<用户>]…
+[WITH GRANT OPTION];
+注意：不同类型的操作对象有不同的操作权限，常见的操作权限如表9-7所示。
+表9-7常见的操作权限
+操作权限
+对　象
+对象类型
+SELECT、INSERT、UPDATE、DELETE、
+属性列
+TABLE
+ALLPRIVILEGES（4种权限的总和）
+SELECT、INSERT、UPDATE、DELETE、
+视图
+TABLE
+ALLPRIVILEGES（4种权限的总和）
+SELECT、INSERT、UPDATE、DELETE、ALTER、INDEX
+基本表
+TABLE
+ALLPRIVILEGES（6种权限的总和）
+CREATETAB建立表的权限，可由DBA授予普通用户
+数据库
+DATABASE
+说明如下。
+PUBLIC：接受权限的用户可以是单个或多个具体的用户，PUBLIC参数可将权限赋给
+全体用户。
+WITHGRANTOPTION：若指定了此子句，那么获得了权限的用户还可以将权限赋给
+其他用户。
+【例9.35】如果用户要求给数据库SPJ中的供应商S、零件P、项目J表赋予各种权限。
+（1）将对供应商S、零件P、项目J的所有操作权限赋给用户User1及User2，其授权语句
+如下:
+GRANT ALL PRIVILEGES ON TABLE S,PJ TO User1, User2;
+（2）将对供应商S的插入权限赋给用户Userl，并允许将此权限赋给其他用户，其授权语

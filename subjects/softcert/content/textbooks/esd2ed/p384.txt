@@ -1,0 +1,67 @@
+第7章
+嵌入式系统的项目开发与维护知识
+375
+Company
+聚集
+多重度
+Department
+Office
+关联
+address:String
+name:Name
+voice:Number
+Department
+角色
+泛化
+member
+1.*
+manager
+Person
+Headguarters
+依赖
+name:Name
+属性
+employeelD:Integer
+PersonRecord
+getPersonalRecordsO
+接口
+操作
+texID:Integer
+GetPhoto(p:Photo)
+salary:Real
+图 7-30
+UMIL类图
+（2）对象图
+日（object diagram）。展现了一组对象以及它们之间的关系，描述了在类
+图中所建立的事物实例的静态快照。对象图一般包括对象和链。与类图相同，对象些
+图给出系统的静态设计视图或静态进程视图，但它们是从真实的或原型案例的角度建
+立的。
+（3）用例图
+(use case diagram）。展现了一组用例、参与者
+(actor)
+以及它们之间的
+关系，描述了谁将使用系统以及用户期望以什么方式与系统交互，如图7-31所示。用例图
+中包含用例、参与者，以及用例之间的扩展关系（<<extend>>）和包含关系（<<include>>），
+参与者和用例之间的关联关系，用例与用例以及参与者与参与者之间的泛化关系。用例
+图给出系统的用例视图，可用于对系统的语境建模；对系统的需求建模
+EnrollSystem
+包含关系
+Enroll Student
+Enroll in
+in University
+《<include)
+Seminar
+Student
+泛化关系
+<extend>)
+扩展关系
+参与者
+Enroll Family
+Perform Security
+Member
+Check
+用例
+InternationalStudent
+系统边界
+图 7-31
+UML用例图

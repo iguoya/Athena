@@ -1,0 +1,31 @@
+第7章面向对象技术
+397
+支持修改日志。这样当系统崩溃时，这些修改可以被重做一遍。在Command 接口中
+添加装载操作和存储操作，可以用来保持变动的一个一致的修改日志。从崩溃中恢复
+的过程包括从磁盘中重新读入记录下来的命令并用Execute操作重新执行它们。
+用构建在原语操作上的高层操作构造一个系统。这样一种结构在支持事务
+（Transaction）的信息系统中很常见。Command模式提供了对事务进行建模的方法。
+Command有一个公共接口，使得可以用同一种方式调用所有的事务，同时使用该模式
+也易于添加新事务以扩展系统。
+3. Interpreter （解释器)
+1）意图
+给定一个语言，定义它的文法的一种表示，并定义一个解释器，这个解释器使用该表示来
+解释语言中的句子。
+2）结构
+解释器模式的结构图如图7-40所示。
+Context
+Client
+AbstractExpression
+Interpret(Context)
+TerminalExpression
+NonterminalExpression
+Interpret(Context)
+Interpret(Context)
+图7-40
+解释器模式结构图
+其中:
+AbstractExpression声明一个程序的解释操作，这个接口为抽象语法树中所有的结点所
+共享。
+符需要该类的一个实例。
+NonterminalExpression 对文法中的每一条规则都需要一个 NonterminalExpression 类;
+为每个符号都维护一个AbstractExpression类型的实例变量；为文法中的非终结符实现

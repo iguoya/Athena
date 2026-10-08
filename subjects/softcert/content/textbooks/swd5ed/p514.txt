@@ -1,0 +1,49 @@
+500
+软件设计师教程（第5版）
+【例9.21】查询其他系比计算机系CS 所有学生年龄都要小的学生的姓名及年龄。
+方法1：（用ALL谓词）
+SELECT
+Sname, Age
+FROM
+WHERE
+Age< ALL(SELECT : Age
+FROM S
+WHERE
+SD=CS')
+AND SD<>'CS'
+方法2：（用MIN聚集函数）从等价的转换关系表9-5中可见，<ALL可用<MIN代换。
+SELECT
+Sname, Age
+FROM
+Age<(SELECT 
+WHERE
+MIN(Age)
+FROM S
+WHERE
+SD='CS'
+AND SD<>'CS'
+说明：方法2实际上是找出计算机系年龄最小的学生的年龄，只要其他系的学生年龄比这
+个年龄小，那么就应在结果集中。
+【例9.22】查询其他系比计算机系某一学生年龄小的学生的姓名及年龄。
+方法1：（用ANY谓词）
+SELECT
+Sname,Age
+FROM
+(SELECT
+Age< ANY
+WHERE
+Age
+FROM S
+WHERE
+SD='CS)
+AND SD<>'CS
+SELECT
+Sname,Age
+ FROM
+Age< (SELECT
+WHERE
+ MAX (Age)
+FROM S
+WHERE
+SD-'CS'
+AND SD<>'CS'

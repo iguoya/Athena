@@ -1,0 +1,62 @@
+302
+嵌入式系统设计师教程
+（第2版）
+3. #
+指针与函数
+指针可以作为函数的参数或返回值
+指针作为函数参数
+函数调用时，用指针作为函数的参数可以借助指针来改变调用函数中实参变量的值
+以下面的
+swap 函数为例进行说明，该函数的功能是交换两个整型变量的值。
+void
+Pa, int*
+swap(int*
+pb)
+int
+temp
++pa 
+*pa
+*pb:
+ temp:
+*pb
+若有函数调用
+swap(&x, &y)，则
+swap 函数执行后两个实参x和y 的值被交换。函数
+中参与运算的值不是
+ pa、pb 本身，而是它们所指向的变量，也就是实参x、y（*pa与x、
+*pb 与 y 所表示的对象相同）。在调用函数中，是把实参的地址传送给形参，即传送&x
+和&y，在 swap
+函数中指针pa 和pb 并没有被修改。
+如果在被调用函数中修改了指针参数的值，则不能实现对实参变量的修改。例如，
+下面函数
+女get_str 中的错误是将指针p指向的目标修改了，从而在 main 中调用
+get str 后，
+ptr 的值仍然是 NULL。
+void get str(char*
+P)
+(char
+malloc(sizeof("testing"));
+strcpy(p,
+"testing")
+int
+main ()
+char*
+ptr
+ = NULL:
+get_str(ptr):
+/调用结束后ptr仍然是空指针
+if
+printf("%san",ptr):
+(ptr)1
+/输出ptr所指字符串的值
+return
+0:
+将上面的函数定义和调用作如下修改，就可以修改实参ptr的值，使其指向函数中所
+申请的字符串存储空间。
+void get str(char**
+P)
+(char
+malloc(sizeof("testing")):
+strcpy(*p,
+"testing"):
+函数调用为：get_str(&ptr)

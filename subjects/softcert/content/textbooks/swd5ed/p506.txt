@@ -1,0 +1,40 @@
+492
+软件设计师教程（第5版）
+SQL 的数据定义包括对表、视图、索引的创建和删除。
+1.创建表（CREATE TABLE)
+语句格式：CREATE TABLE<表名>(<列名><数据类型>[列级完整性约束条件]
+[,<列名><数据类型>[列级完整性约束条件}]
+[,<表级完整性约束条件>]);
+列级完整性约束条件有 NULL（空）和UNIQUE（取值唯一），如NOT NULLUNIQUE 表
+示取值唯一，不能取空值。
+【例9.11】建立一个供应商、零件数据库。其中，“供应商”表S（Sno，Sname，Status,
+City）分别表示供应商代码、供应商名、供应商状态和供应商所在城市。“零件”表P（Pno，
+Pname，Color，Weight，City）表示零件号、零件名、颜色、重量及产地。数据库要满足以下
+要求。
+（1）供应商代码不能为空，且值是唯一的，供应商的名也是唯一的。
+（2）零件号不能为空，且值是唯一的；零件名不能为空。
+（3）-一个供应商可以供应多个零件，而一个零件可以由多个供应商供应。
+分析：根据题意，供应商和零件分别要建立一个关系模式。供应商和零件之间是一个多对
+多的联系，在关系数据库中，多对多联系必须生成一个关系模式，而该模式的码是该联系两端
+实体的码加上联系的属性构成的，若该联系名为SP，那么关系模式为 SP（Sno,Pno,Qty），其
+中，Qty表示零件的数量。
+根据上述分析，用 SQL建立一个供应商、零件数据库如下：
+CREATE TABLE S( SnO CHAR(5) NOT NULL UNIQUE,
+Sname CHAR(30) UNIQUE,
+Status . CHAR(8),
+City
+CHAR(20)
+PRIMARY KEY(Sno);
+CREATE TABLE P( PnoCHAR(6),
+Pname CHAR(30) NOT NULL,
+Color (
+CHAR(8) ,
+Weight NUMERIC(6,2),
+City
+CHAR(20)
+PRIMARY KEY(Pno);
+CREATE TABLE SP( Sno CHAR(5),
+Pno
+CHAR(6),
+Status
+CHAR(8) ,

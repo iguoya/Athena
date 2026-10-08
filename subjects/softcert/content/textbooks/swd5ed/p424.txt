@@ -1,0 +1,38 @@
+412
+软件设计师教程（第5版）
+CashContext
+CashSuper
+CashDiscount
+CashNorma!
+CashReturn
+图7-50购物中心收银软件策略模式类图
+C++程序如下:
+#include <iostream>
+using namespace std;
+enum TYPE  NORMAL, CASH_DISCOUNT, CASH_RETURN);
+class CashSuper (
+public:
+virtual double acceptCash(double money) = 0;
+3;
+1/正常收费子类
+class CashNormal : public CashSuper {
+public:
+double acceptCash(double money) {
+return money;
+3;
+class CashDiscount : public CashSuper {
+private:
+1折扣率
+double moneyDiscount;
+public:
+CashDiscount(double discount) 
+moneyDiscount = discount; 
+return money * moneyDiscount; 
+double acceptCash(double money) ↑
+1/满额返利
+class CashReturn : public CashSuper t
+private:
+1/满额数额
+double moneyCondition;
+1/返利数额
+double moneyReturn;

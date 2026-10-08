@@ -1,0 +1,46 @@
+498
+软件设计师教程（第5版）
+SELECT Sno,2017-Age FROM
+3．连接查询
+若查询涉及两个以上的表，则称为连接查询。
+方法如下;
+SELECT
+Sno, Sname
+FROM
+S, SC
+WHERE
+S.Sno=SC. Sno AND SC.Cno=' C1'
+【例 9.17】
+检索选修了课程名“MS”的学生的学号和姓名，可用连接查询和嵌套查询实
+现，方法如下：
+SELECT
+Sno,Sname
+FROM
+S,SC,C
+WHERE
+S. Sno=SC. Sno AND SC.Cno=C.Cno ANDC.Cname='MS'
+【例9.18】
+SELECT
+Sno
+FROM
+SC SCX, SC SCY
+WHERE
+SCX. Sno=SCY. Sno AND SCX.Cno= C1'AND SCY.Cno=' C3'
+4．子查询与聚集函数
+1）子查询
+子查询也称嵌套查询。嵌套查询是指一个 SELECT-FROM-WHERE查询块可以嵌入另一个
+查询块之中。在SQL中允许多重嵌套。
+【例9.19】例9.17可以采用嵌套查询来实现。
+SELECT
+Sno, Sname
+FROM
+Sno IN (SELECT
+Sno
+WHERE
+FROM SC
+Cno IN (SELECT
+WHERE
+Cno
+FROM C
+WHERE
+Cname= MS))

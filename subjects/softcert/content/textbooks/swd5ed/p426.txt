@@ -1,0 +1,32 @@
+414
+软件设计师教程（第5版）
+import java.util.*;
+enum TYPE { NORMAL, CASH_ DISCOUNT, CASH_RETURN);
+interface CashSuper 
+public double acceptCash(double money);
+1/正常收费子类
+class CashNormal implements CashSuper {
+public double acceptCash(double money) 
+return money;
+class CashDiscount implements CashSuper 
+1/折扣率
+ private double moneyDiscount;
+public CashDiscount(double  moneyDiscount) 
+this.moneyDiscount = moneyDiscount;
+public double acceptCash(double money) 
+return money * moneyDiscount;
+//满额返利
+class CashReturn implements CashSuper 
+private double moneyCondition;
+private double moneyReturn;
+public CashReturn(double moneyCondition, double moneyReturn) {
+//满额数额
+this.moneyCondition = moneyCondition;
+1/返利数额
+this.moneyReturn = moneyReturn;
+public double acceptCash(double money) 
+double result = money;
+if(money >= moneyCondition)
+result = money - Math.floor(money / moneyCondition ) * moneyReturn;
+return result;
+class CashContext {

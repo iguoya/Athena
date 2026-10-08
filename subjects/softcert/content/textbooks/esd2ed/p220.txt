@@ -1,0 +1,49 @@
+第4章
+嵌入式系统软件基础知识
+211
+索弓功能，使得在海量文件中定位单个文件的时间更短。
+嵌入式应用
+EmbeddedApplication
+操作系统
+OperatingSystem
+文件系统接口
+操作系统服务
+FileSystem Interface
+OSServices
+文件系统核心
+Reliance Core
+块设备接口
+缓冲管理
+文件系统
+BlockDevice Interface
+BufferManager
+Datalight Reliance
+磁盘缓存（可选）
+Disk Cache（optinal)
+分区管理（可选）
+Partition Manager (optinal)
+块设备驱动
+操作系统
+BlockDeviceDriver
+Operating System
+硬件平台
+存储设备（StorageDevice）
+HardwarePlatform
+图 4-46
+DatalightReliance文件系统结构图
+（3）基于事务处理：Reliance
+能够跟踪文件系统的稳定状态，包括目录数据和用户数
+据。在用户设定的事务点上将内存中的数据更新到磁盘上，当系统在两个事务点之间发
+生断电的时候，Reliance将文件数据还原到文件系统上一个稳定状态。Reliance
+通过基于
+事务处理的方法，提供给用户一致、可靠的文件系统
+Reliance提供一种特有的存储格式来保证所保存数据的安全性。Reliance可以读取以
+格式存储的文件，而基于标准
+Reliance
+Windows操作系统的应用则无法读该格式存储的
+数据
+快速启动：由于 Reliance 的可靠性设计能够保证文件系统状态的一致性，所以
+(4)
+设备上电启动的时候没有必要运行类似chkdsk
+等应用程序检查文件系统的完整性，这样
+使得Reliance可以提供比DosFS等文件系统更加快速的启动时间。

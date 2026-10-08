@@ -1,0 +1,73 @@
+304
+嵌入式系统设计师教程
+（第2版）
+函数指针也可以在定义时初始化
+int
+char+.
+(Compare)(const
+char+)
+const
+strcmp:
+将函数地址赋给函数指针时，其参数和类型必须匹配
+若有函数定义 int strcmp(const char*,const char*);则
+strcmp
+能被直接调用，也能通过
+Compare
+被间接调用。下面三个函数调用是等价的：
+"Tim):
+strcmp ("Tom"
+/直接调用
+"Tim):
+间接调用
+(*Compare) (Tom"
+"Tim:
+间接调用
+Compare ("Tom".
+【例6-9】在下面的程序代码中，由函数声明
+"int fl(int
+(*f)(int));
+可知调用函数fl
+时，实参应该是函数名或函数指针，且该函数
+（或函数指针指向的函数）
+应有一个整型
+参数且返回值为整型，而 f2 和f3都是符合这种定义的函数。因此，可以通过调用 fl来
+分别调用f2和 f3。
+#include
+ <stdio.h>
+函数原型
+int
+fl(int
+(f）(int）)）
+声明函数
+int
+f2(int):
+／函数原型，声明函数f2
+int
+f3(int):
+／函数原型，声明函数f3
+int
+main 0
+调用函数
+printf("%dn",fl（f2
+f1，f2作为实参
+printf("%d^n",fl（f3 ））;
+／调用函数f1，f3作为实参
+return
+int fl（ int
+(f）(int))
+int n =
+通过函数指针实现函数调用，以函数调用的返回值作为循环条件
+while
+(f(n))
+ntt:
+return
+n:
+int
+f2(int n)
+printf("f2:
+return
+nxn-4 :
+int
+f3(int n)
+printf("f3:
+return n-l:

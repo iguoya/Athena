@@ -1,0 +1,84 @@
+第6章
+嵌入式程序设计
+311
+如图6-19（b）所示。元素出队时修改队头指针，即令Q.front=（Q.front+1)%MAXSIZE，
+如图6-19（c）所示。
+根据队列操作的定义，当出队操作导致队列变为空时，就有
+Q.rear-=Q.front，如图
+6-19（d）所示；若入队列操作导致队列满，则也有Q.
+Q.rear==Q.front，如图6-19（e）所示。
+在队列空和队列满的情况下，循环队列的队头、队尾指针指向的位置是相同的，此时仅
+根据Q.rear 和Q.front之间的关系无法判定队列的状态。为了区分队空和队满，可采用两
+种处理方式：其一是设置一个标志域，以区别头、尾指针的值相同时队列是空还是满；
+其二是牺牲一个元素空间，约定以“队列的尾指针所指位置的下一个位置是头指针”表
+示队列满，如图6-19（f）所示，而头、尾指针的值相同时表示队列为空
+Q.rear
+Q.front
+Q.front
+e7
+e8
+e7
+e8
+Q.rear
+Q.rear
+Q.front
+e65
+(b）元素eee入队列后
+(a）空队列
+(）元素e出队列后
+Q.front
+e8
+e7
+e7
+e8
+Q.rear
+Q.rear
+Q.front
+e6
+e6
+e9
+e9
+Q.front
+Q.rear
+ell
+e10
+e10
+(e）队列满
+(d）空队列
+(f)队列满
+图 6-19
+循环队列的头，尾指针示意图
+设队列中的元素类型为整型，
+则循环队列的类型定义为：
+#define
+MAXOSIZE
+100
+typedef
+struct
+int
+*base:
+★循环队列的存储空间首地址＊
+int
+★队头、队尾指针★／
+frontr rear:
+i sgQueue:
+【函数】创建一个空的循环队列
+*Q）／*创建容量为
+int
+的空队列，若成功则返回1；否则
+initQueue (SgQueue
+MAXOSIZE
+返回0＊／
+(int
+Q->base
+*)malloc(MAxQsIzE*sizeof(int)):
+if
+(!Q->base)
+return
+0 :
+ = 0: Q->rear
+O->front
+0:
+return
+1:
+/*initQueue*/

@@ -1,0 +1,33 @@
+410
+软件设计师教程（第5版）
+return m_pages;
+int Book::getNumberOfPagesOt
+void Book:accept(LibraryVisitor* visitor)visitor->visit(this); 
+1/其余代码省略
+Java程序如下：
+import java.util.*;
+interface LibraryVisitor {
+void visit(Book p_book);
+void visit(Article p_article);
+void printSumO;
+1/打印总页数
+class LibrarySumPrintVisitor implements LibraryVisitor 
+private int sum = 0;
+public void visit(Book p_book)
+sum = sum + p_ book.getNumberOfPagesO;
+public void visit(Article p_article) 
+sum = sum + p_article.getNumberOfPagesO;
+public void printSumO
+System.out.println("SUM - " + sum);
+interface LibraryIteminterface 
+void accept(LibraryVisitor visitor);
+class Article implements LibraryltemInterface (
+m_title;
+1/论文名
+private String
+1/论文作者
+private Stringm_author;
+private int m_start page;
+private int m_end page;
+public Article(String p_author, String p_title, int p_start page,int p_end _ page )
+、m_title =p_title;

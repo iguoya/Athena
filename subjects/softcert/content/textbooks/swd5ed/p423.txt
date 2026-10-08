@@ -1,0 +1,30 @@
+第7章面向对象技术
+411
+m_author = p_author;
+m_start page= p_start _page;
+m_end _page= p_end_page;
+public int getNumberOfPagesO
+return m_end_page - m_start _page;
+public void accept(LibraryVisitor visitor) 
+visitor.visit(this);
+class Book implements LibraryltemInterface 
+private String
+m_title;
+1/书名
+private String
+m_author;
+1/书作者
+private int m_pages;
+1/页数
+public Book(String p_author, String p_title, int p_pages )
+m_title = p_title;
+m_author = p_author;
+m_pages = p_pages;
+public int getNumberOfPagesO!
+return m pages;
+public void accept(LibraryVisitor visitor)
+visitor.visit(this);
+【例7.8】Observer模式。
+一大型购物中心的收银软件中，要求其能够支持购物中心在不同时期推出的各种促销活
+动，如打折、返利（例如，满300返100)等等。针对促销活动的不同策略，适合采用策略（Strategy）
+模式实现该要求，得到如图7-50所示的类图。

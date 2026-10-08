@@ -1,0 +1,34 @@
+404
+软件设计师教程（第5版）
+AbstractClass
+TemplateMethodO
+PrimitiveOperation10
+PrimitiveOperation10
+PrimitiveOperation20
+PrimitiveOperation20
+ConcreteClass
+PrimitiveOperation10
+PrimitiveOperation20
+图 7-47
+模板方法模式结构图
+其中:
+AbstractClass（抽象类）定义抽象的原语操作，具体的子类将重定义它们以实现一个
+算法的各步骤；实现模板方法，定一个算法的骨架，该模板方法不仅调用原语操作，
+也调用定义在 AbstractClass 或其他对象中的操作。
+ConcreteClass（具体类）实现原语操作以完成算法中与特定子类相关的步骤。
+3）适用性
+Tempiate Method 模式适用于:
+一次性实现一个算法的不变的部分，并将可变的行为留给子类来实现。
+各子类中公共的行为应被提取出来并集中到一个公共父类中，以避免代码重复。
+控制子类扩展。模板方法旨在特定点调用“hook”操作（默认的行为，子类可以在必
+要时进行重定义扩展），这就只允许在这些点进行扩展。
+11．Visitor（访问者）
+1）意图
+表示一个作用于某对象结构中的各元素的操作。它允许在不改变各元素的类的前提下定义
+作用于这些元素的新操作。
+2）结构
+访问者模式的结构图如图7-48所示。
+其中:
+Visitor（访问者）为该对象结构中ConcreteElement 的每一个类声明一个Visit 操
+作。该操作的名字和特征标识了发送Visit 请求给该访问者的那个类，这使得访问者
+可以确定正被访问元素的具体的类。这样访问者就可以通过该元素的特定接口直接访

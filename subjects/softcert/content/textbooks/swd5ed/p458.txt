@@ -1,0 +1,34 @@
+444
+软件设计师教程（第5版）
+n列也不是一个合理的位置时，就要回溯，去改变前一行的位置。图8-6 给出了回溯法求解
+4-皇后问题的搜索过程。
+(d)
+(c)
+(e)
+(a)
+(b)
+(i)
+(h)
+(j)
+(J)
+(g)
+图8-6回溯法求解4皇后问题的搜索过程
+n皇后问题的限界函数可以根据问题的定义直接设计，即任意两个皇后不在同行、同列和
+同一斜线上，C代码如下。
+int Place(int *Column,int index)t
+: int i;
+for(i = 1;i < index;i++)
+int Column_differ = abs(Column[index] - Column[i]);
+int Row_differ = abs(index - i);
+if(Column[i] == Column[index] II Column_differ == Row_differ)
+/*有皇后与其在同列或同一斜线上*/
+return 0;
+/*没有皇后与其同行、同列或同对角线*/
+return 1;
+void N_Queue(int n)
+int Column Num[n + 1];
+int index = 1;
+int i;
+int answer_num = 0;
+for(i = 1;i <= n;i++)
+Column _ Num[i] = 0;

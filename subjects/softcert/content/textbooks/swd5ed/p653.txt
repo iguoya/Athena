@@ -1,0 +1,47 @@
+第12章软件系统分析与设计
+639
+login
+《extend》_
+User
+《extend》
+register
+submit paper
+browse review results
+Author
+set
+preferences
+enter review
+Reviewer
+browse submitted
+《extend》
+list accepted/
+papers
+rejected papers
+《Include》
+close reviewing process
+PC chair
+assign
+paper to reviewer
+图12-15
+审稿系统用例图
+根据需求描述，提交稿件过程识别出表12-5所示的活动。
+表 12-5
+提交稿件活动名称列表
+名称
+说明
+名称
+说明
+select paper location
+选择稿件位置
+upload paper
+上传稿件
+select subject group
+选择主题类型
+send notification
+发送通知
+enter title and abstract
+输入标题和摘要
+从建模用例图时可知，参与者、作者和用户之间存在继承关系，提交稿件和登录之间存在
+扩展关系，提交稿件必须是在登录之后进行，所以，在提交稿件的过程中首先判断用户是否登
+录，如果登录则继续；如果没有登录，则执行登录活动。根据活动说明，建模出图12-16所示
+的活动图，其中<<datastore>>用于说明稿件存储对象。

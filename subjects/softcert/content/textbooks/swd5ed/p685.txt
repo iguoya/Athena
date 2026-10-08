@@ -1,0 +1,36 @@
+第12章车
+软件系统分析与设计
+x 673 
+旦从该文件中读出信息后，它就由一个Document对象表示。
+Document
+Application
+-docs
++save0
++canOpenDocument(docName : String)
++open(docName : String)
++addDocument(aDocument : Document)
++close0
++doCreatDocumentO
++readO
++openDocument(docName : String)
+MyDocument
+MyApplication
++readO
++doCreateDocumentO
+图12-34  Application 与 Document关系图
+例如图12-34中的类MyApplication和类MyDocument，并分别实现 Application和Document类
+中的某些方法。
+已知Application类中的openDocument方法采用了模板方法（Template Method）设计模式，
+该方法定义了打开文档的每一个主要步骤，如下所述。
+（1）首先检查文档是否能够被打开，若不能打开，则给出出错信息并返回。
+（2）创建文档对象。
+（3）通过文档对象打开文档。
+（4）通过文档对象读取文档信息。
+（5）将文档对象加入到Application的文档对象集合中。
+2．根据设计模式的名称画出其对应的类图
+问题描述中已经给出了该设计采用的设计模式为模板方法，因此，首先给出模板方法的类
+图，如图12-35所示。
+3.理解类图中每一个类的作用与功能
+在模板方法类图中，AbstractClass 类定义了基本的操作PrimitiveOperation1O和Primitive-
+Operation20，并在TemplateMethodO)方法中调用了这两个操作，但这两个操作都并未实现，而
+是留待子类去实现，从而达到模板方法的目的：定义一个操作中的算法的骨架，而将一些步骤

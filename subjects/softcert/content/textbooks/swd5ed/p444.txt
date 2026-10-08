@@ -1,0 +1,36 @@
+432
+软件设计师教程（第5版）
+（3）计算最优解的值。
+根据上述递归式自底向上地求出最优解的值。将[i,〗的值存储在表[1..m,1..n]中，以行为
+主序从左到右计算表1 中的元素，同时维持表b[1..m,1.n]，用其中的元素 b[i,j]记录使得 [i,］]
+取最优值的最优子结构。以下给出该算法的 C代码，分别用 str1和 str2表示序列X和 Y。
+int** Lcs_ Length(const char* str1,const char* str2,int str1_length,int str2_length)
+int i,j;
+/*为矩阵1、b分配空间*/
+int** 1 = (int **)malloc(sizeof(int *)*(str1_length + 1);
+((I + ea ms)(* )os)oo[e(** ) = q **
+for (i = 0; i <= str1_length; i++)(
+1[il = (int *)malloc(sizeof(int)*(str2_length + 1);
+b[i] = (int *)malloc(sizeof(int)*(str2_length + 1);
+/*初始化矩阵*/
+for(i = 1;i <= str1_length;i++)
+1[][0] = 0;
+for(i = 0;i <= str2_length;i++)
+1[0][i] = 0;
+for(i = 1;i <= str1_length;i++)i
+for(j = 1;j <= str2_length;j++)[
+if(str1[i - 1]  str2j - 1D
+[] = [i - 1J - 1] + 1;
+b[]i] = 0;
+/*0代表指向右上方的箭头*/
+else if(1[i - 1]] >= 1[ilj - 1])(
+1[[] = [i - 1]];
+b[i][j] = 1;
+/*1代表指向上方的箭头*/
+elset
+[] = [i - 1];
+b[i]j]-2;
+/*2代表指向右方的箭头*/
+return b;
+从上述 C 代码可知，算法的时间复杂度为 O(mn)。根据上述算法，已知X=ABCBDAB 和
+Y=BDCABA，则对应的表1 和 b 如图 8-3 所示。

@@ -1,0 +1,40 @@
+第12章软件系统分析与设计
+655
+int mainOt
+int i;
+Stack* myStack;
+myStack = NewStackO;
+Push(myStack, MD(1);
+Push(myStack, MD(2);
+Pop(myStack);
+Push(myStack, MD(3)+1);
+while( !IsEmpty(myStack)) {
+printf("%d ", Top(myStack);
+Pop(myStack);
+return 0;
+2）二叉链表和多叉链表的设计和应用
+（1）二叉树的存储结构设计。二叉树是一种重要的数据结构，采用二叉链表存储时，其结
+点的类型常定义为：
+typedef struct Tnode
+ElemType data;
+/*结点的数据，ElemType 是其类型的抽象表示*/
+struct Tnode *Lchild,*Rchild;
+/*指向结点左、右孩子的指针*/
+↓*Bitree;
+对于某些特殊的二叉树，如哈夫曼树（或称为最优二叉树），由于该类型二叉树中的内部
+结点是由初始的 m个叶子结点根据一定的规则构成的，因此其结点总数总是2m-1，所以采用
+静态的三叉链表来表示，其类型定义如下：
+#define LEAFNUM20
+/*叶子结点数目，在应用中可预先确定*/
+struct nodei
+char ch;
+/*当前结点表示的字符，对于非叶子结点，此域不用*/
+int weight;
+/*当前结点的权值*/
+int parent;
+/*当前结点的父结点的下标，为0时表示无父结点*/
+int lchild, rchild;
+/*当前结点的左、右孩子结点的下标，为0时表示无对应的孩子结点*/
+↑Ht[2* LEAFNUM];
+以具有 4个叶子结点（分别用 a、b、c、d表示，权值为2、7、4、5）为例，采用哈夫曼
+算法构造的最优二叉树及其存储结构如图12-25所示。

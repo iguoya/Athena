@@ -1,0 +1,46 @@
+第7章面向对象技术
+401
+7.Observer（观察者）
+1）意图
+定义对象间的一种一对多的依赖关系，当一个对象的状态发生改变时，所有依赖于它的对
+象都得到通知并被自动更新。
+2）结构
+观察者模式的结构图如图7-44所示。
+Subject
+observers
+Observer
+Attach(Observer)
+UpdateO
+Detach(Observer)
+for all o in observers 
+NotifyO o-
+o->Update0
+ConcreteObserver
+ConcreteSubject
+subject
+UpdateO
+observerState=
+subject->GetStateO
+GetState0 o
+return subjectState
+observerState
+SetState0
+subjectSate
+图7-44
+观察者模式结构图
+其中:
+Subject（目标）知道它的观察者，可以有任意多个观察者观察同一个目标；提供注册
+和删除观察者对象的接口。
+Observer（观察者）为那些在目标发生改变时需获得通知的对象定义一个更新接口。
+ConcreteSubject（具体目标）将有关状态存入各ConcreteObserver对象；当它的状态发
+生改变时，向它的各个观察者发出通知。
+ConcreteObserver（具体观察者）维护一个指向ConcreteSubject对象的引用；存储有关
+状态，这些状态应与目标的状态保持一致；实现Observer的更新接口，以使自身状态
+与目标的状态保持一致。
+3）适用性
+Observer模式适用于：
+当一个抽象模型有两个方面，其中一个方面依赖于另一个方面，将这两者封装在独立
+的对象中以使它们可以各自独立地改变和复用。
+当对一个对象的改变需要同时改变其他对象，而不知道具体有多少对象有待改变时。
+当一个对象必须通知其他对象，而它又不能假定其他对象是谁，即不希望这些对象是
+紧耦合的。

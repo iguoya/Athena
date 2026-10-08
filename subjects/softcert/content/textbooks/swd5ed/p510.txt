@@ -1,0 +1,32 @@
+496
+软件设计师教程（第5版）
+AS SELECT Sno,Sname,Sage,Sex
+FROM Student
+WHERE SD-'CS'
+WITH CHECK OPTION:
+由于CS-STUDENT视图使用了WITH CHECK OPTION子句，因此，对该视图进行修改、
+插入操作时DBMS会自动加上 SD=CS'的条件，保证该视图中只有计算机系的学生。
+2）视图的删除
+语句格式：DROPVIEW视图名
+例如，DROPVIEW CS-STUDENT 将删除视图 CS-STUDENT。
+9.4.4SQL数据查询
+SQL的数据操纵功能包括SELECT（查询）、INSERT（插入）、DELETE（删除）和UPDATE
+（修改）这4条语句。SQL语言对数据库的操作十分灵活、方便，原因在于SELECT语句中成
+分丰富多样的元组，有许多可选形式，尤其是目标列和条件表达式。
+本小节数据查询以图9-20所示的学生选课数据库为例。
+1.．SELECT 基本结构
+数据库查询是数据库的核心操作，SQL语言提供了SELECT语句进行数据库的查询。
+语句格式：SELECT[ALL|DISTINCTK<目标列表达式>[,<目标列表达式>]…
+FROM<表名或视图名>[,<表名或视图名>]
+[WHERE<条件表达式>]
+[GROUP BY<列名 1>[HAVING<条件表达式>]
+[ORDER BY <列名 2>[ASC|DESC]-]
+SQL查询中的子句顺序为 SELECT、FROM、WHERE、GROUPBY、HAVING和 ORDER
+BY。其中，SELECT、FROM是必需的，HAVING条件子句只能与GROUPBY搭配起来使用。
+（1）SELECT子句对应的是关系代数中的投影运算，用来列出查询结果中的属性。其输出
+可以是列名、表达式、集函数（AVG、COUNT、MAX、MIN、SUM)，DISTINCT选项可以保
+证查询的结果集中不存在重复元组。
+（2）FROM子句对应的是关系代数中的笛卡儿积，它列出的是表达式求值过程中需扫描的
+关系，即在FROM子句中出现多个基本表或视图时，系统首先执行笛卡儿积操作。
+（3）WHERE子句对应的是关系代数中的选择谓词。WHERE 子句的条件表达式中可以使
+用的运算符如表9-3所示。

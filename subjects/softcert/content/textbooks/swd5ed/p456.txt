@@ -1,0 +1,46 @@
+442
+软件设计师教程（第5版）
+current_weight += Weights[index];
+Y[index] = 1;
+index++:
+if(index >= n)
+Weight = current_ weight;
+Profit = current_profit;
+index = n;
+int i;
+for(i = 0;i < n;i++)
+[ = []x
+else
+Y[index] = 0;
+while (Bound(Values, Weights, VW,n, W,current profit,current_weight,index) <- Profit) 
+while(index !=0&&Y[index] !=1)( //向前回溯
+index--;
+if(index==0)//输出结果
+return X;
+Y[index] = 0; 
+current profit -- Values[index];
+current_weight -= Weights[index];
+index++;
+其中，W、n、Weights、Values、Weight、Profit 和X分别表示背包的总容量、物品个数、重量
+数组、价值数组、获得最大价值时背包的重量、背包获得的最大价值和问题的最优解。
+假设n=8，W=110，物品的价值和重量如表8-5所示。
+表 8-5
+物品的基本信息
+物品i
+55
+53
+43
+33
+65
+21
+11
+31
+45
+43
+33
+23
+55
+11
+21
+Wi
+则根据上述C代码得到如图8-5所示的搜索空间树。

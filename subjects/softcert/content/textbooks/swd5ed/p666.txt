@@ -1,0 +1,36 @@
+652
+软件设计师教程（第5版）
+#include <stdio.h>
+int max(int a,int b)!
+if (a>b) return a;
+else return b;
+int mainO?
+int max(int a,int b)；/*声明 max 是具有两个整型参数、返回值为整数的函数*/
+int(*funptr)O;
+int x,y,Z;
+funptr = max;
+/*令funptr指向函数max*/
+printf("input two numbers:In");
+scanf("%d%d",&x,&y);
+z =(*funptr)(x,y); /*等价于 z= max(x,y)*/
+printf("maxmum-%d",z);
+return 0;
+既然函数指针变量是一个变量，当然也可以作为某个函数的参数来使用。例如，下面的程
+序中设计了一个testFunCall函数，该函数根据其函数指针参数值的不同分别调用函数 fun1和函
+数fun2（注：fun1 和 fun2 的定义形式应相同）。
+int funl(int x);
+int fun2(int x);
+/*定义一个函数指针类型FunType*/
+typedef int (*FunType)(int);
+void testFunCall(FunType fp,int x);
+int mainO
+/*通过testFunCall调用函数funl*/
+testFunCall(fun1,10);
+/*通过testFunCall调用函数fun2*/
+testFunCall(fun2,20);
+return 0;
+void testFunCall (FunType fp,int x)
+int t;
+/*通过函数指针fp调用fp指向的函数*/
+t = fp(x);
+printf("result: %din", t);

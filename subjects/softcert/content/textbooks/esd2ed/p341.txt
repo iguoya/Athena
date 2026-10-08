@@ -1,0 +1,63 @@
+332
+嵌入式系统设计师教程
+（第2版）
+void f O；意味着函数可能抛出任何一种异常。如果声明为 void f 
+而传统函数声明
+throwO:,J
+则意味着函数不会抛出异常。
+【例6-18】下面程序处理两个数相除时除数为0的异常情况，若第一次输入的除数为
+0，
+则提示重新输入；若仍然输入0作为除数，则结束程序并提示重新运行程序
+#include
+ <iostream>
+using
+std:
+namespace
+int divide(int
+ X, int
+Y)
+fif
+(Y ==
+throw
+0:
+return
+X/Y:
+ //end of
+divide
+void test()
+int a,bi
+try{
+<<"请输入两个整数a和b（用于计算a除以b的商）："：
+cout
+cin >> a >> b:
+int k = divide(a,b):
+-"<< ki
+cout
+<a<<"=<b<<
+catch(int){
+cout<<"重新输入整数a和b（b 的值不能为 o）：":
+cin >> a >> b:
+int k = c
+divide(a,b):
+"="<<  << endl:
+cout
+l//end of test
+int
+main (void)
+try!
+test0:
+catch(int)
+<<"请重新运行程序！"
+cout
+endl :
+return
+0:
+1 //end of
+main
+类库
+6.4.6
+C++标准库可以分为标准函数库和类库两部分。标准函数库继承自C语言，是由通
+用的、独立的、不属于任何类的函数组成的。面向对象类库是类及其相关函数的集合
+C十十类库种类繁多，所解决的问题也极其广泛，列举如下：
+（1）STL：C+十标准模板库，是一个具有工业强度的，高效的 C++程序库。该库提供
+一些非常实用的容器和算法

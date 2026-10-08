@@ -1,0 +1,36 @@
+362
+软件设计师教程（第5版）
+7．无实例的类
+在前几节中曾指出，类是对象的模板，对象是类的实例。那么是否每个类都至少有一个实
+例？如果在类之间没有定义继承关系，回答是肯定的。这是因为若存在没有实例的类，那么这
+样的类对程序的行为没有任何贡献，因而是余的。相反，如果存在继承关系，那么的确有可
+能在类层次结构的较高层次上看到始终没有实例的类。
+要创建无实例的类，仍然需要语言的支持。在C++和Java语言中，抽象类就是这样的类。
+在 C++中通过在类中定义纯虚拟函数来创建-一个抽象类，在 Java 中通过将--个类声明为抽象类
+来创建一个抽象类，并在抽象类中定义抽象方法，抽象类中也可以没有抽象方法。
+【例7.5】用C++语言创建抽象类。
+1/抽象类
+class Person {
+protected:
+char *Name;
+/*...*/
+public:
+void Change(char *name, int age);
+1/纯虚拟函数
+virtual void PrintOnO = 0;
+PersonO;
+Person(char *name, int age, char *addr, char *tele); /过载的构造函数
+~PersonO;
+3;
+【例7.6】用Java语言创建抽象类。
+1/抽象类
+abstract class Person {
+protected String Name;
+/*....*/
+public void Change(String name, int age).. }
+public abstract void PrintOnO；//抽象方法
+public PersonO....
+ public Person(String name, int age, String addr, String tele)..}
+7.1.5
+面向对象测试
+就测试而言，用面向对象方法开发的系统测试与其他方法开发的系统测试没有什么不同，

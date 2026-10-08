@@ -1,0 +1,34 @@
+382
+软件设计师教程（第5版）
+Creator
+Product
+FactoryMethodO
+product=FactoryMethodO
+AnOperationO
+ConcreleCreator
+ConcreteProduct
+FactoryMethodO
+return new ConcreteProduct
+图7-27工厂方法模式结构图
+其中:
+Product定义工厂方法所创建的对象的接口。
+ConcreteProduct 实现 Product 接口。
+Creator 声明工厂方法，该方法返回一个Product类型的对象。Creator也可以定义一个
+工厂方法的默认实现，它返回一个默认的ConcreteProduct对象，可以调用工厂方法以
+创建一个 Product 对象。
+ConcreteCreator 重定义工厂方法以返回一个ConcreteProduct实例。
+3）适用性
+FactoryMethod模式适用于：
+当一个类不知道它所必须创建的对象的类的时候。
+当一个类希望由它的子类来指定它所创建的对象的时候。
+当类将创建对象的职责委托给多个帮助子类中的某一个，并且你希望将哪一个帮助子
+类是代理者这一信息局部化的时候。
+4.Prototype（原型）
+1）意图
+用原型实例指定创建对象的种类，并且通过复制这些原型创建新的对象。
+2）结构
+原型模式的结构如图7-28所示。
+其中:
+Prototype 声明-一个复制自身的接口。
+ConcretePrototype实现一个复制自身的操作。
+Client让一个原型复制自身从而创建一个新的对象。

@@ -1,0 +1,39 @@
+第4章操作系统知识
+195星
+end
+procedure entry get ( item)
+begin
+if count <= O then notempty.wait ;
+{缓冲区已空}
+nextc := buffer ( out ) ;
+out := (out+1) mod n ;
+count := count - 1 ;
+{减少一个产品}
+ifnotfull.queue then notfull.signal;
+{唤醒等待者}
+end
+begin
+in := out := O ; count := O; end
+{初始化}
+利用管程解决生产者一消费者问题，其中生产者和消费者程序如下：
+cobegin
+producer : begin
+repeat
+produce an item in nextp ;
+Producer-Consumer.put ( item) ;
+until false;
+end
+consumer : begin
+repeat
+Producer-Consumer.get (item) ;
+consume the item in nextc ;
+until false ;
+end;
+coend
+进程调室
+进程调度方式是指当有更高优先级的进程到来时如何分配CPU。调度方式分为可剥夺和不
+可剥夺两种。可剥夺式是指当有更高优先级的进程到来时，强行将正在运行进程的CPU分配给
+高优先级的进程；不可剥夺式是指当有更高优先级的进程到来时，必须等待正在运行进程自动
+释放占用的CPU，然后将CPU分配给高优先级的进程。
+1.三级调度
+在某些操作系统中，一个作业从提交到完成需要经历高、中、低三级调度。

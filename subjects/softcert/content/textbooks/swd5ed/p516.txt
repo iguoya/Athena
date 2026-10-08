@@ -1,0 +1,64 @@
+502
+软件设计师教程（第5版）
+根据题意“某工程至少用了三家供应商（包含三家）供应的零件”，应该按照工程号分组，
+而且应该加上条件一一供应商的数目。但是需要注意的是，一个工程项目可能用了同一个供应
+商的多种零件，因此，在统计供应商数的时候需要加上DISTINCT，以避免重复统计导致错误
+的结果。例如，按工程号 Jno=J1'分组，其结果如表 9-6 所示。如果不加DISTINCT，统计的结
+果数为 7；而加了DISTINCT，统计的结果数为 5。
+表9-6按工程号Jno="J1'分组
+Jno
+Qty
+Sno
+Qty
+Pno
+Pno
+Sno
+Jno
+J1
+P1
+200
+200
+J1
+$3
+$1
+P1
+J1
+P6
+300
+400
+$4
+P3
+$2
+J1
+J1
+P3
+200
+200
+J1
+$5
+P3
+J1
+P5
+100
+6.．更名运算
+SQL提供了可为关系和属性重新命名的机制，这是通过使用具有如下形式的AS子句来实
+现的：
+Old-name AS new-name
+AS子句既可出现在SELECT子句，也可出现在FROM子句中。
+【例9.25】查询计算机系学生的Sname 和Age，但Sname用“姓名”表示，Age用“年龄”
+表示。其语句如下：
+SELECT Sname AS 姓名,Age AS 年龄
+FROM S
+WHERE Age< (SELECTMAX(Age)
+FROM S
+WHERE
+SD='CS')
+AND SD<>'CS';
+SQL 中的元组变量必须和特定的关系相联系。元组变量是通过在 FROM子句中使用AS
+子句来定义的。
+【例9.26】 直
+查询计算机系选修了C1课程的学生的姓名 Sname 和成绩 Grade。其语句如下：
+SELECT
+Sname,Grade
+FROM
+Students AS x,sc AS y

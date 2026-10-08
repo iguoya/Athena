@@ -1,0 +1,73 @@
+320
+嵌入式系统设计师教程
+（第2版）
+（1）公有
+（public）：成员可以在类外访问
+私有
+(2）
+（private）：成员只能被该类的成员函数访问
+保护
+(3）
+（protected)：成员只能被该类的成员函数或派生类的成员函数访问。
+数据成员通常是私有的；成员函数通常有一部分是公有的，一部分是私有的。公有
+的成员函数可在类外被访问，也称之为类的接口。
+【例6-12】
+定义一个栈结构的类 Stack。
+int
+ = 100:
+STACK
+const
+SIZE
+class
+stackt
+int top:
+／数据成员：栈顶指针
+int bufferSTACK
+/／数据成员：栈空间
+SIZE:
+public:
+stack(top
+=0:
+int length（）{
+／成员函数：返回栈中元素的数目
+return
+top:
+element)(
+/／成员函数：元素element入栈
+bool
+push(int
+if
+(top
+STACK SIZE)
+"stack
+cout
+ is overflow!n":
+return
+false:
+else
+buffer［top]=
+ element:
+top++
+return
+true:
+bool pop(int
+&e) :
+类的成员函数通常在类外定义，一般形式如下：
+返回类型
+类名：：函数名（形参表）
+函数体
+双冒号
+是域运算符，主要用于类的成员函数的定义。例如，在类外定义中的成
+员函数pop。
+bool stack::pop(int
+&e)
+／成员函数：弹栈并由参数带回栈顶元素
+if
+(top
+1（0
+"stack
+ is
+cout
+empty!n":
+return
+false:

@@ -1,0 +1,65 @@
+第6章
+嵌入式程序设计
+303
+修饰函数参数，可以避免在被调用函数中出现不当的修改。例如：
+const
++to.
+char
+strcpy(char
+void
+*from) 
+const
+其中，from是
+是输入参数，to 是输出参数，如果在函数
+ strcpy F
+内通过from来修改其指
+向的字符
+（如*from=‘a'），编译时将报错
+若需要使指针参数在函数内不能修改为指向其他对象，则可如下修饰指针参数
+void
+)（int
+const
+pl  int 
+swap
+const
+指针作为函数返回值
+函数的返回值也可以是一个指针。返回指针值的函数的一般定义形式是：
+数据类型
+函数名（参数表列）；
+例如，如下进行函数定义和调用，可以降低函数参数的复杂性。
+char*
+get str(void)
+(char
+char*
+malloc(sizeof("testing"))
+strcpy(p,
+"testing")
+return
+函数调用为：ptr =get_strO;
+注意：不能将具有局部作用域的变量的地址作为函数的返回值。这是因为局部变量
+的内存空间在函数返回后即被释放，而该变量也不再有效
+例如，下面函数被调用后，变量a的生存期结束，其存储空间
+（地址）
+不再有效
+int*
+example (0)
+int a = lo;
+return
+&a:
+函数指针
+在C程序中，可以将函数地址保存在函数指针变量中，然后用该指针间接调用函数。
+例如：
+int
+char*.
+(+Compare) (const
+const
+char）:
+该语句定义了一人名称为
+J Compare
+的函数指针变量，用于保存任何有两人常量字符
+指针形参、返回整型值的函数的地址（函数的地址通常用函数名表示）。例如，Compare
+可以指向字符串运算函数库中的函数
+strcmp
+//compare指向 strcmp 函数，&运算符可以省略
+Compare
+&strcmp:

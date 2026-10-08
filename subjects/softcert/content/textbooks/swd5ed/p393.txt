@@ -1,0 +1,33 @@
+第7章　面向对象技术
+381
+2）结构
+生成器模式的结构如图7-26所示。
+Director
+builder
+Builder
+ConstructO
+BuildPartO
+for all objects in structure:
+builder->BuildPartO
+ConcreteBuilder
+Product
+BuildPartO
+GetResultO
+图7-26生成器模式结构图
+其中:
+Builder为创建一个Product对象的各个部件指定抽象接口。
+ConcreteBuilder实现Builder的接口以构造和装配该产品的各个部件，定义并明确它所
+创建的表示，提供一个检索产品的接口。
+Director构造一个使用Builder接口的对象。
+Product表示被构造的复杂对象。ConcreteBuilder创建该产品的内部表示并定义它的装
+配过程。包含定义组成组件的类，包括将这些组件装配成最终产品的接口。
+3）适用性
+Builder模式适用于：
+当创建复杂对象的算法应该独立于该对象的组成部分以及它们的装配方式时。
+当构造过程必须允许被构造的对象有不同的表示时。
+3.Factory Method（工广方法）
+1）意图
+定义一个用于创建对象的接口，让子类决定实例化哪一个类。Factory Method 使一个类的
+实例化延迟到其子类。
+2）结构
+工厂方法模式的结构如图7-27所示。

@@ -1,0 +1,34 @@
+第7章‧面向对象技术
+361
+Employee(char *name, int age);
+~EmployeeO;
+class Manager : public Employee {
+int Level;
+public:
+void RetireO;
+//重置从父类继承的Retire方法
+virtual void ChangeLevel(int n); /虚拟函数，供 Manager的子类重置
+Manager(char *name, int age, int level);
+~ManagerO;
+6．类属类
+类属是程序设计语言中普遍注重的一种参数多态机制，在OOPL中也不例外。本节主要介
+绍与类有关的类属。
+在C++语言中，类属有专门的术语
+—template。
+【例7.4】类属类。
+template <class T> class Vector {
+*V;
+int sz;
+public:
+T& operatorl(int i);
+1/运算符过载
+Vector(int VectorSize);
+/*...*/
+其中，<class T>中的 class 用来说明 T 是一个类型参数，但并不意味着 T一定是一个类，也可
+以是基本类型。
+类属类可以看成是类的模板。一个类属类是关于一组类的一个特性抽象，它强调的是这些
+类的成员特征中与具体类型无关的那些部分，而与具体类型相关的那些部分则用变元来表示。
+这就使得对类的集合也可以按照特性的相似性再次进行划分。类属类的一个重要作用，就是对
+类库的建设提供了强有力的支持。
+重置和类属都是一种多态机制，多态的基本概念以及多态的分类见本章7.1节，对于其他
+种类的多态不在本节进行介绍。

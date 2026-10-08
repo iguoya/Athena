@@ -1,0 +1,30 @@
+第9章数据库技术基础
+翼503
+WHEREx.sno-y.sno AND y.cno='C1';
+元组变量在比较同一关系的两个元组时非常有用。
+7．字符串操作
+对于字符串进行的最常用的操作是使用操作符LIKE的模式匹配。使用两个特殊的字符来
+描述模式：“%”匹配任意字符串；“_”匹配任意一个字符。模式是大小写敏感的。例如：
+Marry%匹配任何以Marry开头的字符串；%idge%匹配任何包含idge的字符串，例如
+Marryidge、 Rock Ridge、 Mianus Bridge 和 Ridgeway。
+【例9.27】学生关系模式为（Sno,Sname,Sex,SD,Age,Add)，其中，Sno 为学号，Sname 为
+姓名，Sex 为性别，SD 为所在系，Age 为年龄，Add 为家庭住址。请查询：
+（1）家庭住址包含“科技路”的学生的姓名。
+（2）名字为“晓军”的学生的姓名、年龄和所在系。
+解：（1）查询家庭住址包含“科技路”的学生的姓名的SQL语句如下：
+SELECT S
+Sname
+FROM S
+WHEREAdd LIKE‘%科技路%
+SELECT Sname,Age,SD
+FROM S
+WHERESname LIKE‘晓军"
+为了使模式中包含特殊模式字符（即%和），在SQL中允许使用ESCAPE关键词来定义
+转义符。转义符紧靠着特殊字符，并放在它的前面，表示该特殊字符被当成普通字符。例如，
+在LIKE比较中使用ESCAPE关键词来定义转义符，例如使用反斜杠“\”作为转义符。
+LIKE‘abl%cd%ESCAPE"，匹配所有以ab%cd开头的字符串。
+LIKEabllcd%'ESCAPE"，匹配所有以ablcd开头的字符串。
+8.视图的查询
+【例9.28】建立“计算机系”（CS表示计算机系）学生的视图，并要求进行修改、插入操
+作时保证该视图只有计算机系的学生。
+CREATE VIEW CS-STUDENT

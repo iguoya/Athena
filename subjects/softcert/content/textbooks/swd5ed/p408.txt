@@ -1,0 +1,37 @@
+396
+软件设计师教程（第5版）
+或记录请求日志，以及支持可撤销的操作。
+2）结构
+命令模式的结构图如图7-39所示。
+Command
+Client
+Invoker
+ExecuteO
+Receiver
+receiver
+ConcreteCommand
+ActionO
+ExecuteO
+receiver->ActionO;
+state
+图7-39
+命令模式结构图
+其中:
+Command声明执行操作的接口。
+ConcreteCommand 将一个接收者对象绑定于一个动作；调用接收者相应的操作，以实
+现 Execute。
+Client创建一个具体命令对象并设定它的接收者。
+Invoker要求该命令执行这个请求。
+Receiver 知道如何实施与执行-一个请求相关的操作。任何类都可能作为一个接收者。
+3）适用性
+Command模式适用于
+抽象出待执行的动作以参数化某对象。Command模式是过程语言中的回调（Callback）
+机制的一个面向对象的替代品。
+在不同的时刻指定、排列和执行请求。一个 Command 对象可以有一个与初始请求无
+关的生存期。如果一个请求的接收者可用-一种与地址空间无关的方式表达，那么就可
+以将负责该请求的命令对象传递给另一一个不同的进程并在那儿实现该请求。
+支持取消操作。Command的Execute 操作可在实施操作前将状态存储起来，在取消操
+作时这个状态用来消除该操作的影响。Command接口必须添加-个Unexecute操作，
+该操作取消上一次 Execute 调用的效果。执行的命令被存储在-个历史列表中。可通
+过向后和向前遍历这一列表并分别调用Unexecute和Execute来实现重数不限的取消”
+和“重做”。

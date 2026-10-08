@@ -1,0 +1,93 @@
+第6章
+嵌入式程序设计
+309
+while
+(*ptr!=o） {
+if
+★当前字符是空格，则读取下一字符＊／
+(*ptr==
+ptr++:
+continue:
+ｉf
+/★当前学符是数字，
+(isdigit（ptr)）{
+else
+则将数字串转换为数值★
+tnum
+0:
+for
+*ptr<='9'ptr++)
+★ 10
+tnum
+tnum
+ + *ptr
+/★运算数压栈★/
+push(&s,tnum)i
+else
+/★当前字符是运算符或其他符号★／
+if
+*ptr
+（ *ptr=='+
+*ptr=='-I
+*ptr
+if
+(!isEmpty(s)){
+top(s, &a): pop(&s):
+★取运算符的第二个运算数，存入a＊／
+if
+(!isEmpty(s)）[
+top(s, &b): pop(&s):
+；／★取运算符的第一个运算数，存入b＊／
+else
+★出错，有运算符，缺运算数
+return
+-1:
+else
+★栈空，缺运算数＊／
+return
+switch
+(*ptr)
+push(&s,bta):
+break:
+case
+push(&s,b-a):
+break:
+case
+push(&s,b*a):
+break:
+case
+push(&s,b/a):
+break:
+case
+1/*end of
+switch*/
+else
+-1l:
+/★非法字符★/
+return
+★下一字符★／
+ptr++:
+★/
+1 /*end of
+while
+if
+(!isEmpty(s)){
+result):
+top(s.
+★取运算结果★/
+pop(&s):
+if(
+(!isEmpty(s))
+return
+return
+0:
+return
+2．队列
+队列常用于需要排队的场合，如操作系统中处理打印任务的打印队列、离散事件的
+计算机模拟等。
+队列是一种先进先出
+的线性表，只允许在队列的一端插入元素，而
+(FIFO
+而在另一
+端删除元素。在队列中，允许插入元素的一端称为队尾
+（rear），允许删除元素的一端称

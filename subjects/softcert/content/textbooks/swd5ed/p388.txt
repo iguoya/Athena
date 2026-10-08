@@ -1,0 +1,49 @@
+376
+软件设计师教程（第5版）
+8.组合结构图
+组合结构图（Composite StructureDiagram）用于描述一个分类器.（如类、构件或用例）的
+内部结构，分类器与系统中其他组成部分之间的交互端口，展示一组相互协作的实例如何完成
+特定的任务，描述设计、架构模式或策略。组合结构图的内部结构和协作使用图分别如图7-21
+和图 7-22 所示。
+Bank ATM
+internal structure
+scd:Display
+mdm:Modem 
+external:Bus
+:Function Keys
+:Bus
+:Central
+:Crypto
+cr:Card Reader
+Processor
+Processor
+:Encrypting
+mem:Bus
+PIN Pad
+:Memory
+vltbus:Bus
+:Printer
+vault
+disposit Mechanism
+dispensingMechanism
+:Security
+Sensor[1.*]
+ :Cash Cartridge[1..4]
+:Deposit Cartridge[1..2]
+:Electronic
+ Journal
+图 7-21
+内部结构组合结构图
+Observer Pattern
+subject:
+《interface》 Subject
+observer:
+observers:Observer[*]
+《interface》Observer
+state:State
+notifyo
+attach(Obserber)
+detach(Obserber)
+notifyAio
+图7-22
+协作使用组合结构图

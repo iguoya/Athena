@@ -1,0 +1,60 @@
+第6章
+嵌入式程序设计
+329
+含有纯虚函数的类，称之为抽象类。C十+不允许用抽象类创造对象，它只能被其他
+类继承。
+要定义抽象类，就必须定义纯虚函数，它实际上起到一个接口的作用
+对虚函数的限制是：只有类的成员函数才可以是虚函数；静态成员函数不能是虚
+函数；构造函数不能是虚函数，析构函数可以是虚函数，而且常常将析构函数定义为
+虚函数。
+【例6-17】以下程序的功能是计算三角形、矩形和正方形的面积并输出，说明了继承、
+抽象类和动态绑定的应用。程序由 4个类组成：类 Triangle、Rectangle 和 Square
+分别表
+示三角形、矩形和正方形；抽象类Figure 提供了一个纯虚拟函数
+getAreaO，作为计算上
+述三种图形面积的通用接口。4个类之间的关系如图6-24所示。
+Figure
+Rectangle
+Triangle
+Square
+图6-24
+类的继承关系示意图
+#include
+<iostream.h>
+#include
+<math.h>
+Figure
+/抽象类
+class
+public:
+virtual double
+纯虚函数
+ getArea (0
+/／类 Rectangle 是 Figure 的派生类
+class
+Rectangle : public Figure
+protected:
+double
+height:
+double
+width:
+public:
+Rectangle()(l:
+Rectangle(double height, double
+width)
+this->height
+ = height:
+this->width
+width:
+double
+getArea 0)
+height
+return
+* width:
+class
+sguare
+public
+: Rectangle t
+public:
+Sguare(double
+width){

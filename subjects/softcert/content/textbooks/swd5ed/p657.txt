@@ -1,0 +1,71 @@
+第12章软件系统分析与设计
+643
+表12-7
+状态以及行为或事件名称表
+行为或事件
+名藍称
+说明
+术语
+说明
+submitted
+已上传
+date=deadline
+日期到最后期限
+under assignment
+分配中
+#reviewers
+审阅人数
+under review
+审阅中
+evaluated
+审稿结果
+accepted
+录用
+threshold
+阈值
+rejected
+拒绝
+camera-ready submitted
+提交了印制的电子版
+notified
+已通知
+published
+已印制
+inPrint
+打印中
+send E-mail
+发送 E-mail
+assign reviewer
+send E-mail
+[#reviewers<3]
+accepted
+notified
+evaluated
+[evaluation>= threshold]
+camera-ready
+submitted
+submitted
+under
+under
+assignment
+review
+inPrint
+When (date-deadline)
+[#reviewers-3]
+published
+evaluated
+[evaluation < threshold]
+send E-mail
+rejected
+图12-18一份稿件的状态图
+在建模状态图时应该注意遵循以下指导原则。
+（1）状态名称要简单但具有描述性。
+（2）避免“黑洞”状态，即只有变换进来而没有任何转换发出的状态，这种状态要么由于
+该状态是一个最终状态，要么就是已经错过了一个或多个转换。
+（3）避免“奇迹”状态，即只有转换发出而没有任何转换进来的状态，这种状态要么是一
+个起点，要么就是已经错过了一个或多个转换。
+（4）对复合状态，需要对子状态集进行建模。
+（5）为复杂的实体创建分层的状态图。
+12.3.7
+建模交互
+交互概览图是活动图的变体，描述业务过程中的控制流概览，软件过程中的详细逻辑概览，

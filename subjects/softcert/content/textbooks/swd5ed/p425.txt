@@ -1,0 +1,33 @@
+第7章面向对象技术
+413
+public:
+CashReturn(double moneyCondition, double moneyReturn) {
+this->moneyCondition = moneyCondition;
+this->moneyReturn = moneyReturn;
+double acceptCash(double money) {
+double result = money;
+if(money >= moneyCondition)
+return result;
+class CashContext 
+private:
+CashSuper *cs;
+public:
+CashContext(int type)
+switch(type) {
+case NORMAL:
+1/正常收费
+cs = new CashNormalO;
+break;
+case CASH RETURN:
+/满300返100
+cs = new CashReturn(300, 100);
+break;
+case CASH_DISCOUNT:
+1/打8折
+cs = new CashDiscount(0.8);
+break;
+double GetResult(double money) {
+return cs->acceptCash(money);
+3;
+//此处略去mainO函数
+Java程序如下：

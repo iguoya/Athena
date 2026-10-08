@@ -1,0 +1,32 @@
+392
+软件设计师教程（第5版）
+强制共享。在Flyweight 对象结构的某些层次，UnsharedConcreteFlyweight 对象通常将
+ConcreteFlyweight对象作为子结点。
+FlyweightFactory创建并管理Flyweight对象；确保合理地共享Flyweight，当用户请求
+一个Flyweight 时，FlyweightFactory对象提供一个已创建的实例或者在不存在时创建
+一个实例。
+Client 维持一个对Flyweight 的引用；计算或存储一个或多个Flyweight 的外部状态。
+3）适用性
+Flyweight模式适用于：
+一个应用程序使用了大量的对象。
+完全由于使用大量的对象，造成很大的存储开销。
+对象的大多数状态都可变为外部状态。
+如果删除对象的外部状态，那么可以用相对较少的共享对象取代很多组对象。
+应用程序不依赖于对象标识。由于Flyweight 对象可以被共享，所以对于概念上明显
+有别的对象，标识测试将返回真值。
+7.Proxy（代理）
+1）意图
+为其他对象提供一种代理以控制对这个对象的访问。
+2）结构
+代理模式的结构如图7-37所示。
+Subject
+Client
+RequestO
+realSubject
+RealSubject
+Proxy
+realSubject->RequestO;
+RequestO
+RequestO
+图7-37代理模式结构图
+其中:

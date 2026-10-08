@@ -1,0 +1,73 @@
+312
+嵌入式系统设计师教程
+（第2版）
+【函数】
+判断队列是否为空
+int
+isEmpty (SqQueue
+★若队列Q为空则返回1，否则返回0＊／
+return
+(Q->front
+Q->rear)
+1/*isEmpty*/
+【函数】元素入循环队列
+int
+*Q,int
+_e）／＊元素e入队，若成功则返回1；否则返回0＊／
+enQueue (SgQueue
+if（(Q->rear+l)% I
+return
+Q->front)
+MAXOSIZE
+0:
+Q->base[Q->rear]
+l=ei
+(Q->rear
+Q->rear
+ + 1% MAXOSIZE:
+return
+1:
+l/*enQueue*/
+【函数】
+元素出循环队列。
+int delQueue(SqQueue
+*Q,int
+ ★e)
+/★若队列不空，
+则删除队头元素，由参数e带回其值并返回1：否则返回0★／
+data next
+if
+(Q->rear
+Q->front)
+return
+Q.front
+*e
+Q->base[Q->frontl:
+Q->front =
+ISOX % (  O<-)
+return
+队头
+l/*delQueue*/
+队列的链式存储也称为链队列。为了便于操作，可给链
+队列添加一个头结点，并令头指针指向头结点，如图6-20所
+Q.rear
+队尾
+示。在这种情况下，队列为空的判定条件是头指针和尾指针
+相同，且均指向头结点。
+图6-20
+链队列示意图
+C程序内嵌汇编
+6.3.6
+嵌入式程序开发与硬件密切相关，
+通过汇编语言可以直接读写指定的地址或者将代
+码放入指定的Flash地址，而使用C语言来读写底层寄存器、存取数据、控制硬件时，C
+语言和硬件之间由编译器来联系，一些C标准不支持的硬件特性操作可由编译器提供。
+在某些情况下可能需要在C程序中直接编写内嵌的汇编代码，示例如下。
+#include
+<stdio.h>
+int
+main 0
+int
+result = lr input = 2:
+int
+a=3,b=5:

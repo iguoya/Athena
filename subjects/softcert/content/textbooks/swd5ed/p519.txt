@@ -1,0 +1,39 @@
+第9章数据库技术基础
+#505#
+VALUES(001,李力,22,m,2000)
+2．删除
+DELETEFROM基本表名
+[WHERE条件表达式]
+【例9.31】
+删除表 employees 中姓名为张然的记录。
+DELETE
+FROM
+ employees
+WHERE
+name="张然'
+3．修改
+UPDATE 基本表名
+SET 列名=值表达式(,列名=值表达式)
+[WHERE条件表达式]
+【例9.32】将教师的工资增加5%。
+UPDATE teachers
+SET Salary = Salary*1.05
+【例9.33】将教师的工资少于1000的增加5%工资。
+UPDATE
+teachers
+SET Salary = Salary*1.05
+WHERE Salary < 1000
+使用视图可以更新数据记录，但应该注意的是，更新的只是数据库中的基表。
+【例9.34】创建一个基于表 employees 的视图v_employees，然后通过该视图修改表
+employees中的记录。其语句如下：
+CREATE
+VIEW V_employees
+AS
+SELECT * FROM employees
+UPDATEV_employees
+SET name='张然'
+WHERE
+name="张三
+9.4.6
+SQL访问控制
+数据控制控制的是用户对数据的存储权力，是由 DBA决定的。但是，某个用户对某类数

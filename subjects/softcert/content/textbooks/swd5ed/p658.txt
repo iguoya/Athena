@@ -1,0 +1,43 @@
+644
+软件设计师教程（第5版）
+以及将多个图进行连接,抽象掉了消息和生命线。审稿系统中显示一篇已分配的稿件(Displaying
+as assigned paper），首先需获取（Retrieve list of assigned papers），然后再显示，然后再显示
+(Display selected paper)，如图 12-19 所示。
+sd Displaying an assigned paper
+sd Retrieve listofassigned papers
+sd Display selected paper
+图12-19显示一篇已分配的稿件交互概览图
+序列图是以图形化的方式描述了在一个用例或操作的执行过程中对象如何通过消息互相
+交互，说明了消息在对象之间被发送和接收以及发送的顺序。根据分析设计的迭代演化需求，
+最初可以绘制系统序列图。系统序列图是一幅描述角色和系统在用例场景下交互的图形，有助
+于确定进入和退出系统的高层信息。
+审稿人获取已分配给自已的稿件的执行序列，浏览会议主页，看到主页后，从导航条浏览
+已分配给自已的稿件，可循环进行选择，创建已分配稿件并显示给审稿人。涉及到的对象名称
+和执行操作如表12-8所示，得出图12-20所示的审稿人获取分配给自已的稿件列表序列图。
+表12-8对象和执行操作名称列表
+操作
+对象
+说明
+名称
+导航
+审阅人
+navigate
+Reviewer
+显示
+会议主页
+show
+ConferenceHomepage
+浏览
+导航栏
+browse
+NavigationBar
+选择
+分配的稿件
+select
+AssignedPapers
+创建
+稿件
+create
+Paper
+分配的稿件列表
+ListOfAssignedPapers

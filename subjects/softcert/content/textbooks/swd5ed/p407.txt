@@ -1,0 +1,31 @@
+第7章「
+面向对象技术
+395
+1. Chain of Responsibility （责任链）
+1）意图
+使多个对象都有机会处理请求，从而避免请求的发送者和接收者之间的耦合关系。将这些
+对象连成一条链，并沿着这条链传递该请求，直到有一个对象处理它为止。
+2）结构
+责任链模式的结构图如图7-38所示。
+Client
+successor
+Handler
+HandleRequestO
+ConcreteHandler1
+ConcreteHandler2
+HandleRequestO
+HandleRequestO
+图7-38责任链模式结构图
+其中:
+Handler定义一个处理请求的接口；（可选）实现后继链。
+ConcreteHandler 处理它所负责的请求；可访问它的后继者；如果可处理该请求，就处
+理它，否则将该请求转发给后继者。
+Client 向链上的具体处理者（ConcreteHandler）对象提交请求。
+3）适用性
+ChainofResponsibility模式适用于以下条件：
+有多个的对象可以处理一个请求，哪个对象处理该请求运行时刻自动确定。
+想在不明确指定接收者的情况下向多个对象中的一个提交一个请求。
+可处理一个请求的对象集合应被动态指定。
+2.Command （命令）
+1）意图
+将一个请求封装为一个对象，从而使得可以用不同的请求对客户进行参数化；对请求排队

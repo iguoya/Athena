@@ -1,0 +1,36 @@
+第7章
+面向对象技术
+391
+当需要构建一个层次结构的子系统时，使用Facade模式定义子系统中每层的入口点。
+如果子系统之间是相互依赖的，则可以让它们仅通过Facade进行通信，从而简化了它
+们之间的依赖关系。
+6.Flyweight（享元）
+1）意图
+运用共享技术有效地支持大量细粒度的对象。
+2）结构
+享元模式的结构如图7-36所示。
+FlyweightFactory
+flyweights
+Flyweight
+GetFlyweight(key)
+Operation(extrinsicState)
+if(flyweight[key]exists)
+return existing flyweight:
++ else {
+create new flyweight:
+add it to poof of flyweights;
+return the new flyweight;
+ConcreteFlyweight
+UnsharedConcreteFlyweight
+Operation(extrinsicState)
+Operation(extrinsicState)
+intrinsicState
+allState
+Client
+图7-36享元模式结构图
+其中:
+Flyweight 描述一个接口，通过这个接口Flyweight可以接受并作用于外部状态。
+ConcreteFlyweight实现Flyweight 接口，并为内部状态（如果有）增加存储空间。
+ConcreteFlyweight对象必须是可共享的。它所存储的状态必须是内部的，即它必须独
+立于ConcreteFlyweight对象的场景。
+并非所有的Flyweight子类都需要被共享。Flyweight接口使共享成为可能，但它并不

@@ -1,0 +1,83 @@
+第6章
+嵌入式程序设计
+307
+用链表作为存储结构的栈称为链栈。
+。由于栈中元素的插入和
+data next
+top-
+删除仅在栈顶一端进行，因此不必另外设置头指针，链表的头指
+栈顶
+针就是栈顶指针。链栈的表示如图6-16所示，其类型定义如下：
+typedef
+struct
+nodet
+int data:
+结点的数据域
+*next:
+:node
+结点的指针域
+struct
+I Node.
+*LinkList:
+typedef
+struct
+栈底
+top:
+LinkList
+/栈顶指针
+1 STACK:
+图6-16
+链栈示意图
+以栈中元素类型为整型为例，实现栈基本运算的函数定义如下。
+【函数】创建一个单链表表示的空栈
+★S)
+initstack(sTACK
+void
+/★创建初始为空的链栈★/
+s->top
+NULL:
+initstack
+【函数】
+元素入栈。
+int
+/★元素e入栈，若成功则返回1：不
+*s, int e)
+否则返回0＊／
+push (STACK
+Node
+(Node
+*)malloc(sizeof(Node))
+if
+(!p)
+return
+P->data
+e:
+= s->topi
+p->next
+s->top
+P:
+return
+push
+【函数】
+元素出栈。
+★S)
+int
+★非空栈的栈顶元素出栈，若成功则返回1，否则返回0★／
+POP(STACK
+Node
+s->top;
+if
+(!p)
+return
+0:
+s->top
+p->next:
+free (p):
+return
+pop*
+【函数】读取并返回栈顶元素
+int
+e)
+S, int
+top(STACK
+★读取栈顶元素，若成功则返回1，否则返回0

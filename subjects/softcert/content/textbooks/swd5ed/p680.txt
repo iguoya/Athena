@@ -1,0 +1,37 @@
+668
+软件设计师教程（第5版）
+优加括号方式。同样，最优解Ah+1Ah+2A,中的子链一定是问题Ak+1Ak+2A,的最优加括号方式。
+（2）递归定义最优解的值。
+根据问题的最优解递归地定义问题最优解的开销。设m[i，表示计算Ai.;所需的最小乘法
+次数，得到下列递归式。对于原问题，计算A1.n的最小开销则为m[1,n]。
+,i=j
+m[i, j] = 
+min(m[i,k]+m[k+1, j]+ Pi-1PkP;} ,i<j
+i<k<j
+（3）计算最优解的值。
+根据上述递归式，以自底向上的方式计算最优开销。假设输入为 p=<po,P1，,Pn>，用表
+m[1..n,1.n]存储 m[i,j]，用辅助表 s[1..n,1.n]存储哪-一个k使得计算 m[i,]时达到最优。最终需
+要利用s构造问题的一个最优解。算法的C代码如下：
+int** Matrix_Chain_Order(int* p,int Length)
+int Multip_times=Length-1;
+/*为m、s分配空间*/
+int** m = (int **)malloc(sizeof(int *)*(Length);
+()*(* ise(** t) = S **
+int i;
+for (i = O; i < Length; i++)
+m[il = (int *)malloc(sizeof(int)*(Length);
+s[i] = (int *)malloc(sizeof(int)*(Length);
+/*初始化m*/
+for(i - 1;i <= Multip_times;i++)
+m[i[i] = 0;
+int 1;
+/*自底至上计算m、s*/
+for(1=2;1<=Multip_times;l++)( /*1 为子问题长度，即有 1个矩阵相乘*/
+for(i = 1;i <= (Multip_times -1 + 1);i++)
+intj=i+1- l;
+m[ijlj] = INT_MAX;
+int k;
+for(k=i;k<j;k++)/*计算 m[ij的最小代价*/
+int q = m[i][k] + m[k + 1]j] + p[i - 1] * p[k] * pli];
+if(q<m[iLil)/*当前代价小于之前的最小代价*/
+m[i]i] = q;
