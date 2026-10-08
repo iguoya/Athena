@@ -4,25 +4,29 @@ import "package:flutter/material.dart";
 
 import "api_config_screen.dart";
 import "../ui/glyphs.dart";
+import "../core/sync.dart";
 import "../core/user_directory.dart";
 import "../core/users.dart";
 /// 登录页（ADR 0075）：输入名字进入，不设口令。
 ///
 /// - 名字在本机缓存里唯一命中 → 直接进，不联网（离线可用）。
-/// - 否则问中心目录：找到一个就进；没有就直接新建并进入（ADR 0078，不再有单独的新建步骤）；
-///   不止一个同名就再问**学习者编号**。
-/// - 目录连不上（ADR 0123）：出现「在这台电脑上新建（不同步）」——建一个本地学习者
-///   （编号 1000 起，只存本机、永不参与同步）；已在本机的人照常直接进。
+/// - 缓存没有的名字 → **默认在这台电脑上新建本地学习者**（编号 1000 起，只存本机、
+///   永不参与同步，ADR 0124 取代 0078 的「自动注册到服务器」）。
+/// - 配了外网访问凭据（同步设置里明确填写，ADR 0124）才问中心目录：找到就登录
+///   （异地登录的场景）；重名再问**学习者编号**；目录里也没有才本地新建。
+///   「我是另一个同名的人，新建」在配了凭据时建到服务器（跨机器可同步）。
+/// - 配了凭据但目录连不上：出现「在这台电脑上新建（不同步）」的出路（ADR 0123）。
 /// - 从侧栏进来时（[currentUser] 非空）可以改**当前这位**学习者自己的名字，改不了别人的；
 ///   本地学习者改名只写本机缓存。
 ///
-/// 中心目录是权威，新建与异地首次登录要联网（ADR 0074 决策 3）。离开内网时要先在「同步设置」
+/// 中心目录是权威，异地首次登录要联网（ADR 0074 决策 3）。离开内网时要先在「同步设置」
 /// 里填外网访问凭据（ADR 0077），页面底部有入口。
 class UserGateScreen extends StatefulWidget {
   const UserGateScreen({
     super.key,
     required this.registry,
     required this.directoryFactory,
+    required this.configLoader,
     required this.onPicked,
     this.onRenamed,
     this.currentUser,
@@ -32,6 +36,10 @@ class UserGateScreen extends StatefulWidget {
 
   final UserRegistry registry;
   final UserDirectory Function() directoryFactory;
+
+  /// 每次动作时现取的同步配置：外网访问凭据配齐（[ApiConfig.wanUsableBase] 非空）才算
+  /// 「明确要跨机器同步」，登录页才会去碰中心目录（ADR 0124）。
+  final ApiConfig Function() configLoader;
 
   /// 选定学习者。第二个参数为真表示使用者同意把旧的单用户本地记录归到他名下。
   final void Function(UserProfile profile, bool adoptLegacy, bool created) onPicked;
@@ -100,8 +108,8 @@ class _UserGateScreenState extends State<UserGateScreen> {
     if (mounted) setState(() => _error = message);
   }
 
-  /// 登录：先看本机缓存，再问中心。返回是否进入了（或到了需要再问编号等中间状态——
-  /// 中间状态不算成功，保持「目录连不上」标志原样）。
+  /// 登录：先看本机缓存；缓存没有的名字默认**在本地新建**——配了外网访问凭据才先问
+  /// 中心目录（登录可能在别的电脑建过的人），目录里也没有才落到本地新建（ADR 0124）。
   Future<bool> _enter() async {
     var entered = false;
     await _guarded(() async {
@@ -125,43 +133,63 @@ class _UserGateScreenState extends State<UserGateScreen> {
           });
           return false;
         }
-        // 缓存里没有这一对：交给中心判断（也许是在别的电脑上建的同名者）。
+        // 缓存里没有这一对：配了凭据就交给中心判断（也许是在别的电脑上建的同名者）。
       }
-      final directory = widget.directoryFactory();
-      try {
-        await _finish(await directory.login(_name.text, id: typedId));
-        return entered = true;
-      } on DirectoryNotFound {
-        if (_askId) {
-          _fail("名字和编号对不上。编号是第一次新建时告诉你的那个数字。");
+      if (_remoteEnabled()) {
+        final directory = widget.directoryFactory();
+        try {
+          await _finish(await directory.login(_name.text, id: typedId));
+          return entered = true;
+        } on DirectoryNotFound {
+          if (_askId) {
+            _fail("名字和编号对不上。编号是第一次新建时告诉你的那个数字。");
+            return false;
+          }
+          // 目录里也没有：不自动注册到服务器（ADR 0124），落到下面的本地新建；
+          // 想建到服务器，用「我是另一个同名的人，新建」显式来。
+        } on DirectoryAmbiguous {
+          setState(() {
+            _askId = true;
+            _error = "有重名的学习者，请输入你的学习者编号。";
+          });
           return false;
         }
-        // 一个都没有：直接新建并进入，不再让人另找「新建」按钮（ADR 0078）。输错了也无妨：
-        // 换回正确的名字，或者在侧栏把这个名字改对。
-        await _finish(await directory.register(_name.text), created: true);
-        return entered = true;
-      } on DirectoryAmbiguous {
-        setState(() {
-          _askId = true;
-          _error = "有重名的学习者，请输入你的学习者编号。";
-        });
-        return false;
       }
+      await _createLocalNamed(_name.text);
+      return entered = true;
     });
     return entered;
   }
 
-  /// 显式新建：用于「另一个人和已有的人同名」这种少见情况；名字已有人用时先确认一次。
-  /// 平时不用点它——输入没人用过的名字点「进入」就会自动新建（ADR 0078）。
+  /// 「明确要跨机器同步」的开关（ADR 0124）：外网访问凭据在同步设置里明确填写了，
+  /// 登录页才碰中心目录；没配就完全本机，新建不关联任何远程。
+  bool _remoteEnabled() => widget.configLoader().wanUsableBase != null;
+
+  /// 显式新建：用于「另一个人和已有的人同名」这种少见情况。配了外网访问凭据 → 建到
+  /// 中心目录（跨机器可同步，名字已有人用时先确认）；没配 → 只能建到本地（ADR 0124）。
   Future<bool> _create() async {
     var created = false;
     await _guarded(() async {
       UserRegistry.validateName(_name.text);
+      final name = _name.text.trim();
+      if (!_remoteEnabled()) {
+        if (widget.registry.matching(name).isNotEmpty) {
+          final go = await _confirm(
+            title: "这台电脑上已有同名的学习者",
+            body: "本机已经有叫「$name」的学习者。如果你就是 ta，请点「取消」再点「进入」；"
+                "如果是另一个人，仍可新建，两个人靠编号区分。",
+            yes: "仍要新建",
+            no: "取消",
+          );
+          if (!go) return false;
+        }
+        return created = await _createLocalNamed(name);
+      }
       final directory = widget.directoryFactory();
-      var exists = widget.registry.matching(_name.text).isNotEmpty;
+      var exists = widget.registry.matching(name).isNotEmpty;
       if (!exists) {
         try {
-          await directory.login(_name.text);
+          await directory.login(name);
           exists = true;
         } on DirectoryAmbiguous {
           exists = true;
@@ -172,41 +200,37 @@ class _UserGateScreenState extends State<UserGateScreen> {
       if (exists) {
         final go = await _confirm(
           title: "已有同名的学习者",
-          body: "已经有叫「${_name.text.trim()}」的学习者。如果你就是 ta，请点「取消」再点「进入」；"
+          body: "已经有叫「$name」的学习者。如果你就是 ta，请点「取消」再点「进入」；"
               "如果是另一个人，仍可新建，之后在别的电脑登录会多问一次编号。",
           yes: "仍要新建",
           no: "取消",
         );
         if (!go) return false;
       }
-      await _finish(await directory.register(_name.text), created: true);
+      await _finish(await directory.register(name), created: true);
       return created = true;
     });
     return created;
   }
 
-  /// 目录连不上时的出路（ADR 0123）：在这台电脑上新建一个本地学习者——编号从 1000 起
-  /// （中心目录只发 1～999，两个段永不重叠），只存本机、永不参与同步。以后想同步，
-  /// 等连得上目录时用中心目录的学习者，两边不互迁。本机已有**本地段**同名时先确认：
-  /// 服务器段的同名者编号不同，不构成歧义。取消不算成功，出路按钮保持可见。
-  Future<bool> _createLocal() async {
-    var created = false;
-    await _guarded(() async {
-      UserRegistry.validateName(_name.text);
-      final name = _name.text.trim();
-      if (widget.registry.matching(name).any((profile) => profile.isLocal)) {
-        final go = await _confirm(
-          title: "这台电脑上已有同名的本地学习者",
-          body: "本机已经有一个叫「$name」的本地学习者。仍要新建的话，两个人靠编号区分。",
-          yes: "仍要新建",
-          no: "取消",
-        );
-        if (!go) return false;
-      }
-      await _finish(UserProfile(id: "${widget.registry.nextLocalId()}", name: name), created: true);
-      return created = true;
-    });
-    return created;
+  /// 在这台电脑上新建一个本地学习者（ADR 0123、0124）：编号从 1000 起（中心目录只发
+  /// 1～999，两个段永不重叠），只存本机、永不参与同步；以后想同步，等配好凭据后用
+  /// 中心目录的学习者，两边不互迁。[confirmDuplicate] 为真且本机已有同名的**本地**
+  /// 学习者时先确认（服务器段的同名者编号不同，不构成歧义）。
+  Future<bool> _createLocalNamed(String name, {bool confirmDuplicate = false}) async {
+    UserRegistry.validateName(name);
+    final trimmed = name.trim();
+    if (confirmDuplicate && widget.registry.matching(trimmed).any((profile) => profile.isLocal)) {
+      final go = await _confirm(
+        title: "这台电脑上已有同名的本地学习者",
+        body: "本机已经有一个叫「$trimmed」的本地学习者。仍要新建的话，两个人靠编号区分。",
+        yes: "仍要新建",
+        no: "取消",
+      );
+      if (!go) return false;
+    }
+    await _finish(UserProfile(id: "${widget.registry.nextLocalId()}", name: trimmed), created: true);
+    return true;
   }
 
   Future<bool> _confirm({required String title, required String body, required String yes, required String no}) async {
@@ -310,7 +334,9 @@ class _UserGateScreenState extends State<UserGateScreen> {
                   const Text("谁在学车？", style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),
                   const SizedBox(height: 8),
                   const Text(
-                    "输入你的名字进入；第一次来的话，直接输入想用的名字，会自动新建。各人的做题记录、成就和解锁进度完全分开，互不打扰。",
+                    "输入你的名字进入；第一次来的话，直接输入想用的名字，会在这台电脑上新建——"
+                    "记录只存本机，不同步到别的设备。想让记录跨机器同步：先在「同步设置」里填好"
+                    "外网访问凭据，之后登录时就会自动找到服务器上的人。各人的做题记录、成就和解锁进度完全分开，互不打扰。",
                     style: TextStyle(height: 1.5),
                   ),
                   const SizedBox(height: 20),
@@ -377,7 +403,9 @@ class _UserGateScreenState extends State<UserGateScreen> {
                   if (_unavailable) ...[
                     const SizedBox(height: 12),
                     OutlinedButton(
-                      onPressed: _busy ? null : _createLocal,
+                      onPressed: _busy
+                          ? null
+                          : () => _guarded(() => _createLocalNamed(_name.text, confirmDuplicate: true)),
                       child: const Text("在这台电脑上新建（不同步）"),
                     ),
                   ],

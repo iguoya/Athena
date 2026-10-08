@@ -78,10 +78,13 @@ void main() {
     await dir.delete(recursive: true);
   });
 
+  /// [remote] 模拟「同步设置里明确填了外网访问凭据」（ADR 0124）：只有这时登录页才会
+  /// 碰中心目录；默认不配——新建一律落到本机。
   Future<void> open(
     WidgetTester tester, {
     UserProfile? current,
     bool legacy = false,
+    bool remote = false,
   }) async {
     tester.view.physicalSize = const Size(1200, 1600);
     tester.view.devicePixelRatio = 1;
@@ -90,6 +93,9 @@ void main() {
       home: UserGateScreen(
         registry: registry,
         directoryFactory: () => directory,
+        configLoader: () => remote
+            ? const ApiConfig(wanBase: "https://wan.example", cfClientId: "id.access", cfClientSecret: "secret")
+            : const ApiConfig(wanBase: null),
         currentUser: current,
         legacyPending: legacy,
         onPicked: (profile, adopt, created) {
@@ -116,9 +122,9 @@ void main() {
     expect(directory.calls, 0);
   });
 
-  testWidgets("本机没有这个名字：问中心目录，找到一个就进并记进缓存", (tester) async {
+  testWidgets("配了凭据：本机没有的名字问中心目录，找到一个就进并记进缓存（异地登录）", (tester) async {
     directory.add("tiger");
-    await open(tester);
+    await open(tester, remote: true);
     await typeName(tester, "Tiger");
     await tester.tap(find.text("进入"));
     await tester.pumpAndSettle();
@@ -126,21 +132,32 @@ void main() {
     expect(registry.byId("1")?.name, "tiger");
   });
 
-  testWidgets("名字没人用过：点「进入」就直接新建并进入，不弹窗、不用另找按钮（ADR 0078）", (tester) async {
+  testWidgets("没配凭据：本机没有的名字直接在本地新建（编号 1000 起），不碰目录（ADR 0124）", (tester) async {
     await open(tester);
     await typeName(tester, "新人");
     await tester.tap(find.text("进入"));
     await tester.pumpAndSettle();
-    expect(picked?.id, "1");
-    expect(createdFlag, isTrue, reason: "告诉启动门这是新建的，进入后用提示条说编号");
-    expect(directory.rows.single.name, "新人");
-    expect(registry.byId("1")?.name, "新人");
-    expect(find.byType(AlertDialog), findsNothing, reason: "编号不再弹窗拦人");
+    expect(picked?.id, "1000", reason: "默认只存这台电脑，编号用本地段");
+    expect(picked?.isLocal, isTrue);
+    expect(createdFlag, isTrue);
+    expect(directory.calls, 0, reason: "没配凭据就完全本机，登录页不发任何请求");
+    expect(find.byType(AlertDialog), findsNothing);
   });
 
-  testWidgets("已有的人点「进入」不会被当成新建", (tester) async {
+  testWidgets("配了凭据、目录里没有：点「进入」默认本地新建，不自动注册到服务器（ADR 0124）", (tester) async {
+    directory.add("tiger");
+    await open(tester, remote: true);
+    await typeName(tester, "没人用过");
+    await tester.tap(find.text("进入"));
+    await tester.pumpAndSettle();
+    expect(picked?.id, "1000");
+    expect(picked?.isLocal, isTrue);
+    expect(directory.rows, hasLength(1), reason: "只有原有的 tiger；没有把新人注册到服务器");
+  });
+
+  testWidgets("配了凭据：目录里有的人点「进入」是登录，不会被当成新建", (tester) async {
     directory.add("小王");
-    await open(tester);
+    await open(tester, remote: true);
     await typeName(tester, "小王");
     await tester.tap(find.text("进入"));
     await tester.pumpAndSettle();
@@ -148,10 +165,10 @@ void main() {
     expect(directory.rows, hasLength(1));
   });
 
-  testWidgets("名字和编号对不上不会自动新建（只有「没有这个名字」才新建）", (tester) async {
+  testWidgets("配了凭据：名字和编号对不上不会自动新建（只有「没有这个名字」才本地新建）", (tester) async {
     directory.add("小王");
     directory.add("小王");
-    await open(tester);
+    await open(tester, remote: true);
     await typeName(tester, "小王");
     await tester.tap(find.text("进入"));
     await tester.pumpAndSettle();
@@ -162,10 +179,10 @@ void main() {
     expect(directory.rows, hasLength(2), reason: "没有因为对不上就新建第三个");
   });
 
-  testWidgets("重名：再问学习者编号，输对才进，输错不进（ADR 0075 决策 2）", (tester) async {
+  testWidgets("配了凭据：重名再问学习者编号，输对才进，输错不进（ADR 0075 决策 2）", (tester) async {
     directory.add("小王");
     directory.add("小王");
-    await open(tester);
+    await open(tester, remote: true);
     await typeName(tester, "小王");
     await tester.tap(find.text("进入"));
     await tester.pumpAndSettle();
@@ -184,18 +201,30 @@ void main() {
     expect(picked?.id, "2");
   });
 
-  testWidgets("显式新建（同名的另一个人）：名字没人用时直接新建进入，没有编号弹窗", (tester) async {
-    await open(tester);
+  testWidgets("配了凭据：显式新建建到服务器，跨机器可同步（ADR 0124）", (tester) async {
+    await open(tester, remote: true);
     await typeName(tester, "新人");
     await tester.tap(find.text("我是另一个同名的人，新建"));
     await tester.pumpAndSettle();
     expect(find.byType(AlertDialog), findsNothing);
     expect((picked?.id, createdFlag), ("1", true));
+    expect(picked?.isLocal, isFalse);
   });
 
-  testWidgets("名字已有人用：新建前先确认，取消就不新建", (tester) async {
-    directory.add("小王");
+  testWidgets("没配凭据：显式新建建到本地（编号 1000 起），不碰目录（ADR 0124）", (tester) async {
     await open(tester);
+    await typeName(tester, "新人");
+    await tester.tap(find.text("我是另一个同名的人，新建"));
+    await tester.pumpAndSettle();
+    expect(find.byType(AlertDialog), findsNothing);
+    expect((picked?.id, createdFlag), ("1000", true));
+    expect(picked?.isLocal, isTrue);
+    expect(directory.calls, 0);
+  });
+
+  testWidgets("配了凭据：名字已有人用，显式新建前先确认，取消就不建", (tester) async {
+    directory.add("小王");
+    await open(tester, remote: true);
     await typeName(tester, "小王");
     await tester.tap(find.text("我是另一个同名的人，新建"));
     await tester.pumpAndSettle();
@@ -207,9 +236,9 @@ void main() {
     expect(picked, isNull);
   });
 
-  testWidgets("名字已有人用：确认后仍可新建，重名靠编号区分", (tester) async {
+  testWidgets("配了凭据：名字已有人用，确认后仍可在服务器新建，重名靠编号区分", (tester) async {
     directory.add("小王");
-    await open(tester);
+    await open(tester, remote: true);
     await typeName(tester, "小王");
     await tester.tap(find.text("我是另一个同名的人，新建"));
     await tester.pumpAndSettle();
@@ -217,6 +246,20 @@ void main() {
     await tester.pumpAndSettle();
     expect((picked?.id, createdFlag), ("2", true));
     expect(directory.rows, hasLength(2));
+  });
+
+  testWidgets("没配凭据：本机已有同名，显式新建前先确认，确认后建到本地（ADR 0124）", (tester) async {
+    registry.remember(const UserProfile(id: "3", name: "小王"));
+    await open(tester);
+    await typeName(tester, "小王");
+    await tester.tap(find.text("我是另一个同名的人，新建"));
+    await tester.pumpAndSettle();
+    expect(find.text("这台电脑上已有同名的学习者"), findsOneWidget);
+
+    await tester.tap(find.text("仍要新建"));
+    await tester.pumpAndSettle();
+    expect((picked?.id, createdFlag), ("1000", true));
+    expect(directory.calls, 0);
   });
 
   testWidgets("只能改当前登录的这位：没有当前学习者时没有改名入口", (tester) async {
@@ -243,21 +286,21 @@ void main() {
     expect(find.text("现在是：老司机（编号 1）"), findsOneWidget);
   });
 
-  testWidgets("名字没人用、自动新建却被服务端拒绝：把原因显示出来，不能静默没反应", (tester) async {
+  testWidgets("配了凭据：名字没人用、自动本地新建不经过服务端；服务端拒绝只发生在显式注册", (tester) async {
     directory.registerRejection = legacyServerMessage;
-    await open(tester);
+    await open(tester, remote: true);
     await typeName(tester, "tiger");
-    await tester.tap(find.text("进入"));
+    await tester.tap(find.text("我是另一个同名的人，新建"));
     await tester.pumpAndSettle();
     expect(picked, isNull);
     expect(find.textContaining("旧版本"), findsOneWidget);
     expect(directory.rows, isEmpty);
   });
 
-  testWidgets("连不上目录：新建说明原因，页面有同步设置入口；本机用过的人仍能直接进", (tester) async {
+  testWidgets("配了凭据但连不上目录：新建说明原因，页面有同步设置入口；本机用过的人仍能直接进", (tester) async {
     registry.remember(const UserProfile(id: "3", name: "小王"));
     directory.down = true;
-    await open(tester);
+    await open(tester, remote: true);
     expect(find.text("同步设置"), findsOneWidget);
 
     await typeName(tester, "新人");
@@ -273,9 +316,9 @@ void main() {
     expect(picked?.id, "3");
   });
 
-  testWidgets("连不上目录：出现「在这台电脑上新建（不同步）」，建出的本地学习者编号 1000 起（ADR 0123）", (tester) async {
+  testWidgets("配了凭据但连不上目录：出现「在这台电脑上新建（不同步）」，建出的本地学习者编号 1000 起（ADR 0123）", (tester) async {
     directory.down = true;
-    await open(tester);
+    await open(tester, remote: true);
     await typeName(tester, "本地新人");
     await tester.tap(find.text("进入"));
     await tester.pumpAndSettle();
@@ -291,10 +334,10 @@ void main() {
     expect(registry.byId("1000")?.name, "本地新人", reason: "记进本机缓存，下次离线也能进");
   });
 
-  testWidgets("本地新建遇到本机同名的本地学习者：先确认，取消就不建（ADR 0123）", (tester) async {
+  testWidgets("配了凭据但连不上目录：本地新建遇到本机同名的本地学习者，先确认，取消就不建（ADR 0123）", (tester) async {
     registry.remember(const UserProfile(id: "1000", name: "老王"));
     directory.down = true;
-    await open(tester);
+    await open(tester, remote: true);
     await typeName(tester, "老王");
     // 显式新建在目录不可达时失败（本机已有同名先确认一次，确认后 register 碰壁），
     // 失败后出现本地新建的出路。
@@ -320,13 +363,10 @@ void main() {
     expect(picked?.isLocal, isTrue);
   });
 
-  testWidgets("连不上目录：本地新建过一次，缓存里的人下次直接进，不再碰目录", (tester) async {
-    directory.down = true;
+  testWidgets("没配凭据：本地新建过一次，缓存里的人下次直接进，全程不碰目录（ADR 0124）", (tester) async {
     await open(tester);
     await typeName(tester, "本地新人");
     await tester.tap(find.text("进入"));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text("在这台电脑上新建（不同步）"));
     await tester.pumpAndSettle();
     expect(picked?.id, "1000");
 
@@ -337,7 +377,7 @@ void main() {
     await tester.tap(find.text("进入"));
     await tester.pumpAndSettle();
     expect(picked?.id, "1000");
-    expect(directory.calls, 1, reason: "只有第一次「进入」那次失败的登录尝试；缓存命中不再碰目录");
+    expect(directory.calls, 0, reason: "没配凭据，两次进入都没碰目录");
   });
 
   testWidgets("本地学习者改自己的名字：只写本机缓存，不碰目录（ADR 0123）", (tester) async {
@@ -360,7 +400,7 @@ void main() {
 
   testWidgets("本机有单用户时代的旧记录：登录后问一句归不归他", (tester) async {
     directory.add("tiger");
-    await open(tester, legacy: true);
+    await open(tester, legacy: true, remote: true);
     await typeName(tester, "tiger");
     await tester.tap(find.text("进入"));
     await tester.pumpAndSettle();
@@ -374,7 +414,7 @@ void main() {
 
   testWidgets("旧记录选「不用」：照样进入，不认领", (tester) async {
     directory.add("tiger");
-    await open(tester, legacy: true);
+    await open(tester, legacy: true, remote: true);
     await typeName(tester, "tiger");
     await tester.tap(find.text("进入"));
     await tester.pumpAndSettle();

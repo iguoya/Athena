@@ -207,6 +207,7 @@ class _BootstrapGateState extends State<BootstrapGate> {
         builder: (context) => UserGateScreen(
           registry: registry,
           directoryFactory: _directory,
+          configLoader: ApiConfig.load,
           currentUser: _profile,
           allowCancel: true,
           onPicked: (profile, _, created) {
@@ -269,6 +270,7 @@ class _BootstrapGateState extends State<BootstrapGate> {
           (context) => UserGateScreen(
             registry: _registry!,
             directoryFactory: _directory,
+            configLoader: ApiConfig.load,
             legacyPending: _legacyPending,
             onPicked: _enter,
           ),
