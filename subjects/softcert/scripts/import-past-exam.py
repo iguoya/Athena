@@ -131,7 +131,10 @@ def parse_paper(html_text: str) -> tuple[list[dict], list[int]]:
 def import_paper(arguments) -> None:
     url = arguments.from_url
     if not url.startswith("http"):
-        url = f"{BASE}/软件设计师/{url.lstrip('/')}"
+        if url.startswith("notes/"):
+            url = f"{BASE}/软件设计师/{url.lstrip('/')}"
+        else:
+            url = f"{BASE}/{url.lstrip('/')}"
     print(f"拉取 {url}", flush=True)
     html_text = fetch(url)
 

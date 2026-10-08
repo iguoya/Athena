@@ -1,7 +1,7 @@
 {
   "id": "esd",
   "title": "嵌入式系统设计师",
-  "tagline": "对齐《嵌入式系统设计师教程(第 2 版)》全部 11 章:菜单即教材目录,硬件与 RTOS 是主场,一年一考(上半年)。",
+  "tagline": "对齐《嵌入式系统设计师教程(第 2 版)》全部 11 章:菜单即教材目录,硬件与 RTOS 是主场,一年一考(2024 年起为上半年 5 月底)。",
   "accent": "#0E8A6D",
   "track": "esd",
   "textbook": {
@@ -16,14 +16,17 @@
     "subject": "软考中级·嵌入式系统设计师",
     "score_range": "两科各 75 分,同时 ≥45 通过",
     "grade": "S",
-    "note": "一年一考、固定上半年(5 月);案例分析约 5 道大题(硬件接口/ARM 体系/RTOS 编程/C 填空/方案选型),对应教材第 11 章的案例形态。"
+    "note": "一年一考,2024 年起安排在上半年 5 月底(2020 年及以前真题均为 11 月卷);案例分析约 5 道大题(硬件接口/ARM 体系/RTOS 编程/C 填空/方案选型),对应教材第 11 章的案例形态。"
   },
   "chapters": [
     {
       "id": "esd-ch01",
       "no": 1,
       "title": "计算机系统基础知识",
-      "textbook_ref": { "sourceId": "textbook-esd-2ed", "locator": "第 1 章" },
+      "textbook_ref": {
+        "sourceId": "textbook-esd-2ed",
+        "locator": "第 1 章"
+      },
       "note": "本章与软设教材第 1 章高度重叠(数据表示、体系结构、可靠性):公共内容先学「软件设计师 → 第 1 章」,本章后续只补嵌入式特有视角。",
       "sections": []
     },
@@ -31,7 +34,10 @@
       "id": "esd-ch02",
       "no": 2,
       "title": "嵌入式系统硬件基础知识",
-      "textbook_ref": { "sourceId": "textbook-esd-2ed", "locator": "第 2 章" },
+      "textbook_ref": {
+        "sourceId": "textbook-esd-2ed",
+        "locator": "第 2 章"
+      },
       "note": "教材小节:2.1 数字电路基础 / 2.2 嵌入式微处理器 / 2.3 存储体系 / 2.4 I/O / 2.5 定时器和计数器 / 2.6 总线及通信接口(含 RapidIO) / 2.7 嵌入式 SoC(Virtex、Spartan 系列 FPGA)。",
       "sections": []
     },
@@ -39,7 +45,10 @@
       "id": "esd-ch03",
       "no": 3,
       "title": "嵌入式硬件设计",
-      "textbook_ref": { "sourceId": "textbook-esd-2ed", "locator": "第 3 章" },
+      "textbook_ref": {
+        "sourceId": "textbook-esd-2ed",
+        "locator": "第 3 章"
+      },
       "note": "教材小节:3.1 电源管理 / 3.2 电子电路设计 / 3.3 Cadence PCB 系统设计。",
       "sections": []
     },
@@ -47,18 +56,39 @@
       "id": "esd-ch04",
       "no": 4,
       "title": "嵌入式系统软件基础知识",
-      "textbook_ref": { "sourceId": "textbook-esd-2ed", "locator": "第 4 章" },
+      "textbook_ref": {
+        "sourceId": "textbook-esd-2ed",
+        "locator": "第 4 章"
+      },
       "note": "教材小节:4.1 嵌入式软件基础 / 4.2 嵌入式操作系统概述 / 4.3 任务管理 / 4.4 存储管理 / 4.5 设备管理 / 4.6 文件系统 / 4.7 嵌入式数据库。通用 OS 原理与软设第 4 章共学,这里只放实时方向的延伸节。",
       "sections": [
-        { "id": "os-rtos", "title": "从通用 OS 到实时系统", "weight": 2, "grade": "A",
-          "kp": { "id": "sc.os.rtos", "difficulty": 3, "mastery_goal": "understand", "knowledge_type": "strategy", "requires": ["sc.os.process", "sc.os.sched"], "guide_line": "这是通往嵌入式专有课程的桥:实时性怎么改变调度与同步的取舍,概念级掌握即可。" } }
+        {
+          "id": "os-rtos",
+          "title": "从通用 OS 到实时系统",
+          "weight": 2,
+          "grade": "A",
+          "kp": {
+            "id": "sc.os.rtos",
+            "difficulty": 3,
+            "mastery_goal": "understand",
+            "knowledge_type": "strategy",
+            "requires": [
+              "sc.os.process",
+              "sc.os.sched"
+            ],
+            "guide_line": "这是通往嵌入式专有课程的桥:实时性怎么改变调度与同步的取舍,概念级掌握即可。"
+          }
+        }
       ]
     },
     {
       "id": "esd-ch05",
       "no": 5,
       "title": "嵌入式系统设计与开发",
-      "textbook_ref": { "sourceId": "textbook-esd-2ed", "locator": "第 5 章" },
+      "textbook_ref": {
+        "sourceId": "textbook-esd-2ed",
+        "locator": "第 5 章"
+      },
       "note": "教材小节:5.1 嵌入式软件开发概述 / 5.2 开发环境(宿主机与目标机、开发工具、IDE) / 5.3 软件开发(平台选型、软件设计、特性设计、设计约束、编码、下载和运行、移植)。",
       "sections": []
     },
@@ -66,7 +96,10 @@
       "id": "esd-ch06",
       "no": 6,
       "title": "嵌入式程序设计",
-      "textbook_ref": { "sourceId": "textbook-esd-2ed", "locator": "第 6 章" },
+      "textbook_ref": {
+        "sourceId": "textbook-esd-2ed",
+        "locator": "第 6 章"
+      },
       "note": "教材小节:6.1 程序设计语言基础 / 6.2 汇编语言程序设计 / 6.3 C 程序设计基础 / 6.4 C++ 程序设计基础。",
       "sections": []
     },
@@ -74,18 +107,51 @@
       "id": "esd-ch07",
       "no": 7,
       "title": "嵌入式系统的项目开发与维护知识",
-      "textbook_ref": { "sourceId": "textbook-esd-2ed", "locator": "第 7 章" },
+      "textbook_ref": {
+        "sourceId": "textbook-esd-2ed",
+        "locator": "第 7 章"
+      },
       "note": "教材小节:7.1 系统开发过程和项目管理 / 7.2 系统分析知识 / 7.3 系统设计知识 / 7.4 结构化分析与设计方法 / 7.5 面向对象分析与设计方法(UML、设计模式) / 7.6 系统实施知识 / 7.7 系统运行与维护。",
       "sections": []
     },
-    { "id": "esd-ch08", "no": 8, "title": "嵌入式系统软件测试", "textbook_ref": { "sourceId": "textbook-esd-2ed", "locator": "第 8 章" }, "sections": [] },
-    { "id": "esd-ch09", "no": 9, "title": "嵌入式系统安全性基础知识", "textbook_ref": { "sourceId": "textbook-esd-2ed", "locator": "第 9 章" }, "sections": [] },
-    { "id": "esd-ch10", "no": 10, "title": "标准化、信息化与知识产权基础知识", "textbook_ref": { "sourceId": "textbook-esd-2ed", "locator": "第 10 章" }, "sections": [] },
+    {
+      "id": "esd-ch08",
+      "no": 8,
+      "title": "嵌入式系统软件测试",
+      "textbook_ref": {
+        "sourceId": "textbook-esd-2ed",
+        "locator": "第 8 章"
+      },
+      "sections": []
+    },
+    {
+      "id": "esd-ch09",
+      "no": 9,
+      "title": "嵌入式系统安全性基础知识",
+      "textbook_ref": {
+        "sourceId": "textbook-esd-2ed",
+        "locator": "第 9 章"
+      },
+      "sections": []
+    },
+    {
+      "id": "esd-ch10",
+      "no": 10,
+      "title": "标准化、信息化与知识产权基础知识",
+      "textbook_ref": {
+        "sourceId": "textbook-esd-2ed",
+        "locator": "第 10 章"
+      },
+      "sections": []
+    },
     {
       "id": "esd-ch11",
       "no": 11,
       "title": "嵌入式系统设计案例分析",
-      "textbook_ref": { "sourceId": "textbook-esd-2ed", "locator": "第 11 章" },
+      "textbook_ref": {
+        "sourceId": "textbook-esd-2ed",
+        "locator": "第 11 章"
+      },
       "note": "11.1 总体设计 / 11.2 硬件设计 / 11.3 应用设计案例——下午案例分析大题的对应章,内容就位后与历年真题卷联动训练。",
       "sections": []
     }
