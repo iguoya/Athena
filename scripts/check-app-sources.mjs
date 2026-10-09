@@ -99,9 +99,18 @@ function refsOf(item, c) {
 let hardFail = 0;
 const report = [];
 
+// 不判分的应用（素材坑、图谱/参考类，REPOSITORY.md 三类判据；ADR 0089）：
+// 出处规范不适用——不报「未接入」、不扫条目。清单过期了按判据重新归类。
+const NON_GRADED = new Set(["design-patterns", "math-tools"]);
+
 for (const app of readdirSync(appsDir).sort()) {
   const appDir = join(appsDir, app);
   if (!statSync(appDir).isDirectory()) continue;
+
+  if (NON_GRADED.has(app)) {
+    report.push({ app, state: "不适用", detail: "不判分（参考类/素材坑，ADR 0089）" });
+    continue;
+  }
 
   const contractPath = join(appDir, "content-contract.json");
   if (!existsSync(contractPath)) {
@@ -122,6 +131,11 @@ for (const app of readdirSync(appsDir).sort()) {
   // 条目的标识字段。默认认 id / stem，但 subjects/cpp 的知识点用 name——认不出来
   // 时每条的 key 都会退化成「(无 id)」，全部撞在一起，豁免名单写了也不生效。
   c.idFields ??= ["id", "stem"];
+  // 档位（ADR 0089）：exam=考试/考证考级类，硬要求全生效、违规即失败；open=技术
+  // 学习类，出处是默认习惯不做门禁——问题照报但不阻断、自造配额解除；reference=
+  // 不判分，只登记不检查。缺 tier 的老契约按 blocking 布尔走旧行为，输出提醒。
+  const tier = typeof c.tier === "string" ? c.tier : null;
+  const enforce = c.blocking !== false && tier !== "open" && tier !== "reference";
 
   const contentDir = join(appDir, c.contentDir ?? "content");
   const catalogIds = new Set();
@@ -212,13 +226,16 @@ for (const app of readdirSync(appsDir).sort()) {
     }
   }
 
-  // 自造配额：一节内不得过半（ADR 0043 第 2 节第 4 条）
-  for (const [sec, [n, a]] of perSection) {
-    if (n >= 2 && a * 2 > n) issues.push(`${sec} 的 ${n} 条里有 ${a} 条自造（过半）`);
+  // 自造配额：一节内不得过半（ADR 0043 第 2 节第 4 条）。open 档自造自由发挥，配额解除（ADR 0089）。
+  if (tier !== "open" && tier !== "reference") {
+    for (const [sec, [n, a]] of perSection) {
+      if (n >= 2 && a * 2 > n) issues.push(`${sec} 的 ${n} 条里有 ${a} 条自造（过半）`);
+    }
   }
 
   report.push({
     app,
+    tier,
     state: issues.length ? "有问题" : "达标",
     total,
     sourced,
@@ -227,21 +244,29 @@ for (const app of readdirSync(appsDir).sort()) {
     issues,
     blocking: c.blocking !== false,
   });
-  if (issues.length && c.blocking !== false) hardFail += issues.length;
+  if (issues.length && enforce) hardFail += issues.length;
 }
 
 // ── 输出 ──
-console.log("跨应用「内容必须有出处」检查（ADR 0043）\n");
+console.log("跨应用「内容必须有出处」检查（ADR 0043、0089）\n");
 for (const r of report) {
-  if (r.state === "未接入" || r.state === "契约损坏") {
+  if (r.state === "未接入" || r.state === "契约损坏" || r.state === "不适用") {
     console.log(`  ${r.app.padEnd(12)} ${r.state} —— ${r.detail}`);
     continue;
   }
+  const tierName =
+    r.tier === "exam" ? "考试档" : r.tier === "open" ? "开放档" : r.tier === "reference" ? "参考档" : "未定档";
   const quota = r.total ? ` 自造 ${r.authored}` : "";
   const legacy = r.legacy ? ` 存量豁免 ${r.legacy}` : "";
-  const mode = r.blocking ? "" : "（只报告）";
+  // 考试档只报告 = 契约里声明的过渡欠账（如 softcert 真题授权前），不是豁免；
+  // 未定档的应用按旧行为跑，但要点名补 tier。
+  const mode = r.tier === "exam"
+    ? (r.blocking ? "" : "（欠账·只报告）")
+    : r.tier === "open" || r.tier === "reference"
+      ? (r.state === "有问题" ? "（只报告）" : "")
+      : (r.blocking ? "（未定档，契约补 tier——ADR 0089）" : "（只报告·未定档，契约补 tier——ADR 0089）");
   console.log(
-    `  ${r.app.padEnd(12)} ${r.state}${mode}：${r.sourced}/${r.total} 条有出处${quota}${legacy}`,
+    `  ${r.app.padEnd(12)} ${tierName} ${r.state}${mode}：${r.sourced}/${r.total} 条有出处${quota}${legacy}`,
   );
   for (const i of r.issues.slice(0, 8)) console.log(`      · ${i}`);
   if (r.issues.length > 8) console.log(`      · …另有 ${r.issues.length - 8} 条`);
@@ -252,7 +277,7 @@ if (notWired.length) {
   console.log(`\n未接入：${notWired.join("、")}。加一份 content-contract.json 即可纳入检查。`);
 }
 if (hardFail) {
-  console.error(`\n共 ${hardFail} 处问题（只报告模式的应用不计入）。见 ADR 0043。`);
+  console.error(`\n共 ${hardFail} 处问题（开放档/参考档只报告，不计入）。见 ADR 0043、0089。`);
   process.exit(1);
 }
 console.log("\n通过。");
