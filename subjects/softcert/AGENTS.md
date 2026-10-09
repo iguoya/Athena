@@ -39,6 +39,9 @@ content/
   (`concept` / `skill` / `strategy`)、先修 `requires`(知识点 id 数组)。
 - **篇幅与掌握目标匹配(ADR 0040)**:`aware` 档的章节不许比 `proficient`
   档写得还长;写完对照评级校准。
+- **章节建设顺序与练习形态**按 [docs/content-plan.md](docs/content-plan.md)
+  的三维评级(应用/实践/实验)执行:实验性高的先做 `viz` 交互,实验性低的
+  只做记忆卡与测验;分值权重待真题录入后校准。
 
 ## 判分与出处(ADR 0043)
 
