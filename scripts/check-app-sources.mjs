@@ -70,12 +70,23 @@ function collectItems(node, markers, sourceField, inherited = null, acc = []) {
   return acc;
 }
 
+/**
+ * 来源字段直接写 catalog id 字符串（如 ascent 的 `"source": "tatoeba"`）时，关系由契约的
+ * stringRefRelation 声明：一个字符串，或 { default, <来源 id>: 关系 } 按来源细分。不让
+ * 应用为了过检查把几千条数据改成对象形状——出处信息是全的，只是写法更省。
+ */
+function stringRef(id, c) {
+  const rule = c.stringRefRelation;
+  const relation = typeof rule === "string" ? rule : (rule?.[id] ?? rule?.default);
+  return { relation, sourceId: id, url: undefined, locator: undefined, why: undefined, raw: id };
+}
+
 /** 从一条条目里取出它的来源引用，拉平成统一形状 */
 function refsOf(item, c) {
   const raw = item[c.sourceField];
   if (!raw) return [];
   const list = Array.isArray(raw) ? raw : [raw];
-  return list.map((r) => ({
+  return list.map((r) => typeof r === "string" && c.stringRefRelation ? stringRef(r, c) : ({
     relation: r[c.relationField],
     sourceId: c.sourceIdField ? r[c.sourceIdField] : undefined,
     url: c.urlFields.map((f) => r[f]).find(Boolean),
@@ -129,12 +140,16 @@ for (const app of readdirSync(appsDir).sort()) {
   const perSection = new Map(); // 节 → [总数, 自造数]，用来查配额
 
   for (const file of jsonFiles(contentDir)) {
+    // 一律按正斜杠比较：契约与豁免名单里写的是 a/b，Windows 上 join 出来是 a\b，
+    // 不统一的话「跳过 sources/」与豁免名单在 Windows 上全部失效，两个平台结论不同。
+    const rel = relative(appDir, file).replaceAll("\\", "/");
     // catalog 与参考材料本身不是判分条目
-    if (c.catalog && file.endsWith(c.catalog)) continue;
-    if (file.includes(`${c.contentDir ?? "content"}/sources/`)) continue;
+    if (c.catalog && rel.endsWith(c.catalog)) continue;
+    if (rel.includes(`${c.contentDir ?? "content"}/sources/`)) continue;
+    // 契约点名排除的文件（如由真题统计出的词频表：条目长得像内容，其实是派生数字）
+    if ((c.excludeFiles ?? []).some((suffix) => rel.endsWith(suffix))) continue;
     const data = readJson(file);
     if (!data) continue;
-    const rel = relative(appDir, file);
 
     for (const { item, inherited } of collectItems(data, c.itemMarkers, c.sourceField)) {
       total++;
