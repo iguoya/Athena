@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // 单题聚焦式作答器:每答一题即写进度库(ADR 0052:作答先入库)。
 // 章节随堂考核用;整卷形态见 PaperRunner。
-import { computed, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { CheckCircle2, XCircle, ArrowRight, Award } from "lucide-vue-next";
 import { recordAttempt } from "../db";
 import { InlineText } from "./InlineText";
@@ -56,6 +56,21 @@ function advance() {
 }
 
 const ratio = computed(() => score.value / props.questions.length);
+
+// 键盘流:A–D / 1–4 作答,Enter 下一题——刷题不用碰鼠标,与 softcert 的
+// 纯点击作答形成体验差异。
+function onKey(e: KeyboardEvent) {
+  if (finished.value) return;
+  const k = e.key.toLowerCase();
+  if (!judged.value) {
+    const map: Record<string, number> = { a: 0, b: 1, c: 2, d: 3, "1": 0, "2": 1, "3": 2, "4": 3 };
+    if (k in map) submit(map[k]);
+  } else if (k === "enter") {
+    advance();
+  }
+}
+onMounted(() => window.addEventListener("keydown", onKey));
+onUnmounted(() => window.removeEventListener("keydown", onKey));
 </script>
 
 <template>
@@ -129,6 +144,9 @@ const ratio = computed(() => score.value / props.questions.length);
         :style="{ width: `${((idx + (judged ? 1 : 0)) / questions.length) * 100}%` }"
       />
     </div>
+    <p class="text-center text-[11px]" style="color: color-mix(in srgb, var(--tk-muted) 70%, transparent)">
+      键盘 A–D 或 1–4 作答 · Enter 下一题
+    </p>
 
     <div class="tk-card p-6">
       <p class="prose-lesson text-[15.5px] font-medium leading-relaxed">
