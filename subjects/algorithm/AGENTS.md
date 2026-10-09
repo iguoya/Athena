@@ -1,6 +1,6 @@
 # Athena DSA — 项目协作规则
 
-本文档是 **`subjects/dsa` 独立应用** 的项目级指令，不依赖任何其他应用即可完成开发、构建、学习与实验全流程。
+本文档是 **`subjects/algorithm` 独立应用** 的项目级指令，不依赖任何其他应用即可完成开发、构建、学习与实验全流程。
 
 仓库根 `AGENTS.md` 写各应用共同遵守的规则；**改本应用时以本文为准**。启动器通过
 `app.json` 把本应用当独立进程拉起（ADR 0032），那不是运行本应用的前提。
@@ -28,7 +28,7 @@
   **随仓库走**，换机器 clone 下来进度还在，主仓库 ADR 0053；发行副本退回
   用户数据目录 `AthenaDSA/`），自建表、自迁移，不共用 C++ 教程的学习库，也不依赖
   它是否启动过（ADR 0037）。`--store` 仅为兼容旧启动参数而接受并忽略。
-  知识点 ID 前缀一律 `dsa.`。
+  知识点 ID 前缀一律 `dsa.`（内容层短名与 id 解耦，保留不动——ADR 0097 决策 3 同规）。
 - **实验运行**：本机 `c++` / `clang++` / `g++`，`-std=c++20`，子进程编译运行
   （不是壳内 FFI）。
 
@@ -76,7 +76,7 @@
 
 ## 架构原则
 
-- **独立可运行**：`launcher open dsa`（编排器执行 `tauri:dev`）不经过任何别的应用。不要启动打包 `.app`。
+- **独立可运行**：`launcher open algorithm`（编排器执行 `tauri:dev`）不经过任何别的应用。不要启动打包 `.app`。
 - **内容驱动 UI**：改课优先改 `content/`，不为新节复制整页硬编码界面。
 - **实验逻辑在 C++**：前端不重写一份算法真相；需要步进可视化时由 C++ 打印
   约定事件（如 NDJSON），前端只消费。
@@ -97,8 +97,8 @@
 ## 开发与验证
 
 ```sh
-cd subjects/dsa
-launcher open dsa       # 日常开发（热更新）；启动器和图谱走的也是这条
+cd subjects/algorithm
+launcher open algorithm       # 日常开发（热更新）；启动器和图谱走的也是这条
 ```
 
 `npm run build:app` 只在真正要交付一份可分发的包时才跑，**不是**打开本应用的步骤，
@@ -106,13 +106,13 @@ launcher open dsa       # 日常开发（热更新）；启动器和图谱走的
 
 环境变量 `ATHENA_DSA_ROOT` 可强制指定应用根目录（含 `content/`）。
 
-验证走仓库根的统一入口 `python3 scripts/check.py dsa`：装前端依赖、`npm run build`、
+验证走仓库根的统一入口 `python3 scripts/check.py algorithm`：装前端依赖、`npm run build`、
 `cargo check` 与 `cargo test`（只改内容或前端时加 `--skip-rust`）。改了 C++ 实验时，再在应用里
 编译运行至少一个 case。
 
 ## 与 C++ 教程、北极星的关系
 
-- 启动器扫描 `subjects/dsa/app.json`，按 dev 声明启动源码（ADR 0041），不传任何状态。
+- 启动器扫描 `subjects/algorithm/app.json`，按 dev 声明启动源码（ADR 0041），不传任何状态。
 - 学科地图在北极星。**本应用不依赖那张图上有没有入口。**
 - 课表留在本目录的 `content/`，不迁回 `subjects/cpp/resources/athena.json`。
 

@@ -36,11 +36,11 @@ docs/decisions/   本应用 ADR
 
 ```sh
 # 推荐：开发（自动补 PATH，打开 Tauri 窗口——实验依赖此壳）
-launcher open dsa
+launcher open algorithm
 
 # 或手动
 export PATH="/usr/local/opt/node/bin:/opt/homebrew/bin:$HOME/.cargo/bin:$PATH"
-cd subjects/dsa
+cd subjects/algorithm
 npm install
 npm run tauri:dev
 ```

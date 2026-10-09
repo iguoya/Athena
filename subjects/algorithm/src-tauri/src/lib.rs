@@ -58,7 +58,7 @@ fn content_root() -> PathBuf {
         }
     }
 
-    // 开发：src-tauri 的上一级就是 subjects/dsa。
+    // 开发：src-tauri 的上一级就是 subjects/algorithm。
     let manifest = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let dev = manifest.join("..");
     dev.canonicalize().unwrap_or(dev)
@@ -92,14 +92,14 @@ fn parse_cli() {
             }
             "--help" | "-h" => {
                 eprintln!(
-                    "用法：athena-dsa\n\n\
+                    "用法：athena-algorithm\n\n\
                      进度写入本应用自己的库，完全独立运行。\n\
                      --store <路径> 仅为兼容旧版主程序而接受，会被忽略。"
                 );
                 std::process::exit(0);
             }
             "--version" => {
-                println!("athena-dsa {}", env!("CARGO_PKG_VERSION"));
+                println!("athena-algorithm {}", env!("CARGO_PKG_VERSION"));
                 std::process::exit(0);
             }
             other => {
@@ -145,7 +145,7 @@ fn format_cpp(source: String) -> Result<String, String> {
         .duration_since(UNIX_EPOCH)
         .unwrap_or_default()
         .as_millis();
-    let work = std::env::temp_dir().join(format!("athena-dsa-fmt-{stamp}"));
+    let work = std::env::temp_dir().join(format!("athena-algorithm-fmt-{stamp}"));
     fs::create_dir_all(&work).map_err(|e| e.to_string())?;
     let src = work.join("main.cpp");
     fs::write(&src, &source).map_err(|e| format!("写入待格式化源码失败：{e}"))?;
@@ -308,15 +308,15 @@ fn compile_and_run(
         .as_millis();
     let case_seg = safe_path_segment(&case_id);
     let entry_seg = safe_path_segment(&entrypoint);
-    let work = std::env::temp_dir().join(format!("athena-dsa-{case_seg}-{stamp}"));
+    let work = std::env::temp_dir().join(format!("athena-algorithm-{case_seg}-{stamp}"));
     fs::create_dir_all(&work).map_err(|e| e.to_string())?;
     let src = work.join(&entry_seg);
     fs::write(&src, source).map_err(|e| format!("写入临时源码失败：{e}"))?;
     let obj = work.join(compiler.artifact_name());
 
     let started = SystemTime::now();
-    // 案例共享头（如 dsa_trace.hpp）放 content/cases/_shared；挂上 include
-    // 路径后案例 `#include "dsa_trace.hpp"` 即可用（ADR 0004）。
+    // 案例共享头（如 algorithm_trace.hpp）放 content/cases/_shared；挂上 include
+    // 路径后案例 `#include "algorithm_trace.hpp"` 即可用（ADR 0004）。
     let shared = {
         let s = state.lock().unwrap();
         s.content_root.join("content/cases/_shared")
@@ -619,5 +619,5 @@ pub fn run() {
             load_all_quiz_picks
         ])
         .run(tauri::generate_context!())
-        .expect("error while running athena-dsa");
+        .expect("error while running athena-algorithm");
 }

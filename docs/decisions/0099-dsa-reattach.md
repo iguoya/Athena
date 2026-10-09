@@ -2,7 +2,7 @@
 
 - 日期：2026-10-10
 - 状态：已接受（tiger 澄清）
-- 关系：修订 [ADR 0095](0095-minimal-links.md) 决策 3；恢复
+- 关系：修订 [ADR 0098](0098-minimal-links.md) 决策 3；恢复
   [ADR 0092](0092-launcher-tree-attach-and-softcert-rename.md) 决策 4 的挂靠表达
 
 ## 背景
@@ -14,7 +14,7 @@ dsa 不应作为与软考课程平级的顶层兄弟出现——它**就应该�
 
 ## 决策
 
-1. **恢复 `dsa.parent = "softcert"`**：dsa 回到思维导图的挂靠层，画在软件设计
+1. **恢复挂靠**（dsa.parent 现指向 `software`——软件设计师 id 随 ADR 0097/后续改名迁移）：dsa 回到思维导图的挂靠层，画在软件设计
    师外一圈；领域圈仍是「算法」（ADR 0092 决策 2：领域圈按 group 画）。
 2. 0095 的其余决策不变：related 与演进线维持删除；挂靠深度一层维持；
    math-tools↔mathematics 维持保留。
