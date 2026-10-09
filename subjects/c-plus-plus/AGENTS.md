@@ -1,4 +1,4 @@
-# subjects/cpp 协作规则（C++ 教程）
+# subjects/c-plus-plus 协作规则（C++ 教程）
 
 本文档是 **C++ 教程这个学习应用**的规则。仓库级的通用规则（中文思考、跨应用教学规范、
 Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../../AGENTS.md)，
@@ -182,7 +182,9 @@ Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../.
 - 既有纯代码构建的视图是欠账，不是范例，改到时顺手收进 `.blp`（清单在 `docs/TECH_DEBT.md`）；
   合规参考是 `resources/ui/window.blp` 与 `resources/ui/chapters/*.blp`。
 - 加新 `.blp` 不用手工接线：共享界面放进 `resources/ui/`，章节页在 `athena.json` 里声明，
-  生成器统一算清单。新增后要 `meson setup --reconfigure`，只 compile 会被构建期守卫拦下。
+  生成器统一算清单。新增后要 `meson setup（Windows 需 MSYS2 工具链：PATH 前置 C:/msys64/mingw64/bin、
+  PKG_CONFIG_PATH=C:/msys64/mingw64/lib/pkgconfig——系统 PATH 里的 pkg-config 可能来自
+  Octave 等无关软件，搜不到 GTK 的 .pc；依赖缺什么用 pacman 补，见 meson-logs） --reconfigure`，只 compile 会被构建期守卫拦下。
 - 窗口类不实现教学业务逻辑；GResource 路径由配置和生成流程保持一致；共享模板不假设不同分类的
   `order` 全局唯一；Builder、页面缓存和初始化状态用完整章节 ID 作键。
 
@@ -225,10 +227,10 @@ Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../.
 本应用的检查入口：
 
 ```sh
-python3 subjects/cpp/scripts/check.py
+python3 subjects/c-plus-plus/scripts/check.py
 ```
 
-仓库根的 `python3 scripts/check.py cpp [参数...]` 会转发到它，CI 走的就是这条。
+仓库根的 `python3 scripts/check.py c-plus-plus [参数...]` 会转发到它，CI 走的就是这条。
 脚本依次执行以下步骤；默认构建目录为 `build`，可用 `--build-dir` 与
 `--buildtype` 覆盖（CI 使用 `--build-dir build --buildtype debugoptimized`）：
 

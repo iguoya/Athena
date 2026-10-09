@@ -270,7 +270,7 @@ resources = gnome.compile_resources(
   source_dir: ['resources', '.', meson.current_build_dir()]
 )
 
-executable('athena-cpp', app_sources,
+executable('athena-c-plus-plus', app_sources,
   sources: resources + platform_sources,
   include_directories: [cplusplus_inc],
   dependencies: [
