@@ -17,7 +17,8 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
   mathematics/ 数学学习（Tauri）
   math-tools/  数学工具（Tauri）——数学学习的配套工具，图谱/参考类，不是学习应用（ADR 0084）
   driver/      驾考学习（Flutter 桌面，科目一 / 科目四）
-  softcert/    软考中级备考（计算机系统基础 + 操作系统，Tauri 2 + React）——以考试为学科，与 driver 同构
+  softcert/    软考中级·软件设计师备考（Tauri 2 + React）——以考试为学科，与 driver 同构
+  esd/         嵌入式系统设计师备考（Tauri 2 + Vue 3）——从 softcert 拆出，同挂启动器「软考」分组（ADR 0090）
   gtkmm/       gtkmm 官方教程精读（Tauri 2 + React）
   polaris/       技术体系图谱（Tauri 2 + React，原 Qt 壳已退役，ADR 0015）——不是学习应用，见下文
   design-patterns/  设计模式素材坑——连应用都不是，见下文
@@ -56,7 +57,8 @@ archive/       历史归档，不参与构建
 | `mathematics` | 数学学习 | `athena-math` | `math.` |
 | `math-tools` | 数学工具 | `athena-math-tools` | （无进度库） |
 | `driver` | 驾考学习 | `athena-driver` | `drive.` |
-| `softcert` | 软考 | `athena-softcert` | `sc.` |
+| `softcert` | 软考（软件设计师） | `athena-softcert` | `sc.` |
+| `esd` | 嵌入式系统设计师（ADR 0090） | `athena-esd` | `esd.` |
 | `gtkmm` | gtkmm 官方教程精读 | `athena-gtkmm` | `gtkmm.` |
 | `polaris` | 北极星 | `athena-polaris` | （无进度库） |
 
