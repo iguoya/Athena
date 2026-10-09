@@ -24,6 +24,7 @@
 | [0058](0058-content-driven-block-based-ui.md) | 内容驱动 UI：有限块类型胜过按章手写整页 | 已接受（统一 dsa 块架构与 cpp 反面案例） |
 | [0059](0059-experiments-ship-skeletons-not-blank-slates.md) | 教学实验给骨架，不给白板 | 已接受（统一 dsa 0003、cpp 0053、mathematics 0014） |
 | [0096](0096-retrieval-spacing-interleaving-lead-curriculum.md) | 检索练习、间隔重复、交错练习定为课程设计的主导学习策略，自我解释与双重编码为辅；界面与内容取舍判据化，按成本五档改造；学习风格适配明确不做 | 已接受；不设自动门禁 |
+| [0107](0107-chapter-three-dimension-rating.md) | 软考章节三维评级（应用性/实践性/实验性）恢复为内容建设正式维度，与「实践路径 A/B」并存分工；2026-10-09 两张评级表收录为基线 | 已接受；评级表原文在本 ADR |
 
 ## 应用边界与启动
 
