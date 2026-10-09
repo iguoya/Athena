@@ -53,12 +53,13 @@
 - 三套皮肤已定版：晨光（柔和渐变）、极光（夜间霓虹）、手账（纸张贴纸），共用一套组件，只换 `src/styles/index.css` 里的设计变量（`data-style` = dawn / night / journal）。
 - 旧的 2020 年 VuePress 作文站在 `archive/vuepress-2020/`，新软件不使用。
 - 自动更新（ADR 0018）：打 v* tag 后由仓库级 Release 工作流编译签名安装包并发布 Release（统一发版，主仓库 ADR 0081；应用内 `.github/` 死工作流已删）；软件启动时用 updater 插件检查并静默更新。签名密钥已配置在 GitHub Secrets（`TAURI_SIGNING_PRIVATE_KEY`），私钥永远不进仓库。本地开发走 `launcher open ascent`（`app.json` 的 `dev` 块声明，ADR 0046），不再用独立时代的「启动 Lumi（开发版）.cmd」一键脚本（已删，ADR 0021）。
-- 内容来源和版权（ADR 0019，待 tiger 确认）：仓库和安装包都是公开的，真题和课本只放本机 `content/private/`（git 忽略）。开放来源登记在 `content/sources.json`；`pnpm content:ecdict` 生成高中、四级、六级三个词库草稿（`content/vocab/{hs,cet4,cet6}/`），`pnpm content:tatoeba` 给每个词挑真实例句（需要能访问 downloads.tatoeba.org），`pnpm content:cet4` 把四级真题句子导入本机并统计各词库的词在真题里的频次。选资源以中国英语考试为准，真题句优先于通用句库。
+- 内容来源和版权（ADR 0019）：仓库和安装包都是公开的，真题和课本只放本机 `content/private/`（git 忽略）。开放来源登记在 `content/sources.json`；`pnpm content:ecdict` 生成高中、四级、六级三个词库草稿（`content/vocab/{hs,cet4,cet6}/`），`pnpm content:stages` 把每个词库按真实难度信号切成先易后难的子阶段（`vocab/*/stages.json`，ADR 0022），`pnpm content:tatoeba` 给每个词挑真实例句（需要能访问 downloads.tatoeba.org），`pnpm content:cet4` 把四级真题句子导入本机并统计各词库的词在真题里的频次。本机教材资料放 `content/private/textbook/<教材名>/words.txt` 后跑 `pnpm content:textbook` 解析（个人自用，不进仓库；ADR 0019 补充、ADR 0022）。选资源以中国英语考试为准，真题句优先于通用句库；出处说不清的词表和例句不用。
 - master 上的每次推送都会发布新版本，推送前确认 `pnpm lint`、`pnpm build` 通过。
 
 ## 当前进度（2026-09-30）
 
 - 里程碑 1 已完成：工程骨架、三套皮肤切换、自定义标题栏、左侧导航、首页（示例数据，今日一句是乔布斯斯坦福演讲的真实句子）。`pnpm build`、`pnpm lint`、`cargo check` 通过（在 Linux 上验证）。
+- 2026-10-09：词库阶梯上线（ADR 0022）——三个词库按真实难度信号切成先易后难的子阶段，新页面选档 → 选阶 → 逐词学，系统 TTS 朗读、收进生词本、阶段通关记里程碑；首页连续天数、周统计、足迹与下一里程碑全部改由学习记录派生（ADR 0052），demo 假数字退场。
 - 下一步（里程碑 2）：今日句组页面，按读、写、听、说走完一组句子；第一章诊断、单元句组、回顾卡和知识地图；点词收录、换句复习、学习小结卡和打卡。
 - 之后：听力与错题本 → AI 批改（大模型厂商待定，需国内稳定可用）→ 句群和短文阶段。
 - 待定：大模型选哪家；词库和真题音频的来源与授权；她的笔记本是 Windows 10 还是 11（毛玻璃需要 11）。软件名定论：工程与发布名 `athena-ascent`（ADR 0021），界面与品牌仍叫「拾阶」。
