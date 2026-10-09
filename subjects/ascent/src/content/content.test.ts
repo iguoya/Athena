@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { grammarChapter, grammarUnits, sentenceSets, sources } from "./index";
+import { bankStages, loadWords, VOCAB_BANKS } from "./vocab";
 import { validateSet } from "./validate";
 
 describe("content packs", () => {
@@ -39,5 +40,40 @@ describe("content packs", () => {
 
   it("registers the jobs speech source for attribution", () => {
     expect(sources["jobs-stanford-2005"]?.title).toContain("Jobs");
+  });
+});
+
+describe("vocab stages (ADR 0022)", () => {
+  it.each(VOCAB_BANKS.map((b) => [b.id] as const))("%s stages cover the bank without overlaps", async (exam) => {
+    const file = bankStages(exam);
+    expect(file).toBeDefined();
+    expect(file!.stages.length).toBeGreaterThan(0);
+
+    const bank = await loadWords(exam);
+    const seen = new Set<string>();
+    for (const stage of file!.stages) {
+      expect(stage.words.length).toBeGreaterThan(0);
+      for (const w of stage.words) {
+        expect(bank[w]).toBeDefined();
+        expect(seen.has(w)).toBe(false);
+        seen.add(w);
+      }
+    }
+  });
+
+  it("orders the high-school ladder from most common words to rarest", () => {
+    const stages = bankStages("hs")!.stages;
+    // the/be 是语料里最高频的词，必须出现在第一阶的开头。
+    expect(stages[0].words.slice(0, 2)).toEqual(["the", "be"]);
+    // 冷门词不该跑到第一阶。
+    expect(stages[0].words).not.toContain("brochure");
+  });
+
+  it("keeps each stage close to one month of new words (15/day)", () => {
+    for (const bank of VOCAB_BANKS) {
+      for (const stage of bankStages(bank.id)!.stages) {
+        expect(stage.words.length).toBeLessThanOrEqual(500);
+      }
+    }
   });
 });

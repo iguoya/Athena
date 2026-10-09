@@ -83,20 +83,3 @@ export const demoMySentences: Record<string, string> = {
   tense: "I finish my homework before dinner every day.",
   passive: "Our dorm was cleaned by everyone last Sunday.",
 };
-
-export const weekMinutes = [
-  { day: "四", minutes: 18 },
-  { day: "五", minutes: 26 },
-  { day: "六", minutes: 12 },
-  { day: "日", minutes: 31 },
-  { day: "一", minutes: 22 },
-  { day: "二", minutes: 28 },
-  { day: "今", minutes: 24 },
-];
-
-export const streakDays = 12;
-
-export const bestSentence = {
-  en: "My roommates and I spent the whole evening decorating our dorm.",
-  note: "这是你本周写得最好的一句：spent … decorating 用对了非谓语。",
-};

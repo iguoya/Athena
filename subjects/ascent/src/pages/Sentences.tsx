@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowLeft, ArrowRight, BookmarkCheck, BookmarkPlus, Check, Eye, Languages } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookmarkCheck, BookmarkPlus, Check, Eye, Languages, Volume2 } from "lucide-react";
 import { Celebration } from "@/components/Celebration";
 import { sources, todaySet } from "@/content";
 import type { Gloss, Segment, SegmentRole, Sentence } from "@/content/types";
+import { speak } from "@/lib/speech";
 import { useProgress } from "@/store/progress";
 import { cn } from "@/lib/utils";
 
@@ -175,6 +176,9 @@ export function Sentences() {
             </Toggle>
             <Toggle on={showCn} onClick={() => setShowCn((v) => !v)} icon={<Languages size={15} />}>
               看译文
+            </Toggle>
+            <Toggle on={false} onClick={() => speak(sentence.en)} icon={<Volume2 size={15} />}>
+              朗读整句
             </Toggle>
             {showStructure && (
               <span className="ml-1 flex items-center gap-3 text-xs text-muted">

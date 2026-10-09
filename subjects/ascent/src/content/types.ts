@@ -69,3 +69,38 @@ export type GrammarChapter = {
   blurb: string;
   units: GrammarUnit[];
 };
+
+/** One draft vocabulary entry from the ECDICT word lists (content/vocab/<exam>/words.json). */
+export type VocabWord = {
+  word: string;
+  phonetic?: string;
+  forms: string[];
+  exams: string[];
+  oxford3000?: boolean;
+  collins?: number;
+  frq?: number;
+  cnDraft?: string;
+  enRef?: string[];
+  simpleEn?: string | null;
+  status: string;
+  source: string;
+};
+
+/** One difficulty stage: an ordered slice of the word bank (ADR 0022). */
+export type VocabStage = {
+  id: string;
+  title: string;
+  blurb: string;
+  words: string[];
+};
+
+export type VocabStages = {
+  about: string;
+  exam: string;
+  stageSize: number;
+  generated: string;
+  stages: VocabStage[];
+};
+
+/** How often a word showed up in the local CET-4 past-paper corpus (counts only, no text). */
+export type ExamFreqEntry = { word: string; hits: number; sentences: number };

@@ -1,9 +1,20 @@
-import { BookOpen, Headphones, Home, Map, NotebookPen, NotebookTabs, PenLine, RotateCcw } from "lucide-react";
+import {
+  BookOpen,
+  Headphones,
+  Home,
+  ListOrdered,
+  Map,
+  NotebookPen,
+  NotebookTabs,
+  PenLine,
+  RotateCcw,
+} from "lucide-react";
 
 // Main navigation; later milestones replace the placeholder pages one by one.
 export const NAV = [
   { to: "/", label: "今天", icon: Home },
   { to: "/sentences", label: "今日句组", icon: BookOpen },
+  { to: "/vocab", label: "词库阶梯", icon: ListOrdered },
   { to: "/map", label: "高中知识地图", icon: Map },
   { to: "/listening", label: "听力 · 听写", icon: Headphones },
   { to: "/writing", label: "写作 · 翻译", icon: PenLine },
