@@ -1,4 +1,6 @@
 {
+  "_": "跨应用「内容必须有出处」检查的接入声明（主仓库 ADR 0043、0089）。档位 reference：本应用是图谱/参考类，不判分、不计掌握度，判分出处约束不适用。每条边有理由和出处是图谱可信度的自有机制（应用 ADR 0002，读取即校验），继续由本应用自己的检查执行；跨应用检查降为登记不阻断。",
+  "tier": "reference",
   "contentDir": "content",
   "catalog": "sources/catalog.json",
   "itemMarkers": ["stable_definition"],
@@ -6,5 +8,5 @@
   "sourceIdField": "source_id",
   "relationField": "relation",
   "locatorFields": ["locator"],
-  "blocking": true
+  "blocking": false
 }

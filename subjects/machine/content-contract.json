@@ -1,6 +1,7 @@
 {
-  "_": "跨应用「内容必须有出处」检查的接入声明（主仓库 ADR 0043）。字段名用跨应用统一的那套：source_refs / relation / source_id / locator / url / note。本应用自己的规范见 docs/decisions/0003-local-sources-and-sourced-exercises.md。",
-  "_blocking": "设为 true：6/6 条判分题与 22 处课表引用都已带齐 relation 与 locator，100% 达标。既然达标就锁住——本应用的内容还在扩充，正是最需要机械保证的时候，漏标出处当场失败好过悄悄倒退。",
+  "_": "跨应用「内容必须有出处」检查的接入声明（主仓库 ADR 0043、0089）。字段名用跨应用统一的那套：source_refs / relation / source_id / locator / url / note。本应用自己的规范见 docs/decisions/0003-local-sources-and-sourced-exercises.md。档位 open：C 与机器是技术学习类，不对着外部考试——出处是默认写作习惯（新写的题仍当场标出处），不做门禁。",
+  "_blocking": "原为 true（扩充期要机械保证，漏标当场失败）。ADR 0089 把技术学习类降为 open：未标注只报告不阻断，自造配额解除；已标注的出处仍被逐条校验，引了 catalog 里不存在的来源 id 照样报。",
+  "tier": "open",
   "contentDir": "content",
   "sourceField": "source_refs",
   "relationField": "relation",
@@ -19,6 +20,6 @@
     "stem"
   ],
   "catalog": "sources/catalog.json",
-  "blocking": true,
+  "blocking": false,
   "legacyUnsourced": []
 }

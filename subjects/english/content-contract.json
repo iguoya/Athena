@@ -1,6 +1,7 @@
 {
-  "_": "跨应用「内容必须有出处」检查的接入声明（主仓库 ADR 0043）。本应用自己的规范见 docs/decisions/0007-sourced-content-and-four-skills.md 与 0008。",
-  "_blocking": "设为 false：本应用的分级内容扩充正在进行中，先只报告不阻断；那批工作收尾后改成 true。",
+  "_": "跨应用「内容必须有出处」检查的接入声明（主仓库 ADR 0043、0089）。本应用自己的规范见 docs/decisions/0007-sourced-content-and-four-skills.md 与 0008。档位 exam：考研英语二对着一张真实试卷，题目与考纲、真题原文的对应关系是内容质量的一部分，判分条目必须有出处、违规阻断。",
+  "_blocking": "设为 true（ADR 0089 落地）：考试档不做只报告过渡。此前「分级内容扩充收尾后改 true」的理由已兑现——1088/1088 达标，扩充中的新内容当场被查，好过悄悄倒退。",
+  "tier": "exam",
   "contentDir": "content",
   "sourceField": "source_refs",
   "relationField": "relation",
@@ -10,6 +11,6 @@
   "whyFields": ["note", "why"],
   "itemMarkers": ["prompt"],
   "catalog": "sources/catalog.json",
-  "blocking": false,
+  "blocking": true,
   "legacyUnsourced": []
 }
