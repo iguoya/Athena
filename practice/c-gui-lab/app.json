@@ -2,7 +2,7 @@
   "id": "c-gui-lab",
   "title": "C GUI Lab",
   "group": "编程",
-  "parent": "softcert",
+  "parent": "software",
   "description": "C 语言 GUI 框架对比实验室：GTK4+Adwaita+CSS、Dear ImGui、LVGL 各自的美观演示，附官方 demo 入口，Electron 母体统一启动。",
   "icon": {
     "type": "theme",
@@ -16,20 +16,36 @@
     "prepare": [
       {
         "when_missing": "node_modules",
-        "run": ["npm", "install"],
+        "run": [
+          "npm",
+          "install"
+        ],
         "label": "安装 Electron 依赖"
       },
       {
         "when_missing": "build",
-        "run": ["cmake", "--preset", "ucrt64"],
+        "run": [
+          "cmake",
+          "--preset",
+          "ucrt64"
+        ],
         "label": "配置 CMake 构建目录"
       },
       {
-        "run": ["cmake", "--build", "--preset", "ucrt64"],
+        "run": [
+          "cmake",
+          "--build",
+          "--preset",
+          "ucrt64"
+        ],
         "label": "编译三个原生程序"
       }
     ],
-    "run": ["npx", "electron", "."],
+    "run": [
+      "npx",
+      "electron",
+      "."
+    ],
     "ready": "process",
     "match": "build"
   }
