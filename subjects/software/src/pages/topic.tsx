@@ -1,9 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, Link2, BookOpen } from "lucide-react";
-import { findSection, lessonOf, courses } from "../content";
+import { findSection, lessonOf, courses, quizOf, pastExamQuestions } from "../content";
 import { textbookTextOf } from "../textbook-text";
 import { saveSetting } from "../db";
 import { LessonBlocks } from "../components/blocks";
+import { QuizRunner } from "./quiz";
+import { PaperRunner } from "./paper-quiz";
 import { GradeBadge, WeightStars, DifficultyDots, MasteryGoalBadge, KnowledgeTypeBadge } from "../components/ui";
 import type { View } from "../App";
 
@@ -31,6 +33,13 @@ export function TopicPage({
   const next = idx < flat.length - 1 ? flat[idx + 1] : null;
   const requires = section.kp?.requires ?? [];
   const textbookText = textbookTextOf(sectionId);
+
+  // 立即检索（P2）：讲解读完立刻作答，讲解与检索 1:1 绑定在同一个页面里。
+  // 真题精选配置的节走整卷模式（延迟反馈），其余走单题聚焦式（即时反馈）。
+  const pattern = section.past_exam_knowledge;
+  const examQuestions = pattern ? pastExamQuestions(pattern) : [];
+  const sectionQuestions = examQuestions.length > 0 ? examQuestions : quizOf(sectionId).questions;
+  const [retrieval, setRetrieval] = useState(false);
 
   // 续读:每次进入章节就记下位置,首页据此放「接着学」入口。
   useEffect(() => {
@@ -112,13 +121,38 @@ export function TopicPage({
         ) : <span />}
       </div>
 
-      <button
-        type="button"
-        onClick={() => go({ kind: "quiz", courseId, sectionId })}
-        className="mx-auto max-w-[980px] w-full rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 py-4 text-[16px] font-bold text-white shadow-lg shadow-emerald-500/25 transition-transform hover:scale-[1.01] active:scale-[0.99]"
-      >
-        开始随堂考核({section.title})
-      </button>
+      {sectionQuestions.length > 0 && !retrieval && (
+        <button
+          type="button"
+          onClick={() => setRetrieval(true)}
+          className="mx-auto max-w-[980px] w-full rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 py-4 text-[16px] font-bold text-white shadow-lg shadow-emerald-500/25 transition-transform hover:scale-[1.01] active:scale-[0.99]"
+        >
+          读完立即检索 · {section.title}({sectionQuestions.length} 题)
+        </button>
+      )}
+      {retrieval && sectionQuestions.length > 0 && (
+        examQuestions.length > 0 ? (
+          <PaperRunner
+            title={`${section.title} · 历年真题精选(${examQuestions.length} 题)`}
+            questions={examQuestions}
+            mode="chapter"
+            course={course.id}
+            chapterId={section.id}
+            kpId={section.kp?.id ?? section.id}
+            onExit={() => setRetrieval(false)}
+          />
+        ) : (
+          <QuizRunner
+            title={`${section.title} · 立即检索`}
+            questions={sectionQuestions}
+            mode="chapter"
+            course={course.id}
+            chapterId={section.id}
+            kpId={section.kp?.id ?? section.id}
+            onExit={() => setRetrieval(false)}
+          />
+        )
+      )}
     </div>
   );
 }

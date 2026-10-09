@@ -62,7 +62,12 @@ export function PaperRunner({
       {/* 顶部 sticky 工具条 */}
       <div className="glass-nav sticky top-0 z-10 -mx-6 mb-6 border-b border-black/5 px-6 py-3">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2">
           <h1 className="text-[16px] font-bold">{title}</h1>
+          <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-[11.5px] font-medium text-amber-700">
+            考核模式 · 交卷前不显示对错与解析
+          </span>
+        </div>
           <span className="text-[13px] text-ink/50">
             已答 {answeredCount} / {questions.length}
           </span>
