@@ -1,7 +1,7 @@
 # ADR 0092：启动器支持树状挂靠，softcert 定名软件设计师，dsa 挂靠软设
 
 - 日期：2026-10-09
-- 状态：**提议（待 tiger 确认）**
+- 状态：已接受（tiger 2026-10-09 确认）
 - 关系：修订 [ADR 0090](0090-softcert-splits-esd.md) 决策 1 的定位表述与
   [ADR 0091](0091-experiments-inside-subject-apps.md) 决策 1 的承接范围；
   启动器布局扩展 [ADR 0083](0083-launcher-mind-map.md)；改名边界延续

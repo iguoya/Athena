@@ -1,8 +1,7 @@
 # ADR 0091：实验能力长在学科应用内，不另建独立实验应用
 
 - 日期：2026-10-09
-- 状态：**提议（待 tiger 确认）**——本条修正了此前「按介质拆两个独立实验应用」的
-  口头方案，理由见背景 3
+- 状态：已接受（tiger 2026-10-09 确认；决策 1 的承接范围由 0092 修订）
 - 关系：实践口径与章节归类见 softcert [docs/content-plan.md](
   ../../subjects/softcert/docs/content-plan.md)；应用拆分见
   [ADR 0090](0090-softcert-splits-esd.md)；内容驱动 UI 与实验块扩展点见

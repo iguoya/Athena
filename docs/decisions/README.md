@@ -81,5 +81,5 @@
 | [0078](0078-login-in-one-step.md) | 登录合并为一步：输入名字点进入，没有就直接新建；编号用提示条告知，不弹窗 | 已接受；修订 0075 决策 3 |
 | [0079](0079-clusters-computed-at-runtime.md) | 考点簇运行时现算（不落盘），强化练习出「同考点变式」，学习诊断给出变式差距 | 已接受；修订 0076 决策 9 的实现方式 |
 | [0089](0089-source-tiers-by-app-nature.md) | 出处要求按应用性质分档：考试/考证考级类阻断（exam），技术学习类降为习惯不做门禁（open），不判分类不适用（reference） | 已接受；修订 0043 的适用范围；english 本轮收紧，machine/gtkmm 降档，softcert 记为考试档已知欠账 |
-| [0091](0091-experiments-inside-subject-apps.md) | 实验能力长在学科应用内：编码实验是 softcert 的 lab 块（软设 8 实践章），硬件实验是 esd 的实验视图（嵌入式第 2、4 章），不另建独立实验应用 | 提议（待 tiger 确认）；依赖 0090 拆分、试点 SQL 实验 |
-| [0092](0092-launcher-tree-attach-and-softcert-rename.md) | 启动器思维导图支持树状挂靠（app.json 新增 parent 单父字段、第三层布局、面板归属随 parent）；softcert 显示名改「软件设计师」；dsa、c-gui-lab 挂靠软设（dsa 承接第 3、8 章编码实验），cpp 预留挂靠 | 提议（待 tiger 确认）；修订 0090 决策 1 定位表述、0091 决策 1 承接范围 |
+| [0091](0091-experiments-inside-subject-apps.md) | 实验能力长在学科应用内：编码实验是 softcert 的 lab 块（软设 8 实践章），硬件实验是 esd 的实验视图（嵌入式第 2、4 章），不另建独立实验应用 | 已接受；试点 SQL 实验 |
+| [0092](0092-launcher-tree-attach-and-softcert-rename.md) | 启动器思维导图支持树状挂靠（app.json 新增 parent 单父字段、第三层布局、面板归属随 parent）；softcert 显示名改「软件设计师」；dsa、c-gui-lab 挂靠软设（dsa 承接第 3、8 章编码实验），cpp 预留挂靠 | 已接受；修订 0090 决策 1 定位表述、0091 决策 1 承接范围；启动器三层布局待实现 |
