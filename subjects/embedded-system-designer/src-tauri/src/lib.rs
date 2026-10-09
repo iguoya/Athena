@@ -48,5 +48,5 @@ pub fn run() {
             save_setting
         ])
         .run(tauri::generate_context!())
-        .expect("error while running athena-esd");
+        .expect("error while running athena-embedded-system-designer");
 }

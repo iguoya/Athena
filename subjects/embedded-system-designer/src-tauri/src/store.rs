@@ -48,7 +48,7 @@ fn store_path() -> PathBuf {
     } else {
         dirs_next::data_dir()
             .unwrap_or_else(|| PathBuf::from("."))
-            .join("AthenaEsd")
+            .join("AthenaEmbeddedSystemDesigner")
     };
     let _ = std::fs::create_dir_all(&dir);
     dir.join("learning.db")

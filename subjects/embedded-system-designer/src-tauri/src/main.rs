@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    athena_esd_lib::run();
+    athena_embedded_system_designer_lib::run();
 }

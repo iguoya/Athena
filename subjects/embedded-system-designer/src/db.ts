@@ -18,7 +18,7 @@ export interface AttemptInput {
   mode: "chapter" | "past-exam";
 }
 
-const LS_KEY = "athena-esd-attempts";
+const LS_KEY = "athena-embedded-system-designer-attempts";
 
 function inTauri(): boolean {
   return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
