@@ -30,8 +30,9 @@
 
 ```
 subjects/<id>/  课程学科：cpp machine dsa english mathematics driver gtkmm ascent（学习应用）
+                software、embedded（软考两应用，各为一级大类，ADR 0102），底下挂实践子课程
+                database design-patterns operating-system network firmware microcontroller（ADR 0103）
                 polaris、math-tools（图谱/参考类，math-tools 是数学学习的配套工具，ADR 0084）
-                design-patterns（素材坑）
 practice/<id>/  项目应用：pocket_cube nas_admin c-gui-lab（ADR 0060）
 launcher/       启动器：core/ gui/ macos/
 docs/           跨应用 ADR（decisions/）与本文件各节的完整阐述

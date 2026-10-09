@@ -17,11 +17,19 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
   mathematics/ 数学学习（Tauri）
   math-tools/  数学工具（Tauri）——数学学习的配套工具，图谱/参考类，不是学习应用（ADR 0084）
   driver/      驾考学习（Flutter 桌面，科目一 / 科目四）
-  software/    软考中级·软件设计师备考（Tauri 2 + React）——以考试为学科，与 driver 同构
-  embedded/    嵌入式系统设计师备考（Tauri 2 + Vue 3）——从 software（原 softcert）拆出，同挂启动器「软考」分组（ADR 0090；定名见 ADR 0097、0100）
+  software/    软考中级·软件设计师备考（Tauri 2 + React）——以考试为学科，与 driver 同构；
+               各为一级大类「计算机」（ADR 0102）
+  embedded/    嵌入式系统设计师备考（Tauri 2 + Vue 3）——从 software（原 softcert）拆出，
+               一级大类「电子信息」（ADR 0090、0102；定名见 ADR 0097、0100）
+  database/         数据库 SQL 实验室（Tauri 2 + React）——软设第 9 章实践课程，挂靠 software（ADR 0103）
+  design-patterns/  设计模式编码实验（Tauri 2 + React）——软设第 7 章实践课程，挂靠 software；
+                    原素材坑转正（ADR 0103）
+  operating-system/ 操作系统实验（Tauri 2 + React）——软设第 4 章实践课程，挂靠 software（ADR 0103）
+  network/          网络与信息安全实验（Tauri 2 + React）——软设第 10 章实践课程，挂靠 software（ADR 0103）
+  firmware/         嵌入式程序设计实验（Tauri 2 + Vue 3）——嵌入第 6/8/11 章实践课程，挂靠 embedded（ADR 0103）
+  microcontroller/  硬件实验台（Tauri 2 + Vue 3）——嵌入第 2/4/5 章实践课程，挂靠 embedded（ADR 0103）
   gtkmm/       gtkmm 官方教程精读（Tauri 2 + React）
   polaris/       技术体系图谱（Tauri 2 + React，原 Qt 壳已退役，ADR 0015）——不是学习应用，见下文
-  design-patterns/  设计模式素材坑——连应用都不是，见下文
 practice/<id>/ 项目应用：动手做的独立小项目，不接掌握度体系（ADR 0060）
   pocket_cube/ 2 阶魔方（GTK4 / gtkmm）
   nas_admin/   驾考中心服务后台（Flask-AppBuilder，部署在软路由）
@@ -59,6 +67,12 @@ archive/       历史归档，不参与构建
 | `driver` | 驾考学习 | `athena-driver` | `drive.` |
 | `software` | 软件设计师（原 `softcert`，ADR 0097、0100） | `athena-software` | `sc.`（历史前缀，保留） |
 | `embedded` | 嵌入式系统设计师（原 `esd`，ADR 0090、0100） | `athena-embedded` | `esd.`（内容层短名，保留） |
+| `database` | 数据库（软设第 9 章实践课程，ADR 0103） | `athena-database` | `db.` |
+| `design-patterns` | 设计模式（软设第 7 章实践课程，原素材坑转正，ADR 0103） | `athena-design-patterns` | `dp.` |
+| `operating-system` | 操作系统（软设第 4 章实践课程，ADR 0103） | `athena-operating-system` | `os.` |
+| `network` | 网络与信息安全（软设第 10 章实践课程，ADR 0103） | `athena-network` | `net.` |
+| `firmware` | 嵌入式程序设计（嵌入第 6/8/11 章实践课程，ADR 0103） | `athena-firmware` | `fw.` |
+| `microcontroller` | 硬件实验台（嵌入第 2/4/5 章实践课程，ADR 0103） | `athena-microcontroller` | `mcu.` |
 | `gtkmm` | gtkmm 官方教程精读 | `athena-gtkmm` | `gtkmm.` |
 | `polaris` | 北极星 | `athena-polaris` | （无进度库） |
 
@@ -73,7 +87,9 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
 - **这个项目要不要让人"学会"什么、要不要追踪掌握度和学习进度？** 要，就是
   **学习应用**，受「跨应用教学规范」（[TEACHING.md](TEACHING.md)）整节约束，且要按 ADR 0037/0053 建自己的
   `progress/learning.db`。当前：`cpp` / `machine` / `dsa` / `english` / `mathematics` /
-  `driver` / `ascent`（`ascent` 的规范差距见 ADR 0066）。
+  `driver` / `ascent`（`ascent` 的规范差距见 ADR 0066）/ 软考两应用及其挂靠实践
+  子课程（ADR 0103：`database` / `design-patterns` / `operating-system` / `network` /
+  `firmware` / `microcontroller`）。
 - **不是学习闭环，是呈现结构化信息供浏览、查阅、决策参考的？** 那是
   **图谱/参考类应用**：仍受「独立应用」一节的平级、隔离、`app.json` 启动规则约束，
   但**不**掌握度、不进度库、不激励——「跨应用教学规范」一节对它不生效，具体规则
@@ -81,7 +97,8 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
   因需要在启动器里和 `mathematics` 关联而归 `subjects/`，不是先例，见 ADR 0084）。
 - **还没决定做成应用，只是存素材和结论，等以后真正开工？** 那连"应用"都不算，
   不需要 `app.json` 也不需要 `scripts/check.py`，根验证入口按设计静默跳过它——
-  这是预期行为，不是遗漏。当前：`design-patterns`。
+  这是预期行为，不是遗漏。当前无素材坑目录（`design-patterns` 曾是唯一的素材坑，
+  已按 ADR 0103 转正为学习应用）。
 
 判据只有一条主问题：**这东西要不要教会人什么、要不要证明学习者进步了**——答案
 决定它落进哪一类，而不是它现在被写在哪张表里。新增应用时先在自己的 `AGENTS.md`

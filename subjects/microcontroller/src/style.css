@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+/* 骨架阶段的最小样式：内容驱动 UI 落地时整体替换（ADR 0058）。
+   与 embedded 同构：组件不硬编码主色，accent 走令牌。 */
+:root {
+  --tk-accent: #4A8A0E;
+  color-scheme: light;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+  background: #f4f6f3;
+  color: #1f2a24;
+}
+.skeleton-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px;
+}
+.skeleton-card {
+  max-width: 720px;
+  background: #ffffff;
+  border: 1px solid #dfe5de;
+  border-radius: 16px;
+  padding: 32px 40px;
+}
+.skeleton-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.skeleton-badge {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+}
+.skeleton-head h1 {
+  margin: 0;
+  font-size: 24px;
+}
+.skeleton-sub {
+  margin: 4px 0 0;
+  color: #6b7a6f;
+  font-size: 14px;
+}
+.skeleton-facts {
+  margin: 24px 0 0;
+  display: grid;
+  gap: 12px;
+}
+.skeleton-facts div {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 12px;
+}
+.skeleton-facts dt {
+  color: #6b7a6f;
+  font-size: 14px;
+}
+.skeleton-facts dd {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+}

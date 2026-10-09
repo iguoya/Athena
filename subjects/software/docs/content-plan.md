@@ -17,10 +17,14 @@
 技术可行性基线（机器是完整开发机，ADR 0057）：本机有 C/C++ 编译器、Python、
 Node；softcert 的 Rust 侧已有 rusqlite（SQL 实验零新增依赖）；交叉编译装
 arm-none-eabi-gcc + QEMU 即可真做；真硬件实验需要一块入门开发板（STM32F103C8T6
-或 51 核心板，几十元级）加 USB-TTL 线。实验能力落点与形态见仓库级
-[ADR 0091](../../../docs/decisions/0091-experiments-inside-subject-apps.md)：
-编码实验是本应用的 `lab` 块类型（落地前立应用级 ADR 扩展 ADR 0058），硬件实验
-长在 esd 应用，不另建独立实验应用。
+或 51 核心板，几十元级）加 USB-TTL 线。实验能力落点：仓库级
+[ADR 0091](../../../docs/decisions/0091-experiments-inside-subject-apps.md) 曾定
+「实验长在学科应用内」；[ADR 0103](../../../docs/decisions/0103-practice-courses-as-attached-subapps.md)
+其后把实践性强的课程独立成挂靠子应用——软设第 3、8 章归 algorithm（ADR 0092
+决策 4），第 9 章归 database、第 7 章归 design-patterns、第 4 章归
+operating-system、第 10 章归 network；嵌入式第 6/8/11 章归 firmware、第 2/4/5
+章归 microcontroller。本应用只剩弱实践章的 `lab` 块路径（第 2 正则、第 5 单元
+测试；落地前立应用级 ADR 扩展 ADR 0058），理论章维持讲解 + viz + 记忆测验。
 
 分值权重为粗估；`exam_weight` 与 `grade` 的权威值仍按 AGENTS.md 由真题分值
 统计得出，待 `content/past-exams/` 录入后校准。
@@ -77,11 +81,16 @@ arm-none-eabi-gcc + QEMU 即可真做；真硬件实验需要一块入门开发�
 **软件设计师**：SQL 真跑（第 9，零新增依赖）→ 设计模式编码库（第 7）→
 正则/自动机真匹配（第 2）→ 数据结构与算法编码实验（第 3、8，与 dsa 共建）→
 进程同步真编码（第 4）→ 单元测试与覆盖率（第 5）。
+（第 9/7/4/10 章实验由挂靠子应用 database / design-patterns / operating-system /
+network 承载，第 3、8 章由 algorithm 承接——ADR 0103；本应用内只剩第 2、5 章
+的 lab 块待建。）
 
 **嵌入式**：嵌入式 C 位操作真编码（第 6，零硬件成本，最高优先）→ 交叉编译 +
 QEMU 工具链（第 5）→ **配开发板后的硬件实验包**（第 2：点灯 → 定时器 →
 串口 → I²C/SPI，一块 STM32F103C8T6 或 51 板即可）→ RTOS 实验（第 4，真板或
 QEMU）→ 案例编程题真验证（第 11）。
+（第 6/8/11 章归 firmware、第 2/4/5 章归 microcontroller 承载——ADR 0103；
+esd/embedded 应用内不再自建这些实验。）
 
 理论侧章节（软设 1 体系结构部分/6/11/12，嵌入式 3/7/10 及各章理论部分）：
 讲解 + viz 演示 + 记忆卡测验，**不冒充实实验**。

@@ -1,0 +1,36 @@
+{
+  "id": "microcontroller",
+  "title": "硬件实验台",
+  "group": "硬件实验",
+  "parent": "embedded",
+  "description": "嵌入式系统设计师第 2、4、5 章的实践课程：开发板串口/烧录真硬件实验与 QEMU 交叉编译工具链。按 ADR 0103 从 embedded 独立成挂靠子应用，可单独使用。真硬件部分需入门开发板（ADR 0091 决策 5）。",
+  "icon": {
+    "type": "theme",
+    "name": "microcontroller-symbolic",
+    "symbol": "cpu.fill",
+    "letter": "板",
+    "accent": "#4A8A0E",
+    "file": "icon.svg",
+    "renders": {
+      "src-tauri/icons/32x32.png": 32,
+      "src-tauri/icons/128x128.png": 128,
+      "src-tauri/icons/128x128@2x.png": 256,
+      "src-tauri/icons/icon.png": 512,
+      "src-tauri/icons/icon.ico": "ico",
+      "src-tauri/icons/icon.icns": "icns"
+    }
+  },
+  "dev": {
+    "prepare": [
+      {
+        "when_missing": "node_modules",
+        "run": ["npm", "install"],
+        "label": "安装前端依赖"
+      }
+    ],
+    "run": ["npm", "run", "tauri:dev"],
+    "ready": { "http": "http://localhost:1495" },
+    "match": "src-tauri/target",
+    "binary": "athena-microcontroller"
+  }
+}

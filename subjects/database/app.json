@@ -1,0 +1,36 @@
+{
+  "id": "database",
+  "title": "数据库",
+  "group": "数据库",
+  "parent": "software",
+  "description": "软考软件设计师第 9 章的实践课程：SQL 真跑实验环境——rusqlite 嵌进程执行、结果集比对判分。按 ADR 0103 从 software 独立成挂靠子应用，可单独使用。",
+  "icon": {
+    "type": "theme",
+    "name": "database-symbolic",
+    "symbol": "cylinder.split.2x2",
+    "letter": "库",
+    "accent": "#2563A8",
+    "file": "icon.svg",
+    "renders": {
+      "src-tauri/icons/32x32.png": 32,
+      "src-tauri/icons/128x128.png": 128,
+      "src-tauri/icons/128x128@2x.png": 256,
+      "src-tauri/icons/icon.png": 512,
+      "src-tauri/icons/icon.ico": "ico",
+      "src-tauri/icons/icon.icns": "icns"
+    }
+  },
+  "dev": {
+    "prepare": [
+      {
+        "when_missing": "node_modules",
+        "run": ["npm", "install"],
+        "label": "安装前端依赖"
+      }
+    ],
+    "run": ["npm", "run", "tauri:dev"],
+    "ready": { "http": "http://localhost:1490" },
+    "match": "src-tauri/target",
+    "binary": "athena-database"
+  }
+}
