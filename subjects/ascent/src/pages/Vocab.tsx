@@ -35,7 +35,7 @@ function BanksView({ seen, onPick }: { seen: Set<string>; onPick: (exam: string)
   return (
     <div className="mx-auto grid max-h-full max-w-4xl gap-5 overflow-y-auto scroll-soft pb-1">
       <header>
-        <p className="text-xs tracking-widest text-muted">词汇 · 拾阶而上</p>
+        <p className="text-xs tracking-widest text-muted">词汇 · 摘星之路</p>
         <h1 className="mt-1 font-display text-4xl font-semibold leading-tight">词库阶梯</h1>
         <p className="mt-1 text-muted">
           高中、四级、六级各成一架梯子，按真实语料里的常用程度先易后难分成小阶段。每天 15 个，一阶大约一个月。

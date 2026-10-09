@@ -1,4 +1,4 @@
-# 拾阶 · Ascent（原 Lumi 英语学习）
+# 摘星 · Ascent（原 Lumi 英语学习）
 
 给一位英语师范专业大一学生用的桌面英语学习软件：先夯实高中英语，再依次准备四级、专四、六级、专八。设计决策见 [adr/](adr/README.md)。
 
@@ -17,8 +17,6 @@ pnpm install
 pnpm tauri dev      # 开发模式，改代码会自动刷新
 pnpm tauri build    # 打包安装程序，输出在 src-tauri/target/release/bundle/nsis/
 ```
-
-平时开发可以直接双击根目录的“启动 Lumi（开发版）.cmd”：自动拉最新代码、装依赖、编译并运行。
 
 只看界面也可以用 `pnpm dev`，在浏览器打开 http://localhost:1440 。
 
