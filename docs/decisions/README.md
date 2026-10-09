@@ -88,5 +88,6 @@
 | [0094](0094-no-category-labels-in-launcher.md) | 课程性/实验性区分留在内容与目录层，启动器界面不设类别标签/徽章/分区，只表达领域圈与挂靠连线 | 已接受；约束 0092/0093 的启动器实现 |
 | [0098](0098-minimal-links.md) | 连线最小化：非必要不特意连线——删 esd↔softcert、磨砚↔摘星 related、C与机器→C++ 演进线、dsa 挂靠（承接软设 3/8 章实验改内容指引）；挂靠深度一层 | 已接受；修订 0092 决策 4 承接表达 |
 | [0099](0099-dsa-reattach.md) | dsa 恢复挂靠软件设计师——0095 决策 3 系误读,树形分支保留,承接第 3、8 章编码实验分工不变 | 已接受;原占 0096 号与检索练习版撞号,重编 0099 |
+| [0100](0100-single-word-app-ids.md) | 应用 id 再收窄为单词:software-designer→software、embedded-system-designer→embedded(进程/identifier/包名同步);内容层短名继续保留 | 已接受;修订 0097 决策 1、2 的具体名字,「不用缩写」口径不变 |
 | [0095](0095-one-exam-one-app.md) | 一个考试一个应用:新考试方向一律独立成新应用,不再并入已有考试应用;softcert 多课程注册表为历史结构不再扩 | 已接受;修订 0092 决策 3 的「届时再议」,关闭 0090 决策 1 扩位预留 |
 | [0097](0097-spell-out-app-ids.md) | 应用 id 全称化:softcert→software-designer、esd→embedded-system-designer(进程/identifier/包名同步);知识点前缀与课程层短名解耦保留;今后新增应用不用缩写 | 已接受;修订 0092 决策 3 的「id 不动」(无进度无发行,改名零损失) |

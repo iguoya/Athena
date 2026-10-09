@@ -1,7 +1,9 @@
 # ADR 0097：应用 id 全称化——softcert 改名 software-designer，esd 改名 embedded-system-designer
 
 - 日期：2026-10-10
-- 状态：已接受（tiger 2026-10-10：「名字缩写太多、词不达意」「不要轻易用缩写」）
+- 状态：已接受（tiger 2026-10-10：「名字缩写太多、词不达意」「不要轻易用缩写」）；
+  注记：决策 1、2 的名字已由 [ADR 0100](0100-single-word-app-ids.md) 收窄为单词
+  形式——`software`、`embedded`；「不用缩写」口径与解耦原则不变
 - 关系：修订 [ADR 0092](0092-launcher-tree-attach-and-softcert-rename.md) 决策 3 的
   「id 不动」（其理由是丢进度、断更新——两应用均无发行包、无进度数据，此刻改名
   零损失，理由不成立）；[ADR 0090](0090-softcert-splits-esd.md)、[ADR 0095](0095-one-exam-one-app.md)
