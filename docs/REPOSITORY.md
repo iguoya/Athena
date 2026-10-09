@@ -17,8 +17,8 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
   mathematics/ 数学学习（Tauri）
   math-tools/  数学工具（Tauri）——数学学习的配套工具，图谱/参考类，不是学习应用（ADR 0084）
   driver/      驾考学习（Flutter 桌面，科目一 / 科目四）
-  softcert/    软考中级·软件设计师备考（Tauri 2 + React）——以考试为学科，与 driver 同构
-  esd/         嵌入式系统设计师备考（Tauri 2 + Vue 3）——从 softcert 拆出，同挂启动器「软考」分组（ADR 0090）
+  software-designer/  软考中级·软件设计师备考（Tauri 2 + React）——以考试为学科，与 driver 同构
+  embedded-system-designer/  嵌入式系统设计师备考（Tauri 2 + Vue 3）——从 software-designer（原 softcert）拆出，同挂启动器「软考」分组（ADR 0090；id 全称化见 ADR 0097）
   gtkmm/       gtkmm 官方教程精读（Tauri 2 + React）
   polaris/       技术体系图谱（Tauri 2 + React，原 Qt 壳已退役，ADR 0015）——不是学习应用，见下文
   design-patterns/  设计模式素材坑——连应用都不是，见下文
@@ -45,7 +45,7 @@ archive/       历史归档，不参与构建
 已经写进进度库的前缀不改。目录名允许下划线的历史遗留（`practice/nas_admin`、
 `practice/pocket_cube`），但 id 与进程名一律连字符；新目录起名跟 id 一致。
 **id 与目录名取英文词或其通行缩写，不用拼音**——拼音名不进仓库；界面标题与
-应用内文案照常用中文，`softcert` 是软考、`driver` 是驾考。
+应用内文案照常用中文，`software-designer` 是软件设计师、`driver` 是驾考；应用 id 用完整的英文词或词组，不用缩写（ADR 0097）。
 
 | 目录 / id | 界面 | 进程 | 知识点前缀 |
 |---|---|---|---|
@@ -57,8 +57,8 @@ archive/       历史归档，不参与构建
 | `mathematics` | 数学学习 | `athena-math` | `math.` |
 | `math-tools` | 数学工具 | `athena-math-tools` | （无进度库） |
 | `driver` | 驾考学习 | `athena-driver` | `drive.` |
-| `softcert` | 软考（软件设计师） | `athena-softcert` | `sc.` |
-| `esd` | 嵌入式系统设计师（ADR 0090） | `athena-esd` | `esd.` |
+| `software-designer` | 软件设计师（原 `softcert`，ADR 0097） | `athena-software-designer` | `sc.`（历史前缀，保留） |
+| `embedded-system-designer` | 嵌入式系统设计师（原 `esd`，ADR 0090、0097） | `athena-embedded-system-designer` | `esd.`（内容层短名，保留） |
 | `gtkmm` | gtkmm 官方教程精读 | `athena-gtkmm` | `gtkmm.` |
 | `polaris` | 北极星 | `athena-polaris` | （无进度库） |
 

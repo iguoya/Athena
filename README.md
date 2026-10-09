@@ -18,8 +18,8 @@
 | [`subjects/mathematics`](subjects/mathematics) | 数学学习 | Tauri + Vite（Python sidecar） |
 | [`subjects/math-tools`](subjects/math-tools) | 数学工具（图谱/参考类） | Tauri + Vue 3 |
 | [`subjects/driver`](subjects/driver) | 驾考学习 | Flutter 桌面 |
-| [`subjects/softcert`](subjects/softcert) | 软考·软件设计师（中级备考） | Tauri 2 + React |
-| [`subjects/esd`](subjects/esd) | 嵌入式系统设计师（软考中级备考，ADR 0090） | Tauri 2 + Vue 3 |
+| [`subjects/software-designer`](subjects/software-designer) | 软件设计师（软考中级备考） | Tauri 2 + React |
+| [`subjects/embedded-system-designer`](subjects/embedded-system-designer) | 嵌入式系统设计师（软考中级备考，ADR 0090） | Tauri 2 + Vue 3 |
 | [`subjects/gtkmm`](subjects/gtkmm) | gtkmm 官方教程精读 | Tauri 2 + React |
 | [`subjects/polaris`](subjects/polaris) | 北极星（技术体系图谱） | Tauri 2 + React |
 | [`subjects/design-patterns`](subjects/design-patterns) | 设计模式素材坑 | 尚未开工 |
