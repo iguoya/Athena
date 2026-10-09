@@ -258,17 +258,25 @@ pub fn layout(apps: &[App]) -> MindMap {
     let first_ring = FIRST_RING.max(group_radius + 153.0);
 
     // 3. 先算每个组需要几圈，才知道画布多大（中心坐标取决于画布）。
+    // 组的成员圈半径：第一圈装不下全组时整组外推——同组即兄弟（ADR 0101），
+    // 兄弟必须同圈，溢出到下一圈会把兄弟画成一内一外。外推到上限才接受溢出。
     let mut ring_of: Vec<usize> = vec![0; apps.len()];
     let mut slot_in_ring: Vec<(usize, usize)> = vec![(0, 0); apps.len()]; // (本圈序号, 本圈个数)
+    let mut member_ring: Vec<f32> = vec![first_ring; members.len()];
     let mut max_ring = 0usize;
     for (g, m) in members.iter().enumerate() {
         let (_, width) = sectors[g];
         let mut placed = 0;
         let mut ring = 0;
         while placed < m.len() {
-            let radius = first_ring + RING_STEP * ring as f32;
-            let capacity = capacity(width, radius);
-            let take = capacity.min(m.len() - placed);
+            let mut radius = first_ring + RING_STEP * ring as f32;
+            if ring == 0 {
+                while capacity(width, radius) < m.len() && radius < first_ring + RING_STEP * 2.0 {
+                    radius += 24.0;
+                }
+            }
+            member_ring[g] = radius;
+            let take = capacity(width, radius).min(m.len() - placed);
             for (k, &app_index) in m[placed..placed + take].iter().enumerate() {
                 ring_of[app_index] = ring;
                 slot_in_ring[app_index] = (k, take);
@@ -283,10 +291,11 @@ pub fn layout(apps: &[App]) -> MindMap {
     let attach_ring_needed = apps
         .iter()
         .any(|app| app.parent.is_some());
+    let innermost = member_ring.iter().copied().fold(first_ring, f32::max);
     let outer = if apps.is_empty() {
         group_radius
     } else {
-        first_ring + RING_STEP * (max_ring as f32 + if attach_ring_needed { 1.0 } else { 0.0 })
+        innermost + RING_STEP * (max_ring as f32 + if attach_ring_needed { 1.0 } else { 0.0 })
     };
     let extent = outer + MARGIN;
     let center = Point::new(extent, extent);
@@ -316,7 +325,7 @@ pub fn layout(apps: &[App]) -> MindMap {
         let (start, width) = sectors[g];
         let (k, count) = slot_in_ring[i];
         let angle = start + (k as f32 + 0.5) * width / count as f32;
-        let radius = first_ring + RING_STEP * ring_of[i] as f32;
+        let radius = member_ring[g] + RING_STEP * ring_of[i] as f32;
         node_at[i] = Point::from_polar(center, radius, angle);
     }
 
@@ -334,7 +343,7 @@ pub fn layout(apps: &[App]) -> MindMap {
         if children.is_empty() || attached_to[p].is_some() {
             continue; // 空挂靠者跳过；链式挂靠（挂靠者自己也被挂）当前数据没有。
         }
-        let radius = first_ring + RING_STEP * (ring_of[p] as f32 + 1.0);
+        let radius = member_ring[group_of[p]] + RING_STEP * (ring_of[p] as f32 + 1.0);
         let (start, width) = sectors[group_of[p]];
         let (k, count) = slot_in_ring[p];
         let parent_angle = start + (k as f32 + 0.5) * width / count as f32;
@@ -368,7 +377,16 @@ pub fn layout(apps: &[App]) -> MindMap {
 
     let mut rings = vec![group_radius];
     if !apps.is_empty() {
-        rings.extend((0..=max_ring).map(|r| first_ring + RING_STEP * r as f32));
+        // 应用实际所在的圈半径(各组 ring0 可能整组外推,不再固定在 first_ring)。
+        let mut used: Vec<f32> = apps
+            .iter()
+            .enumerate()
+            .filter(|(i, _)| attached_to[*i].is_none())
+            .map(|(i, _)| member_ring[group_of[i]] + RING_STEP * ring_of[i] as f32)
+            .collect();
+        used.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        used.dedup();
+        rings.extend(used);
         let mut extra: Vec<f32> = attach_radii
             .iter()
             .filter(|r| **r > outer)
@@ -595,7 +613,11 @@ mod tests {
     fn 一个组应用很多时加外圈而不重叠() {
         let apps: Vec<App> = (0..14).map(|i| app(&format!("a{i}"), Some("大组"), None, &[])).collect();
         let map = layout(&apps);
-        assert!(map.rings.len() > 2, "应用多了应该有外圈");
+        // 大组装不下第一圈时整组外推(兄弟同圈,ADR 0101),而不是把后排兄弟拆到外圈。
+        assert!(
+            map.rings.iter().any(|&r| r > FIRST_RING + 1.0),
+            "大组应整组外推,实际使用的圈半径应大于默认第一圈"
+        );
         assert_clean(&map);
         // 另加几个小组，扇区比例变化后仍然不重叠
         let mut more = apps;
