@@ -20,7 +20,7 @@ arm-none-eabi-gcc + QEMU 即可真做；真硬件实验需要一块入门开发�
 或 51 核心板，几十元级）加 USB-TTL 线。实验能力落点：仓库级
 [ADR 0091](../../../docs/decisions/0091-experiments-inside-subject-apps.md) 曾定
 「实验长在学科应用内」；[ADR 0103](../../../docs/decisions/0103-practice-courses-as-attached-subapps.md)
-其后把实践性强的课程独立成挂靠子应用——软设第 3、8 章归 algorithm（ADR 0092
+其后把实践性强的课程独立成挂靠子应用——软设第 3、8 章归 dsa（原 algorithm，ADR 0105 复名；ADR 0092
 决策 4），第 9 章归 database、第 7 章归 design-patterns、第 4 章归
 operating-system（后改名 os，ADR 0104）、第 10 章归 network；嵌入式第 6/8/11 章归 firmware、第 2/4/5
 章归 microcontroller。本应用只剩弱实践章的 `lab` 块路径（第 2 正则、第 5 单元
@@ -82,7 +82,7 @@ operating-system（后改名 os，ADR 0104）、第 10 章归 network；嵌入�
 正则/自动机真匹配（第 2）→ 数据结构与算法编码实验（第 3、8，与 dsa 共建）→
 进程同步真编码（第 4）→ 单元测试与覆盖率（第 5）。
 （第 9/7/4/10 章实验由挂靠子应用 database / design-patterns / operating-system /
-network 承载，第 3、8 章由 algorithm 承接——ADR 0103；本应用内只剩第 2、5 章
+network 承载，第 3、8 章由 dsa 承接——ADR 0103；本应用内只剩第 2、5 章
 的 lab 块待建。）
 
 **嵌入式**：嵌入式 C 位操作真编码（第 6，零硬件成本，最高优先）→ 交叉编译 +

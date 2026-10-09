@@ -45,13 +45,13 @@
 | 精细提问与自我解释 | 中等效用（Dunlosky 2013） | 每题解析必须说清**错误选项错在哪**（softcert 契约已要求），引导自我解释 |
 | 认知负荷控制 | Sweller：样例效应 | 新考点先样例后练习；正文块有限集（ADR 0058），不堆纯文字 |
 
-## 编程（machine、c-plus-plus、algorithm；practice 出口）
+## 编程（machine、c-plus-plus、dsa；practice 出口）
 
 | 方法 | 依据 | 软件与内容组织映射 |
 |---|---|---|
 | PRIMM 课程结构 | Sentance & Waite：Predict→Run→Investigate→Modify→Make | 编程节的标准五段：先**预测**代码输出（形成预期），再**运行**验证（TEACHING.md 学习闭环的编程特化），然后调查、修改，最后**创作** |
 | Parsons 问题 | Ericson & Guzdial：拖拽代码行排序，负荷介于读码与写码之间 | 打乱代码行排序题：初学者的高效中间形态，写作题之前的台阶 |
-| 代码追踪 | code tracing 研究：手推变量状态表 | trace 题：给代码填变量状态表（algorithm 的 trace-player 已有渲染器） |
+| 代码追踪 | code tracing 研究：手推变量状态表 | trace 题：给代码填变量状态表（dsa 的 trace-player 已有渲染器） |
 | 样例 → 实验 | 认知负荷理论；ADR 0059 | 实验骨架可编译（不改一行也能跑），学生只改标记处 |
 | 即时反馈的刻意练习 | Ericsson 刻意练习：明确目标+即时反馈+重复精化 | 编码实验沙箱：真编译、真运行、真报错（ADR 0091 路线；softcert ADR 0002 的 SQL lab 同构） |
 | 建造主义 | Papert constructionism：在造真实物中学 | 造物出口（practice）：c-gui-lab、pocket-cube——学完的语言拿来造真东西 |
@@ -69,7 +69,7 @@
 
 - **已对齐**：摘星（i+1 分级、FSRS、真实句子、分值权重）；driver 强化练习（检索/
   间隔/变式全套）；softcert（viz 双重编码、解析含错误归因、authored 考核即检索）；
-  algorithm（trace-player、C++ 即时编译实验）；ADR 0059 骨架。
+  dsa（trace-player、C++ 即时编译实验）；ADR 0059 骨架。
 - **缺口**：数学的分级提示梯与跨组交错；英语的泛读流（摘星 passages 后期项）；
   编程的 Parsons 题型；softcert 整卷限时模拟；真硬件实验（嵌入式，待开发板）。
   按各应用内容规划排期消化。
@@ -97,7 +97,7 @@
 | ascent 摘星 | 句组页先猜后翻（P1 ✓）；分阶句组（i+1） | 词库阶梯的词卡当前直接亮释义——改为「词 + 语境例句」先行、释义折叠点击展开（P1）；Today 任务卡把「到期复习」提到首位（P2） |
 | software 软件设计师 | quiz 即检索（P4 练习侧）；viz 双重编码；解析含错误归因 | topic 讲解页每节末尾固定挂「立即检索」区（该节 2–4 题，答完才更新掌握显示）——讲解与检索 1:1 绑定（P2/P3）；整卷模式加显式「考核中」模式标记（P4） |
 | embedded 嵌入式 | 与 softcert 同构（Vue 3） | 同上两条，随内容建设推进；硬件实验视图出现后遵守 P1（先预测引脚/时序行为再上板验证） |
-| algorithm 数据结构与算法 | trace-player（追踪题）；lab-editor（实验编辑器）；即时编译反馈（P4 ✓） | 节结构模板化为 PRIMM 五段（Predict 段 = 代码 + 预测输入框，运行前必填）；新增 Parsons 拖拽排序题作为「读码 → 写码」的中间题型 |
+| dsa 数据结构与算法 | trace-player（追踪题）；lab-editor（实验编辑器）；即时编译反馈（P4 ✓） | 节结构模板化为 PRIMM 五段（Predict 段 = 代码 + 预测输入框，运行前必填）；新增 Parsons 拖拽排序题作为「读码 → 写码」的中间题型 |
 | c-plus-plus C++ | lesson → experiment_dock → checkpoint_view（样例→实验→检查点，P3 ✓）；**predict 块已实现**（scored=false 的先猜再验，ValueSemantics 课程已用 5 处） | 实验撤除序列：完整样例 → 缺步 → 空白（P3）；新课程内容沿用 predict 块组织 Predict 段 |
 | mathematics 数学 | diagnostic（诊断）、drills（练习）、graph-view / transform-view（多表征） | drills 组卷改**交错**逻辑（按已学知识点混出，不按章成串，P2 同源）；每题配 Pólya 分级提示按钮（「理解→计划→执行→回顾」逐级展开，P1 的提示梯）；graph-view 与 transform-view 组成同概念多表征联动 |
 | english 磨砚 | practice.ts 检索练习主体；voice 朗读 | 泛读流（易读材料连续读，P2 的输入侧）；翻译/写作题按 TBLT 任务卡组织（任务 → 尝试 → 对照参考） |

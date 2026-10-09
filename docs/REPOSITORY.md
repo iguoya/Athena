@@ -11,7 +11,8 @@
 subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完全平级
   cpp/         C++ 教程（GTK4 / gtkmm，原来的"主程序"）
   machine/     C 与机器（Qt Quick / QML，原 c/，ADR 0005）
-  dsa/         数据结构与算法（Tauri）
+  dsa/         数据结构与算法（Tauri）——软设第 3、8 章实践课程，挂靠 software
+               （ADR 0092、0099；原 algorithm，复名见 ADR 0105）
   english/     磨砚（考研英语二，Tauri）
   ascent/      拾阶（英语师范生四六级、专四专八，Tauri）
   mathematics/ 数学学习（Tauri）
@@ -60,7 +61,7 @@ archive/       历史归档，不参与构建
 |---|---|---|---|
 | `cpp` | C++ 教程 | `athena-cpp` | `cpp.` |
 | `machine` | C 与机器（原 `c`，ADR 0005） | `athena-machine` | `machine.` |
-| `dsa` | 数据结构与算法 | `athena-dsa` | `dsa.` |
+| `dsa` | 数据结构与算法（原 `algorithm`，复名见 ADR 0105） | `athena-dsa` | `dsa.` |
 | `english` | 磨砚 | `athena-english` | `en.` |
 | `ascent` | 拾阶 | `athena-ascent`（v9.0.0 及之前发行名 Lumi，改名见 ascent ADR 0021） | 无（进度在用户数据目录，见 ADR 0066） |
 | `mathematics` | 数学学习 | `athena-math` | `math.` |
