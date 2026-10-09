@@ -199,11 +199,11 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
    验证入口，ADR 0007）。`check.py --sources-only` 的结构卫生检查会核对这份清单。
 2. **分类对号**：按上面的三类判据写明自己是学习应用 / 图谱参考 / 素材坑；
    学习应用按 ADR 0037/0053 建 `progress/learning.db`。
-3. **登记进文档**：本文的结构树与名字表各加一行（结构卫生检查会与实际目录
-   对账）、根 `README.md` 应用表加一行。
+3. **登记进文档**：本文的结构树与名字表各加一行、根 `README.md` 应用表加一行——
+   三处清单结构卫生检查都会与实际目录对账，幽灵行与漏登都会被拦下。
 4. **进 CI**：`.github/workflows/ci.yml` 的对应 job 或矩阵，以及
-   `workflow_dispatch` 的 `options` 列表——工作流改动本地先过
-   `check.py --sources-only` 的工作流检查（actionlint + 变量粘连）。
+   `workflow_dispatch` 的 `options` 列表（选择项同样与实际目录对账）——工作流改动
+   本地先过 `check.py --sources-only` 的工作流检查（actionlint + 变量粘连）。
 5. **要进发布矩阵的话**：`release.yml` 加构建 job，`publish` 的校验和清单与
    资产通配两处都要覆盖到（ADR 0081）；产物名遵守 `athena-<id>` 约定。
 6. **内容有出处，按档接入**（ADR 0043、0089）：考试/考证考级类学习应用必须接入

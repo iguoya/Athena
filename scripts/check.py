@@ -345,13 +345,46 @@ def run_structure_check() -> None:
     for name in sorted(released - ci_apps):
         problems.append(f"  release.yml 构建应用 {name}，但 ci.yml 的 choices 里没有它——发布必须先有验证")
 
+    # 7. 应用清单三处对账：根 README 的应用表、REPOSITORY.md 的名字表、ci.yml 的
+    #    手动选择项，逐一与实际目录核对。「新增一个应用时动哪些地方」（REPOSITORY.md
+    #    第 3、4 条）最容易漏的就是这几处登记——启动器靠目录自动发现，漏登不报错，
+    #    等发现时文档里早就是幽灵行或缺口了。方向抓两种：文档/工作流里点名了
+    #    不存在的应用（幽灵），以及开工的应用（有 app.json）没进清单（漏登）。
+    readme_refs = {
+        f"{group}/{name}"
+        for group, name in re.findall(r"\((subjects|practice)/([\w-]+)\)", (REPO_ROOT / "README.md").read_text(encoding="utf-8"))
+    }
+    actual_dirs = {f"{root}/{p.name}" for root in APP_ROOTS for p in (REPO_ROOT / root).iterdir() if p.is_dir()}
+    working_apps = {f"{root}/{p.name}" for root in APP_ROOTS for p in (REPO_ROOT / root).iterdir() if (p / "app.json").is_file()}
+    for ghost in sorted(readme_refs - actual_dirs):
+        problems.append(f"  根 README.md 应用表链接到 {ghost}，实际没有这个目录")
+    for missing in sorted(working_apps - readme_refs):
+        problems.append(f"  根 README.md 应用表没有登记开工应用 {missing}（加一行）")
+
+    subjects_dirs = {p.name for p in (REPO_ROOT / "subjects").iterdir() if p.is_dir()}
+    subjects_working = {p.name for p in (REPO_ROOT / "subjects").iterdir() if (p / "app.json").is_file()}
+    # 名字表的行特征是第三列进程名以 `athena-` 开头——学习者目录等别的表格第一列
+    # 也有反引号词（`last`，第三列还有 `null`），只认反引号会把它们误当应用。
+    name_table = set(
+        re.findall(r"^\| `([\w-]+)` \|[^|]+\| `athena-", repository_doc.read_text(encoding="utf-8"), re.MULTILINE)
+    )
+    for ghost in sorted(name_table - subjects_dirs):
+        problems.append(f"  docs/REPOSITORY.md 名字表写了 {ghost}，subjects/ 下没有这个目录")
+    for missing in sorted(subjects_working - name_table):
+        problems.append(f"  docs/REPOSITORY.md 名字表没有登记开工应用 {missing}")
+
+    # all / sources 是伪应用，launcher 是启动器自身的矩阵位，都不是应用目录
+    for ghost in sorted(ci_apps - {"all", "sources", "launcher"} - subjects_dirs - {p.name for p in (REPO_ROOT / "practice").iterdir() if p.is_dir()}):
+        problems.append(f"  ci.yml 手动选择项 {ghost} 不是实际存在的应用目录")
+
     if problems:
         print("\n".join(problems), flush=True)
         raise SystemExit(f"结构卫生没通过（{len(problems)} 处），见上方。")
     print(
         f"结构树与 {sum(len(v) for v in tree.values())} 个应用目录一致，"
         f"四件套齐备，ADR 索引全覆盖，根目录干净，产物全被忽略，"
-        f"发布矩阵 {len(released)} 个应用全部有 CI",
+        f"发布矩阵 {len(released)} 个应用全部有 CI，"
+        f"README/名字表/CI 选择项与 {len(actual_dirs)} 个目录对账一致",
         flush=True,
     )
 
