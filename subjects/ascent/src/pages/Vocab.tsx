@@ -33,7 +33,7 @@ export function Vocab() {
 
 function BanksView({ seen, onPick }: { seen: Set<string>; onPick: (exam: string) => void }) {
   return (
-    <div className="mx-auto grid max-w-4xl gap-5">
+    <div className="mx-auto grid max-h-full max-w-4xl gap-5 overflow-y-auto scroll-soft pb-1">
       <header>
         <p className="text-xs tracking-widest text-muted">词汇 · 拾阶而上</p>
         <h1 className="mt-1 font-display text-4xl font-semibold leading-tight">词库阶梯</h1>
@@ -101,8 +101,8 @@ function StagesView({
   const current = file.stages.find((s) => !doneIds.has(`stage:${s.id}`));
 
   return (
-    <div className="mx-auto grid max-w-4xl gap-5">
-      <header className="flex items-end justify-between gap-3">
+    <div className="mx-auto flex h-full max-w-4xl flex-col gap-5">
+      <header className="flex flex-none items-end justify-between gap-3">
         <div>
           <button
             type="button"
@@ -125,7 +125,7 @@ function StagesView({
         )}
       </header>
 
-      <ol className="grid gap-3">
+      <ol className="grid min-h-0 flex-1 content-start gap-3 overflow-y-auto scroll-soft pr-1">
         {file.stages.map((s, i) => {
           const learned = s.words.filter((w) => seen.has(w)).length;
           const total = s.words.length;
@@ -278,9 +278,10 @@ function StageLearner({
   const collected = hasWord(entry?.word ?? word, `vocab:${stage.id}`);
 
   return (
-    <div className="mx-auto grid max-w-4xl gap-5">
+    // 一屏学习流：header 和操作行固定，词卡吃掉剩余高度；矮视口（200% DPI）不滚动。
+    <div className="mx-auto flex h-full min-h-[500px] max-w-4xl flex-col gap-4">
       <Celebration show={celebrate} message="这一阶通关啦！" />
-      <header className="flex items-end justify-between gap-3">
+      <header className="flex flex-none items-end justify-between gap-3">
         <div>
           <button
             type="button"
@@ -296,7 +297,7 @@ function StageLearner({
         <span className="rounded-full bg-surface-strong px-3 py-1.5 text-xs text-muted shadow-skin">{stage.blurb}</span>
       </header>
 
-      <span className="h-2 overflow-hidden rounded-full bg-bg-2">
+      <span className="h-2 flex-none overflow-hidden rounded-full bg-bg-2">
         <motion.span
           className="block h-full rounded-full bg-[linear-gradient(90deg,var(--accent),var(--accent-2))]"
           initial={{ width: 0 }}
@@ -311,9 +312,9 @@ function StageLearner({
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -30 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="glass flex min-h-[300px] flex-col items-center justify-center gap-3 p-8 text-center"
+          className="glass flex min-h-0 flex-1 flex-col items-center justify-center gap-2 p-5 text-center @2xl:gap-3 xl:p-8"
         >
-          <p className="font-word text-6xl font-semibold text-word">{word}</p>
+          <p className="font-word text-5xl font-semibold text-word @2xl:text-6xl">{word}</p>
           {entry?.phonetic && <p className="font-sentence text-lg text-muted">/{entry.phonetic}/</p>}
           <div className="flex flex-wrap justify-center gap-1.5 text-xs">
             {!!entry?.collins && (
@@ -372,7 +373,7 @@ function StageLearner({
         </motion.section>
       </AnimatePresence>
 
-      <div className="flex justify-end">
+      <div className="flex flex-none justify-end">
         <button
           type="button"
           onClick={advance}

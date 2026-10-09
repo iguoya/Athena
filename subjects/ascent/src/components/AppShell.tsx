@@ -8,8 +8,9 @@ import { cn } from "@/lib/utils";
 
 export function AppShell() {
   const location = useLocation();
-  // Home must fit one screen on 200% DPI laptops; other pages may scroll with wheel (no visible bar).
-  const home = location.pathname === "/";
+  // Home must fit one screen on 200% DPI laptops; the vocab learner runs the same
+  // one-screen flow. Other pages may scroll with wheel (no visible bar).
+  const fixedHeight = location.pathname === "/" || location.pathname.startsWith("/vocab");
   return (
     <div className="flex h-full overflow-hidden">
       <Backdrop />
@@ -19,17 +20,17 @@ export function AppShell() {
       <main
         className={cn(
           "scroll-soft min-w-0 flex-1 px-4 pt-9 sm:px-5 xl:px-7",
-          home ? "overflow-hidden pb-3" : "overflow-y-auto pb-5 xl:pb-6",
+          fixedHeight ? "overflow-hidden pb-3" : "overflow-y-auto pb-5 xl:pb-6",
         )}
       >
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
-            initial={{ opacity: 0, y: home ? 0 : 8 }}
+            initial={{ opacity: 0, y: fixedHeight ? 0 : 8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: home ? 0 : -4 }}
+            exit={{ opacity: 0, y: fixedHeight ? 0 : -4 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
-            className={cn(home && "h-full")}
+            className={cn(fixedHeight && "h-full")}
           >
             <Outlet />
           </motion.div>

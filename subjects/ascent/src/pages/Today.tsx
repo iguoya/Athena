@@ -47,10 +47,12 @@ export function Today() {
   }, [celebrate]);
 
   // Fill the viewport and shrink rows instead of overflowing (critical at 200% DPI ≈ 960 logical px).
+  // 断点用容器查询而不是视口断点：侧边栏吃掉 208px 后，视口 lg(1024) 时内容区只有 ~780，
+  // 视口断点会错误地掉到单列堆叠，把固定高度的首屏压爆（960×540 实测句子溢出、计划列表被裁）。
   return (
     <>
       <Celebration show={celebrate} message="今天完成啦！" />
-      <div className="mx-auto grid h-full max-w-6xl grid-cols-12 grid-rows-[auto_minmax(0,1.15fr)_minmax(0,0.85fr)] gap-x-3 gap-y-2 content-stretch">
+      <div className="@container mx-auto grid h-full max-w-6xl grid-cols-12 grid-rows-[auto_auto_auto] gap-x-3 gap-y-2 content-stretch overflow-y-auto scroll-soft @2xl:grid-rows-[auto_minmax(0,1.25fr)_minmax(0,0.6fr)] @2xl:overflow-hidden">
         <section className="col-span-12 flex flex-wrap items-end justify-between gap-2">
           <div className="min-w-0">
             <h1 className="font-display text-[1.55rem] font-semibold leading-tight text-balance sm:text-[1.75rem] xl:text-3xl">
@@ -89,7 +91,7 @@ function SentenceCard() {
   const [flipped, setFlipped] = useState(false);
   const [before, after] = s.en.split(s.focus);
   return (
-    <section className="relative col-span-12 min-h-0 [perspective:1400px] lg:col-span-7 [:root[data-style=journal]_&]:rotate-[var(--tilt)]">
+    <section className="relative col-span-12 min-h-0 [perspective:1400px] @2xl:col-span-7 [:root[data-style=journal]_&]:rotate-[var(--tilt)]">
       <div
         aria-hidden
         className="absolute -top-2 left-[40%] z-10 hidden h-5 w-24 rotate-3 bg-accent/45 [:root[data-style=journal]_&]:block"
@@ -190,7 +192,7 @@ type PlanProps = { tasks: Task[]; progress: number; doneCount: number; total: nu
 function PlanPanel({ tasks, progress, doneCount, total, onToggle }: PlanProps) {
   const C = 2 * Math.PI * 30;
   return (
-    <section className="glass col-span-12 flex min-h-0 flex-col overflow-hidden p-3 lg:col-span-5 xl:p-4">
+    <section className="glass col-span-12 flex min-h-0 flex-col overflow-hidden p-3 @2xl:col-span-5 xl:p-4">
       <div className="mb-2 flex items-center gap-3">
         <svg viewBox="0 0 100 100" className="h-14 w-14 flex-none" aria-hidden>
           <defs>
@@ -225,9 +227,9 @@ function PlanPanel({ tasks, progress, doneCount, total, onToggle }: PlanProps) {
           </p>
         </div>
       </div>
-      <ul className="grid min-h-0 flex-1 content-start gap-1 overflow-hidden">
+      <ul className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto scroll-soft">
         {tasks.map((t) => (
-          <li key={t.id} className="min-h-0">
+          <li key={t.id} className="flex-none">
             <button
               type="button"
               onClick={() => onToggle(t.id)}
@@ -275,7 +277,7 @@ function MapPanel() {
     <button
       type="button"
       onClick={() => navigate("/map")}
-      className="glass col-span-12 flex min-h-0 flex-col overflow-hidden p-3 text-left md:col-span-6 lg:col-span-4 xl:p-4"
+      className="glass col-span-12 flex min-h-0 flex-col overflow-hidden p-3 text-left @md:col-span-6 @2xl:col-span-4 xl:p-4"
     >
       <p className="text-xs tracking-widest text-muted">高中英语知识地图</p>
       <p className="font-display text-2xl font-semibold tabular-nums xl:text-3xl">
@@ -305,7 +307,7 @@ function WeekPanel() {
   const max = Math.max(...week.map((d) => d.count), 1);
   const total = week.reduce((sum, d) => sum + d.count, 0);
   return (
-    <section className="glass col-span-12 flex min-h-0 flex-col overflow-hidden p-3 md:col-span-6 lg:col-span-4 xl:p-4">
+    <section className="glass col-span-12 flex min-h-0 flex-col overflow-hidden p-3 @md:col-span-6 @2xl:col-span-4 xl:p-4">
       <p className="text-xs tracking-widest text-muted">这 7 天的学习</p>
       <p className="font-display text-2xl font-semibold tabular-nums xl:text-3xl">
         {total}
@@ -364,7 +366,7 @@ function MilestonePanel() {
     <button
       type="button"
       onClick={() => navigate("/vocab")}
-      className="glass relative col-span-12 flex min-h-0 flex-col overflow-hidden p-3 text-left lg:col-span-4 xl:p-4"
+      className="glass relative col-span-12 flex min-h-0 flex-col overflow-hidden p-3 text-left @2xl:col-span-4 xl:p-4"
     >
       <p className="mb-1 flex items-center gap-1.5 text-xs tracking-widest text-muted">
         <Star size={12} className="fill-accent text-accent" />
