@@ -1,7 +1,9 @@
 # ADR 0084：math-tools 从 `practice/` 迁入 `subjects/`，作为数学学习的配套工具
 
 - 日期：2026-10-03
-- 状态：已接受
+- 状态：已接受；注记（2026-10-10）：决策 3 的「声明 `related: ["mathematics"]`」
+  已由 [ADR 0101](0101-domain-circle-siblings-no-links.md) 收回——兄弟关系由同一
+  `group`「数学」表达，圈内不再画特意连线
 - 修订：[ADR 0060](0060-subjects-and-practice.md) 对 `math-tools` 的归类。0060 的分法（按意图分
   `subjects/` 与 `practice/`）不变，原文不改
 - 关系：延续 [ADR 0083](0083-launcher-mind-map.md)（启动器按 `group` / `related` 画关系）；

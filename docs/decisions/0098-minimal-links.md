@@ -1,7 +1,9 @@
 # ADR 0098：连线最小化——非必要不特意连线
 
 - 日期：2026-10-10
-- 状态：已接受（tiger 直接指示）
+- 状态：已接受（tiger 直接指示）；注记（2026-10-10）：决策 4 对 math-tools↔mathematics
+  related 的保留已由 [ADR 0101](0101-domain-circle-siblings-no-links.md) 收回——
+  同领域圈成员即兄弟,圈内不画任何特意连线
 - 关系：修订 [ADR 0092](0092-launcher-tree-attach-and-softcert-rename.md) 决策 4 的
   承接表达；思维导图连线语义仍按 [ADR 0083](0083-launcher-mind-map.md) 与
   [ADR 0092](0092-launcher-tree-attach-and-softcert-rename.md)

@@ -1,7 +1,6 @@
 {
   "id": "math-tools",
   "title": "数学工具",
-  "related": ["mathematics"],
   "group": "数学",
   "description": "数学学习的配套工具:矩阵实验室、函数绘图等数学工具箱(Tauri + Vue 3)",
   "icon": {
@@ -16,11 +15,18 @@
     "prepare": [
       {
         "when_missing": "node_modules",
-        "run": ["npm", "install"],
+        "run": [
+          "npm",
+          "install"
+        ],
         "label": "安装前端依赖"
       }
     ],
-    "run": ["npm", "run", "tauri:dev"],
+    "run": [
+      "npm",
+      "run",
+      "tauri:dev"
+    ],
     "ready": {
       "http": "http://localhost:1451"
     },
