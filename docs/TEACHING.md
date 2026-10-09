@@ -5,6 +5,10 @@
 > AGENTS.md 只留规则要点，要点是本文的摘要，不得与本文冲突；改规则时先改本文，
 > 再同步 AGENTS.md 里对应的那一行。
 
+> 领域化的学习方法参考（数学/语言/考试认证/编程四大类的实证方法与软件设计映射）
+> 见 [LEARNING-METHODS.md](LEARNING-METHODS.md)；其共同地基由
+> [ADR 0096](decisions/0096-retrieval-spacing-interleaving-lead-curriculum.md) 确立。
+
 ## 跨应用教学规范
 
 这些是所有**学习应用**共同的方法论（见 [REPOSITORY.md](REPOSITORY.md)「仓库结构」的三类划分；图谱/参考类
