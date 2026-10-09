@@ -1,7 +1,7 @@
 # 嵌入式系统设计师应用协作规则
 
-仓库级规则见根 `AGENTS.md`,本文只写本应用自己的约定。本应用目录 id `embedded-system-designer`(ADR 0097 全称化;内容层的 `esd-`
-章节 id 与 `esd.*` 知识点前缀是内容层短名,保留)。本应用是**学习应用**
+仓库级规则见根 `AGENTS.md`,本文只写本应用自己的约定。本应用目录 id `embedded`(ADR 0097/0100 定名;内容层的 `esd-` 章节 id 与
+`esd.*` 知识点前缀是内容层短名,保留)。本应用是**学习应用**
 (三类判据见 `docs/REPOSITORY.md`):要教会人考过软考中级·嵌入式系统设计师,
 并用可观察的证据证明掌握度在进步。跨应用教学规范(`docs/TEACHING.md`)全部生效。
 
@@ -25,7 +25,7 @@
   **katex**(公式块)。与 `subjects/math-tools` 同一套技术体系(使用者点名要
   与 softcert 不同的体验),选型理由见该应用 `AGENTS.md`。
 - 包管理用 **npm**(本机 corepack 无权限写 Program Files,不引入 pnpm 依赖)。
-- dev 端口 **1480**(strictPort);进程/二进制 `athena-embedded-system-designer`;
+- dev 端口 **1480**(strictPort);进程/二进制 `athena-embedded`;
   窗口标题「嵌入式系统设计师」;应用内文案用中文。
 
 ## 内容组织

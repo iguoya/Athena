@@ -5,7 +5,7 @@
 由作答写入 `progress/learning.db`。技术体系为 Tauri 2 + Vue 3 + Tailwind 4,
 与 softcert(软件设计师,React)刻意不同——同一类学习,两种体验。
 
-- 打开:`launcher open embedded-system-designer`(与 software-designer 同挂启动器「软考」分组)
+- 打开:`launcher open embedded`(与 software 同挂启动器「软考」分组)
 - 验证:`python3 scripts/check.py`
 - 结构与规则:`AGENTS.md`;真题导入:`content/past-exams/README.md`
 
