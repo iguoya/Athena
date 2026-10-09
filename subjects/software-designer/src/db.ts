@@ -25,7 +25,7 @@ export interface AttemptInput {
   mode: "chapter" | "past-exam";
 }
 
-const LS_KEY = "athena-softcert-attempts";
+const LS_KEY = "athena-software-designer-attempts";
 
 function inTauri(): boolean {
   return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;

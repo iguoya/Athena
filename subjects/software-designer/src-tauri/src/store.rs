@@ -48,7 +48,7 @@ fn store_path() -> PathBuf {
     } else {
         dirs_next::data_dir()
             .unwrap_or_else(|| PathBuf::from("."))
-            .join("AthenaSoftcert")
+            .join("AthenaSoftwareDesigner")
     };
     let _ = std::fs::create_dir_all(&dir);
     dir.join("learning.db")
@@ -204,7 +204,7 @@ mod tests {
 
     #[test]
     fn schema_is_idempotent() {
-        let path = std::env::temp_dir().join(format!("softcert-test-{}.db", std::process::id()));
+        let path = std::env::temp_dir().join(format!("softdesign-test-{}.db", std::process::id()));
         let _ = std::fs::remove_file(&path);
         {
             let s = Store::open_at(&path).expect("open");

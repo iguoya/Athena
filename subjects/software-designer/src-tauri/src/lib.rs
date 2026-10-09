@@ -111,5 +111,5 @@ pub fn run() {
             run_sql_lab
         ])
         .run(tauri::generate_context!())
-        .expect("error while running athena-softcert");
+        .expect("error while running athena-software-designer");
 }
