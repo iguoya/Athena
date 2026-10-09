@@ -338,10 +338,17 @@ pub fn layout(apps: &[App]) -> MindMap {
         let (start, width) = sectors[group_of[p]];
         let (k, count) = slot_in_ring[p];
         let parent_angle = start + (k as f32 + 0.5) * width / count as f32;
-        let spread = (SLOT / radius).asin().max(0.12);
-        let span = spread * (children.len() as f32 - 1.0);
+        // 兄弟节点岔开成弧,不与父节点径向共线:相邻子节点的角距按同圈弦长
+        // ≥ SLOT 反解,下限 0.35 rad(≈20°)保证弧段肉眼可见的弯曲;
+        // 独子也偏开 0.35 rad——正后方会让父、子、连线三点一条直线。
+        let spread = (SLOT / radius).asin().max(0.35);
+        let first_offset = if children.len() == 1 {
+            0.35
+        } else {
+            -spread * (children.len() as f32 - 1.0) / 2.0
+        };
         for (k, &child) in children.iter().enumerate() {
-            attach_at[child] = Some(Point::from_polar(center, radius, parent_angle - span / 2.0 + spread * k as f32));
+            attach_at[child] = Some(Point::from_polar(center, radius, parent_angle + first_offset + spread * k as f32));
         }
         attach_radii.push(radius);
     }
@@ -628,8 +635,16 @@ mod tests {
         let map = layout(&[softcert.clone(), dsa, ghost]);
         let at = |id: &str| map.nodes.iter().find(|n| n.id == id).unwrap().at;
         let (p, c) = (at("softcert"), at("dsa"));
-        // 挂靠节点在挂靠者外一圈：径向距离正好是 RING_STEP。
-        assert!((p.minus(c).length() - RING_STEP).abs() < 1.0, "挂靠者到挂靠节点的径向距离应为 RING_STEP");
+        // 挂靠节点在挂靠者外一圈:到画布中心的距离差正好是 RING_STEP。
+        assert!(
+            ((c.minus(map.center).length()) - (p.minus(map.center).length()) - RING_STEP).abs() < 1.0,
+            "挂靠节点应在外一圈(到中心距离差 RING_STEP)"
+        );
+        // 但不与挂靠者径向共线:独子也偏开 0.35 rad,父、子、连线不排成一条直线。
+        assert!(
+            (p.minus(c).length() - RING_STEP).abs() > 1.0,
+            "挂靠节点不应与挂靠者径向共线"
+        );
         assert!(map.links.iter().any(|l| l.kind == LinkKind::Attach && l.arrow.is_some()));
         // ghost 的 parent 解析不到：作为普通节点进了领域圈。
         assert!(map.groups.iter().any(|g| g.name == "算法"));
