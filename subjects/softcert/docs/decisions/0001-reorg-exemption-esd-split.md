@@ -1,7 +1,9 @@
 # softcert ADR 0001：嵌入式课程拆出，声明重组豁免（ADR 0080 首批第二例）
 
 - 日期：2026-10-09
-- 状态：已接受（使用者明确决定拆分）
+- 状态：已接受（使用者明确决定拆分）；注记（2026-10-10）：本文「将来可加软考
+  其他方向」的课程扩位已由仓库级 [ADR 0095](../../../../docs/decisions/0095-one-exam-one-app.md)
+  收回——今后一律一个考试一个应用，本应用长期只承载软件设计师
 - 基线：tag `pre-softcert-reorg`
 - 依据：仓库级 [ADR 0090](../../../../../docs/decisions/0090-softcert-splits-esd.md)、
   [ADR 0080](../../../../../docs/decisions/0080-reorg-exemption-when-intent-changes.md)
