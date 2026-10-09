@@ -1,0 +1,56 @@
+{
+  "section_id": "db-sql",
+  "blocks": [
+    {
+      "type": "lead",
+      "text": "数据库章在上午卷占 6 分上下,而 SQL 查询几乎每年必考;下午的 SQL 填空更是必拿分题。这一节只练一件事:SELECT 的骨架。骨架熟了,语法题是送分,填空题是默写——先读结构,再进实验真跑一遍。"
+    },
+    {
+      "type": "text",
+      "text": "SQL 查询的子句顺序为 **SELECT、FROM、WHERE、GROUP BY、HAVING、ORDER BY**,其中 **SELECT 和 FROM 是必需的**,HAVING 只能与 GROUP BY 搭配。三个必需子句各对应一个关系代数运算:SELECT 列对应**投影**(π),FROM 对应**笛卡儿积**(×),WHERE 对应**选择**(σ)。记住这条对应关系,「关系代数 ↔ SQL」的互推题就不用背。SELECT 的目标列可以是列名、表达式和集函数(AVG、COUNT、MAX、MIN、SUM),加 DISTINCT 可以去掉结果中的重复行。"
+    },
+    {
+      "type": "table",
+      "title": "WHERE 子句常用运算符(表 9-3 摘选)",
+      "headers": ["类别", "运算符"],
+      "rows": [
+        ["比较", "=、<>、<、<=、>、>="],
+        ["集合成员", "IN、NOT IN"],
+        ["字符串匹配", "LIKE(_ 单字符,% 多字符)"],
+        ["空值", "IS NULL、IS NOT NULL"],
+        ["逻辑", "AND、OR、NOT"]
+      ]
+    },
+    {
+      "type": "code",
+      "caption": "教材例 9.14:查询计算机系(CS)学生的学号、姓名及年龄(第 5 版 9.4.4 节)。",
+      "lang": "sql",
+      "code": "SELECT Sno, Sname, Sage\nFROM S\nWHERE SD = 'CS';"
+    },
+    {
+      "type": "viz",
+      "component": "sql-lab",
+      "caption": "学生表 S 已按教材的学生-课程库建好。写出查询并真跑:结果与参考查询一致才算通过,通过会记入本章掌握度。",
+      "params": {
+        "id": "lab-db-sql-01",
+        "title": "实验 · 查出计算机系的学生",
+        "setup": [
+          "CREATE TABLE S (Sno TEXT PRIMARY KEY, Sname TEXT, SD TEXT, Sage INT, Sex TEXT);",
+          "INSERT INTO S VALUES ('S1','赵一','CS',20,'男'),('S2','钱二','CS',21,'女'),('S3','孙三','MA',22,'男'),('S4','李四','IS',21,'女'),('S5','周五','CS',20,'男'),('S6','吴六','MA',23,'女');"
+        ],
+        "schemaHint": "S(Sno 学号, Sname 姓名, SD 系, Sage 年龄, Sex 性别)",
+        "task": "查询计算机系(CS)所有学生的学号、姓名和年龄,三列都要,顺序不限。",
+        "answer": "SELECT Sno, Sname, Sage FROM S WHERE SD = 'CS';",
+        "hint": "三列写在 SELECT 后面,系别条件写在 WHERE 里;列名不要用 SELECT *。",
+        "course": "swd",
+        "chapterId": "swd-ch09",
+        "kpId": "sc.db.sql"
+      }
+    },
+    {
+      "type": "callout",
+      "kind": "tip",
+      "text": "判定规则:列名和结果行都要对得上才算通过——所以 SELECT * 拿不到通过,考试里问「查询学号姓名」也不该写星号。改条件多跑几遍:把 CS 换成 MA、加上 Sage > 20,先在实验里看到效果再背语法。"
+    }
+  ]
+}

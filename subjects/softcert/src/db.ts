@@ -117,3 +117,21 @@ export async function saveSetting(key: string, value: string): Promise<void> {
   }
   localStorage.setItem(`${LS_KEY}-setting-${key}`, value);
 }
+
+export interface SqlLabOutcome {
+  columns: string[];
+  rows: string[][];
+  passed: boolean;
+  detail: string;
+}
+
+/** SQL 实验：内存库执行 setup 后跑学习者查询与参考查询并比对。纯浏览器 dev 没有
+ * SQLite 引擎,返回 null,界面提示改用应用运行(softcert ADR 0002)。 */
+export async function runSqlLab(
+  setup: string[],
+  userSql: string,
+  answerSql: string,
+): Promise<SqlLabOutcome | null> {
+  if (!inTauri()) return null;
+  return invoke<SqlLabOutcome>("run_sql_lab", { setup, userSql, answerSql });
+}

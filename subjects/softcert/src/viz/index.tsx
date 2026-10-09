@@ -6,6 +6,7 @@ import { ProcessStates } from "./process-states";
 import { SemaphoreAnim } from "./semaphore-anim";
 import { ScheduleGantt } from "./schedule-gantt";
 import { PageReplacement } from "./page-replacement";
+import { SqlLab } from "./sql-lab";
 
 /** viz 块的组件注册表:内容 JSON 用 component 名引用,这里认路。 */
 export const VizRegistry: Record<string, ComponentType<{ params: Record<string, unknown> }>> = {
@@ -16,4 +17,5 @@ export const VizRegistry: Record<string, ComponentType<{ params: Record<string, 
   "semaphore-anim": SemaphoreAnim,
   "schedule-gantt": ScheduleGantt,
   "page-replacement": PageReplacement,
+  "sql-lab": SqlLab,
 } as unknown as Record<string, ComponentType<{ params: Record<string, unknown> }>>;

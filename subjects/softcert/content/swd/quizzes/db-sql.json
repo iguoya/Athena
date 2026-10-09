@@ -1,0 +1,72 @@
+{
+  "section_id": "db-sql",
+  "questions": [
+    {
+      "id": "sc.db.sql.q1",
+      "stem": "SQL 查询语句中,必需的子句是( )。",
+      "options": [
+        "SELECT 和 FROM",
+        "SELECT、FROM 和 WHERE",
+        "SELECT、FROM 和 GROUP BY",
+        "SELECT、WHERE 和 ORDER BY"
+      ],
+      "answer": 0,
+      "explanation": "六个子句的顺序是 SELECT、FROM、WHERE、GROUP BY、HAVING、ORDER BY,但只有 SELECT 和 FROM 是必需的;HAVING 只能与 GROUP BY 搭配使用,WHERE 和 ORDER BY 都可省略。选 B、C、D 的都是把可选子句当成了必需。",
+      "source": {
+        "relation": "authored",
+        "sourceId": "self-authored",
+        "why": "已入库真题中未检索到该考点的可机读单选题;SELECT 子句骨架是本章核心考点,需要可机读的自造练习题。",
+        "locator": "依据教材第 5 版 9.4.4 节「SELECT 基本结构」"
+      }
+    },
+    {
+      "id": "sc.db.sql.q2",
+      "stem": "SQL 查询中,WHERE 子句对应的关系代数运算是( )。",
+      "options": [
+        "投影(π)",
+        "选择(σ)",
+        "笛卡儿积(×)",
+        "除法(÷)"
+      ],
+      "answer": 1,
+      "explanation": "SELECT 目标列对应投影 π,FROM 的多个表对应笛卡儿积 ×,WHERE 条件对应选择 σ。三个必需/常用子句与关系代数的对应是「关系代数 ↔ SQL」互推题的钥匙。",
+      "source": {
+        "relation": "authored",
+        "sourceId": "self-authored",
+        "why": "已入库真题中未检索到该考点的可机读单选题;子句与关系代数的对应是上午卷高频考点。",
+        "locator": "依据教材第 5 版 9.4.4 节「SELECT 基本结构」"
+      }
+    },
+    {
+      "id": "sc.db.sql.q3",
+      "stem": "要使查询结果中不出现重复元组,应在 SELECT 子句中使用( )。",
+      "options": ["ALL", "DISTINCT", "UNIQUE", "ONLY"],
+      "answer": 1,
+      "explanation": "SELECT 的目标列前加 DISTINCT 可保证结果集中不存在重复元组;ALL 是默认选项(允许重复)。UNIQUE 是 SQL 约束关键字不是查询选项,ONLY 不存在。",
+      "source": {
+        "relation": "authored",
+        "sourceId": "self-authored",
+        "why": "已入库真题中未检索到该考点的可机读单选题;DISTINCT 与集函数同为 SELECT 子句的高频考查点。",
+        "locator": "依据教材第 5 版 9.4.4 节「SELECT 基本结构」"
+      }
+    },
+    {
+      "id": "sc.db.sql.q4",
+      "stem": "WHERE 子句中,「姓名以「张」开头」的条件表达式应写成( )。",
+      "options": [
+        "Sname = '张*'",
+        "Sname LIKE '张%'",
+        "Sname IN '张%'",
+        "Sname MATCH '张_'"
+      ],
+      "answer": 1,
+      "explanation": "字符串匹配用 LIKE:'%' 匹配任意多个字符,'_' 匹配单个字符,所以「张开头」是 LIKE '张%'。等号只能做精确比较;IN 用于集合成员;MATCH 不是 SQL 标准运算符。",
+      "source": {
+        "relation": "authored",
+        "sourceId": "self-authored",
+        "why": "已入库真题中未检索到该考点的可机读单选题;LIKE 通配符是 WHERE 运算符里最常出题的一个。",
+        "locator": "依据教材第 5 版 9.4.4 节表 9-3「WHERE 子句的条件表达式中可以使用的运算符」"
+      }
+    }
+  ]
+}
