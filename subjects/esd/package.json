@@ -1,0 +1,39 @@
+{
+  "name": "athena-esd",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 1480 --strictPort",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
+  },
+  "dependencies": {
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@fontsource-variable/sora": "^5.3.0",
+    "@fontsource/noto-sans-sc": "^5.3.0",
+    "@fontsource/zcool-kuaile": "^5.3.0",
+    "@tauri-apps/api": "^2",
+    "katex": "^0.16.11",
+    "lucide-vue-next": "^1.0.0",
+    "motion-v": "^2.5.2",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@tauri-apps/cli": "^2",
+    "@vitejs/plugin-vue": "^6.0.9",
+    "@types/katex": "^0.16.7",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~5.8.3",
+    "vite": "^6",
+    "vue-tsc": "^3.3.12"
+  },
+  "allowScripts": {
+    "esbuild@0.25.12": true
+  }
+}

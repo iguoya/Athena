@@ -1,0 +1,176 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "Consolas", monospace;
+}
+
+/*
+ * 皮肤 = 一组令牌(与 math-tools skins 同构:一套组件、三套氛围)。
+ * 电路(默认,嵌入式绿 + 基板网格)/ 晨读(浅暖衬线)/ 草稿(米纸手写体)。
+ * 三套都是浅色系;若将来加暗皮肤,加令牌块 + html.dark 即可。
+ */
+:root {
+  color-scheme: light;
+  --tk-bg: #f1f7f4;
+  --tk-blob-a: rgb(14 138 109 / 0.13);
+  --tk-blob-b: rgb(20 184 166 / 0.11);
+  --tk-grid: rgb(20 110 90 / 0.07);
+  --tk-surface: rgb(255 255 255 / 0.74);
+  --tk-line: rgb(20 110 90 / 0.16);
+  --tk-fg: #1d3129;
+  --tk-muted: #5f7a6e;
+  --tk-accent: #0e8a6d;
+  --tk-accent-deep: #0b6d56;
+  --tk-accent-from: #0e8a6d;
+  --tk-accent-to: #14b8a6;
+  --tk-accent-soft: rgb(14 138 109 / 0.09);
+  --tk-glow: rgb(14 138 109 / 0.28);
+  --tk-card-shadow: 0 1px 2px rgb(15 70 55 / 0.08);
+  --tk-font-display: "Sora Variable", "Noto Sans SC", ui-sans-serif, sans-serif;
+  --tk-radius: 1rem;
+}
+
+:root[data-style="dawn"] {
+  color-scheme: light;
+  --tk-bg: #faf6f1;
+  --tk-blob-a: rgb(251 191 36 / 0.2);
+  --tk-blob-b: rgb(251 113 133 / 0.14);
+  --tk-grid: rgb(140 110 80 / 0.05);
+  --tk-surface: rgb(255 255 255 / 0.72);
+  --tk-line: rgb(180 140 100 / 0.22);
+  --tk-fg: #3f3529;
+  --tk-muted: #8c7f6d;
+  --tk-accent: #b45309;
+  --tk-accent-deep: #92400e;
+  --tk-accent-from: #f59e0b;
+  --tk-accent-to: #f43f5e;
+  --tk-accent-soft: rgb(180 83 9 / 0.08);
+  --tk-glow: rgb(244 63 94 / 0.3);
+  --tk-card-shadow: 0 1px 2px rgb(120 90 60 / 0.12);
+  --tk-font-display: "Fraunces Variable", "Noto Sans SC", Georgia, serif;
+  --tk-radius: 1rem;
+}
+
+:root[data-style="draft"] {
+  color-scheme: light;
+  --tk-bg: #f5f1e6;
+  --tk-blob-a: transparent;
+  --tk-blob-b: transparent;
+  --tk-grid: rgb(140 120 90 / 0.09);
+  --tk-surface: #fffdf6;
+  --tk-line: #e0d5bd;
+  --tk-fg: #3a3226;
+  --tk-muted: #8f8067;
+  --tk-accent: #3d7a5c;
+  --tk-accent-deep: #2f5f47;
+  --tk-accent-from: #e0765a;
+  --tk-accent-to: #4d9e6a;
+  --tk-accent-soft: rgb(61 122 92 / 0.09);
+  --tk-glow: rgb(90 70 40 / 0.18);
+  --tk-card-shadow: 2px 3px 0 rgb(90 70 40 / 0.1);
+  --tk-font-display: "ZCOOL KuaiLe", "Noto Sans SC", cursive;
+  --tk-radius: 0.5rem;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  background-color: var(--tk-bg);
+  color: var(--tk-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 皮肤氛围:双色光斑 + 基板网格 */
+.app-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(900px 420px at 12% -8%, var(--tk-blob-a), transparent 62%),
+    radial-gradient(760px 400px at 88% -12%, var(--tk-blob-b), transparent 58%),
+    linear-gradient(var(--tk-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--tk-grid) 1px, transparent 1px);
+  background-size: auto, auto, 34px 34px, 34px 34px;
+}
+
+/* 卡片跟随皮肤 */
+.tk-card {
+  background: var(--tk-surface);
+  border: 1px solid var(--tk-line);
+  border-radius: var(--tk-radius);
+  box-shadow: var(--tk-card-shadow);
+  backdrop-filter: blur(10px);
+}
+
+.tk-card-hover {
+  transition: all 0.25s ease;
+}
+.tk-card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px -8px var(--tk-glow);
+}
+
+.accent-gradient {
+  background-image: linear-gradient(135deg, var(--tk-accent-from), var(--tk-accent-to));
+}
+.text-gradient {
+  background-image: linear-gradient(135deg, var(--tk-accent-from), var(--tk-accent-to));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.accent-fg {
+  color: var(--tk-accent);
+}
+.accent-soft {
+  background: var(--tk-accent-soft);
+}
+.tk-display {
+  font-family: var(--tk-font-display);
+}
+
+/* 正文排版(学习的主体是内容,排版保持安静) */
+.prose-lesson {
+  line-height: 1.85;
+}
+.prose-lesson strong {
+  font-weight: 600;
+  color: var(--tk-accent-deep);
+}
+.prose-lesson code {
+  border-radius: 0.375rem;
+  background: var(--tk-accent-soft);
+  padding: 0.125rem 0.375rem;
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  color: var(--tk-accent-deep);
+}
+
+/* KaTeX 公式块 */
+.formula-block .katex-display {
+  margin: 0;
+}
+
+@keyframes shake-wrong {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+.animate-shake {
+  animation: shake-wrong 0.32s ease-in-out;
+}
+
+@keyframes pop-right {
+  0% { transform: scale(0.96); }
+  60% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+.animate-pop {
+  animation: pop-right 0.3s ease-out;
+}

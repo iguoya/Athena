@@ -46,7 +46,7 @@
           "weight": 3,
           "grade": "S",
           "kp": {
-            "id": "sc.esd.mcu",
+            "id": "esd.mcu",
             "difficulty": 3,
             "mastery_goal": "proficient",
             "knowledge_type": "concept",
@@ -61,7 +61,7 @@
           "weight": 3,
           "grade": "S",
           "kp": {
-            "id": "sc.esd.memory",
+            "id": "esd.memory",
             "difficulty": 3,
             "mastery_goal": "proficient",
             "knowledge_type": "concept",
@@ -76,7 +76,7 @@
           "weight": 3,
           "grade": "S",
           "kp": {
-            "id": "sc.esd.bus",
+            "id": "esd.bus",
             "difficulty": 3,
             "mastery_goal": "proficient",
             "knowledge_type": "concept",
@@ -114,7 +114,7 @@
           "weight": 3,
           "grade": "S",
           "kp": {
-            "id": "sc.esd.task",
+            "id": "esd.task",
             "difficulty": 3,
             "mastery_goal": "proficient",
             "knowledge_type": "skill",
@@ -129,15 +129,12 @@
           "weight": 2,
           "grade": "A",
           "kp": {
-            "id": "sc.os.rtos",
+            "id": "esd.os.rtos",
             "difficulty": 3,
             "mastery_goal": "understand",
             "knowledge_type": "strategy",
-            "requires": [
-              "sc.os.process",
-              "sc.os.sched"
-            ],
-            "guide_line": "这是通往嵌入式专有课程的桥:实时性怎么改变调度与同步的取舍,概念级掌握即可。"
+            "requires": [],
+            "guide_line": "这是通往嵌入式专有课程的桥:实时性怎么改变调度与同步的取舍,概念级掌握即可。先修:进程状态与调度算法的基本概念(在「软考·软件设计师」应用的 os-process/os-sched 学)。"
           },
           "past_exam_knowledge": "实时|任务"
         }

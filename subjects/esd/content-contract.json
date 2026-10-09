@@ -1,0 +1,16 @@
+{
+  "_": "跨应用「内容必须有出处」检查的接入声明(主仓库 ADR 0043、0089)。判分条目是题目(带 options 的对象);教学正文块不是判分条目。档位 exam:嵌入式系统设计师对着真实认证考试。当前为「只报告」模式(ADR 0089 记为考试档欠账,从 softcert 拆出时继承):quizzes 里 16 道章节考核是 adapted(依教材改编)与 authored 存量,其中 authored 4 道必然触发「一节内自造过半」配额;past-exams 已入库 11 卷 verbatim 真题(本机自用不分发)。把这批存量替换为对应章节的真题精选后,把 blocking 改回 true。",
+  "tier": "exam",
+  "_items": "题目(stem+options+answer)是判分条目;每题必有 source:自造 authored + why + locator,改编 adapted + 依据 + locator,真题 verbatim + 卷 id + 题号。",
+  "contentDir": "content",
+  "catalog": "sources.json",
+  "sourceField": "source",
+  "itemMarkers": [
+    "options"
+  ],
+  "idFields": [
+    "id"
+  ],
+  "blocking": false,
+  "legacyUnsourced": []
+}

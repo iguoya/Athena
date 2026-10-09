@@ -1,0 +1,46 @@
+{
+  "about": "内容来源登记(ADR 0043)。菜单目录对齐官方教材:每章即教材的章,章节内容锚定教材章节号;判分题目以历年真题为最高出处,自造/改编题(authored/adapted)仅作章节考核的存量补充。本应用自用不分发,教材与真题的完整复制限于本机使用。",
+  "sources": [
+    {
+      "id": "textbook-esd-2ed",
+      "name": "《嵌入式系统设计师教程(第 2 版)》",
+      "publisher": "清华大学出版社",
+      "year": 2019,
+      "isbn": "9787302536970",
+      "use": "bundle",
+      "notes": "嵌入式系统设计师方向菜单目录的依据:全书 11 章(崔西宁、张亮、张淑平主编,595 页;目录已对纸质版逐章核对)。章内 locator 用「嵌入式教材 §章.节」引用。"
+    },
+    {
+      "id": "syllabus-esd-2019",
+      "name": "软考中级·嵌入式系统设计师考试大纲(2019 版)",
+      "use": "bundle",
+      "notes": "同上,嵌入式方向。"
+    },
+    {
+      "id": "past-exam-web-qicoder",
+      "name": "软考真题电子书(qicoder)·嵌入式系统设计师",
+      "url": "https://ebook.qicoder.com/嵌入式系统设计师",
+      "use": "bundle",
+      "notes": "GitBook 网页版历年真题。实际覆盖 2010 下–2020 下(2018 上下午、2019 下午带解析),已停更;2021 之后的卷转 rkpass/lightsoft/希赛。2026-10 复核。"
+    },
+    {
+      "id": "past-exam-web-rkpass",
+      "name": "软考在线(rkpass)·嵌入式系统设计师真题库",
+      "url": "https://www.rkpass.cn/tk_list_download_1.jsp?kemu_id=13",
+      "use": "bundle",
+      "notes": "嵌入式栏目 2014–2026 逐年逐场,是嵌入式 2021 上之后断层段(2023 上、2024 上)的现成来源;网页在线可查,自定义批量下载为 VIP 专享,单卷内容可人工核对录入。2026-10 复核。"
+    },
+    {
+      "id": "real-exam-stat",
+      "name": "近五年软考真题分值统计(公开培训资料汇总)",
+      "use": "bundle",
+      "notes": "各章 exam_weight 与 grade 的取值依据。派生数字,不是学习内容本身。"
+    },
+    {
+      "id": "self-authored",
+      "name": "本应用自造考点题(存量)",
+      "use": "bundle",
+      "notes": "教材对齐改造前录入的 48 道章节练习题,全部 authored + 考纲 locator,保留作存量;新题一律以真题 verbatim 优先,不再新增自造题。"
+    }
+  ]
+}
