@@ -26,6 +26,8 @@ content/
 ├── <course>/course.json    课程内章节树 + 知识点评级 + 考纲权重
 ├── <course>/chapters/*.json   章节教学内容(blocks)
 ├── <course>/quizzes/*.json    章节课后考核题(带出处)
+├── textbooks/              官方教材 OCR 原文(swd5ed 12 章 / esd2ed 11 章,按章与节)
+├── references/             参考资料 OCR 文本(考试大纲、专业英语词汇、三色笔记)
 └── past-exams/             历年真题演练(导入格式见其 README)
 ```
 
