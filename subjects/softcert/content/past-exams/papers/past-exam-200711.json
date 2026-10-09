@@ -1,0 +1,53 @@
+{
+  "id": "past-exam-200711",
+  "title": "2007 年下半年 综合知识",
+  "year": 2007,
+  "session": "下半年",
+  "subject": "综合知识",
+  "source_note": "软考真题电子书(qicoder)整理,题目与答案 verbatim",
+  "source_ref": {
+    "relation": "verbatim",
+    "sourceId": "past-exam-web-qicoder",
+    "locator": "notes/200711软设上午真题.html"
+  },
+  "questions": [
+    {
+      "id": "past-exam-200711.q4",
+      "no": 4,
+      "stem": "若内存地址区间为4000H～43FFH，每个存贮单元可存储16位二进制数，该内存区域用4片存储器芯片构成，则构成该内存所用的存储器芯片的容量是（ ）。",
+      "options": [
+        "512×16bit",
+        "256×8bit",
+        "256×16bit",
+        "1024×8bit"
+      ],
+      "answer": 2,
+      "explanation": "首先将地址编码转换为十进制数，4000H(16)=16384(10)， 43FFH(16)=17407(10)，然后令两个地址码相减再加1，即得到这段地址空间中存储单元的个数。17407-16384+1=1024，因此共有1024个内存单元。1024 × 16b/4=256 ×16b，因此芯片的容量为256× 16b。",
+      "knowledge": "",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-200711 第 4 题"
+      }
+    },
+    {
+      "id": "past-exam-200711.q18",
+      "no": 18,
+      "stem": "表达式“X = A + B ×（C - D）/E”的后缀表示形式可以为（ ）（运算符优先级相同时，遵循左结合的原则）。",
+      "options": [
+        "XAB + CDE/-´=",
+        "XA+BC-DE/´=",
+        "XABCD-´E/+=",
+        "XABCDE+´-/="
+      ],
+      "answer": 2,
+      "explanation": "本题考查程序语言的基础知识。 表达式采用后缀表示时，运算对象写在前面，运算符号写在运算对象的后面，这样可根据运算符号在表达式中的顺序进行计算，所以无需使用括号。对于表达式X=A+B×（C-D）/E，其运算过程为先将C减去D，其结果与B相乘，之后除以E，再与A相加并将最后的结果赋给X。",
+      "knowledge": "",
+      "source": {
+        "relation": "verbatim",
+        "sourceId": "past-exam-web-qicoder",
+        "locator": "past-exam-200711 第 18 题"
+      }
+    }
+  ]
+}
