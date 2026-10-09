@@ -1,8 +1,9 @@
 <script setup lang="ts">
-// 课程页:章树 + 节评级 + 掌握进度。空章是「待建」占位,可直接读教材原文。
+// 课程页 = 学习路径时间线:章是轨道上的里程碑,节是路径节点,按教材章序
+// 排成一条纵向路径。与 softcert 的章节列表布局刻意区分(ADR 0090)。
 import { onMounted, ref } from "vue";
 import { motion } from "motion-v";
-import { ChevronRight, FileQuestion, BookOpen, Hammer } from "lucide-vue-next";
+import { FileQuestion, BookOpen, Hammer } from "lucide-vue-next";
 import { course, masteryOf } from "../content";
 import { attemptsSummary } from "../db";
 import type { KpSummary } from "../types";
@@ -22,7 +23,7 @@ onMounted(() => {
 
 <template>
   <div class="space-y-6">
-    <section class="-mx-5 px-5 pb-8 pt-10">
+    <section class="pb-2 pt-2">
       <div class="flex items-center gap-2 text-[12.5px]" style="color: var(--tk-muted)">
         <GradeBadge :value="course.exam.grade" />
         <span>{{ course.exam.subject }} · {{ course.exam.score_range }}</span>
@@ -43,34 +44,58 @@ onMounted(() => {
       </p>
     </section>
 
-    <section class="space-y-8">
+    <!-- 学习路径:纵向时间线 -->
+    <section class="relative">
+      <div
+        class="absolute bottom-6 left-[21px] top-6 w-0.5 rounded-full"
+        style="background: var(--tk-line)"
+      />
+
       <motion.div
         v-for="(ch, ci) in course.chapters"
         :key="ch.id"
+        class="relative pb-9 last:pb-2"
         :initial="{ opacity: 0, y: 12 }"
         :animate="{ opacity: 1, y: 0 }"
-        :transition="{ delay: 0.04 * ci, duration: 0.35 }"
+        :transition="{ delay: 0.05 * ci, duration: 0.35 }"
       >
-        <div class="mb-3 flex flex-wrap items-baseline gap-2 px-1">
-          <span class="rounded-lg px-2 py-0.5 text-[13px] font-bold text-white" :style="{ background: course.accent }">
-            第 {{ ch.no }} 章
-          </span>
-          <h2 class="text-[17px] font-bold">{{ ch.title }}</h2>
-          <span class="text-[11.5px]" style="color: color-mix(in srgb, var(--tk-muted) 75%, transparent)">
-            {{ ch.textbook_ref.locator }} · {{ course.textbook.title }}
-          </span>
-          <span
-            v-if="ch.sections.length === 0"
-            class="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-[11.5px] font-medium text-amber-600 ring-1 ring-amber-200"
+        <!-- 章 = 里程碑 -->
+        <div class="flex items-center gap-4">
+          <div
+            v-if="ch.sections.length > 0"
+            class="z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[15px] font-bold text-white shadow-md"
+            :style="{ background: course.accent }"
           >
-            <Hammer :size="11" /> 本章待建
-          </span>
+            {{ ch.no }}
+          </div>
+          <div
+            v-else
+            class="z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-dashed text-[15px] font-bold"
+            style="border-color: var(--tk-line); background: var(--tk-bg); color: var(--tk-muted)"
+          >
+            {{ ch.no }}
+          </div>
+          <div class="min-w-0">
+            <div class="flex flex-wrap items-baseline gap-2">
+              <h2 class="text-[17px] font-bold">{{ ch.title }}</h2>
+              <span
+                v-if="ch.sections.length === 0"
+                class="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-[11.5px] font-medium text-amber-600 ring-1 ring-amber-200"
+              >
+                <Hammer :size="11" /> 待建
+              </span>
+            </div>
+            <div class="mt-0.5 text-[11.5px]" style="color: color-mix(in srgb, var(--tk-muted) 75%, transparent)">
+              {{ ch.textbook_ref.locator }} · 《{{ course.textbook.title }}》
+            </div>
+            <p v-if="ch.note" class="mt-1 max-w-3xl text-[12.5px] leading-relaxed" style="color: var(--tk-muted)">
+              {{ ch.note }}
+            </p>
+          </div>
         </div>
-        <p v-if="ch.note" class="mb-3 px-1 text-[12.5px] leading-relaxed" style="color: var(--tk-muted)">
-          {{ ch.note }}
-        </p>
 
-        <div v-if="ch.sections.length > 0" class="space-y-2.5">
+        <!-- 节 = 路径节点 -->
+        <div v-if="ch.sections.length > 0" class="ml-[60px] mt-3 space-y-2.5">
           <div v-for="sec in ch.sections" :key="sec.id" class="tk-card tk-card-hover flex items-center gap-4 p-4">
             <button type="button" class="min-w-0 flex-1 text-left" @click="go({ kind: 'topic', sectionId: sec.id })">
               <div class="flex flex-wrap items-center gap-2">
@@ -99,19 +124,18 @@ onMounted(() => {
                 <FileQuestion :size="17" />
               </button>
               <ProgressRing :value="masteryOf(sec.kp?.id, summary)" :color="course.accent" />
-              <ChevronRight :size="18" style="color: color-mix(in srgb, var(--tk-muted) 55%, transparent)" />
             </div>
           </div>
         </div>
 
-        <div v-else class="space-y-2">
+        <div v-else class="ml-[60px] mt-3">
           <div
             class="rounded-2xl border border-dashed px-4 py-4 text-center text-[13px]"
             style="border-color: var(--tk-line); color: var(--tk-muted)"
           >
             教学内容建设中——以下可直接阅读本章教材原文
           </div>
-          <details v-if="textbookTextOfChapter(ch.id)" class="tk-card px-4 py-3">
+          <details v-if="textbookTextOfChapter(ch.id)" class="tk-card mt-2.5 px-4 py-3">
             <summary class="cursor-pointer select-none text-[13px] font-semibold" style="color: var(--tk-muted)">
               教材原文({{ ch.textbook_ref.locator }},《{{ course.textbook.title }}》忠实转录)
             </summary>

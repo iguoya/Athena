@@ -51,9 +51,9 @@ function jump(qid: string) {
 
 <template>
   <div class="pt-6">
-    <!-- 顶部 sticky 工具条 -->
+    <!-- 顶部 sticky 工具条(顶栏 h-14 之下) -->
     <div
-      class="sticky top-0 z-10 -mx-6 mb-6 border-b px-6 py-3 backdrop-blur"
+      class="sticky top-14 z-10 -mx-6 mb-6 border-b px-6 py-3 backdrop-blur"
       style="border-color: var(--tk-line); background: color-mix(in srgb, var(--tk-bg) 82%, transparent)"
     >
       <div class="mx-auto flex max-w-6xl flex-wrap items-center gap-3">

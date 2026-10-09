@@ -45,7 +45,7 @@ const done = graded.filter((s) => masteryOf(s.kp!.id, summary.value) >= 0.6).len
 <template>
   <div class="space-y-8">
     <!-- hero -->
-    <section class="-mx-5 px-5 pb-10 pt-12">
+    <section class="pb-8 pt-4">
       <motion.div :initial="{ opacity: 0, y: 14 }" :animate="{ opacity: 1, y: 0 }" :transition="{ duration: 0.5 }">
         <div class="flex flex-wrap items-center gap-2">
           <span class="rounded-full accent-gradient px-3 py-1 text-[12px] font-bold text-white shadow">
