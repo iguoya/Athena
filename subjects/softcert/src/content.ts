@@ -1,7 +1,7 @@
 // 内容在构建期静态打进 bundle:发行包不携带 content 资源,类型错误在 tsc 就拦下。
+// 嵌入式系统设计师(esd)课程已拆出到 subjects/esd(ADR 0090),本应用只承载软考课程。
 import registryJson from "../content/courses.json";
 import swdCourseJson from "../content/swd/course.json";
-import esdCourseJson from "../content/esd/course.json";
 import papersJson from "../content/past-exams/papers.json";
 import type {
   ChapterLesson,
@@ -23,11 +23,6 @@ import osSchedLesson from "../content/swd/chapters/os-sched.json";
 import osMemoryLesson from "../content/swd/chapters/os-memory.json";
 import osFileLesson from "../content/swd/chapters/os-file.json";
 import osDeviceLesson from "../content/swd/chapters/os-device.json";
-import osRtosLesson from "../content/esd/chapters/os-rtos.json";
-import esdMcuLesson from "../content/esd/chapters/esd-mcu.json";
-import esdMemoryLesson from "../content/esd/chapters/esd-memory.json";
-import esdBusLesson from "../content/esd/chapters/esd-bus.json";
-import esdTaskMgmtLesson from "../content/esd/chapters/esd-task-mgmt.json";
 
 import csNumberQuiz from "../content/swd/quizzes/cs-number.json";
 import csCpuQuiz from "../content/swd/quizzes/cs-cpu.json";
@@ -40,10 +35,6 @@ import osSchedQuiz from "../content/swd/quizzes/os-sched.json";
 import osMemoryQuiz from "../content/swd/quizzes/os-memory.json";
 import osFileQuiz from "../content/swd/quizzes/os-file.json";
 import osDeviceQuiz from "../content/swd/quizzes/os-device.json";
-import osRtosQuiz from "../content/esd/quizzes/os-rtos.json";
-import esdMcuQuiz from "../content/esd/quizzes/esd-mcu.json";
-import esdMemoryQuiz from "../content/esd/quizzes/esd-memory.json";
-import esdBusQuiz from "../content/esd/quizzes/esd-bus.json";
 
 const lessons: Record<string, ChapterLesson> = Object.fromEntries(
   [
@@ -58,11 +49,6 @@ const lessons: Record<string, ChapterLesson> = Object.fromEntries(
     osMemoryLesson,
     osFileLesson,
     osDeviceLesson,
-    osRtosLesson,
-    esdMcuLesson,
-    esdMemoryLesson,
-    esdBusLesson,
-    esdTaskMgmtLesson,
   ].map((l) => [l.section_id, l as unknown as ChapterLesson]),
 );
 
@@ -79,19 +65,12 @@ const quizzes: Record<string, ChapterQuiz> = Object.fromEntries(
     osMemoryQuiz,
     osFileQuiz,
     osDeviceQuiz,
-    osRtosQuiz,
-    esdMcuQuiz,
-    esdMemoryQuiz,
-    esdBusQuiz,
   ].map((q) => [q.section_id, q as unknown as ChapterQuiz]),
 );
 
 export const registry = registryJson as unknown as CourseRegistry;
 
-export const courses: Course[] = [
-  swdCourseJson as unknown as Course,
-  esdCourseJson as unknown as Course,
-];
+export const courses: Course[] = [swdCourseJson as unknown as Course];
 
 export const pastPapers = papersJson as unknown as PastPaperRegistry;
 

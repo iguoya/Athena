@@ -2,7 +2,7 @@
   "id": "softcert",
   "title": "软考",
   "group": "软考",
-  "description": "软考中级备考：计算机系统基础与操作系统两门共用课程起步，考纲对齐、分值驱动，章节考核与历年真题演练。与驾考同构——以考试为学科。",
+  "description": "软考中级·软件设计师备考:计算机系统基础与操作系统等公共课程起步,考纲对齐、分值驱动,章节考核与历年真题演练。与驾考同构——以考试为学科。嵌入式系统设计师已拆到 subjects/esd(仓库 ADR 0090)。",
   "icon": {
     "type": "theme",
     "name": "certificate-applet-symbolic",
@@ -22,11 +22,18 @@
     "prepare": [
       {
         "when_missing": "node_modules",
-        "run": ["npm", "install"],
+        "run": [
+          "npm",
+          "install"
+        ],
         "label": "安装前端依赖"
       }
     ],
-    "run": ["npm", "run", "tauri:dev"],
+    "run": [
+      "npm",
+      "run",
+      "tauri:dev"
+    ],
     "ready": {
       "http": "http://localhost:1450"
     },

@@ -47,7 +47,8 @@ export function PastExamsPage({ go }: { go: (v: View) => void }) {
         <p className="mt-2 text-[13px] leading-relaxed text-ink/60">
           用 <code className="rounded bg-brand-50 px-1.5 py-0.5 font-mono text-[12px]">scripts/import-past-exam.py</code>{" "}
           从 qicoder 电子书导入更多年份(--list 看可导入的卷);软设真题 PDF 全套
-          (2009–2023)在 huafeishuzhi/exam-ruankao 仓库,嵌入式真题在同站电子书。
+          (2009–2023)在 huafeishuzhi/exam-ruankao 仓库。嵌入式系统设计师真题已拆到
+          subjects/esd 应用。
         </p>
       </section>
     </div>
