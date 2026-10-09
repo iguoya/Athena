@@ -23,6 +23,7 @@
 | [0052](0052-incentives-and-records-cooperate.md) | 激励与统计是同一条回路，必须互相配合 | 已接受（裁定 mathematics 0011 待定项；对齐 english 0009） |
 | [0058](0058-content-driven-block-based-ui.md) | 内容驱动 UI：有限块类型胜过按章手写整页 | 已接受（统一 dsa 块架构与 cpp 反面案例） |
 | [0059](0059-experiments-ship-skeletons-not-blank-slates.md) | 教学实验给骨架，不给白板 | 已接受（统一 dsa 0003、cpp 0053、mathematics 0014） |
+| [0094](0094-retrieval-spacing-interleaving-lead-curriculum.md) | 检索练习、间隔重复、交错练习定为课程设计的主导学习策略，自我解释与双重编码为辅；界面与内容取舍判据化，按成本五档改造；学习风格适配明确不做 | 已接受；不设自动门禁 |
 
 ## 应用边界与启动
 
