@@ -192,11 +192,16 @@ pub fn layout(apps: &[App]) -> MindMap {
         })
         .collect();
 
-    // 1. 分组：按首次出现的顺序，省略 group 的归「其他」。挂靠节点不占扇区，
-    // 但领域归属沿用挂靠者的（画布上它们贴着挂靠者）。
+    // 1. 分组：按首次出现的顺序，省略 group 的归「其他」。领域胶囊只由普通成员
+    // 登记——挂靠节点不占扇区，画布上贴着挂靠者外一圈，领域归属沿用挂靠者；
+    // 它自带的 group 若也照登记（数据库、算法这些子课程组全是挂靠者），内环会
+    // 留下一批没有任何节点连出来的空胶囊。
     let mut group_names: Vec<String> = Vec::new();
-    let mut group_of: Vec<usize> = Vec::with_capacity(apps.len());
-    for app in apps {
+    let mut group_of: Vec<usize> = vec![0; apps.len()];
+    for (i, app) in apps.iter().enumerate() {
+        if attached_to[i].is_some() {
+            continue;
+        }
         let name = app
             .group
             .as_deref()
@@ -211,7 +216,7 @@ pub fn layout(apps: &[App]) -> MindMap {
                 group_names.len() - 1
             }
         };
-        group_of.push(index);
+        group_of[i] = index;
     }
     for (i, target) in attached_to.iter().enumerate() {
         if let Some(p) = target {
@@ -683,6 +688,21 @@ mod tests {
         assert!(map.groups.iter().any(|g| g.name == "算法"));
         assert_clean(&map);
         let _ = softcert;
+    }
+
+    #[test]
+    fn 挂靠节点的组名不生成空分组() {
+        // 子课程的 group 与挂靠者不同：照登记的话内环会出现没有任何节点的胶囊。
+        let hub = app("hub", Some("大类"), None, &[]);
+        let mut sub = app("sub", Some("子课程组"), None, &[]);
+        sub.parent = Some("hub".to_string());
+        let map = layout(&[hub, sub]);
+        assert_eq!(map.groups.len(), 1, "挂靠节点自带的组名不该留在领域圈上");
+        assert_eq!(map.groups[0].name, "大类");
+        assert_eq!(map.groups[0].apps, 1);
+        // 领域归属仍沿用挂靠者：着色跟大类走。
+        assert_eq!(map.nodes.iter().find(|n| n.id == "sub").unwrap().group, 0);
+        assert_clean(&map);
     }
 
     #[test]
