@@ -2,12 +2,14 @@
 // 节学习页 = 阅读器:与 softcert 的「大卡片包内容」刻意区分——内容块直接
 // 铺在学习流上,列宽收窄,标题区紧凑,节末内联考核入口。块自身的视觉
 // (表格卡/公式卡/callout)是内容元素,不是容器。
-import { computed, onMounted, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { ArrowLeft, ArrowRight, Link2, BookOpen, PenLine } from "lucide-vue-next";
-import { course, findSection, lessonOf } from "../content";
+import { course, findSection, lessonOf, pastExamQuestions, quizOf } from "../content";
 import { textbookTextOf } from "../textbook-text";
 import { saveSetting } from "../db";
 import Blocks from "../components/Blocks.vue";
+import QuizRunner from "../components/QuizRunner.vue";
+import PaperRunner from "../components/PaperRunner.vue";
 import { GradeBadge, WeightStars, DifficultyDots, MasteryGoalBadge, KnowledgeTypeBadge } from "../components/ui";
 import type { View } from "./types";
 
@@ -26,6 +28,16 @@ const prev = computed(() => (idx.value > 0 ? flat[idx.value - 1] : null));
 const next = computed(() => (idx.value < flat.length - 1 ? flat[idx.value + 1] : null));
 const requires = computed(() => current.value.section.kp?.requires ?? []);
 const textbookText = computed(() => textbookTextOf(props.sectionId));
+
+// 立即检索（P2）：讲解读完立刻作答，讲解与检索 1:1 绑定在同一页里。
+// 配置了 past_exam_knowledge 的节走真题精选整卷（延迟反馈），其余单题聚焦（即时反馈）。
+const retrieval = ref(false);
+const pattern = computed(() => current.value.section.past_exam_knowledge);
+const pastQuestions = computed(() => (pattern.value ? pastExamQuestions(pattern.value) : []));
+const localQuiz = computed(() => (pastQuestions.value.length === 0 ? quizOf(props.sectionId) : null));
+const questionCount = computed(
+  () => pastQuestions.value.length || localQuiz.value?.questions.length || 0,
+);
 
 // 续读:每次进入章节就记下位置,首页行动卡据此放「接着学」。
 function remember() {
@@ -100,12 +112,34 @@ watch(() => props.sectionId, remember);
 
     <!-- 节末:内联考核入口 + 上下节导航 -->
     <div class="mt-8 space-y-4">
+      <!-- 立即检索（P2）：讲解读完立刻作答；展开后可收起回讲义 -->
+      <PaperRunner
+        v-if="retrieval && pastQuestions.length > 0"
+        :title="`${current.section.title} · 历年真题精选(${pastQuestions.length} 题)`"
+        :questions="pastQuestions"
+        mode="chapter"
+        :course="course.id"
+        :chapter-id="current.section.id"
+        :kp-id="current.section.kp?.id ?? current.section.id"
+        @exit="retrieval = false"
+      />
+      <QuizRunner
+        v-else-if="retrieval && localQuiz"
+        :title="`${current.section.title} · 立即检索`"
+        :questions="localQuiz.questions"
+        mode="chapter"
+        :course="course.id"
+        :chapter-id="current.section.id"
+        :kp-id="current.section.kp?.id ?? current.section.id"
+        @exit="retrieval = false"
+      />
       <button
+        v-else-if="questionCount > 0"
         type="button"
         class="flex w-full items-center justify-center gap-2 rounded-full py-3 text-[14.5px] font-semibold text-white shadow-md transition-transform hover:scale-[1.01] active:scale-[0.99] accent-gradient"
-        @click="go({ kind: 'quiz', sectionId: props.sectionId })"
+        @click="retrieval = true"
       >
-        <PenLine :size="16" /> 学完了,来一趟随堂考核
+        <PenLine :size="16" /> 读完立即检索 · {{ current.section.title }}（{{ questionCount }} 题）
       </button>
 
       <div class="grid gap-3 sm:grid-cols-2">
