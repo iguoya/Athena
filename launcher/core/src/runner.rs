@@ -6,7 +6,9 @@ use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::time::Duration;
 
-use sysinfo::{ProcessRefreshKind, RefreshKind, System};
+use sysinfo::{
+    ProcessesToUpdate, ProcessRefreshKind, RefreshKind, System, UpdateKind,
+};
 
 use crate::manifest::{App, ReadySpec};
 use crate::paths;
@@ -48,12 +50,90 @@ pub struct ProcessSnapshot {
     system: System,
 }
 
+/// 状态探测只认两样：可执行文件路径（认窗口进程）与命令行（认构建进程）。
+/// `everything()` 连内存、磁盘计数、CPU 时间一起刷，本机实测一轮 0.5–6.6
+/// 秒——常驻的探测每两秒一轮，这份浪费直接变成界面的「未响应」。
+fn process_refresh_kind() -> ProcessRefreshKind {
+    ProcessRefreshKind::nothing()
+        .with_exe(UpdateKind::Always)
+        .with_cmd(UpdateKind::Always)
+}
+
 impl ProcessSnapshot {
     pub fn take() -> Self {
-        let system = System::new_with_specifics(
-            RefreshKind::nothing().with_processes(ProcessRefreshKind::everything()),
+        let mut system = System::new();
+        system.refresh_processes_specifics(
+            ProcessesToUpdate::All,
+            true,
+            process_refresh_kind(),
         );
         Self { system }
+    }
+
+    /// 在已有快照上再刷一轮：进程表增量更新，比 take() 便宜得多。常驻的
+    /// 探测循环走这里，别每轮从零建表。
+    pub fn refresh(&mut self) {
+        self.system.refresh_processes_specifics(
+            ProcessesToUpdate::All,
+            true,
+            process_refresh_kind(),
+        );
+    }
+
+    /// 一轮把全部应用的状态算完：进程表只扫一遍，每个进程只取一次 exe 与
+    /// 命令行。逐应用调 state() 会把这两样各重取 N 遍，本机实测单个
+    /// state() 就要 0.6 秒，常驻探测扛不住。返回顺序与 `apps` 一致。
+    pub fn states(&self, apps: &[App]) -> Vec<RunState> {
+        let mut windows = vec![false; apps.len()];
+        let mut busy = vec![false; apps.len()];
+        let prefixes: Vec<PathBuf> = apps.iter().map(|app| app.match_prefix()).collect();
+        // 命令行认目录，needle 末尾必须带分隔符：`subjects/c` 与 `subjects/cpp`
+        // 这类前缀包含关系少了它会互相误判（同 command_line_belongs_to）。
+        let needles: Vec<String> = apps
+            .iter()
+            .map(|app| format!("{}{}", app.dir.display(), std::path::MAIN_SEPARATOR))
+            .collect();
+
+        for (_pid, process) in self.system.processes() {
+            if let Some(exe) = process.exe() {
+                for (index, app) in apps.iter().enumerate() {
+                    if windows[index] {
+                        continue;
+                    }
+                    let by_path = exe.starts_with(&prefixes[index]);
+                    let by_name = app.dev.binary.as_deref().is_some_and(|name| {
+                        exe.file_stem().is_some_and(|stem| stem == name)
+                    });
+                    windows[index] = by_path || by_name;
+                }
+            }
+            if !busy.iter().all(|&hit| hit) {
+                for part in process.cmd() {
+                    let part = part.to_string_lossy();
+                    for (index, needle) in needles.iter().enumerate() {
+                        if !busy[index] && part.contains(needle.as_str()) {
+                            busy[index] = true;
+                        }
+                    }
+                }
+            }
+            if windows.iter().all(|&hit| hit) && busy.iter().all(|&hit| hit) {
+                break;
+            }
+        }
+
+        apps.iter()
+            .enumerate()
+            .map(|(index, app)| {
+                let window_present = windows[index];
+                // 窗口还没出来时不去连端口：停着的应用不该每两秒探一次 localhost。
+                let http_up = match &app.dev.ready {
+                    ReadySpec::Http(url) if window_present => reachable(url),
+                    _ => false,
+                };
+                classify_run_state(window_present, busy[index], &app.dev.ready, http_up)
+            })
+            .collect()
     }
 
     /// 窗口进程：可执行文件落在应用自己的目录下。不靠进程名匹配——名字会改，

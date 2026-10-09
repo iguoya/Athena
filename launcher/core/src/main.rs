@@ -153,6 +153,9 @@ fn listing_json(apps: &[App], snapshot: &ProcessSnapshot) -> String {
                 "dir": app.dir,
                 "matchPrefix": app.match_prefix(),
                 "binary": app.dev.binary.clone().unwrap_or_default(),
+                // ADR 0093：隐藏是显示层的事，脚本与依赖方仍可见。
+                "hidden": app.hidden,
+                "parent": app.parent,
                 "runnable": app.is_runnable(),
                 "state": snapshot.state(app).key(),
                 "log": paths::log_file(&app.id),

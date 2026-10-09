@@ -1,26 +1,32 @@
 //! Athena 跨平台启动器（macOS / Ubuntu / Windows）。
 //!
-//! 界面在 `ui/launcher.slint`，执行逻辑全在 `launcher`——这里只做三件事：
-//! 定时把状态刷进界面、把点击转成一次 open/stop、把构建进度显示出来。
-//! 这样它和终端的 `launcher`、macOS 菜单栏版走的是同一条执行路径。
+//! 界面在 `ui/launcher.slint`，执行逻辑全在 `launcher`——这里只做四件事：
+//! 监听清单文件的变化、定时把状态刷进界面、把点击转成一次 open/stop、把构建
+//! 进度显示出来。这样它和终端的 `launcher`、macOS 菜单栏版走的是同一条执行路径。
 //!
-//! 常驻形态是托盘。关窗口、debug 构建、测试阶段都不能把进程带走——
-//! 只用 `window.run()` 会在最后一扇窗藏起来时退出，托盘图标跟着没了。
+//! 清单是热的（ADR 0001）：仓库里新增、删除、修改 `app.json`，文件通知醒来，
+//! 去抖一秒后重扫清单、比指纹，真的变了才重建界面与托盘。常驻形态是托盘。
+//! 关窗口、debug 构建、测试阶段都不能把进程带走——只用 `window.run()` 会在
+//! 最后一扇窗藏起来时退出，托盘图标跟着没了。
 
 #![windows_subsystem = "windows"]
 
 mod app_icon;
 mod icon;
+#[cfg(windows)]
+mod autostart;
 mod tray;
 
+use std::cell::RefCell;
 use std::net::{Ipv4Addr, TcpListener, TcpStream};
+use std::path::PathBuf;
 use std::rc::Rc;
 use std::sync::mpsc::{channel, Receiver, Sender};
 use std::sync::{Arc, Mutex};
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use launcher_core::{
-    discover, discover_in, mindmap, paths, runner, App, ProcessSnapshot, RunState,
+    discover_in, fingerprint, mindmap, paths, runner, App, ProcessSnapshot, RunState,
 };
 use slint::{Color, Model, ModelRc, SharedString, VecModel};
 
@@ -29,7 +35,99 @@ use crate::tray::{Action, Tray};
 /// 本机回环上占一个端口：第二份启动器连上来，等于请第一份把窗口举到前面。
 const SINGLETON_PORT: u16 = 47821;
 
+/// 文件通知到重扫之间的静默窗：保存文件常是「写临时文件再改名」的原子替换，
+/// 事件成串来，等它安静下来才重扫，一连串变更收敛成一次重建。
+const RESCAN_QUIET: Duration = Duration::from_secs(1);
+
+/// 文件通知的兜底节拍：个别环境（网络盘、事件缓冲溢出）监听会静默失效，
+/// 每分钟摸一次底。重扫便宜、指纹没变就不动界面——这是保险丝，不是节拍。
+const RESCAN_FALLBACK: Duration = Duration::from_secs(60);
+
 slint::include_modules!();
+
+/// 两个面板共用一份可热换的清单：学习应用、实践项目，外加 open/stop 查找用的
+/// 合集。主线程独占——所有消费点（点击回调、定时器）都在主线程，`Rc` 就够，
+/// 不必 `Arc`。
+struct Catalog {
+    /// 两个发现根，文件监听订阅它们就够了（`CatalogWatcher::resync` 用）。
+    roots: Vec<PathBuf>,
+    /// 面板可见的应用（`hidden` 已滤掉，ADR 0093）：思维导图的输入。
+    visible: Vec<App>,
+    /// 全量清单（含 hidden）：open/stop 按 id 找应用用——隐藏不是下线。
+    all: Vec<App>,
+}
+
+impl Catalog {
+    fn load(repo: &std::path::Path) -> Self {
+        let mut everything = launcher_core::discover(repo);
+        everything.extend(discover_in(&repo.join("practice")));
+        let visible: Vec<App> = everything.iter().filter(|app| !app.hidden).cloned().collect();
+        Self {
+            roots: vec![repo.join("subjects"), repo.join("practice")],
+            visible,
+            all: everything,
+        }
+    }
+
+    fn fingerprint(&self) -> String {
+        fingerprint(&self.visible)
+    }
+}
+
+/// 主线程递给探测线程的清单快照。指纹跟着走：探测结果按指纹对号入座，
+/// 清单换岗瞬间产出的旧结果直接丢弃，状态点不会画错行。
+type CatalogProbe = (Vec<App>, String);
+/// 探测线程交回的一轮结果：指纹 + 可见应用的状态（ADR 0093：实践面板已并入）。
+type CatalogStates = (String, Vec<RunState>);
+
+/// 被动通知（ADR 0001）：订阅发现根和应用目录本身，`app.json`、`icon.svg`、
+/// 应用目录的增删都会来一条事件。不递归订阅是刻意的——构建产物、教学内容的
+/// 海量文件改动不在订阅范围里， Flutter 编一次 Windows 也不会吵醒启动器。
+/// watcher 掉出作用域监听即停，所以整个留在 struct 里。
+struct CatalogWatcher {
+    watcher: notify::RecommendedWatcher,
+    watched: Vec<PathBuf>,
+}
+
+impl CatalogWatcher {
+    /// 事件不分种类：任何一条都只意味着「清单可能变了」，主线程去抖后重扫、
+    /// 比指纹，自会分辨真假。
+    fn new(sender: Sender<()>) -> notify::Result<Self> {
+        let watcher = notify::recommended_watcher(
+            move |event: Result<notify::Event, notify::Error>| {
+                if event.is_ok() {
+                    let _ = sender.send(());
+                }
+            },
+        )?;
+        Ok(Self {
+            watcher,
+            watched: Vec::new(),
+        })
+    }
+
+    /// 订阅集合对齐当前清单：发现根 + 每个应用目录。只在差集上动手——
+    /// 重复 watch 和 unwatch 不存在的路径都会报错。
+    fn resync(&mut self, catalog: &Catalog) {
+        use notify::Watcher;
+        let mut wanted = catalog.roots.clone();
+        wanted.extend(catalog.all.iter().map(|app| app.dir.clone()));
+
+        for path in &self.watched {
+            if !wanted.contains(path) {
+                let _ = self.watcher.unwatch(path);
+            }
+        }
+        for path in &wanted {
+            if !self.watched.contains(path)
+                && self.watcher.watch(path, notify::RecursiveMode::NonRecursive).is_ok()
+            {
+                self.watched.push(path.clone());
+            }
+        }
+        self.watched.retain(|path| wanted.contains(path));
+    }
+}
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     prefer_software_renderer();
@@ -44,24 +142,34 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         eprintln!("找不到 Athena 仓库：设置 ATHENA_ROOT，或把启动器放在仓库里。");
         std::process::exit(1);
     };
-    let apps: Arc<Vec<App>> = Arc::new(discover(&repo));
-    if apps.is_empty() {
-        eprintln!("{} 下没有找到任何 app.json", repo.join("subjects").display());
-        std::process::exit(1);
-    }
     // 实践面板：跟学习应用区隔开的独立分区，数据源是 practice/* 而
     // 不是 subjects/*，复用同一套 discover_in()。这里可以为空——PocketCube
     // 之外还没有别的小项目时，界面按 practice-apps.length 隐藏整个分区。
-    let practice_apps: Arc<Vec<App>> = Arc::new(discover_in(&repo.join("practice")));
     // open/stop 按 id 找应用，两边的 app 都要能找到；tray 菜单仍然只列
-    // 学习应用（apps），不把实践小项目也塞进去，两个界面各自的范围不同。
-    let all_apps: Arc<Vec<App>> = Arc::new(
-        apps.iter().chain(practice_apps.iter()).cloned().collect(),
-    );
+    // 学习应用（subjects），不把实践小项目也塞进去，两个界面各自的范围不同。
+    let catalog = Rc::new(RefCell::new(Catalog::load(&repo)));
+    if catalog.borrow().visible.is_empty() {
+        eprintln!(
+            "{} 下没有找到任何 app.json",
+            repo.join("subjects").display()
+        );
+        std::process::exit(1);
+    }
 
-    // 常驻的是托盘，不是窗口：关掉窗口只是收起来，启动器还在状态栏待命。
+    // 文件监听建不起来就如实降级：界面照常用，只是清单不再自动刷新。
+    let (watcher_tx, watcher_rx) = channel();
+    let mut watcher = match CatalogWatcher::new(watcher_tx) {
+        Ok(watcher) => Some(watcher),
+        Err(error) => {
+            eprintln!("文件监听建不起来，清单不再自动刷新：{error}");
+            None
+        }
+    };
+
     let tray = Rc::new(Tray::start(
-        &apps
+        &catalog
+            .borrow()
+            .visible
             .iter()
             .map(|app| (app.id.clone(), app.title.clone()))
             .collect::<Vec<_>>(),
@@ -79,39 +187,71 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             slint::CloseRequestResponse::HideWindow
         });
     }
-    let entries: Rc<VecModel<AppEntry>> = Rc::new(VecModel::from(build_entries(&apps)));
-    window.set_apps(ModelRc::from(entries.clone()));
-    let practice_entries: Rc<VecModel<AppEntry>> =
-        Rc::new(VecModel::from(build_entries(&practice_apps)));
-    window.set_practice_apps(ModelRc::from(practice_entries.clone()));
     window.set_status("点一下就打开；已经在跑的只把窗口叫到前面。".into());
-    set_mind_map(&window, &mindmap::layout(&apps));
+    // 启动铺界面和热刷新铺界面走同一个入口，两条路径铺出来的东西没有差别。
+    apply_catalog(&window, &tray, &catalog.borrow());
+    let mut fingerprint = catalog.borrow().fingerprint();
+    if let Some(watcher) = watcher.as_mut() {
+        watcher.resync(&catalog.borrow());
+    }
 
     // 构建输出从后台线程流回来：界面上要看得见"卡在哪一步"，
     // 沉默几十秒是"慢"的主观放大器。
     let (sender, receiver): (Sender<String>, Receiver<String>) = channel();
     let progress = Arc::new(Mutex::new(receiver));
 
+    // 状态探测放后台线程：一轮快则几百毫秒、慢则数秒（Windows 读进程命令行
+    // 是固有成本），留在主线程就是周期性「未响应」。探测慢半拍无所谓，状态
+    // 点晚几秒变色而已。清单热换后把新清单递过去，探测自动跟着走。
+    let (probe_tx, probe_rx) = channel::<CatalogProbe>();
+    let (states_tx, states_rx) = channel::<CatalogStates>();
     {
-        let all_apps = all_apps.clone();
-        let repo = repo.clone();
-        let sender = sender.clone();
-        window.on_open(move |id| open_app(&all_apps, id.as_str(), &repo, &sender));
+        let initial = {
+            let catalog = catalog.borrow();
+            (catalog.visible.clone(), catalog.fingerprint())
+        };
+        std::thread::spawn(move || {
+            let mut snapshot = ProcessSnapshot::take();
+            let mut current = initial;
+            loop {
+                while let Ok(fresh) = probe_rx.try_recv() {
+                    current = fresh;
+                }
+                snapshot.refresh();
+                let states = snapshot.states(&current.0);
+                let _ = states_tx.send((current.1.clone(), states));
+                std::thread::sleep(Duration::from_secs(2));
+            }
+        });
     }
 
     {
-        let all_apps = all_apps.clone();
+        let catalog = catalog.clone();
+        let repo = repo.clone();
         let sender = sender.clone();
-        window.on_stop(move |id| stop_app(&all_apps, id.as_str(), &sender));
+        window.on_open(move |id| {
+            open_app(catalog.borrow().all.as_slice(), id.as_str(), &repo, &sender)
+        });
+    }
+
+    {
+        let catalog = catalog.clone();
+        let sender = sender.clone();
+        window.on_stop(move |id| {
+            stop_app(catalog.borrow().all.as_slice(), id.as_str(), &sender)
+        });
     }
 
     let clicks = slint::Timer::default();
     {
-        let apps = apps.clone();
+        let catalog = catalog.clone();
         let repo = repo.clone();
         let sender = sender.clone();
         let tray = tray.clone();
         let handle = window.as_weak();
+        let probe_tx = probe_tx.clone();
+        let mut dirty_since: Option<Instant> = None;
+        let mut last_scan = Instant::now();
         clicks.start(
             slint::TimerMode::Repeated,
             Duration::from_millis(200),
@@ -122,10 +262,31 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         bring_to_front();
                     }
                 }
+                // 清单热刷新（ADR 0001）：文件通知只标「可能变了」，静默一秒
+                // 才重扫；重扫完比指纹，真的变了才重建界面与托盘。
+                if watcher_rx.try_iter().count() > 0 {
+                    dirty_since = Some(Instant::now());
+                }
+                let dirty_settled =
+                    dirty_since.is_some_and(|since| since.elapsed() >= RESCAN_QUIET);
+                let fallback_due =
+                    dirty_since.is_none() && last_scan.elapsed() >= RESCAN_FALLBACK;
+                if dirty_settled || fallback_due {
+                    dirty_since = None;
+                    last_scan = Instant::now();
+                    reload_if_changed(
+                        &repo, &catalog, &mut fingerprint, &handle, &tray, watcher.as_mut(),
+                        &probe_tx,
+                    );
+                }
                 for action in tray.drain() {
                     match action {
-                        Action::Open(id) => open_app(&apps, &id, &repo, &sender),
-                        Action::Stop(id) => stop_app(&apps, &id, &sender),
+                        Action::Open(id) => {
+                            open_app(catalog.borrow().all.as_slice(), &id, &repo, &sender)
+                        }
+                        Action::Stop(id) => {
+                            stop_app(catalog.borrow().all.as_slice(), &id, &sender)
+                        }
                         Action::Log(id) => {
                             let _ = sender.send(
                                 paths::log_file(&id).display().to_string(),
@@ -139,40 +300,73 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                             }
                         }
                         Action::Quit => slint::quit_event_loop().unwrap_or(()),
+                        #[cfg(windows)]
+                        Action::ToggleAutostart => {
+                            match autostart::toggle() {
+                                Ok(true) => {
+                                    let _ = sender.send("已开启开机自启".into());
+                                }
+                                Ok(false) => {
+                                    let _ = sender.send("已关闭开机自启".into());
+                                }
+                                Err(message) => {
+                                    let _ = sender.send(message);
+                                }
+                            }
+                            // 勾选状态以注册表为准，翻转之后重画菜单把它画准。
+                            tray.rebuild(
+                                &catalog
+                                    .borrow()
+                                    .visible
+                                    .iter()
+                                    .map(|app| (app.id.clone(), app.title.clone()))
+                                    .collect::<Vec<_>>(),
+                            );
+                        }
+                        #[cfg(not(windows))]
+                        Action::ToggleAutostart => {}
                     }
                 }
             },
         );
     }
 
-    // 状态从系统实况读，每两秒一次：应用被别处启动、崩溃、手动关掉，
-    // 界面都跟得上，不靠启动器自己记账。
+    // 界面从后台探测线程收状态，每两秒看一眼最新一批：应用被别处启动、
+    // 崩溃、手动关掉，界面都跟得上，不靠启动器自己记账。
     let timer = slint::Timer::default();
     {
-        let apps = apps.clone();
-        let practice_apps = practice_apps.clone();
+        let catalog = catalog.clone();
         let handle = window.as_weak();
         let progress = progress.clone();
         let tray = tray.clone();
+        let mut last_tooltip = String::new();
         timer.start(
             slint::TimerMode::Repeated,
             Duration::from_secs(2),
             move || {
-                let snapshot = ProcessSnapshot::take();
-                let states: Vec<RunState> =
-                    apps.iter().map(|app| snapshot.state(app)).collect();
-                // 实践面板的状态刷新跟学习应用分开算：tray 只认识 apps，
-                // 不该把 practice_apps 的状态也塞进 tray.update()。
-                let practice_states: Vec<RunState> = practice_apps
-                    .iter()
-                    .map(|app| snapshot.state(app))
-                    .collect();
                 let latest = progress
                     .lock()
                     .ok()
                     .and_then(|receiver| receiver.try_iter().last());
+                // 只要与当前清单对上号的结果：清单换岗瞬间的旧批次直接丢弃。
+                let print_now = catalog.borrow().fingerprint();
+                let Some((_, states)) = states_rx
+                    .try_iter()
+                    .last()
+                    .filter(|(print, _)| *print == print_now)
+                else {
+                    if let Some(line) = latest {
+                        if let Some(window) = handle.upgrade() {
+                            window.set_status(SharedString::from(line));
+                        }
+                    }
+                    return;
+                };
+                let catalog = catalog.borrow();
                 tray.update(
-                    apps.iter()
+                    catalog
+                        .visible
+                        .iter()
                         .zip(&states)
                         .map(|(app, state)| match state {
                             RunState::Stopped => app.title.clone(),
@@ -180,9 +374,22 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         })
                         .collect(),
                 );
+                // 悬浮提示顺带报家底：面板上多少个应用、几个在跑。变了才动托盘。
+                let running = states
+                    .iter()
+                    .filter(|state| **state != RunState::Stopped)
+                    .count();
+                let tooltip = format!(
+                    "Athena · {} 个应用 · {} 个在跑",
+                    catalog.visible.len(),
+                    running
+                );
+                if tooltip != last_tooltip {
+                    tray.set_tooltip(&tooltip);
+                    last_tooltip = tooltip;
+                }
                 if let Some(window) = handle.upgrade() {
                     apply_states(&window.get_apps(), &states);
-                    apply_states(&window.get_practice_apps(), &practice_states);
                     if let Some(line) = latest {
                         window.set_status(SharedString::from(line));
                     }
@@ -270,6 +477,54 @@ fn open_log(path: &std::path::Path) {
     let _ = opener::open(path);
 }
 
+/// 把一份清单铺进界面与托盘：两个图块模型、思维导图、托盘菜单。启动铺界面
+/// 和热刷新铺界面走同一个入口，两条路径铺出来的东西没有差别（ADR 0001）。
+fn apply_catalog(window: &LauncherWindow, tray: &Tray, catalog: &Catalog) {
+    window.set_apps(ModelRc::from(Rc::new(VecModel::from(build_entries(
+        &catalog.visible,
+    )))));
+    // 实践面板已取消（ADR 0093）：practice 应用按 parent 声明画进思维导图的
+    // 挂靠层，网格永远置空——slint 按 length 显隐，整块分区自然不再出现。
+    window.set_practice_apps(ModelRc::from(Rc::new(VecModel::from(Vec::<AppEntry>::new()))));
+    set_mind_map(window, &mindmap::layout(&catalog.visible));
+    tray.rebuild(
+        &catalog
+            .visible
+            .iter()
+            .map(|app| (app.id.clone(), app.title.clone()))
+            .collect::<Vec<_>>(),
+    );
+}
+
+/// 重扫一遍清单：指纹没变就什么都不动，变了才整条重建界面、托盘和订阅集合。
+/// 文件通知与兜底节拍都汇到这里，没有变化的重扫对界面完全不可见。
+fn reload_if_changed(
+    repo: &std::path::Path,
+    catalog: &Rc<RefCell<Catalog>>,
+    fingerprint: &mut String,
+    handle: &slint::Weak<LauncherWindow>,
+    tray: &Tray,
+    watcher: Option<&mut CatalogWatcher>,
+    probe_tx: &Sender<CatalogProbe>,
+) {
+    let fresh = Catalog::load(repo);
+    let fresh_print = fresh.fingerprint();
+    if fresh_print == *fingerprint {
+        return;
+    }
+    // 探测线程用克隆对号入座；本体先写回指纹再换清单。
+    *fingerprint = fresh_print.clone();
+    *catalog.borrow_mut() = fresh;
+    // 给探测线程递新清单：状态判定自动跟着走，指纹让旧批次作废。
+    let _ = probe_tx.send((catalog.borrow().visible.clone(), fresh_print));
+    if let Some(window) = handle.upgrade() {
+        apply_catalog(&window, tray, &catalog.borrow());
+    }
+    if let Some(watcher) = watcher {
+        watcher.resync(&catalog.borrow());
+    }
+}
+
 /// 把 core 算好的思维导图布局原样填进界面（ADR 0083）。
 ///
 /// 位置、分组、连线和同心圈都在 `launcher_core::mindmap` 里算，那里有单元测试；
@@ -310,6 +565,7 @@ fn map_link(link: &mindmap::Link) -> MapLink {
         mindmap::LinkKind::Branch => (1, 0x88),
         mindmap::LinkKind::Evolves => (2, 0xff),
         mindmap::LinkKind::Related => (3, 0xc0),
+        mindmap::LinkKind::Attach => (4, 0xe6),
     };
     let base = parse_color(link.color, "思维导图");
     let [a, b, c] = link.arrow.unwrap_or([link.to; 3]);

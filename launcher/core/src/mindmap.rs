@@ -142,6 +142,8 @@ pub enum LinkKind {
     Evolves,
     /// 相关：无向，不带箭头。
     Related,
+    /// 挂靠：parent → 子应用，有向带箭头（ADR 0092）。
+    Attach,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -170,8 +172,18 @@ pub struct MindMap {
 }
 
 /// 把应用清单排成放射状思维导图。
+///
+/// 带 `parent` 的应用是挂靠节点（ADR 0092）：不占领域扇区，画在挂靠者外一圈，
+/// 用有向实线连过去；parent 的 id 解析不到就忽略挂靠，回普通布局（与 related 同规）。
 pub fn layout(apps: &[App]) -> MindMap {
-    // 1. 分组：按首次出现的顺序，省略 group 的归「其他」。
+    let index_of = |id: &str| apps.iter().position(|app| app.id == id);
+    let attached_to: Vec<Option<usize>> = apps
+        .iter()
+        .map(|app| app.parent.as_deref().and_then(index_of))
+        .collect();
+
+    // 1. 分组：按首次出现的顺序，省略 group 的归「其他」。挂靠节点不占扇区，
+    // 但领域归属沿用挂靠者的（画布上它们贴着挂靠者）。
     let mut group_names: Vec<String> = Vec::new();
     let mut group_of: Vec<usize> = Vec::with_capacity(apps.len());
     for app in apps {
@@ -191,9 +203,18 @@ pub fn layout(apps: &[App]) -> MindMap {
         };
         group_of.push(index);
     }
+    for (i, target) in attached_to.iter().enumerate() {
+        if let Some(p) = target {
+            group_of[i] = group_of[*p];
+        }
+    }
     let group_count = group_names.len();
     let members: Vec<Vec<usize>> = (0..group_count)
-        .map(|g| (0..apps.len()).filter(|&i| group_of[i] == g).collect())
+        .map(|g| {
+            (0..apps.len())
+                .filter(|&i| attached_to[i].is_none() && group_of[i] == g)
+                .collect()
+        })
         .collect();
 
     // 2. 扇区：按组里的应用数加权，从正上方顺时针排。
@@ -247,10 +268,15 @@ pub fn layout(apps: &[App]) -> MindMap {
             ring += 1;
         }
     }
+    // 挂靠层的半径在 center 定下来之前就得算——挂靠节点贴在挂靠者外一圈，
+    // 画布要为它们多留一整圈。
+    let attach_ring_needed = apps
+        .iter()
+        .any(|app| app.parent.is_some());
     let outer = if apps.is_empty() {
         group_radius
     } else {
-        first_ring + RING_STEP * max_ring as f32
+        first_ring + RING_STEP * (max_ring as f32 + if attach_ring_needed { 1.0 } else { 0.0 })
     };
     let extent = outer + MARGIN;
     let center = Point::new(extent, extent);
@@ -270,22 +296,70 @@ pub fn layout(apps: &[App]) -> MindMap {
             }
         })
         .collect();
+    // 普通节点位置：领域扇区内按圈铺。
+    let mut node_at: Vec<Point> = vec![Point::new(0.0, 0.0); apps.len()];
+    for (i, _) in apps.iter().enumerate() {
+        if attached_to[i].is_some() {
+            continue;
+        }
+        let g = group_of[i];
+        let (start, width) = sectors[g];
+        let (k, count) = slot_in_ring[i];
+        let angle = start + (k as f32 + 0.5) * width / count as f32;
+        let radius = first_ring + RING_STEP * ring_of[i] as f32;
+        node_at[i] = Point::from_polar(center, radius, angle);
+    }
+
+    // 挂靠节点位置：挂靠者外一圈，在挂靠者的角度两侧均分。相邻子节点的角距按
+    // 同圈弦长 ≥ SLOT 反解，图块不会叠在一起。
+    let mut attach_at: Vec<Option<Point>> = vec![None; apps.len()];
+    let mut attach_radii: Vec<f32> = Vec::new();
+    let mut children_of: Vec<Vec<usize>> = vec![Vec::new(); apps.len()];
+    for (i, target) in attached_to.iter().enumerate() {
+        if let Some(p) = target {
+            children_of[*p].push(i);
+        }
+    }
+    for (p, children) in children_of.iter().enumerate() {
+        if children.is_empty() || attached_to[p].is_some() {
+            continue; // 空挂靠者跳过；链式挂靠（挂靠者自己也被挂）当前数据没有。
+        }
+        let radius = first_ring + RING_STEP * (ring_of[p] as f32 + 1.0);
+        let (start, width) = sectors[group_of[p]];
+        let (k, count) = slot_in_ring[p];
+        let parent_angle = start + (k as f32 + 0.5) * width / count as f32;
+        let spread = (SLOT / radius).asin().max(0.12);
+        let span = spread * (children.len() as f32 - 1.0);
+        for (k, &child) in children.iter().enumerate() {
+            attach_at[child] = Some(Point::from_polar(center, radius, parent_angle - span / 2.0 + spread * k as f32));
+        }
+        attach_radii.push(radius);
+    }
+
     let nodes: Vec<AppNode> = apps
         .iter()
         .enumerate()
-        .map(|(i, app)| {
-            let g = group_of[i];
-            let (start, width) = sectors[g];
-            let (k, count) = slot_in_ring[i];
-            let angle = start + (k as f32 + 0.5) * width / count as f32;
-            let radius = first_ring + RING_STEP * ring_of[i] as f32;
-            AppNode { id: app.id.clone(), group: g, at: Point::from_polar(center, radius, angle) }
+        .map(|(i, app)| AppNode {
+            id: app.id.clone(),
+            group: group_of[i],
+            at: match attach_at[i] {
+                Some(at) => at,
+                None => node_at[i],
+            },
         })
         .collect();
 
     let mut rings = vec![group_radius];
     if !apps.is_empty() {
         rings.extend((0..=max_ring).map(|r| first_ring + RING_STEP * r as f32));
+        let mut extra: Vec<f32> = attach_radii
+            .iter()
+            .filter(|r| **r > outer)
+            .copied()
+            .collect();
+        extra.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        extra.dedup();
+        rings.extend(extra);
     }
 
     // 5. 连线。
@@ -307,7 +381,19 @@ pub fn layout(apps: &[App]) -> MindMap {
             clip_to_tile(node.at, group.at, TILE_PAD),
         ));
     }
-    let index_of = |id: &str| apps.iter().position(|app| app.id == id);
+    for (i, _) in apps.iter().enumerate() {
+        if let (Some(p), Some(at)) = (&attached_to[i], attach_at[i]) {
+            links.push(curved(
+                LinkKind::Attach,
+                groups[group_of[i]].color,
+                node_at[*p],
+                at,
+                center,
+                0.14,
+                true,
+            ));
+        }
+    }
     let mut drawn: HashSet<(usize, usize)> = HashSet::new();
     for (to, app) in apps.iter().enumerate() {
         if let Some(from) = app.evolves_from.as_deref().and_then(index_of) {
@@ -402,6 +488,8 @@ mod tests {
             evolves_from: evolves.map(str::to_string),
             group: group.map(str::to_string),
             related: related.iter().map(|s| s.to_string()).collect(),
+            parent: None,
+            hidden: false,
         }
     }
 
@@ -518,6 +606,25 @@ mod tests {
         let one = layout(&[app("only", None, None, &[])]);
         assert_eq!(one.nodes.len(), 1);
         assert_clean(&one);
+    }
+
+    #[test]
+    fn 挂靠节点画在挂靠者外一圈且带有向线() {
+        let mut softcert = app("softcert", Some("软考"), None, &[]);
+        let mut dsa = app("dsa", Some("算法"), None, &[]);
+        dsa.parent = Some("softcert".to_string());
+        let mut ghost = app("ghost", Some("算法"), None, &[]);
+        ghost.parent = Some("不存在的应用".to_string()); // 解析不到：回普通布局
+        let map = layout(&[softcert.clone(), dsa, ghost]);
+        let at = |id: &str| map.nodes.iter().find(|n| n.id == id).unwrap().at;
+        let (p, c) = (at("softcert"), at("dsa"));
+        // 挂靠节点在挂靠者外一圈：径向距离正好是 RING_STEP。
+        assert!((p.minus(c).length() - RING_STEP).abs() < 1.0, "挂靠者到挂靠节点的径向距离应为 RING_STEP");
+        assert!(map.links.iter().any(|l| l.kind == LinkKind::Attach && l.arrow.is_some()));
+        // ghost 的 parent 解析不到：作为普通节点进了领域圈。
+        assert!(map.groups.iter().any(|g| g.name == "算法"));
+        assert_clean(&map);
+        let _ = softcert;
     }
 
     #[test]

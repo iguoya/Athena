@@ -140,6 +140,14 @@ struct RawManifest {
     group: Option<String>,
     #[serde(default)]
     related: Vec<String>,
+    /// 挂靠的应用 id：本应用是它底下的子课程/子能力（ADR 0092）。有向、单父；
+    /// 布局时画在挂靠者外一圈。找不到的 id 布局时忽略。
+    #[serde(default)]
+    parent: Option<String>,
+    /// 显示层隐藏（ADR 0093）：不出现在任何面板，`list --json` 仍返回并带标记；
+    /// open/stop 与 dev 编排照常可用——隐藏是显示层的事，不是下线。
+    #[serde(default)]
+    hidden: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -163,6 +171,10 @@ pub struct App {
     pub group: Option<String>,
     /// 相关应用的 id。无向：只在一边声明就行；找不到的 id 布局时忽略（ADR 0083）。
     pub related: Vec<String>,
+    /// 挂靠的应用 id：本应用是它底下的子课程/子能力（ADR 0092）。有向、单父。
+    pub parent: Option<String>,
+    /// 显示层隐藏（ADR 0093）：不进任何面板，清单与编排仍可见。
+    pub hidden: bool,
 }
 
 impl App {
@@ -268,5 +280,95 @@ fn parse(dir: &Path) -> Option<App> {
         evolves_from: raw.evolves_from,
         group: raw.group,
         related: raw.related,
+        parent: raw.parent,
+        hidden: raw.hidden,
     })
+}
+
+/// 一份清单的指纹：前后两次扫描的指纹相同，就说明清单没变。
+///
+/// 常驻的启动器靠文件通知感知变更（ADR 0001），通知来了要重扫清单；重扫本身
+/// 便宜（一次 `read_dir` 加二十来个小文件），贵的是跟着重建——图标重渲染、
+/// 思维导图重排、托盘菜单整条换掉。所以重扫之后先比指纹，没变就不动界面。
+///
+/// 指纹只在进程内部前后比较，`{:?}` 的展开在同一进程里是稳定的，`App` 以后
+/// 加字段会自动跟着进指纹；图标文件另拼上修改时间与长度——只改 `icon.svg`
+/// 不动 `app.json`，界面也要跟得上。
+pub fn fingerprint(apps: &[App]) -> String {
+    let mut out = format!("{apps:?}\n");
+    for app in apps {
+        let Some(icon) = &app.icon_file else { continue };
+        match std::fs::metadata(icon) {
+            Ok(meta) => {
+                out += &format!("icon {}\n{:?}\n{}\n", icon.display(), meta.modified(), meta.len());
+            }
+            Err(error) => out += &format!("icon {} 失联：{error}\n", icon.display()),
+        }
+    }
+    out
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::path::PathBuf;
+
+    fn app(id: &str, title: &str) -> App {
+        App {
+            id: id.to_string(),
+            title: title.to_string(),
+            summary: String::new(),
+            symbol: "book".to_string(),
+            letter: "A".to_string(),
+            accent: "#5A6270".to_string(),
+            icon_file: None,
+            icon_renders: Vec::new(),
+            dir: PathBuf::new(),
+            dev: DevSpec::default(),
+            evolves_from: None,
+            group: None,
+            related: Vec::new(),
+            parent: None,
+            hidden: false,
+        }
+    }
+
+    /// 同一份清单扫两遍，指纹必须一致——否则常驻期间每次重扫都会白白重建界面。
+    #[test]
+    fn 同一清单指纹稳定() {
+        let apps = vec![app("a", "甲"), app("b", "乙")];
+        assert_eq!(fingerprint(&apps), fingerprint(&apps));
+    }
+
+    #[test]
+    fn 改标题指纹要变() {
+        assert_ne!(fingerprint(&[app("a", "甲")]), fingerprint(&[app("a", "乙")]));
+    }
+
+    #[test]
+    fn 增删应用指纹要变() {
+        let base = vec![app("a", "甲"), app("b", "乙")];
+        assert_ne!(fingerprint(&base), fingerprint(&[app("a", "甲")]));
+        assert_ne!(fingerprint(&base), fingerprint(&[app("a", "甲"), app("b", "乙"), app("c", "丙")]));
+    }
+
+    /// 只改图标文件不动 app.json 也要能看出来：指纹里拼了修改时间与长度。
+    #[test]
+    fn 图标文件变了指纹要变() {
+        struct TempIcon(std::path::PathBuf);
+        impl Drop for TempIcon {
+            fn drop(&mut self) {
+                let _ = std::fs::remove_file(&self.0);
+            }
+        }
+        let path = std::env::temp_dir().join("athena-launcher-fingerprint-test.svg");
+        std::fs::write(&path, "<svg/>").expect("写临时图标");
+        let _guard = TempIcon(path.clone());
+
+        let mut application = app("a", "甲");
+        application.icon_file = Some(path.clone());
+        let before = fingerprint(&[application.clone()]);
+        std::fs::write(&path, "<svg width=\"2\"/>").expect("改临时图标");
+        assert_ne!(before, fingerprint(&[application]));
+    }
 }

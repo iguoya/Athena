@@ -18,6 +18,9 @@ muda = "0.20"
 # 各应用的图标是 SVG，运行时渲染成位图交给界面。
 resvg = "0.45"
 opener = "0.8.5"
+# 清单热刷新（ADR 0001）：文件变更通知三平台各有一套（ReadDirectoryChanges /
+# FSEvents / inotify），notify 把差异吃掉，三平台共用一份订阅代码。
+notify = "8"
 
 [target.'cfg(target_os = "macos")'.dependencies]
 # 两件事：把窗口带到眼前（macOS 不会自动把别的 Space 上的窗口移过来，应用不
@@ -30,6 +33,11 @@ objc2-foundation = "0.3"
 [target.'cfg(target_os = "linux")'.dependencies]
 # Linux 的托盘必须活在 GTK 线程里，这层依赖只为那条路径。
 gtk = "0.18"
+
+[target.'cfg(target_os = "windows")'.dependencies]
+# 「开机自启」只做 Windows（HKCU 的 Run 键）：注册表薄封装，三五行的事
+# 不值得拿 windows crate 手搓句柄。别的平台不假装支持（ADR 0047、0049）。
+winreg = "0.55"
 
 [build-dependencies]
 slint-build = "1.17"
