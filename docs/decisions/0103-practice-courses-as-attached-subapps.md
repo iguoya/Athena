@@ -3,7 +3,8 @@
 - 日期：2026-10-10
 - 状态：已接受（tiger 2026-10-10：「以子课程为单元划分」「实践性强的课程、类似
   数据结构这种，才有必要」「根据不同的节点采用不同的合适的技术架构」「先不考虑
-  内容填充问题」）
+  内容填充问题」；决策 7 的命名由
+  [ADR 0104](0104-os-rename.md) 更新——operating-system 改名 os，原文不改）
 - 关系：收窄 [ADR 0091](0091-experiments-inside-subject-apps.md) 决策 1 的适用
   范围（强实践课程不再由考试应用的 lab 块独占承接）；挂靠机制、单父与一层深度
   沿 [ADR 0092](0092-launcher-tree-attach-and-softcert-rename.md)、

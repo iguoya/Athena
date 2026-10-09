@@ -24,7 +24,8 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
   database/         数据库 SQL 实验室（Tauri 2 + React）——软设第 9 章实践课程，挂靠 software（ADR 0103）
   design-patterns/  设计模式编码实验（Tauri 2 + React）——软设第 7 章实践课程，挂靠 software；
                     原素材坑转正（ADR 0103）
-  operating-system/ 操作系统实验（Tauri 2 + React）——软设第 4 章实践课程，挂靠 software（ADR 0103）
+  os/               操作系统实验（Tauri 2 + React）——软设第 4 章实践课程，挂靠 software
+                    （ADR 0103；原 operating-system，改名见 ADR 0104）
   network/          网络与信息安全实验（Tauri 2 + React）——软设第 10 章实践课程，挂靠 software（ADR 0103）
   firmware/         嵌入式程序设计实验（Tauri 2 + Vue 3）——嵌入第 6/8/11 章实践课程，挂靠 embedded（ADR 0103）
   microcontroller/  硬件实验台（Tauri 2 + Vue 3）——嵌入第 2/4/5 章实践课程，挂靠 embedded（ADR 0103）
@@ -53,7 +54,7 @@ archive/       历史归档，不参与构建
 已经写进进度库的前缀不改。目录名允许下划线的历史遗留（`practice/nas_admin`、
 `practice/pocket_cube`），但 id 与进程名一律连字符；新目录起名跟 id 一致。
 **id 与目录名取英文词或其通行缩写，不用拼音**——拼音名不进仓库；界面标题与
-应用内文案照常用中文，`software` 是软件设计师、`driver` 是驾考；应用 id 用完整的英文单词，不用缩写（ADR 0097、0100）。
+应用内文案照常用中文，`software` 是软件设计师、`driver` 是驾考；应用 id 用完整的英文单词，不用自造缩写（`softcert` → `software` 消灭的正是这类），本领域知名缩写可以用（如 `os`，ADR 0097、0100、0104）。
 
 | 目录 / id | 界面 | 进程 | 知识点前缀 |
 |---|---|---|---|
@@ -69,7 +70,7 @@ archive/       历史归档，不参与构建
 | `embedded` | 嵌入式系统设计师（原 `esd`，ADR 0090、0100） | `athena-embedded` | `esd.`（内容层短名，保留） |
 | `database` | 数据库（软设第 9 章实践课程，ADR 0103） | `athena-database` | `db.` |
 | `design-patterns` | 设计模式（软设第 7 章实践课程，原素材坑转正，ADR 0103） | `athena-design-patterns` | `dp.` |
-| `operating-system` | 操作系统（软设第 4 章实践课程，ADR 0103） | `athena-operating-system` | `os.` |
+| `os` | 操作系统（软设第 4 章实践课程；原 `operating-system`，ADR 0103、0104） | `athena-os` | `os.` |
 | `network` | 网络与信息安全（软设第 10 章实践课程，ADR 0103） | `athena-network` | `net.` |
 | `firmware` | 嵌入式程序设计（嵌入第 6/8/11 章实践课程，ADR 0103） | `athena-firmware` | `fw.` |
 | `microcontroller` | 硬件实验台（嵌入第 2/4/5 章实践课程，ADR 0103） | `athena-microcontroller` | `mcu.` |

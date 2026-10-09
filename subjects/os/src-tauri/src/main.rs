@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    athena_operating_system_lib::run();
+    athena_os_lib::run();
 }

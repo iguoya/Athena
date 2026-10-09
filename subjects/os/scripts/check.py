@@ -24,7 +24,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
-EXPECTED_ID = "operating-system"
+EXPECTED_ID = "os"
 EXPECTED_PARENT = "software"
 EXPECTED_PORT = 1492
 DEFAULT_FULL = False

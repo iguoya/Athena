@@ -11,7 +11,7 @@
 ## 运行
 
 ```sh
-launcher open operating-system        # 推荐：启动器拉起（ADR 0044/0046）
+launcher open os        # 推荐：启动器拉起（ADR 0044/0046）
 python3 scripts/check.py # 验证（--full 加构建检查）
 ```
 

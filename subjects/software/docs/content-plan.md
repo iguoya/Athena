@@ -22,7 +22,7 @@ arm-none-eabi-gcc + QEMU 即可真做；真硬件实验需要一块入门开发�
 「实验长在学科应用内」；[ADR 0103](../../../docs/decisions/0103-practice-courses-as-attached-subapps.md)
 其后把实践性强的课程独立成挂靠子应用——软设第 3、8 章归 algorithm（ADR 0092
 决策 4），第 9 章归 database、第 7 章归 design-patterns、第 4 章归
-operating-system、第 10 章归 network；嵌入式第 6/8/11 章归 firmware、第 2/4/5
+operating-system（后改名 os，ADR 0104）、第 10 章归 network；嵌入式第 6/8/11 章归 firmware、第 2/4/5
 章归 microcontroller。本应用只剩弱实践章的 `lab` 块路径（第 2 正则、第 5 单元
 测试；落地前立应用级 ADR 扩展 ADR 0058），理论章维持讲解 + viz + 记忆测验。
 

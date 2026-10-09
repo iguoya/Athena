@@ -31,7 +31,7 @@
 ```
 subjects/<id>/  课程学科：cpp machine dsa english mathematics driver gtkmm ascent（学习应用）
                 software、embedded（软考两应用，各为一级大类，ADR 0102），底下挂实践子课程
-                database design-patterns operating-system network firmware microcontroller（ADR 0103）
+                database design-patterns os network firmware microcontroller（ADR 0103）
                 polaris、math-tools（图谱/参考类，math-tools 是数学学习的配套工具，ADR 0084）
 practice/<id>/  项目应用：pocket_cube nas_admin c-gui-lab（ADR 0060）
 launcher/       启动器：core/ gui/ macos/
@@ -48,7 +48,7 @@ archive/        历史归档，不参与构建
 - **`subjects/` 与 `practice/` 按意图分**（ADR 0060）：`practice/` 做能跑的东西，不追求知识点
   覆盖、不建进度库，教学规范不生效。两处平级，都用 `app.json`、都走同一个启动器。
 - **C++ 教程没有特权**（ADR 0045）：任何「以主程序为中心」的假设都是过时的。
-- **名字**：进程 `athena-<id>`（连字符）；id 与目录名用完整的英文单词（如 `software`、`embedded`），**不用缩写、不用拼音**（ADR 0097、0100）；已经写进进度库的知识点前缀不改；`driver` 是驾考，
+- **名字**：进程 `athena-<id>`（连字符）；id 与目录名用完整的英文单词（如 `software`、`embedded`），**不用自造缩写、不用拼音**，本领域知名缩写可以用（如 `os`）（ADR 0097、0100、0104）；已经写进进度库的知识点前缀不改；`driver` 是驾考，
   不是设备驱动。
 - **ADR 放哪**：只影响一个应用的放该应用自己的 `docs/decisions/`，影响仓库结构或多个应用的
   放仓库级 `docs/decisions/`；两处各自编号，只增不改。影响架构边界的新决定先写 ADR 再动代码。
