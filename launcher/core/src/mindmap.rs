@@ -407,7 +407,12 @@ pub fn layout(apps: &[App]) -> MindMap {
             group.at.toward(center, PILL_H / 2.0 + 4.0),
         ));
     }
-    for node in &nodes {
+    for (i, node) in nodes.iter().enumerate() {
+        // 挂靠节点只画父应用来的挂靠线（ADR 0092），不画领域分支线——
+        // 它的 group 沿用挂靠者，若不跳过会多出一条领域胶囊连过来的假分支。
+        if attached_to[i].is_some() {
+            continue;
+        }
         let group = &groups[node.group];
         links.push(straight(
             LinkKind::Branch,
@@ -668,6 +673,12 @@ mod tests {
             "挂靠节点不应与挂靠者径向共线"
         );
         assert!(map.links.iter().any(|l| l.kind == LinkKind::Attach && l.arrow.is_some()));
+        // 挂靠节点没有领域分支线:softcert 与 ghost 是普通成员(2 条),dsa 只有挂靠线。
+        assert_eq!(
+            map.links.iter().filter(|l| l.kind == LinkKind::Branch).count(),
+            2,
+            "挂靠节点不应有领域胶囊连来的分支线"
+        );
         // ghost 的 parent 解析不到：作为普通节点进了领域圈。
         assert!(map.groups.iter().any(|g| g.name == "算法"));
         assert_clean(&map);
