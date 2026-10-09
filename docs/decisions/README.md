@@ -23,7 +23,7 @@
 | [0052](0052-incentives-and-records-cooperate.md) | 激励与统计是同一条回路，必须互相配合 | 已接受（裁定 mathematics 0011 待定项；对齐 english 0009） |
 | [0058](0058-content-driven-block-based-ui.md) | 内容驱动 UI：有限块类型胜过按章手写整页 | 已接受（统一 dsa 块架构与 cpp 反面案例） |
 | [0059](0059-experiments-ship-skeletons-not-blank-slates.md) | 教学实验给骨架，不给白板 | 已接受（统一 dsa 0003、cpp 0053、mathematics 0014） |
-| [0094](0094-retrieval-spacing-interleaving-lead-curriculum.md) | 检索练习、间隔重复、交错练习定为课程设计的主导学习策略，自我解释与双重编码为辅；界面与内容取舍判据化，按成本五档改造；学习风格适配明确不做 | 已接受；不设自动门禁 |
+| [0096](0096-retrieval-spacing-interleaving-lead-curriculum.md) | 检索练习、间隔重复、交错练习定为课程设计的主导学习策略，自我解释与双重编码为辅；界面与内容取舍判据化，按成本五档改造；学习风格适配明确不做 | 已接受；不设自动门禁 |
 
 ## 应用边界与启动
 
@@ -86,3 +86,4 @@
 | [0092](0092-launcher-tree-attach-and-softcert-rename.md) | 启动器思维导图支持树状挂靠（app.json 新增 parent 单父字段、第三层布局、面板归属随 parent）；softcert 显示名改「软件设计师」；dsa、c-gui-lab 挂靠软设（dsa 承接第 3、8 章编码实验），cpp 预留挂靠 | 已接受；修订 0090 决策 1 定位表述、0091 决策 1 承接范围；启动器三层布局待实现 |
 | [0093](0093-drop-practice-panel.md) | 取消实践面板（展示全由 group/parent 声明驱动）；app.json 新增 hidden 字段；nas-admin 隐藏（软路由 Web 服务非桌面应用，仪表盘宿主服务照常）；pocket-cube 挂靠 cpp | 已接受；废止 0083 的实践面板分区；启动器实现归启动器开发线 |
 | [0094](0094-no-category-labels-in-launcher.md) | 课程性/实验性区分留在内容与目录层，启动器界面不设类别标签/徽章/分区，只表达领域圈与挂靠连线 | 已接受；约束 0092/0093 的启动器实现 |
+| [0095](0095-one-exam-one-app.md) | 一个考试一个应用:新考试方向一律独立成新应用,不再并入已有考试应用;softcert 多课程注册表为历史结构不再扩 | 已接受;修订 0092 决策 3 的「届时再议」,关闭 0090 决策 1 扩位预留 |
