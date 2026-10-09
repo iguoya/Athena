@@ -189,6 +189,7 @@ function StageLearner({
   const [words, setWords] = useState<Record<string, VocabWord> | null>(null);
   const [missing, setMissing] = useState(false);
   const [index, setIndex] = useState(0);
+  const [revealed, setRevealed] = useState(false);
   const [finished, setFinished] = useState(false);
   const [celebrate, setCelebrate] = useState(false);
   const freq = useMemo(() => bankFreq(exam), [exam]);
@@ -223,6 +224,7 @@ function StageLearner({
       setFinished(true);
       setCelebrate(true);
     } else {
+      setRevealed(false);
       setIndex((i) => i + 1);
     }
   }
@@ -331,8 +333,43 @@ function StageLearner({
               </span>
             )}
           </div>
-          {entry?.simpleEn && <p className="en mt-2 max-w-xl font-sentence text-lg">{entry.simpleEn}</p>}
-          {entry?.cnDraft && <p className="max-w-xl text-xl font-medium">{entry.cnDraft}</p>}
+          {revealed ? (
+            <>
+              {entry?.simpleEn && <p className="en mt-2 max-w-xl font-sentence text-lg">{entry.simpleEn}</p>}
+              {entry?.cnDraft && <p className="max-w-xl text-xl font-medium">{entry.cnDraft}</p>}
+              <button
+                type="button"
+                onClick={collect}
+                className={cn(
+                  "mt-2 flex items-center gap-2 rounded-full px-4 py-2 text-sm",
+                  collected ? "border border-accent text-accent" : "border border-line bg-surface-strong",
+                )}
+              >
+                {collected ? <BookmarkCheck size={16} /> : <BookmarkPlus size={16} />}
+                {collected ? "已在生词本" : "收进生词本"}
+              </button>
+              <p className="mt-1 text-xs text-muted">
+                释义：{entry?.source === "ecdict" ? "ECDICT" : (entry?.source ?? "ECDICT")} 草稿 ·
+                真实例句在后面的里程碑接入
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="max-w-xl text-sm text-muted">
+                想一下它的意思——想清楚了再揭示。想不起来就读一遍，听发音唤起回忆。
+              </p>
+              <button
+                type="button"
+                onClick={() => setRevealed(true)}
+                className="mt-1 rounded-full bg-[linear-gradient(90deg,var(--accent),var(--accent-2))] px-6 py-2.5 text-sm font-medium text-on-accent shadow-skin"
+              >
+                <span className="inline-flex items-center gap-2">
+                  <Sparkles size={15} /> 揭示释义
+                </span>
+              </button>
+              {entry?.cnDraft && <p className="mt-1 text-[11px] text-muted/60">（释义已隐藏）</p>}
+            </>
+          )}
           <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
             <button
               type="button"
@@ -354,22 +391,7 @@ function StageLearner({
             >
               <Turtle size={16} /> 慢速
             </button>
-            <button
-              type="button"
-              onClick={collect}
-              className={cn(
-                "flex items-center gap-2 rounded-full px-4 py-2 text-sm",
-                collected ? "border border-accent text-accent" : "border border-line bg-surface-strong",
-              )}
-            >
-              {collected ? <BookmarkCheck size={16} /> : <BookmarkPlus size={16} />}
-              {collected ? "已在生词本" : "收进生词本"}
-            </button>
           </div>
-          <p className="mt-1 text-xs text-muted">
-            释义：{entry?.source === "ecdict" ? "ECDICT" : (entry?.source ?? "ECDICT")} 草稿 ·
-            真实例句在后面的里程碑接入
-          </p>
         </motion.section>
       </AnimatePresence>
 
