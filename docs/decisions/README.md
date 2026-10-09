@@ -80,3 +80,4 @@
 | [0077](0077-no-device-token-gate-at-cloudflare.md) | 取消设备令牌，外网的门放在 Cloudflare 访问规则上，应用里不认证；限流改按来源地址 | 已接受；修订 0068 决策 3、0070 令牌各条 |
 | [0078](0078-login-in-one-step.md) | 登录合并为一步：输入名字点进入，没有就直接新建；编号用提示条告知，不弹窗 | 已接受；修订 0075 决策 3 |
 | [0079](0079-clusters-computed-at-runtime.md) | 考点簇运行时现算（不落盘），强化练习出「同考点变式」，学习诊断给出变式差距 | 已接受；修订 0076 决策 9 的实现方式 |
+| [0089](0089-source-tiers-by-app-nature.md) | 出处要求按应用性质分档：考试/考证考级类阻断（exam），技术学习类降为习惯不做门禁（open），不判分类不适用（reference） | 已接受；修订 0043 的适用范围；english 本轮收紧，machine/gtkmm 降档，softcert 记为考试档已知欠账 |
