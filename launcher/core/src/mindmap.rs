@@ -177,9 +177,19 @@ pub struct MindMap {
 /// 用有向实线连过去；parent 的 id 解析不到就忽略挂靠，回普通布局（与 related 同规）。
 pub fn layout(apps: &[App]) -> MindMap {
     let index_of = |id: &str| apps.iter().position(|app| app.id == id);
-    let attached_to: Vec<Option<usize>> = apps
+    let raw_targets: Vec<Option<usize>> = apps
         .iter()
         .map(|app| app.parent.as_deref().and_then(index_of))
+        .collect();
+    // 挂靠深度为一层（ADR 0095）：挂靠者自己也被挂时，解析回退普通布局，
+    // 链式挂靠不再往下铺。
+    let attached_to: Vec<Option<usize>> = raw_targets
+        .iter()
+        .enumerate()
+        .map(|(i, target)| match target {
+            Some(p) if raw_targets[*p].is_none() => Some(*p),
+            _ => None,
+        })
         .collect();
 
     // 1. 分组：按首次出现的顺序，省略 group 的归「其他」。挂靠节点不占扇区，
@@ -625,6 +635,23 @@ mod tests {
         assert!(map.groups.iter().any(|g| g.name == "算法"));
         assert_clean(&map);
         let _ = softcert;
+    }
+
+    #[test]
+    fn 链式挂靠的孙节点回退普通布局() {
+        let mut a = app("a", Some("甲"), None, &[]);
+        let mut b = app("b", Some("甲"), None, &[]);
+        let mut c = app("c", Some("甲"), None, &[]);
+        b.parent = Some("a".to_string());
+        c.parent = Some("b".to_string()); // 挂靠者自己也被挂：一层封顶，c 回普通布局
+        let map = layout(&[a, b, c]);
+        let c_node = map.nodes.iter().find(|n| n.id == "c").unwrap();
+        // 回退后的 c 不在画布原点，且没有指向它的挂靠线。
+        assert!(c_node.at.x > 0.0 && c_node.at.y > 0.0);
+        assert!(!map.links.iter().any(|l| l.kind == LinkKind::Attach
+            && (l.to == c_node.at || l.from == c_node.at)));
+        assert!(map.links.iter().any(|l| l.kind == LinkKind::Attach)); // a→b 这条还在
+        assert_clean(&map);
     }
 
     #[test]
