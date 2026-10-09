@@ -29,7 +29,8 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
                     （ADR 0103；原 operating-system，改名见 ADR 0104）
   network/          网络与信息安全实验（Tauri 2 + React）——软设第 10 章实践课程，挂靠 software（ADR 0103）
   firmware/         嵌入式程序设计实验（Tauri 2 + Vue 3）——嵌入第 6/8/11 章实践课程，挂靠 embedded（ADR 0103）
-  microcontroller/  硬件实验台（Tauri 2 + Vue 3）——嵌入第 2/4/5 章实践课程，挂靠 embedded（ADR 0103）
+  microcontroller/  硬件实验台（Tauri 2 + Vue 3）——嵌入第 2/5 章实践课程，挂靠 embedded（ADR 0103）
+  rtos/             实时操作系统（Tauri 2 + Vue 3）——嵌入第 4 章实践课程，挂靠 embedded（ADR 0106）
   gtkmm/       gtkmm 官方教程精读（Tauri 2 + React）
   polaris/       技术体系图谱（Tauri 2 + React，原 Qt 壳已退役，ADR 0015）——不是学习应用，见下文
 practice/<id>/ 项目应用：动手做的独立小项目，不接掌握度体系（ADR 0060）
@@ -74,7 +75,8 @@ archive/       历史归档，不参与构建
 | `os` | 操作系统（软设第 4 章实践课程；原 `operating-system`，ADR 0103、0104） | `athena-os` | `os.` |
 | `network` | 网络与信息安全（软设第 10 章实践课程，ADR 0103） | `athena-network` | `net.` |
 | `firmware` | 嵌入式程序设计（嵌入第 6/8/11 章实践课程，ADR 0103） | `athena-firmware` | `fw.` |
-| `microcontroller` | 硬件实验台（嵌入第 2/4/5 章实践课程，ADR 0103） | `athena-microcontroller` | `mcu.` |
+| `microcontroller` | 硬件实验台（嵌入第 2/5 章实践课程，ADR 0103） | `athena-microcontroller` | `mcu.` |
+| `rtos` | 实时操作系统（嵌入第 4 章实践课程，ADR 0106） | `athena-rtos` | `rtos.` |
 | `gtkmm` | gtkmm 官方教程精读 | `athena-gtkmm` | `gtkmm.` |
 | `polaris` | 北极星 | `athena-polaris` | （无进度库） |
 
@@ -91,7 +93,7 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
   `progress/learning.db`。当前：`cpp` / `machine` / `dsa` / `english` / `mathematics` /
   `driver` / `ascent`（`ascent` 的规范差距见 ADR 0066）/ 软考两应用及其挂靠实践
   子课程（ADR 0103：`database` / `design-patterns` / `operating-system` / `network` /
-  `firmware` / `microcontroller`）。
+  `firmware` / `microcontroller` / `rtos`）。
 - **不是学习闭环，是呈现结构化信息供浏览、查阅、决策参考的？** 那是
   **图谱/参考类应用**：仍受「独立应用」一节的平级、隔离、`app.json` 启动规则约束，
   但**不**掌握度、不进度库、不激励——「跨应用教学规范」一节对它不生效，具体规则

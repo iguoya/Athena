@@ -77,9 +77,10 @@ python3 scripts/check.py --full --skip-rust   # 只改内容或前端时用
 - 影响本应用架构边界的新决定，在 `docs/decisions/` 增补 ADR 后再动代码。
 - 与其他应用构建完全隔离（ADR 0032、0062）：不引用任何应用的路径、配置或
   代码；与 嵌入式系统设计师 的关系是课程归属声明，不是运行时依赖。
-## 与 microcontroller 的分工
+## 与 rtos、microcontroller 的分工
 
-同挂 embedded 的两个子应用按课程切分：本应用是**嵌入式 C 编码**（第 6、8、11
-章，零硬件成本，本机 gcc 真跑）；microcontroller 是**板级实验**（第 2、4、5 章，
-串口/烧录/QEMU）。第 4 章 RTOS 的调度观察在 microcontroller，其编码题归本应用。
+同挂 embedded 的三个子应用按课程切分（ADR 0106）：本应用是**嵌入式 C 编码**
+（第 6、8、11 章，零硬件成本，本机 gcc 真跑）；rtos 是**实时操作系统**（第 4 章，
+FreeRTOS/QEMU/线程模拟）；microcontroller 是**板级基础实验**（第 2、5 章，
+串口/烧录/工具链）。第 4 章 RTOS 实验整体归 rtos，其下午题 C 编码验证归本应用。
 

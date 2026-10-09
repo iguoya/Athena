@@ -22,8 +22,8 @@ arm-none-eabi-gcc + QEMU 即可真做；真硬件实验需要一块入门开发�
 「实验长在学科应用内」；[ADR 0103](../../../docs/decisions/0103-practice-courses-as-attached-subapps.md)
 其后把实践性强的课程独立成挂靠子应用——软设第 3、8 章归 dsa（原 algorithm，ADR 0105 复名；ADR 0092
 决策 4），第 9 章归 database、第 7 章归 design-patterns、第 4 章归
-operating-system（后改名 os，ADR 0104）、第 10 章归 network；嵌入式第 6/8/11 章归 firmware、第 2/4/5
-章归 microcontroller。本应用只剩弱实践章的 `lab` 块路径（第 2 正则、第 5 单元
+operating-system（后改名 os，ADR 0104）、第 10 章归 network；嵌入式第 6/8/11 章归 firmware、第 2/5
+章归 microcontroller、第 4 章（RTOS）归 rtos（ADR 0106）。本应用只剩弱实践章的 `lab` 块路径（第 2 正则、第 5 单元
 测试；落地前立应用级 ADR 扩展 ADR 0058），理论章维持讲解 + viz + 记忆测验。
 
 分值权重为粗估；`exam_weight` 与 `grade` 的权威值仍按 AGENTS.md 由真题分值
@@ -89,8 +89,8 @@ network 承载，第 3、8 章由 dsa 承接——ADR 0103；本应用内只剩�
 QEMU 工具链（第 5）→ **配开发板后的硬件实验包**（第 2：点灯 → 定时器 →
 串口 → I²C/SPI，一块 STM32F103C8T6 或 51 板即可）→ RTOS 实验（第 4，真板或
 QEMU）→ 案例编程题真验证（第 11）。
-（第 6/8/11 章归 firmware、第 2/4/5 章归 microcontroller 承载——ADR 0103；
-esd/embedded 应用内不再自建这些实验。）
+（第 6/8/11 章归 firmware、第 2/5 章归 microcontroller、第 4 章归 rtos 承载——
+ADR 0103、0106；esd/embedded 应用内不再自建这些实验。）
 
 理论侧章节（软设 1 体系结构部分/6/11/12，嵌入式 3/7/10 及各章理论部分）：
 讲解 + viz 演示 + 记忆卡测验，**不冒充实实验**。
