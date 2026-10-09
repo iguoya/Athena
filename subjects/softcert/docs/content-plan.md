@@ -17,8 +17,10 @@
 技术可行性基线（机器是完整开发机，ADR 0057）：本机有 C/C++ 编译器、Python、
 Node；softcert 的 Rust 侧已有 rusqlite（SQL 实验零新增依赖）；交叉编译装
 arm-none-eabi-gcc + QEMU 即可真做；真硬件实验需要一块入门开发板（STM32F103C8T6
-或 51 核心板，几十元级）加 USB-TTL 线。可执行实验要新增块类型/沙箱组件，落地前
-按仓库规则先立 ADR 扩展 ADR 0058。
+或 51 核心板，几十元级）加 USB-TTL 线。实验能力落点与形态见仓库级
+[ADR 0091](../../../docs/decisions/0091-experiments-inside-subject-apps.md)：
+编码实验是本应用的 `lab` 块类型（落地前立应用级 ADR 扩展 ADR 0058），硬件实验
+长在 esd 应用，不另建独立实验应用。
 
 分值权重为粗估；`exam_weight` 与 `grade` 的权威值仍按 AGENTS.md 由真题分值
 统计得出，待 `content/past-exams/` 录入后校准。
