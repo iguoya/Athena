@@ -972,8 +972,8 @@ function bindDrills() {
         picked,
         value: picked,
         correct,
-        // 答错一次之后自动把提示放出来，不必再去点
-        hintShown: prev?.hintShown || !correct,
+        // 答错一次之后自动放出第一级提示，不必再去点；更高等级仍要点开
+        hintLevel: Math.max(prev?.hintLevel ?? 0, !correct ? 1 : 0),
       });
       void invoke("save_prediction", {
         topicId: `drill:${ns}`,
@@ -988,8 +988,9 @@ function bindDrills() {
     b.addEventListener("click", () => {
       const ns = b.dataset.ns!;
       const id = b.dataset.hint!;
+      const next = Number(b.dataset.hintNext ?? "1");
       const st = drillStates.get(key(ns, id)) ?? {};
-      drillStates.set(key(ns, id), { ...st, hintShown: true });
+      drillStates.set(key(ns, id), { ...st, hintLevel: next });
       rerenderTopic();
     }),
   );

@@ -44,8 +44,13 @@ export interface DrillItem {
   context?: string;
   /** 出处（ADR 0019 第 1 节）。存量题的豁免名单见 scripts/lint-content.mjs */
   source_refs?: DrillSource[];
-  /** 卡住时先给方向，不直接给答案（ADR 0011 第 1 节） */
+  /** 卡住时先给方向，不直接给答案（ADR 0011 第 1 节）。与 hints 二选一，hints 优先。 */
   hint?: string;
+  /**
+   * 分级提示梯（Pólya：理解→计划→执行→回顾），点一次「提示」多展开一级，
+   * 不一次性给完。与单条 hint 二选一，hints 优先（ADR 0101 同源方法）。
+   */
+  hints?: string[];
   /** 判完之后说明它为什么是这样 */
   why?: string;
   /** 这一题是在前一题基础上改了什么——变式练习的关键（ADR 0014 第 1 节） */
@@ -68,7 +73,8 @@ export interface DrillState {
   picked?: string;
   value?: string;
   correct?: boolean;
-  hintShown?: boolean;
+  /** 已展开的提示级数（分级提示梯，ADR 0101）。 */
+  hintLevel?: number;
 }
 
 const esc = (s: string) =>
@@ -134,6 +140,8 @@ function sourceLine(refs?: DrillSource[]): string {
 function renderItem(it: DrillItem, idx: number, st: DrillState | undefined, ns: string): string {
   const done = st?.correct === true;
   const wrong = st?.correct === false;
+  const hintLevels = it.hints ?? (it.hint ? [it.hint] : []);
+  const hintLevel = st?.hintLevel ?? 0;
 
   const body =
     it.kind === "number"
@@ -174,9 +182,10 @@ function renderItem(it: DrillItem, idx: number, st: DrillState | undefined, ns: 
       chosen?.misread
         ? `<b>这个选项通常是这么想的：</b>${rich(chosen.misread)}`
         : "<b>再算一次。</b>"
-    }${
-      st?.hintShown && it.hint ? `<div class="dr-hint">提示：${rich(it.hint)}</div>` : ""
-    }</div>`;
+    }${hintLevels
+      .slice(0, hintLevel)
+      .map((h, i) => `<div class="dr-hint">提示 ${i + 1}：${rich(h)}</div>`)
+      .join("")}</div>`;
   }
 
   return `<li class="dr-item${done ? " done" : ""}">
@@ -193,8 +202,10 @@ function renderItem(it: DrillItem, idx: number, st: DrillState | undefined, ns: 
       ${body}
       ${fb}
       ${
-        !done && it.hint && !st?.hintShown
-          ? `<button type="button" class="dr-hintbtn" data-hint="${it.id}" data-ns="${ns}">看提示</button>`
+        !done && hintLevel < hintLevels.length
+          ? `<button type="button" class="dr-hintbtn" data-hint="${it.id}" data-hint-next="${
+              hintLevel + 1
+            }" data-ns="${ns}">提示 ${hintLevel + 1} / ${hintLevels.length}</button>`
           : ""
       }
     </li>`;
