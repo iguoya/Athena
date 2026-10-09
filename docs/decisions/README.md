@@ -83,3 +83,4 @@
 | [0089](0089-source-tiers-by-app-nature.md) | 出处要求按应用性质分档：考试/考证考级类阻断（exam），技术学习类降为习惯不做门禁（open），不判分类不适用（reference） | 已接受；修订 0043 的适用范围；english 本轮收紧，machine/gtkmm 降档，softcert 记为考试档已知欠账 |
 | [0091](0091-experiments-inside-subject-apps.md) | 实验能力长在学科应用内：编码实验是 softcert 的 lab 块（软设 8 实践章），硬件实验是 esd 的实验视图（嵌入式第 2、4 章），不另建独立实验应用 | 已接受；试点 SQL 实验 |
 | [0092](0092-launcher-tree-attach-and-softcert-rename.md) | 启动器思维导图支持树状挂靠（app.json 新增 parent 单父字段、第三层布局、面板归属随 parent）；softcert 显示名改「软件设计师」；dsa、c-gui-lab 挂靠软设（dsa 承接第 3、8 章编码实验），cpp 预留挂靠 | 已接受；修订 0090 决策 1 定位表述、0091 决策 1 承接范围；启动器三层布局待实现 |
+| [0093](0093-drop-practice-panel.md) | 取消实践面板（展示全由 group/parent 声明驱动）；app.json 新增 hidden 字段；nas-admin 隐藏（软路由 Web 服务非桌面应用，仪表盘宿主服务照常）；pocket-cube 挂靠 cpp | 已接受；废止 0083 的实践面板分区；启动器实现归启动器开发线 |
