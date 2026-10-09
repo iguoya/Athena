@@ -1,10 +1,20 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowLeft, ArrowRight, BookmarkCheck, BookmarkPlus, Check, Eye, Languages, Volume2 } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  BookmarkCheck,
+  BookmarkPlus,
+  Check,
+  Eye,
+  Languages,
+  Turtle,
+  Volume2,
+} from "lucide-react";
 import { Celebration } from "@/components/Celebration";
 import { sources, todaySet } from "@/content";
 import type { Gloss, Segment, SegmentRole, Sentence } from "@/content/types";
-import { speak } from "@/lib/speech";
+import { speak, SLOW_RATE } from "@/lib/speech";
 import { useProgress } from "@/store/progress";
 import { cn } from "@/lib/utils";
 
@@ -180,6 +190,9 @@ export function Sentences() {
             <Toggle on={false} onClick={() => speak(sentence.en)} icon={<Volume2 size={15} />}>
               朗读整句
             </Toggle>
+            <Toggle on={false} onClick={() => speak(sentence.en, SLOW_RATE)} icon={<Turtle size={15} />}>
+              慢速
+            </Toggle>
             {showStructure && (
               <span className="ml-1 flex items-center gap-3 text-xs text-muted">
                 {ROLE_LEGEND.map((l) => (
@@ -207,6 +220,22 @@ export function Sentences() {
               <p className="flex items-baseline gap-3">
                 <span className="font-word text-3xl font-semibold text-word">{gloss?.lemma ?? picked.word}</span>
                 {gloss && <span className="text-muted">{gloss.pos}</span>}
+                <button
+                  type="button"
+                  onClick={() => speak(gloss?.lemma ?? picked.word)}
+                  aria-label="朗读这个词"
+                  className="grid h-8 w-8 place-items-center rounded-full border border-line text-muted transition-colors hover:text-accent"
+                >
+                  <Volume2 size={15} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => speak(gloss?.lemma ?? picked.word, SLOW_RATE)}
+                  aria-label="慢速朗读这个词"
+                  className="grid h-8 w-8 place-items-center rounded-full border border-line text-muted transition-colors hover:text-accent"
+                >
+                  <Turtle size={15} />
+                </button>
               </p>
               {gloss ? (
                 <>

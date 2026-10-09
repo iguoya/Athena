@@ -9,12 +9,13 @@ import {
   ChevronRight,
   Sparkles,
   Trophy,
+  Turtle,
   Volume2,
 } from "lucide-react";
 import { Celebration } from "@/components/Celebration";
 import { VOCAB_BANKS, bankFreq, bankStages, loadWords } from "@/content/vocab";
 import type { VocabStage, VocabWord } from "@/content/types";
-import { speak } from "@/lib/speech";
+import { speak, SLOW_RATE } from "@/lib/speech";
 import { allSeenWords, useProgress } from "@/store/progress";
 import { cn } from "@/lib/utils";
 
@@ -341,6 +342,16 @@ function StageLearner({
               className="flex items-center gap-2 rounded-full border border-line bg-surface-strong px-4 py-2 text-sm"
             >
               <Volume2 size={16} /> 读一遍
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                speak(word, SLOW_RATE);
+                markWordSeen(word);
+              }}
+              className="flex items-center gap-2 rounded-full border border-line bg-surface-strong px-4 py-2 text-sm"
+            >
+              <Turtle size={16} /> 慢速
             </button>
             <button
               type="button"

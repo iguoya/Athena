@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "motion/react";
-import { Check, Flag, Flame, Lock, Star } from "lucide-react";
+import { Check, Flag, Flame, Lock, Star, Turtle, Volume2 } from "lucide-react";
 import { initialTasks, sentenceOfTheDay as s, type Task } from "@/data/demo";
 import { useNavigate } from "react-router";
 import { Celebration } from "@/components/Celebration";
 import { grammarUnits, todaySet } from "@/content";
 import { VOCAB_BANKS, bankStages } from "@/content/vocab";
+import { speak, SLOW_RATE } from "@/lib/speech";
 import { allSeenWords, dateKey, streakDays, useProgress, weekActivity } from "@/store/progress";
 import { cn } from "@/lib/utils";
 
@@ -119,7 +120,31 @@ function SentenceCard() {
           </p>
           <div className="flex flex-wrap justify-between gap-2 text-[11px] text-muted">
             <span>先读句子，猜猜 {s.focus} 的意思</span>
-            <span>点击翻面 ↻</span>
+            <span className="flex items-center gap-2">
+              <button
+                type="button"
+                aria-label="朗读今日一句"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  speak(s.en);
+                }}
+                className="grid h-6 w-6 place-items-center rounded-full border border-line text-muted transition-colors hover:text-accent"
+              >
+                <Volume2 size={12} />
+              </button>
+              <button
+                type="button"
+                aria-label="慢速朗读今日一句"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  speak(s.en, SLOW_RATE);
+                }}
+                className="grid h-6 w-6 place-items-center rounded-full border border-line text-muted transition-colors hover:text-accent"
+              >
+                <Turtle size={12} />
+              </button>
+              <span>点击翻面 ↻</span>
+            </span>
           </div>
         </div>
 
