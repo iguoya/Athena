@@ -13,7 +13,7 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
   machine/     C 与机器（Qt Quick / QML，原 c/，ADR 0005）
   dsa/         数据结构与算法（Tauri）——软设第 3、8 章实践课程，挂靠 software
                （ADR 0092、0099；原 algorithm，复名见 ADR 0105）
-  english/     磨砚（考研英语二，Tauri）
+  english/     磨砚（考研英语二，Tauri）——并入 ascent 后退役，迁移中（ADR 0117）
   ascent/      拾阶（英语师范生四六级、专四专八，Tauri）
   mathematics/ 数学学习（Tauri）
   math-tools/  数学工具（Tauri）——数学学习的配套工具，图谱/参考类，不是学习应用（ADR 0084）
