@@ -1,7 +1,7 @@
 // 情境：到处都在判断「是不是空」。findCustomer() 查不到就返回 nullptr，于是每个用到客户的
 // 地方都要写一遍 if (c)——名字怎么显示、折扣多少，各有各的空判断，漏一处就是空指针。
 // 重构手法：引入特例（Introduce Special Case，早期版本叫引入 Null 对象），《重构》第 2 版
-// 第 9 章。Null Object 模式见 Bobby Woolf 的《The Null Object Pattern》。
+// 第 10 章。Null Object 模式见 Bobby Woolf 的《The Null Object Pattern》（PLoPD3，1998）。
 //
 // 实验：
 // 1. 让 findCustomer() 查不到时返回一个「访客」特例对象的引用（名字"访客"，折扣 0），
