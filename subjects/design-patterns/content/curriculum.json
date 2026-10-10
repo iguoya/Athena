@@ -4927,8 +4927,2405 @@
       "id": "behavioral",
       "title": "行为型模式：让对象之间会说话",
       "track": "behavioral",
-      "summary": "策略、命令、观察者、状态、职责链、模板方法等 11 个，下一批填充。\n\n取材：取材：Refactoring.Guru 行为型 · iluwatar/java-design-patterns · Qt signals / 响应式库（观察者的现代形态）",
+      "summary": "行为模式涉及算法和对象间职责的分配，不仅描述对象或类，还描述它们之间的通信。行为类模式用继承分派行为（模板方法、解释器），行为对象模式用对象复合。11 个模式按易混程度排列：策略与状态相邻、观察者与中介者相邻、命令与职责链相邻。\n\n取材：软设教程（第 5 版）§7.3.4、§7.3.5 · GoF《Design Patterns》· Refactoring.Guru",
       "topics": [
+        {
+          "id": "dp.strategy",
+          "title": "策略模式 Strategy",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.ocp",
+            "dp.carp"
+          ],
+          "track": "behavioral",
+          "guide_line": "定义一系列算法，把它们一个个封装起来，并且使它们可以相互替换。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能把一组可互换的算法封装成策略类，消掉按类型分支的条件语句。",
+            "pain": "收费规则、排序方式、压缩算法写成一长串 if/switch，加一种就改一次这个函数。",
+            "model": "Strategy 定义算法的公共接口；每个 ConcreteStrategy 实现一种算法；Context 持有一个 Strategy 并只通过接口调用。",
+            "scope": "Context 由谁配置哪种策略（客户直接给，或像教材例 7.8 那样在 Context 里按类型选）是另一回事；策略只管算法可替换。",
+            "judgment": "看到「同一件事有几种算法、客户可选」——策略；看到「对象行为随自身状态自动切换」——状态。",
+            "landing": "能写一个新的 ConcreteStrategy 并注入 Context，Context 一行不改。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "商场收银要支持「正常收费」「打 8 折」「满 300 返 100」，以后还会推出新的促销。收费计算最好怎么组织？",
+                "options": [
+                  {
+                    "label": "每种促销写成一个实现同一接口的类，收银上下文持有其中一个并只调接口",
+                    "ok": true,
+                    "why": "这是策略：算法可替换、可扩展，上下文不变"
+                  },
+                  {
+                    "label": "在收费函数里用 switch 按促销类型分支",
+                    "ok": false,
+                    "why": "每推出一种促销都要改这个函数，违背开闭"
+                  },
+                  {
+                    "label": "每种促销派生一个收银机子类",
+                    "ok": false,
+                    "why": "收银机的其他行为也被复制到每个子类里，组合一多就爆炸"
+                  },
+                  {
+                    "label": "用单例保存当前的折扣率",
+                    "ok": false,
+                    "why": "折扣率只是一个参数，表达不了「满额返利」这类不同算法"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "策略（Strategy，又称 Policy）的意图：「定义一系列的算法，把它们一个个封装起来，并且使它们可以相互替换。此模式使得算法可以独立于使用它们的客户而变化。」教材例 7.8 的收银软件就是典型：CashSuper 是策略接口，CashNormal、CashDiscount、CashReturn 是三种具体策略，CashContext 是上下文。"
+              },
+              {
+                "type": "uml",
+                "title": "策略类图",
+                "uml": {
+                  "width": 800,
+                  "height": 270,
+                  "classes": [
+                    {
+                      "name": "Context",
+                      "x": 15,
+                      "y": 20,
+                      "w": 200,
+                      "attrs": [
+                        "- strategy: Strategy*"
+                      ],
+                      "methods": [
+                        "+ contextInterface()"
+                      ]
+                    },
+                    {
+                      "name": "Strategy",
+                      "x": 400,
+                      "y": 20,
+                      "w": 220,
+                      "stereotype": "interface",
+                      "methods": [
+                        "+ algorithmInterface()"
+                      ]
+                    },
+                    {
+                      "name": "ConcreteStrategyA",
+                      "x": 190,
+                      "y": 170,
+                      "w": 190,
+                      "methods": [
+                        "+ algorithmInterface()"
+                      ]
+                    },
+                    {
+                      "name": "ConcreteStrategyB",
+                      "x": 400,
+                      "y": 170,
+                      "w": 190,
+                      "methods": [
+                        "+ algorithmInterface()"
+                      ]
+                    },
+                    {
+                      "name": "ConcreteStrategyC",
+                      "x": 600,
+                      "y": 170,
+                      "w": 190,
+                      "methods": [
+                        "+ algorithmInterface()"
+                      ]
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "Context",
+                      "to": "Strategy",
+                      "kind": "agg",
+                      "label": "strategy"
+                    },
+                    {
+                      "from": "ConcreteStrategyA",
+                      "to": "Strategy",
+                      "kind": "implements"
+                    },
+                    {
+                      "from": "ConcreteStrategyB",
+                      "to": "Strategy",
+                      "kind": "implements"
+                    },
+                    {
+                      "from": "ConcreteStrategyC",
+                      "to": "Strategy",
+                      "kind": "implements"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "steps",
+                "title": "参与者",
+                "items": [
+                  "Strategy：定义所有支持的算法的公共接口，Context 用它调用某个 ConcreteStrategy 定义的算法。",
+                  "ConcreteStrategy：以 Strategy 接口实现某个具体算法。",
+                  "Context：用一个 ConcreteStrategy 来配置，维护对 Strategy 的引用，可以定义接口让 Strategy 访问它的数据。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "策略 vs 状态（类图几乎相同）",
+                "left": {
+                  "title": "策略：客户选算法",
+                  "body": "一个 Strategy 对象封装一个算法。用哪种策略通常由客户决定，策略之间互不知道，也不会自己换成别的策略。"
+                },
+                "right": {
+                  "title": "状态：对象自己换行为",
+                  "body": "一个 State 对象封装与某个状态相关的行为。状态之间知道彼此，并在条件满足时把 Context 切换到下一个状态，客户感受到的是「同一个对象行为变了」。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "适用性",
+                "text": "许多相关的类仅仅是行为有异；需要使用一个算法的不同变体（如时间与空间的不同权衡）；算法使用客户不应该知道的数据；一个类定义了多种行为，并以多个条件语句的形式出现——把相关分支移进各自的 Strategy 类。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "教材例 7.8 里，CashContext 构造时按 type 用 switch 选择 new 哪种 CashSuper。这段 switch 承担的是什么职责？",
+                    "choices": [
+                      {
+                        "label": "创建并配置策略对象（相当于一个简单工厂），算法本身仍在各策略类里",
+                        "ok": true,
+                        "why": "选择与创建和算法实现分开了；加新策略时只有这个创建点要改"
+                      },
+                      {
+                        "label": "它本身就是策略模式的核心",
+                        "ok": false,
+                        "why": "策略的核心是 Strategy 接口与可替换的实现，不是 switch"
+                      },
+                      {
+                        "label": "它说明例 7.8 用的是状态模式",
+                        "ok": false,
+                        "why": "状态会在运行中自己切换，这里构造后不再变化"
+                      },
+                      {
+                        "label": "它说明例 7.8 用的是观察者模式",
+                        "ok": false,
+                        "why": "例题标题处的「Observer」与正文不符，正文明确说采用策略模式"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.strategy",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "意图、参与者与适用性依据：软设教程（第 5 版）§7.3.4 Strategy（第 402–403 页）· GoF《Design Patterns》Strategy 一章 · Refactoring.Guru Strategy。实验改编自教材例 7.8（第 411–415 页）。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.strategy.run",
+              "title": "实现「满额返利」策略",
+              "case": "strategy_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "消费 700 元：正常收费、打 8 折、满 300 返 100，三种策略各收多少？先算出来再运行。",
+              "goal": "补 CashReturn::acceptCash() 的 TODO：每满 moneyCondition 减去 moneyReturn，即 money - floor(money / moneyCondition) * moneyReturn。",
+              "pass": {
+                "includes": [
+                  "discount: 560",
+                  "return: 500"
+                ]
+              },
+              "hint": "需要 #include <cmath> 里的 std::floor，骨架已经包含。"
+            }
+          ],
+          "modern": {
+            "verdict": "functional",
+            "text": "四语言现状：C 里函数指针就是策略的标准写法；C++ 用 std::function 或模板参数（零开销）；Python 直接传函数；Rust 用闭包或泛型 trait。传函数即策略——这是一等函数替代模式最典型的例子，类层级只在策略本身带状态、要多个方法时才值得写。"
+          }
+        },
+        {
+          "id": "dp.state",
+          "title": "状态模式 State",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.strategy"
+          ],
+          "track": "behavioral",
+          "guide_line": "允许一个对象在其内部状态改变时改变它的行为。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能把依赖状态的大段条件分支拆成状态类，并让状态对象负责切换。",
+            "pain": "订单、文档、连接的每个操作里都有一模一样的 switch(state)，加一个状态要改遍所有操作。",
+            "model": "Context 维护一个当前 State 对象并把请求委托给它；每个 ConcreteState 实现该状态下的行为，并决定下一个状态。",
+            "scope": "状态切换可以由状态类决定，也可以由 Context 决定；状态对象没有自身数据时可以共享。",
+            "judgment": "对象行为随内部状态变、状态之间会互相切换——状态；客户挑一种算法用到底——策略。",
+            "landing": "能为一个三四个状态的对象写出状态类，Context 里不再有状态分支。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "文档有草稿、审核中、已发布三种状态，publish()、edit()、delete() 在每种状态下行为都不同，现在每个方法里都有一个 switch(state)。要加一个「已归档」状态时会怎样？更好的结构是？",
+                "options": [
+                  {
+                    "label": "要改遍所有方法的 switch；应把每个状态写成一个类，文档把请求委托给当前状态对象",
+                    "ok": true,
+                    "why": "这是状态模式：一个状态的全部行为集中在一个类里"
+                  },
+                  {
+                    "label": "只要在枚举里加一个值",
+                    "ok": false,
+                    "why": "每个 switch 都得补分支，漏一处就是 bug"
+                  },
+                  {
+                    "label": "改用策略模式，让客户选择用哪套行为",
+                    "ok": false,
+                    "why": "状态应由对象自己按流程切换，而不是由客户挑选"
+                  },
+                  {
+                    "label": "给每个状态派生一个文档子类",
+                    "ok": false,
+                    "why": "对象的类型不能在运行时改变，状态却要变"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "状态（State）的意图：「允许一个对象在其内部状态改变时改变它的行为。对象看起来似乎修改了它的类。」做法是把与某个状态相关的行为都放进一个状态类，Context 只持有「当前状态」并把请求转给它——原来散落在各个方法里的状态分支，变成了一个个类。"
+              },
+              {
+                "type": "uml",
+                "title": "状态类图",
+                "uml": {
+                  "width": 700,
+                  "height": 270,
+                  "classes": [
+                    {
+                      "name": "Context",
+                      "x": 15,
+                      "y": 20,
+                      "w": 190,
+                      "attrs": [
+                        "- state: State*"
+                      ],
+                      "methods": [
+                        "+ request()"
+                      ]
+                    },
+                    {
+                      "name": "State",
+                      "x": 400,
+                      "y": 20,
+                      "w": 180,
+                      "stereotype": "interface",
+                      "methods": [
+                        "+ handle()"
+                      ]
+                    },
+                    {
+                      "name": "ConcreteStateA",
+                      "x": 300,
+                      "y": 170,
+                      "w": 170,
+                      "methods": [
+                        "+ handle()"
+                      ]
+                    },
+                    {
+                      "name": "ConcreteStateB",
+                      "x": 500,
+                      "y": 170,
+                      "w": 170,
+                      "methods": [
+                        "+ handle()"
+                      ]
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "Context",
+                      "to": "State",
+                      "kind": "agg",
+                      "label": "state"
+                    },
+                    {
+                      "from": "ConcreteStateA",
+                      "to": "State",
+                      "kind": "implements"
+                    },
+                    {
+                      "from": "ConcreteStateB",
+                      "to": "State",
+                      "kind": "implements"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "steps",
+                "title": "参与者",
+                "items": [
+                  "Context：定义客户感兴趣的接口，维护一个 ConcreteState 子类的实例，它定义当前状态；request() 里调用 state->handle()。",
+                  "State：定义一个接口，封装与 Context 的一个特定状态相关的行为。",
+                  "ConcreteState：每个子类实现与 Context 的一个状态相关的行为。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "状态 vs 策略",
+                "left": {
+                  "title": "状态",
+                  "body": "状态对象互相知道，在满足条件时把 Context 切到下一个状态；客户通常不直接指定状态。目的：消掉依赖状态的条件分支。"
+                },
+                "right": {
+                  "title": "策略",
+                  "body": "策略对象互不知道，由客户或配置决定用哪一个，用的过程中一般不换。目的：让算法可替换。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "适用性",
+                "text": "一个对象的行为取决于它的状态，并且必须在运行时根据状态改变行为；一个操作中含有庞大的多分支条件语句，且这些分支依赖于对象的状态（通常用枚举常量表示），多个操作里有同样的条件结构——状态模式把每个分支放进一个独立的类。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "状态模式中，谁负责把 Context 切换到下一个状态？",
+                    "choices": [
+                      {
+                        "label": "可以由具体状态类在处理请求时决定，也可以由 Context 决定",
+                        "ok": true,
+                        "why": "两种都可以；状态类决定时，状态之间需要相互知道"
+                      },
+                      {
+                        "label": "只能由客户代码切换",
+                        "ok": false,
+                        "why": "客户切换的话，就更像是策略"
+                      },
+                      {
+                        "label": "由一个全局的状态管理单例负责",
+                        "ok": false,
+                        "why": "模式并不要求这样的全局对象"
+                      },
+                      {
+                        "label": "状态一旦设定就不能再改变",
+                        "ok": false,
+                        "why": "状态模式的意义就在于状态会变"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.state",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "意图、参与者与适用性依据：软设教程（第 5 版）§7.3.4 State（第 402 页）· GoF《Design Patterns》State 一章 · Refactoring.Guru State。教材此处意图句 OCR 缺失，采用 GoF 中译本的通行表述。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.state.run",
+              "title": "补上「审核中」状态",
+              "case": "state_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "现在连按三次 publish，每次之后是什么状态？问题出在哪个状态类？",
+              "goal": "补 Moderation::publish() 的 TODO：输出 approved，并调用 doc.changeState(std::make_unique<Published>())。",
+              "pass": {
+                "includes": [
+                  "approved",
+                  "state: Published",
+                  "already published"
+                ]
+              }
+            }
+          ],
+          "modern": {
+            "verdict": "language",
+            "text": "四语言现状：C 里是表驱动的 switch；C++ 可用 std::variant 加 std::visit；Python 3.10 有 match-case；Rust 的 enum+match 能做到「非法状态不可表示」，还可以用类型状态在编译期禁止非法转换。状态类层级仍适合每个状态有大量行为的场景。"
+          }
+        },
+        {
+          "id": "dp.template-method",
+          "title": "模板方法模式 Template Method",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.dip"
+          ],
+          "track": "behavioral",
+          "guide_line": "定义算法的骨架，把其中某些步骤延迟到子类实现。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能把一组子类的共同流程提到父类的模板方法里，用原语操作和钩子留出扩展点。",
+            "pain": "几个子类的流程大同小异，各自复制一份，改一处要改所有副本。",
+            "model": "AbstractClass 的模板方法按固定顺序调用若干原语操作；ConcreteClass 只实现这些原语操作；钩子给出默认行为，子类可选择重定义。",
+            "scope": "模板方法本身不该被子类覆盖（C++ 里不设为 virtual）；这是一个基于继承的行为类模式。",
+            "judgment": "父类定流程、子类填步骤——模板方法；整个算法可替换——策略。",
+            "landing": "能写出带钩子的模板方法，并新增一个子类而不改父类。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "咖啡和茶的冲泡流程都是「烧水 → 冲泡 → 倒入杯中 → 加调料」，只有冲泡和加调料两步不同。现在两个类各写了一遍完整流程。怎样消除重复、又保证流程顺序不被子类改乱？",
+                "options": [
+                  {
+                    "label": "父类写一个固定顺序的流程方法，把不同的两步声明为抽象操作交给子类实现",
+                    "ok": true,
+                    "why": "这是模板方法：不变的部分只写一次，可变的部分留给子类"
+                  },
+                  {
+                    "label": "把完整流程复制到每个子类里",
+                    "ok": false,
+                    "why": "改流程时要改所有副本"
+                  },
+                  {
+                    "label": "用策略模式把整个冲泡流程做成可替换对象",
+                    "ok": false,
+                    "why": "流程顺序是固定的，变的只是其中两步，用继承留扩展点更直接"
+                  },
+                  {
+                    "label": "写一个 switch 按饮料类型执行不同步骤",
+                    "ok": false,
+                    "why": "加一种饮料就要改这个 switch"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "模板方法（Template Method）的意图：「定义一个操作中的算法的骨架，而将一些步骤延迟到子类中。Template Method 使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤。」它是依赖倒置的一个小例子：父类的高层流程依赖抽象步骤，具体步骤由子类提供——「别调用我们，我们会调用你」。"
+              },
+              {
+                "type": "uml",
+                "title": "模板方法类图",
+                "uml": {
+                  "width": 560,
+                  "height": 260,
+                  "classes": [
+                    {
+                      "name": "AbstractClass",
+                      "x": 150,
+                      "y": 20,
+                      "w": 250,
+                      "stereotype": "abstract",
+                      "methods": [
+                        "+ templateMethod()",
+                        "# primitiveOperation1()",
+                        "# primitiveOperation2()"
+                      ]
+                    },
+                    {
+                      "name": "ConcreteClass",
+                      "x": 150,
+                      "y": 170,
+                      "w": 250,
+                      "methods": [
+                        "# primitiveOperation1()",
+                        "# primitiveOperation2()"
+                      ]
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "ConcreteClass",
+                      "to": "AbstractClass",
+                      "kind": "inherits"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "steps",
+                "title": "参与者",
+                "items": [
+                  "AbstractClass：定义抽象的原语操作，由子类重定义以实现算法的各步骤；实现模板方法，定义算法的骨架——模板方法既调用原语操作，也调用 AbstractClass 或其他对象中的操作。",
+                  "ConcreteClass：实现原语操作，完成算法中与特定子类相关的步骤。",
+                  "钩子（hook）：有默认行为的操作，子类在必要时可以重定义它来扩展，只允许在这些点扩展。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "模板方法 vs 策略",
+                "left": {
+                  "title": "模板方法：继承",
+                  "body": "改变算法的**一部分**：骨架在父类里固定，子类重定义其中的步骤。编译期通过子类确定。"
+                },
+                "right": {
+                  "title": "策略：组合",
+                  "body": "改变**整个**算法：Context 持有一个策略对象，运行时可以整体替换。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "适用性",
+                "text": "一次性实现一个算法的不变部分，把可变的行为留给子类；各子类中公共的行为应被提取出来集中到一个公共父类中，避免代码重复；控制子类扩展——模板方法只在特定点调用钩子操作，只允许在这些点扩展。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "C++ 实现模板方法时，为什么 templateMethod() 通常不声明为 virtual？",
+                    "choices": [
+                      {
+                        "label": "算法骨架不应被子类改写，子类只能重定义其中的原语操作",
+                        "ok": true,
+                        "why": "不设为虚函数，子类就无法覆盖流程顺序"
+                      },
+                      {
+                        "label": "为了提高运行速度",
+                        "ok": false,
+                        "why": "这不是主要原因，关键是保护算法结构"
+                      },
+                      {
+                        "label": "C++ 不允许在虚函数里调用虚函数",
+                        "ok": false,
+                        "why": "完全允许，模板方法正是这样调用原语操作的"
+                      },
+                      {
+                        "label": "因为模板方法必须是静态函数",
+                        "ok": false,
+                        "why": "模板方法是普通成员函数"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.template-method",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "意图、参与者与适用性依据：软设教程（第 5 版）§7.3.4 Template Method（第 403–404 页）· GoF《Design Patterns》Template Method 一章 · Refactoring.Guru Template Method。教材此处意图句 OCR 不完整，采用 GoF 中译本的完整表述。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.template-method.run",
+              "title": "给饮料流程加一个子类",
+              "case": "template_method_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "prepare() 固定了四个步骤。新增「茶」时，需要改 prepare() 吗？子类能改变步骤顺序吗？",
+              "goal": "补 TODO：新增 Tea（brew 输出 steeping tea，addCondiments 输出 adding lemon），并在 main 里调用 tea.prepare()。",
+              "pass": {
+                "includes": [
+                  "steeping tea",
+                  "adding lemon"
+                ]
+              }
+            }
+          ],
+          "modern": {
+            "verdict": "language",
+            "text": "四语言现状：C 用结构体里的默认函数指针；C++ 常写成 NVI（非虚接口）惯用法或用 CRTP 静态分派；Python 多改为把钩子函数作为参数传入；Rust 的 trait 默认方法就是语言级的模板方法。框架的生命周期回调（onCreate、setUp/tearDown）是它最常见的现代形态。"
+          }
+        },
+        {
+          "id": "dp.observer",
+          "title": "观察者模式 Observer",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.uml.class",
+            "dp.dip"
+          ],
+          "track": "behavioral",
+          "guide_line": "定义对象间一对多的依赖，目标变化时所有观察者自动得到通知。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能写出目标与观察者的注册、注销与通知，说清推模型与拉模型。",
+            "pain": "一个数据变了，好几个显示要跟着变；数据类里直接调用每个显示，加一个显示就改一次数据类。",
+            "model": "Subject 维护观察者列表并提供 attach/detach/notify；Observer 定义 update()；ConcreteObserver 在 update 时从 ConcreteSubject 取状态。",
+            "scope": "推模型把变化数据随通知发出，拉模型只通知、由观察者自己来取；观察者数量可以在运行时变化。",
+            "judgment": "一对多、目标不知道具体有谁在听——观察者；多对多交互集中到一个协调者——中介者。",
+            "landing": "能实现 notify()，并在运行时增删观察者。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "气象站的温度变化后，手机 App、广告牌、日志都要更新，而且以后还会接入更多显示端。气象站的代码应该怎么写？",
+                "options": [
+                  {
+                    "label": "气象站维护一个观察者列表，温度变化时逐个通知，具体是谁由它们自己注册",
+                    "ok": true,
+                    "why": "这是观察者：目标只依赖抽象的 Observer 接口"
+                  },
+                  {
+                    "label": "气象站里直接调用 App、广告牌、日志的更新方法",
+                    "ok": false,
+                    "why": "每接入一个显示端都要改气象站"
+                  },
+                  {
+                    "label": "各显示端每秒轮询一次气象站",
+                    "ok": false,
+                    "why": "浪费资源且有延迟，也不是「变化时通知」"
+                  },
+                  {
+                    "label": "用单例保存温度，让大家自己去读",
+                    "ok": false,
+                    "why": "解决不了「变化时及时得到通知」"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "观察者（Observer，又称 Dependents、Publish-Subscribe）的意图：「定义对象间的一种一对多的依赖关系，当一个对象的状态发生改变时，所有依赖于它的对象都得到通知并被自动更新。」典型例子是 MVC：模型一变，它的所有视图都得到通知。目标只认识抽象的 Observer 接口，所以目标与观察者可以各自独立地变化和复用。"
+              },
+              {
+                "type": "uml",
+                "title": "观察者类图",
+                "uml": {
+                  "width": 660,
+                  "height": 320,
+                  "classes": [
+                    {
+                      "name": "Subject",
+                      "x": 15,
+                      "y": 20,
+                      "w": 200,
+                      "stereotype": "abstract",
+                      "methods": [
+                        "+ attach(Observer)",
+                        "+ detach(Observer)",
+                        "+ notify()"
+                      ]
+                    },
+                    {
+                      "name": "Observer",
+                      "x": 420,
+                      "y": 20,
+                      "w": 180,
+                      "stereotype": "interface",
+                      "methods": [
+                        "+ update()"
+                      ]
+                    },
+                    {
+                      "name": "ConcreteSubject",
+                      "x": 15,
+                      "y": 200,
+                      "w": 200,
+                      "attrs": [
+                        "- subjectState"
+                      ],
+                      "methods": [
+                        "+ getState()",
+                        "+ setState()"
+                      ]
+                    },
+                    {
+                      "name": "ConcreteObserver",
+                      "x": 420,
+                      "y": 200,
+                      "w": 200,
+                      "attrs": [
+                        "- observerState"
+                      ],
+                      "methods": [
+                        "+ update()"
+                      ]
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "Subject",
+                      "to": "Observer",
+                      "kind": "assoc",
+                      "label": "observers 0..*"
+                    },
+                    {
+                      "from": "ConcreteSubject",
+                      "to": "Subject",
+                      "kind": "inherits"
+                    },
+                    {
+                      "from": "ConcreteObserver",
+                      "to": "Observer",
+                      "kind": "implements"
+                    },
+                    {
+                      "from": "ConcreteObserver",
+                      "to": "ConcreteSubject",
+                      "kind": "assoc",
+                      "label": "subject"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "steps",
+                "title": "参与者",
+                "items": [
+                  "Subject（目标）：知道它的观察者，可以有任意多个观察者观察同一个目标；提供注册和删除观察者的接口。",
+                  "Observer（观察者）：为那些在目标改变时需要获得通知的对象定义一个更新接口。",
+                  "ConcreteSubject（具体目标）：存有观察者感兴趣的状态，状态改变时向各个观察者发出通知。",
+                  "ConcreteObserver（具体观察者）：维护一个指向 ConcreteSubject 的引用，存储应与目标保持一致的状态，实现 update() 使自身状态与目标一致。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "观察者 vs 中介者（相互竞争的两个模式）",
+                "left": {
+                  "title": "观察者：分布通信",
+                  "body": "通过引入 Observer 与 Subject 对象来分布通信，约束由二者协作维护；有利于松耦合、产生更细粒度、更易复用的类。"
+                },
+                "right": {
+                  "title": "中介者：集中通信",
+                  "body": "中介对象封装了其他对象之间的通信，把维护约束的职责直接放在中介者里；目的是集中而不是分布。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "适用性",
+                "text": "一个抽象模型有两个方面，其中一个依赖另一个，把二者封装在独立对象中以便各自改变和复用；对一个对象的改变需要同时改变其他对象，而不知道具体有多少对象要改变；一个对象必须通知其他对象，而又不能假定其他对象是谁，即不希望它们紧耦合。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "观察者模式中，目标（Subject）依赖的是什么？",
+                    "choices": [
+                      {
+                        "label": "抽象的 Observer 接口，不依赖任何具体观察者类",
+                        "ok": true,
+                        "why": "这样新增观察者种类时目标不用改，符合依赖倒置"
+                      },
+                      {
+                        "label": "每一个具体观察者类",
+                        "ok": false,
+                        "why": "那样每加一种观察者都要改目标"
+                      },
+                      {
+                        "label": "一个负责转发消息的中介者",
+                        "ok": false,
+                        "why": "那是中介者模式"
+                      },
+                      {
+                        "label": "观察者的内部状态",
+                        "ok": false,
+                        "why": "目标不关心观察者内部，只负责通知"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.observer",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "意图、参与者与适用性依据：软设教程（第 5 版）§7.3.4 Observer（第 401，比较见第 406–407 页 页）· GoF《Design Patterns》Observer 一章 · Refactoring.Guru Observer。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.observer.run",
+              "title": "让通知真正发出去",
+              "case": "observer_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "气象站登记了两个观察者，但温度变了没人收到。广告牌注销之后再改温度，谁还会收到？",
+              "goal": "补 Subject::notify() 的 TODO：遍历 observers_，对每个观察者调用 update(*this)。",
+              "pass": {
+                "includes": [
+                  "phone shows 25",
+                  "board shows 25",
+                  "phone shows 30"
+                ]
+              }
+            }
+          ],
+          "modern": {
+            "verdict": "infra",
+            "text": "四语言现状：C 里是手写回调数组；C++ 有 Qt 信号槽、boost.signals2；Python 有事件库与 asyncio；Rust 常用 channel，借用检查让「目标持有观察者引用」的经典写法很别扭。响应式框架（ReactiveX）、事件总线、前端状态管理都是观察者的框架化形态，手写的情况越来越少。"
+          }
+        },
+        {
+          "id": "dp.mediator",
+          "title": "中介者模式 Mediator",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [
+            "dp.observer",
+            "dp.lod"
+          ],
+          "track": "behavioral",
+          "guide_line": "用一个中介对象封装一系列对象之间的交互，使它们不必显式相互引用。",
+          "weight": "",
+          "outline": {
+            "promise": "能用中介者把网状的对象交互收成星形，并区分中介者与观察者、外观。",
+            "pain": "对话框里十几个控件互相联动，每个控件都引用一堆别的控件，改一个联动牵动一片。",
+            "model": "Colleague 只认识 Mediator；ConcreteMediator 认识所有同事并协调它们的交互。",
+            "scope": "交互逻辑集中到中介者后，同事类简单了，但中介者本身可能变得庞大复杂。",
+            "judgment": "多个对等对象之间的复杂交互集中到一处——中介者；给子系统一个简单入口——外观。",
+            "landing": "能写出转发消息的中介者，同事之间没有直接引用。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "聊天室里有 N 个用户，任何一人发言其他人都要收到。如果让每个用户直接持有其他所有用户的引用，会怎样？更好的结构是？",
+                "options": [
+                  {
+                    "label": "引用数约为 N×(N−1)，加人要改所有人；应引入聊天室对象，用户只认识聊天室，由它转发",
+                    "ok": true,
+                    "why": "这是中介者：网状依赖变成星形"
+                  },
+                  {
+                    "label": "没问题，引用多一点而已",
+                    "ok": false,
+                    "why": "依赖结构混乱，每个用户都难以复用"
+                  },
+                  {
+                    "label": "让第一个用户负责转发",
+                    "ok": false,
+                    "why": "这个用户就成了隐式的中介者，且职责混乱"
+                  },
+                  {
+                    "label": "用职责链依次传递消息",
+                    "ok": false,
+                    "why": "职责链是找到一个处理者为止，不是广播给所有人"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "中介者（Mediator）的意图：「用一个中介对象来封装一系列的对象交互。中介者使各对象不需要显式地相互引用，从而使其耦合松散，而且可以独立地改变它们之间的交互。」对等对象原本要互相了解，极端情况下每个对象都认识所有其他对象；中介者提供了松耦合所需的间接性。"
+              },
+              {
+                "type": "uml",
+                "title": "中介者类图",
+                "uml": {
+                  "width": 700,
+                  "height": 260,
+                  "classes": [
+                    {
+                      "name": "Mediator",
+                      "x": 15,
+                      "y": 20,
+                      "w": 160,
+                      "stereotype": "abstract"
+                    },
+                    {
+                      "name": "Colleague",
+                      "x": 420,
+                      "y": 20,
+                      "w": 160,
+                      "stereotype": "abstract"
+                    },
+                    {
+                      "name": "ConcreteMediator",
+                      "x": 15,
+                      "y": 170,
+                      "w": 170
+                    },
+                    {
+                      "name": "ConcreteColleague1",
+                      "x": 300,
+                      "y": 170,
+                      "w": 180
+                    },
+                    {
+                      "name": "ConcreteColleague2",
+                      "x": 500,
+                      "y": 170,
+                      "w": 180
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "Colleague",
+                      "to": "Mediator",
+                      "kind": "assoc",
+                      "label": "mediator"
+                    },
+                    {
+                      "from": "ConcreteMediator",
+                      "to": "Mediator",
+                      "kind": "inherits"
+                    },
+                    {
+                      "from": "ConcreteColleague1",
+                      "to": "Colleague",
+                      "kind": "inherits"
+                    },
+                    {
+                      "from": "ConcreteColleague2",
+                      "to": "Colleague",
+                      "kind": "inherits"
+                    },
+                    {
+                      "from": "ConcreteMediator",
+                      "to": "ConcreteColleague1",
+                      "kind": "assoc"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "steps",
+                "title": "参与者",
+                "items": [
+                  "Mediator（中介者）：定义一个接口用于与各同事对象通信。",
+                  "ConcreteMediator（具体中介者）：通过协调各同事对象实现协作行为，了解并维护它的各个同事。",
+                  "Colleague（同事类）：知道它的中介者对象；需要与其他同事通信时，只与中介者通信。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "中介者 vs 外观",
+                "left": {
+                  "title": "中介者：同事之间的交互",
+                  "body": "同事对象知道中介者并主动与它通信，中介者协调的是一组对等对象之间的多向交互。"
+                },
+                "right": {
+                  "title": "外观：客户到子系统的单向入口",
+                  "body": "子系统不知道外观的存在，外观只是把客户的请求转给子系统，通信是单向的。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "适用性",
+                "text": "一组对象以定义良好但复杂的方式通信，相互依赖关系混乱且难以理解；一个对象引用很多其他对象并直接与它们通信，导致难以复用；想定制一个分布在多个类中的行为，又不想生成太多子类。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "引入中介者之后，最可能出现的新问题是？",
+                    "choices": [
+                      {
+                        "label": "交互逻辑都集中到中介者，中介者本身可能变得庞大复杂",
+                        "ok": true,
+                        "why": "耦合从同事之间转移到了中介者里，要防止它变成「上帝类」"
+                      },
+                      {
+                        "label": "同事之间耦合变得更紧",
+                        "ok": false,
+                        "why": "恰恰相反，同事之间不再直接引用"
+                      },
+                      {
+                        "label": "同事类无法再被复用",
+                        "ok": false,
+                        "why": "同事只依赖中介者接口，复用性反而提高"
+                      },
+                      {
+                        "label": "对象之间无法再通信",
+                        "ok": false,
+                        "why": "通信仍在，只是改为经过中介者"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.mediator",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "意图、参与者与适用性依据：软设教程（第 5 版）§7.3.4 Mediator（第 399–400，比较见第 406–407 页 页）· GoF《Design Patterns》Mediator 一章 · Refactoring.Guru Mediator。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.mediator.run",
+              "title": "让聊天室转发消息",
+              "case": "mediator_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "User 只认识 ChatRoom。alice 说话时，消息该怎么到达 bob 和 carol？",
+              "goal": "补 ChatRoom::send() 的 TODO：对 members_ 里除 from 以外的每个人调用 receive(msg, from)。",
+              "pass": {
+                "includes": [
+                  "bob got: hi from alice",
+                  "carol got: hi from alice"
+                ]
+              }
+            }
+          ],
+          "modern": {
+            "verdict": "infra",
+            "text": "四语言现状：GUI 的对话框控制器、MVC 里的控制器、消息总线、聊天服务器都承担中介者角色；现代框架常以事件总线或消息中心的形态提供。思想依然有效，手写中介者类多见于 GUI 与游戏逻辑。"
+          }
+        },
+        {
+          "id": "dp.command",
+          "title": "命令模式 Command",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.uml.class"
+          ],
+          "track": "behavioral",
+          "guide_line": "把一个请求封装为一个对象，从而支持参数化、排队、日志和撤销。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能把请求封装成命令对象，并用历史栈实现撤销。",
+            "pain": "按钮、菜单、快捷键都要触发同一批操作，还要能撤销、能排队、能记日志，调用方与执行方纠缠在一起。",
+            "model": "Command 声明 execute()（可加 undo()）；ConcreteCommand 把一个 Receiver 绑定到一个动作；Invoker 只调用 execute()；Client 创建命令并设定接收者。",
+            "scope": "命令是回调机制的面向对象替代品；命令对象的生存期可以与发出请求的时刻无关。",
+            "judgment": "要把「请求」当成对象来传递、存储、撤销——命令；要保存对象的内部状态以便恢复——备忘录。",
+            "landing": "能写一个带 undo 的 ConcreteCommand，Invoker 一行不改。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "编辑器的「加粗」既能从菜单触发，也能从工具栏和快捷键触发，还要支持撤销与重做。最合适的组织方式是？",
+                "options": [
+                  {
+                    "label": "把「加粗」封装成一个对象，提供执行与撤销；菜单、工具栏、快捷键只持有并执行这个对象，执行过的放进历史表",
+                    "ok": true,
+                    "why": "这是命令：发出请求的一方与执行请求的一方解耦"
+                  },
+                  {
+                    "label": "菜单、工具栏、快捷键各自直接调用文档的加粗函数",
+                    "ok": false,
+                    "why": "撤销与重做无处记录，三处调用方都要重复逻辑"
+                  },
+                  {
+                    "label": "用观察者通知文档加粗",
+                    "ok": false,
+                    "why": "观察者是一对多的状态通知，不负责记录与撤销请求"
+                  },
+                  {
+                    "label": "用备忘录保存每一步的整个文档",
+                    "ok": false,
+                    "why": "可以撤销，但请求本身没有被对象化，排队、日志都做不了"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "命令（Command，又称 Action、Transaction）的意图：「将一个请求封装为一个对象，从而使得可以用不同的请求对客户进行参数化；对请求排队或记录请求日志，以及支持可撤销的操作。」教材特别指出：命令模式是过程语言中**回调**机制的面向对象替代品。"
+              },
+              {
+                "type": "uml",
+                "title": "命令类图",
+                "uml": {
+                  "width": 660,
+                  "height": 280,
+                  "classes": [
+                    {
+                      "name": "Client",
+                      "x": 15,
+                      "y": 20,
+                      "w": 100
+                    },
+                    {
+                      "name": "Invoker",
+                      "x": 200,
+                      "y": 20,
+                      "w": 150
+                    },
+                    {
+                      "name": "Command",
+                      "x": 440,
+                      "y": 20,
+                      "w": 170,
+                      "stereotype": "interface",
+                      "methods": [
+                        "+ execute()"
+                      ]
+                    },
+                    {
+                      "name": "Receiver",
+                      "x": 15,
+                      "y": 180,
+                      "w": 160,
+                      "methods": [
+                        "+ action()"
+                      ]
+                    },
+                    {
+                      "name": "ConcreteCommand",
+                      "x": 420,
+                      "y": 180,
+                      "w": 210,
+                      "attrs": [
+                        "- state"
+                      ],
+                      "methods": [
+                        "+ execute()"
+                      ]
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "Invoker",
+                      "to": "Command",
+                      "kind": "agg"
+                    },
+                    {
+                      "from": "ConcreteCommand",
+                      "to": "Command",
+                      "kind": "implements"
+                    },
+                    {
+                      "from": "ConcreteCommand",
+                      "to": "Receiver",
+                      "kind": "assoc",
+                      "label": "receiver"
+                    },
+                    {
+                      "from": "Client",
+                      "to": "Receiver",
+                      "kind": "dep"
+                    },
+                    {
+                      "from": "Client",
+                      "to": "ConcreteCommand",
+                      "kind": "dep",
+                      "label": "creates"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "steps",
+                "title": "参与者",
+                "items": [
+                  "Command：声明执行操作的接口。",
+                  "ConcreteCommand：将一个接收者对象绑定于一个动作，调用接收者相应的操作以实现 execute()。",
+                  "Client：创建一个具体命令对象并设定它的接收者。",
+                  "Invoker：要求该命令执行这个请求。",
+                  "Receiver：知道如何实施与执行一个请求相关的操作，任何类都可能作为接收者。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "命令 vs 备忘录（都是可传递的「令牌」）",
+                "left": {
+                  "title": "命令：令牌代表一个请求",
+                  "body": "执行命令是一个多态操作，多态在这里特别重要；撤销靠命令自己保存的状态或反向操作。"
+                },
+                "right": {
+                  "title": "备忘录：令牌代表某一时刻的内部状态",
+                  "body": "接口非常小，只能作为值传递，几乎不给客户提供多态操作；撤销靠把原发器恢复到保存的状态。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "适用性",
+                "text": "抽象出待执行的动作以参数化某对象（回调的面向对象替代）；在不同的时刻指定、排列和执行请求；支持取消操作——execute 前保存状态，unexecute 时消除影响，历史列表支持多级撤销与重做；支持修改日志，系统崩溃后可重做；用构建在原语操作上的高层操作（事务）构造系统。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "命令模式中，真正知道「怎么做」的是哪个角色？",
+                    "choices": [
+                      {
+                        "label": "Receiver（接收者）",
+                        "ok": true,
+                        "why": "ConcreteCommand 只是把请求转给接收者的某个动作"
+                      },
+                      {
+                        "label": "Invoker（调用者）",
+                        "ok": false,
+                        "why": "调用者只知道调用 execute()，不知道具体做什么"
+                      },
+                      {
+                        "label": "Command 接口",
+                        "ok": false,
+                        "why": "接口只声明 execute()"
+                      },
+                      {
+                        "label": "Client（客户）",
+                        "ok": false,
+                        "why": "客户负责创建命令并设定接收者，不负责执行"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.command",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "意图、参与者与适用性依据：软设教程（第 5 版）§7.3.4 Command（第 395–397，比较见第 406–407 页 页）· GoF《Design Patterns》Command 一章 · Refactoring.Guru Command。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.command.run",
+              "title": "加一个可撤销的「关灯」命令",
+              "case": "command_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "遥控器只认识 Command 接口。新增一个命令，遥控器要不要改？撤销时它怎么知道该做什么？",
+              "goal": "补 TODO：写 LightOffCommand（execute 调 light_.off()，undo 调 light_.on()），并在 main 里按「开 → 关 → 撤销」操作。",
+              "pass": {
+                "includes": [
+                  "light: OFF",
+                  "undo -> light: ON"
+                ]
+              }
+            }
+          ],
+          "modern": {
+            "verdict": "functional",
+            "text": "四语言现状：C 里是函数指针加 void* 参数；C++ 用 std::function 队列；Python 用闭包或 functools.partial；Rust 用 Box<dyn Fn> 或枚举。只需「延迟执行」时一个闭包就够了；要撤销、重做、序列化、事务时，命令对象仍然是标准做法。"
+          }
+        },
+        {
+          "id": "dp.chain",
+          "title": "职责链模式 Chain of Responsibility",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.command"
+          ],
+          "track": "behavioral",
+          "guide_line": "让多个对象都有机会处理请求，把它们连成链，请求沿链传递直到被处理。",
+          "weight": "",
+          "outline": {
+            "promise": "能把一组处理者连成链，请求的发送者不必知道最终由谁处理。",
+            "pain": "审批额度、事件冒泡、日志级别过滤：发送方要写一长串 if 判断该交给谁。",
+            "model": "Handler 定义处理接口并持有后继；ConcreteHandler 能处理就处理，不能就转给后继；Client 只向链头提交请求。",
+            "scope": "请求可能走到链尾也没人处理，要有兜底；链的组成可以在运行时决定。",
+            "judgment": "沿链传递、通常只有一个处理者——职责链；每一层都对请求做点事再转发——装饰。",
+            "landing": "能在链中插入一个新的处理者，发送请求的代码一行不改。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "报销审批：1000 元以内组长批，5000 元以内经理批，20000 元以内总监批，以上驳回。审批规则以后还会调整。提交报销的代码应该怎么写？",
+                "options": [
+                  {
+                    "label": "只把单子交给链头，组长、经理、总监各自判断能不能批，批不了就交给下一级",
+                    "ok": true,
+                    "why": "这是职责链：发送者与接收者解耦，链可以随时调整"
+                  },
+                  {
+                    "label": "提交方用 if-else 判断金额后直接找对应的审批人",
+                    "ok": false,
+                    "why": "规则一变，所有提交方都要改"
+                  },
+                  {
+                    "label": "把所有审批人的逻辑写进一个审批类",
+                    "ok": false,
+                    "why": "加一级审批就要改这个类"
+                  },
+                  {
+                    "label": "用观察者把单子广播给所有审批人",
+                    "ok": false,
+                    "why": "所有人都会收到并处理，而不是找到一个能批的人"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "职责链（Chain of Responsibility）的意图：「使多个对象都有机会处理请求，从而避免请求的发送者和接收者之间的耦合关系。将这些对象连成一条链，并沿着这条链传递该请求，直到有一个对象处理它为止。」请求的发送者只认识链头，具体由谁处理在运行时才确定。"
+              },
+              {
+                "type": "uml",
+                "title": "职责链类图",
+                "uml": {
+                  "width": 600,
+                  "height": 260,
+                  "classes": [
+                    {
+                      "name": "Client",
+                      "x": 15,
+                      "y": 30,
+                      "w": 100
+                    },
+                    {
+                      "name": "Handler",
+                      "x": 220,
+                      "y": 20,
+                      "w": 200,
+                      "attrs": [
+                        "- successor: Handler*"
+                      ],
+                      "methods": [
+                        "+ handleRequest()"
+                      ]
+                    },
+                    {
+                      "name": "ConcreteHandler1",
+                      "x": 110,
+                      "y": 170,
+                      "w": 190,
+                      "methods": [
+                        "+ handleRequest()"
+                      ]
+                    },
+                    {
+                      "name": "ConcreteHandler2",
+                      "x": 340,
+                      "y": 170,
+                      "w": 190,
+                      "methods": [
+                        "+ handleRequest()"
+                      ]
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "Client",
+                      "to": "Handler",
+                      "kind": "assoc"
+                    },
+                    {
+                      "from": "ConcreteHandler1",
+                      "to": "Handler",
+                      "kind": "inherits"
+                    },
+                    {
+                      "from": "ConcreteHandler2",
+                      "to": "Handler",
+                      "kind": "inherits"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "steps",
+                "title": "参与者",
+                "items": [
+                  "Handler：定义处理请求的接口；（可选）实现后继链——类图中的 successor 是 Handler 指向自身类型的关联。",
+                  "ConcreteHandler：处理它负责的请求，可访问它的后继者；能处理就处理，否则把请求转发给后继者。",
+                  "Client：向链上的具体处理者对象提交请求。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "职责链 vs 装饰（都是一层层转发）",
+                "left": {
+                  "title": "职责链：找到一个处理者为止",
+                  "body": "每个处理者决定自己处理还是交给下一个；通常只有一个对象真正处理请求，链上的其他对象只是转交。"
+                },
+                "right": {
+                  "title": "装饰：每一层都加一点职责",
+                  "body": "每个装饰器都在转发前后做自己的事，请求一定会到达最内层的组件。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "适用性",
+                "text": "有多个对象可以处理一个请求，由哪个对象处理在运行时自动确定；想在不明确指定接收者的情况下，向多个对象中的一个提交请求；可处理请求的对象集合应被动态指定。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "职责链中，一个请求传到链尾仍没有处理者能处理，会怎样？",
+                    "choices": [
+                      {
+                        "label": "请求可能得不到处理，需要设计兜底（如链尾处理者或默认拒绝）",
+                        "ok": true,
+                        "why": "职责链不保证请求一定被处理，这是它的已知代价"
+                      },
+                      {
+                        "label": "自动回到链头重新传递",
+                        "ok": false,
+                        "why": "那样会无限循环"
+                      },
+                      {
+                        "label": "编译期就会报错",
+                        "ok": false,
+                        "why": "链是运行时组成的，编译器不知道"
+                      },
+                      {
+                        "label": "一定由第一个处理者处理",
+                        "ok": false,
+                        "why": "第一个处理者处理不了才会往后传"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.chain",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "意图、参与者与适用性依据：软设教程（第 5 版）§7.3.4 Chain of Responsibility（第 395，比较见第 407 页 页）· GoF《Design Patterns》Chain of Responsibility 一章 · Refactoring.Guru Chain of Responsibility。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.chain.run",
+              "title": "在审批链中插入经理",
+              "case": "chain_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "现在 3000 元的单子是谁批的？插入经理之后呢？发起审批的那行循环要不要改？",
+              "goal": "补 TODO：新增 Manager（额度 5000，title 为 \"Manager\"），并把链改成 lead → manager → director。",
+              "pass": {
+                "includes": [
+                  "800 approved by TeamLead",
+                  "3000 approved by Manager",
+                  "15000 approved by Director",
+                  "50000 rejected"
+                ]
+              },
+              "hint": "setNext() 返回下一个处理者，所以可以写成 lead.setNext(&manager)->setNext(&director);"
+            }
+          ],
+          "modern": {
+            "verdict": "infra",
+            "text": "四语言现状：Web 框架的中间件管道（Express、ASP.NET Core、gRPC 拦截器）、Servlet 过滤器、GUI 事件冒泡、异常处理链都是职责链；框架把「链」做成了配置项，业务代码只写一个个处理函数。"
+          }
+        },
+        {
+          "id": "dp.memento",
+          "title": "备忘录模式 Memento",
+          "difficulty": 3,
+          "mastery_goal": "understand",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.uml.class"
+          ],
+          "track": "behavioral",
+          "guide_line": "在不破坏封装的前提下捕获对象的内部状态，在对象之外保存，以便日后恢复。",
+          "weight": "",
+          "outline": {
+            "promise": "能实现原发器、备忘录、管理者三者的分工，说清它如何不破坏封装。",
+            "pain": "要支持撤销，就得在外面保存对象的内部状态；可一旦为此公开内部字段，封装就破了。",
+            "model": "Originator 创建记录当前状态的 Memento，并能用它恢复；Caretaker 只保管 Memento，不能查看或修改其内容。",
+            "scope": "C++ 常用友元让只有原发器能读备忘录；状态很大时保存成本是主要代价。",
+            "judgment": "保存「某一时刻的内部状态」——备忘录；保存「一个请求」——命令。二者常配合实现撤销。",
+            "landing": "能写出 restore()，并说明为什么 Caretaker 看不到状态。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "文本编辑器要支持撤销。若为此给编辑器加上 getAllInternalState()、setAllInternalState() 两个公有方法，让外部历史记录去存取，问题是？更好的做法是？",
+                "options": [
+                  {
+                    "label": "内部实现细节被暴露、封装被破坏；应由编辑器自己生成一个只有它能读的状态快照，交给历史记录保管",
+                    "ok": true,
+                    "why": "这是备忘录：保存与恢复都由原发器完成"
+                  },
+                  {
+                    "label": "没有问题，方法多两个而已",
+                    "ok": false,
+                    "why": "任何对象都能读写编辑器内部状态，改实现会牵连外部"
+                  },
+                  {
+                    "label": "用观察者在每次修改时通知历史记录",
+                    "ok": false,
+                    "why": "通知解决不了「怎样保存状态而不暴露它」"
+                  },
+                  {
+                    "label": "把编辑器做成单例",
+                    "ok": false,
+                    "why": "与撤销无关"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "备忘录（Memento，又称 Token）的意图：「在不破坏封装性的前提下捕获一个对象的内部状态，并在该对象之外保存这个状态。这样以后就可以将对象恢复到原先保存的状态。」关键在于：备忘录只有创建它的原发器能读，保管它的管理者只能当作一个不透明的值存着。"
+              },
+              {
+                "type": "uml",
+                "title": "备忘录类图",
+                "uml": {
+                  "width": 680,
+                  "height": 160,
+                  "classes": [
+                    {
+                      "name": "Originator",
+                      "x": 15,
+                      "y": 20,
+                      "w": 200,
+                      "attrs": [
+                        "- state"
+                      ],
+                      "methods": [
+                        "+ setMemento(m)",
+                        "+ createMemento()"
+                      ]
+                    },
+                    {
+                      "name": "Memento",
+                      "x": 290,
+                      "y": 20,
+                      "w": 170,
+                      "attrs": [
+                        "- state"
+                      ],
+                      "methods": [
+                        "+ getState()",
+                        "+ setState()"
+                      ]
+                    },
+                    {
+                      "name": "Caretaker",
+                      "x": 540,
+                      "y": 30,
+                      "w": 130
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "Originator",
+                      "to": "Memento",
+                      "kind": "dep",
+                      "label": "creates"
+                    },
+                    {
+                      "from": "Caretaker",
+                      "to": "Memento",
+                      "kind": "agg",
+                      "label": "memento"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "steps",
+                "title": "参与者",
+                "items": [
+                  "Memento（备忘录）：存储原发器的内部状态，原发器决定存哪些；防止原发器以外的其他对象访问备忘录。",
+                  "Originator（原发器）：创建一个备忘录记录当前时刻的内部状态，并使用备忘录恢复内部状态。",
+                  "Caretaker（管理者）：负责保存好备忘录，不能对备忘录的内容进行操作或检查。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "两种接口：窄接口与宽接口",
+                "left": {
+                  "title": "管理者看到的：窄接口",
+                  "body": "只能保存、传递备忘录，读不到里面的状态。"
+                },
+                "right": {
+                  "title": "原发器看到的：宽接口",
+                  "body": "能读写全部状态以便恢复。C++ 用 friend 只对原发器开放，这就是「不破坏封装」的落点。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "适用性",
+                "text": "必须保存一个对象在某一时刻的（部分）状态，以便以后需要时恢复到先前的状态；如果用一个接口让其他对象直接得到这些状态，将会暴露对象的实现细节并破坏封装性。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "备忘录模式中，管理者（Caretaker）能做什么？",
+                    "choices": [
+                      {
+                        "label": "保存和交还备忘录，但不能查看或修改其内容",
+                        "ok": true,
+                        "why": "管理者只负责保管，状态的读写只属于原发器"
+                      },
+                      {
+                        "label": "读取备忘录中的状态并显示给用户",
+                        "ok": false,
+                        "why": "那会破坏原发器的封装"
+                      },
+                      {
+                        "label": "修改备忘录中的状态后再交还",
+                        "ok": false,
+                        "why": "管理者不能操作备忘录内容"
+                      },
+                      {
+                        "label": "直接调用原发器的私有成员恢复状态",
+                        "ok": false,
+                        "why": "恢复由原发器自己用备忘录完成"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.memento",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "意图、参与者与适用性依据：软设教程（第 5 版）§7.3.4 Memento（第 400，比较见第 406 页 页）· GoF《Design Patterns》Memento 一章 · Refactoring.Guru Memento。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.memento.run",
+              "title": "实现撤销时的状态恢复",
+              "case": "memento_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "Memento 的状态是私有的，只有 Editor 是它的友元。History 能读到里面的文本吗？撤销时谁来恢复？",
+              "goal": "补 Editor::restore() 的 TODO：把 text_ 设为备忘录里保存的 state_。",
+              "pass": {
+                "includes": [
+                  "before undo: [Hello World]",
+                  "after undo: [Hello]"
+                ]
+              }
+            }
+          ],
+          "modern": {
+            "verdict": "language",
+            "text": "四语言现状：序列化库（serde、pickle、JSON）承担了大部分「保存状态」的工作；不可变数据结构让「保存旧版本」变成保留一个引用；编辑器与游戏存档仍按原发器/备忘录/管理者分工。C++ 的值语义拷贝让简单场景下的备忘录几乎不用专门写。"
+          }
+        },
+        {
+          "id": "dp.iterator",
+          "title": "迭代器模式 Iterator",
+          "difficulty": 2,
+          "mastery_goal": "understand",
+          "knowledge_type": "concept",
+          "requires": [
+            "dp.factory-method"
+          ],
+          "track": "behavioral",
+          "guide_line": "提供一种方法顺序访问聚合对象中的各个元素，而不暴露其内部表示。",
+          "weight": "",
+          "outline": {
+            "promise": "能说清迭代器把「遍历」从聚合中分离出来的好处，并为一个聚合实现另一种遍历。",
+            "pain": "客户为了遍历一个集合，得知道它是数组、链表还是树；换一种存储，所有遍历代码都要改。",
+            "model": "Iterator 定义 first/next/isDone/currentItem；Aggregate 定义 createIterator()；ConcreteAggregate 创建对应的 ConcreteIterator。",
+            "scope": "同一个聚合可以同时有多个遍历在进行；createIterator() 本身是一个工厂方法。",
+            "judgment": "要遍历而不暴露内部——迭代器；要对各元素执行随类型而变的操作——访问者。",
+            "landing": "能为一个聚合实现反向迭代器，客户遍历代码不变。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "一个通讯录内部用数组存，后来要改成链表。外部有几十处代码用下标 for 循环直接遍历它的数组。怎样让以后换存储结构时外部代码不受影响？",
+                "options": [
+                  {
+                    "label": "让通讯录提供一个迭代器，外部只通过「取第一个、下一个、是否结束、当前元素」遍历",
+                    "ok": true,
+                    "why": "这是迭代器：遍历方式与内部表示分离"
+                  },
+                  {
+                    "label": "把内部数组声明为 public",
+                    "ok": false,
+                    "why": "外部会更依赖内部表示"
+                  },
+                  {
+                    "label": "换存储结构时把几十处代码一起改",
+                    "ok": false,
+                    "why": "下次再换还得再改"
+                  },
+                  {
+                    "label": "用组合模式把通讯录做成树",
+                    "ok": false,
+                    "why": "问题是遍历方式暴露了内部表示，与是否成树无关"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "迭代器（Iterator，又称 Cursor）的意图：「提供一种方法顺序访问一个聚合对象中的各个元素，而又不需暴露该对象的内部表示。」遍历的职责从聚合中移到了迭代器里：同一个聚合可以有多种遍历方式，也可以同时进行多个遍历。"
+              },
+              {
+                "type": "uml",
+                "title": "迭代器类图",
+                "uml": {
+                  "width": 600,
+                  "height": 300,
+                  "classes": [
+                    {
+                      "name": "Aggregate",
+                      "x": 15,
+                      "y": 20,
+                      "w": 190,
+                      "stereotype": "interface",
+                      "methods": [
+                        "+ createIterator()"
+                      ]
+                    },
+                    {
+                      "name": "Client",
+                      "x": 235,
+                      "y": 30,
+                      "w": 110
+                    },
+                    {
+                      "name": "Iterator",
+                      "x": 390,
+                      "y": 20,
+                      "w": 180,
+                      "stereotype": "interface",
+                      "methods": [
+                        "+ first()",
+                        "+ next()",
+                        "+ isDone()",
+                        "+ currentItem()"
+                      ]
+                    },
+                    {
+                      "name": "ConcreteAggregate",
+                      "x": 15,
+                      "y": 200,
+                      "w": 190,
+                      "methods": [
+                        "+ createIterator()"
+                      ]
+                    },
+                    {
+                      "name": "ConcreteIterator",
+                      "x": 390,
+                      "y": 200,
+                      "w": 180,
+                      "attrs": [
+                        "- current"
+                      ]
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "Client",
+                      "to": "Aggregate",
+                      "kind": "assoc"
+                    },
+                    {
+                      "from": "Client",
+                      "to": "Iterator",
+                      "kind": "assoc"
+                    },
+                    {
+                      "from": "ConcreteAggregate",
+                      "to": "Aggregate",
+                      "kind": "implements"
+                    },
+                    {
+                      "from": "ConcreteIterator",
+                      "to": "Iterator",
+                      "kind": "implements"
+                    },
+                    {
+                      "from": "ConcreteAggregate",
+                      "to": "ConcreteIterator",
+                      "kind": "dep",
+                      "label": "creates",
+                      "offset": -10
+                    },
+                    {
+                      "from": "ConcreteIterator",
+                      "to": "ConcreteAggregate",
+                      "kind": "assoc",
+                      "offset": -10
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "steps",
+                "title": "参与者",
+                "items": [
+                  "Iterator（迭代器）：定义访问和遍历元素的接口。",
+                  "ConcreteIterator（具体迭代器）：实现迭代器接口，遍历聚合时跟踪当前位置。",
+                  "Aggregate（聚合）：定义创建相应迭代器对象的接口。",
+                  "ConcreteAggregate（具体聚合）：实现创建相应迭代器的接口，返回一个适当的 ConcreteIterator 实例。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "外部迭代器 vs 内部迭代器",
+                "left": {
+                  "title": "外部迭代器：客户控制",
+                  "body": "客户主动调用 next() 推进遍历（本节实验的写法，C++ STL 迭代器也是）。灵活，可以同时遍历两个聚合做比较。"
+                },
+                "right": {
+                  "title": "内部迭代器：迭代器控制",
+                  "body": "客户把一个操作交给迭代器，由它对每个元素执行（如 for_each、map）。使用简单，但难以中途停下或并行遍历两个聚合。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "适用性",
+                "text": "访问一个聚合对象的内容而无须暴露它的内部表示；支持对聚合对象的多种遍历；为遍历不同的聚合结构提供一个统一的接口（即支持多态迭代）。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "迭代器模式中，Aggregate::createIterator() 与哪个创建型模式的结构相同？",
+                    "choices": [
+                      {
+                        "label": "工厂方法：由具体聚合决定创建哪种具体迭代器",
+                        "ok": true,
+                        "why": "每种 ConcreteAggregate 返回与之配套的 ConcreteIterator"
+                      },
+                      {
+                        "label": "单例",
+                        "ok": false,
+                        "why": "每次遍历可以有新的迭代器"
+                      },
+                      {
+                        "label": "原型",
+                        "ok": false,
+                        "why": "迭代器不是复制出来的"
+                      },
+                      {
+                        "label": "建造者",
+                        "ok": false,
+                        "why": "迭代器不需要分步组装"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.iterator",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "意图、参与者与适用性依据：软设教程（第 5 版）§7.3.4 Iterator（第 398–399 页）· GoF《Design Patterns》Iterator 一章 · Refactoring.Guru Iterator。教材此处意图句 OCR 缺失，采用 GoF 中译本的通行表述。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.iterator.run",
+              "title": "给聚合加一个反向迭代器",
+              "case": "iterator_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "printAll() 只认 Iterator 接口。同一个 NameList，怎样不改 printAll() 就能倒序打印？",
+              "goal": "补 ReverseIterator 的四个方法：first() 定位到最后一个元素，next() 向前一步，isDone() 在越过第一个元素后为真，currentItem() 返回当前位置的元素。",
+              "pass": {
+                "includes": [
+                  "forward: alice bob carol",
+                  "reverse: carol bob alice"
+                ]
+              },
+              "hint": "pos_ 从 NameList::kSize - 1 开始，每次减一，pos_ < 0 时结束。"
+            }
+          ],
+          "modern": {
+            "verdict": "language",
+            "text": "四语言现状：迭代器已完全内建——C++ STL 迭代器与范围 for、Python 的迭代器协议与 yield 生成器、Rust 的 Iterator trait 与惰性组合器（map/filter/take）。自己写迭代器时也是实现语言规定的协议，很少再按 GoF 的四个方法单独设计。"
+          }
+        },
+        {
+          "id": "dp.visitor",
+          "title": "访问者模式 Visitor",
+          "difficulty": 4,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.composite"
+          ],
+          "track": "behavioral",
+          "guide_line": "表示作用于对象结构中各元素的操作，可以在不改变元素类的前提下定义新操作。",
+          "weight": "",
+          "outline": {
+            "promise": "能用双分派为一组元素类添加新操作，并说清访问者适用的前提（元素类稳定）。",
+            "pain": "要对一棵结构里的各种元素做统计、打印、导出、校验……每加一种操作都要改所有元素类。",
+            "model": "Element 定义 accept(Visitor)；ConcreteElement 在 accept 里回调 visitor->visit(this)；Visitor 为每种具体元素声明一个 visit；ObjectStructure 枚举元素。",
+            "scope": "加新操作容易（加一个访问者），加新元素类难（要改所有访问者）。",
+            "judgment": "元素类稳定、操作经常增加——访问者；元素类经常变——把操作留在元素类里更好。",
+            "landing": "能为已有的元素结构写一个新的访问者，元素类一行不改。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "图书馆系统里有图书、论文两种文献，结构很少变，但统计页数、导出目录、检查借阅期限等操作不断增加。每加一种操作都要改两个文献类。更好的办法是？",
+                "options": [
+                  {
+                    "label": "把每种操作写成一个访问者类，文献只提供 accept(访问者)，由访问者按文献的具体类型分别处理",
+                    "ok": true,
+                    "why": "这是访问者：新操作只加一个类，文献类不动"
+                  },
+                  {
+                    "label": "在文献基类里加一个 doOperation(type) 和 switch",
+                    "ok": false,
+                    "why": "每加一种操作都要改 switch"
+                  },
+                  {
+                    "label": "给每种操作派生一组文献子类",
+                    "ok": false,
+                    "why": "类数按「文献种类 × 操作数」增长"
+                  },
+                  {
+                    "label": "用迭代器遍历文献",
+                    "ok": false,
+                    "why": "迭代器只解决遍历，解决不了「按具体类型执行不同操作」"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "访问者（Visitor）的意图：「表示一个作用于某对象结构中的各元素的操作。它允许在不改变各元素的类的前提下定义作用于这些元素的新操作。」核心是**双分派**：element->accept(v) 按元素的实际类型分派一次，accept 里的 v->visit(this) 再按访问者的实际类型分派一次。教材例 7.7 用它统计馆藏文献的总页码。"
+              },
+              {
+                "type": "uml",
+                "title": "访问者类图",
+                "uml": {
+                  "width": 790,
+                  "height": 300,
+                  "classes": [
+                    {
+                      "name": "Visitor",
+                      "x": 15,
+                      "y": 20,
+                      "w": 250,
+                      "stereotype": "interface",
+                      "methods": [
+                        "+ visit(ConcreteElementA)",
+                        "+ visit(ConcreteElementB)"
+                      ]
+                    },
+                    {
+                      "name": "ConcreteVisitor",
+                      "x": 15,
+                      "y": 190,
+                      "w": 250,
+                      "methods": [
+                        "+ visit(ConcreteElementA)",
+                        "+ visit(ConcreteElementB)"
+                      ]
+                    },
+                    {
+                      "name": "Element",
+                      "x": 400,
+                      "y": 20,
+                      "w": 170,
+                      "stereotype": "interface",
+                      "methods": [
+                        "+ accept(Visitor)"
+                      ]
+                    },
+                    {
+                      "name": "ObjectStructure",
+                      "x": 620,
+                      "y": 30,
+                      "w": 150
+                    },
+                    {
+                      "name": "ConcreteElementA",
+                      "x": 320,
+                      "y": 190,
+                      "w": 190,
+                      "methods": [
+                        "+ accept(Visitor v)",
+                        "+ operationA()"
+                      ]
+                    },
+                    {
+                      "name": "ConcreteElementB",
+                      "x": 540,
+                      "y": 190,
+                      "w": 190,
+                      "methods": [
+                        "+ accept(Visitor v)",
+                        "+ operationB()"
+                      ]
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "ConcreteVisitor",
+                      "to": "Visitor",
+                      "kind": "implements"
+                    },
+                    {
+                      "from": "ConcreteElementA",
+                      "to": "Element",
+                      "kind": "implements"
+                    },
+                    {
+                      "from": "ConcreteElementB",
+                      "to": "Element",
+                      "kind": "implements"
+                    },
+                    {
+                      "from": "ObjectStructure",
+                      "to": "Element",
+                      "kind": "agg"
+                    },
+                    {
+                      "from": "Element",
+                      "to": "Visitor",
+                      "kind": "dep"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "steps",
+                "title": "参与者（括号里是教材例 7.7 的对应类）",
+                "items": [
+                  "Visitor：为对象结构中每个 ConcreteElement 类声明一个 visit 操作，使访问者能确定被访问元素的具体类（LibraryVisitor）。",
+                  "ConcreteVisitor：实现每个 visit，为算法提供上下文并存储局部状态，常在遍历中累积结果（LibrarySumPrintVisitor 累加页数）。",
+                  "Element：定义以访问者为参数的 accept 操作（LibraryItemInterface）。",
+                  "ConcreteElement：实现 accept，在里面调用 visitor->visit(this)（Book、Article）。",
+                  "ObjectStructure：能枚举它的元素，可以是组合或集合（馆藏 Library）。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "加新操作 vs 加新元素类",
+                "left": {
+                  "title": "加新操作：容易",
+                  "body": "写一个新的 ConcreteVisitor 即可，元素类一行不改。相关操作集中在一个访问者类里，不「污染」元素类。"
+                },
+                "right": {
+                  "title": "加新元素类：困难",
+                  "body": "Visitor 接口要加一个 visit，所有已有访问者都要实现它。所以元素类经常变化时，不该用访问者。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "适用性",
+                "text": "对象结构包含很多类对象，接口各不相同，要对它们实施依赖于具体类的操作；需要对结构中的对象做很多不相关的操作，又不想让这些操作「污染」对象的类；定义对象结构的类很少改变，但经常需要在结构上定义新的操作。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "访问者模式中，accept(Visitor v) 方法里通常只有一句 v->visit(this)。这句的作用是？",
+                    "choices": [
+                      {
+                        "label": "把元素自己的具体类型告诉访问者，让重载的 visit 选中对应版本（双分派的第二次分派）",
+                        "ok": true,
+                        "why": "accept 已按元素类型分派一次，这里再按访问者类型分派"
+                      },
+                      {
+                        "label": "让元素访问访问者的私有数据",
+                        "ok": false,
+                        "why": "访问者不向元素暴露数据"
+                      },
+                      {
+                        "label": "复制一份元素交给访问者",
+                        "ok": false,
+                        "why": "传的是 this 指针，不是副本"
+                      },
+                      {
+                        "label": "注册访问者以便之后通知",
+                        "ok": false,
+                        "why": "那是观察者的 attach"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.visitor",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "意图、参与者与适用性依据：软设教程（第 5 版）§7.3.4 Visitor（第 404–406，比较见第 406 页 页）· GoF《Design Patterns》Visitor 一章 · Refactoring.Guru Visitor。实验改编自教材例 7.7（第 407–411 页），类名沿用教材。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.visitor.run",
+              "title": "统计馆藏文献总页码",
+              "case": "visitor_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "一本 540 页的图书、两篇各 25 页的论文，总页码应是多少？统计逻辑写在 Book、Article 里还是访问者里？",
+              "goal": "补 LibrarySumPrintVisitor 两个 visit() 的 TODO：分别把 p_book、p_article 的 getNumberOfPages() 累加进 sum_。",
+              "pass": {
+                "includes": [
+                  "SUM = 590"
+                ]
+              }
+            }
+          ],
+          "modern": {
+            "verdict": "language",
+            "text": "四语言现状：C++17 的 std::variant + std::visit、Rust 的 enum + match、Python 3.10 的 match-case 都能直接按类型分派，大量原本用访问者的场景（尤其是语法树处理）改用模式匹配；面向对象语言的编译器与静态分析工具里，经典访问者仍很常见。"
+          }
+        },
+        {
+          "id": "dp.interpreter",
+          "title": "解释器模式 Interpreter",
+          "difficulty": 4,
+          "mastery_goal": "understand",
+          "knowledge_type": "concept",
+          "requires": [
+            "dp.composite"
+          ],
+          "track": "behavioral",
+          "guide_line": "定义一个语言文法的表示，以及用这个表示解释句子的解释器。",
+          "weight": "",
+          "outline": {
+            "promise": "能把一个简单文法表示为类层次，并用递归 interpret 求值一棵抽象语法树。",
+            "pain": "某类问题反复出现，可以用一种简单语言描述（规则表达式、计算公式、查询条件），每次手写解析逻辑。",
+            "model": "AbstractExpression 声明 interpret(Context)；每个终结符一个 TerminalExpression，每条文法规则一个 NonterminalExpression；Client 搭好抽象语法树后调用解释。",
+            "scope": "只适合文法简单、效率不是关键的情况；文法复杂时应换用语法分析器生成工具。",
+            "judgment": "抽象语法树本身是一个组合结构；对语法树做多种操作时常配合访问者。",
+            "landing": "能为一条新文法规则写出 NonterminalExpression 并求值。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "配置文件里允许写简单的计算式，如 (x + 3) - 2，x 的值运行时才知道。最直观的实现思路是？",
+                "options": [
+                  {
+                    "label": "把文法的每条规则表示成一个类，句子组装成一棵表达式树，每个结点递归求值",
+                    "ok": true,
+                    "why": "这是解释器：用类层次表示文法"
+                  },
+                  {
+                    "label": "每次用字符串替换后交给系统命令计算",
+                    "ok": false,
+                    "why": "既不安全也不可控"
+                  },
+                  {
+                    "label": "把所有可能的表达式写成 if-else",
+                    "ok": false,
+                    "why": "表达式无穷多，写不完"
+                  },
+                  {
+                    "label": "用策略模式为每个表达式写一个策略类",
+                    "ok": false,
+                    "why": "表达式是由规则递归组合出来的，不是平铺的几种算法"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "解释器（Interpreter）的意图：「给定一个语言，定义它的文法的一种表示，并定义一个解释器，这个解释器使用该表示来解释语言中的句子。」它是行为类模式：文法规则成为类层次，解释是这些类的实例上的一个递归操作。句子对应的抽象语法树本身就是一个组合结构。"
+              },
+              {
+                "type": "uml",
+                "title": "解释器类图",
+                "uml": {
+                  "width": 660,
+                  "height": 290,
+                  "classes": [
+                    {
+                      "name": "Client",
+                      "x": 15,
+                      "y": 20,
+                      "w": 100
+                    },
+                    {
+                      "name": "Context",
+                      "x": 15,
+                      "y": 170,
+                      "w": 120
+                    },
+                    {
+                      "name": "AbstractExpression",
+                      "x": 260,
+                      "y": 20,
+                      "w": 220,
+                      "stereotype": "abstract",
+                      "methods": [
+                        "+ interpret(Context)"
+                      ]
+                    },
+                    {
+                      "name": "TerminalExpression",
+                      "x": 170,
+                      "y": 190,
+                      "w": 200,
+                      "methods": [
+                        "+ interpret(Context)"
+                      ]
+                    },
+                    {
+                      "name": "NonterminalExpression",
+                      "x": 420,
+                      "y": 190,
+                      "w": 220,
+                      "methods": [
+                        "+ interpret(Context)"
+                      ]
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "Client",
+                      "to": "AbstractExpression",
+                      "kind": "assoc"
+                    },
+                    {
+                      "from": "Client",
+                      "to": "Context",
+                      "kind": "assoc"
+                    },
+                    {
+                      "from": "TerminalExpression",
+                      "to": "AbstractExpression",
+                      "kind": "inherits"
+                    },
+                    {
+                      "from": "NonterminalExpression",
+                      "to": "AbstractExpression",
+                      "kind": "inherits",
+                      "offset": -12
+                    },
+                    {
+                      "from": "NonterminalExpression",
+                      "to": "AbstractExpression",
+                      "kind": "agg",
+                      "label": "1..*",
+                      "offset": 12
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "steps",
+                "title": "参与者",
+                "items": [
+                  "AbstractExpression：声明一个解释操作，为抽象语法树中所有结点所共享。",
+                  "TerminalExpression：实现与文法中终结符相关的解释操作，句子中每个终结符需要一个实例。",
+                  "NonterminalExpression：文法中的每条规则需要一个这样的类，为规则中的每个符号维护一个 AbstractExpression 实例变量，为非终结符实现解释操作。",
+                  "Context：包含解释器之外的一些全局信息。",
+                  "Client：构建（或被给定）表示句子的抽象语法树，并调用解释操作。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "什么时候用，什么时候不用",
+                "left": {
+                  "title": "适合",
+                  "body": "文法简单、规则不多；效率不是关键问题。文法变成类层次后，加一条规则就是加一个类。"
+                },
+                "right": {
+                  "title": "不适合",
+                  "body": "文法复杂时类层次会庞大到无法管理，应改用语法分析程序生成器；追求效率时，高效的解释器通常先把语法树转换成另一种形式再执行。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "适用性",
+                "text": "当有一个语言需要解释执行，并且可将语言中的句子表示为一棵抽象语法树时可以使用。以下情况效果最好：该文法简单；效率不是一个关键问题。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "解释器模式中，文法里的每一条规则对应什么？",
+                    "choices": [
+                      {
+                        "label": "一个 NonterminalExpression 类",
+                        "ok": true,
+                        "why": "规则 expr ::= expr '-' expr 就对应一个 Subtract 类"
+                      },
+                      {
+                        "label": "一个 Context 对象",
+                        "ok": false,
+                        "why": "Context 只保存解释器之外的全局信息"
+                      },
+                      {
+                        "label": "一个 TerminalExpression 实例",
+                        "ok": false,
+                        "why": "终结符对应 TerminalExpression"
+                      },
+                      {
+                        "label": "一个 Client",
+                        "ok": false,
+                        "why": "Client 负责搭树并调用解释"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.interpreter",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "意图、参与者与适用性依据：软设教程（第 5 版）§7.3.4 Interpreter（第 397–398 页）· GoF《Design Patterns》Interpreter 一章 · Refactoring.Guru Interpreter。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.interpreter.run",
+              "title": "补一条减法规则",
+              "case": "interpreter_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "抽象语法树 (x + 3) - 2 已经搭好，x=5 和 x=10 时结果分别是多少？",
+              "goal": "补 Subtract::interpret() 的 TODO：返回 l_->interpret(ctx) - r_->interpret(ctx)。",
+              "pass": {
+                "includes": [
+                  "with x=5, result: 6",
+                  "with x=10, result: 11"
+                ]
+              }
+            }
+          ],
+          "modern": {
+            "verdict": "language",
+            "text": "四语言现状：正则表达式、SQL、模板引擎、规则引擎都是解释器思想的产物，但很少按 GoF 类层次手写；需要小语言时，常用解析器组合子、语法分析器生成器（ANTLR、bison）或语言内建的 AST 工具（Python ast 模块）。"
+          }
+        },
         {
           "id": "dp.behavioral.roadmap",
           "title": "行为型 11 模式·建设计划",
@@ -5030,7 +7427,716 @@
           "labs": [],
           "status": "planned"
         }
-      ]
+      ],
+      "checkpoint": {
+        "intro": "行为型 11 个模式混排，同一模式的题不挨着。易混的几对（策略/状态、观察者/中介者、命令/备忘录、职责链/观察者）会反复出现——先说出意图再选。",
+        "items": [
+          {
+            "stem": "TCP 连接有「已建立」「监听」「已关闭」等状态，同一个 open()、close() 在不同状态下行为不同，且状态会随操作自动转换。最合适的是？",
+            "choices": [
+              {
+                "label": "状态",
+                "ok": true,
+                "why": "行为随内部状态变化、状态之间自动转换"
+              },
+              {
+                "label": "策略",
+                "ok": false,
+                "why": "策略由客户选定，不会自己切换"
+              },
+              {
+                "label": "命令",
+                "ok": false,
+                "why": "命令封装的是请求，不是状态相关的行为"
+              },
+              {
+                "label": "观察者",
+                "ok": false,
+                "why": "观察者处理一对多通知"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.state",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.state"
+          },
+          {
+            "stem": "表格数据变化后，柱状图、饼图、明细表要同时刷新，且图表种类会增加。最合适的是？",
+            "choices": [
+              {
+                "label": "观察者",
+                "ok": true,
+                "why": "一对多依赖，数据变化时自动通知所有视图"
+              },
+              {
+                "label": "中介者",
+                "ok": false,
+                "why": "中介者协调一组对等对象的多向交互"
+              },
+              {
+                "label": "职责链",
+                "ok": false,
+                "why": "职责链找到一个处理者为止"
+              },
+              {
+                "label": "备忘录",
+                "ok": false,
+                "why": "备忘录保存状态以便恢复"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.observer",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.observer"
+          },
+          {
+            "stem": "要把用户的每个操作记录下来，以便系统崩溃后按顺序重新执行。最合适的是？",
+            "choices": [
+              {
+                "label": "命令",
+                "ok": true,
+                "why": "请求被封装成对象后可以存储、记日志、重做"
+              },
+              {
+                "label": "备忘录",
+                "ok": false,
+                "why": "备忘录保存的是对象状态，不是操作本身"
+              },
+              {
+                "label": "观察者",
+                "ok": false,
+                "why": "观察者不记录请求"
+              },
+              {
+                "label": "迭代器",
+                "ok": false,
+                "why": "迭代器负责遍历"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.command",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.command"
+          },
+          {
+            "stem": "编译器的语法树结点类型很少变，但类型检查、代码生成、优化等遍历操作不断增加。最合适的是？",
+            "choices": [
+              {
+                "label": "访问者",
+                "ok": true,
+                "why": "元素类稳定、操作经常增加，正是访问者的适用前提"
+              },
+              {
+                "label": "迭代器",
+                "ok": false,
+                "why": "迭代器只负责遍历顺序"
+              },
+              {
+                "label": "组合",
+                "ok": false,
+                "why": "语法树本身是组合，但增加操作的问题要靠访问者"
+              },
+              {
+                "label": "策略",
+                "ok": false,
+                "why": "策略替换的是一个算法，不按元素类型分派"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.visitor",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.visitor"
+          },
+          {
+            "stem": "几个报表类的生成流程都是「取数 → 计算 → 排版 → 输出」，只有计算与排版两步不同。为消除重复又不让子类改动流程，应采用？",
+            "choices": [
+              {
+                "label": "模板方法",
+                "ok": true,
+                "why": "父类固定流程，子类只实现不同的步骤"
+              },
+              {
+                "label": "策略",
+                "ok": false,
+                "why": "策略替换整个算法，不保护流程顺序"
+              },
+              {
+                "label": "建造者",
+                "ok": false,
+                "why": "建造者分步构造一个复杂对象，不是定义算法流程"
+              },
+              {
+                "label": "装饰",
+                "ok": false,
+                "why": "装饰给对象叠加职责"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.template-method",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.template-method"
+          },
+          {
+            "stem": "Web 服务的请求依次经过「鉴权 → 限流 → 日志 → 业务处理」，任何一环都可能直接拦下请求，环节可以按配置增减。这体现了哪个模式？",
+            "choices": [
+              {
+                "label": "职责链",
+                "ok": true,
+                "why": "请求沿链传递，每个处理者决定处理还是交给下一个"
+              },
+              {
+                "label": "命令",
+                "ok": false,
+                "why": "命令封装请求，不负责沿链传递"
+              },
+              {
+                "label": "观察者",
+                "ok": false,
+                "why": "观察者会通知所有观察者，而不是依次传递"
+              },
+              {
+                "label": "中介者",
+                "ok": false,
+                "why": "中介者集中协调对象交互，不是链式传递"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.chain",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.chain"
+          },
+          {
+            "stem": "游戏要在关卡开始时存档，失败后回到存档点，但不希望存档系统了解角色的内部数据结构。最合适的是？",
+            "choices": [
+              {
+                "label": "备忘录",
+                "ok": true,
+                "why": "角色自己生成只有自己能读的状态快照，存档系统只负责保管"
+              },
+              {
+                "label": "原型",
+                "ok": false,
+                "why": "原型复制出新对象，不保证封装与恢复"
+              },
+              {
+                "label": "命令",
+                "ok": false,
+                "why": "命令记录操作，回到存档点需要的是状态"
+              },
+              {
+                "label": "单例",
+                "ok": false,
+                "why": "与存档无关"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.memento",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.memento"
+          },
+          {
+            "stem": "飞机起降时，各架飞机不直接互相联络，而是统一由塔台协调。这在设计模式上对应？",
+            "choices": [
+              {
+                "label": "中介者",
+                "ok": true,
+                "why": "塔台封装了飞机之间的交互，飞机只与塔台通信"
+              },
+              {
+                "label": "观察者",
+                "ok": false,
+                "why": "观察者是一对多的状态通知，不集中协调交互"
+              },
+              {
+                "label": "外观",
+                "ok": false,
+                "why": "外观是客户到子系统的单向入口"
+              },
+              {
+                "label": "代理",
+                "ok": false,
+                "why": "代理控制对单个对象的访问"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.mediator",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.mediator"
+          },
+          {
+            "stem": "想用同一套代码遍历数组、链表、树三种集合，且不暴露它们各自的内部结构。最合适的是？",
+            "choices": [
+              {
+                "label": "迭代器",
+                "ok": true,
+                "why": "为遍历不同的聚合结构提供统一接口"
+              },
+              {
+                "label": "访问者",
+                "ok": false,
+                "why": "访问者对各元素执行随类型而变的操作，不是统一遍历"
+              },
+              {
+                "label": "组合",
+                "ok": false,
+                "why": "组合表示部分-整体结构"
+              },
+              {
+                "label": "适配器",
+                "ok": false,
+                "why": "问题不在接口不兼容"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.iterator",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.iterator"
+          },
+          {
+            "stem": "图片编辑器提供多种压缩算法（无损、有损、自适应），用户可在保存时选择，以后还会增加。最合适的是？",
+            "choices": [
+              {
+                "label": "策略",
+                "ok": true,
+                "why": "一组可互换的算法，由客户选择"
+              },
+              {
+                "label": "状态",
+                "ok": false,
+                "why": "压缩算法不会随编辑器内部状态自动切换"
+              },
+              {
+                "label": "模板方法",
+                "ok": false,
+                "why": "各算法差异是整体性的，不只是流程中的几步"
+              },
+              {
+                "label": "工厂方法",
+                "ok": false,
+                "why": "工厂方法管创建，算法如何替换要靠策略"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.strategy",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.strategy"
+          },
+          {
+            "stem": "一个规则引擎允许写 amount > 1000 AND level = 'VIP' 这样的简单条件，需要在运行时解释执行。按 GoF 的做法应采用？",
+            "choices": [
+              {
+                "label": "解释器",
+                "ok": true,
+                "why": "把简单文法表示为类层次，句子组成抽象语法树后递归解释"
+              },
+              {
+                "label": "策略",
+                "ok": false,
+                "why": "条件是由规则递归组合的，不是几种平铺的算法"
+              },
+              {
+                "label": "命令",
+                "ok": false,
+                "why": "命令封装请求，不负责解释语言"
+              },
+              {
+                "label": "访问者",
+                "ok": false,
+                "why": "访问者可以配合解释器做多种操作，但表示文法的是解释器"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.interpreter",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.interpreter"
+          },
+          {
+            "stem": "观察者模式与中介者模式的主要区别是？",
+            "choices": [
+              {
+                "label": "观察者把通信分布在目标与观察者之间，中介者把通信集中封装在一个中介对象里",
+                "ok": true,
+                "why": "教材称二者是相互竞争的模式"
+              },
+              {
+                "label": "观察者用于一对一，中介者用于一对多",
+                "ok": false,
+                "why": "观察者本身就是一对多"
+              },
+              {
+                "label": "二者没有区别",
+                "ok": false,
+                "why": "目的一个是分布、一个是集中"
+              },
+              {
+                "label": "中介者不能用于 GUI",
+                "ok": false,
+                "why": "GUI 对话框正是中介者的经典例子"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.observer",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.observer"
+          },
+          {
+            "stem": "命令模式中，Invoker 与 Receiver 的关系是？",
+            "choices": [
+              {
+                "label": "Invoker 不认识 Receiver，只通过 Command 接口调用 execute()",
+                "ok": true,
+                "why": "发送者与接收者由命令对象解耦"
+              },
+              {
+                "label": "Invoker 直接调用 Receiver 的方法",
+                "ok": false,
+                "why": "那样就没有命令对象了"
+              },
+              {
+                "label": "Receiver 持有 Invoker 的引用",
+                "ok": false,
+                "why": "接收者不需要知道谁调用了它"
+              },
+              {
+                "label": "二者必须是同一个类",
+                "ok": false,
+                "why": "职责完全不同"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.command",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.command"
+          },
+          {
+            "stem": "访问者模式最不适合哪种情况？",
+            "choices": [
+              {
+                "label": "对象结构中的元素类经常增加或变化",
+                "ok": true,
+                "why": "每加一种元素类，所有访问者都要改"
+              },
+              {
+                "label": "需要对稳定的对象结构频繁增加新操作",
+                "ok": false,
+                "why": "这正是它的适用场景"
+              },
+              {
+                "label": "想把相关操作集中在一个类里",
+                "ok": false,
+                "why": "这是访问者的优点"
+              },
+              {
+                "label": "元素类有不同的接口",
+                "ok": false,
+                "why": "访问者可以通过具体类型分别访问"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.visitor",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.visitor"
+          },
+          {
+            "stem": "状态模式与策略模式类图相似，它们最本质的区别是？",
+            "choices": [
+              {
+                "label": "状态由对象内部按流程自动切换，策略由客户选择且通常不变",
+                "ok": true,
+                "why": "一个封装状态相关的行为，一个封装可替换的算法"
+              },
+              {
+                "label": "状态模式不使用多态",
+                "ok": false,
+                "why": "两者都靠多态"
+              },
+              {
+                "label": "策略模式的 Context 不持有策略对象",
+                "ok": false,
+                "why": "Context 持有 Strategy 引用"
+              },
+              {
+                "label": "状态模式只能有两个状态",
+                "ok": false,
+                "why": "状态数不限"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.state",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.state"
+          },
+          {
+            "stem": "模板方法模式中的「钩子」操作是指？",
+            "choices": [
+              {
+                "label": "父类给出默认实现、子类可以选择是否重定义的操作",
+                "ok": true,
+                "why": "钩子只在特定点开放扩展"
+              },
+              {
+                "label": "子类必须实现的抽象操作",
+                "ok": false,
+                "why": "那是原语操作"
+              },
+              {
+                "label": "模板方法本身",
+                "ok": false,
+                "why": "模板方法定义骨架，不是钩子"
+              },
+              {
+                "label": "用来注册观察者的方法",
+                "ok": false,
+                "why": "那是观察者的 attach"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.template-method",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.template-method"
+          },
+          {
+            "stem": "备忘录模式中，为什么说它「不破坏封装」？",
+            "choices": [
+              {
+                "label": "只有原发器能读写备忘录的内容，管理者只能保管它",
+                "ok": true,
+                "why": "状态没有通过公共接口暴露给其他对象"
+              },
+              {
+                "label": "备忘录把状态保存在原发器内部",
+                "ok": false,
+                "why": "备忘录在原发器之外保存状态"
+              },
+              {
+                "label": "管理者可以自由修改状态",
+                "ok": false,
+                "why": "管理者不能操作备忘录内容"
+              },
+              {
+                "label": "原发器的成员全是公有的",
+                "ok": false,
+                "why": "那恰恰会破坏封装"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.memento",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.memento"
+          },
+          {
+            "stem": "职责链模式的一个已知缺点是？",
+            "choices": [
+              {
+                "label": "请求可能到链尾都没有被处理，而且不易观察请求的处理路径",
+                "ok": true,
+                "why": "不保证接收，需要兜底"
+              },
+              {
+                "label": "发送者必须知道最终处理者",
+                "ok": false,
+                "why": "恰恰相反，发送者只认识链头"
+              },
+              {
+                "label": "链的组成必须在编译期固定",
+                "ok": false,
+                "why": "链可以在运行时动态组成"
+              },
+              {
+                "label": "每个请求都会被所有处理者处理",
+                "ok": false,
+                "why": "那是观察者的广播"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.chain",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.chain"
+          },
+          {
+            "stem": "C++ 的 std::for_each(v.begin(), v.end(), f) 把操作 f 交给算法，对每个元素执行。按迭代器模式的分类，这种用法更接近？",
+            "choices": [
+              {
+                "label": "内部迭代：由迭代过程控制遍历，客户只提供操作",
+                "ok": true,
+                "why": "for_each 内部推进迭代器，客户不直接调用 ++"
+              },
+              {
+                "label": "外部迭代：客户自己逐个推进",
+                "ok": false,
+                "why": "那是手写 for (auto it = begin; it != end; ++it)"
+              },
+              {
+                "label": "访问者模式",
+                "ok": false,
+                "why": "这里没有按元素类型的双分派"
+              },
+              {
+                "label": "观察者模式",
+                "ok": false,
+                "why": "没有一对多的状态通知"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.iterator",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.iterator"
+          },
+          {
+            "stem": "在 C++ 中，用 std::function<double(double)> 参数代替一个只有一个方法的策略类层次，说明了什么？",
+            "choices": [
+              {
+                "label": "只有一个算法、无需保存状态时，一等函数可以直接充当策略",
+                "ok": true,
+                "why": "这就是「策略退化为传函数」"
+              },
+              {
+                "label": "策略模式在 C++ 中不能使用",
+                "ok": false,
+                "why": "仍然可以，类层次适合策略带状态或多个方法的情况"
+              },
+              {
+                "label": "std::function 实现的是观察者模式",
+                "ok": false,
+                "why": "这里没有通知机制"
+              },
+              {
+                "label": "这会违背开闭原则",
+                "ok": false,
+                "why": "加新策略只需传入新函数，同样不改 Context"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.strategy",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.strategy"
+          },
+          {
+            "stem": "中介者模式中，同事类（Colleague）之间的关系是？",
+            "choices": [
+              {
+                "label": "彼此没有直接引用，只认识中介者",
+                "ok": true,
+                "why": "这正是中介者降低耦合的方式"
+              },
+              {
+                "label": "每个同事都持有其他所有同事的引用",
+                "ok": false,
+                "why": "那是引入中介者之前的网状结构"
+              },
+              {
+                "label": "同事必须继承中介者",
+                "ok": false,
+                "why": "同事与中介者是关联关系，不是继承"
+              },
+              {
+                "label": "同事之间通过观察者互相通知",
+                "ok": false,
+                "why": "通信经过中介者转发"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.mediator",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.mediator"
+          },
+          {
+            "stem": "解释器模式中，句子 (x + 3) - 2 对应的抽象语法树，其结构本身属于哪个结构型模式？",
+            "choices": [
+              {
+                "label": "组合：非终结符表达式包含子表达式，终结符是叶子",
+                "ok": true,
+                "why": "抽象语法树是典型的部分-整体树"
+              },
+              {
+                "label": "装饰",
+                "ok": false,
+                "why": "装饰只包一个对象"
+              },
+              {
+                "label": "适配器",
+                "ok": false,
+                "why": "与接口转换无关"
+              },
+              {
+                "label": "外观",
+                "ok": false,
+                "why": "与子系统入口无关"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.interpreter",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.interpreter"
+          }
+        ]
+      }
     },
     {
       "id": "non-oo",
