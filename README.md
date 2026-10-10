@@ -13,7 +13,6 @@
 | [`subjects/cpp`](subjects/cpp) | C++ 教程 | GTK4 / gtkmm、Meson |
 | [`subjects/machine`](subjects/machine) | C 与机器（C 与汇编） | Qt Quick / QML、CMake |
 | [`subjects/dsa`](subjects/dsa) | 数据结构与算法 | Tauri + Vite |
-| [`subjects/english`](subjects/english) | 磨砚（英语学习） | Tauri + Vite |
 | [`subjects/ascent`](subjects/ascent) | 拾阶（四六级 / 专四专八） | Tauri + Vite |
 | [`subjects/mathematics`](subjects/mathematics) | 数学学习 | Tauri + Vite（Python sidecar） |
 | [`subjects/math-tools`](subjects/math-tools) | 数学工具（图谱/参考类） | Tauri + Vue 3 |

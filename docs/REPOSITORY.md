@@ -15,7 +15,6 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
                    第 3 章（ADR 0108 拆分、0118/0119 定归属；原 algorithm，复名见 ADR 0105）
   algorithms/      算法设计（Tauri 2）——408 算法设计大题（第 41、42 题），本体挂 cs408；
                    软设以文字指引承接第 8 章（ADR 0108 拆分、0118/0119 定归属）
-  english/     磨砚（考研英语二，Tauri）——并入 ascent 后退役，迁移中（ADR 0117）
   ascent/      拾阶（英语师范生四六级、专四专八，Tauri）
   mathematics/ 数学学习（Tauri）
   math-tools/  数学工具（Tauri）——数学学习的配套工具，图谱/参考类，不是学习应用（ADR 0084）
@@ -71,7 +70,6 @@ archive/       历史归档，不参与构建
 | `cpp` | C++ 教程 | `athena-cpp` | `cpp.` |
 | `machine` | C 与机器（原 `c`，ADR 0005） | `athena-machine` | `machine.` |
 | `dsa` | 数据结构与算法（原 `algorithm`，复名见 ADR 0105） | `athena-dsa` | `dsa.` |
-| `english` | 磨砚 | `athena-english` | `en.` |
 | `ascent` | 拾阶 | `athena-ascent`（v9.0.0 及之前发行名 Lumi，改名见 ascent ADR 0021） | 无（进度在用户数据目录，见 ADR 0066） |
 | `mathematics` | 数学学习 | `athena-math` | `math.` |
 | `math-tools` | 数学工具 | `athena-math-tools` | （无进度库） |
@@ -101,7 +99,7 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
 
 - **这个项目要不要让人"学会"什么、要不要追踪掌握度和学习进度？** 要，就是
   **学习应用**，受「跨应用教学规范」（[TEACHING.md](TEACHING.md)）整节约束，且要按 ADR 0037/0053 建自己的
-  `progress/learning.db`。当前：`cpp` / `machine` / `dsa` / `english` / `mathematics` /
+  `progress/learning.db`。当前：`cpp` / `machine` / `dsa` / `mathematics` /
   `driver` / `ascent`（`ascent` 的规范差距见 ADR 0066）/ 软考两应用及其挂靠实践
   子课程（ADR 0103：`database` / `design-patterns` / `operating-system` / `network` /
   `firmware` / `microcontroller` / `rtos`）。

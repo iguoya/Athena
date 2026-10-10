@@ -29,7 +29,7 @@
 完整说明（名字对照表、三类判据的全文）见 [docs/REPOSITORY.md](docs/REPOSITORY.md)。
 
 ```
-subjects/<id>/  课程学科：cpp machine data-structures algorithms linux organization english
+subjects/<id>/  课程学科：cpp machine data-structures algorithms linux organization
                 mathematics driver gtkmm ascent cs408（学习应用；cs408 是 408 考试主应用，
                 五门科目课本体挂它底下，ADR 0116、0118、0119）
                 software、embedded（软考两应用，各为一级大类，ADR 0102），底下挂实践子课程
@@ -111,7 +111,7 @@ archive/        历史归档，不参与构建
 - 知识点分概念、技能、策略三类，教学动作按类型选（ADR 0031）。
 - **内容驱动 UI**：有限的块类型承载全部讲解，不按章手写整页（ADR 0058）。
 - **出处按应用性质分档**（ADR 0043、0089）：考试/考证考级类（判据：对应真实外部考试，
-  当前 driver、software、english、ascent、mathematics、cs408）判分内容必须有出处且检查阻断；技术
+  当前 driver、software、ascent、mathematics、cs408）判分内容必须有出处且检查阻断；技术
   学习类（当前 cpp、machine、data-structures、algorithms、gtkmm）出处是默认习惯、不做门禁，自造配额解除；不判分
   类（图谱/参考、素材坑、practice）不适用。底线全档一致：不凭印象伪造出处，AI 现场出题
   不算数。

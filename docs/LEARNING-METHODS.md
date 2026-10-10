@@ -21,7 +21,7 @@
 | 错误样例分析 | erroneous examples 研究 | 「找错、改错」题型：给一份含典型错误的解答让学生定位修正 |
 | Pólya 四阶段 | 《怎样解题》：理解→计划→执行→回顾 | 解答题的提示梯按四阶段分级展开，不直接给答案 |
 
-## 语言·英语（ascent 摘星、english 磨砚）
+## 语言·英语（ascent 摘星、english 磨砚——磨砚已并入摘星，ADR 0117）
 
 | 方法 | 依据 | 软件与内容组织映射 |
 |---|---|---|
@@ -100,7 +100,7 @@
 | dsa 数据结构与算法 | trace-player（追踪题）；lab-editor（实验编辑器）；即时编译反馈（P4 ✓） | 节结构模板化为 PRIMM 五段（Predict 段 = 代码 + 预测输入框，运行前必填）；新增 Parsons 拖拽排序题作为「读码 → 写码」的中间题型 |
 | c-plus-plus C++ | lesson → experiment_dock → checkpoint_view（样例→实验→检查点，P3 ✓）；**predict 块已实现**（scored=false 的先猜再验，ValueSemantics 课程已用 5 处） | 实验撤除序列：完整样例 → 缺步 → 空白（P3）；新课程内容沿用 predict 块组织 Predict 段 |
 | mathematics 数学 | diagnostic（诊断）、drills（练习）、graph-view / transform-view（多表征） | drills 组卷改**交错**逻辑（按已学知识点混出，不按章成串，P2 同源）；每题配 Pólya 分级提示按钮（「理解→计划→执行→回顾」逐级展开，P1 的提示梯）；graph-view 与 transform-view 组成同概念多表征联动 |
-| english 磨砚 | practice.ts 检索练习主体；voice 朗读 | 泛读流（易读材料连续读，P2 的输入侧）；翻译/写作题按 TBLT 任务卡组织（任务 → 尝试 → 对照参考） |
+| english 磨砚（已并入摘星的考研英语二章节，ADR 0117） | practice.ts 检索练习主体；voice 朗读 | 泛读流（易读材料连续读，P2 的输入侧）；翻译/写作题按 TBLT 任务卡组织（任务 → 尝试 → 对照参考） |
 | driver 驾考 | 强化练习全套（检索/间隔/变式） | 基准实现，无修改；其余考试类应用对齐它 |
 
 ### 内容组织的取舍规则（写内容前先过这四问）
@@ -125,7 +125,7 @@
 | driver 驾考 | R | — | 首页即强化练习；一轮 50 题有界（基准实现） | 真题、同考点变式、模拟考 |
 | software 软件设计师 | R | M、D | 章节按 0107 三维评级选型：第 1/4 章 M（viz 先预测），第 7 章 D，第 11/12 章纯 R | 真题 → 计算题变式 → 案例题；整卷限时 |
 | embedded 嵌入式 | R | M | 第 2/4 章 M（时序波形、优先级反转先预测），第 3/7/10 章纯 R | 同上；硬件题型交给 microcontroller |
-| english 磨砚 | L | R | 考试题按 R 组卷；输入与输出各占一条线 | 真题、翻译/写作任务、语块回忆 |
+| english 磨砚（已并入摘星，ADR 0117；英语二章节同此画像） | L | R | 考试题按 R 组卷；输入与输出各占一条线 | 真题、翻译/写作任务、语块回忆 |
 | ascent 摘星 | L | — | 词卡语境先行、释义点开；Today 首推到期复习 | 语境回忆、分级阅读、写作 |
 | mathematics 数学 | S | D | 样例 → 缺步 → 独立；卡住时逐级提示 | 交错组卷、找错改错、多表征互译（借 math-tools） |
 | c-plus-plus C++ | P | E | lesson → predict 块 → 实验 dock → checkpoint；章首前测 | 输出预测、填空、骨架实验、Parsons |
