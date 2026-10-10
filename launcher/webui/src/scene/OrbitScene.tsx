@@ -60,22 +60,30 @@ function useIconTexture(app: AppDto): THREE.Texture | null {
 }
 
 function IconSphere({
-  app, active, hovered, onHover,
+  app, index, active, hovered, onHover,
 }: {
   app: AppDto;
+  index: number;
   active: boolean;
   hovered: boolean;
   onHover: (id: string | null) => void;
 }) {
   const [x, y, z] = app.pos;
   const texture = useIconTexture(app);
-  const mesh = useRef<THREE.Mesh>(null);
-  // 悬停缩放用帧插值，球体的呼吸感比直接跳 scale 顺。
+  const spinner = useRef<THREE.Group>(null);
+  // 自转速度与相位按序号差异化，行星各转各的；相位让悬浮错落。
+  const spinSpeed = useMemo(() => 0.35 + ((index * 37) % 40) / 100, [index]);
+  const floatPhase = useMemo(() => (index * 137.5 * Math.PI) / 180, [index]);
+  const elapsed = useRef(0);
+  // 自转 + 上下悬浮 + 悬停缩放，全部帧插值。
   useFrame((_, delta) => {
-    if (!mesh.current) return;
+    if (!spinner.current) return;
+    elapsed.current += delta;
+    spinner.current.rotation.y += spinSpeed * delta;
+    spinner.current.position.y = Math.sin(elapsed.current * 0.9 + floatPhase) * 5;
     const target = hovered ? 1.3 : 1;
-    const s = mesh.current.scale.x + (target - mesh.current.scale.x) * Math.min(1, delta * 10);
-    mesh.current.scale.setScalar(s);
+    const s = spinner.current.scale.x + (target - spinner.current.scale.x) * Math.min(1, delta * 10);
+    spinner.current.scale.setScalar(s);
   });
 
   // 贴片纹理到位前不挂徽章（避免白方块一闪）。
@@ -83,36 +91,38 @@ function IconSphere({
 
   return (
     <group position={[x, y, z]}>
-      <mesh
-        ref={mesh}
-        onClick={() => openApp(app.id).catch(console.error)}
-        onPointerOver={(e) => {
-          e.stopPropagation();
-          onHover(app.id);
-        }}
-        onPointerOut={() => onHover(null)}
-      >
-        <sphereGeometry args={[SPHERE_R, 48, 48]} />
-        <meshStandardMaterial
-          color={app.accent}
-          roughness={0.4}
-          metalness={0.08}
-          transparent
-          opacity={active ? 1 : 0.75}
-        />
-      </mesh>
-      {/* 图标徽章：贴在球面正前方（+Z 朝向相机）的透明贴片，随球体一起缩放。 */}
-      {badgeReady && (
-        <mesh position={[0, 0, SPHERE_R + 1.5]} scale={hovered ? 1.15 : 1}>
-          <planeGeometry args={[SPHERE_R * 1.15, SPHERE_R * 1.15]} />
-          <meshBasicMaterial map={texture} transparent depthWrite={false} />
+      {/* 自转组：球体 + 图标徽章 + 状态环一起转，徽章转到背面被球体自然遮挡。 */}
+      <group ref={spinner}>
+        <mesh
+          onClick={() => openApp(app.id).catch(console.error)}
+          onPointerOver={(e) => {
+            e.stopPropagation();
+            onHover(app.id);
+          }}
+          onPointerOut={() => onHover(null)}
+        >
+          <sphereGeometry args={[SPHERE_R, 48, 48]} />
+          <meshStandardMaterial
+            color={app.accent}
+            roughness={0.4}
+            metalness={0.08}
+            transparent
+            opacity={active ? 1 : 0.75}
+          />
         </mesh>
-      )}
-      {/* 运行状态环：贴着球面的细环。 */}
-      <mesh rotation={[Math.PI / 2.6, 0.4, 0]}>
-        <torusGeometry args={[SPHERE_R + 7, 2.4, 12, 48]} />
-        <meshBasicMaterial color={STATE_COLOR[app.state]} transparent opacity={hovered ? 1 : 0.85} />
-      </mesh>
+        {/* 图标徽章：贴在球面正前方的透明贴片，随自转绕球巡行。 */}
+        {badgeReady && (
+          <mesh position={[0, 0, SPHERE_R + 1.5]}>
+            <planeGeometry args={[SPHERE_R * 1.15, SPHERE_R * 1.15]} />
+            <meshBasicMaterial map={texture} transparent depthWrite={false} />
+          </mesh>
+        )}
+        {/* 运行状态环：贴着球面的细环。 */}
+        <mesh rotation={[Math.PI / 2.6, 0.4, 0]}>
+          <torusGeometry args={[SPHERE_R + 7, 2.4, 12, 48]} />
+          <meshBasicMaterial color={STATE_COLOR[app.state]} transparent opacity={hovered ? 1 : 0.85} />
+        </mesh>
+      </group>
       <Html position={[0, -(SPHERE_R + 26), 0]} center distanceFactor={900} zIndexRange={[10, 0]}>
         <div
           style={{
@@ -159,9 +169,9 @@ function TigerCore({ hovered }: { hovered: string | null }) {
   return (
     <group>
       {/* 恒星光：虎头是场景唯一的光源，行星朝向它的一侧亮、背面暗。 */}
-      <pointLight color="#ffb45e" intensity={140000} decay={2} distance={6000} />
+      <pointLight color="#ffb45e" intensity={220000} decay={2} distance={8000} />
       <mesh>
-        <sphereGeometry args={[46, 32, 32]} />
+        <sphereGeometry args={[92, 48, 48]} />
         <meshStandardMaterial
           color="#e8862e"
           emissive="#a44f10"
@@ -188,10 +198,11 @@ export default function OrbitScene({ catalog }: { catalog: CatalogDto }) {
       {catalog.orbits.map((o, i) => (
         <OrbitRing key={i} radius={o.radius} tilt={o.tilt} yaw={o.yaw} />
       ))}
-      {catalog.apps.map((a) => (
+      {catalog.apps.map((a, i) => (
         <IconSphere
           key={a.id + a.pos.join()}
           app={a}
+          index={i}
           active={hovered === null || hovered === a.id}
           hovered={hovered === a.id}
           onHover={setHovered}
