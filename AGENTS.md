@@ -30,8 +30,9 @@
 
 ```
 subjects/<id>/  课程学科：cpp machine data-structures algorithms linux organization
-                mathematics driver gtkmm ascent cs408（学习应用；cs408 是 408 考试主应用，
-                五门科目课本体挂它底下，ADR 0116、0118、0119）
+                mathematics driver gtkmm ascent cs408 python（学习应用；cs408 是 408 考试
+                主应用，五门科目课本体挂它底下，ADR 0116、0118、0119；python 开启
+                「人工智能」圈与 LLM 应用开发课程路线，ADR 0120）
                 software、embedded（软考两应用，各为一级大类，ADR 0102），底下挂实践子课程
                 database design-patterns firmware microcontroller rtos（ADR 0103、0106；
                 os、network 兼作软设承接章，本体归 cs408，ADR 0118、0119）

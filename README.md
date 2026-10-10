@@ -23,6 +23,7 @@
 | [`subjects/polaris`](subjects/polaris) | 北极星（技术体系图谱） | Tauri 2 + React |
 | [`subjects/organization`](subjects/organization) | 计算机组成原理（408，ADR 0115） | Tauri 2 + Vite |
 | [`subjects/cs408`](subjects/cs408) | 408 计算机学科专业基础（考研考试主应用，ADR 0116） | Tauri 2 + Vite |
+| [`subjects/python`](subjects/python) | Python 与 AI 工具链（「人工智能」圈首门课，ADR 0120） | Tauri 2 + React |
 | [`subjects/competitions`](subjects/competitions) | 赛历（竞赛清单与参赛资格，图谱/参考类，ADR 0114） | Tauri 2 + Vite |
 | [`subjects/design-patterns`](subjects/design-patterns) | 设计模式素材坑 | 尚未开工 |
 | [`practice/pocket_cube`](practice/pocket_cube) | 2 阶魔方 | GTK4 / gtkmm |

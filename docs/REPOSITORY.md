@@ -39,6 +39,8 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
   organization/  计算机组成原理（Tauri 2 + Vite）——408 组成原理，挂靠 cs408、引用挂到 software（ADR 0115、0116）
   cs408/         408 计算机学科专业基础（Tauri 2 + Vite）——考研考试主应用，「考研」圈；数据结构、算法设计、
                  组成原理、操作系统、计算机网络五门科目课本体挂它下面，软设以文字指引承接（ADR 0116、0118、0119）
+  python/        Python 与 AI 工具链（Tauri 2 + React）——「人工智能」圈首门课，面向会编程的人的
+                 Python 速成与 AI 生态工具链，LLM 课程路线的入口（ADR 0120）
   competitions/  赛历（Tauri 2 + Vite）——「大赛」圈的竞赛清单，图谱/参考类，不是学习应用（ADR 0114）
 practice/<id>/ 项目应用：动手做的独立小项目，不接掌握度体系（ADR 0060）
   pocket_cube/ 2 阶魔方（GTK4 / gtkmm）
@@ -87,6 +89,7 @@ archive/       历史归档，不参与构建
 | `polaris` | 北极星 | `athena-polaris` | （无进度库） |
 | `organization` | 计算机组成原理（408，ADR 0115） | `athena-organization` | `org.` |
 | `cs408` | 408 计算机学科专业基础（考研考试主应用，ADR 0116） | `athena-cs408` | `cs408.` |
+| `python` | Python 与 AI 工具链（「人工智能」圈首门课，ADR 0120） | `athena-python` | `python.` |
 | `competitions` | 赛历（「大赛」圈，ADR 0114） | `athena-competitions` | （无进度库） |
 
 `driver` 是机动车理论考试，不是设备驱动；Dart 包名仍是 `athena_driver`（包名不能有连字符）。
@@ -100,7 +103,8 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
 - **这个项目要不要让人"学会"什么、要不要追踪掌握度和学习进度？** 要，就是
   **学习应用**，受「跨应用教学规范」（[TEACHING.md](TEACHING.md)）整节约束，且要按 ADR 0037/0053 建自己的
   `progress/learning.db`。当前：`cpp` / `machine` / `dsa` / `mathematics` /
-  `driver` / `ascent`（`ascent` 的规范差距见 ADR 0066）/ 软考两应用及其挂靠实践
+  `driver` / `ascent`（`ascent` 的规范差距见 ADR 0066）/ `python`（ADR 0120）/
+  软考两应用及其挂靠实践
   子课程（ADR 0103：`database` / `design-patterns` / `operating-system` / `network` /
   `firmware` / `microcontroller` / `rtos`）。
 - **不是学习闭环，是呈现结构化信息供浏览、查阅、决策参考的？** 那是

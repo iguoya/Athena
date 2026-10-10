@@ -1,0 +1,30 @@
+{
+  "id": "python",
+  "title": "Python 与 AI 工具链",
+  "group": "人工智能",
+  "description": "面向会编程的人的 Python 速成与 AI 工具链：uv 环境管理、numpy/pandas 数据操作、HTTP 与异步、Jupyter 工作流——人工智能路线的地基（ADR 0120）。可单独使用。",
+  "icon": {
+    "type": "theme",
+    "name": "application-x-python-symbolic",
+    "symbol": "chevron.left.forwardslash.chevron.right",
+    "letter": "Py",
+    "accent": "#3776AB",
+    "renders": {}
+  },
+  "dev": {
+    "env": {
+      "ATHENA_PYTHON_ROOT": "${dir}"
+    },
+    "prepare": [
+      {
+        "when_missing": "node_modules",
+        "run": ["npm", "install"],
+        "label": "安装前端依赖"
+      }
+    ],
+    "run": ["npm", "run", "tauri:dev"],
+    "ready": { "http": "http://localhost:1505" },
+    "match": "src-tauri/target",
+    "binary": "athena-python"
+  }
+}
