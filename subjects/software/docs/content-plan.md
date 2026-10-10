@@ -22,7 +22,7 @@ arm-none-eabi-gcc + QEMU 即可真做；真硬件实验需要一块入门开发�
 「实验长在学科应用内」；[ADR 0103](../../../docs/decisions/0103-practice-courses-as-attached-subapps.md)
 其后把实践性强的课程独立成挂靠子应用——软设第 3 章归 data-structures、第 8 章归 algorithms（dsa 拆分，ADR 0108；原 algorithm，ADR 0092
 决策 4），第 9 章归 database、第 7 章归 design-patterns、第 4 章归
-operating-system（后改名 os，ADR 0104）、第 10 章归 network；嵌入式第 6/8/11 章归 firmware、第 2/5
+operating-system（后改名 os，ADR 0104）、第 10 章归 computer-networks（原 network，ADR 0110 更名计算机网络）；嵌入式第 6/8/11 章归 firmware、第 2/5
 章归 microcontroller、第 4 章（RTOS）归 rtos（ADR 0106）。本应用只剩弱实践章的 `lab` 块路径（第 2 正则、第 5 单元
 测试；落地前立应用级 ADR 扩展 ADR 0058），理论章维持讲解 + viz + 记忆测验。
 
@@ -92,7 +92,7 @@ operating-system（后改名 os，ADR 0104）、第 10 章归 network；嵌入�
 正则/自动机真匹配（第 2）→ 数据结构编码实验（第 3，data-structures）、算法策略实验（第 8，algorithms）→
 进程同步真编码（第 4）→ 单元测试与覆盖率（第 5）。
 （第 9/7/4/10 章实验由挂靠子应用 database / design-patterns / operating-system /
-network 承载，第 3 章由 data-structures、第 8 章由 algorithms 承接——ADR 0103、0108；本应用内只剩第 2、5 章
+computer-networks 承载，第 3 章由 data-structures、第 8 章由 algorithms 承接——ADR 0103、0108；本应用内只剩第 2、5 章
 的 lab 块待建。）
 
 **嵌入式**：嵌入式 C 位操作真编码（第 6，零硬件成本，最高优先）→ 交叉编译 +
