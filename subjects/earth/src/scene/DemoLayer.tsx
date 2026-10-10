@@ -4,8 +4,10 @@ import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import {
   ballisticPath,
+  circleOnSphere,
   demoSeconds,
   greatCirclePoint,
+  lonLatToScene,
   routeDistanceKm,
   stageHeights,
 } from "../content/demo";
@@ -29,6 +31,8 @@ export function DemoLayer() {
   const replayKey = useEarth((s) => s.replayKey);
   const markerRef = useRef<THREE.Mesh>(null);
   const progress = useRef(0);
+  const anchorRef = useRef<THREE.Group>(null);
+  const flyTo = useEarth((s) => s.flyTo);
 
   const model = useMemo(() => {
     if (!demo) return null;
@@ -60,6 +64,17 @@ export function DemoLayer() {
     const boostEnd = samples.filter((s) => s.stage === "boost").at(-1)!;
     const reentryStart = samples.find((s) => s.stage === "reentry")!;
     const endpoints = { launch: samples[0].point, landing: samples[samples.length - 1].point };
+    // 指定起终点的演示附带尺度参照：虚构海岛的轮廓，和岛心到弹道的竖线
+    const island = spec.route ? data.demos.referenceIsland : null;
+    const islandRing = island ? circleOnSphere(island.lonLat, island.radiusKm) : null;
+    const islandTop = island
+      ? samples.reduce((best, s) =>
+          s.point.distanceTo(lonLatToScene(island.lonLat[0], island.lonLat[1], s.heightKm)) <
+          best.point.distanceTo(lonLatToScene(island.lonLat[0], island.lonLat[1], best.heightKm))
+            ? s
+            : best,
+        )
+      : null;
     return {
       kind: "ballistic" as const,
       spec,
@@ -70,6 +85,9 @@ export function DemoLayer() {
       boostEnd,
       reentryStart,
       endpoints,
+      island,
+      islandRing,
+      islandTop,
       seconds: demoSeconds("ballistic", { stageMinutes: spec.stageMinutes }),
     };
   }, [demo]);
@@ -78,6 +96,34 @@ export function DemoLayer() {
   useEffect(() => {
     progress.current = 0;
   }, [replayKey, demo]);
+
+  // 尺度对照演示：每次开始/重播，让镜头对准海岛的世界坐标（演示层在自转、倾斜的地球坐标系里，
+  // 固定的场景坐标会落空，所以用锚点的 getWorldPosition 取实时位置）
+  const hasIsland = !!model && model.kind === "ballistic" && !!model.island;
+  useEffect(() => {
+    if (!hasIsland) return;
+    const id = requestAnimationFrame(() => {
+      const anchor = anchorRef.current;
+      if (!anchor) return;
+      anchor.updateWorldMatrix(true, false);
+      const world = anchor.getWorldPosition(new THREE.Vector3());
+      // 从海岛的南侧、约 35° 仰角斜看：弹道沿东西向，侧面才看得出岛宽与射高的比例
+      const [lon, lat] = data.demos.referenceIsland.lonLat;
+      const here = lonLatToScene(lon, lat, 0.3);
+      const up = anchor.localToWorld(here.clone().normalize().multiplyScalar(0.05)).sub(world);
+      const north = anchor
+        .localToWorld(lonLatToScene(lon, lat + 1, 0.3).sub(here))
+        .sub(world)
+        .normalize();
+      const dir = up.normalize().multiplyScalar(0.6).addScaledVector(north, -0.8);
+      flyTo({
+        target: [world.x, world.y, world.z],
+        distance: 0.35,
+        lookFrom: [dir.x, dir.y, dir.z],
+      });
+    });
+    return () => cancelAnimationFrame(id);
+  }, [hasIsland, replayKey, flyTo]);
 
   const total = model?.seconds ?? 1;
   // 弹道用自己的播放倍率（几分钟的飞行不能被自转倍率压成一秒）；航线仍跟自转时钟
@@ -157,11 +203,47 @@ export function DemoLayer() {
             </Html>
           </group>
         ))}
+      {model.kind === "ballistic" && model.island && model.islandRing && model.islandTop && (
+        <>
+          <line>
+            <primitive object={polyline(model.islandRing)} attach="geometry" />
+            <lineBasicMaterial color="#34d399" />
+          </line>
+          <line>
+            <primitive
+              object={polyline([
+                lonLatToScene(model.island.lonLat[0], model.island.lonLat[1], 0.3),
+                model.islandTop.point,
+              ])}
+              attach="geometry"
+            />
+            <lineBasicMaterial color="#e2e8f0" />
+          </line>
+          <group
+            ref={anchorRef}
+            position={lonLatToScene(model.island.lonLat[0], model.island.lonLat[1], 0.3)}
+          >
+            <Html center style={{ pointerEvents: "none" }} zIndexRange={[45, 40]}>
+              <div className="earth-label">
+                虚构海岛 · 直径 {model.island.radiusKm * 2} km
+              </div>
+            </Html>
+          </group>
+          <group position={model.islandTop.point}>
+            <Html center style={{ pointerEvents: "none" }} zIndexRange={[45, 40]}>
+              <div className="earth-label">
+                岛上空 ≈ {Math.round(model.islandTop.heightKm / 5) * 5} km
+                {model.islandTop.heightKm > 100 ? " · 外太空" : ""}
+              </div>
+            </Html>
+          </group>
+        </>
+      )}
       {model.kind === "ballistic" && (
         <>
           <group position={model.endpoints.launch}>
             <Html center style={{ pointerEvents: "none" }} zIndexRange={[45, 40]}>
-              <div className="earth-label">示意发射点</div>
+              <div className="earth-label">{model.spec.route?.fromLabel ?? "示意发射点"}</div>
             </Html>
           </group>
           <group position={model.endpoints.landing}>
@@ -170,7 +252,7 @@ export function DemoLayer() {
               <meshBasicMaterial color="#c084fc" />
             </mesh>
             <Html center style={{ pointerEvents: "none" }} zIndexRange={[45, 40]}>
-              <div className="earth-label">示意落点</div>
+              <div className="earth-label">{model.spec.route?.toLabel ?? "示意落点"}</div>
             </Html>
           </group>
         </>

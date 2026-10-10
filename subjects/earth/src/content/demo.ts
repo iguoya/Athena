@@ -103,12 +103,14 @@ export interface BallisticSample {
  */
 export function ballisticPath(
   launch: LaunchSite,
-  spec: Pick<BallisticSpec, "rangeKm" | "apogeeKm">,
+  spec: Pick<BallisticSpec, "rangeKm" | "apogeeKm" | "route">,
   profile: "arc" | "glide" = "arc",
   steps = 160,
 ): BallisticSample[] {
   const delta = spec.rangeKm / EARTH_RADIUS_KM;
-  const landing = destinationPoint(launch.lonLat, launch.bearingDeg, delta);
+  const from = spec.route?.from ?? launch.lonLat;
+  const landing =
+    spec.route?.to ?? destinationPoint(launch.lonLat, launch.bearingDeg, delta);
   const samples: BallisticSample[] = [];
   for (let i = 0; i <= steps; i++) {
     const t = i / steps;
@@ -127,12 +129,25 @@ export function ballisticPath(
     } else {
       heightKm = spec.apogeeKm * Math.sin(Math.PI * t);
     }
-    const point = greatCirclePoint(launch.lonLat, landing, t, Math.max(heightKm, 0));
+    const point = greatCirclePoint(from, landing, t, Math.max(heightKm, 0));
     const stage: BallisticSample["stage"] =
       t < 0.12 ? "boost" : t < 0.88 ? "midcourse" : "reentry";
     samples.push({ point, heightKm, t, stage });
   }
   return samples;
+}
+
+/** 地表圆周上的点（球面上以 center 为心、半径 radiusKm 的圆），用于画海岛轮廓 */
+export function circleOnSphere(
+  center: [number, number],
+  radiusKm: number,
+  heightKm = 0.3,
+  steps = 96,
+): THREE.Vector3[] {
+  return Array.from({ length: steps + 1 }, (_, i) => {
+    const [lon, lat] = destinationPoint(center, (360 * i) / steps, radiusKm / EARTH_RADIUS_KM);
+    return lonLatToScene(lon, lat, heightKm);
+  });
 }
 
 /** 三段分界处的示意射高（km，近似到 5 km），读自 ballisticPath 的剖面采样 */

@@ -7,6 +7,8 @@ export interface FocusTarget {
   target: [number, number, number];
   /** 相机到该点的距离（场景单位） */
   distance: number;
+  /** 相机相对目标的方向（场景坐标，不必归一化）；缺省沿当前视线方向 */
+  lookFrom?: [number, number, number];
 }
 
 export interface DemoSelection {

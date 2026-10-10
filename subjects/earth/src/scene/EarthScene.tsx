@@ -372,7 +372,9 @@ function CameraRig() {
     if (focus && controls) {
       goalTarget.current.set(...focus.target);
       // 保持当前方位角，只改距离：从目标点沿当前视线方向退 focus.distance
-      const dir = state.camera.position.clone().sub(goalTarget.current);
+      const dir = focus.lookFrom
+        ? new THREE.Vector3(...focus.lookFrom)
+        : state.camera.position.clone().sub(goalTarget.current);
       if (dir.lengthSq() < 1e-8) dir.set(0.6, 0.35, 0.6);
       goalPos.current
         .copy(goalTarget.current)

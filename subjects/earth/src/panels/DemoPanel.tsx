@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { ballisticPath, demoSeconds, routeDistanceKm, stageHeights } from "../content/demo";
+import {
+  ballisticPath,
+  demoSeconds,
+  routeDistanceKm,
+  stageHeights,
+} from "../content/demo";
 import { data } from "../content/load";
 import { useEarth } from "../state/store";
 
@@ -20,6 +25,7 @@ export function DemoPanel() {
   const startDemo = useEarth((s) => s.startDemo);
   const stopDemo = useEarth((s) => s.stopDemo);
   const replay = useEarth((s) => s.replay);
+  const setSpinScale = useEarth((s) => s.setSpinScale);
   const togglePlay = useEarth((s) => s.togglePlay);
   const spinScale = useEarth((s) => s.spinScale);
   const demoScale = useEarth((s) => s.demoScale);
@@ -42,8 +48,12 @@ export function DemoPanel() {
   const activeId = kind === "air" ? routeId : ballisticId;
   const active = demo?.kind === kind && demo.id === activeId;
 
-  const start = () =>
+  const start = () => {
     startDemo(kind === "air" ? { kind: "air", id: routeId } : { kind: "ballistic", id: ballisticId });
+    // 尺度对照演示：自转放到真实速度（否则镜头对准的海岛几秒就转走了），
+    // 镜头由 DemoLayer 在海岛的世界坐标上对准
+    if (kind === "ballistic" && ballistic.route) setSpinScale(1);
+  };
 
   return (
     <div className="rounded-lg border border-emerald-200 bg-emerald-50/60 p-3 text-sm">

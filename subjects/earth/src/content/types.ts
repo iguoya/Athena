@@ -54,6 +54,7 @@ export interface EarthData {
     ballisticNote: string;
     ballistics: BallisticSpec[];
     launch: LaunchSite;
+    referenceIsland: ReferenceIsland;
     sourceIds: string[];
   };
   sources: Record<string, { title: string; url: string }>;
@@ -83,6 +84,15 @@ export interface BallisticSpec {
   rangeKm: number;
   apogeeKm: number;
   stageMinutes: number;
+  note: string;
+  /** 指定起终点（经纬度）的演示；缺省则用 demos.launch 的抽象演示点按射程推算落点 */
+  route?: { from: [number, number]; to: [number, number]; fromLabel: string; toLabel: string };
+}
+
+export interface ReferenceIsland {
+  name: string;
+  lonLat: [number, number];
+  radiusKm: number;
   note: string;
 }
 
