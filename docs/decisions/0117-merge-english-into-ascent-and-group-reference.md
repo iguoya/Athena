@@ -60,3 +60,8 @@
 ④ 删除 `subjects/english`，磨砚的 `also_in: 考研` 由摘星接替，根文档、启动器清单、
 `ci.yml` 与 `release.yml` 同步移除 english（tiger 指派本会话改工作流）。磨砚进度库的 4 条作答
 按背景第 3 条不迁移，随目录删除；原样保留在 `pre-english-merge` 标签。
+
+## 2026-10-10 补充：分流取消
+
+tiger 决定按自用软件开发，决策 3 的「参考资料与公开发布」分流取消：英语二全部题目进仓库与
+构建，参考资料进 `subjects/ascent/reference/english2/`。见 `subjects/ascent/adr/0026`。
