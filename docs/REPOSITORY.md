@@ -23,7 +23,7 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
                各为一级大类「计算机」（ADR 0102）
   embedded/    嵌入式系统设计师备考（Tauri 2 + Vue 3）——从 software（原 softcert）拆出，
                一级大类「电子信息」（ADR 0090、0102；定名见 ADR 0097、0100）
-  database/         数据库 SQL 实验室（Tauri 2 + React）——软设第 9 章实践课程，挂靠 software（ADR 0103）
+  database/         数据库 SQL 实验室（Tauri 2 + React）——软设第 9 章实践课程，计算机圈（ADR 0103、0126）
   design-patterns/  设计模式与程序组织（Tauri 2 + Vite）——「程序设计」圈，不挂靠；软考降为
                     专题（原素材坑转正 ADR 0103，去挂靠 ADR 0121）
   os/               操作系统实验（Tauri 2 + React）——408 操作系统（35 分），本体挂 cs408；
