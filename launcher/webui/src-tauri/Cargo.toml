@@ -1,0 +1,26 @@
+[package]
+name = "athena-launcher-webui"
+version = "0.1.0"
+description = "Athena 启动器 Web 前端（Tauri 2 + React + Three.js，ADR 0125）"
+authors = ["Athena"]
+edition = "2021"
+
+[lib]
+name = "athena_launcher_webui_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-single-instance = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+base64 = "0.22"
+# 启动器的清单发现、布局纯函数、进程编排全部来自 core（ADR 0125：执行路径只有 core 一处）。
+launcher-core = { path = "../../core" }
+
+[profile.dev]
+debug = 1
+incremental = true

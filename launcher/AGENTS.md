@@ -9,15 +9,18 @@
 | 目录 | 是什么 |
 |---|---|
 | `core/` | 编排器 `launcher`（Rust）：发现应用、准备、启动、判断状态、日志、`sync`、`icons` |
-| `gui/` | 跨平台启动器（Rust + Slint）：托盘常驻 + 列表窗口，另有「实践」分区 |
+| `webui/` | 跨平台启动器（Tauri 2 + React + Three.js）：3D 领域轨道环 + 2D 平铺（ADR 0125），主线前端 |
+| `gui/` | 旧前端（Rust + Slint）：随 ADR 0125 冻结，能跑不再修，待 webui 对齐后退役 |
 | `macos/` | 菜单栏启动器（Swift），macOS 专属（ADR 0048） |
 
 背景与取舍：ADR 0044（常驻启动器）、0046（统一编排器）、0048（菜单栏版只在 macOS）。
 
 ## 规则
 
-- **三个前端同一条执行路径。** 前端不自己读 `app.json`、不自己判断状态、不自己拼日志
-  路径，一律向编排器要（`launcher list --json`）。菜单栏版是平台专属的，更要守住这条。
+- **所有前端同一条执行路径。** 前端不自己读 `app.json`、不自己判断状态、不自己拼日志
+  路径，一律向编排器要：CLI 与脚本走 `launcher list --json`，webui 的 Tauri 后端直接
+  依赖 core crate 库内调用——两个入口一份实现，数据不来自第二处。菜单栏版是平台
+  专属的，更要守住这条。
 - **启动器里没有按应用写的分支。** 新增应用只放一份带 `dev` 声明的 `app.json`，启动器
   不改代码（ADR 0046）。发现逻辑扫 `<root>/*/app.json`：默认 `subjects/`，
   `--root practice` 扫项目应用，GUI 的实践分区用同一套 `discover_in`。

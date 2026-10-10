@@ -5,7 +5,8 @@
 | 目录 | 是什么 | 用在哪 |
 | --- | --- | --- |
 | [`core/`](core) | 编排器 `launcher`（Rust） | 所有前端的执行层，也能直接在终端用 |
-| [`gui/`](gui) | 跨平台启动器（Rust + Slint） | macOS / Ubuntu / Windows：托盘常驻 + 列表窗口 |
+| [`webui/`](webui) | 跨平台启动器（Tauri 2 + React + Three.js） | Windows 首发：3D 领域轨道环 + 2D 平铺，主线前端（ADR 0125） |
+| [`gui/`](gui) | 旧前端（Rust + Slint），冻结 | ADR 0125 前的跨平台启动器，可用不再修，待退役 |
 | [`macos/`](macos) | 菜单栏启动器（Swift） | macOS 专用，⌃⌥A 唤出 |
 
 "同一条执行路径"是字面意思：前端都不自己读 `app.json`、不自己判断状态、不自己拼

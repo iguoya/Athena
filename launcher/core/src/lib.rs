@@ -9,6 +9,7 @@
 //! macOS 的菜单栏常驻应用。
 
 pub mod icons;
+pub mod layout3d;
 pub mod manifest;
 pub mod mindmap;
 pub mod paths;
