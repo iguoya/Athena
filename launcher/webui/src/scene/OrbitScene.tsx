@@ -53,8 +53,8 @@ function useSphereTexture(app: AppDto): { texture: THREE.Texture | null; status:
             ctx.fillStyle = app.accent;
             ctx.fillRect(0, 0, 1024, 512);
             for (let row = 0; row < 2; row++) {
-              for (let col = 0; col < 4; col++) {
-                ctx.drawImage(img, col * 256 + 63, row * 256 + 63, 130, 130);
+              for (let col = 0; col < 2; col++) {
+                ctx.drawImage(img, col * 512 + 136, row * 256 + 8, 240, 240);
               }
             }
           }, 1024, 512);
@@ -97,8 +97,8 @@ function makeFallback(accent: string, letter: string): { texture: THREE.Texture 
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     for (let row = 0; row < 2; row++) {
-      for (let col = 0; col < 4; col++) {
-        ctx.fillText(letter.slice(0, 2), col * 256 + 128, row * 256 + 128);
+      for (let col = 0; col < 2; col++) {
+        ctx.fillText(letter.slice(0, 2), col * 512 + 256, row * 256 + 128);
       }
     }
   }, 1024, 512);
