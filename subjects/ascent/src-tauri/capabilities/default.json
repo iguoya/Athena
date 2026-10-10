@@ -1,8 +1,10 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Main window: custom title bar controls and self-update",
-  "windows": ["main"],
+  "description": "Main window: custom title bar controls and self-update; pick a folder for local-only materials",
+  "windows": [
+    "main"
+  ],
   "permissions": [
     "core:default",
     "core:window:allow-minimize",
@@ -10,6 +12,7 @@
     "core:window:allow-close",
     "core:window:allow-start-dragging",
     "updater:default",
-    "process:allow-restart"
+    "process:allow-restart",
+    "dialog:allow-open"
   ]
 }

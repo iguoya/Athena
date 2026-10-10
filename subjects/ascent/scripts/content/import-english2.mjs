@@ -162,7 +162,8 @@ for (const path of files(src)) {
   }
   if (priv.length) {
     write(OUT_PRIVATE, rel, { ...header, items: priv.map(convert) });
-    privateIndex[rel] = priv.map((item) => item.id);
+    // order 是拆分前的完整顺序：两边合并时按它排回去，公开与本机题原本是交错的。
+    privateIndex[rel] = { private: priv.map((item) => item.id), order: data.items.map((item) => item.id) };
   }
   totals.public += pub.length;
   totals.private += priv.length;
@@ -192,7 +193,7 @@ cpSync(join(src, "sources"), join(OUT_PRIVATE, "sources"), { recursive: true });
 
 write(OUT_PUBLIC, "private-index.json", {
   about:
-    "只在本机 content/private/english2/ 的题目清单（ADR 0025 第 3 节补充）：本机没有这些文件时界面据此提示缺了多少，而不是当它们不存在。",
+    "只在本机 content/private/english2/ 的题目清单（ADR 0025 第 3 节补充）：private 是本机题目，本机没有这些文件时界面据此提示缺了多少，而不是当它们不存在；order 是拆分前的完整顺序，合并时按它排回去。",
   files: privateIndex,
 });
 
