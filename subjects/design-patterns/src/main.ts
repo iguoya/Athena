@@ -120,6 +120,11 @@ type UmlEdge = {
   to: string;
   kind: "inherits" | "implements" | "comp" | "agg" | "assoc" | "dep";
   label?: string;
+  /**
+   * 垂直于连线方向平移的像素数。同一对类之间有两种关系时用（装饰器既继承 Component
+   * 又聚合一个 Component），不平移的话两条线会叠成一条，读不出是两种关系。
+   */
+  offset?: number;
 };
 type UmlDiagram = {
   width?: number;
@@ -1964,8 +1969,12 @@ function renderUml(d: UmlDiagram): string {
   for (const e of d.edges ?? []) {
     const a = boxes.get(e.from), b = boxes.get(e.to);
     if (!a || !b) continue;
-    const [x1, y1] = clip(a, a.x + a.w / 2, a.y + a.h / 2, b.x + b.w / 2, b.y + b.h / 2);
-    const [x2, y2] = clip(b, b.x + b.w / 2, b.y + b.h / 2, a.x + a.w / 2, a.y + a.h / 2);
+    const [cx1, cy1] = clip(a, a.x + a.w / 2, a.y + a.h / 2, b.x + b.w / 2, b.y + b.h / 2);
+    const [cx2, cy2] = clip(b, b.x + b.w / 2, b.y + b.h / 2, a.x + a.w / 2, a.y + a.h / 2);
+    const off = e.offset ?? 0;
+    const len = Math.hypot(cx2 - cx1, cy2 - cy1) || 1;
+    const nx = (-(cy2 - cy1) / len) * off, ny = ((cx2 - cx1) / len) * off;
+    const x1 = cx1 + nx, y1 = cy1 + ny, x2 = cx2 + nx, y2 = cy2 + ny;
     const dashed = e.kind === "implements" || e.kind === "dep" ? ' stroke-dasharray="6 4"' : "";
     parts.push(`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#333" stroke-width="1.4"${dashed}/>`);
     const ang = Math.atan2(y2 - y1, x2 - x1);

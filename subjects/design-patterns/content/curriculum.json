@@ -2814,8 +2814,1579 @@
       "id": "structural",
       "title": "结构型模式：把类拼成更大的结构",
       "track": "structural",
-      "summary": "适配器、桥接、组合、装饰、外观、享元、代理——共 7 个，下一批填充（每个配标准 UML 类图与 C++ 实验）。\n\n取材：取材：Refactoring.Guru 结构型 · iluwatar/java-design-patterns · patterns.dev（前端组合形态）",
+      "summary": "结构型模式涉及如何组合类和对象以获得更大的结构：类模式用继承组合接口或实现，对象模式在运行时组合对象，更灵活。适配器、桥接、组合、装饰、外观、享元、代理 7 个，每个配标准类图与 C++ 实验；易混的几对（适配器/桥接、装饰/组合、装饰/代理、外观/适配器）并排对照。\n\n取材：软设教程（第 5 版）§7.3.3 · GoF《Design Patterns》· Refactoring.Guru",
       "topics": [
+        {
+          "id": "dp.adapter",
+          "title": "适配器模式 Adapter",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.uml.class",
+            "dp.dip"
+          ],
+          "track": "structural",
+          "guide_line": "把一个已有类的接口转换成客户期望的另一个接口。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能为接口不兼容的已有类写出对象适配器，并说清类适配器与对象适配器的差别。",
+            "pain": "买来的库、遗留代码的接口与本系统约定的接口对不上，两边都不能改。",
+            "model": "Target 是客户期望的接口；Adaptee 是已有的类；Adapter 实现 Target，把调用转换后转给 Adaptee。",
+            "scope": "对象适配器（组合，C++/Java 通用）为主；类适配器靠多重继承，了解即可。",
+            "judgment": "已有类、接口不符、不想改两边——适配器；要把一堆接口简化成一个——那是外观。",
+            "landing": "给定 Target 与 Adaptee，能写出转发正确的 Adapter，客户与被适配者都不改。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "系统里所有模块都通过 Logger::log(msg) 记日志；新买的第三方日志库只提供 writeEntry(level, text)，而且源码改不了。最省事又不破坏现有代码的做法是？",
+                "options": [
+                  {
+                    "label": "写一个类实现 Logger，内部持有第三方对象，把 log 转成 writeEntry",
+                    "ok": true,
+                    "why": "这就是对象适配器：两边都不动，只加一个转换层"
+                  },
+                  {
+                    "label": "把所有调用 log 的地方改成 writeEntry",
+                    "ok": false,
+                    "why": "改动面遍布全系统，以后换库还得再改一遍"
+                  },
+                  {
+                    "label": "修改第三方库，给它加一个 log 方法",
+                    "ok": false,
+                    "why": "题设说库改不了；改了也会在升级时被覆盖"
+                  },
+                  {
+                    "label": "让 Logger 继承第三方日志类",
+                    "ok": false,
+                    "why": "抽象接口反过来依赖具体库，方向倒了，违背依赖倒置"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "适配器（Adapter，又称 Wrapper）的意图：「将一个类的接口转换成客户希望的另外一个接口。Adapter 模式使得原本由于接口不兼容而不能一起工作的那些类可以一起工作。」它不增加功能，只做**接口转换**。"
+              },
+              {
+                "type": "uml",
+                "title": "对象适配器类图",
+                "uml": {
+                  "width": 660,
+                  "height": 240,
+                  "classes": [
+                    {
+                      "name": "Client",
+                      "x": 15,
+                      "y": 30,
+                      "w": 110
+                    },
+                    {
+                      "name": "Target",
+                      "x": 200,
+                      "y": 20,
+                      "w": 170,
+                      "stereotype": "interface",
+                      "methods": [
+                        "+ request()"
+                      ]
+                    },
+                    {
+                      "name": "Adapter",
+                      "x": 200,
+                      "y": 160,
+                      "w": 170,
+                      "attrs": [
+                        "- adaptee: Adaptee*"
+                      ],
+                      "methods": [
+                        "+ request()"
+                      ]
+                    },
+                    {
+                      "name": "Adaptee",
+                      "x": 460,
+                      "y": 160,
+                      "w": 180,
+                      "methods": [
+                        "+ specificRequest()"
+                      ]
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "Client",
+                      "to": "Target",
+                      "kind": "assoc"
+                    },
+                    {
+                      "from": "Adapter",
+                      "to": "Target",
+                      "kind": "implements"
+                    },
+                    {
+                      "from": "Adapter",
+                      "to": "Adaptee",
+                      "kind": "assoc",
+                      "label": "adaptee"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "steps",
+                "title": "参与者",
+                "items": [
+                  "Target：定义 Client 使用的、与特定领域相关的接口。",
+                  "Client：与符合 Target 接口的对象协同。",
+                  "Adaptee：一个已经存在、需要适配的接口。",
+                  "Adapter：把 Adaptee 的接口适配到 Target，request() 里调用 adaptee->specificRequest()。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "类适配器 vs 对象适配器",
+                "left": {
+                  "title": "类适配器：多重继承",
+                  "body": "Adapter 同时继承 Target 与 Adaptee（C++ 里对 Adaptee 私有继承）。只能适配 Adaptee 这一个类，不能顺带适配它的子类；好处是可以重定义 Adaptee 的部分行为。"
+                },
+                "right": {
+                  "title": "对象适配器：组合",
+                  "body": "Adapter 实现 Target 并持有一个 Adaptee 指针。一个适配器可以配合 Adaptee 及其所有子类；Java 等单继承语言只能用这种。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "适用性",
+                "text": "想使用一个已经存在的类，而它的接口不符合要求；想创建一个可复用的类，与将来不可预见的类协同工作；（仅对象适配器）想使用一批已有子类，但不可能对每一个都子类化来匹配接口。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "对象适配器中，Adapter 与 Adaptee 之间是什么关系？",
+                    "choices": [
+                      {
+                        "label": "Adapter 持有 Adaptee 的引用并转发调用（组合/关联）",
+                        "ok": true,
+                        "why": "对象适配器靠组合；类适配器才靠继承 Adaptee"
+                      },
+                      {
+                        "label": "Adapter 继承 Adaptee",
+                        "ok": false,
+                        "why": "这是类适配器的做法"
+                      },
+                      {
+                        "label": "Adaptee 实现 Target 接口",
+                        "ok": false,
+                        "why": "Adaptee 正是因为不符合 Target 才需要适配"
+                      },
+                      {
+                        "label": "两者没有关系，由 Client 分别调用",
+                        "ok": false,
+                        "why": "那样 Client 就要知道 Adaptee，适配器失去意义"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.adapter",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "意图、参与者与适用性依据：软设教程（第 5 版）§7.3.3 Adapter（第 385–386 页）· GoF《Design Patterns》Adapter 一章 · Refactoring.Guru Adapter。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.adapter.run",
+              "title": "给第三方日志库做适配",
+              "case": "adapter_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "runJob() 只认 Logger 接口，第三方 ThirdPartyLogger 只有 writeEntry(level, text)。不改这两边，怎么让它们一起工作？",
+              "goal": "补 LoggerAdapter::log() 的 TODO：把消息转发给 adaptee_.writeEntry(1, msg.c_str())。",
+              "hint": "std::string 转 const char* 用 c_str()。",
+              "pass": {
+                "includes": [
+                  "[3rd L1] job started",
+                  "[3rd L1] job done"
+                ]
+              }
+            }
+          ],
+          "modern": {
+            "verdict": "solid",
+            "text": "四语言现状：接口不兼容的胶水层在任何语言里都要写——C 里是一层包装函数，C++/Rust 是实现目标 trait/接口的包装类型（Rust 的孤儿规则下 newtype 包装就是适配器），Python 鸭子类型下签名对得上时常可免适配。只要还在集成别人的库，适配器就在。"
+          }
+        },
+        {
+          "id": "dp.bridge",
+          "title": "桥接模式 Bridge",
+          "difficulty": 4,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.carp",
+            "dp.adapter"
+          ],
+          "track": "structural",
+          "guide_line": "把抽象部分与实现部分分离，使它们都可以独立地变化。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能识别「两个维度各自变化」的结构，用桥接代替维度相乘的子类爆炸。",
+            "pain": "形状 × 渲染方式、消息类型 × 发送渠道：用继承硬拼，每加一个维度的取值，子类数就翻倍。",
+            "model": "Abstraction 持有一个 Implementor 引用；Implementor 只提供基本操作，Abstraction 用它们拼出高层操作；两边各自派生。",
+            "scope": "Abstraction 与 Implementor 的接口可以完全不同；运行时可以切换实现。",
+            "judgment": "看到一个抽象类层次通过一个指针连着另一个实现类层次，就是桥接；接口已存在、只差转换的是适配器。",
+            "landing": "能给两个独立变化的维度画出桥接类图，新增任一维度只加一个类。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "要画圆形与方形，每种都要支持矢量与光栅两种渲染。用继承写成 VectorCircle、RasterCircle、VectorSquare、RasterSquare 四个类。再加一种 SVG 渲染，会怎样？",
+                "options": [
+                  {
+                    "label": "要再写 SVGCircle、SVGSquare，子类数按「形状数 × 渲染数」增长；应把渲染拆成独立层次，形状持有一个渲染器",
+                    "ok": true,
+                    "why": "这正是桥接要解决的维度相乘"
+                  },
+                  {
+                    "label": "只需加一个 SVGRenderer 类",
+                    "ok": false,
+                    "why": "在继承方案里做不到：每种形状都得配一个 SVG 子类"
+                  },
+                  {
+                    "label": "用单例保存当前渲染方式就够了",
+                    "ok": false,
+                    "why": "单例只管实例唯一，管不了两个维度的组合"
+                  },
+                  {
+                    "label": "把所有渲染代码写进一个大 switch",
+                    "ok": false,
+                    "why": "每加一种形状或渲染都要改这个 switch，违背开闭"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "桥接（Bridge，又称 Handle/Body）的意图：「将抽象部分与其实现部分分离，使它们都可以独立地变化。」这里的「实现」不是指子类实现，而是另一个**独立的类层次**：抽象一侧负责高层操作，实现一侧只提供基本操作，中间用一个引用连起来——这个引用就是「桥」。"
+              },
+              {
+                "type": "uml",
+                "title": "桥接类图",
+                "uml": {
+                  "width": 720,
+                  "height": 300,
+                  "classes": [
+                    {
+                      "name": "Abstraction",
+                      "x": 15,
+                      "y": 20,
+                      "w": 200,
+                      "attrs": [
+                        "# impl: Implementor*"
+                      ],
+                      "methods": [
+                        "+ operation()"
+                      ]
+                    },
+                    {
+                      "name": "Implementor",
+                      "x": 420,
+                      "y": 20,
+                      "w": 200,
+                      "stereotype": "interface",
+                      "methods": [
+                        "+ operationImp()"
+                      ]
+                    },
+                    {
+                      "name": "RefinedAbstraction",
+                      "x": 15,
+                      "y": 200,
+                      "w": 200,
+                      "methods": [
+                        "+ operation()"
+                      ]
+                    },
+                    {
+                      "name": "ConcreteImplementorA",
+                      "x": 330,
+                      "y": 200,
+                      "w": 180,
+                      "methods": [
+                        "+ operationImp()"
+                      ]
+                    },
+                    {
+                      "name": "ConcreteImplementorB",
+                      "x": 525,
+                      "y": 200,
+                      "w": 180,
+                      "methods": [
+                        "+ operationImp()"
+                      ]
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "Abstraction",
+                      "to": "Implementor",
+                      "kind": "agg",
+                      "label": "impl"
+                    },
+                    {
+                      "from": "RefinedAbstraction",
+                      "to": "Abstraction",
+                      "kind": "inherits"
+                    },
+                    {
+                      "from": "ConcreteImplementorA",
+                      "to": "Implementor",
+                      "kind": "implements"
+                    },
+                    {
+                      "from": "ConcreteImplementorB",
+                      "to": "Implementor",
+                      "kind": "implements"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "steps",
+                "title": "参与者",
+                "items": [
+                  "Abstraction：定义抽象类的接口，维护一个指向 Implementor 对象的指针。",
+                  "RefinedAbstraction：扩充 Abstraction 定义的接口。",
+                  "Implementor：定义实现类的接口，通常只提供基本操作；它与 Abstraction 的接口可以完全不同。",
+                  "ConcreteImplementor：实现 Implementor 接口。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "桥接 vs 适配器（都在转发请求，时机相反）",
+                "left": {
+                  "title": "适配器：类设计好之后",
+                  "body": "解决两个已有接口不匹配，不关心它们怎么实现、将来怎么演化；不用重新设计任何一方就让它们协同。"
+                },
+                "right": {
+                  "title": "桥接：类设计之前",
+                  "body": "预先把抽象与实现拆成两个层次，给用户一个稳定的抽象接口，同时允许实现部分在系统演化中替换、扩充。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "适用性",
+                "text": "不希望抽象与实现之间有固定绑定（例如运行时要切换实现）；抽象与实现都要能通过子类扩充；修改实现不应影响客户；有许多类要生成、类层次按两个维度膨胀；想在多个对象间共享一个实现而客户不知道。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "桥接模式里的「桥」指的是什么？",
+                    "choices": [
+                      {
+                        "label": "Abstraction 中指向 Implementor 的那个引用",
+                        "ok": true,
+                        "why": "抽象层次与实现层次靠它连接，两边各自派生"
+                      },
+                      {
+                        "label": "RefinedAbstraction 对 Abstraction 的继承",
+                        "ok": false,
+                        "why": "那是抽象层次内部的扩充，不是桥"
+                      },
+                      {
+                        "label": "Client 与 Abstraction 之间的调用",
+                        "ok": false,
+                        "why": "客户只是使用抽象接口"
+                      },
+                      {
+                        "label": "ConcreteImplementor 之间的转换函数",
+                        "ok": false,
+                        "why": "具体实现之间互不相识"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.bridge",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "意图、参与者与适用性依据：软设教程（第 5 版）§7.3.3 Bridge（第 386–387，比较见第 393 页 页）· GoF《Design Patterns》Bridge 一章 · Refactoring.Guru Bridge。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.bridge.run",
+              "title": "给形状加一种新形状",
+              "case": "bridge_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "已有 Circle 和两种渲染器。新增一种形状，要不要动渲染器？要写几个类？",
+              "goal": "补 TODO：新增 Square（RefinedAbstraction，边长存为 side_，draw() 调 4 次 renderer_.line(side_)），并在 main 里用两种渲染器各画一个边长 3 的方形。",
+              "hint": "构造函数写成 Square(Renderer& r, int side) : Shape(r), side_(side) {}。",
+              "pass": {
+                "includes": [
+                  "[vector] line 3",
+                  "[raster] line 3"
+                ]
+              }
+            }
+          ],
+          "modern": {
+            "verdict": "solid",
+            "text": "四语言现状：C 里是「结构体 + 函数表指针」，Linux 内核的设备驱动层就是典型；C++ 的 pImpl 惯用法是桥接的变体（隐藏实现、减少重编译）；Rust 用 trait 对象或泛型参数持有实现。两个维度独立变化的问题不会因语言进化而消失。"
+          }
+        },
+        {
+          "id": "dp.composite",
+          "title": "组合模式 Composite",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.uml.class",
+            "dp.lsp"
+          ],
+          "track": "structural",
+          "guide_line": "把对象组合成树形结构表示「部分-整体」，单个对象与组合对象一致对待。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能用组合模式表示树形结构，并用递归在 Composite 中实现聚合操作。",
+            "pain": "文件与目录、控件与容器：客户代码到处判断「是叶子还是容器」，层次一深就乱。",
+            "model": "Component 是统一接口；Leaf 直接实现；Composite 存一组 Component 子节点，操作时递归转给子节点。",
+            "scope": "子节点管理方法（add/remove/getChild）放在 Component 里求透明，还是只放在 Composite 里求安全，是实现时的取舍。",
+            "judgment": "类图里 Composite 既继承 Component、又聚合多个 Component——就是组合。",
+            "landing": "能写出递归计算的 Composite::operation()，客户只用 Component 接口。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "文件管理器要显示每个目录的总大小。目录里既有文件，也有子目录，子目录里还有子目录。客户代码最好怎么写？",
+                "options": [
+                  {
+                    "label": "文件与目录实现同一个 size() 接口，目录的 size() 把子节点的 size() 加起来",
+                    "ok": true,
+                    "why": "客户只调 size()，不必区分叶子与容器——这是组合"
+                  },
+                  {
+                    "label": "客户代码里先判断类型：是文件就取大小，是目录就遍历",
+                    "ok": false,
+                    "why": "每个用到树的地方都要重复这段判断，层次一深更乱"
+                  },
+                  {
+                    "label": "给每一层目录各写一个类",
+                    "ok": false,
+                    "why": "层数不固定，写不完"
+                  },
+                  {
+                    "label": "把所有文件放进一个扁平列表",
+                    "ok": false,
+                    "why": "丢掉了「部分-整体」的层次"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "组合（Composite）的意图：「将对象组合成树型结构以表示『部分-整体』的层次结构。Composite 使得用户对单个对象和组合对象的使用具有一致性。」关键是 Composite 自己也是一个 Component，所以组合可以再被组合，形成任意深的树。"
+              },
+              {
+                "type": "uml",
+                "title": "组合类图",
+                "uml": {
+                  "width": 640,
+                  "height": 340,
+                  "classes": [
+                    {
+                      "name": "Client",
+                      "x": 15,
+                      "y": 30,
+                      "w": 100
+                    },
+                    {
+                      "name": "Component",
+                      "x": 220,
+                      "y": 15,
+                      "w": 210,
+                      "stereotype": "abstract",
+                      "methods": [
+                        "+ operation()",
+                        "+ add(Component)",
+                        "+ remove(Component)",
+                        "+ getChild(int)"
+                      ]
+                    },
+                    {
+                      "name": "Leaf",
+                      "x": 90,
+                      "y": 210,
+                      "w": 150,
+                      "methods": [
+                        "+ operation()"
+                      ]
+                    },
+                    {
+                      "name": "Composite",
+                      "x": 380,
+                      "y": 210,
+                      "w": 210,
+                      "methods": [
+                        "+ operation()",
+                        "+ add(Component)",
+                        "+ remove(Component)",
+                        "+ getChild(int)"
+                      ]
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "Client",
+                      "to": "Component",
+                      "kind": "assoc"
+                    },
+                    {
+                      "from": "Leaf",
+                      "to": "Component",
+                      "kind": "inherits"
+                    },
+                    {
+                      "from": "Composite",
+                      "to": "Component",
+                      "kind": "inherits",
+                      "offset": -14
+                    },
+                    {
+                      "from": "Composite",
+                      "to": "Component",
+                      "kind": "agg",
+                      "label": "children 0..*",
+                      "offset": 14
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "steps",
+                "title": "参与者",
+                "items": [
+                  "Component：为组合中的对象声明接口，实现共有的默认行为，声明访问和管理子组件的接口。",
+                  "Leaf：叶结点，没有子结点，定义图元对象的行为。",
+                  "Composite：有子组件的组件——存储子组件，在 Component 接口中实现与子组件有关的操作（如对每个子节点递归调用 operation()）。",
+                  "Client：通过 Component 接口操纵组合中的对象。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "透明方式 vs 安全方式",
+                "left": {
+                  "title": "透明：管理方法放在 Component",
+                  "body": "Leaf 与 Composite 接口完全一致，客户无需区分；代价是 Leaf 上调用 add() 没有意义，要在运行时处理。"
+                },
+                "right": {
+                  "title": "安全：管理方法只放在 Composite",
+                  "body": "对 Leaf 调 add() 在编译期就会报错；代价是客户要先确定拿到的是 Composite 才能加子节点。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "适用性",
+                "text": "想表示对象的部分-整体层次结构；希望用户忽略组合对象与单个对象的不同，统一地使用组合结构中的所有对象。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "组合模式的类图里，Composite 与 Component 之间同时存在哪两种关系？",
+                    "choices": [
+                      {
+                        "label": "Composite 继承 Component，同时聚合多个 Component 作为子节点",
+                        "ok": true,
+                        "why": "既「是一个」Component，又「有多个」Component，才能递归成树"
+                      },
+                      {
+                        "label": "只有继承关系",
+                        "ok": false,
+                        "why": "没有聚合就存不了子节点"
+                      },
+                      {
+                        "label": "只有聚合关系",
+                        "ok": false,
+                        "why": "不继承 Component，组合对象就不能被当作单个对象使用"
+                      },
+                      {
+                        "label": "Component 聚合 Composite",
+                        "ok": false,
+                        "why": "方向反了：容器是 Composite，被包含的是 Component"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.composite",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "意图、参与者与适用性依据：软设教程（第 5 版）§7.3.3 Composite（第 387–388 页）· GoF《Design Patterns》Composite 一章 · Refactoring.Guru Composite。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.composite.run",
+              "title": "递归算出目录大小",
+              "case": "composite_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "File 是叶子，Directory 是组合。先预测：Directory::size() 要不要知道子节点是文件还是目录？",
+              "goal": "补 Directory::size() 的 TODO：返回所有 children_ 的 size() 之和。",
+              "hint": "for (const auto& c : children_) sum += c->size();——对子节点一视同仁，递归自然发生。",
+              "pass": {
+                "includes": [
+                  "src/ (1500)",
+                  "total size: 1750"
+                ]
+              }
+            }
+          ],
+          "modern": {
+            "verdict": "solid",
+            "text": "四语言现状：UI 组件树、文件系统、场景图、语法树都是组合；C 用带子节点数组的结构体，C++/Rust 用 vector<unique_ptr<Node>> / Vec<Box<dyn Node>>，Rust 也常直接用递归 enum。声明式 UI（组件嵌套组件）把它变成了日常写法。"
+          }
+        },
+        {
+          "id": "dp.decorator",
+          "title": "装饰模式 Decorator",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.composite",
+            "dp.ocp"
+          ],
+          "track": "structural",
+          "guide_line": "动态地给一个对象添加额外的职责，比生成子类更灵活。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能写出装饰器链，说清装饰与继承扩展、装饰与组合的区别。",
+            "pain": "边框、滚动条、阴影各种组合都用子类表示，子类数按组合爆炸。",
+            "model": "Decorator 实现 Component 接口并持有一个 Component；转发请求的前后加上自己的职责；装饰器可以层层嵌套。",
+            "scope": "装饰器对被装饰者透明（同一接口）；嵌套顺序决定效果顺序。",
+            "judgment": "类图里 Decorator 既继承 Component 又持有一个（不是一组）Component——装饰；持有一组——组合。",
+            "landing": "能写一个新的 ConcreteDecorator 并按需叠加，不修改已有类。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "文本控件要能任意组合「加边框」「加滚动条」「加阴影」三种效果。用子类表示每种组合，最多要多少个类？更好的办法是？",
+                "options": [
+                  {
+                    "label": "组合数是 2³−1=7 种，子类会爆炸；改为每种效果一个包装类，按需一层层套在控件外面",
+                    "ok": true,
+                    "why": "这就是装饰：职责在运行时叠加，类数只随效果数线性增长"
+                  },
+                  {
+                    "label": "写 7 个子类就行，问题不大",
+                    "ok": false,
+                    "why": "再加一种效果就是 15 个，增长是指数级的"
+                  },
+                  {
+                    "label": "在控件里加三个布尔开关",
+                    "ok": false,
+                    "why": "每加一种效果都要改控件类，违背开闭"
+                  },
+                  {
+                    "label": "用抽象工厂按组合创建控件",
+                    "ok": false,
+                    "why": "工厂只管怎么造，组合数仍然要一一写成类"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "装饰（Decorator，又称 Wrapper）的意图：「动态地给一个对象添加一些额外的职责。就增加功能而言，Decorator 模式比生成子类更加灵活。」装饰器与被装饰者实现同一接口，所以对客户透明；它在转发请求的**前后**做自己的事，并且可以无限嵌套。"
+              },
+              {
+                "type": "uml",
+                "title": "装饰类图",
+                "uml": {
+                  "width": 660,
+                  "height": 380,
+                  "classes": [
+                    {
+                      "name": "Component",
+                      "x": 230,
+                      "y": 15,
+                      "w": 170,
+                      "stereotype": "abstract",
+                      "methods": [
+                        "+ operation()"
+                      ]
+                    },
+                    {
+                      "name": "ConcreteComponent",
+                      "x": 15,
+                      "y": 160,
+                      "w": 180,
+                      "methods": [
+                        "+ operation()"
+                      ]
+                    },
+                    {
+                      "name": "Decorator",
+                      "x": 330,
+                      "y": 160,
+                      "w": 200,
+                      "attrs": [
+                        "- component: Component*"
+                      ],
+                      "methods": [
+                        "+ operation()"
+                      ]
+                    },
+                    {
+                      "name": "ConcreteDecoratorA",
+                      "x": 200,
+                      "y": 290,
+                      "w": 190,
+                      "attrs": [
+                        "- addedState"
+                      ],
+                      "methods": [
+                        "+ operation()"
+                      ]
+                    },
+                    {
+                      "name": "ConcreteDecoratorB",
+                      "x": 430,
+                      "y": 290,
+                      "w": 200,
+                      "methods": [
+                        "+ operation()",
+                        "+ addedBehavior()"
+                      ]
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "ConcreteComponent",
+                      "to": "Component",
+                      "kind": "inherits"
+                    },
+                    {
+                      "from": "Decorator",
+                      "to": "Component",
+                      "kind": "inherits",
+                      "offset": -12
+                    },
+                    {
+                      "from": "Decorator",
+                      "to": "Component",
+                      "kind": "agg",
+                      "label": "component",
+                      "offset": 12
+                    },
+                    {
+                      "from": "ConcreteDecoratorA",
+                      "to": "Decorator",
+                      "kind": "inherits"
+                    },
+                    {
+                      "from": "ConcreteDecoratorB",
+                      "to": "Decorator",
+                      "kind": "inherits"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "steps",
+                "title": "参与者",
+                "items": [
+                  "Component：定义一个对象接口，可以给这些对象动态地添加职责。",
+                  "ConcreteComponent：定义一个对象，可以给它添加职责。",
+                  "Decorator：维持一个指向 Component 的指针，并定义与 Component 一致的接口。",
+                  "ConcreteDecorator：向组件添加职责（在 component->operation() 前后加行为或状态）。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "装饰 vs 组合（结构相似，目的不同）",
+                "left": {
+                  "title": "装饰：持有一个",
+                  "body": "递归组合一个对象，目的是**不生成子类就给对象加职责**，避免静态实现全部功能组合导致的子类爆炸。"
+                },
+                "right": {
+                  "title": "组合：持有一组",
+                  "body": "递归组合多个对象，目的是让多个相关对象能被**当作一个对象统一处理**，重点在表示部分-整体。两者常协同使用。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "适用性",
+                "text": "在不影响其他对象的情况下，以动态、透明的方式给单个对象添加职责；处理那些可以撤销的职责；不能采用生成子类的方法扩充时——独立扩展太多导致子类爆炸，或类定义被隐藏、不能生成子类。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "Bold(Italic(text)) 与 Italic(Bold(text)) 渲染结果不同，说明了装饰模式的什么性质？",
+                    "choices": [
+                      {
+                        "label": "装饰按嵌套顺序层层转发，外层的职责包在内层结果之外",
+                        "ok": true,
+                        "why": "每层在转发前后加自己的行为，顺序就是嵌套顺序"
+                      },
+                      {
+                        "label": "装饰器必须按固定顺序使用",
+                        "ok": false,
+                        "why": "顺序可以任意，只是结果随顺序变化"
+                      },
+                      {
+                        "label": "装饰器改变了被装饰对象的接口",
+                        "ok": false,
+                        "why": "装饰器与被装饰者接口一致，这是它对客户透明的前提"
+                      },
+                      {
+                        "label": "装饰模式在编译期确定全部功能",
+                        "ok": false,
+                        "why": "恰恰相反，职责在运行时组合"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.decorator",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "意图、参与者与适用性依据：软设教程（第 5 版）§7.3.3 Decorator（第 389，比较见第 393–394 页 页）· GoF《Design Patterns》Decorator 一章 · Refactoring.Guru Decorator。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.decorator.run",
+              "title": "叠两层装饰",
+              "case": "decorator_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "已有 Bold 装饰器。先预测：Italic(Bold(\"hello\")) 和 Bold(Italic(\"hello\")) 的输出各是什么？",
+              "goal": "补 TODO：仿照 Bold 写 Italic（把内容包进 <i>…</i>），在 main 里按两种顺序各构造一次并输出 render()。",
+              "hint": "Italic 只需继承 TextDecorator 并重写 render()；PlainText 和 Bold 一行不改。",
+              "pass": {
+                "includes": [
+                  "<i><b>hello</b></i>",
+                  "<b><i>hello</i></b>"
+                ]
+              }
+            }
+          ],
+          "modern": {
+            "verdict": "functional",
+            "text": "四语言现状：Python 的 @decorator 把「包一层函数」做成了语法；C++/Rust 用闭包或泛型包装类型（Rust 的 BufReader<R> 包住任意 Read，就是装饰器）；Java I/O 流（BufferedInputStream 包 FileInputStream）是教科书例子。针对函数的装饰已退化为高阶函数，针对对象的装饰仍按本节写。"
+          }
+        },
+        {
+          "id": "dp.facade",
+          "title": "外观模式 Facade",
+          "difficulty": 1,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [
+            "dp.lod"
+          ],
+          "track": "structural",
+          "guide_line": "为子系统中的一组接口提供一个一致的高层接口。",
+          "weight": "",
+          "outline": {
+            "promise": "能为复杂子系统设计一个外观，并区分外观与适配器、外观与中介者。",
+            "pain": "客户要按正确顺序调用子系统里一串细粒度的类，耦合多、容易出错。",
+            "model": "Facade 知道哪个子系统类负责什么，把客户请求转给它们；子系统类不知道 Facade 存在。",
+            "scope": "外观不阻止高级用户绕过它直接用子系统；分层系统可以每层一个外观作为入口。",
+            "judgment": "把一组接口简化成一个——外观；把一个接口转成另一个——适配器。",
+            "landing": "给定一组子系统调用序列，能把它收进外观的一个方法。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "看一部电影要依次：开功放、调音量、开投影、切输入源、开播放器、播放。每个调用方都把这 6 步抄一遍。更好的办法是？",
+                "options": [
+                  {
+                    "label": "加一个类提供 watch(movie)，内部按顺序调用这些子系统",
+                    "ok": true,
+                    "why": "客户只认识一个入口，子系统细节被挡在外观后面"
+                  },
+                  {
+                    "label": "把三个子系统合并成一个大类",
+                    "ok": false,
+                    "why": "子系统各自的复用性没了，类也会臃肿"
+                  },
+                  {
+                    "label": "给每个子系统做一个适配器",
+                    "ok": false,
+                    "why": "接口并没有不兼容，问题在于步骤太多太细"
+                  },
+                  {
+                    "label": "让子系统类彼此持有引用，自动联动",
+                    "ok": false,
+                    "why": "子系统之间耦合更重，也不便单独使用"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "外观（Facade）的意图：「为子系统中的一组接口提供一个一致的界面，Facade 模式定义了一个高层接口，这个接口使得这一子系统更加容易使用。」它是迪米特法则的直接应用：客户只和外观这一个「朋友」打交道。"
+              },
+              {
+                "type": "uml",
+                "title": "外观类图",
+                "uml": {
+                  "width": 660,
+                  "height": 250,
+                  "classes": [
+                    {
+                      "name": "Client",
+                      "x": 15,
+                      "y": 30,
+                      "w": 110
+                    },
+                    {
+                      "name": "Facade",
+                      "x": 230,
+                      "y": 20,
+                      "w": 180,
+                      "methods": [
+                        "+ watch(movie)"
+                      ]
+                    },
+                    {
+                      "name": "Amplifier",
+                      "x": 40,
+                      "y": 170,
+                      "w": 160,
+                      "methods": [
+                        "+ on()",
+                        "+ setVolume(v)"
+                      ]
+                    },
+                    {
+                      "name": "Projector",
+                      "x": 250,
+                      "y": 170,
+                      "w": 160,
+                      "methods": [
+                        "+ on()",
+                        "+ input(src)"
+                      ]
+                    },
+                    {
+                      "name": "Player",
+                      "x": 460,
+                      "y": 170,
+                      "w": 160,
+                      "methods": [
+                        "+ on()",
+                        "+ play(movie)"
+                      ]
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "Client",
+                      "to": "Facade",
+                      "kind": "assoc"
+                    },
+                    {
+                      "from": "Facade",
+                      "to": "Amplifier",
+                      "kind": "assoc"
+                    },
+                    {
+                      "from": "Facade",
+                      "to": "Projector",
+                      "kind": "assoc"
+                    },
+                    {
+                      "from": "Facade",
+                      "to": "Player",
+                      "kind": "assoc"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "steps",
+                "title": "参与者",
+                "items": [
+                  "Facade：知道哪些子系统类负责处理请求，将客户的请求代理给适当的子系统对象。",
+                  "Subsystem classes：实现子系统的功能，处理 Facade 指派的任务；没有 Facade 的任何信息，没有指向 Facade 的指针。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "外观 vs 适配器",
+                "left": {
+                  "title": "外观：一组接口 → 一个简化接口",
+                  "body": "包装一系列对象，定义一个新的、更简单的高层接口；子系统的接口并没有不兼容。"
+                },
+                "right": {
+                  "title": "适配器：一个接口 → 另一个期望的接口",
+                  "body": "包装一个对象，把它已有的接口转换成客户期望的接口，功能不变、只换形状。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "适用性",
+                "text": "要为一个复杂子系统提供一个简单接口（大多数用户只需默认视图，需要定制的用户可以越过外观）；客户与子系统实现之间依赖很多，引入外观使子系统与客户分离、提高独立性与可移植性；构建层次化子系统时，用外观定义每层的入口点，让层与层只通过外观通信。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "关于外观模式，下列说法正确的是？",
+                    "choices": [
+                      {
+                        "label": "子系统类不知道外观的存在，高级用户仍可越过外观直接使用子系统",
+                        "ok": true,
+                        "why": "外观只是提供一个默认的简单入口，不封死子系统"
+                      },
+                      {
+                        "label": "引入外观后，客户不能再直接访问子系统",
+                        "ok": false,
+                        "why": "外观不强制隔离，需要定制的用户可以绕过它"
+                      },
+                      {
+                        "label": "外观负责把不兼容的接口转换成兼容的接口",
+                        "ok": false,
+                        "why": "那是适配器"
+                      },
+                      {
+                        "label": "子系统类必须持有指向外观的指针",
+                        "ok": false,
+                        "why": "恰恰相反，子系统没有指向外观的指针"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.facade",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "意图、参与者与适用性依据：软设教程（第 5 版）§7.3.3 Facade（第 390–391 页）· GoF《Design Patterns》Facade 一章 · Refactoring.Guru Facade。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.facade.run",
+              "title": "把一串调用收进外观",
+              "case": "facade_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "客户想「看一部电影」，却要知道三个子系统、六个步骤的顺序。外观应该承担哪一部分？",
+              "goal": "补 HomeTheater::watch() 的 TODO：依次 amp on、音量 5、projector on、输入 \"player\"、player on、播放 movie。子系统类一行不改。",
+              "pass": {
+                "includes": [
+                  "amp volume 5",
+                  "projector input player",
+                  "playing Inception"
+                ]
+              }
+            }
+          ],
+          "modern": {
+            "verdict": "solid",
+            "text": "四语言现状：库的「高层 API」几乎都是外观——C 库的便捷函数、C++ 的 std::filesystem 对系统调用的封装、Python requests 对 urllib 的封装、Rust 的 reqwest::get。只要还有复杂子系统，就需要一个简单入口。"
+          }
+        },
+        {
+          "id": "dp.flyweight",
+          "title": "享元模式 Flyweight",
+          "difficulty": 3,
+          "mastery_goal": "understand",
+          "knowledge_type": "concept",
+          "requires": [
+            "dp.uml.class"
+          ],
+          "track": "structural",
+          "guide_line": "运用共享技术有效地支持大量细粒度的对象。",
+          "weight": "",
+          "outline": {
+            "promise": "能区分内部状态与外部状态，说清享元工厂怎样保证共享。",
+            "pain": "文档里每个字符、地图上每棵树都建一个对象，内存被大量重复数据吃掉。",
+            "model": "把可共享的内部状态留在享元对象里，与场景有关的外部状态由调用方在使用时传入；FlyweightFactory 按 key 缓存，同一个 key 只建一次。",
+            "scope": "享元对象必须不依赖上下文；应用不能依赖对象标识（概念上不同的对象可能是同一个实例）。",
+            "judgment": "大量对象 + 状态大多可外置 + 存储开销大——享元；只要一个实例——那是单例。",
+            "landing": "能把一个对象的状态划分为内部/外部，并写出带缓存池的享元工厂。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "排版一本十万字的书，每个字符都建一个对象（字形、字体、位置），内存撑不住。最有效的思路是？",
+                "options": [
+                  {
+                    "label": "同一个字符只建一个字形对象来共享，位置这类随场景变化的信息在绘制时传入",
+                    "ok": true,
+                    "why": "把内部状态与外部状态分开，内部状态共享——这就是享元"
+                  },
+                  {
+                    "label": "把字符对象做成单例",
+                    "ok": false,
+                    "why": "全书只有一个字符对象，表示不了不同的字"
+                  },
+                  {
+                    "label": "换更大的内存",
+                    "ok": false,
+                    "why": "没解决重复存储的问题"
+                  },
+                  {
+                    "label": "用原型模式复制字符对象",
+                    "ok": false,
+                    "why": "复制出来仍是很多个对象，内存没省"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "享元（Flyweight）的意图：「运用共享技术有效地支持大量细粒度的对象。」能共享的前提是对象**不含与上下文相关的状态**：存在对象里的是**内部状态**（如字符本身），随场景变化的**外部状态**（如位置）在调用时作为参数传进去。"
+              },
+              {
+                "type": "uml",
+                "title": "享元类图",
+                "uml": {
+                  "width": 700,
+                  "height": 300,
+                  "classes": [
+                    {
+                      "name": "FlyweightFactory",
+                      "x": 15,
+                      "y": 20,
+                      "w": 230,
+                      "attrs": [
+                        "- flyweights: map<key, Flyweight*>"
+                      ],
+                      "methods": [
+                        "+ getFlyweight(key)"
+                      ]
+                    },
+                    {
+                      "name": "Flyweight",
+                      "x": 400,
+                      "y": 20,
+                      "w": 220,
+                      "stereotype": "interface",
+                      "methods": [
+                        "+ operation(extrinsicState)"
+                      ]
+                    },
+                    {
+                      "name": "Client",
+                      "x": 15,
+                      "y": 200,
+                      "w": 100
+                    },
+                    {
+                      "name": "ConcreteFlyweight",
+                      "x": 230,
+                      "y": 190,
+                      "w": 210,
+                      "attrs": [
+                        "- intrinsicState"
+                      ],
+                      "methods": [
+                        "+ operation(extrinsicState)"
+                      ]
+                    },
+                    {
+                      "name": "UnsharedConcreteFlyweight",
+                      "x": 470,
+                      "y": 190,
+                      "w": 220,
+                      "attrs": [
+                        "- allState"
+                      ],
+                      "methods": [
+                        "+ operation(extrinsicState)"
+                      ]
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "FlyweightFactory",
+                      "to": "Flyweight",
+                      "kind": "agg",
+                      "label": "flyweights"
+                    },
+                    {
+                      "from": "ConcreteFlyweight",
+                      "to": "Flyweight",
+                      "kind": "implements"
+                    },
+                    {
+                      "from": "UnsharedConcreteFlyweight",
+                      "to": "Flyweight",
+                      "kind": "implements"
+                    },
+                    {
+                      "from": "Client",
+                      "to": "FlyweightFactory",
+                      "kind": "assoc"
+                    },
+                    {
+                      "from": "Client",
+                      "to": "ConcreteFlyweight",
+                      "kind": "assoc"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "steps",
+                "title": "参与者",
+                "items": [
+                  "Flyweight：描述一个接口，享元通过它接受并作用于外部状态。",
+                  "ConcreteFlyweight：实现 Flyweight 接口，为内部状态增加存储空间；必须可共享，存储的状态必须独立于场景。",
+                  "UnsharedConcreteFlyweight：并非所有 Flyweight 子类都需要共享，接口使共享成为可能但不强制。",
+                  "FlyweightFactory：创建并管理享元；客户请求时，有就返回已创建的实例，没有才创建。",
+                  "Client：维持对享元的引用，计算或存储享元的外部状态。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "内部状态 vs 外部状态",
+                "left": {
+                  "title": "内部状态：存在享元里",
+                  "body": "不随场景变化，可以共享。例：字形对象里的字符编码与字形数据。"
+                },
+                "right": {
+                  "title": "外部状态：调用时传入",
+                  "body": "随场景变化，不能共享，由客户保存并在调用 operation(extrinsicState) 时传入。例：字符在页面上的位置。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "适用性",
+                "text": "应用使用了大量对象，且完全由于对象数量造成很大的存储开销；对象的大多数状态都可变为外部状态；删除外部状态后可以用相对较少的共享对象取代很多组对象；应用不依赖对象标识。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "享元对象能被自由共享的前提是？",
+                    "choices": [
+                      {
+                        "label": "它不存储与上下文相关的状态，这类状态在使用时由外部传入",
+                        "ok": true,
+                        "why": "只有内部状态的对象，放在哪个场景里都一样"
+                      },
+                      {
+                        "label": "它的构造函数是私有的",
+                        "ok": false,
+                        "why": "那是单例的手法，与能否共享无关"
+                      },
+                      {
+                        "label": "它实现了 clone() 方法",
+                        "ok": false,
+                        "why": "那是原型"
+                      },
+                      {
+                        "label": "它只被一个客户使用",
+                        "ok": false,
+                        "why": "共享的意义就在于被很多处同时使用"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.flyweight",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "意图、参与者与适用性依据：软设教程（第 5 版）§7.3.3 Flyweight（第 391–392 页）· GoF《Design Patterns》Flyweight 一章 · Refactoring.Guru Flyweight。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.flyweight.run",
+              "title": "让字形对象共享起来",
+              "case": "flyweight_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "\"hello world\" 有 11 个字符，现在造了 11 个 Glyph 对象。先预测：按字符共享之后应该是几个？",
+              "goal": "补 GlyphFactory::get() 的 TODO：先在 pool_ 里查 c，有就返回已有对象，没有才创建并放进 pool_。",
+              "hint": "pool_.find(c) != pool_.end() 时返回 it->second；新建的对象记得存进 pool_[c]。",
+              "pass": {
+                "includes": [
+                  "glyph objects created: 8",
+                  "same glyph for 'l': yes"
+                ]
+              }
+            }
+          ],
+          "modern": {
+            "verdict": "language",
+            "text": "四语言现状：字符串驻留（Java/Python 的 intern、Python 小整数缓存）是语言内建的享元；C++ 常用 std::shared_ptr 池或 flyweight 库；游戏引擎的实例化渲染与 ECS 共享组件数据仍在大规模使用这一思想。手写享元类层级少见，思想无处不在。"
+          }
+        },
+        {
+          "id": "dp.proxy",
+          "title": "代理模式 Proxy",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.decorator"
+          ],
+          "track": "structural",
+          "guide_line": "为其他对象提供一种代理以控制对这个对象的访问。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能写出虚代理，说清远程/虚/保护/智能引用四类代理，并区分代理与装饰。",
+            "pain": "对象创建开销大、在远处、需要权限检查，又不想让客户代码知道这些细节。",
+            "model": "Proxy 与 RealSubject 实现同一个 Subject 接口，Proxy 持有 RealSubject 的引用，在转发前后控制访问。",
+            "scope": "四类：远程代理、虚代理、保护代理、智能引用；C++ 智能指针就是智能引用。",
+            "judgment": "同接口、持有被代理对象、目的是控制访问——代理；目的是加职责——装饰。",
+            "landing": "能写出延迟创建的虚代理，客户代码不感知代理的存在。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "相册要显示 100 张高清图，每张从磁盘加载都很慢，但用户通常只看前几张。怎样在不改相册代码的前提下避免一次性全部加载？",
+                "options": [
+                  {
+                    "label": "给每张图一个同接口的替身对象，第一次真正显示时才加载原图",
+                    "ok": true,
+                    "why": "这是虚代理：控制的是「何时创建」"
+                  },
+                  {
+                    "label": "相册代码里加判断，滚到了才加载",
+                    "ok": false,
+                    "why": "要改相册代码，而且加载逻辑散落在客户里"
+                  },
+                  {
+                    "label": "把图片对象做成单例",
+                    "ok": false,
+                    "why": "100 张不同的图不可能共用一个实例"
+                  },
+                  {
+                    "label": "用享元共享图片对象",
+                    "ok": false,
+                    "why": "每张图内容不同，没有可共享的内部状态"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "代理（Proxy，又称 Surrogate）的意图：「为其他对象提供一种代理以控制对这个对象的访问。」代理与实体接口相同，所以任何使用实体的地方都能换成代理；代理在转发请求前后决定**能不能访问、何时创建、在哪里执行**。"
+              },
+              {
+                "type": "uml",
+                "title": "代理类图",
+                "uml": {
+                  "width": 640,
+                  "height": 260,
+                  "classes": [
+                    {
+                      "name": "Client",
+                      "x": 15,
+                      "y": 30,
+                      "w": 100
+                    },
+                    {
+                      "name": "Subject",
+                      "x": 220,
+                      "y": 20,
+                      "w": 170,
+                      "stereotype": "interface",
+                      "methods": [
+                        "+ request()"
+                      ]
+                    },
+                    {
+                      "name": "RealSubject",
+                      "x": 90,
+                      "y": 170,
+                      "w": 170,
+                      "methods": [
+                        "+ request()"
+                      ]
+                    },
+                    {
+                      "name": "Proxy",
+                      "x": 360,
+                      "y": 170,
+                      "w": 230,
+                      "attrs": [
+                        "- realSubject: RealSubject*"
+                      ],
+                      "methods": [
+                        "+ request()"
+                      ]
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "Client",
+                      "to": "Subject",
+                      "kind": "assoc"
+                    },
+                    {
+                      "from": "RealSubject",
+                      "to": "Subject",
+                      "kind": "implements"
+                    },
+                    {
+                      "from": "Proxy",
+                      "to": "Subject",
+                      "kind": "implements"
+                    },
+                    {
+                      "from": "Proxy",
+                      "to": "RealSubject",
+                      "kind": "assoc",
+                      "label": "realSubject"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "steps",
+                "title": "参与者与四类代理",
+                "items": [
+                  "Subject：定义 RealSubject 与 Proxy 的共用接口，使任何用 RealSubject 的地方都能用 Proxy。",
+                  "RealSubject：定义 Proxy 所代表的实体。",
+                  "Proxy：保存实体的引用并提供相同接口；控制对实体的存取，可能负责创建和删除它。",
+                  "远程代理：为另一地址空间的对象提供本地代表，负责编码与发送请求。",
+                  "虚代理：根据需要才创建开销很大的对象。",
+                  "保护代理：检查调用者是否有访问权限。",
+                  "智能引用：访问对象时做附加操作，如引用计数、首次引用时装入内存、访问前加锁。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "代理 vs 装饰（结构几乎一样，意图不同）",
+                "left": {
+                  "title": "代理：控制访问",
+                  "body": "实体定义关键功能，代理提供（或拒绝）对它的访问；代理与实体的关系通常是静态确定的，不打算动态叠加。"
+                },
+                "right": {
+                  "title": "装饰：添加职责",
+                  "body": "组件只提供部分功能，一个或多个装饰器负责补充其余功能；可以在运行时任意叠加，适用于编译期无法确定全部功能的情况。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "适用性",
+                "text": "需要用比简单指针更通用、更复杂的对象引用来代替简单指针时：虚代理按需创建大开销对象；保护代理按权限控制访问；智能引用在访问时执行附加操作（引用计数、首次引用时装入、访问前检查锁）；远程代理代表另一地址空间中的对象。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "C++ 的 std::shared_ptr 在访问对象时维护引用计数、计数归零时释放对象。它对应哪一类代理？",
+                    "choices": [
+                      {
+                        "label": "智能引用",
+                        "ok": true,
+                        "why": "访问对象时执行附加操作（引用计数、自动释放），正是智能引用"
+                      },
+                      {
+                        "label": "虚代理",
+                        "ok": false,
+                        "why": "虚代理的重点是延迟创建大开销对象"
+                      },
+                      {
+                        "label": "远程代理",
+                        "ok": false,
+                        "why": "远程代理代表另一地址空间中的对象"
+                      },
+                      {
+                        "label": "保护代理",
+                        "ok": false,
+                        "why": "保护代理按权限决定能否访问"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.proxy",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "意图、参与者与适用性依据：软设教程（第 5 版）§7.3.3 Proxy（第 392–393，比较见第 393–394 页 页）· GoF《Design Patterns》Proxy 一章 · Refactoring.Guru Proxy。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.proxy.run",
+              "title": "把代理改成按需加载",
+              "case": "proxy_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "现在的 ImageProxy 每次 display() 都新建 RealImage，图片加载了两次。代理该在什么时候创建实体？",
+              "goal": "补 ImageProxy::display() 的 TODO：real_ 为空时才 make_unique 一个 RealImage，之后直接转发给 real_->display()。",
+              "pass": {
+                "includes": [
+                  "loads: 1"
+                ]
+              }
+            }
+          ],
+          "modern": {
+            "verdict": "language",
+            "text": "四语言现状：C++ 智能指针（operator-> 重载）、Python 的 __getattr__ 转发、Rust 的 Deref 都把智能引用做进了语言；远程代理由 RPC 框架生成的桩代码承担，ORM 的懒加载属性是虚代理。手写代理类主要剩权限检查与缓存这类业务场景。"
+          }
+        },
         {
           "id": "dp.structural.roadmap",
           "title": "结构型 7 模式·建设计划",
@@ -2897,7 +4468,460 @@
           "labs": [],
           "status": "planned"
         }
-      ]
+      ],
+      "checkpoint": {
+        "intro": "结构型 7 个模式混排，同一模式的题不挨着。很多题考的是「结构相似、意图不同」——先说出意图再选。",
+        "items": [
+          {
+            "stem": "想给一个对象动态地加上「压缩」「加密」两种处理，并且能任意组合、任意顺序。最合适的是？",
+            "choices": [
+              {
+                "label": "装饰",
+                "ok": true,
+                "why": "每种处理一个装饰器，按需嵌套，职责在运行时叠加"
+              },
+              {
+                "label": "代理",
+                "ok": false,
+                "why": "代理的目的是控制访问，不是叠加多种职责"
+              },
+              {
+                "label": "适配器",
+                "ok": false,
+                "why": "接口并没有不兼容"
+              },
+              {
+                "label": "组合",
+                "ok": false,
+                "why": "组合表示部分-整体的树，不是给单个对象叠职责"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.decorator",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.decorator"
+          },
+          {
+            "stem": "系统期望 Shape::draw() 接口，现有一个第三方类 TextView 只有 showText()，且不能修改。应采用？",
+            "choices": [
+              {
+                "label": "适配器",
+                "ok": true,
+                "why": "把已有类的接口转换成客户期望的接口"
+              },
+              {
+                "label": "桥接",
+                "ok": false,
+                "why": "桥接是设计之初就把抽象与实现拆开，不是事后转换已有接口"
+              },
+              {
+                "label": "外观",
+                "ok": false,
+                "why": "外观简化一组接口，这里只有一个接口要转换"
+              },
+              {
+                "label": "装饰",
+                "ok": false,
+                "why": "装饰不改变接口，只加职责"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.adapter",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.adapter"
+          },
+          {
+            "stem": "一个对象的状态分成「内部状态」与「外部状态」，这种划分出自哪个模式？",
+            "choices": [
+              {
+                "label": "享元",
+                "ok": true,
+                "why": "内部状态共享存于享元对象，外部状态在调用时传入"
+              },
+              {
+                "label": "原型",
+                "ok": false,
+                "why": "原型关心复制，不区分内外状态"
+              },
+              {
+                "label": "备忘录",
+                "ok": false,
+                "why": "备忘录保存的是对象的内部状态快照，但没有「外部状态传入」的设计"
+              },
+              {
+                "label": "单例",
+                "ok": false,
+                "why": "单例只管实例唯一"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.flyweight",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.flyweight"
+          },
+          {
+            "stem": "某系统要求只有管理员才能调用 Report::export()，又不想把权限判断写进 Report 类。最合适的是？",
+            "choices": [
+              {
+                "label": "保护代理：同接口的代理先检查权限，再转发给真实对象",
+                "ok": true,
+                "why": "控制访问正是代理的意图"
+              },
+              {
+                "label": "装饰：给 Report 加一个导出功能",
+                "ok": false,
+                "why": "要的不是新职责，而是访问控制"
+              },
+              {
+                "label": "外观：把 Report 封装进子系统入口",
+                "ok": false,
+                "why": "外观简化一组接口，不负责权限"
+              },
+              {
+                "label": "适配器：把 export 转成另一个接口",
+                "ok": false,
+                "why": "接口没有不兼容"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.proxy",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.proxy"
+          },
+          {
+            "stem": "图形编辑器里，「组」可以包含图形，也可以包含别的「组」，对「组」执行移动时其中所有图形一起移动。这是？",
+            "choices": [
+              {
+                "label": "组合",
+                "ok": true,
+                "why": "组与单个图形同接口，操作在组内递归下去"
+              },
+              {
+                "label": "装饰",
+                "ok": false,
+                "why": "装饰只包一个对象，而组包含多个"
+              },
+              {
+                "label": "享元",
+                "ok": false,
+                "why": "享元关心共享以节省内存"
+              },
+              {
+                "label": "外观",
+                "ok": false,
+                "why": "外观为子系统提供简单入口，与部分-整体无关"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.composite",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.composite"
+          },
+          {
+            "stem": "消息分「普通/加急」两类，发送渠道有「邮件/短信/站内信」三种，两个维度都会继续扩展。为避免 2×3 个子类，应采用？",
+            "choices": [
+              {
+                "label": "桥接：消息层次持有一个渠道层次的引用",
+                "ok": true,
+                "why": "两个维度各自派生，新增任一维度只加一个类"
+              },
+              {
+                "label": "适配器",
+                "ok": false,
+                "why": "适配器解决已有接口不兼容，不解决维度相乘"
+              },
+              {
+                "label": "装饰",
+                "ok": false,
+                "why": "装饰叠加职责，不是拆分两个独立变化的维度"
+              },
+              {
+                "label": "抽象工厂",
+                "ok": false,
+                "why": "抽象工厂负责成套创建产品，子类数问题依旧"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.bridge",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.bridge"
+          },
+          {
+            "stem": "一个子系统里有许多细粒度的类，外部用起来很麻烦。为它定义一个高层接口让子系统更易使用，应采用？",
+            "choices": [
+              {
+                "label": "外观",
+                "ok": true,
+                "why": "为子系统中的一组接口提供一个一致的高层接口"
+              },
+              {
+                "label": "适配器",
+                "ok": false,
+                "why": "适配器转换一个已有接口，不是简化一组接口"
+              },
+              {
+                "label": "代理",
+                "ok": false,
+                "why": "代理控制对单个对象的访问"
+              },
+              {
+                "label": "中介者",
+                "ok": false,
+                "why": "中介者封装一组对象之间的交互，客户并不通过它使用子系统"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.facade",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.facade"
+          },
+          {
+            "stem": "在类图里，Decorator 与 Component 的关系是？",
+            "choices": [
+              {
+                "label": "Decorator 继承 Component，同时聚合一个 Component",
+                "ok": true,
+                "why": "同接口才能透明替换，持有一个才能转发并叠加"
+              },
+              {
+                "label": "Decorator 只聚合 Component，不继承",
+                "ok": false,
+                "why": "不继承就不能被当作 Component 使用，也就无法嵌套"
+              },
+              {
+                "label": "Decorator 聚合多个 Component",
+                "ok": false,
+                "why": "聚合多个是组合的结构"
+              },
+              {
+                "label": "Component 继承 Decorator",
+                "ok": false,
+                "why": "方向反了"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.decorator",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.decorator"
+          },
+          {
+            "stem": "关于类适配器与对象适配器，正确的是？",
+            "choices": [
+              {
+                "label": "对象适配器通过组合，一个适配器可以适配 Adaptee 及其所有子类",
+                "ok": true,
+                "why": "持有的是 Adaptee 指针，指向哪个子类都行"
+              },
+              {
+                "label": "类适配器可以同时适配 Adaptee 的所有子类",
+                "ok": false,
+                "why": "类适配器继承一个具体的 Adaptee，只能适配这一个类"
+              },
+              {
+                "label": "Java 中两种适配器都能直接实现",
+                "ok": false,
+                "why": "Java 单继承，类适配器需要同时继承两个类，通常做不到"
+              },
+              {
+                "label": "对象适配器必须继承 Adaptee",
+                "ok": false,
+                "why": "那是类适配器"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.adapter",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.adapter"
+          },
+          {
+            "stem": "下列哪种情况最适合采用享元模式？",
+            "choices": [
+              {
+                "label": "地图上有几十万棵树，树种只有十几种，位置各不相同",
+                "ok": true,
+                "why": "树种数据共享为内部状态，位置作为外部状态传入"
+              },
+              {
+                "label": "系统中某个配置对象只能有一个实例",
+                "ok": false,
+                "why": "那是单例"
+              },
+              {
+                "label": "需要按不同风格成套创建界面控件",
+                "ok": false,
+                "why": "那是抽象工厂"
+              },
+              {
+                "label": "需要撤销对象的最近一次修改",
+                "ok": false,
+                "why": "那是备忘录或命令"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.flyweight",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.flyweight"
+          },
+          {
+            "stem": "代理与装饰类图几乎一样。二者最主要的区别是？",
+            "choices": [
+              {
+                "label": "代理控制对实体的访问，装饰给对象动态添加职责",
+                "ok": true,
+                "why": "目的不同：一个守门，一个加功能"
+              },
+              {
+                "label": "代理与实体接口不同，装饰与组件接口相同",
+                "ok": false,
+                "why": "代理与实体接口也相同，这才能替换"
+              },
+              {
+                "label": "装饰不能嵌套，代理可以",
+                "ok": false,
+                "why": "装饰天生可以层层嵌套"
+              },
+              {
+                "label": "代理只能用于远程对象",
+                "ok": false,
+                "why": "还有虚代理、保护代理、智能引用"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.proxy",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.proxy"
+          },
+          {
+            "stem": "组合模式中把 add/remove 放在 Component（而不是只放在 Composite）里，换来的是什么？",
+            "choices": [
+              {
+                "label": "透明性：叶子与组合接口完全一致，客户无需区分",
+                "ok": true,
+                "why": "代价是对叶子调 add 没有意义，要在运行时处理"
+              },
+              {
+                "label": "安全性：编译期就能阻止对叶子添加子节点",
+                "ok": false,
+                "why": "那是只放在 Composite 里的「安全方式」"
+              },
+              {
+                "label": "性能：遍历更快",
+                "ok": false,
+                "why": "放在哪里与遍历性能无关"
+              },
+              {
+                "label": "线程安全",
+                "ok": false,
+                "why": "与线程无关"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.composite",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.composite"
+          },
+          {
+            "stem": "软件设计好之后才发现两个已有接口不匹配，要用的是？先设计、预先把抽象与实现拆开的又是？",
+            "choices": [
+              {
+                "label": "前者适配器，后者桥接",
+                "ok": true,
+                "why": "适配器在类设计好后实施，桥接在设计类之前实施"
+              },
+              {
+                "label": "前者桥接，后者适配器",
+                "ok": false,
+                "why": "说反了"
+              },
+              {
+                "label": "两者都是适配器",
+                "ok": false,
+                "why": "预先拆分抽象与实现是桥接的意图"
+              },
+              {
+                "label": "两者都是外观",
+                "ok": false,
+                "why": "外观简化一组接口，不处理接口不匹配"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.bridge",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.bridge"
+          },
+          {
+            "stem": "外观模式中，子系统类与外观的关系是？",
+            "choices": [
+              {
+                "label": "子系统类不知道外观，没有指向外观的指针",
+                "ok": true,
+                "why": "外观单向依赖子系统，子系统可以独立使用"
+              },
+              {
+                "label": "子系统类必须继承外观",
+                "ok": false,
+                "why": "子系统与外观没有继承关系"
+              },
+              {
+                "label": "子系统类只能通过外观被访问",
+                "ok": false,
+                "why": "需要定制的用户可以越过外观"
+              },
+              {
+                "label": "外观与子系统类实现同一接口",
+                "ok": false,
+                "why": "外观定义的是新的高层接口"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.facade",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            },
+            "covers": "dp.facade"
+          }
+        ]
+      }
     },
     {
       "id": "behavioral",
