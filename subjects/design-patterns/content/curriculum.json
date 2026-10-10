@@ -432,6 +432,211 @@
       "summary": "模式是招式，原则是内功。开闭是总纲，其余六条都在为它服务。评价一个设计好不好，先拿这七条量一遍。",
       "topics": [
         {
+          "id": "dp.coupling-cohesion",
+          "title": "耦合与内聚",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [],
+          "track": "principles",
+          "guide_line": "七大原则背后的两把尺子：模块之间要松，模块内部要紧。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能用「耦合」「内聚」两个词，说清一段代码为什么难改，以及往哪个方向改。",
+            "pain": "改一个函数，三个不相干的模块跟着坏；一个类里什么都有，起不出一个准确的名字。",
+            "model": "耦合衡量模块之间互相依赖的紧密程度，越松越好；内聚衡量模块内部各部分彼此相关的程度，越高越好。目标是「高内聚、低耦合」。",
+            "scope": "两个词描述的是结果，不是做法：具体怎么松、怎么紧，是后面七大原则和情境篇的事。",
+            "judgment": "拿到一个模块，先问它的名字能不能一句话说清（内聚），再问改它会牵动谁（耦合）。",
+            "landing": "能把一个具体的依赖或一个具体的类，归到耦合/内聚的某一档，并说出下一档该怎么走。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "**耦合**（Coupling）和**内聚**（Cohesion）是结构化设计提出的一对概念（Stevens、Myers、Constantine，1974），用来衡量一个模块「独不独立」。**耦合**看的是模块**之间**：一个模块知道另一个模块多少内部细节。**内聚**看的是模块**之内**：里面的各个部分是不是在为同一件事服务。好的设计两头都占：模块之间只靠窄而稳定的接口联系（低耦合），每个模块只做一件说得清的事（高内聚）。后面的 SRP、DIP、LoD 等原则，都可以看作朝这个方向用力的具体办法。"
+              },
+              {
+                "type": "table",
+                "title": "耦合：从强到弱（越靠下越好）",
+                "headers": [
+                  "耦合类型",
+                  "含义",
+                  "C++ 里的样子"
+                ],
+                "rows": [
+                  [
+                    "内容耦合",
+                    "一个模块直接改另一个模块的内部",
+                    "`#define private public`、`friend` 滥用、`reinterpret_cast` 去改别人的私有成员"
+                  ],
+                  [
+                    "公共耦合",
+                    "多个模块共享同一块全局数据",
+                    "全局变量、全局可变单例"
+                  ],
+                  [
+                    "外部耦合",
+                    "多个模块共享外部格式或设备",
+                    "几个模块都按同一个文件格式、同一个端口号硬编码"
+                  ],
+                  [
+                    "控制耦合",
+                    "传一个标记，指挥对方内部走哪个分支",
+                    "`render(data, true, false)`、`mode` 参数"
+                  ],
+                  [
+                    "标记耦合",
+                    "传整个数据结构，对方只用其中一小部分",
+                    "函数收一个巨大的 `Config&`，只读其中一个字段"
+                  ],
+                  [
+                    "数据耦合",
+                    "只传对方需要的基本数据",
+                    "`area(double w, double h)`"
+                  ],
+                  [
+                    "非直接耦合",
+                    "互不认识，只通过上层协调",
+                    "两个模块都只和调度者通信"
+                  ]
+                ],
+                "note": "软件设计师考试里的分类与排序以此为准；日常评审用得更多的是前三档（内容、公共、控制）。"
+              },
+              {
+                "type": "table",
+                "title": "内聚：从弱到强（越靠下越好）",
+                "headers": [
+                  "内聚类型",
+                  "含义",
+                  "例子"
+                ],
+                "rows": [
+                  [
+                    "偶然内聚",
+                    "各部分毫无关系，只是碰巧放在一起",
+                    "`Utils` 类：日志格式化 + 日期解析 + 文件拷贝"
+                  ],
+                  [
+                    "逻辑内聚",
+                    "做的是「同一类」事，调用时用参数选哪一件",
+                    "`handle(int kind, ...)` 里一个大 switch"
+                  ],
+                  [
+                    "时间内聚",
+                    "只因为同一时刻执行而放一起",
+                    "`initAll()`：初始化日志、网络、界面、缓存"
+                  ],
+                  [
+                    "过程内聚",
+                    "只因为按固定顺序执行",
+                    "「先校验再保存再发邮件」的一条龙函数"
+                  ],
+                  [
+                    "通信内聚",
+                    "操作同一份数据",
+                    "对同一个订单做查询、统计、打印"
+                  ],
+                  [
+                    "顺序内聚",
+                    "前一步的输出是后一步的输入",
+                    "读入 → 解析 → 校验，管道式"
+                  ],
+                  [
+                    "功能内聚",
+                    "全部部分共同完成一个单一功能",
+                    "`computeTax(order)`"
+                  ]
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "两把尺子别混用",
+                "left": {
+                  "title": "内聚：看一个模块的里面",
+                  "body": "问「这个类里的东西是不是一家人」。症状是名字起不准、改一件事总动同一批无关的代码。把无关的东西拆出去提高内聚。"
+                },
+                "right": {
+                  "title": "耦合：看模块之间的缝",
+                  "body": "问「改它会牵动谁」。症状是改一处要连带改很多处、测一个要拖进一堆。把依赖变窄、变抽象来降低耦合。"
+                }
+              },
+              {
+                "type": "scenario",
+                "situation": "一个叫 Helper 的类里有：解析日期、压缩文件、计算订单税额三个静态函数，三者没有共用任何数据。它的内聚属于哪一档？",
+                "options": [
+                  {
+                    "label": "偶然内聚",
+                    "ok": true,
+                    "why": "三个函数毫无关系，只是碰巧放在一起，名字叫 Helper 本身就是信号"
+                  },
+                  {
+                    "label": "功能内聚",
+                    "ok": false,
+                    "why": "功能内聚要求全部部分完成同一个功能"
+                  },
+                  {
+                    "label": "顺序内聚",
+                    "ok": false,
+                    "why": "一个函数的输出并没有交给下一个"
+                  },
+                  {
+                    "label": "通信内聚",
+                    "ok": false,
+                    "why": "它们没有操作同一份数据"
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "和七大原则的关系",
+                "text": "SRP 追求的是高内聚（一个类一个变化原因）；DIP、ISP、LoD 追求的是低耦合（依赖抽象、依赖窄接口、少认识陌生人）；OCP 是两者共同的结果——内聚高、耦合松的模块，扩展时才不必改旧代码。遇到一时分不清该用哪条原则时，先退一步问：这是内聚的问题，还是耦合的问题？"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "函数 `draw(shape, true)` 里，第二个参数为 true 时画实线、false 时画虚线。调用方因此必须知道 draw 内部有两种画法。这属于哪种耦合？",
+                    "choices": [
+                      {
+                        "label": "控制耦合",
+                        "ok": true,
+                        "why": "传入一个标记去指挥对方内部走哪个分支"
+                      },
+                      {
+                        "label": "数据耦合",
+                        "ok": false,
+                        "why": "数据耦合只传对方需要的基本数据，不含控制意图"
+                      },
+                      {
+                        "label": "公共耦合",
+                        "ok": false,
+                        "why": "这里没有共享的全局数据"
+                      },
+                      {
+                        "label": "内容耦合",
+                        "ok": false,
+                        "why": "这里没有直接改对方的内部"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.coupling-cohesion",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "Stevens、Myers、Constantine《Structured Design》（IBM Systems Journal，1974）提出耦合与内聚；分类与排序按《软件设计师教程（第 5 版）》中「模块独立性」一节的口径。C++ 里的例子为本课自编。"
+              }
+            ]
+          }
+        },
+        {
           "id": "dp.ocp",
           "title": "开闭原则（OCP）——总纲",
           "difficulty": 2,
@@ -1227,6 +1432,38 @@
             }
           },
           {
+            "stem": "一个 initAll() 函数依次初始化日志、网络、界面、缓存，唯一的共同点是“启动时一起执行”。它的内聚属于哪一档？",
+            "covers": "dp.coupling-cohesion",
+            "choices": [
+              {
+                "label": "时间内聚",
+                "ok": true,
+                "why": "各部分只因为同一时刻执行而放在一起"
+              },
+              {
+                "label": "功能内聚",
+                "ok": false,
+                "why": "它们并不完成同一个单一功能"
+              },
+              {
+                "label": "顺序内聚",
+                "ok": false,
+                "why": "前一步的输出并不是后一步的输入"
+              },
+              {
+                "label": "通信内聚",
+                "ok": false,
+                "why": "它们没有操作同一份数据"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.coupling-cohesion",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
+          },
+          {
             "stem": "工厂方法、策略、装饰三个模式，在原则层面的共同目标是？",
             "covers": "dp.ocp",
             "choices": [
@@ -1449,6 +1686,38 @@
               "locator": "dp.carp",
               "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
             }
+          },
+          {
+            "stem": "模块 A 把一个包含上百个字段的 Config 整体传给 B，B 其实只读其中一个字段。这属于哪种耦合？",
+            "covers": "dp.coupling-cohesion",
+            "choices": [
+              {
+                "label": "标记耦合",
+                "ok": true,
+                "why": "传的是整个数据结构，对方只用了其中一小部分"
+              },
+              {
+                "label": "数据耦合",
+                "ok": false,
+                "why": "数据耦合只传对方需要的基本数据"
+              },
+              {
+                "label": "公共耦合",
+                "ok": false,
+                "why": "没有共享全局数据"
+              },
+              {
+                "label": "内容耦合",
+                "ok": false,
+                "why": "没有直接改对方内部"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.coupling-cohesion",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
           }
         ]
       }
@@ -1459,6 +1728,151 @@
       "track": "situations",
       "summary": "本课主轴（本应用 ADR 0001）：从「代码出了什么问题」出发，选择合适的组织方式。每节一种症状——症状名与重构手法采用《重构》第 2 版的命名，C++ 规范引用 C++ Core Guidelines 条目——讲识别、改法、代价与边界，并指向模式工具箱里能用上的模式；每节一个重构实验。\n\n取材：Martin Fowler《重构》第 2 版第 3 章与重构目录 · C++ Core Guidelines · Fowler《Inversion of Control Containers and the Dependency Injection pattern》",
       "topics": [
+        {
+          "id": "dp.sit.duplicated-code",
+          "title": "重复代码",
+          "difficulty": 1,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "situations",
+          "guide_line": "同一段逻辑抄了好几份，改规则时漏掉一份，价格就对不上。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能识别「同一条规则被抄了几份」，用提炼函数把它收到一处，并判断哪些相似不该合并。",
+            "pain": "运费规则抄在零售和批发两个函数里；运营说改规则，改了一处，另一处漏了，上线后两个价格对不上。",
+            "model": "同一个知识只在一处表达。把重复的片段提炼成一个有名字的函数，所有用到它的地方改为调用。",
+            "scope": "重复的是「知识」（规则、公式、流程），不是「文字」。长得像但变化原因不同的代码，合并后反而互相拖累，不要合。",
+            "judgment": "改一条规则时，需要在代码里搜索「还有哪些地方抄了它」——就说明规则被复制了。",
+            "landing": "能从两个相似函数里提炼出共用的函数，改规则时只改一处，并顺手完成一个只有收拢之后才容易加的新变体。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "零售和批发两个报价函数各抄了一份运费规则。运营要求「免运费线从 99 改成 199」。最稳妥的做法是？",
+                "options": [
+                  {
+                    "label": "先把运费规则提炼成一个函数，两处都调用它，再改这一处",
+                    "ok": true,
+                    "why": "先收拢再改规则：以后规则变化只需改一处，也不会漏"
+                  },
+                  {
+                    "label": "在两个函数里各改一遍，改完用搜索确认没有遗漏",
+                    "ok": false,
+                    "why": "能改对这一次，但下一次、下一个变体依旧会漏"
+                  },
+                  {
+                    "label": "只改零售那份，批发那份等出问题再说",
+                    "ok": false,
+                    "why": "两个价格迟早不一致，且不一致本身就是线上 bug"
+                  },
+                  {
+                    "label": "把两个函数合并成一个，用 bool 参数区分零售和批发",
+                    "ok": false,
+                    "why": "引入标记参数（控制耦合），问题换了个样子"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "**重复代码**（Duplicated Code）是《重构》列出的第一个坏味道。如果同一个代码结构出现在不止一个地方，把它们统一起来，程序会变得更好。最常用的手法是**提炼函数**（Extract Function）；重复发生在同一个类的兄弟子类之间，用**函数上移**（Pull Up Method）；两段代码相似但顺序不同，先用**移动语句**（Slide Statements）把相同部分挪到一起。需要注意：重复的是「知识」，不是「字面相同」。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：运费规则抄了两份",
+                  "code": "int retailTotal(int amount, int kg) {\n  int ship = amount >= 99 ? 0 : 10;\n  if (kg > 5) ship += (kg - 5) * 2;\n  return amount + ship;\n}\nint wholesaleTotal(int amount, int kg) {\n  int net = amount * 8 / 10;\n  int ship = net >= 99 ? 0 : 10;\n  if (kg > 5) ship += (kg - 5) * 2;\n  return net + ship;\n}"
+                },
+                "after": {
+                  "title": "改造后：规则只写一次",
+                  "code": "int shipping(int net, int kg) {\n  int ship = net >= 199 ? 0 : 10;\n  if (kg > 5) ship += (kg - 5) * 2;\n  return ship;\n}\nint retailTotal(int amount, int kg) {\n  return amount + shipping(amount, kg);\n}\nint wholesaleTotal(int amount, int kg) {\n  int net = amount * 8 / 10;\n  return net + shipping(net, kg);\n}"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "找出重复：不要只看字面，看「这几行表达的是不是同一条规则」。",
+                  "如果各份之间有细小差别，先用移动语句、改变函数声明等小步骤，让它们变得完全一致。",
+                  "把一份提炼成函数，名字说明意图，差异部分变成参数。",
+                  "逐处把其余的重复替换成函数调用，每替换一处就运行一次确认结果不变。",
+                  "最后才改规则本身——这时只需要改一处。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "不是长得像就合并。《重构》提醒的三次法则：第一次先做，第二次忍着重复，第三次再重构，因为到第三次才看得出什么是稳定不变的、什么是真正的变化点。更重要的判断是**变化原因**：两段代码今天一样，但明天会因为不同的原因变化（比如「个人所得税」和「企业所得税」恰好都用同一个速算公式），合并就是把两个不相干的东西绑在一起，之后每一处改动都要加条件分支。宁可保留重复，也不要合并出一个带 bool 参数的怪物。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "两个子类的流程骨架相同、只有几步不同：模板方法（把骨架上移到父类，差异步骤做成虚函数）。差异是一整段可替换的算法：策略。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "两个函数里的税率公式今天完全一样，但一个是「个人所得税」，一个是「企业所得税」，由不同的法规决定，将来很可能各自调整。应该怎么办？",
+                    "choices": [
+                      {
+                        "label": "保持两份，各自独立变化",
+                        "ok": true,
+                        "why": "变化原因不同：合并会让一次法规调整牵连另一个，还会逼出条件分支"
+                      },
+                      {
+                        "label": "提炼成一个共用函数，反正现在一样",
+                        "ok": false,
+                        "why": "字面相同不等于知识相同，这是「偶然的重复」"
+                      },
+                      {
+                        "label": "用 #define 宏把公式统一",
+                        "ok": false,
+                        "why": "宏不解决「变化原因不同」，还会引入新问题"
+                      },
+                      {
+                        "label": "复制第三份放在公共头文件里",
+                        "ok": false,
+                        "why": "更多的重复"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.duplicated-code",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "坏味道「重复代码」与手法「提炼函数」「函数上移」「移动语句」、三次法则：Martin Fowler《重构：改善既有代码的设计》第 2 版（2018）第 2 章、第 3 章与重构目录。「重复的是知识而非字面」的表述为本课对 DRY 思想的转述，DRY 原文见 Hunt、Thomas《The Pragmatic Programmer》。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.duplicated-code.run",
+              "title": "收拢运费规则，再加团购价",
+              "case": "sit_duplicated_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "retail 和 wholesale 的运费规则抄了两份。如果只改其中一份的免运费线，会发生什么？",
+              "goal": "提炼出 int shipping(int net, int kg) 并让两处调用；把免运费线改成 199（只改一处）；写 groupBuyTotal(amount, kg)：先 amount * 7 / 10，再加运费。解开 main 里的 TODO(实验) 行。",
+              "pass": {
+                "includes": [
+                  "retail=166",
+                  "wholesale=240",
+                  "group=702"
+                ]
+              }
+            }
+          ]
+        },
         {
           "id": "dp.sit.repeated-switch",
           "title": "重复的 switch",
@@ -2628,6 +3042,444 @@
               }
             }
           ]
+        },
+        {
+          "id": "dp.sit.speculative-generality",
+          "title": "夸夸其谈的通用性",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "strategy",
+          "requires": [
+            "dp.sit.duplicated-code"
+          ],
+          "track": "situations",
+          "guide_line": "为将来可能的需求预先搭了接口、工厂和选项，将来没来，脚手架留下了。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能识别「为想象中的需求预留的机关」，并把它们折叠回最简单的写法。",
+            "pain": "只有一种导出格式，却有接口、工厂、注册表和一堆没人读的选项；读懂一个简单功能要穿过四层类。",
+            "model": "只为今天的需求设计。出现第二个真实需求时，再从已有的简单代码里提炼抽象——这时你看到了两个真实的例子，抽象才有依据。",
+            "scope": "不是反对抽象：有两个以上真实变体时，抽象就是正当的。反对的是为「也许会有」的变体付出现在的复杂度。",
+            "judgment": "一个抽象层只有一个实现、一个参数没人读、一个钩子没人用——这些都是信号。",
+            "landing": "能把只有单一实现的接口-工厂-注册表折叠成一个函数，并在第二种格式真正出现时用最少的代码接上它。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "导出模块里有 IExporter 接口、ExporterFactory、ExporterRegistry 和 ExportOptions，但三年来只有 CSV 一个实现，Options 里一半字段没人读。现在要加 JSON 格式。第一步应该？",
+                "options": [
+                  {
+                    "label": "先把没用的接口、工厂、注册表折叠成一个 toCsv 函数，再写 toJson",
+                    "ok": true,
+                    "why": "两种格式并排摆着，才看得出真正共用的是什么；多余的机关留着只会拖累新增"
+                  },
+                  {
+                    "label": "按现有框架新增 JsonExporter 和 JsonExporterFactory，保持风格一致",
+                    "ok": false,
+                    "why": "继续为脚手架付费，且框架里没人读的选项会把新代码带歪"
+                  },
+                  {
+                    "label": "在 ExportOptions 里加一个 format 字段，由 CsvExporter 内部判断",
+                    "ok": false,
+                    "why": "把两种格式塞进一个类，更糟"
+                  },
+                  {
+                    "label": "再给框架加几个扩展点，方便以后加 XML",
+                    "ok": false,
+                    "why": "这正是在制造新的夸夸其谈"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "**夸夸其谈的通用性**（Speculative Generality）：为了「将来可能需要」，加上各种钩子、抽象类、多余参数。《重构》的判断很直接：如果它们没被用到，就是累赘。对应的手法是**折叠继承体系**（Collapse Hierarchy）、**内联类**（Inline Class）、**内联函数**（Inline Function）、**改变函数声明**（去掉不用的参数）和**移除死代码**（Remove Dead Code）。这条思想在极限编程里被称为 YAGNI（You Aren't Gonna Need It，你不会需要它）。对一门讲设计模式的课来说，这是最重要的一条制衡：模式是应对**已经出现**的变化的工具，不是预防变化的保险。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：四层机关，一个实现",
+                  "code": "struct ExportOptions { char delimiter; bool header;\n  std::string encoding; int indent; };  // 后两项没人读\nclass IExporter { virtual std::string run(const Table&, const ExportOptions&) const = 0; };\nclass CsvExporter : public IExporter { ... };\nclass ExporterFactory { virtual std::unique_ptr<IExporter> create() const = 0; };\nclass ExporterRegistry { ... map<string, unique_ptr<ExporterFactory>> ... };\n\nregistry.make(\"csv\")->run(table, ExportOptions{});"
+                },
+                "after": {
+                  "title": "改造后：一个函数；第二种格式再并排放一个",
+                  "code": "std::string toCsv(const Table& table);\nstd::string toJson(const Table& table);   // 新需求来了，只是再写一个函数\n\nstd::cout << toCsv(table);"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "列出每一层抽象的实现数、参数的读取者：只有一个实现、没人读的，标为嫌疑。",
+                  "从最外层往里折叠：先去掉注册表，再去掉工厂，再把只有一个实现的接口内联到那个类。",
+                  "删掉没人读的参数和字段；编译器报错的地方就是真正在用的地方。",
+                  "每折叠一层就运行一次，确认输出不变。",
+                  "新需求来了之后，如果两个实现真有共同部分，这时再提炼——此时有了两个真实例子，抽象会更准。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "有些「预留」是正当的：公共库的扩展点、跨团队的稳定接口、已经确定要做的第二个实现。判断标准是**这个变化有多确定、预留的成本有多低**。把握不住时，倾向于先不做——删掉一个没用的抽象很便宜，维护一个用错了的抽象很贵。反方向的陷阱也要防：Fowler 提醒，YAGNI 不等于不做设计，是不要预先为不确定的功能搭建；让代码保持整洁、容易改，本身是对未来最好的准备。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "没有——这一节讲的是**不要**套哪些模式。工厂方法、抽象工厂、策略、桥接这些模式都有适用前提：存在两个以上的真实变体。前提不成立就是夸夸其谈。参见延伸篇「模式的现状」。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "下面哪一种情况最像「夸夸其谈的通用性」？",
+                    "choices": [
+                      {
+                        "label": "只有一个实现类的接口，外加专门创建它的工厂与注册表",
+                        "ok": true,
+                        "why": "没有第二个实现，抽象层没有任何被用到的理由"
+                      },
+                      {
+                        "label": "已有三种支付渠道，用策略模式统一接入",
+                        "ok": false,
+                        "why": "三个真实变体，抽象有依据"
+                      },
+                      {
+                        "label": "公共库对外暴露的稳定扩展点，并有文档",
+                        "ok": false,
+                        "why": "是有意为之的接口设计，不是空猜"
+                      },
+                      {
+                        "label": "为排序函数提供比较函数参数，且有两处不同的调用",
+                        "ok": false,
+                        "why": "有两个真实使用者"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.speculative-generality",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "坏味道「夸夸其谈的通用性」与手法「折叠继承体系」「内联类」「内联函数」「移除死代码」「改变函数声明」：Martin Fowler《重构：改善既有代码的设计》第 2 版（2018）第 3 章与重构目录。YAGNI：Fowler 的文章《Yagni》（martinfowler.com/bliki/Yagni.html）。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.speculative-generality.run",
+              "title": "折叠脚手架，再接上 JSON",
+              "case": "sit_speculative_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "要新增 JSON，现有的 ExporterRegistry 里要写多少个类？没人读的 encoding 和 indent 删掉后，编译会报哪里？",
+              "goal": "删掉 IExporter、ExporterFactory、ExporterRegistry、ExportOptions，留下 std::string toCsv(const Table&)，输出与原来一致；再写 toJson(const Table&)。解开 main 里的 TODO(实验) 行。",
+              "pass": {
+                "includes": [
+                  "name,qty",
+                  "[{\"name\":\"apple\",\"qty\":3},{\"name\":\"pear\",\"qty\":5}]"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "dp.sit.refused-bequest",
+          "title": "拒绝遗赠",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.lsp",
+            "dp.isp"
+          ],
+          "track": "situations",
+          "guide_line": "子类继承了父类的接口却不要其中一部分，只好抛异常或留空。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能识别「子类不要父类的某些成员」，把宽接口拆成窄接口，让不支持的操作在编译期就被拒绝。",
+            "pain": "只读文档继承了「可读写文档」，write() 一调用就抛异常；每个拿着基类指针的地方都要提防它。",
+            "model": "继承表达的是「是一种」，子类必须能做父类能做的一切（里氏替换）。做不到，就说明继承的这条线画错了：把能力拆成窄接口，各类只声明自己真有的能力。",
+            "scope": "只在子类**拒绝**父类的公共行为时才算；子类不使用父类的某个受保护辅助函数，不算。",
+            "judgment": "子类的某个虚函数实现是 throw、assert(false) 或空函数体——先怀疑继承关系。",
+            "landing": "能把一个宽基类拆成读/写等窄接口，并让「把只读对象交给写入函数」成为编译错误。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "ReadOnlyDoc 继承 Doc 以复用 read()，但 write() 只能抛 logic_error。批量保存函数接收 vector<Doc*>，遇到只读文档就异常。怎么改最合理？",
+                "options": [
+                  {
+                    "label": "把 Doc 拆成 Readable 和 Writable，ReadOnlyDoc 只实现 Readable，保存函数只接收 Writable*",
+                    "ok": true,
+                    "why": "不支持的操作从类型上就不存在，错误在编译期暴露"
+                  },
+                  {
+                    "label": "在保存函数里 try/catch 捕获异常并跳过",
+                    "ok": false,
+                    "why": "症状还在：每个调用方都要重复这套防御"
+                  },
+                  {
+                    "label": "给 Doc 加一个 canWrite() 查询，调用前先问",
+                    "ok": false,
+                    "why": "把类型问题变成运行期检查，调用方仍可能忘记问"
+                  },
+                  {
+                    "label": "让 ReadOnlyDoc 的 write() 什么都不做",
+                    "ok": false,
+                    "why": "静默失败比抛异常更糟，调用方以为写进去了"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "**拒绝遗赠**（Refused Bequest）：子类只想继承父类的一部分，其余的要么不用、要么用不了。《重构》给出两条路：如果只是**不想用**，把用不到的函数和字段**下移**到真正需要它们的兄弟子类（Push Down Method / Push Down Field）；如果**不能用**——也就是子类不愿意支持父类的接口——就要**以委托取代子类/超类**（Replace Subclass / Superclass with Delegate），斩断继承关系。在 C++ 中，更自然的做法是把宽接口拆成若干窄接口（接口隔离原则），每个类只实现它真正支持的那几个。这样违反里氏替换的情形，在类型层面就无处可藏。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：写不了的子类也得有 write()",
+                  "code": "class Doc { virtual std::string read() const = 0;\n            virtual void write(const std::string&) = 0; };\nclass ReadOnlyDoc : public Doc {\n  void write(const std::string&) override {\n    throw std::logic_error(\"只读\"); }\n};\nvoid saveAll(const std::vector<Doc*>&);   // 谁知道哪个能写？"
+                },
+                "after": {
+                  "title": "改造后：能力拆开，不会写的类根本没有 write()",
+                  "code": "class Readable { virtual std::string read() const = 0; };\nclass Writable { virtual void write(const std::string&) = 0; };\nclass WritableDoc : public Readable, public Writable { ... };\nclass ReadOnlyDoc : public Readable { ... };   // 没有 write\nvoid saveAll(const std::vector<Writable*>&);   // 传 ReadOnlyDoc 编译不过"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "找出子类里 throw、assert(false) 或空实现的虚函数：它们拒绝了哪一块能力？",
+                  "把基类按「能力」切开：被拒绝的那块单独成一个窄接口。",
+                  "原来的子类只继承它真的支持的接口；支持多种能力的类可以实现多个接口。",
+                  "把使用方的参数类型从宽接口改成它真正需要的窄接口。",
+                  "试着把拒绝者传给需要被拒绝能力的函数——应该编译失败，这就是验收。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "拆得太碎，接口数量激增；多重继承带来菱形问题（两个接口各有 name() 时尤其要小心，窄接口里应避免重复的成员）。每个窄接口要对应使用方的一类真实需求（谁需要只读？谁需要写？），而不是机械地一个方法一个接口。如果拒绝的只是一个很小的可选行为，也可以考虑改用组合，让对象持有一个可选的能力对象。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "策略与装饰（用组合代替继承来获得行为）、适配器（把一个接口转成另一个）。设计原则里对应里氏替换（LSP）与接口隔离（ISP）。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "下面哪个实现最可能是「拒绝遗赠」的信号？",
+                    "choices": [
+                      {
+                        "label": "子类重写了基类的虚函数，函数体里只有 throw std::logic_error(\"不支持\")",
+                        "ok": true,
+                        "why": "子类拒绝履行基类的契约，违反里氏替换"
+                      },
+                      {
+                        "label": "子类重写虚函数，在调用基类版本之后又加了一步日志",
+                        "ok": false,
+                        "why": "这是正常的扩展"
+                      },
+                      {
+                        "label": "子类新增了基类没有的成员函数",
+                        "ok": false,
+                        "why": "新增能力不是拒绝"
+                      },
+                      {
+                        "label": "子类的析构函数里释放了自己的资源",
+                        "ok": false,
+                        "why": "与基类契约无关"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.refused-bequest",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "坏味道「拒绝遗赠」与手法「下移函数」「下移字段」「以委托取代子类」「以委托取代超类」：Martin Fowler《重构：改善既有代码的设计》第 2 版（2018）第 3 章与重构目录。关联原则：里氏替换与接口隔离（本课「设计原则」一章）。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.refused-bequest.run",
+              "title": "把读与写拆开",
+              "case": "sit_refused_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "saveAll 遇到 report.pdf 时发生了什么？如果有人再写一个「只追加」的文档，他要对 Doc 的哪些函数撒谎？",
+              "goal": "把 Doc 拆成 Readable 与 Writable；ReadOnlyDoc 只实现 Readable；saveAll 改为接收 vector<Writable*> 并去掉 try/catch。解开 main 里的 TODO(实验) 行，并确认把 pdf 放进 writers 会编译失败。",
+              "pass": {
+                "includes": [
+                  "typed: readers=2 writers=1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "dp.sit.special-case",
+          "title": "到处判空：引入特例",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.sit.duplicated-code"
+          ],
+          "track": "situations",
+          "guide_line": "查不到就返回空指针，于是每个用到它的地方都要先判一次空。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能把「查不到」这种特殊情形做成一个有默认行为的对象，让调用方不必再判空。",
+            "pain": "查不到客户时返回 nullptr，显示名字、算折扣、开票各写一遍 if；漏一处就空指针。",
+            "model": "引入特例对象（Null Object）：它和正常对象有相同的接口，用约定好的默认值回应所有请求。调用方一视同仁。",
+            "scope": "特例的行为必须有意义（访客折扣为 0）。如果「查不到」是调用方必须处理的错误，就不要用特例把它藏起来。",
+            "judgment": "同一个“是不是空”的判断在多处重复出现，而且每处的“空”分支做的都是同一类默认动作。",
+            "landing": "能把返回指针的查找改成返回引用，查不到时给出特例对象，并在不写 if 的情况下完成一个新需求。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "findCustomer(id) 找不到时返回 nullptr。label()、discountOf()、payable() 每个都写了 `c ? ... : 默认值`，现在又要新增一个收据函数。最好的做法是？",
+                "options": [
+                  {
+                    "label": "让 findCustomer 查不到时返回一个“访客”特例对象，调用方统一当作客户使用",
+                    "ok": true,
+                    "why": "空判断和默认值收进一个地方，新函数不用再写任何 if"
+                  },
+                  {
+                    "label": "在收据函数里也写一遍 `c ? ... : ...`",
+                    "ok": false,
+                    "why": "重复又加了一处，将来漏一处就崩溃"
+                  },
+                  {
+                    "label": "遇到 nullptr 就 assert 终止",
+                    "ok": false,
+                    "why": "“查不到”是正常情形，不该当作崩溃"
+                  },
+                  {
+                    "label": "让 findCustomer 抛异常，由每个调用方去捕获",
+                    "ok": false,
+                    "why": "把重复的判断换成重复的 try/catch"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "**引入特例**（Introduce Special Case，早期版本叫“引入 Null 对象”）：当许多地方都在对同一种特殊情形做同样的判断，就创建一个特殊元素，让它承载这种情形的共同行为，调用方就不必再检查。C++ 里常见的写法是返回引用而不是指针，查不到时返回一个静态的特例对象。这就是 **Null Object** 模式（Bobby Woolf 在《The Null Object Pattern》中描述），它不在 GoF 的 23 个模式里，但在工业代码中极其常见。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：每个调用点各判一次空",
+                  "code": "const Customer* findCustomer(int id);   // 查不到返回 nullptr\n\nstd::string label(const Customer* c) { return c ? c->name : \"访客\"; }\nint discountOf(const Customer* c)    { return c ? c->discountPercent : 0; }\nint payable(int amount, const Customer* c) {\n  return amount - amount * discountOf(c) / 100;\n}"
+                },
+                "after": {
+                  "title": "改造后：特例对象，没有 if",
+                  "code": "const Customer& findCustomer(int id) {\n  static const Customer wang{\"王芳\", 10};\n  static const Customer guest{\"访客\", 0};   // 特例\n  return id == 7 ? wang : guest;\n}\nint payable(int amount, const Customer& c) {\n  return amount - amount * c.discountPercent / 100;\n}"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "数一数：有多少个地方在对同一个“空”做判断？分支里做的是不是同一类默认动作？",
+                  "建一个特例对象，用约定好的默认值填它，让它能回答所有正常对象能回答的问题。",
+                  "让查找函数在查不到时返回特例对象（返回引用，或返回指向特例的指针）。",
+                  "逐个删掉调用方的空判断，改成直接使用。",
+                  "确认特例的默认行为是真的正确的默认值，而不是把错误悄悄吞掉。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "特例对象会把“没有”伪装成“有”。如果调用方确实需要区分（比如“查不到”要提示用户去注册），要么给特例对象留一个 isGuest() 之类的查询，要么干脆不用特例，改用 std::optional 让调用方显式处理。C++17 起，“可能没有”的值通常首选 std::optional（返回值）或引用（必有）；特例对象适合“没有”时有一套**自洽的默认行为**的情形。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "Null Object（非 GoF）；与状态、策略的关系：特例对象本质上是一个“什么都不做”的策略。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "下面哪种场景最不适合用特例对象代替空指针？",
+                    "choices": [
+                      {
+                        "label": "查不到用户时必须提示“请先注册”并中止流程",
+                        "ok": true,
+                        "why": "调用方必须区分并处理，隐藏掉反而出错"
+                      },
+                      {
+                        "label": "查不到客户时按访客身份、无折扣继续结账",
+                        "ok": false,
+                        "why": "访客有自洽的默认行为"
+                      },
+                      {
+                        "label": "没有配置日志器时，使用一个不输出任何内容的日志器",
+                        "ok": false,
+                        "why": "典型的 Null Object"
+                      },
+                      {
+                        "label": "没有选中的图形时，使用一个所有操作都是空操作的“空图形”",
+                        "ok": false,
+                        "why": "默认行为是“什么都不做”，合适"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.special-case",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "手法「引入特例」：Martin Fowler《重构：改善既有代码的设计》第 2 版（2018）第 9 章与重构目录。Null Object 模式：Bobby Woolf《The Null Object Pattern》（收于《Pattern Languages of Program Design 3》，1997）。std::optional：C++17 标准库。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.special-case.run",
+              "title": "用访客对象取代空指针",
+              "case": "sit_special_case_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "现在要新增一个收据函数；沿用 `const Customer*` 的话，它也得带一个空判断。如果 findCustomer 永远返回有效对象呢？",
+              "goal": "让 findCustomer 返回 const Customer&（查不到时返回名字“访客”、折扣 0 的特例对象），删掉全部空判断；写 std::string receiptLine(const Customer&, int amount)，格式“<名字> pays <实付>”。解开 main 里的 TODO(实验) 行。",
+              "pass": {
+                "includes": [
+                  "receipt: 访客 pays 100",
+                  "receipt: 王芳 pays 90"
+                ]
+              }
+            }
+          ]
         }
       ],
       "checkpoint": {
@@ -3144,6 +3996,262 @@
               "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
             },
             "covers": "dp.sit.divergent-change"
+          },
+          {
+            "stem": "改一条运费规则时，你需要在代码里搜索“还有哪些地方抄了它”。这说明？",
+            "covers": "dp.sit.duplicated-code",
+            "choices": [
+              {
+                "label": "规则被复制了多份，应提炼成一个函数",
+                "ok": true,
+                "why": "规则应当只在一处表达"
+              },
+              {
+                "label": "函数太长，应拆成更多文件",
+                "ok": false,
+                "why": "与长度无关"
+              },
+              {
+                "label": "规则太复杂，应加注释",
+                "ok": false,
+                "why": "注释不能消除复制"
+              },
+              {
+                "label": "应改用全局变量保存规则",
+                "ok": false,
+                "why": "全局数据会带来新的问题"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.duplicated-code",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
+          },
+          {
+            "stem": "一个接口只有一个实现类，外加专门创建它的工厂，三年没有第二个实现。最合适的处理是？",
+            "covers": "dp.sit.speculative-generality",
+            "choices": [
+              {
+                "label": "折叠成直接使用那个类，第二个实现真的出现时再提炼接口",
+                "ok": true,
+                "why": "有两个真实例子时抽象才有依据"
+              },
+              {
+                "label": "再多加几个预留的扩展点",
+                "ok": false,
+                "why": "继续制造夸夸其谈"
+              },
+              {
+                "label": "给工厂加缓存",
+                "ok": false,
+                "why": "与问题无关"
+              },
+              {
+                "label": "把接口改成模板",
+                "ok": false,
+                "why": "没有减少抽象层"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.speculative-generality",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
+          },
+          {
+            "stem": "ReadOnlyDoc 继承 Doc，重写 write() 只为抛出异常。这违反了哪条原则？",
+            "covers": "dp.sit.refused-bequest",
+            "choices": [
+              {
+                "label": "里氏替换原则：子类不能履行父类的契约",
+                "ok": true,
+                "why": "拿着 Doc* 的代码无法放心地调用 write()"
+              },
+              {
+                "label": "开闭原则",
+                "ok": false,
+                "why": "问题不在扩展方式"
+              },
+              {
+                "label": "迪米特法则",
+                "ok": false,
+                "why": "没有链式穿透调用"
+              },
+              {
+                "label": "合成复用原则",
+                "ok": false,
+                "why": "问题在于继承关系本身不成立"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.refused-bequest",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
+          },
+          {
+            "stem": "多个函数都在写 `c ? c->name : \"访客\"`，漏掉一处就是空指针。《重构》的手法是？",
+            "covers": "dp.sit.special-case",
+            "choices": [
+              {
+                "label": "引入特例：查不到时返回有默认行为的特例对象",
+                "ok": true,
+                "why": "把空判断收进一个对象"
+              },
+              {
+                "label": "提炼函数",
+                "ok": false,
+                "why": "只是把判断挪了位置，空指针仍然在传递"
+              },
+              {
+                "label": "搬移字段",
+                "ok": false,
+                "why": "与字段位置无关"
+              },
+              {
+                "label": "移除标记参数",
+                "ok": false,
+                "why": "这里没有标记参数"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.special-case",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
+          },
+          {
+            "stem": "下列哪种“重复”最不该被合并？",
+            "covers": "dp.sit.duplicated-code",
+            "choices": [
+              {
+                "label": "两处公式今天相同，但由不同的法规决定、将来会各自调整",
+                "ok": true,
+                "why": "变化原因不同，合并会把不相干的东西绑在一起"
+              },
+              {
+                "label": "三个函数里都有同一段 20 行的价格校验",
+                "ok": false,
+                "why": "同一条规则，应收拢"
+              },
+              {
+                "label": "两个兄弟子类里完全相同的辅助函数",
+                "ok": false,
+                "why": "可以上移到父类"
+              },
+              {
+                "label": "多处相同的错误码到文字的转换",
+                "ok": false,
+                "why": "同一份知识，应收拢"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.duplicated-code",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
+          },
+          {
+            "stem": "下列哪个场景使用策略模式是正当的，而不是夸夸其谈？",
+            "covers": "dp.sit.speculative-generality",
+            "choices": [
+              {
+                "label": "已经接入微信、支付宝、银行卡三种支付渠道，要统一调用",
+                "ok": true,
+                "why": "三个真实变体，抽象有依据"
+              },
+              {
+                "label": "目前只有一种排序规则，但“以后可能会有别的”",
+                "ok": false,
+                "why": "没有真实变体"
+              },
+              {
+                "label": "只有一种日志格式，却预留了 Formatter 体系",
+                "ok": false,
+                "why": "没有真实变体"
+              },
+              {
+                "label": "没有任何调用方，但“先写好总没错”",
+                "ok": false,
+                "why": "没有使用者"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.speculative-generality",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
+          },
+          {
+            "stem": "把 Doc 拆成 Readable 与 Writable 后，最直接的好处是？",
+            "covers": "dp.sit.refused-bequest",
+            "choices": [
+              {
+                "label": "把只读对象交给需要写入的函数，在编译期就报错",
+                "ok": true,
+                "why": "不支持的操作在类型上不存在"
+              },
+              {
+                "label": "程序运行更快",
+                "ok": false,
+                "why": "与性能无关"
+              },
+              {
+                "label": "不再需要虚函数",
+                "ok": false,
+                "why": "接口仍然是虚函数"
+              },
+              {
+                "label": "类的数量变少",
+                "ok": false,
+                "why": "类的数量反而变多"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.refused-bequest",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
+          },
+          {
+            "stem": "“查不到用户时必须提示去注册并中止流程”，这时应该？",
+            "covers": "dp.sit.special-case",
+            "choices": [
+              {
+                "label": "不用特例对象，改用 std::optional 或错误类型让调用方显式处理",
+                "ok": true,
+                "why": "调用方必须区分，特例会把它藏起来"
+              },
+              {
+                "label": "返回一个什么都不做的 Guest 对象",
+                "ok": false,
+                "why": "流程就不会被中止"
+              },
+              {
+                "label": "返回空指针，由调用方自行猜测",
+                "ok": false,
+                "why": "契约不清晰"
+              },
+              {
+                "label": "抛出 std::bad_alloc",
+                "ok": false,
+                "why": "错误类型不对"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.special-case",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
           }
         ]
       }
@@ -3888,6 +4996,448 @@
               }
             }
           ]
+        },
+        {
+          "id": "dp.sit.interface-design",
+          "title": "接口表达不出契约",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.sit.long-params",
+            "dp.sit.primitive"
+          ],
+          "track": "situations",
+          "guide_line": "靠输出指针和返回 bool 传结果，成败、顺序、所有权全靠调用方猜。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能把“输出指针 + 状态码”的接口改成“返回值 + 强类型”，让签名本身说清楚契约。",
+            "pain": "调用方先声明三个变量、传进地址，失败时里面是什么没人知道；三个 int 谁是时、谁是分、谁是秒全凭顺序。",
+            "model": "接口是调用方唯一能看到的东西：输入用参数，输出用返回值，多个输出用结构体，可能失败用 std::optional 或错误类型，含义用具名类型表达。",
+            "scope": "性能敏感处的输出参数（复用大缓冲区）、与 C 接口的衔接，可以保留输出参数；要有理由，并写在注释里。",
+            "judgment": "读签名就能回答：要传什么、能得到什么、会不会失败、谁负责释放？答不出，接口就不够明确。",
+            "landing": "能把一个输出指针风格的解析函数改成返回 std::optional<结构体>，并顺手写出组合它的新函数。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "`bool parseTime(const std::string&, int* h, int* m, int* s)` 的问题最主要是？",
+                "options": [
+                  {
+                    "label": "用输出参数传结果、用 bool 传成败，签名没法表达“失败时输出无意义”，三个 int 也没有名字",
+                    "ok": true,
+                    "why": "契约藏在注释里，编译器帮不上任何忙"
+                  },
+                  {
+                    "label": "函数名不够长",
+                    "ok": false,
+                    "why": "命名不是主要矛盾"
+                  },
+                  {
+                    "label": "参数用了 const 引用",
+                    "ok": false,
+                    "why": "那是正确的输入写法"
+                  },
+                  {
+                    "label": "它没有声明成 inline",
+                    "ok": false,
+                    "why": "与接口表达无关"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "C++ Core Guidelines 对接口的要求可以浓缩成几句：**I.1** 接口要显式，不要靠隐含的约定；**I.4** 接口要精确且强类型，别到处传 int 和 bool；**F.20** 输出值优先用返回值，而不是输出参数；**F.21** 要返回多个值，就返回一个结构体（或 tuple）。“可能失败”则用 std::optional（C++17）或更明确的错误类型表示，而不是靠“返回 false，此时输出不可依赖”这样的注释。目标是让签名自己说话：读签名就应当知道怎么调用、会得到什么。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：输出指针 + bool",
+                  "code": "// 成功返回 true 并写入 h/m/s；失败返回 false，指针里的值不可依赖。\nbool parseTime(const std::string& text, int* h, int* m, int* s);\n\nint h = 0, m = 0, s = 0;\nif (parseTime(text, &h, &m, &s)) { ... }"
+                },
+                "after": {
+                  "title": "改造后：返回值 + 具名类型",
+                  "code": "struct Time { int hour; int minute; int second; };\nstd::optional<Time> parseTime(const std::string& text);\n\nif (auto t = parseTime(text)) { use(*t); }\nTime later = addSeconds(*t, 1800);   // 返回值可以直接组合"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "读签名，列出调用方必须靠注释才能知道的事：成败怎么判断、输出何时有效、指针能不能为空。",
+                  "把输出参数换成返回值；多个输出收进一个具名结构体。",
+                  "把“可能失败”放进返回类型（std::optional，或需要原因时用带错误信息的类型）。",
+                  "把含义不同的原始类型换成具名类型或具名字段。",
+                  "输入参数遵循惯例：小而便宜的按值传，大的按 const 引用传；输入输出两用的才用非 const 引用。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "返回结构体或 optional 可能引入拷贝，现代编译器的返回值优化和移动语义通常让它不构成问题；真的在热点里测出问题，再回头考虑输出参数，并写注释说明原因。另外别过度包装：一个只在两处使用的内部辅助函数，不必为它设计复杂的类型层次。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "建造者（参数多、构造步骤复杂时）、外观（把一组零散接口收成一个清晰入口）、适配器（把旧接口包成新接口，不必动旧代码）。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "C++ Core Guidelines F.21 对“函数需要返回多个值”的建议是？",
+                    "choices": [
+                      {
+                        "label": "返回一个结构体（或 tuple）",
+                        "ok": true,
+                        "why": "让多个输出成为返回值的一部分，而不是通过输出参数传回"
+                      },
+                      {
+                        "label": "用多个非 const 引用参数接收",
+                        "ok": false,
+                        "why": "那正是 F.20 提醒要避免的输出参数"
+                      },
+                      {
+                        "label": "用全局变量暂存",
+                        "ok": false,
+                        "why": "引入全局可变数据"
+                      },
+                      {
+                        "label": "拆成多个函数，各返回一个值，分别调用",
+                        "ok": false,
+                        "why": "会重复计算且可能不一致"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.interface-design",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "C++ Core Guidelines I.1、I.4、F.20、F.21（isocpp.github.io/CppCoreGuidelines）。std::optional：C++17 标准库。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.interface-design.run",
+              "title": "把输出指针改成返回值",
+              "case": "sit_interface_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "parseTime 失败后，h/m/s 里是什么？调用方不看注释能知道吗？",
+              "goal": "定义 struct Time；把 parseTime 改成返回 std::optional<Time>；再写 Time addSeconds(Time, int)（可跨过整点，不跨天）和 std::string format(const Time&)（HH:MM:SS 补零）。解开 main 里的 TODO(实验) 行。",
+              "pass": {
+                "includes": [
+                  "t=12:30:05",
+                  "t=invalid",
+                  "plus 1800s = 13:00:05"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "dp.sit.header-dependency",
+          "title": "头文件依赖与 Pimpl",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.sit.resource-leak",
+            "dp.dip"
+          ],
+          "track": "situations",
+          "guide_line": "头文件把私有成员全暴露了，改一个私有字段，整个项目重新编译。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能判断头文件里哪些依赖可以挪走，用前向声明与 Pimpl 把实现细节关在源文件里。",
+            "pain": "使用者只想调用 add() 和 count()，却被迫 include <map>、<vector>；给 Report 加一个私有字段，所有包含它的源文件都重新编译。",
+            "model": "头文件是给使用者看的接口，源文件是给实现者看的细节。头文件里只放使用者需要的；其余用前向声明或 Pimpl（指向实现的指针）藏起来。",
+            "scope": "Pimpl 多一次间接访问和一次堆分配；只对稳定的库接口、编译时间敏感的公共头值得。内部小类不必用。",
+            "judgment": "头文件里的 #include 超过了使用者需要知道的范围，或者私有成员的改动引发大面积重新编译。",
+            "landing": "能把一个类改成 Pimpl 形式，使对象大小只是一个指针，并在不改头文件的前提下给实现增加字段。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "公共头 report.h 里的类有私有成员 `std::map<size_t, int> byLength_`，使用者因此都要 include <map>。给它加一个私有字段后，几百个源文件重新编译。更合适的做法是？",
+                "options": [
+                  {
+                    "label": "用 Pimpl：头文件只声明 `struct Impl; std::unique_ptr<Impl> impl_;`，成员细节放到 .cpp",
+                    "ok": true,
+                    "why": "私有细节不再出现在头文件，改动只影响一个源文件"
+                  },
+                  {
+                    "label": "把所有成员改成 public，使用者自己 include",
+                    "ok": false,
+                    "why": "更糟：把细节全部交给使用者"
+                  },
+                  {
+                    "label": "把 <map> 换成更小的第三方 map",
+                    "ok": false,
+                    "why": "依赖仍在头文件里，问题没变"
+                  },
+                  {
+                    "label": "加上 #pragma once",
+                    "ok": false,
+                    "why": "防重复包含，不会减少依赖"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "头文件里写的每一个 #include 和每一个私有成员，都会变成**所有使用者**的编译依赖。Core Guidelines 为此给了几条规则：**SF.11** 头文件应当自包含（单独 include 能编译）；**SF.9** 避免源文件之间的循环依赖；**I.27** 需要稳定的库 ABI 时，考虑 **Pimpl** 惯用法。能用**前向声明**解决的（只用到指针或引用），就不要 include 整个头；必须知道类大小的地方（值成员、继承），才需要完整定义。Pimpl 更进一步：把整个实现收进一个只在 .cpp 里定义的 `Impl` 结构，头文件里只留一个指向它的 `unique_ptr`。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：头文件里什么都看得见",
+                  "code": "// report.h\n#include <map>\n#include <string>\n#include <vector>\nclass Report {\npublic:\n  void add(const std::string&);\nprivate:\n  std::vector<std::string> lines_;\n  std::map<size_t, int> byLength_;\n};"
+                },
+                "after": {
+                  "title": "改造后：实现细节都在 .cpp",
+                  "code": "// report.h\n#include <memory>\n#include <string>\nclass Report {\npublic:\n  Report(); ~Report();\n  void add(const std::string&);\nprivate:\n  struct Impl;\n  std::unique_ptr<Impl> impl_;\n};\n\n// report.cpp：定义 Impl，随便加字段\nstruct Report::Impl { std::vector<std::string> lines; ... };\nReport::~Report() = default;   // 必须在 Impl 完整之后"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "先看头文件里每个 #include 的用途：只为了指针/引用的，换成前向声明；只在 .cpp 用到的，挪到 .cpp。",
+                  "仍有大量私有细节暴露时，把它们收进 `struct Impl`，类里只留 `std::unique_ptr<Impl>`。",
+                  "析构函数（以及移动操作）在头文件里只声明，在 .cpp 里 Impl 完整之后定义（`= default` 也要写在 .cpp 里）。",
+                  "成员函数全部移到 .cpp，通过 `impl_->` 访问。",
+                  "给 Impl 新增字段，确认使用者的源文件不需要重新编译。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "每次访问多一次指针间接，构造时多一次堆分配；调试时多跳一层。内联和 constexpr 的机会也少了。所以 Pimpl 用在**接口稳定、实现多变**的地方，比如库的公共类，而不是项目内部的每一个小类。为什么析构函数必须放在 .cpp？因为 `unique_ptr<Impl>` 销毁时要知道 `Impl` 的完整定义；如果在头文件里（Impl 还不完整）隐式生成析构函数，会编译失败。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "桥接（把抽象与实现分成两条独立变化的继承树，Pimpl 可看作它的一种特化）、外观（给复杂的子系统一个小而稳定的入口）。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "为什么使用 `std::unique_ptr<Impl>` 的 Pimpl 类，其析构函数必须定义在 .cpp 里 Impl 完整之后？",
+                    "choices": [
+                      {
+                        "label": "销毁 unique_ptr<Impl> 需要知道 Impl 的完整定义；在 Impl 还不完整的头文件里隐式生成析构函数会编译失败",
+                        "ok": true,
+                        "why": "析构要调用 Impl 的析构并释放内存，必须看到完整类型"
+                      },
+                      {
+                        "label": "因为析构函数不能内联",
+                        "ok": false,
+                        "why": "析构函数可以内联，只是此处类型不完整"
+                      },
+                      {
+                        "label": "因为 unique_ptr 在析构时才拷贝对象",
+                        "ok": false,
+                        "why": "unique_ptr 不拷贝"
+                      },
+                      {
+                        "label": "因为 Impl 里有虚函数",
+                        "ok": false,
+                        "why": "与虚函数无关"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.header-dependency",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "C++ Core Guidelines I.27（Pimpl）、SF.9、SF.11、SF.8（include 保护）（isocpp.github.io/CppCoreGuidelines）。Pimpl 的“指针藏实现”思路对应 GoF 桥接模式。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.header-dependency.run",
+              "title": "把 Report 改成 Pimpl",
+              "case": "sit_pimpl_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "现在 sizeof(Report) 是多少？改完之后又是多少？为什么给 Impl 加字段不需要改“头文件”部分？",
+              "goal": "把私有成员收进 struct Impl（头文件部分只前向声明），类里只留 std::unique_ptr<Impl>；构造与析构放在“源文件”部分；在 Impl 里加 int version，add() 时自增，并补 int version() const。解开 main 里的 TODO(实验) 行。",
+              "pass": {
+                "includes": [
+                  "pimpl: yes",
+                  "lines=2 version=2"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "dp.sit.cyclic-dependency",
+          "title": "循环依赖",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "strategy",
+          "requires": [
+            "dp.dip",
+            "dp.sit.hardwired-dependency"
+          ],
+          "track": "situations",
+          "guide_line": "两个模块互相认识对方，改一个、测一个都得把另一个拖上。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能识别模块之间的环，用依赖倒置把环拆成单向依赖，并让新增的类型不必改旧代码。",
+            "pain": "Document 要认识 Printer 才能打印；Printer 要认识 Document 才能取内容；现在要打印发票，Printer 还得再认识一个新类。",
+            "model": "环里的两个模块谁也不能独立存在。让它们都依赖一个站在使用方一侧的小接口，依赖方向变成一条线：具体类 → 接口 ← 使用方。",
+            "scope": "前向声明只能让环“编译通过”，不能拆环；真正的拆环要改依赖方向，或者合并本来就该在一起的两个类。",
+            "judgment": "两个类的头文件互相需要，或者一个模块不带上另一个就无法单独编译、测试。",
+            "landing": "能引入一个窄接口拆掉两个类之间的环，并在不改使用方的前提下加入第三种实现。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "Document 有 print(Printer&)，Printer 有 print(const Document&)，两边都得 include 对方。现在要新增 Invoice 也能被 Printer 打印。最好的做法是？",
+                "options": [
+                  {
+                    "label": "引入接口 Printable（title/body），Document 和 Invoice 实现它，Printer 只依赖 Printable",
+                    "ok": true,
+                    "why": "依赖方向变成单向，Printer 不需要认识任何具体文档类"
+                  },
+                  {
+                    "label": "给 Printer 再加一个 print(const Invoice&) 重载",
+                    "ok": false,
+                    "why": "Printer 又多认识了一个类，每新增一种都要改 Printer"
+                  },
+                  {
+                    "label": "用前向声明让两边都能编译",
+                    "ok": false,
+                    "why": "只是把环藏起来，依赖关系并没有变"
+                  },
+                  {
+                    "label": "把 Printer 和 Document 写进同一个类",
+                    "ok": false,
+                    "why": "消除了环，但内聚下降，Invoice 仍然进不来"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "**循环依赖**：A 依赖 B，B 又依赖 A。后果是它们实际上是**一个**模块，只是被切成了两半——无法单独编译、测试或复用，任何一方的改动都可能牵动另一方。C++ Core Guidelines **SF.9** 的要求是避免源文件之间的循环依赖；Robert C. Martin 把它概括为**无环依赖原则**（Acyclic Dependencies Principle）。拆环最通用的办法是**依赖倒置**：由“使用方”定义它需要的最小接口，被使用方去实现这个接口，于是两个具体类都只依赖接口，环自然断开。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：Document ⇄ Printer",
+                  "code": "class Printer;\nclass Document {\n  void print(Printer& p) const;     // 认识 Printer\n};\nclass Printer {\n  void print(const Document& d);    // 认识 Document\n};"
+                },
+                "after": {
+                  "title": "改造后：都只依赖 Printable",
+                  "code": "class Printable {\npublic:\n  virtual ~Printable() = default;\n  virtual std::string title() const = 0;\n  virtual std::string body() const = 0;\n};\nclass Printer { void print(const Printable&); };\nclass Document : public Printable { ... };   // 不认识 Printer\nclass Invoice  : public Printable { ... };   // 新增，Printer 一行不改"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "画出依赖：哪个类在代码里提到了哪个类？找出互相指向的那一对。",
+                  "判断谁是“使用方”：这里 Printer 使用 Document 的内容，所以由 Printer 一侧定义它需要的最小接口。",
+                  "写接口，只放使用方真正需要的函数。",
+                  "让被使用方实现接口，并删掉它对使用方的依赖。",
+                  "用一个新类型验证：新增第三方实现，不改使用方。能做到，环就真的拆掉了。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "引入接口意味着多一层虚函数调用，也多一个要维护的类。如果两个类**永远**一起变化、一起使用，它们本来就该在同一个模块里，直接合并（或放进同一个头文件和源文件）比硬拆更诚实。另一种拆法是回调/事件：被使用方不认识使用方，只在发生事件时调用一个注册进来的函数——Observer 模式就是这个思路。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "观察者（用回调反转依赖）、中介者（让互相引用的多个对象只认识中介）、依赖注入（情境篇一“写死的依赖”一节）。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "前向声明 `class Printer;` 能解决 Document 与 Printer 的循环依赖吗？",
+                    "choices": [
+                      {
+                        "label": "不能：它只让头文件能编译，两个类在逻辑上仍互相依赖",
+                        "ok": true,
+                        "why": "拆环要改依赖方向，前向声明不改变依赖关系"
+                      },
+                      {
+                        "label": "能：这就是循环依赖的标准解法",
+                        "ok": false,
+                        "why": "它只是把环藏到源文件里"
+                      },
+                      {
+                        "label": "能：前向声明会让编译器忽略依赖",
+                        "ok": false,
+                        "why": "编译器不会忽略它"
+                      },
+                      {
+                        "label": "不能：前向声明在 C++ 里非法",
+                        "ok": false,
+                        "why": "前向声明是合法的"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.cyclic-dependency",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "C++ Core Guidelines SF.9（避免源文件之间的循环依赖）。无环依赖原则：Robert C. Martin《Agile Software Development: Principles, Patterns, and Practices》（2002）。依赖倒置见本课“设计原则”一章。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.cyclic-dependency.run",
+              "title": "用 Printable 拆环，再加发票",
+              "case": "sit_cycle_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "Document 和 Printer 谁能脱离对方单独编译？要加 Invoice，Printer 需要改几行？",
+              "goal": "定义接口 Printable（title/body）；让 Printer 只依赖 Printable，Document 实现它并不再认识 Printer；写 Invoice(int no, int amount)，title 为“Invoice #<no>”，用同一个 Printer 打印。解开 main 里的 TODO(实验) 行。",
+              "pass": {
+                "includes": [
+                  "[printer] Report Q3",
+                  "[printer] Invoice #7"
+                ]
+              }
+            }
+          ]
         }
       ],
       "checkpoint": {
@@ -4212,6 +5762,198 @@
               "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
             },
             "covers": "dp.sit.invariant"
+          },
+          {
+            "stem": "`bool parse(const std::string&, int* a, int* b)` 这个签名最大的问题是？",
+            "covers": "dp.sit.interface-design",
+            "choices": [
+              {
+                "label": "成败靠 bool、结果靠输出指针，契约要靠注释说明，两个 int 也没有名字",
+                "ok": true,
+                "why": "应返回 std::optional<具名结构体>"
+              },
+              {
+                "label": "参数用了 const 引用",
+                "ok": false,
+                "why": "那是输入参数的正确写法"
+              },
+              {
+                "label": "函数名太短",
+                "ok": false,
+                "why": "不是主要矛盾"
+              },
+              {
+                "label": "没有使用模板",
+                "ok": false,
+                "why": "与问题无关"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.interface-design",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
+          },
+          {
+            "stem": "头文件里只用到了指向 Logger 的指针，却 #include 了完整的 logger.h。更合适的是？",
+            "covers": "dp.sit.header-dependency",
+            "choices": [
+              {
+                "label": "改成前向声明 `class Logger;`，把 include 挪到 .cpp",
+                "ok": true,
+                "why": "只用指针或引用时不需要完整定义"
+              },
+              {
+                "label": "加 #pragma once",
+                "ok": false,
+                "why": "只防重复包含"
+              },
+              {
+                "label": "把 Logger 改成 public 继承",
+                "ok": false,
+                "why": "与问题无关"
+              },
+              {
+                "label": "把 include 放到文件末尾",
+                "ok": false,
+                "why": "没有消除依赖"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.header-dependency",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
+          },
+          {
+            "stem": "拆掉 Document 与 Printer 的环，最通用的办法是？",
+            "covers": "dp.sit.cyclic-dependency",
+            "choices": [
+              {
+                "label": "由使用方定义窄接口，双方都依赖它（依赖倒置）",
+                "ok": true,
+                "why": "具体类 → 接口 ← 使用方"
+              },
+              {
+                "label": "互相前向声明",
+                "ok": false,
+                "why": "只是把环藏起来"
+              },
+              {
+                "label": "把两个类都改成单例",
+                "ok": false,
+                "why": "增加全局状态"
+              },
+              {
+                "label": "把所有成员改成 public",
+                "ok": false,
+                "why": "更紧的耦合"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.cyclic-dependency",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
+          },
+          {
+            "stem": "要“返回两个值”，C++ Core Guidelines 更推荐？",
+            "covers": "dp.sit.interface-design",
+            "choices": [
+              {
+                "label": "返回一个具名结构体（F.21）",
+                "ok": true,
+                "why": "多个输出收进返回值"
+              },
+              {
+                "label": "用两个非 const 引用参数传出",
+                "ok": false,
+                "why": "F.20 提醒避免输出参数"
+              },
+              {
+                "label": "用两个全局变量",
+                "ok": false,
+                "why": "引入全局可变数据"
+              },
+              {
+                "label": "用 void* 传出",
+                "ok": false,
+                "why": "丢失类型信息"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.interface-design",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
+          },
+          {
+            "stem": "Pimpl 的主要代价是？",
+            "covers": "dp.sit.header-dependency",
+            "choices": [
+              {
+                "label": "多一次指针间接和一次堆分配，调试多跳一层",
+                "ok": true,
+                "why": "所以只用在稳定接口、实现多变的类上"
+              },
+              {
+                "label": "类不能再有成员函数",
+                "ok": false,
+                "why": "仍然可以有"
+              },
+              {
+                "label": "无法使用 unique_ptr",
+                "ok": false,
+                "why": "unique_ptr 恰好是常用写法"
+              },
+              {
+                "label": "必须使用虚函数",
+                "ok": false,
+                "why": "与虚函数无关"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.header-dependency",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
+          },
+          {
+            "stem": "什么时候不应该硬拆循环依赖，而该直接合并两个类？",
+            "covers": "dp.sit.cyclic-dependency",
+            "choices": [
+              {
+                "label": "它们永远一起变化、一起使用，本来就是一个模块",
+                "ok": true,
+                "why": "硬拆只会多一层无意义的接口"
+              },
+              {
+                "label": "只要出现环就合并",
+                "ok": false,
+                "why": "多数环可以通过倒置拆开"
+              },
+              {
+                "label": "两个类都很大的时候",
+                "ok": false,
+                "why": "大小不是判据"
+              },
+              {
+                "label": "编译很慢的时候",
+                "ok": false,
+                "why": "编译速度不是判据"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.cyclic-dependency",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
           }
         ]
       }

@@ -63,3 +63,18 @@
    编译验证挂起。
 3. 「现代工程的程序组织写法」章仍为延伸篇（含批判课），本次不动。
 4. 章节顺序：UML → 原则 → 情境篇一至四 → 模式工具箱 → 软考专题 → 现代工程（延伸）。
+
+## 补充二（2026-10-10，tiger：「你按照自己的理解补全吧」）
+
+对照「代码组织」与「特定模式的组织方法」审视章节后补入八个知识点（只增不删，已有 id 不动）：
+
+1. 设计原则章新增 `dp.coupling-cohesion`「耦合与内聚」，放在章首：七大原则是它的推论，
+   分类口径与软设一致。
+2. 情境篇一新增 `dp.sit.duplicated-code`（重复代码，放章首）、`dp.sit.speculative-generality`
+   （夸夸其谈的通用性，学完模式后的反向制衡）、`dp.sit.refused-bequest`（拒绝遗赠，落到 LSP / ISP）、
+   `dp.sit.special-case`（引入特例 / Null Object，非 GoF 但工业常用）。
+3. 情境篇二新增 `dp.sit.interface-design`（兑现本 ADR 决策 2 里写了却没落地的“接口”）、
+   `dp.sit.header-dependency`（头文件依赖与 Pimpl）、`dp.sit.cyclic-dependency`（循环依赖与依赖倒置）。
+4. 每节照情境篇体例配一个重构实验，章节随堂考核每个新知识点补 2 题。
+5. 暂未做、留作后续：过大的类（Large Class）、纯数据类 / 中间人、C 篇的「谁分配谁释放」、
+   并发篇的生产者–消费者、模式组合与易混辨析综合章、类型擦除。
