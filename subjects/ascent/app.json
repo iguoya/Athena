@@ -1,29 +1,44 @@
 {
-  "id": "ascent",
-  "title": "摘星",
-  "group": "英语",
-  "description": "面向英语师范专业学生的桌面英语学习：先夯实高中英语，再依次准备四级、专四、六级、专八；用真实句子学词和句式，三套皮肤。",
-  "icon": {
-    "type": "theme",
-    "name": "accessories-dictionary-symbolic",
-    "symbol": "l.circle",
-    "letter": "L",
-    "accent": "#8F6BFF",
-    "file": "icon.svg"
-  },
-  "dev": {
-    "prepare": [
-      {
-        "when_missing": "node_modules",
-        "run": ["pnpm", "install"],
-        "label": "安装前端依赖"
-      }
-    ],
-    "run": ["pnpm", "tauri", "dev"],
-    "ready": {
-      "http": "http://localhost:1440"
-    },
-    "match": "src-tauri/target",
-    "binary": "athena-ascent"
+ "id": "ascent",
+ "title": "摘星",
+ "group": "英语",
+ "description": "面向英语师范专业学生的桌面英语学习：先夯实高中英语，再依次准备四级、专四、六级、专八；用真实句子学词和句式，三套皮肤。",
+ "icon": {
+  "type": "theme",
+  "name": "accessories-dictionary-symbolic",
+  "symbol": "l.circle",
+  "letter": "L",
+  "accent": "#8F6BFF",
+  "file": "icon.svg",
+  "renders": {
+   "src-tauri/icons/32x32.png": 32,
+   "src-tauri/icons/128x128.png": 128,
+   "src-tauri/icons/128x128@2x.png": 256,
+   "src-tauri/icons/icon.png": 512,
+   "src-tauri/icons/icon.ico": "ico",
+   "src-tauri/icons/icon.icns": "icns"
   }
+ },
+ "dev": {
+  "prepare": [
+   {
+    "when_missing": "node_modules",
+    "run": [
+     "pnpm",
+     "install"
+    ],
+    "label": "安装前端依赖"
+   }
+  ],
+  "run": [
+   "pnpm",
+   "tauri",
+   "dev"
+  ],
+  "ready": {
+   "http": "http://localhost:1440"
+  },
+  "match": "src-tauri/target",
+  "binary": "athena-ascent"
+ }
 }

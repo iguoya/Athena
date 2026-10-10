@@ -1,6 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#4A8A0E"/>
-  <text x="256" y="272" text-anchor="middle" dominant-baseline="central"
-        font-family="'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif"
-        font-size="280" font-weight="700" fill="#ffffff">板</text>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  microcontroller 的应用图标：领域代表图标，直接取自知名图标集，不自造。
+  出处：Lucide Icons「circuit-board"，ISC 许可，https://lucide.dev（stroke 色为本应用领域色，线条原样取自图标集）
+  这份 SVG 就是图标本身：透明底、自带颜色，启动器图块、窗口 / 任务栏 / 标题栏、应用界面
+  三处同源（ADR 0065）。改完跑 `launcher icons` 重新生成 app.json 里 icon.renders 声明的位图。
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="#15803d"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <rect width="18" height="18" x="3" y="3" rx="2" />
+  <path d="M11 9h4a2 2 0 0 0 2-2V3" />
+  <circle cx="9" cy="9" r="2" />
+  <path d="M7 21v-4a2 2 0 0 1 2-2h4" />
+  <circle cx="15" cy="15" r="2" />
 </svg>
