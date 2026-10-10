@@ -495,8 +495,8 @@
                     "`area(double w, double h)`"
                   ],
                   [
-                    "非直接耦合",
-                    "互不认识，只通过上层协调",
+                    "无直接耦合",
+                    "互不认识、不传递任何信息，各自受上层调用",
                     "两个模块都只和调度者通信"
                   ]
                 ],
@@ -631,7 +631,7 @@
               {
                 "type": "callout",
                 "title": "取材",
-                "text": "Stevens、Myers、Constantine《Structured Design》（IBM Systems Journal，1974）提出耦合与内聚；分类与排序按《软件设计师教程（第 5 版）》中「模块独立性」一节的口径。C++ 里的例子为本课自编。"
+                "text": "Stevens、Myers、Constantine《Structured Design》（IBM Systems Journal，1974）提出耦合与内聚；分类与排序按《软件设计师教程（第 5 版）》第 6 章「结构化开发方法」中「模块独立」一节的口径（耦合 7 种、内聚 7 种，教程称偶然内聚也叫巧合内聚）。C++ 里的例子为本课自编。"
               }
             ]
           }
