@@ -5,7 +5,6 @@ import {
   ArrowRight,
   BookCheck,
   ClipboardCheck,
-  FolderInput,
   PenLine,
   RotateCcw,
   Sparkles,
@@ -13,10 +12,8 @@ import {
 } from "lucide-react";
 import { Celebration } from "@/components/Celebration";
 import {
-  importPrivate,
-  privateStatus,
+  english2,
   trackItems,
-  useEnglish2,
   type DeckItem,
   type English2,
   type Media,
@@ -52,7 +49,7 @@ type View =
   | { kind: "mistakes" };
 
 export function English2() {
-  const content = useEnglish2();
+  const content = english2;
   const [view, setView] = useState<View>({ kind: "home" });
   const home = () => setView({ kind: "home" });
 
@@ -115,8 +112,6 @@ function Home({ content, onOpen }: { content: English2; onOpen: (view: View) => 
         </p>
       </header>
 
-      <PrivateBanner content={content} />
-
       <section className="glass flex flex-wrap items-center gap-5 p-5">
         <Stat label="今天做了" value={answered[today] ?? 0} unit="题" />
         <Stat label="到期复习" value={dueTotal} unit="题" />
@@ -160,38 +155,6 @@ function Stat({ label, value, unit }: { label: string; value: number; unit: stri
         <small className="ml-1 font-body text-xs text-muted">{unit}</small>
       </p>
     </div>
-  );
-}
-
-/** 本机资料缺题时如实说出来，并给出补上的办法（ADR 0025 第 3 节补充）。 */
-function PrivateBanner({ content }: { content: English2 }) {
-  const [message, setMessage] = useState<string | null>(null);
-  if (content.loading || content.missing === 0) return null;
-  const onImport = async () => {
-    try {
-      const status = await privateStatus();
-      if (status?.dev) {
-        setMessage(`开发版直接读 ${status.root}；在摘星目录运行 pnpm content:english2 <磨砚的 content 目录> 生成本机题目。`);
-        return;
-      }
-      const copied = await importPrivate();
-      if (copied !== null) window.location.reload();
-    } catch (error) {
-      setMessage(String(error));
-    }
-  };
-  return (
-    <section className="glass flex flex-wrap items-center gap-3 border border-dashed border-line p-4 text-sm">
-      <FolderInput size={18} className="text-accent" />
-      <p className="flex-1 text-muted">
-        还有 <b className="text-fg">{content.missing}</b> 题引用了不能公开发布的来源，只在本机资料里，这台电脑上还没有。
-        {content.error && <span className="block text-rose-500">读取本机资料出错：{content.error}</span>}
-        {message && <span className="block">{message}</span>}
-      </p>
-      <button type="button" onClick={onImport} className={ghostButton}>
-        导入本地资料
-      </button>
-    </section>
   );
 }
 
@@ -594,12 +557,10 @@ function Assessment({ content, track, onBack }: { content: English2; track: Trac
   const [result, setResult] = useState<AssessmentResult | null>(null);
   const items = deck?.items ?? [];
   const left = items.filter((i) => answers[i.id] === undefined).length;
-  // 缺了本机题的考核只是半套卷：可以做着练手，但不记成绩，免得半套卷考出个「通过」。
-  const missing = content.loading ? 0 : content.missingIn(track.assessment);
 
   const onSubmit = () => {
     const scored = scoreAssessment(items, answers);
-    if (missing === 0) submit(track.assessment, scored);
+    submit(track.assessment, scored);
     setResult(scored);
   };
 
@@ -616,15 +577,10 @@ function Assessment({ content, track, onBack }: { content: English2; track: Trac
         </span>
         {record && <span className="ml-auto text-xs text-muted">最好成绩 {Math.round(record.best * 100)}%</span>}
       </header>
-      <Celebration show={(result?.passed ?? false) && missing === 0} message="这条线的考核通过啦！" />
+      <Celebration show={result?.passed ?? false} message="这条线的考核通过啦！" />
       <div className="min-h-0 flex-1 overflow-y-auto scroll-soft pr-1">
-        {missing > 0 && (
-          <p className="glass mb-4 border border-dashed border-line p-4 text-sm text-muted">
-            这套考核还有 {missing} 题在本机资料里，这台电脑上没有。现在交卷只算练手，不记成绩；导入本地资料后再考才算数。
-          </p>
-        )}
         {items.length === 0 ? (
-          <p className="glass p-6 text-muted">这套考核的题目在本机资料里，这台电脑上还没有。先在英语二首页导入本地资料。</p>
+          <p className="glass p-6 text-muted">这套考核还没有题目。</p>
         ) : (
           <div className="grid gap-4">
             {result && (
@@ -634,9 +590,7 @@ function Assessment({ content, track, onBack }: { content: English2; track: Trac
                   <small className="ml-2 font-body text-sm text-muted">{Math.round(result.rate * 100)}%</small>
                 </p>
                 <p className="mt-1 text-sm text-muted">
-                  {missing > 0
-                    ? "缺了本机题的半套卷，这次只算练手，没有记成绩。"
-                    : result.passed
+                  {result.passed
                     ? "通过了。通过资格不会因为以后考差而收回。"
                     : `还差一点：达到 ${Math.round(PASS_RATE * 100)}% 才算通过。下面是每题的解析，回去多练几轮再来。`}
                 </p>

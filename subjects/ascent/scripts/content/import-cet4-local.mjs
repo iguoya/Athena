@@ -1,11 +1,10 @@
-// Real CET-4 exam sentences for LOCAL use only (ADR 0019): exam papers are copyrighted, so the sentences go to
-// the git-ignored content/private/exam/ and never into the public repo or the installer.
+// Real CET-4 exam sentences. Self-use app (ADR 0026): they go to content/exam/ in the repo like any other content.
 //
 //   pnpm content:cet4
 //
 // Source: https://github.com/123xzw999/cet4-exam-quiz, 46 CET-4 papers (2020-2026) with reading passages and
 // the listening lines each answer is located in. The script clones it into .cache/content/ and writes:
-//   content/private/exam/cet4.json          reading and listening sentences, each with paper and part
+//   content/exam/cet4.json                  reading and listening sentences, each with paper and part
 //   content/vocab/{hs,cet4,cet6}/exam-frequency.json  how often each bank word appears in those papers
 // The frequency file holds counts only, no exam text, so it is committed: chapter 1 uses it to put the words
 // CET-4 actually tests first. Writing and translation "model" answers in the source are not exam text and are skipped.
@@ -100,9 +99,9 @@ for (const paper of papers.sort((a, b) => a.id.localeCompare(b.id))) {
 }
 
 writeJsonLines(
-  join(CONTENT, "private/exam/cet4.json"),
+  join(CONTENT, "exam/cet4.json"),
   {
-    about: "四级真题句子，只在本机用，不进仓库（ADR 0019）。由 scripts/content/import-cet4-local.mjs 生成。",
+    about: "四级真题句子（自用软件，随仓库走，ADR 0026）。由 scripts/content/import-cet4-local.mjs 生成。",
     source: "exam",
     upstream: "https://github.com/123xzw999/cet4-exam-quiz",
     generated: today(),

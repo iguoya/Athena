@@ -1,6 +1,6 @@
-// Check that every word and sentence under content/ names a source registered in content/sources.json (ADR 0019),
-// and that nothing from a local-only source sits outside content/private/.
-// 考研英语二（english2/，ADR 0025）的题目另按题目查：出处写在 source 数组里，带关系与定位。
+// Check that every word and sentence under content/ names a source registered in content/sources.json (ADR 0019).
+// 自用软件不按授权限制存放位置（ADR 0026）：只查出处登记过、关系认得，不再拦「只能本机用」。
+// 考研英语二（english2/，ADR 0025）的题目按题目查：出处写在 source 数组里，带关系与定位。
 //
 //   pnpm content:check
 
@@ -20,41 +20,26 @@ function* jsonFiles(dir) {
   }
 }
 
-// 英语二题目：内容来源类引用（照录/摘录/改写）决定能不能公开；选材依据、考纲对应只是说明。
-const CONTENT_RELATIONS = new Set(["verbatim", "quoted", "adapted"]);
-const KNOWN_RELATIONS = new Set([...CONTENT_RELATIONS, "authored", "selection_basis", "exam_alignment", "see_also"]);
+const KNOWN_RELATIONS = new Set(["verbatim", "quoted", "adapted", "authored", "selection_basis", "exam_alignment", "see_also"]);
 
 /** 一道英语二题目连同它的变式：自己没写出处就用文件级的。 */
-function checkEnglish2Item(item, fileRefs, at, isPrivate) {
+function checkEnglish2Item(item, fileRefs, at) {
   const refs = item.source?.length ? item.source : fileRefs;
   if (!refs.length) errors.push(`${at} 没有出处`);
-  for (const ref of refs) {
-    const source = sources.get(ref.source_id);
-    if (!source) errors.push(`${at} 的出处没有登记（${ref.source_id ?? "空"}）`);
+  for (const ref of [...refs, ...(item.variants ?? []).flatMap((v) => v.source ?? [])]) {
+    if (!sources.has(ref.source_id)) errors.push(`${at} 的出处没有登记（${ref.source_id ?? "空"}）`);
     if (!KNOWN_RELATIONS.has(ref.relation)) errors.push(`${at} 的出处关系「${ref.relation ?? "空"}」不认识`);
-    if (source?.use === "local-only" && CONTENT_RELATIONS.has(ref.relation) && !isPrivate)
-      errors.push(`${at} 的内容来自只能本机用的 ${ref.source_id}，不能放在 private/ 外面`);
-  }
-  for (const variant of item.variants ?? []) {
-    for (const ref of variant.source ?? []) {
-      if (!sources.has(ref.source_id)) errors.push(`${at} 的变式出处没有登记（${ref.source_id}）`);
-      if (sources.get(ref.source_id)?.use === "local-only" && CONTENT_RELATIONS.has(ref.relation) && !isPrivate)
-        errors.push(`${at} 的变式内容来自只能本机用的 ${ref.source_id}，不能放在 private/ 外面`);
-    }
   }
 }
 
 for (const file of jsonFiles(CONTENT)) {
-  const rel = relative(CONTENT, file).replaceAll("\\", "/");
-  const isPrivate = rel.startsWith("private/");
-  // 磨砚带过来的作者侧参考资料（词表、句库原样转存），不是题目也不是句库。
-  if (rel.startsWith("private/english2/sources/")) continue;
-  if (/^(private\/)?english2\//.test(rel)) {
+  const rel = relative(CONTENT, file).split("\\").join("/");
+  if (rel.startsWith("english2/")) {
     const data = readJson(file);
-    if (!Array.isArray(data.items)) continue; // 课表、private-index
+    if (!Array.isArray(data.items)) continue; // 课表
     for (const item of data.items) {
       items++;
-      checkEnglish2Item(item, data.source ?? [], `${rel}: ${item.id}`, isPrivate);
+      checkEnglish2Item(item, data.source ?? [], `${rel}: ${item.id}`);
     }
     continue;
   }
@@ -64,11 +49,7 @@ for (const file of jsonFiles(CONTENT)) {
   for (const item of list) {
     items++;
     const id = item.source ?? data.source;
-    const source = sources.get(id);
-    const at = `${rel}: ${item.id ?? item.word}`;
-    if (!source) errors.push(`${at} 的出处没有登记（${id ?? "空"}）`);
-    else if (source.use === "local-only" && !isPrivate)
-      errors.push(`${at} 来自只能本机用的 ${id}，不能放在 private/ 外面`);
+    if (!sources.has(id)) errors.push(`${rel}: ${item.id ?? item.word} 的出处没有登记（${id ?? "空"}）`);
   }
 }
 

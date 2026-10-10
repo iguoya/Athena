@@ -1,16 +1,16 @@
 // 把本机的教材资料（tiger 自己的课本/词表，个人自用，ADR 0019 `textbook` 来源）解析成
-// content/private/textbook/<教材id>/parsed.json，供后续脚本生成句组、短文与写作素材（ADR 0022）。
+// content/textbook/<教材id>/parsed.json，供后续脚本生成句组、短文与写作素材（ADR 0022）。
 //
 //   pnpm content:textbook
 //
 // 放文件的位置和格式见 content/README.md「教材导入」。这里不下载任何东西：
-// 教材内容永远不进 git、不进安装包，parsed.json 写在 private/ 里。
+// 自用软件（ADR 0026）：教材资料和 parsed.json 跟其余内容一样进仓库。
 
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { CONTENT, today } from "./lib.mjs";
 
-const TEXTBOOK_DIR = join(CONTENT, "private", "textbook");
+const TEXTBOOK_DIR = join(CONTENT, "textbook");
 
 // 词表行：`word<TAB>音标<TAB>释义` 或 `word<TAB>释义`；纯单词行也收（释义留空）。
 function parseWordList(text) {

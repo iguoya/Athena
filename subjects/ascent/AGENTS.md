@@ -12,7 +12,7 @@
 - 目标：陪她读完四年，提高英语，通过四六级、专四、专八。教师资格证不在范围内（学校毕业发）。英语专业考研考二外加学校自命题基础英语，不考英语一或英语二，大三再定。
 - 工作方式：个人项目，直接在 master 上开发并推送，不开分支、不走 PR。
 - 本应用已于 2026-10-01 并入 Athena 仓库的 `subjects/ascent`（原独立仓库 iguoya/English，ADR 0020 取代 ADR 0001）。仍是**独立应用**：不引用其他应用的路径或代码，只可借鉴思路；构建、依赖、进度各自独立。
-- **磨砚（`subjects/english`，考研英语二）并入本应用后退役**（主仓库 ADR 0117、本应用 ADR 0025，取代 ADR 0020 的「并列、不合并」）：英语二成为本应用的独立章节与入口，内容与出处原样迁入，界面按本应用规则重写；2026-10-10 迁移完成、磨砚目录已删除（原样在 `pre-english-merge` 标签）。分流规则见 ADR 0025 第 3 节补充：引用了未授权来源的题只在本机 `content/private/english2/`。
+- **磨砚（`subjects/english`，考研英语二）已并入本应用并退役**（主仓库 ADR 0117、本应用 ADR 0025，取代 ADR 0020 的「并列、不合并」）：英语二是本应用的独立章节与入口，617 题全部在 `content/english2/`，作者侧参考资料在 `reference/english2/`；原样在 `pre-english-merge` 标签。
 - 改名只改显示名：`identifier`（com.iguoya.lumi）、`productName`、Cargo 包名不动，否则已安装的版本丢进度、收不到更新（ADR 0020）。
 - **学习方法原型（ADR 0113）**：主原型**语言习得**。词卡语境先行、释义点开（先句后义）；Today 首推到期复习；写作、翻译与输入平级。
 
@@ -54,14 +54,14 @@
 - 三套皮肤已定版：晨光（柔和渐变）、极光（夜间霓虹）、手账（纸张贴纸），共用一套组件，只换 `src/styles/index.css` 里的设计变量（`data-style` = dawn / night / journal）。
 - 旧的 2020 年 VuePress 作文站在 `archive/vuepress-2020/`，新软件不使用。
 - 自动更新（ADR 0018）：打 v* tag 后由仓库级 Release 工作流编译签名安装包并发布 Release（统一发版，主仓库 ADR 0081；应用内 `.github/` 死工作流已删）；软件启动时用 updater 插件检查并静默更新。签名密钥已配置在 GitHub Secrets（`TAURI_SIGNING_PRIVATE_KEY`），私钥永远不进仓库。本地开发走 `launcher open ascent`（`app.json` 的 `dev` 块声明，ADR 0046），不再用独立时代的「启动 Lumi（开发版）.cmd」一键脚本（已删，ADR 0021）。
-- 内容来源和版权（ADR 0019）：仓库和安装包都是公开的，真题和课本只放本机 `content/private/`（git 忽略）。开放来源登记在 `content/sources.json`；`pnpm content:ecdict` 生成高中、四级、六级三个词库草稿（`content/vocab/{hs,cet4,cet6}/`），`pnpm content:stages` 把每个词库按真实难度信号切成先易后难的子阶段（`vocab/*/stages.json`，ADR 0022），`pnpm content:tatoeba` 给每个词挑真实例句（需要能访问 downloads.tatoeba.org），`pnpm content:cet4` 把四级真题句子导入本机并统计各词库的词在真题里的频次。本机教材资料放 `content/private/textbook/<教材名>/words.txt` 后跑 `pnpm content:textbook` 解析（个人自用，不进仓库；ADR 0019 补充、ADR 0022）。选资源以中国英语考试为准，真题句优先于通用句库；出处说不清的词表和例句不用。
+- 内容来源和版权（ADR 0019、0026）：按自用软件开发，所有内容进仓库与构建，不按授权限制存放位置（ADR 0026 取代原「真题和课本只放本机 private/」）；出处照常逐条登记。开放来源登记在 `content/sources.json`；`pnpm content:ecdict` 生成高中、四级、六级三个词库草稿（`content/vocab/{hs,cet4,cet6}/`），`pnpm content:stages` 把每个词库按真实难度信号切成先易后难的子阶段（`vocab/*/stages.json`，ADR 0022），`pnpm content:tatoeba` 给每个词挑真实例句（需要能访问 downloads.tatoeba.org），`pnpm content:cet4` 把四级真题句子导入 `content/exam/` 并统计各词库的词在真题里的频次。教材资料放 `content/textbook/<教材名>/words.txt` 后跑 `pnpm content:textbook` 解析（ADR 0022、0026）。选资源以中国英语考试为准，真题句优先于通用句库；出处说不清的词表和例句不用。
 - master 上的每次推送都会发布新版本，推送前确认 `pnpm lint`、`pnpm build` 通过。
 
 ## 当前进度（2026-09-30）
 
 - 里程碑 1 已完成：工程骨架、三套皮肤切换、自定义标题栏、左侧导航、首页（示例数据，今日一句是乔布斯斯坦福演讲的真实句子）。`pnpm build`、`pnpm lint`、`cargo check` 通过（在 Linux 上验证）。
 - 2026-10-09：词库阶梯上线（ADR 0022）——三个词库按真实难度信号切成先易后难的子阶段，新页面选档 → 选阶 → 逐词学，系统 TTS 朗读、收进生词本、阶段通关记里程碑；首页连续天数、周统计、足迹与下一里程碑全部改由学习记录派生（ADR 0052），demo 假数字退场。同日：品牌名「拾阶」改「摘星」（ADR 0023）；参考磨砚定下掌握度三原则——考核分离、错题出库双条件、回合上限进校验（ADR 0024），换句填空复习与错题本落地时执行。
-- 2026-10-10：考研英语二章节上线（主仓库 ADR 0117、本应用 ADR 0025）——磨砚内容迁入 `content/english2/`（公开 202 题）与 `content/private/english2/`（本机 415 题），导航「考研英语二」：今天这一轮（当前等级选择题轨交错、到期优先、每轮 ≤10 题）、三级九条轨的练习与平行题考核（≥80% 通过、通过不撤销、缺本机题的半套卷不记成绩）、错题本（隔天答对 + 做对变式才出库）、作文只机检字数与衔接；本机题运行时由 Rust 读取，安装版用「导入本地资料」。复习间隔暂用连对阶梯，FSRS 接入时替换 `schedule`。
+- 2026-10-10：考研英语二章节上线（主仓库 ADR 0117、本应用 ADR 0025、0026）——磨砚 617 题迁入 `content/english2/`、全部打包，导航「考研英语二」：今天这一轮（当前等级选择题轨交错、到期优先、每轮 ≤10 题）、三级九条轨的练习与平行题考核（≥80% 通过、通过不撤销）、错题本（隔天答对 + 做对变式才出库）、作文只机检字数与衔接。复习间隔暂用连对阶梯，FSRS 接入时替换 `schedule`。
 - 下一步（里程碑 2）：今日句组页面，按读、写、听、说走完一组句子；第一章诊断、单元句组、回顾卡和知识地图；点词收录、换句复习、学习小结卡和打卡。
 - 之后：听力与错题本 → AI 批改（大模型厂商待定，需国内稳定可用）→ 句群和短文阶段。
 - 待定：大模型选哪家；词库和真题音频的来源与授权；她的笔记本是 Windows 10 还是 11（毛玻璃需要 11）。软件名定论：工程与发布名 `athena-ascent`（ADR 0021），界面与品牌 2026-10-09 起叫「摘星」（ADR 0023，原「拾阶」），identifier 与本地进度存储键不动。

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { DeckItem } from "./english2";
-import { curriculum, english2From, trackItems } from "./english2";
+import { curriculum, english2, trackItems } from "./english2";
 import {
   addDays,
   buildRound,
@@ -47,10 +47,9 @@ describe("英语二练习规则", () => {
   });
 
   it("真实课表里任何一条轨的一轮都不超过上限", () => {
-    const content = english2From({ decks: {}, passages: {} });
     for (const stage of curriculum.stages)
       for (const track of stage.tracks)
-        expect(buildRound(trackItems(content, track), {}, "2026-10-10").length).toBeLessThanOrEqual(ROUND_SIZE);
+        expect(buildRound(trackItems(english2, track), {}, "2026-10-10").length).toBeLessThanOrEqual(ROUND_SIZE);
   });
 
   it("错题出库要隔天答对且做对变式，缺一不出", () => {

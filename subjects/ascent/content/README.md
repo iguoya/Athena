@@ -14,18 +14,16 @@
 | `vocab/hs/sentence-index.json` | 每个词的候选例句编号                                             | `pnpm content:tatoeba`           |
 | `vocab/hs/todo.json`           | 真实例句不足 3 条、先不入库的词                                  | `pnpm content:tatoeba`           |
 | `vocab/*/exam-frequency.json`  | 每个词在四级真题里出现的次数（只有数字）                         | `pnpm content:cet4`              |
-| `private/exam/cet4.json`       | 四级真题句子（本机，git 忽略）                                   | `pnpm content:cet4`              |
-| `private/textbook/`            | 教材资料（本机，git 忽略），见下面「教材导入」                   | 手动放 + `pnpm content:textbook` |
-| `private/`                     | 真题、课本等只在本机用的资料（git 忽略）                         | 手动放                           |
-| `english2/`                    | 考研英语二：迁自磨砚的课表与可公开题目（ADR 0025）               | `pnpm content:english2 <磨砚 content>` |
-| `english2/private-index.json`  | 只在本机的英语二题目清单，界面据此提示本机缺了多少               | `pnpm content:english2`          |
-| `private/english2/`            | 英语二里引用了只能本机用的来源的题目，以及磨砚的作者侧参考资料   | `pnpm content:english2`          |
+| `exam/cet4.json`               | 四级真题句子（自用软件，随仓库走，ADR 0026）                     | `pnpm content:cet4`              |
+| `textbook/`                    | 教材资料，见下面「教材导入」                                     | 手动放 + `pnpm content:textbook` |
+| `private/`                     | 想只留在本机的东西（git 忽略）；没有功能依赖它（ADR 0026）       | 手动放                           |
+| `english2/`                    | 考研英语二：迁自磨砚的课表与全部 617 题（ADR 0025、0026）        | `pnpm content:english2 <磨砚 content>` |
+| `../reference/english2/`       | 磨砚的作者侧参考资料（词表、句库、教辅摘录），进仓库不打包       | `pnpm content:english2`          |
 
 ## 教材导入（ADR 0022）
 
-教材（大学英语、高中英语）的课文和单元词表只在本机使用：把文件放进
-`content/private/textbook/<教材名>/`，再跑 `pnpm content:textbook`，解析结果写在同一目录的
-`parsed.json`，永远不进 git、不进安装包。目前支持：
+教材（大学英语、高中英语）的课文和单元词表：把文件放进 `content/textbook/<教材名>/`，再跑
+`pnpm content:textbook`，解析结果写在同一目录的 `parsed.json`，随仓库走（自用软件，ADR 0026）。目前支持：
 
 - `words.txt`：单元生词表，每行一个词（`word`、`word<TAB>音标`、`word<TAB>音标<TAB>释义`
   或 `word<TAB>释义`，`#` 开头是注释）。
