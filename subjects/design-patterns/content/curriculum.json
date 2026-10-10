@@ -3141,6 +3141,1074 @@
       }
     },
     {
+      "id": "situations2",
+      "title": "情境篇二：C++ 的资源、所有权与错误",
+      "track": "situations",
+      "summary": "情境篇的第二部分：C++ 特有的组织问题——资源怎么释放、对象归谁、拷贝是否正确、失败怎么报告、数据约束谁来守。每节以 C++ Core Guidelines 的编号条目为依据，配一个可编译运行的改造实验。这些手法（RAII、智能指针、零法则、optional）大多不在 GoF 的 23 个模式里，却是写 C++ 时每天都要用的组织方式。\n\n取材：C++ Core Guidelines（R、C、E、F、I 各节）· Martin Fowler《重构》第 2 版重构目录",
+      "topics": [
+        {
+          "id": "dp.sit.resource-leak",
+          "title": "资源泄漏与 RAII",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.sit.long-function"
+          ],
+          "track": "situations",
+          "guide_line": "打开的文件、拿到的锁、分配的内存，在某条提前返回或异常的路径上忘了释放。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能把「获取—释放」配对的资源包进对象，用析构函数保证在所有退出路径上释放。",
+            "pain": "函数有三个 return、中间还可能抛异常，每条路径都要记得 close；改一次代码就可能新增一条漏关的路径。",
+            "model": "RAII：资源在构造函数里获取、在析构函数里释放；对象离开作用域（无论是正常返回、提前返回还是异常）时析构函数一定被调用。",
+            "scope": "资源句柄通常应禁止拷贝（两个对象关同一个句柄），需要转移时提供移动操作；标准库已经有的（std::fstream、std::lock_guard、std::unique_ptr）直接用。",
+            "judgment": "代码里出现成对的 open/close、lock/unlock、new/delete，且中间有分支或可能抛异常——就该用 RAII。",
+            "landing": "能为一对 C 风格接口写一个 RAII 包装类，并删掉所有手写的释放调用。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "一个函数先 openRes()，中间有两处出错提前 return，最后才 closeRes()。最近发现句柄泄漏。最根本的改法是？",
+                "options": [
+                  {
+                    "label": "把句柄包进一个类，构造时打开、析构时关闭，函数里不再手写 closeRes",
+                    "ok": true,
+                    "why": "RAII：释放与作用域绑定，任何退出路径都会执行析构"
+                  },
+                  {
+                    "label": "在每个 return 前补一句 closeRes",
+                    "ok": false,
+                    "why": "这次补齐了，下次加一个 return 又会漏"
+                  },
+                  {
+                    "label": "用 goto 跳到函数末尾统一关闭",
+                    "ok": false,
+                    "why": "C 的老办法，遇到异常仍然无效"
+                  },
+                  {
+                    "label": "在程序退出时统一关闭所有句柄",
+                    "ok": false,
+                    "why": "长时间运行的程序会在退出前耗尽资源"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "**RAII**（Resource Acquisition Is Initialization，资源获取即初始化）是 C++ 管理资源的基本手法：把资源交给一个对象，构造函数获取，析构函数释放。C++ 保证局部对象在离开作用域时析构——不管是走到末尾、提前 return 还是抛出异常——于是「忘了释放」这类错误从结构上消失。C++ Core Guidelines 的对应条目是 R.1「用资源句柄与 RAII 自动管理资源」与 E.6「用 RAII 防止泄漏」。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：每条路径手动释放",
+                  "code": "bool process(const std::string& name, bool fail) {\n  Handle* h = openRes(name);\n  if (fail) return false;      // 漏了 closeRes(h)\n  use(h);                      // 若抛异常，也漏了\n  closeRes(h);\n  return true;\n}"
+                },
+                "after": {
+                  "title": "改造后：释放交给析构函数",
+                  "code": "class Resource {\npublic:\n  explicit Resource(const std::string& n) : h_(openRes(n)) {}\n  ~Resource() { closeRes(h_); }\n  Resource(const Resource&) = delete;\n  Resource& operator=(const Resource&) = delete;\nprivate:\n  Handle* h_;\n};\n\nbool process(const std::string& name, bool fail) {\n  Resource r(name);\n  if (fail) return false;      // r 析构，自动关闭\n  return true;\n}"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "先找标准库里现成的资源句柄：文件用 std::fstream，锁用 std::lock_guard / std::scoped_lock，动态内存用 std::unique_ptr。",
+                  "没有现成的，就写一个小类：构造函数获取并保存句柄，析构函数释放。",
+                  "禁止拷贝；需要转移时实现移动构造与移动赋值（移动后把源对象的句柄置空）。",
+                  "删掉业务代码里所有手写的释放调用。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "析构函数不应抛出异常；释放本身可能失败的资源（如需要确认写入成功的文件），要另外提供显式的 close() 让调用者检查结果，析构函数只做兜底。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "代理（智能引用：访问对象时做附加操作，std::unique_ptr 就是一个所有权代理）。RAII 本身是 C++ 的语言惯用法，不在 GoF 的 23 个模式里——这正是「不局限于 23 个模式」的例子。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "为什么 RAII 在抛出异常时也能释放资源？",
+                    "choices": [
+                      {
+                        "label": "栈展开时，作用域内已构造的局部对象会被析构",
+                        "ok": true,
+                        "why": "C++ 保证异常传播时依次析构已构造的局部对象"
+                      },
+                      {
+                        "label": "编译器会自动在 catch 里插入释放代码",
+                        "ok": false,
+                        "why": "没有这回事，靠的是析构函数"
+                      },
+                      {
+                        "label": "操作系统会立即回收资源",
+                        "ok": false,
+                        "why": "进程结束才回收，运行期间照样泄漏"
+                      },
+                      {
+                        "label": "RAII 对象存放在堆上",
+                        "ok": false,
+                        "why": "RAII 对象通常是栈上的局部对象"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.resource-leak",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "RAII 与条目 R.1、E.6：C++ Core Guidelines（isocpp.github.io/CppCoreGuidelines，Stroustrup 与 Sutter 主编）「R: Resource management」「E: Error handling」两节。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.resource-leak.run",
+              "title": "为 C 风格接口写一个 RAII 包装",
+              "case": "sit_raii_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "b.txt 处理失败提前返回后，句柄还开着吗？最后一行 leaked 是几？",
+              "goal": "写 class Resource（构造调 openRes 并保存句柄，析构调 closeRes，禁止拷贝），让 process() 改用它，删掉所有手写的 closeRes。",
+              "pass": {
+                "includes": [
+                  "close b.txt",
+                  "leaked=0"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "dp.sit.ownership",
+          "title": "所有权不清",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.sit.resource-leak"
+          ],
+          "track": "situations",
+          "guide_line": "函数返回、容器保存的都是裸指针，谁负责释放全靠约定。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能用 std::unique_ptr / std::shared_ptr / 裸指针与引用分别表达独占、共享、借用三种关系。",
+            "pain": "makeWidget() 返回 Widget*，调用者不知道要不要 delete；Panel 存一组 Widget*，析构时也不知道——结果要么泄漏，要么重复释放。",
+            "model": "把所有权写进类型：返回新对象用 std::unique_ptr（R.20、R.21），转移所有权靠 std::move；只是使用、不负责释放的，用裸指针或引用（R.3）。",
+            "scope": "std::shared_ptr 只在确实多方共同拥有、无法确定谁最后释放时用，它有引用计数开销，也容易形成循环引用。",
+            "judgment": "代码里出现 new 与 delete，或者函数签名里出现「返回 T* 但要求调用者释放」——就该用智能指针（R.11、I.11）。",
+            "landing": "能把一组裸指针改为 unique_ptr，删掉所有 delete，且不泄漏。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "工厂函数 Widget* makeWidget() 返回新建的对象，调用方有的 delete、有的不 delete，还有一处 delete 了两次。最根本的改法是？",
+                "options": [
+                  {
+                    "label": "让 makeWidget 返回 std::unique_ptr<Widget>，所有权随返回值转移给调用者",
+                    "ok": true,
+                    "why": "所有权写进类型，编译器帮你检查"
+                  },
+                  {
+                    "label": "在函数注释里写清楚「调用者负责 delete」",
+                    "ok": false,
+                    "why": "约定靠人记，已经出过错"
+                  },
+                  {
+                    "label": "改为返回 std::shared_ptr<Widget>",
+                    "ok": false,
+                    "why": "能用，但多数情况没有共享需求，unique_ptr 更简单、更快（R.21）"
+                  },
+                  {
+                    "label": "改为返回 Widget 的全局实例",
+                    "ok": false,
+                    "why": "引入全局状态，问题更多"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "**所有权**回答的是「谁负责释放这个对象」。C++ 用类型来表达它：std::unique_ptr 表示独占所有权，std::shared_ptr 表示共享所有权，裸指针 T* 和引用 T& 只表示「借用、不负责释放」。C++ Core Guidelines 的对应条目：R.20「用 unique_ptr 或 shared_ptr 表示所有权」、R.21「除非需要共享所有权，优先 unique_ptr」、R.3「裸指针不拥有对象」、I.11「不要用裸指针或引用转移所有权」、R.11「避免显式调用 new 和 delete」。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：所有权靠猜",
+                  "code": "Widget* makeWidget(const std::string& n) {\n  return new Widget(n);       // 谁 delete？\n}\nclass Panel {\n  std::vector<Widget*> widgets_;   // 析构时 delete 吗？\n};"
+                },
+                "after": {
+                  "title": "改造后：所有权写进类型",
+                  "code": "std::unique_ptr<Widget> makeWidget(const std::string& n) {\n  return std::make_unique<Widget>(n);\n}\nclass Panel {\npublic:\n  void add(std::unique_ptr<Widget> w) {\n    widgets_.push_back(std::move(w));   // 所有权转给 Panel\n  }\nprivate:\n  std::vector<std::unique_ptr<Widget>> widgets_;\n};"
+                }
+              },
+              {
+                "type": "compare",
+                "title": "三种关系怎么选",
+                "left": {
+                  "title": "拥有：unique_ptr / shared_ptr",
+                  "body": "负责释放的一方持有智能指针。默认用 unique_ptr；只有确实多方共同拥有、生命周期无法由某一方决定时才用 shared_ptr，并注意用 weak_ptr 打破循环引用。"
+                },
+                "right": {
+                  "title": "借用：T& / T*",
+                  "body": "只使用对象、不负责释放的函数参数用引用（不可为空）或裸指针（可为空）。借用者不能活得比拥有者长。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "unique_ptr 不能拷贝，只能移动——这正是它的意义，但会让需要拷贝的类型也变成只可移动。跨越 C 接口或第三方库时仍要用裸指针，但要在边界处立刻交给智能指针。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "工厂方法、抽象工厂（工厂函数返回 unique_ptr 是现代 C++ 的标准写法）、组合（子节点容器用 vector<unique_ptr<Node>>，析构自动递归）。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "函数 void draw(const Shape& s) 只读取图形、不负责释放。参数用什么最合适？",
+                    "choices": [
+                      {
+                        "label": "const Shape&：借用且不为空",
+                        "ok": true,
+                        "why": "不涉及所有权的参数用引用"
+                      },
+                      {
+                        "label": "std::unique_ptr<Shape>",
+                        "ok": false,
+                        "why": "会把所有权转移进函数，调用后对象就被释放了"
+                      },
+                      {
+                        "label": "std::shared_ptr<Shape>",
+                        "ok": false,
+                        "why": "无谓地增加引用计数，也模糊了所有权"
+                      },
+                      {
+                        "label": "Shape*，并在函数末尾 delete",
+                        "ok": false,
+                        "why": "借用者不能释放对象"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.ownership",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "条目 R.3、R.11、R.20、R.21、I.11：C++ Core Guidelines（isocpp.github.io/CppCoreGuidelines，Stroustrup 与 Sutter 主编）「R: Resource management」「I: Interfaces」两节。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.ownership.run",
+              "title": "用 unique_ptr 表达所有权",
+              "case": "sit_ownership_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "Panel 析构之后，两个 Widget 还活着吗？最后一行 alive 是几？",
+              "goal": "makeWidget 改为返回 std::unique_ptr<Widget>（std::make_unique），Panel 的成员改为 std::vector<std::unique_ptr<Widget>>，add 接收 unique_ptr 并 std::move 进去；printAll 与 main 不用改。",
+              "pass": {
+                "includes": [
+                  "widget ok-button",
+                  "alive=0"
+                ]
+              },
+              "hint": "widgets() 的返回类型也要跟着改成 const std::vector<std::unique_ptr<Widget>>&；printAll 里的 w->name 照样能用。"
+            }
+          ]
+        },
+        {
+          "id": "dp.sit.rule-of-zero",
+          "title": "默认操作：零法则与五法则",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [
+            "dp.sit.ownership",
+            "dp.prototype"
+          ],
+          "track": "situations",
+          "guide_line": "类自己管理资源却只写了一部分特殊成员函数，拷贝变成浅拷贝、析构漏释放。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能判断一个类要不要写析构、拷贝、移动这些特殊成员函数，并优先让成员自己管理资源。",
+            "pain": "类里用 new[] 管着一块数组，只写了构造函数：编译器生成的拷贝只复制指针，两个对象共享内存；没有析构，内存泄漏；补了析构又会重复释放。",
+            "model": "零法则：让成员（std::vector、std::string、智能指针）各自管理资源，类本身一个特殊成员函数都不写；五法则：确实要自己管理时，析构、拷贝构造、拷贝赋值、移动构造、移动赋值一起定义或一起删除。",
+            "scope": "五个函数之间有联动：只写其中几个，编译器生成或删除其余的规则很容易出乎意料。",
+            "judgment": "类的成员里出现裸的资源（new 出来的指针、文件描述符）——先问能不能换成标准库类型；换不了，就五个一起写。",
+            "landing": "能把一个手管数组的类改成零法则，拷贝后两个对象互不影响。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "Scores 类用 int* 管理一块 new[] 出来的数组，只写了构造函数。拷贝一份后改副本，原件也变了。最省事又正确的修法是？",
+                "options": [
+                  {
+                    "label": "把 int* 换成 std::vector<int>，不写任何析构、拷贝、移动函数",
+                    "ok": true,
+                    "why": "零法则：vector 自带正确的深拷贝、移动与释放"
+                  },
+                  {
+                    "label": "只补一个析构函数 delete[] data_",
+                    "ok": false,
+                    "why": "拷贝后两个对象都会 delete 同一块内存——重复释放"
+                  },
+                  {
+                    "label": "只补一个拷贝构造函数",
+                    "ok": false,
+                    "why": "拷贝赋值和析构仍有问题"
+                  },
+                  {
+                    "label": "禁止使用拷贝",
+                    "ok": false,
+                    "why": "掩盖问题，而且调用方需要拷贝"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "C++ 类有五个特殊成员函数会被编译器自动生成或删除：析构函数、拷贝构造、拷贝赋值、移动构造、移动赋值。C++ Core Guidelines 给出两条规则：C.20「能避免定义默认操作就避免」——这就是**零法则**，让成员自己管理资源；C.21「定义或删除了任何一个拷贝、移动或析构函数，就把它们全部定义或删除」——这就是**五法则**。只写一部分，是浅拷贝、泄漏、重复释放的根源。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：自己管资源，只写了构造",
+                  "code": "class Scores {\npublic:\n  Scores(int n, int init) : data_(new int[n]), size_(n) {\n    for (int i = 0; i < n; ++i) data_[i] = init;\n  }\nprivate:\n  int* data_;   // 无析构：泄漏；默认拷贝：共享\n  int size_;\n};"
+                },
+                "after": {
+                  "title": "改造后：零法则",
+                  "code": "class Scores {\npublic:\n  Scores(int n, int init) : data_(n, init) {}\nprivate:\n  std::vector<int> data_;   // 拷贝、移动、释放都由 vector 负责\n};"
+                },
+                "note": "改造后的类一个特殊成员函数都没写，拷贝、移动、析构都由编译器按成员逐个生成，而 vector 的这些操作本身就是正确的。"
+              },
+              {
+                "type": "compare",
+                "title": "零法则 vs 五法则",
+                "left": {
+                  "title": "零法则（首选）",
+                  "body": "成员都是自己会管理资源的类型（容器、字符串、智能指针、RAII 句柄），类本身什么都不写。绝大多数业务类都应该是这样。"
+                },
+                "right": {
+                  "title": "五法则（写 RAII 句柄时）",
+                  "body": "类本身就是资源句柄（如上一节的 Resource）时，五个函数一起考虑：要么全部定义出正确语义，要么用 = delete 明确禁止（如禁止拷贝、只允许移动）。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "多态基类是例外：它需要 virtual 析构函数，写了析构就要按 C.21 把拷贝与移动也明确处理（通常 = default 或 = delete），避免对象切片。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "原型（clone 的深拷贝问题，在 C++ 里正是由拷贝构造是否正确决定的；原型模式一节的实验就是浅拷贝的坑）。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "一个类的成员只有 std::string name 和 std::vector<int> scores。它应该写哪些特殊成员函数？",
+                    "choices": [
+                      {
+                        "label": "一个都不用写（零法则）",
+                        "ok": true,
+                        "why": "成员自己会正确地拷贝、移动、释放"
+                      },
+                      {
+                        "label": "析构函数，释放 scores",
+                        "ok": false,
+                        "why": "vector 会自己释放"
+                      },
+                      {
+                        "label": "拷贝构造与拷贝赋值，做深拷贝",
+                        "ok": false,
+                        "why": "vector 与 string 的拷贝已经是深拷贝"
+                      },
+                      {
+                        "label": "五个全部写出来",
+                        "ok": false,
+                        "why": "无谓增加代码，也容易写错"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.rule-of-zero",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "条目 C.20、C.21：C++ Core Guidelines（isocpp.github.io/CppCoreGuidelines，Stroustrup 与 Sutter 主编）「C.defop: Default operations」一节。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.rule-of-zero.run",
+              "title": "把手管数组改成零法则",
+              "case": "sit_rule_of_zero_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "copy 改了第 0 个元素，original 的第 0 个元素会变吗？先预测再运行。",
+              "goal": "把 int* data_ 与 size_ 换成 std::vector<int> data_，构造函数改为 data_(n, init)，at() 与 size() 基于 vector 实现，不写任何析构、拷贝、移动函数。",
+              "pass": {
+                "includes": [
+                  "original[0]=1 copy[0]=99"
+                ]
+              },
+              "hint": "size() 返回 static_cast<int>(data_.size())，避免有符号与无符号比较的警告。"
+            }
+          ]
+        },
+        {
+          "id": "dp.sit.error-reporting",
+          "title": "错误被悄悄吞掉",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "strategy",
+          "requires": [
+            "dp.sit.long-params"
+          ],
+          "track": "situations",
+          "guide_line": "函数用返回码表示失败、用输出参数带回结果，调用者忘了检查就继续往下走。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能根据错误的性质选择 std::optional、异常或错误码，并让「可能失败」体现在函数的返回类型里。",
+            "pain": "parsePort(s, out) 返回 -1 表示失败，调用者忽略返回值，拿着未赋值的 out 继续执行，错误在很远的地方才暴露。",
+            "model": "结果用返回值带回而不是输出参数（F.20、F.21）；「可能没有结果」写成 std::optional，调用者不检查就拿不到值；函数无法完成任务、调用者通常也处理不了时抛异常（E.2）。",
+            "scope": "异常只用于错误处理，不用于正常的控制流（E.3）；对于调用者完全能预先判断的情况（如容器为空），用预检代替异常（《重构》：以预检取代异常）。",
+            "judgment": "调用者能就地处理「没有结果」的——optional；失败意味着这条执行路径整体作废的——异常；跨越 C 接口或性能极敏感的边界——错误码。",
+            "landing": "能把一个「返回码 + 输出参数」的函数改为返回 std::optional，并让调用处显式处理两种情况。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "int parsePort(const std::string& s, int& out) 失败时返回 -1。线上出现过端口为 0 的连接——调用方忘了检查返回值。最好的改法是？",
+                "options": [
+                  {
+                    "label": "改为返回 std::optional<int>，调用者必须先判断有没有值才能取出端口",
+                    "ok": true,
+                    "why": "「可能失败」写进返回类型，忽略不了"
+                  },
+                  {
+                    "label": "给函数加 [[nodiscard]]，返回值被忽略时编译器警告",
+                    "ok": false,
+                    "why": "能提醒，但输出参数仍可能未赋值就被使用，optional 更彻底"
+                  },
+                  {
+                    "label": "失败时把 out 设成 -1",
+                    "ok": false,
+                    "why": "调用者照样可能不检查"
+                  },
+                  {
+                    "label": "失败时直接调用 exit()",
+                    "ok": false,
+                    "why": "库函数替调用者决定终止程序，太粗暴"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "错误报告的核心问题是：**调用者能不能忽略失败**。返回码加输出参数的写法很容易被忽略；C++ Core Guidelines 建议 F.20「输出值优先用返回值」、F.21「多个输出值返回一个结构体」，把「可能没有结果」写成 std::optional；当函数无法完成它的任务时抛异常（E.2），但异常只用于错误处理（E.3）。《重构》第 2 版对应的手法是**以异常取代错误码**（Replace Error Code with Exception）与反方向的**以预检取代异常**（Replace Exception with Precheck）。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：返回码 + 输出参数",
+                  "code": "int parsePort(const std::string& s, int& out);   // 0 成功，-1 失败\n\nint port = 0;\nparsePort(s, port);              // 返回值被忽略\nconnect(port);                   // port 可能是 0"
+                },
+                "after": {
+                  "title": "改造后：可能没有结果写进类型",
+                  "code": "std::optional<int> parsePort(const std::string& s);\n\nif (auto port = parsePort(s))\n  connect(*port);\nelse\n  report(\"invalid port: \" + s);"
+                }
+              },
+              {
+                "type": "compare",
+                "title": "optional、异常、错误码怎么选",
+                "left": {
+                  "title": "std::optional / 返回结构体",
+                  "body": "「没有结果」是正常情况、调用者就地就能处理：解析输入、查找元素。调用者不检查就取不到值。"
+                },
+                "right": {
+                  "title": "异常 / 错误码",
+                  "body": "异常：函数无法完成任务、失败意味着整条执行路径作废，由上层统一处理（如配置文件读不出来）。错误码：跨 C 接口、禁用异常的环境；要配合 [[nodiscard]]。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "C++ Core Guidelines 明确反对「为了性能一律不用异常」（NR.3），但嵌入式等禁用异常的环境仍要用错误码。C++23 的 std::expected 能同时带回结果或错误原因，是 optional 的加强版。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "职责链（把错误沿处理者链向上传递）、命令（失败的操作可以撤销）。特例对象（《重构》：引入特例 Introduce Special Case）也是处理「没有结果」的一种方式。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "按 C++ Core Guidelines E.3，下列哪种用法不恰当？",
+                    "choices": [
+                      {
+                        "label": "用抛异常来跳出正常的多层循环",
+                        "ok": true,
+                        "why": "异常只用于错误处理，不用于正常控制流"
+                      },
+                      {
+                        "label": "配置文件读取失败时抛异常",
+                        "ok": false,
+                        "why": "函数无法完成任务，符合 E.2"
+                      },
+                      {
+                        "label": "内存分配失败时抛 std::bad_alloc",
+                        "ok": false,
+                        "why": "标准库的正常做法"
+                      },
+                      {
+                        "label": "构造函数无法建立不变式时抛异常",
+                        "ok": false,
+                        "why": "这正是构造函数报告失败的方式"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.error-reporting",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "条目 F.20、F.21、E.2、E.3、NR.3：C++ Core Guidelines（isocpp.github.io/CppCoreGuidelines，Stroustrup 与 Sutter 主编）「F」「E」「NR」各节；手法「以异常取代错误码」「以预检取代异常」「引入特例」：Martin Fowler《重构：改善既有代码的设计》第 2 版（2018） 重构目录。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.error-reporting.run",
+              "title": "把返回码改成 std::optional",
+              "case": "sit_error_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "输入 abc 时，现在会输出什么？调用者有没有发现它失败了？",
+              "goal": "把 parsePort 改成 std::optional<int> parsePort(const std::string&)，失败时返回 std::nullopt；main 的循环改为有值输出 port=<值>，没有值输出 invalid port: <输入>。",
+              "pass": {
+                "includes": [
+                  "port=8080",
+                  "invalid port: abc"
+                ]
+              },
+              "hint": "if (auto port = parsePort(s)) 里，port 是 optional，取值用 *port。"
+            }
+          ]
+        },
+        {
+          "id": "dp.sit.invariant",
+          "title": "不变式没人守",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.sit.primitive"
+          ],
+          "track": "situations",
+          "guide_line": "对象的数据之间有约束（开始不晚于结束、余额不为负），但成员公开，谁都能改坏。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能识别类的不变式，用私有成员加构造函数检查把它守在类内部。",
+            "pain": "DateRange 的 begin、end 是公开的，任何代码都能把它改成「结束早于开始」；于是每个使用它的函数都得自己再检查一遍，或者忘了检查。",
+            "model": "有不变式的数据用 class：成员私有（C.9），构造函数检查并建立不变式（C.41），之后只通过保持不变式的成员函数修改；成员之间没有约束的纯数据才用 struct（C.2）。",
+            "scope": "不变式一旦由构造函数建立并由成员函数维护，使用者就可以放心假设它成立，不用到处检查。",
+            "judgment": "成员之间有「必须同时满足」的关系，或者某个成员有合法范围——就是不变式，应该收进 class。",
+            "landing": "能把一个公开成员的 struct 改成在构造时检查不变式的 class。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "struct DateRange { int begin; int end; }; 系统里有十几处代码在计算区间长度前检查 end >= begin，还有两处忘了检查导致负数天数。最好的改法是？",
+                "options": [
+                  {
+                    "label": "改成 class，成员私有，构造函数检查 end >= begin，不满足就抛异常；对外只提供 length() 等函数",
+                    "ok": true,
+                    "why": "不变式在一处建立，之后处处成立"
+                  },
+                  {
+                    "label": "写一个 isValid() 函数，要求大家用之前先调用",
+                    "ok": false,
+                    "why": "仍然靠调用者自觉"
+                  },
+                  {
+                    "label": "把 int 改成 unsigned",
+                    "ok": false,
+                    "why": "两个 unsigned 相减照样可能出错"
+                  },
+                  {
+                    "label": "在 length() 里遇到负数时返回 0",
+                    "ok": false,
+                    "why": "掩盖了错误数据，而且对象依旧是坏的"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "**不变式**是一个类的数据在任何时刻都必须满足的条件。C++ Core Guidelines C.2：「类有不变式就用 class，数据成员可以各自独立变化就用 struct」；C.41：「构造函数应创建一个完全初始化的对象」——不变式在构造时建立，建立不了就抛异常，不让坏对象诞生；C.9：「尽量少暴露成员」——只有私有成员才能保证不变式不被外部破坏。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：公开成员，谁都能改坏",
+                  "code": "struct DateRange {\n  int begin;\n  int end;      // 要求 begin <= end，没人保证\n};\nDateRange r{3, 8};\nr.end = 1;     // 编译器不拦"
+                },
+                "after": {
+                  "title": "改造后：构造时建立，之后守住",
+                  "code": "class DateRange {\npublic:\n  DateRange(int begin, int end) : begin_(begin), end_(end) {\n    if (end < begin)\n      throw std::invalid_argument(\"end before begin\");\n  }\n  int length() const { return end_ - begin_; }\nprivate:\n  int begin_;\n  int end_;\n};"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "写出这个类的不变式（一句话：什么条件必须永远成立）。",
+                  "成员改为私有；构造函数检查不变式，不满足就抛异常。",
+                  "所有修改数据的操作都改成成员函数，每个函数结束时不变式仍然成立。",
+                  "删掉散落在使用处的重复检查。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "成员私有之后，简单的数据读取要写访问函数。如果成员之间确实没有约束（如一个二维点的 x、y），用公开成员的 struct 反而更直白——不要为封装而封装。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "建造者（构造参数很多、需要分步收集后再一次性建立不变式时）、状态（不变式随状态变化时，把每种状态的约束放进各自的状态类）。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "按 C++ Core Guidelines C.2，下列哪个更适合写成 struct？",
+                    "choices": [
+                      {
+                        "label": "屏幕坐标 Point { int x; int y; }，x、y 可以各自取任意值",
+                        "ok": true,
+                        "why": "成员之间没有约束，没有不变式"
+                      },
+                      {
+                        "label": "银行账户：余额不能为负",
+                        "ok": false,
+                        "why": "有不变式，应该是 class"
+                      },
+                      {
+                        "label": "日期区间：开始不晚于结束",
+                        "ok": false,
+                        "why": "有不变式，应该是 class"
+                      },
+                      {
+                        "label": "有序列表：元素始终保持升序",
+                        "ok": false,
+                        "why": "有不变式，应该是 class"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.invariant",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "条目 C.2、C.9、C.41：C++ Core Guidelines（isocpp.github.io/CppCoreGuidelines，Stroustrup 与 Sutter 主编）「C: Classes and class hierarchies」一节。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.invariant.run",
+              "title": "让 DateRange 守住自己的不变式",
+              "case": "sit_invariant_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "现在 r.end = 1 之后，length 输出多少？这个对象还有意义吗？",
+              "goal": "把 DateRange 改成 class：begin_、end_ 私有；构造函数在 end < begin 时抛 std::invalid_argument(\"end before begin\")；提供 int length() const。删掉 main 的旧代码，解开 TODO(实验) 段。",
+              "pass": {
+                "includes": [
+                  "rejected: end before begin",
+                  "length=5"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "checkpoint": {
+        "intro": "5 种情境混排，同一情境的题不挨着。",
+        "items": [
+          {
+            "stem": "C++ Core Guidelines R.1 的要求是？",
+            "choices": [
+              {
+                "label": "用资源句柄与 RAII 自动管理资源",
+                "ok": true,
+                "why": "资源的释放与对象生命周期绑定"
+              },
+              {
+                "label": "避免使用全局变量",
+                "ok": false,
+                "why": "那是 I.2"
+              },
+              {
+                "label": "优先使用 unique_ptr",
+                "ok": false,
+                "why": "那是 R.21"
+              },
+              {
+                "label": "函数要短小",
+                "ok": false,
+                "why": "那是 F.3"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.resource-leak",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.resource-leak"
+          },
+          {
+            "stem": "一个函数返回新创建的对象，调用者独占它。返回类型应该是？",
+            "choices": [
+              {
+                "label": "std::unique_ptr<T>",
+                "ok": true,
+                "why": "独占所有权随返回值转移（R.20、R.21）"
+              },
+              {
+                "label": "T*，并在文档里写明要 delete",
+                "ok": false,
+                "why": "裸指针不应转移所有权（I.11）"
+              },
+              {
+                "label": "std::shared_ptr<T>",
+                "ok": false,
+                "why": "没有共享需求，开销与语义都多余"
+              },
+              {
+                "label": "T&",
+                "ok": false,
+                "why": "不能返回局部新建对象的引用"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.ownership",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.ownership"
+          },
+          {
+            "stem": "函数 find(id) 在找不到时，用哪种方式报告最合适？",
+            "choices": [
+              {
+                "label": "返回 std::optional<T>",
+                "ok": true,
+                "why": "找不到是正常情况，调用者就地处理"
+              },
+              {
+                "label": "抛异常",
+                "ok": false,
+                "why": "找不到不算无法完成任务，异常不该用于正常控制流"
+              },
+              {
+                "label": "返回一个全局的空对象并让调用者比较地址",
+                "ok": false,
+                "why": "依赖隐式约定"
+              },
+              {
+                "label": "调用 abort()",
+                "ok": false,
+                "why": "过于粗暴"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.error-reporting",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.error-reporting"
+          },
+          {
+            "stem": "一个类只写了析构函数 delete[] data_，没写拷贝构造。拷贝这个对象后会怎样？",
+            "choices": [
+              {
+                "label": "两个对象共享同一块内存，析构时重复释放",
+                "ok": true,
+                "why": "默认拷贝只复制指针——这正是 C.21 要避免的"
+              },
+              {
+                "label": "编译报错",
+                "ok": false,
+                "why": "编译器会生成默认拷贝，编译能通过"
+              },
+              {
+                "label": "自动深拷贝",
+                "ok": false,
+                "why": "默认拷贝是逐成员复制，指针只复制地址"
+              },
+              {
+                "label": "拷贝被禁止",
+                "ok": false,
+                "why": "只写析构不会禁止拷贝"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.rule-of-zero",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.rule-of-zero"
+          },
+          {
+            "stem": "构造函数在参数不满足不变式时，最合适的做法是？",
+            "choices": [
+              {
+                "label": "抛异常，不让坏对象被创建出来",
+                "ok": true,
+                "why": "C.41：构造函数应创建完全初始化的对象，做不到就报告失败"
+              },
+              {
+                "label": "照常构造，加一个 valid 标志",
+                "ok": false,
+                "why": "坏对象流出去，处处都要检查标志"
+              },
+              {
+                "label": "把参数悄悄修正成合法值",
+                "ok": false,
+                "why": "掩盖了调用者的错误"
+              },
+              {
+                "label": "打印一行警告后继续",
+                "ok": false,
+                "why": "坏对象仍然存在"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.invariant",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.invariant"
+          },
+          {
+            "stem": "函数 void render(const Scene& s) 中，参数用引用而不用 unique_ptr，表达的是？",
+            "choices": [
+              {
+                "label": "函数只借用场景，不负责释放",
+                "ok": true,
+                "why": "引用表示借用、不拥有（R.3 的精神）"
+              },
+              {
+                "label": "函数接管了场景的所有权",
+                "ok": false,
+                "why": "那要用 unique_ptr 传值"
+              },
+              {
+                "label": "场景可以为空",
+                "ok": false,
+                "why": "引用不能为空"
+              },
+              {
+                "label": "场景被共享拥有",
+                "ok": false,
+                "why": "那是 shared_ptr"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.ownership",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.ownership"
+          },
+          {
+            "stem": "用 std::lock_guard 代替手写 lock()/unlock() 的主要好处是？",
+            "choices": [
+              {
+                "label": "任何退出路径（包括异常）都会自动解锁",
+                "ok": true,
+                "why": "lock_guard 是锁的 RAII 句柄"
+              },
+              {
+                "label": "加锁速度更快",
+                "ok": false,
+                "why": "与性能无关"
+              },
+              {
+                "label": "可以同时锁住多个线程",
+                "ok": false,
+                "why": "没有这回事"
+              },
+              {
+                "label": "不再需要互斥量",
+                "ok": false,
+                "why": "仍然需要互斥量"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.resource-leak",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.resource-leak"
+          },
+          {
+            "stem": "零法则说的是？",
+            "choices": [
+              {
+                "label": "能不定义特殊成员函数就不定义，让成员自己管理资源",
+                "ok": true,
+                "why": "C.20"
+              },
+              {
+                "label": "类不应该有任何成员函数",
+                "ok": false,
+                "why": "误解"
+              },
+              {
+                "label": "类的成员个数应为零",
+                "ok": false,
+                "why": "误解"
+              },
+              {
+                "label": "不要使用构造函数",
+                "ok": false,
+                "why": "误解"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.rule-of-zero",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.rule-of-zero"
+          },
+          {
+            "stem": "按 C++ Core Guidelines F.20，函数的输出值应优先通过什么带回？",
+            "choices": [
+              {
+                "label": "返回值",
+                "ok": true,
+                "why": "输出参数容易被忽略或未赋值就被使用"
+              },
+              {
+                "label": "非 const 引用参数",
+                "ok": false,
+                "why": "那是 F.20 要避免的输出参数"
+              },
+              {
+                "label": "全局变量",
+                "ok": false,
+                "why": "隐式依赖"
+              },
+              {
+                "label": "静态局部变量",
+                "ok": false,
+                "why": "不可重入，难以测试"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.error-reporting",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.error-reporting"
+          },
+          {
+            "stem": "成员私有之所以是守住不变式的前提，是因为？",
+            "choices": [
+              {
+                "label": "只有类自己的成员函数能修改数据，修改点集中可控",
+                "ok": true,
+                "why": "公开成员可被任何代码改坏（C.9）"
+              },
+              {
+                "label": "私有成员访问更快",
+                "ok": false,
+                "why": "与性能无关"
+              },
+              {
+                "label": "私有成员不能被拷贝",
+                "ok": false,
+                "why": "可以被拷贝"
+              },
+              {
+                "label": "私有成员会自动初始化",
+                "ok": false,
+                "why": "不会自动初始化"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.invariant",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.invariant"
+          }
+        ]
+      }
+    },
+    {
       "id": "creational",
       "title": "创建型模式：把 new 收进工厂",
       "track": "creational",
