@@ -226,6 +226,12 @@ pub struct Link {
     pub to: Point,
     /// 箭头三角形的三个顶点，尖端在 `to`；只有 `Evolves` 有。
     pub arrow: Option<[Point; 3]>,
+    /// 线两端的节点下标（`nodes` 的下标；胶囊端复用节点端的下标）。悬停某个
+    /// 图块时，端点含它的线从虚线切换成实线强调。
+    pub ends: (usize, usize),
+    /// 虚线化的线段端点列：界面默认画这些短段，悬停才画实线贝塞尔。
+    /// Slint 1.17 的 Path 不支持虚线描边，dash 只能在布局里切好。
+    pub dashes: Vec<[Point; 2]>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -639,6 +645,7 @@ pub fn layout(apps: &[App]) -> MindMap {
             group.color,
             group.at.toward(node.at, PILL_H / 2.0 + 4.0),
             clip_to_tile(node.at, group.at, TILE_PAD),
+            (i, i),
         ));
     }
     for (i, _) in apps.iter().enumerate() {
@@ -651,12 +658,22 @@ pub fn layout(apps: &[App]) -> MindMap {
                 center,
                 0.14,
                 true,
+                (*p, i),
             ));
         }
     }
     for (k, &(_, t)) in references.iter().enumerate() {
         if let Some(at) = attach_at[apps.len() + k] {
-            links.push(curved(LinkKind::Reference, groups[group_of[t]].color, node_at[t], at, center, 0.14, true));
+            links.push(curved(
+                LinkKind::Reference,
+                groups[group_of[t]].color,
+                node_at[t],
+                at,
+                center,
+                0.14,
+                true,
+                (t, apps.len() + k),
+            ));
         }
     }
     // 领域圈引用：从领域胶囊连过来，种类是引用，比分支线淡（ADR 0117）。
@@ -667,6 +684,7 @@ pub fn layout(apps: &[App]) -> MindMap {
             groups[g].color,
             groups[g].at.toward(at, PILL_H / 2.0 + 4.0),
             clip_to_tile(at, groups[g].at, TILE_PAD),
+            (group_ref_base + k, group_ref_base + k),
         ));
     }
     let mut drawn: HashSet<(usize, usize)> = HashSet::new();
@@ -674,7 +692,16 @@ pub fn layout(apps: &[App]) -> MindMap {
         if let Some(from) = app.evolves_from.as_deref().and_then(index_of) {
             if from != to {
                 drawn.insert((from.min(to), from.max(to)));
-                links.push(curved(LinkKind::Evolves, "#6b7280", nodes[from].at, nodes[to].at, center, 0.22, true));
+                links.push(curved(
+                    LinkKind::Evolves,
+                    "#6b7280",
+                    nodes[from].at,
+                    nodes[to].at,
+                    center,
+                    0.22,
+                    true,
+                    (from, to),
+                ));
             }
         }
     }
@@ -684,7 +711,16 @@ pub fn layout(apps: &[App]) -> MindMap {
             if a == b || !drawn.insert((a.min(b), a.max(b))) {
                 continue;
             }
-            links.push(curved(LinkKind::Related, "#b6bcc6", nodes[a].at, nodes[b].at, center, 0.18, false));
+            links.push(curved(
+                LinkKind::Related,
+                "#b6bcc6",
+                nodes[a].at,
+                nodes[b].at,
+                center,
+                0.18,
+                false,
+                (a, b),
+            ));
         }
     }
 
@@ -755,20 +791,71 @@ pub fn rings_bitmap(map: &MindMap, scale: f32) -> RingsBitmap {
     }
 }
 
-fn straight(kind: LinkKind, color: &'static str, from: Point, to: Point) -> Link {
+fn straight(kind: LinkKind, color: &'static str, from: Point, to: Point, ends: (usize, usize)) -> Link {
+    let c1 = from.plus(to.minus(from).scale(1.0 / 3.0));
+    let c2 = from.plus(to.minus(from).scale(2.0 / 3.0));
     Link {
         kind,
         color,
         from,
-        c1: from.plus(to.minus(from).scale(1.0 / 3.0)),
-        c2: from.plus(to.minus(from).scale(2.0 / 3.0)),
+        c1,
+        c2,
         to,
         arrow: None,
+        ends,
+        dashes: dash_segments(from, c1, c2, to),
     }
 }
 
+/// 把三次贝塞尔按「画 6px、空 5px」切成虚线段端点列。曲线先按参数均匀采样，
+/// 再沿累计弧长切分，段端点按弧长插值，长短虚线段视觉一致。
+fn dash_segments(from: Point, c1: Point, c2: Point, to: Point) -> Vec<[Point; 2]> {
+    const DASH: f32 = 6.0;
+    const GAP: f32 = 5.0;
+    const N: usize = 96;
+    let bezier = |t: f32| {
+        let mt = 1.0 - t;
+        from.scale(mt * mt * mt)
+            .plus(c1.scale(3.0 * mt * mt * t))
+            .plus(c2.scale(3.0 * mt * t * t))
+            .plus(to.scale(t * t * t))
+    };
+    let pts: Vec<Point> = (0..=N).map(|i| bezier(i as f32 / N as f32)).collect();
+    let mut acc = vec![0.0f32];
+    for w in pts.windows(2) {
+        acc.push(acc.last().unwrap() + w[0].minus(w[1]).length());
+    }
+    let total = acc[N];
+    // 弧长 s → 曲线上的点：定位所在采样格，格内按剩余比例线性插值。
+    let point_at = |s: f32| -> Point {
+        let i = acc.partition_point(|&x| x < s).max(1) - 1;
+        let span = acc[i + 1] - acc[i];
+        let f = if span > 0.0 { (s - acc[i]) / span } else { 0.0 };
+        pts[i].plus(pts[i + 1].minus(pts[i]).scale(f))
+    };
+    let mut segs = Vec::new();
+    let mut d = 0.0;
+    while d < total {
+        let end = (d + DASH).min(total);
+        if end - d > 1.0 {
+            segs.push([point_at(d), point_at(end)]);
+        }
+        d += DASH + GAP;
+    }
+    segs
+}
+
 /// 两个应用之间的弧线：弯向远离中心的一侧，免得穿过虎头和内圈的分组。
-fn curved(kind: LinkKind, color: &'static str, a: Point, b: Point, center: Point, bulge: f32, arrow: bool) -> Link {
+fn curved(
+    kind: LinkKind,
+    color: &'static str,
+    a: Point,
+    b: Point,
+    center: Point,
+    bulge: f32,
+    arrow: bool,
+    ends: (usize, usize),
+) -> Link {
     let from = clip_to_tile(a, b, TILE_PAD);
     let to = clip_to_tile(b, a, TILE_PAD + if arrow { 4.0 } else { 0.0 });
     let mid = from.plus(to).scale(0.5);
@@ -788,7 +875,8 @@ fn curved(kind: LinkKind, color: &'static str, a: Point, b: Point, center: Point
         let base = to.minus(direction.scale(8.0));
         [tip, base.plus(normal.scale(6.0)), base.minus(normal.scale(6.0))]
     });
-    Link { kind, color, from, c1, c2, to, arrow }
+    let dashes = dash_segments(from, c1, c2, to);
+    Link { kind, color, from, c1, c2, to, arrow, ends, dashes }
 }
 
 #[cfg(test)]

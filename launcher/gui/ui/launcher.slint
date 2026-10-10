@@ -19,11 +19,22 @@ export struct GroupSpec {
     w: float,
 }
 
+/// 虚线的一小段：两端点，画布坐标。Path 不支持虚线描边，dash 在布局里切好。
+export struct DashSeg {
+    x0: float, y0: float,
+    x1: float, y1: float,
+}
+
 /// 一条连线：三次贝塞尔（起点、两个控制点、终点）。kind：1 领域→应用，
 /// 2 演进（带箭头），3 相关，4 挂靠，5 引用挂靠（ADR 0116）。颜色连透明度一起由 Rust 按 kind 算好。
+/// 默认只画 segs 里的虚线段；悬停的图块是 a/b 两端之一时整条亮成实线（hot 色）。
 export struct MapLink {
     kind: int,
     color: color,
+    hot: color,
+    a: int,
+    b: int,
+    segs: [DashSeg],
     x0: float, y0: float,
     cx1: float, cy1: float,
     cx2: float, cy2: float,
@@ -54,6 +65,8 @@ component Tile inherits Rectangle {
     in property <AppEntry> entry;
     callback open();
     callback stop();
+    /// 悬停状态变化往外报（思维导图用来点亮这个节点的关系线）。
+    callback hover-changed(bool);
 
     width: 116px;
     height: 124px;
@@ -140,6 +153,7 @@ component Tile inherits Rectangle {
 
     touch := TouchArea {
         clicked => { root.open(); }
+        changed has-hover => { root.hover-changed(touch.has-hover); }
     }
 
     // 悬停时右上角出现停止按钮，只对正在运行的显示。
@@ -226,6 +240,9 @@ component MindMap inherits ScrollView {
     in property <float> map-height;
     in property <float> center-x;
     in property <float> center-y;
+    // 悬停中的图块下标；-1 是没有。相关的关系线亮成实线，其余保持虚线退后。
+    // 纯界面状态：Tile 的悬停回调写、连线渲染读，Rust 不参与。
+    in-out property <int> hovered-node: -1;
     callback open(string);
     callback stop(string);
 
@@ -248,11 +265,18 @@ component MindMap inherits ScrollView {
         height: root.rings-h * 1px;
     }
 
+    // 连线双形态：默认只画 segs 里的虚线段（弱化的关系纹理）；悬停的图块是这条线
+    // 两端之一时，虚线隐去、实线贝塞尔用 hot 色亮出。没有悬停时全体虚线满透明度。
     for link in root.map-links: Rectangle {
         x: 0; y: 0;
         width: root.canvas-w;
         height: root.canvas-h;
-        Path {
+        property <bool> active: root.hovered-node >= 0
+            && (link.a == root.hovered-node || link.b == root.hovered-node);
+        // 虚线：默认形态。有悬停时非相关线再退半档，把视线让给实线。
+        for seg[index] in link.segs: Path {
+            visible: !parent.active;
+            opacity: root.hovered-node >= 0 && !parent.active ? 0.45 : 1.0;
             x: 0; y: 0;
             width: parent.width;
             height: parent.height;
@@ -261,7 +285,24 @@ component MindMap inherits ScrollView {
             viewbox-width: parent.width / 1px;
             viewbox-height: parent.height / 1px;
             stroke: link.color;
-            stroke-width: link.kind == 2 ? 2.2px : link.kind == 3 ? 1.6px : 1.6px;
+            stroke-width: 1.4px;
+            animate opacity { duration: 120ms; }
+
+            MoveTo { x: root.ox / 1px + seg.x0; y: root.oy / 1px + seg.y0; }
+            LineTo { x: root.ox / 1px + seg.x1; y: root.oy / 1px + seg.y1; }
+        }
+        // 实线贝塞尔：该线被点亮时的形态。
+        Path {
+            visible: parent.active;
+            x: 0; y: 0;
+            width: parent.width;
+            height: parent.height;
+            viewbox-x: 0;
+            viewbox-y: 0;
+            viewbox-width: parent.width / 1px;
+            viewbox-height: parent.height / 1px;
+            stroke: link.hot;
+            stroke-width: link.kind == 2 ? 2.4px : 1.8px;
 
             MoveTo { x: root.ox / 1px + link.x0; y: root.oy / 1px + link.y0; }
             CubicTo {
@@ -281,7 +322,7 @@ component MindMap inherits ScrollView {
             viewbox-y: 0;
             viewbox-width: parent.width / 1px;
             viewbox-height: parent.height / 1px;
-            fill: link.color;
+            fill: parent.active ? link.hot : link.color;
 
             MoveTo { x: root.ox / 1px + link.ax; y: root.oy / 1px + link.ay; }
             LineTo { x: root.ox / 1px + link.bx; y: root.oy / 1px + link.by; }
@@ -313,6 +354,8 @@ component MindMap inherits ScrollView {
         entry: entry;
         open => { root.open(entry.id); }
         stop => { root.stop(entry.id); }
+        // 图块下标即节点下标（entries 与 nodes 同序）；悬停点亮它参与的关系线。
+        hover-changed(h) => { root.hovered-node = h ? index : -1; }
     }
 }
 

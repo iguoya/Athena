@@ -585,9 +585,19 @@ fn map_link(link: &mindmap::Link) -> MapLink {
     };
     let base = parse_color(link.color, "思维导图");
     let [a, b, c] = link.arrow.unwrap_or([link.to; 3]);
+    let segs: Vec<DashSeg> = link
+        .dashes
+        .iter()
+        .map(|[p, q]| DashSeg { x0: p.x, y0: p.y, x1: q.x, y1: q.y })
+        .collect();
     MapLink {
         kind,
+        // 虚线用弱化色；悬停点亮时同色系提满。
         color: Color::from_argb_u8(alpha, base.red(), base.green(), base.blue()),
+        hot: Color::from_argb_u8(0xf0, base.red(), base.green(), base.blue()),
+        a: link.ends.0 as i32,
+        b: link.ends.1 as i32,
+        segs: ModelRc::from(Rc::new(VecModel::from(segs))),
         x0: link.from.x,
         y0: link.from.y,
         cx1: link.c1.x,
