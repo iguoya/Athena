@@ -531,22 +531,6 @@ jobs:
             os: ubuntu-26.04
             platform: linux-x86_64
             bundles: deb
-          - app: english
-            os: windows-latest
-            platform: windows-x64
-            bundles: nsis
-          - app: english
-            os: macos-15
-            platform: macos-arm64
-            bundles: app,dmg
-          - app: english
-            os: macos-15-intel
-            platform: macos-x86_64
-            bundles: app,dmg
-          - app: english
-            os: ubuntu-26.04
-            platform: linux-x86_64
-            bundles: deb
           - app: math-tools
             os: windows-latest
             platform: windows-x64
@@ -705,7 +689,6 @@ jobs:
             athena-cpp-*-windows-x64.zip athena-cpp-*-windows-x64.msi
             athena-driver-*.zip athena-driver-*.dmg athena-driver-*.tar.gz
             athena-polaris-* athena-polaris_*
-            athena-english-* athena-english_*
             athena-math-tools-* athena-math-tools_*
             athena-ascent*)
           sha256sum "${files[@]}" > SHA256SUMS.txt
@@ -744,7 +727,6 @@ jobs:
             dist/athena-cpp-*-windows-x64.zip dist/athena-cpp-*-windows-x64.msi
             dist/athena-driver-*.zip dist/athena-driver-*.dmg dist/athena-driver-*.tar.gz
             dist/athena-polaris-* dist/athena-polaris_*
-            dist/athena-english-* dist/athena-english_*
             dist/athena-math-tools-* dist/athena-math-tools_*
             dist/athena-ascent*
             dist/SHA256SUMS.txt)

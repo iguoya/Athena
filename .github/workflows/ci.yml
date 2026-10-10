@@ -17,7 +17,7 @@ on:
         description: 只跑哪个应用（all 为全量，sources 只跑跨应用检查）
         type: choice
         default: all
-        options: [all, sources, cpp, pocket_cube, machine, polaris, dsa, english, mathematics, ascent, math-tools, gtkmm, driver, softcert, nas_admin, launcher, c-gui-lab]
+        options: [all, sources, cpp, pocket_cube, machine, polaris, dsa, mathematics, ascent, math-tools, gtkmm, driver, softcert, nas_admin, launcher, c-gui-lab]
 
 permissions:
   contents: read
@@ -269,13 +269,13 @@ jobs:
   # 工具链，交给下面的 gtkmm-native，这里跳过。
   tauri:
     name: ${{ matrix.app }}（${{ matrix.os }}）
-    if: contains(fromJSON('["all","polaris","dsa","english","mathematics","ascent","math-tools","gtkmm","softcert"]'), inputs.app || 'all')
+    if: contains(fromJSON('["all","polaris","dsa","mathematics","ascent","math-tools","gtkmm","softcert"]'), inputs.app || 'all')
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
-        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["polaris","dsa","english","mathematics","ascent","math-tools","gtkmm","softcert"]' || format('["{0}"]', inputs.app)) }}
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["polaris","dsa","mathematics","ascent","math-tools","gtkmm","softcert"]' || format('["{0}"]', inputs.app)) }}
         os: [macos-15, windows-latest, ubuntu-26.04]
     # Linux 降级：回归了报出来，但不阻塞整体结论（ADR 0051）
     continue-on-error: ${{ matrix.os == 'ubuntu-26.04' }}
