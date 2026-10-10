@@ -58,7 +58,8 @@ pub fn orbit_layout(group_sizes: &[usize]) -> OrbitLayout {
         let a = A0 + g as f32 * A_STEP;
         let b = a * (1.0 - ECC * ECC).sqrt();
         let c = a * ECC;
-        let tilt = if g % 2 == 0 { TILT } else { -TILT } + g as f32 * 0.012;
+        // 所有轨道统一倾角：全部共面，合并为同一个轨道面（黄道面）。
+        let tilt = TILT;
         let spec = OrbitSpec { a, b, c, tilt };
         let count = count.max(1);
         let start = g as f32 * GOLDEN;
