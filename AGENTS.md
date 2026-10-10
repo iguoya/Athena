@@ -30,9 +30,11 @@
 
 ```
 subjects/<id>/  课程学科：cpp machine data-structures algorithms linux organization english
-                mathematics driver gtkmm ascent cs408（学习应用；cs408 是 408 考试主应用，ADR 0116）
+                mathematics driver gtkmm ascent cs408（学习应用；cs408 是 408 考试主应用，
+                五门科目课本体挂它底下，ADR 0116、0118）
                 software、embedded（软考两应用，各为一级大类，ADR 0102），底下挂实践子课程
-                database design-patterns os network firmware microcontroller rtos（ADR 0103、0106）
+                database design-patterns firmware microcontroller rtos（ADR 0103、0106；
+                os、network 兼作软设承接章，本体归 cs408，ADR 0118）
                 polaris、math-tools、competitions（图谱/参考类，math-tools 是数学学习的配套工具，
                 ADR 0084；competitions 是「大赛」圈的赛历，ADR 0114）
 practice/<id>/  项目应用：pocket_cube nas_admin c-gui-lab（ADR 0060）
