@@ -1,0 +1,24 @@
+{
+  "id": "machine-learning",
+  "title": "机器学习基础",
+  "group": "人工智能",
+  "description": "经典机器学习的直觉与实战：回归/分类/聚类、交叉验证、特征工程、sklearn 实战——建立「从数据学规律」的直觉，人工智能路线原理线第一步（ADR 0120）。可单独使用。",
+  "icon": {
+    "type": "theme",
+    "name": "invest-applet-symbolic",
+    "symbol": "chart.xyaxis.line",
+    "letter": "ML",
+    "accent": "#0F766E",
+    "renders": {}
+  },
+  "dev": {
+    "env": { "ATHENA_MACHINE_LEARNING_ROOT": "${dir}" },
+    "prepare": [
+      { "when_missing": "node_modules", "run": ["npm", "install"], "label": "安装前端依赖" }
+    ],
+    "run": ["npm", "run", "tauri:dev"],
+    "ready": { "http": "http://localhost:1506" },
+    "match": "src-tauri/target",
+    "binary": "athena-machine-learning"
+  }
+}

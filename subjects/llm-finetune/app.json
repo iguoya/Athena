@@ -1,0 +1,24 @@
+{
+  "id": "llm-finetune",
+  "title": "大模型微调与部署",
+  "group": "人工智能",
+  "description": "数据准备、LoRA/QLoRA 微调、量化、ollama/vLLM 本地推理、GPU 基础与服务化——打开模型这个盒子（ADR 0120）。可单独使用。",
+  "icon": {
+    "type": "theme",
+    "name": "preferences-system-symbolic",
+    "symbol": "slider.horizontal.3",
+    "letter": "FT",
+    "accent": "#BE185D",
+    "renders": {}
+  },
+  "dev": {
+    "env": { "ATHENA_LLM_FINETUNE_ROOT": "${dir}" },
+    "prepare": [
+      { "when_missing": "node_modules", "run": ["npm", "install"], "label": "安装前端依赖" }
+    ],
+    "run": ["npm", "run", "tauri:dev"],
+    "ready": { "http": "http://localhost:1509" },
+    "match": "src-tauri/target",
+    "binary": "athena-llm-finetune"
+  }
+}

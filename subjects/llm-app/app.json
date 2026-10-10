@@ -1,0 +1,24 @@
+{
+  "id": "llm-app",
+  "title": "大模型应用开发",
+  "group": "人工智能",
+  "description": "提示工程与上下文工程、结构化输出、RAG、Agent 与工具调用、评估与成本——实践应用的主场：做出能跑的大模型应用（ADR 0120）。可单独使用。",
+  "icon": {
+    "type": "theme",
+    "name": "text-speech-symbolic",
+    "symbol": "sparkles",
+    "letter": "LLM",
+    "accent": "#B45309",
+    "renders": {}
+  },
+  "dev": {
+    "env": { "ATHENA_LLM_APP_ROOT": "${dir}" },
+    "prepare": [
+      { "when_missing": "node_modules", "run": ["npm", "install"], "label": "安装前端依赖" }
+    ],
+    "run": ["npm", "run", "tauri:dev"],
+    "ready": { "http": "http://localhost:1508" },
+    "match": "src-tauri/target",
+    "binary": "athena-llm-app"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "deep-learning",
+  "title": "深度学习与 PyTorch",
+  "group": "人工智能",
+  "description": "张量与自动微分、训练循环、CNN/RNN、Transformer 与预训练-微调范式，PyTorch 实战——大模型的底层地基（ADR 0120）。可单独使用。",
+  "icon": {
+    "type": "theme",
+    "name": "applications-engineering-symbolic",
+    "symbol": "brain",
+    "letter": "DL",
+    "accent": "#7C3AED",
+    "renders": {}
+  },
+  "dev": {
+    "env": { "ATHENA_DEEP_LEARNING_ROOT": "${dir}" },
+    "prepare": [
+      { "when_missing": "node_modules", "run": ["npm", "install"], "label": "安装前端依赖" }
+    ],
+    "run": ["npm", "run", "tauri:dev"],
+    "ready": { "http": "http://localhost:1507" },
+    "match": "src-tauri/target",
+    "binary": "athena-deep-learning"
+  }
+}

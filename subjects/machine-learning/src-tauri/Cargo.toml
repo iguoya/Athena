@@ -1,0 +1,31 @@
+[package]
+name = "athena-machine-learning"
+version = "0.1.0"
+description = "Athena 机器学习基础 独立学习应用"
+authors = ["Athena"]
+edition = "2021"
+
+[lib]
+name = "athena_machine_learning_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+dirs-next = "2"
+
+[profile.dev]
+# 少带调试信息，链接明显快一截；断到行号仍够用
+debug = 1
+incremental = true
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true
