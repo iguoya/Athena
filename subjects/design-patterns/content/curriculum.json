@@ -8173,6 +8173,154 @@
               }
             }
           ]
+        },
+        {
+          "id": "dp.cp.task-queue",
+          "title": "任务队列：固定的工作线程",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "strategy",
+          "requires": [
+            "dp.cp.wait-condition",
+            "dp.cp.future"
+          ],
+          "track": "concurrency",
+          "guide_line": "每个任务起一个线程，任务一多线程就用光；该预先建好几个，任务排队等着取。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能把“每任务一线程”改成“固定数量的工作线程 + 任务队列”，并设计好收工时的关闭约定。",
+            "pain": "100 个小任务创建 100 个线程；线程的创建和销毁都很贵，任务量上去后还可能耗尽系统线程。",
+            "model": "生产者把任务放进队列，固定数量的工作线程循环取任务执行（生产者–消费者）。队列有“关闭”状态：关闭后不再接新任务，工作线程把队列里剩下的做完再退出。",
+            "scope": "这里只讲最小结构，用 std::thread 手写以讲清楚各部分的职责；任务个数不多、各自耗时很长时，直接 std::async 往往更合适（CP.4、CP.61）。",
+            "judgment": "代码里出现“循环里 new thread / emplace_back(std::thread)”，每个小任务都对应一个线程。",
+            "landing": "能写出带关闭语义的任务队列，让固定数量的工作线程消费全部任务，结果确定。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "要处理 10 万条消息，每条消息处理很快。现在的写法是每条消息起一个 std::thread。更好的组织方式是？",
+                "options": [
+                  {
+                    "label": "预先创建固定数量的工作线程，消息作为任务放进队列，工作线程循环取",
+                    "ok": true,
+                    "why": "线程的创建销毁成本被分摊，线程数可控"
+                  },
+                  {
+                    "label": "每条消息 std::thread 之后立刻 detach",
+                    "ok": false,
+                    "why": "线程仍然创建了 10 万次，还失去了对它们的监控"
+                  },
+                  {
+                    "label": "把消息处理全放进 main 线程里串行执行",
+                    "ok": false,
+                    "why": "放弃并发，不是组织问题的答案"
+                  },
+                  {
+                    "label": "给线程起更短的名字",
+                    "ok": false,
+                    "why": "与问题无关"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "**线程的创建很贵**。C++ Core Guidelines **CP.41**「尽量少创建和销毁线程」的原文示例，正是“为每条消息开一个线程”，并建议改用**一组预先创建好的工作线程来处理消息**。**CP.4**「要从任务而不是线程的角度思考」说的也是同一个方向：线程是实现层面的概念，任务才是应用层面的概念，应当尽量提高抽象层次。把两者结合起来，就是经典的**生产者–消费者**结构：生产者把“任务”放进一个队列，固定数量的工作线程是消费者，反复从队列里取任务来执行。队列要做对三件事：互斥地访问数据（CP.20，见情境篇四首节）、没有任务时**带条件地**等待（CP.42，见「等待没有条件」一节），以及最后——**怎么收工**。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：每个任务一个线程",
+                  "code": "std::vector<std::thread> threads;\nfor (int i = 1; i <= 100; ++i)\n  threads.emplace_back(work, i);   // 100 个线程\nfor (auto& t : threads) t.join();"
+                },
+                "after": {
+                  "title": "改造后：4 个工作线程 + 任务队列",
+                  "code": "TaskQueue q;\nstd::vector<std::thread> workers;\nfor (int w = 0; w < 4; ++w)\n  workers.emplace_back([&q] {\n    std::function<void()> t;\n    while (q.pop(t)) t();          // 取不到且已关闭才退出\n  });\nfor (int i = 1; i <= 100; ++i) q.push([i] { work(i); });\nq.close();                         // 不再有新任务\nfor (auto& w : workers) w.join();"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "写任务队列：互斥量 + 条件变量 + 队列 + 一个“已关闭”标志。",
+                  "pop() 在锁里用带谓词的 wait 等待“队列非空，或者已关闭”（谓词里必须包含“已关闭”，否则关闭时空着的队列会让工作线程永远睡下去）。",
+                  "pop() 的返回约定：队列空且已关闭时返回 false（工作线程据此退出），否则取出队首返回 true——所以关闭之前放进去的任务一个都不会丢。",
+                  "close() 在锁里置标志，然后 notify_all()，叫醒所有还在等的工作线程。",
+                  "创建固定数量的工作线程，每个都是 `while (q.pop(t)) t();`；生产者放完任务后 close()，最后 join 所有工作线程（线程不要 detach，CP.26）。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "队列默认是无界的：生产者比消费者快时，任务会一直堆积，吃光内存。解决办法是给队列加容量上限，满了就让生产者等一等（这是本课补充的常见做法，Core Guidelines 没有专门条目）。任务里抛出的异常不会自动传回提交者，要在任务内部或工作线程循环里处理；想拿到返回值或异常，用 std::future / std::packaged_task（见「用共享变量传结果」一节）。线程数通常按任务性质选：计算密集的任务不宜远多于核数，等待 I/O 的任务可以更多——没有放之四海皆准的数字。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "放进队列的“任务”其实就是命令对象（命令模式），队列让提交者和执行者解耦；对比发送者与接收者的几种连接方式，见模式工具箱「职责链」一节的对比表。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "任务队列的 pop() 在等待时，谓词为什么必须同时包含“已关闭”？",
+                    "choices": [
+                      {
+                        "label": "否则关闭队列时，空队列上睡着的工作线程永远等不到唤醒条件而无法退出",
+                        "ok": true,
+                        "why": "谓词是“有任务或已关闭”，close() 之后 wait 才会返回"
+                      },
+                      {
+                        "label": "因为谓词越长性能越好",
+                        "ok": false,
+                        "why": "与性能无关"
+                      },
+                      {
+                        "label": "因为 wait 必须带两个条件才能编译",
+                        "ok": false,
+                        "why": "语法没有这个要求"
+                      },
+                      {
+                        "label": "因为已关闭的队列不能再 push",
+                        "ok": false,
+                        "why": "那是关闭的语义，不是谓词的原因"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.cp.task-queue",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "条目 CP.4、CP.41（原文示例与“预先创建的工作线程”建议）、CP.42、CP.26：C++ Core Guidelines（isocpp.github.io/CppCoreGuidelines，已对照原文）「CP: Concurrency and parallelism」一节。关闭语义与有界队列为本课补充。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.cp.task-queue.run",
+              "title": "4 个工作线程消费 100 个任务",
+              "case": "cp_pool_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "现在创建了多少个线程？改成队列后线程数是多少，结果会因调度而变吗？",
+              "goal": "补完 TaskQueue 的 close() 与 pop()（带谓词的 wait，空且已关闭返回 false）；解开 main 里的 TODO(实验) 块，换掉每任务一线程的旧循环。",
+              "pass": {
+                "includes": [
+                  "workers=4",
+                  "tasks=100",
+                  "total=5050"
+                ]
+              }
+            }
+          ]
         }
       ],
       "checkpoint": {
@@ -8273,6 +8421,38 @@
               "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
             },
             "covers": "dp.cp.future"
+          },
+          {
+            "stem": "C++ Core Guidelines CP.41 对“每条消息创建一个线程”的建议是？",
+            "covers": "dp.cp.task-queue",
+            "choices": [
+              {
+                "label": "改用一组预先创建好的工作线程来处理消息",
+                "ok": true,
+                "why": "线程创建销毁很贵"
+              },
+              {
+                "label": "每个线程创建后立刻 detach",
+                "ok": false,
+                "why": "没有减少创建次数，还失去监控"
+              },
+              {
+                "label": "增加互斥量保护线程创建",
+                "ok": false,
+                "why": "与问题无关"
+              },
+              {
+                "label": "改用全局变量传递消息",
+                "ok": false,
+                "why": "引入共享可变数据"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.cp.task-queue",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
           },
           {
             "stem": "两个线程分别以「A 后 B」和「B 后 A」的顺序获取两把锁，可能发生？",
@@ -8433,6 +8613,38 @@
               "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
             },
             "covers": "dp.cp.multiple-locks"
+          },
+          {
+            "stem": "任务队列关闭（close）之后，队列里还没处理的任务应该？",
+            "covers": "dp.cp.task-queue",
+            "choices": [
+              {
+                "label": "由工作线程做完，pop 在“空且已关闭”时才返回 false",
+                "ok": true,
+                "why": "关闭前放入的任务不丢"
+              },
+              {
+                "label": "全部丢弃",
+                "ok": false,
+                "why": "会丢失已提交的任务"
+              },
+              {
+                "label": "留给下一次启动再处理",
+                "ok": false,
+                "why": "不是线程队列的约定"
+              },
+              {
+                "label": "让 close() 直接终止线程",
+                "ok": false,
+                "why": "强行终止线程不安全"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.cp.task-queue",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
           }
         ]
       }
