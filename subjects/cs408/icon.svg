@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  cs408（408 计算机学科专业基础）的应用图标：四格拼成一张卷子——数据结构（树）、组成原理
+  （芯片）、操作系统（窗口）、计算机网络（三节点互连），对应 408 的四门课。本应用自绘，
+  无第三方素材。改完跑 `launcher icons` 重新生成 icon.renders 声明的位图（ADR 0065）。
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1E3A8A"/>
+      <stop offset="0.55" stop-color="#1D4ED8"/>
+      <stop offset="1" stop-color="#3B82F6"/>
+    </linearGradient>
+  </defs>
+  <rect x="32" y="32" width="448" height="448" rx="104" fill="url(#bg)"/>
+  <!-- 四格 -->
+  <rect x="96" y="96" width="148" height="148" rx="28" fill="#FFFFFF"/>
+  <rect x="268" y="96" width="148" height="148" rx="28" fill="#FFFFFF"/>
+  <rect x="96" y="268" width="148" height="148" rx="28" fill="#FFFFFF"/>
+  <rect x="268" y="268" width="148" height="148" rx="28" fill="#FFFFFF"/>
+  <!-- 数据结构：一棵小树 -->
+  <g stroke="#0F766E" stroke-width="9" stroke-linecap="round">
+    <line x1="170" y1="138" x2="136" y2="200"/>
+    <line x1="170" y1="138" x2="204" y2="200"/>
+  </g>
+  <g fill="#0F766E">
+    <circle cx="170" cy="136" r="17"/>
+    <circle cx="136" cy="204" r="17"/>
+    <circle cx="204" cy="204" r="17"/>
+  </g>
+  <!-- 组成原理：芯片 -->
+  <g stroke="#B45309" stroke-width="9" stroke-linecap="round">
+    <line x1="322" y1="124" x2="322" y2="140"/>
+    <line x1="362" y1="124" x2="362" y2="140"/>
+    <line x1="322" y1="200" x2="322" y2="216"/>
+    <line x1="362" y1="200" x2="362" y2="216"/>
+    <line x1="296" y1="150" x2="312" y2="150"/>
+    <line x1="296" y1="190" x2="312" y2="190"/>
+    <line x1="372" y1="150" x2="388" y2="150"/>
+    <line x1="372" y1="190" x2="388" y2="190"/>
+  </g>
+  <rect x="312" y="140" width="60" height="60" rx="10" fill="#B45309"/>
+  <!-- 操作系统：窗口 -->
+  <rect x="122" y="306" width="96" height="76" rx="10" fill="none" stroke="#7C3AED" stroke-width="9"/>
+  <line x1="122" y1="330" x2="218" y2="330" stroke="#7C3AED" stroke-width="9"/>
+  <!-- 计算机网络：三节点互连 -->
+  <g stroke="#BE185D" stroke-width="8">
+    <line x1="342" y1="306" x2="300" y2="378"/>
+    <line x1="342" y1="306" x2="384" y2="378"/>
+    <line x1="300" y1="378" x2="384" y2="378"/>
+  </g>
+  <g fill="#BE185D">
+    <circle cx="342" cy="306" r="16"/>
+    <circle cx="300" cy="378" r="16"/>
+    <circle cx="384" cy="378" r="16"/>
+  </g>
+</svg>

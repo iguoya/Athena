@@ -1,0 +1,57 @@
+{
+ "id": "cs408",
+ "title": "408 计算机学科专业基础",
+ "group": "考研",
+ "description": "考研 408 计算机学科专业基础综合的考试主应用：考试结构与分值、真题组卷与整卷模拟；数据结构、算法设计、组成原理、操作系统、计算机网络五门课以挂靠与引用挂在本应用下（ADR 0116）。可单独使用。",
+ "icon": {
+  "type": "theme",
+  "name": "school-symbolic",
+  "symbol": "graduationcap",
+  "letter": "4",
+  "accent": "#1D4ED8",
+  "file": "icon.svg",
+  "renders": {
+   "src-tauri/icons/32x32.png": 32,
+   "src-tauri/icons/128x128.png": 128,
+   "src-tauri/icons/128x128@2x.png": 256,
+   "src-tauri/icons/icon.png": 512,
+   "src-tauri/icons/icon.ico": "ico",
+   "src-tauri/icons/icon.icns": "icns",
+   "src-tauri/icons/StoreLogo.png": 50,
+   "src-tauri/icons/Square30x30Logo.png": 30,
+   "src-tauri/icons/Square44x44Logo.png": 44,
+   "src-tauri/icons/Square71x71Logo.png": 71,
+   "src-tauri/icons/Square89x89Logo.png": 89,
+   "src-tauri/icons/Square107x107Logo.png": 107,
+   "src-tauri/icons/Square142x142Logo.png": 142,
+   "src-tauri/icons/Square150x150Logo.png": 150,
+   "src-tauri/icons/Square284x284Logo.png": 284,
+   "src-tauri/icons/Square310x310Logo.png": 310
+  }
+ },
+ "dev": {
+  "env": {
+   "ATHENA_CS408_ROOT": "${dir}"
+  },
+  "prepare": [
+   {
+    "when_missing": "node_modules",
+    "run": [
+     "npm",
+     "install"
+    ],
+    "label": "安装前端依赖"
+   }
+  ],
+  "run": [
+   "npm",
+   "run",
+   "tauri:dev"
+  ],
+  "ready": {
+   "http": "http://localhost:1503"
+  },
+  "match": "src-tauri/target",
+  "binary": "athena-cs408"
+ }
+}
