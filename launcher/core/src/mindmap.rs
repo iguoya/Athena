@@ -746,7 +746,9 @@ pub struct RingsBitmap {
 /// femtovg 都能复现）重画脏区会把里面的 Path 填充按高不透明度画上，错一次留
 /// 一块，鼠标划几下画布就叠成实色。环是静态装饰，布局变化时在这里用 resvg
 /// 渲一次，重绘合成里就不再有矢量填充可错。
-pub fn rings_bitmap(map: &MindMap, scale: f32) -> RingsBitmap {
+/// 把同心环渲染成 PNG 字节前先出一帧位图：几何与渲染的唯一实现，
+/// `rings_bitmap`（直通 RGBA）与 `rings_png`（PNG 字节）都从这里走。
+fn rings_pixmap(map: &MindMap, scale: f32) -> (resvg::tiny_skia::Pixmap, f32, f32, f32, f32) {
     let max_a = map.rings.iter().map(|r| r.0).fold(0.0_f32, f32::max);
     let max_b = map.rings.iter().map(|r| r.1).fold(0.0_f32, f32::max);
     // SVG 画布以 center 为对称中心，容下最大环加 1px 描边；可能比内容包围盒大，
@@ -769,6 +771,36 @@ pub fn rings_bitmap(map: &MindMap, scale: f32) -> RingsBitmap {
     let ph = ((h * scale).round() as u32).max(1);
     let mut pixmap = resvg::tiny_skia::Pixmap::new(pw, ph).expect("同心环位图分配失败");
     resvg::render(&tree, resvg::tiny_skia::Transform::from_scale(scale, scale), &mut pixmap.as_mut());
+    (pixmap, map.center.x - half_w, map.center.y - half_h, w, h)
+}
+
+/// 同心环位图的 PNG 与摆放信息（Web 前端走 data URL，直接要字节）。
+pub struct RingsPng {
+    pub png: Vec<u8>,
+    /// 位图原点相对画布原点的偏移与逻辑尺寸（同 RingsBitmap）。
+    pub x: f32,
+    pub y: f32,
+    pub width: f32,
+    pub height: f32,
+}
+
+/// 同心环位图的 PNG 编码。
+pub fn rings_png(map: &MindMap, scale: f32) -> RingsPng {
+    let (pixmap, x, y, w, h) = rings_pixmap(map, scale);
+    let png = pixmap.encode_png().expect("同心环 PNG 编码失败");
+    RingsPng { png, x, y, width: w, height: h }
+}
+
+/// 把同心环画成一张静态位图，界面拿 Image 铺底。
+///
+/// 不用 Slint 的 Path 逐环填充：图块悬停触发局部重绘时，1.17 的渲染器（软件与
+/// femtovg 都能复现）重画脏区会把里面的 Path 填充按高不透明度画上，错一次留
+/// 一块，鼠标划几下画布就叠成实色。环是静态装饰，布局变化时在这里用 resvg
+/// 渲一次，重绘合成里就不再有矢量填充可错。
+pub fn rings_bitmap(map: &MindMap, scale: f32) -> RingsBitmap {
+    let (pixmap, x, y, w, h) = rings_pixmap(map, scale);
+    let pw = pixmap.width();
+    let ph = pixmap.height();
     // tiny-skia 是预乘 alpha；界面要直通 RGBA（与 icons 的 straight_rgba 同一转换）。
     let mut data = pixmap.take();
     for pixel in data.chunks_exact_mut(4) {
@@ -782,8 +814,8 @@ pub fn rings_bitmap(map: &MindMap, scale: f32) -> RingsBitmap {
     }
     RingsBitmap {
         rgba: data,
-        x: map.center.x - half_w,
-        y: map.center.y - half_h,
+        x,
+        y,
         width: w,
         height: h,
         pixels_w: pw,
