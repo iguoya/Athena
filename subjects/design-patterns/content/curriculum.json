@@ -2,7 +2,7 @@
   "id": "design-patterns",
   "title": "设计模式",
   "tagline": "从 UML 与七大原则到 23 个模式：每个模式都画出标准类图、跑起 C++ 实验",
-  "description": "软设第 7 章（面向对象·设计模式）：UML 读图、七大原则、GoF 模式逐个真跑，再走出面向对象看 C 内核与函数式世界的模式。",
+  "description": "设计模式与程序代码组织：UML 读图、七大原则、23 个 GoF 模式逐个画类图、跑 C++ 实验；讲解取材 GoF 原著与软设教程 §7.3。软考作为专题（真题原题），延伸篇走出面向对象看 C 内核与现代工程。",
   "spine": [
     "识图 —— 类框三格与六种关系线",
     "守则 —— 七大原则是所有模式的内功",
@@ -70,7 +70,7 @@
             "promise": "能独立读懂并画出模式类图：类框三格、可见性记号、六种关系线。",
             "pain": "把泛化和实现混为一谈；分不清聚合和组合；看见菱形就慌。",
             "model": "类框=名字+属性+方法三格；可见性 + 公有 / - 私有 / # 保护；六种关系=泛化、实现、组合、聚合、关联、依赖。",
-            "scope": "本课范围：类图（软考下午题的载体）。用例图、顺序图在第 7 章理论侧另学。",
+            "scope": "本课范围：类图——所有模式的载体。用例图、顺序图不在本课范围。",
             "judgment": "先看线型（实/虚）再看箭头端（三角/菱形/开箭头），最后看标注重义。",
             "landing": "给出任意模式类图，能说出类与关系的名字和含义。"
           },
@@ -162,7 +162,7 @@
               },
               {
                 "type": "compare",
-                "title": "聚合 vs 组合（软考最爱混的一对）",
+                "title": "聚合 vs 组合（最容易混的一对）",
                 "left": {
                   "title": "聚合：空心菱形",
                   "body": "「班级◇—学生」：班级散了，学生还活着。整体消失，部分独立存在，生命周期不同步。"
@@ -194,7 +194,13 @@
                         "ok": false,
                         "why": "依赖是临时使用（虚线开箭头），这里是长期持有集合——关联强度更高"
                       }
-                    ]
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.uml.class",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
                   }
                 ]
               }
@@ -215,9 +221,9 @@
           "weight": "重点",
           "outline": {
             "promise": "拿到陌生类图，三步内锁定候选模式：数抽象层、看创建线、看通信线。",
-            "pain": "23 个模式类图背不完；考试给一张陌生图就懵。",
+            "pain": "23 个模式类图背不完；拿到一张陌生的类图就懵。",
             "model": "第一步看抽象层（接口/抽象类与实现数量）；第二步看创建线（谁造谁）；第三步看协作（组装=结构型、通信=行为型）。",
-            "scope": "软考下午题两类：给类图填类名/方法名；给场景选模式。",
+            "scope": "两类常见任务：给类图认出模式、补出类名与方法名；给场景选模式。",
             "judgment": "创建型看「造」，结构型看「装」，行为型看「传」。",
             "landing": "给一份陌生类图，能说出候选模式与理由。"
           },
@@ -264,249 +270,6 @@
               }
             ]
           }
-        },
-        {
-          "id": "dp.criticism",
-          "title": "模式的现状：批判、实证与 2026 视角",
-          "difficulty": 2,
-          "mastery_goal": "master",
-          "knowledge_type": "strategy",
-          "requires": [
-            "dp.uml.class"
-          ],
-          "track": "uml",
-          "guide_line": "把模式当圣经是最大的误区——用实证研究看清它真正的位置。",
-          "weight": "重点",
-          "outline": {
-            "promise": "用三条实证研究（Norvig/AOP/组件化）与社区反思，建立对设计模式的清醒认知。",
-            "pain": "把 23 个模式当背诵任务；到处套模式造成过度设计；不知道哪些已被语言吸收。",
-            "model": "模式=反复出现问题的命名解法，也是语言缺陷的补丁；语言进化，补丁被吸收。",
-            "scope": "Norvig 16/23、AspectJ 17/23、组件化 2/3 三条实证；refactoring.guru 批判栏目；2026 的五档现代视角。",
-            "judgment": "用模式前先问：语言/标准库是不是已经有了解法？",
-            "landing": "能向别人解释「为什么说一半的模式是语言缺陷的补丁」并给出实证。"
-          },
-          "lesson": {
-            "blocks": [
-              {
-                "type": "lead",
-                "text": "判定一个模式的必要性与前景，不看小众语言，看工业界每天都在用的 C、C++、Python、Rust。规律非常清楚：**语言越「穷」模式越必要，语言越「富」模式越隐形**——C 里几乎所有模式都要郑重其事地手写，到 Rust/Python 有一半已经被语法吸收。下表是 17 个经典模式在四个语言的现状。"
-              },
-              {
-                "type": "table",
-                "title": "经典模式 × 工业四语言现状对照（C / C++ / Python / Rust）",
-                "headers": [
-                  "模式",
-                  "C",
-                  "C++",
-                  "Python",
-                  "Rust",
-                  "前景判定"
-                ],
-                "rows": [
-                  [
-                    "单例",
-                    "静态变量 + pthread_once 手写",
-                    "Meyers 局部静态（C++11 起语言级线程安全）",
-                    "模块天然即单例",
-                    "OnceLock / LazyLock 生态内建",
-                    "被语言内建与 DI 容器瓜分，慎用"
-                  ],
-                  [
-                    "简单工厂 / 工厂方法",
-                    "switch + malloc 返回基指针——必要",
-                    "make_unique + std::function 削弱类层级",
-                    "dict 注册表几行搞定",
-                    "enum+match 或 trait 对象注册表",
-                    "「造物决定权」思想永存，类层级形态退化"
-                  ],
-                  [
-                    "抽象工厂",
-                    "双层函数表，罕见手写",
-                    "大系统仍有用，DI 容器接管中",
-                    "dict of dicts",
-                    "Box<dyn> 产品族",
-                    "大系统活着，框架接管中"
-                  ],
-                  [
-                    "建造者",
-                    "init 序列约定",
-                    "流式 builder 活跃（现代 C++ 惯用）",
-                    "@dataclass 的 kwargs 削弱大半需求",
-                    "类型状态 builder：编译期强制必填参数",
-                    "坚挺且被 Rust 强化（唯一越活越强的）"
-                  ],
-                  [
-                    "原型",
-                    "memcpy 冒险",
-                    "拷贝构造语言内建",
-                    "copy.deepcopy 内建",
-                    "derive(Clone) 语言内建",
-                    "已语言化"
-                  ],
-                  [
-                    "适配器",
-                    "包装函数——永远必要",
-                    "包装类 / 模板适配——必要",
-                    "鸭子类型常常根本不需要适配",
-                    "孤儿规则：为外部类型 impl 本地 trait 即适配器",
-                    "永远必要"
-                  ],
-                  [
-                    "装饰",
-                    "函数指针包装",
-                    "继承包装 / 模板包装",
-                    "@decorator 语法语言内建",
-                    "闭包包装",
-                    "Python 已语言化"
-                  ],
-                  [
-                    "外观",
-                    "头文件封装 API",
-                    "必要",
-                    "模块封装",
-                    "必要",
-                    "永远必要"
-                  ],
-                  [
-                    "组合（树）",
-                    "树 + 函数表",
-                    "必要",
-                    "必要",
-                    "必要",
-                    "永远必要"
-                  ],
-                  [
-                    "代理",
-                    "手写转发",
-                    "智能指针 operator-> 语言级代理",
-                    "__getattr__ 魔法方法内建",
-                    "Deref trait 语言级代理",
-                    "语言机制吸收"
-                  ],
-                  [
-                    "策略",
-                    "函数指针——C 的标准武器",
-                    "模板策略（零开销）或 std::function",
-                    "传函数即策略——完全吃掉",
-                    "泛型 trait（静态）或闭包（动态）",
-                    "退化为传函数"
-                  ],
-                  [
-                    "命令",
-                    "函数指针 + void* 参数",
-                    "std::function 队列",
-                    "闭包队列",
-                    "Box<dyn Fn> 队列或 enum+match",
-                    "退化为闭包"
-                  ],
-                  [
-                    "模板方法",
-                    "结构体 + 默认函数指针",
-                    "NVI 惯用法 / CRTP",
-                    "传 hook 函数，继承少用",
-                    "trait 默认方法——语言级模板方法",
-                    "语言机制吸收"
-                  ],
-                  [
-                    "观察者",
-                    "回调数组手写",
-                    "signal/slot 库（boost 等）",
-                    "事件库 / asyncio",
-                    "channel（借用检查改写了经典写法）",
-                    "被响应式与事件总线接管"
-                  ],
-                  [
-                    "状态",
-                    "表驱动 switch",
-                    "std::variant + overload 或继承",
-                    "match-case（3.10 语言级）",
-                    "enum+match 语言级：非法状态不可表示",
-                    "enum+match 吸收"
-                  ],
-                  [
-                    "迭代器",
-                    "手写 next + cookie",
-                    "STL 内建（早已语言生态级）",
-                    "迭代器协议 + yield 生成器内建",
-                    "Iterator trait 内建（含惰性组合器）",
-                    "完全内建"
-                  ],
-                  [
-                    "访问者",
-                    "函数表分发",
-                    "std::variant + std::visit（C++17 库级）",
-                    "match-case 内建",
-                    "enum+match 完全吃掉（社区共识「访客已死」）",
-                    "模式匹配吃掉"
-                  ]
-                ],
-                "note": "判定口径：工业常用语言（C/C++/Python/Rust）在 2026 年的惯用写法。语言越「穷」模式越必要（C 全手写），语言越「富」模式越隐形（Rust/Python 半数内建）。"
-              },
-              {
-                "type": "steps",
-                "title": "前景四档判定",
-                "items": [
-                  "第一档【依然核心】：适配器、外观、组合——四个语言里都要真刀真枪写，胶水层与树形结构永远需要。",
-                  "第二档【退化为传函数】：策略、命令、模板方法——在 C++（std::function/模板）、Python（一等函数）、Rust（闭包/泛型）里一个函数参数就搞定，只剩 C 还在郑重其事。",
-                  "第三档【语言机制吸收】：原型（拷贝构造/derive(Clone)/deepcopy）、迭代器（STL/for 协议/Iterator trait）、代理（智能指针/Deref/__getattr__）、状态与访问者（enum+match/match-case/variant+visit）、单例（模块/OnceLock）、享元（intern）。",
-                  "第四档【框架接管】：观察者（响应式库/信号槽/事件总线）、抽象工厂（DI 容器）、职责链（各框架的中间件管道）。"
-                ]
-              },
-              {
-                "type": "compare",
-                "title": "两种读法",
-                "left": {
-                  "title": "把模式当圣经",
-                  "body": "背 23 个类图、到处套模式、为用而用——refactoring.guru 的批判栏目专治这个：不恰当的模式使用徒增间接层与复杂度。"
-                },
-                "right": {
-                  "title": "把模式当词汇",
-                  "body": "模式是行业交流的词汇表（说「观察者」三字胜十句解释）+ 修复语言缺陷的历史记录。学它认它，用时先问语言有没有给更好的。"
-                }
-              },
-              {
-                "type": "callout",
-                "title": "本课程的立场",
-                "text": "每个模式都带「现代视角」五档标记（已语言化/一等函数可替代/常被框架接管/现代慎用/依然坚挺）——学经典结构是为了看懂遗留代码与软考，写新代码时按标记先找语言的现成解法。"
-              },
-              {
-                "type": "quiz",
-                "title": "随堂练",
-                "items": [
-                  {
-                    "stem": "同一个策略模式：C 里要函数指针+void*，C++ 里 std::function 或模板参数，Python 里直接传函数，Rust 里泛型或闭包。这个对照最支持的结论是？",
-                    "choices": [
-                      {
-                        "label": "模式常是语言缺陷的补丁：语言越富，模式越隐形",
-                        "ok": true,
-                        "why": "工业常用语言的对照正是本课的判定口径——Norvig 在 Lisp/Dylan 上的发现，在工业四语言上同样成立。"
-                      },
-                      {
-                        "label": "策略模式已经彻底无用",
-                        "ok": false,
-                        "why": "C 里它仍是标准武器；判定的是「形态退化」，不是「彻底无用」。"
-                      },
-                      {
-                        "label": "四种语言应该统一语法",
-                        "ok": false,
-                        "why": "语言设计哲学不同，对照说明的是模式与语言特性的关系，不是语言优劣。"
-                      },
-                      {
-                        "label": "只有 C 需要设计模式",
-                        "ok": false,
-                        "why": "适配器、外观、组合在四个语言里都必要；判定按模式逐个进行。"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "callout",
-                "title": "取材与延伸",
-                "text": "取材：Refactoring.Guru（图解与批判栏目）· Wikipedia「Software design pattern」Criticism 章节 · Peter Norvig《Design Patterns in Dynamic Programming》"
-              }
-            ]
-          }
         }
       ],
       "checkpoint": {
@@ -536,7 +299,13 @@
                 "ok": false,
                 "why": "聚合是空心菱形，画在整体端"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.uml.class",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "类图里 Sorter 持有一个 SortStrategy 接口引用，接口下挂 QuickSort、MergeSort 两个实现，没有任何负责 new 的类或方法。按三步法，方向是？",
@@ -562,33 +331,13 @@
                 "ok": false,
                 "why": "建造者有 buildPartX + getResult 的分步方法，这里没有"
               }
-            ]
-          },
-          {
-            "stem": "按本课的前景四档，原型模式在 C++、Rust、Python 里属于哪一档？",
-            "covers": "dp.criticism",
-            "choices": [
-              {
-                "label": "语言机制吸收",
-                "ok": true,
-                "why": "拷贝构造、derive(Clone)、copy.deepcopy 让 clone 成了语言自带能力"
-              },
-              {
-                "label": "依然核心",
-                "ok": false,
-                "why": "依然核心的是适配器、外观、组合，四个语言里都要真写"
-              },
-              {
-                "label": "退化为传函数",
-                "ok": false,
-                "why": "这一档是策略、命令、模板方法——一个函数参数就能替代"
-              },
-              {
-                "label": "框架接管",
-                "ok": false,
-                "why": "这一档是观察者、抽象工厂、职责链——由响应式库、DI 容器、中间件管道承担"
-              }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.uml.pattern-reading",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "订单与订单行：订单被删除后，订单行单独存在没有意义。类图上应该怎么画？",
@@ -614,33 +363,13 @@
                 "ok": false,
                 "why": "依赖是临时使用，这里是长期持有且生命周期绑定"
               }
-            ]
-          },
-          {
-            "stem": "在 Python 新项目里要「按配置切换排序规则」。按本课的立场，第一步该做什么？",
-            "covers": "dp.criticism",
-            "choices": [
-              {
-                "label": "先问语言有没有现成解法：直接传一个函数就能替代策略类层级",
-                "ok": true,
-                "why": "立场是「用模式前先问语言/标准库」，Python 的一等函数让策略退化为传函数"
-              },
-              {
-                "label": "先画出策略模式的完整类图，再逐个写类",
-                "ok": false,
-                "why": "这是「把模式当圣经」的读法，在一等函数语言里徒增间接层"
-              },
-              {
-                "label": "用单例保存当前排序规则",
-                "ok": false,
-                "why": "单例解决的是实例唯一，和切换规则无关"
-              },
-              {
-                "label": "模式已经过时，不做任何抽象，直接 if-else",
-                "ok": false,
-                "why": "批判的落点是换更简单的形态，不是放弃抽象"
-              }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.uml.class",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "类图中 Config 的构造函数前标 -，有一个静态成员 instance: Config 和一个静态方法 getInstance()。按三步法第二步「看创建」，这是？",
@@ -666,7 +395,13 @@
                 "ok": false,
                 "why": "抽象工厂是一个接口里有一族 create 方法"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.uml.pattern-reading",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           }
         ]
       }
@@ -675,7 +410,7 @@
       "id": "principles",
       "title": "面向对象七大设计原则",
       "track": "principles",
-      "summary": "模式是招式，原则是内功。开闭是总纲，其余六条都在为它服务。上午题直接考定义与判断，下午题按原则给分。",
+      "summary": "模式是招式，原则是内功。开闭是总纲，其余六条都在为它服务。评价一个设计好不好，先拿这七条量一遍。",
       "topics": [
         {
           "id": "dp.ocp",
@@ -716,7 +451,8 @@
               {
                 "type": "callout",
                 "title": "软考考点",
-                "text": "上午题给定义句（「软件实体对扩展开放、对修改关闭」）选原则名；下午题的方案评价问「该设计满足哪条原则」。开闭是出现频率最高的原则。"
+                "text": "上午题给定义句（「软件实体对扩展开放、对修改关闭」）选原则名；下午题的方案评价问「该设计满足哪条原则」。开闭是出现频率最高的原则。",
+                "tone": "exam"
               },
               {
                 "type": "quiz",
@@ -745,7 +481,13 @@
                         "ok": false,
                         "why": "接口隔离说不强迫依赖用不到的接口"
                       }
-                    ]
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.ocp",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
                   }
                 ]
               }
@@ -817,7 +559,13 @@
                         "ok": false,
                         "why": "被复用往往正是职责单一的表现"
                       }
-                    ]
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.srp",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
                   }
                 ]
               }
@@ -840,7 +588,7 @@
             "promise": "能判断一个继承关系是否满足可替换，避免「正方形不该继承长方形」式陷阱。",
             "pain": "子类重写后抛异常/不做事，按父类约定写的调用方逻辑崩了。",
             "model": "子类必须完整兑现父类约定（前置不更严、后置不更松）。",
-            "scope": "考「下列继承关系违反哪条原则」。",
+            "scope": "判断「这个继承关系能不能成立」。",
             "judgment": "子类悄悄削弱父类行为=违反 LSP。",
             "landing": "能用前置/后置条件判断给定重写是否合法。"
           },
@@ -865,7 +613,8 @@
               {
                 "type": "callout",
                 "title": "软考考点",
-                "text": "上午题常给「子类替换父类后程序行为异常」的描述选里氏替换。区分：多态是机制，LSP 是对这种机制的约束。"
+                "text": "上午题常给「子类替换父类后程序行为异常」的描述选里氏替换。区分：多态是机制，LSP 是对这种机制的约束。",
+                "tone": "exam"
               },
               {
                 "type": "quiz",
@@ -894,7 +643,13 @@
                         "ok": false,
                         "why": "合成复用说的是优先用组合复用"
                       }
-                    ]
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.lsp",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
                   }
                 ]
               }
@@ -917,7 +672,7 @@
             "promise": "能把「高层直接 new 底层」的结构倒置为双方都依赖接口。",
             "pain": "高层业务类里到处 new 具体类，换实现要改业务代码。",
             "model": "高层与低层都依赖抽象接口；细节实现接口。",
-            "scope": "与 IoC/DI 的关系了解即可，考试考定义。",
+            "scope": "与 IoC/DI 的关系了解即可。",
             "judgment": "看到类成员是具体类（非接口），先问要不要倒置。",
             "landing": "能画出倒置前后的类图差异。"
           },
@@ -942,7 +697,8 @@
               {
                 "type": "callout",
                 "title": "软考考点",
-                "text": "「针对接口编程，而不是针对实现编程」是 DIP 的同义表述。与模板方法的联系：模板方法里高层算法定义的抽象步骤就是依赖抽象。"
+                "text": "「针对接口编程，而不是针对实现编程」是 DIP 的同义表述。与模板方法的联系：模板方法里高层算法定义的抽象步骤就是依赖抽象。",
+                "tone": "exam"
               },
               {
                 "type": "quiz",
@@ -971,7 +727,13 @@
                         "ok": false,
                         "why": "单一职责讲变化理由唯一"
                       }
-                    ]
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.dip",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
                   }
                 ]
               }
@@ -1043,7 +805,13 @@
                         "ok": false,
                         "why": "迪米特讲的是与「直接朋友」通信"
                       }
-                    ]
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.isp",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
                   }
                 ]
               }
@@ -1115,7 +883,13 @@
                         "ok": false,
                         "why": "那是接口隔离原则"
                       }
-                    ]
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.lod",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
                   }
                 ]
               }
@@ -1138,7 +912,7 @@
             "promise": "理解为什么「组合优于继承」，能为复用选择组合方案。",
             "pain": "用继承复用代码，子类背上用不到的父类方法（违反 LSP/ISP）。",
             "model": "复用手段优先级：组合/聚合 > 继承。",
-            "scope": "与 LSP、ISP 联动考。",
+            "scope": "常与 LSP、ISP 一起使用。",
             "judgment": "为了复用几个方法而继承=该用组合。",
             "landing": "能把一段继承复用改为组合复用。"
           },
@@ -1187,7 +961,13 @@
                         "ok": false,
                         "why": "开闭是总纲，本句是具体复用手段的建议"
                       }
-                    ]
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.carp",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
                   }
                 ]
               },
@@ -1227,7 +1007,13 @@
                 "ok": false,
                 "why": "这里没有链式穿透调用"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.ocp",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "UserService 同时负责校验密码规则、发送注册邮件、写数据库：密码规则变了要改它，邮件模板变了也要改它。最直接违反的是？",
@@ -1253,7 +1039,13 @@
                 "ok": false,
                 "why": "题干没有涉及依赖方向"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.srp",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "ReadOnlyList 继承 List，把 add() 实现成抛异常。调用方按 List 的约定使用它时程序崩溃。违反的是？",
@@ -1279,7 +1071,13 @@
                 "ok": false,
                 "why": "合成复用讲复用手段的选择，题干问的是替换后的行为"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.lsp",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "ReportGenerator 在内部直接 new PdfWriter 并调用它。按依赖倒置原则应该怎么改？",
@@ -1305,7 +1103,13 @@
                 "ok": false,
                 "why": "复制代码只是把依赖藏起来，变化仍然要改高层"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.dip",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "下列调用中，最可能违反迪米特法则的是？",
@@ -1331,7 +1135,13 @@
                 "ok": false,
                 "why": "自己创建的对象是直接朋友"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.lod",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "打印机接口 Machine 有 print、scan、fax 三个方法；便宜的打印机只会打印，却必须给 scan、fax 写空实现。改进方向是？",
@@ -1357,7 +1167,13 @@
                 "ok": false,
                 "why": "继承来的方法依然用不上，问题没解决"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.isp",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "Stack 为了复用存储逻辑而继承 Vector，结果把 insertAt 等破坏栈语义的方法也暴露了出去。按合成复用原则应该？",
@@ -1383,7 +1199,13 @@
                 "ok": false,
                 "why": "与复用手段无关"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.carp",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "工厂方法、策略、装饰三个模式，在原则层面的共同目标是？",
@@ -1409,7 +1231,13 @@
                 "ok": false,
                 "why": "三个模式都还在用继承或接口实现"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.ocp",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "判断一个类是否符合单一职责，依据是？",
@@ -1435,7 +1263,13 @@
                 "ok": false,
                 "why": "一个职责可以由多个方法共同完成"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.srp",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "「针对接口编程，而不是针对实现编程」是哪条原则的同义表述？",
@@ -1461,7 +1295,13 @@
                 "ok": false,
                 "why": "迪米特讲通信对象的范围"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.dip",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "关于多态与里氏替换原则的关系，正确的是？",
@@ -1487,7 +1327,13 @@
                 "ok": false,
                 "why": "重写得越多，越可能悄悄削弱父类的行为约定"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.lsp",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "外观模式给子系统提供一个统一入口，客户端只和外观打交道。这在原则层面最直接体现的是？",
@@ -1513,7 +1359,13 @@
                 "ok": false,
                 "why": "外观虽然持有子系统对象，但它要解决的是客户端知道得太多"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.lod",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "单一职责和接口隔离都在「拆」，二者的区别是？",
@@ -1539,7 +1391,13 @@
                 "ok": false,
                 "why": "C++ 的纯虚基类同样是接口，原则与语言无关"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.isp",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "合成复用原则把继承称为「白盒复用」，原因是？",
@@ -1565,7 +1423,13 @@
                 "ok": false,
                 "why": "与可读性无关"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.carp",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           }
         ]
       }
@@ -1589,7 +1453,7 @@
           "guide_line": "一个类全局只有一个实例，并提供全局访问点。",
           "weight": "重点",
           "outline": {
-            "promise": "掌握单例的结构（私有构造+静态 getInstance）与软考考法（类图识别/线程安全问法）。",
+            "promise": "掌握单例的结构（私有构造+静态 getInstance）与线程安全的写法（类图识别、Meyers 单例）。",
             "pain": "全局变量失控：谁都能 new，实例数量与初始化时机不可控。",
             "model": "私有构造函数 + 静态私有成员 + 静态 getInstance()（懒汉/饿汉）。",
             "scope": "饿汉（程序启动即建）与懒汉（首次调用才建）；C++11 起局部静态变量懒汉是线程安全的（Meyers 单例）。",
@@ -1646,7 +1510,8 @@
               {
                 "type": "callout",
                 "title": "软考考点",
-                "text": "上午题给「保证一个类仅有一个实例并提供全局访问点」选单例；类图特征是构造私有+自持有静态实例。下午题可能要求补全 getInstance() 的实现。"
+                "text": "上午题给「保证一个类仅有一个实例并提供全局访问点」选单例；类图特征是构造私有+自持有静态实例。下午题可能要求补全 getInstance() 的实现。",
+                "tone": "exam"
               },
               {
                 "type": "quiz",
@@ -1675,7 +1540,13 @@
                         "ok": false,
                         "why": "约束是唯一性，不是不可变性"
                       }
-                    ]
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.singleton",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
                   }
                 ]
               }
@@ -1704,7 +1575,7 @@
         },
         {
           "id": "dp.simple-factory",
-          "title": "简单工厂（软考备考）",
+          "title": "简单工厂 Simple Factory",
           "difficulty": 2,
           "mastery_goal": "master",
           "knowledge_type": "skill",
@@ -1713,13 +1584,13 @@
             "dp.ocp"
           ],
           "track": "creational",
-          "guide_line": "一个工厂类按参数决定造哪种产品。不是 GoF 模式，但软考常考、是工厂方法的引子。",
+          "guide_line": "一个工厂类按参数决定造哪种产品。不是 GoF 模式，是理解工厂方法的引子。",
           "weight": "重点",
           "outline": {
             "promise": "掌握简单工厂的结构与它违反 OCP 的先天缺陷，理解为什么需要工厂方法。",
             "pain": "客户端到处 switch (type) new 具体类；加一种产品要翻遍所有 switch。",
             "model": "工厂类 + 静态 create(type) + 产品抽象/实现两层。",
-            "scope": "严格说它不属于 GoF 23 模式，是工厂方法的前置形态；软考仍把它当独立考点。",
+            "scope": "严格说它不属于 GoF 23 模式，是工厂方法的前置形态。",
             "judgment": "加新产品必须改工厂的 switch=违反开闭——这条缺陷正是工厂方法要治的病。",
             "landing": "能写出简单工厂并指出它违反 OCP 的位置。"
           },
@@ -1727,7 +1598,7 @@
             "blocks": [
               {
                 "type": "lead",
-                "text": "简单工厂（Simple Factory）：把「new 哪个具体类」这件事从客户端搬进一个工厂类，客户端只说想要什么（参数），工厂负责造。它不是 GoF 23 模式之一，但是软考考点，更是理解工厂方法的台阶。"
+                "text": "简单工厂（Simple Factory）：把「new 哪个具体类」这件事从客户端搬进一个工厂类，客户端只说想要什么（参数），工厂负责造。它不是 GoF 23 模式之一，但它是理解工厂方法的台阶。"
               },
               {
                 "type": "uml",
@@ -1797,7 +1668,8 @@
               {
                 "type": "callout",
                 "title": "软考考点",
-                "text": "认图：一个工厂类 + 一个产品接口 + N 个实现 + 工厂指向产品的 creates 依赖。缺陷追问「加新产品要不要改工厂？」——要，这正是它违反开闭的地方，答案里补一句工厂方法如何解决。"
+                "text": "认图：一个工厂类 + 一个产品接口 + N 个实现 + 工厂指向产品的 creates 依赖。缺陷追问「加新产品要不要改工厂？」——要，这正是它违反开闭的地方，答案里补一句工厂方法如何解决。",
+                "tone": "exam"
               },
               {
                 "type": "quiz",
@@ -1826,7 +1698,13 @@
                         "ok": false,
                         "why": "静态方法是常见写法，不是缺陷"
                       }
-                    ]
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.simple-factory",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
                   }
                 ]
               }
@@ -1955,7 +1833,8 @@
               {
                 "type": "callout",
                 "title": "软考考点",
-                "text": "与简单工厂的辨析：简单工厂一个工厂 switch 全包（违反 OCP），工厂方法每个产品配一个工厂（满足 OCP）。与抽象工厂的辨析：工厂方法的工厂接口只有一个 create 方法，抽象工厂有一族。"
+                "text": "与简单工厂的辨析：简单工厂一个工厂 switch 全包（违反 OCP），工厂方法每个产品配一个工厂（满足 OCP）。与抽象工厂的辨析：工厂方法的工厂接口只有一个 create 方法，抽象工厂有一族。",
+                "tone": "exam"
               },
               {
                 "type": "quiz",
@@ -1984,7 +1863,13 @@
                         "ok": false,
                         "why": "签名在抽象层固定，不因子类改变"
                       }
-                    ]
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.factory-method",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
                   }
                 ]
               }
@@ -2154,7 +2039,8 @@
               {
                 "type": "callout",
                 "title": "软考考点",
-                "text": "下午题给「按操作系统风格成套创建按钮+文本框」的场景，答案是抽象工厂。辨析题高频：它与工厂方法的 create 方法数量；它的缺点（加新产品种类要动所有工厂接口，违背 OCP——加「产品等级」易、加「产品族」易、加「产品种类」难）。"
+                "text": "下午题给「按操作系统风格成套创建按钮+文本框」的场景，答案是抽象工厂。辨析题高频：它与工厂方法的 create 方法数量；它的缺点（加新产品种类要动所有工厂接口，违背 OCP——加「产品等级」易、加「产品族」易、加「产品种类」难）。",
+                "tone": "exam"
               },
               {
                 "type": "quiz",
@@ -2183,7 +2069,13 @@
                         "ok": false,
                         "why": "建造者解决分步组装一个复杂对象，不是一族产品的配套"
                       }
-                    ]
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.abstract-factory",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
                   }
                 ]
               }
@@ -2315,7 +2207,8 @@
               {
                 "type": "callout",
                 "title": "软考考点",
-                "text": "意图句「将复杂对象的构建与它的表示分离，使同样的构建过程可以创建不同的表示」=建造者。辨析：它强调**分步**与**顺序**（Director 控制流程），工厂强调「造哪种」。"
+                "text": "意图句「将复杂对象的构建与它的表示分离，使同样的构建过程可以创建不同的表示」=建造者。辨析：它强调**分步**与**顺序**（Director 控制流程），工厂强调「造哪种」。",
+                "tone": "exam"
               },
               {
                 "type": "quiz",
@@ -2344,7 +2237,13 @@
                         "ok": false,
                         "why": "那是抽象工厂的语义"
                       }
-                    ]
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.builder",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
                   }
                 ]
               }
@@ -2388,7 +2287,7 @@
             "promise": "掌握 clone 的语义（深/浅拷贝）与适用场景（构造昂贵/类型未知）。",
             "pain": "对象的初始化成本高，或者客户端根本不知道要 new 的具体类型（只知道它的抽象）。",
             "model": "抽象 Prototype 声明 clone()；具体原型各自实现克隆；客户端拿着 Prototype* 克隆。",
-            "scope": "C++ 的拷贝构造就是天然的原型机制；深拷贝与浅拷贝的选择是考点。",
+            "scope": "C++ 的拷贝构造就是天然的原型机制；深拷贝与浅拷贝的选择是实现上的关键。",
             "judgment": "看到 clone 方法就是原型。",
             "landing": "能实现深拷贝 clone 并说明浅拷贝的坑。"
           },
@@ -2452,7 +2351,8 @@
               {
                 "type": "callout",
                 "title": "软考考点",
-                "text": "意图句「用原型实例指定创建对象的种类，并通过拷贝这些原型创建新的对象」=原型。实现题常考深拷贝：原型持有指针成员时 clone 必须深拷贝，否则两个对象共享内部状态。"
+                "text": "意图句「用原型实例指定创建对象的种类，并通过拷贝这些原型创建新的对象」=原型。实现题常考深拷贝：原型持有指针成员时 clone 必须深拷贝，否则两个对象共享内部状态。",
+                "tone": "exam"
               },
               {
                 "type": "quiz",
@@ -2481,7 +2381,13 @@
                         "ok": false,
                         "why": "那是建造者"
                       }
-                    ]
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.prototype",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
                   }
                 ]
               },
@@ -2541,7 +2447,13 @@
                 "ok": false,
                 "why": "原型靠复制已有实例，题干要的是按类型扩展创建"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.factory-method",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "原型持有指针成员时，clone() 只复制了指针（浅拷贝）。后果是？",
@@ -2567,7 +2479,13 @@
                 "ok": false,
                 "why": "两个对象共享可变状态，会互相干扰"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.prototype",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "跨平台 UI 库已有 WinFactory、MacFactory，各自造 Button 和 TextBox。现在既要加 Linux 风格（新产品族），又要加 Checkbox（新产品种类），哪个更容易？",
@@ -2593,7 +2511,13 @@
                 "ok": false,
                 "why": "加产品族只需要新增类"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.abstract-factory",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "日志器希望整个进程只有一个实例。下列 C++ 写法中最恰当的是？",
@@ -2619,7 +2543,13 @@
                 "ok": false,
                 "why": "这是静态类，不是单例模式"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.singleton",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "要创建一个 HTTP 请求对象：URL 必填，header、超时、重试次数可选，而且组装步骤有固定顺序。最贴合的是？",
@@ -2645,7 +2575,13 @@
                 "ok": false,
                 "why": "请求对象需要很多个"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.builder",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "简单工厂的 create(type) 每加一种产品都要改分支。它和工厂方法的分界是？",
@@ -2671,7 +2607,13 @@
                 "ok": false,
                 "why": "考试专考这个区别"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.simple-factory",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "类图中 Creator 声明抽象的 factoryMethod()，ConcreteCreatorA、ConcreteCreatorB 各自重写，每个具体工厂只返回一种 Product。这是？",
@@ -2697,7 +2639,13 @@
                 "ok": false,
                 "why": "简单工厂没有工厂子类，靠一个类里的分支"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.factory-method",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "本课「现代视角」把单例判为「现代慎用」，理由是？",
@@ -2723,7 +2671,13 @@
                 "ok": false,
                 "why": "Meyers 单例在程序结束时会正常析构"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.singleton",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "客户端手里只有一个 Shape* 基类指针，不知道它的具体类型，却要造一个同类的新对象。最合适的是？",
@@ -2749,7 +2703,13 @@
                 "ok": false,
                 "why": "用哪个 Builder 也得先知道具体类型"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.prototype",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "抽象工厂保证的核心性质是？",
@@ -2775,7 +2735,13 @@
                 "ok": false,
                 "why": "那是原型"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.abstract-factory",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "简单工厂是不是 GoF 23 种设计模式之一？",
@@ -2801,7 +2767,13 @@
                 "ok": false,
                 "why": "软考会考它的结构与缺陷"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.simple-factory",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           },
           {
             "stem": "同一个 Director::construct() 交给 ChickenBuilder 和 FishBuilder，造出了两种不同的套餐。这体现了建造者意图里的哪一句？",
@@ -2827,7 +2799,13 @@
                 "ok": false,
                 "why": "那是原型的意图"
               }
-            ]
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.builder",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
           }
         ]
       }
@@ -3111,7 +3089,8 @@
           "labs": [],
           "status": "planned"
         }
-      ]
+      ],
+      "layer": "extension"
     },
     {
       "id": "modern",
@@ -3119,6 +3098,255 @@
       "track": "modern",
       "summary": "2026 视角的程序组织全景，六大类提纲（内容待填）：① 语言级新写法——模式匹配吃掉访问者与状态机、类型状态让非法状态不可表示、Result/Option 错误处理取代异常、async/await、concepts/trait/generics 约束即文档、derive 宏与代码生成；② 函数式替代——高阶函数吃掉策略/命令/模板方法，管道与过滤器，不可变数据；③ 并发组织——生产者消费者、线程池、Actor（Erlang）、CSP（Go channel）、结构化并发；④ 架构模式——六边形/Clean Architecture、DDD 战术模式、事件溯源与 CQRS、模块化单体（微服务退潮）、Serverless、中间件管道（职责链的现代形态）、插件架构；⑤ UI 范式——声明式 UI（UI=f(state)）、组件化、组合优于继承的前端实践；⑥ 工程惯例——函数选项模式（Go）、表驱动法、特征开关、垂直切片架构、Composition Root 组装点、ECS 数据导向设计（游戏业对 OOP 的正面反叛）。\n\n取材：取材：martinfowler.com（CQRS/事件溯源）· microservices.io · patterns.dev · DovAmir/awesome-design-patterns（49.3k★ 全领域总列表）· Sandi Metz / Rob Pike 的工程哲学演讲",
       "topics": [
+        {
+          "id": "dp.criticism",
+          "title": "模式的现状：批判、实证与 2026 视角",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "strategy",
+          "requires": [
+            "dp.uml.class"
+          ],
+          "track": "uml",
+          "guide_line": "把模式当圣经是最大的误区——用实证研究看清它真正的位置。",
+          "weight": "重点",
+          "outline": {
+            "promise": "用三条实证研究（Norvig/AOP/组件化）与社区反思，建立对设计模式的清醒认知。",
+            "pain": "把 23 个模式当背诵任务；到处套模式造成过度设计；不知道哪些已被语言吸收。",
+            "model": "模式=反复出现问题的命名解法，也是语言缺陷的补丁；语言进化，补丁被吸收。",
+            "scope": "Norvig 16/23、AspectJ 17/23、组件化 2/3 三条实证；refactoring.guru 批判栏目；2026 的五档现代视角。",
+            "judgment": "用模式前先问：语言/标准库是不是已经有了解法？",
+            "landing": "能向别人解释「为什么说一半的模式是语言缺陷的补丁」并给出实证。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "判定一个模式的必要性与前景，不看小众语言，看工业界每天都在用的 C、C++、Python、Rust。规律非常清楚：**语言越「穷」模式越必要，语言越「富」模式越隐形**——C 里几乎所有模式都要郑重其事地手写，到 Rust/Python 有一半已经被语法吸收。下表是 17 个经典模式在四个语言的现状。"
+              },
+              {
+                "type": "table",
+                "title": "经典模式 × 工业四语言现状对照（C / C++ / Python / Rust）",
+                "headers": [
+                  "模式",
+                  "C",
+                  "C++",
+                  "Python",
+                  "Rust",
+                  "前景判定"
+                ],
+                "rows": [
+                  [
+                    "单例",
+                    "静态变量 + pthread_once 手写",
+                    "Meyers 局部静态（C++11 起语言级线程安全）",
+                    "模块天然即单例",
+                    "OnceLock / LazyLock 生态内建",
+                    "被语言内建与 DI 容器瓜分，慎用"
+                  ],
+                  [
+                    "简单工厂 / 工厂方法",
+                    "switch + malloc 返回基指针——必要",
+                    "make_unique + std::function 削弱类层级",
+                    "dict 注册表几行搞定",
+                    "enum+match 或 trait 对象注册表",
+                    "「造物决定权」思想永存，类层级形态退化"
+                  ],
+                  [
+                    "抽象工厂",
+                    "双层函数表，罕见手写",
+                    "大系统仍有用，DI 容器接管中",
+                    "dict of dicts",
+                    "Box<dyn> 产品族",
+                    "大系统活着，框架接管中"
+                  ],
+                  [
+                    "建造者",
+                    "init 序列约定",
+                    "流式 builder 活跃（现代 C++ 惯用）",
+                    "@dataclass 的 kwargs 削弱大半需求",
+                    "类型状态 builder：编译期强制必填参数",
+                    "坚挺且被 Rust 强化（唯一越活越强的）"
+                  ],
+                  [
+                    "原型",
+                    "memcpy 冒险",
+                    "拷贝构造语言内建",
+                    "copy.deepcopy 内建",
+                    "derive(Clone) 语言内建",
+                    "已语言化"
+                  ],
+                  [
+                    "适配器",
+                    "包装函数——永远必要",
+                    "包装类 / 模板适配——必要",
+                    "鸭子类型常常根本不需要适配",
+                    "孤儿规则：为外部类型 impl 本地 trait 即适配器",
+                    "永远必要"
+                  ],
+                  [
+                    "装饰",
+                    "函数指针包装",
+                    "继承包装 / 模板包装",
+                    "@decorator 语法语言内建",
+                    "闭包包装",
+                    "Python 已语言化"
+                  ],
+                  [
+                    "外观",
+                    "头文件封装 API",
+                    "必要",
+                    "模块封装",
+                    "必要",
+                    "永远必要"
+                  ],
+                  [
+                    "组合（树）",
+                    "树 + 函数表",
+                    "必要",
+                    "必要",
+                    "必要",
+                    "永远必要"
+                  ],
+                  [
+                    "代理",
+                    "手写转发",
+                    "智能指针 operator-> 语言级代理",
+                    "__getattr__ 魔法方法内建",
+                    "Deref trait 语言级代理",
+                    "语言机制吸收"
+                  ],
+                  [
+                    "策略",
+                    "函数指针——C 的标准武器",
+                    "模板策略（零开销）或 std::function",
+                    "传函数即策略——完全吃掉",
+                    "泛型 trait（静态）或闭包（动态）",
+                    "退化为传函数"
+                  ],
+                  [
+                    "命令",
+                    "函数指针 + void* 参数",
+                    "std::function 队列",
+                    "闭包队列",
+                    "Box<dyn Fn> 队列或 enum+match",
+                    "退化为闭包"
+                  ],
+                  [
+                    "模板方法",
+                    "结构体 + 默认函数指针",
+                    "NVI 惯用法 / CRTP",
+                    "传 hook 函数，继承少用",
+                    "trait 默认方法——语言级模板方法",
+                    "语言机制吸收"
+                  ],
+                  [
+                    "观察者",
+                    "回调数组手写",
+                    "signal/slot 库（boost 等）",
+                    "事件库 / asyncio",
+                    "channel（借用检查改写了经典写法）",
+                    "被响应式与事件总线接管"
+                  ],
+                  [
+                    "状态",
+                    "表驱动 switch",
+                    "std::variant + overload 或继承",
+                    "match-case（3.10 语言级）",
+                    "enum+match 语言级：非法状态不可表示",
+                    "enum+match 吸收"
+                  ],
+                  [
+                    "迭代器",
+                    "手写 next + cookie",
+                    "STL 内建（早已语言生态级）",
+                    "迭代器协议 + yield 生成器内建",
+                    "Iterator trait 内建（含惰性组合器）",
+                    "完全内建"
+                  ],
+                  [
+                    "访问者",
+                    "函数表分发",
+                    "std::variant + std::visit（C++17 库级）",
+                    "match-case 内建",
+                    "enum+match 完全吃掉（社区共识「访客已死」）",
+                    "模式匹配吃掉"
+                  ]
+                ],
+                "note": "判定口径：工业常用语言（C/C++/Python/Rust）在 2026 年的惯用写法。语言越「穷」模式越必要（C 全手写），语言越「富」模式越隐形（Rust/Python 半数内建）。"
+              },
+              {
+                "type": "steps",
+                "title": "前景四档判定",
+                "items": [
+                  "第一档【依然核心】：适配器、外观、组合——四个语言里都要真刀真枪写，胶水层与树形结构永远需要。",
+                  "第二档【退化为传函数】：策略、命令、模板方法——在 C++（std::function/模板）、Python（一等函数）、Rust（闭包/泛型）里一个函数参数就搞定，只剩 C 还在郑重其事。",
+                  "第三档【语言机制吸收】：原型（拷贝构造/derive(Clone)/deepcopy）、迭代器（STL/for 协议/Iterator trait）、代理（智能指针/Deref/__getattr__）、状态与访问者（enum+match/match-case/variant+visit）、单例（模块/OnceLock）、享元（intern）。",
+                  "第四档【框架接管】：观察者（响应式库/信号槽/事件总线）、抽象工厂（DI 容器）、职责链（各框架的中间件管道）。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "两种读法",
+                "left": {
+                  "title": "把模式当圣经",
+                  "body": "背 23 个类图、到处套模式、为用而用——refactoring.guru 的批判栏目专治这个：不恰当的模式使用徒增间接层与复杂度。"
+                },
+                "right": {
+                  "title": "把模式当词汇",
+                  "body": "模式是行业交流的词汇表（说「观察者」三字胜十句解释）+ 修复语言缺陷的历史记录。学它认它，用时先问语言有没有给更好的。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "本课程的立场",
+                "text": "每个模式都带「现代视角」五档标记（已语言化/一等函数可替代/常被框架接管/现代慎用/依然坚挺）——学经典结构是为了看懂遗留代码、和同行用同一套词汇交流，写新代码时按标记先找语言的现成解法。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "同一个策略模式：C 里要函数指针+void*，C++ 里 std::function 或模板参数，Python 里直接传函数，Rust 里泛型或闭包。这个对照最支持的结论是？",
+                    "choices": [
+                      {
+                        "label": "模式常是语言缺陷的补丁：语言越富，模式越隐形",
+                        "ok": true,
+                        "why": "工业常用语言的对照正是本课的判定口径——Norvig 在 Lisp/Dylan 上的发现，在工业四语言上同样成立。"
+                      },
+                      {
+                        "label": "策略模式已经彻底无用",
+                        "ok": false,
+                        "why": "C 里它仍是标准武器；判定的是「形态退化」，不是「彻底无用」。"
+                      },
+                      {
+                        "label": "四种语言应该统一语法",
+                        "ok": false,
+                        "why": "语言设计哲学不同，对照说明的是模式与语言特性的关系，不是语言优劣。"
+                      },
+                      {
+                        "label": "只有 C 需要设计模式",
+                        "ok": false,
+                        "why": "适配器、外观、组合在四个语言里都必要；判定按模式逐个进行。"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.criticism",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材与延伸",
+                "text": "取材：Refactoring.Guru（图解与批判栏目）· Wikipedia「Software design pattern」Criticism 章节 · Peter Norvig《Design Patterns in Dynamic Programming》"
+              }
+            ]
+          }
+        },
         {
           "id": "dp.modern.roadmap",
           "title": "现代工程的程序组织写法·建设计划",
@@ -3195,7 +3423,77 @@
           "labs": [],
           "status": "planned"
         }
-      ]
+      ],
+      "checkpoint": {
+        "intro": "延伸篇的随堂考核：先自己判断再看解析，作答后写入完成度。",
+        "items": [
+          {
+            "stem": "按本课的前景四档，原型模式在 C++、Rust、Python 里属于哪一档？",
+            "covers": "dp.criticism",
+            "choices": [
+              {
+                "label": "语言机制吸收",
+                "ok": true,
+                "why": "拷贝构造、derive(Clone)、copy.deepcopy 让 clone 成了语言自带能力"
+              },
+              {
+                "label": "依然核心",
+                "ok": false,
+                "why": "依然核心的是适配器、外观、组合，四个语言里都要真写"
+              },
+              {
+                "label": "退化为传函数",
+                "ok": false,
+                "why": "这一档是策略、命令、模板方法——一个函数参数就能替代"
+              },
+              {
+                "label": "框架接管",
+                "ok": false,
+                "why": "这一档是观察者、抽象工厂、职责链——由响应式库、DI 容器、中间件管道承担"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.criticism",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
+          },
+          {
+            "stem": "在 Python 新项目里要「按配置切换排序规则」。按本课的立场，第一步该做什么？",
+            "covers": "dp.criticism",
+            "choices": [
+              {
+                "label": "先问语言有没有现成解法：直接传一个函数就能替代策略类层级",
+                "ok": true,
+                "why": "立场是「用模式前先问语言/标准库」，Python 的一等函数让策略退化为传函数"
+              },
+              {
+                "label": "先画出策略模式的完整类图，再逐个写类",
+                "ok": false,
+                "why": "这是「把模式当圣经」的读法，在一等函数语言里徒增间接层"
+              },
+              {
+                "label": "用单例保存当前排序规则",
+                "ok": false,
+                "why": "单例解决的是实例唯一，和切换规则无关"
+              },
+              {
+                "label": "模式已经过时，不做任何抽象，直接 if-else",
+                "ok": false,
+                "why": "批判的落点是换更简单的形态，不是放弃抽象"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.criticism",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
+            }
+          }
+        ]
+      },
+      "layer": "extension"
     }
   ]
 }

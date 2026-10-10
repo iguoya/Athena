@@ -1,4 +1,5 @@
 import { invoke as tauriInvoke } from "@tauri-apps/api/core";
+import { openUrl } from "@tauri-apps/plugin-opener";
 import curriculumFallback from "../content/curriculum.json";
 import {
   destroyLabEditor,
@@ -51,9 +52,29 @@ type QuizItem = {
   choices: QuizChoice[];
   /** 章末题可标注覆盖的知识点 id */
   covers?: string;
-  /** 有明确大纲/院校来源才写；没有就不标 */
-  source?: string;
+  /**
+   * 出处。字符串是早期写法；结构化写法与出处检查（ADR 0043）同一套字段：
+   * 真题 relation 为 verbatim，locator 写卷名与题号，url 指向可核对的页面。
+   */
+  source?: string | SourceRef;
 };
+
+type SourceRef = {
+  relation: "verbatim" | "quoted" | "adapted" | "authored";
+  sourceId: string;
+  locator?: string;
+  url?: string;
+  why?: string;
+};
+
+/** 只有原题、引文、改编需要亮出出处；自造题的出处是给检查脚本看的，不打扰作答。 */
+function sourceLabel(source: QuizItem["source"]): string {
+  if (!source) return "";
+  if (typeof source === "string") return source.trim();
+  if (source.relation === "authored") return "";
+  const prefix = source.relation === "verbatim" ? "真题原题" : source.relation === "adapted" ? "改编自" : "引自";
+  return source.locator ? `${prefix} · ${source.locator}` : prefix;
+}
 
 type Block =
   | { type: "lead" | "prose"; text: string }
@@ -176,6 +197,11 @@ type Chapter = {
   topics: Topic[];
   /** 章节下随堂考核：用于评判各知识点完成度 */
   checkpoint?: ChapterAssessment | null;
+  /**
+   * 层级（ADR 0121）：缺省为主线；topic = 专题（软考真题集中在这里）；
+   * extension = 延伸篇（走出面向对象、现代工程），图谱上与主线区分。
+   */
+  layer?: "topic" | "extension";
   /** 可选章末综合卷 */
   assessment?: ChapterAssessment | null;
 };
@@ -668,13 +694,16 @@ function renderMap() {
     const track = tracks.get(ch.track ?? "");
     const color = track?.color ?? TRACK_FALLBACK;
     const planned = ch.topics.every((t) => t.status === "planned");
-    bands.push(`<g class="chapter-band${planned ? " is-planned" : ""}">
+    const layerCls = ch.layer ? ` is-${ch.layer}` : "";
+    const layerTag = ch.layer === "topic" ? "专题 · " : ch.layer === "extension" ? "延伸 · " : "";
+    const countText = planned ? "建设中" : `${ch.topics.length} 个知识点`;
+    bands.push(`<g class="chapter-band${planned ? " is-planned" : ""}${layerCls}">
       <rect class="band-bg${ci % 2 ? " alt" : ""}" x="0" y="${cursorY}" width="${availW}" height="${bandH}" rx="${emPx(0.6)}"></rect>
       <rect x="${padX}" y="${cursorY + emPx(0.42)}" width="${emPx(0.22)}" height="${emPx(0.78)}" rx="${emPx(0.08)}" fill="${color}"></rect>
       <text class="band-title" x="${padX + emPx(0.5)}" y="${cursorY + emPx(1.05)}" font-size="${emPx(0.72)}">${escapeHtml(
-        elide(ch.title, availW - padX * 2 - emPx(4), emPx(0.72), 1)[0] ?? "",
+        elide(`${layerTag}${ch.title}`, availW - padX * 2 - emPx(4), emPx(0.72), 1)[0] ?? "",
       )}</text>
-      <text class="band-count" x="${availW - padX}" y="${cursorY + emPx(1.05)}" font-size="${emPx(0.6)}" text-anchor="end">${planned ? "建设中" : `${ch.topics.length} 个知识点`}</text>
+      <text class="band-count" x="${availW - padX}" y="${cursorY + emPx(1.05)}" font-size="${emPx(0.6)}" text-anchor="end">${countText}</text>
     </g>`);
     ch.topics.forEach((t, i) => {
       pos.set(t.id, {
@@ -1491,8 +1520,14 @@ function renderQuizItems(
         showCovers && item.covers
           ? `<p class="prose muted">覆盖：${escapeHtml(findTopic(item.covers)?.title ?? item.covers)}</p>`
           : "";
-      const source = item.source?.trim()
-        ? `<p class="quiz-source">来源：${escapeHtml(item.source.trim())}</p>`
+      const label = sourceLabel(item.source);
+      const url = typeof item.source === "object" ? item.source.url : undefined;
+      const source = label
+        ? `<p class="quiz-source">${
+            url
+              ? `<a href="${escapeHtml(url)}" data-external target="_blank" rel="noreferrer">${escapeHtml(label)}</a>`
+              : escapeHtml(label)
+          }</p>`
         : "";
       const letters = "ABCDEFGH";
       const choices = stableShuffle(item.choices, item.stem)
@@ -1778,6 +1813,10 @@ function renderLesson(topic: Topic) {
         return `<div class="card"><p class="lead">${richText(b.text)}</p></div>`;
       }
       if (b.type === "callout") {
+        if (b.tone === "exam") {
+          // 软考提示降级为次要信息（ADR 0121）：默认收起，讲解主线只讲模式本身
+          return `<details class="callout exam-note"><summary>${escapeHtml(b.title ?? "软考提示")}</summary><div>${richText(b.text)}</div></details>`;
+        }
         const tone = b.tone === "warn" ? " warn" : "";
         return `<div class="callout${tone}"><div class="title">${escapeHtml(b.title ?? "提示")}</div><div>${richText(b.text)}</div></div>`;
       }
@@ -2549,6 +2588,17 @@ function initNavResizer(): void {
   });
 }
 
+/** 出处链接：Tauri 窗口里 target=_blank 不会开系统浏览器，交给 opener 插件。 */
+function initExternalLinks(): void {
+  document.addEventListener("click", (e) => {
+    const a = (e.target as HTMLElement | null)?.closest<HTMLAnchorElement>("a[data-external]");
+    if (!a || !hasTauri()) return;
+    e.preventDefault();
+    void openUrl(a.href);
+  });
+}
+
 void boot();
 initNavResizer();
 initGraphResize();
+initExternalLinks();
