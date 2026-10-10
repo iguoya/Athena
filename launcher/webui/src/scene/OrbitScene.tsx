@@ -50,7 +50,7 @@ function useSphereTexture(app: AppDto): { texture: THREE.Texture | null; status:
         if (img.complete && img.naturalWidth > 0) {
           clearInterval(poll);
           const texture = make((ctx) => {
-            ctx.fillStyle = app.accent;
+            ctx.fillStyle = app.groupColor;
             ctx.fillRect(0, 0, 1024, 512);
             for (let row = 0; row < 2; row++) {
               for (let col = 0; col < 2; col++) {
@@ -163,7 +163,7 @@ function IconSphere({
           <meshStandardMaterial
             key={sphereTex ? "sphere-map" : "sphere-plain"}
             map={sphereTex ?? undefined}
-            color={sphereTex ? "#ffffff" : app.accent}
+            color={sphereTex ? "#ffffff" : app.groupColor}
             roughness={0.4}
             metalness={0.08}
             transparent

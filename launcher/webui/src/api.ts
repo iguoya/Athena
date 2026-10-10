@@ -10,6 +10,7 @@ export interface AppDto {
   groupIndex: number;
   letter: string;
   accent: string;
+  groupColor: string;
   icon: string | null;
   state: RunState;
   pos: [number, number, number];

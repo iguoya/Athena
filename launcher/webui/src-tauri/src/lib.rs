@@ -16,6 +16,9 @@ pub struct AppDto {
     group_index: usize,
     letter: String,
     accent: String,
+    /// 领域组色（同组同色，来自 mindmap 色板）：3D 行星的球面底色。
+    #[serde(rename = "groupColor")]
+    group_color: String,
     /// icon.svg 的 data URL（骨架阶段每次 catalog 现读；体量大了换 fingerprint 缓存）。
     icon: Option<String>,
     /// runner::RunState::key()：stopped / starting / ready（跨进程契约，ADR 0048）。
@@ -71,13 +74,18 @@ pub mod commands {
         // 分组：领域名按首次出现序登记（与 core 的 mindmap 分组同规则），挂靠应用
         // （有 parent）骨架阶段同圈排布，挂靠语义的专门表达留待下一轮。
         let mut group_names: Vec<String> = Vec::new();
+        let mut group_colors: Vec<String> = Vec::new();
         let mut group_of: Vec<usize> = Vec::with_capacity(visible.len());
         for app in &visible {
             let name = app.group.clone().unwrap_or_else(|| "其他".into());
             let idx = match group_names.iter().position(|g| g == &name) {
                 Some(i) => i,
                 None => {
-                    group_names.push(name);
+                    group_names.push(name.clone());
+                    // 组色按组序取 mindmap 色板（与 mindmap::layout 同规则），同组同色。
+                    group_colors.push(
+                        launcher_core::mindmap::PALETTE[(group_names.len() - 1) % launcher_core::mindmap::PALETTE.len()].to_string(),
+                    );
                     group_names.len() - 1
                 }
             };
@@ -114,6 +122,7 @@ pub mod commands {
                 summary: app.summary.clone(),
                 group: Some(group_names[g].clone()),
                 group_index: g,
+                group_color: group_colors[g].clone(),
                 letter: app.letter.clone(),
                 accent: app.accent.clone(),
                 icon: app.icon_file.as_deref().and_then(icon_data_url),
