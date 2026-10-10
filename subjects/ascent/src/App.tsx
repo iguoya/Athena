@@ -6,10 +6,11 @@ import { Placeholder } from "@/pages/Placeholder";
 import { Sentences } from "@/pages/Sentences";
 import { MapPage } from "@/pages/Map";
 import { Vocab } from "@/pages/Vocab";
+import { English2 } from "@/pages/English2";
 import { NAV } from "@/components/nav";
 import { applySkin, useSkin } from "@/theme/skins";
 
-const routed = new Set(["/", "/sentences", "/map", "/vocab"]);
+const routed = new Set(["/", "/sentences", "/map", "/vocab", "/english2"]);
 
 const router = createHashRouter([
   {
@@ -19,6 +20,7 @@ const router = createHashRouter([
       { path: "/sentences", element: <Sentences /> },
       { path: "/map", element: <MapPage /> },
       { path: "/vocab", element: <Vocab /> },
+      { path: "/english2", element: <English2 /> },
       ...NAV.filter((n) => !routed.has(n.to)).map((n) => ({ path: n.to, element: <Placeholder /> })),
     ],
   },

@@ -1,5 +1,6 @@
 import {
   BookOpen,
+  GraduationCap,
   Headphones,
   Home,
   ListOrdered,
@@ -21,4 +22,6 @@ export const NAV = [
   { to: "/words", label: "生词本", icon: NotebookTabs },
   { to: "/mistakes", label: "错题本", icon: RotateCcw },
   { to: "/journal", label: "学习日志", icon: NotebookPen },
+  // 独立章节：服务 22408 考生，不在四章路线里（ADR 0025）。
+  { to: "/english2", label: "考研英语二", icon: GraduationCap },
 ];

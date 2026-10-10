@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { curriculum, english2From, mergeDeck, missingCount, privateIndex, trackItems, type Deck } from "./english2";
+import { curriculum, english2From, mergeDeck, missingCount, missingIn, privateIndex, trackItems, type Deck } from "./english2";
 import { sources } from "./index";
 
 const deck = (ids: string[]): Deck => ({
@@ -18,6 +18,13 @@ describe("考研英语二内容", () => {
   it("只有一边时原样返回，两边都没有时是 undefined", () => {
     expect(mergeDeck("b.json", deck(["x"]), undefined)?.items.map((i) => i.id)).toEqual(["x"]);
     expect(mergeDeck("b.json", undefined, undefined)).toBeUndefined();
+  });
+
+  it("按题库报出本机缺几题，考核据此决定记不记成绩", () => {
+    const index = { files: { "a.json": { private: ["p1", "p2"], order: ["x", "p1", "p2"] } } };
+    expect(missingIn("a.json", { decks: {}, passages: {} }, index)).toBe(2);
+    expect(missingIn("a.json", { decks: { "a.json": deck(["p1"]) }, passages: {} }, index)).toBe(1);
+    expect(missingIn("b.json", { decks: {}, passages: {} }, index)).toBe(0);
   });
 
   it("本机没有资料时如实报出缺的题数", () => {

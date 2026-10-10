@@ -157,4 +157,32 @@ mod tests {
         assert_eq!(rels, ["passage.md", "vocab/beginner/generated-01.json"]);
         fs::remove_dir_all(&base).unwrap();
     }
+
+    /// 拿这台机器上真实的本机资料走一遍读取路径：读到的英语二题数要和公开那边
+    /// private-index.json 登记的一致。CI 上没有本机资料，跳过。
+    #[test]
+    fn 本机真实英语二题目都读得到() {
+        let content = Path::new(env!("CARGO_MANIFEST_DIR")).join("../content");
+        let base = content.join("private/english2");
+        if !base.is_dir() {
+            return;
+        }
+        let mut paths = Vec::new();
+        collect(&base, &base, &mut paths).unwrap();
+        let mut items = 0;
+        for path in paths.iter().filter(|p| p.extension().is_some_and(|e| e == "json")) {
+            let deck: serde_json::Value = serde_json::from_str(&fs::read_to_string(path).unwrap()).unwrap();
+            items += deck["items"].as_array().map_or(0, Vec::len);
+        }
+        let index: serde_json::Value =
+            serde_json::from_str(&fs::read_to_string(content.join("english2/private-index.json")).unwrap()).unwrap();
+        let expected: usize = index["files"]
+            .as_object()
+            .unwrap()
+            .values()
+            .map(|f| f["private"].as_array().unwrap().len())
+            .sum();
+        assert!(expected > 0);
+        assert_eq!(items, expected);
+    }
 }

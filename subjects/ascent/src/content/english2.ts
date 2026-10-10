@@ -54,6 +54,15 @@ export interface DeckItem {
   reference?: string;
   checklist?: string[];
   source?: SourceRef[];
+  /** 只有授权与来源都清楚的真人原声才有（如 VOA 公有领域录音）。 */
+  media?: Media[];
+}
+
+export interface Media {
+  kind: "audio" | "video";
+  title: string;
+  url: string;
+  source_id: string;
 }
 
 export interface Deck {
@@ -157,14 +166,17 @@ export function mergeDeck(path: string, pub: Deck | undefined, priv: Deck | unde
   return { ...(pub ?? priv)!, items: sorted };
 }
 
-/** 本机缺了多少题：private-index 里登记了、本机那份里却没有的。 */
+/** 某个题库在本机缺了几题：private-index 里登记了、本机那份里却没有的。 */
+export function missingIn(path: string, priv: PrivateContent, index = privateIndex): number {
+  const entry = index.files[path];
+  if (!entry) return 0;
+  const have = new Set((priv.decks[path]?.items ?? []).map((item) => item.id));
+  return entry.private.filter((id) => !have.has(id)).length;
+}
+
+/** 本机一共缺了多少题。 */
 export function missingCount(priv: PrivateContent, index = privateIndex): number {
-  let missing = 0;
-  for (const [path, entry] of Object.entries(index.files)) {
-    const have = new Set((priv.decks[path]?.items ?? []).map((item) => item.id));
-    missing += entry.private.filter((id) => !have.has(id)).length;
-  }
-  return missing;
+  return Object.keys(index.files).reduce((n, path) => n + missingIn(path, priv, index), 0);
 }
 
 export interface English2 {
@@ -174,6 +186,8 @@ export interface English2 {
   passage: (path: string) => string | undefined;
   /** 本机资料缺的题数；0 表示齐全。 */
   missing: number;
+  /** 某个题库在本机缺几题：考核缺题时不记成绩。 */
+  missingIn: (path: string) => number;
   loading: boolean;
   error?: string;
 }
@@ -184,6 +198,7 @@ export function english2From(priv: PrivateContent, loading = false, error?: stri
     deck: (path) => mergeDeck(path, publicDecks[path], priv.decks[path]),
     passage: (path) => publicPassages[path] ?? priv.passages[path],
     missing: missingCount(priv),
+    missingIn: (path) => missingIn(path, priv),
     loading,
     error,
   };
