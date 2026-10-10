@@ -14,12 +14,15 @@ pub struct OrbitSpec {
     pub yaw: f32,
 }
 
-/// 轨道上的一个节点：所属领域圈、圈内序号、世界坐标。
+/// 轨道上的一个节点：所属领域圈、圈内序号、世界坐标与轨道参数角。
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct OrbitNode {
     pub group: usize,
     pub slot: usize,
     pub pos: [f32; 3],
+    /// 未叠加绕 Y 旋转的参数角（含环起始方位）：公转动画沿它加时间项，
+    /// 与静态坐标同一套正变换，t=0 时与布局完全重合。
+    pub theta: f32,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -56,7 +59,7 @@ pub fn orbit_layout(group_sizes: &[usize]) -> OrbitLayout {
             let z = pz * ct;
             // 绕 Y 轴旋转 yaw 把每条环的起始方位错开。
             let (x2, z2) = (x * cy + z * sy, -x * sy + z * cy);
-            nodes.push(OrbitNode { group: g, slot, pos: [x2, y, z2] });
+            nodes.push(OrbitNode { group: g, slot, pos: [x2, y, z2], theta });
         }
     }
     OrbitLayout { orbits, nodes }

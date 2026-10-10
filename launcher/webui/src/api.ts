@@ -13,6 +13,8 @@ export interface AppDto {
   icon: string | null;
   state: RunState;
   pos: [number, number, number];
+  orbit: number;
+  theta: number;
 }
 
 export interface OrbitDto {

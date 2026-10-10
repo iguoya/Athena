@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Html } from "@react-three/drei";
 import * as THREE from "three";
-import { openApp, type AppDto, type CatalogDto } from "../api";
+import { openApp, type AppDto, type CatalogDto, type OrbitDto } from "../api";
 
 const STATE_COLOR: Record<AppDto["state"], string> = {
   stopped: "#b0b4c8",
@@ -60,25 +60,39 @@ function useIconTexture(app: AppDto): THREE.Texture | null {
 }
 
 function IconSphere({
-  app, index, active, hovered, onHover,
+  app, index, orbit, active, hovered, onHover,
 }: {
   app: AppDto;
   index: number;
+  orbit: OrbitDto;
   active: boolean;
   hovered: boolean;
   onHover: (id: string | null) => void;
 }) {
-  const [x, y, z] = app.pos;
   const texture = useIconTexture(app);
   const spinner = useRef<THREE.Group>(null);
+  const planet = useRef<THREE.Group>(null);
   // 自转速度与相位按序号差异化，行星各转各的；相位让悬浮错落。
   const spinSpeed = useMemo(() => 0.35 + ((index * 37) % 40) / 100, [index]);
   const floatPhase = useMemo(() => (index * 137.5 * Math.PI) / 180, [index]);
+  // 公转角速度开普勒式递减：内环快、外环慢（基准环 240 半径转一圈约 28 秒）。
+  const orbitOmega = useMemo(() => 0.22 * (240 / orbit.radius), [orbit.radius]);
   const elapsed = useRef(0);
-  // 自转 + 上下悬浮 + 悬停缩放，全部帧插值。
+  // 公转位置 + 自转 + 上下悬浮 + 悬停缩放，全部帧插值。
   useFrame((_, delta) => {
-    if (!spinner.current) return;
     elapsed.current += delta;
+    if (planet.current) {
+      // 与 core 的 layout3d 同一套正变换，theta 随时间推进即沿轨道公转。
+      const theta = app.theta + orbitOmega * elapsed.current;
+      const { radius, tilt, yaw } = orbit;
+      const px = radius * Math.sin(theta);
+      const pz0 = radius * Math.cos(theta);
+      const py = -pz0 * Math.sin(tilt);
+      const pz = pz0 * Math.cos(tilt);
+      const cy = Math.cos(yaw), sy = Math.sin(yaw);
+      planet.current.position.set(px * cy + pz * sy, py, -px * sy + pz * cy);
+    }
+    if (!spinner.current) return;
     spinner.current.rotation.y += spinSpeed * delta;
     spinner.current.position.y = Math.sin(elapsed.current * 0.9 + floatPhase) * 5;
     const target = hovered ? 1.3 : 1;
@@ -90,7 +104,7 @@ function IconSphere({
   const badgeReady = texture !== null;
 
   return (
-    <group position={[x, y, z]}>
+    <group ref={planet}>
       {/* 自转组：球体 + 图标徽章 + 状态环一起转，徽章转到背面被球体自然遮挡。 */}
       <group ref={spinner}>
         <mesh
@@ -203,6 +217,7 @@ export default function OrbitScene({ catalog }: { catalog: CatalogDto }) {
           key={a.id + a.pos.join()}
           app={a}
           index={i}
+          orbit={catalog.orbits[a.orbit]}
           active={hovered === null || hovered === a.id}
           hovered={hovered === a.id}
           onHover={setHovered}

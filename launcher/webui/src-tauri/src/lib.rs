@@ -22,6 +22,10 @@ pub struct AppDto {
     state: String,
     /// 3D 轨道布局里的世界坐标。
     pos: [f32; 3],
+    /// 公转动画参数：所在轨道下标与初始参数角（rad）。前端每帧
+    /// theta = theta0 + omega·t 后套与布局相同的正变换得到当前位置。
+    orbit: usize,
+    theta: f32,
 }
 
 #[derive(serde::Serialize)]
@@ -97,7 +101,7 @@ pub mod commands {
                 .iter()
                 .find(|n| n.group == g && n.slot == slot)
                 .copied()
-                .unwrap_or(layout3d::OrbitNode { group: g, slot, pos: [0.0; 3] });
+                .unwrap_or(layout3d::OrbitNode { group: g, slot, pos: [0.0; 3], theta: 0.0 });
             out.push(AppDto {
                 id: app.id.clone(),
                 title: app.title.clone(),
@@ -109,6 +113,8 @@ pub mod commands {
                 icon: app.icon_file.as_deref().and_then(icon_data_url),
                 state: states[i].key().to_string(),
                 pos: node.pos,
+                orbit: node.group,
+                theta: node.theta,
             });
         }
 
