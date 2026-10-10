@@ -1,0 +1,1679 @@
+{
+  "id": "design-patterns",
+  "title": "设计模式",
+  "tagline": "从 UML 与七大原则到 23 个模式：每个模式都画出标准类图、跑起 C++ 实验",
+  "description": "软设第 7 章（面向对象·设计模式）：UML 读图、七大原则、GoF 模式逐个真跑，再走出面向对象看 C 内核与函数式世界的模式。",
+  "spine": [
+    "识图 —— 类框三格与六种关系线",
+    "守则 —— 七大原则是所有模式的内功",
+    "造物 —— 创建型：把 new 收进工厂",
+    "组装 —— 结构型：把类拼成更大的结构",
+    "协作 —— 行为型：让对象之间会说话",
+    "出圈 —— 非面向对象世界的模式"
+  ],
+  "tracks": [
+    {
+      "id": "uml",
+      "title": "UML 类图",
+      "color": "#64748b"
+    },
+    {
+      "id": "principles",
+      "title": "七大原则",
+      "color": "#9333ea"
+    },
+    {
+      "id": "creational",
+      "title": "创建型模式",
+      "color": "#2563eb"
+    },
+    {
+      "id": "structural",
+      "title": "结构型模式",
+      "color": "#0d9488"
+    },
+    {
+      "id": "behavioral",
+      "title": "行为型模式",
+      "color": "#d97706"
+    },
+    {
+      "id": "non-oo",
+      "title": "非面向对象的模式",
+      "color": "#6b7280"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "uml",
+      "title": "读模式的语言：UML 类图",
+      "track": "uml",
+      "summary": "设计模式全部用 UML 类图表达。先学会读类框三格与六种关系线，再用三步法从类图认出模式。",
+      "topics": [
+        {
+          "id": "dp.uml.class",
+          "title": "类框与六种关系线",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [],
+          "track": "uml",
+          "guide_line": "类图是模式的骨架：先认框，再认线。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能独立读懂并画出模式类图：类框三格、可见性记号、六种关系线。",
+            "pain": "把泛化和实现混为一谈；分不清聚合和组合；看见菱形就慌。",
+            "model": "类框=名字+属性+方法三格；可见性 + 公有 / - 私有 / # 保护；六种关系=泛化、实现、组合、聚合、关联、依赖。",
+            "scope": "本课范围：类图（软考下午题的载体）。用例图、顺序图在第 7 章理论侧另学。",
+            "judgment": "先看线型（实/虚）再看箭头端（三角/菱形/开箭头），最后看标注重义。",
+            "landing": "给出任意模式类图，能说出类与关系的名字和含义。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "每个设计模式都长成一张类图。类框三格（名字/属性/方法）是「谁」，六种关系线是「谁认识谁、谁造谁、谁是谁的一种」。本课所有模式的类图都用同一套读法。"
+              },
+              {
+                "type": "uml",
+                "title": "示例：一张标准的类图（图形绘制系统）",
+                "uml": {
+                  "width": 640,
+                  "height": 270,
+                  "classes": [
+                    {
+                      "name": "Shape",
+                      "stereotype": "abstract",
+                      "methods": [
+                        "+ area(): double"
+                      ],
+                      "x": 20,
+                      "y": 20,
+                      "w": 170
+                    },
+                    {
+                      "name": "Circle",
+                      "attrs": [
+                        "- r: double"
+                      ],
+                      "methods": [
+                        "+ area()"
+                      ],
+                      "x": 10,
+                      "y": 175,
+                      "w": 125
+                    },
+                    {
+                      "name": "Rect",
+                      "attrs": [
+                        "- w: double",
+                        "- h: double"
+                      ],
+                      "methods": [
+                        "+ area()"
+                      ],
+                      "x": 165,
+                      "y": 175,
+                      "w": 140
+                    },
+                    {
+                      "name": "Canvas",
+                      "attrs": [
+                        "- shapes: vector<Shape*>"
+                      ],
+                      "methods": [
+                        "+ render()"
+                      ],
+                      "x": 360,
+                      "y": 55,
+                      "w": 235
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "Circle",
+                      "to": "Shape",
+                      "kind": "inherits"
+                    },
+                    {
+                      "from": "Rect",
+                      "to": "Shape",
+                      "kind": "inherits"
+                    },
+                    {
+                      "from": "Canvas",
+                      "to": "Shape",
+                      "kind": "agg",
+                      "label": "shapes 1..*"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "callout",
+                "title": "读线口诀",
+                "text": "实线三角=是它的子类（泛化）；虚线三角=承诺实现它（实现）；实心菱形端=整体，部分不能独立活（组合）；空心菱形端=整体，部分可以独立活（聚合）；开箭头=认识它（关联）；虚线开箭头=临时用一下（依赖）。可见性：+ 公有、- 私有、# 保护。"
+              },
+              {
+                "type": "compare",
+                "title": "聚合 vs 组合（软考最爱混的一对）",
+                "left": {
+                  "title": "聚合：空心菱形",
+                  "body": "「班级◇—学生」：班级散了，学生还活着。整体消失，部分独立存在，生命周期不同步。"
+                },
+                "right": {
+                  "title": "组合：实心菱形",
+                  "body": "「订单■—订单行」：订单没了，订单行没有意义。整体消失，部分跟着消失，生命周期同步。"
+                }
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "Canvas 与 Shape 之间是空心菱形（菱形在 Canvas 端），正确读法是？",
+                    "choices": [
+                      {
+                        "label": "Canvas 聚合 Shape：Canvas 持有 Shape 引用集合，Shape 可独立存在",
+                        "ok": true,
+                        "why": "空心菱形在整体端，整体消失部分仍可独立存在——聚合不是组合"
+                      },
+                      {
+                        "label": "Canvas 继承 Shape",
+                        "ok": false,
+                        "why": "继承是实线空心三角，不是菱形"
+                      },
+                      {
+                        "label": "Canvas 依赖 Shape",
+                        "ok": false,
+                        "why": "依赖是临时使用（虚线开箭头），这里是长期持有集合——关联强度更高"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "dp.uml.pattern-reading",
+          "title": "三步法：从类图认出模式",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "strategy",
+          "requires": [
+            "dp.uml.class"
+          ],
+          "track": "uml",
+          "guide_line": "模式类图长得像，认模式靠看「谁抽象、谁造谁、谁和谁通信」。",
+          "weight": "重点",
+          "outline": {
+            "promise": "拿到陌生类图，三步内锁定候选模式：数抽象层、看创建线、看通信线。",
+            "pain": "23 个模式类图背不完；考试给一张陌生图就懵。",
+            "model": "第一步看抽象层（接口/抽象类与实现数量）；第二步看创建线（谁造谁）；第三步看协作（组装=结构型、通信=行为型）。",
+            "scope": "软考下午题两类：给类图填类名/方法名；给场景选模式。",
+            "judgment": "创建型看「造」，结构型看「装」，行为型看「传」。",
+            "landing": "给一份陌生类图，能说出候选模式与理由。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "23 个模式的类图不用背——它们的差别只有三件事：有没有抽象层、谁负责创建、对象之间怎么协作。考试给陌生类图时按这三步走。"
+              },
+              {
+                "type": "steps",
+                "title": "三步认模式",
+                "items": [
+                  "看抽象层：只有一组接口+多实现，多半是策略/状态；两个维度各自变化且互相组合，是桥或抽象工厂。",
+                  "看创建：出现专门的类/方法负责 new 别的（creates 依赖线），是工厂家族；出现 clone 是原型；出现 getInstance 静态方法是单例。",
+                  "看协作：一层包一层（装饰）；通知广播（观察者）；逐级转交（职责链）——行为型。"
+                ]
+              },
+              {
+                "type": "scenario",
+                "situation": "类图里有一个 AbstractFactory 接口、两个 ConcreteFactory，接口里有 createProductA / createProductB 两个创建方法——这是什么模式？",
+                "options": [
+                  {
+                    "label": "抽象工厂",
+                    "ok": true,
+                    "why": "一个工厂接口创建一族产品（A 与 B）；工厂方法只有一个创建方法，这是两者的分界。"
+                  },
+                  {
+                    "label": "工厂方法",
+                    "ok": false,
+                    "why": "工厂方法每个具体工厂只创建一种产品；一个接口里出现多个 create* 是抽象工厂。"
+                  },
+                  {
+                    "label": "建造者",
+                    "ok": false,
+                    "why": "建造者的分步方法是 buildPartX + getResult，语义是「分步组装」。"
+                  },
+                  {
+                    "label": "桥接",
+                    "ok": false,
+                    "why": "桥接是两个维度的抽象互相组合，没有创建线。"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "principles",
+      "title": "面向对象七大设计原则",
+      "track": "principles",
+      "summary": "模式是招式，原则是内功。开闭是总纲，其余六条都在为它服务。上午题直接考定义与判断，下午题按原则给分。",
+      "topics": [
+        {
+          "id": "dp.ocp",
+          "title": "开闭原则（OCP）——总纲",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [],
+          "track": "principles",
+          "guide_line": "对扩展开放，对修改关闭。所有模式共同服务的目标。",
+          "weight": "重点",
+          "outline": {
+            "promise": "理解「加功能不改旧代码」为什么是整个模式体系的总纲。",
+            "pain": "每次加需求都去改老函数，改出回归 bug。",
+            "model": "新需求=新增一个类（新子类/新实现），旧类一行不动。",
+            "scope": "它是判断一切模式是否用对的最终标准。",
+            "judgment": "任何改动方案先问：这是扩展还是修改？",
+            "landing": "能判断一个改动是「扩展」还是「修改」。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "开闭原则（Open-Closed Principle）：对扩展开放，对修改关闭——加新功能应当靠新增代码，而不是修改已上线的代码。它是总纲：工厂隔离创建、策略封装变化、装饰叠加功能，本质都在实现开闭。"
+              },
+              {
+                "type": "compare",
+                "title": "加一种新的图形",
+                "left": {
+                  "title": "违反：改老代码",
+                  "body": "render() 里 if (type==\"circle\") … else if (type==\"rect\") …——每加一种图形都要改 render，老分支随时被改坏。"
+                },
+                "right": {
+                  "title": "遵循：只加子类",
+                  "body": "Shape::area() 由子类各自实现，加 Triangle=新增一个 Triangle 类。render() 拿着 Shape* 循环，一行不改。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "软考考点",
+                "text": "上午题给定义句（「软件实体对扩展开放、对修改关闭」）选原则名；下午题的方案评价问「该设计满足哪条原则」。开闭是出现频率最高的原则。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "某系统新增一种导出格式时，只新增了一个 Exporter 子类，原有代码未改动。这最直接体现了哪条原则？",
+                    "choices": [
+                      {
+                        "label": "开闭原则",
+                        "ok": true,
+                        "why": "对扩展开放（新增子类）、对修改关闭（旧代码未动）正是开闭的定义"
+                      },
+                      {
+                        "label": "单一职责",
+                        "ok": false,
+                        "why": "单一职责说一个类只负责一件事，与「新增不改旧」不同"
+                      },
+                      {
+                        "label": "迪米特法则",
+                        "ok": false,
+                        "why": "迪米特说只与直接朋友通信"
+                      },
+                      {
+                        "label": "接口隔离",
+                        "ok": false,
+                        "why": "接口隔离说不强迫依赖用不到的接口"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "dp.srp",
+          "title": "单一职责原则（SRP）",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [
+            "dp.ocp"
+          ],
+          "track": "principles",
+          "guide_line": "一个类只负责一件事，只有一个变化的理由。",
+          "weight": "重点",
+          "outline": {
+            "promise": "会判断一个类是否背了多份职责，并拆分。",
+            "pain": "God Class：一个类既算工资又发邮件又连数据库，任何需求都改它。",
+            "model": "职责=变化的理由。一个类有多个变化的理由就该拆。",
+            "scope": "只按「变化理由」判断，不按方法数量。",
+            "judgment": "描述类的职责时若需要用「和」，多半该拆。",
+            "landing": "能指出给定类的多重职责并拆开。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "单一职责原则（Single Responsibility）：一个类只应有一个引起它变化的原因。判断标准不是方法多少，而是变化的理由是否唯一。"
+              },
+              {
+                "type": "compare",
+                "title": "Employee 类",
+                "left": {
+                  "title": "违反",
+                  "body": "Employee 里同时有 calculatePay()（财务规则变才改）、save()（存储方案变才改）、report()（报表格式变才改）——三个变化理由挤在一个类。"
+                },
+                "right": {
+                  "title": "遵循",
+                  "body": "拆成 PayCalculator / EmployeeRepository / EmployeeReporter，各自独立变化互不牵连。"
+                }
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "下列最能作为「一个类违反单一职责」的信号是？",
+                    "choices": [
+                      {
+                        "label": "描述这个类的职责时需要用「和」",
+                        "ok": true,
+                        "why": "两个变化理由挤在一起是违反 SRP 的典型信号"
+                      },
+                      {
+                        "label": "类的方法超过 20 个",
+                        "ok": false,
+                        "why": "方法数量不是标准，关键是变化理由是否唯一"
+                      },
+                      {
+                        "label": "类里有私有成员",
+                        "ok": false,
+                        "why": "封装的常规手段，与职责无关"
+                      },
+                      {
+                        "label": "类被多个模块使用",
+                        "ok": false,
+                        "why": "被复用往往正是职责单一的表现"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "dp.lsp",
+          "title": "里氏替换原则（LSP）",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [
+            "dp.ocp"
+          ],
+          "track": "principles",
+          "guide_line": "所有用父类的地方，换成子类必须行为不出错。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能判断一个继承关系是否满足可替换，避免「正方形不该继承长方形」式陷阱。",
+            "pain": "子类重写后抛异常/不做事，按父类约定写的调用方逻辑崩了。",
+            "model": "子类必须完整兑现父类约定（前置不更严、后置不更松）。",
+            "scope": "考「下列继承关系违反哪条原则」。",
+            "judgment": "子类悄悄削弱父类行为=违反 LSP。",
+            "landing": "能用前置/后置条件判断给定重写是否合法。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "里氏替换原则（Liskov Substitution）：任何父类出现的地方，子类都能透明替换且行为正确。它是继承是否合理的裁判：子类若只能「继承接口」却不能「兑现行为」，就是违反。"
+              },
+              {
+                "type": "compare",
+                "title": "经典陷阱：正方形继承长方形",
+                "left": {
+                  "title": "违反",
+                  "body": "Square 继承 Rect 并重写 setW/setH 强制 w==h。调用方按 Rect 约定独立设宽高后面积算错——替换后行为被破坏。"
+                },
+                "right": {
+                  "title": "遵循",
+                  "body": "两者共同抽象为 Shape（只约定 area()），不让 Square 谎称自己是可独立设宽高的 Rect。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "软考考点",
+                "text": "上午题常给「子类替换父类后程序行为异常」的描述选里氏替换。区分：多态是机制，LSP 是对这种机制的约束。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "Penguin 继承 Bird 并把 fly() 实现为抛异常。这违反了哪条原则？",
+                    "choices": [
+                      {
+                        "label": "里氏替换原则",
+                        "ok": true,
+                        "why": "用 Bird 的地方换进 Penguin 就崩——子类没兑现父类的行为约定"
+                      },
+                      {
+                        "label": "开闭原则",
+                        "ok": false,
+                        "why": "问题不在扩展与修改，而在继承关系本身不成立"
+                      },
+                      {
+                        "label": "依赖倒置",
+                        "ok": false,
+                        "why": "依赖倒置说的是依赖抽象而非具体"
+                      },
+                      {
+                        "label": "合成复用",
+                        "ok": false,
+                        "why": "合成复用说的是优先用组合复用"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "dp.dip",
+          "title": "依赖倒置原则（DIP）",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [
+            "dp.ocp"
+          ],
+          "track": "principles",
+          "guide_line": "依赖抽象，不依赖具体实现。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能把「高层直接 new 底层」的结构倒置为双方都依赖接口。",
+            "pain": "高层业务类里到处 new 具体类，换实现要改业务代码。",
+            "model": "高层与低层都依赖抽象接口；细节实现接口。",
+            "scope": "与 IoC/DI 的关系了解即可，考试考定义。",
+            "judgment": "看到类成员是具体类（非接口），先问要不要倒置。",
+            "landing": "能画出倒置前后的类图差异。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "依赖倒置原则（Dependency Inversion）：高层模块不该依赖低层模块，两者都应依赖抽象。「倒置」指依赖箭头翻转——原来高层→低层具体类，倒置后两边一起指向接口。"
+              },
+              {
+                "type": "compare",
+                "title": "业务依赖存储",
+                "left": {
+                  "title": "违反",
+                  "body": "OrderService 的成员是 MySQLDatabase 具体类。换 PostgreSQL？改 OrderService。"
+                },
+                "right": {
+                  "title": "遵循",
+                  "body": "定义 Database 接口，OrderService 持有 Database*；MySQLDatabase / PgDatabase 都实现它。换存储不动业务类。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "软考考点",
+                "text": "「针对接口编程，而不是针对实现编程」是 DIP 的同义表述。与模板方法的联系：模板方法里高层算法定义的抽象步骤就是依赖抽象。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "「高层模块不应依赖低层模块，两者都应依赖抽象」说的是？",
+                    "choices": [
+                      {
+                        "label": "依赖倒置原则",
+                        "ok": true,
+                        "why": "这是 DIP 的标准定义表述"
+                      },
+                      {
+                        "label": "开闭原则",
+                        "ok": false,
+                        "why": "开闭讲扩展与修改，不是依赖方向"
+                      },
+                      {
+                        "label": "里氏替换",
+                        "ok": false,
+                        "why": "里氏讲子类替换父类的行为约束"
+                      },
+                      {
+                        "label": "单一职责",
+                        "ok": false,
+                        "why": "单一职责讲变化理由唯一"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "dp.isp",
+          "title": "接口隔离原则（ISP）",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [
+            "dp.dip"
+          ],
+          "track": "principles",
+          "guide_line": "不强迫客户依赖它们用不到的接口方法。",
+          "weight": "了解",
+          "outline": {
+            "promise": "能把臃肿接口拆成客户专用的小接口。",
+            "pain": "Worker 接口里有 work() 也有 eat()，机器人实现后 eat() 只能空着。",
+            "model": "按客户视角切接口：客户用不到的方法不该出现在它的依赖里。",
+            "scope": "与 SRP 区分：SRP 看类的职责，ISP 看接口的客户。",
+            "judgment": "实现类被迫写空方法/抛异常=接口太胖。",
+            "landing": "能识别胖接口并拆分。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "接口隔离原则（Interface Segregation）：多个专用接口好过一个胖接口。客户不该被迫依赖它用不到的方法。"
+              },
+              {
+                "type": "compare",
+                "title": "胖接口 Worker",
+                "left": {
+                  "title": "违反",
+                  "body": "interface Worker { work(); eat(); sleep(); }——RobotWorker 里 eat()/sleep() 只能写空实现，谎言接口。"
+                },
+                "right": {
+                  "title": "遵循",
+                  "body": "拆成 Workable / Eatable / Sleepable。人类员工实现三个，机器人只实现 Workable。"
+                }
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "实现类被迫为用不到的接口方法写空实现，最直接违反的是？",
+                    "choices": [
+                      {
+                        "label": "接口隔离原则",
+                        "ok": true,
+                        "why": "胖接口强迫客户依赖用不到的方法正是 ISP 的定义"
+                      },
+                      {
+                        "label": "单一职责",
+                        "ok": false,
+                        "why": "职责是类的事，这里的问题在接口粒度"
+                      },
+                      {
+                        "label": "里氏替换",
+                        "ok": false,
+                        "why": "空实现固然危险，但考点落点是接口粒度"
+                      },
+                      {
+                        "label": "迪米特法则",
+                        "ok": false,
+                        "why": "迪米特讲的是与「直接朋友」通信"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "dp.lod",
+          "title": "迪米特法则（LoD）",
+          "difficulty": 1,
+          "mastery_goal": "understand",
+          "knowledge_type": "concept",
+          "requires": [
+            "dp.ocp"
+          ],
+          "track": "principles",
+          "guide_line": "只与直接朋友说话，不和陌生人说话。",
+          "weight": "了解",
+          "outline": {
+            "promise": "能识别「a.getB().getC().doX()」式的链式穿透并收敛。",
+            "pain": "一个类摸穿太多别的类的内部结构，牵一发动全身。",
+            "model": "只与：自己、方法参数、成员、自己创建的对象通信。",
+            "scope": "又名最少知识原则（LKP）。",
+            "judgment": "链式穿透调用出现=耦合过深。",
+            "landing": "能给出收敛方案（让直接朋友代为转达）。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "迪米特法则（Law of Demeter，最少知识原则）：一个对象应对其他对象保持最少了解——只与直接朋友（成员、参数、自己创建的对象）通信。"
+              },
+              {
+                "type": "compare",
+                "title": "取客户所在城市",
+                "left": {
+                  "title": "违反",
+                  "body": "order.getCustomer().getAddress().getCity()——Order 穿透了 Customer 和 Address 的内部结构，任何一层改动 Order 都要跟着改。"
+                },
+                "right": {
+                  "title": "遵循",
+                  "body": "Customer 提供 getCity()，Order 只问一层：order.getCustomerCity()。中间结构变化被 Customer 挡住。"
+                }
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "迪米特法则又叫最少知识原则，它的核心要求是？",
+                    "choices": [
+                      {
+                        "label": "只与直接朋友通信，减少类间耦合",
+                        "ok": true,
+                        "why": "了解的陌生人越少，改动波及面越小"
+                      },
+                      {
+                        "label": "每个类只能有一个方法",
+                        "ok": false,
+                        "why": "与方法数量无关，讲的是通信对象范围"
+                      },
+                      {
+                        "label": "所有成员必须私有",
+                        "ok": false,
+                        "why": "那是封装的常规要求"
+                      },
+                      {
+                        "label": "接口必须拆小",
+                        "ok": false,
+                        "why": "那是接口隔离原则"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "dp.carp",
+          "title": "合成复用原则（CARP）",
+          "difficulty": 1,
+          "mastery_goal": "understand",
+          "knowledge_type": "concept",
+          "requires": [
+            "dp.lsp"
+          ],
+          "track": "principles",
+          "guide_line": "优先用组合/聚合复用，其次才考虑继承。",
+          "weight": "了解",
+          "outline": {
+            "promise": "理解为什么「组合优于继承」，能为复用选择组合方案。",
+            "pain": "用继承复用代码，子类背上用不到的父类方法（违反 LSP/ISP）。",
+            "model": "复用手段优先级：组合/聚合 > 继承。",
+            "scope": "与 LSP、ISP 联动考。",
+            "judgment": "为了复用几个方法而继承=该用组合。",
+            "landing": "能把一段继承复用改为组合复用。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "合成复用原则（Composite Reuse）：尽量用对象组合/聚合而不是继承来复用。组合是黑盒复用（不依赖内部），继承是白盒复用（子类看见父类内部，耦合深）。"
+              },
+              {
+                "type": "compare",
+                "title": "复用缓存逻辑",
+                "left": {
+                  "title": "继承：class CachedService : public Service",
+                  "body": "子类绑死在 Service 上，Service 一改子类跟着改；要给别的类复用缓存逻辑没法搬。"
+                },
+                "right": {
+                  "title": "组合：Service 持有 Cache*",
+                  "body": "缓存逻辑独立成 Cache 类，任何服务都能组合一个 Cache*——复用面宽且松耦合。"
+                }
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "「优先使用对象组合而不是继承来复用」是哪条原则？",
+                    "choices": [
+                      {
+                        "label": "合成复用原则",
+                        "ok": true,
+                        "why": "这正是 CARP 的标准表述"
+                      },
+                      {
+                        "label": "依赖倒置",
+                        "ok": false,
+                        "why": "依赖倒置要求依赖抽象，未指定复用手段"
+                      },
+                      {
+                        "label": "单一职责",
+                        "ok": false,
+                        "why": "与职责划分无关"
+                      },
+                      {
+                        "label": "开闭原则",
+                        "ok": false,
+                        "why": "开闭是总纲，本句是具体复用手段的建议"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "creational",
+      "title": "创建型模式：把 new 收进工厂",
+      "track": "creational",
+      "summary": "对象怎么造出来，决定了系统对变化的抵抗力的下限。创建型模式把「造」从使用方手里收走：单例管唯一，工厂家族管多态创建，建造者管分步组装，原型管复制。",
+      "topics": [
+        {
+          "id": "dp.singleton",
+          "title": "单例模式 Singleton",
+          "difficulty": 1,
+          "mastery_goal": "master",
+          "knowledge_type": "concept",
+          "requires": [
+            "dp.uml.class"
+          ],
+          "track": "creational",
+          "guide_line": "一个类全局只有一个实例，并提供全局访问点。",
+          "weight": "重点",
+          "outline": {
+            "promise": "掌握单例的结构（私有构造+静态 getInstance）与软考考法（类图识别/线程安全问法）。",
+            "pain": "全局变量失控：谁都能 new，实例数量与初始化时机不可控。",
+            "model": "私有构造函数 + 静态私有成员 + 静态 getInstance()（懒汉/饿汉）。",
+            "scope": "饿汉（程序启动即建）与懒汉（首次调用才建）；C++11 起局部静态变量懒汉是线程安全的（Meyers 单例）。",
+            "judgment": "类图特征：自己的类里有指向自己的静态指针；构造函数私有。",
+            "landing": "能写出线程安全的 Meyers 单例并解释为什么它线程安全。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "单例（Singleton）保证一个类**全局只有一个实例**，并提供一个全局访问点。配置中心、日志器、连接池——只要「多一个实例就出错或浪费」，就用它。实现三件套：构造私有、静态私有成员、静态 getInstance()。"
+              },
+              {
+                "type": "uml",
+                "title": "单例模式类图",
+                "uml": {
+                  "width": 620,
+                  "height": 270,
+                  "classes": [
+                    {
+                      "name": "Singleton",
+                      "attrs": [
+                        "- instance: Singleton*",
+                        "- Singleton()"
+                      ],
+                      "methods": [
+                        "+ static getInstance(): Singleton&",
+                        "+ business()"
+                      ],
+                      "x": 250,
+                      "y": 20,
+                      "w": 230
+                    },
+                    {
+                      "name": "Client",
+                      "methods": [
+                        "+ main()"
+                      ],
+                      "x": 40,
+                      "y": 60,
+                      "w": 130
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "Client",
+                      "to": "Singleton",
+                      "kind": "dep",
+                      "label": "Singleton::getInstance()"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "callout",
+                "title": "软考考点",
+                "text": "上午题给「保证一个类仅有一个实例并提供全局访问点」选单例；类图特征是构造私有+自持有静态实例。下午题可能要求补全 getInstance() 的实现。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "单例模式实现的关键约束是？",
+                    "choices": [
+                      {
+                        "label": "构造函数私有，实例由静态 getInstance() 唯一提供",
+                        "ok": true,
+                        "why": "掐死外部 new 的通道，实例只能从唯一入口拿"
+                      },
+                      {
+                        "label": "所有方法都是静态的",
+                        "ok": false,
+                        "why": "单例的 business() 是普通成员方法；全静态的是静态类不是单例模式"
+                      },
+                      {
+                        "label": "必须继承一个 Singleton 基类",
+                        "ok": false,
+                        "why": "单例不需要继承结构"
+                      },
+                      {
+                        "label": "实例必须是 const 的",
+                        "ok": false,
+                        "why": "约束是唯一性，不是不可变性"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.singleton.run",
+              "title": "跑一个 Meyers 单例",
+              "case": "singleton_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "运行观察两次 getInstance() 返回同一地址。然后试着在 main 里直接 new Singleton() 看编译器怎么拦你。"
+            }
+          ]
+        },
+        {
+          "id": "dp.simple-factory",
+          "title": "简单工厂（软考备考）",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.uml.class",
+            "dp.ocp"
+          ],
+          "track": "creational",
+          "guide_line": "一个工厂类按参数决定造哪种产品。不是 GoF 模式，但软考常考、是工厂方法的引子。",
+          "weight": "重点",
+          "outline": {
+            "promise": "掌握简单工厂的结构与它违反 OCP 的先天缺陷，理解为什么需要工厂方法。",
+            "pain": "客户端到处 switch (type) new 具体类；加一种产品要翻遍所有 switch。",
+            "model": "工厂类 + 静态 create(type) + 产品抽象/实现两层。",
+            "scope": "严格说它不属于 GoF 23 模式，是工厂方法的前置形态；软考仍把它当独立考点。",
+            "judgment": "加新产品必须改工厂的 switch=违反开闭——这条缺陷正是工厂方法要治的病。",
+            "landing": "能写出简单工厂并指出它违反 OCP 的位置。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "简单工厂（Simple Factory）：把「new 哪个具体类」这件事从客户端搬进一个工厂类，客户端只说想要什么（参数），工厂负责造。它不是 GoF 23 模式之一，但是软考考点，更是理解工厂方法的台阶。"
+              },
+              {
+                "type": "uml",
+                "title": "简单工厂类图",
+                "uml": {
+                  "width": 660,
+                  "height": 270,
+                  "classes": [
+                    {
+                      "name": "SimpleFactory",
+                      "methods": [
+                        "+ static create(type): Product*"
+                      ],
+                      "x": 15,
+                      "y": 20,
+                      "w": 230
+                    },
+                    {
+                      "name": "Product",
+                      "stereotype": "interface",
+                      "methods": [
+                        "+ use()"
+                      ],
+                      "x": 310,
+                      "y": 20,
+                      "w": 150
+                    },
+                    {
+                      "name": "ProductA",
+                      "methods": [
+                        "+ use()"
+                      ],
+                      "x": 215,
+                      "y": 180,
+                      "w": 140
+                    },
+                    {
+                      "name": "ProductB",
+                      "methods": [
+                        "+ use()"
+                      ],
+                      "x": 415,
+                      "y": 180,
+                      "w": 140
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "SimpleFactory",
+                      "to": "Product",
+                      "kind": "dep",
+                      "label": "creates"
+                    },
+                    {
+                      "from": "ProductA",
+                      "to": "Product",
+                      "kind": "inherits"
+                    },
+                    {
+                      "from": "ProductB",
+                      "to": "Product",
+                      "kind": "inherits"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "callout",
+                "title": "软考考点",
+                "text": "认图：一个工厂类 + 一个产品接口 + N 个实现 + 工厂指向产品的 creates 依赖。缺陷追问「加新产品要不要改工厂？」——要，这正是它违反开闭的地方，答案里补一句工厂方法如何解决。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "简单工厂模式最被人诟病的缺陷是？",
+                    "choices": [
+                      {
+                        "label": "新增产品必须修改工厂类的分支逻辑，违反开闭原则",
+                        "ok": true,
+                        "why": "工厂的 switch 每加产品都要改——这是工厂方法模式存在的理由"
+                      },
+                      {
+                        "label": "客户端无法获得产品",
+                        "ok": false,
+                        "why": "恰恰相反，客户端拿到的都是 Product*"
+                      },
+                      {
+                        "label": "产品必须继承多个接口",
+                        "ok": false,
+                        "why": "产品只需要一个抽象"
+                      },
+                      {
+                        "label": "工厂不能是静态方法",
+                        "ok": false,
+                        "why": "静态方法是常见写法，不是缺陷"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.simple-factory.run",
+              "title": "跑一个简单工厂",
+              "case": "simple_factory_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "运行观察工厂按参数返回不同产品。然后新增 ProductC：你不得不改工厂的 switch——亲身体会这个违反 OCP 的位置。"
+            }
+          ]
+        },
+        {
+          "id": "dp.factory-method",
+          "title": "工厂方法模式 Factory Method",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.simple-factory"
+          ],
+          "track": "creational",
+          "guide_line": "把「造什么」延迟到子类决定：一个产品配一个工厂。",
+          "weight": "重点",
+          "outline": {
+            "promise": "掌握工厂方法对简单工厂的 OCP 修正：加产品=加一对子类，不改旧代码。",
+            "pain": "简单工厂每加产品都要改工厂分支。",
+            "model": "抽象 Creator 声明 factoryMethod()；具体 Creator 各造各的产品；客户端依赖两层抽象。",
+            "scope": "区分它与简单工厂、抽象工厂（一个 create 方法 vs 多个）。",
+            "judgment": "看到「每个具体工厂只造一种产品」就是工厂方法。",
+            "landing": "能给定场景画出工厂方法类图并写出 C++ 骨架。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "工厂方法（Factory Method）：定义创建对象的接口，让子类决定实例化哪个类。治的正是简单工厂的病——新增产品不再改工厂分支，而是**新增一对子类**（产品+工厂），对扩展开放、对修改关闭。"
+              },
+              {
+                "type": "uml",
+                "title": "工厂方法类图",
+                "uml": {
+                  "width": 660,
+                  "height": 280,
+                  "classes": [
+                    {
+                      "name": "Creator",
+                      "stereotype": "abstract",
+                      "methods": [
+                        "+ factoryMethod(): Product*",
+                        "+ template()"
+                      ],
+                      "x": 15,
+                      "y": 15,
+                      "w": 235
+                    },
+                    {
+                      "name": "ConcreteCreator",
+                      "methods": [
+                        "+ factoryMethod(): Product*"
+                      ],
+                      "x": 15,
+                      "y": 180,
+                      "w": 210
+                    },
+                    {
+                      "name": "Product",
+                      "stereotype": "interface",
+                      "methods": [
+                        "+ use()"
+                      ],
+                      "x": 380,
+                      "y": 15,
+                      "w": 160
+                    },
+                    {
+                      "name": "ConcreteProduct",
+                      "methods": [
+                        "+ use()"
+                      ],
+                      "x": 380,
+                      "y": 180,
+                      "w": 185
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "ConcreteCreator",
+                      "to": "Creator",
+                      "kind": "inherits"
+                    },
+                    {
+                      "from": "ConcreteProduct",
+                      "to": "Product",
+                      "kind": "inherits"
+                    },
+                    {
+                      "from": "Creator",
+                      "to": "Product",
+                      "kind": "dep",
+                      "label": "creates"
+                    },
+                    {
+                      "from": "ConcreteCreator",
+                      "to": "ConcreteProduct",
+                      "kind": "dep"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "callout",
+                "title": "软考考点",
+                "text": "与简单工厂的辨析：简单工厂一个工厂 switch 全包（违反 OCP），工厂方法每个产品配一个工厂（满足 OCP）。与抽象工厂的辨析：工厂方法的工厂接口只有一个 create 方法，抽象工厂有一族。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "工厂方法模式中「延迟到子类」的是？",
+                    "choices": [
+                      {
+                        "label": "实例化哪个具体产品类的决定",
+                        "ok": true,
+                        "why": "Creator 的 factoryMethod 由子类实现，决定造哪个 ConcreteProduct"
+                      },
+                      {
+                        "label": "产品的使用方式",
+                        "ok": false,
+                        "why": "产品怎么用是客户端的事，与工厂无关"
+                      },
+                      {
+                        "label": "工厂的析构顺序",
+                        "ok": false,
+                        "why": "与模式意图无关"
+                      },
+                      {
+                        "label": "抽象接口的方法签名",
+                        "ok": false,
+                        "why": "签名在抽象层固定，不因子类改变"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.factory-method.run",
+              "title": "跑一个工厂方法",
+              "case": "factory_method_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "运行观察 Client 只依赖 Creator/Product 两层抽象。然后新增一种产品：只加两个新类，旧文件一行不改——对照简单工厂体会 OCP。"
+            }
+          ]
+        },
+        {
+          "id": "dp.abstract-factory",
+          "title": "抽象工厂模式 Abstract Factory",
+          "difficulty": 4,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.factory-method"
+          ],
+          "track": "creational",
+          "guide_line": "一个工厂接口创建一整族配套产品。",
+          "weight": "重点",
+          "outline": {
+            "promise": "掌握抽象工厂与工厂方法的分界（一个 create 方法 vs 一族 create 方法）与适用场景。",
+            "pain": "需要成套更换产品族（Windows 控件全家换 Mac 全家）时，散落的工厂方法配不成套。",
+            "model": "AbstractFactory 声明 createA()/createB() 一族方法；具体工厂各造一整套；产品也分两级（抽象产品/具体产品）。",
+            "scope": "新增产品种类难（要改工厂接口）=它牺牲种类扩展换家族一致。",
+            "judgment": "看到「工厂接口里有多个 create 方法」就是抽象工厂。",
+            "landing": "能给定「按风格配套创建控件」场景画出抽象工厂类图。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "抽象工厂（Abstract Factory）：提供一个创建**一系列相关产品**的接口，无需指定具体类。与工厂方法的分界线就在 create 方法的数量：一个=工厂方法，一族=抽象工厂。"
+              },
+              {
+                "type": "uml",
+                "title": "抽象工厂类图（两族产品）",
+                "uml": {
+                  "width": 800,
+                  "height": 290,
+                  "classes": [
+                    {
+                      "name": "AbstractFactory",
+                      "stereotype": "interface",
+                      "methods": [
+                        "+ createProductA(): ProductA*",
+                        "+ createProductB(): ProductB*"
+                      ],
+                      "x": 15,
+                      "y": 15,
+                      "w": 260
+                    },
+                    {
+                      "name": "Factory1",
+                      "methods": [
+                        "+ createProductA()",
+                        "+ createProductB()"
+                      ],
+                      "x": 15,
+                      "y": 185,
+                      "w": 145
+                    },
+                    {
+                      "name": "Factory2",
+                      "methods": [
+                        "+ createProductA()",
+                        "+ createProductB()"
+                      ],
+                      "x": 195,
+                      "y": 185,
+                      "w": 145
+                    },
+                    {
+                      "name": "ProductA",
+                      "stereotype": "interface",
+                      "methods": [
+                        "+ useA()"
+                      ],
+                      "x": 430,
+                      "y": 15,
+                      "w": 155
+                    },
+                    {
+                      "name": "ProductB",
+                      "stereotype": "interface",
+                      "methods": [
+                        "+ useB()"
+                      ],
+                      "x": 630,
+                      "y": 15,
+                      "w": 155
+                    },
+                    {
+                      "name": "ProductA1",
+                      "methods": [
+                        "+ useA()"
+                      ],
+                      "x": 430,
+                      "y": 185,
+                      "w": 140
+                    },
+                    {
+                      "name": "ProductB1",
+                      "methods": [
+                        "+ useB()"
+                      ],
+                      "x": 630,
+                      "y": 185,
+                      "w": 140
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "Factory1",
+                      "to": "AbstractFactory",
+                      "kind": "implements"
+                    },
+                    {
+                      "from": "Factory2",
+                      "to": "AbstractFactory",
+                      "kind": "implements"
+                    },
+                    {
+                      "from": "ProductA1",
+                      "to": "ProductA",
+                      "kind": "inherits"
+                    },
+                    {
+                      "from": "ProductB1",
+                      "to": "ProductB",
+                      "kind": "inherits"
+                    },
+                    {
+                      "from": "AbstractFactory",
+                      "to": "ProductA",
+                      "kind": "dep",
+                      "label": "creates"
+                    },
+                    {
+                      "from": "AbstractFactory",
+                      "to": "ProductB",
+                      "kind": "dep",
+                      "label": "creates"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "callout",
+                "title": "软考考点",
+                "text": "下午题给「按操作系统风格成套创建按钮+文本框」的场景，答案是抽象工厂。辨析题高频：它与工厂方法的 create 方法数量；它的缺点（加新产品种类要动所有工厂接口，违背 OCP——加「产品等级」易、加「产品族」易、加「产品种类」难）。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "某 UI 库要保证一次创建的 Button、TextBox 必属于同一风格（Win 风格或 Mac 风格）。最合适的模式是？",
+                    "choices": [
+                      {
+                        "label": "抽象工厂",
+                        "ok": true,
+                        "why": "成套（一族）产品的配套创建正是抽象工厂的意图"
+                      },
+                      {
+                        "label": "工厂方法",
+                        "ok": false,
+                        "why": "工厂方法只管一种产品，配不成套"
+                      },
+                      {
+                        "label": "单例",
+                        "ok": false,
+                        "why": "与实例唯一性无关"
+                      },
+                      {
+                        "label": "建造者",
+                        "ok": false,
+                        "why": "建造者解决分步组装一个复杂对象，不是一族产品的配套"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.abstract-factory.run",
+              "title": "跑一个抽象工厂",
+              "case": "abstract_factory_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "运行观察 Factory1 造出的一对产品来自同一族。然后给工厂接口加一个 createProductC()——体会「加产品种类要改所有工厂」的代价。"
+            }
+          ]
+        },
+        {
+          "id": "dp.builder",
+          "title": "建造者模式 Builder",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.uml.class"
+          ],
+          "track": "creational",
+          "guide_line": "分步构建复杂对象：构建过程与表示分离。",
+          "weight": "重点",
+          "outline": {
+            "promise": "掌握 Director(指挥) + Builder(建造) 的分工，与工厂家族区分（造一步到位 vs 分步组装）。",
+            "pain": "构造函数十几个参数、可选参数排列组合爆炸。",
+            "model": "Builder 接口声明 buildPartX() 与 getResult()；Director 封装构建步骤顺序；产品逐步组装。",
+            "scope": "与工厂家族辨析（工厂一步 create，建造者分步 build）；现代 C++ 的流式 builder 变体。",
+            "judgment": "看到 buildPartX + getResult 的方法对就是建造者。",
+            "landing": "能把多参数构造改造为建造者并说明好处。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "建造者（Builder）：把复杂对象的**构建过程**与**表示**分离。Director（指挥者）定步骤顺序，Builder（建造者）实现每一步——同样的步骤，不同的建造者造出不同的表示。"
+              },
+              {
+                "type": "uml",
+                "title": "建造者类图",
+                "uml": {
+                  "width": 700,
+                  "height": 280,
+                  "classes": [
+                    {
+                      "name": "Builder",
+                      "stereotype": "abstract",
+                      "methods": [
+                        "+ buildPartA()",
+                        "+ buildPartB()",
+                        "+ getResult(): Product*"
+                      ],
+                      "x": 15,
+                      "y": 15,
+                      "w": 220
+                    },
+                    {
+                      "name": "ConcreteBuilder",
+                      "methods": [
+                        "+ buildPartA()",
+                        "+ buildPartB()",
+                        "+ getResult()"
+                      ],
+                      "x": 15,
+                      "y": 185,
+                      "w": 205
+                    },
+                    {
+                      "name": "Director",
+                      "methods": [
+                        "+ construct()"
+                      ],
+                      "x": 300,
+                      "y": 20,
+                      "w": 155
+                    },
+                    {
+                      "name": "Product",
+                      "attrs": [
+                        "- parts: vector<string>"
+                      ],
+                      "methods": [
+                        "+ show()"
+                      ],
+                      "x": 520,
+                      "y": 15,
+                      "w": 165
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "ConcreteBuilder",
+                      "to": "Builder",
+                      "kind": "inherits"
+                    },
+                    {
+                      "from": "Director",
+                      "to": "Builder",
+                      "kind": "assoc",
+                      "label": "directs"
+                    },
+                    {
+                      "from": "Builder",
+                      "to": "Product",
+                      "kind": "dep",
+                      "label": "builds"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "callout",
+                "title": "软考考点",
+                "text": "意图句「将复杂对象的构建与它的表示分离，使同样的构建过程可以创建不同的表示」=建造者。辨析：它强调**分步**与**顺序**（Director 控制流程），工厂强调「造哪种」。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "建造者模式中 Director 的职责是？",
+                    "choices": [
+                      {
+                        "label": "封装构建的步骤与顺序，不关心每步细节",
+                        "ok": true,
+                        "why": "指挥者定流程，建造者干每一步——职责分离是模式的精髓"
+                      },
+                      {
+                        "label": "实现每一个 buildPart 方法",
+                        "ok": false,
+                        "why": "那是 ConcreteBuilder 的活"
+                      },
+                      {
+                        "label": "持有产品的唯一实例",
+                        "ok": false,
+                        "why": "那是单例的语义"
+                      },
+                      {
+                        "label": "决定创建哪个产品族",
+                        "ok": false,
+                        "why": "那是抽象工厂的语义"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.builder.run",
+              "title": "跑一个建造者",
+              "case": "builder_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "运行观察 Director 用相同步骤造出两种餐食。再写一个 VegBuilder 只换 buildPart 的实现——Director 一行不改。"
+            }
+          ]
+        },
+        {
+          "id": "dp.prototype",
+          "title": "原型模式 Prototype",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.uml.class"
+          ],
+          "track": "creational",
+          "guide_line": "用克隆已有实例来创建新对象。",
+          "weight": "了解",
+          "outline": {
+            "promise": "掌握 clone 的语义（深/浅拷贝）与适用场景（构造昂贵/类型未知）。",
+            "pain": "对象的初始化成本高，或者客户端根本不知道要 new 的具体类型（只知道它的抽象）。",
+            "model": "抽象 Prototype 声明 clone()；具体原型各自实现克隆；客户端拿着 Prototype* 克隆。",
+            "scope": "C++ 的拷贝构造就是天然的原型机制；深拷贝与浅拷贝的选择是考点。",
+            "judgment": "看到 clone 方法就是原型。",
+            "landing": "能实现深拷贝 clone 并说明浅拷贝的坑。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "原型（Prototype）：用**复制**已有实例来创建新对象，而不是 new。两个动机：构造过程昂贵（复制省掉初始化）、客户端不知道具体类型（手里只有基类指针，让它自己 clone 出同类新对象）。"
+              },
+              {
+                "type": "uml",
+                "title": "原型模式类图",
+                "uml": {
+                  "width": 620,
+                  "height": 280,
+                  "classes": [
+                    {
+                      "name": "Prototype",
+                      "stereotype": "abstract",
+                      "methods": [
+                        "+ clone(): Prototype*"
+                      ],
+                      "x": 40,
+                      "y": 15,
+                      "w": 210
+                    },
+                    {
+                      "name": "ConcretePrototype",
+                      "methods": [
+                        "+ clone(): Prototype*"
+                      ],
+                      "x": 40,
+                      "y": 180,
+                      "w": 225
+                    },
+                    {
+                      "name": "Client",
+                      "methods": [
+                        "+ operation()"
+                      ],
+                      "x": 380,
+                      "y": 40,
+                      "w": 140
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "from": "ConcretePrototype",
+                      "to": "Prototype",
+                      "kind": "inherits"
+                    },
+                    {
+                      "from": "Client",
+                      "to": "Prototype",
+                      "kind": "dep",
+                      "label": "p->clone()"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "callout",
+                "title": "软考考点",
+                "text": "意图句「用原型实例指定创建对象的种类，并通过拷贝这些原型创建新的对象」=原型。实现题常考深拷贝：原型持有指针成员时 clone 必须深拷贝，否则两个对象共享内部状态。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "原型模式的核心方法是？",
+                    "choices": [
+                      {
+                        "label": "clone()——复制自己产生新对象",
+                        "ok": true,
+                        "why": "克隆是原型的签名，客户端只依赖抽象的 clone"
+                      },
+                      {
+                        "label": "getInstance()",
+                        "ok": false,
+                        "why": "那是单例"
+                      },
+                      {
+                        "label": "create(type)",
+                        "ok": false,
+                        "why": "那是简单工厂"
+                      },
+                      {
+                        "label": "buildPart()",
+                        "ok": false,
+                        "why": "那是建造者"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.prototype.run",
+              "title": "跑一个原型",
+              "case": "prototype_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "运行观察克隆出的对象与原型值相同但地址不同。把成员改成指针并保持浅拷贝，观察两个对象共享同一块内存的坑，再改成深拷贝修复。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "structural",
+      "title": "结构型模式：把类拼成更大的结构",
+      "track": "structural",
+      "summary": "适配器、桥接、组合、装饰、外观、享元、代理——共 7 个，下一批填充（每个配标准 UML 类图与 C++ 实验）。",
+      "topics": []
+    },
+    {
+      "id": "behavioral",
+      "title": "行为型模式：让对象之间会说话",
+      "track": "behavioral",
+      "summary": "策略、命令、观察者、状态、职责链、模板方法等 11 个，下一批填充。",
+      "topics": []
+    },
+    {
+      "id": "non-oo",
+      "title": "非面向对象世界的模式",
+      "track": "non-oo",
+      "summary": "走出类图：Linux 内核的 C 设计模式（函数表/引用计数/通知链）、函数式的策略与命令替代、Go/Rust 的结构化惯例、并发模式。下一批填充。",
+      "topics": []
+    }
+  ]
+}

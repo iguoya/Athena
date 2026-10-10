@@ -4,9 +4,82 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>设计模式</title>
+    <script type="module" src="/src/main.ts" defer></script>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <div id="app" class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <!-- 应用图标：和启动器图块、任务栏、标题栏同一份 icon.svg（仓库 ADR 0065）。 -->
+          <img class="app-icon" src="/icon.svg" alt="" width="40" height="40" />
+          <button type="button" class="home-btn" id="home-btn" title="返回知识图谱">图谱</button>
+          <div>
+            <h1 id="app-title">设计模式</h1>
+            <p id="app-tagline" class="tagline"></p>
+          </div>
+        </div>
+        <div id="app-meta" class="meta"></div>
+      </header>
+
+      <main id="view-map" class="view-map">
+        <section class="graph-wrap card">
+          <div class="graph-head">
+            <div>
+              <div class="pane-title">知识点路线图</div>
+              <p class="graph-note" id="graph-note">
+                纵向 = 先修层级（同层无先后）；左侧色条 = 主线；粗箭头 = 后继要求精通或「先拿下」。
+                悬停看详情，点击进入导读。完成度由各章「随堂考核」写入。
+              </p>
+            </div>
+            <div class="track-legend" id="track-legend"></div>
+          </div>
+          <div id="graph" class="graph" aria-label="设计模式知识图谱"></div>
+        </section>
+
+        <aside class="map-side">
+          <section class="hero card">
+            <p class="lead" id="hero-lead"></p>
+            <p class="prose muted" id="hero-desc"></p>
+          </section>
+          <section class="card">
+            <div class="pane-title">进度概览</div>
+            <div class="stat-row" id="stat-row"></div>
+            <div class="progress-viz" id="progress-viz"></div>
+            <ul class="chapter-stats" id="chapter-stats"></ul>
+          </section>
+          <section class="card" id="node-detail-card">
+            <div class="pane-title">节点详情</div>
+            <div id="node-detail" class="node-detail muted">悬停或点选图谱节点，查看难度、掌握目标、先修、实验与完成度。</div>
+          </section>
+          <section class="card">
+            <div class="pane-title">图谱说明</div>
+            <ul class="legend-list" id="legend-list"></ul>
+          </section>
+          <section class="spine card">
+            <div class="pane-title">读题与读实现时的五条脊</div>
+            <ul id="spine-list" class="spine-list"></ul>
+          </section>
+        </aside>
+      </main>
+
+      <main id="view-topic" class="view-topic is-hidden">
+        <aside class="nav" id="nav"></aside>
+        <section class="stage">
+          <div class="topic-head" id="topic-head"></div>
+          <nav class="tabs" id="tabs" role="tablist">
+            <button type="button" data-tab="brief" class="tab is-active">导读</button>
+            <button type="button" data-tab="lesson" class="tab">讲解</button>
+          </nav>
+          <div class="panel" id="panel"></div>
+        </section>
+      </main>
+    </div>
+
+    <!-- 缺工具这类需要使用者动手的提示走对话框，不淹没在状态栏里 -->
+    <dialog id="notice">
+      <h2 id="notice-title"></h2>
+      <p id="notice-body"></p>
+      <form method="dialog"><button autofocus>知道了</button></form>
+    </dialog>
   </body>
 </html>
