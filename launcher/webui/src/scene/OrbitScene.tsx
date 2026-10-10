@@ -170,11 +170,6 @@ function IconSphere({
             opacity={active ? 1 : 0.75}
           />
         </mesh>
-        {/* 运行状态环：贴着球面的细环。 */}
-        <mesh rotation={[Math.PI / 2.6, 0.4, 0]}>
-          <torusGeometry args={[SPHERE_R + 7, 2.4, 12, 48]} />
-          <meshBasicMaterial color={STATE_COLOR[app.state]} transparent opacity={hovered ? 1 : 0.85} />
-        </mesh>
       </group>
       <Html position={[0, -(SPHERE_R + 26), 0]} center distanceFactor={900} zIndexRange={[10, 0]}>
         <div
@@ -189,7 +184,13 @@ function IconSphere({
             transition: "opacity 140ms",
           }}
         >
-          {app.title}
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+            {app.title}
+            <span style={{
+              width: 7, height: 7, borderRadius: "50%",
+              background: STATE_COLOR[app.state], display: "inline-block",
+            }} />
+          </span>
         </div>
       </Html>
     </group>
