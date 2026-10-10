@@ -20,7 +20,7 @@ export struct GroupSpec {
 }
 
 /// 一条连线：三次贝塞尔（起点、两个控制点、终点）。kind：0 虎头→领域，1 领域→应用，
-/// 2 演进（带箭头），3 相关。颜色连透明度一起由 Rust 按 kind 算好。
+/// 2 演进（带箭头），3 相关，4 挂靠，5 引用挂靠（ADR 0116）。颜色连透明度一起由 Rust 按 kind 算好。
 export struct MapLink {
     kind: int,
     color: color,

@@ -144,6 +144,10 @@ struct RawManifest {
     /// 布局时画在挂靠者外一圈。找不到的 id 布局时忽略。
     #[serde(default)]
     parent: Option<String>,
+    /// 引用挂靠（ADR 0116）：除 `parent` 之外，还在这些应用底下各出现一个引用节点——
+    /// 同一个应用、同一个图标。找不到的 id 布局时忽略。
+    #[serde(default)]
+    also_under: Vec<String>,
     /// 显示层隐藏（ADR 0093）：不出现在任何面板，`list --json` 仍返回并带标记；
     /// open/stop 与 dev 编排照常可用——隐藏是显示层的事，不是下线。
     #[serde(default)]
@@ -173,6 +177,8 @@ pub struct App {
     pub related: Vec<String>,
     /// 挂靠的应用 id：本应用是它底下的子课程/子能力（ADR 0092）。有向、单父。
     pub parent: Option<String>,
+    /// 引用挂靠（ADR 0116）：在这些应用底下各多一个引用节点，点开是同一个应用。
+    pub also_under: Vec<String>,
     /// 显示层隐藏（ADR 0093）：不进任何面板，清单与编排仍可见。
     pub hidden: bool,
 }
@@ -281,6 +287,7 @@ fn parse(dir: &Path) -> Option<App> {
         group: raw.group,
         related: raw.related,
         parent: raw.parent,
+        also_under: raw.also_under,
         hidden: raw.hidden,
     })
 }
@@ -329,6 +336,7 @@ mod tests {
             group: None,
             related: Vec::new(),
             parent: None,
+            also_under: Vec::new(),
             hidden: false,
         }
     }

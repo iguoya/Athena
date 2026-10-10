@@ -130,6 +130,9 @@ pub struct AppNode {
     pub group: usize,
     /// 图标中心。
     pub at: Point,
+    /// 引用节点（ADR 0116）：`also_under` 给同一个应用生成的又一个图块，
+    /// 点开是同一个应用；排在全部本体节点之后。
+    pub reference: bool,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -144,6 +147,8 @@ pub enum LinkKind {
     Related,
     /// 挂靠：parent → 子应用，有向带箭头（ADR 0092）。
     Attach,
+    /// 引用挂靠：also_under 的挂靠者 → 引用节点，有向带箭头，比挂靠线淡（ADR 0116）。
+    Reference,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -166,7 +171,7 @@ pub struct MindMap {
     /// 同心圈半径，只用来画「空间感」，没有信息。
     pub rings: Vec<f32>,
     pub groups: Vec<GroupNode>,
-    /// 与输入的应用同序。
+    /// 前 `apps.len()` 个是本体节点，与输入的应用同序；其后是引用节点（ADR 0116）。
     pub nodes: Vec<AppNode>,
     pub links: Vec<Link>,
 }
@@ -175,6 +180,7 @@ pub struct MindMap {
 ///
 /// 带 `parent` 的应用是挂靠节点（ADR 0092）：不占领域扇区，画在挂靠者外一圈，
 /// 用有向实线连过去；parent 的 id 解析不到就忽略挂靠，回普通布局（与 related 同规）。
+/// `also_under` 列出的挂靠者底下再各放一个引用节点（ADR 0116），与挂靠节点同圈排布。
 pub fn layout(apps: &[App]) -> MindMap {
     let index_of = |id: &str| apps.iter().position(|app| app.id == id);
     let raw_targets: Vec<Option<usize>> = apps
@@ -191,6 +197,20 @@ pub fn layout(apps: &[App]) -> MindMap {
             _ => None,
         })
         .collect();
+
+    // 引用挂靠（ADR 0116）：每条有效的 also_under 生成一个引用节点，节点下标排在本体之后。
+    // 解析不到、指向自己、与主挂靠重复、目标自己也是挂靠节点（深度一层）的都忽略。
+    let mut references: Vec<(usize, usize)> = Vec::new(); // (应用, 挂靠者)
+    for (i, app) in apps.iter().enumerate() {
+        for target in &app.also_under {
+            let Some(t) = index_of(target) else { continue };
+            if t == i || attached_to[i] == Some(t) || raw_targets[t].is_some() || references.contains(&(i, t)) {
+                continue;
+            }
+            references.push((i, t));
+        }
+    }
+    let node_count = apps.len() + references.len();
 
     // 1. 分组：按首次出现的顺序，省略 group 的归「其他」。领域胶囊只由普通成员
     // 登记——挂靠节点不占扇区，画布上贴着挂靠者外一圈，领域归属沿用挂靠者；
@@ -232,12 +252,43 @@ pub fn layout(apps: &[App]) -> MindMap {
         })
         .collect();
 
-    // 2. 扇区：按组里的应用数加权，从正上方顺时针排。
-    let total: f32 = members.iter().map(|m| m.len().max(1) as f32).sum::<f32>().max(1.0);
+    // 2. 扇区：按「角度需求」分，从正上方顺时针排。一个组要的角度取两者的大值：
+    // 第一圈上成员排开要的角度，和挂靠层上它的子节点（真挂靠 + 引用）排开要的角度。
+    // 只按成员数平分的话，单应用的领域挨在一起会互相压住，挂靠者的子节点也会
+    // 铺进隔壁扇区，和邻居的子节点叠成一摞（引用挂靠让子节点多了，ADR 0116）。
+    // 整圈放不下就把第一圈往外推，直到放得下。
+    let mut children_count: Vec<usize> = vec![0; apps.len()];
+    for target in attached_to.iter().flatten() {
+        children_count[*target] += 1;
+    }
+    for &(_, t) in &references {
+        children_count[t] += 1;
+    }
+    let group_children: Vec<usize> = members.iter().map(|m| m.iter().map(|&i| children_count[i]).sum()).collect();
+    let mut ring_guess = FIRST_RING;
+    let demand = loop {
+        let member_angle = chord_angle(ring_guess);
+        let child_angle = chord_angle(ring_guess + RING_STEP);
+        let demand: Vec<f32> = members
+            .iter()
+            .zip(&group_children)
+            .map(|(m, &kids)| {
+                // 独子也要偏开一个身位（见挂靠节点的放置），所以按两个身位算。
+                let kids_need = child_angle * if kids == 1 { 2.0 } else { kids as f32 };
+                // 乘 1.001：capacity 用的是同一个弦长判据，压在边界上时浮点误差会少算一个。
+                (m.len().max(1) as f32 * member_angle).max(kids_need) * 1.001
+            })
+            .collect();
+        if demand.iter().sum::<f32>() <= std::f32::consts::TAU || ring_guess > 3000.0 {
+            break demand;
+        }
+        ring_guess += 8.0;
+    };
+    let total: f32 = demand.iter().sum::<f32>().max(1e-6);
     let mut sector_start = -std::f32::consts::FRAC_PI_2;
     let mut sectors: Vec<(f32, f32)> = Vec::with_capacity(group_count); // (起点, 宽度)
-    for m in &members {
-        let width = std::f32::consts::TAU * (m.len().max(1) as f32) / total;
+    for need in &demand {
+        let width = std::f32::consts::TAU * need / total;
         sectors.push((sector_start, width));
         sector_start += width;
     }
@@ -260,7 +311,7 @@ pub fn layout(apps: &[App]) -> MindMap {
         }
         group_radius += 4.0;
     }
-    let first_ring = FIRST_RING.max(group_radius + 153.0);
+    let first_ring = ring_guess.max(group_radius + 153.0);
 
     // 3. 先算每个组需要几圈，才知道画布多大（中心坐标取决于画布）。
     // 组的成员圈半径：第一圈装不下全组时整组外推——同组即兄弟（ADR 0101），
@@ -293,9 +344,7 @@ pub fn layout(apps: &[App]) -> MindMap {
     }
     // 挂靠层的半径在 center 定下来之前就得算——挂靠节点贴在挂靠者外一圈，
     // 画布要为它们多留一整圈。
-    let attach_ring_needed = apps
-        .iter()
-        .any(|app| app.parent.is_some());
+    let attach_ring_needed = !references.is_empty() || apps.iter().any(|app| app.parent.is_some());
     let innermost = member_ring.iter().copied().fold(first_ring, f32::max);
     let outer = if apps.is_empty() {
         group_radius
@@ -336,13 +385,17 @@ pub fn layout(apps: &[App]) -> MindMap {
 
     // 挂靠节点位置：挂靠者外一圈，在挂靠者的角度两侧均分。相邻子节点的角距按
     // 同圈弦长 ≥ SLOT 反解，图块不会叠在一起。
-    let mut attach_at: Vec<Option<Point>> = vec![None; apps.len()];
+    let mut attach_at: Vec<Option<Point>> = vec![None; node_count];
     let mut attach_radii: Vec<f32> = Vec::new();
     let mut children_of: Vec<Vec<usize>> = vec![Vec::new(); apps.len()];
     for (i, target) in attached_to.iter().enumerate() {
         if let Some(p) = target {
             children_of[*p].push(i);
         }
+    }
+    // 引用节点和挂靠节点一起在挂靠者外一圈均分，排在真挂靠的子节点之后。
+    for (k, &(_, t)) in references.iter().enumerate() {
+        children_of[t].push(apps.len() + k);
     }
     for (p, children) in children_of.iter().enumerate() {
         if children.is_empty() || attached_to[p].is_some() {
@@ -353,11 +406,13 @@ pub fn layout(apps: &[App]) -> MindMap {
         let (k, count) = slot_in_ring[p];
         let parent_angle = start + (k as f32 + 0.5) * width / count as f32;
         // 兄弟节点岔开成弧,不与父节点径向共线:相邻子节点的角距按同圈弦长
-        // ≥ SLOT 反解,下限 0.35 rad(≈20°)保证弧段肉眼可见的弯曲;
-        // 独子也偏开 0.35 rad——正后方会让父、子、连线三点一条直线。
-        let spread = (SLOT / radius).asin().max(0.35);
+        // ≥ SLOT 反解;扇区有余量时放宽到 0.35 rad(≈20°)让弧段肉眼可见地弯曲,
+        // 余量不够就只取弦长下限——宁可弧平一点,也不铺进隔壁扇区。
+        // 独子也偏开一个身位——正后方会让父、子、连线三点一条直线。
+        let room = width / children.len().max(2) as f32;
+        let spread = chord_angle(radius).max(0.35_f32.min(room));
         let first_offset = if children.len() == 1 {
-            0.35
+            spread
         } else {
             -spread * (children.len() as f32 - 1.0) / 2.0
         };
@@ -367,7 +422,7 @@ pub fn layout(apps: &[App]) -> MindMap {
         attach_radii.push(radius);
     }
 
-    let nodes: Vec<AppNode> = apps
+    let mut nodes: Vec<AppNode> = apps
         .iter()
         .enumerate()
         .map(|(i, app)| AppNode {
@@ -377,8 +432,15 @@ pub fn layout(apps: &[App]) -> MindMap {
                 Some(at) => at,
                 None => node_at[i],
             },
+            reference: false,
         })
         .collect();
+    nodes.extend(references.iter().enumerate().map(|(k, &(i, t))| AppNode {
+        id: apps[i].id.clone(),
+        group: group_of[t],
+        at: attach_at[apps.len() + k].unwrap_or(node_at[t]),
+        reference: true,
+    }));
 
     let mut rings = vec![group_radius];
     if !apps.is_empty() {
@@ -414,8 +476,8 @@ pub fn layout(apps: &[App]) -> MindMap {
     }
     for (i, node) in nodes.iter().enumerate() {
         // 挂靠节点只画父应用来的挂靠线（ADR 0092），不画领域分支线——
-        // 它的 group 沿用挂靠者，若不跳过会多出一条领域胶囊连过来的假分支。
-        if attached_to[i].is_some() {
+        // 它的 group 沿用挂靠者，若不跳过会多出一条领域胶囊连过来的假分支。引用节点同理。
+        if node.reference || attached_to[i].is_some() {
             continue;
         }
         let group = &groups[node.group];
@@ -439,6 +501,11 @@ pub fn layout(apps: &[App]) -> MindMap {
             ));
         }
     }
+    for (k, &(_, t)) in references.iter().enumerate() {
+        if let Some(at) = attach_at[apps.len() + k] {
+            links.push(curved(LinkKind::Reference, groups[group_of[t]].color, node_at[t], at, center, 0.14, true));
+        }
+    }
     let mut drawn: HashSet<(usize, usize)> = HashSet::new();
     for (to, app) in apps.iter().enumerate() {
         if let Some(from) = app.evolves_from.as_deref().and_then(index_of) {
@@ -459,6 +526,11 @@ pub fn layout(apps: &[App]) -> MindMap {
     }
 
     MindMap { width: extent * 2.0, height: extent * 2.0, center, rings, groups, nodes, links }
+}
+
+/// 半径 radius 的圈上，相邻两个图块中心的弦长恰为 SLOT 时对应的圆心角。
+fn chord_angle(radius: f32) -> f32 {
+    2.0 * (SLOT / (2.0 * radius)).min(1.0).asin()
 }
 
 /// 一个扇区（宽度 width，弧度）在半径 radius 的圈上最多放几个图块。
@@ -534,6 +606,7 @@ mod tests {
             group: group.map(str::to_string),
             related: related.iter().map(|s| s.to_string()).collect(),
             parent: None,
+            also_under: Vec::new(),
             hidden: false,
         }
     }
@@ -732,12 +805,43 @@ mod tests {
     #[test]
     fn 仓库里的真实清单排得干净() {
         let repo = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("..").join("..");
-        let apps = discover(&repo);
+        let mut apps = discover(&repo);
         if apps.is_empty() {
             return; // 不在完整仓库里（例如单独打包的 crate）
         }
+        // 与 GUI 排的是同一份：subjects 加 practice，去掉隐藏的（ADR 0093）。
+        apps.extend(crate::manifest::discover_in(&repo.join("practice")));
+        apps.retain(|app| !app.hidden);
         let map = layout(&apps);
-        assert_eq!(map.nodes.len(), apps.len());
+        assert_eq!(map.nodes.iter().filter(|n| !n.reference).count(), apps.len());
+        assert_clean(&map);
+    }
+
+    #[test]
+    fn 引用挂靠给同一应用多一个图块_无效引用忽略() {
+        let a = app("a", Some("甲"), None, &[]);
+        let b = app("b", Some("乙"), None, &[]);
+        let mut c = app("c", Some("甲"), None, &[]);
+        c.parent = Some("a".to_string());
+        // b 有效；a 与主挂靠重复、ghost 解析不到、c 指向自己、b 重复一次——都只留一个 b。
+        c.also_under = ["b", "a", "ghost", "c", "b"].iter().map(|s| s.to_string()).collect();
+        let mut d = app("d", Some("甲"), None, &[]);
+        d.parent = Some("a".to_string());
+        d.also_under = vec!["c".to_string()]; // c 自己是挂靠节点：深度一层，忽略
+        let mut e = app("e", Some("甲"), None, &[]);
+        e.also_under = vec!["b".to_string()]; // 没有主挂靠的普通成员也能被引用到别处
+        let map = layout(&[a, b, c, d, e]);
+
+        let ids: Vec<_> = map.nodes.iter().map(|n| (n.id.as_str(), n.reference)).collect();
+        assert_eq!(ids, [("a", false), ("b", false), ("c", false), ("d", false), ("e", false), ("c", true), ("e", true)]);
+        // 引用节点着挂靠者的色，连线是单独的引用种类且带箭头。
+        assert!(map.nodes[5..].iter().all(|n| n.group == map.nodes[1].group));
+        let refs: Vec<_> = map.links.iter().filter(|l| l.kind == LinkKind::Reference).collect();
+        assert_eq!(refs.len(), 2);
+        assert!(refs.iter().all(|l| l.arrow.is_some()));
+        assert_eq!(map.links.iter().filter(|l| l.kind == LinkKind::Attach).count(), 2);
+        // 本体 e 仍在自己的领域里有分支线；引用节点没有分支线。
+        assert_eq!(map.links.iter().filter(|l| l.kind == LinkKind::Branch).count(), 3);
         assert_clean(&map);
     }
 }

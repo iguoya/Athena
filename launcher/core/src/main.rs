@@ -156,6 +156,7 @@ fn listing_json(apps: &[App], snapshot: &ProcessSnapshot) -> String {
                 // ADR 0093：隐藏是显示层的事，脚本与依赖方仍可见。
                 "hidden": app.hidden,
                 "parent": app.parent,
+                "alsoUnder": app.also_under,
                 "runnable": app.is_runnable(),
                 "state": snapshot.state(app).key(),
                 "log": paths::log_file(&app.id),

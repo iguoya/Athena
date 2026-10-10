@@ -480,13 +480,15 @@ fn open_log(path: &std::path::Path) {
 /// 把一份清单铺进界面与托盘：两个图块模型、思维导图、托盘菜单。启动铺界面
 /// 和热刷新铺界面走同一个入口，两条路径铺出来的东西没有差别（ADR 0001）。
 fn apply_catalog(window: &LauncherWindow, tray: &Tray, catalog: &Catalog) {
-    window.set_apps(ModelRc::from(Rc::new(VecModel::from(build_entries(
+    let map = mindmap::layout(&catalog.visible);
+    window.set_apps(ModelRc::from(Rc::new(VecModel::from(map_entries(
         &catalog.visible,
+        &map,
     )))));
     // 实践面板已取消（ADR 0093）：practice 应用按 parent 声明画进思维导图的
     // 挂靠层，网格永远置空——slint 按 length 显隐，整块分区自然不再出现。
     window.set_practice_apps(ModelRc::from(Rc::new(VecModel::from(Vec::<AppEntry>::new()))));
-    set_mind_map(window, &mindmap::layout(&catalog.visible));
+    set_mind_map(window, &map);
     tray.rebuild(
         &catalog
             .visible
@@ -566,6 +568,8 @@ fn map_link(link: &mindmap::Link) -> MapLink {
         mindmap::LinkKind::Evolves => (2, 0xff),
         mindmap::LinkKind::Related => (3, 0xc0),
         mindmap::LinkKind::Attach => (4, 0xe6),
+        // 引用挂靠比主挂靠淡一档：一眼分得出哪条是本体、哪条是引用（ADR 0116）。
+        mindmap::LinkKind::Reference => (5, 0x8c),
     };
     let base = parse_color(link.color, "思维导图");
     let [a, b, c] = link.arrow.unwrap_or([link.to; 3]);
@@ -595,6 +599,18 @@ fn tile_icon(app: &App) -> Option<slint::Image> {
     icon::render(app.icon_file.as_ref()?, 112)
 }
 
+/// 思维导图的图块与 `map.nodes` 一一对应：本体按清单顺序在前，引用节点在后（ADR 0116）。
+/// 引用节点复制本体的图块数据——同一个应用、同一个图标，点开和停止用的也是同一个 id。
+fn map_entries(apps: &[App], map: &mindmap::MindMap) -> Vec<AppEntry> {
+    let mut entries = build_entries(apps);
+    let references: Vec<AppEntry> = map.nodes[apps.len()..]
+        .iter()
+        .filter_map(|node| entries.iter().find(|entry| entry.id.as_str() == node.id).cloned())
+        .collect();
+    entries.extend(references);
+    entries
+}
+
 /// 学习应用面板和实践面板共用同一套图块数据构造，只是喂的 `apps` 来源
 /// 不同（`discover(repo)` vs `discover_in(repo/practice)）。
 fn build_entries(apps: &[App]) -> Vec<AppEntry> {
@@ -620,12 +636,23 @@ fn build_entries(apps: &[App]) -> Vec<AppEntry> {
 /// 颜色由 `tint` 算好（绿/橙/灰）；`running` 只管停止按钮。图标本身不随
 /// 状态变化（ADR 0065）。
 fn apply_states(model: &ModelRc<AppEntry>, states: &[RunState]) {
-    for (index, state) in states.iter().enumerate() {
-        if let Some(mut entry) = model.row_data(index) {
-            entry.tint = tint(*state).into();
-            entry.running = *state != RunState::Stopped;
-            model.set_row_data(index, entry);
-        }
+    // 模型末尾的引用节点（ADR 0116）没有自己的探测结果，按 id 跟本体同步。
+    let mut by_id: Vec<(SharedString, RunState)> = Vec::with_capacity(states.len());
+    for index in 0..model.row_count() {
+        let Some(mut entry) = model.row_data(index) else { continue };
+        let state = match states.get(index) {
+            Some(state) => {
+                by_id.push((entry.id.clone(), *state));
+                *state
+            }
+            None => match by_id.iter().find(|(id, _)| *id == entry.id) {
+                Some((_, state)) => *state,
+                None => continue,
+            },
+        };
+        entry.tint = tint(state).into();
+        entry.running = state != RunState::Stopped;
+        model.set_row_data(index, entry);
     }
 }
 
