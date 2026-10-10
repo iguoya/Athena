@@ -1593,3 +1593,28 @@ textarea.code {
 .callout.exam-note summary { cursor: pointer; font-weight: 700; color: var(--muted); font-size: 0.9em; }
 .callout.exam-note[open] summary { margin-bottom: 0.3em; }
 .callout.exam-note > div { color: var(--muted); font-size: 0.92em; }
+
+/* 代码填空（软考下午题）：原题代码里嵌输入框 */
+.fillcode .fill-statement { white-space: pre-line; }
+.fill-code {
+  background: var(--code-bg); color: var(--code-ink); font-family: var(--mono);
+  font-size: 0.78em; line-height: 1.7; padding: 0.8em 1em; border-radius: var(--radius);
+  border: 1px solid var(--border); overflow-x: auto; white-space: pre;
+}
+.fill-slot { display: inline-flex; align-items: baseline; gap: 0.15em; }
+.fill-no { color: var(--accent-amber); font-weight: 700; font-family: var(--font); font-size: 0.9em; }
+.fill-input {
+  font: inherit; padding: 0.05em 0.35em; border: 1px solid var(--border-strong);
+  border-radius: 0.3em; background: var(--surface); color: var(--ink);
+}
+.fill-input:focus { outline: 2px solid var(--primary-soft); border-color: var(--primary); }
+.fill-input.is-ok { border-color: var(--success); background: var(--success-soft); }
+.fill-input.is-bad { border-color: var(--danger); background: var(--danger-soft); }
+.fill-actions { display: flex; flex-wrap: wrap; gap: 0.5em; align-items: center; margin-top: 0.6em; }
+.fill-summary { color: var(--muted); font-size: 0.9em; }
+.fill-result { margin-top: 0.6em; }
+.fill-out { background: var(--code-bg); font-family: var(--mono); font-size: 0.78em; padding: 0.5em 0.8em; border-radius: var(--radius); white-space: pre-wrap; }
+.fill-ok { color: var(--success); font-weight: 700; }
+.fill-answers code { font-family: var(--mono); }
+.fill-badge.is-done { background: var(--success-soft); color: var(--success); }
+.fill-badge.is-tried { background: var(--warning-soft); color: #8a6500; }

@@ -59,7 +59,12 @@ content/
 
 - **块类型**（ADR 0058，`src/main.ts` 的 `Block`）：`lead` `prose` `callout`（`tone`：
   `warn` / `exam`）`compare` `steps` `predict` `scenario` `practice` `quiz` `uml` `table`
-  `summary`。正文只认 `**加粗**` 一种行内标记。需要新块先确认现有块表达不了。
+  `summary` `fillcode`。正文只认 `**加粗**` 一种行内标记。需要新块先确认现有块表达不了。
+- **`fillcode` 块**（`src/fill-code.ts`）是软考下午题的作答形态：`code` 是展示用的原题代码，
+  `{{n}}` 处渲染为输入框；`template` 是补全了「代码省略」处、带输出的完整程序，空位同样标
+  `{{n}}`；`expect` 是运行输出必须包含的子串。判分先与 `blanks[].answers` 规范化比对（去空白
+  与末尾分号、全角转半角），比对不上可「代入编译运行」由编译器判断等价写法。做完的题按占比
+  写入该知识点的完成度（只用于没被章节考核覆盖的知识点）。
 - **`uml` 块**是标准 UML 类图：类框三格 + 六种关系线（泛化、实现、组合、聚合、关联、
   依赖），坐标由内容作者给定。每个模式至少一张类图。
 - **实验**（`labs`，ADR 0059 骨架可运行）：骨架原样能编译运行（`-Wall -Wextra` 无警告），
@@ -82,6 +87,9 @@ content/
   `sourceId` 在 catalog 里，`locator` 写「年份 + 上/下半年 + 上午/下午 + 第 N 题（第 k 空）」，
   `url` 指向可核对的页面。**年份与题号必须来自真实试卷页面，严禁凭记忆编造**；含图的题
   在没有图的情况下不收。`scripts/check.py` 逐题检查。
+- **下午题（`fillcode`）可以是 `adapted`**：网页转录常丢失 `#`、`*`、注释符或有笔误，按官方
+  答案还原后标 `adapted`，并在 `why` 里逐项写明改了什么；代码与网页一致的标 `verbatim`。
+  用 C++ 版（每年试题五、试题六分别是 C++ 与 Java 版的同一道题）；代码是图片的年份不收。
 
 ## 掌握度与进度库
 
@@ -103,7 +111,9 @@ python3 scripts/check.py --quick      # 只做结构与内容校验
 ```
 
 - 内容校验：知识点 id 前缀与唯一性、`requires` 与 `covers` 指向存在的知识点、实验案例
-  文件存在且带 `pass.includes`、软考专题题目的原题出处。
+  文件存在且带 `pass.includes`、软考专题题目的原题出处、代码填空的空位与出处。
+- 编译验证（非 `--quick` 时）：每个实验骨架原样零警告编译运行且**不**达标；每道代码填空
+  代入官方答案通过、空着不填**不**通过。
 - 跨应用出处检查由根 `scripts/check-app-sources.mjs` 按 `content-contract.json` 接入。
 
 ## 约定

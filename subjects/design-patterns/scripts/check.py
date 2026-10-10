@@ -3,7 +3,7 @@
 
 默认依次做：app.json 一致性（id、不挂靠、端口）、端口三方对齐、内容校验
 （curriculum.json 的知识点与引用、实验案例与判分、软考专题的原题出处）、出处契约、
-前端构建、Rust 检查。--quick 只做前四项。
+实验与代码填空的编译验证、前端构建、Rust 检查。--quick 只做前四项。
 
 用 Python 而不是 shell：验证是每天都要跑的环节，不该要求 Windows 上先装
 Git Bash 或 WSL（ADR 0047）。
@@ -20,6 +20,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -132,9 +133,105 @@ def check_content() -> None:
 
         if ch.get("layer") == "topic":
             problems += check_exam_items(ch, catalog)
+        for t in ch["topics"]:
+            for b in t["lesson"]["blocks"]:
+                if b["type"] == "fillcode":
+                    problems += check_fillcode(b, catalog)
 
     if problems:
         raise SystemExit("内容校验没通过：\n  " + "\n  ".join(problems))
+
+
+BLANK = re.compile(r"\{\{(\d+)\}\}")
+
+
+def check_fillcode(b: dict, catalog: set[str]) -> list[str]:
+    """代码填空块：空位编号三处一致，出处写到卷与题号，改编要写明改了什么。"""
+    found: list[str] = []
+    where = f"代码填空 {b.get('id')}"
+    in_code = {int(n) for n in BLANK.findall(b["code"])}
+    in_after = {int(n) for n in BLANK.findall(b.get("after", ""))}
+    in_tpl = {int(n) for n in BLANK.findall(b["template"])}
+    declared = {x["n"] for x in b["blanks"]}
+    if in_code | in_after != declared:
+        found.append(f"{where} 的空位 {sorted(in_code | in_after)} 与答案 {sorted(declared)} 对不上")
+    if in_tpl != in_code:
+        found.append(f"{where} 的编译模板空位 {sorted(in_tpl)} 与代码空位 {sorted(in_code)} 对不上")
+    if any(not x["answers"] for x in b["blanks"]):
+        found.append(f"{where} 有空位没有官方答案")
+    if not b.get("expect"):
+        found.append(f"{where} 缺 expect，代入编译永远判不了对")
+    src = b.get("source") or {}
+    if src.get("relation") not in ("verbatim", "adapted"):
+        found.append(f"{where} 的出处必须是 verbatim 或 adapted")
+    if src.get("sourceId") not in catalog:
+        found.append(f"{where} 的 sourceId 不在 sources.json 里")
+    if not re.search(r"\d{4} 年.*试题", src.get("locator", "")):
+        found.append(f"{where} 的 locator 要写到「年份 … 试题 N」")
+    if not str(src.get("url", "")).startswith("http"):
+        found.append(f"{where} 缺可核对的页面链接 url")
+    if src.get("relation") == "adapted" and not src.get("why"):
+        found.append(f"{where} 标了 adapted 却没写改了什么")
+    return found
+
+
+def compiler() -> str:
+    for name in ("g++", "clang++"):
+        found = shutil.which(name)
+        if found:
+            return found
+    raise SystemExit("找不到 g++ 或 clang++：实验与代码填空的编译验证需要本机 C++ 编译器（ADR 0057）")
+
+
+def compile_and_run(cxx: str, source: str, workdir: Path, name: str) -> tuple[bool, str, str]:
+    """编译并运行一段源码，返回（是否编译运行成功、编译诊断、标准输出）。"""
+    src = workdir / f"{name}.cpp"
+    exe = workdir / f"{name}.exe"
+    src.write_text(source, encoding="utf-8")
+    c = subprocess.run(
+        [cxx, "-std=c++20", "-O0", "-Wall", "-Wextra", "-I", str(PROJECT_ROOT / "content" / "cases" / "_shared"),
+         str(src), "-o", str(exe)],
+        capture_output=True, text=True, encoding="utf-8", errors="replace",
+    )
+    if c.returncode != 0:
+        return False, c.stderr, ""
+    r = subprocess.run([str(exe)], capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=20)
+    return r.returncode == 0, c.stderr, r.stdout
+
+
+def check_runnable() -> None:
+    """真编译验证：实验骨架原样零警告且不达标；代码填空代入官方答案通过、空着不通过。"""
+    print("== 实验与代码填空的编译验证 ==", flush=True)
+    cxx = compiler()
+    cur = json.loads((PROJECT_ROOT / "content" / "curriculum.json").read_text(encoding="utf-8"))
+    problems: list[str] = []
+    with tempfile.TemporaryDirectory(prefix="dp-check-") as tmp:
+        work = Path(tmp)
+        for ch in cur["chapters"]:
+            for t in ch["topics"]:
+                for lab in t.get("labs", []):
+                    case = PROJECT_ROOT / "content" / "cases" / lab["case"] / lab["entrypoint"]
+                    ok, diag, out = compile_and_run(cxx, case.read_text(encoding="utf-8"), work, lab["case"])
+                    if not ok:
+                        problems.append(f"实验 {lab['id']} 的骨架原样编译运行失败（ADR 0059）：{diag.strip()[:300]}")
+                    elif diag.strip():
+                        problems.append(f"实验 {lab['id']} 的骨架有编译警告：{diag.strip()[:300]}")
+                    elif all(s in out for s in lab["pass"]["includes"]):
+                        problems.append(f"实验 {lab['id']} 的骨架原样就达标了，学习者不用动手")
+                for b in t["lesson"]["blocks"]:
+                    if b["type"] != "fillcode":
+                        continue
+                    first = {x["n"]: x["answers"][0] for x in b["blanks"]}
+                    filled = BLANK.sub(lambda m: first.get(int(m.group(1)), ""), b["template"])
+                    ok, diag, out = compile_and_run(cxx, filled, work, b["id"])
+                    if not ok or not all(s in out for s in b["expect"]):
+                        problems.append(f"代码填空 {b['id']} 代入官方答案没有通过：{(diag or out).strip()[:300]}")
+                    empty = BLANK.sub("", b["template"])
+                    ok, _, out = compile_and_run(cxx, empty, work, b["id"] + "_empty")
+                    if ok and all(s in out for s in b["expect"]):
+                        problems.append(f"代码填空 {b['id']} 空着不填也能通过，判分形同虚设")
+    if problems:
+        raise SystemExit("编译验证没通过：\n  " + "\n  ".join(problems))
 
 
 def check_exam_items(chapter: dict, catalog: set[str]) -> list[str]:
@@ -210,6 +307,7 @@ def main() -> None:
     check_content()
     check_contract()
     if not args.quick:
+        check_runnable()
         check_build(args.skip_rust)
     print("OK", flush=True)
 

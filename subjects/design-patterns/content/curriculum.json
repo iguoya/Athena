@@ -7967,7 +7967,7 @@
       "title": "软考：设计模式真题",
       "track": "exam",
       "layer": "topic",
-      "summary": "软考中级·软件设计师上午试题中与设计模式、设计原则、类图关系相关的原题，按知识点分组。共 80 个题空，题目、答案与解析逐题来自 qicoder 软考真题电子书（2006–2021 年），每题注明卷号题号并可点开原页面核对；多空题按空拆开。含图的题在没有原图时不收；下午的设计模式代码填空题（试题六）尚未收录。",
+      "summary": "软考中级·软件设计师上午试题中与设计模式、设计原则、类图关系相关的原题，按知识点分组。共 80 个题空，题目、答案与解析逐题来自 qicoder 软考真题电子书（2006–2021 年），每题注明卷号题号并可点开原页面核对；多空题按空拆开。含图的题在没有原图时不收；下午的设计模式代码填空大题收录 C++ 版 15 道，可以代入编译验证。",
       "topics": [
         {
           "id": "dp.exam.overview",
@@ -10427,6 +10427,1015 @@
                     }
                   }
                 ]
+              }
+            ]
+          },
+          "labs": []
+        },
+        {
+          "id": "dp.exam.pm-creational",
+          "title": "下午题·创建型代码填空",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.exam.creational"
+          ],
+          "track": "exam",
+          "guide_line": "软件设计师下午试题原题（C++ 版）：生成器、原型、抽象工厂。",
+          "weight": "",
+          "outline": {
+            "promise": "在考试格式下读懂一段模式代码，按类图与上下文补出缺失的声明与调用。",
+            "pain": "认得模式不等于写得出代码：纯虚函数怎么声明、成员同名时要不要 this->、谁调用谁，考场上最容易丢分。",
+            "model": "空位多从「子类实现反推接口」「调用方反推被调用方」「构造函数给成员赋值」三处出题。",
+            "scope": "只收代码为文字的年份；网页转录丢失的符号按官方答案还原并逐题注明。",
+            "judgment": "先认出模式与各类的角色，再从已给出的代码反推空位，最后用编译器验证。",
+            "landing": "每道题能独立填完并通过核对或编译验证。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "软件设计师下午卷的设计模式大题（C++ 版）4 道，2012–2018 年，涉及生成器、原型、抽象工厂。每年下午卷的设计模式大题同时给 C++ 与 Java 两个版本（试题五、试题六，考生任选其一），本应用用 C++ 版，可以直接在本机编译验证。"
+              },
+              {
+                "type": "callout",
+                "title": "怎么作答",
+                "text": "按考试格式在代码的空位里填写，然后点「核对答案」与官方答案比对。字面不一致但你认为等价的，点「代入编译运行」：应用把你的填写代入一份补全了省略部分的完整程序，用本机编译器真编译、真运行，输出符合题意即算通过。做完一道题计入本知识点的完成度。原题的类图、表格是图片，没有收录，结构以代码为准。"
+              },
+              {
+                "type": "fillcode",
+                "id": "pm-201805",
+                "title": "2018 年上半年 试题五 · 生成器（Builder）模式",
+                "statement": "生成器（Builder）模式的意图是将一个复杂对象的构建与它的表示分离，使得同样的构建过程可以创建不同的表示。图5-1所示为其类图。（原题类图略）",
+                "code": "#include <iostream>\n#include <string>\nusing namespace std;\nclass Product {\nprivate:\n    string partA, partB;\npublic:\n    Product() { }\n    void setPartA(const string& s) { partA = s; }\n    void setPartB(const string& s) { partB = s; }\n    // 其余代码省略\n};\nclass Builder {\npublic:\n    {{1}};\n    virtual void buildPartB() = 0;\n    {{2}};\n};\nclass ConcreteBuilder1 : public Builder {\nprivate:\n    Product* product;\npublic:\n    ConcreteBuilder1() { product = new Product(); }\n    void buildPartA() { {{3}}(\"Component A\"); }\n    void buildPartB() { {{4}}(\"Component B\"); }\n    Product* getResult() { return product; }\n    // 其余代码省略\n};\nclass ConcreteBuilder2 : public Builder {\n    /* 代码省略 */\n};\nclass Director {\nprivate:\n    Builder* builder;\npublic:\n    Director(Builder* pBuilder) { builder = pBuilder; }\n    void construct() {\n        {{5}};\n        // 其余代码省略\n    }\n    // 其余代码省略\n};\nint main() {\n    Director* director1 = new Director(new ConcreteBuilder1());\n    director1->construct();\n    delete director1;\n    return 0;\n}",
+                "blanks": [
+                  {
+                    "n": 1,
+                    "answers": [
+                      "virtual void buildPartA() = 0"
+                    ]
+                  },
+                  {
+                    "n": 2,
+                    "answers": [
+                      "virtual Product* getResult() = 0",
+                      "virtual Product *getResult() = 0"
+                    ]
+                  },
+                  {
+                    "n": 3,
+                    "answers": [
+                      "product->setPartA",
+                      "this->product->setPartA"
+                    ]
+                  },
+                  {
+                    "n": 4,
+                    "answers": [
+                      "product->setPartB",
+                      "this->product->setPartB"
+                    ]
+                  },
+                  {
+                    "n": 5,
+                    "answers": [
+                      "builder->buildPartA()",
+                      "builder->buildPartB()",
+                      "this->builder->buildPartA()",
+                      "this->builder->buildPartB()"
+                    ]
+                  }
+                ],
+                "template": "#include <iostream>\n#include <string>\nusing namespace std;\nclass Product {\nprivate:\n    string partA, partB;\npublic:\n    Product() { }\n    void setPartA(const string& s) { partA = s; }\n    void setPartB(const string& s) { partB = s; }\n    string describe() const { return \"partA=\" + partA + \" partB=\" + partB; }\n};\nclass Builder {\npublic:\n    {{1}};\n    virtual void buildPartB() = 0;\n    {{2}};\n    virtual ~Builder() = default;\n};\nclass ConcreteBuilder1 : public Builder {\nprivate:\n    Product* product;\npublic:\n    ConcreteBuilder1() { product = new Product(); }\n    void buildPartA() { {{3}}(\"Component A\"); }\n    void buildPartB() { {{4}}(\"Component B\"); }\n    Product* getResult() { return product; }\n};\nclass Director {\nprivate:\n    Builder* builder;\npublic:\n    Director(Builder* pBuilder) { builder = pBuilder; }\n    void construct() {\n        {{5}};\n    }\n};\nint main() {\n    ConcreteBuilder1 concrete;\n    Builder* builder = &concrete;\n    Director director1(builder);\n    director1.construct();\n    builder->buildPartA();\n    builder->buildPartB();\n    cout << builder->getResult()->describe() << endl;\n    return 0;\n}",
+                "expect": [
+                  "partA=Component A partB=Component B"
+                ],
+                "notes": "(1)(2) 由子类实现的方法反推接口：Builder 里要有 buildPartA 与 getResult 两个纯虚函数。官方答案说明 (5) 填 buildPartA 或 buildPartB 均可，因为后面是「其余代码省略」。",
+                "source": {
+                  "relation": "adapted",
+                  "sourceId": "past-exam-web-qicoder",
+                  "locator": "2018 年上半年软件设计师下午试题 试题五",
+                  "url": "https://ebook.qicoder.com/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/notes/201805%E8%BD%AF%E8%AE%BE%E4%B8%8B%E5%8D%88%E7%9C%9F%E9%A2%98.html",
+                  "why": "网页转录丢失了指针星号与 #include 的 #，并把 partA 误作 PartA，均已按官方答案还原。"
+                }
+              },
+              {
+                "type": "fillcode",
+                "id": "pm-201705",
+                "title": "2017 年上半年 试题五 · 生成器（Builder）模式：比萨套餐",
+                "statement": "某快餐厅主要制作并出售儿童套餐，一般包括主餐（各类比萨）、饮料和玩具，其餐品种类可能不同，但其制作过程相同。前台服务员（Waiter）调度厨师制作套餐。现采用生成器（Builder）模式实现制作过程，得到如图 5-1 所示的类图。（原题类图略）\n程序的输出结果为：pizza: cross + mild + ham&pineapple",
+                "code": "#include <iostream>\n#include <string>\nusing namespace std;\nclass Pizza {\nprivate:\n    string parts;\npublic:\n    void setParts(string parts) { this->parts = parts; }\n    string getParts() { return parts; }\n};\nclass PizzaBuilder {\nprotected:\n    Pizza* pizza;\npublic:\n    Pizza* getPizza() { return pizza; }\n    void createNewPizza() { pizza = new Pizza(); }\n    {{1}};\n};\nclass HawaiianPizzaBuilder : public PizzaBuilder {\npublic:\n    void buildParts() { pizza->setParts(\"cross + mild + ham&pineapple\"); }\n};\nclass SpicyPizzaBuilder : public PizzaBuilder {\npublic:\n    void buildParts() { pizza->setParts(\"pan baked + hot + ham&pineapple\"); }\n};\nclass Waiter {\nprivate:\n    PizzaBuilder* pizzaBuilder;\npublic:\n    void setPizzaBuilder(PizzaBuilder* pizzaBuilder) {   /* 设置构建器 */\n        {{2}};\n    }\n    Pizza* getPizza() { return pizzaBuilder->getPizza(); }\n    void construct() {   /* 构建 */\n        pizzaBuilder->createNewPizza();\n        {{3}};\n    }\n};\nint main() {\n    Waiter* waiter = new Waiter();\n    PizzaBuilder* hawaiian_pizzabuilder = new HawaiianPizzaBuilder();\n    {{4}};\n    {{5}};\n    cout << \"pizza: \" << waiter->getPizza()->getParts() << endl;\n}",
+                "blanks": [
+                  {
+                    "n": 1,
+                    "answers": [
+                      "virtual void buildParts() = 0"
+                    ]
+                  },
+                  {
+                    "n": 2,
+                    "answers": [
+                      "this->pizzaBuilder = pizzaBuilder"
+                    ]
+                  },
+                  {
+                    "n": 3,
+                    "answers": [
+                      "pizzaBuilder->buildParts()",
+                      "this->pizzaBuilder->buildParts()"
+                    ]
+                  },
+                  {
+                    "n": 4,
+                    "answers": [
+                      "waiter->setPizzaBuilder(hawaiian_pizzabuilder)"
+                    ]
+                  },
+                  {
+                    "n": 5,
+                    "answers": [
+                      "waiter->construct()"
+                    ]
+                  }
+                ],
+                "template": "#include <iostream>\n#include <string>\nusing namespace std;\nclass Pizza {\nprivate:\n    string parts;\npublic:\n    void setParts(string parts) { this->parts = parts; }\n    string getParts() { return parts; }\n};\nclass PizzaBuilder {\nprotected:\n    Pizza* pizza;\npublic:\n    Pizza* getPizza() { return pizza; }\n    void createNewPizza() { pizza = new Pizza(); }\n    {{1}};\n};\nclass HawaiianPizzaBuilder : public PizzaBuilder {\npublic:\n    void buildParts() { pizza->setParts(\"cross + mild + ham&pineapple\"); }\n};\nclass SpicyPizzaBuilder : public PizzaBuilder {\npublic:\n    void buildParts() { pizza->setParts(\"pan baked + hot + ham&pineapple\"); }\n};\nclass Waiter {\nprivate:\n    PizzaBuilder* pizzaBuilder;\npublic:\n    void setPizzaBuilder(PizzaBuilder* pizzaBuilder) {   /* 设置构建器 */\n        {{2}};\n    }\n    Pizza* getPizza() { return pizzaBuilder->getPizza(); }\n    void construct() {   /* 构建 */\n        pizzaBuilder->createNewPizza();\n        {{3}};\n    }\n};\nint main() {\n    Waiter* waiter = new Waiter();\n    PizzaBuilder* hawaiian_pizzabuilder = new HawaiianPizzaBuilder();\n    {{4}};\n    {{5}};\n    cout << \"pizza: \" << waiter->getPizza()->getParts() << endl;\n}",
+                "expect": [
+                  "pizza: cross + mild + ham&pineapple"
+                ],
+                "notes": "(2) 形参与成员同名，必须用 this-> 区分。Waiter 就是 Director：它固定「先 createNewPizza 再 buildParts」的构建顺序。",
+                "source": {
+                  "relation": "adapted",
+                  "sourceId": "past-exam-web-qicoder",
+                  "locator": "2017 年上半年软件设计师下午试题 试题五",
+                  "url": "https://ebook.qicoder.com/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/notes/201705%E8%BD%AF%E8%AE%BE%E4%B8%8B%E5%8D%88%E7%9C%9F%E9%A2%98.html",
+                  "why": "网页转录丢失了指针星号、#include 的 # 与注释符，并有 retum、Class、Private、SpicyPizzaBuider、hawaiian pizzabuilder 等笔误，均已按官方答案与题意还原；比萨配料字符串按题目给出的输出统一了空格。"
+                }
+              },
+              {
+                "type": "fillcode",
+                "id": "pm-201305",
+                "title": "2013 年上半年 试题五 · 原型（Prototype）模式：复制简历",
+                "statement": "现要求实现一个能够自动生成求职简历的程序，简历的基本内容包括求职者的姓名、性别、年龄及工作经历。希望每份简历中的工作经历有所不同，并尽量减少程序中的重复代码。\n现采用原型模式（Prototype）来实现上述要求，得到如图5-1所示的类图。（原题类图略）",
+                "code": "#include <string>\nusing namespace std;\nclass Cloneable {\npublic:\n    {{1}};\n};\nclass WorkExperience : public Cloneable {   // 工作经历\nprivate:\n    string workDate;\n    string company;\npublic:\n    Cloneable* Clone() {\n        {{2}};\n        obj->workDate = this->workDate;\n        obj->company = this->company;\n        return obj;\n    }\n    // 其余代码省略\n};\nclass Resume : public Cloneable {   // 简历\nprivate:\n    string name;\n    string sex;\n    string age;\n    WorkExperience* work;\n    Resume(WorkExperience* work) {\n        this->work = {{3}};\n    }\npublic:\n    Resume(string name) { /* 实现省略 */ }\n    void SetPersonInfo(string sex, string age) { /* 实现省略 */ }\n    void SetWorkExperience(string workDate, string company) { /* 实现省略 */ }\n    Cloneable* Clone() {\n        {{4}};\n        obj->name = this->name;\n        obj->sex = this->sex;\n        obj->age = this->age;\n        return obj;\n    }\n};\nint main() {\n    Resume* a = new Resume(\"张三\");\n    a->SetPersonInfo(\"男\", \"29\");\n    a->SetWorkExperience(\"1998-2000\", \"XXX公司\");\n    Resume* b = {{5}};\n    b->SetWorkExperience(\"2001-2006\", \"YYY公司\");\n    return 0;\n}",
+                "blanks": [
+                  {
+                    "n": 1,
+                    "answers": [
+                      "virtual Cloneable* Clone() = 0",
+                      "virtual Cloneable *Clone() = 0"
+                    ]
+                  },
+                  {
+                    "n": 2,
+                    "answers": [
+                      "WorkExperience* obj = new WorkExperience()",
+                      "WorkExperience *obj = new WorkExperience()"
+                    ]
+                  },
+                  {
+                    "n": 3,
+                    "answers": [
+                      "(WorkExperience*)work->Clone()",
+                      "(WorkExperience *) work->Clone()"
+                    ]
+                  },
+                  {
+                    "n": 4,
+                    "answers": [
+                      "Resume* obj = new Resume(this->work)",
+                      "Resume *obj = new Resume(this->work)"
+                    ]
+                  },
+                  {
+                    "n": 5,
+                    "answers": [
+                      "(Resume*)a->Clone()",
+                      "(Resume *)a->Clone()"
+                    ]
+                  }
+                ],
+                "template": "#include <iostream>\n#include <string>\nusing namespace std;\nclass Cloneable {\npublic:\n    {{1}};\n    virtual ~Cloneable() = default;\n};\nclass WorkExperience : public Cloneable {\nprivate:\n    string workDate;\n    string company;\npublic:\n    Cloneable* Clone() {\n        {{2}};\n        obj->workDate = this->workDate;\n        obj->company = this->company;\n        return obj;\n    }\n    void Set(string d, string c) { workDate = d; company = c; }\n    string Show() const { return workDate + \" \" + company; }\n};\nclass Resume : public Cloneable {\nprivate:\n    string name;\n    string sex;\n    string age;\n    WorkExperience* work;\n    Resume(WorkExperience* work) {\n        this->work = {{3}};\n    }\npublic:\n    Resume(string name) { this->name = name; work = new WorkExperience(); }\n    void SetPersonInfo(string sex, string age) { this->sex = sex; this->age = age; }\n    void SetWorkExperience(string workDate, string company) { work->Set(workDate, company); }\n    Cloneable* Clone() {\n        {{4}};\n        obj->name = this->name;\n        obj->sex = this->sex;\n        obj->age = this->age;\n        return obj;\n    }\n    string Show() const { return name + \" \" + sex + \" \" + age + \" \" + work->Show(); }\n};\nint main() {\n    Resume* a = new Resume(\"张三\");\n    a->SetPersonInfo(\"男\", \"29\");\n    a->SetWorkExperience(\"1998-2000\", \"XXX公司\");\n    Resume* b = {{5}};\n    b->SetWorkExperience(\"2001-2006\", \"YYY公司\");\n    cout << \"A: \" << a->Show() << endl;\n    cout << \"B: \" << b->Show() << endl;\n    return 0;\n}",
+                "expect": [
+                  "A: 张三 男 29 1998-2000 XXX公司",
+                  "B: 张三 男 29 2001-2006 YYY公司"
+                ],
+                "notes": "(3) 是深拷贝的关键：私有构造函数里把工作经历再克隆一份，所以改 b 的工作经历不会影响 a。若写成 this->work = work 就成了浅拷贝，A 的输出会变成 YYY公司。",
+                "source": {
+                  "relation": "adapted",
+                  "sourceId": "past-exam-web-qicoder",
+                  "locator": "2013 年上半年软件设计师下午试题 试题五",
+                  "url": "https://ebook.qicoder.com/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/notes/201305%E8%BD%AF%E8%AE%BE%E4%B8%8B%E5%8D%88%E7%9C%9F%E9%A2%98.html",
+                  "why": "网页转录把类名、成员名与方法名大小写写得不一致（workExperience/WorkExperience、workData/workDate、clone/Clone、Obj/obj），并把第 5 空的答案标成了 (6)，已统一按官方答案还原。"
+                }
+              },
+              {
+                "type": "fillcode",
+                "id": "pm-201211",
+                "title": "2012 年下半年 试题五 · 抽象工厂（Abstract Factory）模式：多数据库",
+                "statement": "现欲开发一个软件系统，要求能够同时支持多种不同的数据库，为此采用抽象工厂模式设计该系统。以SQL Server和Access两种数据库以及系统中的数据库表Department为例，其类图如图5-1所示。（原题类图略）",
+                "code": "#include <iostream>\nusing namespace std;\nclass Department { /* 代码省略 */ };\nclass IDepartment {\npublic:\n    {{1}} = 0;\n    {{2}} = 0;\n};\nclass SqlserverDepartment : {{3}} {\npublic:\n    void Insert(Department* department) {\n        cout << \"Insert a record into Department in SQL Server!\\n\";\n        // 其余代码省略\n    }\n    Department GetDepartment(int id) {\n        /* 代码省略 */\n    }\n};\nclass AccessDepartment : {{4}} {\npublic:\n    void Insert(Department* department) {\n        cout << \"Insert a record into Department in ACCESS!\\n\";\n        // 其余代码省略\n    }\n    Department GetDepartment(int id) {\n        /* 代码省略 */\n    }\n};\n{{5}} {\npublic:\n    {{6}} = 0;\n};\nclass SqlServerFactory : public IFactory {\npublic:\n    IDepartment* CreateDepartment() { return new SqlserverDepartment(); }\n    // 其余代码省略\n};\nclass AccessFactory : public IFactory {\npublic:\n    IDepartment* CreateDepartment() { return new AccessDepartment(); }\n    // 其余代码省略\n};",
+                "blanks": [
+                  {
+                    "n": 1,
+                    "answers": [
+                      "virtual void Insert(Department* department)",
+                      "virtual void Insert(Department *department)"
+                    ]
+                  },
+                  {
+                    "n": 2,
+                    "answers": [
+                      "virtual Department GetDepartment(int id)"
+                    ]
+                  },
+                  {
+                    "n": 3,
+                    "answers": [
+                      "public IDepartment"
+                    ]
+                  },
+                  {
+                    "n": 4,
+                    "answers": [
+                      "public IDepartment"
+                    ]
+                  },
+                  {
+                    "n": 5,
+                    "answers": [
+                      "class IFactory"
+                    ]
+                  },
+                  {
+                    "n": 6,
+                    "answers": [
+                      "virtual IDepartment* CreateDepartment()",
+                      "virtual IDepartment *CreateDepartment()"
+                    ]
+                  }
+                ],
+                "template": "#include <iostream>\nusing namespace std;\nclass Department { };\nclass IDepartment {\npublic:\n    {{1}} = 0;\n    {{2}} = 0;\n    virtual ~IDepartment() = default;\n};\nclass SqlserverDepartment : {{3}} {\npublic:\n    void Insert(Department* department) {\n        (void)department;\n        cout << \"Insert a record into Department in SQL Server!\\n\";\n    }\n    Department GetDepartment(int id) { (void)id; return Department(); }\n};\nclass AccessDepartment : {{4}} {\npublic:\n    void Insert(Department* department) {\n        (void)department;\n        cout << \"Insert a record into Department in ACCESS!\\n\";\n    }\n    Department GetDepartment(int id) { (void)id; return Department(); }\n};\n{{5}} {\npublic:\n    {{6}} = 0;\n    virtual ~IFactory() = default;\n};\nclass SqlServerFactory : public IFactory {\npublic:\n    IDepartment* CreateDepartment() { return new SqlserverDepartment(); }\n};\nclass AccessFactory : public IFactory {\npublic:\n    IDepartment* CreateDepartment() { return new AccessDepartment(); }\n};\nint main() {\n    Department d;\n    IFactory* factories[] = { new SqlServerFactory(), new AccessFactory() };\n    for (IFactory* f : factories) {\n        IDepartment* dep = f->CreateDepartment();   // 客户端只认抽象工厂与抽象产品\n        dep->Insert(&d);\n        dep->GetDepartment(1);\n        delete dep;\n        delete f;\n    }\n    return 0;\n}",
+                "expect": [
+                  "Insert a record into Department in SQL Server!",
+                  "Insert a record into Department in ACCESS!"
+                ],
+                "notes": "接口里的方法签名从实现类反推；(5) 的类名从 SqlServerFactory、AccessFactory 的基类 IFactory 得到。",
+                "source": {
+                  "relation": "adapted",
+                  "sourceId": "past-exam-web-qicoder",
+                  "locator": "2012 年下半年软件设计师下午试题 试题五",
+                  "url": "https://ebook.qicoder.com/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/notes/201211%E8%BD%AF%E8%AE%BE%E4%B8%8B%E5%8D%88%E7%9C%9F%E9%A2%98.html",
+                  "why": "网页转录的全角分号与「∥」注释符已改为半角；官方答案中的笔误（Departmet、virlual、IDepartmcnt、Ifactory、IDcpartment）已按代码改正。"
+                }
+              }
+            ]
+          },
+          "labs": []
+        },
+        {
+          "id": "dp.exam.pm-structural",
+          "title": "下午题·结构型代码填空",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.exam.structural"
+          ],
+          "track": "exam",
+          "guide_line": "软件设计师下午试题原题（C++ 版）：桥接、适配器、装饰、组合。",
+          "weight": "",
+          "outline": {
+            "promise": "在考试格式下读懂一段模式代码，按类图与上下文补出缺失的声明与调用。",
+            "pain": "认得模式不等于写得出代码：纯虚函数怎么声明、成员同名时要不要 this->、谁调用谁，考场上最容易丢分。",
+            "model": "空位多从「子类实现反推接口」「调用方反推被调用方」「构造函数给成员赋值」三处出题。",
+            "scope": "只收代码为文字的年份；网页转录丢失的符号按官方答案还原并逐题注明。",
+            "judgment": "先认出模式与各类的角色，再从已给出的代码反推空位，最后用编译器验证。",
+            "landing": "每道题能独立填完并通过核对或编译验证。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "软件设计师下午卷的设计模式大题（C++ 版）6 道，2009–2016 年，涉及桥接、适配器、装饰、组合。每年下午卷的设计模式大题同时给 C++ 与 Java 两个版本（试题五、试题六，考生任选其一），本应用用 C++ 版，可以直接在本机编译验证。"
+              },
+              {
+                "type": "callout",
+                "title": "怎么作答",
+                "text": "按考试格式在代码的空位里填写，然后点「核对答案」与官方答案比对。字面不一致但你认为等价的，点「代入编译运行」：应用把你的填写代入一份补全了省略部分的完整程序，用本机编译器真编译、真运行，输出符合题意即算通过。做完一道题计入本知识点的完成度。原题的类图、表格是图片，没有收录，结构以代码为准。"
+              },
+              {
+                "type": "fillcode",
+                "id": "pm-201605",
+                "title": "2016 年上半年 试题五 · 适配器（Adapter）模式：荷兰语地址",
+                "statement": "某软件系统中，已设计并实现了用于显示地址信息的类Address（如图5-1所示），现要求提供基于Dutch语言的地址信息显示接口。为了实现该要求并考虑到以后可能还会出现新的语言的接口，决定采用适配器（Adapter）模式实现该要求，得到如图5-1所示的类图。（原题类图略）",
+                "code": "#include <iostream>\nusing namespace std;\nclass Address {\npublic:\n    void street() { /* 实现代码省略 */ }\n    void zip()    { /* 实现代码省略 */ }\n    void city()   { /* 实现代码省略 */ }\n    // 其他成员省略\n};\nclass DutchAddress {\npublic:\n    virtual void straat() = 0;\n    virtual void postcode() = 0;\n    virtual void plaats() = 0;\n    // 其他成员省略\n};\nclass DutchAddressAdapter : public DutchAddress {\nprivate:\n    {{1}};\npublic:\n    DutchAddressAdapter(Address* addr) {\n        address = addr;\n    }\n    void straat() {\n        {{2}};\n    }\n    void postcode() {\n        {{3}};\n    }\n    void plaats() {\n        {{4}};\n    }\n    // 其他成员省略\n};\nvoid testDutch(DutchAddress* addr) {\n    addr->straat();\n    addr->postcode();\n    addr->plaats();\n}\nint main() {\n    Address* addr = new Address();\n    {{5}};\n    cout << \"\\n The DutchAddress\\n\" << endl;\n    testDutch(addrAdapter);\n    return 0;\n}",
+                "blanks": [
+                  {
+                    "n": 1,
+                    "answers": [
+                      "Address* address",
+                      "Address *address"
+                    ]
+                  },
+                  {
+                    "n": 2,
+                    "answers": [
+                      "address->street()"
+                    ]
+                  },
+                  {
+                    "n": 3,
+                    "answers": [
+                      "address->zip()"
+                    ]
+                  },
+                  {
+                    "n": 4,
+                    "answers": [
+                      "address->city()"
+                    ]
+                  },
+                  {
+                    "n": 5,
+                    "answers": [
+                      "DutchAddress* addrAdapter = new DutchAddressAdapter(addr)",
+                      "DutchAddress *addrAdapter = new DutchAddressAdapter(addr)"
+                    ]
+                  }
+                ],
+                "template": "#include <iostream>\nusing namespace std;\nclass Address {\npublic:\n    void street() { cout << \"Address::street\" << endl; }\n    void zip()    { cout << \"Address::zip\" << endl; }\n    void city()   { cout << \"Address::city\" << endl; }\n};\nclass DutchAddress {\npublic:\n    virtual void straat() = 0;\n    virtual void postcode() = 0;\n    virtual void plaats() = 0;\n    virtual ~DutchAddress() = default;\n};\nclass DutchAddressAdapter : public DutchAddress {\nprivate:\n    {{1}};\npublic:\n    DutchAddressAdapter(Address* addr) {\n        address = addr;\n    }\n    void straat() {\n        {{2}};\n    }\n    void postcode() {\n        {{3}};\n    }\n    void plaats() {\n        {{4}};\n    }\n};\nvoid testDutch(DutchAddress* addr) {\n    addr->straat();\n    addr->postcode();\n    addr->plaats();\n}\nint main() {\n    Address* addr = new Address();\n    {{5}};\n    cout << \"The DutchAddress\" << endl;\n    testDutch(addrAdapter);\n    return 0;\n}",
+                "expect": [
+                  "Address::street",
+                  "Address::zip",
+                  "Address::city"
+                ],
+                "notes": "对象适配器：DutchAddressAdapter 实现目标接口 DutchAddress，内部持有被适配的 Address，把 straat/postcode/plaats 转发给 street/zip/city。(5) 的变量名 addrAdapter 由下一行 testDutch(addrAdapter) 反推。",
+                "source": {
+                  "relation": "adapted",
+                  "sourceId": "past-exam-web-qicoder",
+                  "locator": "2016 年上半年软件设计师下午试题 试题五",
+                  "url": "https://ebook.qicoder.com/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/notes/201605%E8%BD%AF%E8%AE%BE%E4%B8%8B%E5%8D%88%E7%9C%9F%E9%A2%98.html",
+                  "why": "网页转录中 Address::street 写成 stree、适配器的 plaats 写成 plaat、官方答案中类名写成 DutchAddressAdaptor，均已按官方答案与接口定义改正；「∥」注释符改为 //。"
+                }
+              },
+              {
+                "type": "fillcode",
+                "id": "pm-201311",
+                "title": "2013 年下半年 试题五 · 桥接（Bridge）模式：绘图程序",
+                "statement": "欲开发一个绘图软件，要求使用不同的绘图程序绘制不同的图形。以绘制直线和圆形为例，对应的绘图程序如表5-1所示。（原题表格为图片：DP1 用 draw_a_line、draw_a_circle，DP2 用 drawline、drawcircle，见代码）\n该绘图软件的扩展性要求，将不断扩充新的图形和新的绘图程序。为了避免出现类爆炸的情况，现采用桥接（Bridge）模式来实现上述要求，得到如图5-1所示的类图。（原题类图略）",
+                "code": "class DP1 {\npublic:\n    static void draw_a_line(double x1, double y1, double x2, double y2) { /* 代码省略 */ }\n    static void draw_a_circle(double x, double y, double r) { /* 代码省略 */ }\n};\nclass DP2 {\npublic:\n    static void drawline(double x1, double x2, double y1, double y2) { /* 代码省略 */ }\n    static void drawcircle(double x, double y, double r) { /* 代码省略 */ }\n};\nclass Drawing {\npublic:\n    {{1}};\n    {{2}};\n};\nclass V1Drawing : public Drawing {\npublic:\n    void drawLine(double x1, double y1, double x2, double y2) { /* 代码省略 */ }\n    void drawCircle(double x, double y, double r) { {{3}}; }\n};\nclass V2Drawing : public Drawing {\npublic:\n    void drawLine(double x1, double y1, double x2, double y2) { /* 代码省略 */ }\n    void drawCircle(double x, double y, double r) { {{4}}; }\n};\nclass Shape {\npublic:\n    {{5}};\n    Shape(Drawing* dp) { _dp = dp; }\n    void drawLine(double x1, double y1, double x2, double y2) { _dp->drawLine(x1, y1, x2, y2); }\n    void drawCircle(double x, double y, double r) { _dp->drawCircle(x, y, r); }\nprivate:\n    Drawing* _dp;\n};\nclass Rectangle : public Shape {\npublic:\n    void draw() { /* 代码省略 */ }\n    // 其余代码省略\n};\nclass Circle : public Shape {\nprivate:\n    double _x, _y, _r;\npublic:\n    Circle(Drawing* dp, double x, double y, double r) : {{6}} { _x = x; _y = y; _r = r; }\n    void draw() { drawCircle(_x, _y, _r); }\n};",
+                "blanks": [
+                  {
+                    "n": 1,
+                    "answers": [
+                      "virtual void drawLine(double x1, double y1, double x2, double y2) = 0"
+                    ]
+                  },
+                  {
+                    "n": 2,
+                    "answers": [
+                      "virtual void drawCircle(double x, double y, double r) = 0"
+                    ]
+                  },
+                  {
+                    "n": 3,
+                    "answers": [
+                      "DP1::draw_a_circle(x, y, r)"
+                    ]
+                  },
+                  {
+                    "n": 4,
+                    "answers": [
+                      "DP2::drawcircle(x, y, r)"
+                    ]
+                  },
+                  {
+                    "n": 5,
+                    "answers": [
+                      "virtual void draw() = 0"
+                    ]
+                  },
+                  {
+                    "n": 6,
+                    "answers": [
+                      "Shape(dp)"
+                    ]
+                  }
+                ],
+                "template": "#include <iostream>\nusing namespace std;\nclass DP1 {\npublic:\n    static void draw_a_line(double, double, double, double) { cout << \"DP1 draw_a_line\" << endl; }\n    static void draw_a_circle(double x, double y, double r) { cout << \"DP1 draw_a_circle \" << x << \" \" << y << \" \" << r << endl; }\n};\nclass DP2 {\npublic:\n    static void drawline(double, double, double, double) { cout << \"DP2 drawline\" << endl; }\n    static void drawcircle(double x, double y, double r) { cout << \"DP2 drawcircle \" << x << \" \" << y << \" \" << r << endl; }\n};\nclass Drawing {\npublic:\n    {{1}};\n    {{2}};\n    virtual ~Drawing() = default;\n};\nclass V1Drawing : public Drawing {\npublic:\n    void drawLine(double x1, double y1, double x2, double y2) { DP1::draw_a_line(x1, y1, x2, y2); }\n    void drawCircle(double x, double y, double r) { {{3}}; }\n};\nclass V2Drawing : public Drawing {\npublic:\n    void drawLine(double x1, double y1, double x2, double y2) { DP2::drawline(x1, x2, y1, y2); }\n    void drawCircle(double x, double y, double r) { {{4}}; }\n};\nclass Shape {\npublic:\n    {{5}};\n    Shape(Drawing* dp) { _dp = dp; }\n    virtual ~Shape() = default;\n    void drawLine(double x1, double y1, double x2, double y2) { _dp->drawLine(x1, y1, x2, y2); }\n    void drawCircle(double x, double y, double r) { _dp->drawCircle(x, y, r); }\nprivate:\n    Drawing* _dp;\n};\nclass Circle : public Shape {\nprivate:\n    double _x, _y, _r;\npublic:\n    Circle(Drawing* dp, double x, double y, double r) : {{6}} { _x = x; _y = y; _r = r; }\n    void draw() { drawCircle(_x, _y, _r); }\n};\nint main() {\n    V1Drawing v1;\n    V2Drawing v2;\n    Shape* shapes[] = { new Circle(&v1, 1, 2, 3), new Circle(&v2, 4, 5, 6) };\n    for (Shape* s : shapes) { s->draw(); delete s; }\n    return 0;\n}",
+                "expect": [
+                  "DP1 draw_a_circle 1 2 3",
+                  "DP2 drawcircle 4 5 6"
+                ],
+                "notes": "Shape 是抽象部分，Drawing 是实现部分；V1Drawing、V2Drawing 同时还是对 DP1、DP2 的适配。(6) 基类没有默认构造函数，派生类必须在初始化列表里调用 Shape(dp)。",
+                "source": {
+                  "relation": "verbatim",
+                  "sourceId": "past-exam-web-qicoder",
+                  "locator": "2013 年下半年软件设计师下午试题 试题五",
+                  "url": "https://ebook.qicoder.com/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/notes/201311%E8%BD%AF%E8%AE%BE%E4%B8%8B%E5%8D%88%E7%9C%9F%E9%A2%98.html",
+                  "why": "代码与网页原文一致。"
+                }
+              },
+              {
+                "type": "fillcode",
+                "id": "pm-201205",
+                "title": "2012 年上半年 试题五 · 装饰器（Decorator）模式：咖啡计价",
+                "statement": "某咖啡店当卖咖啡时，可以根据顾客的要求在其中加入各种配料，咖啡店会根据所加入的配料来计算费用。咖啡店所供应的咖啡及配料的种类和价格如下表所示。（原题价格表为图片，价格见代码中的常量）\n现采用装饰器（Decorator）模式来实现计算费用的功能，得到如图5-1所示的类图。（原题类图略）\n编译运行上述程序，其输出结果为：DarkRoast， Mocha， Whip ￥38",
+                "code": "#include <iostream>\n#include <string>\nusing namespace std;\nconst int ESPRESSO_PRICE = 25;\nconst int DRAKROAST_PRICE = 20;\nconst int MOCHA_PRICE = 10;\nconst int WHIP_PRICE = 8;\nclass Beverage {   // 饮料\n{{1}}: string description;\npublic:\n    {{2}}() { return description; }\n    {{3}};\n};\nclass CondimentDecorator : public Beverage {   // 配料\nprotected:\n    {{4}};\n};\nclass Espresso : public Beverage {   // 蒸馏咖啡\npublic:\n    Espresso() { description = \"Espresso\"; }\n    int cost() { return ESPRESSO_PRICE; }\n};\nclass DarkRoast : public Beverage {   // 深度烘焙咖啡\npublic:\n    DarkRoast() { description = \"DarkRoast\"; }\n    int cost() { return DRAKROAST_PRICE; }\n};\nclass Mocha : public CondimentDecorator {   // 摩卡\npublic:\n    Mocha(Beverage* beverage) { this->beverage = beverage; }\n    string getDescription() { return beverage->getDescription() + \"，Mocha\"; }\n    int cost() { return MOCHA_PRICE + beverage->cost(); }\n};\nclass Whip : public CondimentDecorator {   // 奶泡\npublic:\n    Whip(Beverage* beverage) { this->beverage = beverage; }\n    string getDescription() { return beverage->getDescription() + \"，Whip\"; }\n    int cost() { return WHIP_PRICE + beverage->cost(); }\n};\nint main() {\n    Beverage* beverage = new DarkRoast();\n    beverage = new Mocha({{5}});\n    beverage = new Whip({{6}});\n    cout << beverage->getDescription() << \"￥\" << beverage->cost() << endl;\n    return 0;\n}",
+                "blanks": [
+                  {
+                    "n": 1,
+                    "answers": [
+                      "protected"
+                    ]
+                  },
+                  {
+                    "n": 2,
+                    "answers": [
+                      "virtual string getDescription"
+                    ]
+                  },
+                  {
+                    "n": 3,
+                    "answers": [
+                      "virtual int cost() = 0"
+                    ]
+                  },
+                  {
+                    "n": 4,
+                    "answers": [
+                      "Beverage* beverage",
+                      "Beverage *beverage"
+                    ]
+                  },
+                  {
+                    "n": 5,
+                    "answers": [
+                      "beverage"
+                    ]
+                  },
+                  {
+                    "n": 6,
+                    "answers": [
+                      "beverage"
+                    ]
+                  }
+                ],
+                "template": "#include <iostream>\n#include <string>\nusing namespace std;\nconst int ESPRESSO_PRICE = 25;\nconst int DRAKROAST_PRICE = 20;\nconst int MOCHA_PRICE = 10;\nconst int WHIP_PRICE = 8;\nclass Beverage {   // 饮料\n{{1}}: string description;\npublic:\n    {{2}}() { return description; }\n    {{3}};\n};\nclass CondimentDecorator : public Beverage {   // 配料\nprotected:\n    {{4}};\n};\nclass Espresso : public Beverage {   // 蒸馏咖啡\npublic:\n    Espresso() { description = \"Espresso\"; }\n    int cost() { return ESPRESSO_PRICE; }\n};\nclass DarkRoast : public Beverage {   // 深度烘焙咖啡\npublic:\n    DarkRoast() { description = \"DarkRoast\"; }\n    int cost() { return DRAKROAST_PRICE; }\n};\nclass Mocha : public CondimentDecorator {   // 摩卡\npublic:\n    Mocha(Beverage* beverage) { this->beverage = beverage; }\n    string getDescription() { return beverage->getDescription() + \"，Mocha\"; }\n    int cost() { return MOCHA_PRICE + beverage->cost(); }\n};\nclass Whip : public CondimentDecorator {   // 奶泡\npublic:\n    Whip(Beverage* beverage) { this->beverage = beverage; }\n    string getDescription() { return beverage->getDescription() + \"，Whip\"; }\n    int cost() { return WHIP_PRICE + beverage->cost(); }\n};\nint main() {\n    Beverage* beverage = new DarkRoast();\n    beverage = new Mocha({{5}});\n    beverage = new Whip({{6}});\n    cout << beverage->getDescription() << \"￥\" << beverage->cost() << endl;\n    return 0;\n}",
+                "expect": [
+                  "DarkRoast，Mocha，Whip￥38"
+                ],
+                "notes": "(2) 必须是虚函数：Whip 的 getDescription 要层层调用被装饰对象的 getDescription。38 = 深焙 20 + 摩卡 10 + 奶泡 8，装饰器在转发 cost() 时各加上自己的价格。",
+                "source": {
+                  "relation": "adapted",
+                  "sourceId": "past-exam-web-qicoder",
+                  "locator": "2012 年上半年软件设计师下午试题 试题五",
+                  "url": "https://ebook.qicoder.com/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/notes/201205%E8%BD%AF%E8%AE%BE%E4%B8%8B%E5%8D%88%E7%9C%9F%E9%A2%98.html",
+                  "why": "网页转录的全角冒号、全角括号与「／／」注释符已改为半角，输出语句缺失的 << 已补上；DarkRoast 的描述字符串网页写作 DardRoast，按题目给出的输出改为 DarkRoast。"
+                }
+              },
+              {
+                "type": "fillcode",
+                "id": "pm-201105",
+                "title": "2011 年上半年 试题五 · 组合（Composite）模式：饭店菜单",
+                "statement": "某饭店在不同的时段提供多种不同的餐饮，其菜单的结构图如图5-1所示。（原题图略）\n现在采用组合(Composition)模式来构造该饭店的菜单，使得饭店可以方便地在其中增加新的餐饮形式，得到如图5-2所示的类图。（原题类图略）其中MenuComponent为抽象类，定义了添加(add)新菜单和打印饭店所有菜单信息(print)的方法接口。类Menu表示饭店提供的每种餐饮形式的菜单，如煎饼屋菜单、咖啡屋菜单等。每种菜单中都可以添加子菜单，例如图中的甜点菜单。类MenuItem表示菜单中的菜式。",
+                "code": "#include <iostream>\n#include <list>\n#include <string>\nusing namespace std;\nclass MenuComponent {\nprotected:\n    string name;\npublic:\n    MenuComponent(string name) { this->name = name; }\n    string getName() { return name; }\n    {{1}};   // 添加新菜单\n    virtual void print() = 0;   // 打印菜单信息\n};\nclass MenuItem : public MenuComponent {\nprivate:\n    double price;\npublic:\n    MenuItem(string name, double price) : MenuComponent(name) { this->price = price; }\n    double getPrice() { return price; }\n    void add(MenuComponent* menuComponent) { return; }   // 添加新菜单\n    void print() { cout << \"  \" << getName() << \"，\" << getPrice() << endl; }\n};\nclass Menu : public MenuComponent {\nprivate:\n    list<{{2}}> menuComponents;\npublic:\n    Menu(string name) : MenuComponent(name) { }\n    void add(MenuComponent* menuComponent)   // 添加新菜单\n    { {{3}}; }\n    void print() {\n        cout << \"\\n\" << getName() << \"\\n-------------------\" << endl;\n        std::list<MenuComponent*>::iterator iter;\n        for (iter = menuComponents.begin(); iter != menuComponents.end(); iter++)\n            {{4}}->print();\n    }\n};\nint main() {\n    MenuComponent* allMenus = new Menu(\"ALL MENUS\");\n    MenuComponent* dinerMenu = new Menu(\"DINER MENU\");\n    // …… 创建更多的Menu对象，此处代码省略\n    allMenus->add(dinerMenu);   // 将dinerMenu添加到餐厅菜单中\n    // …… 为餐厅增加更多的菜单，此处代码省略\n    {{5}}->print();   // 打印饭店所有菜单的信息\n}",
+                "blanks": [
+                  {
+                    "n": 1,
+                    "answers": [
+                      "virtual void add(MenuComponent* menuComponent) = 0",
+                      "virtual void add(MenuComponent *menuComponent) = 0"
+                    ]
+                  },
+                  {
+                    "n": 2,
+                    "answers": [
+                      "MenuComponent*",
+                      "MenuComponent *"
+                    ]
+                  },
+                  {
+                    "n": 3,
+                    "answers": [
+                      "menuComponents.push_back(menuComponent)",
+                      "this->menuComponents.push_back(menuComponent)"
+                    ]
+                  },
+                  {
+                    "n": 4,
+                    "answers": [
+                      "(*iter)"
+                    ]
+                  },
+                  {
+                    "n": 5,
+                    "answers": [
+                      "allMenus"
+                    ]
+                  }
+                ],
+                "template": "#include <iostream>\n#include <list>\n#include <string>\nusing namespace std;\nclass MenuComponent {\nprotected:\n    string name;\npublic:\n    MenuComponent(string name) { this->name = name; }\n    virtual ~MenuComponent() = default;\n    string getName() { return name; }\n    {{1}};\n    virtual void print() = 0;\n};\nclass MenuItem : public MenuComponent {\nprivate:\n    double price;\npublic:\n    MenuItem(string name, double price) : MenuComponent(name) { this->price = price; }\n    double getPrice() { return price; }\n    void add(MenuComponent*) { return; }\n    void print() { cout << \"  \" << getName() << \"，\" << getPrice() << endl; }\n};\nclass Menu : public MenuComponent {\nprivate:\n    list<{{2}}> menuComponents;\npublic:\n    Menu(string name) : MenuComponent(name) { }\n    void add(MenuComponent* menuComponent)\n    { {{3}}; }\n    void print() {\n        cout << \"\\n\" << getName() << \"\\n-------------------\" << endl;\n        std::list<MenuComponent*>::iterator iter;\n        for (iter = menuComponents.begin(); iter != menuComponents.end(); iter++)\n            {{4}}->print();\n    }\n};\nint main() {\n    MenuComponent* allMenus = new Menu(\"ALL MENUS\");\n    MenuComponent* dinerMenu = new Menu(\"DINER MENU\");\n    MenuComponent* dessertMenu = new Menu(\"DESSERT MENU\");\n    dinerMenu->add(new MenuItem(\"Pasta\", 3.89));\n    dessertMenu->add(new MenuItem(\"Apple Pie\", 1.59));\n    dinerMenu->add(dessertMenu);\n    allMenus->add(dinerMenu);\n    {{5}}->print();\n    return 0;\n}",
+                "expect": [
+                  "ALL MENUS",
+                  "DINER MENU",
+                  "Pasta，3.89",
+                  "DESSERT MENU",
+                  "Apple Pie，1.59"
+                ],
+                "notes": "(4) 迭代器解引用得到 MenuComponent*，要加括号再用 ->，即 (*iter)->print()。菜单里既可以放菜式也可以放子菜单，print() 递归下去——这就是组合模式。",
+                "source": {
+                  "relation": "adapted",
+                  "sourceId": "past-exam-web-qicoder",
+                  "locator": "2011 年上半年软件设计师下午试题 试题五",
+                  "url": "https://ebook.qicoder.com/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/notes/201105%E8%BD%AF%E8%AE%BE%E4%B8%8B%E5%8D%88%E7%9C%9F%E9%A2%98.html",
+                  "why": "网页转录把多处 } 写成 )、MenuItem 写成 Menultem、allMenus 写成 alIMenus，并有全角逗号、分号与 retum，均已改正；main 中两处「……」省略保留为注释。"
+                }
+              },
+              {
+                "type": "fillcode",
+                "id": "pm-201011",
+                "title": "2010 年下半年 试题五 · 组合（Composite）模式：公司组织结构",
+                "statement": "某公司的组织结构图如图5-1所示，现采用组合（Composition）设计模式来构造该公司的组织结构，得到如图5-2所示的类图。（原题两图略：总公司下设人力资源部、财务部与上海分公司，上海分公司下设两部门与南京办事处）\n其中Company为抽象类，定义了在组织结构图上添加（Add）和删除（Delete）分公司/办事处或者部门的方法接口。类ConcreteCompany表示具体的分公司或者办事处，分公司或办事处下可以设置不同的部门。类HRDepartment和FinanceDepartment分别表示人力资源部和财务部。",
+                "code": "#include <iostream>\n#include <list>\n#include <string>\nusing namespace std;\nclass Company {   // 抽象类\nprotected:\n    string name;\npublic:\n    Company(string name) { {{1}} = name; }\n    {{2}};   // 增加子公司、办事处或部门\n    {{3}};   // 删除子公司、办事处或部门\n};\nclass ConcreteCompany : public Company {\nprivate:\n    list<{{4}}> children;   // 存储子公司、办事处或部门\npublic:\n    ConcreteCompany(string name) : Company(name) { }\n    void Add(Company* c) { {{5}}.push_back(c); }\n    void Delete(Company* c) { {{6}}.remove(c); }\n};\nclass HRDepartment : public Company {\npublic:\n    HRDepartment(string name) : Company(name) { }   // 其他代码省略\n};\nclass FinanceDepartment : public Company {\npublic:\n    FinanceDepartment(string name) : Company(name) { }   // 其他代码省略\n};\nint main() {\n    ConcreteCompany* root = new ConcreteCompany(\"北京总公司\");\n    root->Add(new HRDepartment(\"总公司人力资源部\"));\n    root->Add(new FinanceDepartment(\"总公司财务部\"));\n    ConcreteCompany* comp = new ConcreteCompany(\"上海分公司\");\n    comp->Add(new HRDepartment(\"上海分公司人力资源部\"));\n    comp->Add(new FinanceDepartment(\"上海分公司财务部\"));\n    {{7}};\n    ConcreteCompany* comp1 = new ConcreteCompany(\"南京办事处\");\n    comp1->Add(new HRDepartment(\"南京办事处人力资源部\"));\n    comp1->Add(new FinanceDepartment(\"南京办事处财务部\"));\n    {{8}};   // 其他代码省略\n}",
+                "blanks": [
+                  {
+                    "n": 1,
+                    "answers": [
+                      "this->name"
+                    ]
+                  },
+                  {
+                    "n": 2,
+                    "answers": [
+                      "virtual void Add(Company* c) = 0",
+                      "virtual void Add(Company *c) = 0"
+                    ]
+                  },
+                  {
+                    "n": 3,
+                    "answers": [
+                      "virtual void Delete(Company* c) = 0",
+                      "virtual void Delete(Company *c) = 0"
+                    ]
+                  },
+                  {
+                    "n": 4,
+                    "answers": [
+                      "Company*",
+                      "Company *"
+                    ]
+                  },
+                  {
+                    "n": 5,
+                    "answers": [
+                      "children",
+                      "this->children"
+                    ]
+                  },
+                  {
+                    "n": 6,
+                    "answers": [
+                      "children",
+                      "this->children"
+                    ]
+                  },
+                  {
+                    "n": 7,
+                    "answers": [
+                      "root->Add(comp)"
+                    ]
+                  },
+                  {
+                    "n": 8,
+                    "answers": [
+                      "comp->Add(comp1)"
+                    ]
+                  }
+                ],
+                "template": "#include <iostream>\n#include <list>\n#include <string>\nusing namespace std;\nclass Company {\nprotected:\n    string name;\npublic:\n    Company(string name) { {{1}} = name; }\n    {{2}};\n    {{3}};\n    virtual void Show(int depth) { cout << string(depth * 2, '-') << name << endl; }\n    virtual ~Company() = default;\n};\nclass ConcreteCompany : public Company {\nprivate:\n    list<{{4}}> children;\npublic:\n    ConcreteCompany(string name) : Company(name) { }\n    void Add(Company* c) { {{5}}.push_back(c); }\n    void Delete(Company* c) { {{6}}.remove(c); }\n    void Show(int depth) {\n        Company::Show(depth);\n        for (Company* c : children) c->Show(depth + 1);\n    }\n};\nclass HRDepartment : public Company {\npublic:\n    HRDepartment(string name) : Company(name) { }\n    void Add(Company*) { }\n    void Delete(Company*) { }\n};\nclass FinanceDepartment : public Company {\npublic:\n    FinanceDepartment(string name) : Company(name) { }\n    void Add(Company*) { }\n    void Delete(Company*) { }\n};\nint main() {\n    ConcreteCompany* root = new ConcreteCompany(\"北京总公司\");\n    root->Add(new HRDepartment(\"总公司人力资源部\"));\n    root->Add(new FinanceDepartment(\"总公司财务部\"));\n    ConcreteCompany* comp = new ConcreteCompany(\"上海分公司\");\n    comp->Add(new HRDepartment(\"上海分公司人力资源部\"));\n    comp->Add(new FinanceDepartment(\"上海分公司财务部\"));\n    {{7}};\n    ConcreteCompany* comp1 = new ConcreteCompany(\"南京办事处\");\n    comp1->Add(new HRDepartment(\"南京办事处人力资源部\"));\n    comp1->Add(new FinanceDepartment(\"南京办事处财务部\"));\n    {{8}};\n    root->Show(0);\n    return 0;\n}",
+                "expect": [
+                  "--上海分公司",
+                  "----南京办事处"
+                ],
+                "notes": "模板为了能运行，给两个部门类补了空的 Add/Delete（原题「其他代码省略」）——这正是组合模式「透明方式」的代价：叶子也必须实现子节点管理方法。(8) 按组织结构图，南京办事处挂在上海分公司下。",
+                "source": {
+                  "relation": "adapted",
+                  "sourceId": "past-exam-web-qicoder",
+                  "locator": "2010 年下半年软件设计师下午试题 试题五",
+                  "url": "https://ebook.qicoder.com/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/notes/201011%E8%BD%AF%E8%AE%BE%E4%B8%8B%E5%8D%88%E7%9C%9F%E9%A2%98.html",
+                  "why": "网页转录的 strìng、void main 已改正。"
+                }
+              },
+              {
+                "type": "fillcode",
+                "id": "pm-200905",
+                "title": "2009 年上半年 试题六 · 桥接（Bridge）模式：跨平台图像浏览",
+                "statement": "现欲实现一个图像浏览系统，要求该系统能够显示BMP、JPEG 和GIF三种格式的文件，并且能够在Windows和Linux两种操作系统上运行。系统首先将BMP、JPEG 和GIF三种格式的文件解析为像素矩阵，然后将像素矩阵显示在屏幕上。系统需具有较好的扩展性以支持新的文件格式和操作系统。为满足上述需求并减少所需生成的子类数目，采用桥接（Bridge）设计模式进行设计，所得类图如图6-1所示。（原题类图略）\n采用该设计模式的原因在于：系统解析BMP、GIF与JPEG文件的代码仅与文件格式相关，而在屏幕上显示像素矩阵的代码则仅与操作系统相关。",
+                "code": "class Matrix {   // 各种格式的文件最终都被转化为像素矩阵\n    // 此处代码省略\n};\nclass ImageImp {\npublic:\n    virtual void doPaint(Matrix m) = 0;   // 显示像素矩阵m\n};\nclass WinImp : public ImageImp {\npublic:\n    void doPaint(Matrix m) { /* 调用Windows系统的绘制函数绘制像素矩阵 */ }\n};\nclass LinuxImp : public ImageImp {\npublic:\n    void doPaint(Matrix m) { /* 调用Linux系统的绘制函数绘制像素矩阵 */ }\n};\nclass Image {\npublic:\n    void setImp(ImageImp* imp) { {{1}} = imp; }\n    virtual void parseFile(string fileName) = 0;\nprotected:\n    {{2}} *imp;\n};\nclass BMP : public Image {\npublic:\n    void parseFile(string fileName) {\n        // 此处解析BMP文件并获得一个像素矩阵对象m\n        {{3}};   // 显示像素矩阵m\n    }\n};\nclass GIF : public Image {\n    // 此处代码省略\n};\nclass JPEG : public Image {\n    // 此处代码省略\n};\nint main() {\n    // 在windows操作系统上查看 demo.bmp图像文件\n    Image* image1 = {{4}};\n    ImageImp* imageImp1 = {{5}};\n    {{6}};\n    image1->parseFile(\"demo.bmp\");\n}",
+                "blanks": [
+                  {
+                    "n": 1,
+                    "answers": [
+                      "this->imp"
+                    ]
+                  },
+                  {
+                    "n": 2,
+                    "answers": [
+                      "ImageImp"
+                    ]
+                  },
+                  {
+                    "n": 3,
+                    "answers": [
+                      "imp->doPaint(m)",
+                      "this->imp->doPaint(m)"
+                    ]
+                  },
+                  {
+                    "n": 4,
+                    "answers": [
+                      "new BMP()",
+                      "new BMP"
+                    ]
+                  },
+                  {
+                    "n": 5,
+                    "answers": [
+                      "new WinImp()",
+                      "new WinImp"
+                    ]
+                  },
+                  {
+                    "n": 6,
+                    "answers": [
+                      "image1->setImp(imageImp1)"
+                    ]
+                  },
+                  {
+                    "n": 7,
+                    "answers": [
+                      "17"
+                    ]
+                  }
+                ],
+                "template": "#include <iostream>\n#include <string>\nusing namespace std;\nclass Matrix { };\nclass ImageImp {\npublic:\n    virtual void doPaint(Matrix m) = 0;\n    virtual ~ImageImp() = default;\n};\nclass WinImp : public ImageImp {\npublic:\n    void doPaint(Matrix) { cout << \"Windows 绘制像素矩阵\" << endl; }\n};\nclass LinuxImp : public ImageImp {\npublic:\n    void doPaint(Matrix) { cout << \"Linux 绘制像素矩阵\" << endl; }\n};\nclass Image {\npublic:\n    void setImp(ImageImp* imp) { {{1}} = imp; }\n    virtual void parseFile(string fileName) = 0;\n    virtual ~Image() = default;\nprotected:\n    {{2}} *imp;\n};\nclass BMP : public Image {\npublic:\n    void parseFile(string fileName) {\n        cout << \"解析 BMP 文件 \" << fileName << endl;\n        Matrix m;\n        {{3}};\n    }\n};\nint main() {\n    Image* image1 = {{4}};\n    ImageImp* imageImp1 = {{5}};\n    {{6}};\n    image1->parseFile(\"demo.bmp\");\n    return 0;\n}",
+                "expect": [
+                  "解析 BMP 文件 demo.bmp",
+                  "Windows 绘制像素矩阵"
+                ],
+                "notes": "(7)：抽象部分 Image 1 个 + 10 种格式子类，实现部分 ImageImp 1 个 + 5 种操作系统子类，共 17 个；若用继承穷举组合要 10×5=50 个子类。(1) 形参与成员同名，要用 this->。第 (7) 空不参与编译，只比对答案。",
+                "source": {
+                  "relation": "adapted",
+                  "sourceId": "past-exam-web-qicoder",
+                  "locator": "2009 年上半年软件设计师下午试题 试题六",
+                  "url": "https://ebook.qicoder.com/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/notes/200905%E8%BD%AF%E8%AE%BE%E4%B8%8B%E5%8D%88%E7%9C%9F%E9%A2%98.html",
+                  "why": "网页转录的 void main、中文引号、全角分号、Image1 大小写与 setImp 形参名（Imp/imp）已改正；原题中 GIF、JPEG 两个类的空类体保留为省略。"
+                },
+                "after": "现假设该系统需要支持10种格式的图像文件和5种操作系统，不考虑类Matrix，若采用桥接设计模式则至少需要设计{{7}}个类。"
+              }
+            ]
+          },
+          "labs": []
+        },
+        {
+          "id": "dp.exam.pm-behavioral",
+          "title": "下午题·行为型代码填空",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.exam.behavioral"
+          ],
+          "track": "exam",
+          "guide_line": "软件设计师下午试题原题（C++ 版）：策略、命令、状态。",
+          "weight": "",
+          "outline": {
+            "promise": "在考试格式下读懂一段模式代码，按类图与上下文补出缺失的声明与调用。",
+            "pain": "认得模式不等于写得出代码：纯虚函数怎么声明、成员同名时要不要 this->、谁调用谁，考场上最容易丢分。",
+            "model": "空位多从「子类实现反推接口」「调用方反推被调用方」「构造函数给成员赋值」三处出题。",
+            "scope": "只收代码为文字的年份；网页转录丢失的符号按官方答案还原并逐题注明。",
+            "judgment": "先认出模式与各类的角色，再从已给出的代码反推空位，最后用编译器验证。",
+            "landing": "每道题能独立填完并通过核对或编译验证。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "lead",
+                "text": "软件设计师下午卷的设计模式大题（C++ 版）5 道，2010–2019 年，涉及策略、命令、状态。每年下午卷的设计模式大题同时给 C++ 与 Java 两个版本（试题五、试题六，考生任选其一），本应用用 C++ 版，可以直接在本机编译验证。"
+              },
+              {
+                "type": "callout",
+                "title": "怎么作答",
+                "text": "按考试格式在代码的空位里填写，然后点「核对答案」与官方答案比对。字面不一致但你认为等价的，点「代入编译运行」：应用把你的填写代入一份补全了省略部分的完整程序，用本机编译器真编译、真运行，输出符合题意即算通过。做完一道题计入本知识点的完成度。原题的类图、表格是图片，没有收录，结构以代码为准。"
+              },
+              {
+                "type": "fillcode",
+                "id": "pm-201905",
+                "title": "2019 年上半年 试题六 · 策略（Strategy）模式：轮胎刹车痕迹",
+                "statement": "某软件公司欲开发一款汽车竞速类游戏，需要模拟长轮胎和短轮胎急刹车时在路面上留下的不同痕迹，并考虑后续能模拟更多种轮胎急刹车时的痕迹。现采用策略（Strategy）设计模式来实现该需求，所设计的类图如图6-1所示。（原题类图略）",
+                "code": "#include <iostream>\nusing namespace std;\nclass BrakeBehavior {\npublic:\n    {{1}};\n    /* 其余代码省略 */\n};\nclass LongWheelBrake : public BrakeBehavior {\npublic:\n    void stop() { cout << \"模拟长轮胎刹车痕迹!\" << endl; }\n    /* 其余代码省略 */\n};\nclass ShortWheelBrake : public BrakeBehavior {\npublic:\n    void stop() { cout << \"模拟短轮胎刹车痕迹!\" << endl; }\n    /* 其余代码省略 */\n};\nclass Car {\nprotected:\n    {{2}} wheel;\npublic:\n    void brake() { {{3}}; }\n    /* 其余代码省略 */\n};\nclass ShortWheelCar : public Car {\npublic:\n    ShortWheelCar(BrakeBehavior* behavior) {\n        {{4}};\n    }\n    /* 其余代码省略 */\n};\nint main() {\n    BrakeBehavior* brake = new ShortWheelBrake();\n    ShortWheelCar car1(brake);\n    car1.{{5}};\n    return 0;\n}",
+                "blanks": [
+                  {
+                    "n": 1,
+                    "answers": [
+                      "virtual void stop() = 0"
+                    ]
+                  },
+                  {
+                    "n": 2,
+                    "answers": [
+                      "BrakeBehavior*",
+                      "BrakeBehavior *"
+                    ]
+                  },
+                  {
+                    "n": 3,
+                    "answers": [
+                      "wheel->stop()",
+                      "this->wheel->stop()"
+                    ]
+                  },
+                  {
+                    "n": 4,
+                    "answers": [
+                      "wheel = behavior",
+                      "this->wheel = behavior"
+                    ]
+                  },
+                  {
+                    "n": 5,
+                    "answers": [
+                      "brake()"
+                    ]
+                  }
+                ],
+                "template": "#include <iostream>\nusing namespace std;\nclass BrakeBehavior {\npublic:\n    {{1}};\n    /* 其余代码省略 */\n};\nclass LongWheelBrake : public BrakeBehavior {\npublic:\n    void stop() { cout << \"模拟长轮胎刹车痕迹!\" << endl; }\n    /* 其余代码省略 */\n};\nclass ShortWheelBrake : public BrakeBehavior {\npublic:\n    void stop() { cout << \"模拟短轮胎刹车痕迹!\" << endl; }\n    /* 其余代码省略 */\n};\nclass Car {\nprotected:\n    {{2}} wheel;\npublic:\n    void brake() { {{3}}; }\n    /* 其余代码省略 */\n};\nclass ShortWheelCar : public Car {\npublic:\n    ShortWheelCar(BrakeBehavior* behavior) {\n        {{4}};\n    }\n    /* 其余代码省略 */\n};\nint main() {\n    BrakeBehavior* brake = new ShortWheelBrake();\n    ShortWheelCar car1(brake);\n    car1.{{5}};\n    return 0;\n}",
+                "expect": [
+                  "模拟短轮胎刹车痕迹!"
+                ],
+                "notes": "Car 持有一个 BrakeBehavior* 并把 brake() 委托给它——刹车方式可以在构造时注入、随时替换，新增轮胎种类只加一个 BrakeBehavior 子类。",
+                "source": {
+                  "relation": "adapted",
+                  "sourceId": "past-exam-web-qicoder",
+                  "locator": "2019 年上半年软件设计师下午试题 试题六",
+                  "url": "https://ebook.qicoder.com/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/notes/201905%E8%BD%AF%E8%AE%BE%E7%9C%9F%E9%A2%98.html",
+                  "why": "网页转录的 end1（应为 endl）、全角冒号与 car1(brake): 的冒号已改正。"
+                }
+              },
+              {
+                "type": "fillcode",
+                "id": "pm-201511",
+                "title": "2015 年下半年 试题五 · 策略（Strategy）模式：商场收银",
+                "statement": "某大型购物中心欲开发一套收银软件，要求其能够支持购物中心在不同时期推出的各种促销活动，如打折、返利（例如，满300返100）等等。现采用策略（Strategy）模式实现该要求，得到如图5-1所示的类图。（原题类图略）",
+                "code": "#include <iostream>\nusing namespace std;\nenum TYPE { NORMAL, CASH_DISCOUNT, CASH_RETURN };\nclass CashSuper {\npublic:\n    {{1}};\n};\nclass CashNormal : public CashSuper {   // 正常收费子类\npublic:\n    double acceptCash(double money) { return money; }\n};\nclass CashDiscount : public CashSuper {\nprivate:\n    double moneyDiscount;   // 折扣率\npublic:\n    CashDiscount(double discount) { moneyDiscount = discount; }\n    double acceptCash(double money) { return money * moneyDiscount; }\n};\nclass CashReturn : public CashSuper {   // 满额返利\nprivate:\n    double moneyCondition;   // 满额数额\n    double moneyReturn;      // 返利数额\npublic:\n    CashReturn(double moneyCondition, double moneyReturn) {\n        this->moneyCondition = moneyCondition;\n        this->moneyReturn = moneyReturn;\n    }\n    double acceptCash(double money) {\n        double result = money;\n        if (money >= moneyCondition)\n            result = money - (int)(money / moneyCondition) * moneyReturn;\n        return result;\n    }\n};\nclass CashContext {\nprivate:\n    CashSuper* cs;\npublic:\n    CashContext(int type) {\n        switch (type) {\n        case NORMAL:          // 正常收费\n            {{2}};\n            break;\n        case CASH_RETURN:     // 满300返100\n            {{3}};\n            break;\n        case CASH_DISCOUNT:   // 打八折\n            {{4}};\n            break;\n        }\n    }\n    double GetResult(double money) {\n        {{5}};\n    }\n};\n// 此处略去main()函数",
+                "blanks": [
+                  {
+                    "n": 1,
+                    "answers": [
+                      "virtual double acceptCash(double money) = 0"
+                    ]
+                  },
+                  {
+                    "n": 2,
+                    "answers": [
+                      "cs = new CashNormal()",
+                      "cs = new CashNormal"
+                    ]
+                  },
+                  {
+                    "n": 3,
+                    "answers": [
+                      "cs = new CashReturn(300, 100)"
+                    ]
+                  },
+                  {
+                    "n": 4,
+                    "answers": [
+                      "cs = new CashDiscount(0.8)"
+                    ]
+                  },
+                  {
+                    "n": 5,
+                    "answers": [
+                      "return cs->acceptCash(money)"
+                    ]
+                  }
+                ],
+                "template": "#include <iostream>\nusing namespace std;\nenum TYPE { NORMAL, CASH_DISCOUNT, CASH_RETURN };\nclass CashSuper {\npublic:\n    {{1}};\n    virtual ~CashSuper() = default;\n};\nclass CashNormal : public CashSuper {\npublic:\n    double acceptCash(double money) { return money; }\n};\nclass CashDiscount : public CashSuper {\nprivate:\n    double moneyDiscount;\npublic:\n    CashDiscount(double discount) { moneyDiscount = discount; }\n    double acceptCash(double money) { return money * moneyDiscount; }\n};\nclass CashReturn : public CashSuper {\nprivate:\n    double moneyCondition;\n    double moneyReturn;\npublic:\n    CashReturn(double moneyCondition, double moneyReturn) {\n        this->moneyCondition = moneyCondition;\n        this->moneyReturn = moneyReturn;\n    }\n    double acceptCash(double money) {\n        double result = money;\n        if (money >= moneyCondition)\n            result = money - (int)(money / moneyCondition) * moneyReturn;\n        return result;\n    }\n};\nclass CashContext {\nprivate:\n    CashSuper* cs = nullptr;\npublic:\n    CashContext(int type) {\n        switch (type) {\n        case NORMAL:\n            {{2}};\n            break;\n        case CASH_RETURN:\n            {{3}};\n            break;\n        case CASH_DISCOUNT:\n            {{4}};\n            break;\n        }\n    }\n    double GetResult(double money) {\n        {{5}};\n    }\n};\nint main() {\n    cout << \"NORMAL 700 -> \" << CashContext(NORMAL).GetResult(700) << endl;\n    cout << \"CASH_RETURN 700 -> \" << CashContext(CASH_RETURN).GetResult(700) << endl;\n    cout << \"CASH_DISCOUNT 700 -> \" << CashContext(CASH_DISCOUNT).GetResult(700) << endl;\n    return 0;\n}",
+                "expect": [
+                  "NORMAL 700 -> 700",
+                  "CASH_RETURN 700 -> 500",
+                  "CASH_DISCOUNT 700 -> 560"
+                ],
+                "notes": "CashContext 的构造函数用 switch 按类型创建策略对象——这是策略与简单工厂的结合；GetResult 只认 CashSuper 接口。注释写明了满 300 返 100、打八折，(3)(4) 的参数由此而来。",
+                "source": {
+                  "relation": "adapted",
+                  "sourceId": "past-exam-web-qicoder",
+                  "locator": "2015 年下半年软件设计师下午试题 试题五",
+                  "url": "https://ebook.qicoder.com/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/notes/201511%E8%BD%AF%E8%AE%BE%E4%B8%8B%E5%8D%88%E7%9C%9F%E9%A2%98.html",
+                  "why": "网页转录的 #include 的 #、retum、CashRetum、CashRetnm、motieyCondition 等笔误已改正。本题与软设教程例 7.8 是同一个例子。"
+                }
+              },
+              {
+                "type": "fillcode",
+                "id": "pm-201411",
+                "title": "2014 年下半年 试题五 · 命令（Command）模式：灯具遥控器",
+                "statement": "某灯具厂商欲生产一个灯具遥控器，该遥控器具有7个可编程的插槽，每个插槽都有开关按钮，对应着一个不同的灯。利用该遥控器能够统一控制房间中该厂商所有品牌灯具的开关，现采用Command（命令）模式实现该遥控器的软件部分。Command模式的类图如图5-1所示。（原题类图略）",
+                "code": "class Light {\npublic:\n    Light(string name) { /* 代码省略 */ }\n    void on() { /* 代码省略 */ }    // 开灯\n    void off() { /* 代码省略 */ }   // 关灯\n};\nclass Command {\npublic:\n    {{1}};\n};\nclass LightOnCommand : public Command {   // 开灯命令\nprivate:\n    Light* light;\npublic:\n    LightOnCommand(Light* light) { this->light = light; }\n    void execute() { {{2}}; }\n};\nclass LightOffCommand : public Command {   // 关灯命令\nprivate:\n    Light* light;\npublic:\n    LightOffCommand(Light* light) { this->light = light; }\n    void execute() { {{3}}; }\n};\nclass RemoteControl {   // 遥控器\nprivate:\n    Command* onCommands[7];\n    Command* offCommands[7];\npublic:\n    RemoteControl() { /* 代码省略 */ }\n    void setCommand(int slot, Command* onCommand, Command* offCommand) {\n        {{4}} = onCommand;\n        {{5}} = offCommand;\n    }\n    void onButtonWasPushed(int slot) { {{6}}; }\n    void offButtonWasPushed(int slot) { {{7}}; }\n};\nint main() {\n    RemoteControl* remoteControl = new RemoteControl();\n    Light* livingRoomLight = new Light(\"Living Room\");\n    Light* kitchenLight = new Light(\"kitchen\");\n    LightOnCommand* livingRoomLightOn = new LightOnCommand(livingRoomLight);\n    LightOffCommand* livingRoomLightOff = new LightOffCommand(livingRoomLight);\n    LightOnCommand* kitchenLightOn = new LightOnCommand(kitchenLight);\n    LightOffCommand* kitchenLightOff = new LightOffCommand(kitchenLight);\n    remoteControl->setCommand(0, livingRoomLightOn, livingRoomLightOff);\n    remoteControl->setCommand(1, kitchenLightOn, kitchenLightOff);\n    remoteControl->onButtonWasPushed(0);\n    remoteControl->offButtonWasPushed(0);\n    remoteControl->onButtonWasPushed(1);\n    remoteControl->offButtonWasPushed(1);\n    /* 其余代码省略 */\n    return 0;\n}",
+                "blanks": [
+                  {
+                    "n": 1,
+                    "answers": [
+                      "virtual void execute() = 0"
+                    ]
+                  },
+                  {
+                    "n": 2,
+                    "answers": [
+                      "light->on()",
+                      "this->light->on()"
+                    ]
+                  },
+                  {
+                    "n": 3,
+                    "answers": [
+                      "light->off()",
+                      "this->light->off()"
+                    ]
+                  },
+                  {
+                    "n": 4,
+                    "answers": [
+                      "onCommands[slot]",
+                      "this->onCommands[slot]"
+                    ]
+                  },
+                  {
+                    "n": 5,
+                    "answers": [
+                      "offCommands[slot]",
+                      "this->offCommands[slot]"
+                    ]
+                  },
+                  {
+                    "n": 6,
+                    "answers": [
+                      "onCommands[slot]->execute()",
+                      "this->onCommands[slot]->execute()"
+                    ]
+                  },
+                  {
+                    "n": 7,
+                    "answers": [
+                      "offCommands[slot]->execute()",
+                      "this->offCommands[slot]->execute()"
+                    ]
+                  }
+                ],
+                "template": "#include <iostream>\n#include <string>\nusing namespace std;\nclass Light {\n    string name;\npublic:\n    Light(string name) { this->name = name; }\n    void on() { cout << name << \" light on\" << endl; }\n    void off() { cout << name << \" light off\" << endl; }\n};\nclass Command {\npublic:\n    {{1}};\n    virtual ~Command() = default;\n};\nclass LightOnCommand : public Command {\nprivate:\n    Light* light;\npublic:\n    LightOnCommand(Light* light) { this->light = light; }\n    void execute() { {{2}}; }\n};\nclass LightOffCommand : public Command {\nprivate:\n    Light* light;\npublic:\n    LightOffCommand(Light* light) { this->light = light; }\n    void execute() { {{3}}; }\n};\nclass RemoteControl {\nprivate:\n    Command* onCommands[7];\n    Command* offCommands[7];\npublic:\n    RemoteControl() { for (int i = 0; i < 7; ++i) onCommands[i] = offCommands[i] = nullptr; }\n    void setCommand(int slot, Command* onCommand, Command* offCommand) {\n        {{4}} = onCommand;\n        {{5}} = offCommand;\n    }\n    void onButtonWasPushed(int slot) { {{6}}; }\n    void offButtonWasPushed(int slot) { {{7}}; }\n};\nint main() {\n    RemoteControl* remoteControl = new RemoteControl();\n    Light* livingRoomLight = new Light(\"Living Room\");\n    Light* kitchenLight = new Light(\"kitchen\");\n    LightOnCommand* livingRoomLightOn = new LightOnCommand(livingRoomLight);\n    LightOffCommand* livingRoomLightOff = new LightOffCommand(livingRoomLight);\n    LightOnCommand* kitchenLightOn = new LightOnCommand(kitchenLight);\n    LightOffCommand* kitchenLightOff = new LightOffCommand(kitchenLight);\n    remoteControl->setCommand(0, livingRoomLightOn, livingRoomLightOff);\n    remoteControl->setCommand(1, kitchenLightOn, kitchenLightOff);\n    remoteControl->onButtonWasPushed(0);\n    remoteControl->offButtonWasPushed(0);\n    remoteControl->onButtonWasPushed(1);\n    remoteControl->offButtonWasPushed(1);\n    return 0;\n}",
+                "expect": [
+                  "Living Room light on",
+                  "Living Room light off",
+                  "kitchen light on",
+                  "kitchen light off"
+                ],
+                "notes": "遥控器（Invoker）只认 Command 接口，按插槽调用 execute()；灯（Receiver）由具体命令对象绑定。新增一种电器只要新增命令类，遥控器不改。",
+                "source": {
+                  "relation": "adapted",
+                  "sourceId": "past-exam-web-qicoder",
+                  "locator": "2014 年下半年软件设计师下午试题 试题五",
+                  "url": "https://ebook.qicoder.com/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/notes/201411%E8%BD%AF%E8%AE%BE%E4%B8%8B%E5%8D%88%E7%9C%9F%E9%A2%98.html",
+                  "why": "网页转录的全角分号与 newLightOffCommand 缺失的空格已改正。"
+                }
+              },
+              {
+                "type": "fillcode",
+                "id": "pm-201111",
+                "title": "2011 年下半年 试题五 · 状态（State）模式：纸巾售卖机",
+                "statement": "某大型商场内安装了多个简易的纸巾售卖机，自动出售2元钱一包的纸巾，且每次仅售出一包纸巾。纸巾售卖机的状态图如图5-1所示。（原题状态图略：没有投币 —投币→ 有2元钱 —按出纸巾→ 售出纸巾 —纸巾数>0→ 没有投币；售出后纸巾数=0 → 纸巾售完；有2元钱 —退币→ 没有投币）\n采用状态（State）模式来实现该纸巾售卖机，得到如图5-2所示的类图。（原题类图略）其中类State为抽象类，定义了投币、退币、出纸巾等方法接口。类SoldState、SoldOutState、NoQuarterState和HasQuarterState分别对应图5-1中纸巾售卖机的4种状态：售出纸巾、纸巾售完、没有投币、有2元钱。",
+                "code": "#include <iostream>\nusing namespace std;\n// 以下为类的定义部分\nclass TissueMachine;   // 类的提前引用\nclass State {\npublic:\n    virtual void insertQuarter() = 0;   // 投币\n    virtual void ejectQuarter() = 0;    // 退币\n    virtual void turnCrank() = 0;       // 按下“出纸巾”按钮\n    virtual void dispense() = 0;        // 出纸巾\n};\n/* 类SoldOutState、NoQuarterState、HasQuarterState、SoldState的定义省略，每个类中均\n   定义了私有数据成员TissueMachine* tissueMachine; */\nclass TissueMachine {\nprivate:\n    {{1}} *soldOutState, *noQuarterState, *hasQuarterState, *soldState, *state;\n    int count;   // 纸巾数\npublic:\n    TissueMachine(int numbers);\n    void setState(State* state);\n    State* getHasQuarterState();\n    State* getNoQuarterState();\n    State* getSoldState();\n    State* getSoldOutState();\n    int getCount();\n    // 其余代码省略\n};\n// 以下为类的实现部分\nvoid NoQuarterState::insertQuarter() {\n    tissueMachine->setState({{2}});\n}\nvoid HasQuarterState::ejectQuarter() {\n    tissueMachine->setState({{3}});\n}\nvoid SoldState::dispense() {\n    if (tissueMachine->getCount() > 0) {\n        tissueMachine->setState({{4}});\n    }\n    else {\n        tissueMachine->setState({{5}});\n    }\n}   // 其余代码省略",
+                "blanks": [
+                  {
+                    "n": 1,
+                    "answers": [
+                      "State"
+                    ]
+                  },
+                  {
+                    "n": 2,
+                    "answers": [
+                      "tissueMachine->getHasQuarterState()"
+                    ]
+                  },
+                  {
+                    "n": 3,
+                    "answers": [
+                      "tissueMachine->getNoQuarterState()"
+                    ]
+                  },
+                  {
+                    "n": 4,
+                    "answers": [
+                      "tissueMachine->getNoQuarterState()"
+                    ]
+                  },
+                  {
+                    "n": 5,
+                    "answers": [
+                      "tissueMachine->getSoldOutState()"
+                    ]
+                  }
+                ],
+                "template": "#include <iostream>\n#include <string>\nusing namespace std;\nclass TissueMachine;\nclass State {\npublic:\n    virtual void insertQuarter() = 0;\n    virtual void ejectQuarter() = 0;\n    virtual void turnCrank() = 0;\n    virtual void dispense() = 0;\n    virtual string name() const = 0;\n    virtual ~State() = default;\n};\n#define STATE_CLASS(Name)                                              \\\n    class Name : public State {                                        \\\n        TissueMachine* tissueMachine;                                  \\\n    public:                                                            \\\n        explicit Name(TissueMachine* m) : tissueMachine(m) {}          \\\n        void insertQuarter();                                          \\\n        void ejectQuarter();                                           \\\n        void turnCrank();                                              \\\n        void dispense();                                               \\\n        string name() const { return #Name; }                          \\\n    };\nSTATE_CLASS(SoldOutState)\nSTATE_CLASS(NoQuarterState)\nSTATE_CLASS(HasQuarterState)\nSTATE_CLASS(SoldState)\nclass TissueMachine {\nprivate:\n    {{1}} *soldOutState, *noQuarterState, *hasQuarterState, *soldState, *state;\n    int count;\npublic:\n    TissueMachine(int numbers) : count(numbers) {\n        soldOutState = new SoldOutState(this);\n        noQuarterState = new NoQuarterState(this);\n        hasQuarterState = new HasQuarterState(this);\n        soldState = new SoldState(this);\n        state = count > 0 ? noQuarterState : soldOutState;\n    }\n    void setState(State* s) { state = s; }\n    State* getHasQuarterState() { return hasQuarterState; }\n    State* getNoQuarterState() { return noQuarterState; }\n    State* getSoldState() { return soldState; }\n    State* getSoldOutState() { return soldOutState; }\n    int getCount() { return count; }\n    void releaseTissue() { if (count > 0) --count; }\n    void insertQuarter() { state->insertQuarter(); report(\"insert\"); }\n    void ejectQuarter() { state->ejectQuarter(); report(\"eject\"); }\n    void turnCrank() { state->turnCrank(); state->dispense(); report(\"crank\"); }\n    void report(const char* action) { cout << action << \" -> \" << state->name() << \" (count \" << count << \")\" << endl; }\n};\nvoid SoldOutState::insertQuarter() {}\nvoid SoldOutState::ejectQuarter() {}\nvoid SoldOutState::turnCrank() {}\nvoid SoldOutState::dispense() {}\nvoid NoQuarterState::insertQuarter() {\n    tissueMachine->setState({{2}});\n}\nvoid NoQuarterState::ejectQuarter() {}\nvoid NoQuarterState::turnCrank() {}\nvoid NoQuarterState::dispense() {}\nvoid HasQuarterState::insertQuarter() {}\nvoid HasQuarterState::ejectQuarter() {\n    tissueMachine->setState({{3}});\n}\nvoid HasQuarterState::turnCrank() {\n    tissueMachine->releaseTissue();\n    tissueMachine->setState(tissueMachine->getSoldState());\n}\nvoid HasQuarterState::dispense() {}\nvoid SoldState::insertQuarter() {}\nvoid SoldState::ejectQuarter() {}\nvoid SoldState::turnCrank() {}\nvoid SoldState::dispense() {\n    if (tissueMachine->getCount() > 0) {\n        tissueMachine->setState({{4}});\n    }\n    else {\n        tissueMachine->setState({{5}});\n    }\n}\nint main() {\n    TissueMachine m(2);\n    m.insertQuarter();\n    m.ejectQuarter();\n    m.insertQuarter();\n    m.turnCrank();\n    m.insertQuarter();\n    m.turnCrank();\n    return 0;\n}",
+                "expect": [
+                  "insert -> HasQuarterState",
+                  "eject -> NoQuarterState",
+                  "crank -> NoQuarterState (count 1)",
+                  "crank -> SoldOutState (count 0)"
+                ],
+                "notes": "每个状态类只处理自己那一格的行为，并通过 tissueMachine->getXxxState() 决定下一个状态；状态之间的转换完全对应状态图的箭头。",
+                "source": {
+                  "relation": "adapted",
+                  "sourceId": "past-exam-web-qicoder",
+                  "locator": "2011 年下半年软件设计师下午试题 试题五",
+                  "url": "https://ebook.qicoder.com/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/notes/201111%E8%BD%AF%E8%AE%BE%E4%B8%8B%E5%8D%88%E7%9C%9F%E9%A2%98.html",
+                  "why": "网页转录的全角逗号已改为半角。原题省略了四个状态类的定义与 TissueMachine 的实现，编译模板按状态图补全。"
+                }
+              },
+              {
+                "type": "fillcode",
+                "id": "pm-201005",
+                "title": "2010 年上半年 试题五 · 策略（Strategy）模式：飞机飞行模拟",
+                "statement": "某软件公司现欲开发一款飞机飞行模拟系统，该系统主要模拟不同种类飞机的飞行特征与起飞特征。需要模拟的飞机种类及其特征如表5-1所示。（原题表格为图片：直升机为亚音速飞行、垂直起飞）\n为支持将来模拟更多种类的飞机，采用策略设计模式（Strategy）设计的类图如图5-1所示。（原题类图略）\n图5-1中，AirCraft为抽象类，描述了抽象的飞机，而类Helicopter、AirPlane、Fighter和Harrier分别描述具体的飞机种类，方法fly()和takeOff()分别表示不同飞机都具有飞行特征和起飞特征；类FlyBehavior与TakeOffBehavior为抽象类，分别用于表示抽象的飞行为与起飞行为；类SubSonicFly与SuperSonicFly分别描述亚音速飞行和超音速飞行的行为；类VerticalTakeOff与LongDistanceTakeOff分别描述垂直起飞与长距离起飞的行为。",
+                "code": "#include <iostream>\nusing namespace std;\nclass FlyBehavior {\npublic: virtual void fly() = 0;\n};\nclass SubSonicFly : public FlyBehavior {\npublic: void fly() { cout << \"亚音速飞行！\" << endl; }\n};\nclass SuperSonicFly : public FlyBehavior {\npublic: void fly() { cout << \"超音速飞行！\" << endl; }\n};\nclass TakeOffBehavior {\npublic: virtual void takeOff() = 0;\n};\nclass VerticalTakeOff : public TakeOffBehavior {\npublic: void takeOff() { cout << \"垂直起飞！\" << endl; }\n};\nclass LongDistanceTakeOff : public TakeOffBehavior {\npublic: void takeOff() { cout << \"长距离起飞！\" << endl; }\n};\nclass AirCraft {\nprotected:\n    {{1}};\n    {{2}};\npublic:\n    void fly() { {{3}}; }\n    void takeOff() { {{4}}; };\n};\nclass Helicopter : public AirCraft {\npublic:\n    Helicopter() {\n        flyBehavior = new {{5}};\n        takeOffBehavior = new {{6}};\n    }\n    {{7}} {\n        if (!flyBehavior) delete flyBehavior;\n        if (!takeOffBehavior) delete takeOffBehavior;\n    }\n};\n// 其它代码省略",
+                "blanks": [
+                  {
+                    "n": 1,
+                    "answers": [
+                      "FlyBehavior* flyBehavior",
+                      "FlyBehavior *flyBehavior",
+                      "TakeOffBehavior* takeOffBehavior",
+                      "TakeOffBehavior *takeOffBehavior"
+                    ]
+                  },
+                  {
+                    "n": 2,
+                    "answers": [
+                      "TakeOffBehavior* takeOffBehavior",
+                      "TakeOffBehavior *takeOffBehavior",
+                      "FlyBehavior* flyBehavior",
+                      "FlyBehavior *flyBehavior"
+                    ]
+                  },
+                  {
+                    "n": 3,
+                    "answers": [
+                      "flyBehavior->fly()"
+                    ]
+                  },
+                  {
+                    "n": 4,
+                    "answers": [
+                      "takeOffBehavior->takeOff()"
+                    ]
+                  },
+                  {
+                    "n": 5,
+                    "answers": [
+                      "SubSonicFly()",
+                      "SubSonicFly"
+                    ]
+                  },
+                  {
+                    "n": 6,
+                    "answers": [
+                      "VerticalTakeOff()",
+                      "VerticalTakeOff"
+                    ]
+                  },
+                  {
+                    "n": 7,
+                    "answers": [
+                      "~Helicopter()"
+                    ]
+                  }
+                ],
+                "template": "#include <iostream>\nusing namespace std;\nclass FlyBehavior {\npublic: virtual void fly() = 0;\n    virtual ~FlyBehavior() = default;\n};\nclass SubSonicFly : public FlyBehavior {\npublic: void fly() { cout << \"亚音速飞行！\" << endl; }\n};\nclass SuperSonicFly : public FlyBehavior {\npublic: void fly() { cout << \"超音速飞行！\" << endl; }\n};\nclass TakeOffBehavior {\npublic: virtual void takeOff() = 0;\n    virtual ~TakeOffBehavior() = default;\n};\nclass VerticalTakeOff : public TakeOffBehavior {\npublic: void takeOff() { cout << \"垂直起飞！\" << endl; }\n};\nclass LongDistanceTakeOff : public TakeOffBehavior {\npublic: void takeOff() { cout << \"长距离起飞！\" << endl; }\n};\nclass AirCraft {\nprotected:\n    {{1}};\n    {{2}};\npublic:\n    void fly() { {{3}}; }\n    void takeOff() { {{4}}; };\n};\nclass Helicopter : public AirCraft {\npublic:\n    Helicopter() {\n        flyBehavior = new {{5}};\n        takeOffBehavior = new {{6}};\n    }\n    {{7}} {\n        if (!flyBehavior) delete flyBehavior;\n        if (!takeOffBehavior) delete takeOffBehavior;\n    }\n};\nint main() {\n    Helicopter h;\n    h.takeOff();\n    h.fly();\n    return 0;\n}",
+                "expect": [
+                  "垂直起飞！",
+                  "亚音速飞行！"
+                ],
+                "notes": "飞机有两个独立变化的行为（飞行、起飞），各用一个策略层次表示；官方注明 (1)(2) 可互换。直升机是亚音速飞行、垂直起飞。原题析构函数里的 if(!flyBehavior) 条件其实写反了（应为 if(flyBehavior)），不影响填空。",
+                "source": {
+                  "relation": "verbatim",
+                  "sourceId": "past-exam-web-qicoder",
+                  "locator": "2010 年上半年软件设计师下午试题 试题五",
+                  "url": "https://ebook.qicoder.com/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%B8%88/notes/201005%E8%BD%AF%E8%AE%BE%E4%B8%8B%E5%8D%88%E7%9C%9F%E9%A2%98.html",
+                  "why": "代码与网页原文一致（析构函数里的 if(!flyBehavior) 是原题写法，保留）。"
+                }
               }
             ]
           },

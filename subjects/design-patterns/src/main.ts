@@ -13,6 +13,13 @@ import {
   parseTrace,
   stopTracePlayback,
 } from "./trace-player";
+import {
+  fillKey,
+  renderFillCode,
+  wireFillCode,
+  type FillCodeBlock,
+  type FillContext,
+} from "./fill-code";
 import "./styles.css";
 
 /** Vite 打包进前端的案例原文：浏览器预览时可读；保存/编译仍需 Tauri。 */
@@ -103,7 +110,8 @@ type Block =
   | { type: "quiz"; title?: string; items: QuizItem[] }
   | { type: "uml"; title?: string; uml: UmlDiagram }
   | { type: "table"; title?: string; headers: string[]; rows: string[][]; note?: string }
-  | { type: "summary"; title?: string; text: string };
+  | { type: "summary"; title?: string; text: string }
+  | FillCodeBlock;
 
 /** 标准 UML 类图的极简描述：类框三格（名/属性/方法）+ 六种关系线，坐标由内容作者给定。 */
 type UmlClass = {
@@ -1632,6 +1640,58 @@ function updateCheckpointProgress(chapter: Chapter) {
   }
 }
 
+/** 代码填空块的运行环境：草稿、状态都复用实验的存储，编译走同一个 compile_and_run。 */
+function fillContext(topic: Topic): FillContext {
+  return {
+    escapeHtml,
+    loadDraft: (key) => state.sourceByKey[key],
+    saveDraft: (key, value) => {
+      state.sourceByKey[key] = value;
+      void invoke("save_lab_draft", { labKey: key, source: value }).catch(() => undefined);
+    },
+    status: (key) => {
+      const s = state.labStatus[key];
+      return s === "done" || s === "tried" || s === "started" ? s : "none";
+    },
+    setStatus: (key, status) => persistStatusKey(key, status),
+    run: async (block, source) => {
+      if (!hasTauri()) {
+        return { kind: "unavailable", message: "浏览器预览里不能编译运行，请在应用窗口里使用。" };
+      }
+      try {
+        const r = await invoke<RunResult>("compile_and_run", {
+          caseId: `exam_${block.id}`,
+          entrypoint: "main.cpp",
+          source,
+        });
+        return { kind: "result", ok: r.ok, compileLog: r.compile_log, stdout: r.stdout, stderr: r.stderr };
+      } catch (error) {
+        return { kind: "unavailable", message: String(error) };
+      }
+    },
+    onProgress: () => void updateFillMastery(topic),
+  };
+}
+
+/**
+ * 代码填空也是作答（ADR 0052）：本知识点里做完的题占比换算成 0–5 写入完成度。
+ * 只用于没有被章节随堂考核覆盖的知识点，免得两条路径互相覆盖。
+ */
+async function updateFillMastery(topic: Topic) {
+  const fills = topic.lesson.blocks.filter((b): b is FillCodeBlock => b.type === "fillcode");
+  const chapter = findChapterForTopic(topic.id);
+  if (!fills.length || chapter?.checkpoint?.items?.some((i) => i.covers === topic.id)) return;
+  const done = fills.filter((b) => state.labStatus[fillKey(b.id)] === "done").length;
+  const level = masteryFromRatio(done, fills.length);
+  try {
+    await invoke("save_mastery", { topicId: topic.id, mastery: level });
+  } catch {
+    /* 本地仍更新 */
+  }
+  state.mastery[topic.id] = level;
+  renderNav();
+}
+
 function masteryFromRatio(correct: number, total: number): number {
   if (total <= 0) return 0;
   const r = correct / total;
@@ -1880,6 +1940,9 @@ function renderLesson(topic: Topic) {
           <h3>${escapeHtml(b.title ?? "随堂测验")}</h3>
           ${renderQuizItems(b.items, `lesson-${topic.id}-${bi}`)}
         </div>`;
+      }
+      if (b.type === "fillcode") {
+        return renderFillCode(b, fillContext(topic));
       }
       if (b.type === "summary") {
         return `<div class="card summary">
@@ -2281,6 +2344,11 @@ async function refreshTopic() {
       });
     });
     wireQuiz(panel);
+    wireFillCode(
+      panel,
+      topic.lesson.blocks.filter((b): b is FillCodeBlock => b.type === "fillcode"),
+      fillContext(topic),
+    );
     panel.querySelectorAll<HTMLElement>("[data-quiz-store]").forEach((box) => {
       const key = box.dataset.quizStore;
       if (key) restoreQuizPicks(box, state.quizPicks[key]);
