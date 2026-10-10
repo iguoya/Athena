@@ -162,6 +162,8 @@ for (const app of readdirSync(appsDir).sort()) {
     if (rel.includes(`${c.contentDir ?? "content"}/sources/`)) continue;
     // 契约点名排除的文件（如由真题统计出的词频表：条目长得像内容，其实是派生数字）
     if ((c.excludeFiles ?? []).some((suffix) => rel.endsWith(suffix))) continue;
+    // 契约点名排除的目录（如原样转存的作者侧参考词表、句库：不是题，也不归应用出题）
+    if ((c.excludeDirs ?? []).some((prefix) => rel.startsWith(prefix))) continue;
     const data = readJson(file);
     if (!data) continue;
 

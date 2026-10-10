@@ -17,6 +17,9 @@
 | `private/exam/cet4.json`       | 四级真题句子（本机，git 忽略）                                   | `pnpm content:cet4`              |
 | `private/textbook/`            | 教材资料（本机，git 忽略），见下面「教材导入」                   | 手动放 + `pnpm content:textbook` |
 | `private/`                     | 真题、课本等只在本机用的资料（git 忽略）                         | 手动放                           |
+| `english2/`                    | 考研英语二：迁自磨砚的课表与可公开题目（ADR 0025）               | `pnpm content:english2 <磨砚 content>` |
+| `english2/private-index.json`  | 只在本机的英语二题目清单，界面据此提示本机缺了多少               | `pnpm content:english2`          |
+| `private/english2/`            | 英语二里引用了只能本机用的来源的题目，以及磨砚的作者侧参考资料   | `pnpm content:english2`          |
 
 ## 教材导入（ADR 0022）
 

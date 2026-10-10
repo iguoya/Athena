@@ -1,0 +1,386 @@
+{
+  "topic_id": "en.advanced.sentence.passage_logic",
+  "kind": "passage",
+  "title": "步行：主张、证据与边界",
+  "vocab": [
+    "en.beginner.vocab.result",
+    "en.beginner.vocab.reduce",
+    "en.intermediate.vocab.benefit",
+    "en.vocab.significant"
+  ],
+  "media": [
+    {
+      "kind": "audio",
+      "title": "VOA 原文全文原声（6 分 51 秒）",
+      "url": "https://voa-audio.voanews.eu/vle/2017/05/26/3dee3eea-bac8-4ef6-8973-7c26482afcbb.mp3?download=1",
+      "source_id": "voa-walking-wonder-drug"
+    }
+  ],
+  "source": [
+    {
+      "source_id": "voa-walking-wonder-drug",
+      "relation": "adapted",
+      "note": "正文摘编自 Anna Matteo 为 VOA Learning English 编写的原文；删节并补全一处缺少的 to，不收入第三方图片。题目和变式由本项目编写。"
+    },
+    {
+      "source_id": "yz-english-2-outline",
+      "relation": "exam_alignment",
+      "note": "用真实短文练主旨、细节、证据边界和英译汉，不复制英语二真题。"
+    },
+    {
+      "source_id": "netem-vocabulary",
+      "relation": "selection_basis",
+      "note": "立场词和熟词生义按考研词频。"
+    }
+  ],
+  "items": [
+    {
+      "id": "en.passage.walking_evidence.q1",
+      "kind": "main_idea",
+      "prompt": "这段节选的主旨更接近哪一句？",
+      "error_tag": "篇章主旨",
+      "choices": [
+        {
+          "label": "步行容易实行，也有研究显示它能带来具体健康收益",
+          "ok": true,
+          "why": "文章先提出步行这一选择，再用研究和可执行方式支持它。"
+        },
+        {
+          "label": "只有跑步才能降低所有疾病风险",
+          "ok": false,
+          "why": "原文比较了步行和跑步，也没有把结论扩大到所有疾病。"
+        },
+        {
+          "label": "每天必须连续步行三十分钟才有效",
+          "ok": false,
+          "why": "末段明确说可以拆成三次十分钟。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "A useful habit does not have to be difficult. When an action is easy to repeat and supported by evidence, it may produce lasting benefits.",
+          "prompt": "这段变式的中心判断是什么？",
+          "choices": [
+            {
+              "label": "容易坚持且有证据支持的行动可能带来长期收益",
+              "ok": true,
+              "why": "两项条件与 lasting benefits 构成主干。"
+            },
+            {
+              "label": "越困难的习惯一定越有效",
+              "ok": false,
+              "why": "与首句相反。"
+            }
+          ]
+        }
+      ],
+      "source": [
+        {
+          "source_id": "voa-walking-wonder-drug",
+          "relation": "adapted",
+          "locator": "Article text and study paragraphs",
+          "note": "问题直接依据该公开原文节选的主旨、研究数字和证据边界。"
+        }
+      ]
+    },
+    {
+      "id": "en.passage.walking_evidence.q2",
+      "kind": "detail",
+      "prompt": "研究比较的两组人大约各有多少？",
+      "error_tag": "细节定位",
+      "choices": [
+        {
+          "label": "约 33,000 名跑步者和略多于 15,000 名步行者",
+          "ok": true,
+          "why": "第三段直接给出两个样本数。"
+        },
+        {
+          "label": "33 名跑步者和 15 名步行者",
+          "ok": false,
+          "why": "遗漏了 thousand，数量级错误。"
+        },
+        {
+          "label": "两组都恰好 30,000 人",
+          "ok": false,
+          "why": "原文没有给出相同样本量。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "The survey followed 1,200 students and 800 workers for two years.",
+          "prompt": "这项调查包含哪些样本？",
+          "choices": [
+            {
+              "label": "1,200 名学生和 800 名工作者",
+              "ok": true,
+              "why": "准确保留两个群体和数量。"
+            },
+            {
+              "label": "共 800 名学生",
+              "ok": false,
+              "why": "混淆了群体和数量。"
+            }
+          ]
+        }
+      ],
+      "source": [
+        {
+          "source_id": "voa-walking-wonder-drug",
+          "relation": "adapted",
+          "locator": "Article text and study paragraphs",
+          "note": "问题直接依据该公开原文节选的主旨、研究数字和证据边界。"
+        }
+      ]
+    },
+    {
+      "id": "en.passage.walking_evidence.q3",
+      "kind": "evidence",
+      "prompt": "研究结果具体支持了什么，而没有支持什么？",
+      "error_tag": "证据边界",
+      "choices": [
+        {
+          "label": "相同能量的快走和跑步与几项相似的风险下降有关；不能据此断言两者所有效果完全相同",
+          "ok": true,
+          "why": "结论限定在列出的血压、胆固醇和糖尿病等风险上。"
+        },
+        {
+          "label": "步行在任何方面都一定优于跑步",
+          "ok": false,
+          "why": "原文使用 may 和 similar reductions，没有这种绝对结论。"
+        },
+        {
+          "label": "运动量与健康完全无关",
+          "ok": false,
+          "why": "研究正是在比较运动与风险下降。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "The trial found lower stress among participants who walked at lunch, but it did not measure sleep or physical fitness.",
+          "prompt": "哪项没有被这项试验测量？",
+          "choices": [
+            {
+              "label": "睡眠和身体素质",
+              "ok": true,
+              "why": "but 后明确给出未测量项目。"
+            },
+            {
+              "label": "午间步行者的压力",
+              "ok": false,
+              "why": "压力是已经报告的结果。"
+            }
+          ]
+        }
+      ],
+      "source": [
+        {
+          "source_id": "voa-walking-wonder-drug",
+          "relation": "adapted",
+          "locator": "Article text and study paragraphs",
+          "note": "问题直接依据该公开原文节选的主旨、研究数字和证据边界。"
+        }
+      ]
+    },
+    {
+      "id": "en.advanced.sentence.walking_qualification",
+      "kind": "attitude",
+      "text": "The study finds that walking may be as good for us as running.",
+      "prompt": "may 在这里起什么作用？",
+      "error_tag": "论证限定",
+      "choices": [
+        {
+          "label": "把结论限定为有证据支持的可能性，而不是绝对保证",
+          "ok": true,
+          "why": "may 保留了研究结论的谨慎程度。"
+        },
+        {
+          "label": "表示研究已经证明步行在所有方面都更好",
+          "ok": false,
+          "why": "既忽略 may，也把 as good as 改成 better。"
+        },
+        {
+          "label": "表示研究禁止人们跑步",
+          "ok": false,
+          "why": "句中没有禁止含义。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "The change could reduce waiting time, although more evidence is needed.",
+          "prompt": "could 表达什么立场？",
+          "choices": [
+            {
+              "label": "可能有效，但结论仍有限定",
+              "ok": true,
+              "why": "could 与后面的证据不足共同表达谨慎。"
+            },
+            {
+              "label": "已经无条件保证有效",
+              "ok": false,
+              "why": "语气过强。"
+            }
+          ]
+        }
+      ],
+      "source": [
+        {
+          "source_id": "voa-walking-wonder-drug",
+          "relation": "adapted",
+          "locator": "Article text and study paragraphs",
+          "note": "题面句取自或紧贴原文相应表述；题目把它转成英语二所需的态度、推断或英译汉判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.advanced.sentence.walking_translation",
+      "kind": "translation",
+      "text": "If your goal is to walk for 30 minutes a day, you can split that into three 10-minute walks.",
+      "prompt": "哪项翻译完整保留了条件和数量？",
+      "error_tag": "英译汉",
+      "choices": [
+        {
+          "label": "如果你的目标是每天步行三十分钟，可以把它拆成三次、每次十分钟的步行。",
+          "ok": true,
+          "why": "条件、总时长、次数和单次时长全部保留。"
+        },
+        {
+          "label": "如果每天走十分钟，就必须连续走三十天。",
+          "ok": false,
+          "why": "把三次十分钟误成三十天。"
+        },
+        {
+          "label": "每天只能步行一次，每次三十分钟。",
+          "ok": false,
+          "why": "与 can split into three 相反。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "If the full lesson feels too long, divide it into two shorter sessions.",
+          "prompt": "哪项翻译准确？",
+          "choices": [
+            {
+              "label": "如果整节课感觉太长，就把它分成两次较短的学习。",
+              "ok": true,
+              "why": "保留条件和 divide into two。"
+            },
+            {
+              "label": "课程越长越不能分开学习。",
+              "ok": false,
+              "why": "与原文建议相反。"
+            }
+          ]
+        }
+      ],
+      "source": [
+        {
+          "source_id": "voa-walking-wonder-drug",
+          "relation": "adapted",
+          "locator": "Article text and study paragraphs",
+          "note": "题面句取自或紧贴原文相应表述；题目把它转成英语二所需的态度、推断或英译汉判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.advanced.sentence.walking_practicality",
+      "kind": "inference",
+      "text": "Walking requires no special skills or equipment, and it fits easily into a daily schedule.",
+      "prompt": "作者用这句话支持哪项实际判断？",
+      "error_tag": "论据作用",
+      "choices": [
+        {
+          "label": "步行的进入门槛低，比较容易纳入日常生活",
+          "ok": true,
+          "why": "无需技能或器材，并且容易安排，都是可执行性的证据。"
+        },
+        {
+          "label": "步行只能由专业运动员完成",
+          "ok": false,
+          "why": "与 no special skills 相反。"
+        },
+        {
+          "label": "步行需要昂贵设备",
+          "ok": false,
+          "why": "原文明确说 no equipment。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "The exercise uses no special software and takes only five minutes, so most learners can try it immediately.",
+          "prompt": "前半句如何支持后半句？",
+          "choices": [
+            {
+              "label": "低工具和时间门槛支持“多数人可立即尝试”",
+              "ok": true,
+              "why": "前半句给出可执行性依据。"
+            },
+            {
+              "label": "证明练习只能由专家完成",
+              "ok": false,
+              "why": "与句意相反。"
+            }
+          ]
+        }
+      ],
+      "source": [
+        {
+          "source_id": "voa-walking-wonder-drug",
+          "relation": "adapted",
+          "locator": "Article text and study paragraphs",
+          "note": "题面句取自或紧贴原文相应表述；题目把它转成英语二所需的态度、推断或英译汉判断。"
+        }
+      ]
+    },
+    {
+      "id": "en.passage.walking_evidence.translation_whereas",
+      "kind": "translation",
+      "text": "Walking is easy to repeat, whereas some gym plans fail after a week and may undermine the will to continue.",
+      "prompt": "哪项翻译保留了 whereas 的对照和 undermine 的方向？",
+      "error_tag": "英译汉",
+      "source": [
+        {
+          "source_id": "tatoeba",
+          "relation": "adapted",
+          "locator": "Sentence 9149617 · contributor sundown",
+          "locator_url": "https://tatoeba.org/en/sentences/show/9149617",
+          "note": "例句从该真实句的目标词义或搭配作受控改写；替换了场景词，题目解释和干扰项由项目编写。"
+        }
+      ],
+      "choices": [
+        {
+          "label": "步行容易坚持，而有些健身计划一周后就放弃，还可能削弱继续下去的意愿。",
+          "ok": true,
+          "why": "whereas 对照两种习惯，undermine 是逐渐削弱。"
+        },
+        {
+          "label": "步行很难坚持，所以健身计划更能增强意愿。",
+          "ok": false,
+          "why": "对照方向和 undermine 都被说反。"
+        },
+        {
+          "label": "步行和健身计划没有差别，都立刻建立了意志。",
+          "ok": false,
+          "why": "whereas 正是为了标出差别。"
+        }
+      ],
+      "variants": [
+        {
+          "text": "The evidence supports a modest benefit, whereas it does not constitute proof that every claim is true.",
+          "prompt": "哪项翻译准确？",
+          "choices": [
+            {
+              "label": "证据支持有限度的收益，而它并不构成每项主张都为真的证明。",
+              "ok": true,
+              "why": "whereas 与 constitute 都保留了。"
+            },
+            {
+              "label": "证据已经构成全部主张的证明。",
+              "ok": false,
+              "why": "does not constitute 被去掉了。"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

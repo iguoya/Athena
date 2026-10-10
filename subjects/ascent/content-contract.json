@@ -4,13 +4,30 @@
   "_items": "判分条目：句组里的句子（en）与词库里的词（word）——单词关与句组练习都从这两类出题。语法知识地图（grammar.json）只是单元与句型目录，不是题。",
   "_stringRefs": "条目的 source 直接写 sources.json 里的来源 id。开放句库、词典与真题都按原样取用记 verbatim；公开演讲按 ADR 0019 只摘单句，记 quoted。",
   "_exclude": "exam-frequency.json 是由四级真题统计出的词频数字，条目带 word 但不是学习内容。",
+  "_english2": "考研英语二（content/english2/，迁自磨砚，主仓库 ADR 0117、本应用 ADR 0025）的题目以 prompt 标记，出处是 source 数组里的对象（source_id / relation / locator / locator_url / note），变式共享母题出处。本机部分在 content/private/english2/，CI 上没有，只在本机被查；其中 sources/ 是原样转存的作者侧参考资料，不是题，排除。",
   "contentDir": "content",
   "catalog": "sources.json",
   "sourceField": "source",
-  "itemMarkers": ["en", "word"],
-  "idFields": ["id", "word"],
-  "stringRefRelation": { "default": "verbatim", "jobs-stanford-2005": "quoted" },
-  "excludeFiles": ["exam-frequency.json"],
+  "itemMarkers": [
+    "en",
+    "word",
+    "prompt"
+  ],
+  "idFields": [
+    "id",
+    "word"
+  ],
+  "stringRefRelation": {
+    "default": "verbatim",
+    "jobs-stanford-2005": "quoted"
+  },
+  "excludeFiles": [
+    "exam-frequency.json"
+  ],
   "blocking": true,
-  "legacyUnsourced": []
+  "legacyUnsourced": [],
+  "sourceIdField": "source_id",
+  "excludeDirs": [
+    "content/private/english2/sources/"
+  ]
 }

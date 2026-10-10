@@ -1,0 +1,135 @@
+{
+  "title": "英语学习",
+  "tagline": "每天能看见自己多稳住了一些",
+  "lead": "先把到期的清掉，再往前走一小步。首页会记下连续天数、稳住的条目和通过的考核——不是为了打卡，是让你看见自己在前进。",
+  "endpoint": "高级阶段衔接英语二阅读、英译汉与限时写作；三条能力线仍分别过关。",
+  "description": "三个等级都同时训练单词、例句和作文；短文作为语境贯穿其中，不再成为孤立的一章。",
+  "stages": [
+    {
+      "id": "en.stage.beginner",
+      "title": "初级",
+      "subtitle": "打牢基础",
+      "goal": "稳住高频词义和基础句式，并从仿写过渡到一段意思清楚的短文。",
+      "requires": [],
+      "tracks": [
+        {
+          "id": "en.beginner.vocab.core",
+          "title": "单词",
+          "kind": "vocab",
+          "goal": "先在原句里提取义项和搭配，答后再用新句把词形填回去。",
+          "skills": ["listen", "speak", "read"],
+          "decks": [
+            "vocab/beginner/core.json",
+            "vocab/beginner/generated-01.json",
+            "vocab/beginner/generated-02.json",
+            "vocab/beginner/generated-03.json",
+            "vocab/beginner/generated-04.json",
+            "vocab/beginner/generated-05.json",
+            "vocab/beginner/generated-06.json"
+          ],
+          "assessment": "assessments/beginner/vocab.json"
+        },
+        {
+          "id": "en.beginner.sentence.basic_logic",
+          "title": "例句",
+          "kind": "sentence",
+          "goal": "找出句子主干，并判断基本因果、转折和指代。",
+          "skills": ["listen", "speak", "read"],
+          "decks": [
+            "sentences/beginner/core.json",
+            "sentences/beginner/logic.json",
+            "sentences/beginner/translation.json",
+            "passages/beginner/core.json"
+          ],
+          "assessment": "assessments/beginner/sentence.json"
+        },
+        {
+          "id": "en.beginner.writing.guided_paragraph",
+          "title": "作文",
+          "kind": "writing",
+          "goal": "用给定词句完成仿写、扩写和一个清楚的短段落。",
+          "skills": ["listen", "speak", "read", "write"],
+          "deck": "writing/beginner/core.json",
+          "assessment": "assessments/beginner/writing.json"
+        }
+      ]
+    },
+    {
+      "id": "en.stage.intermediate",
+      "title": "中级",
+      "subtitle": "建立逻辑",
+      "goal": "在常见议论语境中认准词义、读清句间逻辑，并写出结构完整的短文。",
+      "requires": [
+        "en.stage.beginner"
+      ],
+      "tracks": [
+        {
+          "id": "en.intermediate.vocab.context_senses",
+          "title": "单词",
+          "kind": "vocab",
+          "goal": "在议论语境里提取义项；答后再用新句把词形填回去。",
+          "skills": ["listen", "speak", "read"],
+          "deck": "vocab/intermediate/core.json",
+          "assessment": "assessments/intermediate/vocab.json"
+        },
+        {
+          "id": "en.intermediate.sentence.clause_and_reference",
+          "title": "例句",
+          "kind": "sentence",
+          "goal": "切分一到两层从句，找清指代、让步和因果关系。",
+          "skills": ["listen", "speak", "read"],
+          "deck": "sentences/intermediate/core.json",
+          "assessment": "assessments/intermediate/sentence.json"
+        },
+        {
+          "id": "en.intermediate.writing.logical_paragraph",
+          "title": "作文",
+          "kind": "writing",
+          "goal": "围绕一个观点组织理由、例子和收束句。",
+          "skills": ["listen", "speak", "read", "write"],
+          "deck": "writing/intermediate/core.json",
+          "assessment": "assessments/intermediate/writing.json"
+        }
+      ]
+    },
+    {
+      "id": "en.stage.advanced",
+      "title": "高级",
+      "subtitle": "衔接英语二",
+      "goal": "处理抽象词义、复杂表达、英译汉和应试写作决策，并在限时条件下独立输出。",
+      "requires": [
+        "en.stage.intermediate"
+      ],
+      "tracks": [
+        {
+          "id": "en.advanced.vocab.argument",
+          "title": "单词",
+          "kind": "vocab",
+          "goal": "提取熟词生义和立场词；答后再用新句把词形填回去。",
+          "skills": ["listen", "speak", "read"],
+          "deck": "vocab/advanced/core.json",
+          "assessment": "assessments/advanced/vocab.json"
+        },
+        {
+          "id": "en.advanced.sentence.passage_logic",
+          "title": "例句",
+          "kind": "sentence",
+          "goal": "在短文中恢复复杂句主干、作者态度和句间关系。",
+          "skills": ["listen", "speak", "read"],
+          "passage": "passages/advanced/work_and_choice.md",
+          "deck": "passages/advanced/work_and_choice.json",
+          "assessment": "assessments/advanced/sentence.json"
+        },
+        {
+          "id": "en.advanced.writing.exam_bridge",
+          "title": "作文",
+          "kind": "writing",
+          "goal": "在限时条件下独立完成任务回应、组织和改写。",
+          "skills": ["listen", "speak", "read", "write"],
+          "deck": "writing/advanced/core.json",
+          "assessment": "assessments/advanced/writing.json"
+        }
+      ]
+    }
+  ]
+}
