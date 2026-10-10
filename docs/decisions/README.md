@@ -28,6 +28,7 @@
 | [0108](0108-dsa-split.md) | dsa 拆分为 data-structures（数据结构，承接软设第 3 章）与 algorithms（算法设计，承接第 8 章），内容按教材章硬切，dsa 退役；端口 1497/1498，前缀 ds./algo.，旧进度库不迁 | 已接受；修订 0103 决策 2 表格 dsa 行与决策 6 承接表述、0099 承接表述 |
 | [0109](0109-linux-subapp.md) | 新增「Linux 程序设计」子应用 linux 挂 software（承接软设第 4 章 Linux 命令实验与 Linux 学科，通用 OS 语义归 os）；端口 1499、前缀 linux.；图标归属：Tux 归 linux，os 用 Unix 专有图标 | 已接受；沿 0103 判据与 0106 追加模式 |
 | [0110](0110-computer-networks-rename.md) | network 更名 computer-networks（计算机网络，title/group 同步；端口 1493 不变，前缀 network.→net. 零成本新起）；图标换 Cisco 标志（品牌蓝） | 已接受；修订 0103 决策 2 表格 network 行的名字与领域圈 |
+| [0111](0111-programming-group.md) | 「编程」领域圈改名「程序设计」（gtkmm、c-gui-lab 的 group 同步）；linux 去挂靠入圈与 gtkmm 并肩，软设第 4 章承接降为文字指引 | 已接受；修订 0109 决策 1 的 parent:software |
 | [0111](0111-method-archetypes-per-course.md) | 按课程性质分配主导学习方法：七种方法原型（检索强化/预测–运行/机制模拟/真做校验/辨析决策/问题解决/语言习得）决定学习单元骨架与题型优先级，按章节选型；补前测、专长反转、不设自评；专注落成会话原则 P6–P8（有界一轮、作答零打扰、可选自由回忆） | 已接受；在 0096 之上新增一层，不修订其条款；不设自动门禁 |
 
 ## 应用边界与启动
