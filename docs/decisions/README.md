@@ -26,6 +26,7 @@
 | [0096](0096-retrieval-spacing-interleaving-lead-curriculum.md) | 检索练习、间隔重复、交错练习定为课程设计的主导学习策略，自我解释与双重编码为辅；界面与内容取舍判据化，按成本五档改造；学习风格适配明确不做 | 已接受；不设自动门禁 |
 | [0107](0107-chapter-three-dimension-rating.md) | 软考章节三维评级（应用性/实践性/实验性）恢复为内容建设正式维度，与「实践路径 A/B」并存分工；2026-10-09 两张评级表收录为基线 | 已接受；评级表原文在本 ADR |
 | [0108](0108-dsa-split.md) | dsa 拆分为 data-structures（数据结构，承接软设第 3 章）与 algorithms（算法设计，承接第 8 章），内容按教材章硬切，dsa 退役；端口 1497/1498，前缀 ds./algo.，旧进度库不迁 | 已接受；修订 0103 决策 2 表格 dsa 行与决策 6 承接表述、0099 承接表述 |
+| [0109](0109-linux-subapp.md) | 新增「Linux 程序设计」子应用 linux 挂 software（承接软设第 4 章 Linux 命令实验与 Linux 学科，通用 OS 语义归 os）；端口 1499、前缀 linux.；图标归属：Tux 归 linux，os 用 Unix 专有图标 | 已接受；沿 0103 判据与 0106 追加模式 |
 
 ## 应用边界与启动
 
