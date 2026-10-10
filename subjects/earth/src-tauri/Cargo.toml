@@ -1,0 +1,32 @@
+[package]
+name = "athena-earth"
+version = "0.1.0"
+description = "地球：真实比例的地球分层可视化"
+authors = ["Athena"]
+edition = "2021"
+
+[lib]
+name = "athena_earth_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+# 保证只有一个地球窗口：第二份启动时把已有窗口举到前面，自己退出。
+tauri-plugin-single-instance = "2"
+# 出处链接要在系统浏览器里打开核对；webview 里直接导航会把应用带走。
+tauri-plugin-opener = "2"
+
+[profile.dev]
+# 少带调试信息，链接明显快一截；断到行号仍够用
+debug = 1
+incremental = true
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true

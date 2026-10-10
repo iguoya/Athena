@@ -1,0 +1,58 @@
+{
+  "id": "earth",
+  "title": "地球",
+  "group": "程序设计",
+  "description": "真实比例的地球分层 3D 可视化：大气分层与地球内部分层，WGS84 椭球、PREM、US Standard Atmosphere 1976 标准模型驱动，剖面 + 径向真实刻度 + 探针联动图表。图谱/参考类，不判分（ADR 0128）。",
+  "icon": {
+    "type": "theme",
+    "name": "starred-symbolic",
+    "symbol": "globe",
+    "letter": "地",
+    "accent": "#1D5FA8",
+    "file": "icon.svg",
+    "renders": {
+      "src-tauri/icons/32x32.png": 32,
+      "src-tauri/icons/64x64.png": 64,
+      "src-tauri/icons/128x128.png": 128,
+      "src-tauri/icons/128x128@2x.png": 256,
+      "src-tauri/icons/icon.png": 512,
+      "src-tauri/icons/icon.ico": "ico",
+      "src-tauri/icons/icon.icns": "icns",
+      "src-tauri/icons/StoreLogo.png": 50,
+      "src-tauri/icons/Square30x30Logo.png": 30,
+      "src-tauri/icons/Square44x44Logo.png": 44,
+      "src-tauri/icons/Square71x71Logo.png": 71,
+      "src-tauri/icons/Square89x89Logo.png": 89,
+      "src-tauri/icons/Square107x107Logo.png": 107,
+      "src-tauri/icons/Square142x142Logo.png": 142,
+      "src-tauri/icons/Square150x150Logo.png": 150,
+      "src-tauri/icons/Square284x284Logo.png": 284,
+      "src-tauri/icons/Square310x310Logo.png": 310
+    }
+  },
+  "dev": {
+    "env": {
+      "ATHENA_EARTH_ROOT": "${dir}"
+    },
+    "prepare": [
+      {
+        "when_missing": "node_modules",
+        "run": [
+          "npm",
+          "install"
+        ],
+        "label": "安装前端依赖"
+      }
+    ],
+    "run": [
+      "npm",
+      "run",
+      "tauri:dev"
+    ],
+    "ready": {
+      "http": "http://localhost:1511"
+    },
+    "match": "src-tauri/target",
+    "binary": "athena-earth"
+  }
+}

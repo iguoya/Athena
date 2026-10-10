@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+/* 3D 场景里的锚点标签：深色底、小字，不抢地球本体。 */
+.earth-label {
+  font-size: 10px;
+  line-height: 1.2;
+  color: #dbe6f5;
+  background: rgba(11, 16, 32, 0.72);
+  border: 1px solid rgba(148, 173, 216, 0.35);
+  border-radius: 4px;
+  padding: 1px 5px;
+  backdrop-filter: blur(2px);
+}
+
+.earth-label-strong {
+  color: #ffd54a;
+  border-color: rgba(255, 213, 74, 0.5);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter Variable", "Noto Sans SC", system-ui, sans-serif;
+}

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  地球的图标：剖开一角的真实比例地球——右上 3/4 是海陆表面，右下 90° 剖面露出
+  地壳 / 地幔 / 外核 / 内核的同心层色（与界面里的层色一致）。
+  这份 SVG 就是图标本身：透明底、自带颜色，启动器图块、窗口 / 任务栏 / 标题栏、
+  应用界面三处同源（ADR 0065）。改完跑 `launcher icons` 重新生成位图。
+-->
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 剖面同心层（自外而内：地壳 / 地幔 / 外核 / 内核） -->
+  <circle cx="16" cy="16" r="14" fill="#8A7968"/>
+  <circle cx="16" cy="16" r="11" fill="#A34A2A"/>
+  <circle cx="16" cy="16" r="7" fill="#D98E3B"/>
+  <circle cx="16" cy="16" r="3.2" fill="#E8C56A"/>
+  <!-- 表面（海陆），保留 270°，右下 90° 让位给剖面 -->
+  <defs>
+    <clipPath id="surface-wedge">
+      <path d="M16 16 L16 2 A14 14 0 1 0 30 16 Z"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#surface-wedge)">
+    <rect x="0" y="0" width="32" height="32" fill="#4C9EE8"/>
+    <path d="M4 10 Q7 7 10 9 Q13 11 11 14 Q8 16 6 14 Q3 13 4 10 Z" fill="#6CBF6C"/>
+    <path d="M14 3 Q18 2 21 4 Q23 6 20 8 Q17 9 15 7 Q13 5 14 3 Z" fill="#6CBF6C"/>
+    <path d="M2 20 Q5 18 7 21 Q8 24 5 25 Q2 24 2 20 Z" fill="#6CBF6C"/>
+    <path d="M20 12 Q23 11 25 13 Q26 15 24 16 Q21 16 20 12 Z" fill="#6CBF6C" opacity="0.85"/>
+  </g>
+  <!-- 剖切边缘的两条线：从地心到赤道右侧与到正下方 -->
+  <path d="M16 16 L30 16" stroke="#F5F8FD" stroke-width="1" stroke-linecap="round"/>
+  <path d="M16 16 L16 2" stroke="#F5F8FD" stroke-width="1" stroke-linecap="round"/>
+  <path d="M16 2 A14 14 0 0 1 30 16" stroke="#F5F8FD" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+</svg>

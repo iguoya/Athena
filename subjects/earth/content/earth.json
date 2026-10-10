@@ -1,0 +1,268 @@
+{
+  "meta": {
+    "title": "地球 · 真实比例分层",
+    "scale": "real",
+    "note": "本文件是场景的唯一数据来源：渲染、剖面着色、探针读数与图表全部由这里的数值生成，不在代码里硬编码任何层界或物理量。",
+    "lengthUnit": "km",
+    "sceneUnitEarthRadii": 1,
+    "sceneUnitLengthKm": 6371.0,
+    "disclaimers": [
+      "全视图为真实比例：各层厚度、半径均为真实数值，垂直方向未放大。",
+      "真实比例下地壳平均约 35 km（地球半径的 0.5%）、卡门线 100 km（1.6%）——薄到看不见是事实，不是缺陷；请使用剖面、聚焦与探针读数查看薄层。",
+      "大气在 86 km 以上不再有权威的单一标准模型（US Standard Atmosphere 1976 的适用上限），相关读数为带范围的参考值。"
+    ]
+  },
+  "shape": {
+    "model": "WGS 84",
+    "equatorialRadiusKm": 6378.137,
+    "polarRadiusKm": 6356.7523142,
+    "inverseFlattening": 298.257223563,
+    "meanRadiusKm": 6371.0,
+    "sourceIds": ["wgs84"],
+    "note": "真实地球是扁椭球而不是正球：赤道半径比极半径长约 21.4 km。椭球参数只在渲染与标注中生效；分层深度仍以平均半径球模型近似（PREM 本身是球对称模型）。"
+  },
+  "surface": {
+    "textureFile": "earth-blue-marble.png",
+    "sourceIds": ["blue-marble"],
+    "features": [
+      { "name": "珠穆朗玛峰", "heightKm": 8.849, "note": "海拔最高点（2020 中尼共同宣布值 8848.86 m）" },
+      { "name": "马里亚纳海沟（挑战者深渊）", "heightKm": -10.935, "note": "海洋最深处（约 10935 m）" }
+    ]
+  },
+  "interior": {
+    "layers": [
+      {
+        "id": "crust",
+        "name": "地壳",
+        "english": "Crust",
+        "topDepthKm": 0,
+        "bottomDepthKm": 35,
+        "bottomDepthKmContinental": 35,
+        "bottomDepthKmOceanic": 7,
+        "bottomDepthRangeKm": [30, 70],
+        "colorHint": "#8A7968",
+        "description": "莫霍面以上的固体岩石外层。大陆地壳厚（典型 35 km，造山带可达 70 km），大洋地壳薄（5–10 km，典型 7 km）——「平均 35 km」是大致印象值，不是任何一点的实测值。人类最深的钻孔（科拉 SG-3，12.26 km）只进入了它的三分之一。",
+        "sourceIds": ["usgs", "prem"]
+      },
+      {
+        "id": "upper-mantle",
+        "name": "上地幔",
+        "english": "Upper mantle",
+        "topDepthKm": 35,
+        "bottomDepthKm": 410,
+        "colorHint": "#C4632F",
+        "description": "从莫霍面到 410 km 不连续面。顶部刚性部分与地壳合成岩石圈，其下的软流圈是板块运动的润滑层；橄榄石在约 410 km 发生相变（α→β 尖晶石结构），密度跳升。",
+        "sourceIds": ["prem", "usgs"]
+      },
+      {
+        "id": "transition-zone",
+        "name": "过渡带",
+        "english": "Transition zone",
+        "topDepthKm": 410,
+        "bottomDepthKm": 660,
+        "colorHint": "#B25830",
+        "description": "410–660 km：地幔矿物（橄榄石族）连续相变的地带，660 km 的 γ 尖晶石→桥镁石+镁方铁矿相变是上下地幔的分界，俯冲板片多滞留于此。",
+        "sourceIds": ["prem"]
+      },
+      {
+        "id": "lower-mantle",
+        "name": "下地幔",
+        "english": "Lower mantle",
+        "topDepthKm": 660,
+        "bottomDepthKm": 2891,
+        "colorHint": "#A34A2A",
+        "description": "660 km 到核幔边界（古登堡面，2891 km）。体积占地球的一半以上；底部 D″ 层（约 200–300 km 厚）是地幔对流与热柱的源头区。",
+        "sourceIds": ["prem"]
+      },
+      {
+        "id": "outer-core",
+        "name": "外核",
+        "english": "Outer core",
+        "topDepthKm": 2891,
+        "bottomDepthKm": 5150,
+        "colorHint": "#D98E3B",
+        "description": "液态铁镍层（横波不能通过，由此确认其液态）。对流运动配合地球自转通过发电机效应产生地磁场。核幔边界上的密度跳跃是全地球最大的一次（约 4.3 g/cm³）。",
+        "sourceIds": ["prem", "usgs"]
+      },
+      {
+        "id": "inner-core",
+        "name": "内核",
+        "english": "Inner core",
+        "topDepthKm": 5150,
+        "bottomDepthKm": 6371,
+        "colorHint": "#E8C56A",
+        "description": "固态铁镍球（压力约 330–360 GPa 使熔点反超温度）。莱曼 1936 年由地震波发现。它比外核转得略快（差旋）的证据仍有争论。",
+        "sourceIds": ["prem", "usgs"]
+      }
+    ],
+    "boundaries": [
+      { "id": "moho", "name": "莫霍面", "depthKm": 35, "note": "壳幔分界，莫霍洛维奇 1909 年发现；深度：大陆 30–70 km，海洋 5–10 km" },
+      { "id": "d410", "name": "410 km 不连续面", "depthKm": 410, "note": "橄榄石 α→β 相变" },
+      { "id": "d660", "name": "660 km 不连续面", "depthKm": 660, "note": "上下地幔分界，γ 尖晶石分解相变" },
+      { "id": "cmb", "name": "古登堡面", "depthKm": 2891, "note": "核幔边界，古登堡 1914 年定出；固态地幔之上的液态外核" },
+      { "id": "icb", "name": "莱曼面", "depthKm": 5150, "note": "内外核边界，莱曼 1936 年发现固态内核" }
+    ],
+    "keyPoints": [
+      { "name": "科拉超深钻孔 SG-3", "depthKm": 12.262, "note": "人类钻探到达的最深处（1970–1992），未穿透地壳" },
+      { "name": "深源地震下限", "depthKm": 700, "note": "观测到的地震震源最深约 700 km，再深处岩石呈塑性" }
+    ],
+    "premSegments": [
+      { "topDepthKm": 0, "bottomDepthKm": 35, "topDensity": 2.72, "bottomDensity": 2.9, "note": "地壳（大陆典型值；大洋地壳 2.6–3.0）" },
+      { "topDepthKm": 35, "bottomDepthKm": 410, "topDensity": 3.32, "bottomDensity": 3.5, "note": "上地幔" },
+      { "topDepthKm": 410, "bottomDepthKm": 660, "topDensity": 3.72, "bottomDensity": 3.99, "note": "过渡带；410 界面两侧 3.5→3.72 为常用近似" },
+      { "topDepthKm": 660, "bottomDepthKm": 2891, "topDensity": 4.38, "bottomDensity": 5.57, "note": "下地幔；660 界面两侧 3.99→4.38" },
+      { "topDepthKm": 2891, "bottomDepthKm": 5150, "topDensity": 9.9, "bottomDensity": 12.17, "note": "外核；古登堡面上密度跳升约 4.3 g/cm³" },
+      { "topDepthKm": 5150, "bottomDepthKm": 6371, "topDensity": 12.76, "bottomDensity": 13.09, "note": "内核；地心密度 13.09 g/cm³" }
+    ],
+    "premNote": "密度单位 g/cm³。取 PREM（Dziewonski & Anderson 1981）的界面值做线性内插近似；PREM 原模型在层内是三次多项式，内插误差远小于界面跳变量。剖面着色与探针读数由这些数值生成。",
+    "tempProfile": [
+      { "depthKm": 0, "tempC": 15, "rangeC": null, "note": "地表平均气温" },
+      { "depthKm": 35, "tempC": 500, "rangeC": [400, 600], "note": "陆壳莫霍面" },
+      { "depthKm": 410, "tempC": 1500, "rangeC": [1400, 1600], "note": "410 相变面" },
+      { "depthKm": 660, "tempC": 1650, "rangeC": [1600, 1700], "note": "660 相变面" },
+      { "depthKm": 2891, "tempC": 3800, "rangeC": [3700, 4000], "note": "核幔边界" },
+      { "depthKm": 5150, "tempC": 5400, "rangeC": [5000, 5700], "note": "内外核边界（铁在 330 GPa 下的熔点约束）" },
+      { "depthKm": 6371, "tempC": 5430, "rangeC": [5000, 5700], "note": "地心；与内核边界几乎同温（绝热）" }
+    ],
+    "tempNote": "地球内部没有直接测温手段（最深钻孔 12.26 km，为半径的 0.2%），温度由相变实验与绝热压缩模型推算。线性内插为示意性参考廓线，rangeC 给出文献共识区间。",
+    "sourceIds": ["prem", "usgs", "interior-temp"]
+  },
+  "atmosphere": {
+    "layers": [
+      {
+        "id": "troposphere",
+        "name": "对流层",
+        "english": "Troposphere",
+        "bottomHeightKm": 0,
+        "topHeightKm": 12,
+        "topHeightNote": "平均 12 km；极地约 8 km，热带 16–18 km",
+        "colorHint": "#6FA8DC",
+        "description": "天气发生的地方，含约 75–80% 的大气质量与几乎全部水汽；温度随高度递减（平均每公里 6.5 °C），递减率归零处即对流层顶。",
+        "sourceIds": ["wmo", "ussa1976"]
+      },
+      {
+        "id": "stratosphere",
+        "name": "平流层",
+        "english": "Stratosphere",
+        "bottomHeightKm": 12,
+        "topHeightKm": 50,
+        "colorHint": "#4A6FB5",
+        "description": "臭氧层（15–35 km，浓度峰值约 22 km）吸收紫外使温度随高度回升，层结稳定所以平飞巡航（10–12 km）选在它的下缘。温度不再下降是「平流」名字的由来。",
+        "sourceIds": ["wmo", "ussa1976"]
+      },
+      {
+        "id": "mesosphere",
+        "name": "中间层",
+        "english": "Mesosphere",
+        "bottomHeightKm": 50,
+        "topHeightKm": 85,
+        "colorHint": "#3A4E8C",
+        "description": "温度再次随高度递减，到中间层顶（约 −86 °C）降到全大气最冷。流星大多在 75–100 km 烧蚀；这里的大气密度已低到难以直接探测，曾被称为「忽略层」。",
+        "sourceIds": ["wmo", "ussa1976"]
+      },
+      {
+        "id": "thermosphere",
+        "name": "热层",
+        "english": "Thermosphere",
+        "bottomHeightKm": 85,
+        "topHeightKm": 600,
+        "topHeightNote": "顶界随太阳活动在 500–1000 km 间波动，600 km 为中等活动的常用值",
+        "colorHint": "#2C3E6B",
+        "description": "吸收极紫外与 X 射线，温度随高度急剧上升（可达 500–2000 K，随太阳活动强烈变化——「温度」在此主要衡量粒子动能，密度已近真空）。极光（100–300 km）与国际空间站轨道（约 400 km）都在这一层。",
+        "sourceIds": ["wmo", "atmos-thermo"]
+      },
+      {
+        "id": "exosphere",
+        "name": "外逸层",
+        "english": "Exosphere",
+        "bottomHeightKm": 600,
+        "topHeightKm": null,
+        "topHeightNote": "没有明确上界：粒子平均自由程超过标高后逐颗逃逸，通常画到 10000 km 渐隐；地冕的钠/氢痕迹可追到数十万公里",
+        "colorHint": "#1F2A44",
+        "description": "最外层。碰撞已可忽略，粒子沿弹道运动，快的逃入太空——「上界」因此是渐变而非界面。地球静止轨道（35786 km）与多数卫星在此范围内的轨道上运行。",
+        "sourceIds": ["wmo", "atmos-thermo"]
+      }
+    ],
+    "karmanLineKm": 100,
+    "karmanNote": "卡门线：国际航空联合会（FAI）采用的航天与航空分界，来自气动升力在稀薄大气中不再实用的估算。它不是物理界面，且美国空军曾以 80 km（50 英里）为界。",
+    "scaleHeightKm": 8.5,
+    "scaleHeightNote": "大气密度标高：高度每升 8.5 km 密度约降为 1/e（≈37%）。渲染的蓝色光晕按 exp(−h/H) 衰减，不是均匀涂层。",
+    "composition": [
+      { "gas": "N₂ 氮", "volumePercent": 78.08 },
+      { "gas": "O₂ 氧", "volumePercent": 20.95 },
+      { "gas": "Ar 氩", "volumePercent": 0.93 },
+      { "gas": "CO₂ 二氧化碳", "volumePercent": 0.042, "note": "2024 年全球均值约 422.7 ppm（NOAA）" }
+    ],
+    "compositionNote": "海平面附近干空气的体积混合比（CRC 手册常用值）。水汽 0–4% 随地点与天气变化，不计入干空气表。",
+    "ussa1976": {
+      "tempPointsC": [
+        { "heightKm": 0, "tempC": 15.0 },
+        { "heightKm": 11, "tempC": -56.5 },
+        { "heightKm": 20, "tempC": -56.5 },
+        { "heightKm": 32, "tempC": -44.5 },
+        { "heightKm": 47, "tempC": -2.5 },
+        { "heightKm": 51, "tempC": -2.5 },
+        { "heightKm": 71, "tempC": -58.5 },
+        { "heightKm": 86, "tempC": -86.3 }
+      ],
+      "pressurePointsHPa": [
+        { "heightKm": 0, "pressureHPa": 1013.25 },
+        { "heightKm": 11, "pressureHPa": 226.32 },
+        { "heightKm": 20, "pressureHPa": 54.75 },
+        { "heightKm": 32, "pressureHPa": 8.68 },
+        { "heightKm": 47, "pressureHPa": 1.11 },
+        { "heightKm": 51, "pressureHPa": 0.67 },
+        { "heightKm": 71, "pressureHPa": 0.04 },
+        { "heightKm": 86, "pressureHPa": 0.0037 }
+      ],
+      "note": "US Standard Atmosphere 1976 的分段线性温度廓线（0–86 km，中纬度年平均）与标准表压力采样点。压力图表用对数轴。",
+      "sourceIds": ["ussa1976"]
+    },
+    "keyPoints": [
+      { "name": "客机巡航", "heightKm": 11, "note": "10–12 km，对流层顶附近的长途巡航高度" },
+      { "name": "臭氧浓度峰值", "heightKm": 22, "note": "约 20–25 km" },
+      { "name": "气象气球探空上限", "heightKm": 35, "note": "常规探空气球在此高度爆裂" },
+      { "name": "流星烧蚀", "heightKm": 80, "note": "大多在 75–100 km" },
+      { "name": "卡门线", "heightKm": 100, "note": "航天与航空的分界约定" },
+      { "name": "极光", "heightKm": 200, "note": "典型发光高度 100–300 km" },
+      { "name": "国际空间站", "heightKm": 408, "note": "平均轨道高度约 400–420 km" },
+      { "name": "哈勃空间望远镜", "heightKm": 535, "note": "约 530–540 km" },
+      { "name": "地球静止轨道", "heightKm": 35786, "note": "42 164 km 半长轴对应的赤道轨道半径；位于外逸层内" }
+    ],
+    "sourceIds": ["wmo", "ussa1976", "atmos-thermo"]
+  },
+  "sources": {
+    "wgs84": {
+      "title": "NGA/NASA WGS 84 定义（NIMA TR8350.2 及后续修订）",
+      "url": "https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84"
+    },
+    "prem": {
+      "title": "Dziewonski, A.M. & Anderson, D.L. (1981). Preliminary Reference Earth Model. Physics of the Earth and Planetary Interiors 25, 297–356.",
+      "url": "https://doi.org/10.1016/0012-821X(81)90046-7"
+    },
+    "ussa1976": {
+      "title": "U.S. Standard Atmosphere, 1976（NOAA / NASA / USAF，NASA TM-X-74335）",
+      "url": "https://ntrs.nasa.gov/citations/19770009539"
+    },
+    "wmo": {
+      "title": "WMO 大气分层定义（International Meteorological Vocabulary / Guide to Meteorological Instruments and Methods of Observation 所载分层）",
+      "url": "https://cloudatlas.wmo.int"
+    },
+    "usgs": {
+      "title": "USGS Inside the Earth / Earthquake Glossary（地球内部结构与地震学常识层界）",
+      "url": "https://www.usgs.gov/programs/earthquake-hazard"
+    },
+    "interior-temp": {
+      "title": "地球内部温度共识区间：Schubert, G. (ed.) Treatise on Geophysics（2015）第 2 卷；Anzellini et al. (2013) Science 340, 464（内核边界熔点约束）",
+      "url": "https://doi.org/10.1126/science.1233514"
+    },
+    "atmos-thermo": {
+      "title": "热层与外逸层参考：NASA Thermosphere / Ionosphere 概览与 NRLMSISE-00 模型说明（86 km 以上温度随太阳活动强烈变化）",
+      "url": "https://ccmc.gsfc.nasa.gov/models/modelinfo.php?model=NRLMSISE-00"
+    },
+    "blue-marble": {
+      "title": "NASA Blue Marble: Next Generation — Land Surface, Ocean Color and Sea Ice（Retstöck 等，公有领域）",
+      "url": "https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73909/"
+    }
+  }
+}
