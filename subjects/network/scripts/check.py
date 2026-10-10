@@ -25,7 +25,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 EXPECTED_ID = "network"
-EXPECTED_PARENT = "software"
+EXPECTED_PARENT = "cs408"
 EXPECTED_PORT = 1493
 DEFAULT_FULL = False
 
@@ -53,7 +53,7 @@ def check_app_json() -> None:
     if data.get("id") != EXPECTED_ID or data.get("id") != PROJECT_ROOT.name:
         raise SystemExit(f"app.json 的 id 必须是 {EXPECTED_ID}（与目录名一致）")
     if data.get("parent") != EXPECTED_PARENT:
-        raise SystemExit(f"app.json 的 parent 必须是 {EXPECTED_PARENT}（ADR 0103）")
+        raise SystemExit(f"app.json 的 parent 必须是 {EXPECTED_PARENT}（ADR 0103 立项，0118/0119 定归属）")
     port = re.search(r":(\d+)$", data.get("dev", {}).get("ready", {}).get("http", ""))
     if not port or int(port.group(1)) != EXPECTED_PORT:
         raise SystemExit(f"dev.ready.http 的端口必须是 {EXPECTED_PORT}")

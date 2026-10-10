@@ -11,10 +11,10 @@
 subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完全平级
   cpp/         C++ 教程（GTK4 / gtkmm，原来的"主程序"）
   machine/     C 与机器（Qt Quick / QML，原 c/，ADR 0005）
-  data-structures/ 数据结构（Tauri 2）——408 数据结构（45 分），本体挂 cs408；软设以引用承接
-                   第 3 章（ADR 0108 拆分、0118 定归属；原 algorithm，复名见 ADR 0105）
+  data-structures/ 数据结构（Tauri 2）——408 数据结构（45 分），本体挂 cs408；软设以文字指引承接
+                   第 3 章（ADR 0108 拆分、0118/0119 定归属；原 algorithm，复名见 ADR 0105）
   algorithms/      算法设计（Tauri 2）——408 算法设计大题（第 41、42 题），本体挂 cs408；
-                   软设以引用承接第 8 章（ADR 0108 拆分、0118 定归属）
+                   软设以文字指引承接第 8 章（ADR 0108 拆分、0118/0119 定归属）
   english/     磨砚（考研英语二，Tauri）——并入 ascent 后退役，迁移中（ADR 0117）
   ascent/      拾阶（英语师范生四六级、专四专八，Tauri）
   mathematics/ 数学学习（Tauri）
@@ -28,10 +28,10 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
   design-patterns/  设计模式编码实验（Tauri 2 + React）——软设第 7 章实践课程，挂靠 software；
                     原素材坑转正（ADR 0103）
   os/               操作系统实验（Tauri 2 + React）——408 操作系统（35 分），本体挂 cs408；
-                    软设以引用承接第 4 章（ADR 0103 立项、0118 定归属；原 operating-system，
-                    改名见 ADR 0104）
+                    软设以文字指引承接第 4 章（ADR 0103 立项、0118/0119 定归属；原
+                    operating-system，改名见 ADR 0104）
   network/          网络与信息安全实验（Tauri 2 + React）——408 计算机网络（25 分），本体挂
-                    cs408；软设以引用承接第 10 章（ADR 0103 立项、0118 定归属）
+                    cs408；软设以文字指引承接第 10 章（ADR 0103 立项、0118/0119 定归属）
   firmware/         嵌入式程序设计实验（Tauri 2 + Vue 3）——嵌入第 6/8/11 章实践课程，挂靠 embedded（ADR 0103）
   microcontroller/  硬件实验台（Tauri 2 + Vue 3）——嵌入第 2/5 章实践课程，挂靠 embedded（ADR 0103）
   rtos/             实时操作系统（Tauri 2 + Vue 3）——嵌入第 4 章实践课程，挂靠 embedded（ADR 0106）
@@ -39,7 +39,7 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
   polaris/       技术体系图谱（Tauri 2 + React，原 Qt 壳已退役，ADR 0015）——不是学习应用，见下文
   organization/  计算机组成原理（Tauri 2 + Vite）——408 组成原理，挂靠 cs408、引用挂到 software（ADR 0115、0116）
   cs408/         408 计算机学科专业基础（Tauri 2 + Vite）——考研考试主应用，「考研」圈；数据结构、算法设计、
-                 组成原理、操作系统、计算机网络五门科目课本体挂它下面，软设以引用承接（ADR 0116、0118）
+                 组成原理、操作系统、计算机网络五门科目课本体挂它下面，软设以文字指引承接（ADR 0116、0118、0119）
   competitions/  赛历（Tauri 2 + Vite）——「大赛」圈的竞赛清单，图谱/参考类，不是学习应用（ADR 0114）
 practice/<id>/ 项目应用：动手做的独立小项目，不接掌握度体系（ADR 0060）
   pocket_cube/ 2 阶魔方（GTK4 / gtkmm）
