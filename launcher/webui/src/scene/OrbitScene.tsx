@@ -12,51 +12,90 @@ const STATE_COLOR: Record<AppDto["state"], string> = {
 
 const SPHERE_R = 34;
 
-// 图标徽章贴图：SVG 光栅化到透明底画布，作为球面正前方贴片的纹理。
-// material 随贴图到位用 key 重建（动态挂 map 不触发 shader 重编译，会渲染成白球）。
-function useIconTexture(app: AppDto): THREE.Texture | null {
-  const [texture, setTexture] = useState<THREE.Texture | null>(null);
+// 图标的两张贴图：球面雕纹（accent 底 + 低透明图标，随自转缓缓移动，让自转可见）
+// 与正面徽章（透明底全彩图标，始终朝向相机保证可读）。material 随贴图到位用 key
+// 重建——动态挂 map 不触发 shader 重编译，会渲染成无贴图的白球。
+function useIconTextures(app: AppDto): { sphere: THREE.Texture | null; badge: THREE.Texture | null } {
+  const [sphere, setSphere] = useState<THREE.Texture | null>(null);
+  const [badge, setBadge] = useState<THREE.Texture | null>(null);
   useEffect(() => {
     let alive = true;
-    const canvas = document.createElement("canvas");
-    canvas.width = 256;
-    canvas.height = 256;
-    const ctx = canvas.getContext("2d")!;
-    const finish = () => {
-      if (!alive) return;
+    const make = (draw: (ctx: CanvasRenderingContext2D) => void) => {
+      const canvas = document.createElement("canvas");
+      canvas.width = 256;
+      canvas.height = 256;
+      const ctx = canvas.getContext("2d")!;
+      draw(ctx);
       const tex = new THREE.CanvasTexture(canvas);
       tex.colorSpace = THREE.SRGBColorSpace;
-      setTexture(tex);
+      return tex;
+    };
+    const done = (sphereTex: THREE.Texture, badgeTex: THREE.Texture | null) => {
+      if (!alive) return;
+      setSphere(sphereTex);
+      setBadge(badgeTex);
     };
     if (app.icon) {
       const img = new Image();
       img.onload = () => {
-        ctx.clearRect(0, 0, 256, 256);
-        ctx.drawImage(img, 28, 28, 200, 200);
-        finish();
+        const sphereTex = make((ctx) => {
+          ctx.fillStyle = app.accent;
+          ctx.fillRect(0, 0, 256, 256);
+          ctx.globalAlpha = 0.3;
+          ctx.drawImage(img, 48, 48, 160, 160);
+          ctx.globalAlpha = 1;
+        });
+        const badgeTex = make((ctx) => {
+          ctx.clearRect(0, 0, 256, 256);
+          ctx.drawImage(img, 28, 28, 200, 200);
+        });
+        done(sphereTex, badgeTex);
       };
-      img.onerror = finish;
-      img.src = app.icon;
+      img.onerror = () => { const fb = makeFallback(app.accent, app.letter, false); done(fb.sphere, fb.badge); };
     } else {
-      // 兜底：accent 圆底 + letter。
-      ctx.clearRect(0, 0, 256, 256);
-      ctx.fillStyle = app.accent;
-      ctx.beginPath();
-      ctx.arc(128, 128, 110, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = "white";
-      ctx.font = "600 96px 'Segoe UI', sans-serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(app.letter.slice(0, 2), 128, 130);
-      finish();
+      const fb = makeFallback(app.accent, app.letter, true); done(fb.sphere, fb.badge);
     }
     return () => {
       alive = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [app.id]);
-  return texture;
+  return { sphere, badge };
+}
+
+function makeFallback(accent: string, letter: string, withBadge: boolean): { sphere: THREE.Texture; badge: THREE.Texture | null } {
+  const mk = (draw: (ctx: CanvasRenderingContext2D) => void) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 256;
+    canvas.height = 256;
+    const ctx = canvas.getContext("2d")!;
+    draw(ctx);
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    return tex;
+  };
+  const sphereTex = mk((ctx) => {
+    ctx.fillStyle = accent;
+    ctx.fillRect(0, 0, 256, 256);
+    ctx.fillStyle = "rgba(255,255,255,0.35)";
+    ctx.font = "600 120px 'Segoe UI', sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(letter.slice(0, 2), 128, 132);
+  });
+  const badgeTex = mk((ctx) => {
+    ctx.clearRect(0, 0, 256, 256);
+    ctx.fillStyle = accent;
+    ctx.beginPath();
+    ctx.arc(128, 128, 110, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "white";
+    ctx.font = "600 96px 'Segoe UI', sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(letter.slice(0, 2), 128, 130);
+  });
+  return withBadge ? { sphere: sphereTex, badge: badgeTex } : { sphere: sphereTex, badge: null };
 }
 
 function IconSphere({
@@ -69,9 +108,11 @@ function IconSphere({
   hovered: boolean;
   onHover: (id: string | null) => void;
 }) {
-  const texture = useIconTexture(app);
+  const { sphere: sphereTex, badge: badgeTex } = useIconTextures(app);
   const spinner = useRef<THREE.Group>(null);
   const planet = useRef<THREE.Group>(null);
+  const badge = useRef<THREE.Mesh>(null);
+  const camDir = useMemo(() => new THREE.Vector3(), []);
   // 自转速度与相位按序号差异化，行星各转各的；相位让悬浮错落。
   const spinSpeed = useMemo(() => 0.35 + ((index * 37) % 40) / 100, [index]);
   const floatPhase = useMemo(() => (index * 137.5 * Math.PI) / 180, [index]);
@@ -79,7 +120,7 @@ function IconSphere({
   const orbitOmega = useMemo(() => 0.22 * (240 / orbit.radius), [orbit.radius]);
   const elapsed = useRef(0);
   // 公转位置 + 自转 + 上下悬浮 + 悬停缩放，全部帧插值。
-  useFrame((_, delta) => {
+  useFrame(({ camera }, delta) => {
     elapsed.current += delta;
     if (planet.current) {
       // 与 core 的 layout3d 同一套正变换，theta 随时间推进即沿轨道公转。
@@ -92,6 +133,12 @@ function IconSphere({
       const cy = Math.cos(yaw), sy = Math.sin(yaw);
       planet.current.position.set(px * cy + pz * sy, py, -px * sy + pz * cy);
     }
+    if (planet.current && badge.current) {
+      // 徽章 billboard：悬在行星朝相机的一侧，且平面永远正对屏幕，图标不变形。
+      camDir.copy(camera.position).sub(planet.current.position).normalize();
+      badge.current.position.copy(camDir).multiplyScalar(SPHERE_R + 1.5);
+      badge.current.quaternion.copy(camera.quaternion);
+    }
     if (!spinner.current) return;
     spinner.current.rotation.y += spinSpeed * delta;
     spinner.current.position.y = Math.sin(elapsed.current * 0.9 + floatPhase) * 5;
@@ -100,12 +147,12 @@ function IconSphere({
     spinner.current.scale.setScalar(s);
   });
 
-  // 贴片纹理到位前不挂徽章（避免白方块一闪）。
-  const badgeReady = texture !== null;
+  // 贴图到位前不挂徽章（避免白方块一闪）。
+  const badgeReady = badgeTex !== null;
 
   return (
     <group ref={planet}>
-      {/* 自转组：球体 + 图标徽章 + 状态环一起转，徽章转到背面被球体自然遮挡。 */}
+      {/* 自转组：雕纹球体 + 状态环一起转，球面图案缓缓移动让自转可见。 */}
       <group ref={spinner}>
         <mesh
           onClick={() => openApp(app.id).catch(console.error)}
@@ -117,26 +164,28 @@ function IconSphere({
         >
           <sphereGeometry args={[SPHERE_R, 48, 48]} />
           <meshStandardMaterial
-            color={app.accent}
+            key={sphereTex ? "sphere-map" : "sphere-plain"}
+            map={sphereTex ?? undefined}
+            color={sphereTex ? "#ffffff" : app.accent}
             roughness={0.4}
             metalness={0.08}
             transparent
             opacity={active ? 1 : 0.75}
           />
         </mesh>
-        {/* 图标徽章：贴在球面正前方的透明贴片，随自转绕球巡行。 */}
-        {badgeReady && (
-          <mesh position={[0, 0, SPHERE_R + 1.5]}>
-            <planeGeometry args={[SPHERE_R * 1.15, SPHERE_R * 1.15]} />
-            <meshBasicMaterial map={texture} transparent depthWrite={false} />
-          </mesh>
-        )}
         {/* 运行状态环：贴着球面的细环。 */}
         <mesh rotation={[Math.PI / 2.6, 0.4, 0]}>
           <torusGeometry args={[SPHERE_R + 7, 2.4, 12, 48]} />
           <meshBasicMaterial color={STATE_COLOR[app.state]} transparent opacity={hovered ? 1 : 0.85} />
         </mesh>
       </group>
+      {/* 图标徽章：billboard——始终正对相机，位置悬在行星朝相机的一侧，永远清晰。 */}
+      {badgeReady && (
+        <mesh ref={badge}>
+          <planeGeometry args={[SPHERE_R * 1.3, SPHERE_R * 1.3]} />
+          <meshBasicMaterial map={badgeTex} transparent depthWrite={false} />
+        </mesh>
+      )}
       <Html position={[0, -(SPHERE_R + 26), 0]} center distanceFactor={900} zIndexRange={[10, 0]}>
         <div
           style={{
