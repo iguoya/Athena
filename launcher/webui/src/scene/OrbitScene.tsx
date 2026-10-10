@@ -117,7 +117,9 @@ function IconSphere({
   const spinSpeed = useMemo(() => 0.35 + ((index * 37) % 40) / 100, [index]);
   const floatPhase = useMemo(() => (index * 137.5 * Math.PI) / 180, [index]);
   // 公转角速度开普勒式递减：内环快、外环慢（半长轴 300 转一圈约 28 秒）。
-  const orbitOmega = useMemo(() => 0.22 * (300 / orbit.a), [orbit.a]);
+  // 取负：theta 递减，从黄道北方俯视为逆时针——与自转同向（真实太阳系的
+  // prograde 特性：公转与自转继承同一片星云的角动量方向）。
+  const orbitOmega = useMemo(() => -0.22 * (300 / orbit.a), [orbit.a]);
   const elapsed = useRef(0);
   // 公转位置 + 自转 + 上下悬浮 + 悬停缩放，全部帧插值。
   useFrame(({ camera }, delta) => {
