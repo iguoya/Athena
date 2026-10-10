@@ -1,4 +1,4 @@
-# ADR 0111：按课程性质分配主导学习方法——方法原型决定界面骨架与题型
+# ADR 0113：按课程性质分配主导学习方法——方法原型决定界面骨架与题型
 
 - 日期：2026-10-10
 - 状态：已接受（tiger 指示，2026-10-10：「不同的课程采用不同的方法策略，采用合适的
@@ -11,6 +11,8 @@
   [ADR 0107](0107-chapter-three-dimension-rating.md) 三维评级；会话形态以
   [ADR 0087](0087-reinforce-round-size-50.md)（driver 一轮 50 题）为先例；
   详表在 [LEARNING-METHODS.md](../LEARNING-METHODS.md)「各课程的方法画像」
+- 编号：初提交为 0111（67de48ae），与并行提交的
+  [0111 程序设计圈](0111-programming-group.md) 撞号，按 0099 先例重编为 0113，内容不变
 - 落地约束：字段名、块类型、渲染方式各应用自定（ADR 0062：约束不继承）
 
 ## 背景
@@ -19,7 +21,7 @@
 LEARNING-METHODS.md 按数学、语言、考试、编程四大类做了领域展开。但两处缺口仍在：
 
 1. **课程数量已远超四大类**。0103/0106/0108/0109 之后有了 data-structures、
-   algorithms、os、rtos、computer-networks、database、design-patterns、linux、
+   algorithms、os、rtos、network、database、design-patterns、linux、
    firmware、microcontroller 等子课程，它们的学习对象差别很大：有的要「看见看不见
    的过程」（调度、封包），有的要「真跑出结果」（SQL、shell、硬件），有的要
    「在相似选项间做判断」（设计模式、算法范式）。只套「编程类」一张表，会让 os
@@ -96,7 +98,7 @@ LEARNING-METHODS.md 按数学、语言、考试、编程四大类做了领域展
 ## 后果
 
 - 新课程（尤其子课程）开工时先定原型，再定界面块与题型，不再默认照搬隔壁应用。
-- os、rtos、computer-networks 的模拟器必须带「先预测」入口；database、linux 的实验
+- os、rtos、network 的模拟器必须带「先预测」入口；database、linux 的实验
   必须带自动比对；design-patterns、algorithms 的练习必须混合相似项——这是三类最
   容易做偏的地方。
 - 专注从个人习惯变为可评审的界面约束（P6–P8），但只约束软件「别添乱」，不越界做
