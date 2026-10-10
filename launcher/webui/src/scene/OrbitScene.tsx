@@ -116,22 +116,20 @@ function IconSphere({
   // 自转速度与相位按序号差异化，行星各转各的；相位让悬浮错落。
   const spinSpeed = useMemo(() => 0.35 + ((index * 37) % 40) / 100, [index]);
   const floatPhase = useMemo(() => (index * 137.5 * Math.PI) / 180, [index]);
-  // 公转角速度开普勒式递减：内环快、外环慢（基准环 240 半径转一圈约 28 秒）。
-  const orbitOmega = useMemo(() => 0.22 * (240 / orbit.radius), [orbit.radius]);
+  // 公转角速度开普勒式递减：内环快、外环慢（半长轴 300 转一圈约 28 秒）。
+  const orbitOmega = useMemo(() => 0.22 * (300 / orbit.a), [orbit.a]);
   const elapsed = useRef(0);
   // 公转位置 + 自转 + 上下悬浮 + 悬停缩放，全部帧插值。
   useFrame(({ camera }, delta) => {
     elapsed.current += delta;
     if (planet.current) {
-      // 与 core 的 layout3d 同一套正变换，theta 随时间推进即沿轨道公转。
+      // 与 core 的 layout3d 同一套正变换，theta 随时间推进即沿椭圆公转
+      // （恒星在焦点：近点段视觉上略快，由参数角均匀推进近似）。
       const theta = app.theta + orbitOmega * elapsed.current;
-      const { radius, tilt, yaw } = orbit;
-      const px = radius * Math.sin(theta);
-      const pz0 = radius * Math.cos(theta);
-      const py = -pz0 * Math.sin(tilt);
-      const pz = pz0 * Math.cos(tilt);
-      const cy = Math.cos(yaw), sy = Math.sin(yaw);
-      planet.current.position.set(px * cy + pz * sy, py, -px * sy + pz * cy);
+      const px = -orbit.c + orbit.a * Math.cos(theta);
+      const pz0 = orbit.b * Math.sin(theta);
+      const sl = Math.sin(orbit.tilt), cl = Math.cos(orbit.tilt);
+      planet.current.position.set(px, -pz0 * sl, pz0 * cl);
     }
     if (planet.current && badge.current) {
       // 徽章 billboard：悬在行星朝相机的一侧，且平面永远正对屏幕，图标不变形。
@@ -206,24 +204,21 @@ function IconSphere({
   );
 }
 
-function OrbitRing({ radius, tilt, yaw }: { radius: number; tilt: number; yaw: number }) {
+function OrbitRing({ a, b, c, tilt }: { a: number; b: number; c: number; tilt: number }) {
   // 用 primitive 挂 THREE.Line 而不是 <line> JSX：后者的类型会被 DOM 的 SVG <line> 撞掉。
   const line = useMemo(() => {
     const pts: THREE.Vector3[] = [];
+    const sl = Math.sin(tilt), cl = Math.cos(tilt);
     for (let i = 0; i <= 128; i++) {
       const theta = (i / 128) * Math.PI * 2;
-      const px = radius * Math.sin(theta);
-      const pz = radius * Math.cos(theta);
-      const py = -pz * Math.sin(tilt);
-      const pz2 = pz * Math.cos(tilt);
-      const v = new THREE.Vector3(px, py, pz2);
-      v.applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
-      pts.push(v);
+      const px = -c + a * Math.cos(theta);
+      const pz0 = b * Math.sin(theta);
+      pts.push(new THREE.Vector3(px, -pz0 * sl, pz0 * cl));
     }
     const geometry = new THREE.BufferGeometry().setFromPoints(pts);
     const material = new THREE.LineBasicMaterial({ color: "#8a97c8", transparent: true, opacity: 0.55 });
     return new THREE.Line(geometry, material);
-  }, [radius, tilt, yaw]);
+  }, [a, b, c, tilt]);
   return <primitive object={line} />;
 }
 
@@ -259,7 +254,7 @@ export default function OrbitScene({ catalog }: { catalog: CatalogDto }) {
       <directionalLight position={[600, 1200, 800]} intensity={1.1} />
       <TigerCore hovered={hovered} />
       {catalog.orbits.map((o, i) => (
-        <OrbitRing key={i} radius={o.radius} tilt={o.tilt} yaw={o.yaw} />
+        <OrbitRing key={i} a={o.a} b={o.b} c={o.c} tilt={o.tilt} />
       ))}
       {catalog.apps.map((a, i) => (
         <IconSphere

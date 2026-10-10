@@ -3,15 +3,18 @@
 //! 纯函数：输入每个领域圈的成员数，输出每条轨道的空间姿态与每个节点的世界坐标。
 //! 界面只负责渲染，布局能脱离窗口做单元测试。
 //!
-//! 几何：虎头在原点是恒星；每个领域圈是一条倾斜的圆轨道（半径逐层外推，倾角与
-//! 起始方位角交错，避免共面与节点对齐），圈内成员沿轨道按参数角均匀分布。
+//! 几何（开普勒式）：虎头是恒星，位于每个椭圆轨道的**公共焦点**上；所有椭圆
+//! 长轴同向（沿世界 X，宽屏横向），半长轴逐环外推，倾角交替微差避免共面。
+//! 行星沿参数角均匀布点。
 
-/// 每条轨道的静态姿态：半径、绕 X 轴倾角、绕 Y 轴起始方位（弧度）。
+/// 每条椭圆轨道的姿态：半长轴、半短轴、焦点距（中心到恒星的偏移）、绕 X 倾角。
+/// 椭圆中心在 (-c, 0, 0)，恒星（原点）即长轴上的近侧焦点。
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct OrbitSpec {
-    pub radius: f32,
+    pub a: f32,
+    pub b: f32,
+    pub c: f32,
     pub tilt: f32,
-    pub yaw: f32,
 }
 
 /// 轨道上的一个节点：所属领域圈、圈内序号、世界坐标与轨道参数角。
@@ -20,8 +23,8 @@ pub struct OrbitNode {
     pub group: usize,
     pub slot: usize,
     pub pos: [f32; 3],
-    /// 未叠加绕 Y 旋转的参数角（含环起始方位）：公转动画沿它加时间项，
-    /// 与静态坐标同一套正变换，t=0 时与布局完全重合。
+    /// 椭圆参数角（含环起始错位）：公转动画沿它加时间项，与静态坐标同一套
+    /// 正变换，t=0 时与布局完全重合。
     pub theta: f32,
 }
 
@@ -31,36 +34,40 @@ pub struct OrbitLayout {
     pub nodes: Vec<OrbitNode>,
 }
 
-const R0: f32 = 240.0;
-const RING_STEP: f32 = 150.0;
-const TILT: f32 = 0.30; // ≈17°，环面与视轴的错角
-const GOLDEN: f32 = 2.39996; // 黄金角：起始方位逐环错开，节点不对齐
+const A0: f32 = 300.0;
+const A_STEP: f32 = 170.0;
+const ECC: f32 = 0.3; // 离心率：椭圆感明显又不至于近点撞恒星
+const TILT: f32 = 0.3; // ≈17°，环面与视轴的错角
+const GOLDEN: f32 = 2.39996; // 黄金角：各环的行星起始角错开，不对齐
 
-/// 排布 `group_sizes`：第 g 个领域圈占第 g 条轨道，成员沿轨道均匀分布。
+/// 椭圆上参数角 θ 的点（世界坐标）：中心 (-c,0,0) 加半轴 (a,b)，绕 X 轴倾 tilt。
+pub fn orbit_point(spec: &OrbitSpec, theta: f32) -> [f32; 3] {
+    let (st, ct) = theta.sin_cos();
+    let (sl, cl) = spec.tilt.sin_cos();
+    let px = -spec.c + spec.a * ct;
+    let pz0 = spec.b * st;
+    [px, -pz0 * sl, pz0 * cl]
+}
+
+/// 排布 `group_sizes`：第 g 个领域圈占第 g 条轨道，成员沿参数角均匀分布。
 /// 组数为零时输出空布局。
 pub fn orbit_layout(group_sizes: &[usize]) -> OrbitLayout {
     let mut orbits = Vec::with_capacity(group_sizes.len());
     let mut nodes = Vec::new();
     for (g, &count) in group_sizes.iter().enumerate() {
-        let radius = R0 + g as f32 * RING_STEP;
+        let a = A0 + g as f32 * A_STEP;
+        let b = a * (1.0 - ECC * ECC).sqrt();
+        let c = a * ECC;
         let tilt = if g % 2 == 0 { TILT } else { -TILT } + g as f32 * 0.04;
-        let yaw = g as f32 * GOLDEN;
-        orbits.push(OrbitSpec { radius, tilt, yaw });
+        let spec = OrbitSpec { a, b, c, tilt };
         let count = count.max(1);
+        let start = g as f32 * GOLDEN;
         for slot in 0..count {
-            let theta = yaw + slot as f32 * std::f32::consts::TAU / count as f32;
-            // 环平面：先在 XZ 平面上取圆，绕 X 轴倾 tilt，再绕 Y 轴转 yaw。
-            let (sx, sz) = theta.sin_cos();
-            let (ct, st) = tilt.sin_cos();
-            let (cy, sy) = yaw.sin_cos();
-            let (px, pz) = (radius * sx, radius * sz);
-            let x = px;
-            let y = -pz * st;
-            let z = pz * ct;
-            // 绕 Y 轴旋转 yaw 把每条环的起始方位错开。
-            let (x2, z2) = (x * cy + z * sy, -x * sy + z * cy);
-            nodes.push(OrbitNode { group: g, slot, pos: [x2, y, z2], theta });
+            let theta = start + slot as f32 * std::f32::consts::TAU / count as f32;
+            let pos = orbit_point(&spec, theta);
+            nodes.push(OrbitNode { group: g, slot, pos, theta });
         }
+        orbits.push(spec);
     }
     OrbitLayout { orbits, nodes }
 }
@@ -69,8 +76,11 @@ pub fn orbit_layout(group_sizes: &[usize]) -> OrbitLayout {
 mod tests {
     use super::*;
 
+    /// 恒星（原点）到节点的距离应等于焦点到该参数角椭圆点的解析距离
+    /// d(θ) = a(1 - e·cosθ)（参数角形式；真近点角的开普勒式与之等价）——
+    /// 即恒星确实在焦点上。
     #[test]
-    fn 节点落在各自轨道半径上() {
+    fn 恒星位于椭圆焦点() {
         let layout = orbit_layout(&[3, 4, 5]);
         for node in &layout.nodes {
             let spec = layout.orbits[node.group];
@@ -78,20 +88,21 @@ mod tests {
                 + node.pos[1] * node.pos[1]
                 + node.pos[2] * node.pos[2])
                 .sqrt();
-            assert!((d - spec.radius).abs() < 1.0, "节点偏离轨道半径 {d} vs {}", spec.radius);
+            let expected = spec.a * (1.0 - ECC * node.theta.cos());
+            assert!(
+                (d - expected).abs() < 2.0,
+                "焦点距离 {d} 偏离解析式 {expected}"
+            );
         }
     }
 
     #[test]
-    fn 相邻环不共面() {
-        let layout = orbit_layout(&[1, 1, 1, 1]);
-        for pair in layout.orbits.windows(2) {
-            let (a, b) = (pair[0], pair[1]);
-            // 倾角交替加逐环微差：同倾角的两环起始方位至少差一个黄金角。
-            assert!(
-                (a.tilt - b.tilt).abs() > 0.01 || (a.yaw - b.yaw).abs() % std::f32::consts::PI > 0.01,
-                "相邻环共面"
-            );
+    fn 椭圆中心随半长轴外推且近点不撞恒星() {
+        let layout = orbit_layout(&[1, 1]);
+        for spec in &layout.orbits {
+            // 中心 (-c,0,0)：近焦点 = a - c = a(1-e)。
+            assert!((spec.c - spec.a * ECC).abs() < 1.0);
+            assert!(spec.a - spec.c > 150.0, "近点不能撞恒星");
         }
     }
 
@@ -104,12 +115,7 @@ mod tests {
     #[test]
     fn 同组成员按序均匀分布() {
         let layout = orbit_layout(&[4]);
-        let angles: Vec<f32> = layout
-            .nodes
-            .iter()
-            .map(|n| n.slot as f32 * std::f32::consts::TAU / 4.0)
-            .collect();
-        assert_eq!(angles.len(), 4);
+        assert_eq!(layout.nodes.len(), 4);
         assert_eq!(layout.nodes[0].slot, 0);
         assert_eq!(layout.nodes[3].slot, 3);
     }

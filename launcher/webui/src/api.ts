@@ -18,9 +18,10 @@ export interface AppDto {
 }
 
 export interface OrbitDto {
-  radius: number;
+  a: number;
+  b: number;
+  c: number;
   tilt: number;
-  yaw: number;
 }
 
 export interface CatalogDto {

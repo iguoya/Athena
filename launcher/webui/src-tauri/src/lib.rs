@@ -30,9 +30,10 @@ pub struct AppDto {
 
 #[derive(serde::Serialize)]
 pub struct OrbitDto {
-    radius: f32,
+    a: f32,
+    b: f32,
+    c: f32,
     tilt: f32,
-    yaw: f32,
 }
 
 #[derive(serde::Serialize)]
@@ -123,7 +124,7 @@ pub mod commands {
             orbits: layout
                 .orbits
                 .iter()
-                .map(|o| OrbitDto { radius: o.radius, tilt: o.tilt, yaw: o.yaw })
+                .map(|o| OrbitDto { a: o.a, b: o.b, c: o.c, tilt: o.tilt })
                 .collect(),
             apps: out,
         })
