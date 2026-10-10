@@ -81,6 +81,7 @@ type Block =
   | { type: "practice"; prompt: string; hint?: string; open_lab?: string }
   | { type: "quiz"; title?: string; items: QuizItem[] }
   | { type: "uml"; title?: string; uml: UmlDiagram }
+  | { type: "table"; title?: string; headers: string[]; rows: string[][]; note?: string }
   | { type: "summary"; title?: string; text: string };
 
 /** 标准 UML 类图的极简描述：类框三格（名/属性/方法）+ 六种关系线，坐标由内容作者给定。 */
@@ -1821,6 +1822,14 @@ function renderLesson(topic: Topic) {
       }
       if (b.type === "uml") {
         return `<div class="card"><div class="pane-title">${escapeHtml(b.title ?? "UML 类图")}</div><div class="viz-scroll">${renderUml(b.uml)}</div></div>`;
+      }
+      if (b.type === "table") {
+        const head = b.headers.map((h) => `<th>${escapeHtml(h)}</th>`).join("");
+        const rows = b.rows
+          .map((r) => `<tr>${r.map((c) => `<td>${escapeHtml(c)}</td>`).join("")}</tr>`)
+          .join("");
+        const note = b.note ? `<div class="muted" style="margin-top:6px;font-size:12px">${escapeHtml(b.note)}</div>` : "";
+        return `<div class="card"><div class="pane-title">${escapeHtml(b.title ?? "对照表")}</div><div class="viz-scroll"><table class="uml-table"><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>${note}</div>`;
       }
       return `<div class="card"><p class="prose">${escapeHtml(b.text)}</p></div>`;
     })
