@@ -1,6 +1,6 @@
-> 迁自磨砚（主仓库 ADR 0117、本应用 ADR 0025），由 `pnpm content:english2` 生成，不手改。
-> 引用了只能本机用的来源的题目在 `content/private/english2/` 的同一路径下，清单见 `private-index.json`；
-> 下文中的 `source_refs`、`sources/catalog.json` 在这里分别对应 `source` 与 `content/sources.json`。
+> 迁自磨砚（主仓库 ADR 0117、本应用 ADR 0025、0026），由 `pnpm content:english2` 生成，不手改。
+> 下文中的 `source_refs`、`sources/catalog.json`、`sources/reference/` 在这里分别对应 `source`、
+> `content/sources.json` 与 `reference/english2/reference/`。
 
 # English 内容分级与来源
 
