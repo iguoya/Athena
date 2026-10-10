@@ -8,11 +8,12 @@
     "守则 —— 七大原则是所有模式的内功",
     "诊断 —— 情境篇一：从坏味道出发选组织方式",
     "落地 —— 情境篇二：C++ 的资源、所有权与错误",
+    "没有类 —— 情境篇三：C 的代码组织",
+    "并发 —— 情境篇四：并发下的代码组织",
     "工具箱 · 造物 —— 创建型：把 new 收进工厂",
     "工具箱 · 组装 —— 结构型：把类拼成更大的结构",
     "工具箱 · 协作 —— 行为型：让对象之间会说话",
     "应试 —— 软考专题：历年原题按知识点归组",
-    "出圈 —— 非面向对象世界的模式",
     "看今朝 —— 现代工程的程序组织写法"
   ],
   "tracks": [
@@ -48,7 +49,7 @@
     },
     {
       "id": "non-oo",
-      "title": "非面向对象的模式",
+      "title": "C 的代码组织",
       "color": "#6b7280"
     },
     {
@@ -60,6 +61,11 @@
       "id": "exam",
       "title": "软考专题",
       "color": "#b45309"
+    },
+    {
+      "id": "concurrency",
+      "title": "并发组织",
+      "color": "#0891b2"
     }
   ],
   "chapters": [
@@ -4206,6 +4212,1649 @@
               "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
             },
             "covers": "dp.sit.invariant"
+          }
+        ]
+      }
+    },
+    {
+      "id": "non-oo",
+      "title": "情境篇三：没有类的时候——C 的代码组织",
+      "track": "non-oo",
+      "summary": "C 没有类、没有 private、没有析构函数，同样的组织问题要用别的手段解决：不透明类型代替 private，函数指针表代替虚函数，void* 上下文代替闭包，goto 集中出口代替析构函数。每节都对照前面情境篇里 C++ 的做法。范围按本应用 ADR 0001 补充收窄到有权威出处的写法。\n\n取材：Linux 内核编码规范与 VFS 文档 · SEI CERT C 编码规范 · POSIX",
+      "topics": [
+        {
+          "id": "dp.c.opaque-type",
+          "title": "没有 private：不透明类型",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.sit.invariant"
+          ],
+          "track": "non-oo",
+          "guide_line": "C 的结构体成员对所有人可见，调用方可以绕过函数直接改坏数据。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能用「只声明不定义」的结构体把实现藏在 .c 文件里，调用方只能通过函数操作。",
+            "pain": "Stack 的定义放在头文件里，调用方随手写 s.top = 99，栈的不变式就坏了；改结构体布局，所有调用方都要重新编译。",
+            "model": "头文件只写 typedef struct Stack Stack; 和函数声明，结构体定义放在实现文件；调用方只能拿到指针，读写成员会编译失败。",
+            "scope": "代价是对象只能在堆上创建（调用方不知道大小），需要成对的 create/destroy 函数。",
+            "judgment": "一个 C 模块的数据有不变式，或者希望以后能改布局而不影响调用方——就用不透明类型。",
+            "landing": "能把一个公开定义的结构体改成不透明类型，并提供 create/destroy 与操作函数。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "C 写的栈模块把 struct Stack 的定义放在 stack.h 里。调用方为了「省事」直接改 top，导致栈溢出。不改语言的前提下，最根本的防护是？",
+                "options": [
+                  {
+                    "label": "头文件里只声明 struct Stack，不给定义；定义移到 stack.c，调用方只能通过函数操作",
+                    "ok": true,
+                    "why": "不透明类型：调用方连成员名都看不到"
+                  },
+                  {
+                    "label": "在头文件里加注释「不要直接访问 top」",
+                    "ok": false,
+                    "why": "注释拦不住"
+                  },
+                  {
+                    "label": "把 top 改名为 _top_do_not_touch",
+                    "ok": false,
+                    "why": "仍然能访问"
+                  },
+                  {
+                    "label": "每个函数开头检查 top 是否合法",
+                    "ok": false,
+                    "why": "数据已经被改坏了，检查只能事后发现"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "C 没有访问控制，但有**不完整类型**：头文件里只写 typedef struct Stack Stack;，调用方知道有这么个类型、能持有 Stack* 指针，却看不到它的成员，也不知道它多大。SEI CERT C 编码规范把这条列为 **DCL12-C「用不透明类型实现抽象数据类型」**；Linux 内核编码规范第 5 节也说，typedef 只应用于这种「完全不透明的对象」——用来**隐藏**对象是什么。它在 C 里起到的作用，相当于 C++ 的 private 加构造函数（见情境篇二「不变式没人守」）。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：定义公开在头文件",
+                  "code": "/* stack.h */\nstruct Stack { int items[8]; int top; };\ntypedef struct Stack Stack;\n\n/* 调用方 */\nStack s;\ns.top = 99;          /* 编译器不拦 */"
+                },
+                "after": {
+                  "title": "改造后：头文件只有声明",
+                  "code": "/* stack.h */\ntypedef struct Stack Stack;\nStack* stack_create(void);\nvoid   stack_destroy(Stack* s);\nint    stack_push(Stack* s, int v);\n\n/* stack.c */\nstruct Stack { int items[8]; int top; };\n\n/* 调用方 */\nStack* s = stack_create();\ns->top = 99;         /* 编译错误：不完整类型 */"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "把结构体定义从头文件挪进 .c 文件，头文件只留 typedef 前向声明。",
+                  "提供 create（分配并初始化）与 destroy（释放）函数，取代调用方自己定义变量。",
+                  "调用方所有对成员的直接访问都改成函数调用；编译器会把漏改的地方全部报出来。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "对象必须在堆上分配，多一次 malloc；成员访问都要经过函数调用（对性能敏感的小对象，内核会在头文件里公开定义并配访问宏）。内核规范也提醒：不透明与访问函数本身不是目的，只在确实没有可移植的信息可公开时才用。"
+              },
+              {
+                "type": "callout",
+                "title": "代码说明",
+                "text": "实验代码按 C 的写法写，用本应用的 C++ 编译器编译，因此 malloc 的结果要显式转换类型、goto 不能跳过带初始化的声明——这两点在真正的 C 编译器里都不需要。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "头文件只有 typedef struct Stack Stack; 时，调用方能做下面哪件事？",
+                    "choices": [
+                      {
+                        "label": "声明 Stack* 指针并把它传给函数",
+                        "ok": true,
+                        "why": "指向不完整类型的指针可以使用"
+                      },
+                      {
+                        "label": "定义一个 Stack s; 局部变量",
+                        "ok": false,
+                        "why": "不知道大小，无法定义对象"
+                      },
+                      {
+                        "label": "访问 s->top",
+                        "ok": false,
+                        "why": "看不到成员"
+                      },
+                      {
+                        "label": "用 sizeof(Stack) 分配内存",
+                        "ok": false,
+                        "why": "不完整类型没有 sizeof"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.c.opaque-type",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "SEI CERT C 编码规范 DCL12-C「Implement abstract data types using opaque types」；Linux 内核编码规范（Documentation/process/coding-style.rst） 第 5 节「Typedefs」。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.c.opaque-type.run",
+              "title": "把栈改成不透明类型",
+              "case": "c_opaque_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "调用方写了 s.top = 99，编译器为什么没拦？改完之后再写这一行会怎样？",
+              "goal": "把 struct Stack 的定义挪到「stack.c」段，「stack.h」段只留 typedef 与函数声明；新增 stack_create（malloc 并把 top 置 0）与 stack_destroy；删掉 main 的旧代码，解开 TODO(实验) 段。",
+              "pass": {
+                "includes": [
+                  "size=2",
+                  "pop=20",
+                  "pop on empty rejected"
+                ]
+              },
+              "hint": "stack_create 里写 Stack* s = (Stack*)malloc(sizeof(Stack));——sizeof 只能在看得到定义的 stack.c 段里用。"
+            }
+          ]
+        },
+        {
+          "id": "dp.c.ops-table",
+          "title": "按类型 switch：函数指针表",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.sit.repeated-switch",
+            "dp.c.opaque-type"
+          ],
+          "track": "non-oo",
+          "guide_line": "C 里每个操作都按类型 switch，加一种类型就要改所有函数。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能用「操作表」结构体（一组函数指针）在 C 里实现多态，新增类型只加一张表。",
+            "pain": "设备驱动、文件系统、协议处理器有很多种，read、write、name 每个函数都按类型 switch——C 版本的「重复的 switch」。",
+            "model": "每种类型提供一张 struct xxx_ops（里面是它自己的函数指针），对象持有指向表的指针；调用方只写 d->ops->read(...)。这正是 C++ 虚函数表的手工版本。",
+            "scope": "表通常声明为 static const：只有一份、不可修改；不支持的操作可以填 NULL，调用前检查。",
+            "judgment": "同一组类型在多个函数里 switch，而且类型会继续增加——用操作表；只有一两处分支——switch 就够。",
+            "landing": "能把一组按类型 switch 的函数改成操作表，并只加一个函数和一张表来支持新类型。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "一个 C 写的设备层支持 zero、null 两种设备，read() 和 name() 里都有 switch(kind)。现在要加第三种设备。按 Linux 内核 VFS 的做法应该怎么组织？",
+                "options": [
+                  {
+                    "label": "每种设备一张函数指针表，设备对象持有表指针，调用方通过表调用；加设备只加一张表",
+                    "ok": true,
+                    "why": "这就是 struct file_operations 的组织方式"
+                  },
+                  {
+                    "label": "在两个 switch 里各加一个 case",
+                    "ok": false,
+                    "why": "下次加设备还要找遍所有 switch"
+                  },
+                  {
+                    "label": "改用 C++ 重写整个设备层",
+                    "ok": false,
+                    "why": "不是这个问题的答案，C 本身就能解决"
+                  },
+                  {
+                    "label": "用宏生成 switch",
+                    "ok": false,
+                    "why": "分支依旧重复，只是藏起来了"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "C 没有虚函数，但可以手工做出一张「虚函数表」：一个装满函数指针的结构体。Linux 内核 VFS 文档描述的 **struct file_operations** 就是这样——每种文件系统提供自己的一张操作表，VFS 打开文件时把表指针存进 file 对象，之后的读写都通过表里的函数指针调用，VFS 本身不需要知道有哪些文件系统。它解决的正是情境篇一的「重复的 switch」，只是没有类可用。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：每个操作都 switch",
+                  "code": "int device_read(const struct device* d,\n                unsigned char* buf, int n) {\n  switch (d->kind) {\n  case DEV_ZERO: memset(buf, 0, n); return n;\n  case DEV_NULL: return 0;\n  }\n}\n/* device_name() 里还有一个同样的 switch */"
+                },
+                "after": {
+                  "title": "改造后：每种设备一张操作表",
+                  "code": "struct device_ops {\n  const char* name;\n  int (*read)(unsigned char* buf, int n);\n};\nstatic int zero_read(unsigned char* b, int n)\n  { memset(b, 0, n); return n; }\nstatic const struct device_ops zero_ops =\n  { \"zero\", zero_read };\n\nstruct device { const struct device_ops* ops; };\n/* 调用方 */ d->ops->read(buf, 4);"
+                }
+              },
+              {
+                "type": "compare",
+                "title": "C 的操作表 vs C++ 的虚函数",
+                "left": {
+                  "title": "操作表（手工）",
+                  "body": "表是显式的数据，可以在运行时替换、可以部分填 NULL 表示不支持；忘了填某个函数，编译器不会报错，要靠约定或运行时检查。"
+                },
+                "right": {
+                  "title": "虚函数（编译器生成）",
+                  "body": "编译器为每个类生成虚表，纯虚函数没实现会编译报错；但表的内容在编译期固定。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "函数指针调用比直接调用多一次间接；操作表一多，要统一约定哪些函数可以为 NULL。只有一两处分支、类型集合固定时，switch 更直白。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "策略、状态（都是「把随类型变化的行为放进可替换的对象」）、桥接（设备对象与操作表就是抽象与实现两个层次）。"
+              },
+              {
+                "type": "callout",
+                "title": "代码说明",
+                "text": "实验代码按 C 的写法写，用本应用的 C++ 编译器编译，因此 malloc 的结果要显式转换类型、goto 不能跳过带初始化的声明——这两点在真正的 C 编译器里都不需要。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "操作表为什么通常声明成 static const struct device_ops？",
+                    "choices": [
+                      {
+                        "label": "每种类型只需一份、放在只读区，防止运行时被意外修改",
+                        "ok": true,
+                        "why": "所有同类对象共享同一张表"
+                      },
+                      {
+                        "label": "为了让函数指针可以为空",
+                        "ok": false,
+                        "why": "与 const 无关"
+                      },
+                      {
+                        "label": "因为 C 不允许非 const 的函数指针",
+                        "ok": false,
+                        "why": "可以有，只是不安全"
+                      },
+                      {
+                        "label": "为了提高调用速度",
+                        "ok": false,
+                        "why": "不是主要目的"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.c.ops-table",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "Linux 内核 VFS 文档（Documentation/filesystems/vfs.rst）「The File Object」一节中的 struct file_operations。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.c.ops-table.run",
+              "title": "用操作表加一种设备",
+              "case": "c_ops_table_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "加一种 ones 设备，现在要改几个函数？改成操作表之后呢？",
+              "goal": "定义 struct device_ops（name 与 read 函数指针），为 zero、null、ones 各写一个 read 函数和一张 static const 表；struct device 改为持有 const struct device_ops* ops；show() 改为通过 d->ops 调用；删掉旧代码并解开 TODO(实验) 段。",
+              "pass": {
+                "includes": [
+                  "zero: read 4 bytes, first=0",
+                  "ones: read 4 bytes, first=1"
+                ]
+              },
+              "hint": "null 的 read 不用参数，写成 static int null_read(unsigned char*, int) { return 0; } 可以避免「未使用参数」警告。"
+            }
+          ]
+        },
+        {
+          "id": "dp.c.callback-context",
+          "title": "回调拿不到上下文：void* 参数",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.sit.global-data"
+          ],
+          "track": "non-oo",
+          "guide_line": "回调函数只能拿到固定的几个参数，需要的状态只好放进全局变量。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能为 C 回调设计「函数指针 + void* 上下文」的接口，消除回调对全局变量的依赖。",
+            "pain": "for_each(a, n, fn) 的回调只拿得到元素值，要累加就得写全局变量；两个调用同时进行就会互相覆盖，也不能在多线程中使用。",
+            "model": "回调多带一个 void* ctx 参数，调用方把自己的数据地址传进去，接口原样转交给回调，回调再转回具体类型。这是 C 版本的「闭包」。",
+            "scope": "void* 丢掉了类型信息，转错类型编译器不会发现；把上下文和回调成对传递、并在回调第一行就转换，能降低出错机会。",
+            "judgment": "回调里出现对全局变量的读写——先看接口能不能多带一个上下文参数。",
+            "landing": "能把一个依赖全局变量的回调接口改为带 void* 上下文，同时算两个独立的结果。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "一个 C 库提供 for_each(arr, n, fn)，fn 的签名是 void (*)(int)。你需要在回调里累加到一个局部结构体里。库的作者应该怎样改接口？",
+                "options": [
+                  {
+                    "label": "增加一个 void* ctx 参数，并原样传给回调：void (*fn)(int, void*)",
+                    "ok": true,
+                    "why": "pthread_create、qsort_r 都是这样设计的"
+                  },
+                  {
+                    "label": "让使用者把结构体放进全局变量",
+                    "ok": false,
+                    "why": "无法同时进行两次调用，也不能并发"
+                  },
+                  {
+                    "label": "为每种累加方式提供一个专门的 for_each",
+                    "ok": false,
+                    "why": "组合爆炸"
+                  },
+                  {
+                    "label": "让回调返回累加结果",
+                    "ok": false,
+                    "why": "每次回调只看到一个元素，返回值无处累积"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "C 的函数指针只是一个地址，不像 C++ 的 lambda 那样能「带着」变量。标准做法是给回调多加一个 **void* 上下文参数**：调用方把任意数据的地址交给接口，接口原样转交给回调。POSIX 的 pthread_create 就是这样设计的——线程函数签名是 void* (*)(void*)，再配一个 void* arg；glibc 的 qsort_r 和 C11 附录 K 的 qsort_s 也都为比较函数多带了一个上下文参数，弥补了标准 qsort 的不足。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：回调只能写全局变量",
+                  "code": "int g_sum = 0;\nvoid add(int v) { g_sum += v; }\n\nvoid for_each(const int* a, int n, void (*fn)(int));\nfor_each(a, 5, add);"
+                },
+                "after": {
+                  "title": "改造后：上下文随回调传递",
+                  "code": "struct sums { int even; int odd; };\nvoid add_by_parity(int v, void* ctx) {\n  struct sums* s = (struct sums*)ctx;\n  if (v % 2 == 0) s->even += v; else s->odd += v;\n}\nvoid for_each(const int* a, int n,\n              void (*fn)(int, void*), void* ctx);\n\nstruct sums s = {0, 0};\nfor_each(a, 5, add_by_parity, &s);"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "void* 绕过了类型检查：传错了上下文类型，编译能过、运行出错。C++ 里同样的需求直接用 lambda 或 std::function，编译器会检查类型。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "命令、策略（「函数 + 它需要的数据」打包传递，就是一个命令或策略对象）、观察者（注册回调时同时注册上下文，通知时一并传回）。"
+              },
+              {
+                "type": "callout",
+                "title": "代码说明",
+                "text": "实验代码按 C 的写法写，用本应用的 C++ 编译器编译，因此 malloc 的结果要显式转换类型、goto 不能跳过带初始化的声明——这两点在真正的 C 编译器里都不需要。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "pthread_create 的最后一个参数 void* arg 的作用是？",
+                    "choices": [
+                      {
+                        "label": "把线程函数需要的数据原样传给它",
+                        "ok": true,
+                        "why": "线程函数以 void* 参数接收，再转回具体类型"
+                      },
+                      {
+                        "label": "指定线程的优先级",
+                        "ok": false,
+                        "why": "那是属性参数的事"
+                      },
+                      {
+                        "label": "接收线程的返回值",
+                        "ok": false,
+                        "why": "返回值通过 pthread_join 取得"
+                      },
+                      {
+                        "label": "指定线程栈的大小",
+                        "ok": false,
+                        "why": "那是属性参数的事"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.c.callback-context",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "POSIX pthread_create 的函数签名；glibc qsort_r 与 C11 附录 K qsort_s 的上下文参数。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.c.callback-context.run",
+              "title": "给回调加上下文参数",
+              "case": "c_callback_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "想同时算偶数和与奇数和，用全局变量要几个？如果两个调用并发进行呢？",
+              "goal": "for_each 改为接收 void (*fn)(int, void*) 和 void* ctx；写 struct sums 与 add_by_parity（把 ctx 转成 struct sums* 后按奇偶累加）；删掉 g_sum 与旧回调，解开 TODO(实验) 段。",
+              "pass": {
+                "includes": [
+                  "even=6 odd=9"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "dp.c.goto-cleanup",
+          "title": "没有析构函数：goto 集中出口",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.sit.resource-leak"
+          ],
+          "track": "non-oo",
+          "guide_line": "C 函数依次申请多个资源，任一步失败都要释放前面的，嵌套与重复的释放代码容易漏。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能用按逆序排列的清理标签组织 C 函数的错误出口，并给标签起说明用途的名字。",
+            "pain": "申请 a、b、c 三个资源，用嵌套 if 写，每个失败分支都要重复释放前面的资源；改一次代码就可能漏掉一条路径。",
+            "model": "失败时 goto 到函数末尾的清理标签；标签按申请的逆序排列，从哪个标签进去，就释放它和它之前申请的全部资源。每个出口只跳转，不写释放代码。",
+            "scope": "这是 C 没有析构函数时的替代方案；在 C++ 里应该用 RAII（情境篇二）而不是 goto。",
+            "judgment": "一个 C 函数有多个出口且每个出口都要做相同的清理——用集中出口；没有清理工作就直接 return。",
+            "landing": "能把嵌套 if 的资源申请改写成集中出口，并保证任一步失败都不泄漏。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "C 函数依次 malloc 三块缓冲区，用三层嵌套 if 写，第二层失败时忘了 free 第一块。按 Linux 内核编码规范应该怎样组织？",
+                "options": [
+                  {
+                    "label": "失败时 goto 到末尾按逆序排列的清理标签，标签名写明它释放什么（如 out_free_buffer）",
+                    "ok": true,
+                    "why": "内核规范第 7 节「集中出口」"
+                  },
+                  {
+                    "label": "在每个失败分支里复制全部释放代码",
+                    "ok": false,
+                    "why": "改一处就要改所有分支"
+                  },
+                  {
+                    "label": "申请失败时直接 exit()",
+                    "ok": false,
+                    "why": "库函数不能替调用者决定终止"
+                  },
+                  {
+                    "label": "永远不释放，交给操作系统回收",
+                    "ok": false,
+                    "why": "长时间运行的程序会耗尽内存"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "C 没有析构函数，资源释放只能手写。Linux 内核编码规范第 7 节「**Centralized exiting of functions**」给出的做法是：函数从多处退出、且都要做相同的清理时，用 goto 跳到函数末尾的清理代码。它列出的理由是：无条件跳转更容易理解和跟踪、减少嵌套、修改时不会忘记更新某个出口。规范还要求标签名说明它做什么，例如 out_free_buffer，而不是 err1、err2 这样的编号——加减出口时编号要重排，也看不出正确性。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：嵌套 if，释放代码分散",
+                  "code": "void* a = acquire(\"a\");\nif (a) {\n  void* b = acquire(\"b\");\n  if (b) {\n    void* c = acquire(\"c\");\n    if (c) { /* …… */ return 0; }\n    /* 忘了释放 b */\n  }\n  release(a);\n}\nreturn -1;"
+                },
+                "after": {
+                  "title": "改造后：集中出口",
+                  "code": "a = acquire(\"a\");\nif (!a) goto out;\nb = acquire(\"b\");\nif (!b) goto out_free_a;\nc = acquire(\"c\");\nif (!c) goto out_free_b;\n/* …… */\nreturn 0;\nout_free_b:\n  release(b);\nout_free_a:\n  release(a);\nout:\n  return -1;"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "把所有资源变量在函数开头声明并初始化为 NULL。",
+                  "按申请顺序写，每一步失败就 goto 到「释放前一个资源」的标签。",
+                  "在函数末尾按申请的逆序排列清理标签，让控制流从上往下「落」过所有需要的释放。",
+                  "标签名写清它释放什么；没有任何清理工作的出口直接 return。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "goto 只适用于向前跳到函数末尾的清理，不要用它做循环或往回跳。C++ 代码不应照搬：资源交给 RAII，析构函数在任何出口都会执行。"
+              },
+              {
+                "type": "callout",
+                "title": "代码说明",
+                "text": "实验代码按 C 的写法写，用本应用的 C++ 编译器编译，因此 malloc 的结果要显式转换类型、goto 不能跳过带初始化的声明——这两点在真正的 C 编译器里都不需要。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "按 Linux 内核编码规范，下列哪个清理标签名最好？",
+                    "choices": [
+                      {
+                        "label": "out_free_buffer",
+                        "ok": true,
+                        "why": "说明了跳到这里会释放 buffer"
+                      },
+                      {
+                        "label": "err1",
+                        "ok": false,
+                        "why": "规范明确不建议编号式标签"
+                      },
+                      {
+                        "label": "label2",
+                        "ok": false,
+                        "why": "看不出用途"
+                      },
+                      {
+                        "label": "fail",
+                        "ok": false,
+                        "why": "看不出要释放什么"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.c.goto-cleanup",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "Linux 内核编码规范（Documentation/process/coding-style.rst） 第 7 节「Centralized exiting of functions」。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.c.goto-cleanup.run",
+              "title": "用集中出口重写资源申请",
+              "case": "c_goto_cleanup_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "第三步申请失败时，现在的代码释放了哪些资源？漏了哪个？",
+              "goal": "重写 setup()：a、b、c 在开头声明并初始化为 NULL，依次申请，失败时分别 goto out、out_free_a、out_free_b；末尾按 out_free_b → out_free_a → out 的顺序排列标签。",
+              "pass": {
+                "includes": [
+                  "release b",
+                  "rc=-1 leaked=0"
+                ]
+              },
+              "hint": "C++ 编译器不允许 goto 跳过带初始化的声明，所以三个变量都要在第一个 goto 之前声明。"
+            }
+          ]
+        }
+      ],
+      "checkpoint": {
+        "intro": "4 种 C 组织方式混排，同一节的题不挨着。",
+        "items": [
+          {
+            "stem": "SEI CERT C 的 DCL12-C 建议用什么方式实现抽象数据类型？",
+            "choices": [
+              {
+                "label": "不透明类型：头文件只声明结构体，定义放在实现文件",
+                "ok": true,
+                "why": "调用方只能通过函数操作"
+              },
+              {
+                "label": "全局变量",
+                "ok": false,
+                "why": "无关"
+              },
+              {
+                "label": "宏",
+                "ok": false,
+                "why": "宏不提供封装"
+              },
+              {
+                "label": "把所有成员命名为下划线开头",
+                "ok": false,
+                "why": "仍然可以访问"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.c.opaque-type",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.c.opaque-type"
+          },
+          {
+            "stem": "C 里的操作表（一组函数指针）最接近 C++ 的哪个机制？",
+            "choices": [
+              {
+                "label": "虚函数表",
+                "ok": true,
+                "why": "按对象的实际类型调用不同的函数"
+              },
+              {
+                "label": "模板",
+                "ok": false,
+                "why": "模板在编译期展开"
+              },
+              {
+                "label": "命名空间",
+                "ok": false,
+                "why": "只是组织名字"
+              },
+              {
+                "label": "异常",
+                "ok": false,
+                "why": "无关"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.c.ops-table",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.c.ops-table"
+          },
+          {
+            "stem": "回调接口多带一个 void* 上下文参数，主要是为了消除什么？",
+            "choices": [
+              {
+                "label": "回调对全局变量的依赖",
+                "ok": true,
+                "why": "数据随回调传递，可以有多份、可以并发"
+              },
+              {
+                "label": "函数调用开销",
+                "ok": false,
+                "why": "开销反而略增"
+              },
+              {
+                "label": "编译警告",
+                "ok": false,
+                "why": "无关"
+              },
+              {
+                "label": "类型转换",
+                "ok": false,
+                "why": "反而需要转换"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.c.callback-context",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.c.callback-context"
+          },
+          {
+            "stem": "Linux 内核编码规范为什么不建议把清理标签命名为 err1、err2？",
+            "choices": [
+              {
+                "label": "增删出口时要重新编号，且看不出每个标签做什么",
+                "ok": true,
+                "why": "规范要求标签名说明用途"
+              },
+              {
+                "label": "编译器不允许数字结尾的标签",
+                "ok": false,
+                "why": "允许"
+              },
+              {
+                "label": "会和系统宏冲突",
+                "ok": false,
+                "why": "不是原因"
+              },
+              {
+                "label": "影响运行速度",
+                "ok": false,
+                "why": "无关"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.c.goto-cleanup",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.c.goto-cleanup"
+          },
+          {
+            "stem": "不透明类型的主要代价是？",
+            "choices": [
+              {
+                "label": "对象只能在堆上创建，需要 create/destroy 函数",
+                "ok": true,
+                "why": "调用方不知道对象大小"
+              },
+              {
+                "label": "不能传递指针",
+                "ok": false,
+                "why": "可以传递"
+              },
+              {
+                "label": "不能有成员函数",
+                "ok": false,
+                "why": "C 本来就没有成员函数"
+              },
+              {
+                "label": "无法编译",
+                "ok": false,
+                "why": "可以编译"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.c.opaque-type",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.c.opaque-type"
+          },
+          {
+            "stem": "把一张操作表声明为 static const 的好处是？",
+            "choices": [
+              {
+                "label": "所有同类对象共享一份只读的表，不会被意外修改",
+                "ok": true,
+                "why": "表是共享的元数据"
+              },
+              {
+                "label": "函数调用更快",
+                "ok": false,
+                "why": "不是主要目的"
+              },
+              {
+                "label": "允许函数指针为空",
+                "ok": false,
+                "why": "与 const 无关"
+              },
+              {
+                "label": "可以省略函数实现",
+                "ok": false,
+                "why": "不行"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.c.ops-table",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.c.ops-table"
+          },
+          {
+            "stem": "void* 上下文的主要风险是？",
+            "choices": [
+              {
+                "label": "丢失类型信息，转错类型编译器发现不了",
+                "ok": true,
+                "why": "需要调用方与回调约定一致"
+              },
+              {
+                "label": "不能传结构体",
+                "ok": false,
+                "why": "可以传结构体地址"
+              },
+              {
+                "label": "只能在单线程中使用",
+                "ok": false,
+                "why": "恰恰相反"
+              },
+              {
+                "label": "会造成内存泄漏",
+                "ok": false,
+                "why": "不一定"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.c.callback-context",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.c.callback-context"
+          },
+          {
+            "stem": "C++ 代码里遇到同样的多资源清理问题，应该用什么？",
+            "choices": [
+              {
+                "label": "RAII：每个资源交给一个对象，析构时释放",
+                "ok": true,
+                "why": "C++ 有析构函数，不需要 goto"
+              },
+              {
+                "label": "同样用 goto",
+                "ok": false,
+                "why": "C++ 里 goto 不能跳过初始化，且有更好的办法"
+              },
+              {
+                "label": "setjmp/longjmp",
+                "ok": false,
+                "why": "会跳过析构函数，更危险"
+              },
+              {
+                "label": "全局清理函数",
+                "ok": false,
+                "why": "无法知道哪些已申请"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.c.goto-cleanup",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.c.goto-cleanup"
+          }
+        ]
+      }
+    },
+    {
+      "id": "concurrency",
+      "title": "情境篇四：并发下的代码组织",
+      "track": "concurrency",
+      "summary": "多个线程同时运行时，组织问题变成「谁在什么时候能碰哪份数据」：锁交给 RAII 并与数据放在一起，多把锁一次性获取，等待一定要有条件，能用任务和 future 传结果就不共享可写变量。每节以 C++ Core Guidelines 并发一节（CP）的编号条目为依据。\n\n取材：C++ Core Guidelines「CP: Concurrency and parallelism」",
+      "topics": [
+        {
+          "id": "dp.cp.manual-lock",
+          "title": "手写 lock/unlock 与无人看管的数据",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.sit.resource-leak"
+          ],
+          "track": "concurrency",
+          "guide_line": "互斥量手动加锁解锁，异常或提前返回时锁没被释放；共享数据和保护它的锁分散在不同地方。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能用 lock_guard / scoped_lock 管理锁，并把互斥量与它保护的数据放进同一个类。",
+            "pain": "deposit() 在参数非法时抛异常，跳过了 unlock()，之后所有线程都卡在这把锁上；另一个模块直接读写 balance，根本没加锁（数据竞争）。",
+            "model": "锁是资源，交给 RAII：std::lock_guard 构造时加锁、析构时解锁（CP.20）；互斥量与它保护的数据定义在同一个类里，只能通过加锁的成员函数访问（CP.50）。",
+            "scope": "lock_guard 必须有名字——不起名的临时对象在本行结束就析构，等于没加锁（CP.44）。",
+            "judgment": "代码里出现 m.lock()——换成 lock_guard；多个线程能读写同一个变量却没有锁保护——数据竞争（CP.2），要么加锁，要么不再共享。",
+            "landing": "能把手写 lock/unlock 的代码改成 lock_guard，并说明异常时为什么也能解锁。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "Account::deposit() 里先 m.lock()，参数非法时 throw，最后才 m.unlock()。上线后偶尔整个服务卡死。最可能的原因和修法是？",
+                "options": [
+                  {
+                    "label": "抛异常时跳过了 unlock，锁一直被占着；改用 std::lock_guard，析构时自动解锁",
+                    "ok": true,
+                    "why": "CP.20：用 RAII，绝不直接 lock/unlock"
+                  },
+                  {
+                    "label": "线程太多，增加线程池大小",
+                    "ok": false,
+                    "why": "锁没被释放，加多少线程都会卡住"
+                  },
+                  {
+                    "label": "在 throw 前加一句 unlock",
+                    "ok": false,
+                    "why": "这次修好了，下次加一个 return 又会漏"
+                  },
+                  {
+                    "label": "把 std::mutex 换成 std::recursive_mutex",
+                    "ok": false,
+                    "why": "可重入不解决其他线程的等待"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "多线程代码里最常见的组织问题不是算法，而是**谁在什么时候能碰哪份数据**。C++ Core Guidelines 并发一节的几条基础规则：CP.2「避免数据竞争」——多个线程访问同一变量、至少一个在写、又没有同步，就是未定义行为；CP.20「用 RAII，绝不直接调用 lock()/unlock()」——锁和文件句柄一样是资源（见情境篇二 RAII）；CP.50「把互斥量和它保护的数据定义在一起」——这样就不会有人绕过锁访问数据。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：手写加锁解锁",
+                  "code": "void deposit(int amount) {\n  m_.lock();\n  if (amount <= 0)\n    throw std::invalid_argument(\"…\");  // 锁没解开\n  balance_ += amount;\n  m_.unlock();\n}"
+                },
+                "after": {
+                  "title": "改造后：锁交给 RAII",
+                  "code": "void deposit(int amount) {\n  std::lock_guard<std::mutex> guard(m_);   // 一定要有名字\n  if (amount <= 0)\n    throw std::invalid_argument(\"…\");  // guard 析构，自动解锁\n  balance_ += amount;\n}"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "锁的范围就是 lock_guard 的作用域；想缩短持锁时间（CP.43），用花括号单独开一个作用域。只读、不会被修改的数据可以无锁共享。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "代理（把加锁封装在访问对象的接口里，就是一个保护代理）。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "std::lock_guard<std::mutex>(m_); 这一行（没有变量名）有什么问题？",
+                    "choices": [
+                      {
+                        "label": "创建的是临时对象，本行结束就析构解锁，后面的代码没有受到保护",
+                        "ok": true,
+                        "why": "CP.44：记得给 lock_guard 起名字"
+                      },
+                      {
+                        "label": "编译不通过",
+                        "ok": false,
+                        "why": "能编译，所以才危险"
+                      },
+                      {
+                        "label": "会造成死锁",
+                        "ok": false,
+                        "why": "不会死锁，只是没起作用"
+                      },
+                      {
+                        "label": "没有问题",
+                        "ok": false,
+                        "why": "锁只持有了一瞬间"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.cp.manual-lock",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "条目 CP.2、CP.20、CP.43、CP.44、CP.50：C++ Core Guidelines（isocpp.github.io/CppCoreGuidelines）「CP: Concurrency and parallelism」一节。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.cp.manual-lock.run",
+              "title": "把手写锁换成 lock_guard",
+              "case": "cp_lock_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "deposit(-5) 抛出异常之后，另一个线程还能拿到这把锁吗？",
+              "goal": "deposit() 与 balance() 里的 m_.lock() / m_.unlock() 全部换成 std::lock_guard<std::mutex> guard(m_);。",
+              "pass": {
+                "includes": [
+                  "mutex free",
+                  "balance=100"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "dp.cp.multiple-locks",
+          "title": "同时要两把锁：死锁",
+          "difficulty": 3,
+          "mastery_goal": "understand",
+          "knowledge_type": "concept",
+          "requires": [
+            "dp.cp.manual-lock"
+          ],
+          "track": "concurrency",
+          "guide_line": "两个线程以相反的顺序获取两把锁，各拿一把、互相等待。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能说清死锁的成因，并用 std::scoped_lock 一次性获取多把锁。",
+            "pain": "转账 transfer(a, b) 先锁 a 再锁 b；另一个线程同时执行 transfer(b, a)，先锁 b 再锁 a——两边各拿一把，永远等下去。",
+            "model": "一次需要多把锁时，用 std::scoped_lock(m1, m2)（C++17）或 std::lock 一次性获取，它内部使用避免死锁的算法（CP.21）；持锁期间不要调用不知底细的代码，例如回调（CP.22）。",
+            "scope": "死锁往往只在特定的时序下出现，测试很难稳定复现——所以要靠组织方式从结构上避免，而不是靠测出来。",
+            "judgment": "一个函数里出现两次以上的加锁——检查是否会被其他线程以相反顺序调用，改为一次性获取。",
+            "landing": "能把「依次加两把锁」改写成 std::scoped_lock。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "transfer(from, to) 先锁 from.m 再锁 to.m。两个线程同时执行 transfer(A, B) 和 transfer(B, A)，程序偶尔卡死。最好的修法是？",
+                "options": [
+                  {
+                    "label": "用 std::scoped_lock lock(from.m, to.m); 一次性获取两把锁",
+                    "ok": true,
+                    "why": "CP.21：用 std::lock 或 std::scoped_lock 获取多个互斥量"
+                  },
+                  {
+                    "label": "在两次加锁之间 sleep 一下",
+                    "ok": false,
+                    "why": "只是改变了时序，没消除死锁"
+                  },
+                  {
+                    "label": "把两把锁合并成一把全局锁",
+                    "ok": false,
+                    "why": "能避免死锁，但所有转账都串行化了"
+                  },
+                  {
+                    "label": "加锁失败时重试",
+                    "ok": false,
+                    "why": "手写的重试很容易变成活锁"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "**死锁**发生在多个线程以不同的顺序获取多把锁时：每个线程都拿着一把、等着另一把。C++ Core Guidelines CP.21 要求「用 std::lock() 或 std::scoped_lock 获取多个互斥量」——它们一次性获取全部锁，内部用避免死锁的算法，无论调用方以什么顺序传入都安全。CP.22 则要求「持锁时不要调用未知代码（例如回调）」，因为回调里可能又去获取别的锁。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：依次加锁",
+                  "code": "void transfer(Account& from, Account& to, int n) {\n  std::lock_guard<std::mutex> l1(from.m);\n  std::lock_guard<std::mutex> l2(to.m);   // 另一线程顺序相反 → 死锁\n  from.balance -= n;\n  to.balance += n;\n}"
+                },
+                "after": {
+                  "title": "改造后：一次性获取",
+                  "code": "void transfer(Account& from, Account& to, int n) {\n  std::scoped_lock lock(from.m, to.m);   // C++17，避免死锁\n  from.balance -= n;\n  to.balance += n;\n}"
+                },
+                "note": "本节不配实验：死锁只在特定时序下出现，一个会卡住的骨架既不能稳定演示，也会让编译验证挂起。"
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "scoped_lock 只解决「同一处同时获取多把锁」；锁散布在多个函数里、经由回调层层嵌套获取时，仍要靠固定的加锁层次（总是先锁 A 再锁 B）或减少锁的数量来避免。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "按 CP.22，持有锁的时候调用一个用户注册的回调，危险在哪里？",
+                    "choices": [
+                      {
+                        "label": "回调里可能获取其他锁或回过头调用本对象，造成死锁或重入",
+                        "ok": true,
+                        "why": "不知道回调会做什么"
+                      },
+                      {
+                        "label": "回调执行得太快",
+                        "ok": false,
+                        "why": "速度不是问题"
+                      },
+                      {
+                        "label": "回调不能访问局部变量",
+                        "ok": false,
+                        "why": "与此无关"
+                      },
+                      {
+                        "label": "编译器会报错",
+                        "ok": false,
+                        "why": "不会报错"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.cp.multiple-locks",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "条目 CP.21、CP.22：C++ Core Guidelines（isocpp.github.io/CppCoreGuidelines）「CP: Concurrency and parallelism」一节。"
+              }
+            ]
+          },
+          "labs": []
+        },
+        {
+          "id": "dp.cp.wait-condition",
+          "title": "等待没有条件",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.cp.manual-lock"
+          ],
+          "track": "concurrency",
+          "guide_line": "消费者靠 sleep 或反复轮询等数据，或者不检查条件就取。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能用条件变量加谓词实现「等到条件成立再继续」，并说明谓词为什么必须有。",
+            "pain": "消费者线程直接从队列取数据，队列空着就拿到一个默认值；或者 sleep 一会儿再看——要么浪费 CPU，要么时序一变就出错。",
+            "model": "生产者在锁内放入数据后 notify；消费者用 unique_lock 加锁，wait(lock, 谓词) 等到条件成立——带谓词的 wait 能正确处理虚假唤醒和「通知早于等待」的情况（CP.42）。",
+            "scope": "条件变量必须和一把互斥量、一个受这把锁保护的条件一起使用；三者缺一都会出错。",
+            "judgment": "代码里出现 while(!ready) sleep(…) 或 不带谓词的 cv.wait(lock)——改成带谓词的 wait。",
+            "landing": "能为一个队列实现阻塞的 pop()，消费者在没有数据时等待、有数据时被唤醒。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "消费者线程用 while (q.empty()) std::this_thread::sleep_for(10ms); 等待数据。问题是什么，标准做法是什么？",
+                "options": [
+                  {
+                    "label": "轮询浪费 CPU、延迟取决于睡眠时长，而且 empty() 的检查与取数据之间没有加锁；应改用条件变量带谓词等待",
+                    "ok": true,
+                    "why": "CP.42：不要不带条件地 wait"
+                  },
+                  {
+                    "label": "把睡眠时间改成 1 毫秒",
+                    "ok": false,
+                    "why": "更费 CPU，问题依旧"
+                  },
+                  {
+                    "label": "没有问题，这是标准写法",
+                    "ok": false,
+                    "why": "这是轮询，不是等待"
+                  },
+                  {
+                    "label": "改成 while (true) 忙等",
+                    "ok": false,
+                    "why": "更糟"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "「等某件事发生」在并发代码里要用**条件变量**，而且一定要带上条件。C++ Core Guidelines CP.42「不要不带条件地 wait」解释了原因：没有条件的 wait 可能错过已经发出的通知（通知早于等待），也可能被虚假唤醒。带谓词的 cv.wait(lock, pred) 等价于在循环里检查条件，条件不成立就继续等。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：不等，空了就返回默认值",
+                  "code": "int pop() {\n  std::lock_guard<std::mutex> lock(m_);\n  if (q_.empty()) return 0;     // 调用方分不出真假\n  int v = q_.front(); q_.pop();\n  return v;\n}"
+                },
+                "after": {
+                  "title": "改造后：等到条件成立",
+                  "code": "void push(int v) {\n  { std::lock_guard<std::mutex> lock(m_); q_.push(v); }\n  cv_.notify_one();\n}\nint pop() {\n  std::unique_lock<std::mutex> lock(m_);\n  cv_.wait(lock, [this] { return !q_.empty(); });\n  int v = q_.front(); q_.pop();\n  return v;\n}"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "wait 需要 unique_lock（等待期间要解锁、醒来后重新加锁），不能用 lock_guard。生产者—消费者之外，「等一个结果」更适合用下一节的 future。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "观察者（通知等待者）；生产者—消费者队列本身也常被归入并发模式。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "为什么 cv.wait 要用 std::unique_lock 而不是 std::lock_guard？",
+                    "choices": [
+                      {
+                        "label": "wait 在等待期间要暂时解锁、醒来后再加锁，lock_guard 不支持中途解锁",
+                        "ok": true,
+                        "why": "unique_lock 可以被 wait 解开与重新锁上"
+                      },
+                      {
+                        "label": "unique_lock 速度更快",
+                        "ok": false,
+                        "why": "不是原因"
+                      },
+                      {
+                        "label": "lock_guard 不能用于 std::mutex",
+                        "ok": false,
+                        "why": "可以用"
+                      },
+                      {
+                        "label": "unique_lock 可以同时锁多把锁",
+                        "ok": false,
+                        "why": "那是 scoped_lock"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.cp.wait-condition",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "条目 CP.42：C++ Core Guidelines（isocpp.github.io/CppCoreGuidelines）「CP: Concurrency and parallelism」一节。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.cp.wait-condition.run",
+              "title": "实现阻塞的 pop()",
+              "case": "cp_wait_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "消费者先启动、生产者 50 毫秒后才放入数据。现在 sum 会是多少？",
+              "goal": "给 BlockingQueue 加 std::condition_variable cv_；push() 放入后 cv_.notify_one()；pop() 改用 std::unique_lock 加 cv_.wait(lock, [this] { return !q_.empty(); })，删掉返回 0 的分支。",
+              "pass": {
+                "includes": [
+                  "sum=15"
+                ]
+              },
+              "hint": "记得 #include <condition_variable>。"
+            }
+          ]
+        },
+        {
+          "id": "dp.cp.future",
+          "title": "用共享变量传结果：future",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.cp.manual-lock"
+          ],
+          "track": "concurrency",
+          "guide_line": "线程把结果写进外部变量，读取方要自己记得等线程结束。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能用 std::async 与 std::future 把「并发任务」和「它的结果」绑在一起，减少共享的可写数据。",
+            "pain": "两个线程各算一半，结果写进外面的两个变量；main 必须先 join 才能读，读早了就是数据竞争；结果与线程的对应关系只靠变量名约定。",
+            "model": "按任务而不是线程思考（CP.4）：std::async 启动一个任务并返回 future（CP.61），future.get() 等任务完成后取出结果（CP.60），不需要共享可写变量（CP.3）。",
+            "scope": "std::async 要显式传 std::launch::async 才保证在新线程运行；future 的析构可能阻塞等待任务结束。",
+            "judgment": "线程只为了算出一个值——用 async/future；线程要长期运行、持续交换数据——用队列等并发数据结构。",
+            "landing": "能把「线程 + 共享结果变量」改写成 async + future。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "main 启动两个 std::thread，各自把部分和写进 main 里的 left、right 两个变量，join 之后相加。更符合 Core Guidelines 的写法是？",
+                "options": [
+                  {
+                    "label": "用 std::async 启动两个任务，用各自 future 的 get() 取结果相加",
+                    "ok": true,
+                    "why": "CP.60、CP.61：用 future 返回结果、用 async 启动任务"
+                  },
+                  {
+                    "label": "把 left、right 改成全局变量",
+                    "ok": false,
+                    "why": "共享更广，问题更多"
+                  },
+                  {
+                    "label": "给 left、right 各加一把锁",
+                    "ok": false,
+                    "why": "能避免竞争，但结果仍靠共享变量传递"
+                  },
+                  {
+                    "label": "改为 detach 两个线程",
+                    "ok": false,
+                    "why": "CP.26 明确不要 detach"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "很多并发场景其实只是「把一件事放到后台算，算完拿结果」。C++ Core Guidelines 建议：CP.4「按任务而不是线程思考」、CP.61「用 async() 启动并发任务」、CP.60「用 future 从并发任务返回值」、CP.3「尽量少显式共享可写数据」。std::async 返回的 future 把任务和它的结果绑在一起，get() 会等任务完成再取值，读早了的问题从结构上消失。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：线程 + 共享结果变量",
+                  "code": "long left = 0, right = 0;\nstd::thread t1([&] { left = sumRange(1, 50); });\nstd::thread t2([&] { right = sumRange(51, 100); });\nt1.join();\nt2.join();               // 忘了 join 就去读：数据竞争\nstd::cout << left + right;"
+                },
+                "after": {
+                  "title": "改造后：任务 + future",
+                  "code": "auto f1 = std::async(std::launch::async, sumRange, 1, 50);\nauto f2 = std::async(std::launch::async, sumRange, 51, 100);\nstd::cout << f1.get() + f2.get();   // get() 会等任务完成"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "每次 async 都可能创建线程，任务很多很小时开销大（CP.41 提醒尽量少创建线程），这时应该用线程池。任务里抛出的异常会在 get() 时重新抛出——这反而是个好处，错误不会悄悄丢失。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "命令（一个可以交给别人执行、之后再取结果的任务对象）、代理（future 是一个「将来才有值」的占位代理）。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "std::async 启动的任务里抛出异常，会发生什么？",
+                    "choices": [
+                      {
+                        "label": "异常被保存在 future 里，调用 get() 时重新抛出",
+                        "ok": true,
+                        "why": "错误随结果一起传回调用方"
+                      },
+                      {
+                        "label": "程序立即终止",
+                        "ok": false,
+                        "why": "那是 std::thread 里异常未捕获的后果"
+                      },
+                      {
+                        "label": "异常被静默丢弃",
+                        "ok": false,
+                        "why": "不会"
+                      },
+                      {
+                        "label": "get() 返回默认值",
+                        "ok": false,
+                        "why": "不会"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.cp.future",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "条目 CP.3、CP.4、CP.26、CP.41、CP.60、CP.61：C++ Core Guidelines（isocpp.github.io/CppCoreGuidelines）「CP: Concurrency and parallelism」一节。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.cp.future.run",
+              "title": "把线程改成 async 任务",
+              "case": "cp_future_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "现在如果有人把 t1.join() 挪到输出之后，会发生什么？改用 future 之后还会有这个风险吗？",
+              "goal": "删掉两个线程与共享变量，用 std::async(std::launch::async, sumRange, …) 启动两个任务，输出 async total=<两个 get() 之和>（解开 TODO(实验) 段）。",
+              "pass": {
+                "includes": [
+                  "async total=5050"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "checkpoint": {
+        "intro": "4 种并发情境混排，同一节的题不挨着。",
+        "items": [
+          {
+            "stem": "C++ Core Guidelines CP.20 的要求是？",
+            "choices": [
+              {
+                "label": "用 RAII，绝不直接调用 lock()/unlock()",
+                "ok": true,
+                "why": "锁是资源"
+              },
+              {
+                "label": "不要创建线程",
+                "ok": false,
+                "why": "无此规定"
+              },
+              {
+                "label": "用 volatile 做同步",
+                "ok": false,
+                "why": "CP.8 明确反对"
+              },
+              {
+                "label": "每个变量都要加锁",
+                "ok": false,
+                "why": "无此规定"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.cp.manual-lock",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.cp.manual-lock"
+          },
+          {
+            "stem": "带谓词的 cv.wait(lock, pred) 相比不带谓词的 wait，能额外处理什么？",
+            "choices": [
+              {
+                "label": "虚假唤醒，以及通知早于等待的情况",
+                "ok": true,
+                "why": "条件已成立就不等，醒来条件不成立就继续等"
+              },
+              {
+                "label": "死锁",
+                "ok": false,
+                "why": "不能"
+              },
+              {
+                "label": "数据竞争",
+                "ok": false,
+                "why": "不能"
+              },
+              {
+                "label": "线程创建失败",
+                "ok": false,
+                "why": "无关"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.cp.wait-condition",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.cp.wait-condition"
+          },
+          {
+            "stem": "按 CP.60，从并发任务返回一个值应该用？",
+            "choices": [
+              {
+                "label": "std::future",
+                "ok": true,
+                "why": "future 绑定任务与结果"
+              },
+              {
+                "label": "全局变量",
+                "ok": false,
+                "why": "共享可写数据"
+              },
+              {
+                "label": "引用参数",
+                "ok": false,
+                "why": "需要另行同步与等待"
+              },
+              {
+                "label": "std::thread 的返回值",
+                "ok": false,
+                "why": "std::thread 不返回值"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.cp.future",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.cp.future"
+          },
+          {
+            "stem": "两个线程分别以「A 后 B」和「B 后 A」的顺序获取两把锁，可能发生？",
+            "choices": [
+              {
+                "label": "死锁",
+                "ok": true,
+                "why": "各拿一把，互相等待"
+              },
+              {
+                "label": "数据竞争",
+                "ok": false,
+                "why": "都加了锁，不是数据竞争"
+              },
+              {
+                "label": "栈溢出",
+                "ok": false,
+                "why": "无关"
+              },
+              {
+                "label": "什么都不会发生",
+                "ok": false,
+                "why": "时序不巧就会卡死"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.cp.multiple-locks",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.cp.multiple-locks"
+          },
+          {
+            "stem": "CP.50 要求把互斥量和什么定义在一起？",
+            "choices": [
+              {
+                "label": "它所保护的数据",
+                "ok": true,
+                "why": "这样就不会有人绕过锁访问数据"
+              },
+              {
+                "label": "线程函数",
+                "ok": false,
+                "why": "不是"
+              },
+              {
+                "label": "条件变量",
+                "ok": false,
+                "why": "不是 CP.50 的要求"
+              },
+              {
+                "label": "main 函数",
+                "ok": false,
+                "why": "不是"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.cp.manual-lock",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.cp.manual-lock"
+          },
+          {
+            "stem": "条件变量的 wait 为什么需要配合一个受同一把锁保护的条件？",
+            "choices": [
+              {
+                "label": "检查条件与进入等待必须是原子的，否则可能错过通知",
+                "ok": true,
+                "why": "条件、锁、条件变量三者一起才正确"
+              },
+              {
+                "label": "为了让编译通过",
+                "ok": false,
+                "why": "不带条件也能编译"
+              },
+              {
+                "label": "为了提高性能",
+                "ok": false,
+                "why": "不是主要原因"
+              },
+              {
+                "label": "条件变量本身不能被通知",
+                "ok": false,
+                "why": "可以被通知"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.cp.wait-condition",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.cp.wait-condition"
+          },
+          {
+            "stem": "CP.4「按任务而不是线程思考」意味着？",
+            "choices": [
+              {
+                "label": "关注要完成的工作及其结果，用 async、线程池等机制去执行，而不是手工管理线程",
+                "ok": true,
+                "why": "线程是实现细节"
+              },
+              {
+                "label": "永远不要使用多线程",
+                "ok": false,
+                "why": "误解"
+              },
+              {
+                "label": "每个任务必须一个线程",
+                "ok": false,
+                "why": "误解"
+              },
+              {
+                "label": "任务之间必须共享变量",
+                "ok": false,
+                "why": "相反"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.cp.future",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.cp.future"
+          },
+          {
+            "stem": "std::scoped_lock lock(m1, m2); 与依次写两个 lock_guard 相比，主要好处是？",
+            "choices": [
+              {
+                "label": "一次性获取两把锁并避免死锁，与参数顺序无关",
+                "ok": true,
+                "why": "CP.21"
+              },
+              {
+                "label": "不需要互斥量",
+                "ok": false,
+                "why": "仍然需要"
+              },
+              {
+                "label": "持锁时间更短",
+                "ok": false,
+                "why": "不是主要区别"
+              },
+              {
+                "label": "可以不起变量名",
+                "ok": false,
+                "why": "仍然要起名"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.cp.multiple-locks",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.cp.multiple-locks"
           }
         ]
       }
@@ -14601,90 +16250,6 @@
           }
         ]
       }
-    },
-    {
-      "id": "non-oo",
-      "title": "非面向对象世界的模式",
-      "track": "non-oo",
-      "summary": "走出类图：Linux 内核的 C 设计模式（函数表/引用计数/通知链）、函数式的策略与命令替代、Go/Rust 的结构化惯例、并发模式。下一批填充。\n\n取材：取材：rust-unofficial/patterns（Rust 模式书）· Go Proverbs（Rob Pike）· Linux 内核源码惯例（Greg K-H 的内核设计模式演讲）",
-      "topics": [
-        {
-          "id": "dp.nonoo.roadmap",
-          "title": "非面向对象世界的模式·建设计划",
-          "difficulty": 1,
-          "mastery_goal": "understand",
-          "knowledge_type": "strategy",
-          "requires": [],
-          "track": "nonoo",
-          "guide_line": "第四批交付（上）：C 内核模式、Unix 哲学、函数式替代、并发组织、ECS——取材 rust-unofficial/patterns 与 Go Proverbs。",
-          "weight": "了解",
-          "outline": {
-            "promise": "看得见的建设路线：本章要做什么、每个模式的现代视角预判、取材来源。",
-            "pain": "空章让人不知道后续会有什么；承诺不落在界面上就会被忘记。",
-            "model": "路线图 + 23 模式现代视角预判总表 + 取材来源。",
-            "scope": "只做计划展示，正式内容按批次填充。",
-            "judgment": "批次完成后本条会被真实知识点替换（id 不改嫁，届时删除本条）。",
-            "landing": "打开本章就知道下一步有什么。"
-          },
-          "lesson": {
-            "blocks": [
-              {
-                "type": "lead",
-                "text": "走出类图：C、Go、Rust、函数式语言的世界里，模式以完全不同的形态存在——而且是被工业界每天使用的形态。第四批（上）建设。"
-              },
-              {
-                "type": "table",
-                "title": "提纲·六大主题",
-                "headers": [
-                  "主题",
-                  "内容",
-                  "取材"
-                ],
-                "rows": [
-                  [
-                    "C 内核模式",
-                    "file_operations 函数表=策略的多态、container_of+VTable、kref 引用计数、notifier chain=观察者、init/exit 生命周期",
-                    "Linux 内核源码惯例、Greg K-H 内核设计模式演讲"
-                  ],
-                  [
-                    "Unix 哲学",
-                    "一切皆文件、管道与过滤器——Unix 最重要的架构模式",
-                    "《The Unix Programming Environment》、POSIX 惯例"
-                  ],
-                  [
-                    "函数式替代",
-                    "高阶函数吃掉策略/命令/模板方法；Monad 链式错误处理；记忆化",
-                    "Haskell/OCaml 社区、faif/python-patterns"
-                  ],
-                  [
-                    "并发组织",
-                    "生产者-消费者、线程池、Actor（Erlang）、CSP（Go channel）、结构化并发",
-                    "Go Proverbs（Rob Pike）、Erlang 文档"
-                  ],
-                  [
-                    "Rust 惯用法",
-                    "类型状态、newtype、RAII、derive 宏——所有权如何改写经典模式",
-                    "rust-unofficial/patterns（MPL-2.0）"
-                  ],
-                  [
-                    "ECS 数据导向",
-                    "游戏引擎对 OOP 的正面反叛：实体-组件-系统",
-                    "Bevy/Unity DOTS 文档"
-                  ]
-                ]
-              },
-              {
-                "type": "callout",
-                "title": "交付承诺",
-                "text": "第四批（上）：六大主题全要素，每个主题配「GoF 对应物」对照——同一个问题在非 OO 世界怎么解。"
-              }
-            ]
-          },
-          "labs": [],
-          "status": "planned"
-        }
-      ],
-      "layer": "extension"
     },
     {
       "id": "modern",
