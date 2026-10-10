@@ -9,7 +9,7 @@
 
 ```
 subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完全平级
-  cpp/         C++ 教程（GTK4 / gtkmm，原来的"主程序"）
+  c-plus-plus/ C++ 教程（GTK4 / gtkmm，原来的"主程序"；原目录名 cpp，进度前缀仍 cpp.）
   machine/     C 与机器（Qt Quick / QML，原 c/，ADR 0005）
   data-structures/ 数据结构（Tauri 2）——408 数据结构（45 分），本体挂 cs408；软设以文字指引承接
                    第 3 章（ADR 0108 拆分、0118/0119 定归属；原 algorithm，复名见 ADR 0105）
@@ -25,7 +25,9 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
                一级大类「电子信息」（ADR 0090、0102；定名见 ADR 0097、0100）
   database/         数据库 SQL 实验室（Tauri 2 + React）——软设第 9 章实践课程，计算机圈（ADR 0103、0126）
   design-patterns/  设计模式与程序组织（Tauri 2 + Vite）——「程序设计」圈，不挂靠；软考降为
-                    专题（原素材坑转正 ADR 0103，去挂靠 ADR 0121）
+                     专题（原素材坑转正 ADR 0103，去挂靠 ADR 0121）
+  linux/             Linux 程序设计（Tauri 2 + Vite）——软设第 4 章实验承接（ADR 0109），
+                     「程序设计」圈（ADR 0111）
   os/               操作系统实验（Tauri 2 + React）——408 操作系统（35 分），本体挂 cs408；
                     软设以文字指引承接第 4 章（ADR 0103 立项、0118/0119 定归属；原
                     operating-system，改名见 ADR 0104）
@@ -74,9 +76,10 @@ archive/       历史归档，不参与构建
 
 | 目录 / id | 界面 | 进程 | 知识点前缀 |
 |---|---|---|---|
-| `cpp` | C++ 教程 | `athena-cpp` | `cpp.` |
+| `c-plus-plus` | C++ 教程（原 `cpp`） | `athena-c-plus-plus` | `cpp.` |
 | `machine` | C 与机器（原 `c`，ADR 0005） | `athena-machine` | `machine.` |
-| `dsa` | 数据结构与算法（原 `algorithm`，复名见 ADR 0105） | `athena-dsa` | `dsa.` |
+| `data-structures` | 数据结构（原 `dsa` 拆出，ADR 0108） | `athena-data-structures` | `ds.` |
+| `algorithms` | 算法设计（原 `dsa` 拆出，ADR 0108） | `athena-algorithms` | `algo.` |
 | `ascent` | 拾阶 | `athena-ascent`（v9.0.0 及之前发行名 Lumi，改名见 ascent ADR 0021） | 无（进度在用户数据目录，见 ADR 0066） |
 | `mathematics` | 数学学习 | `athena-math` | `math.` |
 | `math-tools` | 数学工具 | `athena-math-tools` | （无进度库） |
@@ -85,6 +88,7 @@ archive/       历史归档，不参与构建
 | `embedded` | 嵌入式系统设计师（原 `esd`，ADR 0090、0100） | `athena-embedded` | `esd.`（内容层短名，保留） |
 | `database` | 数据库（软设第 9 章实践课程，ADR 0103） | `athena-database` | `db.` |
 | `design-patterns` | 设计模式（「程序设计」圈，ADR 0103 转正、0121 去挂靠） | `athena-design-patterns` | `dp.` |
+| `linux` | Linux 程序设计（ADR 0109，「程序设计」圈 ADR 0111） | `athena-linux` | `linux.` |
 | `os` | 操作系统（软设第 4 章实践课程；原 `operating-system`，ADR 0103、0104） | `athena-os` | `os.` |
 | `network` | 网络与信息安全（软设第 10 章实践课程，ADR 0103） | `athena-network` | `net.` |
 | `firmware` | 嵌入式程序设计（嵌入第 6/8/11 章实践课程，ADR 0103） | `athena-firmware` | `fw.` |
@@ -111,13 +115,14 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
 
 - **这个项目要不要让人"学会"什么、要不要追踪掌握度和学习进度？** 要，就是
   **学习应用**，受「跨应用教学规范」（[TEACHING.md](TEACHING.md)）整节约束，且要按 ADR 0037/0053 建自己的
-  `progress/learning.db`。当前：`cpp` / `machine` / `dsa` / `mathematics` /
-  `driver` / `ascent`（`ascent` 的规范差距见 ADR 0066）/ `python`（ADR 0120）及其
-  人工智能课程路线的四门（`machine-learning` / `deep-learning` / `llm-app` /
-  `llm-finetune`，ADR 0120、0122）/
+  `progress/learning.db`。当前：`c-plus-plus` / `machine` / `data-structures` /
+  `algorithms` / `mathematics` / `driver` / `ascent`（`ascent` 的规范差距见 ADR 0066）/
+  `cs408`（ADR 0116）/ `organization`（ADR 0115）/ `gtkmm` / `linux`（ADR 0109）/
+  `python`（ADR 0120）及其人工智能课程路线的四门（`machine-learning` / `deep-learning` /
+  `llm-app` / `llm-finetune`，ADR 0120、0122）/
   `design-patterns`（ADR 0121）/ 软考两应用及其挂靠实践
-  子课程（ADR 0103：`database` / `operating-system` / `network` /
-  `firmware` / `microcontroller` / `rtos`）。
+  子课程（ADR 0103：`database` / `os` / `network` /
+  `firmware` / `microcontroller` / `rtos`，ADR 0106）。
 - **不是学习闭环，是呈现结构化信息供浏览、查阅、决策参考的？** 那是
   **图谱/参考类应用**：仍受「独立应用」一节的平级、隔离、`app.json` 启动规则约束，
   但**不**掌握度、不进度库、不激励——「跨应用教学规范」一节对它不生效，具体规则
@@ -146,7 +151,7 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
 ## 独立应用（`subjects/`）
 
 - **一个目录一个独立应用**（ADR 0032、0045），自带构建系统、依赖、界面技术和内容体系。
-  目录名按领域取（`cpp`、`machine`、`dsa` 这样的领域名），不带实现技术名——手段会换，领域不会。
+  目录名按领域取（`c-plus-plus`、`machine`、`data-structures` 这样的领域名），不带实现技术名——手段会换，领域不会。
 - **各应用有自己的 `AGENTS.md`**：改该应用时以它为准，不把别的应用的规则套进去。
   每个应用必须能**脱离其他应用独立开发与运行**。
 - **构建完全隔离**：应用之间不互相引用路径、不互相 include 头文件、不读对方的内容配置，
@@ -173,7 +178,7 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
   `launcher open <id>`。三个前端同一条执行路径——都不自己读 `app.json`、不自己
   判断状态，一律向编排器要（`launcher list --json`）。新增应用照样放一份带
   `dev` 声明的 `app.json` 即可，启动器不需要改代码。
-- `subjects/cpp` 不再有跨应用学科路线图首页——打开别的应用一律走上面这条启动器路径，
+- `subjects/c-plus-plus` 不再有跨应用学科路线图首页——打开别的应用一律走上面这条启动器路径，
   不再有第二个入口（subjects/cpp ADR 0058，推翻 ADR 0032 第 5 条）。
 
 ## 学习者目录（`Athena/users.json`）

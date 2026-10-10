@@ -17,7 +17,7 @@ on:
         description: 只跑哪个应用（all 为全量，sources 只跑跨应用检查）
         type: choice
         default: all
-        options: [all, sources, cpp, pocket_cube, machine, polaris, dsa, mathematics, ascent, math-tools, gtkmm, driver, softcert, nas_admin, launcher, c-gui-lab]
+        options: [all, sources, c-plus-plus, pocket_cube, machine, polaris, data-structures, algorithms, mathematics, ascent, math-tools, gtkmm, driver, software, nas_admin, launcher, c-gui-lab, embedded, database, design-patterns, os, network, firmware, microcontroller, rtos, linux, organization, cs408, python, machine-learning, deep-learning, llm-app, llm-finetune, competitions]
 
 permissions:
   contents: read
@@ -56,14 +56,14 @@ jobs:
   # GTK4 + gtkmm + Meson 的应用：C++ 教程与魔方（pocket_cube）。魔方的依赖是 C++ 教程的
   # 子集，同一套安装步骤；三个平台各装各的依赖，跑的是同一条 Python 入口。
   cpp-macos:
-    name: ${{ matrix.app == 'cpp' && 'C++ 教程' || matrix.app }}（macOS）
-    if: contains(fromJSON('["all","cpp","pocket_cube"]'), inputs.app || 'all')
+    name: ${{ matrix.app == 'c-plus-plus' && 'C++ 教程' || matrix.app }}（macOS）
+    if: contains(fromJSON('["all","c-plus-plus","pocket_cube"]'), inputs.app || 'all')
     runs-on: macos-15
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["cpp","pocket_cube"]' || format('["{0}"]', inputs.app)) }}
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["c-plus-plus","pocket_cube"]' || format('["{0}"]', inputs.app)) }}
     env:
       HOMEBREW_NO_AUTO_UPDATE: "1"
 
@@ -81,18 +81,18 @@ jobs:
       - name: Verify
         run: python3 scripts/check.py ${{ matrix.app }} --build-dir build --buildtype debugoptimized
 
-  # 这一档不按 ADR 0051 降级：subjects/cpp 的 Windows 已经被 ADR 0049 排除，
+  # 这一档不按 ADR 0051 降级：subjects/c-plus-plus 的 Windows 已经被 ADR 0049 排除，
   # macOS 与 Ubuntu 是它仅有的两个支持平台。再把 Ubuntu 放松，就只剩一个平台
   # 在验证了——声明支持就要验证（ADR 0047），这跟优先级排序不冲突。
   cpp-ubuntu:
-    name: ${{ matrix.app == 'cpp' && 'C++ 教程' || matrix.app }}（Ubuntu）
-    if: contains(fromJSON('["all","cpp","pocket_cube"]'), inputs.app || 'all')
+    name: ${{ matrix.app == 'c-plus-plus' && 'C++ 教程' || matrix.app }}（Ubuntu）
+    if: contains(fromJSON('["all","c-plus-plus","pocket_cube"]'), inputs.app || 'all')
     runs-on: ubuntu-26.04
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["cpp","pocket_cube"]' || format('["{0}"]', inputs.app)) }}
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["c-plus-plus","pocket_cube"]' || format('["{0}"]', inputs.app)) }}
 
     steps:
       - name: Check out source
@@ -117,14 +117,14 @@ jobs:
   # 同批修掉的还有我们自己的两处 POSIX 专有写法（LC_MESSAGES、M_PI）和缺失的
   # .gitattributes（CRLF 让按字节匹配的测试挂了）。详见 ADR 0049。
   cpp-windows:
-    name: ${{ matrix.app == 'cpp' && 'C++ 教程' || matrix.app }}（Windows）
-    if: contains(fromJSON('["all","cpp","pocket_cube"]'), inputs.app || 'all')
+    name: ${{ matrix.app == 'c-plus-plus' && 'C++ 教程' || matrix.app }}（Windows）
+    if: contains(fromJSON('["all","c-plus-plus","pocket_cube"]'), inputs.app || 'all')
     runs-on: windows-latest
     timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
-        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["cpp","pocket_cube"]' || format('["{0}"]', inputs.app)) }}
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["c-plus-plus","pocket_cube"]' || format('["{0}"]', inputs.app)) }}
     defaults:
       run:
         shell: msys2 {0}
@@ -269,13 +269,23 @@ jobs:
   # 工具链，交给下面的 gtkmm-native，这里跳过。
   tauri:
     name: ${{ matrix.app }}（${{ matrix.os }}）
-    if: contains(fromJSON('["all","polaris","dsa","mathematics","ascent","math-tools","gtkmm","softcert"]'), inputs.app || 'all')
+    if: >-
+      contains(fromJSON('["algorithms","ascent","competitions","cs408","database",
+      "data-structures","deep-learning","design-patterns","embedded","firmware",
+      "gtkmm","linux","llm-app","llm-finetune","math-tools","mathematics",
+      "machine-learning","microcontroller","network","organization","os","polaris",
+      "python","rtos","software"]'), inputs.app || 'all')
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
-        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["polaris","dsa","mathematics","ascent","math-tools","gtkmm","softcert"]' || format('["{0}"]', inputs.app)) }}
+        app: >-
+          ${{ fromJSON((inputs.app || 'all') == 'all' && '["algorithms","ascent","competitions","cs408","database",
+          "data-structures","deep-learning","design-patterns","embedded","firmware",
+          "gtkmm","linux","llm-app","llm-finetune","math-tools","mathematics",
+          "machine-learning","microcontroller","network","organization","os","polaris",
+          "python","rtos","software"]' || format('["{0}"]', inputs.app)) }}
         os: [macos-15, windows-latest, ubuntu-26.04]
     # Linux 降级：回归了报出来，但不阻塞整体结论（ADR 0051）
     continue-on-error: ${{ matrix.os == 'ubuntu-26.04' }}

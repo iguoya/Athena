@@ -1,7 +1,7 @@
 # 仓库级 ADR 索引
 
 这里收**影响仓库结构或多个应用**的架构决策记录。只管某一个应用的决策记在该应用自己的
-`docs/decisions/` 下，例如 [`subjects/cpp/docs/decisions/`](../../subjects/cpp/docs/decisions/README.md)。
+`docs/decisions/` 下，例如 [`subjects/c-plus-plus/docs/decisions/`](../../subjects/c-plus-plus/docs/decisions/README.md)。
 两处各自延续编号，所以两边都有跳号（ADR 0045）。仓库级侧的缺号（0001–0006、
 0008–0027、0033–0036、0038–0039 等）产生于本目录按 ADR 0045/0061 建立之前：当时的
 决策或散见各应用文档，或未落成文；编号按「只增不改」保留空位，不回填、不重排。
@@ -36,6 +36,10 @@
 | [0116](0116-reference-attach-and-cs408.md) | 引用挂靠：app.json 新增 also_under，一个应用可在多处出现（同图标同进程）；新增 408 考试主应用 cs408（「考研」圈，考试档）；目标考试更正为 22408，英语二、数学二已有承载，缺口只剩政治；思维导图扇区改按角度需求分配 | 已接受；修订 0115 的 organization 挂靠与缺口清单 |
 | [0121](0121-design-patterns-to-programming-group.md) | design-patterns 去挂靠入「程序设计」圈；定位改为以设计模式与程序组织为主（讲解取材 GoF → 软设教程 §7.3 → Refactoring.Guru），软考降为专题（真题原题 verbatim）；批判课与出圈两章降为延伸层；出处档位改 open | 已接受；修订 0103 决策 2 表格 design-patterns 行 |
 | [0115](0115-organization-app.md) | 新增计算机组成原理学习应用 organization（group 计算机、不设 parent，端口 1501，前缀 org.，主原型机制模拟）；记录 11408/0854 课程缺口，其余缺口与 408 主应用挂靠另立 | 已接受 |
+| [0118](0118-heavier-exam-owns-course-body.md) | 课程本体归权重更高的考试——408 夺走软设手里的四门课（数据结构、组成原理、操作系统、计算机网络本体挂 cs408，软设降为文字指引） | 已接受 |
+| [0119](0119-detach-is-exclusive.md) | 夺走即独占——启动器画布上一个节点只出现一次，被夺走方不再保留该节点 | 已接受 |
+| [0120](0120-ai-group-and-llm-curriculum.md) | 新增「人工智能」领域圈与 LLM 应用开发课程路线；首门课 python 立项 | 已接受 |
+| [0122](0122-ai-skeletons-in-one-pass.md) | 人工智能五门课（python、machine-learning、deep-learning、llm-app、llm-finetune）骨架一次落齐 | 已接受 |
 
 ## 应用边界与启动
 
@@ -49,6 +53,14 @@
 | [0045](0045-apps-are-peers.md) | C++ 教程降级为 `subjects/cpp`，所有学习应用平级 | 已接受；目录由 0060 拆分 |
 | [0060](0060-subjects-and-practice.md) | `apps/` 拆成 `subjects/`（课程学科）与 `practice/`（项目应用） | 已接受 |
 | [0062](0062-apps-own-their-constraints.md) | 每个应用只守自己的约束，不从别的应用继承 | 已接受 |
+| [0090](0090-softcert-splits-esd.md) | 软考拆成两个应用——软件设计师留 softcert、嵌入式系统设计师独立成 esd（id 后经 0097、0100 全称化为 software / embedded） | 已接受 |
+| [0103](0103-practice-courses-as-attached-subapps.md) | 实践性课程按子课程单元独立成挂靠子应用——software 与 embedded 细分（database、os、network、firmware、microcontroller 等立项） | 已接受；database 挂靠由 0126 修订 |
+| [0104](0104-os-rename.md) | operating-system 改名 os——单字领域词优先，长连字符名收窄 | 已接受 |
+| [0105](0105-dsa-rename-back.md) | algorithm 复名 dsa——DSA 是数据结构与算法的领域知名缩写，禁自造缩写口径下知名缩写可用 | 已接受；后由 0108 拆分退役 |
+| [0106](0106-rtos-subapp.md) | RTOS 从嵌入式侧独立成子应用 rtos | 已接受；0123 入电子信息圈 |
+| [0123](0123-embedded-practice-subapps-to-electronic-info.md) | rtos、microcontroller、firmware 去挂靠入「电子信息」圈 | 已接受；沿 0111/0121 入圈即去挂靠先例 |
+| [0124](0124-software-to-programming-group.md) | software 去挂靠入「程序设计」圈 | 已接受；领域圈由 0126 改回「计算机」 |
+| [0126](0126-software-database-to-computing-group.md) | software 与 database 入「计算机」圈，软考系聚回一处；database 去挂靠 | 已接受；修订 0124 的圈归属与 0103 的 database 行 |
 | [0128](0128-earth-app.md) | 新增图谱/参考类应用 earth（「地球」，「程序设计」圈暂存归属，端口 1511）：真实比例的地球分层 3D 可视化——WGS84 椭球、PREM、US Standard Atmosphere 1976 标准模型驱动，不建进度库，壳复制自 polaris | 已接受 |
 
 ## 仓库工程
@@ -106,3 +118,4 @@
 | [0102](0102-exam-apps-as-top-level-groups.md) | 软件设计师、嵌入式系统设计师各为启动器一级大类(group 为领域名「计算机」「电子信息」,「软考」分组退役);挂靠关系不变,id/进度库/内容不动 | 已接受;修订 0090 决策 2 的「group 同为软考」 |
 | [0095](0095-one-exam-one-app.md) | 一个考试一个应用:新考试方向一律独立成新应用,不再并入已有考试应用;softcert 多课程注册表为历史结构不再扩 | 已接受;修订 0092 决策 3 的「届时再议」,关闭 0090 决策 1 扩位预留 |
 | [0097](0097-spell-out-app-ids.md) | 应用 id 全称化:softcert→software-designer、esd→embedded-system-designer(进程/identifier/包名同步);知识点前缀与课程层短名解耦保留;今后新增应用不用缩写 | 已接受;修订 0092 决策 3 的「id 不动」(无进度无发行,改名零损失) |
+| [0125](0125-launcher-webui-tauri-threejs.md) | 启动器 UI 层重选 Tauri 2 + Three.js，学习应用面板改「领域轨道环」3D 构图 | 已接受 |
