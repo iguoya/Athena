@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { demoSeconds, routeDistanceKm } from "../content/demo";
+import { ballisticPath, demoSeconds, routeDistanceKm, stageHeights } from "../content/demo";
 import { data } from "../content/load";
 import { useEarth } from "../state/store";
 
@@ -22,6 +22,8 @@ export function DemoPanel() {
   const replay = useEarth((s) => s.replay);
   const togglePlay = useEarth((s) => s.togglePlay);
   const spinScale = useEarth((s) => s.spinScale);
+  const demoScale = useEarth((s) => s.demoScale);
+  const setDemoScale = useEarth((s) => s.setDemoScale);
 
   const route = data.demos.routes.find((r) => r.id === routeId)!;
   const craft = data.demos.aircraft.find((a) => a.id === aircraftId)!;
@@ -30,6 +32,13 @@ export function DemoPanel() {
     routeKm: routeDistanceKm(route),
     speedKmh: craft.cruiseSpeedKmh,
   });
+  const heights = stageHeights(
+    ballisticPath(
+      data.demos.launch,
+      ballistic,
+      ballistic.id === "df-17" ? "glide" : "arc",
+    ),
+  );
   const activeId = kind === "air" ? routeId : ballisticId;
   const active = demo?.kind === kind && demo.id === activeId;
 
@@ -115,9 +124,35 @@ export function DemoPanel() {
           <p className="leading-relaxed">
             射程 <b className="tabular-nums">{ballistic.rangeKm.toLocaleString()}</b> km（公开报道
             估计）· 顶点 ≈ <b className="tabular-nums">{ballistic.apogeeKm}</b> km · 真实全程约{" "}
-            <b>{ballistic.stageMinutes}</b> 分钟（×{spinScale} 下约{" "}
-            {Math.max(1, Math.round((ballistic.stageMinutes * 60) / spinScale))} 秒）
+            <b>{ballistic.stageMinutes}</b> 分钟（×{demoScale} 下约{" "}
+            {Math.max(1, Math.round((ballistic.stageMinutes * 60) / demoScale))} 秒）
           </p>
+          <p className="leading-relaxed">
+            射高（示意剖面）：<span className="text-red-500">助推</span> 0 → {heights.boostEndKm} km ·{" "}
+            <span className="text-amber-500">中段</span> 顶点 ≈ {heights.apexKm} km
+            {heights.apexKm > 100 ? "（太空）" : ""} ·{" "}
+            <span className="text-purple-500">再入</span> {heights.reentryStartKm} km → 0
+          </p>
+          <div className="flex items-center gap-1">
+            播放速度
+            {[
+              { scale: 6, label: "慢" },
+              { scale: 15, label: "中" },
+              { scale: 40, label: "快" },
+            ].map((option) => (
+              <button
+                key={option.scale}
+                onClick={() => setDemoScale(option.scale)}
+                className={`rounded-md px-2 py-0.5 ${
+                  demoScale === option.scale
+                    ? "bg-emerald-600 text-white"
+                    : "bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50"
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
           <p className="text-slate-500">{ballistic.note}</p>
         </div>
       )}

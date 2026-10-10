@@ -7,6 +7,7 @@ import {
   greatCirclePoint,
   lonLatToScene,
   routeDistanceKm,
+  stageHeights,
 } from "./demo";
 import { data } from "./load";
 
@@ -119,6 +120,17 @@ describe("示意弹道剖面", () => {
     const path = ballisticPath(data.demos.launch, df41);
     const stages = new Set(path.map((s) => s.stage));
     expect(stages).toEqual(new Set(["boost", "midcourse", "reentry"]));
+  });
+});
+
+describe("阶段射高标注", () => {
+  it("助推结束与再入起点低于顶点，顶点等于数据里的 apogeeKm（近似到 5 km）", () => {
+    const df15 = data.demos.ballistics.find((b) => b.id === "df-15b")!;
+    const heights = stageHeights(ballisticPath(data.demos.launch, df15));
+    expect(Math.abs(heights.apexKm - df15.apogeeKm)).toBeLessThanOrEqual(5);
+    expect(heights.boostEndKm).toBeLessThan(heights.apexKm);
+    expect(heights.reentryStartKm).toBeLessThan(heights.apexKm);
+    expect(heights.boostEndKm % 5).toBe(0);
   });
 });
 

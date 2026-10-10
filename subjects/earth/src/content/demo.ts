@@ -135,6 +135,26 @@ export function ballisticPath(
   return samples;
 }
 
+/** 三段分界处的示意射高（km，近似到 5 km），读自 ballisticPath 的剖面采样 */
+export interface StageHeights {
+  boostEndKm: number;
+  apexKm: number;
+  reentryStartKm: number;
+}
+
+export function stageHeights(samples: BallisticSample[]): StageHeights {
+  const round5 = (km: number) => Math.round(km / 5) * 5;
+  const lastOf = (stage: BallisticSample["stage"]) =>
+    samples.filter((s) => s.stage === stage).at(-1)!;
+  const firstOf = (stage: BallisticSample["stage"]) =>
+    samples.find((s) => s.stage === stage)!;
+  return {
+    boostEndKm: round5(lastOf("boost").heightKm),
+    apexKm: round5(Math.max(...samples.map((s) => s.heightKm))),
+    reentryStartKm: round5(firstOf("reentry").heightKm),
+  };
+}
+
 /** 演示的模拟时长（秒，真实时间） */
 export function demoSeconds(
   kind: "air" | "ballistic",

@@ -7,6 +7,7 @@ import {
   demoSeconds,
   greatCirclePoint,
   routeDistanceKm,
+  stageHeights,
 } from "../content/demo";
 import { data } from "../content/load";
 import { useEarth } from "../state/store";
@@ -54,12 +55,21 @@ export function DemoLayer() {
       points: samples.filter((s) => s.stage === stage).map((s) => s.point),
     }));
     const apex = samples.reduce((best, s) => (s.heightKm > best.heightKm ? s : best), samples[0]);
+    const heights = stageHeights(samples);
+    // 三段分界点：助推结束 / 再入起点各标一次射高
+    const boostEnd = samples.filter((s) => s.stage === "boost").at(-1)!;
+    const reentryStart = samples.find((s) => s.stage === "reentry")!;
+    const endpoints = { launch: samples[0].point, landing: samples[samples.length - 1].point };
     return {
       kind: "ballistic" as const,
       spec,
       samples,
       segments,
       apex,
+      heights,
+      boostEnd,
+      reentryStart,
+      endpoints,
       seconds: demoSeconds("ballistic", { stageMinutes: spec.stageMinutes }),
     };
   }, [demo]);
@@ -70,9 +80,14 @@ export function DemoLayer() {
   }, [replayKey, demo]);
 
   const total = model?.seconds ?? 1;
+  // 弹道用自己的播放倍率（几分钟的飞行不能被自转倍率压成一秒）；航线仍跟自转时钟
+  const rate = () =>
+    model?.kind === "ballistic"
+      ? useEarth.getState().demoScale
+      : useEarth.getState().spinScale;
   useFrame((_, dt) => {
     if (!model || !playing || progress.current >= 1) return;
-    progress.current = Math.min(1, progress.current + (dt * useEarth.getState().spinScale) / total);
+    progress.current = Math.min(1, progress.current + (dt * rate()) / total);
     const path =
       model.kind === "air" ? model.points : model.samples.map((s) => s.point);
     const marker = markerRef.current;
@@ -117,9 +132,48 @@ export function DemoLayer() {
             <meshBasicMaterial color="#fde047" />
           </mesh>
           <Html center style={{ pointerEvents: "none" }} zIndexRange={[45, 40]}>
-            <div className="earth-label">弹道顶点 ≈ {model.apex.heightKm} km · 太空</div>
+            <div className="earth-label">
+              中段顶点 ≈ {model.heights.apexKm} km{model.heights.apexKm > 100 ? " · 太空" : ""}
+            </div>
           </Html>
         </group>
+      )}
+      {model.kind === "ballistic" &&
+        (
+          [
+            ["助推结束", model.boostEnd, model.heights.boostEndKm],
+            ["再入起点", model.reentryStart, model.heights.reentryStartKm],
+          ] as const
+        ).map(([label, sample, km]) => (
+          <group key={label} position={sample.point}>
+            <mesh>
+              <sphereGeometry args={[0.005, 10, 10]} />
+              <meshBasicMaterial color={STAGE_COLORS[sample.stage]} />
+            </mesh>
+            <Html center style={{ pointerEvents: "none" }} zIndexRange={[45, 40]}>
+              <div className="earth-label">
+                {label} ≈ {km} km
+              </div>
+            </Html>
+          </group>
+        ))}
+      {model.kind === "ballistic" && (
+        <>
+          <group position={model.endpoints.launch}>
+            <Html center style={{ pointerEvents: "none" }} zIndexRange={[45, 40]}>
+              <div className="earth-label">示意发射点</div>
+            </Html>
+          </group>
+          <group position={model.endpoints.landing}>
+            <mesh>
+              <sphereGeometry args={[0.006, 10, 10]} />
+              <meshBasicMaterial color="#c084fc" />
+            </mesh>
+            <Html center style={{ pointerEvents: "none" }} zIndexRange={[45, 40]}>
+              <div className="earth-label">示意落点</div>
+            </Html>
+          </group>
+        </>
       )}
       {/* 移动标记：三角锥朝向轨迹切线 */}
       <mesh ref={markerRef}>

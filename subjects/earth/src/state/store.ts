@@ -29,6 +29,8 @@ interface EarthState {
   cameraDistanceR: number;
   /** 自转时间倍率：真实恒星日 86164 s × 倍率 */
   spinScale: number;
+  /** 弹道演示的播放倍率（真实时间 ÷ 演示时间），与自转倍率分开：几分钟的飞行不能被 ×600 压成一秒 */
+  demoScale: number;
   /** 飞行演示：选中即常驻画线，playing 时标记沿轨迹移动 */
   demo: DemoSelection | null;
   playing: boolean;
@@ -42,6 +44,7 @@ interface EarthState {
   arrive: () => void;
   reportDistance: (distanceR: number) => void;
   setSpinScale: (spinScale: number) => void;
+  setDemoScale: (demoScale: number) => void;
   startDemo: (demo: DemoSelection) => void;
   stopDemo: () => void;
   togglePlay: () => void;
@@ -57,6 +60,7 @@ export const useEarth = create<EarthState>((set) => ({
   focus: null,
   cameraDistanceR: 4.2,
   spinScale: 600,
+  demoScale: 15,
   demo: null,
   playing: false,
   replayKey: 0,
@@ -70,6 +74,7 @@ export const useEarth = create<EarthState>((set) => ({
   arrive: () => set({ focus: null }),
   reportDistance: (cameraDistanceR) => set({ cameraDistanceR }),
   setSpinScale: (spinScale) => set({ spinScale }),
+  setDemoScale: (demoScale) => set({ demoScale }),
   startDemo: (demo) => set({ demo, playing: true, replayKey: Date.now() }),
   stopDemo: () => set({ demo: null, playing: false }),
   togglePlay: () => set((s) => (s.demo ? { playing: !s.playing } : {})),
