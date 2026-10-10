@@ -58,6 +58,11 @@ component Tile inherits Rectangle {
     width: 116px;
     height: 124px;
     border-radius: 12px;
+    // 悬停强调：一圈淡蓝紫描边把可点的卡片圈出来（之前试过整块蒙灰，浅底上像阴影；
+    // 只靠图标放大又不够可感知）。描边随悬停淡入淡出。
+    border-width: touch.has-hover ? 1.5px : 0px;
+    border-color: #5468a473;
+    animate border-width { duration: 120ms; }
 
     // 图块里的东西全部绝对定位，共用同一条中轴线。交给 VerticalLayout 排的话，
     // 定宽的色块和整宽居中的标题各按各的算，看着就是散的。
@@ -66,7 +71,7 @@ component Tile inherits Rectangle {
 
     // 图标在三种运行状态下一模一样（ADR 0065）：同一张图、同样大小，
     // 状态只交给下面那颗状态点。悬停放大一点是在回应指针，不是状态。
-    property <length> side: touch.has-hover ? root.hub + 4px : root.hub;
+    property <length> side: touch.has-hover ? root.hub + 10px : root.hub;
 
     Image {
         source: entry.icon;
