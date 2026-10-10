@@ -31,7 +31,7 @@
     system-ui, sans-serif;
   --mono: "SF Mono", Menlo, Consolas, ui-monospace, monospace;
   --map-side: minmax(16em, 32%);
-  --topic-nav: minmax(12em, 22%);
+  --topic-nav: minmax(15em, 28%);
   --mastery-all: #198754;
   --mastery-some: #fd7e14;
   --mastery-none: #8b97a5;
@@ -626,30 +626,36 @@ body {
 
 .view-topic {
   display: grid;
-  grid-template-columns: var(--topic-nav) minmax(0, 1fr);
+  grid-template-columns: var(--topic-nav-w, var(--topic-nav)) 5px minmax(0, 1fr);
   min-height: 0;
   height: 100%;
+}
+html.is-resizing { user-select: none; cursor: col-resize; }
+html.is-resizing .nav-resizer { background: var(--primary-soft); }
+.nav-resizer {
+  cursor: col-resize;
+  border-right: 1px solid var(--border);
 }
 
 .nav {
   overflow: auto;
-  padding: 0.6em 0.4em 1.2em;
-  border-right: 1px solid var(--border);
+  padding: 0.8em 0.6em 1.4em;
+  border-right: none;
   background: color-mix(in srgb, var(--surface) 80%, var(--surface-subtle));
   min-width: 0;
 }
 .chapter { margin-bottom: 0.6em; }
 .chapter-title {
-  margin: 0 0.4em 0.2em;
-  font-size: 0.72em;
+  margin: 0 0.5em 0.3em;
+  font-size: 0.82em;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);
 }
 .chapter-summary {
-  margin: 0 0.4em 0.4em;
-  font-size: 0.78em;
+  margin: 0 0.5em 0.5em;
+  font-size: 0.86em;
   color: var(--muted);
   line-height: 1.4;
 }
@@ -657,13 +663,13 @@ body {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 0.2em;
+  gap: 0.3em;
   align-items: flex-start;
   text-align: left;
   border: 2px solid transparent;
   background: transparent;
-  border-radius: 0.6em;
-  padding: 0.4em 0.5em;
+  border-radius: 0.7em;
+  padding: 0.62em 0.72em;
   cursor: pointer;
   color: inherit;
   font: inherit;
@@ -835,15 +841,15 @@ body {
   color: var(--danger);
   font-weight: 600;
 }
-.topic-btn .name { font-weight: 700; font-size: 0.92em; }
-.topic-btn .meta-row { display: flex; flex-wrap: wrap; gap: 0.2em; }
+.topic-btn .name { font-weight: 700; font-size: 1.04em; line-height: 1.35; }
+.topic-btn .meta-row { display: flex; flex-wrap: wrap; gap: 0.3em; }
 
 .badge {
   display: inline-flex;
   align-items: center;
   border-radius: 999px;
-  padding: 0.05em 0.4em;
-  font-size: 0.7em;
+  padding: 0.08em 0.5em;
+  font-size: 0.78em;
   font-weight: 700;
   border: 1px solid var(--border);
   background: var(--surface);
@@ -1496,6 +1502,7 @@ textarea.code {
 @media (max-width: 48em) {
   .compare { grid-template-columns: 1fr; }
   .view-topic { grid-template-columns: minmax(0, 1fr); }
+  .nav-resizer { display: none; }
   .nav {
     max-height: 30vh;
     border-right: none;

@@ -2494,4 +2494,35 @@ async function boot() {
   renderMap();
 }
 
+/** 侧栏拖拽调宽：宽度记 localStorage，跨会话生效。 */
+function initNavResizer(): void {
+  const resizer = document.getElementById("nav-resizer");
+  const nav = document.getElementById("nav");
+  if (!resizer || !nav) return;
+  const saved = Number(localStorage.getItem("dp.navWidth") ?? 0);
+  if (saved >= 220 && saved <= 900) {
+    document.documentElement.style.setProperty("--topic-nav-w", `${saved}px`);
+  }
+  let startX = 0, startW = 0;
+  const onMove = (e: MouseEvent) => {
+    const w = Math.min(900, Math.max(220, startW + e.clientX - startX));
+    document.documentElement.style.setProperty("--topic-nav-w", `${w}px`);
+  };
+  const onUp = () => {
+    document.documentElement.classList.remove("is-resizing");
+    window.removeEventListener("mousemove", onMove);
+    window.removeEventListener("mouseup", onUp);
+    localStorage.setItem("dp.navWidth", String(Math.round(nav.getBoundingClientRect().width)));
+  };
+  resizer.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    startX = e.clientX;
+    startW = nav.getBoundingClientRect().width;
+    document.documentElement.classList.add("is-resizing");
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+  });
+}
+
 void boot();
+initNavResizer();
