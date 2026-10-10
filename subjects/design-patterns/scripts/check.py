@@ -189,7 +189,7 @@ def compile_and_run(cxx: str, source: str, workdir: Path, name: str) -> tuple[bo
     exe = workdir / f"{name}.exe"
     src.write_text(source, encoding="utf-8")
     c = subprocess.run(
-        [cxx, "-std=c++20", "-O0", "-Wall", "-Wextra", "-I", str(PROJECT_ROOT / "content" / "cases" / "_shared"),
+        [cxx, "-std=c++20", "-O0", "-Wall", "-Wextra", "-pthread", "-I", str(PROJECT_ROOT / "content" / "cases" / "_shared"),
          str(src), "-o", str(exe)],
         capture_output=True, text=True, encoding="utf-8", errors="replace",
     )

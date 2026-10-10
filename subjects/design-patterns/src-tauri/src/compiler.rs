@@ -49,6 +49,9 @@ impl Compiler {
             Compiler::GnuLike { program } => {
                 let mut cmd = Command::new(program);
                 cmd.arg("-std=c++20").arg("-O0").arg("-Wall").arg("-Wextra");
+                // 并发实验用 std::thread：旧版 glibc 不加 -pthread 会链接失败；
+                // MinGW 与 macOS 的 clang 都接受这个参数，统一加上免得分平台。
+                cmd.arg("-pthread");
                 cmd.arg(src);
                 cmd.arg("-o").arg(out);
                 if let Some(dir) = include {
