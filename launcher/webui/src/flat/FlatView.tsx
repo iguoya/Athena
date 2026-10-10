@@ -43,7 +43,7 @@ export default function FlatView({ catalog }: { catalog: CatalogDto }) {
     <div style={{ height: "100vh", overflowY: "auto", padding: "52px 24px 24px" }}>
       {[...groups.entries()].map(([name, apps]) => (
         <section key={name} style={{ marginBottom: 28 }}>
-          <h3 style={{ fontSize: 13, color: "#8a90b8", margin: "8px 4px", fontWeight: 600 }}>
+          <h3 style={{ fontSize: 13, color: "#6b7086", margin: "8px 4px", fontWeight: 600 }}>
             {name}
           </h3>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>

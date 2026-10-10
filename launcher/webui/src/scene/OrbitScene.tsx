@@ -5,7 +5,7 @@ import * as THREE from "three";
 import { openApp, type AppDto, type CatalogDto } from "../api";
 
 const STATE_COLOR: Record<AppDto["state"], string> = {
-  stopped: "#5a5f7a",
+  stopped: "#b0b4c8",
   starting: "#ff9800",
   ready: "#4caf50",
 };
@@ -56,7 +56,7 @@ function OrbitRing({ radius, tilt, yaw }: { radius: number; tilt: number; yaw: n
       pts.push(v);
     }
     const geometry = new THREE.BufferGeometry().setFromPoints(pts);
-    const material = new THREE.LineBasicMaterial({ color: "#5468a4", transparent: true, opacity: 0.35 });
+    const material = new THREE.LineBasicMaterial({ color: "#8a97c8", transparent: true, opacity: 0.55 });
     return new THREE.Line(geometry, material);
   }, [radius, tilt, yaw]);
   return <primitive object={line} />;
@@ -80,7 +80,7 @@ export default function OrbitScene({ catalog }: { catalog: CatalogDto }) {
     <Canvas
       camera={{ position: [0, 900, 2100], fov: 55, near: 1, far: 8000 }}
       onCreated={({ camera }) => camera.lookAt(0, 0, 0)}
-      style={{ background: "radial-gradient(ellipse at center, #141833 0%, #0d1020 70%)" }}
+      style={{ background: "radial-gradient(ellipse at center, #ffffff 0%, #eef0fa 60%, #e3e7f6 100%)" }}
     >
       <ambientLight intensity={0.9} />
       <TigerCore />
