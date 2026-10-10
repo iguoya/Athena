@@ -29,8 +29,8 @@
 完整说明（名字对照表、三类判据的全文）见 [docs/REPOSITORY.md](docs/REPOSITORY.md)。
 
 ```
-subjects/<id>/  课程学科：cpp machine data-structures algorithms english mathematics driver
-                gtkmm ascent（学习应用）
+subjects/<id>/  课程学科：cpp machine data-structures algorithms linux english mathematics
+                driver gtkmm ascent（学习应用）
                 software、embedded（软考两应用，各为一级大类，ADR 0102），底下挂实践子课程
                 database design-patterns os network firmware microcontroller rtos（ADR 0103、0106）
                 polaris、math-tools（图谱/参考类，math-tools 是数学学习的配套工具，ADR 0084）
