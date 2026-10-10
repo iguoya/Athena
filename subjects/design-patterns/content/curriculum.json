@@ -3480,6 +3480,437 @@
               }
             }
           ]
+        },
+        {
+          "id": "dp.sit.large-class",
+          "title": "过大的类",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.srp",
+            "dp.sit.duplicated-code"
+          ],
+          "track": "situations",
+          "guide_line": "一个类字段成堆，一部分字段总是一起出现，又总被另一个类重复需要。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能从字段的前缀、使用者的使用方式看出类里藏着另一个类，并用提炼类把它独立出来。",
+            "pain": "Order 里既有订单自己的金额，又揣着收货地址的四个字段，地址的格式化和校验也在里面；发货单要用地址，只能再抄一份。",
+            "model": "类做的事太多，常表现为字段太多。字段太多，重复代码也就不远了。把一组该在一起的字段连同相关函数提炼成新类，原类持有它。",
+            "scope": "不是字段多就拆：拆分依据是“这几个字段是不是一个概念”，以及“使用者是不是只用到类的某一部分”。",
+            "judgment": "字段带有相同的前缀或后缀（street、city、zip）；类里有的字段只在部分情形下才用；使用者只用类的一个子集。",
+            "landing": "能把成组的字段与行为提炼成独立的类，原类改为持有它，并让第二个使用者直接复用。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "Order 类有 customer、street、city、zip、total 五个字段，还有格式化地址和校验邮编的函数。发货单也需要地址，最好的办法是？",
+                "options": [
+                  {
+                    "label": "把 street、city、zip 和相关函数提炼成 Address 类，Order 和发货单都持有它",
+                    "ok": true,
+                    "why": "提炼类：一组字段连同行为独立出来，两处复用"
+                  },
+                  {
+                    "label": "在发货单里把这三个字段和校验函数再写一遍",
+                    "ok": false,
+                    "why": "重复代码，规则改了要改两处"
+                  },
+                  {
+                    "label": "让发货单继承 Order",
+                    "ok": false,
+                    "why": "发货单不是一种订单，只为复用继承是错的"
+                  },
+                  {
+                    "label": "把地址字段全改成 public，发货单直接读",
+                    "ok": false,
+                    "why": "破坏封装，校验仍然要重复"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "**过大的类**（Large Class）：一个类想做太多事，往往表现为字段太多；字段一多，重复代码也就离得不远了。《重构》给出的主要手法是**提炼类**（Extract Class）：把一些字段打包成一个组件。怎么挑？比如 depositAmount 和 depositCurrency 很可能该在一起；更一般地，一个类里**一部分字段有共同的前缀或后缀**，就暗示可以拆出一个组件。如果拆出的部分适合用继承表达，则用**提炼超类**（Extract Superclass）或**以子类取代类型码**（Replace Type Code with Subclasses）。另一条线索来自使用者：看看客户是否只用到这个类的一部分功能，**每一个这样的子集，都可能是一个独立的类**。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：地址字段挤在 Order 里",
+                  "code": "class Order {\n  std::string customer_, street_, city_, zip_;\n  int total_;\npublic:\n  std::string label() const;   // 拼地址\n  bool validZip() const;        // 校验邮编\n};\n// 发货单要地址？再抄一份 street_/city_/zip_ 和校验"
+                },
+                "after": {
+                  "title": "改造后：地址是自己的类",
+                  "code": "class Address {\n  std::string street_, city_, zip_;\npublic:\n  std::string oneLine() const;\n  bool validZip() const;\n};\nclass Order    { std::string customer_; Address to_; int total_; };\nstruct Shipment { Address to; int kg; };   // 直接复用"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "找出一组该在一起的字段：看前缀后缀，看哪些字段总是一起出现、一起传递。",
+                  "新建类，先把这些字段搬过去（每搬一个就编译、测试一次）。",
+                  "把只用到这些字段的函数也搬过去；只用一半的函数先用提炼函数切开再搬。",
+                  "原类改为持有新类的对象，原来的函数改为委托，或者让调用方直接用新类。",
+                  "给新类起一个说得清的名字，并考虑让它不可变。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "拆出来的类要有真实的概念，不能为拆而拆——拆得太碎会变成“冗赘的元素”（Lazy Element），下一个坏味道。委托多了又会出现“中间人”（见本篇「中间人」一节）。过大的类还常常伴随过长的函数，先把长函数拆开，往往能更清楚地看见类该怎么切。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "没有单一对应的模式。拆出的组件若要在运行时替换，是策略或状态；若是为了让外界只看到窄接口，是外观。对应的设计原则是单一职责（SRP）。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "按《重构》，除了看字段的前缀后缀，还有什么线索能帮助决定如何切分一个过大的类？",
+                    "choices": [
+                      {
+                        "label": "看使用者：客户是否只用到类的一部分功能，每个这样的子集都可能是一个独立的类",
+                        "ok": true,
+                        "why": "原文：类的客户通常是拆分它的最佳线索"
+                      },
+                      {
+                        "label": "看类的行数，超过 200 行就拆",
+                        "ok": false,
+                        "why": "行数不是依据"
+                      },
+                      {
+                        "label": "看类名里有没有 Manager",
+                        "ok": false,
+                        "why": "命名不是依据"
+                      },
+                      {
+                        "label": "看成员函数是不是 virtual",
+                        "ok": false,
+                        "why": "与切分无关"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.large-class",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "坏味道「过大的类」与手法「提炼类」「提炼超类」「以子类取代类型码」：Martin Fowler《重构：改善既有代码的设计》第 2 版（2018）第 3 章（已对照原文核对）与重构目录。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.large-class.run",
+              "title": "把地址提炼成 Address，再给发货单复用",
+              "case": "sit_large_class_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "Order 里哪几个字段总是一起出现？发货单要用同样的地址时，现在只能怎么办？",
+              "goal": "提炼 class Address（street、city、zip；validZip()：邮编 6 位；oneLine()：\"<street>, <city> <zip>\"），让 Order 持有它且输出不变；写 struct Shipment { Address to; int kg; }。解开 main 里的 TODO(实验) 行。",
+              "pass": {
+                "includes": [
+                  "ship: 中山路 1 号, 杭州 310000 valid=yes"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "dp.sit.data-class",
+          "title": "纯数据类",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.sit.feature-envy",
+            "dp.sit.invariant"
+          ],
+          "track": "situations",
+          "guide_line": "类只有字段和取值设值函数，处理它的逻辑全散在调用方。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能识别“行为放错了地方”的数据类，把行为搬回类里，并辨别哪些纯数据记录是正当的。",
+            "pain": "Account 只有公开的 balance，谁都可以 acc.balance -= n；“余额不足不许取”要靠每个调用方自己记得检查。",
+            "model": "数据类往往说明行为在错误的位置。把使用数据的函数从调用方搬进数据类，字段改私有，规则只在一处。",
+            "scope": "例外：一次函数调用产生的结果记录，尤其是拆分阶段之后的中间数据结构——它们不可变，不需要封装。",
+            "judgment": "类里只有字段和 getter/setter，另一些类在对它做大量细节操作。",
+            "landing": "能把外部的自由函数和直接改字段的代码搬成成员函数，把规则收进一处，并新增一个只有收拢后才好写的规则。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "Account 有公开的 balance 字段，deposit 是外面的自由函数，调用方有时直接 acc.balance -= n。现在要加“余额不足不许取款”的规则，应该？",
+                "options": [
+                  {
+                    "label": "把字段改私有，deposit、withdraw 搬成成员函数，规则只在 withdraw 里写一次",
+                    "ok": true,
+                    "why": "把行为搬进数据类，规则收拢到一处"
+                  },
+                  {
+                    "label": "在每个直接改 balance 的调用点前加判断",
+                    "ok": false,
+                    "why": "规则散落，漏一处就出错"
+                  },
+                  {
+                    "label": "加注释提醒大家取款前先检查余额",
+                    "ok": false,
+                    "why": "注释拦不住调用方"
+                  },
+                  {
+                    "label": "加一个全局的 checkBalance() 函数",
+                    "ok": false,
+                    "why": "仍然没人强制调用，行为仍在类外"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "**纯数据类**（Data Class）：只有字段、取值函数和设值函数，别的什么也没有。这样的类是“哑”的数据容器，常常被其他类过于细节地操作。《重构》的做法分几步：若有公开字段，立刻用**封装记录**（Encapsulate Record）；对不该被修改的字段用**移除设值函数**（Remove Setting Method）；然后看别的类在哪里使用这些取值设值函数，用**搬移函数**（Move Function）把行为搬进数据类——搬不动整个函数，就先用**提炼函数**切出一段可搬的部分。数据类往往是行为放错地方的信号，把行为从客户搬进数据类，可以取得很大的进展。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：数据在这里，规则在调用方",
+                  "code": "struct Account { std::string owner; int balance; };\nvoid deposit(Account& a, int n) { a.balance += n; }\n\nacc.balance -= 500;   // 没人检查余额"
+                },
+                "after": {
+                  "title": "改造后：行为和数据在一起",
+                  "code": "class Account {\n  std::string owner_; int balance_;\npublic:\n  void deposit(int n);\n  bool withdraw(int n) {            // 规则只在这里\n    if (n > balance_) return false;\n    balance_ -= n; return true;\n  }\n  int balance() const { return balance_; }\n};"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "正当的例外：结果记录",
+                "text": "Fowler 特别指出，有一类纯数据记录是正当的：它是某次函数调用产生的**结果记录**，比如用“拆分阶段”（Split Phase）切开计算与输出之后，两阶段之间的那个中间数据结构。这样的记录的关键特征是**不可变**（至少实际上不可变）：不可变的字段不需要封装，由不可变数据派生出来的信息可以直接做成字段，不必写取值函数。C++ 里常见的写法就是一个字段全公开的 `struct`（Core Guidelines C.2：成员可以各自独立变化时用 struct）。"
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "有公开字段的，先封装起来（字段私有，提供取值函数）。",
+                  "对不该被外面修改的字段，去掉设值函数。",
+                  "看调用方：哪些代码在拿着这个类的数据做计算？把这段逻辑提炼成函数，再搬进数据类。",
+                  "把原来分散在多处的规则收进成员函数里，原调用点改为调用它。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "不是所有的结构体都要有成员函数。纯数据、成员彼此无约束、需要跨模块或跨语言传递的记录（如配置、消息、返回结果）就该是 struct。判断办法是看有没有**不变式**（见情境篇二「不变式没人守」）：有约束就封装，没约束就让它简单。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "《重构》认为下面哪种纯数据记录是正当的？",
+                    "choices": [
+                      {
+                        "label": "拆分阶段之后，计算阶段交给输出阶段的不可变结果记录",
+                        "ok": true,
+                        "why": "不可变的结果记录不需要封装"
+                      },
+                      {
+                        "label": "字段全公开、被十几处代码随意修改的账户类",
+                        "ok": false,
+                        "why": "典型的行为放错了地方"
+                      },
+                      {
+                        "label": "有设值函数、业务规则靠调用方自觉遵守的订单类",
+                        "ok": false,
+                        "why": "规则没有收拢"
+                      },
+                      {
+                        "label": "只有取值函数、却被外部代码用来做复杂计算的类",
+                        "ok": false,
+                        "why": "计算应该搬进类里"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.data-class",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "坏味道「纯数据类」与手法「封装记录」「移除设值函数」「搬移函数」「提炼函数」「拆分阶段」：Martin Fowler《重构：改善既有代码的设计》第 2 版（2018）第 3 章（已对照原文核对）与重构目录。规范：C++ Core Guidelines C.2。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.data-class.run",
+              "title": "把取款规则搬进 Account",
+              "case": "sit_data_class_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "现在谁来保证“余额不够不许取”？如果有第三个调用方，它会记得检查吗？",
+              "goal": "把 balance 改私有并提供 balance() 取值；deposit、statement 搬成成员函数；新增 bool withdraw(int)：余额不足返回 false 且余额不变。把 main 里直接改字段的地方改掉，解开 TODO(实验) 行。",
+              "pass": {
+                "includes": [
+                  "withdraw 5000: refused",
+                  "balance=700"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "dp.sit.middle-man",
+          "title": "中间人",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "strategy",
+          "requires": [
+            "dp.sit.feature-envy"
+          ],
+          "track": "situations",
+          "guide_line": "为了隐藏委托，一个类一半的函数都在转发给另一个类。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能识别“封装做过头”的转发函数，用移除中间人让调用方直接与真正的对象对话，并知道它和隐藏委托的取舍。",
+            "pain": "Person 给 Department 的每个查询都包了转发函数；Department 加一个新查询，Person 里就得再补一个转发。",
+            "model": "封装常伴随委托，但委托过头时，类的接口里一半函数都只是转发。此时让客户直接访问被委托的对象。",
+            "scope": "它是“隐藏委托关系”的反方向：消息链太长就隐藏，转发太多就移除，取舍随情况变化。",
+            "judgment": "打开一个类，一半的函数体只有一行“return 另一个对象.同名函数()”。",
+            "landing": "能删掉纯转发函数、暴露被委托对象，新增查询时不再改中间人。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "Person 里有 manager()、budget()、headcount() 三个函数，函数体都只是 dept_.同名函数()。现在 Department 又要加 costPerHead()，怎么办最合适？",
+                "options": [
+                  {
+                    "label": "移除中间人：给 Person 加 department() 访问器，调用方直接用 Department；以后加查询不动 Person",
+                    "ok": true,
+                    "why": "转发层已无价值，直接对话"
+                  },
+                  {
+                    "label": "在 Person 里再补一个 costPerHead() 转发",
+                    "ok": false,
+                    "why": "继续喂养中间人，每次新增都要两处改"
+                  },
+                  {
+                    "label": "把 Department 的所有函数复制进 Person",
+                    "ok": false,
+                    "why": "重复代码"
+                  },
+                  {
+                    "label": "让 Person 继承 Department",
+                    "ok": false,
+                    "why": "Person 不是一种部门"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "**中间人**（Middle Man）：对象的主要特征之一是封装——对外隐藏内部细节，而封装常常伴随委托。你问主管有没有空开会，她把消息转给自己的日程本再回答你；你不必知道她用的是日程本、电子设备还是秘书。但这可以走过头：看一个类的接口，发现**一半的函数都在委托给另一个类**，这时就该用**移除中间人**（Remove Middle Man），直接和真正知道情况的对象对话。如果只有少数几个函数没做什么事，可以用**内联函数**把它们内联到调用方；如果中间人还带有额外行为，则可以用**以委托取代超类/子类**把中间人折叠进真正的对象里。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：Person 只管转发",
+                  "code": "class Person {\n  Department dept_;\npublic:\n  const std::string& manager() const { return dept_.manager(); }\n  int budget() const    { return dept_.budget(); }\n  int headcount() const { return dept_.headcount(); }\n};"
+                },
+                "after": {
+                  "title": "改造后：直接访问 Department",
+                  "code": "class Person {\n  Department dept_;\npublic:\n  const Department& department() const { return dept_; }\n};\n\np.department().manager();\np.department().costPerHead();   // 新增查询，Person 不动"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "和“过长的消息链”的关系",
+                "text": "情境篇一「依恋情结与过长的消息链」教的是**隐藏委托关系**（Hide Delegate）：调用方 a.getB().getC().value() 太长，就给 a 加一个转发函数。《重构》自己说得很平衡：有人认为任何消息链都是糟糕的，他们“以冷静而有理的方式”并不这么看。两个手法是一对反向的旋钮——链太长、客户知道得太多，就隐藏；转发太多、接口被琐碎函数淹没，就移除。没有永远正确的位置，随着系统演化来回调整。"
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "给中间人加一个访问器，返回被委托的对象。",
+                  "找出调用转发函数的地方，逐个改为通过访问器直接调用被委托对象。",
+                  "每改一处就编译、测试。",
+                  "当某个转发函数再没人调用，就删掉它。"
+                ]
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "「中间人」与「过长的消息链」分别对应哪两个重构手法，它们的关系是？",
+                    "choices": [
+                      {
+                        "label": "移除中间人与隐藏委托关系，方向相反，按实际情况取舍",
+                        "ok": true,
+                        "why": "转发太多就移除，链太长就隐藏"
+                      },
+                      {
+                        "label": "都是提炼函数，只是名字不同",
+                        "ok": false,
+                        "why": "不是同一个手法"
+                      },
+                      {
+                        "label": "两者必须同时使用",
+                        "ok": false,
+                        "why": "它们是反向的两个旋钮"
+                      },
+                      {
+                        "label": "都是以多态取代条件表达式",
+                        "ok": false,
+                        "why": "与条件分支无关"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.middle-man",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "坏味道「中间人」与手法「移除中间人」「隐藏委托关系」「内联函数」「以委托取代超类/子类」：Martin Fowler《重构：改善既有代码的设计》第 2 版（2018）第 3 章（已对照原文核对）与重构目录（原文指出“消息链”一节对两种态度的平衡论述）。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.middle-man.run",
+              "title": "移除 Person 里的转发，再加 costPerHead",
+              "case": "sit_middle_man_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "Department 新增一个查询时，Person 里需要跟着改吗？为什么？",
+              "goal": "给 Person 加 department() 访问器，删掉 manager()/budget()/headcount() 三个转发函数，调用方改用 person.department().xxx()；给 Department 加 int costPerHead() const（预算除以人数）。解开 main 里的 TODO(实验) 行。",
+              "pass": {
+                "includes": [
+                  "cost/head=2500"
+                ]
+              }
+            }
+          ]
         }
       ],
       "checkpoint": {
@@ -4250,6 +4681,198 @@
               "relation": "authored",
               "sourceId": "self-authored",
               "locator": "dp.sit.special-case",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
+          },
+          {
+            "stem": "一个类里有 street、city、zip 三个字段，常在各处一起被传递。《重构》会建议？",
+            "covers": "dp.sit.large-class",
+            "choices": [
+              {
+                "label": "提炼类：把它们独立成 Address",
+                "ok": true,
+                "why": "相同前缀的一组字段暗示一个组件"
+              },
+              {
+                "label": "移除标记参数",
+                "ok": false,
+                "why": "这里没有标记参数"
+              },
+              {
+                "label": "以多态取代条件表达式",
+                "ok": false,
+                "why": "没有类型分支"
+              },
+              {
+                "label": "内联类",
+                "ok": false,
+                "why": "方向相反"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.large-class",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
+          },
+          {
+            "stem": "Account 只有公开的 balance，几个调用方都直接改它。最先该做的是？",
+            "covers": "dp.sit.data-class",
+            "choices": [
+              {
+                "label": "封装记录，并把相关行为搬进类里",
+                "ok": true,
+                "why": "数据类是行为放错地方的信号"
+              },
+              {
+                "label": "加更多注释",
+                "ok": false,
+                "why": "拦不住调用方"
+              },
+              {
+                "label": "把字段改成静态",
+                "ok": false,
+                "why": "与问题无关"
+              },
+              {
+                "label": "把类改成单例",
+                "ok": false,
+                "why": "与问题无关"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.data-class",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
+          },
+          {
+            "stem": "Person 一半的函数只是转发给 Department。《重构》的手法是？",
+            "covers": "dp.sit.middle-man",
+            "choices": [
+              {
+                "label": "移除中间人，让客户直接访问 Department",
+                "ok": true,
+                "why": "转发层已无价值"
+              },
+              {
+                "label": "隐藏委托关系",
+                "ok": false,
+                "why": "那是消息链太长时的手法，方向相反"
+              },
+              {
+                "label": "提炼超类",
+                "ok": false,
+                "why": "与转发无关"
+              },
+              {
+                "label": "引入参数对象",
+                "ok": false,
+                "why": "与参数无关"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.middle-man",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
+          },
+          {
+            "stem": "拆分类时，下面哪一条是《重构》给的线索？",
+            "covers": "dp.sit.large-class",
+            "choices": [
+              {
+                "label": "看客户是否只用到类的一部分功能",
+                "ok": true,
+                "why": "每个使用子集都可能是一个独立的类"
+              },
+              {
+                "label": "看类名长度",
+                "ok": false,
+                "why": "不是依据"
+              },
+              {
+                "label": "看是否使用了模板",
+                "ok": false,
+                "why": "不是依据"
+              },
+              {
+                "label": "看是否有静态成员",
+                "ok": false,
+                "why": "不是依据"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.large-class",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
+          },
+          {
+            "stem": "下面哪种纯数据 struct 不需要封装？",
+            "covers": "dp.sit.data-class",
+            "choices": [
+              {
+                "label": "拆分阶段后传给输出阶段的不可变结果记录",
+                "ok": true,
+                "why": "不可变，无需封装"
+              },
+              {
+                "label": "可被任意修改、有业务规则的账户",
+                "ok": false,
+                "why": "有不变式，应封装"
+              },
+              {
+                "label": "被十几个类细节操作的订单",
+                "ok": false,
+                "why": "行为该搬回类里"
+              },
+              {
+                "label": "有设值函数的用户配置",
+                "ok": false,
+                "why": "是否正当取决于有无约束"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.data-class",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
+          },
+          {
+            "stem": "“隐藏委托关系”和“移除中间人”的关系是？",
+            "covers": "dp.sit.middle-man",
+            "choices": [
+              {
+                "label": "两个反向的旋钮，随系统演化来回调整",
+                "ok": true,
+                "why": "链太长就隐藏，转发太多就移除"
+              },
+              {
+                "label": "两者永远应同时使用",
+                "ok": false,
+                "why": "它们方向相反"
+              },
+              {
+                "label": "前者总是对的，后者总是错的",
+                "ok": false,
+                "why": "没有永远正确的位置"
+              },
+              {
+                "label": "它们是同一个手法的不同名字",
+                "ok": false,
+                "why": "是两个手法"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.middle-man",
               "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
             }
           }
