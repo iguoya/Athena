@@ -306,10 +306,129 @@ pub mod commands {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    use launcher_core::{manifest, runner};
     let repo = paths::locate_repo().expect("找不到 Athena 仓库：设置 ATHENA_ROOT，或把启动器放在仓库里");
+    let repo_for_setup = repo.clone();
+
     tauri::Builder::default()
-        .plugin(tauri_plugin_single_instance::init(|_app, _args, _cwd| {}))
+        .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
+            // 第二实例被单例拦下时，把已有窗口叫到前台——这就是「再次双击没反应」的反面。
+            if let Some(w) = tauri::Manager::get_webview_window(app, "main") {
+                let _ = w.show();
+                let _ = w.set_focus();
+            }
+        }))
         .manage(Repo(repo))
+        .setup(move |app| {
+            use tauri::menu::{Menu, MenuItem, PredefinedMenuItem, Submenu};
+            use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
+            use tauri::Manager;
+
+            let handle = app.handle().clone();
+            let repo = repo_for_setup.clone();
+
+            // 托盘菜单：每个应用一个子菜单（打开/停止），加显示与退出。
+            // 清单变化后的菜单重建骨架阶段先不做（重启启动器生效），热更新随后补。
+            let apps = manifest::discover(&repo);
+            let menu = Menu::new(&handle)?;
+            for a in apps.iter().filter(|a| !a.hidden) {
+                let sub = Submenu::with_id(&handle, format!("app:{}", a.id), &a.title, true)?;
+                let open = MenuItem::with_id(
+                    &handle,
+                    format!("open:{}", a.id),
+                    "打开",
+                    true,
+                    None::<&str>,
+                )?;
+                let stop = MenuItem::with_id(
+                    &handle,
+                    format!("stop:{}", a.id),
+                    "停止",
+                    true,
+                    None::<&str>,
+                )?;
+                sub.append(&open)?;
+                sub.append(&stop)?;
+                menu.append(&sub)?;
+            }
+            menu.append(&PredefinedMenuItem::separator(&handle)?)?;
+            let show = MenuItem::with_id(&handle, "show", "显示启动器", true, None::<&str>)?;
+            menu.append(&show)?;
+            let quit = MenuItem::with_id(&handle, "quit", "退出启动器", true, None::<&str>)?;
+            menu.append(&quit)?;
+
+            let _tray = TrayIconBuilder::with_id("main-tray")
+                .icon(tauri::image::Image::from_bytes(include_bytes!(
+                    "../icons/32x32.png"
+                ))?)
+                .tooltip("Athena 启动器")
+                .menu(&menu)
+                .show_menu_on_left_click(false)
+                .on_menu_event(|app, event| {
+                    let id = event.id().as_ref().to_string();
+                    let repo = paths::locate_repo().expect("找不到 Athena 仓库");
+                    let (action, target) = if let Some(t) = id.strip_prefix("open:") {
+                        ("open", t.to_string())
+                    } else if let Some(t) = id.strip_prefix("stop:") {
+                        ("stop", t.to_string())
+                    } else if id == "show" {
+                        if let Some(w) = tauri::Manager::get_webview_window(app, "main") {
+                            let _ = w.show();
+                            let _ = w.set_focus();
+                        }
+                        return;
+                    } else if id == "quit" {
+                        app.exit(0);
+                        return;
+                    } else {
+                        return;
+                    };
+                    // launch 会跑完整构建链（数十秒），绝不能堵在事件回调线程上。
+                    let target = target.to_string();
+                    let app_handle = app.clone();
+                    tauri::async_runtime::spawn_blocking(move || {
+                        let apps = manifest::discover(&repo);
+                        let Some(app_cfg) = apps.iter().find(|a| a.id == target) else {
+                            return;
+                        };
+                        let result = match action {
+                            "open" => runner::launch(app_cfg, &repo, |_| {}).map(|_| ()),
+                            _ => runner::stop(app_cfg),
+                        };
+                        if let Err(e) = result {
+                            eprintln!("托盘动作 {action} {target} 失败：{e}");
+                        }
+                    });
+                })
+                .on_tray_icon_event(|tray, event| {
+                    // 左键单击：唤起主窗口（常驻启动器的主入口）。
+                    if let TrayIconEvent::Click {
+                        button: MouseButton::Left,
+                        button_state: MouseButtonState::Up,
+                        ..
+                    } = event
+                    {
+                        let app = tray.app_handle();
+                        if let Some(w) = tauri::Manager::get_webview_window(app, "main") {
+                            let _ = w.show();
+                            let _ = w.set_focus();
+                        }
+                    }
+                })
+                .build(app)?;
+            let _ = handle;
+
+            // 常驻形态：关窗口 = 隐藏到托盘，退出走托盘菜单。
+            let window = app.get_webview_window("main").expect("主窗口缺失");
+            let window_for_event = window.clone();
+            window.on_window_event(move |event| {
+                if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+                    api.prevent_close();
+                    let _ = window_for_event.hide();
+                }
+            });
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             commands::catalog,
             commands::mindmap,
