@@ -64,8 +64,6 @@ component Tile inherits Rectangle {
     width: 116px;
     height: 124px;
     border-radius: 12px;
-    background: touch.has-hover ? #00000010 : transparent;
-    animate background { duration: 120ms; }
 
     // 图块里的东西全部绝对定位，共用同一条中轴线。交给 VerticalLayout 排的话，
     // 定宽的色块和整宽居中的标题各按各的算，看着就是散的。
