@@ -9,12 +9,6 @@ export struct NodePos {
     y: float,
 }
 
-/// 一条同心椭圆轨道：长半轴沿横向（launcher ADR 0002）。
-export struct RingSpec {
-    rx: float,
-    ry: float,
-}
-
 /// 领域分组节点：胶囊中心与颜色。
 export struct GroupSpec {
     name: string,
@@ -216,7 +210,13 @@ component MindMap inherits ScrollView {
     in property <[NodePos]> positions;
     in property <[GroupSpec]> groups;
     in property <[MapLink]> map-links;
-    in property <[RingSpec]> rings;
+    // 同心椭圆环：Rust 侧用 resvg 预渲染的静态位图（core 的 rings_bitmap），不是 Path——
+    // 图块悬停触发局部重绘时，1.17 的渲染器会把脏区里的 Path 填充按高不透明度画错并残留。
+    in property <image> rings-image;
+    in property <float> rings-x;
+    in property <float> rings-y;
+    in property <float> rings-w;
+    in property <float> rings-h;
     in property <float> map-width;
     in property <float> map-height;
     in property <float> center-x;
@@ -232,55 +232,15 @@ component MindMap inherits ScrollView {
     viewport-width: self.canvas-w;
     viewport-height: self.canvas-h;
 
-    // 同心椭圆：从外到内叠着画，每一圈淡淡地铺一层底，叠起来中间深、外面浅——
-    // 这就是「立体」的来源，不碰图标本身。椭圆而不是正圆：屏幕是横向的，
-    // 内容铺进宽屏真正看得到的宽度（launcher ADR 0002）。椭圆用四段三次贝塞尔
-    // 近似（κ ≈ 0.5523 是圆弧贝塞尔的标准系数），肉眼与真椭圆无差。
-    property <float> kappa: 0.552284749;
-    for r in rings: Path {
-        x: 0; y: 0;
-        width: root.canvas-w;
-        height: root.canvas-h;
-        viewbox-width: root.canvas-w / 1px;
-        viewbox-height: root.canvas-h / 1px;
-        fill: #5468a40a;
-        stroke: #5468a418;
-        stroke-width: 1px;
-
-        MoveTo { x: root.ox / 1px + root.center-x - r.rx; y: root.oy / 1px + root.center-y; }
-        CubicTo {
-            control-1-x: root.ox / 1px + root.center-x - r.rx;
-            control-1-y: root.oy / 1px + root.center-y - r.ry * root.kappa;
-            control-2-x: root.ox / 1px + root.center-x - r.rx * root.kappa;
-            control-2-y: root.oy / 1px + root.center-y - r.ry;
-            x: root.ox / 1px + root.center-x;
-            y: root.oy / 1px + root.center-y - r.ry;
-        }
-        CubicTo {
-            control-1-x: root.ox / 1px + root.center-x + r.rx * root.kappa;
-            control-1-y: root.oy / 1px + root.center-y - r.ry;
-            control-2-x: root.ox / 1px + root.center-x + r.rx;
-            control-2-y: root.oy / 1px + root.center-y - r.ry * root.kappa;
-            x: root.ox / 1px + root.center-x + r.rx;
-            y: root.oy / 1px + root.center-y;
-        }
-        CubicTo {
-            control-1-x: root.ox / 1px + root.center-x + r.rx;
-            control-1-y: root.oy / 1px + root.center-y + r.ry * root.kappa;
-            control-2-x: root.ox / 1px + root.center-x + r.rx * root.kappa;
-            control-2-y: root.oy / 1px + root.center-y + r.ry;
-            x: root.ox / 1px + root.center-x;
-            y: root.oy / 1px + root.center-y + r.ry;
-        }
-        CubicTo {
-            control-1-x: root.ox / 1px + root.center-x - r.rx * root.kappa;
-            control-1-y: root.oy / 1px + root.center-y + r.ry;
-            control-2-x: root.ox / 1px + root.center-x - r.rx;
-            control-2-y: root.oy / 1px + root.center-y + r.ry * root.kappa;
-            x: root.ox / 1px + root.center-x - r.rx;
-            y: root.oy / 1px + root.center-y;
-        }
-        Close {}
+    // 同心椭圆：从外到内叠着的淡底，叠起来中间深、外面浅——这就是「立体」的来源，
+    // 不碰图标本身。椭圆而不是正圆：屏幕是横向的，内容铺进宽屏真正看得到的宽度
+    // （launcher ADR 0002）。填充在 core 的 rings_bitmap 里渲染成一张位图，这里原样铺。
+    Image {
+        source: root.rings-image;
+        x: root.ox + root.rings-x * 1px;
+        y: root.oy + root.rings-y * 1px;
+        width: root.rings-w * 1px;
+        height: root.rings-h * 1px;
     }
 
     for link in root.map-links: Rectangle {
@@ -358,11 +318,16 @@ export component LauncherWindow inherits Window {
     // 数据源（发现根目录）和界面分区不同。空的时候整个分区隐藏，不占地方。
     in property <[AppEntry]> practice-apps;
     in property <string> status;
-    // 思维导图（ADR 0083）：位置、分组和连线全部由 launcher-core 的布局算好。
+    // 思维导图（ADR 0083）：位置、分组和连线全部由 launcher-core 的布局算好；
+    // 同心环是 core 预渲染的位图（见 MindMap 的 rings-image 注释）。
     in property <[NodePos]> positions;
     in property <[GroupSpec]> groups;
     in property <[MapLink]> map-links;
-    in property <[RingSpec]> rings;
+    in property <image> rings-image;
+    in property <float> rings-x;
+    in property <float> rings-y;
+    in property <float> rings-w;
+    in property <float> rings-h;
     in property <float> map-width: 600;
     in property <float> map-height: 600;
     in property <float> center-x: 300;
@@ -406,7 +371,11 @@ export component LauncherWindow inherits Window {
             positions: root.positions;
             groups: root.groups;
             map-links: root.map-links;
-            rings: root.rings;
+            rings-image: root.rings-image;
+            rings-x: root.rings-x;
+            rings-y: root.rings-y;
+            rings-w: root.rings-w;
+            rings-h: root.rings-h;
             map-width: root.map-width;
             map-height: root.map-height;
             center-x: root.center-x;

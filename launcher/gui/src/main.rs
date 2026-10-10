@@ -549,17 +549,22 @@ fn set_mind_map(window: &LauncherWindow, map: &mindmap::MindMap) {
         })
         .collect();
     let links: Vec<MapLink> = map.links.iter().map(map_link).collect();
-    // 界面从外到内叠着画椭圆（外层先铺底），布局给的是从内到外，这里反转。
-    let rings: Vec<RingSpec> = map
-        .rings
-        .iter()
-        .rev()
-        .map(|(a, b)| RingSpec { rx: *a, ry: *b })
-        .collect();
+    // 同心环预渲染成位图（悬停重绘会画坏 Slint 的 Path 填充，见 core 的 rings_bitmap）；
+    // 位图倍率跟窗口的 DPI 走，跨屏拖动时 Slint 自己缩放。
+    let scale = (window.window().scale_factor() as f32).max(1.0);
+    let rings = mindmap::rings_bitmap(map, scale);
     window.set_positions(ModelRc::new(VecModel::from(positions)));
     window.set_groups(ModelRc::new(VecModel::from(groups)));
     window.set_map_links(ModelRc::new(VecModel::from(links)));
-    window.set_rings(ModelRc::new(VecModel::from(rings)));
+    window.set_rings_image(slint::Image::from_rgba8(slint::SharedPixelBuffer::clone_from_slice(
+        &rings.rgba,
+        rings.pixels_w,
+        rings.pixels_h,
+    )));
+    window.set_rings_x(rings.x);
+    window.set_rings_y(rings.y);
+    window.set_rings_w(rings.width);
+    window.set_rings_h(rings.height);
     window.set_map_width(map.width);
     window.set_map_height(map.height);
     window.set_center_x(map.center.x);

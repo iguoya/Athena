@@ -13,6 +13,8 @@
 
 use std::collections::HashSet;
 
+use resvg::usvg;
+
 use crate::manifest::App;
 
 /// 一个图块的外框（与 `launcher.slint` 里的 `Tile` 同尺寸）。
@@ -696,6 +698,70 @@ pub fn layout(apps: &[App]) -> MindMap {
     }
 
     MindMap { width: max_x - min_x, height: max_y - min_y, center, rings, groups, nodes, links }
+}
+
+/// 同心环的静态位图：直通 alpha 的 RGBA，外加它覆盖的画布区域（逻辑像素）。
+pub struct RingsBitmap {
+    pub rgba: Vec<u8>,
+    /// 位图原点相对画布原点的偏移：画布以 center 对称外扩，可能比内容包围盒大。
+    pub x: f32,
+    pub y: f32,
+    /// 逻辑尺寸；界面按 `width × height` 摆放，位图本身是 `pixels_w × pixels_h`。
+    pub width: f32,
+    pub height: f32,
+    pub pixels_w: u32,
+    pub pixels_h: u32,
+}
+
+/// 把同心环画成一张静态位图，界面拿 Image 铺底。
+///
+/// 不用 Slint 的 Path 逐环填充：图块悬停触发局部重绘时，1.17 的渲染器（软件与
+/// femtovg 都能复现）重画脏区会把里面的 Path 填充按高不透明度画上，错一次留
+/// 一块，鼠标划几下画布就叠成实色。环是静态装饰，布局变化时在这里用 resvg
+/// 渲一次，重绘合成里就不再有矢量填充可错。
+pub fn rings_bitmap(map: &MindMap, scale: f32) -> RingsBitmap {
+    let max_a = map.rings.iter().map(|r| r.0).fold(0.0_f32, f32::max);
+    let max_b = map.rings.iter().map(|r| r.1).fold(0.0_f32, f32::max);
+    // SVG 画布以 center 为对称中心，容下最大环加 1px 描边；可能比内容包围盒大，
+    // 所以把位图原点相对画布的偏移一并交给界面。
+    let half_w = map.center.x.max(map.width - map.center.x).max(max_a + 1.0);
+    let half_h = map.center.y.max(map.height - map.center.y).max(max_b + 1.0);
+    let (w, h) = (half_w * 2.0, half_h * 2.0);
+    let mut svg = format!(
+        r##"<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}">"##
+    );
+    for (a, b) in &map.rings {
+        svg += &format!(
+            r##"<ellipse cx="{half_w}" cy="{half_h}" rx="{a}" ry="{b}" fill="#5468a40a" stroke="#5468a418" stroke-width="1"/>"##
+        );
+    }
+    svg += "</svg>";
+    let tree = usvg::Tree::from_data(svg.as_bytes(), &usvg::Options::default())
+        .expect("同心环 SVG 解析失败");
+    let pw = ((w * scale).round() as u32).max(1);
+    let ph = ((h * scale).round() as u32).max(1);
+    let mut pixmap = resvg::tiny_skia::Pixmap::new(pw, ph).expect("同心环位图分配失败");
+    resvg::render(&tree, resvg::tiny_skia::Transform::from_scale(scale, scale), &mut pixmap.as_mut());
+    // tiny-skia 是预乘 alpha；界面要直通 RGBA（与 icons 的 straight_rgba 同一转换）。
+    let mut data = pixmap.take();
+    for pixel in data.chunks_exact_mut(4) {
+        let alpha = pixel[3] as u32;
+        if alpha == 0 || alpha == 255 {
+            continue;
+        }
+        for channel in &mut pixel[..3] {
+            *channel = ((*channel as u32 * 255 + alpha / 2) / alpha).min(255) as u8;
+        }
+    }
+    RingsBitmap {
+        rgba: data,
+        x: map.center.x - half_w,
+        y: map.center.y - half_h,
+        width: w,
+        height: h,
+        pixels_w: pw,
+        pixels_h: ph,
+    }
 }
 
 fn straight(kind: LinkKind, color: &'static str, from: Point, to: Point) -> Link {
