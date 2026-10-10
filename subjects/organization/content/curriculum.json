@@ -1,0 +1,93 @@
+{
+  "id": "organization",
+  "title": "计算机组成原理",
+  "tagline": "从门电路到整机：把看不见的硬件过程一步步走出来",
+  "description": "408 计算机组成原理（ADR 0115）：七章按考纲排列，机制类内容先预测再单步模拟，数据表示类内容用本机 C++ 实验真跑验证。",
+  "spine": [
+    "看整机 —— 冯·诺依曼结构与性能指标",
+    "算数据 —— 编码、运算电路与溢出",
+    "存数据 —— Cache、主存与虚拟存储的层次",
+    "执行指令 —— 指令格式、寻址与数据通路",
+    "连外设 —— 总线、中断与 DMA"
+  ],
+  "tracks": [
+    {
+      "id": "data",
+      "title": "数据与运算",
+      "color": "#b45309"
+    },
+    {
+      "id": "memory",
+      "title": "存储层次",
+      "color": "#2563eb"
+    },
+    {
+      "id": "cpu",
+      "title": "指令与 CPU",
+      "color": "#7c3aed"
+    },
+    {
+      "id": "io",
+      "title": "总线与 I/O",
+      "color": "#16a34a"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "overview",
+      "title": "计算机系统概述",
+      "track": "cpu",
+      "summary": "冯·诺依曼结构、层次结构与性能指标（CPI、MIPS、执行时间）；软设第 1 章「计算机系统」的组成部分从这里起步。",
+      "topics": [],
+      "checkpoint": null
+    },
+    {
+      "id": "data-representation",
+      "title": "数据的表示和运算",
+      "track": "data",
+      "summary": "进位计数与编码、原码补码移码、定点加减与溢出判断、乘除运算、IEEE 754 浮点与规格化；补码溢出与浮点精度用 C++ 实验真跑。",
+      "topics": [],
+      "checkpoint": null
+    },
+    {
+      "id": "memory-hierarchy",
+      "title": "存储系统",
+      "track": "memory",
+      "summary": "存储器层次、主存与容量扩展、Cache 映射与替换（先预测命中再单步模拟）、虚拟存储与 TLB 地址转换。",
+      "topics": [],
+      "checkpoint": null
+    },
+    {
+      "id": "instruction-set",
+      "title": "指令系统",
+      "track": "cpu",
+      "summary": "指令格式、操作码扩展、寻址方式与有效地址计算、CISC 与 RISC；与 machine 应用的汇编视角分工（ADR 0115）。",
+      "topics": [],
+      "checkpoint": null
+    },
+    {
+      "id": "cpu",
+      "title": "中央处理器",
+      "track": "cpu",
+      "summary": "CPU 功能与结构、数据通路、硬布线与微程序控制器、指令流水线与冒险（先预测各段时钟周期再单步）、多处理器基本概念。",
+      "topics": [],
+      "checkpoint": null
+    },
+    {
+      "id": "bus",
+      "title": "总线",
+      "track": "io",
+      "summary": "总线结构与分类、仲裁、定时方式、总线带宽计算。",
+      "topics": [],
+      "checkpoint": null
+    },
+    {
+      "id": "io-system",
+      "title": "输入输出系统",
+      "track": "io",
+      "summary": "I/O 接口与端口编址、程序查询、中断（响应过程与屏蔽字）、DMA 与周期挪用；中断与 DMA 时序先预测再演示。",
+      "topics": [],
+      "checkpoint": null
+    }
+  ]
+}
