@@ -52,14 +52,14 @@ function useIconTextures(app: AppDto): { sphere: THREE.Texture | null; badge: TH
         }
         if (img.complete && img.naturalWidth > 0) {
           clearInterval(poll);
-          // 球面贴图：白底 + 图标 4×2 平铺整个等距柱状画布——全球覆盖，
-          // 行星转到任何角度球面上都有图标（两极略有拉伸，平铺图案可接受）。
+          // 球面贴图：领域色底（同组同色，归属一眼可辨）+ 图标 4×2 平铺整个
+          // 等距柱状画布——全球覆盖，行星转到任何角度球面上都有图标。
           const sphereTex = make((ctx) => {
-            ctx.fillStyle = "#ffffff";
+            ctx.fillStyle = app.accent;
             ctx.fillRect(0, 0, 1024, 512);
             for (let row = 0; row < 2; row++) {
               for (let col = 0; col < 4; col++) {
-                ctx.drawImage(img, col * 256 + 28, row * 256 + 28, 200, 200);
+                ctx.drawImage(img, col * 256 + 63, row * 256 + 63, 130, 130);
               }
             }
           }, 1024, 512);

@@ -5,7 +5,7 @@ import OrbitScene from "./scene/OrbitScene";
 
 export default function App() {
   const [catalog, setCatalog] = useState<CatalogDto | null>(null);
-  const [view, setView] = useState<"orbit" | "mindmap">("mindmap");
+  const [view, setView] = useState<"orbit" | "mindmap">("orbit");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
