@@ -7171,6 +7171,155 @@
               "hint": "C++ 编译器不允许 goto 跳过带初始化的声明，所以三个变量都要在第一个 goto 之前声明。"
             }
           ]
+        },
+        {
+          "id": "dp.c.alloc-ownership",
+          "title": "谁分配谁释放：调用方给缓冲区",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "strategy",
+          "requires": [
+            "dp.c.goto-cleanup",
+            "dp.sit.ownership"
+          ],
+          "track": "non-oo",
+          "guide_line": "函数在内部 malloc 再返回，释放的责任只写在注释里，调用方一多就有人忘或重复释放。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能为 C 接口选一种清楚的内存归属约定——调用方提供缓冲区，或成对的创建/销毁函数——让“谁释放”从接口形状就看得出来。",
+            "pain": "make_greeting() 返回堆内存，靠注释写着“调用方 free”；漏一处就泄漏，被调函数在出错分支里替人 free 又会重复释放。",
+            "model": "C 没有智能指针，归属只能靠约定。两条最稳的约定：一，调用方提供缓冲区和大小，被调函数返回需要的长度（snprintf 的做法）；二，谁创建谁销毁，成对的 xxx_create/xxx_destroy 放在同一个模块里。",
+            "scope": "这是约定，不是语言强制；约定要写进接口形状和命名，不能只写在注释里。C++ 里对应的是 RAII 与智能指针（情境篇二）。",
+            "judgment": "接口返回 malloc 出来的指针，又没有配套的销毁函数；或者分配和释放出现在不同的函数层级。",
+            "landing": "能把返回堆内存的函数改成“调用方给缓冲区、返回所需长度”的写法，并用返回值检测截断。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "char* make_greeting(const char* name) 内部 malloc 并返回。调用方有三十多处，常有人忘记 free。更稳妥的接口设计是？",
+                "options": [
+                  {
+                    "label": "int format_greeting(char* buf, size_t size, const char* name)：调用方提供缓冲区，返回需要的长度",
+                    "ok": true,
+                    "why": "不再有跨函数的堆内存，没有“谁释放”的问题"
+                  },
+                  {
+                    "label": "在注释里用大字写“必须 free”",
+                    "ok": false,
+                    "why": "注释拦不住遗忘"
+                  },
+                  {
+                    "label": "让 make_greeting 返回后自己再 free 一次作为保险",
+                    "ok": false,
+                    "why": "会变成重复释放"
+                  },
+                  {
+                    "label": "改成返回静态数组",
+                    "ok": false,
+                    "why": "不可重入，多次调用会互相覆盖"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "**谁分配、谁释放**。SEI CERT C 的 **MEM00-C** 说得很直接：在不同模块、不同抽象层级分配和释放内存，很难判断一块内存释放了没有、该不该释放，容易导致内存泄漏、重复释放、使用已释放的内存；所以内存应当在**同一抽象层级**、最好在**同一个代码模块**里分配和释放。原文还举了一个真实漏洞：MIT Kerberos 5 的 ASN.1 解码器出错时释放了自己分配的内存，调用它的库函数收到错误后又去释放同一块内存，造成重复释放。C 里落实这条建议有两种主要写法：**调用方提供缓冲区**——就像标准库的 `snprintf(buf, bufsz, ...)`，它最多写 bufsz-1 个字符，返回的是“缓冲区足够大时本应写入的字符数”，调用方据此发现截断；以及**成对的创建/销毁函数**——如情境篇三「没有 private：不透明类型」里的 stack_create / stack_destroy，谁调用 create，谁负责调用对应的 destroy。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：返回堆内存，释放靠约定",
+                  "code": "/* 返回堆内存，调用方负责 free。 */\nchar* make_greeting(const char* name);\n\nchar* b = make_greeting(\"Li\");\nputs(b);              /* 忘了 free(b)：泄漏 */"
+                },
+                "after": {
+                  "title": "改造后：调用方给缓冲区，返回需要的长度",
+                  "code": "int format_greeting(char* buf, size_t size, const char* name);\n\nchar buf[16];\nint need = format_greeting(buf, sizeof buf, \"Wang the Third\");\nif (need >= (int)sizeof buf)\n    printf(\"truncated: need %d\\n\", need);   /* 没有任何堆分配 */"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "找出返回 malloc 内存的函数，问：释放的责任写在接口里还是只写在注释里？",
+                  "能让调用方在栈上或自己管理的缓冲区里放结果的，就改成“缓冲区 + 大小”参数，返回所需长度（不含结尾的 '\\0'）。",
+                  "必须由被调用方创建对象的（对象大小对调用方不透明、生命周期长），提供成对的 create/destroy，放在同一个模块里，命名对称。",
+                  "实现里不要在被调函数的错误路径上替调用方释放别人分配的内存。",
+                  "调用方检查返回值：长度大于等于缓冲区大小就是被截断了。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "调用方要事先估好缓冲区的大小；放不下就得处理截断。标准库提供的“两次调用”写法是：第一次传空指针和 0 作为缓冲区，只为取得需要的长度（cppreference 说明 snprintf 在 bufsz 为 0 时不写入，buffer 可以是空指针，但返回值照常计算），再按这个长度分配后调用第二次——此时分配和释放仍在调用方这一层。成对的 create/destroy 适合对象本身大、要长期存在的情况；简单的“格式化出一小段文字”用缓冲区更直接。"
+              },
+              {
+                "type": "callout",
+                "title": "对应的 C++ 写法",
+                "text": "C++ 把“释放的责任”写进类型：std::unique_ptr 表示独占所有权，用 RAII 保证释放（见情境篇二「资源泄漏与 RAII」「所有权不清」）。面对 C 接口时，可以用带自定义删除器的 unique_ptr 把 create/destroy 一对包起来，调用处不再写 destroy。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "SEI CERT C 的 MEM00-C 建议内存应当怎样分配和释放？",
+                    "choices": [
+                      {
+                        "label": "在同一抽象层级、最好在同一个代码模块里分配和释放",
+                        "ok": true,
+                        "why": "避免因释放责任不清导致泄漏和重复释放"
+                      },
+                      {
+                        "label": "总是在被调函数里分配，在调用方释放",
+                        "ok": false,
+                        "why": "这正是容易出错的分层方式"
+                      },
+                      {
+                        "label": "分配在底层模块，释放在上层模块",
+                        "ok": false,
+                        "why": "跨层级分配释放违反建议"
+                      },
+                      {
+                        "label": "全部使用静态数组，不用堆内存",
+                        "ok": false,
+                        "why": "建议并不禁止堆内存"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.c.alloc-ownership",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "SEI CERT C 编码规范 MEM00-C「Allocate and free memory in the same module, at the same level of abstraction」（含 MIT Kerberos 5 重复释放案例）；snprintf 的返回值与零长度缓冲区用法：cppreference「std::fprintf, std::sprintf, std::snprintf」（C 部分）；成对创建/销毁见本章「没有 private：不透明类型」所引 SEI CERT DCL12-C。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.c.alloc-ownership.run",
+              "title": "改成“调用方给缓冲区”，不再有堆分配",
+              "case": "c_alloc_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "make_greeting 的两个调用点里，哪个泄漏了？live 是几？",
+              "goal": "按 snprintf 的约定写 int format_greeting(char* buf, size_t size, const char* name)（\"hello, <name>\"）与 int format_farewell(...)（\"bye, <name>\"），返回完整内容需要的长度，内部不得 malloc。把 main 换成 TODO(实验) 注释里的几行。",
+              "pass": {
+                "includes": [
+                  "hello, Wang",
+                  "truncated: need 21",
+                  "bye, Wang",
+                  "live=0"
+                ]
+              }
+            }
+          ]
         }
       ],
       "checkpoint": {
@@ -7305,6 +7454,38 @@
             "covers": "dp.c.goto-cleanup"
           },
           {
+            "stem": "函数 char* make_x() 内部 malloc 并返回，释放的责任只写在注释里。这个接口的主要风险是？",
+            "covers": "dp.c.alloc-ownership",
+            "choices": [
+              {
+                "label": "调用方一多就会有人忘记释放（泄漏）或重复释放",
+                "ok": true,
+                "why": "归属没有体现在接口形状上"
+              },
+              {
+                "label": "返回值类型不对",
+                "ok": false,
+                "why": "类型本身没问题"
+              },
+              {
+                "label": "malloc 比 new 慢",
+                "ok": false,
+                "why": "与问题无关"
+              },
+              {
+                "label": "函数名太长",
+                "ok": false,
+                "why": "与问题无关"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.c.alloc-ownership",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
+          },
+          {
             "stem": "不透明类型的主要代价是？",
             "choices": [
               {
@@ -7431,6 +7612,38 @@
               "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
             },
             "covers": "dp.c.goto-cleanup"
+          },
+          {
+            "stem": "snprintf(buf, bufsz, ...) 的返回值表示什么？",
+            "covers": "dp.c.alloc-ownership",
+            "choices": [
+              {
+                "label": "缓冲区足够大时本应写入的字符数（不含结尾空字符）",
+                "ok": true,
+                "why": "调用方比较它与 bufsz 就能发现截断"
+              },
+              {
+                "label": "实际写入的字节数，不管有没有截断",
+                "ok": false,
+                "why": "截断时返回值大于实际写入量"
+              },
+              {
+                "label": "缓冲区剩余的空间",
+                "ok": false,
+                "why": "不是剩余空间"
+              },
+              {
+                "label": "总是 0 表示成功",
+                "ok": false,
+                "why": "不是状态码"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.c.alloc-ownership",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
           }
         ]
       }
