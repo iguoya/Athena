@@ -31,5 +31,6 @@
 | [0022](0022-stages-and-textbook-path.md)           | 词库分阶（先易后难子阶段）与教材导入路径 |
 | [0023](0023-brand-name-zhaixing.md)                | 品牌名从「拾阶」改为「摘星」，工程命名不动 |
 | [0024](0024-adopted-moyan-principles.md)           | 从磨砚吸收的掌握度三原则（考核分离、错题出库双条件、回合上限进校验） |
+| [0025](0025-absorb-kaoyan-english2.md)             | 承接考研英语二：磨砚并入摘星，独立章节与入口；参考资料分流规则待定 |
 
 完整的第一版功能范围见：https://claude.ai/code/artifact/93687992-8596-41b3-9acf-87199ac80580
