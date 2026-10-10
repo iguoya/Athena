@@ -571,17 +571,17 @@ fn set_mind_map(window: &LauncherWindow, map: &mindmap::MindMap) {
     window.set_center_y(map.center.y);
 }
 
-/// 一条连线：几何照搬布局，透明度按种类定——虎头到领域的最淡，演进线不透明，
-/// 相关线比分支略深，免得和分支线混成一片。
+/// 一条连线：几何照搬布局，透明度按种类定——演进线不透明，相关线比分支略深，
+/// 免得和分支线混成一片。挂靠/引用线常常横跨半个画布，压到一成上下当背景纹理，
+/// 交叉多时才不至于糊成一片（总览时骨架优先）。
 fn map_link(link: &mindmap::Link) -> MapLink {
     let (kind, alpha) = match link.kind {
-        mindmap::LinkKind::Hub => (0, 0x66),
         mindmap::LinkKind::Branch => (1, 0x88),
         mindmap::LinkKind::Evolves => (2, 0xff),
         mindmap::LinkKind::Related => (3, 0xc0),
-        mindmap::LinkKind::Attach => (4, 0xe6),
-        // 引用挂靠比主挂靠淡一档：一眼分得出哪条是本体、哪条是引用（ADR 0116）。
-        mindmap::LinkKind::Reference => (5, 0x8c),
+        mindmap::LinkKind::Attach => (4, 0x4d),
+        // 引用挂靠比主挂靠再淡一档：一眼分得出哪条是本体、哪条是引用（ADR 0116）。
+        mindmap::LinkKind::Reference => (5, 0x2e),
     };
     let base = parse_color(link.color, "思维导图");
     let [a, b, c] = link.arrow.unwrap_or([link.to; 3]);

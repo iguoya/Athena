@@ -39,13 +39,13 @@ pub const HUB_R: f32 = 46.0;
 /// 椭圆长短轴之比。16:10 是主流屏幕的横向形态，正圆（1:1）对宽屏最不友好。
 const ASPECT: f32 = 1.6;
 /// 领域胶囊层的起始短半轴：胶囊外推的起点，装不下会沿椭圆向外长。
-const PILL_B: f32 = 132.0;
+const PILL_B: f32 = 152.0;
 // 应用层与胶囊层、层与层之间的间距要隔一个图块对角线（见 SLOT）：两层上斜着相邻的
 // 图块，层距小于对角线就会重叠。
-const LAYER_GAP: f32 = 172.0;
+const LAYER_GAP: f32 = 200.0;
 /// 内层短半轴的下限：图块下半截（标题、状态点）悬在图标中心下方 86px，斜上方的图块
-/// 会压住同一角度上的领域胶囊，所以应用内层与胶囊层至少隔 ≈152px。
-const INNER_B_MIN: f32 = 258.0;
+/// 会压住同一角度上的领域胶囊，所以应用内层与胶囊层至少隔一大截。
+const INNER_B_MIN: f32 = 300.0;
 /// 同一层上相邻两个图块的中心至少隔这么远。取图块对角线（√(116²+124²) ≈ 170）：
 /// 图块是矩形，斜着挨在一起时，中心距小于对角线就可能重叠，光比「比宽度大」不够。
 const SLOT: f32 = 171.0;
@@ -204,8 +204,6 @@ pub struct AppNode {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LinkKind {
-    /// 虎头 → 领域。
-    Hub,
     /// 领域 → 应用。
     Branch,
     /// 谁从谁长出来：带箭头。
@@ -626,16 +624,9 @@ pub fn layout(apps: &[App]) -> MindMap {
     let mut rings: Vec<(f32, f32)> = vec![(pill.a, pill.b)];
     rings.extend(layers.iter().map(|l| (l.a, l.b)));
 
-    // 5. 连线。
+    // 5. 连线。虎头不再向领域胶囊放射线：胶囊的位置本身已表达「从中心长出」，
+    //    放射线只在中心叠出一团交叉。
     let mut links: Vec<Link> = Vec::new();
-    for group in &groups {
-        links.push(straight(
-            LinkKind::Hub,
-            group.color,
-            center.toward(group.at, HUB_R),
-            group.at.toward(center, PILL_H / 2.0 + 4.0),
-        ));
-    }
     for (i, node) in nodes.iter().enumerate() {
         // 挂靠节点只画父应用来的挂靠线（ADR 0092），不画领域分支线——
         // 它的 group 沿用挂靠者，若不跳过会多出一条领域胶囊连过来的假分支。引用节点同理。
@@ -901,7 +892,6 @@ mod tests {
         let kinds = |k: LinkKind| map.links.iter().filter(|l| l.kind == k).count();
         assert_eq!(kinds(LinkKind::Evolves), 1);
         assert_eq!(kinds(LinkKind::Related), 1);
-        assert_eq!(kinds(LinkKind::Hub), 2);
         assert_eq!(kinds(LinkKind::Branch), 3);
         let evolves = map.links.iter().find(|l| l.kind == LinkKind::Evolves).unwrap();
         assert!(evolves.arrow.is_some());
@@ -911,7 +901,9 @@ mod tests {
 
     #[test]
     fn 一个组应用很多时加外圈而不重叠() {
-        let apps: Vec<App> = (0..14).map(|i| app(&format!("a{i}"), Some("大组"), None, &[])).collect();
+        // 数量要压得过放大后的内层周长预算（16 × SLOT > 内层周长 × 0.97），
+        // 否则整组装得下单层，就构造不出「外推」的场景了。
+        let apps: Vec<App> = (0..16).map(|i| app(&format!("a{i}"), Some("大组"), None, &[])).collect();
         let map = layout(&apps);
         // 大组装不下内层时整组外推(兄弟同层,ADR 0101),而不是把后排兄弟拆到内层。
         assert!(
