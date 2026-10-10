@@ -12,14 +12,12 @@ const STATE_COLOR: Record<AppDto["state"], string> = {
 
 const SPHERE_R = 34;
 
-// 图标的两张贴图：球面雕纹（accent 底 + 低透明图标，随自转缓缓移动，让自转可见）
-// 与正面徽章（透明底全彩图标，始终朝向相机保证可读）。material 随贴图到位用 key
-// 重建——动态挂 map 不触发 shader 重编译，会渲染成无贴图的白球。
-type TexStatus = "waiting" | "loading" | "loaded" | "error" | "no-icon";
+// 球面贴图：领域色底 + 图标 4×2 全球平铺。material 随贴图到位用 key 重建——
+// 动态挂 map 不触发 shader 重编译，会渲染成无贴图的白球。
+type TexStatus = "loading" | "loaded" | "error" | "no-icon";
 
-function useIconTextures(app: AppDto): { sphere: THREE.Texture | null; badge: THREE.Texture | null; status: TexStatus } {
-  const [sphere, setSphere] = useState<THREE.Texture | null>(null);
-  const [badge, setBadge] = useState<THREE.Texture | null>(null);
+function useSphereTexture(app: AppDto): { texture: THREE.Texture | null; status: TexStatus } {
+  const [texture, setTexture] = useState<THREE.Texture | null>(null);
   const [status, setStatus] = useState<TexStatus>("loading");
   useEffect(() => {
     let alive = true;
@@ -34,11 +32,10 @@ function useIconTextures(app: AppDto): { sphere: THREE.Texture | null; badge: TH
       tex.wrapS = THREE.RepeatWrapping;
       return tex;
     };
-    const done = (sphereTex: THREE.Texture, badgeTex: THREE.Texture | null, st: TexStatus) => {
+    const done = (texture: THREE.Texture, st: TexStatus) => {
       if (!alive) return;
       setStatus(st);
-      setSphere(sphereTex);
-      setBadge(badgeTex);
+      setTexture(texture);
     };
     if (app.icon) {
       const img = new Image();
@@ -52,9 +49,7 @@ function useIconTextures(app: AppDto): { sphere: THREE.Texture | null; badge: TH
         }
         if (img.complete && img.naturalWidth > 0) {
           clearInterval(poll);
-          // 球面贴图：领域色底（同组同色，归属一眼可辨）+ 图标 4×2 平铺整个
-          // 等距柱状画布——全球覆盖，行星转到任何角度球面上都有图标。
-          const sphereTex = make((ctx) => {
+          const texture = make((ctx) => {
             ctx.fillStyle = app.accent;
             ctx.fillRect(0, 0, 1024, 512);
             for (let row = 0; row < 2; row++) {
@@ -63,29 +58,26 @@ function useIconTextures(app: AppDto): { sphere: THREE.Texture | null; badge: TH
               }
             }
           }, 1024, 512);
-          const badgeTex = make((ctx) => {
-            ctx.clearRect(0, 0, 256, 256);
-            ctx.drawImage(img, 28, 28, 200, 200);
-          });
-          done(sphereTex, badgeTex, "loaded");
+          done(texture, "loaded");
         } else if (img.complete) {
           clearInterval(poll);
-          const fb = makeFallback(app.accent, app.letter, false);
-          done(fb.sphere, fb.badge, "error");
+          const fb = makeFallback(app.accent, app.letter);
+          done(fb.texture, "error");
         }
       }, 80);
     } else {
-      const fb = makeFallback(app.accent, app.letter, true); done(fb.sphere, fb.badge, "error");
+      const fb = makeFallback(app.accent, app.letter);
+      done(fb.texture, "no-icon");
     }
     return () => {
       alive = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [app.id]);
-  return { sphere, badge, status };
+  return { texture, status };
 }
 
-function makeFallback(accent: string, letter: string, withBadge: boolean): { sphere: THREE.Texture; badge: THREE.Texture | null } {
+function makeFallback(accent: string, letter: string): { texture: THREE.Texture } {
   const mk = (draw: (ctx: CanvasRenderingContext2D) => void, w = 256, h = 256) => {
     const canvas = document.createElement("canvas");
     canvas.width = w;
@@ -97,7 +89,7 @@ function makeFallback(accent: string, letter: string, withBadge: boolean): { sph
     tex.wrapS = THREE.RepeatWrapping;
     return tex;
   };
-  const sphereTex = mk((ctx) => {
+  const texture = mk((ctx) => {
     ctx.fillStyle = accent;
     ctx.fillRect(0, 0, 1024, 512);
     ctx.fillStyle = "rgba(255,255,255,0.4)";
@@ -110,19 +102,7 @@ function makeFallback(accent: string, letter: string, withBadge: boolean): { sph
       }
     }
   }, 1024, 512);
-  const badgeTex = mk((ctx) => {
-    ctx.clearRect(0, 0, 256, 256);
-    ctx.fillStyle = accent;
-    ctx.beginPath();
-    ctx.arc(128, 128, 110, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "white";
-    ctx.font = "600 96px 'Segoe UI', sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(letter.slice(0, 2), 128, 130);
-  });
-  return withBadge ? { sphere: sphereTex, badge: badgeTex } : { sphere: sphereTex, badge: null };
+  return { texture };
 }
 
 function IconSphere({
@@ -135,11 +115,9 @@ function IconSphere({
   hovered: boolean;
   onHover: (id: string | null) => void;
 }) {
-  const { sphere: sphereTex, badge: badgeTex } = useIconTextures(app);
+  const { texture: sphereTex } = useSphereTexture(app);
   const spinner = useRef<THREE.Group>(null);
   const planet = useRef<THREE.Group>(null);
-  const badge = useRef<THREE.Mesh>(null);
-  const camDir = useMemo(() => new THREE.Vector3(), []);
   // 自转速度与相位按序号差异化，行星各转各的；相位让悬浮错落。
   const spinSpeed = useMemo(() => 0.35 + ((index * 37) % 40) / 100, [index]);
   const floatPhase = useMemo(() => (index * 137.5 * Math.PI) / 180, [index]);
@@ -149,7 +127,7 @@ function IconSphere({
   const orbitOmega = useMemo(() => -0.22 * (300 / orbit.a), [orbit.a]);
   const elapsed = useRef(0);
   // 公转位置 + 自转 + 上下悬浮 + 悬停缩放，全部帧插值。
-  useFrame(({ camera }, delta) => {
+  useFrame((_, delta) => {
     elapsed.current += delta;
     if (planet.current) {
       // 与 core 的 layout3d 同一套正变换，theta 随时间推进即沿椭圆公转
@@ -160,12 +138,6 @@ function IconSphere({
       const sl = Math.sin(orbit.tilt), cl = Math.cos(orbit.tilt);
       planet.current.position.set(px, -pz0 * sl, pz0 * cl);
     }
-    if (planet.current && badge.current) {
-      // 徽章 billboard：悬在行星朝相机的一侧，且平面永远正对屏幕，图标不变形。
-      camDir.copy(camera.position).sub(planet.current.position).normalize();
-      badge.current.position.copy(camDir).multiplyScalar(SPHERE_R + 1.5);
-      badge.current.quaternion.copy(camera.quaternion);
-    }
     if (!spinner.current) return;
     spinner.current.rotation.y += spinSpeed * delta;
     spinner.current.position.y = Math.sin(elapsed.current * 0.9 + floatPhase) * 5;
@@ -173,9 +145,6 @@ function IconSphere({
     const s = spinner.current.scale.x + (target - spinner.current.scale.x) * Math.min(1, delta * 10);
     spinner.current.scale.setScalar(s);
   });
-
-  // 贴图到位前不挂徽章（避免白方块一闪）。
-  const badgeReady = badgeTex !== null;
 
   return (
     <group ref={planet}>
@@ -207,13 +176,6 @@ function IconSphere({
           <meshBasicMaterial color={STATE_COLOR[app.state]} transparent opacity={hovered ? 1 : 0.85} />
         </mesh>
       </group>
-      {/* 图标徽章：billboard——始终正对相机，位置悬在行星朝相机的一侧，永远清晰。 */}
-      {badgeReady && (
-        <mesh ref={badge}>
-          <planeGeometry args={[SPHERE_R * 1.3, SPHERE_R * 1.3]} />
-          <meshBasicMaterial map={badgeTex} transparent depthWrite={false} />
-        </mesh>
-      )}
       <Html position={[0, -(SPHERE_R + 26), 0]} center distanceFactor={900} zIndexRange={[10, 0]}>
         <div
           style={{
@@ -252,7 +214,7 @@ function OrbitRing({ a, b, c, tilt }: { a: number; b: number; c: number; tilt: n
   return <primitive object={line} />;
 }
 
-// 黄道面：径向渐变的半透明圆盘铺在轨道之下，承接行星投影——「太阳系仪底盘」。
+// 黄道面：单层圆盘，径向渐变的半透明贴图 + 承接行星投影，一个 mesh 干两件事。
 function EclipticPlane() {
   const gradTex = useMemo(() => {
     const canvas = document.createElement("canvas");
@@ -260,8 +222,8 @@ function EclipticPlane() {
     canvas.height = 512;
     const ctx = canvas.getContext("2d")!;
     const grad = ctx.createRadialGradient(256, 256, 30, 256, 256, 256);
-    grad.addColorStop(0, "rgba(84, 104, 164, 0.22)");
-    grad.addColorStop(0.55, "rgba(84, 104, 164, 0.10)");
+    grad.addColorStop(0, "rgba(84, 104, 164, 0.25)");
+    grad.addColorStop(0.55, "rgba(84, 104, 164, 0.12)");
     grad.addColorStop(1, "rgba(84, 104, 164, 0)");
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, 512, 512);
@@ -270,16 +232,10 @@ function EclipticPlane() {
     return tex;
   }, []);
   return (
-    <group>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -8, 0]}>
-        <circleGeometry args={[2400, 96]} />
-        <meshBasicMaterial map={gradTex} transparent depthWrite={false} />
-      </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -7, 0]} receiveShadow>
-        <circleGeometry args={[2400, 96]} />
-        <shadowMaterial opacity={0.14} />
-      </mesh>
-    </group>
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -8, 0]} receiveShadow>
+      <circleGeometry args={[2400, 96]} />
+      <meshStandardMaterial map={gradTex} transparent depthWrite={false} roughness={1} />
+    </mesh>
   );
 }
 
@@ -301,7 +257,7 @@ function TigerCore({ hovered }: { hovered: string | null }) {
   );
 }
 
-// 领域轨道环（ADR 0125）：虎头居中为恒星，每颗应用是一颗带图标徽章的行星球体；
+// 领域轨道环（ADR 0125）：虎头居中为恒星，每颗应用是一颗贴着自家图标的行星球体；
 // 布局坐标全部来自 launcher-core 的 layout3d，前端只渲染。
 export default function OrbitScene({ catalog }: { catalog: CatalogDto }) {
   const [hovered, setHovered] = useState<string | null>(null);
