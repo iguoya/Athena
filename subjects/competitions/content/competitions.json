@@ -1,0 +1,557 @@
+{
+  "_": "赛历数据（主仓库 ADR 0114）。students / public 取值：yes 允许、no 不允许、per-event 以单场规则为准、pending 待核对。verify.level：official 官方章程、notice 往届或院校转发的通知、report 第三方报道、pending 未核对。没有核对来源的条目一律 pending，不凭印象写允许；url 只填确认过的官网，不确定留 null。",
+  "directions": [
+    {
+      "id": "algo",
+      "title": "算法编程"
+    },
+    {
+      "id": "math",
+      "title": "数学与建模"
+    },
+    {
+      "id": "hardware",
+      "title": "电子与嵌入式"
+    },
+    {
+      "id": "security",
+      "title": "网络安全"
+    },
+    {
+      "id": "data",
+      "title": "数据与 AI"
+    },
+    {
+      "id": "english",
+      "title": "英语"
+    },
+    {
+      "id": "general",
+      "title": "软件与综合创新"
+    }
+  ],
+  "competitions": [
+    {
+      "id": "icpc",
+      "name": "ICPC 国际大学生程序设计竞赛",
+      "direction": "algo",
+      "organizer": "ICPC Foundation",
+      "students": "yes",
+      "public": "no",
+      "note": "须在学位项目中注册且至少半时；同校三人一队；参赛年限与参赛次数有上限，截止年份每季调整。",
+      "window": null,
+      "url": "https://icpc.global",
+      "courses": [
+        "算法设计",
+        "数据结构"
+      ],
+      "verify": {
+        "level": "notice",
+        "source": "https://competition.binus.ac.id/icpc2019/index/rules",
+        "date": "2026-10-10"
+      }
+    },
+    {
+      "id": "lanqiao",
+      "name": "蓝桥杯全国软件和信息技术专业人才大赛",
+      "direction": "algo",
+      "organizer": null,
+      "students": "yes",
+      "public": "no",
+      "note": "面向具有正式全日制学籍的研究生、本科生与高职高专学生；社会人士只能以企业顾问身份参与，没有独立组别。",
+      "window": "省赛约 4 月，总决赛约 6 月（第十七届通知）",
+      "url": "https://dasai.lanqiao.cn",
+      "courses": [
+        "算法设计",
+        "数据结构",
+        "C++ 教程"
+      ],
+      "verify": {
+        "level": "notice",
+        "source": "https://jwc.ustb.edu.cn/docs/2026-03/93bc9052694b411ba47ba6d6fd460ccf.pdf",
+        "date": "2026-10-10"
+      }
+    },
+    {
+      "id": "gplt",
+      "name": "团体程序设计天梯赛（中国高校计算机大赛）",
+      "direction": "algo",
+      "organizer": null,
+      "students": "yes",
+      "public": "no",
+      "note": "以高校为单位组队，队员须是在册本科生或专科生，每队最多 10 人并配本校教师作教练（2022 年规程）。",
+      "window": null,
+      "url": null,
+      "courses": [
+        "算法设计",
+        "数据结构"
+      ],
+      "verify": {
+        "level": "notice",
+        "source": "https://rongrong.sjtu.edu.cn/uploadfiles/2022/07/20220722172532308.pdf",
+        "date": "2026-10-10"
+      }
+    },
+    {
+      "id": "csp",
+      "name": "CCF CSP 计算机软件能力认证",
+      "direction": "algo",
+      "organizer": "中国计算机学会（CCF）",
+      "students": "yes",
+      "public": "yes",
+      "note": "认证而非竞赛，但与机试同型；专业级面向在校生与 IT 从业者。部分院校考研复试认可 CSP 成绩，以当年招生简章为准。",
+      "window": null,
+      "url": "https://www.cspro.org",
+      "courses": [
+        "算法设计",
+        "数据结构",
+        "C++ 教程"
+      ],
+      "verify": {
+        "level": "report",
+        "source": "https://www.zizzs.com/gk/jingsai/170946.html",
+        "date": "2026-10-10"
+      }
+    },
+    {
+      "id": "codeforces",
+      "name": "Codeforces 在线赛",
+      "direction": "algo",
+      "organizer": null,
+      "students": "yes",
+      "public": "yes",
+      "note": "在线积分赛，注册账号即可参加 Div. 2、Div. 3 与 Div. 1+2 等轮次，是否计入积分看当前分数段；适合日常算法练手。",
+      "window": "每周多场",
+      "url": "https://codeforces.com",
+      "courses": [
+        "算法设计",
+        "数据结构"
+      ],
+      "verify": {
+        "level": "report",
+        "source": "https://codeforces.com/blog/entry/93104",
+        "date": "2026-10-10"
+      }
+    },
+    {
+      "id": "atcoder",
+      "name": "AtCoder 在线赛",
+      "direction": "algo",
+      "organizer": null,
+      "students": "yes",
+      "public": "yes",
+      "note": "官方比赛页标明「Can Participate: All」，计分区间按场设定（如 ABC 为 0–1999）；入门向的 ABC 场适合初学者。",
+      "window": "每周",
+      "url": "https://atcoder.jp",
+      "courses": [
+        "算法设计",
+        "数据结构"
+      ],
+      "verify": {
+        "level": "official",
+        "source": "https://atcoder.jp/contests/abc465",
+        "date": "2026-10-10"
+      }
+    },
+    {
+      "id": "leetcode",
+      "name": "力扣周赛",
+      "direction": "algo",
+      "organizer": null,
+      "students": "pending",
+      "public": "pending",
+      "note": "在线周赛与双周赛，题型贴近面试与复试机试。未查到写明参赛对象的官方规则，资格待核对。",
+      "window": "每周",
+      "url": "https://leetcode.cn/contest/",
+      "courses": [
+        "算法设计",
+        "数据结构"
+      ],
+      "verify": {
+        "level": "pending",
+        "source": null,
+        "date": null
+      }
+    },
+    {
+      "id": "cumcm",
+      "name": "全国大学生数学建模竞赛",
+      "direction": "math",
+      "organizer": "中国工业与应用数学学会",
+      "students": "yes",
+      "public": "no",
+      "note": "面向全国大学生，3 名大学生一队；研究生另有中国研究生数学建模竞赛。",
+      "window": null,
+      "url": null,
+      "courses": [
+        "数学学习",
+        "数学工具"
+      ],
+      "verify": {
+        "level": "notice",
+        "source": "https://jkc.nhjcxy.edu.cn/rootfiles/2024/04/25/1713247697591133-1713247697922660.pdf",
+        "date": "2026-10-10"
+      }
+    },
+    {
+      "id": "mathorcup",
+      "name": "MathorCup 高校数学建模挑战赛",
+      "direction": "math",
+      "organizer": null,
+      "students": "yes",
+      "public": "no",
+      "note": "往届通知与报道均写明面向全日制高校学生；未查到当届章程。",
+      "window": null,
+      "url": "https://www.mathorcup.org",
+      "courses": [
+        "数学学习",
+        "数学工具"
+      ],
+      "verify": {
+        "level": "report",
+        "source": "https://english.zzu.edu.cn/info/1024/1269.htm",
+        "date": "2026-10-10"
+      }
+    },
+    {
+      "id": "mcm",
+      "name": "美国大学生数学建模竞赛（MCM/ICM）",
+      "direction": "math",
+      "organizer": "COMAP",
+      "students": "pending",
+      "public": "pending",
+      "note": "资格未核对。",
+      "window": null,
+      "url": "https://www.comap.com/contests/mcm-icm",
+      "courses": [
+        "数学学习",
+        "数学工具"
+      ],
+      "verify": {
+        "level": "pending",
+        "source": null,
+        "date": null
+      }
+    },
+    {
+      "id": "cmc",
+      "name": "全国大学生数学竞赛",
+      "direction": "math",
+      "organizer": null,
+      "students": "pending",
+      "public": "pending",
+      "note": "资格未核对。",
+      "window": null,
+      "url": null,
+      "courses": [
+        "数学学习"
+      ],
+      "verify": {
+        "level": "pending",
+        "source": null,
+        "date": null
+      }
+    },
+    {
+      "id": "nuedc",
+      "name": "全国大学生电子设计竞赛",
+      "direction": "hardware",
+      "organizer": null,
+      "students": "yes",
+      "public": "no",
+      "note": "初赛面向具有正式学籍的全日制本科或高职高专学生，决赛限本科生，3 人一队（2024 年专题赛通知）。",
+      "window": null,
+      "url": null,
+      "courses": [
+        "硬件实验台",
+        "嵌入式系统设计师",
+        "计算机组成原理"
+      ],
+      "verify": {
+        "level": "notice",
+        "source": "https://jw.beijing.gov.cn/gjc/tzgg_15688/202404/P020240407397175599979.docx",
+        "date": "2026-10-10"
+      }
+    },
+    {
+      "id": "smartcar",
+      "name": "全国大学生智能汽车竞赛",
+      "direction": "hardware",
+      "organizer": null,
+      "students": "pending",
+      "public": "pending",
+      "note": "资格未核对。",
+      "window": null,
+      "url": null,
+      "courses": [
+        "硬件实验台",
+        "实时操作系统（RTOS）",
+        "嵌入式程序设计"
+      ],
+      "verify": {
+        "level": "pending",
+        "source": null,
+        "date": null
+      }
+    },
+    {
+      "id": "embedded-chip",
+      "name": "全国大学生嵌入式芯片与系统设计竞赛",
+      "direction": "hardware",
+      "organizer": null,
+      "students": "pending",
+      "public": "pending",
+      "note": "资格未核对。",
+      "window": null,
+      "url": null,
+      "courses": [
+        "嵌入式系统设计师",
+        "嵌入式程序设计",
+        "硬件实验台"
+      ],
+      "verify": {
+        "level": "pending",
+        "source": null,
+        "date": null
+      }
+    },
+    {
+      "id": "robomaster",
+      "name": "RoboMaster 机甲大师高校系列赛",
+      "direction": "hardware",
+      "organizer": null,
+      "students": "pending",
+      "public": "pending",
+      "note": "资格未核对。",
+      "window": null,
+      "url": "https://www.robomaster.com",
+      "courses": [
+        "实时操作系统（RTOS）",
+        "硬件实验台"
+      ],
+      "verify": {
+        "level": "pending",
+        "source": null,
+        "date": null
+      }
+    },
+    {
+      "id": "ciscn",
+      "name": "全国大学生信息安全竞赛",
+      "direction": "security",
+      "organizer": null,
+      "students": "pending",
+      "public": "pending",
+      "note": "资格未核对。",
+      "window": null,
+      "url": null,
+      "courses": [
+        "计算机网络",
+        "Linux 程序设计"
+      ],
+      "verify": {
+        "level": "pending",
+        "source": null,
+        "date": null
+      }
+    },
+    {
+      "id": "qiangwang",
+      "name": "强网杯全国网络安全挑战赛",
+      "direction": "security",
+      "organizer": null,
+      "students": "yes",
+      "public": "yes",
+      "note": "参赛队来自关键信息基础设施单位、行业部门、高校、科研机构、安全与互联网企业和社会力量；另有面向 10–18 岁的青少年专项赛。",
+      "window": null,
+      "url": null,
+      "courses": [
+        "计算机网络",
+        "Linux 程序设计"
+      ],
+      "verify": {
+        "level": "report",
+        "source": "https://www.secrss.com/articles/61850",
+        "date": "2026-10-10"
+      }
+    },
+    {
+      "id": "wangding",
+      "name": "网鼎杯网络安全大赛",
+      "direction": "security",
+      "organizer": null,
+      "students": "yes",
+      "public": "yes",
+      "note": "按行业类型分四个组别（青龙、白虎、朱雀、玄武）；2020 届面向行业部门、科研机构、院校、企业与社会力量开放。各组对应人群以当届章程为准。",
+      "window": null,
+      "url": "https://www.wangdingcup.com",
+      "courses": [
+        "计算机网络",
+        "Linux 程序设计"
+      ],
+      "verify": {
+        "level": "report",
+        "source": "https://www.secrss.com/articles/17838",
+        "date": "2026-10-10"
+      }
+    },
+    {
+      "id": "bdci",
+      "name": "CCF 大数据与计算智能大赛（BDCI）",
+      "direction": "data",
+      "organizer": "中国计算机学会（CCF）",
+      "students": "yes",
+      "public": "yes",
+      "note": "历届参赛者来自高校、企事业单位与科研机构；个人与企业报名细则以当届赛题页为准。",
+      "window": null,
+      "url": "https://www.datafountain.cn",
+      "courses": [
+        "数据库",
+        "算法设计"
+      ],
+      "verify": {
+        "level": "report",
+        "source": "https://en.sophgo.com/competition/introduction.html?id=16",
+        "date": "2026-10-10"
+      }
+    },
+    {
+      "id": "tianchi",
+      "name": "阿里云天池大赛",
+      "direction": "data",
+      "organizer": "阿里云",
+      "students": "per-event",
+      "public": "per-event",
+      "note": "没有统一的参赛对象规定：不少赛事面向全社会开放（个人、高校、企业、科研单位均可），也有只面向高校学生的校园赛，以单场规则为准。",
+      "window": null,
+      "url": "https://tianchi.aliyun.com",
+      "courses": [
+        "数据库",
+        "算法设计"
+      ],
+      "verify": {
+        "level": "report",
+        "source": "https://www.itbear.com.cn/html/2021-06/406294.html",
+        "date": "2026-10-10"
+      }
+    },
+    {
+      "id": "kaggle",
+      "name": "Kaggle 竞赛",
+      "direction": "data",
+      "organizer": "Kaggle",
+      "students": "per-event",
+      "public": "per-event",
+      "note": "多数比赛向个人开放，但每场的 Rules 页可能另加年龄、居住地、团队人数等限制，以单场规则为准。",
+      "window": null,
+      "url": "https://www.kaggle.com/competitions",
+      "courses": [
+        "算法设计",
+        "数学学习"
+      ],
+      "verify": {
+        "level": "report",
+        "source": "https://www.aralia.com/computer-science/kaggle-competitions/",
+        "date": "2026-10-10"
+      }
+    },
+    {
+      "id": "neccs",
+      "name": "全国大学生英语竞赛（NECCS）",
+      "direction": "english",
+      "organizer": null,
+      "students": "pending",
+      "public": "pending",
+      "note": "资格未核对。",
+      "window": null,
+      "url": null,
+      "courses": [
+        "摘星",
+        "磨砚"
+      ],
+      "verify": {
+        "level": "pending",
+        "source": null,
+        "date": null
+      }
+    },
+    {
+      "id": "guocai",
+      "name": "外研社·国才杯大学生英语系列赛",
+      "direction": "english",
+      "organizer": null,
+      "students": "pending",
+      "public": "pending",
+      "note": "资格未核对。",
+      "window": null,
+      "url": null,
+      "courses": [
+        "摘星",
+        "磨砚"
+      ],
+      "verify": {
+        "level": "pending",
+        "source": null,
+        "date": null
+      }
+    },
+    {
+      "id": "jsjds",
+      "name": "中国大学生计算机设计大赛",
+      "direction": "general",
+      "organizer": null,
+      "students": "pending",
+      "public": "pending",
+      "note": "资格未核对。",
+      "window": null,
+      "url": null,
+      "courses": [
+        "软件设计师",
+        "设计模式"
+      ],
+      "verify": {
+        "level": "pending",
+        "source": null,
+        "date": null
+      }
+    },
+    {
+      "id": "cnsoftbei",
+      "name": "中国软件杯大学生软件设计大赛",
+      "direction": "general",
+      "organizer": null,
+      "students": "pending",
+      "public": "pending",
+      "note": "资格未核对。",
+      "window": null,
+      "url": null,
+      "courses": [
+        "软件设计师",
+        "设计模式",
+        "数据库"
+      ],
+      "verify": {
+        "level": "pending",
+        "source": null,
+        "date": null
+      }
+    },
+    {
+      "id": "tiaozhanbei",
+      "name": "挑战杯全国大学生课外学术科技作品竞赛",
+      "direction": "general",
+      "organizer": null,
+      "students": "pending",
+      "public": "pending",
+      "note": "资格未核对。",
+      "window": null,
+      "url": null,
+      "courses": [],
+      "verify": {
+        "level": "pending",
+        "source": null,
+        "date": null
+      }
+    }
+  ]
+}

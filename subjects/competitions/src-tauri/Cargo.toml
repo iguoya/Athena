@@ -1,0 +1,28 @@
+[package]
+name = "athena-competitions"
+version = "0.1.0"
+description = "Athena 赛历：竞赛清单与参赛资格参考"
+authors = ["Athena"]
+edition = "2021"
+
+[lib]
+name = "athena_competitions_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-opener = "2"
+
+[profile.dev]
+debug = 1
+incremental = true
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>赛历</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+    <script type="module" src="/src/main.ts" defer></script>
+  </head>
+  <body>
+    <header class="top">
+      <div>
+        <h1>赛历</h1>
+        <p class="lede">谁能参加、和哪门课对得上。参赛资格每年调整，报名前以当届章程为准。</p>
+      </div>
+      <div class="filters">
+        <div class="seg" role="group" aria-label="参赛身份">
+          <button data-who="all" class="on">全部</button>
+          <button data-who="students">在校生可参</button>
+          <button data-who="public">社会人士可参</button>
+        </div>
+        <select id="direction" aria-label="方向"></select>
+      </div>
+    </header>
+    <main>
+      <p id="count" class="count"></p>
+      <section id="list" class="grid"></section>
+    </main>
+  </body>
+</html>
