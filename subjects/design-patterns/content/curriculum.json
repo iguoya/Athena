@@ -6061,6 +6061,153 @@
               }
             }
           ]
+        },
+        {
+          "id": "dp.sit.type-erasure",
+          "title": "不相关的类型，一起多态：类型擦除",
+          "difficulty": 3,
+          "mastery_goal": "master",
+          "knowledge_type": "strategy",
+          "requires": [
+            "dp.sit.ownership",
+            "dp.sit.interface-design"
+          ],
+          "track": "situations",
+          "guide_line": "几个互不相识的类型都有同一个操作，却没有共同基类、源码也改不了，还想放进同一个容器。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能用“外层值语义包装 + 内部概念接口与模板模型”把没有共同基类的类型统一起来，并说清它和继承式多态的取舍。",
+            "pain": "Circle、Square、Triangle 来自不同的第三方库，都有 draw()，却没有公共基类；想按顺序统一处理，只能每种类型各放一个容器，顺序全丢。",
+            "model": "类型擦除：包装类持有一个只在内部可见的抽象接口（Concept）指针，模板构造函数为每个传入的具体类型生成一个模型类（Model<T>），把调用转发给它。外面只见一个普通的值类型。",
+            "scope": "它擦掉的是“具体类型”，不是“要求”——传入的类型仍必须有 draw()，只是不必继承任何东西。自己能改类型、愿意用指针时，普通继承更简单。",
+            "judgment": "需要统一处理的类型来自不同来源，无法让它们继承同一个基类；或者不想让用户为了使用多态而到处写基类指针和 new。",
+            "landing": "能写出一个最小的类型擦除包装类，把三种无关类型放进同一个 vector 并按顺序调用，再接入第四种类型而不改包装类。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "Circle、Square、Triangle 来自三个第三方库，都有 `std::string draw() const`，没有共同基类，源码不能改。要把它们按放入顺序放进同一个容器统一调用 draw()，怎么组织最合适？",
+                "options": [
+                  {
+                    "label": "写一个包装类 Drawable，用模板构造函数接收任意有 draw() 的类型，内部转发（类型擦除）",
+                    "ok": true,
+                    "why": "不需要它们继承任何东西，包装类自己是值类型"
+                  },
+                  {
+                    "label": "让三个类都继承 Shape 基类",
+                    "ok": false,
+                    "why": "第三方源码改不了"
+                  },
+                  {
+                    "label": "每种类型一个 vector，最后手动合并",
+                    "ok": false,
+                    "why": "放入顺序丢失，新增类型要改合并代码"
+                  },
+                  {
+                    "label": "用 void* 存对象再强制转换",
+                    "ok": false,
+                    "why": "丢掉类型安全，调用方要记住类型"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "继承式多态要求所有类型**先**继承同一个基类，调用者还得通过指针或引用使用它们。**类型擦除**（type erasure）反过来：用一个**类型中立的容器**接口化各种具体类型（More C++ Idioms 的定义）。你每天都在用它——`std::function` 能存放任何可拷贝构造的可调用对象（函数指针、lambda、bind 表达式、函数对象，见 cppreference），`std::any` 能存放任何可拷贝构造类型的值；这个惯用法正被用于它们的内部实现。Sean Parent 的演讲《Value Semantics and Concepts-based Polymorphism》把这条思路讲得最透：多态的要求来自**使用**，不存在“多态的类型”，只有对相似类型的“多态的使用”。做法是三件套：一个只在内部可见的抽象接口 **Concept**，一个为每种具体类型生成的 **Model<T>**，以及外层持有 `unique_ptr<Concept>` 的**包装类**。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：每种类型一个容器",
+                  "code": "std::vector<Circle> circles;\nstd::vector<Square> squares;\n// 放入顺序丢了；新增 Triangle 要再加一个容器和一段循环"
+                },
+                "after": {
+                  "title": "改造后：值类型包装，一个容器",
+                  "code": "class Drawable {\n  struct Concept { virtual ~Concept() = default;\n                   virtual std::string draw() const = 0; };\n  template <class T> struct Model : Concept {\n    T value;\n    std::string draw() const override { return value.draw(); }\n  };\n  std::unique_ptr<Concept> p_;\npublic:\n  template <class T> Drawable(T x) : p_(std::make_unique<Model<T>>(std::move(x))) {}\n  std::string draw() const { return p_->draw(); }\n};\nstd::vector<Drawable> shapes;   // Circle、Square、Triangle 按顺序放进去"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "写出统一处理时真正需要的操作清单（这里是 draw()），它们就是接口的全部。",
+                  "在包装类里声明私有的 Concept：虚析构函数 + 这些操作的纯虚函数。",
+                  "声明 Model<T> 继承 Concept，持有一个 T，把每个虚函数转发给 T 的同名操作。",
+                  "包装类持有 `unique_ptr<Concept>`，提供模板构造函数，用传入的值创建 Model<T>。",
+                  "需要拷贝时，在 Concept 里再加一个 clone() 虚函数，让包装类的拷贝构造调用它；不需要拷贝就只做成可移动。",
+                  "使用时把各种类型直接放进 `std::vector<Drawable>`，不需要 new，也不需要基类指针。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "朴素的写法每装一个对象就多一次堆分配，调用多一次虚函数；要写的样板代码也不少（Folly 的 Poly 等库就是为了减少它）。而且它擦掉的是类型而不是要求：传入的类型必须有 Concept 里列的那些操作，编译期才会报错。如果类型都是你自己的、愿意让大家通过基类指针使用，普通继承更直接；真正需要类型擦除的往往是库的边界——用户的类型各不相同，你不想强迫它们继承你的基类。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "Concept/Model 的结构很像适配器（把不同类型适配到同一接口，只是适配器由模板自动生成）；`std::function` 放 lambda，就是策略模式的轻量写法（见模式工具箱「策略」一节的 C++ 说明）。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "类型擦除包装类（如 Drawable）的模板构造函数为什么能接收没有公共基类的类型？",
+                    "choices": [
+                      {
+                        "label": "它为每个传入的类型生成一个继承内部 Concept 的 Model<T>，由 Model 转发调用",
+                        "ok": true,
+                        "why": "继承关系只发生在包装类内部，使用者的类型不必继承任何东西"
+                      },
+                      {
+                        "label": "因为 C++ 允许任意类型隐式转换成基类",
+                        "ok": false,
+                        "why": "没有这样的规则"
+                      },
+                      {
+                        "label": "因为用了 void* 保存对象",
+                        "ok": false,
+                        "why": "那样会丢失类型安全"
+                      },
+                      {
+                        "label": "因为编译器自动生成了公共基类",
+                        "ok": false,
+                        "why": "没有自动生成"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.type-erasure",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "cppreference「std::function」「std::any」对两者能存放什么类型的描述（已对照原页）；More C++ Idioms（Wikibooks）「Type Erasure」「Polymorphic Value Types」：定义、已知用途与 Concept/Model/包装类的结构；Sean Parent 的演讲《Value Semantics and Concepts-based Polymorphism》与《Inheritance Is The Base Class of Evil》（Wikibooks 引用的参考文献，本课未取得演讲原稿，年份以原演讲为准）。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.type-erasure.run",
+              "title": "写一个 Drawable，把三种无关类型放进一个 vector",
+              "case": "sit_type_erasure_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "现在的 by type 输出里，放入的先后顺序还在吗？如果再来第四种类型，现在的写法要改几处？",
+              "goal": "写 class Drawable：内部 Concept + 模板 Model<T>，持有 unique_ptr<Concept>，模板构造函数接收任意有 draw() 的类型，成员 draw() 转发。解开 main 里的 TODO(实验) 行：Circle、Square、Circle、Triangle 按顺序放进同一个 vector<Drawable>。",
+              "pass": {
+                "includes": [
+                  "order: circle,square,circle,triangle"
+                ]
+              }
+            }
+          ]
         }
       ],
       "checkpoint": {
@@ -6225,6 +6372,38 @@
               "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
             },
             "covers": "dp.sit.invariant"
+          },
+          {
+            "stem": "std::function 能存放 lambda、函数指针和函数对象，却不要求它们继承同一个基类。这用的是什么手法？",
+            "covers": "dp.sit.type-erasure",
+            "choices": [
+              {
+                "label": "类型擦除：内部用概念接口加模板模型转发调用",
+                "ok": true,
+                "why": "std::function 与 std::any 的内部实现用的就是这个惯用法"
+              },
+              {
+                "label": "虚继承",
+                "ok": false,
+                "why": "与继承无关"
+              },
+              {
+                "label": "宏替换",
+                "ok": false,
+                "why": "不是宏"
+              },
+              {
+                "label": "运行时反射",
+                "ok": false,
+                "why": "C++ 没有这样的反射机制被用于此"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.type-erasure",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
           },
           {
             "stem": "函数 void render(const Scene& s) 中，参数用引用而不用 unique_ptr，表达的是？",
@@ -6575,6 +6754,38 @@
               "relation": "authored",
               "sourceId": "self-authored",
               "locator": "dp.sit.cyclic-dependency",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            }
+          },
+          {
+            "stem": "什么情况下，普通继承比类型擦除更合适？",
+            "covers": "dp.sit.type-erasure",
+            "choices": [
+              {
+                "label": "类型都是你自己的，愿意让调用者通过基类指针或引用使用它们",
+                "ok": true,
+                "why": "继承更直接，没有额外的包装样板"
+              },
+              {
+                "label": "类型来自不能修改的第三方库",
+                "ok": false,
+                "why": "这恰是类型擦除的用武之地"
+              },
+              {
+                "label": "希望把对象按值放进 vector",
+                "ok": false,
+                "why": "值语义是类型擦除的优势"
+              },
+              {
+                "label": "类型之间没有任何共同操作",
+                "ok": false,
+                "why": "没有共同操作就谈不上统一接口"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.type-erasure",
               "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
             }
           }
