@@ -140,9 +140,10 @@
 | database 数据库 | E | D | 写 SQL → 真跑 → 结果集自动比对；范式判断并排 | SQL 结果集题、范式与关系代数判别 |
 | design-patterns 设计模式 | D | P | 易混模式并排（策略/状态、装饰/代理、适配器/外观）→ 混合情境判别 | 混合判别题（写依据）、UML 补全、代码识别 |
 | firmware 固件 | P | E | 位运算先预测寄存器值再运行 | 位运算求值、volatile/指针辨析、C 填空 |
+| organization 计算机组成原理 | M | P | Cache、地址转换、流水线、数据通路先预测再单步；数据表示用 C++ 真跑 | Cache 地址划分、CPI 与执行时间、流水线时空图、补码与浮点实验 |
 | microcontroller 单片机 | E | M | 上板前先预测现象；没板子时 M 模拟顶上 | 现象预测、定时器/波特率计算、上板实验 |
 
-math-tools、polaris（图谱/参考类）与 `practice/`（项目应用）不分配原型；
+math-tools、polaris、competitions（图谱/参考类）与 `practice/`（项目应用）不分配原型；
 math-tools 作为 mathematics 的多表征工具被引用。
 
 ### 专注：会话形态原则（接 P1–P5）

@@ -22,6 +22,8 @@
 | [`subjects/embedded`](subjects/embedded) | 嵌入式系统设计师（软考中级备考，ADR 0090） | Tauri 2 + Vue 3 |
 | [`subjects/gtkmm`](subjects/gtkmm) | gtkmm 官方教程精读 | Tauri 2 + React |
 | [`subjects/polaris`](subjects/polaris) | 北极星（技术体系图谱） | Tauri 2 + React |
+| [`subjects/organization`](subjects/organization) | 计算机组成原理（408，ADR 0115） | Tauri 2 + Vite |
+| [`subjects/competitions`](subjects/competitions) | 赛历（竞赛清单与参赛资格，图谱/参考类，ADR 0114） | Tauri 2 + Vite |
 | [`subjects/design-patterns`](subjects/design-patterns) | 设计模式素材坑 | 尚未开工 |
 | [`practice/pocket_cube`](practice/pocket_cube) | 2 阶魔方 | GTK4 / gtkmm |
 | [`practice/nas_admin`](practice/nas_admin) | 驾考中心服务后台 | Flask-AppBuilder |

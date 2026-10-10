@@ -33,6 +33,8 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
   rtos/             实时操作系统（Tauri 2 + Vue 3）——嵌入第 4 章实践课程，挂靠 embedded（ADR 0106）
   gtkmm/       gtkmm 官方教程精读（Tauri 2 + React）
   polaris/       技术体系图谱（Tauri 2 + React，原 Qt 壳已退役，ADR 0015）——不是学习应用，见下文
+  organization/  计算机组成原理（Tauri 2 + Vite）——408 组成原理，「计算机」圈顶层，不设 parent（ADR 0115）
+  competitions/  赛历（Tauri 2 + Vite）——「大赛」圈的竞赛清单，图谱/参考类，不是学习应用（ADR 0114）
 practice/<id>/ 项目应用：动手做的独立小项目，不接掌握度体系（ADR 0060）
   pocket_cube/ 2 阶魔方（GTK4 / gtkmm）
   nas_admin/   驾考中心服务后台（Flask-AppBuilder，部署在软路由）
@@ -79,6 +81,8 @@ archive/       历史归档，不参与构建
 | `rtos` | 实时操作系统（嵌入第 4 章实践课程，ADR 0106） | `athena-rtos` | `rtos.` |
 | `gtkmm` | gtkmm 官方教程精读 | `athena-gtkmm` | `gtkmm.` |
 | `polaris` | 北极星 | `athena-polaris` | （无进度库） |
+| `organization` | 计算机组成原理（408，ADR 0115） | `athena-organization` | `org.` |
+| `competitions` | 赛历（「大赛」圈，ADR 0114） | `athena-competitions` | （无进度库） |
 
 `driver` 是机动车理论考试，不是设备驱动；Dart 包名仍是 `athena_driver`（包名不能有连字符）。
 C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。进程和发行包文件名是
@@ -97,7 +101,7 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
 - **不是学习闭环，是呈现结构化信息供浏览、查阅、决策参考的？** 那是
   **图谱/参考类应用**：仍受「独立应用」一节的平级、隔离、`app.json` 启动规则约束，
   但**不**掌握度、不进度库、不激励——「跨应用教学规范」一节对它不生效，具体规则
-  以它自己的 `AGENTS.md` 为准。当前：`polaris`、`math-tools`（后者是数学学习的配套工具，
+  以它自己的 `AGENTS.md` 为准。当前：`polaris`、`math-tools`、`competitions`（赛历，ADR 0114；`math-tools`是数学学习的配套工具，
   因需要在启动器里和 `mathematics` 关联而归 `subjects/`，不是先例，见 ADR 0084）。
 - **还没决定做成应用，只是存素材和结论，等以后真正开工？** 那连"应用"都不算，
   不需要 `app.json` 也不需要 `scripts/check.py`，根验证入口按设计静默跳过它——
