@@ -37,7 +37,7 @@ pub struct OrbitLayout {
 const A0: f32 = 300.0;
 const A_STEP: f32 = 170.0;
 const ECC: f32 = 0.3; // 离心率：椭圆感明显又不至于近点撞恒星
-const TILT: f32 = 0.3; // ≈17°，环面与视轴的错角
+const TILT: f32 = 0.087; // ≈5°，贴近真实太阳系的近共面（各环再按序微差）
 const GOLDEN: f32 = 2.39996; // 黄金角：各环的行星起始角错开，不对齐
 
 /// 椭圆上参数角 θ 的点（世界坐标）：中心 (-c,0,0) 加半轴 (a,b)，绕 X 轴倾 tilt。
@@ -58,7 +58,7 @@ pub fn orbit_layout(group_sizes: &[usize]) -> OrbitLayout {
         let a = A0 + g as f32 * A_STEP;
         let b = a * (1.0 - ECC * ECC).sqrt();
         let c = a * ECC;
-        let tilt = if g % 2 == 0 { TILT } else { -TILT } + g as f32 * 0.04;
+        let tilt = if g % 2 == 0 { TILT } else { -TILT } + g as f32 * 0.012;
         let spec = OrbitSpec { a, b, c, tilt };
         let count = count.max(1);
         let start = g as f32 * GOLDEN;

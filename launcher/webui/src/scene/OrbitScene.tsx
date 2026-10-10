@@ -155,6 +155,7 @@ function IconSphere({
       {/* 自转组：雕纹球体 + 状态环一起转，球面图案缓缓移动让自转可见。 */}
       <group ref={spinner}>
         <mesh
+          castShadow
           onClick={() => openApp(app.id).catch(console.error)}
           onPointerOver={(e) => {
             e.stopPropagation();
@@ -224,13 +225,44 @@ function OrbitRing({ a, b, c, tilt }: { a: number; b: number; c: number; tilt: n
   return <primitive object={line} />;
 }
 
+// 黄道面：径向渐变的半透明圆盘铺在轨道之下，承接行星投影——「太阳系仪底盘」。
+function EclipticPlane() {
+  const gradTex = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 512;
+    canvas.height = 512;
+    const ctx = canvas.getContext("2d")!;
+    const grad = ctx.createRadialGradient(256, 256, 30, 256, 256, 256);
+    grad.addColorStop(0, "rgba(84, 104, 164, 0.22)");
+    grad.addColorStop(0.55, "rgba(84, 104, 164, 0.10)");
+    grad.addColorStop(1, "rgba(84, 104, 164, 0)");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 512, 512);
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    return tex;
+  }, []);
+  return (
+    <group>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -8, 0]}>
+        <circleGeometry args={[2400, 96]} />
+        <meshBasicMaterial map={gradTex} transparent depthWrite={false} />
+      </mesh>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -7, 0]} receiveShadow>
+        <circleGeometry args={[2400, 96]} />
+        <shadowMaterial opacity={0.14} />
+      </mesh>
+    </group>
+  );
+}
+
 function TigerCore({ hovered }: { hovered: string | null }) {
   // 虎头贴图等图标管线接入后替换成 sprite；骨架阶段用发光核心占位。
   return (
     <group>
       {/* 恒星光：虎头是场景唯一的光源，行星朝向它的一侧亮、背面暗。 */}
       <pointLight color="#ffb45e" intensity={220000} decay={2} distance={8000} />
-      <mesh>
+      <mesh castShadow>
         <sphereGeometry args={[92, 48, 48]} />
         <meshStandardMaterial
           color="#e8862e"
@@ -248,12 +280,27 @@ export default function OrbitScene({ catalog }: { catalog: CatalogDto }) {
   const [hovered, setHovered] = useState<string | null>(null);
   return (
     <Canvas
+      shadows
       camera={{ position: [0, 900, 2100], fov: 55, near: 1, far: 8000 }}
       onCreated={({ camera }) => camera.lookAt(0, 0, 0)}
       style={{ background: "radial-gradient(ellipse at center, #ffffff 0%, #eef0fa 60%, #e3e7f6 100%)" }}
     >
       <ambientLight intensity={1.2} />
-      <directionalLight position={[600, 1200, 800]} intensity={1.1} />
+      <directionalLight
+        position={[600, 1200, 800]}
+        intensity={1.1}
+        castShadow
+        shadow-mapSize-width={2048}
+        shadow-mapSize-height={2048}
+        shadow-camera-left={-2400}
+        shadow-camera-right={2400}
+        shadow-camera-top={2400}
+        shadow-camera-bottom={-2400}
+        shadow-camera-near={1}
+        shadow-camera-far={6000}
+        shadow-bias={-0.0005}
+      />
+      <EclipticPlane />
       <TigerCore hovered={hovered} />
       {catalog.orbits.map((o, i) => (
         <OrbitRing key={i} a={o.a} b={o.b} c={o.c} tilt={o.tilt} />
