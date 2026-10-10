@@ -78,7 +78,8 @@ export default function OrbitScene({ catalog }: { catalog: CatalogDto }) {
   const [hovered, setHovered] = useState<string | null>(null);
   return (
     <Canvas
-      camera={{ position: [0, 420, 900], fov: 55 }}
+      camera={{ position: [0, 900, 2100], fov: 55, near: 1, far: 8000 }}
+      onCreated={({ camera }) => camera.lookAt(0, 0, 0)}
       style={{ background: "radial-gradient(ellipse at center, #141833 0%, #0d1020 70%)" }}
     >
       <ambientLight intensity={0.9} />
@@ -94,7 +95,7 @@ export default function OrbitScene({ catalog }: { catalog: CatalogDto }) {
           onHover={setHovered}
         />
       ))}
-      <OrbitControls enablePan={false} minDistance={300} maxDistance={2400} />
+      <OrbitControls enablePan={false} minDistance={300} maxDistance={4800} />
     </Canvas>
   );
 }

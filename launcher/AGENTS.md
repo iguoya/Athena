@@ -49,5 +49,18 @@ cargo build --manifest-path launcher/Cargo.toml --all-targets   # CI 三平台�
 cargo test  --manifest-path launcher/Cargo.toml
 ```
 
+webui 的日常运行与打包（Tauri 约定，ADR 0125）：
+
+```sh
+cd launcher/webui
+npm run tauri:dev        # 开发：vite 热重载 + debug 后端
+npm run tauri:build      # 打包：自动启用 custom-protocol，页面资产内嵌
+```
+
+直接 `cargo build --release` 出的 exe **打不开页面**（连 dev 服务器被拒）——必须
+`cargo build --release -p athena-launcher-webui --features custom-protocol`：
+生产模式的页面内嵌由 `custom-protocol` feature 控制，tauri CLI 会自动加，手搓
+cargo 命令要自己带。
+
 macOS 菜单栏版：`swift build --package-path launcher/macos`。启动器不在
 `subjects/`、`practice/` 下，根 `scripts/check.py` 不会带上它，改完要自己跑上面两条。
