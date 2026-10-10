@@ -15,74 +15,101 @@ const SPHERE_R = 34;
 // 图标的两张贴图：球面雕纹（accent 底 + 低透明图标，随自转缓缓移动，让自转可见）
 // 与正面徽章（透明底全彩图标，始终朝向相机保证可读）。material 随贴图到位用 key
 // 重建——动态挂 map 不触发 shader 重编译，会渲染成无贴图的白球。
-function useIconTextures(app: AppDto): { sphere: THREE.Texture | null; badge: THREE.Texture | null } {
+type TexStatus = "waiting" | "loading" | "loaded" | "error" | "no-icon";
+
+function useIconTextures(app: AppDto): { sphere: THREE.Texture | null; badge: THREE.Texture | null; status: TexStatus } {
   const [sphere, setSphere] = useState<THREE.Texture | null>(null);
   const [badge, setBadge] = useState<THREE.Texture | null>(null);
+  const [status, setStatus] = useState<TexStatus>("loading");
   useEffect(() => {
     let alive = true;
-    const make = (draw: (ctx: CanvasRenderingContext2D) => void) => {
+    const make = (draw: (ctx: CanvasRenderingContext2D) => void, w = 256, h = 256) => {
       const canvas = document.createElement("canvas");
-      canvas.width = 256;
-      canvas.height = 256;
+      canvas.width = w;
+      canvas.height = h;
       const ctx = canvas.getContext("2d")!;
       draw(ctx);
       const tex = new THREE.CanvasTexture(canvas);
       tex.colorSpace = THREE.SRGBColorSpace;
+      tex.wrapS = THREE.RepeatWrapping;
       return tex;
     };
-    const done = (sphereTex: THREE.Texture, badgeTex: THREE.Texture | null) => {
+    const done = (sphereTex: THREE.Texture, badgeTex: THREE.Texture | null, st: TexStatus) => {
       if (!alive) return;
+      setStatus(st);
       setSphere(sphereTex);
       setBadge(badgeTex);
     };
     if (app.icon) {
       const img = new Image();
-      img.onload = () => {
-        const sphereTex = make((ctx) => {
-          ctx.fillStyle = app.accent;
-          ctx.fillRect(0, 0, 256, 256);
-          ctx.globalAlpha = 0.3;
-          ctx.drawImage(img, 48, 48, 160, 160);
-          ctx.globalAlpha = 1;
-        });
-        const badgeTex = make((ctx) => {
-          ctx.clearRect(0, 0, 256, 256);
-          ctx.drawImage(img, 28, 28, 200, 200);
-        });
-        done(sphereTex, badgeTex);
-      };
-      img.onerror = () => { const fb = makeFallback(app.accent, app.letter, false); done(fb.sphere, fb.badge); };
+      // 这个 WebView2 里 img 的 load/error 事件不可靠（永不触发），complete/
+      // naturalWidth 属性却是同步可查的——轮询它代替事件。
+      img.src = app.icon;
+      const poll = setInterval(() => {
+        if (!alive) {
+          clearInterval(poll);
+          return;
+        }
+        if (img.complete && img.naturalWidth > 0) {
+          clearInterval(poll);
+          // 球面贴图：白底 + 图标 4×2 平铺整个等距柱状画布——全球覆盖，
+          // 行星转到任何角度球面上都有图标（两极略有拉伸，平铺图案可接受）。
+          const sphereTex = make((ctx) => {
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, 1024, 512);
+            for (let row = 0; row < 2; row++) {
+              for (let col = 0; col < 4; col++) {
+                ctx.drawImage(img, col * 256 + 28, row * 256 + 28, 200, 200);
+              }
+            }
+          }, 1024, 512);
+          const badgeTex = make((ctx) => {
+            ctx.clearRect(0, 0, 256, 256);
+            ctx.drawImage(img, 28, 28, 200, 200);
+          });
+          done(sphereTex, badgeTex, "loaded");
+        } else if (img.complete) {
+          clearInterval(poll);
+          const fb = makeFallback(app.accent, app.letter, false);
+          done(fb.sphere, fb.badge, "error");
+        }
+      }, 80);
     } else {
-      const fb = makeFallback(app.accent, app.letter, true); done(fb.sphere, fb.badge);
+      const fb = makeFallback(app.accent, app.letter, true); done(fb.sphere, fb.badge, "error");
     }
     return () => {
       alive = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [app.id]);
-  return { sphere, badge };
+  return { sphere, badge, status };
 }
 
 function makeFallback(accent: string, letter: string, withBadge: boolean): { sphere: THREE.Texture; badge: THREE.Texture | null } {
-  const mk = (draw: (ctx: CanvasRenderingContext2D) => void) => {
+  const mk = (draw: (ctx: CanvasRenderingContext2D) => void, w = 256, h = 256) => {
     const canvas = document.createElement("canvas");
-    canvas.width = 256;
-    canvas.height = 256;
+    canvas.width = w;
+    canvas.height = h;
     const ctx = canvas.getContext("2d")!;
     draw(ctx);
     const tex = new THREE.CanvasTexture(canvas);
     tex.colorSpace = THREE.SRGBColorSpace;
+    tex.wrapS = THREE.RepeatWrapping;
     return tex;
   };
   const sphereTex = mk((ctx) => {
     ctx.fillStyle = accent;
-    ctx.fillRect(0, 0, 256, 256);
-    ctx.fillStyle = "rgba(255,255,255,0.35)";
-    ctx.font = "600 120px 'Segoe UI', sans-serif";
+    ctx.fillRect(0, 0, 1024, 512);
+    ctx.fillStyle = "rgba(255,255,255,0.4)";
+    ctx.font = "600 96px 'Segoe UI', sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(letter.slice(0, 2), 128, 132);
-  });
+    for (let row = 0; row < 2; row++) {
+      for (let col = 0; col < 4; col++) {
+        ctx.fillText(letter.slice(0, 2), col * 256 + 128, row * 256 + 128);
+      }
+    }
+  }, 1024, 512);
   const badgeTex = mk((ctx) => {
     ctx.clearRect(0, 0, 256, 256);
     ctx.fillStyle = accent;

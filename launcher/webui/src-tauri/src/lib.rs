@@ -43,11 +43,16 @@ pub struct CatalogDto {
     orbits: Vec<OrbitDto>,
 }
 
+/// icon.svg → 256px PNG 的 data URL。不用 SVG data URL 直传：WebView2 里
+/// `new Image()` 加载 SVG data URL 的 onload 会悬挂（贴图永远停在 loading），
+/// 而且用 core 的 resvg 渲染位图，Fluent Emoji 的滤镜表现反而更有保障。
 fn icon_data_url(path: &std::path::Path) -> Option<String> {
-    let bytes = std::fs::read(path).ok()?;
+    let tree = launcher_core::icons::load(path).ok()?;
+    let pixmap = launcher_core::icons::render(&tree, 256).ok()?;
+    let png = pixmap.encode_png().ok()?;
     Some(format!(
-        "data:image/svg+xml;base64,{}",
-        base64::engine::general_purpose::STANDARD.encode(bytes)
+        "data:image/png;base64,{}",
+        base64::engine::general_purpose::STANDARD.encode(png)
     ))
 }
 
