@@ -1618,3 +1618,15 @@ textarea.code {
 .fill-answers code { font-family: var(--mono); }
 .fill-badge.is-done { background: var(--success-soft); color: var(--success); }
 .fill-badge.is-tried { background: var(--warning-soft); color: #8a6500; }
+
+/* 改造前后代码对照（本应用 ADR 0001） */
+.code-compare { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.code-compare .compare-pane { min-width: 0; }
+.code-pane {
+  margin: 0.3em 0 0; font-family: var(--mono); font-size: 0.72em; line-height: 1.55;
+  background: var(--code-bg); color: var(--code-ink); padding: 0.6em 0.8em;
+  border-radius: calc(var(--radius) * 0.7); overflow-x: auto; white-space: pre;
+}
+@media (max-width: 48em) {
+  .code-compare { grid-template-columns: minmax(0, 1fr); }
+}

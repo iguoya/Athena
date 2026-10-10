@@ -111,6 +111,14 @@ type Block =
   | { type: "uml"; title?: string; uml: UmlDiagram }
   | { type: "table"; title?: string; headers: string[]; rows: string[][]; note?: string }
   | { type: "summary"; title?: string; text: string }
+  | {
+      /** 改造前后的代码并排：重构教学的核心是同一段代码的两种组织方式（本应用 ADR 0001） */
+      type: "codecompare";
+      title?: string;
+      before: { title: string; code: string };
+      after: { title: string; code: string };
+      note?: string;
+    }
   | FillCodeBlock;
 
 /** 标准 UML 类图的极简描述：类框三格（名/属性/方法）+ 六种关系线，坐标由内容作者给定。 */
@@ -1939,6 +1947,16 @@ function renderLesson(topic: Topic) {
         return `<div class="card quiz-set" data-quiz-store="${escapeHtml(store)}" data-quiz-count="${b.items.length}">
           <h3>${escapeHtml(b.title ?? "随堂测验")}</h3>
           ${renderQuizItems(b.items, `lesson-${topic.id}-${bi}`)}
+        </div>`;
+      }
+      if (b.type === "codecompare") {
+        return `<div class="card">
+          ${b.title ? `<h3>${escapeHtml(b.title)}</h3>` : ""}
+          <div class="compare code-compare">
+            <div class="compare-pane is-no"><div class="compare-label">${escapeHtml(b.before.title)}</div><pre class="code-pane">${escapeHtml(b.before.code)}</pre></div>
+            <div class="compare-pane is-yes"><div class="compare-label">${escapeHtml(b.after.title)}</div><pre class="code-pane">${escapeHtml(b.after.code)}</pre></div>
+          </div>
+          ${b.note ? `<p class="prose muted stack-gap">${richText(b.note)}</p>` : ""}
         </div>`;
       }
       if (b.type === "fillcode") {

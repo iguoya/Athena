@@ -25,6 +25,11 @@
       "color": "#9333ea"
     },
     {
+      "id": "situations",
+      "title": "情境篇",
+      "color": "#be185d"
+    },
+    {
       "id": "creational",
       "title": "创建型模式",
       "color": "#2563eb"
@@ -1436,6 +1441,1701 @@
               "locator": "dp.carp",
               "why": "混合辨析题按本课讲解自编，用于章节随堂考核；真题原题集中在软考专题"
             }
+          }
+        ]
+      }
+    },
+    {
+      "id": "situations",
+      "title": "情境篇一：从坏味道出发",
+      "track": "situations",
+      "summary": "本课主轴（本应用 ADR 0001）：从「代码出了什么问题」出发，选择合适的组织方式。每节一种症状——症状名与重构手法采用《重构》第 2 版的命名，C++ 规范引用 C++ Core Guidelines 条目——讲识别、改法、代价与边界，并指向模式工具箱里能用上的模式；每节一个重构实验。\n\n取材：Martin Fowler《重构》第 2 版第 3 章与重构目录 · C++ Core Guidelines · Fowler《Inversion of Control Containers and the Dependency Injection pattern》",
+      "topics": [
+        {
+          "id": "dp.sit.repeated-switch",
+          "title": "重复的 switch",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.ocp"
+          ],
+          "track": "situations",
+          "guide_line": "同一套按类型分支的 switch 散落在多处，加一种类型就要找遍所有分支。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能认出重复的类型分支，并按情况选择多态、表驱动或保留 switch。",
+            "pain": "按「形状种类」「订单类型」「用户等级」分支的 switch 在面积、名称、序列化等多个函数里各写一遍，新增一种类型时总有一处漏改。",
+            "model": "把「随类型变化的行为」放进以类型区分的子类里（以多态取代条件表达式），调用方只调虚函数；行为只是查数据时，用表驱动更轻。",
+            "scope": "类型集合封闭、只有一处分支时，switch 本身没问题；问题在于「同一组分支重复出现」。",
+            "judgment": "同一组 case 出现两次以上——考虑多态；分支只是在选一个值——考虑查表。",
+            "landing": "能把一组重复的 switch 改成类层次，并只新增一个子类就支持一种新类型。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "面积 area()、名称 name()、导出 toJson() 三个函数里都有一个按形状种类的 switch。现在要加「三角形」。最稳妥的长期做法是？",
+                "options": [
+                  {
+                    "label": "把「随形状变化的行为」放进各自的子类，三个函数变成虚函数；以后加形状只新增一个子类",
+                    "ok": true,
+                    "why": "这是以多态取代条件表达式：分支被类型系统接管，漏改会变成编译错误"
+                  },
+                  {
+                    "label": "三个 switch 各加一个 case",
+                    "ok": false,
+                    "why": "这次能改对，下次加类型时还要找遍所有 switch"
+                  },
+                  {
+                    "label": "把三个函数合并成一个大函数，只保留一个 switch",
+                    "ok": false,
+                    "why": "职责搅在一起，函数会越来越长"
+                  },
+                  {
+                    "label": "用 if-else 代替 switch",
+                    "ok": false,
+                    "why": "换汤不换药，分支仍然重复"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "**重复的 switch**（Repeated Switches）是《重构》第 2 版列出的坏味道之一：同一组按类型的分支在多处出现，每加一种类型就要把它们全部找出来改一遍。对应的重构手法是**以多态取代条件表达式**（Replace Conditional with Polymorphism）：为每种类型建一个子类，把各个分支的逻辑搬进子类的同名虚函数里。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：分支散落两处",
+                  "code": "double area(const Shape& s) {\n  switch (s.kind) {\n  case Circle: return pi * s.r * s.r;\n  case Square: return s.a * s.a;\n  }\n}\nstd::string name(const Shape& s) {\n  switch (s.kind) {\n  case Circle: return \"Circle\";\n  case Square: return \"Square\";\n  }\n}"
+                },
+                "after": {
+                  "title": "改造后：一种类型一个类",
+                  "code": "struct Shape {\n  virtual ~Shape() = default;\n  virtual double area() const = 0;\n  virtual std::string name() const = 0;\n};\nstruct Circle : Shape {\n  double r;\n  double area() const override { return pi * r * r; }\n  std::string name() const override { return \"Circle\"; }\n};"
+                },
+                "note": "改造后新增类型只写一个新类；忘了实现某个纯虚函数，编译器会直接报错。"
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "确认这些 switch 分的是同一组类型，且会继续增加类型。",
+                  "建抽象基类，把每个 switch 对应的函数声明成纯虚函数。",
+                  "每个 case 建一个子类，把该 case 的代码搬进子类的同名函数。",
+                  "调用方改为通过基类指针或引用调用；最后删掉 switch 与类型枚举。"
+                ]
+              },
+              {
+                "type": "compare",
+                "title": "三种处理方式怎么选",
+                "left": {
+                  "title": "多态（类层次）",
+                  "body": "各类型的行为差别大、会持续增加类型时用。代价：类变多，「看一种操作对所有类型的处理」要翻多个文件。"
+                },
+                "right": {
+                  "title": "表驱动 / 保留 switch",
+                  "body": "分支只是在选一个值（如单价、名称）时用查表；类型集合封闭、只有一处分支时，switch 最直接。C++17 起 std::variant + std::visit 也能在保持封闭集合的同时让编译器检查漏掉的情况。"
+                }
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "策略模式（按算法替换）、状态模式（按对象自身状态替换）、访问者模式（类型封闭、操作经常增加时，反过来把操作做成类）。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "下列哪种情况最不需要把 switch 改成多态？",
+                    "choices": [
+                      {
+                        "label": "只有一处 switch，按月份取当月天数",
+                        "ok": true,
+                        "why": "分支只是在选一个值，而且只出现一次——保留 switch 或查表即可"
+                      },
+                      {
+                        "label": "计费、开票、导出三个模块都按会员等级 switch",
+                        "ok": false,
+                        "why": "同一组分支重复三处，正是多态的适用场景"
+                      },
+                      {
+                        "label": "每接入一种支付方式，就要改五个函数里的分支",
+                        "ok": false,
+                        "why": "新增类型要改多处，是典型的重复 switch"
+                      },
+                      {
+                        "label": "绘图、碰撞检测、序列化都按图形种类分支，图形种类还会增加",
+                        "ok": false,
+                        "why": "类型会增加且分支重复，适合多态"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.repeated-switch",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "坏味道「重复的 switch」与手法「以多态取代条件表达式」：Martin Fowler《重构：改善既有代码的设计》第 2 版（2018） 第 3 章、重构目录。std::variant 与 std::visit 见 C++17 标准库。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.repeated-switch.run",
+              "title": "把 switch 改成多态并加一种形状",
+              "case": "sit_switch_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "area() 和 name() 里各有一个按形状种类的 switch。加一种三角形，旧写法要改几处？改成多态之后呢？",
+              "goal": "把 Shape 改成带纯虚函数 area()、name() 的抽象基类，写 Circle、Square、Triangle 三个子类（三角形面积 = sqrt(3)/4·a²），删掉旧循环并解开 main 里的 TODO(实验) 段。",
+              "pass": {
+                "includes": [
+                  "Circle area=3.14",
+                  "Square area=4.00",
+                  "Triangle area=1.73"
+                ]
+              },
+              "hint": "子类构造函数接收一个 double；main 里用 std::make_unique<Triangle>(2.0) 创建。"
+            }
+          ]
+        },
+        {
+          "id": "dp.sit.long-function",
+          "title": "过长函数",
+          "difficulty": 1,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.srp"
+          ],
+          "track": "situations",
+          "guide_line": "一个函数做了好几件事，想复用其中一段只能复制。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能按「一段代码做一件事」把长函数拆成有名字的小函数，并把计算与输出分成两个阶段。",
+            "pain": "结算函数里汇总、算折扣、排版全挤在一起；要加一种输出格式，只能把计算部分再抄一遍。",
+            "model": "给每段「做一件事」的代码起一个说明意图的名字，提炼成函数；先算出中间数据结构、再交给各种输出（拆分阶段）。",
+            "scope": "不是越短越好：拆分的依据是「这段代码能不能用一个名字说清」，不是行数。",
+            "judgment": "需要写注释才能说明这一段在干什么——就该提炼成一个以注释为名的函数。",
+            "landing": "能从长函数里提炼出纯计算函数，并让两种输出复用它。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "printReport() 里先汇总金额、再算折扣、最后排版打印。现在要再导出一份 CSV。最好的做法是？",
+                "options": [
+                  {
+                    "label": "把汇总与折扣提炼成 summarize() 返回一个结果结构，打印与 CSV 都基于它输出",
+                    "ok": true,
+                    "why": "提炼函数 + 拆分阶段：计算只写一次，输出可以有多种"
+                  },
+                  {
+                    "label": "复制一份 printReport() 改成 printCsv()",
+                    "ok": false,
+                    "why": "计算规则一改，两份都要改，迟早不一致"
+                  },
+                  {
+                    "label": "给 printReport() 加一个 bool 参数决定输出格式",
+                    "ok": false,
+                    "why": "函数更长了，还多了一个标记参数"
+                  },
+                  {
+                    "label": "用全局变量把 total 传给 CSV 函数",
+                    "ok": false,
+                    "why": "引入了全局可变数据，调用顺序一错结果就错"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "**过长函数**（Long Function）是最常见的坏味道。《重构》给的判断方法是：每当觉得需要写注释来说明一段代码在做什么，就把这段代码提炼成一个以该说明命名的函数——这就是**提炼函数**（Extract Function）。当一段代码先「算」后「输出」时，用**拆分阶段**（Split Phase）把两个阶段用一个中间数据结构隔开。C++ Core Guidelines 的对应条目是 F.2「一个函数只做一件逻辑上的事」与 F.3「保持函数短小简单」。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：计算与输出搅在一起",
+                  "code": "void printReport(const Orders& os) {\n  int total = 0;\n  for (auto& o : os) total += o.qty * o.price;\n  int discount = total >= 1000 ? total / 10 : 0;\n  std::cout << \"合计 \" << total\n            << \"，应付 \" << total - discount;\n}"
+                },
+                "after": {
+                  "title": "改造后：先算出结果，再交给输出",
+                  "code": "Summary summarize(const Orders& os);   // 只负责算\n\nvoid printReport(const Orders& os) {\n  Summary s = summarize(os);\n  std::cout << \"合计 \" << s.total\n            << \"，应付 \" << s.payable;\n}\nstd::string toCsv(const Summary& s);    // 新输出直接复用"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "找出函数里「一段只做一件事」的代码，想一个说明意图的名字。",
+                  "把它搬进新函数：它读到的局部变量变成参数，它算出的结果变成返回值。",
+                  "原处改为调用新函数；运行一遍确认结果不变。",
+                  "如果函数是「先计算再输出」，把计算结果收进一个结构体，让输出只依赖这个结构体。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "函数变多后，读者要跳转才能看全流程——所以名字必须准确表达意图，读名字就够了，才值得拆。只在一处使用、本身已一目了然的两三行代码，不必为拆而拆。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "模板方法（多个类共享同一流程骨架时，把流程提到父类）、建造者（构建步骤很多时，把每一步提成独立方法）。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "按《重构》的建议，什么信号最说明「这段代码该提炼成函数」？",
+                    "choices": [
+                      {
+                        "label": "你想为这段代码写一行注释说明它在做什么",
+                        "ok": true,
+                        "why": "注释说明的意图就是新函数的名字"
+                      },
+                      {
+                        "label": "函数超过了 20 行",
+                        "ok": false,
+                        "why": "行数不是依据，能否用一个名字说清才是"
+                      },
+                      {
+                        "label": "这段代码里用到了循环",
+                        "ok": false,
+                        "why": "循环本身不是问题"
+                      },
+                      {
+                        "label": "这段代码只被调用一次",
+                        "ok": false,
+                        "why": "只调用一次也可以提炼，提炼的目的是表达意图而非复用"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.long-function",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "坏味道「过长函数」与手法「提炼函数」「拆分阶段」：Martin Fowler《重构：改善既有代码的设计》第 2 版（2018） 第 3 章、重构目录。规范：C++ Core Guidelines F.2、F.3。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.long-function.run",
+              "title": "提炼计算，再加一种 CSV 输出",
+              "case": "sit_long_function_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "要加 CSV 输出时，printReport() 里哪几行是两种输出都需要的？",
+              "goal": "提炼出 Summary summarize(const std::vector<Order>&)，让 printReport() 改为调用它；再写 std::string toCsv(const Summary&)，输出表头 total,discount,payable 与数值行，解开 main 里的 TODO(实验) 行。",
+              "pass": {
+                "includes": [
+                  "total,discount,payable",
+                  "1200,120,1080"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "dp.sit.long-params",
+          "title": "过长参数列表与数据泥团",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.srp"
+          ],
+          "track": "situations",
+          "guide_line": "参数太多、几个参数总是一起出现、一串 true/false 看不出含义。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能用参数对象收拢总是同时出现的参数，用具名的选项结构代替标记参数。",
+            "pain": "bookRoom(\"li\", 2026, 10, 1, 3, true, false)——调用处看不出每个值是什么，参数顺序一错编译器也不报。",
+            "model": "总是一起出现的一组数据（年月日、起止时间）收成一个结构体（引入参数对象）；控制行为的 bool 参数改成具名字段或拆成两个函数（移除标记参数）。",
+            "scope": "C++20 的指定初始化（Extras{.breakfast = true}）让调用处自带说明；参数对象也给日后加字段留了位置。",
+            "judgment": "看到三个以上参数总是一起传、或调用处出现裸的 true/false——就该收拢。",
+            "landing": "能把一个 7 参数的函数改成 2–3 个有意义的参数对象。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "代码里到处是 bookRoom(\"li\", 2026, 10, 1, 3, true, false) 这样的调用。最能减少调用出错的改法是？",
+                "options": [
+                  {
+                    "label": "把年月日收成 Date、把入住信息收成 Stay、把两个开关收成具名字段的 Extras",
+                    "ok": true,
+                    "why": "引入参数对象 + 移除标记参数：每个值在调用处都有名字"
+                  },
+                  {
+                    "label": "给每个参数加一行注释",
+                    "ok": false,
+                    "why": "注释不会被编译器检查，调用处照样能传错顺序"
+                  },
+                  {
+                    "label": "把参数改成 std::vector<int>",
+                    "ok": false,
+                    "why": "类型信息全丢了，更容易出错"
+                  },
+                  {
+                    "label": "用全局变量保存这些参数",
+                    "ok": false,
+                    "why": "引入全局可变数据，调用之间互相干扰"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "**过长参数列表**（Long Parameter List）与**数据泥团**（Data Clumps）常一起出现：几个参数总是成群结队地传，说明它们本该是一个概念。《重构》对应的手法是**引入参数对象**（Introduce Parameter Object）与**保持对象完整**（Preserve Whole Object）；用 bool 参数切换函数行为的，用**移除标记参数**（Remove Flag Argument）处理。C++ Core Guidelines 也要求 I.23「函数参数要少」、I.4「接口要精确且强类型」。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：7 个参数，后两个是裸 bool",
+                  "code": "void bookRoom(const std::string& guest,\n              int year, int month, int day,\n              int nights,\n              bool breakfast, bool lateCheckout);\n\nbookRoom(\"li\", 2026, 10, 1, 3, true, false);"
+                },
+                "after": {
+                  "title": "改造后：参数对象 + 具名选项",
+                  "code": "struct Date   { int year, month, day; };\nstruct Stay   { Date checkIn; int nights; };\nstruct Extras { bool breakfast = false;\n                bool lateCheckout = false; };\nvoid bookRoom(const std::string& guest,\n              const Stay& stay, const Extras& extras);\n\nbookRoom(\"li\", Stay{.checkIn = {2026, 10, 1}, .nights = 3},\n         Extras{.breakfast = true});"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "找出总是一起出现的参数，给它们起一个领域名字（日期、入住、地址、区间）。",
+                  "建结构体，新函数接收结构体；旧函数先改成转调新函数，逐步替换调用处。",
+                  "bool 标记参数：若只控制一个小选项，放进具名字段；若让函数走两条完全不同的路，拆成两个函数。",
+                  "结构体建好后，常会发现有些逻辑（如日期校验）也该搬进去。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "参数对象多了一层定义，只用一次的两三个参数不必收拢。传入的结构体如果被函数修改，接口就更难懂——参数对象通常按 const 引用传入。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "建造者（可选参数很多、组装有顺序时，用分步构建代替长参数列表）。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "send(msg, true) 中的 true 表示「加急」。按《重构》，最合适的处理是？",
+                    "choices": [
+                      {
+                        "label": "移除标记参数：拆成 send() 与 sendUrgent()，或改用具名选项",
+                        "ok": true,
+                        "why": "调用处的 true 看不出含义，具名之后自带说明"
+                      },
+                      {
+                        "label": "把 true 改成 1",
+                        "ok": false,
+                        "why": "仍然是看不出含义的魔数"
+                      },
+                      {
+                        "label": "再加一个 bool 参数表示「普通」",
+                        "ok": false,
+                        "why": "更难懂了"
+                      },
+                      {
+                        "label": "在调用处写注释 /*urgent*/",
+                        "ok": false,
+                        "why": "注释不受编译器检查，聊胜于无"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.long-params",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "坏味道「过长参数列表」「数据泥团」与手法「引入参数对象」「保持对象完整」「移除标记参数」：Martin Fowler《重构：改善既有代码的设计》第 2 版（2018） 第 3 章、重构目录。规范：C++ Core Guidelines I.23、I.4。指定初始化见 C++20 标准。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.long-params.run",
+              "title": "把 7 个参数收成参数对象",
+              "case": "sit_long_params_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "bookRoom(\"li\", 2026, 10, 1, 3, true, false) 的第 5、6、7 个参数分别是什么？改成参数对象后，调用处还需要你去猜吗？",
+              "goal": "定义 Date、Stay、Extras 三个结构体，写新的 bookRoom(const std::string&, const Stay&, const Extras&)，输出格式与旧版相同；解开 main 里的 TODO(实验) 段。",
+              "pass": {
+                "includes": [
+                  "li 2026-10-01 x3 [breakfast]",
+                  "wang 2026-10-03 x1 [late-checkout]"
+                ]
+              },
+              "hint": "Extras 的两个 bool 要给默认值 false，这样 Extras{.lateCheckout = true} 才合法。"
+            }
+          ]
+        },
+        {
+          "id": "dp.sit.primitive",
+          "title": "基本类型偏执",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.srp"
+          ],
+          "track": "situations",
+          "guide_line": "金额、币种、电话、温度都用 int/double/string 表示，规则散落各处、错误编译器不拦。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能把带规则的领域值从基本类型升级为小类，让非法操作在编译期或构造时就被拦下。",
+            "pain": "金额是 double、币种另用一个字符串跟着：人民币加美元也能直接相加，浮点误差混进账目。",
+            "model": "为领域值建一个小类（以对象取代基本类型）：内部选合适的表示（分），对外只提供合法的操作（同币种相加），非法操作抛异常或编译不过。",
+            "scope": "不是每个 int 都要包一层：值有单位、有格式、有合法范围或有专门运算时，才值得。",
+            "judgment": "同一个基本类型的值总要配合某条规则使用（检查范围、带上单位）——就该有自己的类型。",
+            "landing": "能写出一个只允许同币种相加、以分为单位的 Money 类。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "系统里金额全是 double，币种用一个 string 跟着传。最近出现了把美元当人民币相加的账目错误。根本的改法是？",
+                "options": [
+                  {
+                    "label": "建一个 Money 类，内部用整数存分并带上币种，只提供同币种相加，币种不同时报错",
+                    "ok": true,
+                    "why": "以对象取代基本类型：规则只写一处，错误在第一时间暴露"
+                  },
+                  {
+                    "label": "在每个相加的地方加一句 if 检查币种",
+                    "ok": false,
+                    "why": "规则散落在几十处，总有漏的"
+                  },
+                  {
+                    "label": "统一换成 float",
+                    "ok": false,
+                    "why": "精度更差，也没解决币种问题"
+                  },
+                  {
+                    "label": "规定团队成员注意",
+                    "ok": false,
+                    "why": "约定靠人记，迟早出错"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "**基本类型偏执**（Primitive Obsession）是指用整数、浮点数、字符串表示本该有自己行为的领域概念：金额、坐标、电话号码、时间段。《重构》对应的手法是**以对象取代基本类型**（Replace Primitive with Object）。C++ Core Guidelines I.4 也要求「接口要精确且强类型」——让类型本身就能表达约束，而不是靠注释和调用者自觉。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：double + 字符串",
+                  "code": "double price = 100.0;     // 人民币\ndouble refund = 15.0;     // 美元？看不出来\ndouble total = price + refund;   // 编译器不拦"
+                },
+                "after": {
+                  "title": "改造后：Money 自带规则",
+                  "code": "class Money {\npublic:\n  Money(long long cents, std::string currency);\n  Money operator+(const Money& o) const {\n    if (currency_ != o.currency_)\n      throw std::invalid_argument(\"currency mismatch\");\n    return Money(cents_ + o.cents_, currency_);\n  }\nprivate:\n  long long cents_;          // 用整数存分，避免浮点误差\n  std::string currency_;\n};"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "找出总要配合某条规则使用的基本类型值（要换算、要检查、要带单位）。",
+                  "建一个小类，先只包住原来的值，构造函数里做合法性检查。",
+                  "把散落各处的规则（相加、比较、格式化）搬进这个类，作为它的成员函数或运算符。",
+                  "逐步把函数参数与返回值从基本类型换成这个类。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "多一个类型就多一层转换，和外部库交互时要拆装。只是计数、下标这类没有额外规则的值，用基本类型就好。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "享元（大量小值对象可以共享时）、原型（值对象的复制）；C++ 里值对象通常直接用拷贝语义，不需要额外模式。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "Money 类内部为什么常用整数存「分」而不是用 double 存「元」？",
+                    "choices": [
+                      {
+                        "label": "double 无法精确表示 0.1 这类十进制小数，累加会产生误差",
+                        "ok": true,
+                        "why": "以最小单位的整数存储，加减法完全精确"
+                      },
+                      {
+                        "label": "整数占用内存更少",
+                        "ok": false,
+                        "why": "不是主要原因"
+                      },
+                      {
+                        "label": "double 不能参与比较",
+                        "ok": false,
+                        "why": "可以比较，但有精度问题"
+                      },
+                      {
+                        "label": "C++ 不支持 double 运算符重载",
+                        "ok": false,
+                        "why": "支持，与此无关"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.primitive",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "坏味道「基本类型偏执」与手法「以对象取代基本类型」：Martin Fowler《重构：改善既有代码的设计》第 2 版（2018） 第 3 章、重构目录。规范：C++ Core Guidelines I.4。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.primitive.run",
+              "title": "写一个带币种的 Money 类",
+              "case": "sit_primitive_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "现在的 total 把人民币和美元加在一起了。怎样让这种错误在运行时第一时间暴露，而不是混进账目？",
+              "goal": "写 class Money：内部用 long long 存分、带 std::string 币种；operator+ 在币种不同时抛 std::invalid_argument(\"currency mismatch\")；str() 输出如 120.50 CNY。解开 main 里的 TODO(实验) 段。",
+              "pass": {
+                "includes": [
+                  "120.50 CNY",
+                  "error: currency mismatch"
+                ]
+              },
+              "hint": "格式化两位小数可以用 cents / 100 与 cents % 100 分别输出，后者不足两位补 0。"
+            }
+          ]
+        },
+        {
+          "id": "dp.sit.divergent-change",
+          "title": "发散式变化与霰弹式修改",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.srp"
+          ],
+          "track": "situations",
+          "guide_line": "一个类为好几种原因而变化；或者一个变化要改好多个类。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能按「变化的原因」重新划分类与函数：一个原因的变化集中在一处。",
+            "pain": "Employee 里既有工资规则又有报表格式，改哪个都要动它（发散式变化）；反过来，加一个字段要改五个文件（霰弹式修改）。",
+            "model": "发散式变化：按变化原因把类拆开（提炼类、搬移函数）；霰弹式修改：把散落的相关代码搬到一起（搬移函数、内联类）。",
+            "scope": "两个坏味道方向相反，目标相同：让「一种变化」只落在「一个地方」。这就是单一职责原则在代码层面的样子。",
+            "judgment": "描述一次修改时要说「还要顺便改……」——多半是霰弹式修改；说「这个类又因为……要改」——多半是发散式变化。",
+            "landing": "能把一个混合了计算与展示的类拆成两个，并在不改计算的情况下新增一种展示。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "Employee 类既负责算工资，又负责生成文字报表。现在要加 JSON 报表，同时财务也在改加班费规则。两拨人都在改 Employee，经常冲突。该怎么调整？",
+                "options": [
+                  {
+                    "label": "把工资计算与报表生成拆成两个类，JSON 报表作为另一个报表类加入",
+                    "ok": true,
+                    "why": "按变化原因拆分：改规则与改格式各改各的类"
+                  },
+                  {
+                    "label": "给 Employee 加一个 jsonReport() 方法",
+                    "ok": false,
+                    "why": "Employee 的变化原因又多了一个"
+                  },
+                  {
+                    "label": "约定两拨人轮流修改",
+                    "ok": false,
+                    "why": "管住了人，没解决结构问题"
+                  },
+                  {
+                    "label": "把所有方法都改成静态函数",
+                    "ok": false,
+                    "why": "函数仍在一起，变化原因没有分开"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "**发散式变化**（Divergent Change）：一个类因为多种不相干的原因而被修改。**霰弹式修改**（Shotgun Surgery）：一种变化要在很多类里各改一点。《重构》把两者放在一起讲：前者用**提炼类**（Extract Class）、**拆分阶段**拆开，后者用**搬移函数**（Move Function）、**搬移字段**把散落的代码收拢。目标都是「一种变化只改一个地方」——单一职责原则的落地形态。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：两种变化原因在一个类里",
+                  "code": "class Employee {\npublic:\n  std::string name;\n  int baseSalary, overtimeHours;\n  int pay() const;              // 工资规则变 → 改这里\n  std::string report() const;   // 报表格式变 → 也改这里\n};"
+                },
+                "after": {
+                  "title": "改造后：按变化原因分开",
+                  "code": "struct Employee { std::string name; int baseSalary, overtimeHours; };\n\nclass PayCalculator {           // 只因工资规则而变\npublic: int pay(const Employee&) const;\n};\nclass TextReport {              // 只因报表格式而变\npublic: std::string render(const Employee&, int pay) const;\n};\nclass JsonReport { /* 新格式只加一个类 */ };"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "列出这个类最近被修改的原因，按原因给方法分组。",
+                  "为每一组建一个新类，用搬移函数把方法搬过去，必要时搬移字段。",
+                  "原类只保留共同的数据，或者只做协调。",
+                  "霰弹式修改反过来：找出一次变化要动的所有地方，把它们搬到同一个类或模块里。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "拆得过细会出现另一种坏味道「冗赘的元素」（Lazy Element）：一个类只转一句话。拆分以真实发生过、或明确会发生的变化为依据，不要为假想的变化拆。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "桥接（两个维度各自变化）、策略（计算规则可替换）、外观（把一次变化涉及的多个类收在一个入口后面）。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "「每加一个商品字段，都要同时修改实体类、数据库映射、校验器、导出器、界面五个地方」，这属于哪种坏味道？",
+                    "choices": [
+                      {
+                        "label": "霰弹式修改",
+                        "ok": true,
+                        "why": "一种变化要在很多地方各改一点"
+                      },
+                      {
+                        "label": "发散式变化",
+                        "ok": false,
+                        "why": "发散式变化是一个类因多种原因被改，方向相反"
+                      },
+                      {
+                        "label": "过长函数",
+                        "ok": false,
+                        "why": "与函数长度无关"
+                      },
+                      {
+                        "label": "基本类型偏执",
+                        "ok": false,
+                        "why": "与字段用什么类型表示无关"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.divergent-change",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "坏味道「发散式变化」「霰弹式修改」「冗赘的元素」与手法「提炼类」「搬移函数」「搬移字段」「拆分阶段」：Martin Fowler《重构：改善既有代码的设计》第 2 版（2018） 第 3 章、重构目录。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.divergent-change.run",
+              "title": "按变化原因拆开 Employee",
+              "case": "sit_divergent_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "要加 JSON 报表，同时工资规则也在改。怎样让这两件事改的是不同的类？",
+              "goal": "把工资计算搬到 PayCalculator::pay(const Employee&)，把文字报表搬到 TextReport::render(const Employee&, int)，再写 JsonReport 输出 {\"name\":\"zhang\",\"pay\":12500}；Employee 只保留数据。删掉旧调用，解开 main 里的 TODO(实验) 段。",
+              "pass": {
+                "includes": [
+                  "员工 zhang 本月应发 12500 元",
+                  "{\"name\":\"zhang\",\"pay\":12500}"
+                ]
+              },
+              "hint": "C++ 字符串里的双引号写成 \\\"。"
+            }
+          ]
+        },
+        {
+          "id": "dp.sit.feature-envy",
+          "title": "依恋情结与过长的消息链",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.lod"
+          ],
+          "track": "situations",
+          "guide_line": "一个函数总在读别的对象的数据，或者一路 a.getB().getC().getD() 穿透进去。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能把「依恋」别处数据的函数搬到数据所在的类，并用委托函数隐藏对象之间的导航路径。",
+            "pain": "运费计算写在结算模块，却要穿过订单、客户、地址三层去取城市；地址结构一改，结算模块跟着改。",
+            "model": "函数搬到它最常使用的数据所在的类（搬移函数）；调用方需要的信息由直接朋友提供（隐藏委托关系）。",
+            "scope": "隐藏委托过度会产生另一个坏味道「中间人」（Middle Man）：一个类大半方法只是转发——这时反过来移除中间人。",
+            "judgment": "一个函数对另一个对象的 get 调用比对自己数据的访问还多——依恋情结；出现 a.b().c().d()——过长的消息链。",
+            "landing": "能把一段穿透三层对象的计算搬进合适的类，调用方只问一层。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "结算模块里有 fee = o.getCustomer().getAddress().getCity() == \"上海\" ? 10 : 18。客户地址结构即将改成「多个收货地址」。怎样让这次改动不波及结算模块？",
+                "options": [
+                  {
+                    "label": "让 Order 提供 shippingCity() 并把运费计算搬进 Order，结算模块只调 order.shippingFee()",
+                    "ok": true,
+                    "why": "隐藏委托 + 搬移函数：结构变化被挡在 Order 里面"
+                  },
+                  {
+                    "label": "在结算模块里继续加一层 getDefaultAddress()",
+                    "ok": false,
+                    "why": "消息链更长，耦合更深"
+                  },
+                  {
+                    "label": "把 Address 的字段改成 public 方便访问",
+                    "ok": false,
+                    "why": "外部更依赖内部结构了"
+                  },
+                  {
+                    "label": "给结算模块加注释说明依赖关系",
+                    "ok": false,
+                    "why": "注释挡不住结构变化的波及"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "**依恋情结**（Feature Envy）：一个函数和另一个模块的数据交流，比和自己所在模块的数据还频繁——它多半应该搬过去（**搬移函数**，Move Function）。**过长的消息链**（Message Chains）：a.getB().getC().getD() 让调用者依赖整条导航路径——用**隐藏委托关系**（Hide Delegate）让直接朋友提供所需信息。两者都是迪米特法则在代码里的具体信号。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：结算模块穿透三层",
+                  "code": "int shippingFee(const Order& o) {\n  if (o.getCustomer().getAddress().city == \"上海\")\n    return 10;\n  return 18;\n}"
+                },
+                "after": {
+                  "title": "改造后：Order 自己回答",
+                  "code": "struct Order {\n  // ……\n  std::string shippingCity() const {     // 隐藏委托关系\n    return customer.getAddress().city;\n  }\n  int shippingFee() const {              // 搬移函数\n    return shippingCity() == \"上海\" ? 10 : 18;\n  }\n};\n// 调用方：order.shippingFee()"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "看函数主要读的是谁的数据，就把它搬到那个类（或离那些数据最近的类）。",
+                  "调用方为了拿一个值而一路 get 下去的，在第一层对象上加一个委托函数，由它去走后面的路径。",
+                  "改完后检查：如果某个类的大部分方法都只是转发，说明委托过度了，考虑移除中间人。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "隐藏委托会给中间的类加方法；转发太多就成了中间人。流式接口（builder.a().b().c()）和对同一个对象的链式调用不算消息链——它们没有暴露导航路径。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "外观（为一组对象提供一个入口，调用方不必知道内部导航）、中介者（对象之间不直接互相引用）。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "一个类的方法有八成只是把调用原样转给另一个对象。这是哪种坏味道，通常怎么处理？",
+                    "choices": [
+                      {
+                        "label": "中间人（Middle Man），移除中间人，让调用方直接与真正干活的对象打交道",
+                        "ok": true,
+                        "why": "隐藏委托做过头就会出现中间人"
+                      },
+                      {
+                        "label": "依恋情结，搬移函数",
+                        "ok": false,
+                        "why": "依恋情结是函数过多读取别处数据，不是转发"
+                      },
+                      {
+                        "label": "过长的消息链，继续隐藏委托",
+                        "ok": false,
+                        "why": "继续隐藏会让中间人更严重"
+                      },
+                      {
+                        "label": "基本类型偏执，以对象取代基本类型",
+                        "ok": false,
+                        "why": "与此无关"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.feature-envy",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "坏味道「依恋情结」「过长的消息链」「中间人」与手法「搬移函数」「隐藏委托关系」「移除中间人」：Martin Fowler《重构：改善既有代码的设计》第 2 版（2018） 第 3 章、重构目录。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.feature-envy.run",
+              "title": "把运费计算搬进 Order",
+              "case": "sit_envy_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "shippingFee() 穿过了几层对象？如果 Customer 改成有多个地址，哪些代码要跟着改？",
+              "goal": "给 Order 加 std::string shippingCity() const（由它去取客户地址的城市）与 int shippingFee() const（上海 10 元，其他 18 元），解开 main 里的 TODO(实验) 段。",
+              "pass": {
+                "includes": [
+                  "order 2 city=成都",
+                  "order 2 fee=18"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "dp.sit.global-data",
+          "title": "全局数据与可变数据",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.srp"
+          ],
+          "track": "situations",
+          "guide_line": "任何函数都能改的全局变量、到处被修改的共享数据。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能把全局可变状态封装进对象并显式传递，必要时让数据默认不可变。",
+            "pain": "请求计数放在全局变量里，任何函数都能改；要统计两个独立会话时才发现只有一份，测试之间也会互相污染。",
+            "model": "把全局变量封装进类（封装变量），由创建者决定有几份、传给谁；不需要变的数据声明为 const。",
+            "scope": "全局常量没有问题；问题是「可变」加「全局」——谁都能改、改了谁都受影响。",
+            "judgment": "排查一个 bug 要搜「谁改过这个变量」——就是全局可变数据的代价。",
+            "landing": "能把一个全局计数器改成可以有多个独立实例的类。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "日志模块用全局变量 g_requestCount 计数。现在一个进程里要同时统计两个独立会话，单元测试之间也互相干扰。根本的改法是？",
+                "options": [
+                  {
+                    "label": "把计数封装进 Session 类，每个会话一个实例，由创建者传给需要的地方",
+                    "ok": true,
+                    "why": "封装变量：状态的份数与可见范围由代码结构决定"
+                  },
+                  {
+                    "label": "再加一个全局变量 g_requestCount2",
+                    "ok": false,
+                    "why": "第三个会话怎么办？问题照旧"
+                  },
+                  {
+                    "label": "把计数器做成单例",
+                    "ok": false,
+                    "why": "单例仍然只有一份，本质还是全局状态"
+                  },
+                  {
+                    "label": "在每个测试开始前把全局变量清零",
+                    "ok": false,
+                    "why": "掩盖问题，并行测试时照样冲突"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "**全局数据**（Global Data）与**可变数据**（Mutable Data）是《重构》第 2 版新增强调的两种坏味道：任何地方都能修改的数据，出了问题很难查清是谁改的。首选手法是**封装变量**（Encapsulate Variable）——先把对它的访问收进函数或类，再缩小它的可见范围。C++ Core Guidelines 对应 I.2「避免非 const 的全局变量」与 Con.1「默认让对象不可变」。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：全局可变，只有一份",
+                  "code": "int g_requestCount = 0;\n\nvoid handleRequest() { ++g_requestCount; }"
+                },
+                "after": {
+                  "title": "改造后：状态属于对象",
+                  "code": "class Session {\npublic:\n  void record() { ++count_; }\n  int count() const { return count_; }\nprivate:\n  int count_ = 0;\n};\n\nSession a, b;   // 想要几份就有几份"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "先用函数包住所有对这个全局变量的读写（封装变量），找出所有使用点。",
+                  "把变量与这些函数搬进一个类；在合适的位置（main、请求处理入口）创建实例。",
+                  "把实例以引用传给需要它的函数，删掉全局变量。",
+                  "不需要改变的数据一律加 const；只在构造时确定的值不提供 setter。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "显式传递会让函数签名多一个参数；参数在调用链上层层传递时，可以用依赖注入集中装配。真正的进程级唯一资源（如日志的输出目标）可以全局，但要让它不可变或只在启动时配置一次。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "单例是「受控的全局状态」，并没有消除全局状态——这正是现代视角把它标为「现代慎用」的原因；需要共享时优先显式传递或依赖注入。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "把全局变量改成单例，解决了全局可变数据的哪个问题？",
+                    "choices": [
+                      {
+                        "label": "只控制了实例的创建方式，状态仍然全局共享、处处可改",
+                        "ok": true,
+                        "why": "单例是受控的全局状态，测试干扰、隐式依赖依旧"
+                      },
+                      {
+                        "label": "彻底解决了测试之间的互相干扰",
+                        "ok": false,
+                        "why": "单例仍是一份，测试之间照样互相影响"
+                      },
+                      {
+                        "label": "让每个调用方拿到独立的副本",
+                        "ok": false,
+                        "why": "单例恰恰相反"
+                      },
+                      {
+                        "label": "让状态变成不可变",
+                        "ok": false,
+                        "why": "单例与是否可变无关"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.global-data",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "坏味道「全局数据」「可变数据」与手法「封装变量」：Martin Fowler《重构：改善既有代码的设计》第 2 版（2018） 第 3 章、重构目录。规范：C++ Core Guidelines I.2、Con.1。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.global-data.run",
+              "title": "把全局计数器封装成会话",
+              "case": "sit_global_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "要同时统计两个会话的请求数，全局变量为什么做不到？",
+              "goal": "写 class Session（私有 int count_，提供 record() 与 count() const），删掉全局变量与 handleRequest()，解开 main 里的 TODO(实验) 段。",
+              "pass": {
+                "includes": [
+                  "a=2 b=1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "dp.sit.hardwired-dependency",
+          "title": "写死的依赖",
+          "difficulty": 2,
+          "mastery_goal": "master",
+          "knowledge_type": "skill",
+          "requires": [
+            "dp.dip"
+          ],
+          "track": "situations",
+          "guide_line": "类在内部直接创建它依赖的具体对象，想替换（测试、换实现）就得改类本身。",
+          "weight": "重点",
+          "outline": {
+            "promise": "能用构造函数注入把依赖的创建移到类的外部，并让类只依赖抽象接口。",
+            "pain": "ReportService 在方法里直接 new FileStorage：单元测试会真的写磁盘，以后换数据库也要改 ReportService。",
+            "model": "类只声明「我需要一个 Storage」，由外部创建具体对象再传进来（依赖注入）；类依赖抽象接口，具体实现在组装处决定。",
+            "scope": "注入方式有构造函数注入、设值注入、接口注入；构造函数注入最常用，它让依赖一目了然、对象创建后即可用。",
+            "judgment": "一个类里出现 new 某个具体基础设施类（文件、网络、数据库、时钟）——就要问能不能注入。",
+            "landing": "能把一个内部 new 依赖的类改成构造函数注入，并在测试里换成内存实现。"
+          },
+          "lesson": {
+            "blocks": [
+              {
+                "type": "scenario",
+                "situation": "ReportService::publish() 里直接创建 FileStorage 写文件。现在要给它写单元测试，又不想真的写磁盘。最好的改法是？",
+                "options": [
+                  {
+                    "label": "抽出 Storage 接口，ReportService 通过构造函数接收 Storage&，测试时传入内存实现",
+                    "ok": true,
+                    "why": "构造函数注入：依赖由外部决定，类只依赖抽象"
+                  },
+                  {
+                    "label": "在 publish() 里用 if 判断是不是测试环境",
+                    "ok": false,
+                    "why": "测试逻辑混进了产品代码"
+                  },
+                  {
+                    "label": "测试结束后删掉写出的文件",
+                    "ok": false,
+                    "why": "测试仍依赖真实磁盘，慢且不稳定"
+                  },
+                  {
+                    "label": "把 FileStorage 做成单例",
+                    "ok": false,
+                    "why": "单例仍然是写死的具体类，测试照样换不掉"
+                  }
+                ]
+              },
+              {
+                "type": "lead",
+                "text": "**写死的依赖**指一个类在内部直接创建它所依赖的具体对象。Martin Fowler 2004 年的文章《Inversion of Control Containers and the Dependency Injection pattern》把解决办法命名为**依赖注入**：由一个外部的「装配者」创建依赖并交给使用它的对象。它是依赖倒置原则的具体做法——高层的 ReportService 只依赖抽象的 Storage。"
+              },
+              {
+                "type": "codecompare",
+                "title": "改造前后",
+                "before": {
+                  "title": "改造前：在方法里 new 具体类",
+                  "code": "class ReportService {\npublic:\n  void publish(int id) {\n    FileStorage storage;          // 写死\n    storage.save(key(id), body());\n  }\n};"
+                },
+                "after": {
+                  "title": "改造后：构造函数注入",
+                  "code": "class ReportService {\npublic:\n  explicit ReportService(Storage& s) : storage_(s) {}\n  void publish(int id) { storage_.save(key(id), body()); }\nprivate:\n  Storage& storage_;\n};\n\nMemoryStorage memory;           // 测试时\nReportService service(memory);"
+                }
+              },
+              {
+                "type": "steps",
+                "title": "怎么改",
+                "items": [
+                  "从具体依赖里提炼出一个抽象接口，只包含使用方真正调用的方法。",
+                  "让使用方的构造函数接收这个接口（引用或智能指针），删掉内部的创建代码。",
+                  "在程序入口（组装处）创建具体对象并传入；测试里传入替身实现。",
+                  "所有权要说清：传引用表示使用方不负责释放；转移所有权时用 std::unique_ptr。"
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "代价与边界",
+                "text": "依赖多了，组装代码会变长，大型项目常用 DI 容器集中装配。不会被替换的纯计算工具（如 std::string、数学函数）不必注入。"
+              },
+              {
+                "type": "callout",
+                "title": "工具箱里的对应模式",
+                "text": "抽象工厂（需要成套创建依赖时）、策略（注入的是一种算法时）；DI 容器本质上是运行时的抽象工厂。"
+              },
+              {
+                "type": "quiz",
+                "title": "随堂练",
+                "items": [
+                  {
+                    "stem": "构造函数注入相比在类内部 new 依赖，最直接的好处是？",
+                    "choices": [
+                      {
+                        "label": "依赖可以在类的外部替换，测试时能传入替身",
+                        "ok": true,
+                        "why": "类不再决定用哪个具体实现"
+                      },
+                      {
+                        "label": "运行速度更快",
+                        "ok": false,
+                        "why": "与性能无关"
+                      },
+                      {
+                        "label": "类不再需要任何依赖",
+                        "ok": false,
+                        "why": "依赖仍在，只是由外部提供"
+                      },
+                      {
+                        "label": "可以省掉接口定义",
+                        "ok": false,
+                        "why": "通常反而要先提炼出接口"
+                      }
+                    ],
+                    "source": {
+                      "relation": "authored",
+                      "sourceId": "self-authored",
+                      "locator": "dp.sit.hardwired-dependency",
+                      "why": "讲解后的即时小测，按本节内容自编"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "callout",
+                "title": "取材",
+                "text": "依赖注入：Martin Fowler《Inversion of Control Containers and the Dependency Injection pattern》（martinfowler.com，2004），文中区分构造函数注入、设值注入与接口注入；对应依赖倒置原则。所有权表达见 C++ Core Guidelines R.20、I.11。"
+              }
+            ]
+          },
+          "labs": [
+            {
+              "id": "dp.sit.hardwired-dependency.run",
+              "title": "改成构造函数注入",
+              "case": "sit_di_demo",
+              "entrypoint": "main.cpp",
+              "prompt": "想测试 ReportService 而不写磁盘，现在的代码里哪一行挡住了你？",
+              "goal": "定义抽象类 Storage（纯虚 save），让 FileStorage 实现它；写 MemoryStorage（存进 std::map 并输出 saved to memory: <key>）；ReportService 改为构造函数接收 Storage&。删掉旧代码，解开 main 里的 TODO(实验) 段。",
+              "pass": {
+                "includes": [
+                  "saved to memory: report-1"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "checkpoint": {
+        "intro": "8 种情境混排，同一情境的题不挨着。先判断症状，再选手法。",
+        "items": [
+          {
+            "stem": "计费、报表、导出三个模块里都有 switch (memberLevel)，下个月要新增「钻石会员」。这段代码最突出的坏味道是？",
+            "choices": [
+              {
+                "label": "重复的 switch",
+                "ok": true,
+                "why": "同一组分支散落三处，新增类型要找遍"
+              },
+              {
+                "label": "过长函数",
+                "ok": false,
+                "why": "问题不在函数长度"
+              },
+              {
+                "label": "全局数据",
+                "ok": false,
+                "why": "与全局变量无关"
+              },
+              {
+                "label": "依恋情结",
+                "ok": false,
+                "why": "与读取别处数据无关"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.repeated-switch",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.repeated-switch"
+          },
+          {
+            "stem": "createUser(name, email, true, false, true) 最该先做的重构是？",
+            "choices": [
+              {
+                "label": "移除标记参数 / 把开关收进具名选项结构",
+                "ok": true,
+                "why": "三个裸 bool 在调用处看不出含义"
+              },
+              {
+                "label": "提炼函数",
+                "ok": false,
+                "why": "问题在接口，不在函数体"
+              },
+              {
+                "label": "以多态取代条件表达式",
+                "ok": false,
+                "why": "没有重复的类型分支"
+              },
+              {
+                "label": "封装变量",
+                "ok": false,
+                "why": "与全局变量无关"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.long-params",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.long-params"
+          },
+          {
+            "stem": "C++ Core Guidelines I.2 的要求是？",
+            "choices": [
+              {
+                "label": "避免非 const 的全局变量",
+                "ok": true,
+                "why": "可变的全局状态让依赖隐式化、难以测试"
+              },
+              {
+                "label": "避免使用 goto",
+                "ok": false,
+                "why": "那不是 I.2"
+              },
+              {
+                "label": "避免使用异常",
+                "ok": false,
+                "why": "Core Guidelines 并不反对异常（见 NR.3）"
+              },
+              {
+                "label": "所有函数都要内联",
+                "ok": false,
+                "why": "无此规定"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.global-data",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.global-data"
+          },
+          {
+            "stem": "a.getB().getC().getD().value() 这种写法对应哪种坏味道，常用什么手法？",
+            "choices": [
+              {
+                "label": "过长的消息链；隐藏委托关系",
+                "ok": true,
+                "why": "调用方依赖了整条导航路径"
+              },
+              {
+                "label": "过长参数列表；引入参数对象",
+                "ok": false,
+                "why": "这里没有参数问题"
+              },
+              {
+                "label": "重复的 switch；多态",
+                "ok": false,
+                "why": "没有类型分支"
+              },
+              {
+                "label": "全局数据；封装变量",
+                "ok": false,
+                "why": "没有全局变量"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.feature-envy",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.feature-envy"
+          },
+          {
+            "stem": "下列哪种写法属于「写死的依赖」？",
+            "choices": [
+              {
+                "label": "OrderService 的方法里直接 MySqlConnection conn;",
+                "ok": true,
+                "why": "具体的基础设施类在内部创建，外部无法替换"
+              },
+              {
+                "label": "OrderService 的构造函数接收 Repository&",
+                "ok": false,
+                "why": "这正是构造函数注入"
+              },
+              {
+                "label": "OrderService 使用 std::vector 存订单",
+                "ok": false,
+                "why": "标准容器不需要注入"
+              },
+              {
+                "label": "OrderService 调用 std::max",
+                "ok": false,
+                "why": "纯函数工具不需要注入"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.hardwired-dependency",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.hardwired-dependency"
+          },
+          {
+            "stem": "《重构》对「什么时候该提炼函数」最核心的判断是？",
+            "choices": [
+              {
+                "label": "能为这段代码起一个说明意图的名字，而原地只能靠注释说明",
+                "ok": true,
+                "why": "名字表达意图，读名字就够了"
+              },
+              {
+                "label": "函数超过 30 行",
+                "ok": false,
+                "why": "行数不是依据"
+              },
+              {
+                "label": "代码里有嵌套循环",
+                "ok": false,
+                "why": "嵌套不是依据"
+              },
+              {
+                "label": "这段代码被调用多次",
+                "ok": false,
+                "why": "只用一次也可以为表达意图而提炼"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.long-function",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.long-function"
+          },
+          {
+            "stem": "用 int 表示温度，代码里时而是摄氏、时而是华氏，常有换算错误。应该？",
+            "choices": [
+              {
+                "label": "以对象取代基本类型：建 Temperature 类型，构造时明确单位，换算只在类内完成",
+                "ok": true,
+                "why": "让类型带上单位，错误在编译期或构造时暴露"
+              },
+              {
+                "label": "在变量名里加单位后缀",
+                "ok": false,
+                "why": "有帮助但编译器不检查"
+              },
+              {
+                "label": "统一改成 double",
+                "ok": false,
+                "why": "精度不是问题所在"
+              },
+              {
+                "label": "加注释说明单位",
+                "ok": false,
+                "why": "注释不受检查"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.primitive",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.primitive"
+          },
+          {
+            "stem": "一个类既因为「定价规则变了」要改，又因为「界面文案变了」要改。这是？",
+            "choices": [
+              {
+                "label": "发散式变化：应按变化原因拆成两个类",
+                "ok": true,
+                "why": "一个类有两种不相干的变化原因"
+              },
+              {
+                "label": "霰弹式修改",
+                "ok": false,
+                "why": "霰弹式修改是一种变化要改很多处，方向相反"
+              },
+              {
+                "label": "过长的消息链",
+                "ok": false,
+                "why": "与对象导航无关"
+              },
+              {
+                "label": "基本类型偏执",
+                "ok": false,
+                "why": "与值的类型无关"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.divergent-change",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.divergent-change"
+          },
+          {
+            "stem": "分支只是按月份取当月天数，且全程序只有这一处。最合适的是？",
+            "choices": [
+              {
+                "label": "保留 switch 或改成查表",
+                "ok": true,
+                "why": "只有一处、只是在选值，引入类层次反而复杂"
+              },
+              {
+                "label": "为每个月建一个子类",
+                "ok": false,
+                "why": "过度设计"
+              },
+              {
+                "label": "改成状态模式",
+                "ok": false,
+                "why": "月份不是对象的状态"
+              },
+              {
+                "label": "改成访问者模式",
+                "ok": false,
+                "why": "没有对象结构"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.repeated-switch",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.repeated-switch"
+          },
+          {
+            "stem": "C++20 的写法 Extras{.breakfast = true} 对接口设计的意义是？",
+            "choices": [
+              {
+                "label": "调用处的每个值都带着名字，读代码时不必对照参数顺序",
+                "ok": true,
+                "why": "指定初始化让参数对象自带说明"
+              },
+              {
+                "label": "让程序运行更快",
+                "ok": false,
+                "why": "与性能无关"
+              },
+              {
+                "label": "可以省略结构体定义",
+                "ok": false,
+                "why": "仍需定义结构体"
+              },
+              {
+                "label": "允许传入任意类型",
+                "ok": false,
+                "why": "仍是强类型"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.long-params",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.long-params"
+          },
+          {
+            "stem": "为什么说把全局计数器改成单例「没有真正解决问题」？",
+            "choices": [
+              {
+                "label": "单例仍是一份全局共享、处处可改的状态，测试干扰与隐式依赖依旧",
+                "ok": true,
+                "why": "单例只控制了创建方式"
+              },
+              {
+                "label": "单例的性能比全局变量差",
+                "ok": false,
+                "why": "不是主要原因"
+              },
+              {
+                "label": "单例无法计数",
+                "ok": false,
+                "why": "可以计数"
+              },
+              {
+                "label": "C++ 不能实现单例",
+                "ok": false,
+                "why": "可以实现"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.global-data",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.global-data"
+          },
+          {
+            "stem": "按《重构》，一个函数应该放在哪个类里？",
+            "choices": [
+              {
+                "label": "它最常访问的那些数据所在的类",
+                "ok": true,
+                "why": "函数与它依恋的数据放在一起，变化才会集中"
+              },
+              {
+                "label": "调用它最多的那个类",
+                "ok": false,
+                "why": "调用多不等于依赖数据多"
+              },
+              {
+                "label": "任意一个工具类",
+                "ok": false,
+                "why": "会产生依恋情结"
+              },
+              {
+                "label": "一律放进 main.cpp",
+                "ok": false,
+                "why": "无组织可言"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.feature-envy",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.feature-envy"
+          },
+          {
+            "stem": "构造函数注入与设值注入相比，主要优点是？",
+            "choices": [
+              {
+                "label": "依赖在构造时就齐全，对象创建后即可用，依赖关系一目了然",
+                "ok": true,
+                "why": "Fowler 文中推荐优先使用构造函数注入的理由"
+              },
+              {
+                "label": "可以在对象使用中途随时更换依赖",
+                "ok": false,
+                "why": "那是设值注入的特点，也是它的风险"
+              },
+              {
+                "label": "不需要接口",
+                "ok": false,
+                "why": "两者都通常依赖接口"
+              },
+              {
+                "label": "性能更好",
+                "ok": false,
+                "why": "与性能无关"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.hardwired-dependency",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.hardwired-dependency"
+          },
+          {
+            "stem": "「拆分阶段」（Split Phase）适合哪种代码？",
+            "choices": [
+              {
+                "label": "一段代码先计算出结果，再把结果以某种格式输出",
+                "ok": true,
+                "why": "用中间数据结构隔开两个阶段，输出可以有多种"
+              },
+              {
+                "label": "一个类有多个子类",
+                "ok": false,
+                "why": "那是继承结构问题"
+              },
+              {
+                "label": "函数里有多个 return",
+                "ok": false,
+                "why": "与阶段无关"
+              },
+              {
+                "label": "变量命名不清",
+                "ok": false,
+                "why": "那是重命名的事"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.long-function",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.long-function"
+          },
+          {
+            "stem": "下列哪个值最不值得包成独立类型？",
+            "choices": [
+              {
+                "label": "循环里的计数下标 i",
+                "ok": true,
+                "why": "没有单位、没有额外规则，用 int 就好"
+              },
+              {
+                "label": "带币种的金额",
+                "ok": false,
+                "why": "有币种与精度规则"
+              },
+              {
+                "label": "带区号格式的电话号码",
+                "ok": false,
+                "why": "有格式校验"
+              },
+              {
+                "label": "有起止且不能倒置的日期区间",
+                "ok": false,
+                "why": "有合法性约束"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.primitive",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.primitive"
+          },
+          {
+            "stem": "拆分类拆得过细，会出现什么坏味道？",
+            "choices": [
+              {
+                "label": "冗赘的元素（Lazy Element）：一个类或函数几乎什么都不做",
+                "ok": true,
+                "why": "拆分要以真实的变化为依据"
+              },
+              {
+                "label": "全局数据",
+                "ok": false,
+                "why": "无关"
+              },
+              {
+                "label": "过长参数列表",
+                "ok": false,
+                "why": "无必然联系"
+              },
+              {
+                "label": "重复的 switch",
+                "ok": false,
+                "why": "无关"
+              }
+            ],
+            "source": {
+              "relation": "authored",
+              "sourceId": "self-authored",
+              "locator": "dp.sit.divergent-change",
+              "why": "混合辨析题按本课讲解自编，用于章节随堂考核"
+            },
+            "covers": "dp.sit.divergent-change"
           }
         ]
       }
