@@ -336,7 +336,6 @@ body {
   filter: drop-shadow(0 0.25em 0.6em rgba(0, 0, 0, 0.16));
 }
 .graph-node text { font-family: var(--font); }
-.graph-node text.chapter { font-weight: 700; letter-spacing: 0.04em; }
 .graph-node text.title { font-weight: 800; fill: var(--ink); }
 .graph-node text.guide { fill: #5b6470; }
 .graph-node text.badge-text { font-weight: 700; }
@@ -345,20 +344,27 @@ body {
 
 .graph-edge {
   fill: none;
-  stroke-width: 1.8;
-  opacity: 0.45;
+  stroke-width: 1.6;
+  opacity: 0.22;
+  pointer-events: none;
 }
 .graph-edge.strong {
-  stroke-width: 2.8;
-  opacity: 0.85;
+  stroke-width: 2.4;
+  opacity: 0.38;
 }
-.layer-label {
-  font-weight: 700;
-  fill: #9aa4af;
-  font-family: var(--font);
-  letter-spacing: 0.06em;
-}
-.layer-band { fill: #f3f5f8; opacity: 0.55; }
+/* 按章分带：带头是章名，带内节点折行 */
+.chapter-band .band-bg { fill: #f6f8fb; stroke: #e3e8ef; stroke-width: 1; }
+.chapter-band .band-bg.alt { fill: #eef2f7; }
+.chapter-band .band-title { font-family: var(--font); font-weight: 800; fill: var(--primary-text); }
+.chapter-band .band-count { font-family: var(--font); font-weight: 600; fill: var(--muted); }
+.chapter-band.is-planned .band-title { fill: var(--muted); }
+.graph-node.is-planned .node-card { stroke-dasharray: 6 4; fill: #fbfcfd; }
+
+/* 悬停聚焦：只提亮该节点的先修与后继，其余退后 */
+.graph svg.is-focus .graph-edge { opacity: 0.08; }
+.graph svg.is-focus .graph-edge.is-related { opacity: 1; stroke-width: 3; }
+.graph svg.is-focus .graph-node:not(.is-related) { opacity: 0.4; }
+.graph-node, .graph-edge { transition: opacity 0.15s ease; }
 
 .stat-row {
   display: grid;
@@ -1551,24 +1557,26 @@ textarea.code {
 }
 
 /* 现代视角：过时性/替代性标记（ADR 无需——内容层字段，2026 视角） */
+/* 字号一律 em：根字号 20pt 是全站基准，写死 px 会让这些卡片比正文小一大截 */
 .modern-badge {
-  font-size: 12px; font-weight: 600; border: 1px solid; border-radius: 10px;
-  padding: 1px 9px; vertical-align: middle; margin-left: 6px;
+  font-size: 0.62em; font-weight: 700; border: 1px solid; border-radius: 1em;
+  padding: 0.1em 0.65em; vertical-align: middle; margin-left: 0.4em;
 }
 .modern-card {
-  margin: 6px 0 14px; padding: 10px 14px; border-radius: 8px; font-size: 13px;
-  border-left: 3px solid #d97706; background: rgba(217, 119, 6, 0.09);
+  margin: 0.3em 0 0.7em; padding: 0.55em 0.8em; border-radius: var(--radius); font-size: 0.85em;
+  line-height: 1.6; border-left: 0.2em solid #d97706; background: rgba(217, 119, 6, 0.09);
 }
-.modern-title { font-weight: 700; margin-bottom: 4px; }
+.modern-title { font-weight: 700; margin-bottom: 0.2em; }
 .modern-dot {
-  display: inline-block; width: 7px; height: 7px; border-radius: 50%;
-  margin-left: 5px; vertical-align: middle;
+  display: inline-block; width: 0.4em; height: 0.4em; border-radius: 50%;
+  margin-left: 0.3em; vertical-align: middle;
 }
 
 /* 四语言对照表 */
-.uml-table { border-collapse: collapse; font-size: 12.5px; min-width: 100%; }
+.uml-table { border-collapse: collapse; font-size: 0.8em; min-width: 100%; }
 .uml-table th, .uml-table td {
-  border: 1px solid var(--border, #cbd5e1); padding: 6px 9px; text-align: left;
-  vertical-align: top; line-height: 1.45;
+  border: 1px solid var(--border, #cbd5e1); padding: 0.4em 0.6em; text-align: left;
+  vertical-align: top; line-height: 1.5;
 }
+.table-note { margin-top: 0.4em; font-size: 0.8em; }
 .uml-table th { font-weight: 700; background: rgba(148, 163, 184, 0.12); white-space: nowrap; }

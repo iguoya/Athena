@@ -288,6 +288,14 @@ function restoreQuizPicks(root: HTMLElement, picks: Array<number | null> | undef
   });
 }
 
+/**
+ * 正文里唯一支持的行内标记：**加粗**。先转义再替换，内容作者写不进任何 HTML；
+ * 其余 Markdown 语法不认，免得讲解文字里的星号、下划线被误吞。
+ */
+function richText(text: string): string {
+  return escapeHtml(text).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+}
+
 function $(id: string): HTMLElement {
   const el = document.getElementById(id);
   if (!el) throw new Error(`missing #${id}`);
@@ -501,46 +509,20 @@ function labJumpButton(topic: Topic, labId: string | undefined): string {
   return `<button type="button" class="lab-jump" data-open-lab="${escapeHtml(labId)}">${escapeHtml(label)}</button>`;
 }
 
-/** 按 requires 拓扑分层；同层按先修在课表中的平均位置排，减少交叉边。 */
-function layoutLayers(topics: Topic[]): Topic[][] {
-  const byId = new Map(topics.map((t) => [t.id, t]));
-  const order = new Map(topics.map((t, i) => [t.id, i]));
-  const depth = new Map<string, number>();
+/** 图谱上次排版时的容器宽度：视图隐藏量不到宽度时沿用。 */
+let graphLastWidth = 0;
 
-  const depthOf = (id: string, stack: Set<string>): number => {
-    if (depth.has(id)) return depth.get(id)!;
-    if (stack.has(id)) return 0;
-    stack.add(id);
-    const t = byId.get(id);
-    let d = 0;
-    if (t) {
-      for (const r of t.requires) {
-        if (byId.has(r)) d = Math.max(d, depthOf(r, stack) + 1);
-      }
-    }
-    stack.delete(id);
-    depth.set(id, d);
-    return d;
-  };
-
-  for (const t of topics) depthOf(t.id, new Set());
-  const max = Math.max(0, ...[...depth.values()]);
-  const layers: Topic[][] = Array.from({ length: max + 1 }, () => []);
-  for (const t of topics) layers[depth.get(t.id) ?? 0].push(t);
-
-  const parentAvg = (t: Topic): number => {
-    const reqs = t.requires.filter((id) => byId.has(id));
-    if (!reqs.length) return order.get(t.id) ?? 0;
-    return reqs.reduce((sum, id) => sum + (order.get(id) ?? 0), 0) / reqs.length;
-  };
-  for (const layer of layers) {
-    layer.sort((a, b) => {
-      const d = parentAvg(a) - parentAvg(b);
-      if (d !== 0) return d;
-      return (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0);
-    });
-  }
-  return layers;
+/** 图谱按容器宽度排版，宽度变了（拖窗口、切单栏）就重排；高度变化是重排自己引起的，忽略。 */
+function initGraphResize(): void {
+  const el = document.getElementById("graph");
+  if (!el || typeof ResizeObserver === "undefined") return;
+  let pending = 0;
+  new ResizeObserver(() => {
+    const w = el.clientWidth;
+    if (w <= 0 || Math.abs(w - graphLastWidth) < 4) return;
+    cancelAnimationFrame(pending);
+    pending = requestAnimationFrame(() => renderMap());
+  }).observe(el);
 }
 
 function showView(view: ViewId) {
@@ -651,35 +633,66 @@ function renderMap() {
   const colorOf = (t: Topic): string =>
     tracks.get(trackIdOf(t))?.color ?? TRACK_FALLBACK;
 
+  // 按章分带、带内按容器宽度折行，SVG 按 1:1 像素渲染。
+  // 原先按先修深度分层：本课几乎所有模式都只依赖「类框与六种关系线」，同一层一排十几个
+  // 节点，整张图被压到容器宽度后文字只剩 4px 高。先修深度在这里没有区分度，章才是
+  // 学习者认路的单位；先修关系改由连线表达，悬停时高亮。
   const topics = allTopics(cur);
-  const layers = layoutLayers(topics);
-  const NODE_W = emPx(14.2);
-  const NODE_H = emPx(7.6);
-  const gapX = emPx(1.3);
-  const gapY = emPx(4.4);
-  const padX = emPx(3);
-  const padY = emPx(1.7);
-  const maxCount = Math.max(1, ...layers.map((l) => l.length));
-  const width = padX * 2 + maxCount * NODE_W + (maxCount - 1) * gapX;
-  const height = padY * 2 + layers.length * NODE_H + (layers.length - 1) * gapY;
+  const graphEl = $("graph");
+  const measured = graphEl.clientWidth;
+  // 视图隐藏时量不到宽度（交卷后在知识点页里刷新图谱），沿用上次的宽度；
+  // 回到图谱页时 ResizeObserver 会按真实宽度再排一次。
+  const availW = measured > 0 ? measured : graphLastWidth || 1000;
+  if (measured > 0) graphLastWidth = measured;
+
+  const padX = emPx(0.4);
+  const gapX = emPx(0.8);
+  const gapY = emPx(0.8);
+  const minNodeW = emPx(11);
+  const innerW = availW - padX * 2;
+  const cols = Math.max(1, Math.floor((innerW + gapX) / (minNodeW + gapX)));
+  const NODE_W = (innerW - (cols - 1) * gapX) / cols;
+  const NODE_H = emPx(6.2);
+  const bandHeadH = emPx(1.5);
+  const bandPadB = emPx(0.7);
+  const bandGap = emPx(0.6);
 
   type Pos = { x: number; y: number; t: Topic };
   const pos = new Map<string, Pos>();
-  layers.forEach((layer, li) => {
-    const span = layer.length * NODE_W + Math.max(0, layer.length - 1) * gapX;
-    const startX = (width - span) / 2;
-    layer.forEach((t, i) => {
+  const bands: string[] = [];
+  let cursorY = emPx(0.3);
+  cur.chapters.forEach((ch, ci) => {
+    if (!ch.topics.length) return;
+    const rows = Math.ceil(ch.topics.length / cols);
+    const bandH = bandHeadH + rows * NODE_H + (rows - 1) * gapY + bandPadB;
+    const track = tracks.get(ch.track ?? "");
+    const color = track?.color ?? TRACK_FALLBACK;
+    const planned = ch.topics.every((t) => t.status === "planned");
+    bands.push(`<g class="chapter-band${planned ? " is-planned" : ""}">
+      <rect class="band-bg${ci % 2 ? " alt" : ""}" x="0" y="${cursorY}" width="${availW}" height="${bandH}" rx="${emPx(0.6)}"></rect>
+      <rect x="${padX}" y="${cursorY + emPx(0.42)}" width="${emPx(0.22)}" height="${emPx(0.78)}" rx="${emPx(0.08)}" fill="${color}"></rect>
+      <text class="band-title" x="${padX + emPx(0.5)}" y="${cursorY + emPx(1.05)}" font-size="${emPx(0.72)}">${escapeHtml(
+        elide(ch.title, availW - padX * 2 - emPx(4), emPx(0.72), 1)[0] ?? "",
+      )}</text>
+      <text class="band-count" x="${availW - padX}" y="${cursorY + emPx(1.05)}" font-size="${emPx(0.6)}" text-anchor="end">${planned ? "建设中" : `${ch.topics.length} 个知识点`}</text>
+    </g>`);
+    ch.topics.forEach((t, i) => {
       pos.set(t.id, {
-        x: startX + i * (NODE_W + gapX),
-        y: padY + li * (NODE_H + gapY),
+        x: padX + (i % cols) * (NODE_W + gapX),
+        y: cursorY + bandHeadH + Math.floor(i / cols) * (NODE_H + gapY),
         t,
       });
     });
+    cursorY += bandH + bandGap;
   });
+  const width = availW;
+  const height = cursorY;
 
   // 先修边染成**源节点**的主线色：顺着颜色就能看出一条知识是从哪条线上长出来的。
+  // 默认淡显，悬停某个节点时只把它的先修与后继提亮，避免二十多条线糊成一片。
   const markers = new Map<string, string>();
   const edges: string[] = [];
+  const tipGap = emPx(0.35);
   for (const t of topics) {
     const to = pos.get(t.id);
     if (!to) continue;
@@ -690,26 +703,38 @@ function renderMap() {
       const markerId = `arrow-${color.replace("#", "")}`;
       markers.set(markerId, color);
       const x0 = from.x + NODE_W / 2;
-      const y0 = from.y + NODE_H;
       const x1 = to.x + NODE_W / 2;
-      const y1 = to.y;
-      const mid = (y0 + y1) / 2;
+      let d: string;
+      if (Math.abs(from.y - to.y) < 1) {
+        // 同一行（同章相邻）：从底边绕下去再回到目标底边，箭头朝上
+        const y = from.y + NODE_H;
+        const dip = y + gapY * 0.9;
+        d = `M${x0} ${y} C${x0} ${dip}, ${x1} ${dip}, ${x1} ${y + tipGap}`;
+      } else if (to.y > from.y) {
+        const y0 = from.y + NODE_H;
+        const y1 = to.y;
+        const mid = (y0 + y1) / 2;
+        d = `M${x0} ${y0} C${x0} ${mid}, ${x1} ${mid}, ${x1} ${y1 - tipGap}`;
+      } else {
+        const y0 = from.y;
+        const y1 = to.y + NODE_H;
+        const mid = (y0 + y1) / 2;
+        d = `M${x0} ${y0} C${x0} ${mid}, ${x1} ${mid}, ${x1} ${y1 + tipGap}`;
+      }
       const strong = t.mastery_goal === "master" || t.weight === "先拿下";
-      const tipGap = emPx(0.35);
       edges.push(
-        `<path class="graph-edge${strong ? " strong" : ""}" stroke="${color}" d="M${x0} ${y0} C${x0} ${mid}, ${x1} ${mid}, ${x1} ${y1 - tipGap}" marker-end="url(#${markerId})" />`,
+        `<path class="graph-edge${strong ? " strong" : ""}" data-from="${escapeHtml(r)}" data-to="${escapeHtml(t.id)}" stroke="${color}" d="${d}" marker-end="url(#${markerId})" />`,
       );
     }
   }
 
-  const textX = emPx(1.4);
-  const textPadR = emPx(0.8);
+  const textX = emPx(1.2);
+  const textPadR = emPx(0.7);
   const textW = NODE_W - textX - textPadR;
-  const fontGuide = emPx(0.55);
-  const fontChapter = emPx(0.5);
-  const guideLineH = emPx(0.72);
-  const guideY0 = emPx(3.7);
-  const badgeY = NODE_H - emPx(2.35);
+  const fontGuide = emPx(0.56);
+  const guideLineH = emPx(0.74);
+  const guideY0 = emPx(2.3);
+  const badgeY = NODE_H - emPx(2.25);
   const badgeGap = emPx(0.25);
   const barY = NODE_H - emPx(0.55);
   const barH = emPx(0.28);
@@ -727,66 +752,49 @@ function renderMap() {
       const pipW = emPx(0.32);
       const pipGap = emPx(0.08);
       const pipH = emPx(0.52);
-      const pipsX = NODE_W - textPadR - (pipW * 5 + pipGap * 4);
+      const pipsW = pipW * 5 + pipGap * 4;
+      const pipsX = NODE_W - textPadR - pipsW;
       const pips = Array.from({ length: 5 }, (_, i) =>
-        `<rect class="pip${i < mastery ? "" : " pip-off"}" x="${pipsX + i * (pipW + pipGap)}" y="${emPx(0.85)}" width="${pipW}" height="${pipH}" rx="${emPx(0.08)}"${i < mastery ? ` fill="${color}"` : ""}></rect>`,
+        `<rect class="pip${i < mastery ? "" : " pip-off"}" x="${pipsX + i * (pipW + pipGap)}" y="${emPx(0.78)}" width="${pipW}" height="${pipH}" rx="${emPx(0.08)}"${i < mastery ? ` fill="${color}"` : ""}></rect>`,
       ).join("");
 
       const guideLines = elide(t.guide_line, textW, fontGuide, 2)
         .map((line, i) => `<text class="guide" x="${textX}" y="${guideY0 + i * guideLineH}" font-size="${fontGuide}">${escapeHtml(line)}</text>`)
         .join("");
 
+      // 徽标按优先级排，放不下的从尾部丢（详情面板与悬停提示里都有全量信息）。
       const level = Math.min(5, Math.max(1, t.difficulty || 1));
-      let bx = textX;
-      const badges = [
-        svgBadge(bx, badgeY, `D${t.difficulty}`, DIFFICULTY_STYLE[level - 1]),
+      const badgeSpecs: Array<[string, BadgeStyle]> = [
+        [`D${t.difficulty}`, DIFFICULTY_STYLE[level - 1]],
+        [goalLabel(t.mastery_goal), GOAL_STYLE[t.mastery_goal] ?? DIFFICULTY_STYLE[0]],
+        [typeLabel(t.knowledge_type), TYPE_STYLE[t.knowledge_type] ?? DIFFICULTY_STYLE[0]],
       ];
-      bx += badges[0].width + badgeGap;
-      const goal = svgBadge(
-        bx, badgeY, goalLabel(t.mastery_goal),
-        GOAL_STYLE[t.mastery_goal] ?? DIFFICULTY_STYLE[0],
-      );
-      badges.push(goal);
-      bx += goal.width + badgeGap;
-      badges.push(
-        svgBadge(
-          bx, badgeY, typeLabel(t.knowledge_type),
-          TYPE_STYLE[t.knowledge_type] ?? DIFFICULTY_STYLE[0],
-        ),
-      );
       if (t.weight) {
-        bx += badges[badges.length - 1].width + badgeGap;
-        badges.push(
-          svgBadge(bx, badgeY, t.weight, {
-            fill: "#fff4e8",
-            stroke: "#e0c4a8",
-            ink: "#9a5a00",
-          }),
-        );
+        badgeSpecs.push([t.weight, { fill: "#fff4e8", stroke: "#e0c4a8", ink: "#9a5a00" }]);
       }
       if (labs.length) {
-        bx += badges[badges.length - 1].width + badgeGap;
-        badges.push(
-          svgBadge(bx, badgeY, `实验${labs.length}`, {
-            fill: "#eef2fb",
-            stroke: "#b7c7ef",
-            ink: "#2f4f9b",
-          }),
-        );
+        badgeSpecs.push([`实验${labs.length}`, { fill: "#eef2fb", stroke: "#b7c7ef", ink: "#2f4f9b" }]);
+      }
+      const badges: Array<{ svg: string; width: number }> = [];
+      let bx = textX;
+      for (const [label, style] of badgeSpecs) {
+        const b = svgBadge(bx, badgeY, label, style);
+        if (bx + b.width > NODE_W - textPadR) break;
+        badges.push(b);
+        bx += b.width + badgeGap;
       }
 
-      const chapterTitle = elide(chapter?.title ?? "", textW - emPx(3), fontChapter, 1)[0] ?? "";
       const rx = emPx(0.7);
-      const accentX = emPx(0.65);
+      const accentX = emPx(0.55);
       const accentW = emPx(0.2);
       const fontTitle = emPx(0.7);
+      const titleText = elide(t.title, pipsX - textX - emPx(0.4), fontTitle, 1)[0] ?? "";
       const barW = NODE_W - barPad * 2;
       const fillW = (barW * mastery) / 5;
       const progress = getTopicProgressStatus(t);
       const progressCls = labStatusClass(progress);
       const accentFill =
         progress === "done" ? "#198754" : progress === "tried" || progress === "started" ? "#d97706" : color;
-      const chapterFill = accentFill;
       const tip = [
         t.title,
         t.guide_line,
@@ -801,35 +809,17 @@ function renderMap() {
           : "本章暂无随堂考核",
       ].join("\n");
 
-      return `<g class="graph-node ${progressCls}" data-topic="${escapeHtml(t.id)}" transform="translate(${x}, ${y})">
+      return `<g class="graph-node ${progressCls}${t.status === "planned" ? " is-planned" : ""}" data-topic="${escapeHtml(t.id)}" transform="translate(${x}, ${y})">
         <title>${escapeHtml(tip)}</title>
         <rect class="node-card" width="${NODE_W}" height="${NODE_H}" rx="${rx}" ry="${rx}"></rect>
-        <rect x="${accentX}" y="${emPx(0.8)}" width="${accentW}" height="${NODE_H - emPx(1.6)}" rx="${emPx(0.1)}" fill="${accentFill}"></rect>
-        <text class="chapter" x="${textX}" y="${emPx(1.3)}" font-size="${fontChapter}" fill="${chapterFill}">${escapeHtml(chapterTitle)}</text>
+        <rect x="${accentX}" y="${emPx(0.7)}" width="${accentW}" height="${NODE_H - emPx(1.4)}" rx="${emPx(0.1)}" fill="${accentFill}"></rect>
         ${pips}
-        <text class="title" x="${textX}" y="${emPx(2.55)}" font-size="${fontTitle}">${escapeHtml(t.title)}</text>
+        <text class="title" x="${textX}" y="${emPx(1.3)}" font-size="${fontTitle}">${escapeHtml(titleText)}</text>
         ${guideLines}
         ${badges.map((b) => b.svg).join("")}
         <rect x="${barPad}" y="${barY}" width="${barW}" height="${barH}" rx="${barH / 2}" fill="#e4e8ed"></rect>
         <rect x="${barPad}" y="${barY}" width="${fillW}" height="${barH}" rx="${barH / 2}" fill="${accentFill}"></rect>
       </g>`;
-    })
-    .join("");
-
-  // 交替的浅色横带，让"同一层没有先后"一眼看得出来。
-  const bandPad = emPx(0.7);
-  const bands = layers
-    .map((_, li) =>
-      li % 2 === 1
-        ? `<rect class="layer-band" x="0" y="${padY + li * (NODE_H + gapY) - bandPad}" width="${width}" height="${NODE_H + bandPad * 2}" rx="${emPx(0.8)}"></rect>`
-        : "",
-    )
-    .join("");
-
-  const layerLabels = layers
-    .map((layer, li) => {
-      const y = padY + li * (NODE_H + gapY) + emPx(1);
-      return `<text class="layer-label" x="${emPx(0.8)}" y="${y}" font-size="${emPx(0.55)}">L${li} · ${layer.length}</text>`;
     })
     .join("");
 
@@ -839,18 +829,38 @@ function renderMap() {
     )
     .join("");
 
-  $("graph").innerHTML = `<svg viewBox="0 0 ${width} ${height}" style="width:100%;max-width:${width}px" role="img">
+  // 宽高与容器同像素：不再让浏览器整体缩放，字号就是写下的字号。
+  graphEl.innerHTML = `<svg viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img">
     <defs>${defs}</defs>
-    ${bands}
-    ${layerLabels}
+    ${bands.join("")}
     ${edges.join("")}
     ${nodes}
   </svg>`;
 
-  $("graph").querySelectorAll<SVGGElement>("[data-topic]").forEach((g) => {
+  const svg = graphEl.querySelector("svg")!;
+  const edgeEls = Array.from(svg.querySelectorAll<SVGPathElement>(".graph-edge"));
+  const nodeEls = Array.from(svg.querySelectorAll<SVGGElement>("[data-topic]"));
+  const focus = (id: string | null) => {
+    svg.classList.toggle("is-focus", !!id);
+    const related = new Set<string>(id ? [id] : []);
+    for (const e of edgeEls) {
+      const hit = !!id && (e.dataset.from === id || e.dataset.to === id);
+      e.classList.toggle("is-related", hit);
+      if (hit) {
+        related.add(e.dataset.from ?? "");
+        related.add(e.dataset.to ?? "");
+      }
+    }
+    for (const n of nodeEls) n.classList.toggle("is-related", related.has(n.dataset.topic ?? ""));
+  };
+  nodeEls.forEach((g) => {
     const id = g.dataset.topic;
     if (!id) return;
-    g.addEventListener("mouseenter", () => showNodeDetail(id));
+    g.addEventListener("mouseenter", () => {
+      showNodeDetail(id);
+      focus(id);
+    });
+    g.addEventListener("mouseleave", () => focus(null));
     g.addEventListener("click", () => {
       openTopic(id);
     });
@@ -1313,26 +1323,15 @@ function syncTabs() {
   });
 }
 
-function renderBrief(chapter: Chapter, topic: Topic, cur: Curriculum) {
+/**
+ * 导读只放本知识点自己的东西。章摘要与同章知识点列表左侧导航一直都在，
+ * 这里再列一遍只会把 outline 挤到首屏以下；一句话定位已在页头。
+ */
+function renderBrief(_chapter: Chapter, topic: Topic, _cur: Curriculum) {
   const o = topic.outline;
-  const siblings = chapter.topics
-    .map((t) => {
-      const here = t.id === topic.id ? " is-here" : "";
-      return `<button type="button" class="brief-node${here}" data-topic="${escapeHtml(t.id)}">
-        <span class="brief-node-title">${escapeHtml(t.title)}</span>
-        <span class="meta-row">
-          <span class="badge">D${t.difficulty}</span>
-          <span class="${goalClass(t.mastery_goal)}">${goalLabel(t.mastery_goal)}</span>
-        </span>
-        <span class="brief-node-line">${escapeHtml(t.guide_line)}</span>
-      </button>`;
-    })
-    .join("");
-
   const visual = briefVisual(topic);
 
   const sections: [string, string][] = [
-    ["这一节要解决什么", o.promise],
     ["痛点与来历", o.pain],
     ["心智模型", o.model],
     ["讲什么与边界", o.scope],
@@ -1341,28 +1340,24 @@ function renderBrief(chapter: Chapter, topic: Topic, cur: Curriculum) {
   ];
 
   const outlineHtml = sections
+    .filter(([, body]) => body?.trim())
     .map(
       ([title, body]) =>
-        `<div class="brief-section"><h3>${escapeHtml(title)}</h3><p class="prose">${escapeHtml(body)}</p></div>`,
+        `<div class="brief-section"><h3>${escapeHtml(title)}</h3><p class="prose">${richText(body)}</p></div>`,
     )
     .join("");
 
   return `
     <div class="card brief-hero">
-      <p class="lead">${escapeHtml(topic.guide_line)}</p>
-      <p class="prose muted stack-gap">章 · ${escapeHtml(chapter.title)}：${escapeHtml(chapter.summary)}</p>
-      <p class="prose muted">先修：${
+      <div class="pane-title">这一节要解决什么</div>
+      <p class="lead">${richText(o.promise || topic.guide_line)}</p>
+      <p class="prose muted stack-gap">先修：${
         topic.requires.length
           ? topic.requires
               .map((id) => escapeHtml(findTopic(id)?.title ?? id))
               .join("、")
-          : "无（本课入口工具）"
+          : "无（本课入口）"
       }</p>
-    </div>
-    <div class="card">
-      <div class="pane-title">本章知识点</div>
-      <div class="brief-map">${siblings}</div>
-      <p class="prose muted stack-gap">${escapeHtml(cur.tagline)}</p>
     </div>
     ${visual}
     <div class="card">
@@ -1780,25 +1775,25 @@ function renderLesson(topic: Topic) {
   const body = topic.lesson.blocks
     .map((b, bi) => {
       if (b.type === "lead") {
-        return `<div class="card"><p class="lead">${escapeHtml(b.text)}</p></div>`;
+        return `<div class="card"><p class="lead">${richText(b.text)}</p></div>`;
       }
       if (b.type === "callout") {
         const tone = b.tone === "warn" ? " warn" : "";
-        return `<div class="callout${tone}"><div class="title">${escapeHtml(b.title ?? "提示")}</div><div>${escapeHtml(b.text)}</div></div>`;
+        return `<div class="callout${tone}"><div class="title">${escapeHtml(b.title ?? "提示")}</div><div>${richText(b.text)}</div></div>`;
       }
       if (b.type === "compare") {
         return `<div class="card">
           ${b.title ? `<h3>${escapeHtml(b.title)}</h3>` : ""}
           <div class="compare">
-            <div class="compare-pane is-yes"><div class="compare-label">${escapeHtml(b.left.title)}</div><p class="prose">${escapeHtml(b.left.body)}</p></div>
-            <div class="compare-pane is-no"><div class="compare-label">${escapeHtml(b.right.title)}</div><p class="prose">${escapeHtml(b.right.body)}</p></div>
+            <div class="compare-pane is-yes"><div class="compare-label">${escapeHtml(b.left.title)}</div><p class="prose">${richText(b.left.body)}</p></div>
+            <div class="compare-pane is-no"><div class="compare-label">${escapeHtml(b.right.title)}</div><p class="prose">${richText(b.right.body)}</p></div>
           </div>
         </div>`;
       }
       if (b.type === "steps") {
         return `<div class="card">
           ${b.title ? `<h3>${escapeHtml(b.title)}</h3>` : ""}
-          <ol class="steps">${b.items.map((it) => `<li>${escapeHtml(it)}</li>`).join("")}</ol>
+          <ol class="steps">${b.items.map((it) => `<li>${richText(it)}</li>`).join("")}</ol>
         </div>`;
       }
       if (b.type === "predict") {
@@ -1821,7 +1816,7 @@ function renderLesson(topic: Topic) {
           .join("");
         return `<div class="card scenario">
           <h3>情境选择</h3>
-          <p class="prose">${escapeHtml(b.situation)}</p>
+          <p class="prose">${richText(b.situation)}</p>
           <div class="scenario-opts">${opts}</div>
           <p class="scenario-feedback muted">点一个选项，看判据是否站得住。</p>
           ${labJumpButton(topic, b.open_lab)}
@@ -1845,7 +1840,7 @@ function renderLesson(topic: Topic) {
       if (b.type === "summary") {
         return `<div class="card summary">
           <h3>${escapeHtml(b.title ?? "总结")}</h3>
-          <p class="prose">${escapeHtml(b.text)}</p>
+          <p class="prose">${richText(b.text)}</p>
         </div>`;
       }
       if (b.type === "uml") {
@@ -1854,12 +1849,12 @@ function renderLesson(topic: Topic) {
       if (b.type === "table") {
         const head = b.headers.map((h) => `<th>${escapeHtml(h)}</th>`).join("");
         const rows = b.rows
-          .map((r) => `<tr>${r.map((c) => `<td>${escapeHtml(c)}</td>`).join("")}</tr>`)
+          .map((r) => `<tr>${r.map((c) => `<td>${richText(c)}</td>`).join("")}</tr>`)
           .join("");
-        const note = b.note ? `<div class="muted" style="margin-top:6px;font-size:12px">${escapeHtml(b.note)}</div>` : "";
+        const note = b.note ? `<div class="muted table-note">${richText(b.note)}</div>` : "";
         return `<div class="card"><div class="pane-title">${escapeHtml(b.title ?? "对照表")}</div><div class="viz-scroll"><table class="uml-table"><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>${note}</div>`;
       }
-      return `<div class="card"><p class="prose">${escapeHtml(b.text)}</p></div>`;
+      return `<div class="card"><p class="prose">${richText(b.text)}</p></div>`;
     })
     .join("");
 
@@ -2556,3 +2551,4 @@ function initNavResizer(): void {
 
 void boot();
 initNavResizer();
+initGraphResize();
