@@ -76,6 +76,7 @@ launcher/target/release/launcher icons --check  # 只核对，过期时退出码
 ### 分组与关系（学习应用面板的思维导图）
 
 学习应用面板是放射状思维导图（ADR 0083）：中心是虎头，向外是领域分组，应用挂在各自领域外面。
+同心轨道是椭圆（launcher ADR 0002：长轴沿横向，贴屏幕形态；子节点多的组占内层），
 位置、分组和连线全部由 `launcher-core` 的 `mindmap::layout` 从清单算出来，不存坐标；
 `app.json` 里这几个可选字段决定画什么：
 

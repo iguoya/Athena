@@ -549,10 +549,17 @@ fn set_mind_map(window: &LauncherWindow, map: &mindmap::MindMap) {
         })
         .collect();
     let links: Vec<MapLink> = map.links.iter().map(map_link).collect();
+    // 界面从外到内叠着画椭圆（外层先铺底），布局给的是从内到外，这里反转。
+    let rings: Vec<RingSpec> = map
+        .rings
+        .iter()
+        .rev()
+        .map(|(a, b)| RingSpec { rx: *a, ry: *b })
+        .collect();
     window.set_positions(ModelRc::new(VecModel::from(positions)));
     window.set_groups(ModelRc::new(VecModel::from(groups)));
     window.set_map_links(ModelRc::new(VecModel::from(links)));
-    window.set_rings(ModelRc::new(VecModel::from(map.rings.clone())));
+    window.set_rings(ModelRc::new(VecModel::from(rings)));
     window.set_map_width(map.width);
     window.set_map_height(map.height);
     window.set_center_x(map.center.x);

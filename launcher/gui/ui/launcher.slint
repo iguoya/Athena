@@ -9,6 +9,12 @@ export struct NodePos {
     y: float,
 }
 
+/// 一条同心椭圆轨道：长半轴沿横向（launcher ADR 0002）。
+export struct RingSpec {
+    rx: float,
+    ry: float,
+}
+
 /// 领域分组节点：胶囊中心与颜色。
 export struct GroupSpec {
     name: string,
@@ -212,7 +218,7 @@ component MindMap inherits ScrollView {
     in property <[NodePos]> positions;
     in property <[GroupSpec]> groups;
     in property <[MapLink]> map-links;
-    in property <[float]> rings;
+    in property <[RingSpec]> rings;
     in property <float> map-width;
     in property <float> map-height;
     in property <float> center-x;
@@ -228,17 +234,55 @@ component MindMap inherits ScrollView {
     viewport-width: self.canvas-w;
     viewport-height: self.canvas-h;
 
-    // 同心圈：从外到内叠着画，每一圈淡淡地铺一层底，叠起来中间深、外面浅——
-    // 这就是「立体」的来源，不碰图标本身。
-    for r[i] in rings: Rectangle {
-        x: root.ox + (root.center-x - r) * 1px;
-        y: root.oy + (root.center-y - r) * 1px;
-        width: 2 * r * 1px;
-        height: self.width;
-        border-radius: self.width / 2;
-        background: #5468a40a;
-        border-width: 1px;
-        border-color: #5468a418;
+    // 同心椭圆：从外到内叠着画，每一圈淡淡地铺一层底，叠起来中间深、外面浅——
+    // 这就是「立体」的来源，不碰图标本身。椭圆而不是正圆：屏幕是横向的，
+    // 内容铺进宽屏真正看得到的宽度（launcher ADR 0002）。椭圆用四段三次贝塞尔
+    // 近似（κ ≈ 0.5523 是圆弧贝塞尔的标准系数），肉眼与真椭圆无差。
+    property <float> kappa: 0.552284749;
+    for r in rings: Path {
+        x: 0; y: 0;
+        width: root.canvas-w;
+        height: root.canvas-h;
+        viewbox-width: root.canvas-w / 1px;
+        viewbox-height: root.canvas-h / 1px;
+        fill: #5468a40a;
+        stroke: #5468a418;
+        stroke-width: 1px;
+
+        MoveTo { x: root.ox / 1px + root.center-x - r.rx; y: root.oy / 1px + root.center-y; }
+        CubicTo {
+            control-1-x: root.ox / 1px + root.center-x - r.rx;
+            control-1-y: root.oy / 1px + root.center-y - r.ry * root.kappa;
+            control-2-x: root.ox / 1px + root.center-x - r.rx * root.kappa;
+            control-2-y: root.oy / 1px + root.center-y - r.ry;
+            x: root.ox / 1px + root.center-x;
+            y: root.oy / 1px + root.center-y - r.ry;
+        }
+        CubicTo {
+            control-1-x: root.ox / 1px + root.center-x + r.rx * root.kappa;
+            control-1-y: root.oy / 1px + root.center-y - r.ry;
+            control-2-x: root.ox / 1px + root.center-x + r.rx;
+            control-2-y: root.oy / 1px + root.center-y - r.ry * root.kappa;
+            x: root.ox / 1px + root.center-x + r.rx;
+            y: root.oy / 1px + root.center-y;
+        }
+        CubicTo {
+            control-1-x: root.ox / 1px + root.center-x + r.rx;
+            control-1-y: root.oy / 1px + root.center-y + r.ry * root.kappa;
+            control-2-x: root.ox / 1px + root.center-x + r.rx * root.kappa;
+            control-2-y: root.oy / 1px + root.center-y + r.ry;
+            x: root.ox / 1px + root.center-x;
+            y: root.oy / 1px + root.center-y + r.ry;
+        }
+        CubicTo {
+            control-1-x: root.ox / 1px + root.center-x - r.rx * root.kappa;
+            control-1-y: root.oy / 1px + root.center-y + r.ry;
+            control-2-x: root.ox / 1px + root.center-x - r.rx;
+            control-2-y: root.oy / 1px + root.center-y + r.ry * root.kappa;
+            x: root.ox / 1px + root.center-x - r.rx;
+            y: root.oy / 1px + root.center-y;
+        }
+        Close {}
     }
 
     for link in root.map-links: Rectangle {
@@ -320,7 +364,7 @@ export component LauncherWindow inherits Window {
     in property <[NodePos]> positions;
     in property <[GroupSpec]> groups;
     in property <[MapLink]> map-links;
-    in property <[float]> rings;
+    in property <[RingSpec]> rings;
     in property <float> map-width: 600;
     in property <float> map-height: 600;
     in property <float> center-x: 300;
@@ -336,8 +380,9 @@ export component LauncherWindow inherits Window {
     // 标题栏左上角：与托盘、任务栏同一份虎头（build.rs 从 tiger.svg 渲染）。
     icon: @image-url("../assets/tiger-mark.png");
     default-font-family: ui-font;
-    // 思维导图需要约 700px 见方的画布（放不下就在画布里滚动）；下面还有实践面板和状态栏。
-    preferred-width: 700px;
+    // 思维导图是横向的椭圆画布（launcher ADR 0002），窗口跟着宽一点才放得下
+    // 内容；放不下就在画布里滚动。下面还有实践面板和状态栏。
+    preferred-width: 960px;
     preferred-height: 820px;
     min-width: 360px;
     min-height: 420px;
