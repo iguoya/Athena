@@ -25,7 +25,6 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 EXPECTED_ID = "design-patterns"
-EXPECTED_PARENT = "software"
 EXPECTED_PORT = 1491
 DEFAULT_FULL = False
 
@@ -52,8 +51,8 @@ def check_app_json() -> None:
     data = json.loads(path.read_text(encoding="utf-8"))
     if data.get("id") != EXPECTED_ID or data.get("id") != PROJECT_ROOT.name:
         raise SystemExit(f"app.json 的 id 必须是 {EXPECTED_ID}（与目录名一致）")
-    if data.get("parent") != EXPECTED_PARENT:
-        raise SystemExit(f"app.json 的 parent 必须是 {EXPECTED_PARENT}（ADR 0103）")
+    if "parent" in data:
+        raise SystemExit("app.json 不得有 parent：本应用在「程序设计」圈，不挂靠（仓库 ADR 0121）")
     port = re.search(r":(\d+)$", data.get("dev", {}).get("ready", {}).get("http", ""))
     if not port or int(port.group(1)) != EXPECTED_PORT:
         raise SystemExit(f"dev.ready.http 的端口必须是 {EXPECTED_PORT}")

@@ -25,7 +25,7 @@
 | [`subjects/cs408`](subjects/cs408) | 408 计算机学科专业基础（考研考试主应用，ADR 0116） | Tauri 2 + Vite |
 | [`subjects/python`](subjects/python) | Python 与 AI 工具链（「人工智能」圈首门课，ADR 0120） | Tauri 2 + React |
 | [`subjects/competitions`](subjects/competitions) | 赛历（竞赛清单与参赛资格，图谱/参考类，ADR 0114） | Tauri 2 + Vite |
-| [`subjects/design-patterns`](subjects/design-patterns) | 设计模式素材坑 | 尚未开工 |
+| [`subjects/design-patterns`](subjects/design-patterns) | 设计模式与程序组织（「程序设计」圈，ADR 0121） | Tauri 2 + Vite |
 | [`practice/pocket_cube`](practice/pocket_cube) | 2 阶魔方 | GTK4 / gtkmm |
 | [`practice/nas_admin`](practice/nas_admin) | 驾考中心服务后台 | Flask-AppBuilder |
 | [`practice/c-gui-lab`](practice/c-gui-lab) | C 语言 GUI 框架对比实验室 | Electron + GTK/ImGui/LVGL |

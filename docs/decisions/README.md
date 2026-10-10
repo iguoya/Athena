@@ -34,6 +34,7 @@
 | [0114](0114-competitions-group.md) | 新增「大赛」领域圈，首个成员赛历参考应用 competitions（图谱/参考类，端口 1502）：赛事资格分在校生/社会人士，条目必带来源等级与核对日期，超一年标可能过期；训练应用按一个赛事一个应用另立 | 已接受 |
 | [0117](0117-merge-english-into-ascent-and-group-reference.md) | 磨砚并入摘星后退役（先迁移后退役，打 pre-english-merge 标签兜底，参考资料分流规则迁移前先定）；引用挂靠扩展到领域圈：app.json 新增 also_in，数学学习与磨砚引用到「考研」圈 | 已接受；修订 0066、0095 在英语上的适用 |
 | [0116](0116-reference-attach-and-cs408.md) | 引用挂靠：app.json 新增 also_under，一个应用可在多处出现（同图标同进程）；新增 408 考试主应用 cs408（「考研」圈，考试档）；目标考试更正为 22408，英语二、数学二已有承载，缺口只剩政治；思维导图扇区改按角度需求分配 | 已接受；修订 0115 的 organization 挂靠与缺口清单 |
+| [0121](0121-design-patterns-to-programming-group.md) | design-patterns 去挂靠入「程序设计」圈；定位改为以设计模式与程序组织为主（讲解取材 GoF → 软设教程 §7.3 → Refactoring.Guru），软考降为专题（真题原题 verbatim）；批判课与出圈两章降为延伸层；出处档位改 open | 已接受；修订 0103 决策 2 表格 design-patterns 行 |
 | [0115](0115-organization-app.md) | 新增计算机组成原理学习应用 organization（group 计算机、不设 parent，端口 1501，前缀 org.，主原型机制模拟）；记录 11408/0854 课程缺口，其余缺口与 408 主应用挂靠另立 | 已接受 |
 
 ## 应用边界与启动

@@ -30,11 +30,11 @@
 
 ```
 subjects/<id>/  课程学科：cpp machine data-structures algorithms linux organization
-                mathematics driver gtkmm ascent cs408 python（学习应用；cs408 是 408 考试
+                mathematics driver gtkmm ascent cs408 python design-patterns（学习应用；cs408 是 408 考试
                 主应用，五门科目课本体挂它底下，ADR 0116、0118、0119；python 开启
-                「人工智能」圈与 LLM 应用开发课程路线，ADR 0120）
+                「人工智能」圈与 LLM 应用开发课程路线，ADR 0120；design-patterns 在「程序设计」圈，ADR 0121）
                 software、embedded（软考两应用，各为一级大类，ADR 0102），底下挂实践子课程
-                database design-patterns firmware microcontroller rtos（ADR 0103、0106；
+                database firmware microcontroller rtos（ADR 0103、0106；
                 os、network 兼作软设承接章，本体归 cs408，ADR 0118、0119）
                 polaris、math-tools、competitions（图谱/参考类，math-tools 是数学学习的配套工具，
                 ADR 0084；competitions 是「大赛」圈的赛历，ADR 0114）
@@ -113,7 +113,7 @@ archive/        历史归档，不参与构建
 - **内容驱动 UI**：有限的块类型承载全部讲解，不按章手写整页（ADR 0058）。
 - **出处按应用性质分档**（ADR 0043、0089）：考试/考证考级类（判据：对应真实外部考试，
   当前 driver、software、ascent、mathematics、cs408）判分内容必须有出处且检查阻断；技术
-  学习类（当前 cpp、machine、data-structures、algorithms、gtkmm）出处是默认习惯、不做门禁，自造配额解除；不判分
+  学习类（当前 cpp、machine、data-structures、algorithms、gtkmm、design-patterns）出处是默认习惯、不做门禁，自造配额解除；不判分
   类（图谱/参考、素材坑、practice）不适用。底线全档一致：不凭印象伪造出处，AI 现场出题
   不算数。
 - **实验与练习给骨架，不给白板**：不改一行也能编译运行（ADR 0059）。

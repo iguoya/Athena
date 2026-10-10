@@ -24,8 +24,8 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
   embedded/    嵌入式系统设计师备考（Tauri 2 + Vue 3）——从 software（原 softcert）拆出，
                一级大类「电子信息」（ADR 0090、0102；定名见 ADR 0097、0100）
   database/         数据库 SQL 实验室（Tauri 2 + React）——软设第 9 章实践课程，挂靠 software（ADR 0103）
-  design-patterns/  设计模式编码实验（Tauri 2 + React）——软设第 7 章实践课程，挂靠 software；
-                    原素材坑转正（ADR 0103）
+  design-patterns/  设计模式与程序组织（Tauri 2 + Vite）——「程序设计」圈，不挂靠；软考降为
+                    专题（原素材坑转正 ADR 0103，去挂靠 ADR 0121）
   os/               操作系统实验（Tauri 2 + React）——408 操作系统（35 分），本体挂 cs408；
                     软设以文字指引承接第 4 章（ADR 0103 立项、0118/0119 定归属；原
                     operating-system，改名见 ADR 0104）
@@ -79,7 +79,7 @@ archive/       历史归档，不参与构建
 | `software` | 软件设计师（原 `softcert`，ADR 0097、0100） | `athena-software` | `sc.`（历史前缀，保留） |
 | `embedded` | 嵌入式系统设计师（原 `esd`，ADR 0090、0100） | `athena-embedded` | `esd.`（内容层短名，保留） |
 | `database` | 数据库（软设第 9 章实践课程，ADR 0103） | `athena-database` | `db.` |
-| `design-patterns` | 设计模式（软设第 7 章实践课程，原素材坑转正，ADR 0103） | `athena-design-patterns` | `dp.` |
+| `design-patterns` | 设计模式（「程序设计」圈，ADR 0103 转正、0121 去挂靠） | `athena-design-patterns` | `dp.` |
 | `os` | 操作系统（软设第 4 章实践课程；原 `operating-system`，ADR 0103、0104） | `athena-os` | `os.` |
 | `network` | 网络与信息安全（软设第 10 章实践课程，ADR 0103） | `athena-network` | `net.` |
 | `firmware` | 嵌入式程序设计（嵌入第 6/8/11 章实践课程，ADR 0103） | `athena-firmware` | `fw.` |
@@ -104,8 +104,8 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
   **学习应用**，受「跨应用教学规范」（[TEACHING.md](TEACHING.md)）整节约束，且要按 ADR 0037/0053 建自己的
   `progress/learning.db`。当前：`cpp` / `machine` / `dsa` / `mathematics` /
   `driver` / `ascent`（`ascent` 的规范差距见 ADR 0066）/ `python`（ADR 0120）/
-  软考两应用及其挂靠实践
-  子课程（ADR 0103：`database` / `design-patterns` / `operating-system` / `network` /
+  `design-patterns`（ADR 0121）/ 软考两应用及其挂靠实践
+  子课程（ADR 0103：`database` / `operating-system` / `network` /
   `firmware` / `microcontroller` / `rtos`）。
 - **不是学习闭环，是呈现结构化信息供浏览、查阅、决策参考的？** 那是
   **图谱/参考类应用**：仍受「独立应用」一节的平级、隔离、`app.json` 启动规则约束，
