@@ -29,7 +29,8 @@
 完整说明（名字对照表、三类判据的全文）见 [docs/REPOSITORY.md](docs/REPOSITORY.md)。
 
 ```
-subjects/<id>/  课程学科：cpp machine dsa english mathematics driver gtkmm ascent（学习应用）
+subjects/<id>/  课程学科：cpp machine data-structures algorithms english mathematics driver
+                gtkmm ascent（学习应用）
                 software、embedded（软考两应用，各为一级大类，ADR 0102），底下挂实践子课程
                 database design-patterns os network firmware microcontroller rtos（ADR 0103、0106）
                 polaris、math-tools（图谱/参考类，math-tools 是数学学习的配套工具，ADR 0084）
@@ -108,7 +109,7 @@ archive/        历史归档，不参与构建
 - **内容驱动 UI**：有限的块类型承载全部讲解，不按章手写整页（ADR 0058）。
 - **出处按应用性质分档**（ADR 0043、0089）：考试/考证考级类（判据：对应真实外部考试，
   当前 driver、software、english、ascent、mathematics）判分内容必须有出处且检查阻断；技术
-  学习类（当前 cpp、machine、dsa、gtkmm）出处是默认习惯、不做门禁，自造配额解除；不判分
+  学习类（当前 cpp、machine、data-structures、algorithms、gtkmm）出处是默认习惯、不做门禁，自造配额解除；不判分
   类（图谱/参考、素材坑、practice）不适用。底线全档一致：不凭印象伪造出处，AI 现场出题
   不算数。
 - **实验与练习给骨架，不给白板**：不改一行也能编译运行（ADR 0059）。

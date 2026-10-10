@@ -20,7 +20,7 @@ arm-none-eabi-gcc + QEMU 即可真做；真硬件实验需要一块入门开发�
 或 51 核心板，几十元级）加 USB-TTL 线。实验能力落点：仓库级
 [ADR 0091](../../../docs/decisions/0091-experiments-inside-subject-apps.md) 曾定
 「实验长在学科应用内」；[ADR 0103](../../../docs/decisions/0103-practice-courses-as-attached-subapps.md)
-其后把实践性强的课程独立成挂靠子应用——软设第 3、8 章归 dsa（原 algorithm，ADR 0105 复名；ADR 0092
+其后把实践性强的课程独立成挂靠子应用——软设第 3 章归 data-structures、第 8 章归 algorithms（dsa 拆分，ADR 0108；原 algorithm，ADR 0092
 决策 4），第 9 章归 database、第 7 章归 design-patterns、第 4 章归
 operating-system（后改名 os，ADR 0104）、第 10 章归 network；嵌入式第 6/8/11 章归 firmware、第 2/5
 章归 microcontroller、第 4 章（RTOS）归 rtos（ADR 0106）。本应用只剩弱实践章的 `lab` 块路径（第 2 正则、第 5 单元
@@ -57,7 +57,7 @@ operating-system（后改名 os，ADR 0104）、第 10 章归 network；嵌入�
 |---|------|----------|--------------------------|
 | 1 | 计算机系统 | B 弱：加密真算（AES/RSA/摘要用代码跑）；进制/补码可写程序验证但本质是纸笔题 | 流水线、Cache、可靠性计算——viz 演示已做，属理论侧 |
 | 2 | 程序设计语言 | **B ✓** 正则真匹配（语言内置）、有限自动机可编码执行 | 文法与编译阶段讲解 |
-| 3 | 数据结构 | **B ✓✓** 全部可编码实现真跑（与 dsa 学科共建） | — |
+| 3 | 数据结构 | **B ✓✓** 全部可编码实现真跑（data-structures 学科承接） | — |
 | 4 | 操作系统 | **B ✓✓** 进程/信号量真编码（pthread / Python threading 真跑）；调度与页置换可编码模拟器执行 | 文件与设备管理讲解 |
 | 5 | 软件工程 | B △ 单元测试真写真跑、覆盖率工具真用 | 过程模型、估算、项目管理——理论 |
 | 6 | 结构化方法 | 无 | DFD/数据字典——纸笔题型，案例题库 |
@@ -89,10 +89,10 @@ operating-system（后改名 os，ADR 0104）、第 10 章归 network；嵌入�
 ## 建设优先级（按实践路径）
 
 **软件设计师**：SQL 真跑（第 9，零新增依赖）→ 设计模式编码库（第 7）→
-正则/自动机真匹配（第 2）→ 数据结构与算法编码实验（第 3、8，与 dsa 共建）→
+正则/自动机真匹配（第 2）→ 数据结构编码实验（第 3，data-structures）、算法策略实验（第 8，algorithms）→
 进程同步真编码（第 4）→ 单元测试与覆盖率（第 5）。
 （第 9/7/4/10 章实验由挂靠子应用 database / design-patterns / operating-system /
-network 承载，第 3、8 章由 dsa 承接——ADR 0103；本应用内只剩第 2、5 章
+network 承载，第 3 章由 data-structures、第 8 章由 algorithms 承接——ADR 0103、0108；本应用内只剩第 2、5 章
 的 lab 块待建。）
 
 **嵌入式**：嵌入式 C 位操作真编码（第 6，零硬件成本，最高优先）→ 交叉编译 +
