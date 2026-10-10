@@ -231,6 +231,109 @@
     ],
     "sourceIds": ["wmo", "ussa1976", "atmos-thermo"]
   },
+  "demos": {
+    "airNote": "巡航高度与速度取公开手册量级（窄体/宽体客机、双发制空战斗机）；航线沿大圆（球面最短路径）插值，飞行用时 = 距离 ÷ 巡航速度的真实值，动画进度跟随顶栏的模拟时钟倍率。真实比例下 11 km 巡航高度只有地球半径的 0.17%——航线贴着地表，请用「贴近大气层」观察。",
+    "aircraft": [
+      {
+        "id": "narrowbody",
+        "name": "窄体客机（737 / A320 级）",
+        "cruiseHeightKm": 10.7,
+        "cruiseSpeedKmh": 850,
+        "colorHint": "#38bdf8",
+        "note": "单通道干线客机的典型巡航：约 35000 ft（10.7 km）、M0.78–0.82"
+      },
+      {
+        "id": "widebody",
+        "name": "宽体客机（777 / A350 级）",
+        "cruiseHeightKm": 11.5,
+        "cruiseSpeedKmh": 905,
+        "colorHint": "#22d3ee",
+        "note": "双通道宽体的典型巡航：约 38000 ft（11.5 km）、M0.84"
+      },
+      {
+        "id": "fighter",
+        "name": "战斗机（双发制空型）",
+        "cruiseHeightKm": 17,
+        "cruiseSpeedKmh": 2200,
+        "colorHint": "#f97316",
+        "note": "高空高速段：约 55000 ft（17 km）、M1.8 量级（不开加力的超音速巡航）"
+      }
+    ],
+    "routes": [
+      {
+        "id": "pek-sha",
+        "name": "北京 → 上海",
+        "from": [116.4, 39.9],
+        "to": [121.47, 31.23],
+        "note": "国内干线的量级：大圆距离约 1080 km"
+      },
+      {
+        "id": "pek-jfk",
+        "name": "北京 → 纽约（跨极地大圆）",
+        "from": [116.4, 39.9],
+        "to": [-74.0, 40.7],
+        "note": "大圆航线从北极附近掠过——平面地图上「绕远」的路线才是球面最短"
+      }
+    ],
+    "ballisticNote": "弹道为教学示意：射程取公开报道的估计量级，高度剖面按正弦近似（发射 → 顶点 → 再入），发射/落点用抽象演示点、不指涉真实目标；真实飞行程序（助推 / 中段 / 再入的制导与机动）不在演示范围内。关键教学事实：中段在 100 km 卡门线之外的外太空，洲际弹道顶点比国际空间站（408 km）还高一个量级。",
+    "ballistics": [
+      {
+        "id": "df-15b",
+        "name": "东风-15B（短程弹道）",
+        "rangeKm": 900,
+        "apogeeKm": 180,
+        "stageMinutes": 6,
+        "note": "公开报道射程估计约 600–900 km；短程弹道顶点通常在一二百公里量级"
+      },
+      {
+        "id": "df-17",
+        "name": "东风-17（高超音速滑翔）",
+        "rangeKm": 1800,
+        "apogeeKm": 60,
+        "stageMinutes": 9,
+        "note": "助推到约 60 km 后释放滑翔体压平滑翔——轨迹与抛物线截然不同，这里画示意滑翔剖面；公开报道射程估计约 1800–2500 km"
+      },
+      {
+        "id": "df-21d",
+        "name": "东风-21D（中程弹道）",
+        "rangeKm": 1500,
+        "apogeeKm": 420,
+        "stageMinutes": 9,
+        "note": "公开报道射程估计约 1500 km 量级"
+      },
+      {
+        "id": "df-26",
+        "name": "东风-26（中远程弹道）",
+        "rangeKm": 4000,
+        "apogeeKm": 850,
+        "stageMinutes": 13,
+        "note": "公开报道射程估计约 4000 km；顶点已远在卡门线之外的太空"
+      },
+      {
+        "id": "df-31ag",
+        "name": "东风-31AG（洲际弹道）",
+        "rangeKm": 11000,
+        "apogeeKm": 1300,
+        "stageMinutes": 24,
+        "note": "公开报道射程估计约 11000 km 量级；全程约二三十分钟"
+      },
+      {
+        "id": "df-41",
+        "name": "东风-41（洲际弹道）",
+        "rangeKm": 13000,
+        "apogeeKm": 1400,
+        "stageMinutes": 26,
+        "note": "公开报道射程估计约 12000–15000 km；顶点约 1400 km，是国际空间站轨道高度的 3 倍以上"
+      }
+    ],
+    "launch": {
+      "name": "示意演示点（华北）",
+      "lonLat": [108.0, 36.0],
+      "bearingDeg": 75,
+      "note": "抽象演示点与固定发射方位角（向东跨太平洋）：演示射程几何，不指涉任何真实目标或靶场"
+    },
+    "sourceIds": ["aviation-performance", "missile-ranges-public"]
+  },
   "sources": {
     "wgs84": {
       "title": "NGA/NASA WGS 84 定义（NIMA TR8350.2 及后续修订）",
@@ -263,6 +366,14 @@
     "blue-marble": {
       "title": "NASA Blue Marble: Next Generation — Land Surface, Ocean Color and Sea Ice（Retstöck 等，公有领域）",
       "url": "https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73909/"
+    },
+    "aviation-performance": {
+      "title": "民航机型巡航性能公开手册量级（Boeing 777 / Airbus A350 / A320 机场规划手册 ACP 的典型巡航高度与速度）",
+      "url": "https://www.boeing.com/company/general-info/commercial-aviation"
+    },
+    "missile-ranges-public": {
+      "title": "导弹射程为公开报道的估计量级（国际防务智库与公开百科的常见引用区间），弹道形状为教学示意",
+      "url": "https://www.tandfonline.com/doi/abs/10.1080/16161262.2020.1731969"
     }
   }
 }

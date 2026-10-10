@@ -1,9 +1,11 @@
 import { formatKm, viewportWidthKm, AtmosphereChart, InteriorChart } from "./panels/ProfileChart";
+import { DemoPanel } from "./panels/DemoPanel";
 import { LayerDetail } from "./panels/LayerDetail";
 import { LayerList } from "./panels/LayerList";
 import { ProbePanel } from "./panels/ProbePanel";
 import { EarthCanvas } from "./scene/EarthCanvas";
-import { ATMOS_FOCUS_TARGET, EarthScene } from "./scene/EarthScene";import { data } from "./content/load";
+import { ATMOS_FOCUS_TARGET, EarthScene } from "./scene/EarthScene";
+import { data } from "./content/load";
 import { useEarth } from "./state/store";
 
 const FOV = 40;
@@ -113,6 +115,7 @@ export function App() {
         </div>
         <aside className="w-[340px] shrink-0 space-y-3 overflow-y-auto border-l border-slate-200 bg-slate-50 p-3">
           <LayerDetail />
+          <DemoPanel />
           <ProbePanel />
           <LayerList />
           <section className="rounded-lg border border-slate-200 bg-white p-3">

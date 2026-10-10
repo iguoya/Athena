@@ -14,6 +14,7 @@ import {
   interiorLayers,
   kmToScene,
 } from "../content/load";
+import { DemoLayer } from "./DemoLayer";
 import { useEarth } from "../state/store";
 
 // 剖切平面：切掉 x>0 与 z>0 的四分之一（THREE 约定 normal·p + c < 0 的部分被裁）。
@@ -461,6 +462,8 @@ export function EarthScene() {
             <Globe clippingPlanes={clippingPlanes} />
             <InteriorShells clippingPlanes={clippingPlanes} />
             <AtmosphereGlow />
+            {/* 演示轨迹画在地表路径上，属于地球坐标系——必须随本体一起转 */}
+            <DemoLayer />
           </SpinGroup>
         </group>
       </group>

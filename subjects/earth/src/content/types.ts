@@ -47,7 +47,50 @@ export interface EarthData {
     keyPoints: AtmosphereKeyPoint[];
     sourceIds: string[];
   };
+  demos: {
+    airNote: string;
+    aircraft: AircraftSpec[];
+    routes: FlightRoute[];
+    ballisticNote: string;
+    ballistics: BallisticSpec[];
+    launch: LaunchSite;
+    sourceIds: string[];
+  };
   sources: Record<string, { title: string; url: string }>;
+}
+
+export interface AircraftSpec {
+  id: string;
+  name: string;
+  cruiseHeightKm: number;
+  cruiseSpeedKmh: number;
+  colorHint: string;
+  note: string;
+}
+
+export interface FlightRoute {
+  id: string;
+  name: string;
+  /** [经度, 纬度] */
+  from: [number, number];
+  to: [number, number];
+  note: string;
+}
+
+export interface BallisticSpec {
+  id: string;
+  name: string;
+  rangeKm: number;
+  apogeeKm: number;
+  stageMinutes: number;
+  note: string;
+}
+
+export interface LaunchSite {
+  name: string;
+  lonLat: [number, number];
+  bearingDeg: number;
+  note: string;
 }
 
 export interface SurfaceFeature {

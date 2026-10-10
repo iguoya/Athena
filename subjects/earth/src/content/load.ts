@@ -2,7 +2,8 @@ import raw from "@content/earth.json";
 import type { AtmosphereLayer, EarthData, InteriorLayer } from "./types";
 
 // JSON 导入的类型断言只做一次：数据结构由 catalog.test.ts 对照 types.ts 核对。
-export const data = raw as EarthData;
+// tuple 字段（经纬度对）在 JSON 推断里是 number[]，需要经过 unknown 中转。
+export const data = raw as unknown as EarthData;
 
 /** 场景单位：1 = 地球平均半径（ADR 0128 决策 5）。所有真实长度经它换算，比例关系保持真实。 */
 export const EARTH_RADIUS_KM = data.shape.meanRadiusKm;

@@ -9,6 +9,11 @@ export interface FocusTarget {
   distance: number;
 }
 
+export interface DemoSelection {
+  kind: "air" | "ballistic";
+  id: string;
+}
+
 interface EarthState {
   /** 剖面开关：开（默认）= 切掉 x>0、z>0 四分之一，露出两片密度着色的截面 */
   cutaway: boolean;
@@ -24,6 +29,10 @@ interface EarthState {
   cameraDistanceR: number;
   /** 自转时间倍率：真实恒星日 86164 s × 倍率 */
   spinScale: number;
+  /** 飞行演示：选中即常驻画线，playing 时标记沿轨迹移动 */
+  demo: DemoSelection | null;
+  playing: boolean;
+  replayKey: number;
   setCutaway: (cutaway: boolean) => void;
   select: (layerId: string | null) => void;
   setProbeMode: (mode: ProbeMode) => void;
@@ -33,6 +42,10 @@ interface EarthState {
   arrive: () => void;
   reportDistance: (distanceR: number) => void;
   setSpinScale: (spinScale: number) => void;
+  startDemo: (demo: DemoSelection) => void;
+  stopDemo: () => void;
+  togglePlay: () => void;
+  replay: () => void;
 }
 
 export const useEarth = create<EarthState>((set) => ({
@@ -44,6 +57,9 @@ export const useEarth = create<EarthState>((set) => ({
   focus: null,
   cameraDistanceR: 4.2,
   spinScale: 600,
+  demo: null,
+  playing: false,
+  replayKey: 0,
   setCutaway: (cutaway) => set({ cutaway }),
   select: (selectedLayerId) => set({ selectedLayerId }),
   setProbeMode: (probeMode) =>
@@ -54,4 +70,8 @@ export const useEarth = create<EarthState>((set) => ({
   arrive: () => set({ focus: null }),
   reportDistance: (cameraDistanceR) => set({ cameraDistanceR }),
   setSpinScale: (spinScale) => set({ spinScale }),
+  startDemo: (demo) => set({ demo, playing: true, replayKey: Date.now() }),
+  stopDemo: () => set({ demo: null, playing: false }),
+  togglePlay: () => set((s) => (s.demo ? { playing: !s.playing } : {})),
+  replay: () => set((s) => (s.demo ? { playing: true, replayKey: Date.now() } : {})),
 }));

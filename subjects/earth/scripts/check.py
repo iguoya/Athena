@@ -140,7 +140,8 @@ def check_standards() -> None:
     sources = data["sources"]
     referenced = set(data["shape"]["sourceIds"] + data["surface"]["sourceIds"]
                      + data["interior"]["sourceIds"] + data["atmosphere"]["sourceIds"]
-                     + data["atmosphere"]["ussa1976"]["sourceIds"])
+                     + data["atmosphere"]["ussa1976"]["sourceIds"]
+                     + data["demos"]["sourceIds"])
     for group in (data["interior"]["layers"], data["atmosphere"]["layers"]):
         for entry in group:
             if not entry["sourceIds"]:
@@ -151,6 +152,26 @@ def check_standards() -> None:
             problems.append(f"缺出处条目：{source_id}")
         elif not str(sources[source_id]["url"]).startswith("http"):
             problems.append(f"出处 {source_id} 的链接不是 http(s)")
+
+    # 演示数据（ADR 0128 严谨口径的延伸）：射程是公开报道量级、弹道声明为示意、
+    # 演示点是抽象的、机型参数是手册常识区间
+    demos = data["demos"]
+    if "示意" not in demos["ballisticNote"] or "示意" not in demos["launch"]["name"]:
+        problems.append("弹道演示必须声明教学示意口径与抽象演示点")
+    for spec in demos["ballistics"]:
+        if spec["apogeeKm"] >= spec["rangeKm"]:
+            problems.append(f"{spec['id']} 的顶点高度不低于射程，剖面不成立")
+        if spec["name"].find("短程") >= 0 and spec["rangeKm"] >= 1000:
+            problems.append(f"{spec['id']} 标为短程但射程 ≥ 1000 km")
+        if "洲际" in spec["name"] and spec["rangeKm"] <= 10000:
+            problems.append(f"{spec['id']} 标为洲际但射程 ≤ 10000 km")
+        if "中程" in spec["name"] and not 1000 < spec["rangeKm"] < 5000:
+            problems.append(f"{spec['id']} 标为中程但射程不在 1000–5000 km")
+    for craft in demos["aircraft"]:
+        if not 700 < craft["cruiseSpeedKmh"] < 3000:
+            problems.append(f"{craft['id']} 巡航速度不在常识区间")
+        if not 8 < craft["cruiseHeightKm"] < 25:
+            problems.append(f"{craft['id']} 巡航高度不在常识区间")
 
     if problems:
         for problem in problems:

@@ -255,6 +255,7 @@ describe("出处（图谱/参考类的底线：每个数值组都能追到源头
       ...data.interior.sourceIds,
       ...data.atmosphere.sourceIds,
       ...data.atmosphere.ussa1976.sourceIds,
+      ...data.demos.sourceIds,
     ];
     for (const layer of [...interiorLayers, ...atmosphereLayers]) {
       expect(layer.sourceIds.length).toBeGreaterThan(0);
@@ -264,6 +265,28 @@ describe("出处（图谱/参考类的底线：每个数值组都能追到源头
       expect(data.sources[id], `缺出处：${id}`).toBeDefined();
       expect(data.sources[id].url).toMatch(/^https?:\/\//);
     }
+  });
+
+  it("演示口径在位：弹道是教学示意、射程在公开报道量级、机型参数是手册常识", () => {
+    // 东风系列：短程 < 1000，中程 1000–5000，洲际 > 10000 km
+    for (const spec of data.demos.ballistics) {
+      if (spec.name.includes("短程")) expect(spec.rangeKm).toBeLessThan(1000);
+      if (spec.name.includes("中程") || spec.name.includes("中远程")) {
+        expect(spec.rangeKm).toBeGreaterThan(1000);
+        expect(spec.rangeKm).toBeLessThan(5000);
+      }
+      if (spec.name.includes("洲际")) expect(spec.rangeKm).toBeGreaterThan(10000);
+      // 示意弹道的顶点必须低于射程（几何上正弦剖面不成立的天花板），且洲际顶点在太空
+      expect(spec.apogeeKm).toBeLessThan(spec.rangeKm);
+    }
+    for (const craft of data.demos.aircraft) {
+      expect(craft.cruiseSpeedKmh).toBeGreaterThan(700);
+      expect(craft.cruiseHeightKm).toBeGreaterThan(8);
+      expect(craft.cruiseHeightKm).toBeLessThan(25);
+    }
+    // 演示点必须是抽象的：不指涉真实目标
+    expect(data.demos.launch.name).toContain("示意");
+    expect(data.demos.ballisticNote).toContain("示意");
   });
 
   it("真实比例的免责声明在位——薄层看不见是事实，界面必须讲清楚", () => {
