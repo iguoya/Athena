@@ -157,6 +157,7 @@ fn listing_json(apps: &[App], snapshot: &ProcessSnapshot) -> String {
                 "hidden": app.hidden,
                 "parent": app.parent,
                 "alsoUnder": app.also_under,
+                "alsoIn": app.also_in,
                 "runnable": app.is_runnable(),
                 "state": snapshot.state(app).key(),
                 "log": paths::log_file(&app.id),
