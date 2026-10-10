@@ -404,14 +404,15 @@ jobs:
       - name: Check out source
         uses: actions/checkout@v7
 
-      - name: Install Linux GUI dependencies
-        if: runner.os == 'Linux'
+      # webui（Tauri 2 + React）的页面资产要先构建，cargo 编译时内嵌（ADR 0125）。
+      # Linux 不编 webui：Tauri 2 需要 webkit2gtk 全套，Linux 支持未承诺（ADR 0051），
+      # 只编 core 纯逻辑兜底。
+      - name: Build webui frontend
+        if: runner.os != 'Linux'
         run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            libxkbcommon-dev libwayland-dev libxcb1-dev \
-            libfontconfig1-dev libayatana-appindicator3-dev \
-            libxdo-dev
+          npm ci
+          npm run build
+        working-directory: launcher/webui
 
       - name: Cache cargo
         uses: actions/cache@v5

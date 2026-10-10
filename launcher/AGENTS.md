@@ -10,7 +10,7 @@
 |---|---|
 | `core/` | 编排器 `launcher`（Rust）：发现应用、准备、启动、判断状态、日志、`sync`、`icons` |
 | `webui/` | 跨平台启动器（Tauri 2 + React + Three.js）：3D 领域轨道环 + 2D 平铺（ADR 0125），主线前端 |
-| `gui/` | 旧前端（Rust + Slint）：随 ADR 0125 冻结，能跑不再修，待 webui 对齐后退役 |
+| `gui/` | 旧前端（Rust + Slint）：已退役（ADR 0127）——源码留档、不参与构建，运行入口是 webui |
 | `macos/` | 菜单栏启动器（Swift），macOS 专属（ADR 0048） |
 
 背景与取舍：ADR 0044（常驻启动器）、0046（统一编排器）、0048（菜单栏版只在 macOS）。
@@ -49,7 +49,8 @@ cargo build --manifest-path launcher/Cargo.toml --all-targets   # CI 三平台�
 cargo test  --manifest-path launcher/Cargo.toml
 ```
 
-webui 的日常运行与打包（Tauri 约定，ADR 0125）：
+webui 的日常运行与打包（Tauri 约定，ADR 0125）。它现在是唯一的图形前端
+（gui 已退役，ADR 0127；托盘与自启动待迁移，入口暂为 webui 窗口本体）：
 
 ```sh
 cd launcher/webui
