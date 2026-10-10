@@ -905,7 +905,11 @@
               "entrypoint": "main.cpp",
               "prompt": "运行观察两次 getInstance() 返回同一地址。然后试着在 main 里直接 new Singleton() 看编译器怎么拦你。"
             }
-          ]
+          ],
+          "modern": {
+            "verdict": "caution",
+            "text": "现代评审普遍慎用：全局状态让测试与并发排查变难。Kotlin 的 object、Go 的 sync.Once、Python 的模块对象把语言级单例做成了内建；更多场景由依赖注入容器统一管理生命周期。学它的结构（构造私有+唯一入口）没问题，实战里先问「能不能不用」。"
+          }
         },
         {
           "id": "dp.simple-factory",
@@ -1045,7 +1049,11 @@
               "entrypoint": "main.cpp",
               "prompt": "运行观察工厂按参数返回不同产品。然后新增 ProductC：你不得不改工厂的 switch——亲身体会这个违反 OCP 的位置。"
             }
-          ]
+          ],
+          "modern": {
+            "verdict": "functional",
+            "text": "一个 lambda 就是工厂：std::function<std::unique_ptr<Product>()> 或直接传构造函数，连工厂类都能省。教学保留它是因为结构最直白，最好懂「把 new 收走」这件事。"
+          }
         },
         {
           "id": "dp.factory-method",
@@ -1191,7 +1199,11 @@
               "entrypoint": "main.cpp",
               "prompt": "运行观察 Client 只依赖 Creator/Product 两层抽象。然后新增一种产品：只加两个新类，旧文件一行不改——对照简单工厂体会 OCP。"
             }
-          ]
+          ],
+          "modern": {
+            "verdict": "functional",
+            "text": "小场景里 std::function 或注册表（map<string, lambda>）就是工厂方法；大型框架的注册式工厂仍是这个骨架。思想的归宿没变：把 new 的决定权从使用方挪走，形态从类层级变成了函数与注册表。"
+          }
         },
         {
           "id": "dp.abstract-factory",
@@ -1378,7 +1390,11 @@
               "entrypoint": "main.cpp",
               "prompt": "运行观察 Factory1 造出的一对产品来自同一族。然后给工厂接口加一个 createProductC()——体会「加产品种类要改所有工厂」的代价。"
             }
-          ]
+          ],
+          "modern": {
+            "verdict": "infra",
+            "text": "Spring 等 DI 容器按配置装配一整族 Bean——容器就是运行时的抽象工厂。手写类层级多见于跨平台原生库。「一族产品必须配套」的问题永远在，实现形态在变。"
+          }
         },
         {
           "id": "dp.builder",
@@ -1525,7 +1541,11 @@
               "entrypoint": "main.cpp",
               "prompt": "运行观察 Director 用相同步骤造出两种餐食。再写一个 VegBuilder 只换 buildPart 的实现——Director 一行不改。"
             }
-          ]
+          ],
+          "modern": {
+            "verdict": "solid",
+            "text": "不但没过时还更流行了：流式 builder（链式调用）、Lombok @Builder、Go 的函数选项模式都是它的现代变体。多参数配置对象的最好答案。"
+          }
         },
         {
           "id": "dp.prototype",
@@ -1650,7 +1670,11 @@
               "entrypoint": "main.cpp",
               "prompt": "运行观察克隆出的对象与原型值相同但地址不同。把成员改成指针并保持浅拷贝，观察两个对象共享同一块内存的坑，再改成深拷贝修复。"
             }
-          ]
+          ],
+          "modern": {
+            "verdict": "language",
+            "text": "语言机制已吸收：C++ 拷贝构造、Rust 的 derive(Clone)、Python 的 copy 模块、JS 的结构化克隆。今天很少手写 clone()，但深浅拷贝的坑一点没少——这恰是原型真正要教的东西。"
+          }
         }
       ]
     },

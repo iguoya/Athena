@@ -146,6 +146,17 @@ type Topic = {
   outline: Outline;
   lesson: { blocks: Block[] };
   labs: LabSpec[];
+  /** 现代视角：这个模式在 2026 年的语言与工程实践里处于什么位置 */
+  modern?: { verdict: "language" | "functional" | "infra" | "caution" | "solid"; text: string };
+};
+
+/** 现代视角五档的徽标文案与颜色 */
+const MODERN_VERDICTS: Record<string, { label: string; color: string }> = {
+  language: { label: "已语言化", color: "#16a34a" },
+  functional: { label: "一等函数可替代", color: "#0d9488" },
+  infra: { label: "常被框架接管", color: "#2563eb" },
+  caution: { label: "现代慎用", color: "#d97706" },
+  solid: { label: "依然坚挺", color: "#7c3aed" },
 };
 
 type ChapterAssessment = {
@@ -1195,7 +1206,7 @@ function renderNav() {
             state.stageMode === "topic" && t.id === state.topicId ? " is-active" : "";
           const stars = "★".repeat(state.mastery[t.id] ?? 0);
           return `<button type="button" class="topic-btn${active}" data-topic="${escapeHtml(t.id)}">
-            <span class="name">${escapeHtml(t.title)}</span>
+            <span class="name">${escapeHtml(t.title)}${t.modern ? ` <i class="modern-dot" style="background:${MODERN_VERDICTS[t.modern.verdict].color}" title="${MODERN_VERDICTS[t.modern.verdict].label}"></i>` : ""}</span>
             <span class="meta-row">
               <span class="badge">D${t.difficulty}</span>
               <span class="${goalClass(t.mastery_goal)}">${goalLabel(t.mastery_goal)}</span>
@@ -2136,9 +2147,10 @@ async function refreshTopic() {
   }
 
   $("topic-head").innerHTML = `
-    <h2>${escapeHtml(topic.title)}</h2>
+    <h2>${escapeHtml(topic.title)}${topic.modern ? ` <span class="modern-badge" style="border-color:${MODERN_VERDICTS[topic.modern.verdict].color};color:${MODERN_VERDICTS[topic.modern.verdict].color}">${MODERN_VERDICTS[topic.modern.verdict].label}</span>` : ""}</h2>
     <p><span class="${typeClass(topic.knowledge_type)}">${typeLabel(topic.knowledge_type)}</span>
-    ${escapeHtml(topic.guide_line)} · 完成度 ${state.mastery[topic.id] ?? 0}/5（随堂考核评定）</p>`;
+    ${escapeHtml(topic.guide_line)} · 完成度 ${state.mastery[topic.id] ?? 0}/5（随堂考核评定）</p>
+    ${topic.modern ? `<div class="modern-card"><div class="modern-title">现代视角 · ${MODERN_VERDICTS[topic.modern.verdict].label}</div><div>${escapeHtml(topic.modern.text)}</div></div>` : ""}`;
 
   renderNav();
   syncTabs();
