@@ -193,7 +193,7 @@ def check_build(skip_rust: bool) -> None:
     run([tool("npm"), "run", "build"], "前端构建")
     if not skip_rust:
         cargo = tool("cargo")
-        run([cargo, "check"], "Rust cargo check")
+        run([cargo, "check", "--manifest-path", str(PROJECT_ROOT / "src-tauri" / "Cargo.toml")], "Rust cargo check")
 
 
 def main() -> None:
