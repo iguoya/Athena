@@ -1,11 +1,16 @@
 {
-  "_": "跨应用「内容必须有出处」检查的接入声明（主仓库 ADR 0043、0089）。本应用是考试档（tier: exam）：判分条目是实验的校验断言（带 assertions 的对象），实验骨架代码本身不是判分条目。骨架阶段（ADR 0103）尚无判分条目，blocking 暂 false；内容开始填充后改为 true，由根 scripts/check-app-sources.mjs 按 catalog 校验。",
-  "tier": "exam",
+  "_": "跨应用「内容出处」检查的接入声明（仓库 ADR 0043、0089、0121）。本应用是技术学习类，档位 open：出处是默认写作习惯，未标注只报告不阻断。判分条目是带 choices 的选择题（讲解小测与章节随堂考核）。软考专题的题必须是真题原题，这一条由本应用 scripts/check.py 自己逐题检查，不靠本契约。",
+  "tier": "open",
   "contentDir": "content",
   "catalog": "sources.json",
   "sourceField": "source",
-  "itemMarkers": ["assertions"],
-  "idFields": ["id"],
+  "itemMarkers": [
+    "choices"
+  ],
+  "idFields": [
+    "id",
+    "stem"
+  ],
   "blocking": false,
   "legacyUnsourced": []
 }

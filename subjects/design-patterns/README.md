@@ -1,8 +1,18 @@
-# 设计模式（尚未开工）
+# 设计模式
 
-这个目录**还不是一个可运行的应用**：没有 `app.json`，启动器扫不到它；没有
-`scripts/check.py`，仓库根的验证入口会跳过它。它现在的全部作用，是替将来真正
-开发这个学习应用的人保存素材和结论。
+设计模式与程序代码组织的学习应用：UML 读图、设计原则、23 个 GoF 模式逐个画标准类图、
+在本机编译器上跑 C++ 实验；软考作为专题（真题原题），延伸篇走出面向对象看 C 内核与
+现代工程。启动器里在「程序设计」圈（仓库 ADR 0121）。
+
+```sh
+launcher/target/release/launcher open design-patterns   # 在仓库根经启动器打开
+npm run tauri:dev                                       # 在本目录直接开发
+python3 scripts/check.py                                # 验证
+```
+
+协作规则、取材原则、内容格式见 [AGENTS.md](AGENTS.md)。
+
+下面是本目录作为素材坑时期（2026-09）留下的记录，转正后仍然有效的部分保留作参考。
 
 ## 为什么从 subjects/cpp 剥离出来
 
@@ -30,7 +40,7 @@
 - [`docs/cpp-foundations-reference.md`](docs/cpp-foundations-reference.md)：设计模式
   实验所需的 C++ 前置能力、模式应解决的耦合问题，以及与 C++ 教程的边界。
 
-## 将来开工时，请先读这几条
+## 开工前定下的几条（素材坑时期写下，仍然适用）
 
 这些不是凭空写的建议，是 2026-09-15 对照 `subjects/dsa`、`subjects/mathematics`、
 `subjects/english` 审视 `subjects/cpp` 得出的结论。`subjects/cpp` 在这几条上都吃过亏，

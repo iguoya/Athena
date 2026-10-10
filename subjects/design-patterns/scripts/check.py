@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """设计模式应用的验证入口。
 
-骨架阶段（ADR 0103）默认只做结构校验：app.json 一致性（id/parent/端口三方
-对齐）、内容 JSON 语法、课程节前缀、出处契约、图标齐备；--full 追加前端
-构建与 Rust 检查。内容开始填充后把 DEFAULT_FULL 翻转为 True。
+默认依次做：app.json 一致性（id、不挂靠、端口）、端口三方对齐、内容校验
+（curriculum.json 的知识点与引用、实验案例与判分、软考专题的原题出处）、出处契约、
+前端构建、Rust 检查。--quick 只做前四项。
 
 用 Python 而不是 shell：验证是每天都要跑的环节，不该要求 Windows 上先装
 Git Bash 或 WSL（ADR 0047）。
 
 用法：
-    python3 scripts/check.py [--full] [--skip-rust]
+    python3 scripts/check.py [--quick] [--skip-rust]
 """
 
 from __future__ import annotations
@@ -26,7 +26,6 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 EXPECTED_ID = "design-patterns"
 EXPECTED_PORT = 1491
-DEFAULT_FULL = False
 
 
 def _force_utf8_output() -> None:
@@ -78,28 +77,90 @@ def check_ports() -> None:
 
 
 def check_content() -> None:
-    print("== 内容 JSON 校验 ==", flush=True)
-    files = sorted((PROJECT_ROOT / "content").rglob("*.json"))
-    if not files:
-        raise SystemExit("content/ 下没有任何 JSON，内容目录是不是错了？")
-    for path in files:
+    print("== 内容校验 ==", flush=True)
+    content = PROJECT_ROOT / "content"
+    for path in sorted(content.rglob("*.json")):
         try:
             json.loads(path.read_text(encoding="utf-8"))
         except json.JSONDecodeError as error:
             raise SystemExit(f"{path.relative_to(PROJECT_ROOT)}: {error}")
-    course = json.loads(
-        (PROJECT_ROOT / "content" / "course.json").read_text(encoding="utf-8")
-    )
-    sections = course.get("sections")
-    if not isinstance(sections, list) or not sections:
-        raise SystemExit("course.json 缺 sections 列表")
-    for section in sections:
-        sid = section.get("id", "")
-        if not sid.startswith("dp."):
-            raise SystemExit(f"节 id {sid!r} 必须用 dp. 前缀（知识点前缀与"
-                             "目录 id 解耦，ADR 0097 决策 3 同规）")
-        if not section.get("title"):
-            raise SystemExit(f"节 {sid} 缺 title")
+
+    cur = json.loads((content / "curriculum.json").read_text(encoding="utf-8"))
+    catalog = {
+        s["id"]
+        for s in json.loads((content / "sources.json").read_text(encoding="utf-8"))["sources"]
+    }
+    problems: list[str] = []
+    topic_ids: set[str] = set()
+    for ch in cur["chapters"]:
+        if ch.get("layer") not in (None, "topic", "extension"):
+            problems.append(f"章 {ch['id']} 的 layer 只能是 topic / extension 或不写")
+        for t in ch["topics"]:
+            tid = t["id"]
+            if not tid.startswith("dp."):
+                problems.append(f"知识点 {tid!r} 必须用 dp. 前缀（ADR 0097 决策 3 同规）")
+            if tid in topic_ids:
+                problems.append(f"知识点 id 重复：{tid}（一个 id 只装一个东西，ADR 0054）")
+            topic_ids.add(tid)
+
+    for ch in cur["chapters"]:
+        chapter_topics = {t["id"] for t in ch["topics"]}
+        for t in ch["topics"]:
+            for r in t.get("requires", []):
+                if r not in topic_ids:
+                    problems.append(f"{t['id']} 的先修 {r} 不存在")
+            for lab in t.get("labs", []):
+                case = content / "cases" / lab["case"] / lab["entrypoint"]
+                if not case.is_file():
+                    problems.append(f"实验 {lab['id']} 的案例文件不存在：{case.relative_to(PROJECT_ROOT)}")
+                elif "TODO(实验)" not in case.read_text(encoding="utf-8"):
+                    problems.append(f"实验 {lab['id']} 的骨架没有 TODO(实验) 标记（ADR 0059：给骨架，标出空缺）")
+                if not (lab.get("pass") or {}).get("includes"):
+                    problems.append(f"实验 {lab['id']} 缺 pass.includes，永远到不了「已完成」")
+        items = (ch.get("checkpoint") or {}).get("items", [])
+        for i, item in enumerate(items):
+            if item.get("covers") not in chapter_topics:
+                problems.append(f"章 {ch['id']} 考核第 {i + 1} 题的 covers 不是本章知识点")
+            if sum(1 for c in item["choices"] if c.get("ok")) != 1:
+                problems.append(f"章 {ch['id']} 考核第 {i + 1} 题必须恰好一个正确选项")
+        covers = [i.get("covers") for i in items]
+        # 只覆盖一个知识点的考核（如延伸章）无从交错
+        for a, b in zip(covers, covers[1:]) if len(set(covers)) > 1 else []:
+            if a == b:
+                problems.append(f"章 {ch['id']} 考核里 {a} 的题相邻了：同一知识点的题要交错排")
+                break
+
+        if ch.get("layer") == "topic":
+            problems += check_exam_items(ch, catalog)
+
+    if problems:
+        raise SystemExit("内容校验没通过：\n  " + "\n  ".join(problems))
+
+
+def check_exam_items(chapter: dict, catalog: set[str]) -> list[str]:
+    """软考专题里的题必须是真题原题（ADR 0121）：出处是 verbatim、能核对、写到题号。"""
+    found: list[str] = []
+    quizzes = [
+        item
+        for t in chapter["topics"]
+        for b in t["lesson"]["blocks"]
+        if b["type"] == "quiz"
+        for item in b["items"]
+    ]
+    quizzes += (chapter.get("checkpoint") or {}).get("items", [])
+    for item in quizzes:
+        src = item.get("source")
+        where = f"软考专题「{item['stem'][:24]}…」"
+        if not isinstance(src, dict) or src.get("relation") != "verbatim":
+            found.append(f"{where} 不是标了 verbatim 的真题原题")
+            continue
+        if src.get("sourceId") not in catalog:
+            found.append(f"{where} 的 sourceId 不在 sources.json 里")
+        if not re.search(r"\d{4} 年.*第 \d+ 题", src.get("locator", "")):
+            found.append(f"{where} 的 locator 要写到「年份 … 第 N 题」")
+        if not str(src.get("url", "")).startswith("http"):
+            found.append(f"{where} 缺可核对的页面链接 url")
+    return found
 
 
 def check_contract() -> None:
@@ -107,8 +168,8 @@ def check_contract() -> None:
     contract = json.loads(
         (PROJECT_ROOT / "content-contract.json").read_text(encoding="utf-8")
     )
-    if contract.get("tier") != "exam":
-        raise SystemExit("content-contract.json 的 tier 必须是 exam（ADR 0089、0103）")
+    if contract.get("tier") != "open":
+        raise SystemExit("content-contract.json 的 tier 必须是 open（仓库 ADR 0089、0121）")
     if contract.get("catalog") != "sources.json":
         raise SystemExit("catalog 必须指向 content/sources.json")
     sources = json.loads(
@@ -138,15 +199,17 @@ def check_build(skip_rust: bool) -> None:
 def main() -> None:
     _force_utf8_output()
     parser = argparse.ArgumentParser()
-    parser.add_argument("--full", action="store_true", help="追加构建检查")
-    parser.add_argument("--skip-rust", action="store_true", help="--full 时跳过 cargo")
+    parser.add_argument("--quick", action="store_true", help="只做结构与内容校验，不构建")
+    parser.add_argument("--skip-rust", action="store_true", help="跳过 cargo check")
+    # --full 是骨架阶段的旧参数：现在默认就是完整检查，保留它免得旧命令报错
+    parser.add_argument("--full", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
 
     check_app_json()
     check_ports()
     check_content()
     check_contract()
-    if args.full or DEFAULT_FULL:
+    if not args.quick:
         check_build(args.skip_rust)
     print("OK", flush=True)
 

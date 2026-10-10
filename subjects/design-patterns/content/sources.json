@@ -1,11 +1,12 @@
 {
-  "_": "来源登记（出处检查的 catalog，ADR 0043/0089）。出处档位 open：判分实验不出，但课程内容取材自下列权威资源，鼓励逐条标注。",
+  "_": "来源登记（出处检查的 catalog，ADR 0043/0089/0121）。出处档位 open；讲解取材按 GoF 原著 → 软设教程 §7.3 → Refactoring.Guru 的优先级，逐节在「取材」callout 里标注。软考专题的真题来自 past-exam-web-qicoder，逐题写卷名、题号与页面链接。",
   "sources": [
     {
       "id": "textbook-swd-5ed",
       "title": "软件设计师教程（第 5 版）",
       "publisher": "清华大学出版社",
-      "note": "软设实验例题与考纲依据"
+      "note": "§7.3 按 GoF 体例转述 23 个模式的意图、结构、参与者与适用性，是中文讲解的对照依据；OCR 全文在 software 应用 content/textbooks/swd5ed/chapters/swd-ch07.txt（只读参考，不在构建中引用）。",
+      "isbn": "9787302491224"
     },
     {
       "id": "self-authored",
@@ -83,6 +84,19 @@
       "title": "patterns.dev",
       "publisher": "patterns.dev",
       "note": "现代 Web 的渲染/性能/设计模式书"
+    },
+    {
+      "id": "gof-1994",
+      "title": "Design Patterns: Elements of Reusable Object-Oriented Software",
+      "publisher": "Gamma, Helm, Johnson, Vlissides · Addison-Wesley, 1994",
+      "note": "23 个模式的原始出处（GoF）。每个模式按意图、动机、适用性、结构、参与者、协作、效果、实现体例写成；本课意图与参与者以它为准。"
+    },
+    {
+      "id": "past-exam-web-qicoder",
+      "title": "软考真题电子书（qicoder）· 软件设计师历年真题",
+      "publisher": "ebook.qicoder.com",
+      "url": "https://ebook.qicoder.com/软件设计师",
+      "note": "GitBook 网页版历年真题，每题带答案、知识点与解析；覆盖 2006–2021 上午卷与 2008–2020 下午卷。软考专题的原题从这里逐题核对收录（2026-10-10 抓取）。"
     }
   ]
 }
