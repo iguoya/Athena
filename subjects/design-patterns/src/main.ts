@@ -149,6 +149,8 @@ type Topic = {
   labs: LabSpec[];
   /** 现代视角：这个模式在 2026 年的语言与工程实践里处于什么位置 */
   modern?: { verdict: "language" | "functional" | "infra" | "caution" | "solid"; text: string };
+  /** planned = 建设计划（路线图占位，内容待批次填充） */
+  status?: "planned";
 };
 
 /** 现代视角五档的徽标文案与颜色 */
@@ -2156,7 +2158,7 @@ async function refreshTopic() {
   }
 
   $("topic-head").innerHTML = `
-    <h2>${escapeHtml(topic.title)}${topic.modern ? ` <span class="modern-badge" style="border-color:${MODERN_VERDICTS[topic.modern.verdict].color};color:${MODERN_VERDICTS[topic.modern.verdict].color}">${MODERN_VERDICTS[topic.modern.verdict].label}</span>` : ""}</h2>
+    <h2>${escapeHtml(topic.title)}${topic.modern ? ` <span class="modern-badge" style="border-color:${MODERN_VERDICTS[topic.modern.verdict].color};color:${MODERN_VERDICTS[topic.modern.verdict].color}">${MODERN_VERDICTS[topic.modern.verdict].label}</span>` : ""}${topic.status === "planned" ? ` <span class="modern-badge" style="border-color:#64748b;color:#64748b">建设中 · 提纲</span>` : ""}</h2>
     <p><span class="${typeClass(topic.knowledge_type)}">${typeLabel(topic.knowledge_type)}</span>
     ${escapeHtml(topic.guide_line)} · 完成度 ${state.mastery[topic.id] ?? 0}/5（随堂考核评定）</p>
     ${topic.modern ? `<div class="modern-card"><div class="modern-title">现代视角 · ${MODERN_VERDICTS[topic.modern.verdict].label}</div><div>${escapeHtml(topic.modern.text)}</div></div>` : ""}`;
