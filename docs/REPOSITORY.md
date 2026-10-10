@@ -31,9 +31,9 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
                     operating-system，改名见 ADR 0104）
   network/          网络与信息安全实验（Tauri 2 + React）——408 计算机网络（25 分），本体挂
                     cs408；软设以文字指引承接第 10 章（ADR 0103 立项、0118/0119 定归属）
-  firmware/         嵌入式程序设计实验（Tauri 2 + Vue 3）——嵌入第 6/8/11 章实践课程，挂靠 embedded（ADR 0103）
-  microcontroller/  硬件实验台（Tauri 2 + Vue 3）——嵌入第 2/5 章实践课程，挂靠 embedded（ADR 0103）
-  rtos/             实时操作系统（Tauri 2 + Vue 3）——嵌入第 4 章实践课程，挂靠 embedded（ADR 0106）
+  firmware/         嵌入式程序设计实验（Tauri 2 + Vue 3）——嵌入第 6/8/11 章实践课程，电子信息圈（ADR 0103、0123）
+  microcontroller/  硬件实验台（Tauri 2 + Vue 3）——嵌入第 2/5 章实践课程，电子信息圈（ADR 0103、0123）
+  rtos/             实时操作系统（Tauri 2 + Vue 3）——嵌入第 4 章实践课程，电子信息圈（ADR 0106、0123）
   gtkmm/       gtkmm 官方教程精读（Tauri 2 + React）
   polaris/       技术体系图谱（Tauri 2 + React，原 Qt 壳已退役，ADR 0015）——不是学习应用，见下文
   organization/  计算机组成原理（Tauri 2 + Vite）——408 组成原理，挂靠 cs408、引用挂到 software（ADR 0115、0116）
