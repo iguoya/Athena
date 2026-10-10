@@ -1,6 +1,6 @@
 import { Html, OrbitControls, useTexture } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
-import { useMemo, useRef } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useMemo, useRef, type ReactNode } from "react";
 import * as THREE from "three";
 import surfaceTextureUrl from "../assets/earth-blue-marble.png";
 import {
@@ -26,10 +26,23 @@ const CLIP_PLANES = [
 const POLAR_SCALE = data.shape.polarRadiusKm / data.shape.equatorialRadiusKm;
 
 // 剖面上的径向标尺方向（单位向量，组内坐标）：盘 A（x=0，z<0 半圆）放内部锚点与探针，
-// 盘 B（z=0，x<0 半圆）放大气锚点——各占一片截面，互不打架。
+// 盘 B（z=0，x<0 半圆）放大气锚点——各占一片截面，互不打架。大气标尺接近水平：
+// 竖着伸的话 35786 km 的锚点会把标签顶出窗口外。
 const PROBE_DIR = new THREE.Vector3(0, -0.55, -0.835).normalize();
 const INTERIOR_RULER_DIR = new THREE.Vector3(0, 0.5, -0.866).normalize();
-const ATMOS_RULER_DIR = new THREE.Vector3(-0.45, 0.893, 0).normalize();
+const ATMOS_RULER_DIR = new THREE.Vector3(-0.93, 0.34, 0).normalize();
+
+/** 「贴近大气层」的观察点：地表沿大气标尺方向的点（大气薄壳与锚点标尺居中） */
+export const ATMOS_FOCUS_TARGET: [number, number, number] = [
+  ATMOS_RULER_DIR.x * 1.02,
+  ATMOS_RULER_DIR.y * 1.02,
+  ATMOS_RULER_DIR.z * 1.02,
+];
+
+/** 真实自转：恒星日 86164 s（23h56m4s），从北极看逆时针（西向东）。 */
+const SIDEREAL_DAY_S = 86164;
+/** 黄赤交角 23.44°：自转轴绕 z 轴倾斜，北极偏向剖面开口一侧 */
+const AXIAL_TILT = (23.44 * Math.PI) / 180;
 
 function Stars() {
   const geometry = useMemo(() => {
@@ -65,7 +78,7 @@ function Globe({ clippingPlanes }: { clippingPlanes: THREE.Plane[] }) {
         map={texture}
         emissive="#ffffff"
         emissiveMap={texture}
-        emissiveIntensity={0.42}
+        emissiveIntensity={0.5}
         roughness={0.9}
         metalness={0}
         clippingPlanes={clippingPlanes}
@@ -342,46 +355,86 @@ function Probe() {
   );
 }
 
-/** 相机距离的阻尼飞行 + 节流上报（比例尺换算用）。 */
+/** 相机飞行：position 与 controls.target 一起阻尼逼近——target 不再钉死在地心，
+    才凑得近大气薄层；到达后把控制权交还用户（可继续平移/旋转）。 */
 function CameraRig() {
-  const focusDistance = useEarth((s) => s.focusDistance);
+  const focus = useEarth((s) => s.focus);
   const arrive = useEarth((s) => s.arrive);
+  const controls = useThree((s) => s.controls) as
+    | (THREE.EventDispatcher & { target: THREE.Vector3 })
+    | null;
   const frames = useRef(0);
+  const goalPos = useRef(new THREE.Vector3());
+  const goalTarget = useRef(new THREE.Vector3());
   useFrame((state, dt) => {
-    const distance = state.camera.position.length();
-    if (focusDistance != null) {
-      const direction = state.camera.position.clone().normalize();
-      const next = THREE.MathUtils.damp(distance, focusDistance, 3.5, dt);
-      state.camera.position.copy(direction.multiplyScalar(next));
-      if (Math.abs(next - focusDistance) < 0.005) arrive();
+    const k = 1 - Math.exp(-3.5 * dt);
+    if (focus && controls) {
+      goalTarget.current.set(...focus.target);
+      // 保持当前方位角，只改距离：从目标点沿当前视线方向退 focus.distance
+      const dir = state.camera.position.clone().sub(goalTarget.current);
+      if (dir.lengthSq() < 1e-8) dir.set(0.6, 0.35, 0.6);
+      goalPos.current
+        .copy(goalTarget.current)
+        .add(dir.normalize().multiplyScalar(focus.distance));
+      state.camera.position.lerp(goalPos.current, k);
+      controls.target.lerp(goalTarget.current, k);
+      if (
+        state.camera.position.distanceTo(goalPos.current) < 0.005 &&
+        controls.target.distanceTo(goalTarget.current) < 0.005
+      ) {
+        arrive();
+      }
+    } else if (controls) {
+      goalPos.current.copy(state.camera.position);
     }
     frames.current += 1;
-    if (frames.current % 12 === 0) {
-      useEarth.getState().reportDistance(state.camera.position.length());
+    if (frames.current % 12 === 0 && controls) {
+      useEarth
+        .getState()
+        .reportDistance(state.camera.position.distanceTo(controls.target));
     }
   });
   return null;
 }
 
+/** 地球自转：整个本体（表面 + 内部壳 + 大气）绕倾斜后的地轴旋转，
+    角速度 = 2π/恒星日 × 时间倍率；标尺、探针与剖面是观察标记，不跟着转。 */
+function SpinGroup({
+  timeScale,
+  children,
+}: {
+  timeScale: number;
+  children: ReactNode;
+}) {
+  const ref = useRef<THREE.Group>(null);
+  const angle = useRef(0);
+  useFrame((_, dt) => {
+    angle.current += ((dt * 2 * Math.PI) / SIDEREAL_DAY_S) * timeScale;
+    if (ref.current) ref.current.rotation.y = angle.current;
+  });
+  return (
+    <group ref={ref} rotation={[0, 0, -AXIAL_TILT]}>
+      {children}
+    </group>
+  );
+}
+
 export function EarthScene() {
   const cutaway = useEarth((s) => s.cutaway);
   const showLabels = useEarth((s) => s.showLabels);
+  const spinScale = useEarth((s) => s.spinScale);
   const clippingPlanes = cutaway ? CLIP_PLANES : [];
 
   return (
     <>
       <color attach="background" args={["#0b1020"]} />
       <Stars />
-      {/* 可见的保留球面是 +x 或 +z 两侧的「牙」，只有接近顶部的光能同时照到它们；
-          剖面盘是 BasicMaterial 不受光，不怕被照花 */}
-      <ambientLight intensity={0.6} />
-      <directionalLight position={[1.2, 5, 1.2]} intensity={2.0} />
+      {/* 太阳固定在惯性空间，自转扫出昼夜；夜面靠环境光与自发光保持可读 */}
+      <ambientLight intensity={0.35} />
+      <directionalLight position={[5, 1.6, 2.5]} intensity={2.6} />
+      {/* 剖面、标尺与探针是观察标记：在世界坐标系压扁，不随地球倾斜与自转 */}
       <group scale={[1, POLAR_SCALE, 1]}>
         {cutaway && <SectionFaces />}
-        <Globe clippingPlanes={clippingPlanes} />
-        <InteriorShells clippingPlanes={clippingPlanes} />
-        <AtmosphereGlow />
-        <ExosphereEnvelope />
         {cutaway && (
           <>
             {atmosphereLayers.map((layer) =>
@@ -401,10 +454,21 @@ export function EarthScene() {
           </>
         )}
       </group>
+      {/* 地球本体：先沿自转轴压扁（WGS 84），再倾斜黄赤交角，最后绕轴自转 */}
+      <group rotation={[0, 0, -AXIAL_TILT]}>
+        <group scale={[1, POLAR_SCALE, 1]}>
+          <SpinGroup timeScale={spinScale}>
+            <Globe clippingPlanes={clippingPlanes} />
+            <InteriorShells clippingPlanes={clippingPlanes} />
+            <AtmosphereGlow />
+          </SpinGroup>
+        </group>
+      </group>
+      <ExosphereEnvelope />
       <OrbitControls
         makeDefault
-        enablePan={false}
-        minDistance={1.02}
+        enablePan
+        minDistance={0.05}
         maxDistance={12}
         dampingFactor={0.08}
       />

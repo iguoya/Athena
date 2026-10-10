@@ -2,6 +2,13 @@ import { create } from "zustand";
 
 export type ProbeMode = "interior" | "atmosphere";
 
+export interface FocusTarget {
+  /** 相机最终看向的点（场景单位） */
+  target: [number, number, number];
+  /** 相机到该点的距离（场景单位） */
+  distance: number;
+}
+
 interface EarthState {
   /** 剖面开关：开（默认）= 切掉 x>0、z>0 四分之一，露出两片密度着色的截面 */
   cutaway: boolean;
@@ -11,18 +18,21 @@ interface EarthState {
   /** interior 模式 = 深度（0–6371 km）；atmosphere 模式 = 高度（0–1000 km） */
   probeKm: number;
   showLabels: boolean;
-  /** 相机目标距离（场景单位 R）；null = 不在飞行中 */
-  focusDistance: number | null;
-  /** 相机当前距离（R），由 CameraRig 节流上报，供视野比例尺换算 */
+  /** 相机飞行目标；null = 不在飞行中。target 可以不是地心（否则看不了大气薄层） */
+  focus: FocusTarget | null;
+  /** 相机当前到观察目标的距离（R），由 CameraRig 节流上报，供视野比例尺换算 */
   cameraDistanceR: number;
+  /** 自转时间倍率：真实恒星日 86164 s × 倍率 */
+  spinScale: number;
   setCutaway: (cutaway: boolean) => void;
   select: (layerId: string | null) => void;
   setProbeMode: (mode: ProbeMode) => void;
   setProbeKm: (km: number) => void;
   toggleLabels: () => void;
-  flyTo: (distanceR: number) => void;
+  flyTo: (focus: FocusTarget) => void;
   arrive: () => void;
   reportDistance: (distanceR: number) => void;
+  setSpinScale: (spinScale: number) => void;
 }
 
 export const useEarth = create<EarthState>((set) => ({
@@ -31,15 +41,17 @@ export const useEarth = create<EarthState>((set) => ({
   probeMode: "interior",
   probeKm: 0,
   showLabels: true,
-  focusDistance: null,
+  focus: null,
   cameraDistanceR: 4.2,
+  spinScale: 600,
   setCutaway: (cutaway) => set({ cutaway }),
   select: (selectedLayerId) => set({ selectedLayerId }),
   setProbeMode: (probeMode) =>
     set({ probeMode, probeKm: probeMode === "interior" ? 0 : 12 }),
   setProbeKm: (probeKm) => set({ probeKm }),
   toggleLabels: () => set((s) => ({ showLabels: !s.showLabels })),
-  flyTo: (focusDistance) => set({ focusDistance }),
-  arrive: () => set({ focusDistance: null }),
+  flyTo: (focus) => set({ focus }),
+  arrive: () => set({ focus: null }),
   reportDistance: (cameraDistanceR) => set({ cameraDistanceR }),
+  setSpinScale: (spinScale) => set({ spinScale }),
 }));
