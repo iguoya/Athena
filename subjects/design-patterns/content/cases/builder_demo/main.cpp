@@ -1,6 +1,7 @@
 // 建造者：Director 定步骤顺序，ConcreteBuilder 实现每一步。
-// 实验：运行观察同样的 construct() 造出两种套餐。再写一个 VegBuilder
-// 只换 buildMain/buildSide 的实现——Director 一行不改。
+// 实验：运行观察同一个 construct() 造出两种套餐。补 TODO：写一个 VegBuilder
+// （主食 veggie burger、配菜 corn、饮料 tea），交给同一个 Director——
+// Director 一行不改。
 #include <iostream>
 #include <string>
 #include <vector>
@@ -37,6 +38,7 @@ public:
     void buildDrink() override { m.add("juice"); }
     Meal getResult()  override { return m; }
 };
+// TODO(实验)：在这里新增 VegBuilder
 
 class Director {
 public:
@@ -51,4 +53,5 @@ int main() {
     ChickenBuilder cb; FishBuilder fb;
     d.construct(cb).show();
     d.construct(fb).show();
+    // TODO(实验)：VegBuilder vb; d.construct(vb).show();
 }

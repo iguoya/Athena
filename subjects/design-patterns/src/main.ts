@@ -1464,17 +1464,43 @@ function vizTable(title: string, head: string[], rows: string[][], note: string)
     </div>`;
 }
 
-function renderQuizItems(items: QuizItem[], idPrefix: string): string {
+/**
+ * 选项按题干做稳定打乱。内容作者习惯把正解写在第一个，原样渲染就成了「永远选 A」；
+ * 种子取题干而不是随机数，重渲染时顺序不变，按显示位置存的作答记录才不会错位。
+ */
+function stableShuffle<T>(list: T[], seedText: string): T[] {
+  let h = 2166136261;
+  for (const ch of seedText) h = Math.imul(h ^ (ch.codePointAt(0) ?? 0), 16777619) >>> 0;
+  const out = [...list];
+  for (let i = out.length - 1; i > 0; i -= 1) {
+    h = (Math.imul(h, 1664525) + 1013904223) >>> 0;
+    const j = h % (i + 1);
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
+/**
+ * showCovers：讲解里的小测可以标覆盖知识点；章节考核是跨知识点混排的辨析题，
+ * 逐题标出「覆盖：抽象工厂」等于把答案写在题干旁边，所以考核里不显示。
+ */
+function renderQuizItems(
+  items: QuizItem[],
+  idPrefix: string,
+  opts: { showCovers?: boolean } = {},
+): string {
+  const showCovers = opts.showCovers ?? true;
   return items
     .map((item, qi) => {
-      const cover = item.covers
-        ? `<p class="prose muted">覆盖：${escapeHtml(findTopic(item.covers)?.title ?? item.covers)}</p>`
-        : "";
+      const cover =
+        showCovers && item.covers
+          ? `<p class="prose muted">覆盖：${escapeHtml(findTopic(item.covers)?.title ?? item.covers)}</p>`
+          : "";
       const source = item.source?.trim()
         ? `<p class="quiz-source">来源：${escapeHtml(item.source.trim())}</p>`
         : "";
       const letters = "ABCDEFGH";
-      const choices = item.choices
+      const choices = stableShuffle(item.choices, item.stem)
         .map(
           (c, ci) =>
             `<button type="button" class="quiz-opt" data-quiz="${idPrefix}-${qi}" data-ok="${c.ok ? "1" : "0"}" data-why="${escapeHtml(c.why)}">${letters[ci] ?? ci + 1}. ${escapeHtml(c.label)}</button>`,
@@ -1625,7 +1651,7 @@ function renderChapterExam(chapter: Chapter, kind: "checkpoint" | "finale"): str
       ${gradeBar}
     </div>
     <div class="quiz-set" id="exam-quiz-root" data-quiz-store="${escapeHtml(quizStoreKey(kind, chapter.id))}" data-quiz-count="${pack.items.length}">
-      ${renderQuizItems(pack.items, `${kind}-${chapter.id}`)}
+      ${renderQuizItems(pack.items, `${kind}-${chapter.id}`, { showCovers: false })}
     </div>`;
 }
 
@@ -1787,7 +1813,7 @@ function renderLesson(topic: Topic) {
         </div>`;
       }
       if (b.type === "scenario") {
-        const opts = b.options
+        const opts = stableShuffle(b.options, b.situation)
           .map(
             (o, i) =>
               `<button type="button" class="scenario-opt" data-ok="${o.ok ? "1" : "0"}" data-why="${escapeHtml(o.why)}">${i + 1}. ${escapeHtml(o.label)}</button>`,
@@ -1953,11 +1979,14 @@ function renderLab(topic: Topic) {
   const lab = currentLab(topic)!;
   state.labId = lab.id;
 
-  // 标题已在 topic-head；此处只放「要做什么」——有 goal 用 goal，否则用 prompt，避免标题/题目重复。
+  // 标题已在 topic-head；此处先放题干（要验证什么，先预测），再放动手（补哪个 TODO）。
+  // 两者都有时都显示：只给动手不给题干，实验就退化成照做，丢了「预测—运行」的那一步。
+  const prompt = lab.prompt?.trim() ?? "";
   const task =
     lab.goal?.trim() ||
-    lab.prompt?.trim() ||
+    prompt ||
     "在骨架里按 TODO 补全，用运行输出验证本节概念。";
+  const question = lab.goal?.trim() && prompt ? prompt : "";
   const hint = lab.hint?.trim() ?? "";
   const st = getLabStatus(topic.id, lab.id);
 
@@ -1965,6 +1994,7 @@ function renderLab(topic: Topic) {
     <div class="lab-workspace">
       <div class="lab-brief ${labStatusClass(st)}">
         <div class="lab-brief-text">
+          ${question ? `<p class="lab-brief-question">${escapeHtml(question)}</p>` : ""}
           <p class="lab-brief-task"><span class="badge ${labStatusBadgeClass(st)}">${labStatusLabel(st)}</span> ${escapeHtml(task)}</p>
           ${hint ? `<p class="lab-brief-hint">${escapeHtml(hint)}</p>` : ""}
         </div>

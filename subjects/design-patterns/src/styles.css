@@ -1000,6 +1000,17 @@ html.is-resizing .nav-resizer { background: var(--primary-soft); }
   display: grid;
   gap: 0.3em;
 }
+.lab-brief-question {
+  margin: 0;
+  font-size: 0.95em;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.lab-brief-question::before {
+  content: "先预测 · ";
+  font-weight: 800;
+  color: var(--accent-amber);
+}
 .lab-brief-task {
   margin: 0;
   font-size: 0.95em;

@@ -508,7 +508,168 @@
             ]
           }
         }
-      ]
+      ],
+      "checkpoint": {
+        "intro": "各知识点的题打乱交错排列，同一个知识点的题不挨着。先自己判断再看解析，全部作答后按每个知识点的正确率写入完成度。",
+        "items": [
+          {
+            "stem": "类图中 A 到 B 是一条虚线，B 端是空心三角。正确读法是？",
+            "covers": "dp.uml.class",
+            "choices": [
+              {
+                "label": "A 实现 B（B 是接口）",
+                "ok": true,
+                "why": "虚线 + 空心三角 = 实现：A 承诺兑现 B 约定的方法"
+              },
+              {
+                "label": "A 继承 B",
+                "ok": false,
+                "why": "继承（泛化）是实线 + 空心三角，线型不同"
+              },
+              {
+                "label": "A 依赖 B",
+                "ok": false,
+                "why": "依赖是虚线 + 开箭头，箭头端不是三角"
+              },
+              {
+                "label": "A 聚合 B",
+                "ok": false,
+                "why": "聚合是空心菱形，画在整体端"
+              }
+            ]
+          },
+          {
+            "stem": "类图里 Sorter 持有一个 SortStrategy 接口引用，接口下挂 QuickSort、MergeSort 两个实现，没有任何负责 new 的类或方法。按三步法，方向是？",
+            "covers": "dp.uml.pattern-reading",
+            "choices": [
+              {
+                "label": "一组接口 + 多实现、没有创建线：先往策略/状态这类行为型想",
+                "ok": true,
+                "why": "第一步看抽象层就能锁定；第二步没有创建线，排除了工厂家族"
+              },
+              {
+                "label": "工厂方法",
+                "ok": false,
+                "why": "工厂方法必须有专门负责 new 产品的 factoryMethod，这里没有"
+              },
+              {
+                "label": "单例",
+                "ok": false,
+                "why": "单例的标志是私有构造 + 静态 getInstance，这里没有"
+              },
+              {
+                "label": "建造者",
+                "ok": false,
+                "why": "建造者有 buildPartX + getResult 的分步方法，这里没有"
+              }
+            ]
+          },
+          {
+            "stem": "按本课的前景四档，原型模式在 C++、Rust、Python 里属于哪一档？",
+            "covers": "dp.criticism",
+            "choices": [
+              {
+                "label": "语言机制吸收",
+                "ok": true,
+                "why": "拷贝构造、derive(Clone)、copy.deepcopy 让 clone 成了语言自带能力"
+              },
+              {
+                "label": "依然核心",
+                "ok": false,
+                "why": "依然核心的是适配器、外观、组合，四个语言里都要真写"
+              },
+              {
+                "label": "退化为传函数",
+                "ok": false,
+                "why": "这一档是策略、命令、模板方法——一个函数参数就能替代"
+              },
+              {
+                "label": "框架接管",
+                "ok": false,
+                "why": "这一档是观察者、抽象工厂、职责链——由响应式库、DI 容器、中间件管道承担"
+              }
+            ]
+          },
+          {
+            "stem": "订单与订单行：订单被删除后，订单行单独存在没有意义。类图上应该怎么画？",
+            "covers": "dp.uml.class",
+            "choices": [
+              {
+                "label": "订单端画实心菱形（组合）",
+                "ok": true,
+                "why": "整体消失、部分随之消失，生命周期同步，是组合；菱形画在整体端"
+              },
+              {
+                "label": "订单端画空心菱形（聚合）",
+                "ok": false,
+                "why": "聚合的部分可以独立存在（如班级与学生），与题意相反"
+              },
+              {
+                "label": "订单行端画实心菱形",
+                "ok": false,
+                "why": "菱形永远画在整体那一端，不在部分端"
+              },
+              {
+                "label": "虚线开箭头（依赖）",
+                "ok": false,
+                "why": "依赖是临时使用，这里是长期持有且生命周期绑定"
+              }
+            ]
+          },
+          {
+            "stem": "在 Python 新项目里要「按配置切换排序规则」。按本课的立场，第一步该做什么？",
+            "covers": "dp.criticism",
+            "choices": [
+              {
+                "label": "先问语言有没有现成解法：直接传一个函数就能替代策略类层级",
+                "ok": true,
+                "why": "立场是「用模式前先问语言/标准库」，Python 的一等函数让策略退化为传函数"
+              },
+              {
+                "label": "先画出策略模式的完整类图，再逐个写类",
+                "ok": false,
+                "why": "这是「把模式当圣经」的读法，在一等函数语言里徒增间接层"
+              },
+              {
+                "label": "用单例保存当前排序规则",
+                "ok": false,
+                "why": "单例解决的是实例唯一，和切换规则无关"
+              },
+              {
+                "label": "模式已经过时，不做任何抽象，直接 if-else",
+                "ok": false,
+                "why": "批判的落点是换更简单的形态，不是放弃抽象"
+              }
+            ]
+          },
+          {
+            "stem": "类图中 Config 的构造函数前标 -，有一个静态成员 instance: Config 和一个静态方法 getInstance()。按三步法第二步「看创建」，这是？",
+            "covers": "dp.uml.pattern-reading",
+            "choices": [
+              {
+                "label": "单例",
+                "ok": true,
+                "why": "私有构造掐死外部 new，静态 getInstance 是唯一入口，自持有静态实例"
+              },
+              {
+                "label": "原型",
+                "ok": false,
+                "why": "原型的标志是 clone()，靠复制创建"
+              },
+              {
+                "label": "简单工厂",
+                "ok": false,
+                "why": "简单工厂的 create(type) 负责造别的类的对象，不造自己"
+              },
+              {
+                "label": "抽象工厂",
+                "ok": false,
+                "why": "抽象工厂是一个接口里有一族 create 方法"
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "id": "principles",
@@ -1038,7 +1199,376 @@
             ]
           }
         }
-      ]
+      ],
+      "checkpoint": {
+        "intro": "各知识点的题打乱交错排列，同一个知识点的题不挨着。先自己判断再看解析，全部作答后按每个知识点的正确率写入完成度。",
+        "items": [
+          {
+            "stem": "支付系统新增「数字人民币」支付时，开发者在 PaymentService.pay() 的 switch 里加了一个 case。这个改法违反的是？",
+            "covers": "dp.ocp",
+            "choices": [
+              {
+                "label": "开闭原则",
+                "ok": true,
+                "why": "新功能靠修改已上线代码实现，而不是靠新增类——老分支随时可能被改坏"
+              },
+              {
+                "label": "单一职责原则",
+                "ok": false,
+                "why": "问题不在类有几个变化理由，而在新增功能要改旧代码"
+              },
+              {
+                "label": "里氏替换原则",
+                "ok": false,
+                "why": "这里没有子类替换父类的行为问题"
+              },
+              {
+                "label": "迪米特法则",
+                "ok": false,
+                "why": "这里没有链式穿透调用"
+              }
+            ]
+          },
+          {
+            "stem": "UserService 同时负责校验密码规则、发送注册邮件、写数据库：密码规则变了要改它，邮件模板变了也要改它。最直接违反的是？",
+            "covers": "dp.srp",
+            "choices": [
+              {
+                "label": "单一职责原则",
+                "ok": true,
+                "why": "一个类有三个独立的变化理由"
+              },
+              {
+                "label": "接口隔离原则",
+                "ok": false,
+                "why": "接口隔离针对的是胖接口迫使使用方依赖用不到的方法；这里是一个类承担了多个变化理由"
+              },
+              {
+                "label": "开闭原则",
+                "ok": false,
+                "why": "题干说的是职责混在一起，不是新增功能的改法"
+              },
+              {
+                "label": "依赖倒置原则",
+                "ok": false,
+                "why": "题干没有涉及依赖方向"
+              }
+            ]
+          },
+          {
+            "stem": "ReadOnlyList 继承 List，把 add() 实现成抛异常。调用方按 List 的约定使用它时程序崩溃。违反的是？",
+            "covers": "dp.lsp",
+            "choices": [
+              {
+                "label": "里氏替换原则",
+                "ok": true,
+                "why": "子类换进父类出现的位置后行为被破坏——没兑现父类的约定"
+              },
+              {
+                "label": "接口隔离原则",
+                "ok": false,
+                "why": "接口偏胖也许是诱因，但题干的落点是「替换后行为错误」"
+              },
+              {
+                "label": "开闭原则",
+                "ok": false,
+                "why": "问题不在扩展还是修改，而在继承关系本身不成立"
+              },
+              {
+                "label": "合成复用原则",
+                "ok": false,
+                "why": "合成复用讲复用手段的选择，题干问的是替换后的行为"
+              }
+            ]
+          },
+          {
+            "stem": "ReportGenerator 在内部直接 new PdfWriter 并调用它。按依赖倒置原则应该怎么改？",
+            "covers": "dp.dip",
+            "choices": [
+              {
+                "label": "抽出 Writer 接口，ReportGenerator 只依赖 Writer，具体的 PdfWriter 从外部传入",
+                "ok": true,
+                "why": "高层与低层都依赖抽象，换输出格式不动 ReportGenerator"
+              },
+              {
+                "label": "把 PdfWriter 改成单例",
+                "ok": false,
+                "why": "单例只管实例数量，ReportGenerator 依然依赖具体类"
+              },
+              {
+                "label": "让 ReportGenerator 继承 PdfWriter",
+                "ok": false,
+                "why": "继承具体类耦合更深，同时违背合成复用"
+              },
+              {
+                "label": "把 PdfWriter 的代码复制进 ReportGenerator",
+                "ok": false,
+                "why": "复制代码只是把依赖藏起来，变化仍然要改高层"
+              }
+            ]
+          },
+          {
+            "stem": "下列调用中，最可能违反迪米特法则的是？",
+            "covers": "dp.lod",
+            "choices": [
+              {
+                "label": "order.getCustomer().getAddress().getCity()",
+                "ok": true,
+                "why": "穿透了 Customer 和 Address 两层内部结构，任一层变化都会波及调用方"
+              },
+              {
+                "label": "this->helper.doWork()（helper 是成员）",
+                "ok": false,
+                "why": "成员是直接朋友"
+              },
+              {
+                "label": "param.doWork()（param 是方法参数）",
+                "ok": false,
+                "why": "参数是直接朋友"
+              },
+              {
+                "label": "auto b = Builder(); b.build();（自己创建的对象）",
+                "ok": false,
+                "why": "自己创建的对象是直接朋友"
+              }
+            ]
+          },
+          {
+            "stem": "打印机接口 Machine 有 print、scan、fax 三个方法；便宜的打印机只会打印，却必须给 scan、fax 写空实现。改进方向是？",
+            "covers": "dp.isp",
+            "choices": [
+              {
+                "label": "拆成 Printer、Scanner、Fax 三个小接口，各设备按需实现",
+                "ok": true,
+                "why": "多个专用接口好过一个胖接口，实现方不再被迫依赖用不到的方法"
+              },
+              {
+                "label": "让 scan、fax 抛异常",
+                "ok": false,
+                "why": "抛异常还会把问题变成里氏替换的违规"
+              },
+              {
+                "label": "把三个方法合并成 doJob(type)",
+                "ok": false,
+                "why": "接口更模糊，类型判断搬进实现里"
+              },
+              {
+                "label": "让便宜打印机继承高级打印机",
+                "ok": false,
+                "why": "继承来的方法依然用不上，问题没解决"
+              }
+            ]
+          },
+          {
+            "stem": "Stack 为了复用存储逻辑而继承 Vector，结果把 insertAt 等破坏栈语义的方法也暴露了出去。按合成复用原则应该？",
+            "covers": "dp.carp",
+            "choices": [
+              {
+                "label": "Stack 内部持有一个 Vector 成员，只对外暴露 push、pop",
+                "ok": true,
+                "why": "组合是黑盒复用：只借用需要的能力，不把父类接口整个继承下来"
+              },
+              {
+                "label": "继续继承，并把 insertAt 重写成抛异常",
+                "ok": false,
+                "why": "这又制造了一个违反里氏替换的子类"
+              },
+              {
+                "label": "反过来让 Vector 继承 Stack",
+                "ok": false,
+                "why": "关系颠倒，同样是为复用而继承"
+              },
+              {
+                "label": "把 Stack 改成单例",
+                "ok": false,
+                "why": "与复用手段无关"
+              }
+            ]
+          },
+          {
+            "stem": "工厂方法、策略、装饰三个模式，在原则层面的共同目标是？",
+            "covers": "dp.ocp",
+            "choices": [
+              {
+                "label": "让新的变化靠新增类来承接，而不是修改已有代码",
+                "ok": true,
+                "why": "这就是开闭原则——它是总纲，模式是实现它的招式"
+              },
+              {
+                "label": "减少每个类的方法数量",
+                "ok": false,
+                "why": "方法数量不是任何一条原则的判据"
+              },
+              {
+                "label": "保证每个类只有一个实例",
+                "ok": false,
+                "why": "那是单例的意图"
+              },
+              {
+                "label": "彻底消除继承",
+                "ok": false,
+                "why": "三个模式都还在用继承或接口实现"
+              }
+            ]
+          },
+          {
+            "stem": "判断一个类是否符合单一职责，依据是？",
+            "covers": "dp.srp",
+            "choices": [
+              {
+                "label": "引起它变化的原因是否只有一个",
+                "ok": true,
+                "why": "SRP 的判据是变化理由，不是规模"
+              },
+              {
+                "label": "方法数是否不超过 10 个",
+                "ok": false,
+                "why": "方法多少不是判据"
+              },
+              {
+                "label": "是否只被一个类调用",
+                "ok": false,
+                "why": "被多处复用往往正是职责单一的表现"
+              },
+              {
+                "label": "是否只有一个公有方法",
+                "ok": false,
+                "why": "一个职责可以由多个方法共同完成"
+              }
+            ]
+          },
+          {
+            "stem": "「针对接口编程，而不是针对实现编程」是哪条原则的同义表述？",
+            "covers": "dp.dip",
+            "choices": [
+              {
+                "label": "依赖倒置原则",
+                "ok": true,
+                "why": "依赖抽象而不依赖具体实现，正是 DIP"
+              },
+              {
+                "label": "接口隔离原则",
+                "ok": false,
+                "why": "名字里有「接口」，但 ISP 讲的是接口的粒度"
+              },
+              {
+                "label": "开闭原则",
+                "ok": false,
+                "why": "开闭讲扩展与修改"
+              },
+              {
+                "label": "迪米特法则",
+                "ok": false,
+                "why": "迪米特讲通信对象的范围"
+              }
+            ]
+          },
+          {
+            "stem": "关于多态与里氏替换原则的关系，正确的是？",
+            "covers": "dp.lsp",
+            "choices": [
+              {
+                "label": "多态是语言机制，LSP 是对子类行为的约束：能编译通过不等于满足 LSP",
+                "ok": true,
+                "why": "Penguin::fly() 抛异常照样能编译，但替换后行为错误"
+              },
+              {
+                "label": "LSP 就是多态的另一个名字",
+                "ok": false,
+                "why": "多态让替换在语法上可行，LSP 要求替换后行为正确"
+              },
+              {
+                "label": "满足 LSP 就不能用继承",
+                "ok": false,
+                "why": "LSP 正是用来判断继承是否合理的，不是禁止继承"
+              },
+              {
+                "label": "子类重写了父类所有方法就满足 LSP",
+                "ok": false,
+                "why": "重写得越多，越可能悄悄削弱父类的行为约定"
+              }
+            ]
+          },
+          {
+            "stem": "外观模式给子系统提供一个统一入口，客户端只和外观打交道。这在原则层面最直接体现的是？",
+            "covers": "dp.lod",
+            "choices": [
+              {
+                "label": "迪米特法则",
+                "ok": true,
+                "why": "客户端只认识外观这一个直接朋友，子系统内部变化被挡在外观后面"
+              },
+              {
+                "label": "里氏替换原则",
+                "ok": false,
+                "why": "外观不涉及子类替换"
+              },
+              {
+                "label": "单一职责原则",
+                "ok": false,
+                "why": "外观的要点是缩小客户端的认识范围，不是拆职责"
+              },
+              {
+                "label": "合成复用原则",
+                "ok": false,
+                "why": "外观虽然持有子系统对象，但它要解决的是客户端知道得太多"
+              }
+            ]
+          },
+          {
+            "stem": "单一职责和接口隔离都在「拆」，二者的区别是？",
+            "covers": "dp.isp",
+            "choices": [
+              {
+                "label": "SRP 按变化理由拆类（实现侧），ISP 按使用方的需要拆接口（使用侧）",
+                "ok": true,
+                "why": "一个从类为什么会变出发，一个从调用方需要什么出发"
+              },
+              {
+                "label": "二者完全是同一条原则",
+                "ok": false,
+                "why": "考试会分别考定义，必须区分"
+              },
+              {
+                "label": "SRP 讲接口，ISP 讲类",
+                "ok": false,
+                "why": "说反了"
+              },
+              {
+                "label": "ISP 只适用于 Java",
+                "ok": false,
+                "why": "C++ 的纯虚基类同样是接口，原则与语言无关"
+              }
+            ]
+          },
+          {
+            "stem": "合成复用原则把继承称为「白盒复用」，原因是？",
+            "covers": "dp.carp",
+            "choices": [
+              {
+                "label": "子类看得见并依赖父类的内部实现，父类一改子类就容易受影响",
+                "ok": true,
+                "why": "白盒指内部对复用方可见；组合只通过接口使用，是黑盒"
+              },
+              {
+                "label": "继承的运行性能更好",
+                "ok": false,
+                "why": "原则讨论的是耦合，不是性能"
+              },
+              {
+                "label": "继承无法实现多态",
+                "ok": false,
+                "why": "继承恰恰是 C++ 实现运行期多态的主要手段"
+              },
+              {
+                "label": "白盒指代码可读性好",
+                "ok": false,
+                "why": "与可读性无关"
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "id": "creational",
@@ -1157,7 +1687,14 @@
               "title": "跑一个 Meyers 单例",
               "case": "singleton_demo",
               "entrypoint": "main.cpp",
-              "prompt": "运行观察两次 getInstance() 返回同一地址。然后试着在 main 里直接 new Singleton() 看编译器怎么拦你。"
+              "prompt": "两个模块各自调用 getInstance()，拿到的真是同一个对象吗？先预测「Singleton constructed」会打印几次，再运行核对。",
+              "goal": "补 main 里的 TODO：比较 &a 与 &b，相同则输出一行 same instance: yes。做完再解开末尾的注释行，看编译器怎么拦住外部构造。",
+              "hint": "引用取地址得到的就是对象本身的地址；Singleton 的拷贝构造已删除，只能比地址，不能比对象。",
+              "pass": {
+                "includes": [
+                  "same instance: yes"
+                ]
+              }
             }
           ],
           "modern": {
@@ -1301,7 +1838,15 @@
               "title": "跑一个简单工厂",
               "case": "simple_factory_demo",
               "entrypoint": "main.cpp",
-              "prompt": "运行观察工厂按参数返回不同产品。然后新增 ProductC：你不得不改工厂的 switch——亲身体会这个违反 OCP 的位置。"
+              "prompt": "main 已经在要产品 \"C\"，工厂却只认 A 和 B（运行可见 unknown product: C）。让它认出 C 需要动哪些代码？",
+              "goal": "补两处 TODO：新增 ProductC（use() 输出 use ProductC），并在 SimpleFactory::create 里认出 \"C\"。留意你不得不修改旧的 create——这就是违反开闭的位置。",
+              "pass": {
+                "includes": [
+                  "use ProductA",
+                  "use ProductB",
+                  "use ProductC"
+                ]
+              }
             }
           ],
           "modern": {
@@ -1451,7 +1996,15 @@
               "title": "跑一个工厂方法",
               "case": "factory_method_demo",
               "entrypoint": "main.cpp",
-              "prompt": "运行观察 Client 只依赖 Creator/Product 两层抽象。然后新增一种产品：只加两个新类，旧文件一行不改——对照简单工厂体会 OCP。"
+              "prompt": "新增一种 Logger，能不能做到 LoggerFactory 和 FileLoggerFactory 一行不改？",
+              "goal": "补 TODO：仿照 FileLogger / FileLoggerFactory 新增 ConsoleLogger（write 输出 [console] 加消息）和 ConsoleLoggerFactory，再在 main 里调用 clientCode()。",
+              "hint": "只加新类；对照简单工厂实验里不得不改的那一行。",
+              "pass": {
+                "includes": [
+                  "[file] hello",
+                  "[console] hello"
+                ]
+              }
             }
           ],
           "modern": {
@@ -1642,7 +2195,17 @@
               "title": "跑一个抽象工厂",
               "case": "abstract_factory_demo",
               "entrypoint": "main.cpp",
-              "prompt": "运行观察 Factory1 造出的一对产品来自同一族。然后给工厂接口加一个 createProductC()——体会「加产品种类要改所有工厂」的代价。"
+              "prompt": "render() 只认 WidgetFactory 抽象。换一族风格要改哪里？客户端有没有可能把 Win 按钮和 Mac 文本框混在一起？",
+              "goal": "补 main 里的 TODO：加一行，用 Mac 风格再画一遍——只换传入的工厂，render() 一行不改。",
+              "hint": "做完再想：要加 createCheckbox() 的话，哪些类都得改？",
+              "pass": {
+                "includes": [
+                  "[Win button]",
+                  "[Win textbox]",
+                  "[Mac button]",
+                  "[Mac textbox]"
+                ]
+              }
             }
           ],
           "modern": {
@@ -1793,7 +2356,15 @@
               "title": "跑一个建造者",
               "case": "builder_demo",
               "entrypoint": "main.cpp",
-              "prompt": "运行观察 Director 用相同步骤造出两种餐食。再写一个 VegBuilder 只换 buildPart 的实现——Director 一行不改。"
+              "prompt": "同一个 Director::construct() 造出了两种套餐。再加一种套餐，Director 需要改吗？",
+              "goal": "补 TODO：写一个 VegBuilder（主食 veggie burger、配菜 corn、饮料 tea），在 main 里交给同一个 Director 构造并 show()。",
+              "pass": {
+                "includes": [
+                  "- veggie burger",
+                  "- corn",
+                  "- tea"
+                ]
+              }
             }
           ],
           "modern": {
@@ -1927,7 +2498,14 @@
               "title": "跑一个原型",
               "case": "prototype_demo",
               "entrypoint": "main.cpp",
-              "prompt": "运行观察克隆出的对象与原型值相同但地址不同。把成员改成指针并保持浅拷贝，观察两个对象共享同一块内存的坑，再改成深拷贝修复。"
+              "prompt": "改了克隆件的分数，原型的分数会跟着变吗？先预测，再运行核对两行 int@ 地址。",
+              "goal": "补 TODO：把 Resume 的拷贝构造从浅拷贝改成深拷贝（给克隆件新分配一个 int），让最后一行输出 proto score=90 after copy changed。",
+              "hint": "std::make_shared<int>(*other.score) 会新分配一块内存并复制值。",
+              "pass": {
+                "includes": [
+                  "proto score=90 after copy changed"
+                ]
+              }
             }
           ],
           "modern": {
@@ -1935,7 +2513,324 @@
             "text": "四语言现状：C 的 memcpy 是冒险（要手写深拷贝）；C++ 拷贝构造语言内建；Python copy.deepcopy 内建；Rust derive(Clone) 一行声明。四个语言都已吸收，但深浅拷贝的坑要靠它这门课来教。"
           }
         }
-      ]
+      ],
+      "checkpoint": {
+        "intro": "各知识点的题打乱交错排列，同一个知识点的题不挨着。先自己判断再看解析，全部作答后按每个知识点的正确率写入完成度。",
+        "items": [
+          {
+            "stem": "日志系统要支持文件、控制台、网络三种 Logger，以后还会继续增加，并要求新增时不修改已有的工厂代码。最合适的是？",
+            "covers": "dp.factory-method",
+            "choices": [
+              {
+                "label": "工厂方法",
+                "ok": true,
+                "why": "每种 Logger 配一个工厂子类，新增产品只加类，满足开闭"
+              },
+              {
+                "label": "简单工厂",
+                "ok": false,
+                "why": "新增产品要改工厂的分支，违反「不修改已有工厂代码」的要求"
+              },
+              {
+                "label": "单例",
+                "ok": false,
+                "why": "单例只管实例唯一"
+              },
+              {
+                "label": "原型",
+                "ok": false,
+                "why": "原型靠复制已有实例，题干要的是按类型扩展创建"
+              }
+            ]
+          },
+          {
+            "stem": "原型持有指针成员时，clone() 只复制了指针（浅拷贝）。后果是？",
+            "covers": "dp.prototype",
+            "choices": [
+              {
+                "label": "克隆件与原型共享同一块内部状态，改一个另一个跟着变",
+                "ok": true,
+                "why": "这正是本章原型实验里 score 从 90 变成 59 的坑"
+              },
+              {
+                "label": "编译不通过",
+                "ok": false,
+                "why": "浅拷贝在语法上完全合法，这才危险"
+              },
+              {
+                "label": "clone() 返回空指针",
+                "ok": false,
+                "why": "对象照样能造出来"
+              },
+              {
+                "label": "没有任何影响",
+                "ok": false,
+                "why": "两个对象共享可变状态，会互相干扰"
+              }
+            ]
+          },
+          {
+            "stem": "跨平台 UI 库已有 WinFactory、MacFactory，各自造 Button 和 TextBox。现在既要加 Linux 风格（新产品族），又要加 Checkbox（新产品种类），哪个更容易？",
+            "covers": "dp.abstract-factory",
+            "choices": [
+              {
+                "label": "加 Linux 族容易，只需新增 LinuxFactory 和对应产品；加 Checkbox 难，要改抽象工厂接口和所有具体工厂",
+                "ok": true,
+                "why": "抽象工厂对「产品族」开放，对「产品种类」不开放"
+              },
+              {
+                "label": "两者都容易",
+                "ok": false,
+                "why": "加产品种类要改接口，所有工厂都得跟着改"
+              },
+              {
+                "label": "加 Checkbox 容易，加 Linux 族难",
+                "ok": false,
+                "why": "说反了"
+              },
+              {
+                "label": "两者都要改所有已有的类",
+                "ok": false,
+                "why": "加产品族只需要新增类"
+              }
+            ]
+          },
+          {
+            "stem": "日志器希望整个进程只有一个实例。下列 C++ 写法中最恰当的是？",
+            "covers": "dp.singleton",
+            "choices": [
+              {
+                "label": "私有构造，static Logger& getInstance() { static Logger inst; return inst; }",
+                "ok": true,
+                "why": "Meyers 单例：C++11 起局部静态变量的初始化是线程安全的"
+              },
+              {
+                "label": "公有构造，再定义一个全局变量 Logger g_log;",
+                "ok": false,
+                "why": "谁都能再造一个，实例数量不可控"
+              },
+              {
+                "label": "getInstance() 每次都 return new Logger();",
+                "ok": false,
+                "why": "每次调用都是新实例，违背唯一性"
+              },
+              {
+                "label": "把所有成员函数都写成 static",
+                "ok": false,
+                "why": "这是静态类，不是单例模式"
+              }
+            ]
+          },
+          {
+            "stem": "要创建一个 HTTP 请求对象：URL 必填，header、超时、重试次数可选，而且组装步骤有固定顺序。最贴合的是？",
+            "covers": "dp.builder",
+            "choices": [
+              {
+                "label": "建造者",
+                "ok": true,
+                "why": "复杂对象分步组装，构建过程与最终表示分离"
+              },
+              {
+                "label": "抽象工厂",
+                "ok": false,
+                "why": "抽象工厂造的是一族配套产品，不是分步组装一个对象"
+              },
+              {
+                "label": "原型",
+                "ok": false,
+                "why": "原型靠复制已有实例"
+              },
+              {
+                "label": "单例",
+                "ok": false,
+                "why": "请求对象需要很多个"
+              }
+            ]
+          },
+          {
+            "stem": "简单工厂的 create(type) 每加一种产品都要改分支。它和工厂方法的分界是？",
+            "covers": "dp.simple-factory",
+            "choices": [
+              {
+                "label": "简单工厂由一个工厂类按参数包揽所有产品；工厂方法给每种产品配一个工厂子类，新增产品只加类",
+                "ok": true,
+                "why": "这就是开闭原则上的差距，也是工厂方法存在的理由"
+              },
+              {
+                "label": "简单工厂有抽象工厂接口，工厂方法没有",
+                "ok": false,
+                "why": "说反了：工厂方法才有抽象的 Creator"
+              },
+              {
+                "label": "工厂方法必须传 type 参数",
+                "ok": false,
+                "why": "传参选产品是简单工厂的特征"
+              },
+              {
+                "label": "二者没有区别",
+                "ok": false,
+                "why": "考试专考这个区别"
+              }
+            ]
+          },
+          {
+            "stem": "类图中 Creator 声明抽象的 factoryMethod()，ConcreteCreatorA、ConcreteCreatorB 各自重写，每个具体工厂只返回一种 Product。这是？",
+            "covers": "dp.factory-method",
+            "choices": [
+              {
+                "label": "工厂方法",
+                "ok": true,
+                "why": "工厂接口只有一个 create 方法，由子类决定造哪种产品"
+              },
+              {
+                "label": "抽象工厂",
+                "ok": false,
+                "why": "抽象工厂的接口里有一族 create 方法"
+              },
+              {
+                "label": "建造者",
+                "ok": false,
+                "why": "建造者是 buildPartX + getResult 的分步方法"
+              },
+              {
+                "label": "简单工厂",
+                "ok": false,
+                "why": "简单工厂没有工厂子类，靠一个类里的分支"
+              }
+            ]
+          },
+          {
+            "stem": "本课「现代视角」把单例判为「现代慎用」，理由是？",
+            "covers": "dp.singleton",
+            "choices": [
+              {
+                "label": "Meyers 局部静态、Python 模块、Rust OnceLock 等语言内建写法更简单，DI 容器又接管了生命周期",
+                "ok": true,
+                "why": "先问语言和容器，再决定要不要自己写单例类"
+              },
+              {
+                "label": "单例在 C++ 里实现不了",
+                "ok": false,
+                "why": "C++11 的局部静态就是语言级的线程安全单例"
+              },
+              {
+                "label": "单例必然违反里氏替换",
+                "ok": false,
+                "why": "单例通常不涉及继承替换"
+              },
+              {
+                "label": "单例一定会内存泄漏",
+                "ok": false,
+                "why": "Meyers 单例在程序结束时会正常析构"
+              }
+            ]
+          },
+          {
+            "stem": "客户端手里只有一个 Shape* 基类指针，不知道它的具体类型，却要造一个同类的新对象。最合适的是？",
+            "covers": "dp.prototype",
+            "choices": [
+              {
+                "label": "原型：调用 shape->clone()",
+                "ok": true,
+                "why": "让对象自己复制自己，客户端不需要知道具体类"
+              },
+              {
+                "label": "简单工厂：create(type)",
+                "ok": false,
+                "why": "客户端说不出 type"
+              },
+              {
+                "label": "单例",
+                "ok": false,
+                "why": "要的是新对象"
+              },
+              {
+                "label": "建造者",
+                "ok": false,
+                "why": "用哪个 Builder 也得先知道具体类型"
+              }
+            ]
+          },
+          {
+            "stem": "抽象工厂保证的核心性质是？",
+            "covers": "dp.abstract-factory",
+            "choices": [
+              {
+                "label": "从同一个工厂拿到的产品一定同族、彼此配套",
+                "ok": true,
+                "why": "客户端只依赖抽象工厂，混搭两族在代码里写不出来"
+              },
+              {
+                "label": "每种产品只有一个实例",
+                "ok": false,
+                "why": "那是单例"
+              },
+              {
+                "label": "产品可以分步组装",
+                "ok": false,
+                "why": "那是建造者"
+              },
+              {
+                "label": "产品通过复制已有实例来创建",
+                "ok": false,
+                "why": "那是原型"
+              }
+            ]
+          },
+          {
+            "stem": "简单工厂是不是 GoF 23 种设计模式之一？",
+            "covers": "dp.simple-factory",
+            "choices": [
+              {
+                "label": "不是，但它是软考考点，也是理解工厂方法的台阶",
+                "ok": true,
+                "why": "GoF 的创建型只有 5 个：单例、工厂方法、抽象工厂、建造者、原型"
+              },
+              {
+                "label": "是，属于创建型",
+                "ok": false,
+                "why": "它不在 GoF 的 23 种里"
+              },
+              {
+                "label": "是，属于结构型",
+                "ok": false,
+                "why": "它既不在 23 种里，也不是结构型"
+              },
+              {
+                "label": "不是，软考也不考",
+                "ok": false,
+                "why": "软考会考它的结构与缺陷"
+              }
+            ]
+          },
+          {
+            "stem": "同一个 Director::construct() 交给 ChickenBuilder 和 FishBuilder，造出了两种不同的套餐。这体现了建造者意图里的哪一句？",
+            "covers": "dp.builder",
+            "choices": [
+              {
+                "label": "同样的构建过程可以创建不同的表示",
+                "ok": true,
+                "why": "Director 固定步骤顺序，表示随具体 Builder 变化"
+              },
+              {
+                "label": "保证一个类仅有一个实例",
+                "ok": false,
+                "why": "那是单例的意图"
+              },
+              {
+                "label": "提供创建一系列相关对象的接口",
+                "ok": false,
+                "why": "那是抽象工厂的意图"
+              },
+              {
+                "label": "用原型实例指定要创建对象的种类",
+                "ok": false,
+                "why": "那是原型的意图"
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "id": "structural",
