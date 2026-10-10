@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { Canvas } from "@react-three/fiber";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Html } from "@react-three/drei";
 import * as THREE from "three";
 import { openApp, type AppDto, type CatalogDto } from "../api";
@@ -7,37 +7,129 @@ import { openApp, type AppDto, type CatalogDto } from "../api";
 const STATE_COLOR: Record<AppDto["state"], string> = {
   stopped: "#b0b4c8",
   starting: "#ff9800",
-  ready: "#4caf50",
+  ready: "#2e9e44",
 };
 
-function IconNode({ app, active, onHover }: { app: AppDto; active: boolean; onHover: (id: string | null) => void }) {
+const SPHERE_R = 34;
+
+// 图标徽章贴图：SVG 光栅化到透明底画布，作为球面正前方贴片的纹理。
+// material 随贴图到位用 key 重建（动态挂 map 不触发 shader 重编译，会渲染成白球）。
+function useIconTexture(app: AppDto): THREE.Texture | null {
+  const [texture, setTexture] = useState<THREE.Texture | null>(null);
+  useEffect(() => {
+    let alive = true;
+    const canvas = document.createElement("canvas");
+    canvas.width = 256;
+    canvas.height = 256;
+    const ctx = canvas.getContext("2d")!;
+    const finish = () => {
+      if (!alive) return;
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      setTexture(tex);
+    };
+    if (app.icon) {
+      const img = new Image();
+      img.onload = () => {
+        ctx.clearRect(0, 0, 256, 256);
+        ctx.drawImage(img, 28, 28, 200, 200);
+        finish();
+      };
+      img.onerror = finish;
+      img.src = app.icon;
+    } else {
+      // 兜底：accent 圆底 + letter。
+      ctx.clearRect(0, 0, 256, 256);
+      ctx.fillStyle = app.accent;
+      ctx.beginPath();
+      ctx.arc(128, 128, 110, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "white";
+      ctx.font = "600 96px 'Segoe UI', sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(app.letter.slice(0, 2), 128, 130);
+      finish();
+    }
+    return () => {
+      alive = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [app.id]);
+  return texture;
+}
+
+function IconSphere({
+  app, active, hovered, onHover,
+}: {
+  app: AppDto;
+  active: boolean;
+  hovered: boolean;
+  onHover: (id: string | null) => void;
+}) {
   const [x, y, z] = app.pos;
+  const texture = useIconTexture(app);
+  const mesh = useRef<THREE.Mesh>(null);
+  // 悬停缩放用帧插值，球体的呼吸感比直接跳 scale 顺。
+  useFrame((_, delta) => {
+    if (!mesh.current) return;
+    const target = hovered ? 1.3 : 1;
+    const s = mesh.current.scale.x + (target - mesh.current.scale.x) * Math.min(1, delta * 10);
+    mesh.current.scale.setScalar(s);
+  });
+
+  // 贴片纹理到位前不挂徽章（避免白方块一闪）。
+  const badgeReady = texture !== null;
+
   return (
-    // 图标与中文文字走 DOM 叠加（drei Html）：清晰、可点、可 CSS 动画。
-    <Html position={[x, y, z]} center distanceFactor={900} zIndexRange={[10, 0]}>
-      <div
-        className="tile"
-        data-state={app.state}
-        style={{
-          opacity: active ? 1 : 0.88,
-          transform: active ? "scale(1.12)" : "scale(1)",
-          transition: "transform 140ms ease-out, opacity 140ms",
-        }}
+    <group position={[x, y, z]}>
+      <mesh
+        ref={mesh}
         onClick={() => openApp(app.id).catch(console.error)}
-        onMouseEnter={() => onHover(app.id)}
-        onMouseLeave={() => onHover(null)}
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          onHover(app.id);
+        }}
+        onPointerOut={() => onHover(null)}
       >
-        {app.icon ? (
-          <img src={app.icon} alt="" />
-        ) : (
-          <div className="fallback" style={{ background: app.accent }}>
-            {app.letter}
-          </div>
-        )}
-        <span className="name">{app.title}</span>
-        <span className="dot" style={{ background: STATE_COLOR[app.state] }} />
-      </div>
-    </Html>
+        <sphereGeometry args={[SPHERE_R, 48, 48]} />
+        <meshStandardMaterial
+          color={app.accent}
+          roughness={0.4}
+          metalness={0.08}
+          transparent
+          opacity={active ? 1 : 0.75}
+        />
+      </mesh>
+      {/* 图标徽章：贴在球面正前方（+Z 朝向相机）的透明贴片，随球体一起缩放。 */}
+      {badgeReady && (
+        <mesh position={[0, 0, SPHERE_R + 1.5]} scale={hovered ? 1.15 : 1}>
+          <planeGeometry args={[SPHERE_R * 1.15, SPHERE_R * 1.15]} />
+          <meshBasicMaterial map={texture} transparent depthWrite={false} />
+        </mesh>
+      )}
+      {/* 运行状态环：贴着球面的细环。 */}
+      <mesh rotation={[Math.PI / 2.6, 0.4, 0]}>
+        <torusGeometry args={[SPHERE_R + 7, 2.4, 12, 48]} />
+        <meshBasicMaterial color={STATE_COLOR[app.state]} transparent opacity={hovered ? 1 : 0.85} />
+      </mesh>
+      <Html position={[0, -(SPHERE_R + 26), 0]} center distanceFactor={900} zIndexRange={[10, 0]}>
+        <div
+          style={{
+            color: "#3a3a44",
+            fontSize: 13,
+            textShadow: "0 1px 2px rgba(255,255,255,0.9)",
+            whiteSpace: "nowrap",
+            textAlign: "center",
+            pointerEvents: "none",
+            opacity: active ? 1 : 0.6,
+            transition: "opacity 140ms",
+          }}
+        >
+          {app.title}
+        </div>
+      </Html>
+    </group>
   );
 }
 
@@ -62,17 +154,25 @@ function OrbitRing({ radius, tilt, yaw }: { radius: number; tilt: number; yaw: n
   return <primitive object={line} />;
 }
 
-function TigerCore() {
+function TigerCore({ hovered }: { hovered: string | null }) {
   // 虎头贴图等图标管线接入后替换成 sprite；骨架阶段用发光核心占位。
   return (
-    <mesh>
-      <sphereGeometry args={[46, 32, 32]} />
-      <meshStandardMaterial color="#e8862e" emissive="#a44f10" emissiveIntensity={0.6} />
-    </mesh>
+    <group>
+      {/* 恒星光：虎头是场景唯一的光源，行星朝向它的一侧亮、背面暗。 */}
+      <pointLight color="#ffb45e" intensity={140000} decay={2} distance={6000} />
+      <mesh>
+        <sphereGeometry args={[46, 32, 32]} />
+        <meshStandardMaterial
+          color="#e8862e"
+          emissive="#a44f10"
+          emissiveIntensity={hovered === null ? 0.6 : 0.35}
+        />
+      </mesh>
+    </group>
   );
 }
 
-// 领域轨道环（ADR 0125）：虎头居中，每个领域一条倾斜轨道，图标是环上的行星；
+// 领域轨道环（ADR 0125）：虎头居中为恒星，每颗应用是一颗带图标徽章的行星球体；
 // 布局坐标全部来自 launcher-core 的 layout3d，前端只渲染。
 export default function OrbitScene({ catalog }: { catalog: CatalogDto }) {
   const [hovered, setHovered] = useState<string | null>(null);
@@ -82,16 +182,18 @@ export default function OrbitScene({ catalog }: { catalog: CatalogDto }) {
       onCreated={({ camera }) => camera.lookAt(0, 0, 0)}
       style={{ background: "radial-gradient(ellipse at center, #ffffff 0%, #eef0fa 60%, #e3e7f6 100%)" }}
     >
-      <ambientLight intensity={0.9} />
-      <TigerCore />
+      <ambientLight intensity={1.2} />
+      <directionalLight position={[600, 1200, 800]} intensity={1.1} />
+      <TigerCore hovered={hovered} />
       {catalog.orbits.map((o, i) => (
         <OrbitRing key={i} radius={o.radius} tilt={o.tilt} yaw={o.yaw} />
       ))}
       {catalog.apps.map((a) => (
-        <IconNode
+        <IconSphere
           key={a.id + a.pos.join()}
           app={a}
           active={hovered === null || hovered === a.id}
+          hovered={hovered === a.id}
           onHover={setHovered}
         />
       ))}
