@@ -17,7 +17,7 @@ on:
         description: 只跑哪个应用（all 为全量，sources 只跑跨应用检查）
         type: choice
         default: all
-        options: [all, sources, c-plus-plus, pocket_cube, machine, polaris, data-structures, algorithms, mathematics, ascent, math-tools, gtkmm, driver, software, nas_admin, launcher, c-gui-lab, embedded, database, design-patterns, os, network, firmware, microcontroller, rtos, linux, organization, cs408, python, machine-learning, deep-learning, llm-app, llm-finetune, competitions]
+        options: [all, sources, c-plus-plus, pocket_cube, machine, polaris, data-structures, algorithms, mathematics, ascent, math-tools, gtkmm, driver, software, nas_admin, launcher, c-gui-lab, embedded, database, design-patterns, os, network, firmware, microcontroller, rtos, linux, organization, cs408, python, machine-learning, deep-learning, llm-app, llm-finetune, competitions, earth]
 
 permissions:
   contents: read
@@ -271,7 +271,7 @@ jobs:
     name: ${{ matrix.app }}（${{ matrix.os }}）
     if: >-
       contains(fromJSON('["algorithms","ascent","competitions","cs408","database",
-      "data-structures","deep-learning","design-patterns","embedded","firmware",
+      "data-structures","deep-learning","design-patterns","earth","embedded","firmware",
       "gtkmm","linux","llm-app","llm-finetune","math-tools","mathematics",
       "machine-learning","microcontroller","network","organization","os","polaris",
       "python","rtos","software"]'), inputs.app || 'all')
@@ -282,7 +282,7 @@ jobs:
       matrix:
         app: >-
           ${{ fromJSON((inputs.app || 'all') == 'all' && '["algorithms","ascent","competitions","cs408","database",
-          "data-structures","deep-learning","design-patterns","embedded","firmware",
+          "data-structures","deep-learning","design-patterns","earth","embedded","firmware",
           "gtkmm","linux","llm-app","llm-finetune","math-tools","mathematics",
           "machine-learning","microcontroller","network","organization","os","polaris",
           "python","rtos","software"]' || format('["{0}"]', inputs.app)) }}

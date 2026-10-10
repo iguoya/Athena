@@ -61,6 +61,7 @@
 | [0123](0123-embedded-practice-subapps-to-electronic-info.md) | rtos、microcontroller、firmware 去挂靠入「电子信息」圈 | 已接受；沿 0111/0121 入圈即去挂靠先例 |
 | [0124](0124-software-to-programming-group.md) | software 去挂靠入「程序设计」圈 | 已接受；领域圈由 0126 改回「计算机」 |
 | [0126](0126-software-database-to-computing-group.md) | software 与 database 入「计算机」圈，软考系聚回一处；database 去挂靠 | 已接受；修订 0124 的圈归属与 0103 的 database 行 |
+| [0127](0127-gui-retired-webui-succeeds.md) | gui（Slint）退役——webui 转正为唯一图形前端；旧版可执行产物删除，托盘与自启动待 webui 迁移 | 已接受 |
 | [0128](0128-earth-app.md) | 新增图谱/参考类应用 earth（「地球」，「程序设计」圈暂存归属，端口 1511）：真实比例的地球分层 3D 可视化——WGS84 椭球、PREM、US Standard Atmosphere 1976 标准模型驱动，不建进度库，壳复制自 polaris | 已接受 |
 
 ## 仓库工程

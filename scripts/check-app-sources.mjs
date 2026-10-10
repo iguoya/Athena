@@ -101,7 +101,7 @@ const report = [];
 
 // 不判分的应用（素材坑、图谱/参考类，REPOSITORY.md 三类判据；ADR 0089）：
 // 出处规范不适用——不报「未接入」、不扫条目。清单过期了按判据重新归类。
-const NON_GRADED = new Set(["math-tools", "competitions"]);
+const NON_GRADED = new Set(["math-tools", "competitions", "earth"]);
 
 for (const app of readdirSync(appsDir).sort()) {
   const appDir = join(appsDir, app);

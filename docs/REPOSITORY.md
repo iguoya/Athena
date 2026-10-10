@@ -49,6 +49,8 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
                  实践应用的主场（ADR 0120、0122）
   llm-finetune/  大模型微调与部署（Tauri 2 + React）——「人工智能」圈；LoRA、量化、本地推理与服务化（ADR 0120、0122）
   competitions/  赛历（Tauri 2 + Vite）——「大赛」圈的竞赛清单，图谱/参考类，不是学习应用（ADR 0114）
+  earth/         地球（Tauri 2 + React + Three.js）——真实比例的地球分层 3D 可视化，图谱/参考类，
+                 「程序设计」圈暂存归属（ADR 0128）
 practice/<id>/ 项目应用：动手做的独立小项目，不接掌握度体系（ADR 0060）
   pocket_cube/ 2 阶魔方（GTK4 / gtkmm）
   nas_admin/   驾考中心服务后台（Flask-AppBuilder，部署在软路由）
@@ -104,6 +106,7 @@ archive/       历史归档，不参与构建
 | `llm-app` | 大模型应用开发（「人工智能」圈，ADR 0120、0122） | `athena-llm-app` | `llmapp.` |
 | `llm-finetune` | 大模型微调与部署（「人工智能」圈，ADR 0120、0122） | `athena-llm-finetune` | `finetune.` |
 | `competitions` | 赛历（「大赛」圈，ADR 0114） | `athena-competitions` | （无进度库） |
+| `earth` | 地球（「程序设计」圈暂存归属，ADR 0128） | `athena-earth` | （无进度库） |
 
 `driver` 是机动车理论考试，不是设备驱动；Dart 包名仍是 `athena_driver`（包名不能有连字符）。
 C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。进程和发行包文件名是
@@ -127,7 +130,8 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
   **图谱/参考类应用**：仍受「独立应用」一节的平级、隔离、`app.json` 启动规则约束，
   但**不**掌握度、不进度库、不激励——「跨应用教学规范」一节对它不生效，具体规则
   以它自己的 `AGENTS.md` 为准。当前：`polaris`、`math-tools`、`competitions`（赛历，ADR 0114；`math-tools`是数学学习的配套工具，
-  因需要在启动器里和 `mathematics` 关联而归 `subjects/`，不是先例，见 ADR 0084）。
+  因需要在启动器里和 `mathematics` 关联而归 `subjects/`，不是先例，见 ADR 0084）、
+  `earth`（地球，真实比例分层可视化，ADR 0128）。
 - **还没决定做成应用，只是存素材和结论，等以后真正开工？** 那连"应用"都不算，
   不需要 `app.json` 也不需要 `scripts/check.py`，根验证入口按设计静默跳过它——
   这是预期行为，不是遗漏。当前无素材坑目录（`design-patterns` 曾是唯一的素材坑，

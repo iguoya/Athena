@@ -39,7 +39,8 @@ subjects/<id>/  课程学科：cpp machine data-structures algorithms linux orga
                 database firmware microcontroller rtos（ADR 0103、0106；
                 os、network 兼作软设承接章，本体归 cs408，ADR 0118、0119）
                 polaris、math-tools、competitions（图谱/参考类，math-tools 是数学学习的配套工具，
-                ADR 0084；competitions 是「大赛」圈的赛历，ADR 0114）
+                ADR 0084；competitions 是「大赛」圈的赛历，ADR 0114）、earth（真实比例的
+                地球分层 3D 可视化，「程序设计」圈暂存归属，ADR 0128）
 practice/<id>/  项目应用：pocket_cube nas_admin c-gui-lab（ADR 0060）
 launcher/       启动器：core/ gui/ macos/
 docs/           跨应用 ADR（decisions/）与本文件各节的完整阐述
