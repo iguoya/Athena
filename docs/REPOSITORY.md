@@ -33,7 +33,9 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
   rtos/             实时操作系统（Tauri 2 + Vue 3）——嵌入第 4 章实践课程，挂靠 embedded（ADR 0106）
   gtkmm/       gtkmm 官方教程精读（Tauri 2 + React）
   polaris/       技术体系图谱（Tauri 2 + React，原 Qt 壳已退役，ADR 0015）——不是学习应用，见下文
-  organization/  计算机组成原理（Tauri 2 + Vite）——408 组成原理，「计算机」圈顶层，不设 parent（ADR 0115）
+  organization/  计算机组成原理（Tauri 2 + Vite）——408 组成原理，挂靠 cs408、引用挂到 software（ADR 0115、0116）
+  cs408/         408 计算机学科专业基础（Tauri 2 + Vite）——考研考试主应用，「考研」圈；数据结构、算法设计、
+                 操作系统、计算机网络以引用挂在它下面（ADR 0116）
   competitions/  赛历（Tauri 2 + Vite）——「大赛」圈的竞赛清单，图谱/参考类，不是学习应用（ADR 0114）
 practice/<id>/ 项目应用：动手做的独立小项目，不接掌握度体系（ADR 0060）
   pocket_cube/ 2 阶魔方（GTK4 / gtkmm）
@@ -82,6 +84,7 @@ archive/       历史归档，不参与构建
 | `gtkmm` | gtkmm 官方教程精读 | `athena-gtkmm` | `gtkmm.` |
 | `polaris` | 北极星 | `athena-polaris` | （无进度库） |
 | `organization` | 计算机组成原理（408，ADR 0115） | `athena-organization` | `org.` |
+| `cs408` | 408 计算机学科专业基础（考研考试主应用，ADR 0116） | `athena-cs408` | `cs408.` |
 | `competitions` | 赛历（「大赛」圈，ADR 0114） | `athena-competitions` | （无进度库） |
 
 `driver` 是机动车理论考试，不是设备驱动；Dart 包名仍是 `athena_driver`（包名不能有连字符）。
