@@ -10,6 +10,8 @@ export default defineConfig(() => ({
   server: {
     port: 1491,
     strictPort: true,
+    // 公共呈现件在仓库根 packages/viz（ADR 0137）：Vite 默认不放行工作区之外的文件。
+    fs: { allow: [".", "../../packages/viz"] },
     host: host || false,
     hmr: host
       ? {

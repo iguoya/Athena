@@ -12,7 +12,7 @@ import {
   mountTracePlayer,
   parseTrace,
   stopTracePlayback,
-} from "./trace-player";
+} from "@athena/viz";
 import {
   fillKey,
   renderFillCode,
@@ -20,6 +20,7 @@ import {
   type FillCodeBlock,
   type FillContext,
 } from "./fill-code";
+import "@athena/viz/trace-player.css";
 import "./styles.css";
 
 /** Vite 打包进前端的案例原文：浏览器预览时可读；保存/编译仍需 Tauri。 */
@@ -2520,7 +2521,7 @@ async function runLab() {
       // 有 #dp-trace 快照走步进回放器（ADR 0004）；否则保持 key=value 文本模式。
       stopTracePlayback();
       const title = `<div class="pane-title">观察区</div>`;
-      const frames = result.ok ? parseTrace(result.stdout) : [];
+      const frames = result.ok ? parseTrace(result.stdout, "#dp-trace") : [];
       if (frames.length) {
         observe.innerHTML = title;
         mountTracePlayer(observe, frames);

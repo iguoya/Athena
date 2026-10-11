@@ -1,7 +1,9 @@
-// 步进可视化回放器（本应用 ADR 0004）。
-// 只消费 C++ 驱动打印的 `#ds-trace {...}` 状态快照行并逐步渲染，不在前端
-// 复刻任何算法真相；stdout 无快照时观察区走原 key=value 文本模式。
-// 观察区同一时刻至多一个回放器，播放定时器用模块级单例管理。
+// 步进可视化回放器（公共件，ADR 0137；协议出处：data-structures 应用 ADR 0004）。
+// 只消费真实进程打印的 `<marker> {...}` 状态快照行并逐步渲染，不在前端复刻
+// 任何算法真相；stdout 无快照时由调用方走原 key=value 文本模式。
+// marker 由各应用自定（如 `#ds-trace`、`#algo-trace`），公共件不内置任何应用名。
+// 同一时刻至多一个回放器，播放定时器用模块级单例管理。
+// 样式见 trace-player.css，颜色取自消费方已有的 CSS 变量。
 
 export interface TraceFrame {
   kind: string;
@@ -11,16 +13,17 @@ export interface TraceFrame {
   values: number[];
 }
 
-const PREFIX = "#ds-trace ";
 const PLAY_INTERVAL_MS = 600;
 
-export function parseTrace(stdout: string): TraceFrame[] {
+/** 把进程输出里以 `marker` + 空格开头的行解析成帧；坏行跳过。 */
+export function parseTrace(stdout: string, marker: string): TraceFrame[] {
+  const prefix = `${marker} `;
   const frames: TraceFrame[] = [];
   for (const raw of stdout.split("\n")) {
     const line = raw.trimStart();
-    if (!line.startsWith(PREFIX)) continue;
+    if (!line.startsWith(prefix)) continue;
     try {
-      const f = JSON.parse(line.slice(PREFIX.length)) as Partial<TraceFrame>;
+      const f = JSON.parse(line.slice(prefix.length)) as Partial<TraceFrame>;
       // 协议要求每行独立合法；坏行跳过，不拖垮整段回放。
       if (typeof f.kind === "string" && typeof f.step === "number") {
         frames.push(f as TraceFrame);
@@ -104,12 +107,26 @@ function renderUnknown(f: TraceFrame): string {
   return `<pre class="trace-raw">${esc(JSON.stringify(f, null, 2))}</pre>`;
 }
 
-function renderFrame(f: TraceFrame): string {
-  return f.kind === "list" ? renderListSvg(f) : renderUnknown(f);
+/** 按 `kind` 把一帧画成 HTML/SVG 字符串；未登记的 kind 降级为原始 JSON。 */
+export type FrameRenderer = (f: TraceFrame) => string;
+
+const builtinRenderers: Record<string, FrameRenderer> = { list: renderListSvg };
+
+export interface TracePlayerOptions {
+  /** 追加或覆盖某个 kind 的渲染器；内置 `list`。 */
+  renderers?: Record<string, FrameRenderer>;
 }
 
-export function mountTracePlayer(container: HTMLElement, frames: TraceFrame[]) {
+export function mountTracePlayer(
+  container: HTMLElement,
+  frames: TraceFrame[],
+  options: TracePlayerOptions = {},
+) {
   stopTracePlayback();
+  const renderers = { ...builtinRenderers, ...options.renderers };
+  // 只认自有属性：kind 若是 `constructor` 之类原型链上的名字，不能误当渲染器。
+  const renderFrame = (f: TraceFrame) =>
+    (Object.hasOwn(renderers, f.kind) ? renderers[f.kind] : renderUnknown)(f);
 
   const root = document.createElement("div");
   root.className = "trace-player";
