@@ -423,6 +423,13 @@ pub fn run() {
             tauri::RunEvent::ExitRequested { .. } => {
                 quitting_for_run.store(true, Ordering::SeqCst);
             }
+            // dev 构建里 Tauri 会在这一刻用内嵌图标再设一次 Dock。放在它之后，
+            // release（没有内嵌图标）也走同一条。
+            tauri::RunEvent::Ready => {
+                if let Some(window) = app.get_webview_window("main") {
+                    app_icon::install(&window);
+                }
+            }
             tauri::RunEvent::Reopen {
                 has_visible_windows: false,
                 ..
