@@ -50,7 +50,7 @@
 | [0032](0032-independent-apps-launched-as-processes.md) | 异构学习应用作为独立进程共处一个仓库 | 已接受；启动路径见 0041 |
 | [0037](0037-independent-apps-own-their-progress-store.md) | 每个独立应用自建自管自己的进度库 | 已接受；库位置由 0053 修订 |
 | [0041](0041-independent-apps-launch-in-dev-mode.md) | 独立应用从源码以开发模式启动，不经打包副本 | 已接受 |
-| [0042](0042-c-language-qt-qml-lessons.md) | C 语言学习应用用 Qt Quick / QML 写教案 | 已接受 |
+| [0042](0042-c-language-qt-qml-lessons.md) | C 语言学习应用用 Qt Quick / QML 写教案 | 已接受；决策 1、3 由 0138 取代（machine 迁 Tauri + React） |
 | [0044](0044-menubar-launcher.md) | 常驻菜单栏的启动器，主程序也只是其中一项 | 已接受 |
 | [0045](0045-apps-are-peers.md) | C++ 教程降级为 `subjects/cpp`，所有学习应用平级 | 已接受；目录由 0060 拆分 |
 | [0060](0060-subjects-and-practice.md) | `apps/` 拆成 `subjects/`（课程学科）与 `practice/`（项目应用） | 已接受 |
@@ -131,3 +131,4 @@
 | [0135](0135-share-low-cost-build-layer-first.md) | 共享分层推进：A 档（同栈核心依赖版本对齐+跨应用版本检查，Rust target 已由启动器共享）现在做，B 档（npm/Cargo workspace）另立 ADR，C 档（schema/内容/通用代码）仍暂缓；同栈不再要求构建隔离，异构栈各自构建 | 已接受；收窄 0132，修订 0032 决策 2，更正 0130 背景中 target 的说法 |
 | [0136](0136-unify-on-pnpm.md) | 前端包管理器统一为 pnpm，去掉 ascent 的特殊：磁盘去重、依赖严格、catalog 与供应链防护优于 npm；迁移保持版本不变 | 已接受；迁移已执行（Tauri 应用 package-lock 换 pnpm-lock，check.py 钉 packageManager；c-gui-lab 是 Electron 异构栈不在此列）；修订 0135 决策 3 的 ascent 例外 |
 | [0137](0137-viz-shared-package.md) | 可视化呈现件抽成仓库根 `packages/viz`（`@athena/viz`，纯 TS 源码不预编译）：同类功能只留一份实现，六份拷贝的 trace-player 收敛为一份（解析前缀参数化、渲染器按 kind 注册）；不触及 schema/内容/进度库，是 C 档的明示例外；data-structures 先试点，其余使用方逐个迁移，防回流检查跟进 | 已接受；例外于 0135 决策 5 与 C 档；满足 0132 决策 5 第二条重启条件；按 0134 先草拟、复看后落 |
+| [0138](0138-course-apps-unify-tauri-react.md) | 课程/讲解/演示类应用统一 Tauri 2 + React（Vue、原生 TS 壳、Qt 壳逐波改造），页面渲染以摘星为基线，schema 不动；共享配置按课程属性四要素准入；machine 改造、c-plus-plus 与 driver 暂缓 | 已接受；修订 0133（默认→强制），取代 0042 决策 1、3；迁移待使用者逐波指派 |

@@ -13,3 +13,4 @@
 | [0005](0005-machine-c-and-assembly-tracks.md) | 改名 machine，C 与汇编两条线独立又联合 | 已接受；修订 0002、0004 第 2 条；豁免仓库 0054（依 0080）；第 8 条语法部分由 0007 修订 |
 | [0006](0006-multi-target-run-environment.md) | 多目标运行环境与平台矩阵 | 已接受 |
 | [0007](0007-x86-syntax-follows-real-usage.md) | x86-64 汇编语法不强制统一，按目标的实际用法并可切换 | 已接受；修订 0005 第 8 条的语法部分 |
+| [0008](0008-migrate-shell-to-tauri-react.md) | 壳由 Qt6/QML 迁到 Tauri 2 + React；内容、实验、前缀不变，`playground/` 保留；实验链路先做可行性验证 | 已接受，迁移未执行；取代仓库 0042 决策 1、3 |
