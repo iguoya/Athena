@@ -29,7 +29,7 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: "1"
     defaults:
       run:
-        working-directory: subjects/cpp
+        working-directory: subjects/c-plus-plus
 
     steps:
       - name: Check out tagged source
@@ -67,7 +67,7 @@ jobs:
         run: |
           python3 scripts/package_macos.py \
             --project-root . \
-            --binary build-release/athena-cpp \
+            --binary build-release/athena-c-plus-plus \
             --output-dir dist \
             --version "${{ steps.version.outputs.version }}"
 
@@ -84,7 +84,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: athena-cpp-macos-${{ matrix.architecture }}
-          path: subjects/cpp/dist/athena-cpp-*.dmg
+          path: subjects/c-plus-plus/dist/athena-cpp-*.dmg
           if-no-files-found: error
           retention-days: 7
 
@@ -94,7 +94,7 @@ jobs:
     timeout-minutes: 45
     defaults:
       run:
-        working-directory: subjects/cpp
+        working-directory: subjects/c-plus-plus
 
     steps:
       - name: Check out tagged source
@@ -167,8 +167,8 @@ jobs:
         with:
           name: athena-cpp-linux-x86_64
           path: |
-            subjects/cpp/dist/athena-cpp_*.deb
-            subjects/cpp/dist/athena-cpp-*-linux-x86_64.AppImage
+            subjects/c-plus-plus/dist/athena-cpp_*.deb
+            subjects/c-plus-plus/dist/athena-cpp-*-linux-x86_64.AppImage
           if-no-files-found: error
           retention-days: 7
 
@@ -179,7 +179,7 @@ jobs:
     defaults:
       run:
         shell: msys2 {0}
-        working-directory: subjects/cpp
+        working-directory: subjects/c-plus-plus
 
     steps:
       - name: Check out tagged source
@@ -234,13 +234,13 @@ jobs:
           export PATH="$PATH:$USERPROFILE/.dotnet/tools"
           python scripts/package_windows.py \
             --project-root . \
-            --binary build-windows-release/athena-cpp.exe \
+            --binary build-windows-release/athena-c-plus-plus.exe \
             --output-dir dist \
             --version "${{ steps.version.outputs.version }}"
 
       - name: Verify Windows packages
         shell: pwsh
-        working-directory: subjects/cpp
+        working-directory: subjects/c-plus-plus
         run: |
           $version = "${{ steps.version.outputs.version }}"
           $zip = "dist/athena-cpp-$version-windows-x64.zip"
@@ -263,8 +263,8 @@ jobs:
         with:
           name: athena-cpp-windows-x64
           path: |
-            subjects/cpp/dist/athena-cpp-*-windows-x64.zip
-            subjects/cpp/dist/athena-cpp-*-windows-x64.msi
+            subjects/c-plus-plus/dist/athena-cpp-*-windows-x64.zip
+            subjects/c-plus-plus/dist/athena-cpp-*-windows-x64.msi
           if-no-files-found: error
           retention-days: 7
 
@@ -694,7 +694,7 @@ jobs:
           sha256sum "${files[@]}" > SHA256SUMS.txt
 
       - name: Build release notes from CHANGELOG
-        working-directory: subjects/cpp
+        working-directory: subjects/c-plus-plus
         run: |
           version="${GITHUB_REF_NAME#v}"
           # 有手写节就用；缺失则统计上一标签至今的提交并写回 CHANGELOG，
