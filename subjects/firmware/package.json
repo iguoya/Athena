@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 1494 --strictPort",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
     "tauri:dev": "tauri dev",
@@ -14,17 +14,21 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^2.12.0",
-    "vue": "^3.5.13"
-},
+    "clsx": "^2.1.1",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "tailwind-merge": "^3.7.0"
+  },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
     "@tauri-apps/cli": "^2.12.0",
-    "@vitejs/plugin-vue": "^6.0.9",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
-    "vite": "^8.3.1",
-    "vue-tsc": "^3.3.12"
-},
+    "vite": "^8.3.1"
+  },
   "allowScripts": {
     "esbuild@0.25.12": true
   }

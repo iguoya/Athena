@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+/* 骨架阶段的最小样式：内容驱动 UI 落地时整体替换（ADR 0058）。
+   渲染栈按摘星基线（ADR 0138）：Tailwind v4 + 令牌；组件不硬编码颜色，走下面的令牌。 */
+@theme {
+  --color-surface: #ffffff;
+  --color-line: #dfe5de;
+  --color-muted: #6b7280;
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  font-family: "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+  background: #f4f6f3;
+  color: #1f2a24;
+}
