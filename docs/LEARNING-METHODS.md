@@ -96,7 +96,7 @@
 |---|---|---|
 | ascent 摘星 | 句组页先猜后翻（P1 ✓）；分阶句组（i+1） | 词库阶梯的词卡当前直接亮释义——改为「词 + 语境例句」先行、释义折叠点击展开（P1）；Today 任务卡把「到期复习」提到首位（P2） |
 | software 软件设计师 | quiz 即检索（P4 练习侧）；viz 双重编码；解析含错误归因 | topic 讲解页每节末尾固定挂「立即检索」区（该节 2–4 题，答完才更新掌握显示）——讲解与检索 1:1 绑定（P2/P3）；整卷模式加显式「考核中」模式标记（P4） |
-| embedded 嵌入式 | 与 softcert 同构（Vue 3） | 同上两条，随内容建设推进；硬件实验视图出现后遵守 P1（先预测引脚/时序行为再上板验证） |
+| embedded 嵌入式 | 与 softcert 同构（界面体验刻意不同，前端 React，embedded ADR 0002） | 同上两条，随内容建设推进；硬件实验视图出现后遵守 P1（先预测引脚/时序行为再上板验证） |
 | dsa 数据结构与算法 | trace-player（追踪题）；lab-editor（实验编辑器）；即时编译反馈（P4 ✓） | 节结构模板化为 PRIMM 五段（Predict 段 = 代码 + 预测输入框，运行前必填）；新增 Parsons 拖拽排序题作为「读码 → 写码」的中间题型 |
 | c-plus-plus C++ | lesson → experiment_dock → checkpoint_view（样例→实验→检查点，P3 ✓）；**predict 块已实现**（scored=false 的先猜再验，ValueSemantics 课程已用 5 处） | 实验撤除序列：完整样例 → 缺步 → 空白（P3）；新课程内容沿用 predict 块组织 Predict 段 |
 | mathematics 数学 | diagnostic（诊断）、drills（练习）、graph-view / transform-view（多表征） | drills 组卷改**交错**逻辑（按已学知识点混出，不按章成串，P2 同源）；每题配 Pólya 分级提示按钮（「理解→计划→执行→回顾」逐级展开，P1 的提示梯）；graph-view 与 transform-view 组成同概念多表征联动 |

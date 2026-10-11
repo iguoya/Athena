@@ -9,7 +9,7 @@
 
 ```
 subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完全平级
-  c-plus-plus/ C++ 教程（GTK4 / gtkmm，原来的"主程序"；原目录名 cpp，进度前缀仍 cpp.）
+  c-plus-plus/ C++ 教程（Tauri 2 + React；原目录名 cpp，进度前缀仍 cpp.。GTK 源码还在目录里，不再是启动路径，见该应用 ADR 0060）
   machine/     C 与机器（Qt Quick / QML，原 c/，ADR 0005）
   data-structures/ 数据结构（Tauri 2）——408 数据结构（45 分），本体挂 cs408；软设以文字指引承接
                    第 3 章（ADR 0108 拆分、0118/0119 定归属；原 algorithm，复名见 ADR 0105）
@@ -17,11 +17,11 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
                    软设以文字指引承接第 8 章（ADR 0108 拆分、0118/0119 定归属）
   ascent/      拾阶（英语师范生四六级、专四专八，Tauri）
   mathematics/ 数学学习（Tauri）
-  math-tools/  数学工具（Tauri）——数学学习的配套工具，图谱/参考类，不是学习应用（ADR 0084）
+  math-tools/  数学工具（Tauri 2 + React）——数学学习的配套工具，图谱/参考类，不是学习应用（ADR 0084）
   driver/      驾考学习（Flutter 桌面，科目一 / 科目四）
   software/    软考中级·软件设计师备考（Tauri 2 + React）——以考试为学科，与 driver 同构；
                各为一级大类「计算机」（ADR 0102）
-  embedded/    嵌入式系统设计师备考（Tauri 2 + Vue 3）——从 software（原 softcert）拆出，
+  embedded/    嵌入式系统设计师备考（Tauri 2 + React）——从 software（原 softcert）拆出，
                一级大类「电子信息」（ADR 0090、0102；定名见 ADR 0097、0100）
   database/         数据库 SQL 实验室（Tauri 2 + React）——软设第 9 章实践课程，计算机圈（ADR 0103、0126）
   design-patterns/  设计模式与程序组织（Tauri 2 + Vite）——「程序设计」圈，不挂靠；软考降为
@@ -33,9 +33,9 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
                     operating-system，改名见 ADR 0104）
   network/          网络与信息安全实验（Tauri 2 + React）——408 计算机网络（25 分），本体挂
                     cs408；软设以文字指引承接第 10 章（ADR 0103 立项、0118/0119 定归属）
-  firmware/         嵌入式程序设计实验（Tauri 2 + Vue 3）——嵌入第 6/8/11 章实践课程，电子信息圈（ADR 0103、0123）
-  microcontroller/  硬件实验台（Tauri 2 + Vue 3）——嵌入第 2/5 章实践课程，电子信息圈（ADR 0103、0123）
-  rtos/             实时操作系统（Tauri 2 + Vue 3）——嵌入第 4 章实践课程，电子信息圈（ADR 0106、0123）
+  firmware/         嵌入式程序设计实验（Tauri 2 + React）——嵌入第 6/8/11 章实践课程，电子信息圈（ADR 0103、0123）
+  microcontroller/  硬件实验台（Tauri 2 + React）——嵌入第 2/5 章实践课程，电子信息圈（ADR 0103、0123）
+  rtos/             实时操作系统（Tauri 2 + React）——嵌入第 4 章实践课程，电子信息圈（ADR 0106、0123）
   gtkmm/       gtkmm 官方教程精读（Tauri 2 + React）
   polaris/       技术体系图谱（Tauri 2 + React，原 Qt 壳已退役，ADR 0015）——不是学习应用，见下文
   organization/  计算机组成原理（Tauri 2 + Vite）——408 组成原理，挂靠 cs408、引用挂到 software（ADR 0115、0116）

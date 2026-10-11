@@ -198,7 +198,6 @@ STACK_VERSIONS = {
     "@tauri-apps/plugin-opener": "^2.7.0",
     "@fontsource/noto-sans-sc": "^5.3.0",
     "lucide-react": "^1.52.0", "motion": "^14.0.0",
-    "@vitejs/plugin-vue": "^6.0.9", "vue-tsc": "^3.3.12",
 }
 # 例外必须写理由：(应用, 依赖) -> 为什么不跟。"*" 表示该应用整体豁免。
 STACK_VERSION_EXEMPT: dict[tuple[str, str], str] = {
@@ -239,6 +238,63 @@ def run_stack_version_check() -> None:
             f"同栈依赖版本不一致（{len(problems)} 处）。对齐到 scripts/check.py 的 STACK_VERSIONS，"
             "确有理由不跟的在 STACK_VERSION_EXEMPT 写明理由。"
         )
+
+
+# 课程/讲解/演示类应用统一 Tauri 2 + React（ADR 0138 决策 2、9）。
+# 豁免表逐项列出尚未迁移或本轮暂缓的应用，**每迁完一个就删一行**，表空即全部统一。
+# 这里只管 subjects/（学习应用与图谱/参考类）；practice/ 自由发挥，不检查。
+REACT_FRONTEND_EXEMPT: dict[str, str] = {
+    "algorithms": "原生 TS 同源壳，待 ADR 0138 迁移（波 4）",
+    "cs408": "原生 TS 同源壳，待 ADR 0138 迁移（波 4）",
+    "data-structures": "原生 TS 同源壳，待 ADR 0138 迁移（波 4）",
+    "linux": "原生 TS 同源壳，待 ADR 0138 迁移（波 4）",
+    "organization": "原生 TS 同源壳，待 ADR 0138 迁移（波 4）",
+    "design-patterns": "原生 TS 自有壳，待 ADR 0138 迁移（波 6）",
+    "mathematics": "原生 TS 自有壳，待 ADR 0138 迁移（波 6）",
+    "machine": "Qt6/QML 壳，待 ADR 0138 决策 7 与 machine ADR 0008 迁移（波 5）",
+    "driver": "Flutter 存量投入，ADR 0138 决策 8 本轮暂缓",
+}
+# 正在由别的会话迁移、落库前后两种状态都放行的应用（落库后删这一项）。
+REACT_FRONTEND_EITHER: dict[str, str] = {
+    "c-plus-plus": "Tauri + React 壳正由另一会话落地（c-plus-plus ADR 0060 草稿），GTK 主程序与新壳并存过渡",
+}
+
+
+def run_react_frontend_check() -> None:
+    """课程/图谱类应用必须是 Tauri 2 + React，Vue 一律不允许（ADR 0138）。"""
+    import json
+
+    print("== 跨应用检查：课程类前端统一 Tauri 2 + React ==", flush=True)
+    problems: list[str] = []
+    seen: set[str] = set()
+    for app in sorted((REPO_ROOT / "subjects").iterdir()):
+        if not (app / "app.json").is_file():
+            continue
+        seen.add(app.name)
+        pkg = app / "package.json"
+        tauri = pkg.is_file() and (app / "src-tauri" / "Cargo.toml").is_file()
+        if app.name in REACT_FRONTEND_EITHER:
+            continue
+        if not tauri:
+            if app.name not in REACT_FRONTEND_EXEMPT:
+                problems.append(f"  subjects/{app.name} 不是 Tauri + Node 应用，又不在 REACT_FRONTEND_EXEMPT（ADR 0138）")
+            continue
+        data = json.loads(pkg.read_text(encoding="utf-8"))
+        declared = {**data.get("dependencies", {}), **data.get("devDependencies", {})}
+        if "vue" in declared:
+            problems.append(f"  subjects/{app.name} 还在用 Vue，课程类前端统一 React，Vue 不允许（ADR 0138）")
+        has_react = "react" in declared
+        exempt = app.name in REACT_FRONTEND_EXEMPT
+        if not has_react and not exempt:
+            problems.append(f"  subjects/{app.name} 的前端不是 React，又不在 REACT_FRONTEND_EXEMPT（ADR 0138）")
+        if has_react and exempt:
+            problems.append(f"  subjects/{app.name} 已是 React，应从 REACT_FRONTEND_EXEMPT 删掉这一行")
+    for name in (*REACT_FRONTEND_EXEMPT, *REACT_FRONTEND_EITHER):
+        if name not in seen:
+            problems.append(f"  REACT_FRONTEND_EXEMPT 里的 {name} 已不存在，删掉这一行")
+    if problems:
+        print("\n".join(problems), flush=True)
+        raise SystemExit(f"课程类前端统一检查没通过（{len(problems)} 处）。")
 
 
 def run_source_check() -> None:
@@ -493,6 +549,7 @@ def main(argv: list[str]) -> int:
         run_source_check()
         run_workflow_check()
         run_stack_version_check()
+        run_react_frontend_check()
         run_structure_check()
         return 0
 
@@ -504,6 +561,7 @@ def main(argv: list[str]) -> int:
     run_source_check()
     run_workflow_check()
     run_stack_version_check()
+    run_react_frontend_check()
     run_structure_check()
     for root in APP_ROOTS:
         for entry in sorted((REPO_ROOT / root).iterdir()):
