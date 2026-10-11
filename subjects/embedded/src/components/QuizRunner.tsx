@@ -27,7 +27,8 @@ export default function QuizRunner({ title, questions, mode, course, chapterId, 
   const question = questions[idx];
   const judged = picked !== null;
   const correct = judged && picked === question?.answer;
-  const finished = answers.length === questions.length;
+  // 最后一题作答后先停在解析页,点「看结果」(advance 把 idx 推到末尾)才进结果页。
+  const finished = idx >= questions.length;
   const score = answers.filter((a) => a.picked === a.question.answer).length;
   const ratio = score / questions.length;
 
