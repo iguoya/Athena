@@ -45,7 +45,7 @@ export const pastPapers = papersJson as unknown as PastPaperRegistry;
 
 // 卷子文件由 scripts/import-past-exam.py 生成,构建期收集——导入即生效。
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const paperModules = import.meta.glob<any>("../../content/past-exams/papers/*.json", {
+const paperModules = import.meta.glob<any>("../content/past-exams/papers/*.json", {
   eager: true,
 });
 export const pastPaperFiles = Object.values(paperModules)
