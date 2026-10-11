@@ -242,15 +242,52 @@ c-plus-plus 与 driver 本轮不动。
   统一到 React 之后，只需补一层 React 绑定，Vue 绑定那条「待两个 Vue 使用方」不再有意义。
 - **ADR 0129 / 0054 精神**：改造期间 `id` 不改嫁、内容与进度库零改动，改框架不借机改内容。
 
-### 关键设计决定（需要拍板，见「待拍板」）
+### schema 不动（tiger 2026-10-11 裁定）
 
-原生 TS 那五份壳怎么迁。两条路：
+曾考虑过「把原生 TS 那五份壳统一到某个已有 React 应用的格式」（即启动 schema 统一），
+使用者评估后撤回：**共用 schema 太暴力，时机未到，先维持现状**。本提案因此只统一
+**技术底座与页面渲染技术**，不统一内容数据格式：
 
-- **甲（建议）**：把壳**保持自己的内容格式**，只把呈现层从手写 DOM 改成 React 组件。
-  先拿内容最轻的 linux 做出 React 版壳，验证后复制到另四个（现状就是复制五份，迁完仍是
-  五份，但框架一致）。不动 schema，符合 0132。
-- **乙**：改用某个已有 React 应用（如 software、os）的壳，把五个应用的内容格式转成它的格式。
-  等于启动 schema 统一，与 0132 冲突，成本最高，**不建议**。
+- 每个应用继续读自己的 `curriculum.json` / `course.json` / `content-contract.json`，
+  进度库表结构不变，ADR 0132 的暂缓范围原样保留。
+- 原生 TS 五份壳（algorithms、cs408、data-structures、linux、organization）按
+  **「只换呈现层」**迁：保持各自内容格式，把手写 DOM 改成 React 组件；先在 linux 做出
+  React 版壳，验证后复制到另四个。
+- 调研备忘（供将来重启 schema 议题时用）：原生 TS 一族（上面五个 + design-patterns）
+  已事实上共用同一套课表（章 → 知识点 → 教案块 → 随堂 checkpoint → labs）与同一套
+  4 张表的进度库（`knowledge_progress`、`lab_draft`、`lab_progress`、`quiz_picks`）；
+  React 一侧 os / network / python / database / AI 五门只是约 50 行的空壳（`course.json`
+  占位），真正实装的只有 gtkmm（节 → 知识点 → blocks，进度表 `attempts` 等）与 software
+  （`courses.json`）。**事实上最接近统一基准的是原生 TS 那一族，而不是任何一个 React 应用**
+  ——将来真要统一，以它为起点。
+
+### 页面渲染技术基线：以摘星（ascent）为准（tiger 2026-10-11）
+
+「Tauri + React」只定了框架层。页面怎么画——样式、组件、动效、状态、路由——也要
+统一，**以摘星为基线**。摘星当前的页面渲染栈（`subjects/ascent/AGENTS.md` 与
+`package.json` 实测）：
+
+| 层 | 选型 |
+|---|---|
+| 样式 | Tailwind v4（`@tailwindcss/vite`） |
+| 组件 | shadcn/ui 式（`class-variance-authority` + `clsx` + `tailwind-merge`）+ `lucide-react` 图标 |
+| 动效 | Motion |
+| 状态 | Zustand |
+| 路由 | React Router |
+| 图表 / 富文本 | ECharts / Tiptap（按需） |
+| 质量 | ESLint、Prettier、Vitest；TypeScript 固定 6.x |
+
+现状：software、gtkmm、polaris 已经在用 Tailwind v4 + lucide + Motion（polaris 还有
+Zustand），与摘星同路；os、network、python、database 与 AI 五门的空壳连 Tailwind 都
+没装，新建壳时直接按此基线起步。**迁移到 React 的每个应用，页面用这套栈写。**
+
+- **只定技术，不定视觉**：各应用的配色、字体、皮肤（摘星有 `theme/skins.ts`）自便；
+  基线是「用什么写」，不是「长什么样」。
+- **摘星自身不动**：它的 ADR 0066（不趋同）仍管摘星自己；此处是「其他应用向摘星的
+  渲染栈看齐」，不是要摘星改任何东西。
+- **共用的组件放哪**：沿用 ADR 0137 的纪律——先各应用自备，**二次使用才抽进
+  `packages/`**，不预建 UI 组件库。`packages/viz` 保持无框架 TS，React 应用挂一层薄绑定。
+- 这批依赖版本进 `catalog:`（B 档），与 ADR 0135 A 档的对齐方向一致。
 
 ### 迁移顺序（先易后难）
 
@@ -262,7 +299,7 @@ c-plus-plus 与 driver 本轮不动。
 | 1 | firmware、microcontroller、rtos | 直接按 React 模板重建壳；无内容可迁 | 各约 50 行空壳 |
 | 2 | competitions、math-tools | 重写前端，数据文件原样保留 | 460 / 1100 行 |
 | 3 | embedded | 重写前端，`db.ts`、`content.ts` 的行为对照移植 | 2200 行，有读写逻辑 |
-| 4 | linux（试点）→ organization、cs408 → algorithms、data-structures | 甲方案；先在 linux 做出 React 壳 | 五份同源壳；前三个内容是空骨架，风险最低 |
+| 4 | linux（试点）→ organization、cs408 → algorithms、data-structures | 只换呈现层、schema 不动；先在 linux 做出 React 壳 | 五份同源壳；前三个内容是空骨架，风险最低 |
 | 5 | machine | Qt/QML → Tauri + React；见下一节 | 教案是 QML 组件，要逐个重写为 React 组件 |
 | 6 | design-patterns、mathematics | 各自的壳单独移植 | 内容与交互最重，放最后 |
 
@@ -309,12 +346,18 @@ c-plus-plus 与 driver 本轮不动。
 
 ### 待拍板
 
-1. 原生 TS 五份壳走**甲**（只换呈现层，推荐）还是乙？
-2. machine 的 `playground/`（LVGL）原地保留，还是随迁移删除？
-3. 波 4 里的试点应用用 linux（内容空骨架、风险最低，推荐）还是 data-structures（内容更全、更能暴露问题）？
-4. B 档试点应用用 os 还是 network，或另选？
-5. 草稿定稿后，仓库级 ADR 与 machine ADR 的编号：落库时按「选号到落库一次完成」处理。
-6. 课程属性「四要素」是**全部具备**才算（上面按此写），还是「章节 + 练习或实验至少一项」
-   即可？按前者，gtkmm、ascent 等个别缺课后习题的应用会被划到共享配置之外，需要逐个核对。
-7. 不采用共享配置的三个图谱/工具类应用，是否同意「仍须 Tauri + React、依赖版本对齐，
+已定：Tauri 2 + React；schema 不动（甲）；页面渲染以摘星为基线；machine 同批改；
+c-plus-plus 与 driver 暂缓。
+
+仍待确认：
+
+1. machine 的 `playground/`（LVGL）原地保留，还是随迁移删除？
+2. 波 4 的试点应用用 linux（内容空骨架、风险最低，推荐）还是 data-structures？
+3. B 档（共享配置）的试点应用用 os 还是 network，或另选？
+4. 课程属性「四要素」是**全部具备**才算（上面按此写），还是「章节 + 练习或实验至少一项」
+   即可？
+5. 不采用共享配置的三个图谱/工具类应用，是否同意「仍须 Tauri + React、依赖版本对齐，
    但不入工作区」。
+6. 页面渲染基线是否要把 shadcn/ui 的组件源码也共用（现在各应用自己 `npx shadcn add`），
+   还是只统一依赖与约定、组件各自生成？建议后者，等第二个应用真要同一组件时再抽。
+7. 草稿定稿后，仓库级 ADR 与 machine ADR 的编号：落库时按「选号到落库一次完成」处理。
