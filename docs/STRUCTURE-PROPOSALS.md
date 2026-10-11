@@ -361,3 +361,39 @@ c-plus-plus 与 driver 暂缓。
 6. 页面渲染基线是否要把 shadcn/ui 的组件源码也共用（现在各应用自己 `npx shadcn add`），
    还是只统一依赖与约定、组件各自生成？建议后者，等第二个应用真要同一组件时再抽。
 7. 草稿定稿后，仓库级 ADR 与 machine ADR 的编号：落库时按「选号到落库一次完成」处理。
+
+---
+
+## V3 新增顶层目录 `guide/`（手册类教程），gtkmm 迁入（草拟 2026-10-12；**已落 ADR 0143**）
+
+### 主张
+
+使用者（tiger 2026-10-12）：新建顶层目录 `guide/` 存放手册类教程，类似 gtkmm；
+`subjects/` 改名 `course/`（存放课程类学习）稍后做。
+
+顶层语义由此三分：
+
+| 目录 | 类别 | 内容组织 |
+|---|---|---|
+| `course/`（现 `subjects/`） | 课程类学习 | 自编教学设计——大纲指方向、教学过程落细节、教学实验验证（ADR 0028 三层自上而下） |
+| `guide/` | 手册类教程 | 以一本外部手册 / 官方教程为蓝本精读，章节结构与编号跟随原书，不自编大纲 |
+| `practice/` | 项目应用 | 做出能跑的东西（ADR 0060） |
+
+gtkmm 是手册类的现成原型：定位「官方教程精读」，《Programming with gtkmm 4》全量翻译为
+编排基准、章节编号严格跟随官方文档（应用 ADR 0003），住在 `subjects/` 里名不副实。
+
+### 已拍板（tiger 2026-10-12）
+
+1. `guide/` 为顶层目录类别，与 `subjects/`、`practice/` 平级；一本手册一个独立应用。
+2. gtkmm 迁入 `guide/`，为首批唯一成员。
+3. 三分语义一次写清；`subjects`→`course` 的实际改名另行 ADR。
+4. 首批不立项新手册（ADR 0129 宁缺毋滥）。
+
+### 牵动面
+
+- `launcher/core/src/manifest.rs`：发现清单加一层 `guide`。
+- `scripts/check.py`：`APP_ROOTS`、目录白名单与各处对账加 `guide`。
+- 登记三处：`docs/REPOSITORY.md`、根 `README.md`、根 `AGENTS.md`。
+- gtkmm 自身：`AGENTS.md` 自述路径、`scripts/extract_source.py` 提示文案。
+- `ci.yml`：gtkmm 两处 `fetch_upstream.py` 的调用路径。
+- **不动**：id、进程名、知识点前缀、进度库内容、挂靠关系、领域圈 group、出处档位。

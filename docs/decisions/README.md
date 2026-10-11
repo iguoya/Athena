@@ -66,6 +66,7 @@
 | [0127](0127-gui-retired-webui-succeeds.md) | gui（Slint）退役——webui 转正为唯一图形前端；旧版可执行产物删除，托盘与自启动待 webui 迁移 | 已接受 |
 | [0128](0128-earth-app.md) | 新增图谱/参考类应用 earth（「地球」，「程序设计」圈暂存归属，端口 1511）：真实比例的地球分层 3D 可视化——WGS84 椭球、PREM、US Standard Atmosphere 1976 标准模型驱动，不建进度库，壳复制自 polaris | 已接受；2026-10-11 补记：目录改为 practice/earth |
 | [0139](0139-app-lifecycle-states.md) | 应用生命周期状态：`app.json` 新增可选 `lifecycle`（active 活跃学习 / built 建成待学 / archived 冻结归档，默认 active），启动器按档分层呈现——built 淡显、archived 默认不呈现且思维导图可开关显示；`hidden`（0093）语义不变，两者独立；首批标注 13 壳 archived、3 个建成待学 built | 已接受；给 0129「宁缺毋滥」提供比删除温和的中间态 |
+| [0143](0143-guide-directory.md) | 新增顶层目录 `guide/`（手册类教程）：顶层语义三分 course（课程类，自编教学设计，现 `subjects/`）/ guide（手册类，跟随一本外部手册精读）/ practice（项目类）；gtkmm 迁入为首批唯一成员，id/前缀/进度库/领域圈不动；`subjects`→`course` 改名另行 ADR | 已接受；草拟于 STRUCTURE-PROPOSALS.md V3（0134 流程） |
 
 ## 仓库工程
 
