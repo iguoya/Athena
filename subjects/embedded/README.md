@@ -2,8 +2,8 @@
 
 以软考中级·嵌入式系统设计师为目标的学习应用:考纲对齐、分值驱动,教材
 第 2 版章树对齐,章节课后考核与历年真题演练(2010–2020 十一卷),掌握度
-由作答写入 `progress/learning.db`。技术体系为 Tauri 2 + Vue 3 + Tailwind 4,
-与 softcert(软件设计师,React)刻意不同——同一类学习,两种体验。
+由作答写入 `progress/learning.db`。技术体系为 Tauri 2 + React 19 + Tailwind 4(摘星基线,仓库 ADR 0138),
+与 softcert(软件设计师)的界面与交互刻意不同——同一类学习,两种体验。
 
 - 打开:`launcher open embedded`(与 software 各为启动器一级大类,ADR 0102)
 - 验证:`python3 scripts/check.py`

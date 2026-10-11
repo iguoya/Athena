@@ -20,11 +20,11 @@
 
 ## 技术栈与选型理由
 
-- **Tauri 2**(Rust 壳 + 系统 WebView)+ **Vue 3 + TypeScript + Vite** +
-  **Tailwind CSS 4**(经 `@tailwindcss/vite` 接入)+ **motion-v**(入场编排,
-  基础转场用 Vue 内置 `<Transition>`)+ **lucide-vue-next** 图标 +
-  **katex**(公式块)。与 `subjects/math-tools` 同一套技术体系(使用者点名要
-  与 softcert 不同的体验),选型理由见该应用 `AGENTS.md`。
+- **Tauri 2**(Rust 壳 + 系统 WebView)+ **React 19 + TypeScript + Vite** +
+  **Tailwind CSS 4**(经 `@tailwindcss/vite` 接入)+ **Motion**(`motion/react`,
+  入场与转场编排)+ **lucide-react** 图标 + **katex**(公式块)+ `cn()`
+  (clsx + tailwind-merge)。页面渲染按摘星基线(仓库 ADR 0138,本应用 ADR 0002,
+  取代 ADR 0001 的 Vue 栈);Zustand、React Router 用到再装。
 - 包管理用 **pnpm**（仓库统一，ADR 0136；安装见 docs/ENGINEERING.md「包管理器」）。
 - dev 端口 **1480**(strictPort);进程/二进制 `athena-embedded`;
   窗口标题「嵌入式系统设计师」;应用内文案用中文。
@@ -102,7 +102,8 @@ content/
 草稿)定义在 `src/style.css` 的 `--tk-*` 令牌块,清单与切换在 `src/theme.ts`,
 偏好存 localStorage(`esd-skin`)。组件里**不硬编码主色**——用 `accent-gradient`、
 `accent-soft`、`accent-fg`、`text-gradient`、`tk-card`、`tk-display` 这些
-类;品牌绿 `#0E8A6D` 只出现在令牌与 icon.svg。新增皮肤 = 加一段 `--tk-*`
+类(它们是纯 CSS 类,`cn()` 已在 `src/lib/utils.ts` 登记成独立类组,
+不要绕过 `cn()` 另起 tailwind-merge);品牌绿 `#0E8A6D` 只出现在令牌与 icon.svg。新增皮肤 = 加一段 `--tk-*`
 令牌 + `SKINS` 一行,不动组件。
 
 ## 验证与构建
@@ -116,7 +117,7 @@ python3 scripts/check.py --content-only  # 只跑内容校验
 - 内容 JSON 语法、章树/节评级/题目结构、`requires` 引用存在性(限本应用)、
   题目出处字段齐备、viz 组件注册对账,由 `check.py` 把关;跨应用出处检查由
   根 `scripts/check-app-sources.mjs` 按 `content-contract.json` 接入。
-- 前端(`vue-tsc --noEmit && vite build`)与 Rust `cargo check` + `cargo test`
+- 前端(`tsc && vite build`)与 Rust `cargo check` + `cargo test`
   都要过;跨平台是硬约束,脚本用 Python 写,不依赖 shell。
 
 ## 约定

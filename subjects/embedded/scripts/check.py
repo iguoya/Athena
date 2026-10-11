@@ -220,7 +220,7 @@ def main() -> int:
         return 0
 
     ensure_dependencies()
-    # pnpm run build = vue-tsc --noEmit + vite build,类型和打包一次过。
+    # pnpm run build = tsc + vite build,类型和打包一次过。
     run([tool("pnpm"), "run", "build"], "前端类型检查与构建")
 
     if not arguments.skip_rust:
