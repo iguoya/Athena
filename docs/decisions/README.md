@@ -64,7 +64,7 @@
 | [0124](0124-software-to-programming-group.md) | software 去挂靠入「程序设计」圈 | 已接受；领域圈由 0126 改回「计算机」 |
 | [0126](0126-software-database-to-computing-group.md) | software 与 database 入「计算机」圈，软考系聚回一处；database 去挂靠 | 已接受；修订 0124 的圈归属与 0103 的 database 行 |
 | [0127](0127-gui-retired-webui-succeeds.md) | gui（Slint）退役——webui 转正为唯一图形前端；旧版可执行产物删除，托盘与自启动待 webui 迁移 | 已接受 |
-| [0128](0128-earth-app.md) | 新增图谱/参考类应用 earth（「地球」，「程序设计」圈暂存归属，端口 1511）：真实比例的地球分层 3D 可视化——WGS84 椭球、PREM、US Standard Atmosphere 1976 标准模型驱动，不建进度库，壳复制自 polaris | 已接受 |
+| [0128](0128-earth-app.md) | 新增图谱/参考类应用 earth（「地球」，「程序设计」圈暂存归属，端口 1511）：真实比例的地球分层 3D 可视化——WGS84 椭球、PREM、US Standard Atmosphere 1976 标准模型驱动，不建进度库，壳复制自 polaris | 已接受；2026-10-11 补记：目录改为 practice/earth |
 
 ## 仓库工程
 
@@ -129,4 +129,5 @@
 | [0134](0134-structural-decisions-cold-down.md) | 结构稳定性：`id` 与目录名一经入库不改名（实质错误须新 ADR 并按牵动面清单一次改齐）；新增/退役/合并、挂靠、圈归属等结构性决定先在 STRUCTURE-PROPOSALS.md 草拟、落 ADR 前重读草稿；使用者显式豁免与紧急修订不受限 | 已接受；与 0129 互补（0129 管要不要留，本篇管定下来不折腾）；反转移到草稿层 |
 | [0132](0132-defer-shared-layer.md) | 共享层暂缓：问题存在但课程结构未充实，不值得抽象；0130、0131 不执行，构建隔离与各自进度库照旧，列出重启条件 | 已接受；范围由 0135 收窄为只暂缓 schema 与内容抽象；0043 §1、0037 恢复为现行 |
 | [0135](0135-share-low-cost-build-layer-first.md) | 共享分层推进：A 档（同栈核心依赖版本对齐+跨应用版本检查，Rust target 已由启动器共享）现在做，B 档（npm/Cargo workspace）另立 ADR，C 档（schema/内容/通用代码）仍暂缓；同栈不再要求构建隔离，异构栈各自构建 | 已接受；收窄 0132，修订 0032 决策 2，更正 0130 背景中 target 的说法 |
-| [0136](0136-unify-on-pnpm.md) | 前端包管理器统一为 pnpm，去掉 ascent 的特殊：磁盘去重、依赖严格、catalog 与供应链防护优于 npm；迁移保持版本不变，执行条件（装 pnpm、CI 文件无他人改动、先单应用跑通）未满足前不开始 | 已接受（决定已定、迁移未执行）；修订 0135 决策 3 的 ascent 例外 |
+| [0136](0136-unify-on-pnpm.md) | 前端包管理器统一为 pnpm，去掉 ascent 的特殊：磁盘去重、依赖严格、catalog 与供应链防护优于 npm；迁移保持版本不变 | 已接受；迁移已执行（Tauri 应用 package-lock 换 pnpm-lock，check.py 钉 packageManager；c-gui-lab 是 Electron 异构栈不在此列）；修订 0135 决策 3 的 ascent 例外 |
+| [0137](0137-viz-shared-package.md) | 可视化呈现件抽成仓库根 `packages/viz`（`@athena/viz`，纯 TS 源码不预编译）：同类功能只留一份实现，六份拷贝的 trace-player 收敛为一份（解析前缀参数化、渲染器按 kind 注册）；不触及 schema/内容/进度库，是 C 档的明示例外；data-structures 先试点，其余使用方逐个迁移，防回流检查跟进 | 已接受；例外于 0135 决策 5 与 C 档；满足 0132 决策 5 第二条重启条件；按 0134 先草拟、复看后落 |

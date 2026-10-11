@@ -43,6 +43,13 @@
   `subjects/cpp` 一样分核心测试和 GTK 测试两个可执行文件），`meson test -C
   build` 能跑。
 
+- [`earth/`](earth/)：真实比例的地球分层 3D 可视化（ADR 0128）。2026-10-11 从
+  `subjects/earth` 迁入，`id` 仍是 `earth`，进程 `athena-earth`。
+
+  ```sh
+  launcher --root practice open earth
+  ```
+
 - [`nas_admin/`](nas_admin/)：**NAS 后台管理**（2026-10-02 从路由器
   /opt/webapp 的单文件 Flask 演化而来）。Flask-AppBuilder 5 + 路由器上的
   PostgreSQL 17（库 nas_admin），本机与路由器共用同一条连接串、同一套数据。

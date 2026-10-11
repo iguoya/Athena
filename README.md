@@ -37,11 +37,11 @@
 | [`subjects/llm-app`](subjects/llm-app) | 大模型应用开发（「人工智能」圈，ADR 0120、0122） | Tauri 2 + React |
 | [`subjects/llm-finetune`](subjects/llm-finetune) | 大模型微调与部署（「人工智能」圈，ADR 0120、0122） | Tauri 2 + React |
 | [`subjects/competitions`](subjects/competitions) | 赛历（竞赛清单与参赛资格，图谱/参考类，ADR 0114） | Tauri 2 + Vite |
-| [`subjects/earth`](subjects/earth) | 地球（真实比例的地球分层 3D 可视化，图谱/参考类，ADR 0128） | Tauri 2 + React + Three.js |
 | [`subjects/design-patterns`](subjects/design-patterns) | 设计模式与程序组织（「程序设计」圈，ADR 0121） | Tauri 2 + Vite |
 | [`practice/pocket_cube`](practice/pocket_cube) | 2 阶魔方 | GTK4 / gtkmm |
 | [`practice/nas_admin`](practice/nas_admin) | 驾考中心服务后台 | Flask-AppBuilder |
 | [`practice/c-gui-lab`](practice/c-gui-lab) | C 语言 GUI 框架对比实验室 | Electron + GTK/ImGui/LVGL |
+| [`practice/earth`](practice/earth) | 地球（真实比例的地球分层 3D 可视化，ADR 0128） | Tauri 2 + React + Three.js |
 
 每个应用怎么构建、怎么启动、怎么算就绪，都写在自己的 `app.json` 里；执行统一由
 [`launcher/core`](launcher/core) 的编排器负责，没有一份应用自己的启动脚本（ADR 0046）。

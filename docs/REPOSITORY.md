@@ -49,12 +49,12 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
                  实践应用的主场（ADR 0120、0122）
   llm-finetune/  大模型微调与部署（Tauri 2 + React）——「人工智能」圈；LoRA、量化、本地推理与服务化（ADR 0120、0122）
   competitions/  赛历（Tauri 2 + Vite）——「大赛」圈的竞赛清单，图谱/参考类，不是学习应用（ADR 0114）
-  earth/         地球（Tauri 2 + React + Three.js）——真实比例的地球分层 3D 可视化，图谱/参考类，
-                 「程序设计」圈暂存归属（ADR 0128）
 practice/<id>/ 项目应用：动手做的独立小项目，不接掌握度体系（ADR 0060）
   pocket_cube/ 2 阶魔方（GTK4 / gtkmm）
   nas_admin/   驾考中心服务后台（Flask-AppBuilder，部署在软路由）
   c-gui-lab/   C 语言 GUI 框架对比实验室（Electron 母体收编各框架官方 demo）
+  earth/       地球（Tauri 2 + React + Three.js）——真实比例的地球分层 3D 可视化；
+               使用者从 subjects/ 迁入（ADR 0128 补记）。id 仍为 earth，进程 athena-earth，无进度库
 launcher/      启动器：macos/（Swift 菜单栏常驻）、core/、gui/
 docs/decisions/  跨应用的架构决策记录（ADR）
 scripts/       仓库级脚本：统一验证入口 check.py、跨应用内容出处检查
@@ -106,7 +106,6 @@ archive/       历史归档，不参与构建
 | `llm-app` | 大模型应用开发（「人工智能」圈，ADR 0120、0122） | `athena-llm-app` | `llmapp.` |
 | `llm-finetune` | 大模型微调与部署（「人工智能」圈，ADR 0120、0122） | `athena-llm-finetune` | `finetune.` |
 | `competitions` | 赛历（「大赛」圈，ADR 0114） | `athena-competitions` | （无进度库） |
-| `earth` | 地球（「程序设计」圈暂存归属，ADR 0128） | `athena-earth` | （无进度库） |
 
 `driver` 是机动车理论考试，不是设备驱动；Dart 包名仍是 `athena_driver`（包名不能有连字符）。
 C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。进程和发行包文件名是
@@ -130,8 +129,8 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
   **图谱/参考类应用**：仍受「独立应用」一节的平级、隔离、`app.json` 启动规则约束，
   但**不**掌握度、不进度库、不激励——「跨应用教学规范」一节对它不生效，具体规则
   以它自己的 `AGENTS.md` 为准。当前：`polaris`、`math-tools`、`competitions`（赛历，ADR 0114；`math-tools`是数学学习的配套工具，
-  因需要在启动器里和 `mathematics` 关联而归 `subjects/`，不是先例，见 ADR 0084）、
-  `earth`（地球，真实比例分层可视化，ADR 0128）。
+  因需要在启动器里和 `mathematics` 关联而归 `subjects/`，不是先例，见 ADR 0084）。
+  地球分层可视化 `earth` 由使用者迁到 `practice/earth`（ADR 0128 补记）。
 - **还没决定做成应用，只是存素材和结论，等以后真正开工？** 那连"应用"都不算，
   不需要 `app.json` 也不需要 `scripts/check.py`，根验证入口按设计静默跳过它——
   这是预期行为，不是遗漏。当前无素材坑目录（`design-patterns` 曾是唯一的素材坑，
@@ -163,6 +162,8 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
   趋同并由 `scripts/check.py` 检查；异构栈各自构建。应用之间仍不互相引用路径、不互相
   include、不读对方的内容配置。学习应用之间共用的是教学**规范**（[TEACHING.md](TEACHING.md)，
   仅对学习应用生效），schema、内容块与通用代码的抽象待成熟（ADR 0132，原方向 ADR 0130）。
+  例外是仓库根 `packages/` 下的纯呈现件（ADR 0137）：`@athena/viz` 这类不触及 schema、
+  内容、进度的组件抽成一份共用，应用以 `link:` 挂接；`src/` 内不许再留拷贝（结构卫生检查拦截）。
 - **约束也各守各的，不从别的应用继承**（ADR 0062）：每个应用的约束只来自仓库级大原则和它
   自己的 `AGENTS.md` 与 ADR。不写「沿用 X 应用的做法」「对齐 X 应用 ADR」作为约束来源——
   来源一改，继承方不会知道，规则就悄悄过时。在本应用也成立的做法，自己写下来、自己说明

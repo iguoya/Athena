@@ -305,7 +305,8 @@ jobs:
         with:
           node-version: "22"
           cache: ${{ matrix.app == 'ascent' && 'pnpm' || 'npm' }}
-          cache-dependency-path: subjects/${{ matrix.app }}/${{ matrix.app == 'ascent' && 'pnpm-lock.yaml' || 'package-lock.json' }}
+          # earth 在 practice/，其余 Tauri 应用在 subjects/（ADR 0128 补记）。
+          cache-dependency-path: ${{ matrix.app == 'earth' && 'practice' || 'subjects' }}/${{ matrix.app }}/${{ matrix.app == 'ascent' && 'pnpm-lock.yaml' || 'package-lock.json' }}
 
       - name: Install Tauri system dependencies (Ubuntu)
         # Linux 上 Tauri 的 WebView 是系统 WebKitGTK，得先装；macOS 与 Windows
@@ -325,8 +326,8 @@ jobs:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
-            subjects/${{ matrix.app }}/src-tauri/target
-          key: tauri-${{ matrix.app }}-${{ matrix.os }}-${{ hashFiles(format('subjects/{0}/src-tauri/Cargo.lock', matrix.app)) }}
+            ${{ matrix.app == 'earth' && 'practice' || 'subjects' }}/${{ matrix.app }}/src-tauri/target
+          key: tauri-${{ matrix.app }}-${{ matrix.os }}-${{ hashFiles(format('{0}/{1}/src-tauri/Cargo.lock', matrix.app == 'earth' && 'practice' || 'subjects', matrix.app)) }}
 
       - name: Fetch gtkmm upstream docs
         # 结构核对要官方 DocBook（gitignore 的 upstream/），按 upstream.json 的钉点拉取

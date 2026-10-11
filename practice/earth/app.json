@@ -38,16 +38,16 @@
       {
         "when_missing": "node_modules",
         "run": [
-          "npm",
+          "pnpm",
           "install"
         ],
         "label": "安装前端依赖"
       }
     ],
     "run": [
-      "npm",
-      "run",
-      "tauri:dev"
+      "pnpm",
+      "tauri",
+      "dev"
     ],
     "ready": {
       "http": "http://localhost:1511"

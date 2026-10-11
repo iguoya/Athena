@@ -221,13 +221,16 @@ def run_stack_version_check() -> None:
             pkg = app / "package.json"
             if not (pkg.is_file() and (app / "src-tauri" / "Cargo.toml").is_file()):
                 continue
-            if (app.name, "*") in STACK_VERSION_EXEMPT:
-                continue
             data = json.loads(pkg.read_text(encoding="utf-8"))
+            # 包管理器统一为 pnpm（ADR 0136）：不留 npm 的锁，并钉 pnpm 版本。
+            if (app / "package-lock.json").exists():
+                problems.append(f"  {root}/{app.name} 还有 package-lock.json，应只留 pnpm-lock.yaml（ADR 0136）")
+            if not str(data.get("packageManager", "")).startswith("pnpm@"):
+                problems.append(f"  {root}/{app.name} 的 package.json 缺 packageManager: pnpm@x.y.z（ADR 0136）")
             declared = {**data.get("dependencies", {}), **data.get("devDependencies", {})}
             for name, want in STACK_VERSIONS.items():
                 have = declared.get(name)
-                if have is None or have == want or (app.name, name) in STACK_VERSION_EXEMPT:
+                if have is None or have == want or (app.name, name) in STACK_VERSION_EXEMPT or (app.name, "*") in STACK_VERSION_EXEMPT:
                     continue
                 problems.append(f"  {root}/{app.name} 的 {name} 是 {have}，应为 {want}（ADR 0135）")
     if problems:
@@ -269,6 +272,7 @@ _ROOT_ALLOW = {
     ".git", ".gitignore", ".gitattributes", ".zcodeignore",
     ".agents", ".claude", ".cursor", ".gemini", ".vscode", ".github",
     "subjects", "practice", "launcher", "docs", "scripts", "archive",
+    "packages",
 }
 
 # 本机构建产物：存在就必须被 .gitignore 覆盖。一个新 Tauri 应用的 target 是
@@ -452,6 +456,22 @@ def run_structure_check() -> None:
         if any(inner.stdout.split("\0")):
             problems.append(f"  {entry} 是未跟踪的目录——登记进 git、写进 .gitignore，或整个删掉")
 
+    # 9. 公共呈现件防回流（ADR 0137）：packages/*/src/ 收编过的组件，应用 src/ 里
+    #    不许再有同名拷贝——六份 trace-player 就是从「顺手抄一份」攒出来的，改一个
+    #    bug 要改六处，还会各自漂移。新公共件入包后，同名文件即视为回流。
+    package_sources = {
+        p.name for p in (REPO_ROOT / "packages").glob("*/src/*") if p.is_file()
+    }
+    for root in APP_ROOTS:
+        for app_dir in sorted((REPO_ROOT / root).iterdir()):
+            src = app_dir / "src"
+            if not src.is_dir():
+                continue
+            for ghost in sorted(package_sources & {p.name for p in src.iterdir() if p.is_file()}):
+                problems.append(
+                    f"  {root}/{app_dir.name}/src/{ghost} 与公共包重复——用 packages/ 里的版本，别留拷贝"
+                )
+
     if problems:
         print("\n".join(problems), flush=True)
         raise SystemExit(f"结构卫生没通过（{len(problems)} 处），见上方。")
@@ -459,7 +479,7 @@ def run_structure_check() -> None:
         f"结构树与 {sum(len(v) for v in tree.values())} 个应用目录一致，"
         f"四件套齐备，ADR 索引全覆盖，根目录干净，产物全被忽略，"
         f"发布矩阵 {len(released)} 个应用全部有 CI，"
-        f"README/名字表/CI 选择项与 {len(actual_dirs)} 个目录对账一致，应用区无影子目录",
+        f"README/名字表/CI 选择项与 {len(actual_dirs)} 个目录对账一致，应用区无影子目录，公共件无回流",
         flush=True,
     )
 
