@@ -1,7 +1,7 @@
 # 数学工具 · Math Tools
 
 数学学习的配套工具箱(`subjects/`,ADR 0084,原属 `practice/`):矩阵实验室、函数绘图,后续按需扩充。
-技术栈:Tauri 2 + Vue 3 + TypeScript + Tailwind CSS 4 + motion-v + mathjs。
+技术栈:Tauri 2 + React 19 + TypeScript + Tailwind CSS 4 + Motion + mathjs(页面渲染按摘星基线,ADR 0138)。
 选型理由与协作规则见 [AGENTS.md](AGENTS.md)。
 
 ## 运行

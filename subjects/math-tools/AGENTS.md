@@ -19,13 +19,12 @@
 - **Tauri 2**(Rust 壳 + 系统 WebView):界面是 Web 技术;若将来要嵌 GeoGebra 等只有
   Web 运行时的组件,同壳零摩擦;仓库内 `subjects/ascent`、`subjects/mathematics` 已
   有 Tauri 2 前例,配置与坑均有参照。
-- **Vue 3 + TypeScript + Vite**:单文件组件把模板、样式、逻辑就近内聚,适合按块渲染
-  的工具界面;`<Transition>` 内置,基础转场不依赖库。
+- **React 19 + TypeScript + Vite**:页面渲染按摘星基线(ADR 0138,取代原 Vue 路线):Tailwind v4、`clsx` + `tailwind-merge`(`cn`)、`lucide-react`、Motion;Zustand、React Router 用到再装。
 - **Tailwind CSS 4**:原子化样式,经 `@tailwindcss/vite` 插件接入;主题令牌集中在
-  `src/style.css` 的 `@theme`。
-- **motion-v**:motion 的 Vue 版,负责入场编排、spring 与 layout 动画;基础转场优先用
-  Vue 内置 `<Transition>`,motion-v 只做 CSS 表达不了的部分。
-- **lucide-vue-next** 图标;**mathjs** 做矩阵运算与表达式求值,不自己写数值内核。
+  `src/style.css` 的 `@theme` 与 `--tk-*` 皮肤令牌。
+- **Motion**(`motion/react`):页面切换、卡片入场、勾选图标切换用 `AnimatePresence` 编排;
+  没有 CSS 转场类。
+- **mathjs** 做矩阵运算与表达式求值,不自己写数值内核。
 - 字体:Sora(标题/拉丁)、Noto Sans SC(正文中文)、JetBrains Mono(数字/公式),
   经 `@fontsource` 打进包内,离线可用。
 - 包管理用 **pnpm**（仓库统一，ADR 0136；安装见 docs/ENGINEERING.md「包管理器」）。
@@ -46,7 +45,7 @@
 
 ## 验证
 
-- `python3 scripts/check.py`:app.json 合法性 + `vue-tsc` 类型检查 + `vite build`;
+- `python3 scripts/check.py`:app.json 合法性 + `tsc` 类型检查 + `vite build`;
   缺 `node_modules` 时先按 lock `pnpm install --frozen-lockfile`,不跳过。
 - 根目录 `python3 scripts/check.py math-tools` 透传到本脚本。
 

@@ -74,7 +74,7 @@
 
 html,
 body,
-#app {
+#root {
   height: 100%;
 }
 
@@ -189,34 +189,7 @@ body {
   rotate: var(--tk-tilt);
 }
 
-/* 页面切换转场 */
-.page-enter-active,
-.page-leave-active {
-  transition: opacity 0.22s ease, transform 0.22s ease;
-}
-.page-enter-from {
-  opacity: 0;
-  transform: translateY(10px);
-}
-.page-leave-to {
-  opacity: 0;
-  transform: translateY(-6px);
-}
-
-/* 结果卡 / 列表项出现 */
-.pop-enter-active {
-  transition: opacity 0.25s ease, transform 0.25s ease;
-}
-.pop-enter-from {
-  opacity: 0;
-  transform: scale(0.96) translateY(6px);
-}
-.pop-leave-active {
-  transition: opacity 0.15s ease;
-}
-.pop-leave-to {
-  opacity: 0;
-}
+/* 页面切换与结果卡出现的转场由 Motion 在组件里编排(ADR 0138),这里不再写 CSS 转场类。 */
 
 /* 输入框统一观感 */
 .field {

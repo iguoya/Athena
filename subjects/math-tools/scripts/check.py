@@ -48,7 +48,7 @@ def main() -> int:
         print("ok: pnpm install --frozen-lockfile(按 lock 安装前端依赖)")
 
     run_pnpm(["run", "typecheck"])
-    print("ok: vue-tsc 类型检查")
+    print("ok: tsc 类型检查")
     run_pnpm(["run", "build"])
     print("ok: vite build")
     return 0
