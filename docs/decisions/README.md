@@ -122,3 +122,4 @@
 | [0125](0125-launcher-webui-tauri-threejs.md) | 启动器 UI 层重选 Tauri 2 + Three.js，学习应用面板改「领域轨道环」3D 构图 | 已接受 |
 | [0129](0129-prefer-quality-over-quantity.md) | 内容工作宁缺毋滥：取舍标尺是质量而非数量，空骨架与被取代的旧内容不留占位；参考不得悄悄重划结构、`id` 不改嫁、先入库、显式删除的安全网保留 | 已接受；取代 0054 总原则与第 2 条；0080 适用面收窄为 `id` 不改嫁；不自动清理存量 |
 | [0130](0130-shared-build-and-schema.md) | 构建共享、schema 共享：仓库级共享层放通用代码、依赖与公共 schema，应用仍独立进程且互不引用；数据与约束不合并 | 已接受（原则先行，机制待定）；取代 0032 决策 2、0043 §1；修订 0037、0073；0062 不变 |
+| [0131](0131-shared-layer-location-and-pilot.md) | 共享层放仓库根 `shared/`（不是应用）；以 gtkmm 试点，只换进度层并无损迁移 69 条作答；公共进度 schema 起步为草案，冻结前对照 software/embedded/design-patterns | 已接受；落实 0130 决策 7 前两项；工具选型、driver 去留、推广顺序仍待定 |
