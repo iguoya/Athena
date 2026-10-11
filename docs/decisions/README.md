@@ -136,5 +136,3 @@
 | [0137](0137-viz-shared-package.md) | 可视化呈现件抽成仓库根 `packages/viz`（`@athena/viz`，纯 TS 源码不预编译）：同类功能只留一份实现，六份拷贝的 trace-player 收敛为一份（解析前缀参数化、渲染器按 kind 注册）；不触及 schema/内容/进度库，是 C 档的明示例外；data-structures 先试点，其余使用方逐个迁移，防回流检查跟进 | 已接受；例外于 0135 决策 5 与 C 档；满足 0132 决策 5 第二条重启条件；按 0134 先草拟、复看后落 |
 | [0138](0138-course-apps-unify-tauri-react.md) | 课程/讲解/演示类应用统一 Tauri 2 + React（Vue、原生 TS 壳、Qt 壳逐波改造），页面渲染以摘星为基线，schema 不动；共享配置按课程属性四要素准入；machine 改造、c-plus-plus 与 driver 暂缓 | 已接受；修订 0133（默认→强制），取代 0042 决策 1、3；迁移待使用者逐波指派 |
 | [0140](0140-shared-tauri-workspace.md) | 同栈 Tauri 应用共用一份 pnpm 工作区与 catalog 版本、一个 `.cache/cargo-target`；课程壳进根 Cargo 工作区，启动器保留自己的工作区但依赖表必须相同 | 已接受；落实 0135 的 B 档；不抽 schema 与应用代码 |
-| [0141](0141-split-gtk-cpp-into-practice.md) | 旧 gtkmm 窗口从 C++ 教程拆出，独立为 `practice/cpp`（id `cpp`）；新壳只启动它已经编好的程序 | 已接受 |
-| [0142](0142-certification-root-for-driver.md) | 驾考迁到仓库根 `certification/driver`，与 `exercise` 平级；id 仍是 `driver` | 已接受 |
