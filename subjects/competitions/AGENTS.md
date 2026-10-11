@@ -31,7 +31,7 @@
 
 - **壳**：Tauri 2（Rust），只开窗口并通过 `tauri-plugin-opener` 把官网交给系统浏览器；
   没有自定义命令。
-- **界面**：Vite + TypeScript，无框架。数据在构建期由 Vite 直接打进前端——一份几十条的
+- **界面**：Vite + React 19 + TypeScript + Tailwind v4（页面渲染按摘星基线，ADR 0138；用到 Motion、Zustand、路由等再装）。数据在构建期由 Vite 直接打进前端——一份几十条的
   JSON 不值得走一趟运行期读取。
 - 端口 1502，进程 `athena-competitions`。
 

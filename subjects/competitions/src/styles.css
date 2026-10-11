@@ -1,3 +1,7 @@
+@import "tailwindcss";
+
+/* 渲染栈按摘星基线（ADR 0138）：Tailwind v4 + 令牌。颜色全部走下面的令牌，
+   组件里不写死色值；深色由系统偏好切换（prefers-color-scheme），只换令牌。 */
 :root {
   --bg: #f7f5f2;
   --surface: #ffffff;
@@ -37,268 +41,24 @@
   }
 }
 
-* {
-  box-sizing: border-box;
+@theme inline {
+  --color-page: var(--bg);
+  --color-surface: var(--surface);
+  --color-ink: var(--text);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-yes: var(--yes);
+  --color-yes-bg: var(--yes-bg);
+  --color-no: var(--no);
+  --color-no-bg: var(--no-bg);
+  --color-per: var(--per);
+  --color-per-bg: var(--per-bg);
+  --color-pending: var(--pending);
+  --color-pending-bg: var(--pending-bg);
 }
 
 body {
   margin: 0;
   background: var(--bg);
-}
-
-.top {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 20px 28px 16px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--line);
-}
-
-h1 {
-  margin: 0;
-  font-size: 26px;
-}
-
-.lede {
-  margin: 4px 0 0;
-  color: var(--muted);
-  font-size: 14px;
-}
-
-.filters {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.seg {
-  display: inline-flex;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  overflow: hidden;
-  background: var(--surface);
-}
-
-.seg button,
-select {
-  font: inherit;
-  font-size: 14px;
-  color: var(--text);
-}
-
-.seg button {
-  border: 0;
-  padding: 7px 14px;
-  background: transparent;
-  cursor: pointer;
-}
-
-.seg button + button {
-  border-left: 1px solid var(--line);
-}
-
-.seg button.on {
-  background: var(--accent);
-  color: #fff;
-}
-
-select {
-  padding: 7px 10px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--surface);
-}
-
-main {
-  padding: 16px 28px 40px;
-}
-
-.count {
-  margin: 0 0 12px;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 16px;
-}
-
-.card {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 16px 18px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-}
-
-.card-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.card-head h2 {
-  margin: 0;
-  font-size: 16px;
-  line-height: 1.4;
-}
-
-.tag {
-  flex: none;
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 12px;
-  color: var(--accent);
-  border: 1px solid currentColor;
-}
-
-.badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.badge {
-  display: inline-flex;
-  border-radius: 8px;
-  overflow: hidden;
-  font-size: 12px;
-}
-
-.badge-label {
-  padding: 3px 7px;
-  background: var(--no-bg);
-  color: var(--muted);
-}
-
-.badge-value {
-  padding: 3px 8px;
-  font-weight: 600;
-}
-
-.badge.yes .badge-value {
-  background: var(--yes-bg);
-  color: var(--yes);
-}
-
-.badge.no .badge-value {
-  background: var(--no-bg);
-  color: var(--no);
-}
-
-.badge.per-event .badge-value {
-  background: var(--per-bg);
-  color: var(--per);
-}
-
-.badge.pending .badge-value {
-  background: var(--pending-bg);
-  color: var(--pending);
-}
-
-.note {
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-.meta {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 2px 10px;
-  margin: 0;
-  font-size: 13px;
-}
-
-.meta dt {
-  color: var(--muted);
-}
-
-.meta dd {
-  margin: 0;
-}
-
-.courses {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: center;
-  font-size: 12px;
-}
-
-.courses-label {
-  color: var(--muted);
-}
-
-.course {
-  padding: 2px 8px;
-  border-radius: 6px;
-  background: var(--no-bg);
-}
-
-.card-foot {
-  margin-top: auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  padding-top: 8px;
-  border-top: 1px solid var(--line);
-  font-size: 12px;
-  color: var(--muted);
-}
-
-.verify.pending {
-  color: var(--pending);
-}
-
-.stale {
-  margin-left: 6px;
-  padding: 1px 6px;
-  border-radius: 6px;
-  background: var(--pending-bg);
-  color: var(--pending);
-}
-
-.actions {
-  display: flex;
-  gap: 6px;
-}
-
-.link {
-  font: inherit;
-  font-size: 12px;
-  padding: 4px 10px;
-  border-radius: 8px;
-  border: 1px solid var(--line);
-  background: transparent;
-  color: var(--text);
-  cursor: pointer;
-}
-
-.link.primary {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-@media (max-width: 640px) {
-  .top,
-  main {
-    padding-left: 16px;
-    padding-right: 16px;
-  }
-  .grid {
-    grid-template-columns: 1fr;
-  }
 }
