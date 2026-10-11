@@ -26,7 +26,7 @@
 | [`subjects/database`](subjects/database) | 数据库 SQL 实验室（计算机圈，ADR 0103、0126） | Tauri 2 + React |
 | [`subjects/linux`](subjects/linux) | Linux 程序设计（程序设计圈，ADR 0109、0111） | Tauri 2 + Vite |
 | [`subjects/gtkmm`](subjects/gtkmm) | gtkmm 官方教程精读 | Tauri 2 + React |
-| [`subjects/polaris`](subjects/polaris) | 北极星（技术体系图谱） | Tauri 2 + React |
+| [`mentor/polaris`](mentor/polaris) | 北极星（技术体系图谱，ADR 0144） | Tauri 2 + React |
 | [`subjects/organization`](subjects/organization) | 计算机组成原理（408，ADR 0115） | Tauri 2 + Vite |
 | [`subjects/os`](subjects/os) | 操作系统实验（408，ADR 0103、0104） | Tauri 2 + React |
 | [`subjects/network`](subjects/network) | 计算机网络（408，ADR 0103） | Tauri 2 + React |
@@ -36,7 +36,7 @@
 | [`subjects/deep-learning`](subjects/deep-learning) | 深度学习与 PyTorch（「人工智能」圈，ADR 0120、0122） | Tauri 2 + React |
 | [`subjects/llm-app`](subjects/llm-app) | 大模型应用开发（「人工智能」圈，ADR 0120、0122） | Tauri 2 + React |
 | [`subjects/llm-finetune`](subjects/llm-finetune) | 大模型微调与部署（「人工智能」圈，ADR 0120、0122） | Tauri 2 + React |
-| [`subjects/competitions`](subjects/competitions) | 赛历（竞赛清单与参赛资格，图谱/参考类，ADR 0114） | Tauri 2 + Vite |
+| [`mentor/competitions`](mentor/competitions) | 赛历（竞赛清单与参赛资格，图谱/参考类，ADR 0114、0144） | Tauri 2 + Vite |
 | [`subjects/design-patterns`](subjects/design-patterns) | 设计模式与程序组织（「程序设计」圈，ADR 0121） | Tauri 2 + Vite |
 | [`practice/pocket_cube`](practice/pocket_cube) | 2 阶魔方 | GTK4 / gtkmm |
 | [`practice/nas_admin`](practice/nas_admin) | 驾考中心服务后台 | Flask-AppBuilder |

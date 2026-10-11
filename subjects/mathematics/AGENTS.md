@@ -143,4 +143,4 @@ python3 scripts/check.py mathematics    # 验证（在仓库根执行）：lint�
 1. 改课：先改 `content/`，再补前端展示类型（若有新实验形态）。
 2. 改引擎交互：先确认没有违反「只判不算」，再动 `src/`。
 3. 改运行时：只动 `src-tauri`，保持命令表面稳定。
-4. 学科地图在北极星（`subjects/polaris`）。
+4. 学科地图在北极星（`mentor/polaris`）。

@@ -400,60 +400,52 @@ gtkmm 是手册类的现成原型：定位「官方教程精读」，《Programm
 
 ---
 
-## V4 新增顶层目录 `reference/`（图谱/参考类），北极星、math-tools、competitions 迁入（草拟 2026-10-12；**已落 ADR 0144，迁移待相邻迁移落地后执行**）
+## V4 新增顶层目录 `mentor/`（导师类），北极星、赛历迁入（草拟 2026-10-12；**已落 ADR 0144 并已执行**）
 
 ### 主张
 
-使用者（tiger 2026-10-12）：北极星剥离出 `subjects/`；同类的 math-tools（数学学习的配套
-工具）、competitions（赛历）也考虑并入；要一个更合适的目录名。
+使用者（tiger 2026-10-12）：北极星剥离出 `subjects/`；同类的应用一并考虑；目录名几经讨论，
+最终定 `mentor`，把「指南针」（北极星）和大赛应用（赛历）迁进去。
 
-三者在「三类判据」里都是**图谱/参考类**（北极星自述；math-tools 见其 ADR 0084；competitions
-见 ADR 0114）：只呈现信息或提供工具供查阅，不教、不判分、不建进度库，教学规范不生效。
-`subjects/` 的语义已是自编教学设计的课程（`course`），它们混在里面是类别错位。
+北极星与赛历在「三类判据」里都是**图谱/参考类**：给人方向和决策依据，不教课、不判分、不建
+进度库，教学规范不生效。`subjects/` 的语义是自编教学设计的课程，它们混在里面是类别错位。
 
-### 名字
+### 名字（演变）
 
 | 候选 | 取舍 |
 |---|---|
-| **`reference`**（采用） | 与仓库自己的判据措辞「图谱/参考类」一致；覆盖图谱（北极星）、清单（赛历）、工具（数学工具）三种形态；与 `certification`、`guide`、`practice` 同为单个英文单词 |
-| `atlas` | 贴北极星，但装不下赛历和矩阵实验室，名字会比成员窄 |
-| `toolkit` / `utility` | 只贴 math-tools，北极星和赛历不是工具 |
-| `almanac` | 只贴赛历，生僻 |
+| `reference` | 首版草稿采用；只描述形态，没说它们为学习者做什么 |
+| `atlas` | 贴北极星，装不下赛历 |
+| `guide` | 已被 ADR 0143 定为手册类教程（gtkmm），并入会改写 0143 的定义 |
+| `guidance` / `support` | 前者与 `guide/` 太像，后者过泛 |
+| **`mentor`**（采用） | 导师：北极星是路线图与指南针，赛历是替人挑赛事，做的都是「给方向」 |
 
-`reference` 与 `polaris/content/sources/reference/`（路线图对照原料）重名，但一个是顶层、
-一个是应用内子路径，层级不同，根白名单检查只看顶层，无冲突。
+### 范围
 
-### 备选
+- 迁入：`polaris`、`competitions`。
+- **不迁 `math-tools`**：数学学习的配套工具，要在启动器里与 `mathematics` 关联（ADR 0084
+  的归属理由），且带 localStorage 打卡清单，边界最接近学习应用。首版草稿曾列入，使用者
+  最终只点名了北极星与赛历。
 
-- **只迁北极星**：最小改动，但留下两个同类应用在 `subjects/`，`reference/` 之后又要补一轮。
-  不采用。
-- **北极星单独放仓库根**（`polaris/`）：根目录全是类别目录，单个应用放根破坏这一规律。不采用。
+### 牵动面（已一次改齐）
 
-### 牵动面
-
-- `launcher/core/src/manifest.rs`：发现清单加一层 `reference`（与 guide、certification 同机制）。
-- `scripts/check.py`：`APP_ROOTS`、根白名单与各处对账加 `reference`。
-- **`pnpm-workspace.yaml`**：`packages` 只有 `subjects/*`，不加 `reference/*` 三个应用会被静默踢出共享工作区。
-- **根 `Cargo.toml`**：`members` 里三条 `subjects/…/src-tauri` 改路径。
-- `.github/workflows/ci.yml`、`release.yml`：working-directory、产物路径。
-- 登记三处：`docs/REPOSITORY.md`、根 `README.md`、根 `AGENTS.md`（结构图、三类判据）。
-- 三个应用自己的 `AGENTS.md` 自述路径；`subjects/algorithms|data-structures|linux|mathematics` 的 `AGENTS.md` 里有指向它们的路径文字；`launcher/core/src/paths.rs` 有一处引用待核。
-- 目录深度不变（`reference/<id>` 与 `subjects/<id>` 同为两层），`../../packages/*` 一类相对路径不用改。
-- **不动**：id、进程名、端口、`group`（图谱 / 数学 / 大赛）、`parent`、内容。
-
-### 风险
-
-- `launcher/core`、`check.py`、`ci.yml`、`release.yml` 同时被 0142（certification）、0143（guide）
-  的迁移触及，且工作区里有别的会话的未提交改动；三次迁移应协调到同一轮合入，或按序各自提交，
-  不并行改同一批文件。
-- math-tools 带一份 localStorage 打卡清单，边界最接近学习应用；其 AGENTS.md 已写明升级成
-  学习应用要先立 ADR，届时目录随类别迁到 `course/`。
+- `launcher/core/src/manifest.rs`：`discover_all` 追加一层 `mentor`。
+- `scripts/check.py`：`APP_ROOTS`、根白名单、结构树、README 与名字表对账、React 前端检查。
+- `release.yml`：矩阵加 `root` 字段，北极星四项写 `root: mentor`，working-directory 与产物路径
+  改用 `${{ matrix.root || 'subjects' }}`。`ci.yml` 按应用 id 调检查，不用改。
+- 登记三处：`docs/REPOSITORY.md`、根 `README.md`、根 `AGENTS.md`；
+  `subjects/algorithms|data-structures|linux|mathematics` 对北极星的路径引用；两个应用自述与
+  `extract_cpp_roadmap.py`（含它生成的 JSON 里的出处文字）。
+- 工作区文件：`pnpm-workspace.yaml` 补 `mentor/*`，根 `Cargo.toml` 两条成员路径。这两份
+  当时尚未入库，只改工作区、不进本次提交。
+- 目录深度不变，`../../packages/*` 一类相对路径不用改。
+- **不动**：id、进程名、端口、`group`、`parent`、内容。
 
 ### 已拍板（tiger 2026-10-12）
 
-1. 目录名 `reference` 定稿。
-2. math-tools 同批并入。
-3. 等 `subjects/`→`course/` 改名与 gtkmm→`guide/` 等相邻迁移落地后再执行。
+1. 目录名 `mentor`。
+2. 迁入北极星与赛历；math-tools 留 `subjects/`。
+3. 不等相邻迁移（0142、0143、0145），在不干扰它们的前提下先行执行。
 
 ---
 
@@ -464,7 +456,7 @@ gtkmm 是手册类的现成原型：定位「官方教程精读」，《Programm
 使用者（tiger 2026-10-12）：「将 subjects 改名 course，更符合里面应用的定位。」
 
 ADR 0143 已定三分语义并把 `course` 定为目标名；ADR 0142（certification）与
-ADR 0144（reference）落地后，`subjects/` 里留下的**全部是课程类学习应用**
+ADR 0144（mentor）落地后，`subjects/` 里留下的**全部是课程类学习应用**
 （自编教学设计：c-plus-plus、machine、data-structures、algorithms、ascent、
 mathematics、design-patterns、linux、os、network、database、firmware、
 microcontroller、rtos、organization、cs408、software、embedded、python 及
@@ -497,4 +489,5 @@ microcontroller、rtos、organization、cs408、software、embedded、python 及
 
 等并行重组会话（c-plus-plus→`practice/cpp`、driver→`certification/driver` 已暂存，
 gtkmm 工作区化进行中）在 `subjects/` 上的未提交改动落库后执行；届时与 gtkmm→`guide/`
-迁移一批完成，再放行 ADR 0144 的 reference 迁移。
+迁移一批完成，ADR 0144 的 mentor 迁移已先行执行（北极星与赛历已在 `mentor/`，
+不在改名范围内）。

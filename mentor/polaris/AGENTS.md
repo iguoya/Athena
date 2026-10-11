@@ -100,7 +100,7 @@ commit；保留版权（roadmap.sh）、带相同方式共享义务（CC BY-SA�
 ## 验证
 
 ```sh
-cd subjects/polaris
+cd mentor/polaris
 python3 scripts/check.py              # 内容 JSON、原料覆盖、内容契约、前端构建与单测、Rust 侧
 python3 scripts/check.py --skip-rust  # 只改了内容或前端时用，省掉 Rust 编译
 ```

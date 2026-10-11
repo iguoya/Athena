@@ -1,6 +1,6 @@
 # Athena 赛历 — 项目协作规则
 
-本文档是 **`subjects/competitions` 独立应用** 的项目级指令。仓库根 `AGENTS.md` 写各应用
+本文档是 **`mentor/competitions` 独立应用** 的项目级指令。仓库根 `AGENTS.md` 写各应用
 共同遵守的规则；**改本应用时以本文为准**。
 
 ## 定位

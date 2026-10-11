@@ -515,19 +515,24 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # root 缺省为 subjects；北极星在 mentor/（ADR 0144）
           - app: polaris
+            root: mentor
             os: windows-latest
             platform: windows-x64
             bundles: nsis
           - app: polaris
+            root: mentor
             os: macos-15
             platform: macos-arm64
             bundles: app,dmg
           - app: polaris
+            root: mentor
             os: macos-15-intel
             platform: macos-x86_64
             bundles: app,dmg
           - app: polaris
+            root: mentor
             os: ubuntu-26.04
             platform: linux-x86_64
             bundles: deb
@@ -568,7 +573,7 @@ jobs:
         with:
           node-version: "22"
           cache: npm
-          cache-dependency-path: subjects/${{ matrix.app }}/package-lock.json
+          cache-dependency-path: ${{ matrix.root || 'subjects' }}/${{ matrix.app }}/package-lock.json
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
@@ -579,7 +584,7 @@ jobs:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
-            subjects/${{ matrix.app }}/src-tauri/target
+            ${{ matrix.root || 'subjects' }}/${{ matrix.app }}/src-tauri/target
           key: tauri-release-${{ matrix.app }}-${{ matrix.os }}-${{ hashFiles(format('subjects/{0}/src-tauri/Cargo.lock', matrix.app)) }}
 
       - name: Install Linux bundle dependencies
@@ -593,7 +598,7 @@ jobs:
 
       # 版本号由 tag 决定写入 tauri.conf.json（ADR 0081 决策 3，与 driver 同法）
       - name: Set version
-        working-directory: subjects/${{ matrix.app }}
+        working-directory: ${{ matrix.root || 'subjects' }}/${{ matrix.app }}
         env:
           VERSION: ${{ steps.version.outputs.value }}
         shell: bash
@@ -601,16 +606,16 @@ jobs:
           node -e "const f='src-tauri/tauri.conf.json';const c=require('./'+f);c.version=process.env.VERSION;require('fs').writeFileSync(f,JSON.stringify(c,null,2))"
 
       - name: Install frontend dependencies
-        working-directory: subjects/${{ matrix.app }}
+        working-directory: ${{ matrix.root || 'subjects' }}/${{ matrix.app }}
         run: npm ci
 
       - name: Build and bundle
-        working-directory: subjects/${{ matrix.app }}
+        working-directory: ${{ matrix.root || 'subjects' }}/${{ matrix.app }}
         shell: bash
         run: npx tauri build --bundles "${{ matrix.bundles }}"
 
       - name: Collect and rename artifacts
-        working-directory: subjects/${{ matrix.app }}
+        working-directory: ${{ matrix.root || 'subjects' }}/${{ matrix.app }}
         shell: bash
         run: |
           version="${{ steps.version.outputs.value }}"
@@ -630,7 +635,7 @@ jobs:
           ls -l dist
 
       - name: Verify package
-        working-directory: subjects/${{ matrix.app }}
+        working-directory: ${{ matrix.root || 'subjects' }}/${{ matrix.app }}
         shell: bash
         run: |
           version="${{ steps.version.outputs.value }}"
@@ -652,8 +657,8 @@ jobs:
           name: athena-${{ matrix.app }}-${{ matrix.platform }}
           # deb 按 Debian 惯例用下划线（athena-<app>_<版本>_amd64.deb），只写 -* 会漏掉它
           path: |
-            subjects/${{ matrix.app }}/dist/athena-${{ matrix.app }}-*
-            subjects/${{ matrix.app }}/dist/athena-${{ matrix.app }}_*
+            ${{ matrix.root || 'subjects' }}/${{ matrix.app }}/dist/athena-${{ matrix.app }}-*
+            ${{ matrix.root || 'subjects' }}/${{ matrix.app }}/dist/athena-${{ matrix.app }}_*
           if-no-files-found: error
           retention-days: 7
 

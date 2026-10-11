@@ -122,4 +122,4 @@ launcher open dsa       # 日常开发（热更新）；启动器和图谱走的
 1. 改课：先改 `content/curriculum.json` 与 cases，再补前端展示类型（若有新 block）。
 2. 改运行时：只动 `src-tauri`，保持命令表面稳定。
 3. 改 UI 布局：只动 `src/` + `index.html`，不要求 C++ 教程的界面跟着改。
-4. 学科入口若要出现在北极星，改 `subjects/polaris`，与本应用发版可分开。
+4. 学科入口若要出现在北极星，改 `mentor/polaris`，与本应用发版可分开。

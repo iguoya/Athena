@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """仓库统一验证入口（ADR 0007、0045、0047）。
 
-检查逻辑归各应用自己（subjects/<id>/ 与 practice/<id>/ 下的 scripts/check.py），
+检查逻辑归各应用自己（subjects/<id>/、practice/<id>/、mentor/<id>/ 下的 scripts/check.py），
 这里只负责依次调用，
 外加四项跨应用检查：内容必须有出处（ADR 0043），项目 skill 在 .agents/ 与
 .claude/ 两处一致（ADR 0061），GitHub 工作流过 actionlint 与变量粘连检查，
@@ -41,7 +41,7 @@ def _force_utf8_output() -> None:
             reconfigure(encoding="utf-8", errors="replace")
 
 # 应用住在这两处，彼此平级（ADR 0060）。按意图分住处，但都走同一个验证入口。
-APP_ROOTS = ("subjects", "practice")
+APP_ROOTS = ("subjects", "practice", "mentor")
 
 
 def find_app(app: str) -> Path:
@@ -242,7 +242,7 @@ def run_stack_version_check() -> None:
 
 # 课程/讲解/演示类应用统一 Tauri 2 + React（ADR 0138 决策 2、9）。
 # 豁免表逐项列出尚未迁移或本轮暂缓的应用，**每迁完一个就删一行**，表空即全部统一。
-# 这里只管 subjects/（学习应用与图谱/参考类）；practice/ 自由发挥，不检查。
+# 这里只管 subjects/ 与 mentor/（学习应用与图谱/参考类）；practice/ 自由发挥，不检查。
 REACT_FRONTEND_EXEMPT: dict[str, str] = {
     "algorithms": "原生 TS 同源壳，待 ADR 0138 迁移（波 4）",
     "cs408": "原生 TS 同源壳，待 ADR 0138 迁移（波 4）",
@@ -267,28 +267,29 @@ def run_react_frontend_check() -> None:
     print("== 跨应用检查：课程类前端统一 Tauri 2 + React ==", flush=True)
     problems: list[str] = []
     seen: set[str] = set()
-    for app in sorted((REPO_ROOT / "subjects").iterdir()):
+    for app in sorted(p for root in ("subjects", "mentor") for p in (REPO_ROOT / root).iterdir()):
         if not (app / "app.json").is_file():
             continue
         seen.add(app.name)
+        where = f"{app.parent.name}/{app.name}"
         pkg = app / "package.json"
         tauri = pkg.is_file() and (app / "src-tauri" / "Cargo.toml").is_file()
         if app.name in REACT_FRONTEND_EITHER:
             continue
         if not tauri:
             if app.name not in REACT_FRONTEND_EXEMPT:
-                problems.append(f"  subjects/{app.name} 不是 Tauri + Node 应用，又不在 REACT_FRONTEND_EXEMPT（ADR 0138）")
+                problems.append(f"  {where} 不是 Tauri + Node 应用，又不在 REACT_FRONTEND_EXEMPT（ADR 0138）")
             continue
         data = json.loads(pkg.read_text(encoding="utf-8"))
         declared = {**data.get("dependencies", {}), **data.get("devDependencies", {})}
         if "vue" in declared:
-            problems.append(f"  subjects/{app.name} 还在用 Vue，课程类前端统一 React，Vue 不允许（ADR 0138）")
+            problems.append(f"  {where} 还在用 Vue，课程类前端统一 React，Vue 不允许（ADR 0138）")
         has_react = "react" in declared
         exempt = app.name in REACT_FRONTEND_EXEMPT
         if not has_react and not exempt:
-            problems.append(f"  subjects/{app.name} 的前端不是 React，又不在 REACT_FRONTEND_EXEMPT（ADR 0138）")
+            problems.append(f"  {where} 的前端不是 React，又不在 REACT_FRONTEND_EXEMPT（ADR 0138）")
         if has_react and exempt:
-            problems.append(f"  subjects/{app.name} 已是 React，应从 REACT_FRONTEND_EXEMPT 删掉这一行")
+            problems.append(f"  {where} 已是 React，应从 REACT_FRONTEND_EXEMPT 删掉这一行")
     for name in (*REACT_FRONTEND_EXEMPT, *REACT_FRONTEND_EITHER):
         if name not in seen:
             problems.append(f"  REACT_FRONTEND_EXEMPT 里的 {name} 已不存在，删掉这一行")
@@ -318,7 +319,7 @@ _EMPTY_PLOT_MINIMUM = ("README.md",)
 _APP_MINIMUM = ("AGENTS.md", "CLAUDE.md", "README.md", "scripts/check.py")
 
 _STRUCTURE_TREE_RE = re.compile(r"^  (\S+)/")
-_GROUP_RE = re.compile(r"^(subjects|practice)/")
+_GROUP_RE = re.compile(r"^(subjects|practice|mentor)/")
 
 # 仓库根只认这些条目：文档、代理与编辑器配置、六大功能区。别的出现在根下
 # 要么登记进来，要么进 .gitignore，要么删——launcher_list_out.txt、
@@ -327,7 +328,7 @@ _ROOT_ALLOW = {
     "AGENTS.md", "CLAUDE.md", "README.md", "CHANGELOG.md", "LICENSE",
     ".git", ".gitignore", ".gitattributes", ".zcodeignore",
     ".agents", ".claude", ".cursor", ".gemini", ".vscode", ".github",
-    "subjects", "practice", "launcher", "docs", "scripts", "archive",
+    "subjects", "practice", "mentor", "launcher", "docs", "scripts", "archive",
     "packages",
 }
 
@@ -370,7 +371,7 @@ def run_structure_check() -> None:
     #    少写的是新应用忘了登记——两个方向都算文档漂移。
     #    只解析 ``` 围栏内的树，正文里两空格缩进的普通段落不算数。
     repository_doc = REPO_ROOT / "docs" / "REPOSITORY.md"
-    tree: dict[str, set[str]] = {"subjects": set(), "practice": set()}
+    tree: dict[str, set[str]] = {"subjects": set(), "practice": set(), "mentor": set()}
     group = None
     in_tree_block = False
     for line in repository_doc.read_text(encoding="utf-8").splitlines():
@@ -387,7 +388,7 @@ def run_structure_check() -> None:
         entry = _STRUCTURE_TREE_RE.match(line)
         if entry and group:
             tree[group].add(entry.group(1))
-    for root in ("subjects", "practice"):
+    for root in APP_ROOTS:
         actual = {p.name for p in (REPO_ROOT / root).iterdir() if p.is_dir()}
         for ghost in sorted(tree[root] - actual):
             problems.append(f"  {repository_doc.relative_to(REPO_ROOT)} 结构树写了 {root}/{ghost}/，实际没有这个目录")
@@ -482,7 +483,7 @@ def run_structure_check() -> None:
     #    不存在的应用（幽灵），以及开工的应用（有 app.json）没进清单（漏登）。
     readme_refs = {
         f"{group}/{name}"
-        for group, name in re.findall(r"\((subjects|practice)/([\w-]+)\)", (REPO_ROOT / "README.md").read_text(encoding="utf-8"))
+        for group, name in re.findall(r"\((subjects|practice|mentor)/([\w-]+)\)", (REPO_ROOT / "README.md").read_text(encoding="utf-8"))
     }
     actual_dirs = {f"{root}/{p.name}" for root in APP_ROOTS for p in (REPO_ROOT / root).iterdir() if p.is_dir()}
     working_apps = {f"{root}/{p.name}" for root in APP_ROOTS for p in (REPO_ROOT / root).iterdir() if (p / "app.json").is_file()}
@@ -491,15 +492,16 @@ def run_structure_check() -> None:
     for missing in sorted(working_apps - readme_refs):
         problems.append(f"  根 README.md 应用表没有登记开工应用 {missing}（加一行）")
 
-    subjects_dirs = {p.name for p in (REPO_ROOT / "subjects").iterdir() if p.is_dir()}
-    subjects_working = {p.name for p in (REPO_ROOT / "subjects").iterdir() if (p / "app.json").is_file()}
+    # 名字表覆盖 subjects/ 与 mentor/ 两处（学习应用与图谱/参考类）；practice/ 不登记。
+    subjects_dirs = {p.name for root in ("subjects", "mentor") for p in (REPO_ROOT / root).iterdir() if p.is_dir()}
+    subjects_working = {p.name for root in ("subjects", "mentor") for p in (REPO_ROOT / root).iterdir() if (p / "app.json").is_file()}
     # 名字表的行特征是第三列进程名以 `athena-` 开头——学习者目录等别的表格第一列
     # 也有反引号词（`last`，第三列还有 `null`），只认反引号会把它们误当应用。
     name_table = set(
         re.findall(r"^\| `([\w-]+)` \|[^|]+\| `athena-", repository_doc.read_text(encoding="utf-8"), re.MULTILINE)
     )
     for ghost in sorted(name_table - subjects_dirs):
-        problems.append(f"  docs/REPOSITORY.md 名字表写了 {ghost}，subjects/ 下没有这个目录")
+        problems.append(f"  docs/REPOSITORY.md 名字表写了 {ghost}，subjects/ 与 mentor/ 下都没有这个目录")
     for missing in sorted(subjects_working - name_table):
         problems.append(f"  docs/REPOSITORY.md 名字表没有登记开工应用 {missing}")
 
@@ -507,7 +509,7 @@ def run_structure_check() -> None:
     for ghost in sorted(ci_apps - {"all", "sources", "launcher"} - subjects_dirs - {p.name for p in (REPO_ROOT / "practice").iterdir() if p.is_dir()}):
         problems.append(f"  ci.yml 手动选择项 {ghost} 不是实际存在的应用目录")
 
-    # 8. 应用区不留影子目录：subjects/、practice/、launcher/ 下不允许「未跟踪也未
+    # 8. 应用区不留影子目录：subjects/、practice/、mentor/、launcher/ 下不允许「未跟踪也未
     #    忽略」的目录。应用改 id 或退役后，磁盘上常剩下只剩构建产物的旧目录——
     #    c、cpp、dsa、english 四个旧名最多各留了 1.9 GB 的 build 与 node_modules，
     #    被忽略的对账看不见，未跟踪的等在第一次 `git add -A` 的路上。目录要么被

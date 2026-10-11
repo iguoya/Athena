@@ -12,7 +12,7 @@ C++ 的规则拼接。跑一次就够，源文件删掉之后这个脚本会自�
 已经是唯一事实来源。
 
 用法：
-    python3 subjects/polaris/scripts/extract_cpp_roadmap.py [--check]
+    python3 mentor/polaris/scripts/extract_cpp_roadmap.py [--check]
 
     --check 只校验已有 JSON 与源文件一致，不写文件（供 check.py 调用）。
 """
@@ -205,7 +205,7 @@ def extract() -> dict:
             "subjects/cpp 首页学科路线图的逐字导出，是 polaris 技术体系图的原料。"
             "字段含义见 subjects/cpp/registry/domain_graph.h；kind/verify/priority/"
             "track 由同名枚举转写成小写。不要手改这个文件——它由 "
-            "subjects/polaris/scripts/extract_cpp_roadmap.py 生成。"
+            "mentor/polaris/scripts/extract_cpp_roadmap.py 生成。"
         ),
         "nodes": nodes,
         "theory": parse_theory(text),

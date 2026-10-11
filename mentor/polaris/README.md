@@ -35,7 +35,7 @@
 
 ```sh
 launcher open polaris                 # 从仓库根目录
-python3 scripts/check.py              # 在 subjects/polaris 下
+python3 scripts/check.py              # 在 mentor/polaris 下
 ```
 
 规则与内容模型见 [AGENTS.md](AGENTS.md)，架构决策见 [docs/decisions/](docs/decisions/README.md)。

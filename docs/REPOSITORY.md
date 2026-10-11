@@ -37,7 +37,6 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
   microcontroller/  硬件实验台（Tauri 2 + React）——嵌入第 2/5 章实践课程，电子信息圈（ADR 0103、0123）
   rtos/             实时操作系统（Tauri 2 + React）——嵌入第 4 章实践课程，电子信息圈（ADR 0106、0123）
   gtkmm/       gtkmm 官方教程精读（Tauri 2 + React）
-  polaris/       技术体系图谱（Tauri 2 + React，原 Qt 壳已退役，ADR 0015）——不是学习应用，见下文
   organization/  计算机组成原理（Tauri 2 + Vite）——408 组成原理，挂靠 cs408、引用挂到 software（ADR 0115、0116）
   cs408/         408 计算机学科专业基础（Tauri 2 + Vite）——考研考试主应用，「考研」圈；数据结构、算法设计、
                  组成原理、操作系统、计算机网络五门科目课本体挂它下面，软设以文字指引承接（ADR 0116、0118、0119）
@@ -48,13 +47,15 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
   llm-app/       大模型应用开发（Tauri 2 + React）——「人工智能」圈；提示工程、RAG、Agent 与评估，
                  实践应用的主场（ADR 0120、0122）
   llm-finetune/  大模型微调与部署（Tauri 2 + React）——「人工智能」圈；LoRA、量化、本地推理与服务化（ADR 0120、0122）
-  competitions/  赛历（Tauri 2 + Vite）——「大赛」圈的竞赛清单，图谱/参考类，不是学习应用（ADR 0114）
 practice/<id>/ 项目应用：动手做的独立小项目，不接掌握度体系（ADR 0060）
   pocket_cube/ 2 阶魔方（GTK4 / gtkmm）
   nas_admin/   驾考中心服务后台（Flask-AppBuilder，部署在软路由）
   c-gui-lab/   C 语言 GUI 框架对比实验室（Electron 母体收编各框架官方 demo）
   earth/       地球（Tauri 2 + React + Three.js）——真实比例的地球分层 3D 可视化；
                使用者从 subjects/ 迁入（ADR 0128 补记）。id 仍为 earth，进程 athena-earth，无进度库
+mentor/<id>/   导师类（图谱/参考类）：给方向和查阅依据，不教课、不判分、不建进度库（ADR 0144）
+  polaris/       技术体系图谱（Tauri 2 + React，原 Qt 壳已退役，ADR 0015）——路线图与指南针，不是学习应用，见下文
+  competitions/  赛历（Tauri 2 + Vite）——「大赛」圈的竞赛清单，图谱/参考类，不是学习应用（ADR 0114）
 launcher/      启动器：macos/（Swift 菜单栏常驻）、core/、gui/
 docs/decisions/  跨应用的架构决策记录（ADR）
 scripts/       仓库级脚本：统一验证入口 check.py、跨应用内容出处检查
@@ -128,8 +129,8 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
 - **不是学习闭环，是呈现结构化信息供浏览、查阅、决策参考的？** 那是
   **图谱/参考类应用**：仍受「独立应用」一节的平级、隔离、`app.json` 启动规则约束，
   但**不**掌握度、不进度库、不激励——「跨应用教学规范」一节对它不生效，具体规则
-  以它自己的 `AGENTS.md` 为准。当前：`polaris`、`math-tools`、`competitions`（赛历，ADR 0114；`math-tools`是数学学习的配套工具，
-  因需要在启动器里和 `mathematics` 关联而归 `subjects/`，不是先例，见 ADR 0084）。
+  以它自己的 `AGENTS.md` 为准。当前：`polaris`、`competitions`（赛历，ADR 0114）住在 `mentor/`（ADR 0144）；
+  `math-tools` 是数学学习的配套工具，因需要在启动器里和 `mathematics` 关联而留在 `subjects/`，不是先例，见 ADR 0084。
   地球分层可视化 `earth` 由使用者迁到 `practice/earth`（ADR 0128 补记）。
 - **还没决定做成应用，只是存素材和结论，等以后真正开工？** 那连"应用"都不算，
   不需要 `app.json` 也不需要 `scripts/check.py`，根验证入口按设计静默跳过它——

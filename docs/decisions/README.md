@@ -67,6 +67,7 @@
 | [0128](0128-earth-app.md) | 新增图谱/参考类应用 earth（「地球」，「程序设计」圈暂存归属，端口 1511）：真实比例的地球分层 3D 可视化——WGS84 椭球、PREM、US Standard Atmosphere 1976 标准模型驱动，不建进度库，壳复制自 polaris | 已接受；2026-10-11 补记：目录改为 practice/earth |
 | [0139](0139-app-lifecycle-states.md) | 应用生命周期状态：`app.json` 新增可选 `lifecycle`（active 活跃学习 / built 建成待学 / archived 冻结归档，默认 active），启动器按档分层呈现——built 淡显、archived 默认不呈现且思维导图可开关显示；`hidden`（0093）语义不变，两者独立；首批标注 13 壳 archived、3 个建成待学 built | 已接受；给 0129「宁缺毋滥」提供比删除温和的中间态 |
 | [0143](0143-guide-directory.md) | 新增顶层目录 `guide/`（手册类教程）：顶层语义三分 course（课程类，自编教学设计，现 `subjects/`）/ guide（手册类，跟随一本外部手册精读）/ practice（项目类）；gtkmm 迁入为首批唯一成员，id/前缀/进度库/领域圈不动；`subjects`→`course` 改名另行 ADR | 已接受；草拟于 STRUCTURE-PROPOSALS.md V3（0134 流程） |
+| [0144](0144-mentor-directory.md) | 新增顶层目录 `mentor/`（导师类，图谱/参考类）：北极星、赛历迁入，只搬目录，id/进程名/端口/group 不动；math-tools 因与 mathematics 关联留 `subjects/`；发版矩阵加 `root` 字段 | 已接受，已执行；修订首版（`reference/`、三应用并入） |
 | [0145](0145-subjects-rename-to-course.md) | `subjects/` 整体改名 `course/`（0143 决策 2 的落实）：应用 id/目录名/进程名/知识点前缀/进度库全不动，只改顶层容器名；牵动面清单见 STRUCTURE-PROPOSALS V5，等并行重组落库后与 gtkmm→guide 迁移一批执行 | 已接受；草拟于 STRUCTURE-PROPOSALS.md V5（0134 流程） |
 
 ## 仓库工程
