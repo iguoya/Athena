@@ -2,7 +2,8 @@
 
 - 日期：2026-09-10
 - 状态：已接受；启动路径已由 [ADR 0041](0041-independent-apps-launch-in-dev-mode.md)
-  改为开发模式（Tauri 应用跑 `tauri:dev`，不启动打包 `.app`）
+  改为开发模式（Tauri 应用跑 `tauri:dev`，不启动打包 `.app`）；
+  **决策 2「构建完全隔离」与决策 3 末句已由 [ADR 0130](0130-shared-build-and-schema.md) 取代**
 
 ## 背景
 

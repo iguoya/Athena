@@ -1,7 +1,7 @@
 # ADR 0043：「内容必须有出处」跨应用统一规范
 
 - 日期：2026-09-14
-- 状态：已接受
+- 状态：已接受；§1「schema 不共用」已由 [ADR 0130](0130-shared-build-and-schema.md) 取代，其余有效
 - 统一：`apps/mathematics` ADR 0019、`apps/c` ADR 0003、`apps/english` ADR 0007–0009
 - 依赖：ADR 0032（异构独立应用）
 

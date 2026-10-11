@@ -2,7 +2,8 @@
 
 - 日期：2026-09-12
 - 状态：已接受；取代 ADR 0032 第 4 条。**第 1 条的库位置已由 ADR 0053 修订**
-  （进度库改放 `apps/<id>/progress/learning.db` 并随仓库走），其余部分继续有效
+  （进度库改放 `apps/<id>/progress/learning.db` 并随仓库走），其余部分继续有效；
+  **表结构不再各自定义，改走共享 schema（[ADR 0130](0130-shared-build-and-schema.md)），数据仍各应用自管**
 - 影响：`apps/*`、`ui/external_app_launcher`、`MainWindow`
 
 ## 背景
