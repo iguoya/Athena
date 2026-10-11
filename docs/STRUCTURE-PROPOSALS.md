@@ -454,3 +454,47 @@ gtkmm 是手册类的现成原型：定位「官方教程精读」，《Programm
 1. 目录名 `reference` 定稿。
 2. math-tools 同批并入。
 3. 等 `subjects/`→`course/` 改名与 gtkmm→`guide/` 等相邻迁移落地后再执行。
+
+---
+
+## V5 `subjects/` 改名 `course/`（草拟 2026-10-12；**已落 ADR 0145**）
+
+### 主张
+
+使用者（tiger 2026-10-12）：「将 subjects 改名 course，更符合里面应用的定位。」
+
+ADR 0143 已定三分语义并把 `course` 定为目标名；ADR 0142（certification）与
+ADR 0144（reference）落地后，`subjects/` 里留下的**全部是课程类学习应用**
+（自编教学设计：c-plus-plus、machine、data-structures、algorithms、ascent、
+mathematics、design-patterns、linux、os、network、database、firmware、
+microcontroller、rtos、organization、cs408、software、embedded、python 及
+人工智能四门）——目录名与内容第一次完全一致。
+
+### 已拍板（tiger 2026-10-12）
+
+1. `subjects/` 整体改名为 `course/`，一个 ADR 一次改齐。
+2. 所有应用 id、目录名、进程名、知识点前缀、进度库、`app.json` 全部不变。
+
+### 牵动面清单（ADR 0134：一次改齐）
+
+- `git mv subjects course`（保留 rename 历史）。
+- 启动器：`launcher/core/src/manifest.rs` 的 `discover()`（`repo.join("subjects")`）、
+  `paths.rs` 仓库根识别锚、`runner.rs` 测试路径。
+- 根 `scripts/check.py`：`APP_ROOTS`、各处 `REPO_ROOT / "subjects"`、根目录白名单、
+  CI/文档对账。
+- CI 与发版：`ci.yml` 各 job 的 `working-directory` 与路径引用、`release.yml` 的
+  `working-directory` 与 dist 路径。
+- 共享构建层：`pnpm-workspace.yaml`（`packages` 里的 `subjects/*`）、根 `Cargo.toml`
+  （`members` 里的 `subjects/…/src-tauri`）。
+- 文档：`docs/REPOSITORY.md`（结构树、名字表、判据段、`subjects/` 与 `practice/`
+  按意图分的表述）、根 `README.md`、根 `AGENTS.md`、`docs/ENGINEERING.md` 如有引用。
+- 各应用自述：应用自己的 `AGENTS.md` / `README.md` / `docs` 里的 `subjects/<id>`
+  路径批量替换；应用 `scripts/check.py` 里的 `subjects` 引用。
+- **不改**：历史 ADR 原文（`subjects/<id>` 是当时事实）、STRUCTURE-PROPOSALS 历史节、
+  `archive/`、进度库、知识点前缀。
+
+### 执行时机
+
+等并行重组会话（c-plus-plus→`practice/cpp`、driver→`certification/driver` 已暂存，
+gtkmm 工作区化进行中）在 `subjects/` 上的未提交改动落库后执行；届时与 gtkmm→`guide/`
+迁移一批完成，再放行 ADR 0144 的 reference 迁移。

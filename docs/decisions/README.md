@@ -67,6 +67,7 @@
 | [0128](0128-earth-app.md) | 新增图谱/参考类应用 earth（「地球」，「程序设计」圈暂存归属，端口 1511）：真实比例的地球分层 3D 可视化——WGS84 椭球、PREM、US Standard Atmosphere 1976 标准模型驱动，不建进度库，壳复制自 polaris | 已接受；2026-10-11 补记：目录改为 practice/earth |
 | [0139](0139-app-lifecycle-states.md) | 应用生命周期状态：`app.json` 新增可选 `lifecycle`（active 活跃学习 / built 建成待学 / archived 冻结归档，默认 active），启动器按档分层呈现——built 淡显、archived 默认不呈现且思维导图可开关显示；`hidden`（0093）语义不变，两者独立；首批标注 13 壳 archived、3 个建成待学 built | 已接受；给 0129「宁缺毋滥」提供比删除温和的中间态 |
 | [0143](0143-guide-directory.md) | 新增顶层目录 `guide/`（手册类教程）：顶层语义三分 course（课程类，自编教学设计，现 `subjects/`）/ guide（手册类，跟随一本外部手册精读）/ practice（项目类）；gtkmm 迁入为首批唯一成员，id/前缀/进度库/领域圈不动；`subjects`→`course` 改名另行 ADR | 已接受；草拟于 STRUCTURE-PROPOSALS.md V3（0134 流程） |
+| [0145](0145-subjects-rename-to-course.md) | `subjects/` 整体改名 `course/`（0143 决策 2 的落实）：应用 id/目录名/进程名/知识点前缀/进度库全不动，只改顶层容器名；牵动面清单见 STRUCTURE-PROPOSALS V5，等并行重组落库后与 gtkmm→guide 迁移一批执行 | 已接受；草拟于 STRUCTURE-PROPOSALS.md V5（0134 流程） |
 
 ## 仓库工程
 
@@ -135,3 +136,5 @@
 | [0137](0137-viz-shared-package.md) | 可视化呈现件抽成仓库根 `packages/viz`（`@athena/viz`，纯 TS 源码不预编译）：同类功能只留一份实现，六份拷贝的 trace-player 收敛为一份（解析前缀参数化、渲染器按 kind 注册）；不触及 schema/内容/进度库，是 C 档的明示例外；data-structures 先试点，其余使用方逐个迁移，防回流检查跟进 | 已接受；例外于 0135 决策 5 与 C 档；满足 0132 决策 5 第二条重启条件；按 0134 先草拟、复看后落 |
 | [0138](0138-course-apps-unify-tauri-react.md) | 课程/讲解/演示类应用统一 Tauri 2 + React（Vue、原生 TS 壳、Qt 壳逐波改造），页面渲染以摘星为基线，schema 不动；共享配置按课程属性四要素准入；machine 改造、c-plus-plus 与 driver 暂缓 | 已接受；修订 0133（默认→强制），取代 0042 决策 1、3；迁移待使用者逐波指派 |
 | [0140](0140-shared-tauri-workspace.md) | 同栈 Tauri 应用共用一份 pnpm 工作区与 catalog 版本、一个 `.cache/cargo-target`；课程壳进根 Cargo 工作区，启动器保留自己的工作区但依赖表必须相同 | 已接受；落实 0135 的 B 档；不抽 schema 与应用代码 |
+| [0141](0141-split-gtk-cpp-into-practice.md) | 旧 gtkmm 窗口从 C++ 教程拆出，独立为 `practice/cpp`（id `cpp`）；新壳只启动它已经编好的程序 | 已接受 |
+| [0142](0142-certification-root-for-driver.md) | 驾考迁到仓库根 `certification/driver`，与 `exercise` 平级；id 仍是 `driver` | 已接受 |
