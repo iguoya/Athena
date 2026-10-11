@@ -41,7 +41,7 @@ def _force_utf8_output() -> None:
             reconfigure(encoding="utf-8", errors="replace")
 
 # 应用住在这两处，彼此平级（ADR 0060）。按意图分住处，但都走同一个验证入口。
-APP_ROOTS = ("subjects", "practice", "mentor")
+APP_ROOTS = ("subjects", "guide", "practice", "mentor")
 
 
 def find_app(app: str) -> Path:
@@ -267,7 +267,7 @@ def run_react_frontend_check() -> None:
     print("== 跨应用检查：课程类前端统一 Tauri 2 + React ==", flush=True)
     problems: list[str] = []
     seen: set[str] = set()
-    for app in sorted(p for root in ("subjects", "mentor") for p in (REPO_ROOT / root).iterdir()):
+    for app in sorted(p for root in ("subjects", "guide", "mentor") for p in (REPO_ROOT / root).iterdir()):
         if not (app / "app.json").is_file():
             continue
         seen.add(app.name)
@@ -319,7 +319,7 @@ _EMPTY_PLOT_MINIMUM = ("README.md",)
 _APP_MINIMUM = ("AGENTS.md", "CLAUDE.md", "README.md", "scripts/check.py")
 
 _STRUCTURE_TREE_RE = re.compile(r"^  (\S+)/")
-_GROUP_RE = re.compile(r"^(subjects|practice|mentor)/")
+_GROUP_RE = re.compile(r"^(subjects|guide|practice|mentor)/")
 
 # 仓库根只认这些条目：文档、代理与编辑器配置、六大功能区。别的出现在根下
 # 要么登记进来，要么进 .gitignore，要么删——launcher_list_out.txt、
@@ -371,7 +371,7 @@ def run_structure_check() -> None:
     #    少写的是新应用忘了登记——两个方向都算文档漂移。
     #    只解析 ``` 围栏内的树，正文里两空格缩进的普通段落不算数。
     repository_doc = REPO_ROOT / "docs" / "REPOSITORY.md"
-    tree: dict[str, set[str]] = {"subjects": set(), "practice": set(), "mentor": set()}
+    tree: dict[str, set[str]] = {"subjects": set(), "guide": set(), "practice": set(), "mentor": set()}
     group = None
     in_tree_block = False
     for line in repository_doc.read_text(encoding="utf-8").splitlines():
@@ -483,7 +483,7 @@ def run_structure_check() -> None:
     #    不存在的应用（幽灵），以及开工的应用（有 app.json）没进清单（漏登）。
     readme_refs = {
         f"{group}/{name}"
-        for group, name in re.findall(r"\((subjects|practice|mentor)/([\w-]+)\)", (REPO_ROOT / "README.md").read_text(encoding="utf-8"))
+        for group, name in re.findall(r"\((subjects|guide|practice|mentor)/([\w-]+)\)", (REPO_ROOT / "README.md").read_text(encoding="utf-8"))
     }
     actual_dirs = {f"{root}/{p.name}" for root in APP_ROOTS for p in (REPO_ROOT / root).iterdir() if p.is_dir()}
     working_apps = {f"{root}/{p.name}" for root in APP_ROOTS for p in (REPO_ROOT / root).iterdir() if (p / "app.json").is_file()}
@@ -493,8 +493,8 @@ def run_structure_check() -> None:
         problems.append(f"  根 README.md 应用表没有登记开工应用 {missing}（加一行）")
 
     # 名字表覆盖 subjects/ 与 mentor/ 两处（学习应用与图谱/参考类）；practice/ 不登记。
-    subjects_dirs = {p.name for root in ("subjects", "mentor") for p in (REPO_ROOT / root).iterdir() if p.is_dir()}
-    subjects_working = {p.name for root in ("subjects", "mentor") for p in (REPO_ROOT / root).iterdir() if (p / "app.json").is_file()}
+    subjects_dirs = {p.name for root in ("subjects", "guide", "mentor") for p in (REPO_ROOT / root).iterdir() if p.is_dir()}
+    subjects_working = {p.name for root in ("subjects", "guide", "mentor") for p in (REPO_ROOT / root).iterdir() if (p / "app.json").is_file()}
     # 名字表的行特征是第三列进程名以 `athena-` 开头——学习者目录等别的表格第一列
     # 也有反引号词（`last`，第三列还有 `null`），只认反引号会把它们误当应用。
     name_table = set(

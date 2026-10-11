@@ -25,7 +25,7 @@
 | [`subjects/rtos`](subjects/rtos) | 实时操作系统（电子信息圈，ADR 0106、0123） | Tauri 2 + React |
 | [`subjects/database`](subjects/database) | 数据库 SQL 实验室（计算机圈，ADR 0103、0126） | Tauri 2 + React |
 | [`subjects/linux`](subjects/linux) | Linux 程序设计（程序设计圈，ADR 0109、0111） | Tauri 2 + Vite |
-| [`subjects/gtkmm`](subjects/gtkmm) | gtkmm 官方教程精读 | Tauri 2 + React |
+| [`guide/gtkmm`](guide/gtkmm) | gtkmm 官方教程精读（手册类，ADR 0143） | Tauri 2 + React |
 | [`mentor/polaris`](mentor/polaris) | 北极星（技术体系图谱，ADR 0144） | Tauri 2 + React |
 | [`subjects/organization`](subjects/organization) | 计算机组成原理（408，ADR 0115） | Tauri 2 + Vite |
 | [`subjects/os`](subjects/os) | 操作系统实验（408，ADR 0103、0104） | Tauri 2 + React |

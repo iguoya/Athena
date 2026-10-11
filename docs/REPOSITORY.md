@@ -36,7 +36,6 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
   firmware/         嵌入式程序设计实验（Tauri 2 + React）——嵌入第 6/8/11 章实践课程，电子信息圈（ADR 0103、0123）
   microcontroller/  硬件实验台（Tauri 2 + React）——嵌入第 2/5 章实践课程，电子信息圈（ADR 0103、0123）
   rtos/             实时操作系统（Tauri 2 + React）——嵌入第 4 章实践课程，电子信息圈（ADR 0106、0123）
-  gtkmm/       gtkmm 官方教程精读（Tauri 2 + React）
   organization/  计算机组成原理（Tauri 2 + Vite）——408 组成原理，挂靠 cs408、引用挂到 software（ADR 0115、0116）
   cs408/         408 计算机学科专业基础（Tauri 2 + Vite）——考研考试主应用，「考研」圈；数据结构、算法设计、
                  组成原理、操作系统、计算机网络五门科目课本体挂它下面，软设以文字指引承接（ADR 0116、0118、0119）
@@ -54,6 +53,8 @@ practice/<id>/ 项目应用：动手做的独立小项目，不接掌握度体�
   earth/       地球（Tauri 2 + React + Three.js）——真实比例的地球分层 3D 可视化；
                使用者从 subjects/ 迁入（ADR 0128 补记）。id 仍为 earth，进程 athena-earth，无进度库
 mentor/<id>/   导师类（图谱/参考类）：给方向和查阅依据，不教课、不判分、不建进度库（ADR 0144）
+guide/<id>/    手册类教程：跟随一本外部手册/官方教程精读，章节结构与编号以原书为准（ADR 0143）
+  gtkmm/       gtkmm 官方教程精读（Tauri 2 + React）——《Programming with gtkmm 4》全量翻译为编排基准
   polaris/       技术体系图谱（Tauri 2 + React，原 Qt 壳已退役，ADR 0015）——路线图与指南针，不是学习应用，见下文
   competitions/  赛历（Tauri 2 + Vite）——「大赛」圈的竞赛清单，图谱/参考类，不是学习应用（ADR 0114）
 launcher/      启动器：macos/（Swift 菜单栏常驻）、core/、gui/

@@ -31,7 +31,7 @@
 
 ```
 subjects/<id>/  课程学科：cpp machine data-structures algorithms linux organization
-                mathematics driver gtkmm ascent cs408 python design-patterns（学习应用；cs408 是 408 考试
+                mathematics driver ascent cs408 python design-patterns（学习应用；cs408 是 408 考试
                 主应用，五门科目课本体挂它底下，ADR 0116、0118、0119；python 开启
                 「人工智能」圈与 LLM 应用开发课程路线，machine-learning、deep-learning、
                 llm-app、llm-finetune 同批落骨架，五门一圈，ADR 0120、0122；
@@ -42,6 +42,7 @@ subjects/<id>/  课程学科：cpp machine data-structures algorithms linux orga
                 math-tools（图谱/参考类，数学学习的配套工具，因要与 mathematics 在启动器里关联
                 而留在这里，ADR 0084）
 mentor/<id>/    导师类（图谱/参考类）：polaris（路线图与指南针）、competitions（「大赛」圈的赛历，
+guide/<id>/    手册类教程：跟随一本外部手册/官方教程精读，首批 gtkmm（ADR 0143）
                 ADR 0114）；给方向和查阅依据，不教课、不建进度库（ADR 0144）
 practice/<id>/  项目应用：pocket_cube nas_admin c-gui-lab（ADR 0060）、earth（真实比例的
                 地球分层 3D 可视化，自 subjects/ 迁入，ADR 0128）
