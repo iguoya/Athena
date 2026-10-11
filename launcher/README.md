@@ -23,11 +23,11 @@
 
 ```json
 "dev": {
-  "env": { "ATHENA_DSA_ROOT": "${dir}" },
+  "env": { "ATHENA_DATA_STRUCTURES_ROOT": "${dir}" },
   "prepare": [{ "when_missing": "node_modules", "run": ["npm", "install"] }],
   "run": ["npm", "run", "tauri:dev"],
-  "ready": { "http": "http://localhost:1420" },
-  "binary": "athena-dsa"
+  "ready": { "http": "http://localhost:1497" },
+  "binary": "athena-data-structures"
 }
 ```
 
@@ -36,16 +36,17 @@
 - `ready` 区分"有 dev server"和"进程在就算就绪"。
 - `binary` 是窗口进程的可执行文件名——共享 cargo 缓存之后，Tauri 应用的二进制不在
   应用目录里了，按文件名认最直接。
-- `match`（可选）是判断进程归属的路径前缀，`subjects/cpp` 用它指向 `build`。
+- `match`（可选）是判断进程归属的路径前缀，`subjects/c-plus-plus` 用它指向 `build`。
 
 **清单是热的**（ADR 0001）：托盘启动器用文件通知盯着 `subjects/`、`practice/` 和各
 应用目录，新增、删除、修改 `app.json`，约两秒后托盘菜单、应用列表和思维导图自动
 跟着变，不用重启启动器；只改 `icon.svg` 同样生效。文件通知失效的环境有一分钟一次
 的兜底摸底，指纹没变就不动界面。
 
-窗口标题栏、任务栏和托盘用**同一份**虎头，来自 `gui/assets/tiger.svg`（Fluent Emoji
-虎头，和各应用同一画风，ADR 0065）。标题栏引用构建期写出的 `tiger-mark.png`；托盘与
-exe 资源段用同一份渲的位图——换标志只换那份 SVG。
+窗口标题栏用**虎头**（Fluent Emoji 虎头，和各应用同一画风，ADR 0065）：SVG 原件
+`gui/assets/tiger.svg` 随退役的 gui 留档（ADR 0127），webui 引用的是入库的
+`webui/public/tiger-mark.png`。托盘尚未迁移到 webui（ADR 0127），迁回时继续以那份
+SVG 为唯一源。
 
 ### 图标
 
@@ -158,7 +159,7 @@ launcher/target/release/launcher sync        # 提交并推送学习进度
 - **托盘**：Windows 正常；GNOME 默认没有状态栏区域，需要 AppIndicator 扩展，
   装不上时托盘不显示，窗口照常能用。Ubuntu 上还需要 `libayatana-appindicator3-dev`。
 - **Windows** 上全部应用都有正式的 CI 门槛并且构建通过：启动器、三个 Tauri 应用、
-  `subjects/machine`（Qt）、`subjects/cpp`（GTK4）。`subjects/cpp` 的 Windows 支持 2026-09-15 打通，
+  `subjects/machine`（Qt）、`subjects/c-plus-plus`（GTK4）。`subjects/c-plus-plus` 的 Windows 支持 2026-09-15 打通，
   其中一处临时垫片绕开了 glib 2.90 与 MSYS2 现有 glibmm 2.86 的名字冲突
   （ADR 0049），MSYS2 跟上后可以删。
 

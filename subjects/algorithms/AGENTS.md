@@ -12,7 +12,7 @@
 - 案例与讲解默认用 **C++20**；算法思想与语言无关，实现与对照以 C++ 为准。
 - **本应用是算法设计领域的承载者**（数据结构已拆分为 `subjects/data-structures`，ADR 0108）。两个应用都写 C++，边界是**教的是什么**
   ——那边教标准库怎么用，这里教手写实现与代价直觉。哈希表、排序、树这几章落在
-  重叠地带，写之前看一眼 [`docs/boundary-with-cpp.md`](docs/boundary-with-cpp.md)。
+  重叠地带，写之前看一眼 [`docs/boundary-with-c-plus-plus.md`](docs/boundary-with-c-plus-plus.md)。
 - 不以做成在线 OJ 或通用 IDE 为目标；实验短小、可观察、可反复改跑。
 - **出处档位 open**（ADR 0089）：内容以代码实验为主，出处是默认习惯不做门禁——
   新写的题鼓励当场标出处，未标注只报告不阻断；不凭印象伪造出处（要么如实标
