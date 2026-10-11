@@ -160,3 +160,129 @@ v9.0.0 周期仓库从 8 个目录涨到 14 个应用（subjects 11 + practice 3
 
 `AGENTS.md`（「通用应用代码的抽象待……再议」一句）、`docs/REPOSITORY.md`、
 `docs/decisions/README.md`（索引行）、`scripts/check.py`（防回流检查）。
+
+---
+
+## V2 课程/讲解/演示类应用统一为 Tauri 2 + React（草拟 2026-10-11；**未落 ADR**）
+
+### 主张
+
+使用者（tiger 2026-10-11）：所有课程类、讲解类、演示类应用采用一致的技术底层——
+**Tauri 2 + React**——并共用构建规范与依赖规范；不符合的全部改造，**先易后难**。
+纯实践类（`practice/`）自由发挥，不强求。
+
+使用者在同一段话里先后提到过 Electron + React，已澄清：**选 Tauri**。理由：25 个课程与
+图谱应用已是 Tauri，改 Electron 要重写每个应用的 `src-tauri` 壳和启动器托盘/自启动
+（刚在 ADR 0127 迁到 Tauri）；实践类 c-gui-lab 的 Electron 不受约束，保持原样。
+
+### 适用范围（按判据，不查清单）
+
+「课程/讲解/演示类」= 学习应用 + 图谱/参考类（REPOSITORY.md 的前两类），即以讲解或演示为目的、
+会被启动器当课程应用打开的那批。`practice/` 与素材坑不在内。
+
+### 现状（2026-10-11 实测，26 个 Tauri 应用 + 3 个非 Web 栈）
+
+| 前端 | 应用 | 备注 |
+|---|---|---|
+| Tauri + React（已符合） | ascent、database、deep-learning、gtkmm、llm-app、llm-finetune、machine-learning、network、os、python、software、polaris | 12 个，不动 |
+| Tauri + 原生 TS | algorithms、cs408、data-structures、linux、organization | **同一套壳复制五份**：`main.ts` 各约 2357 行，两两只差约 22 行；cs408/linux/organization 内容仍是空骨架 |
+| Tauri + 原生 TS | design-patterns | 自有壳 `main.ts` 约 2700 行 + `fill-code.ts`，内容约 1.4 MB，最完善 |
+| Tauri + 原生 TS | mathematics | 自有壳，与上面五份壳相差约 4000 行；另有 `engine/`、`prototypes/` |
+| Tauri + 原生 TS | competitions | 约 460 行，赛历 |
+| Tauri + Vue | firmware、microcontroller、rtos | 各约 50 行的空壳，**没有内容要迁** |
+| Tauri + Vue | math-tools（约 1100 行）、embedded（约 2200 行，含 `db.ts`、`content.ts`） | 有实质代码 |
+| Qt6/QML + CMake | machine | QML 20 个文件约 1800 行 + C++ 壳约 250 行；课表、题库、实验、汇编素材都是 JSON/文件，与 Qt 无关 |
+| Meson + GTK | c-plus-plus | **暂缓**（使用者定） |
+| Flutter | driver | **暂缓**（使用者定） |
+
+即：25 个 Tauri 课程/图谱应用里，12 个已是 React，13 个要改；另有 machine 一个要换栈；
+c-plus-plus 与 driver 本轮不动。
+
+### 与现行规则的关系
+
+- **ADR 0133**：它的默认栈（Tauri 2 + React）从「新应用的默认」升为「课程/讲解/演示类的
+  强制」；准入 (a)(b)(c) 里保留 gtkmm（教 GTK）、c-plus-plus、driver、c-gui-lab、pocket_cube；
+  **machine 退出准入表**（它的 Qt 本来就记为「不得效仿的历史例外」）。math-tools 与 embedded
+  系的 Vue 此前从未被准入，只是没人管，现在明确不再允许。
+- **ADR 0135 / 0136**：A 档（版本对齐）与 pnpm 统一已落；本提案把 **B 档**（pnpm 工作区 +
+  `catalog:` 统一版本 + 共享 tsconfig/vite 基础配置）提前，因为「统一的构建规范和依赖规范」
+  正是 B 档的内容。B 档按 0135 要求另立 ADR，且先在一个应用上跑通 `install → dev → build →
+  tauri dev` 再批量。
+- **ADR 0132**（schema 与内容抽象暂缓）：**不碰**。本提案只换**前端框架**，课表格式、
+  `content-contract.json`、进度库 schema、知识点前缀一律不动，不借机抽象公共 schema。
+- **ADR 0137**（`packages/viz`）：与本提案正交且互相受益。模拟器核心已是无框架 TS；
+  统一到 React 之后，只需补一层 React 绑定，Vue 绑定那条「待两个 Vue 使用方」不再有意义。
+- **ADR 0129 / 0054 精神**：改造期间 `id` 不改嫁、内容与进度库零改动，改框架不借机改内容。
+
+### 关键设计决定（需要拍板，见「待拍板」）
+
+原生 TS 那五份壳怎么迁。两条路：
+
+- **甲（建议）**：把壳**保持自己的内容格式**，只把呈现层从手写 DOM 改成 React 组件。
+  先拿内容最轻的 linux 做出 React 版壳，验证后复制到另四个（现状就是复制五份，迁完仍是
+  五份，但框架一致）。不动 schema，符合 0132。
+- **乙**：改用某个已有 React 应用（如 software、os）的壳，把五个应用的内容格式转成它的格式。
+  等于启动 schema 统一，与 0132 冲突，成本最高，**不建议**。
+
+### 迁移顺序（先易后难）
+
+每一波一个独立提交系列，每个应用单独提交；波与波之间可以暂停。
+
+| 波 | 对象 | 做法 | 难度依据 |
+|---|---|---|---|
+| 0 | 前置 | 打 tag `pre-react-unify`；B 档工作区在一个应用上试点（建议先用已符合的 os 或 network） | 0135 要求先试点后批量 |
+| 1 | firmware、microcontroller、rtos | 直接按 React 模板重建壳；无内容可迁 | 各约 50 行空壳 |
+| 2 | competitions、math-tools | 重写前端，数据文件原样保留 | 460 / 1100 行 |
+| 3 | embedded | 重写前端，`db.ts`、`content.ts` 的行为对照移植 | 2200 行，有读写逻辑 |
+| 4 | linux（试点）→ organization、cs408 → algorithms、data-structures | 甲方案；先在 linux 做出 React 壳 | 五份同源壳；前三个内容是空骨架，风险最低 |
+| 5 | machine | Qt/QML → Tauri + React；见下一节 | 教案是 QML 组件，要逐个重写为 React 组件 |
+| 6 | design-patterns、mathematics | 各自的壳单独移植 | 内容与交互最重，放最后 |
+
+### machine 迁移要点
+
+- **不变**：`id`、目录名、`machine.` 知识点前缀、`content/` 下全部 JSON 与素材、`labs/`、
+  `scripts/lab.py`、汇编素材 `content/asm/`、学习方法原型（预测–运行 + 机制模拟）。
+- **重写**：`qml/pages/`（图谱、大纲）、`qml/components/`（章卡片、节点、内存条、对照、
+  随堂考核）、`qml/lessons/*.qml` 的教案（逐节重写为 React 组件，保留动画语义）。
+- **删除**：`CMakeLists.txt` 的 Qt 部分、`src/` 的 C++ 壳、CI 与 `app.json` 里的 Qt 步骤、
+  macOS 打包里的 Qt 部分。热加载由 Vite HMR 取代。
+- **要处理**：machine 自己的 ADR 0042「教案用 QML 写」需要新 ADR 取代；`playground/` 的
+  LVGL 小程序本来就是「不是图谱入口」的旁路，建议原地保留、不随迁移处理（待拍板）。
+- 迁移前打 `pre-machine-react` tag（machine 已有 `pre-machine-reorg`，不复用）。
+
+### 验收口径（每个应用）
+
+1. `pnpm typecheck`、`pnpm build`、`tauri dev` 能跑，`scripts/check.py <id>` 通过；
+2. `content/` 与 `progress/` 的 git diff 为空（machine 之外）；
+3. 同一页面迁移前后截图对照，布局与交互没有退化；
+4. 禁止遗留：应用内不再有 `.vue`、手写 DOM 壳或 QML；
+5. `scripts/check.py` 加一条跨应用检查——课程/讲解/演示类应用的前端必须是 React，
+   例外只能列在带理由的豁免表里（初始：c-plus-plus、driver，标「暂缓」，不是准入）。
+
+### 牵动面
+
+- 13 个 Tauri 应用的前端 + machine 的整套壳；`scripts/check.py`（新增检查、豁免表）。
+- 需要同步的文档：根 `AGENTS.md` 与 `docs/REPOSITORY.md` 的技术栈措辞、`docs/ENGINEERING.md`、
+  各被迁应用的 `AGENTS.md` 技术栈节与目录表、CI 里 machine 的 Qt 步骤。
+- 需要新 ADR：仓库级一篇（强制统一 + 修订 0133 准入表 + 提前 B 档，注明与 0132 的关系）；
+  machine 一篇（取代 ADR 0042）。
+- 不涉及 `id`、目录名、挂靠关系、进度库、内容契约。
+
+### 风险
+
+- **工作量**：design-patterns 与 mathematics 的壳最重，机械移植也要数天；放最后做，
+  前面几波的经验用来估时。
+- **行为漂移**：手写 DOM 改 React 容易丢交互细节（键盘、滚动位置、焦点）。靠验收口径第 3 条
+  的截图对照与逐页清单兜底。
+- **machine 的实验链路**：`lab.py` 与应用的衔接（原来由 C++ 壳触发）需要在 Tauri 侧重新接，
+  这是 machine 迁移里最不确定的一块，应先做可行性小验证再排期。
+- **并行代理冲突**：被迁应用在迁移期间应由单一代理负责，避免和其他会话的内容改动撞车
+  （参见 AGENTS.md「多个代理并行」）。
+
+### 待拍板
+
+1. 原生 TS 五份壳走**甲**（只换呈现层，推荐）还是乙？
+2. machine 的 `playground/`（LVGL）原地保留，还是随迁移删除？
+3. 波 4 里的试点应用用 linux（内容空骨架、风险最低，推荐）还是 data-structures（内容更全、更能暴露问题）？
+4. B 档试点应用用 os 还是 network，或另选？
+5. 草稿定稿后，仓库级 ADR 与 machine ADR 的编号：落库时按「选号到落库一次完成」处理。
