@@ -38,7 +38,7 @@ def _force_utf8_output() -> None:
 
 
 def tool(name: str) -> str:
-    """把命令名解析成真实路径再执行（Windows 上 npm 实际是 npm.cmd）。"""
+    """把命令名解析成真实路径再执行（Windows 上 pnpm 实际是 pnpm.cmd）。"""
     found = shutil.which(name)
     if found is None:
         raise SystemExit(f"找不到 {name}，请先安装后重试")
@@ -286,8 +286,8 @@ def run(command: list[str], step: str) -> None:
 def check_build(skip_rust: bool) -> None:
     node_modules = PROJECT_ROOT / "node_modules"
     if not node_modules.exists():
-        run([tool("npm"), "install"], "安装前端依赖")
-    run([tool("npm"), "run", "build"], "前端构建")
+        run([tool("pnpm"), "install"], "安装前端依赖")
+    run([tool("pnpm"), "run", "build"], "前端构建")
     if not skip_rust:
         cargo = tool("cargo")
         run([cargo, "check", "--manifest-path", str(PROJECT_ROOT / "src-tauri" / "Cargo.toml")], "Rust cargo check")

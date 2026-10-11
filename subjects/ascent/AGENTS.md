@@ -72,6 +72,6 @@
 
 需要 Node 22+、Rust（rustup，MSVC 工具链）、VS 2022 C++ 生成工具（“使用 C++ 的桌面开发”）、WebView2。然后 `pnpm install`、`pnpm tauri dev`。安装任何软件前先问 tiger。
 
-pnpm 的提供方式（2026-10-09）：这台机器 corepack enable 需要管理员写 Program Files，实际用
-`npm i -g pnpm@12` 装进用户级 `%APPDATA%\npm`（本来就在 PATH）。此前 pnpm 不在 PATH，启动器
+pnpm 的提供方式（2026-10-09，全仓统一见 ADR 0136）：Windows 机器上 corepack enable 需要管理员写
+Program Files，实际用 `npm i -g pnpm@12` 装进用户级 `%APPDATA%\npm`（本来就在 PATH）。此前 pnpm 不在 PATH，启动器
 执行 dev 块的 `pnpm tauri dev` 会直接报找不到命令——摘星「启动器跑不起来」即此因。

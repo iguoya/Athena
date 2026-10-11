@@ -25,7 +25,7 @@
   基础转场用 Vue 内置 `<Transition>`)+ **lucide-vue-next** 图标 +
   **katex**(公式块)。与 `subjects/math-tools` 同一套技术体系(使用者点名要
   与 softcert 不同的体验),选型理由见该应用 `AGENTS.md`。
-- 包管理用 **npm**(本机 corepack 无权限写 Program Files,不引入 pnpm 依赖)。
+- 包管理用 **pnpm**（仓库统一，ADR 0136；安装见 docs/ENGINEERING.md「包管理器」）。
 - dev 端口 **1480**(strictPort);进程/二进制 `athena-embedded`;
   窗口标题「嵌入式系统设计师」;应用内文案用中文。
 

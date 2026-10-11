@@ -26,13 +26,13 @@ def check_app_json() -> None:
     print("ok: app.json")
 
 
-def run_npm(args: list[str]) -> None:
-    npm = shutil.which("npm")
-    if npm is None:
-        raise SystemExit("找不到 npm,请先安装 Node.js")
-    proc = subprocess.run([npm, *args], cwd=ROOT)
+def run_pnpm(args: list[str]) -> None:
+    pnpm = shutil.which("pnpm")
+    if pnpm is None:
+        raise SystemExit("找不到 pnpm,安装见 docs/ENGINEERING.md「包管理器」")
+    proc = subprocess.run([pnpm, *args], cwd=ROOT)
     if proc.returncode != 0:
-        raise SystemExit(f"npm {args[0]} 失败")
+        raise SystemExit(f"pnpm {args[0]} 失败")
 
 
 def main() -> int:
@@ -44,12 +44,12 @@ def main() -> int:
     # 缺依赖就按 lock 装上再查，而不是跳过报通过：CI 每次都是干净检出，
     # 跳过等于这一项从没被验证过。
     if not (ROOT / "node_modules").exists():
-        run_npm(["ci"])
-        print("ok: npm ci(按 lock 安装前端依赖)")
+        run_pnpm(["install", "--frozen-lockfile"])
+        print("ok: pnpm install --frozen-lockfile(按 lock 安装前端依赖)")
 
-    run_npm(["run", "typecheck"])
+    run_pnpm(["run", "typecheck"])
     print("ok: vue-tsc 类型检查")
-    run_npm(["run", "build"])
+    run_pnpm(["run", "build"])
     print("ok: vite build")
     return 0
 

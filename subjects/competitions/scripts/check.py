@@ -34,7 +34,7 @@ def _force_utf8_output() -> None:
 
 
 def tool(name: str) -> str:
-    # Windows 上 npm 实际是 npm.cmd，which 按 PATHEXT 查找才拿得到可执行路径（ADR 0047）。
+    # Windows 上 pnpm 实际是 pnpm.cmd，which 按 PATHEXT 查找才拿得到可执行路径（ADR 0047）。
     found = shutil.which(name)
     if found is None:
         raise SystemExit(f"找不到 {name}，请先安装后重试")
@@ -92,11 +92,11 @@ def check_data() -> None:
 def ensure_dependencies() -> None:
     if (PROJECT_ROOT / "node_modules").is_dir():
         return
-    npm = tool("npm")
-    if (PROJECT_ROOT / "package-lock.json").is_file():
-        run([npm, "ci"], "安装前端依赖（按 lock）")
+    pnpm = tool("pnpm")
+    if (PROJECT_ROOT / "pnpm-lock.yaml").is_file():
+        run([pnpm, "install", "--frozen-lockfile"], "安装前端依赖（按 lock）")
     else:
-        run([npm, "install"], "安装前端依赖")
+        run([pnpm, "install"], "安装前端依赖")
 
 
 def main() -> int:
@@ -107,7 +107,7 @@ def main() -> int:
 
     check_data()
     ensure_dependencies()
-    run([tool("npm"), "run", "build"], "前端类型检查与构建")
+    run([tool("pnpm"), "run", "build"], "前端类型检查与构建")
     if not arguments.skip_rust:
         run(
             [tool("cargo"), "check", "--manifest-path", "src-tauri/Cargo.toml", "--all-targets"],

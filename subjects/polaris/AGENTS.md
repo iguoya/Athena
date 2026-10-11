@@ -25,7 +25,7 @@
 - **壳与视图**：Tauri 2 + React 19 + TypeScript（Vite 8），样式 Tailwind 4，动效 Motion；
   图面以 SVG + DOM 承载（ADR 0015）。Rust 端只做壳：`tauri-plugin-single-instance` 保证
   **运行时只有一个北极星窗口**，`tauri-plugin-opener` 让出处链接在系统浏览器里打开。
-- **开发**：`app.json` 的 `dev` 块跑 `npm run tauri:dev`（端口 1470），前端由 Vite 热更新。
+- **开发**：`app.json` 的 `dev` 块跑 `pnpm run tauri:dev`（端口 1470），前端由 Vite 热更新。
 - `content/polaris.json` 是路线图的唯一内容来源，前端用 `@content` 别名直接导入，**不复制**、
   不得把节点、边、路线或来源硬编码进代码；`content/sources/catalog.json` 保存来源目录。
 - **内容契约只在 `scripts/contract.py` 里**（ADR 0015 决策 2）：运行时不校验。新增规则只改这一

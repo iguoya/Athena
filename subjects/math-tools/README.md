@@ -15,9 +15,9 @@ launcher open math-tools
 手动开发:
 
 ```sh
-npm install
-npm run tauri:dev   # Tauri 桌面窗口,前端热更
-npm run dev         # 仅前端,浏览器 http://localhost:1451
+pnpm install
+pnpm run tauri:dev   # Tauri 桌面窗口,前端热更
+pnpm run dev         # 仅前端,浏览器 http://localhost:1451
 ```
 
 ## 功能

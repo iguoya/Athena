@@ -76,7 +76,7 @@ launcher open organization   # 日常开发（热更新）
 环境变量 `ATHENA_ORGANIZATION_ROOT` 可强制指定应用根目录（含 `content/`）。
 
 验证走仓库根的统一入口 `python3 scripts/check.py organization`：内容 JSON 校验、
-`npm run build`、`cargo check` 与 `cargo test`（只改内容或前端时加 `--skip-rust`）。
+`pnpm run build`、`cargo check` 与 `cargo test`（只改内容或前端时加 `--skip-rust`）。
 
 ## 修改流程
 

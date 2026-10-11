@@ -31,7 +31,7 @@ def _force_utf8_output() -> None:
 def tool(name: str) -> str:
     """把命令名解析成真实路径再执行。
 
-    Windows 上 npm 实际是 npm.cmd，直接把裸名交给 subprocess 会找不到；
+    Windows 上 pnpm 实际是 pnpm.cmd，直接把裸名交给 subprocess 会找不到；
     which 会按 PATHEXT 查找，三个平台都能拿到能直接执行的路径（ADR 0047）。
     """
     found = shutil.which(name)
@@ -66,11 +66,11 @@ def ensure_dependencies() -> None:
     if (PROJECT_ROOT / "node_modules").is_dir():
         return
     # 有 lock 就按 lock 装：CI 上每次拿到的依赖要和本地一致。
-    npm = tool("npm")
-    if (PROJECT_ROOT / "package-lock.json").is_file():
-        run([npm, "ci"], "安装前端依赖（按 lock）")
+    pnpm = tool("pnpm")
+    if (PROJECT_ROOT / "pnpm-lock.yaml").is_file():
+        run([pnpm, "install", "--frozen-lockfile"], "安装前端依赖（按 lock）")
     else:
-        run([npm, "install"], "安装前端依赖")
+        run([pnpm, "install"], "安装前端依赖")
 
 
 def main() -> int:
@@ -85,10 +85,10 @@ def main() -> int:
 
     check_json()
     ensure_dependencies()
-    # npm run build = lint-content + test-speech + tsc + vite build：内容 lint、
-    # 朗读用例、类型和打包一次过。这些检查留在 npm 那边，本地 npm run build
+    # pnpm run build = lint-content + test-speech + tsc + vite build：内容 lint、
+    # 朗读用例、类型和打包一次过。这些检查留在 pnpm 那边，本地 pnpm run build
     # 也会跑到它们。
-    run([tool("npm"), "run", "build"], "前端类型检查与构建")
+    run([tool("pnpm"), "run", "build"], "前端类型检查与构建")
 
     if not arguments.skip_rust:
         # 不设 CARGO_TARGET_DIR：尊重外部环境。编排器对同类 Tauri 会注入共享目录

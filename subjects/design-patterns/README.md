@@ -7,7 +7,7 @@
 
 ```sh
 launcher/target/release/launcher open design-patterns   # 在仓库根经启动器打开
-npm run tauri:dev                                       # 在本目录直接开发
+pnpm run tauri:dev                                       # 在本目录直接开发
 python3 scripts/check.py                                # 验证
 ```
 

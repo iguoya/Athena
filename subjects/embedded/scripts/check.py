@@ -45,7 +45,7 @@ def _force_utf8_output() -> None:
 
 
 def tool(name: str, hint: str = "") -> str:
-    """Windows 上 npm 实际是 npm.cmd,which 按 PATHEXT 查出可执行路径(ADR 0047)。"""
+    """Windows 上 pnpm 实际是 pnpm.cmd,which 按 PATHEXT 查出可执行路径(ADR 0047)。"""
     found = shutil.which(name)
     if found is None:
         raise SystemExit(f"找不到 {name},请先安装后重试。{hint}")
@@ -201,11 +201,11 @@ def check_content() -> None:
 def ensure_dependencies() -> None:
     if (PROJECT_ROOT / "node_modules").is_dir():
         return
-    npm = tool("npm")
-    if (PROJECT_ROOT / "package-lock.json").is_file():
-        run([npm, "ci"], "安装前端依赖(按 lock)")
+    pnpm = tool("pnpm")
+    if (PROJECT_ROOT / "pnpm-lock.yaml").is_file():
+        run([pnpm, "install", "--frozen-lockfile"], "安装前端依赖(按 lock)")
     else:
-        run([npm, "install"], "安装前端依赖")
+        run([pnpm, "install"], "安装前端依赖")
 
 
 def main() -> int:
@@ -220,8 +220,8 @@ def main() -> int:
         return 0
 
     ensure_dependencies()
-    # npm run build = vue-tsc --noEmit + vite build,类型和打包一次过。
-    run([tool("npm"), "run", "build"], "前端类型检查与构建")
+    # pnpm run build = vue-tsc --noEmit + vite build,类型和打包一次过。
+    run([tool("pnpm"), "run", "build"], "前端类型检查与构建")
 
     if not arguments.skip_rust:
         # 不设 CARGO_TARGET_DIR:尊重外部环境;单独跑时用应用自己的 src-tauri/target。

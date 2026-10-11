@@ -6,7 +6,7 @@
 
 需要先装好：
 
-1. [Node.js](https://nodejs.org/) 22 或更新，然后运行 `corepack enable` 启用 pnpm。
+1. [Node.js](https://nodejs.org/) 22 或更新，然后 `npm i -g pnpm`（安装见 docs/ENGINEERING.md「包管理器」）。
 2. [Rust](https://www.rust-lang.org/tools/install)（rustup，默认的 MSVC 工具链）。
 3. Microsoft C++ 生成工具，安装时勾选“使用 C++ 的桌面开发”。WebView2 在 Windows 10/11 上一般已经自带。
 

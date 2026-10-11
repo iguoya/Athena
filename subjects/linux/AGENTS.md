@@ -101,12 +101,12 @@ cd subjects/linux
 launcher open dsa       # 日常开发（热更新）；启动器和图谱走的也是这条
 ```
 
-`npm run build:app` 只在真正要交付一份可分发的包时才跑，**不是**打开本应用的步骤，
+`pnpm run build:app` 只在真正要交付一份可分发的包时才跑，**不是**打开本应用的步骤，
 也不要把产物装进 `/Applications`。
 
 环境变量 `ATHENA_LINUX_ROOT` 可强制指定应用根目录（含 `content/`）。
 
-验证走仓库根的统一入口 `python3 scripts/check.py dsa`：装前端依赖、`npm run build`、
+验证走仓库根的统一入口 `python3 scripts/check.py dsa`：装前端依赖、`pnpm run build`、
 `cargo check` 与 `cargo test`（只改内容或前端时加 `--skip-rust`）。改了 C++ 实验时，再在应用里
 编译运行至少一个 case。
 

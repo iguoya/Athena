@@ -177,11 +177,11 @@ def ensure_dependencies() -> None:
     if (PROJECT_ROOT / "node_modules").is_dir():
         return
     # 有 lock 就按 lock 装：CI 上每次拿到的依赖要和本地一致。
-    npm = tool("npm")
-    if (PROJECT_ROOT / "package-lock.json").is_file():
-        run([npm, "ci"], "安装前端依赖（按 lock）")
+    pnpm = tool("pnpm")
+    if (PROJECT_ROOT / "pnpm-lock.yaml").is_file():
+        run([pnpm, "install", "--frozen-lockfile"], "安装前端依赖（按 lock）")
     else:
-        run([npm, "install"], "安装前端依赖")
+        run([pnpm, "install"], "安装前端依赖")
 
 
 def main() -> int:
@@ -198,10 +198,10 @@ def main() -> int:
     check_absorption()
     check_contract()
     ensure_dependencies()
-    npm = tool("npm")
-    # npm run build = tsc -b + vite build，类型和打包一次过。
-    run([npm, "run", "build"], "前端类型检查与构建")
-    run([npm, "test"], "前端单元测试与渲染冒烟（布局、视口、路由、全部视图）")
+    pnpm = tool("pnpm")
+    # pnpm run build = tsc -b + vite build，类型和打包一次过。
+    run([pnpm, "run", "build"], "前端类型检查与构建")
+    run([pnpm, "test"], "前端单元测试与渲染冒烟（布局、视口、路由、全部视图）")
     if not arguments.skip_rust:
         run(
             [tool("cargo"), "check", "--manifest-path", "src-tauri/Cargo.toml", "--all-targets"],

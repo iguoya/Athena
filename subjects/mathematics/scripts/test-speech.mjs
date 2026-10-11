@@ -1,6 +1,6 @@
 // 朗读文本转换的用例（ADR 0018）。speakable 是纯函数，最容易在改别的规则时
 // 被顺手改坏，而坏了只有戴着耳机听才发现——所以拿测试钉住。
-// 跑法：node scripts/test-speech.mjs（已挂进 npm run build）
+// 跑法：node scripts/test-speech.mjs（已挂进 pnpm run build）
 //
 // 用 esbuild 的 JS API 而不是 spawn `npx esbuild`：Windows 上 npx 实际是
 // npx.cmd，execFileSync 不经 shell，CreateProcess 只替没有扩展名的程序补 .exe，

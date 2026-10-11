@@ -28,7 +28,7 @@
 - **lucide-vue-next** 图标;**mathjs** 做矩阵运算与表达式求值,不自己写数值内核。
 - 字体:Sora(标题/拉丁)、Noto Sans SC(正文中文)、JetBrains Mono(数字/公式),
   经 `@fontsource` 打进包内,离线可用。
-- 包管理用 **npm**(本机 corepack 无权限写 Program Files,不引入 pnpm 依赖)。
+- 包管理用 **pnpm**（仓库统一，ADR 0136；安装见 docs/ENGINEERING.md「包管理器」）。
 
 ## 命名与端口
 
@@ -39,15 +39,15 @@
 ## 开发与运行
 
 - 打开应用走启动器:`launcher open math-tools`(ADR 0044、0046)。
-- 手动开发:`npm install` 后 `npm run tauri:dev`(改前端即时热更);
-  仅看界面可 `npm run dev` 后浏览器开 http://localhost:1451 。
-- 打包:`npm run tauri:build`(打包前需先补 `src-tauri/icons/`,当前
+- 手动开发:`pnpm install` 后 `pnpm run tauri:dev`(改前端即时热更);
+  仅看界面可 `pnpm run dev` 后浏览器开 http://localhost:1451 。
+- 打包:`pnpm run tauri:build`(打包前需先补 `src-tauri/icons/`,当前
   `bundle.active: false`)。
 
 ## 验证
 
 - `python3 scripts/check.py`:app.json 合法性 + `vue-tsc` 类型检查 + `vite build`;
-  缺 `node_modules` 时先按 lock `npm ci`,不跳过。
+  缺 `node_modules` 时先按 lock `pnpm install --frozen-lockfile`,不跳过。
 - 根目录 `python3 scripts/check.py math-tools` 透传到本脚本。
 
 ## 约定

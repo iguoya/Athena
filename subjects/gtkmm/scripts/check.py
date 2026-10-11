@@ -308,7 +308,7 @@ def check_license_pages() -> None:
 
 
 def tool(name: str) -> str:
-    """Windows 上 npm 实际是 npm.cmd；which 按 PATHEXT 解析，三平台可用。"""
+    """Windows 上 pnpm 实际是 pnpm.cmd；which 按 PATHEXT 解析，三平台可用。"""
     found = shutil.which(name)
     if found is None:
         raise SystemExit(f"找不到 {name}，请先安装后重试")

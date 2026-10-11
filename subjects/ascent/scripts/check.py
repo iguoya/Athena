@@ -57,9 +57,8 @@ def main() -> int:
     )
     arguments = parser.parse_args()
 
-    # Lumi 用 pnpm（pnpm-lock.yaml 里的版本约束依赖 pnpm 的 minimumReleaseAge，换成 npm
-    # 会装出另一套依赖）。corepack enable 即可启用，不必单独安装。
-    pnpm = tool("pnpm", "先运行 `corepack enable`（Node 22+ 自带 corepack）。")
+    # 仓库统一用 pnpm（ADR 0136）；Lumi 的 pnpm-lock.yaml 还依赖 pnpm 的 minimumReleaseAge。
+    pnpm = tool("pnpm", "安装见 docs/ENGINEERING.md「包管理器」（npm i -g pnpm）。")
     if not (PROJECT_ROOT / "node_modules").is_dir():
         run([pnpm, "install", "--frozen-lockfile"], "安装前端依赖（按 lock）")
 

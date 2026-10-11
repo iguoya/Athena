@@ -41,17 +41,17 @@ launcher open dsa
 # 或手动
 export PATH="/usr/local/opt/node/bin:/opt/homebrew/bin:$HOME/.cargo/bin:$PATH"
 cd subjects/algorithms
-npm install
-npm run tauri:dev
+pnpm install
+pnpm run tauri:dev
 ```
 
-不要只跑 `npm run dev` 再用浏览器打开：那只有前端，没有磁盘读写与本机编译，
+不要只跑 `pnpm run dev` 再用浏览器打开：那只有前端，没有磁盘读写与本机编译，
 实验页会出现「无法加载案例 / invoke」类错误。
 
 Athena 首页点「数据结构与算法」会 spawn `app.json` 的 dev 声明（热更新），**不要**
 先 `build:app` 再打开 `bin/` 或 `/Applications` 里的打包副本。
 
-`npm run build:app` 只在真正要交付一份可分发的包时才用。
+`pnpm run build:app` 只在真正要交付一份可分发的包时才用。
 
 ## 内容怎么规划（当前课表）
 

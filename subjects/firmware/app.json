@@ -23,11 +23,11 @@
     "prepare": [
       {
         "when_missing": "node_modules",
-        "run": ["npm", "install"],
+        "run": ["pnpm", "install"],
         "label": "安装前端依赖"
       }
     ],
-    "run": ["npm", "run", "tauri:dev"],
+    "run": ["pnpm", "run", "tauri:dev"],
     "ready": { "http": "http://localhost:1494" },
     "match": "src-tauri/target",
     "binary": "athena-firmware"

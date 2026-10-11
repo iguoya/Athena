@@ -30,6 +30,13 @@ Python + SymPy）、不内置编译器、不把功能降级成「没有工具链
 值得写的是「VS 要勾哪个工作负载」「MSYS2 的包名叫什么」这些查起来费事的；
 官网 URL、「LLVM 带 clang++」之类的常识不写——写进去反而是把人当小白。
 
+## 包管理器
+
+前端依赖统一用 **pnpm**（ADR 0136），锁文件是各应用的 `pnpm-lock.yaml`，`package.json` 里
+`packageManager` 钉版本，仓库里不留 `package-lock.json`。Node 25 起不再随带 corepack，
+需要单独装：`npm i -g pnpm`（装进用户级目录，Windows 也不要管理员权限），macOS 也可
+`brew install pnpm`。启动器和各应用的 `check.py` 找不到 pnpm 时会报出这一节。
+
 ## 跨平台优先（强约束）
 
 **技术选型和代码编写一律跨平台优先（ADR 0047）**，适用于仓库里每一个应用。
