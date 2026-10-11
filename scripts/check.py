@@ -202,7 +202,7 @@ STACK_VERSIONS = {
 }
 # 例外必须写理由：(应用, 依赖) -> 为什么不跟。"*" 表示该应用整体豁免。
 STACK_VERSION_EXEMPT: dict[tuple[str, str], str] = {
-    ("ascent", "*"): "用 pnpm 管依赖，本机默认工具链未装 pnpm，无法同批验证；单独升级",
+    ("ascent", "*"): "待 ADR 0136 把全部应用迁到 pnpm；迁移完成后删除此豁免，ascent 的版本并入 STACK_VERSIONS",
 }
 
 
