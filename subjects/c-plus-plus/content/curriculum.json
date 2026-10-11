@@ -1,0 +1,2402 @@
+{
+  "id": "cpp",
+  "title": "C++ 教程",
+  "tagline": "先看值类别和对象怎么活，再谈资源和接口。",
+  "chapters": [
+    {
+      "id": "cpp.TypeSemantics",
+      "title": "类型与表达式",
+      "description": "从初始化、类型推导和值类别建立阅读 C++ 对象与表达式的基本方法。",
+      "requires": [],
+      "topics": [
+        {
+          "id": "cpp.TypeSemantics.initialization",
+          "title": "初始化",
+          "description": "验证不同初始化形式、列表初始化的窄化检查和 explicit 构造边界。",
+          "difficulty": 2,
+          "masteryGoal": "master",
+          "knowledgeType": "concept",
+          "requires": [],
+          "sourceRefs": [
+            {
+              "source_id": "cppreference",
+              "relation": "adapted",
+              "locator": "cpp/language/copy_initialization",
+              "url": "https://en.cppreference.com/cpp/language/copy_initialization",
+              "note": "拷贝初始化只考虑非 explicit 构造函数与非 explicit 转换函数，直接初始化考虑全部——两种写法的分界以此条为准"
+            },
+            {
+              "source_id": "cppreference",
+              "relation": "adapted",
+              "locator": "cpp/language/list_initialization",
+              "url": "https://en.cppreference.com/cpp/language/list_initialization",
+              "note": "花括号拒绝窄化转换的规则"
+            },
+            {
+              "source_id": "cpp-core-guidelines",
+              "relation": "adapted",
+              "locator": "ES.23",
+              "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#res-list",
+              "note": "「优先用 {} 初始化」这条取舍与它的例外"
+            },
+            {
+              "source_id": "cpp-core-guidelines",
+              "relation": "selection_basis",
+              "locator": "ES.20",
+              "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#res-always",
+              "note": "「总是初始化对象」——这一节为什么值得单独讲"
+            }
+          ],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "同样是创建一个对象，初始化的写法决定编译器考虑哪些构造函数，以及会不会拒绝窄化。"
+            },
+            {
+              "type": "compare",
+              "caption": "三种常见写法",
+              "headers": [
+                "写法",
+                "名称",
+                "要记住的边界"
+              ],
+              "rows": [
+                [
+                  "T a{1};",
+                  "直接列表初始化",
+                  "花括号拒绝把 double 窄化塞进 int"
+                ],
+                [
+                  "T b = 1;",
+                  "拷贝初始化",
+                  "不考虑 explicit 构造函数和 explicit 转换"
+                ],
+                [
+                  "T c(1);",
+                  "直接初始化",
+                  "圆括号会考虑 explicit，也没有花括号的窄化检查"
+                ]
+              ]
+            },
+            {
+              "type": "code",
+              "caption": "explicit 只挡住拷贝初始化",
+              "text": "struct Tracer {\n    explicit Tracer(int);\n};\nTracer a{1};   // 可以\nTracer b = 1;  // 不可以：拷贝初始化不看 explicit 构造\n"
+            },
+            {
+              "type": "predict",
+              "prompt": "C++17 起，用纯右值初始化对象：Tracer b = Tracer{2}; 会先造一个临时对象再拷贝吗？",
+              "reveal": "不会。用纯右值初始化对象是保证的复制消除，没有那一次拷贝。案例 initialization_forms 就是在看这件事。"
+            }
+          ],
+          "quiz": [
+            {
+              "prompt": "下面哪种初始化会拒绝把 3.14 放进 int？",
+              "choices": [
+                "int x{3.14};",
+                "int x = 3.14;",
+                "int x(3.14);",
+                "int x = int(3.14);"
+              ],
+              "answer": 0,
+              "explanation": "花括号列表初始化禁止窄化转换。圆括号和等号拷贝初始化不会因为窄化而失败。依据 cppreference：list initialization。"
+            },
+            {
+              "prompt": "构造函数标了 explicit 之后，哪一行编不过？",
+              "choices": [
+                "Tracer a{1};",
+                "Tracer b(1);",
+                "Tracer c = 1;",
+                "Tracer d = Tracer{1};"
+              ],
+              "answer": 2,
+              "explanation": "拷贝初始化只考虑非 explicit 的构造函数。直接初始化和列表初始化看得到 explicit。"
+            }
+          ],
+          "labs": [
+            {
+              "case": "initialization_forms",
+              "prompt": "同样带一个等号，Tracer copy = a; 和 Tracer b = 2; 是同一回事吗？后者会不会先建一个临时对象再拷贝给 b？",
+              "goal": "补出 todo_copy_init() 里的那一行，对照两段输出里构造函数的调用次数与种类。",
+              "hint": "先写下你的预测再跑。如果结果和预测一致，想想为什么 copy = a 那行多了一次拷贝构造。"
+            }
+          ]
+        },
+        {
+          "id": "cpp.TypeSemantics.enum_class",
+          "title": "enum class",
+          "description": "验证枚举作用域、禁止隐式整数转换和显式读取底层值。",
+          "difficulty": 1,
+          "masteryGoal": "required",
+          "knowledgeType": "strategy",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "验证枚举作用域、禁止隐式整数转换和显式读取底层值。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.TypeSemantics.cast",
+          "title": "类型转换",
+          "description": "验证四种命名转换分别表达的意图、检查能力与风险边界。",
+          "difficulty": 2,
+          "masteryGoal": "required",
+          "knowledgeType": "strategy",
+          "requires": [
+            "cpp.TypeSemantics.initialization"
+          ],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "验证四种命名转换分别表达的意图、检查能力与风险边界。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.TypeSemantics.object_lifetime",
+          "title": "对象生命周期",
+          "description": "验证块作用域对象何时析构、临时对象在完整表达式末尾结束，以及 const 引用怎样延长临时对象的寿命。",
+          "difficulty": 3,
+          "masteryGoal": "master",
+          "knowledgeType": "concept",
+          "requires": [
+            "cpp.TypeSemantics.initialization"
+          ],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "对象的生命周期从初始化完成开始，到析构函数开始为止。存储能活多久是另一件事。"
+            },
+            {
+              "type": "compare",
+              "caption": "不要把两件事合成一件",
+              "headers": [
+                "",
+                "问的是什么"
+              ],
+              "rows": [
+                [
+                  "存储期",
+                  "这块内存由谁、在什么时候准备好：自动、静态、动态"
+                ],
+                [
+                  "生命周期",
+                  "这块内存里的对象从何时算构造完，到何时开始析构"
+                ]
+              ]
+            },
+            {
+              "type": "callout",
+              "tone": "warn",
+              "text": "自动存储的对象在离开作用域时析构，顺序与构造相反。动态存储要有人 delete 或交给 RAII，作用域结束不会自动释放。"
+            }
+          ],
+          "quiz": [
+            {
+              "prompt": "函数里的局部对象，析构发生在什么时候？",
+              "choices": [
+                "return 语句执行完、离开作用域时，按构造的逆序",
+                "进程退出时一起析构",
+                "下一次 new 的时候",
+                "只有调用了 delete 才析构"
+              ],
+              "answer": 0,
+              "explanation": "自动存储期的对象在声明它的块结束时析构。delete 管的是动态存储。"
+            },
+            {
+              "prompt": "生命周期从哪一刻算开始？",
+              "choices": [
+                "为它分配了存储的那一刻",
+                "初始化完成的那一刻",
+                "第一次被读取的那一刻",
+                "构造函数被调用之前"
+              ],
+              "answer": 1,
+              "explanation": "存储先到位，对象要等初始化完成才开始它的生命周期。"
+            }
+          ],
+          "labs": []
+        },
+        {
+          "id": "cpp.TypeSemantics.auto_deduction",
+          "title": "auto",
+          "description": "验证 auto 按值产生副本、auto& 保留别名，以及结构化绑定的复制与引用差别。",
+          "difficulty": 3,
+          "masteryGoal": "master",
+          "knowledgeType": "strategy",
+          "requires": [
+            "cpp.TypeSemantics.initialization"
+          ],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "验证 auto 按值产生副本、auto& 保留别名，以及结构化绑定的复制与引用差别。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.TypeSemantics.value_category",
+          "title": "值类别",
+          "description": "验证左值、纯右值和将亡值如何影响引用绑定与重载选择。",
+          "difficulty": 4,
+          "masteryGoal": "required",
+          "knowledgeType": "concept",
+          "requires": [
+            "cpp.TypeSemantics.object_lifetime"
+          ],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "值类别回答的是：这个表达式有没有身份、能不能被掏空。它不是「左值在左边」这种说法。"
+            },
+            {
+              "type": "compare",
+              "caption": "三种值类别",
+              "headers": [
+                "类别",
+                "有身份",
+                "可以移动走资源"
+              ],
+              "rows": [
+                [
+                  "左值 glvalue 里的 lvalue",
+                  "有",
+                  "不可以，它还要接着用"
+                ],
+                [
+                  "将亡值 xvalue",
+                  "有",
+                  "可以，对象即将结束"
+                ],
+                [
+                  "纯右值 prvalue",
+                  "没有",
+                  "它本身就是在初始化一个对象"
+                ]
+              ]
+            },
+            {
+              "type": "code",
+              "caption": "std::move 不移动任何东西",
+              "text": "std::string a = \"hi\";\nstd::string b = std::move(a);\n// std::move(a) 只是把左值变成将亡值。\n// 真正把缓冲区交出去的是 string 的移动构造。\n"
+            },
+            {
+              "type": "predict",
+              "prompt": "表达式 std::move(a) 的值类别是什么？",
+              "reveal": "将亡值（xvalue）。移动发生在用这个将亡值去初始化或赋值的时候，不是发生在 std::move 里。"
+            }
+          ],
+          "quiz": [
+            {
+              "prompt": "std::move(x) 做了什么？",
+              "choices": [
+                "把 x 的资源立刻转给一个新对象",
+                "把左值表达式变成将亡值，好让重载选中移动操作",
+                "把 x 清空成默认状态",
+                "禁止编译器再拷贝 x"
+              ],
+              "answer": 1,
+              "explanation": "std::move 是一个转换，返回将亡值。资源转不转移，取决于随后调用的构造或赋值。"
+            },
+            {
+              "prompt": "纯右值（prvalue）和将亡值（xvalue）的差别是？",
+              "choices": [
+                "纯右值没有对象身份，将亡值指向一个即将结束的对象",
+                "纯右值一定是字面量，将亡值一定是函数返回值",
+                "纯右值可以取地址，将亡值不行",
+                "两者只是写法不同，类别一样"
+              ],
+              "answer": 0,
+              "explanation": "将亡值是有身份的泛左值，表示对象可以安全被掏空。纯右值是初始化的材料，本身不是那个对象。"
+            }
+          ],
+          "labs": []
+        },
+        {
+          "id": "cpp.TypeSemantics.decltype_deduction",
+          "title": "decltype",
+          "description": "验证 decltype 对名字、左值表达式和将亡值表达式分别保留什么类型信息。",
+          "difficulty": 4,
+          "masteryGoal": "familiar",
+          "knowledgeType": "concept",
+          "requires": [
+            "cpp.TypeSemantics.auto_deduction",
+            "cpp.TypeSemantics.value_category"
+          ],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "验证 decltype 对名字、左值表达式和将亡值表达式分别保留什么类型信息。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        }
+      ]
+    },
+    {
+      "id": "cpp.Reference",
+      "title": "引用",
+      "description": "学习引用的基本语义、const 引用、引用传递和引用返回值。",
+      "requires": [
+        "cpp.TypeSemantics"
+      ],
+      "topics": [
+        {
+          "id": "cpp.Reference.reference_basics",
+          "title": "引用基础",
+          "description": "理解引用是对象的别名、引用必须初始化以及引用不能重新绑定。",
+          "difficulty": 1,
+          "masteryGoal": "master",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "引用是对象的另一个名字。它必须在声明时绑定，之后不能改去绑另一个对象。"
+            },
+            {
+              "type": "code",
+              "caption": "绑定一次",
+              "text": "int a = 1;\nint& r = a;   // r 就是 a\nr = 2;        // 改的是 a\n// int& s;    // 不可以：引用没有「先声明再绑定」\n"
+            },
+            {
+              "type": "callout",
+              "tone": "note",
+              "text": "引用不是对象，没有自己的存储可以让你重新赋值「指向别处」。看起来的赋值是在给它绑定的那个对象赋值。"
+            }
+          ],
+          "quiz": [
+            {
+              "prompt": "下面哪句成立？",
+              "choices": [
+                "引用可以先声明，稍后再绑定",
+                "引用声明时必须绑定到一个对象，之后不能改绑",
+                "引用和指针一样可以为空",
+                "给引用赋值会让它改去指另一个对象"
+              ],
+              "answer": 1,
+              "explanation": "引用没有空状态，也没有改绑操作。赋值作用于被引用的对象。"
+            },
+            {
+              "prompt": "int& r = a; 之后执行 r = b; 发生了什么？",
+              "choices": [
+                "r 改去绑定 b",
+                "a 被赋成 b 的值，r 仍然是 a 的名字",
+                "产生一个新的引用对象",
+                "编译失败，因为引用不能赋值"
+              ],
+              "answer": 1,
+              "explanation": "r 只是 a 的别名。r = b 就是 a = b。"
+            }
+          ],
+          "labs": []
+        },
+        {
+          "id": "cpp.Reference.const_reference",
+          "title": "const 引用",
+          "description": "学习 const 引用的只读语义；重点演示它能绑定临时对象并延长临时对象生命周期这一特殊规则，以及该规则只在当前作用域的绑定上生效、函数返回后临时对象照常销毁的边界。",
+          "difficulty": 3,
+          "masteryGoal": "master",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习 const 引用的只读语义；重点演示它能绑定临时对象并延长临时对象生命周期这一特殊规则，以及该规则只在当前作用域的绑定上生效、函数返回后临时对象照常销毁的边界。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.Reference.pass_by_reference",
+          "title": "值传递 vs 引用传递",
+          "description": "比较值传递和引用传递对调用方对象、复制成本及可修改性的影响。",
+          "difficulty": 1,
+          "masteryGoal": "master",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "比较值传递和引用传递对调用方对象、复制成本及可修改性的影响。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.Reference.return_by_reference",
+          "title": "引用返回值",
+          "description": "学习返回成员或生命周期更长的对象引用的安全用法；重点演示返回局部变量引用造成的悬空引用，理解为什么这是未定义行为以及编译器警告的局限。",
+          "difficulty": 4,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习返回成员或生命周期更长的对象引用的安全用法；重点演示返回局部变量引用造成的悬空引用，理解为什么这是未定义行为以及编译器警告的局限。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        }
+      ]
+    },
+    {
+      "id": "cpp.FunctionCallable",
+      "title": "函数与可调用对象",
+      "description": "学习 C++ 函数接口、重载机制、函数对象、Lambda 和通用回调。",
+      "requires": [
+        "cpp.TypeSemantics",
+        "cpp.Reference"
+      ],
+      "topics": [
+        {
+          "id": "cpp.FunctionCallable.overload",
+          "title": "函数重载",
+          "description": "学习重载解析、默认参数以及通过明确接口表达不同调用方式。",
+          "difficulty": 2,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习重载解析、默认参数以及通过明确接口表达不同调用方式。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.FunctionCallable.function_object",
+          "title": "函数对象",
+          "description": "学习重载调用运算符的类类型对象；演示函数对象相比函数指针可以携带状态、更容易被编译器内联，是标准算法和 Lambda 的底层机制。",
+          "difficulty": 2,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习重载调用运算符的类类型对象；演示函数对象相比函数指针可以携带状态、更容易被编译器内联，是标准算法和 Lambda 的底层机制。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.FunctionCallable.lambda",
+          "title": "Lambda 表达式",
+          "description": "学习捕获列表的语义差异：按值捕获复制一份快照、按引用捕获共享原对象；演示隐式捕获、mutable 与返回类型推导，以及捕获局部变量后在对象生命周期外使用导致的悬空引用风险。",
+          "difficulty": 3,
+          "masteryGoal": "master",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习捕获列表的语义差异：按值捕获复制一份快照、按引用捕获共享原对象；演示隐式捕获、mutable 与返回类型推导，以及捕获局部变量后在对象生命周期外使用导致的悬空引用风险。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.FunctionCallable.function_wrapper",
+          "title": "通用可调用包装",
+          "description": "学习 std::function 以类型擦除方式统一存放函数指针、Lambda 和函数对象；理解它带来的间接调用开销，以及调用空包装时抛出 bad_function_call 的行为。",
+          "difficulty": 3,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习 std::function 以类型擦除方式统一存放函数指针、Lambda 和函数对象；理解它带来的间接调用开销，以及调用空包装时抛出 bad_function_call 的行为。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.FunctionCallable.callback",
+          "title": "回调函数",
+          "description": "练习设计携带上下文数据的回调接口；重点观察被回调方持有引用或指针时，提供方对象生命周期结束导致的悬空问题，理解回调设计必须明确所有权约定。",
+          "difficulty": 2,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "练习设计携带上下文数据的回调接口；重点观察被回调方持有引用或指针时，提供方对象生命周期结束导致的悬空问题，理解回调设计必须明确所有权约定。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        }
+      ]
+    },
+    {
+      "id": "cpp.ClassObject",
+      "title": "类、对象与运算符",
+      "description": "学习类的定义、对象生命周期、拷贝控制、const 正确性和运算符重载。",
+      "requires": [
+        "cpp.FunctionCallable",
+        "cpp.Reference"
+      ],
+      "topics": [
+        {
+          "id": "cpp.ClassObject.class_basic",
+          "title": "类与对象",
+          "description": "理解类、对象、成员变量、成员函数和访问控制。",
+          "difficulty": 1,
+          "masteryGoal": "master",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "理解类、对象、成员变量、成员函数和访问控制。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.ClassObject.constructor_destructor",
+          "title": "构造与析构",
+          "description": "学习对象构造与析构的时机和顺序：成员按声明顺序初始化而非初始化列表书写顺序，析构按相反顺序执行；观察局部对象离开作用域和异常栈展开时的自动析构。",
+          "difficulty": 3,
+          "masteryGoal": "master",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习对象构造与析构的时机和顺序：成员按声明顺序初始化而非初始化列表书写顺序，析构按相反顺序执行；观察局部对象离开作用域和异常栈展开时的自动析构。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.ClassObject.operator_overloading",
+          "title": "运算符重载",
+          "description": "学习为自定义类型实现语义清晰的运算符。",
+          "difficulty": 2,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习为自定义类型实现语义清晰的运算符。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.ClassObject.three_way_comparison",
+          "title": "三路比较",
+          "description": "用 operator<=> 一次性得到六个比较运算符；理解 strong_ordering 与 partial_ordering 的区别，以及 = default 在什么条件下能用。",
+          "difficulty": 3,
+          "masteryGoal": "required",
+          "knowledgeType": "skill",
+          "requires": [
+            "cpp.ClassObject.operator_overloading"
+          ],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "用 operator<=> 一次性得到六个比较运算符；理解 strong_ordering 与 partial_ordering 的区别，以及 = default 在什么条件下能用。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        }
+      ]
+    },
+    {
+      "id": "cpp.ContainerIterator",
+      "title": "容器与迭代器",
+      "description": "标准库容器的选择依据与代价，以及迭代器这层把容器和算法连起来的接口。",
+      "requires": [
+        "cpp.ClassObject"
+      ],
+      "topics": [
+        {
+          "id": "cpp.ContainerIterator.sequential_container",
+          "title": "顺序容器",
+          "description": "比较 vector、deque、list 的内存布局与随机访问、中间插入的复杂度差异；重点学习迭代器失效规则：vector 扩容使全部迭代器失效，list 插入删除不影响既有迭代器。",
+          "difficulty": 3,
+          "masteryGoal": "master",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "比较 vector、deque、list 的内存布局与随机访问、中间插入的复杂度差异；重点学习迭代器失效规则：vector 扩容使全部迭代器失效，list 插入删除不影响既有迭代器。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.ContainerIterator.associative_container",
+          "title": "关联容器",
+          "description": "学习 map、set 基于红黑树的有序语义：元素按比较器有序、查找为对数复杂度；理解键不可变，以及 operator[] 会在键不存在时默认插入的行为差异。",
+          "difficulty": 3,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习 map、set 基于红黑树的有序语义：元素按比较器有序、查找为对数复杂度；理解键不可变，以及 operator[] 会在键不存在时默认插入的行为差异。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.ContainerIterator.unordered_container",
+          "title": "无序容器",
+          "description": "学习 unordered_map、unordered_set 的哈希桶结构；理解哈希冲突与负载因子触发重哈希、自定义类型需要同时提供 hash 和相等比较，以及重哈希使迭代器失效的规则。",
+          "difficulty": 3,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习 unordered_map、unordered_set 的哈希桶结构；理解哈希冲突与负载因子触发重哈希、自定义类型需要同时提供 hash 和相等比较，以及重哈希使迭代器失效的规则。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.ContainerIterator.basic",
+          "title": "迭代器基础",
+          "description": "理解迭代器的解引用、递增和区间表示。",
+          "difficulty": 1,
+          "masteryGoal": "master",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "理解迭代器的解引用、递增和区间表示。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.ContainerIterator.range_for",
+          "title": "范围 for 循环",
+          "description": "学习范围 for 的展开机制和引用语义：循环变量按值会复制每个元素、按引用才能修改原容器；理解遍历过程中修改容器结构导致迭代器失效的风险。",
+          "difficulty": 2,
+          "masteryGoal": "master",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习范围 for 的展开机制和引用语义：循环变量按值会复制每个元素、按引用才能修改原容器；理解遍历过程中修改容器结构导致迭代器失效的风险。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        }
+      ]
+    },
+    {
+      "id": "cpp.AlgorithmRanges",
+      "title": "标准算法 · 初阶",
+      "description": "排序、查找、变换这些现成的算法怎么用，以及它们凭什么能作用于任意容器。",
+      "requires": [
+        "cpp.ContainerIterator",
+        "cpp.FunctionCallable"
+      ],
+      "topics": [
+        {
+          "id": "cpp.AlgorithmRanges.with_algorithm",
+          "title": "迭代器与算法",
+          "description": "理解标准算法如何通过迭代器操作不同容器。",
+          "difficulty": 2,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "理解标准算法如何通过迭代器操作不同容器。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.AlgorithmRanges.sorting",
+          "title": "排序",
+          "description": "学习 sort、stable_sort 和自定义比较器；理解比较器必须满足严格弱序，违反时排序行为未定义，以及 stable_sort 如何保持相等元素的相对顺序。",
+          "difficulty": 3,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习 sort、stable_sort 和自定义比较器；理解比较器必须满足严格弱序，违反时排序行为未定义，以及 stable_sort 如何保持相等元素的相对顺序。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.AlgorithmRanges.finding",
+          "title": "查找",
+          "description": "学习 find、find_if 和二分查找相关算法。",
+          "difficulty": 1,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习 find、find_if 和二分查找相关算法。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.AlgorithmRanges.transform",
+          "title": "变换",
+          "description": "学习 transform 等对序列进行映射和转换的算法。",
+          "difficulty": 1,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习 transform 等对序列进行映射和转换的算法。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        }
+      ]
+    },
+    {
+      "id": "cpp.StandardLibrary",
+      "title": "词汇类型 · 初阶",
+      "description": "optional、pair 与 tuple、any、format——让函数签名自己说清楚「可能没有值」「一次返回多个」。",
+      "requires": [
+        "cpp.ClassObject"
+      ],
+      "topics": [
+        {
+          "id": "cpp.StandardLibrary.pair_tuple",
+          "title": "pair 与 tuple",
+          "description": "学习组合多个不同类型的值以及结构化绑定。",
+          "difficulty": 1,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习组合多个不同类型的值以及结构化绑定。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.StandardLibrary.optional",
+          "title": "optional",
+          "description": "使用 optional 表达可能不存在的返回值，避免特殊哨兵值。",
+          "difficulty": 1,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "使用 optional 表达可能不存在的返回值，避免特殊哨兵值。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.StandardLibrary.any",
+          "title": "any",
+          "description": "理解 any 的类型擦除、运行时取值和适用边界。",
+          "difficulty": 2,
+          "masteryGoal": "familiar",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "理解 any 的类型擦除、运行时取值和适用边界。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.StandardLibrary.format",
+          "title": "C++20 格式化",
+          "description": "学习 std::format 的占位符、格式说明和类型安全输出。",
+          "difficulty": 1,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习 std::format 的占位符、格式说明和类型安全输出。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        }
+      ]
+    },
+    {
+      "id": "cpp.ErrorHandling",
+      "title": "异常的使用 · 初阶",
+      "description": "抛出、捕获、标准异常层次与自定义异常——把错误从发生的地方送到能处理的地方。",
+      "requires": [
+        "cpp.ClassObject"
+      ],
+      "topics": [
+        {
+          "id": "cpp.ErrorHandling.exception_handling",
+          "title": "异常处理",
+          "description": "学习异常抛出后的栈展开过程：局部对象按构造相反顺序析构、catch 按顺序匹配和重新抛出；理解构造函数中途抛出异常时已构造成员会被析构、对象本身不存在的语义。",
+          "difficulty": 2,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习异常抛出后的栈展开过程：局部对象按构造相反顺序析构、catch 按顺序匹配和重新抛出；理解构造函数中途抛出异常时已构造成员会被析构、对象本身不存在的语义。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.ErrorHandling.standard_exception",
+          "title": "标准异常",
+          "description": "学习标准异常层次和根据错误语义选择异常类型。",
+          "difficulty": 2,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习标准异常层次和根据错误语义选择异常类型。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.ErrorHandling.custom_exception",
+          "title": "自定义异常",
+          "description": "学习定义携带上下文且保持稳定接口的异常类型。",
+          "difficulty": 2,
+          "masteryGoal": "familiar",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习定义携带上下文且保持稳定接口的异常类型。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        }
+      ]
+    },
+    {
+      "id": "cpp.InheritancePolymorphism",
+      "title": "继承与多态 · 初阶",
+      "description": "继承怎么写、虚函数怎么分派，以及 override 与 final 这两个让编译器替你把关的关键字。",
+      "requires": [
+        "cpp.ClassObject"
+      ],
+      "topics": [
+        {
+          "id": "cpp.InheritancePolymorphism.inheritance",
+          "title": "继承",
+          "description": "理解继承关系、访问控制和基类子对象。",
+          "difficulty": 1,
+          "masteryGoal": "master",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "理解继承关系、访问控制和基类子对象。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.InheritancePolymorphism.polymorphism",
+          "title": "多态",
+          "description": "学习虚函数、动态绑定和通过基类接口使用派生对象。",
+          "difficulty": 2,
+          "masteryGoal": "master",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习虚函数、动态绑定和通过基类接口使用派生对象。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.InheritancePolymorphism.override_keyword",
+          "title": "override 校验",
+          "description": "学习用 override 让编译器校验虚函数重写，避免签名不一致造成的意外隐藏。",
+          "difficulty": 1,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习用 override 让编译器校验虚函数重写，避免签名不一致造成的意外隐藏。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.InheritancePolymorphism.final_keyword",
+          "title": "final 密封",
+          "description": "学习用 final 禁止进一步重写虚函数或继承类，表达明确的扩展边界。",
+          "difficulty": 1,
+          "masteryGoal": "familiar",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习用 final 禁止进一步重写虚函数或继承类，表达明确的扩展边界。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        }
+      ]
+    },
+    {
+      "id": "cpp.FileIO",
+      "title": "I/O 与文件系统",
+      "description": "学习流式输入输出、格式化、文件访问和 C++17 文件系统库。",
+      "requires": [
+        "cpp.ErrorHandling",
+        "cpp.ContainerIterator"
+      ],
+      "topics": [
+        {
+          "id": "cpp.FileIO.file_read_write",
+          "title": "文件读写",
+          "description": "学习使用文件流打开、读取、写入和关闭文件。",
+          "difficulty": 1,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习使用文件流打开、读取、写入和关闭文件。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.FileIO.string_stream",
+          "title": "字符串与流",
+          "description": "学习 stringstream 的解析、拼接和格式转换用途。",
+          "difficulty": 1,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习 stringstream 的解析、拼接和格式转换用途。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.FileIO.filesystem",
+          "title": "文件系统",
+          "description": "学习使用 std::filesystem 处理路径、目录和文件属性。",
+          "difficulty": 2,
+          "masteryGoal": "familiar",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习使用 std::filesystem 处理路径、目录和文件属性。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        }
+      ]
+    },
+    {
+      "id": "cpp.ValueSemantics",
+      "title": "拷贝、移动与转发",
+      "description": "一个对象怎么被复制、被移走、被原样传下去——从拷贝控制到移动语义再到完美转发的完整一条线。",
+      "requires": [
+        "cpp.ClassObject",
+        "cpp.TypeSemantics"
+      ],
+      "topics": [
+        {
+          "id": "cpp.ValueSemantics.copy_control",
+          "title": "拷贝控制",
+          "description": "学习拷贝构造与拷贝赋值的编写约定；演示只按位复制指针造成的浅拷贝双重释放问题，理解三法则：自定义了析构、拷贝构造或拷贝赋值之一时，通常三者都需要。",
+          "difficulty": 3,
+          "masteryGoal": "master",
+          "knowledgeType": "concept",
+          "requires": [
+            "cpp.ClassObject.class_basic",
+            "cpp.TypeSemantics.object_lifetime"
+          ],
+          "sourceRefs": [
+            {
+              "source_id": "cpp-core-guidelines",
+              "relation": "adapted",
+              "locator": "C.61",
+              "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#rc-copy-semantic",
+              "note": "拷贝要产生相等且独立的对象——本节的判据"
+            },
+            {
+              "source_id": "cpp-core-guidelines",
+              "relation": "selection_basis",
+              "locator": "C.20",
+              "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#rc-zero",
+              "note": "零法则：能不定义默认操作就不定义"
+            },
+            {
+              "source_id": "cppreference",
+              "relation": "adapted",
+              "locator": "cpp/language/copy_constructor",
+              "url": "https://en.cppreference.com/cpp/language/copy_constructor",
+              "note": "逐成员拷贝的具体行为与隐式生成条件"
+            }
+          ],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "自己管着一块资源时，按位把指针拷过去会让两个对象析构同一块内存。"
+            },
+            {
+              "type": "prose",
+              "text": "自定义了析构函数、拷贝构造或拷贝赋值里的一个，通常三个都要自己写：析构负责释放，拷贝构造和拷贝赋值负责做出一块相等且独立的资源。只写析构、拷贝仍是浅拷贝，就是双重释放。"
+            },
+            {
+              "type": "predict",
+              "prompt": "两个对象的指针成员指向同一块 new 出来的内存，离开作用域时会释放几次？",
+              "reveal": "两次。第二次释放同一地址，行为没有定义。案例用计数代替真实崩溃，是为了能看见「重复释放」。"
+            }
+          ],
+          "quiz": [
+            {
+              "prompt": "类里自己 delete 了指针成员。拷贝构造用编译器默认生成的，会怎样？",
+              "choices": [
+                "每个对象得到自己的一份资源",
+                "两个对象共享同一指针，各自析构时重复释放",
+                "编译器拒绝生成拷贝构造",
+                "移动构造会自动改成深拷贝"
+              ],
+              "answer": 1,
+              "explanation": "默认拷贝是成员逐个拷贝。指针拷的是地址，不是那块内存。Core Guidelines C.61 要求拷贝语义相等且独立。"
+            },
+            {
+              "prompt": "三法则说的是哪三个？",
+              "choices": [
+                "构造、析构、赋值",
+                "析构、拷贝构造、拷贝赋值",
+                "移动构造、移动赋值、交换",
+                "默认构造、拷贝构造、移动构造"
+              ],
+              "answer": 1,
+              "explanation": "这三个都在管同一份资源的所有权。写了一个，另外两个的默认行为通常就不再对。"
+            }
+          ],
+          "labs": [
+            {
+              "case": "copy_control_aliasing",
+              "prompt": "逐成员拷贝对裸资源做了什么？两个对象共用一块内存时，析构会发生几次释放？",
+              "goal": "给 Deep 补上拷贝构造，让它复制出自己的块，再看末尾的「重复释放」计数变成多少。",
+              "hint": "真让它双重释放会直接崩，所以这里用一本账替代真实的堆——重复释放被记成数字而不是崩溃。"
+            }
+          ]
+        },
+        {
+          "id": "cpp.ValueSemantics.rvalue",
+          "title": "右值引用",
+          "description": "理解右值引用绑定的是可以被安全掏空的临时对象；演示左值引用、右值引用与 const 引用的重载选择规则，理解为什么右值引用让资源转移成为合法操作。",
+          "difficulty": 3,
+          "masteryGoal": "master",
+          "knowledgeType": "concept",
+          "requires": [
+            "cpp.TypeSemantics.value_category"
+          ],
+          "sourceRefs": [
+            {
+              "source_id": "cppreference",
+              "relation": "adapted",
+              "locator": "cpp/language/reference",
+              "url": "https://en.cppreference.com/cpp/language/reference",
+              "note": "右值引用的绑定规则，以及「具名右值引用是左值」"
+            },
+            {
+              "source_id": "cpp-core-guidelines",
+              "relation": "adapted",
+              "locator": "F.18",
+              "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#rf-consume",
+              "note": "X&& 参数表示「这个函数会搬走它」"
+            }
+          ],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "右值引用绑定的是可以安全被掏空的对象。它让「把资源转走」成为重载能选中的那一个。"
+            },
+            {
+              "type": "compare",
+              "caption": "引用能绑什么",
+              "headers": [
+                "参数",
+                "左值",
+                "右值"
+              ],
+              "rows": [
+                [
+                  "T&",
+                  "能",
+                  "不能"
+                ],
+                [
+                  "const T&",
+                  "能",
+                  "能，但你不该通过它掏空对象"
+                ],
+                [
+                  "T&&",
+                  "不能",
+                  "能"
+                ]
+              ]
+            },
+            {
+              "type": "callout",
+              "tone": "note",
+              "text": "重载同时有 const T& 和 T&& 时，右值选中 T&&。这是移动操作能被调用的原因，不是右值引用自己会搬内存。"
+            }
+          ],
+          "quiz": [
+            {
+              "prompt": "void f(T&&) 可以接受哪种实参？",
+              "choices": [
+                "一个普通左值变量",
+                "临时对象，或被 std::move 转成将亡值的左值",
+                "只有字面量 0",
+                "任何 const 对象"
+              ],
+              "answer": 1,
+              "explanation": "T&& 绑定右值。左值要先变成将亡值才会选中这个重载。"
+            },
+            {
+              "prompt": "为什么需要右值引用这种参数？",
+              "choices": [
+                "让函数能修改调用者的 const 对象",
+                "让重载能区分「还要继续用」和「可以被掏空」",
+                "代替所有的 const 引用",
+                "禁止编译器做返回值优化"
+              ],
+              "answer": 1,
+              "explanation": "左值还要接着用，只能拷贝。右值的资源可以转走。右值引用把这两条路分成两个重载。"
+            }
+          ],
+          "labs": [
+            {
+              "case": "rvalue_overloads",
+              "prompt": "同一个名字的三个重载，编译器凭什么选中其中一个？在 Buffer&& 参数内部再调用它，又会选哪个？",
+              "goal": "在 todo_inside_rvalue_parameter 里写一行 take(b);，对照它选中的重载和你的预测。",
+              "hint": "问「表达式 b 的值类别是什么」，而不是「b 的类型是什么」。"
+            }
+          ]
+        },
+        {
+          "id": "cpp.ValueSemantics.move_semantics",
+          "title": "移动构造与赋值",
+          "description": "学习移动构造、移动赋值和 std::move 的完整语义；重点观察被移动对象处于有效但未指定状态、std::move 本身只是类型转换而非移动动作，以及移动对容器性能的数量级改善。",
+          "difficulty": 4,
+          "masteryGoal": "master",
+          "knowledgeType": "concept",
+          "requires": [
+            "cpp.ValueSemantics.rvalue",
+            "cpp.ValueSemantics.copy_control"
+          ],
+          "sourceRefs": [
+            {
+              "source_id": "cpp-core-guidelines",
+              "relation": "adapted",
+              "locator": "C.64",
+              "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#rc-move-semantic",
+              "note": "移动要真的移动，并让源处于有效状态"
+            },
+            {
+              "source_id": "cpp-core-guidelines",
+              "relation": "adapted",
+              "locator": "C.66",
+              "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#rc-move-noexcept",
+              "note": "移动操作要 noexcept，否则标准库会退回拷贝"
+            },
+            {
+              "source_id": "cppreference",
+              "relation": "adapted",
+              "locator": "cpp/utility/move",
+              "url": "https://en.cppreference.com/cpp/utility/move",
+              "note": "std::move 是到右值引用的类型转换，本身不搬运数据"
+            }
+          ],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "移动构造把资源转走，源对象留在有效但未指定的状态。std::move 本身仍然只是转换。"
+            },
+            {
+              "type": "code",
+              "caption": "转移，不是复制",
+              "text": "Buf b = std::move(a);\n// b 拿走 a 的缓冲区。\n// a 仍是一个活着的 Buf，可以析构、可以赋新值，\n// 不要再假设它里面还有原来的数据。\n"
+            },
+            {
+              "type": "callout",
+              "tone": "warn",
+              "text": "被移走的对象必须还能安全析构。指针成员要置空，否则两个析构会释放同一块内存——移动就退回了浅拷贝的老问题。"
+            }
+          ],
+          "quiz": [
+            {
+              "prompt": "移动之后，源对象处于什么状态？",
+              "choices": [
+                "对象已经析构，不能再碰",
+                "有效但未指定：可以析构和重新赋值，原来的值不要再读",
+                "和移动前完全一样",
+                "自动变成空指针常量 nullptr"
+              ],
+              "answer": 1,
+              "explanation": "标准保证被移动的标准库对象仍有效，但不保证还留着原来的内容。自己写的类型也要守住「能安全析构」。"
+            },
+            {
+              "prompt": "容器在扩容时优先移动元素，快在哪里？",
+              "choices": [
+                "少了一次对元素缓冲区的深拷贝",
+                "编译器跳过了所有构造函数",
+                "元素个数不再增加",
+                "不再调用析构函数"
+              ],
+              "answer": 0,
+              "explanation": "能移动的元素只交接指针或句柄。不能移动的才退回拷贝。"
+            }
+          ],
+          "labs": [
+            {
+              "case": "move_transfer",
+              "prompt": "拷贝和移动在「复制了多少个元素」上差多少？移动之后源对象还剩什么，还能安全析构吗？",
+              "goal": "在 todo_move 里写 Payload b = std::move(a);，对照累计复制元素数与 a.size 的变化。",
+              "hint": "先预测三件事：调用哪个构造函数、复制计数增加多少、a.size 变成几。"
+            }
+          ]
+        },
+        {
+          "id": "cpp.ValueSemantics.special_members",
+          "title": "特殊成员函数",
+          "description": "编译器在什么条件下生成、抑制或删除拷贝与移动操作；理解五法则要求这六个函数一起考虑，以及为什么写了析构函数会让移动操作悄悄退化成拷贝。",
+          "difficulty": 4,
+          "masteryGoal": "master",
+          "knowledgeType": "concept",
+          "requires": [
+            "cpp.ValueSemantics.copy_control",
+            "cpp.ValueSemantics.move_semantics"
+          ],
+          "sourceRefs": [
+            {
+              "source_id": "cpp-core-guidelines",
+              "relation": "adapted",
+              "locator": "C.21",
+              "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#rc-five",
+              "note": "五法则：定义或 =delete 了任何一个，就要全部考虑"
+            },
+            {
+              "source_id": "cppreference",
+              "relation": "adapted",
+              "locator": "cpp/language/rule_of_three",
+              "url": "https://en.cppreference.com/cpp/language/rule_of_three",
+              "note": "六个特殊成员函数的生成、抑制与删除条件"
+            }
+          ],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "编译器在什么条件下生成、抑制或删除拷贝与移动操作；理解五法则要求这六个函数一起考虑，以及为什么写了析构函数会让移动操作悄悄退化成拷贝。"
+            },
+            {
+              "type": "callout",
+              "tone": "note",
+              "text": "五法则：定义或 =delete 了任何一个，就要全部考虑"
+            }
+          ],
+          "quiz": [],
+          "labs": [
+            {
+              "case": "special_members_suppression",
+              "prompt": "两个类只差一个空析构函数，为什么其中一个的「移动」实际是拷贝？这个退化编译器为什么不报错？",
+              "goal": "给 WithDtor 补回 = default 的移动操作，看第二列从「否（退回拷贝）」变回「是」。",
+              "hint": "注意 is_move_constructible 两个都是 1——拷贝构造也能接住右值，所以这个特征查不出退化。"
+            }
+          ]
+        },
+        {
+          "id": "cpp.ValueSemantics.forwarding",
+          "title": "完美转发",
+          "description": "理解 T&& 在模板推导中是转发引用而非右值引用、引用折叠规则，以及 std::forward 为什么必须带模板实参；对照只用 std::move 会把左值实参错误地掏空。",
+          "difficulty": 5,
+          "masteryGoal": "required",
+          "knowledgeType": "skill",
+          "requires": [
+            "cpp.ValueSemantics.move_semantics"
+          ],
+          "sourceRefs": [
+            {
+              "source_id": "cpp-core-guidelines",
+              "relation": "adapted",
+              "locator": "F.19",
+              "url": "https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#rf-forward",
+              "note": "转发参数用 TP&&，且只用 std::forward 转发"
+            },
+            {
+              "source_id": "cppreference",
+              "relation": "adapted",
+              "locator": "cpp/utility/forward",
+              "url": "https://en.cppreference.com/cpp/utility/forward",
+              "note": "std::forward 的条件转换与必须显式指定模板实参"
+            },
+            {
+              "source_id": "cppreference",
+              "relation": "selection_basis",
+              "locator": "cpp/language/reference",
+              "url": "https://en.cppreference.com/cpp/language/reference",
+              "note": "引用折叠规则"
+            }
+          ],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "理解 T&& 在模板推导中是转发引用而非右值引用、引用折叠规则，以及 std::forward 为什么必须带模板实参；对照只用 std::move 会把左值实参错误地掏空。"
+            },
+            {
+              "type": "callout",
+              "tone": "note",
+              "text": "转发参数用 TP&&，且只用 std::forward 转发"
+            }
+          ],
+          "quiz": [],
+          "labs": [
+            {
+              "case": "forward_vs_move",
+              "prompt": "同一个转发函数，把 std::forward 换成 std::move 会有什么后果？后果出现在哪一侧——被调方还是调用方？",
+              "goal": "在 todo_forward_rvalue 里用 forward_it 传一个右值，对照传左值时的输出，说出 T 分别被推导成什么。",
+              "hint": "两个示范函数只差一个词，输出的最后一行（调用方手里还剩什么）才是重点。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cpp.RAII",
+      "title": "RAII 与资源管理",
+      "description": "学习对象生命周期、智能指针和移动语义构成的现代 C++ 资源管理体系。",
+      "requires": [
+        "cpp.ValueSemantics"
+      ],
+      "topics": [
+        {
+          "id": "cpp.RAII.raw_pointer_ownership",
+          "title": "裸指针与所有权",
+          "description": "裸指针不表达所有权——同一个 T* 可能是拥有者、观察者或一段数组的起点，看签名分辨不出来；理解这正是智能指针要解决的问题。",
+          "difficulty": 2,
+          "masteryGoal": "master",
+          "knowledgeType": "concept",
+          "requires": [
+            "cpp.Reference.reference_basics"
+          ],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "裸指针不表达所有权——同一个 T* 可能是拥有者、观察者或一段数组的起点，看签名分辨不出来；理解这正是智能指针要解决的问题。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.RAII.basic",
+          "title": "RAII 思想",
+          "description": "理解资源获取即初始化以及析构函数自动释放资源的机制。",
+          "difficulty": 2,
+          "masteryGoal": "master",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "资源在构造时拿到，在析构时放开。作用域结束就释放，不靠记得写 delete。"
+            },
+            {
+              "type": "prose",
+              "text": "RAII 把资源和对象的生命周期绑在一起。初始化成功，资源就属于这个对象；无论正常返回还是抛异常，析构都会跑。锁、文件、堆内存都是同一条规则。"
+            },
+            {
+              "type": "compare",
+              "caption": "两套写法",
+              "headers": [
+                "手动",
+                "RAII"
+              ],
+              "rows": [
+                [
+                  "每一条 return 前都要释放",
+                  "析构函数只有一处"
+                ],
+                [
+                  "中途抛异常会漏掉释放",
+                  "栈展开时析构照样执行"
+                ]
+              ]
+            }
+          ],
+          "quiz": [
+            {
+              "prompt": "RAII 把资源的释放放在哪里？",
+              "choices": [
+                "析构函数",
+                "调用者记得写的 finally",
+                "进程退出钩子",
+                "下一次构造函数"
+              ],
+              "answer": 0,
+              "explanation": "获取在构造，释放在析构。调用者靠对象离开作用域，而不是靠记得配对。"
+            },
+            {
+              "prompt": "函数中途抛出异常时，已经构造的局部 RAII 对象会怎样？",
+              "choices": [
+                "析构被跳过，资源泄漏",
+                "栈展开时析构，资源被释放",
+                "要等 catch 里手动调用析构",
+                "对象泄漏，但资源被操作系统立刻收回"
+              ],
+              "answer": 1,
+              "explanation": "这是 RAII 相对手动释放的那一点：异常路径不用再写一遍清理。"
+            }
+          ],
+          "labs": []
+        },
+        {
+          "id": "cpp.RAII.unique",
+          "title": "独占指针",
+          "description": "学习 unique_ptr 的独占所有权、创建、转移和自动释放。",
+          "difficulty": 2,
+          "masteryGoal": "master",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "unique_ptr 表示这块资源只有一个主人。拷贝被删掉，转移用移动。"
+            },
+            {
+              "type": "code",
+              "caption": "一个主人",
+              "text": "auto p = std::make_unique<int>(1);\nauto q = std::move(p);\n// p 不再拥有那块 int，q 析构时释放。\n// auto r = q;  // 不可以：独占指针没有拷贝\n"
+            },
+            {
+              "type": "callout",
+              "tone": "note",
+              "text": "优先 make_unique，而不是先 new 再包进 unique_ptr。所有权从创建那一刻就在智能指针里。"
+            }
+          ],
+          "quiz": [
+            {
+              "prompt": "unique_ptr 为什么没有拷贝构造？",
+              "choices": [
+                "拷贝会让两个指针都认为自己拥有同一块资源",
+                "标准库还没实现",
+                "拷贝比移动慢，所以删掉了",
+                "它只能放在全局变量里"
+              ],
+              "answer": 0,
+              "explanation": "独占意味着析构权只有一份。要交给别人，用移动，源指针变成空。"
+            },
+            {
+              "prompt": "auto q = std::move(p); 之后，谁负责释放？",
+              "choices": [
+                "p 和 q 都会释放",
+                "q 释放，p 不再拥有",
+                "谁都不释放，必须手动 reset",
+                "p 释放，q 只是观察"
+              ],
+              "answer": 1,
+              "explanation": "移动把所有权转给 q。p 处于空的、可析构的状态。"
+            }
+          ],
+          "labs": []
+        },
+        {
+          "id": "cpp.RAII.shared",
+          "title": "共享指针",
+          "description": "学习 shared_ptr 的引用计数共享所有权；理解引用计数本身是原子操作、但所指对象不会因此自动线程安全，make_shared 的分配优势，以及控制块带来的额外开销。",
+          "difficulty": 3,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习 shared_ptr 的引用计数共享所有权；理解引用计数本身是原子操作、但所指对象不会因此自动线程安全，make_shared 的分配优势，以及控制块带来的额外开销。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.RAII.weak",
+          "title": "弱引用指针",
+          "description": "学习 weak_ptr 的非拥有观察语义；演示 shared_ptr 互相引用形成循环引用导致内存无法释放，以及通过 lock 尝试提升访问时对象已被销毁的处理方式。",
+          "difficulty": 4,
+          "masteryGoal": "familiar",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习 weak_ptr 的非拥有观察语义；演示 shared_ptr 互相引用形成循环引用导致内存无法释放，以及通过 lock 尝试提升访问时对象已被销毁的处理方式。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        }
+      ]
+    },
+    {
+      "id": "cpp.Constness",
+      "title": "常量与不可变",
+      "description": "什么时候该让一个东西不可变，以及不可变能推到多早——从 const 正确性到编译期求值。",
+      "requires": [
+        "cpp.ClassObject"
+      ],
+      "topics": [
+        {
+          "id": "cpp.Constness.const_correctness",
+          "title": "const 正确性",
+          "description": "理解 const 对象、const 成员函数和接口约束。",
+          "difficulty": 1,
+          "masteryGoal": "master",
+          "knowledgeType": "",
+          "requires": [
+            "cpp.ClassObject.class_basic"
+          ],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "理解 const 对象、const 成员函数和接口约束。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.Constness.compile_time",
+          "title": "编译期编程",
+          "description": "学习 constexpr 函数在编译期求值的条件、consteval 强制编译期调用，以及 constexpr 变量与 const 的区别；理解把计算前移到编译期能换取运行期性能和编译期错误检查。",
+          "difficulty": 4,
+          "masteryGoal": "familiar",
+          "knowledgeType": "",
+          "requires": [
+            "cpp.Constness.const_correctness"
+          ],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习 constexpr 函数在编译期求值的条件、consteval 强制编译期调用，以及 constexpr 变量与 const 的区别；理解把计算前移到编译期能换取运行期性能和编译期错误检查。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.Constness.consteval_constinit",
+          "title": "consteval 与 constinit",
+          "description": "区分三个关键字各自强制的是什么：constexpr 允许编译期、consteval 强制编译期调用、constinit 强制静态初始化在编译期完成；理解它们解决的是不同问题。",
+          "difficulty": 4,
+          "masteryGoal": "familiar",
+          "knowledgeType": "concept",
+          "requires": [
+            "cpp.Constness.compile_time"
+          ],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "区分三个关键字各自强制的是什么：constexpr 允许编译期、consteval 强制编译期调用、constinit 强制静态初始化在编译期完成；理解它们解决的是不同问题。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.Constness.immutable_design",
+          "title": "不可变设计",
+          "description": "把不变量放进类型而不是靠约定：不可变对象天然线程安全、不需要防御性拷贝；理解为什么「能 const 就 const」是接口层面的承诺而不只是编译器检查。",
+          "difficulty": 3,
+          "masteryGoal": "required",
+          "knowledgeType": "strategy",
+          "requires": [
+            "cpp.Constness.const_correctness"
+          ],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "把不变量放进类型而不是靠约定：不可变对象天然线程安全、不需要防御性拷贝；理解为什么「能 const 就 const」是接口层面的承诺而不只是编译器检查。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        }
+      ]
+    },
+    {
+      "id": "cpp.InterfaceDesign",
+      "title": "接口与设计约定",
+      "description": "参数怎么传、返回什么、契约怎么表达——写任何一个函数都要做的判断，依据来自值语义与所有权。",
+      "requires": [
+        "cpp.ValueSemantics"
+      ],
+      "topics": [
+        {
+          "id": "cpp.InterfaceDesign.parameter_passing",
+          "title": "参数传递方式的选择",
+          "description": "按值、按 const 引用、按右值引用、按指针各自表达什么意图；理解「拷贝贵不贵」和「函数要不要接管它」这两个问题如何决定选择。",
+          "difficulty": 3,
+          "masteryGoal": "master",
+          "knowledgeType": "strategy",
+          "requires": [
+            "cpp.ValueSemantics.move_semantics"
+          ],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "按值、按 const 引用、按右值引用、按指针各自表达什么意图；理解「拷贝贵不贵」和「函数要不要接管它」这两个问题如何决定选择。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.InterfaceDesign.return_values",
+          "title": "返回值与输出参数",
+          "description": "为什么优先返回值而不是输出参数；多个结果用结构体或 tuple 返回；理解返回值优化让「返回一个大对象」不再昂贵。",
+          "difficulty": 2,
+          "masteryGoal": "master",
+          "knowledgeType": "strategy",
+          "requires": [
+            "cpp.InterfaceDesign.parameter_passing"
+          ],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "为什么优先返回值而不是输出参数；多个结果用结构体或 tuple 返回；理解返回值优化让「返回一个大对象」不再昂贵。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.InterfaceDesign.span_views",
+          "title": "span 与非拥有视图",
+          "description": "用 span 代替「裸指针加长度」这对参数；理解非拥有视图的生命周期约束——视图不延长任何东西的寿命，源一旦销毁它就悬垂。",
+          "difficulty": 3,
+          "masteryGoal": "required",
+          "knowledgeType": "skill",
+          "requires": [
+            "cpp.InterfaceDesign.parameter_passing"
+          ],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "用 span 代替「裸指针加长度」这对参数；理解非拥有视图的生命周期约束——视图不延长任何东西的寿命，源一旦销毁它就悬垂。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.InterfaceDesign.preconditions",
+          "title": "前置条件与契约",
+          "description": "把函数的期望写清楚：哪些由类型系统保证、哪些只能靠断言和文档；理解宽契约与窄契约的取舍，以及为什么不要用返回码表达「调用方用错了」。",
+          "difficulty": 4,
+          "masteryGoal": "required",
+          "knowledgeType": "strategy",
+          "requires": [
+            "cpp.InterfaceDesign.return_values"
+          ],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "把函数的期望写清楚：哪些由类型系统保证、哪些只能靠断言和文档；理解宽契约与窄契约的取舍，以及为什么不要用返回码表达「调用方用错了」。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.InterfaceDesign.interface_minimality",
+          "title": "接口的最小化与正交性",
+          "description": "少而正交的接口为什么比大而全的好用：理解每多一个公开成员就多一份要维护的承诺，以及非成员非友元函数如何降低耦合。",
+          "difficulty": 4,
+          "masteryGoal": "familiar",
+          "knowledgeType": "strategy",
+          "requires": [
+            "cpp.InterfaceDesign.preconditions"
+          ],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "少而正交的接口为什么比大而全的好用：理解每多一个公开成员就多一份要维护的承诺，以及非成员非友元函数如何降低耦合。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        }
+      ]
+    },
+    {
+      "id": "cpp.VocabularyAdvanced",
+      "title": "词汇类型 · 进阶",
+      "description": "string_view、variant 与 chrono：三个都带着明确的使用边界，用错的代价比不用更大。",
+      "requires": [
+        "cpp.StandardLibrary"
+      ],
+      "topics": [
+        {
+          "id": "cpp.VocabularyAdvanced.string_view",
+          "title": "string 与 string_view",
+          "description": "学习 string_view 作为非拥有字符串视图的零拷贝传参优势；重点演示视图不延长底层数据的生命周期——引用临时字符串或已销毁的缓冲区会产生悬空视图。",
+          "difficulty": 3,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习 string_view 作为非拥有字符串视图的零拷贝传参优势；重点演示视图不延长底层数据的生命周期——引用临时字符串或已销毁的缓冲区会产生悬空视图。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.VocabularyAdvanced.variant",
+          "title": "variant",
+          "description": "学习 variant 的类型安全多选一语义、按索引或按类型访问当前值，以及 visit 配合重载 Lambda 分发处理每种可能类型；理解访问非当前类型时抛出 bad_variant_access。",
+          "difficulty": 3,
+          "masteryGoal": "familiar",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习 variant 的类型安全多选一语义、按索引或按类型访问当前值，以及 visit 配合重载 Lambda 分发处理每种可能类型；理解访问非当前类型时抛出 bad_variant_access。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.VocabularyAdvanced.chrono",
+          "title": "chrono",
+          "description": "学习时长、时间点和时钟三个抽象的类型安全运算；理解不同精度的 duration 需要显式转换、有截断风险的隐式转换会被编译器拒绝，以及 steady_clock 与 system_clock 的适用差异。",
+          "difficulty": 3,
+          "masteryGoal": "familiar",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习时长、时间点和时钟三个抽象的类型安全运算；理解不同精度的 duration 需要显式转换、有截断风险的隐式转换会被编译器拒绝，以及 steady_clock 与 system_clock 的适用差异。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        }
+      ]
+    },
+    {
+      "id": "cpp.ExceptionSafety",
+      "title": "异常安全与错误策略 · 进阶",
+      "description": "写出在异常穿过时仍然正确的代码：noexcept 的承诺、三种异常安全保证，以及什么时候该改用返回值表达失败。",
+      "requires": [
+        "cpp.ErrorHandling",
+        "cpp.RAII"
+      ],
+      "topics": [
+        {
+          "id": "cpp.ExceptionSafety.noexcept_contract",
+          "title": "noexcept",
+          "description": "理解 noexcept 是接口契约而非实现细节：标注后违反将直接 terminate；学习它如何让容器放心选择移动而非拷贝操作，以及何时应该、何时不应该标注。",
+          "difficulty": 4,
+          "masteryGoal": "familiar",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "理解 noexcept 是接口契约而非实现细节：标注后违反将直接 terminate；学习它如何让容器放心选择移动而非拷贝操作，以及何时应该、何时不应该标注。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.ExceptionSafety.exception_safety",
+          "title": "异常安全保证",
+          "description": "学习三级异常安全保证的定义和逐级成本：基本保证维持不变量不泄漏、强保证失败后回滚如初、不抛出保证绝不失败；理解 RAII 与 copy-and-swap 分别支撑哪一级保证。",
+          "difficulty": 5,
+          "masteryGoal": "familiar",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习三级异常安全保证的定义和逐级成本：基本保证维持不变量不泄漏、强保证失败后回滚如初、不抛出保证绝不失败；理解 RAII 与 copy-and-swap 分别支撑哪一级保证。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.ExceptionSafety.expected_errors",
+          "title": "expected 与错误返回",
+          "description": "用 expected 把「可预期的失败」写进返回类型，与异常分工：异常留给真正异常的情况，可预期的失败走返回值；理解两条路线各自的代价。",
+          "difficulty": 3,
+          "masteryGoal": "required",
+          "knowledgeType": "strategy",
+          "requires": [
+            "cpp.ErrorHandling.exception_handling"
+          ],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "用 expected 把「可预期的失败」写进返回类型，与异常分工：异常留给真正异常的情况，可预期的失败走返回值；理解两条路线各自的代价。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        }
+      ]
+    },
+    {
+      "id": "cpp.PolymorphismPitfalls",
+      "title": "多态的边界与代价 · 进阶",
+      "description": "抽象接口该怎么定义，以及多态用错时的两个经典后果——对象切片与漏写虚析构。",
+      "requires": [
+        "cpp.InheritancePolymorphism"
+      ],
+      "topics": [
+        {
+          "id": "cpp.PolymorphismPitfalls.abstract_interface",
+          "title": "抽象接口",
+          "description": "学习纯虚函数、抽象类和面向接口的设计。",
+          "difficulty": 2,
+          "masteryGoal": "master",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习纯虚函数、抽象类和面向接口的设计。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.PolymorphismPitfalls.object_slicing",
+          "title": "对象切片",
+          "description": "观察把派生类对象按值赋给基类对象时派生部分被丢弃、虚函数调用退化为基类版本的现象；理解多态必须通过指针或引用实现，按值传递是多态代码的隐蔽错误来源。",
+          "difficulty": 4,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "观察把派生类对象按值赋给基类对象时派生部分被丢弃、虚函数调用退化为基类版本的现象；理解多态必须通过指针或引用实现，按值传递是多态代码的隐蔽错误来源。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.PolymorphismPitfalls.virtual_destructor",
+          "title": "虚析构函数",
+          "description": "理解通过基类指针销毁派生对象时，非虚析构函数导致派生类析构不被执行的未定义行为；学习何时必须把基类析构声明为 virtual、何时声明为 protected 以禁止多态删除。",
+          "difficulty": 4,
+          "masteryGoal": "master",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "理解通过基类指针销毁派生对象时，非虚析构函数导致派生类析构不被执行的未定义行为；学习何时必须把基类析构声明为 virtual、何时声明为 protected 以禁止多态删除。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        }
+      ]
+    },
+    {
+      "id": "cpp.RangesViews",
+      "title": "Ranges 与视图 · 进阶",
+      "description": "C++20 把「容器 + 迭代器对」换成可组合的范围：管道式书写、惰性求值，以及它们各自的代价。",
+      "requires": [
+        "cpp.AlgorithmRanges"
+      ],
+      "topics": [
+        {
+          "id": "cpp.RangesViews.ranges_algorithm",
+          "title": "C++20 Ranges 算法",
+          "description": "学习以容器直接调用 ranges 算法，配合投影取出成员、用视图管道先变换再计算；理解类型不满足约束时直接在调用点编译失败。",
+          "difficulty": 4,
+          "masteryGoal": "familiar",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习以容器直接调用 ranges 算法，配合投影取出成员、用视图管道先变换再计算；理解类型不满足约束时直接在调用点编译失败。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.RangesViews.range_view",
+          "title": "C++20 Range 与 View",
+          "description": "学习视图的惰性求值：管道组合本身不做任何计算，消费时才逐元素变换；理解视图不拥有数据，引用已销毁的临时容器会产生悬空范围。",
+          "difficulty": 4,
+          "masteryGoal": "familiar",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习视图的惰性求值：管道组合本身不做任何计算，消费时才逐元素变换；理解视图不拥有数据，引用已销毁的临时容器会产生悬空范围。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.RangesViews.range_adaptor",
+          "title": "适配器与管道组合",
+          "description": "适配器把一个范围变成另一个范围，用 | 串起来读作一条数据流水线；理解组合顺序会影响遍历次数与中间结果。",
+          "difficulty": 4,
+          "masteryGoal": "required",
+          "knowledgeType": "skill",
+          "requires": [
+            "cpp.RangesViews.range_view"
+          ],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "适配器把一个范围变成另一个范围，用 | 串起来读作一条数据流水线；理解组合顺序会影响遍历次数与中间结果。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.RangesViews.range_projection",
+          "title": "投影",
+          "description": "让算法直接作用于元素的某个成员而不必写比较器；理解投影为什么能同时简化排序、查找与分组。",
+          "difficulty": 4,
+          "masteryGoal": "familiar",
+          "knowledgeType": "skill",
+          "requires": [
+            "cpp.RangesViews.ranges_algorithm"
+          ],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "让算法直接作用于元素的某个成员而不必写比较器；理解投影为什么能同时简化排序、查找与分组。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        }
+      ]
+    },
+    {
+      "id": "cpp.TemplateGeneric",
+      "title": "模板、泛型与编译期",
+      "description": "学习模板、类型约束和编译期计算，建立现代 C++ 泛型程序设计能力。",
+      "requires": [
+        "cpp.FunctionCallable",
+        "cpp.ClassObject"
+      ],
+      "topics": [
+        {
+          "id": "cpp.TemplateGeneric.template_basic",
+          "title": "模板基础",
+          "description": "学习函数模板、类模板、实例化和模板参数。",
+          "difficulty": 2,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习函数模板、类模板、实例化和模板参数。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.TemplateGeneric.template_specialization",
+          "title": "模板特化",
+          "description": "学习为特定类型提供全特化实现覆盖通用模板；理解全特化与偏特化的区别，以及特化版本必须与主模板签名严格对应。",
+          "difficulty": 3,
+          "masteryGoal": "familiar",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习为特定类型提供全特化实现覆盖通用模板；理解全特化与偏特化的区别，以及特化版本必须与主模板签名严格对应。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.TemplateGeneric.generic_programming",
+          "title": "泛型编程",
+          "description": "理解通过通用接口和类型约束编写可复用算法。",
+          "difficulty": 3,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "理解通过通用接口和类型约束编写可复用算法。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.TemplateGeneric.variadic_template",
+          "title": "可变参数模板",
+          "description": "学习参数包的定义、sizeof... 计数和递归展开模式，以及 C++17 折叠表达式如何把递归展开压缩为一行；练习实现类型安全的可变参数转发。",
+          "difficulty": 5,
+          "masteryGoal": "familiar",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习参数包的定义、sizeof... 计数和递归展开模式，以及 C++17 折叠表达式如何把递归展开压缩为一行；练习实现类型安全的可变参数转发。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.TemplateGeneric.type_constraints",
+          "title": "C++20 Concepts",
+          "description": "学习用 concept 命名类型约束、requires 表达式检查类型能力，以及按约束重载模板；理解约束失败时编译器给出的是缺了什么能力，而不是模板内部的长篇报错。",
+          "difficulty": 4,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习用 concept 命名类型约束、requires 表达式检查类型能力，以及按约束重载模板；理解约束失败时编译器给出的是缺了什么能力，而不是模板内部的长篇报错。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        }
+      ]
+    },
+    {
+      "id": "cpp.Concurrency",
+      "title": "并发、异步与协程",
+      "description": "学习线程、同步原语、内存模型、异步任务和 C++20 协程。",
+      "requires": [
+        "cpp.RAII",
+        "cpp.StandardLibrary"
+      ],
+      "topics": [
+        {
+          "id": "cpp.Concurrency.multithreading",
+          "title": "多线程编程",
+          "description": "学习线程创建、join 与 detach 的生命周期约束；演示多线程无同步读写共享数据产生的数据竞争，引出后续同步原语的必要性。",
+          "difficulty": 3,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习线程创建、join 与 detach 的生命周期约束；演示多线程无同步读写共享数据产生的数据竞争，引出后续同步原语的必要性。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.Concurrency.mutex_lock",
+          "title": "互斥量与锁",
+          "description": "学习 mutex 的持有语义和 lock_guard、unique_lock 的 RAII 加锁差异；观察两个线程以不同顺序获取两把锁造成的死锁，理解锁粒度与性能的权衡。",
+          "difficulty": 4,
+          "masteryGoal": "required",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习 mutex 的持有语义和 lock_guard、unique_lock 的 RAII 加锁差异；观察两个线程以不同顺序获取两把锁造成的死锁，理解锁粒度与性能的权衡。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.Concurrency.condition_variable",
+          "title": "条件变量",
+          "description": "学习等待-通知协作模式；重点理解为什么必须配合谓词在循环中等待——既存在虚假唤醒，也存在通知先于等待发生的丢失场景，以及等待为何要求 unique_lock。",
+          "difficulty": 5,
+          "masteryGoal": "familiar",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习等待-通知协作模式；重点理解为什么必须配合谓词在循环中等待——既存在虚假唤醒，也存在通知先于等待发生的丢失场景，以及等待为何要求 unique_lock。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.Concurrency.atomic_memory_model",
+          "title": "原子操作与内存模型",
+          "description": "理解数据竞争是未定义行为而不是读到旧值那么简单；学习 atomic 的原子性、内存顺序从 relaxed 到 acquire/release 再到 seq_cst 的可见性承诺差异，以及为什么默认 seq_cst 最安全。",
+          "difficulty": 5,
+          "masteryGoal": "familiar",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "理解数据竞争是未定义行为而不是读到旧值那么简单；学习 atomic 的原子性、内存顺序从 relaxed 到 acquire/release 再到 seq_cst 的可见性承诺差异，以及为什么默认 seq_cst 最安全。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.Concurrency.asynchronous_task",
+          "title": "异步任务",
+          "description": "学习 future、promise 的任务结果传递和 async 的启动策略差异；理解 future 析构可能阻塞等待任务完成、异常如何经由 future 传递给等待方。",
+          "difficulty": 4,
+          "masteryGoal": "familiar",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习 future、promise 的任务结果传递和 async 的启动策略差异；理解 future 析构可能阻塞等待任务完成、异常如何经由 future 传递给等待方。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.Concurrency.coroutine",
+          "title": "C++20 协程",
+          "description": "理解协程帧保存挂起点状态、co_await 与 co_yield 的挂起恢复机制；对比协程与线程的本质差异：挂起点由代码显式标注，切换不涉及系统调度。",
+          "difficulty": 5,
+          "masteryGoal": "familiar",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "理解协程帧保存挂起点状态、co_await 与 co_yield 的挂起恢复机制；对比协程与线程的本质差异：挂起点由代码显式标注，切换不涉及系统调度。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        },
+        {
+          "id": "cpp.Concurrency.concurrent_patterns",
+          "title": "并发模式",
+          "description": "学习任务队列、生产者消费者等常见并发组织方式。",
+          "difficulty": 4,
+          "masteryGoal": "familiar",
+          "knowledgeType": "",
+          "requires": [],
+          "sourceRefs": [],
+          "blocks": [
+            {
+              "type": "lead",
+              "text": "学习任务队列、生产者消费者等常见并发组织方式。"
+            }
+          ],
+          "quiz": [],
+          "labs": []
+        }
+      ]
+    }
+  ]
+}

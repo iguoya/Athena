@@ -1,0 +1,21 @@
+[package]
+name = "athena-c-plus-plus"
+version = "0.1.0"
+description = "Athena C++ 教程"
+authors = ["Athena"]
+edition = "2021"
+
+[lib]
+name = "athena_c_plus_plus_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { workspace = true }
+
+[dependencies]
+tauri = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+dirs-next = "2"
+# bundled：SQLite 随应用编译。Windows 上没有系统 sqlite3。
+rusqlite = { version = "0.32", features = ["bundled"] }

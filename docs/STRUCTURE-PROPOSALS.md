@@ -397,3 +397,60 @@ gtkmm 是手册类的现成原型：定位「官方教程精读」，《Programm
 - gtkmm 自身：`AGENTS.md` 自述路径、`scripts/extract_source.py` 提示文案。
 - `ci.yml`：gtkmm 两处 `fetch_upstream.py` 的调用路径。
 - **不动**：id、进程名、知识点前缀、进度库内容、挂靠关系、领域圈 group、出处档位。
+
+---
+
+## V4 新增顶层目录 `reference/`（图谱/参考类），北极星、math-tools、competitions 迁入（草拟 2026-10-12；**已落 ADR 0144，迁移待相邻迁移落地后执行**）
+
+### 主张
+
+使用者（tiger 2026-10-12）：北极星剥离出 `subjects/`；同类的 math-tools（数学学习的配套
+工具）、competitions（赛历）也考虑并入；要一个更合适的目录名。
+
+三者在「三类判据」里都是**图谱/参考类**（北极星自述；math-tools 见其 ADR 0084；competitions
+见 ADR 0114）：只呈现信息或提供工具供查阅，不教、不判分、不建进度库，教学规范不生效。
+`subjects/` 的语义已是自编教学设计的课程（`course`），它们混在里面是类别错位。
+
+### 名字
+
+| 候选 | 取舍 |
+|---|---|
+| **`reference`**（采用） | 与仓库自己的判据措辞「图谱/参考类」一致；覆盖图谱（北极星）、清单（赛历）、工具（数学工具）三种形态；与 `certification`、`guide`、`practice` 同为单个英文单词 |
+| `atlas` | 贴北极星，但装不下赛历和矩阵实验室，名字会比成员窄 |
+| `toolkit` / `utility` | 只贴 math-tools，北极星和赛历不是工具 |
+| `almanac` | 只贴赛历，生僻 |
+
+`reference` 与 `polaris/content/sources/reference/`（路线图对照原料）重名，但一个是顶层、
+一个是应用内子路径，层级不同，根白名单检查只看顶层，无冲突。
+
+### 备选
+
+- **只迁北极星**：最小改动，但留下两个同类应用在 `subjects/`，`reference/` 之后又要补一轮。
+  不采用。
+- **北极星单独放仓库根**（`polaris/`）：根目录全是类别目录，单个应用放根破坏这一规律。不采用。
+
+### 牵动面
+
+- `launcher/core/src/manifest.rs`：发现清单加一层 `reference`（与 guide、certification 同机制）。
+- `scripts/check.py`：`APP_ROOTS`、根白名单与各处对账加 `reference`。
+- **`pnpm-workspace.yaml`**：`packages` 只有 `subjects/*`，不加 `reference/*` 三个应用会被静默踢出共享工作区。
+- **根 `Cargo.toml`**：`members` 里三条 `subjects/…/src-tauri` 改路径。
+- `.github/workflows/ci.yml`、`release.yml`：working-directory、产物路径。
+- 登记三处：`docs/REPOSITORY.md`、根 `README.md`、根 `AGENTS.md`（结构图、三类判据）。
+- 三个应用自己的 `AGENTS.md` 自述路径；`subjects/algorithms|data-structures|linux|mathematics` 的 `AGENTS.md` 里有指向它们的路径文字；`launcher/core/src/paths.rs` 有一处引用待核。
+- 目录深度不变（`reference/<id>` 与 `subjects/<id>` 同为两层），`../../packages/*` 一类相对路径不用改。
+- **不动**：id、进程名、端口、`group`（图谱 / 数学 / 大赛）、`parent`、内容。
+
+### 风险
+
+- `launcher/core`、`check.py`、`ci.yml`、`release.yml` 同时被 0142（certification）、0143（guide）
+  的迁移触及，且工作区里有别的会话的未提交改动；三次迁移应协调到同一轮合入，或按序各自提交，
+  不并行改同一批文件。
+- math-tools 带一份 localStorage 打卡清单，边界最接近学习应用；其 AGENTS.md 已写明升级成
+  学习应用要先立 ADR，届时目录随类别迁到 `course/`。
+
+### 已拍板（tiger 2026-10-12）
+
+1. 目录名 `reference` 定稿。
+2. math-tools 同批并入。
+3. 等 `subjects/`→`course/` 改名与 gtkmm→`guide/` 等相邻迁移落地后再执行。

@@ -1,0 +1,30 @@
+{
+  "name": "athena-c-plus-plus",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.15.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 1512 --strictPort",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "catalog:",
+    "@tauri-apps/cli": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  }
+}

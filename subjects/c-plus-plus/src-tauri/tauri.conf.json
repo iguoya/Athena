@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "athena-c-plus-plus",
+  "version": "0.1.0",
+  "identifier": "cn.athena.cpp",
+  "build": {
+    "beforeDevCommand": "pnpm run dev",
+    "devUrl": "http://localhost:1512",
+    "beforeBuildCommand": "pnpm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "withGlobalTauri": false,
+    "windows": [
+      {
+        "title": "C++ 教程",
+        "width": 1280,
+        "height": 860,
+        "minWidth": 960,
+        "minHeight": 640
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": false
+  }
+}

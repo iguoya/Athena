@@ -1,0 +1,56 @@
+{
+  "id": "cpp",
+  "title": "C++ 旧窗口",
+  "group": "编程语言",
+  "description": "gtkmm 版的 C++ 窗口。从 C++ 教程拆出来单独保存（ADR 0141），不承担课程掌握度。课程学习在「C++ 教程」。",
+  "icon": {
+    "type": "theme",
+    "name": "text-x-cpp-symbolic",
+    "symbol": "chevron.left.forwardslash.chevron.right",
+    "letter": "C++",
+    "accent": "#00599C",
+    "file": "icon.svg",
+    "renders": {
+      "icon.ico": "ico",
+      "resources/icons/16x16/apps/cn.athena.icon.png": 16,
+      "resources/icons/32x32/apps/cn.athena.icon.png": 32,
+      "resources/icons/64x64/apps/cn.athena.icon.png": 64,
+      "resources/icons/128x128/apps/cn.athena.icon.png": 128,
+      "resources/icons/256x256/apps/cn.athena.icon.png": 256,
+      "resources/icons/512x512/apps/cn.athena.icon.png": 512,
+      "resources/icons/1024x1024/apps/cn.athena.icon.png": 1024
+    }
+  },
+  "dev": {
+    "env": {
+      "ATHENA_CPP_ROOT": "${dir}"
+    },
+    "prepare": [
+      {
+        "when_missing": "build",
+        "run": [
+          "meson",
+          "setup",
+          "build",
+          "--buildtype=debug"
+        ],
+        "label": "配置构建目录"
+      },
+      {
+        "run": [
+          "meson",
+          "compile",
+          "-C",
+          "build"
+        ],
+        "label": "增量编译"
+      }
+    ],
+    "run": [
+      "build/athena-cpp"
+    ],
+    "ready": "process",
+    "match": "build",
+    "binary": "athena-cpp"
+  }
+}

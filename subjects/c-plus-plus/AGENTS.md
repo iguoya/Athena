@@ -3,64 +3,45 @@
 本文档是 **C++ 教程这个学习应用**的规则。仓库级的通用规则（中文思考、跨应用教学规范、
 Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../../AGENTS.md)，
 那里写过的不在这里重复。
-「学习内容」和四节工程规则只留要点，完整原文在 `docs/CONTENT_RULES.md` 与
-`docs/ENGINEERING_RULES.md`（主仓库 ADR 0061）。
+gtkmm 工程已经迁到 `practice/cpp`（仓库 ADR 0141）。本文件里仍出现的 GTK、Blueprint、
+Meson 规则，原文在那边的 `docs/`，**不要拿来改这个 Tauri 课程**。
 
 本应用是 `subjects/` 下的平级学习应用之一（ADR 0045），没有任何特权：仓库根既没有它的
 源码，也没有它的脚本和文档。修改代码前先理解当前实现，不得把目标设计误认为已经落地的功能。
-界面标题是「C++ 教程」。窗口进程和发行包文件名是 `athena-cpp`。发行副本的用户数据
-在 `athena-cpp` 目录；旧目录 `Athena` 若还在且新目录没有，启动时改名过去。
+界面标题是「C++ 教程」。窗口进程是 `athena-c-plus-plus`。进度库在本目录的
+`progress/learning.db`；发行包退回用户数据目录 `athena-cpp`。
 
 ## 必读文档
 
 开始设计或修改代码前，按任务范围阅读：
 
-- `docs/CONTENT_RULES.md`、`docs/ENGINEERING_RULES.md`：本文件「学习内容」「架构原则」
-  「代码生成规则」「C++ 编码规则」「GTK 与 Blueprint 规则」五节的完整原文；本文件只留要点。
-- `docs/ARCHITECTURE.md`：系统边界、依赖方向和目标架构。
-- `docs/CHAPTER_CONFIG.md`：`resources/athena.json` 的字段、标识符和校验规则。
-- `docs/CODE_GENERATION.md`：代码生成流程、文件所有权和 Meson 集成约束。
-- `docs/decisions/`：本应用的架构决策记录（ADR）；影响仓库结构或多个应用的决策
-  记在仓库级 `../../docs/decisions/`。影响架构边界或不可逆方向的新决策应先新增 ADR
-  再动代码。
-- `docs/LESSON_AUTHORING.md`：写学习页时怎么为一节选择表达手段——按知识类型、
-  能否实验、掌握目标来判断，以及可复用的内容块组件（`ui/lesson_blocks.h`）。
-  它是**范式不是模子**：`type_semantics` 的节结构由那些知识点的性质决定，
-  照抄它的目录只会抄到形状。
-- `docs/CONTENT_REFERENCES.md`：**内容来源与查证规则**（ADR 0054）。教学内容一律
-  有据可依，不得凭记忆发挥；来源分两级，定义与边界以一级规范性材料
-  （cppreference、ISO 草案、Core Guidelines、Microsoft Learn）为准，中文教程站
-  只作讲法对照。要防的是抄，不是查。
-
-背景阅读（不必每次读，ADR 0059）：`docs/CODE_ROLES.md` 借政府组织结构讲代码组织的思维模型；
-冲突时以本文件和 ADR 为准。已知的存量欠账见 `docs/TECH_DEBT.md`。
+- `docs/decisions/`：本应用现在的 ADR 只有 0060（Tauri 壳）和 0061（运行旧窗口）。
+  gtkmm 时代的 ADR 在 `practice/cpp/docs/decisions/`。影响仓库结构或多个应用的决策
+  记在仓库级 `../../docs/decisions/`。
+- 写新的讲解按课表块：导语、对照、代码、先预测再揭示。不要再往 `.blp` 里加学习页。
 
 若实现与文档不一致，先指出差异；修复代码或更新文档时，保持二者同步。
 
 ## 项目技术栈
 
-- C++20
-- GTK4 / gtkmm 4
-- GtkSourceView 5（源码语法高亮与行号）
-- MD4C（把 AI 实时返回的 Markdown 讲解解析成结构化 `DocModel`；学习内容本身不用 Markdown）
-- GTK `DocumentView`（渲染 AI 讲解对话框里的 Markdown；不使用 WebView。学习内容
-  本身由 `.blp` 控件树承载，不经此路径）
-- 界面使用 GTK 内建样式与自定义 `style.css`，不依赖 libadwaita
-- Meson
-- Blueprint UI
-- nlohmann/json
-- SQLite（掌握状态、AI 讲解缓存和应用设置的本地存储；macOS 与 Linux 用系统自带 libsqlite3，Windows 由打包器随包带上 DLL）。
-  库在 `progress/learning.db`，**随仓库走**（主仓库 ADR 0053）：路径由启动器通过
-  `ATHENA_CPP_ROOT` 传入，`platform/app_paths` 的 `own_app_root()` 读它，拿不到
-  （发行包）就退回用户数据目录。这不放松「教学内容只从 GResource 读」——内容必须与
-  二进制同版本，进度是使用者自己的东西。
+- **壳**：Tauri 2（Rust）+ React 19 + TypeScript + Vite + Tailwind 4（本应用 ADR 0060，
+  仓库 ADR 0138）。窗口标题「C++ 教程」，进程 `athena-c-plus-plus`，端口 **1512**。
+- **课**：`content/curriculum.json`。知识点 id 仍是 `cpp.<章>.<节>`，与进度库
+  `function_id` 相同。讲解用块：导语、对照、代码、先预测再揭示。随堂题写入掌握度。
+- **实验**：本机 `c++` / `clang++` / `g++`（没有时用 MSVC），`-std=c++20`。案例仍在
+  `resources/cases/`。不提供任意 shell。
+- **进度**：SQLite `progress/learning.db`，随仓库走（主仓库 ADR 0053）。路径由启动器
+  通过 `ATHENA_CPP_ROOT` 传入；发行包退回用户数据目录 `athena-cpp`。掌握度仍是
+  `正确数 * 5 / 题数`。
+- 侧栏「运行旧版窗口」启动 `practice/cpp/build/` 里已经编好的 `athena-cpp`
+  （本应用 ADR 0061）。本应用的检查不跑 Meson。旧工程的源码、文档和构建都在
+  `practice/cpp`，不在本目录。
 
-引入新依赖按主仓库 ADR 0057：判据是合不合适，不是依赖多不多（ADR 0059）。更换 UI 技术栈、
-把项目改造成完整 MVC/MVP 框架仍要先问。
+引入新依赖按主仓库 ADR 0057：判据是合不合适，不是依赖多不多（ADR 0059）。
 
 ## 学习内容
 
-完整原文见 [docs/CONTENT_RULES.md](docs/CONTENT_RULES.md)。
+GTK 时代的原文在 [practice/cpp/docs/CONTENT_RULES.md](../../practice/cpp/docs/CONTENT_RULES.md)，不要按它改这个课程的界面。
 
 - 自用的学练合一软件，不以完整教程产品为目标。学习内容从「学习 C++ 知识点」的角度组织，
   不按源码的文件、类或函数顺序写成源码说明书，**不从现有实现反推该教什么**。
@@ -231,20 +212,9 @@ Git 提交、验证入口、应用之间的边界）在 [`../../AGENTS.md`](../.
 python3 subjects/c-plus-plus/scripts/check.py
 ```
 
-仓库根的 `python3 scripts/check.py c-plus-plus [参数...]` 会转发到它，CI 走的就是这条。
-脚本依次执行以下步骤；默认构建目录为 `build`，可用 `--build-dir` 与
-`--buildtype` 覆盖（CI 使用 `--build-dir build --buildtype debugoptimized`）：
-
-```sh
-python3 -m json.tool resources/athena.json >/dev/null
-python3 scripts/generate_project.py --project-root . --config resources/athena.json check
-meson setup build --reconfigure   # 构建目录不存在时改为 meson setup build
-meson compile -C build
-meson test -C build --print-errorlogs
-```
-
-统一生成器的 `check` 必须通过；GResource XML 和函数注册表只生成到构建目录，
-因此检查工作区时不应出现由正常构建造成的生成文件改动。
+仓库根的 `python3 scripts/check.py c-plus-plus [参数...]` 会转发到它。脚本核对
+`content/curriculum.json`，再跑 `pnpm run build` 和 `cargo check`。只改课表时可以加
+`--skip-rust`。旧窗口的 Meson 检查在 `practice/cpp`。
 
 ## 代码评审重点
 

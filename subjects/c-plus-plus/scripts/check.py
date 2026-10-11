@@ -1,89 +1,138 @@
 #!/usr/bin/env python3
-"""C++ 教程的验证入口：JSON 校验、生成器检查、构建与测试。
+"""C++ 教程的验证入口。
 
-用 Python 而不是 shell：验证是每天都要跑的环节，不该要求 Windows 上先装
-Git Bash 或 WSL（ADR 0047）。Python 三个平台都自带，仓库里生成器和打包器
-本来就是 Python。
+核对课表，然后构建前端并 cargo check。gtkmm 工程在 practice/cpp，不在这条入口
+（仓库 ADR 0141）。
 
 用法：
-    python3 scripts/check.py [--build-dir DIR] [--buildtype TYPE]
+    python3 scripts/check.py [--skip-rust] [--content-only]
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import re
 import shutil
 import subprocess
 import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-
+EXPECTED_ID = "c-plus-plus"
+EXPECTED_PORT = 1512
 
 
 def _force_utf8_output() -> None:
-    """Windows 控制台默认不是 UTF-8，打印中文会抛 UnicodeEncodeError。
-
-    跨平台的做法是在入口处把标准流重设成 UTF-8，而不是把提示改成英文
-    或者只在 CI 里设 PYTHONIOENCODING（ADR 0047）。
-    """
     for stream in (sys.stdout, sys.stderr):
         reconfigure = getattr(stream, "reconfigure", None)
         if reconfigure is not None:
             reconfigure(encoding="utf-8", errors="replace")
 
-def run(command: list[str], step: str) -> None:
-    print(f"== {step} ==", flush=True)
-    # shell=False：参数按列表传，路径里有空格也不会被拆开，Windows 上尤其重要。
-    completed = subprocess.run(command, cwd=PROJECT_ROOT)
-    if completed.returncode != 0:
-        raise SystemExit(completed.returncode)
 
-
-def meson() -> str:
-    found = shutil.which("meson")
+def tool(name: str) -> str:
+    found = shutil.which(name)
     if found is None:
-        raise SystemExit("找不到 meson，请先安装（pip install meson 或包管理器）")
+        raise SystemExit(f"找不到 {name}，请先安装后重试")
     return found
 
 
-def main() -> int:
-    _force_utf8_output()
-    parser = argparse.ArgumentParser(description="验证 C++ 教程：校验、构建、测试")
-    parser.add_argument("--build-dir", default="build", help="构建目录（默认 build）")
-    parser.add_argument("--buildtype", help="传给 meson setup 的 --buildtype")
-    arguments = parser.parse_args()
+def check_app_json() -> None:
+    print("== app.json 一致性 ==", flush=True)
+    data = json.loads((PROJECT_ROOT / "app.json").read_text(encoding="utf-8"))
+    if data.get("id") != EXPECTED_ID or data.get("id") != PROJECT_ROOT.name:
+        raise SystemExit(f"app.json 的 id 必须是 {EXPECTED_ID}")
+    if data.get("parent") is not None:
+        raise SystemExit("app.json 不应声明 parent")
+    ready = data.get("dev", {}).get("ready", {})
+    http = ready.get("http", "") if isinstance(ready, dict) else ""
+    if not http.endswith(f":{EXPECTED_PORT}"):
+        raise SystemExit(f"dev.ready.http 的端口必须是 {EXPECTED_PORT}")
+    run = data.get("dev", {}).get("run", [])
+    if "meson" in run or any("meson" in str(step) for step in data.get("dev", {}).get("prepare", [])):
+        raise SystemExit("dev 块不应再走 Meson（ADR 0060）")
 
-    print("== JSON 校验 ==", flush=True)
-    config = PROJECT_ROOT / "resources" / "athena.json"
-    json.loads(config.read_text(encoding="utf-8"))
 
-    run(
-        [
-            sys.executable,
-            "scripts/generate_project.py",
-            "--project-root",
-            ".",
-            "--config",
-            "resources/athena.json",
-            "check",
-        ],
-        "生成器检查",
+def check_ports() -> None:
+    print("== 端口三方对齐 ==", flush=True)
+    vite = (PROJECT_ROOT / "vite.config.ts").read_text(encoding="utf-8")
+    match = re.search(r"port:\s*(\d+)", vite)
+    if not match or int(match.group(1)) != EXPECTED_PORT:
+        raise SystemExit(f"vite.config.ts 的 port 必须是 {EXPECTED_PORT}")
+    tauri = json.loads(
+        (PROJECT_ROOT / "src-tauri" / "tauri.conf.json").read_text(encoding="utf-8")
+    )
+    dev_url = tauri.get("build", {}).get("devUrl", "")
+    if not dev_url.endswith(f"localhost:{EXPECTED_PORT}"):
+        raise SystemExit(f"tauri.conf.json 的 devUrl 必须指向 localhost:{EXPECTED_PORT}")
+
+
+def check_content() -> None:
+    print("== 课表对齐 ==", flush=True)
+    course = json.loads(
+        (PROJECT_ROOT / "content" / "curriculum.json").read_text(encoding="utf-8")
+    )
+    seen: set[str] = set()
+    for chapter in course["chapters"]:
+        if not str(chapter.get("id", "")).startswith("cpp."):
+            raise SystemExit(f"章 id {chapter.get('id')!r} 必须以 cpp. 开头")
+        for topic in chapter["topics"]:
+            tid = topic["id"]
+            if tid in seen:
+                raise SystemExit(f"知识点 id 重复: {tid}")
+            seen.add(tid)
+            if not tid.startswith(chapter["id"] + "."):
+                raise SystemExit(f"{tid} 不在章 {chapter['id']} 下")
+            for item in topic.get("quiz", []):
+                choices = item.get("choices", [])
+                if len(choices) != 4:
+                    raise SystemExit(f"{tid} 的随堂题必须是 4 个选项")
+                answer = item.get("answer")
+                if not isinstance(answer, int) or not 0 <= answer < 4:
+                    raise SystemExit(f"{tid} 的答案下标不合法")
+                if not item.get("explanation"):
+                    raise SystemExit(f"{tid} 的随堂题缺解析")
+            for lab in topic.get("labs", []):
+                case = lab.get("case", "")
+                path = PROJECT_ROOT / "resources" / "cases" / case / "main.cpp"
+                if not path.is_file():
+                    raise SystemExit(f"{tid} 的案例不存在: {case}")
+    print(f"知识点 {len(seen)} 个", flush=True)
+
+
+def pnpm_build() -> None:
+    print("== 前端构建 ==", flush=True)
+    pnpm = tool("pnpm")
+    if not (PROJECT_ROOT / "node_modules").exists():
+        subprocess.run([pnpm, "install", "--frozen-lockfile"], cwd=PROJECT_ROOT, check=True)
+    subprocess.run([pnpm, "run", "build"], cwd=PROJECT_ROOT, check=True)
+
+
+def cargo_check() -> None:
+    print("== cargo check ==", flush=True)
+    cargo = tool("cargo")
+    subprocess.run(
+        [cargo, "check", "--manifest-path", "src-tauri/Cargo.toml", "--tests"],
+        cwd=PROJECT_ROOT,
+        check=True,
     )
 
-    build_dir = arguments.build_dir
-    setup = [meson(), "setup", build_dir]
-    if (PROJECT_ROOT / build_dir).is_dir():
-        setup.append("--reconfigure")
-    if arguments.buildtype:
-        setup.append(f"--buildtype={arguments.buildtype}")
-    run(setup, "Meson 配置")
 
-    run([meson(), "compile", "-C", build_dir], "构建")
-    run([meson(), "test", "-C", build_dir, "--print-errorlogs"], "测试")
-    return 0
+def main() -> None:
+    _force_utf8_output()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--skip-rust", action="store_true")
+    parser.add_argument("--content-only", action="store_true")
+    args = parser.parse_args()
+    check_app_json()
+    check_ports()
+    check_content()
+    if args.content_only:
+        return
+    pnpm_build()
+    if not args.skip_rust:
+        cargo_check()
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    main()
