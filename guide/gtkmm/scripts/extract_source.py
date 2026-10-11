@@ -263,7 +263,7 @@ def main() -> int:
         raise SystemExit(
             f"找不到官方文档源：{DOCBOOK}\n"
             "先克隆官方仓库：git clone https://gitlab.gnome.org/GNOME/gtkmm-documentation.git "
-            "upstream/gtkmm-documentation（在应用根 subjects/gtkmm/ 下执行）"
+            "upstream/gtkmm-documentation（在应用根 guide/gtkmm/ 下执行）"
         )
     if args.section:
         for chapter in load_structure():
