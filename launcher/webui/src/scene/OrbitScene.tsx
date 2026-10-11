@@ -260,11 +260,14 @@ function TigerCore({ hovered }: { hovered: string | null }) {
 
 // 领域轨道环（ADR 0125）：虎头居中为恒星，每颗应用是一颗贴着自家图标的行星球体；
 // 布局坐标全部来自 launcher-core 的 layout3d，前端只渲染。
-export default function OrbitScene({ catalog }: { catalog: CatalogDto }) {
+export default function OrbitScene({ catalog, paused }: { catalog: CatalogDto; paused: boolean }) {
   const [hovered, setHovered] = useState<string | null>(null);
   return (
     <Canvas
       shadows
+      // 挂起时彻底停帧：托盘隐藏时 WebView 的遮挡检测通常已停掉 rAF，
+      // frameloop="never" 是双保险，保证常驻状态下一帧都不画。
+      frameloop={paused ? "never" : "always"}
       camera={{ position: [0, 900, 2100], fov: 55, near: 1, far: 8000 }}
       onCreated={({ camera }) => camera.lookAt(0, 0, 0)}
       style={{ background: "radial-gradient(ellipse at center, #ffffff 0%, #eef0fa 60%, #e3e7f6 100%)" }}
@@ -274,8 +277,8 @@ export default function OrbitScene({ catalog }: { catalog: CatalogDto }) {
         position={[600, 1200, 800]}
         intensity={1.1}
         castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
         shadow-camera-left={-2400}
         shadow-camera-right={2400}
         shadow-camera-top={2400}

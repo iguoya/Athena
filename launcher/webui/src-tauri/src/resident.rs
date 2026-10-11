@@ -15,7 +15,7 @@ use std::sync::Arc;
 use launcher_core::{discover_all, runner};
 use tauri::menu::{CheckMenuItem, Menu, MenuItem, PredefinedMenuItem, Submenu};
 use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
-use tauri::{AppHandle, Manager, WebviewWindow};
+use tauri::{AppHandle, Emitter, Manager, WebviewWindow};
 use tauri_plugin_autostart::ManagerExt;
 
 /// 登录拉起时附加的参数。平时手动打开不带它，窗口照常出现。
@@ -123,6 +123,9 @@ pub fn install(
             }
             api.prevent_close();
             let _ = window_for_event.hide();
+            // 前端靠这个事件整体挂起（停轮询、停 3D 帧循环），托盘里零损耗。
+            // 广播走 app 级 emit，与前端 @tauri-apps/api/event 的全局 listen 同一通道。
+            let _ = window_for_event.app_handle().emit("launcher://visibility", false);
         }
     });
     Ok(())
@@ -134,6 +137,7 @@ pub fn show_main(app: &AppHandle) {
         let _ = window.unminimize();
         let _ = window.set_focus();
     }
+    let _ = app.emit("launcher://visibility", true);
 }
 
 fn handle_menu(

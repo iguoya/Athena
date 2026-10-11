@@ -110,18 +110,28 @@ function Tile({
 
 // 椭圆导图：同心环底图（core 预渲染 PNG）→ 连线（默认虚线，悬停节点点亮相关线为
 // 实线）→ 领域胶囊 → 虎头 → 图块。节点下标即连线端点下标（nodes 与 ends 同一序列）。
-export default function MindmapView() {
+export default function MindmapView({ paused }: { paused: boolean }) {
   const [map, setMap] = useState<MindmapDto | null>(null);
   const [hovered, setHovered] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // 托盘常驻时挂起：不拉导图也不排下一轮，回来时立即拉一次。
+    if (paused) return;
     let alive = true;
     let timer: ReturnType<typeof setTimeout> | undefined;
+    let lastSig = "";
+    let pulls = 0;
     const pull = () =>
       fetchMindmap()
         .then((m) => {
-          if (alive) {
+          if (!alive) return;
+          // 稳态轮询零重渲染：只有节点状态变了才进 React；布局类的离线
+          // 变化签名看不见，每 10 轮（约 30 秒）强制刷一次兜底。
+          const sig = m.nodes.map((n) => n.state).join(",");
+          pulls += 1;
+          if (sig !== lastSig || pulls % 10 === 0) {
+            lastSig = sig;
             setMap(m);
             setError(null);
           }
@@ -136,7 +146,7 @@ export default function MindmapView() {
       alive = false;
       clearTimeout(timer);
     };
-  }, []);
+  }, [paused]);
 
   if (error) return <div className="status">导图读取失败：{error}</div>;
   if (!map) return <div className="status">排布导图…</div>;

@@ -150,6 +150,19 @@ pub mod commands {
         })
     }
 
+    // ---- 主窗口可见性：托盘常驻时前端整体挂起（轮询与 3D 帧循环都停）----
+
+    /// 前端启动时主动问一次初始状态；此后的变化走 resident 发的
+    /// `launcher://visibility` 事件。启动器大部分时间藏在托盘，挂起后
+    /// 常驻损耗只剩进程本身的内存。
+    #[tauri::command]
+    pub fn main_window_visible(app: tauri::AppHandle) -> bool {
+        use tauri::Manager;
+        app.get_webview_window("main")
+            .and_then(|w| w.is_visible().ok())
+            .unwrap_or(false)
+    }
+
     #[tauri::command]
     pub fn open_app(repo: State<Repo>, id: String) -> Result<(), String> {
         let apps = discover_all(&repo.0);
@@ -395,6 +408,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             commands::catalog,
             commands::mindmap,
+            commands::main_window_visible,
             commands::open_app,
             commands::stop_app
         ])
