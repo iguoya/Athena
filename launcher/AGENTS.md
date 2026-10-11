@@ -22,8 +22,9 @@
   依赖 core crate 库内调用——两个入口一份实现，数据不来自第二处。菜单栏版是平台
   专属的，更要守住这条。
 - **启动器里没有按应用写的分支。** 新增应用只放一份带 `dev` 声明的 `app.json`，启动器
-  不改代码（ADR 0046）。发现逻辑扫 `<root>/*/app.json`：默认 `subjects/`，
-  `--root practice` 扫项目应用，GUI 的实践分区用同一套 `discover_in`。
+  不改代码（ADR 0046）。发现逻辑扫 `<root>/*/app.json`。默认 `discover_all` 把
+  `subjects/` 与 `practice/` 合成一份清单，桌面应用都进轨道图和托盘；`hidden` 的
+  服务不画。`--root` 把范围收成其中一层。
 - **状态从系统实况读，不自己记账。** 窗口进程在 = 运行中；有属于它的构建进程 = 启动中；
   都没有 = 未运行。dev server 端口通了不算就绪。
 - **`list --json` 的 `state` 是契约。** `stopped` / `starting` / `ready` 是固定标识符，
@@ -32,8 +33,10 @@
   列出来交回使用者，不替人 push。
 - **平台降级要如实说**（ADR 0047、0049、0051）：做不到就明说（例如 Wayland 不允许抢
   焦点时提示使用者自己切过去），不假装成功。
-- **换标志只换 `gui/assets/tiger.svg`。** 标题栏、任务栏、托盘都由 `gui/build.rs` 从这一份
-  渲染，不另画。
+- **启动器标志是虎头。** 窗口内 `webui/public/tiger-mark.png`，托盘
+  `webui/src-tauri/icons/32x32.png`，Dock / 任务栏 `icons/icon.png`（与 tiger-mark
+  同一张）。裸二进制补图标的代码在 `webui/src-tauri/src/app_icon.rs`。SVG 原件留在
+  退役的 `gui/assets/tiger.svg`，gui 不再参与构建。
 - **学习应用面板的布局是 `core/src/mindmap.rs` 的纯函数**（ADR 0083）：位置、分组、连线都在那里算、
   有单元测试，GUI 只填数据；分组和关系来自 `app.json` 的 `group` / `related` / `evolves_from`，
   不要在界面里按应用 id 写位置。改了布局先跑 `cargo test -p launcher-core mindmap`。
@@ -50,12 +53,12 @@ cargo test  --manifest-path launcher/Cargo.toml
 ```
 
 webui 的日常运行与打包（Tauri 约定，ADR 0125）。它现在是唯一的图形前端
-（gui 已退役，ADR 0127；托盘与自启动待迁移，入口暂为 webui 窗口本体）：
+（gui 已退役，ADR 0127；托盘常驻与开机自启在 webui，关窗口不退出）：
 
 **表现层冻结（2026-10-11 结构评审定）**：启动器的价值在「找到应用、一键启动、看到全局」，
 open/stop、托盘、思维导图、3D 轨道环到位后，视觉与视图层封版——不再新增视图、
-不再做视觉打磨（开普勒轨道、贴图、配色一类的微调到此为止）。剩余工作只有两件：
-托盘与自启动迁移、修 bug。富余的精力应该去内容侧（课程正文、实验），那里缺人。
+不再做视觉打磨（开普勒轨道、贴图、配色一类的微调到此为止）。托盘常驻与开机自启已补上，
+剩余工作是修 bug。富余的精力应该去内容侧（课程正文、实验），那里缺人。
 
 ```sh
 cd launcher/webui

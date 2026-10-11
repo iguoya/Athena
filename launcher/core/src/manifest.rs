@@ -223,6 +223,16 @@ pub fn discover(repo: &Path) -> Vec<App> {
     discover_in(&repo.join("subjects"))
 }
 
+/// 启动器要管的全部应用：`subjects/` 与 `practice/` 各一层 `app.json`。
+/// 桌面窗口不按目录分家——地球、魔方和课程应用进同一份清单。
+/// `hidden` 的条目仍在结果里（目前只有路由器上的 nas-admin），界面自己不画。
+/// 顺序是先 subjects、再 practice，各自按目录名排。
+pub fn discover_all(repo: &Path) -> Vec<App> {
+    let mut apps = discover(repo);
+    apps.extend(discover_in(&repo.join("practice")));
+    apps
+}
+
 /// `discover` 的通用版本：扫描任意一层 `<root>/*/app.json`，不写死 `subjects/`。
 /// `practice/` 下将来会挂多个独立小项目，`practice` 面板复用同一套发现
 /// 逻辑，只是换一个根目录（不用为它另写一份）。

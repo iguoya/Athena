@@ -10,13 +10,12 @@
 //!   launcher icons [--check]  按各应用 app.json 的 icon.renders 从 icon.svg 生成位图；
 //!                             不给 --root 时 subjects/ 与 practice/ 一起扫（ADR 0065）
 //!
-//! `--root <dir>` 换发现根目录（相对仓库根，默认 `subjects/`），放在任意位置都行：
-//! `launcher --root practice list`。扫 `practice/*` 这种子目录下的
-//! 独立小项目时用得上，不用另写一套发现逻辑。
+//! `--root <dir>` 把发现范围收成仓库根下的那一层（`launcher --root practice list`）。
+//! 不给 `--root` 时 subjects/ 与 practice/ 一起扫：桌面应用都归启动器管。
 
 use std::process::ExitCode;
 
-use launcher_core::{discover, paths, runner, App, ProcessSnapshot};
+use launcher_core::{discover_all, paths, runner, App, ProcessSnapshot};
 
 /// 从参数里摘出 `--root <dir>`（相对仓库根），不管它出现在哪个位置；
 /// 剩下的参数原样交给下面的子命令解析，`--root` 对它们不可见。
@@ -48,7 +47,7 @@ fn main() -> ExitCode {
     };
     let apps = match &root_override {
         Some(root) => launcher_core::discover_in(&repo.join(root)),
-        None => discover(&repo),
+        None => discover_all(&repo),
     };
 
     match arguments.first().map(String::as_str) {
@@ -95,11 +94,7 @@ fn main() -> ExitCode {
         },
         Some("icons") => {
             let check = arguments.get(1).map(String::as_str) == Some("--check");
-            // 维护命令，不是某一面板的操作：默认两个发现根一起扫，免得漏掉 practice/。
-            let apps = match &root_override {
-                Some(_) => apps,
-                None => [discover(&repo), launcher_core::discover_in(&repo.join("practice"))].concat(),
-            };
+            // 默认清单已经包含 practice/。指定了 --root 就只渲染那一层。
             match launcher_core::icons::render_all(&apps, check, line) {
                 Ok(report) if check && report.stale > 0 => {
                     eprintln!("{} 份位图和 icon.svg 对不上，跑一次 `launcher icons`。", report.stale);

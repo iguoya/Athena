@@ -34,3 +34,9 @@
   全套，Linux 支持未承诺，ADR 0051 降级约定）。
 - launcher 的 Slint 相关依赖（slint、slint-build）随 gui 移出构建不再编译；
   Cargo.lock 中的存量条目待下次依赖刷新自然收敛。
+
+> 2026-10-11 补记：托盘常驻与开机自启已迁到 webui。关窗口隐藏到托盘，退出走托盘菜单
+> 「退出启动器」或系统退出；登录拉起带 `--autostart`，窗口不弹出。开机自启用
+> `tauri-plugin-autostart`，菜单勾选、默认关，状态从系统实况读：macOS LaunchAgent
+> （`~/Library/LaunchAgents/athena-launcher.plist`）、Windows 的 HKCU Run 键、Linux 的
+> XDG autostart。本条「尚未迁移」的后果作废。决策 4 的原文保留。

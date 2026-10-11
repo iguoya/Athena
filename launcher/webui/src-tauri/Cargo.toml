@@ -25,6 +25,13 @@ serde_json = "1"
 base64 = "0.22"
 # 启动器的清单发现、布局纯函数、进程编排全部来自 core（ADR 0125：执行路径只有 core 一处）。
 launcher-core = { path = "../../core" }
+tauri-plugin-autostart = "2"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+# 裸二进制没有 .app，Dock 不读 Info.plist。运行时给 NSApplication 设虎头。
+objc2 = "0.6"
+objc2-app-kit = { version = "0.3", features = ["NSApplication", "NSImage", "NSResponder"] }
+objc2-foundation = "0.3"
 
 [profile.dev]
 debug = 1

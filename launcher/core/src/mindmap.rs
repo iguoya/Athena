@@ -914,7 +914,7 @@ fn curved(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::manifest::{discover, DevSpec};
+    use crate::manifest::DevSpec;
     use std::path::PathBuf;
 
     fn app(id: &str, group: Option<&str>, evolves: Option<&str>, related: &[&str]) -> App {
@@ -1135,12 +1135,11 @@ mod tests {
     #[test]
     fn 仓库里的真实清单排得干净() {
         let repo = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("..").join("..");
-        let mut apps = discover(&repo);
+        let mut apps = crate::manifest::discover_all(&repo);
         if apps.is_empty() {
             return; // 不在完整仓库里（例如单独打包的 crate）
         }
-        // 与 GUI 排的是同一份：subjects 加 practice，去掉隐藏的（ADR 0093）。
-        apps.extend(crate::manifest::discover_in(&repo.join("practice")));
+        // 与启动器画的是同一份：两个发现根，去掉隐藏的服务（ADR 0093）。
         apps.retain(|app| !app.hidden);
         let map = layout(&apps);
         assert_eq!(map.nodes.iter().filter(|n| !n.reference).count(), apps.len());

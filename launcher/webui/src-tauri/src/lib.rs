@@ -1,8 +1,15 @@
 //! Athena 启动器 Web 前端（ADR 0125）。执行路径约定（ADR 0046）不变：
 //! 清单、布局、状态、启动编排全部来自 launcher-core，这里只做类型转换与命令暴露。
 
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Arc;
+
 use base64::Engine as _;
 use launcher_core::paths;
+use tauri::Manager;
+
+mod app_icon;
+mod resident;
 
 /// 仓库定位一次、整个进程共享：locate_repo 每次都走盘上探测，没必要。
 pub struct Repo(pub std::path::PathBuf);
@@ -63,12 +70,12 @@ fn icon_data_url(path: &std::path::Path) -> Option<String> {
 /// 同模块里定义并引用会撞名（Tauri 2 的既知约束）。
 pub mod commands {
     use super::{icon_data_url, AppDto, CatalogDto, OrbitDto, Repo};
-    use launcher_core::{layout3d, manifest, mindmap, runner};
+    use launcher_core::{discover_all, layout3d, manifest, mindmap, runner};
     use tauri::State;
 
     #[tauri::command]
     pub fn catalog(repo: State<Repo>) -> Result<CatalogDto, String> {
-        let apps = manifest::discover(&repo.0);
+        let apps = discover_all(&repo.0);
         let visible: Vec<&manifest::App> = apps.iter().filter(|a| !a.hidden).collect();
 
         // 分组：领域名按首次出现序登记（与 core 的 mindmap 分组同规则），挂靠应用
@@ -84,7 +91,9 @@ pub mod commands {
                     group_names.push(name.clone());
                     // 组色按组序取 mindmap 色板（与 mindmap::layout 同规则），同组同色。
                     group_colors.push(
-                        launcher_core::mindmap::PALETTE[(group_names.len() - 1) % launcher_core::mindmap::PALETTE.len()].to_string(),
+                        launcher_core::mindmap::PALETTE
+                            [(group_names.len() - 1) % launcher_core::mindmap::PALETTE.len()]
+                        .to_string(),
                     );
                     group_names.len() - 1
                 }
@@ -115,7 +124,12 @@ pub mod commands {
                 .iter()
                 .find(|n| n.group == g && n.slot == slot)
                 .copied()
-                .unwrap_or(layout3d::OrbitNode { group: g, slot, pos: [0.0; 3], theta: 0.0 });
+                .unwrap_or(layout3d::OrbitNode {
+                    group: g,
+                    slot,
+                    pos: [0.0; 3],
+                    theta: 0.0,
+                });
             out.push(AppDto {
                 id: app.id.clone(),
                 title: app.title.clone(),
@@ -138,7 +152,12 @@ pub mod commands {
             orbits: layout
                 .orbits
                 .iter()
-                .map(|o| OrbitDto { a: o.a, b: o.b, c: o.c, tilt: o.tilt })
+                .map(|o| OrbitDto {
+                    a: o.a,
+                    b: o.b,
+                    c: o.c,
+                    tilt: o.tilt,
+                })
                 .collect(),
             apps: out,
         })
@@ -146,16 +165,22 @@ pub mod commands {
 
     #[tauri::command]
     pub fn open_app(repo: State<Repo>, id: String) -> Result<(), String> {
-        let apps = manifest::discover(&repo.0);
-        let app = apps.iter().find(|a| a.id == id).ok_or_else(|| format!("清单里没有 {id}"))?;
+        let apps = discover_all(&repo.0);
+        let app = apps
+            .iter()
+            .find(|a| a.id == id)
+            .ok_or_else(|| format!("清单里没有 {id}"))?;
         // launch 返回窗口进程 pid，前端只需要成败。
         runner::launch(app, &repo.0, |_| {}).map(|_| ())
     }
 
     #[tauri::command]
     pub fn stop_app(repo: State<Repo>, id: String) -> Result<(), String> {
-        let apps = manifest::discover(&repo.0);
-        let app = apps.iter().find(|a| a.id == id).ok_or_else(|| format!("清单里没有 {id}"))?;
+        let apps = discover_all(&repo.0);
+        let app = apps
+            .iter()
+            .find(|a| a.id == id)
+            .ok_or_else(|| format!("清单里没有 {id}"))?;
         runner::stop(app)
     }
 
@@ -192,14 +217,21 @@ pub mod commands {
         hot: String,
         a: i32,
         b: i32,
-        x0: f32, y0: f32,
-        cx1: f32, cy1: f32,
-        cx2: f32, cy2: f32,
-        x1: f32, y1: f32,
+        x0: f32,
+        y0: f32,
+        cx1: f32,
+        cy1: f32,
+        cx2: f32,
+        cy2: f32,
+        x1: f32,
+        y1: f32,
         has_arrow: bool,
-        ax: f32, ay: f32,
-        bx: f32, by: f32,
-        cx: f32, cy: f32,
+        ax: f32,
+        ay: f32,
+        bx: f32,
+        by: f32,
+        cx: f32,
+        cy: f32,
         dashes: Vec<[f32; 4]>,
     }
 
@@ -233,7 +265,7 @@ pub mod commands {
 
     #[tauri::command]
     pub fn mindmap(repo: State<Repo>) -> Result<MindmapDto, String> {
-        let apps = manifest::discover(&repo.0);
+        let apps = discover_all(&repo.0);
         let visible: Vec<manifest::App> = apps.iter().filter(|a| !a.hidden).cloned().collect();
         let map = mindmap::layout(&visible);
 
@@ -250,7 +282,10 @@ pub mod commands {
         for (i, node) in map.nodes.iter().enumerate() {
             // 引用节点排在全部本体之后，id 与某个本体应用相同：显示同应用的图标与状态。
             let app = visible.get(i).unwrap_or_else(|| {
-                visible.iter().find(|a| a.id == node.id).expect("引用节点的 id 必有本体")
+                visible
+                    .iter()
+                    .find(|a| a.id == node.id)
+                    .expect("引用节点的 id 必有本体")
             });
             nodes.push(MindNodeDto {
                 id: node.id.clone(),
@@ -290,14 +325,21 @@ pub mod commands {
                     hot: format!("#{base}f0"),
                     a: l.ends.0 as i32,
                     b: l.ends.1 as i32,
-                    x0: l.from.x, y0: l.from.y,
-                    cx1: l.c1.x, cy1: l.c1.y,
-                    cx2: l.c2.x, cy2: l.c2.y,
-                    x1: l.to.x, y1: l.to.y,
+                    x0: l.from.x,
+                    y0: l.from.y,
+                    cx1: l.c1.x,
+                    cy1: l.c1.y,
+                    cx2: l.c2.x,
+                    cy2: l.c2.y,
+                    x1: l.to.x,
+                    y1: l.to.y,
                     has_arrow: l.arrow.is_some(),
-                    ax: arrow[0].x, ay: arrow[0].y,
-                    bx: arrow[1].x, by: arrow[1].y,
-                    cx: arrow[2].x, cy: arrow[2].y,
+                    ax: arrow[0].x,
+                    ay: arrow[0].y,
+                    bx: arrow[1].x,
+                    by: arrow[1].y,
+                    cx: arrow[2].x,
+                    cy: arrow[2].y,
                     dashes: l.dashes.iter().map(|[p, q]| [p.x, p.y, q.x, q.y]).collect(),
                 }
             })
@@ -325,129 +367,47 @@ pub mod commands {
     }
 }
 
+fn autostart_plugin() -> tauri::plugin::TauriPlugin<tauri::Wry> {
+    let mut builder = tauri_plugin_autostart::Builder::new()
+        .app_name("athena-launcher")
+        .args([resident::AUTOSTART_ARG]);
+    // LaunchAgent 指向当前可执行文件。开发二进制不是 .app，登录项那条路走不通。
+    #[cfg(target_os = "macos")]
+    {
+        builder = builder.macos_launcher(tauri_plugin_autostart::MacosLauncher::LaunchAgent);
+    }
+    builder.build()
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    use launcher_core::{manifest, runner};
-    let repo = paths::locate_repo().expect("找不到 Athena 仓库：设置 ATHENA_ROOT，或把启动器放在仓库里");
-    let repo_for_setup = repo.clone();
+    let repo =
+        paths::locate_repo().expect("找不到 Athena 仓库：设置 ATHENA_ROOT，或把启动器放在仓库里");
+    let quitting = Arc::new(AtomicBool::new(false));
+    let quitting_for_run = Arc::clone(&quitting);
 
     tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
-            // 第二实例被单例拦下时，把已有窗口叫到前台——这就是「再次双击没反应」的反面。
-            if let Some(w) = tauri::Manager::get_webview_window(app, "main") {
-                let _ = w.show();
-                let _ = w.set_focus();
-            }
+            // 第二实例被单例拦下时，把已有窗口叫到前台。
+            resident::show_main(app);
         }))
+        .plugin(autostart_plugin())
         .manage(Repo(repo))
         .setup(move |app| {
-            use tauri::menu::{Menu, MenuItem, PredefinedMenuItem, Submenu};
-            use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
-            use tauri::Manager;
-
-            let handle = app.handle().clone();
-            let repo = repo_for_setup.clone();
-
-            // 托盘菜单：每个应用一个子菜单（打开/停止），加显示与退出。
-            // 清单变化后的菜单重建骨架阶段先不做（重启启动器生效），热更新随后补。
-            let apps = manifest::discover(&repo);
-            let menu = Menu::new(&handle)?;
-            for a in apps.iter().filter(|a| !a.hidden) {
-                let sub = Submenu::with_id(&handle, format!("app:{}", a.id), &a.title, true)?;
-                let open = MenuItem::with_id(
-                    &handle,
-                    format!("open:{}", a.id),
-                    "打开",
-                    true,
-                    None::<&str>,
-                )?;
-                let stop = MenuItem::with_id(
-                    &handle,
-                    format!("stop:{}", a.id),
-                    "停止",
-                    true,
-                    None::<&str>,
-                )?;
-                sub.append(&open)?;
-                sub.append(&stop)?;
-                menu.append(&sub)?;
-            }
-            menu.append(&PredefinedMenuItem::separator(&handle)?)?;
-            let show = MenuItem::with_id(&handle, "show", "显示启动器", true, None::<&str>)?;
-            menu.append(&show)?;
-            let quit = MenuItem::with_id(&handle, "quit", "退出启动器", true, None::<&str>)?;
-            menu.append(&quit)?;
-
-            let _tray = TrayIconBuilder::with_id("main-tray")
-                .icon(tauri::image::Image::from_bytes(include_bytes!(
-                    "../icons/32x32.png"
-                ))?)
-                .tooltip("Athena 启动器")
-                .menu(&menu)
-                .show_menu_on_left_click(false)
-                .on_menu_event(|app, event| {
-                    let id = event.id().as_ref().to_string();
-                    let repo = paths::locate_repo().expect("找不到 Athena 仓库");
-                    let (action, target) = if let Some(t) = id.strip_prefix("open:") {
-                        ("open", t.to_string())
-                    } else if let Some(t) = id.strip_prefix("stop:") {
-                        ("stop", t.to_string())
-                    } else if id == "show" {
-                        if let Some(w) = tauri::Manager::get_webview_window(app, "main") {
-                            let _ = w.show();
-                            let _ = w.set_focus();
-                        }
-                        return;
-                    } else if id == "quit" {
-                        app.exit(0);
-                        return;
-                    } else {
-                        return;
-                    };
-                    // launch 会跑完整构建链（数十秒），绝不能堵在事件回调线程上。
-                    let target = target.to_string();
-                    let app_handle = app.clone();
-                    tauri::async_runtime::spawn_blocking(move || {
-                        let apps = manifest::discover(&repo);
-                        let Some(app_cfg) = apps.iter().find(|a| a.id == target) else {
-                            return;
-                        };
-                        let result = match action {
-                            "open" => runner::launch(app_cfg, &repo, |_| {}).map(|_| ()),
-                            _ => runner::stop(app_cfg),
-                        };
-                        if let Err(e) = result {
-                            eprintln!("托盘动作 {action} {target} 失败：{e}");
-                        }
-                    });
-                })
-                .on_tray_icon_event(|tray, event| {
-                    // 左键单击：唤起主窗口（常驻启动器的主入口）。
-                    if let TrayIconEvent::Click {
-                        button: MouseButton::Left,
-                        button_state: MouseButtonState::Up,
-                        ..
-                    } = event
-                    {
-                        let app = tray.app_handle();
-                        if let Some(w) = tauri::Manager::get_webview_window(app, "main") {
-                            let _ = w.show();
-                            let _ = w.set_focus();
-                        }
-                    }
-                })
-                .build(app)?;
-            let _ = handle;
-
-            // 常驻形态：关窗口 = 隐藏到托盘，退出走托盘菜单。
             let window = app.get_webview_window("main").expect("主窗口缺失");
-            let window_for_event = window.clone();
-            window.on_window_event(move |event| {
-                if let tauri::WindowEvent::CloseRequested { api, .. } = event {
-                    api.prevent_close();
-                    let _ = window_for_event.hide();
+            app_icon::install(&window);
+            let hidden = resident::launched_hidden();
+            if !hidden {
+                let _ = window.show();
+                let _ = window.set_focus();
+            }
+            if let Err(error) = resident::install(app.handle(), &window, quitting) {
+                eprintln!("托盘没能建起来，窗口照常能用：{error}");
+                if hidden {
+                    let _ = window.show();
+                    let _ = window.set_focus();
                 }
-            });
+            }
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -456,6 +416,17 @@ pub fn run() {
             commands::open_app,
             commands::stop_app
         ])
-        .run(tauri::generate_context!())
-        .expect("启动器窗口启动失败");
+        .build(tauri::generate_context!())
+        .expect("启动器窗口启动失败")
+        .run(move |app, event| match event {
+            // Cmd+Q 一类的系统退出先到这里。关窗口走的是 CloseRequested，不会进这条。
+            tauri::RunEvent::ExitRequested { .. } => {
+                quitting_for_run.store(true, Ordering::SeqCst);
+            }
+            tauri::RunEvent::Reopen {
+                has_visible_windows: false,
+                ..
+            } => resident::show_main(app),
+            _ => {}
+        });
 }

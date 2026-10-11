@@ -38,15 +38,22 @@
   应用目录里了，按文件名认最直接。
 - `match`（可选）是判断进程归属的路径前缀，`subjects/c-plus-plus` 用它指向 `build`。
 
-**清单是热的**（ADR 0001）：托盘启动器用文件通知盯着 `subjects/`、`practice/` 和各
-应用目录，新增、删除、修改 `app.json`，约两秒后托盘菜单、应用列表和思维导图自动
-跟着变，不用重启启动器；只改 `icon.svg` 同样生效。文件通知失效的环境有一分钟一次
-的兜底摸底，指纹没变就不动界面。
+窗口里的清单每 3 秒向编排器重读。托盘菜单在进程启动时生成，新增或删掉应用后要重启
+启动器，菜单才会跟上。关窗口不退出，进程留在菜单栏托盘里；左键点图标把窗口叫回来，
+退出走菜单里的「退出启动器」。
+
+「开机自启」在托盘菜单里，默认关。勾选状态以系统实况为准，启动器不另记账：macOS 写
+`~/Library/LaunchAgents/athena-launcher.plist`（LaunchAgent，指向当前这份可执行文件），
+Windows 写 HKCU 的 Run 键，Linux 写 XDG autostart。登录拉起时窗口不弹出，点托盘或
+Dock 再打开。开发调试版依赖 vite，勾了自启后下次登录会拉起这份 debug 二进制；日常
+自启用带 `custom-protocol` 的 release。
 
 窗口标题栏用**虎头**（Fluent Emoji 虎头，和各应用同一画风，ADR 0065）：SVG 原件
-`gui/assets/tiger.svg` 随退役的 gui 留档（ADR 0127），webui 引用的是入库的
-`webui/public/tiger-mark.png`。托盘尚未迁移到 webui（ADR 0127），迁回时继续以那份
-SVG 为唯一源。
+`gui/assets/tiger.svg` 随退役的 gui 留档（ADR 0127），窗口里用的是入库的
+`webui/public/tiger-mark.png`，托盘用 `webui/src-tauri/icons/32x32.png`。Dock 和
+Windows 任务栏用同一张 256px 的 `webui/src-tauri/icons/icon.png`。裸二进制没有
+`.app`，macOS 的 Dock 读不到 Info.plist；Windows 任务栏认的是大图标，窗口创建时
+只填了标题栏那张。这两处由 `webui/src-tauri/src/app_icon.rs` 在窗口建好后补上。
 
 ### 图标
 
@@ -156,8 +163,11 @@ launcher/target/release/launcher sync        # 提交并推送学习进度
 - **把已运行的窗口叫到前面**：macOS 有正经办法；X11 靠 `wmctrl` / `xdotool`；
   **Wayland 出于安全不允许别的进程抢焦点**，那种情况下编排器会明说"请自己切过去"，
   而不是假装成功。
-- **托盘**：Windows 正常；GNOME 默认没有状态栏区域，需要 AppIndicator 扩展，
-  装不上时托盘不显示，窗口照常能用。Ubuntu 上还需要 `libayatana-appindicator3-dev`。
+- **托盘**：macOS 在菜单栏，Windows 在通知区。关窗口隐藏，进程还在。GNOME 默认没有
+  状态栏区域，需要 AppIndicator 扩展；装不上时托盘不显示，窗口照常能用，关窗口即退出。
+  Ubuntu 上还需要 `libayatana-appindicator3-dev`。
+- **开机自启**：托盘菜单勾选，三平台都写进系统自己的登录启动（见上）。Linux 上启动器
+  图形界面本身仍按 ADR 0051 不作为承诺。
 - **Windows** 上全部应用都有正式的 CI 门槛并且构建通过：启动器、三个 Tauri 应用、
   `subjects/machine`（Qt）、`subjects/c-plus-plus`（GTK4）。`subjects/c-plus-plus` 的 Windows 支持 2026-09-15 打通，
   其中一处临时垫片绕开了 glib 2.90 与 MSYS2 现有 glibmm 2.86 的名字冲突
