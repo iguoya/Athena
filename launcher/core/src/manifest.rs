@@ -124,6 +124,30 @@ pub enum RenderSpec {
     Icns,
 }
 
+/// 学习生命周期（ADR 0139）：应用当前在不在真实学习计划上。
+///
+/// 只影响呈现，不影响编排：归档应用 `open` / `stop` / `sync` 照常可用。
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum Lifecycle {
+    /// 活跃学习（默认）：正在学，或工具常驻。`app.json` 不写 `lifecycle` 即是它。
+    #[default]
+    Active,
+    /// 建成待学：教学内容已成体系，真实学习还没排上——呈现但降视觉权重。
+    Built,
+    /// 冻结归档：当前不在学习计划里——默认不呈现，可按需显示。
+    Archived,
+}
+
+impl Lifecycle {
+    pub fn key(self) -> &'static str {
+        match self {
+            Lifecycle::Active => "active",
+            Lifecycle::Built => "built",
+            Lifecycle::Archived => "archived",
+        }
+    }
+}
+
 #[derive(Debug, Clone, Deserialize)]
 struct RawManifest {
     id: String,
@@ -156,6 +180,10 @@ struct RawManifest {
     /// open/stop 与 dev 编排照常可用——隐藏是显示层的事，不是下线。
     #[serde(default)]
     hidden: bool,
+    /// 学习生命周期（ADR 0139）：active / built / archived。省略即 active。
+    /// 收 String 再手动转枚举：未知值点名回退，而不是让整个 app.json 读不动。
+    #[serde(default)]
+    lifecycle: Option<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -187,6 +215,8 @@ pub struct App {
     pub also_in: Vec<String>,
     /// 显示层隐藏（ADR 0093）：不进任何面板，清单与编排仍可见。
     pub hidden: bool,
+    /// 学习生命周期（ADR 0139）：活跃学习 / 建成待学 / 冻结归档。
+    pub lifecycle: Lifecycle,
 }
 
 impl App {
@@ -274,6 +304,19 @@ fn parse(dir: &Path) -> Option<App> {
         };
         icon_renders.push((path.clone(), spec));
     }
+    let lifecycle = match raw.lifecycle.as_deref() {
+        None | Some("active") => Lifecycle::Active,
+        Some("built") => Lifecycle::Built,
+        Some("archived") => Lifecycle::Archived,
+        // 与 icon.renders 写错同策：不让启动器起不来，但点名是谁、写的什么。
+        Some(other) => {
+            eprintln!(
+                "{} 的 lifecycle「{other}」：只认 active / built / archived，按 active 处理",
+                dir.display()
+            );
+            Lifecycle::Active
+        }
+    };
     Some(App {
         icon_renders,
         // 没写 letter 就取标题第一个字：新增应用不配这两项也能显示。
@@ -306,6 +349,7 @@ fn parse(dir: &Path) -> Option<App> {
         also_under: raw.also_under,
         also_in: raw.also_in,
         hidden: raw.hidden,
+        lifecycle,
     })
 }
 
@@ -356,7 +400,33 @@ mod tests {
             also_under: Vec::new(),
             also_in: Vec::new(),
             hidden: false,
+            lifecycle: Lifecycle::Active,
         }
+    }
+
+    /// lifecycle 解析：省略即 active；未知值点名回退，不让整个 app.json 读不动。
+    #[test]
+    fn lifecycle_解析() {
+        let dir = std::env::temp_dir().join(format!("athena-lifecycle-test-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).expect("建临时目录");
+        let write = |text: &str| {
+            std::fs::write(dir.join("app.json"), text).expect("写临时 app.json");
+            parse(&dir).unwrap()
+        };
+        assert_eq!(write(r#"{"id":"a","title":"甲"}"#).lifecycle, Lifecycle::Active);
+        assert_eq!(
+            write(r#"{"id":"a","title":"甲","lifecycle":"archived"}"#).lifecycle,
+            Lifecycle::Archived
+        );
+        assert_eq!(
+            write(r#"{"id":"a","title":"甲","lifecycle":"built"}"#).lifecycle,
+            Lifecycle::Built
+        );
+        assert_eq!(
+            write(r#"{"id":"a","title":"甲","lifecycle":"gone"}"#).lifecycle,
+            Lifecycle::Active
+        );
+        let _ = std::fs::remove_dir_all(&dir);
     }
 
     /// 同一份清单扫两遍，指纹必须一致——否则常驻期间每次重扫都会白白重建界面。

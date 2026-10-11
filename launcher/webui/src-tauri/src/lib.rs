@@ -28,6 +28,9 @@ pub struct AppDto {
     group_color: String,
     /// icon.svg 的 data URL（骨架阶段每次 catalog 现读；体量大了换 fingerprint 缓存）。
     icon: Option<String>,
+    /// 学习生命周期（ADR 0139）：active / built / archived。3D 视图不含归档，
+    /// built 在前端淡显。
+    lifecycle: String,
     /// runner::RunState::key()：stopped / starting / ready（跨进程契约，ADR 0048）。
     state: String,
     /// 3D 轨道布局里的世界坐标。
@@ -64,7 +67,11 @@ pub mod commands {
     #[tauri::command]
     pub fn catalog(repo: State<Repo>) -> Result<CatalogDto, String> {
         let apps = discover_all(&repo.0);
-        let visible: Vec<&manifest::App> = apps.iter().filter(|a| !a.hidden).collect();
+        // 归档（ADR 0139）与隐藏（ADR 0093）都不进 3D 视图；归档在思维导图可开关查看。
+        let visible: Vec<&manifest::App> = apps
+            .iter()
+            .filter(|a| !a.hidden && a.lifecycle != manifest::Lifecycle::Archived)
+            .collect();
 
         // 分组：领域名按首次出现序登记（与 core 的 mindmap 分组同规则），挂靠应用
         // （有 parent）骨架阶段同圈排布，挂靠语义的专门表达留待下一轮。
@@ -127,6 +134,7 @@ pub mod commands {
                 letter: app.letter.clone(),
                 accent: app.accent.clone(),
                 icon: app.icon_file.as_deref().and_then(cache::icon_data_url),
+                lifecycle: app.lifecycle.key().to_string(),
                 state: states[i].key().to_string(),
                 pos: node.pos,
                 orbit: node.group,
@@ -193,6 +201,8 @@ pub mod commands {
         letter: String,
         accent: String,
         icon: Option<String>,
+        /// 学习生命周期（ADR 0139）：前端按 built / archived 淡显。
+        lifecycle: String,
         state: String,
         reference: bool,
         x: f32,
@@ -264,9 +274,17 @@ pub mod commands {
     }
 
     #[tauri::command]
-    pub fn mindmap(repo: State<Repo>) -> Result<MindmapDto, String> {
+    pub fn mindmap(repo: State<Repo>, include_archived: Option<bool>) -> Result<MindmapDto, String> {
         let apps = discover_all(&repo.0);
-        let visible: Vec<manifest::App> = apps.iter().filter(|a| !a.hidden).cloned().collect();
+        // 归档默认不呈现（ADR 0139）；「显示归档」开关打开时以淡显节点进来。
+        let include_archived = include_archived.unwrap_or(false);
+        let visible: Vec<manifest::App> = apps
+            .iter()
+            .filter(|a| {
+                !a.hidden && (include_archived || a.lifecycle != manifest::Lifecycle::Archived)
+            })
+            .cloned()
+            .collect();
         let map = mindmap::layout(&visible);
 
         let states = cache::states(&apps);
@@ -292,6 +310,7 @@ pub mod commands {
                 letter: app.letter.clone(),
                 accent: app.accent.clone(),
                 icon: app.icon_file.as_deref().and_then(cache::icon_data_url),
+                lifecycle: app.lifecycle.key().to_string(),
                 state: state_of_id(&node.id),
                 reference: node.reference,
                 x: node.at.x,

@@ -16,5 +16,5 @@ pub mod paths;
 pub mod progress;
 pub mod runner;
 
-pub use manifest::{discover, discover_all, discover_in, fingerprint, App, RenderSpec};
+pub use manifest::{discover, discover_all, discover_in, fingerprint, App, Lifecycle, RenderSpec};
 pub use runner::{activate, launch, stop, ProcessSnapshot, RunState};

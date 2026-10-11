@@ -167,7 +167,8 @@ function IconSphere({
             roughness={0.4}
             metalness={0.08}
             transparent
-            opacity={active ? 1 : 0.75}
+            // 建成待学（ADR 0139）降视觉权重：行星整体淡一档，悬停可看清。
+            opacity={(active ? 1 : 0.75) * (app.lifecycle === "built" ? 0.55 : 1)}
           />
         </mesh>
       </group>
@@ -180,12 +181,15 @@ function IconSphere({
             whiteSpace: "nowrap",
             textAlign: "center",
             pointerEvents: "none",
-            opacity: active ? 1 : 0.6,
+            opacity: (active ? 1 : 0.6) * (app.lifecycle === "built" ? 0.7 : 1),
             transition: "opacity 140ms",
           }}
         >
           <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
             {app.title}
+            {app.lifecycle === "built" && (
+              <span style={{ opacity: 0.65 }}>· 待学</span>
+            )}
             <span style={{
               width: 7, height: 7, borderRadius: "50%",
               background: STATE_COLOR[app.state], display: "inline-block",

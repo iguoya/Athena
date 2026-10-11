@@ -2,6 +2,9 @@
 
 export type RunState = "stopped" | "starting" | "ready";
 
+// 学习生命周期（ADR 0139）。
+export type Lifecycle = "active" | "built" | "archived";
+
 export interface AppDto {
   id: string;
   title: string;
@@ -12,6 +15,7 @@ export interface AppDto {
   accent: string;
   groupColor: string;
   icon: string | null;
+  lifecycle: Lifecycle;
   state: RunState;
   pos: [number, number, number];
   orbit: number;

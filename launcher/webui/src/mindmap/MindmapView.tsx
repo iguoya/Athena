@@ -2,7 +2,7 @@
 // 布局坐标全部来自 launcher-core 的 mindmap::layout，这里只渲染与转发交互。
 
 import { useEffect, useState } from "react";
-import { openApp, stopApp, type RunState } from "../api";
+import { openApp, stopApp, type Lifecycle, type RunState } from "../api";
 import { invoke } from "@tauri-apps/api/core";
 
 export interface MindNodeDto {
@@ -11,6 +11,7 @@ export interface MindNodeDto {
   letter: string;
   accent: string;
   icon: string | null;
+  lifecycle: Lifecycle;
   state: RunState;
   reference: boolean;
   x: number;
@@ -63,9 +64,21 @@ const STATE_COLOR: Record<RunState, string> = {
   ready: "#2e9e44",
 };
 
-function fetchMindmap(): Promise<MindmapDto> {
-  return invoke<MindmapDto>("mindmap");
+function fetchMindmap(includeArchived: boolean): Promise<MindmapDto> {
+  return invoke<MindmapDto>("mindmap", { includeArchived });
 }
+
+// 生命周期呈现层级（ADR 0139）：[悬停时, 平时] 的不透明度。
+const LIFECYCLE_ALPHA: Record<Lifecycle, [number, number]> = {
+  active: [1, 0.55],
+  built: [0.8, 0.45],
+  archived: [0.55, 0.35],
+};
+
+const LIFECYCLE_HINT: Partial<Record<Lifecycle, string>> = {
+  built: " · 建成待学",
+  archived: " · 已归档",
+};
 
 function Tile({
   node, index, active, onHover,
@@ -75,16 +88,18 @@ function Tile({
   active: boolean;
   onHover: (i: number | null) => void;
 }) {
+  const [hot, cold] = LIFECYCLE_ALPHA[node.lifecycle] ?? LIFECYCLE_ALPHA.active;
   return (
     <div
       className="tile"
       data-state={node.state}
-      title={node.title}
+      title={`${node.title}${LIFECYCLE_HINT[node.lifecycle] ?? ""}`}
       style={{
         position: "absolute",
         left: node.x - 58,
         top: node.y - 38,
-        opacity: active ? 1 : 0.55,
+        opacity: active ? hot : cold,
+        filter: node.lifecycle === "archived" ? "grayscale(0.9)" : undefined,
         transition: "opacity 120ms",
       }}
       onClick={() => openApp(node.id).catch(console.error)}
@@ -110,7 +125,7 @@ function Tile({
 
 // 椭圆导图：同心环底图（core 预渲染 PNG）→ 连线（默认虚线，悬停节点点亮相关线为
 // 实线）→ 领域胶囊 → 虎头 → 图块。节点下标即连线端点下标（nodes 与 ends 同一序列）。
-export default function MindmapView({ paused }: { paused: boolean }) {
+export default function MindmapView({ paused, showArchived }: { paused: boolean; showArchived: boolean }) {
   const [map, setMap] = useState<MindmapDto | null>(null);
   const [hovered, setHovered] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -123,12 +138,12 @@ export default function MindmapView({ paused }: { paused: boolean }) {
     let lastSig = "";
     let pulls = 0;
     const pull = () =>
-      fetchMindmap()
+      fetchMindmap(showArchived)
         .then((m) => {
           if (!alive) return;
-          // 稳态轮询零重渲染：只有节点状态变了才进 React；布局类的离线
-          // 变化签名看不见，每 10 轮（约 30 秒）强制刷一次兜底。
-          const sig = m.nodes.map((n) => n.state).join(",");
+          // 稳态轮询零重渲染：只有节点状态或生命周期变了才进 React；布局类的
+          // 离线变化签名看不见，每 10 轮（约 30 秒）强制刷一次兜底。
+          const sig = m.nodes.map((n) => `${n.state}:${n.lifecycle}`).join(",");
           pulls += 1;
           if (sig !== lastSig || pulls % 10 === 0) {
             lastSig = sig;
@@ -146,7 +161,7 @@ export default function MindmapView({ paused }: { paused: boolean }) {
       alive = false;
       clearTimeout(timer);
     };
-  }, [paused]);
+  }, [paused, showArchived]);
 
   if (error) return <div className="status">导图读取失败：{error}</div>;
   if (!map) return <div className="status">排布导图…</div>;

@@ -404,6 +404,23 @@ def run_structure_check() -> None:
             for missing in (name for name in required if not (entry / name).is_file()):
                 problems.append(f"  {root}/{entry.name} 缺 {missing}")
 
+    # 2a. 生命周期字段（ADR 0139）：app.json 写了 lifecycle 就必须是三档枚举之一。
+    #     启动器对未知值按 active 兜底、不让应用消失，这里拦在更早：档位是内容
+    #     决定，写错等于归错了类——「冻结归档」被静默当成「活跃学习」正是要防的。
+    import json as _json
+
+    for root in APP_ROOTS:
+        for entry in sorted((REPO_ROOT / root).iterdir()):
+            manifest = entry / "app.json"
+            if not manifest.is_file():
+                continue
+            data = _json.loads(manifest.read_text(encoding="utf-8"))
+            if data.get("lifecycle", "active") not in ("active", "built", "archived"):
+                problems.append(
+                    f"  {root}/{entry.name} 的 lifecycle「{data.get('lifecycle')}」"
+                    "只认 active / built / archived（ADR 0139）"
+                )
+
     # 3. 仓库级 ADR 索引覆盖：落在 docs/decisions/ 的每一篇都必须能从 README
     #    走到（0082/0087/0088 就曾三篇同时漏行，索引成了不全的地图）。
     decisions = REPO_ROOT / "docs" / "decisions"

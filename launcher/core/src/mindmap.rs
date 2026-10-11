@@ -936,6 +936,7 @@ mod tests {
             also_under: Vec::new(),
             also_in: Vec::new(),
             hidden: false,
+            lifecycle: crate::manifest::Lifecycle::Active,
         }
     }
 

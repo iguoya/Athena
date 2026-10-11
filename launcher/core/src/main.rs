@@ -150,6 +150,8 @@ fn listing_json(apps: &[App], snapshot: &ProcessSnapshot) -> String {
                 "binary": app.dev.binary.clone().unwrap_or_default(),
                 // ADR 0093：隐藏是显示层的事，脚本与依赖方仍可见。
                 "hidden": app.hidden,
+                // ADR 0139：活跃学习 / 建成待学 / 冻结归档，菜单栏版按它分层呈现。
+                "lifecycle": app.lifecycle.key(),
                 "parent": app.parent,
                 "alsoUnder": app.also_under,
                 "alsoIn": app.also_in,

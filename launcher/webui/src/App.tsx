@@ -7,6 +7,8 @@ import OrbitScene from "./scene/OrbitScene";
 export default function App() {
   const [catalog, setCatalog] = useState<CatalogDto | null>(null);
   const [view, setView] = useState<"orbit" | "mindmap">("orbit");
+  // 归档默认不呈现（ADR 0139）；思维导图视图可开关查看，3D 视图不做开关。
+  const [showArchived, setShowArchived] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const visible = useWindowVisible();
 
@@ -24,7 +26,7 @@ export default function App() {
           // 后端每轮重建 DTO，状态没变就不进 React：稳态轮询零重渲染。
           // 图标文件内容的变化签名上看不见，每 10 轮（约 30 秒）强制刷一次兜底。
           const sig = c.apps
-            .map((a) => `${a.id}:${a.state}:${a.orbit}:${a.pos.join()}`)
+            .map((a) => `${a.id}:${a.state}:${a.lifecycle}:${a.orbit}:${a.pos.join()}`)
             .join(",");
           pulls += 1;
           if (sig !== lastSig || pulls % 10 === 0) {
@@ -56,12 +58,22 @@ export default function App() {
         <button onClick={() => setView(view === "orbit" ? "mindmap" : "orbit")}>
           {view === "orbit" ? "椭圆视图" : "轨道视图"}
         </button>
+        {view === "mindmap" && (
+          <label style={{ display: "inline-flex", alignItems: "center", gap: 5, cursor: "pointer" }}>
+            <input
+              type="checkbox"
+              checked={showArchived}
+              onChange={(e) => setShowArchived(e.target.checked)}
+            />
+            显示归档
+          </label>
+        )}
         <span className="hint">点图标启动 · 悬停看关系（3D）</span>
       </div>
       {view === "orbit" ? (
         <OrbitScene catalog={catalog} paused={!visible} />
       ) : (
-        <MindmapView paused={!visible} />
+        <MindmapView paused={!visible} showArchived={showArchived} />
       )}
     </div>
   );
