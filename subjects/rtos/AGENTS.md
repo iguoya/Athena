@@ -28,8 +28,7 @@
 ## 技术栈与选型理由
 
 - 壳 **Tauri 2**（Rust + 系统 WebView）。
-- 前端：Vue 3 + TypeScript + Vite + Tailwind CSS 4（与 embedded 同体系，
-  ADR 0103 决策 3）；代码编辑器统一用 CodeMirror 6。
+- 前端：React 19 + TypeScript + Vite + Tailwind CSS 4（页面渲染按摘星基线：Tailwind v4、shadcn/ui 式组件、Motion、Zustand、React Router，用到再装；ADR 0138，取代 ADR 0103 决策 3 的 Vue 前端部分）；代码编辑器统一用 CodeMirror 6。
 - **实验引擎（本应用的核心差异化架构，ADR 0106 决策 2）**：真板跑 FreeRTOS 看抢占（串口输出观测，需开发板，ADR 0091 决策 5 前置）；QEMU + arm-none-eabi-gcc 交叉编译全流程（零硬件真跑）；本机 gcc 线程级模拟（任务/信号量映射 pthread，调度直觉快速回路）。调度时序可视化（任务时间线甘特图）是核心教学界面。命令一律白名单 spawn。
 - **安全边界**（沿 ADR 0091 决策 3）：应用只执行白名单内的预设命令与实验断言，
   参数模板化；不提供任意 shell。
