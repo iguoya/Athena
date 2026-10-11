@@ -200,9 +200,9 @@ STACK_VERSIONS = {
     "lucide-react": "^1.52.0", "motion": "^14.0.0",
 }
 # 例外必须写理由：(应用, 依赖) -> 为什么不跟。"*" 表示该应用整体豁免。
-STACK_VERSION_EXEMPT: dict[tuple[str, str], str] = {
-    ("ascent", "*"): "待 ADR 0136 把全部应用迁到 pnpm；迁移完成后删除此豁免，ascent 的版本并入 STACK_VERSIONS",
-}
+# ascent 的整体豁免已按 ADR 0136 决策 5 清除：pnpm 统一完成，motion/lucide-react
+# 已并入上表并同批升级（2026-10-11）。
+STACK_VERSION_EXEMPT: dict[tuple[str, str], str] = {}
 
 
 def run_stack_version_check() -> None:
