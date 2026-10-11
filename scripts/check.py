@@ -5,7 +5,7 @@
 这里只负责依次调用，
 外加四项跨应用检查：内容必须有出处（ADR 0043），项目 skill 在 .agents/ 与
 .claude/ 两处一致（ADR 0061），GitHub 工作流过 actionlint 与变量粘连检查，
-结构卫生（文档树对账、应用四件套、ADR 索引覆盖）。新增应用放一份自己的
+同栈应用核心依赖版本一致（ADR 0135），结构卫生（文档树对账、应用四件套、ADR 索引覆盖）。新增应用放一份自己的
 check.py 就会被带上，不用改这个文件，也不用改 CI。
 
 用 Python 而不是 shell：验证每天都要跑，不该要求 Windows 上先装 Git Bash
@@ -183,6 +183,59 @@ def run_workflow_check() -> None:
         print("\n".join(problems), flush=True)
     if completed.returncode != 0 or problems:
         raise SystemExit("工作流检查没通过，见上方。")
+
+
+# 同栈（Tauri 2 + Node 前端）应用的核心依赖版本表（ADR 0135 A 档）。取仓库里已在用的最新
+# 组合，不跳到 npm 上尚无应用验证过的大版本（如 TypeScript 7）。升级时改这张表并同批升级
+# 所有应用，而不是让个别应用先走。表里没列的依赖（motion、codemirror 等）不管。
+STACK_VERSIONS = {
+    "react": "^19.3.0", "react-dom": "^19.3.0",
+    "@types/react": "^19.3.0", "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "vite": "^8.3.1", "typescript": "^6.0.3",
+    "tailwindcss": "^4.3.3", "@tailwindcss/vite": "^4.3.3",
+    "@tauri-apps/api": "^2.12.0", "@tauri-apps/cli": "^2.12.0",
+    "@tauri-apps/plugin-opener": "^2.7.0",
+    "@fontsource/noto-sans-sc": "^5.3.0",
+    "lucide-react": "^1.52.0", "motion": "^14.0.0",
+    "@vitejs/plugin-vue": "^6.0.9", "vue-tsc": "^3.3.12",
+}
+# 例外必须写理由：(应用, 依赖) -> 为什么不跟。"*" 表示该应用整体豁免。
+STACK_VERSION_EXEMPT: dict[tuple[str, str], str] = {
+    ("ascent", "*"): "用 pnpm 管依赖，本机默认工具链未装 pnpm，无法同批验证；单独升级",
+}
+
+
+def run_stack_version_check() -> None:
+    """同栈应用的核心依赖必须是同一个版本范围（ADR 0135）。
+
+    版本分叉的代价是同一台机器上要装、要构建多套互不兼容的前端工具链，且 React 18/19、
+    Vite 6/8 这类大版本差会让一个应用里验证过的写法在另一个应用里跑不通。
+    """
+    import json
+
+    print("== 跨应用检查：同栈核心依赖版本 ==", flush=True)
+    problems: list[str] = []
+    for root in APP_ROOTS:
+        for app in sorted((REPO_ROOT / root).iterdir()):
+            pkg = app / "package.json"
+            if not (pkg.is_file() and (app / "src-tauri" / "Cargo.toml").is_file()):
+                continue
+            if (app.name, "*") in STACK_VERSION_EXEMPT:
+                continue
+            data = json.loads(pkg.read_text(encoding="utf-8"))
+            declared = {**data.get("dependencies", {}), **data.get("devDependencies", {})}
+            for name, want in STACK_VERSIONS.items():
+                have = declared.get(name)
+                if have is None or have == want or (app.name, name) in STACK_VERSION_EXEMPT:
+                    continue
+                problems.append(f"  {root}/{app.name} 的 {name} 是 {have}，应为 {want}（ADR 0135）")
+    if problems:
+        print("\n".join(problems), flush=True)
+        raise SystemExit(
+            f"同栈依赖版本不一致（{len(problems)} 处）。对齐到 scripts/check.py 的 STACK_VERSIONS，"
+            "确有理由不跟的在 STACK_VERSION_EXEMPT 写明理由。"
+        )
 
 
 def run_source_check() -> None:
@@ -419,6 +472,7 @@ def main(argv: list[str]) -> int:
         run_skill_mirror_check()
         run_source_check()
         run_workflow_check()
+        run_stack_version_check()
         run_structure_check()
         return 0
 
@@ -429,6 +483,7 @@ def main(argv: list[str]) -> int:
     run_skill_mirror_check()
     run_source_check()
     run_workflow_check()
+    run_stack_version_check()
     run_structure_check()
     for root in APP_ROOTS:
         for entry in sorted((REPO_ROOT / root).iterdir()):
