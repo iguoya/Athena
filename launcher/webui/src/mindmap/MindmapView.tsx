@@ -117,6 +117,7 @@ export default function MindmapView() {
 
   useEffect(() => {
     let alive = true;
+    let timer: ReturnType<typeof setTimeout> | undefined;
     const pull = () =>
       fetchMindmap()
         .then((m) => {
@@ -125,12 +126,15 @@ export default function MindmapView() {
             setError(null);
           }
         })
-        .catch((e) => alive && setError(String(e)));
+        .catch((e) => alive && setError(String(e)))
+        .finally(() => {
+          // 上一轮回来才排下一轮：命令慢于间隔时排队而不是叠加。
+          if (alive) timer = setTimeout(pull, 3000);
+        });
     pull();
-    const timer = setInterval(pull, 3000);
     return () => {
       alive = false;
-      clearInterval(timer);
+      clearTimeout(timer);
     };
   }, []);
 

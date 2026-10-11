@@ -4,11 +4,11 @@
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 
-use base64::Engine as _;
 use launcher_core::paths;
 use tauri::Manager;
 
 mod app_icon;
+mod cache;
 mod resident;
 
 /// 仓库定位一次、整个进程共享：locate_repo 每次都走盘上探测，没必要。
@@ -53,23 +53,11 @@ pub struct CatalogDto {
     orbits: Vec<OrbitDto>,
 }
 
-/// icon.svg → 256px PNG 的 data URL。不用 SVG data URL 直传：WebView2 里
-/// `new Image()` 加载 SVG data URL 的 onload 会悬挂（贴图永远停在 loading），
-/// 而且用 core 的 resvg 渲染位图，Fluent Emoji 的滤镜表现反而更有保障。
-fn icon_data_url(path: &std::path::Path) -> Option<String> {
-    let tree = launcher_core::icons::load(path).ok()?;
-    let pixmap = launcher_core::icons::render(&tree, 256).ok()?;
-    let png = pixmap.encode_png().ok()?;
-    Some(format!(
-        "data:image/png;base64,{}",
-        base64::engine::general_purpose::STANDARD.encode(png)
-    ))
-}
-
 /// 命令集中在子模块：`generate_handler!` 的宏展开会引入与命令同名的辅助项，
 /// 同模块里定义并引用会撞名（Tauri 2 的既知约束）。
 pub mod commands {
-    use super::{icon_data_url, AppDto, CatalogDto, OrbitDto, Repo};
+    use super::cache;
+    use super::{AppDto, CatalogDto, OrbitDto, Repo};
     use launcher_core::{discover_all, layout3d, manifest, mindmap, runner};
     use tauri::State;
 
@@ -109,8 +97,7 @@ pub mod commands {
         };
         let layout = layout3d::orbit_layout(&sizes);
 
-        let snapshot = runner::ProcessSnapshot::take();
-        let states = snapshot.states(&apps);
+        let states = cache::states(&apps);
 
         // 组内成员按清单序占位：第 g 组的第 k 个成员落轨道 g 的第 k 个节点。
         let mut cursor = vec![0usize; group_names.len()];
@@ -139,7 +126,7 @@ pub mod commands {
                 group_color: group_colors[g].clone(),
                 letter: app.letter.clone(),
                 accent: app.accent.clone(),
-                icon: app.icon_file.as_deref().and_then(icon_data_url),
+                icon: app.icon_file.as_deref().and_then(cache::icon_data_url),
                 state: states[i].key().to_string(),
                 pos: node.pos,
                 orbit: node.group,
@@ -269,8 +256,7 @@ pub mod commands {
         let visible: Vec<manifest::App> = apps.iter().filter(|a| !a.hidden).cloned().collect();
         let map = mindmap::layout(&visible);
 
-        let snapshot = runner::ProcessSnapshot::take();
-        let states = snapshot.states(&apps);
+        let states = cache::states(&apps);
         let state_of_id = |id: &str| -> String {
             apps.iter()
                 .position(|a| a.id == id)
@@ -292,7 +278,7 @@ pub mod commands {
                 title: app.title.clone(),
                 letter: app.letter.clone(),
                 accent: app.accent.clone(),
-                icon: app.icon_file.as_deref().and_then(icon_data_url),
+                icon: app.icon_file.as_deref().and_then(cache::icon_data_url),
                 state: state_of_id(&node.id),
                 reference: node.reference,
                 x: node.at.x,
@@ -345,8 +331,7 @@ pub mod commands {
             })
             .collect();
 
-        let rings = mindmap::rings_png(&map, 1.25);
-        use base64::Engine as _;
+        let rings = cache::rings_png(&map, 1.25);
         Ok(MindmapDto {
             width: map.width,
             height: map.height,
@@ -355,10 +340,7 @@ pub mod commands {
             nodes,
             groups,
             links,
-            rings: format!(
-                "data:image/png;base64,{}",
-                base64::engine::general_purpose::STANDARD.encode(rings.png)
-            ),
+            rings: rings.data_url,
             rings_x: rings.x,
             rings_y: rings.y,
             rings_w: rings.width,

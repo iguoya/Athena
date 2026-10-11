@@ -10,6 +10,7 @@ export default function App() {
 
   useEffect(() => {
     let alive = true;
+    let timer: ReturnType<typeof setTimeout> | undefined;
     const pull = () =>
       fetchCatalog()
         .then((c) => {
@@ -18,13 +19,16 @@ export default function App() {
             setError(null);
           }
         })
-        .catch((e) => alive && setError(String(e)));
+        .catch((e) => alive && setError(String(e)))
+        .finally(() => {
+          // 上一轮回来才排下一轮：命令慢于间隔时排队而不是叠加。
+          if (alive) timer = setTimeout(pull, 3000);
+        });
     pull();
     // 状态从系统实况读（ADR 0046）：骨架阶段轮询，事件推送留给下一轮。
-    const timer = setInterval(pull, 3000);
     return () => {
       alive = false;
-      clearInterval(timer);
+      clearTimeout(timer);
     };
   }, []);
 
