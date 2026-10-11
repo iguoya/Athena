@@ -51,5 +51,9 @@
 ## 后果
 
 - 迁移前，`ascent` 仍是唯一用 pnpm 的应用，豁免暂时保留并标注"待 ADR 0136 迁移"。
-- 迁移后磁盘占用预期明显下降；迁移时实测并记入本 ADR 的后续修订，不凭预期声称。
+- **实测（2026-10-11 迁移）**：24 个应用全部装好，npm 方案 `node_modules` 合计 3.3 GB；pnpm 的
+  全局存储合计 **1.1 GB**，各应用 `node_modules` 是指向它的硬链接（约三分之一）。
+  迁移中还遇到两处差异：pnpm 12 默认拦截依赖的安装脚本（`mathematics` 直接用 esbuild，需在
+  `pnpm-workspace.yaml` 的 `allowBuilds` 里批准）；`packageManager` 字段会写进锁文件，先写字段
+  再 `pnpm import` 的顺序会让 `--frozen-lockfile` 失败，应先 `pnpm install` 刷新一次锁。
 - 多一个必装工具；缺 pnpm 时启动器的 `prepare` 会失败，需按决策 3 的安装指引提示。
