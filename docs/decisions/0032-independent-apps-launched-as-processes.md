@@ -3,7 +3,7 @@
 - 日期：2026-09-10
 - 状态：已接受；启动路径已由 [ADR 0041](0041-independent-apps-launch-in-dev-mode.md)
   改为开发模式（Tauri 应用跑 `tauri:dev`，不启动打包 `.app`）；
-  ADR 0130 曾取代决策 2 与决策 3 末句，后经 [ADR 0132](0132-defer-shared-layer.md) 暂缓，**两条现行有效**
+  ADR 0130 曾取代决策 2 与决策 3 末句，后经 [ADR 0132](0132-defer-shared-layer.md) 暂缓，**决策 3 末句现行有效；决策 2 经 [ADR 0135](0135-share-low-cost-build-layer-first.md) 改为同栈构建可共享、异构栈仍隔离**
 
 ## 背景
 

@@ -2,6 +2,7 @@
 
 - 日期：2026-10-11
 - 状态：已接受（tiger 2026-10-11：共享问题存在，但现在不是解决的时候；课程结构还不充实，不值得抽象共享）
+- **范围已由 [ADR 0135](0135-share-low-cost-build-layer-first.md) 收窄**：只暂缓 schema 与内容抽象，构建层低成本项不再暂缓
 - 暂缓实施：[ADR 0130](0130-shared-build-and-schema.md)、[ADR 0131](0131-shared-layer-location-and-pilot.md)
 - 恢复生效：[ADR 0032](0032-independent-apps-launched-as-processes.md) 决策 2（构建完全隔离）、
   [ADR 0043](0043-sourced-content-across-apps.md) §1（schema 不共用）、
