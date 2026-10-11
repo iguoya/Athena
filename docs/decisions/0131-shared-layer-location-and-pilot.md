@@ -1,7 +1,7 @@
 # ADR 0131：共享层放 `shared/`，以 gtkmm 试点
 
 - 日期：2026-10-11
-- 状态：已接受（tiger 2026-10-11：共享层放 `shared/`；试点选 gtkmm）
+- 状态：**不执行，见 [ADR 0132](0132-defer-shared-layer.md)**；原为已接受（tiger 2026-10-11：共享层放 `shared/`；试点选 gtkmm），作为重启时的备选保留
 - 延续：[ADR 0130](0130-shared-build-and-schema.md) 决策 7 的前两项（位置、试点）；
   工具选型细节与公共 schema 终稿仍待定（见决策 5）
 - 关联：[ADR 0129](0129-prefer-quality-over-quantity.md)、[ADR 0037](0037-independent-apps-own-their-progress-store.md)

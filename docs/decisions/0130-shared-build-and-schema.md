@@ -1,7 +1,7 @@
 # ADR 0130：构建共享、schema 共享（取代「构建完全隔离、不共用 schema」）
 
 - 日期：2026-10-11
-- 状态：已接受（tiger 2026-10-11：构建完全隔离、不共用 schema 改为构建共享、共享 schema）；
+- 状态：**暂缓实施，见 [ADR 0132](0132-defer-shared-layer.md)**；原为已接受（tiger 2026-10-11：构建完全隔离、不共用 schema 改为构建共享、共享 schema）；
   **原则先行，机制待定**——共享层的位置、工具与迁移顺序由后续 ADR 决定，本 ADR 不动代码
 - 取代：[ADR 0032](0032-independent-apps-launched-as-processes.md) 决策 2（构建完全隔离）与决策 3
   末句（复用 schema 会产生耦合）；[ADR 0043](0043-sourced-content-across-apps.md) §1「schema 不共用」；
