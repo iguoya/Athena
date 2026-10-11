@@ -16,13 +16,13 @@
 | [`subjects/algorithms`](subjects/algorithms) | 算法设计（408，原 dsa 拆分 ADR 0108） | Tauri 2 + Vite |
 | [`subjects/ascent`](subjects/ascent) | 拾阶（四六级 / 专四专八） | Tauri + Vite |
 | [`subjects/mathematics`](subjects/mathematics) | 数学学习 | Tauri + Vite（Python sidecar） |
-| [`subjects/math-tools`](subjects/math-tools) | 数学工具（图谱/参考类） | Tauri + Vue 3 |
+| [`subjects/math-tools`](subjects/math-tools) | 数学工具（图谱/参考类） | Tauri 2 + React |
 | [`subjects/driver`](subjects/driver) | 驾考学习 | Flutter 桌面 |
 | [`subjects/software`](subjects/software) | 软件设计师（软考中级备考） | Tauri 2 + React |
-| [`subjects/embedded`](subjects/embedded) | 嵌入式系统设计师（软考中级备考，ADR 0090） | Tauri 2 + Vue 3 |
-| [`subjects/firmware`](subjects/firmware) | 嵌入式程序设计实验（电子信息圈，ADR 0103、0123） | Tauri 2 + Vue 3 |
-| [`subjects/microcontroller`](subjects/microcontroller) | 硬件实验台（电子信息圈，ADR 0103、0123） | Tauri 2 + Vue 3 |
-| [`subjects/rtos`](subjects/rtos) | 实时操作系统（电子信息圈，ADR 0106、0123） | Tauri 2 + Vue 3 |
+| [`subjects/embedded`](subjects/embedded) | 嵌入式系统设计师（软考中级备考，ADR 0090） | Tauri 2 + React |
+| [`subjects/firmware`](subjects/firmware) | 嵌入式程序设计实验（电子信息圈，ADR 0103、0123） | Tauri 2 + React |
+| [`subjects/microcontroller`](subjects/microcontroller) | 硬件实验台（电子信息圈，ADR 0103、0123） | Tauri 2 + React |
+| [`subjects/rtos`](subjects/rtos) | 实时操作系统（电子信息圈，ADR 0106、0123） | Tauri 2 + React |
 | [`subjects/database`](subjects/database) | 数据库 SQL 实验室（计算机圈，ADR 0103、0126） | Tauri 2 + React |
 | [`subjects/linux`](subjects/linux) | Linux 程序设计（程序设计圈，ADR 0109、0111） | Tauri 2 + Vite |
 | [`subjects/gtkmm`](subjects/gtkmm) | gtkmm 官方教程精读 | Tauri 2 + React |

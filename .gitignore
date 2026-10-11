@@ -1,8 +1,11 @@
 # 构建目录。Meson 一律用 build/。builddir/ 是 C++ 教程还在仓库根时的旧名
 # （ADR 0045），作废，避免再在根上或应用旁边长出第二份。
+# /target 是 cargo 的默认输出；同栈应用实际写到 .cache/cargo-target（ADR 0140）。
 build/
 builddir/
 dist/
+/node_modules/
+/target/
 
 # Meson internal files
 meson-private/
@@ -56,3 +59,6 @@ subjects/*/progress/*.db-journal
 # Python 虚拟环境是 dev 准备步骤的产物（ADR 0046），哪个应用都不入库——
 # nas_admin 的 .venv 曾一百多 MB 裸奔在磁盘上没有任何规则覆盖。
 .venv/
+
+# 启动器调试时重定向的 stderr 日志（launcher ... 2> launcher-stderr.log）。
+launcher-stderr.log
