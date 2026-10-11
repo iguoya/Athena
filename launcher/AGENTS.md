@@ -52,6 +52,11 @@ cargo test  --manifest-path launcher/Cargo.toml
 webui 的日常运行与打包（Tauri 约定，ADR 0125）。它现在是唯一的图形前端
 （gui 已退役，ADR 0127；托盘与自启动待迁移，入口暂为 webui 窗口本体）：
 
+**表现层冻结（2026-10-11 结构评审定）**：启动器的价值在「找到应用、一键启动、看到全局」，
+open/stop、托盘、思维导图、3D 轨道环到位后，视觉与视图层封版——不再新增视图、
+不再做视觉打磨（开普勒轨道、贴图、配色一类的微调到此为止）。剩余工作只有两件：
+托盘与自启动迁移、修 bug。富余的精力应该去内容侧（课程正文、实验），那里缺人。
+
 ```sh
 cd launcher/webui
 npm run tauri:dev        # 开发：vite 热重载 + debug 后端
