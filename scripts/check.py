@@ -377,6 +377,28 @@ def run_structure_check() -> None:
     for ghost in sorted(ci_apps - {"all", "sources", "launcher"} - subjects_dirs - {p.name for p in (REPO_ROOT / "practice").iterdir() if p.is_dir()}):
         problems.append(f"  ci.yml 手动选择项 {ghost} 不是实际存在的应用目录")
 
+    # 8. 应用区不留影子目录：subjects/、practice/、launcher/ 下不允许「未跟踪也未
+    #    忽略」的目录。应用改 id 或退役后，磁盘上常剩下只剩构建产物的旧目录——
+    #    c、cpp、dsa、english 四个旧名最多各留了 1.9 GB 的 build 与 node_modules，
+    #    被忽略的对账看不见，未跟踪的等在第一次 `git add -A` 的路上。目录要么被
+    #    git 跟踪，要么整个删掉，半在半不在就是结构混乱本身。
+    #    `--directory` 会把「目录未跟踪、内部全被忽略」的（如 Tauri 的 gen/，只有
+    #    已忽略的 schemas）也整目录列出，逐个复查内部确有未跟踪文件才算数。
+    completed = subprocess.run(
+        ["git", "ls-files", "--others", "--exclude-standard", "--directory", "-z",
+         "--", *APP_ROOTS, "launcher"],
+        cwd=REPO_ROOT, capture_output=True, text=True,
+    )
+    for entry in completed.stdout.split("\0"):
+        if not entry.endswith("/"):
+            continue
+        inner = subprocess.run(
+            ["git", "ls-files", "--others", "--exclude-standard", "-z", "--", entry],
+            cwd=REPO_ROOT, capture_output=True, text=True,
+        )
+        if any(inner.stdout.split("\0")):
+            problems.append(f"  {entry} 是未跟踪的目录——登记进 git、写进 .gitignore，或整个删掉")
+
     if problems:
         print("\n".join(problems), flush=True)
         raise SystemExit(f"结构卫生没通过（{len(problems)} 处），见上方。")
@@ -384,7 +406,7 @@ def run_structure_check() -> None:
         f"结构树与 {sum(len(v) for v in tree.values())} 个应用目录一致，"
         f"四件套齐备，ADR 索引全覆盖，根目录干净，产物全被忽略，"
         f"发布矩阵 {len(released)} 个应用全部有 CI，"
-        f"README/名字表/CI 选择项与 {len(actual_dirs)} 个目录对账一致",
+        f"README/名字表/CI 选择项与 {len(actual_dirs)} 个目录对账一致，应用区无影子目录",
         flush=True,
     )
 
