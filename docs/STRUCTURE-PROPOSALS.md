@@ -180,6 +180,34 @@ v9.0.0 周期仓库从 8 个目录涨到 14 个应用（subjects 11 + practice 3
 「课程/讲解/演示类」= 学习应用 + 图谱/参考类（REPOSITORY.md 的前两类），即以讲解或演示为目的、
 会被启动器当课程应用打开的那批。`practice/` 与素材坑不在内。
 
+### 共享配置的准入判据（tiger 2026-10-11 补充）
+
+两件事分开：**技术栈**（Tauri 2 + React）管整个课程/讲解/演示类；**共享配置**（B 档：pnpm
+工作区、`catalog:` 统一依赖版本、共享 `tsconfig` / `vite` 基础配置）只管**具有课程属性**的应用。
+
+**课程属性 = 同时具备四要素**：
+
+1. **章节**（有章结构与知识点路线）；
+2. **随堂练习**（章内的随堂考核）；
+3. **课后习题**；
+4. **章节技术实验**（章配套的、可观察证据的实验）。
+
+符合者采用共享配置；不符合者不被拉进共享配置。
+
+判定方式：**按应用在自己 `AGENTS.md` 里声明的教学结构判定，不按当前写了多少**——
+python、llm-app 这类刚落骨架的课程，设计上就是章节 + 练习 + 实验，应算在内，否则每写满
+一项就要重新划一次线。判据是新应用立项时自查的一句话，不是清单。
+
+初步归类（以各应用声明的结构为准，落 ADR 前逐个核对）：
+
+| 采用共享配置（课程属性） | 不采用（图谱/参考/演示类） |
+|---|---|
+| 学习应用：algorithms、ascent、cs408、data-structures、database、deep-learning、design-patterns、embedded、firmware、gtkmm、linux、llm-app、llm-finetune、machine、machine-learning、mathematics、microcontroller、network、organization、os、python、rtos、software | polaris（图谱）、math-tools（工具）、competitions（赛历） |
+
+不采用共享配置的三个仍须是 **Tauri + React**（前面「适用范围」不变），依赖版本继续守
+ADR 0135 A 档对齐，只是不强制入工作区、不强制套共享 `vite` / `tsconfig` 基础配置。
+`practice/` 自由，不在此列。
+
 ### 现状（2026-10-11 实测，26 个 Tauri 应用 + 3 个非 Web 栈）
 
 | 前端 | 应用 | 备注 |
@@ -253,7 +281,7 @@ c-plus-plus 与 driver 本轮不动。
 ### 验收口径（每个应用）
 
 1. `pnpm typecheck`、`pnpm build`、`tauri dev` 能跑，`scripts/check.py <id>` 通过；
-2. `content/` 与 `progress/` 的 git diff 为空（machine 之外）；
+2. `content/` 与 `progress/` 的 git diff 为空（machine 之外）；入共享配置的应用还须通过 B 档检查（版本取自 `catalog:`、继承共享基础配置）；
 3. 同一页面迁移前后截图对照，布局与交互没有退化；
 4. 禁止遗留：应用内不再有 `.vue`、手写 DOM 壳或 QML；
 5. `scripts/check.py` 加一条跨应用检查——课程/讲解/演示类应用的前端必须是 React，
@@ -286,3 +314,7 @@ c-plus-plus 与 driver 本轮不动。
 3. 波 4 里的试点应用用 linux（内容空骨架、风险最低，推荐）还是 data-structures（内容更全、更能暴露问题）？
 4. B 档试点应用用 os 还是 network，或另选？
 5. 草稿定稿后，仓库级 ADR 与 machine ADR 的编号：落库时按「选号到落库一次完成」处理。
+6. 课程属性「四要素」是**全部具备**才算（上面按此写），还是「章节 + 练习或实验至少一项」
+   即可？按前者，gtkmm、ascent 等个别缺课后习题的应用会被划到共享配置之外，需要逐个核对。
+7. 不采用共享配置的三个图谱/工具类应用，是否同意「仍须 Tauri + React、依赖版本对齐，
+   但不入工作区」。
