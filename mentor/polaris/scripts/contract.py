@@ -260,6 +260,16 @@ def _validate_graded_node(report: _Report, node: dict, nwhere: str, node_stage: 
         node_stage[node["id"]] = stage
 
 
+def _app_exists(root: Path, app: str) -> bool:
+    """应用按 id 在仓库根的各顶层目录（subjects/、mentor/ ……）下找，不写死目录名。
+
+    北极星曾与被指向的学习应用同住 subjects/，直接找同级目录就够；它迁到 mentor/ 后
+    同级找不到了（ADR 0144）。顶层分类还会变，所以只认「仓库根下任一顶层目录里有
+    <id>/app.json」。
+    """
+    return any((top / app / "app.json").is_file() for top in root.parent.parent.iterdir() if top.is_dir())
+
+
 def _validate_academic_node(report: _Report, node: dict, nwhere: str, root: Path,
                             view_kind_by_map: dict) -> None:
     # targets 不再必填（ADR 0021 决策 6）：军工目标图只是参考层；写了就必须有效。
@@ -270,7 +280,7 @@ def _validate_academic_node(report: _Report, node: dict, nwhere: str, root: Path
             report.add("node.targets_kind", nwhere, f"targets 只能指向职业目标层的地图，{target} 不是。")
     # 承载这个领域的独立应用（ADR 0009 第 8 条）：可以为空（规划中），写了就必须真有。
     app = node.get("app")
-    if _text(app) and not (root.parent / app / "app.json").exists():
+    if _text(app) and not _app_exists(root, app):
         report.add("node.app", nwhere, f"app 指向了不存在的应用：{app}")
 
 
