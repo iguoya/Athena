@@ -8,7 +8,7 @@
 到看不见**；教科书的「厚分层」插图全是夸张画法，而本应用把「薄」本身当作第一教学点，
 用剖面、聚焦与探针读数表达，**不做任何空间夸张**。
 
-- 界面名**地球**；目录、`id` 与二进制都是 `earth`（`athena-earth`），端口 **1511**。
+- 界面名**地球**；应用目录是 `practice/earth`，`id` 与二进制都是 `earth`（`athena-earth`），端口 **1511**。
 - 启动器归属：`group: 程序设计`——使用者指派的**暂存**归属，不承载领域判断；挪圈是
   纯配置改动，id 与端口不动（ADR 0128 决策 3）。
 - 不建 `progress/learning.db`、不建 `content-contract.json`，跨应用教学规范不生效；
@@ -50,5 +50,5 @@
 ```sh
 python3 scripts/check.py            # 数据标准值 + 前端构建/测试 + Rust 侧检查
 python3 scripts/check.py --skip-rust  # 只改数据或前端时
-launcher/target/release/launcher open earth   # 真的打开一次
+launcher/target/release/launcher --root practice open earth   # 真的打开一次
 ```

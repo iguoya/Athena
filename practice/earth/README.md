@@ -8,5 +8,5 @@ US Standard Atmosphere 1976 标准模型驱动。真实比例下薄层看不见�
 
 ```sh
 python3 scripts/check.py                      # 数据标准值 + 构建 + 测试
-../../launcher/target/release/launcher open earth
+../../launcher/target/release/launcher --root practice open earth
 ```
