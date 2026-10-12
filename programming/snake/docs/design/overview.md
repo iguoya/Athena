@@ -35,7 +35,7 @@
 | FR-7 | 四个相位：待机、进行、暂停、结束；暂停期间不累积时间 |
 | FR-8 | 最高分在死亡时判定，并写入文件，下次启动读回 |
 | FR-9 | 吃到、撞死各响一次音效 |
-| FR-10 | USB 手柄（XInput）：D-pad 与左摇杆转向，A 开始/重开，Start 暂停/继续；与键盘汇入同一条输入队列 |
+| FR-10 | USB 手柄：D-pad/左摇杆转向，A（或 HID 兜底的 1 号键）开始/重开，Start（或 2 号键）暂停/继续；与键盘汇入同一条输入队列。Windows 上 XInput 手柄走 GLFW，DirectInput/HID 手柄走 winmm 兜底 |
 | NFR-1 | 规则层不依赖 raylib，能脱离窗口单独编译和测试 |
 | NFR-2 | 逻辑步长与渲染帧率解耦；蛇身在两步之间插值滑动 |
 | NFR-3 | 步长有下限 0.09 秒 |
@@ -46,7 +46,7 @@
 
 C++20、CMake ≥ 3.21、raylib 5.5（系统有就用，没有则 FetchContent 拉源码编译）。单线程。
 棋盘 32×24 格，每格 32 像素，窗口 1024×768。键盘：WASD 或方向键、Enter/Space、P；
-USB 手柄（XInput，可热插拔）：D-pad/左摇杆、A、Start。
+USB 手柄：XInput 走 GLFW（可热插拔）；DirectInput/HID 手柄在 Windows 走 winmm 兜底（不做热插拔，插好再启动），POV/轴转向、1 号键开始、2 号键暂停。
 
 ## 4. 架构
 
@@ -227,7 +227,7 @@ flowchart LR
 | FR-7 | `main.cc` 相位机 | 人工 | 运行第 10 章：待机、暂停、结束各走一遍 |
 | FR-8 | `main.cc` 最高分存取 | 人工 | 破纪录后重启，HUD 的 best 保持 |
 | FR-9 | `main.cc` 音效 | 人工 | 吃一口听一声；撞死听一声 |
-| FR-10 | `main.cc` 手柄输入映射 | 人工 | 插手柄：D-pad 与左摇杆转向，A 开始/重开，Start 暂停/继续 |
+| FR-10 | `main.cc` 手柄输入映射 | 人工 | XInput：D-pad/左摇杆转向，A 开始，Start 暂停；HID 兜底：POV/轴转向，1 号键开始，2 号键暂停 |
 | NFR-1 | `logic.hh`、测试目标 | 测试 | `rules_test.cc` 不链接 raylib 即可编译运行；`check.py` 另查头文件 |
 | NFR-2 | `main.cc` 累加器与插值 | 人工 | 运行时蛇身平滑滑动，不跳格 |
 | NFR-3 | `logic.hh` `step` | 测试 | `rules_test.cc` `test_speed_floor` |

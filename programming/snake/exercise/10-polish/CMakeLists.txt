@@ -24,6 +24,10 @@ endif()
 add_executable(snake-10 src/main.cc)
 set_target_properties(snake-10 PROPERTIES RUNTIME_OUTPUT_DIRECTORY "$<1:${CMAKE_CURRENT_BINARY_DIR}>")
 target_link_libraries(snake-10 PRIVATE raylib)
+# main.cc 的手柄兜底轮询用 winmm 老游戏杆接口（GLFW 只认 XInput 手柄）。
+if(WIN32)
+  target_link_libraries(snake-10 PRIVATE winmm)
+endif()
 # 规则不碰窗口，测试也就不需要 raylib——这是逻辑与渲染分离的直接回报。
 enable_testing()
 add_executable(snake-10-logic-test tests/logic_test.cc)

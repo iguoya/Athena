@@ -13,6 +13,23 @@
 
 #include "raylib.h"
 
+#if defined(_WIN32)
+// GLFW 的 gamepad 接口只认「有映射的 XInput 手柄」；直插的 HID 手柄（DirectInput 类）
+// XInput 不认，raylib 便看不见它。Windows 自带的老游戏杆接口（winmm）认这类手柄，
+// 这里轮询它做兜底。其它平台 GLFW 走 evdev / IOHID，这类手柄原生可见，无需兜底。
+// 下面一组 NO* 宏把 winuser/winmm 里与 raylib 同名的 API（CloseWindow、DrawText、
+// PlaySound 等）挡在声明之外——本程序用不到它们，留着只会撞名。
+#define NOMINMAX
+#define NOGDI
+#define NOUSER
+#define NOSOUND
+#define NOMMIDS
+#define MMNOSOUND
+#define NOMCX
+#include <windows.h>
+#include <mmsystem.h>
+#endif
+
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -117,16 +134,59 @@ int main() {
         }
     };
 
+#if defined(_WIN32)
+    // winmm 兜底手柄：开机选一个有响应的游戏杆 id（不做热插拔——XInput 路径仍支持；
+    // HID 手柄请插好再启动）。POV 十字与轴合成同一个方向变化沿；键位约定：
+    // 1 号键=开始/重开，2 号键=暂停/继续（转向全靠 POV 与轴，各手柄 POV 最可靠）。
+    UINT padId = 0;
+    bool padFound = false;
+    int padDir = -1;
+    UINT padButtons = 0;
+    JOYINFOEX ji{};
+    ji.dwSize = sizeof(ji);
+    ji.dwFlags = JOY_RETURNALL | JOY_RETURNPOV;
+    for (UINT id = 0; id < joyGetNumDevs(); ++id) {
+        if (joyGetPosEx(id, &ji) == JOYERR_NOERROR) { padId = id; padFound = true; break; }
+    }
+#else
+    const bool padStart = false;
+    const bool padPause = false;
+    const int padDirHit = -1;
+#endif
+
     while (!WindowShouldClose()) {
+#if defined(_WIN32)
+        bool padStart = false;
+        bool padPause = false;
+        int padDirHit = -1;
+        if (padFound && joyGetPosEx(padId, &ji) == JOYERR_NOERROR) {
+            int dir = -1;
+            if (ji.dwPOV != JOY_POVCENTERED) {
+                const int deg = static_cast<int>(ji.dwPOV / 100);  // 0 上 / 90 右 / 180 下 / 270 左
+                dir = (deg < 45 || deg > 315) ? 2 : (deg < 135 ? 0 : (deg < 225 ? 3 : 1));
+            } else {
+                const float ax = (ji.dwXpos - 32768.0f) / 32768.0f;
+                const float ay = (ji.dwYpos - 32768.0f) / 32768.0f;
+                if (fabsf(ax) > 0.35f || fabsf(ay) > 0.35f)
+                    dir = fabsf(ax) > fabsf(ay) ? (ax > 0 ? 0 : 1) : (ay > 0 ? 3 : 2);
+            }
+            if (dir != padDir) { padDir = dir; padDirHit = dir; }
+            const UINT hit = ji.dwButtons & ~padButtons;  // 本帧新按下的位
+            padButtons = ji.dwButtons;
+            padStart = (hit & JOY_BUTTON1) != 0;
+            padPause = (hit & JOY_BUTTON2) != 0;
+        }
+#endif
         if (phase == Phase::Ready || phase == Phase::Over) {
             if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)
-                || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) {
+                || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)
+                || padStart) {
                 snake::reset(game);
                 previous = game.body;
                 phase = Phase::Playing;
             }
         } else if (phase == Phase::Playing) {
-            if (IsKeyPressed(KEY_P) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT)) {
+            if (IsKeyPressed(KEY_P) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT) || padPause) {
                 phase = Phase::Paused;
             } else {
                 if (IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)
@@ -138,9 +198,13 @@ int main() {
                 if (IsKeyPressed(KEY_S) || IsKeyPressed(KEY_DOWN)
                     || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_DOWN)) snake::press(game, snake::Dir::Down);
                 stick_poll();
+                if (padDirHit >= 0) {
+                    const snake::Dir PAD_DIR[4] = {snake::Dir::Right, snake::Dir::Left, snake::Dir::Up, snake::Dir::Down};
+                    snake::press(game, PAD_DIR[padDirHit]);
+                }
             }
         } else if (phase == Phase::Paused) {
-            if (IsKeyPressed(KEY_P) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT)) phase = Phase::Playing;
+            if (IsKeyPressed(KEY_P) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT) || padPause) phase = Phase::Playing;
         }
 
         float dt = GetFrameTime();
