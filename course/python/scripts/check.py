@@ -51,8 +51,8 @@ def check_app_json() -> None:
     data = json.loads(path.read_text(encoding="utf-8"))
     if data.get("id") != EXPECTED_ID or data.get("id") != PROJECT_ROOT.name:
         raise SystemExit(f"app.json 的 id 必须是 {EXPECTED_ID}（与目录名一致）")
-    if data.get("group") != "人工智能":
-        raise SystemExit('app.json 的 group 必须是 "人工智能"（ADR 0120）')
+    if data.get("group") != "程序设计":
+        raise SystemExit('app.json 的 group 必须是 "程序设计"（ADR 0148，python 是人工智能路线的入口但归程序设计圈）')
     port = re.search(r":(\d+)$", data.get("dev", {}).get("ready", {}).get("http", ""))
     if not port or int(port.group(1)) != EXPECTED_PORT:
         raise SystemExit(f"dev.ready.http 的端口必须是 {EXPECTED_PORT}")

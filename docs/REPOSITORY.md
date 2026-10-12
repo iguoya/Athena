@@ -17,7 +17,7 @@ course/<id>/ 课程学科学习：一个目录一个独立应用，彼此完全�
                    软设以文字指引承接第 8 章（ADR 0108 拆分、0118/0119 定归属）
   ascent/      拾阶（英语师范生四六级、专四专八，Tauri）
   mathematics/ 数学学习（Tauri）
-  database/         数据库 SQL 实验室（Tauri 2 + React）——软设第 9 章实践课程，计算机圈（ADR 0103、0126）
+  database/         数据库 SQL 实验室（Tauri 2 + React）——软设第 9 章实践课程，「计算机基础」圈（ADR 0103、0126、0148）
   design-patterns/  设计模式与程序组织（Tauri 2 + Vite）——「程序设计」圈，不挂靠；软考降为
                      专题（原素材坑转正 ADR 0103，去挂靠 ADR 0121）
   linux/             Linux 程序设计（Tauri 2 + Vite）——软设第 4 章实验承接（ADR 0109），
@@ -33,8 +33,8 @@ course/<id>/ 课程学科学习：一个目录一个独立应用，彼此完全�
   organization/  计算机组成原理（Tauri 2 + Vite）——408 组成原理，挂靠 cs408、引用挂到 software（ADR 0115、0116）
   cs408/         408 计算机学科专业基础（Tauri 2 + Vite）——考研考试主应用，「考研」圈；数据结构、算法设计、
                  组成原理、操作系统、计算机网络五门科目课本体挂它下面，软设以文字指引承接（ADR 0116、0118、0119）
-  python/        Python 与 AI 工具链（Tauri 2 + React）——「人工智能」圈首门课，面向会编程的人的
-                 Python 速成与 AI 生态工具链，LLM 课程路线的入口（ADR 0120）
+  python/        Python 与 AI 工具链（Tauri 2 + React）——「程序设计」圈，面向会编程的人的
+                 Python 速成与 AI 生态工具链，同时是人工智能课程路线的入口（ADR 0120、0148）
   machine-learning/ 机器学习基础（Tauri 2 + React）——「人工智能」圈；经典 ML 直觉与 sklearn 实战（ADR 0120、0122）
   deep-learning/ 深度学习与 PyTorch（Tauri 2 + React）——「人工智能」圈；从张量到 Transformer（ADR 0120、0122）
   llm-app/       大模型应用开发（Tauri 2 + React）——「人工智能」圈；提示工程、RAG、Agent 与评估，
@@ -105,7 +105,7 @@ archive/       历史归档，不参与构建
 | `polaris` | 北极星 | `athena-polaris` | （无进度库） |
 | `organization` | 计算机组成原理（408，ADR 0115） | `athena-organization` | `org.` |
 | `cs408` | 408 计算机学科专业基础（考研考试主应用，ADR 0116） | `athena-cs408` | `cs408.` |
-| `python` | Python 与 AI 工具链（「人工智能」圈首门课，ADR 0120） | `athena-python` | `python.` |
+| `python` | Python 与 AI 工具链（「程序设计」圈，人工智能路线的入口，ADR 0120、0148） | `athena-python` | `python.` |
 | `machine-learning` | 机器学习基础（「人工智能」圈，ADR 0120、0122） | `athena-machine-learning` | `ml.` |
 | `deep-learning` | 深度学习与 PyTorch（「人工智能」圈，ADR 0120、0122） | `athena-deep-learning` | `dl.` |
 | `llm-app` | 大模型应用开发（「人工智能」圈，ADR 0120、0122） | `athena-llm-app` | `llmapp.` |

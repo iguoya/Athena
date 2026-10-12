@@ -4,7 +4,7 @@ const INFO = {
   title: "Python 与 AI 工具链",
   letter: "Py",
   accent: "#3776AB",
-  group: "人工智能",
+  group: "程序设计",
   route: "人工智能路线第 1 门（主仓库 ADR 0120）：应用线通 llm-app，原理线通 machine-learning",
   engine: "本机 Python/uv 子进程真跑（白名单 spawn）",
 };

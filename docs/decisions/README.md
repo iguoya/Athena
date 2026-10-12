@@ -71,6 +71,7 @@
 | [0145](0145-subjects-rename-to-course.md) | `subjects/` 整体改名 `course/`（0143 决策 2 的落实）：应用 id/目录名/进程名/知识点前缀/进度库全不动，只改顶层容器名；牵动面清单见 STRUCTURE-PROPOSALS V5，等并行重组落库后与 gtkmm→guide 迁移一批执行 | 已接受；草拟于 STRUCTURE-PROPOSALS.md V5（0134 流程） |
 | [0146](0146-tools-directory-for-math-tools.md) | 新建 `tools/`，math-tools 迁入；id、进程名、端口不动 | 已接受；修订 0144 决策 3 |
 | [0147](0147-exam-apps-into-certification.md) | 软件设计师与嵌入式系统设计师迁入 `certification/`；id、进程名、知识点前缀不动，实践子课程留在 `subjects/` | 已接受 |
+| [0148](0148-regroup-domain-circles.md) | 领域圈（`group`）归并为 6 个：计算机基础 / 程序设计 / 人工智能 / 电子信息 / 考研 / 考证；分组仍是 `app.json` 字段，不做成目录；`python` 归程序设计 | 已接受；调整 0102、0111、0120 |
 
 ## 仓库工程
 
