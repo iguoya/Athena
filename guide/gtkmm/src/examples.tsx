@@ -1,6 +1,6 @@
-// 官方示例区块（应用 ADR 0006）：教程节页尾部的 exercise/ 示例卡。
-// 清单驱动（content/demos.json examples 数组，按 page_ref 锚定），
-// 不为某章手写页面；代码是 exercise/ 的原样镜像，壳逐字返回、这里不加工。
+// 官方示例区块（应用 ADR 0006、0008）：教程节页顶部（正文之前，先演示后读文）
+// 的 exercise/ 示例卡。清单驱动（content/demos.json examples 数组，按 page_ref
+// 锚定），不为某章手写页面；代码是 exercise/ 的原样镜像，壳逐字返回、这里不加工。
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { motion } from "motion/react";

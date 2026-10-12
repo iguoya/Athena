@@ -636,6 +636,17 @@ export default function App() {
                 >
                   ← 本章节页
                 </button>
+                {/* 官方示例（应用 ADR 0006、0008）：页面最上方、正文之前——
+                    先跑官方代码再读教程。本章 + 锚定本节（page_ref），章级示例
+                    （无 page_ref）随本章各节页重复出现；清单是唯一事实源 */}
+                <OfficialExamples
+                  examples={(manifest?.examples ?? []).filter(
+                    (e) =>
+                      e.translation_ref?.chapter === section.translation_ref.chapter &&
+                      (!e.page_ref || e.page_ref === page.id),
+                  )}
+                  onLaunch={launchExample}
+                />
                 <PageView
                   key={page.id}
                   chapterId={section.id}
@@ -648,16 +659,6 @@ export default function App() {
                   onRate={ratePara}
                   myTranslations={myTranslations}
                   onSaveMyTranslation={saveMyTranslation}
-                />
-                {/* 官方示例（应用 ADR 0006）：本章 + 锚定本节（page_ref），
-                    章级示例（无 page_ref）随本章各节页重复出现；清单是唯一事实源 */}
-                <OfficialExamples
-                  examples={(manifest?.examples ?? []).filter(
-                    (e) =>
-                      e.translation_ref?.chapter === section.translation_ref.chapter &&
-                      (!e.page_ref || e.page_ref === page.id),
-                  )}
-                  onLaunch={launchExample}
                 />
                 <PageAssessments
                   section={section}
