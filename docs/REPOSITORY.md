@@ -11,28 +11,14 @@
 course/<id>/ 课程学科学习：一个目录一个独立应用，彼此完全平级
   c-plus-plus/ C++ 教程（Tauri 2 + React，ADR 0060）。旧 gtkmm 窗口已拆到 practice/cpp（ADR 0141）
   machine/     C 与机器（Qt Quick / QML，原 c/，ADR 0005）
-  data-structures/ 数据结构（Tauri 2）——408 数据结构（45 分），本体挂 cs408；软设以文字指引承接
-                   第 3 章（ADR 0108 拆分、0118/0119 定归属；原 algorithm，复名见 ADR 0105）
-  algorithms/      算法设计（Tauri 2）——408 算法设计大题（第 41、42 题），本体挂 cs408；
-                   软设以文字指引承接第 8 章（ADR 0108 拆分、0118/0119 定归属）
-  ascent/      拾阶（英语师范生四六级、专四专八，Tauri）
-  mathematics/ 数学学习（Tauri）
   database/         数据库 SQL 实验室（Tauri 2 + React）——软设第 9 章实践课程，「计算机基础」圈（ADR 0103、0126、0148）
   design-patterns/  设计模式与程序组织（Tauri 2 + Vite）——「程序设计」圈，不挂靠；软考降为
                      专题（原素材坑转正 ADR 0103，去挂靠 ADR 0121）
   linux/             Linux 程序设计（Tauri 2 + Vite）——软设第 4 章实验承接（ADR 0109），
                      「程序设计」圈（ADR 0111）
-  os/               操作系统实验（Tauri 2 + React）——408 操作系统（35 分），本体挂 cs408；
-                    软设以文字指引承接第 4 章（ADR 0103 立项、0118/0119 定归属；原
-                    operating-system，改名见 ADR 0104）
-  network/          网络与信息安全实验（Tauri 2 + React）——408 计算机网络（25 分），本体挂
-                    cs408；软设以文字指引承接第 10 章（ADR 0103 立项、0118/0119 定归属）
   firmware/         嵌入式程序设计实验（Tauri 2 + React）——嵌入第 6/8/11 章实践课程，电子信息圈（ADR 0103、0123）
   microcontroller/  硬件实验台（Tauri 2 + React）——嵌入第 2/5 章实践课程，电子信息圈（ADR 0103、0123）
   rtos/             实时操作系统（Tauri 2 + React）——嵌入第 4 章实践课程，电子信息圈（ADR 0106、0123）
-  organization/  计算机组成原理（Tauri 2 + Vite）——408 组成原理，挂靠 cs408、引用挂到 software（ADR 0115、0116）
-  cs408/         408 计算机学科专业基础（Tauri 2 + Vite）——考研考试主应用，「考研」圈；数据结构、算法设计、
-                 组成原理、操作系统、计算机网络五门科目课本体挂它下面，软设以文字指引承接（ADR 0116、0118、0119）
   python/        Python 与 AI 工具链（Tauri 2 + React）——「程序设计」圈，面向会编程的人的
                  Python 速成与 AI 生态工具链，同时是人工智能课程路线的入口（ADR 0120、0148）
   machine-learning/ 机器学习基础（Tauri 2 + React）——「人工智能」圈；经典 ML 直觉与 sklearn 实战（ADR 0120、0122）
@@ -40,6 +26,21 @@ course/<id>/ 课程学科学习：一个目录一个独立应用，彼此完全�
   llm-app/       大模型应用开发（Tauri 2 + React）——「人工智能」圈；提示工程、RAG、Agent 与评估，
                  实践应用的主场（ADR 0120、0122）
   llm-finetune/  大模型微调与部署（Tauri 2 + React）——「人工智能」圈；LoRA、量化、本地推理与服务化（ADR 0120、0122）
+postgraduate/<id>/ 考研应用：408 与考研公共课，目录与「考研」圈一致（ADR 0149）
+  cs408/         408 计算机学科专业基础（Tauri 2 + Vite）——考研考试主应用，「考研」圈；数据结构、算法设计、
+                 组成原理、操作系统、计算机网络五门科目课本体挂它下面，软设以文字指引承接（ADR 0116、0118、0119）
+  data-structures/ 数据结构（Tauri 2）——408 数据结构（45 分），本体挂 cs408；软设以文字指引承接
+                   第 3 章（ADR 0108 拆分、0118/0119 定归属；原 algorithm，复名见 ADR 0105）
+  algorithms/      算法设计（Tauri 2）——408 算法设计大题（第 41、42 题），本体挂 cs408；
+                   软设以文字指引承接第 8 章（ADR 0108 拆分、0118/0119 定归属）
+  organization/  计算机组成原理（Tauri 2 + Vite）——408 组成原理，挂靠 cs408、引用挂到 software（ADR 0115、0116）
+  os/               操作系统实验（Tauri 2 + React）——408 操作系统（35 分），本体挂 cs408；
+                    软设以文字指引承接第 4 章（ADR 0103 立项、0118/0119 定归属；原
+                    operating-system，改名见 ADR 0104）
+  network/          网络与信息安全实验（Tauri 2 + React）——408 计算机网络（25 分），本体挂
+                    cs408；软设以文字指引承接第 10 章（ADR 0103 立项、0118/0119 定归属）
+  mathematics/ 数学学习（Tauri）
+  ascent/      拾阶（英语师范生四六级、专四专八，Tauri）
 practice/<id>/ 项目应用：动手做的独立小项目，不接掌握度体系（ADR 0060）
   pocket_cube/ 2 阶魔方（GTK4 / gtkmm）
   nas_admin/   驾考中心服务后台（Flask-AppBuilder，部署在软路由）
@@ -71,7 +72,7 @@ archive/       历史归档，不参与构建
 
 **归档**。不参与构建与检查的历史按「离它最近的归档位」放：仓库级的前身与旧数据进根
 `archive/`（如前身 computer 仓库、driver 迁中心 PG 前的最后一个本地进度库），应用
-自己的历史档进应用目录内的 `archive/`（如 `course/ascent/archive/` 的 vuepress 旧站）。
+自己的历史档进应用目录内的 `archive/`（如 `postgraduate/ascent/archive/` 的 vuepress 旧站）。
 
 **名字**。仓库叫 Athena。打开应用的终端命令是 `launcher open <id>`（二进制在
 `launcher/target/`，名字是 `launcher`；旧文档里的 `athena-dev` 是同一个编排器）。

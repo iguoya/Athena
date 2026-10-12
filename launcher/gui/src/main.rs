@@ -60,6 +60,7 @@ struct Catalog {
 impl Catalog {
     fn load(repo: &std::path::Path) -> Self {
         let mut everything = launcher_core::discover(repo);
+        everything.extend(discover_in(&repo.join("postgraduate")));
         everything.extend(discover_in(&repo.join("practice")));
         everything.extend(discover_in(&repo.join("certification")));
         everything.extend(discover_in(&repo.join("mentor")));
@@ -68,6 +69,7 @@ impl Catalog {
         Self {
             roots: vec![
                 repo.join("course"),
+                repo.join("postgraduate"),
                 repo.join("practice"),
                 repo.join("certification"),
                 repo.join("mentor"),

@@ -2,6 +2,7 @@
 # 不收 driver（Flutter）、machine（Qt）、c-gui-lab（Electron）、pocket_cube（GTK）、nas_admin（Python）。
 packages:
   - "course/*"
+  - "postgraduate/*"
   - "guide/*"
   - "mentor/*"
   - "tools/*"
@@ -32,11 +33,11 @@ catalog:
   "@react-three/fiber": ^9.6.0
   "@react-three/drei": ^10.7.9
 
-# 从 course/mathematics/pnpm-workspace.yaml 并上来。
+# 从 postgraduate/mathematics/pnpm-workspace.yaml 并上来。
 allowBuilds:
   esbuild: true
 
-# 从 course/ascent/pnpm-workspace.yaml 并上来：这些版本的发布年龄短于 pnpm 默认等待。
+# 从 postgraduate/ascent/pnpm-workspace.yaml 并上来：这些版本的发布年龄短于 pnpm 默认等待。
 minimumReleaseAgeExclude:
   - "@vitest/mocker@5.0.3"
   - "@vitest/spy@5.0.3"

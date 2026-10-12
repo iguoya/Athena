@@ -75,7 +75,7 @@ Windows 任务栏用同一张 256px 的 `webui/src-tauri/icons/icon.png`。裸�
 值是 PNG 边长，或 `"ico"`（16–256 共 9 帧）/ `"icns"`（16–1024）。改了 `icon.svg` 跑：
 
 ```sh
-launcher/target/release/launcher icons          # course/、practice/、certification/、mentor/ 与 tools/ 一起重新生成
+launcher/target/release/launcher icons          # course/、postgraduate/、practice/、certification/、mentor/ 与 tools/ 一起重新生成
 launcher/target/release/launcher icons --check  # 只核对，过期时退出码非零
 ```
 

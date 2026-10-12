@@ -56,7 +56,7 @@ ls docs/decisions | tail -3
 - 同栈应用不自带锁文件：核心依赖写 `catalog:`，`tauri` / `tauri-build` / `serde` /
   `serde_json` 写 `workspace = true`，并把这个 `src-tauri` 加进仓库根 `Cargo.toml` 的
   members。然后在仓库根重新生成 `pnpm-lock.yaml` 与 `Cargo.lock`（ADR 0140）。
-- 本应用 `scripts/check.py` 里写死的 id、端口（如 `course/os` 的 `EXPECTED_ID` /
+- 本应用 `scripts/check.py` 里写死的 id、端口（如 `postgraduate/os` 的 `EXPECTED_ID` /
   `EXPECTED_PORT`；壳里没有就不用加）。
 - 界面里的标题、文案。
 
@@ -68,7 +68,7 @@ dsa 带过来的标题文案。锁文件只在仓库根，不在应用目录里�
 
 四件套缺一个，`check.py --sources-only` 的结构卫生检查就会报：
 
-- **`AGENTS.md`**：本应用规则。参照 `course/cs408/AGENTS.md` 的骨架：
+- **`AGENTS.md`**：本应用规则。参照 `postgraduate/cs408/AGENTS.md` 的骨架：
   - 定位：属于哪一类、按什么判据；挂靠关系；学习应用写**出处档位**与**方法原型**
     （主原型决定首页入口与单元块顺序）。
   - 技术栈：壳来自哪个应用要写，但写成「最初复制自 X，此后独立演进」——**不写**「沿用 X 的

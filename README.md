@@ -5,17 +5,17 @@
 
 ## 应用
 
-`course/` 是课程学科（学习应用 + 图谱/参考类），`practice/` 是项目应用（ADR 0060）。
+`course/` 是课程学科，`postgraduate/` 是考研应用（408 与考研公共课，ADR 0149），`practice/` 是项目应用（ADR 0060）。
 分类判据见 [`AGENTS.md`](AGENTS.md)：要不要教会人什么、要不要证明学习者进步了。
 
 | 目录 | 应用 | 技术 |
 | --- | --- | --- |
 | [`course/c-plus-plus`](course/c-plus-plus) | C++ 教程 | Tauri 2 + React |
 | [`course/machine`](course/machine) | C 与机器（C 与汇编） | Qt Quick / QML、CMake |
-| [`course/data-structures`](course/data-structures) | 数据结构（408，原 dsa 拆分 ADR 0108） | Tauri 2 + Vite |
-| [`course/algorithms`](course/algorithms) | 算法设计（408，原 dsa 拆分 ADR 0108） | Tauri 2 + Vite |
-| [`course/ascent`](course/ascent) | 拾阶（四六级 / 专四专八） | Tauri + Vite |
-| [`course/mathematics`](course/mathematics) | 数学学习 | Tauri + Vite（Python sidecar） |
+| [`postgraduate/data-structures`](postgraduate/data-structures) | 数据结构（408，原 dsa 拆分 ADR 0108） | Tauri 2 + Vite |
+| [`postgraduate/algorithms`](postgraduate/algorithms) | 算法设计（408，原 dsa 拆分 ADR 0108） | Tauri 2 + Vite |
+| [`postgraduate/ascent`](postgraduate/ascent) | 拾阶（四六级 / 专四专八） | Tauri + Vite |
+| [`postgraduate/mathematics`](postgraduate/mathematics) | 数学学习 | Tauri + Vite（Python sidecar） |
 | [`tools/math-tools`](tools/math-tools) | 数学工具 | Tauri 2 + React |
 | [`certification/driver`](certification/driver) | 驾考学习 | Flutter 桌面 |
 | [`certification/software`](certification/software) | 软件设计师（软考中级备考） | Tauri 2 + React |
@@ -27,10 +27,10 @@
 | [`course/linux`](course/linux) | Linux 程序设计（程序设计圈，ADR 0109、0111） | Tauri 2 + Vite |
 | [`guide/gtkmm`](guide/gtkmm) | gtkmm 官方教程精读（手册类，ADR 0143） | Tauri 2 + React |
 | [`mentor/polaris`](mentor/polaris) | 北极星（技术体系图谱，ADR 0144） | Tauri 2 + React |
-| [`course/organization`](course/organization) | 计算机组成原理（408，ADR 0115） | Tauri 2 + Vite |
-| [`course/os`](course/os) | 操作系统实验（408，ADR 0103、0104） | Tauri 2 + React |
-| [`course/network`](course/network) | 计算机网络（408，ADR 0103） | Tauri 2 + React |
-| [`course/cs408`](course/cs408) | 408 计算机学科专业基础（考研考试主应用，ADR 0116） | Tauri 2 + Vite |
+| [`postgraduate/organization`](postgraduate/organization) | 计算机组成原理（408，ADR 0115） | Tauri 2 + Vite |
+| [`postgraduate/os`](postgraduate/os) | 操作系统实验（408，ADR 0103、0104） | Tauri 2 + React |
+| [`postgraduate/network`](postgraduate/network) | 计算机网络（408，ADR 0103） | Tauri 2 + React |
+| [`postgraduate/cs408`](postgraduate/cs408) | 408 计算机学科专业基础（考研考试主应用，ADR 0116） | Tauri 2 + Vite |
 | [`course/python`](course/python) | Python 与 AI 工具链（「程序设计」圈，人工智能路线入口，ADR 0120、0148） | Tauri 2 + React |
 | [`course/machine-learning`](course/machine-learning) | 机器学习基础（「人工智能」圈，ADR 0120、0122） | Tauri 2 + React |
 | [`course/deep-learning`](course/deep-learning) | 深度学习与 PyTorch（「人工智能」圈，ADR 0120、0122） | Tauri 2 + React |

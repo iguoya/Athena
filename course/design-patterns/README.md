@@ -43,7 +43,7 @@ python3 scripts/check.py                                # 验证
 
 ## 开工前定下的几条（素材坑时期写下，仍然适用）
 
-这些不是凭空写的建议，是 2026-09-15 对照 `subjects/dsa`、`course/mathematics`、
+这些不是凭空写的建议，是 2026-09-15 对照 `subjects/dsa`、`postgraduate/mathematics`、
 `subjects/english` 审视 `subjects/cpp` 得出的结论。`subjects/cpp` 在这几条上都吃过亏，
 新应用没有理由重走一遍。
 

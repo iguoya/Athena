@@ -30,14 +30,13 @@
 完整说明（名字对照表、三类判据的全文）见 [docs/REPOSITORY.md](docs/REPOSITORY.md)。
 
 ```
-course/<id>/  课程学科：cpp machine data-structures algorithms linux organization
-                mathematics ascent cs408 python design-patterns（学习应用；cs408 是 408 考试
-                主应用，五门科目课本体挂它底下，ADR 0116、0118、0119；python 是
-                人工智能课程路线的入口、归「程序设计」圈；machine-learning、deep-learning、
-                llm-app、llm-finetune 四门在「人工智能」圈，ADR 0120、0122、0148；
-                design-patterns 在「程序设计」圈，ADR 0121）
-                database firmware microcontroller rtos（软考实践子课程，ADR 0103、0106；
-                os、network 兼作软设承接章，本体归 cs408，ADR 0118、0119）
+course/<id>/  课程学科：c-plus-plus machine linux python design-patterns（python 是人工智能课程路线的
+                入口、归「程序设计」圈；design-patterns 同在该圈，ADR 0121）、machine-learning deep-learning
+                llm-app llm-finetune（「人工智能」圈，ADR 0120、0122、0148）、database firmware
+                microcontroller rtos（软考实践子课程，ADR 0103、0106）
+postgraduate/<id>/ 考研应用（ADR 0149）：cs408（408 考试主应用）及本体挂它的 data-structures algorithms
+                organization os network（ADR 0116、0118、0119），加考研公共课 mathematics ascent；
+                os、network 兼作软设承接章
 mentor/<id>/    导师类（图谱/参考类）：polaris（路线图与指南针）、competitions（「大赛」圈的赛历，
 guide/<id>/    手册类教程：跟随一本外部手册/官方教程精读，首批 gtkmm（ADR 0143）
                 ADR 0114）；给方向和查阅依据，不教课、不建进度库（ADR 0144）
@@ -179,7 +178,7 @@ python3 scripts/check.py cpp              # 只跑某个应用，余下参数原
 python3 scripts/check.py --sources-only   # 只跑跨应用检查（skill 两处一致、出处、工作流）
 ```
 
-检查逻辑归各应用自己的 `scripts/check.py`（`course/` 与 `practice/` 下都扫）。**每个应用都
+检查逻辑归各应用自己的 `scripts/check.py`（各应用根目录下都扫）。**每个应用都
 必须有这份脚本**，没有它的应用会被静默跳过，等于没人验证。
 
 ## 必读文档

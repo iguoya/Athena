@@ -393,7 +393,7 @@ jobs:
       run:
         shell: bash
     env:
-      APP_DIR: course/ascent
+      APP_DIR: postgraduate/ascent
     steps:
       - name: Resolve version
         id: version
@@ -437,16 +437,16 @@ jobs:
       - uses: swatinem/rust-cache@v2
         if: steps.key.outputs.ready == 'true'
         with:
-          workspaces: course/ascent/src-tauri
+          workspaces: postgraduate/ascent/src-tauri
 
       - name: Install dependencies
         if: steps.key.outputs.ready == 'true'
-        working-directory: course/ascent
+        working-directory: postgraduate/ascent
         run: pnpm install --frozen-lockfile
 
       - name: Set version
         if: steps.key.outputs.ready == 'true'
-        working-directory: course/ascent
+        working-directory: postgraduate/ascent
         env:
           VERSION: ${{ steps.version.outputs.value }}
         run: |
@@ -476,7 +476,7 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
-          projectPath: course/ascent
+          projectPath: postgraduate/ascent
           tagName: v__VERSION__
           releaseName: Athena v__VERSION__
           releaseBody: 自动构建，提交 ${{ github.sha }}
@@ -488,8 +488,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          mkdir -p course/ascent/dist
-          gh release download "v${{ steps.version.outputs.value }}" --pattern latest.json --dir course/ascent/dist
+          mkdir -p postgraduate/ascent/dist
+          gh release download "v${{ steps.version.outputs.value }}" --pattern latest.json --dir postgraduate/ascent/dist
 
       - name: Upload release assets
         if: steps.key.outputs.ready == 'true'
@@ -497,8 +497,8 @@ jobs:
         with:
           name: athena-ascent-windows-x64
           path: |
-            course/ascent/src-tauri/target/release/bundle/nsis/*.exe
-            course/ascent/dist/latest.json
+            postgraduate/ascent/src-tauri/target/release/bundle/nsis/*.exe
+            postgraduate/ascent/dist/latest.json
           if-no-files-found: error
           retention-days: 7
 
