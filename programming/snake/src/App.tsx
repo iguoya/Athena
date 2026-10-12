@@ -241,6 +241,14 @@ export default function App() {
 
   const shown = file ?? chapter.files[0];
 
+  // 图与接口代码块全宽横幅渲染（图占一行、说明在图下方），文字讲解留在分栏里。
+  const fullSections = chapter.sections.filter(
+    (item) => item.role === "diagram" || item.role === "code",
+  );
+  const flowSections = chapter.sections.filter(
+    (item) => item.role !== "diagram" && item.role !== "code",
+  );
+
   function chapterDone(item: Chapter) {
     return item.questions.length > 0 && item.questions.every((question) => passed.has(question.id));
   }
@@ -367,17 +375,30 @@ export default function App() {
           </p>
         </section>
 
+        {fullSections.map((section) => (
+          <section className={`panel step ${section.role}`} key={section.heading}>
+            <h3>{section.heading}</h3>
+            {section.role === "diagram" && section.diagram ? (
+              <Diagram code={section.diagram} />
+            ) : null}
+            {section.role === "code" && section.code ? (
+              <pre className="code-sample">{section.code}</pre>
+            ) : null}
+            {section.body
+              ? section.body.split("\n\n").map((paragraph) => (
+                  <p key={paragraph}>
+                    <RichText text={paragraph} />
+                  </p>
+                ))
+              : null}
+          </section>
+        ))}
+
         <div className="split">
           <div>
-            {chapter.sections.map((section) => (
+            {flowSections.map((section) => (
               <section className={`panel step ${section.role}`} key={section.heading}>
                 <h3>{section.heading}</h3>
-                {section.role === "diagram" && section.diagram ? (
-                  <Diagram code={section.diagram} />
-                ) : null}
-                {section.role === "code" && section.code ? (
-                  <pre className="code-sample">{section.code}</pre>
-                ) : null}
                 {section.body
                   ? section.body.split("\n\n").map((paragraph) => (
                       <p key={paragraph}>
