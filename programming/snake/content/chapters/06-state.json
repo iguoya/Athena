@@ -1,0 +1,111 @@
+{
+  "id": "snake.state",
+  "exercise": "06-state",
+  "title": "把散落的 if 收进状态机",
+  "lead": "第三、四、五章的「死了按 R」是一行凑合。开始画面一来、暂停一来，散装判断就互相纠缠——凑合不动了，才把那行裸 if 收编进四相状态机。第五章的 dead 布尔升格成了 Over 相。这一章没有分数。",
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "四个相位，同一颗键各有含义",
+      "body": "Phase::Ready / Playing / Paused / Over。Enter 在 Ready 和 Over 里是「开始 / 重来」，P 在 Playing 和 Paused 之间切换；方向键只在 Playing 里收。逻辑步进也只在 Playing 里走。\n\n〔重点〕状态机的价值不是少写代码，是「同一颗键在不同相里含义不同」有了明确的安放处。每相只回答自己的问题，新增相位不必回头改旧相。"
+    },
+    {
+      "role": "focus",
+      "heading": "收编第三章的凑合",
+      "body": "第三章那行「game = Game{}」的重开，第四、五章原样带过来，这一章变成了 Ready 与 Over 相里的 reset——凑合被正式收编，而它被收编的原因不是「变漂亮了」，是「开始画面和暂停来了，散装 if 排不出优先级」。\n\n〔要点〕重构的真实时机是功能挤压出来的，不是审美观决定的。前几章保留那行丑代码，就是为了让这个时机看得见。"
+    },
+    {
+      "role": "focus",
+      "heading": "暂停时不补时间",
+      "body": "只在 Playing 里累加 acc；离开 Playing 就把它清零。\n\n〔考点〕不清零的话，暂停十秒回来，while 会一口气补走几十步——蛇瞬移暴毙。第二章的「补步」是修卡顿，这里反着用：不是游戏时间的流逝不该补。累加器是双刃，用在哪一相要看语义。"
+    }
+  ],
+  "questions": [
+    {
+      "id": "snake.state.phase",
+      "kind": "重点",
+      "stem": "引入状态机主要解决什么问题？",
+      "choices": [
+        "让代码行数更少",
+        "同一颗键、同一段逻辑在不同局面下含义不同，需要明确的安放处",
+        "提高渲染帧率",
+        "省掉输入缓冲"
+      ],
+      "answer": 1,
+      "explanation": "Enter 在 Ready 是开始、在 Over 是重来，方向键只在 Playing 有效。按相分发让每个局面只回答自己的问题。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 6 章 · 四个相位",
+          "note": "按本章 Phase 的分发结构自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.state.adopt",
+      "kind": "要点",
+      "stem": "第三章那行「game = Game{}」的凑合重开，是在哪一章、因为什么被收编的？",
+      "choices": [
+        "第三章当晚就重构成了 reset 函数",
+        "第六章：开始画面与暂停加入后，散装判断排不出优先级，才收进状态机的相位",
+        "永远不会被收编，凑合可以一直用",
+        "被输入缓冲替代了"
+      ],
+      "answer": 1,
+      "explanation": "重构的真实时机是功能挤压出来的。凑合被保留到收编那一刻，是演化被显式记录的一部分。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 6 章 · 收编",
+          "note": "按第 3、6 章的对照自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.state.pause",
+      "kind": "难点",
+      "stem": "离开 Playing 时把 acc 清零，是为了什么？",
+      "choices": [
+        "acc 是浮点数，时间长了精度不够",
+        "暂停期间流逝的时间不是游戏时间，不清零恢复后会一口气补走几十步",
+        "让下一帧从整数开始计步",
+        "避免 while 死循环"
+      ],
+      "answer": 1,
+      "explanation": "第二章用 while 补齐掉帧欠下的步；暂停期间的时间不是欠的，补了就是瞬移。同一个机制，语义决定用不用。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 6 章 · 暂停",
+          "note": "与第 2 章补步对照自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.state.over",
+      "kind": "考点",
+      "stem": "第五章里蛇有一个 dead 布尔，第六章它变成了什么？",
+      "choices": [
+        "被删掉了，死亡不再需要表示",
+        "升格成状态机的一个相：Phase::Over，开始画面、暂停与它平级",
+        "拆成两个布尔：dying 和 dead",
+        "移进了渲染层，由画面推断"
+      ],
+      "answer": 1,
+      "explanation": "布尔只能表达「死 / 没死」两态；局面一多，两态不够分，布尔自然升格成相位。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 6 章 · 相位",
+          "note": "按第 5 章 dead 与本章 Phase 的对照自拟。"
+        }
+      ]
+    }
+  ],
+  "runs": [{ "id": "06-state", "label": "打开第 6 章的窗口", "primary": true }],
+  "files": ["exercise/06-state/src/main.cc", "exercise/06-state/CMakeLists.txt"]
+}

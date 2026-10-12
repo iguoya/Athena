@@ -27,8 +27,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 EXPECTED_ID = "snake"
 EXPECTED_PORT = 1514
 DEFAULT_FULL = False
-CHAPTERS = ("01-window", "02-grid", "03-body", "04-food", "05-state", "06-score", "07-logic", "08-polish")
-TARGETS = dict(zip(CHAPTERS, (f"snake-{i:02d}" for i in range(1, 9)), strict=True))
+CHAPTERS = ("01-window", "02-grid", "03-body", "04-input", "05-food", "06-state", "07-score", "08-logic", "09-test", "10-polish")
+TARGETS = dict(zip(CHAPTERS, (f"snake-{i:02d}" for i in range(1, 11)), strict=True))
 
 
 def _force_utf8_output() -> None:
@@ -153,13 +153,15 @@ def check_exercises() -> None:
             raise SystemExit(f"{main.relative_to(PROJECT_ROOT)} 里要有游戏循环（EndDrawing + GetFrameTime）")
         if f"project({TARGETS[chapter]}" not in (root / "CMakeLists.txt").read_text(encoding="utf-8"):
             raise SystemExit(f"{chapter} 的 CMakeLists.txt 项目名要与 {TARGETS[chapter]} 对应")
-    logic = PROJECT_ROOT / "exercise" / "07-logic" / "logic.hh"
-    test = PROJECT_ROOT / "exercise" / "07-logic" / "tests" / "logic_test.cc"
-    if not logic.is_file() or not test.is_file():
-        raise SystemExit("07-logic 缺 logic.hh 或 tests/logic_test.cc")
-    polish = PROJECT_ROOT / "exercise" / "08-polish"
+    logic = PROJECT_ROOT / "exercise" / "08-logic" / "logic.hh"
+    test = PROJECT_ROOT / "exercise" / "09-test" / "tests" / "logic_test.cc"
+    if not logic.is_file():
+        raise SystemExit("08-logic 缺 logic.hh")
+    if not test.is_file():
+        raise SystemExit("09-test 缺 tests/logic_test.cc")
+    polish = PROJECT_ROOT / "exercise" / "10-polish"
     if not (polish / "logic.hh").is_file() or not (polish / "tests" / "logic_test.cc").is_file():
-        raise SystemExit("08-polish 缺 logic.hh 或 tests/logic_test.cc")
+        raise SystemExit("10-polish 缺 logic.hh 或 tests/logic_test.cc")
 
 
 def check_contract() -> None:
@@ -205,7 +207,7 @@ def check_native() -> None:
         if not exe.is_file():
             raise SystemExit(f"{chapter} 编译过了但没有找到 {exe.name}")
     ctest = tool("ctest", env)
-    for chapter in ("07-logic", "08-polish"):
+    for chapter in ("09-test", "10-polish"):
         rules = PROJECT_ROOT / "exercise" / chapter
         # 多配置生成器（VS）按配置名挑测试命令；单配置生成器忽略 -C，写了也无害。
         ctest_cmd = [ctest, "--test-dir", "build", "--output-on-failure"]

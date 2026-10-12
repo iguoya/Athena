@@ -1,0 +1,116 @@
+{
+  "id": "snake.polish",
+  "exercise": "10-polish",
+  "title": "手感：插值、声音与演化",
+  "lead": "完成版做三件事：画面配上插值，蛇在两步之间滑动而不是跳格；动作配上声音——不需要任何音频文件；规则自己也演化了一步——logic.hh 长出「吃到加速」，第九章的测试跟着长出断言。",
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "插值：渲染逻辑步之间的空白",
+      "body": "逻辑每步 0.12 秒，渲染每秒 60 帧——绝大多数渲染帧里蛇「还没到下一格」，直接画格子就会跳。做法：step 前把蛇身存进 previous；渲染时算比例 t = acc / stepTime，每一节从它在 previous 里的格子向当前格子滑过去。\n\n〔难点〕吃到食物时长出的那一节在 previous 里没有对应位置，让它原地不动。暂停与待机时 t 取 1，定格在格子正中。所谓手感，大多就是这类「渲染把逻辑的台阶抹成斜坡」的小把戏。"
+    },
+    {
+      "role": "focus",
+      "heading": "声音是一列数字",
+      "body": "make_beep 在运行时手工填一个 Wave：采样率 22050 表示每秒 22050 个采样点，正弦的频率决定音高（吃食物 660 Hz，撞墙 110 Hz），指数衰减决定「叮」的短促。填完交给 LoadSoundFromWave，原始内存随即释放。\n\n〔要点〕数字音频的最小模型就是一列采样值——不需要音频文件，也就不需要资产管线。游戏音效、合成器、语音，底层都是这一列数字。"
+    },
+    {
+      "role": "focus",
+      "heading": "规则自己也在演化",
+      "body": "吃到加速（stepTime 乘 0.98，下限 0.06 秒）长在 logic.hh 的 step 里，不写在渲染层。判断标准还是那块试金石：关掉窗口，「越吃越快」依然成立——它是规则。第十版的 logic.hh 与第九版只差这一处，测试多了一条断言。\n\n〔要点〕第八章保证「搬运不改行为」，这一章才改行为——而且改在哪、测试跟到哪，都看得见。演化被记录，而不是被抹平。"
+    }
+  ],
+  "questions": [
+    {
+      "id": "snake.polish.lerp",
+      "kind": "难点",
+      "stem": "插值比例 t = acc / stepTime 里，acc 是什么？t 接近 1 时画面是什么样？",
+      "choices": [
+        "acc 是当前帧号；t 接近 1 时蛇回到起点",
+        "acc 是自上一步起攒下的时间；t 接近 1 表示快到下一格，蛇身几乎滑进目标格",
+        "acc 是蛇的加速度；t 接近 1 时蛇加速",
+        "acc 是音频缓冲；t 接近 1 时声音变高"
+      ],
+      "answer": 1,
+      "explanation": "每节从 previous 滑向当前格，t 就是这场滑动的进度条。暂停时 t 定格为 1，蛇停在格子正中。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 10 章 · 插值",
+          "note": "按本章渲染段的 lerp 与 t 的来源自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.polish.sound",
+      "kind": "考点",
+      "stem": "make_beep 里采样率 22050 写下的是哪一条承诺？",
+      "choices": [
+        "声音最长持续 22050 采样",
+        "每秒用 22050 个采样点描述波形；写入与还原用同一速率，波形才不走样",
+        "音量是 22050 分贝的千分之一",
+        "缓冲区大小固定为 22050 字节"
+      ],
+      "answer": 1,
+      "explanation": "采样率是「每秒多少个数字」。所以 Wave 结构里要填 sampleRate，播放器才知道还原的速度。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "raylib-examples",
+          "locator": "第 10 章 · 声音",
+          "note": "Wave 与 Sound 的用法参考 raylib examples 的音频组。按本章 make_beep 自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.polish.accel",
+      "kind": "难点",
+      "stem": "「吃到加速」写进 logic.hh 的 step，而不是写在渲染层。判断依据是什么？",
+      "choices": [
+        "渲染层放不下",
+        "关掉窗口，「越吃越快」依然成立——它是规则；试金石永远是这条",
+        "渲染层每帧执行，太频繁",
+        "加速需要随机数，只有 logic.hh 有随机引擎"
+      ],
+      "answer": 1,
+      "explanation": "规则住在规则层。下一个长出规则的版本（道具、传送门）也该长在同一个地方。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 10 章 · 演化",
+          "note": "按第 9、10 版 logic.hh 的差异自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.polish.observe",
+      "kind": "考点",
+      "stem": "main 里用「previous.size() < game.body.size() 就播放吃食物声」来触发音效，为什么不直接在吃到的分支里响？",
+      "choices": [
+        "声音延迟一帧更自然",
+        "吃到的分支在规则层，而声音是呈现层的事——渲染层观察「蛇长了」这个输出就够了，不必侵入规则",
+        "PlaySound 不能在 step 里调用",
+        "这样省一个布尔变量"
+      ],
+      "answer": 1,
+      "explanation": "调用方观察输出的形状（变长了），而不是让规则层替它做决定。规则保持纯粹，声音的时机仍准确。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "raylib-examples",
+          "locator": "第 10 章 · 声音",
+          "note": "PlaySound 的用法见 raylib examples。按本章 main 的观察式触发自拟。"
+        }
+      ]
+    }
+  ],
+  "runs": [{ "id": "10-polish", "label": "打开第 10 章的窗口", "primary": true }],
+  "files": [
+    "exercise/10-polish/src/main.cc",
+    "exercise/10-polish/logic.hh",
+    "exercise/10-polish/tests/logic_test.cc",
+    "exercise/10-polish/CMakeLists.txt"
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "id": "snake.score",
+  "exercise": "07-score",
+  "title": "计分，与一份留得住的记录",
+  "lead": "玩法到第六章已经完整，但「玩得怎样」还没有一个数。这一章把分数挂在吃上，把最高分留在文件里——顺带面对「文件该写在哪」这个所有本地程序都要回答的问题。",
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "计分挂在「吃到」这个事件上",
+      "body": "吃到一节加十分，分数是 Game 的一个字段，随 reset 归零。HUD 每帧画一遍。\n\n〔要点〕分数不需要自己的机制——它是对已有事件的计数。给已有事件配一个观察量，几乎总是对的；为观察量发明新事件，几乎总是错的。"
+    },
+    {
+      "role": "focus",
+      "heading": "最高分：死亡那一步才判定",
+      "body": "破纪录的判定写在转进 Over 相的那一步：score 大于 best 就更新并写入文件。启动时读回来。\n\n〔考点〕为什么在死亡时判定，而不是每次得分都比较？一次对局只有死亡才是「终局」，终局才有「最终成绩」。把判定挂在状态转移上，逻辑自然只有一条路径。"
+    },
+    {
+      "role": "focus",
+      "heading": "文件写在进程工作目录，是有意的从简",
+      "body": "HIGHSCORE_FILE 是相对路径，写进哪里取决于从哪个目录启动。教学上够用；真实程序应写用户数据目录——工作目录随启动方式漂移、可能没有写权限、多用户会互相覆盖。\n\n〔难点〕这不是不知道，是这一章的边界。值得记住的是差别的三条理由，它们在任何平台都成立。"
+    }
+  ],
+  "questions": [
+    {
+      "id": "snake.score.event",
+      "kind": "重点",
+      "stem": "分数加十的时机挂在哪个事件上？",
+      "choices": [
+        "每走一步",
+        "吃到食物",
+        "每转向一次",
+        "每隔固定时间"
+      ],
+      "answer": 1,
+      "explanation": "分数是对「吃到」这个已有事件的计数。为观察量发明新事件几乎总是错的。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 7 章 · 计分",
+          "note": "按本章 step() 的 score += 10 自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.score.timing",
+      "kind": "考点",
+      "stem": "破纪录的判定为什么放在死亡那一步，而不是每次得分时？",
+      "choices": [
+        "省电",
+        "一次对局只有死亡才是终局，终局才有最终成绩；判定挂在状态转移上只有一条路径",
+        "文件写入太频繁会磨损磁盘",
+        "避免渲染时竞争读写"
+      ],
+      "answer": 1,
+      "explanation": "挂在 Over 转移上，一次对局恰好判定一次。中途比较会产生「破纪录瞬间」和「最终成绩」两个概念的纠缠。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 7 章 · 最高分",
+          "note": "按本章 step() 的转相与写入自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.score.location",
+      "kind": "难点",
+      "stem": "最高分写进进程工作目录，这个做法差在哪？",
+      "choices": [
+        "工作目录的文件读写太慢",
+        "位置随启动方式漂移、可能没有写权限、多用户互相覆盖——应写用户数据目录",
+        "文件格式不能跨平台",
+        "raylib 不支持相对路径"
+      ],
+      "answer": 1,
+      "explanation": "相对路径的落点由「从哪里启动」决定，教学从简可以接受，真实程序要落到每用户的数据目录。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "raylib-cheatsheet",
+          "locator": "第 7 章 · 文件",
+          "note": "SaveFileText 只管写入这个路径，落点选择是操作系统的事。按本章注释自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.score.const",
+      "kind": "要点",
+      "stem": "save_best 里为什么要把数字先 snprintf 进自己的缓冲，再交给 SaveFileText？",
+      "choices": [
+        "TextFormat 返回 const char*，而 SaveFileText 的第二个参数要求非 const 的 char*",
+        "snprintf 比字符串拼接快",
+        "SaveFileText 不认数字，只认格式化的浮点",
+        "为了让文件末尾多一个换行"
+      ],
+      "answer": 0,
+      "explanation": "这是编译器教的一次类型修正：库函数的签名决定了调用方式。真实的编译反馈比记忆可靠。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "raylib-cheatsheet",
+          "locator": "第 7 章 · 文件",
+          "note": "SaveFileText 与 TextFormat 的签名见 cheatsheet。按本章 save_best() 自拟。"
+        }
+      ]
+    }
+  ],
+  "runs": [{ "id": "07-score", "label": "打开第 7 章的窗口", "primary": true }],
+  "files": ["exercise/07-score/src/main.cc", "exercise/07-score/CMakeLists.txt"]
+}

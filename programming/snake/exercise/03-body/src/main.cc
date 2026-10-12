@@ -1,7 +1,9 @@
-// 第三章：让「蛇」存在——固定长度，能转向，撞墙会死。
-// 蛇身是一条队列（头进尾出，整体前移），按键排进另一条队列（每步只消费一个）。
-// 这一章没有食物：蛇不会变长，也就不会咬到自己——「自吃」是下一章才诞生的死法。
-// 死了按 R 重开，先用一行裸 if 凑合；等散装判断收拾不动了，第五章再收编它。
+// 第三章：让「蛇」存在——三节身体，能转向，撞墙会死。
+// 蛇身是一条队列：头进尾出，整体前移。方向在这一章是直接改写的：
+// IsKeyPressed 检测到就写 heading，没有缓冲。
+// 〔已知 bug，有意留在这里〕快速按两下键（比如「上、左」），两帧内方向连改两次，
+// 蛇会在一步之内掉头，头叠进自己的身体——画面上蛇身折叠。它不是崩溃，
+// 但它是错的。第四章的输入缓冲就是为这个 bug 发明的。
 // 界面文字用英文，理由同第一章。
 
 #include "raylib.h"
@@ -20,30 +22,15 @@ struct Cell {
 
 enum Direction { Right, Left, Up, Down };
 constexpr Cell DELTA[] = {{1, 0}, {-1, 0}, {0, -1}, {0, 1}};
-constexpr Direction OPPOSITE[] = {Left, Right, Down, Up};
 
 struct Game {
     std::deque<Cell> body = {Cell{5, 12}, Cell{4, 12}, Cell{3, 12}};  // 头在 front
-    std::deque<Direction> pending;
     Direction heading = Right;
     bool dead = false;
 };
 
-// 按键不直接改方向，只排队。反向的输入丢掉：固定长度的蛇一步掉头，
-// 头会撞进自己的第二节——这个 bug 不需要变长就存在。
-void press(Game& game, Direction dir) {
-    Direction last = game.pending.empty() ? game.heading : game.pending.back();
-    if (dir == last || dir == OPPOSITE[last]) return;
-    if (game.pending.size() >= 3) return;
-    game.pending.push_back(dir);
-}
-
 void step(Game& game) {
     if (game.dead) return;
-    if (!game.pending.empty()) {
-        game.heading = game.pending.front();
-        game.pending.pop_front();
-    }
     Cell head{game.body.front().x + DELTA[game.heading].x,
               game.body.front().y + DELTA[game.heading].y};
     if (head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS) {
@@ -63,12 +50,13 @@ int main() {
     float acc = 0.0f;
 
     while (!WindowShouldClose()) {
-        if (IsKeyPressed(KEY_RIGHT)) press(game, Right);
-        if (IsKeyPressed(KEY_LEFT)) press(game, Left);
-        if (IsKeyPressed(KEY_UP)) press(game, Up);
-        if (IsKeyPressed(KEY_DOWN)) press(game, Down);
+        // 方向直接改写。试试在两帧之内按「上、左」：蛇会当场折叠——这就是第四章要修的 bug。
+        if (IsKeyPressed(KEY_RIGHT)) game.heading = Right;
+        if (IsKeyPressed(KEY_LEFT)) game.heading = Left;
+        if (IsKeyPressed(KEY_UP)) game.heading = Up;
+        if (IsKeyPressed(KEY_DOWN)) game.heading = Down;
         if (game.dead && IsKeyPressed(KEY_R)) {
-            game = Game{};  // 凑合的重开：整只换新。第五章用状态机正式收编它。
+            game = Game{};  // 凑合的重开：整只换新。第六章用状态机正式收编它。
         }
 
         float dt = GetFrameTime();

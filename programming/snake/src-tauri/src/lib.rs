@@ -12,11 +12,13 @@ const CHAPTERS: &[(&str, &str)] = &[
     ("01-window", "snake-01"),
     ("02-grid", "snake-02"),
     ("03-body", "snake-03"),
-    ("04-food", "snake-04"),
-    ("05-state", "snake-05"),
-    ("06-score", "snake-06"),
-    ("07-logic", "snake-07"),
-    ("08-polish", "snake-08"),
+    ("04-input", "snake-04"),
+    ("05-food", "snake-05"),
+    ("06-state", "snake-06"),
+    ("07-score", "snake-07"),
+    ("08-logic", "snake-08"),
+    ("09-test", "snake-09"),
+    ("10-polish", "snake-10"),
 ];
 
 fn app_root() -> Result<PathBuf, String> {

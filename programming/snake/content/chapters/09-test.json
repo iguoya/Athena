@@ -1,0 +1,116 @@
+{
+  "id": "snake.test",
+  "exercise": "09-test",
+  "title": "给搬出来的规则配上测试",
+  "lead": "这一章的程序与第八章逐行相同——差别全在 tests/：logic_test.cc 直接编 logic.hh，不开窗口就能断言规则。第三章那个折叠 bug 的触发操作，在这里第一次变成永远会重放的断言。",
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "把触发 bug 的操作固化成断言",
+      "body": "第四章修折叠 bug 时说过：验证要用触发它的同一组操作。测试做的就是把这句话变成代码——「起步朝右，先压一个反向：第一步继续向右」「一帧内压上、左：两步之内先上后左」。断言写下的不是这一次对，是从此每一次都对。\n\n〔重点〕测试是记忆的机械化。人玩两分钟会忘，断言在每一次构建里都会重问一遍。"
+    },
+    {
+      "role": "focus",
+      "heading": "断言盯规则，不盯画面",
+      "body": "tests 里全是 snake::Game 的字段和函数调用：body 的头在哪、长度多少、dead 与否。没有一个 raylib 类型。\n\n〔考点〕「测什么」跟着第八章的分家走：规则层有明确答案（撞死时头在 x=0），画面层没有（「看起来对」不是断言）。能写成断言的，先是那些关掉窗口仍然成立的东西。"
+    },
+    {
+      "role": "focus",
+      "heading": "第二个 target：构建图上看得见的分离",
+      "body": "CMakeLists 里多了一个目标 snake-09-logic-test，它只编 tests/logic_test.cc，链接列表里没有 raylib；add_test 把它注册给 CTest，cmake --build 之后 ctest 一条命令跑完。\n\n〔难点〕依赖关系撒不了谎：测试目标的链接列表里没有 raylib，恰好证明规则层没沾渲染层。分离不必口头承诺，构建文件上看得见。"
+    }
+  ],
+  "questions": [
+    {
+      "id": "snake.test.memory",
+      "kind": "重点",
+      "stem": "「把触发 bug 的操作固化成断言」是什么意思？",
+      "choices": [
+        "把 bug 截图存档",
+        "把当年触发折叠的那组操作写成代码断言，让每一次构建都自动重放一遍",
+        "在注释里记下 bug 的经过",
+        "给 bug 编号归档到文档"
+      ],
+      "answer": 1,
+      "explanation": "人玩两分钟会忘，断言在每次构建里重问。修复被验证一次是运气，被验证永远才是修好。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 9 章 · 固化",
+          "note": "按本章与第 4 章验证的呼应自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.test.pure",
+      "kind": "重点",
+      "stem": "tests/logic_test.cc 为什么一个 raylib 头文件都不 include？",
+      "choices": [
+        "raylib 与 C++ 不兼容",
+        "被测的规则不依赖窗口；不链图形库，测试在哪都能编、能跑、能进 CI",
+        "include 会拖慢编译",
+        "raylib 不允许被静态链接"
+      ],
+      "answer": 1,
+      "explanation": "依赖越少，可验证面越大。链接列表里没有 raylib，恰好证明规则层没沾渲染层。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 9 章 · 构建图",
+          "note": "按本章 CMakeLists 的两个 target 自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.test.what",
+      "kind": "难点",
+      "stem": "tests 里的断言全部盯 snake::Game 的字段，一个都不盯画面。为什么？",
+      "choices": [
+        "画面不重要",
+        "「头在哪、死没死」有明确答案，「看起来对」没有；能断言的先是关掉窗口仍成立的东西",
+        "画面没法自动化",
+        "raylib 禁止测试读取"
+      ],
+      "answer": 1,
+      "explanation": "测什么跟分家走：规则层给出确定答案，呈现层的对错留给人的眼睛和将来的黄金帧对比。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 9 章 · 断言盯规则",
+          "note": "按本章断言的自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.test.ctest",
+      "kind": "考点",
+      "stem": "add_test 注册之后，规则测试怎么跑？",
+      "choices": [
+        "每次打开窗口自动跑",
+        "构建之后 ctest 一条命令跑完；本应用的 check --native 和 CI 都会跑它",
+        "要手动双击测试程序",
+        "只有调试器里能跑"
+      ],
+      "answer": 1,
+      "explanation": "CTest 是 CMake 自带的测试入口。进了 ctest，测试就能被 check 脚本和 CI 无脑调用。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 9 章 · ctest",
+          "note": "按本章 CMakeLists 的 enable_testing 与 add_test 自拟。"
+        }
+      ]
+    }
+  ],
+  "runs": [{ "id": "09-test", "label": "打开第 9 章的窗口", "primary": true }],
+  "files": [
+    "exercise/09-test/src/main.cc",
+    "exercise/09-test/tests/logic_test.cc",
+    "exercise/09-test/logic.hh",
+    "exercise/09-test/CMakeLists.txt"
+  ]
+}
