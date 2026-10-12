@@ -105,7 +105,18 @@ function applyTheme(theme: ThemeId) {
 
 applyTheme(readTheme());
 
-const HUES = ["hue-window", "hue-grid", "hue-snake", "hue-state", "hue-polish"];
+const HUES = [
+  "hue-window",
+  "hue-grid",
+  "hue-body",
+  "hue-input",
+  "hue-food",
+  "hue-state",
+  "hue-score",
+  "hue-logic",
+  "hue-test",
+  "hue-polish",
+];
 
 function kindClass(kind: string) {
   if (kind === "重点" || kind === "要点") return "key";
