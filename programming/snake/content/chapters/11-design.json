@@ -1,0 +1,122 @@
+{
+  "id": "snake.design",
+  "exercise": "10-polish",
+  "title": "成品长成了什么样",
+  "lead": "前十章讲这只蛇怎么一步步长出来；这一节回头看它长成了什么样——需求、不变式、测试怎么一一对上，以及补写设计文档时顺手查出了什么。正本是仓库里的 docs/design/overview.md，文件栏第一项就是它。",
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "回溯的设计，不是当初的设计",
+      "body": "十章是边做边演化出来的，从来没有一份「先设计」的文档。总览是对第 10 章成品的整理（软件工程里叫 as-built），不是当初的设计稿，也不能倒过来决定该教什么。\n\n它回答三件十章没有回答的事：长成了什么样；为什么是这样（关键决策与被放弃的备选）；怎么确认确实如此（追溯矩阵）。\n\n〔要点〕现行的主流做法里，详细设计的大半由类型、头文件和测试承担——函数契约和边界写进测试，比写进文档更不容易过期。所以总览只保留不变式、状态转移和关键决策，没有逐函数的说明书。"
+    },
+    {
+      "role": "diagram",
+      "heading": "需求怎么落到验证上",
+      "body": "每条需求有编号，落在某个模块，再按能不能自动验证分三类。标「测试」的，rules_test.cc 里必须有 @covers 标注的用例，scripts/check.py 每次检查；呈现层的行为只能运行观察，如实标「人工」；没有验证的如实写「未覆盖」。",
+      "diagram": "flowchart LR\n    REQ[\"需求 FR-1 … NFR-5\"]:::r --> MOD[\"承担模块\nlogic.hh / main.cc\"]:::m\n    MOD --> VER{\"能自动验证吗\"}:::v\n    VER -->|测试| T[\"rules_test.cc\n@covers 编号\"]:::t\n    VER -->|人工| H[\"运行观察\n音效、相位、插值\"]:::h\n    VER -->|未覆盖| U[\"如实写出\n不隐藏\"]:::u\n    T --> CHK[\"check.py 核对\n矩阵 ↔ 标记\"]:::c\n    classDef r fill:#e8eef5,stroke:#35628a,color:#1c3a5e\n    classDef m fill:#35628a,stroke:#24456a,color:#fff\n    classDef v fill:#6a4c9a,stroke:#4e3775,color:#fff\n    classDef t fill:#2e7d32,stroke:#1b5e20,color:#fff\n    classDef h fill:#b86e00,stroke:#8a5400,color:#fff\n    classDef u fill:#b23a48,stroke:#8a2f3c,color:#fff\n    classDef c fill:#0e7c73,stroke:#0a5a55,color:#fff"
+    },
+    {
+      "role": "focus",
+      "heading": "不变式：任何按键序列下都成立的话",
+      "body": "例子只能证明想到的场景。不变式是关于局面的断言，例如：蛇身相邻两节恰好相接、食物不压在蛇身上、缓冲最多三格、长度恒等于 3 + 得分 / 10。总览列了 7 条，rules_test.cc 用固定种子的半贪心随机游走，每一步前后各查一遍——游走里既会吃到，也会撞墙、咬自己，覆盖的是手写例子想不到的序列。\n\n〔难点〕测试自己也要被测试。把规则故意弄坏九种（去掉自咬判定、缓冲容量改 4、去掉速度下限……），全部被抓住；其中「死后不再冻结」最初漏网：原来的用例死后再走一步，没有早退也照样撞墙、纹丝不动，分辨不出来；改成死后先按一个合法转向再走，才抓住。一次就通过的测试，先怀疑它是不是空的。"
+    },
+    {
+      "role": "focus",
+      "heading": "写文档就是一次评审",
+      "body": "补写总览时，把每个函数的后置条件、每个状态转移逐条对一遍代码，查出两个真缺陷，都已修复：吃到音效一口响好几次——判断写在逻辑步之外，两步之间的每个渲染帧都再次看到「比 previous 长」；读最高分用了 LoadFileText 却没有归还堆内存。\n\n仍然留着的限制如实写在总览第 10 节：蛇占满棋盘时刷食物会死循环，一帧补步没有上限。「头进入当前尾格算撞死」不是缺陷而是现行的设计决策 D-3，用测试钉住——想改成允许追尾，要同时改 step 的顺序和那条测试。\n\n〔要点〕文档写不下去的地方，往往就是设计没想清楚的地方。"
+    }
+  ],
+  "questions": [
+    {
+      "id": "snake.design.asbuilt",
+      "kind": "要点",
+      "stem": "设计总览为什么要在开头写明自己是「回溯性的成品设计」？",
+      "choices": [
+        "因为文档是后补的，质量可以低一些",
+        "十章是演化出来的，没有当初的设计稿；总览整理的是终点，不能倒过来决定该教什么",
+        "因为 as-built 是国家标准要求的标题",
+        "为了说明代码不会再改了"
+      ],
+      "answer": 1,
+      "explanation": "写明性质，读者才不会把它当成「先设计后实现」的证据，也不会据此改教学大纲。教学方向仍然自上而下。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 11 章 · 回溯的设计",
+          "note": "按应用级 ADR 0005 与 docs/design/overview.md 第 0 节自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.design.invariant",
+      "kind": "难点",
+      "stem": "rules_test.cc 的随机游走在每一步前后检查 7 条不变式，它比手写的例子多保证了什么？",
+      "choices": [
+        "测试跑得更快",
+        "无论按键序列怎样，局面始终合法——例子只覆盖想到的场景，不变式还能挡住没想到的序列",
+        "可以取代所有例子测试",
+        "保证游戏好玩"
+      ],
+      "answer": 1,
+      "explanation": "不变式管「任何时候都不许出现的局面」，例子管「这个具体行为是什么」。两者互补：比如「头进当前尾格判死」是具体行为，只能用例子钉住。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 11 章 · 不变式",
+          "note": "按 rules_test.cc 的 check_invariants 与随机游走自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.design.trace",
+      "kind": "考点",
+      "stem": "追溯矩阵里 FR-9（音效）标「人工」而不是「测试」，依据是什么？",
+      "choices": [
+        "音效不重要，不需要测试",
+        "音效在呈现层，依赖音频设备，不能脱离窗口自动验证；如实标「人工」，check.py 就不会要求它有 @covers",
+        "测试框架不支持音频",
+        "因为 FR-9 是最后一条需求"
+      ],
+      "answer": 1,
+      "explanation": "矩阵的价值在诚实：能自动验证的标「测试」并被机器核对，不能的标「人工」写明怎么观察，没验证的标「未覆盖」。标错类别比留空更糟。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 11 章 · 追溯矩阵",
+          "note": "按总览第 11 节矩阵与 check_design 自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.design.tail",
+      "kind": "难点",
+      "stem": "蛇长 4 格，绕成 2×2 的一圈，头朝前一步正好是当前尾巴所在的格子。现行的 step 判这一步撞死。总览里这算什么？",
+      "choices": [
+        "一个待修的 bug，应该允许追尾",
+        "现行的设计决策（D-3）：判定先于尾巴出队；用测试钉住，要改就同时改 step 的顺序和那条测试",
+        "raylib 的限制",
+        "没有被记录，属于未定义行为"
+      ],
+      "answer": 1,
+      "explanation": "两种规则都合理，关键是选了哪个要说出来并有测试守着。碰巧如此的行为一动就悄悄变；写进决策和测试的行为，改动时会被拦住。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 11 章 · 评审",
+          "note": "按总览决策 D-3 与 test_head_into_current_tail_cell_kills 自拟。"
+        }
+      ]
+    }
+  ],
+  "runs": [{ "id": "10-polish", "label": "打开第 10 章的窗口", "primary": true }],
+  "files": [
+    "docs/design/overview.md",
+    "exercise/10-polish/tests/rules_test.cc",
+    "exercise/10-polish/logic.hh",
+    "exercise/10-polish/src/main.cc"
+  ]
+}

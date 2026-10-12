@@ -44,18 +44,22 @@ type Chapter = {
   files: string[];
 };
 
-const chapters = Object.values(
+// 按文件名排序而不是按 exercise：设计篇导读与第 10 章共用同一个程序目录。
+const chapters = Object.entries(
   import.meta.glob("../content/chapters/*.json", {
     eager: true,
     import: "default",
   }) as Record<string, Chapter>,
-).sort((a, b) => a.exercise.localeCompare(b.exercise));
+)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([, chapter]) => chapter);
 
 const sources = import.meta.glob(
   [
     "../exercise/**/*.{cc,hh,h}",
     "../exercise/**/CMakeLists.txt",
     "!../exercise/**/build/**",
+    "../docs/design/*.md",
   ],
   { eager: true, query: "?raw", import: "default" },
 ) as Record<string, string>;
@@ -117,6 +121,7 @@ const HUES = [
   "hue-body",
   "hue-input",
   "hue-food",
+  "hue-design",
 ];
 
 function kindClass(kind: string) {

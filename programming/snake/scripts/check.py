@@ -28,6 +28,9 @@ EXPECTED_ID = "snake"
 EXPECTED_PORT = 1514
 DEFAULT_FULL = False
 CHAPTERS = ("01-window", "02-grid", "03-body", "04-input", "05-food", "06-state", "07-score", "08-logic", "09-test", "10-polish")
+# 设计篇导读（应用级 ADR 0005）：文件名 11-design，与第 10 章共用同一个程序目录。
+DESIGN_LESSON = ("11-design", "10-polish")
+LESSONS = [(chapter, chapter) for chapter in CHAPTERS] + [DESIGN_LESSON]
 TARGETS = dict(zip(CHAPTERS, (f"snake-{i:02d}" for i in range(1, 11)), strict=True))
 
 
@@ -99,15 +102,15 @@ def check_content() -> None:
             raise SystemExit(f"{path.relative_to(PROJECT_ROOT)}: {error}") from error
     course = json.loads((PROJECT_ROOT / "content" / "course.json").read_text(encoding="utf-8"))
     sections = course.get("sections")
-    if not isinstance(sections, list) or len(sections) != len(CHAPTERS):
-        raise SystemExit(f"course.json 必须有 {len(CHAPTERS)} 节")
-    for section, chapter in zip(sections, CHAPTERS, strict=True):
+    if not isinstance(sections, list) or len(sections) != len(LESSONS):
+        raise SystemExit(f"course.json 必须有 {len(LESSONS)} 节（十章 + 设计篇导读）")
+    for section, (stem, chapter) in zip(sections, LESSONS, strict=True):
         sid = section.get("id", "")
         if not sid.startswith("snake."):
             raise SystemExit(f"节 id {sid!r} 必须用 snake. 前缀")
         if section.get("exercise") != chapter:
             raise SystemExit(f"节 {sid} 的 exercise 必须是 {chapter}")
-        path = PROJECT_ROOT / "content" / "chapters" / f"{chapter}.json"
+        path = PROJECT_ROOT / "content" / "chapters" / f"{stem}.json"
         lesson = json.loads(path.read_text(encoding="utf-8"))
         if lesson.get("id") != sid:
             raise SystemExit(f"{path.name} 的 id 与课表不一致")
@@ -142,8 +145,13 @@ def check_content() -> None:
             if f'"{run["id"]}"' not in rust:
                 raise SystemExit(f"{run['id']} 不在教程壳的白名单里")
         lesson_files = lesson.get("files") or []
-        if not lesson_files or not lesson_files[0].endswith("src/main.cc"):
-            raise SystemExit(f"{path.name} 的文件列表要以主程序 src/main.cc 开头")
+        # 设计篇导读以设计总览打头，其余各章以主程序打头。
+        lead_file = "docs/design/overview.md" if stem == DESIGN_LESSON[0] else "src/main.cc"
+        if not lesson_files or not lesson_files[0].endswith(lead_file):
+            raise SystemExit(f"{path.name} 的文件列表要以 {lead_file} 开头")
+        for rel in lesson_files:
+            if not (PROJECT_ROOT / rel).is_file():
+                raise SystemExit(f"{path.name} 列出的文件不存在：{rel}")
 
 
 def check_exercises() -> None:
