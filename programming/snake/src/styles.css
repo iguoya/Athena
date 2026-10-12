@@ -199,17 +199,12 @@ pre {
   color: var(--green);
 }
 
-/* 十章四段：基础蓝（1-2）· 玩法绿（3-5）· 完整橙（6-7）· 工程紫（8-10），与 README 演化阶梯同色 */
+/* 侧栏五色，第 6 章起循环复用——后五章与前五章同一套视觉语言 */
 .nav button.chapter.hue-window i { background: #3d6a94; }
-.nav button.chapter.hue-grid i { background: #35628a; }
+.nav button.chapter.hue-grid i { background: #0e7c73; }
 .nav button.chapter.hue-body i { background: #2e7d32; }
 .nav button.chapter.hue-input i { background: #3f8f4a; }
 .nav button.chapter.hue-food i { background: #57a344; }
-.nav button.chapter.hue-state i { background: #b86e00; }
-.nav button.chapter.hue-score i { background: #c08a2e; }
-.nav button.chapter.hue-logic i { background: #6a4c9a; }
-.nav button.chapter.hue-test i { background: #7d5cb5; }
-.nav button.chapter.hue-polish i { background: #8f6fc9; }
 
 .nav button.chapter.active {
   background: var(--card);
@@ -217,15 +212,10 @@ pre {
 }
 
 .nav button.chapter.hue-window.active { box-shadow: inset 0.22rem 0 0 #3d6a94; }
-.nav button.chapter.hue-grid.active { box-shadow: inset 0.22rem 0 0 #35628a; }
+.nav button.chapter.hue-grid.active { box-shadow: inset 0.22rem 0 0 #0e7c73; }
 .nav button.chapter.hue-body.active { box-shadow: inset 0.22rem 0 0 #2e7d32; }
 .nav button.chapter.hue-input.active { box-shadow: inset 0.22rem 0 0 #3f8f4a; }
 .nav button.chapter.hue-food.active { box-shadow: inset 0.22rem 0 0 #57a344; }
-.nav button.chapter.hue-state.active { box-shadow: inset 0.22rem 0 0 #b86e00; }
-.nav button.chapter.hue-score.active { box-shadow: inset 0.22rem 0 0 #c08a2e; }
-.nav button.chapter.hue-logic.active { box-shadow: inset 0.22rem 0 0 #6a4c9a; }
-.nav button.chapter.hue-test.active { box-shadow: inset 0.22rem 0 0 #7d5cb5; }
-.nav button.chapter.hue-polish.active { box-shadow: inset 0.22rem 0 0 #8f6fc9; }
 
 .nav button.chapter.done i {
   box-shadow: 0 0 0 0.12rem var(--card), 0 0 0 0.22rem var(--green);
@@ -401,6 +391,11 @@ h2 {
 .step.compare {
   background: var(--compare);
   border-left: 0.28rem solid var(--compare-edge);
+}
+
+.step.diagram-block,
+.step.code-block {
+  border-left: 0.28rem solid var(--accent);
 }
 
 mark.mark {

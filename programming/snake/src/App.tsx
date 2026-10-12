@@ -105,17 +105,18 @@ function applyTheme(theme: ThemeId) {
 
 applyTheme(readTheme());
 
+// 侧栏编号色复用前五章的五色（两轮循环）：后五章与前五章同一套视觉语言。
 const HUES = [
   "hue-window",
   "hue-grid",
   "hue-body",
   "hue-input",
   "hue-food",
-  "hue-state",
-  "hue-score",
-  "hue-logic",
-  "hue-test",
-  "hue-polish",
+  "hue-window",
+  "hue-grid",
+  "hue-body",
+  "hue-input",
+  "hue-food",
 ];
 
 function kindClass(kind: string) {
@@ -406,7 +407,7 @@ export default function App() {
 
         {fullSections.map((section) => (
           <section
-            className="panel step"
+            className={`panel step ${section.role === "code" ? "code-block" : "diagram-block"}`}
             key={section.heading}
           >
             <h3>{section.heading}</h3>
