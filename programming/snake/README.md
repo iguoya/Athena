@@ -55,8 +55,11 @@ flowchart LR
 | `exercise/09-test` | 搬出来之后能干什么？——tests/ 直测规则，bug 的触发操作变成断言 |
 | `exercise/10-polish` | 手感差在哪？——插值、合成音效、`logic.hh` 演化出加速 |
 
-第 9、10 章的规则在 `logic.hh`，测试在 `tests/logic_test.cc`，不依赖 raylib。
-WASD 或方向键，P 暂停。
+第 9、10 章的规则在 `logic.hh`，测试在 `tests/logic_test.cc`，不依赖 raylib。第 10 章另有
+按需求编号铺开的 `tests/rules_test.cc`。WASD 或方向键，P 暂停。
+
+想看成品**长成了什么样、为什么这样**，读 [设计总览](docs/design/overview.md)：需求、
+架构、不变式、关键决策与追溯矩阵。十章讲怎么长出来的，总览讲长成的样子。
 
 ## 打开
 

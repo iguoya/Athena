@@ -4,6 +4,9 @@
 // scripts/check.py 会核对这些标记与总览里的追溯矩阵一致。
 //
 // 不用 assert：Release 构建定义 NDEBUG 后 assert 整个消失，测试就成了空壳。
+//
+// 这个文件只包含 logic.hh、不链接 raylib 也能编译运行，本身就是 NFR-1 的证据。
+// @covers NFR-1
 
 #include "../logic.hh"
 

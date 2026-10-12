@@ -171,6 +171,73 @@ def check_exercises() -> None:
         raise SystemExit("10-polish 缺 logic.hh 或 tests/logic_test.cc")
 
 
+# 注释里提到 raylib 是正常的，只拦 #include。
+RAYLIB_INCLUDE = re.compile(r'#\s*include\s*[<"][^>"]*raylib', re.IGNORECASE)
+
+
+def _between(text: str, begin: str, end: str, what: str) -> str:
+    start = text.find(begin)
+    stop = text.find(end)
+    if start < 0 or stop < start:
+        raise SystemExit(f"docs/design/overview.md 缺 {what} 的标记 {begin} … {end}")
+    return text[start + len(begin):stop]
+
+
+def check_design() -> None:
+    """设计总览与代码不漂移（应用级 ADR 0005）。静态检查，不编译。"""
+    print("== 设计总览与追溯矩阵 ==", flush=True)
+    polish = PROJECT_ROOT / "exercise" / "10-polish"
+    overview_path = PROJECT_ROOT / "docs" / "design" / "overview.md"
+    if not overview_path.is_file():
+        raise SystemExit("缺 docs/design/overview.md")
+    overview = overview_path.read_text(encoding="utf-8")
+
+    # 追溯矩阵：第一列编号，第三列验证方式。
+    rows: dict[str, str] = {}
+    for line in _between(overview, "<!-- trace:begin -->", "<!-- trace:end -->", "追溯矩阵").splitlines():
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        if len(cells) >= 4 and re.fullmatch(r"N?FR-\d+", cells[0]):
+            if cells[2] not in ("测试", "人工", "未覆盖"):
+                raise SystemExit(f"追溯矩阵 {cells[0]} 的验证方式必须是 测试 / 人工 / 未覆盖，现为 {cells[2]!r}")
+            rows[cells[0]] = cells[2]
+    if not rows:
+        raise SystemExit("追溯矩阵里没有读到任何需求行")
+
+    # 需求表里出现的编号都要进矩阵，反过来也一样。
+    declared = set(re.findall(r"^\| (N?FR-\d+) \|", overview, flags=re.MULTILINE))
+    if declared != set(rows):
+        raise SystemExit(f"需求表与追溯矩阵的编号不一致：{sorted(declared ^ set(rows))}")
+
+    # 测试里的 @covers 标记。
+    covered: set[str] = set()
+    for test in sorted((polish / "tests").glob("*.cc")):
+        text = test.read_text(encoding="utf-8")
+        if RAYLIB_INCLUDE.search(text):
+            raise SystemExit(f"{test.relative_to(PROJECT_ROOT)} 不得包含 raylib 头文件（NFR-1）")
+        for match in re.finditer(r"@covers\s+([A-Z0-9, -]+)", text):
+            covered.update(re.findall(r"N?FR-\d+", match.group(1)))
+    unknown = covered - set(rows)
+    if unknown:
+        raise SystemExit(f"测试里的 @covers 引用了矩阵里没有的编号：{sorted(unknown)}")
+    missing = sorted(rid for rid, how in rows.items() if how == "测试" and rid not in covered)
+    if missing:
+        raise SystemExit(f"追溯矩阵标「测试」但没有任何 @covers 标记的用例：{missing}")
+    manual = sorted(rid for rid, how in rows.items() if how != "测试" and rid in covered)
+    if manual:
+        raise SystemExit(f"测试已经覆盖却没有在矩阵里标「测试」：{manual}")
+
+    # 接口表里的函数都要在 logic.hh 里。
+    logic = (polish / "logic.hh").read_text(encoding="utf-8")
+    if RAYLIB_INCLUDE.search(logic):
+        raise SystemExit("exercise/10-polish/logic.hh 不得包含 raylib 头文件（NFR-1）")
+    names = re.findall(r"^\| `(\w+)` \|", _between(overview, "<!-- api:begin -->", "<!-- api:end -->", "接口表"), flags=re.MULTILINE)
+    if not names:
+        raise SystemExit("接口表里没有读到任何函数名")
+    absent = [name for name in names if not re.search(rf"\b{name}\b", logic)]
+    if absent:
+        raise SystemExit(f"接口表里的函数在 logic.hh 中找不到：{absent}")
+
+
 def check_contract() -> None:
     print("== 出处契约 ==", flush=True)
     contract = json.loads((PROJECT_ROOT / "content-contract.json").read_text(encoding="utf-8"))
@@ -235,6 +302,7 @@ def main() -> None:
     check_ports()
     check_content()
     check_exercises()
+    check_design()
     check_contract()
     if args.native:
         check_native()

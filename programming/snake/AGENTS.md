@@ -72,5 +72,9 @@ python3 scripts/check.py --native
 ## 约定
 
 - 影响本应用边界的决定写在 `docs/decisions/`。
+- **成品设计总览**在 `docs/design/overview.md`（应用级 ADR 0005），描述第 10 章成品，是
+  Markdown 正本。改 `logic.hh` 的接口、规则或不变式时同步改它和追溯矩阵；`check.py` 会
+  核对矩阵、`@covers` 标记、接口表与 `logic.hh`。测试按需求编号铺在
+  `exercise/10-polish/tests/rules_test.cc`。
 - 不引用其他应用的路径或代码。
 - 壳只启动白名单里的章节 id，不提供任意命令。
