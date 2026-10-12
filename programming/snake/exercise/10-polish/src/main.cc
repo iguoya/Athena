@@ -5,6 +5,8 @@
 //   3. 规则自己也在演化——logic.hh 长出「吃到加速」，测试跟着长出一条断言。
 // 画面还换上全套课程共用的「夜园」深色主题：双色格棋盘、渐变的蛇身、呼吸的苹果——
 // 这些都只在呈现层，logic.hh 与测试对此一无所知。
+// 输入也长了一源：USB 手柄（XInput）——D-pad/左摇杆转向、A 开始/重开、Start 暂停；
+// 仍只是输入映射，汇进同一条 press 队列，规则层不知道玩家用的是键盘还是手柄。
 // 界面文字仍是英文，理由同第一章。
 
 #include "../logic.hh"
@@ -95,24 +97,50 @@ int main() {
     std::deque<snake::Cell> previous;  // 上一步的蛇身，插值的起点
     float acc = 0.0f;
 
+    // 手柄（若插着）与键盘汇入同一条 press 队列——输入源不同，规则不变。
+    // 左摇杆是持续量不是按键：只在「指向哪边发生变化」的沿上入队一次，
+    // 否则按住不放会每帧灌缓冲，把玩家提前排好的转向顶掉。死区滤掉静置噪声。
+    int stickDir = -1;  // 上一帧摇杆方向：0 右 1 左 2 上 3 下，-1 死区
+    auto stick_poll = [&]() {
+        if (!IsGamepadAvailable(0)) return;
+        const float ax = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X);
+        const float ay = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y);
+        int dir = -1;
+        if (fabsf(ax) > 0.35f || fabsf(ay) > 0.35f)
+            dir = fabsf(ax) > fabsf(ay) ? (ax > 0 ? 0 : 1) : (ay > 0 ? 3 : 2);
+        if (dir != stickDir) {
+            stickDir = dir;
+            if (dir == 0) snake::press(game, snake::Dir::Right);
+            else if (dir == 1) snake::press(game, snake::Dir::Left);
+            else if (dir == 2) snake::press(game, snake::Dir::Up);
+            else if (dir == 3) snake::press(game, snake::Dir::Down);
+        }
+    };
+
     while (!WindowShouldClose()) {
         if (phase == Phase::Ready || phase == Phase::Over) {
-            if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
+            if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)
+                || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) {
                 snake::reset(game);
                 previous = game.body;
                 phase = Phase::Playing;
             }
         } else if (phase == Phase::Playing) {
-            if (IsKeyPressed(KEY_P)) {
+            if (IsKeyPressed(KEY_P) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT)) {
                 phase = Phase::Paused;
             } else {
-                if (IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)) snake::press(game, snake::Dir::Right);
-                if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)) snake::press(game, snake::Dir::Left);
-                if (IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)) snake::press(game, snake::Dir::Up);
-                if (IsKeyPressed(KEY_S) || IsKeyPressed(KEY_DOWN)) snake::press(game, snake::Dir::Down);
+                if (IsKeyPressed(KEY_D) || IsKeyPressed(KEY_RIGHT)
+                    || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT)) snake::press(game, snake::Dir::Right);
+                if (IsKeyPressed(KEY_A) || IsKeyPressed(KEY_LEFT)
+                    || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT)) snake::press(game, snake::Dir::Left);
+                if (IsKeyPressed(KEY_W) || IsKeyPressed(KEY_UP)
+                    || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_UP)) snake::press(game, snake::Dir::Up);
+                if (IsKeyPressed(KEY_S) || IsKeyPressed(KEY_DOWN)
+                    || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_LEFT_FACE_DOWN)) snake::press(game, snake::Dir::Down);
+                stick_poll();
             }
         } else if (phase == Phase::Paused) {
-            if (IsKeyPressed(KEY_P)) phase = Phase::Playing;
+            if (IsKeyPressed(KEY_P) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT)) phase = Phase::Playing;
         }
 
         float dt = GetFrameTime();
@@ -196,9 +224,9 @@ int main() {
 
         const char* title = nullptr;
         const char* sub = nullptr;
-        if (phase == Phase::Ready) { title = "READY"; sub = "press ENTER to start"; }
-        if (phase == Phase::Paused) { title = "PAUSED"; sub = "press P to resume"; }
-        if (phase == Phase::Over) { title = "GAME OVER"; sub = "press ENTER to restart"; }
+        if (phase == Phase::Ready) { title = "READY"; sub = "ENTER / A - start"; }
+        if (phase == Phase::Paused) { title = "PAUSED"; sub = "P / Start - resume"; }
+        if (phase == Phase::Over) { title = "GAME OVER"; sub = "ENTER / A - restart"; }
         if (title) {
             // 提示卡：全屏压暗，中央一张圆角卡片承载标题与按键提示。
             DrawRectangle(0, 0, width, height, Fade(NIGHT, 0.55f));
