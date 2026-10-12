@@ -108,6 +108,28 @@
    "zh": ""
   },
   {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLE_HELLOWORLD_H\n#define GTKMM_EXAMPLE_HELLOWORLD_H\n\n#include <gtkmm/box.h>\n#include <gtkmm/button.h>\n#include <gtkmm/window.h>\n\nclass HelloWorld : public Gtk::Window\n{\npublic:\n  HelloWorld();\n  ~HelloWorld() override;\n\nprotected:\n\n  // Signal handlers:\n  // Our new improved on_button_clicked().\n  void on_button_clicked(const Glib::ustring& data);\n\n  // Child widgets:\n  Gtk::Box m_box1;\n  Gtk::Button m_button1, m_button2;\n};\n\n#endif // GTKMM_EXAMPLE_HELLOWORLD_H",
+   "sha": "f2e4371d48ad9b0d",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/helloworld2",
+   "file": "helloworld.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"helloworld.h\"\n#include <iostream>\n\nHelloWorld::HelloWorld()\n: m_button1(\"Button 1\"),\n  m_button2(\"Button 2\")\n{\n  // This just sets the title of our new window.\n  set_title(\"Hello Buttons!\");\n\n  // Sets the margin around the box.\n  m_box1.set_margin(10);\n\n  // put the box into the main window.\n  set_child(m_box1);\n\n  // Now when the button is clicked, we call the on_button_clicked() function\n  // with a pointer to \"button 1\" as its argument.\n  m_button1.signal_clicked().connect(sigc::bind(\n              sigc::mem_fun(*this, &HelloWorld::on_button_clicked), \"button 1\"));\n\n  // We use Gtk::Box::append() to pack this button into the box,\n  // which has been packed into the window.\n  // A widget's default behaviour is not to expand if extra space is available.\n  // A container widget by default expands if any of the contained widgets\n  // wants to expand.\n  m_box1.append(m_button1);\n  m_button1.set_expand();\n\n  // call the same signal handler with a different argument,\n  // passing a pointer to \"button 2\" instead.\n  m_button2.signal_clicked().connect(sigc::bind(\n              sigc::mem_fun(*this, &HelloWorld::on_button_clicked), \"button 2\"));\n\n  m_box1.append(m_button2);\n  m_button2.set_expand();\n\n  // Gtk::Widget::set_visible(true) is seldom needed. All widgets are visible by default.\n}\n\nHelloWorld::~HelloWorld()\n{\n}\n\n// Our new improved signal handler.  The data passed to this method is\n// printed to stdout.\nvoid HelloWorld::on_button_clicked(const Glib::ustring& data)\n{\n  std::cout << \"Hello World - \" << data << \" was pressed\" << std::endl;\n}",
+   "sha": "035ef05eda1ddd8a",
+   "file": "helloworld.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"helloworld.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char* argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<HelloWorld>(argc, argv);\n}",
+   "sha": "e73e2efb12eb343e",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
    "type": "para",
    "text": "After building and running this program, try resizing the window to see the\nbehavior. Also, try playing with set_expand(),\nset_hexpand(), set_vexpand(),\nset_halign() and set_valign()\nwhile reading the [Boxes](#sec-boxes) section.",
    "sha": "12723f5444eefb55",
@@ -190,7 +212,6 @@
    "type": "code",
    "text": "Gtk::Box(Gtk::Orientation orientation = Gtk::Orientation::HORIZONTAL, int spacing = 0);\nvoid set_orientation(Gtk::Orientation orientation);\nvoid set_spacing(int spacing);\nvoid set_homogeneous(bool homogeneous = true);",
    "sha": "009504742cc16654",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/helloworld2",
    "zh": ""
   },
   {
@@ -249,6 +270,42 @@
    "zh": "这是上述截图所运行示例的源代码。在运行此示例时请提供1到3之间的数字作为命令行选项以查看正在使用不同装填选项的行为。"
   },
   {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow(int which);\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_button_quit_clicked();\n\n  //Child widgets:\n  Gtk::Button m_button;\n  Gtk::Box m_box1;\n  Gtk::Box m_boxQuit;\n  Gtk::Button m_buttonQuit;\n\n  Gtk::Label m_Label1, m_Label2;\n\n  Gtk::Separator m_separator1, m_separator2;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "d2477f3c73bf3f08",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/box",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLE_PACKBOX_H\n#define GTKMM_EXAMPLE_PACKBOX_H\n\n#include <gtkmm.h>\n\nclass PackBox : public Gtk::Box\n{\npublic:\n  PackBox(bool homogeneous = false, int spacing = 0, bool expand = false,\n    Gtk::Align align = Gtk::Align::FILL, int margin = 0);\n\nprotected:\n  Gtk::Button m_buttons[4];\n};\n\n#endif //GTKMM_EXAMPLE_PACKBOX_H",
+   "sha": "43ef116ee10f9798",
+   "file": "packbox.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include <iostream>\n#include \"examplewindow.h\"\n#include \"packbox.h\"\n\nExampleWindow::ExampleWindow(int which)\n: m_box1(Gtk::Orientation::VERTICAL),\n  m_buttonQuit(\"Quit\")\n{\n  set_title(\"Gtk::Box example\");\n\n  m_separator1.set_margin_top(5);\n  m_separator1.set_margin_bottom(5);\n  m_separator2.set_margin_top(5);\n  m_separator2.set_margin_bottom(5);\n\n  switch(which)\n  {\n    case 1:\n    {\n      m_Label1.set_text(\"Gtk::Box(Gtk::Orientation::HORIZONTAL, 0); set_homogeneous(false);\");\n\n      // Align the label to the left side.\n      m_Label1.set_halign(Gtk::Align::START);\n      m_Label1.set_valign(Gtk::Align::START);\n\n      // Pack the label into the vertical box (vbox box1).  Remember that\n      // widgets added to a vbox will be packed one on top of the other in\n      // order.\n      m_box1.append(m_Label1);\n\n      // Create a PackBox - homogeneous = false, spacing = 0,\n      // expand = false, Gtk::Align::FILL, margin = 0\n      // These are the default values.\n      auto pPackBox = Gtk::make_managed<PackBox>();\n      m_box1.append(*pPackBox);\n\n      // Create a PackBox - homogeneous = false, spacing = 0,\n      // expand = true, Gtk::Align::CENTER, margin = 0\n      pPackBox = Gtk::make_managed<PackBox>(false, 0, true, Gtk::Align::CENTER);\n      m_box1.append(*pPackBox);\n\n      // Create a PackBox - homogeneous = false, spacing = 0,\n      // expand = true, Gtk::Align::FILL, margin = 0\n      pPackBox = Gtk::make_managed<PackBox>(false, 0, true);\n      m_box1.append(*pPackBox);\n\n      // pack the separator into the vbox.  Remember each of these\n      // widgets are being packed into a vbox, so they'll be stacked\n      // vertically.\n      m_box1.append(m_separator1);\n\n      // create another new label, and show it.\n      m_Label2.set_text(\"Gtk::Box(Gtk::Orientation::HORIZONTAL, 0); set_homogeneous(true);\");\n      m_Label2.set_halign(Gtk::Align::START);\n      m_Label2.set_valign(Gtk::Align::START);\n      m_box1.append(m_Label2);\n\n      // Args are: homogeneous, spacing, expand, align, margin\n      pPackBox = Gtk::make_managed<PackBox>(true, 0, true, Gtk::Align::CENTER);\n      m_box1.append(*pPackBox);\n\n      // Args are: homogeneous, spacing, expand, align, margin\n      pPackBox = Gtk::make_managed<PackBox>(true, 0, true);\n      m_box1.append(*pPackBox);\n\n      m_box1.append(m_separator2);\n\n      break;\n    }\n\n    case 2:\n    {\n      m_Label1.set_text(\"Gtk::Box(Gtk::Orientation::HORIZONTAL, 10); set_homogeneous(false);\");\n      m_Label1.set_halign(Gtk::Align::START);\n      m_Label1.set_valign(Gtk::Align::START);\n      m_box1.append(m_Label1);\n\n      auto pPackBox = Gtk::make_managed<PackBox>(false, 10, true, Gtk::Align::CENTER);\n      m_box1.append(*pPackBox);\n\n      pPackBox = Gtk::make_managed<PackBox>(false, 10, true);\n      m_box1.append(*pPackBox);\n\n      m_box1.append(m_separator1);\n\n      m_Label2.set_text(\"Gtk::Box(Gtk::Orientation::HORIZONTAL, 0); set_homogeneous(false);\");\n      m_Label2.set_halign(Gtk::Align::START);\n      m_Label2.set_valign(Gtk::Align::START);\n      m_box1.append(m_Label2);\n\n      pPackBox = Gtk::make_managed<PackBox>(false, 0, false, Gtk::Align::FILL, 10);\n      m_box1.append(*pPackBox);\n\n      pPackBox = Gtk::make_managed<PackBox>(false, 0, true, Gtk::Align::FILL, 10);\n      m_box1.append(*pPackBox);\n\n      m_box1.append(m_separator2);\n\n      break;\n    }\n\n    case 3:\n    {\n      // This demonstrates the ability to use Gtk::Align::END to\n      // right justify widgets.  First, we create a new box as before.\n      auto pPackBox = Gtk::make_managed<PackBox>();\n\n      // create the label that will be put at the end.\n      m_Label1.set_text(\"end\");\n\n      // pack it using Gtk::Align::END, so it is put on the right side\n      // of the PackBox.\n      m_Label1.set_halign(Gtk::Align::END);\n      m_Label1.set_hexpand(true);\n      pPackBox->append(m_Label1);\n\n      m_box1.append(*pPackBox);\n\n      // This explicitly sets the separator to 700 pixels wide by 5 pixels\n      // high.  This is so the hbox we created will also be 700 pixels wide,\n      // and the \"end\" label will be separated from the other labels in the\n      // hbox.  Otherwise, all the widgets in the hbox would be packed as\n      // close together as possible.\n      m_separator1.set_size_request(700, 5);\n\n      // pack the separator into the vbox.\n      m_box1.append(m_separator1);\n\n      break;\n    }\n\n    default:\n    {\n      std::cerr << \"Unexpected command-line option.\" << std::endl;\n      break;\n    }\n  }\n\n  // Connect the signal to hide the window:\n  m_buttonQuit.signal_clicked().connect( sigc::mem_fun(*this,\n              &ExampleWindow::on_button_quit_clicked) );\n\n  // pack the button into the quitbox.\n  m_boxQuit.append(m_buttonQuit);\n  m_buttonQuit.set_hexpand(true);\n  m_buttonQuit.set_halign(Gtk::Align::CENTER);\n  m_box1.append(m_boxQuit);\n\n  // pack the vbox (box1) which now contains all our widgets, into the\n  // main window.\n  set_child(m_box1);\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_button_quit_clicked()\n{\n  close();\n}",
+   "sha": "5cad0b9a7955ad73",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n#include <iostream>\n#include <cstdlib>\n\n#define GTK_APPLICATION_RECEIVES_COMMAND_LINE_ARGUMENTS 0\n\n#if GTK_APPLICATION_RECEIVES_COMMAND_LINE_ARGUMENTS\nnamespace\n{\nint on_command_line(const Glib::RefPtr<Gio::ApplicationCommandLine>& command_line,\n                    Glib::RefPtr<Gtk::Application>& app)\n{\n  int argc = 0;\n  char** argv = command_line->get_arguments(argc);\n\n  for (int i = 0; i < argc; ++i)\n    std::cout << \"argv[\" << i << \"] = \" << argv[i] << std::endl;\n\n  app->activate(); // Without activate() the window won't be shown.\n  return EXIT_SUCCESS;\n}\n} // anonymous namespace\n#endif\n\n\nint main(int argc, char *argv[])\n{\n  if (argc != 2)\n  {\n    std::cerr << \"Usage: example <num>, where <num> is 1, 2, or 3.\" << std::endl;\n    return EXIT_FAILURE;\n  }\n\n  int argc1 = argc;\n\n#if GTK_APPLICATION_RECEIVES_COMMAND_LINE_ARGUMENTS\n  // The Gio::Application::Flags::HANDLES_COMMAND_LINE flag and the\n  // on_command_line() signal handler are not necessary. This program is simpler\n  // without them, and with argc = 1 in the call to Gtk::Application::make_window_and_run().\n  // They are included to show a program with Gio::Application::Flags::HANDLES_COMMAND_LINE.\n  // Gio::Application::Flags::NON_UNIQUE makes it possible to run several instances of\n  // this application simultaneously.\n  auto app = Gtk::Application::create(\n    \"org.gtkmm.example\", Gio::Application::Flags::HANDLES_COMMAND_LINE | Gio::Application::Flags::NON_UNIQUE);\n\n  // Note after = false.\n  // Only one signal handler is invoked. This signal handler must run before\n  // the default signal handler, or else it won't run at all.\n  app->signal_command_line().connect(\n    [&app](const auto& command_line)\n    { return on_command_line(command_line, app); }, false);\n#else\n  // Gio::Application::Flags::NON_UNIQUE makes it possible to run several instances of\n  // this application simultaneously.\n  argc1 = 1; // Don't give the command line arguments to Gtk::Application.\n  auto app = Gtk::Application::create(\"org.gtkmm.example\", Gio::Application::Flags::NON_UNIQUE);\n#endif\n\n  // Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc1, argv, std::atoi(argv[1]));\n}",
+   "sha": "3af4cbc586ae6d04",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"packbox.h\"\n#include <map>\n\nnamespace\n{\n  const std::map<Gtk::Align, Glib::ustring> align_string = {\n    {Gtk::Align::FILL, \"Gtk::Align::FILL\"},\n    {Gtk::Align::START, \"Gtk::Align::START\"},\n    {Gtk::Align::END, \"Gtk::Align::END\"},\n    {Gtk::Align::CENTER, \"Gtk::Align::CENTER\"},\n    {Gtk::Align::BASELINE, \"Gtk::Align::BASELINE\"},\n  };\n}\n\nPackBox::PackBox(bool homogeneous, int spacing, bool expand, Gtk::Align align, int margin)\n: Gtk::Box(Gtk::Orientation::HORIZONTAL, spacing)\n{\n  set_homogeneous(homogeneous);\n\n  m_buttons[0].set_label(\"box.append(button);\");\n  m_buttons[1].set_label(\"expand=\" + Glib::ustring(expand ? \"true\" : \"false\"));\n  m_buttons[2].set_label(align_string.at(align));\n  m_buttons[3].set_label(\"margin=\" + Glib::ustring::format(margin));\n\n  for (auto& button : m_buttons)\n  {\n    append(button);\n    button.set_hexpand(expand);\n    button.set_halign(align);\n    button.set_margin_start(margin);\n    button.set_margin_end(margin);\n  }\n}",
+   "sha": "108d234d383e9e2a",
+   "file": "packbox.cc",
+   "zh": ""
+  },
+  {
    "type": "heading",
    "text": "Grid",
    "sha": "0d7d12ac624c66e6",
@@ -298,6 +355,28 @@
    "zh": ""
   },
   {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprivate:\n  // Signal handlers:\n  void on_button_quit();\n  void on_button_numbered(const Glib::ustring& data);\n\n  // Child widgets:\n  Gtk::Grid m_grid;\n  Gtk::Button m_button_1, m_button_2, m_button_quit;\n};\n\n#endif /* GTKMM_EXAMPLEWINDOW_H */",
+   "sha": "9ac94029dce77e28",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/grid",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include <iostream>\n#include \"examplewindow.h\"\n\nExampleWindow::ExampleWindow()\n: m_button_1(\"button 1\"),\n  m_button_2(\"button 2\"),\n  m_button_quit(\"Quit\")\n{\n  set_title(\"Gtk::Grid\");\n\n  m_grid.set_margin(12);\n  set_child(m_grid);\n\n  m_grid.attach(m_button_1, 0, 0);\n  m_grid.attach(m_button_2, 1, 0);\n  m_grid.attach_next_to(m_button_quit, m_button_1, Gtk::PositionType::BOTTOM, 2, 1);\n\n  m_button_1.signal_clicked().connect(\n    sigc::bind( sigc::mem_fun(*this, &ExampleWindow::on_button_numbered), \"button 1\") );\n  m_button_2.signal_clicked().connect(\n    sigc::bind( sigc::mem_fun(*this, &ExampleWindow::on_button_numbered), \"button 2\") );\n\n  m_button_quit.signal_clicked().connect(sigc::mem_fun(*this,\n    &ExampleWindow::on_button_quit) );\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_button_quit()\n{\n  close();\n}\n\nvoid\nExampleWindow::on_button_numbered(const Glib::ustring& data)\n{\n  std::cout << data << \" was pressed\" << std::endl;\n}",
+   "sha": "11f4712bf738649c",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  // Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "3ed38888ef503ca2",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
    "type": "heading",
    "text": "Notebook",
    "sha": "0dec07abf92dbe72",
@@ -344,6 +423,28 @@
    "text": "Notebook",
    "ref": "figures/notebook.png",
    "sha": "0dec07abf92dbe72-1",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_button_quit();\n  void on_notebook_switch_page(Gtk::Widget* page, guint page_num);\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n  Gtk::Notebook m_Notebook;\n  Gtk::Label m_Label1, m_Label2;\n\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "3344ea32f7446fe8",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/notebook/",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include <iostream>\n#include \"examplewindow.h\"\n\nExampleWindow::ExampleWindow()\n: m_VBox(Gtk::Orientation::VERTICAL),\n  m_Label1(\"Contents of tab 1\"),\n  m_Label2(\"Contents of tab 2\"),\n  m_Button_Quit(\"Quit\")\n{\n  set_title(\"Gtk::Notebook example\");\n  set_default_size(400, 200);\n\n  m_VBox.set_margin(10);\n  set_child(m_VBox);\n\n  //Add the Notebook, with the button underneath:\n  m_Notebook.set_margin(10);\n  m_Notebook.set_expand();\n  m_VBox.append(m_Notebook);\n  m_VBox.append(m_ButtonBox);\n\n  m_ButtonBox.append(m_Button_Quit);\n  m_Button_Quit.set_hexpand(true);\n  m_Button_Quit.set_halign(Gtk::Align::CENTER);\n  m_Button_Quit.signal_clicked().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_button_quit) );\n\n  //Add the Notebook pages:\n  m_Notebook.append_page(m_Label1, \"First\");\n  m_Notebook.append_page(m_Label2, \"Second\");\n\n  m_Notebook.signal_switch_page().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_notebook_switch_page) );\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_button_quit()\n{\n  close();\n}\n\nvoid ExampleWindow::on_notebook_switch_page(Gtk::Widget* /* page */, guint page_num)\n{\n  std::cout << \"Switched to tab with index \" << page_num << std::endl;\n\n  //You can also use m_Notebook.get_current_page() to get this index.\n}",
+   "sha": "2175e5c00790b017",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee",
+   "file": "main.cc",
    "zh": ""
   },
   {
@@ -406,6 +507,42 @@
    "text": "Assistant",
    "ref": "figures/assistant.png",
    "sha": "391e405152779acc-1",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEASSISTANT_H\n#define GTKMM_EXAMPLEASSISTANT_H\n\n#include <gtkmm.h>\n\nclass ExampleAssistant : public Gtk::Assistant\n{\npublic:\n  ExampleAssistant();\n  virtual ~ExampleAssistant();\n\n  void get_result(bool& check_state, Glib::ustring& entry_text);\n\nprivate:\n  // Signal handlers:\n  void on_assistant_apply();\n  void on_assistant_cancel();\n  void on_assistant_close();\n  void on_assistant_prepare(Gtk::Widget* widget);\n  void on_entry_changed();\n\n  // Member functions:\n  void print_status();\n\n  // Child widgets:\n  Gtk::Box m_box;\n  Gtk::Label m_label1, m_label2;\n  Gtk::CheckButton m_check;\n  Gtk::Entry m_entry;\n};\n\n#endif /* GTKMM_EXAMPLEASSISTANT_H */",
+   "sha": "b8aaebcbe890fc55",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/assistant/",
+   "file": "exampleassistant.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include \"exampleassistant.h\"\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprivate:\n  // Signal handlers:\n  void on_button_clicked();\n  void on_assistant_apply();\n\n  // Child widgets:\n  Gtk::Grid m_grid;\n  Gtk::Button m_button;\n  Gtk::Label m_label1, m_label2;\n  Gtk::CheckButton m_check;\n  Gtk::Entry m_entry;\n  ExampleAssistant m_assistant;\n};\n\n#endif /* GTKMM_EXAMPLEWINDOW_H */",
+   "sha": "fa518624a45a2724",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include <iostream>\n#include \"exampleassistant.h\"\n\nExampleAssistant::ExampleAssistant()\n: m_box(Gtk::Orientation::HORIZONTAL, 12),\n  m_label1(\"Type text to allow the assistant to continue:\"),\n  m_label2(\"Confirmation page\"),\n  m_check(\"Optional extra information\")\n{\n  set_title(\"Gtk::Assistant example\");\n  set_default_size(400, 200);\n\n  m_box.append(m_label1);\n  m_box.append(m_entry);\n  m_label1.set_wrap();\n  m_label1.set_valign(Gtk::Align::CENTER);\n  m_entry.set_valign(Gtk::Align::CENTER);\n\n  append_page(m_box);\n  append_page(m_check);\n  append_page(m_label2);\n\n  set_page_title(*get_nth_page(0), \"Page 1\");\n  set_page_title(*get_nth_page(1), \"Page 2\");\n  set_page_title(*get_nth_page(2), \"Confirmation\");\n\n  set_page_complete(m_check, true);\n  set_page_complete(m_label2, true);\n\n  set_page_type(m_box, Gtk::AssistantPage::Type::INTRO);\n  set_page_type(m_label2, Gtk::AssistantPage::Type::CONFIRM);\n\n  signal_apply().connect(sigc::mem_fun(*this,\n    &ExampleAssistant::on_assistant_apply));\n  signal_cancel().connect(sigc::mem_fun(*this,\n    &ExampleAssistant::on_assistant_cancel));\n  signal_close().connect(sigc::mem_fun(*this,\n    &ExampleAssistant::on_assistant_close));\n  signal_prepare().connect(sigc::mem_fun(*this,\n    &ExampleAssistant::on_assistant_prepare));\n\n  m_entry.signal_changed().connect(sigc::mem_fun(*this,\n    &ExampleAssistant::on_entry_changed));\n}\n\nExampleAssistant::~ExampleAssistant()\n{\n}\n\nvoid ExampleAssistant::get_result(bool& check_state, Glib::ustring& entry_text)\n{\n  check_state = m_check.get_active();\n  entry_text = m_entry.get_text();\n}\n\nvoid ExampleAssistant::on_assistant_apply()\n{\n  std::cout << \"Apply was clicked\";\n  print_status();\n}\n\nvoid ExampleAssistant::on_assistant_cancel()\n{\n  std::cout << \"Cancel was clicked\";\n  print_status();\n  set_visible(false);\n}\n\nvoid ExampleAssistant::on_assistant_close()\n{\n  std::cout << \"Assistant was closed\";\n  print_status();\n  set_visible(false);\n}\n\nvoid ExampleAssistant::on_assistant_prepare(Gtk::Widget* /* widget */)\n{\n  set_title(Glib::ustring::compose(\"Gtk::Assistant example (Page %1 of %2)\",\n    get_current_page() + 1, get_n_pages()));\n}\n\nvoid ExampleAssistant::on_entry_changed()\n{\n  // The page is only complete if the entry contains text.\n  if(m_entry.get_text_length())\n    set_page_complete(m_box, true);\n  else\n    set_page_complete(m_box, false);\n}\n\nvoid ExampleAssistant::print_status()\n{\n  std::cout << \", entry contents: \\\"\" << m_entry.get_text()\n    << \"\\\", checkbutton status: \" << m_check.get_active() << std::endl;\n}",
+   "sha": "ab59d1e6bf9e3678",
+   "file": "exampleassistant.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include \"exampleassistant.h\"\n\nExampleWindow::ExampleWindow()\n: m_button(\"Show the assistant\"),\n  m_label1(\"State of assistant checkbutton:\", Gtk::Align::START, Gtk::Align::CENTER),\n  m_label2(\"Contents of assistant entry:\", Gtk::Align::START, Gtk::Align::CENTER)\n{\n  set_title(\"Gtk::Assistant example\");\n\n  m_grid.set_row_homogeneous(true);\n  m_grid.set_column_spacing(5);\n  m_grid.set_margin(12);\n\n  m_grid.attach(m_button, 0, 0, 2, 1);\n  m_button.set_hexpand(true);\n  m_button.set_valign(Gtk::Align::CENTER);\n\n  m_grid.attach(m_label1, 0, 1, 1, 1);\n\n  m_grid.attach(m_label2, 0, 2, 1, 1);\n\n  m_grid.attach(m_check, 1, 1, 1, 1);\n  m_check.set_halign(Gtk::Align::START);\n\n  m_grid.attach(m_entry, 1, 2, 1, 1);\n  m_entry.set_hexpand(true);\n\n  set_child(m_grid);\n\n  m_button.signal_clicked().connect(sigc::mem_fun(*this,\n    &ExampleWindow::on_button_clicked));\n  m_assistant.signal_apply().connect(sigc::mem_fun(*this,\n    &ExampleWindow::on_assistant_apply));\n\n  m_check.set_sensitive(false);\n  m_entry.set_sensitive(false);\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_assistant_apply()\n{\n  bool check_state;\n  Glib::ustring entry_text;\n\n  m_assistant.get_result(check_state, entry_text);\n  m_check.set_active(check_state);\n  m_entry.set_text(entry_text);\n}\n\nvoid ExampleWindow::on_button_clicked()\n{\n  m_assistant.set_visible(true);\n}",
+   "sha": "bf8500c95af1216d",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  // Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "3ed38888ef503ca2-1",
+   "file": "main.cc",
    "zh": ""
   },
   {

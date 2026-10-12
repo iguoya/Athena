@@ -100,6 +100,42 @@
    "ref": "figures/custom_widget.png",
    "sha": "d23e918bd35d4cc3",
    "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n#include \"mywidget.h\"\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_button_quit();\n\n  //Child widgets:\n  Gtk::Grid m_Grid;\n  MyWidget m_MyWidgetS1;\n  MyWidget m_MyWidgetS2;\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "67bbc9c22f540393",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/custom/custom_widget/",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_CUSTOM_WIDGET_MYWIDGET_H\n#define GTKMM_CUSTOM_WIDGET_MYWIDGET_H\n\n#include <gtkmm/widget.h>\n#include <gtkmm/border.h>\n#include <gdkmm/rgba.h>\n\nclass MyWidget : public Gtk::Widget\n{\npublic:\n  MyWidget();\n  ~MyWidget() override;\n\nprotected:\n  // Overrides:\n  Gtk::SizeRequestMode get_request_mode_vfunc() const override;\n  void measure_vfunc(Gtk::Orientation orientation, int for_size, int& minimum, int& natural,\n    int& minimum_baseline, int& natural_baseline) const override;\n  void on_map() override;\n  void on_unmap() override;\n  void on_realize() override;\n  void on_unrealize() override;\n  void snapshot_vfunc(const Glib::RefPtr<Gtk::Snapshot>& snapshot) override;\n\n  Gtk::Border m_padding;\n  Gdk::RGBA m_foreground{0.0, 0.0, 1.0};\n  Gdk::RGBA m_background{1.0, 0.0, 0.0};\n};\n\n#endif //GTKMM_CUSTOM_WIDGET_MYWIDGET_H",
+   "sha": "21eaa1c1768011cb",
+   "file": "mywidget.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n\nExampleWindow::ExampleWindow()\n: m_Button_Quit(\"Quit\")\n{\n  set_title(\"Custom Widget example\");\n  set_default_size(600, 400);\n\n  m_Grid.set_margin(6);\n  m_Grid.set_row_spacing(10);\n  m_Grid.set_column_spacing(10);\n\n  set_child(m_Grid);\n\n  m_Grid.attach(m_MyWidgetS1, 0, 0);\n  m_Grid.attach(m_MyWidgetS2, 1, 1);\n\n  m_Grid.attach(m_ButtonBox, 0, 2, 2, 1);\n\n  m_ButtonBox.append(m_Button_Quit);\n  m_ButtonBox.set_margin(6);\n  m_Button_Quit.set_hexpand(true);\n  m_Button_Quit.set_halign(Gtk::Align::END);\n  m_Button_Quit.signal_clicked().connect( sigc::mem_fun(*this, &ExampleWindow::on_button_quit) );\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_button_quit()\n{\n  close();\n}",
+   "sha": "85c66879a48d8ed8",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"mywidget.h\"\n#include <gdkmm/general.h>  // for Gdk::Cairo:: functions\n#include <gtkmm/snapshot.h>\n\nMyWidget::MyWidget()\n{\n  // Expand, if there is extra space.\n  set_expand(true);\n\n  m_padding.set_left(5);\n  m_padding.set_right(15);\n  m_padding.set_top(10);\n  m_padding.set_bottom(20);\n}\n\nMyWidget::~MyWidget()\n{\n}\n\nGtk::SizeRequestMode MyWidget::get_request_mode_vfunc() const\n{\n  //Accept the default value supplied by the base class.\n  return Gtk::Widget::get_request_mode_vfunc();\n}\n\n//Discover the total amount of minimum space and natural space needed by\n//this widget.\n//Let's make this simple example widget always need minimum 60 by 50 and\n//natural 100 by 70.\nvoid MyWidget::measure_vfunc(Gtk::Orientation orientation, int /* for_size */,\n  int& minimum, int& natural, int& minimum_baseline, int& natural_baseline) const\n{\n  if (orientation == Gtk::Orientation::HORIZONTAL)\n  {\n    minimum = 60;\n    natural = 100;\n  }\n  else\n  {\n    minimum = 50;\n    natural = 70;\n  }\n\n  // Don't use baseline alignment.\n  minimum_baseline = -1;\n  natural_baseline = -1;\n}\n\nvoid MyWidget::on_map()\n{\n  //Call base class:\n  Gtk::Widget::on_map();\n}\n\nvoid MyWidget::on_unmap()\n{\n  //Call base class:\n  Gtk::Widget::on_unmap();\n}\n\nvoid MyWidget::on_realize()\n{\n  //Call base class:\n  Gtk::Widget::on_realize();\n}\n\nvoid MyWidget::on_unrealize()\n{\n  //Call base class:\n  Gtk::Widget::on_unrealize();\n}\n\nvoid MyWidget::snapshot_vfunc(const Glib::RefPtr<Gtk::Snapshot>& snapshot)\n{\n  const auto allocation = get_allocation();\n  const Gdk::Rectangle rect(0, 0, allocation.get_width(), allocation.get_height());\n\n  // Create a cairo context to draw on.\n  auto cr = snapshot->append_cairo(rect);\n\n  // paint the background\n  Gdk::Cairo::set_source_rgba(cr, m_background);\n  Gdk::Cairo::add_rectangle_to_path(cr, rect);\n  cr->fill();\n\n  // draw the foreground\n  const double scale_x = 0.001 * (allocation.get_width() - m_padding.get_left() - m_padding.get_right());\n  const double scale_y = 0.001 * (allocation.get_height() - m_padding.get_top() - m_padding.get_bottom());\n  Gdk::Cairo::set_source_rgba(cr, m_foreground);\n  cr->translate(m_padding.get_left(), m_padding.get_top());\n  cr->rectangle(0.0, 0.0, 1000.0*scale_x, 1000.0*scale_y);\n  cr->move_to(155.*scale_x, 165.*scale_y);\n  cr->line_to(155.*scale_x, 838.*scale_y);\n  cr->line_to(265.*scale_x, 900.*scale_y);\n  cr->line_to(849.*scale_x, 564.*scale_y);\n  cr->line_to(849.*scale_x, 438.*scale_y);\n  cr->line_to(265.*scale_x, 100.*scale_y);\n  cr->line_to(155.*scale_x, 165.*scale_y);\n  cr->move_to(265.*scale_x, 100.*scale_y);\n  cr->line_to(265.*scale_x, 652.*scale_y);\n  cr->line_to(526.*scale_x, 502.*scale_y);\n  cr->move_to(369.*scale_x, 411.*scale_y);\n  cr->line_to(633.*scale_x, 564.*scale_y);\n  cr->move_to(369.*scale_x, 286.*scale_y);\n  cr->line_to(369.*scale_x, 592.*scale_y);\n  cr->move_to(369.*scale_x, 286.*scale_y);\n  cr->line_to(849.*scale_x, 564.*scale_y);\n  cr->move_to(633.*scale_x, 564.*scale_y);\n  cr->line_to(155.*scale_x, 838.*scale_y);\n  cr->stroke();\n}",
+   "sha": "999c7dfca2c3fb34",
+   "file": "mywidget.cc",
+   "zh": ""
   }
  ]
 }

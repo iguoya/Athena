@@ -35,6 +35,28 @@
    "zh": "这与前一小节的方法极其类似，所以在此不再进行过多的解释。以下是个小例子："
   },
   {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLE_IDLEEXAMPLE_H\n#define GTKMM_EXAMPLE_IDLEEXAMPLE_H\n\n#include <gtkmm.h>\n#include <iostream>\n\nclass IdleExample : public Gtk::Window\n{\npublic:\n  IdleExample();\n\nprotected:\n  // Signal Handlers:\n  bool on_timer();\n  bool on_idle();\n  void on_button_clicked();\n\n  // Member data:\n  Gtk::Box m_Box;\n  Gtk::Button m_ButtonQuit;\n  Gtk::ProgressBar m_ProgressBar_c;\n  Gtk::ProgressBar m_ProgressBar_d;\n};\n\n#endif // GTKMM_EXAMPLE_IDLEEXAMPLE_H",
+   "sha": "34e35761cc0d0a32",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/idle/",
+   "file": "idleexample.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"idleexample.h\"\n\nIdleExample::IdleExample() :\n  m_Box(Gtk::Orientation::VERTICAL, 5),\n  m_ButtonQuit(\"_Quit\", true)\n{\n  m_Box.set_margin(5);\n\n  // Put buttons into container\n\n  // Adding a few widgets:\n  set_child(m_Box);\n  m_Box.append(*Gtk::make_managed<Gtk::Label>(\"Formatting Windows drive C:\"));\n  m_Box.append(*Gtk::make_managed<Gtk::Label>(\"100 MB\"));\n  m_Box.append(m_ProgressBar_c);\n  m_ProgressBar_c.set_expand();\n\n  m_Box.append(*Gtk::make_managed<Gtk::Label>(\"\"));\n\n  m_Box.append(*Gtk::make_managed<Gtk::Label>(\"Formatting Windows drive D:\"));\n  m_Box.append(*Gtk::make_managed<Gtk::Label>(\"5000 MB\"));\n  m_Box.append(m_ProgressBar_d);\n  m_ProgressBar_d.set_expand();\n\n  auto hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL,10);\n  m_Box.append(*hbox);\n  hbox->append(m_ButtonQuit);\n  m_ButtonQuit.set_expand();\n  m_ButtonQuit.set_halign(Gtk::Align::END);\n  m_ButtonQuit.set_valign(Gtk::Align::END);\n\n  // Connect the signal handlers:\n  m_ButtonQuit.signal_clicked().connect( sigc::mem_fun(*this,\n              &IdleExample::on_button_clicked) );\n\n  // formatting drive c in timeout signal handler - called once every 50ms\n  Glib::signal_timeout().connect( sigc::mem_fun(*this, &IdleExample::on_timer),\n          50 );\n\n  // formatting drive d in idle signal handler - called as quickly as possible\n  Glib::signal_idle().connect( sigc::mem_fun(*this, &IdleExample::on_idle) );\n}\n\nvoid IdleExample::on_button_clicked()\n{\n  close();\n}\n\n// this timer callback function is executed once every 50ms (set in connection\n// above).  Use timeouts when speed is not critical. (ie periodically updating\n// something).\nbool IdleExample::on_timer()\n{\n  double value = m_ProgressBar_c.get_fraction();\n\n  // Update progressbar 1/500th each time:\n  m_ProgressBar_c.set_fraction(value + 0.002);\n\n  return value < 0.99;  // return false when done\n}\n\n\n// This idle callback function is executed as often as possible, hence it is\n// ideal for processing intensive tasks.\nbool IdleExample::on_idle()\n{\n  double value = m_ProgressBar_d.get_fraction();\n\n  // Update progressbar 1/5000th each time:\n  m_ProgressBar_d.set_fraction(value + 0.0002);\n\n  return value < 0.99;  // return false when done\n}",
+   "sha": "6bc67fee3744f672",
+   "file": "idleexample.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"idleexample.h\"\n#include <gtkmm/application.h>\n\nint main (int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  return app->make_window_and_run<IdleExample>(argc, argv);\n}",
+   "sha": "c48efbc544a1b2c5",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
    "type": "para",
    "text": "This example points out the difference of idle and timeout methods a\nlittle. If you need methods that are called periodically, and speed\nis not very important, then you want timeout methods. If\nyou want methods that are called as often as possible (like\ncalculating a fractal in background), then use idle methods.",
    "sha": "e6bad7ae0cf0e6b4",

@@ -24,6 +24,60 @@
    "zh": ""
   },
   {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n// This file is part of the printing/simple and printing/advanced examples\n\n#include <gtkmm.h>\n\nclass PrintFormOperation;\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow(const Glib::RefPtr<Gtk::Application>& app);\n  virtual ~ExampleWindow();\n\nprotected:\n\n  void build_main_menu(const Glib::RefPtr<Gtk::Application>& app);\n\n  void print_or_preview(Gtk::PrintOperation::Action print_action);\n\n  //PrintOperation signal handlers.\n  //We handle these so can get necessary information to update the UI or print settings.\n  //Our derived PrintOperation class also overrides some default signal handlers.\n  void on_printoperation_status_changed();\n  void on_printoperation_done(Gtk::PrintOperation::Result result);\n\n  //Action signal handlers:\n  void on_menu_file_new();\n  void on_menu_file_page_setup();\n  void on_menu_file_print_preview();\n  void on_menu_file_print();\n  void on_menu_file_quit();\n\n  //Printing-related objects:\n  Glib::RefPtr<Gtk::PageSetup> m_refPageSetup;\n  Glib::RefPtr<Gtk::PrintSettings> m_refSettings;\n  Glib::RefPtr<PrintFormOperation> m_refPrintFormOperation;\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n  Gtk::Grid m_Grid;\n\n  Gtk::Label m_NameLabel;\n  Gtk::Entry m_NameEntry;\n\n  Gtk::Label m_SurnameLabel;\n  Gtk::Entry m_SurnameEntry;\n\n  Gtk::Label m_CommentsLabel;\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::TextView m_TextView;\n\n  Glib::RefPtr<Gtk::TextBuffer> m_refTextBuffer;\n\n  Gtk::Label m_Statusbar;\n\n  Glib::RefPtr<Gtk::Builder> m_refBuilder;\n\n  Glib::RefPtr<Gtk::AlertDialog> m_refDialog;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "bb373f88704be2bd",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/printing/simple/",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_PRINT_FORM_OPERATION_H\n#define GTKMM_PRINT_FORM_OPERATION_H\n\n#include <gtkmm.h>\n#include <pangomm.h>\n#include <vector>\n\n//We derive our own class from PrintOperation,\n//so we can put the actual print implementation here.\nclass PrintFormOperation : public Gtk::PrintOperation\n{\n public:\n  static Glib::RefPtr<PrintFormOperation> create();\n  virtual ~PrintFormOperation();\n\n  void set_name(const Glib::ustring& name) { m_Name = name; }\n  void set_comments(const Glib::ustring& comments) { m_Comments = comments; }\n\n protected:\n  PrintFormOperation();\n\n  //PrintOperation default signal handler overrides:\n  void on_begin_print(const Glib::RefPtr<Gtk::PrintContext>& context) override;\n  void on_draw_page(const Glib::RefPtr<Gtk::PrintContext>& context, int page_nr) override;\n\n  Glib::ustring m_Name;\n  Glib::ustring m_Comments;\n  Glib::RefPtr<Pango::Layout> m_refLayout;\n  std::vector<int> m_PageBreaks; // line numbers where a page break occurs\n};\n\n#endif // GTKMM_PRINT_FORM_OPERATION_H",
+   "sha": "879f6528f2f0608f",
+   "file": "printformoperation.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include \"printformoperation.h\"\n#include <iostream>\n\nExampleWindow::ExampleWindow(const Glib::RefPtr<Gtk::Application>& app)\n: m_VBox(Gtk::Orientation::VERTICAL),\n  m_NameLabel(\"Name\"),\n  m_SurnameLabel(\"Surname\"),\n  m_CommentsLabel(\"Comments\")\n{\n  m_refPageSetup = Gtk::PageSetup::create();\n  m_refSettings = Gtk::PrintSettings::create();\n\n  set_title(\"gtkmm Printing Example\");\n  set_default_size(400, 300);\n\n  set_child(m_VBox);\n\n  build_main_menu(app);\n\n  m_VBox.append(m_Grid);\n\n  //Arrange the widgets inside the grid:\n  m_Grid.set_expand(true);\n  m_Grid.set_row_spacing(5);\n  m_Grid.set_column_spacing(5);\n  m_Grid.attach(m_NameLabel, 0, 0);\n  m_Grid.attach(m_NameEntry, 1, 0);\n\n  m_Grid.attach(m_SurnameLabel, 0, 1);\n  m_Grid.attach(m_SurnameEntry, 1, 1);\n\n  //Add the TextView, inside a ScrolledWindow:\n  m_ScrolledWindow.set_child(m_TextView);\n\n  //Only show the scrollbars when they are necessary:\n  m_ScrolledWindow.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);\n\n  m_Grid.attach(m_CommentsLabel, 0, 2);\n  m_Grid.attach(m_ScrolledWindow, 1, 2);\n  m_ScrolledWindow.set_expand(true);\n\n  m_refTextBuffer = Gtk::TextBuffer::create();\n  m_TextView.set_buffer(m_refTextBuffer);\n\n  m_Statusbar.set_hexpand(true);\n  m_VBox.append(m_Statusbar);\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::build_main_menu(const Glib::RefPtr<Gtk::Application>& app)\n{\n  //Create actions for menus and toolbars:\n  auto refActionGroup = Gio::SimpleActionGroup::create();\n\n  //File menu:\n  refActionGroup->add_action(\"new\",\n    sigc::mem_fun(*this, &ExampleWindow::on_menu_file_new));\n\n  refActionGroup->add_action(\"pagesetup\",\n    sigc::mem_fun(*this, &ExampleWindow::on_menu_file_page_setup));\n\n  refActionGroup->add_action(\"printpreview\",\n    sigc::mem_fun(*this, &ExampleWindow::on_menu_file_print_preview));\n\n  refActionGroup->add_action(\"print\",\n    sigc::mem_fun(*this, &ExampleWindow::on_menu_file_print));\n\n  refActionGroup->add_action(\"quit\",\n    sigc::mem_fun(*this, &ExampleWindow::on_menu_file_quit));\n\n  insert_action_group(\"example\", refActionGroup);\n\n  // When the menubar is a child of a Gtk::Window, keyboard accelerators are not\n  // automatically fetched from the Gio::Menu.\n  // See the examples/book/menus/main_menu example for an alternative way of\n  // adding the menubar when using Gtk::ApplicationWindow.\n  app->set_accel_for_action(\"example.new\", \"<Primary>n\");\n  app->set_accel_for_action(\"example.print\", \"<Primary>p\");\n  app->set_accel_for_action(\"example.quit\", \"<Primary>q\");\n\n  m_refBuilder = Gtk::Builder::create();\n\n  // Layout the actions in a menubar:\n  Glib::ustring ui_menu_info =\n    \"<interface>\"\n    \"  <menu id='menu-example'>\"\n    \"    <submenu>\"\n    \"      <attribute name='label' translatable='yes'>_File</attribute>\"\n    \"      ",
+   "sha": "f0bc6b3a492abbdd",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "",
+   "sha": "e3b0c44298fc1c14",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "",
+   "sha": "e3b0c44298fc1c14-1",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "",
+   "sha": "e3b0c44298fc1c14-2",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char* argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  // Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv, app);\n}",
+   "sha": "2b0bee512436f25b",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"printformoperation.h\"\n\nPrintFormOperation::PrintFormOperation()\n{\n}\n\nPrintFormOperation::~PrintFormOperation()\n{\n}\n\nGlib::RefPtr<PrintFormOperation> PrintFormOperation::create()\n{\n  return Glib::make_refptr_for_instance<PrintFormOperation>(new PrintFormOperation());\n}\n\nvoid PrintFormOperation::on_begin_print(\n        const Glib::RefPtr<Gtk::PrintContext>& print_context)\n{\n  //Create and set up a Pango layout for PrintData based on the passed\n  //PrintContext: We then use this to calculate the number of pages needed, and\n  //the lines that are on each page.\n  m_refLayout = print_context->create_pango_layout();\n\n  Pango::FontDescription font_desc(\"sans 12\");\n  m_refLayout->set_font_description(font_desc);\n\n  const double width = print_context->get_width();\n  const double height = print_context->get_height();\n\n  m_refLayout->set_width(static_cast<int>(width * Pango::SCALE));\n\n  //Set and mark up the text to print:\n  Glib::ustring marked_up_form_text;\n  marked_up_form_text += \"<b>Name</b>: \" + m_Name + \"\\n\\n\";\n  marked_up_form_text += \"<b>Comments</b>: \" + m_Comments;\n\n  m_refLayout->set_markup(marked_up_form_text);\n\n  //Set the number of pages to print by determining the line numbers\n  //where page breaks occur:\n  const int line_count = m_refLayout->get_line_count();\n\n  Glib::RefPtr<Pango::LayoutLine> layout_line;\n  double page_height = 0;\n\n  for (int line = 0; line < line_count; ++line)\n  {\n    Pango::Rectangle ink_rect, logical_rect;\n\n    layout_line = m_refLayout->get_line(line);\n    layout_line->get_extents(ink_rect, logical_rect);\n\n    const double line_height = logical_rect.get_height() / 1024.0;\n\n    if (page_height + line_height > height)\n    {\n      m_PageBreaks.push_back(line);\n      page_height = 0;\n    }\n\n    page_height += line_height;\n  }\n\n  set_n_pages(m_PageBreaks.size() + 1);\n}\n\nvoid PrintFormOperation::on_draw_page(\n        const Glib::RefPtr<Gtk::PrintContext>& print_context, int page_nr)\n{\n  //Decide which lines we need to print in order to print the specified page:\n  int start_page_line = 0;\n  int end_page_line = 0;\n\n  if(page_nr == 0)\n  {\n    start_page_line = 0;\n  }\n  else\n  {\n    start_page_line = m_PageBreaks[page_nr - 1];\n  }\n\n  if(page_nr < static_cast<int>(m_PageBreaks.size()))\n  {\n    end_page_line = m_PageBreaks[page_nr];\n  }\n  else\n  {\n    end_page_line = m_refLayout->get_line_count();\n  }\n\n  //Get a Cairo Context, which is used as a drawing board:\n  Cairo::RefPtr<Cairo::Context> cairo_ctx = print_context->get_cairo_context();\n\n  //We'll use black letters:\n  cairo_ctx->set_source_rgb(0, 0, 0);\n\n  //Render Pango LayoutLines over the Cairo context:\n  auto iter = m_refLayout->get_iter();\n\n  double start_pos = 0;\n  int line_index = 0;\n\n  do\n  {\n    if(line_index >= start_page_line)\n    {\n      auto layout_line = iter.get_line();\n      auto logical_rect = iter.get_line_logical_extents();\n      int baseline = iter.get_baseline();\n\n      if (line_index == start_page_line)\n      {\n        start_pos = logical_rect.get_y() / 1024.0;\n      }\n\n      cairo_ctx->move_to(logical_rect.get_x() / 1024.0,\n        baseline / 1024.0 - start_pos);\n\n      layout_line->show_in_cairo_context(cairo_ctx);\n    }\n\n    line_index++;\n  }\n  while(line_index < end_page_line && iter.next_line());\n}",
+   "sha": "bff85f1ef67b0064",
+   "file": "printformoperation.cc",
+   "zh": ""
+  },
+  {
    "type": "heading",
    "text": "PrintDialog",
    "sha": "655f667c39aedcaa",
@@ -40,6 +94,60 @@
    "text": "Printing - PrintDialog",
    "ref": "figures/printing_printdialog.png",
    "sha": "1dac49fafac5cc2d",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass PrintFormDialog;\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow(const Glib::RefPtr<Gtk::Application>& app);\n  ~ExampleWindow() override;\n\nprotected:\n  void build_main_menu(const Glib::RefPtr<Gtk::Application>& app);\n\n  // Action signal handlers:\n  void on_menu_file_new();\n  void on_menu_file_print_setup();\n  void on_menu_file_print();\n  void on_menu_file_quit();\n\n  // Printing-related objects:\n  Glib::RefPtr<PrintFormDialog> m_refPrintFormDialog;\n\n  // Child widgets:\n  Gtk::Box m_VBox;\n  Gtk::Grid m_Grid;\n\n  Gtk::Label m_NameLabel;\n  Gtk::Entry m_NameEntry;\n\n  Gtk::Label m_SurnameLabel;\n  Gtk::Entry m_SurnameEntry;\n\n  Gtk::Label m_CommentsLabel;\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::TextView m_TextView;\n\n  Glib::RefPtr<Gtk::TextBuffer> m_refTextBuffer;\n\n  Glib::RefPtr<Gtk::Builder> m_refBuilder;\n};\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "d114b2cb28dd4f88",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/printing/print_dialog/",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_PRINT_FORM_DIALOG_H\n#define GTKMM_PRINT_FORM_DIALOG_H\n\n#include <gtkmm.h>\n#include <pangomm.h>\n#include <vector>\n\n#define HAS_PRINT_DIALOG GTKMM_CHECK_VERSION(4,13,1)\n\n#if HAS_PRINT_DIALOG\n// We derive our own class from PrintDialog,\n// so we can put the actual print implementation here.\nclass PrintFormDialog : public Gtk::PrintDialog\n{\npublic:\n  static Glib::RefPtr<PrintFormDialog> create();\n  virtual ~PrintFormDialog();\n\n  void set_name(const Glib::ustring& name) { m_Name = name; }\n  void set_comments(const Glib::ustring& comments) { m_Comments = comments; }\n  void do_setup(Gtk::Window* parent);\n  void do_print(Gtk::Window* parent);\n\nprotected:\n  PrintFormDialog();\n\n  // PrintDialog callback slots:\n  void on_setup_finish(const Glib::RefPtr<Gio::AsyncResult>& result);\n  void on_print_finish(const Glib::RefPtr<Gio::AsyncResult>& result);\n  Cairo::ErrorStatus write_func(const unsigned char* data, unsigned int length,\n    Glib::RefPtr<Gio::OutputStream>& stream);\n  void do_printing(const Cairo::RefPtr<Cairo::Context>& cairo_ctx);\n\n  Glib::ustring m_Name;\n  Glib::ustring m_Comments;\n  Glib::RefPtr<Pango::Layout> m_refLayout;\n  Glib::RefPtr<Gtk::PrintSetup> m_refPrintSetup;\n};\n#endif // HAS_PRINT_DIALOG\n\n#endif // GTKMM_PRINT_FORM_DIALOG_H",
+   "sha": "b1f1e39e73b34bba",
+   "file": "printformdialog.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include \"printformdialog.h\"\n#include <iostream>\n\nExampleWindow::ExampleWindow(const Glib::RefPtr<Gtk::Application>& app)\n: m_VBox(Gtk::Orientation::VERTICAL),\n  m_NameLabel(\"Name\"),\n  m_SurnameLabel(\"Surname\"),\n  m_CommentsLabel(\"Comments\")\n{\n  set_title(\"gtkmm PrintDialog Example\");\n  set_default_size(400, 300);\n\n#if HAS_PRINT_DIALOG\n  // Create a PrintDialog. (We use our derived PrintDialog class.)\n  m_refPrintFormDialog = PrintFormDialog::create();\n#endif // HAS_PRINT_DIALOG\n\n  set_child(m_VBox);\n\n  build_main_menu(app);\n\n  m_VBox.append(m_Grid);\n\n  // Arrange the widgets inside the grid:\n  m_Grid.set_expand(true);\n  m_Grid.set_row_spacing(5);\n  m_Grid.set_column_spacing(5);\n  m_Grid.attach(m_NameLabel, 0, 0);\n  m_Grid.attach(m_NameEntry, 1, 0);\n\n  m_Grid.attach(m_SurnameLabel, 0, 1);\n  m_Grid.attach(m_SurnameEntry, 1, 1);\n\n  // Add the TextView, inside a ScrolledWindow:\n  m_ScrolledWindow.set_child(m_TextView);\n\n  // Only show the scrollbars when they are necessary:\n  m_ScrolledWindow.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);\n\n  m_Grid.attach(m_CommentsLabel, 0, 2);\n  m_Grid.attach(m_ScrolledWindow, 1, 2);\n  m_ScrolledWindow.set_expand(true);\n\n  m_refTextBuffer = Gtk::TextBuffer::create();\n  m_TextView.set_buffer(m_refTextBuffer);\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::build_main_menu(const Glib::RefPtr<Gtk::Application>& app)\n{\n  // Create actions for menus and toolbars:\n  auto refActionGroup = Gio::SimpleActionGroup::create();\n\n  // File menu:\n  refActionGroup->add_action(\"new\",\n    sigc::mem_fun(*this, &ExampleWindow::on_menu_file_new));\n\n  refActionGroup->add_action(\"printsetup\",\n    sigc::mem_fun(*this, &ExampleWindow::on_menu_file_print_setup));\n\n  refActionGroup->add_action(\"print\",\n    sigc::mem_fun(*this, &ExampleWindow::on_menu_file_print));\n\n  refActionGroup->add_action(\"quit\",\n    sigc::mem_fun(*this, &ExampleWindow::on_menu_file_quit));\n\n  insert_action_group(\"example\", refActionGroup);\n\n  // When the menubar is a child of a Gtk::Window, keyboard accelerators are not\n  // automatically fetched from the Gio::Menu.\n  // See the examples/book/menus/main_menu example for an alternative way of\n  // adding the menubar when using Gtk::ApplicationWindow.\n  app->set_accel_for_action(\"example.new\", \"<Primary>n\");\n  app->set_accel_for_action(\"example.print\", \"<Primary>p\");\n  app->set_accel_for_action(\"example.quit\", \"<Primary>q\");\n\n  m_refBuilder = Gtk::Builder::create();\n\n  // Layout the actions in a menubar:\n  Glib::ustring ui_menu_info =\n    \"<interface>\"\n    \"  <menu id='menu-example'>\"\n    \"    <submenu>\"\n    \"      <attribute name='label' translatable='yes'>_File</attribute>\"\n    \"      ",
+   "sha": "668157cc040e733d",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "",
+   "sha": "e3b0c44298fc1c14-3",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "",
+   "sha": "e3b0c44298fc1c14-4",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "",
+   "sha": "e3b0c44298fc1c14-5",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char* argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  // Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv, app);\n}",
+   "sha": "2b0bee512436f25b-1",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"printformdialog.h\"\n#include <iostream>\n\n#if HAS_PRINT_DIALOG\nPrintFormDialog::PrintFormDialog()\n{\n  set_page_setup(Gtk::PageSetup::create());\n  set_print_settings(Gtk::PrintSettings::create());\n}\n\nPrintFormDialog::~PrintFormDialog()\n{\n}\n\nGlib::RefPtr<PrintFormDialog> PrintFormDialog::create()\n{\n  return Glib::make_refptr_for_instance<PrintFormDialog>(new PrintFormDialog());\n}\n\nvoid PrintFormDialog::do_setup(Gtk::Window* parent)\n{\n  set_title(\"Print setup\");\n  if (parent)\n    setup(*parent, sigc::mem_fun(*this, &PrintFormDialog::on_setup_finish));\n  else\n    setup(sigc::mem_fun(*this, &PrintFormDialog::on_setup_finish));\n}\n\nvoid PrintFormDialog::do_print(Gtk::Window* parent)\n{\n  set_title(\"Printing\");\n  if (parent)\n    print(*parent, sigc::mem_fun(*this, &PrintFormDialog::on_print_finish));\n  else\n    print(sigc::mem_fun(*this, &PrintFormDialog::on_print_finish));\n}\n\nvoid PrintFormDialog::on_setup_finish(const Glib::RefPtr<Gio::AsyncResult>& result)\n{\n  try\n  {\n    m_refPrintSetup = setup_finish(result);\n    if (m_refPrintSetup)\n    {\n      set_page_setup(m_refPrintSetup->get_page_setup());\n      set_print_settings(m_refPrintSetup->get_print_settings());\n    }\n  }\n  catch (const Gtk::DialogError& err)\n  {\n    // Can be thrown by setup_finish(result).\n    std::cout << \"No setup selected. \" << err.what() << std::endl;\n  }\n  catch (const Glib::Error& err)\n  {\n    std::cout << \"Unexpected exception. \" << err.what() << std::endl;\n  }\n}\n\nvoid PrintFormDialog::on_print_finish(const Glib::RefPtr<Gio::AsyncResult>& result)\n{\n  Glib::RefPtr<Gio::OutputStream> outputStream;\n  try\n  {\n    outputStream = print_finish(result);\n  }\n  catch (const Gtk::DialogError& err)\n  {\n    // Can be thrown by print_finish(result).\n    std::cout << \"No output stream. \" << err.what() << std::endl;\n    return;\n  }\n  catch (const Glib::Error& err)\n  {\n    std::cout << \"Unexpected exception. \" << err.what() << std::endl;\n    return;\n  }\n  const double paper_width = get_page_setup()->get_paper_width(Gtk::Unit::POINTS);\n  const double paper_height = get_page_setup()->get_paper_height(Gtk::Unit::POINTS);\n  auto cairo_surface = Cairo::PdfSurface::create_for_stream(\n    sigc::bind(sigc::mem_fun(*this, &PrintFormDialog::write_func), outputStream),\n    paper_width, paper_height);\n  auto cairo_ctx = Cairo::Context::create(cairo_surface);\n\n  do_printing(cairo_ctx);\n\n  // cairo_surface->finish() calls write_func(),\n  // which must be done before the stream is closed.\n  cairo_surface->finish();\n  try\n  {\n    outputStream->close();\n  }\n  catch (const Glib::Error& err)\n  {\n    std::cout << \"Error closing stream. \" << err.what() << std::endl;\n  }\n}\n\nCairo::ErrorStatus PrintFormDialog::write_func(const unsigned char* data,\n  unsigned int length, Glib::RefPtr<Gio::OutputStream>& stream)\n{\n  try\n  {\n    gsize bytes_written = 0;\n    stream->write_all(data, length, bytes_written);\n  }\n  catch (const Glib::Error& err)\n  {\n    std::cout << \"Error writing to stream. \" << err.what() << std::endl;\n    return CAIRO_STATUS_WRITE_ERROR;\n  }\n  return CAIRO_STATUS_SUCCESS;\n}\nvoid PrintFormDialog::do_printing(const Cairo::RefPtr<Cairo::Context>& cairo_ctx)\n{\n  m_refLayout = Pango::Layout::create(cairo_ctx);\n  m_refLayout->set_font_description(Pango::FontDescription(\"sans 12\"));\n\n  const auto page_setup = get_page_setup();\n  const double page_width = page_setup->get_page_width(Gtk::Unit::POINTS);\n  const double page_height = page_setup->get_page_height(Gtk::Unit::POINTS);\n  const double left_margin = page_setup->get_left_margin(Gtk::Unit::POINTS);\n  const double top_margin = page_setup->get_top_margin(Gtk::Unit::POINTS);\n  m_refLayout->set_width(static_cast<int>(page_width * Pango::SCALE));\n  m_refLayout->set_wrap(Pango::WrapMode::WORD_CHAR);\n  cairo_ctx->translate(left_margin, top_margin);\n\n  // Set and mark up the text to print:\n  Glib::ustring marked_up_form_text =\n    \"<b>Name</b>: \" + m_Name + \"\\n\\n\" +\n    \"<b>Comments</b>: \" + m_Comments;\n  m_refLayout->set_markup(marked_up_form_text);\n\n  // We'll use black letters:\n  cairo_ctx->set_source_rgb(0, 0, 0);\n\n  // Render Pango LayoutLines over the Cairo context:\n  const double inverse_pango_scale = 1.0 / Pango::SCALE;\n  double page_y = 0.0;\n  auto iter = m_refLayout->get_iter();\n  double start_y_pos = iter.get_line_logical_extents().get_y() * inverse_pango_scale;\n  do\n  {\n    const auto layout_line = iter.get_line();\n    const auto logical_rect = iter.get_line_logical_extents();\n    const double line_height = logical_rect.get_height() * inverse_pango_scale;\n\n    if (page_y + line_height > page_height)\n    {\n      // Start a new page.\n      cairo_ctx->show_page();\n      page_y = 0.0;\n      start_y_pos = logical_rect.get_y() * inverse_pango_scale;\n    }\n    page_y += line_height;\n\n    cairo_ctx->move_to(logical_rect.get_x() * inverse_pango_scale,\n      iter.get_baseline() * inverse_pango_scale - start_y_pos);\n    layout_line->show_in_cairo_context(cairo_ctx);\n  }\n  while (iter.next_line());\n\n  cairo_ctx->show_page();\n}\n#endif // HAS_PRINT_DIALOG",
+   "sha": "94c091c79670b15e",
+   "file": "printformdialog.cc",
    "zh": ""
   }
  ]

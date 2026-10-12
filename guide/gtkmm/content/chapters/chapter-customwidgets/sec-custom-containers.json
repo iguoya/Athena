@@ -76,6 +76,42 @@
    "ref": "figures/custom_container.png",
    "sha": "41003bbf6930810f",
    "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n#include \"mycontainer.h\"\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  //Signal handlers:\n  void on_button_quit();\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n  MyContainer m_MyContainer;\n  Gtk::Button m_Button_Child;\n  Gtk::Label m_Label_Child;\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "3bdd67c53ffc4af2",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/custom/custom_container/",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_CUSTOM_CONTAINER_MYCONTAINER_H\n#define GTKMM_CUSTOM_CONTAINER_MYCONTAINER_H\n\n#include <gtkmm/widget.h>\n#include <gtkmm/version.h>\n\n#define HAS_SIGNAL_DESTROY GTKMM_CHECK_VERSION(4,7,1)\n\nclass MyContainer : public Gtk::Widget\n{\npublic:\n  MyContainer();\n  ~MyContainer() override;\n\n  void append(Gtk::Widget& child);\n  void prepend(Gtk::Widget& child);\n  void remove(Gtk::Widget& child);\n\nprotected:\n  int get_nvis_children() const;\n\n  //Overrides:\n  Gtk::SizeRequestMode get_request_mode_vfunc() const override;\n  void measure_vfunc(Gtk::Orientation orientation, int for_size, int& minimum, int& natural,\n    int& minimum_baseline, int& natural_baseline) const override;\n  void size_allocate_vfunc(int width, int height, int baseline) override;\n\n#if HAS_SIGNAL_DESTROY\n  // Signal handler:\n  void on_container_destroy();\n#endif\n};\n\n#endif //GTKMM_CUSTOM_CONTAINER_MYCONTAINER_H",
+   "sha": "f873a968306a3a06",
+   "file": "mycontainer.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n\nExampleWindow::ExampleWindow()\n: m_VBox(Gtk::Orientation::VERTICAL),\n  m_Button_Child(\"Child button\"),\n  m_Label_Child(\"Child label\", Gtk::Align::END, Gtk::Align::CENTER),\n  m_Button_Quit(\"Quit\")\n{\n  set_title(\"Custom Container example\");\n  set_default_size(400, 200);\n\n  m_VBox.set_margin(6);\n  set_child(m_VBox);\n\n  //Add the child widgets to the custom container:\n  m_MyContainer.append(m_Button_Child);\n  m_MyContainer.append(m_Label_Child);\n  m_MyContainer.prepend(*Gtk::make_managed<Gtk::Label>(\n    \"First line\\nSecond line\\nThird line\"));\n  m_MyContainer.set_expand();\n  m_VBox.append(m_MyContainer);\n\n#if HAS_SIGNAL_DESTROY\n  // A managed custom container.\n  auto container = Gtk::make_managed<MyContainer>();\n  container->prepend(*Gtk::make_managed<Gtk::Label>(\"Second custom container\"));\n  container->set_expand();\n  m_VBox.append(*container);\n#endif\n  m_VBox.append(m_ButtonBox);\n\n  m_ButtonBox.append(m_Button_Quit);\n  m_ButtonBox.set_margin(6);\n  m_Button_Quit.set_hexpand(true);\n  m_Button_Quit.set_halign(Gtk::Align::END);\n  m_Button_Quit.signal_clicked().connect( sigc::mem_fun(*this,\n              &ExampleWindow::on_button_quit) );\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_button_quit()\n{\n  close();\n}",
+   "sha": "b7486ae2670acd8a",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"mycontainer.h\"\n\n#include <algorithm> // std::max()\n\n// This example container is a simplified vertical Box.\n//\n// It can't be used as a managed widget, managed by another container\n// unless Gtk::Widget::signal_destroy() exists.\n// It would cause an error like\n// Gtk-WARNING **: 08:31:48.137: Finalizing gtkmm__GtkWidget 0x561b777462c0, but it still has children left:\n\nMyContainer::MyContainer()\n{\n#if HAS_SIGNAL_DESTROY\n  signal_destroy().connect(sigc::mem_fun(*this, &MyContainer::on_container_destroy));\n#endif\n}\n\nMyContainer::~MyContainer()\n{\n  // If MyContainer is a managed widget, the underlying C object is destructed\n  // before this C++ destructor is executed.\n  if (!gobj())\n    return;\n\n  // If MyContainer is not a managed widget, unparent all children here.\n  while (Widget* child = get_first_child())\n    child->unparent();\n}\n\n#if HAS_SIGNAL_DESTROY\n// This signal handler is called only if MyContainer is a managed widget.\nvoid MyContainer::on_container_destroy()\n{\n  while (Widget* child = get_first_child())\n    child->unparent();\n}\n#endif\n\n// Get number of visible children.\nint MyContainer::get_nvis_children() const\n{\n  int nvis_children = 0;\n  for (const Widget* child = get_first_child(); child; child = child->get_next_sibling())\n    if (child->get_visible())\n      ++nvis_children;\n\n  return nvis_children;\n}\n\nGtk::SizeRequestMode MyContainer::get_request_mode_vfunc() const\n{\n  return Gtk::SizeRequestMode::HEIGHT_FOR_WIDTH;\n}\n\n// Discover the total amount of minimum space and natural space needed by\n// this container and its children.\nvoid MyContainer::measure_vfunc(Gtk::Orientation orientation, int for_size,\n  int& minimum, int& natural, int& minimum_baseline, int& natural_baseline) const\n{\n  // Don't use baseline alignment.\n  minimum_baseline = -1;\n  natural_baseline = -1;\n\n  minimum = 0;\n  natural = 0;\n\n  // Number of visible children.\n  const int nvis_children = get_nvis_children();\n\n  if (orientation == Gtk::Orientation::HORIZONTAL)\n  {\n    // Divide the height equally among the visible children.\n    if (for_size > 0 && nvis_children > 0)\n      for_size /= nvis_children;\n\n    // Request a width equal to the width of the widest visible child.\n  }\n\n  for (const Widget* child = get_first_child(); child; child = child->get_next_sibling())\n    if (child->get_visible())\n    {\n      int child_minimum, child_natural, ignore;\n      child->measure(orientation, for_size, child_minimum, child_natural, ignore, ignore);\n      minimum = std::max(minimum, child_minimum);\n      natural = std::max(natural, child_natural);\n    }\n\n  if (orientation == Gtk::Orientation::VERTICAL)\n  {\n    // The allocated height will be divided equally among the visible children.\n    // Request a height equal to the number of visible children times the height\n    // of the highest child.\n    minimum *= nvis_children;\n    natural *= nvis_children;\n  }\n}\n\nvoid MyContainer::size_allocate_vfunc(int width, int height, int baseline)\n{\n  //Do something with the space that we have actually been given:\n  //(We will not be given heights or widths less than we have requested, though\n  //we might get more.)\n\n  // Number of visible children.\n  const int nvis_children = get_nvis_children();\n\n  if (nvis_children <= 0)\n  {\n    // No visible child.\n    return;\n  }\n\n  //Assign space to the children:\n  Gtk::Allocation child_allocation;\n  const int height_per_child = height / nvis_children;\n\n  //Place the first visible child at the top-left:\n  child_allocation.set_x(0);\n  child_allocation.set_y(0);\n\n  //Make it take up the full width available:\n  child_allocation.set_width(width);\n  child_allocation.set_height(height_per_child);\n\n  //Divide the height equally among the visible children.\n  for (Widget* child = get_first_child(); child; child = child->get_next_sibling())\n    if (child->get_visible())\n    {\n      child->size_allocate(child_allocation, baseline);\n      child_allocation.set_y(child_allocation.get_y() + height_per_child);\n    }\n}\n\nvoid MyContainer::append(Gtk::Widget& child)\n{\n   child.insert_at_end(*this);\n}\n\nvoid MyContainer::prepend(Gtk::Widget& child)\n{\n   child.insert_at_start(*this);\n}\n\nvoid MyContainer::remove(Gtk::Widget& child)\n{\n  child.unparent();\n}",
+   "sha": "8c7bfe77717334e0",
+   "file": "mycontainer.cc",
+   "zh": ""
   }
  ]
 }

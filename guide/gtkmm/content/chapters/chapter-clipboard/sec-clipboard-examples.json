@@ -24,6 +24,28 @@
    "zh": ""
   },
   {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_button_copy();\n  void on_button_paste();\n\n  void on_clipboard_text_received(Glib::RefPtr<Gio::AsyncResult>& result);\n\n  Glib::ustring m_strData;\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n\n  Gtk::Label m_Label;\n\n  Gtk::Grid m_Grid;\n  Gtk::ToggleButton m_ButtonA1, m_ButtonA2, m_ButtonB1, m_ButtonB2;\n\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Copy, m_Button_Paste;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "8c5430df70aa5966",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/clipboard/simple/",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <iostream>\n\nExampleWindow::ExampleWindow()\n: m_VBox(Gtk::Orientation::VERTICAL),\n  m_Label(\"Select cells in the grid, click Copy, then open a second \"\n        \"instance of this example to try pasting the copied data.\"),\n  m_ButtonA1(\"A1\"), m_ButtonA2(\"A2\"), m_ButtonB1(\"B1\"), m_ButtonB2(\"B2\"),\n  m_Button_Copy(\"_Copy\", /* mnemonic= */ true), m_Button_Paste(\"_Paste\", true)\n{\n  set_title(\"Gtk::Clipboard example\");\n\n  m_VBox.set_margin(12);\n  set_child(m_VBox);\n\n  m_VBox.append(m_Label);\n\n  //Fill Grid:\n  m_VBox.append(m_Grid);\n  m_Grid.set_expand(true);\n  m_Grid.set_row_homogeneous(true);\n  m_Grid.set_column_homogeneous(true);\n  m_Grid.attach(m_ButtonA1, 0, 0);\n  m_Grid.attach(m_ButtonA2, 1, 0);\n  m_Grid.attach(m_ButtonB1, 0, 1);\n  m_Grid.attach(m_ButtonB2, 1, 1);\n\n  //Add ButtonBox to bottom:\n  m_VBox.append(m_ButtonBox);\n  m_VBox.set_spacing(6);\n\n  //Fill ButtonBox:\n  m_ButtonBox.append(m_Button_Copy);\n  m_Button_Copy.set_hexpand(true);\n  m_Button_Copy.set_halign(Gtk::Align::END);\n  m_Button_Copy.signal_clicked().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_button_copy) );\n  m_ButtonBox.append(m_Button_Paste);\n  m_Button_Paste.signal_clicked().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_button_paste) );\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_button_copy()\n{\n  //Build a string representation of the stuff to be copied:\n  //Ideally you would use XML, with an XML parser here:\n  m_strData = m_ButtonA1.get_active() ? \"1\" : \"0\";\n  m_strData += m_ButtonA2.get_active() ? \"1\" : \"0\";\n  m_strData += m_ButtonB1.get_active() ? \"1\" : \"0\";\n  m_strData += m_ButtonB2.get_active() ? \"1\" : \"0\";\n\n  // Gdk::Clipboard::set_text() does not take a copy of the text.\n  // The text can only be pasted (in this program or in some other program)\n  // for as long as it exists.\n  get_clipboard()->set_text(m_strData);\n}\n\nvoid ExampleWindow::on_button_paste()\n{\n  //Tell the clipboard to call our method when it is ready:\n  get_clipboard()->read_text_async(sigc::mem_fun(*this,\n              &ExampleWindow::on_clipboard_text_received));\n}\n\nvoid ExampleWindow::on_clipboard_text_received(Glib::RefPtr<Gio::AsyncResult>& result)\n{\n  Glib::ustring text;\n  try\n  {\n    text = get_clipboard()->read_text_finish(result);\n  }\n  catch (const Glib::Error& err)\n  {\n    // Print an error about why pasting failed.\n    // Usually you probably want to ignore such failures,\n    // but for demonstration purposes, we show the error.\n    std::cout << \"Pasting failed: \" << err.what() << std::endl;\n  }\n\n  //See comment in on_button_copy() about this silly clipboard format.\n  if(text.size() >= 4)\n  {\n    m_ButtonA1.set_active( text[0] == '1' );\n    m_ButtonA2.set_active( text[1] == '1' );\n    m_ButtonB1.set_active( text[2] == '1' );\n    m_ButtonB2.set_active( text[3] == '1' );\n  }\n}",
+   "sha": "f2c68ce7d9db862f",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  // Gio::Application::Flags::NON_UNIQUE because it shall be possible to run\n  // several instances of this application simultaneously.\n  auto app = Gtk::Application::create(\n    \"org.gtkmm.example\", Gio::Application::Flags::NON_UNIQUE);\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "e070a44eb32000e2",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
    "type": "heading",
    "text": "Ideal",
    "sha": "4e3cfaa334cbafb5",
@@ -54,6 +76,28 @@
    "text": "Clipboard - Ideal",
    "ref": "figures/clipboard_ideal.png",
    "sha": "8d925e112e870e70",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_button_copy();\n  void on_button_paste();\n\n  void on_clipboard_content_changed();\n\n  void on_clipboard_received(Glib::RefPtr<Gio::AsyncResult>& result);\n  void on_clipboard_received_status(Glib::RefPtr<Gio::AsyncResult>& result);\n\n  void update_paste_status(); //Disable the paste button if there is nothing to paste.\n\n  Glib::ustring m_strData;\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n\n  Gtk::Label m_Label;\n\n  Gtk::Grid m_Grid;\n  Gtk::ToggleButton m_ButtonA1, m_ButtonA2, m_ButtonB1, m_ButtonB2;\n\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Copy, m_Button_Paste;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "d43530c883594e74",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/clipboard/ideal/",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <iostream>\n#include <string>\n\nnamespace\n{\n\nconst char example_format_custom[] = \"gtkmmclipboardexample\";\n\n} // anonymous namespace\n\n\nExampleWindow::ExampleWindow()\n: m_VBox(Gtk::Orientation::VERTICAL),\n  m_Label(\"Select cells in the grid, click Copy, then open a second instance \"\n          \"of this example to try pasting the copied data.\\nOr try pasting the \"\n          \"text representation into gedit.\"),\n  m_ButtonA1(\"A1\"), m_ButtonA2(\"A2\"), m_ButtonB1(\"B1\"), m_ButtonB2(\"B2\"),\n  m_Button_Copy(\"_Copy\", /* mnemonic= */ true), m_Button_Paste(\"_Paste\", true)\n{\n  set_title(\"Gtk::Clipboard example\");\n\n  m_VBox.set_margin(12);\n  set_child(m_VBox);\n\n  m_VBox.append(m_Label);\n\n  //Fill Grid:\n  m_VBox.append(m_Grid);\n  m_Grid.set_expand(true);\n  m_Grid.set_row_homogeneous(true);\n  m_Grid.set_column_homogeneous(true);\n  m_Grid.attach(m_ButtonA1, 0, 0);\n  m_Grid.attach(m_ButtonA2, 1, 0);\n  m_Grid.attach(m_ButtonB1, 0, 1);\n  m_Grid.attach(m_ButtonB2, 1, 1);\n\n  //Add ButtonBox to bottom:\n  m_VBox.append(m_ButtonBox);\n  m_VBox.set_spacing(6);\n\n  //Fill ButtonBox:\n  m_ButtonBox.append(m_Button_Copy);\n  m_Button_Copy.set_hexpand(true);\n  m_Button_Copy.set_halign(Gtk::Align::END);\n  m_Button_Copy.signal_clicked().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_button_copy) );\n  m_ButtonBox.append(m_Button_Paste);\n  m_Button_Paste.signal_clicked().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_button_paste) );\n\n  //Connect a signal handler that will be called when the contents of\n  //the clipboard change.\n  get_clipboard()->signal_changed().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_clipboard_content_changed));\n\n  update_paste_status();\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_button_copy()\n{\n  //Build a string representation of the stuff to be copied:\n  //Ideally you would use XML, with an XML parser here:\n  m_strData = example_format_custom;\n  m_strData += m_ButtonA1.get_active() ? \" A1\" : \"\";\n  m_strData += m_ButtonA2.get_active() ? \" A2\" : \"\";\n  m_strData += m_ButtonB1.get_active() ? \" B1\" : \"\";\n  m_strData += m_ButtonB2.get_active() ? \" B2\" : \"\";\n\n  // Gdk::Clipboard::set_text() does not take a copy of the text.\n  // The text can only be pasted (in this program or in some other program)\n  // for as long as it exists.\n  get_clipboard()->set_text(m_strData);\n}\n\nvoid ExampleWindow::on_button_paste()\n{\n  //Tell the clipboard to call our method when it is ready:\n  get_clipboard()->read_text_async(sigc::mem_fun(*this,\n              &ExampleWindow::on_clipboard_received));\n}\n\nvoid ExampleWindow::on_clipboard_content_changed()\n{\n  update_paste_status();\n}\n\nvoid ExampleWindow::on_clipboard_received(Glib::RefPtr<Gio::AsyncResult>& result)\n{\n  Glib::ustring text;\n  try\n  {\n    text = get_clipboard()->read_text_finish(result);\n  }\n  catch (const Glib::Error& err)\n  {\n    // Print an error about why pasting failed.\n    // Usually you probably want to ignore such failures,\n    // but for demonstration purposes, we show the error.\n    std::cout << \"Pasting failed: \" << err.what() << std::endl;\n  }\n\n  if (text.find(example_format_custom) == 0)\n  {\n    // It's the expected format.\n    m_ButtonA1.set_active(text.find(\"A1\") != std::string::npos);\n    m_ButtonA2.set_active(text.find(\"A2\") != std::string::npos);\n    m_ButtonB1.set_active(text.find(\"B1\") != std::string::npos);\n    m_ButtonB2.set_active(text.find(\"B2\") != std::string::npos);\n  }\n  else\n  {\n    // Unexpected format. Disable the Paste button.\n    std::cout << \"Unexpected pasted text: \\\"\" << text << \"\\\"\" << std::endl;\n    m_Button_Paste.set_sensitive(false);\n  }\n}\n\nvoid ExampleWindow::update_paste_status()\n{\n  // Disable the paste button if there is nothing to paste.\n  get_clipboard()->read_text_async(sigc::mem_fun(*this,\n              &ExampleWindow::on_clipboard_received_status));\n}\n\nvoid ExampleWindow::on_clipboard_received_status(Glib::RefPtr<Gio::AsyncResult>& result)\n{\n  Glib::ustring text;\n  try\n  {\n    text = get_clipboard()->read_text_finish(result);\n  }\n  catch (const Glib::Error&)\n  {\n  }\n\n  const bool bPasteIsPossible = text.find(example_format_custom) == 0;\n\n  // Enable/Disable the Paste button appropriately:\n  m_Button_Paste.set_sensitive(bPasteIsPossible);\n}",
+   "sha": "ac92e330c155290d",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  // Gio::Application::Flags::NON_UNIQUE because it shall be possible to run\n  // several instances of this application simultaneously.\n  auto app = Gtk::Application::create(\n    \"org.gtkmm.example\", Gio::Application::Flags::NON_UNIQUE);\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "e070a44eb32000e2-1",
+   "file": "main.cc",
    "zh": ""
   }
  ]

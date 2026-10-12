@@ -10,6 +10,28 @@
    "ref": "figures/dropdown_string.png",
    "sha": "937f8ab3058ce018",
    "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm/window.h>\n#include <gtkmm/dropdown.h>\n#include <gtkmm/stringlist.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  // Signal handler:\n  void on_dropdown_changed();\n\n  // Child widget:\n  Gtk::DropDown m_DropDown;\n\n  Glib::RefPtr<Gtk::StringList> m_StringList;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "768b06ab1de7c20f",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/dropdown/string",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <iostream>\n\nExampleWindow::ExampleWindow()\n{\n  set_title(\"DropDown example\");\n\n  set_child(m_DropDown);\n\n  // Fill the dropdown:\n  const std::vector<Glib::ustring> strings{\n    \"1 minute\", \"2 minutes\", \"5 minutes\", \"20 minutes\"\n  };\n  m_StringList = Gtk::StringList::create(strings);\n  m_DropDown.set_model(m_StringList);\n  m_DropDown.set_selected(0);\n\n  // Connect signal handler:\n  m_DropDown.property_selected().signal_changed().connect(\n    sigc::mem_fun(*this, &ExampleWindow::on_dropdown_changed));\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_dropdown_changed()\n{\n  const auto selected = m_DropDown.get_selected();\n  std::cout << \"DropDown changed: Row=\" << selected\n    << \", String=\" << m_StringList->get_string(selected) << std::endl;\n}",
+   "sha": "523ee9df9a53cbd3",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char* argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  // Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "599e76cbc26ebd80",
+   "file": "main.cc",
+   "zh": ""
   }
  ]
 }

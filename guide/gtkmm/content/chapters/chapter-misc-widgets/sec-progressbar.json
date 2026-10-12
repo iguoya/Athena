@@ -64,6 +64,28 @@
    "ref": "figures/progressbar.png",
    "sha": "e5e8341142ea9086",
    "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_checkbutton_text();\n  void on_checkbutton_activity();\n  void on_checkbutton_inverted();\n\n  bool on_timeout();\n  void on_button_close();\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n  Gtk::Grid m_Grid;\n  Gtk::ProgressBar m_ProgressBar;\n  Gtk::Separator m_Separator;\n  Gtk::CheckButton m_CheckButton_Text, m_CheckButton_Activity, m_CheckButton_Inverted;\n  Gtk::Button m_Button_Close;\n\n  sigc::connection m_connection_timeout;\n  bool m_bActivityMode;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "54fec372c7508c33",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/progressbar",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <iostream>\n\nExampleWindow::ExampleWindow()\n: m_VBox(Gtk::Orientation::VERTICAL, 5),\n  m_CheckButton_Text(\"Show text\"),\n  m_CheckButton_Activity(\"Activity mode\"),\n  m_CheckButton_Inverted(\"Right to Left\"),\n  m_Button_Close(\"Close\"),\n  m_bActivityMode(false)\n{\n  set_resizable();\n  set_title(\"Gtk::ProgressBar\");\n\n  m_VBox.set_margin(10);\n  set_child(m_VBox);\n\n  m_VBox.append(m_ProgressBar);\n  m_ProgressBar.set_margin_end(5);\n  m_ProgressBar.set_halign(Gtk::Align::CENTER);\n  m_ProgressBar.set_valign(Gtk::Align::CENTER);\n  m_ProgressBar.set_size_request(100, -1);\n  m_ProgressBar.set_text(\"some text\");\n  m_ProgressBar.set_show_text(false);\n\n  //Add a timer callback to update the value of the progress bar:\n  m_connection_timeout = Glib::signal_timeout().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_timeout), 50 );\n\n  m_VBox.append(m_Separator);\n  m_VBox.append(m_Grid);\n  m_Grid.set_expand(true);\n  m_Grid.set_row_homogeneous(true);\n\n  //Add a check button to select displaying of the trough text:\n  m_Grid.attach(m_CheckButton_Text, 0, 0);\n  m_CheckButton_Text.set_margin(5);\n  m_CheckButton_Text.signal_toggled().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_checkbutton_text) );\n\n  //Add a check button to toggle activity mode:\n  m_Grid.attach(m_CheckButton_Activity, 0, 1);\n  m_CheckButton_Activity.set_margin(5);\n  m_CheckButton_Activity.signal_toggled().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_checkbutton_activity) );\n\n  //Add a check button to select growth from left to right or from right to left:\n  m_Grid.attach(m_CheckButton_Inverted, 0, 2);\n  m_CheckButton_Inverted.set_margin(5);\n  m_CheckButton_Inverted.signal_toggled().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_checkbutton_inverted) );\n\n  //Add a button to exit the program.\n  m_VBox.append(m_Button_Close);\n  m_Button_Close.signal_clicked().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_button_close) );\n  set_default_widget(m_Button_Close);\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_checkbutton_text()\n{\n  const bool show_text = m_CheckButton_Text.get_active();\n  m_ProgressBar.set_show_text(show_text);\n}\n\nvoid ExampleWindow::on_checkbutton_activity()\n{\n  m_bActivityMode = m_CheckButton_Activity.get_active();\n\n  if(m_bActivityMode)\n    m_ProgressBar.pulse();\n  else\n    m_ProgressBar.set_fraction(0.0);\n}\n\nvoid ExampleWindow::on_checkbutton_inverted()\n{\n  const bool inverted = m_CheckButton_Inverted.get_active();\n  m_ProgressBar.set_inverted(inverted);\n}\n\nvoid ExampleWindow::on_button_close()\n{\n  close();\n}\n\n/* Update the value of the progress bar so that we get\n * some movement */\nbool ExampleWindow::on_timeout()\n{\n  if(m_bActivityMode)\n    m_ProgressBar.pulse();\n  else\n  {\n    double new_val = m_ProgressBar.get_fraction() + 0.01;\n\n    if(new_val > 1.0)\n      new_val = 0.0;\n\n    //Set the new value:\n    m_ProgressBar.set_fraction(new_val);\n  }\n\n  //As this is a timeout function, return true so that it\n  //continues to get called\n  return true;\n}",
+   "sha": "d6d45d6bec579df0",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee",
+   "file": "main.cc",
+   "zh": ""
   }
  ]
 }

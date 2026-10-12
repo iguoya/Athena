@@ -66,6 +66,28 @@
    "zh": ""
   },
   {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_checkbox_editable_toggled();\n  void on_checkbox_visibility_toggled();\n  void on_button_close();\n\n  //Child widgets:\n  Gtk::Box m_HBox;\n  Gtk::Box m_VBox;\n  Gtk::Entry m_Entry;\n  Gtk::Button m_Button_Close;\n  Gtk::CheckButton m_CheckButton_Editable, m_CheckButton_Visible;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "8f709d473f88189f",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/entry/simple",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <iostream>\n\nExampleWindow::ExampleWindow()\n: m_VBox(Gtk::Orientation::VERTICAL),\n  m_Button_Close(\"Close\"),\n  m_CheckButton_Editable(\"Editable\"),\n  m_CheckButton_Visible(\"Visible\")\n{\n  set_size_request(200, 100);\n  set_title(\"Gtk::Entry\");\n\n  set_child(m_VBox);\n\n  m_Entry.set_max_length(50);\n  m_Entry.set_text(\"hello\");\n  m_Entry.set_text(m_Entry.get_text() + \" world\");\n  m_Entry.select_region(0, m_Entry.get_text_length());\n  m_Entry.set_expand(true);\n  m_VBox.append(m_Entry);\n\n  m_VBox.append(m_HBox);\n\n  m_HBox.append(m_CheckButton_Editable);\n  m_CheckButton_Editable.set_expand(true);\n  m_CheckButton_Editable.signal_toggled().connect( sigc::mem_fun(*this,\n              &ExampleWindow::on_checkbox_editable_toggled) );\n  m_CheckButton_Editable.set_active(true);\n\n  m_HBox.append(m_CheckButton_Visible);\n  m_CheckButton_Visible.set_expand(true);\n  m_CheckButton_Visible.signal_toggled().connect( sigc::mem_fun(*this,\n              &ExampleWindow::on_checkbox_visibility_toggled) );\n  m_CheckButton_Visible.set_active(true);\n\n  m_Button_Close.signal_clicked().connect( sigc::mem_fun(*this,\n              &ExampleWindow::on_button_close) );\n  m_VBox.append(m_Button_Close);\n  m_Button_Close.set_expand();\n  set_default_widget(m_Button_Close);\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_checkbox_editable_toggled()\n{\n  m_Entry.set_editable(m_CheckButton_Editable.get_active());\n}\n\nvoid ExampleWindow::on_checkbox_visibility_toggled()\n{\n  m_Entry.set_visibility(m_CheckButton_Visible.get_active());\n}\n\nvoid ExampleWindow::on_button_close()\n{\n  close();\n}",
+   "sha": "ab4dcca527880950",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
    "type": "heading",
    "text": "Entry Completion",
    "sha": "441d3fa09fc825e9",
@@ -128,6 +150,28 @@
    "zh": ""
   },
   {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_button_close();\n\n  //See the comment in the implementation:\n  //bool on_completion_match(const Glib::ustring& key, const Gtk::TreeModel::const_iterator& iter);\n\n  //Tree model columns, for the EntryCompletion's filter model:\n  class ModelColumns : public Gtk::TreeModel::ColumnRecord\n  {\n  public:\n    ModelColumns()\n    { add(m_col_id); add(m_col_name); }\n\n    Gtk::TreeModelColumn<unsigned int> m_col_id;\n    Gtk::TreeModelColumn<Glib::ustring> m_col_name;\n  };\n\n  ModelColumns m_Columns;\n\n  //Child widgets:\n  Gtk::Box m_HBox;\n  Gtk::Box m_VBox;\n  Gtk::Entry m_Entry;\n  Gtk::Label m_Label;\n  Gtk::Button m_Button_Close;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "e8d7f7b6de2a47eb",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/entry/completion",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <iostream>\n\nExampleWindow::ExampleWindow()\n: m_VBox(Gtk::Orientation::VERTICAL),\n  m_Label(\"Press a or b to see a list of possible completions.\"),\n  m_Button_Close(\"Close\")\n{\n  //set_size_request(200, 100);\n  set_title(\"Gtk::EntryCompletion\");\n\n  set_child(m_VBox);\n  m_VBox.append(m_Entry);\n\n  m_VBox.append(m_Label);\n  m_Label.set_expand(true);\n\n  m_Button_Close.signal_clicked().connect( sigc::mem_fun(*this,\n              &ExampleWindow::on_button_close) );\n  m_VBox.append(m_Button_Close);\n  set_default_widget(m_Button_Close);\n\n  //Add an EntryCompletion:\n  auto completion =\n      Gtk::EntryCompletion::create();\n  m_Entry.set_completion(completion);\n\n  //Create and fill the completion's filter model\n  auto refCompletionModel =\n      Gtk::ListStore::create(m_Columns);\n  completion->set_model(refCompletionModel);\n\n  // For more complex comparisons, use a filter match callback, like this.\n  // See the comment below for more details:\n  //completion->set_match_func( sigc::mem_fun(*this,\n              //&ExampleWindow::on_completion_match) );\n\n  //Fill the TreeView's model\n  auto row = *(refCompletionModel->append());\n  row[m_Columns.m_col_id] = 1;\n  row[m_Columns.m_col_name] = \"Alan Zebedee\";\n\n  row = *(refCompletionModel->append());\n  row[m_Columns.m_col_id] = 2;\n  row[m_Columns.m_col_name] = \"Adrian Boo\";\n\n  row = *(refCompletionModel->append());\n  row[m_Columns.m_col_id] = 3;\n  row[m_Columns.m_col_name] = \"Bob McRoberts\";\n\n  row = *(refCompletionModel->append());\n  row[m_Columns.m_col_id] = 4;\n  row[m_Columns.m_col_name] = \"Bob McBob\";\n\n  //Tell the completion what model column to use to\n  //- look for a match (when we use the default matching, instead of\n  //  set_match_func().\n  //- display text in the entry when a match is found.\n  completion->set_text_column(m_Columns.m_col_name);\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_button_close()\n{\n  close();\n}\n\n/* You can do more complex matching with a handler like this.\n * For instance, you could check for substrings inside the string instead of the start,\n * or you could look for the key in extra model columns as well as the model column that will be displayed.\n * The code here is not actually more complex - it's a reimplementation of the default behaviour.\n *\nbool ExampleWindow::on_completion_match(const Glib::ustring& key, const\n        Gtk::TreeModel::const_iterator& iter)\n{\n  if(iter)\n  {\n    const auto row = *iter;\n\n    const auto key_length = key.size();\n    auto filter_string = row[m_Columns.m_col_name];\n\n    auto filter_string_start = filter_string.substr(0, key_length);\n    //The key is lower-case, even if the user input is not.\n    filter_string_start = filter_string_start.lowercase();\n\n    if(key == filter_string_start)\n      return true; //A match was found.\n  }\n\n  return false; //No match.\n}\n*/",
+   "sha": "abc723193afc546c",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee-1",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
    "type": "heading",
    "text": "Entry Icons",
    "sha": "ea89c5c667cbed17",
@@ -159,6 +203,28 @@
    "zh": ""
   },
   {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_icon_pressed(Gtk::Entry::IconPosition icon_pos);\n  void on_button_close();\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n  Gtk::Entry m_Entry;\n  Gtk::Button m_Button_Close;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "b301f0f9fcc8b40e",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/entry/icon",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <iostream>\n\nExampleWindow::ExampleWindow()\n: m_VBox(Gtk::Orientation::VERTICAL),\n  m_Button_Close(\"Close\")\n{\n  set_title(\"Gtk::Entry\");\n\n  set_child(m_VBox);\n\n  m_Entry.set_max_length(50);\n  m_Entry.set_text(\"Hello world\");\n  m_VBox.append(m_Entry);\n\n  m_Entry.set_icon_from_icon_name(\"edit-find\");\n  m_Entry.signal_icon_press().connect( sigc::mem_fun(*this, &ExampleWindow::on_icon_pressed) );\n\n\n  m_Button_Close.signal_clicked().connect( sigc::mem_fun(*this,\n              &ExampleWindow::on_button_close) );\n  m_VBox.append(m_Button_Close);\n  set_default_widget(m_Button_Close);\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_icon_pressed(Gtk::Entry::IconPosition /* icon_pos */)\n{\n  std::cout << \"Icon pressed.\" << std::endl;\n}\n\nvoid ExampleWindow::on_button_close()\n{\n  close();\n}",
+   "sha": "347065bb2d7a8cc1",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee-2",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
    "type": "heading",
    "text": "Entry Progress",
    "sha": "853a303efbb11649",
@@ -187,6 +253,28 @@
    "text": "Entry with Progress Bar",
    "ref": "figures/entry_progress.png",
    "sha": "b2c5442f751947ea",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  bool on_timeout();\n  void on_button_close();\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n  Gtk::Entry m_Entry;\n  Gtk::Button m_Button_Close;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "293809bc5584a305",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/entry/progress",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <iostream>\n\nExampleWindow::ExampleWindow()\n: m_VBox(Gtk::Orientation::VERTICAL),\n  m_Button_Close(\"Close\")\n{\n  set_title(\"Gtk::Entry\");\n\n  set_child(m_VBox);\n\n  m_Entry.set_max_length(50);\n  m_Entry.set_text(\"Hello world\");\n  m_VBox.append(m_Entry);\n\n  //Change the progress fraction every 0.1 second:\n  Glib::signal_timeout().connect(\n    sigc::mem_fun(*this, &ExampleWindow::on_timeout),\n    100\n  );\n\n  m_Button_Close.signal_clicked().connect( sigc::mem_fun(*this,\n              &ExampleWindow::on_button_close) );\n  m_VBox.append(m_Button_Close);\n  set_default_widget(m_Button_Close);\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nbool ExampleWindow::on_timeout()\n{\n  static double fraction = 0;\n  m_Entry.set_progress_fraction(fraction);\n\n  fraction += 0.01;\n  if(fraction > 1)\n    fraction = 0;\n\n  return true;\n}\n\nvoid ExampleWindow::on_button_close()\n{\n  close();\n}",
+   "sha": "468df54b5dd81110",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee-3",
+   "file": "main.cc",
    "zh": ""
   }
  ]

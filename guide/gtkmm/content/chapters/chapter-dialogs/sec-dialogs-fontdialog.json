@@ -34,6 +34,28 @@
    "ref": "figures/dialogs_fontdialog.png",
    "sha": "a80db61717a82a8f",
    "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  //Signal handlers:\n  void on_font_button_font_set();\n  void on_button_dialog_clicked();\n  void on_dialog_finish(const Glib::RefPtr<Gio::AsyncResult>& result);\n\n  //Child widgets:\n  Gtk::Box m_ButtonBox;\n  Gtk::FontDialogButton m_FontDialogButton;\n  Gtk::Button m_Button_Dialog;\n\n  Glib::RefPtr<Gtk::FontDialog> m_pDialog;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "d5247222b29f6c05",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/dialogs/fontdialog",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <iostream>\n\nExampleWindow::ExampleWindow()\n: m_ButtonBox(Gtk::Orientation::VERTICAL),\n  m_Button_Dialog(\"Choose Font\")\n{\n  set_title(\"Gtk::FontDialog example\");\n\n  set_child(m_ButtonBox);\n\n  m_pDialog = Gtk::FontDialog::create();\n\n  m_ButtonBox.append(m_FontDialogButton);\n  m_FontDialogButton.set_dialog(m_pDialog);\n  m_FontDialogButton.set_font_desc(Pango::FontDescription(\"Sans 10\"));\n  m_FontDialogButton.set_expand(true);\n  m_FontDialogButton.set_use_font(true);\n  m_FontDialogButton.set_use_size(true);\n  m_FontDialogButton.property_font_desc().signal_changed().connect(\n    sigc::mem_fun(*this, &ExampleWindow::on_font_button_font_set));\n\n  m_ButtonBox.append(m_Button_Dialog);\n  m_Button_Dialog.set_expand(true);\n  m_Button_Dialog.signal_clicked().connect(\n    sigc::mem_fun(*this, &ExampleWindow::on_button_dialog_clicked));\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_font_button_font_set()\n{\n  auto font_name = m_FontDialogButton.get_font_desc().to_string();\n  std::cout << \"Font chosen: \" << font_name << std::endl;\n}\n\nvoid ExampleWindow::on_button_dialog_clicked()\n{\n  // Get the previously selected font description from the FontDialogButton.\n  m_pDialog->choose_font(*this,\n    sigc::mem_fun(*this, &ExampleWindow::on_dialog_finish),\n    m_FontDialogButton.get_font_desc());\n}\n\nvoid ExampleWindow::on_dialog_finish(const Glib::RefPtr<Gio::AsyncResult>& result)\n{\n  try\n  {\n    // If this call changes the font, it will trigger a call to\n    // on_font_button_font_set().\n    m_FontDialogButton.set_font_desc(m_pDialog->choose_font_finish(result));\n  }\n  catch (const Gtk::DialogError& err)\n  {\n    // Can be thrown by m_pDialog->choose_font_finish(result).\n    std::cout << \"No font selected. \" << err.what() << std::endl;\n  }\n  catch (const Glib::Error& err)\n  {\n    std::cout << \"Unexpected exception. \" << err.what() << std::endl;\n  }\n}",
+   "sha": "784dabb67b7b408e",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee",
+   "file": "main.cc",
+   "zh": ""
   }
  ]
 }

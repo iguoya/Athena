@@ -23,6 +23,14 @@
    "zh": "在开始介绍 gtkmm 之前，我们将以一个尽可能简单的程序开始。这个程序创建一个 200 x 200 像素大小的空窗口。"
   },
   {
+   "type": "code",
+   "text": "#include <gtkmm.h>\n\nclass MyWindow : public Gtk::Window\n{\npublic:\n  MyWindow();\n};\n\nMyWindow::MyWindow()\n{\n  set_title(\"Basic application\");\n  set_default_size(200, 200);\n}\n\nint main(int argc, char* argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.examples.base\");\n\n  return app->make_window_and_run<MyWindow>(argc, argv);\n}",
+   "sha": "d902901ab9840e21",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/base",
+   "file": "base.cc",
+   "zh": ""
+  },
+  {
    "type": "para",
    "text": "We will now explain each part of the example",
    "sha": "0bda0050ce17862b",
@@ -32,7 +40,6 @@
    "type": "code",
    "text": "#include <gtkmm.h>",
    "sha": "6316eea381711010",
-   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/base",
    "zh": ""
   },
   {

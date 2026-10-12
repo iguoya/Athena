@@ -28,6 +28,42 @@
    "ref": "figures/dialogs_windowdialog.png",
    "sha": "b9560e5d647b3803",
    "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n#include \"namedialog.h\"\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  //Signal handlers:\n  void on_button_clicked();\n  void on_dialog_response(const Glib::ustring& response);\n  void on_dialog_hidden();\n\n  //Child widgets:\n  Gtk::Button m_Button;\n\n  NameDialog m_Dialog;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "926ab8f924dfaaa8",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/dialogs/windowdialog",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_NAME_DIALOG_H_\n#define GTKMM_NAME_DIALOG_H_\n\n#include <gtkmm.h>\n\nclass NameDialog : public Gtk::Window\n{\npublic:\n  NameDialog();\n  ~NameDialog() override;\n\n  void buttons_clicked_connect(const sigc::slot<void(const Glib::ustring&)>& slot);\n  Glib::ustring get_entry1() const;\n  Glib::ustring get_entry2() const;\n\nprotected:\n  //Member widgets:\n  Gtk::Grid m_Grid;\n  Gtk::Image m_Image;\n  Gtk::Label m_Label1;\n  Gtk::Label m_Label2;\n  Gtk::Entry m_Entry1;\n  Gtk::Entry m_Entry2;\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_OK;\n  Gtk::Button m_Button_Cancel;\n};\n\n#endif /* GTKMM_NAME_DIALOG_H_ */",
+   "sha": "8167a2dbb6518962",
+   "file": "namedialog.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <iostream>\n\nExampleWindow::ExampleWindow()\n: m_Button(\"Show Dialog\"),\n  m_Dialog()\n{\n  set_title(\"Custom Dialog example\");\n\n  set_child(m_Button);\n  m_Button.signal_clicked().connect(\n    sigc::mem_fun(*this, &ExampleWindow::on_button_clicked));\n\n  m_Dialog.set_default_size(250, 100);\n  m_Dialog.set_transient_for(*this);\n  m_Dialog.set_modal();\n  m_Dialog.set_hide_on_close();\n  m_Dialog.buttons_clicked_connect(\n    sigc::mem_fun(*this, &ExampleWindow::on_dialog_response));\n  m_Dialog.signal_hide().connect(\n    sigc::mem_fun(*this, &ExampleWindow::on_dialog_hidden));\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_button_clicked()\n{\n  m_Dialog.set_visible(true);\n}\n\nvoid ExampleWindow::on_dialog_response(const Glib::ustring& response)\n{\n  m_Dialog.set_visible(false);\n\n  if (response == \"OK\")\n    std::cout << \"Name: \" << m_Dialog.get_entry1() << \" \"\n      << m_Dialog.get_entry2() << std::endl; \n  else\n    std::cout << response << \" button clicked\" << std::endl;\n}\n\nvoid ExampleWindow::on_dialog_hidden()\n{\n  std::cout << \"Dialog hidden\" << std::endl;\n}",
+   "sha": "02ed6f39e4101305",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "NameDialog::NameDialog()\n: m_Label1(\"_First name\", true),\n  m_Label2(\"_Second name\", true),\n  m_ButtonBox(Gtk::Orientation::HORIZONTAL, 5),\n  m_Button_OK(\"_OK\", true),\n  m_Button_Cancel(\"_Cancel\", true)\n{\n  set_destroy_with_parent(true);\n\n  set_title(\"Name Dialog\");\n  set_child(m_Grid);\n\n  m_Grid.set_row_spacing(4);\n  m_Grid.set_column_spacing(4);\n  m_Grid.set_expand(true);\n\n  m_Image.set_from_icon_name(\"dialog-question\");\n  m_Image.set_icon_size(Gtk::IconSize::LARGE);\n  m_Grid.attach(m_Image, 0, 0, 1, 2);\n\n  m_Grid.attach(m_Label1, 1, 0);\n  m_Grid.attach(m_Entry1, 2, 0);\n  m_Label1.set_mnemonic_widget(m_Entry1);\n\n  m_Grid.attach(m_Label2, 1, 1);\n  m_Grid.attach(m_Entry2, 2, 1);\n  m_Label2.set_mnemonic_widget(m_Entry2);\n\n  m_Grid.attach(m_ButtonBox, 0, 2, 3, 1);\n  m_ButtonBox.set_halign(Gtk::Align::END);\n  m_ButtonBox.append(m_Button_OK);\n  m_ButtonBox.append(m_Button_Cancel);\n}\n\nvoid NameDialog::buttons_clicked_connect(\n  const sigc::slot<void(const Glib::ustring&)>& slot)\n{\n  m_Button_OK.signal_clicked().connect(sigc::bind(slot, \"OK\"));\n  m_Button_Cancel.signal_clicked().connect(sigc::bind(slot, \"Cancel\"));\n}\n\nGlib::ustring NameDialog::get_entry1() const\n{\n  return m_Entry1.get_text();\n}\n\nGlib::ustring NameDialog::get_entry2() const\n{\n  return m_Entry2.get_text();\n}\n\nNameDialog::~NameDialog()\n{\n}",
+   "sha": "6fff6ce74caf7f28",
+   "file": "namedialog.cc",
+   "zh": ""
   }
  ]
 }

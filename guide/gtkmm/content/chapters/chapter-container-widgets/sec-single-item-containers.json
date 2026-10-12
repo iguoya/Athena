@@ -54,6 +54,28 @@
    "zh": ""
   },
   {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n\n  //Child widgets:\n  Gtk::Frame m_Frame;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "c659c7c96186410d",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/frame",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n\nExampleWindow::ExampleWindow()\n{\n /* Set some window properties */\n  set_title(\"Frame Example\");\n  set_size_request(300, 300);\n\n  /* Sets the margin around the frame. */\n  m_Frame.set_margin(10);\n\n  set_child(m_Frame);\n\n  /* Set the frames label */\n  m_Frame.set_label(\"Gtk::Frame Widget\");\n\n  /* Align the label at the right of the frame */\n  m_Frame.set_label_align(Gtk::Align::END);\n}\n\nExampleWindow::~ExampleWindow()\n{\n}",
+   "sha": "29d5187b802cf5c2",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
    "type": "heading",
    "text": "Paned",
    "sha": "7ac63a60d9a1052b",
@@ -94,6 +116,56 @@
    "text": "Paned",
    "ref": "figures/paned.png",
    "sha": "7ac63a60d9a1052b-1",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include \"messageslist.h\"\n#include \"messagetext.h\"\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n\n  //Child widgets:\n  Gtk::Paned m_VPaned;\n  MessagesList m_MessagesList;\n  MessageText m_MessageText;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "b02571a4178a2c92",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/paned",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLE_MESSAGESLIST_H\n#define GTKMM_EXAMPLE_MESSAGESLIST_H\n\n#include <gtkmm.h>\n\nclass MessagesList: public Gtk::ScrolledWindow\n{\npublic:\n  MessagesList();\n  ~MessagesList() override;\n\nprotected:\n  // Signal handlers:\n  void on_setup_message(const Glib::RefPtr<Gtk::ListItem>& list_item);\n  void on_bind_message(const Glib::RefPtr<Gtk::ListItem>& list_item);\n\n  Glib::RefPtr<Gtk::StringList> m_refStringList; // The List Model.\n  Gtk::ListView m_ListView; // The List View.\n};\n#endif //GTKMM_EXAMPLE_MESSAGESLIST_H",
+   "sha": "c6c97d1a0fd9c727",
+   "file": "messageslist.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLE_MESSAGETEXT_H\n#define GTKMM_EXAMPLE_MESSAGETEXT_H\n\n#include <gtkmm.h>\n\nclass MessageText : public Gtk::ScrolledWindow\n{\npublic:\n  MessageText();\n  virtual ~MessageText();\n\n  void insert_text();\n\nprotected:\n  Gtk::TextView m_TextView;\n};\n\n#endif //GTKMM_EXAMPLE_MESSAGETEXT_H",
+   "sha": "8435eec8b57f9acd",
+   "file": "messagetext.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n\nExampleWindow::ExampleWindow()\n: m_VPaned(Gtk::Orientation::VERTICAL)\n{\n  set_title (\"Paned Windows\");\n  set_default_size(450, 400);\n  m_VPaned.set_margin(10);\n\n  /* Add a vpaned widget to our toplevel window */\n  set_child(m_VPaned);\n\n  /* Now add the contents of the two halves of the window */\n  m_VPaned.set_start_child(m_MessagesList);\n  m_VPaned.set_end_child(m_MessageText);\n}\n\nExampleWindow::~ExampleWindow()\n{\n}",
+   "sha": "3bb7765c098ff0da",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee-1",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"messageslist.h\"\n\nMessagesList::MessagesList()\n{\n  /* Create a new scrolled window, with scrollbars only if needed */\n  set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);\n\n  set_child(m_ListView);\n\n  /* create list store */\n  m_refStringList = Gtk::StringList::create({});\n  auto selection_model = Gtk::SingleSelection::create(m_refStringList);\n  m_ListView.set_model(selection_model);\n\n  /* Add some messages to the window */\n  for (int i = 1; i <= 10; ++i)\n    m_refStringList->append(Glib::ustring::format(\"message #\", i));\n\n  // Create a ListItemFactory to use for populating list items.\n  auto factory = Gtk::SignalListItemFactory::create();\n  factory->signal_setup().connect(sigc::mem_fun(*this, &MessagesList::on_setup_message));\n  factory->signal_bind().connect(sigc::mem_fun(*this, &MessagesList::on_bind_message));\n  m_ListView.set_factory(factory);\n}\n\nMessagesList::~MessagesList()\n{\n}\n\nvoid MessagesList::on_setup_message(const Glib::RefPtr<Gtk::ListItem>& list_item)\n{\n  auto label = Gtk::make_managed<Gtk::Label>();\n  label->set_halign(Gtk::Align::START);\n  list_item->set_child(*label);\n}\n\nvoid MessagesList::on_bind_message(const Glib::RefPtr<Gtk::ListItem>& list_item)\n{\n  auto pos = list_item->get_position();\n  if (pos == GTK_INVALID_LIST_POSITION)\n    return;\n  auto label = dynamic_cast<Gtk::Label*>(list_item->get_child());\n  if (!label)\n    return;\n  label->set_text(m_refStringList->get_string(pos));\n}",
+   "sha": "c5f4fac3c0895398",
+   "file": "messageslist.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"messagetext.h\"\n\nMessageText::MessageText()\n{\n  set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);\n\n  set_child(m_TextView);\n  insert_text();\n}\n\nMessageText::~MessageText()\n{\n}\n\nvoid MessageText::insert_text()\n{\n  auto refTextBuffer = m_TextView.get_buffer();\n\n  auto iter = refTextBuffer->get_iter_at_offset(0);\n  refTextBuffer->insert(iter,\n    \"From: pathfinder@nasa.gov\\n\"\n    \"To: mom@nasa.gov\\n\"\n    \"Subject: Made it!\\n\"\n    \"\\n\"\n    \"We just got in this morning. The weather has been\\n\"\n    \"great - clear but cold, and there are lots of fun sights.\\n\"\n    \"Sojourner says hi. See you soon.\\n\"\n    \" -Path\\n\");\n}",
+   "sha": "af01f7681a8e9257",
+   "file": "messagetext.cc",
    "zh": ""
   },
   {
@@ -140,6 +212,28 @@
    "zh": ""
   },
   {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  //Signal handlers:\n  void on_button_close();\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::Grid m_Grid;\n  Gtk::Button m_ButtonClose;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "ea81ca592ef48422",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/scrolledwindow",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <iostream>\n\nExampleWindow::ExampleWindow()\n: m_VBox(Gtk::Orientation::VERTICAL, 10),\n  m_ButtonClose(\"_Close\", true)\n{\n  set_title(\"Gtk::ScrolledWindow example\");\n  set_size_request(300, 300);\n\n  set_child(m_VBox);\n  m_VBox.set_margin(10);\n\n  /* The policy is one of Gtk::PolicyType::AUTOMATIC, or Gtk::PolicyType::ALWAYS.\n   * Gtk::PolicyType::AUTOMATIC will automatically decide whether you need\n   * scrollbars, whereas Gtk::PolicyType::ALWAYS will always leave the scrollbars\n   * there. The first one is the horizontal scrollbar, the second, the vertical. */\n  m_ScrolledWindow.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::ALWAYS);\n  m_ScrolledWindow.set_expand();\n\n  m_VBox.append(m_ScrolledWindow);\n\n  /* set the spacing to 10 on x and 10 on y */\n  m_Grid.set_row_spacing(10);\n  m_Grid.set_column_spacing(10);\n\n  /* pack the grid into the scrolled window */\n  m_ScrolledWindow.set_child(m_Grid);\n\n  /* this simply creates a grid of toggle buttons\n   * to demonstrate the scrolled window. */\n  for (int i = 0; i < 10; i++)\n  {\n    for (int j = 0; j < 10; j++)\n    {\n      auto s = Glib::ustring::compose(\"button (%1,%2)\", i, j);\n      auto pButton = Gtk::make_managed<Gtk::ToggleButton>(s);\n      m_Grid.attach(*pButton, i, j);\n    }\n  }\n\n  /* Add a \"close\" button to the bottom of the dialog */\n  m_VBox.append(m_ButtonClose);\n  m_ButtonClose.set_halign(Gtk::Align::END);\n  m_ButtonClose.signal_clicked().connect(\n    sigc::mem_fun(*this, &ExampleWindow::on_button_close));\n\n  /* Hitting the \"Enter\" key will cause this button to activate. */\n  m_ButtonClose.grab_focus();\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_button_close()\n{\n  close();\n}",
+   "sha": "873a440372e5a245",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee-2",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
    "type": "heading",
    "text": "AspectFrame",
    "sha": "cccc4e87163da7f8",
@@ -174,6 +268,28 @@
    "text": "AspectFrame",
    "ref": "figures/aspectframe.png",
    "sha": "cccc4e87163da7f8-1",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n\n  //Child widgets:\n  Gtk::AspectFrame m_AspectFrame;\n  Gtk::Frame m_Frame;\n  Gtk::DrawingArea m_DrawingArea;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "2932f07e1d521d14",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/aspectframe",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n\nExampleWindow::ExampleWindow()\n: m_AspectFrame(\n    Gtk::Align::CENTER, /* center x */\n    Gtk::Align::CENTER, /* center y */\n    2.0, /* xsize/ysize = 2 */\n    false /* ignore child's aspect */),\n  m_Frame(\"2x1\" /* label */)\n{\n  set_title(\"Aspect Frame\");\n\n  // Set a child widget to the aspect frame */\n  // Ask for a 200x200 window, but the AspectFrame will give us a 200x100\n  // window since we are forcing a 2x1 aspect ratio */\n  m_DrawingArea.set_content_width(200);\n  m_DrawingArea.set_content_height(200);\n  m_Frame.set_child(m_DrawingArea);\n  m_AspectFrame.set_child(m_Frame);\n  m_AspectFrame.set_margin(10);\n\n  // Add the aspect frame to our toplevel window:\n  set_child(m_AspectFrame);\n}\n\nExampleWindow::~ExampleWindow()\n{\n}",
+   "sha": "68108a0a39b2a824",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee-3",
+   "file": "main.cc",
    "zh": ""
   },
   {

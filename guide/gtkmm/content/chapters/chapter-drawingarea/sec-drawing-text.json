@@ -34,6 +34,28 @@
    "ref": "figures/drawingarea_pango_text.png",
    "sha": "0b7a30062da6f131",
    "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLE_MYAREA_H\n#define GTKMM_EXAMPLE_MYAREA_H\n\n#include <gtkmm/drawingarea.h>\n\nclass MyArea : public Gtk::DrawingArea\n{\npublic:\n  MyArea();\n  virtual ~MyArea();\n\nprotected:\n  void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);\n\nprivate:\n  void draw_rectangle(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);\n  void draw_text(const Cairo::RefPtr<Cairo::Context>& cr, int rectangle_width, int rectangle_height);\n\n};\n\n#endif // GTKMM_EXAMPLE_MYAREA_H",
+   "sha": "8ea1d6850c66f644",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/drawingarea/pango_text",
+   "file": "myarea.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"myarea.h\"\n#include <gtkmm/application.h>\n#include <gtkmm/window.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n\nprotected:\n  MyArea m_area;\n};\n\nExampleWindow::ExampleWindow()\n{\n  set_title(\"Drawing text example\");\n  set_child(m_area);\n}\n\nint main(int argc, char* argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "f40c6b1841b139ef",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"myarea.h\"\n\nMyArea::MyArea()\n{\n  set_draw_func(sigc::mem_fun(*this, &MyArea::on_draw));\n}\n\nMyArea::~MyArea()\n{\n}\n\nvoid MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height)\n{\n  const int rectangle_width = width;\n  const int rectangle_height = height / 2;\n\n  // Draw a black rectangle\n  cr->set_source_rgb(0.0, 0.0, 0.0);\n  draw_rectangle(cr, rectangle_width, rectangle_height);\n\n  // and some white text\n  cr->set_source_rgb(1.0, 1.0, 1.0);\n  draw_text(cr, rectangle_width, rectangle_height);\n\n  // flip the image vertically\n  // see http://www.cairographics.org/documentation/cairomm/reference/classCairo_1_1Matrix.html\n  // the -1 corresponds to the yy part (the flipping part)\n  // the height part is a translation (we could have just called cr->translate(0, height) instead)\n  // it's height and not height / 2, since we want this to be on the second part of our drawing\n  // (otherwise, it would draw over the previous part)\n  Cairo::Matrix matrix(1.0, 0.0, 0.0, -1.0, 0.0, height);\n\n  // apply the matrix\n  cr->transform(matrix);\n\n  // white rectangle\n  cr->set_source_rgb(1.0, 1.0, 1.0);\n  draw_rectangle(cr, rectangle_width, rectangle_height);\n\n  // black text\n  cr->set_source_rgb(0.0, 0.0, 0.0);\n  draw_text(cr, rectangle_width, rectangle_height);\n}\n\nvoid MyArea::draw_rectangle(const Cairo::RefPtr<Cairo::Context>& cr,\n                            int width, int height)\n{\n  cr->rectangle(0, 0, width, height);\n  cr->fill();\n}\n\nvoid MyArea::draw_text(const Cairo::RefPtr<Cairo::Context>& cr,\n                       int rectangle_width, int rectangle_height)\n{\n  // https://gnome.pages.gitlab.gnome.org/pangomm/classPango_1_1FontDescription.html\n  Pango::FontDescription font;\n\n  font.set_family(\"Monospace\");\n  font.set_weight(Pango::Weight::BOLD);\n\n  // https://gnome.pages.gitlab.gnome.org/pangomm/classPango_1_1Layout.html\n  auto layout = create_pango_layout(\"Hi there!\");\n\n  layout->set_font_description(font);\n\n  int text_width;\n  int text_height;\n\n  //get the text dimensions (it updates the variables -- by reference)\n  layout->get_pixel_size(text_width, text_height);\n\n  // Position the text in the middle\n  cr->move_to((rectangle_width-text_width)/2, (rectangle_height-text_height)/2);\n\n  layout->show_in_cairo_context(cr);\n}",
+   "sha": "60cd703f568e5495",
+   "file": "myarea.cc",
+   "zh": ""
   }
  ]
 }

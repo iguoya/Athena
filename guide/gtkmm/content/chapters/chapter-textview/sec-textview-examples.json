@@ -18,6 +18,28 @@
    "zh": ""
   },
   {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n\n  void fill_buffers();\n\n  //Signal handlers:\n  void on_button_quit();\n  void on_button_buffer1();\n  void on_button_buffer2();\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::TextView m_TextView;\n\n  Glib::RefPtr<Gtk::TextBuffer> m_refTextBuffer1, m_refTextBuffer2;\n\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit, m_Button_Buffer1, m_Button_Buffer2;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "c7067fcfa0ff23e6",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/textview/",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n\nExampleWindow::ExampleWindow()\n: m_VBox(Gtk::Orientation::VERTICAL),\n  m_Button_Quit(\"_Quit\", true),\n  m_Button_Buffer1(\"Use buffer 1\"),\n  m_Button_Buffer2(\"Use buffer 2\")\n{\n  set_title(\"Gtk::TextView example\");\n  set_default_size(400, 200);\n\n  m_VBox.set_margin(5);\n  set_child(m_VBox);\n\n  //Add the TreeView, inside a ScrolledWindow, with the button underneath:\n  m_ScrolledWindow.set_child(m_TextView);\n\n  //Only show the scrollbars when they are necessary:\n  m_ScrolledWindow.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);\n  m_ScrolledWindow.set_expand();\n\n  m_VBox.append(m_ScrolledWindow);\n\n  //append buttons:\n  m_VBox.append(m_ButtonBox);\n\n  m_Button_Buffer1.set_hexpand(true);\n  m_Button_Buffer1.set_halign(Gtk::Align::END);\n  m_ButtonBox.append(m_Button_Buffer1);\n  m_ButtonBox.append(m_Button_Buffer2);\n  m_ButtonBox.append(m_Button_Quit);\n  m_ButtonBox.set_margin(5);\n  m_ButtonBox.set_spacing(5);\n\n  //Connect signals:\n  m_Button_Quit.signal_clicked().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_button_quit) );\n  m_Button_Buffer1.signal_clicked().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_button_buffer1) );\n  m_Button_Buffer2.signal_clicked().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_button_buffer2) );\n\n  fill_buffers();\n  on_button_buffer1();\n}\n\nvoid ExampleWindow::fill_buffers()\n{\n  m_refTextBuffer1 = Gtk::TextBuffer::create();\n  m_refTextBuffer1->set_text(\"This is the text from TextBuffer #1.\");\n\n  m_refTextBuffer2 = Gtk::TextBuffer::create();\n  m_refTextBuffer2->set_text(\n          \"This is some alternative text, from TextBuffer #2.\");\n\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_button_quit()\n{\n  close();\n}\n\nvoid ExampleWindow::on_button_buffer1()\n{\n  m_TextView.set_buffer(m_refTextBuffer1);\n}\n\nvoid ExampleWindow::on_button_buffer2()\n{\n  m_TextView.set_buffer(m_refTextBuffer2);\n}",
+   "sha": "0e064098937eb803",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
    "type": "heading",
    "text": "Other Examples",
    "sha": "05d0c789aafa03fa",

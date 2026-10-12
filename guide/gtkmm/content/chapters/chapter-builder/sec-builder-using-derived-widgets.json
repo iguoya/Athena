@@ -111,6 +111,42 @@
    "text": "This example shows how to load a `.ui` file\nat runtime and access the widgets via derived classes.",
    "sha": "b2a8df927d9905ec",
    "zh": "本示例展示了如何在运行时加载Glade文件以及如何通过派生类访问部件。"
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLE_DERIVED_BUTTON_H\n#define GTKMM_EXAMPLE_DERIVED_BUTTON_H\n\n#include <gtkmm.h>\n\nclass DerivedButton : public Gtk::Button\n{\npublic:\n  DerivedButton();\n  DerivedButton(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refBuilder);\n  virtual ~DerivedButton();\n\n  // Provide proxies for the properties. The proxy allows you to connect to\n  // the 'changed' signal, etc.\n  Glib::PropertyProxy<Glib::ustring> property_ustring() { return prop_ustring.get_proxy(); }\n  Glib::PropertyProxy<int> property_int() { return prop_int.get_proxy(); }\n\nprivate:\n  Glib::Property<Glib::ustring> prop_ustring;\n  Glib::Property<int> prop_int;\n};\n\n#endif //GTKMM_EXAMPLE_DERIVED_BUTTON_H",
+   "sha": "6a9f4caf946a31ea",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/builder/derived",
+   "file": "derivedbutton.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLE_DERIVED_DIALOG_H\n#define GTKMM_EXAMPLE_DERIVED_DIALOG_H\n\n#include <gtkmm.h>\n#include \"derivedbutton.h\"\n\nclass DerivedDialog : public Gtk::Window\n{\npublic:\n  DerivedDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refBuilder);\n  DerivedDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refBuilder,\n    bool is_glad);\n  ~DerivedDialog() override;\n\nprotected:\n  //Signal handlers:\n  void on_button_quit();\n\n  Glib::RefPtr<Gtk::Builder> m_refBuilder;\n  DerivedButton* m_pButton;\n};\n\n#endif //GTKMM_EXAMPLE_DERIVED_DIALOG_H",
+   "sha": "f61289d6a09d7841",
+   "file": "deriveddialog.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"derivedbutton.h\"\n#include <iostream>\n\n// For creating a dummy object in main.cc.\nDerivedButton::DerivedButton()\n: Glib::ObjectBase(\"MyButton\"),\n  prop_ustring(*this, \"button-ustring\"),\n  prop_int(*this, \"button-int\", 10)\n{\n}\n\nDerivedButton::DerivedButton(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& /* refBuilder */)\n: // To register custom properties, you must register a custom GType.  If\n  // you don't know what that means, don't worry, just remember to add\n  // this Glib::ObjectBase constructor call to your class' constructor.\n  // The GType name will be gtkmm__CustomObject_MyButton.\n  Glib::ObjectBase(\"MyButton\"),\n  Gtk::Button(cobject),\n  // register the properties with the object and give them names\n  prop_ustring(*this, \"button-ustring\"),\n  // this one has a default value\n  prop_int(*this, \"button-int\", 10)\n{\n  // Register some handlers that will be called when the values of the\n  // specified parameters are changed.\n  property_ustring().signal_changed().connect(\n    [](){ std::cout << \"- ustring property changed!\" << std::endl; }\n  );\n  property_int().signal_changed().connect(\n    [](){ std::cout << \"- int property changed!\" << std::endl; }\n  );\n}\n\nDerivedButton::~DerivedButton()\n{\n}",
+   "sha": "db4e61389464d977",
+   "file": "derivedbutton.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"deriveddialog.h\"\n#include <iostream>\n\nDerivedDialog::DerivedDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refBuilder)\n: Gtk::Window(cobject),\n  m_refBuilder(refBuilder),\n  m_pButton(nullptr)\n{\n  // Get the GtkBuilder-instantiated Button, and connect a signal handler:\n  m_pButton = Gtk::Builder::get_widget_derived<DerivedButton>(m_refBuilder, \"quit_button\");\n  if (m_pButton)\n  {\n    m_pButton->signal_clicked().connect( sigc::mem_fun(*this, &DerivedDialog::on_button_quit) );\n    std::cout << \"ustring, int: \" << m_pButton->property_ustring()\n              << \", \" << m_pButton->property_int() << std::endl;\n    m_pButton->property_int() = 99;\n    std::cout << \"ustring, int: \" << m_pButton->property_ustring()\n              << \", \" << m_pButton->property_int() << std::endl;\n  }\n}\n\n// The first two parameters are mandatory in a constructor that will be called\n// from Gtk::Builder::get_widget_derived().\n// Additional parameters, if any, correspond to additional arguments in the call\n// to Gtk::Builder::get_widget_derived().\nDerivedDialog::DerivedDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refBuilder,\n  bool is_glad)\n: DerivedDialog(cobject, refBuilder) // Delegate to the other constructor\n{\n  // Show an icon.\n  auto content_area = refBuilder->get_widget<Gtk::Box>(\"dialog-content_area\");\n  if (!content_area)\n  {\n    std::cerr << \"Could not get the content area\" << std::endl;\n    return;\n  }\n  auto pImage = Gtk::make_managed<Gtk::Image>();\n  pImage->set_from_icon_name(is_glad ? \"face-smile\" : \"face-sad\");\n  pImage->set_icon_size(Gtk::IconSize::LARGE);\n  pImage->set_expand();\n  content_area->append(*pImage);\n}\n\nDerivedDialog::~DerivedDialog()\n{\n}\n\nvoid DerivedDialog::on_button_quit()\n{\n  // When the application's only window is removed with\n  // unset_application(), Gtk::Application::run() will end.\n  unset_application();\n}",
+   "sha": "4b5f6cd94961edb2",
+   "file": "deriveddialog.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"deriveddialog.h\"\n#include <iostream>\n#include <cstring>\n\nnamespace\n{\nbool show_icon = false;\nbool is_glad = true;\n\nDerivedDialog* pDialog = nullptr;\nGlib::RefPtr<Gtk::Application> app;\n\nvoid on_app_activate()\n{\n  // Create a dummy instance before the call to refBuilder->add_from_file().\n  // This creation registers DerivedButton's class in the GType system.\n  // This is necessary because DerivedButton contains user-defined properties\n  // (Glib::Property) and is created by Gtk::Builder.\n  static_cast<void>(DerivedButton());\n\n  // Load the GtkBuilder file and instantiate its widgets:\n  auto refBuilder = Gtk::Builder::create();\n  try\n  {\n    refBuilder->add_from_file(\"derived.ui\");\n  }\n  catch(const Glib::FileError& ex)\n  {\n    std::cerr << \"FileError: \" << ex.what() << std::endl;\n    return;\n  }\n  catch(const Glib::MarkupError& ex)\n  {\n    std::cerr << \"MarkupError: \" << ex.what() << std::endl;\n    return;\n  }\n  catch(const Gtk::BuilderError& ex)\n  {\n    std::cerr << \"BuilderError: \" << ex.what() << std::endl;\n    return;\n  }\n\n  // Get the GtkBuilder-instantiated dialog:\n  if (show_icon)\n    pDialog = Gtk::Builder::get_widget_derived<DerivedDialog>(refBuilder, \"DialogDerived\", is_glad);\n  else\n    pDialog = Gtk::Builder::get_widget_derived<DerivedDialog>(refBuilder, \"DialogDerived\");\n\n  if (!pDialog)\n  {\n    std::cerr << \"Could not get the dialog\" << std::endl;\n    return;\n  }\n\n  // It's not possible to delete widgets after app->run() has returned.\n  // Delete the dialog with its child widgets before app->run() returns.\n  app->signal_window_removed().connect([](Gtk::Window* window) { delete window; });\n\n  app->add_window(*pDialog);\n  pDialog->set_visible(true);\n}\n} // anonymous namespace\n\nint main(int argc, char** argv)\n{\n  int argc1 = argc;\n  if (argc > 1)\n  {\n    if (std::strcmp(argv[1], \"--glad\") == 0)\n    {\n      show_icon = true;\n      is_glad = true;\n      argc1 = 1; // Don't give the command line arguments to Gtk::Application.\n    }\n    else if (std::strcmp(argv[1], \"--sad\") == 0)\n    {\n      show_icon = true;\n      is_glad = false;\n      argc1 = 1; // Don't give the command line arguments to Gtk::Application.\n    }\n  }\n\n  app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  // Instantiate a dialog when the application has been activated.\n  // This can only be done after the application has been registered.\n  // It's possible to call app->register_application() explicitly, but\n  // usually it's easier to let app->run() do it for you.\n  app->signal_activate().connect([] () { on_app_activate(); });\n\n  return app->run(argc1, argv);\n}",
+   "sha": "5307595a4dc4e677",
+   "file": "main.cc",
+   "zh": ""
   }
  ]
 }

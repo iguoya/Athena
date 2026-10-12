@@ -123,6 +123,49 @@
    "text": "This does not look very impressive yet, but our application is already presenting itself\non the session bus, it has single-instance semantics, and it accepts files as commandline arguments.",
    "sha": "89bf54770bb25d8f",
    "zh": "这看起来还无法让人印象深刻，但是我们的应用程序已经在会话总线上展示了自己。现在它具有单实例语义，并且接受命令行参数作为文件路径。"
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEAPPLICATION_H\n#define GTKMM_EXAMPLEAPPLICATION_H\n\n#include <gtkmm.h>\n\nclass ExampleAppWindow;\n\nclass ExampleApplication: public Gtk::Application\n{\nprotected:\n  ExampleApplication();\n\npublic:\n  static Glib::RefPtr<ExampleApplication> create();\n\nprotected:\n  // Override default signal handlers:\n  void on_activate() override;\n  void on_open(const Gio::Application::type_vec_files& files,\n    const Glib::ustring& hint) override;\n\nprivate:\n  ExampleAppWindow* create_appwindow();\n};\n\n#endif /* GTKMM_EXAMPLEAPPLICATION_H */",
+   "sha": "6e66f54fc03cb843",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/buildapp/step1",
+   "file": "exampleapplication.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEAPPWINDOW_H_\n#define GTKMM_EXAMPLEAPPWINDOW_H_\n\n#include <gtkmm.h>\n\nclass ExampleAppWindow : public Gtk::ApplicationWindow\n{\npublic:\n  ExampleAppWindow();\n\n  void open_file_view(const Glib::RefPtr<Gio::File>& file);\n};\n\n#endif /* GTKMM_EXAMPLEAPPWINDOW_H */",
+   "sha": "e42e460670c1f664",
+   "file": "exampleappwindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"exampleapplication.h\"\n#include \"exampleappwindow.h\"\n\nExampleApplication::ExampleApplication()\n: Gtk::Application(\"org.gtkmm.examples.application\", Gio::Application::Flags::HANDLES_OPEN)\n{\n  // Delete a window when it is removed from the application.\n  signal_window_removed().connect([](Gtk::Window* window) { delete window; });\n}\n\nGlib::RefPtr<ExampleApplication> ExampleApplication::create()\n{\n  return Glib::make_refptr_for_instance<ExampleApplication>(new ExampleApplication());\n}\n\nExampleAppWindow* ExampleApplication::create_appwindow()\n{\n  auto appwindow = new ExampleAppWindow();\n\n  // Make sure that the application runs for as long this window is still open.\n  add_window(*appwindow);\n\n  // A window can be added to an application with Gtk::Application::add_window()\n  // or Gtk::Window::set_application(). When all added windows have been removed,\n  // the application stops running (Gtk::Application::run() returns),\n  // unless Gio::Application::hold() has been called.\n\n  return appwindow;\n}\n\nvoid ExampleApplication::on_activate()\n{\n  // The application has been started, so let's show a window.\n  auto appwindow = create_appwindow();\n  appwindow->present();\n}\n\nvoid ExampleApplication::on_open(const Gio::Application::type_vec_files& files,\n  const Glib::ustring& /* hint */)\n{\n  // The application has been asked to open some files,\n  // so let's open a new view for each one.\n  ExampleAppWindow* appwindow = nullptr;\n  auto windows = get_windows();\n  if (windows.size() > 0)\n    appwindow = dynamic_cast<ExampleAppWindow*>(windows[0]);\n\n  if (!appwindow)\n    appwindow = create_appwindow();\n\n  for (const auto& file : files)\n    appwindow->open_file_view(file);\n\n  appwindow->present();\n}",
+   "sha": "0a053dbfefdc8228",
+   "file": "exampleapplication.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"exampleappwindow.h\"\n\nExampleAppWindow::ExampleAppWindow()\n: Gtk::ApplicationWindow()\n{\n}\n\nvoid ExampleAppWindow::open_file_view(const Glib::RefPtr<Gio::File>& /* file */)\n{\n}",
+   "sha": "1eec5792a6403961",
+   "file": "exampleappwindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"exampleapplication.h\"\n\nint main(int argc, char* argv[])\n{\n  auto application = ExampleApplication::create();\n\n  // Start the application, showing the initial window,\n  // and opening extra views for any files that it is asked to open,\n  // for instance as a command-line parameter.\n  // run() will return when the last window has been closed.\n  return application->run(argc, argv);\n}",
+   "sha": "3d79635e0e10029c",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "[Desktop Entry]\nType=Application\nName=Gtkmm example\nGenericName=Example\nComment=From the \"Programming with gtkmm 4\" tutorial\nIcon=exampleapp\nStartupNotify=true\nExec=@bindir@/exampleapp %U\nCategories=GNOME;GTK;Utility",
+   "sha": "9a87253cb2fff83e",
+   "file": "exampleapp.desktop.in",
+   "zh": ""
   }
  ]
 }

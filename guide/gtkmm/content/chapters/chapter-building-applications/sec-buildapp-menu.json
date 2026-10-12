@@ -46,6 +46,75 @@
    "ref": "figures/buildapp_menu.png",
    "sha": "19f324e38a077c28",
    "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEAPPLICATION_H\n#define GTKMM_EXAMPLEAPPLICATION_H\n\n#include <gtkmm.h>\n\nclass ExampleAppWindow;\n\nclass ExampleApplication: public Gtk::Application\n{\nprotected:\n  ExampleApplication();\n\npublic:\n  static Glib::RefPtr<ExampleApplication> create();\n\nprotected:\n  // Override default signal handlers:\n  void on_startup() override;\n  void on_activate() override;\n  void on_open(const Gio::Application::type_vec_files& files,\n    const Glib::ustring& hint) override;\n\nprivate:\n  ExampleAppWindow* create_appwindow();\n  void on_action_preferences();\n  void on_action_quit();\n};\n\n#endif /* GTKMM_EXAMPLEAPPLICATION_H */",
+   "sha": "58b74ffd61ec7619",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/buildapp/step4",
+   "file": "exampleapplication.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEAPPWINDOW_H_\n#define GTKMM_EXAMPLEAPPWINDOW_H_\n\n#include <gtkmm.h>\n\nclass ExampleAppWindow : public Gtk::ApplicationWindow\n{\npublic:\n  ExampleAppWindow(BaseObjectType* cobject,\n    const Glib::RefPtr<Gtk::Builder>& refBuilder);\n\n  static ExampleAppWindow* create();\n\n  void open_file_view(const Glib::RefPtr<Gio::File>& file);\n\nprotected:\n  Glib::RefPtr<Gtk::Builder> m_refBuilder;\n  Gtk::Stack* m_stack {nullptr};\n  Gtk::MenuButton* m_gears {nullptr};\n};\n\n#endif /* GTKMM_EXAMPLEAPPWINDOW_H */",
+   "sha": "8ee1219cfb84638d",
+   "file": "exampleappwindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"exampleapplication.h\"\n#include \"exampleappwindow.h\"\n#include <iostream>\n#include <exception>\n\nExampleApplication::ExampleApplication()\n: Gtk::Application(\"org.gtkmm.examples.application\", Gio::Application::Flags::HANDLES_OPEN)\n{\n  // Delete a window when it is removed from the application.\n  signal_window_removed().connect([](Gtk::Window* window) { delete window; });\n}\n\nGlib::RefPtr<ExampleApplication> ExampleApplication::create()\n{\n  return Glib::make_refptr_for_instance<ExampleApplication>(new ExampleApplication());\n}\n\nExampleAppWindow* ExampleApplication::create_appwindow()\n{\n  auto appwindow = ExampleAppWindow::create();\n\n  // Make sure that the application runs for as long this window is still open.\n  add_window(*appwindow);\n\n  // A window can be added to an application with Gtk::Application::add_window()\n  // or Gtk::Window::set_application(). When all added windows have been removed,\n  // the application stops running (Gtk::Application::run() returns),\n  // unless Gio::Application::hold() has been called.\n\n  return appwindow;\n}\n\nvoid ExampleApplication::on_startup()\n{\n  // Call the base class's implementation.\n  Gtk::Application::on_startup();\n\n  // Add actions and keyboard accelerators for the menu.\n  add_action(\"preferences\", sigc::mem_fun(*this, &ExampleApplication::on_action_preferences));\n  add_action(\"quit\", sigc::mem_fun(*this, &ExampleApplication::on_action_quit));\n  set_accel_for_action(\"app.quit\", \"<Ctrl>Q\");\n}\n\nvoid ExampleApplication::on_activate()\n{\n  try\n  {\n    // The application has been started, so let's show a window.\n    auto appwindow = create_appwindow();\n    appwindow->present();\n  }\n  // If create_appwindow() throws an exception (perhaps from Gtk::Builder),\n  // no window has been created, no window has been added to the application,\n  // and therefore the application will stop running.\n  catch (const Glib::Error& ex)\n  {\n    std::cerr << \"ExampleApplication::on_activate(): \" << ex.what() << std::endl;\n  }\n  catch (const std::exception& ex)\n  {\n    std::cerr << \"ExampleApplication::on_activate(): \" << ex.what() << std::endl;\n  }\n}\n\nvoid ExampleApplication::on_open(const Gio::Application::type_vec_files& files,\n  const Glib::ustring& /* hint */)\n{\n  // The application has been asked to open some files,\n  // so let's open a new view for each one.\n  ExampleAppWindow* appwindow = nullptr;\n  auto windows = get_windows();\n  if (windows.size() > 0)\n    appwindow = dynamic_cast<ExampleAppWindow*>(windows[0]);\n\n  try\n  {\n    if (!appwindow)\n      appwindow = create_appwindow();\n\n    for (const auto& file : files)\n      appwindow->open_file_view(file);\n\n    appwindow->present();\n  }\n  catch (const Glib::Error& ex)\n  {\n    std::cerr << \"ExampleApplication::on_open(): \" << ex.what() << std::endl;\n  }\n  catch (const std::exception& ex)\n  {\n    std::cerr << \"ExampleApplication::on_open(): \" << ex.what() << std::endl;\n  }\n}\n\nvoid ExampleApplication::on_action_preferences()\n{\n\n}\n\nvoid ExampleApplication::on_action_quit()\n{\n  // Gio::Application::quit() will make Gio::Application::run() return,\n  // but it's a crude way of ending the program. The window is not removed\n  // from the application. Neither the window's nor the application's\n  // destructors will be called, because there will be remaining reference\n  // counts in both of them. If we want the destructors to be called, we\n  // must remove the window from the application. See ExampleApplication's constructor.\n  // A window can be removed from an application with Gtk::Application::remove_window()\n  // or Gtk::Window::unset_application().\n  auto windows = get_windows();\n  for (auto window : windows)\n    remove_window(*window);\n\n  // Not really necessary, when Gtk::Application::remove_window() is called,\n  // unless Gio::Application::hold() has been called without a corresponding\n  // call to Gio::Application::release().\n  quit();\n}",
+   "sha": "c2e7bfe26b4316da",
+   "file": "exampleapplication.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"exampleappwindow.h\"\n#include <iostream>\n#include <stdexcept>\n\nExampleAppWindow::ExampleAppWindow(BaseObjectType* cobject,\n  const Glib::RefPtr<Gtk::Builder>& refBuilder)\n: Gtk::ApplicationWindow(cobject),\n  m_refBuilder(refBuilder)\n{\n  // Get widgets from the Gtk::Builder file.\n  m_stack = m_refBuilder->get_widget<Gtk::Stack>(\"stack\");\n  if (!m_stack)\n    throw std::runtime_error(\"No \\\"stack\\\" object in window.ui\");\n\n  m_gears = m_refBuilder->get_widget<Gtk::MenuButton>(\"gears\");\n  if (!m_gears)\n    throw std::runtime_error(\"No \\\"gears\\\" object in window.ui\");\n\n  // Connect the menu to the MenuButton m_gears.\n  // (The connection between action and menu item is specified in gears_menu.ui.)\n  auto menu_builder = Gtk::Builder::create_from_resource(\"/org/gtkmm/exampleapp/gears_menu.ui\");\n  auto menu = menu_builder->get_object<Gio::MenuModel>(\"menu\");\n  if (!menu)\n    throw std::runtime_error(\"No \\\"menu\\\" object in gears_menu.ui\");\n\n  m_gears->set_menu_model(menu);\n}\n\n//static\nExampleAppWindow* ExampleAppWindow::create()\n{\n  // Load the Builder file and instantiate its widgets.\n  auto refBuilder = Gtk::Builder::create_from_resource(\"/org/gtkmm/exampleapp/window.ui\");\n\n  auto window = Gtk::Builder::get_widget_derived<ExampleAppWindow>(refBuilder, \"app_window\");\n  if (!window)\n    throw std::runtime_error(\"No \\\"app_window\\\" object in window.ui\");\n\n  return window;\n}\n\nvoid ExampleAppWindow::open_file_view(const Glib::RefPtr<Gio::File>& file)\n{\n  const Glib::ustring basename = file->get_basename();\n\n  auto scrolled = Gtk::make_managed<Gtk::ScrolledWindow>();\n  scrolled->set_expand(true);\n  auto view = Gtk::make_managed<Gtk::TextView>();\n  view->set_editable(false);\n  view->set_cursor_visible(false);\n  scrolled->set_child(*view);\n  m_stack->add(*scrolled, basename, basename);\n\n  try\n  {\n    char* contents = nullptr;\n    gsize length = 0;\n    \n    file->load_contents(contents, length);\n    view->get_buffer()->set_text(contents, contents+length);\n    g_free(contents);\n  }\n  catch (const Glib::Error& ex)\n  {\n    std::cout << \"ExampleAppWindow::open_file_view(\\\"\" << file->get_parse_name()\n      << \"\\\"):\\n  \" << ex.what() << std::endl;\n  }\n}",
+   "sha": "9fa4eec0ab57abfc",
+   "file": "exampleappwindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"../step1/main.cc\"\n// Equal to the corresponding file in step1",
+   "sha": "262378e5afb6f163",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<gresources>\n  <gresource prefix=\"/org/gtkmm/exampleapp\">\n    <file preprocess=\"xml-stripblanks\">window.ui</file>\n    <file preprocess=\"xml-stripblanks\">gears_menu.ui</file>\n  </gresource>\n</gresources>",
+   "sha": "6b14832aedd790bc",
+   "file": "exampleapp.gresource.xml",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<interface>\n  <menu id=\"menu\">\n    ",
+   "sha": "cda6160220ddc926",
+   "file": "gears_menu.ui",
+   "zh": ""
+  },
+  {
+   "type": "heading",
+   "text": "",
+   "sha": "e3b0c44298fc1c14",
+   "zh": null
+  },
+  {
+   "type": "heading",
+   "text": "",
+   "sha": "e3b0c44298fc1c14-1",
+   "zh": null
+  },
+  {
+   "type": "code",
+   "text": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<interface>\n  <object class=\"GtkApplicationWindow\" id=\"app_window\">\n    <property name=\"title\" translatable=\"yes\">Example Application</property>\n    <property name=\"default-width\">600</property>\n    <property name=\"default-height\">400</property>\n    <child type=\"titlebar\">\n      <object class=\"GtkHeaderBar\" id=\"header\">\n        <child type=\"title\">\n          <object class=\"GtkStackSwitcher\" id=\"tabs\">\n            <property name=\"stack\">stack</property>\n          </object>\n        </child>\n        <child type=\"end\">\n          <object class=\"GtkMenuButton\" id=\"gears\">\n            <property name=\"direction\">none</property>\n          </object>\n        </child>\n      </object>\n    </child>\n    <child>\n      <object class=\"GtkBox\" id=\"content_box\">\n        <property name=\"orientation\">vertical</property>\n        <child>\n          <object class=\"GtkStack\" id=\"stack\"/>\n        </child>\n      </object>\n    </child>\n  </object>\n</interface>",
+   "sha": "3fc78f054434ce84",
+   "file": "window.ui",
+   "zh": ""
   }
  ]
 }

@@ -9,6 +9,42 @@
    "text": "This is a full working example that defines and uses custom signals.",
    "sha": "704519e6963ec079",
    "zh": "这是一个完整的定义了并使用了自定义信号的示例。"
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLE_CLIENT_H\n#define GTKMM_EXAMPLE_CLIENT_H\n\n#include <sigc++/sigc++.h>\n\n//Client must inherit from sigc::trackable.\n//because libsigc++ needs to keep track of the lifetime of signal handlers.\nclass Client : public sigc::trackable\n{\npublic:\n  Client();\n  virtual ~Client();\n\n  //Signal handler:\n  void on_server_something(bool a, int b);\n};\n\n#endif //GTKMM_EXAMPLE_CLIENT_H",
+   "sha": "8f5d55d0f3944f24",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/signals/custom/",
+   "file": "client.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLE_SERVER_H\n#define GTKMM_EXAMPLE_SERVER_H\n\n#include <sigc++/sigc++.h>\n\nclass Server\n{\npublic:\n  Server();\n  virtual ~Server();\n\n  void do_something();\n\n  //signal accessor:\n  using type_signal_something = sigc::signal<void(bool, int)>;\n  type_signal_something signal_something();\n\nprotected:\n  type_signal_something m_signal_something;\n};\n\n#endif //GTKMM_EXAMPLE_SERVER_H",
+   "sha": "b8d1fd4226f8b5e2",
+   "file": "server.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"client.h\"\n#include <iostream>\n\nClient::Client()\n{\n}\n\nClient::~Client()\n{\n}\n\nvoid Client::on_server_something(bool a, int b)\n{\n  std::cout << \"Client::on_server_something() called with these parameters: \"\n      << a << \", \" << b << std::endl;\n}",
+   "sha": "210d276237182372",
+   "file": "client.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"server.h\"\n#include \"client.h\"\n#include <iostream>\n\nint main(int, char**)\n{\n  Server server;\n  Client client;\n\n  //Connect a Server signal to the signal handler in Client.\n  server.signal_something().connect(sigc::mem_fun(client,\n              &Client::on_server_something) );\n\n  std::cout << \"Before Server::do_something()\" << std::endl;\n\n  //Tell the server to do something that will eventually cause it to emit the\n  //\"something\" signal.\n  server.do_something();    // Client::on_server_something() will run before\n                            // Server::do_something() has completed.\n\n  std::cout << \"After Server::do_something()\" << std::endl;\n\n  return 0;\n}",
+   "sha": "349d536ce3f78c00",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"server.h\"\n#include <iostream>\n\nServer::Server()\n{\n}\n\nServer::~Server()\n{\n}\n\nServer::type_signal_something Server::signal_something()\n{\n  return m_signal_something;\n}\n\nvoid Server::do_something()\n{\n  m_signal_something.emit(false, 5);\n}",
+   "sha": "8404b399f9c7d39d",
+   "file": "server.cc",
+   "zh": ""
   }
  ]
 }

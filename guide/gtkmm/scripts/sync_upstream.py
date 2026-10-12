@@ -44,6 +44,79 @@ from extract_source import (  # noqa: E402
 
 _CUSTOM = docbook_entities()
 
+# 官方脚本的 examples_base_dir 参数 = examples/book/（url_examples_base
+# 实体指向这里，Source Code 链接的路径都相对它）
+EXAMPLES_BASE = PROJECT_ROOT / "upstream" / "gtkmm-documentation" / "examples" / "book"
+
+# —— 官方示例代码注入（复刻 upstream docs/tutorial/insert_example_code.py）——
+# 官网 Example 小节里内嵌的完整源码不在 DocBook 源里：官方构建期由
+# insert_example_code.py 扫描「Source Code」链接段，把链接指向的 examples/
+# 目录下的文件逐个写成「File: xxx (For use with gtkmm 4)」段 + CDATA 程序
+# 清单。快照跟随 DocBook 源（应用 ADR 0002），正文要与官网最终呈现一致，
+# 就必须复刻这最后一步注入。口径与官方逐项一致：*.h 排序在前、*.cc 在后；
+# .h/.cc 跳过开头的版权注释（直到首个以 #、字母、数字开头的行）；
+# <!-- Insert ... --> 点名的额外文件不跳；目录不存在时空注入（官方同款）。
+# 与官方的唯一差异：File 段不带 <filename> 标签——提取后由
+# strip_meta_labels 消化为代码块的 file 属性（渲染为代码块标题），
+# 与官网视觉等价，且不给翻译层制造假段落。
+SOURCE_INCLUDE_RE = re.compile(
+    r'\s*<para><link xlink:href="&url_examples_base;([/\w]+)">Source Code</link></para>\s*'
+    r"(?:<!--\s*Insert\s+(.*?)-->)?")
+START_OF_SOURCE_RE = re.compile(r"[#\w]")
+
+
+def source_file_xml(path: Path, skip_comment: bool) -> str:
+    """单个示例文件 → File 段 + CDATA 程序清单（与官方输出同构）。"""
+    lines = path.read_text(encoding="utf-8", errors="replace").splitlines(keepends=True)
+    body: list[str] = []
+    found_start = not skip_comment
+    for line in lines:
+        if not found_start:
+            if not START_OF_SOURCE_RE.match(line):
+                continue
+            found_start = True
+        body.append(line)
+    return (f"<para>File: {path.name} (For use with gtkmm 4)</para>\n"
+            f"<programlisting><code><![CDATA[{''.join(body)}]]></code></programlisting>\n")
+
+
+def insert_example_code(source: str) -> str:
+    """把全文里每个 Source Code 链接段展开为官方同款的内嵌源码。"""
+    if not EXAMPLES_BASE.is_dir():
+        return source
+    out: list[str] = []
+    for line in source.splitlines(keepends=True):
+        m = SOURCE_INCLUDE_RE.match(line)
+        if m is None:
+            out.append(line)
+            continue
+        out.append(m.expand(
+            '<para><link xlink:href="&url_examples_base;\\1">Source Code</link></para>\n'))
+        directory = EXAMPLES_BASE / m.group(1)
+        names: list[str] = []
+        if directory.is_dir():
+            names = sorted(p.name for p in directory.glob("*.h")) \
+                + sorted(p.name for p in directory.glob("*.cc"))
+        for name in names:
+            out.append(source_file_xml(directory / name, skip_comment=True))
+        for name in (m.group(2) or "").split():
+            if (directory / name).is_file():
+                out.append(source_file_xml(directory / name, skip_comment=False))
+    return "".join(out)
+
+
+def strip_comments(source: str) -> str:
+    """删 XML 注释，CDATA 区间原样保留——注入后的程序清单是代码原文
+    （UI 文件里真有 XML 注释），不能被当注释剥掉（应用 ADR 0002）。"""
+    parts: list[str] = []
+    last = 0
+    for m in re.finditer(r"<!\[CDATA\[.*?\]\]>", source, re.S):
+        parts.append(re.sub(r"<!--.*?-->", "", source[last:m.start()], flags=re.S))
+        parts.append(source[m.start():m.end()])
+        last = m.end()
+    parts.append(re.sub(r"<!--.*?-->", "", source[last:], flags=re.S))
+    return "".join(parts)
+
 
 def expand_md(raw: str) -> str:
     # 标准实体 + DocBook 自定义实体（gtkmm、cpp 等）一起展开
@@ -543,7 +616,11 @@ def main() -> int:
     totals = {"kept": 0, "stale": 0, "new": 0, "gone": 0}
     synced = 0
     source = DOCBOOK.read_text(encoding="utf-8")
-    source = re.sub(r"<!--.*?-->", "", source, flags=re.S)
+    # 官网同款构建期注入（insert_example_code.py 复刻，见函数 docstring）：
+    # 必须在删注释之前——<!-- Insert ... --> 点名的额外文件靠注释传递，
+    # 而删注释换用 CDATA 感知版本，避免剥掉注入代码原文里的 XML 注释
+    source = insert_example_code(source)
+    source = strip_comments(source)
     # <xref linkend="X"/> 官网渲染为指向目标的链接（文本 = 目标标题）；
     # 提取前替换成受限 markdown 链接，正文不留「剥标签后的空洞」
     titles = xref_titles(structure, source)

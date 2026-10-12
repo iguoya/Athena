@@ -51,6 +51,28 @@
    "text": "Here's an example of this technique:",
    "sha": "3e3e3085cc2eafb6",
    "zh": "这是此技术的示例："
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLE_TIMEREXAMPLE_H\n#define GTKMM_EXAMPLE_TIMEREXAMPLE_H\n\n#include <gtkmm.h>\n#include <iostream>\n#include <map>\n\nclass TimerExample : public Gtk::Window\n{\npublic:\n  TimerExample();\n\nprotected:\n  // signal handlers\n  void on_button_add_timer();\n  void on_button_delete_timer();\n  void on_button_quit();\n\n  // This is the callback function the timeout will call\n  bool on_timeout(int timer_number);\n\n  // Member data:\n\n  Gtk::Box m_Box;\n  Gtk::Button m_ButtonAddTimer, m_ButtonDeleteTimer, m_ButtonQuit;\n\n  // Keep track of the timers being added:\n  int m_timer_number;\n\n  // These two constants are initialized in the constructor's member initializer:\n  const int count_value;\n  const int timeout_value;\n\n  // STL map for storing our connections\n  std::map<int, sigc::connection> m_timers;\n\n  // STL map for storing our timer values.\n  // Each timer counts back from COUNT_VALUE to 0 and is removed when it reaches 0\n  std::map<int, int> m_counters;\n};\n\n#endif // GTKMM_EXAMPLE_TIMEREXAMPLE_H",
+   "sha": "aac379ba1f83178e",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/timeout/",
+   "file": "timerexample.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"timerexample.h\"\n#include <gtkmm/application.h>\n\nint main (int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  return app->make_window_and_run<TimerExample>(argc, argv);\n}",
+   "sha": "bd427d10e5ab9631",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"timerexample.h\"\n\nTimerExample::TimerExample() :\n  m_Box(Gtk::Orientation::HORIZONTAL, 10),\n  m_ButtonAddTimer(\"_Add\", true),\n  m_ButtonDeleteTimer(\"_Remove\", true),\n  m_ButtonQuit(\"_Quit\", true),\n  m_timer_number(0), // start numbering the timers at 0\n  count_value(5), // each timer will count down 5 times before disconnecting\n  timeout_value(1500) // 1500 ms = 1.5 seconds\n{\n  m_Box.set_margin(10);\n  set_child(m_Box);\n  m_Box.append(m_ButtonAddTimer);\n  m_Box.append(m_ButtonDeleteTimer);\n  m_Box.append(m_ButtonQuit);\n  m_ButtonAddTimer.set_expand();\n  m_ButtonDeleteTimer.set_expand();\n  m_ButtonQuit.set_expand();\n\n  // Connect the three buttons:\n  m_ButtonQuit.signal_clicked().connect(sigc::mem_fun(*this,\n              &TimerExample::on_button_quit));\n  m_ButtonAddTimer.signal_clicked().connect(sigc::mem_fun(*this,\n              &TimerExample::on_button_add_timer));\n  m_ButtonDeleteTimer.signal_clicked().connect(sigc::mem_fun(*this,\n              &TimerExample::on_button_delete_timer));\n}\n\nvoid TimerExample::on_button_quit()\n{\n  close();\n}\n\nvoid TimerExample::on_button_add_timer()\n{\n  // Creation of a new object prevents long lines and shows us a little\n  // how slots work.  We have 0 parameters and bool as a return value\n  // after calling sigc::bind.\n  sigc::slot<bool()> my_slot = sigc::bind(sigc::mem_fun(*this,\n              &TimerExample::on_timeout), m_timer_number);\n\n  // This is where we connect the slot to the Glib::signal_timeout()\n  auto conn = Glib::signal_timeout().connect(my_slot,\n          timeout_value);\n\n  // Remember the connection:\n  m_timers[m_timer_number] = conn;\n\n  // Initialize timer count:\n  m_counters[m_timer_number] = count_value + 1;\n\n  // Print some info to the console for the user:\n  std::cout << \"added timeout \" << m_timer_number++ << std::endl;\n}\n\nvoid TimerExample::on_button_delete_timer()\n{\n  // any timers?\n  if(m_timers.empty())\n  {\n    // no timers left\n    std::cout << \"Sorry, there are no timers left.\" << std::endl;\n  }\n  else\n  {\n    // get the number of the first timer\n    int timer_number = m_timers.begin()->first;\n\n    // Give some info to the user:\n    std::cout << \"manually disconnecting timer \" << timer_number\n        << std::endl;\n\n    // Remove the entry in the counter values\n    m_counters.erase(timer_number);\n\n    // Diconnect the signal handler:\n    m_timers[timer_number].disconnect();\n\n    // Forget the connection:\n    m_timers.erase(timer_number);\n  }\n}\n\nbool TimerExample::on_timeout(int timer_number)\n{\n  // Print the timer:\n  std::cout << \"This is timer \" << timer_number;\n\n  // decrement and check counter value\n  if (--m_counters[timer_number] == 0)\n  {\n    std::cout << \" being disconnected\" <<  std::endl;\n\n    // delete the counter entry in the STL MAP\n    m_counters.erase(timer_number);\n\n    // delete the connection entry in the STL MAP\n    m_timers.erase(timer_number);\n\n    // Note that we do not have to explicitly call disconnect() on the\n    // connection since Gtk::Main does this for us when we return false.\n    return false;\n  }\n\n  // Print the timer value\n  std::cout << \" - \" << m_counters[timer_number] << \"/\"\n      << count_value << std::endl;\n\n // Keep going (do not disconnect yet):\n  return true;\n}",
+   "sha": "ba22e73894061be6",
+   "file": "timerexample.cc",
+   "zh": ""
   }
  ]
 }

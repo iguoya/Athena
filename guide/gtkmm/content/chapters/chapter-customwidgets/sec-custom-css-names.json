@@ -82,6 +82,63 @@
    "ref": "figures/custom_css_name.png",
    "sha": "a17fe90eb5a4b5de",
    "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n#include \"mybutton.h\"\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  // Signal handlers:\n  void on_button_quit();\n  static void on_parsing_error(const Glib::RefPtr<const Gtk::CssSection>& section,\n    const Glib::Error& error);\n\n  // Child widgets:\n  Gtk::Box m_VBox;\n  MyButton m_Button_Child;\n  Gtk::Label m_Label_Child1;\n  Gtk::Label m_Label_Child2;\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit;\n\n  Glib::RefPtr<Gtk::CssProvider> m_refCssProvider;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "1eb7b239050d2472",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/custom/custom_css_name/",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLE_MYBUTTON_H\n#define GTKMM_EXAMPLE_MYBUTTON_H\n\n#include <gtkmm/button.h>\n#include \"myextrainit.h\"\n\nclass MyButton : public MyExtraInit, public Gtk::Button\n{\npublic:\n  MyButton(const Glib::ustring& label, bool mnemonic=false);\n  ~MyButton() override;\n};\n\n#endif //GTKMM_EXAMPLE_MYBUTTON_H",
+   "sha": "e68ebb5dab351880",
+   "file": "mybutton.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLE_MYEXTRAINIT_H\n#define GTKMM_EXAMPLE_MYEXTRAINIT_H\n\n#include <glibmm/extraclassinit.h>\n#include <glibmm/ustring.h>\n\n// Calls gtk_widget_class_set_css_name() in the class init function.\nclass MyExtraInit : public Glib::ExtraClassInit\n{\npublic:\n  MyExtraInit(const Glib::ustring& css_name);\n\nprivate:\n  Glib::ustring m_css_name;\n};\n\n#endif //GTKMM_EXAMPLE_MYEXTRAINIT_H",
+   "sha": "778dcc88b0291e9a",
+   "file": "myextrainit.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <iostream>\n#include <gtkmm/version.h>\n\n#define HAS_STYLE_PROVIDER_ADD_PROVIDER_FOR_DISPLAY GTKMM_CHECK_VERSION(4,9,1)\n\nExampleWindow::ExampleWindow()\n: m_VBox(Gtk::Orientation::VERTICAL),\n  m_Button_Child(\"Button with custom CSS node name\"),\n  m_Label_Child1(\"Label with custom name\"),\n  m_Label_Child2(\"Label with custom CSS class\"),\n  m_Button_Quit(\"Quit\")\n{\n  set_title(\"Custom CSS name example\");\n  set_default_size(400, 200);\n\n  m_VBox.set_margin(10);\n  m_VBox.set_spacing(5);\n  set_child(m_VBox);\n\n  // There are 3 ways to set custom CSS data for a widget:\n  // 1. The CSS name can be set for a GType with gtk_widget_class_set_css_name().\n  // 2. The CSS name can be set for a widget instance with gtk_widget_set_name()\n  //    (Gtk::Widget::set_name()).\n  // 3. A CSS class can be set for a widget instance with\n  //    gtk_widget_add_css_class() (Gtk::Widget::add_css_class()).\n  //\n  // gtk_widget_class_set_css_name(), if used, must be called in the class init\n  // function. It has not been wrapped in a C++ function.\n  // Gtk::Widget::set_name() and Gtk::Widget::add_css_class() can be called in\n  // a C++ constructor.\n\n  // CSS widget name, which must be used in the CSS file, preceded by \"#\".\n  m_Label_Child1.set_name(\"my-label1\");\n\n  // CSS class name, which must be used in the CSS file, preceded by \".\".\n  m_Label_Child2.add_css_class(\"my-label2\");\n\n  // Add the child widgets to m_VBox:\n  m_VBox.append(*Gtk::make_managed<Gtk::Label>(\"Ordinary label\"));\n  m_VBox.append(m_Button_Child);\n  m_VBox.append(m_Label_Child1);\n  m_VBox.append(m_Label_Child2);\n  m_VBox.set_expand();\n  m_VBox.append(m_ButtonBox);\n\n  m_ButtonBox.append(m_Button_Quit);\n  m_ButtonBox.set_margin(6);\n  m_Button_Quit.set_hexpand(true);\n  m_Button_Quit.set_halign(Gtk::Align::END);\n  m_Button_Quit.signal_clicked().connect( sigc::mem_fun(*this,\n              &ExampleWindow::on_button_quit) );\n\n  // Load extra CSS file.\n  m_refCssProvider = Gtk::CssProvider::create();\n#if HAS_STYLE_PROVIDER_ADD_PROVIDER_FOR_DISPLAY\n  Gtk::StyleProvider::add_provider_for_display(get_display(), m_refCssProvider,\n    GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);\n#else\n  Gtk::StyleContext::add_provider_for_display(get_display(), m_refCssProvider,\n    GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);\n#endif\n\n  m_refCssProvider->signal_parsing_error().connect(\n    [](const auto& section, const auto& error)\n    { on_parsing_error(section, error); }\n  );\n  m_refCssProvider->load_from_path(\"custom_gtkmm.css\");\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_button_quit()\n{\n  close();\n}\n\nvoid ExampleWindow::on_parsing_error(const Glib::RefPtr<const Gtk::CssSection>& section,\n  const Glib::Error& error)\n{\n  std::cerr << \"on_parsing_error(): \" << error.what() << std::endl;\n  if (section)\n  {\n    const auto file = section->get_file();\n    if (file)\n    {\n      std::cerr << \"  URI = \" << file->get_uri() << std::endl;\n    }\n\n    auto start_location = section->get_start_location();\n    auto end_location = section->get_end_location();\n    std::cerr << \"  start_line = \" << start_location.get_lines()+1\n              << \", end_line = \" << end_location.get_lines()+1 << std::endl;\n    std::cerr << \"  start_position = \" << start_location.get_line_chars()\n              << \", end_position = \" << end_location.get_line_chars() << std::endl;\n  }\n}",
+   "sha": "1c50ea48ad5d7ff6",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char* argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  // Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "599e76cbc26ebd80",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"mybutton.h\"\n#include <gtk/gtk.h> // For GTK_IS_BUTTON()\n#include <iostream>\n\nMyButton::MyButton(const Glib::ustring& label, bool mnemonic)\n  :\n  // The GType name will actually be gtkmm__CustomObject_MyButton\n  Glib::ObjectBase(\"MyButton\"),\n  MyExtraInit(\"my-button\"), // CSS node name, which must be used in the CSS file.\n  Gtk::Button(label, mnemonic)\n{\n  // This shows the GType name:\n  std::cout << \"GType name: \" << G_OBJECT_TYPE_NAME(gobj()) << std::endl;\n\n  // This shows that the GType still derives from GtkButton:\n  std::cout << \"Gtype is a GtkButton?: \" << GTK_IS_BUTTON(gobj()) << std::endl;\n\n  // The CSS name can be set either\n  // - for a GType (in this case for your custom class) with gtk_widget_class_set_css_name(), or\n  // - for a widget instance with gtk_widget_set_name() (Gtk::Widget::set_name()).\n  //\n  // gtk_widget_class_set_css_name(), if used, must be called in the class init function.\n  // It has not been wrapped in a C++ function.\n  // Gtk::Widget::set_name() can be called in a C++ constructor.\n  //\n  // Another alternative: The custom button inherits the CSS name \"button\" from\n  // GtkButton. That name can be used in the CSS file.\n}\n\nMyButton::~MyButton()\n{\n}",
+   "sha": "7add973518d11a6a",
+   "file": "mybutton.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"myextrainit.h\"\n#include <gtkmm/widget.h>\n#include <gtk/gtk.h>\n\nnamespace\n{\nusing BaseObjectType = GtkWidget;\nusing BaseClassType = GtkWidgetClass;\n\n// These callback functions are called from GLib (a C library).\n// They shall have C linkage. (Many compilers accept callback functions\n// with C++ linkage, but such a program has undefined behavior.)\n//\n// If you want the functions with C linkage to have internal linkage,\n// they must be declared 'static', even though they are defined in an anonymous\n// namespace. The compiler respects namespace declarations of functions\n// with C linkage, but the linker does not.\nextern \"C\"\n{\n// Extra class init function.\nstatic void class_init_function(void* g_class, void* class_data)\n{\n  g_return_if_fail(GTK_IS_WIDGET_CLASS(g_class));\n\n  const auto klass = static_cast<BaseClassType*>(g_class);\n  const auto css_name = static_cast<Glib::ustring*>(class_data);\n\n  gtk_widget_class_set_css_name(klass, css_name->c_str());\n}\n\n// Extra instance init function.\nstatic void instance_init_function(GTypeInstance* instance, void* /* g_class */)\n{\n  g_return_if_fail(GTK_IS_WIDGET(instance));\n\n  // Nothing to do here.\n  // This extra instance init function just shows how such a function can\n  // be added to a custom widget, if necessary.\n}\n} // extern \"C\"\n} // anonymous namespace\n\nMyExtraInit::MyExtraInit(const Glib::ustring& css_name)\n:\nGlib::ExtraClassInit(class_init_function, &m_css_name, instance_init_function),\nm_css_name(css_name)\n{\n}",
+   "sha": "b57fabddc6d505f1",
+   "file": "myextrainit.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "/* Example of a CSS style sheet. */\n\nmy-button {\n  background-color: red;\n  color:            blue;\n  padding:          10px 15px 20px 5px; /* top right bottom left */\n  border:           solid black 2px;\n  border-radius:    8px;   \n}\nmy-button:active {\n  background-color: rgb(0,255,0);\n}\n#my-label1 {\n  background-color: rgb(180,180,180);\n  color:            rgb(0,255,255);\n  padding:          10px 15px 10px 25px; /* top right bottom left */\n}\n#my-label1:hover {\n  background-color: rgb(220,220,220);\n}\n.my-label2 {\n  background-color: rgb(180,180,100);\n  color:            black;\n  padding:          5px 15px 5px 25px; /* top right bottom left */\n}\n.my-label2:hover {\n  background-color: rgb(220,220,140);\n}",
+   "sha": "236fb9c417456011",
+   "file": "custom_gtkmm.css",
+   "zh": ""
   }
  ]
 }

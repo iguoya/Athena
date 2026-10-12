@@ -18,6 +18,28 @@
    "zh": ""
   },
   {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLE_CLOCK_H\n#define GTKMM_EXAMPLE_CLOCK_H\n\n#include <gtkmm/drawingarea.h>\n\nclass Clock : public Gtk::DrawingArea\n{\npublic:\n  Clock();\n  virtual ~Clock();\n\nprotected:\n  void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);\n\n  bool on_timeout();\n\n  double m_radius;\n  double m_line_width;\n};\n\n#endif // GTKMM_EXAMPLE_CLOCK_H",
+   "sha": "afe127b459d84b67",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/drawingarea/clock",
+   "file": "clock.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include <ctime>\n#include <cmath>\n#include <cairomm/context.h>\n#include <glibmm/main.h>\n#include \"clock.h\"\n\nClock::Clock()\n: m_radius(0.42), m_line_width(0.05)\n{\n  Glib::signal_timeout().connect( sigc::mem_fun(*this, &Clock::on_timeout), 1000 );\n  set_draw_func(sigc::mem_fun(*this, &Clock::on_draw));\n}\n\nClock::~Clock()\n{\n}\n\nvoid Clock::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height)\n{\n  // scale to unit square and translate (0, 0) to be (0.5, 0.5), i.e.\n  // the center of the window\n  cr->scale(width, height);\n  cr->translate(0.5, 0.5);\n  cr->set_line_width(m_line_width);\n\n  cr->save();\n  cr->set_source_rgba(0.337, 0.612, 0.117, 0.9);   // green\n  cr->paint();\n  cr->restore();\n  cr->arc(0, 0, m_radius, 0, 2 * M_PI);\n  cr->save();\n  cr->set_source_rgba(1.0, 1.0, 1.0, 0.8);\n  cr->fill_preserve();\n  cr->restore();\n  cr->stroke_preserve();\n  cr->clip();\n\n  //clock ticks\n  for (int i = 0; i < 12; i++)\n  {\n    double inset = 0.05;\n\n    cr->save();\n    cr->set_line_cap(Cairo::Context::LineCap::ROUND);\n\n    if(i % 3 != 0)\n    {\n      inset *= 0.8;\n      cr->set_line_width(0.03);\n    }\n\n    cr->move_to(\n      (m_radius - inset) * cos (i * M_PI / 6),\n      (m_radius - inset) * sin (i * M_PI / 6));\n    cr->line_to (\n      m_radius * cos (i * M_PI / 6),\n      m_radius * sin (i * M_PI / 6));\n    cr->stroke();\n    cr->restore(); /* stack-pen-size */\n  }\n\n  // store the current time\n  time_t rawtime;\n  time(&rawtime);\n  struct tm * timeinfo = localtime (&rawtime);\n\n  // compute the angles of the indicators of our clock\n  double minutes = timeinfo->tm_min * M_PI / 30;\n  double hours = timeinfo->tm_hour * M_PI / 6;\n  double seconds= timeinfo->tm_sec * M_PI / 30;\n\n  cr->save();\n  cr->set_line_cap(Cairo::Context::LineCap::ROUND);\n\n  // draw the seconds hand\n  cr->save();\n  cr->set_line_width(m_line_width / 3);\n  cr->set_source_rgba(0.7, 0.7, 0.7, 0.8); // gray\n  cr->move_to(0, 0);\n  cr->line_to(sin(seconds) * (m_radius * 0.9),\n    -cos(seconds) * (m_radius * 0.9));\n  cr->stroke();\n  cr->restore();\n\n  // draw the minutes hand\n  cr->set_source_rgba(0.117, 0.337, 0.612, 0.9);   // blue\n  cr->move_to(0, 0);\n  cr->line_to(sin(minutes + seconds / 60) * (m_radius * 0.8),\n    -cos(minutes + seconds / 60) * (m_radius * 0.8));\n  cr->stroke();\n\n  // draw the hours hand\n  cr->set_source_rgba(0.337, 0.612, 0.117, 0.9);   // green\n  cr->move_to(0, 0);\n  cr->line_to(sin(hours + minutes / 12.0) * (m_radius * 0.5),\n    -cos(hours + minutes / 12.0) * (m_radius * 0.5));\n  cr->stroke();\n  cr->restore();\n\n  // draw a little dot in the middle\n  cr->arc(0, 0, m_line_width / 3.0, 0, 2 * M_PI);\n  cr->fill();\n}\n\nbool Clock::on_timeout()\n{\n  // force our program to redraw the entire clock.\n  queue_draw();\n  return true;\n}",
+   "sha": "c2729a98e22d71bc",
+   "file": "clock.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"clock.h\"\n#include <gtkmm/application.h>\n#include <gtkmm/window.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n\nprotected:\n  Clock m_clock;\n};\n\nExampleWindow::ExampleWindow()\n{\n  set_title(\"Cairomm Clock\");\n  set_child(m_clock);\n}\n\nint main(int argc, char** argv)\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "3a258e61688c604d",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
    "type": "para",
    "text": "As before, almost all of the interesting stuff is done in the draw\n          function on_draw(). Before we dig\n          into the draw function, notice that the constructor for the\n          `Clock` widget connects a handler function\n          on_timeout() to a timer with a timeout\n          period of 1000 milliseconds (1 second). This means that\n          on_timeout() will get called once per\n          second. The sole responsibility of this function is to invalidate\n          the window so that gtkmm will be forced to redraw it.",
    "sha": "5a2deb1e9e071a47",

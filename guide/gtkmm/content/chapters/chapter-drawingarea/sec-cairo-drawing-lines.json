@@ -50,6 +50,28 @@
    "zh": ""
   },
   {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLE_MYAREA_H\n#define GTKMM_EXAMPLE_MYAREA_H\n\n#include <gtkmm/drawingarea.h>\n\nclass MyArea : public Gtk::DrawingArea\n{\npublic:\n  MyArea();\n  virtual ~MyArea();\n\nprotected:\n  void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);\n};\n\n#endif // GTKMM_EXAMPLE_MYAREA_H",
+   "sha": "b9a46af5968c608f",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/drawingarea/simple",
+   "file": "myarea.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"myarea.h\"\n#include <gtkmm/application.h>\n#include <gtkmm/window.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n\nprotected:\n  MyArea m_area;\n};\n\nExampleWindow::ExampleWindow()\n{\n  set_title(\"DrawingArea\");\n  set_child(m_area);\n}\n\nint main(int argc, char** argv)\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "80e8193dad61994b",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"myarea.h\"\n#include <cairomm/context.h>\n\nMyArea::MyArea()\n{\n  set_draw_func(sigc::mem_fun(*this, &MyArea::on_draw));\n}\n\nMyArea::~MyArea()\n{\n}\n\nvoid MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height)\n{\n  // coordinates for the center of the window\n  int xc, yc;\n  xc = width / 2;\n  yc = height / 2;\n\n  cr->set_line_width(10.0);\n\n  // draw red lines out from the center of the window\n  cr->set_source_rgb(0.8, 0.0, 0.0);\n  cr->move_to(0, 0);\n  cr->line_to(xc, yc);\n  cr->line_to(0, height);\n  cr->move_to(xc, yc);\n  cr->line_to(width, yc);\n  cr->stroke();\n}",
+   "sha": "cc3c36d835a824d6",
+   "file": "myarea.cc",
+   "zh": ""
+  },
+  {
    "type": "para",
    "text": "This program contains a single class, `MyArea`,\n        which is a subclass of `Gtk::DrawingArea` and\n        contains an on_draw() member function.\n        This function becomes the draw function by a call to set_draw_func()\n        in `MyArea`'s constructor. on_draw()\n        is then called whenever the image in the drawing area needs to\n        be redrawn. It is passed a `Cairo::RefPtr`\n        pointer to a `Cairo::Context` that we use\n        for the drawing.\n        The actual drawing code sets the color we want to use for drawing by\n        using set_source_rgb() which takes arguments\n        defining the Red, Green, and Blue components of the desired color\n        (valid values are between 0 and 1). After setting the color, we\n        created a new path using the functions move_to()\n        and line_to(), and then stroked this path with\n        stroke().",
    "sha": "1900d129ea65a2be",
@@ -128,6 +150,42 @@
    "text": "Drawing Area - Thin Lines",
    "ref": "figures/drawingarea_thin_lines.png",
    "sha": "dc4650f7fc365198",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm/window.h>\n#include <gtkmm/box.h>\n#include <gtkmm/checkbutton.h>\n#include \"myarea.h\"\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_button_toggled();\n\nprivate:\n  Gtk::Box m_HBox;\n  MyArea m_Area_Lines;\n  Gtk::CheckButton m_Button_FixLines;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "2589ec42f3e75ddd",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/drawingarea/thin_lines",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLE_MYAREA_H\n#define GTKMM_EXAMPLE_MYAREA_H\n\n#include <gtkmm/drawingarea.h>\n\nclass MyArea : public Gtk::DrawingArea\n{\npublic:\n  MyArea();\n  virtual ~MyArea();\n\n  void fix_lines(bool fix = true);\n\nprotected:\n  void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);\n\nprivate:\n  double m_fix;\n};\n\n#endif // GTKMM_EXAMPLE_MYAREA_H",
+   "sha": "818c1fa43138f8cf",
+   "file": "myarea.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n\nExampleWindow::ExampleWindow()\n: m_HBox(Gtk::Orientation::HORIZONTAL),\n  m_Button_FixLines(\"Fix lines\")\n{\n  set_title(\"Thin lines example\");\n\n  m_HBox.append(m_Area_Lines);\n  m_HBox.append(m_Button_FixLines);\n\n  set_child(m_HBox);\n\n  m_Button_FixLines.signal_toggled().connect(\n    sigc::mem_fun(*this, &ExampleWindow::on_button_toggled));\n\n  // Synchonize the drawing in m_Area_Lines with the state of the toggle button.\n  on_button_toggled();\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_button_toggled()\n{\n  m_Area_Lines.fix_lines(m_Button_FixLines.get_active());\n}",
+   "sha": "28a6797fc5b0997c",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char* argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "dd87c4e2e7c61ab2",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"myarea.h\"\n\nMyArea::MyArea()\n: m_fix (0)\n{\n  set_content_width(200);\n  set_content_height(100);\n  set_draw_func(sigc::mem_fun(*this, &MyArea::on_draw));\n}\n\nMyArea::~MyArea()\n{\n}\n\nvoid MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height)\n{\n  cr->set_line_width(1.0);\n\n  // draw one line, every two pixels\n  // without the 'fix', you won't notice any space between the lines,\n  // since each one will occupy two pixels (width)\n  for (int i = 0; i < width; i += 2)\n  {\n    cr->move_to(i + m_fix, 0);\n    cr->line_to(i + m_fix, height);\n  }\n\n  cr->stroke();\n}\n\n// Toogle between both values (0 or 0.5)\nvoid MyArea::fix_lines(bool fix)\n{\n  // to get the width right, we have to draw in the middle of the pixel\n  m_fix = fix ? 0.5 : 0.0;\n\n  // force the redraw of the image\n  queue_draw();\n}",
+   "sha": "d753b209f47b2c40",
+   "file": "myarea.cc",
    "zh": ""
   }
  ]

@@ -57,6 +57,14 @@
    "text": "This simple example shows how to load a `.ui`\nfile at runtime and access the widgets with `Gtk::Builder`.",
    "sha": "556666e47eb12618",
    "zh": "这个简单示例展示了如何在运行时加载Glade文件并使用Gtk::Builder访问部件。"
+  },
+  {
+   "type": "code",
+   "text": "#include <gtkmm.h>\n#include <iostream>\n\nnamespace\n{\nGtk::Window* pDialog = nullptr;\nGlib::RefPtr<Gtk::Application> app;\n\nvoid on_button_clicked()\n{\n  // When the application's only window is removed with\n  // unset_application(), Gtk::Application::run() will end.\n  if (pDialog)\n    pDialog->unset_application();\n}\n\nvoid on_app_activate()\n{\n  // Load the GtkBuilder file and instantiate its widgets:\n  auto refBuilder = Gtk::Builder::create();\n  try\n  {\n    refBuilder->add_from_file(\"basic.ui\");\n  }\n  catch(const Glib::FileError& ex)\n  {\n    std::cerr << \"FileError: \" << ex.what() << std::endl;\n    return;\n  }\n  catch(const Glib::MarkupError& ex)\n  {\n    std::cerr << \"MarkupError: \" << ex.what() << std::endl;\n    return;\n  }\n  catch(const Gtk::BuilderError& ex)\n  {\n    std::cerr << \"BuilderError: \" << ex.what() << std::endl;\n    return;\n  }\n\n  // Get the GtkBuilder-instantiated dialog:\n  pDialog = refBuilder->get_widget<Gtk::Window>(\"DialogBasic\");\n  if (!pDialog)\n  {\n    std::cerr << \"Could not get the dialog\" << std::endl;\n    return;\n  }\n\n  // Get the GtkBuilder-instantiated button, and connect a signal handler:\n  auto pButton = refBuilder->get_widget<Gtk::Button>(\"quit_button\");\n  if (pButton)\n    pButton->signal_clicked().connect([] () { on_button_clicked(); });\n\n  // It's not possible to delete widgets after app->run() has returned.\n  // Delete the dialog with its child widgets before app->run() returns.\n  app->signal_window_removed().connect([](Gtk::Window* window) { delete window; });\n\n  app->add_window(*pDialog);\n  pDialog->set_visible(true);\n}\n} // anonymous namespace\n\nint main(int argc, char** argv)\n{\n  app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  // Instantiate a dialog when the application has been activated.\n  // This can only be done after the application has been registered.\n  // It's possible to call app->register_application() explicitly, but\n  // usually it's easier to let app->run() do it for you.\n  app->signal_activate().connect([] () { on_app_activate(); });\n\n  return app->run(argc, argv);\n}",
+   "sha": "cf550fd58a1d1deb",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/builder/basic",
+   "file": "main.cc",
+   "zh": ""
   }
  ]
 }

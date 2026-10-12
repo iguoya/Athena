@@ -84,6 +84,28 @@
    "zh": ""
   },
   {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm/window.h>\n#include <gtkmm/combobox.h>\n#include <gtkmm/liststore.h>\n#include <gtkmm/version.h>\n\n#define HAS_SIGNAL_ACTIVATE GTKMM_CHECK_VERSION(4,7,1)\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  //Signal handlers:\n  void on_entry_changed();\n#if HAS_SIGNAL_ACTIVATE\n  void on_entry_activate();\n#endif\n  void on_entry_focus_leave();\n\n  //Signal connection:\n  sigc::connection m_ConnectionFocusLeave;\n\n  //Tree model columns:\n  class ModelColumns : public Gtk::TreeModel::ColumnRecord\n  {\n  public:\n\n    ModelColumns()\n    { add(m_col_id); add(m_col_name); }\n\n    Gtk::TreeModelColumn<Glib::ustring> m_col_id; //The data to choose - this must be text.\n    Gtk::TreeModelColumn<Glib::ustring> m_col_name;\n  };\n\n  ModelColumns m_Columns;\n\n  //Child widgets:\n  Gtk::ComboBox m_Combo;\n  Glib::RefPtr<Gtk::ListStore> m_refTreeModel;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "b9c4893f90d5fb52",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/combobox/entry_complex",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/eventcontrollerfocus.h>\n#include <iostream>\n\nExampleWindow::ExampleWindow()\n: m_Combo(true /* has_entry */)\n{\n  set_title(\"ComboBox example\");\n\n  //Create the Tree model:\n  //m_refTreeModel = Gtk::TreeStore::create(m_Columns);\n  m_refTreeModel = Gtk::ListStore::create(m_Columns);\n  m_Combo.set_model(m_refTreeModel);\n\n  //Fill the ComboBox's Tree Model:\n  auto row = *(m_refTreeModel->append());\n  row[m_Columns.m_col_id] = \"1\";\n  row[m_Columns.m_col_name] = \"Billy Bob\";\n  /*\n  auto childrow = *(m_refTreeModel->append(row.children()));\n  childrow[m_Columns.m_col_id] = 11;\n  childrow[m_Columns.m_col_name] = \"Billy Bob Junior\";\n\n  childrow = *(m_refTreeModel->append(row.children()));\n  childrow[m_Columns.m_col_id] = 12;\n  childrow[m_Columns.m_col_name] = \"Sue Bob\";\n  */\n\n  row = *(m_refTreeModel->append());\n  row[m_Columns.m_col_id] = \"2\";\n  row[m_Columns.m_col_name] = \"Joey Jojo\";\n\n  row = *(m_refTreeModel->append());\n  row[m_Columns.m_col_id] = \"3\";\n  row[m_Columns.m_col_name] = \"Rob McRoberts\";\n\n  /*\n  childrow = *(m_refTreeModel->append(row.children()));\n  childrow[m_Columns.m_col_id] = 31;\n  childrow[m_Columns.m_col_name] = \"Xavier McRoberts\";\n  */\n\n  //Add the model columns to the Combo (which is a kind of view),\n  //rendering them in the default way:\n  //This is automatically rendered when we use set_entry_text_column().\n  //m_Combo.pack_start(m_Columns.m_col_id, Gtk::PackOptions::EXPAND_WIDGET);\n  m_Combo.pack_start(m_Columns.m_col_name);\n\n  m_Combo.set_entry_text_column(m_Columns.m_col_id);\n  m_Combo.set_active(1);\n\n  //Add the ComboBox to the window.\n  set_child(m_Combo);\n\n  //Connect signal handlers:\n  auto entry = m_Combo.get_entry();\n  if (entry)\n  {\n    // Alternatively you can connect to m_Combo.signal_changed().\n    entry->signal_changed().connect(sigc::mem_fun(*this,\n      &ExampleWindow::on_entry_changed));\n#if HAS_SIGNAL_ACTIVATE\n    entry->signal_activate().connect(sigc::mem_fun(*this,\n      &ExampleWindow::on_entry_activate));\n#endif\n    // The Entry shall receive focus-leave events.\n    auto controller = Gtk::EventControllerFocus::create();\n    m_ConnectionFocusLeave = controller->signal_leave().connect(\n      sigc::mem_fun(*this, &ExampleWindow::on_entry_focus_leave));\n    entry->add_controller(controller);\n  }\n  else\n    std::cout << \"No Entry ???\" << std::endl;\n}\n\nExampleWindow::~ExampleWindow()\n{\n  // The focus-leave signal may be emitted while m_Combo is being destructed.\n  // The signal handler can generate critical messages, if it's called when\n  // m_Combo has been partly destructed.\n  m_ConnectionFocusLeave.disconnect();\n}\n\nvoid ExampleWindow::on_entry_changed()\n{\n  auto entry = m_Combo.get_entry();\n  if (entry)\n  {\n    std::cout << \"on_entry_changed(): Row=\" << m_Combo.get_active_row_number()\n      << \", ID=\" << entry->get_text() << std::endl;\n  }\n}\n\n#if HAS_SIGNAL_ACTIVATE\nvoid ExampleWindow::on_entry_activate()\n{\n  auto entry = m_Combo.get_entry();\n  if (entry)\n  {\n    std::cout << \"on_entry_activate(): Row=\" << m_Combo.get_active_row_number()\n      << \", ID=\" << entry->get_text() << std::endl;\n  }\n}\n#endif\n\nvoid ExampleWindow::on_entry_focus_leave()\n{\n  auto entry = m_Combo.get_entry();\n  if (entry)\n  {\n    std::cout << \"on_entry_focus_leave(): Row=\" << m_Combo.get_active_row_number()\n      << \", ID=\" << entry->get_text() << std::endl;\n  }\n}",
+   "sha": "5f6280ec95a39e88",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
    "type": "heading",
    "text": "Simple Text Example",
    "sha": "d234c1efc4154348",
@@ -94,6 +116,28 @@
    "text": "ComboBoxText with Entry",
    "ref": "figures/comboboxentry_text.png",
    "sha": "46d7dbdf6e19f6ef",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm/window.h>\n#include <gtkmm/comboboxtext.h>\n#include <gtkmm/version.h>\n\n#define HAS_SIGNAL_ACTIVATE GTKMM_CHECK_VERSION(4,7,1)\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  //Signal handlers:\n  void on_combo_changed();\n#if HAS_SIGNAL_ACTIVATE\n  void on_entry_activate();\n#endif\n  void on_entry_focus_leave();\n\n  //Signal connection:\n  sigc::connection m_ConnectionFocusLeave;\n\n  //Child widgets:\n  Gtk::ComboBoxText m_Combo;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "56a126f356b7f726",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/combobox/entry_text",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/eventcontrollerfocus.h>\n#include <iostream>\n\nExampleWindow::ExampleWindow()\n: m_Combo(true /* has_entry */)\n{\n  set_title(\"ComboBoxText example\");\n\n  //Fill the combo:\n  m_Combo.append(\"something\");\n  m_Combo.append(\"something else\");\n  m_Combo.append(\"something or other\");\n  m_Combo.set_active(0);\n\n  set_child(m_Combo);\n\n  //Connect signal handlers:\n  auto entry = m_Combo.get_entry();\n  // Alternatively you can connect to entry->signal_changed().\n  m_Combo.signal_changed().connect(sigc::mem_fun(*this,\n    &ExampleWindow::on_combo_changed) );\n\n  if (entry)\n  {\n#if HAS_SIGNAL_ACTIVATE\n    entry->signal_activate().connect(sigc::mem_fun(*this,\n      &ExampleWindow::on_entry_activate));\n#endif\n    // The Entry shall receive focus-leave events.\n    auto controller = Gtk::EventControllerFocus::create();\n    m_ConnectionFocusLeave = controller->signal_leave().connect(\n      sigc::mem_fun(*this, &ExampleWindow::on_entry_focus_leave));\n    entry->add_controller(controller);\n  }\n  else\n    std::cout << \"No Entry ???\" << std::endl;\n\n  m_Combo.property_has_frame() = false;\n}\n\nExampleWindow::~ExampleWindow()\n{\n  // The focus-leave signal may be emitted while m_Combo is being destructed.\n  // The signal handler can generate critical messages, if it's called when\n  // m_Combo has been partly destructed.\n  m_ConnectionFocusLeave.disconnect();\n}\n\nvoid ExampleWindow::on_combo_changed()\n{\n  std::cout << \"on_combo_changed(): Row=\" << m_Combo.get_active_row_number()\n    << \", Text=\" << m_Combo.get_active_text() << std::endl;\n}\n\n#if HAS_SIGNAL_ACTIVATE\nvoid ExampleWindow::on_entry_activate()\n{\n  std::cout << \"on_entry_activate(): Row=\" << m_Combo.get_active_row_number()\n    << \", Text=\" << m_Combo.get_active_text() << std::endl;\n}\n#endif\n\nvoid ExampleWindow::on_entry_focus_leave()\n{\n  std::cout << \"on_entry_focus_leave(): Row=\" << m_Combo.get_active_row_number()\n    << \", Text=\" << m_Combo.get_active_text() << std::endl;\n}",
+   "sha": "4ea07dbae2303ba1",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee-1",
+   "file": "main.cc",
    "zh": ""
   }
  ]

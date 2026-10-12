@@ -89,6 +89,11 @@
   （`code_text()` 只还原 XML 实体、剥标签，保留缩进与内部空白），不翻译、不注释、
   不改写；快照 code 块的 `zh` 恒为空，前端代码块不显示译文。手写知识点里的代码
   示例是原创教学内容，不属此约束。
+- **正文含官网同款内嵌源码**（应用 ADR 0007）：官网 Example 小节的完整示例代码
+  是官方构建期（`insert_example_code.py`）注入的，DocBook 源里只有 Source Code
+  外链——`sync_upstream.py` 提取前复刻该注入（同口径：.h→.cc 排序、跳版权头、
+  Insert 点名文件），File 段消化为代码块 `file` 属性。正文与官网最终呈现对齐；
+  与 `exercise/`（ADR 0006）同出一个上游钉点。
 - 课表页的 `translated` 状态要求该节快照里全部文字段都有 `zh`（check 校验一致性
   与 pinned_commit 版本）；语义争议以官方 DocBook 当前内容为准，官方 zh_CN.po
   可作术语参照（覆盖率不完全）。

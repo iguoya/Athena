@@ -34,6 +34,28 @@
    "ref": "figures/dialogs_colordialog.png",
    "sha": "70e8934857227794",
    "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  //Signal handlers:\n  void on_color_button_color_set();\n  void on_button_dialog_clicked();\n  void on_dialog_finish(const Glib::RefPtr<Gio::AsyncResult>& result);\n\n  //Draw function:\n  void on_drawing_area_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n  Gtk::ColorDialogButton m_ColorDialogButton;\n  Gtk::Button m_Button_Dialog;\n  Gtk::DrawingArea m_DrawingArea; //To show the color.\n\n  Glib::RefPtr<Gtk::ColorDialog> m_pDialog;\n  Gdk::RGBA m_Color;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "763d8a174a619e32",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/dialogs/colordialog",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <iostream>\n\nExampleWindow::ExampleWindow()\n: m_VBox(Gtk::Orientation::VERTICAL, 5),\n  m_Button_Dialog(\"Choose Color\")\n{\n  set_title(\"Gtk::ColorDialog example\");\n  set_default_size(200, 200);\n\n  m_pDialog = Gtk::ColorDialog::create();\n  m_ColorDialogButton.set_dialog(m_pDialog);\n\n  set_child(m_VBox);\n\n  m_VBox.append(m_ColorDialogButton);\n  m_ColorDialogButton.property_rgba().signal_changed().connect(\n    sigc::mem_fun(*this, &ExampleWindow::on_color_button_color_set));\n\n  m_VBox.append(m_Button_Dialog);\n  m_Button_Dialog.signal_clicked().connect(sigc::mem_fun(*this,\n    &ExampleWindow::on_button_dialog_clicked) );\n\n  //Set start color:\n  m_Color.set_red(0.0);\n  m_Color.set_green(0.0);\n  m_Color.set_blue(1.0);\n  m_Color.set_alpha(1.0); //opaque\n  m_ColorDialogButton.set_rgba(m_Color);\n\n  m_VBox.append(m_DrawingArea);\n  m_DrawingArea.set_expand(true);\n  m_DrawingArea.set_draw_func(sigc::mem_fun(*this, &ExampleWindow::on_drawing_area_draw));\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_color_button_color_set()\n{\n  //Store the chosen color:\n  m_Color = m_ColorDialogButton.get_rgba();\n  m_DrawingArea.queue_draw();\n}\n\nvoid ExampleWindow::on_button_dialog_clicked()\n{\n  m_pDialog->choose_rgba(*this, m_Color,\n    sigc::mem_fun(*this, &ExampleWindow::on_dialog_finish));\n}\n\nvoid ExampleWindow::on_dialog_finish(const Glib::RefPtr<Gio::AsyncResult>& result)\n{\n  try\n  {\n    // If this call changes the color, it will trigger a call to\n    // on_color_button_color_set().\n    m_ColorDialogButton.set_rgba(m_pDialog->choose_rgba_finish(result));\n\n    // This is what you should do if m_ColorDialogButton and\n    // on_color_button_color_set() did not exist:\n    //m_Color = m_pDialog->choose_rgba_finish(result);\n    //m_DrawingArea.queue_draw();\n  }\n  catch (const Gtk::DialogError& err)\n  {\n    // Can be thrown by m_pDialog->choose_rgba_finish(result).\n    std::cout << \"No color selected. \" << err.what() << std::endl;\n  }\n  catch (const Glib::Error& err)\n  {\n    std::cout << \"Unexpected exception. \" << err.what() << std::endl;\n  }\n}\n\nvoid ExampleWindow::on_drawing_area_draw(const Cairo::RefPtr<Cairo::Context>& cr, int, int)\n{\n  Gdk::Cairo::set_source_rgba(cr, m_Color);\n  cr->paint();\n}",
+   "sha": "7d7d9b33db9d93fe",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee",
+   "file": "main.cc",
+   "zh": ""
   }
  ]
 }

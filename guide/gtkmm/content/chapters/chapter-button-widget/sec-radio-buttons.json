@@ -70,6 +70,28 @@
    "ref": "figures/radiobuttons.png",
    "sha": "746e369c24751bb9",
    "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLE_RADIOBUTTONS_H\n#define GTKMM_EXAMPLE_RADIOBUTTONS_H\n\n#include <gtkmm/box.h>\n#include <gtkmm/window.h>\n#include <gtkmm/button.h>\n#include <gtkmm/checkbutton.h>\n#include <gtkmm/separator.h>\n\nclass RadioButtons : public Gtk::Window\n{\npublic:\n  RadioButtons();\n  virtual ~RadioButtons();\n\nprotected:\n  //Signal handlers:\n  void on_button_clicked();\n\n  //Child widgets:\n  Gtk::Box m_Box_Top, m_Box1, m_Box2;\n  Gtk::CheckButton m_RadioButton1, m_RadioButton2, m_RadioButton3;\n  Gtk::Separator m_Separator;\n  Gtk::Button m_Button_Close;\n};\n\n#endif //GTKMM_EXAMPLE_RADIOBUTTONS_H",
+   "sha": "61aa77876fdd3080",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/buttons/radiobutton",
+   "file": "radiobuttons.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"radiobuttons.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<RadioButtons>(argc, argv);\n}",
+   "sha": "a6147de758747b02",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"radiobuttons.h\"\n\nRadioButtons::RadioButtons() :\n  m_Box_Top(Gtk::Orientation::VERTICAL),\n  m_Box1(Gtk::Orientation::VERTICAL, 10),\n  m_Box2(Gtk::Orientation::VERTICAL, 10),\n  m_RadioButton1(\"button1\"),\n  m_RadioButton2(\"button2\"),\n  m_RadioButton3(\"button3\"),\n  m_Button_Close(\"close\")\n{\n  // Set title and border of the window\n  set_title(\"radio buttons\");\n\n  // Gtk::CheckButton and Gtk::ToggleButton have set_group() methods.\n  // They act as radio buttons, if they are included in a group.\n\n  // Put radio buttons 2 and 3 in the same group as 1:\n  m_RadioButton2.set_group(m_RadioButton1);\n  m_RadioButton3.set_group(m_RadioButton1);\n\n  // Add outer box to the window (because the window\n  // can only contain a single widget)\n  set_child(m_Box_Top);\n\n  //Put the inner boxes and the separator in the outer box:\n  m_Box_Top.append(m_Box1);\n  m_Box_Top.append(m_Separator);\n  m_Box_Top.append(m_Box2);\n  m_Separator.set_expand();\n\n  // Set the inner boxes' margins\n  m_Box1.set_margin(10);\n  m_Box2.set_margin(10);\n\n  // Put the radio buttons in Box1:\n  m_Box1.append(m_RadioButton1);\n  m_Box1.append(m_RadioButton2);\n  m_Box1.append(m_RadioButton3);\n  m_RadioButton1.set_expand();\n  m_RadioButton2.set_expand();\n  m_RadioButton3.set_expand();\n\n  // Set the second button active\n  m_RadioButton2.set_active(true);\n\n  // Put Close button in Box2:\n  m_Box2.append(m_Button_Close);\n  m_Button_Close.set_expand();\n\n  // Make the button the default widget\n  set_default_widget(m_Button_Close);\n\n  // Connect the toggled signal of the button to\n  // RadioButtons::on_button_toggled()\n  m_Button_Close.signal_clicked().connect(sigc::mem_fun(*this,\n              &RadioButtons::on_button_clicked) );\n}\n\nRadioButtons::~RadioButtons()\n{\n}\n\nvoid RadioButtons::on_button_clicked()\n{\n  close();\n}",
+   "sha": "f8a1374f4574194e",
+   "file": "radiobuttons.cc",
+   "zh": ""
   }
  ]
 }

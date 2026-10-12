@@ -40,6 +40,28 @@
    "ref": "figures/dialogs_filedialog.png",
    "sha": "b1b56a57a5dff50a",
    "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  //Signal handlers:\n  void on_button_file_clicked();\n  void on_button_folder_clicked();\n  void on_file_dialog_finish(const Glib::RefPtr<Gio::AsyncResult>& result,\n    const Glib::RefPtr<Gtk::FileDialog>& dialog);\n  void on_folder_dialog_finish(const Glib::RefPtr<Gio::AsyncResult>& result,\n    const Glib::RefPtr<Gtk::FileDialog>& dialog);\n\n  //Child widgets:\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_File;\n  Gtk::Button m_Button_Folder;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "8b91351263b445c4",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/dialogs/filedialog",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <iostream>\n\nExampleWindow::ExampleWindow()\n: m_ButtonBox(Gtk::Orientation::VERTICAL),\n  m_Button_File(\"Choose File\"),\n  m_Button_Folder(\"Choose Folder\")\n{\n  set_title(\"Gtk::FileDialog example\");\n\n  set_child(m_ButtonBox);\n\n  m_ButtonBox.append(m_Button_File);\n  m_Button_File.set_expand(true);\n  m_Button_File.signal_clicked().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_button_file_clicked) );\n\n  m_ButtonBox.append(m_Button_Folder);\n  m_Button_Folder.set_expand(true);\n  m_Button_Folder.signal_clicked().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_button_folder_clicked) );\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_button_file_clicked()\n{\n  auto dialog = Gtk::FileDialog::create();\n\n  // Add filters, so that only certain file types can be selected:\n  auto filters = Gio::ListStore<Gtk::FileFilter>::create();\n\n  auto filter_text = Gtk::FileFilter::create();\n  filter_text->set_name(\"Text files\");\n  filter_text->add_mime_type(\"text/plain\");\n  filters->append(filter_text);\n\n  auto filter_cpp = Gtk::FileFilter::create();\n  filter_cpp->set_name(\"C/C++ files\");\n  filter_cpp->add_mime_type(\"text/x-c\");\n  filter_cpp->add_mime_type(\"text/x-c++\");\n  filter_cpp->add_mime_type(\"text/x-c-header\");\n  filters->append(filter_cpp);\n\n  auto filter_any = Gtk::FileFilter::create();\n  filter_any->set_name(\"Any files\");\n  filter_any->add_pattern(\"*\");\n  filters->append(filter_any);\n\n  dialog->set_filters(filters);\n\n  // Show the dialog and wait for a user response:\n  dialog->open(sigc::bind(sigc::mem_fun(\n    *this, &ExampleWindow::on_file_dialog_finish), dialog));\n}\n\nvoid ExampleWindow::on_file_dialog_finish(const Glib::RefPtr<Gio::AsyncResult>& result,\n  const Glib::RefPtr<Gtk::FileDialog>& dialog)\n{\n  // Handle the response:\n  try\n  {\n    auto file = dialog->open_finish(result);\n\n    // Notice that this is a std::string, not a Glib::ustring.\n    auto filename = file->get_path();\n    std::cout << \"File selected: \" <<  filename << std::endl;\n  }\n  catch (const Gtk::DialogError& err)\n  {\n    // Can be thrown by dialog->open_finish(result).\n    std::cout << \"No file selected. \" << err.what() << std::endl;\n  }\n  catch (const Glib::Error& err)\n  {\n    std::cout << \"Unexpected exception. \" << err.what() << std::endl;\n  }\n}\n\nvoid ExampleWindow::on_button_folder_clicked()\n{\n  auto dialog = Gtk::FileDialog::create();\n\n  // Show the dialog and wait for a user response:\n  dialog->select_folder(sigc::bind(sigc::mem_fun(\n    *this, &ExampleWindow::on_folder_dialog_finish), dialog));\n}\n\nvoid ExampleWindow::on_folder_dialog_finish(const Glib::RefPtr<Gio::AsyncResult>& result,\n  const Glib::RefPtr<Gtk::FileDialog>& dialog)\n{\n  // Handle the response:\n  try\n  {\n    auto folder = dialog->select_folder_finish(result);\n    std::cout << \"Folder selected: \" << folder->get_path() << std::endl;\n  }\n  catch (const Gtk::DialogError& err)\n  {\n    // Can be thrown by dialog->select_folder_finish(result).\n    std::cout << \"No folder selected. \" << err.what() << std::endl;\n  }\n  catch (const Glib::Error& err)\n  {\n    std::cout << \"Unexpected exception. \" << err.what() << std::endl;\n  }\n}",
+   "sha": "2ee7caa0652777ab",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee",
+   "file": "main.cc",
+   "zh": ""
   }
  ]
 }

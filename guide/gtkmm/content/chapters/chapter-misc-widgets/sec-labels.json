@@ -52,6 +52,28 @@
    "ref": "figures/label.png",
    "sha": "0e66373f45dcf3dd",
    "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n\n  //Child widgets:\n  Gtk::Box m_HBox;\n  Gtk::Box m_VBox, m_VBox2;\n  Gtk::Frame m_Frame_Normal, m_Frame_Multi, m_Frame_Left, m_Frame_Right,\n    m_Frame_LineWrapped, m_Frame_FilledWrapped, m_Frame_Underlined;\n  Gtk::Label m_Label_Normal, m_Label_Multi, m_Label_Left, m_Label_Right,\n    m_Label_LineWrapped, m_Label_FilledWrapped, m_Label_Underlined;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "5f62a8d5e3c2183a",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/label",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <iostream>\n\nExampleWindow::ExampleWindow()\n:\n  m_HBox(Gtk::Orientation::HORIZONTAL, 5),\n  m_VBox(Gtk::Orientation::VERTICAL, 5),\n  m_VBox2(Gtk::Orientation::VERTICAL, 5),\n  m_Frame_Normal(\"Normal Label\"),\n  m_Frame_Multi(\"Multi-line Label\"),\n  m_Frame_Left(\"Left Justified Label\"),\n  m_Frame_Right(\"Right Justified Label\"),\n  m_Frame_LineWrapped(\"Line wrapped label\"),\n  m_Frame_FilledWrapped(\"Filled, wrapped label\"),\n  m_Frame_Underlined(\"Underlined label\"),\n  m_Label_Normal(\"_This is a Normal label\", true),\n  m_Label_Multi(\"This is a Multi-line label.\\nSecond line\\nThird line\"),\n  m_Label_Left(\"This is a Left-Justified\\nMulti-line label.\\nThird line\"),\n  m_Label_Right(\"This is a Right-Justified\\nMulti-line label.\\nThird line\"),\n  m_Label_Underlined(\"<u>This label is underlined!</u>\\n\"\n          \"<u>T</u>h<u>is one is</u> <u>u</u>n<u>derlin</u>ed \"\n          \"in<u> q</u>u<u>ite a f</u>u<u>nky</u> fashion\")\n{\n  set_title(\"Label\");\n\n  m_HBox.set_margin(5);\n  set_child(m_HBox);\n\n  m_HBox.append(m_VBox);\n\n  m_Frame_Normal.set_child(m_Label_Normal);\n  m_VBox.append(m_Frame_Normal);\n\n  m_Frame_Multi.set_child(m_Label_Multi);\n  m_VBox.append(m_Frame_Multi);\n\n  m_Label_Left.set_justify(Gtk::Justification::LEFT);\n  m_Frame_Left.set_child(m_Label_Left);\n  m_VBox.append(m_Frame_Left);\n\n  m_Label_Right.set_justify(Gtk::Justification::RIGHT);\n  m_Frame_Right.set_child(m_Label_Right);\n  m_VBox.append(m_Frame_Right);\n\n  m_HBox.append(m_VBox2);\n\n  m_Label_LineWrapped.set_text(\n          \"This is an example of a line-wrapped label.  It \"\n          /* add a big space to the next line to test spacing */\n          \"should not be taking up the entire             \"\n          \"width allocated to it, but automatically \"\n          \"wraps the words to fit.  \"\n          \"The time has come, for all good men, to come to \"\n          \"the aid of their party.  \"\n          \"The sixth sheik's six sheep's sick.\\n\"\n          \"     It supports multiple paragraphs correctly, \"\n          \"and  correctly   adds \"\n          \"many          extra  spaces. \");\n  m_Label_LineWrapped.set_wrap();\n  m_Frame_LineWrapped.set_child(m_Label_LineWrapped);\n  m_VBox2.append(m_Frame_LineWrapped);\n\n  m_Label_FilledWrapped.set_text(\n          \"This is an example of a line-wrapped, filled label.  \"\n          \"It should be taking \"\n          \"up the entire              width allocated to it.  \"\n          \"Here is a sentence to prove \"\n          \"my point.  Here is another sentence. \"\n          \"Here comes the sun, do de do de do.\\n\"\n          \"    This is a new paragraph.\\n\"\n          \"    This is another newer, longer, better \"\n          \"paragraph.  It is coming to an end, \"\n          \"unfortunately.\");\n  m_Label_FilledWrapped.set_justify(Gtk::Justification::FILL);\n  m_Label_FilledWrapped.set_wrap();\n  m_Frame_FilledWrapped.set_child(m_Label_FilledWrapped);\n  m_VBox2.append(m_Frame_FilledWrapped);\n\n  m_Label_Underlined.set_justify(Gtk::Justification::LEFT);\n  m_Label_Underlined.set_use_markup(true);\n  m_Frame_Underlined.set_child(m_Label_Underlined);\n  m_VBox2.append(m_Frame_Underlined);\n}\n\nExampleWindow::~ExampleWindow()\n{\n}",
+   "sha": "8222a14f3d48ca37",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee",
+   "file": "main.cc",
+   "zh": ""
   }
  ]
 }

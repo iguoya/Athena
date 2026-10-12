@@ -42,6 +42,28 @@
    "zh": ""
   },
   {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLE_MYAREA_H\n#define GTKMM_EXAMPLE_MYAREA_H\n\n#include <gtkmm/drawingarea.h>\n\nclass MyArea : public Gtk::DrawingArea\n{\npublic:\n  MyArea();\n  virtual ~MyArea();\n\nprotected:\n  void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);\n};\n\n#endif // GTKMM_EXAMPLE_MYAREA_H",
+   "sha": "b9a46af5968c608f",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/drawingarea/arcs",
+   "file": "myarea.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"myarea.h\"\n#include <gtkmm/application.h>\n#include <gtkmm/window.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n\nprotected:\n  MyArea m_area;\n};\n\nExampleWindow::ExampleWindow()\n{\n  set_title(\"DrawingArea\");\n  set_child(m_area);\n}\n\nint main(int argc, char** argv)\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "80e8193dad61994b",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"myarea.h\"\n#include <cairomm/context.h>\n#include <cmath>\n\nMyArea::MyArea()\n{\n  set_draw_func(sigc::mem_fun(*this, &MyArea::on_draw));\n}\n\nMyArea::~MyArea()\n{\n}\n\nvoid MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height)\n{\n  const int lesser = std::min(width, height);\n\n  // coordinates for the center of the window\n  const int xc = width / 2;\n  const int yc = height / 2;\n\n  cr->set_line_width(lesser * 0.02);  // outline thickness changes\n                                      // with window size\n\n  // first draw a simple unclosed arc\n  cr->save();\n  cr->arc(width / 3.0, height / 4.0, lesser / 4.0, -(M_PI / 5.0), M_PI);\n  cr->close_path();   // line back to start point\n  cr->set_source_rgb(0.0, 0.8, 0.0);\n  cr->fill_preserve();\n  cr->restore();  // back to opaque black\n  cr->stroke();   // outline it\n\n  // now draw a circle\n  cr->save();\n  cr->arc(xc, yc, lesser / 4.0, 0.0, 2.0 * M_PI); // full circle\n  cr->set_source_rgba(0.0, 0.0, 0.8, 0.6);    // partially translucent\n  cr->fill_preserve();\n  cr->restore();  // back to opaque black\n  cr->stroke();\n\n  // and finally an ellipse\n  double ex, ey, ew, eh;\n  // center of ellipse\n  ex = xc;\n  ey = 3.0 * height / 4.0;\n  // ellipse dimensions\n  ew = 3.0 * width / 4.0;\n  eh = height / 3.0;\n\n  cr->save();\n\n  cr->translate(ex, ey);  // make (ex, ey) == (0, 0)\n  cr->scale(ew / 2.0, eh / 2.0);  // for width: ew / 2.0 == 1.0\n                                  // for height: eh / 2.0 == 1.0\n\n  cr->arc(0.0, 0.0, 1.0, 0.0, 2 * M_PI);  // 'circle' centered at (0, 0)\n                                          // with 'radius' of 1.0\n\n  cr->set_source_rgba(0.8, 0.0, 0.0, 0.7);\n  cr->fill_preserve();\n  cr->restore();  // back to opaque black\n  cr->stroke();\n}",
+   "sha": "8ccbe63559a9b1ab",
+   "file": "myarea.cc",
+   "zh": ""
+  },
+  {
    "type": "para",
    "text": "There are a couple of things to note about this example code.\n              Again, the only real difference between this example and the\n              previous ones is the on_draw()\n              function, so we'll limit our focus to that function. In\n              addition, the first part of the function is nearly identical to\n              the previous examples, so we'll skip that portion.",
    "sha": "9e3cd2f77db91d7a",

@@ -30,6 +30,28 @@
    "zh": ""
   },
   {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLE_MYAREA_H\n#define GTKMM_EXAMPLE_MYAREA_H\n\n#include <gtkmm/drawingarea.h>\n\nclass MyArea : public Gtk::DrawingArea\n{\npublic:\n  MyArea();\n  virtual ~MyArea();\n\nprotected:\n  void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height);\n};\n\n#endif // GTKMM_EXAMPLE_MYAREA_H",
+   "sha": "b9a46af5968c608f",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/drawingarea/curve",
+   "file": "myarea.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"myarea.h\"\n#include <gtkmm/application.h>\n#include <gtkmm/window.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n\nprotected:\n  MyArea m_area;\n};\n\nExampleWindow::ExampleWindow()\n{\n  set_title(\"DrawingArea\");\n  set_child(m_area);\n}\n\nint main(int argc, char** argv)\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "80e8193dad61994b",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"myarea.h\"\n#include <cairomm/context.h>\n#include <vector>\n\nMyArea::MyArea()\n{\n  set_draw_func(sigc::mem_fun(*this, &MyArea::on_draw));\n}\n\nMyArea::~MyArea()\n{\n}\n\nvoid MyArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int width, int height)\n{\n  const double x0=0.1, y0=0.5, // start point\n               x1=0.4, y1=0.9, // control point #1\n               x2=0.6, y2=0.1, // control point #2\n               x3=0.9, y3=0.5; // end point\n  const std::vector<double> dashes = {0.08, 0.05};\n\n  // scale to unit square (0 to 1 width and height)\n  cr->scale(width, height);\n\n  // draw curve\n  cr->set_line_width(0.05);\n  cr->move_to(x0, y0);\n  cr->curve_to(x1, y1, x2, y2, x3, y3);\n  cr->stroke();\n\n  // show first control point (red)\n  cr->set_line_width(0.03);\n  cr->set_dash(dashes, 0.0);\n  cr->set_source_rgba(1.0, 0.2, 0.2, 0.6);\n  cr->set_line_cap(Cairo::Context::LineCap::ROUND);\n  cr->move_to(x1, y1);\n  cr->line_to (x0, y0);\n  cr->stroke();\n\n  // show second control point (blue)\n  cr->set_source_rgba(0.2, 0.2, 1.0, 0.6);\n  cr->set_line_cap(Cairo::Context::LineCap::BUTT);\n  cr->move_to(x2, y2);\n  cr->line_to (x3, y3);\n  cr->stroke();\n}",
+   "sha": "2d331970468e54f3",
+   "file": "myarea.cc",
+   "zh": ""
+  },
+  {
    "type": "para",
    "text": "The only difference between this example and the straight line\n            example is in the on_draw() function,\n            but there are a few new concepts and functions introduced here, so\n            let's examine them briefly.",
    "sha": "7ea822773e751a74",

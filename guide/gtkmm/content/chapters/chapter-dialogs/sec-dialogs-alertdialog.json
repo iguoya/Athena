@@ -84,6 +84,28 @@
    "ref": "figures/dialogs_alertdialog.png",
    "sha": "5b7efd9c5f3f262f",
    "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  //Signal handlers:\n  void on_button_info_clicked();\n  void on_button_question_clicked();\n  void on_question_dialog_finish(const Glib::RefPtr<Gio::AsyncResult>& result);\n\n  //Child widgets:\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Info;\n  Gtk::Button m_Button_Question;\n\n  Glib::RefPtr<Gtk::AlertDialog> m_pDialog;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "e9343563847d3cf5",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/dialogs/alertdialog",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/messagedialog.h>\n#include <iostream>\n\n\nExampleWindow::ExampleWindow()\n: m_ButtonBox(Gtk::Orientation::VERTICAL),\n  m_Button_Info(\"Show Info AlertDialog\"),\n  m_Button_Question(\"Show Question AlertDialog\")\n{\n  set_title(\"Gtk::AlertDialog example\");\n\n  set_child(m_ButtonBox);\n\n  m_ButtonBox.append(m_Button_Info);\n  m_Button_Info.set_expand(true);\n  m_Button_Info.signal_clicked().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_button_info_clicked) );\n\n  m_ButtonBox.append(m_Button_Question);\n  m_Button_Question.set_expand(true);\n  m_Button_Question.signal_clicked().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_button_question_clicked) );\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_button_info_clicked()\n{\n  if (!m_pDialog)\n    m_pDialog = Gtk::AlertDialog::create();\n  else\n  {\n    // Reset values that may have been set by on_button_question_clicked().\n    m_pDialog->set_buttons({});\n    m_pDialog->set_default_button(-1);\n    m_pDialog->set_cancel_button(-1);\n  }\n\n  m_pDialog->set_message(\"This is an INFO AlertDialog.\");\n  m_pDialog->set_detail(\"And this is the secondary text that explains things.\");\n  m_pDialog->show(*this);\n}\n\nvoid ExampleWindow::on_button_question_clicked()\n{\n  if (!m_pDialog)\n    m_pDialog = Gtk::AlertDialog::create();\n  m_pDialog->set_message(\"This is a QUESTION AlertDialog.\");\n  m_pDialog->set_detail(\"And this is the secondary text that explains things.\");\n  m_pDialog->set_buttons({\"Cancel\", \"Retry\", \"OK\"});\n  m_pDialog->set_default_button(2); // OK button or Return key\n  m_pDialog->set_cancel_button(0); // Cancel button or Escape key\n  m_pDialog->choose(*this,\n    sigc::mem_fun(*this, &ExampleWindow::on_question_dialog_finish));\n}\n\nvoid ExampleWindow::on_question_dialog_finish(const Glib::RefPtr<Gio::AsyncResult>& result)\n{\n  try\n  {\n    const int response_id = m_pDialog->choose_finish(result);\n    switch (response_id)\n    {\n    case 0:\n      std::cout << \"Cancel clicked.\" << std::endl;\n      break;\n    case 1:\n      std::cout << \"Retry clicked.\" << std::endl;\n      break;\n    case 2:\n      std::cout << \"OK clicked.\" << std::endl;\n      break;\n    default:\n      std::cout << \"Unexpected response: \" << response_id << std::endl;\n      break;\n    }\n  }\n  catch (const Gtk::DialogError& err)\n  {\n    // Can be thrown by m_pDialog->choose_finish(result).\n    std::cout << \"DialogError, \" << err.what() << std::endl;\n  }\n  catch (const Glib::Error& err)\n  {\n    std::cout << \"Unexpected exception. \" << err.what() << std::endl;\n  }\n}",
+   "sha": "cd0c3d487dae96d2",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee",
+   "file": "main.cc",
+   "zh": ""
   }
  ]
 }

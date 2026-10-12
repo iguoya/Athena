@@ -36,6 +36,28 @@
    "zh": ""
   },
   {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_button_quit();\n\n  //Tree model columns:\n  class ModelColumns : public Gtk::TreeModel::ColumnRecord\n  {\n  public:\n\n    ModelColumns()\n    { add(m_col_id); add(m_col_name); add(m_col_number); add(m_col_percentage);}\n\n    Gtk::TreeModelColumn<unsigned int> m_col_id;\n    Gtk::TreeModelColumn<Glib::ustring> m_col_name;\n    Gtk::TreeModelColumn<short> m_col_number;\n    Gtk::TreeModelColumn<int> m_col_percentage;\n  };\n\n  ModelColumns m_Columns;\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::TreeView m_TreeView;\n  Glib::RefPtr<Gtk::ListStore> m_refTreeModel;\n\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "fe7551e3fc7ee123",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/treeview/list/",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include <iostream>\n#include \"examplewindow.h\"\n\nExampleWindow::ExampleWindow()\n: m_VBox(Gtk::Orientation::VERTICAL),\n  m_Button_Quit(\"Quit\")\n{\n  set_title(\"Gtk::TreeView (ListStore) example\");\n  set_default_size(400, 200);\n\n  m_VBox.set_margin(5);\n  set_child(m_VBox);\n\n  //Add the TreeView, inside a ScrolledWindow, with the button underneath:\n  m_ScrolledWindow.set_child(m_TreeView);\n\n  //Only show the scrollbars when they are necessary:\n  m_ScrolledWindow.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);\n  m_ScrolledWindow.set_expand();\n\n  m_VBox.append(m_ScrolledWindow);\n  m_VBox.append(m_ButtonBox);\n\n  m_ButtonBox.append(m_Button_Quit);\n  m_ButtonBox.set_margin(5);\n  m_Button_Quit.set_hexpand(true);\n  m_Button_Quit.set_halign(Gtk::Align::END);\n  m_Button_Quit.signal_clicked().connect( sigc::mem_fun(*this,\n              &ExampleWindow::on_button_quit) );\n\n  //Create the Tree model:\n  m_refTreeModel = Gtk::ListStore::create(m_Columns);\n  m_TreeView.set_model(m_refTreeModel);\n\n  //Fill the TreeView's model\n  auto row = *(m_refTreeModel->append());\n  row[m_Columns.m_col_id] = 1;\n  row[m_Columns.m_col_name] = \"Billy Bob\";\n  row[m_Columns.m_col_number] = 10;\n  row[m_Columns.m_col_percentage] = 15;\n\n  row = *(m_refTreeModel->append());\n  row[m_Columns.m_col_id] = 2;\n  row[m_Columns.m_col_name] = \"Joey Jojo\";\n  row[m_Columns.m_col_number] = 20;\n  row[m_Columns.m_col_percentage] = 40;\n\n  row = *(m_refTreeModel->append());\n  row[m_Columns.m_col_id] = 3;\n  row[m_Columns.m_col_name] = \"Rob McRoberts\";\n  row[m_Columns.m_col_number] = 30;\n  row[m_Columns.m_col_percentage] = 70;\n\n  //Add the TreeView's view columns:\n  //This number will be shown with the default numeric formatting.\n  m_TreeView.append_column(\"ID\", m_Columns.m_col_id);\n  m_TreeView.append_column(\"Name\", m_Columns.m_col_name);\n\n  m_TreeView.append_column_numeric(\"Formatted number\", m_Columns.m_col_number,\n          \"%010d\" /* 10 digits, using leading zeroes. */);\n\n  //Display a progress bar instead of a decimal number:\n  auto cell = Gtk::make_managed<Gtk::CellRendererProgress>();\n  int cols_count = m_TreeView.append_column(\"Some percentage\", *cell);\n  auto pColumn = m_TreeView.get_column(cols_count - 1);\n  if(pColumn)\n  {\n    pColumn->add_attribute(cell->property_value(), m_Columns.m_col_percentage);\n  }\n\n  //Make all the columns reorderable:\n  //This is not necessary, but it's nice to show the feature.\n  //You can use TreeView::set_column_drag_function() to more\n  //finely control column drag and drop.\n  for(guint i = 0; i < 2; i++)\n  {\n    auto column = m_TreeView.get_column(i);\n    column->set_reorderable();\n  }\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_button_quit()\n{\n  close();\n}",
+   "sha": "1f0d48ed02f9c01e",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
    "type": "heading",
    "text": "TreeStore",
    "sha": "8e835cdee901deeb",
@@ -52,6 +74,28 @@
    "text": "TreeView - TreeStore",
    "ref": "figures/treeview_tree.png",
    "sha": "ba0c588f7a9b80a7",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_button_quit();\n  void on_treeview_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column);\n\n  //Tree model columns:\n  class ModelColumns : public Gtk::TreeModel::ColumnRecord\n  {\n  public:\n\n    ModelColumns()\n    { add(m_col_id); add(m_col_name); }\n\n    Gtk::TreeModelColumn<int> m_col_id;\n    Gtk::TreeModelColumn<Glib::ustring> m_col_name;\n  };\n\n  ModelColumns m_Columns;\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::TreeView m_TreeView;\n  Glib::RefPtr<Gtk::TreeStore> m_refTreeModel;\n\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "7b5dfac97f6613ec",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/treeview/tree/",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include <iostream>\n#include \"examplewindow.h\"\n\nExampleWindow::ExampleWindow()\n: m_VBox(Gtk::Orientation::VERTICAL),\n  m_Button_Quit(\"Quit\")\n{\n  set_title(\"Gtk::TreeView (TreeStore) example\");\n  set_default_size(400, 200);\n\n  m_VBox.set_margin(5);\n  set_child(m_VBox);\n\n  //Add the TreeView, inside a ScrolledWindow, with the button underneath:\n  m_ScrolledWindow.set_child(m_TreeView);\n\n  //Only show the scrollbars when they are necessary:\n  m_ScrolledWindow.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);\n  m_ScrolledWindow.set_expand();\n\n  m_VBox.append(m_ScrolledWindow);\n  m_VBox.append(m_ButtonBox);\n\n  m_ButtonBox.append(m_Button_Quit);\n  m_ButtonBox.set_margin(5);\n  m_Button_Quit.set_hexpand(true);\n  m_Button_Quit.set_halign(Gtk::Align::END);\n  m_Button_Quit.signal_clicked().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_button_quit) );\n\n  //Create the Tree model:\n  m_refTreeModel = Gtk::TreeStore::create(m_Columns);\n  m_TreeView.set_model(m_refTreeModel);\n\n  //All the items to be reordered with drag-and-drop:\n  m_TreeView.set_reorderable();\n\n  //Fill the TreeView's model\n  auto row = *(m_refTreeModel->append());\n  row[m_Columns.m_col_id] = 1;\n  row[m_Columns.m_col_name] = \"Billy Bob\";\n\n  auto childrow = *(m_refTreeModel->append(row.children()));\n  childrow[m_Columns.m_col_id] = 11;\n  childrow[m_Columns.m_col_name] = \"Billy Bob Junior\";\n\n  childrow = *(m_refTreeModel->append(row.children()));\n  childrow[m_Columns.m_col_id] = 12;\n  childrow[m_Columns.m_col_name] = \"Sue Bob\";\n\n  row = *(m_refTreeModel->append());\n  row[m_Columns.m_col_id] = 2;\n  row[m_Columns.m_col_name] = \"Joey Jojo\";\n\n\n  row = *(m_refTreeModel->append());\n  row[m_Columns.m_col_id] = 3;\n  row[m_Columns.m_col_name] = \"Rob McRoberts\";\n\n  childrow = *(m_refTreeModel->append(row.children()));\n  childrow[m_Columns.m_col_id] = 31;\n  childrow[m_Columns.m_col_name] = \"Xavier McRoberts\";\n\n  //Add the TreeView's view columns:\n  m_TreeView.append_column(\"ID\", m_Columns.m_col_id);\n  m_TreeView.append_column(\"Name\", m_Columns.m_col_name);\n\n  //Connect signal:\n  m_TreeView.signal_row_activated().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_treeview_row_activated) );\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_button_quit()\n{\n  close();\n}\n\nvoid ExampleWindow::on_treeview_row_activated(const Gtk::TreeModel::Path& path,\n        Gtk::TreeViewColumn* /* column */)\n{\n  const auto iter = m_refTreeModel->get_iter(path);\n  if(iter)\n  {\n    const auto row = *iter;\n    std::cout << \"Row activated: ID=\" << row[m_Columns.m_col_id] << \", Name=\"\n        << row[m_Columns.m_col_name] << std::endl;\n  }\n}",
+   "sha": "f7aad3b6d01e822d",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee-1",
+   "file": "main.cc",
    "zh": ""
   },
   {
@@ -74,6 +118,28 @@
    "zh": ""
   },
   {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_button_quit();\n\n  void treeviewcolumn_validated_on_cell_data(Gtk::CellRenderer* renderer, const Gtk::TreeModel::const_iterator& iter);\n  void cellrenderer_validated_on_editing_started(Gtk::CellEditable* cell_editable, const Glib::ustring& path);\n  void cellrenderer_validated_on_edited(const Glib::ustring& path_string, const Glib::ustring& new_text);\n  void on_message_response(int response_id, Gtk::MessageDialog* dialog);\n\n  //Tree model columns:\n  class ModelColumns : public Gtk::TreeModel::ColumnRecord\n  {\n  public:\n\n    ModelColumns()\n    { add(m_col_id); add(m_col_name); add(m_col_foo); add(m_col_number); add(m_col_number_validated); }\n\n    Gtk::TreeModelColumn<unsigned int> m_col_id;\n    Gtk::TreeModelColumn<Glib::ustring> m_col_name;\n    Gtk::TreeModelColumn<bool> m_col_foo;\n    Gtk::TreeModelColumn<int> m_col_number;\n    Gtk::TreeModelColumn<int> m_col_number_validated;\n  };\n\n  ModelColumns m_Columns;\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::TreeView m_TreeView;\n  Glib::RefPtr<Gtk::ListStore> m_refTreeModel;\n\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit;\n\n  //For the validated column:\n  //You could also use a CellRendererSpin or a CellRendererProgress:\n  Gtk::CellRendererText m_cellrenderer_validated;\n  Gtk::TreeView::Column m_treeviewcolumn_validated;\n  bool m_validate_retry;\n  Glib::ustring m_invalid_text_for_retry;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "d516c80ffb1a0b3a",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/treeview/editable_cells/",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include <iostream>\n#include <cstdio>\n#include <cstdlib>\n#include \"examplewindow.h\"\n\nusing std::sprintf;\nusing std::strtol;\n\nExampleWindow::ExampleWindow()\n: m_VBox(Gtk::Orientation::VERTICAL),\n  m_Button_Quit(\"Quit\"),\n  m_validate_retry(false)\n{\n  set_title(\"Gtk::TreeView Editable Cells example\");\n  set_default_size(400, 200);\n\n  m_VBox.set_margin(5);\n  set_child(m_VBox);\n\n  //Add the TreeView, inside a ScrolledWindow, with the button underneath:\n  m_ScrolledWindow.set_child(m_TreeView);\n\n  //Only show the scrollbars when they are necessary:\n  m_ScrolledWindow.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);\n  m_ScrolledWindow.set_expand();\n\n  m_VBox.append(m_ScrolledWindow);\n  m_VBox.append(m_ButtonBox);\n\n  m_ButtonBox.append(m_Button_Quit);\n  m_ButtonBox.set_margin(5);\n  m_Button_Quit.set_hexpand(true);\n  m_Button_Quit.set_halign(Gtk::Align::END);\n  m_Button_Quit.signal_clicked().connect( sigc::mem_fun(*this,\n              &ExampleWindow::on_button_quit) );\n\n  //Create the Tree model:\n  m_refTreeModel = Gtk::ListStore::create(m_Columns);\n  m_TreeView.set_model(m_refTreeModel);\n\n  //Fill the TreeView's model\n  auto row = *(m_refTreeModel->append());\n  row[m_Columns.m_col_id] = 1;\n  row[m_Columns.m_col_name] = \"Billy Bob\";\n  row[m_Columns.m_col_foo] = true;\n  row[m_Columns.m_col_number] = 10;\n\n  row = *(m_refTreeModel->append());\n  row[m_Columns.m_col_id] = 2;\n  row[m_Columns.m_col_name] = \"Joey Jojo\";\n  row[m_Columns.m_col_foo] = true;\n  row[m_Columns.m_col_number] = 20;\n\n  row = *(m_refTreeModel->append());\n\n  row[m_Columns.m_col_id] = 3;\n  row[m_Columns.m_col_name] = \"Rob McRoberts\";\n  row[m_Columns.m_col_foo] = false;\n  row[m_Columns.m_col_number] = 30;\n\n  //Add the TreeView's view columns:\n  //We use the *_editable convenience methods for most of these,\n  //because the default functionality is enough:\n  m_TreeView.append_column_editable(\"ID\", m_Columns.m_col_id);\n  m_TreeView.append_column_editable(\"Name\", m_Columns.m_col_name);\n  m_TreeView.append_column_editable(\"foo\", m_Columns.m_col_foo);\n  m_TreeView.append_column_numeric_editable(\"Number\", m_Columns.m_col_number,\n          \"%010d\");\n\n  //For this column, we create the CellRenderer ourselves, and connect our own\n  //signal handlers, so that we can validate the data that the user enters, and\n  //control how it is displayed.\n  m_treeviewcolumn_validated.set_title(\"validated (<10)\");\n  m_treeviewcolumn_validated.pack_start(m_cellrenderer_validated);\n  m_TreeView.append_column(m_treeviewcolumn_validated);\n\n  //Tell the view column how to render the model values:\n  m_treeviewcolumn_validated.set_cell_data_func(m_cellrenderer_validated,\n          sigc::mem_fun(*this,\n              &ExampleWindow::treeviewcolumn_validated_on_cell_data) );\n\n  //Make the CellRenderer editable, and handle its editing signals:\n  m_cellrenderer_validated.property_editable() = true;\n\n  m_cellrenderer_validated.signal_editing_started().connect(\n          sigc::mem_fun(*this,\n        &ExampleWindow::cellrenderer_validated_on_editing_started) );\n\n  m_cellrenderer_validated.signal_edited().connect( sigc::mem_fun(*this,\n              &ExampleWindow::cellrenderer_validated_on_edited) );\n\n  //If this was a CellRendererSpin then you would have to set the adjustment:\n  //m_cellrenderer_validated.property_adjustment() = m_spin_adjustment;\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_button_quit()\n{\n  close();\n}\n\nvoid ExampleWindow::treeviewcolumn_validated_on_cell_data(\n        Gtk::CellRenderer* /* renderer */,\n        const Gtk::TreeModel::const_iterator& iter)\n{\n  //Get the value from the model and show it appropriately in the view:\n  if(iter)\n  {\n    const auto row = *iter;\n    int model_value = row[m_Columns.m_col_number_validated];\n\n    //This is just an example.\n    //In this case, it would be easier to use append_column_editable() or\n    //append_column_numeric_editable()\n    char buffer[32];\n    sprintf(buffer, \"%d\", model_value);\n\n    auto view_text = buffer;\n    m_cellrenderer_validated.property_text() = view_text;\n  }\n}\n\nvoid ExampleWindow::cellrenderer_validated_on_editing_started(\n        Gtk::CellEditable* cell_editable, const Glib::ustring& /* path */)\n{\n  //Start editing with previously-entered (but invalid) text,\n  //if we are allowing the user to correct some invalid data.\n  if(m_validate_retry)\n  {\n    //This is the CellEditable inside the CellRenderer.\n    auto celleditable_validated = cell_editable;\n\n    //It's usually an Entry, at least for a CellRendererText:\n    auto pEntry = dynamic_cast<Gtk::Entry*>(celleditable_validated);\n    if(pEntry)\n    {\n      pEntry->set_text(m_invalid_text_for_retry);\n      m_validate_retry = false;\n      m_invalid_text_for_retry.clear();\n    }\n  }\n}\n\nvoid ExampleWindow::cellrenderer_validated_on_edited(\n        const Glib::ustring& path_string,\n        const Glib::ustring& new_text)\n{\n  Gtk::TreePath path(path_string);\n\n  //Convert the inputed text to an integer, as needed by our model column:\n  char* pchEnd = nullptr;\n  int new_value = strtol(new_text.c_str(), &pchEnd, 10);\n\n  if(new_value >= 10)\n  {\n    //Prevent entry of numbers higher than 10.\n\n    //Tell the user:\n    auto dialog = new Gtk::MessageDialog(*this,\n            \"The number must be less than 10. Please try again.\",\n            false, Gtk::MessageType::ERROR, Gtk::ButtonsType::OK, true /* modal */);\n    dialog->signal_response().connect(sigc::bind(\n      sigc::mem_fun(*this, &ExampleWindow::on_message_response), dialog));\n\n    dialog->set_visible(true);\n\n    //Start editing again, with the bad text, so that the user can correct it.\n    //A real application should probably allow the user to revert to the\n    //previous text.\n\n    //Set the text to be used in the start_editing signal handler:\n    m_invalid_text_for_retry = new_text;\n    m_validate_retry = true;\n\n    //Start editing again, when the message dialog has been closed:\n    m_TreeView.set_cursor(path, m_treeviewcolumn_validated,\n            m_cellrenderer_validated, true /* start_editing */);\n  }\n  else\n  {\n    //Get the row from the path:\n    auto iter = m_refTreeModel->get_iter(path);\n    if(iter)\n    {\n      auto row = *iter;\n\n      //Put the new value in the model:\n      row[m_Columns.m_col_number_validated] = new_value;\n    }\n  }\n}\n\nvoid ExampleWindow::on_message_response(int /* response_id */, Gtk::MessageDialog* dialog)\n{\n  delete dialog;\n}",
+   "sha": "033db98b71e7abdb",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee-2",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
    "type": "heading",
    "text": "Drag and Drop",
    "sha": "9d0e99cead189899",
@@ -93,6 +159,42 @@
    "zh": ""
   },
   {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n#include \"treemodel_dnd.h\"\n\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_button_quit();\n\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  Gtk::TreeView m_TreeView;\n  Glib::RefPtr<TreeModel_Dnd> m_refTreeModel;\n\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "d2f63e158bcc8f57",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/treeview/drag_and_drop/",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLE_TREEMODEL_DND_H\n#define GTKMM_EXAMPLE_TREEMODEL_DND_H\n\n#include <gtkmm.h>\n\nclass TreeModel_Dnd : public Gtk::TreeStore\n{\nprotected:\n  TreeModel_Dnd();\n\npublic:\n\n  //Tree model columns:\n  class ModelColumns : public Gtk::TreeModel::ColumnRecord\n  {\n  public:\n\n    ModelColumns()\n    { add(m_col_id); add(m_col_name); add(m_col_draggable); add(m_col_receivesdrags); }\n\n    Gtk::TreeModelColumn<int> m_col_id;\n    Gtk::TreeModelColumn<Glib::ustring> m_col_name;\n    Gtk::TreeModelColumn<bool> m_col_draggable;\n    Gtk::TreeModelColumn<bool> m_col_receivesdrags;\n  };\n\n  ModelColumns m_Columns;\n\n  static Glib::RefPtr<TreeModel_Dnd> create();\n\nprotected:\n  //Overridden virtual functions:\n  bool row_draggable_vfunc(const Gtk::TreeModel::Path& path) const override;\n  bool row_drop_possible_vfunc(const Gtk::TreeModel::Path& dest, const Glib::ValueBase& value) const override;\n};\n\n#endif //GTKMM_EXAMPLE_TREEMODEL_DND_H",
+   "sha": "615bbefb77715722",
+   "file": "treemodel_dnd.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include <iostream>\n#include \"examplewindow.h\"\n\nExampleWindow::ExampleWindow()\n: m_VBox(Gtk::Orientation::VERTICAL),\n  m_Button_Quit(\"_Quit\", true)\n{\n  set_title(\"Gtk::TreeView (Drag and Drop) example\");\n  set_default_size(400, 200);\n\n  m_VBox.set_margin(5);\n  set_child(m_VBox);\n\n  //Add the TreeView, inside a ScrolledWindow, with the button underneath:\n  m_ScrolledWindow.set_child(m_TreeView);\n\n  //Only show the scrollbars when they are necessary:\n  m_ScrolledWindow.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);\n  m_ScrolledWindow.set_expand();\n\n  m_VBox.append(m_ScrolledWindow);\n  m_VBox.append(m_ButtonBox);\n\n  m_ButtonBox.append(m_Button_Quit);\n  m_ButtonBox.set_margin(5);\n  m_Button_Quit.set_hexpand(true);\n  m_Button_Quit.set_halign(Gtk::Align::END);\n  m_Button_Quit.signal_clicked().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_button_quit) );\n\n  //Create the Tree model:\n  //Use our derived model, which overrides some Gtk::TreeDragDest and\n  //Gtk::TreeDragSource virtual functions:\n  //The columns are declared in the overridden TreeModel.\n  m_refTreeModel = TreeModel_Dnd::create();\n  m_TreeView.set_model(m_refTreeModel);\n\n  //Enable Drag-and-Drop of TreeView rows:\n  //See also the derived TreeModel's *_vfunc overrides.\n  m_TreeView.enable_model_drag_source();\n  m_TreeView.enable_model_drag_dest();\n\n  //Fill the TreeView's model\n  auto row = *(m_refTreeModel->append());\n  row[m_refTreeModel->m_Columns.m_col_id] = 1;\n  row[m_refTreeModel->m_Columns.m_col_name] = \"Billy Bob\";\n  row[m_refTreeModel->m_Columns.m_col_draggable] = true;\n  row[m_refTreeModel->m_Columns.m_col_receivesdrags] = true;\n\n  auto childrow = *(m_refTreeModel->append(row.children()));\n  childrow[m_refTreeModel->m_Columns.m_col_id] = 11;\n  childrow[m_refTreeModel->m_Columns.m_col_name] = \"Billy Bob Junior\";\n  childrow[m_refTreeModel->m_Columns.m_col_draggable] = true;\n  childrow[m_refTreeModel->m_Columns.m_col_receivesdrags] = true;\n\n  childrow = *(m_refTreeModel->append(row.children()));\n  childrow[m_refTreeModel->m_Columns.m_col_id] = 12;\n  childrow[m_refTreeModel->m_Columns.m_col_name] = \"Sue Bob\";\n  childrow[m_refTreeModel->m_Columns.m_col_draggable] = true;\n  childrow[m_refTreeModel->m_Columns.m_col_receivesdrags] = true;\n\n  row = *(m_refTreeModel->append());\n  row[m_refTreeModel->m_Columns.m_col_id] = 2;\n  row[m_refTreeModel->m_Columns.m_col_name] = \"Joey Jojo\";\n  row[m_refTreeModel->m_Columns.m_col_draggable] = true;\n  row[m_refTreeModel->m_Columns.m_col_receivesdrags] = true;\n\n  row = *(m_refTreeModel->append());\n  row[m_refTreeModel->m_Columns.m_col_id] = 3;\n  row[m_refTreeModel->m_Columns.m_col_name] = \"Rob McRoberts\";\n  row[m_refTreeModel->m_Columns.m_col_draggable] = true;\n  row[m_refTreeModel->m_Columns.m_col_receivesdrags] = true;\n\n  childrow = *(m_refTreeModel->append(row.children()));\n  childrow[m_refTreeModel->m_Columns.m_col_id] = 31;\n  childrow[m_refTreeModel->m_Columns.m_col_name] = \"Xavier McRoberts\";\n  childrow[m_refTreeModel->m_Columns.m_col_draggable] = true;\n  childrow[m_refTreeModel->m_Columns.m_col_receivesdrags] = true;\n\n  //Add the TreeView's view columns:\n  m_TreeView.append_column(\"ID\", m_refTreeModel->m_Columns.m_col_id);\n  m_TreeView.append_column(\"Name\", m_refTreeModel->m_Columns.m_col_name);\n  m_TreeView.append_column_editable(\"Draggable\",\n          m_refTreeModel->m_Columns.m_col_draggable);\n  m_TreeView.append_column_editable(\"Receives Drags\",\n          m_refTreeModel->m_Columns.m_col_receivesdrags);\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_button_quit()\n{\n  close();\n}",
+   "sha": "838193c641f49b1a",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee-3",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"treemodel_dnd.h\"\n#include <iostream>\n\nTreeModel_Dnd::TreeModel_Dnd()\n{\n  //We can't just call Gtk::TreeModel(m_Columns) in the initializer list\n  //because m_Columns does not exist when the base class constructor runs.\n  //And we can't have a static m_Columns instance, because that would be\n  //instantiated before the gtkmm type system.\n  //So, we use this method, which should only be used just after creation:\n  set_column_types(m_Columns);\n}\n\nGlib::RefPtr<TreeModel_Dnd> TreeModel_Dnd::create()\n{\n  return Glib::make_refptr_for_instance<TreeModel_Dnd>( new TreeModel_Dnd() );\n}\n\nbool\nTreeModel_Dnd::row_draggable_vfunc(const Gtk::TreeModel::Path& path) const\n{\n  // Make the value of the \"draggable\" column determine whether this row can\n  // be dragged:\n\n  const const_iterator iter = get_iter(path);\n  if(iter)\n  {\n    ConstRow row = *iter;\n    bool is_draggable = row[m_Columns.m_col_draggable];\n    return is_draggable;\n  }\n\n  return Gtk::TreeStore::row_draggable_vfunc(path);\n}\n\nbool\nTreeModel_Dnd::row_drop_possible_vfunc(const Gtk::TreeModel::Path& dest,\n        const Glib::ValueBase& value) const\n{\n  //Make the value of the \"receives drags\" column determine whether a row can be\n  //dragged into it:\n\n  //dest is the path that the row would have after it has been dropped:\n  //But in this case we are more interested in the parent row:\n  auto dest_parent = dest;\n  bool dest_is_not_top_level = dest_parent.up();\n  if(!dest_is_not_top_level || dest_parent.empty())\n  {\n    //The user wants to move something to the top-level.\n    //Let's always allow that.\n  }\n  else\n  {\n    //Get an iterator for the row at this path:\n    const const_iterator iter_dest_parent = get_iter(dest_parent);\n    if(iter_dest_parent)\n    {\n      ConstRow row = *iter_dest_parent;\n      bool receives_drags = row[m_Columns.m_col_receivesdrags];\n      return receives_drags;\n    }\n  }\n\n  // You could also examine the row being dragged (via value)\n  // if you must look at both rows to see whether a drop should be allowed.\n  // You could use\n  //   Glib::RefPtr<const Gtk::TreeModel> model_dragged_row;\n  //   Gtk::TreeModel::Path path_dragged_row;\n  //   Gtk::TreeModel::Path::get_row_drag_data(value,\n  //     model_dragged_row, path_dragged_row);\n\n  return Gtk::TreeStore::row_drop_possible_vfunc(dest, value);\n}",
+   "sha": "41cc9b97e4e76408",
+   "file": "treemodel_dnd.cc",
+   "zh": ""
+  },
+  {
    "type": "heading",
    "text": "Popup Context Menu",
    "sha": "300b4517f09ce127",
@@ -109,6 +211,42 @@
    "text": "TreeView - Popup Context Menu",
    "ref": "figures/treeview_popup.png",
    "sha": "84efef6c09d8858f",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n#include \"treeview_withpopup.h\"\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_button_quit();\n\n\n\n  //Child widgets:\n  Gtk::Box m_VBox;\n\n  Gtk::ScrolledWindow m_ScrolledWindow;\n  TreeView_WithPopup m_TreeView;\n\n  Gtk::Box m_ButtonBox;\n  Gtk::Button m_Button_Quit;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "f9d4c82e3711e3df",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/treeview/popup/",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLE_TREEVIEW_WITHPOPUP_H\n#define GTKMM_EXAMPLE_TREEVIEW_WITHPOPUP_H\n\n#include <gtkmm.h>\n\nclass TreeView_WithPopup : public Gtk::TreeView\n{\npublic:\n  TreeView_WithPopup();\n  virtual ~TreeView_WithPopup();\n\nprotected:\n  // Signal handler for showing popup menu:\n  void on_popup_button_pressed(int n_press, double x, double y);\n\n  //Signal handler for popup menu items:\n  void on_menu_file_popup_generic();\n\n\n  //Tree model columns:\n  class ModelColumns : public Gtk::TreeModel::ColumnRecord\n  {\n  public:\n\n    ModelColumns()\n    { add(m_col_id); add(m_col_name); }\n\n    Gtk::TreeModelColumn<unsigned int> m_col_id;\n    Gtk::TreeModelColumn<Glib::ustring> m_col_name;\n  };\n\n  ModelColumns m_Columns;\n\n  //The Tree model:\n  Glib::RefPtr<Gtk::ListStore> m_refTreeModel;\n\n  Gtk::PopoverMenu m_MenuPopup;\n};\n\n#endif //GTKMM_EXAMPLE_TREEVIEW_WITHPOPUP_H",
+   "sha": "e87358de97c85a72",
+   "file": "treeview_withpopup.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include <iostream>\n#include \"examplewindow.h\"\n\nExampleWindow::ExampleWindow()\n: m_VBox(Gtk::Orientation::VERTICAL),\n  m_Button_Quit(\"Quit\")\n{\n  set_title(\"Gtk::TreeView (ListStore) example\");\n  set_default_size(400, 200);\n\n  m_VBox.set_margin(5);\n  set_child(m_VBox);\n\n  //Add the TreeView, inside a ScrolledWindow, with the button underneath:\n  m_ScrolledWindow.set_child(m_TreeView);\n\n  //Only show the scrollbars when they are necessary:\n  m_ScrolledWindow.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);\n  m_ScrolledWindow.set_expand();\n\n  m_VBox.append(m_ScrolledWindow);\n  m_VBox.append(m_ButtonBox);\n\n  m_ButtonBox.append(m_Button_Quit);\n  m_ButtonBox.set_margin(5);\n  m_Button_Quit.set_hexpand(true);\n  m_Button_Quit.set_halign(Gtk::Align::END);\n  m_Button_Quit.signal_clicked().connect( sigc::mem_fun(*this,\n              &ExampleWindow::on_button_quit) );\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_button_quit()\n{\n  close();\n}",
+   "sha": "bff7db567820dee6",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee-4",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"treeview_withpopup.h\"\n#include <iostream>\n\nTreeView_WithPopup::TreeView_WithPopup()\n{\n  //Create the Tree model:\n  m_refTreeModel = Gtk::ListStore::create(m_Columns);\n  set_model(m_refTreeModel);\n\n  //Fill the TreeView's model\n  auto row = *(m_refTreeModel->append());\n  row[m_Columns.m_col_id] = 1;\n  row[m_Columns.m_col_name] = \"right-click on this\";\n\n  row = *(m_refTreeModel->append());\n  row[m_Columns.m_col_id] = 2;\n  row[m_Columns.m_col_name] = \"or this\";\n\n  row = *(m_refTreeModel->append());\n  row[m_Columns.m_col_id] = 3;\n  row[m_Columns.m_col_name] = \"or this, for a popup context menu\";\n\n  //Add the TreeView's view columns:\n  append_column(\"ID\", m_Columns.m_col_id);\n  append_column(\"Name\", m_Columns.m_col_name);\n\n  // Catch button press events:\n  auto refGesture = Gtk::GestureClick::create();\n  refGesture->set_button(GDK_BUTTON_SECONDARY);\n  refGesture->signal_pressed().connect(\n    sigc::mem_fun(*this, &TreeView_WithPopup::on_popup_button_pressed));\n  add_controller(refGesture);\n\n  // Fill popup menu:\n  auto gmenu = Gio::Menu::create();\n  gmenu->append(\"_Edit\", \"popup.edit\");\n  gmenu->append(\"_Process\", \"popup.process\");\n  gmenu->append(\"_Remove\", \"popup.remove\");\n\n  m_MenuPopup.set_parent(*this);\n  m_MenuPopup.set_menu_model(gmenu);\n  m_MenuPopup.set_has_arrow(false);\n\n  // Create actions:\n  auto refActionGroup = Gio::SimpleActionGroup::create();\n\n  refActionGroup->add_action(\"edit\",\n    sigc::mem_fun(*this, &TreeView_WithPopup::on_menu_file_popup_generic));\n  refActionGroup->add_action(\"process\",\n    sigc::mem_fun(*this, &TreeView_WithPopup::on_menu_file_popup_generic));\n  refActionGroup->add_action(\"remove\",\n    sigc::mem_fun(*this, &TreeView_WithPopup::on_menu_file_popup_generic));\n\n  insert_action_group(\"popup\", refActionGroup);\n}\n\nTreeView_WithPopup::~TreeView_WithPopup()\n{\n}\n\nvoid TreeView_WithPopup::on_popup_button_pressed(int /* n_press */, double x, double y)\n{\n  const Gdk::Rectangle rect(x, y, 1, 1);\n  m_MenuPopup.set_pointing_to(rect);\n  m_MenuPopup.popup();\n}\n\nvoid TreeView_WithPopup::on_menu_file_popup_generic()\n{\n  std::cout << \"A popup menu item was selected.\" << std::endl;\n\n  auto refSelection = get_selection();\n  if(refSelection)\n  {\n    auto iter = refSelection->get_selected();\n    if(iter)\n    {\n      int id = (*iter)[m_Columns.m_col_id];\n      std::cout << \"  Selected ID=\" << id << std::endl;\n    }\n  }\n}",
+   "sha": "e4fc71bd97ef2bc6",
+   "file": "treeview_withpopup.cc",
    "zh": ""
   }
  ]

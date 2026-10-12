@@ -46,6 +46,49 @@
    "ref": "figures/buildapp_opening_files.png",
    "sha": "39887049dea79cd7",
    "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"../step1/exampleapplication.h\"\n// Equal to the corresponding file in step1",
+   "sha": "d7112806314cf509",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/buildapp/step3",
+   "file": "exampleapplication.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEAPPWINDOW_H_\n#define GTKMM_EXAMPLEAPPWINDOW_H_\n\n#include <gtkmm.h>\n\nclass ExampleAppWindow : public Gtk::ApplicationWindow\n{\npublic:\n  ExampleAppWindow(BaseObjectType* cobject,\n    const Glib::RefPtr<Gtk::Builder>& refBuilder);\n\n  static ExampleAppWindow* create();\n\n  void open_file_view(const Glib::RefPtr<Gio::File>& file);\n\nprotected:\n  Glib::RefPtr<Gtk::Builder> m_refBuilder;\n  Gtk::Stack* m_stack {nullptr};\n};\n\n#endif /* GTKMM_EXAMPLEAPPWINDOW_H */",
+   "sha": "cd00a97858998470",
+   "file": "exampleappwindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"../step2/exampleapplication.cc\"\n// Equal to the corresponding file in step2",
+   "sha": "5cb1279d3f817f34",
+   "file": "exampleapplication.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"exampleappwindow.h\"\n#include <iostream>\n#include <stdexcept>\n\nExampleAppWindow::ExampleAppWindow(BaseObjectType* cobject,\n  const Glib::RefPtr<Gtk::Builder>& refBuilder)\n: Gtk::ApplicationWindow(cobject),\n  m_refBuilder(refBuilder)\n{\n  m_stack = m_refBuilder->get_widget<Gtk::Stack>(\"stack\");\n  if (!m_stack)\n    throw std::runtime_error(\"No \\\"stack\\\" object in window.ui\");\n}\n\n//static\nExampleAppWindow* ExampleAppWindow::create()\n{\n  // Load the Builder file and instantiate its widgets.\n  auto refBuilder = Gtk::Builder::create_from_resource(\"/org/gtkmm/exampleapp/window.ui\");\n\n  auto window = Gtk::Builder::get_widget_derived<ExampleAppWindow>(refBuilder, \"app_window\");\n  if (!window)\n    throw std::runtime_error(\"No \\\"app_window\\\" object in window.ui\");\n\n  return window;\n}\n\nvoid ExampleAppWindow::open_file_view(const Glib::RefPtr<Gio::File>& file)\n{\n  const Glib::ustring basename = file->get_basename();\n\n  auto scrolled = Gtk::make_managed<Gtk::ScrolledWindow>();\n  scrolled->set_expand(true);\n  auto view = Gtk::make_managed<Gtk::TextView>();\n  view->set_editable(false);\n  view->set_cursor_visible(false);\n  scrolled->set_child(*view);\n  m_stack->add(*scrolled, basename, basename);\n\n  try\n  {\n    char* contents = nullptr;\n    gsize length = 0;\n    \n    file->load_contents(contents, length);\n    view->get_buffer()->set_text(contents, contents+length);\n    g_free(contents);\n  }\n  catch (const Glib::Error& ex)\n  {\n    std::cout << \"ExampleAppWindow::open_file_view(\\\"\" << file->get_parse_name()\n      << \"\\\"):\\n  \" << ex.what() << std::endl;\n  }\n}",
+   "sha": "5f1ec0180895168b",
+   "file": "exampleappwindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"../step1/main.cc\"\n// Equal to the corresponding file in step1",
+   "sha": "262378e5afb6f163",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<interface>\n  <object class=\"GtkApplicationWindow\" id=\"app_window\">\n    <property name=\"title\" translatable=\"yes\">Example Application</property>\n    <property name=\"default-width\">600</property>\n    <property name=\"default-height\">400</property>\n    <child type=\"titlebar\">\n      <object class=\"GtkHeaderBar\" id=\"header\">\n        <child type=\"title\">\n          <object class=\"GtkStackSwitcher\" id=\"tabs\">\n            <property name=\"stack\">stack</property>\n          </object>\n        </child>\n      </object>\n    </child>\n    <child>\n      <object class=\"GtkBox\" id=\"content_box\">\n        <property name=\"orientation\">vertical</property>\n        <child>\n          <object class=\"GtkStack\" id=\"stack\"/>\n        </child>\n      </object>\n    </child>\n  </object>\n</interface>",
+   "sha": "10f9467fe5276464",
+   "file": "window.ui",
+   "zh": ""
   }
  ]
 }

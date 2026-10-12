@@ -10,6 +10,28 @@
    "ref": "figures/combobox_text.png",
    "sha": "1a5062601edd82ce",
    "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm/window.h>\n#include <gtkmm/comboboxtext.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprotected:\n  //Signal handlers:\n  void on_combo_changed();\n\n  //Child widgets:\n  Gtk::ComboBoxText m_Combo;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "18b415e75c164749",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/combobox/text",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <iostream>\n\nExampleWindow::ExampleWindow()\n{\n  set_title(\"ComboBoxText example\");\n\n  //Fill the combo:\n  m_Combo.append(\"something\");\n  m_Combo.append(\"something else\");\n  m_Combo.append(\"something or other\");\n  m_Combo.set_active(1);\n\n  set_child(m_Combo);\n\n  //Connect signal handler:\n  m_Combo.signal_changed().connect(sigc::mem_fun(*this,\n              &ExampleWindow::on_combo_changed) );\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_combo_changed()\n{\n  Glib::ustring text = m_Combo.get_active_text();\n  if(!(text.empty()))\n    std::cout << \"Combo changed: \" << text << std::endl;\n}",
+   "sha": "9925039eabd6c151",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee",
+   "file": "main.cc",
+   "zh": ""
   }
  ]
 }

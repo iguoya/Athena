@@ -58,6 +58,28 @@
    "ref": "figures/events_simple.png",
    "sha": "28a3233919a5a809",
    "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n\n  ExampleWindow();\n  virtual ~ExampleWindow();\n\nprivate:\n  // Signal handler:\n  bool on_window_key_pressed(guint keyval, guint keycode, Gdk::ModifierType state);\n\n  Gtk::Box m_container;\n  Gtk::CheckButton m_first;\n  Gtk::CheckButton m_second;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "947e00f4ab75a9ea",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/events/keyboard_simple/",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n\nExampleWindow::ExampleWindow()\n{\n  set_title(\"Keyboard Events\");\n  m_container.set_margin(10);\n  set_child(m_container);\n\n  // Radio buttons:\n  m_first.set_label(\"First\");\n  m_second.set_label(\"Second\");\n\n  m_second.set_group(m_first);\n  m_first.set_active();\n\n  // Main Container:\n  m_container.set_orientation(Gtk::Orientation::HORIZONTAL);\n  m_container.append(m_first);\n  m_container.append(m_second);\n\n  // Events.\n  auto controller = Gtk::EventControllerKey::create();\n  controller->signal_key_pressed().connect(\n    sigc::mem_fun(*this, &ExampleWindow::on_window_key_pressed), false);\n  add_controller(controller);\n}\n\nbool ExampleWindow::on_window_key_pressed(guint keyval, guint, Gdk::ModifierType state)\n{\n  //Gdk::ModifierType::ALT_MASK -> the 'Alt' key(mask)\n  //GDK_KEY_1 -> the '1' key\n  //GDK_KEY_2 -> the '2' key\n\n  //select the first radio button, when we press alt + 1\n  if((keyval == GDK_KEY_1) &&\n    (state & (Gdk::ModifierType::SHIFT_MASK | Gdk::ModifierType::CONTROL_MASK | Gdk::ModifierType::ALT_MASK)) == Gdk::ModifierType::ALT_MASK)\n  {\n    m_first.set_active();\n    //returning true, cancels the propagation of the event\n    return true;\n  }\n  else if((keyval == GDK_KEY_2) &&\n    (state & (Gdk::ModifierType::SHIFT_MASK | Gdk::ModifierType::CONTROL_MASK | Gdk::ModifierType::ALT_MASK)) == Gdk::ModifierType::ALT_MASK)\n  {\n    //and the second radio button, when we press alt + 2\n    m_second.set_active();\n    return true;\n  }\n  else if(keyval == GDK_KEY_Escape)\n  {\n    //close the window, when the 'esc' key is pressed\n    close();\n    return true;\n  }\n\n  //the event has not been handled\n  return false;\n}\n\nExampleWindow::~ExampleWindow()\n{\n}",
+   "sha": "7f5704dbeae9c935",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "5bfa93f8de9de4ee",
+   "file": "main.cc",
+   "zh": ""
   }
  ]
 }

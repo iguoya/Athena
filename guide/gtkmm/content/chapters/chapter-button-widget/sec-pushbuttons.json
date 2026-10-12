@@ -98,6 +98,28 @@
    "ref": "figures/buttons.png",
    "sha": "b4a2ef7861255c90",
    "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLE_BUTTONS_H\n#define GTKMM_EXAMPLE_BUTTONS_H\n\n#include <gtkmm/window.h>\n#include <gtkmm/button.h>\n\nclass Buttons : public Gtk::Window\n{\npublic:\n  Buttons();\n  virtual ~Buttons();\n\nprotected:\n  //Signal handlers:\n  void on_button_clicked();\n\n  //Child widgets:\n  Gtk::Button m_button;\n};\n\n#endif //GTKMM_EXAMPLE_BUTTONS_H",
+   "sha": "56abaa3a40fc8f16",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/buttons/button",
+   "file": "buttons.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"buttons.h\"\n#include <gtkmm/box.h>\n#include <gtkmm/image.h>\n#include <gtkmm/label.h>\n#include <iostream>\n\nButtons::Buttons()\n{\n  // This corresponds to Gtk::Bin::add_pixlabel(\"info.xpm\", \"cool button\") in gtkmm3.\n  //Create Image and Label widgets:\n  auto pmap = Gtk::make_managed<Gtk::Image>(\"info.xpm\");\n  auto label = Gtk::make_managed<Gtk::Label>(\"cool button\");\n  label->set_expand(true);\n\n  //Put them in a Box:\n  auto hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 5);\n  hbox->append(*pmap);\n  hbox->append(*label);\n\n  //And put that Box in the button:\n  m_button.set_child(*hbox);\n\n  set_title(\"Pixmap'd buttons!\");\n\n  m_button.signal_clicked().connect( sigc::mem_fun(*this,\n              &Buttons::on_button_clicked) );\n\n  m_button.set_margin(10);\n  set_child(m_button);\n}\n\nButtons::~Buttons()\n{\n}\n\nvoid Buttons::on_button_clicked()\n{\n  std::cout << \"The Button was clicked.\" << std::endl;\n}",
+   "sha": "637345cbc8005e2b",
+   "file": "buttons.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"buttons.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char *argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  //Shows the window and returns when it is closed.\n  return app->make_window_and_run<Buttons>(argc, argv);\n}",
+   "sha": "2f0757527ab63416",
+   "file": "main.cc",
+   "zh": ""
   }
  ]
 }

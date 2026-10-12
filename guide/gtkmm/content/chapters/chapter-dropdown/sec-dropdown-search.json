@@ -30,6 +30,28 @@
    "zh": ""
   },
   {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm/window.h>\n#include <gtkmm/dropdown.h>\n#include <gtkmm/stringlist.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  // Signal handler:\n  void on_dropdown_changed();\n\n  // Child widget:\n  Gtk::DropDown m_DropDown;\n  \n  Glib::RefPtr<Gtk::StringList> m_StringList;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "cc5d366fd2da1cae",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/dropdown/search_string",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/expression.h>\n#include <gtkmm/stringobject.h>\n#include <iostream>\n\nExampleWindow::ExampleWindow()\n{\n  set_title(\"Searchable DropDown example\");\n\n  set_child(m_DropDown);\n\n  // Fill the dropdown:\n  const std::vector<Glib::ustring> many_times{\n    \"1 minute\", \"2 minutes\", \"5 minutes\", \"10 minutes\", \"15 minutes\", \"20 minutes\",\n    \"25 minutes\", \"30 minutes\", \"35 minutes\", \"40 minutes\", \"45 minutes\", \"50 minutes\",\n    \"55 minutes\", \"1 hour\", \"2 hours\", \"3 hours\", \"5 hours\", \"6 hours\", \"7 hours\",\n    \"8 hours\", \"9 hours\", \"10 hours\", \"11 hours\", \"12 hours\"\n  };\n  m_StringList = Gtk::StringList::create(many_times);\n  m_DropDown.set_model(m_StringList);\n  m_DropDown.set_selected(0);\n\n  // Show a search entry.\n  m_DropDown.set_enable_search(true);\n  auto expression = Gtk::ClosureExpression<Glib::ustring>::create(\n    [](const Glib::RefPtr<Glib::ObjectBase>& item)->Glib::ustring\n    {\n      // An item in a StringList is a StringObject.\n      const auto string_object = std::dynamic_pointer_cast<Gtk::StringObject>(item);\n      return string_object ? string_object->get_string() : \"\";\n    });\n  m_DropDown.set_expression(expression);\n\n  // Connect signal handler:\n  m_DropDown.property_selected().signal_changed().connect(\n    sigc::mem_fun(*this, &ExampleWindow::on_dropdown_changed));\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_dropdown_changed()\n{\n  const auto selected = m_DropDown.get_selected();\n  std::cout << \"DropDown changed: Row=\" << selected\n    << \", String=\" << m_StringList->get_string(selected) << std::endl;\n}",
+   "sha": "5dc2282b73e0e99a",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char* argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  // Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "599e76cbc26ebd80",
+   "file": "main.cc",
+   "zh": ""
+  },
+  {
    "type": "heading",
    "text": "Font Example",
    "sha": "2233c07012bf12e7",
@@ -46,6 +68,28 @@
    "text": "Search Font",
    "ref": "figures/dropdown_search_font.png",
    "sha": "de9926f85ee72f6f",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#ifndef GTKMM_EXAMPLEWINDOW_H\n#define GTKMM_EXAMPLEWINDOW_H\n\n#include <gtkmm.h>\n\nclass ExampleWindow : public Gtk::Window\n{\npublic:\n  ExampleWindow();\n  ~ExampleWindow() override;\n\nprotected:\n  // Signal handler:\n  void on_dropdown_changed();\n\n  Glib::ustring get_family_name(const Glib::RefPtr<Glib::ObjectBase>& item);\n\n  // Child widget:\n  Gtk::DropDown m_DropDown;\n};\n\n#endif //GTKMM_EXAMPLEWINDOW_H",
+   "sha": "c6e4fe6e0b07dcb1",
+   "source_url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/dropdown/search_font",
+   "file": "examplewindow.h",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <pangomm/cairofontmap.h>\n#include <iostream>\n//#include <typeinfo>\n\nExampleWindow::ExampleWindow()\n{\n  set_title(\"Searchable DropDown example\");\n\n  // Add the DropDown to the window.\n  set_child(m_DropDown);\n\n  // Show a search entry.\n  m_DropDown.set_enable_search(true);\n  auto expression = Gtk::ClosureExpression<Glib::ustring>::create(\n    sigc::mem_fun(*this, &ExampleWindow::get_family_name));\n  m_DropDown.set_expression(expression);\n\n  // Pango::FontMap is a Gio::ListModel.\n  auto model = Pango::CairoFontMap::get_default();\n  m_DropDown.set_model(model);\n  m_DropDown.set_selected(0);\n\n  // Connect signal handler.\n  m_DropDown.property_selected().signal_changed().connect(\n    sigc::mem_fun(*this, &ExampleWindow::on_dropdown_changed));\n}\n\nExampleWindow::~ExampleWindow()\n{\n}\n\nvoid ExampleWindow::on_dropdown_changed()\n{\n  const auto selected = m_DropDown.get_selected();\n  const auto item = m_DropDown.get_selected_item();\n  std::cout << \"DropDown changed: Row=\" << selected\n    << \", Font=\" << get_family_name(item) << std::endl;\n\n  // Pango::FontMap is often a list of items of type Pango::FontFamily.\n  // From the description of Pango::CairoFontMap: \"The actual type of the font map\n  // will depend on the particular font technology Cairo was compiled to use.\"\n  // If get_family_name() does not return a family name, you can add\n  // #include <typeinfo> and query the type of the items with:\n  //   std::cout << typeid(*item.get()).name() << std::endl;\n}\n\nGlib::ustring ExampleWindow::get_family_name(const Glib::RefPtr<Glib::ObjectBase>& item)\n{\n  auto family = std::dynamic_pointer_cast<Pango::FontFamily>(item);\n  return family ? family->get_name() : \"\";\n}",
+   "sha": "192fa3a95e6291a5",
+   "file": "examplewindow.cc",
+   "zh": ""
+  },
+  {
+   "type": "code",
+   "text": "#include \"examplewindow.h\"\n#include <gtkmm/application.h>\n\nint main(int argc, char* argv[])\n{\n  auto app = Gtk::Application::create(\"org.gtkmm.example\");\n\n  // Shows the window and returns when it is closed.\n  return app->make_window_and_run<ExampleWindow>(argc, argv);\n}",
+   "sha": "599e76cbc26ebd80-1",
+   "file": "main.cc",
    "zh": ""
   }
  ]
