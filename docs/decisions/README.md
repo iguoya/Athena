@@ -40,7 +40,7 @@
 | [0115](0115-organization-app.md) | 新增计算机组成原理学习应用 organization（group 计算机、不设 parent，端口 1501，前缀 org.，主原型机制模拟）；记录 11408/0854 课程缺口，其余缺口与 408 主应用挂靠另立 | 已接受 |
 | [0118](0118-heavier-exam-owns-course-body.md) | 课程本体归权重更高的考试——408 夺走软设手里的四门课（数据结构、组成原理、操作系统、计算机网络本体挂 cs408，软设降为文字指引） | 已接受 |
 | [0119](0119-detach-is-exclusive.md) | 夺走即独占——启动器画布上一个节点只出现一次，被夺走方不再保留该节点 | 已接受 |
-| [0120](0120-ai-group-and-llm-curriculum.md) | 新增「人工智能」领域圈与 LLM 应用开发课程路线；首门课 python 立项 | 已接受 |
+| [0120](0120-ai-group-and-llm-curriculum.md) | 新增「人工智能」领域圈与 LLM 应用开发课程路线；首门课 python 立项 | 已接受；由 0152 修订 |
 | [0122](0122-ai-skeletons-in-one-pass.md) | 人工智能五门课（python、machine-learning、deep-learning、llm-app、llm-finetune）骨架一次落齐 | 已接受 |
 
 ## 应用边界与启动
@@ -74,6 +74,7 @@
 | [0148](0148-regroup-domain-circles.md) | 领域圈（`group`）归并为 6 个：计算机基础 / 程序设计 / 人工智能 / 电子信息 / 考研 / 考证；分组仍是 `app.json` 字段，不做成目录；`python` 归程序设计 | 已接受；调整 0102、0111、0120 |
 | [0149](0149-postgraduate-directory.md) | 新增顶层目录 `postgraduate/`，搬入 cs408、五门科目课、mathematics、ascent；group 统一「考研」，挂靠与 id 不变 | 已接受；局部修订 0148 |
 | [0150](0150-dissolve-course-by-group.md) | 取消 `course/`：课程类应用按领域圈分到 `programming/`、`artificial-intelligence/`、`computer-fundamentals/`、`electronics/`（加 `postgraduate/`）；启动器认根改用 AGENTS.md + launcher/ | 已接受；取代 0145，修订 0148 决策 1 |
+| [0152](0152-edge-ai-course.md) | 新增 AI 路线第 6 门 `edge-ai`（端侧 AI 推理与部署），放 `artificial-intelligence/edge-ai/`；运行时 ONNX Runtime 加 llama.cpp，主线板 RK3588；第一批做第 1–5 章，上板章后写；量化边界与 `llm-finetune` 划清 | 已接受；修订 0120 |
 
 ## 仓库工程
 
