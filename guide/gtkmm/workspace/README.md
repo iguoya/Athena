@@ -46,6 +46,15 @@
 
 命令行同款：`cmake --preset msys2-mingw64 && cmake --build --preset msys2-mingw64`。
 
+### 字体与主题（一次设置）
+
+- **字体**：导入本目录的 `athena.vssettings`——编辑器换成 Cascadia Code 16pt（VS2022 自带、专为编程设计的字体，带连字），输出窗口 14pt。路径：「工具 → 导入和导出设置 → 导入选定的环境设置」选它即可。
+- **主题**：「工具 → 选项 → 环境 → 常规 → 颜色主题」，推荐**深色(Dark)**（低对比深灰，长时间看不刺眼）；想更暖一点选蓝色(Blue)。
+
+### 官方示例的副本
+
+课程里点「打开工作区」生成的副本（如 `example-buttons-button/`）是**独立 CMake 工程**，单独打开这个目录就能配置构建；要并入 VS2022 统一构建，在顶层 `CMakeLists.txt` 加一行 `add_subdirectory(<副本目录>)`，并在 `launch.vs.json` 加一段启动配置（参考 hello-gtkmm 的写法，env 前置 `C:\msys64\mingw64in` 让程序找得到 GTK 的运行时 DLL）。
+
 ## 从骨架开一个实验副本
 
 ```sh

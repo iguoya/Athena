@@ -12,3 +12,4 @@ pkg_check_modules(GTKMM4 REQUIRED IMPORTED_TARGET gtkmm-4.0)
 
 # 新增学习集后在这里加一行；只想独立构建的集注释掉即可
 add_subdirectory(hello-gtkmm)
+add_subdirectory(example-buttons-button)
