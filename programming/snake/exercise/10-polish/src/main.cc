@@ -88,6 +88,7 @@ int main() {
     Sound crash = make_beep(110.0f, 0.3f);
 
     snake::Game game;
+    snake::reset(game);  // 开机先摆出初始局面：Ready 相的画面要画蛇与食物，而 Game 默认构造是空局面
     int best = load_best();
     Phase phase = Phase::Ready;
 
