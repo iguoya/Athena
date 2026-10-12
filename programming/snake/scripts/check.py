@@ -275,7 +275,7 @@ def check_build(skip_rust: bool) -> None:
 
 
 def check_native() -> None:
-    print("== 编译八个 raylib 程序 ==", flush=True)
+    print("== 编译十个 raylib 程序 ==", flush=True)
     env = toolchain_env()
     cmake = tool("cmake", env)
     cache = PROJECT_ROOT / ".cache" / "fetchcontent"
@@ -303,7 +303,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--full", action="store_true", help="追加教程壳的前端构建与 cargo check")
     parser.add_argument("--skip-rust", action="store_true", help="--full 时跳过 cargo")
-    parser.add_argument("--native", action="store_true", help="用 cmake 编译 exercise/ 下的五个 raylib 程序")
+    parser.add_argument("--native", action="store_true", help="用 cmake 编译 exercise/ 下的十个 raylib 程序")
     args = parser.parse_args()
 
     check_app_json()

@@ -25,11 +25,11 @@
 
 - **教程壳**：Tauri 2 + React + TypeScript + Vite。壳最初照 `programming/chinese-chess`
   的壳改，此后独立演进。壳不画蛇，只读章节、记录作答、按白名单编译并启动某一章。
-- **贪吃蛇**：raylib 5，C++20，CMake。八章在 `exercise/`，每章自己的 `CMakeLists.txt`
+- **贪吃蛇**：raylib 5，C++20，CMake。十章在 `exercise/`，每章自己的 `CMakeLists.txt`
   和单文件主程序，章与章不抽公共库（章内的 `logic.hh` 是第七、八章的教学点，不是跨章
-  共享）。第 7、8 章各带一份不依赖 raylib 的规则测试。
+  共享）。第 9、10 章各带不依赖 raylib 的测试。
 - **raylib 不要求预装**：系统有（MSYS2 / vcpkg / 发行版包）就用系统的，没有时 CMake
-  FetchContent 自动拉 5.5 源码现场编译——它是单文件 C 库，几秒编完。八章共享
+  FetchContent 自动拉 5.5 源码现场编译——它是单文件 C 库，几秒编完。十章共享
   `.cache/fetchcontent` 一份下载与编译缓存（已 gitignore）。
 - Windows 上编译：系统 CMake + Visual Studio C++ 工作负载即可，MSYS2 的 cmake 也可以；
   mac、Linux 用各自的标准工具链。两条已踩过的坑都修在 CMakeLists 里：MSVC 要
