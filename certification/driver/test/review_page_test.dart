@@ -41,15 +41,13 @@ void main() {
       final wrongs = await store.wrongCounts();
       final streaks = await store.correctStreaksSinceWrong();
       final totals = await store.attemptCounts();
-      final s1Done = allMastered(bank.forSubject("subject1"), await store.masteredQuestionIds());
       expected = {
         for (final q in bank.questions)
           if (inReview(
-                wrongCount: wrongs[q.id] ?? 0,
-                correctCount: (totals[q.id] ?? 0) - (wrongs[q.id] ?? 0),
-                streak: streaks[q.id] ?? 0,
-              ) &&
-              (s1Done || !q.topicId.startsWith("drive.s4.")))
+            wrongCount: wrongs[q.id] ?? 0,
+            correctCount: (totals[q.id] ?? 0) - (wrongs[q.id] ?? 0),
+            streak: streaks[q.id] ?? 0,
+          ))
             q.id,
       };
     });

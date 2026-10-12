@@ -9,10 +9,10 @@ import "package:athena_driver/core/progress.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
-/// 侧栏按科目分目录（ADR 0050）：章节挂在所属科目底下，箭头只展开 / 收起，锁着的科目没有子项；
+/// 侧栏按科目分目录（ADR 0050、0126）：三个科目都可展开，章节挂在所属科目底下；
 /// 跨科目入口钉在底部（ADR 0051）。
 void main() {
-  testWidgets("科目一的章节挂在科目一和科目二之间，收起后不见，锁着的科目没有箭头，错题本和考前复习钉在底部", (tester) async {
+  testWidgets("科目一的章节挂在科目一和科目二之间，收起后不见，错题本和考前复习钉在底部", (tester) async {
     late Directory dir;
     late ProgressStore store;
     late Bank bank;
@@ -40,20 +40,22 @@ void main() {
     expect(topic, findsOneWidget, reason: "科目一默认展开");
     final y = tester.getCenter(topic).dy;
     expect(y, greaterThan(tester.getCenter(inSidebar(find.text("科目一"))).dy));
-    expect(y, lessThan(tester.getCenter(inSidebar(find.text("科目二（未解锁）"))).dy));
+    expect(y, lessThan(tester.getCenter(inSidebar(find.text("科目二（C2）"))).dy));
     expect(inSidebar(find.text("模拟考试")), findsOneWidget);
+    expect(inSidebar(find.text("科目四")), findsOneWidget);
+    expect(find.textContaining("未解锁"), findsNothing);
 
-    // 新库里科目二、科目四都锁着：整个侧栏只有科目一一个箭头。
+    // 科目一默认展开，科目二、科目四收着，各有自己的箭头（ADR 0126）。
     expect(find.byIcon(Glyph.collapse), findsOneWidget);
-    expect(find.byIcon(Glyph.expand), findsNothing);
+    expect(find.byIcon(Glyph.expand), findsNWidgets(2));
 
     await tester.tap(find.byIcon(Glyph.collapse));
     await tester.pump();
     expect(topic, findsNothing);
     expect(inSidebar(find.text("模拟考试")), findsNothing);
-    expect(find.byIcon(Glyph.expand), findsOneWidget);
+    expect(find.byIcon(Glyph.expand), findsNWidgets(3));
 
-    await tester.tap(find.byIcon(Glyph.expand));
+    await tester.tap(find.byIcon(Glyph.expand).first);
     await tester.pump();
     expect(topic, findsOneWidget);
 

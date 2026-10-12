@@ -26,7 +26,7 @@ void main() {
     );
   });
 
-  testWidgets("科目二、科目四锁着：侧栏标未解锁，点进去只说明原因", (tester) async {
+  testWidgets("左侧目录不锁：没考过科目一也能进科目二和科目四", (tester) async {
     late Directory dir;
     late ProgressStore store;
     late Bank bank;
@@ -34,15 +34,6 @@ void main() {
       bank = await ContentLoader.load();
       dir = await Directory.systemTemp.createTemp("athena-driver-lock-");
       store = await ProgressStore.open(suite: "subject_lock_test");
-      // 两场 100 分、最近一场 94：差一点也不开。
-      for (final (i, score) in [100, 100, 94].indexed) {
-        await store.recordExam(
-          subjectId: "subject1",
-          score: score,
-          passed: true,
-          at: DateTime(2026, 1, 1, 9, i),
-        );
-      }
     });
     await tester.binding.setSurfaceSize(const Size(1600, 2600));
     final ready = Completer<void>();
@@ -55,17 +46,16 @@ void main() {
     }
     expect(ready.isCompleted, isTrue);
 
-    expect(find.text("科目二（未解锁）"), findsOneWidget);
-    expect(find.text("科目四（未解锁）"), findsOneWidget);
-    await tester.tap(find.text("科目二（未解锁）"));
+    expect(find.textContaining("未解锁"), findsNothing);
+    await tester.tap(find.text("科目二（C2）"));
     await tester.pump();
-    expect(find.text("科目二未解锁"), findsOneWidget);
-    expect(find.textContaining("94、100、100"), findsOneWidget);
-    expect(find.text("项目手册"), findsNothing);
+    expect(find.text("练车日"), findsOneWidget);
+    expect(find.text("项目手册"), findsOneWidget);
 
-    await tester.tap(find.text("科目四（未解锁）"));
+    await tester.tap(find.text("科目四"));
     await tester.pump();
-    expect(find.text("科目四未解锁"), findsOneWidget);
+    expect(find.text("安全文明驾驶常识"), findsWidgets);
+    expect(find.textContaining("未解锁"), findsNothing);
 
     await tester.pumpWidget(const SizedBox());
     await tester.runAsync(() async {

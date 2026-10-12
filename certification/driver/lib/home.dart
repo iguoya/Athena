@@ -106,7 +106,6 @@ class _HomePageState extends State<HomePage> {
   int _reviewGraduated = 0;
   Map<String, int> _wrongCounts = const {};
   List<ExamRecord> _exams = const [];
-  List<ExamRecord> _s1Exams = const [];
   List<Notice> _notices = const [];
   List<DailyCount> _daily = const [];
   Map<String, TopicStats> _topicStats = const {};
@@ -155,22 +154,6 @@ class _HomePageState extends State<HomePage> {
 
 
   bool get _s1Done => allMastered(_subject1All, _mastered);
-
-  /// 最近几场科目一模拟考都在 95 分以上（ADR 0047）。
-  bool get _s1Steady => ProgressStore.subject1Steady(_s1Exams);
-
-  /// 科目二要等科目一模拟考稳定在 95 分以上（ADR 0047），科目四要等科目一日常题
-  /// 全部掌握（ADR 0006 第 4 条）。两把锁都由作答和交卷记录推导，没有手动开关。
-  bool _locked(String subjectId) => switch (subjectId) {
-        "subject2" => !_s1Steady,
-        "subject4" => !_s1Done,
-        _ => false,
-      };
-
-  /// 锁着的科目，它的题不进错题本和考前复习——题干都不该先看到（ADR 0006 后果）。
-  static bool _hiddenTopic(String topicId, {required bool s1Done, required bool s1Steady}) =>
-      (!s1Steady && topicId.startsWith("drive.s2.")) ||
-      (!s1Done && (topicId.startsWith("drive.s4.") || topicId.startsWith("drive.recall.s4.")));
 
   bool _keepInPractice(Question q) {
     return q.appearsInPractice(
@@ -269,18 +252,13 @@ class _HomePageState extends State<HomePage> {
     final streaks = await widget.store.correctStreaksSinceWrong();
     final drillRuns = await widget.store.drillRuns();
     final exams = await widget.store.recentExams();
-    // 单独取科目一的：混着取的最近 12 场可能被科目四挤掉，科目二的解锁线就算不准了。
-    final s1Exams = await widget.store.recentExams(subjectId: "subject1", limit: ProgressStore.steadyRuns);
     final notices = await widget.store.notices(limit: 5);
     final daily = await widget.store.dailyAttempts();
     final topicStats = await widget.store.topicStats();
-    final s1Done = allMastered(widget.bank.forSubject("subject1"), mastered);
     final wrong = [
       for (final id in ids)
         if (widget.bank.questions.any((q) => q.id == id)) widget.bank.byId(id),
     ];
-    final s1Steady = ProgressStore.subject1Steady(s1Exams);
-    wrong.removeWhere((q) => _hiddenTopic(q.topicId, s1Done: s1Done, s1Steady: s1Steady));
     // 错得越多的排越前：考前该先啃反复栽跟头的那几道。
     wrong.sort(
       (a, b) => (wrongCounts[b.id] ?? 0).compareTo(wrongCounts[a.id] ?? 0),
@@ -289,9 +267,7 @@ class _HomePageState extends State<HomePage> {
     // 再错又回来（ADR 0033、0035）。全部从作答记录派生，不另存一张表。
     final eligible = [
       for (final q in widget.bank.questions)
-        if ((wrongCounts[q.id] ?? 0) >= reviewMinWrong &&
-            !_hiddenTopic(q.topicId, s1Done: s1Done, s1Steady: s1Steady))
-          q,
+        if ((wrongCounts[q.id] ?? 0) >= reviewMinWrong) q,
     ];
     int correctOf(Question q) => (attempts[q.id] ?? 0) - (wrongCounts[q.id] ?? 0);
     int left(Question q) => reviewExitCorrect(wrongCounts[q.id] ?? 0) - correctOf(q);
@@ -322,8 +298,7 @@ class _HomePageState extends State<HomePage> {
         if (!q.isRare &&
             (q.topicId.startsWith("drive.s1.") ||
                 q.topicId.startsWith("drive.s4.") ||
-                q.topicId.startsWith(recallTopicPrefix)) &&
-            !_hiddenTopic(q.topicId, s1Done: s1Done, s1Steady: s1Steady))
+                q.topicId.startsWith(recallTopicPrefix)))
           q,
     ];
     final reinforcePlan = planReinforcement(
@@ -361,7 +336,6 @@ class _HomePageState extends State<HomePage> {
       _reviewGraduated = eligible.length - review.length;
       _wrongCounts = wrongCounts;
       _exams = exams;
-      _s1Exams = s1Exams;
       _notices = notices;
       _daily = daily;
       _topicStats = topicStats;
@@ -438,13 +412,13 @@ class _HomePageState extends State<HomePage> {
                 ),
                 ..._subjectBranch(
                   "subject2",
-                  icon: _s1Steady ? Glyph.subject2 : Glyph.locked,
-                  label: _s1Steady ? "科目二（C2）" : "科目二（未解锁）",
+                  icon: Glyph.subject2,
+                  label: "科目二（C2）",
                 ),
                 ..._subjectBranch(
                   "subject4",
-                  icon: _s1Done ? Glyph.subject4 : Glyph.locked,
-                  label: _s1Done ? "科目四" : "科目四（未解锁）",
+                  icon: Glyph.subject4,
+                  label: "科目四",
                 ),
               ],
             ),
@@ -535,7 +509,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// 一个科目在侧栏里的一枝：科目本身一行，展开时下面缩进挂模拟考、待练和各章节。
-  /// 锁着的科目没有子项——题干都不该先看到（ADR 0006 后果、ADR 0047）。
+  /// 三个科目都直接可进（ADR 0126）。
   /// 一个科目底下的速记专题（ADR 0096、0109）：小标题「专题」，下面按内容分成几组，组可以折叠；
   /// 组和专题左边各有一个状态圆，按自测的作答记录上色（红 = 答错过未掌握、绿 = 全部答对过、灰 = 没测完）。
   List<Widget> _speedTopicLines(String subjectId) {
@@ -625,8 +599,7 @@ class _HomePageState extends State<HomePage> {
 
   List<Widget> _subjectBranch(String id, {required IconData icon, required String label}) {
     final subject = widget.bank.curriculum.subject(id);
-    final locked = _locked(id);
-    final expanded = !locked && _expanded.contains(id);
+    final expanded = _expanded.contains(id);
     final session = _session;
     bool inSession(String title) => session != null && session.subjectId == id && session.title == title;
     return [
@@ -634,27 +607,24 @@ class _HomePageState extends State<HomePage> {
         icon: icon,
         selected: _place == id && _session == null,
         label: label,
-        muted: locked,
         onTap: () {
-          if (!locked) _expanded.add(id);
+          _expanded.add(id);
           _go(id);
         },
-        trailing: locked
-            ? null
-            : InkWell(
-                borderRadius: BorderRadius.circular(Bs.radius),
-                onTap: () => setState(() {
-                  if (!_expanded.remove(id)) _expanded.add(id);
-                }),
-                child: Tooltip(
-                  message: expanded ? "收起" : "展开",
-                  child: Icon(
-                    expanded ? Glyph.collapse : Glyph.expand,
-                    size: Bs.bodySize,
-                    color: Skins.current.navText,
-                  ),
-                ),
-              ),
+        trailing: InkWell(
+          borderRadius: BorderRadius.circular(Bs.radius),
+          onTap: () => setState(() {
+            if (!_expanded.remove(id)) _expanded.add(id);
+          }),
+          child: Tooltip(
+            message: expanded ? "收起" : "展开",
+            child: Icon(
+              expanded ? Glyph.collapse : Glyph.expand,
+              size: Bs.bodySize,
+              color: Skins.current.navText,
+            ),
+          ),
+        ),
       ),
       // 展开收起走 200ms 高度动画（Bs.durFast 令牌）：树形目录是最高频的导航动作，
       // 直插直删的跳变最扎眼（批次 8 收尾）。收起时留一个等宽空盒，动画才有起点尺寸。
@@ -835,13 +805,8 @@ class _HomePageState extends State<HomePage> {
     if (_place == _wrongId) return _wrongOverview(context);
     if (_place == _reviewId) return _reviewOverview(context);
     if (_place == _reinforceId) return _reinforceOverview(context);
-    // 速记专题属于某个科目（ADR 0096）：科目锁着，它的专题也锁着。
     final topic = speedTopicById(_place);
-    if (topic != null) {
-      if (_locked(topic.subjectId)) return _lockedSubject(context, widget.bank.curriculum.subject(topic.subjectId));
-      return _speedTopicPage(context, topic);
-    }
-    if (_locked(_place)) return _lockedSubject(context, widget.bank.curriculum.subject(_place));
+    if (topic != null) return _speedTopicPage(context, topic);
     if (_place == "subject2") {
       final subject2 = widget.bank.curriculum.subject("subject2");
       return Subject2Page(
@@ -856,55 +821,6 @@ class _HomePageState extends State<HomePage> {
     final subject = _subject!;
     if (subject.id == "subject1") return _subject1Overview(context, subject);
     return _subjectOverview(context, subject);
-  }
-
-  Widget _lockedSubject(BuildContext context, Subject subject) {
-    final String why;
-    final String todo;
-    if (subject.id == "subject2") {
-      final scores = [for (final e in _s1Exams) e.score];
-      why = "科目二是场地驾驶技能考，科目一考过才能约。科目一模拟考最近 ${ProgressStore.steadyRuns} 场"
-          "都在 ${ProgressStore.steadyScore} 分以上之前，先不开放。";
-      todo = scores.isEmpty
-          ? "还没考过科目一模拟考。"
-          : "科目一最近 ${scores.length} 场：${scores.join("、")} 分（新的在前）。"
-              "要连着 ${ProgressStore.steadyRuns} 场都不低于 ${ProgressStore.steadyScore} 分。";
-    } else {
-      final left = _pending(dailyQuestions(_subject1All)).length;
-      why = "科目四是单独一卷、单独记分的文明驾驶常识考，跟路考不是同一张成绩。科目一日常题全部掌握之前，先不开放。";
-      todo = "科目一还有 $left 题没掌握。先把科目一练完。";
-    }
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(36, 28, 36, 32),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Glyph.locked, color: Bs.paper),
-              const SizedBox(width: 8),
-              Text(
-                "${subject.code}未解锁",
-                style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(why, style: Theme.of(context).textTheme.bodyLarge),
-          const SizedBox(height: 16),
-          BsAlert(
-            color: Bs.warning,
-            icon: Glyph.goal,
-            child: Text(todo),
-          ),
-          const SizedBox(height: 24),
-          FilledButton(
-            onPressed: () => _go("subject1"),
-            child: const Text("回到科目一"),
-          ),
-        ],
-      ),
-    );
   }
 
   Widget _subject1Overview(BuildContext context, Subject subject) {
@@ -945,8 +861,8 @@ class _HomePageState extends State<HomePage> {
           icon: Glyph.info,
           child: Text(
             _s1Done
-                ? "科目一日常题都掌握了，科目四已经开放。想再从头练一遍，点下面的「重新练习全部题」；模拟考随时可以考；连着 ${ProgressStore.steadyRuns} 场 ${ProgressStore.steadyScore} 分以上开放科目二。"
-                : "四个阶段按内容分组，全部开放，想练哪组点哪组；「练习待练题」从错题、高频、常考、常规依次出。偏难怪默认不出。模拟考随时可以考；科目二要等模拟考连着 ${ProgressStore.steadyRuns} 场 ${ProgressStore.steadyScore} 分以上，科目四要等科目一全部掌握。",
+                ? "科目一日常题都掌握了。想再从头练一遍，点下面的「重新练习全部题」。模拟考随时可以考。"
+                : "四个阶段按内容分组，全部开放，想练哪组点哪组；「练习待练题」从错题、高频、常考、常规依次出。偏难怪默认不出。三个科目的练习和模拟考都在左侧目录里。",
           ),
         ),
         const SizedBox(height: 16),
@@ -1131,11 +1047,12 @@ class _HomePageState extends State<HomePage> {
               subject.code,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
-            BsBadge(
-              text: "科目一已过关",
-              color: Bs.success,
-              icon: Glyph.unlocked,
-            ),
+            if (_s1Done)
+              BsBadge(
+                text: "科目一已全部掌握",
+                color: Bs.success,
+                icon: Glyph.correct,
+              ),
           ],
         ),
         const SizedBox(height: 8),
@@ -1151,7 +1068,11 @@ class _HomePageState extends State<HomePage> {
         BsAlert(
           color: Bs.paper,
           icon: Glyph.info,
-          child: const Text("科目一已经掌握。科目四 50 题、45 分钟，折合 90 分及格，跟路考分开记分。"),
+          child: Text(
+            _s1Done
+                ? "科目一日常题都掌握了。科目四 50 题、45 分钟，折合 90 分及格，跟路考分开记分。"
+                : "科目四 50 题、45 分钟，折合 90 分及格，跟路考分开记分。",
+          ),
         ),
         const SizedBox(height: 16),
         _progressCharts(context, subject),
@@ -1554,7 +1475,6 @@ class _HomePageState extends State<HomePage> {
   Widget _reinforceOverview(BuildContext context) {
     final subjects = <ReinforceSubjectView>[];
     for (final id in const ["subject1", "subject4"]) {
-      if (_locked(id)) continue;
       final subject = widget.bank.curriculum.subject(id);
       subjects.add(ReinforceSubjectView(
         id: id,
@@ -1858,7 +1778,7 @@ class _HomePageState extends State<HomePage> {
   /// 通过概率要抽几百次卷，放到后台 isolate 里算，不卡界面；算完才显示（主仓库 ADR 0076）。
   Future<void> _ensurePass() async {
     for (final id in const ["subject1", "subject4"]) {
-      if (_locked(id) || _pass.containsKey(id) || _passComputing.contains(id)) continue;
+      if (_pass.containsKey(id) || _passComputing.contains(id)) continue;
       final rules = widget.bank.curriculum.subject(id).exam;
       if (rules == null) continue;
       final pool = widget.bank.forSubject(id);
@@ -1896,7 +1816,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _startExam(Subject subject) async {
-    if (_locked(subject.id)) return;
     final draftKey = "${subject.id}.exam";
     final resumed = await _resumeDraft(draftKey);
     if (resumed != null) {
@@ -1978,7 +1897,6 @@ class _HomePageState extends State<HomePage> {
     bool recordChosen = true,
     bool includeMastered = false,
   }) {
-    if (_locked(subject.id)) return;
     final List<Question> queue;
     if (shuffleQueue) {
       queue = _speedGroupQueue(questions);

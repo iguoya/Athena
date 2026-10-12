@@ -825,9 +825,9 @@ class ProgressStore {
     return n;
   }
 
-  /// 科目二的解锁线：最近 [steadyRuns] 场科目一模拟考都不低于 [steadyScore] 分（ADR 0047）。
-  /// 百分制折合分就是正确率；只看最近几场而不看最高分——考过一次 95 不算稳，
-  /// 连着几场都在 95 以上才算。[exams] 新的在前，可以混着别的科目。
+  /// 最近 [steadyRuns] 场科目一模拟考都不低于 [steadyScore] 分。
+  /// 百分制折合分就是正确率；只看最近几场而不看最高分。左侧目录不再用它当入口（ADR 0126）。
+  /// [exams] 新的在前，可以混着别的科目。
   static const steadyScore = 95;
   static const steadyRuns = 3;
 

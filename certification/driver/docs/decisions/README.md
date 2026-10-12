@@ -1,6 +1,6 @@
 # 驾考学习 · ADR 索引
 
-本目录只记录 **`subjects/driver` 独立应用** 的产品与技术决策。主仓库
+本目录只记录 **`certification/driver` 独立应用** 的产品与技术决策。主仓库
 `docs/decisions/` 管跨应用规则；精神可对齐，编号互不混用。
 
 | 编号 | 决策 | 状态 |
@@ -10,7 +10,7 @@
 | [0003](0003-sourced-theory-questions.md) | 题目必须能指到法条或标准 | 已接受（第 3 条由 0024 修订） |
 | [0004](0004-desktop-workspace.md) | 桌面工作台，不用手机题库的控件妥协 | 已接受 |
 | [0005](0005-native-tts-for-explain.md) | 答题解释用系统 TTS 朗读 | 已接受 |
-| [0006](0006-phased-subject-one-unlocks-four.md) | 科目一分阶段，过关后才开科目四 | 已接受（第 2、3 条由 0044 撤销） |
+| [0006](0006-phased-subject-one-unlocks-four.md) | 科目一分阶段，过关后才开科目四 | 已接受（第 2、3 条由 0044 撤销；第 4 条由 0126 撤销） |
 | [0007](0007-four-questions-per-page.md) | 练习一页四题，答错才朗读，解析按需回看 | 已接受（第 1 条由 0022 修订） |
 | [0008](0008-adopt-public-question-banks.md) | 自用软件不受版权束缚，公开题库可以直接收录 | 已接受 |
 | [0009](0009-rebalance-subject-one-phases.md) | 科目一四阶段按题量重划 | 已接受（题量区间由 0026 取消） |
@@ -51,7 +51,7 @@
 | [0044](0044-subject1-no-unlocking.md) | 科目一不设解锁，四个阶段和模拟考全部开放 | 已接受（撤销 0006 第 2、3 条） |
 | [0045](0045-collect-remaining-public-bank-questions.md) | 补收公开题库剩余题目，同考点换问法也收，逐道核对现行规定 | 已接受 |
 | [0046](0046-low-trust-source-questions.md) | 低可信来源的题量不大时也收，答案逐道按条文重核 | 已接受 |
-| [0047](0047-subject2-unlocks-at-steady-95.md) | 科目二要等科目一模拟考稳定在 95 分以上才开放 | 已接受 |
+| [0047](0047-subject2-unlocks-at-steady-95.md) | 科目二要等科目一模拟考稳定在 95 分以上才开放 | 已接受（入口锁由 0126 撤销） |
 | [0048](0048-car-app-icon.md) | 应用图标改用上色的小汽车，界面标志用同一份 | 已接受 |
 | [0049](0049-icon-glossary.md) | 界面图标对照表：一个概念一个图标，统一实心风格 | 已接受 |
 | [0050](0050-sidebar-subject-tree.md) | 侧栏按科目分目录，章节挂在所属科目底下 | 已接受（修订 0004 侧栏排列） |
@@ -127,3 +127,7 @@
 | [0120](0120-retire-gap-in-status-dot.md) | 还在错题库里的条目，红点里写「还要再对几次」 | 已接受 |
 | [0121](0121-self-test-last-answer-rule.md) | 专题自测去掉「答对到答错的 2 倍」，最近一次答对就算掌握 | 已接受 |
 | [0122](0122-sidebar-topic-group-pass-count.md) | 侧栏专题右侧写「a/b」——通过的大类 / 大类总数 | 已接受 |
+| [0123](0123-local-learners-without-server.md) | 目录连不上也能新建——1000 起的本地学习者；没配外网凭据就不试外网 | 已接受 |
+| [0124](0124-local-first-registration.md) | 新学习者默认只存本机——填了外网访问凭据才碰中心目录 | 已接受 |
+| [0125](0125-repractice-after-all-mastered.md) | 全部掌握后练习不再是死路——确认一次即可整组重新练习 | 已接受 |
+| [0126](0126-sidebar-never-locks.md) | 左侧目录不锁科目，科目二与科目四直接可进 | 已接受（撤销 0006 第 4 条、0047） |

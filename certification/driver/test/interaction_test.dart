@@ -184,7 +184,7 @@ void main() {
       bank = await ContentLoader.load();
       dir = await Directory.systemTemp.createTemp("athena-driver-repractice-all-");
       store = await ProgressStore.open(suite: "interaction_repractice_all_test");
-      // 科目一全部日常题各答对一次：待练清零，科目四随之解锁。
+      // 科目一全部日常题各答对一次：待练清零。
       for (final q in bank.forSubject("subject1").where((q) => !q.isRare)) {
         await store.recordAttempt(questionId: q.id, topicId: q.topicId, subjectId: "subject1", correct: true);
       }
@@ -219,7 +219,7 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
     final stage = tester.widget<SessionStage>(find.byType(SessionStage));
     expect(stage.launch.questions.length, daily.length);
-    // 解锁状态不受重练影响：科目四照常可进，没有重新锁上。
+    // 重练不改侧栏：科目四照常在。
     expect(find.textContaining("科目四"), findsWidgets);
 
     await tester.runAsync(() => Future<void>.delayed(const Duration(seconds: 6)));
