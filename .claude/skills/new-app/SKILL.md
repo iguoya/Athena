@@ -17,7 +17,7 @@ description: 在 Athena 仓库里新建一个独立应用（course/ 或 practice
 |---|---|
 | 归类：学习应用 / 图谱参考 / 素材坑 / `practice/` 项目应用 | REPOSITORY.md 三类判据——主问题是「要不要教会人什么、要不要证明学习者进步了」，按判据推，不查清单 |
 | id 与目录名 | 完整英文单词，本领域知名缩写可以（`os`），不自造缩写、不用拼音（ADR 0097、0100、0104）；目录名与 id 一致 |
-| 启动器位置：`group`（圈）与 `parent`（挂靠） | 看同圈现有应用的 `app.json`；考试应用与实践子课程的挂靠关系见 ADR 0103、0116、0118、0119 |
+| 启动器位置：`group`（圈，软约束、可省略）与 `parent`（挂靠） | 目录才是硬约束；`group` 只在同领域已有同类应用时才写，看同圈现有应用的 `app.json`，没有同类就省略（ADR 0148）；考试应用与实践子课程的挂靠关系见 ADR 0103、0116、0118、0119 |
 | 技术栈 | 判据是合不合适（ADR 0057）；跨平台优先、macOS ≈ Windows > Linux（ADR 0047、0051） |
 | 有没有可交付的第一批内容 | 宁缺毋滥（ADR 0129）：没有第一批可交付内容就先不建，不落空骨架占位 |
 | 学习应用另需：出处档位、方法原型、知识点前缀 | 档位：对应真实外部考试 → `exam`，否则 `open`（ADR 0043、0089）；原型：一主至多两辅（ADR 0113，初版画像见 docs/LEARNING-METHODS.md）；前缀短、全仓库唯一 |
@@ -47,7 +47,7 @@ ls docs/decisions | tail -3
 
 改名必须逐项过，漏一处就是两个应用抢同一个端口或同一个数据目录：
 
-- `app.json`：`id`、`title`、`group`、`parent`、`description`、`icon`（`letter`、`accent`、
+- `app.json`：`id`、`title`、`group`（可省略）、`parent`、`description`、`icon`（`letter`、`accent`、
   `symbol`）、`dev.ready.http` 端口、`dev.binary`（`athena-<id>`）、`dev.env` 里的
   `ATHENA_<ID>_ROOT`。
 - `vite.config.ts` 端口；`src-tauri/tauri.conf.json` 的 `productName`、`identifier`、
