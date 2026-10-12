@@ -98,7 +98,7 @@ fn run_tool(dir: &Path, program: &str, args: &[&str]) -> Result<String, String> 
     with_toolchain(&mut cmd);
     let output = cmd
         .output()
-        .map_err(|e| format!("无法启动 {program}：{e}。Windows 上需要 MSYS2 mingw64 的 cmake 与 raylib（pacman -S mingw-w64-x86_64-cmake mingw-w64-x86_64-raylib mingw-w64-x86_64-ninja）"))?;
+        .map_err(|e| format!("无法启动 {program}：{e}。需要 CMake（Windows 用 Visual Studio 或 MSYS2 的都可以）；raylib 不用预装，首次配置会自动联网拉取源码"))?;
     let mut text = String::new();
     text.push_str(&String::from_utf8_lossy(&output.stdout));
     text.push_str(&String::from_utf8_lossy(&output.stderr));
@@ -149,12 +149,17 @@ fn run_chapter_sync(id: String) -> Result<String, String> {
         .find(|(key, _)| *key == id)
         .copied()
         .ok_or("未知章节")?;
-    let dir = app_root()?.join("exercise").join(dir_name);
+    let root = app_root()?;
+    let dir = root.join("exercise").join(dir_name);
     if !dir.join("CMakeLists.txt").is_file() {
         return Err(format!("{dir_name} 没有 CMakeLists.txt"));
     }
+    // 八章共享一份 raylib 下载缓存：FetchContent 只在第一次联网拉源码。
+    let cache = root.join(".cache").join("fetchcontent");
+    std::fs::create_dir_all(&cache).map_err(|e| e.to_string())?;
+    let cache_arg = format!("-DFETCHCONTENT_BASE_DIR={}", cache.display());
     if !dir.join("build").join("CMakeCache.txt").is_file() {
-        run_tool(&dir, "cmake", &["-B", "build"])?;
+        run_tool(&dir, "cmake", &["-B", "build", cache_arg.as_str()])?;
     }
     run_tool(&dir, "cmake", &["--build", "build"])?;
     let exe = if cfg!(windows) {

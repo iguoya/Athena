@@ -43,7 +43,7 @@ def tool(name: str, env: dict[str, str] | None = None) -> str:
     if found is None:
         hint = ""
         if name == "cmake":
-            hint = "。Windows 上：pacman -S mingw-w64-x86_64-cmake mingw-w64-x86_64-raylib mingw-w64-x86_64-ninja"
+            hint = "。Windows 装 Visual Studio C++ 工作负载或 MSYS2 的 cmake 都可以；raylib 不用预装"
         raise SystemExit(f"找不到 {name}，请先安装后重试{hint}")
     return found
 
@@ -194,9 +194,12 @@ def check_native() -> None:
     print("== 编译八个 raylib 程序 ==", flush=True)
     env = toolchain_env()
     cmake = tool("cmake", env)
+    cache = PROJECT_ROOT / ".cache" / "fetchcontent"
+    cache.mkdir(parents=True, exist_ok=True)
+    cache_arg = f"-DFETCHCONTENT_BASE_DIR={cache}"
     for chapter in CHAPTERS:
         root = PROJECT_ROOT / "exercise" / chapter
-        run([cmake, "-B", "build"], f"{chapter} 配置", env=env, cwd=root)
+        run([cmake, "-B", "build", cache_arg], f"{chapter} 配置", env=env, cwd=root)
         run([cmake, "--build", "build"], f"{chapter} 编译", env=env, cwd=root)
         exe = root / "build" / (TARGETS[chapter] + (".exe" if os.name == "nt" else ""))
         if not exe.is_file():
@@ -204,7 +207,11 @@ def check_native() -> None:
     ctest = tool("ctest", env)
     for chapter in ("07-logic", "08-polish"):
         rules = PROJECT_ROOT / "exercise" / chapter
-        run([ctest, "--test-dir", "build", "--output-on-failure"], f"{chapter} 规则测试", env=env, cwd=rules)
+        # 多配置生成器（VS）按配置名挑测试命令；单配置生成器忽略 -C，写了也无害。
+        ctest_cmd = [ctest, "--test-dir", "build", "--output-on-failure"]
+        if os.name == "nt":
+            ctest_cmd += ["-C", "Debug"]
+        run(ctest_cmd, f"{chapter} 规则测试", env=env, cwd=rules)
 
 
 def main() -> None:

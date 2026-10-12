@@ -33,14 +33,16 @@ launcher open snake
 
 只看教程页、不编蛇：`pnpm run dev`，浏览器开 http://localhost:1514 。
 
-单独编某一章（Windows 上要先把 MSYS2 mingw64 放进 `PATH`，并装 raylib：
-`pacman -S mingw-w64-x86_64-raylib mingw-w64-x86_64-cmake mingw-w64-x86_64-ninja`）：
+单独编某一章（需要 CMake 和一个 C++ 编译器：Windows 装 Visual Studio 的 C++ 工作负载
+或 MSYS2 都可以；**raylib 不用预装**，首次配置会自动联网拉源码编译，八章共享
+`.cache/fetchcontent` 缓存）：
 
 ```sh
 cd exercise/08-polish
 cmake -B build
 cmake --build build
-ctest --test-dir build
+# Windows 下跑测试要带配置名；macOS / Linux 不用
+ctest --test-dir build -C Debug
 # 编出来的是 build/snake-08.exe
 ```
 

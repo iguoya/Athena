@@ -25,11 +25,16 @@
 - **贪吃蛇**：raylib 5，C++20，CMake。八章在 `exercise/`，每章自己的 `CMakeLists.txt`
   和单文件主程序，章与章不抽公共库（章内的 `logic.hh` 是第七、八章的教学点，不是跨章
   共享）。第 7、8 章各带一份不依赖 raylib 的规则测试。
-- raylib 的来源三选一：MSYS2 `pacman -S mingw-w64-x86_64-raylib mingw-w64-x86_64-cmake
-  mingw-w64-x86_64-ninja`（Windows 本机路径）、vcpkg、发行版包。CMake 先找 CMake 包
-  配置，找不到退到 pkg-config。
-- Windows 上编译走 MSYS2 mingw64：`PATH` 前置 `C:\msys64\mingw64\bin`。HUD 文字用
-  英文——raylib 默认字体只带 ASCII，中文化要 LoadFontEx 加载 TTF，不在这门课里。
+- **raylib 不要求预装**：系统有（MSYS2 / vcpkg / 发行版包）就用系统的，没有时 CMake
+  FetchContent 自动拉 5.5 源码现场编译——它是单文件 C 库，几秒编完。八章共享
+  `.cache/fetchcontent` 一份下载与编译缓存（已 gitignore）。
+- Windows 上编译：系统 CMake + Visual Studio C++ 工作负载即可，MSYS2 的 cmake 也可以；
+  mac、Linux 用各自的标准工具链。两条已踩过的坑都修在 CMakeLists 里：MSVC 要
+  `/utf-8`（默认按系统代码页读源文件，UTF-8 中文注释会吞掉换行）；多配置生成器的
+  exe 输出用 `RUNTIME_OUTPUT_DIRECTORY` 固定回 `build/` 根，ctest 用
+  `$<TARGET_FILE:...>` 并带 `-C Debug`。
+- HUD 文字用英文——raylib 默认字体只带 ASCII，中文化要 LoadFontEx 加载 TTF，不在这门
+  课里。
 - 进度库 `progress/learning.db` 随仓库走，只存题目的作答，一题一行。发行包退回用户
   数据目录 `AthenaSnake`。环境变量 `ATHENA_SNAKE_ROOT` 指向应用根。
 
