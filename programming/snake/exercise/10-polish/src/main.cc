@@ -44,10 +44,13 @@ Sound make_beep(float freq, float seconds) {
 }
 
 int load_best() {
-    if (FileExists(HIGHSCORE_FILE)) {
-        return atoi(LoadFileText(HIGHSCORE_FILE));
-    }
-    return 0;
+    if (!FileExists(HIGHSCORE_FILE)) return 0;
+    // LoadFileText 返回的是堆内存，用完要还给 UnloadFileText；读失败时返回空指针。
+    char* text = LoadFileText(HIGHSCORE_FILE);
+    if (text == nullptr) return 0;
+    int best = atoi(text);
+    UnloadFileText(text);
+    return best;
 }
 
 int main() {
@@ -64,7 +67,6 @@ int main() {
     Phase phase = Phase::Ready;
 
     std::deque<snake::Cell> previous;  // 上一步的蛇身，插值的起点
-    bool wasDead = false;
     float acc = 0.0f;
 
     while (!WindowShouldClose()) {
@@ -94,7 +96,11 @@ int main() {
                 previous = game.body;
                 snake::step(game);
                 acc -= game.stepTime;
+                // 音效是 step 的观察输出，必须在这一步之内判断：放到循环外，两步之间
+                // 的每个渲染帧都会看到「蛇比 previous 长」，一口食物会连响好几次。
+                if (game.body.size() > previous.size()) PlaySound(eat);  // 长了一节，就是吃到了
                 if (game.dead) {
+                    PlaySound(crash);
                     phase = Phase::Over;
                     if (game.score > best) {
                         best = game.score;
@@ -102,11 +108,9 @@ int main() {
                         snprintf(text, sizeof text, "%d", best);
                         SaveFileText(HIGHSCORE_FILE, text);
                     }
+                    break;  // 死了就不再补步，撞墙声也只响这一次
                 }
             }
-            if (!wasDead && game.dead) PlaySound(crash);
-            if (previous.size() < game.body.size()) PlaySound(eat);  // 长了一节，就是吃到了
-            wasDead = game.dead;
         } else {
             acc = 0.0f;
             previous = game.body;

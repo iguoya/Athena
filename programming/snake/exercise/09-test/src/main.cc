@@ -18,10 +18,13 @@ constexpr const char* HIGHSCORE_FILE = "snake-highscore.txt";
 enum class Phase { Ready, Playing, Paused, Over };
 
 int load_best() {
-    if (FileExists(HIGHSCORE_FILE)) {
-        return atoi(LoadFileText(HIGHSCORE_FILE));
-    }
-    return 0;
+    if (!FileExists(HIGHSCORE_FILE)) return 0;
+    // LoadFileText 返回的是堆内存，用完要还给 UnloadFileText；读失败时返回空指针。
+    char* text = LoadFileText(HIGHSCORE_FILE);
+    if (text == nullptr) return 0;
+    int best = atoi(text);
+    UnloadFileText(text);
+    return best;
 }
 
 int main() {
