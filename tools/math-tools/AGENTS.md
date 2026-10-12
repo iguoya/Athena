@@ -17,7 +17,7 @@
 ## 技术栈与选型理由
 
 - **Tauri 2**(Rust 壳 + 系统 WebView):界面是 Web 技术;若将来要嵌 GeoGebra 等只有
-  Web 运行时的组件,同壳零摩擦;仓库内 `subjects/ascent`、`subjects/mathematics` 已
+  Web 运行时的组件,同壳零摩擦;仓库内 `course/ascent`、`course/mathematics` 已
   有 Tauri 2 前例,配置与坑均有参照。
 - **React 19 + TypeScript + Vite**:页面渲染按摘星基线(ADR 0138,取代原 Vue 路线):Tailwind v4、`clsx` + `tailwind-merge`(`cn`)、`lucide-react`、Motion;Zustand、React Router 用到再装。
 - **Tailwind CSS 4**:原子化样式,经 `@tailwindcss/vite` 插件接入;主题令牌集中在

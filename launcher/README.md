@@ -19,7 +19,7 @@
 
 ## 应用怎么被启动
 
-没有任何应用自己写启动脚本。每个应用在 `subjects/<id>/app.json` 里**声明**：
+没有任何应用自己写启动脚本。每个应用在 `course/<id>/app.json` 里**声明**：
 
 ```json
 "dev": {
@@ -36,7 +36,7 @@
 - `ready` 区分"有 dev server"和"进程在就算就绪"。
 - `binary` 是窗口进程的可执行文件名——共享 cargo 缓存之后，Tauri 应用的二进制不在
   应用目录里了，按文件名认最直接。
-- `match`（可选）是判断进程归属的路径前缀，`subjects/c-plus-plus` 用它指向 `build`。
+- `match`（可选）是判断进程归属的路径前缀，`course/c-plus-plus` 用它指向 `build`。
 
 窗口里的清单每 3 秒向编排器重读。托盘菜单在进程启动时生成，新增或删掉应用后要重启
 启动器，菜单才会跟上。关窗口不退出，进程留在菜单栏托盘里；左键点图标把窗口叫回来，
@@ -75,7 +75,7 @@ Windows 任务栏用同一张 256px 的 `webui/src-tauri/icons/icon.png`。裸�
 值是 PNG 边长，或 `"ico"`（16–256 共 9 帧）/ `"icns"`（16–1024）。改了 `icon.svg` 跑：
 
 ```sh
-launcher/target/release/launcher icons          # subjects/、practice/、certification/、mentor/ 与 tools/ 一起重新生成
+launcher/target/release/launcher icons          # course/、practice/、certification/、mentor/ 与 tools/ 一起重新生成
 launcher/target/release/launcher icons --check  # 只核对，过期时退出码非零
 ```
 
@@ -138,7 +138,7 @@ launcher/target/release/launcher logs dsa    # 日志文件路径
 launcher/target/release/launcher sync        # 提交并推送学习进度
 ```
 
-`sync` 对应 ADR 0053：进度库跟着仓库走（`subjects/<id>/progress/learning.db`），所以
+`sync` 对应 ADR 0053：进度库跟着仓库走（`course/<id>/progress/learning.db`），所以
 同步就是一次提交加一次推送。（已迁中心 PostgreSQL 的应用，如 `driver`，个人数据不在
 这里，ADR 0067；它们的 `progress/` 目录只剩点位照片，仍按目录被收集。）它**只碰 `progress` 路径**，不会连带你手上的代码改动；
 待推送的提交里有不是进度的，它会列出来交回你自己决定，不替你 push。顺带把
@@ -169,7 +169,7 @@ launcher/target/release/launcher sync        # 提交并推送学习进度
 - **开机自启**：托盘菜单勾选，三平台都写进系统自己的登录启动（见上）。Linux 上启动器
   图形界面本身仍按 ADR 0051 不作为承诺。
 - **Windows** 上全部应用都有正式的 CI 门槛并且构建通过：启动器、三个 Tauri 应用、
-  `subjects/machine`（Qt）、`subjects/c-plus-plus`（GTK4）。`subjects/c-plus-plus` 的 Windows 支持 2026-09-15 打通，
+  `course/machine`（Qt）、`course/c-plus-plus`（GTK4）。`course/c-plus-plus` 的 Windows 支持 2026-09-15 打通，
   其中一处临时垫片绕开了 glib 2.90 与 MSYS2 现有 glibmm 2.86 的名字冲突
   （ADR 0049），MSYS2 跟上后可以删。
 

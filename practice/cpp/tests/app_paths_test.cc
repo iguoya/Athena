@@ -32,7 +32,7 @@ private:
 };
 
 TEST(AppPathsTest, ReadsAppsRootFromEnvironment) {
-    const ScopedEnv apps("ATHENA_APPS_ROOT", ATHENA_SOURCE_ROOT "/../../subjects");
+    const ScopedEnv apps("ATHENA_APPS_ROOT", ATHENA_SOURCE_ROOT "/../../course");
 
     const string root = external_apps_root();
 
@@ -42,7 +42,7 @@ TEST(AppPathsTest, ReadsAppsRootFromEnvironment) {
 }
 
 TEST(AppPathsTest, EmptyWhenEnvironmentMissing) {
-    // 没人告诉它 subjects/ 在哪就返回空，由调用方提示改用启动器（ADR 0047）——
+    // 没人告诉它 course/ 在哪就返回空，由调用方提示改用启动器（ADR 0047）——
     // 不自己去猜别的应用住在哪。
     const ScopedEnv apps("ATHENA_APPS_ROOT", "");
     g_unsetenv("ATHENA_APPS_ROOT");

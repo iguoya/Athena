@@ -1,6 +1,6 @@
 ---
 name: new-app
-description: 在 Athena 仓库里新建一个独立应用（subjects/ 或 practice/ 下的新目录）时的完整流程——先定归类与名字、先落 ADR，再复制同栈应用的壳并逐项改名，建齐四件套，按类别补进度库与出处契约，最后在 REPOSITORY.md、根 README、根 AGENTS.md、CI 等处登记并跑结构卫生检查。使用者说「新建一个应用」「加一门课」「新开一个 subjects/xxx」「拆出一个子应用」「把素材坑转正」时使用；把一个应用拆成两个、或给考试应用新挂一个实践子课程时同样适用。
+description: 在 Athena 仓库里新建一个独立应用（course/ 或 practice/ 下的新目录）时的完整流程——先定归类与名字、先落 ADR，再复制同栈应用的壳并逐项改名，建齐四件套，按类别补进度库与出处契约，最后在 REPOSITORY.md、根 README、根 AGENTS.md、CI 等处登记并跑结构卫生检查。使用者说「新建一个应用」「加一门课」「新开一个 course/xxx」「拆出一个子应用」「把素材坑转正」时使用；把一个应用拆成两个、或给考试应用新挂一个实践子课程时同样适用。
 ---
 
 # 新增一个应用
@@ -32,7 +32,7 @@ description: 在 Athena 仓库里新建一个独立应用（subjects/ 或 practi
 
 ```sh
 # 下一个 dev 端口：取现有最大值加一（端口在 app.json、vite.config.ts、tauri.conf.json 三处出现）
-grep -ho 'localhost:[0-9]*' subjects/*/app.json practice/*/app.json | sort -t: -k2 -n | tail -3
+grep -ho 'localhost:[0-9]*' course/*/app.json practice/*/app.json | sort -t: -k2 -n | tail -3
 # 知识点前缀不能和别人撞：看 docs/REPOSITORY.md 名字表的第四列
 # 仓库级 ADR 下一个编号
 ls docs/decisions | tail -3
@@ -56,7 +56,7 @@ ls docs/decisions | tail -3
 - 同栈应用不自带锁文件：核心依赖写 `catalog:`，`tauri` / `tauri-build` / `serde` /
   `serde_json` 写 `workspace = true`，并把这个 `src-tauri` 加进仓库根 `Cargo.toml` 的
   members。然后在仓库根重新生成 `pnpm-lock.yaml` 与 `Cargo.lock`（ADR 0140）。
-- 本应用 `scripts/check.py` 里写死的 id、端口（如 `subjects/os` 的 `EXPECTED_ID` /
+- 本应用 `scripts/check.py` 里写死的 id、端口（如 `course/os` 的 `EXPECTED_ID` /
   `EXPECTED_PORT`；壳里没有就不用加）。
 - 界面里的标题、文案。
 
@@ -68,7 +68,7 @@ dsa 带过来的标题文案。锁文件只在仓库根，不在应用目录里�
 
 四件套缺一个，`check.py --sources-only` 的结构卫生检查就会报：
 
-- **`AGENTS.md`**：本应用规则。参照 `subjects/cs408/AGENTS.md` 的骨架：
+- **`AGENTS.md`**：本应用规则。参照 `course/cs408/AGENTS.md` 的骨架：
   - 定位：属于哪一类、按什么判据；挂靠关系；学习应用写**出处档位**与**方法原型**
     （主原型决定首页入口与单元块顺序）。
   - 技术栈：壳来自哪个应用要写，但写成「最初复制自 X，此后独立演进」——**不写**「沿用 X 的
@@ -105,7 +105,7 @@ dsa 带过来的标题文案。锁文件只在仓库根，不在应用目录里�
 | 位置 | 改什么 | 检查拦不拦 |
 |---|---|---|
 | `docs/REPOSITORY.md` 结构树 | 加一行 | 拦（与实际目录对账） |
-| `docs/REPOSITORY.md` 名字表 | 加一行：目录/id、界面、进程、前缀 | 拦（只对 `subjects/`） |
+| `docs/REPOSITORY.md` 名字表 | 加一行：目录/id、界面、进程、前缀 | 拦（只对 `course/`） |
 | 根 `README.md` 应用表 | 加一行 | 拦 |
 | 根 `AGENTS.md`「仓库结构」代码块 | 学科清单里加上 id | **不拦**，靠自觉 |
 | 根 `AGENTS.md` 与 `docs/TEACHING.md` 的考试档清单 | `exam` 档才加 | **不拦** |
@@ -130,8 +130,8 @@ launcher/target/release/launcher open <id>    # 真的打开一次（practice �
 整个新目录都是你建的时，按文件逐个加，不用目录参数（项目 hook 会拦 `git add <目录>`）：
 
 ```sh
-git ls-files --others --exclude-standard -z subjects/<id> | xargs -0 git add --
+git ls-files --others --exclude-standard -z course/<id> | xargs -0 git add --
 ```
 
-加之前用 `git status --short subjects/<id>` 确认里面只有你的文件，并且构建产物都已被忽略
+加之前用 `git status --short course/<id>` 确认里面只有你的文件，并且构建产物都已被忽略
 （结构卫生检查也会核对 `target`、`node_modules` 是否被 `.gitignore` 覆盖）。

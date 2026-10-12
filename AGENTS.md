@@ -30,7 +30,7 @@
 完整说明（名字对照表、三类判据的全文）见 [docs/REPOSITORY.md](docs/REPOSITORY.md)。
 
 ```
-subjects/<id>/  课程学科：cpp machine data-structures algorithms linux organization
+course/<id>/  课程学科：cpp machine data-structures algorithms linux organization
                 mathematics ascent cs408 python design-patterns（学习应用；cs408 是 408 考试
                 主应用，五门科目课本体挂它底下，ADR 0116、0118、0119；python 开启
                 「人工智能」圈与 LLM 应用开发课程路线，machine-learning、deep-learning、
@@ -58,7 +58,7 @@ archive/        历史归档，不参与构建
   查阅 → **图谱/参考类**，不接掌握度、教学规范不生效；只存素材 → **素材坑**，没有
   `app.json` 与 `check.py`，根验证入口跳过它是预期行为。学习应用的规范不套到别的类，
   别的类的例外也不当学习应用的先例。
-- **`subjects/` 与 `practice/` 按意图分**（ADR 0060）：`practice/` 做能跑的东西，不追求知识点
+- **`course/` 与 `practice/` 按意图分**（ADR 0060）：`practice/` 做能跑的东西，不追求知识点
   覆盖、不建进度库，教学规范不生效。两处平级，都用 `app.json`、都走同一个启动器。
 - **C++ 教程没有特权**（ADR 0045）：任何「以主程序为中心」的假设都是过时的。
 - **名字**：进程 `athena-<id>`（连字符）；id 与目录名用完整的英文单词（如 `software`、`embedded`），**不用自造缩写、不用拼音**，本领域知名缩写可以用（如 `os`）（ADR 0097、0100、0104）；已经写进进度库的知识点前缀不改；`driver` 是驾考，
@@ -179,7 +179,7 @@ python3 scripts/check.py cpp              # 只跑某个应用，余下参数原
 python3 scripts/check.py --sources-only   # 只跑跨应用检查（skill 两处一致、出处、工作流）
 ```
 
-检查逻辑归各应用自己的 `scripts/check.py`（`subjects/` 与 `practice/` 下都扫）。**每个应用都
+检查逻辑归各应用自己的 `scripts/check.py`（`course/` 与 `practice/` 下都扫）。**每个应用都
 必须有这份脚本**，没有它的应用会被静默跳过，等于没人验证。
 
 ## 必读文档

@@ -34,7 +34,7 @@
 #
 # `merge` 保持关着（上一条 `*.db binary` 已经 unset 掉它）：真撞上冲突时按整文件
 # 二选一，不要让 git 去缝合 SQLite 页——缝出来的是一个坏库。
-subjects/*/progress/*.db -text diff=sqlite
+course/*/progress/*.db -text diff=sqlite
 
 # Windows 专用的批处理必须是 CRLF，否则某些环境下解析会出错
 *.bat text eol=crlf

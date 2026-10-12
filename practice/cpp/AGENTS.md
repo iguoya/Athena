@@ -5,7 +5,7 @@
 ## 是什么
 
 `practice/` 下的项目应用（仓库 ADR 0060、0141）：原来的 gtkmm C++ 窗口，从
-`subjects/c-plus-plus` 整棵拆出来。**不是学习应用**——课程、课表和
+`course/c-plus-plus` 整棵拆出来。**不是学习应用**——课程、课表和
 `progress/learning.db` 在「C++ 教程」。这里只把旧窗口编出来、跑起来。
 
 id 是 `cpp`，进程 `athena-cpp`。不挂靠任何应用。不进仓库根的 pnpm / Cargo 工作区。
@@ -14,7 +14,7 @@ id 是 `cpp`，进程 `athena-cpp`。不挂靠任何应用。不进仓库根的 
 
 ## 规则
 
-- 不引用 `subjects/c-plus-plus` 的源码或课表。新教程如果要打开本窗口，只启动
+- 不引用 `course/c-plus-plus` 的源码或课表。新教程如果要打开本窗口，只启动
   `build/` 里已经编好的程序（该应用 ADR 0061）。
 - `ATHENA_CPP_ROOT` 指向本目录。不要把课程的进度库指到这里，也不要把这里的运行数据写进课程目录。
 - Windows 上编译与运行走 MSYS2 mingw64：`PATH` 前置 `C:/msys64/mingw64/bin`，

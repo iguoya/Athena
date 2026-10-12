@@ -87,7 +87,7 @@ impl ProcessSnapshot {
         let mut windows = vec![false; apps.len()];
         let mut busy = vec![false; apps.len()];
         let prefixes: Vec<PathBuf> = apps.iter().map(|app| app.match_prefix()).collect();
-        // 命令行认目录，needle 末尾必须带分隔符：`subjects/c` 与 `subjects/cpp`
+        // 命令行认目录，needle 末尾必须带分隔符：`course/c` 与 `course/cpp`
         // 这类前缀包含关系少了它会互相误判（同 command_line_belongs_to）。
         let needles: Vec<String> = apps
             .iter()
@@ -210,7 +210,7 @@ fn reachable(url: &str) -> bool {
 
 /// 命令行里出现应用目录，才算这个构建进程属于它。
 ///
-/// 末尾必须带分隔符：`subjects/c` 与 `subjects/cpp` 这类前缀包含关系（`c` 已改名 `machine`，写法保留作示例），少了它两个应用会互相误判。
+/// 末尾必须带分隔符：`course/c` 与 `course/cpp` 这类前缀包含关系（`c` 已改名 `machine`，写法保留作示例），少了它两个应用会互相误判。
 fn command_line_belongs_to(
     dir: &Path,
     parts: impl IntoIterator<Item = impl AsRef<str>>,
@@ -598,12 +598,12 @@ mod tests {
 
     #[test]
     fn c_directory_does_not_claim_cpp_command() {
-        let apps = PathBuf::from("repo").join("subjects");
+        let apps = PathBuf::from("repo").join("course");
         let c_dir = apps.join("c");
         let cpp_command = apps.join("cpp").join("src-tauri").display().to_string();
         assert!(
             !command_line_belongs_to(&c_dir, [cpp_command.as_str()]),
-            "subjects/c 不能因为字符串前缀吃掉 subjects/cpp"
+            "course/c 不能因为字符串前缀吃掉 course/cpp"
         );
         let own = c_dir.join("node_modules").display().to_string();
         assert!(command_line_belongs_to(&c_dir, [own.as_str()]));

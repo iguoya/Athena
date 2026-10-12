@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 // 学习应用与考证应用都判分。practice/ 不扫：earth 等参考类迁出后不在此列。
-const APP_ROOTS = ["subjects", "certification"];
+const APP_ROOTS = ["course", "certification"];
 
 /**
  * 与原材料的关系（ADR 0043 第 2 节第 3 条）。

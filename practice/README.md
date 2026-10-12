@@ -1,6 +1,6 @@
 # 应用实践
 
-跟 `subjects/dsa`、`subjects/machine` 这些学习应用不是一回事：这里放的是"动手做一个小
+跟 `subjects/dsa`、`course/machine` 这些学习应用不是一回事：这里放的是"动手做一个小
 东西练手"，不追求知识点覆盖、不接掌握度体系。目录下每个子目录是一个独立
 的小项目，各自一份 `app.json`——`practice` 本身**不是**一个应用，
 没有自己的 `app.json`，跟仓库根验证入口不打交道，是"应用实践"这个概念的
@@ -14,11 +14,11 @@
 （subjects/cpp ADR 0058），顺带也把「应用实践」这个跟 C++ 语言边界不重合的
 分类一起搬了出来——`subjects/cpp` 的边界一直是"教的是什么"，不是"用什么
 语言写"，「应用实践」教的是数据结构与算法，不满足这条。参照 `subjects/dsa`、
-`subjects/design-patterns` 先例——不满足边界的内容独立成 `subjects/<id>/`，而
+`course/design-patterns` 先例——不满足边界的内容独立成 `course/<id>/`，而
 不是留在原地降级凑合。
 
-2026-09-23 又从 `apps/practice/` 上移到仓库根，跟 `subjects/` 平级（ADR 0060）：
-`subjects/` 负责课程学科学习，`practice/` 专注项目应用。
+2026-09-23 又从 `apps/practice/` 上移到仓库根，跟 `course/` 平级（ADR 0060）：
+`course/` 负责课程学科学习，`practice/` 专注项目应用。
 
 ## 现在有什么
 
@@ -67,7 +67,7 @@
 ## 发现与启动
 
 不单独起一个独立进程，走 `launcher` 编排器同一套机制——发现根目录从
-`subjects/*` 换成 `practice/*`（`launcher/core` 的 `discover_in()` 通用
+`course/*` 换成 `practice/*`（`launcher/core` 的 `discover_in()` 通用
 版本），每个小项目各自一份 `app.json`，跟仓库里其他应用同样的写法。
 
 **还没做**：启动器 GUI（`launcher/gui`）里的独立"实践面板"分区，跟现有
