@@ -5,6 +5,12 @@
   "lead": "这一章的程序与第八章逐行相同——差别全在 tests/：logic_test.cc 直接编 logic.hh，不开窗口就能断言规则。第三章那个折叠 bug 的触发操作，在这里第一次变成永远会重放的断言。",
   "sections": [
     {
+      "role": "diagram",
+      "heading": "构建图上的分离",
+      "body": "两个编译目标，一实一虚一条线：测试目标的链接列表里没有 raylib——依赖关系撒不了谎，逻辑与渲染的分离不必口头承诺。",
+      "diagram": "flowchart LR\n    T1[\"snake-09\nsrc/main.cc\"] -->|链接| R[\"raylib\"]\n    T1 -->|include| L[\"logic.hh\"]\n    T2[\"snake-09-logic-test\ntests/logic_test.cc\"] -->|include| L\n    T2 -.->|不链接| R"
+    },
+    {
       "role": "focus",
       "heading": "把触发 bug 的操作固化成断言",
       "body": "第四章修折叠 bug 时说过：验证要用触发它的同一组操作。测试做的就是把这句话变成代码——「起步朝右，先压一个反向：第一步继续向右」「一帧内压上、左：两步之内先上后左」。断言写下的不是这一次对，是从此每一次都对。\n\n〔重点〕测试是记忆的机械化。人玩两分钟会忘，断言在每一次构建里都会重问一遍。"

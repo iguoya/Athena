@@ -6,6 +6,19 @@
 每一章回答上一章留下的一个真实问题，前一阶段的凑合保留到被收编的那一章，章数由演化
 阶段数决定。
 
+## 全局结构
+
+```mermaid
+flowchart TB
+    subgraph shell["教程壳 · Tauri 2 + React"]
+        READ["读章节讲解"] --- ANSWER["预测作答"] --- LAUNCH["按白名单编译并启动"]
+    end
+    LAUNCH -->|"cmake 配置 + 编译"| CH["exercise/ 十章\n每章一个独立 CMake 工程"]
+    ANSWER --> DB[("progress/learning.db")]
+    CH -->|"链接"| R["raylib 5.5\n系统优先 · 缺则自动拉源码编译"]
+    CH -->|"第 9、10 章：tests 直接编译\n不链接 raylib"| LH["logic.hh\n规则层 · 零 raylib"]
+```
+
 ## 十章
 
 每章一个目录，自己的 `CMakeLists.txt`，章与章不共用库。后一章是前一章长出来的样子，

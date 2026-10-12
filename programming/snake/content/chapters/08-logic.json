@@ -5,6 +5,12 @@
   "lead": "游戏到第七章已经能玩，但规则和窗口住在同一个文件里：改一条规则要开窗口玩一遍才知道对不对。这一章把规则搬进 logic.hh——里面没有一个 raylib 类型。这一章只做搬运，不改行为；画面仍是跳格的，无声的。测试是搬出来之后能干的第一件事，下一章单独讲。",
   "sections": [
     {
+      "role": "diagram",
+      "heading": "分家之后的模块边界",
+      "body": "箭头是调用方向：呈现层调规则层，规则层对呈现层一无所知。试金石「关掉窗口还成立吗」在图上就是右下角这一块的边界。",
+      "diagram": "flowchart TB\n    subgraph M[\"main.cc · 呈现层\"]\n        IN[\"收输入 · 状态机 phase\"]\n        DRAW[\"绘制 · raylib\"]\n        IO[\"文件 IO · 最高分\"]\n    end\n    subgraph L[\"logic.hh · 规则层（零 raylib）\"]\n        API[\"reset · press · step\"]\n        G[\"Game：body / pending / food / score\"]\n    end\n    IN -->|snake::press| API\n    IN -->|snake::step| API\n    API --> G\n    G -->|每帧读 body 与 food| DRAW"
+    },
+    {
       "role": "focus",
       "heading": "搬运，而不是重写",
       "body": "logic.hh 里每一条规则都和第七章逐行对应：撞墙与自吃的判定、头进尾出、吃到的分支、输入缓冲的两道闸。变的只是住址和名字（snake:: 命名空间）。\n\n〔重点〕分离的第一步是纯搬运。行为一变，你永远说不清「是搬家搬坏了，还是新想法有错」。先保证搬家不改变行为，改行为才是后面的事。"

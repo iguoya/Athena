@@ -5,6 +5,12 @@
   "lead": "完成版做三件事：画面配上插值，蛇在两步之间滑动而不是跳格；动作配上声音——不需要任何音频文件；规则自己也演化了一步——logic.hh 长出「吃到加速」，第九章的测试跟着长出断言。",
   "sections": [
     {
+      "role": "diagram",
+      "heading": "一帧之内发生的事",
+      "body": "从 dt 进来到画面出去，插值比例 t 是逻辑时间与渲染时间的换算点；声音是 step 的两个观察输出，不进规则。",
+      "diagram": "flowchart TB\n    DT[\"dt = GetFrameTime\"] --> ACC[\"acc += dt\"]\n    ACC -->|\"acc >= stepTime\"| STEP[\"previous = body\nstep 前进一步\"]\n    STEP -->|蛇长了一节| EAT[\"PlaySound eat\"]\n    STEP -->|dead| CRASH[\"PlaySound crash\"]\n    STEP --> SUB[\"acc -= stepTime\"]\n    ACC --> T[\"t = acc / stepTime\"]\n    SUB --> T\n    PREV[\"previous（上一步蛇身）\"] --> DRAW\n    T --> DRAW[\"lerp 每节 · 绘制 60 fps\"]"
+    },
+    {
       "role": "focus",
       "heading": "插值：渲染逻辑步之间的空白",
       "body": "逻辑每步 0.12 秒，渲染每秒 60 帧——绝大多数渲染帧里蛇「还没到下一格」，直接画格子就会跳。做法：step 前把蛇身存进 previous；渲染时算比例 t = acc / stepTime，每一节从它在 previous 里的格子向当前格子滑过去。\n\n〔难点〕吃到食物时长出的那一节在 previous 里没有对应位置，让它原地不动。暂停与待机时 t 取 1，定格在格子正中。所谓手感，大多就是这类「渲染把逻辑的台阶抹成斜坡」的小把戏。"

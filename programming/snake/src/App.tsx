@@ -1,10 +1,14 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import mermaid from "mermaid";
+
+mermaid.initialize({ startOnLoad: false, theme: "neutral" });
 
 type Section = {
-  role: "focus" | "compare";
+  role: "focus" | "compare" | "diagram";
   heading: string;
-  body: string;
+  body?: string;
+  diagram?: string;
 };
 
 type Question = {
@@ -122,6 +126,40 @@ function RichText({ text }: { text: string }) {
   if (last === 0) return text;
   if (last < text.length) nodes.push(text.slice(last));
   return nodes;
+}
+
+let diagramSeq = 0;
+
+function Diagram({ code }: { code: string }) {
+  const [svg, setSvg] = useState("");
+  const [error, setError] = useState("");
+  const id = useRef(`diagram-${++diagramSeq}`);
+  useEffect(() => {
+    let alive = true;
+    mermaid
+      .render(id.current, code)
+      .then(({ svg }) => {
+        if (alive) {
+          setSvg(svg);
+          setError("");
+        }
+      })
+      .catch((e) => {
+        if (alive) setError(String(e));
+      });
+    return () => {
+      alive = false;
+    };
+  }, [code]);
+  if (error) {
+    return (
+      <div className="diagram-error">
+        <p>这张图画不出来，源码如下：</p>
+        <pre>{code}</pre>
+      </div>
+    );
+  }
+  return <div className="diagram" dangerouslySetInnerHTML={{ __html: svg }} />;
 }
 
 export default function App() {
@@ -311,11 +349,16 @@ export default function App() {
             {chapter.sections.map((section) => (
               <section className={`panel step ${section.role}`} key={section.heading}>
                 <h3>{section.heading}</h3>
-                {section.body.split("\n\n").map((paragraph) => (
-                  <p key={paragraph}>
-                    <RichText text={paragraph} />
-                  </p>
-                ))}
+                {section.role === "diagram" && section.diagram ? (
+                  <Diagram code={section.diagram} />
+                ) : null}
+                {section.body
+                  ? section.body.split("\n\n").map((paragraph) => (
+                      <p key={paragraph}>
+                        <RichText text={paragraph} />
+                      </p>
+                    ))
+                  : null}
               </section>
             ))}
           </div>

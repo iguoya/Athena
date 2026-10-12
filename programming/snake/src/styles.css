@@ -491,3 +491,18 @@ mark.exam { background: var(--exam-bg); color: var(--exam-fg); }
     overflow: visible;
   }
 }
+
+.diagram {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0;
+  overflow-x: auto;
+}
+.diagram svg {
+  max-width: 100%;
+  height: auto;
+}
+.diagram-error pre {
+  white-space: pre-wrap;
+  color: #b23a48;
+}

@@ -114,6 +114,11 @@ def check_content() -> None:
         lesson_sections = lesson.get("sections") or []
         if not any(item.get("role") == "focus" for item in lesson_sections):
             raise SystemExit(f"{path.name} 缺少主程序的重点讲解")
+        for item in lesson_sections:
+            if item.get("role") == "diagram":
+                d = item.get("diagram", "")
+                if len(d) < 10 or not any(k in d for k in ("flowchart", "stateDiagram", "sequenceDiagram", "graph ")):
+                    raise SystemExit(f"{path.name} 的 diagram 块缺合法的 mermaid 图源")
         questions = lesson.get("questions") or []
         if not questions:
             raise SystemExit(f"{path.name} 没有题目")
