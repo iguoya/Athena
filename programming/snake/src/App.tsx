@@ -394,7 +394,10 @@ export default function App() {
         </section>
 
         {fullSections.map((section) => (
-          <section className={`panel step ${section.role}`} key={section.heading}>
+          <section
+            className="panel step"
+            key={section.heading}
+          >
             <h3>{section.heading}</h3>
             {section.role === "diagram" && section.diagram ? (
               <Diagram code={section.diagram} />
