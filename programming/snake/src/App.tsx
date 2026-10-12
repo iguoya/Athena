@@ -7,7 +7,7 @@ mermaid.initialize({
   theme: "neutral",
   flowchart: { useMaxWidth: false },
   state: { useMaxWidth: false },
-  themeVariables: { fontSize: "18px" },
+  themeVariables: { fontSize: "20px" },
 });
 
 type Section = {
@@ -137,20 +137,21 @@ function RichText({ text }: { text: string }) {
 
 let diagramSeq = 0;
 
-// 图按自然尺寸渲染（不缩进容器宽），点击进全屏：遮罩里用 <img> 隔离 svg 的 id 空间，
-// 同一份源码两处展示互不串线。svg 是矢量，放大不失真。
+// 图是 SVG 矢量，缩放不失真。全屏用第二次独立 render（不同 id）——
+// 不能走 <img>：mermaid 的 HTML label 走 foreignObject，img 会拒绝渲染它，全屏就空了。
 function Diagram({ code }: { code: string }) {
-  const [svg, setSvg] = useState("");
+  const [mainSvg, setMainSvg] = useState("");
+  const [zoomSvg, setZoomSvg] = useState("");
   const [error, setError] = useState("");
   const [zoom, setZoom] = useState(false);
-  const id = useRef(`diagram-${++diagramSeq}`);
+  const seq = useRef(++diagramSeq);
   useEffect(() => {
     let alive = true;
     mermaid
-      .render(id.current, code)
+      .render(`d${seq.current}`, code)
       .then(({ svg }) => {
         if (alive) {
-          setSvg(svg);
+          setMainSvg(svg);
           setError("");
         }
       })
@@ -161,6 +162,21 @@ function Diagram({ code }: { code: string }) {
       alive = false;
     };
   }, [code]);
+  useEffect(() => {
+    if (!zoom) return;
+    let alive = true;
+    mermaid
+      .render(`z${seq.current}`, code)
+      .then(({ svg }) => {
+        if (alive) setZoomSvg(svg);
+      })
+      .catch(() => {
+        if (alive) setZoomSvg(mainSvg);
+      });
+    return () => {
+      alive = false;
+    };
+  }, [zoom, code, mainSvg]);
   if (error) {
     return (
       <div className="diagram-error">
@@ -169,15 +185,17 @@ function Diagram({ code }: { code: string }) {
       </div>
     );
   }
-  const dataUrl = `data:image/svg+xml,${encodeURIComponent(svg)}`;
   return (
     <>
       <div className="diagram" title="点击放大">
-        <div onClick={() => setZoom(true)} dangerouslySetInnerHTML={{ __html: svg }} />
+        <div onClick={() => setZoom(true)} dangerouslySetInnerHTML={{ __html: mainSvg }} />
       </div>
       {zoom ? (
         <div className="diagram-fullscreen" onClick={() => setZoom(false)}>
-          <img src={dataUrl} alt="放大查看" />
+          <div
+            className="diagram-fullscreen-body"
+            dangerouslySetInnerHTML={{ __html: zoomSvg }}
+          />
           <p className="diagram-hint">点击任意处关闭</p>
         </div>
       ) : null}

@@ -516,9 +516,18 @@ mark.exam { background: var(--exam-bg); color: var(--exam-fg); }
 }
 .diagram svg {
   max-width: 100%;
-  max-height: 480px;
+  max-height: 72vh;
   width: auto;
   height: auto;
+}
+.diagram-fullscreen-body svg {
+  max-width: 94vw;
+  max-height: 84vh;
+  width: auto;
+  height: auto;
+  background: #fdfcf8;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
 }
 .diagram-fullscreen {
   position: fixed;
@@ -534,13 +543,7 @@ mark.exam { background: var(--exam-bg); color: var(--exam-fg); }
   cursor: zoom-out;
   overflow: auto;
 }
-.diagram-fullscreen img {
-  max-width: 94vw;
-  max-height: 82vh;
-  background: #fdfcf8;
-  border-radius: 0.5rem;
-  padding: 1.5rem;
-}
+
 .diagram-hint {
   color: #dfe5df;
   font-size: 0.85em;
