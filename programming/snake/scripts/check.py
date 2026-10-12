@@ -27,8 +27,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 EXPECTED_ID = "snake"
 EXPECTED_PORT = 1514
 DEFAULT_FULL = False
-CHAPTERS = ("01-window", "02-grid", "03-snake", "04-state", "05-polish")
-TARGETS = dict(zip(CHAPTERS, ("snake-01", "snake-02", "snake-03", "snake-04", "snake-05"), strict=True))
+CHAPTERS = ("01-window", "02-grid", "03-body", "04-food", "05-state", "06-score", "07-logic", "08-polish")
+TARGETS = dict(zip(CHAPTERS, (f"snake-{i:02d}" for i in range(1, 9)), strict=True))
 
 
 def _force_utf8_output() -> None:
@@ -153,10 +153,13 @@ def check_exercises() -> None:
             raise SystemExit(f"{main.relative_to(PROJECT_ROOT)} 里要有游戏循环（EndDrawing + GetFrameTime）")
         if f"project({TARGETS[chapter]}" not in (root / "CMakeLists.txt").read_text(encoding="utf-8"):
             raise SystemExit(f"{chapter} 的 CMakeLists.txt 项目名要与 {TARGETS[chapter]} 对应")
-    logic = PROJECT_ROOT / "exercise" / "05-polish" / "logic.hh"
-    test = PROJECT_ROOT / "exercise" / "05-polish" / "tests" / "logic_test.cc"
+    logic = PROJECT_ROOT / "exercise" / "07-logic" / "logic.hh"
+    test = PROJECT_ROOT / "exercise" / "07-logic" / "tests" / "logic_test.cc"
     if not logic.is_file() or not test.is_file():
-        raise SystemExit("05-polish 缺 logic.hh 或 tests/logic_test.cc")
+        raise SystemExit("07-logic 缺 logic.hh 或 tests/logic_test.cc")
+    polish = PROJECT_ROOT / "exercise" / "08-polish"
+    if not (polish / "logic.hh").is_file() or not (polish / "tests" / "logic_test.cc").is_file():
+        raise SystemExit("08-polish 缺 logic.hh 或 tests/logic_test.cc")
 
 
 def check_contract() -> None:
@@ -188,7 +191,7 @@ def check_build(skip_rust: bool) -> None:
 
 
 def check_native() -> None:
-    print("== 编译五个 raylib 程序 ==", flush=True)
+    print("== 编译八个 raylib 程序 ==", flush=True)
     env = toolchain_env()
     cmake = tool("cmake", env)
     for chapter in CHAPTERS:
@@ -198,8 +201,10 @@ def check_native() -> None:
         exe = root / "build" / (TARGETS[chapter] + (".exe" if os.name == "nt" else ""))
         if not exe.is_file():
             raise SystemExit(f"{chapter} 编译过了但没有找到 {exe.name}")
-    rules = PROJECT_ROOT / "exercise" / "05-polish"
-    run([ctest := tool("ctest", env), "--test-dir", "build", "--output-on-failure"], "蛇的规则测试", env=env, cwd=rules)
+    ctest = tool("ctest", env)
+    for chapter in ("07-logic", "08-polish"):
+        rules = PROJECT_ROOT / "exercise" / chapter
+        run([ctest, "--test-dir", "build", "--output-on-failure"], f"{chapter} 规则测试", env=env, cwd=rules)
 
 
 def main() -> None:

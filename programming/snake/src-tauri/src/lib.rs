@@ -11,9 +11,12 @@ use rusqlite::{params, Connection};
 const CHAPTERS: &[(&str, &str)] = &[
     ("01-window", "snake-01"),
     ("02-grid", "snake-02"),
-    ("03-snake", "snake-03"),
-    ("04-state", "snake-04"),
-    ("05-polish", "snake-05"),
+    ("03-body", "snake-03"),
+    ("04-food", "snake-04"),
+    ("05-state", "snake-05"),
+    ("06-score", "snake-06"),
+    ("07-logic", "snake-07"),
+    ("08-polish", "snake-08"),
 ];
 
 fn app_root() -> Result<PathBuf, String> {

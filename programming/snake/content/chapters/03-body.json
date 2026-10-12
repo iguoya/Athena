@@ -1,0 +1,111 @@
+{
+  "id": "snake.body",
+  "exercise": "03-body",
+  "title": "让蛇先存在：两条队列",
+  "lead": "这一章只有蛇：固定长度，能转向，撞墙会死。发现是——蛇身是一条队列，按键是另一条队列。还没有食物，所以也不会咬到自己；「自吃」是下一章才诞生的死法。",
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "蛇身是 deque：头进尾出",
+      "body": "std::deque<Cell>，头在 front。每步头进一格、尾出一格，整体前移。不需要坐标数组来回搬移，不需要标记哪节是头。\n\n〔重点〕数据结构第一次以「正好是这个形状」被用上：队列的进出就是蛇的移动。撞死那一步头不入队，蛇停在原地——画面和死因对得上。"
+    },
+    {
+      "role": "focus",
+      "heading": "输入也是队列：反向丢弃，容量三格",
+      "body": "按键不直接改方向，只排进 pending；逻辑每步只消费一个。压入时两道闸：与队尾（或当前朝向）相同或相反的丢弃；队列满三格丢弃。\n\n〔难点〕不要以为固定长度的蛇安全：三节的蛇一步掉头，头正好撞进自己的第二节。180 度反转自杀 bug 不需要变长就存在，反向在压入时丢弃，从根上挡住。缓冲太深手感发飘，三格是可玩的折中。"
+    },
+    {
+      "role": "focus",
+      "heading": "裸 if 重开：先凑合，再收编",
+      "body": "死了按 R，做法是一行「game = Game{}」整只换新。能跑，但丑——开始画面、暂停、菜单一来，这种散装判断就会互相纠缠。\n\n〔要点〕这一行凑合是有意留下的：真实的过程是先凑合，等凑合不动了再收编。第五章的状态机不是天生设计出来的，是被逼出来的——这正是程序一步步长出来的样子。"
+    }
+  ],
+  "questions": [
+    {
+      "id": "snake.body.deque",
+      "kind": "重点",
+      "stem": "蛇「向前移动一格」在队列上对应哪一组操作？",
+      "choices": [
+        "所有节各向前复制一步",
+        "头进一格、尾出一格，其余不动",
+        "整条队列反向再遍历",
+        "按节号交换相邻两节"
+      ],
+      "answer": 1,
+      "explanation": "队列的进出就是蛇的移动。只有头尾两个动作，中间的节完全不动。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "cppreference",
+          "locator": "第 3 章 · 蛇身",
+          "note": "std::deque 的 push_front/pop_back 语义见 cppreference。按本章 step() 自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.body.reverse",
+      "kind": "难点",
+      "stem": "固定长度的蛇也会一步掉头自杀吗？",
+      "choices": [
+        "不会，蛇太短撞不到自己",
+        "会：三节的蛇掉头，头正好落进自己第二节所在的格子",
+        "只会在帧率低时发生",
+        "只有吃了食物之后才会发生"
+      ],
+      "answer": 1,
+      "explanation": "掉头 bug 和长度无关：反向的输入在压入缓冲时丢弃，从根上挡住。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 3 章 · 输入队列",
+          "note": "按本章 press() 的两道闸自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.body.buffer",
+      "kind": "难点",
+      "stem": "输入缓冲的容量为什么限制在三格，而不是越大越好？",
+      "choices": [
+        "内存放不下更多方向",
+        "缓冲太深，早先按下的方向要很久之后才生效，手感发飘",
+        "deque 的实现限制",
+        "防止玩家按出循环"
+      ],
+      "answer": 1,
+      "explanation": "缓冲换来「连续转向不丢键」，但每格积压都推迟生效时机。三格是可玩性折中，不是技术上限。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 3 章 · 输入队列",
+          "note": "按本章 press() 的容量取舍自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.body.deadstep",
+      "kind": "考点",
+      "stem": "撞死的那一步，蛇头为什么不入队？",
+      "choices": [
+        "省一次内存分配",
+        "让画面停在撞墙前一刻，死因看得见",
+        "避免队列越界异常",
+        "下一章会用这颗头复活"
+      ],
+      "answer": 1,
+      "explanation": "头入队等于又走了一步，画面就显示不出「死在墙上」。规则与画面对齐，是调试体验的一部分。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 3 章 · 撞墙",
+          "note": "按本章 step() 的提前 return 自拟。"
+        }
+      ]
+    }
+  ],
+  "runs": [{ "id": "03-body", "label": "打开第 3 章的窗口", "primary": true }],
+  "files": ["exercise/03-body/src/main.cc", "exercise/03-body/CMakeLists.txt"]
+}

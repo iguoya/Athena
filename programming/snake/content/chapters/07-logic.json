@@ -1,0 +1,116 @@
+{
+  "id": "snake.logic",
+  "exercise": "07-logic",
+  "title": "把规则搬出窗口",
+  "lead": "游戏到第六章已经能玩，但规则和窗口住在同一个文件里：改一条规则要开窗口玩一遍才知道对不对。这一章把规则搬进 logic.hh——里面没有一个 raylib 类型——tests 直接编它。画面仍是跳格的，无声的：这一章只搬规则。",
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "搬运，而不是重写",
+      "body": "logic.hh 里每一条规则都和第六章逐行对应：撞墙与自吃的判定、头进尾出、吃到的分支、输入缓冲的两道闸。变的只是住址和名字（snake:: 命名空间）。\n\n〔重点〕分离的第一步是纯搬运。行为一变，你永远说不清「是搬家搬坏了，还是新想法有错」。先保证搬家不改变行为，改行为才是下一章的事。"
+    },
+    {
+      "role": "focus",
+      "heading": "main 瘦成三件事",
+      "body": "窗口、状态机、绘制。phase（Ready / Playing / Paused / Over）留在 main——它是「这一局怎么呈现」的事，不是蛇的规则；最高分的文件 IO 也留在 main——写文件是这一局的宿命，不是蛇的生物学。\n\n〔难点〕分离时最难的不是「什么搬走」，是「什么留下」。试金石还是那句话：关掉窗口它还成立吗？成立的是规则，不成立的是呈现。"
+    },
+    {
+      "role": "focus",
+      "heading": "测试不开窗口就能跑",
+      "body": "tests/logic_test.cc 直接编 logic.hh：掉头被拒、排队消费、吃到变长、撞墙即死，几条断言全部不经过图形栈。\n\n〔考点〕测试目标的链接列表里没有 raylib——依赖关系撒不了谎。逻辑与渲染的分离不必口头承诺，构建图上看得见。"
+    }
+  ],
+  "questions": [
+    {
+      "id": "snake.logic.pure",
+      "kind": "重点",
+      "stem": "logic.hh 为什么一个 raylib 头文件都不 include？",
+      "choices": [
+        "raylib 与 C++ 不兼容",
+        "规则不依赖窗口；不依赖图形库，测试不开窗口就能编、能跑",
+        "include 会拖慢编译",
+        "raylib 不允许被静态链接"
+      ],
+      "answer": 1,
+      "explanation": "依赖越少，可验证面越大。tests/ 直接编 logic.hh，不需要链 raylib——这是分离的直接回报。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 7 章 · 分家",
+          "note": "按本章 logic.hh 与 tests/ 的结构自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.logic.move",
+      "kind": "难点",
+      "stem": "为什么第七章「只做搬运，不改行为」？",
+      "choices": [
+        "省时间，一步到位太累",
+        "搬家与改行为混在一起，出错时说不清是搬坏的还是改错的；先保证搬运不改变行为",
+        "raylib 不允许同时改两者",
+        "为了凑章节"
+      ],
+      "answer": 1,
+      "explanation": "一次只引入一类变化，出错时嫌疑对象只有一个。这是演化能被讲清楚的前提。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 7 章 · 搬运",
+          "note": "按本章与第 6 章逐行对应的关系自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.logic.stays",
+      "kind": "难点",
+      "stem": "phase（Ready / Playing / Paused / Over）和最高分文件 IO 为什么留在 main，不进 logic.hh？",
+      "choices": [
+        "logic.hh 装不下了",
+        "关掉窗口它们就不成立：呈现方式与宿命属于这一局，不属于蛇的规则",
+        "它们写起来太短，不值得搬",
+        "raylib 禁止其他文件使用它们"
+      ],
+      "answer": 1,
+      "explanation": "试金石：关掉窗口它还成立吗？成立的是规则，不成立的是呈现。文件路径连 window 都没有，但「存到哪」同样不是蛇的生物学。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 7 章 · main 三件事",
+          "note": "按本章 main 的结构自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.logic.test",
+      "kind": "考点",
+      "stem": "logic_test 的 CMake 目标不链接 raylib，这说明什么？",
+      "choices": [
+        "测试跑得更快而已",
+        "被测的规则对图形库零依赖——逻辑与渲染的分离在构建图上看得见",
+        "raylib 的许可证不允许进测试",
+        "测试还需要补完"
+      ],
+      "answer": 1,
+      "explanation": "依赖关系撒不了谎：测试目标的链接列表里没有 raylib，恰好证明规则层没沾渲染层。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 7 章 · 测试",
+          "note": "按本章 CMakeLists 的两个 target 自拟。"
+        }
+      ]
+    }
+  ],
+  "runs": [{ "id": "07-logic", "label": "打开第 7 章的窗口", "primary": true }],
+  "files": [
+    "exercise/07-logic/src/main.cc",
+    "exercise/07-logic/logic.hh",
+    "exercise/07-logic/tests/logic_test.cc",
+    "exercise/07-logic/CMakeLists.txt"
+  ]
+}
