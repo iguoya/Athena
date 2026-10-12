@@ -8,7 +8,13 @@
       "role": "diagram",
       "heading": "分家之后的模块边界",
       "body": "箭头是调用方向：呈现层调规则层，规则层对呈现层一无所知。试金石「关掉窗口还成立吗」在图上就是右下角这一块的边界。",
-      "diagram": "flowchart TB\n    subgraph M[\"main.cc · 呈现层\"]\n        IN[\"收输入 · 状态机 phase\"]\n        DRAW[\"绘制 · raylib\"]\n        IO[\"文件 IO · 最高分\"]\n    end\n    subgraph L[\"logic.hh · 规则层（零 raylib）\"]\n        API[\"reset · press · step\"]\n        G[\"Game：body / pending / food / score\"]\n    end\n    IN -->|snake::press| API\n    IN -->|snake::step| API\n    API --> G\n    G -->|每帧读 body 与 food| DRAW"
+      "diagram": "flowchart TB\n    subgraph M[\"main.cc · 呈现层\"]\n        IN[\"收输入 · 状态机 phase\"]:::m\n        DRAW[\"绘制 · raylib\"]:::m\n        IO[\"文件 IO · 最高分\"]:::m\n    end\n    subgraph L[\"logic.hh · 规则层（零 raylib）\"]\n        API[\"reset · press · step\"]:::g\n        G[\"Game：body / pending / food / score\"]:::g\n    end\n    IN -->|snake::press| API\n    IN -->|snake::step| API\n    API --> G\n    G -->|每帧读 body 与 food| DRAW\n    classDef g fill:#2e7d32,stroke:#1b5e20,color:#fff\n    classDef m fill:#e8eef5,stroke:#35628a,color:#1c3a5e\n    style M fill:#f5f7fa,stroke:#35628a\n    style L fill:#f2f7f2,stroke:#2e7d32,stroke-width:2px"
+    },
+    {
+      "role": "code",
+      "heading": "规则层的整个表面：logic.hh 对外接口速览",
+      "body": "就这么多——呈现层能对规则做的事，全部是三个函数加一个结构体。接口越小，规则越敢改；这张清单读一遍，第八章之后的所有演化都发生在它的内部。",
+      "code": "namespace snake {\n    struct Game {\n        body, pending, heading, food, score, stepTime, dead\n    };\n\n    void reset(Game&);       // 开新局\n    void press(Game&, Dir);  // 压入方向（反向丢弃，容量 3）\n    void step(Game&);        // 前进一步：移动 · 吃到 · 死亡\n}"
     },
     {
       "role": "focus",

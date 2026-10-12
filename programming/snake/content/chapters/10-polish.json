@@ -8,7 +8,7 @@
       "role": "diagram",
       "heading": "一帧之内发生的事",
       "body": "从 dt 进来到画面出去，插值比例 t 是逻辑时间与渲染时间的换算点；声音是 step 的两个观察输出，不进规则。",
-      "diagram": "flowchart TB\n    DT[\"dt = GetFrameTime\"] --> ACC[\"acc += dt\"]\n    ACC -->|\"acc >= stepTime\"| STEP[\"previous = body\nstep 前进一步\"]\n    STEP -->|蛇长了一节| EAT[\"PlaySound eat\"]\n    STEP -->|dead| CRASH[\"PlaySound crash\"]\n    STEP --> SUB[\"acc -= stepTime\"]\n    ACC --> T[\"t = acc / stepTime\"]\n    SUB --> T\n    PREV[\"previous（上一步蛇身）\"] --> DRAW\n    T --> DRAW[\"lerp 每节 · 绘制 60 fps\"]"
+      "diagram": "flowchart TB\n    DT[\"dt = GetFrameTime\"]:::t --> ACC[\"acc += dt\"]:::t\n    ACC -->|\"acc >= stepTime\"| STEP[\"previous = body\nstep 前进一步\"]:::g\n    STEP -->|蛇长了一节| EAT[\"PlaySound eat\"]:::o\n    STEP -->|dead| CRASH[\"PlaySound crash\"]:::r\n    STEP --> SUB[\"acc -= stepTime\"]:::t\n    ACC --> T[\"t = acc / stepTime\"]:::p\n    SUB --> T\n    PREV[\"previous（上一步蛇身）\"]:::q --> DRAW\n    T --> DRAW[\"lerp 每节 · 绘制 60 fps\"]:::b\n    classDef g fill:#2e7d32,stroke:#1b5e20,color:#fff\n    classDef o fill:#b86e00,stroke:#8a5400,color:#fff\n    classDef r fill:#b23a48,stroke:#8a2f3c,color:#fff\n    classDef t fill:#e8eef5,stroke:#35628a,color:#1c3a5e\n    classDef b fill:#35628a,stroke:#24456a,color:#fff\n    classDef p fill:#6a4c9a,stroke:#4e3775,color:#fff\n    classDef q fill:#0e7c73,stroke:#0a5a55,color:#fff"
     },
     {
       "role": "focus",

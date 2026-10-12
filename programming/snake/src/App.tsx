@@ -2,13 +2,20 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import mermaid from "mermaid";
 
-mermaid.initialize({ startOnLoad: false, theme: "neutral" });
+mermaid.initialize({
+  startOnLoad: false,
+  theme: "neutral",
+  flowchart: { useMaxWidth: false },
+  state: { useMaxWidth: false },
+  themeVariables: { fontSize: "18px" },
+});
 
 type Section = {
-  role: "focus" | "compare" | "diagram";
+  role: "focus" | "compare" | "diagram" | "code";
   heading: string;
   body?: string;
   diagram?: string;
+  code?: string;
 };
 
 type Question = {
@@ -130,9 +137,12 @@ function RichText({ text }: { text: string }) {
 
 let diagramSeq = 0;
 
+// 图按自然尺寸渲染（不缩进容器宽），点击进全屏：遮罩里用 <img> 隔离 svg 的 id 空间，
+// 同一份源码两处展示互不串线。svg 是矢量，放大不失真。
 function Diagram({ code }: { code: string }) {
   const [svg, setSvg] = useState("");
   const [error, setError] = useState("");
+  const [zoom, setZoom] = useState(false);
   const id = useRef(`diagram-${++diagramSeq}`);
   useEffect(() => {
     let alive = true;
@@ -159,7 +169,20 @@ function Diagram({ code }: { code: string }) {
       </div>
     );
   }
-  return <div className="diagram" dangerouslySetInnerHTML={{ __html: svg }} />;
+  const dataUrl = `data:image/svg+xml,${encodeURIComponent(svg)}`;
+  return (
+    <>
+      <div className="diagram" title="点击放大">
+        <div onClick={() => setZoom(true)} dangerouslySetInnerHTML={{ __html: svg }} />
+      </div>
+      {zoom ? (
+        <div className="diagram-fullscreen" onClick={() => setZoom(false)}>
+          <img src={dataUrl} alt="放大查看" />
+          <p className="diagram-hint">点击任意处关闭</p>
+        </div>
+      ) : null}
+    </>
+  );
 }
 
 export default function App() {
@@ -351,6 +374,9 @@ export default function App() {
                 <h3>{section.heading}</h3>
                 {section.role === "diagram" && section.diagram ? (
                   <Diagram code={section.diagram} />
+                ) : null}
+                {section.role === "code" && section.code ? (
+                  <pre className="code-sample">{section.code}</pre>
                 ) : null}
                 {section.body
                   ? section.body.split("\n\n").map((paragraph) => (

@@ -13,10 +13,28 @@ flowchart TB
     subgraph shell["教程壳 · Tauri 2 + React"]
         READ["读章节讲解"] --- ANSWER["预测作答"] --- LAUNCH["按白名单编译并启动"]
     end
-    LAUNCH -->|"cmake 配置 + 编译"| CH["exercise/ 十章\n每章一个独立 CMake 工程"]
-    ANSWER --> DB[("progress/learning.db")]
-    CH -->|"链接"| R["raylib 5.5\n系统优先 · 缺则自动拉源码编译"]
-    CH -->|"第 9、10 章：tests 直接编译\n不链接 raylib"| LH["logic.hh\n规则层 · 零 raylib"]
+    LAUNCH -->|"cmake 配置 + 编译"| CH["exercise/ 十章\n每章一个独立 CMake 工程"]:::ch
+    ANSWER --> DB[("progress/learning.db")]:::db
+    CH -->|"链接"| R["raylib 5.5\n系统优先 · 缺则自动拉源码编译"]:::lib
+    CH -->|"第 9、10 章：tests 直接编译\n不链接 raylib"| LH["logic.hh\n规则层 · 零 raylib"]:::rule
+    classDef ch fill:#35628a,stroke:#24456a,color:#fff
+    classDef db fill:#b86e00,stroke:#8a5400,color:#fff
+    classDef lib fill:#eceff1,stroke:#90a4ae,color:#37474f
+    classDef rule fill:#2e7d32,stroke:#1b5e20,color:#fff
+    style shell fill:#f5f7fa,stroke:#35628a
+```
+
+## 演化阶梯
+
+```mermaid
+flowchart LR
+    A["01\n循环"]:::base --> B["02\n节拍"]:::base --> C["03\n蛇身·bug"]:::play --> D["04\n缓冲修bug"]:::play --> E["05\n食物·变长"]:::play
+    F["06\n状态机"]:::full --> G["07\n计分"]:::full --> H["08\n规则出窗"]:::eng --> I["09\n测试"]:::eng --> J["10\n手感"]:::eng
+    E ~~~ F
+    classDef base fill:#35628a,stroke:#24456a,color:#fff
+    classDef play fill:#2e7d32,stroke:#1b5e20,color:#fff
+    classDef full fill:#b86e00,stroke:#8a5400,color:#fff
+    classDef eng fill:#6a4c9a,stroke:#4e3775,color:#fff
 ```
 
 ## 十章

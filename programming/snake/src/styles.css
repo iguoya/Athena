@@ -506,3 +506,55 @@ mark.exam { background: var(--exam-bg); color: var(--exam-fg); }
   white-space: pre-wrap;
   color: #b23a48;
 }
+
+.diagram {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0;
+  overflow-x: auto;
+  cursor: zoom-in;
+}
+.diagram svg {
+  max-width: 100%;
+  max-height: 420px;
+  width: auto;
+  height: auto;
+}
+.diagram-fullscreen {
+  position: fixed;
+  inset: 0;
+  background: rgba(24, 30, 24, 0.93);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  cursor: zoom-out;
+  overflow: auto;
+}
+.diagram-fullscreen img {
+  max-width: 94vw;
+  max-height: 82vh;
+  background: #fdfcf8;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+}
+.diagram-hint {
+  color: #dfe5df;
+  font-size: 0.85em;
+}
+.diagram-error pre {
+  white-space: pre-wrap;
+  color: #b23a48;
+}
+.code-sample {
+  background: #f4f1e8;
+  border: 1px solid #e0dbc9;
+  border-radius: 0.4rem;
+  padding: 0.8rem 1rem;
+  overflow-x: auto;
+  font-size: 0.85em;
+  line-height: 1.5;
+}

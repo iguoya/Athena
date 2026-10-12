@@ -8,7 +8,7 @@
       "role": "diagram",
       "heading": "构建图上的分离",
       "body": "两个编译目标，一实一虚一条线：测试目标的链接列表里没有 raylib——依赖关系撒不了谎，逻辑与渲染的分离不必口头承诺。",
-      "diagram": "flowchart LR\n    T1[\"snake-09\nsrc/main.cc\"] -->|链接| R[\"raylib\"]\n    T1 -->|include| L[\"logic.hh\"]\n    T2[\"snake-09-logic-test\ntests/logic_test.cc\"] -->|include| L\n    T2 -.->|不链接| R"
+      "diagram": "flowchart LR\n    T1[\"snake-09\nsrc/main.cc\"]:::app -->|链接| R[\"raylib\"]:::lib\n    T1 -->|include| L[\"logic.hh\"]:::rule\n    T2[\"snake-09-logic-test\ntests/logic_test.cc\"]:::test -->|include| L\n    T2 -.->|不链接| R\n    classDef app fill:#35628a,stroke:#24456a,color:#fff\n    classDef test fill:#b86e00,stroke:#8a5400,color:#fff\n    classDef rule fill:#2e7d32,stroke:#1b5e20,color:#fff\n    classDef lib fill:#eceff1,stroke:#90a4ae,color:#37474f"
     },
     {
       "role": "focus",

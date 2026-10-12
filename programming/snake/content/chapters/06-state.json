@@ -8,7 +8,7 @@
       "role": "diagram",
       "heading": "相位流转全景",
       "body": "箭头上的字是触发转移的输入。逻辑步进只发生在 Playing 相里——图上看，它是唯一没有出边的「停留」状态。",
-      "diagram": "stateDiagram-v2\n    [*] --> Ready\n    Ready --> Playing : ENTER / reset\n    Over --> Playing : ENTER / reset\n    Playing --> Paused : P\n    Paused --> Playing : P\n    Playing --> Over : step 撞墙或咬到自己\n    note right of Playing\n        逻辑只在这一相走\n        方向键也只在这里收\n    end note"
+      "diagram": "stateDiagram-v2\n    [*] --> Ready\n    Ready --> Playing : ENTER / reset\n    Over --> Playing : ENTER / reset\n    Playing --> Paused : P\n    Paused --> Playing : P\n    Playing --> Over : 撞墙或咬到自己\n    note right of Playing\n        逻辑只在这一相走\n        方向键也只在这里收\n    end note\n    classDef playing fill:#2e7d32,stroke:#1b5e20,color:#fff\n    classDef paused fill:#b86e00,stroke:#8a5400,color:#fff\n    classDef neutral fill:#eceff1,stroke:#78909c,color:#263238\n    class Playing playing\n    class Paused paused\n    class Ready,Over neutral"
     },
     {
       "role": "focus",
@@ -112,6 +112,15 @@
       ]
     }
   ],
-  "runs": [{ "id": "06-state", "label": "打开第 6 章的窗口", "primary": true }],
-  "files": ["exercise/06-state/src/main.cc", "exercise/06-state/CMakeLists.txt"]
+  "runs": [
+    {
+      "id": "06-state",
+      "label": "打开第 6 章的窗口",
+      "primary": true
+    }
+  ],
+  "files": [
+    "exercise/06-state/src/main.cc",
+    "exercise/06-state/CMakeLists.txt"
+  ]
 }

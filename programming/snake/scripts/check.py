@@ -119,6 +119,8 @@ def check_content() -> None:
                 d = item.get("diagram", "")
                 if len(d) < 10 or not any(k in d for k in ("flowchart", "stateDiagram", "sequenceDiagram", "graph ")):
                     raise SystemExit(f"{path.name} 的 diagram 块缺合法的 mermaid 图源")
+            if item.get("role") == "code" and len(item.get("code", "")) < 10:
+                raise SystemExit(f"{path.name} 的 code 块内容为空")
         questions = lesson.get("questions") or []
         if not questions:
             raise SystemExit(f"{path.name} 没有题目")
