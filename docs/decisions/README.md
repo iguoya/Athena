@@ -74,7 +74,9 @@
 | [0148](0148-regroup-domain-circles.md) | 领域圈（`group`）归并为 6 个：计算机基础 / 程序设计 / 人工智能 / 电子信息 / 考研 / 考证；分组仍是 `app.json` 字段，不做成目录；`python` 归程序设计 | 已接受；调整 0102、0111、0120 |
 | [0149](0149-postgraduate-directory.md) | 新增顶层目录 `postgraduate/`，搬入 cs408、五门科目课、mathematics、ascent；group 统一「考研」，挂靠与 id 不变 | 已接受；局部修订 0148 |
 | [0150](0150-dissolve-course-by-group.md) | 取消 `course/`：课程类应用按领域圈分到 `programming/`、`artificial-intelligence/`、`computer-fundamentals/`、`electronics/`（加 `postgraduate/`）；启动器认根改用 AGENTS.md + launcher/ | 已接受；取代 0145，修订 0148 决策 1 |
+| [0151](0151-chinese-chess-app.md) | 新增 `programming/chinese-chess`：教程壳 Tauri + React，棋盘按五章独立 gtkmm 程序放在 `exercise/` | 已接受 |
 | [0152](0152-edge-ai-course.md) | 新增 AI 路线第 6 门 `edge-ai`（端侧 AI 推理与部署），放 `artificial-intelligence/edge-ai/`；运行时 ONNX Runtime 加 llama.cpp，主线板 RK3588；第一批做第 1–5 章，上板章后写；量化边界与 `llm-finetune` 划清 | 已接受；修订 0120 |
+| [0153](0153-snake-app.md) | 新增 `programming/snake`：教程壳 Tauri + React，贪吃蛇按五章独立 raylib 程序放在 `exercise/`，第 5 章规则抽 `logic.hh` 配测试 | 已接受 |
 
 ## 仓库工程
 

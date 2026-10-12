@@ -11,6 +11,8 @@
 | 目录 | 应用 | 技术 |
 | --- | --- | --- |
 | [`programming/c-plus-plus`](programming/c-plus-plus) | C++ 教程 | Tauri 2 + React |
+| [`programming/chinese-chess`](programming/chinese-chess) | 中国象棋（教程壳 + gtkmm 棋盘，ADR 0151） | Tauri 2 + React |
+| [`programming/snake`](programming/snake) | 贪吃蛇（教程壳 + raylib 蛇，ADR 0153） | Tauri 2 + React |
 | [`programming/machine`](programming/machine) | C 与机器（C 与汇编） | Qt Quick / QML、CMake |
 | [`postgraduate/data-structures`](postgraduate/data-structures) | 数据结构（408，原 dsa 拆分 ADR 0108） | Tauri 2 + Vite |
 | [`postgraduate/algorithms`](postgraduate/algorithms) | 算法设计（408，原 dsa 拆分 ADR 0108） | Tauri 2 + Vite |

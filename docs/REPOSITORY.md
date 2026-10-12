@@ -17,6 +17,8 @@ programming/<id>/ 程序设计圈：语言、系统与程序组织的课程（AD
                  Python 速成与 AI 生态工具链，同时是人工智能课程路线的入口（ADR 0120、0148）
   design-patterns/  设计模式与程序组织（Tauri 2 + Vite）——「程序设计」圈，不挂靠；软考降为
                      专题（原素材坑转正 ADR 0103，去挂靠 ADR 0121）
+  chinese-chess/ 中国象棋（Tauri 2 + React 教程壳，棋盘是 gtkmm；ADR 0151）
+  snake/ 贪吃蛇（Tauri 2 + React 教程壳，蛇是 raylib；ADR 0153）
 artificial-intelligence/<id>/ 人工智能圈：人工智能课程路线的四门（ADR 0120、0122、0150）
   machine-learning/ 机器学习基础（Tauri 2 + React）——「人工智能」圈；经典 ML 直觉与 sklearn 实战（ADR 0120、0122）
   deep-learning/ 深度学习与 PyTorch（Tauri 2 + React）——「人工智能」圈；从张量到 Transformer（ADR 0120、0122）
@@ -89,6 +91,8 @@ archive/       历史归档，不参与构建
 | 目录 / id | 界面 | 进程 | 知识点前缀 |
 |---|---|---|---|
 | `c-plus-plus` | C++ 教程（原 `cpp`） | `athena-c-plus-plus` | `cpp.` |
+| `chinese-chess` | 中国象棋（gtkmm 棋盘，教程壳 Tauri；ADR 0151） | `athena-chinese-chess` | `chess.` |
+| `snake` | 贪吃蛇（raylib 蛇，教程壳 Tauri；ADR 0153） | `athena-snake` | `snake.` |
 | `machine` | C 与机器（原 `c`，ADR 0005） | `athena-machine` | `machine.` |
 | `data-structures` | 数据结构（原 `dsa` 拆出，ADR 0108） | `athena-data-structures` | `ds.` |
 | `algorithms` | 算法设计（原 `dsa` 拆出，ADR 0108） | `athena-algorithms` | `algo.` |
@@ -133,7 +137,7 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
   `cs408`（ADR 0116）/ `organization`（ADR 0115）/ `gtkmm` / `linux`（ADR 0109）/
   `python`（ADR 0120）及其人工智能课程路线的四门（`machine-learning` / `deep-learning` /
   `llm-app` / `llm-finetune`，ADR 0120、0122）/ `edge-ai`（ADR 0152）/
-  `design-patterns`（ADR 0121）/ 软考实践子课程（ADR 0103：`database` / `os` / `network` /
+  `design-patterns`（ADR 0121）/ `chinese-chess`（ADR 0151）/ `snake`（ADR 0153）/ 软考实践子课程（ADR 0103：`database` / `os` / `network` /
   `firmware` / `microcontroller` / `rtos`，ADR 0106）。驾考 `driver`、软件设计师
   `software`、嵌入式系统设计师 `embedded` 同样是学习应用，目录在仓库根
   `certification/`（ADR 0142、0147）。
