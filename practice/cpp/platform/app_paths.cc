@@ -19,10 +19,6 @@ string directory_from_environment(const char* name) {
 
 } // namespace
 
-string external_apps_root() {
-    return directory_from_environment("ATHENA_APPS_ROOT");
-}
-
 string own_app_root() {
     return directory_from_environment("ATHENA_CPP_ROOT");
 }

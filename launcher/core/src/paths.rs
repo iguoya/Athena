@@ -2,7 +2,7 @@
 
 use std::path::{Path, PathBuf};
 
-/// 找到 Athena 仓库根。标志是 `course/` 目录。
+/// 找到 Athena 仓库根。标志是根 `AGENTS.md` 与 `launcher/` 目录。
 ///
 /// 顺序：显式环境变量 → 可执行文件往上找 → 当前目录往上找。
 pub fn locate_repo() -> Option<PathBuf> {
@@ -37,7 +37,7 @@ fn climb(from: &Path) -> Option<PathBuf> {
 }
 
 fn validate(candidate: &Path) -> Option<PathBuf> {
-    if candidate.join("course").is_dir() {
+    if candidate.join("AGENTS.md").is_file() && candidate.join("launcher").is_dir() {
         std::fs::canonicalize(candidate).ok()
     } else {
         None
@@ -124,7 +124,7 @@ pub fn extra_path_entries(app: &crate::manifest::App) -> Vec<PathBuf> {
         // 路径，让开发态启动也稳定找到它。
         //
         // 只给用 Meson 的应用注入（目前是 subjects/cpp 和 practice/
-        // 下的 GTK4 小项目）：`course/machine`、`subjects/polaris` 是 Qt + MSVC，一旦这个
+        // 下的 GTK4 小项目）：`programming/machine`、`subjects/polaris` 是 Qt + MSVC，一旦这个
         // 目录下的 g++/gcc 对它们也可见，CMake 的 Ninja 生成器会优先在 PATH
         // 里找到 MinGW 编译器而不是走 vswhere 探测 MSVC——实测触发过这个
         // 问题：Qt 官方安装器的 Qt6 是 MSVC ABI 编的，链接期全是

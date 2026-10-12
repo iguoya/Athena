@@ -31,9 +31,9 @@ description: 给 Athena 的学习应用写或改教学内容——一章的大�
 
 按顺序读，读完再动笔：
 
-1. `course/<id>/AGENTS.md`：出处档位（`exam` / `open`）、**方法原型**（主原型定单元
+1. `<分类目录>/<id>/AGENTS.md`：出处档位（`exam` / `open`）、**方法原型**（主原型定单元
    骨架与题型优先级，ADR 0113）、内容文件在哪、块类型有哪些。
-2. `course/<id>/docs/decisions/` 里与内容格式、题型、实验相关的 ADR。
+2. `<分类目录>/<id>/docs/decisions/` 里与内容格式、题型、实验相关的 ADR。
 3. `content-contract.json`：出处字段叫什么、哪些条目算判分内容。
 4. 同一应用里**写得最完整的一节**，看现成的块怎么用。
 

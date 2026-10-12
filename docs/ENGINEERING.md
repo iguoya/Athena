@@ -83,7 +83,7 @@ python3 scripts/check.py cpp        # 只跑某个应用，余下参数原样透
 python3 scripts/check.py --sources-only   # 只跑跨应用检查（skill 两处一致、出处、工作流、结构卫生）
 ```
 
-检查逻辑归各应用自己（`course/<id>/` 与 `practice/<id>/` 下的 `scripts/check.py`），根入口只负责依次调用，
+检查逻辑归各应用自己（各应用目录（`<分类目录>/<id>/`）下的 `scripts/check.py`），根入口只负责依次调用，
 新增应用放一份自己的 `check.py` 就会被带上。**每个应用都必须有这份脚本**——
 没有它的应用会被根入口静默跳过，等于没人验证。
 

@@ -60,7 +60,6 @@ struct Catalog {
 impl Catalog {
     fn load(repo: &std::path::Path) -> Self {
         let mut everything = launcher_core::discover(repo);
-        everything.extend(discover_in(&repo.join("postgraduate")));
         everything.extend(discover_in(&repo.join("practice")));
         everything.extend(discover_in(&repo.join("certification")));
         everything.extend(discover_in(&repo.join("mentor")));
@@ -68,7 +67,10 @@ impl Catalog {
         let visible: Vec<App> = everything.iter().filter(|app| !app.hidden).cloned().collect();
         Self {
             roots: vec![
-                repo.join("course"),
+                repo.join("programming"),
+                repo.join("artificial-intelligence"),
+                repo.join("computer-fundamentals"),
+                repo.join("electronics"),
                 repo.join("postgraduate"),
                 repo.join("practice"),
                 repo.join("certification"),
@@ -154,15 +156,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         std::process::exit(1);
     };
     // 实践面板：跟学习应用区隔开的独立分区，数据源是 practice/* 而
-    // 不是 course/*，复用同一套 discover_in()。这里可以为空——PocketCube
+    // 不是课程类分组目录，复用同一套 discover_in()。这里可以为空——PocketCube
     // 之外还没有别的小项目时，界面按 practice-apps.length 隐藏整个分区。
     // open/stop 按 id 找应用，两边的 app 都要能找到；tray 菜单仍然只列
-    // 学习应用（course），不把实践小项目也塞进去，两个界面各自的范围不同。
+    // 学习应用（课程类分组目录），不把实践小项目也塞进去，两个界面各自的范围不同。
     let catalog = Rc::new(RefCell::new(Catalog::load(&repo)));
     if catalog.borrow().visible.is_empty() {
         eprintln!(
             "{} 下没有找到任何 app.json",
-            repo.join("course").display()
+            repo.display()
         );
         std::process::exit(1);
     }

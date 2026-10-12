@@ -8,10 +8,10 @@
 //!   launcher logs <id>        打印日志文件路径
 //!   launcher sync             提交并推送学习进度，不碰你的代码改动（ADR 0053）
 //!   launcher icons [--check]  按各应用 app.json 的 icon.renders 从 icon.svg 生成位图；
-//!                             不给 --root 时 course/、postgraduate/、practice/、certification/、mentor/ 与 tools/ 一起扫（ADR 0065、0142、0144、0146）
+//!                             不给 --root 时 各分组目录、practice/、certification/、mentor/ 与 tools/ 一起扫（ADR 0065、0142、0144、0146）
 //!
 //! `--root <dir>` 把发现范围收成仓库根下的那一层（`launcher --root practice list`）。
-//! 不给 `--root` 时 course/、postgraduate/、practice/、certification/、mentor/ 与 tools/ 一起扫：桌面应用都归启动器管。
+//! 不给 `--root` 时 各分组目录、practice/、certification/、mentor/ 与 tools/ 一起扫：桌面应用都归启动器管。
 
 use std::process::ExitCode;
 

@@ -73,6 +73,7 @@
 | [0147](0147-exam-apps-into-certification.md) | 软件设计师与嵌入式系统设计师迁入 `certification/`；id、进程名、知识点前缀不动，实践子课程留在 `subjects/` | 已接受 |
 | [0148](0148-regroup-domain-circles.md) | 领域圈（`group`）归并为 6 个：计算机基础 / 程序设计 / 人工智能 / 电子信息 / 考研 / 考证；分组仍是 `app.json` 字段，不做成目录；`python` 归程序设计 | 已接受；调整 0102、0111、0120 |
 | [0149](0149-postgraduate-directory.md) | 新增顶层目录 `postgraduate/`，搬入 cs408、五门科目课、mathematics、ascent；group 统一「考研」，挂靠与 id 不变 | 已接受；局部修订 0148 |
+| [0150](0150-dissolve-course-by-group.md) | 取消 `course/`：课程类应用按领域圈分到 `programming/`、`artificial-intelligence/`、`computer-fundamentals/`、`electronics/`（加 `postgraduate/`）；启动器认根改用 AGENTS.md + launcher/ | 已接受；取代 0145，修订 0148 决策 1 |
 
 ## 仓库工程
 

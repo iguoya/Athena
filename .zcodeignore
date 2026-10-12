@@ -48,9 +48,9 @@ launcher/.build/
 
 # 进度库本身要进版本库（ADR 0053），但 SQLite 的伴生文件不要：
 # -wal / -shm 是未落盘的日志和共享内存，跟着提交会让库在别的机器上打不开。
-course/*/progress/*.db-wal
-course/*/progress/*.db-shm
-course/*/progress/*.db-journal
+*/*/progress/*.db-wal
+*/*/progress/*.db-shm
+*/*/progress/*.db-journal
 
 # ===== ↑ 以上同步自 .gitignore（「从 .gitignore 同步」只重写以上部分）=====
 .git/

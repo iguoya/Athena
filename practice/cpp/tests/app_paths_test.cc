@@ -31,33 +31,6 @@ private:
     string m_previous;
 };
 
-TEST(AppPathsTest, ReadsAppsRootFromEnvironment) {
-    const ScopedEnv apps("ATHENA_APPS_ROOT", ATHENA_SOURCE_ROOT "/../../course");
-
-    const string root = external_apps_root();
-
-    ASSERT_FALSE(root.empty());
-    EXPECT_TRUE(Glib::file_test(
-        Glib::build_filename(root, "machine", "app.json"), Glib::FileTest::EXISTS));
-}
-
-TEST(AppPathsTest, EmptyWhenEnvironmentMissing) {
-    // 没人告诉它 course/ 在哪就返回空，由调用方提示改用启动器（ADR 0047）——
-    // 不自己去猜别的应用住在哪。
-    const ScopedEnv apps("ATHENA_APPS_ROOT", "");
-    g_unsetenv("ATHENA_APPS_ROOT");
-
-    EXPECT_TRUE(external_apps_root().empty());
-}
-
-TEST(AppPathsTest, EmptyWhenPathIsNotDirectory) {
-    const ScopedEnv apps(
-        "ATHENA_APPS_ROOT",
-        Glib::build_filename(Glib::get_tmp_dir(), "athena-apps-does-not-exist"));
-
-    EXPECT_TRUE(external_apps_root().empty());
-}
-
 TEST(AppPathsTest, ReadsOwnRootFromEnvironment) {
     const ScopedEnv own("ATHENA_CPP_ROOT", ATHENA_SOURCE_ROOT);
 

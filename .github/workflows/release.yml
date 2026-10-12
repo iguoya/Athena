@@ -515,7 +515,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # root 缺省为 course；北极星在 mentor/（ADR 0144）
+          # 每项都写 root（应用所在的顶层目录）；北极星在 mentor/（ADR 0144）
           - app: polaris
             root: mentor
             os: windows-latest
@@ -607,7 +607,7 @@ jobs:
 
       # 版本号由 tag 决定写入 tauri.conf.json（ADR 0081 决策 3，与 driver 同法）
       - name: Set version
-        working-directory: ${{ matrix.root || 'course' }}/${{ matrix.app }}
+        working-directory: ${{ matrix.root }}/${{ matrix.app }}
         env:
           VERSION: ${{ steps.version.outputs.value }}
         shell: bash
@@ -618,12 +618,12 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build and bundle
-        working-directory: ${{ matrix.root || 'course' }}/${{ matrix.app }}
+        working-directory: ${{ matrix.root }}/${{ matrix.app }}
         shell: bash
         run: npx tauri build --bundles "${{ matrix.bundles }}"
 
       - name: Collect and rename artifacts
-        working-directory: ${{ matrix.root || 'course' }}/${{ matrix.app }}
+        working-directory: ${{ matrix.root }}/${{ matrix.app }}
         shell: bash
         run: |
           version="${{ steps.version.outputs.value }}"
@@ -644,7 +644,7 @@ jobs:
           ls -l dist
 
       - name: Verify package
-        working-directory: ${{ matrix.root || 'course' }}/${{ matrix.app }}
+        working-directory: ${{ matrix.root }}/${{ matrix.app }}
         shell: bash
         run: |
           version="${{ steps.version.outputs.value }}"
@@ -666,8 +666,8 @@ jobs:
           name: athena-${{ matrix.app }}-${{ matrix.platform }}
           # deb 按 Debian 惯例用下划线（athena-<app>_<版本>_amd64.deb），只写 -* 会漏掉它
           path: |
-            ${{ matrix.root || 'course' }}/${{ matrix.app }}/dist/athena-${{ matrix.app }}-*
-            ${{ matrix.root || 'course' }}/${{ matrix.app }}/dist/athena-${{ matrix.app }}_*
+            ${{ matrix.root }}/${{ matrix.app }}/dist/athena-${{ matrix.app }}-*
+            ${{ matrix.root }}/${{ matrix.app }}/dist/athena-${{ matrix.app }}_*
           if-no-files-found: error
           retention-days: 7
 

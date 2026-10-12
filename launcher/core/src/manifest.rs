@@ -1,4 +1,4 @@
-//! 应用清单：`course/<id>/app.json`。
+//! 应用清单：`<分类目录>/<id>/app.json`。
 //!
 //! 每个应用只**声明**自己怎么构建、怎么跑、怎么算就绪；执行统一由编排器负责。
 //! 这样各应用不必各写一份形状相同的 dev 脚本，改一次行为也不用改五遍。
@@ -9,7 +9,7 @@ use std::path::{Path, PathBuf};
 use serde::Deserialize;
 
 /// 环境变量的值。除了直接给字符串，还可以让编排器从几个候选里挑第一个存在的
-/// 路径——`course/machine` 找 Qt 前缀就是这么干的，各平台装在哪不一样。
+/// 路径——`programming/machine` 找 Qt 前缀就是这么干的，各平台装在哪不一样。
 #[derive(Debug, Clone, Deserialize)]
 #[serde(untagged)]
 pub enum EnvValue {
@@ -247,19 +247,32 @@ impl App {
     }
 }
 
-/// 扫描 `<repo>/course/*/app.json`。顺序按目录名排，界面上的次序才不随文件系统变。
-/// 这里没有任何针对某个应用的分支：C++ 教程也只是 `subjects/cpp`（ADR 0045）。
+/// 课程类学习应用所在的目录：按分组分目录（ADR 0150），各装一个领域圈的课程。
+pub const LEARNING_ROOTS: [&str; 5] = [
+    "programming",
+    "artificial-intelligence",
+    "computer-fundamentals",
+    "electronics",
+    "postgraduate",
+];
+
+/// 扫描 `LEARNING_ROOTS` 下的 `<root>/*/app.json`，合起来按应用目录名排，界面上的次序才不随
+/// 文件系统和分组目录变。这里没有任何针对某个应用的分支：C++ 教程也只是其中一个（ADR 0045）。
 pub fn discover(repo: &Path) -> Vec<App> {
-    discover_in(&repo.join("course"))
+    let mut apps: Vec<App> = LEARNING_ROOTS
+        .iter()
+        .flat_map(|root| discover_in(&repo.join(root)))
+        .collect();
+    apps.sort_by(|a, b| a.dir.file_name().cmp(&b.dir.file_name()));
+    apps
 }
 
-/// 启动器要管的全部应用：`course/`、`postgraduate/`、`guide/`、`practice/`、`certification/`、`mentor/`、`tools/` 各一层 `app.json`。
+/// 启动器要管的全部应用：课程类的分组目录（`LEARNING_ROOTS`）、`guide/`、`practice/`、`certification/`、`mentor/`、`tools/` 各一层 `app.json`。
 /// 桌面窗口不按目录分家——地球、魔方、课程、驾考、北极星和数学工具进同一份清单。
 /// `hidden` 的条目仍在结果里（目前只有路由器上的 nas-admin），界面自己不画。
-/// 顺序是先 course、再 postgraduate、再 guide、再 practice、再 certification、再 mentor、再 tools，各自按目录名排。
+/// 顺序是先课程类分组目录、再 guide、再 practice、再 certification、再 mentor、再 tools，各自按目录名排。
 pub fn discover_all(repo: &Path) -> Vec<App> {
     let mut apps = discover(repo);
-    apps.extend(discover_in(&repo.join("postgraduate")));
     apps.extend(discover_in(&repo.join("guide")));
     apps.extend(discover_in(&repo.join("practice")));
     apps.extend(discover_in(&repo.join("certification")));
@@ -268,7 +281,7 @@ pub fn discover_all(repo: &Path) -> Vec<App> {
     apps
 }
 
-/// `discover` 的通用版本：扫描任意一层 `<root>/*/app.json`，不写死 `course/`。
+/// `discover` 的通用版本：扫描任意一层 `<root>/*/app.json`，不写死某个目录名。
 /// `practice/` 下将来会挂多个独立小项目，`practice` 面板复用同一套发现
 /// 逻辑，只是换一个根目录（不用为它另写一份）。
 pub fn discover_in(apps_root: &Path) -> Vec<App> {

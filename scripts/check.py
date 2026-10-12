@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """仓库统一验证入口（ADR 0007、0045、0047）。
 
-检查逻辑归各应用自己（course/、postgraduate/、practice/、certification/、mentor/、tools/ 下的 scripts/check.py），
+检查逻辑归各应用自己（各应用根目录 APP_ROOTS 下的 scripts/check.py），
 这里只负责依次调用，
 外加四项跨应用检查：内容必须有出处（ADR 0043），项目 skill 在 .agents/ 与
 .claude/ 两处一致（ADR 0061），GitHub 工作流过 actionlint 与变量粘连检查，
@@ -41,7 +41,10 @@ def _force_utf8_output() -> None:
             reconfigure(encoding="utf-8", errors="replace")
 
 # 应用住在这两处，彼此平级（ADR 0060）。按意图分住处，但都走同一个验证入口。
-APP_ROOTS = ("course", "postgraduate", "guide", "practice", "certification", "mentor", "tools")
+# 课程类学习应用按分组分目录（ADR 0150），其余按应用类别分；增减分组目录只改这两行。
+GROUP_ROOTS = ("programming", "artificial-intelligence", "computer-fundamentals", "electronics", "postgraduate")
+APP_ROOTS = (*GROUP_ROOTS, "guide", "practice", "certification", "mentor", "tools")
+_ROOTS_RE = "|".join(APP_ROOTS)
 
 
 def find_app(app: str) -> Path:
@@ -63,7 +66,7 @@ def run_app(app: str, extra: list[str]) -> None:
     # 工作区成员的依赖装在仓库根（ADR 0140）。应用自己的检查只在 node_modules
     # 还不存在时才会再装；这里先装好，避免它因找不到本目录的锁文件而裸装。
     rel = app_dir.relative_to(REPO_ROOT).as_posix()
-    in_workspace = rel.startswith(("course/", "postgraduate/", "guide/", "mentor/", "tools/", "certification/")) or rel == "practice/earth"
+    in_workspace = rel.startswith(tuple(f"{root}/" for root in APP_ROOTS if root != "practice")) or rel == "practice/earth"
     if in_workspace and (app_dir / "package.json").is_file() and not (app_dir / "node_modules").is_dir():
         if not (REPO_ROOT / "pnpm-lock.yaml").is_file():
             raise SystemExit("仓库根没有 pnpm-lock.yaml，先在仓库根执行 pnpm install（ADR 0140）")
@@ -299,10 +302,10 @@ def run_shared_build_check() -> None:
         problems.append("  仓库根与 launcher/Cargo.toml 的 workspace.dependencies 不一致")
     if not (REPO_ROOT / "Cargo.lock").is_file():
         problems.append("  仓库根缺 Cargo.lock，在仓库根执行 cargo generate-lockfile 后提交")
-    declared = set(re.findall(r'"((?:course|postgraduate|guide|practice|mentor|tools|certification)/[^"]+/src-tauri)"', (REPO_ROOT / "Cargo.toml").read_text(encoding="utf-8")))
+    declared = set(re.findall(r'"((?:' + _ROOTS_RE + r')/[^"]+/src-tauri)"', (REPO_ROOT / "Cargo.toml").read_text(encoding="utf-8")))
     found = {
         path.parent.relative_to(REPO_ROOT).as_posix()
-        for root in ("course", "postgraduate", "guide", "mentor", "tools", "certification")
+        for root in APP_ROOTS if root != "practice"
         for path in (REPO_ROOT / root).glob("*/src-tauri/Cargo.toml")
     }
     earth = REPO_ROOT / "practice" / "earth" / "src-tauri" / "Cargo.toml"
@@ -323,7 +326,7 @@ def run_shared_build_check() -> None:
 
 # 课程/讲解/演示类应用统一 Tauri 2 + React（ADR 0138 决策 2、9）。
 # 豁免表逐项列出尚未迁移或本轮暂缓的应用，**每迁完一个就删一行**，表空即全部统一。
-# 这里只管 course/、postgraduate/、mentor/ 与 tools/（学习应用、图谱/参考类、配套工具）；practice/ 自由发挥，不检查。
+# 这里只管课程类分组目录、mentor/ 与 tools/（学习应用、图谱/参考类、配套工具）；practice/ 自由发挥，不检查。
 REACT_FRONTEND_EXEMPT: dict[str, str] = {
     "algorithms": "原生 TS 同源壳，待 ADR 0138 迁移（波 4）",
     "cs408": "原生 TS 同源壳，待 ADR 0138 迁移（波 4）",
@@ -345,7 +348,7 @@ def run_react_frontend_check() -> None:
 
     print("== 跨应用检查：课程类前端统一 Tauri 2 + React ==", flush=True)
     problems: list[str] = []
-    for app in sorted(p for root in ("course", "postgraduate", "guide", "mentor", "tools", "certification") for p in (REPO_ROOT / root).iterdir()):
+    for app in sorted(p for root in APP_ROOTS if root != "practice" for p in (REPO_ROOT / root).iterdir()):
         if not (app / "app.json").is_file():
             continue
         where = f"{app.parent.name}/{app.name}"
@@ -404,7 +407,7 @@ _EMPTY_PLOT_MINIMUM = ("README.md",)
 _APP_MINIMUM = ("AGENTS.md", "CLAUDE.md", "README.md", "scripts/check.py")
 
 _STRUCTURE_TREE_RE = re.compile(r"^  (\S+)/")
-_GROUP_RE = re.compile(r"^(course|postgraduate|guide|practice|certification|mentor|tools)/")
+_GROUP_RE = re.compile(r"^(" + _ROOTS_RE + r")/")
 
 # 仓库根只认这些条目：文档、代理与编辑器配置、六大功能区。别的出现在根下
 # 要么登记进来，要么进 .gitignore，要么删——launcher_list_out.txt、
@@ -415,7 +418,7 @@ _ROOT_ALLOW = {
     ".agents", ".claude", ".cursor", ".gemini", ".vscode", ".github",
     ".cargo", "Cargo.toml", "Cargo.lock",
     "package.json", "pnpm-lock.yaml", "pnpm-workspace.yaml",
-    "course", "postgraduate", "guide", "practice", "certification", "mentor", "tools", "launcher", "docs", "scripts", "archive",
+    *APP_ROOTS, "launcher", "docs", "scripts", "archive",
     "packages",
 }
 
@@ -458,7 +461,7 @@ def run_structure_check() -> None:
     #    少写的是新应用忘了登记——两个方向都算文档漂移。
     #    只解析 ``` 围栏内的树，正文里两空格缩进的普通段落不算数。
     repository_doc = REPO_ROOT / "docs" / "REPOSITORY.md"
-    tree: dict[str, set[str]] = {"course": set(), "postgraduate": set(), "guide": set(), "practice": set(), "certification": set(), "mentor": set(), "tools": set()}
+    tree: dict[str, set[str]] = {root: set() for root in APP_ROOTS}
     group = None
     in_tree_block = False
     for line in repository_doc.read_text(encoding="utf-8").splitlines():
@@ -570,7 +573,7 @@ def run_structure_check() -> None:
     #    不存在的应用（幽灵），以及开工的应用（有 app.json）没进清单（漏登）。
     readme_refs = {
         f"{group}/{name}"
-        for group, name in re.findall(r"\((course|postgraduate|guide|practice|certification|mentor|tools)/([\w-]+)\)", (REPO_ROOT / "README.md").read_text(encoding="utf-8"))
+        for group, name in re.findall(r"\((" + _ROOTS_RE + r")/([\w-]+)\)", (REPO_ROOT / "README.md").read_text(encoding="utf-8"))
     }
     actual_dirs = {f"{root}/{p.name}" for root in APP_ROOTS for p in (REPO_ROOT / root).iterdir() if p.is_dir()}
     working_apps = {f"{root}/{p.name}" for root in APP_ROOTS for p in (REPO_ROOT / root).iterdir() if (p / "app.json").is_file()}
@@ -579,8 +582,8 @@ def run_structure_check() -> None:
     for missing in sorted(working_apps - readme_refs):
         problems.append(f"  根 README.md 应用表没有登记开工应用 {missing}（加一行）")
 
-    course_dirs = {p.name for root in ("course", "postgraduate", "guide", "mentor") for p in (REPO_ROOT / root).iterdir() if p.is_dir()}
-    course_working = {p.name for root in ("course", "postgraduate", "guide", "mentor") for p in (REPO_ROOT / root).iterdir() if (p / "app.json").is_file()}
+    learning_dirs = {p.name for root in (*GROUP_ROOTS, "guide", "mentor") for p in (REPO_ROOT / root).iterdir() if p.is_dir()}
+    learning_working = {p.name for root in (*GROUP_ROOTS, "guide", "mentor") for p in (REPO_ROOT / root).iterdir() if (p / "app.json").is_file()}
     app_dir_names = {
         p.name
         for root in APP_ROOTS
@@ -594,14 +597,14 @@ def run_structure_check() -> None:
     )
     for ghost in sorted(name_table - app_dir_names):
         problems.append(f"  docs/REPOSITORY.md 名字表写了 {ghost}，应用目录里没有这个目录")
-    for missing in sorted(course_working - name_table):
+    for missing in sorted(learning_working - name_table):
         problems.append(f"  docs/REPOSITORY.md 名字表没有登记开工应用 {missing}")
 
     # all / sources 是伪应用，launcher 是启动器自身的矩阵位，都不是应用目录
     for ghost in sorted(ci_apps - {"all", "sources", "launcher"} - app_dir_names):
         problems.append(f"  ci.yml 手动选择项 {ghost} 不是实际存在的应用目录")
 
-    # 8. 应用区不留影子目录：course/、postgraduate/、practice/、certification/、mentor/、tools/、launcher/ 下不允许「未跟踪也未
+    # 8. 应用区不留影子目录：各应用根目录与 launcher/ 下不允许「未跟踪也未
     #    忽略」的目录。应用改 id 或退役后，磁盘上常剩下只剩构建产物的旧目录——
     #    c、cpp、dsa、english 四个旧名最多各留了 1.9 GB 的 build 与 node_modules，
     #    被忽略的对账看不见，未跟踪的等在第一次 `git add -A` 的路上。目录要么被

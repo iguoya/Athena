@@ -15,7 +15,7 @@
 数据结构与算法原本是 `subjects/cpp/resources/athena.json` 里的分类 `da`，23 章里
 22 章没有知识点，在提交 `b534cfb` 里删掉，改由本应用承载；首页学科图谱的 `da`
 节点是 `ExternalApp` + `app_id: "algorithms"`，点击直接启动本应用。设计模式后来走了
-同一条路（`course/design-patterns/`）。所以**本应用是这个领域的唯一承载者**，
+同一条路（`programming/design-patterns/`）。所以**本应用是这个领域的唯一承载者**，
 不必顾虑 `subjects/cpp` 那边还留着什么。
 
 ## 重叠地带的衔接

@@ -23,7 +23,7 @@
   专属的，更要守住这条。
 - **启动器里没有按应用写的分支。** 新增应用只放一份带 `dev` 声明的 `app.json`，启动器
   不改代码（ADR 0046）。发现逻辑扫 `<root>/*/app.json`。默认 `discover_all` 把
-  `course/`、`postgraduate/`、`practice/`、`certification/`、`mentor/` 与 `tools/` 合成一份清单，桌面应用都进轨道图和托盘；`hidden` 的
+  各课程分组目录、`practice/`、`certification/`、`mentor/` 与 `tools/` 合成一份清单，桌面应用都进轨道图和托盘；`hidden` 的
   服务不画。`--root` 把范围收成其中一层。
 - **状态从系统实况读，不自己记账。** 窗口进程在 = 运行中；有属于它的构建进程 = 启动中；
   都没有 = 未运行。dev server 端口通了不算就绪。
@@ -72,4 +72,4 @@ pnpm run tauri:build     # 打包：自动启用 custom-protocol，页面资产�
 cargo 命令要自己带。
 
 macOS 菜单栏版：`swift build --package-path launcher/macos`。启动器不在
-`course/`、`practice/` 下，根 `scripts/check.py` 不会带上它，改完要自己跑上面两条。
+各应用目录下，根 `scripts/check.py` 不会带上它，改完要自己跑上面两条。

@@ -30,10 +30,11 @@
 完整说明（名字对照表、三类判据的全文）见 [docs/REPOSITORY.md](docs/REPOSITORY.md)。
 
 ```
-course/<id>/  课程学科：c-plus-plus machine linux python design-patterns（python 是人工智能课程路线的
-                入口、归「程序设计」圈；design-patterns 同在该圈，ADR 0121）、machine-learning deep-learning
-                llm-app llm-finetune（「人工智能」圈，ADR 0120、0122、0148）、database firmware
-                microcontroller rtos（软考实践子课程，ADR 0103、0106）
+programming/<id>/ 程序设计圈（ADR 0150）：c-plus-plus machine linux python design-patterns；python 是
+                人工智能课程路线的入口、归本圈（ADR 0120、0148）
+artificial-intelligence/<id>/ 人工智能圈：machine-learning deep-learning llm-app llm-finetune（ADR 0120、0122）
+computer-fundamentals/<id>/ 计算机基础圈：database（软设第 9 章实践课程，ADR 0103、0126）
+electronics/<id>/ 电子信息圈：firmware microcontroller rtos（嵌入式系统设计师实践课程，ADR 0103、0123）
 postgraduate/<id>/ 考研应用（ADR 0149）：cs408（408 考试主应用）及本体挂它的 data-structures algorithms
                 organization os network（ADR 0116、0118、0119），加考研公共课 mathematics ascent；
                 os、network 兼作软设承接章
@@ -57,7 +58,7 @@ archive/        历史归档，不参与构建
   查阅 → **图谱/参考类**，不接掌握度、教学规范不生效；只存素材 → **素材坑**，没有
   `app.json` 与 `check.py`，根验证入口跳过它是预期行为。学习应用的规范不套到别的类，
   别的类的例外也不当学习应用的先例。
-- **`course/` 与 `practice/` 按意图分**（ADR 0060）：`practice/` 做能跑的东西，不追求知识点
+- **课程类分组目录与 `practice/` 按意图分**（ADR 0060）：`practice/` 做能跑的东西，不追求知识点
   覆盖、不建进度库，教学规范不生效。两处平级，都用 `app.json`、都走同一个启动器。
 - **C++ 教程没有特权**（ADR 0045）：任何「以主程序为中心」的假设都是过时的。
 - **名字**：进程 `athena-<id>`（连字符）；id 与目录名用完整的英文单词（如 `software`、`embedded`），**不用自造缩写、不用拼音**，本领域知名缩写可以用（如 `os`）（ADR 0097、0100、0104）；已经写进进度库的知识点前缀不改；`driver` 是驾考，
