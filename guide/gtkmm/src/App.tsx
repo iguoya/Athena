@@ -157,6 +157,14 @@ export default function App() {
       .catch(() => setNotice("浏览器预览下不能启动示例，请在应用内运行。"));
   };
 
+  // 官方示例的工作区副本（应用 ADR 0009）：workspace/ 生成可编辑副本并用 VS Code 打开
+  const openWorkspace = (exampleId: string) => {
+    setNotice(`正在准备 ${exampleId} 的工作区副本…`);
+    invoke<{ ok: boolean; message: string }>("open_example_workspace", { exampleId })
+      .then((result) => setNotice(result.message))
+      .catch(() => setNotice("浏览器预览下不能打开工作区，请在应用内运行。"));
+  };
+
   const answer = (itemId: string, correct: boolean) => {
     invoke("record_attempt", { knowledgeId: kp?.id ?? "", itemId, correct }).catch(() => {});
     setAttempts((prev) => [
@@ -646,6 +654,7 @@ export default function App() {
                       (!e.page_ref || e.page_ref === page.id),
                   )}
                   onLaunch={launchExample}
+                  onOpenWorkspace={openWorkspace}
                 />
                 <PageView
                   key={page.id}

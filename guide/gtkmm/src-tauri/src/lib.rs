@@ -597,6 +597,347 @@ fn read_example_sources(state: State<AppState>, example_id: String) -> Result<Ve
     Ok(files)
 }
 
+// —— 官方示例的工作区副本（应用 ADR 0009）——
+// exercise/ 是禁止修改的镜像；「真实工程项目」的查看、编辑、运行发生在
+// workspace/<示例 id>/ 的学习者副本上（与 exp.* 骨架副本同一约定：重置 =
+// 删掉重拷，构建产物不入库）。副本由壳生成：官方文件原样 + 独立 CMake 工程
+// + 按当前平台写好的 VS Code 配置（tasks/launch/IntelliSense）。
+
+/// 工程内参与编译的源文件（.xpm 是运行时资源，不进 add_executable）。
+fn example_build_sources(dir: &Path) -> Result<Vec<String>, String> {
+    let mut names: Vec<String> = Vec::new();
+    for entry in fs::read_dir(dir).map_err(|error| format!("读 {} 失败：{}", dir.display(), error))? {
+        let path = entry.map_err(|error| error.to_string())?.path();
+        let ext = path
+            .extension()
+            .and_then(|ext| ext.to_str())
+            .map(|ext| ext.to_ascii_lowercase());
+        if path.is_file() && matches!(ext.as_deref(), Some("cc" | "h")) {
+            names.push(path.file_name().unwrap_or_default().to_string_lossy().into_owned());
+        }
+    }
+    names.sort();
+    Ok(names)
+}
+
+fn generated_cmake_lists(project: &str, sources: &[String]) -> String {
+    let list = sources
+        .iter()
+        .map(|name| format!("\n    {name}"))
+        .collect::<String>();
+    format!(
+        "cmake_minimum_required(VERSION 3.21)\n\
+         project({project} CXX)\n\n\
+         # 官方示例的学习者副本（应用 ADR 0009）：源文件来自 exercise/ 镜像原样，\n\
+         # 本文件由壳生成——改坏了删掉副本目录，在课程里重新点「打开工作区」即可。\n\
+         set(CMAKE_CXX_STANDARD 17)\n\
+         set(CMAKE_CXX_STANDARD_REQUIRED ON)\n\n\
+         find_package(PkgConfig REQUIRED)\n\
+         pkg_check_modules(GTKMM4 REQUIRED IMPORTED_TARGET gtkmm-4.0)\n\n\
+         set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${{CMAKE_BINARY_DIR}})\n\n\
+         add_executable({project}{list})\n\
+         target_link_libraries({project} PRIVATE PkgConfig::GTKMM4)\n"
+    )
+}
+
+/// MSYS2 前缀路径（正斜杠，写进 JSON 配置）；非 Windows 返回 None。
+fn msys2_bin_forward() -> Option<String> {
+    msys2_mingw64().map(|dir| dir.to_string_lossy().replace('\\', "/"))
+}
+
+fn vscode_tasks_json(target: &str, run_binary: &str) -> String {
+    // Windows 需要 MSYS2 前缀（cmake 找 ninja/gcc、产物找 GTK DLL）；macOS/Linux
+    // 的 pkg-config 与运行时走系统路径，不需要 env 覆盖。副本是本机个人区，
+    // 按当前平台生成即可。
+    let windows = cfg!(windows);
+    let Some(msys) = msys2_bin_forward().filter(|_| windows) else {
+        return serde_json::json!({
+            "version": "2.0.0",
+            "tasks": [
+                {
+                    "label": "configure", "type": "shell", "command": "cmake",
+                    "args": ["-G", "Ninja", "-S", ".", "-B", "build"],
+                    "problemMatcher": []
+                },
+                {
+                    "label": "build", "type": "shell", "command": "cmake",
+                    "args": ["--build", "build"],
+                    "group": { "kind": "build", "isDefault": true },
+                    "dependsOn": "configure",
+                    "problemMatcher": ["$gcc"]
+                },
+                {
+                    "label": "run", "type": "shell",
+                    "command": format!("./build/{run_binary}"),
+                    "options": { "cwd": "${workspaceFolder}" },
+                    "dependsOn": "build",
+                    "problemMatcher": []
+                }
+            ]
+        })
+        .to_string();
+    };
+    let env_options = serde_json::json!({
+        "env": {
+            "PATH": format!("{msys};${{env:PATH}}"),
+            "PKG_CONFIG_PATH": format!("{msys}/../lib/pkgconfig"),
+        }
+    });
+    serde_json::json!({
+        "version": "2.0.0",
+        "tasks": [
+            {
+                "label": "configure", "type": "shell", "command": "cmake",
+                "args": ["-G", "Ninja", "-S", ".", "-B", "build"],
+                "options": env_options,
+                "problemMatcher": []
+            },
+            {
+                "label": "build", "type": "shell", "command": "cmake",
+                "args": ["--build", "build"],
+                "options": env_options,
+                "group": { "kind": "build", "isDefault": true },
+                "dependsOn": "configure",
+                "problemMatcher": ["$gcc"]
+            },
+            {
+                "label": "run", "type": "shell",
+                "command": format!("./build/{run_binary}"),
+                "options": {
+                    "cwd": "${workspaceFolder}",
+                    "env": { "PATH": format!("{msys};${{env:PATH}}") }
+                },
+                "dependsOn": "build",
+                "problemMatcher": []
+            }
+        ]
+    })
+    .to_string()
+}
+
+fn vscode_launch_json(run_binary: &str) -> String {
+    let windows = cfg!(windows);
+    let program = if windows {
+        format!("${{workspaceFolder}}/build/{run_binary}.exe")
+    } else {
+        format!("${{workspaceFolder}}/build/{run_binary}")
+    };
+    let mut config = serde_json::json!({
+        "name": "调试官方示例",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": program,
+        "cwd": "${workspaceFolder}",
+        "preLaunchTask": "build",
+    });
+    if windows {
+        // cppdbg 需要 C/C++ 扩展（ms-vscode.cpptools）；gdb 随 MSYS2 工具链而来
+        let msys = msys2_bin_forward().unwrap_or_else(|| "C:/msys64/mingw64".into());
+        config["MIMode"] = "gdb".into();
+        config["miDebuggerPath"] = format!("{msys}/gdb.exe").into();
+        config["environment"] = serde_json::json!([
+            { "name": "PATH", "value": format!("{msys};${{env:PATH}}") }
+        ]);
+    }
+    serde_json::json!({ "version": "0.2.0", "configurations": [config] }).to_string()
+}
+
+fn vscode_intellisense_json() -> String {
+    let mut config = serde_json::json!({
+        "name": "gtkmm",
+        "includePath": ["${workspaceFolder}/**"],
+        "cStandard": "c17",
+        "cppStandard": "c++17",
+    });
+    if let Some(msys) = msys2_bin_forward().filter(|_| cfg!(windows)) {
+        config["compilerPath"] = format!("{msys}/g++.exe").into();
+    }
+    serde_json::json!({ "version": 4, "configurations": [config] }).to_string()
+}
+
+fn workspace_readme(example_id: &str, source_dir: &str, target: &str) -> String {
+    format!(
+        "# {example_id} — 官方示例的学习者副本\n\n\
+        来自 `exercise/{source_dir}`（官方 `examples/book/` 的逐字镜像，版本随\n\
+        `upstream.json` 钉点）；`CMakeLists.txt` 与 `.vscode/` 由课程壳生成。\n\
+        这里是学习者的地盘，随便改；想回到官方原样，删掉整个目录后在课程里\n\
+        重新点「打开工作区」。\n\n\
+        ## 构建与运行\n\n\
+        命令行（Windows 在 MSYS2 MINGW64 Shell 里；macOS/Linux 直接用）：\n\n\
+        ```sh\n\
+        cmake -G Ninja -S . -B build\n\
+        cmake --build build\n\
+        ./build/{target}\n\
+        ```\n\n\
+        VS Code：`Ctrl+Shift+B` 构建默认任务；任务「run」构建并运行（窗口从\n\
+        本目录启动——button 示例从工作目录读 `info.xpm`）。「调试官方示例」\n\
+        （F5）需要 C/C++ 扩展（ms-vscode.cpptools），未装也能用任务构建运行。\n"
+    )
+}
+
+/// 生成（或复用）工作区副本，返回副本目录。
+fn materialize_workspace(app_root: &Path, entity: &Value) -> Result<PathBuf, String> {
+    let example_id = entity.get("id").and_then(|v| v.as_str()).unwrap_or("");
+    let source_rel = entity
+        .get("source_dir")
+        .and_then(|v| v.as_str())
+        .ok_or_else(|| format!("{example_id}: 缺 source_dir"))?;
+    let target = entity
+        .get("build_target")
+        .and_then(|v| v.as_str())
+        .ok_or_else(|| format!("{example_id}: 缺 build_target"))?;
+    let source_dir = app_root.join(source_rel);
+    let workspace_dir = app_root.join("workspace").join(example_id.replace('.', "-"));
+
+    if !workspace_dir.join("CMakeLists.txt").is_file() {
+        fs::create_dir_all(&workspace_dir)
+            .map_err(|error| format!("建 {} 失败：{}", workspace_dir.display(), error))?;
+        // 官方源文件原样复制（镜像 → 副本，一层目录，无子目录）
+        for entry in
+            fs::read_dir(&source_dir).map_err(|error| format!("读 {} 失败：{}", source_dir.display(), error))?
+        {
+            let from = entry.map_err(|error| error.to_string())?.path();
+            if from.is_file() {
+                let to = workspace_dir.join(from.file_name().unwrap_or_default());
+                fs::copy(&from, &to).map_err(|error| {
+                    format!("复制 {} 失败：{}", from.display(), error)
+                })?;
+            }
+        }
+        let sources = example_build_sources(&workspace_dir)?;
+        if sources.is_empty() {
+            return Err(format!("{source_rel}: 镜像目录里没有可编译的源文件"));
+        }
+        fs::create_dir_all(workspace_dir.join(".vscode"))
+            .map_err(|error| error.to_string())?;
+        fs::write(
+            workspace_dir.join("CMakeLists.txt"),
+            generated_cmake_lists(target, &sources),
+        )
+        .map_err(|error| error.to_string())?;
+        fs::write(
+            workspace_dir.join(".vscode").join("tasks.json"),
+            vscode_tasks_json(target, target),
+        )
+        .map_err(|error| error.to_string())?;
+        fs::write(
+            workspace_dir.join(".vscode").join("launch.json"),
+            vscode_launch_json(target),
+        )
+        .map_err(|error| error.to_string())?;
+        fs::write(
+            workspace_dir.join(".vscode").join("c_cpp_properties.json"),
+            vscode_intellisense_json(),
+        )
+        .map_err(|error| error.to_string())?;
+        fs::write(
+            workspace_dir.join("README.md"),
+            workspace_readme(example_id, source_rel, target),
+        )
+        .map_err(|error| error.to_string())?;
+    }
+    Ok(workspace_dir)
+}
+
+/// 找 VS Code 的启动入口：PATH 里的 `code`，或 Windows 常见安装位置的 code.cmd。
+fn find_vscode() -> Option<PathBuf> {
+    if let Some(path_var) = std::env::var_os("PATH") {
+        let exe_names: &[&str] = if cfg!(windows) {
+            &["code.cmd", "code"]
+        } else {
+            &["code"]
+        };
+        for dir in std::env::split_paths(&path_var) {
+            for name in exe_names {
+                let candidate = dir.join(name);
+                if candidate.is_file() {
+                    return Some(candidate);
+                }
+            }
+        }
+    }
+    if cfg!(windows) {
+        let mut roots = vec![std::env::var_os("LOCALAPPDATA").map(PathBuf::from)];
+        roots.push(Some(PathBuf::from("C:/Program Files")));
+        roots.push(Some(PathBuf::from("C:/Program Files (x86)")));
+        for root in roots.into_iter().flatten() {
+            let candidate = root
+                .join("Programs")
+                .join("Microsoft VS Code")
+                .join("bin")
+                .join("code.cmd");
+            if candidate.is_file() {
+                return Some(candidate);
+            }
+            let system = root.join("Microsoft VS Code").join("bin").join("code.cmd");
+            if system.is_file() {
+                return Some(system);
+            }
+        }
+    }
+    if cfg!(target_os = "macos") {
+        let candidate = PathBuf::from(
+            "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code",
+        );
+        if candidate.is_file() {
+            return Some(candidate);
+        }
+    }
+    None
+}
+
+/// 打开官方示例的工作区副本（VS Code）：副本不存在时从 exercise/ 镜像生成
+/// （源文件原样 + 独立 CMake 工程 + 本机配套的 VS Code 配置）；已存在则直接
+/// 打开，不覆盖个人改动。绑定 VS Code 探测失败时给具体指引。
+#[tauri::command]
+fn open_example_workspace(state: State<AppState>, example_id: String) -> LaunchResult {
+    let manifest = match read_content(&state.content_root, "demos.json") {
+        Ok(manifest) => manifest,
+        Err(_) => return LaunchResult { ok: false, message: "读 demos.json 失败".into() },
+    };
+    let Some(entity) = find_example(&manifest, &example_id) else {
+        return LaunchResult { ok: false, message: format!("清单里没有官方示例 {example_id}") };
+    };
+    let app_root = state
+        .content_root
+        .parent()
+        .map(Path::to_path_buf)
+        .unwrap_or_default();
+    // 副本已存在时 materialize_workspace 原样返回，不覆盖个人改动（重置 =
+    // 删掉副本目录后在课程里重新点「打开工作区」，与 exp.* 骨架副本同约定）
+    let workspace_dir = match materialize_workspace(&app_root, &entity) {
+        Ok(dir) => dir,
+        Err(message) => return LaunchResult { ok: false, message },
+    };
+
+    let Some(code) = find_vscode() else {
+        return LaunchResult {
+            ok: false,
+            message: format!(
+                "副本已生成在 {}，但找不到 VS Code——请安装并勾选「添加到 PATH」\
+                 （或把 code 命令放进 PATH）后重试。",
+                workspace_dir.display()
+            ),
+        };
+    };
+
+    let mut command = if cfg!(windows) {
+        let mut command = Command::new("cmd");
+        command.arg("/C").arg(&code);
+        command
+    } else {
+        Command::new(&code)
+    };
+    command.arg(&workspace_dir).stdin(Stdio::null()).stdout(Stdio::null()).stderr(Stdio::null());
+    match command.spawn() {
+        Ok(_) => LaunchResult {
+            ok: true,
+            message: format!("{} 已在 VS Code 打开（工作区副本）", example_id),
+        },
+        Err(error) => LaunchResult { ok: false, message: format!("启动 VS Code 失败：{error}") },
+    }
+}
+
 pub fn run() {
     let content_root = content_root();
     let store = store_path();
@@ -625,8 +966,93 @@ pub fn run() {
             launch_demo,
             stop_demo,
             launch_example,
-            read_example_sources
+            read_example_sources,
+            open_example_workspace
         ])
         .run(tauri::generate_context!())
         .expect("error while running athena-gtkmm");
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::Value;
+
+    /// 在临时根里摆一个假镜像目录 + 实体，生成副本并验证内容。
+    /// 只测生成逻辑本身；MSYS2 探测结果因机器而异，配置只断言「合法 JSON +
+    /// 关键结构」，不断言平台相关字段。
+    #[test]
+    fn workspace_copy_is_complete_and_configs_parse() {
+        let root = std::env::temp_dir().join(format!(
+            "athena-gtkmm-test-{}",
+            SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos()
+        ));
+        let source_dir = root.join("exercise/buttons/button");
+        fs::create_dir_all(&source_dir).unwrap();
+        fs::write(source_dir.join("buttons.h"), "#pragma once\n").unwrap();
+        fs::write(source_dir.join("buttons.cc"), "#include \"buttons.h\"\n").unwrap();
+        fs::write(source_dir.join("main.cc"), "int main() { return 0; }\n").unwrap();
+        fs::write(source_dir.join("info.xpm"), "/* xpm */\n").unwrap();
+
+        let entity = serde_json::json!({
+            "id": "example.buttons.button",
+            "source_dir": "exercise/buttons/button",
+            "build_target": "example-buttons-button",
+        });
+        let workspace_dir =
+            materialize_workspace(&root, &entity).expect("materialize_workspace 失败");
+        assert_eq!(
+            workspace_dir,
+            root.join("workspace").join("example-buttons-button")
+        );
+
+        // 源文件（含 xpm 资源）逐个复制到位
+        for name in ["buttons.h", "buttons.cc", "main.cc", "info.xpm"] {
+            assert!(workspace_dir.join(name).is_file(), "缺 {name}");
+        }
+        // CMakeLists：target 与参与编译的源文件都在，xpm 不进编译清单
+        let cmake = fs::read_to_string(workspace_dir.join("CMakeLists.txt")).unwrap();
+        assert!(cmake.contains("project(example-buttons-button CXX)"));
+        assert!(cmake.contains("add_executable(example-buttons-button"));
+        for name in ["buttons.cc", "buttons.h", "main.cc"] {
+            assert!(cmake.contains(name), "CMakeLists 缺 {name}");
+        }
+        assert!(!cmake.contains("info.xpm"), "xpm 不应进 add_executable");
+
+        // .vscode 三件：合法 JSON + 任务齐全 + 调试配置指向产物
+        let tasks: Value = serde_json::from_str(
+            &fs::read_to_string(workspace_dir.join(".vscode/tasks.json")).unwrap(),
+        )
+        .unwrap();
+        let labels: Vec<&str> = tasks["tasks"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|t| t["label"].as_str().unwrap())
+            .collect();
+        assert_eq!(labels, ["configure", "build", "run"]);
+        assert!(tasks["tasks"][1]["group"]["isDefault"] == true);
+        assert!(tasks["tasks"][2]["command"]
+            .as_str()
+            .unwrap()
+            .contains("example-buttons-button"));
+
+        let launch: Value = serde_json::from_str(
+            &fs::read_to_string(workspace_dir.join(".vscode/launch.json")).unwrap(),
+        )
+        .unwrap();
+        assert!(launch["configurations"][0]["program"]
+            .as_str()
+            .unwrap()
+            .contains("example-buttons-button"));
+
+        serde_json::from_str::<Value>(
+            &fs::read_to_string(workspace_dir.join(".vscode/c_cpp_properties.json")).unwrap(),
+        )
+        .expect("c_cpp_properties.json 不是合法 JSON");
+
+        assert!(workspace_dir.join("README.md").is_file());
+
+        fs::remove_dir_all(&root).unwrap();
+    }
 }

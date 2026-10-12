@@ -1,10 +1,11 @@
-// 官方示例区块（应用 ADR 0006、0008）：教程节页顶部（正文之前，先演示后读文）
-// 的 exercise/ 示例卡。清单驱动（content/demos.json examples 数组，按 page_ref
-// 锚定），不为某章手写页面；代码是 exercise/ 的原样镜像，壳逐字返回、这里不加工。
+// 官方示例区块（应用 ADR 0006、0008、0009）：教程节页顶部（正文之前，先演示
+// 后读文）的 exercise/ 示例卡。清单驱动（content/demos.json examples 数组，按
+// page_ref 锚定），不为某章手写页面；代码是 exercise/ 的原样镜像，壳逐字返回、
+// 这里不加工。「打开工作区」在 workspace/ 生成可编辑副本并用 VS Code 打开。
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { motion } from "motion/react";
-import { BookMarked, ChevronDown, ChevronUp, Play } from "lucide-react";
+import { BookMarked, ChevronDown, ChevronUp, FolderOpen, Play } from "lucide-react";
 import type { ExampleEntity } from "./types";
 import { highlightCode } from "./highlight";
 
@@ -16,10 +17,12 @@ interface SourceFile {
 export function OfficialExamples({
   examples,
   onLaunch,
+  onOpenWorkspace,
 }: {
   /** 锚定当前节 + 章级的官方示例（调用方过滤）；空数组不渲染 */
   examples: ExampleEntity[];
   onLaunch: (exampleId: string) => void;
+  onOpenWorkspace: (exampleId: string) => void;
 }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const [sources, setSources] = useState<Record<string, SourceFile[] | "error">>({});
@@ -79,6 +82,12 @@ export function OfficialExamples({
                 >
                   <Play className="size-5" /> 编译并运行
                 </motion.button>
+                <button
+                  onClick={() => onOpenWorkspace(entity.id)}
+                  className="flex items-center justify-center gap-1.5 rounded-xl px-4 py-2 text-[18px] text-accent ring-1 ring-accent/40 transition-colors hover:bg-accent/10"
+                >
+                  <FolderOpen className="size-4" /> 打开工作区
+                </button>
                 <button
                   onClick={() => toggle(entity.id)}
                   className="flex items-center justify-center gap-1 rounded-xl px-4 py-2 text-[18px] text-accent ring-1 ring-accent/40 transition-colors hover:bg-accent/10"
