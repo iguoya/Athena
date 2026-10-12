@@ -640,9 +640,11 @@ fn generated_cmake_lists(project: &str, sources: &[String]) -> String {
     )
 }
 
-/// MSYS2 前缀路径（正斜杠，写进 JSON 配置）；非 Windows 返回 None。
+/// MSYS2 的 bin 目录（正斜杠，写进 JSON 配置：PATH 前缀、编译器与 gdb 的
+/// 可执行路径都指这里——PATH 若指到 mingw64 根会漏掉全部 exe，cmake 会
+/// 落到系统里别的 pkg-config，比如 GNU Octave 自带的那份）。非 Windows 返回 None。
 fn msys2_bin_forward() -> Option<String> {
-    msys2_mingw64().map(|dir| dir.to_string_lossy().replace('\\', "/"))
+    msys2_mingw64().map(|dir| dir.join("bin").to_string_lossy().replace('\\', "/"))
 }
 
 fn vscode_tasks_json(target: &str, run_binary: &str) -> String {
@@ -722,24 +724,40 @@ fn vscode_launch_json(run_binary: &str) -> String {
     } else {
         format!("${{workspaceFolder}}/build/{run_binary}")
     };
-    let mut config = serde_json::json!({
-        "name": "调试官方示例",
+    // 双调试配置：学习者装了哪个调试扩展就能用哪个——cppdbg 走
+    // ms-vscode.cpptools（Windows 用 MSYS2 gdb），lldb 走 vadimcn.vscode-lldb
+    // （CodeLLDB，VS Code 对 C++ 的常见自动生成模板即它的格式）。
+    // 两个都以「build」任务为先，PATH 都前置 MSYS2（GTK 的运行时 DLL）。
+    let mut cppdbg = serde_json::json!({
+        "name": "调试（C/C++ 扩展）",
         "type": "cppdbg",
         "request": "launch",
         "program": program,
         "cwd": "${workspaceFolder}",
         "preLaunchTask": "build",
     });
+    let mut lldb = serde_json::json!({
+        "name": "调试（CodeLLDB 扩展）",
+        "type": "lldb",
+        "request": "launch",
+        "program": program,
+        "cwd": "${workspaceFolder}",
+        "preLaunchTask": "build",
+    });
     if windows {
-        // cppdbg 需要 C/C++ 扩展（ms-vscode.cpptools）；gdb 随 MSYS2 工具链而来
         let msys = msys2_bin_forward().unwrap_or_else(|| "C:/msys64/mingw64".into());
-        config["MIMode"] = "gdb".into();
-        config["miDebuggerPath"] = format!("{msys}/gdb.exe").into();
-        config["environment"] = serde_json::json!([
+        cppdbg["MIMode"] = "gdb".into();
+        cppdbg["miDebuggerPath"] = format!("{msys}/gdb.exe").into();
+        cppdbg["environment"] = serde_json::json!([
             { "name": "PATH", "value": format!("{msys};${{env:PATH}}") }
         ]);
+        lldb["env"] = serde_json::json!({ "PATH": format!("{msys};${{env:PATH}}") });
     }
-    serde_json::json!({ "version": "0.2.0", "configurations": [config] }).to_string()
+    serde_json::json!({
+        "version": "0.2.0",
+        "configurations": [cppdbg, lldb]
+    })
+    .to_string()
 }
 
 fn vscode_intellisense_json() -> String {
@@ -776,6 +794,11 @@ fn workspace_readme(example_id: &str, source_dir: &str, target: &str) -> String 
 }
 
 /// 生成（或复用）工作区副本，返回副本目录。
+///
+/// 源文件只在首次（CMakeLists 缺失 = 副本未初始化）从镜像复制，之后不动——
+/// 那是学习者改代码的地方；`.vscode/` 三件与 README 是壳的生成物，**缺失
+/// 即补**（已有则不动，尊重对配置本身的修改）。半成品副本（如手工建的、
+/// 只带 VS Code 自动生成坏模板的）点一次「打开工作区」即被补全。
 fn materialize_workspace(app_root: &Path, entity: &Value) -> Result<PathBuf, String> {
     let example_id = entity.get("id").and_then(|v| v.as_str()).unwrap_or("");
     let source_rel = entity
@@ -808,35 +831,59 @@ fn materialize_workspace(app_root: &Path, entity: &Value) -> Result<PathBuf, Str
         if sources.is_empty() {
             return Err(format!("{source_rel}: 镜像目录里没有可编译的源文件"));
         }
-        fs::create_dir_all(workspace_dir.join(".vscode"))
-            .map_err(|error| error.to_string())?;
         fs::write(
             workspace_dir.join("CMakeLists.txt"),
             generated_cmake_lists(target, &sources),
         )
         .map_err(|error| error.to_string())?;
-        fs::write(
-            workspace_dir.join(".vscode").join("tasks.json"),
-            vscode_tasks_json(target, target),
-        )
-        .map_err(|error| error.to_string())?;
-        fs::write(
-            workspace_dir.join(".vscode").join("launch.json"),
-            vscode_launch_json(target),
-        )
-        .map_err(|error| error.to_string())?;
-        fs::write(
-            workspace_dir.join(".vscode").join("c_cpp_properties.json"),
-            vscode_intellisense_json(),
-        )
-        .map_err(|error| error.to_string())?;
-        fs::write(
-            workspace_dir.join("README.md"),
-            workspace_readme(example_id, source_rel, target),
-        )
-        .map_err(|error| error.to_string())?;
     }
+    ensure_generated_file(
+        &workspace_dir,
+        ".vscode",
+        "tasks.json",
+        &vscode_tasks_json(target, target),
+    )?;
+    ensure_generated_file(
+        &workspace_dir,
+        ".vscode",
+        "launch.json",
+        &vscode_launch_json(target),
+    )?;
+    ensure_generated_file(
+        &workspace_dir,
+        ".vscode",
+        "c_cpp_properties.json",
+        &vscode_intellisense_json(),
+    )?;
+    ensure_generated_file(
+        &workspace_dir,
+        "",
+        "README.md",
+        &workspace_readme(example_id, source_rel, target),
+    )?;
     Ok(workspace_dir)
+}
+
+/// 副本里壳生成物的落盘：子目录不存在先建；文件已存在则不动。
+fn ensure_generated_file(
+    workspace_dir: &Path,
+    subdir: &str,
+    name: &str,
+    content: &str,
+) -> Result<(), String> {
+    let dir = if subdir.is_empty() {
+        workspace_dir.to_path_buf()
+    } else {
+        workspace_dir.join(subdir)
+    };
+    fs::create_dir_all(&dir).map_err(|error| error.to_string())?;
+    let path = dir.join(name);
+    if !path.is_file() {
+        fs::write(&path, content).map_err(|error| {
+            format!("写 {} 失败：{}", path.display(), error)
+        })?;
+    }
+    Ok(())
 }
 
 /// 找 VS Code 的启动入口：PATH 里的 `code`，或 Windows 常见安装位置的 code.cmd。
@@ -1041,10 +1088,14 @@ mod tests {
             &fs::read_to_string(workspace_dir.join(".vscode/launch.json")).unwrap(),
         )
         .unwrap();
-        assert!(launch["configurations"][0]["program"]
-            .as_str()
-            .unwrap()
-            .contains("example-buttons-button"));
+        let configs = launch["configurations"].as_array().unwrap();
+        assert_eq!(configs.len(), 2, "应有 cppdbg 与 CodeLLDB 两个调试配置");
+        for config in configs {
+            assert!(config["program"].as_str().unwrap().contains("example-buttons-button"));
+            assert_eq!(config["preLaunchTask"], "build");
+        }
+        assert_eq!(configs[0]["type"], "cppdbg");
+        assert_eq!(configs[1]["type"], "lldb");
 
         serde_json::from_str::<Value>(
             &fs::read_to_string(workspace_dir.join(".vscode/c_cpp_properties.json")).unwrap(),
