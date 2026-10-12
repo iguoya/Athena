@@ -1,0 +1,111 @@
+{
+  "id": "snake.state",
+  "exercise": "04-state",
+  "title": "把散落的 if 收进状态机",
+  "lead": "第三章的主循环里已经冒出「死了别走、按 R 重开」这类散装判断，功能一多就会互相纠缠。这一章引入四相状态机，顺带把「玩得怎样」正式化：计分与最高分。",
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "四个相位，同一颗键各有含义",
+      "body": "Phase::Ready / Playing / Paused / Over。输入按相分发：Enter 在 Ready 和 Over 里是「开始 / 重来」，P 在 Playing 和 Paused 之间切换；方向键只在 Playing 里收。逻辑步进也只在 Playing 里走。\n\n〔重点〕状态机的价值不是少写代码，是「同一颗键在不同相里含义不同」有了明确的安放处。每相只回答自己的问题，新增相位不必回头改旧相。"
+    },
+    {
+      "role": "focus",
+      "heading": "计分与最高分",
+      "body": "吃一节加十分。死亡时若破纪录，把最高分写进文件，下次启动读回来。\n\n〔难点〕这份文件写在进程工作目录（HIGHSCORE_FILE 相对路径），只是教学从简。真实程序要写用户数据目录：工作目录随启动方式漂移、可能没有写权限、多用户会互相覆盖；raylib 的 SaveFileText 之外，各平台都有「用户数据目录」的正规来源——差别写在注释里，不是不知道。"
+    },
+    {
+      "role": "focus",
+      "heading": "暂停时不补时间",
+      "body": "只在 Playing 里累加 acc；离开 Playing 就把它清零。\n\n〔考点〕不清零的话，暂停十秒回来，while 会一口气补走几十步——蛇瞬移暴毙。第 2 章的「补步」是修卡顿，这里反着用：不是游戏时间的流逝不该补。累加器是双刃，用在哪一相要看语义。"
+    }
+  ],
+  "questions": [
+    {
+      "id": "snake.state.phase",
+      "kind": "重点",
+      "stem": "引入状态机主要解决什么问题？",
+      "choices": [
+        "让代码行数更少",
+        "同一颗键、同一段逻辑在不同局面下含义不同，需要明确的安放处",
+        "提高渲染帧率",
+        "省掉输入缓冲"
+      ],
+      "answer": 1,
+      "explanation": "Enter 在 Ready 是开始、在 Over 是重来，方向键只在 Playing 有效。按相分发让每个局面只回答自己的问题。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 4 章 · 四个相位",
+          "note": "按本章 Phase 的分发结构自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.state.pause",
+      "kind": "难点",
+      "stem": "离开 Playing 时把 acc 清零，是为了什么？",
+      "choices": [
+        "acc 是浮点数，时间长了精度不够",
+        "暂停期间流逝的时间不是游戏时间，不清零恢复后会一口气补走几十步",
+        "让下一帧从整数开始计步",
+        "避免 while 死循环"
+      ],
+      "answer": 1,
+      "explanation": "第 2 章用 while 补齐掉帧欠下的步；暂停期间的时间不是欠的，补了就是瞬移。同一个机制，语义决定用不用。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 4 章 · 暂停",
+          "note": "与第 2 章补步对照自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.state.best",
+      "kind": "难点",
+      "stem": "最高分写进进程工作目录，这个做法差在哪？",
+      "choices": [
+        "工作目录的文件读写太慢",
+        "位置随启动方式漂移、可能没有写权限、多用户互相覆盖——应写用户数据目录",
+        "文件格式不能跨平台",
+        "raylib 不支持相对路径"
+      ],
+      "answer": 1,
+      "explanation": "相对路径的落点由「从哪里启动」决定，教学从简可以接受，真实程序要落到每用户的数据目录。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "raylib-cheatsheet",
+          "locator": "第 4 章 · 文件",
+          "note": "SaveFileText 只管写入这个路径，落点选择是操作系统的事。按本章注释自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.state.key",
+      "kind": "考点",
+      "stem": "P 键在 Playing 与 Paused 两个相位里分别做什么？这说明状态机的什么特征？",
+      "choices": [
+        "都是暂停；说明按键语义全局唯一",
+        "暂停与恢复；同一颗键的语义由当前相位决定，按相分发",
+        "退出与重开；说明相位之间互不相干",
+        "加速与减速；说明按键可以复用"
+      ],
+      "answer": 1,
+      "explanation": "输入按相分发是这一章的骨架。每相只处理对自己有意义的键，不存在全局唯一的键义表。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 4 章 · 输入分发",
+          "note": "按本章主循环的 if/else 结构自拟。"
+        }
+      ]
+    }
+  ],
+  "runs": [{ "id": "04-state", "label": "打开第 4 章的窗口", "primary": true }],
+  "files": ["exercise/04-state/src/main.cc", "exercise/04-state/CMakeLists.txt"]
+}

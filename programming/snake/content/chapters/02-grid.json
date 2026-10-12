@@ -1,0 +1,111 @@
+{
+  "id": "snake.grid",
+  "exercise": "02-grid",
+  "title": "格子世界与固定节拍",
+  "lead": "把世界变成格子，把时间变成节拍：逻辑每 0.2 秒走一格，渲染每秒跑 60 帧。两者从这一章起正式分家——这是所有实时程序的时间模型。",
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "两个坐标系",
+      "body": "Cell 是逻辑世界的坐标（第几格），像素只是它每帧的投影（格子乘以 CELL）。方块画在哪由 pos.x * CELL 算出，但「它在哪里」只由 pos 决定。\n\n〔重点〕格子坐标是真身，像素是影子。下一章蛇的吃、撞、长全部发生在格子上；把逻辑锁在格子里，规则才能写得干净、测得准确。"
+    },
+    {
+      "role": "focus",
+      "heading": "累加器：攒够一个节拍走一步",
+      "body": "每帧把 dt 累进 acc，攒够 stepTime 就走一格并扣掉。渲染帧再快，逻辑也只按自己的节拍走。\n\n〔难点〕补步用 while 而不是 if：掉帧攒下两三个节拍时一次补齐。换成 if，渲染一慢逻辑就跟着慢——蛇在卡顿的机器上会走得比在快的机器上慢，这不叫游戏。"
+    },
+    {
+      "role": "focus",
+      "heading": "网格线是画给人看的",
+      "body": "屏幕上的浅色网格线帮你看清格子；逻辑世界里没有线，只有格子坐标。\n\n〔要点〕给人看的东西全放在渲染段。判断「这一章哪些代码属于逻辑、哪些属于渲染」的试金石就一句话：把它搬到没有窗口的程序里，还成立吗？"
+    }
+  ],
+  "questions": [
+    {
+      "id": "snake.grid.acc",
+      "kind": "难点",
+      "stem": "补步为什么用 while (acc >= stepTime) 而不是 if？",
+      "choices": [
+        "while 更快，if 有分支预测惩罚",
+        "掉帧时 acc 一次攒了多个节拍，要一口气补完，逻辑速度才与帧率无关",
+        "if 在某些编译器下不能比较浮点数",
+        "while 能保证 acc 恰好归零"
+      ],
+      "answer": 1,
+      "explanation": "渲染卡一帧 dt 可能是两个节拍。用 if 就要等下一帧才补，蛇在卡顿机器上走得慢；while 把欠的步全部补齐。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 2 章 · 累加器",
+          "note": "固定步进的教学实现与取舍，按本章 main.cc 自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.grid.cell",
+      "kind": "重点",
+      "stem": "格子和像素，谁是逻辑世界的真身？",
+      "choices": [
+        "像素，绘制才是程序的真实输出",
+        "格子；像素只是它每帧的投影",
+        "两个都是，各自独立演化",
+        "都不是，真正的主人是屏幕"
+      ],
+      "answer": 1,
+      "explanation": "规则全在格子上发生（第 3 章起）。像素坐标每帧由格子算出，画完就丢。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 2 章 · 两个坐标系",
+          "note": "按本章 Cell 与 CELL 的分工自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.grid.fps",
+      "kind": "考点",
+      "stem": "把 SetTargetFPS(60) 改成 30，方块每秒走几格？",
+      "choices": [
+        "约 2.5 格，跟着帧率减半",
+        "还是 5 格，逻辑节拍与帧率无关",
+        "10 格，补偿机制翻倍",
+        "不确定，取决于显卡"
+      ],
+      "answer": 1,
+      "explanation": "stepTime 是 0.2 秒，节拍每秒 5 次。帧率只影响画面多细腻，不影响逻辑走多快。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 2 章 · 累加器",
+          "note": "与第 1 章 SetTargetFPS 的讲解对照自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.grid.hz",
+      "kind": "重点",
+      "stem": "stepTime = 0.2f 写下的是哪一条承诺？",
+      "choices": [
+        "每帧最多更新一次逻辑",
+        "每 0.2 秒逻辑恰好前进一步",
+        "逻辑每秒运行 0.2 次",
+        "渲染延迟不超过 0.2 秒"
+      ],
+      "answer": 1,
+      "explanation": "这是逻辑步长：5 Hz。渲染再快也只按节拍走，渲染再卡也用 while 补齐。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 2 章 · 固定节拍",
+          "note": "按本章常量的含义自拟。"
+        }
+      ]
+    }
+  ],
+  "runs": [{ "id": "02-grid", "label": "打开第 2 章的窗口", "primary": true }],
+  "files": ["exercise/02-grid/src/main.cc", "exercise/02-grid/CMakeLists.txt"]
+}

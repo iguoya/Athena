@@ -1,0 +1,111 @@
+{
+  "id": "snake.body",
+  "exercise": "03-snake",
+  "title": "一条蛇就是两条队列",
+  "lead": "玩法在这一章写全：吃食物变长，撞墙或咬到自己就停。核心发现是：蛇身是一条队列，输入是另一条队列——两条队列把贪吃蛇最经典的两个 bug 挡在门外。",
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "蛇身是 deque：头进尾出",
+      "body": "std::deque<Cell>，头在 front。每步头进一格；没吃到食物，尾就出一格——整体前移；吃到了，尾不出队，蛇自然长一节。\n\n〔重点〕数据结构第一次以「正好是这个形状」被用上：队列的进出就是蛇的移动。不需要坐标数组来回搬移，不需要标记哪节是头。撞死那一步头不入队，蛇停在原地——画面和死因对得上。"
+    },
+    {
+      "role": "focus",
+      "heading": "输入也是队列：反向丢弃，容量三格",
+      "body": "按键不直接改方向，只排进 pending；逻辑每步只消费一个。压入时两道闸：与队尾（或当前朝向）相同或相反的丢弃；队列满三格丢弃。\n\n〔难点〕没有缓冲会怎样？在两个逻辑步之间快速按「上、右」，蛇一步内直接掉头，头撞进自己第二节——这就是 180 度反转自杀 bug，几乎每个人第一次写贪吃蛇都会撞上。反向在压入时丢弃；缓冲太深手感发飘，三格是可玩的折中。"
+    },
+    {
+      "role": "focus",
+      "heading": "随机要守规矩",
+      "body": "食物位置来自 std::mt19937 配均匀分布，落在蛇身上就重试。\n\n〔考点〕为什么不用 rand() % N？取模会让分布偏斜，且 rand 的质量与可替换性都差；<random> 把「引擎」和「分布」分开，均匀性由分布保证。盘面远大于蛇身时，重试的期望次数接近 1；等蛇快占满全场才值得换成「收集空格再抽样」。"
+    }
+  ],
+  "questions": [
+    {
+      "id": "snake.body.deque",
+      "kind": "重点",
+      "stem": "吃到食物时「尾不出队」，蛇为什么就长了一节？",
+      "choices": [
+        "尾部节点被复制了一份",
+        "食物格加入了队列",
+        "正常移动是头进尾出，少弹出一次尾部，长度自然加一",
+        "蛇的容量扩大了"
+      ],
+      "answer": 2,
+      "explanation": "移动的本体是「头进尾出」。只进不出，队列就长了——变长不是额外操作，是省略了一个操作。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "cppreference",
+          "locator": "第 3 章 · 蛇身",
+          "note": "std::deque 的 push_front/pop_back 语义见 cppreference。按本章 step() 自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.body.reverse",
+      "kind": "难点",
+      "stem": "180 度反转自杀 bug 是怎么发生的？",
+      "choices": [
+        "蛇身队列溢出",
+        "两个逻辑步之间按了两次键，朝向直接变成反方向，头撞进自己的第二节",
+        "食物生成在蛇身上",
+        "帧率太高导致输入丢失"
+      ],
+      "answer": 1,
+      "explanation": "输入消费得比产生慢，连续两键在一步内全部生效就会掉头。反向的输入在压入缓冲时丢弃，从根上挡住。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 3 章 · 输入队列",
+          "note": "按本章 press() 的两道闸自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.body.buffer",
+      "kind": "难点",
+      "stem": "输入缓冲的容量为什么限制在三格，而不是越大越好？",
+      "choices": [
+        "内存放不下更多方向",
+        "缓冲太深，早先按下的方向会在很久之后才生效，手感发飘",
+        "deque 的实现限制",
+        "防止玩家按出循环"
+      ],
+      "answer": 1,
+      "explanation": "缓冲换来的是「连续转向不丢键」，但每格积压都会推迟生效时机。三格是可玩性折中，不是技术上限。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 3 章 · 输入队列",
+          "note": "按本章 press() 的容量取舍自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.body.random",
+      "kind": "考点",
+      "stem": "生成食物时为什么要「落在蛇身上就重试」？",
+      "choices": [
+        "让食物看起来更随机",
+        "避免编译器警告",
+        "食物必须落在空格上，否则蛇吃不到或判定出错",
+        "节省内存"
+      ],
+      "answer": 2,
+      "explanation": "食物的语义是「空格上的食物」。蛇身远未占满盘面时重试的期望次数接近 1，简单重试就是正解。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "cppreference",
+          "locator": "第 3 章 · 随机数",
+          "note": "std::mt19937 与均匀分布见 cppreference。按本章 spawn_food() 自拟。"
+        }
+      ]
+    }
+  ],
+  "runs": [{ "id": "03-snake", "label": "打开第 3 章的窗口", "primary": true }],
+  "files": ["exercise/03-snake/src/main.cc", "exercise/03-snake/CMakeLists.txt"]
+}

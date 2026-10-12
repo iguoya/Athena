@@ -1,0 +1,30 @@
+{
+  "id": "snake",
+  "title": "贪吃蛇",
+  "group": "程序设计",
+  "description": "用 raylib 把一只贪吃蛇按章节做出来：每章一个能独立编译的程序，教程壳负责讲解、预测和启动（ADR 0153）。",
+  "icon": {
+    "type": "theme",
+    "name": "applications-games-symbolic",
+    "symbol": "circle.grid.cross",
+    "letter": "蛇",
+    "accent": "#1F7A33",
+    "renders": {}
+  },
+  "dev": {
+    "env": {
+      "ATHENA_SNAKE_ROOT": "${dir}"
+    },
+    "prepare": [
+      {
+        "when_missing": "node_modules",
+        "run": ["pnpm", "install"],
+        "label": "安装前端依赖"
+      }
+    ],
+    "run": ["pnpm", "run", "tauri:dev"],
+    "ready": { "http": "http://localhost:1514" },
+    "match": "src-tauri/target",
+    "binary": "athena-snake"
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "id": "snake.window",
+  "exercise": "01-window",
+  "title": "先让循环跑起来",
+  "lead": "这一章只有一件事：让循环跑起来，并亲眼看见「每一帧都在重画」。没有蛇，没有网格，没有输入。raylib 是 immediate mode——理解了这一点，后面四章都只是在往这个循环里填东西。",
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "循环是唯一的骨架",
+      "body": "InitWindow 开窗，SetTargetFPS(60) 定渲染节奏，然后一个 while 跑到窗口被关掉为止。循环体内三步：收输入（这一章还没有）、更新（两个计数器）、重画。\n\n〔重点〕BeginDrawing 和 EndDrawing 之间每帧把整个画面从头画一遍：先 ClearBackground 清屏，再画字、画方块。没有「控件」这种活着的东西，也没有回调——你不画，屏幕上就什么都没有。gtkmm 那套「创建控件、等事件」的思维在这一章要整个放下。"
+    },
+    {
+      "role": "focus",
+      "heading": "动画就是时间的函数",
+      "body": "画面上会动的只有一个方块，它的 x 是累计时间 elapsed 的函数，每帧算一遍、画一遍。\n\n〔重点〕immediate mode 里「动画」没有别的机制：不设补间、不发通知、不做失效区域。把「某个东西随时间怎么变」写成一个纯函数，每帧调用它，就是全部。方块出界靠取模回绕——这个循环没有任何特殊状态。"
+    },
+    {
+      "role": "focus",
+      "heading": "dt 从第一帧就问",
+      "body": "GetFrameTime 返回上一帧花了多少秒，HUD 上把它和帧号、累计时间一起画出来。\n\n〔难点〕这一章其实用不上 dt，但每帧都问一次是这个循环的固定动作：下一章的固定步进、第五章的插值，原料都是它。从第一天起就让循环里留着这个位置，后面才不会临时塞进去。"
+    }
+  ],
+  "questions": [
+    {
+      "id": "snake.window.redraw",
+      "kind": "重点",
+      "stem": "想让方块随时间移动，immediate mode 的做法是？",
+      "choices": [
+        "给方块设置一个速度属性，等库通知它移动",
+        "每帧用当前时间算出新位置，从头重画一遍",
+        "只重画方块动过的那一小块区域",
+        "注册一个移动回调，到点自动触发"
+      ],
+      "answer": 1,
+      "explanation": "画面没有持久对象，每帧从清屏开始重画。位置是时间的函数，每帧求值一次。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "raylib-cheatsheet",
+          "locator": "第 1 章 · 主循环",
+          "note": "BeginDrawing/EndDrawing 的用法见 cheatsheet。没有现成中文题，按本章 main.cc 自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.window.fps",
+      "kind": "重点",
+      "stem": "SetTargetFPS(60) 约束的是？",
+      "choices": [
+        "游戏逻辑每秒最多走 60 步",
+        "渲染循环每秒最多跑 60 帧",
+        "输入每秒最多采样 60 次",
+        "计时器每秒溢出 60 次"
+      ],
+      "answer": 1,
+      "explanation": "它管的是循环的空转节奏。逻辑速度是另一回事，第 2 章用固定步进把两者正式分开。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "raylib-cheatsheet",
+          "locator": "第 1 章 · 窗口",
+          "note": "SetTargetFPS 只影响循环频率。按本章与第 2 章的对照自拟。"
+        }
+      ]
+    },
+    {
+      "id": "snake.window.dt",
+      "kind": "考点",
+      "stem": "GetFrameTime() 的返回值是什么？",
+      "choices": [
+        "开机至今的秒数",
+        "窗口开了多少秒",
+        "上一帧从开始到结束花掉的秒数",
+        "距离下一次帧交换还有多久"
+      ],
+      "answer": 2,
+      "explanation": "它是上一帧的实际耗时。第 2 章把它累加起来攒节拍，第 5 章用它算插值比例。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "raylib-cheatsheet",
+          "locator": "第 1 章 · 时间",
+          "note": "GetFrameTime 语义见 cheatsheet 的 Timing 函数组。"
+        }
+      ]
+    },
+    {
+      "id": "snake.window.font",
+      "kind": "难点",
+      "stem": "HUD 文字为什么全用英文？",
+      "choices": [
+        "raylib 不支持 UTF-8 字符串",
+        "C++ 源码不允许出现中文字符",
+        "默认字体只带 ASCII 字形，中文要另外加载 TTF 字体",
+        "英文字体渲染比中文快"
+      ],
+      "answer": 2,
+      "explanation": "DrawText 用内置字体，字形只覆盖 ASCII。中文要 LoadFontEx 加载 TTF 并声明码点，属于资源管线，不是这一章的事。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "raylib-cheatsheet",
+          "locator": "第 1 章 · 文字",
+          "note": "DrawText 与 LoadFontEx 的分工见 cheatsheet。按本章的取舍自拟。"
+        }
+      ]
+    }
+  ],
+  "runs": [{ "id": "01-window", "label": "打开第 1 章的窗口", "primary": true }],
+  "files": ["exercise/01-window/src/main.cc", "exercise/01-window/CMakeLists.txt"]
+}
