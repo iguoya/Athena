@@ -1,0 +1,20 @@
+[package]
+name = "athena-chinese-chess"
+version = "0.1.0"
+description = "Athena 中国象棋：gtkmm 棋盘按章节长出来，教程壳用 Tauri"
+authors = ["Athena"]
+edition = "2021"
+
+[lib]
+name = "athena_chinese_chess_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { workspace = true }
+
+[dependencies]
+tauri = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+dirs-next = "2"
+rusqlite = { version = "0.32", features = ["bundled"] }

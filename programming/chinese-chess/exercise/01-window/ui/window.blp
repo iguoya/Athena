@@ -1,0 +1,24 @@
+using Gtk 4.0;
+
+// 这一份只描述窗口里有什么。程序怎么启动、棋盘怎么画，不写在这里。
+ApplicationWindow main_window {
+  title: "中国象棋";
+  default-width: 960;
+  default-height: 640;
+
+  titlebar: HeaderBar {
+    show-title-buttons: true;
+    title-widget: Label {
+      label: "中国象棋";
+      styles ["title"]
+    };
+  };
+
+  Label {
+    label: "窗口已经在了。棋盘从下一章开始摆。";
+    margin-top: 24;
+    margin-bottom: 24;
+    margin-start: 24;
+    margin-end: 24;
+  }
+}

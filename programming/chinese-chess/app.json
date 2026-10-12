@@ -1,0 +1,38 @@
+{
+  "id": "chinese-chess",
+  "title": "中国象棋",
+  "group": "程序设计",
+  "description": "用 gtkmm 把一盘中国象棋按章节做出来：每章一个能独立编译的窗口，教程壳负责讲解、预测和启动（ADR 0151）。",
+  "icon": {
+    "type": "theme",
+    "name": "applications-games-symbolic",
+    "symbol": "circle.grid.cross",
+    "letter": "棋",
+    "accent": "#7A2E2E",
+    "file": "icon.svg",
+    "renders": {
+      "icon.ico": "ico",
+      "src-tauri/icons/32x32.png": 32,
+      "src-tauri/icons/128x128.png": 128,
+      "src-tauri/icons/128x128@2x.png": 256,
+      "src-tauri/icons/icon.ico": "ico",
+      "src-tauri/icons/icon.icns": "icns"
+    }
+  },
+  "dev": {
+    "env": {
+      "ATHENA_CHINESE_CHESS_ROOT": "${dir}"
+    },
+    "prepare": [
+      {
+        "when_missing": "node_modules",
+        "run": ["pnpm", "install"],
+        "label": "安装前端依赖"
+      }
+    ],
+    "run": ["pnpm", "run", "tauri:dev"],
+    "ready": { "http": "http://localhost:1513" },
+    "match": "src-tauri/target",
+    "binary": "athena-chinese-chess"
+  }
+}

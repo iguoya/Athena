@@ -1,0 +1,165 @@
+{
+  "id": "chess.pieces",
+  "exercise": "04-pieces",
+  "title": "把开局摆上去",
+  "lead": "上一章有了九十个交叉点，没有子。这一章只把开局画上去：一颗子一张矢量图，红黑各一套字。坐标写在绘制函数里，点一下不会走。局面还没有单独的地方放，下一章才把「能不能走」从绘制里分出去。",
+  "cooperation": {
+    "intro": "相对上一章，依赖只多了 paint_piece。坐标写在 BoardView::draw 里，还没有规则类。步骤图是这一次绘制的顺序。",
+    "roster": [
+      { "name": "Host::open", "role": "仍把 BoardView 放进 board_slot。不连接点击。", "with": "BoardView" },
+      { "name": "BoardView::draw", "role": "先 paint_board，再按开局坐标 paint_piece。坐标写在这个函数里。", "with": "paint_board、paint_piece、layout_for" },
+      { "name": "paint_piece", "role": "把一颗矢量子画在给出的交叉点中心。边长约为一格的 0.92，跟着格子变。", "with": "layout 给出的格子" },
+      { "name": "layout_for", "role": "和画线共用。棋子的像素位置是 origin 加 file、rank 乘 cell。", "with": "不调用界面" }
+    ],
+    "figures": [
+      {
+        "kind": "dependency",
+        "title": "谁可以调用谁",
+        "caption": "棋子不读界面文件。换位置改的是 draw 里的坐标，不是 blp。",
+        "layers": [
+          [{ "name": "Host", "role": "放入棋盘" }],
+          [{ "name": "BoardView", "role": "draw 里摆开局" }],
+          [
+            { "name": "paint_board", "role": "先画线" },
+            { "name": "paint_piece", "role": "再画子" }
+          ]
+        ],
+        "links": [
+          { "from": "Host", "to": "BoardView", "label": "放进 board_slot", "style": "call" },
+          { "from": "BoardView", "to": "paint_board", "label": "先有交叉点", "style": "call" },
+          { "from": "BoardView", "to": "paint_piece", "label": "按写死的坐标", "style": "call" }
+        ]
+      },
+      {
+        "kind": "flow",
+        "title": "一次绘制的步骤",
+        "caption": "先有交叉点，再把子放到点上。两步都在 draw 里，没有选中，也没有走子。",
+        "steps": [
+          { "name": "BoardView::draw", "role": "clip，并取得 layout" },
+          { "name": "paint_board", "role": "先有交叉点" },
+          { "name": "paint_piece", "role": "底线、兵卒和炮各画一次" }
+        ]
+      }
+    ]
+  },
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "一颗子是一张矢量图",
+      "body": "棋子来自 Kadagaden 的木纹矢量图，红黑分开，字画在图里，不是用字体现写的。〔重点〕paint_piece 把子画在交叉点中心，边长大约是一格的 0.92。〔〕和棋盘一样，按当前窗口的像素重画并缓存。拉大窗口时子仍然清楚。\n\n车、马、炮靠棋子上的字和红黑区分，不靠外面再描一圈。"
+    },
+    {
+      "role": "focus",
+      "heading": "开局摆在这些点上",
+      "body": "y 从上往下增大。黑方底线 y = 0，从左到右是车马象士将士象马车。红方底线 y = 9，字是车马相仕帅仕相马车。〔重点〕帅在 (4, 9)，将在 (4, 0)。〔〕\n\n黑卒在 y = 3 的偶数列，红兵在 y = 6 的偶数列。黑炮在 (1, 2) 和 (7, 2)，红炮在 (1, 7) 和 (7, 7)。"
+    },
+    {
+      "role": "focus",
+      "heading": "两套字，一条向下的轴",
+      "body": "红方用帅、仕、相、兵，黑方用将、士、象、卒。车、马、炮两边都有，字形仍是两张图。不要用「往上是 y 变大」来记：〔难点〕屏幕上往下，y 才变大，红方在下方。〔〕\n\n两个窗口都编译这一份 BoardView。界面文件不负责摆子，只留 board_slot。"
+    },
+    {
+      "role": "compare",
+      "heading": "对照：代码版装的是同一块带棋子的棋盘",
+      "body": "代码版的侧栏仍是 C++ 拼出来的，按钮仍然按不了。棋盘控件和界面文件版相同，所以开局的位置不会出现两套。〔考点〕状态行写着「开局摆好了。点棋子还不会动。」〔〕坐标写在绘制里是有意的：还没有单独的局面，点了不能走。下一章才把能不能走从绘制里分出去。"
+    }
+  ],
+  "questions": [
+    {
+      "id": "chess.piece.center",
+      "kind": "重点",
+      "stem": "棋子画在棋盘的什么位置？",
+      "choices": [
+        "画在格子中心，边长正好是一格",
+        "画在交叉点中心，边长大约是一格的 0.92",
+        "画在侧栏里，棋盘上只留线",
+        "画在河界的「楚河汉界」四个字上"
+      ],
+      "answer": 1,
+      "explanation": "子的中心对准交叉点。矢量图按窗口像素重画，放大不糊。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "kadagaden-xiangqi",
+          "locator": "第 4 章 · 棋子图",
+          "note": "图是 CC-BY 的木纹棋子。落在交叉点、边长约 0.92 格是本章的画法，自拟题目。"
+        }
+      ]
+    },
+    {
+      "id": "chess.piece.general",
+      "kind": "重点",
+      "stem": "开局时，红方的帅在哪个点？",
+      "choices": [
+        "(0, 0)，棋盘左上角",
+        "(4, 0)，黑方底线正中",
+        "(4, 9)，红方底线正中",
+        "(8, 9)，红方底线最右边"
+      ],
+      "answer": 2,
+      "explanation": "红方在下，底线 y = 9。帅在这一行的正中，x = 4。将在 (4, 0)。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 4 章 · 开局",
+          "note": "开局位置按本章 BoardView 的摆法自拟，坐标约定见第 3 章。"
+        }
+      ]
+    },
+    {
+      "id": "chess.piece.axis",
+      "kind": "难点",
+      "stem": "下面哪一句和这一章的坐标一致？",
+      "choices": [
+        "y 往上增大，红方在 y = 0",
+        "y 往下增大，红方用帅仕相兵，黑方用将士象卒",
+        "红黑共用一张「帅」的图，只靠 CSS 变色",
+        "兵和卒都画在 y = 5 的河界上"
+      ],
+      "answer": 1,
+      "explanation": "屏幕向下是 y 增大。红黑的帅仕相和将士象是两套图。兵在 y = 6，卒在 y = 3。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 4 章 · 坐标与用字",
+          "note": "用字和 y 轴方向是本章的约定，没有外部题号。"
+        }
+      ]
+    },
+    {
+      "id": "chess.piece.click",
+      "kind": "考点",
+      "stem": "这一章点一下帅，会发生什么？",
+      "choices": [
+        "帅向前走一步，棋谱记下「帅五进一」",
+        "弹出可走的点，但还不能真的走",
+        "什么都不走。棋子只是画上去的",
+        "界面文件版能走，代码版不能走"
+      ],
+      "answer": 2,
+      "explanation": "这一章的 BoardView 不接收走子。两个窗口都是这样。按钮也仍然按不了。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 4 章 · 还不能走",
+          "note": "点击不产生着法是这一章相对第 5 章的边界，自拟题目。"
+        }
+      ]
+    }
+  ],
+  "runs": [
+    { "id": "04-pieces/ui", "label": "打开界面文件版", "primary": true },
+    { "id": "04-pieces/code", "label": "打开代码版" }
+  ],
+  "files": [
+    "exercise/04-pieces/ui/window.blp",
+    "exercise/04-pieces/ui/main.cc",
+    "exercise/04-pieces/board_view.cc",
+    "exercise/assets/xiangqi_art.hh",
+    "exercise/04-pieces/code/main.cc",
+    "exercise/04-pieces/meson.build"
+  ]
+}

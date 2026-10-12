@@ -1,0 +1,162 @@
+{
+  "id": "chess.layout",
+  "exercise": "02-layout",
+  "title": "先把位置占上",
+  "lead": "上一章只有一扇空窗。这一章只回答位置写在哪：棋盘在左、侧栏在右，侧栏里是黑方、棋谱、红方和两个按钮。木色棋盘由 C++ 画，放进界面文件留出的空位。两个按钮按不了，也是有意的：规则还没出现，接上点击没有可做的事。",
+  "cooperation": {
+    "intro": "组织看依赖：Host 可以读界面、可以把 Wood 放进空位。Wood 和按钮不反过来调用 Host。打开时的先后另用时序图。",
+    "roster": [
+      { "name": "ChessApp::on_activate", "role": "只调用 Host::open。窗口内容不写在 Application 里。", "with": "Host" },
+      { "name": "Host::open", "role": "装样式和界面，把 Wood 放进名为 board_slot 的盒子，再 present。", "with": "need、Wood" },
+      { "name": "Host::need", "role": "按 blp 里的 id 取控件。没有这个 id 就停下来，避免界面静默少一块。", "with": "Builder" },
+      { "name": "Wood 的绘制函数", "role": "把分到的区域涂成木色。先 clip，颜色才不会画到侧栏上。两个窗口共用这一份。", "with": "不调用别的类" }
+    ],
+    "figures": [
+      {
+        "kind": "dependency",
+        "title": "谁可以调用谁",
+        "caption": "按钮在界面文件里，这一章没有信号。Wood 只负责涂色，不知道侧栏的存在。",
+        "layers": [
+          [{ "name": "window.blp", "role": "盒子、侧栏和按钮" }],
+          [{ "name": "Host", "role": "按 id 取出控件" }],
+          [{ "name": "Wood", "role": "把空位涂成木色" }]
+        ],
+        "links": [
+          { "from": "Host", "to": "window.blp", "label": "need 按 id 取控件", "style": "call" },
+          { "from": "Host", "to": "Wood", "label": "放进 board_slot", "style": "call" }
+        ]
+      },
+      {
+        "kind": "sequence",
+        "title": "打开窗口时的先后",
+        "caption": "这张图只看时间顺序。谁允许调用谁，以上面的依赖为准。",
+        "actors": ["ChessApp", "Host", "window.blp", "Wood"],
+        "messages": [
+          { "from": 0, "to": 1, "label": "on_activate → open" },
+          { "from": 1, "to": 2, "label": "need(\"board_slot\")" },
+          { "from": 1, "to": 3, "label": "append 到空位" }
+        ]
+      }
+    ]
+  },
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "横向盒子写在界面文件里",
+      "body": "window.blp 的外层是竖着的盒子：上面是棋盘和侧栏，下面是一行状态。棋盘和侧栏在一个横向盒子里，间距 12。名为 board_slot 的空盒子设了 hexpand，把多余的宽度吃掉。侧栏 width-request 是 260，不跟着拉宽。\n\n这些数字都在 blp 里。〔重点〕改「侧栏多宽、棋盘是否撑开」不用动 C++。〔〕"
+    },
+    {
+      "role": "focus",
+      "heading": "颜色挂在样式类上",
+      "body": "侧栏的类是 side，双方名字的类是 player。style.css 里 .side 是浅纸色，.player 是 18 像素的粗体。〔重点〕不给每一个 Label 单独写颜色。〔〕下一章换棋盘时，这套侧栏样式可以照用。"
+    },
+    {
+      "role": "focus",
+      "heading": "棋盘占位仍是 C++",
+      "body": "〔难点〕Blueprint 描述的是按钮、标签和盒子，画不出一块会随窗口缩放的木色。〔〕ui/main.cc 用 Builder 取出 board_slot，把 Wood 放进去。Wood 是一个 DrawingArea，整块涂成木色，并设了 hexpand，这样空盒子才会被它填满。两个程序都编译这一份 wood.hh。"
+    },
+    {
+      "role": "compare",
+      "heading": "对照：用代码把同一套盒子装出来",
+      "body": "code/main.cc 自己 new 横向盒子、侧栏和按钮，再 append。侧栏宽度用 set_size_request(260, -1)，按钮 set_sensitive(false)。样式是一段字符串，规则和 style.css 相同。〔考点〕界面文件版把 sensitive: false 直接写在按钮上。〔〕这一章按钮只占位置。规则还没写，接上信号也没有可做的事。"
+    }
+  ],
+  "questions": [
+    {
+      "id": "chess.layout.box",
+      "kind": "重点",
+      "stem": "棋盘占满左边、侧栏保持 260 像素宽，这两件事写在哪里？",
+      "choices": [
+        "写在 window.blp：board_slot 设 hexpand，侧栏设 width-request 260",
+        "写在 style.css 的窗口宽度里",
+        "只能在 C++ 里 set_size_request，blp 排不了横向盒子",
+        "由 Wood 的涂色决定，盒子不参与"
+      ],
+      "answer": 0,
+      "explanation": "横向盒子、撑开和侧栏宽度都是控件树的事，写在 blp。代码版用等价的 append 和 set_size_request 做同一件事。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "blueprint-compiler",
+          "locator": "第 2 章 · 布局",
+          "note": "hexpand 与 width-request 是 Gtk 控件属性。按本章 window.blp 自拟。"
+        }
+      ]
+    },
+    {
+      "id": "chess.layout.css",
+      "kind": "重点",
+      "stem": "侧栏的浅纸色和「黑方 / 红方」的粗体写在哪里？",
+      "choices": [
+        "写在每个 Label 的构造函数里",
+        "写在 style.css 的 .side 和 .player 上",
+        "写在 window.blp 的 label 文字旁边，用十六进制颜色",
+        "由 Wood 的木色自动带出来"
+      ],
+      "answer": 1,
+      "explanation": "控件只挂样式类。颜色和字号在 style.css。代码版用同一套类名，样式放在 C++ 字符串里。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "blueprint-compiler",
+          "locator": "第 2 章 · 样式类",
+          "note": "样式类与 CSS 选择器的对应是本章的讲法，没有现成中文题。"
+        }
+      ]
+    },
+    {
+      "id": "chess.layout.slot",
+      "kind": "难点",
+      "stem": "为什么木色棋盘不写进 window.blp？",
+      "choices": [
+        "因为 blp 不能放盒子",
+        "因为 DrawingArea 的绘制要在 C++ 里，界面文件只留出 board_slot",
+        "因为木色必须用 CSS 画，不能用控件",
+        "因为这一章还没有侧栏"
+      ],
+      "answer": 1,
+      "explanation": "界面文件排位置。Wood 怎么涂色是绘制，ui/main.cc 把它放进 board_slot。两个窗口用同一份 wood.hh。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 2 章 · board_slot",
+          "note": "自绘控件与界面文件的分工是本章的设计，没有外部题可引。"
+        }
+      ]
+    },
+    {
+      "id": "chess.layout.sensitive",
+      "kind": "考点",
+      "stem": "这一章的「新局」和「悔棋」为什么按不了？",
+      "choices": [
+        "因为窗口还没有标题栏",
+        "因为按钮标了 sensitive: false，只占位置",
+        "因为侧栏宽 260 像素，按钮被挤出窗口",
+        "因为 Wood 挡住了点击"
+      ],
+      "answer": 1,
+      "explanation": "界面文件版在 blp 里写 sensitive: false。代码版调用 set_sensitive(false)。走子留到第 5 章。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "gtkmm-docs",
+          "locator": "第 2 章 · 按钮",
+          "note": "GtkWidget 的 sensitive 属性。按本章两个窗口的按钮自拟。"
+        }
+      ]
+    }
+  ],
+  "runs": [
+    { "id": "02-layout/ui", "label": "打开界面文件版", "primary": true },
+    { "id": "02-layout/code", "label": "打开代码版" }
+  ],
+  "files": [
+    "exercise/02-layout/ui/window.blp",
+    "exercise/02-layout/ui/style.css",
+    "exercise/02-layout/ui/main.cc",
+    "exercise/02-layout/wood.hh",
+    "exercise/02-layout/code/main.cc",
+    "exercise/02-layout/meson.build"
+  ]
+}

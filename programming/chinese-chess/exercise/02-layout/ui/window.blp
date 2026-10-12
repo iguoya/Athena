@@ -1,0 +1,87 @@
+using Gtk 4.0;
+
+// 控件树写在这里。棋盘那一块留空，C++ 把自绘控件放进 board_slot。
+ApplicationWindow main_window {
+  title: "中国象棋";
+  default-width: 1100;
+  default-height: 760;
+
+  titlebar: HeaderBar {
+    show-title-buttons: true;
+    title-widget: Label {
+      label: "中国象棋";
+      styles ["title"]
+    };
+  };
+
+  Box {
+    orientation: vertical;
+
+    Box {
+      orientation: horizontal;
+      spacing: 12;
+      margin-top: 12;
+      margin-bottom: 12;
+      margin-start: 12;
+      margin-end: 12;
+
+      Box board_slot {
+        hexpand: true;
+        vexpand: true;
+      }
+
+      Box {
+        orientation: vertical;
+        spacing: 8;
+        margin-top: 12;
+        margin-bottom: 12;
+        margin-start: 12;
+        margin-end: 12;
+        width-request: 260;
+        styles ["side"]
+
+        Label {
+          label: "黑方";
+          halign: start;
+          styles ["player"]
+        }
+
+        Label {
+          label: "棋谱出现在这里";
+          vexpand: true;
+          valign: start;
+        }
+
+        Label {
+          label: "红方";
+          halign: start;
+          styles ["player"]
+        }
+
+        Box {
+          orientation: horizontal;
+          spacing: 8;
+
+          Button {
+            label: "新局";
+            sensitive: false;
+          }
+
+          Button {
+            label: "悔棋";
+            sensitive: false;
+          }
+        }
+      }
+    }
+
+    Label {
+      label: "布局先占住位置，按钮先不做事。";
+      margin-top: 8;
+      margin-bottom: 8;
+      margin-start: 8;
+      margin-end: 8;
+      halign: start;
+    }
+  }
+}

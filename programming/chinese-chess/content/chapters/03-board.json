@@ -1,0 +1,166 @@
+{
+  "id": "chess.board",
+  "exercise": "03-board",
+  "title": "把棋盘画在交叉点上",
+  "lead": "上一章的棋盘是一块木色，位置已经占上。这一章只回答线怎么落在交叉点上：一张矢量图，按当前窗口的像素重画。两个窗口插入同一份 BoardView。不放棋子，也不接收点击。格子的比例先定成唯一的一份，子才有地方落。",
+  "cooperation": {
+    "intro": "依赖图看模块：Host 只放入 BoardView，画线在 BoardView 调用的两个函数里。步骤图是 draw 内部的顺序，不是另一套分工。",
+    "roster": [
+      { "name": "Host::open", "role": "和上一章相同，放进 board_slot 的换成 BoardView。", "with": "BoardView" },
+      { "name": "BoardView 构造函数", "role": "登记 draw，并要一个最小尺寸。不接收点击。", "with": "GTK" },
+      { "name": "BoardView::draw", "role": "GTK 要重画时调用。先 clip，再 layout_for，再 paint_board。", "with": "layout_for、paint_board" },
+      { "name": "layout_for", "role": "按控件的像素算出格子多大、左上角交叉点在哪。绘制以后也用这一份，避免两套比例。", "with": "不调用界面" },
+      { "name": "paint_board", "role": "画线、九宫、河界和上下的路名。不画棋子。", "with": "layout 给出的格子" }
+    ],
+    "figures": [
+      {
+        "kind": "dependency",
+        "title": "谁可以调用谁",
+        "caption": "layout_for 和 paint_board 不认识 Host，也不认识按钮。改线宽不用打开界面文件。",
+        "layers": [
+          [{ "name": "Host", "role": "把棋盘放进空位" }],
+          [{ "name": "BoardView", "role": "响应重画" }],
+          [
+            { "name": "layout_for", "role": "像素换成格子" },
+            { "name": "paint_board", "role": "按格子画线" }
+          ]
+        ],
+        "links": [
+          { "from": "Host", "to": "BoardView", "label": "放进 board_slot", "style": "call" },
+          { "from": "BoardView", "to": "layout_for", "label": "draw 里要格子", "style": "call" },
+          { "from": "BoardView", "to": "paint_board", "label": "draw 里画线", "style": "call" }
+        ]
+      },
+      {
+        "kind": "flow",
+        "title": "一次重画的步骤",
+        "caption": "窗口大小变了，GTK 会再次调用 draw。layout_for 每次按当时的像素重算。",
+        "steps": [
+          { "name": "BoardView::draw", "role": "先把绘制裁到自己的区域" },
+          { "name": "layout_for", "role": "算出 cell、origin_x、origin_y" },
+          { "name": "paint_board", "role": "按这个比例画棋盘和路名" }
+        ]
+      }
+    ]
+  },
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "矢量棋盘按窗口像素重画",
+      "body": "棋盘图宽 902.383、高 1002。格子的原点在 (51.383, 51)，一格 100。layout_for 按这个比例把图放进当前控件的像素，再用 librsvg 按这个像素大小重画。〔重点〕窗口拉大时重新栅格化，线不会糊。〔〕\n\n九宫的斜线、路和河界的空白都在这张图里。图上没有「楚河汉界」，也没有上下的坐标，这两样用 Pango 补在格子上。炮和兵的位置记号也是程序补的，开局会被棋子挡住。"
+    },
+    {
+      "role": "focus",
+      "heading": "九十个交叉点",
+      "body": "〔重点〕棋子落在交叉点上，不是落在格子中间。〔〕横 9 路、竖 10 行，一共 90 个点。坐标 x 从左到右 0–8，y 从上到下 0–9。y = 0 是黑方底线，y = 9 是红方底线。\n\n河界在第 4 行和第 5 行之间，第 1 到第 7 路的竖线在这里断开。〔考点〕红方报路从右往左，最左边是「九」，所以「九」的 x 是 0，「一」的 x 是 8。〔〕上方的 1–9 是黑方的路，从左往右。"
+    },
+    {
+      "role": "focus",
+      "heading": "两个窗口用同一块棋盘",
+      "body": "界面文件只留 board_slot。ui/main.cc 把 BoardView 放进去，并让它横竖都撑开。code/main.cc 把同一个 BoardView append 到自己装的盒子里。〔难点〕绘制只有一份。〔〕点下去怎么换算成交叉点，也用 layout_for 的那套格子，不另写一套。这一章还不放子、不接点击：比例先定下来，下一章才往点上摆。"
+    },
+    {
+      "role": "compare",
+      "heading": "对照：代码版自己把棋盘装进盒子",
+      "body": "代码版不读 blp。侧栏、260 像素和两个按不了的按钮都在 C++ 里装。棋盘控件和界面文件版是同一份 board_view.cc。样式仍是一段字符串，规则和 style.css 相同。"
+    }
+  ],
+  "questions": [
+    {
+      "id": "chess.board.vector",
+      "kind": "重点",
+      "stem": "窗口拉大之后，棋盘线为什么还是清楚的？",
+      "choices": [
+        "因为线是位图，放大时由系统平滑",
+        "因为按当前控件的像素，用矢量图重新画了一遍",
+        "因为 style.css 里写了图像分辨率",
+        "因为界面文件会在拉大时重排九宫"
+      ],
+      "answer": 1,
+      "explanation": "格子来自棋盘图上的 100 单位。layout_for 换成当前像素，librsvg 按这个大小重画。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "kadagaden-xiangqi",
+          "locator": "第 3 章 · 棋盘图",
+          "note": "图的尺寸和格子原点是量这张 CC-BY 棋盘得到的。重画方式是本章的实现，没有现成题。"
+        }
+      ]
+    },
+    {
+      "id": "chess.board.cross",
+      "kind": "重点",
+      "stem": "这张棋盘上，棋子应该落在哪里？",
+      "choices": [
+        "落在格子中心，一共 9×8 格",
+        "落在交叉点上，横 9 路、竖 10 行，共 90 个点",
+        "落在河界的空白里",
+        "落在侧栏的 260 像素里"
+      ],
+      "answer": 1,
+      "explanation": "中国象棋的子在交叉点上。河界把第 1 到第 7 路的竖线在第 4、5 行之间断开，点数不变。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 3 章 · 交叉点",
+          "note": "棋盘几何按本章坐标约定自拟，没有外部题号可引。"
+        }
+      ]
+    },
+    {
+      "id": "chess.board.shared",
+      "kind": "难点",
+      "stem": "界面文件版和代码版的棋盘线，为什么是同一套？",
+      "choices": [
+        "因为 blp 里画了线，C++ 再抄一遍",
+        "因为两个程序都编译同一份 BoardView，界面文件只留 board_slot",
+        "因为 style.css 的 .side 会画出九宫",
+        "因为后一章会自动更新前一章的线"
+      ],
+      "answer": 1,
+      "explanation": "线在 BoardView 里。blp 不画棋盘。章与章仍不共用库，但同一章的两个窗口共用这一份绘制。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 3 章 · 同一份棋盘",
+          "note": "两个可执行文件链接同一份 board_view.cc，是本章的结构，没有外部题。"
+        }
+      ]
+    },
+    {
+      "id": "chess.board.nine",
+      "kind": "考点",
+      "stem": "红方的「九」在棋盘的哪一侧？",
+      "choices": [
+        "最右边，x = 8",
+        "最左边，x = 0",
+        "正中间，x = 4",
+        "河界右侧，和黑方的 9 重合"
+      ],
+      "answer": 1,
+      "explanation": "红方在下，报路从右往左。最左是九，最右是一。黑方上方的数字从左往右是 1 到 9。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 3 章 · 红方路名",
+          "note": "红方从右往左报路是棋规。本章坐标把它落成 x = 0 为九，自拟题目。"
+        }
+      ]
+    }
+  ],
+  "runs": [
+    { "id": "03-board/ui", "label": "打开界面文件版", "primary": true },
+    { "id": "03-board/code", "label": "打开代码版" }
+  ],
+  "files": [
+    "exercise/03-board/ui/window.blp",
+    "exercise/03-board/ui/main.cc",
+    "exercise/03-board/board_view.cc",
+    "exercise/assets/xiangqi_art.hh",
+    "exercise/03-board/code/main.cc",
+    "exercise/03-board/meson.build"
+  ]
+}

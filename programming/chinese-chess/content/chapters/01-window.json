@@ -1,0 +1,147 @@
+{
+  "id": "chess.window",
+  "exercise": "01-window",
+  "title": "先开出一扇窗",
+  "lead": "这一章只回答一件事：窗口怎么出现。主路径是界面文件，window.blp 写控件，style.css 写颜色，C++ 只把程序跑起来；旁边一份代码搭出同一扇窗，用来对照。棋盘、侧栏和走子都还没有，是有意的：先看清两套写法各管什么，再往里面填。",
+  "cooperation": {
+    "intro": "表里是每个函数的职责，以及它把事情交给谁。打开窗口是一条直线，用步骤图就够，不必再画依赖。",
+    "roster": [
+      { "name": "main", "role": "把命令行参数交给 Application，自己不装窗口。", "with": "ChessApp" },
+      { "name": "ChessApp::on_activate", "role": "界面文件版。装上 style.css，用 Builder 按名字取出 main_window，再 present。", "with": "Builder、ApplicationWindow" },
+      { "name": "ChessWindow 构造函数", "role": "代码版。在这里用 make_managed 装 HeaderBar 和 Label，不经过 Builder。", "with": "HeaderBar、Label" },
+      { "name": "make_window_and_run", "role": "代码版把 ChessWindow 交给 Application。激活时由 GTK 调用构造函数。", "with": "ChessWindow、Application" }
+    ],
+    "figures": [
+      {
+        "kind": "flow",
+        "title": "界面文件版怎样打开窗口",
+        "caption": "blp 只描述控件树。进程、Application 和 present 仍在 ui/main.cc。",
+        "steps": [
+          { "name": "main", "role": "调用 ChessApp::run" },
+          { "name": "ChessApp::on_activate", "role": "从资源装样式，Builder 取出窗口" },
+          { "name": "present", "role": "窗口出现在屏幕上" }
+        ]
+      }
+    ]
+  },
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "界面文件只描述控件树",
+      "body": "window.blp 写出一扇 ApplicationWindow，标题栏是 HeaderBar，中间一个 Label 写「中国象棋」，窗口里再放一句说明。这份文件不创建进程，也不调用 Application::create。\n\n〔重点〕ui/main.cc 做三件事：用 id cn.athena.chinese_chess.ch01ui 创建 Application，从资源装上 style.css，再用 Builder 取出名为 main_window 的窗口并 present。〔〕Blueprint 编成 GtkBuilder 的界面，打进这个程序自己的资源。改控件树就改 blp，不必在 C++ 里一个个 append。"
+    },
+    {
+      "role": "focus",
+      "heading": "颜色单独放在样式文件",
+      "body": "style.css 规定窗口的纸色、标题栏的暗红和白字。控件上不写死颜色。标题栏成为窗口的 titlebar 之后，〔难点〕看得见的「中国象棋」是那个 Label，不是窗口的 title 属性。〔〕title 是任务栏上的名字，这里两处都写成「中国象棋」，但它们不是同一个控件。"
+    },
+    {
+      "role": "focus",
+      "heading": "身份和标题用两套字",
+      "body": "〔重点〕Application 的 id 要能当会话总线的名字，不能含连字符，所以用下划线 chinese_chess。〔〕窗口标题可以是中文。界面文件版的 id 是 ch01ui，代码版是 ch01，两份不一样，才能同时开着。"
+    },
+    {
+      "role": "compare",
+      "heading": "对照：用代码把同一扇窗搭出来",
+      "body": "code/main.cc 不读 blp。它用 make_managed 装上 HeaderBar 和 Label，样式是一段 C++ 字符串，内容和 style.css 是同一套规则。〔考点〕两份程序都标了 NON_UNIQUE，再启动一次就再开一扇，不把焦点抢回已经开着的那份。〔〕正式对弈软件通常改回单实例，这里故意不那么做，就是为了两套写法能并排看。"
+    }
+  ],
+  "questions": [
+    {
+      "id": "chess.window.builder",
+      "kind": "重点",
+      "stem": "window.blp 写好了 ApplicationWindow 之后，程序还要做什么才能看见这扇窗？",
+      "choices": [
+        "什么都不用做，编译 blp 时窗口会自己弹出来",
+        "C++ 仍要创建 Application，用 Builder 取出窗口并 present",
+        "把 blp 里的控件再在 C++ 里 append 一遍",
+        "只要写 style.css，窗口就会出现"
+      ],
+      "answer": 1,
+      "explanation": "界面文件描述控件树。进程、Application 和把窗口显示出来，仍在 ui/main.cc。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "blueprint-compiler",
+          "locator": "第 1 章 · 界面文件",
+          "note": "Blueprint 只生成 GtkBuilder 界面。没有现成中文题，按本章 ui/main.cc 的三步自拟。"
+        }
+      ]
+    },
+    {
+      "id": "chess.window.identity",
+      "kind": "重点",
+      "stem": "应用 id 写成 cn.athena.chinese-chess.ch01ui，窗口标题写成「中国象棋」。哪一句对？",
+      "choices": [
+        "两边必须是同一个字符串，否则窗口开不出来",
+        "id 不能含连字符，所以用下划线；标题可以是中文",
+        "id 必须用中文，否则输入法进不了窗口",
+        "标题栏的 Label 会覆盖 id，id 写什么都行"
+      ],
+      "answer": 1,
+      "explanation": "id 给会话总线用，连字符不合法。标题是给人看的，两套字各写各的。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "gtkmm-docs",
+          "locator": "第 1 章 · 应用身份",
+          "note": "会话总线名字的字符集是 Gio 的规定。仓库里没有现成中文题，按 Application::create 的用法自拟。"
+        }
+      ]
+    },
+    {
+      "id": "chess.window.header",
+      "kind": "难点",
+      "stem": "HeaderBar 放进 titlebar 之后，窗口上方看见的「中国象棋」是哪一个？",
+      "choices": [
+        "Application 的 id",
+        "窗口的 title 属性本身画在标题栏中间",
+        "HeaderBar 的 title-widget，一个 Label",
+        "style.css 里写的文字"
+      ],
+      "answer": 2,
+      "explanation": "title 是任务栏名字。标题栏中间那几个字是 Label。CSS 只负责颜色，不负责写标题。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "gtkmm-docs",
+          "locator": "第 1 章 · 标题栏",
+          "note": "HeaderBar 的 title-widget 与窗口 title 是两个属性。按本章 window.blp 自拟。"
+        }
+      ]
+    },
+    {
+      "id": "chess.window.both",
+      "kind": "考点",
+      "stem": "为什么界面文件版和代码版可以同时开着？",
+      "choices": [
+        "因为两份用了同一个应用 id",
+        "因为都标了 NON_UNIQUE，再启动一次就再开一扇",
+        "因为 blp 和 C++ 会自动合并成一个进程",
+        "因为这一章还没有棋盘，窗口不受单实例限制"
+      ],
+      "answer": 1,
+      "explanation": "两份 id 不同，并且都标 NON_UNIQUE。默认的单实例会把第二次启动交回已经开着的那份。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "gtkmm-docs",
+          "locator": "第 1 章 · NON_UNIQUE",
+          "note": "Gio::Application::Flags::NON_UNIQUE 的行为。按本章两个 main.cc 自拟。"
+        }
+      ]
+    }
+  ],
+  "runs": [
+    { "id": "01-window/ui", "label": "打开界面文件版", "primary": true },
+    { "id": "01-window/code", "label": "打开代码版" }
+  ],
+  "files": [
+    "exercise/01-window/ui/window.blp",
+    "exercise/01-window/ui/style.css",
+    "exercise/01-window/ui/main.cc",
+    "exercise/01-window/ui/app.gresource.xml",
+    "exercise/01-window/code/main.cc",
+    "exercise/01-window/meson.build"
+  ]
+}

@@ -1,0 +1,227 @@
+{
+  "id": "chess.move",
+  "exercise": "05-move",
+  "title": "让棋子走起来",
+  "lead": "上一章的子是画死的，第 2 章的按钮只占位置。这一章把点击、按钮和规则接上：走不走得动由 Position 决定，两个窗口用同一份 Session。能点选、吃子、记谱、悔棋、新局，也能看出将军、将死和困毙。没有电脑对手，不判长将、长捉。人对人能下了，引擎是另外一件事。",
+  "cooperation": {
+    "intro": "组织用两样：职责表写每个函数做什么、和谁协作；依赖图画谁允许调用谁。实线是调用，虚线是信号。点一下的先后仍用时序图。合法着怎么算是步骤，那是 Position 内部的算法，不是模块怎么分。",
+    "roster": [
+      { "name": "Host::open / ChessWindow 构造", "role": "准备好标签、棋谱和按钮，把 BoardView 放进棋盘区，然后 Session::bind。两套窗口到这里为止。", "with": "Session、BoardView" },
+      { "name": "Session::bind", "role": "接上点击、新局和悔棋，立刻 refresh 一次，让开局画出来。", "with": "BoardView 的信号、两个按钮" },
+      { "name": "BoardView::on_click", "role": "把像素收成最近的交叉点。离点太远就不报。只发出信号，不判断能不能走。", "with": "Session（只发 signal_picked）" },
+      { "name": "Session::on_picked", "role": "已选中且这一格是合法落点就 apply。否则选中轮到的一方的子，或取消选择。", "with": "Position::legal_moves_from、apply" },
+      { "name": "Position::legal_moves_from", "role": "给 Session 用。不是当前走棋方就返回空。先取形状上的伪着，再丢掉会让己方将被攻击的，并写成棋谱。", "with": "pseudo_from、own_king_safe_after" },
+      { "name": "Position::pseudo_from", "role": "按棋子形状列出落点，不看将军，也不写棋谱。车和炮走到空位要求中间没有子；吃子交给 attacks。", "with": "attacks、screens_between" },
+      { "name": "Position::attacks", "role": "按吃子几何判断能不能打到那一格。将军检测走这里。炮在这里要求中间恰好一个子。", "with": "不调用界面" },
+      { "name": "Position::own_king_safe_after", "role": "在副本上试走一步，用 in_check 看己方将帅是否被攻击。不改当前局面。", "with": "in_check" },
+      { "name": "Position::apply / undo", "role": "落子或退回，并交换走棋方。被吃的子记在这一步里，悔棋才放得回去。", "with": "不调用界面" },
+      { "name": "Session::refresh", "role": "向 Position 要提示点，交给 BoardView 去画，并改状态行、得子和棋谱。", "with": "Position、BoardView::show_position" },
+      { "name": "BoardView::show_position / draw", "role": "记住 Session 给的局面、提示和圈，然后重画。不在这里计算合法着。", "with": "Position::at（只读）" },
+      { "name": "Position::status_text", "role": "用 in_check 和 has_any_legal_move 区分轮到谁、将军、将死和困毙。", "with": "in_check、has_any_legal_move" }
+    ],
+    "figures": [
+      {
+        "kind": "dependency",
+        "title": "谁可以调用谁",
+        "caption": "Position 在最下，没有任何指向窗口的箭头。BoardView 通知 Session 只用信号，不调用 Session 的函数。",
+        "layers": [
+          [{ "name": "界面文件", "role": "按钮和空位，没有规则" }],
+          [{ "name": "Host", "role": "取出控件并接线" }],
+          [{ "name": "Session", "role": "点选、走子、刷新" }],
+          [
+            { "name": "BoardView", "role": "绘制，点击只交坐标" },
+            { "name": "Position", "role": "局面和规则" }
+          ]
+        ],
+        "links": [
+          { "from": "Host", "to": "界面文件", "label": "按 id 取按钮和空位", "style": "call" },
+          { "from": "Host", "to": "Session", "label": "bind", "style": "call" },
+          { "from": "Session", "to": "Position", "label": "问合法着、落子、要状态", "style": "call" },
+          { "from": "Session", "to": "BoardView", "label": "show_position", "style": "call" },
+          { "from": "BoardView", "to": "Session", "label": "signal_picked 只交坐标", "style": "signal" },
+          { "from": "BoardView", "to": "Position", "label": "at，只为了画子", "style": "call" }
+        ]
+      },
+      {
+        "kind": "sequence",
+        "title": "点一下并走子时的顺序",
+        "caption": "第一次点击通常只选中。第二次点在提示上，才走到 apply。画完仍由 Session 收尾。",
+        "actors": ["BoardView", "Session", "Position"],
+        "messages": [
+          { "from": 0, "to": 1, "label": "signal_picked(x, y)" },
+          { "from": 1, "to": 2, "label": "legal_moves_from" },
+          { "from": 1, "to": 2, "label": "apply" },
+          { "from": 1, "to": 2, "label": "status_text" },
+          { "from": 1, "to": 0, "label": "show_position" }
+        ]
+      },
+      {
+        "kind": "flow",
+        "title": "一步怎样算出来",
+        "caption": "这是 Position 里面的算法，不是模块划分。炮走到空位在 pseudo_from 里要求中间没有子。attacks 里的炮只表示吃子和照将：中间恰好一个子。两处不要并成一个判断。",
+        "steps": [
+          { "name": "legal_moves_from", "role": "不是轮到的一方，直接空列表" },
+          { "name": "pseudo_from", "role": "按车、炮、马、象、仕、将、兵的形状收落点" },
+          { "name": "own_king_safe_after", "role": "试走后己方将被攻击的丢掉" },
+          { "name": "写成棋谱", "role": "平写目标路；车炮帅兵的进退写步数" }
+        ]
+      }
+    ]
+  },
+  "sections": [
+    {
+      "role": "focus",
+      "heading": "界面文件出按钮，C++ 接规则",
+      "body": "window.blp 里有 board_slot、黑方和红方的标签、一份不能编辑的棋谱，还有「新局」和「悔棋」。这些控件有名字，ui/main.cc 按名字取出来，把 BoardView 放进空位，再交给 Session::bind。\n\n点交叉点、高亮可走的点、写棋谱、改状态行，都在 Session 里。界面文件不写「车能不能吃」。代码版用 C++ 装出同名的按钮和标签，bind 的是同一份 Session。〔重点〕改规则只改 Position。〔〕"
+    },
+    {
+      "role": "focus",
+      "heading": "车和炮，马腿和象眼",
+      "body": "〔重点〕车沿直线走或吃，中间不能有子。炮不吃子时，中间也不能有子；吃子时，中间恰好要有一个子当炮架。〔〕判断对方将帅是否被攻击时，炮同样要隔一个子。\n\n马走日。〔难点〕先走的那一格是马腿，腿上有子就不能跳。象走田，田字中心是象眼，眼上有子就不能过。〔〕〔难点〕仕和象都不能过河：仕只在己方九宫里斜着走一步，象只在己方半边。〔〕"
+    },
+    {
+      "role": "focus",
+      "heading": "将帅、兵卒，和照面",
+      "body": "帅和将只在己方九宫里直着走一步。双方在同一条竖线上、中间一个子都没有时，互相攻击。会让自己的将帅被照面的那一步，走不成。开局中路有兵和卒，帅往前一步不会因此照面。\n\n红兵未过河只能向前，y 减小一格。走到对方半边（y ≤ 4）之后可以横走一格，不能后退。黑卒向前是 y 增大，走到 y ≥ 5 之后可以横走。不能走出棋盘，也不能吃己方的子。走完若自己的将帅被将军，这一步非法。"
+    },
+    {
+      "role": "focus",
+      "heading": "记谱里的「进一」是步数",
+      "body": "平，写目标那一路，例如炮二平五。直着前进写「进」，后退写「退」。车、炮、帅、兵直着走时，后面的数字是走了几步，不是路名。〔考点〕帅往前一格记成「帅五进一」，这里的「一」是一步。〔〕\n\n马、象、仕走的是斜的，进退后面写落到哪一路，不写步数。同一路上有两个相同的子时，用「前」「后」区分。"
+    },
+    {
+      "role": "focus",
+      "heading": "将军、将死、困毙",
+      "body": "轮到的一方被将军，状态写成「将军」。被将军而且没有任何合法着法，是将死，对方胜。〔考点〕没有被将军、可是也没有任何合法着法，是困毙，同样算走方负。〔〕状态分别是「被将死」和「困毙」。\n\n悔棋退回上一步，新局回到开局。不判断长将和长捉。没有引擎，每一步都是人走的。"
+    },
+    {
+      "role": "compare",
+      "heading": "对照：代码版把同一套按钮装上再接过去",
+      "body": "code/main.cc 用盒子装出侧栏、棋谱和两个按钮，样式是一段字符串。「新局」挂 play 类，和 style.css 里的 button.play 是同一条规则。装完之后调用 Session::bind。走子、记谱和胜负不再各写一份。"
+    }
+  ],
+  "questions": [
+    {
+      "id": "chess.move.owner",
+      "kind": "重点",
+      "stem": "「新局」按下去会重新开局。这件事情写在哪里？",
+      "choices": [
+        "写在 window.blp 的按钮属性里",
+        "写在 style.css 的 button.play 里",
+        "按钮在界面文件里，点击后做什么在 C++ 的 Session，规则在 Position",
+        "界面文件版写在 blp，代码版写在 Position，两套规则各算各的"
+      ],
+      "answer": 2,
+      "explanation": "blp 只提供有名字的按钮。两个窗口都 bind 到同一份 Session，Session 改的是同一份 Position。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "blueprint-compiler",
+          "locator": "第 5 章 · 按钮与规则",
+          "note": "界面文件不包含信号处理器。按本章 ui/main.cc 与 Session 的分工自拟。"
+        }
+      ]
+    },
+    {
+      "id": "chess.move.rook",
+      "kind": "重点",
+      "stem": "车和炮沿直线吃子，中间的子要怎么数？",
+      "choices": [
+        "都要中间恰好一个子",
+        "车中间不能有子；炮吃子时中间恰好一个子",
+        "都要中间一个子都没有",
+        "炮不能吃子，只能走空位"
+      ],
+      "answer": 1,
+      "explanation": "车的路径必须是空的。炮平移到空位时路径也是空的；吃子必须隔一个炮架。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 5 章 · 车与炮",
+          "note": "按本章 Position 的走法自拟。没有现成题号。"
+        }
+      ]
+    },
+    {
+      "id": "chess.move.block",
+      "kind": "难点",
+      "stem": "下面哪一句符合这一章的规则？",
+      "choices": [
+        "马腿有子仍可跳，象眼有子就不能过",
+        "马腿或象眼有子，这一跳就不行；仕和象都不能过河",
+        "象可以过河，只要象眼是空的",
+        "仕可以出九宫，只要是斜着走"
+      ],
+      "answer": 1,
+      "explanation": "马先跨的一格、象田字中心有子，都不能走。仕只在九宫，象只在己方半边。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 5 章 · 马象仕",
+          "note": "蹩马腿、塞象眼和不过河按本章 Position 自拟。"
+        }
+      ]
+    },
+    {
+      "id": "chess.move.step",
+      "kind": "考点",
+      "stem": "棋谱里的「帅五进一」，「一」指什么？",
+      "choices": [
+        "走到红方的一路，也就是 x = 8",
+        "向前走了一步，不是路名",
+        "吃掉了对方的「一」字子",
+        "帅移到了黑方的 1 路"
+      ],
+      "answer": 1,
+      "explanation": "车、炮、帅、兵直着进退，数字是步数。马、象、仕的进退才写落到哪一路。平，写目标路。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 5 章 · 记谱",
+          "note": "记谱按本章 legal_moves_from 的写法自拟。"
+        }
+      ]
+    },
+    {
+      "id": "chess.move.end",
+      "kind": "考点",
+      "stem": "轮到红方，红方没有合法着法，可是帅并没有被将军。这一章怎么判？",
+      "choices": [
+        "和棋，因为没有被将军",
+        "黑胜 · 红方困毙",
+        "黑胜 · 红方被将死",
+        "先不判，要等长将出现"
+      ],
+      "answer": 1,
+      "explanation": "无着法且被将军才是将死。无着法但没被将军是困毙，走方负。长将、长捉不判。",
+      "source_refs": [
+        {
+          "relation": "authored",
+          "source_id": "self-authored",
+          "locator": "第 5 章 · 困毙",
+          "note": "将死与困毙的状态文案按本章 status_text 自拟。"
+        }
+      ]
+    }
+  ],
+  "runs": [
+    { "id": "05-move/ui", "label": "打开界面文件版", "primary": true },
+    { "id": "05-move/code", "label": "打开代码版" }
+  ],
+  "files": [
+    "exercise/05-move/ui/window.blp",
+    "exercise/05-move/ui/style.css",
+    "exercise/05-move/ui/main.cc",
+    "exercise/05-move/session.hh",
+    "exercise/05-move/session.cc",
+    "exercise/05-move/position.hh",
+    "exercise/05-move/position.cc",
+    "exercise/05-move/board_view.hh",
+    "exercise/05-move/board_view.cc",
+    "exercise/05-move/code/main.cc",
+    "exercise/05-move/meson.build"
+  ]
+}
