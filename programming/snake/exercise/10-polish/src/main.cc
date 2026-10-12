@@ -136,17 +136,39 @@ int main() {
 
 #if defined(_WIN32)
     // winmm 兜底手柄：开机选一个有响应的游戏杆 id（不做热插拔——XInput 路径仍支持；
-    // HID 手柄请插好再启动）。POV 十字与轴合成同一个方向变化沿；键位约定：
-    // 1 号键=开始/重开，2 号键=暂停/继续（转向全靠 POV 与轴，各手柄 POV 最可靠）。
+    // HID 手柄请插好再启动）。方向优先走轴（多数 HID 手柄的十字键就是轴），POV 只在
+    // caps 声明有 POV 时才参与——有些手柄 POV 字段恒 0，按「≠居中即有方向」会把轴挡死。
+    // 键位约定：1 号键=开始/重开，2 号键=暂停/继续。
     UINT padId = 0;
     bool padFound = false;
     int padDir = -1;
     UINT padButtons = 0;
+    float padCx = 32768.0f, padCy = 32768.0f;   // 轴中心：从 caps 范围算，别写死
+    float padXs = 32768.0f, padYs = 32768.0f;   // 半量程
+    bool padHasPOV = false;
     JOYINFOEX ji{};
     ji.dwSize = sizeof(ji);
     ji.dwFlags = JOY_RETURNALL | JOY_RETURNPOV;
     for (UINT id = 0; id < joyGetNumDevs(); ++id) {
-        if (joyGetPosEx(id, &ji) == JOYERR_NOERROR) { padId = id; padFound = true; break; }
+        if (joyGetPosEx(id, &ji) != JOYERR_NOERROR) continue;
+        padId = id;
+        padFound = true;
+        JOYCAPSW caps{};
+        if (joyGetDevCapsW(id, &caps, sizeof caps) == JOYERR_NOERROR) {
+            padCx = (caps.wXmin + caps.wXmax) / 2.0f;
+            padCy = (caps.wYmin + caps.wYmax) / 2.0f;
+            padXs = (caps.wXmax - caps.wXmin) / 2.0f;
+            padYs = (caps.wYmax - caps.wYmin) / 2.0f;
+            padHasPOV = (caps.wCaps & (JOYCAPS_HASPOV | JOYCAPS_POVCTS)) != 0;
+        }
+        break;
+    }
+    // 开机先记住当前方向（不当作新输入发出去），避免 POV 恒 0 之类的非标值误发一步。
+    if (padFound) {
+        const float ax = (ji.dwXpos - padCx) / padXs;
+        const float ay = (ji.dwYpos - padCy) / padYs;
+        if (fabsf(ax) > 0.35f || fabsf(ay) > 0.35f)
+            padDir = fabsf(ax) > fabsf(ay) ? (ax > 0 ? 0 : 1) : (ay > 0 ? 3 : 2);
     }
 #else
     const bool padStart = false;
@@ -161,14 +183,13 @@ int main() {
         int padDirHit = -1;
         if (padFound && joyGetPosEx(padId, &ji) == JOYERR_NOERROR) {
             int dir = -1;
-            if (ji.dwPOV != JOY_POVCENTERED) {
+            const float ax = (ji.dwXpos - padCx) / padXs;
+            const float ay = (ji.dwYpos - padCy) / padYs;
+            if (fabsf(ax) > 0.35f || fabsf(ay) > 0.35f)
+                dir = fabsf(ax) > fabsf(ay) ? (ax > 0 ? 0 : 1) : (ay > 0 ? 3 : 2);
+            else if (padHasPOV && ji.dwPOV != JOY_POVCENTERED) {
                 const int deg = static_cast<int>(ji.dwPOV / 100);  // 0 上 / 90 右 / 180 下 / 270 左
                 dir = (deg < 45 || deg > 315) ? 2 : (deg < 135 ? 0 : (deg < 225 ? 3 : 1));
-            } else {
-                const float ax = (ji.dwXpos - 32768.0f) / 32768.0f;
-                const float ay = (ji.dwYpos - 32768.0f) / 32768.0f;
-                if (fabsf(ax) > 0.35f || fabsf(ay) > 0.35f)
-                    dir = fabsf(ax) > fabsf(ay) ? (ax > 0 ? 0 : 1) : (ay > 0 ? 3 : 2);
             }
             if (dir != padDir) { padDir = dir; padDirHit = dir; }
             const UINT hit = ji.dwButtons & ~padButtons;  // 本帧新按下的位
