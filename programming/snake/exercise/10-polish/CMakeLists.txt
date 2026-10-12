@@ -28,3 +28,7 @@ target_link_libraries(snake-10 PRIVATE raylib)
 enable_testing()
 add_executable(snake-10-logic-test tests/logic_test.cc)
 add_test(NAME snake-logic COMMAND $<TARGET_FILE:snake-10-logic-test>)
+
+# 按需求编号铺开的规则验证（docs/design/overview.md 的追溯矩阵）。同样不链接 raylib。
+add_executable(snake-10-rules-test tests/rules_test.cc)
+add_test(NAME snake-rules COMMAND $<TARGET_FILE:snake-10-rules-test>)
