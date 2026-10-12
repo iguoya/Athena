@@ -3,7 +3,7 @@
 - 日期：2026-10-12
 - 状态：已接受（使用者要求：「优先端侧 AI 路线」；形态、硬件、运行时、边界、第一批范围等
   15 个问题经逐轮追问确认）
-- 关系：修订 [ADR 0120](0120-ai-group-and-llm-curriculum.md)（路线表加第 6 门、端口 1510、边界补
+- 关系：修订 [ADR 0120](0120-ai-group-and-llm-curriculum.md)（路线表加第 6 门、端口 1515、边界补
   一条）；目录依 [ADR 0150](0150-dissolve-course-by-group.md)（`artificial-intelligence/`）；
   学习方法原型按 [ADR 0113](0113-method-archetypes-per-course.md)；出处档位按
   [ADR 0089](0089-source-tiers-by-app-nature.md)；内容取舍按 [ADR 0129](0129-prefer-quality-over-quantity.md)
@@ -21,7 +21,7 @@
 ## 决策
 
 1. **新增 `edge-ai`：端侧 AI 推理与部署，AI 路线第 6 门。** 目录
-   `artificial-intelligence/edge-ai/`，进程 `athena-edge-ai`，知识点前缀 `edge.`，端口 **1510**，
+   `artificial-intelligence/edge-ai/`，进程 `athena-edge-ai`，知识点前缀 `edge.`，端口 **1515**，
    group「人工智能」。壳 Tauri 2 + React，出处档位 open，实验在本机 Python 子进程真跑、应用只执行
    白名单内的预设命令（ADR 0091 决策 3 同规）。
 2. **先修靠文字指引，可单独使用**（ADR 0120）：先修是 deep-learning。开头自带一小节「把
@@ -56,7 +56,7 @@
 
 ## 后果
 
-- ADR 0120 的路线表变为六门；端口预留 1505–1510；知识点前缀增加 `edge.`。原 ADR 0120 正文不改，
+- ADR 0120 的路线表变为六门；端口预留 1505–1509 与 1515；知识点前缀增加 `edge.`。原 ADR 0120 正文不改，
   索引表状态栏补「由 0152 修订」。
 - 使用者需要自行购买 RK3588 板子（建议 Orange Pi 5 Plus 16GB，现价到官方店核实）并配电源与散热；
   第 6 章要等板子到手、使用者跑通一次实测后才能写，因为作者无法接触这块板子。
@@ -64,3 +64,7 @@
   写对应章节之前必须验证的内容；价格是 2023 年发布价，仅作参考。
 - 仓库级 ADR 编号：0151 已被 `programming/chinese-chess` 占用，本条为 0152。
 - 应用的立项 ADR（应用级 `docs/decisions/0001-…`）、四件套和根文档登记在建应用时一并落，另起提交。
+- **勘误（2026-10-12）**：本条初稿把端口写成 1510，但 1510 已被 `launcher/webui` 占用（它的
+  `tauri.conf.json` 与 `vite.config.ts` 都用 1510），建应用前核对时发现。改为 **1515**（现有最大
+  端口加一）。初稿只扫了各应用的 `app.json`，漏了启动器；以后查端口要同时扫 `app.json`、
+  `vite.config.ts`、`tauri.conf.json`。
