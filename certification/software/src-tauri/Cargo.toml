@@ -1,0 +1,22 @@
+[package]
+name = "athena-software"
+version = "0.1.0"
+description = "Athena 软考中级·软件设计师备考学习应用"
+authors = ["Athena"]
+edition = "2021"
+
+[lib]
+name = "athena_software_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { workspace = true }
+
+[dependencies]
+tauri = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+# bundled：自带 SQLite 源码一起编，不依赖目标机器上有没有 libsqlite3。
+# Windows 上没有系统 sqlite3，链系统库这条路走不通（ADR 0047）。
+rusqlite = { version = "0.32", features = ["bundled"] }
+dirs-next = "2"

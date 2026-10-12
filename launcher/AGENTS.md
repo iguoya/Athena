@@ -23,7 +23,7 @@
   专属的，更要守住这条。
 - **启动器里没有按应用写的分支。** 新增应用只放一份带 `dev` 声明的 `app.json`，启动器
   不改代码（ADR 0046）。发现逻辑扫 `<root>/*/app.json`。默认 `discover_all` 把
-  `subjects/` 与 `practice/` 合成一份清单，桌面应用都进轨道图和托盘；`hidden` 的
+  `subjects/`、`practice/`、`certification/`、`mentor/` 与 `tools/` 合成一份清单，桌面应用都进轨道图和托盘；`hidden` 的
   服务不画。`--root` 把范围收成其中一层。
 - **状态从系统实况读，不自己记账。** 窗口进程在 = 运行中；有属于它的构建进程 = 启动中；
   都没有 = 未运行。dev server 端口通了不算就绪。
@@ -62,8 +62,8 @@ open/stop、托盘、思维导图、3D 轨道环到位后，视觉与视图层�
 
 ```sh
 cd launcher/webui
-npm run tauri:dev        # 开发：vite 热重载 + debug 后端
-npm run tauri:build      # 打包：自动启用 custom-protocol，页面资产内嵌
+pnpm run tauri:dev       # 开发：vite 热重载 + debug 后端。依赖装在仓库根（ADR 0140）
+pnpm run tauri:build     # 打包：自动启用 custom-protocol，页面资产内嵌
 ```
 
 直接 `cargo build --release` 出的 exe **打不开页面**（连 dev 服务器被拒）——必须

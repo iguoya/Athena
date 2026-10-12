@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """仓库统一验证入口（ADR 0007、0045、0047）。
 
-检查逻辑归各应用自己（subjects/<id>/、practice/<id>/、mentor/<id>/ 下的 scripts/check.py），
+检查逻辑归各应用自己（subjects/、practice/、certification/、mentor/、tools/ 下的 scripts/check.py），
 这里只负责依次调用，
 外加四项跨应用检查：内容必须有出处（ADR 0043），项目 skill 在 .agents/ 与
 .claude/ 两处一致（ADR 0061），GitHub 工作流过 actionlint 与变量粘连检查，
@@ -41,7 +41,7 @@ def _force_utf8_output() -> None:
             reconfigure(encoding="utf-8", errors="replace")
 
 # 应用住在这两处，彼此平级（ADR 0060）。按意图分住处，但都走同一个验证入口。
-APP_ROOTS = ("subjects", "guide", "practice", "mentor")
+APP_ROOTS = ("subjects", "guide", "practice", "certification", "mentor", "tools")
 
 
 def find_app(app: str) -> Path:
@@ -56,11 +56,23 @@ def find_app(app: str) -> Path:
 
 
 def run_app(app: str, extra: list[str]) -> None:
-    entry = find_app(app) / "scripts" / "check.py"
+    app_dir = find_app(app)
+    entry = app_dir / "scripts" / "check.py"
     if not entry.is_file():
         raise SystemExit(f"应用 {app} 没有 {entry.relative_to(REPO_ROOT)}")
+    # 工作区成员的依赖装在仓库根（ADR 0140）。应用自己的检查只在 node_modules
+    # 还不存在时才会再装；这里先装好，避免它因找不到本目录的锁文件而裸装。
+    rel = app_dir.relative_to(REPO_ROOT).as_posix()
+    in_workspace = rel.startswith(("subjects/", "guide/", "mentor/", "tools/", "certification/")) or rel == "practice/earth"
+    if in_workspace and (app_dir / "package.json").is_file() and not (app_dir / "node_modules").is_dir():
+        if not (REPO_ROOT / "pnpm-lock.yaml").is_file():
+            raise SystemExit("仓库根没有 pnpm-lock.yaml，先在仓库根执行 pnpm install（ADR 0140）")
+        print("== 安装工作区前端依赖 ==", flush=True)
+        completed = subprocess.run(["pnpm", "install", "--frozen-lockfile"], cwd=REPO_ROOT)
+        if completed.returncode != 0:
+            raise SystemExit(completed.returncode)
     print(f"== 检查应用：{app} ==", flush=True)
-    completed = subprocess.run([sys.executable, str(entry), *extra], cwd=entry.parent.parent)
+    completed = subprocess.run([sys.executable, str(entry), *extra], cwd=app_dir)
     if completed.returncode != 0:
         raise SystemExit(completed.returncode)
 
@@ -185,9 +197,9 @@ def run_workflow_check() -> None:
         raise SystemExit("工作流检查没通过，见上方。")
 
 
-# 同栈（Tauri 2 + Node 前端）应用的核心依赖版本表（ADR 0135 A 档）。取仓库里已在用的最新
-# 组合，不跳到 npm 上尚无应用验证过的大版本（如 TypeScript 7）。升级时改这张表并同批升级
-# 所有应用，而不是让个别应用先走。表里没列的依赖（motion、codemirror 等）不管。
+# 同栈核心依赖的版本范围。真正的声明在 pnpm-workspace.yaml 的 catalog（ADR 0140），
+# 这里留一份是为了检查两边没有漂。升级时两处一起改。不跳到尚无应用验证过的大版本
+# （如 TypeScript 7）。表里没列的依赖不管。
 STACK_VERSIONS = {
     "react": "^19.3.0", "react-dom": "^19.3.0",
     "@types/react": "^19.3.0", "@types/react-dom": "^19.3.0",
@@ -198,51 +210,120 @@ STACK_VERSIONS = {
     "@tauri-apps/plugin-opener": "^2.7.0",
     "@fontsource/noto-sans-sc": "^5.3.0",
     "lucide-react": "^1.52.0", "motion": "^14.0.0",
+    "three": "^0.182.0", "@types/three": "^0.182.0",
+    "@react-three/fiber": "^9.6.0", "@react-three/drei": "^10.7.9",
 }
+PNPM_PIN = "pnpm@10.15.1"
 # 例外必须写理由：(应用, 依赖) -> 为什么不跟。"*" 表示该应用整体豁免。
-# ascent 的整体豁免已按 ADR 0136 决策 5 清除：pnpm 统一完成，motion/lucide-react
-# 已并入上表并同批升级（2026-10-11）。
 STACK_VERSION_EXEMPT: dict[tuple[str, str], str] = {}
 
 
-def run_stack_version_check() -> None:
-    """同栈应用的核心依赖必须是同一个版本范围（ADR 0135）。
+def load_pnpm_catalog() -> dict[str, str]:
+    catalog: dict[str, str] = {}
+    in_catalog = False
+    for line in (REPO_ROOT / "pnpm-workspace.yaml").read_text(encoding="utf-8").splitlines():
+        if line.startswith("catalog:"):
+            in_catalog = True
+            continue
+        if not in_catalog:
+            continue
+        if line and not line.startswith((" ", "#")):
+            break
+        match = re.match(r"\s{2}(\S+):\s+(\S+)\s*$", line)
+        if match:
+            catalog[match.group(1).strip('"')] = match.group(2)
+    return catalog
 
-    版本分叉的代价是同一台机器上要装、要构建多套互不兼容的前端工具链，且 React 18/19、
-    Vite 6/8 这类大版本差会让一个应用里验证过的写法在另一个应用里跑不通。
-    """
+
+def workspace_dependencies_block(path: Path) -> str:
+    text = path.read_text(encoding="utf-8")
+    match = re.search(r"\[workspace\.dependencies\]\n(.*?)(?:\n\[|\Z)", text, re.S)
+    return match.group(1).strip() if match else ""
+
+
+def run_stack_version_check() -> None:
+    """同栈应用的核心依赖必须走同一份 catalog（ADR 0135、0140）。"""
     import json
 
     print("== 跨应用检查：同栈核心依赖版本 ==", flush=True)
     problems: list[str] = []
+    if not (REPO_ROOT / "pnpm-workspace.yaml").is_file():
+        problems.append("  仓库根缺 pnpm-workspace.yaml（ADR 0140）")
+    else:
+        catalog = load_pnpm_catalog()
+        if catalog != STACK_VERSIONS:
+            problems.append("  pnpm-workspace.yaml 的 catalog 与 STACK_VERSIONS 不一致（ADR 0140）")
+    if not (REPO_ROOT / "pnpm-lock.yaml").is_file():
+        problems.append("  仓库根缺 pnpm-lock.yaml，在仓库根执行 pnpm install 后提交（ADR 0140）")
+
+    frontends: list[tuple[str, Path]] = []
     for root in APP_ROOTS:
         for app in sorted((REPO_ROOT / root).iterdir()):
-            pkg = app / "package.json"
-            if not (pkg.is_file() and (app / "src-tauri" / "Cargo.toml").is_file()):
+            if (app / "package.json").is_file() and (app / "src-tauri" / "Cargo.toml").is_file():
+                frontends.append((f"{root}/{app.name}", app))
+    launcher_webui = REPO_ROOT / "launcher" / "webui"
+    if (launcher_webui / "package.json").is_file():
+        frontends.append(("launcher/webui", launcher_webui))
+
+    for label, app in frontends:
+        pkg = app / "package.json"
+        data = json.loads(pkg.read_text(encoding="utf-8"))
+        if (app / "package-lock.json").exists():
+            problems.append(f"  {label} 还有 package-lock.json（ADR 0136）")
+        if (app / "pnpm-lock.yaml").exists():
+            problems.append(f"  {label} 还有自己的 pnpm-lock.yaml，锁文件只留仓库根一份（ADR 0140）")
+        if data.get("packageManager") != PNPM_PIN:
+            problems.append(f"  {label} 的 packageManager 是 {data.get('packageManager')!r}，应为 {PNPM_PIN}")
+        declared = {**data.get("dependencies", {}), **data.get("devDependencies", {})}
+        for name in STACK_VERSIONS:
+            have = declared.get(name)
+            if have is None or (app.name, name) in STACK_VERSION_EXEMPT or (app.name, "*") in STACK_VERSION_EXEMPT:
                 continue
-            data = json.loads(pkg.read_text(encoding="utf-8"))
-            # 包管理器统一为 pnpm（ADR 0136）：不留 npm 的锁，并钉 pnpm 版本。
-            if (app / "package-lock.json").exists():
-                problems.append(f"  {root}/{app.name} 还有 package-lock.json，应只留 pnpm-lock.yaml（ADR 0136）")
-            if not str(data.get("packageManager", "")).startswith("pnpm@"):
-                problems.append(f"  {root}/{app.name} 的 package.json 缺 packageManager: pnpm@x.y.z（ADR 0136）")
-            declared = {**data.get("dependencies", {}), **data.get("devDependencies", {})}
-            for name, want in STACK_VERSIONS.items():
-                have = declared.get(name)
-                if have is None or have == want or (app.name, name) in STACK_VERSION_EXEMPT or (app.name, "*") in STACK_VERSION_EXEMPT:
-                    continue
-                problems.append(f"  {root}/{app.name} 的 {name} 是 {have}，应为 {want}（ADR 0135）")
+            if have != "catalog:":
+                problems.append(f"  {label} 的 {name} 是 {have}，应为 catalog:（ADR 0140）")
     if problems:
         print("\n".join(problems), flush=True)
-        raise SystemExit(
-            f"同栈依赖版本不一致（{len(problems)} 处）。对齐到 scripts/check.py 的 STACK_VERSIONS，"
-            "确有理由不跟的在 STACK_VERSION_EXEMPT 写明理由。"
-        )
+        raise SystemExit(f"同栈依赖版本不一致（{len(problems)} 处）。")
+
+
+def run_shared_build_check() -> None:
+    """同栈 Rust 共用一个编译目录，两份工作区的依赖表必须相同（ADR 0140）。"""
+    print("== 跨应用检查：共用编译目录与 Cargo 工作区 ==", flush=True)
+    problems: list[str] = []
+    config = REPO_ROOT / ".cargo" / "config.toml"
+    if not config.is_file() or ".cache/cargo-target" not in config.read_text(encoding="utf-8"):
+        problems.append("  .cargo/config.toml 没有把 target-dir 指到 .cache/cargo-target")
+    root_block = workspace_dependencies_block(REPO_ROOT / "Cargo.toml")
+    launcher_block = workspace_dependencies_block(REPO_ROOT / "launcher" / "Cargo.toml")
+    if not root_block or root_block != launcher_block:
+        problems.append("  仓库根与 launcher/Cargo.toml 的 workspace.dependencies 不一致")
+    if not (REPO_ROOT / "Cargo.lock").is_file():
+        problems.append("  仓库根缺 Cargo.lock，在仓库根执行 cargo generate-lockfile 后提交")
+    declared = set(re.findall(r'"((?:subjects|guide|practice|mentor|tools|certification)/[^"]+/src-tauri)"', (REPO_ROOT / "Cargo.toml").read_text(encoding="utf-8")))
+    found = {
+        path.parent.relative_to(REPO_ROOT).as_posix()
+        for root in ("subjects", "guide", "mentor", "tools", "certification")
+        for path in (REPO_ROOT / root).glob("*/src-tauri/Cargo.toml")
+    }
+    earth = REPO_ROOT / "practice" / "earth" / "src-tauri" / "Cargo.toml"
+    if earth.is_file():
+        found.add("practice/earth/src-tauri")
+    if declared != found:
+        missing = ", ".join(sorted(found - declared)) or "无"
+        extra = ", ".join(sorted(declared - found)) or "无"
+        problems.append(f"  根 Cargo.toml 成员与实际 src-tauri 不一致。缺：{missing}。多：{extra}")
+    for rel in sorted(found):
+        lock = REPO_ROOT / rel / "Cargo.lock"
+        if lock.is_file():
+            problems.append(f"  {rel}/Cargo.lock 应删除，锁文件只留仓库根（ADR 0140）")
+    if problems:
+        print("\n".join(problems), flush=True)
+        raise SystemExit(f"共用构建检查没通过（{len(problems)} 处）。")
 
 
 # 课程/讲解/演示类应用统一 Tauri 2 + React（ADR 0138 决策 2、9）。
 # 豁免表逐项列出尚未迁移或本轮暂缓的应用，**每迁完一个就删一行**，表空即全部统一。
-# 这里只管 subjects/ 与 mentor/（学习应用与图谱/参考类）；practice/ 自由发挥，不检查。
+# 这里只管 subjects/、mentor/ 与 tools/（学习应用、图谱/参考类、配套工具）；practice/ 自由发挥，不检查。
 REACT_FRONTEND_EXEMPT: dict[str, str] = {
     "algorithms": "原生 TS 同源壳，待 ADR 0138 迁移（波 4）",
     "cs408": "原生 TS 同源壳，待 ADR 0138 迁移（波 4）",
@@ -254,10 +335,8 @@ REACT_FRONTEND_EXEMPT: dict[str, str] = {
     "machine": "Qt6/QML 壳，待 ADR 0138 决策 7 与 machine ADR 0008 迁移（波 5）",
     "driver": "Flutter 存量投入，ADR 0138 决策 8 本轮暂缓",
 }
-# 正在由别的会话迁移、落库前后两种状态都放行的应用（落库后删这一项）。
-REACT_FRONTEND_EITHER: dict[str, str] = {
-    "c-plus-plus": "Tauri + React 壳正由另一会话落地（c-plus-plus ADR 0060 草稿），GTK 主程序与新壳并存过渡",
-}
+# 正在迁移、落库前后两种状态都放行的应用。空表表示没有这种过渡。
+REACT_FRONTEND_EITHER: dict[str, str] = {}
 
 
 def run_react_frontend_check() -> None:
@@ -266,11 +345,9 @@ def run_react_frontend_check() -> None:
 
     print("== 跨应用检查：课程类前端统一 Tauri 2 + React ==", flush=True)
     problems: list[str] = []
-    seen: set[str] = set()
-    for app in sorted(p for root in ("subjects", "guide", "mentor") for p in (REPO_ROOT / root).iterdir()):
+    for app in sorted(p for root in ("subjects", "guide", "mentor", "tools", "certification") for p in (REPO_ROOT / root).iterdir()):
         if not (app / "app.json").is_file():
             continue
-        seen.add(app.name)
         where = f"{app.parent.name}/{app.name}"
         pkg = app / "package.json"
         tauri = pkg.is_file() and (app / "src-tauri" / "Cargo.toml").is_file()
@@ -290,8 +367,16 @@ def run_react_frontend_check() -> None:
             problems.append(f"  {where} 的前端不是 React，又不在 REACT_FRONTEND_EXEMPT（ADR 0138）")
         if has_react and exempt:
             problems.append(f"  {where} 已是 React，应从 REACT_FRONTEND_EXEMPT 删掉这一行")
+    # 豁免名单按应用 id 对账，不限 subjects/：驾考迁到 certification/ 后仍是
+    # Flutter 暂缓项（ADR 0138 决策 8、0142），不能因为离开 subjects/ 就被当成已删除。
+    known = {
+        p.name
+        for root in APP_ROOTS
+        for p in (REPO_ROOT / root).iterdir()
+        if p.is_dir() and (p / "app.json").is_file()
+    }
     for name in (*REACT_FRONTEND_EXEMPT, *REACT_FRONTEND_EITHER):
-        if name not in seen:
+        if name not in known:
             problems.append(f"  REACT_FRONTEND_EXEMPT 里的 {name} 已不存在，删掉这一行")
     if problems:
         print("\n".join(problems), flush=True)
@@ -319,7 +404,7 @@ _EMPTY_PLOT_MINIMUM = ("README.md",)
 _APP_MINIMUM = ("AGENTS.md", "CLAUDE.md", "README.md", "scripts/check.py")
 
 _STRUCTURE_TREE_RE = re.compile(r"^  (\S+)/")
-_GROUP_RE = re.compile(r"^(subjects|guide|practice|mentor)/")
+_GROUP_RE = re.compile(r"^(subjects|guide|practice|certification|mentor|tools)/")
 
 # 仓库根只认这些条目：文档、代理与编辑器配置、六大功能区。别的出现在根下
 # 要么登记进来，要么进 .gitignore，要么删——launcher_list_out.txt、
@@ -328,7 +413,9 @@ _ROOT_ALLOW = {
     "AGENTS.md", "CLAUDE.md", "README.md", "CHANGELOG.md", "LICENSE",
     ".git", ".gitignore", ".gitattributes", ".zcodeignore",
     ".agents", ".claude", ".cursor", ".gemini", ".vscode", ".github",
-    "subjects", "practice", "mentor", "launcher", "docs", "scripts", "archive",
+    ".cargo", "Cargo.toml", "Cargo.lock",
+    "package.json", "pnpm-lock.yaml", "pnpm-workspace.yaml",
+    "subjects", "practice", "certification", "mentor", "tools", "launcher", "docs", "scripts", "archive",
     "packages",
 }
 
@@ -371,7 +458,7 @@ def run_structure_check() -> None:
     #    少写的是新应用忘了登记——两个方向都算文档漂移。
     #    只解析 ``` 围栏内的树，正文里两空格缩进的普通段落不算数。
     repository_doc = REPO_ROOT / "docs" / "REPOSITORY.md"
-    tree: dict[str, set[str]] = {"subjects": set(), "guide": set(), "practice": set(), "mentor": set()}
+    tree: dict[str, set[str]] = {"subjects": set(), "guide": set(), "practice": set(), "certification": set(), "mentor": set(), "tools": set()}
     group = None
     in_tree_block = False
     for line in repository_doc.read_text(encoding="utf-8").splitlines():
@@ -483,7 +570,7 @@ def run_structure_check() -> None:
     #    不存在的应用（幽灵），以及开工的应用（有 app.json）没进清单（漏登）。
     readme_refs = {
         f"{group}/{name}"
-        for group, name in re.findall(r"\((subjects|guide|practice|mentor)/([\w-]+)\)", (REPO_ROOT / "README.md").read_text(encoding="utf-8"))
+        for group, name in re.findall(r"\((subjects|guide|practice|certification|mentor|tools)/([\w-]+)\)", (REPO_ROOT / "README.md").read_text(encoding="utf-8"))
     }
     actual_dirs = {f"{root}/{p.name}" for root in APP_ROOTS for p in (REPO_ROOT / root).iterdir() if p.is_dir()}
     working_apps = {f"{root}/{p.name}" for root in APP_ROOTS for p in (REPO_ROOT / root).iterdir() if (p / "app.json").is_file()}
@@ -492,24 +579,29 @@ def run_structure_check() -> None:
     for missing in sorted(working_apps - readme_refs):
         problems.append(f"  根 README.md 应用表没有登记开工应用 {missing}（加一行）")
 
-    # 名字表覆盖 subjects/ 与 mentor/ 两处（学习应用与图谱/参考类）；practice/ 不登记。
     subjects_dirs = {p.name for root in ("subjects", "guide", "mentor") for p in (REPO_ROOT / root).iterdir() if p.is_dir()}
     subjects_working = {p.name for root in ("subjects", "guide", "mentor") for p in (REPO_ROOT / root).iterdir() if (p / "app.json").is_file()}
+    app_dir_names = {
+        p.name
+        for root in APP_ROOTS
+        for p in (REPO_ROOT / root).iterdir()
+        if p.is_dir()
+    }
     # 名字表的行特征是第三列进程名以 `athena-` 开头——学习者目录等别的表格第一列
     # 也有反引号词（`last`，第三列还有 `null`），只认反引号会把它们误当应用。
     name_table = set(
         re.findall(r"^\| `([\w-]+)` \|[^|]+\| `athena-", repository_doc.read_text(encoding="utf-8"), re.MULTILINE)
     )
-    for ghost in sorted(name_table - subjects_dirs):
-        problems.append(f"  docs/REPOSITORY.md 名字表写了 {ghost}，subjects/ 与 mentor/ 下都没有这个目录")
+    for ghost in sorted(name_table - app_dir_names):
+        problems.append(f"  docs/REPOSITORY.md 名字表写了 {ghost}，应用目录里没有这个目录")
     for missing in sorted(subjects_working - name_table):
         problems.append(f"  docs/REPOSITORY.md 名字表没有登记开工应用 {missing}")
 
     # all / sources 是伪应用，launcher 是启动器自身的矩阵位，都不是应用目录
-    for ghost in sorted(ci_apps - {"all", "sources", "launcher"} - subjects_dirs - {p.name for p in (REPO_ROOT / "practice").iterdir() if p.is_dir()}):
+    for ghost in sorted(ci_apps - {"all", "sources", "launcher"} - app_dir_names):
         problems.append(f"  ci.yml 手动选择项 {ghost} 不是实际存在的应用目录")
 
-    # 8. 应用区不留影子目录：subjects/、practice/、mentor/、launcher/ 下不允许「未跟踪也未
+    # 8. 应用区不留影子目录：subjects/、practice/、certification/、mentor/、tools/、launcher/ 下不允许「未跟踪也未
     #    忽略」的目录。应用改 id 或退役后，磁盘上常剩下只剩构建产物的旧目录——
     #    c、cpp、dsa、english 四个旧名最多各留了 1.9 GB 的 build 与 node_modules，
     #    被忽略的对账看不见，未跟踪的等在第一次 `git add -A` 的路上。目录要么被
@@ -568,6 +660,7 @@ def main(argv: list[str]) -> int:
         run_source_check()
         run_workflow_check()
         run_stack_version_check()
+        run_shared_build_check()
         run_react_frontend_check()
         run_structure_check()
         return 0
@@ -580,6 +673,7 @@ def main(argv: list[str]) -> int:
     run_source_check()
     run_workflow_check()
     run_stack_version_check()
+    run_shared_build_check()
     run_react_frontend_check()
     run_structure_check()
     for root in APP_ROOTS:

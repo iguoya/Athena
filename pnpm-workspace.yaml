@@ -1,0 +1,44 @@
+# 同栈 Tauri + Node 的唯一前端工作区（ADR 0140）。
+# 不收 driver（Flutter）、machine（Qt）、c-gui-lab（Electron）、pocket_cube（GTK）、nas_admin（Python）。
+packages:
+  - "subjects/*"
+  - "guide/*"
+  - "mentor/*"
+  - "tools/*"
+  - "certification/software"
+  - "certification/embedded"
+  - "practice/earth"
+  - "launcher/webui"
+  - "packages/*"
+
+catalog:
+  react: ^19.3.0
+  react-dom: ^19.3.0
+  "@types/react": ^19.3.0
+  "@types/react-dom": ^19.3.0
+  "@vitejs/plugin-react": ^6.1.1
+  vite: ^8.3.1
+  typescript: ^6.0.3
+  tailwindcss: ^4.3.3
+  "@tailwindcss/vite": ^4.3.3
+  "@tauri-apps/api": ^2.12.0
+  "@tauri-apps/cli": ^2.12.0
+  "@tauri-apps/plugin-opener": ^2.7.0
+  "@fontsource/noto-sans-sc": ^5.3.0
+  lucide-react: ^1.52.0
+  motion: ^14.0.0
+  three: ^0.182.0
+  "@types/three": ^0.182.0
+  "@react-three/fiber": ^9.6.0
+  "@react-three/drei": ^10.7.9
+
+# 从 subjects/mathematics/pnpm-workspace.yaml 并上来。
+allowBuilds:
+  esbuild: true
+
+# 从 subjects/ascent/pnpm-workspace.yaml 并上来：这些版本的发布年龄短于 pnpm 默认等待。
+minimumReleaseAgeExclude:
+  - "@vitest/mocker@5.0.3"
+  - "@vitest/spy@5.0.3"
+  - lucide-react@1.49.0
+  - vitest@5.0.3

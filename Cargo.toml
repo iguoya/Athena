@@ -1,0 +1,57 @@
+# 课程与 practice/earth 的 Tauri 壳（ADR 0140）。
+# launcher 另有自己的工作区（含 launcher-core），不能再嵌进这一层；
+# 两边的 workspace.dependencies 必须逐字相同，由 scripts/check.py 比对。
+[workspace]
+resolver = "2"
+members = [
+  "practice/earth/src-tauri",
+  "subjects/algorithms/src-tauri",
+  "subjects/ascent/src-tauri",
+  "subjects/c-plus-plus/src-tauri",
+  "mentor/competitions/src-tauri",
+  "subjects/cs408/src-tauri",
+  "subjects/data-structures/src-tauri",
+  "subjects/database/src-tauri",
+  "subjects/deep-learning/src-tauri",
+  "subjects/design-patterns/src-tauri",
+  "certification/embedded/src-tauri",
+  "subjects/firmware/src-tauri",
+  "guide/gtkmm/src-tauri",
+  "subjects/linux/src-tauri",
+  "subjects/llm-app/src-tauri",
+  "subjects/llm-finetune/src-tauri",
+  "subjects/machine-learning/src-tauri",
+  "subjects/mathematics/src-tauri",
+  "tools/math-tools/src-tauri",
+  "subjects/microcontroller/src-tauri",
+  "subjects/network/src-tauri",
+  "subjects/organization/src-tauri",
+  "subjects/os/src-tauri",
+  "mentor/polaris/src-tauri",
+  "subjects/python/src-tauri",
+  "subjects/rtos/src-tauri",
+  "certification/software/src-tauri",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+
+# 成员自己的 [profile] 在虚拟工作区里不生效，统一写在这里。
+# 与 launcher/Cargo.toml 的同名表逐字相同，由 scripts/check.py 比对。
+[workspace.dependencies]
+tauri = { version = "2", features = [] }
+tauri-build = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[profile.dev]
+debug = 1
+incremental = true
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true

@@ -6,4 +6,4 @@ Flask-AppBuilder + PostgreSQL 的中心服务管理端：学习者目录、作�
 
 - 接口文档：[`docs/user-api.md`](docs/user-api.md)。
 - 验证：`python scripts/check.py`。
-- 客户端侧的对接方是 [`subjects/driver`](../../subjects/driver)（ADR 0068、0070）。
+- 客户端侧的对接方是 [`certification/driver`](../../certification/driver)（ADR 0068、0070）。

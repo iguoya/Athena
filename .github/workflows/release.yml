@@ -29,7 +29,7 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: "1"
     defaults:
       run:
-        working-directory: subjects/c-plus-plus
+        working-directory: practice/cpp
 
     steps:
       - name: Check out tagged source
@@ -67,7 +67,7 @@ jobs:
         run: |
           python3 scripts/package_macos.py \
             --project-root . \
-            --binary build-release/athena-c-plus-plus \
+            --binary build-release/athena-cpp \
             --output-dir dist \
             --version "${{ steps.version.outputs.version }}"
 
@@ -84,7 +84,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: athena-cpp-macos-${{ matrix.architecture }}
-          path: subjects/c-plus-plus/dist/athena-cpp-*.dmg
+          path: practice/cpp/dist/athena-cpp-*.dmg
           if-no-files-found: error
           retention-days: 7
 
@@ -94,7 +94,7 @@ jobs:
     timeout-minutes: 45
     defaults:
       run:
-        working-directory: subjects/c-plus-plus
+        working-directory: practice/cpp
 
     steps:
       - name: Check out tagged source
@@ -167,8 +167,8 @@ jobs:
         with:
           name: athena-cpp-linux-x86_64
           path: |
-            subjects/c-plus-plus/dist/athena-cpp_*.deb
-            subjects/c-plus-plus/dist/athena-cpp-*-linux-x86_64.AppImage
+            practice/cpp/dist/athena-cpp_*.deb
+            practice/cpp/dist/athena-cpp-*-linux-x86_64.AppImage
           if-no-files-found: error
           retention-days: 7
 
@@ -179,7 +179,7 @@ jobs:
     defaults:
       run:
         shell: msys2 {0}
-        working-directory: subjects/c-plus-plus
+        working-directory: practice/cpp
 
     steps:
       - name: Check out tagged source
@@ -234,13 +234,13 @@ jobs:
           export PATH="$PATH:$USERPROFILE/.dotnet/tools"
           python scripts/package_windows.py \
             --project-root . \
-            --binary build-windows-release/athena-c-plus-plus.exe \
+            --binary build-windows-release/athena-cpp.exe \
             --output-dir dist \
             --version "${{ steps.version.outputs.version }}"
 
       - name: Verify Windows packages
         shell: pwsh
-        working-directory: subjects/c-plus-plus
+        working-directory: practice/cpp
         run: |
           $version = "${{ steps.version.outputs.version }}"
           $zip = "dist/athena-cpp-$version-windows-x64.zip"
@@ -263,8 +263,8 @@ jobs:
         with:
           name: athena-cpp-windows-x64
           path: |
-            subjects/c-plus-plus/dist/athena-cpp-*-windows-x64.zip
-            subjects/c-plus-plus/dist/athena-cpp-*-windows-x64.msi
+            practice/cpp/dist/athena-cpp-*-windows-x64.zip
+            practice/cpp/dist/athena-cpp-*-windows-x64.msi
           if-no-files-found: error
           retention-days: 7
 
@@ -315,22 +315,22 @@ jobs:
 
       # 版本号由 tag 决定写入 pubspec，发版不需要预先改版本提交（ADR 0081 决策 3）
       - name: Set version
-        working-directory: subjects/driver
+        working-directory: certification/driver
         shell: bash
         run: |
           sed -i.bak -E "s/^version: .+/version: ${{ steps.version.outputs.value }}+1/" pubspec.yaml
           rm pubspec.yaml.bak
 
       - name: Enable desktop targets
-        working-directory: subjects/driver
+        working-directory: certification/driver
         run: flutter config --no-analytics --enable-macos-desktop --enable-linux-desktop --enable-windows-desktop
 
       - name: Test
-        working-directory: subjects/driver
+        working-directory: certification/driver
         run: flutter test
 
       - name: Build
-        working-directory: subjects/driver
+        working-directory: certification/driver
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then
@@ -342,7 +342,7 @@ jobs:
           fi
 
       - name: Package
-        working-directory: subjects/driver
+        working-directory: certification/driver
         shell: bash
         run: |
           version="${{ steps.version.outputs.value }}"
@@ -359,7 +359,7 @@ jobs:
           fi
 
       - name: Verify package
-        working-directory: subjects/driver
+        working-directory: certification/driver
         shell: bash
         run: |
           version="${{ steps.version.outputs.value }}"
@@ -378,7 +378,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: athena-driver-${{ matrix.platform }}
-          path: subjects/driver/dist/athena-driver-*
+          path: certification/driver/dist/athena-driver-*
           if-no-files-found: error
           retention-days: 7
 
@@ -422,14 +422,14 @@ jobs:
       - uses: pnpm/action-setup@v4
         if: steps.key.outputs.ready == 'true'
         with:
-          version: 10
+          version: 10.15.1
 
       - uses: actions/setup-node@v6
         if: steps.key.outputs.ready == 'true'
         with:
           node-version: 22
           cache: pnpm
-          cache-dependency-path: subjects/ascent/pnpm-lock.yaml
+          cache-dependency-path: pnpm-lock.yaml
 
       - uses: dtolnay/rust-toolchain@stable
         if: steps.key.outputs.ready == 'true'
@@ -537,18 +537,22 @@ jobs:
             platform: linux-x86_64
             bundles: deb
           - app: math-tools
+            root: tools
             os: windows-latest
             platform: windows-x64
             bundles: nsis
           - app: math-tools
+            root: tools
             os: macos-15
             platform: macos-arm64
             bundles: app,dmg
           - app: math-tools
+            root: tools
             os: macos-15-intel
             platform: macos-x86_64
             bundles: app,dmg
           - app: math-tools
+            root: tools
             os: ubuntu-26.04
             platform: linux-x86_64
             bundles: deb
@@ -568,12 +572,17 @@ jobs:
       - name: Check out tagged source
         uses: actions/checkout@v7
 
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+
       - name: Set up Node
         uses: actions/setup-node@v6
         with:
           node-version: "22"
-          cache: npm
-          cache-dependency-path: ${{ matrix.root || 'subjects' }}/${{ matrix.app }}/package-lock.json
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
@@ -584,8 +593,8 @@ jobs:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
-            ${{ matrix.root || 'subjects' }}/${{ matrix.app }}/src-tauri/target
-          key: tauri-release-${{ matrix.app }}-${{ matrix.os }}-${{ hashFiles(format('subjects/{0}/src-tauri/Cargo.lock', matrix.app)) }}
+            .cache/cargo-target
+          key: tauri-release-${{ matrix.os }}-${{ hashFiles('Cargo.lock') }}
 
       - name: Install Linux bundle dependencies
         if: runner.os == 'Linux'
@@ -606,8 +615,7 @@ jobs:
           node -e "const f='src-tauri/tauri.conf.json';const c=require('./'+f);c.version=process.env.VERSION;require('fs').writeFileSync(f,JSON.stringify(c,null,2))"
 
       - name: Install frontend dependencies
-        working-directory: ${{ matrix.root || 'subjects' }}/${{ matrix.app }}
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build and bundle
         working-directory: ${{ matrix.root || 'subjects' }}/${{ matrix.app }}
@@ -621,15 +629,16 @@ jobs:
           version="${{ steps.version.outputs.value }}"
           platform="${{ matrix.platform }}"
           mkdir -p dist
+          bundle="$GITHUB_WORKSPACE/.cache/cargo-target/release/bundle"
           case "$RUNNER_OS" in
             Windows)
-              cp src-tauri/target/release/bundle/nsis/*-setup.exe \
+              cp "$bundle"/nsis/*-setup.exe \
                 "dist/athena-${{ matrix.app }}-$version-$platform-setup.exe" ;;
             macOS)
-              cp src-tauri/target/release/bundle/dmg/*.dmg \
+              cp "$bundle"/dmg/*.dmg \
                 "dist/athena-${{ matrix.app }}-$version-$platform.dmg" ;;
             Linux)
-              cp src-tauri/target/release/bundle/deb/*.deb \
+              cp "$bundle"/deb/*.deb \
                 "dist/athena-${{ matrix.app }}_${version}_amd64.deb" ;;
           esac
           ls -l dist
@@ -699,7 +708,7 @@ jobs:
           sha256sum "${files[@]}" > SHA256SUMS.txt
 
       - name: Build release notes from CHANGELOG
-        working-directory: subjects/c-plus-plus
+        working-directory: practice/cpp
         run: |
           version="${GITHUB_REF_NAME#v}"
           # 有手写节就用；缺失则统计上一标签至今的提交并写回 CHANGELOG，

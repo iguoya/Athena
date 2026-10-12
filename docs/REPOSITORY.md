@@ -9,7 +9,7 @@
 
 ```
 subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完全平级
-  c-plus-plus/ C++ 教程（Tauri 2 + React；原目录名 cpp，进度前缀仍 cpp.。GTK 源码还在目录里，不再是启动路径，见该应用 ADR 0060）
+  c-plus-plus/ C++ 教程（Tauri 2 + React，ADR 0060）。旧 gtkmm 窗口已拆到 practice/cpp（ADR 0141）
   machine/     C 与机器（Qt Quick / QML，原 c/，ADR 0005）
   data-structures/ 数据结构（Tauri 2）——408 数据结构（45 分），本体挂 cs408；软设以文字指引承接
                    第 3 章（ADR 0108 拆分、0118/0119 定归属；原 algorithm，复名见 ADR 0105）
@@ -17,12 +17,6 @@ subjects/<id>/ 课程学科学习：一个目录一个独立应用，彼此完�
                    软设以文字指引承接第 8 章（ADR 0108 拆分、0118/0119 定归属）
   ascent/      拾阶（英语师范生四六级、专四专八，Tauri）
   mathematics/ 数学学习（Tauri）
-  math-tools/  数学工具（Tauri 2 + React）——数学学习的配套工具，图谱/参考类，不是学习应用（ADR 0084）
-  driver/      驾考学习（Flutter 桌面，科目一 / 科目四）
-  software/    软考中级·软件设计师备考（Tauri 2 + React）——以考试为学科，与 driver 同构；
-               各为一级大类「计算机」（ADR 0102）
-  embedded/    嵌入式系统设计师备考（Tauri 2 + React）——从 software（原 softcert）拆出，
-               一级大类「电子信息」（ADR 0090、0102；定名见 ADR 0097、0100）
   database/         数据库 SQL 实验室（Tauri 2 + React）——软设第 9 章实践课程，计算机圈（ADR 0103、0126）
   design-patterns/  设计模式与程序组织（Tauri 2 + Vite）——「程序设计」圈，不挂靠；软考降为
                      专题（原素材坑转正 ADR 0103，去挂靠 ADR 0121）
@@ -52,11 +46,20 @@ practice/<id>/ 项目应用：动手做的独立小项目，不接掌握度体�
   c-gui-lab/   C 语言 GUI 框架对比实验室（Electron 母体收编各框架官方 demo）
   earth/       地球（Tauri 2 + React + Three.js）——真实比例的地球分层 3D 可视化；
                使用者从 subjects/ 迁入（ADR 0128 补记）。id 仍为 earth，进程 athena-earth，无进度库
+  cpp/         C++ 旧窗口（GTK4 / gtkmm、Meson）。从 C++ 教程拆出，id 为 cpp（ADR 0141）
+certification/ 考证应用：一门应用绑定一门真实考试（ADR 0142、0147）
+  driver/      驾考学习（Flutter 桌面，科目一 / 科目四）
+  software/    软考中级·软件设计师备考（Tauri 2 + React）——以考试为学科，与 driver 同构；
+               各为一级大类「计算机」（ADR 0102、0147）
+  embedded/    嵌入式系统设计师备考（Tauri 2 + React）——从 software（原 softcert）拆出，
+               一级大类「电子信息」（ADR 0090、0102、0147；定名见 ADR 0097、0100）
 mentor/<id>/   导师类（图谱/参考类）：给方向和查阅依据，不教课、不判分、不建进度库（ADR 0144）
-guide/<id>/    手册类教程：跟随一本外部手册/官方教程精读，章节结构与编号以原书为准（ADR 0143）
-  gtkmm/       gtkmm 官方教程精读（Tauri 2 + React）——《Programming with gtkmm 4》全量翻译为编排基准
   polaris/       技术体系图谱（Tauri 2 + React，原 Qt 壳已退役，ADR 0015）——路线图与指南针，不是学习应用，见下文
   competitions/  赛历（Tauri 2 + Vite）——「大赛」圈的竞赛清单，图谱/参考类，不是学习应用（ADR 0114）
+guide/<id>/    手册类教程：跟随一本外部手册/官方教程精读，章节结构与编号以原书为准（ADR 0143）
+  gtkmm/       gtkmm 官方教程精读（Tauri 2 + React）——《Programming with gtkmm 4》全量翻译为编排基准
+tools/         配套工具：做出能用的工具，不建进度库（ADR 0146）
+  math-tools/  数学工具（Tauri 2 + React）——数学学习的配套工具（ADR 0084、0146）
 launcher/      启动器：macos/（Swift 菜单栏常驻）、core/、gui/
 docs/decisions/  跨应用的架构决策记录（ADR）
 scripts/       仓库级脚本：统一验证入口 check.py、跨应用内容出处检查
@@ -120,18 +123,19 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
 - **这个项目要不要让人"学会"什么、要不要追踪掌握度和学习进度？** 要，就是
   **学习应用**，受「跨应用教学规范」（[TEACHING.md](TEACHING.md)）整节约束，且要按 ADR 0037/0053 建自己的
   `progress/learning.db`。当前：`c-plus-plus` / `machine` / `data-structures` /
-  `algorithms` / `mathematics` / `driver` / `ascent`（`ascent` 的规范差距见 ADR 0066）/
+  `algorithms` / `mathematics` / `ascent`（`ascent` 的规范差距见 ADR 0066）/
   `cs408`（ADR 0116）/ `organization`（ADR 0115）/ `gtkmm` / `linux`（ADR 0109）/
   `python`（ADR 0120）及其人工智能课程路线的四门（`machine-learning` / `deep-learning` /
   `llm-app` / `llm-finetune`，ADR 0120、0122）/
-  `design-patterns`（ADR 0121）/ 软考两应用及其挂靠实践
-  子课程（ADR 0103：`database` / `os` / `network` /
-  `firmware` / `microcontroller` / `rtos`，ADR 0106）。
+  `design-patterns`（ADR 0121）/ 软考实践子课程（ADR 0103：`database` / `os` / `network` /
+  `firmware` / `microcontroller` / `rtos`，ADR 0106）。驾考 `driver`、软件设计师
+  `software`、嵌入式系统设计师 `embedded` 同样是学习应用，目录在仓库根
+  `certification/`（ADR 0142、0147）。
 - **不是学习闭环，是呈现结构化信息供浏览、查阅、决策参考的？** 那是
   **图谱/参考类应用**：仍受「独立应用」一节的平级、隔离、`app.json` 启动规则约束，
   但**不**掌握度、不进度库、不激励——「跨应用教学规范」一节对它不生效，具体规则
   以它自己的 `AGENTS.md` 为准。当前：`polaris`、`competitions`（赛历，ADR 0114）住在 `mentor/`（ADR 0144）；
-  `math-tools` 是数学学习的配套工具，因需要在启动器里和 `mathematics` 关联而留在 `subjects/`，不是先例，见 ADR 0084。
+  `math-tools` 是数学学习的配套工具，目录在 `tools/math-tools`（ADR 0146）。
   地球分层可视化 `earth` 由使用者迁到 `practice/earth`（ADR 0128 补记）。
 - **还没决定做成应用，只是存素材和结论，等以后真正开工？** 那连"应用"都不算，
   不需要 `app.json` 也不需要 `scripts/check.py`，根验证入口按设计静默跳过它——
@@ -225,7 +229,7 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
 
 | 字段 | 含义 |
 |---|---|
-| `users[].id` | 学习者编号，**身份**。服务端登记时分配的 1～999 纯数字（存成字符串，无前导零），永不变、不复用。它会进本地库文件名、请求头 `X-Athena-User` 和中心库 `user` 列。**1000～9999 是本地段**：中心目录不用这个段，由应用在目录连不上时自分配给「只存这台电脑、永不参与同步」的本地学习者（目前只有 `subjects/driver`，见其 ADR 0123）；本地编号同样永不变、不复用，且不会发给任何服务端 |
+| `users[].id` | 学习者编号，**身份**。服务端登记时分配的 1～999 纯数字（存成字符串，无前导零），永不变、不复用。它会进本地库文件名、请求头 `X-Athena-User` 和中心库 `user` 列。**1000～9999 是本地段**：中心目录不用这个段，由应用在目录连不上时自分配给「只存这台电脑、永不参与同步」的本地学习者（目前只有 `certification/driver`，见其 ADR 0123）；本地编号同样永不变、不复用，且不会发给任何服务端 |
 | `users[].name` | 显示名，**只是称呼**。非空、不超过 64 个字符、不含 `/`、`\` 与空字符；不要求唯一，比较时忽略大小写和首尾空白。只能由本人改（改名走中心目录，成功后更新缓存；本地学习者改名只写本机） |
 | `last` | 上次使用者的编号，没有则 `null`。各应用共用同一个「上次是谁」 |
 
@@ -239,14 +243,14 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
 - 登录成功（无论是缓存命中还是问了中心）后把这位学习者记进 `users` 并设为 `last`。缓存命中
   即可离线进入；缓存里没有的名字，应用**默认在本机新建一个本地学习者**（1000 段编号，只存
   这台电脑、永不同步，见 `users[].id` 行）；要登录中心目录里的人（异地登录）或把新学习者
-  建到服务器，得先在应用里明确配置远程访问凭据——目前 `subjects/driver` 以外网访问凭据
+  建到服务器，得先在应用里明确配置远程访问凭据——目前 `certification/driver` 以外网访问凭据
   配齐为开关（其 ADR 0124）。
 - 两台机器上的 `users.json` 彼此独立，不自动同步。同一个人在另一台机器上输入名字登录，中心
   告诉本机这个人是几号；重名时再输入编号。
 - 无口令、无加密：它是本机的称呼缓存，不是凭据。访问控制不在应用里：内网可信，外网由 Cloudflare
   Access 把守（主仓库 ADR 0077）。
 
-**现状**：目前只有 `subjects/driver` 接入（`lib/users.dart`、`lib/user_directory.dart`）。
+**现状**：目前只有 `certification/driver` 接入（`lib/users.dart`、`lib/user_directory.dart`）。
 中心侧接口见 `practice/nas_admin/docs/user-api.md`。
 
 ## 新增一个应用时动哪些地方

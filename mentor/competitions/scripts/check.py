@@ -93,7 +93,8 @@ def ensure_dependencies() -> None:
     if (PROJECT_ROOT / "node_modules").is_dir():
         return
     pnpm = tool("pnpm")
-    if (PROJECT_ROOT / "pnpm-lock.yaml").is_file():
+    repo_lock = PROJECT_ROOT.parents[1] / "pnpm-lock.yaml"
+    if (PROJECT_ROOT / "pnpm-lock.yaml").is_file() or repo_lock.is_file():
         run([pnpm, "install", "--frozen-lockfile"], "安装前端依赖（按 lock）")
     else:
         run([pnpm, "install"], "安装前端依赖")

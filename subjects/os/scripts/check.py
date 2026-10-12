@@ -129,7 +129,7 @@ def run(command: list[str], step: str) -> None:
 def check_build(skip_rust: bool) -> None:
     node_modules = PROJECT_ROOT / "node_modules"
     if not node_modules.exists():
-        run([tool("pnpm"), "install"], "安装前端依赖")
+        run([tool("pnpm"), "install", "--frozen-lockfile"], "安装前端依赖（按仓库根 lock）")
     run([tool("pnpm"), "run", "build"], "前端构建")
     if not skip_rust:
         cargo = tool("cargo")

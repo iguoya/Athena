@@ -7,6 +7,13 @@ version = "0.1.0"
 edition = "2021"
 rust-version = "1.82"
 
+# 与仓库根 Cargo.toml 的同名表逐字相同（ADR 0140）。启动器不能并进根工作区。
+[workspace.dependencies]
+tauri = { version = "2", features = [] }
+tauri-build = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
 [profile.dev]
 # 启动器自己不需要在 Rust 里下断点，调试信息只留行号表：编译更快、目录更小。
 debug = "line-tables-only"

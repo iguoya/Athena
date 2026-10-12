@@ -31,21 +31,21 @@
 
 ```
 subjects/<id>/  课程学科：cpp machine data-structures algorithms linux organization
-                mathematics driver ascent cs408 python design-patterns（学习应用；cs408 是 408 考试
+                mathematics ascent cs408 python design-patterns（学习应用；cs408 是 408 考试
                 主应用，五门科目课本体挂它底下，ADR 0116、0118、0119；python 开启
                 「人工智能」圈与 LLM 应用开发课程路线，machine-learning、deep-learning、
                 llm-app、llm-finetune 同批落骨架，五门一圈，ADR 0120、0122；
                 design-patterns 在「程序设计」圈，ADR 0121）
-                software、embedded（软考两应用，各为一级大类，ADR 0102），底下挂实践子课程
-                database firmware microcontroller rtos（ADR 0103、0106；
+                database firmware microcontroller rtos（软考实践子课程，ADR 0103、0106；
                 os、network 兼作软设承接章，本体归 cs408，ADR 0118、0119）
-                math-tools（图谱/参考类，数学学习的配套工具，因要与 mathematics 在启动器里关联
-                而留在这里，ADR 0084）
 mentor/<id>/    导师类（图谱/参考类）：polaris（路线图与指南针）、competitions（「大赛」圈的赛历，
 guide/<id>/    手册类教程：跟随一本外部手册/官方教程精读，首批 gtkmm（ADR 0143）
                 ADR 0114）；给方向和查阅依据，不教课、不建进度库（ADR 0144）
 practice/<id>/  项目应用：pocket_cube nas_admin c-gui-lab（ADR 0060）、earth（真实比例的
-                地球分层 3D 可视化，自 subjects/ 迁入，ADR 0128）
+ 地球分层 3D 可视化，自 subjects/ 迁入，ADR 0128）、cpp（旧 gtkmm 窗口，ADR 0141）
+certification/  考证应用：driver（驾考，ADR 0142）、software（软件设计师）、
+                embedded（嵌入式系统设计师，ADR 0147）。id 不动
+tools/          配套工具：math-tools（数学工具，ADR 0146）。id 仍是 math-tools
 launcher/       启动器：core/ gui/ macos/
 docs/           跨应用 ADR（decisions/）与本文件各节的完整阐述
 scripts/        统一验证入口 check.py、跨应用检查
@@ -71,8 +71,8 @@ archive/        历史归档，不参与构建
 完整说明见 [docs/REPOSITORY.md](docs/REPOSITORY.md)「独立应用」。
 
 - **一个目录一个独立应用**（ADR 0032、0045），目录名按领域取；能脱离其他应用独立开发与运行。
-- **构建分层共享**（ADR 0135，修订 ADR 0032 决策 2）：同技术体系（课程/讲解/演示类统一 Tauri 2 + React，
-  ADR 0133、0138；存量改造中）不要求构建隔离，工具链与核心依赖版本趋同，低成本项先做；异构栈各自构建。应用
+- **构建分层共享**（ADR 0135、0140，修订 ADR 0032 决策 2）：同技术体系（课程/讲解/演示类统一 Tauri 2 + React，
+  ADR 0133、0138；存量改造中）共用仓库根的 pnpm 工作区、catalog 版本和 `.cache/cargo-target`；异构栈各自构建。应用
   之间仍**不互相引用**路径与内容配置。schema、内容块、通用应用代码的抽象待内容与结构成熟
   再议（ADR 0132，原方向见 ADR 0130），在此之前不为「将来共享」提前对齐字段。
 - **约束也不继承**（ADR 0062）：只守仓库级大原则和本应用规则，不写「沿用 / 对齐某应用」；

@@ -32,10 +32,13 @@ Python + SymPy）、不内置编译器、不把功能降级成「没有工具链
 
 ## 包管理器
 
-前端依赖统一用 **pnpm**（ADR 0136），锁文件是各应用的 `pnpm-lock.yaml`，`package.json` 里
-`packageManager` 钉版本，仓库里不留 `package-lock.json`。Node 25 起不再随带 corepack，
-需要单独装：`npm i -g pnpm`（装进用户级目录，Windows 也不要管理员权限），macOS 也可
-`brew install pnpm`。启动器和各应用的 `check.py` 找不到 pnpm 时会报出这一节。
+前端依赖统一用 **pnpm**（ADR 0136、0140）。同栈 Tauri 应用是仓库根的一个工作区：版本写在
+`pnpm-workspace.yaml` 的 `catalog`，`package.json` 里写 `catalog:`，锁文件只留根上的
+`pnpm-lock.yaml`。`packageManager` 钉 `pnpm@10.15.1`。Rust 编译产物在
+`.cache/cargo-target`（仓库根 `.cargo/config.toml` 的 `target-dir`）。装依赖在仓库根执行 `pnpm install`。
+Node 25 起不再随带 corepack，需要单独装：`npm i -g pnpm`（装进用户级目录，Windows 也不要
+管理员权限），macOS 也可 `brew install pnpm`。启动器和各应用的 `check.py` 找不到 pnpm
+时会报出这一节。
 
 ## 跨平台优先（强约束）
 

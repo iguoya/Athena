@@ -23,7 +23,7 @@ ADR 0008 收录并逐道核对；商业站点只作选题线索（ADR 0046）。
 需要 Flutter SDK（stable）。
 
 ```sh
-cd subjects/driver
+cd certification/driver
 launcher open driver
 ```
 

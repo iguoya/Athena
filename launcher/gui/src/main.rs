@@ -61,9 +61,18 @@ impl Catalog {
     fn load(repo: &std::path::Path) -> Self {
         let mut everything = launcher_core::discover(repo);
         everything.extend(discover_in(&repo.join("practice")));
+        everything.extend(discover_in(&repo.join("certification")));
+        everything.extend(discover_in(&repo.join("mentor")));
+        everything.extend(discover_in(&repo.join("tools")));
         let visible: Vec<App> = everything.iter().filter(|app| !app.hidden).cloned().collect();
         Self {
-            roots: vec![repo.join("subjects"), repo.join("practice")],
+            roots: vec![
+                repo.join("subjects"),
+                repo.join("practice"),
+                repo.join("certification"),
+                repo.join("mentor"),
+                repo.join("tools"),
+            ],
             visible,
             all: everything,
         }

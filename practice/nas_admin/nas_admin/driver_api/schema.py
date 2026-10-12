@@ -1,6 +1,6 @@
 """驾考（driver）进度库的表结构镜像。
 
-**真正的表由 driver 客户端在内网首次连接时建好**（`subjects/driver/lib/progress.dart`
+**真正的表由 driver 客户端在内网首次连接时建好**（`certification/driver/lib/progress.dart`
 的 `_ensureSchema`），本 API 的数据库角色没有 DDL 权限，也不建表——这样「家里直连」
 和「外网走 API」读写的是同一份数据。这里只镜像列定义，用途两个：
 

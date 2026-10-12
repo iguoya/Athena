@@ -10,22 +10,10 @@ name = "athena_deep_learning_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2", features = [] }
+tauri-build = { workspace = true }
 
 [dependencies]
-tauri = { version = "2", features = [] }
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
+tauri = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
 dirs-next = "2"
-
-[profile.dev]
-# 少带调试信息，链接明显快一截；断到行号仍够用
-debug = 1
-incremental = true
-
-[profile.release]
-codegen-units = 1
-lto = true
-opt-level = 3
-panic = "abort"
-strip = true

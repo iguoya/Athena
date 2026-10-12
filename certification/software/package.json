@@ -1,0 +1,37 @@
+{
+  "name": "athena-software",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.15.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "build:app": "tauri build"
+  },
+  "dependencies": {
+    "@fontsource/noto-sans-sc": "catalog:",
+    "@tauri-apps/api": "catalog:",
+    "katex": "^0.16.11",
+    "lucide-react": "catalog:",
+    "motion": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "catalog:",
+    "@tauri-apps/cli": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  },
+  "allowScripts": {
+    "esbuild@0.25.12": true
+  }
+}

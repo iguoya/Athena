@@ -166,5 +166,5 @@ cd practice/nas_admin
 - 应用里没有第二道门：Cloudflare Access 配错或被删时，外网就是敞开的，所以每次改完要做自检。
   可选的后续加固是服务端校验 `Cf-Access-Jwt-Assertion` 的签名（ADR 0077 风险一节）。
 - 后台入口仍是 Flask 自带服务器；对外前建议换 `waitress`（纯 Python，路由器能装）。
-- 客户端（`subjects/driver`）已接入（主仓库 ADR 0070）：本地优先 + 待发送队列 + 游标拉取，
+- 客户端（`certification/driver`）已接入（主仓库 ADR 0070）：本地优先 + 待发送队列 + 游标拉取，
   断网照常做题、联网后补发；内网也走本 API，直连 PG 的通道已退役。

@@ -28,7 +28,7 @@ tiger 的编号（ADR 0075，服务端分配的纯数字，1～999）：`--tiger
 `--users-db` 指向后台库（nas_admin）时登记全局用户目录 `athena_users`（ADR 0073 决策 2、
 ADR 0075）；不给就跳过登记（只做 driver 库）。
 
-表结构与 `subjects/driver/lib/progress.dart` 的本地建表保持同名同列（0070）；时间列
+表结构与 `certification/driver/lib/progress.dart` 的本地建表保持同名同列（0070）；时间列
 沿用 ISO 字符串存 TEXT，去重靠 API 层「先查再插」（ADR 0068），中心表不建业务键
 唯一索引——与 0067 时代迁入的存量表一致。
 """

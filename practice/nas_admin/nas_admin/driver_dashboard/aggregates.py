@@ -23,7 +23,7 @@ from nas_admin.driver_api import store
 
 DAILY_WINDOW = 30  # 每日趋势的天数窗口，对齐客户端首页「最近 14 天」的思路放宽到月
 
-# 科目 id 与标题来自 subjects/driver/content/curriculum.json（subject3 是路考，
+# 科目 id 与标题来自 certification/driver/content/curriculum.json（subject3 是路考，
 # 不在题库里，练车数据不带科目）。这里只放展示名，不复制内容（应用间构建隔离）。
 # wrong / review / reinforce 不是科目，是客户端的练习场景（错题本、考前复习、强化练习，
 # home.dart 的 _wrongId / _reviewId / _reinforceId）——作答记录里带这两个 subject_id，正确率单独看才有意义。

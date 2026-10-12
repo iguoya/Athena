@@ -17,7 +17,7 @@ on:
         description: 只跑哪个应用（all 为全量，sources 只跑跨应用检查）
         type: choice
         default: all
-        options: [all, sources, c-plus-plus, pocket_cube, machine, polaris, data-structures, algorithms, mathematics, ascent, math-tools, gtkmm, driver, software, nas_admin, launcher, c-gui-lab, embedded, database, design-patterns, os, network, firmware, microcontroller, rtos, linux, organization, cs408, python, machine-learning, deep-learning, llm-app, llm-finetune, competitions, earth]
+        options: [all, sources, c-plus-plus, pocket_cube, cpp, machine, polaris, data-structures, algorithms, mathematics, ascent, math-tools, gtkmm, driver, software, nas_admin, launcher, c-gui-lab, embedded, database, design-patterns, os, network, firmware, microcontroller, rtos, linux, organization, cs408, python, machine-learning, deep-learning, llm-app, llm-finetune, competitions, earth]
 
 permissions:
   contents: read
@@ -53,17 +53,17 @@ jobs:
       - name: Verify
         run: python3 scripts/check.py --sources-only
 
-  # GTK4 + gtkmm + Meson 的应用：C++ 教程与魔方（pocket_cube）。魔方的依赖是 C++ 教程的
-  # 子集，同一套安装步骤；三个平台各装各的依赖，跑的是同一条 Python 入口。
+  # GTK4 + gtkmm + Meson：魔方（pocket_cube）与拆出的旧 C++ 窗口（cpp，ADR 0141）。
+  # C++ 教程走下面的 tauri 矩阵。三个平台各装各的依赖，跑的是同一条 Python 入口。
   cpp-macos:
-    name: ${{ matrix.app == 'c-plus-plus' && 'C++ 教程' || matrix.app }}（macOS）
-    if: contains(fromJSON('["all","c-plus-plus","pocket_cube"]'), inputs.app || 'all')
+    name: ${{ matrix.app }}（macOS）
+    if: contains(fromJSON('["all","pocket_cube","cpp"]'), inputs.app || 'all')
     runs-on: macos-15
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["c-plus-plus","pocket_cube"]' || format('["{0}"]', inputs.app)) }}
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["pocket_cube","cpp"]' || format('["{0}"]', inputs.app)) }}
     env:
       HOMEBREW_NO_AUTO_UPDATE: "1"
 
@@ -81,18 +81,16 @@ jobs:
       - name: Verify
         run: python3 scripts/check.py ${{ matrix.app }} --build-dir build --buildtype debugoptimized
 
-  # 这一档不按 ADR 0051 降级：subjects/c-plus-plus 的 Windows 已经被 ADR 0049 排除，
-  # macOS 与 Ubuntu 是它仅有的两个支持平台。再把 Ubuntu 放松，就只剩一个平台
-  # 在验证了——声明支持就要验证（ADR 0047），这跟优先级排序不冲突。
+  # 声明支持就要验证（ADR 0047）。pocket_cube 三个平台都跑，不把 Ubuntu 降级。
   cpp-ubuntu:
-    name: ${{ matrix.app == 'c-plus-plus' && 'C++ 教程' || matrix.app }}（Ubuntu）
-    if: contains(fromJSON('["all","c-plus-plus","pocket_cube"]'), inputs.app || 'all')
+    name: ${{ matrix.app }}（Ubuntu）
+    if: contains(fromJSON('["all","pocket_cube","cpp"]'), inputs.app || 'all')
     runs-on: ubuntu-26.04
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["c-plus-plus","pocket_cube"]' || format('["{0}"]', inputs.app)) }}
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["pocket_cube","cpp"]' || format('["{0}"]', inputs.app)) }}
 
     steps:
       - name: Check out source
@@ -117,14 +115,14 @@ jobs:
   # 同批修掉的还有我们自己的两处 POSIX 专有写法（LC_MESSAGES、M_PI）和缺失的
   # .gitattributes（CRLF 让按字节匹配的测试挂了）。详见 ADR 0049。
   cpp-windows:
-    name: ${{ matrix.app == 'c-plus-plus' && 'C++ 教程' || matrix.app }}（Windows）
-    if: contains(fromJSON('["all","c-plus-plus","pocket_cube"]'), inputs.app || 'all')
+    name: ${{ matrix.app }}（Windows）
+    if: contains(fromJSON('["all","pocket_cube","cpp"]'), inputs.app || 'all')
     runs-on: windows-latest
     timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
-        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["c-plus-plus","pocket_cube"]' || format('["{0}"]', inputs.app)) }}
+        app: ${{ fromJSON((inputs.app || 'all') == 'all' && '["pocket_cube","cpp"]' || format('["{0}"]', inputs.app)) }}
     defaults:
       run:
         shell: msys2 {0}
@@ -270,7 +268,7 @@ jobs:
   tauri:
     name: ${{ matrix.app }}（${{ matrix.os }}）
     if: >-
-      contains(fromJSON('["algorithms","ascent","competitions","cs408","database",
+      contains(fromJSON('["algorithms","ascent","c-plus-plus","competitions","cs408","database",
       "data-structures","deep-learning","design-patterns","earth","embedded","firmware",
       "gtkmm","linux","llm-app","llm-finetune","math-tools","mathematics",
       "machine-learning","microcontroller","network","organization","os","polaris",
@@ -281,7 +279,7 @@ jobs:
       fail-fast: false
       matrix:
         app: >-
-          ${{ fromJSON((inputs.app || 'all') == 'all' && '["algorithms","ascent","competitions","cs408","database",
+          ${{ fromJSON((inputs.app || 'all') == 'all' && '["algorithms","ascent","c-plus-plus","competitions","cs408","database",
           "data-structures","deep-learning","design-patterns","earth","embedded","firmware",
           "gtkmm","linux","llm-app","llm-finetune","math-tools","mathematics",
           "machine-learning","microcontroller","network","organization","os","polaris",
@@ -295,18 +293,17 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up pnpm
-        if: matrix.app == 'ascent'
         uses: pnpm/action-setup@v4
         with:
-          version: 10
+          version: 10.15.1
 
       - name: Set up Node
         uses: actions/setup-node@v6
         with:
           node-version: "22"
-          cache: ${{ matrix.app == 'ascent' && 'pnpm' || 'npm' }}
-          # earth 在 practice/，其余 Tauri 应用在 subjects/（ADR 0128 补记）。
-          cache-dependency-path: ${{ matrix.app == 'earth' && 'practice' || 'subjects' }}/${{ matrix.app }}/${{ matrix.app == 'ascent' && 'pnpm-lock.yaml' || 'package-lock.json' }}
+          cache: pnpm
+          # 同栈应用共用仓库根这一份锁（ADR 0140）。
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install Tauri system dependencies (Ubuntu)
         # Linux 上 Tauri 的 WebView 是系统 WebKitGTK，得先装；macOS 与 Windows
@@ -326,8 +323,8 @@ jobs:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
-            ${{ matrix.app == 'earth' && 'practice' || 'subjects' }}/${{ matrix.app }}/src-tauri/target
-          key: tauri-${{ matrix.app }}-${{ matrix.os }}-${{ hashFiles(format('{0}/{1}/src-tauri/Cargo.lock', matrix.app == 'earth' && 'practice' || 'subjects', matrix.app)) }}
+            .cache/cargo-target
+          key: tauri-shared-${{ matrix.os }}-${{ hashFiles('Cargo.lock') }}
 
       - name: Fetch gtkmm upstream docs
         # 结构核对要官方 DocBook（gitignore 的 upstream/），按 upstream.json 的钉点拉取
@@ -418,12 +415,25 @@ jobs:
       # webui（Tauri 2 + React）的页面资产要先构建，cargo 编译时内嵌（ADR 0125）。
       # Linux 不编 webui：Tauri 2 需要 webkit2gtk 全套，Linux 支持未承诺（ADR 0051），
       # 只编 core 纯逻辑兜底。
+      - name: Set up pnpm
+        if: runner.os != 'Linux'
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+
+      - name: Set up Node
+        if: runner.os != 'Linux'
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
       - name: Build webui frontend
         if: runner.os != 'Linux'
         run: |
-          npm ci
-          npm run build
-        working-directory: launcher/webui
+          pnpm install --frozen-lockfile
+          pnpm --dir launcher/webui run build
 
       - name: Cache cargo
         uses: actions/cache@v5
@@ -431,8 +441,8 @@ jobs:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
-            launcher/target
-          key: launcher-${{ matrix.os }}-${{ hashFiles('launcher/Cargo.lock') }}
+            .cache/cargo-target
+          key: launcher-${{ matrix.os }}-${{ hashFiles('launcher/Cargo.lock', 'Cargo.lock') }}
 
       - name: Build
         run: cargo build --manifest-path launcher/Cargo.toml --all-targets

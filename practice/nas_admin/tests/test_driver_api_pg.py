@@ -8,7 +8,7 @@ SQLite 测试盖住逻辑，这里盖住 PG 才有的东西：`INSERT … SELECT
     DRIVER_API_TEST_PG_OWNER_URL=postgresql://属主:密码@主机/测试库   # 建表、清表用
     DRIVER_API_TEST_PG_URL=postgresql://API角色:密码@主机/测试库       # 被测的低权限角色
 
-测试库里的表由属主按 driver 客户端的 DDL 建好（与 `subjects/driver/lib/progress.dart`
+测试库里的表由属主按 driver 客户端的 DDL 建好（与 `certification/driver/lib/progress.dart`
 的 `_ensureSchema` 同构）；本文件会对照 `schema.py` 核对列名，漂移了立刻报错。
 """
 

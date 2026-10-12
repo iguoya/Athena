@@ -178,7 +178,8 @@ def ensure_dependencies() -> None:
         return
     # 有 lock 就按 lock 装：CI 上每次拿到的依赖要和本地一致。
     pnpm = tool("pnpm")
-    if (PROJECT_ROOT / "pnpm-lock.yaml").is_file():
+    repo_lock = PROJECT_ROOT.parents[1] / "pnpm-lock.yaml"
+    if (PROJECT_ROOT / "pnpm-lock.yaml").is_file() or repo_lock.is_file():
         run([pnpm, "install", "--frozen-lockfile"], "安装前端依赖（按 lock）")
     else:
         run([pnpm, "install"], "安装前端依赖")

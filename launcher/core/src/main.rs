@@ -8,10 +8,10 @@
 //!   launcher logs <id>        打印日志文件路径
 //!   launcher sync             提交并推送学习进度，不碰你的代码改动（ADR 0053）
 //!   launcher icons [--check]  按各应用 app.json 的 icon.renders 从 icon.svg 生成位图；
-//!                             不给 --root 时 subjects/ 与 practice/ 一起扫（ADR 0065）
+//!                             不给 --root 时 subjects/、practice/、certification/、mentor/ 与 tools/ 一起扫（ADR 0065、0142、0144、0146）
 //!
 //! `--root <dir>` 把发现范围收成仓库根下的那一层（`launcher --root practice list`）。
-//! 不给 `--root` 时 subjects/ 与 practice/ 一起扫：桌面应用都归启动器管。
+//! 不给 `--root` 时 subjects/、practice/、certification/、mentor/ 与 tools/ 一起扫：桌面应用都归启动器管。
 
 use std::process::ExitCode;
 
@@ -94,7 +94,7 @@ fn main() -> ExitCode {
         },
         Some("icons") => {
             let check = arguments.get(1).map(String::as_str) == Some("--check");
-            // 默认清单已经包含 practice/。指定了 --root 就只渲染那一层。
+            // 默认清单已经包含 practice/、certification/、mentor/ 与 tools/。指定了 --root 就只渲染那一层。
             match launcher_core::icons::render_all(&apps, check, line) {
                 Ok(report) if check && report.stale > 0 => {
                     eprintln!("{} 份位图和 icon.svg 对不上，跑一次 `launcher icons`。", report.stale);

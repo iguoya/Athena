@@ -1,0 +1,5 @@
+# 同栈 Rust 编译产物进同一目录（ADR 0140、0063）。
+# 配置文件里的相对路径相对于 .cargo 的上一级（仓库根），不随当前工作目录变。
+# 不用 [env] CARGO_TARGET_DIR：那只传给子进程，改不了 cargo 自己的输出目录。
+[build]
+target-dir = ".cache/cargo-target"

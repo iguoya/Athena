@@ -53,13 +53,16 @@ ls docs/decisions | tail -3
 - `vite.config.ts` 端口；`src-tauri/tauri.conf.json` 的 `productName`、`identifier`、
   `devUrl`、窗口标题；`src-tauri/Cargo.toml` 的包名；Rust 代码里的环境变量名与发行版
   用户数据目录名（`Athena<Id>/`）。
+- 同栈应用不自带锁文件：核心依赖写 `catalog:`，`tauri` / `tauri-build` / `serde` /
+  `serde_json` 写 `workspace = true`，并把这个 `src-tauri` 加进仓库根 `Cargo.toml` 的
+  members。然后在仓库根重新生成 `pnpm-lock.yaml` 与 `Cargo.lock`（ADR 0140）。
 - 本应用 `scripts/check.py` 里写死的 id、端口（如 `subjects/os` 的 `EXPECTED_ID` /
   `EXPECTED_PORT`；壳里没有就不用加）。
 - 界面里的标题、文案。
 
 改完**一定要全文搜一遍旧 id 和旧中文名**（排除 `node_modules`、`target`、`dist`、锁文件），
 残留的旧名字比漏改配置更难发现——organization 复制 linux 的壳时，就顺手修掉了更早从
-dsa 带过来的标题文案。锁文件（`package-lock.json`、`Cargo.lock`）重新生成，不手改。
+dsa 带过来的标题文案。锁文件只在仓库根，不在应用目录里手改。
 
 ## 3. 四件套与按类别的附加物
 

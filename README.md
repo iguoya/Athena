@@ -10,16 +10,16 @@
 
 | 目录 | 应用 | 技术 |
 | --- | --- | --- |
-| [`subjects/c-plus-plus`](subjects/c-plus-plus) | C++ 教程 | GTK4 / gtkmm、Meson |
+| [`subjects/c-plus-plus`](subjects/c-plus-plus) | C++ 教程 | Tauri 2 + React |
 | [`subjects/machine`](subjects/machine) | C 与机器（C 与汇编） | Qt Quick / QML、CMake |
 | [`subjects/data-structures`](subjects/data-structures) | 数据结构（408，原 dsa 拆分 ADR 0108） | Tauri 2 + Vite |
 | [`subjects/algorithms`](subjects/algorithms) | 算法设计（408，原 dsa 拆分 ADR 0108） | Tauri 2 + Vite |
 | [`subjects/ascent`](subjects/ascent) | 拾阶（四六级 / 专四专八） | Tauri + Vite |
 | [`subjects/mathematics`](subjects/mathematics) | 数学学习 | Tauri + Vite（Python sidecar） |
-| [`subjects/math-tools`](subjects/math-tools) | 数学工具（图谱/参考类） | Tauri 2 + React |
-| [`subjects/driver`](subjects/driver) | 驾考学习 | Flutter 桌面 |
-| [`subjects/software`](subjects/software) | 软件设计师（软考中级备考） | Tauri 2 + React |
-| [`subjects/embedded`](subjects/embedded) | 嵌入式系统设计师（软考中级备考，ADR 0090） | Tauri 2 + React |
+| [`tools/math-tools`](tools/math-tools) | 数学工具 | Tauri 2 + React |
+| [`certification/driver`](certification/driver) | 驾考学习 | Flutter 桌面 |
+| [`certification/software`](certification/software) | 软件设计师（软考中级备考） | Tauri 2 + React |
+| [`certification/embedded`](certification/embedded) | 嵌入式系统设计师（软考中级备考，ADR 0090） | Tauri 2 + React |
 | [`subjects/firmware`](subjects/firmware) | 嵌入式程序设计实验（电子信息圈，ADR 0103、0123） | Tauri 2 + React |
 | [`subjects/microcontroller`](subjects/microcontroller) | 硬件实验台（电子信息圈，ADR 0103、0123） | Tauri 2 + React |
 | [`subjects/rtos`](subjects/rtos) | 实时操作系统（电子信息圈，ADR 0106、0123） | Tauri 2 + React |
@@ -42,6 +42,7 @@
 | [`practice/nas_admin`](practice/nas_admin) | 驾考中心服务后台 | Flask-AppBuilder |
 | [`practice/c-gui-lab`](practice/c-gui-lab) | C 语言 GUI 框架对比实验室 | Electron + GTK/ImGui/LVGL |
 | [`practice/earth`](practice/earth) | 地球（真实比例的地球分层 3D 可视化，ADR 0128） | Tauri 2 + React + Three.js |
+| [`practice/cpp`](practice/cpp) | C++ 旧窗口（gtkmm，从 C++ 教程拆出，ADR 0141） | GTK4 / gtkmm |
 
 每个应用怎么构建、怎么启动、怎么算就绪，都写在自己的 `app.json` 里；执行统一由
 [`launcher/core`](launcher/core) 的编排器负责，没有一份应用自己的启动脚本（ADR 0046）。

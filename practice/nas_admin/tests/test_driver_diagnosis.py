@@ -1,6 +1,6 @@
 """驾考仪表盘「学习诊断」测试（主仓库 ADR 0076 决策 10）。
 
-口径必须和客户端 `subjects/driver/lib/diagnosis.dart` 一致，所以这里的用例都是从
+口径必须和客户端 `certification/driver/lib/diagnosis.dart` 一致，所以这里的用例都是从
 `test/diagnosis_test.dart` 的同名场景搬来的：同样的输入，同样的结论、同样的门槛。
 """
 

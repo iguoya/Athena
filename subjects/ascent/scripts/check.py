@@ -57,7 +57,7 @@ def main() -> int:
     )
     arguments = parser.parse_args()
 
-    # 仓库统一用 pnpm（ADR 0136）；Lumi 的 pnpm-lock.yaml 还依赖 pnpm 的 minimumReleaseAge。
+    # 仓库统一用 pnpm（ADR 0136、0140）。锁文件在仓库根，从本目录执行会沿工作区找到它。
     pnpm = tool("pnpm", "安装见 docs/ENGINEERING.md「包管理器」（npm i -g pnpm）。")
     if not (PROJECT_ROOT / "node_modules").is_dir():
         run([pnpm, "install", "--frozen-lockfile"], "安装前端依赖（按 lock）")
@@ -69,7 +69,7 @@ def main() -> int:
     run([pnpm, "test"], "前端测试")
 
     if not arguments.skip_rust:
-        # 不设 CARGO_TARGET_DIR：尊重外部环境；单独跑时用应用自己的 src-tauri/target。
+        # 编译目录由仓库根 .cargo/config.toml 指到 .cache/cargo-target（ADR 0140）。
         cargo = tool("cargo")
         run(
             [cargo, "check", "--manifest-path", "src-tauri/Cargo.toml", "--all-targets"],

@@ -10,19 +10,8 @@ name = "athena_competitions_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2", features = [] }
+tauri-build = { workspace = true }
 
 [dependencies]
-tauri = { version = "2", features = [] }
+tauri = { workspace = true }
 tauri-plugin-opener = "2"
-
-[profile.dev]
-debug = 1
-incremental = true
-
-[profile.release]
-codegen-units = 1
-lto = true
-opt-level = 3
-panic = "abort"
-strip = true

@@ -7,7 +7,7 @@
 // 这个脚本只读不写，不参与任何应用的构建，因此不构成 ADR 0032 禁止的耦合——
 // 那条禁的是运行时与构建期依赖，开发期的横向检查不在其列。
 //
-// 各应用字段名不同，靠 subjects/<app>/content-contract.json 认路。没有那份文件的
+// 各应用字段名不同，靠 <根>/<app>/content-contract.json 认路。没有那份文件的
 // 应用报「未接入」而不是默默跳过：沉默地通过是最坏的结果。
 //
 // 跑法：node scripts/check-app-sources.mjs
@@ -17,7 +17,8 @@ import { join, dirname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const appsDir = join(root, "subjects");
+// 学习应用与考证应用都判分。practice/ 不扫：earth 等参考类迁出后不在此列。
+const APP_ROOTS = ["subjects", "certification"];
 
 /**
  * 与原材料的关系（ADR 0043 第 2 节第 3 条）。
@@ -101,12 +102,21 @@ const report = [];
 
 // 不判分的应用（素材坑、图谱/参考类，REPOSITORY.md 三类判据；ADR 0089）：
 // 出处规范不适用——不报「未接入」、不扫条目。清单过期了按判据重新归类。
-// 本脚本只扫 subjects/。earth 已迁到 practice/，不在此列。
+// practice/ 不在 APP_ROOTS 里。earth 已迁到 practice/，不在此列。
 const NON_GRADED = new Set(["math-tools", "competitions"]);
 
-for (const app of readdirSync(appsDir).sort()) {
-  const appDir = join(appsDir, app);
-  if (!statSync(appDir).isDirectory()) continue;
+const apps = [];
+for (const group of APP_ROOTS) {
+  const appsDir = join(root, group);
+  if (!existsSync(appsDir)) continue;
+  for (const app of readdirSync(appsDir)) {
+    const appDir = join(appsDir, app);
+    if (statSync(appDir).isDirectory()) apps.push({ app, appDir });
+  }
+}
+apps.sort((a, b) => a.app.localeCompare(b.app));
+
+for (const { app, appDir } of apps) {
 
   if (NON_GRADED.has(app)) {
     report.push({ app, state: "不适用", detail: "不判分（参考类/素材坑，ADR 0089）" });
