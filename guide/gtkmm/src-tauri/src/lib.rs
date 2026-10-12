@@ -5,6 +5,7 @@ use serde::Serialize;
 use serde_json::{json, Value};
 use base64::Engine as _;
 use std::collections::HashMap;
+use std::ffi::OsString;
 use std::fs;
 use std::io::{BufRead, BufReader, Write};
 use std::path::{Path, PathBuf};
@@ -40,6 +41,12 @@ struct MyTranslationRow {
     sha: String,
     text: String,
     updated_at: u64,
+}
+
+#[derive(Clone, Serialize)]
+struct SourceFile {
+    path: String,
+    content: String,
 }
 
 fn content_root() -> PathBuf {
@@ -108,6 +115,96 @@ fn find_entity(manifest: &Value, demo_id: &str) -> Option<Value> {
         }
     }
     None
+}
+
+/// 官方示例实体（content/demos.json 的 examples 数组，应用 ADR 0006）。
+fn find_example(manifest: &Value, example_id: &str) -> Option<Value> {
+    manifest
+        .get("examples")?
+        .as_array()?
+        .iter()
+        .find(|entity| entity.get("id").and_then(|v| v.as_str()) == Some(example_id))
+        .cloned()
+}
+
+/// Windows 上 gtkmm-4.0 的 MSYS2 工具链（与 scripts/check.py 的
+/// msys2_mingw64 同源）；非 Windows 返回 None，工具链走系统路径。
+fn msys2_mingw64() -> Option<PathBuf> {
+    for candidate in ["C:/msys64/mingw64", "D:/msys64/mingw64"] {
+        let dir = PathBuf::from(candidate);
+        if dir.join("bin").join("pkgconf.exe").is_file()
+            && dir.join("lib").join("pkgconfig").join("gtkmm-4.0.pc").is_file()
+        {
+            return Some(dir);
+        }
+    }
+    None
+}
+
+/// 原生命令的运行环境：Windows 下前置 MSYS2 mingw64（cmake 要找 ninja/gcc，
+/// GTK 程序要找运行时 DLL），并指好 pkg-config；其他平台原样继承。
+fn native_env(command: &mut Command) -> &mut Command {
+    if let Some(mingw) = msys2_mingw64() {
+        command
+            .env("PATH", prepend_path(&mingw.join("bin")))
+            .env("PKG_CONFIG_PATH", mingw.join("lib").join("pkgconfig"));
+    }
+    command
+}
+
+/// 把目录插到现有 PATH 最前（读注册表 PATH 太重，继承本进程 PATH 即够：
+/// 壳由启动器从带完整工具链的 shell 拉起）。
+fn prepend_path(dir: &Path) -> OsString {
+    let existing = std::env::var_os("PATH").unwrap_or_default();
+    let mut parts = vec![dir.to_path_buf()];
+    parts.extend(std::env::split_paths(&existing));
+    std::env::join_paths(parts).unwrap_or(existing)
+}
+
+/// 官方示例的编译：产物缺失时对 exercise 工程做 configure + 增量编译
+/// （与 check.py 的 build-exercise 同一目录，编译一次两边复用）。
+fn ensure_example_built(app_root: &Path, build_target: &str) -> Result<PathBuf, String> {
+    let base = app_root.join("build-exercise").join(build_target);
+    let binary = if cfg!(windows) {
+        let exe = base.with_extension("exe");
+        if exe.is_file() {
+            return Ok(exe);
+        }
+        exe
+    } else {
+        base
+    };
+
+    let configure = native_env(
+        Command::new("cmake")
+            .args(["-G", "Ninja", "-S", "exercise", "-B", "build-exercise"])
+            .current_dir(app_root),
+    )
+    .output()
+    .map_err(|error| format!("找不到 cmake（{error}）——开发机应有完整工具链"))?;
+    if !configure.status.success() {
+        return Err(format!(
+            "CMake configure 失败：{}",
+            String::from_utf8_lossy(&configure.stderr)
+        ));
+    }
+    let build = native_env(
+        Command::new("cmake")
+            .args(["--build", "build-exercise"])
+            .current_dir(app_root),
+    )
+    .output()
+    .map_err(|error| format!("运行 cmake 失败：{error}"))?;
+    if !build.status.success() {
+        return Err(format!(
+            "示例编译失败：{}",
+            String::from_utf8_lossy(&build.stderr)
+        ));
+    }
+    if !binary.is_file() {
+        return Err(format!("编译完成但产物缺失：{}", binary.display()));
+    }
+    Ok(binary)
 }
 
 fn init_store(path: &Path) -> rusqlite::Connection {
@@ -418,6 +515,88 @@ fn stop_demo(state: State<AppState>, demo_id: String) -> Result<(), String> {
     Ok(())
 }
 
+/// 编译并运行官方示例（应用 ADR 0006）：原样代码没有 JSON-RPC 协议，
+/// 壳只负责拉起独立窗口——不握手、不转发、不进程托管（Child 随手丢弃，
+/// 不会杀掉进程）；工作目录设在示例源目录（button 示例从工作目录读 info.xpm）。
+#[tauri::command]
+fn launch_example(state: State<AppState>, example_id: String) -> LaunchResult {
+    let manifest = match read_content(&state.content_root, "demos.json") {
+        Ok(manifest) => manifest,
+        Err(_) => return LaunchResult { ok: false, message: "读 demos.json 失败".into() },
+    };
+    let Some(entity) = find_example(&manifest, &example_id) else {
+        return LaunchResult { ok: false, message: format!("清单里没有官方示例 {example_id}") };
+    };
+    let Some(build_target) = entity.get("build_target").and_then(|v| v.as_str()) else {
+        return LaunchResult { ok: false, message: format!("{example_id}: 缺 build_target") };
+    };
+    let app_root = state
+        .content_root
+        .parent()
+        .map(Path::to_path_buf)
+        .unwrap_or_default();
+    let binary = match ensure_example_built(&app_root, build_target) {
+        Ok(binary) => binary,
+        Err(message) => return LaunchResult { ok: false, message },
+    };
+    let source_dir = app_root.join(entity.get("source_dir").and_then(|v| v.as_str()).unwrap_or(""));
+    let spawned = native_env(
+        Command::new(&binary)
+            .current_dir(&source_dir)
+            .stdin(Stdio::null())
+            .stdout(Stdio::null())
+            .stderr(Stdio::null()),
+    )
+    .spawn();
+    match spawned {
+        Ok(_) => LaunchResult { ok: true, message: format!("{example_id} 已启动") },
+        Err(error) => LaunchResult { ok: false, message: format!("启动失败：{error}") },
+    }
+}
+
+/// 官方示例源码（页内「查看源码」）：返回示例目录下源文件的相对路径与文本。
+/// 代码是教材本身，逐字返回、不加工（应用 ADR 0002、0006）。
+#[tauri::command]
+fn read_example_sources(state: State<AppState>, example_id: String) -> Result<Vec<SourceFile>, String> {
+    let manifest = read_content(&state.content_root, "demos.json")?;
+    let Some(entity) = find_example(&manifest, &example_id) else {
+        return Err(format!("清单里没有官方示例 {example_id}"));
+    };
+    let rel_dir = entity.get("source_dir").and_then(|v| v.as_str()).unwrap_or("");
+    let app_root = state
+        .content_root
+        .parent()
+        .map(Path::to_path_buf)
+        .unwrap_or_default();
+    let dir = app_root.join(rel_dir);
+    let mut files: Vec<SourceFile> = Vec::new();
+    let entries =
+        fs::read_dir(&dir).map_err(|error| format!("读 {} 失败：{}", dir.display(), error))?;
+    for entry in entries.flatten() {
+        let path = entry.path();
+        let ext = path
+            .extension()
+            .and_then(|ext| ext.to_str())
+            .map(|ext| ext.to_ascii_lowercase())
+            .unwrap_or_default();
+        if !matches!(ext.as_str(), "cc" | "h" | "xpm") || !path.is_file() {
+            continue;
+        }
+        let content = fs::read_to_string(&path)
+            .map_err(|error| format!("读 {} 失败：{}", path.display(), error))?;
+        files.push(SourceFile {
+            path: format!(
+                "{}/{}",
+                rel_dir,
+                path.file_name().and_then(|name| name.to_str()).unwrap_or("?")
+            ),
+            content,
+        });
+    }
+    files.sort_by(|a, b| a.path.cmp(&b.path));
+    Ok(files)
+}
+
 pub fn run() {
     let content_root = content_root();
     let store = store_path();
@@ -444,7 +623,9 @@ pub fn run() {
             save_my_translation,
             get_my_translations,
             launch_demo,
-            stop_demo
+            stop_demo,
+            launch_example,
+            read_example_sources
         ])
         .run(tauri::generate_context!())
         .expect("error while running athena-gtkmm");

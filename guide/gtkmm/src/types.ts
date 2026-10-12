@@ -8,7 +8,7 @@ export interface TranslationRef {
 }
 
 export interface SourceRef {
-  relation: "verbatim" | "quoted" | "adapted" | "authored";
+  relation: "verbatim" | "quoted" | "adapted" | "authored" | "upstream";
   source_id?: string;
   url?: string;
   locator?: string;
@@ -26,6 +26,21 @@ export interface QuizItem {
 export interface ExperimentEntity extends ManifestEntity {
   skeleton_dir: string;
   acceptance: string;
+}
+
+/** 官方示例（exercise/ 的原样镜像，应用 ADR 0006）：锚定教程章与节。 */
+export interface ExampleEntity {
+  id: string;
+  title: string;
+  purpose: string;
+  source_dir: string;
+  build_target: string;
+  /** 所属教程章（章级过滤用；正文链接的示例再由 page_ref 锚到节） */
+  translation_ref: TranslationRef;
+  /** 锚定的官方节页 id；缺省 = 章级示例，显示在本章各节尾部 */
+  page_ref?: string;
+  note?: string;
+  source_refs: SourceRef[];
 }
 
 export type Block =
@@ -111,6 +126,7 @@ export interface Manifest {
   version: number;
   demos: ManifestEntity[];
   experiments: ExperimentEntity[];
+  examples?: ExampleEntity[];
 }
 
 export interface DemoEvent {

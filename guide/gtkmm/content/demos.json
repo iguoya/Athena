@@ -1,15 +1,17 @@
 {
   "version": 1,
-  "_": "演示与实验清单：壳、scripts/check.py 与（将来的）演示宿主三方的唯一事实源（应用 ADR 0001 决策 6）。curriculum.json 的教学块只引用这里的 id，不重复实体信息。",
+  "_": "演示、实验与官方示例清单：壳、scripts/check.py 与（将来的）演示宿主三方的唯一事实源（应用 ADR 0001 决策 6、0006）。curriculum.json 的教学块只引用这里的 id，不重复实体信息。",
   "_fields": {
-    "id": "清单内唯一；演示 demo.*，实验 exp.*",
+    "id": "清单内唯一；演示 demo.*，实验 exp.*，官方示例 example.*",
     "title": "展示名",
     "purpose": "演示目的——回答「这个演示具象化哪个理论点」",
     "theory_refs": "对应的理论点 id（curriculum.json knowledge_points），前缀 gtkmm.",
     "source_dir": "CMake 工程目录（相对应用根）",
     "build_target": "CMake target 名",
     "translation_ref": "锚定的教程章节（chapter/appendix + title）",
-    "source_refs": "出处（docs.gtk.org / 教程章节 / gtkmm-demo 文件）",
+    "source_refs": "出处（docs.gtk.org / 教程章节 / gtkmm-demo 文件；官方示例指上游仓库目录）",
+    "page_ref": "官方示例锚定的教程节 id（快照节名）；缺省 = 章级示例，显示在本章各节尾部",
+    "note": "补充说明（如锚定依据）",
     "skeleton_dir": "实验骨架目录（只读；学习者副本在工作区）",
     "acceptance": "实验跑通标准"
   },
@@ -59,6 +61,104 @@
           "relation": "adapted",
           "url": "https://docs.gtk.org/gtk4/signal.Button.clicked.html",
           "note": "信号语义以 GTK4 C 文档为基准"
+        }
+      ]
+    }
+  ],
+  "examples": [
+    {
+      "id": "example.buttons.button",
+      "translation_ref": {
+        "chapter": 6,
+        "title": "Buttons"
+      },
+      "title": "官方示例：图片按钮（Button）",
+      "purpose": "官方 Buttons 示例：把 Image+Label 装进 Button（按钮也是容器），clicked 用 sigc::mem_fun 连成员函数；从工作目录读 info.xpm。与 demo.buttons 对照：演示卡讲信号时序，这里看官方完整写法。",
+      "source_dir": "exercise/buttons/button",
+      "build_target": "example-buttons-button",
+      "page_ref": "sec-pushbuttons",
+      "source_refs": [
+        {
+          "relation": "upstream",
+          "url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/-/tree/master/examples/book/buttons/button",
+          "note": "原样镜像（应用 ADR 0006）；版本由 upstream.json 钉住"
+        }
+      ]
+    },
+    {
+      "id": "example.buttons.togglebutton",
+      "translation_ref": {
+        "chapter": 6,
+        "title": "Buttons"
+      },
+      "title": "官方示例：开关状态（ToggleButton）",
+      "purpose": "官方 ToggleButton 示例：点击切换 get_active() 状态，处理器按状态分流输出；与 demo.buttons 的 toggled 信号观察互补。",
+      "source_dir": "exercise/buttons/togglebutton",
+      "build_target": "example-buttons-togglebutton",
+      "page_ref": "sec-toggle-buttons",
+      "note": "官方目录有此示例但正文未单独链接，按同名小节锚定。",
+      "source_refs": [
+        {
+          "relation": "upstream",
+          "url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/-/tree/master/examples/book/buttons/togglebutton",
+          "note": "原样镜像（应用 ADR 0006）；版本由 upstream.json 钉住"
+        }
+      ]
+    },
+    {
+      "id": "example.buttons.checkbutton",
+      "translation_ref": {
+        "chapter": 6,
+        "title": "Buttons"
+      },
+      "title": "官方示例：勾选按钮（CheckButton）",
+      "purpose": "官方 CheckButton 示例：toggled 信号 + get_active()，与 ToggleButton 同一套活跃状态 API，仅外观不同。",
+      "source_dir": "exercise/buttons/checkbutton",
+      "build_target": "example-buttons-checkbutton",
+      "page_ref": "sec-checkbuttons",
+      "source_refs": [
+        {
+          "relation": "upstream",
+          "url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/-/tree/master/examples/book/buttons/checkbutton",
+          "note": "原样镜像（应用 ADR 0006）；版本由 upstream.json 钉住"
+        }
+      ]
+    },
+    {
+      "id": "example.buttons.radiobutton",
+      "translation_ref": {
+        "chapter": 6,
+        "title": "Buttons"
+      },
+      "title": "官方示例：单选按钮组（RadioButton）",
+      "purpose": "官方 RadioButton 示例：set_group() 把多个按钮组成互斥组，组内同时只有一个活跃；附 close 按钮的窗口关闭。",
+      "source_dir": "exercise/buttons/radiobutton",
+      "build_target": "example-buttons-radiobutton",
+      "page_ref": "sec-radio-buttons",
+      "source_refs": [
+        {
+          "relation": "upstream",
+          "url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/-/tree/master/examples/book/buttons/radiobutton",
+          "note": "原样镜像（应用 ADR 0006）；版本由 upstream.json 钉住"
+        }
+      ]
+    },
+    {
+      "id": "example.buttons.scalebutton",
+      "translation_ref": {
+        "chapter": 6,
+        "title": "Buttons"
+      },
+      "title": "官方示例：量值按钮（ScaleButton）",
+      "purpose": "官方 ScaleButton 示例：带弹出滑块的量值按钮，set_icons 按值段换音量图标、value_changed 持续报值。",
+      "source_dir": "exercise/buttons/scalebutton",
+      "build_target": "example-buttons-scalebutton",
+      "note": "官方 buttons 示例集附带；教程正文未提，作为章级示例展示在本章各节尾部。",
+      "source_refs": [
+        {
+          "relation": "upstream",
+          "url": "https://gitlab.gnome.org/GNOME/gtkmm-documentation/-/tree/master/examples/book/buttons/scalebutton",
+          "note": "原样镜像（应用 ADR 0006）；版本由 upstream.json 钉住"
         }
       ]
     }

@@ -248,7 +248,7 @@ def collect_lab_refs(course: dict) -> list[str]:
 
 
 def check_manifest(manifest: dict, kp_ids: set[str], course_refs: set[str],
-                   lab_refs: list[str]) -> None:
+                   lab_refs: list[str], page_ids: set[str] | None = None) -> None:
     if manifest is None:
         return
     entity_ids: set[str] = set()
@@ -277,6 +277,30 @@ def check_manifest(manifest: dict, kp_ids: set[str], course_refs: set[str],
                 fail(f"{where}: source_dir 不存在：{entity.get('source_dir')}")
             if entity.get("source_dir") and not (source_dir / "CMakeLists.txt").is_file():
                 fail(f"{where}: source_dir 里没有 CMakeLists.txt（每个演示/实验一个工程）")
+    # 官方示例（应用 ADR 0006）：exercise/ 是上游逐字镜像，构建集中在
+    # exercise/CMakeLists.txt——目录里没有各自的 CMakeLists，不套用上一条检查；
+    # 锚定教程节（page_ref），不被课表块引用，不参与孤儿闭环。
+    for entity in manifest.get("examples", []):
+        entity_id = entity.get("id", "")
+        where = f"demos.json examples[] {entity_id or '?'}"
+        for field in ("id", "title", "purpose", "source_dir", "build_target",
+                      "translation_ref", "source_refs"):
+            if field not in entity:
+                fail(f"{where}: 缺必填字段 {field}")
+        if not entity_id.startswith("example."):
+            fail(f"{where}: id 必须用 example. 前缀")
+        elif entity_id in entity_ids:
+            fail(f"{where}: id 重复")
+        entity_ids.add(entity_id)
+        page_ref = entity.get("page_ref")
+        if page_ref and page_ids is not None and page_ref not in page_ids:
+            fail(f"{where}: page_ref {page_ref!r} 不是官方节页")
+        source_dir = PROJECT_ROOT / entity.get("source_dir", "")
+        if entity.get("source_dir") and not source_dir.is_dir():
+            fail(f"{where}: source_dir 不存在：{entity.get('source_dir')}")
+        for ref in entity.get("source_refs", []):
+            if ref.get("relation") != "upstream":
+                fail(f"{where}: source_refs 必须 relation=upstream（官方示例的原样出处）")
     # 闭环：课表引用的实体必须在清单里；清单实体必须被课表引用（孤儿=死代码）
     missing = course_refs - entity_ids
     if missing:
@@ -291,7 +315,8 @@ def check_manifest(manifest: dict, kp_ids: set[str], course_refs: set[str],
         fail(f"清单实体没有任何课表块或实验区引用（孤儿条目）：{sorted(orphans)}")
     print(
         f"清单校验通过：{len(manifest.get('demos', []))} 个演示、"
-        f"{len(manifest.get('experiments', []))} 个实验，引用闭环成立"
+        f"{len(manifest.get('experiments', []))} 个实验、"
+        f"{len(manifest.get('examples', []))} 个官方示例，引用闭环成立"
     )
 
 
@@ -350,10 +375,13 @@ def check_native() -> None:
     """演示/实验的 CMake 工程全量编译 + --self-check（有实体才跑）。
 
     self-check 构造控件树后即退出 0，证明工程可编译、可加载——不弹窗。
+    官方示例（exercise/，应用 ADR 0006）不带协议、不能改代码加自检：
+    全量编译 + 产物存在即验证目标，运行交给壳的 launch_example。
     """
     manifest = load_json(CONTENT_DIR / "demos.json") or {}
     entities = manifest.get("demos", []) + manifest.get("experiments", [])
-    if not entities:
+    examples = manifest.get("examples", [])
+    if not entities and not examples:
         return
     cmake = shutil.which("cmake")
     if cmake is None:
@@ -370,17 +398,30 @@ def check_native() -> None:
         env["PKG_CONFIG_PATH"] = str(mingw / "lib" / "pkgconfig")
     # macOS（Homebrew）/Linux：pkg-config 直接找系统路径，无需特殊 env。
 
-    build_dir = PROJECT_ROOT / "build-native"
-    build_dir.mkdir(exist_ok=True)
-    run([cmake, "-G", "Ninja", "-S", "demos", "-B", "build-native"],
-        "原生侧 CMake configure", env)
-    run([cmake, "--build", "build-native"], "原生侧全量编译", env)
-    for entity in entities:
-        binary = build_dir / entity["id"].replace(".", "-")
-        if sys.platform == "win32" and not binary.with_suffix(".exe").is_file():
-            fail(f"{entity['id']}: 编译产物缺失（{binary.name}.exe）")
-            continue
-        run([str(binary), "--self-check"], f"{entity['id']} --self-check", env)
+    if entities:
+        build_dir = PROJECT_ROOT / "build-native"
+        build_dir.mkdir(exist_ok=True)
+        run([cmake, "-G", "Ninja", "-S", "demos", "-B", "build-native"],
+            "原生侧 CMake configure", env)
+        run([cmake, "--build", "build-native"], "原生侧全量编译", env)
+        for entity in entities:
+            binary = build_dir / entity["id"].replace(".", "-")
+            if sys.platform == "win32" and not binary.with_suffix(".exe").is_file():
+                fail(f"{entity['id']}: 编译产物缺失（{binary.name}.exe）")
+                continue
+            run([str(binary), "--self-check"], f"{entity['id']} --self-check", env)
+
+    if examples:
+        build_dir = PROJECT_ROOT / "build-exercise"
+        build_dir.mkdir(exist_ok=True)
+        run([cmake, "-G", "Ninja", "-S", "exercise", "-B", "build-exercise"],
+            "官方示例 CMake configure", env)
+        run([cmake, "--build", "build-exercise"], "官方示例全量编译", env)
+        for entity in examples:
+            binary = build_dir / entity["build_target"]
+            if sys.platform == "win32" and not binary.with_suffix(".exe").is_file():
+                fail(f"{entity['id']}: 编译产物缺失（{binary.name}.exe）")
+        print(f"官方示例编译通过：{len(examples)} 个（exercise/ → build-exercise/）")
 
 
 def check_alignment() -> None:
@@ -502,8 +543,10 @@ def main() -> int:
     official = {c["id"]: {s["id"]: s for s in c["sections"]} for c in load_structure()}
     course = load_json(CONTENT_DIR / "curriculum.json")
     kp_ids, course_refs, lab_refs = check_curriculum(course or {}, official)
+    page_ids = {p["id"] for s in (course or {}).get("sections", [])
+                for p in s.get("pages", []) if p.get("id")}
     manifest = load_json(CONTENT_DIR / "demos.json")
-    check_manifest(manifest or {}, kp_ids, course_refs, lab_refs)
+    check_manifest(manifest or {}, kp_ids, course_refs, lab_refs, page_ids)
     check_alignment()
     check_po_units()
     check_po_gnu()

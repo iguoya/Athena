@@ -13,6 +13,7 @@ import {
   X,
 } from "lucide-react";
 import { BlockView } from "./blocks";
+import { OfficialExamples } from "./examples";
 import { PageView, setAnnotationData, buildAnnotationMatcher } from "./page-view";
 import type { VocabEntry, PatternEntry } from "./page-view";
 import type {
@@ -146,6 +147,14 @@ export default function App() {
     invoke<{ ok: boolean; message: string }>("launch_demo", { demoId })
       .then((result) => setNotice(result.message))
       .catch(() => setNotice("浏览器预览下不能启动演示，请在应用内运行。"));
+  };
+
+  // 官方示例（应用 ADR 0006）：先增量编译（首次 configure 较慢）再弹独立窗口
+  const launchExample = (exampleId: string) => {
+    setNotice(`正在编译 ${exampleId}（首次约需一分钟）…`);
+    invoke<{ ok: boolean; message: string }>("launch_example", { exampleId })
+      .then((result) => setNotice(result.message))
+      .catch(() => setNotice("浏览器预览下不能启动示例，请在应用内运行。"));
   };
 
   const answer = (itemId: string, correct: boolean) => {
@@ -639,6 +648,16 @@ export default function App() {
                   onRate={ratePara}
                   myTranslations={myTranslations}
                   onSaveMyTranslation={saveMyTranslation}
+                />
+                {/* 官方示例（应用 ADR 0006）：本章 + 锚定本节（page_ref），
+                    章级示例（无 page_ref）随本章各节页重复出现；清单是唯一事实源 */}
+                <OfficialExamples
+                  examples={(manifest?.examples ?? []).filter(
+                    (e) =>
+                      e.translation_ref?.chapter === section.translation_ref.chapter &&
+                      (!e.page_ref || e.page_ref === page.id),
+                  )}
+                  onLaunch={launchExample}
                 />
                 <PageAssessments
                   section={section}
