@@ -10,9 +10,17 @@
 
 #include <deque>
 
+// 「夜园」主题：全套课程共用的深色配色。每章是独立程序，各自带一份用到的颜色。
+constexpr Color NIGHT {22, 27, 21, 255};      // 底色：近黑的绿
+constexpr Color GRID {36, 44, 36, 255};       // 网格线：比底色略亮的绿
+constexpr Color SNAKE {118, 200, 96, 255};    // 蛇园的草绿
+constexpr Color EYE {18, 24, 18, 255};        // 眼睛：近黑
+constexpr Color ALERT {228, 92, 78, 255};     // 死亡提示：苹果红
+constexpr Color INK_DIM {134, 146, 126, 255}; // 次要文字
+
 constexpr int COLS = 32;
 constexpr int ROWS = 24;
-constexpr int CELL = 20;
+constexpr int CELL = 32;
 
 struct Cell {
     int x = 0;
@@ -67,16 +75,18 @@ int main() {
         }
 
         BeginDrawing();
-        ClearBackground(RAYWHITE);
+        ClearBackground(NIGHT);
+        for (int c = 1; c < COLS; ++c) DrawLine(c * CELL, 0, c * CELL, ROWS * CELL, GRID);
+        for (int r = 1; r < ROWS; ++r) DrawLine(0, r * CELL, COLS * CELL, r * CELL, GRID);
         for (const Cell& part : game.body) {
-            DrawRectangle(part.x * CELL, part.y * CELL, CELL, CELL, GREEN);
+            DrawRectangle(part.x * CELL, part.y * CELL, CELL, CELL, SNAKE);
         }
-        DrawCircle(game.body.front().x * CELL + CELL / 2 + DELTA[game.heading].x * 5,
-                   game.body.front().y * CELL + CELL / 2 + DELTA[game.heading].y * 5, 3.0f, DARKGREEN);
+        DrawCircle(game.body.front().x * CELL + CELL / 2 + DELTA[game.heading].x * 8,
+                   game.body.front().y * CELL + CELL / 2 + DELTA[game.heading].y * 8, 4.5f, EYE);
         if (game.dead) {
-            DrawText("DEAD - press R to restart", 24, 24, 20, MAROON);
+            DrawText("DEAD - press R to restart", 24, 24, 20, ALERT);
         }
-        DrawText(TextFormat("body %d", (int)game.body.size()), 24, 48, 16, GRAY);
+        DrawText(TextFormat("body %d", (int)game.body.size()), 24, 56, 16, INK_DIM);
         EndDrawing();
     }
 

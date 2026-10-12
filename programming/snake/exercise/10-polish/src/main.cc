@@ -3,6 +3,8 @@
 //   1. 插值渲染——逻辑 5~16 Hz，画面 60 fps，蛇身在两步之间滑动而不是跳格；
 //   2. 声音——数字音频的最小模型：声音就是一列采样值，运行时合成，不需要音频文件；
 //   3. 规则自己也在演化——logic.hh 长出「吃到加速」，测试跟着长出一条断言。
+// 画面还换上全套课程共用的「夜园」深色主题：双色格棋盘、渐变的蛇身、呼吸的苹果——
+// 这些都只在呈现层，logic.hh 与测试对此一无所知。
 // 界面文字仍是英文，理由同第一章。
 
 #include "../logic.hh"
@@ -14,8 +16,31 @@
 #include <cstdlib>
 #include <deque>
 
-constexpr int CELL = 20;
+constexpr int CELL = 32;
 constexpr const char* HIGHSCORE_FILE = "snake-highscore.txt";
+
+// 「夜园」主题色板：全套课程共用的一副深色配色，本章把它铺满。
+constexpr Color NIGHT {22, 27, 21, 255};        // 底色：近黑的绿
+constexpr Color LAWN_A {31, 39, 30, 255};       // 棋盘浅格
+constexpr Color LAWN_B {26, 33, 25, 255};       // 棋盘深格
+constexpr Color SNAKE_HEAD {158, 224, 118, 255}; // 蛇头：亮草绿
+constexpr Color SNAKE_TAIL {64, 124, 60, 255};  // 蛇尾：暗绿
+constexpr Color FADED {104, 112, 100, 255};     // 死后整条褪成的灰绿
+constexpr Color EYE {18, 24, 18, 255};          // 眼睛：近黑
+constexpr Color APPLE {228, 92, 78, 255};       // 苹果红
+constexpr Color APPLE_SHINE {255, 190, 172, 255}; // 苹果高光
+constexpr Color CARD {38, 47, 37, 252};         // 提示卡片：比底色亮一档
+constexpr Color INK {214, 224, 198, 255};       // 主要文字
+constexpr Color INK_DIM {134, 146, 126, 255};   // 次要文字
+constexpr Color AMBER {234, 188, 92, 255};      // 最高分：琥珀金
+
+// 颜色也要插值：蛇身的渐变就是从头色到尾色的 t。
+Color blend(Color a, Color b, float t) {
+    auto mix = [t](unsigned char x, unsigned char y) {
+        return static_cast<unsigned char>(x + (y - x) * t);
+    };
+    return Color{mix(a.r, b.r), mix(a.g, b.g), mix(a.b, b.b), mix(a.a, b.a)};
+}
 
 enum class Phase { Ready, Playing, Paused, Over };
 
@@ -120,13 +145,25 @@ int main() {
         float t = phase == Phase::Playing ? acc / game.stepTime : 1.0f;
 
         BeginDrawing();
-        ClearBackground(RAYWHITE);
+        ClearBackground(NIGHT);
+        // 棋盘铺成双色格的园圃：纯装饰，逻辑世界里仍然只有格子。
+        DrawRectangle(0, 0, width, height, LAWN_B);
+        for (int row = 0; row < snake::ROWS; ++row) {
+            for (int col = row % 2; col < snake::COLS; col += 2) {
+                DrawRectangle(col * CELL, row * CELL, CELL, CELL, LAWN_A);
+            }
+        }
+        // 蛇身：每一节的颜色从头色滑向尾色；死了就整条褪成灰。
+        // 每节向四周多画一像素，插值滑动时相邻两节正好搭住，链身看起来是连续的。
+        const int length = static_cast<int>(game.body.size());
         int index = 0;
         for (const snake::Cell& part : game.body) {
             const snake::Cell& from = index < (int)previous.size() ? previous[index] : part;
             float x = lerp((float)from.x, (float)part.x, t) * CELL;
             float y = lerp((float)from.y, (float)part.y, t) * CELL;
-            DrawRectangleRounded(Rectangle{x, y, CELL, CELL}, 0.5f, 8, GREEN);
+            float shade = length > 1 ? (float)index / (length - 1) : 0.0f;
+            Color skin = game.dead ? FADED : blend(SNAKE_HEAD, SNAKE_TAIL, shade);
+            DrawRectangleRounded(Rectangle{x - 1, y - 1, CELL + 2, CELL + 2}, 0.3f, 6, skin);
             index += 1;
         }
         {
@@ -135,23 +172,42 @@ int main() {
             float cx = (head.x + 0.5f) * CELL;
             float cy = (head.y + 0.5f) * CELL;
             // 两只眼：沿前进方向偏一点，再沿垂直方向分开两侧。
-            float fx = dir.x * 4.0f;
-            float fy = dir.y * 4.0f;
-            float px = -dir.y * 4.5f;
-            float py = dir.x * 4.5f;
-            DrawCircleV(Vector2{cx + fx + px, cy + fy + py}, 2.2f, DARKGREEN);
-            DrawCircleV(Vector2{cx + fx - px, cy + fy - py}, 2.2f, DARKGREEN);
+            float fx = dir.x * 6.5f;
+            float fy = dir.y * 6.5f;
+            float px = -dir.y * 7.0f;
+            float py = dir.x * 7.0f;
+            DrawCircleV(Vector2{cx + fx + px, cy + fy + py}, 3.4f, EYE);
+            DrawCircleV(Vector2{cx + fx - px, cy + fy - py}, 3.4f, EYE);
         }
-        DrawRectangle(game.food.x * CELL, game.food.y * CELL, CELL, CELL, MAROON);
-        DrawText(TextFormat("score %d    best %d    step %.0f ms", game.score, best, game.stepTime * 1000), 24, 24, 16, DARKGREEN);
+        {
+            // 苹果轻轻呼吸：半径随时间摆动 ±8%；死后画面定格，呼吸停止。
+            float pulse = game.dead ? 1.0f : 1.0f + 0.08f * std::sin((float)GetTime() * 4.0f);
+            float radius = CELL * 0.40f * pulse;
+            Vector2 center{(game.food.x + 0.5f) * CELL, (game.food.y + 0.5f) * CELL};
+            DrawCircleV(center, radius, APPLE);
+            DrawCircleV(Vector2{center.x - radius * 0.35f, center.y - radius * 0.35f}, radius * 0.22f, APPLE_SHINE);
+        }
+        // HUD：一条半透明的夜色横条，得分在左，最高分在右。
+        DrawRectangleRounded(Rectangle{16, 14, width - 32, 44}, 0.5f, 8, Fade(NIGHT, 0.72f));
+        DrawText(TextFormat("SCORE %d", game.score), 36, 26, 20, INK);
+        DrawText(TextFormat("STEP %.0f ms", game.stepTime * 1000), 220, 28, 16, INK_DIM);
+        DrawText(TextFormat("BEST %d", best), width - 140, 26, 20, AMBER);
 
-        const char* hint = nullptr;
-        if (phase == Phase::Ready) hint = "snake 10 - press ENTER to start";
-        if (phase == Phase::Paused) hint = "PAUSED - press P to resume";
-        if (phase == Phase::Over) hint = "GAME OVER - press ENTER to restart";
-        if (hint) {
-            DrawRectangle(0, 200, width, 80, Fade(RAYWHITE, 0.85f));
-            DrawText(hint, 24, 232, 24, MAROON);
+        const char* title = nullptr;
+        const char* sub = nullptr;
+        if (phase == Phase::Ready) { title = "READY"; sub = "press ENTER to start"; }
+        if (phase == Phase::Paused) { title = "PAUSED"; sub = "press P to resume"; }
+        if (phase == Phase::Over) { title = "GAME OVER"; sub = "press ENTER to restart"; }
+        if (title) {
+            // 提示卡：全屏压暗，中央一张圆角卡片承载标题与按键提示。
+            DrawRectangle(0, 0, width, height, Fade(NIGHT, 0.55f));
+            const float cardWidth = 560;
+            const float cardHeight = 128;
+            float x0 = (width - cardWidth) / 2;
+            float y0 = (height - cardHeight) / 2;
+            DrawRectangleRounded(Rectangle{x0, y0, cardWidth, cardHeight}, 0.16f, 10, CARD);
+            DrawText(title, (int)(x0 + (cardWidth - MeasureText(title, 34)) / 2), (int)y0 + 28, 34, INK);
+            DrawText(sub, (int)(x0 + (cardWidth - MeasureText(sub, 18)) / 2), (int)y0 + 78, 18, INK_DIM);
         }
         EndDrawing();
     }

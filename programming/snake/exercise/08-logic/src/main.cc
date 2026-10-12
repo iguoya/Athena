@@ -12,7 +12,15 @@
 #include <cstdio>
 #include <deque>
 
-constexpr int CELL = 20;
+// 「夜园」主题：全套课程共用的深色配色。每章是独立程序，各自带一份用到的颜色。
+constexpr Color NIGHT {22, 27, 21, 255};      // 底色：近黑的绿
+constexpr Color GRID {36, 44, 36, 255};       // 网格线：比底色略亮的绿
+constexpr Color SNAKE {118, 200, 96, 255};    // 蛇园的草绿
+constexpr Color EYE {18, 24, 18, 255};        // 眼睛：近黑
+constexpr Color APPLE {228, 92, 78, 255};     // 食物：苹果红
+constexpr Color INK {214, 224, 198, 255};     // 主要文字
+
+constexpr int CELL = 32;
 constexpr const char* HIGHSCORE_FILE = "snake-highscore.txt";
 
 enum class Phase { Ready, Playing, Paused, Over };
@@ -78,25 +86,27 @@ int main() {
         }
 
         BeginDrawing();
-        ClearBackground(RAYWHITE);
+        ClearBackground(NIGHT);
+        for (int c = 1; c < snake::COLS; ++c) DrawLine(c * CELL, 0, c * CELL, snake::ROWS * CELL, GRID);
+        for (int r = 1; r < snake::ROWS; ++r) DrawLine(0, r * CELL, snake::COLS * CELL, r * CELL, GRID);
         for (const snake::Cell& part : game.body) {
-            DrawRectangle(part.x * CELL, part.y * CELL, CELL, CELL, GREEN);
+            DrawRectangle(part.x * CELL, part.y * CELL, CELL, CELL, SNAKE);
         }
         {
             const snake::Cell& head = game.body.front();
             snake::Cell dir = snake::DELTA[snake::dir_index(game.heading)];
-            DrawCircle((head.x + 0.5f) * CELL + dir.x * 5, (head.y + 0.5f) * CELL + dir.y * 5, 3.0f, DARKGREEN);
+            DrawCircle((head.x + 0.5f) * CELL + dir.x * 8, (head.y + 0.5f) * CELL + dir.y * 8, 4.5f, EYE);
         }
-        DrawRectangle(game.food.x * CELL, game.food.y * CELL, CELL, CELL, MAROON);
-        DrawText(TextFormat("score %d    best %d", game.score, best), 24, 24, 16, DARKGREEN);
+        DrawCircle(game.food.x * CELL + CELL / 2, game.food.y * CELL + CELL / 2, CELL * 0.38f, APPLE);
+        DrawText(TextFormat("score %d    best %d", game.score, best), 24, 24, 18, INK);
 
         const char* hint = nullptr;
         if (phase == Phase::Ready) hint = "snake 08 - press ENTER to start";
         if (phase == Phase::Paused) hint = "PAUSED - press P to resume";
         if (phase == Phase::Over) hint = "GAME OVER - press ENTER to restart";
         if (hint) {
-            DrawRectangle(0, 200, width, 80, Fade(RAYWHITE, 0.85f));
-            DrawText(hint, 24, 232, 24, MAROON);
+            DrawRectangle(0, height / 2 - 44, width, 88, Fade(NIGHT, 0.8f));
+            DrawText(hint, 24, height / 2 - 12, 24, INK);
         }
         EndDrawing();
     }

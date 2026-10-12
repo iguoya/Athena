@@ -5,9 +5,15 @@
 
 #include "raylib.h"
 
+// 「夜园」主题：全套课程共用的深色配色。每章是独立程序，各自带一份用到的颜色。
+constexpr Color NIGHT {22, 27, 21, 255};      // 底色：近黑的绿
+constexpr Color SNAKE {118, 200, 96, 255};    // 蛇园的草绿
+constexpr Color INK {214, 224, 198, 255};     // 主要文字
+constexpr Color INK_DIM {134, 146, 126, 255}; // 次要文字
+
 int main() {
-    const int screenWidth = 640;
-    const int screenHeight = 480;
+    const int screenWidth = 960;
+    const int screenHeight = 600;
     InitWindow(screenWidth, screenHeight, "snake 01 - window");
     SetTargetFPS(60);
 
@@ -23,15 +29,15 @@ int main() {
         frames += 1;
 
         BeginDrawing();
-        ClearBackground(RAYWHITE);
+        ClearBackground(NIGHT);
 
-        DrawText("snake 01: the loop is running", 24, 24, 20, DARKGREEN);
-        DrawText(TextFormat("frame %d   elapsed %.2f s   dt %.4f s", frames, elapsed, dt), 24, 56, 16, GRAY);
+        DrawText("snake 01: the loop is running", 24, 24, 20, INK);
+        DrawText(TextFormat("frame %d   elapsed %.2f s   dt %.4f s", frames, elapsed, dt), 24, 56, 16, INK_DIM);
 
         // 方块的 x 由累计时间决定。每帧重画同一个函数，位置自然随时间走——
         // 在 immediate mode 里「动画」就是这件事，没有补间、没有失效区域、没有别的机制。
         int x = static_cast<int>(elapsed * 120.0) % (screenWidth - 80);
-        DrawRectangle(x, 200, 80, 40, GREEN);
+        DrawRectangle(x, 260, 80, 40, SNAKE);
 
         DrawFPS(24, screenHeight - 32);
         EndDrawing();

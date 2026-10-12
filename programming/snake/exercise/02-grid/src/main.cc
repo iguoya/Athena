@@ -4,9 +4,16 @@
 
 #include "raylib.h"
 
+// 「夜园」主题：全套课程共用的深色配色。每章是独立程序，各自带一份用到的颜色。
+constexpr Color NIGHT {22, 27, 21, 255};      // 底色：近黑的绿
+constexpr Color GRID {36, 44, 36, 255};       // 网格线：比底色略亮的绿
+constexpr Color SNAKE {118, 200, 96, 255};    // 蛇园的草绿
+constexpr Color INK {214, 224, 198, 255};     // 主要文字
+constexpr Color INK_DIM {134, 146, 126, 255}; // 次要文字
+
 constexpr int COLS = 32;
 constexpr int ROWS = 24;
-constexpr int CELL = 20;  // 32 x 24 格，每格 20 像素，正好 640 x 480
+constexpr int CELL = 32;  // 32 x 24 格，每格 32 像素，正好 1024 x 768
 
 struct Cell {
     int x = 0;
@@ -32,19 +39,19 @@ int main() {
         }
 
         BeginDrawing();
-        ClearBackground(RAYWHITE);
+        ClearBackground(NIGHT);
 
         // 网格线只是画给人看的；逻辑世界里没有线，只有格子。
         for (int c = 1; c < COLS; ++c) {
-            DrawLine(c * CELL, 0, c * CELL, ROWS * CELL, LIGHTGRAY);
+            DrawLine(c * CELL, 0, c * CELL, ROWS * CELL, GRID);
         }
         for (int r = 1; r < ROWS; ++r) {
-            DrawLine(0, r * CELL, COLS * CELL, r * CELL, LIGHTGRAY);
+            DrawLine(0, r * CELL, COLS * CELL, r * CELL, GRID);
         }
 
-        DrawRectangle(pos.x * CELL, pos.y * CELL, CELL, CELL, GREEN);
-        DrawText("logic ticks at 5 Hz, drawing runs at 60 fps", 24, 24, 16, DARKGREEN);
-        DrawText(TextFormat("cell (%d, %d)", pos.x, pos.y), 24, 48, 16, GRAY);
+        DrawRectangle(pos.x * CELL, pos.y * CELL, CELL, CELL, SNAKE);
+        DrawText("logic ticks at 5 Hz, drawing runs at 60 fps", 24, 24, 18, INK);
+        DrawText(TextFormat("cell (%d, %d)", pos.x, pos.y), 24, 52, 16, INK_DIM);
 
         EndDrawing();
     }
