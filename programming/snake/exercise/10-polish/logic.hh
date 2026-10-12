@@ -32,7 +32,7 @@ struct Game {
     Dir heading = Dir::Right;
     Cell food{20, 12};
     int score = 0;
-    float stepTime = 0.12f;     // 每吃一节乘 0.98，下限见 step
+    float stepTime = 0.18f;     // 每吃一节乘 0.98，下限见 step
     bool dead = false;
     std::mt19937 rng{std::random_device{}()};
 };
@@ -57,7 +57,7 @@ inline void reset(Game& game) {
     game.pending.clear();
     game.heading = Dir::Right;
     game.score = 0;
-    game.stepTime = 0.12f;
+    game.stepTime = 0.18f;
     game.dead = false;
     spawn_food(game);
 }
@@ -84,7 +84,7 @@ inline void step(Game& game) {
     game.body.push_front(head);
     if (head == game.food) {
         game.score += 10;
-        game.stepTime = std::max(0.06f, game.stepTime * 0.98f);  // 越吃越快，但有下限
+        game.stepTime = std::max(0.09f, game.stepTime * 0.98f);  // 越吃越快，但有下限
         spawn_food(game);
     } else {
         game.body.pop_back();

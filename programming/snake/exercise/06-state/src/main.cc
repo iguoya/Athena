@@ -98,7 +98,7 @@ int main() {
     SetTargetFPS(60);
 
     Game game;
-    const float stepTime = 0.12f;
+    const float stepTime = 0.18f;
     float acc = 0.0f;
 
     while (!WindowShouldClose()) {
@@ -109,10 +109,10 @@ int main() {
             if (IsKeyPressed(KEY_P)) {
                 game.phase = Phase::Paused;
             } else {
-                if (IsKeyPressed(KEY_RIGHT)) press(game, Right);
-                if (IsKeyPressed(KEY_LEFT)) press(game, Left);
-                if (IsKeyPressed(KEY_UP)) press(game, Up);
-                if (IsKeyPressed(KEY_DOWN)) press(game, Down);
+                if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) press(game, Right);
+                if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) press(game, Left);
+                if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) press(game, Up);
+                if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) press(game, Down);
             }
         } else if (game.phase == Phase::Paused) {
             if (IsKeyPressed(KEY_P)) game.phase = Phase::Playing;

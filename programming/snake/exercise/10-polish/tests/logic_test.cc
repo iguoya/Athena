@@ -30,7 +30,7 @@ int main() {
     snake::step(game);
     assert(game.body.size() == length + 1);
     assert(game.score == 10);
-    assert(game.stepTime < 0.12f);
+    assert(game.stepTime < 0.18f);
 
     // 一路向左，撞到墙为止；撞死那一步头不入队。
     while (game.body.front().x > 0) snake::step(game);

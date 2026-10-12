@@ -54,15 +54,15 @@ int main() {
     SetTargetFPS(60);
 
     Game game;
-    const float stepTime = 0.12f;
+    const float stepTime = 0.18f;
     float acc = 0.0f;
 
     while (!WindowShouldClose()) {
         // 方向直接改写。试试在两帧之内按「上、左」：蛇会当场折叠——这就是第四章要修的 bug。
-        if (IsKeyPressed(KEY_RIGHT)) game.heading = Right;
-        if (IsKeyPressed(KEY_LEFT)) game.heading = Left;
-        if (IsKeyPressed(KEY_UP)) game.heading = Up;
-        if (IsKeyPressed(KEY_DOWN)) game.heading = Down;
+        if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) game.heading = Right;
+        if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) game.heading = Left;
+        if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) game.heading = Up;
+        if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) game.heading = Down;
         if (game.dead && IsKeyPressed(KEY_R)) {
             game = Game{};  // 凑合的重开：整只换新。第六章用状态机正式收编它。
         }

@@ -8,12 +8,12 @@
       "role": "diagram",
       "heading": "相位流转全景",
       "body": "箭头上的字是触发转移的输入。逻辑步进只发生在 Playing 相里——图上看，它是唯一没有出边的「停留」状态。",
-      "diagram": "stateDiagram-v2\n    [*] --> Ready\n    Ready --> Playing : ENTER / reset\n    Over --> Playing : ENTER / reset\n    Playing --> Paused : P\n    Paused --> Playing : P\n    Playing --> Over : 撞墙或咬到自己\n    note right of Playing\n        逻辑只在这一相走\n        方向键也只在这里收\n    end note\n    classDef playing fill:#2e7d32,stroke:#1b5e20,color:#fff\n    classDef paused fill:#b86e00,stroke:#8a5400,color:#fff\n    classDef neutral fill:#eceff1,stroke:#78909c,color:#263238\n    class Playing playing\n    class Paused paused\n    class Ready,Over neutral"
+      "diagram": "stateDiagram-v2\n    [*] --> Ready\n    Ready --> Playing : ENTER / reset\n    Over --> Playing : ENTER / reset\n    Playing --> Paused : P\n    Paused --> Playing : P\n    Playing --> Over : 撞墙或咬到自己\n    note right of Playing\n        逻辑只在这一相走\n        方向键 / WASD 也只在这里收\n    end note\n    classDef playing fill:#2e7d32,stroke:#1b5e20,color:#fff\n    classDef paused fill:#b86e00,stroke:#8a5400,color:#fff\n    classDef neutral fill:#eceff1,stroke:#78909c,color:#263238\n    class Playing playing\n    class Paused paused\n    class Ready,Over neutral"
     },
     {
       "role": "focus",
       "heading": "四个相位，同一颗键各有含义",
-      "body": "Phase::Ready / Playing / Paused / Over。Enter 在 Ready 和 Over 里是「开始 / 重来」，P 在 Playing 和 Paused 之间切换；方向键只在 Playing 里收。逻辑步进也只在 Playing 里走。\n\n〔重点〕状态机的价值不是少写代码，是「同一颗键在不同相里含义不同」有了明确的安放处。每相只回答自己的问题，新增相位不必回头改旧相。"
+      "body": "Phase::Ready / Playing / Paused / Over。Enter 在 Ready 和 Over 里是「开始 / 重来」，P 在 Playing 和 Paused 之间切换；方向键 / WASD 只在 Playing 里收。逻辑步进也只在 Playing 里走。\n\n〔重点〕状态机的价值不是少写代码，是「同一颗键在不同相里含义不同」有了明确的安放处。每相只回答自己的问题，新增相位不必回头改旧相。"
     },
     {
       "role": "focus",
@@ -38,7 +38,7 @@
         "省掉输入缓冲"
       ],
       "answer": 1,
-      "explanation": "Enter 在 Ready 是开始、在 Over 是重来，方向键只在 Playing 有效。按相分发让每个局面只回答自己的问题。",
+      "explanation": "Enter 在 Ready 是开始、在 Over 是重来，方向键 / WASD 只在 Playing 有效。按相分发让每个局面只回答自己的问题。",
       "source_refs": [
         {
           "relation": "authored",

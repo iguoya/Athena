@@ -65,8 +65,8 @@ void check_invariants(const Game& game) {
         CHECK(d != previous && d != snake::OPPOSITE[snake::dir_index(previous)]);
         previous = d;
     }
-    // I-6 步长始终在 [0.06, 0.12]
-    CHECK(game.stepTime >= 0.06f && game.stepTime <= 0.12f);
+    // I-6 步长始终在 [0.09, 0.18]
+    CHECK(game.stepTime >= 0.09f && game.stepTime <= 0.18f);
     // I-7 长度与得分同步：初始三节，每吃一口多一节、多十分
     CHECK(static_cast<int>(game.body.size()) == 3 + game.score / 10);
 }
@@ -121,7 +121,7 @@ void test_eat_grows_scores_speeds_up() {
     snake::step(game);
     CHECK(game.body.size() == 4);
     CHECK(game.score == 10);
-    CHECK(game.stepTime < 0.1177f && game.stepTime > 0.1175f);  // 0.12 * 0.98
+    CHECK(game.stepTime < 0.1765f && game.stepTime > 0.1763f);  // 0.18 * 0.98
     CHECK(!snake::occupies(game, game.food));                    // 新食物不在蛇身上
     check_invariants(game);
 }
@@ -212,7 +212,7 @@ void test_reset_restores_initial_state() {
     CHECK(game.heading == Dir::Right);
     CHECK(game.pending.empty());
     CHECK(game.score == 0);
-    CHECK(game.stepTime == 0.12f);
+    CHECK(game.stepTime == 0.18f);
     CHECK(!game.dead);
     check_invariants(game);
 }
@@ -221,14 +221,14 @@ void test_reset_restores_initial_state() {
 void test_speed_floor() {
     Game game;
     place(game, {Cell{5, 12}, Cell{4, 12}, Cell{3, 12}}, Dir::Right);
-    game.stepTime = 0.0601f;
+    game.stepTime = 0.0901f;
     game.food = Cell{6, 12};
     snake::step(game);
-    CHECK(game.stepTime >= 0.06f);
-    game.stepTime = 0.06f;               // 已在下限：再吃也不会更小
+    CHECK(game.stepTime >= 0.09f);
+    game.stepTime = 0.09f;               // 已在下限：再吃也不会更小
     game.food = Cell{7, 12};
     snake::step(game);
-    CHECK(game.stepTime >= 0.06f);
+    CHECK(game.stepTime >= 0.09f);
 }
 
 // @covers NFR-4

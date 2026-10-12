@@ -31,7 +31,7 @@ struct Game {
     Dir heading = Dir::Right;
     Cell food{20, 12};
     int score = 0;
-    float stepTime = 0.12f;
+    float stepTime = 0.18f;
     bool dead = false;
     std::mt19937 rng{std::random_device{}()};
 };
