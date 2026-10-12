@@ -1,0 +1,12 @@
+{
+  "_": "课表（主仓库 ADR 0152、本应用 ADR 0001）。第一批只列第 1–5 章，status 为 planned 表示正在按顺序写、写好后改为真实内容。第 6 章「上板与 NPU」要等 RK3588 开发板到手并有一次实测后才写，写好之前不进课表（ADR 0129 不留占位）。",
+  "course": "edge-ai",
+  "title": "端侧 AI 推理与部署",
+  "sections": [
+    { "id": "edge.budget-baseline", "title": "端侧预算与基线：统一测量延迟、内存、体积与精度", "status": "planned" },
+    { "id": "edge.export-equivalence", "title": "模型导出与等价性：PyTorch 到 ONNX，输出对齐", "status": "planned" },
+    { "id": "edge.post-training-quantization", "title": "训练后量化：INT8 校准，精度、体积与速度的权衡", "status": "planned" },
+    { "id": "edge.ort-profiling", "title": "ONNX Runtime 推理与性能剖析", "status": "planned" },
+    { "id": "edge.llm-on-device", "title": "端侧大模型：llama.cpp 与 GGUF", "status": "planned" }
+  ]
+}

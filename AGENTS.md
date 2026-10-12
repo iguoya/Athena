@@ -32,7 +32,7 @@
 ```
 programming/<id>/ 程序设计圈（ADR 0150）：c-plus-plus machine linux python design-patterns；python 是
                 人工智能课程路线的入口、归本圈（ADR 0120、0148）
-artificial-intelligence/<id>/ 人工智能圈：machine-learning deep-learning llm-app llm-finetune（ADR 0120、0122）
+artificial-intelligence/<id>/ 人工智能圈：machine-learning deep-learning llm-app llm-finetune edge-ai（ADR 0120、0122、0152）
 computer-fundamentals/<id>/ 计算机基础圈：database（软设第 9 章实践课程，ADR 0103、0126）
 electronics/<id>/ 电子信息圈：firmware microcontroller rtos（嵌入式系统设计师实践课程，ADR 0103、0123）
 postgraduate/<id>/ 考研应用（ADR 0149）：cs408（408 考试主应用）及本体挂它的 data-structures algorithms

@@ -23,6 +23,7 @@ artificial-intelligence/<id>/ 人工智能圈：人工智能课程路线的四�
   llm-app/       大模型应用开发（Tauri 2 + React）——「人工智能」圈；提示工程、RAG、Agent 与评估，
                  实践应用的主场（ADR 0120、0122）
   llm-finetune/  大模型微调与部署（Tauri 2 + React）——「人工智能」圈；LoRA、量化、本地推理与服务化（ADR 0120、0122）
+  edge-ai/       端侧 AI 推理与部署（Tauri 2 + React）——「人工智能」圈；导出、量化、ONNX Runtime 与 llama.cpp，设备上的预算与剖析（ADR 0152）
 computer-fundamentals/<id>/ 计算机基础圈：目前只有软设实践子课程 database（ADR 0103、0150）
   database/         数据库 SQL 实验室（Tauri 2 + React）——软设第 9 章实践课程，「计算机基础」圈（ADR 0103、0126、0148）
 electronics/<id>/ 电子信息圈：嵌入式系统设计师的实践子课程（ADR 0103、0123、0150）
@@ -114,6 +115,7 @@ archive/       历史归档，不参与构建
 | `deep-learning` | 深度学习与 PyTorch（「人工智能」圈，ADR 0120、0122） | `athena-deep-learning` | `dl.` |
 | `llm-app` | 大模型应用开发（「人工智能」圈，ADR 0120、0122） | `athena-llm-app` | `llmapp.` |
 | `llm-finetune` | 大模型微调与部署（「人工智能」圈，ADR 0120、0122） | `athena-llm-finetune` | `finetune.` |
+| `edge-ai` | 端侧 AI 推理与部署（「人工智能」圈，ADR 0152） | `athena-edge-ai` | `edge.` |
 | `competitions` | 赛历（「大赛」圈，ADR 0114） | `athena-competitions` | （无进度库） |
 
 `driver` 是机动车理论考试，不是设备驱动；Dart 包名仍是 `athena_driver`（包名不能有连字符）。
@@ -130,7 +132,7 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
   `algorithms` / `mathematics` / `ascent`（`ascent` 的规范差距见 ADR 0066）/
   `cs408`（ADR 0116）/ `organization`（ADR 0115）/ `gtkmm` / `linux`（ADR 0109）/
   `python`（ADR 0120）及其人工智能课程路线的四门（`machine-learning` / `deep-learning` /
-  `llm-app` / `llm-finetune`，ADR 0120、0122）/
+  `llm-app` / `llm-finetune`，ADR 0120、0122）/ `edge-ai`（ADR 0152）/
   `design-patterns`（ADR 0121）/ 软考实践子课程（ADR 0103：`database` / `os` / `network` /
   `firmware` / `microcontroller` / `rtos`，ADR 0106）。驾考 `driver`、软件设计师
   `software`、嵌入式系统设计师 `embedded` 同样是学习应用，目录在仓库根

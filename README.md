@@ -36,6 +36,7 @@
 | [`artificial-intelligence/deep-learning`](artificial-intelligence/deep-learning) | 深度学习与 PyTorch（「人工智能」圈，ADR 0120、0122） | Tauri 2 + React |
 | [`artificial-intelligence/llm-app`](artificial-intelligence/llm-app) | 大模型应用开发（「人工智能」圈，ADR 0120、0122） | Tauri 2 + React |
 | [`artificial-intelligence/llm-finetune`](artificial-intelligence/llm-finetune) | 大模型微调与部署（「人工智能」圈，ADR 0120、0122） | Tauri 2 + React |
+| [`artificial-intelligence/edge-ai`](artificial-intelligence/edge-ai) | 端侧 AI 推理与部署（「人工智能」圈，ADR 0152） | Tauri 2 + React |
 | [`mentor/competitions`](mentor/competitions) | 赛历（竞赛清单与参赛资格，图谱/参考类，ADR 0114、0144） | Tauri 2 + Vite |
 | [`programming/design-patterns`](programming/design-patterns) | 设计模式与程序组织（「程序设计」圈，ADR 0121） | Tauri 2 + Vite |
 | [`practice/pocket_cube`](practice/pocket_cube) | 2 阶魔方 | GTK4 / gtkmm |

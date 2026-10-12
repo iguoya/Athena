@@ -1,0 +1,19 @@
+[package]
+name = "athena-edge-ai"
+version = "0.1.0"
+description = "Athena 端侧 AI 推理与部署 独立学习应用"
+authors = ["Athena"]
+edition = "2021"
+
+[lib]
+name = "athena_edge_ai_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { workspace = true }
+
+[dependencies]
+tauri = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+dirs-next = "2"

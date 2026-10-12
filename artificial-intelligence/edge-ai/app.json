@@ -1,0 +1,24 @@
+{
+  "id": "edge-ai",
+  "title": "端侧 AI 推理与部署",
+  "group": "人工智能",
+  "description": "把模型压小、转格式、在固定设备上测出延迟、内存与精度并满足预算：导出与等价性、训练后量化、ONNX Runtime 与 llama.cpp——人工智能路线的端侧一环（ADR 0152）。可单独使用。",
+  "icon": {
+    "type": "theme",
+    "name": "computer-symbolic",
+    "symbol": "cpu",
+    "letter": "EA",
+    "accent": "#0F766E",
+    "renders": {}
+  },
+  "dev": {
+    "env": { "ATHENA_EDGE_AI_ROOT": "${dir}" },
+    "prepare": [
+      { "when_missing": "node_modules", "run": ["pnpm", "install"], "label": "安装前端依赖" }
+    ],
+    "run": ["pnpm", "run", "tauri:dev"],
+    "ready": { "http": "http://localhost:1515" },
+    "match": "src-tauri/target",
+    "binary": "athena-edge-ai"
+  }
+}
