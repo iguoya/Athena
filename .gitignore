@@ -50,8 +50,10 @@ launcher/.build/
 # 同类 Tauri 共享的 cargo 构建缓存（ADR 0063；仅 dsa/english/mathematics）
 .cache/
 
-# 进度库本身要进版本库（ADR 0053），但 SQLite 的伴生文件不要：
-# -wal / -shm 是未落盘的日志和共享内存，跟着提交会让库在别的机器上打不开。
+# 进度库不进版本库（ADR 0155，取代 ADR 0053）：本地库放用户数据目录，由启动器同步到
+# 路由器 PG。这里仍忽略 `progress/` 下的库与 SQLite 伴生文件，防止旧习惯或旧版本应用
+# 把它们又写回工作树、再被 `git add` 带进去。
+*/*/progress/*.db
 */*/progress/*.db-wal
 */*/progress/*.db-shm
 */*/progress/*.db-journal
