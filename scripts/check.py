@@ -642,6 +642,27 @@ def run_structure_check() -> None:
                     f"  {root}/{app_dir.name}/src/{ghost} 与公共包重复——用 packages/ 里的版本，别留拷贝"
                 )
 
+    # 10. 进度库守门（ADR 0155）：学习进度本机优先、永不进 git。应用的 Rust 源码
+    #     里一旦建了 learning.db，app.json 就必须声明 progress（目录名与合并规则），
+    #     否则启动器不会同步它；已被 git 跟踪的 progress/*.db 一律不许有（archive/ 是历史归档）。
+    #     只管 src-tauri/src：driver 有自己的通路，脚本里提到旧库不算数。
+    for root in APP_ROOTS:
+        for app_dir in sorted((REPO_ROOT / root).iterdir()):
+            manifest = app_dir / "app.json"
+            src = app_dir / "src-tauri" / "src"
+            if not manifest.is_file() or not src.is_dir():
+                continue
+            uses_db = any("learning.db" in p.read_text(encoding="utf-8", errors="ignore") for p in src.rglob("*.rs"))
+            if uses_db and "progress" not in _json.loads(manifest.read_text(encoding="utf-8")):
+                problems.append(
+                    f"  {root}/{app_dir.name} 的源码建了 learning.db，但 app.json 没有声明 progress（ADR 0155）"
+                )
+    tracked_dbs = subprocess.run(
+        ["git", "ls-files", "-z", "--", *(f"{root}/*/progress/*.db" for root in APP_ROOTS)],
+        cwd=REPO_ROOT, capture_output=True, text=True,
+    ).stdout.split("\0")
+    problems += [f"  {path} 是进度库却被 git 跟踪——进度永不进 git（ADR 0155）" for path in tracked_dbs if path]
+
     if problems:
         print("\n".join(problems), flush=True)
         raise SystemExit(f"结构卫生没通过（{len(problems)} 处），见上方。")
