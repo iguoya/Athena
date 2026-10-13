@@ -56,11 +56,16 @@ describe("App 装配", () => {
     }
   });
 
-  it("剖面开关与标注开关存在，Canvas 桩被挂载", () => {
+  it("三视图按钮在位；默认是航空视角（海拔剖面），切到太空视角才挂 Canvas 桩", () => {
     renderApp();
-    expect(document.body.textContent).toContain("四分之一剖面");
+    for (const label of ["航空视角", "太空视角", "内部剖面"]) {
+      expect(screenHas(label));
+    }
     expect(screenHas("标注"));
-    expect(document.querySelector('[data-testid="earth-canvas-stub"]')).not.toBeNull();
+    // 默认视图：航空视角的海拔剖面（0–12 km 放大说明 + 条目图标）
+    expect(screenHas("0–50 km 的空中事务"));
+    expect(screenHas("🦢 斑头雁迁徙"));
+    expect(document.querySelector('[data-testid="earth-canvas-stub"]')).toBeNull();
   });
 
   it("探针默认在内部模式，读数显示地表密度 2.72 g/cm³", () => {

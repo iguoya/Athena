@@ -5,14 +5,19 @@ export type ProbeMode = "interior" | "atmosphere";
 
 export type { ViewFocus };
 
+/** 视图体系：aviation = 航空视角（0–50 km 海拔剖面专题，50 km 内飞行事务的专门呈现）；
+    space = 太空视角（全球 3D + 地面视角观空中，原全景视图）；interior = 内部剖面。 */
+export type ViewMode = "aviation" | "space" | "interior";
+
 export interface DemoSelection {
   kind: "air" | "ballistic";
   id: string;
 }
 
 interface EarthState {
-  /** 剖面开关：默认关——第一眼是全球 + 地面视角观空中（内部构成不抢戏）；
-      开 = 切掉 x>0、z>0 四分之一，露出两片密度着色的截面。 */
+  /** 当前视图（默认航空视角：50 km 内的空中事务是本应用第一眼） */
+  view: ViewMode;
+  /** 剖面开关由 view 派生（interior 时为真），3D 场景读它决定剖不剖 */
   cutaway: boolean;
   /** 选中的层 id（内部与大气层的 id 不冲突） */
   selectedLayerId: string | null;
@@ -32,7 +37,7 @@ interface EarthState {
   demo: DemoSelection | null;
   playing: boolean;
   replayKey: number;
-  setCutaway: (cutaway: boolean) => void;
+  setView: (view: ViewMode) => void;
   select: (layerId: string | null) => void;
   setProbeMode: (mode: ProbeMode) => void;
   setProbeKm: (km: number) => void;
@@ -49,6 +54,7 @@ interface EarthState {
 }
 
 export const useEarth = create<EarthState>((set) => ({
+  view: "aviation",
   cutaway: false,
   selectedLayerId: null,
   probeMode: "interior",
@@ -61,7 +67,7 @@ export const useEarth = create<EarthState>((set) => ({
   demo: null,
   playing: false,
   replayKey: 0,
-  setCutaway: (cutaway) => set({ cutaway }),
+  setView: (view) => set({ view, cutaway: view === "interior" }),
   select: (selectedLayerId) => set({ selectedLayerId }),
   setProbeMode: (probeMode) =>
     set({ probeMode, probeKm: probeMode === "interior" ? 0 : 12 }),

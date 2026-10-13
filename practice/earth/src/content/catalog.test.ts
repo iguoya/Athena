@@ -206,6 +206,21 @@ describe("大气分层", () => {
     const starlink = data.atmosphere.keyPoints.find((p) => p.name === "星链星座")!;
     expect(starlink.country).toBe("美国");
   });
+
+  it("航空视角的数据面：50 km 内有足够的细分条目，且每条都带图标", () => {
+    const under50 = data.atmosphere.keyPoints.filter((p) => p.heightKm <= 50);
+    expect(under50.length).toBeGreaterThanOrEqual(18);
+    for (const point of data.atmosphere.keyPoints) {
+      expect(point.icon).toBeTruthy();
+    }
+    // 平流层跳伞纪录落在气象气球上限之上、中间层之下
+    const stratos = data.atmosphere.keyPoints.find((p) => p.name === "红牛 Stratos 跳伞")!;
+    expect(stratos.heightKm).toBeGreaterThan(35);
+    expect(stratos.heightKm).toBeLessThan(50);
+    expect(atmosphereLayerAtHeight(stratos.heightKm)?.id).toBe("stratosphere");
+    // 消费级无人机限高 120 m 落在对流层
+    expect(atmosphereLayerAtHeight(0.12)?.id).toBe("troposphere");
+  });
 });
 
 describe("US Standard Atmosphere 1976", () => {

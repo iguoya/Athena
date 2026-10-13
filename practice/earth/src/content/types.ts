@@ -197,4 +197,6 @@ export interface AtmosphereKeyPoint {
   country?: string;
   /** 可查出处；动物与自然现象为观测/公开报道，常不单独列 */
   sourceIds?: string[];
+  /** 展示图标（emoji，数据跟着条目走；场景标签与航空视图共用） */
+  icon?: string;
 }

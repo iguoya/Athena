@@ -455,10 +455,44 @@
     },
     "keyPoints": [
       {
+        "name": "消费级无人机",
+        "heightKm": 0.12,
+        "category": "aircraft",
+        "country": "多国",
+        "icon": "🛩️",
+        "note": "法规限高通常 120 m（如中国《无人驾驶航空器飞行管理暂行条例》对微型/轻型机的管控高度）",
+        "sourceIds": [
+          "aviation-performance"
+        ]
+      },
+      {
+        "name": "直升机通航作业",
+        "heightKm": 0.6,
+        "category": "aircraft",
+        "country": "多国",
+        "icon": "🚁",
+        "note": "城市与山区作业的典型高度带 0.3–3 km",
+        "sourceIds": [
+          "aviation-performance"
+        ]
+      },
+      {
+        "name": "热气球观光",
+        "heightKm": 3,
+        "category": "aircraft",
+        "country": "多国",
+        "icon": "🎈",
+        "note": "观光飞行的典型巡航高度 2–3 km",
+        "sourceIds": [
+          "aviation-performance"
+        ]
+      },
+      {
         "name": "斑头雁迁徙",
         "heightKm": 8.8,
         "category": "animal",
-        "note": "候鸟中数一数二的高飞者：卫星跟踪证实其迁徙往返横越喜马拉雅（约 8 800 m）"
+        "note": "候鸟中数一数二的高飞者：卫星跟踪证实其迁徙往返横越喜马拉雅（约 8 800 m）",
+        "icon": "🦢"
       },
       {
         "name": "C919 巡航",
@@ -468,13 +502,15 @@
         "note": "干线客机典型巡航约 33 000 ft（10.1 km）",
         "sourceIds": [
           "aviation-performance"
-        ]
+        ],
+        "icon": "✈️"
       },
       {
         "name": "鲁氏秃鹫",
         "heightKm": 11.3,
         "category": "animal",
-        "note": "鸟类飞行高度纪录：11 300 m（一次与飞机相撞的记录）"
+        "note": "鸟类飞行高度纪录：11 300 m（一次与飞机相撞的记录）",
+        "icon": "🦅"
       },
       {
         "name": "波音 787 巡航",
@@ -482,6 +518,18 @@
         "category": "aircraft",
         "country": "美国",
         "note": "宽体客机典型巡航约 38 000 ft（11.5 km），对流层顶附近",
+        "sourceIds": [
+          "aviation-performance"
+        ],
+        "icon": "✈️"
+      },
+      {
+        "name": "RQ-4 全球鹰",
+        "heightKm": 18.3,
+        "category": "aircraft",
+        "country": "美国",
+        "icon": "🛩️",
+        "note": "高空长航时侦察无人机，实用升限约 18.3 km（公开参数）",
         "sourceIds": [
           "aviation-performance"
         ]
@@ -494,7 +542,8 @@
         "note": "公开估计实用升限 18–20 km 量级（无官方数值）",
         "sourceIds": [
           "aviation-performance"
-        ]
+        ],
+        "icon": "🛩️"
       },
       {
         "name": "F-22 升限",
@@ -504,7 +553,8 @@
         "note": "实用升限约 65 000 ft（19.8 km），公开参数",
         "sourceIds": [
           "aviation-performance"
-        ]
+        ],
+        "icon": "🛩️"
       },
       {
         "name": "U-2 高空侦察",
@@ -514,13 +564,15 @@
         "note": "70 000 ft 级高空侦察机，至今现役",
         "sourceIds": [
           "aviation-performance"
-        ]
+        ],
+        "icon": "✈️"
       },
       {
         "name": "臭氧浓度峰值",
         "heightKm": 22,
         "category": "phenomenon",
-        "note": "约 20–25 km；吸收紫外线使平流层温度回升"
+        "note": "约 20–25 km；吸收紫外线使平流层温度回升",
+        "icon": "☁️"
       },
       {
         "name": "SR-71 巡航",
@@ -530,43 +582,83 @@
         "note": "85 000 ft 级双三侦察机（25.9 km），1998 年退役",
         "sourceIds": [
           "aviation-performance"
-        ]
+        ],
+        "icon": "✈️"
       },
       {
         "name": "平流层微生物",
         "heightKm": 30,
         "category": "animal",
-        "note": "高空科学气球在 20–41 km 采样到活细菌孢子（如 2013 年印度 ISRO 实验）"
+        "note": "高空科学气球在 20–41 km 采样到活细菌孢子（如 2013 年印度 ISRO 实验）",
+        "icon": "🦠"
       },
       {
         "name": "气象气球探空上限",
         "heightKm": 35,
         "category": "phenomenon",
-        "note": "常规探空气球在此高度爆裂"
+        "note": "常规探空气球在此高度爆裂",
+        "icon": "🎈"
+      },
+      {
+        "name": "红牛 Stratos 跳伞",
+        "heightKm": 38.97,
+        "category": "aircraft",
+        "country": "奥地利/美国",
+        "icon": "🪂",
+        "note": "2012 年 Felix Baumgartner 从 38 969 m 的氦气球跳下，成为不借助载具超音速第一人",
+        "sourceIds": [
+          "flight-records-public"
+        ]
+      },
+      {
+        "name": "超压科学气球",
+        "heightKm": 40,
+        "category": "aircraft",
+        "country": "多国",
+        "icon": "🎈",
+        "note": "NASA 与中科院的超压气球可在 35–40 km 长期驻空，载科学载荷巡天",
+        "sourceIds": [
+          "flight-records-public"
+        ]
+      },
+      {
+        "name": "Eustace 跳伞纪录",
+        "heightKm": 41.4,
+        "category": "aircraft",
+        "country": "美国",
+        "icon": "🪂",
+        "note": "2014 年 Alan Eustace 从 41 419 m 跳下，至今仍是人类最高跳伞纪录",
+        "sourceIds": [
+          "flight-records-public"
+        ]
       },
       {
         "name": "流星烧蚀",
         "heightKm": 80,
         "category": "phenomenon",
-        "note": "大多在 75–100 km 烧蚀发光"
+        "note": "大多在 75–100 km 烧蚀发光",
+        "icon": "✨"
       },
       {
         "name": "夜光云",
         "heightKm": 83,
         "category": "phenomenon",
-        "note": "约 76–85 km 的中间层顶冰晶云，夏季高纬可见"
+        "note": "约 76–85 km 的中间层顶冰晶云，夏季高纬可见",
+        "icon": "🌌"
       },
       {
         "name": "卡门线",
         "heightKm": 100,
         "category": "boundary",
-        "note": "航天与航空的分界约定"
+        "note": "航天与航空的分界约定",
+        "icon": "🚀"
       },
       {
         "name": "极光",
         "heightKm": 200,
         "category": "phenomenon",
-        "note": "典型发光高度 100–300 km"
+        "note": "典型发光高度 100–300 km",
+        "icon": "🌌"
       },
       {
         "name": "天宫空间站",
@@ -576,7 +668,8 @@
         "note": "380–400 km 近圆轨道；乘组由神舟载人飞船往返",
         "sourceIds": [
           "space-orbits-public"
-        ]
+        ],
+        "icon": "🛰️"
       },
       {
         "name": "和平号空间站",
@@ -586,7 +679,8 @@
         "note": "苏联/俄罗斯第三代空间站，平均轨道约 390 km，2001 年受控再入",
         "sourceIds": [
           "space-orbits-public"
-        ]
+        ],
+        "icon": "🛰️"
       },
       {
         "name": "国际空间站",
@@ -596,7 +690,8 @@
         "note": "平均轨道高度约 400–420 km，2000 年起持续载人",
         "sourceIds": [
           "space-orbits-public"
-        ]
+        ],
+        "icon": "🛰️"
       },
       {
         "name": "天空实验室",
@@ -606,7 +701,8 @@
         "note": "美国首座空间站（1973–1979），平均轨道约 435 km，已坠毁",
         "sourceIds": [
           "space-orbits-public"
-        ]
+        ],
+        "icon": "🛰️"
       },
       {
         "name": "墨子号",
@@ -616,7 +712,8 @@
         "note": "世界首颗量子科学实验卫星（2016），太阳同步轨道约 500 km",
         "sourceIds": [
           "space-orbits-public"
-        ]
+        ],
+        "icon": "🛰️"
       },
       {
         "name": "哈勃空间望远镜",
@@ -626,7 +723,8 @@
         "note": "约 530–540 km，1990 年发射至今",
         "sourceIds": [
           "space-orbits-public"
-        ]
+        ],
+        "icon": "🔭"
       },
       {
         "name": "星链星座",
@@ -636,7 +734,8 @@
         "note": "主壳层约 550 km（FCC 申报），在轨数千颗",
         "sourceIds": [
           "space-orbits-public"
-        ]
+        ],
+        "icon": "🛰️"
       },
       {
         "name": "GPS 卫星",
@@ -646,7 +745,8 @@
         "note": "中圆轨道约 20 180 km，6 个轨道面",
         "sourceIds": [
           "space-orbits-public"
-        ]
+        ],
+        "icon": "🛰️"
       },
       {
         "name": "北斗 MEO 卫星",
@@ -656,7 +756,8 @@
         "note": "北斗中圆轨道约 21 500 km；混合星座另有 GEO/IGSO 在 35 786 km",
         "sourceIds": [
           "space-orbits-public"
-        ]
+        ],
+        "icon": "🛰️"
       },
       {
         "name": "地球静止轨道",
@@ -665,7 +766,8 @@
         "note": "42 164 km 半长轴对应的赤道轨道：天链（中）、TDRS（美）、北斗 GEO 等聚集于此",
         "sourceIds": [
           "space-orbits-public"
-        ]
+        ],
+        "icon": "🛰️"
       }
     ],
     "sourceIds": [
@@ -868,6 +970,10 @@
     "space-orbits-public": {
       "title": "航天器轨道与性能参数取各国公开资料量级：NASA NSSDC 航天器档案、机构与运营商公告（天宫、ISS、星链、北斗、GPS 等常用轨道高度）",
       "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/query"
+    },
+    "flight-records-public": {
+      "title": "航空极限纪录与高空作业高度取公开报道与认证机构口径（FAI 国际航空运动联合会的世界航空纪录）",
+      "url": "https://www.fai.org/world-air-sports-records"
     }
   }
 }
