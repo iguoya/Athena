@@ -22,7 +22,7 @@ ADR 0001 / 0158 的大方向下自主推进，小事不必问使用者；方向�
 | 路径 | 主人 |
 |---|---|
 | `src/**`、`src-tauri/**`、`packages/maps/**`、`scripts/check.py`、应用根 `README.md` / `AGENTS.md` | cursor |
-| `content/**`、`scripts/check_layers.py`、`scripts/add_content.py`、`docs/LOCAL-MAPS.md` | zcode |
+| `content/**`、`scripts/check_layers.py`、`scripts/add_content.py` | zcode |
 | `docs/PARALLEL.md`、`docs/ROADMAP.md`、`docs/INTENT-CHECKLIST.md`、`docs/comms/tasks/**`（创建）、`scripts/comms.py` | claude-code |
 | `docs/comms/msgs/**`、`docs/comms/read/<自己>.txt` | 发信人 / 各自 |
 | `docs/decisions/**`（应用 ADR） | claude-code 起草，涉及哪方由哪方落实 |
