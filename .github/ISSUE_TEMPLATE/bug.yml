@@ -1,0 +1,24 @@
+name: Bug
+description: 应用或工具跑不起来、行为不对
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: input
+    id: app
+    attributes:
+      label: 哪个应用 / 哪个命令
+      description: 例如 `athena-snake`、`launcher open earth`、`python3 scripts/check.py`
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 怎么复现
+      description: 做了什么、期望什么、实际发生了什么；有报错请贴原文。
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: 环境
+      description: 操作系统与版本，例如 Windows 11 / macOS 15 / Ubuntu 26.04

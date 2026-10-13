@@ -1,0 +1,24 @@
+name: 内容勘误
+description: 学习内容里的错误：讲解不对、题目答案有误、出处对不上、链接失效
+title: "[勘误] "
+labels: ["内容勘误"]
+body:
+  - type: input
+    id: app
+    attributes:
+      label: 应用与章节
+      description: 例如「算法设计 · 第 3 章 · 大 O 记号」
+    validations:
+      required: true
+  - type: textarea
+    id: wrong
+    attributes:
+      label: 错在哪里
+      description: 原文是什么、哪里不对。题目请写题干和你认为的正确答案。
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: 依据
+      description: 教材页码、官方文档链接或实测结果。判分内容的出处要能核对（ADR 0043）。
