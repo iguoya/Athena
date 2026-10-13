@@ -25,9 +25,9 @@
 - **主图 MapLibre GL** + `@athena/maps`（仓库 ADR 0157、0158）：纸本底、岸线、河网、走廊；
   目标叠离线晕渲与 denser 公域河网（Natural Earth + 自绘）。
 - **默认按真实年份 scrub**（可切事件序列）；阶段色带与事件密度柱（分期）；播放目标「年/秒」。
-- **本机学术层**：CHGIS / 自备谭图系进 `.cache/maps/`，`prepare_local_maps.py`；有则叠、无则示意。
-  勿提交 `.cache`。
-- 动效用 Motion。Rust 端薄壳；读本机 `.cache` 需要时再加命令。
+- **学术层**：CHGIS / 谭图系等转成 GeoJSON 直接入库 `packages/maps/geo/academic/`（ADR 0159，
+  取代 0158 的「本机可选」）；没有对应年层的时段用 `territories.json` 示意帧作底色。
+- 动效用 Motion。Rust 端薄壳。
 
 ## 内容组织
 

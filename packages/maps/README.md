@@ -10,17 +10,10 @@
 - `geo/coastline.json`、`hydro.json`、`corridors.json`：自研示意矢量  
   （`hydro.json` 已加密主干：黄河几字弯、长江中下游、淮河/珠江/海河/辽河/松花江/澜沧江/雅鲁藏布等）
 
-## 本机学术层（自用，不进 git）
+## 学术层（直接入库，ADR 0159）
 
-把 CHGIS / Hartwell / 自备谭图数字化包放到仓库根或应用下的 `.cache/maps/`，或设
-`ATHENA_MAPS_DATA` 指向目录。运行：
-
-```sh
-python packages/maps/scripts/prepare_local_maps.py
-```
-
-会生成 `.cache/maps/manifest.json` 与可选年层 GeoJSON；九州有则叠、无则降级示意层。
-**勿**把 `.cache` 提交进版本库。
+CHGIS / Hartwell / 谭图数字化等转成 WGS84 GeoJSON 后放 `geo/academic/`，随仓库提交；
+每批数据旁写明来源、版本、下载地址与许可。数据尚未入库时，九州只用上面的示意层。
 
 ### Natural Earth 河网再加密（可选）
 
@@ -45,4 +38,4 @@ python packages/maps/scripts/prepare_relief.py
 ```
 
 应用侧用 MapLibre `image` + `raster`（opacity ≈0.35）叠在陆面色块上。更高精度 DEM
-瓦片仍可走本机 `.cache`（`prepare_local_maps.py`），不进发行包。
+瓦片另议。

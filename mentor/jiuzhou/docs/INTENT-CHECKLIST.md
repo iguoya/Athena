@@ -27,7 +27,7 @@
 | 11 | 行军线 `route` | ✅ 15 条路线，途经点带年份 | Cursor：R6 镜头跟随；Claude Code：补路线 |
 | 12 | 关键节点前后对照 | ✅ 12 个事件带 `compare` | Cursor：对照时过渡动画 |
 | 13 | 人物以落点标签呈现，落州府 | 🟡 有人物页，缺人物轨迹地图 | Cursor：R4 |
-| 14 | 学术层（CHGIS/谭图）本机优先，有则叠 | ❌ 前端没有读 `.cache/maps/manifest.json` | Cursor：R3 |
+| 14 | 学术层（CHGIS/谭图）入库后直接读包内 GeoJSON（ADR 0159） | ❌ 数据尚未入库，前端也未接 | Cursor：R3 |
 
 ## 三、来自应用 ADR 0001（空间有自己的历史）
 

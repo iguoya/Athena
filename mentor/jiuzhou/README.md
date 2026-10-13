@@ -11,5 +11,5 @@ launcher open jiuzhou
 python3 scripts/check.py
 ```
 
-内容真源：`content/atlas.json`。底图与示意水系在 `@athena/maps`；学术矢量仅本机
-`.cache/maps/`（勿提交）。并行分工：[`docs/PARALLEL.md`](docs/PARALLEL.md)。
+内容真源：`content/atlas.json`。底图与示意水系在 `@athena/maps`；学术矢量放
+`packages/maps/geo/academic/`（入库，ADR 0159）。并行分工：[`docs/PARALLEL.md`](docs/PARALLEL.md)。

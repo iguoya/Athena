@@ -1175,8 +1175,7 @@ export default function App() {
             九州
           </h1>
           <p className="mt-1 max-w-xl text-sm text-muted">
-            年份色块扫史 · 古今地名对照 · 行军与模块提亮。学术矢量放本机
-            .cache/maps。
+            年份色块扫史 · 古今地名对照 · 行军与模块提亮。
           </p>
         </div>
 

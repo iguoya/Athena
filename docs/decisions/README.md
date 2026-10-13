@@ -78,9 +78,9 @@
 | [0152](0152-edge-ai-course.md) | 新增 AI 路线第 6 门 `edge-ai`（端侧 AI 推理与部署），放 `artificial-intelligence/edge-ai/`；运行时 ONNX Runtime 加 llama.cpp，主线板 RK3588；第一批做第 1–5 章，上板章后写；量化边界与 `llm-finetune` 划清 | 已接受；修订 0120 |
 | [0153](0153-snake-app.md) | 新增 `programming/snake`：教程壳 Tauri + React，贪吃蛇按五章独立 raylib 程序放在 `exercise/`，第 5 章规则抽 `logic.hh` 配测试 | 已接受 |
 | [0156](0156-jiuzhou-history-atlas.md) | 新增图谱/参考类应用 jiuzhou（「九州 / Jiuzhou」，端口 1516）：中国历史地理图鉴；政治秩序主轴（2026-10-13 起七段，蒙元并入唐宋）；MapLibre + `@athena/maps`；新开领域圈「兴趣」；earth 预期后期迁入 | 已接受；修订 0148；地理呈现见 0157 |
-| [0157](0157-athena-maps-shared-package.md) | 历史地理纯呈现抽成 `packages/maps`（`@athena/maps`）：纸本墨线底图、自研水系/岸线/走廊；CHGIS 本机可选不入库；jiuzhou 首接 | 已接受；由 0158 修订学术层优先级；沿 0137 例外；衔接 0156 |
-| [0158](0158-jiuzhou-local-academic-maps-expressiveness.md) | 九州本机学术地理层（CHGIS / Hartwell / 谭图数字化）升为有则必用的主真相，不入 git，无则静默降级到 `@athena/maps` 示意；采纳史图馆 / 谭图系 / 杨利辉的表述手段 | 已接受；修订 0157 学术层优先级；衔接 0156 |
-| [0158](0158-jiuzhou-local-academic-maps-expressiveness.md) | 九州本机学术地理层优先（CHGIS/自备谭图系进 `.cache` 不进 git）；采纳史图馆色块年轴、谭图系古今对照、杨利辉提亮/路线/前后对照 | 已接受；修订 0157；衔接 0156 |
+| [0157](0157-athena-maps-shared-package.md) | 历史地理纯呈现抽成 `packages/maps`（`@athena/maps`）：纸本墨线底图、自研水系/岸线/走廊；CHGIS 本机可选不入库；jiuzhou 首接 | 已接受；由 0158 修订学术层优先级，CHGIS 不入库一条由 0159 取代；沿 0137 例外；衔接 0156 |
+| [0158](0158-jiuzhou-local-academic-maps-expressiveness.md) | 九州本机学术地理层优先（CHGIS/自备谭图系进 `.cache` 不进 git）；采纳史图馆色块年轴、谭图系古今对照、杨利辉提亮/路线/前后对照 | 已接受；修订 0157；衔接 0156；决策 1、2 由 0159 取代 |
+| [0159](0159-jiuzhou-academic-layer-in-repo.md) | 互联网上能找到的数据一律默认公域，不为授权设计分流；九州学术层（CHGIS / Hartwell / 谭图数字化）据此直接入库 `packages/maps/geo/academic/`，取消 `prepare_local_maps.py` 等本机可选机制；出处照记 | 已接受；取代 0158 决策 1、2，取代 0156/0157 中「禁止再分发、不入库」的表述 |
 
 ## 仓库工程
 
