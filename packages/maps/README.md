@@ -2,7 +2,7 @@
 
 历史地理**纯呈现**包（ADR 0157、0158）。不写应用事件模型。
 
-## 默认（可再分发）
+## 默认底图
 
 - `paper-style`：MapLibre 纸本墨线底图（背景=海面 `#cfd8d4`）
 - `geo/land.json`、`countries.json`：Natural Earth 50m 裁东亚并简化（≤250KB），由

@@ -136,7 +136,7 @@ export function HomePage({ go }: { go: (v: View) => void }) {
           </span>
           <span>
             <span className="block font-bold">历年真题演练</span>
-            <span className="block text-[13px] text-ink/55">按年份成卷;真题整卷待授权导入,格式已就绪</span>
+            <span className="block text-[13px] text-ink/55">按年份成卷</span>
           </span>
         </button>
         <button type="button" onClick={() => go({ kind: "dashboard" })} className="card card-hover flex items-center gap-4 p-5 text-left">
