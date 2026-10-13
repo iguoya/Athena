@@ -1,6 +1,9 @@
 import {
+  atmosphereKeyPointsInLayer,
   atmosphereLayers,
   interiorLayers,
+  KEYPOINT_CATEGORY_NAMES,
+  KEYPOINT_COLORS,
   sourceTitle,
   sourceUrl,
 } from "../content/load";
@@ -54,6 +57,29 @@ export function LayerDetail() {
         </p>
       )}
       <p className="leading-relaxed text-slate-700">{(interior ?? atmosphere)!.description}</p>
+      {atmosphere && (
+        <>
+          <h5 className="mb-1 mt-3 text-xs font-semibold tracking-wide text-slate-400">
+            本层居民（按真实高度落层）
+          </h5>
+          <ul className="space-y-1.5">
+            {atmosphereKeyPointsInLayer(atmosphere.id).map((point) => (
+              <li key={point.name} className="text-xs leading-relaxed">
+                <span className="font-medium text-slate-800">
+                  <span style={{ color: KEYPOINT_COLORS[point.category ?? "phenomenon"] }}>● </span>
+                  {point.name}
+                </span>
+                <span className="ml-1.5 rounded bg-slate-100 px-1 py-px text-[10px] text-slate-500">
+                  {KEYPOINT_CATEGORY_NAMES[point.category ?? "phenomenon"]}
+                  {point.country ? ` · ${point.country}` : ""}
+                </span>
+                <span className="ml-1.5 tabular-nums text-slate-500">{point.heightKm} km</span>
+                <span className="block text-slate-500">{point.note}</span>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
       <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
         {sourceIds.map((id) => (
           <button

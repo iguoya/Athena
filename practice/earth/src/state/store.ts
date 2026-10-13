@@ -1,15 +1,9 @@
 import { create } from "zustand";
+import type { ViewFocus } from "../scene/viewpoints";
 
 export type ProbeMode = "interior" | "atmosphere";
 
-export interface FocusTarget {
-  /** 相机最终看向的点（场景单位） */
-  target: [number, number, number];
-  /** 相机到该点的距离（场景单位） */
-  distance: number;
-  /** 相机相对目标的方向（场景坐标，不必归一化）；缺省沿当前视线方向 */
-  lookFrom?: [number, number, number];
-}
+export type { ViewFocus };
 
 export interface DemoSelection {
   kind: "air" | "ballistic";
@@ -17,7 +11,8 @@ export interface DemoSelection {
 }
 
 interface EarthState {
-  /** 剖面开关：开（默认）= 切掉 x>0、z>0 四分之一，露出两片密度着色的截面 */
+  /** 剖面开关：默认关——第一眼是全球 + 地面视角观空中（内部构成不抢戏）；
+      开 = 切掉 x>0、z>0 四分之一，露出两片密度着色的截面。 */
   cutaway: boolean;
   /** 选中的层 id（内部与大气层的 id 不冲突） */
   selectedLayerId: string | null;
@@ -26,7 +21,7 @@ interface EarthState {
   probeKm: number;
   showLabels: boolean;
   /** 相机飞行目标；null = 不在飞行中。target 可以不是地心（否则看不了大气薄层） */
-  focus: FocusTarget | null;
+  focus: ViewFocus | null;
   /** 相机当前到观察目标的距离（R），由 CameraRig 节流上报，供视野比例尺换算 */
   cameraDistanceR: number;
   /** 自转时间倍率：真实恒星日 86164 s × 倍率 */
@@ -42,7 +37,7 @@ interface EarthState {
   setProbeMode: (mode: ProbeMode) => void;
   setProbeKm: (km: number) => void;
   toggleLabels: () => void;
-  flyTo: (focus: FocusTarget) => void;
+  flyTo: (focus: ViewFocus) => void;
   arrive: () => void;
   reportDistance: (distanceR: number) => void;
   setSpinScale: (spinScale: number) => void;
@@ -54,7 +49,7 @@ interface EarthState {
 }
 
 export const useEarth = create<EarthState>((set) => ({
-  cutaway: true,
+  cutaway: false,
   selectedLayerId: null,
   probeMode: "interior",
   probeKm: 0,

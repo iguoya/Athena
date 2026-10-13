@@ -181,6 +181,31 @@ describe("大气分层", () => {
     const geo = data.atmosphere.keyPoints.find((p) => p.name.includes("地球静止轨道"))!;
     expect(atmosphereLayerAtHeight(geo.heightKm)?.id).toBe("exosphere");
   });
+
+  it("空中居民各就各位：动物在对流层，战机在平流层，天宫/星链在热层，北斗 MEO 在外逸层", () => {
+    const find = (name: string) => data.atmosphere.keyPoints.find((p) => p.name === name)!;
+    expect(atmosphereLayerAtHeight(find("斑头雁迁徙").heightKm)?.id).toBe("troposphere");
+    expect(atmosphereLayerAtHeight(find("C919 巡航").heightKm)?.id).toBe("troposphere");
+    expect(atmosphereLayerAtHeight(find("U-2 高空侦察").heightKm)?.id).toBe("stratosphere");
+    expect(atmosphereLayerAtHeight(find("夜光云").heightKm)?.id).toBe("mesosphere");
+    expect(atmosphereLayerAtHeight(find("天宫空间站").heightKm)?.id).toBe("thermosphere");
+    expect(atmosphereLayerAtHeight(find("星链星座").heightKm)?.id).toBe("thermosphere");
+    expect(atmosphereLayerAtHeight(find("北斗 MEO 卫星").heightKm)?.id).toBe("exosphere");
+  });
+
+  it("每条居民锚点都声明了类型，航空与航天条目给出国家与可查出处", () => {
+    for (const point of data.atmosphere.keyPoints) {
+      expect(point.category).toBeDefined();
+    }
+    const c919 = data.atmosphere.keyPoints.find((p) => p.name === "C919 巡航")!;
+    expect(c919.country).toBe("中国");
+    expect(c919.sourceIds).toContain("aviation-performance");
+    const tiangong = data.atmosphere.keyPoints.find((p) => p.name === "天宫空间站")!;
+    expect(tiangong.country).toBe("中国");
+    expect(tiangong.sourceIds).toContain("space-orbits-public");
+    const starlink = data.atmosphere.keyPoints.find((p) => p.name === "星链星座")!;
+    expect(starlink.country).toBe("美国");
+  });
 });
 
 describe("US Standard Atmosphere 1976", () => {
