@@ -46,12 +46,14 @@ nas_admin/          应用包（__init__ 工厂、views 首页与探活、templa
 nas_admin/access.py  来源地址与限流（应用里不认证，门在网络层；ADR 0077）
 nas_admin/driver_api/  驾考进度 REST API（/api/driver/v1；ADR 0068、0077）
 nas_admin/user_api/  全局学习者目录 REST API（/api/users/v1；ADR 0074、0075、0077）
+nas_admin/progress_api/  学习进度通用同步接口（/api/progress/v1，按 JSON 行存，不认应用表结构；ADR 0155）
 nas_admin/driver_dashboard/  驾考进度只读仪表盘（/driver/，免登录页面，外网靠 Access；ADR 0069）
                      含「学习诊断」标签（diagnosis.py，口径同客户端 lib/diagnosis.dart，按学习者算；ADR 0076）
 nas_admin/static/   echarts.min.js 等前端文件（随部署走，不走 CDN）
 tests/              单元测试（SQLite）、真实 FAB 冒烟、对真实 PG 的集成测试（设环境变量才跑）
 docs/driver-api.md  API 接口、认证、部署（含数据库低权限角色）与测试说明
 docs/user-api.md    学习者目录 API：登记、按名字登录、只能改自己的名字
+docs/progress-api.md  进度同步 API：push/pull、append 与 lww 合并规则、游标
 docs/cloudflare-access.md  外网访问：Cloudflare Access 的一次性配置与自检
 scripts/run_dev.py  本机自举：bootstrap 建 .venv，serve 起 app.py
 scripts/check.py    验证入口（依赖就绪 + smoke：/api/health、/login/、/）

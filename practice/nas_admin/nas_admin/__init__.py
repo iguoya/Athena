@@ -13,6 +13,7 @@ from flask_appbuilder.models.sqla.base import SQLA
 
 from nas_admin.driver_api import init_driver_api
 from nas_admin.driver_dashboard import init_driver_dashboard
+from nas_admin.progress_api import init_progress_api
 from nas_admin.user_api import init_user_api
 from nas_admin.views import DashboardIndexView, health
 
@@ -39,6 +40,9 @@ def create_app(config_object: str = "config") -> Flask:
 
     # 全局学习者目录 REST API（同一套设备令牌，ADR 0074、0075）。
     init_user_api(app)
+
+    # 各学习应用本地进度库的通用同步接口（ADR 0155）。
+    init_progress_api(app)
 
     # 驾考进度只读仪表盘（免登录页面，ADR 0069）。
     init_driver_dashboard(app)
