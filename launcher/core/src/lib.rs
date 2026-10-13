@@ -14,6 +14,7 @@ pub mod manifest;
 pub mod mindmap;
 pub mod paths;
 pub mod progress;
+pub mod progress_sync;
 pub mod runner;
 
 pub use manifest::{discover, discover_all, discover_in, fingerprint, App, Lifecycle, RenderSpec};

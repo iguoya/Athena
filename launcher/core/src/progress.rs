@@ -100,6 +100,8 @@ fn push(repo: &Path, report: &mut impl FnMut(&str)) -> Result<(), String> {
 /// 一样（`mathematics` 的知识点前缀就是 `math.`，两者有意不同）。
 fn progress_paths(repo: &Path, apps: &[App]) -> Vec<String> {
     apps.iter()
+        // 声明了 `progress` 的应用走启动器的同步代理（ADR 0155），库不再进 git。
+        .filter(|app| app.progress.is_none())
         .filter_map(|app| {
             let directory = app.dir.join("progress");
             if !directory.is_dir() {

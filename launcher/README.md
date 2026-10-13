@@ -135,8 +135,31 @@ launcher/target/release/launcher list --json # 同上，机器读的格式（前
 launcher/target/release/launcher open dsa    # 打开；已在跑的只把窗口叫到前面
 launcher/target/release/launcher stop dsa    # 连同构建期拉起的那一串一起收掉
 launcher/target/release/launcher logs dsa    # 日志文件路径
-launcher/target/release/launcher sync        # 提交并推送学习进度
+launcher/target/release/launcher sync        # 提交并推送学习进度（只剩未迁走的应用）
+launcher/target/release/launcher progress sync [id]   # 本地进度库与路由器对一遍
+launcher/target/release/launcher progress status      # 每个应用的本地库、待推送条数、游标
+launcher/target/release/launcher progress backup [dir]  # 本地库与中心库导出成 JSON 快照
 ```
+
+**进度同步代理**（ADR 0155）：在 `app.json` 里声明了 `progress` 的应用，本地库放在用户数据目录
+（`<dir>/learning.db`），**不进 git**；启动器在能连上路由器时把它与 `nas_admin` 的
+`/api/progress/v1` 互推。打开应用前会先对一遍，常驻时每隔一段时间对没在跑的应用对一遍；
+路由器不可达只写日志（`<用户数据目录>/AthenaSync/sync.log`），不弹任何提示。
+配置在 `AthenaSync/config.json`（首次自动生成：端点列表、学习者编号、设备名）。
+声明格式：
+
+```json
+"progress": {
+  "dir": "athena-cpp",
+  "tables": {
+    "knowledge_progress": { "mode": "lww" },
+    "run_history": { "mode": "append", "key": ["started_at", "lab_id"] }
+  }
+}
+```
+
+`mode` 是 `lww`（可变记录，更新时间新者胜）或 `append`（事件，同一键只记第一次）；
+`key` 省略取表的主键，没有主键的表必须写。
 
 `sync` 对应 ADR 0053：进度库跟着仓库走（`<分类目录>/<id>/progress/learning.db`），所以
 同步就是一次提交加一次推送。（已迁中心 PostgreSQL 的应用，如 `driver`，个人数据不在

@@ -31,6 +31,10 @@
   前端和脚本都认它；改它等于破坏所有前端。
 - **`sync` 只碰 `progress` 路径**（ADR 0053）：不连带代码改动，待推送里有非进度提交就
   列出来交回使用者，不替人 push。
+- **进度同步是通用代理，不按应用写分支**（ADR 0155）：`core/src/progress_sync.rs` 只认
+  `app.json` 里的 `progress` 声明，读写应用本地库、与 `nas_admin` 互推；同步失败只写日志，
+  不进任何界面，也不拦启动。拉取要写应用的库，所以只在应用没在跑时做。改它先跑
+  `cargo test -p launcher-core progress_sync`；对真实服务端的端到端测试是 `--ignored e2e`。
 - **平台降级要如实说**（ADR 0047、0049、0051）：做不到就明说（例如 Wayland 不允许抢
   焦点时提示使用者自己切过去），不假装成功。
 - **启动器标志是虎头。** 窗口内 `webui/public/tiger-mark.png`，托盘

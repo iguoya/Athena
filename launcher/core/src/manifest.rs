@@ -148,6 +148,32 @@ impl Lifecycle {
     }
 }
 
+/// 本地进度库的同步声明（ADR 0155）：库在用户数据目录的哪里、哪些表怎么合并。
+/// 没有这个字段的应用不参与进度同步（图谱/参考类、practice、已迁走的 driver）。
+#[derive(Debug, Clone, Deserialize)]
+pub struct ProgressSpec {
+    /// 用户数据目录下放本应用库的目录名，与应用里 `database_path` 用的名字一致。
+    pub dir: String,
+    /// 要同步的表。没列出的表不同步，也不会被同步代理读写。
+    pub tables: std::collections::BTreeMap<String, TableSpec>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct TableSpec {
+    pub mode: TableMode,
+    /// 业务键的列。省略则取表的 PRIMARY KEY；没有主键的表必须写。
+    #[serde(default)]
+    pub key: Vec<String>,
+}
+
+/// `append`：事件，同一键只记第一次，取并集；`lww`：可变记录，更新时间新者胜。
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum TableMode {
+    Append,
+    Lww,
+}
+
 #[derive(Debug, Clone, Deserialize)]
 struct RawManifest {
     id: String,
@@ -184,6 +210,9 @@ struct RawManifest {
     /// 收 String 再手动转枚举：未知值点名回退，而不是让整个 app.json 读不动。
     #[serde(default)]
     lifecycle: Option<String>,
+    /// 本地进度库的同步声明（ADR 0155）。
+    #[serde(default)]
+    progress: Option<ProgressSpec>,
 }
 
 #[derive(Debug, Clone)]
@@ -217,6 +246,8 @@ pub struct App {
     pub hidden: bool,
     /// 学习生命周期（ADR 0139）：活跃学习 / 建成待学 / 冻结归档。
     pub lifecycle: Lifecycle,
+    /// 本地进度库的同步声明（ADR 0155）；没有就不参与同步。
+    pub progress: Option<ProgressSpec>,
 }
 
 impl App {
@@ -368,6 +399,7 @@ fn parse(dir: &Path) -> Option<App> {
         also_in: raw.also_in,
         hidden: raw.hidden,
         lifecycle,
+        progress: raw.progress,
     })
 }
 
@@ -419,6 +451,7 @@ mod tests {
             also_in: Vec::new(),
             hidden: false,
             lifecycle: Lifecycle::Active,
+            progress: None,
         }
     }
 

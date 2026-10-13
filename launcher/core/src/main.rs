@@ -6,7 +6,11 @@
 //!   launcher open <id>        打开：已在跑就把窗口叫到前面，没跑才构建并启动
 //!   launcher stop <id>        停止它，连同构建期拉起的那一串
 //!   launcher logs <id>        打印日志文件路径
-//!   launcher sync             提交并推送学习进度，不碰你的代码改动（ADR 0053）
+//!   launcher sync             提交并推送学习进度，不碰你的代码改动（ADR 0053；
+//!                             声明了 progress 的应用已改走下面的同步代理，不再经 git）
+//!   launcher progress sync [<id>]   把本地进度库与路由器对一遍（ADR 0155）；路由器不可达只报告
+//!   launcher progress status        每个应用的本地库、待推送条数、拉取游标
+//!   launcher progress backup [<dir>]  本地库与中心库导出成带时间戳的 JSON 快照，不进 git
 //!   launcher icons [--check]  按各应用 app.json 的 icon.renders 从 icon.svg 生成位图；
 //!                             不给 --root 时 各分组目录、practice/、certification/、mentor/ 与 tools/ 一起扫（ADR 0065、0142、0144、0146）
 //!
@@ -117,6 +121,66 @@ fn main() -> ExitCode {
             Ok(()) => ExitCode::SUCCESS,
             Err(message) => {
                 eprintln!("{message}");
+                ExitCode::FAILURE
+            }
+        },
+        Some("progress") => match arguments.get(1).map(String::as_str) {
+            Some("sync") => {
+                let snapshot = ProcessSnapshot::take();
+                let only = arguments.get(2).map(String::as_str);
+                let results = launcher_core::progress_sync::sync_all(&apps, &snapshot, only);
+                if results.is_empty() {
+                    eprintln!("没有声明了 progress 的应用{}。", only.map(|id| format!("（{id}）")).unwrap_or_default());
+                    return ExitCode::FAILURE;
+                }
+                let mut failed = false;
+                for (id, result) in results {
+                    match result {
+                        Ok(o) => line(&format!(
+                            "{id:<18} 本地新改动 {}，推送 {}，拉取 {}{}",
+                            o.changed,
+                            o.pushed,
+                            o.pulled,
+                            o.note.map(|n| format!("（{n}）")).unwrap_or_default()
+                        )),
+                        Err(message) => {
+                            failed = true;
+                            eprintln!("{id:<18} {message}");
+                        }
+                    }
+                }
+                if failed { ExitCode::FAILURE } else { ExitCode::SUCCESS }
+            }
+            Some("status") => {
+                for entry in launcher_core::progress_sync::status(&apps) {
+                    line(&entry);
+                }
+                ExitCode::SUCCESS
+            }
+            Some("backup") => {
+                let dir = match arguments.get(2) {
+                    Some(dir) => std::path::PathBuf::from(dir),
+                    None => match launcher_core::progress_sync::sync_dir() {
+                        Some(base) => base.join("backups"),
+                        None => {
+                            eprintln!("找不到用户数据目录");
+                            return ExitCode::FAILURE;
+                        }
+                    },
+                };
+                match launcher_core::progress_sync::backup(&apps, &dir) {
+                    Ok(path) => {
+                        line(&format!("已备份到 {}", path.display()));
+                        ExitCode::SUCCESS
+                    }
+                    Err(message) => {
+                        eprintln!("{message}");
+                        ExitCode::FAILURE
+                    }
+                }
+            }
+            _ => {
+                eprintln!("用法：launcher progress sync [<id>] | status | backup [<dir>]");
                 ExitCode::FAILURE
             }
         },

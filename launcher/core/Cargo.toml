@@ -15,6 +15,15 @@ which = "8.0.6"
 resvg = "0.45"
 ico = "0.5"
 icns = "0.3"
+# 进度同步代理（ADR 0155）：读写各应用的本地 SQLite 进度库，经 HTTP 与路由器上的
+# nas_admin 互推。rusqlite 与各应用同版本，同一份编译缓存。
+rusqlite = { version = "0.32", features = ["bundled"] }
+dirs-next = "2"
+# 同步走内网 http 与外网 https（Cloudflare），阻塞式客户端足够：同步在后台线程里跑。
+ureq = { version = "2", features = ["json"] }
+
+[dev-dependencies]
+tempfile = "3"
 
 [lib]
 name = "launcher_core"

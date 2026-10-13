@@ -301,6 +301,10 @@ pub fn launch(app: &App, repo: &Path, mut report: impl FnMut(&str)) -> Result<u3
         ));
     }
 
+    // 启动之前先和路由器对一遍进度（ADR 0155）：此刻它没在跑，可以放心推拉；
+    // 尽力而为，路由器不可达只记日志，不拦启动。
+    crate::progress_sync::before_launch(app);
+
     let log_path = paths::log_file(&app.id);
     let mut log = std::fs::OpenOptions::new()
         .create(true)

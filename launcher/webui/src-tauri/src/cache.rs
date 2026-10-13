@@ -65,7 +65,10 @@ pub fn states(apps: &[manifest::App]) -> Vec<RunState> {
         None => *guard = Some(ProcessSnapshot::take()),
         Some(snapshot) => snapshot.refresh(),
     }
-    guard.as_ref().expect("上一行刚放入快照").states(apps)
+    let states = guard.as_ref().expect("上一行刚放入快照").states(apps);
+    // 常驻时顺带做进度同步（ADR 0155）：节流、后台线程，不拖慢这条每 3 秒一次的轮询。
+    launcher_core::progress_sync::tick(apps, &states);
+    states
 }
 
 /// 同心环底图：PNG data URL 加摆放坐标。环是静态装饰，布局没变就复用上一张。
