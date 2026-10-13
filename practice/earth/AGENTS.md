@@ -50,5 +50,5 @@
 ```sh
 python3 scripts/check.py            # 数据标准值 + 前端构建/测试 + Rust 侧检查
 python3 scripts/check.py --skip-rust  # 只改数据或前端时
-launcher/target/release/launcher --root practice open earth   # 真的打开一次
+.cache/cargo-target/release/launcher --root practice open earth   # 真的打开一次（产物路径见 ADR 0140）
 ```

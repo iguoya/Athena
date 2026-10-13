@@ -91,8 +91,8 @@ dsa 带过来的标题文案。锁文件只在仓库根，不在应用目录里�
   然后用启动器渲染：
 
   ```sh
-  launcher/target/release/launcher icons          # 写入位图
-  launcher/target/release/launcher icons --check  # 只核对
+  .cache/cargo-target/release/launcher icons          # 写入位图（产物路径见 ADR 0140）
+  .cache/cargo-target/release/launcher icons --check  # 只核对
   ```
 
   注意：本机 PATH 上的 `launcher` 可能是别的程序（PyCharm 也带一个），用仓库里的二进制。
@@ -123,7 +123,7 @@ dsa 带过来的标题文案。锁文件只在仓库根，不在应用目录里�
 python3 scripts/check.py --sources-only   # 结构卫生、skill 两处一致、出处、工作流
 python3 scripts/check.py <id>             # 本应用自己的检查
 cargo test --manifest-path launcher/Cargo.toml -p launcher-core mindmap   # 新圈/新挂靠时跑，看布局
-launcher/target/release/launcher open <id>    # 真的打开一次（practice 加 --root practice）
+.cache/cargo-target/release/launcher open <id>    # 真的打开一次（practice 加 --root practice）
 ```
 
 拆成几个提交：**ADR** → **应用目录本身** → **登记**（文档与工作流）。提交只加自己的文件。

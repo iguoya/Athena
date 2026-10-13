@@ -81,7 +81,8 @@ archive/       历史归档，不参与构建
 自己的历史档进应用目录内的 `archive/`（如 `postgraduate/ascent/archive/` 的 vuepress 旧站）。
 
 **名字**。仓库叫 Athena。打开应用的终端命令是 `launcher open <id>`（二进制在
-`launcher/target/`，名字是 `launcher`；旧文档里的 `athena-dev` 是同一个编排器）。
+`.cache/cargo-target/release/`（ADR 0140 的共享构建缓存），名字是 `launcher`；
+旧文档里的 `athena-dev` 是同一个编排器，`launcher/target/` 下的旧产物已废弃）。
 进程名用 `athena-<id>`，连字符。目录、界面标题、知识点前缀不必是同一个词；
 已经写进进度库的前缀不改。目录名允许下划线的历史遗留（`practice/nas_admin`、
 `practice/pocket_cube`），但 id 与进程名一律连字符；新目录起名跟 id 一致。

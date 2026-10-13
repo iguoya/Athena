@@ -5,7 +5,7 @@
             "name": "启动器",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/launcher/target/debug/athena-launcher",
+            "program": "${workspaceFolder}/.cache/cargo-target/debug/athena-launcher-webui",
             "args": [],
             "cwd": "${workspaceFolder}",
             "env": {
@@ -19,15 +19,15 @@
             ],
             "preLaunchTask": "Athena: Build launcher",
             "windows": {
-                "program": "${workspaceFolder}/launcher/target/debug/athena-launcher.exe"
+                "program": "${workspaceFolder}/.cache/cargo-target/debug/athena-launcher-webui.exe"
             },
             "osx": {
                 "type": "lldb",
-                "program": "${workspaceFolder}/launcher/target/debug/athena-launcher"
+                "program": "${workspaceFolder}/.cache/cargo-target/debug/athena-launcher-webui"
             },
             "linux": {
                 "type": "cppdbg",
-                "program": "${workspaceFolder}/launcher/target/debug/athena-launcher",
+                "program": "${workspaceFolder}/.cache/cargo-target/debug/athena-launcher-webui",
                 "MIMode": "gdb",
                 "miDebuggerPath": "/usr/bin/gdb"
             }

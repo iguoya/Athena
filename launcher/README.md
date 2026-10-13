@@ -75,8 +75,8 @@ Windows 任务栏用同一张 256px 的 `webui/src-tauri/icons/icon.png`。裸�
 值是 PNG 边长，或 `"ico"`（16–256 共 9 帧）/ `"icns"`（16–1024）。改了 `icon.svg` 跑：
 
 ```sh
-launcher/target/release/launcher icons          # 各分组目录、practice/、certification/、mentor/ 与 tools/ 一起重新生成
-launcher/target/release/launcher icons --check  # 只核对，过期时退出码非零
+.cache/cargo-target/release/launcher icons          # 各分组目录、practice/、certification/、mentor/ 与 tools/ 一起重新生成
+.cache/cargo-target/release/launcher icons --check  # 只核对，过期时退出码非零
 ```
 
 生成的文件提交进各应用目录，应用构建不依赖启动器。没有 `icon.svg` 的新应用，图块退回
@@ -111,14 +111,21 @@ launcher/target/release/launcher icons --check  # 只核对，过期时退出码
 
 ## 用
 
+Rust 构建产物不进 `launcher/target/`：仓库根 `.cargo/config.toml` 把本仓库所有
+Rust 构建指到共享缓存 `.cache/cargo-target/`（ADR 0140、0063），下面所有命令的
+产物都在 `.cache/cargo-target/release/` 里。
+
 ```sh
-cargo build --release --manifest-path launcher/Cargo.toml
+cargo build --release --features custom-protocol --manifest-path launcher/Cargo.toml
 ```
+
+`custom-protocol` 把前端页面嵌进二进制（`tauri build` 自动带，直接 `cargo build`
+要手动加）；不带它是开发版，运行时去连 vite 开发服务器（`pnpm dev`），改前端时用。
 
 **跨平台启动器**（托盘常驻，关掉窗口不退出）：
 
 ```sh
-launcher/target/release/athena-launcher
+.cache/cargo-target/release/athena-launcher-webui
 ```
 
 **macOS 菜单栏版**（常驻状态栏，⌃⌥A 唤出，可登录自启）：
@@ -130,15 +137,15 @@ launcher/macos/scripts/install.sh
 **终端**：
 
 ```sh
-launcher/target/release/launcher list        # 谁在跑、谁没跑
-launcher/target/release/launcher list --json # 同上，机器读的格式（前端用它）
-launcher/target/release/launcher open dsa    # 打开；已在跑的只把窗口叫到前面
-launcher/target/release/launcher stop dsa    # 连同构建期拉起的那一串一起收掉
-launcher/target/release/launcher logs dsa    # 日志文件路径
-launcher/target/release/launcher sync        # 提交并推送学习进度（只剩未迁走的应用）
-launcher/target/release/launcher progress sync [id]   # 本地进度库与路由器对一遍
-launcher/target/release/launcher progress status      # 每个应用的本地库、待推送条数、游标
-launcher/target/release/launcher progress backup [dir]  # 本地库与中心库导出成 JSON 快照
+.cache/cargo-target/release/launcher list        # 谁在跑、谁没跑
+.cache/cargo-target/release/launcher list --json # 同上，机器读的格式（前端用它）
+.cache/cargo-target/release/launcher open dsa    # 打开；已在跑的只把窗口叫到前面
+.cache/cargo-target/release/launcher stop dsa    # 连同构建期拉起的那一串一起收掉
+.cache/cargo-target/release/launcher logs dsa    # 日志文件路径
+.cache/cargo-target/release/launcher sync        # 提交并推送学习进度（只剩未迁走的应用）
+.cache/cargo-target/release/launcher progress sync [id]   # 本地进度库与路由器对一遍
+.cache/cargo-target/release/launcher progress status      # 每个应用的本地库、待推送条数、游标
+.cache/cargo-target/release/launcher progress backup [dir]  # 本地库与中心库导出成 JSON 快照
 ```
 
 **进度同步代理**（ADR 0155）：在 `app.json` 里声明了 `progress` 的应用，本地库放在用户数据目录

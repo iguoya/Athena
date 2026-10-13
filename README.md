@@ -59,17 +59,18 @@ C++ 教程曾经占据仓库根、是打开其他应用的必经之路；[ADR 00
 已经在跑的只把窗口提到前面：
 
 ```sh
-cargo build --release --manifest-path launcher/Cargo.toml   # 先备好编排器与界面
-launcher/target/release/athena-launcher                     # 跨平台：托盘常驻 + 列表窗口
+cargo build --release --features custom-protocol --manifest-path launcher/Cargo.toml
+                                                            # 产物在 .cache/cargo-target/release/（ADR 0140）
+.cache/cargo-target/release/athena-launcher-webui           # 跨平台：托盘常驻 + 列表窗口
 launcher/macos/scripts/install.sh                           # macOS：菜单栏常驻，⌃⌥A 唤出
 ```
 
 终端里也能用同一个编排器：
 
 ```sh
-launcher/target/release/launcher list        # 谁在跑、谁没跑
-launcher/target/release/launcher open data-structures   # 打开；已在跑的只把窗口叫到前面
-launcher/target/release/launcher stop data-structures
+.cache/cargo-target/release/launcher list        # 谁在跑、谁没跑
+.cache/cargo-target/release/launcher open data-structures   # 打开；已在跑的只把窗口叫到前面
+.cache/cargo-target/release/launcher stop data-structures
 ```
 
 一律走这些热更新入口，不要启动打包副本——那会让人不知不觉对着旧版本工作。
