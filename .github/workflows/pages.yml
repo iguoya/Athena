@@ -2,7 +2,9 @@ name: Pages
 
 # 文档站（ADR 0154）：把 docs/ 与根文档渲染成静态站点，发布到 GitHub Pages。
 #
-# 触发：文档相关文件推送到 main，或手动 `gh workflow run pages.yml`。
+# 站点 = 文档 + 在线演示（目前只有 practice/earth 的网页版，见 scripts/docs_site.py 的 DEMOS）。
+#
+# 触发：文档或演示相关文件推送到 main，或手动 `gh workflow run pages.yml`。
 # 这是 ADR 0064「CI 显式触发」的有意例外：站点只读文档、一分钟内跑完、不开矩阵，
 # 且「文档一改站点就跟着变」正是它存在的理由；路径过滤保证改代码不会触发。
 on:
@@ -10,6 +12,8 @@ on:
     branches: [main]
     paths:
       - "docs/**"
+      - "practice/earth/**"
+      - "!practice/earth/src-tauri/**"
       - "README.md"
       - "AGENTS.md"
       - "CHANGELOG.md"
@@ -44,6 +48,24 @@ jobs:
 
       - name: Install MkDocs
         run: python -m pip install -r scripts/docs-site/requirements.txt
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      # 只装 earth 及其依赖，不装整个工作区。
+      - name: Build earth demo
+        run: |
+          pnpm install --frozen-lockfile --filter "./practice/earth..."
+          pnpm --filter ./practice/earth build
 
       - name: Build site
         run: python scripts/docs_site.py

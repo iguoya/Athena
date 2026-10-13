@@ -35,6 +35,11 @@ BRANCH = "main"
 INCLUDE_DIRS = ("docs",)
 INCLUDE_FILES = ("README.md", "AGENTS.md", "CHANGELOG.md")
 
+# 在线演示：站点 /demo/<名字>/ 下放纯前端应用的 Vite 构建产物（ADR 0154）。
+# 只收不依赖 Tauri 后端就能在浏览器里跑的应用；产物由 pages.yml 先构建，本地没构建
+# 就跳过，不影响文档站本身。
+DEMOS = {"earth": "practice/earth/dist"}
+
 # 这些是文档里真会用到的 HTML 标签，其余尖括号一律当文字。
 KNOWN_HTML = {
     "a", "b", "i", "em", "strong", "code", "pre", "p", "br", "hr", "div", "span",
@@ -147,12 +152,26 @@ def run_mkdocs(serve: bool) -> int:
     )
 
 
+def copy_demos() -> None:
+    site = STAGE / "site"
+    for name, built in DEMOS.items():
+        source = REPO_ROOT / built
+        if not source.is_dir():
+            print(f"跳过演示 {name}：没有构建产物 {built}（先构建该应用的前端）")
+            continue
+        shutil.copytree(source, site / "demo" / name)
+        print(f"已加入演示 {name} → /demo/{name}/")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--serve", action="store_true", help="本地预览")
     args = parser.parse_args()
     stage_content()
-    raise SystemExit(run_mkdocs(args.serve))
+    code = run_mkdocs(args.serve)
+    if code == 0 and not args.serve:
+        copy_demos()
+    raise SystemExit(code)
 
 
 if __name__ == "__main__":
