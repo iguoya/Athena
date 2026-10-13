@@ -1,7 +1,7 @@
 # ADR 0079：强化练习动态移出——对的次数达到错的 2 倍就移出
 
 - 日期：2026-10-05
-- 状态：已接受
+- 状态：已接受；决策 1 的移出条件由 ADR 0128 修订（加「最近一次答对」）
 - 影响：`lib/reinforce.dart`（`QuestionHistory.retiredFromWrongPool`、`correct`、
   `correctsToRetire`、`retireRatio`；删去 `reinforcedSinceWrong`、`variantPassesSinceWrong`、
   `StubbornQuestion.pinned`；`HistorySet.build` 不再接考点簇）、`lib/reinforce_page.dart`

@@ -65,6 +65,32 @@ void main() {
       expect(back.correctsToRetire, 2);
     });
 
+    test("一直答对的题第一次答错：累计答对再多也要回备选库，再对一次才算修补（ADR 0128）", () {
+      final attempts = [for (var i = 0; i < 6; i++) _a("a", true, i), _a("a", false, 6)];
+      final h = HistorySet.build(attempts).of("a")!;
+      expect(h.wrong, 1);
+      expect(h.correct, 6);
+      expect(h.retiredFromWrongPool, isFalse, reason: "最近一次答错，不能因为从前答对得多就直接移出");
+      expect(h.correctsToRetire, 1);
+      final back = HistorySet.build([...attempts, _a("a", true, 7)]).of("a")!;
+      expect(back.retiredFromWrongPool, isTrue);
+      expect(back.correctsToRetire, 0);
+    });
+
+    test("强化练习与考前复习对同一段作答给出同一个结论（ADR 0128）", () {
+      // 先错 w 次再对 c 次：最后一次错之后连对 c 次，streak 就是 c。
+      for (var w = 2; w <= 5; w++) {
+        for (var c = 0; c <= 2 * w + 2; c++) {
+          final h = HistorySet.build(_history("a", w, c)).of("a")!;
+          expect(
+            h.retiredFromWrongPool,
+            !inReview(wrongCount: w, correctCount: c, streak: c),
+            reason: "错 $w 次、再对 $c 次",
+          );
+        }
+      }
+    });
+
     test("没答错过的题不在备选库里，也不算移出", () {
       final h = HistorySet.build(_history("a", 0, 5)).of("a")!;
       expect(h.retiredFromWrongPool, isFalse);

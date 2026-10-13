@@ -36,8 +36,9 @@ void main() {
     expect(row["duration_ms"], 300000);
   });
 
-  // 考前复习的进出（ADR 0033、0035）：答对比答错多 1～2 次、且最近一次答对才出；再错回来。
-  test("考前复习：答对比答错多 1～2 次才移出，错多次的也能出，再错一次回来", () async {
+  // 考前复习的进出（ADR 0033、0128）：与强化练习共用「已修补」判据——
+  // 累计答对达到答错的 2 倍、且最近一次答对才出；再错回来。
+  test("考前复习：答对达到答错的 2 倍才移出，错多次的也能出，再错一次回来", () async {
     Future<void> answer(String id, List<bool> results) async {
       for (final ok in results) {
         await store.recordAttempt(questionId: id, topicId: "t", subjectId: "s", correct: ok);
@@ -56,12 +57,12 @@ void main() {
     await answer("once", [false]);
     expect(await reviewing("once"), isFalse);
 
-    // 错 2 次：要对 3 次。对 2 次还在，对第 3 次移出。
-    await answer("two", [false, false, true, true]);
+    // 错 2 次：要对 4 次。对 3 次还在，对第 4 次移出。
+    await answer("two", [false, false, true, true, true]);
     expect(await reviewing("two"), isTrue);
     await answer("two", [true]);
     expect(await reviewing("two"), isFalse);
-    // 移出后再错：累计错 3 次，要对 5 次；已经对 3 次，再对 2 次才出去。
+    // 移出后再错：累计错 3 次，要对 6 次；已经对了 4 次，再对 2 次才出去。
     await answer("two", [false]);
     expect(await reviewing("two"), isTrue);
     expect((await store.correctStreaksSinceWrong())["two"], 0);
@@ -70,9 +71,9 @@ void main() {
     await answer("two", [true]);
     expect(await reviewing("two"), isFalse);
 
-    // 错 8 次的顽固题：对 10 次也能出，不会永远困在里面。
+    // 错 8 次的顽固题：对 16 次也能出，不会永远困在里面。
     await answer("stubborn", List.filled(8, false));
-    await answer("stubborn", List.filled(9, true));
+    await answer("stubborn", List.filled(15, true));
     expect(await reviewing("stubborn"), isTrue);
     await answer("stubborn", [true]);
     expect(await reviewing("stubborn"), isFalse);
@@ -84,10 +85,19 @@ void main() {
     expect(await reviewing("late"), isFalse);
   });
 
-  test("考前复习移出门槛：答对比答错多 1～2 次", () {
-    expect(reviewExitCorrect(2), 3);
-    expect(reviewExitCorrect(3), 5);
-    expect(reviewExitCorrect(8), 10);
+  test("已修补的门槛：答对达到答错的 2 倍；最近一次答错时至少还差 1 次", () {
+    int need(int wrong, int correct, {bool last = true}) =>
+        correctsToRepair(wrong: wrong, correct: correct, lastCorrect: last);
+    expect(need(2, 0), 4);
+    expect(need(3, 0), 6);
+    expect(need(8, 0), 16);
+    expect(need(2, 4), 0);
+    expect(need(0, 5), 0, reason: "没答错过的题不需要修补");
+    expect(need(2, 9, last: false), 1, reason: "累计够了但刚答错：靠下一次答对把「最近一次」翻回来");
+    expect(isRepaired(wrong: 2, correct: 4, lastCorrect: true), isTrue);
+    expect(isRepaired(wrong: 2, correct: 3, lastCorrect: true), isFalse);
+    expect(isRepaired(wrong: 2, correct: 9, lastCorrect: false), isFalse);
+    expect(isRepaired(wrong: 0, correct: 9, lastCorrect: true), isFalse);
   });
 
   test("按作答时间认最近一次：后并进来的更早答错不盖掉现在的答对", () async {

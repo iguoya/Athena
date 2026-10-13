@@ -257,15 +257,19 @@ class _HomePageState extends State<HomePage> {
     wrong.sort(
       (a, b) => (wrongCounts[b.id] ?? 0).compareTo(wrongCounts[a.id] ?? 0),
     );
-    // 考前复习：累计错够次数进来；最近一次答对、且累计答对比答错多 1～2 次才出去，
-    // 再错又回来（ADR 0033、0035）。全部从作答记录派生，不另存一张表。
+    // 考前复习：累计错够次数进来；与强化练习共用「已修补」判据才出去——最近一次答对、
+    // 且累计答对达到答错的 2 倍，再错又回来（ADR 0033、0128）。全部从作答记录派生，不另存一张表。
     final eligible = [
       for (final q in widget.bank.questions)
         if ((wrongCounts[q.id] ?? 0) >= reviewMinWrong) q,
     ];
     int correctOf(Question q) => (attempts[q.id] ?? 0) - (wrongCounts[q.id] ?? 0);
-    int left(Question q) => reviewExitCorrect(wrongCounts[q.id] ?? 0) - correctOf(q);
     bool stillWrong(Question q) => (streaks[q.id] ?? 0) == 0;
+    int left(Question q) => correctsToRepair(
+          wrong: wrongCounts[q.id] ?? 0,
+          correct: correctOf(q),
+          lastCorrect: !stillWrong(q),
+        );
     final review = [
       for (final q in eligible)
         if (inReview(
@@ -1471,7 +1475,8 @@ class _HomePageState extends State<HomePage> {
 
   /// 考前复习：累计答错 [reviewMinWrong] 次以上的题（ADR 0033）。
   /// 跟错题本的区别：错题本答对一次就移走；这里要最近一次答对、且累计答对
-  /// 够 [reviewExitCorrect] 次（比答错多 1～2 次）才移出，再错又回来（ADR 0035）。
+  /// 达到答错的 [repairRatio] 倍才移出（与强化练习同一个「已修补」判据 [isRepaired]），
+  /// 再错又回来（ADR 0128）。
   Widget _reviewOverview(BuildContext context) {
     final items = _reviewQuestions;
     final open = [for (final q in items) if (_wrongIds.contains(q.id)) q];
@@ -1511,7 +1516,7 @@ class _HomePageState extends State<HomePage> {
                 ? (_reviewGraduated == 0
                     ? "还没有累计答错 $reviewMinWrong 次以上的题。"
                     : "反复错过的 $_reviewGraduated 道都已连对够次数移出了；再错会自动回来。")
-                : "累计答错 $reviewMinWrong 次以上的题进这里。答对次数要比答错多 1～2 次（错 2 次对 3 次，错 3 次以上多对 2 次）、且最近一次答对才移出；移出后再错会自动回来。",
+                : "累计答错 $reviewMinWrong 次以上的题进这里。累计答对要达到答错的 $repairRatio 倍（错 2 次要对 4 次，错 3 次要对 6 次）、且最近一次答对才移出；移出后再错会自动回来。",
             style: body,
           ),
           if (items.isNotEmpty) ...[
@@ -1553,7 +1558,7 @@ class _HomePageState extends State<HomePage> {
                   final times = _wrongCounts[q.id] ?? reviewMinWrong;
                   final streak = _reviewStreaks[q.id] ?? 0;
                   final correct = (_attempts[q.id] ?? 0) - times;
-                  final need = reviewExitCorrect(times);
+                  final need = repairRatio * times;
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
