@@ -385,7 +385,7 @@ fn table_info(db: &Connection, tbl: &str, spec: &TableSpec) -> Result<Option<Tab
         return Err(format!("表名「{tbl}」不合法"));
     }
     let mut stmt = db.prepare(&format!("PRAGMA table_info({})", quote(tbl))).map_err(|e| e.to_string())?;
-    let mut columns: Vec<(String, i64)> = stmt
+    let columns: Vec<(String, i64)> = stmt
         .query_map([], |r| Ok((r.get::<_, String>(1)?, r.get::<_, i64>(5)?)))
         .map_err(|e| e.to_string())?
         .collect::<Result<_, _>>()
@@ -393,13 +393,14 @@ fn table_info(db: &Connection, tbl: &str, spec: &TableSpec) -> Result<Option<Tab
     if columns.is_empty() {
         return Ok(None);
     }
-    let cols: Vec<String> = columns.iter().map(|(name, _)| name.clone()).collect();
+    let all_cols: Vec<String> = columns.iter().map(|(name, _)| name.clone()).collect();
+    let mut primary: Vec<(String, i64)> = columns.iter().filter(|(_, pk)| *pk > 0).cloned().collect();
+    primary.sort_by_key(|(_, pk)| *pk);
+    let primary: Vec<String> = primary.into_iter().map(|(name, _)| name).collect();
     let key = if spec.key.is_empty() {
-        columns.retain(|(_, pk)| *pk > 0);
-        columns.sort_by_key(|(_, pk)| *pk);
-        columns.into_iter().map(|(name, _)| name).collect()
+        primary.clone()
     } else {
-        if let Some(missing) = spec.key.iter().find(|k| !cols.contains(k)) {
+        if let Some(missing) = spec.key.iter().find(|k| !all_cols.contains(k)) {
             return Err(format!("表 {tbl} 没有声明的键列 {missing}"));
         }
         spec.key.clone()
@@ -407,6 +408,10 @@ fn table_info(db: &Connection, tbl: &str, spec: &TableSpec) -> Result<Option<Tab
     if key.is_empty() {
         return Err(format!("表 {tbl} 没有主键，app.json 的 progress.tables.{tbl}.key 必须写"));
     }
+    // 业务键之外的主键列（典型是自增 id）只在本机有意义：各台机器的 id 会撞号，
+    // 一旦随行传过去再写进来，`INSERT OR REPLACE` 会盖掉本机另一条记录。所以它既不读、
+    // 不传，也不写，新行的 id 由本机自己的自增分配。
+    let cols = all_cols.into_iter().filter(|c| key.contains(c) || !primary.contains(c)).collect();
     Ok(Some(TableInfo { cols, key }))
 }
 
@@ -702,11 +707,40 @@ pub fn sync_with(state: &State, remote: &mut dyn Remote, device: &str, app: &str
 
 // ---------------------------------------------------------------- 对外入口
 
+/// 旧位置（仓库里的 `<app>/progress/learning.db`，ADR 0053）→ 新位置（用户数据目录）。
+/// 只在新位置还没有库时复制一次；旧文件原样留着，是否撤出 git 是后一步的事。
+/// 必须赶在应用第一次用新路径之前：应用见不到库会自己建一个空的，之后就不会再搬了。
+fn migrate_legacy(app: &App, spec: &ProgressSpec) {
+    let Some(target) = local_db_path(spec) else { return };
+    let legacy = app.dir.join("progress").join("learning.db");
+    match copy_once(&legacy, &target) {
+        Ok(true) => log(&format!("{} 旧进度库已搬到 {}", app.id, target.display())),
+        Ok(false) => {}
+        Err(error) => log(&format!("{} 旧进度库搬迁失败：{error}", app.id)),
+    }
+}
+
+/// 目标不存在、来源存在时复制一次；返回是否复制了。
+fn copy_once(legacy: &Path, target: &Path) -> std::io::Result<bool> {
+    if target.exists() || !legacy.is_file() {
+        return Ok(false);
+    }
+    if let Some(parent) = target.parent() {
+        std::fs::create_dir_all(parent)?;
+    }
+    std::fs::copy(legacy, target)?;
+    Ok(true)
+}
+
 /// 同步一组声明了 `progress` 的应用。`may_pull` 回答「这个应用此刻能不能写它的库」：
 /// 应用在跑就只推不拉，拉取要写它的库。
 fn sync_apps(targets: &[&App], may_pull: &dyn Fn(&App) -> bool) -> Vec<(String, Result<Outcome, String>)> {
     if targets.is_empty() {
         return Vec::new();
+    }
+    // 先搬旧库，再碰网络：路由器不可达也不能耽误这一步。
+    for app in targets {
+        migrate_legacy(app, app.progress.as_ref().expect("调用方已过滤"));
     }
     let session = (|| -> Result<(Config, State), String> {
         let config = load_config()?;
@@ -1003,6 +1037,23 @@ mod tests {
     }
 
     #[test]
+    fn 旧库只在新位置没有时搬一次() {
+        let dir = tempfile::tempdir().unwrap();
+        let legacy = dir.path().join("repo").join("learning.db");
+        let target = dir.path().join("data").join("athena-x").join("learning.db");
+        std::fs::create_dir_all(legacy.parent().unwrap()).unwrap();
+        std::fs::write(&legacy, b"old").unwrap();
+        assert!(copy_once(&legacy, &target).unwrap());
+        assert_eq!(std::fs::read(&target).unwrap(), b"old");
+        // 新位置已有（应用之后写过）就不能再被旧文件覆盖。
+        std::fs::write(&target, b"new").unwrap();
+        assert!(!copy_once(&legacy, &target).unwrap());
+        assert_eq!(std::fs::read(&target).unwrap(), b"new");
+        // 没有旧库也不报错。
+        assert!(!copy_once(&dir.path().join("none.db"), &dir.path().join("t2.db")).unwrap());
+    }
+
+    #[test]
     fn 时间戳格式() {
         assert_eq!(utc_stamp(UNIX_EPOCH), "1970-01-01T00:00:00.000Z");
         assert_eq!(utc_stamp(UNIX_EPOCH + Duration::from_millis(1_760_317_323_123)), "2025-10-13T01:02:03.123Z");
@@ -1066,6 +1117,30 @@ mod tests {
         a.sync(&server, true).unwrap();
         assert_eq!(a.attempts(), 2);
         assert_eq!(b.attempts(), 2);
+    }
+
+    #[test]
+    fn 自增id撞号时不会覆盖本地另一条记录() {
+        let server = remote();
+        let a = Device::new("pc-a");
+        let b = Device::new("pc-b");
+        // 两边各自的第 1 条记录自增 id 都是 1，但内容不同。
+        a.db().execute("INSERT INTO attempts(qid, at, ok) VALUES('qa', 't1', 1)", []).unwrap();
+        b.db().execute("INSERT INTO attempts(qid, at, ok) VALUES('qb', 't2', 0)", []).unwrap();
+        a.sync(&server, true).unwrap();
+        b.sync(&server, true).unwrap();
+        a.sync(&server, true).unwrap();
+        for device in [&a, &b] {
+            let qids: Vec<String> = device
+                .db()
+                .prepare("SELECT qid FROM attempts ORDER BY qid")
+                .unwrap()
+                .query_map([], |r| r.get(0))
+                .unwrap()
+                .collect::<Result<_, _>>()
+                .unwrap();
+            assert_eq!(qids, vec!["qa", "qb"], "{}", device.name);
+        }
     }
 
     #[test]
