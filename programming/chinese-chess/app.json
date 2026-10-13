@@ -34,5 +34,11 @@
     "ready": { "http": "http://localhost:1513" },
     "match": "src-tauri/target",
     "binary": "athena-chinese-chess"
+  },
+  "progress": {
+    "dir": "AthenaChineseChess",
+    "tables": {
+      "attempts": { "mode": "append", "key": ["function_id", "correct", "answered_at"] }
+    }
   }
 }

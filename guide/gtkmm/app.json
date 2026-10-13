@@ -53,5 +53,12 @@
   },
   "match": "src-tauri/target",
   "binary": "athena-gtkmm"
- }
+ },
+  "progress": {
+    "dir": "AthenaGTKMM",
+    "tables": {
+      "attempts": { "mode": "append", "key": ["knowledge_id", "item_id", "answered_at"] },
+      "my_translations": { "mode": "lww" }
+    }
+  }
 }

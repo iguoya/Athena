@@ -55,5 +55,14 @@
   },
   "match": "src-tauri/target",
   "binary": "athena-organization"
- }
+ },
+  "progress": {
+    "dir": "AthenaOrganization",
+    "tables": {
+      "knowledge_progress": { "mode": "lww" },
+      "lab_progress": { "mode": "lww" },
+      "lab_draft": { "mode": "lww" },
+      "quiz_picks": { "mode": "lww" }
+    }
+  }
 }

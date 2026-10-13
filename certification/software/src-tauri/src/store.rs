@@ -36,20 +36,11 @@ pub struct TodayStats {
 }
 
 fn store_path() -> PathBuf {
-    // 开发工作树:exe 从 cargo 的 target/ 下跑,进度随仓库走(ADR 0053),
-    // 换机器 clone 下来战绩还在。发行包:内容已打进前端 bundle,exe 旁没有
-    // 仓库标记,写系统数据目录。
-    let in_dev_tree = std::env::current_exe()
-        .ok()
-        .map(|exe| exe.components().any(|c| c.as_os_str() == "target"))
-        .unwrap_or(false);
-    let dir = if in_dev_tree {
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("..").join("progress")
-    } else {
-        dirs_next::data_dir()
-            .unwrap_or_else(|| PathBuf::from("."))
-            .join("AthenaSoftware")
-    };
+    // 进度库放用户数据目录，不进仓库（ADR 0155）：启动器的同步代理在能连上路由器时
+    // 把它与中心库互推。目录名登记在 app.json 的 progress.dir，两处必须一致。
+    let dir = dirs_next::data_dir()
+        .unwrap_or_else(|| PathBuf::from("."))
+        .join("AthenaSoftware");
     let _ = std::fs::create_dir_all(&dir);
     dir.join("learning.db")
 }

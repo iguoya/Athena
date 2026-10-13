@@ -65,15 +65,8 @@ fn content_root() -> PathBuf {
 }
 
 fn own_store_path() -> PathBuf {
-    // 进度随仓库走（ADR 0053）：换一台机器 clone 下来，掌握度和战绩要还在。
-    // `app.json` 只存在于工作树，打包副本的 Resources 里没有它——据此区分，
-    // 不必判断路径是否可写，也不必问自己「是不是在仓库里」。
-    let root = content_root();
-    if root.join("app.json").is_file() {
-        let dir = root.join("progress");
-        let _ = fs::create_dir_all(&dir);
-        return dir.join("learning.db");
-    }
+    // 进度库放用户数据目录，不进仓库（ADR 0155）：启动器的同步代理在能连上路由器时
+    // 把它与中心库互推。目录名登记在 app.json 的 progress.dir，两处必须一致。
     let base = dirs_next::data_dir().unwrap_or_else(|| PathBuf::from("."));
     let dir = base.join("AthenaLinux");
     let _ = fs::create_dir_all(&dir);

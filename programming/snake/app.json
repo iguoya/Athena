@@ -34,5 +34,11 @@
     "ready": { "http": "http://localhost:1514" },
     "match": "src-tauri/target",
     "binary": "athena-snake"
+  },
+  "progress": {
+    "dir": "AthenaSnake",
+    "tables": {
+      "attempts": { "mode": "append", "key": ["function_id", "correct", "answered_at"] }
+    }
   }
 }

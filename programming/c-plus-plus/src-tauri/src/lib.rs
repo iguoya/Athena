@@ -57,11 +57,8 @@ fn app_root() -> Option<PathBuf> {
 }
 
 fn database_path() -> Result<PathBuf, String> {
-    if let Some(root) = app_root() {
-        let dir = root.join("progress");
-        fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
-        return Ok(dir.join("learning.db"));
-    }
+    // 进度库放用户数据目录，不进仓库（ADR 0155）：启动器的同步代理在能连上路由器时
+    // 把它与中心库互推。目录名登记在 app.json 的 progress.dir，两处必须一致。
     let dir = dirs_next::data_dir()
         .ok_or("找不到用户数据目录")?
         .join("athena-cpp");

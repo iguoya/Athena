@@ -34,5 +34,12 @@
     "ready": { "http": "http://localhost:1512" },
     "match": "src-tauri/target",
     "binary": "athena-c-plus-plus"
+  },
+  "progress": {
+    "dir": "athena-cpp",
+    "tables": {
+      "knowledge_progress": { "mode": "lww" },
+      "assessment_attempt": { "mode": "append", "key": ["function_id", "answered_at", "correct", "total"] }
+    }
   }
 }

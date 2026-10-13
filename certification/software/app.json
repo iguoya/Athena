@@ -39,5 +39,11 @@
     },
     "match": "src-tauri/target",
     "binary": "athena-software"
+  },
+  "progress": {
+    "dir": "AthenaSoftware",
+    "tables": {
+      "attempts": { "mode": "append", "key": ["course", "chapter_id", "kp_id", "question_id", "answered_at"] }
+    }
   }
 }

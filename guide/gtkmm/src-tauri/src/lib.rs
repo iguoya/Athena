@@ -75,10 +75,8 @@ fn content_root() -> PathBuf {
 }
 
 fn store_path() -> PathBuf {
-    // 开发模式（app.json dev.env 给了应用根）进度随仓库走；发行副本退回用户目录。
-    if let Ok(root) = std::env::var("ATHENA_GTKMM_ROOT") {
-        return PathBuf::from(root).join("progress").join("learning.db");
-    }
+    // 进度库放用户数据目录，不进仓库（ADR 0155）：启动器的同步代理在能连上路由器时
+    // 把它与中心库互推。目录名登记在 app.json 的 progress.dir，两处必须一致。
     let base = dirs_next::data_dir().unwrap_or_else(|| PathBuf::from("."));
     base.join("AthenaGTKMM").join("learning.db")
 }
