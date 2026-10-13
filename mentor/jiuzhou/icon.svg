@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  九州（jiuzhou）图标：禹贡九州九宫 + 水系。历史地理图鉴读点（ADR 0065 / 0156）。
+  透明外、纸本圆角内；小尺寸靠色块与粗线识别，中格「九」为品牌字。
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <rect x="16" y="16" width="480" height="480" rx="88" fill="#F3EFE6"/>
+  <rect x="16" y="16" width="480" height="480" rx="88" stroke="#C9BBA8" stroke-width="10"/>
+
+  <!-- 九宫：格 104、缝 20；原点 80 -->
+  <g fill="#C2410C">
+    <rect x="80" y="80" width="104" height="104" rx="18"/>
+    <rect x="204" y="80" width="104" height="104" rx="18"/>
+    <rect x="328" y="80" width="104" height="104" rx="18"/>
+    <rect x="80" y="204" width="104" height="104" rx="18"/>
+    <rect x="328" y="204" width="104" height="104" rx="18"/>
+    <rect x="80" y="328" width="104" height="104" rx="18"/>
+    <rect x="204" y="328" width="104" height="104" rx="18"/>
+    <rect x="328" y="328" width="104" height="104" rx="18"/>
+  </g>
+  <!-- 中格更深 -->
+  <rect x="204" y="204" width="104" height="104" rx="18" fill="#7C2D12"/>
+
+  <!-- 「九」加粗描边，小尺寸仍可辨 -->
+  <text
+    x="256"
+    y="278"
+    text-anchor="middle"
+    font-family="Songti SC, Noto Serif SC, STSong, SimSun, serif"
+    font-size="78"
+    font-weight="700"
+    fill="#FDF6EC"
+  >九</text>
+
+  <!-- 粗水系：地理意象，压过下排三格 -->
+  <path
+    d="M56 368 C130 318, 190 408, 256 362 C322 316, 382 408, 456 348"
+    stroke="#1E3A5F"
+    stroke-width="22"
+    stroke-linecap="round"
+  />
+  <path
+    d="M64 380 C136 334, 196 416, 262 374 C328 332, 388 416, 448 364"
+    stroke="#F3EFE6"
+    stroke-width="8"
+    stroke-linecap="round"
+    opacity="0.55"
+  />
+</svg>

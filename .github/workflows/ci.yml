@@ -17,7 +17,7 @@ on:
         description: 只跑哪个应用（all 为全量，sources 只跑跨应用检查）
         type: choice
         default: all
-        options: [all, sources, c-plus-plus, chinese-chess, snake, pocket_cube, cpp, machine, polaris, data-structures, algorithms, mathematics, ascent, math-tools, gtkmm, driver, software, nas_admin, launcher, c-gui-lab, embedded, database, design-patterns, os, network, firmware, microcontroller, rtos, linux, organization, cs408, python, machine-learning, deep-learning, llm-app, llm-finetune, competitions, earth, edge-ai]
+        options: [all, sources, c-plus-plus, chinese-chess, snake, pocket_cube, cpp, machine, polaris, data-structures, algorithms, mathematics, ascent, math-tools, gtkmm, driver, software, nas_admin, launcher, c-gui-lab, embedded, database, design-patterns, os, network, firmware, microcontroller, rtos, linux, organization, cs408, python, machine-learning, deep-learning, llm-app, llm-finetune, competitions, earth, edge-ai, jiuzhou]
 
 permissions:
   contents: read
@@ -270,7 +270,7 @@ jobs:
     if: >-
       contains(fromJSON('["algorithms","ascent","c-plus-plus","chinese-chess","competitions","cs408","database",
       "data-structures","deep-learning","design-patterns","earth","edge-ai","embedded","firmware",
-      "gtkmm","linux","llm-app","llm-finetune","math-tools","mathematics",
+      "gtkmm","jiuzhou","linux","llm-app","llm-finetune","math-tools","mathematics",
       "machine-learning","microcontroller","network","organization","os","polaris",
       "python","rtos","snake","software"]'), inputs.app || 'all')
     runs-on: ${{ matrix.os }}
@@ -281,7 +281,7 @@ jobs:
         app: >-
           ${{ fromJSON((inputs.app || 'all') == 'all' && '["algorithms","ascent","c-plus-plus","chinese-chess","competitions","cs408","database",
           "data-structures","deep-learning","design-patterns","earth","edge-ai","embedded","firmware",
-          "gtkmm","linux","llm-app","llm-finetune","math-tools","mathematics",
+          "gtkmm","jiuzhou","linux","llm-app","llm-finetune","math-tools","mathematics",
           "machine-learning","microcontroller","network","organization","os","polaris",
           "python","rtos","snake","software"]' || format('["{0}"]', inputs.app)) }}
         os: [macos-15, windows-latest, ubuntu-26.04]
