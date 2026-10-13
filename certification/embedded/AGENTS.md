@@ -76,9 +76,8 @@ content/
 
 ## 进度库
 
-- `progress/learning.db` 随仓库走(ADR 0037、0053),Rust 侧自建自迁移:
-  仓库工作树内(以 `app.json` 存在为准)写 `progress/learning.db`,
-  发行包写系统数据目录。schema 变更直接改 `store.rs` 的建表语句并保证
+- 进度库在用户数据目录 `AthenaEmbedded/learning.db`,不进 git、由启动器同步到路由器(ADR 0037、0155),
+  Rust 侧自建自迁移,不再区分工作树与发行包。schema 变更直接改 `store.rs` 的建表语句并保证
   旧库可迁移——进度库很小,`ALTER TABLE` 兜底即可,不引迁移框架。
 
 ## 界面组织

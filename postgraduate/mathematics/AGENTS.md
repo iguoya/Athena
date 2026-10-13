@@ -69,8 +69,8 @@
 - **可视化**：静态示意用 SVG；要拖参数实时响应的用前端 Canvas/SVG 自绘；曲面与三维用
   three.js。没有具体场景时不预先引入。概念节可带 `walkthrough`（ADR 0018），不自动播放，
   演完能接着拖。
-- **进度**：SQLite `progress/learning.db`，随仓库走（主仓库 ADR 0053），发行副本退回用户数据
-  目录 `AthenaMath/`；自建表、自迁移（主仓库 ADR 0037）。知识点 ID 前缀是 `math.`。
+- **进度**：SQLite，用户数据目录 `AthenaMath/learning.db`，不进 git、由启动器同步到路由器
+  （主仓库 ADR 0155）；自建表、自迁移（主仓库 ADR 0037）。知识点 ID 前缀是 `math.`。
 - MATLAB / Octave 需要时可以引入，符号判等仍用 SymPy。不做 Pyodide 版本。
 
 ## 目录与所有权

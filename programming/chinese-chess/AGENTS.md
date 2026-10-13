@@ -15,7 +15,7 @@
 - **教程壳**：Tauri 2 + React + TypeScript + Vite。壳最初照 `programming/python` 的薄壳改，此后独立演进。壳不画棋盘，只读章节、记录作答、按白名单编译并启动某一章。
 - **棋盘**：gtkmm 4，C++20，Meson。五章在 `exercise/`，每章自己的 `meson.build` 和一份 glib 垫片，章与章不抽公共库。同一章的两个窗口可以编译这一章的 `BoardView`、`Position` 和 `Session`。界面文件版 id 是 `cn.athena.chinese_chess.ch01ui` … `ch05ui`，代码版是 `ch01` … `ch05`，都标 `NON_UNIQUE`。
 - Windows 上编译棋盘走 MSYS2 mingw64：`PATH` 前置 `C:\msys64\mingw64\bin`，`PKG_CONFIG_PATH=C:\msys64\mingw64\lib\pkgconfig`。源文件加 `-finput-charset=UTF-8`。
-- 进度库 `progress/learning.db` 随仓库走，只存题目的作答，一题一行。发行包退回用户数据目录 `AthenaChineseChess`。环境变量 `ATHENA_CHINESE_CHESS_ROOT` 指向应用根。
+- 进度库在用户数据目录 `AthenaChineseChess/learning.db`，不进 git、由启动器同步到路由器（主仓库 ADR 0155），只存题目的作答，一题一行。环境变量 `ATHENA_CHINESE_CHESS_ROOT` 指向应用根（只管内容）。
 
 ## 章节
 

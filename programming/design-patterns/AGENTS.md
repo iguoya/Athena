@@ -111,8 +111,8 @@ content/
   正确率，换算成 0–5 写入 `knowledge_progress`。讲解里的小测只记作答、不写掌握度。
 - 实验状态（未开始/已开始/未完成/已完成）写 `lab_progress`，「已完成」只由运行输出满足
   `pass.includes` 触发；不设「实验币」等旁路激励，激励只展示由记录派生的量。
-- `progress/learning.db` 随仓库走（ADR 0037、0053），Rust 侧自建自迁移：仓库工作树内
-  （以 `app.json` 存在为准）写 `progress/learning.db`，发行包写系统数据目录。表：
+- 进度库在用户数据目录 `AthenaDesignPatterns/learning.db`，不进 git、由启动器同步到路由器
+  （ADR 0037、0155），Rust 侧自建自迁移，不再区分工作树与发行包。表：
   `knowledge_progress`、`lab_progress`、`lab_draft`、`quiz_picks`。schema 变更直接改
   建表语句并保证旧库可迁移，不引迁移框架。
 

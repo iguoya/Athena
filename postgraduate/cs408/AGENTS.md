@@ -33,8 +33,8 @@
 - **壳**：Tauri 2（Rust），界面 Vite + TypeScript。壳最初复制自 organization 应用，此后独立
   演进；真题判分与组卷逻辑落地时按考试需要改造，不跟随对方。
 - **内容**：`content/curriculum.json`（本目录唯一课表）。
-- **进度**：SQLite，写入本应用自己的 `progress/learning.db`（主仓库 ADR 0053；发行副本退回
-  用户数据目录 `AthenaCs408/`），知识点 ID 前缀 `cs408.`。
+- **进度**：SQLite，写入本应用自己的库（用户数据目录 `AthenaCs408/learning.db`，不进 git，
+  由启动器同步到路由器，主仓库 ADR 0155），知识点 ID 前缀 `cs408.`。
 - 端口 1503，进程 `athena-cs408`。
 
 ## 开发与验证

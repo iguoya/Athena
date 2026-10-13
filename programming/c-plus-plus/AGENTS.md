@@ -8,8 +8,8 @@ Meson 规则，原文在那边的 `docs/`，**不要拿来改这个 Tauri 课程
 
 本应用是 `subjects/` 下的平级学习应用之一（ADR 0045），没有任何特权：仓库根既没有它的
 源码，也没有它的脚本和文档。修改代码前先理解当前实现，不得把目标设计误认为已经落地的功能。
-界面标题是「C++ 教程」。窗口进程是 `athena-c-plus-plus`。进度库在本目录的
-`progress/learning.db`；发行包退回用户数据目录 `athena-cpp`。
+界面标题是「C++ 教程」。窗口进程是 `athena-c-plus-plus`。进度库在用户数据目录
+`athena-cpp/learning.db`，不进 git，由启动器同步到路由器（主仓库 ADR 0155）。
 
 ## 必读文档
 
@@ -30,8 +30,8 @@ Meson 规则，原文在那边的 `docs/`，**不要拿来改这个 Tauri 课程
   `function_id` 相同。讲解用块：导语、对照、代码、先预测再揭示。随堂题写入掌握度。
 - **实验**：本机 `c++` / `clang++` / `g++`（没有时用 MSVC），`-std=c++20`。案例仍在
   `resources/cases/`。不提供任意 shell。
-- **进度**：SQLite `progress/learning.db`，随仓库走（主仓库 ADR 0053）。路径由启动器
-  通过 `ATHENA_CPP_ROOT` 传入；发行包退回用户数据目录 `athena-cpp`。掌握度仍是
+- **进度**：SQLite，用户数据目录 `athena-cpp/learning.db`，不进 git（主仓库 ADR 0155）。
+  `ATHENA_CPP_ROOT` 只管内容与旧窗口，不再决定进度库位置。掌握度仍是
   `正确数 * 5 / 题数`。
 - 侧栏「运行旧版窗口」启动 `practice/cpp/build/` 里已经编好的 `athena-cpp`
   （本应用 ADR 0061）。本应用的检查不跑 Meson。旧工程的源码、文档和构建都在

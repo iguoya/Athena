@@ -27,8 +27,8 @@
   （`exercise/`）原样编译、不带协议，壳直接拉起独立窗口（应用 ADR 0006）
 - **内容**：`content/curriculum.json`（课表）+ `content/demos.json`（演示/实验/
   官方示例清单）+ 章节翻译正文（本目录唯一内容源）
-- **进度**：SQLite，写本应用自己的库（`progress/learning.db`，随仓库走，
-  主仓库 ADR 0053）；知识点 ID 前缀一律 `gtkmm.`
+- **进度**：SQLite，写本应用自己的库（用户数据目录 `AthenaGTKMM/learning.db`，不进 git，
+  由启动器同步到路由器，主仓库 ADR 0155）；知识点 ID 前缀一律 `gtkmm.`
 - 出处默认标注（主仓库 ADR 0043；档位 open，ADR 0089，只报告不阻断）：题面指向
   `docs.gtk.org` 或教程章节，演示观察题指向演示条目；不凭印象伪造出处
 

@@ -26,9 +26,9 @@
 - **壳**：Tauri 2（Rust）
 - **界面**：Vite + TypeScript（Web UI，非 GTK）
 - **内容**：`content/curriculum.json` + `content/cases/**`（本目录唯一课表）
-- **进度**：SQLite；**始终写入本应用自己的库**（`progress/learning.db`，
-  **随仓库走**，换机器 clone 下来进度还在，主仓库 ADR 0053；发行副本退回
-  用户数据目录 `AthenaLinux/`），自建表、自迁移，不共用 C++ 教程的学习库，也不依赖
+- **进度**：SQLite；**始终写入本应用自己的库**（用户数据目录 `AthenaLinux/learning.db`，
+  不进 git，由启动器同步到路由器，主仓库 ADR 0155；同步规则在 `app.json` 的
+  `progress`），自建表、自迁移，不共用 C++ 教程的学习库，也不依赖
   它是否启动过（ADR 0037）。`--store` 仅为兼容旧启动参数而接受并忽略。
   知识点 ID 前缀一律 `linux.`，与目录 id 一致（ADR 0108）。
 - **实验运行**：本机 `c++` / `clang++` / `g++`，`-std=c++20`，子进程编译运行

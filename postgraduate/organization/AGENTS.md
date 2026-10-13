@@ -35,8 +35,8 @@
 - **壳**：Tauri 2（Rust）
 - **界面**：Vite + TypeScript（Web UI）
 - **内容**：`content/curriculum.json` + `content/cases/**`（本目录唯一课表）
-- **进度**：SQLite，写入本应用自己的 `progress/learning.db`（随仓库走，主仓库 ADR 0053；
-  发行副本退回用户数据目录 `AthenaOrganization/`），自建表、自迁移（ADR 0037）。
+- **进度**：SQLite，写入本应用自己的库（用户数据目录 `AthenaOrganization/learning.db`，
+  不进 git，由启动器同步到路由器，主仓库 ADR 0155），自建表、自迁移（ADR 0037）。
   知识点 ID 前缀 `org.`。
 - **实验运行**：本机 `c++` / `clang++` / `g++`，`-std=c++20`，子进程编译运行。选 C++ 而不是
   汇编或 HDL：数据表示与访存行为用 C++ 就能真跑出可观察的证据，开发机基线自带编译器

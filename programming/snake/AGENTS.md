@@ -38,8 +38,8 @@
   `$<TARGET_FILE:...>` 并带 `-C Debug`。
 - HUD 文字用英文——raylib 默认字体只带 ASCII，中文化要 LoadFontEx 加载 TTF，不在这门
   课里。
-- 进度库 `progress/learning.db` 随仓库走，只存题目的作答，一题一行。发行包退回用户
-  数据目录 `AthenaSnake`。环境变量 `ATHENA_SNAKE_ROOT` 指向应用根。
+- 进度库在用户数据目录 `AthenaSnake/learning.db`，不进 git、由启动器同步到路由器
+  （主仓库 ADR 0155），只存题目的作答，一题一行。环境变量 `ATHENA_SNAKE_ROOT` 指向应用根（只管内容）。
 
 ## 章节
 

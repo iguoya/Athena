@@ -132,8 +132,8 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
 不要去查有没有把它列进某张清单——清单会过期，判据不会：**
 
 - **这个项目要不要让人"学会"什么、要不要追踪掌握度和学习进度？** 要，就是
-  **学习应用**，受「跨应用教学规范」（[TEACHING.md](TEACHING.md)）整节约束，且要按 ADR 0037/0053 建自己的
-  `progress/learning.db`。当前：`c-plus-plus` / `machine` / `data-structures` /
+  **学习应用**，受「跨应用教学规范」（[TEACHING.md](TEACHING.md)）整节约束，且要按 ADR 0037/0155 建自己的
+  本地进度库（`learning.db`，放用户数据目录）。当前：`c-plus-plus` / `machine` / `data-structures` /
   `algorithms` / `mathematics` / `ascent`（`ascent` 的规范差距见 ADR 0066）/
   `cs408`（ADR 0116）/ `organization`（ADR 0115）/ `gtkmm` / `linux`（ADR 0109）/
   `python`（ADR 0120）及其人工智能课程路线的四门（`machine-learning` / `deep-learning` /
@@ -185,14 +185,16 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
   自己的 `AGENTS.md` 与 ADR。不写「沿用 X 应用的做法」「对齐 X 应用 ADR」作为约束来源——
   来源一改，继承方不会知道，规则就悄悄过时。在本应用也成立的做法，自己写下来、自己说明
   理由，之后各改各的；多个应用都需要且应该一起变的，才提升为仓库级原则。
-- **学习应用的学习库数据各自独立，但随仓库走**（ADR 0037、0053；只约束学习应用，图谱/
- 参考类应用不建这个库）：每个学习应用自建、自管、自迁移它自己的进度库，不共用别人
- 的库，也不假设别人跑过。库放在应用自己目录下的 `progress/learning.db` 并**进版本
- 库**——换一台机器 clone 下来，掌握度、连续日和战绩还在；拿不到工作树的发行副本才
- 退回本机用户数据目录。同步用 `launcher sync`（只提交 `progress` 路径，不连带代码
- 改动）。知识点 ID 用自己的前缀（C 与机器 `machine.`，数据结构 `dsa.`）。**例外**：已迁中心
- PostgreSQL 的应用（目前只有 `driver`，ADR 0067、0068）个人数据存 PG，不再有
- `learning.db`、也不再靠 `launcher sync` 带着走。
+- **学习应用的学习库数据各自独立、本机优先、不进 git**（ADR 0037、0155，取代 0053；只约束学习应用，
+ 图谱/参考类应用不建这个库）：每个学习应用自建、自管、自迁移它自己的进度库，不共用别人
+ 的库，也不假设别人跑过。库放在**用户数据目录**（`<目录名>/learning.db`，目录名登记在 `app.json`
+ 的 `progress.dir`），不进版本库、也不推 GitHub；离开路由器环境照常使用。能连上路由器时，启动器的
+ 同步代理（`launcher/core/src/progress_sync.rs`）按 `app.json` 里 `progress.tables` 声明的合并规则
+ （`append` 事件并集、`lww` 更新时间新者胜）把本地库与中心 PostgreSQL 互推，失败只写日志、
+ 不进界面。换机器靠连上路由器自动拉回，而不是 clone。`launcher progress backup` 导出文本快照。
+ 知识点 ID 用自己的前缀（C 与机器 `machine.`，数据结构 `dsa.`）。**例外**：`driver`（ADR 0067、0068、
+ 0127）有自己的通路（`/api/driver/v1`），个人数据存 PG，客户端本地只留缓存与待发队列。
+ 旧 `launcher sync`（提交推送 `progress/`）只对没声明 `progress` 的应用仍然生效。
 - **应用只声明怎么启动，不写启动脚本**（ADR 0046）：`app.json` 的 `dev` 块写清
   环境变量、准备步骤（装依赖 / 增量构建）、长驻命令和就绪判据，执行统一由
   `launcher/core` 的编排器负责。热更新，改源码即时可见；不要用打包 `.app` / DMG，
@@ -274,7 +276,7 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
    `@AGENTS.md`）、`README.md`（一段定位与入口）、`scripts/check.py`（本应用
    验证入口，ADR 0007）。`check.py --sources-only` 的结构卫生检查会核对这份清单。
 2. **分类对号**：按上面的三类判据写明自己是学习应用 / 图谱参考 / 素材坑；
-   学习应用按 ADR 0037/0053 建 `progress/learning.db`。
+   学习应用按 ADR 0037/0155 建本地进度库，并在 `app.json` 里声明 `progress`。
 3. **登记进文档**：本文的结构树与名字表各加一行、根 `README.md` 应用表加一行——
    三处清单结构卫生检查都会与实际目录对账，幽灵行与漏登都会被拦下。
 4. **进 CI**：`.github/workflows/ci.yml` 的对应 job 或矩阵，以及
