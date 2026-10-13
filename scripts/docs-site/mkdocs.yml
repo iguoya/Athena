@@ -1,0 +1,55 @@
+# 暂存后的站点配置（scripts/docs_site.py 会把它连同内容拷到 .cache/docs-site）。
+# 站点内容不在这里写：源是仓库的 docs/ 与根文档，导航由目录结构自动生成。
+site_name: Athena
+site_description: 多应用自用学习平台——架构决策、工程规范与教学方法
+site_url: https://iguoya.github.io/Athena/
+repo_url: https://github.com/iguoya/Athena
+repo_name: iguoya/Athena
+edit_uri: edit/main/
+
+docs_dir: src
+site_dir: site
+
+theme:
+  name: material
+  language: zh
+  features:
+    - navigation.indexes
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/weather-night
+        name: 切换到深色
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: 切换到浅色
+
+plugins:
+  - search:
+      lang: zh
+
+markdown_extensions:
+  - tables
+  - admonition
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+validation:
+  links:
+    # 指向应用目录、源码的链接已在暂存时改写成 GitHub 地址，剩下找不到的才是真问题。
+    not_found: warn
+    anchors: info

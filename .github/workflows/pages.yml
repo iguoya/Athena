@@ -1,0 +1,71 @@
+name: Pages
+
+# 文档站（ADR 0154）：把 docs/ 与根文档渲染成静态站点，发布到 GitHub Pages。
+#
+# 触发：文档相关文件推送到 main，或手动 `gh workflow run pages.yml`。
+# 这是 ADR 0064「CI 显式触发」的有意例外：站点只读文档、一分钟内跑完、不开矩阵，
+# 且「文档一改站点就跟着变」正是它存在的理由；路径过滤保证改代码不会触发。
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "README.md"
+      - "AGENTS.md"
+      - "CHANGELOG.md"
+      - "scripts/docs_site.py"
+      - "scripts/docs-site/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# 同一时刻只部署一份，排队而不取消，避免把正在发布的站点打断成半截。
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: 构建站点
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: scripts/docs-site/requirements.txt
+
+      - name: Install MkDocs
+        run: python -m pip install -r scripts/docs-site/requirements.txt
+
+      - name: Build site
+        run: python scripts/docs_site.py
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: .cache/docs-site/site
+
+  deploy:
+    name: 部署到 Pages
+    needs: build
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    # github-pages 环境由 Pages 自动创建，部署记录与访问地址显示在仓库的 Environments 页。
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

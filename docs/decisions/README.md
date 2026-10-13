@@ -147,3 +147,4 @@
 | [0140](0140-shared-tauri-workspace.md) | 同栈 Tauri 应用共用一份 pnpm 工作区与 catalog 版本、一个 `.cache/cargo-target`；课程壳进根 Cargo 工作区，启动器保留自己的工作区但依赖表必须相同 | 已接受；落实 0135 的 B 档；不抽 schema 与应用代码 |
 | [0141](0141-split-gtk-cpp-into-practice.md) | 旧 gtkmm 窗口从 C++ 教程拆出，独立为 `practice/cpp`（id `cpp`）；新壳只启动它已经编好的程序 | 已接受 |
 | [0142](0142-certification-root-for-driver.md) | 驾考迁到仓库根 `certification/driver`，与 `exercise` 平级；id 仍是 `driver` | 已接受 |
+| [0154](0154-docs-site-on-github-pages.md) | 文档站用 MkDocs Material 发布到 GitHub Pages：站点无自有内容，源是 `docs/` 与根文档，暂存时改写链接；`pages.yml` 在文档路径推送时触发，是 0064 的有意例外 | 已接受 |
