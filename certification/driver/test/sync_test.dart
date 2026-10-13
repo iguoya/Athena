@@ -596,6 +596,31 @@ void main() {
       expect(api.rowCount("attempts"), 1);
     });
 
+    test("没检测到路由器：探测间隔内不再重复去探，路由器出现后到了间隔才连上（ADR 0127）", () async {
+      lan.setDrop(true);
+      final e = SyncEngine(
+        store: store,
+        config: ApiConfig(lanBase: lan.base, wanBase: null),
+        user: "tiger",
+        draftKeys: const [],
+        lanProbeInterval: const Duration(milliseconds: 400),
+      );
+      addTearDown(e.stop);
+      await store.recordAttempt(questionId: "a", topicId: "t", subjectId: "s", correct: true);
+      await e.syncNow(); // 第一次：探测一下内网，没有
+      final probes = lan.requests.length;
+      expect(store.pendingCount(), 1);
+
+      lan.setDrop(false); // 路由器这时出现了，但还没到下一次探测的时间
+      await e.syncNow();
+      expect(lan.requests.length, probes, reason: "间隔内不再碰路由器：不在家时别每次写入都白等一轮超时");
+      expect(store.pendingCount(), 1);
+
+      await Future<void>.delayed(const Duration(milliseconds: 450));
+      await e.syncNow();
+      expect(store.pendingCount(), 0, reason: "到了探测间隔，检测到路由器，队列补发");
+    });
+
     test("外网凭据没配齐：外网端点不进候选（ADR 0123），数据留在本地队列", () async {
       lan.setDrop(true);
       final e = SyncEngine(

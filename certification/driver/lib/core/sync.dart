@@ -453,6 +453,11 @@ class SyncEngine {
     // 上次用活的端点优先；但正走着外网时，隔一阵先试一次内网，回到家里就能自动切回直连。
     // 外网没配凭据时不进候选（wanUsableBase 为 null，ADR 0123）。
     final lan = _config.lanBase;
+    // 路由器环境检测（ADR 0127）：从没连上过、也没有外网通路时，每隔 [lanProbeInterval] 才
+    // 探一次内网，期间这一轮直接放弃——不在家时每次写入都去等 3 秒超时是没有意义的。
+    if (_activeBase == null && _config.wanUsableBase == null && DateTime.now().isBefore(_lanProbeAfter)) {
+      throw SyncTransient("未检测到路由器");
+    }
     final probeLan = _activeBase != null && _activeBase != lan && !DateTime.now().isBefore(_lanProbeAfter);
     final bases = [
       if (probeLan) lan,

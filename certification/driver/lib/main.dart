@@ -7,13 +7,13 @@ import "package:flutter_localizations/flutter_localizations.dart";
 import "package:path/path.dart" as p;
 import "package:window_manager/window_manager.dart";
 
-import "app/api_config_screen.dart";
 import "core/content.dart";
 import "home.dart";
 import "ui/look.dart";
 import "core/models.dart";
 import "core/progress.dart";
 import "ui/skin.dart";
+import "core/binding.dart";
 import "core/sync.dart";
 import "core/user_directory.dart";
 import "app/user_gate_screen.dart";
@@ -64,8 +64,8 @@ Future<void> main() async {
 }
 
 /// 启动门：本地进度库必开成功（ADR 0070，做题不以「连上中心」为前提）；先认出是谁
-/// （ADR 0071、0075：输入名字登录，本机缓存里的人离线也能直接进）；同步总是尝试，连不上
-/// 就是「暂不同步」，队列等连上后自然补发（ADR 0077：没有令牌可配）。
+/// （ADR 0071、0075：输入名字登录，学习者一律先在本机创建）；同步是后台的事、界面里没有
+/// 这个概念（ADR 0127）：检测到路由器才绑定中心身份并同步，检测不到就一直只存本机。
 class BootstrapGate extends StatefulWidget {
   const BootstrapGate({super.key});
 
@@ -79,6 +79,7 @@ class _BootstrapGateState extends State<BootstrapGate> {
   Bank? _bank;
   ProgressStore? _store;
   SyncEngine? _engine;
+  Timer? _bindTimer;
   UserProfile? _profile;
   UserRegistry? _registry;
 
@@ -133,38 +134,17 @@ class _BootstrapGateState extends State<BootstrapGate> {
       _legacyPending = false;
     }
     await _openAs(profile);
-    if (created) _showWelcome(profile);
-  }
-
-  /// 新建学习者后的提示：编号用一条不挡路的提示条告诉他（ADR 0078 决策 2）。
-  /// 本地学习者的提示另说清楚「不同步」（ADR 0123）。
-  /// 等进入应用的那一帧画完再弹，提示条才挂得上。
-  void _showWelcome(UserProfile profile) {
-    final content = profile.isLocal
-        ? "已在这台电脑上新建本地学习者「${profile.name}」，编号 ${profile.id}。"
-            "记录只保存在这台电脑上，不会同步到其他设备。"
-        : "已新建学习者「${profile.name}」，编号 ${profile.id}。在别的电脑登录时如果遇到同名，会问这个编号。";
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _messengerKey.currentState?.showSnackBar(
-        SnackBar(
-          content: Text(content),
-          duration: const Duration(seconds: 15),
-          showCloseIcon: true,
-        ),
-      );
-    });
   }
 
   /// 以某个学习者身份打开应用：换人就是换一份空白历史（ADR 0071）。
-  /// 身份认编号（ADR 0075）；侧栏显示的是名字。本地学习者（ADR 0123，编号 1000 起）
-  /// 不启动同步引擎——它只存这台电脑，永不出站。
+  /// 身份认编号（ADR 0075）；侧栏显示的是名字。同步在后台另起（见 [_beginSync]）。
   Future<void> _openAs(UserProfile profile) async {
     try {
-      _engine?.stop();
+      _stopSync();
       await _store?.close();
       final store = await ProgressStore.open(user: profile.id);
       _registry?.setLast(profile.id);
-      _engine = profile.isLocal ? null : _startEngine(store, _bank!, ApiConfig.load(), profile.id);
+      _beginSync(store, profile);
       setState(() {
         _store = store;
         _profile = profile;
@@ -178,6 +158,36 @@ class _BootstrapGateState extends State<BootstrapGate> {
     }
   }
 
+  void _stopSync() {
+    _bindTimer?.cancel();
+    _bindTimer = null;
+    _engine?.stop();
+    _engine = null;
+  }
+
+  /// 后台同步（ADR 0127），全程不进界面：学习者已有中心编号就直接起引擎；本机学习者先静默
+  /// 绑定（按名字认领或登记中心身份），路由器不在身边就每隔一阵再试。引擎自己也只在检测到
+  /// 路由器时才出站，所以不在家时这里什么都不会发生。
+  void _beginSync(ProgressStore store, UserProfile profile) {
+    final bank = _bank!;
+    final registry = _registry!;
+    final binder = LearnerBinder(
+      registry: registry,
+      directoryFactory: () => HttpUserDirectory(ApiConfig.load(), timeout: const Duration(seconds: 3)),
+    );
+    Future<void> attempt() async {
+      if (_engine != null) return;
+      final serverId = await binder.ensureBound(registry.byId(profile.id) ?? profile);
+      if (serverId == null || !mounted || !identical(_store, store) || _engine != null) return;
+      _bindTimer?.cancel();
+      _bindTimer = null;
+      setState(() => _engine = _startEngine(store, bank, ApiConfig.load(), serverId));
+    }
+
+    unawaited(attempt());
+    _bindTimer = Timer.periodic(const Duration(minutes: 10), (_) => unawaited(attempt()));
+  }
+
   SyncEngine _startEngine(ProgressStore store, Bank bank, ApiConfig config, String user) {
     return SyncEngine(
       store: store,
@@ -186,9 +196,6 @@ class _BootstrapGateState extends State<BootstrapGate> {
       draftKeys: [for (final subject in bank.curriculum.subjects) "${subject.id}.exam"],
     )..start();
   }
-
-  /// 登录页每次动作时现取：配置页改了端点，同一个页面立刻生效。
-  UserDirectory _directory() => HttpUserDirectory(ApiConfig.load());
 
   /// 名字被改后同步侧栏显示（只能改当前登录的人，ADR 0075 决策 5）。
   void _onRenamed(UserProfile profile) {
@@ -201,19 +208,13 @@ class _BootstrapGateState extends State<BootstrapGate> {
     final registry = _registry;
     final navigator = _navigatorKey.currentState;
     if (registry == null || navigator == null) return;
-    String? createdId; // 这次是不是在登录页顺手新建的
     final picked = await navigator.push<UserProfile>(
       MaterialPageRoute(
         builder: (context) => UserGateScreen(
           registry: registry,
-          directoryFactory: _directory,
-          configLoader: ApiConfig.load,
           currentUser: _profile,
           allowCancel: true,
-          onPicked: (profile, _, created) {
-            if (created) createdId = profile.id;
-            Navigator.of(context).pop(profile);
-          },
+          onPicked: (profile, _, _) => Navigator.of(context).pop(profile),
           onRenamed: _onRenamed,
         ),
         fullscreenDialog: true,
@@ -234,32 +235,11 @@ class _BootstrapGateState extends State<BootstrapGate> {
     );
     if (confirmed != true || !mounted) return;
     await _openAs(picked);
-    if (createdId == picked.id) _showWelcome(picked);
-  }
-
-  /// 侧栏同步行点进来重新配置：保存后换引擎重启同步，跳过则维持现状。
-  Future<void> _openConfig() async {
-    final navigator = _navigatorKey.currentState;
-    if (navigator == null) return;
-    final config = await navigator.push<ApiConfigScreenResult>(
-      MaterialPageRoute(
-        builder: (context) => const ApiConfigScreen(allowSkip: true),
-        fullscreenDialog: true,
-      ),
-    );
-    if (config == null || !mounted) return;
-    final bank = _bank;
-    final store = _store;
-    final profile = _profile;
-    if (bank == null || store == null || profile == null) return;
-    _engine?.stop();
-    _engine = _startEngine(store, bank, config.config, profile.id);
-    setState(() {});
   }
 
   @override
   void dispose() {
-    _engine?.stop();
+    _stopSync();
     super.dispose();
   }
 
@@ -269,23 +249,8 @@ class _BootstrapGateState extends State<BootstrapGate> {
       "first-user" || "pick" => withSkins(
           (context) => UserGateScreen(
             registry: _registry!,
-            directoryFactory: _directory,
-            configLoader: ApiConfig.load,
             legacyPending: _legacyPending,
             onPicked: _enter,
-          ),
-        ),
-      "config" => withSkins(
-          (context) => ApiConfigScreen(
-            onSavedDirect: (config) {
-              final bank = _bank;
-              final store = _store;
-              final profile = _profile;
-              if (bank == null || store == null || profile == null) return;
-              _engine = _startEngine(store, bank, config, profile.id);
-              setState(() => _stage = "ready");
-            },
-            onSkipDirect: () => setState(() => _stage = "ready"),
           ),
         ),
       "error" => withSkins((context) => BootstrapErrorApp(message: _message)),
@@ -298,8 +263,6 @@ class _BootstrapGateState extends State<BootstrapGate> {
             messengerKey: _messengerKey,
             onSwitchUser: _switchUser,
             syncStatus: _engine?.status,
-            localOnly: _profile!.isLocal,
-            onOpenConfig: _openConfig,
           ),
           navigatorKey: _navigatorKey,
           scaffoldMessengerKey: _messengerKey,
@@ -348,8 +311,6 @@ class DriverApp extends StatelessWidget {
     this.navigatorKey,
     this.messengerKey,
     this.syncStatus,
-    this.localOnly = false,
-    this.onOpenConfig,
     this.onSwitchUser,
   });
 
@@ -364,12 +325,9 @@ class DriverApp extends StatelessWidget {
 
   /// 应用内的提示条（新建学习者后告诉编号等）。
   final GlobalKey<ScaffoldMessengerState>? messengerKey;
+
+  /// 后台同步拉回新数据时据此重读本地库；界面不展示同步状态（ADR 0127）。
   final ValueListenable<SyncStatus>? syncStatus;
-
-  /// 本地学习者（ADR 0123）：没有同步引擎，侧栏如实写「本地模式」。
-  final bool localOnly;
-
-  final VoidCallback? onOpenConfig;
   final VoidCallback? onSwitchUser;
 
   @override
@@ -380,8 +338,6 @@ class DriverApp extends StatelessWidget {
       store: store,
       currentUser: currentUser,
       syncStatus: syncStatus,
-      localOnly: localOnly,
-      onOpenConfig: onOpenConfig,
       onSwitchUser: onSwitchUser,
     );
   }

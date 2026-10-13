@@ -50,13 +50,15 @@ class DirectoryRejected implements Exception {
 }
 
 class HttpUserDirectory implements UserDirectory {
-  HttpUserDirectory(this._config, {http.Client? client}) : _client = client ?? http.Client();
+  HttpUserDirectory(this._config, {http.Client? client, this.timeout = const Duration(seconds: 10)})
+      : _client = client ?? http.Client();
 
   final ApiConfig _config;
   final http.Client _client;
   String? _activeBase;
 
-  static const _requestTimeout = Duration(seconds: 10);
+  /// 单个请求的超时。后台绑定（ADR 0127）只给探测那么长：路由器不在身边时别在后台空等。
+  final Duration timeout;
 
   @override
   Future<UserProfile> login(String name, {String? id}) async {
@@ -96,7 +98,7 @@ class HttpUserDirectory implements UserDirectory {
         request.headers["CF-Access-Client-Secret"] = _config.cfClientSecret!;
       }
       try {
-        final response = await _client.send(request).timeout(_requestTimeout);
+        final response = await _client.send(request).timeout(timeout);
         final text = await response.stream.bytesToString();
         _activeBase = base;
         if (blockedByCloudflare(response.statusCode, response.headers, text)) {

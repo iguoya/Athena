@@ -51,8 +51,6 @@ class HomePage extends StatefulWidget {
     this.currentUser,
     this.onSwitchUser,
     this.syncStatus,
-    this.localOnly = false,
-    this.onOpenConfig,
     this.clusterBuilder = _buildClustersInBackground,
   });
 
@@ -66,13 +64,9 @@ class HomePage extends StatefulWidget {
   final String? currentUser;
   final VoidCallback? onSwitchUser;
 
-  /// 同步状态（ADR 0070 决策 4）：null 表示未配置同步，侧栏照实提示；
-  /// 点击进入配置屏。测试不传就不渲染这一行。
+  /// 后台同步的进度（ADR 0127）：只用来在拉回新数据后重读本地库，**界面不展示同步状态**。
+  /// null 表示没有同步（还没检测到路由器，或测试）。
   final ValueListenable<SyncStatus>? syncStatus;
-
-  /// 本地学习者（ADR 0123）：没有同步引擎，侧栏写「本地模式」而不是不显示。
-  final bool localOnly;
-  final VoidCallback? onOpenConfig;
 
   /// 第一次从进度库读完统计后调一次；测试靠它等首页就绪，不按固定时长等。
   final VoidCallback? onReady;
@@ -455,13 +449,6 @@ class _HomePageState extends State<HomePage> {
                     label: "学习者：${widget.currentUser}",
                     onTap: widget.onSwitchUser,
                   ),
-                if (widget.localOnly)
-                  _localModeLine()
-                else if (widget.syncStatus != null)
-                  ValueListenableBuilder<SyncStatus>(
-                    valueListenable: widget.syncStatus!,
-                    builder: (context, status, _) => _syncLine(status),
-                  ),
                 _skinPicker(),
               ],
             ),
@@ -705,51 +692,6 @@ class _HomePageState extends State<HomePage> {
             : const SizedBox(width: double.infinity),
       ),
     ];
-  }
-
-  /// 侧栏底部的同步状态行（ADR 0070 决策 4）：待发条数常驻可见，出错如实说。
-  /// 点击进配置屏改端点或外网访问凭据。
-  Widget _syncLine(SyncStatus status) {
-    final (icon, text, color) = status.dead > 0
-        ? (Glyph.syncFailed, "${status.dead} 条记录无法同步", Bs.danger)
-        : status.lastError != null && status.pending == 0 && !status.running
-            ? (Glyph.syncFailed, status.lastError!, Bs.warning)
-            : status.lastError != null && !status.running
-                ? (Glyph.syncFailed, "待同步 ${status.pending} 条 · ${status.lastError!}", Bs.warning)
-                : status.running
-                    ? (Glyph.sync, "同步中…", Skins.current.navText)
-                    : status.pending > 0
-                        ? (Glyph.sync, "待同步 ${status.pending} 条", Skins.current.navText)
-                        : (Glyph.sync, "已同步", Skins.current.navTextMuted);
-    return _syncRow(icon, text, color);
-  }
-
-  /// 本地学习者的侧栏行（ADR 0123）：没有同步引擎，如实写「本地模式」，不冒充「已同步」。
-  /// 点击同样进配置屏——以后想接上服务器，从那里配。
-  Widget _localModeLine() =>
-      _syncRow(Glyph.sync, "本地模式 · 记录只存这台电脑", Skins.current.navTextMuted);
-
-  Widget _syncRow(IconData icon, String text, Color color) {
-    return InkWell(
-      onTap: widget.onOpenConfig,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-        child: Row(
-          children: [
-            Icon(icon, size: Bs.bodySize, color: color),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                text,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: color, fontSize: Bs.bodySize),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   Widget _navLine({
@@ -1708,8 +1650,6 @@ class _HomePageState extends State<HomePage> {
     };
   }
 
-  /// 跨机器同步：日常走云盘文件夹（iCloud Drive 这类），GitHub 那条留着当
-  /// 版本历史与异地备份（ADR 0010）。
   Widget _sessionPane() {
     return SessionStage(
       key: ObjectKey(_session),

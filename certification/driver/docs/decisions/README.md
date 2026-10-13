@@ -127,7 +127,8 @@
 | [0120](0120-retire-gap-in-status-dot.md) | 还在错题库里的条目，红点里写「还要再对几次」 | 已接受 |
 | [0121](0121-self-test-last-answer-rule.md) | 专题自测去掉「答对到答错的 2 倍」，最近一次答对就算掌握 | 已接受 |
 | [0122](0122-sidebar-topic-group-pass-count.md) | 侧栏专题右侧写「a/b」——通过的大类 / 大类总数 | 已接受 |
-| [0123](0123-local-learners-without-server.md) | 目录连不上也能新建——1000 起的本地学习者；没配外网凭据就不试外网 | 已接受 |
-| [0124](0124-local-first-registration.md) | 新学习者默认只存本机——填了外网访问凭据才碰中心目录 | 已接受 |
+| [0123](0123-local-learners-without-server.md) | 目录连不上也能新建——1000 起的本地学习者；没配外网凭据就不试外网 | 已接受；由 0127 取代 |
+| [0124](0124-local-first-registration.md) | 新学习者默认只存本机——填了外网访问凭据才碰中心目录 | 已接受；由 0127 取代 |
 | [0125](0125-repractice-after-all-mastered.md) | 全部掌握后练习不再是死路——确认一次即可整组重新练习 | 已接受 |
 | [0126](0126-sidebar-never-locks.md) | 左侧目录不锁科目，科目二与科目四直接可进 | 已接受（撤销 0006 第 4 条、0047） |
+| [0127](0127-sync-invisible-local-first-identity.md) | 同步不进界面：学习者先在本机创建，检测到路由器后台自己绑定中心身份并同步；删侧栏同步行与配置屏 | 已接受（取代 0123、0124；修订 0070 决策 4、8）|

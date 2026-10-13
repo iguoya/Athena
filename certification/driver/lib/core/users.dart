@@ -12,9 +12,14 @@ class UserProfile {
   final String id;
   final String name;
 
-  /// 编号 ≥1000 的是**本地学习者**（ADR 0123）：目录不可达时在无服务器的机器上新建，
-  /// 只存这台电脑、永不参与同步；中心目录不用这个编号段，由编号段本身派生，不另设标志。
+  /// 编号 ≥1000 的是**本机编号**（ADR 0123、0127）：学习者一律先在本机创建，用本机段编号；
+  /// 中心目录只发 1～999，由编号段本身派生，不另设标志。
   bool get isLocal => (int.tryParse(id) ?? 0) >= UserRegistry.localIdBase;
+
+  /// 在中心目录里的编号（ADR 0127）：中心编号段的学习者就是它自己；本机编号的学习者在联网
+  /// 检测到路由器后由 `LearnerBinder` 按名字绑定，记在这里（`users.json` 的 `server_id`）。
+  /// null 表示还没绑定——此时只在本机使用，不出站。
+  String? get serverId => isLocal ? extra["server_id"] as String? : id;
 
   /// 注册表文件里本版本不认识的字段，原样带回去（见 [UserRegistry] 的读写约定）。
   final Map<String, dynamic> extra;
@@ -125,6 +130,16 @@ class UserRegistry {
     last = stored.id;
     _save();
     return stored;
+  }
+
+  /// 记下本机学习者在中心目录里的编号（ADR 0127）；`users.json` 里作为条目的 `server_id` 字段，
+  /// 本版本不认识该字段的读取方按「未知字段原样带回」处理。
+  void bindServerId(String id, String serverId) {
+    final index = users.indexWhere((entry) => entry.id == id);
+    if (index < 0) return;
+    final old = users[index];
+    users[index] = UserProfile(id: old.id, name: old.name, extra: {...old.extra, "server_id": serverId});
+    _save();
   }
 
   /// 服务端改名成功后同步缓存里的名字。
