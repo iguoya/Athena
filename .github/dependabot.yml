@@ -1,0 +1,68 @@
+# 依赖版本更新。单人自用项目，目标是「知道哪些依赖落后了」，不是追最新：
+# 每月一次、同生态合并成一个 PR、同时最多开 2 个，攒着到想升级时再处理。
+# 安全告警（Dependabot alerts）与这里无关，它由仓库设置开启，有漏洞才会通知。
+#
+# 不覆盖的目录：archive/ 不参与构建；practice/c-gui-lab/third_party 是上游
+# 原样拷贝（自带 dependabot.yml，不归我们升级）。
+version: 2
+
+updates:
+  # pnpm 工作区：根 package.json + pnpm-workspace.yaml 的 catalog 版本。
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 2
+    groups:
+      npm-all:
+        patterns: ["*"]
+
+  # 课程应用的 Tauri 壳（根工作区）。
+  - package-ecosystem: cargo
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 2
+    groups:
+      cargo-all:
+        patterns: ["*"]
+
+  # launcher 有自己独立的 Cargo 工作区（ADR 0140）。
+  - package-ecosystem: cargo
+    directory: /launcher
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 2
+    groups:
+      cargo-launcher:
+        patterns: ["*"]
+
+  # driver（Flutter）。
+  - package-ecosystem: pub
+    directory: /certification/driver
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 1
+    groups:
+      pub-all:
+        patterns: ["*"]
+
+  # nas_admin（Flask-AppBuilder）。
+  - package-ecosystem: pip
+    directory: /practice/nas_admin
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 1
+    groups:
+      pip-all:
+        patterns: ["*"]
+
+  # CI / Release 工作流里的 actions/*。
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 1
+    groups:
+      actions-all:
+        patterns: ["*"]
