@@ -155,6 +155,12 @@ class ValidationTests(ProgressApiCase):
         self.assert_invalid(self.push([row(stamp="2026-10-13 01:00:00")]), "stamp")
         self.assert_invalid(self.push([row(stamp="2026-10-13T01:00:00+08:00")]), "stamp")
 
+    def test_时间的小数位必须是三位毫秒(self):
+        # 字符串比较只在格式一致时等于时间比较：无小数、微秒与毫秒混用会把先后比反
+        # （"03.5Z" < "03Z"、"03.123456Z" < "03.123Z"），所以只认固定三位。
+        for bad in ("2026-10-13T01:00:00Z", "2026-10-13T01:00:00.5Z", "2026-10-13T01:00:00.123456Z"):
+            self.assert_invalid(self.push([row(stamp=bad)]), "stamp")
+
     def test_模式只有两种(self):
         self.assert_invalid(self.push([row(mode="merge")]), "mode")
 

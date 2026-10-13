@@ -29,8 +29,9 @@ MAX_DATA = 64 * 1024  # 单行 JSON 序列化后的上限
 
 _APP_RE = re.compile(r"^[a-z][a-z0-9-]{0,63}$")
 _TABLE_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]{0,63}$")
-# 统一成 UTC、毫秒或微秒精度：只有格式一致，字符串比较才等价于时间比较。
-_STAMP_RE = re.compile(r"^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d{1,6})?Z$")
+# 固定 UTC、三位毫秒：只有格式逐字一致，字符串比较才等价于时间比较。
+# 允许无小数或位数不一的写法会把先后比反（"03.5Z" < "03Z"），客户端也只产出这一种。
+_STAMP_RE = re.compile(r"^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z$")
 
 
 def _error(status: int, code: str, message: str, **extra: Any) -> tuple[Response, int]:
@@ -108,7 +109,7 @@ def _table_name(field: str, value: Any) -> str:
 def _stamp(field: str, value: Any) -> str:
     text = string(40)(field, value)
     if not _STAMP_RE.match(text):
-        raise ValidationError(field, "必须是 UTC 的 ISO-8601 时间，形如 2026-10-13T01:02:03.123Z")
+        raise ValidationError(field, "必须是 UTC 的 ISO-8601 时间，形如 2026-10-13T01:02:03.123Z（固定三位毫秒）")
     return text
 
 
