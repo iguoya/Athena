@@ -81,8 +81,9 @@ dsa 带过来的标题文案。锁文件只在仓库根，不在应用目录里�
 
 按类别再加：
 
-- **学习应用**：进度库 `progress/learning.db` 由应用首次运行时建，建出来后进版本库
-  （ADR 0037、0053）；`content-contract.json`
+- **学习应用**：进度库由应用首次运行时建在用户数据目录（`<data_dir>/<目录名>/learning.db`），
+  **永不进 git**；在 `app.json` 里声明 `progress`（`dir` 与每张表的合并规则 `append` / `lww`），
+  由启动器同步到路由器（ADR 0037、0155，取代 0053）；`content-contract.json`
   按档位声明 `tier`（`exam` 阻断、`open` 只报告，字段格式照抄现有契约）；
   `docs/decisions/README.md` 建应用级 ADR 索引。
 - **图谱/参考类**：不建进度库、不建出处契约，教学规范不生效。

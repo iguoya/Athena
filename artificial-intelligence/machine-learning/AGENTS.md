@@ -26,7 +26,7 @@
 - **壳**：Tauri 2（Rust），界面 React 18 + TypeScript + Vite。骨架阶段只有窗口与定位页；
   实验引擎随内容填充期落地，此后独立演进（ADR 0062）。
 - **内容**：`content/course.json`（本目录唯一课表）。
-- **进度**：SQLite，写入本应用自己的 `progress/learning.db`（随仓库走，ADR 0053），
+- **进度**：SQLite，写入本应用自己的用户数据目录 `<data_dir>/<目录名>/learning.db`，不进 git，由启动器同步到路由器（ADR 0155，取代 0053）；骨架阶段还没有库，建库时同批在 `app.json` 声明 `progress`。
   知识点 ID 前缀 `ml.`。
 - 端口 **1506**（strictPort）；进程/二进制 `athena-machine-learning`。
 
