@@ -1,4 +1,4 @@
-// Athena 408 计算机学科专业基础 — 壳本体在共用 crate（ADR 0157）；这里只给出本应用的几个名字。
+// Athena 408 计算机学科专业基础 — 壳本体在共用 crate（ADR 0161）；这里只给出本应用的几个名字。
 
 use athena_course_shell::ShellConfig;
 

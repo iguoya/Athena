@@ -165,7 +165,7 @@ launcher/macos/scripts/install.sh
 }
 ```
 
-`mode` 是 `lww`（可变记录，更新时间新者胜）或 `append`（事件，同一键只记第一次；删除用墓碑，只标记不真删，ADR 0156）；
+`mode` 是 `lww`（可变记录，更新时间新者胜）或 `append`（事件，同一键只记第一次；删除用墓碑，只标记不真删，ADR 0160）；
 `key` 省略取表的主键，没有主键的表必须写。
 
 `sync` 对应 ADR 0053：进度库跟着仓库走（`<分类目录>/<id>/progress/learning.db`），所以

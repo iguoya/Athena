@@ -120,7 +120,7 @@ class MergeTests(ProgressApiCase):
         self.assertEqual(self.pull().get_json()["rows"][0]["data"], {"ok": 1})
 
     def test_append_墓碑标记删除但保留原数据(self):
-        # ADR 0156：事件表的删除也是一个新增的事实（墓碑），不是真删——原数据留着，可审计、可恢复。
+        # ADR 0160：事件表的删除也是一个新增的事实（墓碑），不是真删——原数据留着，可审计、可恢复。
         self.push([row(tbl="attempts", pk="q1|t1", mode="append", stamp=T1, data={"ok": 1})])
         r = self.push([row(tbl="attempts", pk="q1|t1", mode="append", stamp=T2, deleted=True)], device="pc-b").get_json()
         self.assertEqual((r["accepted"], r["ignored"]), (1, 0))

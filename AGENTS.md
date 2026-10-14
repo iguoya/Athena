@@ -56,7 +56,7 @@ tools/          配套工具：math-tools（数学工具，ADR 0146）。id 仍�
 launcher/       启动器：core/ gui/ macos/
 docs/           跨应用 ADR（decisions/）与本文件各节的完整阐述
 scripts/        统一验证入口 check.py、跨应用检查
-packages/       课程应用共用件：@athena/viz（纯呈现，ADR 0137）、athena-course-shell（课程壳 Rust crate，ADR 0157）；不是应用
+packages/       课程应用共用件：@athena/viz（纯呈现，ADR 0137）、athena-course-shell（课程壳 Rust crate，ADR 0161）；不是应用
 archive/        历史归档，不参与构建
 ```
 

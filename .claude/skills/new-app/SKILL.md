@@ -58,7 +58,7 @@ ls docs/decisions | tail -3
   members。然后在仓库根重新生成 `pnpm-lock.yaml` 与 `Cargo.lock`（ADR 0140）。
 - **C++ 实验类课程应用的壳不要复制**：照 `postgraduate/cs408/src-tauri` 的样子，`lib.rs` 只写一份
   `ShellConfig`（应用名、环境变量名、数据目录名、课程标题）并交给 `athena_course_shell::run`，
-  依赖里保留 `tauri-plugin-opener`（ADR 0157）。
+  依赖里保留 `tauri-plugin-opener`（ADR 0161）。
 - 本应用 `scripts/check.py` 里写死的 id、端口（如 `postgraduate/os` 的 `EXPECTED_ID` /
   `EXPECTED_PORT`；壳里没有就不用加）。
 - 界面里的标题、文案。

@@ -540,7 +540,7 @@ fn scan(state: &State, app: &str, spec: &ProgressSpec, db: &Connection, stamp: &
             }
             seen.insert(row.pk);
         }
-        // 本地消失的行记成删除。可变表直接按此处理；事件表（ADR 0156）用墓碑表达——服务端
+        // 本地消失的行记成删除。可变表直接按此处理；事件表（ADR 0160）用墓碑表达——服务端
         // 不真删、原数据保留，所以误判的代价是可恢复的，但仍加一道护栏：事件表整张为空更
         // 像「库被重建 / 重装」而不是「用户删光了」，此时不推断删除，免得把中心的历史全标成墓碑。
         let deletable = match table.mode {
