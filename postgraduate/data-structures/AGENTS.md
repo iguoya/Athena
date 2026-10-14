@@ -40,7 +40,7 @@
 |---|---|
 | `content/` | 课表与 C++ 案例；**唯一内容源** |
 | `src/` | 前端：导航、导读 / 讲解 / 实验 |
-| `src-tauri/` | 窗口、读内容、进度、`compile_and_run` |
+| `src-tauri/` | 窗口配置；壳本体在共用 crate `packages/athena-course-shell`（ADR 0157），这里只传 `ShellConfig` |
 | `app.json` | 声明怎么构建、怎么启动、怎么算就绪；由 `launcher` 执行（ADR 0046） |
 | `docs/decisions/` | 本应用 ADR |
 | `AGENTS.md` | 本文；本应用协作规则 |
