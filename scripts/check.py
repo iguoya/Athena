@@ -663,6 +663,24 @@ def run_structure_check() -> None:
     ).stdout.split("\0")
     problems += [f"  {path} 是进度库却被 git 跟踪——进度永不进 git（ADR 0155）" for path in tracked_dbs if path]
 
+    # 11. 「最近一次」不许按自增 id 认（ADR 0155、0156）：同步拉回的旧记录入库晚、id 更大，
+    #     MAX(id) / ORDER BY id DESC 会把别的设备昨天的答错当成最近一次。这个写法在
+    #     snake、chinese-chess、software、embedded 里各抄过一份、各踩过一次，壳又是各应用
+    #     各写一份，没有共用代码可改——只能靠检查拦回流。要认时间，用 answered_at 再按 id。
+    id_order = re.compile(r"MAX\(\s*id\s*\)|ORDER\s+BY\s+(?:\w+\.)?id\s+DESC", re.IGNORECASE)
+    for root in APP_ROOTS:
+        for app_dir in sorted((REPO_ROOT / root).iterdir()):
+            src = app_dir / "src-tauri" / "src"
+            if not src.is_dir():
+                continue
+            for source in sorted(src.rglob("*.rs")):
+                for number, line in enumerate(source.read_text(encoding="utf-8", errors="ignore").splitlines(), 1):
+                    if id_order.search(line) and not line.lstrip().startswith("//"):
+                        problems.append(
+                            f"  {source.relative_to(REPO_ROOT)}:{number} 按自增 id 判先后——"
+                            "同步拉回的旧记录 id 更大，改按 answered_at（同秒再按 id）"
+                        )
+
     if problems:
         print("\n".join(problems), flush=True)
         raise SystemExit(f"结构卫生没通过（{len(problems)} 处），见上方。")
