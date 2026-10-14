@@ -3,7 +3,9 @@
 一行 = 某学习者在某应用某张表里的某条记录，内容是客户端原样传来的 JSON 对象。
 合并规则由客户端按表声明、随每行带来：
 
-- `append`：事件，同一业务键只记第一次，之后重复上传一律忽略（取并集）；
+- `append`：事件，同一业务键只记第一次，之后重复上传一律忽略（取并集）。删除用**墓碑**表达
+  （ADR 0156）：带 `deleted` 的一行把存活的事件标成已删，原数据留着不清；墓碑只增不减，
+  已删的事件不会再被任何写入复活，重复的墓碑也一律忽略；
 - `lww`：可变记录，按 (更新时间, 设备) 新者胜，删除是带 `deleted` 标记的一行，不真删。
 
 `seq` 是全局单调序号，每次写入（新增或改写）都取新号，客户端用它做增量拉取的游标。
@@ -104,7 +106,7 @@ def push(conn: Connection, learner: int, app: str, device: str, incoming: list[d
             & (rows.c.tbl == item["tbl"])
             & (rows.c.pk == item["pk"])
         )
-        current = conn.execute(select(rows.c.stamp, rows.c.device).where(key)).mappings().first()
+        current = conn.execute(select(rows.c.stamp, rows.c.device, rows.c.deleted).where(key)).mappings().first()
         values = dict(
             data=None if item["deleted"] else item["data"],
             mode=item["mode"],
@@ -120,8 +122,21 @@ def push(conn: Connection, learner: int, app: str, device: str, incoming: list[d
             )
             accepted += 1
             continue
-        # 事件只记第一次；可变记录比 (更新时间, 设备)，同一时刻也有确定的胜者。
-        if item["mode"] == "append" or (item["stamp"], device) <= (current["stamp"], current["device"]):
+        if item["mode"] == "append":
+            # 事件只记第一次；唯一能改它的是墓碑——存活 → 已删，单向、幂等，原数据不动。
+            if not (item["deleted"] and not current["deleted"]):
+                ignored += 1
+                continue
+            top += 1
+            conn.execute(
+                update(rows)
+                .where(key)
+                .values(deleted=True, stamp=item["stamp"], device=device, received_at=now, seq=top)
+            )
+            accepted += 1
+            continue
+        # 可变记录比 (更新时间, 设备)，同一时刻也有确定的胜者。
+        if (item["stamp"], device) <= (current["stamp"], current["device"]):
             ignored += 1
             continue
         top += 1

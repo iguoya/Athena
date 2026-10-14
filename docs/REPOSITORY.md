@@ -190,7 +190,7 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
  的库，也不假设别人跑过。库放在**用户数据目录**（`<目录名>/learning.db`，目录名登记在 `app.json`
  的 `progress.dir`），不进版本库、也不推 GitHub；离开路由器环境照常使用。能连上路由器时，启动器的
  同步代理（`launcher/core/src/progress_sync.rs`）按 `app.json` 里 `progress.tables` 声明的合并规则
- （`append` 事件并集、`lww` 更新时间新者胜）把本地库与中心 PostgreSQL 互推，失败只写日志、
+ （`append` 事件并集、删除用墓碑——ADR 0156；`lww` 更新时间新者胜）把本地库与中心 PostgreSQL 互推，失败只写日志、
  不进界面。换机器靠连上路由器自动拉回，而不是 clone。`launcher progress backup` 导出文本快照。
  知识点 ID 用自己的前缀（C 与机器 `machine.`，数据结构 `dsa.`）。**例外**：`driver`（ADR 0067、0068、
  0127）有自己的通路（`/api/driver/v1`），个人数据存 PG，客户端本地只留缓存与待发队列。

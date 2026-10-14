@@ -119,6 +119,34 @@ class MergeTests(ProgressApiCase):
         self.assertEqual((r["accepted"], r["ignored"]), (0, 1))
         self.assertEqual(self.pull().get_json()["rows"][0]["data"], {"ok": 1})
 
+    def test_append_墓碑标记删除但保留原数据(self):
+        # ADR 0156：事件表的删除也是一个新增的事实（墓碑），不是真删——原数据留着，可审计、可恢复。
+        self.push([row(tbl="attempts", pk="q1|t1", mode="append", stamp=T1, data={"ok": 1})])
+        r = self.push([row(tbl="attempts", pk="q1|t1", mode="append", stamp=T2, deleted=True)], device="pc-b").get_json()
+        self.assertEqual((r["accepted"], r["ignored"]), (1, 0))
+        got = self.pull().get_json()["rows"][0]
+        self.assertTrue(got["deleted"])
+        self.assertEqual(got["data"], {"ok": 1})
+        self.assertEqual(got["device"], "pc-b")
+
+    def test_append_墓碑只增不减_重复与复活都被忽略(self):
+        self.push([row(tbl="attempts", pk="q1|t1", mode="append", stamp=T1, data={"ok": 1})])
+        self.push([row(tbl="attempts", pk="q1|t1", mode="append", stamp=T2, deleted=True)], device="pc-b")
+        top = self.pull().get_json()["next"]
+        again = self.push([row(tbl="attempts", pk="q1|t1", mode="append", stamp=T3, deleted=True)], device="pc-c").get_json()
+        revive = self.push([row(tbl="attempts", pk="q1|t1", mode="append", stamp=T3, data={"ok": 0})], device="pc-c").get_json()
+        self.assertEqual((again["accepted"], revive["accepted"]), (0, 0))
+        got = self.pull().get_json()
+        self.assertEqual(got["next"], top, "被忽略的写入不该分配新序号")
+        self.assertTrue(got["rows"][0]["deleted"])
+
+    def test_append_对没见过的键直接落墓碑(self):
+        r = self.push([row(tbl="attempts", pk="q9|t9", mode="append", stamp=T1, deleted=True)]).get_json()
+        self.assertEqual(r["accepted"], 1)
+        got = self.pull().get_json()["rows"][0]
+        self.assertTrue(got["deleted"])
+        self.assertIsNone(got["data"])
+
     def test_删除是一行带标记的记录并清掉数据(self):
         self.push([row(stamp=T1)])
         self.push([row(stamp=T2, deleted=True)], device="pc-b")

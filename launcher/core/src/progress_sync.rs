@@ -540,8 +540,14 @@ fn scan(state: &State, app: &str, spec: &ProgressSpec, db: &Connection, stamp: &
             }
             seen.insert(row.pk);
         }
-        // 事件表里的行不会被删除同步（事件只增不减）；可变表里消失的行记成删除。
-        if table.mode == TableMode::Lww {
+        // 本地消失的行记成删除。可变表直接按此处理；事件表（ADR 0156）用墓碑表达——服务端
+        // 不真删、原数据保留，所以误判的代价是可恢复的，但仍加一道护栏：事件表整张为空更
+        // 像「库被重建 / 重装」而不是「用户删光了」，此时不推断删除，免得把中心的历史全标成墓碑。
+        let deletable = match table.mode {
+            TableMode::Lww => true,
+            TableMode::Append => !seen.is_empty(),
+        };
+        if deletable {
             for pk in state.live_keys(app, tbl)? {
                 if !seen.contains(&pk) {
                     state.put(app, tbl, &pk, 0, stamp, true, false, None)?;
@@ -636,9 +642,16 @@ fn apply(state: &State, app: &str, db: &Connection, tbl: &str, table: &TableSpec
     }
     let known = state.get(app, tbl, &row.pk)?;
     match table.mode {
+        TableMode::Append if row.deleted => {
+            // 墓碑单向生效：本机已经是墓碑就不动；否则落到下面的删除分支。
+            if known.as_ref().is_some_and(|k| k.deleted) {
+                return Ok(false);
+            }
+        }
         TableMode::Append => {
+            // 已有就不动（本机登记过的墓碑也算已有，别处晚到的存活副本复活不了它）。
             if known.is_some() || read_one(db, tbl, info, &pk)?.is_some() {
-                // 已有就不动；本地原有的行第一次见到时也要登记，免得下一轮把它当本地新增推出去。
+                // 本地原有的行第一次见到时也要登记，免得下一轮把它当本地新增推出去。
                 if known.is_none() {
                     if let Some(local) = read_one(db, tbl, info, &pk)? {
                         state.put(app, tbl, &row.pk, local.hash, &row.stamp, false, true, Some(&local.data.to_string()))?;
@@ -927,17 +940,21 @@ mod tests {
             }
             for r in rows {
                 let key = (app.to_string(), r.tbl.clone(), r.pk.clone());
-                let take = match s.rows.get(&key) {
-                    None => true,
-                    Some((cur, _)) => r.mode != "append" && (r.stamp.as_str(), device) > (cur.stamp.as_str(), cur.device.as_str()),
+                // 与 nas_admin/progress_api/store.py 一致：事件只记第一次，唯一的改动是
+                // 存活 → 墓碑（原数据保留）；可变记录比 (时间, 设备)。
+                let (take, keep_data) = match s.rows.get(&key) {
+                    None => (true, None),
+                    Some((cur, _)) if r.mode == "append" => (r.deleted && !cur.deleted, cur.data.clone()),
+                    Some((cur, _)) => ((r.stamp.as_str(), device) > (cur.stamp.as_str(), cur.device.as_str()), None),
                 };
                 if take {
                     s.seq += 1;
                     let seq = s.seq;
+                    let data = if r.mode == "append" && r.deleted { keep_data } else { r.data.clone() };
                     s.rows.insert(
                         key,
                         (
-                            PullRow { tbl: r.tbl.clone(), pk: r.pk.clone(), data: r.data.clone(), stamp: r.stamp.clone(), deleted: r.deleted, device: device.to_string(), seq },
+                            PullRow { tbl: r.tbl.clone(), pk: r.pk.clone(), data, stamp: r.stamp.clone(), deleted: r.deleted, device: device.to_string(), seq },
                             r.mode.clone(),
                         ),
                     );
@@ -1141,6 +1158,72 @@ mod tests {
                 .unwrap();
             assert_eq!(qids, vec!["qa", "qb"], "{}", device.name);
         }
+    }
+
+    #[test]
+    fn 事件的删除也会同步_以墓碑表达且服务端保留原数据() {
+        let server = remote();
+        let a = Device::new("pc-a");
+        let b = Device::new("pc-b");
+        a.db().execute("INSERT INTO attempts(qid, at, ok) VALUES('q1', 't1', 1)", []).unwrap();
+        a.db().execute("INSERT INTO attempts(qid, at, ok) VALUES('q2', 't2', 1)", []).unwrap();
+        a.sync(&server, true).unwrap();
+        b.sync(&server, true).unwrap();
+        assert_eq!(b.attempts(), 2);
+
+        // a 重置了 q1 的作答（应用里真的 DELETE），两边都同步一轮。
+        a.db().execute("DELETE FROM attempts WHERE qid='q1'", []).unwrap();
+        a.sync(&server, true).unwrap();
+        let out = b.sync(&server, true).unwrap();
+        assert_eq!(out.pulled, 1);
+        assert_eq!(a.attempts(), 1);
+        assert_eq!(b.attempts(), 1, "墓碑应当传到另一台并在本机删掉");
+
+        // 服务端没有真删：墓碑行还在，原数据也还在。
+        let s = server.0.borrow();
+        let tomb = s.rows.values().map(|(r, _)| r).find(|r| r.deleted).expect("服务端应有一条墓碑");
+        assert!(tomb.data.is_some());
+    }
+
+    #[test]
+    fn 已删的事件不会被旧副本复活() {
+        let server = remote();
+        let a = Device::new("pc-a");
+        let b = Device::new("pc-b");
+        a.db().execute("INSERT INTO attempts(qid, at, ok) VALUES('q1', 't1', 1)", []).unwrap();
+        a.sync(&server, true).unwrap();
+        b.sync(&server, true).unwrap();
+        // b 离线期间 a 删了 q1 并同步；b 仍带着旧副本再同步一轮。
+        a.db().execute("DELETE FROM attempts", []).unwrap();
+        a.db().execute("INSERT INTO attempts(qid, at, ok) VALUES('q2', 't2', 0)", []).unwrap();
+        a.sync(&server, true).unwrap();
+        b.sync(&server, true).unwrap();
+        a.sync(&server, true).unwrap();
+        for device in [&a, &b] {
+            let qids: Vec<String> = device
+                .db()
+                .prepare("SELECT qid FROM attempts ORDER BY qid")
+                .unwrap()
+                .query_map([], |r| r.get(0))
+                .unwrap()
+                .collect::<Result<_, _>>()
+                .unwrap();
+            assert_eq!(qids, vec!["q2"], "{}", device.name);
+        }
+    }
+
+    #[test]
+    fn 事件表整张为空时不推断为全删() {
+        // 重装、库被重建后事件表是空的：这是「本机没有数据」，不是「用户删了全部」，
+        // 不能把中心已有的历史记录全标成墓碑。
+        let server = remote();
+        let a = Device::new("pc-a");
+        a.db().execute("INSERT INTO attempts(qid, at, ok) VALUES('q1', 't1', 1)", []).unwrap();
+        a.sync(&server, true).unwrap();
+        a.db().execute("DELETE FROM attempts", []).unwrap();
+        let out = a.sync(&server, false).unwrap();
+        assert_eq!(out.changed, 0);
+        assert!(server.0.borrow().rows.values().all(|(r, _)| !r.deleted));
     }
 
     #[test]
