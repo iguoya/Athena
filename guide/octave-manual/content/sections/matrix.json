@@ -1,0 +1,2121 @@
+{
+ "id": "matrix",
+ "title_en": "Matrix Manipulation",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "There are a number of functions available for checking to see if the elements of a matrix meet some condition, and for rearranging the elements of a matrix. For example, Octave can easily tell you if all the elements of a matrix are finite, or are less than some specified value. Octave can also rotate the elements, extract the upper- or lower-triangular parts, or sort the columns of a matrix.",
+    "sha": "b138b7c0cb09",
+    "zh": "Octave 提供了不少函数，用来检查矩阵的元素是否满足某个条件，也用来重新排列矩阵的元素。例如，Octave 可以很方便地告诉你一个矩阵的元素是否全部有限、是否都小于某个给定值；它还能旋转元素、提取上三角或下三角部分、对矩阵的各列排序。"
+   }
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Finding Elements and Checking Conditions",
+    "sha": "1d923a73b358",
+    "zh": "查找元素与检查条件"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The functions `any` and `all` are useful for determining whether any or all of the elements of a matrix satisfy some condition. The `find` function is also useful in determining which elements of a matrix meet a specified condition.",
+    "sha": "d5d41c912ccc",
+    "zh": "函数 `any` 和 `all` 用来判断矩阵中是否有元素、或是否所有元素满足某个条件。函数 `find` 则用来找出矩阵中哪些元素满足给定条件。"
+   }
+  },
+  {
+   "k": "def",
+   "name": "any",
+   "sigs": [
+    "tf = any (x)",
+    "tf = any (x, dim)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For a vector argument, return true (logical 1) if any element of the vector is nonzero.",
+      "sha": "bec7adea3c39",
+      "zh": "对向量参数，只要向量中有任何一个元素非零，就返回真（逻辑值 1）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For a matrix argument, return a row vector of logical ones and zeros with each element indicating whether any of the elements of the corresponding column of the matrix are nonzero. For example:",
+      "sha": "08924f65608e",
+      "zh": "对矩阵参数，返回一个由逻辑 1 和 0 组成的行向量，其中每个元素表示矩阵对应列中是否有元素非零。例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "any (eye (2, 4))\n ⇒ [ 1, 1, 0, 0 ]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the optional argument *dim* is supplied, work along dimension *dim*. For example:",
+      "sha": "723ff230f8d7",
+      "zh": "如果给出了可选参数 *dim*，则沿维度 *dim* 进行判断。例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "any (eye (2, 4), 2)\n ⇒ [ 1; 1 ]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `all`.",
+      "sha": "dbc6e3fa6663",
+      "zh": "另见：`all`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "all",
+   "sigs": [
+    "tf = all (x)",
+    "tf = all (x, dim)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For a vector argument, return true (logical 1) if all elements of the vector are nonzero.",
+      "sha": "7d0384894031",
+      "zh": "对向量参数，只有向量中所有元素都非零时，才返回真（逻辑值 1）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For a matrix argument, return a row vector of logical ones and zeros with each element indicating whether all of the elements of the corresponding column of the matrix are nonzero. For example:",
+      "sha": "369a31de289e",
+      "zh": "对矩阵参数，返回一个由逻辑 1 和 0 组成的行向量，其中每个元素表示矩阵对应列中的所有元素是否都非零。例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "all ([2, 3; 1, 0])\n    ⇒ [ 1, 0 ]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the optional argument *dim* is supplied, work along dimension *dim*. See also: `any`.",
+      "sha": "ce291696fb01",
+      "zh": "如果给出了可选参数 *dim*，则沿维度 *dim* 进行判断。另见：`any`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Since the comparison operators (see Comparison Ops) return matrices of ones and zeros, it is easy to test a matrix for many things, not just whether the elements are nonzero. For example,",
+    "sha": "24a02a69e0b1",
+    "zh": "比较运算符（见 Comparison Ops）返回由 1 和 0 组成的矩阵，因此除了判断元素是否非零，我们还能用它来检验矩阵的许多其他性质。例如，"
+   }
+  },
+  {
+   "k": "code",
+   "text": "all (all (rand (5) < 0.9))\n     ⇒ 0"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "tests a random 5 by 5 matrix to see if all of its elements are less than 0.9.",
+    "sha": "e9d990275660",
+    "zh": "检验一个随机的 5 × 5 矩阵，看它的所有元素是否都小于 0.9。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Note that in conditional contexts (like the test clause of `if` and `while` statements) Octave treats the test as if you had typed `all (all (condition))`.",
+    "sha": "9ce3f1b2f6b1",
+    "zh": "注意，在条件语境中（例如 `if` 和 `while` 语句的判断子句），Octave 会把判断条件当作你写的是 `all (all (condition))`。"
+   }
+  },
+  {
+   "k": "def",
+   "name": "diff",
+   "sigs": [
+    "y = diff (x)",
+    "y = diff (x, k)",
+    "y = diff (x, k, dim)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If *x* is a vector of length $n$, `diff (x)` is the vector of first differences $x_2 - x_1, \\ldots{}, x_n - x_{n-1}$.",
+      "sha": "3d71404bd579",
+      "zh": "如果 *x* 是长度为 $n$ 的向量，则 `diff (x)` 是一阶差分向量 $x_2 - x_1, \\ldots{}, x_n - x_{n-1}$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *x* is a matrix, `diff (x)` is the matrix of column differences along the first non-singleton dimension.",
+      "sha": "ecc7f69dda64",
+      "zh": "如果 *x* 是矩阵，则 `diff (x)` 是沿第一个非单一维度（长度不为 1 的维度）计算的列差分矩阵。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The second argument is optional. If supplied, `diff (x, k)`, where *k* is a non-negative integer, returns the *k*-th differences. It is possible that *k* is larger than the first non-singleton dimension of the matrix. In this case, `diff` continues to take the differences along the next non-singleton dimension.",
+      "sha": "60b5a5ea494c",
+      "zh": "第二个参数是可选的。若给出，则 `diff (x, k)`（其中 *k* 为非负整数）返回 *k* 阶差分。*k* 有可能比矩阵第一个非单一维度的长度还大，这时 `diff` 会继续沿下一个非单一维度做差分。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The dimension along which to take the difference can be explicitly stated with the optional variable *dim*. In this case the *k*-th order differences are calculated along this dimension. In the case where *k* exceeds `size (x, dim)` an empty matrix is returned. See also: `sort`, `merge`.",
+      "sha": "24424136ea0e",
+      "zh": "计算差分所沿的维度可以用可选变量 *dim* 明确指定。此时，*k* 阶差分沿该维度计算。如果 *k* 超过 `size (x, dim)`，则返回空矩阵。另见：`sort`、`merge`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "isinf",
+   "sigs": [
+    "tf = isinf (x)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a logical array which is true where the elements of *x* are infinite and false where they are not.",
+      "sha": "aebac870e679",
+      "zh": "返回一个逻辑数组：*x* 中为无穷大的元素处为真，其余处为假。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For example:",
+      "sha": "059c3e8cce26",
+      "zh": "例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "isinf ([13, Inf, NA, NaN])\n      ⇒ [ 0, 1, 0, 0 ]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `isfinite`, `isnan`, `isna`.",
+      "sha": "c5f18a61ccb1",
+      "zh": "另见：`isfinite`、`isnan`、`isna`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "isnan",
+   "sigs": [
+    "tf = isnan (x)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a logical array which is true where the elements of *x* are NaN values and false where they are not.",
+      "sha": "a7b46ff065bd",
+      "zh": "返回一个逻辑数组：*x* 中为 NaN 的元素处为真，其余处为假。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "NA values are also considered NaN values. For example:",
+      "sha": "33043aa6a7fb",
+      "zh": "NA 值也被视为 NaN 值。例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "isnan ([13, Inf, NA, NaN])\n      ⇒ [ 0, 0, 1, 1 ]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `isna`, `isinf`, `isfinite`.",
+      "sha": "c70fce249393",
+      "zh": "另见：`isna`、`isinf`、`isfinite`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "find",
+   "sigs": [
+    "idx = find (x)",
+    "idx = find (x, n)",
+    "idx = find (x, n, direction)",
+    "[i, j] = find (…)",
+    "[i, j, v] = find (…)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a vector of indices of nonzero elements of a matrix, as a row if *x* is a row vector or as a column otherwise.",
+      "sha": "7ee3b8f3dbac",
+      "zh": "返回矩阵中非零元素的下标向量：若 *x* 是行向量，则结果为行向量，否则为列向量。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To obtain a single index for each matrix element, Octave pretends that the columns of a matrix form one long vector (like Fortran arrays are stored). For example:",
+      "sha": "02d6afbce5de",
+      "zh": "为了给矩阵的每个元素只用一个下标，Octave 把矩阵的各列依次首尾相接，看作一个长向量（与 Fortran 数组的存储方式相同）。例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "find (eye (2))\n  ⇒ [ 1; 4 ]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If two inputs are given, *n* indicates the maximum number of elements to find from the beginning of the matrix or vector.",
+      "sha": "2ebe34d60b5f",
+      "zh": "如果给出两个输入，*n* 表示从矩阵或向量的开头起，最多查找多少个元素。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If three inputs are given, *direction* should be one of `\"first\"` or `\"last\"`, requesting only the first or last *n* indices, respectively. However, the indices are always returned in ascending order.",
+      "sha": "7581abf0ca9c",
+      "zh": "如果给出三个输入，*direction* 应为 `\"first\"` 或 `\"last\"` 之一，分别表示只要前 *n* 个或后 *n* 个下标。不过，返回的下标总是按升序排列。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If two outputs are requested, `find` returns the row and column indices of nonzero elements of a matrix. For example:",
+      "sha": "29155e77fecc",
+      "zh": "如果要求两个输出，`find` 返回矩阵中非零元素的行下标和列下标。例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "[i, j] = find (2 * eye (2))\n    ⇒ i = [ 1; 2 ]\n    ⇒ j = [ 1; 2 ]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If three outputs are requested, `find` also returns a vector containing the nonzero values. For example:",
+      "sha": "3089fd07ca92",
+      "zh": "如果要求三个输出，`find` 还会返回一个包含这些非零值的向量。例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "[i, j, v] = find (3 * eye (2))\n       ⇒ i = [ 1; 2 ]\n       ⇒ j = [ 1; 2 ]\n       ⇒ v = [ 3; 3 ]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *x* is a multi-dimensional array of size m x n x p x …, *j* contains the column locations as if *x* was flattened into a two-dimensional matrix of size m x (n + p + …).",
+      "sha": "4c6c9d7fd426",
+      "zh": "如果 *x* 是大小为 m x n x p x … 的多维数组，则 *j* 给出的列位置，相当于把 *x* 展平成大小为 m x (n + p + …) 的二维矩阵后的列位置。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note that this function is particularly useful for sparse matrices, as it extracts the nonzero elements as vectors, which can then be used to create the original matrix. For example:",
+      "sha": "2aafdff8d7af",
+      "zh": "注意，这个函数对稀疏矩阵特别有用：它把非零元素提取成向量，这些向量又可以用来重建原矩阵。例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "sz = size (a);\n[i, j, v] = find (a);\nb = sparse (i, j, v, sz(1), sz(2));"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `nonzeros`.",
+      "sha": "78aa1a8d75fa",
+      "zh": "另见：`nonzeros`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If you wish to check if a variable exists at all, instead of properties its elements may have, consult Status of Variables.",
+    "sha": "90fa24fc1b9e",
+    "zh": "如果你想检查某个变量是否存在，而不是检查它的元素具有什么性质，请参阅 Status of Variables。"
+   }
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Rearranging Matrices",
+    "sha": "c994326662b4",
+    "zh": "重新排列矩阵"
+   }
+  },
+  {
+   "k": "def",
+   "name": "fliplr",
+   "sigs": [
+    "B = fliplr (A)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Flip array left to right.",
+      "sha": "1655184ae34a",
+      "zh": "把数组左右翻转。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a copy of *A* with the order of the columns reversed. In other words, *A* is flipped left-to-right about a vertical axis. For example:",
+      "sha": "4c964b625f29",
+      "zh": "返回 *A* 的一个副本，其各列的顺序被颠倒。换句话说，*A* 绕竖直轴做了左右翻转。例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": " fliplr ([1, 2; 3, 4])\n      ⇒  2  1\n          4  3"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `flipud`, `flip`, `rot90`, `rotdim`.",
+      "sha": "64d62fabc96a",
+      "zh": "另见：`flipud`、`flip`、`rot90`、`rotdim`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "flipud",
+   "sigs": [
+    "B = flipud (A)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Flip array upside down.",
+      "sha": "2734b6a7f5a2",
+      "zh": "把数组上下翻转。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a copy of *A* with the order of the rows reversed. In other words, *A* is flipped upside-down about a horizontal axis. For example:",
+      "sha": "5b09694a6761",
+      "zh": "返回 *A* 的一个副本，其各行的顺序被颠倒。换句话说，*A* 绕水平轴做了上下翻转。例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": " flipud ([1, 2; 3, 4])\n      ⇒  3  4\n          1  2"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `fliplr`, `flip`, `rot90`, `rotdim`.",
+      "sha": "8977fabab834",
+      "zh": "另见：`fliplr`、`flip`、`rot90`、`rotdim`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "flip",
+   "sigs": [
+    "B = flip (A)",
+    "B = flip (A, dim)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a copy of array *A* flipped across dimension *dim*.",
+      "sha": "0a37f91eec97",
+      "zh": "返回数组 *A* 沿维度 *dim* 翻转后的副本。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *dim* is unspecified it defaults to the first non-singleton dimension.",
+      "sha": "b4a757a40a91",
+      "zh": "如果未指定 *dim*，则默认取第一个非单一维度。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Examples:",
+      "sha": "fb3447b632f6",
+      "zh": "例："
+     }
+    },
+    {
+     "k": "code",
+     "text": " ## row vector\n flip ([1  2  3  4])\n       ⇒  4  3  2  1\n\n ## column vector\n flip ([1; 2; 3; 4])\n       ⇒  4\n           3\n           2\n           1\n\n ## 2-D matrix along dimension 1\n flip ([1 2; 3 4])\n       ⇒  3  4\n           1  2\n\n ## 2-D matrix along dimension 2\n flip ([1 2; 3 4], 2)\n       ⇒  2  1\n           4  3"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `fliplr`, `flipud`, `rot90`, `rotdim`, `permute`, `transpose`.",
+      "sha": "c4e43591f070",
+      "zh": "另见：`fliplr`、`flipud`、`rot90`、`rotdim`、`permute`、`transpose`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "rot90",
+   "sigs": [
+    "B = rot90 (A)",
+    "B = rot90 (A, k)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Rotate array by 90 degree increments.",
+      "sha": "8830ce90015d",
+      "zh": "按 90 度的整数倍旋转数组。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a copy of *A* with the elements rotated counterclockwise in 90-degree increments.",
+      "sha": "0945f839b339",
+      "zh": "返回 *A* 的一个副本，其元素按逆时针方向、以 90 度为单位旋转。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The second argument is optional, and specifies how many 90-degree rotations are to be applied (the default value is 1). Negative values of *k* rotate the matrix in a clockwise direction. For example,",
+      "sha": "27b524b9793f",
+      "zh": "第二个参数是可选的，指定要旋转多少个 90 度（默认值为 1）。*k* 取负值时，矩阵按顺时针方向旋转。例如，"
+     }
+    },
+    {
+     "k": "code",
+     "text": " rot90 ([1, 2; 3, 4], -1)\n     ⇒  3  1\n         4  2"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "rotates the given matrix clockwise by 90 degrees. The following are all equivalent statements:",
+      "sha": "194d724e9ac5",
+      "zh": "把给定的矩阵顺时针旋转 90 度。下面几条语句都是等价的："
+     }
+    },
+    {
+     "k": "code",
+     "text": " rot90 ([1, 2; 3, 4], -1)\n rot90 ([1, 2; 3, 4], 3)\n rot90 ([1, 2; 3, 4], 7)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The rotation is always performed on the plane of the first two dimensions, i.e., rows and columns. To perform a rotation on any other plane, use `rotdim`.",
+      "sha": "7e7d334f66cc",
+      "zh": "旋转总是在前两个维度（即行和列）所在的平面上进行。若要在其他平面上旋转，请使用 `rotdim`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `rotdim`, `fliplr`, `flipud`, `flip`.",
+      "sha": "6b7f87b42aa4",
+      "zh": "另见：`rotdim`、`fliplr`、`flipud`、`flip`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "cat",
+   "sigs": [
+    "A = cat (dim, array1, array2, …, arrayN)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the concatenation of N-D array objects, *array1*, *array2*, …, *arrayN* along dimension *dim*.",
+      "sha": "1d2a2fb4685b",
+      "zh": "返回 N 维数组对象 *array1*、*array2*、…、*arrayN* 沿维度 *dim* 拼接后的结果。"
+     }
+    },
+    {
+     "k": "code",
+     "text": "A = ones (2, 2);\nB = zeros (2, 2);\ncat (2, A, B)\n  ⇒ 1 1 0 0\n     1 1 0 0"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Alternatively, we can concatenate *A* and *B* along the second dimension in the following way:",
+      "sha": "e3b3b9cdc2a8",
+      "zh": "或者，我们也可以用下面的方式沿第二个维度拼接 *A* 和 *B*："
+     }
+    },
+    {
+     "k": "code",
+     "text": "[A, B]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*dim* can be larger than the dimensions of the N-D array objects and the result will thus have *dim* dimensions as the following example shows:",
+      "sha": "3997cc812fc2",
+      "zh": "*dim* 可以大于这些 N 维数组对象的维数，此时结果就有 *dim* 个维度，如下面的例子所示："
+     }
+    },
+    {
+     "k": "code",
+     "text": "cat (4, ones (2, 2), zeros (2, 2))\n  ⇒ ans(:,:,1,1) =\n\n       1 1\n       1 1\n\n     ans(:,:,1,2) =\n\n       0 0\n       0 0"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `horzcat`, `vertcat`.",
+      "sha": "8f876561e379",
+      "zh": "另见：`horzcat`、`vertcat`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "horzcat",
+   "sigs": [
+    "A = horzcat (array1, array2, …, arrayN)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the horizontal concatenation of N-D array objects, *array1*, *array2*, …, *arrayN* along dimension 2.",
+      "sha": "5d4bab3810ad",
+      "zh": "返回 N 维数组对象 *array1*、*array2*、…、*arrayN* 沿维度 2 水平拼接后的结果。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Arrays may also be concatenated horizontally using the syntax for creating new matrices. For example:",
+      "sha": "be3537a50fe2",
+      "zh": "数组也可以用创建新矩阵的语法进行水平拼接。例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "A = [ array1, array2, … ]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This syntax is slightly more efficient because the Octave parser can concatenate the arrays without the overhead of a function call. See also: `cat`, `vertcat`.",
+      "sha": "43aeb5ef495d",
+      "zh": "这种语法的效率略高一些，因为 Octave 的解析器可以直接拼接数组，省去函数调用的开销。另见：`cat`、`vertcat`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "vertcat",
+   "sigs": [
+    "A = vertcat (array1, array2, …, arrayN)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the vertical concatenation of N-D array objects, *array1*, *array2*, …, *arrayN* along dimension 1.",
+      "sha": "160d849f5afa",
+      "zh": "返回 N 维数组对象 *array1*、*array2*、…、*arrayN* 沿维度 1 垂直拼接后的结果。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Arrays may also be concatenated vertically using the syntax for creating new matrices. For example:",
+      "sha": "cf220baf3f29",
+      "zh": "数组也可以用创建新矩阵的语法进行垂直拼接。例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "A = [ array1; array2; … ]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This syntax is slightly more efficient because the Octave parser can concatenate the arrays without the overhead of a function call. See also: `cat`, `horzcat`.",
+      "sha": "2080695d2f7d",
+      "zh": "这种语法的效率略高一些，因为 Octave 的解析器可以直接拼接数组，省去函数调用的开销。另见：`cat`、`horzcat`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "permute",
+   "sigs": [
+    "B = permute (A, perm)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the generalized transpose for an N-D array object *A*.",
+      "sha": "71d1ddb36b69",
+      "zh": "返回 N 维数组对象 *A* 的广义转置。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The permutation vector *perm* must contain the elements `1:ndims (A)` (in any order, but each element must appear only once). The *N*th dimension of *A* gets remapped to dimension `PERM(N)`. For example:",
+      "sha": "089ba0251802",
+      "zh": "排列向量 *perm* 必须包含 `1:ndims (A)` 中的所有元素（顺序任意，但每个元素只能出现一次）。*A* 的第 *N* 个维度被重新映射为维度 `PERM(N)`。例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "x = zeros ([2, 3, 5, 7]);\nsize (x)\n   ⇒  2   3   5   7\n\nsize (permute (x, [2, 1, 3, 4]))\n   ⇒  3   2   5   7\n\nsize (permute (x, [1, 3, 4, 2]))\n   ⇒  2   5   7   3\n\n## The identity permutation\nsize (permute (x, [1, 2, 3, 4]))\n   ⇒  2   3   5   7"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `ipermute`.",
+      "sha": "cafbde831239",
+      "zh": "另见：`ipermute`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "reshape",
+   "sigs": [
+    "B = reshape (A, m, n, …)",
+    "B = reshape (A, [m n …])",
+    "B = reshape (A, …, [], …)",
+    "B = reshape (A, size)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a matrix with the specified dimensions (*m*, *n*, …) whose elements are taken from the matrix *A*.",
+      "sha": "c5c97b1cc266",
+      "zh": "返回一个具有指定维度（*m*、*n*、…）的矩阵，其元素取自矩阵 *A*。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The elements of the matrix are accessed in column-major order (like Fortran arrays are stored).",
+      "sha": "9f140e1d0fb7",
+      "zh": "矩阵的元素按列优先的顺序读取（与 Fortran 数组的存储方式相同）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The following code demonstrates reshaping a 1x4 row vector into a 2x2 square matrix.",
+      "sha": "e2f106ac9608",
+      "zh": "下面的代码演示如何把 1x4 的行向量重塑为 2x2 的方阵。"
+     }
+    },
+    {
+     "k": "code",
+     "text": "reshape ([1, 2, 3, 4], 2, 2)\n      ⇒  1  3\n          2  4"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note that the total number of elements in the original matrix (`prod (size (A))`) must match the total number of elements in the new matrix (`prod ([m n …])`).",
+      "sha": "df43a078be12",
+      "zh": "注意，原矩阵的元素总数（`prod (size (A))`）必须等于新矩阵的元素总数（`prod ([m n …])`）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "A single dimension of the return matrix may be left unspecified and Octave will determine its size automatically. An empty matrix ([]) is used to flag the unspecified dimension. See also: `resize`, `vec`, `postpad`, `cat`, `squeeze`.",
+      "sha": "93de1034612c",
+      "zh": "返回矩阵的某一个维度可以不指定，Octave 会自动确定它的大小。此时用空矩阵（[]）来标记那个未指定的维度。另见：`resize`、`vec`、`postpad`、`cat`、`squeeze`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "circshift",
+   "sigs": [
+    "y = circshift (x, n)",
+    "y = circshift (x, n, dim)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Circularly shift the values of the array *x*.",
+      "sha": "2ffaa187dfcb",
+      "zh": "对数组 *x* 的值做循环移位。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*n* must be a vector of integers no longer than the number of dimensions in *x*. The values of *n* can be either positive or negative, which determines the direction in which the values of *x* are shifted. If an element of *n* is zero, then the corresponding dimension of *x* will not be shifted. If *n* is a scalar and no *dim* is specified then the shift is applied to the first non-singular dimension.",
+      "sha": "817e734dc270",
+      "zh": "*n* 必须是整数向量，其长度不超过 *x* 的维数。*n* 的值可正可负，决定了移位的方向。如果 *n* 的某个元素为零，则 *x* 对应的维度不移位。如果 *n* 是标量且没有指定 *dim*，则对第一个非单一维度做移位。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If a scalar *dim* is given then operate along the specified dimension. In this case *n* must be a scalar as well.",
+      "sha": "17cf93405b69",
+      "zh": "如果给出标量 *dim*，则沿指定的维度操作。此时 *n* 也必须是标量。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Examples:",
+      "sha": "fb3447b632f6",
+      "zh": "例："
+     }
+    },
+    {
+     "k": "code",
+     "text": " x = [1, 2, 3;\n      4, 5, 6;\n      7, 8, 9];\n ## positive shift on rows (1st non-singular dim)\n circshift (x, 1)\n   ⇒\n        7   8   9\n        1   2   3\n        4   5   6\n ## negative shift on rows (1st non-singular dim)\n circshift (x, -2)\n   ⇒\n        7   8   9\n        1   2   3\n        4   5   6\n ## no shift of rows, shift columns by 1 (2nd dimension)\n circshift (x, [0,1])\n   ⇒\n        3   1   2\n        6   4   5\n        9   7   8\n ## shift columns (2nd dimension)\n circshift (x, 1, 2)\n   ⇒\n        3   1   2\n        6   4   5\n        9   7   8"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `permute`, `ipermute`, `shiftdim`.",
+      "sha": "e1e48861ad5b",
+      "zh": "另见：`permute`、`ipermute`、`shiftdim`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "sort",
+   "sigs": [
+    "[s, i] = sort (x)",
+    "[s, i] = sort (x, dim)",
+    "[s, i] = sort (x, mode)",
+    "[s, i] = sort (x, dim, mode)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a copy of *x* with the elements arranged in increasing order.",
+      "sha": "1aef47e0cc57",
+      "zh": "返回 *x* 的一个副本，其元素按递增顺序排列。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For matrices, `sort` orders the elements within columns",
+      "sha": "8b306b360c10",
+      "zh": "对矩阵，`sort` 在各列内部对元素排序。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For example:",
+      "sha": "059c3e8cce26",
+      "zh": "例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "sort ([1, 2; 2, 3; 3, 1])\n   ⇒  1  1\n       2  2\n       3  3"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the optional argument *dim* is given, then the matrix is sorted along the dimension defined by *dim*. The optional argument *mode* defines the order in which the values will be sorted. Valid values of *mode* are `\"ascend\"` or `\"descend\"`.",
+      "sha": "101c32f0cd5d",
+      "zh": "如果给出可选参数 *dim*，则沿 *dim* 指定的维度排序。可选参数 *mode* 指定排序的顺序，有效值为 `\"ascend\"` 或 `\"descend\"`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The `sort` function may also be used to produce a matrix containing the original row indices of the elements in the sorted matrix. For example:",
+      "sha": "25c3c452095f",
+      "zh": "`sort` 函数还可以生成一个矩阵，其中包含排序后各元素在原矩阵中的行下标。例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "[s, i] = sort ([1, 2; 2, 3; 3, 1])\n  ⇒ s = 1  1\n         2  2\n         3  3\n  ⇒ i = 1  3\n         2  1\n         3  2"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For equal elements, the indices are such that equal elements are listed in the order in which they appeared in the original list.",
+      "sha": "0566df548332",
+      "zh": "对于相等的元素，下标的排列方式是：相等的元素按它们在原列表中出现的先后顺序列出。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Sorting of complex entries is done first by magnitude (`abs (z)`) and for any ties by phase angle (`angle (z)`). For example:",
+      "sha": "8eb714630e8e",
+      "zh": "复数元素先按模（`abs (z)`）排序，模相同时再按辐角（`angle (z)`）排序。例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "sort ([1+i; 1; 1-i])\n    ⇒ 1 + 0i\n       1 - 1i\n       1 + 1i"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "NaN values are treated as being greater than any other value and are sorted to the end of the list.",
+      "sha": "5fda41a35f87",
+      "zh": "NaN 值被视为大于任何其他值，排在列表末尾。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The `sort` function may also be used to sort strings and cell arrays of strings, in which case ASCII dictionary order (uppercase 'A' precedes lowercase 'a') of the strings is used.",
+      "sha": "929b24a781a8",
+      "zh": "`sort` 函数也可以对字符串和字符串元胞数组排序，此时按字符串的 ASCII 字典序排列（大写字母 'A' 排在小写字母 'a' 之前）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The algorithm used in `sort` is optimized for the sorting of partially ordered lists. See also: `sortrows`, `issorted`.",
+      "sha": "3b6e467ae293",
+      "zh": "`sort` 所用的算法针对部分有序的列表做了优化。另见：`sortrows`、`issorted`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "tril",
+   "sigs": [
+    "A_LO = tril (A)",
+    "A_LO = tril (A, k)",
+    "A_LO = tril (A, k, pack)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a new matrix formed by extracting the lower triangular part of the matrix *A*, and setting all other elements to zero.",
+      "sha": "3acb08f8bf6f",
+      "zh": "返回一个新矩阵，它由矩阵 *A* 的下三角部分提取而成，其余元素置为零。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional second argument specifies how many diagonals above or below the main diagonal should also be set to zero. The default value of *k* is zero which includes the main diagonal as part of the result. If the value of *k* is a nonzero integer then the selection of elements starts at an offset of *k* diagonals above the main diagonal for positive *k* or below the main diagonal for negative *k*. The absolute value of *k* may not be greater than the number of subdiagonals or superdiagonals.",
+      "sha": "5f7d1377fa19",
+      "zh": "可选的第二个参数指定主对角线上方或下方的多少条对角线也要置零。*k* 的默认值为零，此时主对角线包含在结果中。如果 *k* 是非零整数，则从偏离主对角线 *k* 条对角线的位置开始选取元素：*k* 为正时在主对角线上方，*k* 为负时在主对角线下方。*k* 的绝对值不能超过次对角线或超对角线的条数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Example 1 : exclude main diagonal",
+      "sha": "17c59604b41f",
+      "zh": "例 1：不含主对角线"
+     }
+    },
+    {
+     "k": "code",
+     "text": "tril (ones (3), -1)\n     ⇒  0  0  0\n         1  0  0\n         1  1  0"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Example 2 : include first superdiagonal",
+      "sha": "b3f96d09342c",
+      "zh": "例 2：包含第一条超对角线"
+     }
+    },
+    {
+     "k": "code",
+     "text": "tril (ones (3), 1)\n     ⇒  1  1  0\n         1  1  1\n         1  1  1"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the optional third argument `\"pack\"` is given then the extracted elements are not inserted into a matrix, but instead stacked column-wise one above another, and returned as a column vector. See also: `triu`, `istril`, `diag`.",
+      "sha": "26fcc0867b6f",
+      "zh": "如果给出可选的第三个参数 `\"pack\"`，则提取出的元素不会放回矩阵中，而是按列依次上下堆叠，作为列向量返回。另见：`triu`、`istril`、`diag`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "triu",
+   "sigs": [
+    "A_UP = triu (A)",
+    "A_UP = triu (A, k)",
+    "A_UP = triu (A, k, pack)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a new matrix formed by extracting the upper triangular part of the matrix *A*, and setting all other elements to zero.",
+      "sha": "ca1e95f67b9d",
+      "zh": "返回一个新矩阵，它由矩阵 *A* 的上三角部分提取而成，其余元素置为零。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional second argument specifies how many diagonals above or below the main diagonal should also be set to zero. The default value of *k* is zero which includes the main diagonal as part of the result. If the value of *k* is a nonzero integer then the selection of elements starts at an offset of *k* diagonals above the main diagonal for positive *k* or below the main diagonal for negative *k*. The absolute value of *k* may not be greater than the number of subdiagonals or superdiagonals.",
+      "sha": "5f7d1377fa19",
+      "zh": "可选的第二个参数指定主对角线上方或下方的多少条对角线也要置零。*k* 的默认值为零，此时主对角线包含在结果中。如果 *k* 是非零整数，则从偏离主对角线 *k* 条对角线的位置开始选取元素：*k* 为正时在主对角线上方，*k* 为负时在主对角线下方。*k* 的绝对值不能超过次对角线或超对角线的条数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Example 1 : exclude main diagonal",
+      "sha": "17c59604b41f",
+      "zh": "例 1：不含主对角线"
+     }
+    },
+    {
+     "k": "code",
+     "text": "triu (ones (3), 1)\n     ⇒  0  1  1\n         0  0  1\n         0  0  0"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Example 2 : include first subdiagonal",
+      "sha": "59ecb250d076",
+      "zh": "例 2：包含第一条次对角线"
+     }
+    },
+    {
+     "k": "code",
+     "text": "triu (ones (3), -1)\n     ⇒  1  1  1\n         1  1  1\n         0  1  1"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the optional third argument `\"pack\"` is given then the extracted elements are not inserted into a matrix, but instead stacked column-wise one above another, and returned as a column vector. See also: `tril`, `istriu`, `diag`.",
+      "sha": "f510dda3bf76",
+      "zh": "如果给出可选的第三个参数 `\"pack\"`，则提取出的元素不会放回矩阵中，而是按列依次上下堆叠，作为列向量返回。另见：`tril`、`istriu`、`diag`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "vec",
+   "sigs": [
+    "v = vec (x)",
+    "v = vec (x, dim)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the vector obtained by stacking the columns of the matrix *x* one above the other.",
+      "sha": "d9096d158f93",
+      "zh": "返回把矩阵 *x* 的各列上下依次堆叠得到的向量。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Without *dim* this is equivalent to `x(:)`.",
+      "sha": "105c309022d8",
+      "zh": "不给出 *dim* 时，这等价于 `x(:)`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *dim* is supplied, the dimensions of *v* are set to *dim* with all elements along the last dimension. This is equivalent to `shiftdim (x(:), 1-dim)`. See also: `vech`, `resize`, `cat`.",
+      "sha": "5166b4849250",
+      "zh": "如果给出 *dim*，则 *v* 的维度被设为 *dim*，所有元素都排在最后一个维度上。这等价于 `shiftdim (x(:), 1-dim)`。另见：`vech`、`resize`、`cat`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "diag",
+   "sigs": [
+    "M = diag (v)",
+    "M = diag (v, k)",
+    "M = diag (v, m, n)",
+    "v = diag (M)",
+    "v = diag (M, k)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a diagonal matrix with vector *v* on diagonal *k*.",
+      "sha": "ec3328531b06",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The second argument is optional. If it is positive, the vector is placed on the *k*-th superdiagonal. If it is negative, it is placed on the *-k*-th subdiagonal. The default value of *k* is 0, and the vector is placed on the main diagonal. For example:",
+      "sha": "83079f29898d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "diag ([1, 2, 3], 1)\n   ⇒  0  1  0  0\n       0  0  2  0\n       0  0  0  3\n       0  0  0  0"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The 3-input form returns a diagonal matrix with vector *v* on the main diagonal and the resulting matrix being of size *m* rows x *n* columns.",
+      "sha": "d7115465e7f2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Given a matrix argument, instead of a vector, `diag` extracts the *k*-th diagonal of the matrix.",
+      "sha": "8af098826e65",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "blkdiag",
+   "sigs": [
+    "M = blkdiag (A, B, C, …)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Build a block diagonal matrix from *A*, *B*, *C*, …",
+      "sha": "4c1dc06a18df",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "All arguments must be numeric and either two-dimensional matrices or scalars. If any argument is of type sparse, the output will also be sparse. See also: `diag`, `horzcat`, `vertcat`, `sparse`.",
+      "sha": "f9eb243560d1",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Special Utility Matrices",
+    "sha": "dd45a654c543",
+    "zh": ""
+   }
+  },
+  {
+   "k": "def",
+   "name": "eye",
+   "sigs": [
+    "I = eye (n)",
+    "I = eye (m, n)",
+    "I = eye ([m n])",
+    "I = eye (…, class)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return an identity matrix.",
+      "sha": "f4ffcd64e639",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If invoked with a single scalar argument *n*, return a square",
+      "sha": "2490854dc61e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If supplied two scalar arguments (*m*, *n*), `eye` takes them to be the number of rows and columns. If given a vector with two elements, `eye` uses the values of the elements as the number of rows and columns, respectively. For example:",
+      "sha": "86ce9ce84248",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "eye (3)\n ⇒  1  0  0\n     0  1  0\n     0  0  1"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The following expressions all produce the same result:",
+      "sha": "c8aa01c13510",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "eye (2)\n≡\neye (2, 2)\n≡\neye (size ([1, 2; 3, 4]))"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional argument *class*, allows `eye` to return an array of the specified type, like",
+      "sha": "d9d35bc06589",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "val = zeros (n,m, \"uint8\")"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Calling `eye` with no arguments is equivalent to calling it with an argument of 1. Any negative dimensions are treated as zero. These odd definitions are for compatibility with MATLAB. See also: `speye`, `ones`, `zeros`.",
+      "sha": "a7faafdedae2",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "ones",
+   "sigs": [
+    "val = ones (n)",
+    "val = ones (m, n)",
+    "val = ones (m, n, k, …)",
+    "val = ones ([m n …])",
+    "val = ones (…, \"like\", var)",
+    "val = ones (…, class)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a matrix or N-dimensional array whose elements are all 1.",
+      "sha": "3c31e9b40d54",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If invoked with a single scalar integer argument *n*, return a square",
+      "sha": "31e20588af6c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If invoked with two or more scalar integer arguments, or a vector of integer values, return an array with the given dimensions.",
+      "sha": "f6105974f7b7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To create a constant matrix whose values are all the same use an expression such as",
+      "sha": "e5cdbeac1c69",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "val_matrix = val * ones (m, n)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If a variable *var* is specified after `\"like\"`, the output *val* will have the same data type, complexity, and sparsity as *var*.",
+      "sha": "7e1238148006",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional argument *class* specifies the class of the return array and defaults to double. For example:",
+      "sha": "999ce66535cd",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "val = ones (m,n, \"uint8\")"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `zeros`.",
+      "sha": "7bbbb8889b5a",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "zeros",
+   "sigs": [
+    "val = zeros (n)",
+    "val = zeros (m, n)",
+    "val = zeros (m, n, k, …)",
+    "val = zeros ([m n …])",
+    "val = zeros (…, \"like\", var)",
+    "val = zeros (…, class)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a matrix or N-dimensional array whose elements are all 0.",
+      "sha": "dbd843d2b12a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If invoked with a single scalar integer argument, return a square",
+      "sha": "4b532c927903",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If invoked with two or more scalar integer arguments, or a vector of integer values, return an array with the given dimensions.",
+      "sha": "f6105974f7b7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If a variable *var* is specified after `\"like\"`, the output *val* will have the same data type, complexity, and sparsity as *var*.",
+      "sha": "7e1238148006",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional argument *class* specifies the class of the return array and defaults to double. For example:",
+      "sha": "999ce66535cd",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "val = zeros (m,n, \"uint8\")"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `ones`.",
+      "sha": "1c3849fea008",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "repmat",
+   "sigs": [
+    "B = repmat (A, m)",
+    "B = repmat (A, m, n)",
+    "B = repmat (A, m, n, p …)",
+    "B = repmat (A, [m n])",
+    "B = repmat (A, [m n p …])"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Repeat matrix or N-D array.",
+      "sha": "210bf5eec381",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Form a block matrix of size *m* by *n*, with a copy of matrix *A* as each element.",
+      "sha": "b59f592adee8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *n* is not specified, form an *m* by *m* block matrix. For copying along more than two dimensions, specify the number of times to copy across each dimension *m*, *n*, *p*, …, in a vector in the second argument.",
+      "sha": "bc941d5a7d75",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `bsxfun`, `kron`, `repelems`.",
+      "sha": "2ecc830fdd93",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The functions `linspace` and `logspace` make it very easy to create vectors with evenly or logarithmically spaced elements. See Ranges.",
+    "sha": "692729fd614f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "def",
+   "name": "linspace",
+   "sigs": [
+    "y = linspace (start, end)",
+    "y = linspace (start, end, n)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a row vector with *n* linearly spaced elements between *start* and *end*.",
+      "sha": "bf3ecb4391a4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the number of elements *n* is greater than one, then the endpoints *start* and *end* are always included in the range. If *start* is greater than *end*, the elements are stored in decreasing order. If the number of points *n* is not specified, a value of 100 is used.",
+      "sha": "3a29148fd4c1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The `linspace` function returns a row vector when both *start* and *end* are scalars. If one, or both, inputs are vectors, then `linspace` transforms them to column vectors and returns a matrix where each row is an independent sequence between `start(row_n), end(row_n)`.",
+      "sha": "90b2f166923b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Programming Notes: For compatibility with MATLAB, return the second argument (*end*) when a single value (*n* = 1) is requested. If *n* is not an integer then `floor (n)` is used to round the number of elements. If *n* is zero or negative then an empty 1x0 matrix is returned. See also: `colon`, `logspace`.",
+      "sha": "3ec806e846c3",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "logspace",
+   "sigs": [
+    "y = logspace (a, b)",
+    "y = logspace (a, b, n)",
+    "y = logspace (a, pi)",
+    "y = logspace (a, pi, n)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a row vector with *n* elements logarithmically spaced from $10^{a}$ to $10^{b}$.",
+      "sha": "8eacc6fce32b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the number of elements *n* is unspecified it defaults to 50.",
+      "sha": "c28d9830ddb1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *b* is equal to $\\pi$, the points are between $10^{a}$ and $\\pi$, *not* $10^{a}$ and $10^{\\pi}$, which is useful in digital signal processing.",
+      "sha": "df3c09770841",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Programming Notes: For compatibility with MATLAB, return the right-hand side of the range ($10^{b}$) when a single value (*n* = 1) is requested. If *n* is not an integer then `floor (n)` is used to round the number of elements. If *n* is zero or negative then an empty 1x0 matrix is returned. See also: `linspace`.",
+      "sha": "201c227c182a",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "rand",
+   "sigs": [
+    "x = rand (n)",
+    "x = rand (m, n, …)",
+    "x = rand ([m n …])",
+    "x = rand (…, \"single\")",
+    "x = rand (…, \"double\")",
+    "v = rand (\"state\")",
+    "rand (\"state\", v)",
+    "rand (\"state\", \"reset\")",
+    "v = rand (\"seed\")",
+    "rand (\"seed\", v)",
+    "rand (\"seed\", \"reset\")"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a matrix with random elements uniformly distributed on the interval (0, 1).",
+      "sha": "573de10e9400",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The arguments are handled the same as the arguments for `eye`.",
+      "sha": "5ebb022ffcab",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "You can query the state of the random number generator using the form",
+      "sha": "72c7ec5af6d9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "v = rand (\"state\")"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This returns a column vector *v* of length 625. Later, you can restore the random number generator to the state *v* using the form",
+      "sha": "c5d6992f67d3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "rand (\"state\", v)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "You may also initialize the state vector from an arbitrary vector of length 625 for *v*. This new state will be a hash based on the value of *v*, not *v* itself.",
+      "sha": "8fdd8eebd2f4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By default, the generator is initialized by contributing entropy from the wall clock time, the CPU time, the current fraction of a second, the process ID and—if available—up to 1024 bits from the C++ random numbers source `random_device`, which might be non-deterministic (implementation specific). Note that this differs from MATLAB, which always initializes the state to the same state at startup. To obtain behavior comparable to MATLAB, initialize with a deterministic state vector in Octave's startup files (see Startup Files).",
+      "sha": "ca04db2d8219",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To compute the pseudo-random sequence, `rand` uses the Mersenne Twister with a period of $2^{19937}-1$ (See M. Matsumoto and T. Nishimura, *Mersenne Twister: A 623-dimensionally equidistributed uniform pseudorandom number generator*, pp. 3--30, January 1998, http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html). Do **not** use for cryptography without securely hashing several returned values together, otherwise the generator state can be learned after reading 624 consecutive values.",
+      "sha": "38986fa33ebd",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Older versions of Octave used a different random number generator. The new generator is used by default as it is significantly faster than the old generator, and produces random numbers with a significantly longer cycle time. However, in some circumstances it might be desirable to obtain the same random sequences as produced by the old generators. To do this the keyword `\"seed\"` is used to specify that the old generators should be used, as in",
+      "sha": "8141917ca489",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "rand (\"seed\", val)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which sets the seed of the generator to *val*. The seed of the generator can be queried with",
+      "sha": "cd06064ad219",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "s = rand (\"seed\")"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "However, it should be noted that querying the seed will not cause `rand` to use the old generators, only setting the seed will. To cause `rand` to once again use the new generators, the keyword `\"state\"` should be used to reset the state of the `rand`.",
+      "sha": "413fa163b596",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The state or seed of the generator can be reset to a new random value using the `\"reset\"` keyword.",
+      "sha": "817bb6e40df1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The class of the value returned can be controlled by a trailing `\"double\"` or `\"single\"` argument. These are the only valid classes. See also: `randn`, `rande`, `randg`, `randp`.",
+      "sha": "80d2db31b99f",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "randi",
+   "sigs": [
+    "R = randi (imax)",
+    "R = randi (imax, n)",
+    "R = randi (imax, m, n, …)",
+    "R = randi ([imin imax], …)",
+    "R = randi (…, \"class\")"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return random integers in the range 1:*imax*.",
+      "sha": "cf8e1a388ab6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Additional arguments determine the shape of the return matrix. When no arguments are specified a single random integer is returned. If one argument *n* is specified then a square matrix (*n* x *n*) is returned. Two or more arguments will return a multi-dimensional matrix (*m* x *n* x …).",
+      "sha": "7c57f6db72a4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The integer range may optionally be described by a two-element matrix with a lower and upper bound in which case the returned integers will be on the interval [*imin*, *imax*].",
+      "sha": "0c72109d7358",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional argument *class* will return a matrix of the requested type. The default is `\"double\"`.",
+      "sha": "8c164c023ca1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The following example returns 150 integers in the range 1--10.",
+      "sha": "92511d631ac4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": " ri = randi (10, 150, 1)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Implementation Note: `randi` relies internally on `rand` which uses class `\"double\"` to represent numbers. This limits the maximum integer (*imax*) and range (*imax* - *imin*) to the value returned by the `flintmax` function. For IEEE floating point numbers this value is $2^{53} - 1$.",
+      "sha": "ff1e23c8139a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `rand`, `randn`.",
+      "sha": "a25ae56ed30b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "randn",
+   "sigs": [
+    "x = randn (n)",
+    "x = randn (m, n, …)",
+    "x = randn ([m n …])",
+    "x = randn (…, \"single\")",
+    "x = randn (…, \"double\")",
+    "v = randn (\"state\")",
+    "randn (\"state\", v)",
+    "randn (\"state\", \"reset\")",
+    "v = randn (\"seed\")",
+    "randn (\"seed\", v)",
+    "randn (\"seed\", \"reset\")"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a matrix with normally distributed random elements having zero mean and variance one.",
+      "sha": "d49b46793f35",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The arguments are handled the same as the arguments for `rand`.",
+      "sha": "9465a2c9b971",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By default, `randn` uses the Marsaglia and Tsang “Ziggurat technique” to transform from a uniform to a normal distribution.",
+      "sha": "54558043da02",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The class of the value returned can be controlled by a trailing `\"double\"` or `\"single\"` argument. These are the only valid classes.",
+      "sha": "1d998a096445",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Reference: G. Marsaglia and W.W. Tsang, *Ziggurat Method for Generating Random Variables*, J. Statistical Software, vol 5, 2000, https://www.jstatsoft.org/v05/i08/",
+      "sha": "c664ce7b5dcf",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `rand`, `rande`, `randg`, `randp`.",
+      "sha": "8f53fc436aee",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The generators operate in the new or old style together, it is not possible to mix the two. Initializing any generator with `\"state\"` or `\"seed\"` causes the others to switch to the same style for future calls.",
+    "sha": "193ceed8212f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The state of each generator is independent and calls to different generators can be interleaved without affecting the final result. For example,",
+    "sha": "ebda8f6d91f4",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "rand (\"state\", [11, 22, 33]);\nrandn (\"state\", [44, 55, 66]);\nu = rand (100, 1);\nn = randn (100, 1);"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and",
+    "sha": "cffa50a32cb1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "rand (\"state\", [11, 22, 33]);\nrandn (\"state\", [44, 55, 66]);\nu = zeros (100, 1);\nn = zeros (100, 1);\nfor i = 1:100\n  u(i) = rand ();\n  n(i) = randn ();\nend"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "produce equivalent results. When the generators are initialized in the old style with `\"seed\"` only `rand` and `randn` are independent, because the old `rande`, `randg` and `randp` generators make calls to `rand` and `randn`.",
+    "sha": "66de1d090dc3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The generators are initialized with random states at start-up, so that the sequences of random numbers are not the same each time you run Octave. (The old versions of `rand` and `randn` obtain their initial seeds from the system clock.) If you really do need to reproduce a sequence of numbers exactly, you can set the state or seed to a specific value.",
+    "sha": "1fc027a481ac",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If invoked without arguments, `rand` and `randn` return a single element of a random sequence.",
+    "sha": "c37c71769f76",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The original `rand` and `randn` functions use Fortran code from RANLIB, a library of Fortran routines for random number generation, compiled by Barry W. Brown and James Lovato of the Department of Biomathematics at The University of Texas, M.D. Anderson Cancer Center, Houston, TX 77030.",
+    "sha": "5f64be56cf4e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Famous Matrices",
+    "sha": "877e85d41fd1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The following functions return famous matrix forms.",
+    "sha": "7c29274e68a8",
+    "zh": ""
+   }
+  },
+  {
+   "k": "def",
+   "name": "hilb",
+   "sigs": [
+    "h = hilb (n)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the Hilbert matrix of order *n*.",
+      "sha": "78603346dd59",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The $i,j$ element of a Hilbert matrix is defined as",
+      "sha": "ecd63f7d52b9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "H(i, j) = {1 \\over (i + j - 1)}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Hilbert matrices are close to being singular which make them difficult to invert with numerical routines. Comparing the condition number of a random matrix 5x5 matrix with that of a Hilbert matrix of order 5 reveals just how difficult the problem is.",
+      "sha": "dfa71a276ca8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": " cond (rand (5))\n    ⇒ 14.392\n cond (hilb (5))\n    ⇒ 4.7661e+05"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `invhilb`.",
+      "sha": "3ed5150a0c97",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "magic",
+   "sigs": [
+    "M = magic (n)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Create an *n*-by-*n* magic square.",
+      "sha": "68c2af680d08",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "A magic square is an arrangement of the integers `1:n^2` such that the row sums, column sums, and diagonal sums are all equal to the same value.",
+      "sha": "e6968ef05676",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note: *n* must be a scalar greater than or equal to 3. If you supply *n* less than 3, magic returns either a nonmagic square, or else the degenerate magic squares 1 and [].",
+      "sha": "bbe6e7410124",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "pascal",
+   "sigs": [
+    "P = pascal (n)",
+    "P = pascal (n, t)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the Pascal matrix of order *n* if `t = 0`.",
+      "sha": "80aa377d1ae2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The default value of *t* is 0.",
+      "sha": "9c89570aa881",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When `t = 1`, return the pseudo-lower triangular Cholesky factor of the Pascal matrix (The sign of some columns may be negative). This matrix is its own inverse, that is `pascal (n, 1) ^ 2 == eye (n)`.",
+      "sha": "8e7d6981ad01",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If `t = -1`, return the true Cholesky factor with strictly positive values on the diagonal.",
+      "sha": "d4c44889bb0a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If `t = 2`, return a transposed and permuted version of `pascal (n, 1)`, which is the cube root of the identity matrix. That is, `pascal (n, 2) ^ 3 == eye (n)`.",
+      "sha": "fada22f6c09e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `chol`.",
+      "sha": "fba35a1c8f14",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "toeplitz",
+   "sigs": [
+    "T = toeplitz (c)",
+    "T = toeplitz (c, r)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the Toeplitz matrix constructed from the first column *c*, and optionally the first row *r*.",
+      "sha": "c1923907985e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the second argument is omitted, the first row is taken to be the same as the first column. If the first element of *r* is not the same as the first element of *c*, the first element of *c* is used.",
+      "sha": "1328ac81c073",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "A Toeplitz, or diagonal-constant, matrix has the same value along each diagonal. Although it need not be square, it often is. An MxN Toeplitz matrix has the form:",
+      "sha": "8486283c5b56",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{matrix}c_1 & r_2 & r_3 & \\cdots & r_n\\\\ c_2 & c_1 & r_2 & \\cdots & r_{n-1}\\\\ c_3 & c_2 & c_1 & \\cdots & r_{n-2}\\\\ \\vdots & \\vdots & \\vdots & \\ddots & \\vdots\\\\ c_m & c_{m-1} & c_{m-2} & \\ldots & c{m-n+1}\\end{matrix}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `hankel`.",
+      "sha": "dd0adfac8bfa",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "vander",
+   "sigs": [
+    "V = vander (c)",
+    "V = vander (c, n)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the Vandermonde matrix whose next to last column is *c*.",
+      "sha": "01a4fa74d458",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *n* is specified, it determines the number of columns; otherwise, *n* is taken to be equal to the length of *c*.",
+      "sha": "90aaca442f98",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "A Vandermonde matrix has the form:",
+      "sha": "03b0606a67ef",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{matrix}c_1^{n-1} & \\cdots & c_1^2 & c_1 & 1 \\\\ c_2^{n-1} & \\cdots & c_2^2 & c_2 & 1 \\\\ \\vdots & \\ddots & \\vdots & \\vdots & \\vdots \\\\ c_n^{n-1} & \\cdots & c_n^2 & c_n & 1\\end{matrix}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `polyfit`.",
+      "sha": "2eeec0e34d4c",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "title_zh": "矩阵的构造与变形"
+}

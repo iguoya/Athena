@@ -1,0 +1,406 @@
+{
+ "_": "课表范围（ADR 0163）：GNU Octave 官方手册按「用 Octave 学线代与高数」裁剪。每页取手册某章的若干节（sections），并只收列出的函数说明（functions）；没列的函数、没列的节不进课表，也不留占位。页序是学习顺序，不是手册章序。页 id 取自上游文件名。",
+ "parts": [
+  {
+   "id": "manual",
+   "en": "Octave Manual (cropped)",
+   "zh": "手册（裁剪）",
+   "items": [
+    {
+     "id": "numbers",
+     "zh": "数值类型与矩阵",
+     "file": "numbers.txi",
+     "sections": [
+      "Matrices",
+      "Ranges",
+      "Logical Values",
+      "Predicates for Numeric Objects"
+     ],
+     "functions": [
+      "double",
+      "logical",
+      "true",
+      "false",
+      "isnumeric",
+      "islogical",
+      "isfloat",
+      "isreal",
+      "iscomplex",
+      "ismatrix",
+      "isvector",
+      "isrow",
+      "iscolumn",
+      "isscalar",
+      "issquare",
+      "issymmetric",
+      "ishermitian",
+      "isdefinite",
+      "isdiag",
+      "istril",
+      "istriu"
+     ]
+    },
+    {
+     "id": "expr",
+     "zh": "表达式与运算符",
+     "file": "expr.txi",
+     "sections": [
+      "Index Expressions",
+      "Arithmetic Operators",
+      "Comparison Operators",
+      "Boolean Expressions",
+      "Assignment Expressions",
+      "Operator Precedence"
+     ],
+     "functions": [
+      "sub2ind",
+      "ind2sub",
+      "mldivide",
+      "mrdivide",
+      "mpower",
+      "mtimes",
+      "times",
+      "power",
+      "rdivide",
+      "transpose",
+      "ctranspose",
+      "isequal",
+      "and",
+      "or",
+      "not"
+     ]
+    },
+    {
+     "id": "matrix",
+     "zh": "矩阵的构造与变形",
+     "file": "matrix.txi",
+     "sections": [
+      "Finding Elements and Checking Conditions",
+      "Rearranging Matrices",
+      "Special Utility Matrices",
+      "Famous Matrices"
+     ],
+     "functions": [
+      "any",
+      "all",
+      "diff",
+      "isinf",
+      "isnan",
+      "find",
+      "fliplr",
+      "flipud",
+      "flip",
+      "rot90",
+      "cat",
+      "horzcat",
+      "vertcat",
+      "permute",
+      "reshape",
+      "circshift",
+      "sort",
+      "tril",
+      "triu",
+      "vec",
+      "diag",
+      "blkdiag",
+      "eye",
+      "ones",
+      "zeros",
+      "repmat",
+      "linspace",
+      "logspace",
+      "rand",
+      "randi",
+      "randn",
+      "magic",
+      "hilb",
+      "vander",
+      "toeplitz",
+      "pascal"
+     ]
+    },
+    {
+     "id": "arith",
+     "zh": "算术与初等函数",
+     "file": "arith.txi",
+     "sections": [
+      "Exponents and Logarithms",
+      "Complex Arithmetic",
+      "Trigonometry",
+      "Sums and Products",
+      "Utility Functions",
+      "Special Functions",
+      "Coordinate Transformations",
+      "Mathematical Constants"
+     ],
+     "functions": [
+      "exp",
+      "log",
+      "log10",
+      "log2",
+      "sqrt",
+      "nthroot",
+      "abs",
+      "arg",
+      "conj",
+      "imag",
+      "real",
+      "deg2rad",
+      "rad2deg",
+      "sin",
+      "cos",
+      "tan",
+      "asin",
+      "acos",
+      "atan",
+      "sinh",
+      "cosh",
+      "tanh",
+      "atan2",
+      "sind",
+      "cosd",
+      "sum",
+      "prod",
+      "cumsum",
+      "cumprod",
+      "sumsq",
+      "ceil",
+      "fix",
+      "floor",
+      "round",
+      "max",
+      "min",
+      "hypot",
+      "gradient",
+      "dot",
+      "cross",
+      "factorial",
+      "factor",
+      "gcd",
+      "lcm",
+      "rem",
+      "mod",
+      "primes",
+      "sign",
+      "gamma",
+      "erf",
+      "beta",
+      "cart2pol",
+      "pol2cart",
+      "e",
+      "pi",
+      "I",
+      "Inf",
+      "NaN",
+      "eps"
+     ]
+    },
+    {
+     "id": "vectorize",
+     "zh": "向量化与广播",
+     "file": "vectorize.txi",
+     "sections": [
+      "Basic Vectorization",
+      "Broadcasting",
+      "Function Application",
+      "Miscellaneous Techniques",
+      "Examples"
+     ],
+     "functions": [
+      "bsxfun",
+      "arrayfun"
+     ]
+    },
+    {
+     "id": "plot",
+     "zh": "绘图",
+     "file": "plot.txi",
+     "sections": [
+      "Introduction to Plotting",
+      "High-Level Plotting"
+     ],
+     "functions": [
+      "plot",
+      "semilogx",
+      "semilogy",
+      "loglog",
+      "bar",
+      "hist",
+      "stairs",
+      "stem",
+      "scatter",
+      "contour",
+      "contourf",
+      "polar",
+      "axis",
+      "xlim",
+      "fill",
+      "area",
+      "fplot",
+      "ezplot",
+      "mesh",
+      "meshc",
+      "surf",
+      "surfc",
+      "meshgrid",
+      "plot3",
+      "view",
+      "contour3",
+      "quiver",
+      "sombrero",
+      "peaks",
+      "scatter3",
+      "waterfall",
+      "title",
+      "legend",
+      "text",
+      "xlabel",
+      "clabel",
+      "grid",
+      "colorbar",
+      "subplot",
+      "figure",
+      "hold",
+      "clf",
+      "close",
+      "print",
+      "saveas"
+     ]
+    },
+    {
+     "id": "linalg",
+     "zh": "线性代数",
+     "file": "linalg.txi",
+     "sections": [
+      "Techniques Used for Linear Algebra",
+      "Basic Matrix Functions",
+      "Matrix Factorizations",
+      "Functions of a Matrix"
+     ],
+     "functions": [
+      "det",
+      "eig",
+      "inv",
+      "linsolve",
+      "norm",
+      "null",
+      "orth",
+      "pinv",
+      "rank",
+      "rcond",
+      "trace",
+      "rref",
+      "cond",
+      "vecnorm",
+      "chol",
+      "lu",
+      "qr",
+      "schur",
+      "svd",
+      "expm",
+      "logm",
+      "sqrtm",
+      "kron"
+     ]
+    },
+    {
+     "id": "poly",
+     "zh": "多项式与拟合",
+     "file": "poly.txi",
+     "sections": [
+      "Evaluating Polynomials",
+      "Finding Roots",
+      "Products of Polynomials",
+      "Derivatives / Integrals / Transforms",
+      "Polynomial Interpolation",
+      "Miscellaneous Functions"
+     ],
+     "functions": [
+      "polyval",
+      "polyvalm",
+      "roots",
+      "compan",
+      "conv",
+      "deconv",
+      "polygcd",
+      "residue",
+      "polyder",
+      "polyint",
+      "polyfit",
+      "poly",
+      "polyout",
+      "polyreduce"
+     ]
+    },
+    {
+     "id": "interp",
+     "zh": "插值",
+     "file": "interp.txi",
+     "sections": [
+      "One-dimensional Interpolation",
+      "Multi-dimensional Interpolation"
+     ],
+     "functions": [
+      "interp1",
+      "spline",
+      "interp2"
+     ]
+    },
+    {
+     "id": "quad",
+     "zh": "数值积分",
+     "file": "quad.txi",
+     "sections": [
+      "Functions of One Variable",
+      "Functions of Multiple Variables"
+     ],
+     "functions": [
+      "quad",
+      "quadv",
+      "quadl",
+      "quadgk",
+      "quadcc",
+      "integral",
+      "trapz",
+      "cumtrapz",
+      "dblquad",
+      "integral2",
+      "integral3"
+     ]
+    },
+    {
+     "id": "diffeq",
+     "zh": "常微分方程",
+     "file": "diffeq.txi",
+     "sections": [
+      "Ordinary Differential Equations",
+      "Matlab-compatible solvers"
+     ],
+     "functions": [
+      "lsode",
+      "ode45",
+      "ode23",
+      "odeset",
+      "odeget"
+     ]
+    },
+    {
+     "id": "nonlin",
+     "zh": "方程求根与最优化",
+     "file": "nonlin.txi",
+     "sections": [
+      "Solvers",
+      "Minimizers"
+     ],
+     "functions": [
+      "fsolve",
+      "fzero",
+      "fminbnd",
+      "fminunc",
+      "fminsearch"
+     ]
+    }
+   ]
+  }
+ ]
+}

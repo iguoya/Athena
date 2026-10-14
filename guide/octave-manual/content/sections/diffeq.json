@@ -1,0 +1,1097 @@
+{
+ "id": "diffeq",
+ "title_en": "Differential Equations",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "Octave has built-in functions for solving ordinary differential equations (ODEs), and differential-algebraic equations (DAEs).",
+    "sha": "909e5ed3f4bf",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Ordinary Differential Equations",
+    "sha": "65f83ada4b52",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The function `lsode` can be used to solve ODEs of the form",
+    "sha": "2b9128c670a1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "{dx\\over dt} = f (x, t)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "using Hindmarsh's ODE solver LSODE.",
+    "sha": "0e1df71a799a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "def",
+   "name": "lsode",
+   "sigs": [
+    "[x, istate, msg] = lsode (fcn, x_0, t)",
+    "[x, istate, msg] = lsode (fcn, x_0, t, t_crit)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Ordinary Differential Equation (ODE) solver.",
+      "sha": "281ec1156c6c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The set of differential equations to solve is",
+      "sha": "215bdf8ec42e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "{dx \\over dt} = f (x, t)"
+    },
+    {
+     "k": "math",
+     "tex": "x(t_0) = x_0"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The solution is returned in the matrix *x*, with each row corresponding to an element of the vector *t*. The first element of *t* should be $t_0$ and should correspond to the initial state of the system *x_0*, so that the first row of the output is *x_0*.",
+      "sha": "e1d9155bcc47",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The first argument, *fcn*, is a string, inline, or function handle that names the function $f$ to call to compute the vector of right hand sides for the set of equations. The function must have the form",
+      "sha": "e69da8690cbc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "xdot = f (x, t)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "in which *xdot* and *x* are vectors and *t* is a scalar.",
+      "sha": "f5a62b9fc3e5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *fcn* is a two-element string array or a two-element cell array of strings, inline functions, or function handles, the first element names the function $f$ described above, and the second element names a function to compute the Jacobian of $f$. The Jacobian function must have the form",
+      "sha": "1f737cc51865",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "jac = j (x, t)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "in which *jac* is the matrix of partial derivatives",
+      "sha": "8e2fe4237d52",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "J = {\\partial f_i \\over \\partial x_j} = \\left[\\begin{matrix} {\\partial f_1 \\over \\partial x_1} & {\\partial f_1 \\over \\partial x_2} & \\cdots & {\\partial f_1 \\over \\partial x_N} \\\\ {\\partial f_2 \\over \\partial x_1} & {\\partial f_2 \\over \\partial x_2} & \\cdots & {\\partial f_2 \\over \\partial x_N} \\\\ \\vdots & \\vdots & \\ddots & \\vdots \\\\ {\\partial f_M \\over \\partial x_1} & {\\partial f_M \\over \\partial x_2} & \\cdots & {\\partial f_M \\over \\partial x_N} \\end{matrix}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The second argument specifies the initial state of the system $x_0$. The third argument is a vector, *t*, specifying the time values for which a solution is sought.",
+      "sha": "21fceeec4f58",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The fourth argument is optional, and may be used to specify a set of times that the ODE solver should not integrate past. It is useful for avoiding difficulties with singularities and points where there is a discontinuity in the derivative.",
+      "sha": "4227de2d1e07",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "After a successful computation, the value of *istate* will be 2 (consistent with the Fortran version of LSODE).",
+      "sha": "1eafb986504a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the computation is not successful, *istate* will be something other than 2 and *msg* will contain additional information.",
+      "sha": "f72c8b0c201f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "You can use the function `lsode_options` to set optional parameters for `lsode`.",
+      "sha": "3ad5d6dcd54b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See Alan C. Hindmarsh, *ODEPACK, A Systematized Collection of ODE Solvers*, in Scientific Computing, R. S. Stepleman, editor, (1983) or https://computing.llnl.gov/projects/odepack for more information about the inner workings of `lsode`.",
+      "sha": "8d44363018ed",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Example: Solve the Van der Pol equation",
+      "sha": "3c4efae6b827",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "fvdp = @(y,t) [y(2); (1 - y(1)^2) * y(2) - y(1)];\nt = linspace (0, 20, 100);\ny = lsode (fvdp, [2; 0], t);"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `daspk`, `dassl`, `dasrt`.",
+      "sha": "6f8854c75197",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Here is an example of solving a set of three differential equations using `lsode`. Given the function",
+    "sha": "a53961891dba",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "## oregonator differential equation\nfunction xdot = f (x, t)\n\n  xdot = zeros (3,1);\n\n  xdot(1) = 77.27 * (x(2) - x(1)*x(2) + x(1) ...\n            - 8.375e-06*x(1)^2);\n  xdot(2) = (x(3) - x(1)*x(2) - x(2)) / 77.27;\n  xdot(3) = 0.161*(x(1) - x(3));\n\nendfunction"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and the initial condition `x0 = [ 4; 1.1; 4 ]`, the set of equations can be integrated using the command",
+    "sha": "48aec2f06ca0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "t = linspace (0, 500, 1000);\n\ny = lsode (\"f\", x0, t);"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If you try this, you will see that the value of the result changes dramatically between *t* = 0 and 5, and again around *t* = 305. A more efficient set of output points might be",
+    "sha": "256e6414f9b8",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "t = [0, logspace(-1, log10(303), 150), ...\n        logspace(log10(304), log10(500), 150)];"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "An m-file for the differential equation used above is included with the Octave distribution in the examples directory under the name `oregonator.m`.",
+    "sha": "7ce366868d34",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Matlab-compatible solvers",
+    "sha": "78cbd3e265e7",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Octave also provides a set of solvers for initial value problems for ordinary differential equations (ODEs) that have a MATLAB-compatible interface. The options for this class of methods are set using the functions.",
+    "sha": "8ca5444c9518",
+    "zh": ""
+   }
+  },
+  {
+   "k": "list",
+   "ordered": false,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "`odeset`",
+       "sha": "ef10fb8a61a5",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "`odeget`",
+       "sha": "4f7315f9d591",
+       "zh": ""
+      }
+     }
+    ]
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Currently implemented solvers are:",
+    "sha": "d93740326d63",
+    "zh": ""
+   }
+  },
+  {
+   "k": "list",
+   "ordered": false,
+   "items": [
+    [
+     {
+      "k": "list",
+      "ordered": false,
+      "items": [
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "`ode45` integrates a system of non-stiff ODEs or index-1 differential-algebraic equations (DAEs) using the high-order, variable-step Dormand-Prince method. It requires six function evaluations per integration step, but may take larger steps on smooth problems than `ode23`: potentially offering improved efficiency at smaller tolerances.",
+          "sha": "04b83cec8d6c",
+          "zh": ""
+         }
+        }
+       ],
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "`ode23` integrates a system of non-stiff ODEs or (or index-1 DAEs). It uses the third-order Bogacki-Shampine method and adapts the local step size in order to satisfy a user-specified tolerance. The solver requires three function evaluations per integration step.",
+          "sha": "56a0730ff3e4",
+          "zh": ""
+         }
+        }
+       ],
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "`ode23s` integrates a system of stiff ODEs (or index-1 DAEs) using a modified second-order Rosenbrock method.",
+          "sha": "cf1bbec6fe0f",
+          "zh": ""
+         }
+        }
+       ]
+      ]
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Linear multistep methods",
+       "sha": "38edbd502022",
+       "zh": ""
+      }
+     },
+     {
+      "k": "list",
+      "ordered": false,
+      "items": [
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "`ode15s` integrates a system of stiff ODEs (or index-1 DAEs) using a variable step, variable order method based on Backward Difference Formulas (BDF).",
+          "sha": "5c912a883dbf",
+          "zh": ""
+         }
+        }
+       ],
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "`ode15i` integrates a system of fully-implicit ODEs (or index-1 DAEs) using the same variable step, variable order method as `ode15s`. `decic` can be used to compute consistent initial conditions for `ode15i`.",
+          "sha": "7db7f182d845",
+          "zh": ""
+         }
+        }
+       ]
+      ]
+     }
+    ]
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Detailed information on the solvers are given in L. F. Shampine and Scientific Computing, Vol. 18, 1997, pp. 1–22,",
+    "sha": "5e0f9169e9ce",
+    "zh": ""
+   }
+  },
+  {
+   "k": "def",
+   "name": "ode45",
+   "sigs": [
+    "[t, y] = ode45 (fcn, trange, init)",
+    "[t, y] = ode45 (fcn, trange, init, ode_opt)",
+    "[t, y, te, ye, ie] = ode45 (…)",
+    "solution = ode45 (…)",
+    "ode45 (…)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Solve a set of non-stiff Ordinary Differential Equations (non-stiff ODEs) with the well known explicit Dormand-Prince method of order 4.",
+      "sha": "efbb3467eaea",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*fcn* is a function handle, inline function, or string containing the name of the function that defines the ODE: `y' = f(t,y)`. The function must accept two inputs where the first is time *t* and the second is a column vector of unknowns *y*.",
+      "sha": "699c03f9f9f3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*trange* specifies the time interval over which the ODE will be evaluated. Typically, it is a two-element vector specifying the initial and final times (`[tinit, tfinal]`). If there are more than two elements then the solution will also be evaluated at these intermediate time instances.",
+      "sha": "d3649bb367ca",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By default, `ode45` uses an adaptive timestep with the `integrate_adaptive` algorithm. The tolerance for the timestep computation may be changed by using the options `\"RelTol\"` and `\"AbsTol\"`.",
+      "sha": "e2ac72a61124",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*init* contains the initial value for the unknowns. If it is a row vector then the solution *y* will be a matrix in which each column is the solution for the corresponding initial value in *init*.",
+      "sha": "f5a4f4b56ab2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional fourth argument *ode_opt* specifies non-default options to the ODE solver. It is a structure generated by `odeset`.",
+      "sha": "4fb61cc90431",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The function typically returns two outputs. Variable *t* is a column vector and contains the times where the solution was found. The output *y* is a matrix in which each column refers to a different unknown of the problem and each row corresponds to a time in *t*.",
+      "sha": "a45aa28264ac",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The output can also be returned as a structure *solution* which has a field *x* containing a row vector of times where the solution was evaluated and a field *y* containing the solution matrix such that each column corresponds to a time in *x*. Use `fieldnames (solution)` to see the other fields and additional information returned.",
+      "sha": "f5752e4ffba5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If no output arguments are requested, and no `\"OutputFcn\"` is specified in *ode_opt*, then the `\"OutputFcn\"` is set to `odeplot` and the results of the solver are plotted immediately.",
+      "sha": "e767f668cb60",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If using the `\"Events\"` option then three additional outputs may be returned. *te* holds the time when an Event function returned a zero. *ye* holds the value of the solution at time *te*. *ie* contains an index indicating which Event function was triggered in the case of multiple Event functions.",
+      "sha": "9b9d945c2781",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Example: Solve the Van der Pol equation",
+      "sha": "3c4efae6b827",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": " fvdp = @(t,y) [y(2); (1 - y(1)^2) * y(2) - y(1)];\n [t,y] = ode45 (fvdp, [0, 20], [2, 0]);"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `odeset`, `odeget`, `ode23`, `ode15s`.",
+      "sha": "10bed9f183c1",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "ode23",
+   "sigs": [
+    "[t, y] = ode23 (fcn, trange, init)",
+    "[t, y] = ode23 (fcn, trange, init, ode_opt)",
+    "[t, y, te, ye, ie] = ode23 (…)",
+    "solution = ode23 (…)",
+    "ode23 (…)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Solve a set of non-stiff Ordinary Differential Equations (non-stiff ODEs) with the well known explicit Bogacki-Shampine method of order 3.",
+      "sha": "5669aa06148b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*fcn* is a function handle, inline function, or string containing the name of the function that defines the ODE: `y' = f(t,y)`. The function must accept two inputs where the first is time *t* and the second is a column vector of unknowns *y*.",
+      "sha": "699c03f9f9f3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*trange* specifies the time interval over which the ODE will be evaluated. Typically, it is a two-element vector specifying the initial and final times (`[tinit, tfinal]`). If there are more than two elements then the solution will also be evaluated at these intermediate time instances.",
+      "sha": "d3649bb367ca",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By default, `ode23` uses an adaptive timestep with the `integrate_adaptive` algorithm. The tolerance for the timestep computation may be changed by using the options `\"RelTol\"` and `\"AbsTol\"`.",
+      "sha": "def94b292975",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*init* contains the initial value for the unknowns. If it is a row vector then the solution *y* will be a matrix in which each column is the solution for the corresponding initial value in *init*.",
+      "sha": "f5a4f4b56ab2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional fourth argument *ode_opt* specifies non-default options to the ODE solver. It is a structure generated by `odeset`.",
+      "sha": "4fb61cc90431",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The function typically returns two outputs. Variable *t* is a column vector and contains the times where the solution was found. The output *y* is a matrix in which each column refers to a different unknown of the problem and each row corresponds to a time in *t*.",
+      "sha": "a45aa28264ac",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The output can also be returned as a structure *solution* which has a field *x* containing a row vector of times where the solution was evaluated and a field *y* containing the solution matrix such that each column corresponds to a time in *x*. Use `fieldnames (solution)` to see the other fields and additional information returned.",
+      "sha": "f5752e4ffba5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If no output arguments are requested, and no `\"OutputFcn\"` is specified in *ode_opt*, then the `\"OutputFcn\"` is set to `odeplot` and the results of the solver are plotted immediately.",
+      "sha": "e767f668cb60",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If using the `\"Events\"` option then three additional outputs may be returned. *te* holds the time when an Event function returned a zero. *ye* holds the value of the solution at time *te*. *ie* contains an index indicating which Event function was triggered in the case of multiple Event functions.",
+      "sha": "9b9d945c2781",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Example: Solve the Van der Pol equation",
+      "sha": "3c4efae6b827",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": " fvdp = @(t,y) [y(2); (1 - y(1)^2) * y(2) - y(1)];\n [t,y] = ode23 (fvdp, [0, 20], [2, 0]);"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Reference: For the definition of this method see https://en.wikipedia.org/wiki/List_of_Runge%E2%80%93Kutta_methods. See also: `odeset`, `odeget`, `ode45`, `ode15s`.",
+      "sha": "4fb61f2e23c0",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "odeset",
+   "sigs": [
+    "odestruct = odeset ()",
+    "odestruct = odeset (\"field1\", value1, \"field2\", value2, …)",
+    "odestruct = odeset (oldstruct, \"field1\", value1, \"field2\", value2, …)",
+    "odestruct = odeset (oldstruct, newstruct)",
+    "odeset ()"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Create or modify an ODE options structure.",
+      "sha": "be81321856cf",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with no input argument and one output argument, return a new ODE options structure that contains all possible fields initialized to their default values. If no output argument is requested, display a list of the common ODE solver options along with their default value.",
+      "sha": "1046ed4c0ab7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If called with name-value input argument pairs *\"field1\"*, *\"value1\"*, *\"field2\"*, *\"value2\"*, … return a new ODE options structure with all the most common option fields initialized, **and** set the values of the fields *\"field1\"*, *\"field2\"*, … to the values *value1*, *value2*, ….",
+      "sha": "4b49120d3fb4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If called with an input structure *oldstruct* then overwrite the values of the options *\"field1\"*, *\"field2\"*, … with new values *value1*, *value2*, … and return the modified structure.",
+      "sha": "c75590fd4552",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with two input ODE options structures *oldstruct* and *newstruct* overwrite all values from the structure *oldstruct* with new values from the structure *newstruct*. Empty values in *newstruct* will not overwrite values in *oldstruct*.",
+      "sha": "490367e2541a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The most commonly used ODE options, which are always assigned a value by `odeset`, are the following:",
+      "sha": "aa9800efd55d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "`AbsTol`: positive scalar | vector, def. `1e-6`",
+        "sha": "b8bd6e2ed115",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Absolute error tolerance.",
+          "sha": "cc6f394660f8",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`BDF`: {`\"off\"`} | `\"on\"`",
+        "sha": "67c6d8a87498",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Use BDF formulas in implicit multistep methods. *Note*: This option is not yet implemented.",
+          "sha": "1ed1e7352a62",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`Events`: function_handle",
+        "sha": "85be12935d26",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Event function. An event function must have the form `[value, isterminal, direction] = my_events_f (t, y)`",
+          "sha": "70de66ce2b98",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`InitialSlope`: vector",
+        "sha": "7af2c4a817f2",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Consistent initial slope vector for DAE solvers.",
+          "sha": "ac5d891ae096",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`InitialStep`: positive scalar",
+        "sha": "e291b37bd3a5",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Initial time step size.",
+          "sha": "eef8931850e3",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`Jacobian`: matrix | function_handle",
+        "sha": "06c1fe6e76d2",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Jacobian matrix, specified as a constant matrix or a function of time and state.",
+          "sha": "b71df2ac5652",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`JConstant`: {`\"off\"`} | `\"on\"`",
+        "sha": "3d64218023d0",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Specify whether the Jacobian is a constant matrix or depends on the state.",
+          "sha": "565bd677b5aa",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`JPattern`: sparse matrix",
+        "sha": "fe504a1d6f23",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "If the Jacobian matrix is sparse and non-constant but maintains a constant sparsity pattern, specify the sparsity pattern.",
+          "sha": "8e24f4e0063a",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`Mass`: matrix | function_handle",
+        "sha": "8a9cb9d28077",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Mass matrix, specified as a constant matrix or a function of time and state.",
+          "sha": "0e811bd456b0",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`MassSingular`: {`\"maybe\"`} | `\"yes\"` | `\"on\"`",
+        "sha": "548951d6b8aa",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Specify whether the mass matrix is singular.",
+          "sha": "d4c2147a103d",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`MaxOrder`: {`5`} | `4` | `3` | `2` | `1`",
+        "sha": "c3da1fffdef1",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Maximum order of formula.",
+          "sha": "a5845e6e7cda",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`MaxStep`: positive scalar",
+        "sha": "bf26f1901e7b",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Maximum time step value.",
+          "sha": "a3039e679faa",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`MStateDependence`: {`\"weak\"`} | `\"none\"` | `\"strong\"`",
+        "sha": "ee1d622baf94",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Specify whether the mass matrix depends on the state or only on time.",
+          "sha": "37c351ad215b",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`MvPattern`: sparse matrix",
+        "sha": "87333ab70cfb",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "If the mass matrix is sparse and non-constant but maintains a constant sparsity pattern, specify the sparsity pattern. *Note*: This option is not yet implemented.",
+          "sha": "9005a1be683f",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`NonNegative`: scalar | vector",
+        "sha": "3fd30613c601",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Specify elements of the state vector that are expected to remain non-negative during the simulation.",
+          "sha": "90928add3add",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`NormControl`: {`\"off\"`} | `\"on\"`",
+        "sha": "85aede400d4a",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Control error relative to the 2-norm of the solution, rather than its absolute value.",
+          "sha": "59c4ea0f073a",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`OutputFcn`: function_handle",
+        "sha": "793ce6f13361",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Function to monitor the state during the simulation. For the form of the function to use `odeplot`.",
+          "sha": "430abff37319",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`OutputSel`: scalar | vector",
+        "sha": "4ed531dbb764",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Indices of elements of the state vector to be passed to the output monitoring function.",
+          "sha": "cb5992485776",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`Refine`: positive scalar",
+        "sha": "497105ca1d9a",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Specify whether output should be returned only at the end of each time step or also at intermediate time instances. The value should be a scalar indicating the number of equally spaced time points to use within each timestep at which to return output.",
+          "sha": "86d334892a22",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`RelTol`: positive scalar",
+        "sha": "08f0f8a1b15d",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Relative error tolerance.",
+          "sha": "d84636381955",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`Stats`: {`\"off\"`} | `\"on\"`",
+        "sha": "f1c0e94205ab",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Print solver statistics after simulation.",
+          "sha": "bebfa3744ab8",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`Vectorized`: {`\"off\"`} | `\"on\"`",
+        "sha": "47943e6f563f",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Specify whether `odefcn` can be passed multiple values of the state at once.",
+          "sha": "d00eba7ea36f",
+          "zh": ""
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Field names that are not in the above list are also accepted and added to the result structure.",
+      "sha": "4e545404ef8d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `odeget`.",
+      "sha": "550b480eb0f6",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "odeget",
+   "sigs": [
+    "val = odeget (ode_opt, field)",
+    "val = odeget (ode_opt, field, default)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Query the value of the property *field* in the ODE options structure *ode_opt*.",
+      "sha": "32c672a676e8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If called with two input arguments and the first input argument *ode_opt* is an ODE option structure and the second input argument *field* is a string specifying an option name, then return the option value *val* corresponding to *field* from *ode_opt*.",
+      "sha": "db2693898ff6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If called with an optional third input argument, and *field* is not set in the structure *ode_opt*, then return the default value *default* instead. See also: `odeset`.",
+      "sha": "893b5a19ac12",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "title_zh": "常微分方程"
+}

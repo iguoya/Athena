@@ -1,0 +1,1126 @@
+{
+ "id": "poly",
+ "title_en": "Polynomial Manipulations",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "In Octave, a polynomial is represented by its coefficients (arranged in descending order). For example, a vector *c* of length $N+1$ corresponds to the following polynomial of order $N$ $$ p (x) = c_1 x^N + \\ldots + c_N x + c_{N+1}. $$",
+    "sha": "a2025266e08f",
+    "zh": "在 Octave 中，多项式用它的系数表示（按降幂排列）。例如，长度为 $N+1$ 的向量 *c* 对应下面这个 $N$ 次多项式 $$ p (x) = c_1 x^N + \\ldots + c_N x + c_{N+1}. $$"
+   }
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Evaluating Polynomials",
+    "sha": "c15a82033b84",
+    "zh": "多项式求值"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The value of a polynomial represented by the vector *c* can be evaluated at the point *x* very easily, as the following example shows:",
+    "sha": "80f4b98fd4ac",
+    "zh": "由向量 *c* 表示的多项式，在点 *x* 处的值可以很方便地算出，如下例所示："
+   }
+  },
+  {
+   "k": "code",
+   "text": "N = length (c) - 1;\nval = dot (x.^(N:-1:0), c);"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "While the above example shows how easy it is to compute the value of a polynomial, it isn't the most stable algorithm. With larger polynomials you should use more elegant algorithms, such as Horner's Method, which is exactly what the Octave function `polyval` does.",
+    "sha": "53312d7ff18e",
+    "zh": "上面的例子说明了计算多项式的值有多容易，但它并不是最稳定的算法。对于次数较高的多项式，应当使用更精巧的算法，例如 Horner 方法（Horner's Method），Octave 的 `polyval` 函数用的正是这种方法。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In the case where *x* is a square matrix, the polynomial given by *c* is still well-defined. As when *x* is a scalar the obvious implementation is easily expressed in Octave, but also in this case more elegant algorithms perform better. The `polyvalm` function provides such an algorithm.",
+    "sha": "3c50a77da1c2",
+    "zh": "当 *x* 是一个方阵时，由 *c* 给出的多项式仍然有意义。和 *x* 为标量时一样，最直接的实现在 Octave 里也很容易写出来，但此时更精巧的算法同样表现更好。`polyvalm` 函数提供的就是这样的算法。"
+   }
+  },
+  {
+   "k": "def",
+   "name": "polyval",
+   "sigs": [
+    "y = polyval (p, x)",
+    "y = polyval (p, x, [], mu)",
+    "[y, dy] = polyval (p, x, s)",
+    "[y, dy] = polyval (p, x, s, mu)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Evaluate the polynomial *p* at the specified values of *x*.",
+      "sha": "c22a38122ec4",
+      "zh": "在指定的 *x* 处计算多项式 *p* 的值。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *x* is a vector or matrix, the polynomial is evaluated for each of the elements of *x*.",
+      "sha": "cdc3885ed860",
+      "zh": "如果 *x* 是向量或矩阵，则对 *x* 的每个元素分别计算多项式的值。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When *mu* is present, evaluate the polynomial for (*x* - *mu*(1)) / *mu*(2).",
+      "sha": "5094dee66530",
+      "zh": "给出 *mu* 时，计算的是多项式在 (*x* - *mu*(1)) / *mu*(2) 处的值。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In addition to evaluating the polynomial, the second output represents the prediction interval, *y* +/- *dy*, which contains at least 50% of the future predictions. To calculate the prediction interval, the structured variable *s*, originating from `polyfit`, must be supplied.",
+      "sha": "01b35c624b55",
+      "zh": "除了计算多项式的值，第二个输出还给出预测区间 *y* +/- *dy*，它至少包含 50% 的未来预测值。要计算预测区间，必须提供由 `polyfit` 得到的结构体变量 *s*。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `polyvalm`, `polyaffine`, `polyfit`, `roots`, `poly`.",
+      "sha": "435f568f2411",
+      "zh": "另见：`polyvalm`、`polyaffine`、`polyfit`、`roots`、`poly`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "polyvalm",
+   "sigs": [
+    "y = polyvalm (c, x)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Evaluate a polynomial in the matrix sense.",
+      "sha": "fd7fa4c68bc9",
+      "zh": "按矩阵的意义计算多项式的值。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`polyvalm (c, x)` will evaluate the polynomial in the matrix sense, i.e., matrix multiplication is used instead of element by element multiplication as used in `polyval`.",
+      "sha": "187791c1ef73",
+      "zh": "`polyvalm (c, x)` 按矩阵的意义计算多项式的值，也就是说用矩阵乘法，而不是 `polyval` 里使用的逐元素乘法。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The argument *x* must be a square matrix. See also: `polyval`, `roots`, `poly`.",
+      "sha": "2cc38c1e3e5d",
+      "zh": "参数 *x* 必须是方阵。另见：`polyval`、`roots`、`poly`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Finding Roots",
+    "sha": "e13ac0d57d26",
+    "zh": "求根"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Octave can find the roots of a given polynomial. This is done by computing the companion matrix of the polynomial (see the `compan` function for a definition), and then finding its eigenvalues.",
+    "sha": "75642075cb48",
+    "zh": "Octave 可以求出给定多项式的根。做法是先计算该多项式的友矩阵（companion matrix，定义见 `compan` 函数），再求这个矩阵的特征值。"
+   }
+  },
+  {
+   "k": "def",
+   "name": "roots",
+   "sigs": [
+    "r = roots (c)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the roots of the polynomial *c*.",
+      "sha": "95e3ea4a5933",
+      "zh": "计算多项式 *c* 的根。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For a vector *c* with $N$ components, return the roots of the polynomial",
+      "sha": "5a897626f7f5",
+      "zh": "对于有 $N$ 个分量的向量 *c*，返回如下多项式的根"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "c_1 x^{N-1} + \\cdots + c_{N-1} x + c_N."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "As an example, the following code finds the roots of the quadratic polynomial",
+      "sha": "4b8262ecba7c",
+      "zh": "下面的代码以一个二次多项式为例求根"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "p(x) = x^2 - 5."
+    },
+    {
+     "k": "code",
+     "text": " c = [1, 0, -5];\n roots (c)\n ⇒  2.2361\n ⇒ -2.2361"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note that the true result is $\\pm \\sqrt{5}$ which is roughly $\\pm 2.2361$. See also: `poly`, `compan`, `fzero`.",
+      "sha": "5013cb214a77",
+      "zh": "注意，真实的结果是 $\\pm \\sqrt{5}$，约等于 $\\pm 2.2361$。另见：`poly`、`compan`、`fzero`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "compan",
+   "sigs": [
+    "A = compan (c)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the companion matrix corresponding to polynomial coefficient vector *c*.",
+      "sha": "197f3fbc93f8",
+      "zh": "计算与多项式系数向量 *c* 对应的友矩阵。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The companion matrix is",
+      "sha": "f21cf3116b73",
+      "zh": "友矩阵为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{matrix} -c_2/c_1 & -c_3/c_1 & \\cdots & -c_N/c_1 & -c_{N+1}/c_1\\\\ 1 & 0 & \\cdots & 0 & 0 \\\\ 0 & 1 & \\cdots & 0 & 0 \\\\ \\vdots & \\vdots & \\ddots & \\vdots & \\vdots \\\\ 0 & 0 & \\cdots & 1 & 0\\end{matrix}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The eigenvalues of the companion matrix are equal to the roots of the polynomial. See also: `roots`, `poly`, `eig`.",
+      "sha": "f1c6d09192cc",
+      "zh": "友矩阵的特征值等于多项式的根。另见：`roots`、`poly`、`eig`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Products of Polynomials",
+    "sha": "85d77459b3a1",
+    "zh": "多项式的乘积"
+   }
+  },
+  {
+   "k": "def",
+   "name": "conv",
+   "sigs": [
+    "y = conv (a, b)",
+    "y = conv (a, b, shape)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Convolve two vectors *a* and *b*.",
+      "sha": "a92ebfd3bb5f",
+      "zh": "对两个向量 *a* 和 *b* 做卷积（convolution）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When *a* and *b* are the coefficient vectors of two polynomials, the convolution represents the coefficient vector of the product polynomial.",
+      "sha": "bf18c4ffd71f",
+      "zh": "当 *a* 和 *b* 是两个多项式的系数向量时，它们的卷积就是乘积多项式的系数向量。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The size of the result is determined by the optional *shape* argument which takes the following values",
+      "sha": "8bfbd82a016a",
+      "zh": "结果的大小由可选参数 *shape* 决定，它可取以下值"
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "*shape* = `\"full\"`",
+        "sha": "fbba26709f24",
+        "zh": "*shape* = `\"full\"`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Return the full convolution. (default) The result is a vector with length equal to `length (a) + length (b) - 1`.",
+          "sha": "6ea7015ff3d2",
+          "zh": "返回完整的卷积（默认）。结果是一个向量，长度等于 `length (a) + length (b) - 1`。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "*shape* = `\"same\"`",
+        "sha": "ffaed124c110",
+        "zh": "*shape* = `\"same\"`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Return the central part of the convolution with the same size as *a*.",
+          "sha": "1712dd74a7a4",
+          "zh": "返回卷积的中间部分，大小与 *a* 相同。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "*shape* = `\"valid\"`",
+        "sha": "e0b95f18e398",
+        "zh": "*shape* = `\"valid\"`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Return only the parts which do not include zero-padded edges. The size of the result is `max (size (a) - size (b) + 1, 0)`.",
+          "sha": "24d4b0648cdb",
+          "zh": "只返回不涉及补零边缘的部分。结果的大小为 `max (size (a) - size (b) + 1, 0)`。"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `deconv`, `conv2`, `convn`, `fftconv`.",
+      "sha": "5f4589f185c9",
+      "zh": "另见：`deconv`、`conv2`、`convn`、`fftconv`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "deconv",
+   "sigs": [
+    "b = deconv (y, a)",
+    "[b, r] = deconv (y, a)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Deconvolve two vectors (polynomial division).",
+      "sha": "7e5b26b27fa0",
+      "zh": "对两个向量做解卷积（deconvolution，即多项式除法）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`[b, r] = deconv (y, a)` solves for *b* and *r* such that `y = conv (a, b) + r`.",
+      "sha": "13f0f236621e",
+      "zh": "`[b, r] = deconv (y, a)` 求出满足 `y = conv (a, b) + r` 的 *b* 和 *r*。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *y* and *a* are polynomial coefficient vectors, *b* will contain the coefficients of the polynomial quotient and *r* will be a remainder polynomial of lowest order. See also: `conv`, `residue`.",
+      "sha": "f5f06a3e6655",
+      "zh": "如果 *y* 和 *a* 是多项式的系数向量，则 *b* 包含商多项式的系数，*r* 是次数最低的余式。另见：`conv`、`residue`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "polygcd",
+   "sigs": [
+    "q = polygcd (b, a)",
+    "q = polygcd (b, a, tol)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the greatest common divisor of two polynomials.",
+      "sha": "c6425c66aec6",
+      "zh": "求两个多项式的最大公因式。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is equivalent to the polynomial found by multiplying together all the common roots. Together with deconv, you can reduce a ratio of two polynomials.",
+      "sha": "86ca11ed808b",
+      "zh": "它等价于把所有公共根对应的因式乘在一起得到的多项式。与 deconv 配合使用，可以对两个多项式之比做约分。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The tolerance *tol* defaults to `sqrt (eps)`.",
+      "sha": "2eb170d37cba",
+      "zh": "容差 *tol* 默认为 `sqrt (eps)`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "**Caution:** This is a numerically unstable algorithm and should not be used on large polynomials.",
+      "sha": "e63e964d4dbe",
+      "zh": "**注意：**这个算法在数值上不稳定，不应用于次数较高的多项式。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Example code:",
+      "sha": "1fabb1683d22",
+      "zh": "示例代码："
+     }
+    },
+    {
+     "k": "code",
+     "text": " polygcd (poly (1:8), poly (3:12)) - poly (3:8)\n ⇒ [ 0, 0, 0, 0, 0, 0, 0 ]\n deconv (poly (1:8), polygcd (poly (1:8), poly (3:12))) - poly (1:2)\n ⇒ [ 0, 0, 0 ]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `poly`, `roots`, `conv`, `deconv`, `residue`.",
+      "sha": "c8010d96bdb1",
+      "zh": "另见：`poly`、`roots`、`conv`、`deconv`、`residue`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "residue",
+   "sigs": [
+    "[r, p, k, e] = residue (b, a)",
+    "[b, a] = residue (r, p, k)",
+    "[b, a] = residue (r, p, k, e)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The first calling form computes the partial fraction expansion for the quotient of the polynomials, *b* and *a*.",
+      "sha": "321c65a8e478",
+      "zh": "第一种调用形式计算多项式 *b* 与 *a* 之商的部分分式展开。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The quotient is defined as",
+      "sha": "4ddc12676b17",
+      "zh": "这个商定义为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "{B(s)\\over A(s)} = \\sum_{m=1}^M {r_m\\over (s-p_m)^e_m} + \\sum_{i=1}^N k_i s^{N-i}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where $M$ is the number of poles (the length of the *r*, *p*, and *e*), the *k* vector is a polynomial of order $N-1$ representing the direct contribution, and the *e* vector specifies the multiplicity of the m-th residue's pole.",
+      "sha": "30e44d2327cd",
+      "zh": "其中 $M$ 是极点的个数（即 *r*、*p*、*e* 的长度），向量 *k* 是一个 $N-1$ 次的多项式，表示直接项的贡献，向量 *e* 给出第 m 个留数所对应极点的重数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For example,",
+      "sha": "6db6725e9e7d",
+      "zh": "例如，"
+     }
+    },
+    {
+     "k": "code",
+     "text": " b = [1, 1, 1];\n a = [1, -5, 8, -4];\n [r, p, k, e] = residue (b, a)\n    ⇒ r = [-2; 7; 3]\n    ⇒ p = [2; 2; 1]\n    ⇒ k = [](0x0)\n    ⇒ e = [1; 2; 1]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which represents the following partial fraction expansion",
+      "sha": "4f7ad19ce26e",
+      "zh": "它表示如下的部分分式展开"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "{s^2+s+1\\over s^3-5s^2+8s-4} = {-2\\over s-2} + {7\\over (s-2)^2} + {3\\over s-1}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The second calling form performs the inverse operation and computes the reconstituted quotient of polynomials, *b*(s)/*a*(s), from the partial fraction expansion; represented by the residues, poles, and a direct polynomial specified by *r*, *p* and *k*, and the pole multiplicity *e*.",
+      "sha": "df3c1dd0740d",
+      "zh": "第二种调用形式执行逆运算：由留数、极点和直接项多项式（分别由 *r*、*p* 和 *k* 给出）以及极点重数 *e* 所表示的部分分式展开，重新合成多项式之商 *b*(s)/*a*(s)。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the multiplicity, *e*, is not explicitly specified the multiplicity is determined by the function `mpoles`.",
+      "sha": "177bc3411dd9",
+      "zh": "如果没有明确给出重数 *e*，则由 `mpoles` 函数确定重数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For example:",
+      "sha": "059c3e8cce26",
+      "zh": "例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": " r = [-2; 7; 3];\n p = [2; 2; 1];\n k = [1, 0];\n [b, a] = residue (r, p, k)\n    ⇒ b = [1, -5, 9, -3, 1]\n    ⇒ a = [1, -5, 8, -4]\n\n where mpoles is used to determine e = [1; 2; 1]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Alternatively the multiplicity may be defined explicitly, for example,",
+      "sha": "fa9500290cf4",
+      "zh": "也可以明确指定重数，例如，"
+     }
+    },
+    {
+     "k": "code",
+     "text": " r = [7; 3; -2];\n p = [2; 1; 2];\n k = [1, 0];\n e = [2; 1; 1];\n [b, a] = residue (r, p, k, e)\n    ⇒ b = [1, -5, 9, -3, 1]\n    ⇒ a = [1, -5, 8, -4]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which represents the following partial fraction expansion",
+      "sha": "4f7ad19ce26e",
+      "zh": "它表示如下的部分分式展开"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "{-2\\over s-2} + {7\\over (s-2)^2} + {3\\over s-1} + s = {s^4-5s^3+9s^2-3s+1\\over s^3-5s^2+8s-4}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `mpoles`, `poly`, `roots`, `conv`, `deconv`.",
+      "sha": "b7969e73bdbf",
+      "zh": "另见：`mpoles`、`poly`、`roots`、`conv`、`deconv`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Derivatives / Integrals / Transforms",
+    "sha": "234cd7a626af",
+    "zh": "导数／积分／变换"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Octave comes with functions for computing the derivative and the integral of a polynomial. The functions `polyder` and `polyint` both return new polynomials describing the result. As an example we'll compute the definite integral of $p(x) = x^2 + 1$ from 0 to 3.",
+    "sha": "df79dd59882e",
+    "zh": "Octave 提供了计算多项式的导数和积分的函数。`polyder` 与 `polyint` 都返回描述结果的新多项式。下面以 $p(x) = x^2 + 1$ 为例，计算它从 0 到 3 的定积分。"
+   }
+  },
+  {
+   "k": "code",
+   "text": "c = [1, 0, 1];\nintegral = polyint (c);\narea = polyval (integral, 3) - polyval (integral, 0)\n⇒ 12"
+  },
+  {
+   "k": "def",
+   "name": "polyder",
+   "sigs": [
+    "k = polyder (p)",
+    "k = polyder (a, b)",
+    "[q, d] = polyder (b, a)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the coefficients of the derivative of the polynomial whose coefficients are given by the vector *p*.",
+      "sha": "73c2995666a2",
+      "zh": "返回多项式的导数的系数，该多项式的系数由向量 *p* 给出。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If a pair of polynomials is given, return the derivative of the product $a*b$.",
+      "sha": "cd6cabb201dc",
+      "zh": "如果给出一对多项式，则返回乘积 $a*b$ 的导数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If two inputs and two outputs are given, return the derivative of the polynomial quotient $b/a$. The quotient numerator is in *q* and the denominator in *d*. See also: `polyint`, `polyval`, `polyreduce`.",
+      "sha": "9f3f43a522f5",
+      "zh": "如果给出两个输入和两个输出，则返回多项式之商 $b/a$ 的导数，其分子在 *q* 中，分母在 *d* 中。另见：`polyint`、`polyval`、`polyreduce`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "polyint",
+   "sigs": [
+    "q = polyint (p)",
+    "q = polyint (p, k)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the coefficients of the integral of the polynomial whose coefficients are represented by the vector *p*.",
+      "sha": "e72e7b02babf",
+      "zh": "返回多项式的积分的系数，该多项式的系数由向量 *p* 表示。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The variable *k* is the constant of integration, which by default is set to zero. See also: `polyder`, `polyval`.",
+      "sha": "79404ddba411",
+      "zh": "变量 *k* 是积分常数，默认取零。另见：`polyder`、`polyval`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Polynomial Interpolation",
+    "sha": "289c31232e55",
+    "zh": "多项式插值"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Octave comes with good support for various kinds of interpolation, most of which are described in Interpolation. One simple alternative to the functions described in the aforementioned chapter, is to fit a single polynomial, or a piecewise polynomial (spline) to some given data points. To avoid a highly fluctuating polynomial, one most often wants to fit a low-order polynomial to data. This usually means that it is necessary to fit the polynomial in a least-squares sense, which just is what the `polyfit` function does.",
+    "sha": "f3b381e5647f",
+    "zh": "Octave 对各种插值（interpolation）提供了很好的支持，其中大部分在“插值”一章中介绍。除了那一章的函数之外，还有一种简单的做法：用单个多项式，或者分段多项式（样条，spline），去拟合给定的数据点。为了避免多项式剧烈波动，通常要用低次多项式去拟合数据。这往往意味着需要在最小二乘（least-squares）意义下拟合，`polyfit` 函数做的正是这件事。"
+   }
+  },
+  {
+   "k": "def",
+   "name": "polyfit",
+   "sigs": [
+    "p = polyfit (x, y, n)",
+    "[p, s] = polyfit (x, y, n)",
+    "[p, s, mu] = polyfit (x, y, n)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the coefficients of a polynomial *p*(*x*) of degree *n* that minimizes the least-squares-error of the fit to the points `[x(:), y(:)]`.",
+      "sha": "79d383a9375e",
+      "zh": "返回 *n* 次多项式 *p*(*x*) 的系数，该多项式使对点 `[x(:), y(:)]` 的拟合的最小二乘误差达到最小。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*n* is typically an integer 0 specifying the degree of the approximating polynomial. If *n* is a logical vector, it is used as a mask to selectively force the corresponding polynomial coefficients to be used or ignored.",
+      "sha": "fb5832fbd4c9",
+      "zh": "*n* 通常是一个整数，指定逼近多项式的次数。如果 *n* 是逻辑向量，则它用作掩码，选择性地强制使用或忽略相应的多项式系数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The polynomial coefficients are returned in the row vector *p*. The output *p* may be directly used with `polyval` to estimate values using the fitted polynomial.",
+      "sha": "225d33d94635",
+      "zh": "多项式系数以行向量 *p* 的形式返回。输出 *p* 可以直接交给 `polyval`，用拟合出的多项式估计函数值。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional output *s* is a structure containing the following fields:",
+      "sha": "e21a57285584",
+      "zh": "可选输出 *s* 是一个结构体，包含以下字段："
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "`yf`",
+        "sha": "9e25b82afd31",
+        "zh": "`yf`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "The values of the polynomial for each value of *x*.",
+          "sha": "9e73acf1ae94",
+          "zh": "多项式在每个 *x* 值处的取值。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`X`",
+        "sha": "05a05ae68c0b",
+        "zh": "`X`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "The Vandermonde matrix used to compute the polynomial coefficients.",
+          "sha": "28199d112fc8",
+          "zh": "计算多项式系数时用到的 Vandermonde 矩阵。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`R`",
+        "sha": "5f63d67e2f68",
+        "zh": "`R`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Triangular factor R from the QR decomposition.",
+          "sha": "65e79e90951a",
+          "zh": "QR 分解中的三角因子 R。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`C`",
+        "sha": "5f87cc5bcf09",
+        "zh": "`C`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "The unscaled covariance matrix, formally equal to the inverse of *x'***x*, but computed in a way minimizing roundoff error propagation.",
+          "sha": "6184e37ade1c",
+          "zh": "未经缩放的协方差矩阵，形式上等于 *x'***x* 的逆，但计算方式能把舍入误差的传播降到最小。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`df`",
+        "sha": "6afa6f5e7d17",
+        "zh": "`df`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "The degrees of freedom.",
+          "sha": "89f1845a2619",
+          "zh": "自由度。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`normr`",
+        "sha": "1c46f370e899",
+        "zh": "`normr`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "The norm of the residuals.",
+          "sha": "824defc9fe1d",
+          "zh": "残差的范数。"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The second output may be used by `polyval` to calculate the statistical error limits of the predicted values. In particular, the standard deviation of *p* coefficients is given by",
+      "sha": "6fbf27e5631e",
+      "zh": "`polyval` 可以利用第二个输出来计算预测值的统计误差限。具体来说，*p* 各系数的标准差为"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`sqrt (diag (s.C)/s.df) * s.normr`.",
+      "sha": "ff77e58d5bbc",
+      "zh": "`sqrt (diag (s.C)/s.df) * s.normr`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When the third output, *mu*, is present the original data is centered and scaled which can improve the numerical stability of the fit. The coefficients *p* are associated with a polynomial in",
+      "sha": "bf85e74ed7b2",
+      "zh": "给出第三个输出 *mu* 时，原始数据会先被中心化并缩放，这可以提高拟合的数值稳定性。此时系数 *p* 对应的多项式，其自变量为"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`xhat = (x - mu(1)) / mu(2)` where *mu*(1) = mean (*x*), and *mu*(2) = std (*x*).",
+      "sha": "901503e956a5",
+      "zh": "`xhat = (x - mu(1)) / mu(2)`，其中 *mu*(1) = mean (*x*)，*mu*(2) = std (*x*)。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Example 1 : logical *n* and integer *n*",
+      "sha": "ad5f8e1ff7fa",
+      "zh": "例 1：逻辑值 *n* 与整数 *n*"
+     }
+    },
+    {
+     "k": "code",
+     "text": " f = @(x) x.^2 + 5;   # data-generating function\n x = 0:5;\n y = f (x);\n ## Fit data to polynomial A*x^3 + B*x^1\n p = polyfit (x, y, logical ([1, 0, 1, 0]))\n ⇒ p = [ 0.0680, 0, 4.2444, 0 ]\n ## Fit data to polynomial using all terms up to x^3\n p = polyfit (x, y, 3)\n ⇒ p = [ -4.9608e-17, 1.0000e+00, -3.3813e-15, 5.0000e+00 ]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `polyval`, `polyaffine`, `roots`, `vander`, `zscore`.",
+      "sha": "db6a76be467d",
+      "zh": "另见：`polyval`、`polyaffine`、`roots`、`vander`、`zscore`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In situations where a single polynomial isn't good enough, a solution is to use several polynomials pieced together. The function `splinefit` fits a piecewise polynomial (spline) to a set of data.",
+    "sha": "18096d1b6978",
+    "zh": "当单个多项式不够用时，办法是把几个多项式拼接起来使用。函数 `splinefit` 用分段多项式（样条）去拟合一组数据。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The number of *breaks* (or knots) used to construct the piecewise polynomial is a significant factor in suppressing the noise present in the input data, *x* and *y*. This is demonstrated by the example below.",
+    "sha": "f978b1b7b5fc",
+    "zh": "构造分段多项式时所用的断点（*breaks*，也叫节点）的个数，是抑制输入数据 *x* 和 *y* 中噪声的重要因素。下面的例子说明了这一点。"
+   }
+  },
+  {
+   "k": "code",
+   "text": "x = 2 * pi * rand (1, 200);\ny = sin (x) + sin (2 * x) + 0.2 * randn (size (x));\n## Uniform breaks\nbreaks = linspace (0, 2 * pi, 41); % 41 breaks, 40 pieces\npp1 = splinefit (x, y, breaks);\n## Breaks interpolated from data\npp2 = splinefit (x, y, 10);  % 11 breaks, 10 pieces\n## Plot\nxx = linspace (0, 2 * pi, 400);\ny1 = ppval (pp1, xx);\ny2 = ppval (pp2, xx);\nplot (x, y, \".\", xx, [y1; y2])\naxis tight\nylim auto\nlegend ({\"data\", \"41 breaks, 40 pieces\", \"11 breaks, 10 pieces\"})"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The result of which can be seen in fig:splinefit1.",
+    "sha": "f7beb3c3be02",
+    "zh": "结果见 fig:splinefit1。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The piecewise polynomial fit, provided by `splinefit`, has continuous derivatives up to the *order*-1. For example, a cubic fit has continuous first and second derivatives. This is demonstrated by the code",
+    "sha": "cd32d0e768ff",
+    "zh": "`splinefit` 给出的分段多项式拟合，其导数直到 *order*-1 阶都是连续的。例如，三次拟合的一阶和二阶导数都是连续的。下面的代码演示了这一点"
+   }
+  },
+  {
+   "k": "code",
+   "text": "## Data (200 points)\nx = 2 * pi * rand (1, 200);\ny = sin (x) + sin (2 * x) + 0.1 * randn (size (x));\n## Piecewise constant\npp1 = splinefit (x, y, 8, \"order\", 0);\n## Piecewise linear\npp2 = splinefit (x, y, 8, \"order\", 1);\n## Piecewise quadratic\npp3 = splinefit (x, y, 8, \"order\", 2);\n## Piecewise cubic\npp4 = splinefit (x, y, 8, \"order\", 3);\n## Piecewise quartic\npp5 = splinefit (x, y, 8, \"order\", 4);\n## Plot\nxx = linspace (0, 2 * pi, 400);\ny1 = ppval (pp1, xx);\ny2 = ppval (pp2, xx);\ny3 = ppval (pp3, xx);\ny4 = ppval (pp4, xx);\ny5 = ppval (pp5, xx);\nplot (x, y, \".\", xx, [y1; y2; y3; y4; y5])\naxis tight\nylim auto\nlegend ({\"data\", \"order 0\", \"order 1\", \"order 2\", \"order 3\", \"order 4\"})"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The result of which can be seen in fig:splinefit2.",
+    "sha": "4c711f353722",
+    "zh": "结果见 fig:splinefit2。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When the underlying function to provide a fit to is periodic, `splinefit` is able to apply the boundary conditions needed to manifest a periodic fit. This is demonstrated by the code below.",
+    "sha": "14337eada88a",
+    "zh": "当被拟合的函数是周期函数时，`splinefit` 可以施加所需的边界条件，得到周期性的拟合。下面的代码演示了这一点。"
+   }
+  },
+  {
+   "k": "code",
+   "text": "## Data (100 points)\nx = 2 * pi * [0, (rand (1, 98)), 1];\ny = sin (x) - cos (2 * x) + 0.2 * randn (size (x));\n## No constraints\npp1 = splinefit (x, y, 10, \"order\", 5);\n## Periodic boundaries\npp2 = splinefit (x, y, 10, \"order\", 5, \"periodic\", true);\n## Plot\nxx = linspace (0, 2 * pi, 400);\ny1 = ppval (pp1, xx);\ny2 = ppval (pp2, xx);\nplot (x, y, \".\", xx, [y1; y2])\naxis tight\nylim auto\nlegend ({\"data\", \"no constraints\", \"periodic\"})"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The result of which can be seen in fig:splinefit3.",
+    "sha": "1ba18eeda07a",
+    "zh": "结果见 fig:splinefit3。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "More complex constraints may be added as well. For example, the code below illustrates a periodic fit with values that have been clamped at the endpoints, and a second periodic fit which is hinged at the endpoints.",
+    "sha": "55f051b53660",
+    "zh": "还可以加入更复杂的约束。例如，下面的代码演示了一个在端点处取值被钳定（clamped）的周期拟合，以及一个在端点处铰接（hinged）的周期拟合。"
+   }
+  },
+  {
+   "k": "code",
+   "text": "## Data (200 points)\nx = 2 * pi * rand (1, 200);\ny = sin (2 * x) + 0.1 * randn (size (x));\n## Breaks\nbreaks = linspace (0, 2 * pi, 10);\n## Clamped endpoints, y = y' = 0\nxc = [0, 0, 2*pi, 2*pi];\ncc = [(eye (2)), (eye (2))];\ncon = struct (\"xc\", xc, \"cc\", cc);\npp1 = splinefit (x, y, breaks, \"constraints\", con);\n## Hinged periodic endpoints, y = 0\ncon = struct (\"xc\", 0);\npp2 = splinefit (x, y, breaks, \"constraints\", con, \"periodic\", true);\n## Plot\nxx = linspace (0, 2 * pi, 400);\ny1 = ppval (pp1, xx);\ny2 = ppval (pp2, xx);\nplot (x, y, \".\", xx, [y1; y2])\naxis tight\nylim auto\nlegend ({\"data\", \"clamped\", \"hinged periodic\"})"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The result of which can be seen in fig:splinefit4.",
+    "sha": "b3da89bb5170",
+    "zh": "结果见 fig:splinefit4。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The `splinefit` function also provides the convenience of a *robust* fitting, where the effect of outlying data is reduced. In the example below, three different fits are provided. Two with differing levels of outlier suppression and a third illustrating the non-robust solution.",
+    "sha": "3d536d37b4a2",
+    "zh": "`splinefit` 函数还提供方便的 *robust*（稳健）拟合，可以减弱离群数据的影响。下面的例子给出三种拟合：两种的离群值抑制程度不同，第三种是非稳健的解。"
+   }
+  },
+  {
+   "k": "code",
+   "text": "## Data\nx = linspace (0, 2*pi, 200);\ny = sin (x) + sin (2 * x) + 0.05 * randn (size (x));\n## Add outliers\nx = [x, linspace(0,2*pi,60)];\ny = [y, -ones(1,60)];\n## Fit splines with hinged conditions\ncon = struct (\"xc\", [0, 2*pi]);\n## Robust fitting, beta = 0.25\npp1 = splinefit (x, y, 8, \"constraints\", con, \"beta\", 0.25);\n## Robust fitting, beta = 0.75\npp2 = splinefit (x, y, 8, \"constraints\", con, \"beta\", 0.75);\n## No robust fitting\npp3 = splinefit (x, y, 8, \"constraints\", con);\n## Plot\nxx = linspace (0, 2*pi, 400);\ny1 = ppval (pp1, xx);\ny2 = ppval (pp2, xx);\ny3 = ppval (pp3, xx);\nplot (x, y, \".\", xx, [y1; y2; y3])\nlegend ({\"data with outliers\",\"robust, beta = 0.25\", ...\n         \"robust, beta = 0.75\", \"no robust fitting\"})\naxis tight\nylim auto"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The result of which can be seen in fig:splinefit6.",
+    "sha": "9e268a9e5918",
+    "zh": "结果见 fig:splinefit6。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A very specific form of polynomial interpretation is the Pad@'e approximant. For control systems, a continuous-time delay can be modeled very simply with the approximant.",
+    "sha": "c220196cbbc8",
+    "zh": "多项式逼近中有一种很特殊的形式，即 Padé 逼近（Padé approximant）。在控制系统中，连续时间的延迟可以很简单地用这种逼近来建模。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The function, `ppval`, evaluates the piecewise polynomials, created by `mkpp` or other means, and `unmkpp` returns detailed information about the piecewise polynomial.",
+    "sha": "9f78b6b45642",
+    "zh": "函数 `ppval` 计算由 `mkpp` 或其他方式创建的分段多项式的值，`unmkpp` 则返回分段多项式的详细信息。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The following example shows how to combine two linear functions and a quadratic into one function. Each of these functions is expressed on adjoined intervals.",
+    "sha": "d0902515e66e",
+    "zh": "下面的例子演示如何把两个线性函数和一个二次函数合并成一个函数。其中每个函数定义在相邻的区间上。"
+   }
+  },
+  {
+   "k": "code",
+   "text": "x = [-2, -1, 1, 2];\np = [ 0,  1, 0;\n      1, -2, 1;\n      0, -1, 1 ];\npp = mkpp (x, p);\nxi = linspace (-2, 2, 50);\nyi = ppval (pp, xi);\nplot (xi, yi);"
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Miscellaneous Functions",
+    "sha": "319c19b9e813",
+    "zh": "其他函数"
+   }
+  },
+  {
+   "k": "def",
+   "name": "poly",
+   "sigs": [
+    "y = poly (A)",
+    "y = poly (x)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If *A* is a square $N$-by-$N$ matrix, `poly (A)` is the row vector of the coefficients of `det (z * eye (N) - A)`, the characteristic polynomial of *A*.",
+      "sha": "888eab1a63a9",
+      "zh": "如果 *A* 是 $N$ 乘 $N$ 的方阵，则 `poly (A)` 是 `det (z * eye (N) - A)` 的系数行向量，即 *A* 的特征多项式。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For example, the following code finds the eigenvalues of *A* which are the roots of `poly (A)`.",
+      "sha": "0cd0e07dfeac",
+      "zh": "例如，下面的代码求 *A* 的特征值，它们是 `poly (A)` 的根。"
+     }
+    },
+    {
+     "k": "code",
+     "text": " roots (poly (eye (3)))\n     ⇒ 1.00001 + 0.00001i\n        1.00001 - 0.00001i\n        0.99999 + 0.00000i"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In fact, all three eigenvalues are exactly 1 which emphasizes that for numerical performance the `eig` function should be used to compute eigenvalues.",
+      "sha": "1016a813c969",
+      "zh": "事实上，三个特征值都恰好是 1，这说明要获得好的数值表现，应当用 `eig` 函数来计算特征值。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *x* is a vector, `poly (x)` is a vector of the coefficients of the polynomial whose roots are the elements of *x*. That is, if *c* is a polynomial, then the elements of `d = roots (poly (c))` are contained in *c*. The vectors *c* and *d* are not identical, however, due to sorting and numerical errors. See also: `roots`, `eig`.",
+      "sha": "4d8a75d093b9",
+      "zh": "如果 *x* 是向量，则 `poly (x)` 是以 *x* 的各元素为根的多项式的系数向量。也就是说，如果 *c* 是一个多项式，则 `d = roots (poly (c))` 的各元素都包含在 *c* 中。不过，由于排序和数值误差，向量 *c* 与 *d* 并不完全相同。另见：`roots`、`eig`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "polyout",
+   "sigs": [
+    "polyout (c)",
+    "polyout (c, x)",
+    "str = polyout (…)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Display a formatted version of the polynomial *c*.",
+      "sha": "24356be2cb87",
+      "zh": "显示多项式 *c* 的格式化形式。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The formatted polynomial",
+      "sha": "778cbb78c76c",
+      "zh": "格式化后的多项式"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "c(x) = c_1 x^n + \\ldots + c_n x + c_{n+1}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is returned as a string or written to the screen if `nargout` is zero.",
+      "sha": "21ea05359007",
+      "zh": "作为字符串返回；如果 `nargout` 为零，则写到屏幕上。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The second argument *x* specifies the variable name to use for each term and defaults to the string `\"s\"`. See also: `polyreduce`.",
+      "sha": "2b7313e721bb",
+      "zh": "第二个参数 *x* 指定每一项所用的变量名，默认为字符串 `\"s\"`。另见：`polyreduce`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "polyreduce",
+   "sigs": [
+    "p = polyreduce (c)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Reduce a polynomial coefficient vector to a minimum number of terms by stripping off any leading zeros. See also: `polyout`.",
+      "sha": "650cc379785e",
+      "zh": "去掉多项式系数向量开头的所有零，使项数减到最少。另见：`polyout`。"
+     }
+    }
+   ]
+  }
+ ],
+ "title_zh": "多项式与拟合"
+}

@@ -1,0 +1,2481 @@
+{
+ "id": "expr",
+ "title_en": "Expressions",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "Expressions are the basic building block of statements in Octave. An expression evaluates to a value, which you can print, test, store in a variable, pass to a function, or assign a new value to a variable with an assignment operator.",
+    "sha": "61ee8032ad6e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "An expression can serve as a statement on its own. Most other kinds of statements contain one or more expressions which specify data to be operated on. As in other languages, expressions in Octave include variables, array references, constants, and function calls, as well as combinations of these with various operators.",
+    "sha": "8a647a9b2cb7",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Index Expressions",
+    "sha": "71c97279cf83",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "An *index expression* allows you to reference or extract selected elements of a vector, a matrix (2-D), or a higher-dimensional array.",
+    "sha": "2167d6e37c55",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Indices may be scalars, vectors, ranges, or the special operator `:`, which selects entire rows, columns, or higher-dimensional slices.",
+    "sha": "806f214c14c7",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "An index expression consists of a set of parentheses enclosing $M$ expressions separated by commas. Each individual index value, or component, is used for the respective dimension of the object that it is applied to. In other words, the first index component is used for the first dimension (rows) of the object, the second index component is used for the second dimension (columns) of the object, and so on. The number of index components $M$ defines the dimensionality of the index expression. An index with two components would be referred to as a 2-D index because it has two dimensions.",
+    "sha": "a44ba6834a55",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In the simplest case, 1) all components are scalars, and 2) the dimensionality of the index expression $M$ is equal to the dimensionality of the object it is applied to. For example:",
+    "sha": "061acca0a5bc",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "A = reshape (1:8, 2, 2, 2)  # Create 3-D array\nA =\n\nans(:,:,1) =\n\n   1   3\n   2   4\n\nans(:,:,2) =\n\n   5   7\n   6   8\n\nA(2, 1, 2)   # second row, first column of second slice\n             # in third dimension: ans = 6"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The size of the returned object in a specific dimension is equal to the number of elements in the corresponding component of the index expression. When all components are scalars, the result is a single output value. However, if any component is a vector or range then the returned values are the Cartesian product of the indices in the respective dimensions. For example:",
+    "sha": "32a5e842aefa",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "A([1, 2], 1, 2) ≡ [A(1,1,2); A(2,1,2)]\n⇒\nans =\n   5\n   6"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The total number of returned values is the product of the number of elements returned for each index component. In the example above, the total is 2*1*1 = 2 elements.",
+    "sha": "1a1e2954fb0e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Notice that the size of the returned object in a given dimension is equal to the number of elements in the index expression for that dimension. In the code above, the first index component (`[1, 2]`) was specified as a row vector, but its shape is unimportant. The important fact is that the component specified two values, and hence the result must have a size of two in the first dimension; and because the first dimension corresponds to rows, the overall result is a column vector.",
+    "sha": "8562dbe1377d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "A(1, [2, 1, 1], 1)    # result is a row vector: ans = [3, 1, 1]\nA(ones (2, 2), 1, 1)  # result is a column vector: ans = [1; 1; 1; 1]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The first line demonstrates again that the size of the output in a given dimension is equal to the number of elements in the respective indexing component. In this case, the output has three elements in the second dimension (which corresponds to columns), so the result is a row vector. The example also shows how repeating entries in the index expression can be used to replicate elements in the output. The last example further proves that the shape of the indexing component is irrelevant, it is only the number of elements (2x2 = 4) which is important.",
+    "sha": "4a56628ffe67",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The above rules apply whenever the dimensionality of the index expression is greater than one ($M > 1$). However, for one-dimensional index expressions special rules apply and the shape of the output **is** determined by the shape of the indexing component. For example:",
+    "sha": "b6066b43ae2b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "A([1, 2])  # result is a row vector: ans = [1, 2]\nA([1; 2])  # result is a column vector: ans = [1; 2]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The shape rules for *A*(*P*) are:",
+    "sha": "2e47ca73e42a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "list",
+   "ordered": false,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "When at least one of *A* or *P* has two or more dimensions, then *A*(*P*) takes the shape of *P*. This happens when at least one of the variables is a 2-D matrix or an N-D array.",
+       "sha": "2405d8b8140f",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "When both *A* and *P* are 1-D vectors, then *A*(*P*) takes the shape of *A* itself. In particular, when *A* is a row vector, then *A*(*P*) is also a row vector irrespective of *P*'s shape. The case when *A* is a column vector is analogous.",
+       "sha": "2f8acf78538c",
+       "zh": ""
+      }
+     }
+    ]
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Note that it is permissible to use a 1-D index with a multi-dimensional object (also called linear indexing). In this case, the elements of the multi-dimensional array are taken in column-first order like Fortran. That is, the columns of the array are imagined to be stacked on top of each other to form a column vector and then the single linear index is applied to this vector.",
+    "sha": "94e320a8e494",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "A(5)    # linear indexing into three-dimensional array: ans = 5\nA(3:5)  # result has shape of index component: ans = [3, 4, 5]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A colon (`:`) may be used as an index component to select all of the elements in a specified dimension. Given the matrix,",
+    "sha": "5f7b17a42707",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "A = [1, 2; 3, 4]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "all of the following expressions are equivalent and select the first row of the matrix.",
+    "sha": "c038b3b7c6e8",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "A(1, [1, 2])  # row 1, columns 1 and 2\nA(1, 1:2)     # row 1, columns in range 1-2\nA(1, :)       # row 1, all columns"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When a colon is used in the special case of 1-D indexing the result is always a column vector. Creating column vectors with a colon index is a very frequently encountered code idiom and is faster and generally clearer than calling `reshape` for this case.",
+    "sha": "4d0372b18581",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "A(:)    # result is column vector: ans = [1; 2; 3; 4]\nA(:)'   # result is row vector: ans = [1, 2, 3, 4]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In index expressions the keyword `end` automatically refers to the last entry for a particular dimension. This magic index can also be used in ranges and typically eliminates the needs to call `size` or `length` to gather array bounds before indexing. For example:",
+    "sha": "e3476b97d702",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "A(1:end/2)        # first half of A => [1, 2]\nA(end + 1) = 5;   # append element\nA(end) = [];      # delete element\nA(1:2:end)        # odd elements of A => [1, 3]\nA(2:2:end)        # even elements of A => [2, 4]\nA(end:-1:1)       # reversal of A => [4, 3, 2, 1]"
+  },
+  {
+   "k": "heading",
+   "level": 3,
+   "t": {
+    "en": "Advanced Indexing",
+    "sha": "e4a9df64655f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When it is necessary to extract subsets of entries out of an array whose indices cannot be written as a Cartesian product of components, linear indexing together with the function `sub2ind` can be used. For example:",
+    "sha": "27b643ac11b9",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "A = reshape (1:8, 2, 2, 2)  # Create 3-D array\nA =\n\nans(:,:,1) =\n\n   1   3\n   2   4\n\nans(:,:,2) =\n\n   5   7\n   6   8\n\nA(sub2ind (size (A), [1, 2, 1], [1, 1, 2], [1, 2, 1]))\n   ⇒ ans = [A(1, 1, 1), A(2, 1, 2), A(1, 2, 1)]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "An array with `nd` dimensions can be indexed by an index expression which has from 1 to `nd` components. For the ordinary and most common case, the number of components `M` matches the number of dimensions `nd`. In this case the ordinary indexing rules apply and each component corresponds to the respective dimension of the array.",
+    "sha": "3351b994257e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "However, if the number of indexing components exceeds the number of dimensions (`M > nd`) then the excess components must all be singletons (`1`). Moreover, if `M < nd`, the behavior is equivalent to reshaping the input object so as to merge the trailing `nd - M` dimensions into the last index dimension `M`. Thus, the result will have the dimensionality of the index expression, and not the original object. This is the case whenever dimensionality of the index is greater than one (`M > 1`), so that the special rules for linear indexing are not applied. This is easiest to understand with an example:",
+    "sha": "78ee3de567e6",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "A = reshape (1:8, 2, 2, 2)  # Create 3-D array\nA =\n\nans(:,:,1) =\n\n   1   3\n   2   4\n\nans(:,:,2) =\n\n   5   7\n   6   8\n\n## 2-D indexing causes third dimension to be merged into second dimension.\n## Equivalent array for indexing, Atmp, is now 2x4.\nAtmp = reshape (A, 2, 4)\nAtmp =\n\n   1   3   5   7\n   2   4   6   8\n\n\nA(2,1)   # Reshape to 2x4 matrix, second entry of first column: ans = 2\nA(2,4)   # Reshape to 2x4 matrix, second entry of fourth column: ans = 8\nA(:,:)   # Reshape to 2x4 matrix, select all rows & columns, ans = Atmp"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Note here the elegant use of the double colon to replace the call to the `reshape` function.",
+    "sha": "b1b6f04498d5",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Another advanced use of linear indexing is to create arrays filled with a single value. This can be done by using an index of ones on a scalar value. The result is an object with the dimensions of the index expression and every element equal to the original scalar. For example, the following statements",
+    "sha": "86c8d4349d09",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "a = 13;\na(ones (1, 4))"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "produce a row vector whose four elements are all equal to 13.",
+    "sha": "b5b9846eff04",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Similarly, by indexing a scalar with two vectors of ones it is possible to create a matrix. The following statements",
+    "sha": "6b67d3081cce",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "a = 13;\na(ones (1, 2), ones (1, 3))"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "create a 2x3 matrix with all elements equal to 13. This could also have been written as",
+    "sha": "7f61477ed300",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "13(ones (2, 3))"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It is more efficient to use indexing rather than the code construction `scalar * ones (M, N, …)` because it avoids the unnecessary multiplication operation. Moreover, multiplication may not be defined for the object to be replicated whereas indexing an array is always defined. The following code shows how to create a 2x3 cell array from a base unit which is not itself a scalar.",
+    "sha": "562ba4dc1c05",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "{\"Hello\"}(ones (2, 3))"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It should be noted that `ones (1, n)` (a row vector of ones) results in a range object (with zero increment). A range is stored internally as a starting value, increment, end value, and total number of values; hence, it is more efficient for storage than a vector or matrix of ones whenever the number of elements is greater than 4. In particular, when `r` is a row vector, the expressions",
+    "sha": "7ddb31e44a17",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "  r(ones (1, n), :)"
+  },
+  {
+   "k": "code",
+   "text": "  r(ones (n, 1), :)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "will produce identical results, but the first one will be significantly faster, at least for `r` and `n` large enough. In the first case the index is held in compressed form as a range which allows Octave to choose a more efficient algorithm to handle the expression.",
+    "sha": "0b8b2e676123",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A general recommendation for users unfamiliar with these techniques is to use the function `repmat` for replicating smaller arrays into bigger ones, which uses such tricks.",
+    "sha": "d94b13ab631b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A second use of indexing is to speed up code. Indexing is a fast operation and judicious use of it can reduce the requirement for looping over individual array elements, which is a slow operation.",
+    "sha": "06e1a90b4660",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Consider the following example which creates a 10-element row vector $a$ containing the values $a_i = \\sqrt{i}$.",
+    "sha": "7818f9c4ea3e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "for i = 1:10\n  a(i) = sqrt (i);\nendfor"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It is quite inefficient to create a vector using a loop like this. In this case, it would have been much more efficient to use the expression",
+    "sha": "3f1682d8f399",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "a = sqrt (1:10);"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "which avoids the loop entirely.",
+    "sha": "d27231b8fb29",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In cases where a loop cannot be avoided, or a number of values must be combined to form a larger matrix, it is generally faster to set the size of the matrix first (pre-allocate storage), and then insert elements using indexing commands. For example, given a matrix `a`,",
+    "sha": "9f71bd06fafc",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "[nr, nc] = size (a);\nx = zeros (nr, n * nc);\nfor i = 1:n\n  x(:,(i-1)*nc+1:i*nc) = a;\nendfor"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "is considerably faster than",
+    "sha": "042038d9d193",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "x = a;\nfor i = 1:n-1\n  x = [x, a];\nendfor"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "because Octave does not have to repeatedly resize the intermediate result.",
+    "sha": "145cb1c748ff",
+    "zh": ""
+   }
+  },
+  {
+   "k": "def",
+   "name": "sub2ind",
+   "sigs": [
+    "ind = sub2ind (dims, i, j)",
+    "ind = sub2ind (dims, s1, s2, …, sN)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Convert subscripts to linear indices.",
+      "sha": "ffcf78531ddc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The input *dims* is a dimension vector where each element is the size of the array in the respective dimension (`size`). The remaining inputs are scalars or vectors of subscripts to be converted.",
+      "sha": "ab1f8382122f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The output vector *ind* contains the converted linear indices.",
+      "sha": "0e76a03c4c56",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Background: Array elements can be specified either by a linear index which starts at 1 and runs through the number of elements in the array, or they may be specified with subscripts for the row, column, page, etc. The functions `ind2sub` and `sub2ind` interconvert between the two forms.",
+      "sha": "9e2406aed867",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The linear index traverses dimension 1 (rows), then dimension 2 (columns), then dimension 3 (pages), etc. until it has numbered all of the elements. Consider the following 3-by-3 matrices:",
+      "sha": "9dde169f5c2f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "[(1,1), (1,2), (1,3)]     [1, 4, 7]\n[(2,1), (2,2), (2,3)] ==> [2, 5, 8]\n[(3,1), (3,2), (3,3)]     [3, 6, 9]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The left matrix contains the subscript tuples for each matrix element. The right matrix shows the linear indices for the same matrix.",
+      "sha": "2a7ce296ced7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The following example shows how to convert the two-dimensional indices `(2,1)` and `(2,3)` of a 3-by-3 matrix to linear indices with a single call to `sub2ind`.",
+      "sha": "5ab7eb4c9e62",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "s1 = [2, 2];\ns2 = [1, 3];\nind = sub2ind ([3, 3], s1, s2)\n    ⇒ ind =  2   8"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `ind2sub`, `size`.",
+      "sha": "a3853fc8f8a7",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "ind2sub",
+   "sigs": [
+    "[s1, s2, …, sN] = ind2sub (dims, ind)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Convert linear indices to subscripts.",
+      "sha": "e4ca2aa76109",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The input *dims* is a dimension vector where each element is the size of the array in the respective dimension (`size`). The second input *ind* contains linear indices to be converted.",
+      "sha": "87f556c6e7ee",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The outputs *s1*, …, *sN* contain the converted subscripts.",
+      "sha": "05f649c4d50f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Background: Array elements can be specified either by a linear index which starts at 1 and runs through the number of elements in the array, or they may be specified with subscripts for the row, column, page, etc. The functions `ind2sub` and `sub2ind` interconvert between the two forms.",
+      "sha": "9e2406aed867",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The linear index traverses dimension 1 (rows), then dimension 2 (columns), then dimension 3 (pages), etc. until it has numbered all of the elements. Consider the following 3-by-3 matrices:",
+      "sha": "9dde169f5c2f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "[1, 4, 7]     [(1,1), (1,2), (1,3)]\n[2, 5, 8] ==> [(2,1), (2,2), (2,3)]\n[3, 6, 9]     [(3,1), (3,2), (3,3)]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The left matrix contains the linear indices for each matrix element. The right matrix shows the subscript tuples for the same matrix.",
+      "sha": "d6592614b9e3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The following example shows how to convert the linear indices `2` and `8` to appropriate subscripts of a 3-by-3 matrix.",
+      "sha": "f826b8b689d3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "ind = [2, 8];\n[r, c] = ind2sub ([3, 3], ind)\n    ⇒ r =  2   2\n    ⇒ c =  1   3"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the number of output subscripts exceeds the number of dimensions, the exceeded dimensions are set to `1`. On the other hand, if fewer subscripts than dimensions are provided, the exceeding dimensions are merged into the final requested dimension. For clarity, consider the following examples:",
+      "sha": "a492297671d5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "ind  = [2, 8];\ndims = [3, 3];\n## same as dims = [3, 3, 1]\n[r, c, s] = ind2sub (dims, ind)\n    ⇒ r =  2   2\n    ⇒ c =  1   3\n    ⇒ s =  1   1\n## same as dims = [9]\nr = ind2sub (dims, ind)\n    ⇒ r =  2   8"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `sub2ind`, `size`.",
+      "sha": "05a9f8739968",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Arithmetic Operators",
+    "sha": "6104f39ed22a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The following arithmetic operators are available, and work on scalars and matrices. The element-by-element operators and functions broadcast (see Broadcasting).",
+    "sha": "889ccd5a4938",
+    "zh": ""
+   }
+  },
+  {
+   "k": "dl",
+   "items": [
+    {
+     "term": {
+      "en": "*x* + *y*",
+      "sha": "5dafe2e26d99",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Addition (always works element by element). If both operands are matrices, the number of rows and columns must both agree, or they must be broadcastable to the same shape.",
+        "sha": "1dde0d144f03",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "*x* - *y*",
+      "sha": "930098fe7dd9",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Subtraction (always works element by element). If both operands are matrices, the number of rows and columns of both must agree, or they must be broadcastable to the same shape.",
+        "sha": "c45c9e7d9d27",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "*x* * *y*",
+      "sha": "269be300137e",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Matrix multiplication. The number of columns of *x* must agree with the number of rows of *y*.",
+        "sha": "820515b31ece",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "*x* .* *y*",
+      "sha": "2034c458b358",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Element-by-element multiplication. If both operands are matrices, the number of rows and columns must both agree, or they must be broadcastable to the same shape.",
+        "sha": "06feafc41a55",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "*x* / *y*",
+      "sha": "d369646d6662",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Right division. This is conceptually equivalent to the expression",
+        "sha": "35a5cdbd4876",
+        "zh": ""
+       }
+      },
+      {
+       "k": "code",
+       "text": "(inv (y') * x')'"
+      },
+      {
+       "k": "p",
+       "t": {
+        "en": "but it is computed without forming the inverse of *y'*.",
+        "sha": "a4a3f22ce035",
+        "zh": ""
+       }
+      },
+      {
+       "k": "p",
+       "t": {
+        "en": "If the system is not square, or if the coefficient matrix is singular, a minimum norm solution is computed.",
+        "sha": "11c8c537e9a4",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "*x* ./ *y*",
+      "sha": "c4a27710ed37",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Element-by-element right division.",
+        "sha": "ee128fb55b76",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "*x* \\ *y*",
+      "sha": "c8cf4cf64dfb",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Left division. This is conceptually equivalent to the expression",
+        "sha": "6278d6c93e2e",
+        "zh": ""
+       }
+      },
+      {
+       "k": "code",
+       "text": "inv (x) * y"
+      },
+      {
+       "k": "p",
+       "t": {
+        "en": "but it is computed without forming the inverse of *x*.",
+        "sha": "1ea4ed82a272",
+        "zh": ""
+       }
+      },
+      {
+       "k": "p",
+       "t": {
+        "en": "If the system is not square, or if the coefficient matrix is singular, a minimum norm solution is computed.",
+        "sha": "11c8c537e9a4",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "*x* .\\ *y*",
+      "sha": "6b83e0d941a9",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Element-by-element left division. Each element of *y* is divided by each corresponding element of *x*.",
+        "sha": "bd984c9c9690",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "*x* ^ *y*",
+      "sha": "4651b26640f4",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Power operator. If *x* and *y* are both scalars, this operator returns *x* raised to the power *y*. If *x* is a scalar and *y* is a square matrix, the result is computed using an eigenvalue expansion. If *x* is a square matrix, the result is computed by repeated multiplication if *y* is an integer, and by an eigenvalue expansion if *y* is not an integer. An error results if both *x* and *y* are matrices.",
+        "sha": "40932c9a7f3d",
+        "zh": ""
+       }
+      },
+      {
+       "k": "p",
+       "t": {
+        "en": "The implementation of this operator needs to be improved.",
+        "sha": "9d712f9a74d7",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "*x* .^ *y*",
+      "sha": "286a18e0eb80",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Element-by-element power operator. If both operands are matrices, the number of rows and columns must both agree, or they must be broadcastable to the same shape. If several complex results are possible, the one with smallest non-negative argument (angle) is taken. This rule may return a complex root even when a real root is also possible. Use `realpow`, `realsqrt`, `cbrt`, or `nthroot` if a real result is preferred.",
+        "sha": "cd21d875109f",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "-*x*",
+      "sha": "d11ee3a2a59e",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Negation.",
+        "sha": "e94de1f5e234",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "+*x*",
+      "sha": "c9dfafcc8d25",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Unary plus. This operator has no effect on the operand.",
+        "sha": "7764c45e364f",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "*x*'",
+      "sha": "2cc3c00c2417",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Complex conjugate transpose. For real arguments, this operator is the same as the transpose operator. For complex arguments, this operator is equivalent to the expression",
+        "sha": "83ed34c575fb",
+        "zh": ""
+       }
+      },
+      {
+       "k": "code",
+       "text": "conj (x.')"
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "*x*.'",
+      "sha": "4ea0089a114f",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Transpose.",
+        "sha": "5aac140fd36d",
+        "zh": ""
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Note that because Octave's element-by-element operators begin with a `.`, there is a possible ambiguity for statements like",
+    "sha": "1a7688769bb2",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "1./m"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "because the period could be interpreted either as part of the constant or as part of the operator. To resolve this conflict, Octave treats the expression as if you had typed",
+    "sha": "3b90cbea79a8",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "(1) ./ m"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and not",
+    "sha": "2f3522d8409f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "(1.) / m"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Although this is inconsistent with the normal behavior of Octave's lexer, which usually prefers to break the input into tokens by preferring the longest possible match at any given point, it is more useful in this case.",
+    "sha": "eaed2852742b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Note also that some combinations of binary operators and whitespace can create apparent ambiguities with the Command Syntax form of calling functions. See Command Syntax and Function Syntax for a description of how Octave treats that syntax.",
+    "sha": "1582ab9a67bb",
+    "zh": ""
+   }
+  },
+  {
+   "k": "def",
+   "name": "ctranspose",
+   "sigs": [
+    "B = ctranspose (A)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the complex conjugate transpose of *A*.",
+      "sha": "a34ca8b48cfa",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This function and `A'` are equivalent. See also: `transpose`.",
+      "sha": "835d4a24d3fc",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "mldivide",
+   "sigs": [
+    "C = mldivide (A, B)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the matrix left division of *A* and *B*.",
+      "sha": "1579ced8bdf7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This function and `A B` are equivalent.",
+      "sha": "c331f63b5325",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the system is not square, or if the coefficient matrix is singular, a minimum norm solution is computed. See also: `mrdivide`, `ldivide`, `rdivide`, `linsolve`.",
+      "sha": "35fa7d755f9e",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "mpower",
+   "sigs": [
+    "C = mpower (A, B)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the matrix power operation of *A* raised to the *B* power.",
+      "sha": "fdb113b62a08",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This function and `A ^ B` are equivalent. See also: `power`, `mtimes`, `plus`, `minus`.",
+      "sha": "9f247cb3f019",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "mrdivide",
+   "sigs": [
+    "C = mrdivide (A, B)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the matrix right division of *A* and *B*.",
+      "sha": "b49bfb053704",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This function and `A / B` are equivalent.",
+      "sha": "65fb0793646e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the system is not square, or if the coefficient matrix is singular, a minimum norm solution is computed. See also: `mldivide`, `rdivide`, `plus`, `minus`.",
+      "sha": "4f655e652513",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "mtimes",
+   "sigs": [
+    "C = mtimes (A, B)",
+    "C = mtimes (A1, A2, …)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the matrix multiplication product of inputs.",
+      "sha": "dabe4eec23e3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This function and `A * B` are equivalent. If more arguments are given, the multiplication is applied cumulatively from left to right:",
+      "sha": "0d9377429af4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "(…((A1 * A2) * A3) * …)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `times`, `plus`, `minus`, `rdivide`, `mrdivide`, `mldivide`, `mpower`.",
+      "sha": "132a38eef144",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "power",
+   "sigs": [
+    "C = power (A, B)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the element-by-element operation of *A* raised to the *B* power.",
+      "sha": "89c0d28b7261",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This function and `A .^ B` are equivalent.",
+      "sha": "1001588c20ac",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If several complex results are possible, returns the one with smallest non-negative argument (angle). Use `realpow`, `realsqrt`, `cbrt`, or `nthroot` if a real result is preferred.",
+      "sha": "c0e07a6369ec",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `mpower`, `realpow`, `realsqrt`, `cbrt`, `nthroot`.",
+      "sha": "110514df855b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "rdivide",
+   "sigs": [
+    "C = rdivide (A, B)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the element-by-element right division of *A* and *B*.",
+      "sha": "a2130aea959b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This function and `A ./ B` are equivalent. See also: `ldivide`, `mrdivide`, `times`, `plus`.",
+      "sha": "5bb8c1e28b54",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "times",
+   "sigs": [
+    "C = times (A, B)",
+    "C = times (A1, A2, …)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the element-by-element multiplication product of inputs.",
+      "sha": "0fa2a032cd0b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This function and `A .* B` are equivalent. If more arguments are given, the multiplication is applied cumulatively from left to right:",
+      "sha": "812e1ccb9697",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "(…((A1 .* A2) .* A3) .* …)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `mtimes`, `rdivide`.",
+      "sha": "37e0b73a8a75",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "transpose",
+   "sigs": [
+    "B = transpose (A)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the transpose of *A*.",
+      "sha": "4f60234e60ba",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This function and `A.'` are equivalent. See also: `ctranspose`.",
+      "sha": "b6f5c1ffd26e",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Comparison Operators",
+    "sha": "25acda77b0bc",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "*Comparison operators* compare numeric values for relationships such as equality. They are written using *relational operators*.",
+    "sha": "2fffccb6c04e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "All of Octave's comparison operators return a value of 1 if the comparison is true, or 0 if it is false. For matrix values, they all work on an element-by-element basis. Broadcasting rules apply. See Broadcasting. For example:",
+    "sha": "06359de88cec",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "[1, 2; 3, 4] == [1, 3; 2, 4]\n     ⇒  1  0\n         0  1"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "According to broadcasting rules, if one operand is a scalar and the other is a matrix, the scalar is compared to each element of the matrix in turn, and the result is the same size as the matrix.",
+    "sha": "96cb4fd1198a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "dl",
+   "items": [
+    {
+     "term": {
+      "en": "`x < y`",
+      "sha": "56abe6128209",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "True if *x* is less than *y*.",
+        "sha": "d2b87d4181f8",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`x <= y`",
+      "sha": "249f0a0ae9a3",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "True if *x* is less than or equal to *y*.",
+        "sha": "90b65c41c71d",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`x == y`",
+      "sha": "05292bf507da",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "True if *x* is equal to *y*.",
+        "sha": "a12fea0281d7",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`x >= y`",
+      "sha": "ffe224faf5ba",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "True if *x* is greater than or equal to *y*.",
+        "sha": "2f223ddbe4fb",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`x > y`",
+      "sha": "394481dcb240",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "True if *x* is greater than *y*.",
+        "sha": "365007333169",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`x != y`, `x ~= y`",
+      "sha": "c089342252ae",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "True if *x* is not equal to *y*.",
+        "sha": "98791ac5cf0c",
+        "zh": ""
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For complex numbers, the following ordering is defined: *z1* < *z2* if and only if",
+    "sha": "26255f178cf9",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "  abs (z1) < abs (z2)\n  || (abs (z1) == abs (z2) && arg (z1) < arg (z2))"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This is consistent with the ordering used by *max*, *min* and *sort*, but is not consistent with MATLAB, which only compares the real parts.",
+    "sha": "a24b31e859f2",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "String comparisons may also be performed with the `strcmp` function, not with the comparison operators listed above. See Strings.",
+    "sha": "22731f7a16a8",
+    "zh": ""
+   }
+  },
+  {
+   "k": "def",
+   "name": "isequal",
+   "sigs": [
+    "tf = isequal (x1, x2, …)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return true if all of *x1*, *x2*, … are equal. See also: `isequaln`.",
+      "sha": "93d8d608ea89",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Boolean Expressions",
+    "sha": "c9ac379f8377",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "level": 3,
+   "t": {
+    "en": "Element-by-element Boolean Operators",
+    "sha": "9e4360bae4f3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "An *element-by-element boolean expression* is a combination of comparison expressions using the boolean operators “or” (`|`), “and” (`&`), and “not” (`!`), along with parentheses to control nesting. The truth of the boolean expression is computed by combining the truth values of the corresponding elements of the component expressions. A value is considered to be false if it is zero, and true otherwise.",
+    "sha": "4d7f79a4a2e1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Element-by-element boolean expressions can be used wherever comparison expressions can be used. They can be used in `if` and `while` statements. However, a matrix value used as the condition in an `if` or `while` statement is only true if *all* of its elements are nonzero.",
+    "sha": "03eae23d94ff",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Like comparison operations, each element of an element-by-element boolean expression also has a numeric value (1 if true, 0 if false) that comes into play if the result of the boolean expression is stored in a variable, or used in arithmetic.",
+    "sha": "07f03b2420a3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Here are descriptions of the three element-by-element boolean operators.",
+    "sha": "c5da2c1f2165",
+    "zh": ""
+   }
+  },
+  {
+   "k": "dl",
+   "items": [
+    {
+     "term": {
+      "en": "`boolean1 & boolean2`",
+      "sha": "4632b972b257",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Elements of the result are true if both corresponding elements of *boolean1* and *boolean2* are true.",
+        "sha": "f1461351b862",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`boolean1 | boolean2`",
+      "sha": "2abb170778a2",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Elements of the result are true if either of the corresponding elements of *boolean1* or *boolean2* is true.",
+        "sha": "2769dc1e0ac4",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`! boolean`, `~ boolean`",
+      "sha": "3a122b902d65",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Each element of the result is true if the corresponding element of *boolean* is false.",
+        "sha": "24923e57f5f3",
+        "zh": ""
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "These operators work on an element-by-element basis. For example, the expression",
+    "sha": "a854e78a3e0d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "[1, 0; 0, 1] & [1, 0; 2, 3]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "returns a two by two identity matrix.",
+    "sha": "a2f994bb57b0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For the binary operators, broadcasting rules apply. See Broadcasting. In particular, if one of the operands is a scalar and the other a matrix, the operator is applied to the scalar and each element of the matrix.",
+    "sha": "5e5a7ccd4472",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For the binary element-by-element boolean operators, both subexpressions *boolean1* and *boolean2* are evaluated before computing the result. This can make a difference when the expressions have side effects. For example, in the expression",
+    "sha": "fdd12f1d4c0a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "a & b++"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "the value of the variable *b* is incremented even if the variable *a* is zero.",
+    "sha": "5f3593a55524",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This behavior is necessary for the boolean operators to work as described for matrix-valued operands.",
+    "sha": "a3e74c97a50c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "def",
+   "name": "and",
+   "sigs": [
+    "TF = and (x, y)",
+    "TF = and (x1, x2, …)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the logical AND of *x* and *y*.",
+      "sha": "66ac4b02fb7e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This function is equivalent to the operator syntax `x & y`. If more than two arguments are given, the logical AND is applied cumulatively from left to right:",
+      "sha": "f2364cd54f04",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "(…((x1 & x2) & x3) & …)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `or`, `not`, `xor`.",
+      "sha": "2e66b876f3b9",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "not",
+   "sigs": [
+    "z = not (x)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the logical NOT of *x*.",
+      "sha": "d4f9cd844dcb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This function is equivalent to the operator syntax `! x`. See also: `and`, `or`, `xor`.",
+      "sha": "d3f559f9793f",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "or",
+   "sigs": [
+    "TF = or (x, y)",
+    "TF = or (x1, x2, …)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the logical OR of *x* and *y*.",
+      "sha": "08be90ab1746",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This function is equivalent to the operator syntax `x | y`. If more than two arguments are given, the logical OR is applied cumulatively from left to right:",
+      "sha": "dfd404d797a6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "(…((x1 | x2) | x3) | …)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `and`, `not`, `xor`.",
+      "sha": "e623bc53d9a1",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 3,
+   "t": {
+    "en": "Short-circuit Boolean Operators",
+    "sha": "c71c91d2b9b6",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Combined with the implicit conversion to scalar values in `if` and `while` conditions, Octave's element-by-element boolean operators are often sufficient for performing most logical operations. However, it is sometimes desirable to stop evaluating a boolean expression as soon as the overall truth value can be determined. Octave's *short-circuit* boolean operators work this way.",
+    "sha": "48c45bc34238",
+    "zh": ""
+   }
+  },
+  {
+   "k": "dl",
+   "items": [
+    {
+     "term": {
+      "en": "`boolean1 && boolean2`",
+      "sha": "89d2193bff1e",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "The expression *boolean1* is evaluated and converted to a scalar using the equivalent of the operation `all (boolean1(:))`. If *boolean1* is not a logical value, it is considered true if its value is nonzero, and false if its value is zero. If *boolean1* is an array, it is considered true only if it is non-empty and all elements are non-zero. If *boolean1* evaluates to false, the result of the overall expression is false. If it is true, the expression *boolean2* is evaluated in the same way as *boolean1*. If it is true, the result of the overall expression is true. Otherwise the result of the overall expression is false.",
+        "sha": "3f0ae07f8610",
+        "zh": ""
+       }
+      },
+      {
+       "k": "p",
+       "t": {
+        "en": "**Warning:** the one exception to the equivalence with evaluating `all (boolean1(:))` is when `boolean1` an the empty array. For MATLAB compatibility, the truth value of an empty array is always `false` so `[] && true` evaluates to `false` even though `all ([])` is `true`.",
+        "sha": "ff60d631b327",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`boolean1 || boolean2`",
+      "sha": "ab9e85df5d4e",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "The expression *boolean1* is evaluated and converted to a scalar using the equivalent of the operation `all (boolean1(:))`. If *boolean1* is not a logical value, it is considered true if its value is nonzero, and false if its value is zero. If *boolean1* is an array, it is considered true only if it is non-empty and all elements are non-zero. If *boolean1* evaluates to true, the result of the overall expression is true. If it is false, the expression *boolean2* is evaluated in the same way as *boolean1*. If it is true, the result of the overall expression is true. Otherwise the result of the overall expression is false.",
+        "sha": "5eec127c39b0",
+        "zh": ""
+       }
+      },
+      {
+       "k": "p",
+       "t": {
+        "en": "**Warning:** the truth value of an empty matrix is always `false`, see the previous list item for details.",
+        "sha": "ad3f05d35c9a",
+        "zh": ""
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The fact that both operands may not be evaluated before determining the overall truth value of the expression can be important. For example, in the expression",
+    "sha": "290f64bd26e0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "a && b++"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "the value of the variable *b* is only incremented if the variable *a* is nonzero.",
+    "sha": "7c7cc16be7e1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This can be used to write somewhat more concise code. For example, it is possible write",
+    "sha": "885fee0ae890",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "function f (a, b, c)\n  if (nargin > 2 && ischar (c))\n    …"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "instead of having to use two `if` statements to avoid attempting to evaluate an argument that doesn't exist. For example, without the short-circuit feature, it would be necessary to write",
+    "sha": "7568f0420468",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "function f (a, b, c)\n  if (nargin > 2)\n    if (ischar (c))\n      …"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Writing",
+    "sha": "2dabb8334b6c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "function f (a, b, c)\n  if (nargin > 2 & ischar (c))\n    …"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "would result in an error if `f` were called with one or two arguments because Octave would be forced to try to evaluate both of the operands for the operator `&`.",
+    "sha": "8236975f232e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "MATLAB has special behavior that allows the operators `&` and `|` to short-circuit when used in the truth expression for `if` and `while` statements. Octave behaves the same way for compatibility, however, the use of the `&` and `|` operators in this way is strongly discouraged and a warning will be issued. Instead, you should use the `&&` and `||` operators that always have short-circuit behavior.",
+    "sha": "93dd6d5dddba",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Finally, the ternary operator (?:) is not supported in Octave. If short-circuiting is not important, it can be replaced by the `ifelse` function.",
+    "sha": "5a85eb05629a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Assignment Expressions",
+    "sha": "6cd6e2e234bf",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "An *assignment* is an expression that stores a new value into a variable. For example, the following expression assigns the value 1 to the variable `z`:",
+    "sha": "26cb099c21bd",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "z = 1"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "After this expression is executed, the variable `z` has the value 1. Whatever old value `z` had before the assignment is forgotten. The `=` sign is called an *assignment operator*.",
+    "sha": "52eebc0e5755",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Assignments can store string values also. For example, the following expression would store the value `\"this food is good\"` in the variable `message`:",
+    "sha": "daf97d8c4c2f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "thing = \"food\"\npredicate = \"good\"\nmessage = [ \"this \" , thing , \" is \" , predicate ]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "(This also illustrates concatenation of strings.)",
+    "sha": "cc33e2d53491",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Most operators (addition, concatenation, and so on) have no effect except to compute a value. If you ignore the value, you might as well not use the operator. An assignment operator is different. It does produce a value, but even if you ignore the value, the assignment still makes itself felt through the alteration of the variable. We call this a *side effect*.",
+    "sha": "dffc6af3af6a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The left-hand operand of an assignment need not be a variable (see Variables). It can also be an element of a matrix (see Index Expressions) or a list of return values (see Calling Functions). These are all called *lvalues*, which means they can appear on the left-hand side of an assignment operator. The right-hand operand may be any expression. It produces the new value which the assignment stores in the specified variable, matrix element, or list of return values.",
+    "sha": "542c064669c0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It is important to note that variables do *not* have permanent types. The type of a variable is simply the type of whatever value it happens to hold at the moment. In the following program fragment, the variable `foo` has a numeric value at first, and a string value later on:",
+    "sha": "24f28cbba6c3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "octave:13> foo = 1\nfoo = 1\noctave:13> foo = \"bar\"\nfoo = bar"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When the second assignment gives `foo` a string value, the fact that it previously had a numeric value is forgotten.",
+    "sha": "64391172fd09",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Assignment of a scalar to an indexed matrix sets all of the elements that are referenced by the indices to the scalar value. For example, if `a` is a matrix with at least two columns,",
+    "sha": "d9bd5f1aa841",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "a(:, 2) = 5"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "sets all the elements in the second column of `a` to 5.",
+    "sha": "c3d45d1f63b5",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Assigning an empty matrix `[]` works in most cases to allow you to delete rows or columns of matrices and vectors. See Empty Matrices. For example, given a 4 by 5 matrix *A*, the assignment",
+    "sha": "4e17646defc0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "A (3, :) = []"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "deletes the third row of *A*, and the assignment",
+    "sha": "afab076666ca",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "A (:, 1:2:5) = []"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "deletes the first, third, and fifth columns.",
+    "sha": "936fcf478949",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "An assignment is an expression, so it has a value. Thus, `z = 1` as an expression has the value 1. One consequence of this is that you can write multiple assignments together:",
+    "sha": "278cb66c7220",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "x = y = z = 0"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "stores the value 0 in all three variables. It does this because the value of `z = 0`, which is 0, is stored into `y`, and then the value of `y = z = 0`, which is 0, is stored into `x`.",
+    "sha": "424a6308e432",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This is also true of assignments to lists of values, so the following is a valid expression",
+    "sha": "77f06266a102",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "[a, b, c] = [u, s, v] = svd (a)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "that is exactly equivalent to",
+    "sha": "1210016fe1e6",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "[u, s, v] = svd (a)\na = u\nb = s\nc = v"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In expressions like this, the number of values in each part of the expression need not match. For example, the expression",
+    "sha": "8f4b3bcabb6f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "[a, b] = [u, s, v] = svd (a)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "is equivalent to",
+    "sha": "1ec285792f84",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "[u, s, v] = svd (a)\na = u\nb = s"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The number of values on the left side of the expression can, however, not exceed the number of values on the right side. For example, the following will produce an error.",
+    "sha": "a847ac422ab7",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "[a, b, c, d] = [u, s, v] = svd (a);\n-| error: element number 4 undefined in return list"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The symbol `~` may be used as a placeholder in the list of lvalues, indicating that the corresponding return value should be ignored and not stored anywhere:",
+    "sha": "2d5914b5e127",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "[~, s, v] = svd (a);"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This is cleaner and more memory efficient than using a dummy variable. The `nargout` value for the right-hand side expression is not affected. If the assignment is used as an expression, the return value is a comma-separated list with the ignored values dropped.",
+    "sha": "9bd4e8ba85ab",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A very common programming pattern is to increment an existing variable with a given value, like this",
+    "sha": "d64b123d4fc1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "a = a + 2;"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This can be written in a clearer and more condensed form using the `+=` operator",
+    "sha": "fe7e921c9936",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "a += 2;"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Similar operators also exist for subtraction (`-=`), multiplication (`*=`), and division (`/=`). An expression of the form",
+    "sha": "44c7e33046b5",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "expr1 op= expr2"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "is evaluated as",
+    "sha": "cce64d12b85d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "expr1 = (expr1) op (expr2)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "where *op* can be either `+`, `-`, `*`, or `/`, as long as *expr2* is a simple expression with no side effects. If *expr2* also contains an assignment operator, then this expression is evaluated as",
+    "sha": "22ecec0600b9",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "temp = expr2\nexpr1 = (expr1) op temp"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "where *temp* is a placeholder temporary value storing the computed result of evaluating *expr2*. So, the expression",
+    "sha": "026b1951abdc",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "a *= b+1"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "is evaluated as",
+    "sha": "cce64d12b85d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "a = a * (b+1)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and *not*",
+    "sha": "bcae617f4c2b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "a = a * b + 1"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "You can use an assignment anywhere an expression is called for. For example, it is valid to write `x != (y = 1)` to set `y` to 1 and then test whether `x` equals 1. But this style tends to make programs hard to read. Except in a one-shot program, you should rewrite it to get rid of such nesting of assignments. This is never very hard.",
+    "sha": "781ae5cd5deb",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Operator Precedence",
+    "sha": "5ab53f8310f5",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "*Operator precedence* determines how operators are grouped, when different operators appear close by in one expression. For example, `*` has higher precedence than `+`. Thus, the expression `a + b * c` means to multiply `b` and `c`, and then add `a` to the product (i.e., `a + (b * c)`).",
+    "sha": "40b28dd84ce8",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "You can overrule the precedence of the operators by using parentheses. You can think of the precedence rules as saying where the parentheses are assumed if you do not write parentheses yourself. In fact, it is wise to use parentheses whenever you have an unusual combination of operators, because other people who read the program may not remember what the precedence is in this case. You might forget as well, and then you too could make a mistake. Explicit parentheses will help prevent any such mistake.",
+    "sha": "372a4dc8747b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When operators of equal precedence are used together, the leftmost operator groups first, except for the assignment operators, which group in the opposite order. Thus, the expression `a - b + c` groups as `(a - b) + c`, but the expression `a = b = c` groups as `a = (b = c)`.",
+    "sha": "7cda32e0988e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The precedence of prefix unary operators is important when another operator follows the operand. For example, `-x^2` means `-(x^2)`, because `-` has lower precedence than `^`.",
+    "sha": "af29fb7771ee",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Here is a table of the operators in Octave, in order of decreasing precedence. Unless noted, all operators group left to right.",
+    "sha": "81607290078a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "dl",
+   "items": [
+    {
+     "term": {
+      "en": "`function call and array indexing, cell array indexing, and structure element indexing`",
+      "sha": "82881448ad08",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "`()` `{}` `.`",
+        "sha": "0fcd5337b8db",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`postfix increment, and postfix decrement`",
+      "sha": "158737cbc15f",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "`++` `--`",
+        "sha": "156b444a1f12",
+        "zh": ""
+       }
+      },
+      {
+       "k": "p",
+       "t": {
+        "en": "These operators group right to left.",
+        "sha": "89d5f1b227db",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`transpose and exponentiation`",
+      "sha": "ba703db392e0",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "`'` `.'` `^` `.^`",
+        "sha": "598313c80428",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`unary plus, unary minus, prefix increment, prefix decrement, and logical \"not\"`",
+      "sha": "bfc4c77fbd91",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "`+` `-` `++` `--` `~` `!`",
+        "sha": "fb5043115de6",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`multiply and divide`",
+      "sha": "e1d99f8d5137",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "`*` `/` `\\` `.\\` `.*` `./`",
+        "sha": "c4d1419b746b",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`add, subtract`",
+      "sha": "3bce4a0498fb",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "`+` `-`",
+        "sha": "2011bc2618e2",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`colon`",
+      "sha": "a7a18e8e8e52",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "`:`",
+        "sha": "aeb60244e7e1",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`relational`",
+      "sha": "b14a781b00ff",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "`<` `<=` `==` `>=` `>` `!=` `~=`",
+        "sha": "d85f28a2cabb",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`element-wise \"and\"`",
+      "sha": "8211723e3ec8",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "`&`",
+        "sha": "bcfbbda91528",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`element-wise \"or\"`",
+      "sha": "d05817e60694",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "`|`",
+        "sha": "e0153b711d8c",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`logical \"and\"`",
+      "sha": "44c34b5490be",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "`&&`",
+        "sha": "16bd182e53d2",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`logical \"or\"`",
+      "sha": "b1ee6e965fbb",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "`||`",
+        "sha": "03fa53dbd46d",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`assignment`",
+      "sha": "7e2f06ce4096",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "`=` `+=` `-=` `*=` `/=` `\\=` `^=` `.*=` `./=` `.\\=` `.^=` `|=` `&=`",
+        "sha": "735940ced353",
+        "zh": ""
+       }
+      },
+      {
+       "k": "p",
+       "t": {
+        "en": "These operators group right to left.",
+        "sha": "89d5f1b227db",
+        "zh": ""
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "title_zh": "表达式与运算符"
+}

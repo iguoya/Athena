@@ -1,0 +1,2080 @@
+{
+ "id": "linalg",
+ "title_en": "Linear Algebra",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "This chapter documents the linear algebra functions provided in Octave. Reference material for many of these functions may be found in Johns Hopkins, 1989, and in the *LAPACK Users' Guide*, SIAM, 1992. The *LAPACK Users' Guide* is available at: *http://www.netlib.org/lapack/lug/*",
+    "sha": "8377a54db4e8",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A common text for engineering courses is G. Strang, *Linear Algebra and Its Applications, 4th Edition*. It has become a widespread reference for linear algebra. An alternative is P. Lax *Linear Algebra and Its Applications*, and also is a good choice. It claims to be suitable for high school students with substantial mathematical interests as well as first-year undergraduates.",
+    "sha": "287422119341",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Techniques Used for Linear Algebra",
+    "sha": "4277b4841d1f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Octave includes a polymorphic solver that selects an appropriate matrix factorization depending on the properties of the matrix itself. Generally, the cost of determining the matrix type is small relative to the cost of factorizing the matrix itself. In any case the matrix type is cached once it is calculated so that it is not re-determined each time it is used in a linear equation.",
+    "sha": "135e3c5cc173",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The selection tree for how the linear equation is solved or a matrix inverse is formed is given by:",
+    "sha": "6b7896052d90",
+    "zh": ""
+   }
+  },
+  {
+   "k": "list",
+   "ordered": true,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "If the matrix is upper or lower triangular sparse use a forward or backward substitution using the LAPACK xTRTRS function, and goto 4.",
+       "sha": "96f9f4c9dea8",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "If the matrix is square, Hermitian with a real positive diagonal, attempt Cholesky factorization using the LAPACK xPOTRF function.",
+       "sha": "95a166757a17",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "If the Cholesky factorization failed or the matrix is not Hermitian with a real positive diagonal, and the matrix is square, factorize using the LAPACK xGETRF function.",
+       "sha": "4dc80f1ca77a",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "If the matrix is not square, or any of the previous solvers flags a singular or near singular matrix, find a least squares solution using the LAPACK xGELSD function.",
+       "sha": "8faac08fafa0",
+       "zh": ""
+      }
+     }
+    ]
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The user can force the type of the matrix with the `matrix_type` function. This overcomes the cost of discovering the type of the matrix. However, it should be noted that identifying the type of the matrix incorrectly will lead to unpredictable results, and so `matrix_type` should be used with care.",
+    "sha": "2660c55789c0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It should be noted that the test for whether a matrix is a candidate for Cholesky factorization, performed above, and by the `matrix_type` function, does not make certain that the matrix is Hermitian. However, the attempt to factorize the matrix will quickly detect a non-Hermitian matrix.",
+    "sha": "a5f0f0a56459",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Basic Matrix Functions",
+    "sha": "8a00c0a675f6",
+    "zh": ""
+   }
+  },
+  {
+   "k": "def",
+   "name": "cond",
+   "sigs": [
+    "c = cond (A)",
+    "c = cond (A, p)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the *p*-norm condition number of a matrix with respect to inversion.",
+      "sha": "2341b439e37f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`cond (A)` is defined as ${\\parallel A \\parallel_p * \\parallel A^{-1} \\parallel_p .}$",
+      "sha": "f97a5c31ea81",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By default, `p = 2` is used which implies a (relatively slow) singular value decomposition. Other possible selections are `p = 1, Inf, \"fro\"` which are generally faster. For a full discussion of possible *p* values, `norm`.",
+      "sha": "1b2a3d6a371a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The condition number of a matrix quantifies the sensitivity of the matrix inversion operation when small changes are made to matrix elements. Ideally the condition number will be close to 1. When the number is large this indicates small changes (such as underflow or round-off error) will produce large changes in the resulting output. In such cases the solution results from numerical computing are not likely to be accurate. See also: `condest`, `rcond`, `condeig`, `norm`, `svd`.",
+      "sha": "4e422c812746",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "det",
+   "sigs": [
+    "d = det (A)",
+    "[d, rcond] = det (A)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the determinant of *A*.",
+      "sha": "b76b2ce3bf8a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Return an estimate of the reciprocal condition number if requested.",
+      "sha": "8acc6f1a44e0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Programming Notes: Routines from LAPACK are used for full matrices and code from UMFPACK is used for sparse matrices.",
+      "sha": "cca8deaab8a9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The determinant should not be used to check a matrix for singularity. For that, use any of the condition number functions: `cond`, `condest`, `rcond`. See also: `cond`, `condest`, `rcond`.",
+      "sha": "1edcaad25663",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "eig",
+   "sigs": [
+    "lambda = eig (A)",
+    "lambda = eig (A, B)",
+    "[V, lambda] = eig (A)",
+    "[V, lambda] = eig (A, B)",
+    "[V, lambda, W] = eig (A)",
+    "[V, lambda, W] = eig (A, B)",
+    "[…] = eig (A, balanceOption)",
+    "[…] = eig (A, B, algorithm)",
+    "[…] = eig (…, eigvalOption)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the eigenvalues (*lambda*) and optionally the right eigenvectors (*V*) and the left eigenvectors (*W*) of a matrix or pair of matrices.",
+      "sha": "4bb6d7292c5e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The flag *balanceOption* can be one of:",
+      "sha": "6677ed14593b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "`\"balance\"` (default)",
+        "sha": "e16053e32f43",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Preliminary balancing is on.",
+          "sha": "c85ec437fbcb",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`\"nobalance\"`",
+        "sha": "0bb123fec563",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Disables preliminary balancing.",
+          "sha": "5e5f1ff8c40c",
+          "zh": ""
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The flag *eigvalOption* can be one of:",
+      "sha": "0e1804ea0a52",
+      "zh": ""
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "`\"matrix\"`",
+        "sha": "279c03f9d1ea",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Return the eigenvalues in a diagonal matrix. (default if 2 or 3 outputs are requested)",
+          "sha": "859867659035",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`\"vector\"`",
+        "sha": "85e402d55f13",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Return the eigenvalues in a column vector. (default if only 1 output is requested, e.g., *lambda* = eig (*A*))",
+          "sha": "cac976eb79da",
+          "zh": ""
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The flag *algorithm* can be one of:",
+      "sha": "a0d5c1996040",
+      "zh": ""
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "`\"chol\"`",
+        "sha": "a77a02f4aa02",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Use the Cholesky factorization of B. (default if *A* is symmetric (Hermitian) and *B* is symmetric (Hermitian) positive definite)",
+          "sha": "cc30d9277255",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`\"qz\"`",
+        "sha": "e201818e81f5",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Use the QZ algorithm. (used whenever *A* or *B* are not symmetric)",
+          "sha": "e113bb8350a6",
+          "zh": ""
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "table",
+     "spec": "grid",
+     "rows": [
+      [
+       "",
+       {
+        "en": "no flag",
+        "sha": "44af2d949737",
+        "zh": ""
+       },
+       {
+        "en": "chol",
+        "sha": "e56a49cbbbe4",
+        "zh": ""
+       },
+       {
+        "en": "qz",
+        "sha": "ea9d3ee7ec65",
+        "zh": ""
+       }
+      ],
+      [
+       {
+        "en": "`\"chol\"`",
+        "sha": "a77a02f4aa02",
+        "zh": ""
+       },
+       {
+        "en": "`\"qz\"`",
+        "sha": "e201818e81f5",
+        "zh": ""
+       }
+      ],
+      [
+       {
+        "en": "`\"qz\"`",
+        "sha": "e201818e81f5",
+        "zh": ""
+       },
+       {
+        "en": "`\"qz\"`",
+        "sha": "e201818e81f5",
+        "zh": ""
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The eigenvalues returned by `eig` are not ordered. See also: `eigs`, `svd`.",
+      "sha": "50cd9aa4edd0",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "inv",
+   "sigs": [
+    "x = inv (A)",
+    "[x, rcond] = inv (A)",
+    "[…] = inverse (…)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the inverse of the square matrix *A*.",
+      "sha": "aec2d91983a0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Return an estimate of the reciprocal condition number if requested, otherwise warn of an ill-conditioned matrix if the reciprocal condition number is small.",
+      "sha": "42f9f72413d9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In general it is best to avoid calculating the inverse of a matrix directly. For example, it is both faster and more accurate to solve systems of equations (*A**$x$ = $b$) with `y = A \\ b`, rather than `y = inv (A) * b`.",
+      "sha": "60d40dd1d6b3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If called with a sparse matrix, then in general *x* will be a full matrix requiring significantly more storage. Avoid forming the inverse of a sparse matrix if possible.",
+      "sha": "f1a99b52b7b0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`inverse` is an alias and may be used identically in place of `inv`. See also: `ldivide`, `rdivide`, `pinv`.",
+      "sha": "0065b4a94b89",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "linsolve",
+   "sigs": [
+    "x = linsolve (A, b)",
+    "x = linsolve (A, b, opts)",
+    "[x, R] = linsolve (…)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Solve the linear system `A*x = b`.",
+      "sha": "de50c695a069",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "With no options, this function is equivalent to the left division operator (`x = A \\ b`) or the matrix-left-divide function (`x = mldivide (A, b)`).",
+      "sha": "a687e7a2a69f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Octave ordinarily examines the properties of the matrix *A* and chooses a solver that best matches the matrix. By passing a structure *opts* to `linsolve` you can inform Octave directly about the matrix *A*. In this case Octave will skip the matrix examination and proceed directly to solving the linear system.",
+      "sha": "9e0cf03ef031",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "**Warning:** If the matrix *A* does not have the properties listed in the *opts* structure then the result will not be accurate AND no warning will be given. When in doubt, let Octave examine the matrix and choose the appropriate solver as this step takes little time and the result is cached so that it is only done once per linear system.",
+      "sha": "86a56095e2c2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Possible *opts* fields (set value to true/false):",
+      "sha": "4dc6018330f3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "LT",
+        "sha": "6c62fb7313eb",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "*A* is lower triangular",
+          "sha": "cbc4b03a4242",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "UT",
+        "sha": "a7439191c896",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "*A* is upper triangular",
+          "sha": "33182389cfee",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "UHESS",
+        "sha": "85ef7b3eed88",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "*A* is upper Hessenberg (currently makes no difference)",
+          "sha": "dc341b26998e",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "SYM",
+        "sha": "83f865021ac3",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "*A* is symmetric or complex Hermitian (currently makes no difference)",
+          "sha": "19167b0cbb60",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "POSDEF",
+        "sha": "ef16a101e58c",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "*A* is positive definite",
+          "sha": "3aec2160e6ad",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "RECT",
+        "sha": "75e1bc97e17f",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "*A* is general rectangular (currently makes no difference)",
+          "sha": "37b937b01a48",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "TRANSA",
+        "sha": "c1cc2d085389",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Solve `A'*x = b` if true rather than `A*x = b`",
+          "sha": "b11f7ead5509",
+          "zh": ""
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional second output *R* is the inverse condition number of *A* (zero if matrix is singular). See also: `mldivide`, `matrix_type`, `rcond`.",
+      "sha": "2ad85ee531cd",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "norm",
+   "sigs": [
+    "n = norm (A)",
+    "n = norm (A, p)",
+    "n = norm (A, p, opt)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the p-norm of the matrix *A*.",
+      "sha": "9855e83bb964",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the second argument is not given, `p = 2` is used.",
+      "sha": "c0fc081582f3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *A* is a matrix (or sparse matrix):",
+      "sha": "d06d24884aa9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "*p* = `1`",
+        "sha": "4676480e8831",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "1-norm, the largest column sum of the absolute values of *A*.",
+          "sha": "8498494d0a13",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "*p* = `2`",
+        "sha": "93bd947a44fa",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Largest singular value of *A*.",
+          "sha": "4d718412cc55",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "*p* = `Inf` or `\"inf\"`",
+        "sha": "4449f5a13a68",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Infinity norm, the largest row sum of the absolute values of *A*.",
+          "sha": "e62dd316522e",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "*p* = `\"fro\"`",
+        "sha": "991517f07dde",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "`sqrt (sum (diag (A' * A)))`.",
+          "sha": "58c8ebbb5b99",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "other *p*, `p > 1`",
+        "sha": "748481b6ca1a",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "maximum `norm (A*x, p)` such that `norm (x, p) == 1`",
+          "sha": "f971df5e9554",
+          "zh": ""
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *A* is a vector or a scalar:",
+      "sha": "cdc8eb5b64d0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "*p* = `Inf` or `\"inf\"`",
+        "sha": "4449f5a13a68",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "`max (abs (A))`.",
+          "sha": "7c387203a6a7",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "*p* = `-Inf`",
+        "sha": "2f2d16b5393c",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "`min (abs (A))`.",
+          "sha": "9df6d8c56a5a",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "*p* = `\"fro\"`",
+        "sha": "991517f07dde",
+        "zh": ""
+       },
+       "blocks": []
+      },
+      {
+       "term": {
+        "en": "*p* = 0",
+        "sha": "ad298d27841b",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Hamming norm—the number of nonzero elements.",
+          "sha": "d8ddecd076dc",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "other *p*, `p > 1`",
+        "sha": "748481b6ca1a",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "p-norm of *A*, `(sum (abs (A) .^ p)) ^ (1/p)`.",
+          "sha": "7c186588b773",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "other *p* `p < 1`",
+        "sha": "7ab56fd0aec0",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "the p-pseudonorm defined as above.",
+          "sha": "235d818ebb2a",
+          "zh": ""
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *opt* is the value `\"rows\"`, treat each row as a vector and compute its norm. The result is returned as a column vector. Similarly, if *opt* is `\"columns\"` or `\"cols\"` then compute the norms of each column and return a row vector. See also: `normest`, `normest1`, `vecnorm`, `cond`, `svd`.",
+      "sha": "36c0600cda23",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "null",
+   "sigs": [
+    "Z = null (A)",
+    "Z = null (A, tol)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return an orthonormal basis *Z* of the null space of *A*.",
+      "sha": "d4eb989fdf87",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The dimension of the null space *Z* is taken as the number of singular values of *A* not greater than *tol*. If the argument *tol* is missing, it is computed as",
+      "sha": "4763bbfe8c4c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": " max (size (A)) * max (svd (A, 0)) * eps"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `orth`, `svd`.",
+      "sha": "b23d4ea67294",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "orth",
+   "sigs": [
+    "B = orth (A)",
+    "B = orth (A, tol)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return an orthonormal basis of the range space of *A*.",
+      "sha": "ad604f35eb7b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The dimension of the range space is taken as the number of singular values of *A* greater than *tol*. If the argument *tol* is missing, it is computed as",
+      "sha": "a6e898c26914",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": " max (size (A)) * max (svd (A)) * eps"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `null`.",
+      "sha": "29e4767baa17",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "pinv",
+   "sigs": [
+    "B = pinv (A)",
+    "B = pinv (A, tol)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the Moore-Penrose pseudoinverse of *A*.",
+      "sha": "5e5ac9f55c40",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Singular values less than *tol* are ignored.",
+      "sha": "b10936704e60",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the second argument is omitted, it is taken to be",
+      "sha": "95bed98cae0f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "tol = max ([rows(x), columns(x)]) * norm (x) * eps"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `inv`, `ldivide`.",
+      "sha": "d1c03438655a",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "rank",
+   "sigs": [
+    "k = rank (A)",
+    "k = rank (A, tol)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the rank of matrix *A*, using the singular value decomposition.",
+      "sha": "7598b9ebafc6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The rank is taken to be the number of singular values of *A* that are greater than the specified tolerance *tol*. If the second argument is omitted, it is taken to be",
+      "sha": "355a770e955e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": " tol = max (size (A)) * sigma(1) * eps;"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where `eps` is machine precision and `sigma(1)` is the largest singular value of *A*.",
+      "sha": "e90dc6c88d9c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The rank of a matrix is the number of linearly independent rows or columns and equals the dimension of the row and column space. The function `orth` may be used to compute an orthonormal basis of the column space.",
+      "sha": "739d3671ed4a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For testing if a system `A*x = b` of linear equations is solvable, one can use",
+      "sha": "7cf6c76e50ab",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": " rank (A) == rank ([A b])"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In this case, `x = A \\ b` finds a particular solution *x*. The general solution is *x* plus the null space of matrix *A*. The function `null` may be used to compute a basis of the null space.",
+      "sha": "1b71de31bc5f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Example:",
+      "sha": "c63737abd734",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": " A = [1 2 3\n      4 5 6\n      7 8 9];\n rank (A)\n   ⇒ 2"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In this example, the number of linearly independent rows is only 2 because the final row is a linear combination of the first two rows:",
+      "sha": "5d0c9fd4333b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": " A(3,:) == -A(1,:) + 2 * A(2,:)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `null`, `orth`, `sprank`, `svd`, `eps`.",
+      "sha": "32376cacc738",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "rcond",
+   "sigs": [
+    "c = rcond (A)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the 1-norm estimate of the reciprocal condition number as returned by LAPACK.",
+      "sha": "646172cb00d0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the matrix is well-conditioned then *c* will be near 1 and if the matrix is poorly conditioned it will be close to 0.",
+      "sha": "ddf36fac78b3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix *A* must not be sparse. If the matrix is sparse then `condest (A)` or `rcond (full (A))` should be used instead. See also: `cond`, `condest`.",
+      "sha": "36c1b3e5f942",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "trace",
+   "sigs": [
+    "t = trace (A)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the trace of *A*, the sum of the elements along the main diagonal.",
+      "sha": "bac78cb5b655",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The implementation is straightforward: `sum (diag (A))`. See also: `eig`.",
+      "sha": "e7af9987c233",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "rref",
+   "sigs": [
+    "r = rref (A)",
+    "r = rref (A, tol)",
+    "[r, k] = rref (…)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the reduced row echelon form of *A*.",
+      "sha": "8995fadad60d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*tol* defaults to `eps * max (size (A)) * norm (A, inf)`.",
+      "sha": "ac96e52d1297",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional return argument *k* contains the vector of \"bound variables\", which are those columns on which elimination has been performed.",
+      "sha": "bb8d688313bd",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "vecnorm",
+   "sigs": [
+    "n = vecnorm (A)",
+    "n = vecnorm (A, p)",
+    "n = vecnorm (A, p, dim)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the vector p-norm of the elements of array *A* along dimension *dim*.",
+      "sha": "9dc1afe68855",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The p-norm of a vector is defined as",
+      "sha": "a939cf6fc12f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "{\\Vert A \\Vert}_p = \\left[ \\sum_{i=1}^N {| A_i |}^p \\right] ^ {1/p}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The input *p* must be a positive scalar. If omitted it defaults to 2 (Euclidean norm or distance). Other special values of *p* are 1 (Manhattan norm, sum of absolute values) and `Inf` (absolute value of largest element).",
+      "sha": "22504b53de9b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The input *dim* specifies the dimension of the array on which the function operates and must be a positive integer. If omitted the first non-singleton dimension is used.",
+      "sha": "5620c09fa66a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `norm`.",
+      "sha": "a89ce6a365e6",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Matrix Factorizations",
+    "sha": "da4ac3de1ae5",
+    "zh": ""
+   }
+  },
+  {
+   "k": "def",
+   "name": "chol",
+   "sigs": [
+    "R = chol (A)",
+    "[R, p] = chol (A)",
+    "[R, p, Q] = chol (A)",
+    "[R, p, Q] = chol (A, \"vector\")",
+    "[L, …] = chol (…, \"lower\")",
+    "[R, …] = chol (…, \"upper\")"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the upper Cholesky factor, *R*, of the real symmetric or complex Hermitian positive definite matrix *A*.",
+      "sha": "b021651b738a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The upper Cholesky factor *R* is computed by using the upper triangular part of matrix *A* and is defined by $ R^T R = A $.",
+      "sha": "8687473461b0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Calling `chol` using the optional `\"upper\"` flag has the same behavior. In contrast, using the optional `\"lower\"` flag, `chol` returns the lower triangular factorization, computed by using the lower triangular part of matrix *A*, such that $ L L^T = A $.",
+      "sha": "010458b77ccd",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Called with one output argument `chol` fails if matrix *A* is not positive definite. Note that if matrix *A* is not real symmetric or complex Hermitian then the lower triangular part is considered to be the (complex conjugate) transpose of the upper triangular part, or vice versa, given the `\"lower\"` flag.",
+      "sha": "2bf1ce919bd2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Called with two or more output arguments *p* flags whether the matrix *A* was positive definite and `chol` does not fail. A zero value of *p* indicates that matrix *A* is positive definite and *R* gives the factorization. Otherwise, *p* will have a positive value.",
+      "sha": "401597c350b1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If called with three output arguments matrix *A* must be sparse and a sparsity preserving row/column permutation is applied to matrix *A* prior to the factorization. That is *R* is the factorization of `A(Q,Q)` such that $ R^T R = Q^T A Q$.",
+      "sha": "e49dc176acd2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The sparsity preserving permutation is generally returned as a matrix. However, given the optional flag `\"vector\"`, *Q* will be returned as a vector such that $ R^T R = A (Q, Q)$.",
+      "sha": "2ad441d005a9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In general the lower triangular factorization is significantly faster for sparse matrices. See also: `hess`, `lu`, `qr`, `qz`, `schur`, `svd`, `ichol`, `cholinv`, `chol2inv`, `cholupdate`, `cholinsert`, `choldelete`, `cholshift`.",
+      "sha": "0aadc892492b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "lu",
+   "sigs": [
+    "[L, U] = lu (A)",
+    "[L, U, P] = lu (A)",
+    "[L, U, P, Q] = lu (S)",
+    "[L, U, P, Q, R] = lu (S)",
+    "[…] = lu (S, thresh)",
+    "y = lu (…)",
+    "[…] = lu (…, \"vector\")"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the LU decomposition of *A*.",
+      "sha": "b6911166cdac",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *A* is full then subroutines from LAPACK are used, and if *A* is sparse then UMFPACK is used.",
+      "sha": "6ae7e69ee7de",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The result is returned in a permuted form, according to the optional return value *P*. For example, given the matrix `A = [1, 2; 3, 4]`,",
+      "sha": "497cdbd16883",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "[L, U, P] = lu (A)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "returns",
+      "sha": "414e681ebabc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "L =\n\n  1.00000  0.00000\n  0.33333  1.00000\n\nU =\n\n  3.00000  4.00000\n  0.00000  0.66667\n\nP =\n\n  0  1\n  1  0"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix is not required to be square.",
+      "sha": "392773183bac",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with two or three output arguments and a sparse input matrix, `lu` does not attempt to perform sparsity preserving column permutations. Called with a fourth output argument, the sparsity preserving column transformation *Q* is returned, such that `P * A * Q = L * U`. This is the **preferred** way to call `lu` with sparse input matrices.",
+      "sha": "d552e6d3444d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Called with a fifth output argument and a sparse input matrix, `lu` attempts to use a scaling factor *R* on the input matrix such that `P * (R \\ A) * Q = L * U`. This typically leads to a sparser and more stable factorization.",
+      "sha": "6eadbccdb22a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "An additional input argument *thresh* that defines the pivoting threshold can be given. *thresh* can be a scalar, in which case it defines the UMFPACK pivoting tolerance for both symmetric and unsymmetric cases. If *thresh* is a 2-element vector, then the first element defines the pivoting tolerance for the unsymmetric UMFPACK pivoting strategy and the second for the symmetric strategy. By default, the values defined by `spparms` are used ([0.1, 0.001]).",
+      "sha": "c6fc59071a22",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Given the string argument `\"vector\"`, `lu` returns the values of *P* and *Q* as vector values, such that for full matrix, `A(P,:) = L * U`, and `R(P,:) * A(:,Q) = L * U`.",
+      "sha": "5e7c12876144",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "With two output arguments, returns the permuted forms of the upper and lower triangular matrices, such that `A = L * U`. With one output argument *y*, then the matrix returned by the LAPACK routines is returned. If the input matrix is sparse then the matrix *L* is embedded into *U* to give a return value similar to the full case. For both full and sparse matrices, `lu` loses the permutation information. See also: `luupdate`, `ilu`, `chol`, `hess`, `qr`, `qz`, `schur`, `svd`.",
+      "sha": "9ba314e03d8b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "qr",
+   "sigs": [
+    "[Q, R] = qr (A)",
+    "[Q, R, P] = qr (A)",
+    "X = qr (A)  # non-sparse A",
+    "R = qr (A)  # sparse A",
+    "X = qr (A, B) # sparse A",
+    "[C, R] = qr (A, B)",
+    "[…] = qr (…, 0)",
+    "[…] = qr (…, \"econ\")",
+    "[…] = qr (…, \"vector\")",
+    "[…] = qr (…, \"matrix\")"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the QR factorization of *A*, using standard LAPACK subroutines.",
+      "sha": "a89cb4c4dbfb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The QR factorization is $QR = A$ where $Q$ is an orthogonal matrix and $R$ is upper triangular.",
+      "sha": "fedb54ef7ea0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For example, given the matrix `A = [1, 2; 3, 4]`,",
+      "sha": "de96b9d54d89",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "[Q, R] = qr (A)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "returns",
+      "sha": "414e681ebabc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "Q =\n\n  -0.31623  -0.94868\n  -0.94868   0.31623\n\nR =\n\n  -3.16228  -4.42719\n   0.00000  -0.63246"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which multiplied together return the original matrix",
+      "sha": "f6c3c00a9ca2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "Q * R\n  ⇒\n     1.0000   2.0000\n     3.0000   4.0000"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If just a single return value is requested then it is either *R*, if *A* is sparse, or *X*, such that `R = triu (X)` if *A* is full. (Note: unlike most commands, the single return value is not the first return value when multiple values are requested.)",
+      "sha": "3734f43ee9b3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If a third output *P* is requested, then `qr` calculates the permuted QR factorization $QR = AP$ where $Q$ is an orthogonal matrix, $R$ is upper triangular, and $P$ is a permutation matrix.",
+      "sha": "b62a73156713",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *A* is dense, the permuted QR factorization has the additional property that the diagonal entries of *R* are ordered by decreasing magnitude. In other words, `abs (diag (R))` will be ordered from largest to smallest.",
+      "sha": "9717731b777b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *A* is sparse, *P* is a fill-reducing ordering of the columns of *A*. In that case, the diagonal entries of *R* are not ordered by decreasing magnitude.",
+      "sha": "dfc343865ebb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For example, given the matrix `A = [1, 2; 3, 4]`,",
+      "sha": "de96b9d54d89",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "[Q, R, P] = qr (A)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "returns",
+      "sha": "414e681ebabc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "Q =\n\n  -0.44721  -0.89443\n  -0.89443   0.44721\n\nR =\n\n  -4.47214  -3.13050\n   0.00000   0.44721\n\nP =\n\n   0  1\n   1  0"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the input matrix *A* is sparse, the sparse QR factorization is computed by using SPQR or CXSPARSE (e.g., if SPQR is not available). Because the matrix *Q* is, in general, a full matrix, it is recommended to request only one return value *R*. In that case, the computation avoids the construction of *Q* and returns a sparse *R* such that `R = chol (A' * A)`.",
+      "sha": "39a836cc665c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *A* is dense, an additional matrix *B* is supplied and two return values are requested, then `qr` returns *C*, where `C = Q' * B`. This allows the least squares approximation of `A \\ B` to be calculated as",
+      "sha": "50ad7ae121dc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "[C, R] = qr (A, B)\nX = R \\ C"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *A* is a sparse MxN matrix and an additional matrix *B* is supplied, one or two return values are possible. If one return value *X* is requested and M < N, then *X* is the minimum 2-norm solution of `A \\ B`. If M >= N, *X* is the least squares approximation of `A \\ B`. If two return values are requested, *C* and *R* have the same meaning as in the dense case (*C* is dense and *R* is sparse). The version with one return parameter should be preferred because it uses less memory and can handle rank-deficient matrices better.",
+      "sha": "fcc0d62c98a6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the final argument is the string `\"vector\"` then *P* is a permutation vector (of the columns of *A*) instead of a permutation matrix. In this case, the defining relationship is:",
+      "sha": "d90ee34ab6d0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "Q * R = A(:, P)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The default, however, is to return a permutation matrix and this may be explicitly specified by using a final argument of `\"matrix\"`.",
+      "sha": "44e55d61822d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the final argument is the scalar 0 or the string `\"econ\"`, an economy factorization is returned. If the original matrix *A* has size rows in *R* and N columns in *Q* and omit the zeros in *R*. If M N, there is no difference between the economy and standard factorizations. When calculating an economy factorization and *A* is dense, the output *P* is always a vector rather than a matrix. If *A* is sparse, output *P* is a sparse permutation matrix.",
+      "sha": "7f9fd7379f49",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Background: The QR factorization has applications in the solution of least squares problems",
+      "sha": "8a072b76d13b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\min_x \\left\\Vert A x - b \\right\\Vert_2"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for overdetermined systems of equations (i.e., $A$ is a tall, thin matrix).",
+      "sha": "8a2006ec7a30",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The permuted QR factorization `[Q, R, P] = qr (A)` allows the construction of an orthogonal basis of `span (A)`.",
+      "sha": "08054a8613f1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `chol`, `hess`, `lu`, `qz`, `schur`, `svd`, `qrupdate`, `qrinsert`, `qrdelete`, `qrshift`.",
+      "sha": "99fa53277df0",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "schur",
+   "sigs": [
+    "S = schur (A)",
+    "S = schur (A, \"real\")",
+    "S = schur (A, \"complex\")",
+    "S = schur (A, opt)",
+    "[U, S] = schur (…)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the Schur decomposition of *A*.",
+      "sha": "df5393a107e9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The Schur decomposition of a square matrix *A* is defined as",
+      "sha": "cfd8276de545",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "S = U^T A U"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where *U* is a unitary matrix ($U^T U$ is identity) and *S* is upper triangular. The eigenvalues of *A* (and *S*) are the diagonal elements of *S*. If the matrix *A* is real, then the real Schur decomposition is computed, in which the matrix *U* is orthogonal and *S* is block upper triangular with blocks of size at most $2 \\times 2$ along the diagonal.",
+      "sha": "9e1e21a1e29d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The default for real matrices is a real Schur decomposition. A complex decomposition may be forced by passing the flag `\"complex\"`.",
+      "sha": "c443f206e376",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The eigenvalues are optionally ordered along the diagonal according to the value of *opt*:",
+      "sha": "d824bd87f6ba",
+      "zh": ""
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "`opt = \"a\"`",
+        "sha": "8ce43ecbf08d",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Move eigenvalues with negative real parts to the leading block of *S*. Mnemonic: `\"a\"` for Algebraic Riccati Equations, where this ordering is useful.",
+          "sha": "cdb0d54e536e",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`opt = \"d\"`",
+        "sha": "daaac8dc2c00",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Move eigenvalues with magnitude less than one to the leading block of *S*. Mnemonic: `\"d\"` for Discrete Algebraic Riccati Equations, where this ordering is useful.",
+          "sha": "4bc3dc2b480b",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`opt = \"u\"`",
+        "sha": "c93eec222f53",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Unordered. No particular ordering of eigenvalues (default).",
+          "sha": "6f15d8561ec5",
+          "zh": ""
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The leading *k* columns of *U* always span the *A*-invariant subspace corresponding to the *k* leading eigenvalues of *S*. See also: `rsf2csf`, `ordschur`, `ordeig`, `lu`, `chol`, `hess`, `qr`, `qz`, `svd`, `eig`.",
+      "sha": "2ead1b735a04",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "svd",
+   "sigs": [
+    "s = svd (A)",
+    "[U, S, V] = svd (A)",
+    "[U, S, V] = svd (A, \"econ\")",
+    "[U, S, V] = svd (A, 0)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the singular value decomposition of *A*.",
+      "sha": "4360b01152b9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The singular value decomposition is defined by the relation",
+      "sha": "4f2591fbb468",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = U S V^{\\dagger}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The function `svd` normally returns only the vector of singular values. When called with three return values, it computes $U$, $S$, and $V$. For example,",
+      "sha": "ec01639602d2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "svd (hilb (3))"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "returns",
+      "sha": "414e681ebabc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "ans =\n\n  1.4083189\n  0.1223271\n  0.0026873"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and",
+      "sha": "cffa50a32cb1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "[u, s, v] = svd (hilb (3))"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "returns",
+      "sha": "414e681ebabc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "u =\n\n  -0.82704   0.54745   0.12766\n  -0.45986  -0.52829  -0.71375\n  -0.32330  -0.64901   0.68867\n\ns =\n\n  1.40832  0.00000  0.00000\n  0.00000  0.12233  0.00000\n  0.00000  0.00000  0.00269\n\nv =\n\n  -0.82704   0.54745   0.12766\n  -0.45986  -0.52829  -0.71375\n  -0.32330  -0.64901   0.68867"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When given a second argument that is not 0, `svd` returns an economy-sized decomposition, eliminating the unnecessary rows or columns of *U* or *V*.",
+      "sha": "6c012b8dfc4d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the second argument is exactly 0, then the choice of decomposition is based on the matrix *A*. If *A* has more rows than columns then an economy-sized decomposition is returned, otherwise a regular decomposition is calculated.",
+      "sha": "3f8dcccc1d1c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Algorithm Notes: When calculating the full decomposition (left and right singular matrices in addition to singular values) there is a choice of two routines in LAPACK. The default routine used by Octave is `gesvd`. The alternative is `gesdd` which is 5X faster, but may use more memory and may be inaccurate for some input matrices. There is a third routine `gejsv`, suitable for better accuracy at extreme scale. See the documentation for `svd_driver` for more information on choosing a driver. See also: `svd_driver`, `svds`, `eig`, `lu`, `chol`, `hess`, `qr`, `qz`.",
+      "sha": "e504b0e88b0f",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Functions of a Matrix",
+    "sha": "11b4d38b9cdf",
+    "zh": ""
+   }
+  },
+  {
+   "k": "def",
+   "name": "expm",
+   "sigs": [
+    "r = expm (A)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the exponential of a matrix.",
+      "sha": "73e3923ce3c2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix exponential is defined as the infinite Taylor series",
+      "sha": "991c11ab8c41",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\exp (A) = I + A + {A^2 \\over 2!} + {A^3 \\over 3!} + \\cdots"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "However, the Taylor series is *not* the way to compute the matrix exponential; see Moler and Van Loan, *Nineteen Dubious Ways to Compute the Exponential of a Matrix*, SIAM Review, 1978. This routine uses Ward's diagonal Pad@'e approximation method with three step preconditioning (SIAM Journal on Numerical Analysis, 1977). Diagonal Pad@'e approximations are rational polynomials of matrices $D_q(A)^{-1}N_q(A)$ whose Taylor series matches the first $2 q + 1$ terms of the Taylor series above; direct evaluation of the Taylor series (with the same preconditioning steps) may be desirable in lieu of the Pad@'e approximation when $D_q(A)$ is ill-conditioned. See also: `logm`, `sqrtm`.",
+      "sha": "f857bac4e30d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "logm",
+   "sigs": [
+    "s = logm (A)",
+    "s = logm (A, opt_iters)",
+    "[s, iters] = logm (…)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the matrix logarithm of the square matrix *A*.",
+      "sha": "a30057320fb3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The implementation utilizes a Pad@'e approximant and the identity",
+      "sha": "58f705798cef",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": " logm (A) = 2^k * logm (A^(1 / 2^k))"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional input *opt_iters* is the maximum number of square roots to compute and defaults to 100.",
+      "sha": "f805fd4a7304",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional output *iters* is the number of square roots actually computed. See also: `expm`, `sqrtm`.",
+      "sha": "8508fa2af775",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "sqrtm",
+   "sigs": [
+    "s = sqrtm (A)",
+    "[s, error_estimate] = sqrtm (A)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the matrix square root of the square matrix *A*.",
+      "sha": "a66724f877fc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Ref: N.J. Higham. *A New sqrtm for MATLAB*. Numerical Analysis Report No. 336, Manchester Centre for Computational Mathematics, Manchester, England, January 1999. See also: `expm`, `logm`.",
+      "sha": "f3a21383f190",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "kron",
+   "sigs": [
+    "C = kron (A, B)",
+    "C = kron (A1, A2, …)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Form the Kronecker product of two or more matrices.",
+      "sha": "1d7194b26da1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is defined block by block as",
+      "sha": "64ad3c2cd6f4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "c = [ a(i,j)*b ]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For example:",
+      "sha": "059c3e8cce26",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "kron (1:4, ones (3, 1))\n     ⇒  1  2  3  4\n         1  2  3  4\n         1  2  3  4"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If there are more than two input arguments *A1*, *A2*, …, *An* the Kronecker product is computed as",
+      "sha": "2e20a0458b9c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "kron (kron (A1, A2), …, An)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since the Kronecker product is associative, this is well-defined.",
+      "sha": "def2db0952bb",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "title_zh": "线性代数"
+}

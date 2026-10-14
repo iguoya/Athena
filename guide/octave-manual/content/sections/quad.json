@@ -1,0 +1,1914 @@
+{
+ "id": "quad",
+ "title_en": "Numerical Integration",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "Octave comes with several built-in functions for computing the integral of a function numerically (termed quadrature). These functions all solve 1-dimensional integration problems.",
+    "sha": "bc213aaef9c2",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Functions of One Variable",
+    "sha": "c10b79d3765a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Octave supports five different adaptive quadrature algorithms for computing the integral",
+    "sha": "b961cc1496e1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\int_a^b f(x) d x"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "of a function $f$ over the interval from $a$ to $b$. These are",
+    "sha": "cb25ea0efa56",
+    "zh": ""
+   }
+  },
+  {
+   "k": "dl",
+   "items": [
+    {
+     "term": {
+      "en": "`quad`",
+      "sha": "e1797301a0c7",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Numerical integration based on Gaussian quadrature.",
+        "sha": "3b7bae0d49e6",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`quadv`",
+      "sha": "2f6609eb2115",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Numerical integration using an adaptive vectorized Simpson's rule.",
+        "sha": "32620545ee8a",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`quadl`",
+      "sha": "fc5cade7dedc",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Numerical integration using an adaptive Lobatto rule.",
+        "sha": "c36d43591de9",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`quadgk`",
+      "sha": "d16bc02f8225",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Numerical integration using an adaptive Gauss-Konrod rule.",
+        "sha": "355d4128a9ef",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`quadcc`",
+      "sha": "68c2f072f085",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Numerical integration using adaptive Clenshaw-Curtis rules.",
+        "sha": "be3286a435d4",
+        "zh": ""
+       }
+      },
+      {
+       "k": "p",
+       "t": {
+        "en": "In addition, the following functions are also provided:",
+        "sha": "45c11b9edc04",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`integral`",
+      "sha": "d27a8e4eaec6",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "A compatibility wrapper function that will choose between `quadv` and `quadgk` depending on the integrand and options chosen.",
+        "sha": "cce214602154",
+        "zh": ""
+       }
+      }
+     ]
+    },
+    {
+     "term": {
+      "en": "`trapz, cumtrapz`",
+      "sha": "df52f9a67d2c",
+      "zh": ""
+     },
+     "blocks": [
+      {
+       "k": "p",
+       "t": {
+        "en": "Numerical integration of data using the trapezoidal method.",
+        "sha": "2e24000809e4",
+        "zh": ""
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The best quadrature algorithm to use depends on the integrand. If you have empirical data, rather than a function, the choice is `trapz` or `cumtrapz`. If you are uncertain about the characteristics of the integrand, `quadcc` will be the most robust as it can handle discontinuities, singularities, oscillatory functions, and infinite intervals. When the integrand is smooth `quadgk` may be the fastest of the algorithms.",
+    "sha": "f31549baaf27",
+    "zh": ""
+   }
+  },
+  {
+   "k": "table",
+   "spec": "grid",
+   "rows": [
+    [
+     "",
+     {
+      "en": "Function",
+      "sha": "f1e410ad1472",
+      "zh": ""
+     },
+     {
+      "en": "Characteristics",
+      "sha": "2fa17410341c",
+      "zh": ""
+     }
+    ],
+    [
+     "",
+     {
+      "en": "quad",
+      "sha": "f77f1468fdd0",
+      "zh": ""
+     },
+     {
+      "en": "Low accuracy with nonsmooth integrands",
+      "sha": "51bd1ef84a4f",
+      "zh": ""
+     }
+    ],
+    [
+     "",
+     {
+      "en": "quadv",
+      "sha": "85343e9eb6e9",
+      "zh": ""
+     },
+     {
+      "en": "Medium accuracy with smooth integrands",
+      "sha": "b93a8c7df926",
+      "zh": ""
+     }
+    ],
+    [
+     "",
+     {
+      "en": "quadl",
+      "sha": "03f049e4ae40",
+      "zh": ""
+     },
+     {
+      "en": "Medium accuracy with smooth integrands. Slower than quadgk.",
+      "sha": "6c8497d782d1",
+      "zh": ""
+     }
+    ],
+    [
+     "",
+     {
+      "en": "quadgk",
+      "sha": "e68ac6a28af0",
+      "zh": ""
+     },
+     {
+      "en": "Medium accuracy (1e-6 -- 1e-9) with smooth integrands.",
+      "sha": "62d10acbcf4c",
+      "zh": ""
+     }
+    ],
+    [
+     "",
+     "",
+     {
+      "en": "Handles oscillatory functions and infinite bounds",
+      "sha": "d48c14b11175",
+      "zh": ""
+     }
+    ],
+    [
+     "",
+     {
+      "en": "quadcc",
+      "sha": "0cc88ebdbbfd",
+      "zh": ""
+     },
+     {
+      "en": "Low to High accuracy with nonsmooth/smooth integrands",
+      "sha": "c3c3ad58b0ac",
+      "zh": ""
+     }
+    ],
+    [
+     "",
+     "",
+     {
+      "en": "Handles oscillatory functions, singularities, and infinite bounds",
+      "sha": "ab84502bf330",
+      "zh": ""
+     }
+    ]
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Here is an example of using `quad` to integrate the function $$ f(x) = x \\sin (1/x) \\sqrt {|1 - x|} $$ from $x = 0$ to $x = 3$.",
+    "sha": "cdad9a7d623d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This is a fairly difficult integration (plot the function over the range of integration to see why).",
+    "sha": "fdfc38c23b9b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The first step is to define the function:",
+    "sha": "5e201d1fe26a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "function y = f (x)\n  y = x .* sin (1./x) .* sqrt (abs (1 - x));\nendfunction"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Note the use of the ‘dot’ forms of the operators. This is not necessary for the `quad` integrator, but is required by the other integrators. In any case, it makes it much easier to generate a set of points for plotting because it is possible to call the function with a vector argument to produce a vector result.",
+    "sha": "901866baf9f5",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The second step is to call quad with the limits of integration:",
+    "sha": "5b9175078bb6",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "[q, ier, nfun, err] = quad (\"f\", 0, 3)\n     ⇒ 1.9819\n     ⇒ 1\n     ⇒ 5061\n     ⇒ 1.1522e-07"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Although `quad` returns a nonzero value for *ier*, the result is reasonably accurate (to see why, examine what happens to the result if you move the lower bound to 0.1, then 0.01, then 0.001, etc.).",
+    "sha": "ae301ac391eb",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The function `\"f\"` can be the string name of a function or a function handle. These options make it quite easy to do integration without having to fully define a function in an m-file. For example:",
+    "sha": "623c47ce95b7",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "# Verify gamma function = (n-1)! for n = 4\nf = @(x) x.^3 .* exp (-x);\nquadcc (f, 0, Inf)\n     ⇒ 6.0000"
+  },
+  {
+   "k": "def",
+   "name": "quad",
+   "sigs": [
+    "q = quad (f, a, b)",
+    "q = quad (f, a, b, tol)",
+    "q = quad (f, a, b, tol, sing)",
+    "[q, ier, nfev, err] = quad (…)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Numerically evaluate the integral of *f* from *a* to *b* using Fortran routines from QUADPACK.",
+      "sha": "17aeffa48ea1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*f* is a function handle, inline function, or a string containing the name of the function to evaluate. The function must have the form `y = f (x)` where *y* and *x* are scalars.",
+      "sha": "32c2415a5baa",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*a* and *b* are the lower and upper limits of integration. Either or both may be infinite.",
+      "sha": "fc654904e212",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional argument *tol* is a vector that specifies the desired accuracy of the result. The first element of the vector is the desired absolute tolerance, and the second element is the desired relative tolerance. To choose a relative test only, set the absolute tolerance to zero. To choose an absolute test only, set the relative tolerance to zero. Both tolerances default to `sqrt (eps)` or approximately 1.5e-8.",
+      "sha": "970d47a42a0c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional argument *sing* is a vector of values at which the integrand is known to be singular.",
+      "sha": "e3b48c8a6c3c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The result of the integration is returned in *q*.",
+      "sha": "0ebf6d0f65a2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*ier* contains an integer error code (0 indicates a successful integration).",
+      "sha": "9c5d60ff38d1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*nfev* indicates the number of function evaluations that were made.",
+      "sha": "a646a2567378",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*err* contains an estimate of the error in the solution.",
+      "sha": "0a4768c73acc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The function `quad_options` can set other optional parameters for `quad`.",
+      "sha": "53753e79941f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note: because `quad` is written in Fortran it cannot be called recursively. This prevents its use in integrating over more than one variable by routines `dblquad` and `triplequad`. See also: `quad_options`, `quadv`, `quadl`, `quadgk`, `quadcc`, `trapz`, `dblquad`, `triplequad`.",
+      "sha": "1b2b97a5d038",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "quadv",
+   "sigs": [
+    "q = quadv (f, a, b)",
+    "q = quadv (f, a, b, tol)",
+    "q = quadv (f, a, b, tol, trace)",
+    "q = quadv (f, a, b, tol, trace, p1, p2, …)",
+    "[q, nfev] = quadv (…)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Numerically evaluate the integral of *f* from *a* to *b* using an adaptive Simpson's rule.",
+      "sha": "877a44ac89f4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*f* is a function handle, inline function, or string containing the name of the function to evaluate. `quadv` is a vectorized version of `quad` and the function defined by *f* must accept a scalar or vector as input and return a scalar, vector, or array as output.",
+      "sha": "e384a134bc51",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*a* and *b* are the lower and upper limits of integration. Both limits must be finite.",
+      "sha": "c3416cd9ff3a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional argument *tol* defines the absolute tolerance used to stop the adaptation procedure. The default value is 1e-6.",
+      "sha": "a6b0b6c7bb68",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The algorithm used by `quadv` involves recursively subdividing the integration interval and applying Simpson's rule on each subinterval. If *trace* is true then after computing each of these partial integrals display: (1) the total number of function evaluations, (2) the left end of the subinterval, (3) the length of the subinterval, (4) the approximation of the integral over the subinterval.",
+      "sha": "ec8559705591",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Additional arguments *p1*, etc., are passed directly to the function *f*. To use default values for *tol* and *trace*, one may pass empty matrices ([]).",
+      "sha": "8acb93ee08e9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The result of the integration is returned in *q*.",
+      "sha": "0ebf6d0f65a2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional output *nfev* indicates the total number of function evaluations performed.",
+      "sha": "73e8fa2a1f91",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note: `quadv` is written in Octave's scripting language and can be used recursively in `dblquad` and `triplequad`, unlike the `quad` function. See also: `quad`, `quadl`, `quadgk`, `quadcc`, `trapz`, `dblquad`, `triplequad`, `integral`, `integral2`, `integral3`.",
+      "sha": "5f73b040cd89",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "quadl",
+   "sigs": [
+    "q = quadl (f, a, b)",
+    "q = quadl (f, a, b, tol)",
+    "q = quadl (f, a, b, tol, trace)",
+    "q = quadl (f, a, b, tol, trace, p1, p2, …)",
+    "[q, nfev] = quadl (…)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Numerically evaluate the integral of *f* from *a* to *b* using an adaptive Lobatto rule.",
+      "sha": "72442d0aa4ec",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*f* is a function handle, inline function, or string containing the name of the function to evaluate. The function *f* must be vectorized and return a vector of output values when given a vector of input values.",
+      "sha": "418f19dd8eea",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*a* and *b* are the lower and upper limits of integration. Both limits must be finite.",
+      "sha": "c3416cd9ff3a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional argument *tol* defines the absolute tolerance with which to perform the integration. The default value is 1e-6.",
+      "sha": "f2c28f511094",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The algorithm used by `quadl` involves recursively subdividing the integration interval. If *trace* is defined then for each subinterval display: (1) the total number of function evaluations, (2) the left end of the subinterval, (3) the length of the subinterval, (4) the approximation of the integral over the subinterval.",
+      "sha": "3123695814e9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Additional arguments *p1*, etc., are passed directly to the function *f*. To use default values for *tol* and *trace*, one may pass empty matrices ([]).",
+      "sha": "8acb93ee08e9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The result of the integration is returned in *q*.",
+      "sha": "0ebf6d0f65a2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional output *nfev* indicates the total number of function evaluations performed.",
+      "sha": "73e8fa2a1f91",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Reference: W. Gander and W. Gautschi, *Adaptive Quadrature - Revisited*, BIT Vol. 40, No. 1, March 2000, pp. 84--101. https://www.inf.ethz.ch/personal/gander/ See also: `quad`, `quadv`, `quadgk`, `quadcc`, `trapz`, `dblquad`, `triplequad`, `integral`, `integral2`, `integral3`.",
+      "sha": "310640b9f146",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "quadgk",
+   "sigs": [
+    "q = quadgk (f, a, b)",
+    "q = quadgk (f, a, b, abstol)",
+    "q = quadgk (f, a, b, abstol, trace)",
+    "q = quadgk (f, a, b, \"prop\", val, …)",
+    "[q, err] = quadgk (…)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Numerically evaluate the integral of *f* from *a* to *b* using adaptive Gauss-Kronrod quadrature.",
+      "sha": "988cefe68e08",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*f* is a function handle, inline function, or string containing the name of the function to evaluate. The function *f* must be vectorized and return a vector of output values when given a vector of input values (See property `\"ArrayValued\"` for an exception to this rule).",
+      "sha": "c137786bf893",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*a* and *b* are the lower and upper limits of integration. Either or both limits may be infinite or contain weak end singularities. Variable transformation will be used to treat any infinite intervals and weaken the singularities. For example:",
+      "sha": "8bc2cbd2d56f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": " quadgk (@(x) 1 ./ (sqrt (x) .* (x + 1)), 0, Inf)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note that the formulation of the integrand uses the element-by-element operator `./` and all user functions to `quadgk` should do the same.",
+      "sha": "9f8e97be3517",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional argument *abstol* defines the absolute tolerance used to stop the integration procedure. The default value is 1e-10 (1e-5 for single).",
+      "sha": "ab27f211d3e5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The algorithm used by `quadgk` involves subdividing the integration interval and evaluating each subinterval. If *trace* is true then after computing each of these partial integrals display: (1) the number of subintervals at this step, (2) the current estimate of the error *err*, (3) the current estimate for the integral *q*.",
+      "sha": "bb9e4a3474d4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The behavior of the algorithm can be configured by passing arguments to `quadgk` as pairs `\"prop\", val`. Valid properties are",
+      "sha": "507be4fad046",
+      "zh": ""
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "`AbsTol`",
+        "sha": "a8b2ebf2af1b",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Define the absolute error tolerance for the quadrature. The default absolute tolerance is 1e-10 (1e-5 for single).",
+          "sha": "1c10d80e4148",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`RelTol`",
+        "sha": "18ace5bfe352",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Define the relative error tolerance for the quadrature. The default relative tolerance is 1e-6 (1e-4 for single).",
+          "sha": "15ceb98f3c26",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`ArrayValued`",
+        "sha": "3a8b73d11389",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "When set to true, the function *f* produces an array output for a scalar input. The default is false which requires that *f* produce an output that is the same size as the input. For example,",
+          "sha": "03817c83581c",
+          "zh": ""
+         }
+        },
+        {
+         "k": "code",
+         "text": " quadgk (@(x) x .^ (1:5), 0, 2, \"ArrayValued\", 1)"
+        },
+        {
+         "k": "p",
+         "t": {
+          "en": "will integrate `[x.^1, x.^2, x.^3, x.^4, x.^5]` in one function call rather than having to repeatedly define a single anonymous function and use a normal invocation of `quadgk`.",
+          "sha": "3153f6ffb135",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`WayPoints`",
+        "sha": "a8f6545fb4a1",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Specify points which will become endpoints for subintervals in the algorithm which can result in significantly improved estimation of the error in the integral, faster computation, or both. It can be useful to specify more subintervals around a region where the integrand is rapidly changing or to flag locations where there is a discontinuity in the first derivative of the function. For example, the signum function has a discontinuity at `x == 0` and by specifying a waypoint",
+          "sha": "656f5947d353",
+          "zh": ""
+         }
+        },
+        {
+         "k": "code",
+         "text": " quadgk (@(x) sign (x), -0.5, 1, \"Waypoints\", [0])"
+        },
+        {
+         "k": "p",
+         "t": {
+          "en": "the error bound is reduced from 4e-7 to 1e-13.",
+          "sha": "9e20811936bd",
+          "zh": ""
+         }
+        },
+        {
+         "k": "p",
+         "t": {
+          "en": "If the function has **singularities** within the region of integration those should not be addressed with waypoints. Instead, the overall integral should be decomposed into a sum of several smaller integrals such that the singularity occurs as one of the bounds of integration in the call to `quadgk`.",
+          "sha": "c68dc87a1a50",
+          "zh": ""
+         }
+        },
+        {
+         "k": "p",
+         "t": {
+          "en": "If any of the waypoints are complex then contour integration is performed as documented below.",
+          "sha": "7bdd8b2ab6d5",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`MaxIntervalCount`",
+        "sha": "1f60dcd69293",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "`quadgk` initially subdivides the interval on which to perform the quadrature into 10 intervals or, if WayPoints are given, at each waypoint. Subintervals that have an unacceptable error are subdivided and re-evaluated. If the number of subintervals exceeds 650 subintervals at any point then a poor convergence is signaled and the current estimate of the integral is returned. The property `\"MaxIntervalCount\"` can be used to alter the number of subintervals that can exist before exiting.",
+          "sha": "65667a38a34d",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`Trace`",
+        "sha": "850c3c182337",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "If logically true `quadgk` prints information on the convergence of the quadrature at each iteration.",
+          "sha": "2076b20df7cc",
+          "zh": ""
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If any of *a*, *b*, or *waypoints* is complex then the quadrature is treated as a contour integral along a piecewise linear path defined by `[a, waypoints(1), waypoints(2), …, b]`. In this case the integral is assumed to have no edge singularities. For example,",
+      "sha": "c92079e6df31",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": " quadgk (@(z) log (z), 1+1i, 1+1i, \"WayPoints\",\n         [-1+1i, -1-1i, +1-1i])"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "integrates `log (z)` along the square defined by `[1+1i, -1+1i, -1-1i, +1-1i]`.",
+      "sha": "48fb9033b877",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The result of the integration is returned in *q*.",
+      "sha": "0ebf6d0f65a2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*err* is an approximate bound on the error in the integral `abs (q - I)`, where *I* is the exact value of the integral. If the adaptive integration did not converge, the value of *err* will be larger than the requested tolerance. If only a single output is requested then a warning will be emitted when the requested tolerance is not met. If the second output *err* is requested then no warning is issued and it is the responsibility of the programmer to inspect and determine whether the results are satisfactory.",
+      "sha": "a1bebc6efa93",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Reference: L.F. Shampine, *\"Vectorized adaptive quadrature in MATLAB\"*, Journal of Computational and Applied Mathematics, pp. 131--140, Vol 211, Issue 2, Feb 2008.",
+      "sha": "716b2bec5929",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `quad`, `quadv`, `quadl`, `quadcc`, `trapz`, `dblquad`, `triplequad`, `integral`, `integral2`, `integral3`.",
+      "sha": "ed3e801aa515",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "quadcc",
+   "sigs": [
+    "q = quadcc (f, a, b)",
+    "q = quadcc (f, a, b, tol)",
+    "q = quadcc (f, a, b, tol, sing)",
+    "[q, err, nr_points] = quadcc (…)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Numerically evaluate the integral of *f* from *a* to *b* using doubly-adaptive Clenshaw-Curtis quadrature.",
+      "sha": "917a6b272ac1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*f* is a function handle, inline function, or string containing the name of the function to evaluate. The function *f* must be vectorized and must return a vector of output values if given a vector of input values. For example,",
+      "sha": "7810331ea9db",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "f = @(x) x .* sin (1./x) .* sqrt (abs (1 - x));"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which uses the element-by-element “dot” form for all operators.",
+      "sha": "05b851c3c502",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*a* and *b* are the lower and upper limits of integration. Either or both limits may be infinite. `quadcc` handles an infinite limit by substituting the variable of integration with `x = tan (pi/2*u)`.",
+      "sha": "09271a3c082a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional argument *tol* is a 1- or 2-element vector that specifies the desired accuracy of the result. The first element of the vector is the desired absolute tolerance, and the second element is the desired relative tolerance. To choose a relative test only, set the absolute tolerance to zero. To choose an absolute test only, set the relative tolerance to zero. The default absolute tolerance is 1e-10 (1e-5 for single), and the default relative tolerance is 1e-6 (1e-4 for single).",
+      "sha": "f83cecbdffc9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional argument *sing* contains a list of points where the integrand has known singularities, or discontinuities in any of its derivatives, inside the integration interval. For the example above, which has a discontinuity at x=1, the call to `quadcc` would be as follows",
+      "sha": "3e36f6b7229d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": "int = quadcc (f, a, b, [], [ 1 ]);"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The result of the integration is returned in *q*.",
+      "sha": "0ebf6d0f65a2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*err* is an estimate of the absolute integration error.",
+      "sha": "98a5bad39393",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*nr_points* is the number of points at which the integrand was evaluated.",
+      "sha": "2caeb9a2539b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the adaptive integration did not converge, the value of *err* will be larger than the requested tolerance. If only a single output is requested then a warning will be emitted when the requested tolerance is not met. If the second output *err* is requested then no warning is issued and it is the responsibility of the programmer to inspect and determine whether the results are satisfactory.",
+      "sha": "0ba4da115782",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`quadcc` is capable of dealing with non-numeric values of the integrand such as `NaN` or `Inf`. If the integral diverges, and `quadcc` detects this, then a warning is issued and `Inf` or `-Inf` is returned.",
+      "sha": "f2be1461395d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note: `quadcc` is a general purpose quadrature algorithm and, as such, may be less efficient for a smooth or otherwise well-behaved integrand than other methods such as `quadgk`.",
+      "sha": "10938df2540f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The algorithm uses Clenshaw-Curtis quadrature rules of increasing degree in each interval and bisects the interval if either the function does not appear to be smooth or a rule of maximum degree has been reached. The error estimate is computed from the L2-norm of the difference between two successive interpolations of the integrand over the nodes of the respective quadrature rules.",
+      "sha": "c1944e095f0d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Reference: P. Gonnet, *Increasing the Reliability of Adaptive Quadrature Using Explicit Interpolants*, ACM Transactions on Mathematical Software, Vol. 37, Issue 3, Article No. 3, 2010. See also: `quad`, `quadv`, `quadl`, `quadgk`, `trapz`, `dblquad`, `triplequad`.",
+      "sha": "361ba0b8172d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "integral",
+   "sigs": [
+    "q = integral (f, a, b)",
+    "q = integral (f, a, b, prop, val, …)",
+    "[q, err] = integral (…)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Numerically evaluate the integral of *f* from *a* to *b* using adaptive quadrature.",
+      "sha": "ad7f5085529b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`integral` is a wrapper for `quadcc` (general real-valued, scalar integrands and limits), and `quadgk` (integrals with specified integration paths and array-valued integrands) that is intended to provide MATLAB compatibility. More control of the numerical integration may be achievable by calling the various quadrature functions directly.",
+      "sha": "e0506f491fc8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*f* is a function handle, inline function, or string containing the name of the function to evaluate. The function *f* must be vectorized and return a vector of output values when given a vector of input values.",
+      "sha": "418f19dd8eea",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*a* and *b* are the lower and upper limits of integration. Either or both limits may be infinite or contain weak end singularities. If either or both limits are complex, `integral` will perform a straight line path integral. Alternatively, a complex domain path can be specified using the `\"Waypoints\"` option (see below).",
+      "sha": "7c35dd61000a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Additional optional parameters can be specified using `\"property\", value` pairs. Valid properties are:",
+      "sha": "fd9a801fb211",
+      "zh": ""
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "`Waypoints`",
+        "sha": "e4e0ad146a38",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Specifies points to be used in defining subintervals of the quadrature algorithm, or if *a*, *b*, or *waypoints* are complex then the quadrature is calculated as a contour integral along a piecewise continuous path. For more detail, `quadgk`.",
+          "sha": "d24ce815295d",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`ArrayValued`",
+        "sha": "3a8b73d11389",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "`integral` expects *f* to return a scalar value unless *arrayvalued* is specified as true. This option will cause `integral` to perform the integration over the entire array and return *q* with the same dimensions as returned by *f*. For more detail `quadgk`.",
+          "sha": "336912b7554d",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`AbsTol`",
+        "sha": "a8b2ebf2af1b",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Define the absolute error tolerance for the quadrature. The default absolute tolerance is 1e-10 (1e-5 for single).",
+          "sha": "1c10d80e4148",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`RelTol`",
+        "sha": "18ace5bfe352",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Define the relative error tolerance for the quadrature. The default relative tolerance is 1e-6 (1e-4 for single).",
+          "sha": "15ceb98f3c26",
+          "zh": ""
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional output *err* contains the absolute error estimate used by the called integrator.",
+      "sha": "01a7b51f44af",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Adaptive quadrature is used to minimize the estimate of error until the following is satisfied:",
+      "sha": "8277c41fb8ab",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "error \\leq \\max \\left( AbsTol, RelTol\\cdot\\vert q\\vert \\right)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Known MATLAB incompatibilities:",
+      "sha": "d537d285e58b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If tolerances are left unspecified, and any integration limits or waypoints are of type `single`, then Octave's integral functions automatically reduce the default absolute and relative error tolerances as specified above. If tighter tolerances are desired they must be specified. MATLAB leaves the tighter tolerances appropriate for `double` inputs in place regardless of the class of the integration limits.",
+         "sha": "ee03258df758",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `integral2`, `integral3`, `quad`, `quadgk`, `quadv`, `quadl`, `quadcc`, `trapz`, `dblquad`, `triplequad`.",
+      "sha": "2a44dbf96ea4",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Sometimes one does not have the function, but only the raw (x, y) points from which to perform an integration. This can occur when collecting data in an experiment. The `trapz` function can integrate these values as shown in the following example where \"data\" has been collected on the cosine function over the range [0, pi/2).",
+    "sha": "898576d66602",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "x = 0:0.1:pi/2;  # Uniformly spaced points\ny = cos (x);\ntrapz (x, y)\n     ⇒ 0.99666"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The answer is reasonably close to the exact value of 1. Ordinary quadrature is sensitive to the characteristics of the integrand. Empirical integration depends not just on the integrand, but also on the particular points chosen to represent the function. Repeating the example above with the sine function over the range [0, pi/2) produces far inferior results.",
+    "sha": "361b36c20d35",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "x = 0:0.1:pi/2;  # Uniformly spaced points\ny = sin (x);\ntrapz (x, y)\n     ⇒ 0.92849"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "However, a slightly different choice of data points can change the result significantly. The same integration, with the same number of points, but spaced differently produces a more accurate answer.",
+    "sha": "d0fa4a235177",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "x = linspace (0, pi/2, 16);  # Uniformly spaced, but including endpoint\ny = sin (x);\ntrapz (x, y)\n     ⇒ 0.99909"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In general there may be no way of knowing the best distribution of points ahead of time. Or the points may come from an experiment where there is no freedom to select the best distribution. In any case, one must remain aware of this issue when using `trapz`.",
+    "sha": "f6e20bde3327",
+    "zh": ""
+   }
+  },
+  {
+   "k": "def",
+   "name": "trapz",
+   "sigs": [
+    "q = trapz (y)",
+    "q = trapz (x, y)",
+    "q = trapz (…, dim)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Numerically evaluate the integral of points *y* using the trapezoidal method.",
+      "sha": "5b50a2c3ee6a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`trapz (y)` computes the integral of *y* along the first non-singleton dimension. When the argument *x* is omitted an equally spaced *x* vector with unit spacing (1) is assumed. `trapz (x, y)` evaluates the integral with respect to the spacing in *x* and the values in *y*. This is useful if the points in *y* have been sampled unevenly.",
+      "sha": "ea8ae64dbe05",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the optional *dim* argument is given, operate along this dimension.",
+      "sha": "1d3583a1451d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Application Note: If *x* is not specified then unit spacing will be used. To scale the integral to the correct value you must multiply by the actual spacing value (deltaX). As an example, the integral of $x^3$ over the range [0, 1] is $x^4/4$ or 0.25. The following code uses `trapz` to calculate the integral in three different ways.",
+      "sha": "92f926d4b81f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": " x = 0:0.1:1;\n y = x.^3;\n ## No scaling\n q = trapz (y)\n   ⇒ q = 2.5250\n ## Approximation to integral by scaling\n q * 0.1\n   ⇒ 0.25250\n ## Same result by specifying x\n trapz (x, y)\n   ⇒ 0.25250"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `cumtrapz`.",
+      "sha": "f89710ce49dc",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "cumtrapz",
+   "sigs": [
+    "q = cumtrapz (y)",
+    "q = cumtrapz (x, y)",
+    "q = cumtrapz (…, dim)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Cumulative numerical integration of points *y* using the trapezoidal method.",
+      "sha": "4daf26ad6fa0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`cumtrapz (y)` computes the cumulative integral of *y* along the first non-singleton dimension. Where `trapz` reports only the overall integral sum, `cumtrapz` reports the current partial sum value at each point of *y*.",
+      "sha": "253a49b1b9c1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When the argument *x* is omitted an equally spaced *x* vector with unit spacing (1) is assumed. `cumtrapz (x, y)` evaluates the integral with respect to the spacing in *x* and the values in *y*. This is useful if the points in *y* have been sampled unevenly.",
+      "sha": "aabebc5d97a4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the optional *dim* argument is given, operate along this dimension.",
+      "sha": "1d3583a1451d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Application Note: If *x* is not specified then unit spacing will be used. To scale the integral to the correct value you must multiply by the actual spacing value (deltaX). See also: `trapz`, `cumsum`.",
+      "sha": "4c7eeb3d9d5b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Functions of Multiple Variables",
+    "sha": "7630c503450c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Octave includes several functions for computing the integral of functions of multiple variables. This procedure can generally be performed by creating a function that integrates $f$ with respect to $x$, and then integrates that function with respect to $y$. This procedure can be performed manually using the following example which integrates the function:",
+    "sha": "c250fab4fff0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "f(x, y) = \\sin(\\pi x y)\\sqrt{x y}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "for $x$ and $y$ between 0 and 1.",
+    "sha": "1904ec4ef406",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Using `quadgk` in the example below, a double integration can be performed. (Note that any of the 1-D quadrature functions can be used in this fashion except for `quad` since it is written in Fortran and cannot be called recursively.)",
+    "sha": "89ce6ea386db",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "function q = g(y)\n  q = ones (size (y));\n  for i = 1:length (y)\n    f = @(x) sin (pi*x.*y(i)) .* sqrt (x.*y(i));\n    q(i) = quadgk (f, 0, 1);\n  endfor\nendfunction\n\nI = quadgk (\"g\", 0, 1)\n      ⇒ 0.30022"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The algorithm above is implemented in the function `dblquad` for integrals over two variables. The 3-D equivalent of this process is implemented in `triplequad` for integrals over three variables. As an example, the result above can be replicated with a call to `dblquad` as shown below.",
+    "sha": "cd98ec86c3e3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "I = dblquad (@(x, y) sin (pi*x.*y) .* sqrt (x.*y), 0, 1, 0, 1)\n      ⇒ 0.30022"
+  },
+  {
+   "k": "def",
+   "name": "dblquad",
+   "sigs": [
+    "q = dblquad (f, xa, xb, ya, yb)",
+    "q = dblquad (f, xa, xb, ya, yb, tol)",
+    "q = dblquad (f, xa, xb, ya, yb, tol, quadf)",
+    "q = dblquad (f, xa, xb, ya, yb, tol, quadf, …)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Numerically evaluate the double integral of *f*.",
+      "sha": "350f602cb554",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*f* is a function handle, inline function, or string containing the name of the function to evaluate. The function *f* must have the form $z = f(x,y)$ where *x* is a vector and *y* is a scalar. It should return a vector of the same length and orientation as *x*.",
+      "sha": "7620d5feaf08",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*xa*, *ya* and *xb*, *yb* are the lower and upper limits of integration for x and y respectively. The underlying integrator determines whether infinite bounds are accepted.",
+      "sha": "b501e45a46d6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional argument *tol* defines the absolute tolerance used to integrate each sub-integral. The default value is 1e-6.",
+      "sha": "2f78ef47493b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional argument *quadf* specifies which underlying integrator function to use. Any choice but `quad` is available and the default is `quadcc`.",
+      "sha": "0fd04334b1e3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Additional arguments, are passed directly to *f*. To use the default value for *tol* or *quadf* one may pass `':'` or an empty matrix ([]). See also: `integral2`, `integral3`, `triplequad`, `quad`, `quadv`, `quadl`, `quadgk`, `quadcc`, `trapz`.",
+      "sha": "26e42b5df4e5",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The recursive algorithm for quadrature presented above is referred to as `\"iterated\"`. A separate 2-D integration method is implemented in the function `quad2d`. This function performs a `\"tiled\"` integration by subdividing the integration domain into rectangular regions and performing separate integrations over those domains. The domains are further subdivided in areas requiring refinement to reach the desired numerical accuracy. For certain functions this method can be faster than the 2-D iteration used in the other functions above.",
+    "sha": "15b71732b44c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Finally, the functions `integral2` and `integral3` are provided as general 2-D and 3-D integration functions. They will auto-select between iterated and tiled integration methods and, unlike `dblquad` and `triplequad`, will work with non-rectangular integration domains.",
+    "sha": "016b01ccf058",
+    "zh": ""
+   }
+  },
+  {
+   "k": "def",
+   "name": "integral2",
+   "sigs": [
+    "q = integral2 (f, xa, xb, ya, yb)",
+    "q = integral2 (f, xa, xb, ya, yb, prop, val, …)",
+    "[q, err] = integral2 (…)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Numerically evaluate the two-dimensional integral of *f* using adaptive quadrature over the two-dimensional domain defined by *xa*, *xb*, *ya*, *yb* (scalars may be finite or infinite). Additionally, *ya* and *yb* may be scalar functions of *x*, allowing for integration over non-rectangular domains.",
+      "sha": "ee3683d14f40",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*f* is a function handle, inline function, or string containing the name of the function to evaluate. The function *f* must be of the form $z = f(x,y)$ where *x* is a vector and *y* is a scalar. It should return a vector of the same length and orientation as *x*.",
+      "sha": "4c8cc6f889ce",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Additional optional parameters can be specified using `\"property\", value` pairs. Valid properties are:",
+      "sha": "fd9a801fb211",
+      "zh": ""
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "`AbsTol`",
+        "sha": "a8b2ebf2af1b",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Define the absolute error tolerance for the quadrature. The default value is 1e-10 (1e-5 for single).",
+          "sha": "0a5d1f6ce7b3",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`RelTol`",
+        "sha": "18ace5bfe352",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Define the relative error tolerance for the quadrature. The default value is 1e-6 (1e-4 for single).",
+          "sha": "09d5b3a21324",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`Method`",
+        "sha": "63affcbc406f",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Specify the two-dimensional integration method to be used, with valid options being `\"auto\"` (default), `\"tiled\"`, or `\"iterated\"`. When using `\"auto\"`, Octave will choose the `\"tiled\"` method unless any of the integration limits are infinite.",
+          "sha": "76f13478e261",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`Vectorized`",
+        "sha": "900c2043c619",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Enable or disable vectorized integration. A value of `false` forces Octave to use only scalar inputs when calling the integrand, which enables integrands $f(x,y)$ that have not been vectorized and only accept *x* and *y* as scalars to be used. The default value is `true`.",
+          "sha": "e71b7f3f48a5",
+          "zh": ""
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Adaptive quadrature is used to minimize the estimate of error until the following is satisfied:",
+      "sha": "8277c41fb8ab",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "error \\leq \\max \\left( AbsTol, RelTol\\cdot\\vert q\\vert \\right)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*err* is an approximate bound on the error in the integral `abs (q - I)`, where *I* is the exact value of the integral.",
+      "sha": "5ffa447cb464",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Example 1 : integrate a rectangular region in x-y plane",
+      "sha": "9fa880544bca",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": " f = @(x,y) 2*ones (size (x));\n q = integral2 (f, 0, 1, 0, 1)\n   ⇒ q =  2"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The result is a volume, which for this constant-value integrand, is just `Length * Width * Height`.",
+      "sha": "6bc4f4a2bd6e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Example 2 : integrate a triangular region in x-y plane",
+      "sha": "30560da7085e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": " f = @(x,y) 2*ones (size (x));\n ymax = @(x) 1 - x;\n q = integral2 (f, 0, 1, 0, ymax)\n   ⇒ q =  1"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The result is a volume, which for this constant-value integrand, is the Triangle Area x Height or `1/2 * Base * Width * Height`.",
+      "sha": "65cd1a4ab9c1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Programming Notes: If there are singularities within the integration region it is best to split the integral and place the singularities on the boundary.",
+      "sha": "9cc9f43744a0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Known MATLAB incompatibility: If tolerances are left unspecified, and any integration limits are of type `single`, then Octave's integral functions automatically reduce the default absolute and relative error tolerances as specified above. If tighter tolerances are desired they must be specified. MATLAB leaves the tighter tolerances appropriate for `double` inputs in place regardless of the class of the integration limits.",
+      "sha": "f66a4ad5402c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Reference: L.F. Shampine, *MATLAB program for quadrature in 2D*, Applied Mathematics and Computation, pp. 266--274, Vol 1, 2008.",
+      "sha": "5a165cc78e82",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `quad2d`, `dblquad`, `integral`, `quad`, `quadgk`, `quadv`, `quadl`, `quadcc`, `trapz`, `integral3`, `triplequad`.",
+      "sha": "681f8935cb7c",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "integral3",
+   "sigs": [
+    "q = integral3 (f, xa, xb, ya, yb, za, zb)",
+    "q = integral3 (f, xa, xb, ya, yb, za, zb, prop, val, …)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Numerically evaluate the three-dimensional integral of *f* using adaptive quadrature over the three-dimensional domain defined by *xa*, *xb*, *ya*, *yb*, *za*, *zb* (scalars may be finite or infinite). Additionally, *ya* and *yb* may be scalar functions of *x* and *za*, and *zb* maybe be scalar functions of *x* and *y*, allowing for integration over non-rectangular domains.",
+      "sha": "808b29428dc9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*f* is a function handle, inline function, or string containing the name of the function to evaluate. The function *f* must be of the form $z = f(x,y)$ where *x* is a vector and *y* is a scalar. It should return a vector of the same length and orientation as *x*.",
+      "sha": "4c8cc6f889ce",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Additional optional parameters can be specified using `\"property\", value` pairs. Valid properties are:",
+      "sha": "fd9a801fb211",
+      "zh": ""
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "`AbsTol`",
+        "sha": "a8b2ebf2af1b",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Define the absolute error tolerance for the quadrature. The default value is 1e-10 (1e-5 for single).",
+          "sha": "0a5d1f6ce7b3",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`RelTol`",
+        "sha": "18ace5bfe352",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Define the relative error tolerance for the quadrature. The default value is 1e-6 (1e-4 for single).",
+          "sha": "09d5b3a21324",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`Method`",
+        "sha": "63affcbc406f",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Specify the two-dimensional integration method to be used, with valid options being `\"auto\"` (default), `\"tiled\"`, or `\"iterated\"`. When using `\"auto\"`, Octave will choose the `\"tiled\"` method unless any of the integration limits are infinite.",
+          "sha": "76f13478e261",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`Vectorized`",
+        "sha": "900c2043c619",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Enable or disable vectorized integration. A value of `false` forces Octave to use only scalar inputs when calling the integrand, which enables integrands $f(x,y)$ that have not been vectorized and only accept *x* and *y* as scalars to be used. The default value is `true`.",
+          "sha": "e71b7f3f48a5",
+          "zh": ""
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Adaptive quadrature is used to minimize the estimate of error until the following is satisfied:",
+      "sha": "8277c41fb8ab",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "error \\leq \\max \\left( AbsTol, RelTol\\cdot\\vert q\\vert \\right)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*err* is an approximate bound on the error in the integral `abs (q - I)`, where *I* is the exact value of the integral.",
+      "sha": "5ffa447cb464",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Example 1 : integrate over a rectangular volume",
+      "sha": "78f60d2f8a0b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": " f = @(x,y,z) ones (size (x));\n q = integral3 (f, 0, 1, 0, 1, 0, 1)\n   ⇒ q =  1.00000"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For this constant-value integrand, the result is a volume which is just `Length * Width * Height`.",
+      "sha": "c52a486b0692",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Example 2 : integrate over a spherical volume",
+      "sha": "b2c75ce654c4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": " f = @(x,y) ones (size (x));\n ymax = @(x) sqrt (1 - x.^2);\n zmax = @(x,y) sqrt (1 - x.^2 - y.^2);\n q = integral3 (f, 0, 1, 0, ymax, 0, zmax)\n   ⇒ q =  0.52360"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For this constant-value integrand, the result is a volume which is 1/8th of a unit sphere or `1/8 * 4/3 * pi`.",
+      "sha": "e01af58e894e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Programming Notes: If there are singularities within the integration region it is best to split the integral and place the singularities on the boundary.",
+      "sha": "9cc9f43744a0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Known MATLAB incompatibility: If tolerances are left unspecified, and any integration limits are of type `single`, then Octave's integral functions automatically reduce the default absolute and relative error tolerances as specified above. If tighter tolerances are desired they must be specified. MATLAB leaves the tighter tolerances appropriate for `double` inputs in place regardless of the class of the integration limits.",
+      "sha": "f66a4ad5402c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Reference: L.F. Shampine, *MATLAB program for quadrature in 2D*, Applied Mathematics and Computation, pp. 266--274, Vol 1, 2008.",
+      "sha": "5a165cc78e82",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `triplequad`, `integral`, `quad`, `quadgk`, `quadv`, `quadl`, `quadcc`, `trapz`, `integral2`, `quad2d`, `dblquad`.",
+      "sha": "50e9ae45862d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The above integrations can be fairly slow, and that problem increases exponentially with the dimensionality of the integral. Another possible solution for 2-D integration is to use Orthogonal Collocation as described in the previous section (see Orthogonal Collocation). The integral of a function $f(x,y)$ for $x$ and $y$ between 0 and 1 can be approximated using $n$ points by",
+    "sha": "756cba14a00f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\int_0^1 \\int_0^1 f(x,y) d x d y \\approx \\sum_{i=1}^n \\sum_{j=1}^n q_i q_j f(r_i, r_j),"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "where $q$ and $r$ is as returned by `colloc (n)`. The generalization to more than two variables is straight forward. The following code computes the studied integral using $n=8$ points.",
+    "sha": "3d8c2f4e7075",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "f = @(x,y) sin (pi*x*y') .* sqrt (x*y');\nn = 8;\n[t, ~, ~, q] = colloc (n);\nI = q'*f(t,t)*q;\n      ⇒ 0.30022"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It should be noted that the number of points determines the quality of the approximation. If the integration needs to be performed between $a$ and $b$, instead of 0 and 1, then a change of variables is needed.",
+    "sha": "7b8c62f00b01",
+    "zh": ""
+   }
+  }
+ ],
+ "title_zh": "数值积分"
+}

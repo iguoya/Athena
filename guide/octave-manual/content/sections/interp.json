@@ -1,0 +1,594 @@
+{
+ "id": "interp",
+ "title_en": "Interpolation",
+ "blocks": [
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "One-dimensional Interpolation",
+    "sha": "dc3ac91f24ed",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Octave supports several methods for one-dimensional interpolation, most of which are described in this section. Polynomial Interpolation and Interpolation on Scattered Data describe additional methods.",
+    "sha": "6a1cc5c594e8",
+    "zh": ""
+   }
+  },
+  {
+   "k": "def",
+   "name": "interp1",
+   "sigs": [
+    "yi = interp1 (x, y, xi)",
+    "yi = interp1 (y, xi)",
+    "yi = interp1 (…, method)",
+    "yi = interp1 (…, extrap)",
+    "yi = interp1 (…, \"left\")",
+    "yi = interp1 (…, \"right\")",
+    "pp = interp1 (…, \"pp\")"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "One-dimensional interpolation.",
+      "sha": "8ed1c8b84160",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Interpolate input data to determine the value of *yi* at the points *xi*. If not specified, *x* is taken to be the indices of *y* (`1:length (y)`). If *y* is a matrix or an N-dimensional array, the interpolation is performed on each column of *y*.",
+      "sha": "dc65b5b10202",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The interpolation *method* is one of:",
+      "sha": "17088d4a06dc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "`\"nearest\"`",
+        "sha": "cfae8e33e302",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Return the nearest neighbor.",
+          "sha": "09401f2fbdee",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`\"previous\"`",
+        "sha": "15493482f6a6",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Return the previous neighbor.",
+          "sha": "d576e54653fc",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`\"next\"`",
+        "sha": "8708b1f6f675",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Return the next neighbor.",
+          "sha": "76b2a7051932",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`\"linear\"` (default)",
+        "sha": "ac56ca032e77",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Linear interpolation from nearest neighbors.",
+          "sha": "36c5d1785acc",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`\"pchip\"`",
+        "sha": "b18ca4274232",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Piecewise cubic Hermite interpolating polynomial—shape-preserving interpolation with smooth first derivative.",
+          "sha": "c714d8013acc",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`\"cubic\"`",
+        "sha": "fd2f7900f841",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Cubic interpolation (same as `\"pchip\"`).",
+          "sha": "e88554bfa562",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`\"spline\"`",
+        "sha": "2b11d43db5c9",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Cubic spline interpolation—smooth first and second derivatives throughout the curve.",
+          "sha": "bc3787780bd8",
+          "zh": ""
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Adding '*' to the start of any method above forces `interp1` to assume that *x* is uniformly spaced, and only `x(1)` and `x(2)` are referenced. This is usually faster, and is never slower. The default method is `\"linear\"`.",
+      "sha": "5dfcb9cbdb1f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *extrap* is the string `\"extrap\"`, then extrapolate values beyond the endpoints using the current *method*. If *extrap* is a number, then replace values beyond the endpoints with that number. When unspecified, *extrap* defaults to `NA`.",
+      "sha": "44c379a6057f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the string argument `\"pp\"` is specified, then *xi* should not be supplied and `interp1` returns a piecewise polynomial object. This object can later be used with `ppval` to evaluate the interpolation. There is an equivalence, such that `ppval (interp1 (x, y, method, \"pp\"), xi) == interp1 (x, y, xi, method, \"extrap\")`.",
+      "sha": "a9d93b74cbb6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Duplicate points in *x* specify a discontinuous interpolant. There may be at most 2 consecutive points with the same value. If *x* is increasing, the default discontinuous interpolant is right-continuous. If *x* is decreasing, the default discontinuous interpolant is left-continuous. The continuity condition of the interpolant may be specified by using the options `\"left\"` or `\"right\"` to select a left-continuous or right-continuous interpolant, respectively. Discontinuous interpolation is only allowed for `\"nearest\"` and `\"linear\"` methods; in all other cases, the *x*-values must be unique.",
+      "sha": "a58fe0cdab47",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "An example of the use of `interp1` is",
+      "sha": "4aa97682cff8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "code",
+     "text": " xf = [0:0.05:10];\n yf = sin (2*pi*xf/5);\n xp = [0:10];\n yp = sin (2*pi*xp/5);\n lin = interp1 (xp, yp, xf);\n near = interp1 (xp, yp, xf, \"nearest\");\n pch = interp1 (xp, yp, xf, \"pchip\");\n spl = interp1 (xp, yp, xf, \"spline\");\n plot (xf,yf,\"r\", xf,near,\"g\", xf,lin,\"b\", xf,pch,\"c\", xf,spl,\"m\",\n       xp,yp,\"r*\");\n legend (\"original\", \"nearest\", \"linear\", \"pchip\", \"spline\");"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `pchip`, `spline`, `interpft`, `interp2`, `interp3`, `interpn`.",
+      "sha": "624a199b7375",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There are some important differences between the various interpolation methods. The `\"spline\"` method enforces that both the first and second derivatives of the interpolated values have a continuous derivative, whereas the other methods do not. This means that the results of the `\"spline\"` method are generally smoother. If the function to be interpolated is in fact smooth, then `\"spline\"` will give excellent results. However, if the function to be evaluated is in some manner discontinuous, then `\"pchip\"` interpolation might give better results.",
+    "sha": "e4abca9e3ae2",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This can be demonstrated by the code",
+    "sha": "fdab6097b81d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "t = -2:2;\ndt = 1;\nti =-2:0.025:2;\ndti = 0.025;\ny = sign (t);\nys = interp1 (t,y,ti,\"spline\");\nyp = interp1 (t,y,ti,\"pchip\");\nddys = diff (diff (ys)./dti) ./ dti;\nddyp = diff (diff (yp)./dti) ./ dti;\nfigure (1);\nplot (ti,ys,\"r-\", ti,yp,\"g-\");\nlegend (\"spline\", \"pchip\", 4);\nfigure (2);\nplot (ti,ddys,\"r+\", ti,ddyp,\"g*\");\nlegend (\"spline\", \"pchip\");"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The result of which can be seen in fig:interpderiv1 and fig:interpderiv2.",
+    "sha": "9640313d9076",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Fourier interpolation, is a resampling technique where a signal is converted to the frequency domain, padded with zeros and then reconverted to the time domain.",
+    "sha": "6678225f59e5",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There are two significant limitations on Fourier interpolation. First, the function signal is assumed to be periodic, and so non-periodic signals will be poorly represented at the edges. Second, both the signal and its interpolation are required to be sampled at equispaced points. An example of the use of `interpft` is",
+    "sha": "6237c5337cad",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "t = 0 : 0.3 : pi; dt = t(2)-t(1);\nn = length (t); k = 100;\nti = t(1) + [0 : k-1]*dt*n/k;\ny = sin (4*t + 0.3) .* cos (3*t - 0.1);\nyp = sin (4*ti + 0.3) .* cos (3*ti - 0.1);\nplot (ti, yp, \"g\", ti, interp1 (t, y, ti, \"spline\"), \"b\", ...\n      ti, interpft (y, k), \"c\", t, y, \"r+\");\nlegend (\"sin(4t+0.3)cos(3t-0.1)\", \"spline\", \"interpft\", \"data\");"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "which demonstrates the poor behavior of Fourier interpolation for non-periodic functions, as can be seen in fig:interpft.",
+    "sha": "480cca2b4643",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In addition, the support functions `spline` and `lookup` that underlie the `interp1` function can be called directly.",
+    "sha": "b14dca0eba8a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "def",
+   "name": "spline",
+   "sigs": [
+    "pp = spline (x, y)",
+    "yi = spline (x, y, xi)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the cubic spline interpolant of points *x* and *y*.",
+      "sha": "cef3f95b4a9f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with two arguments, return the piecewise polynomial *pp* that may be used with `ppval` to evaluate the polynomial at specific points.",
+      "sha": "1a7ec45c358a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with a third input argument, `spline` evaluates the spline at the points *xi*. The third calling form `spline (x, y, xi)` is equivalent to `ppval (spline (x, y), xi)`.",
+      "sha": "5fca112bb2f0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The variable *x* must be a vector of length *n*.",
+      "sha": "1ee0051c7fd8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*y* can be either a vector or array. If *y* is a vector it must have a length of either *n* or `n + 2`. If the length of *y* is *n*, then the `\"not-a-knot\"` end condition is used. If the length of *y* is `n + 2`, then the first and last values of the vector *y* are the values of the first derivative of the cubic spline at the endpoints.",
+      "sha": "29337704cbc2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *y* is an array, then the size of *y* must have the form",
+      "sha": "d4a28ccd2802",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[s_1, s_2, \\cdots, s_k, n]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "or",
+      "sha": "1758356db217",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[s_1, s_2, \\cdots, s_k, n + 2]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The array is reshaped internally to a matrix where the leading dimension is given by",
+      "sha": "e9577b6a546e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "s_1 s_2 \\cdots s_k"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and each row of this matrix is then treated separately. Note that this is exactly the opposite of `interp1` but is done for MATLAB compatibility.",
+      "sha": "139787dbf32d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `pchip`, `ppval`, `mkpp`, `unmkpp`.",
+      "sha": "094545765d7f",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Multi-dimensional Interpolation",
+    "sha": "5348b693bb31",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There are three multi-dimensional interpolation functions in Octave, with similar capabilities. Methods using Delaunay tessellation are described in Interpolation on Scattered Data.",
+    "sha": "27fe031e5d0d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "def",
+   "name": "interp2",
+   "sigs": [
+    "zi = interp2 (x, y, z, xi, yi)",
+    "zi = interp2 (z, xi, yi)",
+    "zi = interp2 (z, n)",
+    "zi = interp2 (z)",
+    "zi = interp2 (…, method)",
+    "zi = interp2 (…, method, extrap)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Two-dimensional interpolation.",
+      "sha": "d2b642896980",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Interpolate reference data *x*, *y*, *z* to determine *zi* at the coordinates *xi*, *yi*. The reference data *x*, *y* can be matrices, as returned by `meshgrid`, in which case the sizes of *x*, *y*, and *z* must be equal. If *x*, *y* are vectors describing a grid then `length (x) == columns (z)` and `length (y) == rows (z)`. In either case the input data must be strictly monotonic.",
+      "sha": "9a86073c801c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If called without *x*, *y*, and just a single reference data matrix *z*, the 2-D region `x = 1:columns (z), y = 1:rows (z)` is assumed. This saves memory if the grid is regular and the distance between points is not important.",
+      "sha": "f05440c8ce8b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If called with a single reference data matrix *z* and a refinement value *n*, then perform interpolation over a grid where each original interval has been recursively subdivided *n* times. This results in `2^n-1` additional points for every interval in the original grid. If *n* is omitted a value of 1 is used. As an example, the interval [0,1] with `n==2` results in a refined interval with points at [0, 1/4, 1/2, 3/4, 1].",
+      "sha": "db7ee2575313",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The interpolation *method* is one of:",
+      "sha": "17088d4a06dc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "`\"nearest\"`",
+        "sha": "cfae8e33e302",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Return the nearest neighbor.",
+          "sha": "09401f2fbdee",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`\"linear\"` (default)",
+        "sha": "ac56ca032e77",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Linear interpolation from nearest neighbors.",
+          "sha": "36c5d1785acc",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`\"pchip\"`",
+        "sha": "b18ca4274232",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Piecewise cubic Hermite interpolating polynomial—shape-preserving interpolation with smooth first derivative.",
+          "sha": "c714d8013acc",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`\"cubic\"`",
+        "sha": "fd2f7900f841",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Cubic interpolation using a convolution kernel function—third order method with smooth first derivative.",
+          "sha": "f05b7432d333",
+          "zh": ""
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`\"spline\"`",
+        "sha": "2b11d43db5c9",
+        "zh": ""
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Cubic spline interpolation—smooth first and second derivatives throughout the curve.",
+          "sha": "bc3787780bd8",
+          "zh": ""
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*extrap* is a scalar number. It replaces values beyond the endpoints with *extrap*. Note that if *extrap* is used, *method* must be specified as well. If *extrap* is omitted and the *method* is `\"spline\"`, then the extrapolated values of the `\"spline\"` are used. Otherwise the default *extrap* value for any other *method* is `\"NA\"`. See also: `interp1`, `interp3`, `interpn`, `meshgrid`.",
+      "sha": "90de1c692e27",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A significant difference between `interpn` and the other two multi-dimensional interpolation functions is the fashion in which the dimensions are treated. For `interp2` and `interp3`, the y-axis is considered to be the columns of the matrix, whereas the x-axis corresponds to the rows of the array. As Octave indexes arrays in column major order, the first dimension of any array is the columns, and so `interpn` effectively reverses the 'x' and 'y' dimensions. Consider the example,",
+    "sha": "4688475e10cc",
+    "zh": ""
+   }
+  },
+  {
+   "k": "code",
+   "text": "x = y = z = -1:1;\nf = @(x,y,z) x.^2 - y - z.^2;\n[xx, yy, zz] = meshgrid (x, y, z);\nv = f (xx,yy,zz);\nxi = yi = zi = -1:0.1:1;\n[xxi, yyi, zzi] = meshgrid (xi, yi, zi);\nvi = interp3 (x, y, z, v, xxi, yyi, zzi, \"spline\");\n[xxi, yyi, zzi] = ndgrid (xi, yi, zi);\nvi2 = interpn (x, y, z, v, xxi, yyi, zzi, \"spline\");\nmesh (zi, yi, squeeze (vi2(1,:,:)));"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "where `vi` and `vi2` are identical. The reversal of the dimensions is treated in the `meshgrid` and `ndgrid` functions respectively. The result of this code can be seen in fig:interpn.",
+    "sha": "6df56c0de581",
+    "zh": ""
+   }
+  }
+ ],
+ "title_zh": "插值"
+}
