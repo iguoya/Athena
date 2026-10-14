@@ -1,1 +1,7 @@
-export { PAPER_STYLE, MAP_TOKENS } from "./paper-style";
+export {
+  PAPER_STYLE,
+  MAP_TOKENS,
+  POWER_COLORS,
+  powerColor,
+  powerEdgeColor,
+} from "./paper-style";

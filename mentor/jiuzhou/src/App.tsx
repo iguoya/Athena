@@ -8,7 +8,12 @@ import MapGl, {
 } from "react-map-gl/maplibre";
 import { AnimatePresence, motion } from "motion/react";
 import { cn } from "@/lib/utils";
-import { PAPER_STYLE, MAP_TOKENS } from "@athena/maps/index.ts";
+import {
+  PAPER_STYLE,
+  MAP_TOKENS,
+  powerColor,
+  powerEdgeColor,
+} from "@athena/maps/index.ts";
 import coastlineJson from "../../../packages/maps/geo/coastline.json";
 import landJson from "../../../packages/maps/geo/land.json";
 import countriesJson from "../../../packages/maps/geo/countries.json";
@@ -240,6 +245,10 @@ export default function App() {
   const mapRef = useRef<MapRef>(null);
   const mapBoxRef = useRef<HTMLDivElement>(null);
   const [academicPick, setAcademicPick] = useState<AcademicProps | null>(null);
+  /** T-019：暗角与纸纹，默认开 */
+  const [paperAmbience, setPaperAmbience] = useState(true);
+  /** 势力名标签随缩放淡出 */
+  const [mapZoom, setMapZoom] = useState(CHINA_VIEW.zoom);
   const yearRef = useRef(year);
   const holdUntilRef = useRef(0);
   const territoryModeRef = useRef<string | null>(null);
@@ -583,7 +592,7 @@ export default function App() {
       out.push({
         place,
         power: p.power ?? "",
-        color: p.color ?? MAP_TOKENS.territory,
+        color: powerColor(p.power, p.color ?? MAP_TOKENS.territory),
         capitalName: p.capital ?? placeNameAt(place, displayYear),
       });
     }
@@ -746,10 +755,30 @@ export default function App() {
         lon: sx / n,
         lat: sy / n,
         power: p.power,
-        color: p.color ?? MAP_TOKENS.territory,
+        color: powerColor(p.power, p.color ?? MAP_TOKENS.territory),
       });
     }
     return out;
+  }, [territoryData]);
+
+  /** T-019：注入 POWER_COLORS，供 fill 表达式读取 */
+  const territoryPaintData = useMemo(() => {
+    if (!territoryData) return null;
+    return {
+      type: "FeatureCollection" as const,
+      features: territoryData.features.map((f) => {
+        const p = (f.properties ?? {}) as TerrProps;
+        const color = powerColor(p.power, p.color ?? MAP_TOKENS.territory);
+        return {
+          ...f,
+          properties: {
+            ...p,
+            color,
+            edge: powerEdgeColor(color),
+          },
+        };
+      }),
+    };
   }, [territoryData]);
 
   const [drawerLeft, setDrawerLeft] = useState(false);
@@ -1670,7 +1699,7 @@ export default function App() {
             <p className="mb-1 px-2 text-xs tracking-widest text-muted">
               图层
             </p>
-            <label className="mb-3 flex cursor-pointer items-center gap-2 px-2 text-xs">
+            <label className="mb-1 flex cursor-pointer items-center gap-2 px-2 text-xs">
               <input
                 type="checkbox"
                 checked={showCapitals}
@@ -1683,6 +1712,15 @@ export default function App() {
                   · {liveCapitals.mains.length} 主都
                 </span>
               )}
+            </label>
+            <label className="mb-3 flex cursor-pointer items-center gap-2 px-2 text-xs">
+              <input
+                type="checkbox"
+                checked={paperAmbience}
+                onChange={(e) => setPaperAmbience(e.target.checked)}
+                className="accent-[var(--accent)]"
+              />
+              纸本质感
             </label>
             <p className="mb-1 px-2 text-xs tracking-widest text-muted">
               主题叙事
@@ -1753,8 +1791,11 @@ export default function App() {
             ]}
             cursor="pointer"
             onLoad={() => {
-              mapRef.current?.getMap()?.resize();
+              const m = mapRef.current?.getMap();
+              m?.resize();
+              if (m) setMapZoom(m.getZoom());
             }}
+            onMove={(e) => setMapZoom(e.viewState.zoom)}
             onClick={(e) => {
               const arc = e.features?.find(
                 (x) => x.layer?.id === "leads-arc-line",
@@ -1834,9 +1875,10 @@ export default function App() {
                 id="country-line"
                 type="line"
                 paint={{
-                  "line-color": MAP_TOKENS.coast,
-                  "line-width": 0.6,
-                  "line-opacity": 0.35,
+                  "line-color": MAP_TOKENS.countryLine,
+                  "line-width": 0.8,
+                  "line-opacity": 0.45,
+                  "line-dasharray": [2, 1.5],
                 }}
               />
             </Source>
@@ -1865,6 +1907,36 @@ export default function App() {
             </Source>
             <Source id="coast" type="geojson" data={coastline}>
               <Layer
+                id="coast-glow-wide"
+                type="line"
+                paint={{
+                  "line-color": "#e8f2f4",
+                  "line-width": 14,
+                  "line-blur": 10,
+                  "line-opacity": 0.28,
+                }}
+              />
+              <Layer
+                id="coast-glow-mid"
+                type="line"
+                paint={{
+                  "line-color": "#d0e4e8",
+                  "line-width": 8,
+                  "line-blur": 7,
+                  "line-opacity": 0.38,
+                }}
+              />
+              <Layer
+                id="coast-glow-near"
+                type="line"
+                paint={{
+                  "line-color": "#b8d4da",
+                  "line-width": 3,
+                  "line-blur": 4,
+                  "line-opacity": 0.5,
+                }}
+              />
+              <Layer
                 id="coast-line"
                 type="line"
                 paint={{
@@ -1879,21 +1951,43 @@ export default function App() {
                 id="lakes-fill"
                 type="fill"
                 paint={{
-                  "fill-color": MAP_TOKENS.sea,
-                  "fill-opacity": 0.85,
+                  "fill-color": MAP_TOKENS.lake,
+                  "fill-opacity": 0.75,
                 }}
               />
               <Layer
                 id="lakes-line"
                 type="line"
                 paint={{
-                  "line-color": MAP_TOKENS.river,
-                  "line-width": 0.6,
-                  "line-opacity": 0.5,
+                  "line-color": MAP_TOKENS.lakeLine,
+                  "line-width": 0.7,
+                  "line-opacity": 0.6,
                 }}
               />
             </Source>
             <Source id="hydro" type="geojson" data={hydro}>
+              <Layer
+                id="hydro-rivers-casing"
+                type="line"
+                filter={["!=", ["get", "kind"], "canal"]}
+                paint={{
+                  "line-color": "#ffffff",
+                  "line-width": [
+                    "case",
+                    [
+                      "in",
+                      ["get", "id"],
+                      [
+                        "literal",
+                        ["huanghe", "changjiang", "huaihe", "zhujiang"],
+                      ],
+                    ],
+                    3.6,
+                    2.2,
+                  ],
+                  "line-opacity": 0.55,
+                }}
+              />
               <Layer
                 id="hydro-rivers"
                 type="line"
@@ -1908,10 +2002,22 @@ export default function App() {
                   "line-width": [
                     "case",
                     ["in", ["get", "id"], ["literal", [...litHydro]]],
-                    3.4,
-                    1.7,
+                    3.2,
+                    [
+                      "case",
+                      [
+                        "in",
+                        ["get", "id"],
+                        [
+                          "literal",
+                          ["huanghe", "changjiang", "huaihe", "zhujiang"],
+                        ],
+                      ],
+                      2.4,
+                      1.2,
+                    ],
                   ],
-                  "line-opacity": 0.78,
+                  "line-opacity": 0.85,
                 }}
               />
               <Layer
@@ -1996,8 +2102,8 @@ export default function App() {
                 }}
               />
             </Source>
-            {territoryData && territoryMode === "snapshot" && (
-              <Source id="territory" type="geojson" data={territoryData}>
+            {territoryPaintData && territoryMode === "snapshot" && (
+              <Source id="territory" type="geojson" data={territoryPaintData}>
                 <Layer
                   id="territory-fill"
                   type="fill"
@@ -2007,7 +2113,17 @@ export default function App() {
                       ["get", "color"],
                       MAP_TOKENS.territory,
                     ],
-                    "fill-opacity": 0.28,
+                    /** 半透明叠在地形上，近似 multiply 透底 */
+                    "fill-opacity": 0.5,
+                  }}
+                />
+                <Layer
+                  id="territory-gap"
+                  type="line"
+                  paint={{
+                    "line-color": MAP_TOKENS.page,
+                    "line-width": 2.2,
+                    "line-opacity": 0.9,
                   }}
                 />
                 <Layer
@@ -2016,30 +2132,39 @@ export default function App() {
                   paint={{
                     "line-color": [
                       "coalesce",
+                      ["get", "edge"],
                       ["get", "color"],
                       MAP_TOKENS.territory,
                     ],
-                    "line-width": 1.8,
-                    "line-opacity": 0.75,
+                    "line-width": 1.7,
+                    "line-opacity": 0.9,
                   }}
                 />
               </Source>
             )}
-            {territoryData && territoryMode === "schematic" && (
-              <Source id="territory-schematic" type="geojson" data={territoryData}>
+            {territoryPaintData && territoryMode === "schematic" && (
+              <Source id="territory-schematic" type="geojson" data={territoryPaintData}>
                 <Layer
                   id="territory-schematic-fill"
                   type="fill"
                   paint={{
-                    "fill-color": MAP_TOKENS.territory,
-                    "fill-opacity": 0.06,
+                    "fill-color": [
+                      "coalesce",
+                      ["get", "color"],
+                      MAP_TOKENS.territory,
+                    ],
+                    "fill-opacity": 0.14,
                   }}
                 />
                 <Layer
                   id="territory-schematic-line"
                   type="line"
                   paint={{
-                    "line-color": MAP_TOKENS.territory,
+                    "line-color": [
+                      "coalesce",
+                      ["get", "edge"],
+                      MAP_TOKENS.territory,
+                    ],
                     "line-width": 1.2,
                     "line-opacity": 0.45,
                     "line-dasharray": [2.5, 2],
@@ -2090,21 +2215,27 @@ export default function App() {
                 />
               </Source>
             )}
-            {powerCentroids.map((c) => (
-              <Marker
-                key={`power-${c.power}-${c.lon}`}
-                longitude={c.lon}
-                latitude={c.lat}
-                anchor="center"
-              >
-                <span
-                  className="pointer-events-none rounded px-1.5 py-0.5 text-[10px] font-semibold text-white/95 shadow-sm"
-                  style={{ backgroundColor: c.color, opacity: 0.88 }}
+            {mapZoom < 5.8 &&
+              powerCentroids.map((c) => (
+                <Marker
+                  key={`power-${c.power}-${c.lon}`}
+                  longitude={c.lon}
+                  latitude={c.lat}
+                  anchor="center"
                 >
-                  {c.power}
-                </span>
-              </Marker>
-            ))}
+                  <span
+                    className="pointer-events-none select-none text-[13px] font-semibold tracking-[0.28em]"
+                    style={{
+                      color: c.color,
+                      opacity: mapZoom < 4.2 ? 0.92 : Math.max(0.25, 0.92 - (mapZoom - 4.2) * 0.35),
+                      textShadow:
+                        "0 0 2px #f3efe6, 1px 0 0 #f3efe6, -1px 0 0 #f3efe6, 0 1px 0 #f3efe6, 0 -1px 0 #f3efe6, 1px 1px 0 #f3efe6, -1px -1px 0 #f3efe6",
+                    }}
+                  >
+                    {c.power}
+                  </span>
+                </Marker>
+              ))}
             {marchRouteData.features.length > 0 && (
               <Source id="march-routes" type="geojson" data={marchRouteData}>
                 <Layer
@@ -2326,11 +2457,19 @@ export default function App() {
                   >
                     <span
                       className={cn(
-                        "mt-1 flex max-w-[9rem] flex-col items-center rounded px-1 py-0.5 text-center leading-tight shadow-sm",
+                        "mt-1 flex max-w-[9rem] flex-col items-center rounded px-1 py-0.5 text-center leading-tight",
                         active
-                          ? "bg-accent text-white"
-                          : "bg-page/90 text-ink",
+                          ? "bg-accent text-white shadow-sm"
+                          : "bg-transparent text-ink",
                       )}
+                      style={
+                        active
+                          ? undefined
+                          : {
+                              textShadow:
+                                "0 0 2px #f3efe6, 1px 0 0 #f3efe6, -1px 0 0 #f3efe6, 0 1px 0 #f3efe6, 0 -1px 0 #f3efe6",
+                            }
+                      }
                     >
                       <span className="truncate text-[11px] font-medium">
                         {name}
@@ -2392,6 +2531,24 @@ export default function App() {
                 示意
               </span>
             </div>
+          )}
+          {paperAmbience && (
+            <>
+              <div
+                className="pointer-events-none absolute inset-0 z-[4]"
+                style={{
+                  background:
+                    "radial-gradient(ellipse at center, transparent 42%, rgba(42,33,24,0.12) 100%)",
+                }}
+              />
+              <div
+                className="pointer-events-none absolute inset-0 z-[4] opacity-[0.05] mix-blend-multiply"
+                style={{
+                  backgroundImage:
+                    "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E\")",
+                }}
+              />
+            </>
           )}
           {academicPick && (
             <div className="absolute bottom-28 left-4 z-10 max-w-xs rounded-md border border-line bg-surface/95 px-3 py-2 shadow-md">
