@@ -25,6 +25,12 @@
  意图整体改变时，该应用可在自己的 ADR 里声明对 `id` 不改嫁的重组豁免，并须在重组前打
  `pre-<id>-reorg` tag；出处与语义基准不在豁免之列。目前只有 `machine`（原 `c`）。
 
+- **互联网上能找到的数据，一律默认公域（ADR 0159）**：Athena 是自用软件。资料、数据集、
+  真题、地图矢量只要网上能找到，就直接进仓库、直接参与构建，不查许可证、不为授权设计
+  「只放本机」「本机可选」「有则叠、无则降级」之类的分流机制，也不以授权为由拒绝入库或
+  反复提醒。出处照记（ADR 0043 底线不变）。体积过大（整本 PDF、GGUF 模型等）按工程理由
+  决定放哪，不是授权理由。
+
 ## 仓库结构
 
 完整说明（名字对照表、三类判据的全文）见 [docs/REPOSITORY.md](docs/REPOSITORY.md)。
@@ -40,7 +46,8 @@ postgraduate/<id>/ 考研应用（ADR 0149）：cs408（408 考试主应用）�
                 os、network 兼作软设承接章
 guide/<id>/     手册类教程：跟随一本外部手册/官方教程精读，首批 gtkmm（ADR 0143）
 mentor/<id>/    导师类（图谱/参考类）：polaris（路线图与指南针）、competitions（「大赛」圈的赛历，
-                ADR 0114）；给方向和查阅依据，不教课、不建进度库（ADR 0144）
+                ADR 0114）、jiuzhou（「兴趣」圈的九州历史地理图鉴，ADR 0156）；给方向和查阅
+                依据，不教课、不建进度库（ADR 0144）
 practice/<id>/  项目应用：pocket_cube nas_admin c-gui-lab（ADR 0060）、earth（真实比例的
                 地球分层 3D 可视化，自 subjects/ 迁入，ADR 0128）、cpp（旧 gtkmm 窗口，ADR 0141）
 certification/  考证应用：driver（驾考，ADR 0142）、software（软件设计师）、

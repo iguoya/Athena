@@ -1,0 +1,7268 @@
+{
+  "_": "九州图鉴。year 公元前为负；疆域见 territories.json（示意）。主轴七大政治秩序阶段（蒙元并入唐宋多元段）。深度：爱好者中高档。",
+  "eras": [
+    {
+      "id": "origins",
+      "title": "文明起源与早期国家",
+      "from": -2000,
+      "to": -771,
+      "blurb": "二里头—殷墟—西周的连续与断裂：青铜礼器、都邑迁移与「天命」话语，把黄河中游织成早期国家的核心区；此时尚无后世那种可调度全国的郡县帝国。",
+      "territoryId": "origins-core"
+    },
+    {
+      "id": "warring-unify",
+      "title": "列国争霸与第一次统一",
+      "from": -770,
+      "to": -207,
+      "blurb": "从「礼乐征伐自天子出」崩解，到商鞅变法、合纵连横与秦并六国：统一不是自然终点，而是关中资源动员术对山东列国的制度性压倒。",
+      "territoryId": "qin-empire"
+    },
+    {
+      "id": "qin-han",
+      "title": "秦汉帝国秩序",
+      "from": -221,
+      "to": 220,
+      "blurb": "郡县、编户、长城与西域经营把「帝国」做成可复制的模板；新莽、党锢与黄巾则暴露同一模板的财政—边防—地方豪强三角危机。",
+      "territoryId": "han-empire"
+    },
+    {
+      "id": "division-rebuild",
+      "title": "分裂与重建",
+      "from": 220,
+      "to": 907,
+      "blurb": "人口与士族南渡改写经济地理；北朝胡汉制度实验与隋唐再统一，把「正统」与「天下秩序」重新接到长安—洛阳轴上，并溢出到东亚朝贡网络。",
+      "territoryId": "tang-empire"
+    },
+    {
+      "id": "tang-song-plural",
+      "title": "唐宋变革·多元与蒙元",
+      "from": 907,
+      "to": 1368,
+      "blurb": "科举、募兵与运河城市改变国家与社会接合；辽夏金与两宋并立之后，蒙元以行省、站赤与跨区域帝国机器完成再整合。多元并存与强制统一，同属这一长段的政治地理课题，而不是两个互不相关的故事。",
+      "territoryId": "song-plural"
+    },
+    {
+      "id": "ming-qing",
+      "title": "明清帝制晚期",
+      "from": 1368,
+      "to": 1840,
+      "blurb": "两京、卫所/八旗、边疆军府与海洋贸易并存：帝制国家在陆上达到空间经营的高峰，同时在全球白银与军事技术变迁面前逐渐失去规则制定权。",
+      "territoryId": "qing-empire"
+    },
+    {
+      "id": "modern",
+      "title": "近代转型",
+      "from": 1840,
+      "to": 1949,
+      "blurb": "条约口岸、铁路与新式军队改写权力空间；从「天下」到「主权国家」的概念革命，比任何单场战役都更持久地重绘地图的含义。",
+      "territoryId": "qing-late"
+    }
+  ],
+  "places": [
+    {
+      "id": "anyang",
+      "modern": "安阳",
+      "lon": 114.39,
+      "lat": 36.1,
+      "tier": "capital",
+      "names": [
+        {
+          "from": -1300,
+          "to": -1046,
+          "name": "殷",
+          "also": [
+            "大邑商"
+          ]
+        },
+        {
+          "from": -1046,
+          "name": "相州",
+          "also": [
+            "邺"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "luoyang",
+      "modern": "洛阳",
+      "lon": 112.45,
+      "lat": 34.62,
+      "tier": "capital",
+      "names": [
+        {
+          "from": -1100,
+          "to": -256,
+          "name": "洛邑",
+          "also": [
+            "成周"
+          ]
+        },
+        {
+          "from": -256,
+          "to": 960,
+          "name": "洛阳",
+          "also": [
+            "雒阳"
+          ]
+        },
+        {
+          "from": 960,
+          "name": "洛阳"
+        }
+      ],
+      "role": "伊洛盆地「天下之中」，兼顾关中形胜与关东人力财赋的双都东端。"
+    },
+    {
+      "id": "xianyang",
+      "modern": "咸阳",
+      "lon": 108.709,
+      "lat": 34.33,
+      "tier": "capital",
+      "names": [
+        {
+          "from": -350,
+          "to": 25,
+          "name": "咸阳"
+        }
+      ]
+    },
+    {
+      "id": "changan",
+      "modern": "西安",
+      "lon": 108.94,
+      "lat": 34.26,
+      "tier": "capital",
+      "names": [
+        {
+          "from": -1046,
+          "to": -202,
+          "name": "镐京",
+          "also": [
+            "宗周"
+          ]
+        },
+        {
+          "from": -202,
+          "to": 904,
+          "name": "长安",
+          "also": [
+            "京兆"
+          ]
+        },
+        {
+          "from": 904,
+          "to": 1369,
+          "name": "京兆"
+        },
+        {
+          "from": 1369,
+          "to": 1912,
+          "name": "西安",
+          "also": [
+            "奉元"
+          ]
+        },
+        {
+          "from": 1912,
+          "name": "西安"
+        }
+      ],
+      "role": "关中盆地核心都城，四塞形胜与渭河粮道交汇；帝国「形胜侧」政治中心的长期坐标。"
+    },
+    {
+      "id": "handan",
+      "modern": "邯郸",
+      "lon": 114.49,
+      "lat": 36.61,
+      "tier": "metropolis",
+      "names": [
+        {
+          "from": -400,
+          "to": -228,
+          "name": "邯郸"
+        },
+        {
+          "from": -228,
+          "name": "邯郸"
+        }
+      ]
+    },
+    {
+      "id": "linzi",
+      "modern": "淄博临淄",
+      "lon": 118.3,
+      "lat": 36.82,
+      "tier": "metropolis",
+      "names": [
+        {
+          "from": -800,
+          "to": -221,
+          "name": "临淄"
+        }
+      ]
+    },
+    {
+      "id": "ying",
+      "modern": "荆州江陵",
+      "lon": 112.19,
+      "lat": 30.33,
+      "tier": "capital",
+      "names": [
+        {
+          "from": -700,
+          "to": -278,
+          "name": "郢"
+        },
+        {
+          "from": -278,
+          "name": "江陵",
+          "also": [
+            "荆州"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "xianyang_pass_hangu",
+      "modern": "灵宝（函谷）",
+      "lon": 110.88,
+      "lat": 34.52,
+      "tier": "pass",
+      "names": [
+        {
+          "from": -400,
+          "to": 220,
+          "name": "函谷关"
+        },
+        {
+          "from": 220,
+          "name": "潼关附近"
+        }
+      ],
+      "role": "函谷—潼关一线的关中东部门户示意点。"
+    },
+    {
+      "id": "hangu",
+      "modern": "灵宝（函谷关一带）",
+      "lon": 110.88,
+      "lat": 34.52,
+      "tier": "pass",
+      "names": [
+        {
+          "from": -400,
+          "to": 220,
+          "name": "函谷关"
+        }
+      ],
+      "role": "先秦至汉仰攻关中的经典关塞（与函谷叙事同线）。"
+    },
+    {
+      "id": "wuguan",
+      "modern": "丹凤（武关）",
+      "lon": 110.34,
+      "lat": 33.7,
+      "tier": "pass",
+      "names": [
+        {
+          "from": -300,
+          "name": "武关"
+        }
+      ]
+    },
+    {
+      "id": "xiaoguan",
+      "modern": "固原（萧关）",
+      "lon": 106.28,
+      "lat": 36.0,
+      "tier": "pass",
+      "names": [
+        {
+          "from": -200,
+          "name": "萧关"
+        }
+      ]
+    },
+    {
+      "id": "jiuyuan",
+      "modern": "包头西",
+      "lon": 109.8,
+      "lat": 40.6,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": -215,
+          "name": "九原"
+        }
+      ]
+    },
+    {
+      "id": "dunhuang",
+      "modern": "敦煌",
+      "lon": 94.66,
+      "lat": 40.14,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": -111,
+          "name": "敦煌"
+        }
+      ],
+      "role": "河西走廊西端绿洲，丝路总枢纽与敦煌文书所代表的走廊社会。"
+    },
+    {
+      "id": "wuwei",
+      "modern": "武威",
+      "lon": 102.63,
+      "lat": 37.93,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": -121,
+          "to": 600,
+          "name": "姑臧",
+          "also": [
+            "武威"
+          ]
+        },
+        {
+          "from": 600,
+          "name": "凉州",
+          "also": [
+            "武威"
+          ]
+        }
+      ],
+      "role": "河西四郡东段，走廊屯田与驿站链的起点性节点。"
+    },
+    {
+      "id": "zhangye",
+      "modern": "张掖",
+      "lon": 100.45,
+      "lat": 38.93,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": -111,
+          "name": "张掖"
+        }
+      ]
+    },
+    {
+      "id": "jiuquan",
+      "modern": "酒泉",
+      "lon": 98.51,
+      "lat": 39.74,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": -111,
+          "name": "酒泉"
+        }
+      ]
+    },
+    {
+      "id": "louyang_hebei_ye",
+      "modern": "临漳（邺）",
+      "lon": 114.6,
+      "lat": 36.35,
+      "tier": "capital",
+      "names": [
+        {
+          "from": -200,
+          "to": 580,
+          "name": "邺"
+        },
+        {
+          "from": 580,
+          "name": "相州"
+        }
+      ]
+    },
+    {
+      "id": "ye",
+      "modern": "临漳（邺城）",
+      "lon": 114.6,
+      "lat": 36.35,
+      "tier": "capital",
+      "names": [
+        {
+          "from": 204,
+          "to": 580,
+          "name": "邺"
+        }
+      ]
+    },
+    {
+      "id": "jiankang",
+      "modern": "南京",
+      "lon": 118.8,
+      "lat": 32.06,
+      "tier": "capital",
+      "names": [
+        {
+          "from": -210,
+          "to": 212,
+          "name": "秣陵",
+          "also": [
+            "金陵"
+          ]
+        },
+        {
+          "from": 212,
+          "to": 282,
+          "name": "建业",
+          "also": [
+            "石头城"
+          ]
+        },
+        {
+          "from": 282,
+          "to": 313,
+          "name": "建邺"
+        },
+        {
+          "from": 313,
+          "to": 589,
+          "name": "建康"
+        },
+        {
+          "from": 937,
+          "to": 975,
+          "name": "金陵"
+        },
+        {
+          "from": 1368,
+          "to": 1421,
+          "name": "应天",
+          "also": [
+            "南京"
+          ]
+        },
+        {
+          "from": 1421,
+          "to": 1912,
+          "name": "南京",
+          "also": [
+            "江宁"
+          ]
+        },
+        {
+          "from": 1912,
+          "name": "南京"
+        }
+      ],
+      "role": "长江下游石头城—秦淮河城市带，南渡法统与江南财赋的接合点。"
+    },
+    {
+      "id": "chengdu",
+      "modern": "成都",
+      "lon": 104.06,
+      "lat": 30.67,
+      "tier": "capital",
+      "names": [
+        {
+          "from": -300,
+          "name": "成都",
+          "also": [
+            "益州"
+          ]
+        }
+      ],
+      "role": "成都平原天府粮仓，巴蜀盆地的政治与补给中心。"
+    },
+    {
+      "id": "xiangyang",
+      "modern": "襄阳",
+      "lon": 112.14,
+      "lat": 32.04,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": -200,
+          "name": "襄阳"
+        }
+      ],
+      "role": "汉水中游南北对峙锁钥（与襄樊同址不同条目时互参）。"
+    },
+    {
+      "id": "jiangling",
+      "modern": "荆州",
+      "lon": 112.19,
+      "lat": 30.33,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": -278,
+          "name": "江陵",
+          "also": [
+            "荆州"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "yangzhou",
+      "modern": "扬州",
+      "lon": 119.42,
+      "lat": 32.39,
+      "tier": "metropolis",
+      "names": [
+        {
+          "from": -100,
+          "to": 589,
+          "name": "广陵"
+        },
+        {
+          "from": 589,
+          "name": "扬州"
+        }
+      ],
+      "role": "运河与长江交汇的盐漕都会，「扬一益二」的江淮心脏。"
+    },
+    {
+      "id": "suzhou",
+      "modern": "苏州",
+      "lon": 120.62,
+      "lat": 31.3,
+      "tier": "metropolis",
+      "names": [
+        {
+          "from": -500,
+          "to": 589,
+          "name": "吴"
+        },
+        {
+          "from": 589,
+          "to": 1229,
+          "name": "苏州",
+          "also": [
+            "吴郡"
+          ]
+        },
+        {
+          "from": 1229,
+          "name": "平江",
+          "also": [
+            "苏州"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hangzhou",
+      "modern": "杭州",
+      "lon": 120.15,
+      "lat": 30.25,
+      "tier": "metropolis",
+      "names": [
+        {
+          "from": 589,
+          "to": 1129,
+          "name": "杭州"
+        },
+        {
+          "from": 1129,
+          "to": 1276,
+          "name": "临安"
+        },
+        {
+          "from": 1276,
+          "name": "杭州"
+        }
+      ],
+      "role": "钱塘江口与江南水网都市，南宋行在与海陆贸易腹地。"
+    },
+    {
+      "id": "kaifeng",
+      "modern": "开封",
+      "lon": 114.35,
+      "lat": 34.8,
+      "tier": "capital",
+      "names": [
+        {
+          "from": 781,
+          "to": 960,
+          "name": "汴州"
+        },
+        {
+          "from": 960,
+          "to": 1127,
+          "name": "东京",
+          "also": [
+            "汴京",
+            "开封"
+          ]
+        },
+        {
+          "from": 1127,
+          "name": "开封"
+        }
+      ],
+      "role": "汴河漕运帝都，运河补给型国家的空间标本。"
+    },
+    {
+      "id": "luoyang_tang",
+      "modern": "洛阳",
+      "lon": 112.45,
+      "lat": 34.62,
+      "tier": "capital",
+      "names": [
+        {
+          "from": 605,
+          "to": 907,
+          "name": "东都",
+          "also": [
+            "洛阳"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "taiyuan",
+      "modern": "太原",
+      "lon": 112.55,
+      "lat": 37.87,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": -200,
+          "to": 618,
+          "name": "晋阳"
+        },
+        {
+          "from": 618,
+          "name": "太原",
+          "also": [
+            "北都"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "datong",
+      "modern": "大同",
+      "lon": 113.3,
+      "lat": 40.08,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": 398,
+          "to": 494,
+          "name": "平城"
+        },
+        {
+          "from": 1044,
+          "name": "西京",
+          "also": [
+            "大同"
+          ]
+        }
+      ],
+      "role": "大同盆地云中/西京，农牧交接带的军镇与辽金西京传统。"
+    },
+    {
+      "id": "yinchuan",
+      "modern": "银川",
+      "lon": 106.23,
+      "lat": 38.49,
+      "tier": "capital",
+      "names": [
+        {
+          "from": 1038,
+          "to": 1227,
+          "name": "兴庆",
+          "also": [
+            "中兴"
+          ]
+        },
+        {
+          "from": 1227,
+          "name": "宁夏"
+        }
+      ],
+      "role": "贺兰山东麓兴庆府，西夏立国的河套—宁夏地理底座。"
+    },
+    {
+      "id": "liaoyang",
+      "modern": "辽阳",
+      "lon": 123.17,
+      "lat": 41.27,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": 918,
+          "to": 1125,
+          "name": "东京",
+          "also": [
+            "辽阳"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shenyang",
+      "modern": "沈阳",
+      "lon": 123.43,
+      "lat": 41.8,
+      "tier": "capital",
+      "names": [
+        {
+          "from": 1625,
+          "to": 1644,
+          "name": "盛京",
+          "also": [
+            "沈阳"
+          ]
+        },
+        {
+          "from": 1644,
+          "name": "盛京"
+        }
+      ]
+    },
+    {
+      "id": "dadu",
+      "modern": "北京",
+      "lon": 116.4,
+      "lat": 39.9,
+      "tier": "capital",
+      "names": [
+        {
+          "from": 938,
+          "to": 1122,
+          "name": "南京",
+          "also": [
+            "幽州"
+          ]
+        },
+        {
+          "from": 1153,
+          "to": 1215,
+          "name": "中都"
+        },
+        {
+          "from": 1272,
+          "to": 1368,
+          "name": "大都"
+        },
+        {
+          "from": 1403,
+          "to": 1644,
+          "name": "北京",
+          "also": [
+            "京师"
+          ]
+        },
+        {
+          "from": 1644,
+          "to": 1912,
+          "name": "京师",
+          "also": [
+            "北京"
+          ]
+        },
+        {
+          "from": 1912,
+          "name": "北京"
+        }
+      ],
+      "role": "华北平原北缘帝都，漕运终点与长城前线之间的政治驻跸点。"
+    },
+    {
+      "id": "quanzhou",
+      "modern": "泉州",
+      "lon": 118.68,
+      "lat": 24.87,
+      "tier": "metropolis",
+      "names": [
+        {
+          "from": 700,
+          "name": "泉州",
+          "also": [
+            "刺桐"
+          ]
+        }
+      ],
+      "role": "刺桐港，印度洋—东海贸易的制度高峰口岸。"
+    },
+    {
+      "id": "guangzhou",
+      "modern": "广州",
+      "lon": 113.26,
+      "lat": 23.13,
+      "tier": "metropolis",
+      "names": [
+        {
+          "from": -214,
+          "to": 226,
+          "name": "番禺"
+        },
+        {
+          "from": 226,
+          "name": "广州"
+        }
+      ],
+      "role": "岭南港市，南海贸易与逾岭道路的南端汇聚点。"
+    },
+    {
+      "id": "fuzhou",
+      "modern": "福州",
+      "lon": 119.3,
+      "lat": 26.08,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": 725,
+          "name": "福州"
+        }
+      ]
+    },
+    {
+      "id": "ningbo",
+      "modern": "宁波",
+      "lon": 121.55,
+      "lat": 29.87,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": 738,
+          "to": 1381,
+          "name": "明州"
+        },
+        {
+          "from": 1381,
+          "name": "宁波"
+        }
+      ],
+      "role": "明州/庆元，唐宋以降东海贸易与对日航线要港；与泉州、广州并列的海上出口。"
+    },
+    {
+      "id": "wuchang",
+      "modern": "武汉武昌",
+      "lon": 114.3,
+      "lat": 30.55,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": 223,
+          "name": "鄂州",
+          "also": [
+            "江夏",
+            "武昌"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "changsha",
+      "modern": "长沙",
+      "lon": 112.98,
+      "lat": 28.19,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": -200,
+          "name": "长沙",
+          "also": [
+            "潭州"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kunming",
+      "modern": "昆明",
+      "lon": 102.71,
+      "lat": 25.04,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": 765,
+          "to": 1253,
+          "name": "拓东",
+          "also": [
+            "鄯阐"
+          ]
+        },
+        {
+          "from": 1276,
+          "name": "中庆",
+          "also": [
+            "昆明"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lhasa",
+      "modern": "拉萨",
+      "lon": 91.11,
+      "lat": 29.65,
+      "tier": "capital",
+      "names": [
+        {
+          "from": 630,
+          "name": "逻些",
+          "also": [
+            "拉萨"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "turpan",
+      "modern": "吐鲁番",
+      "lon": 89.19,
+      "lat": 42.95,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": -100,
+          "to": 640,
+          "name": "高昌"
+        },
+        {
+          "from": 640,
+          "name": "西州",
+          "also": [
+            "高昌"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kashgar",
+      "modern": "喀什",
+      "lon": 75.99,
+      "lat": 39.47,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": -100,
+          "name": "疏勒"
+        }
+      ]
+    },
+    {
+      "id": "harbin",
+      "modern": "哈尔滨阿城",
+      "lon": 126.95,
+      "lat": 45.55,
+      "tier": "capital",
+      "names": [
+        {
+          "from": 1115,
+          "to": 1234,
+          "name": "上京会宁"
+        }
+      ]
+    },
+    {
+      "id": "shanghai",
+      "modern": "上海",
+      "lon": 121.47,
+      "lat": 31.23,
+      "tier": "metropolis",
+      "names": [
+        {
+          "from": 1291,
+          "to": 1843,
+          "name": "上海县"
+        },
+        {
+          "from": 1843,
+          "name": "上海"
+        }
+      ],
+      "role": "长江口条约口岸超级城市，近代经济地理的独立变量。"
+    },
+    {
+      "id": "tianjin",
+      "modern": "天津",
+      "lon": 117.2,
+      "lat": 39.13,
+      "tier": "metropolis",
+      "names": [
+        {
+          "from": 1404,
+          "name": "天津"
+        }
+      ]
+    },
+    {
+      "id": "nanjing_liao",
+      "modern": "北京（辽南京）",
+      "lon": 116.4,
+      "lat": 39.9,
+      "tier": "capital",
+      "names": [
+        {
+          "from": 938,
+          "to": 1122,
+          "name": "南京"
+        }
+      ]
+    },
+    {
+      "id": "pingyao",
+      "modern": "平遥",
+      "lon": 112.18,
+      "lat": 37.19,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": -200,
+          "name": "平陶",
+          "also": [
+            "平遥"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "jingdezhen",
+      "modern": "景德镇",
+      "lon": 117.18,
+      "lat": 29.29,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": 1004,
+          "name": "景德镇",
+          "also": [
+            "昌南"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "zhengzhou",
+      "modern": "郑州",
+      "lon": 113.62,
+      "lat": 34.75,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": -800,
+          "to": -375,
+          "name": "管"
+        },
+        {
+          "from": -375,
+          "name": "郑州",
+          "also": [
+            "管城"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tongguan",
+      "modern": "潼关",
+      "lon": 110.25,
+      "lat": 34.61,
+      "tier": "pass",
+      "role": "关中东门，继函谷之后的仰攻咽喉；控渭洛交汇与黄河弯曲，谁守潼关谁守关中补给线。",
+      "names": [
+        {
+          "from": -300,
+          "name": "潼关"
+        }
+      ]
+    },
+    {
+      "id": "jiange",
+      "modern": "剑阁",
+      "lon": 105.52,
+      "lat": 32.29,
+      "tier": "pass",
+      "role": "蜀道锁钥：栈道与剑门把关中—汉中—成都串成一条窄喉，北伐与入蜀都绕不开。",
+      "names": [
+        {
+          "from": -300,
+          "name": "剑阁",
+          "also": [
+            "剑门"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hanzhong",
+      "modern": "汉中",
+      "lon": 107.02,
+      "lat": 33.07,
+      "tier": "prefecture",
+      "role": "秦岭南麓盆地，关中与巴蜀之间的战略跳板；粮储与栈道终点常在此交接。",
+      "names": [
+        {
+          "from": -300,
+          "name": "汉中"
+        }
+      ]
+    },
+    {
+      "id": "yanmenguan",
+      "modern": "代县雁门关",
+      "lon": 112.86,
+      "lat": 39.18,
+      "tier": "pass",
+      "role": "太行—恒山北缘孔道，农耕区与草原之间的经典关隘；边防与互市常在此一线摆动。",
+      "names": [
+        {
+          "from": -200,
+          "name": "雁门关"
+        }
+      ]
+    },
+    {
+      "id": "juyongguan",
+      "modern": "昌平居庸关",
+      "lon": 116.07,
+      "lat": 40.29,
+      "tier": "pass",
+      "role": "京师西北门户，军都山峡谷中的长城关城；护大都/北京北面的第一道险。",
+      "names": [
+        {
+          "from": 400,
+          "name": "居庸关"
+        }
+      ]
+    },
+    {
+      "id": "shanhaiguan",
+      "modern": "山海关",
+      "lon": 119.75,
+      "lat": 39.98,
+      "tier": "pass",
+      "role": "辽西走廊入关第一关：山海之间的窄喉，连接华北平原与东北；明清易代的地理开关。",
+      "names": [
+        {
+          "from": 1381,
+          "name": "山海关",
+          "also": [
+            "榆关"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "jiayuguan",
+      "modern": "嘉峪关",
+      "lon": 98.22,
+      "lat": 39.8,
+      "tier": "pass",
+      "role": "河西走廊西端明长城关城，内地与西域绿洲交通的门户象征。",
+      "names": [
+        {
+          "from": 1372,
+          "name": "嘉峪关"
+        }
+      ]
+    },
+    {
+      "id": "yumen",
+      "modern": "玉门",
+      "lon": 97.05,
+      "lat": 40.29,
+      "tier": "pass",
+      "role": "汉代经营西域的西出门户之一，与阳关并称；走廊西端的烽燧与屯戍节点。",
+      "names": [
+        {
+          "from": -120,
+          "name": "玉门关"
+        }
+      ]
+    },
+    {
+      "id": "yangguan",
+      "modern": "敦煌阳关",
+      "lon": 94.15,
+      "lat": 39.93,
+      "tier": "pass",
+      "role": "出敦煌南道门户，与玉门关分指西域南北道；文学地名背后是实在的绿洲补给点。",
+      "names": [
+        {
+          "from": -120,
+          "name": "阳关"
+        }
+      ]
+    },
+    {
+      "id": "hami",
+      "modern": "哈密",
+      "lon": 93.51,
+      "lat": 42.83,
+      "tier": "prefecture",
+      "role": "天山南麓东端绿洲，内地进新疆的东大门；明清哈密卫与贡道关键站。",
+      "names": [
+        {
+          "from": -100,
+          "to": 1400,
+          "name": "伊吾"
+        },
+        {
+          "from": 1400,
+          "name": "哈密"
+        }
+      ]
+    },
+    {
+      "id": "kuqa",
+      "modern": "库车",
+      "lon": 82.96,
+      "lat": 41.72,
+      "tier": "prefecture",
+      "role": "龟兹故地，天山南麓丝路北道重镇；佛教与绿洲城邦政治的交汇点。",
+      "names": [
+        {
+          "from": -100,
+          "name": "龟兹"
+        }
+      ]
+    },
+    {
+      "id": "hotan",
+      "modern": "和田",
+      "lon": 79.92,
+      "lat": 37.11,
+      "tier": "prefecture",
+      "role": "于阗绿洲，丝路南道枢纽与玉石产地；汉唐经营西域的南翼支点。",
+      "names": [
+        {
+          "from": -100,
+          "name": "于阗"
+        }
+      ]
+    },
+    {
+      "id": "beitíng",
+      "modern": "吉木萨尔北庭",
+      "lon": 89.18,
+      "lat": 44.0,
+      "tier": "prefecture",
+      "role": "唐北庭都护府驻地一带，天山北麓游牧—屯垦交接带的军政中心。",
+      "names": [
+        {
+          "from": 640,
+          "name": "北庭"
+        }
+      ]
+    },
+    {
+      "id": "huaián",
+      "modern": "淮安",
+      "lon": 119.15,
+      "lat": 33.5,
+      "tier": "metropolis",
+      "role": "淮扬运河与黄河故道交汇带的漕运枢纽；明清漕船过淮常在此盘驳。",
+      "names": [
+        {
+          "from": -200,
+          "to": 960,
+          "name": "淮阴"
+        },
+        {
+          "from": 960,
+          "name": "淮安"
+        }
+      ]
+    },
+    {
+      "id": "jining",
+      "modern": "济宁",
+      "lon": 116.59,
+      "lat": 35.41,
+      "tier": "metropolis",
+      "role": "会通河开通后的山东漕运中枢，南北水道与鲁西南陆路在此交会。",
+      "names": [
+        {
+          "from": 1280,
+          "name": "济宁"
+        }
+      ]
+    },
+    {
+      "id": "linqing",
+      "modern": "临清",
+      "lon": 115.71,
+      "lat": 36.84,
+      "tier": "metropolis",
+      "role": "会通河与卫河交汇的钞关城市，明清运河商税与粮船最繁忙的节点之一。",
+      "names": [
+        {
+          "from": 1280,
+          "name": "临清"
+        }
+      ]
+    },
+    {
+      "id": "tongzhou",
+      "modern": "通州",
+      "lon": 116.66,
+      "lat": 39.91,
+      "tier": "metropolis",
+      "role": "北运河终点，京师漕粮上岸码头；「北驾南漕」在地理上的最后一站。",
+      "names": [
+        {
+          "from": 1200,
+          "name": "通州"
+        }
+      ]
+    },
+    {
+      "id": "zhenjiang",
+      "modern": "镇江",
+      "lon": 119.45,
+      "lat": 32.2,
+      "tier": "metropolis",
+      "role": "长江与大运河十字交汇的京口，控江防与漕运；南北军事对峙常盯住此处。",
+      "names": [
+        {
+          "from": -200,
+          "to": 589,
+          "name": "京口"
+        },
+        {
+          "from": 589,
+          "name": "润州",
+          "also": [
+            "镇江"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "jiujiang",
+      "modern": "九江",
+      "lon": 115.99,
+      "lat": 29.71,
+      "tier": "prefecture",
+      "role": "长江中游鄱阳湖口附近口岸，江防与赣江入江咽喉；控江西财赋出江通道。",
+      "names": [
+        {
+          "from": -200,
+          "to": 960,
+          "name": "浔阳"
+        },
+        {
+          "from": 960,
+          "name": "江州",
+          "also": [
+            "九江"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "yueyang",
+      "modern": "岳阳",
+      "lon": 113.13,
+      "lat": 29.37,
+      "tier": "prefecture",
+      "role": "洞庭湖入江口，荆湖粮米与湘江流域的出江门户。",
+      "names": [
+        {
+          "from": -200,
+          "to": 960,
+          "name": "巴陵"
+        },
+        {
+          "from": 960,
+          "name": "岳州"
+        }
+      ]
+    },
+    {
+      "id": "yichang",
+      "modern": "宜昌",
+      "lon": 111.29,
+      "lat": 30.7,
+      "tier": "prefecture",
+      "role": "三峡东口、长江上游进入江汉平原的咽喉；夷陵之战与江防布局的地理锚点。",
+      "names": [
+        {
+          "from": -200,
+          "name": "夷陵",
+          "also": [
+            "峡州"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "jingkou_caishi",
+      "modern": "马鞍山采石",
+      "lon": 118.48,
+      "lat": 31.72,
+      "tier": "pass",
+      "role": "长江下游矶头渡口，历代南北争江的经典战场与渡江点。",
+      "names": [
+        {
+          "from": 200,
+          "name": "采石"
+        }
+      ]
+    },
+    {
+      "id": "dengzhou",
+      "modern": "蓬莱",
+      "lon": 120.75,
+      "lat": 37.8,
+      "tier": "prefecture",
+      "role": "登州港，黄渤海航运与东方海上航线的北方口岸；岸防与漕海运节点。",
+      "names": [
+        {
+          "from": -200,
+          "name": "登州"
+        }
+      ]
+    },
+    {
+      "id": "mingzhou",
+      "modern": "宁波",
+      "lon": 121.55,
+      "lat": 29.87,
+      "tier": "metropolis",
+      "role": "明州/庆元，唐宋以降东海贸易与对日航线要港；与泉州、广州并列的海上出口。",
+      "names": [
+        {
+          "from": 738,
+          "to": 1195,
+          "name": "明州"
+        },
+        {
+          "from": 1195,
+          "name": "庆元",
+          "also": [
+            "宁波"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "jingzhou_jiangling",
+      "modern": "荆州",
+      "lon": 112.24,
+      "lat": 30.33,
+      "tier": "metropolis",
+      "role": "江汉平原与长江中游军政枢纽，「兵争要地」；北上宛洛、东下建康、西入巴蜀的十字路口。",
+      "names": [
+        {
+          "from": -300,
+          "name": "江陵",
+          "also": [
+            "荆州"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "xiangfan",
+      "modern": "襄阳",
+      "lon": 112.14,
+      "lat": 32.04,
+      "tier": "metropolis",
+      "role": "汉水中游锁钥，南北对峙时中原与江淮之间的军事支点；水陆均可补给。",
+      "names": [
+        {
+          "from": -200,
+          "name": "襄阳"
+        }
+      ]
+    },
+    {
+      "id": "well_xing",
+      "modern": "井陉",
+      "lon": 114.14,
+      "lat": 38.03,
+      "tier": "pass",
+      "role": "太行八陉之一，河北平原通往山西的窄道；韩信破赵一类战例的地理舞台。",
+      "names": [
+        {
+          "from": -300,
+          "name": "井陉"
+        }
+      ]
+    },
+    {
+      "id": "zijingguan",
+      "modern": "易县紫荆关",
+      "lon": 115.12,
+      "lat": 39.42,
+      "tier": "pass",
+      "role": "太行东麓内三关之一，护京师西南侧；与居庸、倒马构成京西防线。",
+      "names": [
+        {
+          "from": 500,
+          "name": "紫荆关"
+        }
+      ]
+    },
+    {
+      "id": "ningyuan",
+      "modern": "兴城",
+      "lon": 120.71,
+      "lat": 40.62,
+      "tier": "pass",
+      "role": "辽西走廊宁远卫一线，明末抗后金的前沿堡城；走廊战争的地理标本。",
+      "names": [
+        {
+          "from": 1400,
+          "name": "宁远"
+        }
+      ]
+    },
+    {
+      "id": "taiwan_fu",
+      "modern": "台南",
+      "lon": 120.21,
+      "lat": 22.99,
+      "tier": "prefecture",
+      "role": "明郑—清代台湾府核心区，东南海上抗清基地转入省府行政后的岛上政治中心。",
+      "names": [
+        {
+          "from": 1624,
+          "to": 1683,
+          "name": "热兰遮—承天"
+        },
+        {
+          "from": 1683,
+          "name": "台湾府"
+        }
+      ]
+    },
+    {
+      "id": "ili",
+      "modern": "伊宁",
+      "lon": 81.32,
+      "lat": 43.92,
+      "tier": "prefecture",
+      "role": "伊犁河谷，清乾隆后新疆军府重镇；天山北路农牧与卡伦体系的西端枢纽。",
+      "names": [
+        {
+          "from": 1760,
+          "name": "伊犁"
+        }
+      ]
+    },
+    {
+      "id": "urumqi",
+      "modern": "乌鲁木齐",
+      "lon": 87.62,
+      "lat": 43.83,
+      "tier": "prefecture",
+      "role": "天山北麓后期军府与屯垦中心，近代新疆交通与行政的地理重心逐渐北移至此。",
+      "names": [
+        {
+          "from": 1760,
+          "name": "迪化",
+          "also": [
+            "乌鲁木齐"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "xining",
+      "modern": "西宁",
+      "lon": 101.78,
+      "lat": 36.62,
+      "tier": "prefecture",
+      "role": "河湟谷地门户，控青海路与藏区东北缘；边地军镇与茶马贸易节点。",
+      "names": [
+        {
+          "from": -100,
+          "to": 1100,
+          "name": "湟中"
+        },
+        {
+          "from": 1100,
+          "name": "西宁"
+        }
+      ]
+    },
+    {
+      "id": "chengde",
+      "modern": "承德",
+      "lon": 117.96,
+      "lat": 40.97,
+      "tier": "prefecture",
+      "role": "清避暑山庄所在，木兰围场与蒙旗朝觐的塞外政治舞台，长城以外的第二种「京师」。",
+      "names": [
+        {
+          "from": 1703,
+          "name": "热河",
+          "also": [
+            "承德"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qiongzhou",
+      "modern": "海口",
+      "lon": 110.35,
+      "lat": 20.02,
+      "tier": "prefecture",
+      "role": "琼州海峡北岸门户，岭南逾海经营海南岛的跳板。",
+      "names": [
+        {
+          "from": 600,
+          "name": "琼州"
+        }
+      ]
+    },
+    {
+      "id": "guilin",
+      "modern": "桂林",
+      "lon": 110.29,
+      "lat": 25.27,
+      "tier": "prefecture",
+      "role": "岭南西部湘桂走廊枢纽，中原入广西的主要孔道与静江府治所。",
+      "names": [
+        {
+          "from": -214,
+          "to": 960,
+          "name": "桂州"
+        },
+        {
+          "from": 960,
+          "name": "静江",
+          "also": [
+            "桂林"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nanning",
+      "modern": "南宁",
+      "lon": 108.37,
+      "lat": 22.82,
+      "tier": "prefecture",
+      "role": "邕州，岭南西道与左江流域军政中心，通往交趾方向的内地支点。",
+      "names": [
+        {
+          "from": 600,
+          "name": "邕州",
+          "also": [
+            "南宁"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "zhaoqing",
+      "modern": "肇庆",
+      "lon": 112.47,
+      "lat": 23.05,
+      "tier": "prefecture",
+      "role": "西江中游端州，两广总督常驻与岭南内河航运枢纽之一。",
+      "names": [
+        {
+          "from": 600,
+          "name": "端州",
+          "also": [
+            "肇庆"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wuhu",
+      "modern": "芜湖",
+      "lon": 118.38,
+      "lat": 31.33,
+      "tier": "prefecture",
+      "role": "长江下游米市与江防节点，皖南与江淮之间的水运码头。",
+      "names": [
+        {
+          "from": 200,
+          "name": "芜湖"
+        }
+      ]
+    },
+    {
+      "id": "hankou",
+      "modern": "武汉汉口",
+      "lon": 114.29,
+      "lat": 30.58,
+      "tier": "metropolis",
+      "role": "汉水入江口，近代崛起的长江中游总码头；「九省通衢」的地理含义在此落地。",
+      "names": [
+        {
+          "from": -200,
+          "to": 1861,
+          "name": "夏口",
+          "also": [
+            "汉口"
+          ]
+        },
+        {
+          "from": 1861,
+          "name": "汉口"
+        }
+      ]
+    },
+    {
+      "id": "xuzhou",
+      "modern": "徐州",
+      "lon": 117.28,
+      "lat": 34.2,
+      "tier": "metropolis",
+      "role": "淮北四战之地，控齐鲁与江淮之间的陆路咽喉。",
+      "names": [
+        {
+          "from": -200,
+          "name": "彭城",
+          "also": [
+            "徐州"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nanyang",
+      "modern": "南阳",
+      "lon": 112.53,
+      "lat": 33.0,
+      "tier": "prefecture",
+      "role": "南阳盆地，中原通往荆襄与汉中的枢纽。",
+      "names": [
+        {
+          "from": -300,
+          "name": "宛",
+          "also": [
+            "南阳"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shouchun",
+      "modern": "寿县",
+      "lon": 116.78,
+      "lat": 32.55,
+      "tier": "prefecture",
+      "role": "淮河中游寿春，楚晚期与魏晋南北朝的江淮军政支点。",
+      "names": [
+        {
+          "from": -300,
+          "name": "寿春"
+        }
+      ]
+    },
+    {
+      "id": "yuzhou_xuchang",
+      "modern": "许昌",
+      "lon": 113.85,
+      "lat": 34.04,
+      "tier": "prefecture",
+      "role": "许下屯田与汉魏之际政治中心之一，中原腹心。",
+      "names": [
+        {
+          "from": -200,
+          "name": "许",
+          "also": [
+            "许昌"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bozhou",
+      "modern": "亳州",
+      "lon": 115.78,
+      "lat": 33.87,
+      "tier": "prefecture",
+      "role": "涡淮之间，曹操起家与中原药材、漕路节点。",
+      "names": [
+        {
+          "from": -200,
+          "name": "谯",
+          "also": [
+            "亳州"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dezhou",
+      "modern": "德州",
+      "lon": 116.36,
+      "lat": 37.45,
+      "tier": "prefecture",
+      "role": "运河沿线鲁北码头，南北漕粮过境要站。",
+      "names": [
+        {
+          "from": 600,
+          "name": "德州"
+        }
+      ]
+    },
+    {
+      "id": "cangzhou",
+      "modern": "沧州",
+      "lon": 116.86,
+      "lat": 38.3,
+      "tier": "prefecture",
+      "role": "渤海湾西岸与运河交会，海防与盐场地带。",
+      "names": [
+        {
+          "from": 500,
+          "name": "沧州"
+        }
+      ]
+    },
+    {
+      "id": "qingjiangpu",
+      "modern": "淮安清江浦",
+      "lon": 119.02,
+      "lat": 33.58,
+      "tier": "metropolis",
+      "role": "清代漕运总督驻地一线，黄运交汇的盘驳中心。",
+      "names": [
+        {
+          "from": 1415,
+          "name": "清江浦"
+        }
+      ]
+    },
+    {
+      "id": "sanguan",
+      "modern": "宝鸡大散关",
+      "lon": 106.98,
+      "lat": 34.28,
+      "tier": "pass",
+      "role": "秦岭北麓散关，关中入汉中蜀道西线锁钥。",
+      "names": [
+        {
+          "from": -300,
+          "name": "散关",
+          "also": [
+            "大散关"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lantian",
+      "modern": "蓝田",
+      "lon": 109.32,
+      "lat": 34.15,
+      "tier": "pass",
+      "role": "蓝关，关中东南出武关道的近畿关隘。",
+      "names": [
+        {
+          "from": -200,
+          "name": "蓝田关"
+        }
+      ]
+    },
+    {
+      "id": "baidicheng",
+      "modern": "奉节白帝城",
+      "lon": 109.57,
+      "lat": 31.04,
+      "tier": "pass",
+      "role": "瞿塘峡口，长江出蜀的东门与江防要塞。",
+      "names": [
+        {
+          "from": 25,
+          "name": "白帝城"
+        }
+      ]
+    },
+    {
+      "id": "dujiangyan",
+      "modern": "都江堰",
+      "lon": 103.61,
+      "lat": 31.0,
+      "tier": "prefecture",
+      "role": "岷江分水工程，成都平原成为天府的地理前提。",
+      "names": [
+        {
+          "from": -256,
+          "name": "都江堰"
+        }
+      ]
+    },
+    {
+      "id": "chaozhou",
+      "modern": "潮州",
+      "lon": 116.63,
+      "lat": 23.66,
+      "tier": "prefecture",
+      "role": "韩江下游，闽粤沿海贸易与移民社会的重要口岸。",
+      "names": [
+        {
+          "from": 600,
+          "name": "潮州"
+        }
+      ]
+    },
+    {
+      "id": "zhangzhou",
+      "modern": "漳州",
+      "lon": 117.65,
+      "lat": 24.51,
+      "tier": "prefecture",
+      "role": "九龙江口，明清月港—厦门航线腹地。",
+      "names": [
+        {
+          "from": 600,
+          "name": "漳州"
+        }
+      ]
+    },
+    {
+      "id": "xiamen",
+      "modern": "厦门",
+      "lon": 118.09,
+      "lat": 24.48,
+      "tier": "metropolis",
+      "role": "近代五口之一，闽南出海与对台航线枢纽。",
+      "names": [
+        {
+          "from": 1394,
+          "to": 1840,
+          "name": "中左所",
+          "also": [
+            "厦门"
+          ]
+        },
+        {
+          "from": 1840,
+          "name": "厦门"
+        }
+      ]
+    },
+    {
+      "id": "wenzhou",
+      "modern": "温州",
+      "lon": 120.7,
+      "lat": 28.0,
+      "tier": "prefecture",
+      "role": "瓯江口，浙南海上贸易与海岸平原中心。",
+      "names": [
+        {
+          "from": 600,
+          "name": "温州"
+        }
+      ]
+    },
+    {
+      "id": "zhapou",
+      "modern": "平湖乍浦",
+      "lon": 121.0,
+      "lat": 30.6,
+      "tier": "prefecture",
+      "role": "杭州湾北岸港口，清代对日贸易与海防节点。",
+      "names": [
+        {
+          "from": 1400,
+          "name": "乍浦"
+        }
+      ]
+    },
+    {
+      "id": "leizhou",
+      "modern": "雷州",
+      "lon": 110.1,
+      "lat": 20.91,
+      "tier": "prefecture",
+      "role": "雷州半岛，琼州海峡北岸与南海航运跳板。",
+      "names": [
+        {
+          "from": 600,
+          "name": "雷州"
+        }
+      ]
+    },
+    {
+      "id": "wuzhou",
+      "modern": "梧州",
+      "lon": 111.28,
+      "lat": 23.48,
+      "tier": "prefecture",
+      "role": "西江总汇，两广内河航运与岭南西部门户。",
+      "names": [
+        {
+          "from": -200,
+          "name": "苍梧",
+          "also": [
+            "梧州"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "macao",
+      "modern": "澳门",
+      "lon": 113.54,
+      "lat": 22.19,
+      "tier": "prefecture",
+      "role": "珠江口西岸早期欧洲据点，近代贸易与条约空间标本。",
+      "names": [
+        {
+          "from": 1557,
+          "name": "澳门"
+        }
+      ]
+    },
+    {
+      "id": "hongkong",
+      "modern": "香港",
+      "lon": 114.17,
+      "lat": 22.32,
+      "tier": "metropolis",
+      "role": "珠江口东岸深水港，近代殖民地港口—金融节点。",
+      "names": [
+        {
+          "from": 1842,
+          "name": "香港"
+        }
+      ]
+    },
+    {
+      "id": "dali",
+      "modern": "大理",
+      "lon": 100.23,
+      "lat": 25.69,
+      "tier": "prefecture",
+      "role": "洱海盆地，南诏—大理国政治中心，滇西走廊枢纽。",
+      "names": [
+        {
+          "from": 700,
+          "name": "大理",
+          "also": [
+            "羊苴咩"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lijiang",
+      "modern": "丽江",
+      "lon": 100.23,
+      "lat": 26.86,
+      "tier": "prefecture",
+      "role": "滇西北茶马古道节点，纳西土司区与横断山脉入口。",
+      "names": [
+        {
+          "from": 1200,
+          "name": "丽江"
+        }
+      ]
+    },
+    {
+      "id": "guiyang",
+      "modern": "贵阳",
+      "lon": 106.71,
+      "lat": 26.57,
+      "tier": "prefecture",
+      "role": "黔中枢纽，明清经略云贵的驿路与军屯中心。",
+      "names": [
+        {
+          "from": 1400,
+          "name": "贵阳"
+        }
+      ]
+    },
+    {
+      "id": "zunyi",
+      "modern": "遵义",
+      "lon": 106.93,
+      "lat": 27.73,
+      "tier": "prefecture",
+      "role": "黔北，川黔通道与近代长征转折的地理舞台。",
+      "names": [
+        {
+          "from": 1400,
+          "name": "遵义"
+        }
+      ]
+    },
+    {
+      "id": "shigatse",
+      "modern": "日喀则",
+      "lon": 88.88,
+      "lat": 29.27,
+      "tier": "prefecture",
+      "role": "后藏中心，扎什伦布与藏西农牧交接带。",
+      "names": [
+        {
+          "from": 1400,
+          "name": "日喀则"
+        }
+      ]
+    },
+    {
+      "id": "qamdo",
+      "modern": "昌都",
+      "lon": 97.17,
+      "lat": 31.14,
+      "tier": "prefecture",
+      "role": "藏东枢纽，川藏滇通道交会。",
+      "names": [
+        {
+          "from": 1600,
+          "name": "昌都"
+        }
+      ]
+    },
+    {
+      "id": "shache",
+      "modern": "莎车",
+      "lon": 77.25,
+      "lat": 38.41,
+      "tier": "prefecture",
+      "role": "叶尔羌绿洲，天山南路西端大城与南疆贸易中心。",
+      "names": [
+        {
+          "from": -100,
+          "name": "莎车",
+          "also": [
+            "叶尔羌"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aksu",
+      "modern": "阿克苏",
+      "lon": 80.26,
+      "lat": 41.17,
+      "tier": "prefecture",
+      "role": "天山南麓绿洲带中段，丝路北道补给站。",
+      "names": [
+        {
+          "from": -100,
+          "name": "姑墨",
+          "also": [
+            "阿克苏"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "barkol",
+      "modern": "巴里坤",
+      "lon": 93.0,
+      "lat": 43.6,
+      "tier": "prefecture",
+      "role": "天山北麓东端牧场与军府，清经营新疆的北路支点。",
+      "names": [
+        {
+          "from": 1700,
+          "name": "巴里坤"
+        }
+      ]
+    },
+    {
+      "id": "aning",
+      "modern": "安西敦煌东",
+      "lon": 95.77,
+      "lat": 40.53,
+      "tier": "pass",
+      "role": "瓜州—安西一线，河西出敦煌前的走廊东段关城。",
+      "names": [
+        {
+          "from": -100,
+          "name": "瓜州",
+          "also": [
+            "安西"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kaiyuan",
+      "modern": "开原",
+      "lon": 124.04,
+      "lat": 42.54,
+      "tier": "pass",
+      "role": "辽东边墙内侧，明辽东都司北缘军镇。",
+      "names": [
+        {
+          "from": 1388,
+          "name": "开原"
+        }
+      ]
+    },
+    {
+      "id": "lushun",
+      "modern": "旅顺",
+      "lon": 121.26,
+      "lat": 38.85,
+      "tier": "pass",
+      "role": "辽东半岛尖端军港，近代海权与租借地争夺焦点。",
+      "names": [
+        {
+          "from": 1400,
+          "name": "旅顺"
+        }
+      ]
+    },
+    {
+      "id": "ningguta",
+      "modern": "宁安宁古塔",
+      "lon": 129.48,
+      "lat": 44.34,
+      "tier": "prefecture",
+      "role": "清初经略黑龙江中下游的军府前哨。",
+      "names": [
+        {
+          "from": 1650,
+          "name": "宁古塔"
+        }
+      ]
+    },
+    {
+      "id": "aihun",
+      "modern": "黑河瑷珲",
+      "lon": 127.48,
+      "lat": 50.25,
+      "tier": "prefecture",
+      "role": "黑龙江城，近代中俄东北边界条约的地理现场。",
+      "names": [
+        {
+          "from": 1680,
+          "name": "瑷珲",
+          "also": [
+            "黑龙江城"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "jilin_ula",
+      "modern": "吉林",
+      "lon": 126.55,
+      "lat": 43.84,
+      "tier": "prefecture",
+      "role": "松花江畔船厂与将军驻地，清代吉林将军辖区核心。",
+      "names": [
+        {
+          "from": 1670,
+          "name": "吉林乌拉"
+        }
+      ]
+    },
+    {
+      "id": "qiqihar",
+      "modern": "齐齐哈尔",
+      "lon": 123.92,
+      "lat": 47.35,
+      "tier": "prefecture",
+      "role": "嫩江平原，清黑龙江将军移驻后的军政中心。",
+      "names": [
+        {
+          "from": 1690,
+          "name": "齐齐哈尔"
+        }
+      ]
+    },
+    {
+      "id": "tieling",
+      "modern": "铁岭",
+      "lon": 123.85,
+      "lat": 42.29,
+      "tier": "prefecture",
+      "role": "辽河中游，辽东走廊北段农垦与边防带。",
+      "names": [
+        {
+          "from": 1400,
+          "name": "铁岭"
+        }
+      ]
+    },
+    {
+      "id": "pianmen",
+      "modern": "偏关",
+      "lon": 111.5,
+      "lat": 39.44,
+      "tier": "pass",
+      "role": "外三关西端，黄河拐弯处的晋北长城关。",
+      "names": [
+        {
+          "from": 1400,
+          "name": "偏头关"
+        }
+      ]
+    },
+    {
+      "id": "ningwu",
+      "modern": "宁武",
+      "lon": 112.3,
+      "lat": 39.0,
+      "tier": "pass",
+      "role": "外三关中路，管涔山间的晋北孔道。",
+      "names": [
+        {
+          "from": 1400,
+          "name": "宁武关"
+        }
+      ]
+    },
+    {
+      "id": "daomaguan",
+      "modern": "唐县倒马关",
+      "lon": 114.7,
+      "lat": 39.0,
+      "tier": "pass",
+      "role": "内三关之一，太行东麓护京师西南。",
+      "names": [
+        {
+          "from": 500,
+          "name": "倒马关"
+        }
+      ]
+    },
+    {
+      "id": "gubeikou",
+      "modern": "密云古北口",
+      "lon": 117.15,
+      "lat": 40.68,
+      "tier": "pass",
+      "role": "燕山孔道，京师东北出塞与承德方向门户。",
+      "names": [
+        {
+          "from": 500,
+          "name": "古北口"
+        }
+      ]
+    },
+    {
+      "id": "xifengkou",
+      "modern": "迁西喜峰口",
+      "lon": 118.3,
+      "lat": 40.4,
+      "tier": "pass",
+      "role": "长城喜峰口，冀东出塞与近代抗战地理符号。",
+      "names": [
+        {
+          "from": 1400,
+          "name": "喜峰口"
+        }
+      ]
+    },
+    {
+      "id": "laizhou",
+      "modern": "莱州",
+      "lon": 119.94,
+      "lat": 37.18,
+      "tier": "prefecture",
+      "role": "胶东半岛西岸，登莱海防与渔盐地带。",
+      "names": [
+        {
+          "from": -200,
+          "name": "掖县",
+          "also": [
+            "莱州"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "jiaozhou",
+      "modern": "胶州",
+      "lon": 120.03,
+      "lat": 36.26,
+      "tier": "prefecture",
+      "role": "胶州湾，近代青岛崛起前的海湾口岸。",
+      "names": [
+        {
+          "from": 600,
+          "name": "胶州"
+        }
+      ]
+    },
+    {
+      "id": "qingdao",
+      "modern": "青岛",
+      "lon": 120.38,
+      "lat": 36.07,
+      "tier": "metropolis",
+      "role": "胶州湾近代军港与商埠，北方海岸现代化标本。",
+      "names": [
+        {
+          "from": 1891,
+          "name": "青岛"
+        }
+      ]
+    },
+    {
+      "id": "weihai",
+      "modern": "威海",
+      "lon": 122.12,
+      "lat": 37.51,
+      "tier": "pass",
+      "role": "威海卫，北洋海军基地与甲午战场地理锚点。",
+      "names": [
+        {
+          "from": 1400,
+          "name": "威海卫"
+        }
+      ]
+    },
+    {
+      "id": "nanchang",
+      "modern": "南昌",
+      "lon": 115.86,
+      "lat": 28.68,
+      "tier": "metropolis",
+      "role": "赣江下游，江西财赋与南北驿路中枢。",
+      "names": [
+        {
+          "from": 200,
+          "name": "洪州",
+          "also": [
+            "南昌"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ganzhou",
+      "modern": "赣州",
+      "lon": 114.93,
+      "lat": 25.85,
+      "tier": "prefecture",
+      "role": "赣江上游，控大庾岭入粤通道的赣南重镇。",
+      "names": [
+        {
+          "from": 600,
+          "name": "虔州",
+          "also": [
+            "赣州"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dayuling",
+      "modern": "大余大庾岭",
+      "lon": 114.3,
+      "lat": 25.4,
+      "tier": "pass",
+      "role": "梅关古道，中原—岭南最重要的陆路过岭孔道。",
+      "names": [
+        {
+          "from": -200,
+          "name": "大庾岭",
+          "also": [
+            "梅关"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chongqing",
+      "modern": "重庆",
+      "lon": 106.55,
+      "lat": 29.56,
+      "tier": "metropolis",
+      "role": "长江上游港口与山城，抗战陪都与西南水陆枢纽。",
+      "names": [
+        {
+          "from": -200,
+          "to": 1189,
+          "name": "巴郡",
+          "also": [
+            "渝州"
+          ]
+        },
+        {
+          "from": 1189,
+          "name": "重庆"
+        }
+      ]
+    },
+    {
+      "id": "hefei",
+      "modern": "合肥",
+      "lon": 117.23,
+      "lat": 31.82,
+      "tier": "prefecture",
+      "role": "江淮之间巢湖流域军政节点，南北对峙的中线支点。",
+      "names": [
+        {
+          "from": -200,
+          "name": "合肥"
+        }
+      ]
+    },
+    {
+      "id": "qufu",
+      "modern": "曲阜",
+      "lon": 116.98,
+      "lat": 35.58,
+      "tier": "prefecture",
+      "role": "鲁都与孔庙所在，儒学地理锚点。",
+      "names": [
+        {
+          "from": -1000,
+          "name": "曲阜"
+        }
+      ]
+    },
+    {
+      "id": "baoding",
+      "modern": "保定",
+      "lon": 115.46,
+      "lat": 38.87,
+      "tier": "metropolis",
+      "names": [
+        {
+          "from": 960,
+          "name": "保州"
+        },
+        {
+          "from": 1275,
+          "name": "保定",
+          "also": [
+            "保定府",
+            "清苑"
+          ]
+        }
+      ],
+      "role": "燕南咽喉、京师南大门；清直隶省会与直隶总督驻地（1669–1912）。"
+    },
+    {
+      "id": "lanzhou",
+      "modern": "兰州",
+      "lon": 103.83,
+      "lat": 36.06,
+      "tier": "metropolis",
+      "names": [
+        {
+          "from": -81,
+          "name": "金城",
+          "also": [
+            "金城郡"
+          ]
+        },
+        {
+          "from": 581,
+          "name": "兰州",
+          "also": [
+            "兰州府"
+          ]
+        }
+      ],
+      "role": "黄河渡口与河西走廊东端门户，控制关中通西域大道；清甘肃建省后为省会、陕甘总督驻地。"
+    },
+    {
+      "id": "jinan",
+      "modern": "济南",
+      "lon": 117.02,
+      "lat": 36.67,
+      "tier": "metropolis",
+      "names": [
+        {
+          "from": -164,
+          "name": "济南",
+          "also": [
+            "历下",
+            "历城"
+          ]
+        }
+      ],
+      "role": "泰山西麓、济水故道上的枢纽；明洪武起取代青州为山东布政使司驻地，此后为山东政治中心。"
+    },
+    {
+      "id": "shanzhou",
+      "modern": "三门峡",
+      "lon": 111.2,
+      "lat": 34.77,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": 487,
+          "name": "陕州",
+          "also": [
+            "陕县"
+          ]
+        }
+      ],
+      "role": "崤函通道中段与黄河三门峡漕运咽喉，唐都关中时江南粮秣经此溯河入渭，砥柱之险损耗常达二三成。"
+    },
+    {
+      "id": "daming",
+      "modern": "大名",
+      "lon": 115.15,
+      "lat": 36.28,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": 1042,
+          "name": "大名府",
+          "also": [
+            "北京"
+          ]
+        }
+      ],
+      "role": "华北平原西部枢路；北宋庆历二年升为北京陪都以备辽，唐魏博镇故地。"
+    },
+    {
+      "id": "shangqiu",
+      "modern": "商丘",
+      "lon": 115.66,
+      "lat": 34.41,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": -1040,
+          "name": "睢阳",
+          "also": [
+            "宋"
+          ]
+        },
+        {
+          "from": 1006,
+          "name": "应天府",
+          "also": [
+            "南京",
+            "归德府"
+          ]
+        },
+        {
+          "from": 1545,
+          "name": "商丘"
+        }
+      ],
+      "role": "赵宋龙兴之地（赵匡胤起于归德军）、北宋南京应天府；靖康后赵构即位于此。"
+    },
+    {
+      "id": "helin",
+      "modern": "哈拉和林",
+      "lon": 102.85,
+      "lat": 47.21,
+      "tier": "capital",
+      "names": [
+        {
+          "from": 1220,
+          "name": "哈拉和林",
+          "also": [
+            "和林",
+            "和宁"
+          ]
+        }
+      ],
+      "role": "蒙古帝国都城（1235–1260），欧亚驿路的中心；忽必烈迁都后为元岭北行省治所。"
+    },
+    {
+      "id": "jianmenguan",
+      "modern": "剑门关",
+      "lon": 105.56,
+      "lat": 32.22,
+      "tier": "pass",
+      "names": [
+        {
+          "from": 231,
+          "name": "剑门",
+          "also": [
+            "剑阁",
+            "剑门关"
+          ]
+        }
+      ],
+      "role": "金牛道上的断崖隘口，相传诸葛亮架栈道时设防；姜维曾据此拒魏，是蜀道入川第一险。"
+    },
+    {
+      "id": "henei",
+      "modern": "河内",
+      "lon": 105.85,
+      "lat": 21.0,
+      "tier": "metropolis",
+      "names": [
+        {
+          "from": -111,
+          "name": "龙编"
+        },
+        {
+          "from": 866,
+          "name": "大罗"
+        },
+        {
+          "from": 1010,
+          "name": "升龙",
+          "also": [
+            "东京",
+            "东都"
+          ]
+        },
+        {
+          "from": 1831,
+          "name": "河内"
+        }
+      ],
+      "role": "红河三角洲枢纽；汉交趾郡、唐安南都护府治所，1010 年起为越南历代都城。"
+    },
+    {
+      "id": "taicang",
+      "modern": "太仓",
+      "lon": 121.17,
+      "lat": 31.56,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": 1279,
+          "name": "刘家港",
+          "also": [
+            "刘河"
+          ]
+        },
+        {
+          "from": 1497,
+          "name": "太仓",
+          "also": [
+            "太仓州"
+          ]
+        }
+      ],
+      "role": "长江口南岸良港；元代海运起针处，明郑和宝船舰队由此出海（1405 起）。"
+    },
+    {
+      "id": "qingzhou",
+      "modern": "青州",
+      "lon": 118.48,
+      "lat": 36.69,
+      "tier": "metropolis",
+      "names": [
+        {
+          "from": -200,
+          "name": "青州",
+          "also": [
+            "益都"
+          ]
+        }
+      ],
+      "role": "山东半岛西部门户；明初山东行省驻地（1368–1377，后移济南），此后为青州府治。"
+    },
+    {
+      "id": "pyongyang",
+      "modern": "平壤",
+      "lon": 125.75,
+      "lat": 39.02,
+      "tier": "metropolis",
+      "names": [
+        {
+          "from": -108,
+          "name": "朝鲜县",
+          "also": [
+            "王俭城",
+            "乐浪"
+          ]
+        },
+        {
+          "from": 427,
+          "name": "平壤"
+        }
+      ],
+      "role": "大同江下游；汉乐浪郡治，427 年起为高句丽都城，高丽西京，1593 年壬辰之战明军由此破日。"
+    },
+    {
+      "id": "dasanguan",
+      "modern": "大散关",
+      "lon": 107.01,
+      "lat": 34.27,
+      "tier": "pass",
+      "names": [
+        {
+          "from": -200,
+          "name": "大散关"
+        }
+      ],
+      "role": "秦岭北坡陈仓道口，周以来七十余战；宋吴玠吴璘兄弟据此抗金（1131 年前后和尚原连捷）。"
+    },
+    {
+      "id": "puzhou",
+      "modern": "永济",
+      "lon": 110.45,
+      "lat": 34.87,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": -200,
+          "name": "蒲坂"
+        },
+        {
+          "from": 618,
+          "name": "蒲州",
+          "also": [
+            "河中府"
+          ]
+        }
+      ],
+      "role": "黄河东西要渡蒲津渡所在；唐开元铸铁牛维舟架浮桥，连关中与河东。"
+    },
+    {
+      "id": "yuncheng",
+      "modern": "运城",
+      "lon": 111.01,
+      "lat": 35.03,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": -200,
+          "name": "解州",
+          "also": [
+            "解县"
+          ]
+        },
+        {
+          "from": 1369,
+          "name": "运城"
+        }
+      ],
+      "role": "河东盐池北岸，盐利为历代财政重源，历代视为「国宝」之池。"
+    },
+    {
+      "id": "zhengding",
+      "modern": "正定",
+      "lon": 114.57,
+      "lat": 38.15,
+      "tier": "metropolis",
+      "names": [
+        {
+          "from": -200,
+          "name": "真定",
+          "also": [
+            "常山",
+            "镇州"
+          ]
+        },
+        {
+          "from": 1723,
+          "name": "正定"
+        }
+      ],
+      "role": "太行山东麓北通道枢纽；东汉起为常山郡治，唐成德节度使驻地，四世纪至清末一直是区域中心。"
+    },
+    {
+      "id": "piantouguan",
+      "modern": "偏关",
+      "lon": 111.51,
+      "lat": 39.44,
+      "tier": "pass",
+      "names": [
+        {
+          "from": 1390,
+          "name": "偏头关",
+          "also": [
+            "偏关"
+          ]
+        }
+      ],
+      "role": "明外三关之一（与雁门、宁武），长城与黄河在此交汇，防河套蒙古南犯的前哨。"
+    },
+    {
+      "id": "guangning",
+      "modern": "北镇",
+      "lon": 121.8,
+      "lat": 41.6,
+      "tier": "metropolis",
+      "names": [
+        {
+          "from": 1123,
+          "name": "广宁"
+        },
+        {
+          "from": 1913,
+          "name": "北镇",
+          "also": [
+            "北宁"
+          ]
+        }
+      ],
+      "role": "医巫闾山西麓、辽西走廊东端；明辽东驻军重镇与马市贸易中心。"
+    },
+    {
+      "id": "duolun",
+      "modern": "多伦",
+      "lon": 116.48,
+      "lat": 42.21,
+      "tier": "prefecture",
+      "names": [
+        {
+          "from": 1691,
+          "name": "多伦诺尔",
+          "also": [
+            "多伦",
+            "喇嘛庙"
+          ]
+        }
+      ],
+      "role": "滦河上源草原商镇与藏传佛教中心；康熙三十年（1691）多伦会盟，喀尔喀归附；近元上都遗址。"
+    },
+    {
+      "id": "zhangjiakou",
+      "modern": "张家口",
+      "lon": 114.89,
+      "lat": 40.77,
+      "tier": "metropolis",
+      "names": [
+        {
+          "from": 1429,
+          "name": "张家口",
+          "also": [
+            "张垣"
+          ]
+        }
+      ],
+      "role": "长城大境门所在；明军堡转为蒙汉马市，清中俄贸易（1727 恰克图条约后）与张库大道的起点。"
+    }
+  ],
+  "events": [
+    {
+      "id": "evt-erlitou",
+      "eraId": "origins",
+      "year": -1750,
+      "placeId": "luoyang",
+      "title": "二里头都邑兴起",
+      "dynastyTag": "夏商之际（考古）",
+      "people": [],
+      "personIds": [],
+      "summary": "约公元前十八至十六世纪，偃师二里头出现宫城、青铜礼器作坊与井字道路，中原聚落第一次稳定分化出宫殿区与手工业专化区。宫城墙、绿松石龙形器与青铜容器同出，说明祭祀、仓储与金属工艺已被同一权力中心调度。它是否等于文献中的「夏都」仍有争论，但作为早期国家考古标尺已不可回避：权力开始物化为可复原的空间秩序。",
+      "impact": "都邑不再只是人口聚集点，而成了礼器生产、仓储与祭祀的集中机器。商周宫室—作坊传统由此获得可追溯的前史；后世讨论「中国」核心区时，地理想象往往不自觉地从伊洛—豫西这一圈画起。早期国家的关键首先是：谁能让礼器、粮储与武力在同一地点稳定再生产，并把周边聚落编进贡纳与征伐网络。二里头把「早期国家」从传说推到可挖的地层：宫城轴线与作坊分区，是后来商周都城规划的远祖模板。",
+      "leadsTo": [
+        "evt-anyang-yin"
+      ],
+      "lede": "伊洛盆地出现宫城与青铜作坊，早期国家有了可考的物证。",
+      "kind": "政治",
+      "geoWhy": "伊洛盆地四面环山、河洛交汇，易守且能集聚农业人口。"
+    },
+    {
+      "id": "evt-anyang-yin",
+      "eraId": "origins",
+      "year": -1300,
+      "placeId": "anyang",
+      "title": "盘庚迁殷与甲骨王室",
+      "dynastyTag": "商",
+      "people": [
+        "盘庚"
+      ],
+      "personIds": [],
+      "summary": "晚商以殷墟为王都，宫殿宗庙、王陵与巨量甲骨并存。王室通过占卜决定征伐、田猎与贡纳，把豫北、晋南乃至更远方国编进同一套神意行政；妇好墓一类高等级墓葬则显示王室女性也可领军与主祭。盘庚迁殷的文献年代与考古序列不必一一钉死，但「殷」作为可归档的政治中心是硬事实。甲骨把征伐、贡纳与田猎写成可复查的行政档案，使王权第一次拥有跨世代的记忆外挂。",
+      "impact": "文字与王权绑定，使统治可以跨越口述记忆而积累制度档案。西周「天命」话语面对的，正是这套已高度仪式化的商王室操作系统；没有甲骨所代表的神政技术，封建与册命很难找到对手盘。商的遗产不只是青铜器风格，更是「中央可下令、边地须应答」的行政想象。没有这套神政文书，西周封建很难找到可对标、可否定的对手制度。",
+      "leadsTo": [
+        "evt-muye"
+      ],
+      "lede": "殷墟成为商王都，甲骨把征伐与贡纳写成档案。",
+      "kind": "政治",
+      "geoWhy": "殷墟在太行东麓与华北平原交界处，向东控平原、向西依山地。"
+    },
+    {
+      "id": "evt-sanxingdui",
+      "eraId": "origins",
+      "year": -1200,
+      "placeId": "chengdu",
+      "title": "三星堆祭祀坑",
+      "dynastyTag": "商代晚期",
+      "people": [],
+      "personIds": [],
+      "summary": "三星堆遗址位于成都平原北部的广汉，年代大致相当于商代晚期。1986年发现的两座祭祀坑出土了青铜大立人、纵目面具、青铜神树和大量象牙、玉器，其风格与中原青铜器明显不同。",
+      "impact": "三星堆说明早在商代，长江上游已有高度发达的青铜文明，与中原、长江中游之间存在交流，却自成一系。中华文明因此更像多个中心相互影响，而不是只从黄河流域单线扩散。",
+      "leadsTo": [],
+      "lede": "三星堆祭祀坑出土青铜神树与纵目面具。",
+      "kind": "文化",
+      "geoWhy": "成都平原有岷江冲积的肥沃土地，四周环山形成相对封闭的环境，使这里发展出独立的文明中心。"
+    },
+    {
+      "id": "evt-muye",
+      "eraId": "origins",
+      "year": -1046,
+      "placeId": "zhengzhou",
+      "title": "牧野之战与周人东进",
+      "dynastyTag": "商周之际",
+      "people": [
+        "周武王",
+        "商纣"
+      ],
+      "personIds": [
+        "person-zhou-wu"
+      ],
+      "summary": "约公元前十一世纪中叶（常见取前1046年说），周人自西土东进，牧野之役颠覆商王室。胜利后并未立刻郡县化，而是以封建兄弟姻亲、驻守战略要点的方式消化东方更稠密的人口与文化；盟津会师与「前徒倒戈」的记载，反映的是商末联军结构已经松动。小邦如何吞并大邑，成为此后一切征服政权的原型难题。牧野之后的封建，是用血缘与驻防去消化更稠密的东方，而不是立刻建立穿透式郡县。",
+      "impact": "「小邦周」如何统治「大邑商」留下的结构问题，直接催生洛邑经营与封建制，也埋下诸侯坐大的种子。中国政治史第一次大规模「征服者制度移植」从这里开始：胜利者用亲属网络与礼仪等级去覆盖被征服区，而不是马上建立穿透式郡县。这一选择换来短期稳定，却把权力外溢写进了制度基因。征服者制度移植的第一课：短期稳定靠诸侯网络，长期离心也从同一网络长出。",
+      "leadsTo": [
+        "evt-luoyi"
+      ],
+      "lede": "周人东进灭商，以封建而非郡县消化东方。",
+      "kind": "军事"
+    },
+    {
+      "id": "evt-fengjian-zhou",
+      "eraId": "origins",
+      "year": -1040,
+      "placeId": "luoyang",
+      "title": "周初分封诸侯",
+      "dynastyTag": "西周",
+      "people": [
+        "周公",
+        "周武王"
+      ],
+      "personIds": [
+        "person-zhou-gong",
+        "person-zhou-wu"
+      ],
+      "summary": "周灭商后，武王、周公等人把宗室、功臣和先代之后分封到各地：太公望封于齐，召公奭封于燕，叔虞封于晋，周公之子伯禽封于鲁，康叔封于卫。诸侯在封地筑城，对周王负有朝贡和出兵的义务。",
+      "impact": "分封把周人的统治据点扩展到黄河下游、燕山南北和晋南，形成了以礼制联系的政治网络，也是后来“封建”一词的来源。随着血缘关系渐远，诸侯逐渐独立，东周的列国争霸即由此而来。",
+      "leadsTo": [
+        "evt-pingwang-dongqian"
+      ],
+      "lede": "周初分封诸侯，把周人安插到东方要地。",
+      "kind": "政治",
+      "geoWhy": "分封把周人的据点安插到黄河下游、燕山脚下和晋南盆地等战略要地。",
+      "placeIds": [
+        "luoyang",
+        "linzi",
+        "dadu",
+        "taiyuan"
+      ]
+    },
+    {
+      "id": "evt-luoyi",
+      "eraId": "origins",
+      "year": -1036,
+      "placeId": "luoyang",
+      "title": "营成周 / 洛邑",
+      "dynastyTag": "西周",
+      "people": [
+        "周公",
+        "召公"
+      ],
+      "personIds": [
+        "person-zhou-gong"
+      ],
+      "summary": "周人在伊洛盆地营建东都成周，作为镇抚东方与举行朝会、大蒐的枢纽。宗周（关中）与成周（洛邑）双中心，使「天下之中」从地理直觉变成可调度的制度安排：东方诸侯的朝觐路线与贡道路线被重新画出，王室也得以在两都之间调配武力与礼仪资源。成周不是陪都点缀，而是东方统治的日常工作台。",
+      "impact": "洛阳由此进入极长的政治地理生命线：凡欲兼顾关中形胜与山东人力财赋，几乎都会回到伊洛。秦汉东都、武周神都、北宋西京，都是这一逻辑的变奏而非偶然选址；丢开伊洛，往往意味着放弃对关东的日常控制。双都将地理上的「中」翻译成行政上的「可到达」，这是周人对中国都城史最持久的贡献之一。",
+      "leadsTo": [
+        "evt-li-guo"
+      ],
+      "lede": "营建成周，宗周与成周双中心把“天下之中”变成制度。",
+      "kind": "政治",
+      "geoWhy": "洛邑居天下之中，向西通关中、向东控中原。"
+    },
+    {
+      "id": "evt-hezun",
+      "eraId": "origins",
+      "year": -1035,
+      "placeId": "luoyang",
+      "title": "何尊铭文与“中国”",
+      "dynastyTag": "西周",
+      "people": [
+        "周成王"
+      ],
+      "personIds": [],
+      "summary": "何尊是西周早期的青铜酒器，1963年出土于陕西宝鸡，内底铭文记载成王营建成周（洛邑），并引用武王的话“余其宅兹中国”。这是目前所见“中国”一词最早的文字记录之一。",
+      "impact": "铭文中的“中国”指的是天下之中的洛邑一带，而不是后来的国家名称。它说明周人已把伊洛盆地当作统治天下的中心，“中国”的概念从此带上了地理中心的含义，后来才逐步扩展为国家和文化共同体的名称。",
+      "leadsTo": [
+        "evt-luoyi"
+      ],
+      "lede": "何尊铭文最早出现“中国”一词。",
+      "kind": "文化",
+      "geoWhy": "洛邑居伊洛盆地，处于黄河中游东西南北交通的交汇处，所以被视作“天下之中”。"
+    },
+    {
+      "id": "evt-li-guo",
+      "eraId": "origins",
+      "year": -841,
+      "placeId": "changan",
+      "title": "国人暴动与共和行政",
+      "dynastyTag": "西周",
+      "people": [
+        "周厉王"
+      ],
+      "personIds": [],
+      "summary": "周厉王专利与弭谤激起国人暴动，王奔彘；传统记载出现「共和」行政纪年。无论细节如何还原，都说明西周王畿社会已能以集体行动约束王权：国人、卿士与国人舆论构成了天子必须面对的地方政治。天子并非不受都城公众与地方精英限制的绝对君主，王权需要财政与宣传的双重配合才能运转。国人暴动说明王畿公众与卿士可以打断天子日程，专利与弭谤并不能单独维持统治。",
+      "impact": "「王权可被都城公众打断」成为深远记忆，进入东周舆论与儒家民本叙事。礼乐封建若不能自动修复冲突，就只能靠霸政与兼并来填真空——平王东迁只是把这一趋势公开化。厉王事件提醒后来的统一者：都城既是权力舞台，也可能是权力的断裂点；合法性若只靠恐吓，会先在京师失守。",
+      "leadsTo": [
+        "evt-pingwang-dongqian"
+      ],
+      "lede": "国人暴动逐走厉王，王权第一次被都城公众打断。",
+      "kind": "政治"
+    },
+    {
+      "id": "evt-pingwang-dongqian",
+      "eraId": "origins",
+      "year": -770,
+      "placeId": "luoyang",
+      "title": "平王东迁",
+      "dynastyTag": "两周之际",
+      "people": [
+        "周平王"
+      ],
+      "personIds": [],
+      "summary": "犬戎破镐京后，平王东迁洛邑，依赖晋、郑等国夹辅。天子失去西土基本盘与军事自主性，封建体系的「共主」权威迅速象征化：征伐、会盟、城筑改由强藩主导，王室更多出售名器与名分。东迁不是简单搬家，而是把周王室从关中军政核心降格为东方礼仪仲裁者，王畿缩小、军赋外溢。",
+      "impact": "这是中国政治史第一场持久的「中心失重」：统一话语仍在，统一能力已无。春秋霸政与战国全民战争，都是对这一真空的填补竞赛，而不是简单的道德堕落史。此后凡「挟天子」或「尊王攘夷」，都在利用东迁留下的名器真空；地理上丢掉镐京，等于丢掉了西土动员的发动机。",
+      "leadsTo": [
+        "evt-guanyuan"
+      ],
+      "lede": "犬戎破镐京，平王东迁，周室降为礼仪共主。",
+      "kind": "政治"
+    },
+    {
+      "id": "evt-guanyuan",
+      "eraId": "warring-unify",
+      "year": -685,
+      "placeId": "linzi",
+      "title": "管仲相齐与霸政原型",
+      "dynastyTag": "春秋·齐",
+      "people": [
+        "齐桓公",
+        "管仲"
+      ],
+      "personIds": [
+        "person-qi-huan",
+        "person-guan-zhong"
+      ],
+      "summary": "齐据滨海盐铁与商业优势，管仲整顿行政与军赋，桓公尊王攘夷、葵丘会盟。霸政的要点是：承认周天子名义，同时以齐国军力与物资维持会盟纪律，向列国输出一种可示范的国际秩序方案。管仲的「叁其国而伍其鄙」一类改革，把军赋与户籍编成可计算的国家能力，使齐能在东方充当短期秩序供应商。",
+      "impact": "它证明在封建碎片化条件下，秩序可以来自强藩的制度输出，而不必等待王畿重建。晋楚争霸、乃至后来的「挟天子」想象，都沿这条链生长。霸政不是封建的「堕落」，而是对东迁后真空的制度响应：谁能把会盟写成可执行的规则，谁就暂时拥有「天下」的调度权。",
+      "leadsTo": [
+        "evt-shangyang"
+      ],
+      "lede": "管仲整顿军赋户籍，齐桓公以会盟充当秩序供应商。",
+      "kind": "政治"
+    },
+    {
+      "id": "evt-confucian-temple",
+      "eraId": "origins",
+      "year": -479,
+      "placeId": "qufu",
+      "title": "孔子卒与鲁地儒学源",
+      "dynastyTag": "春秋",
+      "people": [
+        "孔子"
+      ],
+      "personIds": [
+        "person-confucius"
+      ],
+      "kind": "文化",
+      "lede": "孔子卒于鲁，私学传统扎根曲阜。",
+      "summary": "孔子卒后，弟子散游诸侯，把鲁地礼乐与私学传统带向各地。曲阜作为圣域记忆的地理锚点，在后世孔庙、孔林与郡县文庙体系里被反复加固，使「文化正统」有了可朝拜的地点。",
+      "impact": "儒学成为帝国意识形态主干之前，先是地方性的礼乐知识网络；曲阜把正统钉在具体地点上，供朝野祭祀，也成为后世科举社会共享的象征地理。",
+      "geoWhy": "曲阜居鲁中，近泗水，是东周礼乐记忆最集中的一块乡土。",
+      "leadsTo": [
+        "evt-keju-origin"
+      ]
+    },
+    {
+      "id": "evt-hangou-digging",
+      "eraId": "warring-unify",
+      "year": -486,
+      "placeId": "yangzhou",
+      "title": "吴王夫差开邗沟",
+      "dynastyTag": "吴",
+      "people": [
+        "夫差"
+      ],
+      "personIds": [],
+      "summary": "鲁哀公九年（前486），吴王夫差为北上争霸，在扬州一带开凿邗沟，引长江水北入淮河，吴军因此可以由水路北进。邗沟是中国最早有明确记载的大型人工运河，也是后来京杭大运河最早的一段。",
+      "impact": "邗沟把长江与淮河两大水系连起来，隋代开通济渠、元代截弯取直时都以它为基础。它说明中国的运河最初是为军事和争霸而开，后来才变成漕运和商业的通道。",
+      "leadsTo": [
+        "evt-yangzhou-canal"
+      ],
+      "lede": "吴王夫差开邗沟，沟通长江与淮河。",
+      "kind": "科技",
+      "geoWhy": "长江与淮河之间有湖沼和低地，借天然水面凿通一条短渠，就能让大船北上。"
+    },
+    {
+      "id": "evt-ximen-bao",
+      "eraId": "warring-unify",
+      "year": -420,
+      "placeId": "ye",
+      "title": "西门豹治邺",
+      "dynastyTag": "战国·魏",
+      "people": [
+        "西门豹"
+      ],
+      "personIds": [],
+      "summary": "战国初年，魏文侯派西门豹任邺令。他破除了“河伯娶妇”的陋俗，又组织开凿十二条渠引漳水灌溉农田，使邺地由水患和贫困之地变为富庶。《史记·滑稽列传》记载了前一段故事。",
+      "impact": "西门豹治邺是中国早期水利工程和地方官治理的典型，邺因此成为战国魏国和后来曹魏、东魏、北齐的重要城市。以官府组织修渠、破除迷信，也成为后世循吏形象的样板。",
+      "leadsTo": [],
+      "lede": "西门豹治邺，引漳水灌田。",
+      "kind": "科技",
+      "geoWhy": "漳水挟带泥沙，在河北平原南部多次泛滥，引水灌溉既能防洪，又能淤灌盐碱地。"
+    },
+    {
+      "id": "evt-yugong",
+      "eraId": "warring-unify",
+      "year": -400,
+      "placeId": "luoyang",
+      "title": "《禹贡》与九州",
+      "dynastyTag": "战国",
+      "people": [],
+      "personIds": [],
+      "summary": "《尚书·禹贡》约成篇于战国时期，托名大禹，按山川划分冀、兖、青、徐、扬、荆、豫、梁、雍九州，并记述各州的山川、土壤、物产、贡赋和水运路线。“九州”后来成为中国的代称。",
+      "impact": "《禹贡》把天下想象成以山川为界的九个区域，把地理和赋税结合起来，影响了后世的政区划分与地理著作。历代正史地理志和《水经注》都沿用了以山川定区域的思路。",
+      "leadsTo": [],
+      "lede": "《禹贡》按山川划九州，是最早的地理分区。",
+      "kind": "文化",
+      "geoWhy": "九州以山脉和河流为界，反映了早期中国人按自然地理单元认识世界的方式。"
+    },
+    {
+      "id": "evt-jixia",
+      "eraId": "warring-unify",
+      "year": -360,
+      "placeId": "linzi",
+      "title": "稷下学宫",
+      "dynastyTag": "战国·齐",
+      "people": [
+        "孟子",
+        "荀子"
+      ],
+      "personIds": [],
+      "summary": "齐桓公田午、威王、宣王时期（约前4世纪），齐国在都城临淄稷门附近设立学宫，供各国学者讲学议政，孟子、荀子、邹衍、淳于髡等人都曾在此活动，是“百家争鸣”的重要场所。",
+      "impact": "稷下学宫是中国最早的官办高等学府之一，学者不任实职却受礼遇，议论国事相对自由。它促进了儒、道、法、阴阳等学派的交流和融合，也说明经济繁荣的城市能够供养思想家。",
+      "leadsTo": [],
+      "lede": "稷下学宫聚集百家学者，齐都成为思想中心。",
+      "kind": "文化",
+      "geoWhy": "临淄是海岱地区最富庶的工商都会，有财力供养大批学者，又处于东西南北交通的交会处。"
+    },
+    {
+      "id": "evt-shangyang",
+      "eraId": "warring-unify",
+      "year": -356,
+      "placeId": "xianyang",
+      "title": "商鞅变法",
+      "dynastyTag": "战国·秦",
+      "people": [
+        "商鞅",
+        "秦孝公"
+      ],
+      "personIds": [
+        "person-shangyang",
+        "person-qin-xiaogong"
+      ],
+      "summary": "秦孝公任用商鞅：开阡陌、什伍连坐、军功爵、重农抑商，把人口、土地与战功编成可计算的国家能力。变法使秦社会刚性化、功利化，却换来对山东列国的动员与后勤优势，为日后东出奠定制度底座。迁都咸阳、奖励耕战，等于把整个关中社会改造成战争机器的配件库。",
+      "impact": "统一的真正前提往往不是「人心思定」，而是谁先把编户齐民与军功激励咬合。汉以后反复争论的「秦制」去留，本质上是在问：没有这套动员术，大一统能否维持。商鞅留下的不只是酷法形象，更是「国家可以按人头与亩积算力」的行政语法；后世王朝骂秦，却离不开这套语法。",
+      "leadsTo": [
+        "evt-hangu-debate",
+        "evt-qin-unify"
+      ],
+      "lede": "商鞅变法，把人口、土地与战功编成可计算的国力。",
+      "kind": "政治"
+    },
+    {
+      "id": "evt-hangu-debate",
+      "eraId": "warring-unify",
+      "year": -318,
+      "placeId": "hangu",
+      "title": "函谷关与东西对峙定型",
+      "dynastyTag": "战国",
+      "people": [],
+      "personIds": [],
+      "summary": "函谷（及稍后潼关一线）成为山东联军仰攻关中的咽喉。多次合纵攻秦止步于关塞，说明形胜已被制度能力放大：关内粮仓与军团可内线作战，关外难以持久围困或拆散秦的动员网络。地理优势必须配合军功爵与仓廪，才称得上战略；光有山河而无户籍军功，关塞只是风景。",
+      "impact": "「关中本位」是古代战略地理的通则。楚汉、永嘉南渡后的北朝经营、安史后的藩镇格局、明末李自成入关，反复验证同一关隘—平原耦合逻辑。谁掌握关中，谁就对关东居高临下；谁丢掉关中，往往只能退守河洛或江南另起炉灶。读统一史，函谷一线几乎是地理上的「开关」。",
+      "leadsTo": [
+        "evt-qin-unify"
+      ],
+      "lede": "函谷关锁住崤函通道，关中据险，关东难攻。",
+      "kind": "军事",
+      "geoWhy": "函谷关扼崤函通道，卡住黄河拐弯处东西之间最窄的一段。"
+    },
+    {
+      "id": "evt-ba-shu",
+      "eraId": "warring-unify",
+      "year": -316,
+      "placeId": "chengdu",
+      "title": "秦灭巴蜀",
+      "dynastyTag": "秦",
+      "people": [
+        "司马错"
+      ],
+      "personIds": [],
+      "summary": "秦惠文王更元九年（前316），秦将司马错、张仪等人攻灭蜀国和巴国，设巴郡、蜀郡。秦军由金牛道入蜀，在此之前，蜀国是长江上游最大的政权。",
+      "impact": "巴蜀入秦，使秦得到成都平原的粮食和人力，也得到顺长江东下攻楚的上游基地。后来秦在统一战争中，正是靠巴蜀的粮食和水师，攻破了楚国的郢都。",
+      "leadsTo": [
+        "evt-dujiangyan"
+      ],
+      "lede": "秦灭巴蜀，得天府粮仓，并占据长江上游。",
+      "kind": "军事",
+      "geoWhy": "金牛道入蜀，山路险峻；成都平原四面环山又自成一体，被占后便成了秦的稳固后方。"
+    },
+    {
+      "id": "evt-huxi-qishe",
+      "eraId": "warring-unify",
+      "year": -307,
+      "placeId": "handan",
+      "title": "赵武灵王胡服骑射",
+      "dynastyTag": "战国·赵",
+      "people": [
+        "赵武灵王"
+      ],
+      "personIds": [],
+      "summary": "赵武灵王十九年（前307），赵国推行胡服骑射：改穿短衣窄袖的胡服，训练骑兵，放弃以车兵为主的作战方式。此后赵国北击林胡、楼烦，在北边筑长城，设云中、雁门、代郡。",
+      "impact": "胡服骑射使中原国家第一次系统学习游牧民族的骑射，骑兵从此成为战国后期的重要兵种，也促进了农耕与游牧地区的交流。赵国一度成为山东六国中最能与秦抗衡的力量，直到长平之战元气大伤。",
+      "leadsTo": [
+        "evt-changping"
+      ],
+      "lede": "赵武灵王胡服骑射，向游牧邻居学军事。",
+      "kind": "民族",
+      "geoWhy": "赵国北邻游牧部族，国土从邯郸一直延伸到阴山脚下，必须能在草原与平原两种地形上作战。"
+    },
+    {
+      "id": "evt-ying-fall",
+      "eraId": "warring-unify",
+      "year": -278,
+      "placeId": "ying",
+      "title": "白起拔郢",
+      "dynastyTag": "秦",
+      "people": [
+        "白起"
+      ],
+      "personIds": [
+        "person-bai-qi"
+      ],
+      "summary": "秦昭襄王二十九年（前278），秦将白起攻陷楚国都城郢（今湖北荆州），烧夷陵，楚顷襄王东迁陈。秦军以巴蜀的粮食和水师为后盾，沿长江顺流而下。",
+      "impact": "郢都失陷使楚国失去了长江中游的核心地带，国力一蹶不振，秦则在这里设南郡，把势力推进到江汉平原。长江中游从此成为秦统一战争中战略纵深最大的一片地区。",
+      "leadsTo": [],
+      "lede": "白起攻陷郢都，楚国被迫东迁。",
+      "kind": "军事",
+      "geoWhy": "郢都位于江汉平原，水陆交通方便；秦得巴蜀之后能顺长江东下，居高临下攻楚。"
+    },
+    {
+      "id": "evt-changping",
+      "eraId": "warring-unify",
+      "year": -260,
+      "placeId": "handan",
+      "title": "长平之战",
+      "dynastyTag": "战国·秦赵",
+      "people": [
+        "白起",
+        "赵括"
+      ],
+      "personIds": [
+        "person-bai-qi"
+      ],
+      "summary": "公元前260年，秦赵在上党—长平一线倾国相抗，赵军主力被歼。山东唯一能在总兵力与骑兵上长期威胁秦的赵国元气大伤，合纵失去可做脊梁的军事支柱。长平不只是一场战役，而是人口与后勤的极限对赌：谁能把更多壮丁与粮草持续送到太行东麓，谁就改写统一时间表。",
+      "impact": "统一战争从此更接近人口与士卒的消耗战，而非会盟外交的延长。六国更多是在延迟被吞并，联盟结构难以再组织起对等的战略反攻。赵国折损后，东方再难出现「第二个秦」式的对等动员体，合纵从外交问题变成军事脊梁断裂问题；合纵的失败，首先是军事脊梁断裂，其次才是外交默契的瓦解。",
+      "leadsTo": [
+        "evt-qin-unify"
+      ],
+      "lede": "秦赵长平对耗，赵军主力被歼，合纵失去脊梁。",
+      "kind": "军事",
+      "geoWhy": "上党居太行之巅，秦占此地便能自高处压住赵国所在的河北平原。"
+    },
+    {
+      "id": "evt-dujiangyan",
+      "eraId": "warring-unify",
+      "year": -256,
+      "placeId": "dujiangyan",
+      "title": "都江堰成堰与成都平原",
+      "dynastyTag": "战国秦",
+      "people": [
+        "李冰"
+      ],
+      "personIds": [
+        "person-li-bing"
+      ],
+      "summary": "秦蜀守李冰主持岷江分水，鱼嘴、飞沙堰与宝瓶口把洪水变成可调度的灌溉网。成都平原从此摆脱周期性洪灾主导，稻作面积与人口承载力跃升，为秦国提供稳定的西南粮仓与后方。这不是点状水利工程，而是把盆地地貌改写成帝国财政地理的基础设施。",
+      "impact": "「天府之国」名号的地理基础由此落实：谁控都江堰，谁就握有巴蜀人力与粮赋。汉唐至近代，成都平原的富庶都建立在这条分水逻辑上；统一王朝经营西南，往往先问岷江是否安澜。",
+      "leadsTo": [
+        "evt-qin-unify"
+      ],
+      "highlightPlaceIds": [
+        "dujiangyan",
+        "chengdu"
+      ],
+      "lede": "李冰在岷江分水，成都平原成为秦的粮仓。",
+      "kind": "科技",
+      "geoWhy": "岷江出山口的扇形平原，分水灌溉使成都平原成为天府。"
+    },
+    {
+      "id": "evt-zhengguoqu",
+      "eraId": "warring-unify",
+      "year": -246,
+      "placeId": "changan",
+      "title": "郑国渠与关中灌溉",
+      "dynastyTag": "战国秦",
+      "people": [
+        "郑国"
+      ],
+      "personIds": [],
+      "summary": "韩人郑国入秦主持引泾水东注洛水的渠道，意在疲秦却反成关中增产工程。渠道贯通北山南缘黄土台塬，盐碱地得以冲洗，关中亩产与军粮储备显著提高。地理上，它把泾洛之间的旱作带缝进咸阳的后勤半径。",
+      "impact": "关中本位不只靠四塞形胜，更靠可计算的灌溉产出。郑国渠与都江堰南北呼应，使秦在统一战争中拥有双粮仓；后世谈关中富强，水利地理与军功爵同样不可缺席。",
+      "leadsTo": [
+        "evt-qin-unify"
+      ],
+      "lede": "郑国渠引泾灌溉关中，疲秦之计反成增产工程。",
+      "kind": "科技"
+    },
+    {
+      "id": "evt-qin-unify",
+      "eraId": "warring-unify",
+      "year": -221,
+      "placeId": "xianyang",
+      "title": "秦并六国与帝制开端",
+      "dynastyTag": "秦",
+      "people": [
+        "秦始皇"
+      ],
+      "personIds": [
+        "person-qin-shihuang"
+      ],
+      "summary": "前230–前221年秦逐次灭国，齐亡后「皇帝」名号与郡县、车同轨、书同文、统一度量衡并行推出，并北筑长城、南取岭南。统一首先是军事结局，随即是标准化行政、交通与文书的工程，把六国异制强行压成可统计的帝国。皇帝制度把「天下」收成单一主权符号，郡县则把地方变成可替换的行政单元。皇帝名号与郡县、度量衡、文字同步推出，统一首先是标准化工程。",
+      "impact": "「中国」第一次被收成中央可穿透基层的行政空间。汉承秦制的含义是：可以痛骂秦政，却离不开秦留下的空间操作系统；后世王朝换人，很少换这张底盘——争论的是酷法轻重，而不是要不要郡县与统一文字。统一不是一次性仪式，而是把道路、货币、文书与边防写成同一套接口。",
+      "leadsTo": [
+        "evt-qin-collapse",
+        "evt-lingnan"
+      ],
+      "lede": "秦灭六国，皇帝名号与郡县、度量衡同步推出。",
+      "kind": "政治",
+      "compare": {
+        "label": "六国并立 → 秦统一",
+        "beforeYear": -250,
+        "afterYear": -215
+      }
+    },
+    {
+      "id": "evt-lingnan",
+      "eraId": "warring-unify",
+      "year": -214,
+      "placeId": "guangzhou",
+      "title": "略定岭南与南海郡",
+      "dynastyTag": "秦",
+      "people": [
+        "任嚣",
+        "赵佗"
+      ],
+      "personIds": [],
+      "summary": "秦逾五岭置桂林、象郡、南海，番禺成为南缘港口型郡治。北人戍卒、道路与本土社会相遇，岭南开始被拉进帝国财政与文书世界，同时也保留长久的边疆性格。五岭既是气候与交通障碍，也被行政道路凿穿；南征与置郡，使「南方」第一次进入帝国年表的固定栏目。五岭被行政道路凿穿后，湿热边疆开始进入帝国税册与戍卒网络。",
+      "impact": "帝国南界不再停在长江。广州一线日后成为海外贸易、南海政区与近代开埠的深位前提；没有秦的南向一凿，汉唐岭南经营会缺乏行政骨架。岭南纳入版籍，也意味着帝国必须长期面对湿热环境、水道交通与本土社会的磨合——这是南向扩张的制度成本，而不只是地图上多画几郡。",
+      "leadsTo": [
+        "evt-han-found"
+      ],
+      "lede": "秦军越五岭置南海等郡，帝国南界越过长江。",
+      "kind": "军事"
+    },
+    {
+      "id": "evt-lingqu",
+      "eraId": "qin-han",
+      "year": -214,
+      "placeId": "guilin",
+      "title": "灵渠接通湘漓",
+      "dynastyTag": "秦",
+      "people": [],
+      "personIds": [],
+      "summary": "秦在兴安开灵渠，以陡门连接湘江与漓江上游，使长江水系与珠江水系在五岭之间出现可通航接口。南征粮秣与人员得以部分走水路逾岭，岭南置郡不再只靠陆路栈道硬扛。这是帝国第一次用工程改写南岭交通地理。",
+      "impact": "五岭不再是绝对隔绝带，湘桂走廊成为南方经略的默认路线。汉唐经营岭南、近代湘军入粤，都反复走这条被灵渠点亮的水路接口；岭南置郡的后勤前提由此改变。",
+      "leadsTo": [
+        "evt-lingnan"
+      ],
+      "highlightPlaceIds": [
+        "guilin",
+        "guangzhou"
+      ],
+      "lede": "灵渠接通湘江与漓江，连起长江与珠江水系。",
+      "kind": "科技",
+      "geoWhy": "灵渠在湘、漓分水岭上凿通水道，连起长江与珠江水系。"
+    },
+    {
+      "id": "evt-fenshu",
+      "eraId": "warring-unify",
+      "year": -213,
+      "placeId": "xianyang",
+      "title": "焚书坑儒",
+      "dynastyTag": "秦",
+      "people": [
+        "秦始皇",
+        "李斯"
+      ],
+      "personIds": [
+        "person-qin-shihuang"
+      ],
+      "summary": "始皇三十四年（前213），丞相李斯建议焚毁史官以外的《诗》《书》和诸子书籍，禁止私学；次年又有方士和儒生因批评而被处死，史称焚书坑儒。民间收藏的典籍损失严重，官方博士所藏则保存下来。",
+      "impact": "这一事件常被作为秦政苛暴的象征，也说明统一国家需要统一思想与文字。汉代为恢复典籍花费很大精力，今文、古文经学之争也与焚书后的文本传承有关。",
+      "leadsTo": [
+        "evt-qin-collapse"
+      ],
+      "lede": "秦始皇焚书坑儒，统一思想的代价。",
+      "kind": "文化"
+    },
+    {
+      "id": "evt-qin-collapse",
+      "eraId": "warring-unify",
+      "year": -209,
+      "placeId": "kaifeng",
+      "title": "陈胜起事与秦急崩",
+      "dynastyTag": "秦末",
+      "people": [
+        "陈胜",
+        "吴广"
+      ],
+      "personIds": [
+        "person-chen-sheng"
+      ],
+      "summary": "前209年大泽乡戍卒失期起事，六国贵族与楚地英豪分头响应，三年内秦亡。统一帝国的脆弱性首次暴露：标准化若无弹性与合法性补给，崩溃可以快过建立。陈胜吴广点燃的是力役与严刑的积怨，项羽刘邦接力的是六国故地的再动员；关中形胜挡不住关东与楚地同时失火。",
+      "impact": "「速亡教训」写进帝国说明书：酷法、超规模力役与二世政治成为反面教材。汉的郡国并行、约法三章与轻徭薄赋，都是对秦崩的制度性反应。此后凡谈「秦制」，都必须同时谈秦崩——统一能力与合法性赤字可以同体共生，崩溃速度本身就是一种历史证据。",
+      "leadsTo": [
+        "evt-han-found"
+      ],
+      "lede": "陈胜吴广起事，关东楚地同时失火，秦转瞬崩溃。",
+      "kind": "军事"
+    },
+    {
+      "id": "evt-julu",
+      "eraId": "warring-unify",
+      "year": -207,
+      "placeId": "handan",
+      "title": "巨鹿之战",
+      "dynastyTag": "秦末",
+      "people": [
+        "项羽",
+        "章邯"
+      ],
+      "personIds": [
+        "person-xiang-yu"
+      ],
+      "summary": "秦二世三年（前207），项羽率楚军渡漳水救赵，破釜沉舟，与章邯率领的秦军主力在巨鹿大战，九战九胜，章邯后来投降。此战之后，诸侯军都归项羽统领。",
+      "impact": "秦军主力在巨鹿被歼，关中门户洞开，刘邦得以经武关先入关中，秦朝灭亡只剩时间问题。项羽成为诸侯上将军，也因此在灭秦后主持分封，埋下楚汉相争的种子。",
+      "leadsTo": [
+        "evt-han-found"
+      ],
+      "lede": "巨鹿之战，项羽破釜沉舟，歼灭秦军主力。",
+      "kind": "军事",
+      "geoWhy": "巨鹿位于漳水与河北平原之间，是秦军与六国故地联络的枢纽，战场开阔，利于大军决战。"
+    },
+    {
+      "id": "evt-han-found",
+      "eraId": "qin-han",
+      "year": -202,
+      "placeId": "changan",
+      "title": "楚汉终结与西汉定都长安",
+      "dynastyTag": "西汉",
+      "people": [
+        "刘邦",
+        "项羽"
+      ],
+      "personIds": [
+        "person-han-gaozu",
+        "person-xiang-yu"
+      ],
+      "summary": "刘邦击败项羽后即皇帝位，旋都长安。关中余民、陵邑移民与京兆尹体系，使帝都同时是军粮终点、宗庙所在与象征中心；东方战场合尾与西方立都之间的张力从此固定，帝国必须学会在形胜与财赋之间来回摆渡。楚汉之争留下的教训是：得关中者得后勤与形胜，得山东者得人口与粮仓，二者必须被同一政权缝合。楚汉合尾后都长安，把形胜侧政治中心与东方财赋之间的摆渡写成开国公式。",
+      "impact": "「都关中」成为对东方财赋的汲取姿态：政治中心放在形胜侧，经济重心却在关东乃至江南成长。二者张力贯穿两汉至唐，直到汴京—临安才改写公式；读汉唐史，都城选址几乎就是财政地理题。汉的开国地理选择，等于提前写下了「政治在西、财富在东」的长期作业题。",
+      "leadsTo": [
+        "evt-tui-en",
+        "evt-silk-road"
+      ],
+      "lede": "刘邦胜出楚汉之争，汉定都长安，承秦制而宽其政。",
+      "kind": "政治",
+      "compare": {
+        "label": "秦 → 汉",
+        "beforeYear": -215,
+        "afterYear": -100
+      }
+    },
+    {
+      "id": "evt-baideng",
+      "eraId": "qin-han",
+      "year": -200,
+      "placeId": "datong",
+      "title": "白登之围与汉匈和亲",
+      "dynastyTag": "汉",
+      "people": [
+        "刘邦",
+        "冒顿单于"
+      ],
+      "personIds": [
+        "person-han-gaozu",
+        "person-modun"
+      ],
+      "summary": "高帝七年（前200），刘邦率军北击匈奴，在平城东南的白登山被冒顿单于的骑兵围困七天，用陈平之计才得脱身。此后汉朝改行和亲、岁赠，直到武帝时才转入反攻。",
+      "impact": "白登之围使汉初君臣认识到，在草原上步兵很难追上骑兵，农耕政权的北线只能靠边塞和外交维持。匈奴也借此建立了对草原诸部的控制，汉匈长期对峙的格局由此成形。",
+      "leadsTo": [],
+      "lede": "刘邦被匈奴围困白登，汉朝转向和亲。",
+      "kind": "民族",
+      "geoWhy": "平城位于雁门以北的农牧交错带，匈奴骑兵可在数日内越过边塞逼近。"
+    },
+    {
+      "id": "evt-silk-road",
+      "eraId": "qin-han",
+      "year": -139,
+      "placeId": "changan",
+      "title": "张骞凿空",
+      "dynastyTag": "西汉",
+      "people": [
+        "张骞"
+      ],
+      "personIds": [
+        "person-zhangqian"
+      ],
+      "summary": "张骞出使月氏，被扣十余年而归报西域城邦与物产。武帝随即军政并行：河西列郡、屯田、都护，把「西域」从传闻写成可派官、可打仗、可贸易的行政对象，帝国第一次拥有面向中亚的常设经略工具。凿空的意义不在浪漫探险，而在情报、外交与后勤走廊被同时打开。",
+      "impact": "丝路是边防、外交与奢侈品财政的复合体，而非浪漫商旅故事；敦煌—酒泉走廊是其后勤脊柱。没有河西四郡，凿空只会停留在使节游记，而进不了帝国年表。张骞之后，「西域」从文学意象变成了职官、烽燧与戊己校尉可以落脚的空间——这才是地理进入制度的标志。",
+      "leadsTo": [
+        "evt-hexi-jun",
+        "evt-ban-chao"
+      ],
+      "lede": "张骞凿空西域，汉朝获得通往中亚的情报与通道。",
+      "kind": "政治",
+      "geoWhy": "祁连山北麓的河西走廊是干旱区里连续的绿洲带，也是通西域唯一可走的大道。",
+      "placeIds": [
+        "changan",
+        "dunhuang",
+        "kashgar"
+      ]
+    },
+    {
+      "id": "evt-xinan-yi",
+      "eraId": "qin-han",
+      "year": -130,
+      "placeId": "kunming",
+      "title": "开通西南夷道",
+      "dynastyTag": "西汉",
+      "people": [
+        "汉武帝"
+      ],
+      "personIds": [
+        "person-han-wudi"
+      ],
+      "summary": "武帝经略西南夷，发巴蜀兵治道，试图打通从四川盆地到滇池、夜郎乃至身毒的陆路。道路、屯戍与羁縻并举，把横断山脉东缘的部落地带拉进帝国驿道想象。地理阻力巨大，成败反复，却留下西南官道的早期骨架。",
+      "impact": "云贵高原不再只是化外叙事：驿道、郡县与土司制度的前史从这里长出。明清改土归流与近代滇缅公路，都是同一条「从盆地进高原」地理课题的后续作业。",
+      "leadsTo": [
+        "evt-miaojiang"
+      ],
+      "lede": "汉武帝开西南夷道，把巴蜀以南纳入郡县。",
+      "kind": "政治"
+    },
+    {
+      "id": "evt-tui-en",
+      "eraId": "qin-han",
+      "year": -127,
+      "placeId": "changan",
+      "title": "推恩令与王国削实",
+      "dynastyTag": "西汉",
+      "people": [
+        "汉武帝",
+        "主父偃"
+      ],
+      "personIds": [
+        "person-han-wudi"
+      ],
+      "summary": "武帝采纳主父偃之策，允许诸侯王分割支庶为列侯，王国版图在继承中自行碎化，中央不战而收权。配合十三州刺史监察，郡国并行走向实质郡县化。推恩令把家族伦理变成政治手术刀：每多一个合法继承人，王国就少一块连片的军政空间，尾大不掉在继承法里被悄悄拆解。",
+      "impact": "用家族伦理做政治手术，解决同姓尾大的经典手法。后世藩镇、宗室与「众建诸侯而少其力」的议论，反复回响推恩逻辑。它证明中央集权不必总靠屠刀：制度设计可以把离心力转化为自我碎化。汉代政治地理的收紧，很大一部分是在谱牒与袭爵规则里完成的。",
+      "leadsTo": [
+        "evt-silk-road"
+      ],
+      "lede": "推恩令让诸侯分封子弟，王国自行碎化。",
+      "kind": "政治"
+    },
+    {
+      "id": "evt-hexi-jun",
+      "eraId": "qin-han",
+      "year": -121,
+      "placeId": "wuwei",
+      "title": "河西四郡开置",
+      "dynastyTag": "西汉",
+      "people": [
+        "霍去病"
+      ],
+      "personIds": [
+        "person-huo-qubing"
+      ],
+      "summary": "漠南战后，汉陆续开武威、张掖、酒泉、敦煌，切断匈奴与羌的联系，保护通西域走廊，并移民屯田以为久计。四郡把河西走廊从游牧通道改写成帝国驿站与粮仓链，使长安到西域的人力物资可以按站接力，而不必每次远征都从零补给。",
+      "impact": "河西成为中国古代的「内亚接口」。谁控制四郡，谁就对天山南北拥有发言权；隋唐、明清经营西北，都沿这条走廊做加减法。丢掉河西，等于切断帝国伸向中亚的手臂；守住河西，则可以把长城防线与绿洲城邦连成一条可管理的边疆带。",
+      "leadsTo": [
+        "evt-ban-chao"
+      ],
+      "lede": "汉置河西四郡，把游牧通道改成驿站与粮仓链。",
+      "kind": "军事",
+      "placeIds": [
+        "wuwei",
+        "zhangye",
+        "jiuquan",
+        "dunhuang"
+      ]
+    },
+    {
+      "id": "evt-yantie",
+      "eraId": "qin-han",
+      "year": -119,
+      "placeId": "changan",
+      "title": "盐铁官营",
+      "dynastyTag": "汉",
+      "people": [
+        "汉武帝",
+        "桑弘羊",
+        "孔仅"
+      ],
+      "personIds": [
+        "person-han-wudi",
+        "person-sang-hongyang"
+      ],
+      "summary": "元狩四年（前119），汉武帝在对匈奴连年用兵、财政吃紧的背景下，任用东郭咸阳、孔仅等人推行盐铁官营，在各郡设盐官、铁官，从产地到销售由官府统一管理。后来桑弘羊又主持了均输、平准等更多国营措施。",
+      "impact": "官营增加了国家收入，保证了对外战争的财政，也引发了汉昭帝时的“盐铁会议”，围绕国家是否应与民争利展开辩论，《盐铁论》记录了这场辩论。此后盐铁专卖成为历代财政的重要来源。",
+      "leadsTo": [],
+      "lede": "汉武帝收盐铁归官营，国家直接经营工商业。",
+      "kind": "经济",
+      "geoWhy": "盐和铁的产地分散在沿海、盐池和矿区，官府在各产地设官，才能把分散的资源收进国家手里。"
+    },
+    {
+      "id": "evt-wangmang",
+      "eraId": "qin-han",
+      "year": 9,
+      "placeId": "changan",
+      "title": "王莽改制与新朝",
+      "dynastyTag": "新",
+      "people": [
+        "王莽"
+      ],
+      "personIds": [
+        "person-wang-mang"
+      ],
+      "summary": "王莽代汉，托古改币、王田、五均六筦，试图用经典理想重装帝国。制度震荡叠加边患与灾异，绿林赤眉起，长安残破，新朝速亡。王莽把「复古」当成财政政策工具，结果是货币信用与土地预期同时崩坏；理想国说明书撞上官僚执行与豪族利益，立刻变成全国性混乱。托古改币与王田理想撞上执行层与豪族利益，货币信用与土地预期同时崩坏。",
+      "impact": "证明经典原教旨无法直接当财政政策。光武重建更谨慎，也更依赖豪族网络；土地与奴婢矛盾被推迟，直到黄巾总爆发才以宗教—军事形式摊牌。王莽失败的遗产是：任何大规模制度再设计，若不同时解决执行层与既得利益，都会先在京师与关东同时失火。",
+      "leadsTo": [
+        "evt-huangjin"
+      ],
+      "lede": "王莽托古改制，币制与王田令引发全面反弹。",
+      "kind": "政治"
+    },
+    {
+      "id": "evt-huanghe-11",
+      "eraId": "qin-han",
+      "year": 11,
+      "placeId": "kaifeng",
+      "placeIds": [
+        "kaifeng",
+        "luoyang"
+      ],
+      "title": "黄河改道与王景治河",
+      "dynastyTag": "新—东汉",
+      "people": [
+        "王景"
+      ],
+      "personIds": [],
+      "kind": "灾害",
+      "lede": "黄河大改道，东汉治河后北流近千年。",
+      "summary": "王莽始建国三年河决，主流改走东北入渤海一线；东汉明帝时王景治河，大致稳定了濮阳以下的新河道。华北平原中部从此少了一条大河，冀中水网与农田格局重写。",
+      "impact": "河患与漕运从此绑在同一条地理账上：治河不只是救灾，也是保住京师粮道与河北边防。唐宋以前「北流」格局，成为理解北宋河患争论的前提。",
+      "geoWhy": "黄河出荥阳后游荡于华北平原，决口一次就能改写入海口与农区边界。",
+      "leadsTo": [
+        "evt-huanghe-1194"
+      ],
+      "compare": {
+        "label": "黄河改道前后",
+        "beforeYear": 5,
+        "afterYear": 20
+      },
+      "source": [
+        {
+          "work": "《后汉书·循吏列传》（王景传）",
+          "loc": "卷七十六：遣景与王吴修渠筑堤，自荥阳东至千乘海口千余里",
+          "url": "https://www.shidianguji.com/book/HY2027/chapter/1knxmrvthq1q7"
+        }
+      ]
+    },
+    {
+      "id": "evt-nan-xiongnu",
+      "eraId": "qin-han",
+      "year": 48,
+      "placeId": "jiuyuan",
+      "title": "南匈奴内附",
+      "dynastyTag": "东汉",
+      "people": [
+        "呼韩邪单于比"
+      ],
+      "personIds": [],
+      "summary": "建武二十四年（48），匈奴因连年天灾和内争分裂为南北两部，日逐王比自立为呼韩邪单于，率南部诸部归附东汉，被安置在河套、五原一带的边郡。北匈奴此后被汉军与鲜卑等部压迫，逐渐西迁。",
+      "impact": "南匈奴入居塞内，成为后来“五胡”进入中原的重要源头。东汉以后，北方边郡的人口构成越来越多元，农牧之间的界线不再是一道墙，而是一片杂居带。",
+      "leadsTo": [],
+      "lede": "匈奴分裂，南匈奴内附，塞内出现新的杂居带。",
+      "kind": "民族",
+      "geoWhy": "河套地区草场和农田相接，边郡可以安置牧民，也成了胡汉杂居的前沿。"
+    },
+    {
+      "id": "evt-yongping-buddhism",
+      "eraId": "qin-han",
+      "year": 67,
+      "placeId": "luoyang",
+      "title": "永平求法与洛阳白马寺",
+      "dynastyTag": "东汉",
+      "people": [
+        "汉明帝",
+        "迦叶摩腾",
+        "竺法兰"
+      ],
+      "personIds": [],
+      "summary": "相传永平十年（67）汉明帝遣使西行求法，迎回天竺僧人迦叶摩腾、竺法兰，并在洛阳雍门外建白马寺。求法故事的细节出自后世佛教文献，但佛教在东汉初年已由西域传入京师，这一点没有疑问。",
+      "impact": "佛教沿河西走廊—洛阳一线进入中原，先依附黄老方术，到魏晋南北朝借乱世扩张为主要信仰之一。白马寺被称为“释源”，洛阳也成为早期译经与寺院的中心。",
+      "leadsTo": [],
+      "lede": "洛阳建白马寺，佛教沿丝路进入中原。",
+      "kind": "文化",
+      "geoWhy": "佛教沿丝路经河西走廊先到都城洛阳，白马寺建在京师城外。"
+    },
+    {
+      "id": "evt-ban-chao",
+      "eraId": "qin-han",
+      "year": 73,
+      "placeId": "kashgar",
+      "title": "班超再通西域",
+      "dynastyTag": "东汉",
+      "people": [
+        "班超"
+      ],
+      "personIds": [
+        "person-ban-chao"
+      ],
+      "summary": "东汉中衰后再图西域，班超以极少兵力纵横疏勒等地，重置都护威信。西域秩序更多依赖精英外交与本地联盟，而非单纯堆屯重兵；班超的三十年经营，示范了在财政吃紧时如何用政治企业家精神维持走廊畅通。疏勒、于阗等城邦的向背，往往比汉军人数更能决定都护能否站住。班超以极少数兵力重置都护威信，靠的是本地联盟与持续驻留，而非堆屯重兵。",
+      "impact": "留下羁縻与「以夷制夷」的实操样本：财政吃紧时，帝国仍愿为贸易走廊与侧翼安全支付政治企业家成本；也显示西域经营的节奏可以中断再续。班超证明边疆不一定靠重兵压镇，但必须有可持续的本地同盟与中央意志——二者缺一，走廊就会重新碎成互不统属的城邦战场。财政吃紧时仍愿为走廊支付政治企业家成本，说明西域经营可以中断再续，但不能没有同盟。",
+      "leadsTo": [
+        "evt-huangjin"
+      ],
+      "lede": "班超以少量兵力重新控制天山南路诸国。",
+      "kind": "军事",
+      "placeIds": [
+        "kashgar",
+        "jiuquan",
+        "hotan",
+        "kuqa"
+      ]
+    },
+    {
+      "id": "evt-cailun-paper",
+      "eraId": "qin-han",
+      "year": 105,
+      "placeId": "luoyang",
+      "title": "蔡伦改进造纸与纸的推广",
+      "dynastyTag": "东汉",
+      "people": [
+        "蔡伦",
+        "汉和帝"
+      ],
+      "personIds": [
+        "person-cai-lun"
+      ],
+      "summary": "元兴元年（105），尚方令蔡伦向和帝上报以树皮、麻头、破布和渔网为原料造纸的方法。考古已发现更早的西汉纸，蔡伦的贡献在于总结并推广了一套低成本、可大批量生产的工艺。",
+      "impact": "廉价的书写材料逐步取代简牍与缣帛，文书、典籍和教育的成本大幅下降，官僚行政和士人阶层的扩张有了物质条件。造纸术后来经丝路传入中亚、阿拉伯世界和欧洲。",
+      "leadsTo": [],
+      "lede": "蔡伦总结造纸工艺，廉价纸张开始取代简牍。",
+      "kind": "科技",
+      "geoWhy": "尚方官署设在都城洛阳，集中了原料、工匠与朝廷用纸需求。"
+    },
+    {
+      "id": "evt-zhangheng-seismoscope",
+      "eraId": "qin-han",
+      "year": 132,
+      "placeId": "luoyang",
+      "title": "张衡制候风地动仪",
+      "dynastyTag": "东汉",
+      "people": [
+        "张衡"
+      ],
+      "personIds": [
+        "person-zhang-heng"
+      ],
+      "summary": "阳嘉元年（132），太史令张衡制成候风地动仪，用铜龙吐丸的方式显示地震的方位。《后汉书》记载，138年仪器的西面龙口吐丸，数日后驿使来报陇西发生了地震。",
+      "impact": "它是世界上有记载的最早地震仪器之一，说明汉代已把灾异从占卜转向监测和记录。原仪早已不存，复原方案至今仍有分歧，学术界对其原理没有统一结论。",
+      "leadsTo": [],
+      "lede": "张衡造地动仪，用仪器感知远方的地震。",
+      "kind": "科技",
+      "geoWhy": "洛阳与陇西相隔数百公里，驿传要数日，仪器能让朝廷先知道震向。"
+    },
+    {
+      "id": "evt-huangjin",
+      "eraId": "qin-han",
+      "year": 184,
+      "placeId": "zhengzhou",
+      "title": "黄巾起事",
+      "dynastyTag": "东汉",
+      "people": [
+        "张角"
+      ],
+      "personIds": [
+        "person-zhang-jue"
+      ],
+      "summary": "太平道以宗教网络组织青徐兖豫等地青壮，州郡失守、京师震动。为平叛而放权，州由监察区变为军政实体，州牧握兵握财。黄巾的意义不只是「农民起义」，更是帝国第一次大规模用宗教结社完成跨郡动员，迫使中央把监察官改造成带兵的州牧。",
+      "impact": "帝国操作系统内核被改写：做大的州牧正是三国分裂的制度前夜。宗教动员与地方军事化并行，中古乱局的开关由此按下。黄巾被镇压后，真正留下来的不是太平道教义，而是州牧握兵的行政现实——统一帝国从此必须与武装地方长官共存。",
+      "leadsTo": [
+        "evt-three-kingdoms"
+      ],
+      "lede": "黄巾起事迫使朝廷设州牧，地方握兵成定局。",
+      "kind": "军事"
+    },
+    {
+      "id": "evt-guandu",
+      "eraId": "qin-han",
+      "year": 200,
+      "placeId": "zhengzhou",
+      "title": "官渡之战",
+      "dynastyTag": "东汉",
+      "people": [
+        "曹操",
+        "袁绍"
+      ],
+      "personIds": [],
+      "summary": "建安五年（200），曹操与袁绍对峙于官渡（今河南中牟一带），曹军兵力处于劣势，却突袭袁军屯粮的乌巢，粮草被焚后袁军溃败。此战后袁氏势力迅速衰落，曹操在207年前后基本平定河北。",
+      "impact": "官渡之战使黄河以北最大的割据势力瓦解，曹操得以把中原农业区与河北人口合并，为后来魏国奠定基础。它也是以少胜多、争夺补给线的经典战例，后世常用来说明后勤对决战胜负的作用。",
+      "leadsTo": [],
+      "lede": "官渡之战，曹操以少胜多败袁绍，奠定统一北方之基。",
+      "kind": "军事",
+      "geoWhy": "官渡扼黄河南岸、鸿沟水道之间的运输要冲，袁军粮仓乌巢被烧就断了补给。"
+    },
+    {
+      "id": "evt-chibi",
+      "eraId": "qin-han",
+      "year": 208,
+      "placeId": "wuchang",
+      "title": "赤壁之战",
+      "dynastyTag": "东汉",
+      "people": [
+        "曹操",
+        "孙权",
+        "刘备",
+        "周瑜"
+      ],
+      "personIds": [
+        "person-liu-bei"
+      ],
+      "summary": "建安十三年（208），曹操平定荆州后顺长江东下，孙权、刘备联军在赤壁一带以火攻击败曹军，曹军退回北方。具体战场位置史学界仍有争论，一般认为在今湖北赤壁至武汉江段之间。",
+      "impact": "赤壁之战阻止了曹操一举统一南方，使孙权保住江东，刘备得以占据荆州一部并入蜀，三国鼎立的格局由此成形。长江天险从此成为南北对峙的天然防线。",
+      "leadsTo": [
+        "evt-three-kingdoms"
+      ],
+      "lede": "赤壁之战，孙刘联军火攻败曹军，三分格局初定。",
+      "kind": "军事",
+      "geoWhy": "曹军多是北方兵，不习水战，战船连锁、江面开阔又遇东南风，火攻因此奏效。"
+    },
+    {
+      "id": "evt-three-kingdoms",
+      "eraId": "division-rebuild",
+      "year": 220,
+      "placeId": "luoyang",
+      "title": "曹丕代汉与三国开场",
+      "dynastyTag": "魏",
+      "people": [
+        "曹丕"
+      ],
+      "personIds": [
+        "person-cao-pi"
+      ],
+      "summary": "曹丕逼禅称帝，刘备、孙权相继立国。北方屯田与九品官人，蜀汉汉中—成都补给线，江东水军与江淮防线，三分成相对稳定的军事生态，而非短暂军阀混战；各自都在学习如何把战时动员变成可继承的政权。赤壁之后的均势，是长江天险、北方骑兵与西南补给线三方互相卡住的结果。",
+      "impact": "「正统」变得可竞争：谁继承汉统，谁就握有意识形态武器。东晋、南宋的流亡法统叙事，都从这里学会如何在半壁维持合法性——地理上的分裂，反而逼出更精致的正统话语。三国不是简单的英雄传奇，而是中国第一次长时间多政权并存并各自完成国家化的实验场。正统变得可竞争：半壁政权学会用意识形态维持合法性，为东晋、南宋流亡叙事提供模板。",
+      "leadsTo": [
+        "evt-jiankang-capital",
+        "evt-yiling"
+      ],
+      "lede": "曹丕代汉，魏蜀吴三分，长江天险卡住北方骑兵。",
+      "kind": "政治",
+      "compare": {
+        "label": "东汉 → 三国鼎立",
+        "beforeYear": 170,
+        "afterYear": 240
+      }
+    },
+    {
+      "id": "evt-yiling",
+      "eraId": "division-rebuild",
+      "year": 222,
+      "placeId": "jiangling",
+      "title": "夷陵之战",
+      "dynastyTag": "吴蜀",
+      "people": [
+        "刘备",
+        "陆逊"
+      ],
+      "personIds": [
+        "person-liu-bei",
+        "person-lu-xun"
+      ],
+      "summary": "刘备为关羽之仇伐吴，在夷陵（猇亭）一线被陆逊火攻大败，蜀汉扩张动能耗尽，三国均势固化，长江上下游暂时停止战略互噬。夷陵之战把蜀汉从「北伐有望」打回「自保为主」：荆州丢失之后再折夷陵，蜀汉再也无法同时威胁江东与中原。",
+      "impact": "南方政治地理稳定为「蜀守险、吴控江」。没有这场惨败，吴蜀联盟破裂后的再平衡会更漫长，北魏—西晋统一南方的窗口也可能改写。夷陵把长江上游锁定为守势政权，中下游锁定为水军政权，北方则获得各个击破的时间——三分之势由此真正板结。",
+      "leadsTo": [
+        "evt-jiankang-capital"
+      ],
+      "lede": "夷陵之战，陆逊火攻破蜀军，蜀汉收复荆州无望。",
+      "kind": "军事"
+    },
+    {
+      "id": "evt-beifa",
+      "eraId": "division-rebuild",
+      "year": 228,
+      "placeId": "hanzhong",
+      "title": "诸葛亮北伐",
+      "dynastyTag": "蜀汉",
+      "people": [
+        "诸葛亮"
+      ],
+      "personIds": [],
+      "summary": "建兴六年（228）起，诸葛亮多次率蜀军自汉中北出，进攻魏的陇右和关中，先后五次，234年病逝于五丈原。北伐的路线主要有祁山道和斜谷道，都要翻越秦岭、陇山的险路。",
+      "impact": "北伐没有改变三国的力量对比，却反映出蜀汉以益州一隅对抗中原的战略困境：人口少、粮运难。相传的木牛流马和屯田等办法，也都是为了解决运粮问题。",
+      "leadsTo": [],
+      "lede": "诸葛亮出祁山北伐，蜀道补给成了最大的瓶颈。",
+      "kind": "军事",
+      "geoWhy": "汉中与关中之间隔着秦岭，栈道难行、转运困难，蜀军屡因粮尽而退。"
+    },
+    {
+      "id": "evt-wu-fall",
+      "eraId": "division-rebuild",
+      "year": 280,
+      "placeId": "jiankang",
+      "title": "西晋灭吴",
+      "dynastyTag": "西晋",
+      "people": [
+        "司马炎",
+        "王濬"
+      ],
+      "personIds": [],
+      "summary": "太康元年（280），西晋发兵六路伐吴，益州刺史王濬的水军自成都顺江东下，破吴国在江中设置的铁锁和木桩，直下建业，吴主孙皓投降。三国分立的局面至此结束。",
+      "impact": "统一只持续了不到二十年：八王之乱、永嘉之乱接踵而至。长江天险既能保住孙吴，也能被上游水军顺流突破，此后南北朝的攻守都在这条线上展开。",
+      "leadsTo": [
+        "evt-yongjia-fall"
+      ],
+      "lede": "晋军六路伐吴，三国归晋。",
+      "kind": "军事",
+      "geoWhy": "上游益州水军顺江而下，长江天险从屏障变成了通道。"
+    },
+    {
+      "id": "evt-yongjia-fall",
+      "eraId": "division-rebuild",
+      "year": 311,
+      "placeId": "luoyang",
+      "title": "永嘉之乱与洛阳陷落",
+      "dynastyTag": "西晋",
+      "people": [
+        "晋怀帝",
+        "刘曜"
+      ],
+      "personIds": [],
+      "summary": "永嘉五年（311），匈奴贵族建立的汉国军队攻入洛阳，俘获晋怀帝，焚烧宫室，史称永嘉之乱；316年长安也被攻陷，西晋灭亡。此前八王之乱已耗尽西晋的兵力和财力，内迁各族势力借机崛起。",
+      "impact": "中原大批士族和百姓沿淮泗、汉水、秦岭南渡，形成东晋南朝的侨姓士族和侨州郡县；北方则进入十六国时期，各族政权并立。南北人口与经济重心的分化，就从这里开始。",
+      "leadsTo": [
+        "evt-jiankang-capital"
+      ],
+      "lede": "洛阳陷于匈奴汉国，中原士民开始南迁。",
+      "kind": "民族",
+      "geoWhy": "洛阳四面平坦、无险可守，一旦失去禁军，就挡不住来自并州、关中的骑兵。",
+      "placeIds": [
+        "luoyang",
+        "changan"
+      ]
+    },
+    {
+      "id": "evt-jiankang-capital",
+      "eraId": "division-rebuild",
+      "year": 317,
+      "placeId": "jiankang",
+      "title": "东晋再造于建康",
+      "dynastyTag": "东晋",
+      "people": [
+        "司马睿",
+        "王导"
+      ],
+      "personIds": [
+        "person-sima-rui",
+        "person-wang-dao"
+      ],
+      "summary": "永嘉之乱后，司马睿在建康称晋王并即帝位，王与马共天下。北来侨姓与吴姓大族共享政权，南方第一次成为中原正统的承载地，而不仅是边郡粮仓；北人政权必须学会与江东土著共治。建康城墙、秦淮河与石头城，构成了半壁法统的日常舞台。",
+      "impact": "建康—金陵—南京政治地名链正式启动；经济重心南移从人口事实上升为法统事实。没有东晋，就没有南朝文物与唐宋江南财赋的历史深度——江南从此可以声称自己也是「中国」。南渡把「正统可搬迁」写进政治地理：丢掉洛阳不等于丢掉中国，只要还能在长江下游重建礼仪与选官。",
+      "leadsTo": [
+        "evt-xiaowendi",
+        "evt-sui-unify"
+      ],
+      "lede": "西晋亡后司马睿在建康重建朝廷，北人大批南迁。",
+      "kind": "政治",
+      "placeIds": [
+        "jiankang",
+        "luoyang"
+      ]
+    },
+    {
+      "id": "evt-mogao",
+      "eraId": "division-rebuild",
+      "year": 366,
+      "placeId": "dunhuang",
+      "title": "莫高窟始凿",
+      "dynastyTag": "前秦",
+      "people": [
+        "乐僔"
+      ],
+      "personIds": [],
+      "summary": "前秦建元二年（366），僧人乐僔在敦煌东南的鸣沙山崖壁上开凿了第一座洞窟，此后历代相继开凿。保存至今的洞窟有七百余座，壁画和彩塑前后延续了约一千年。",
+      "impact": "莫高窟把印度、中亚、河西和中原的艺术风格叠在同一面崖壁上，是丝路文化交流最完整的实物档案。宋元以后陆路丝路的地位下降，敦煌衰落，洞窟反而因偏僻得以保存。",
+      "leadsTo": [],
+      "lede": "乐僔始凿莫高窟，丝路咽喉留下千年洞窟。",
+      "kind": "文化",
+      "geoWhy": "敦煌是河西走廊西端、丝路南北道分岔处；砾岩崖壁不宜石雕，只能做泥塑和壁画。"
+    },
+    {
+      "id": "evt-feishui",
+      "eraId": "division-rebuild",
+      "year": 383,
+      "placeId": "shouchun",
+      "title": "淝水之战与江淮线",
+      "dynastyTag": "东晋",
+      "people": [
+        "谢安",
+        "苻坚"
+      ],
+      "personIds": [
+        "person-xie-an",
+        "person-fu-jian"
+      ],
+      "summary": "前秦大军南下至淮淝一线，东晋以江淮为防线决战。胜负改写南北均势，但更持久的是地理结论：淮河—长江之间的河网与粮道，足以支撑南方政权抵挡北方骑兵的正面冲击。寿春—合肥—江东构成一条可反复使用的国防带。",
+      "impact": "此后凡北人南征，必须回答「如何过淮过江」；凡南人北伐，必须回答「如何在中原站稳」。淝水把江淮写成中国分裂时期的默认战略地理公式。",
+      "leadsTo": [
+        "evt-jiankang-capital"
+      ],
+      "lede": "淝水之战，前秦大军溃于淮河支流淝水。",
+      "kind": "军事",
+      "geoWhy": "淮河—淝水一线是南北之间的水网缓冲带，北方骑兵优势到此被消解。"
+    },
+    {
+      "id": "evt-beiwei-unify",
+      "eraId": "division-rebuild",
+      "year": 439,
+      "placeId": "datong",
+      "title": "北魏统一黄河流域",
+      "dynastyTag": "北魏",
+      "people": [
+        "拓跋焘"
+      ],
+      "personIds": [],
+      "summary": "太延五年（439），北魏太武帝拓跋焘攻灭北凉，结束了十六国以来北方长期分裂的局面。此后北魏与江南的刘宋隔淮对峙，历史进入南北朝时期。",
+      "impact": "统一北方使游牧出身的统治者开始面对农业社会的治理问题，推动了均田制、三长制和迁都洛阳等后来的汉化改革。河西走廊重新纳入北朝，丝路北道的东段也随之恢复。",
+      "leadsTo": [
+        "evt-xiaowendi"
+      ],
+      "lede": "北魏灭北凉，统一黄河流域，南北朝对峙开始。",
+      "kind": "军事",
+      "geoWhy": "平城地处农牧交界，北魏骑兵能南下中原，也能西控河西走廊。"
+    },
+    {
+      "id": "evt-miefo-446",
+      "eraId": "division-rebuild",
+      "year": 446,
+      "placeId": "datong",
+      "title": "太武帝灭佛",
+      "dynastyTag": "北魏",
+      "people": [
+        "北魏太武帝"
+      ],
+      "personIds": [],
+      "summary": "太平真君七年（446），北魏太武帝在平定盖吴起义后下诏毁佛，拆寺焚经，僧人被迫还俗，这是中国历史上“三武一宗”灭佛的第一次。452年文成帝即位，很快恢复了佛教。",
+      "impact": "这次灭佛与道教势力、国家财政和兵源有关，也使僧人对王权的依附更加明确。复兴后的佛教由国家主导，昙曜奏请开凿云冈石窟，正是这一背景下的产物。",
+      "leadsTo": [
+        "evt-yungang"
+      ],
+      "lede": "太武帝下令灭佛，数年后文成帝复兴佛教。",
+      "kind": "文化"
+    },
+    {
+      "id": "evt-yungang",
+      "eraId": "division-rebuild",
+      "year": 460,
+      "placeId": "datong",
+      "title": "云冈石窟与昙曜五窟",
+      "dynastyTag": "北魏",
+      "people": [
+        "昙曜",
+        "北魏文成帝"
+      ],
+      "personIds": [
+        "person-tan-yao"
+      ],
+      "summary": "北魏和平初年（约460），沙门统昙曜奏请在平城西的武州山崖开凿石窟，先成五座大像窟，一般认为分别对应北魏的五位皇帝。工程由国家主持，延续到孝文帝迁洛前后。",
+      "impact": "云冈是中国第一处由皇室主持的大规模石窟群，把西域和犍陀罗的造像传统带到了黄河以北，迁都洛阳之后风格转向更中原化。龙门石窟承接的正是这条线。",
+      "leadsTo": [
+        "evt-xiaowendi"
+      ],
+      "lede": "昙曜在平城西开五窟，皇家主持的石窟自此起步。",
+      "kind": "文化",
+      "geoWhy": "平城是北魏首都，武州山的砂岩质地松软易凿，工程可由京师直接调度。"
+    },
+    {
+      "id": "evt-zuchongzhi",
+      "eraId": "division-rebuild",
+      "year": 480,
+      "placeId": "jiankang",
+      "title": "祖冲之推算圆周率",
+      "dynastyTag": "南朝宋—齐",
+      "people": [
+        "祖冲之"
+      ],
+      "personIds": [],
+      "summary": "南朝宋、齐之际，祖冲之在建康一带推算圆周率，得到的值在3.1415926与3.1415927之间，这个精度在世界上保持了近千年。他还提出大明历，首次把岁差引入历法。",
+      "impact": "祖冲之的成果载于其著作《缀术》，但该书后来失传，今人主要通过《隋书》的记载了解。他在天文历算上的工作表明，南朝虽然政治上动荡，江南的科学传统仍然延续。",
+      "leadsTo": [],
+      "lede": "祖冲之把圆周率推算到小数点后七位。",
+      "kind": "科技"
+    },
+    {
+      "id": "evt-xiaowendi",
+      "eraId": "division-rebuild",
+      "year": 494,
+      "placeId": "luoyang",
+      "title": "北魏孝文帝迁洛与汉化",
+      "dynastyTag": "北魏",
+      "people": [
+        "拓跋宏"
+      ],
+      "personIds": [
+        "person-xiaowen"
+      ],
+      "summary": "北魏孝文帝自平城迁洛，禁胡语胡服、改汉姓、定门阀，推行均田与三长，意在把鲜卑军事国家改造成可统治农业核心区的中原式王朝。迁都洛阳不只是搬家，而是把统治重心从代北牧区推入伊洛农耕核心，并用门第与礼乐重新定义谁有资格进入帝国上层。",
+      "impact": "胡汉制度融合的高峰实验：礼乐门第成功处，六镇反弹随之而来。隋唐制度库大量继承北朝成果，而非只继承南朝风流——这是读中古史的关键校正。孝文改革证明：征服者可以主动汉化以统治农业核心，但边缘军镇若被制度抛弃，就会以叛乱形式索回发言权。",
+      "leadsTo": [
+        "evt-sui-unify"
+      ],
+      "lede": "北魏孝文帝迁都洛阳，推行全面汉化。",
+      "kind": "民族"
+    },
+    {
+      "id": "evt-liuzhen",
+      "eraId": "division-rebuild",
+      "year": 523,
+      "placeId": "datong",
+      "title": "六镇起义与北边军镇",
+      "dynastyTag": "北魏",
+      "people": [],
+      "personIds": [],
+      "summary": "北魏迁洛后，沃野至怀朔等六镇戍卒地位下降，边镇爆发起义并蔓延。地理上，这是农耕核心区礼乐门第与草原边缘军镇之间的断裂：迁都把政治重心南移，却把北边防御带抛在制度之外。军镇地理一旦失血，洛阳的汉化实验也会失稳。",
+      "impact": "提醒征服王朝：边疆军镇与核心区必须同表运行。隋唐府兵与羁縻、明清九边与驻防，都在不同程度上回应「边缘武装如何安置」这一地理—制度问题。",
+      "leadsTo": [
+        "evt-xiaowendi"
+      ],
+      "lede": "六镇起义爆发，北魏北边军镇的边缘化酿成崩溃。",
+      "kind": "军事"
+    },
+    {
+      "id": "evt-qimin-yaoshu",
+      "eraId": "division-rebuild",
+      "year": 540,
+      "placeId": "linzi",
+      "title": "贾思勰与《齐民要术》",
+      "dynastyTag": "北魏",
+      "people": [
+        "贾思勰"
+      ],
+      "personIds": [],
+      "summary": "北魏末年（约533—544），高阳太守贾思勰写成《齐民要术》，系统总结黄河中下游的旱地耕作、选种、轮作、园艺、畜牧和农产品加工。书中大量引用此前的农书，并记下作者亲自访问农民得来的经验。",
+      "impact": "它是现存最早、最完整的综合性农书，影响了后世农书的写法。书中强调抢墒保墒、轮作和绿肥，说明华北旱作农业在这一时期已形成成熟的技术体系，为隋唐的人口增长打下农业基础。",
+      "leadsTo": [],
+      "lede": "贾思勰著《齐民要术》，总结黄河流域旱作农业。",
+      "kind": "科技",
+      "geoWhy": "黄河中下游是缺水的旱作区，抢墒、保墒和轮作决定收成，所以华北农书最重土壤水分的管理。"
+    },
+    {
+      "id": "evt-houjing",
+      "eraId": "division-rebuild",
+      "year": 548,
+      "placeId": "jiankang",
+      "title": "侯景之乱",
+      "dynastyTag": "梁",
+      "people": [
+        "侯景",
+        "梁武帝"
+      ],
+      "personIds": [],
+      "summary": "太清二年（548），东魏降将侯景在寿阳叛梁，次年攻陷建康台城，梁武帝被困饿死。叛乱延续四年，建康遭到严重破坏，江南的世家大族和人口损失惨重。",
+      "impact": "侯景之乱结束了梁朝的盛世，也使长江中游的萧绎政权和西魏势力得以介入，西魏趁机夺取益州、江陵。南朝从此衰落，北方的北周、隋逐渐占据优势。",
+      "leadsTo": [
+        "evt-sui-unify"
+      ],
+      "lede": "侯景之乱攻陷台城，梁武帝饿死，江南元气大伤。",
+      "kind": "军事",
+      "geoWhy": "建康靠长江和台城自守，但城内人口和粮储过于集中，围城一久就无法自救。"
+    },
+    {
+      "id": "evt-sui-unify",
+      "eraId": "division-rebuild",
+      "year": 589,
+      "placeId": "jiankang",
+      "title": "隋灭陈与南北复合",
+      "dynastyTag": "隋",
+      "people": [
+        "杨坚",
+        "杨广"
+      ],
+      "personIds": [
+        "person-yang-jian",
+        "person-yang-guang"
+      ],
+      "summary": "开皇九年隋灭陈，建康城破，近三百年南北政治分裂结束。随后营造大兴—东都、开运河，试图把关中、中原与江南缝成可统一调度的整体，让文书、府兵与漕粮第一次在同一张时间表上运行。灭陈容易，难的是让南北两套社会重新承认同一套日历与税册。",
+      "impact": "「复合中国」复活：北方兵制与南方财赋被要求同表运行。大运河是统一国家的血管；隋的速亡与唐的成功，都站在同一基础设施之上——差别在于谁能把工程成本转化为持久秩序。隋的遗产是空间缝合方案，唐的贡献是把这套方案运行得更久。",
+      "leadsTo": [
+        "evt-yangzhou-canal",
+        "evt-zhenguan"
+      ],
+      "lede": "隋灭陈，结束东晋南北朝的长期分裂。",
+      "kind": "政治"
+    },
+    {
+      "id": "evt-keju-origin",
+      "eraId": "division-rebuild",
+      "year": 605,
+      "placeId": "changan",
+      "title": "隋置进士科与科举的开端",
+      "dynastyTag": "隋",
+      "people": [
+        "隋炀帝"
+      ],
+      "personIds": [
+        "person-yang-guang"
+      ],
+      "summary": "隋文帝罢九品中正制之后，隋炀帝在大业年间设进士科，以考试选官（史书所系年份有分歧，一般系于605年前后）。唐代沿用并扩展，到宋代形成定期开科、糊名誊录的成熟制度。",
+      "impact": "官员来源从门阀转向读书应试，大批寒门子弟靠科举进入官僚体系，皇权得以绕开世家大族直接选才。科举沿用了一千三百年，直到1905年废止，并影响了东亚其他国家。",
+      "leadsTo": [],
+      "lede": "隋置进士科，考试选官开始取代门第。",
+      "kind": "文化",
+      "geoWhy": "考生从各州县汇聚京师应试，选官权集中到都城，削弱了地方世族对仕途的垄断。"
+    },
+    {
+      "id": "evt-yangzhou-canal",
+      "eraId": "division-rebuild",
+      "year": 605,
+      "placeId": "yangzhou",
+      "title": "通济渠与扬州枢纽",
+      "dynastyTag": "隋",
+      "people": [
+        "隋炀帝"
+      ],
+      "personIds": [
+        "person-yang-guang"
+      ],
+      "summary": "炀帝开通济渠等，洛阳—淮泗—长江航道贯通，扬州成为漕盐与南北货殖总枢纽。超大规模力役同时透支民力，统一工程与速亡风险并存；运河城市第一次成为帝国后勤的心脏瓣膜。江都行宫与龙舟故事的背后，是一条把江南米盐抽向洛阳—涿郡的巨型吸管。运河把江南米盐抽向洛阳—涿郡，扬州成为漕盐与货殖总枢纽，也是力役透支的爆点。",
+      "impact": "唐宋都市网与「扬一益二」的基础设施前提在此奠定；也示范一条定律：可以制造统一的工程，也可以制造崩溃。唐以后谈东南财赋，几乎都要先谈这条水上脊梁是否畅通。运河一旦淤塞或被战乱切断，政治中心就会立刻感到饥渴——这是隋留给后世最冷静的地理教训。",
+      "leadsTo": [
+        "evt-zhenguan"
+      ],
+      "lede": "隋开通济渠，洛阳经运河连接江淮与扬州。",
+      "kind": "经济",
+      "placeIds": [
+        "yangzhou",
+        "luoyang",
+        "hangzhou"
+      ],
+      "compare": {
+        "label": "隋运河开通前后",
+        "beforeYear": 600,
+        "afterYear": 610
+      }
+    },
+    {
+      "id": "evt-sui-goguryeo",
+      "eraId": "division-rebuild",
+      "year": 612,
+      "placeId": "liaoyang",
+      "title": "隋征高句丽",
+      "dynastyTag": "隋",
+      "people": [
+        "隋炀帝"
+      ],
+      "personIds": [
+        "person-yang-guang"
+      ],
+      "summary": "大业八年（612），隋炀帝亲率大军远征高句丽，水陆并进，却久攻辽东城不下，一支别动队在萨水被击溃。此后他又在613年、614年两次发兵，三次均未能灭高句丽。",
+      "impact": "连年征役、运河和长城工程的负担叠加，山东、河北等地农民纷纷起义，隋朝迅速陷入内乱，618年炀帝在江都被杀。远征高句丽成了隋亡的直接导火索。",
+      "leadsTo": [],
+      "lede": "隋炀帝三征高句丽，战线太长，民变四起。",
+      "kind": "军事",
+      "geoWhy": "辽东远离中原粮仓，军需要经永济渠和辽西走廊长途转运，补给线过长。"
+    },
+    {
+      "id": "evt-zhenguan",
+      "eraId": "division-rebuild",
+      "year": 630,
+      "placeId": "changan",
+      "title": "唐破东突厥与天可汗秩序",
+      "dynastyTag": "唐",
+      "people": [
+        "唐太宗"
+      ],
+      "personIds": [
+        "person-tang-taizong"
+      ],
+      "summary": "贞观四年唐破东突厥，西北诸部尊太宗为天可汗。长安成为欧亚东端的礼仪与贸易中心，羁縻府州与丝路城市链外扩，人员与宗教信仰大量流入。天可汗不是文学称号，而是一套可观察的朝贡、质子与军事仲裁秩序；长安的胡人坊市与译经场，是这套秩序的城市侧影。",
+      "impact": "唐的「世界性」是可观测的外交等级与人员流动，而非文学修辞。安史乱后外向秩序收缩，盛唐才显得特殊——对比本身即历史解释。贞观至开元年间的外向扩张，依赖府兵、牧场与河西走廊同时可用；一旦河北与朔方失序，天可汗秩序就会退回内地财政逻辑。",
+      "leadsTo": [
+        "evt-an-lushan"
+      ],
+      "lede": "唐击破东突厥，太宗被尊为“天可汗”。",
+      "kind": "民族"
+    },
+    {
+      "id": "evt-wencheng-tibet",
+      "eraId": "division-rebuild",
+      "year": 641,
+      "placeId": "lhasa",
+      "title": "文成公主入藏",
+      "dynastyTag": "唐",
+      "people": [
+        "文成公主",
+        "松赞干布"
+      ],
+      "personIds": [
+        "person-wencheng",
+        "person-songtsen"
+      ],
+      "summary": "贞观十五年（641），唐太宗将宗室女文成公主嫁给吐蕃赞普松赞干布，由江夏王李道宗护送入藏。公主带去了工匠、种子和典籍，相传还有释迦牟尼佛像，后来大昭寺、小昭寺的修建与此有关。",
+      "impact": "唐蕃和亲促进了汉藏之间的商贸、佛教与技术交流，青藏高原通往长安的唐蕃古道由此成为常用通道。但两国关系并非一直友好，此后双方在河西、西域的争夺持续了两个世纪。",
+      "leadsTo": [],
+      "lede": "文成公主入藏，唐蕃之间开通了和亲与商路。",
+      "kind": "民族",
+      "geoWhy": "唐蕃古道从长安经陇右、青海入拉萨，双方的往来与冲突都集中在河陇一线。"
+    },
+    {
+      "id": "evt-wuzhou",
+      "eraId": "division-rebuild",
+      "year": 690,
+      "placeId": "luoyang",
+      "title": "武则天称帝，定都神都洛阳",
+      "dynastyTag": "武周",
+      "people": [
+        "武则天"
+      ],
+      "personIds": [],
+      "summary": "天授元年（690），武则天正式称帝，改国号为周，以洛阳为神都，这是中国历史上唯一的女性正统皇帝。她此前已多次到洛阳常住，并通过科举殿试、提拔寒门来削弱关陇旧族。",
+      "impact": "武周十五年间，政治重心东移洛阳，进士科取士规模扩大，寒门官员增多。705年唐中宗复位，国号恢复为唐，都城迁回长安，但洛阳作为“东都”的地位一直保持到唐末。",
+      "leadsTo": [],
+      "lede": "武则天改唐为周，定都洛阳，称神都。",
+      "kind": "政治",
+      "geoWhy": "关中粮食供应不足，唐前期皇帝常东幸洛阳就食；洛阳又靠近运河枢纽，便于接受江淮漕粮。"
+    },
+    {
+      "id": "evt-bohai",
+      "eraId": "division-rebuild",
+      "year": 698,
+      "placeId": "ningguta",
+      "title": "渤海国建立",
+      "dynastyTag": "唐",
+      "people": [
+        "大祚荣"
+      ],
+      "personIds": [],
+      "summary": "圣历元年（698），靺鞨首领大祚荣在今吉林东部建立震国；713年唐玄宗册封他为渤海郡王，国号改称渤海。渤海国控制今东北东部、朝鲜半岛北部和俄罗斯滨海地区，上京龙泉府（今黑龙江宁安）仿长安城而建。",
+      "impact": "渤海国以唐制为模板，设五京、十五府，是东北地区文明程度最高的地方政权，存续到926年被契丹所灭。它说明唐的影响不只靠疆域，也靠制度和文化向周边辐射。",
+      "leadsTo": [],
+      "lede": "大祚荣在东北建国，渤海国承唐而自成一体。",
+      "kind": "民族",
+      "geoWhy": "牡丹江流域土地肥沃，北靠山林、南通海路，既能养活定居人口，又便于与唐和日本往来。"
+    },
+    {
+      "id": "evt-meiguan",
+      "eraId": "division-rebuild",
+      "year": 716,
+      "placeId": "dayuling",
+      "title": "大庾岭路整治",
+      "dynastyTag": "唐",
+      "people": [
+        "张九龄"
+      ],
+      "personIds": [
+        "person-zhang-jiuling"
+      ],
+      "summary": "开元间整治大庾岭（梅关）官道，改善五岭陆路过岭条件，使江南与岭南的商旅、仕宦与粮货往来更可预期。梅关不是唯一通岭道路，却是中原话语里最著名的「过岭」地理符号，把庾岭写成南下的台阶。",
+      "impact": "唐宋以降，韶州—虔州一线成为入粤默认陆路。理解岭南如何被纳入科举、文官与商业网络，必须把梅关官道放进交通史，而不是只看广州港。",
+      "leadsTo": [
+        "evt-zhenguan"
+      ],
+      "route": [
+        [
+          114.9,
+          25.8
+        ],
+        [
+          114.2,
+          25.3
+        ],
+        [
+          113.3,
+          23.1
+        ]
+      ],
+      "lede": "张九龄奏凿大庾岭路，打通岭南北上的商道。",
+      "kind": "经济"
+    },
+    {
+      "id": "evt-nanzhao",
+      "eraId": "division-rebuild",
+      "year": 738,
+      "placeId": "dali",
+      "title": "南诏统一六诏",
+      "dynastyTag": "唐",
+      "people": [
+        "皮罗阁"
+      ],
+      "personIds": [],
+      "summary": "开元二十六年（738），南诏首领皮罗阁在唐朝支持下吞并其余五诏，被册封为云南王，定都太和城（在今大理）。南诏占据洱海平原，与唐、吐蕃之间既联合又对抗。",
+      "impact": "南诏后来在天宝战争中击败唐军，转向依附吐蕃，又在贞元年间重新归唐。云南由此形成以洱海为中心的稳定政权，延续到大理国，西南地区的族群与文化格局在这时定型。",
+      "leadsTo": [],
+      "lede": "皮罗阁统一六诏，南诏在洱海地区崛起。",
+      "kind": "民族",
+      "geoWhy": "洱海平原有水田和交通优势，是云南高原上少有的大块平地，又处于通往东南亚和川藏的交汇点。"
+    },
+    {
+      "id": "evt-an-lushan",
+      "eraId": "division-rebuild",
+      "year": 755,
+      "placeId": "changan",
+      "title": "安史之乱",
+      "dynastyTag": "唐",
+      "people": [
+        "安禄山",
+        "唐玄宗",
+        "唐肃宗"
+      ],
+      "personIds": [
+        "person-an-lushan",
+        "person-xuanzong"
+      ],
+      "summary": "安史之乱把「边疆节度使」这一临时军事安排，写成了内地长期无法收回的军政事实；两京残破，北方人口与财赋重心进一步南移，藩镇格局由此定型数十年。",
+      "impact": "中古分水岭：外向军事财政破产，经济重心加速南移；「河朔故事」成为中央与地方博弈的长期脚本，直到宋的强干弱枝另起炉灶。读唐后半段，与其说王朝衰落，不如说国家形态改型——统一仍在名义上，调度权却要与藩镇谈判购买。外向军事财政破产，河朔故事成为中央与地方博弈脚本，国家形态从扩张转向谈判购买调度权。",
+      "leadsTo": [
+        "evt-huangchao",
+        "evt-kaifeng-capital"
+      ],
+      "lede": "安禄山范阳起兵，唐朝由盛转衰、藩镇割据。",
+      "kind": "军事"
+    },
+    {
+      "id": "evt-tubo-changan",
+      "eraId": "division-rebuild",
+      "year": 763,
+      "placeId": "changan",
+      "title": "吐蕃攻入长安",
+      "dynastyTag": "唐",
+      "people": [
+        "唐代宗",
+        "郭子仪"
+      ],
+      "personIds": [
+        "person-guo-ziyi"
+      ],
+      "summary": "广德元年（763）十月，吐蕃军队趁唐军主力东调平叛、陇右空虚，攻入长安，唐代宗出逃陕州，吐蕃另立李承宏为帝；唐将郭子仪收拢部众反攻，吐蕃约半个月后撤离。",
+      "impact": "长安第一次被外族军队攻占，朝廷威信受挫，也促使唐朝加强京西北的军镇防御。此后河西、陇右长期落入吐蕃，丝路干线被切断，唐朝的西北边防重心退到关中周围。",
+      "leadsTo": [],
+      "lede": "吐蕃攻入长安，安史之乱后唐朝西线门户洞开。",
+      "kind": "民族",
+      "geoWhy": "关中西北方向的陇右一失，长安以西就没有险阻，吐蕃骑兵沿泾水河谷几日便可逼近。"
+    },
+    {
+      "id": "evt-liuyan-caoyun",
+      "eraId": "division-rebuild",
+      "year": 764,
+      "placeId": "yangzhou",
+      "title": "刘晏整顿漕运与盐法",
+      "dynastyTag": "唐",
+      "people": [
+        "刘晏"
+      ],
+      "personIds": [],
+      "summary": "广德二年（764），刘晏任转运使，疏浚汴河，改直运为分段接力运输，又推行盐的官收、官运、商销，使盐税成为朝廷最大的财政来源之一。在他任内，江淮的粮食和钱物稳定运往长安。",
+      "impact": "安史之乱后北方残破，唐朝靠江淮的粮盐维持中央财政。刘晏的改革形成了以东南财赋支撑北方政权的格局，宋、元、明、清的漕运和盐政在很大程度上沿用了这套思路。",
+      "leadsTo": [
+        "evt-liangshui"
+      ],
+      "lede": "刘晏整顿漕运与盐法，江淮物资稳定供给长安。",
+      "kind": "经济",
+      "geoWhy": "扬州汇集运河与长江交通，又靠近海盐产区，是江淮物资北运的第一站。"
+    },
+    {
+      "id": "evt-liangshui",
+      "eraId": "division-rebuild",
+      "year": 780,
+      "placeId": "changan",
+      "title": "两税法",
+      "dynastyTag": "唐",
+      "people": [
+        "杨炎",
+        "唐德宗"
+      ],
+      "personIds": [
+        "person-yang-yan"
+      ],
+      "summary": "建中元年（780），宰相杨炎在唐德宗支持下推行两税法：不再按人丁征租庸调，而是按各户资产和田亩多少，每年夏秋分两季征税，并把原来的杂税合并。",
+      "impact": "安史之乱后户籍大乱、均田制瓦解，两税法承认了土地私有和人口流动的事实，把赋税建立在资产上，成为此后税制的基础。明代的一条鞭法和清代的摊丁入亩，都延续了这一方向。",
+      "leadsTo": [
+        "evt-yitiaobian"
+      ],
+      "lede": "杨炎推行两税法，唐代税制从人丁转向资产。",
+      "kind": "经济",
+      "geoWhy": "战乱之后人口大量流动，官府已无法按户籍收税，只能就地按居住地与资产征收。"
+    },
+    {
+      "id": "evt-nestorian-stele",
+      "eraId": "division-rebuild",
+      "year": 781,
+      "placeId": "changan",
+      "title": "大秦景教流行中国碑",
+      "dynastyTag": "唐",
+      "people": [
+        "景净"
+      ],
+      "personIds": [],
+      "summary": "建中二年（781），长安大秦寺立碑，用汉文和叙利亚文记述景教自贞观九年（635）传入以来的经过。碑于明天启年间出土，现藏西安碑林。",
+      "impact": "碑文证明唐代长安容纳了波斯、粟特和叙利亚系的多种宗教，唐前期朝廷对外来宗教基本宽容。会昌灭佛（845）时景教一并受到禁断，此后在中原衰落。",
+      "leadsTo": [],
+      "lede": "长安立景教碑，汉叙双语记下外来宗教的足迹。",
+      "kind": "文化",
+      "geoWhy": "长安是丝路东端，波斯、粟特和叙利亚系的商团与教团都汇聚在这里。"
+    },
+    {
+      "id": "evt-changqing-huimeng",
+      "eraId": "division-rebuild",
+      "year": 822,
+      "placeId": "lhasa",
+      "title": "长庆会盟与唐蕃会盟碑",
+      "dynastyTag": "唐",
+      "people": [],
+      "personIds": [],
+      "summary": "长庆元年至二年（821–822），唐与吐蕃先后在长安和拉萨举行会盟，约定以现有疆界为界、互不侵扰。823年，用汉文与藏文刻写盟文的唐蕃会盟碑立于拉萨大昭寺前，至今犹存。",
+      "impact": "这是唐蕃两百年交往中最稳定的一段和平，碑文记载了双方互称“舅甥”的关系，是研究汉藏关系的重要原始文献。不过吐蕃很快陷入内乱，会盟后二十余年，赞普被杀，政权分裂。",
+      "leadsTo": [],
+      "lede": "长庆会盟立碑拉萨，唐蕃划定边界、约为舅甥。",
+      "kind": "民族",
+      "geoWhy": "拉萨河谷是吐蕃政权的核心农区，会盟碑立在王室寺院前，既是边界协议，也是对内宣示。"
+    },
+    {
+      "id": "evt-jingangjing-868",
+      "eraId": "division-rebuild",
+      "year": 868,
+      "placeId": "dunhuang",
+      "title": "咸通九年刻印《金刚经》",
+      "dynastyTag": "唐",
+      "people": [
+        "王玠"
+      ],
+      "personIds": [],
+      "summary": "咸通九年（868），王玠为双亲出资刻印《金刚经》，卷末题有刊印年月。这卷雕版印刷品后来在敦煌藏经洞被发现，今藏大英图书馆，是现存最早有明确纪年的印刷品之一。",
+      "impact": "它说明至迟在九世纪，雕版印刷已用于佛经的大量复制，宋代刻书业的兴盛有了技术基础。印刷让经文和知识脱离抄写，成本大降，对佛教传播和后来的科举教材影响很大。",
+      "leadsTo": [
+        "evt-bisheng-type"
+      ],
+      "lede": "咸通九年刻印《金刚经》，现存最早有纪年的印刷品。",
+      "kind": "科技",
+      "geoWhy": "敦煌是丝路上的佛教中心，大量佛经在此抄写、刻印，也在此被封存保存下来。"
+    },
+    {
+      "id": "evt-huangchao",
+      "eraId": "division-rebuild",
+      "year": 880,
+      "placeId": "changan",
+      "title": "黄巢入长安",
+      "dynastyTag": "唐末",
+      "people": [
+        "黄巢"
+      ],
+      "personIds": [
+        "person-huang-chao"
+      ],
+      "summary": "王仙芝—黄巢暴动横扫南北，黄巢称齐、入长安，门阀余焰与唐廷威信一并崩解，节度使交兵进入五代。黄巢军流动作战、攻破长安又退出，说明唐末中央既无可用禁军，也无重建京师社会的能力；门阀与士族网络在战火中被连根拔起。",
+      "impact": "魏晋以来贵族政治社会基本结束，宋以后文官—科举社会才有空位；「长安不可恢复」也从此写成事实，政治中心东移、南移不可逆。黄巢之后，中国再无「关中形胜+门阀共治」的旧配方，只能改走汴河漕运与文官国家的新路。门阀政治社会基本结束，长安不可恢复，政治中心东移南移不可逆，只能改走汴河与文官国家。",
+      "leadsTo": [
+        "evt-kaifeng-capital"
+      ],
+      "route": [
+        [
+          115.0,
+          35.0
+        ],
+        [
+          114.3,
+          34.8
+        ],
+        [
+          112.5,
+          34.7
+        ],
+        [
+          108.9,
+          34.3
+        ],
+        [
+          113.3,
+          23.1
+        ]
+      ],
+      "lede": "黄巢攻入长安，唐末既无禁军也无力重建京师。",
+      "kind": "军事"
+    },
+    {
+      "id": "evt-youyun",
+      "eraId": "tang-song-plural",
+      "year": 938,
+      "placeId": "dadu",
+      "title": "幽云十六州入契丹",
+      "dynastyTag": "五代",
+      "people": [
+        "石敬瑭"
+      ],
+      "personIds": [
+        "person-shi-jingtang"
+      ],
+      "summary": "石晋割幽云十六州予契丹，燕山山脉与长城内侧的农耕前沿落入草原政权。华北平原失去北面山地屏障，开封从此必须在无险可守的运河城市上面对骑兵压力。这是中古到近世华北战略地理的一次结构性改写。",
+      "impact": "北宋「守内虚外」与岁币政策，很大程度是幽云丧失后的代价管理。金元明定都燕地，则把失去的屏障变成新的政治中心——同一片地理，角色对调。",
+      "leadsTo": [
+        "evt-chanyuan"
+      ],
+      "compare": {
+        "label": "幽云割让前后",
+        "beforeYear": 935,
+        "afterYear": 938
+      },
+      "highlightPlaceIds": [
+        "dadu",
+        "datong"
+      ],
+      "lede": "石敬瑭割幽云十六州给契丹，华北北门洞开。",
+      "kind": "军事",
+      "placeIds": [
+        "dadu",
+        "yanmenguan",
+        "juyongguan",
+        "gubeikou"
+      ]
+    },
+    {
+      "id": "evt-kaifeng-capital",
+      "eraId": "tang-song-plural",
+      "year": 960,
+      "placeId": "kaifeng",
+      "title": "陈桥兵变与北宋都汴",
+      "dynastyTag": "北宋",
+      "people": [
+        "赵匡胤"
+      ],
+      "personIds": [
+        "person-song-taizu"
+      ],
+      "summary": "建隆元年赵匡胤陈桥兵变，都开封。汴河漕运使帝都可靠江南粮，杯酒释兵权与强干弱枝重塑文武关系，国家从「关中形胜型」转向「运河补给型」，帝都安全依赖的是河渠与仓储，而非四塞山地。开封无险可守，却有汴水可喂——这是宋人自觉选择的国家形态。",
+      "impact": "政治中心第一次牢固坐落在供销网络节点上。对辽夏的岁币—战争双轨，成为「富国」而非「关中强兵」的国家形态选择；文明高度与边境压力并存，是北宋的基本处境。读宋史，必须把汴河当成都城的生命线：河通则政稳，河断则朝廷立刻失血。政治中心坐落在供销节点上：河通则政稳，河断则朝廷失血，富国与边境压力并存。",
+      "leadsTo": [
+        "evt-chanyuan",
+        "evt-xi-xia"
+      ],
+      "lede": "陈桥兵变后北宋定都开封，靠运河养兵。",
+      "kind": "政治",
+      "geoWhy": "开封是四战之地，无险可守，靠汴河运江淮粮食养兵。"
+    },
+    {
+      "id": "evt-chanyuan",
+      "eraId": "tang-song-plural",
+      "year": 1005,
+      "placeId": "dadu",
+      "title": "澶渊之盟",
+      "dynastyTag": "北宋—辽",
+      "people": [
+        "寇准",
+        "宋真宗"
+      ],
+      "personIds": [
+        "person-kou-zhun"
+      ],
+      "summary": "景德年间辽军南下至澶州，宋辽议和：宋岁输银绢，约为兄弟之国，疆界大致稳定，幽云问题被冻结而非解决。澶渊之盟是战场上的妥协，也是财政上的精算：用可计算的岁币换取河北战场的长期休战，让开封继续做它的消费与科举首都。",
+      "impact": "在朝贡话语内部开创大国间近乎平等的条约实践，证明多元政权可用财政换和平。同时也把军事上的结构性缺陷留给后世——直到金、蒙古打破均衡。澶渊之后，「中国」政治地理必须学会同时演算宋辽夏三方，而不是假装中原王朝仍是唯一玩家。",
+      "leadsTo": [
+        "evt-xi-xia",
+        "evt-jingkang"
+      ],
+      "lede": "澶渊之盟，宋以岁币换来与辽的百年和平。",
+      "kind": "政治"
+    },
+    {
+      "id": "evt-champa-rice",
+      "eraId": "tang-song-plural",
+      "year": 1012,
+      "placeId": "fuzhou",
+      "title": "占城稻引入江淮",
+      "dynastyTag": "北宋",
+      "people": [
+        "宋真宗"
+      ],
+      "personIds": [],
+      "summary": "大中祥符五年（1012），宋真宗因江淮、两浙大旱，派使者到福建取占城稻种三万斛，分发给三地农民种植。占城稻耐旱、早熟、对水土要求低，适合在丘陵和旱田推广。",
+      "impact": "早熟稻让一年两熟成为可能，也让原来不宜种水稻的高田、旱地得以开垦，宋代南方的粮食产量和人口因而大增。长江下游在宋以后成为全国最重要的粮仓，“苏湖熟，天下足”的说法就出现在南宋。",
+      "leadsTo": [],
+      "lede": "占城稻引入江淮，宋代稻作与人口得以扩张。",
+      "kind": "经济",
+      "geoWhy": "福建山多田少，较早引入占城稻，成为稻种向江淮、两浙扩散的第一站。"
+    },
+    {
+      "id": "evt-jiaozi",
+      "eraId": "tang-song-plural",
+      "year": 1023,
+      "placeId": "chengdu",
+      "title": "交子：官营纸币",
+      "dynastyTag": "北宋",
+      "people": [],
+      "personIds": [],
+      "summary": "天圣元年（1023），宋廷在益州（今成都）设立交子务，由官府发行统一的纸币“交子”。此前成都的商人为避免铁钱笨重，已用民间交子流通；官方接管后，规定三年一界、限额发行，并留有准备金。",
+      "impact": "交子是世界上最早由政府发行的纸币之一，反映了宋代商业发达和铜铁钱不足的现实。后来南宋会子、金交钞、元宝钞延续这一做法，货币逐渐从金属走向信用，也埋下了滥发导致通胀的隐患。",
+      "leadsTo": [],
+      "lede": "益州设交子务，官营纸币在宋代问世。",
+      "kind": "经济",
+      "geoWhy": "四川用铁钱，面值低、分量重，商旅携带不便，成都平原的商业需求催生了纸币。"
+    },
+    {
+      "id": "evt-xi-xia",
+      "eraId": "tang-song-plural",
+      "year": 1038,
+      "placeId": "yinchuan",
+      "title": "元昊建西夏",
+      "dynastyTag": "西夏",
+      "people": [
+        "李元昊"
+      ],
+      "personIds": [
+        "person-li-yuanhao"
+      ],
+      "summary": "党项李元昊称帝，建兴庆府，创番书、改礼乐，与宋辽成三足。河西—贺兰山成为独立的军事—文化板块，宋对西域的直接经略被打断。西夏不是「叛藩」，而是拥有文字、官制与常备军的绿洲—山地复合国家，卡住了宋人西望的走廊。",
+      "impact": "丝路往往改走草原或海上；中国西北出现持续近两百年的非汉文官方传统。谈「唐宋」若忽略夏，就会误判当时的国际体系。西夏迫使宋把西北军费与岁赐写成长期预算，也把「中国」从单一中原叙事改写成多政权并立的东亚大陆体系。",
+      "leadsTo": [
+        "evt-jingkang"
+      ],
+      "lede": "李元昊称帝建西夏，扼住河西与丝路通道。",
+      "kind": "民族"
+    },
+    {
+      "id": "evt-bisheng-type",
+      "eraId": "tang-song-plural",
+      "year": 1041,
+      "placeId": "hangzhou",
+      "title": "毕昇发明活字印刷",
+      "dynastyTag": "北宋",
+      "people": [
+        "毕昇",
+        "沈括"
+      ],
+      "personIds": [
+        "person-bi-sheng",
+        "person-shen-kuo"
+      ],
+      "summary": "据沈括《梦溪笔谈》，庆历年间（1041–1048）布衣毕昇用胶泥刻字、烧硬，排版印刷后可拆版重用。毕昇的活动地点有杭州、湖北英山等说，原物和实印本均未保存。",
+      "impact": "活字降低了小批量、多品种的印刷成本，但汉字字数多，宋元时期雕版仍是刻书的主流，活字没有立即取代它。技术后来传入朝鲜、日本，明清时用木活字、铜活字印书和修谱。",
+      "leadsTo": [],
+      "lede": "毕昇用胶泥活字，印刷从整版雕刻走向可重排。",
+      "kind": "科技",
+      "geoWhy": "宋代刻书集中在杭州、成都、建阳，繁荣的书籍市场刺激了印刷技术的改进。"
+    },
+    {
+      "id": "evt-huanghe-1048",
+      "eraId": "tang-song-plural",
+      "year": 1048,
+      "placeId": "kaifeng",
+      "title": "商胡决口与黄河北流",
+      "dynastyTag": "北宋",
+      "people": [],
+      "personIds": [],
+      "kind": "灾害",
+      "lede": "庆历八年河决，北流与辽宋边境重叠。",
+      "summary": "庆历八年商胡决口，河水北流经大名、河间至天津入海。朝廷「回河」之争数十年：北流利于边防却损河北田赋，东流利漕运却更冲击京畿。",
+      "impact": "治河变成国防与财政的同一道题。河与辽宋边界相叠时，水患即边患；理解北宋边疆，不能只看雄州关城，还要看这一条北流水带如何重划河北农田与边防。",
+      "geoWhy": "河北平原地势低平，决口北流会直接改写边防与农田的相对位置。",
+      "leadsTo": [
+        "evt-huanghe-1194"
+      ],
+      "compare": {
+        "label": "黄河北流前后",
+        "beforeYear": 1040,
+        "afterYear": 1060
+      },
+      "source": [
+        {
+          "work": "《宋史·河渠志》",
+          "loc": "卷九十一·黄河上：庆历八年六月癸酉，河决澶州商胡埽",
+          "url": "https://zh.wikisource.org/wiki/%E5%AE%8B%E5%8F%B2/%E5%8D%B7091"
+        }
+      ]
+    },
+    {
+      "id": "evt-wanganshi",
+      "eraId": "tang-song-plural",
+      "year": 1069,
+      "placeId": "kaifeng",
+      "title": "王安石变法",
+      "dynastyTag": "北宋",
+      "people": [
+        "王安石",
+        "宋神宗"
+      ],
+      "personIds": [
+        "person-wang-anshi"
+      ],
+      "summary": "熙宁变法推行青苗、募役、保甲、市易等，试图在不彻底土地革命前提下增强财政与民兵。新旧党争使之反复兴废，理想与官僚利益剧烈摩擦。王安石要把国家能力伸进乡村信贷与徭役市场，反对者则担心骚扰与吏缘为奸；争论的实质是共治时代国家能走多远。",
+      "impact": "提出共治时代的国家能力极限：市场、征募与监察如何进入乡村。争论本身塑造宋明政治文化，其余波一直响到晚清言利与言官传统。变法失败的教训不是「改革无用」，而是：没有稳定的执行层与政治共识，再精密的理财术也会在党争中被撕成口号。",
+      "leadsTo": [
+        "evt-jingkang"
+      ],
+      "lede": "王安石变法，把国家能力伸进乡村信贷与徭役。",
+      "kind": "经济"
+    },
+    {
+      "id": "evt-compass-sea",
+      "eraId": "tang-song-plural",
+      "year": 1119,
+      "placeId": "guangzhou",
+      "title": "指南针用于远洋航海",
+      "dynastyTag": "北宋",
+      "people": [
+        "朱彧"
+      ],
+      "personIds": [],
+      "summary": "朱彧《萍洲可谈》约成书于1119年，记述他随父在广州所见的海船：舟师夜观星、昼观日，阴天则靠指南针辨别方向。这是中国文献中关于指南针用于航海的最早明确记载之一。",
+      "impact": "有了不受天气限制的方向工具，远洋航行从沿岸转向深海，宋元海上贸易和后来的郑和航海都以此为基础。指南针也经阿拉伯商人传向西方。",
+      "leadsTo": [
+        "evt-quanzhou-trade",
+        "evt-zhenghe"
+      ],
+      "lede": "广州海船用指南针辨向，远洋航行不再看天吃饭。",
+      "kind": "科技",
+      "geoWhy": "广州设市舶司最早，外商海船云集，航海对可靠辨向工具的需求最迫切。"
+    },
+    {
+      "id": "evt-qingming-shanghe",
+      "eraId": "tang-song-plural",
+      "year": 1120,
+      "placeId": "kaifeng",
+      "title": "《清明上河图》",
+      "dynastyTag": "北宋",
+      "people": [
+        "张择端"
+      ],
+      "personIds": [],
+      "summary": "北宋末年（约12世纪初），画家张择端绘成《清明上河图》，以长卷形式描绘汴京郊野、汴河、虹桥和城内街市的景象，画中有数百个人物、船只和店铺。",
+      "impact": "它是研究北宋城市生活和商业的重要图像史料，表明宋代汴京的商业已突破坊市分区，街巷店铺临街开设。图中汴河上的漕船和虹桥，也反映了运河对都城的重要性。",
+      "leadsTo": [],
+      "lede": "《清明上河图》画下汴京的河与市。",
+      "kind": "文化",
+      "geoWhy": "汴河穿城而过，码头和虹桥是漕运和商业的中心，画面以河为轴展开。"
+    },
+    {
+      "id": "evt-jingkang",
+      "eraId": "tang-song-plural",
+      "year": 1127,
+      "placeId": "kaifeng",
+      "title": "靖康之变",
+      "dynastyTag": "北宋→南宋",
+      "people": [
+        "宋徽宗",
+        "宋钦宗"
+      ],
+      "personIds": [],
+      "summary": "靖康二年金军破汴，二帝北狩，宗室南迁。北宋积累的开封消费文明、太学与画院传统遭毁灭性打击，中原法统被迫搬场；城市毁坏的密度，使「恢复」同时成为人口与记忆问题。东京梦华的破碎，不只是王朝更迭，而是一种运河都市生活方式的骤停。",
+      "impact": "政治中心迁江淮以南成为常态；「恢复中原」成意识形态主轴，同时南方社会经济继续单独高涨——观念地理与经济地理分叉，是南宋史的基本张力，也是后来元明必须重新缝合的裂痕。靖康之变把「中国可否偏安」写成公开政治题，此后每一代统一者都必须回答它。",
+      "leadsTo": [
+        "evt-linan",
+        "evt-yuefei"
+      ],
+      "lede": "金军攻破开封，徽钦二帝被掳，北宋亡。",
+      "kind": "军事",
+      "compare": {
+        "label": "北宋辽夏 → 宋金对峙",
+        "beforeYear": 1050,
+        "afterYear": 1150
+      }
+    },
+    {
+      "id": "evt-marak",
+      "eraId": "tang-song-plural",
+      "year": 1127,
+      "placeId": "hangzhou",
+      "title": "宋室南渡与经济地理南移",
+      "dynastyTag": "南宋",
+      "people": [],
+      "personIds": [],
+      "summary": "靖康后宋室南渡，政治中心迁到江浙水网。北方人口、士人与技术随迁，江南稻作、市镇与海贸加速成为国家财政主引擎。地理上，中国经济重心南移从趋势变成不可逆的制度事实：行在必须坐落在能喂饱朝廷的水网里。",
+      "impact": "元明清无论定都何处，都要解决「江南米银如何北运」。大运河、海运与近代铁路，都是南重北轻经济地理的运输答案；行在可迁，税源重心却更难北返。",
+      "leadsTo": [
+        "evt-linan"
+      ],
+      "lede": "赵构南渡即位，经济重心与政治中心在南方重合。",
+      "kind": "政治"
+    },
+    {
+      "id": "evt-duchong-breach",
+      "eraId": "tang-song-plural",
+      "year": 1128,
+      "placeId": "kaifeng",
+      "title": "杜充决河阻金兵",
+      "dynastyTag": "南宋",
+      "people": [
+        "杜充"
+      ],
+      "personIds": [],
+      "summary": "建炎二年（1128），东京留守杜充为阻挡金军南下，在滑州一带决开黄河大堤，河水东南流入泗水、淮河。洪水淹及豫东、鲁西南和苏北，百姓死伤无数。",
+      "impact": "这是以水代兵的早期例子，也是后来黄河南流夺淮的先声：此后河道在豫东平原反复摆动，到1194年主流南徙。治河和防边从此长期纠缠在一起，淮河流域的水系秩序被打乱。",
+      "leadsTo": [
+        "evt-huanghe-1194"
+      ],
+      "lede": "杜充决开黄河阻金兵，河水南泛夺泗入淮。",
+      "kind": "灾害",
+      "geoWhy": "豫东平原地势平缓，河床高于两岸，决堤后水流顺地势涌向东南的泗水与淮河。",
+      "source": [
+        {
+          "work": "《宋史·高宗本纪》",
+          "loc": "卷二十五·高宗二：是冬，杜充决黄河，自泗入淮，以阻金兵",
+          "url": "https://zh.wikisource.org/wiki/%E5%AE%8B%E5%8F%B2/%E5%8D%B7025"
+        }
+      ]
+    },
+    {
+      "id": "evt-linan",
+      "eraId": "tang-song-plural",
+      "year": 1138,
+      "placeId": "hangzhou",
+      "title": "南宋定都临安",
+      "dynastyTag": "南宋",
+      "people": [
+        "宋高宗"
+      ],
+      "personIds": [],
+      "summary": "绍兴年间行在升格，杭州称临安。西湖城市、御街与海上贸易使行在兼具消费首都与港口腹地，行在政治与江南市场深度嵌合，宫廷消费本身成为拉动市镇的力量。临安不是临时避难所，而是把半壁法统与江南财赋绑在同一座水网城市里。",
+      "impact": "「临安」成为南宋记忆的地理符号；中国都城史进入江南水网时代。元明清对江南财赋的依赖，在此已不可逆——此后任何统一政权都必须回答：如何运输与分配江南的米与银。临安证明：丢掉中原后，仍可用水网都市维持高度文明与复杂行政，但恢复中原会变成永难兑现的政治承诺。",
+      "leadsTo": [
+        "evt-yuan-dadu"
+      ],
+      "lede": "南宋定都临安，以江南财赋和水网立国。",
+      "kind": "政治"
+    },
+    {
+      "id": "evt-yuefei",
+      "eraId": "tang-song-plural",
+      "year": 1140,
+      "placeId": "kaifeng",
+      "title": "郾城—颍昌与绍兴和议前夜",
+      "dynastyTag": "南宋—金",
+      "people": [
+        "岳飞",
+        "完颜兀术"
+      ],
+      "personIds": [
+        "person-yue-fei"
+      ],
+      "summary": "绍兴十年岳家军北伐，郾城、颍昌一带获胜，军事上出现收复开封的可能；随即绍兴和议与班师，战场被政治冻结。岳飞之死与和议并行，说明南宋的真正约束往往不在前线胜负，而在财政、淮汉防线与高宗对「迎回二圣」的政治恐惧。郾城颍昌的胜绩说明军事上曾出现收复开封的可能，随即被和议与政治恐惧冻结。",
+      "impact": "武力恢复与妥协共存的困境写进民族叙事。更冷的事实是：淮汉前线长期化，南北两个市场圈各自发育，统一被推迟为下一次征服王朝的课题。岳家军故事之所以持久，正因为它把军事可能与政治选择之间的裂缝，永久刻进了中国人的历史记忆。",
+      "leadsTo": [
+        "evt-jiaoding"
+      ],
+      "lede": "岳飞郾城、颍昌战胜后被召回，绍兴和议随之达成。",
+      "kind": "军事"
+    },
+    {
+      "id": "evt-jin-zhongdu",
+      "eraId": "tang-song-plural",
+      "year": 1153,
+      "placeId": "nanjing_liao",
+      "title": "金迁都燕京，改称中都",
+      "dynastyTag": "金",
+      "people": [
+        "完颜亮"
+      ],
+      "personIds": [
+        "person-wanyan-liang"
+      ],
+      "summary": "贞元元年（1153），金海陵王完颜亮把都城从会宁府（今黑龙江阿城）迁到燕京，改称中都。此举把女真统治的重心从东北腹地移到华北平原北缘，并推行官制和礼制的汉化。",
+      "impact": "金中都后来成为元大都、明清北京的前身，北京从此成为北方政权的都城，一直延续到现在。迁都也使女真贵族大量南迁，与汉人杂居，加快了汉化，也削弱了他们原有的军事组织。",
+      "leadsTo": [
+        "evt-yuan-dadu"
+      ],
+      "lede": "海陵王迁都燕京，女真统治中心南移。",
+      "kind": "民族",
+      "geoWhy": "燕京居于华北平原北缘、燕山之南，既能控制平原农区，又靠近草原和东北，便于南北兼治。"
+    },
+    {
+      "id": "evt-zhuxi-bailudong",
+      "eraId": "tang-song-plural",
+      "year": 1179,
+      "placeId": "jiujiang",
+      "title": "朱熹重建白鹿洞书院",
+      "dynastyTag": "南宋",
+      "people": [
+        "朱熹"
+      ],
+      "personIds": [],
+      "summary": "淳熙六年（1179），朱熹任南康军知军，在庐山五老峰下重建白鹿洞书院，请朝廷赐额赐书，并订立《白鹿洞书院教条》。书院成为讲学和藏书的场所，学生可以自由听讲、质疑论辩。",
+      "impact": "朱熹把四书与理学的思想体系结合书院教学传播开来，后来元明清的科举以朱熹《四书章句集注》为标准教材。书院制度也成为儒家知识分子脱离官学、发展地方学术的重要载体。",
+      "leadsTo": [],
+      "lede": "朱熹重建白鹿洞书院，理学讲学的样板。",
+      "kind": "文化",
+      "geoWhy": "庐山位于长江与鄱阳湖之间，山水清幽、远离官府，又处江西南北交通要道，便于学者往来。"
+    },
+    {
+      "id": "evt-huanghe-1194",
+      "eraId": "tang-song-plural",
+      "year": 1194,
+      "placeId": "kaifeng",
+      "title": "黄河夺淮入海",
+      "dynastyTag": "金",
+      "people": [],
+      "personIds": [],
+      "summary": "金明昌五年（1194），黄河在阳武（今河南原阳）决口，主流南徙，经开封、商丘、徐州，借泗水、淮河入黄海。此后黄河主要走这条南流河道，直到1855年才北返。",
+      "impact": "黄河泥沙长期灌入淮河，淮河失去独立入海口，洪泽湖淤高，苏北水患不断。明清为保住大运河过淮的清口一段，朝廷每年投入巨额河工经费，治河成为财政和政治的头等大事。",
+      "leadsTo": [
+        "evt-huanghe-1855"
+      ],
+      "lede": "黄河南徙夺淮入海，淮河水系被改写六百余年。",
+      "kind": "灾害",
+      "geoWhy": "黄河在豫东平原是游荡性河道，泥沙淤高河床，南岸决口后借泗水、淮河水道入海。",
+      "compare": {
+        "label": "黄河夺淮前后",
+        "beforeYear": 1190,
+        "afterYear": 1200
+      },
+      "source": [
+        {
+          "work": "《金史·河渠志》",
+          "loc": "卷二十七·志第八：明昌五年八月，河决阳武故堤，灌封丘而东",
+          "url": "http://www.guoxue123.com/Shibu/0101/00jinsf/027.htm"
+        }
+      ]
+    },
+    {
+      "id": "evt-xixia-fall",
+      "eraId": "tang-song-plural",
+      "year": 1227,
+      "placeId": "yinchuan",
+      "title": "蒙古灭西夏",
+      "dynastyTag": "蒙古",
+      "people": [
+        "成吉思汗"
+      ],
+      "personIds": [],
+      "summary": "宝义二年（1227），蒙古军攻陷西夏都城兴庆府，西夏灭亡；成吉思汗在同年病逝。西夏曾控制河西走廊和河套，立国近两百年，党项人此后逐渐融入其他民族。",
+      "impact": "西夏灭亡后，蒙古军可以经河套、陕西从西面包抄金朝，1234年联宋灭金。河西走廊重新为中原政权所有，丝路北道的东段再次畅通，但也被战争破坏。",
+      "leadsTo": [
+        "evt-jiaoding"
+      ],
+      "lede": "蒙古灭西夏，金与宋的西部屏障消失。",
+      "kind": "军事",
+      "geoWhy": "西夏控制河西走廊和河套，灭夏切断了金与宋的西部通道，也打通了蒙古东进中原的西路。"
+    },
+    {
+      "id": "evt-jiaoding",
+      "eraId": "tang-song-plural",
+      "year": 1234,
+      "placeId": "kaifeng",
+      "title": "蒙古—宋联合灭金",
+      "dynastyTag": "金末",
+      "people": [],
+      "personIds": [],
+      "summary": "端平前后蒙古与宋联合灭金，金哀宗死于蔡州。宋军入洛无法坚守，蒙古转而经略南方，中原真空被草原帝国直接填补。联蒙灭金是短视的外交胜利：金亡之后，宋人面对的是比金更难用岁币安抚的对手，淮河以南再无缓冲国。",
+      "impact": "南宋迎来存亡战；中国再整合将以蒙元形式完成，而非宋的北伐成功。联盟灭邻国从来不是免费午餐。蔡州之后，东亚大陆的统一权从「汉地王朝之间的竞赛」转成「草原军事机器如何消化农耕区」的问题。",
+      "leadsTo": [
+        "evt-xiangyang-siege"
+      ],
+      "lede": "宋蒙联军灭金，宋失去最后的北方缓冲国。",
+      "kind": "军事"
+    },
+    {
+      "id": "evt-yuan-zhanchi",
+      "eraId": "tang-song-plural",
+      "year": 1270,
+      "placeId": "dadu",
+      "title": "元设站赤驿路",
+      "dynastyTag": "元",
+      "people": [
+        "忽必烈"
+      ],
+      "personIds": [
+        "person-kubilai"
+      ],
+      "summary": "元朝在全国设立称为“站赤”的驿站网络，沿主要交通线每隔数十里设站，配备马匹、船只和食宿，专供官府传递文书和使节往来。驿路自大都出发，通向各行省和西北的察合台、伊利等汗国。",
+      "impact": "站赤使元朝能在辽阔疆域内快速传递政令和军情，也方便了欧亚之间的商旅、使节和传教士往来。马可·波罗等人的东行都离不开这套驿路，明清的驿站制度大体沿用了它的框架。",
+      "leadsTo": [],
+      "lede": "元设站赤驿路，通到各行省与欧亚。",
+      "kind": "政治",
+      "geoWhy": "元的疆域横跨草原与农耕区，驿路以大都为中心辐射，才能把分散的行省连成一体。"
+    },
+    {
+      "id": "evt-yuan-dadu",
+      "eraId": "tang-song-plural",
+      "year": 1272,
+      "placeId": "dadu",
+      "title": "元大都与国号「元」",
+      "dynastyTag": "元",
+      "people": [
+        "忽必烈"
+      ],
+      "personIds": [
+        "person-kubilai"
+      ],
+      "summary": "至元八年忽必烈建国号大元，升中都为大都。宫城、坊巷与积水潭漕运码头，使华北再成跨区域帝国中枢，行省制同时铺开，草原都城传统与汉地都城传统在同一座城里叠合。大都不是简单的「北京前史」，而是把蒙古大汗驻跸与汉地漕运终点焊在一起的新帝都类型。",
+      "impact": "北京城址的帝都生命被加固；「腹里」与江南、湖广编进同一套高层行政区，明清省制由此得祖型。征服者用中原行政语言重写了自己，也把多族群分层治理写进了帝国日常。元的空间遗产是：统一可以跨越草原与汉地，但治理必须分层——省制与站赤是硬件，四等人制是软件。",
+      "leadsTo": [
+        "evt-cliff",
+        "evt-quanzhou-trade"
+      ],
+      "lede": "忽必烈定国号“元”，迁都大都，南北一体治理。",
+      "kind": "政治"
+    },
+    {
+      "id": "evt-xiangyang-siege",
+      "eraId": "tang-song-plural",
+      "year": 1273,
+      "placeId": "xiangyang",
+      "title": "襄樊陷落",
+      "dynastyTag": "南宋—元",
+      "people": [
+        "吕文焕"
+      ],
+      "personIds": [],
+      "summary": "元军长期围困襄阳、樊城，断南宋长江中游屏障；襄樊陷落后伯颜得以沿江东下，临安暴露在水网进攻轴线之上。襄阳守将与回回炮的攻防，把一场围城写成南宋国防体系的压力测试：中游锁钥一失，下游繁华城池再无战略纵深。",
+      "impact": "水网国防若失去中游锁钥，下游繁华无法自保。此役是南宋军事体系的结构性坍塌点，而非单城偶然失守。襄樊之后，元军可以沿江而下如同打开水闸；临安的投降，在军事地理上几乎已被提前宣判。",
+      "leadsTo": [
+        "evt-yuan-dadu",
+        "evt-cliff"
+      ],
+      "lede": "襄樊失守，蒙古得汉水通道，南宋失去中游锁钥。",
+      "kind": "军事",
+      "geoWhy": "襄阳扼汉水与南阳盆地之口，得之便可沿汉水入长江中游。"
+    },
+    {
+      "id": "evt-marco-polo",
+      "eraId": "tang-song-plural",
+      "year": 1275,
+      "placeId": "dadu",
+      "title": "马可·波罗来华",
+      "dynastyTag": "元",
+      "people": [
+        "马可·波罗"
+      ],
+      "personIds": [],
+      "summary": "据《马可·波罗行纪》，威尼斯商人马可·波罗约在1275年抵达元上都，后在元朝任职十余年，1290年代由海路返回欧洲。这部书的真实性和他是否亲历中国曾有长期争论，但书中对大都、杭州、泉州的描写与元代情况大体吻合。",
+      "impact": "《行纪》激发了欧洲人对东方财富与航路的想象，哥伦布等人都读过此书。它也是研究元代中西交通、城市与贸易的重要旁证，只是须与中国史料对照使用。",
+      "leadsTo": [],
+      "lede": "马可·波罗抵元，《行纪》让欧洲知道东方。",
+      "kind": "文化",
+      "geoWhy": "元代陆上丝路与海上航线同时畅通，欧亚商旅能从河西、大都、杭州、泉州一路连到中国。"
+    },
+    {
+      "id": "evt-cliff",
+      "eraId": "tang-song-plural",
+      "year": 1279,
+      "placeId": "guangzhou",
+      "title": "崖山海战与南宋亡",
+      "dynastyTag": "宋元之际",
+      "people": [
+        "陆秀夫",
+        "张世杰"
+      ],
+      "personIds": [],
+      "summary": "祥兴二年崖门海战，残宋舰队覆灭，帝昺溺亡，海上流亡政权结束，全土纳入元统治。崖山不是简单的「宋亡」，而是陆地中国第一次被一个同时统治草原与汉地的政权从海上合围闭合；流亡朝廷把最后的法统押在舰队上，也押输了。",
+      "impact": "「陆地中国」被一个同时统治草原与汉地的政权闭合。遗民书写影响明清士人自我理解；正统论从此必须处理非汉王朝入主的事实。崖山之后，「中国」的政治地理不再等于汉人王朝连续体，而必须学会在征服王朝框架里讨论正统、文化与行政继承。",
+      "leadsTo": [
+        "evt-quanzhou-trade"
+      ],
+      "lede": "崖山海战，南宋亡，蒙元统一南北。",
+      "kind": "军事",
+      "compare": {
+        "label": "宋金 → 元",
+        "beforeYear": 1150,
+        "afterYear": 1300
+      }
+    },
+    {
+      "id": "evt-quanzhou-trade",
+      "eraId": "tang-song-plural",
+      "year": 1280,
+      "placeId": "quanzhou",
+      "title": "刺桐港与色目商网",
+      "dynastyTag": "元",
+      "people": [],
+      "personIds": [],
+      "summary": "元前中期泉州（刺桐）成为印度洋—东亚贸易顶峰港口之一，穆斯林商贾与市舶司并存，香料、瓷器与人员密集吞吐。刺桐港把东南沿海写成世界市场的接口：船舶、宗教社区与市舶课税同场运转，说明「海洋中国」在蒙元时期曾达到制度高峰。",
+      "impact": "海上丝路的制度高峰。明初海禁是对这一开放的反动，也说明「海洋中国」并非近代才出现，而是被政治选择压抑或释放。泉州兴衰提醒：港口繁荣依赖帝国是否愿意把海贸写进财政与外交；一旦政治选择转向防海，再繁忙的港湾也会迅速萎缩。",
+      "leadsTo": [
+        "evt-ming-nanjing"
+      ],
+      "lede": "泉州刺桐港成为色目商网的东方枢纽。",
+      "kind": "经济"
+    },
+    {
+      "id": "evt-yuan-xingsheng",
+      "eraId": "tang-song-plural",
+      "year": 1280,
+      "placeId": "dadu",
+      "title": "元设行省制度",
+      "dynastyTag": "元",
+      "people": [
+        "忽必烈"
+      ],
+      "personIds": [
+        "person-kubilai"
+      ],
+      "summary": "元朝在中央设中书省直辖“腹里”地区，其余地区设行中书省，简称行省，前期大约设十个，包括陕西、四川、云南、辽阳、江浙、江西、湖广、河南等。行省既是中央的派出机构，也是地方最高行政单位。",
+      "impact": "行省制度此后被明清继承，演变为“省”这一级行政区，使用至今。元代划界注重军事控制，一些省的地理范围跨越山河，使其难以凭险单独割据。",
+      "leadsTo": [],
+      "lede": "元设行省制度，省界犬牙交错，各省难以割据。",
+      "kind": "政治",
+      "geoWhy": "行省边界常跨越山川，使各省难以凭山河之险自立，便于中央控制。"
+    },
+    {
+      "id": "evt-shoushi-calendar",
+      "eraId": "tang-song-plural",
+      "year": 1281,
+      "placeId": "dadu",
+      "title": "授时历颁行与全国天文测量",
+      "dynastyTag": "元",
+      "people": [
+        "郭守敬",
+        "王恂",
+        "许衡"
+      ],
+      "personIds": [
+        "person-guo-shoujing"
+      ],
+      "summary": "至元十八年（1281），元朝颁行郭守敬、王恂等人修订的授时历，把回归年定为365.2425日，与现行公历相同。编历前在全国设二十七处观测点，实测各地冬夏至日影和北极高度，称“四海测验”。",
+      "impact": "授时历是中国古代最精确的历法之一，一直用到明末，明代《大统历》基本沿用其数据。它说明历法修订依赖大范围的地理测量，而不只是推算。",
+      "leadsTo": [],
+      "lede": "授时历颁行，全国二十七处观测点为历法校准。",
+      "kind": "科技",
+      "geoWhy": "疆域南北跨度大，各地昼夜长短与北极高度不同，历法必须用分布全国的实测数据校准。"
+    },
+    {
+      "id": "evt-red-turban",
+      "eraId": "tang-song-plural",
+      "year": 1351,
+      "placeId": "yangzhou",
+      "title": "红巾起事与元失江南",
+      "dynastyTag": "元末",
+      "people": [
+        "刘福通",
+        "韩山童"
+      ],
+      "personIds": [
+        "person-liu-futong"
+      ],
+      "summary": "至正年间河患、纸币崩溃与族群分层刺激白莲—红巾暴动，元廷失去江淮粮赋区，群雄混战中朱元璋崛起于南方。红巾不是单一叛军，而是黄河失修、钞法破产与南方财赋区失控共同点燃的连锁反应；谁能重建江南秩序，谁就握住了改朝换代的钥匙。",
+      "impact": "征服王朝在财政—族群双轨上的脆弱被摊开；明朝「驱除」叙事获得动员能量，同时也继承了元的行省与驿站遗产。元亡教给我们的是：跨族群帝国可以极强，但一旦粮道与钞法同时失灵，意识形态动员会迅速压过征服者的军事优势。",
+      "leadsTo": [
+        "evt-ming-nanjing"
+      ],
+      "lede": "红巾军起事，元朝失去江南财赋区。",
+      "kind": "军事"
+    },
+    {
+      "id": "evt-ming-nanjing",
+      "eraId": "ming-qing",
+      "year": 1368,
+      "placeId": "jiankang",
+      "title": "朱元璋应天称帝",
+      "dynastyTag": "明",
+      "people": [
+        "朱元璋"
+      ],
+      "personIds": [
+        "person-ming-taizu"
+      ],
+      "summary": "洪武元年朱元璋在应天称帝，同年徐达克大都。废宰相、重锦衣与卫所，以高强度君主集权重建汉人帝国，并定南京为京师；开国立法刻意防止再出现元末那种将帅分权。南京再为正统所系，大明宝钞与卫所军户则试图把财政与军事重新嵌进农业社会。废相、卫所与集权立法，意在防止元末将帅分权，南京再为正统所系。",
+      "impact": "南京再为正统所系；卫所试图把军户嵌入农业社会。集权成功的代价是中后期宦官与内阁非正式政治膨胀——制度真空总会被填，废相并不等于皇帝真能日理万机。洪武体制把皇权抬到极高，却把日常政务推向后来的内阁与厂卫——这是明史政治地理之外的制度地理。",
+      "leadsTo": [
+        "evt-ming-beijing",
+        "evt-zhenghe"
+      ],
+      "lede": "朱元璋在应天称帝，明朝以南京为首都。",
+      "kind": "政治",
+      "compare": {
+        "label": "元 → 明",
+        "beforeYear": 1300,
+        "afterYear": 1450
+      }
+    },
+    {
+      "id": "evt-hongwu-migration",
+      "eraId": "ming-qing",
+      "year": 1370,
+      "placeId": "taiyuan",
+      "title": "洪武移民",
+      "dynastyTag": "明",
+      "people": [
+        "明太祖"
+      ],
+      "personIds": [
+        "person-ming-taizu"
+      ],
+      "summary": "元末战乱和黄河、淮河水灾使河南、河北、山东等地人口锐减。洪武三年（1370）起，明政府有组织地把山西等地人口迁往这些地区，并给予土地、耕牛和免税的优惠，迁移延续到永乐年间。",
+      "impact": "洪武移民重建了华北平原的农业和人口，也留下了“洪洞大槐树”的移民记忆。移民带去了山西人的方言和习俗，华北平原不少村庄的宗谱都以此为起点。",
+      "leadsTo": [],
+      "lede": "洪武年间大规模移民，山西人口迁往华北平原。",
+      "kind": "经济",
+      "geoWhy": "山西盆地相对少受战乱，人口稠密，而华北平原战乱后土地荒芜，两地之间的太行通道成为迁移路线。"
+    },
+    {
+      "id": "evt-jingnan",
+      "eraId": "ming-qing",
+      "year": 1399,
+      "placeId": "jiankang",
+      "title": "靖难之役",
+      "dynastyTag": "明",
+      "people": [
+        "朱棣",
+        "建文帝"
+      ],
+      "personIds": [
+        "person-yongle"
+      ],
+      "summary": "建文元年（1399），建文帝削藩，燕王朱棣在北平起兵，自称“靖难”。经过三年多的战争，1402年燕军渡江攻入南京，建文帝下落不明，朱棣即位，即明成祖。",
+      "impact": "靖难使明朝的统治重心从南京转向北平，朱棣即位后改北平为北京，并于1421年正式迁都。分封诸王的制度也因此大大削弱，明代藩王从此不再掌兵。",
+      "leadsTo": [
+        "evt-ming-beijing"
+      ],
+      "lede": "靖难之役，燕王朱棣南下夺位。",
+      "kind": "军事",
+      "geoWhy": "燕王以北平为基地，掌握北方边防的精锐骑兵；南京靠长江防线，燕军渡江后便无险可守。"
+    },
+    {
+      "id": "evt-zhenghe",
+      "eraId": "ming-qing",
+      "year": 1405,
+      "placeId": "jiankang",
+      "title": "郑和开洋",
+      "dynastyTag": "明",
+      "people": [
+        "郑和"
+      ],
+      "personIds": [
+        "person-zheng-he"
+      ],
+      "summary": "永乐至宣德间郑和七下西洋，以宝船舰队宣示册封秩序并疏通贡道，南京龙湾与太仓为起航基地，远至印度洋西岸。下西洋把南京—太仓写成远洋投射的母港，用朝贡贸易与武力巡航并行的方式，短暂把西太平洋到印度洋纳入明初的秩序想象。",
+      "impact": "证明明初仍具备远洋投射能力；随后收缩使中国错过与葡萄牙海权同步扩张的窗口。这是结构选择，不是单次航海技术失败。郑和之后的海禁与收缩，把海洋从「可经营的前线」改回「需防范的边患」，这一转向的代价要到十九世纪才被舰队轰开。",
+      "leadsTo": [
+        "evt-tumu"
+      ],
+      "lede": "郑和船队七下西洋，官方朝贡航线远达印度洋。",
+      "kind": "经济"
+    },
+    {
+      "id": "evt-yongle-dadian",
+      "eraId": "ming-qing",
+      "year": 1408,
+      "placeId": "jiankang",
+      "title": "《永乐大典》成书",
+      "dynastyTag": "明",
+      "people": [
+        "解缙",
+        "姚广孝",
+        "明成祖"
+      ],
+      "personIds": [
+        "person-yongle"
+      ],
+      "summary": "永乐六年（1408），《永乐大典》在南京编成，由解缙、姚广孝等主持，收书七八千种，分装一万一千余册，约二万二千卷，是当时世界上最大的百科类书。",
+      "impact": "它把明初以前的大量典籍按韵目抄录保存，不少原书今已失传，后人靠它辑佚。正本迁都北京后移藏文楼，下落不明，嘉靖年间抄成的副本也在清末战乱中大量散失，现存仅四百册左右。",
+      "leadsTo": [],
+      "lede": "南京编成《永乐大典》，一部汇集万卷典籍的类书。",
+      "kind": "文化",
+      "geoWhy": "编纂于南京文渊阁，迁都北京后随国都北移，也因此在战乱中散失。"
+    },
+    {
+      "id": "evt-ming-beijing",
+      "eraId": "ming-qing",
+      "year": 1421,
+      "placeId": "dadu",
+      "title": "永乐迁都北京",
+      "dynastyTag": "明",
+      "people": [
+        "朱棣"
+      ],
+      "personIds": [
+        "person-yongle"
+      ],
+      "summary": "永乐十九年正式迁都北京，南京留都。天子驻跸与北边防务合一，大运河负担加重，「北驾南漕」成为日常国家作业；两京体制让南方保留法统余温，北方承担军事压力。迁都等于把皇帝搬到长城前线，用政治意志去压北方边防，再用江南漕粮去喂这座前线首都。",
+      "impact": "近世政治地理定型：皇帝坐在前线，粮从江南来。清代全盘继承这一空间逻辑，直到近代铁路与海运改写补给方程。读明清史，运河畅通几乎就是政治稳定的晴雨表——漕船一断，北京立刻感到帝国的饥渴。",
+      "leadsTo": [
+        "evt-tumu",
+        "evt-zhenghe"
+      ],
+      "lede": "永乐帝迁都北京，“北驾南漕”成为国家日常。",
+      "kind": "政治",
+      "placeIds": [
+        "dadu",
+        "jiankang"
+      ]
+    },
+    {
+      "id": "evt-tumu",
+      "eraId": "ming-qing",
+      "year": 1449,
+      "placeId": "datong",
+      "title": "土木之变",
+      "dynastyTag": "明",
+      "people": [
+        "明英宗",
+        "也先"
+      ],
+      "personIds": [],
+      "summary": "正统十四年英宗亲征瓦剌，大军溃于土木堡，皇帝被俘。于谦等组织北京保卫战，另立景帝，才稳住京畿。土木之变把京军精锐一次性打穿，暴露了宦官监军、边防虚报与皇帝亲征的系统性风险；北京能守住，靠的是于谦重组的城防与民心，而非旧京营的惯性。",
+      "impact": "京军精锐重创，北防转守；宦官监军与京营问题暴露。帝国更依赖长城线与九边军费，财政—边防螺旋从此收紧。土木之后，明代北边从「可出击」转向「以守为主」，军费与漕运压力同步上升，帝国开始长期为长城买单。",
+      "leadsTo": [
+        "evt-wanli-aid-korea"
+      ],
+      "lede": "土木堡之变，英宗亲征被俘，明京军精锐覆没。",
+      "kind": "军事"
+    },
+    {
+      "id": "evt-huaxian-quake",
+      "eraId": "ming-qing",
+      "year": 1556,
+      "placeId": "tongguan",
+      "title": "华县大地震",
+      "dynastyTag": "明",
+      "people": [],
+      "personIds": [],
+      "summary": "嘉靖三十四年十二月十二日（1556年1月23日）夜，陕西华州一带发生特大地震，波及陕西、山西、河南，今天估计震级约8级。《明史·五行志》记载“官吏军民压死八十三万有奇”。",
+      "impact": "这一数字使它被认为是有史料可查的死亡人数最多的地震之一，但统计口径仍有争议。关中是当时西北的重要农业区，地震造成大量人口死亡和房屋、城垣倒塌，对地方社会的打击极重。",
+      "leadsTo": [],
+      "lede": "华县地震，史载死者八十三万有奇。",
+      "kind": "灾害",
+      "geoWhy": "渭河盆地边缘有活动断裂，当地多黄土窑洞，震后崩塌掩埋，死亡因此特别惨重。",
+      "placeIds": [
+        "tongguan",
+        "changan"
+      ],
+      "source": [
+        {
+          "work": "《明史·五行志》",
+          "loc": "卷三十·志第六·五行三：三十四年十二月壬寅，山西、陕西、河南同时地震，官吏军民压死八十三万有奇",
+          "url": "https://zh.wikisource.org/wiki/%E6%98%8E%E5%8F%B2/%E5%8D%B730"
+        }
+      ]
+    },
+    {
+      "id": "evt-qijiguang",
+      "eraId": "ming-qing",
+      "year": 1561,
+      "placeId": "ningbo",
+      "title": "戚继光台州九捷",
+      "dynastyTag": "明",
+      "people": [
+        "戚继光"
+      ],
+      "personIds": [],
+      "summary": "嘉靖四十年（1561），戚继光率领新编的“戚家军”在浙江台州一带九战九捷，击溃倭寇主力。此后他又转战福建、广东，到嘉靖末年，东南沿海的大规模倭患基本平定。",
+      "impact": "戚继光以招募农民、严明纪律、鸳鸯阵和火器配合著称，所著《纪效新书》成为明代练兵的名著。倭患平息后，隆庆年间部分开放海禁，月港兴起，沿海走私与合法贸易的关系重新调整。",
+      "leadsTo": [
+        "evt-longqing-kaihai"
+      ],
+      "lede": "戚继光台州九捷，东南倭患大体平息。",
+      "kind": "军事",
+      "geoWhy": "浙闽沿海岛屿港湾众多，倭寇与走私商人借此出没，防御必须靠陆上的机动兵力。"
+    },
+    {
+      "id": "evt-longqing-kaihai",
+      "eraId": "ming-qing",
+      "year": 1567,
+      "placeId": "zhangzhou",
+      "title": "隆庆开海与月港",
+      "dynastyTag": "明",
+      "people": [],
+      "personIds": [],
+      "summary": "隆庆元年（1567），福建巡抚涂泽民奏请开放海禁，朝廷准许福建漳州的月港对东西洋开放，商人可凭引出海贸易，但仍不得前往日本。此前倭寇、走私盛行，海禁多年，民间海上贸易长期受到压制。",
+      "impact": "月港成为明代后期中国对外贸易的主要口岸，经马尼拉与西班牙的美洲白银贸易接上，大量白银流入中国。白银货币化推动了赋役折银和商品经济，也使明朝财政对海外贸易产生依赖。",
+      "leadsTo": [
+        "evt-yitiaobian"
+      ],
+      "lede": "月港部分开放海禁，漳州成为私人海上贸易港。",
+      "kind": "经济",
+      "geoWhy": "月港位于九龙江口的内河港湾，水浅船小，远离官府控制的大港，成为走私贸易的天然落脚点。"
+    },
+    {
+      "id": "evt-bencao",
+      "eraId": "ming-qing",
+      "year": 1578,
+      "placeId": "wuchang",
+      "title": "李时珍完成《本草纲目》",
+      "dynastyTag": "明",
+      "people": [
+        "李时珍"
+      ],
+      "personIds": [
+        "person-li-shizhen"
+      ],
+      "summary": "万历六年（1578），蕲州人李时珍历经近三十年写成《本草纲目》，收药一千八百余种，在前代本草基础上重新分类，并附药方一万余首。书至万历二十四年（1596）才在南京刻印。",
+      "impact": "它纠正了前代本草中的不少错误，把药物按自然属性分类，对后世医学、博物和药物学有长久影响。十七世纪起传入日本，后来译成多种欧洲文字。",
+      "leadsTo": [],
+      "lede": "李时珍遍访药材，编成收药千八百种的《本草纲目》。",
+      "kind": "科技",
+      "geoWhy": "李时珍籍贯蕲州在长江中游，他亲自到湖广、江南各地采药访医，取得第一手标本。"
+    },
+    {
+      "id": "evt-yitiaobian",
+      "eraId": "ming-qing",
+      "year": 1581,
+      "placeId": "dadu",
+      "title": "张居正推行一条鞭法",
+      "dynastyTag": "明",
+      "people": [
+        "张居正"
+      ],
+      "personIds": [
+        "person-zhang-juzheng"
+      ],
+      "summary": "万历九年（1581），首辅张居正在全国推行一条鞭法：把田赋、徭役和杂税合并，主要折成白银，按田亩和人丁统一征收，由官府雇人代役。",
+      "impact": "赋役折银简化了税收，减少了地方胥吏的盘剥，也使白银成为赋税的主要形式，推动了商品经济。它是两税法的延续，清代的摊丁入亩又在此基础上把人丁税并入田赋。",
+      "leadsTo": [],
+      "lede": "张居正推行一条鞭法，赋役合并折银征收。",
+      "kind": "经济",
+      "geoWhy": "白银通过海外贸易大量流入，东南沿海最先商品化，税制才可能整体折银。"
+    },
+    {
+      "id": "evt-wanli-aid-korea",
+      "eraId": "ming-qing",
+      "year": 1592,
+      "placeId": "datong",
+      "title": "万历援朝之役",
+      "dynastyTag": "明—朝鲜—日本",
+      "people": [
+        "李如松",
+        "丰臣秀吉"
+      ],
+      "personIds": [],
+      "summary": "万历朝鲜之役中，明军跨鸭绿江对抗丰臣秀吉侵朝，七年拉锯，明财政与辽东兵力严重消耗，东亚国际战争进入前近代高峰。援朝不只是宗藩义务，而是把明朝拖进一场跨海陆的长期消耗战：粮饷、火器与辽东防务同时透支，日本也未能在半岛站稳。跨海陆七年消耗战透支粮饷、火器与辽东防务，朝贡秩序无法单方面覆盖多国暴力互动。",
+      "impact": "明朝国力透支，为后金在辽东崛起让出战略窗口。东北亚多国体系的暴力互动，不再是中国单方面朝贡秩序能够覆盖。万历三大征之后，朝廷账面空虚、辽东空虚，努尔哈赤的机会窗口正是这样被战争财政撕开的。",
+      "leadsTo": [
+        "evt-sarhu",
+        "evt-1644"
+      ],
+      "lede": "万历援朝，明军入朝抗日，耗去大量财政。",
+      "kind": "军事"
+    },
+    {
+      "id": "evt-ricci-map",
+      "eraId": "ming-qing",
+      "year": 1602,
+      "placeId": "dadu",
+      "title": "利玛窦与《坤舆万国全图》",
+      "dynastyTag": "明",
+      "people": [
+        "利玛窦",
+        "李之藻"
+      ],
+      "personIds": [
+        "person-ricci",
+        "person-li-zhizao"
+      ],
+      "summary": "万历二十九年（1601），意大利传教士利玛窦获准入京。次年他与李之藻等人合作在北京刊印《坤舆万国全图》，用中文标注五大洲、赤道和经纬线，并介绍地圆说。",
+      "impact": "中国士人第一次在地图上看到美洲和欧洲，“天圆地方”和“中国居天下之中”的传统地理想象受到冲击。此图虽把中国放在中央以便阅读，五大洲的概念此后通过《职方外纪》等书传开。",
+      "leadsTo": [],
+      "lede": "利玛窦在北京刻世界地图，五大洲首次进入中文图版。",
+      "kind": "文化",
+      "geoWhy": "北京是明朝政治中心，士大夫集中，地图一经刊印便通过京师士人网络向各省传播。"
+    },
+    {
+      "id": "evt-sarhu",
+      "eraId": "ming-qing",
+      "year": 1619,
+      "placeId": "shenyang",
+      "title": "萨尔浒之战",
+      "dynastyTag": "明—后金",
+      "people": [
+        "努尔哈赤",
+        "杨镐"
+      ],
+      "personIds": [
+        "person-nurhaci"
+      ],
+      "summary": "万历四十七年明军四路攻后金，主力在萨尔浒一带被击破，辽东战场主动权易手，明无法再以优势兵力围歼后金。萨尔浒证明：分进合击若无统一指挥与情报，面对后金的骑兵与集中突击只会沦为被逐个击破；辽沈防线从此从进攻转为苦撑。",
+      "impact": "明清易代的军事转折：此后明军多在辽西走廊消耗，战略进攻转为被动防御。萨尔浒之后，明朝失去在辽东「一战定乾坤」的能力，只能靠堡垒与粮饷拖延，而拖延本身是在等待关内爆雷。",
+      "leadsTo": [
+        "evt-1644"
+      ],
+      "lede": "萨尔浒之战，后金集中兵力击破明军分进合击。",
+      "kind": "军事"
+    },
+    {
+      "id": "evt-huangtaiji",
+      "eraId": "ming-qing",
+      "year": 1636,
+      "placeId": "shenyang",
+      "title": "皇太极称帝，改国号为清",
+      "dynastyTag": "后金—清",
+      "people": [
+        "皇太极"
+      ],
+      "personIds": [
+        "person-huangtaiji"
+      ],
+      "summary": "崇德元年（1636），皇太极在盛京（今沈阳）称帝，改国号“大清”；此前一年他已把族名定为满洲。他先后征服漠南蒙古，吸收汉人官员和降军，使满洲政权成为兼有满、蒙、汉三种成分的国家。",
+      "impact": "清在入关之前就建立了八旗制度和满蒙联姻，积累了管理多民族的经验。1644年入关后，这套制度被带进北京，成为清代兼容满、蒙、汉、藏的统治基础。",
+      "leadsTo": [
+        "evt-1644"
+      ],
+      "lede": "皇太极在盛京称帝，改国号为清。",
+      "kind": "民族",
+      "geoWhy": "盛京位于辽河平原，南接辽西走廊，北连蒙古草原，既靠近明朝边防，又便于联合蒙古。"
+    },
+    {
+      "id": "evt-tiangong-kaiwu",
+      "eraId": "ming-qing",
+      "year": 1637,
+      "placeId": "nanchang",
+      "title": "宋应星《天工开物》",
+      "dynastyTag": "明",
+      "people": [
+        "宋应星"
+      ],
+      "personIds": [],
+      "summary": "崇祯十年（1637），江西奉新人宋应星刊行《天工开物》，分十八卷，记述农业、纺织、制盐、陶瓷、冶铁、造船、造纸、火药等的生产过程，并附有大量插图。",
+      "impact": "《天工开物》是中国古代最全面的技术著作之一，反映了明代东南地区手工业与商品经济的发达。此书在国内一度流传不广，民国初年才由日本传回并重新受到重视。",
+      "leadsTo": [],
+      "lede": "宋应星《天工开物》，记下明代的农业与手工业。",
+      "kind": "科技",
+      "geoWhy": "江西是明代造纸、陶瓷、冶铁和稻作的重要产区，作者在家乡和各地的见闻为书提供了素材。"
+    },
+    {
+      "id": "evt-kaifeng-flood-1642",
+      "eraId": "ming-qing",
+      "year": 1642,
+      "placeId": "kaifeng",
+      "title": "开封围城决河",
+      "dynastyTag": "明",
+      "people": [
+        "李自成"
+      ],
+      "personIds": [
+        "person-li-zicheng"
+      ],
+      "kind": "灾害",
+      "lede": "围城中决黄河灌汴，开封没于泥沙。",
+      "summary": "李自成围开封，明军与义军先后掘河，洪水灌城，人口与城市肌理严重损毁。汴京作为中原都会的连续性在此断裂一层，黄泛记忆写进城史。",
+      "impact": "证明「以水代兵」可毁城却难得民心；中原城市史从此更多要在黄泛与围城的双重地理里读，而不是只谈北宋汴京一度拥有的繁华遗影。",
+      "geoWhy": "开封地势低于周围黄河堤，决堤后水沙直灌城厢，几乎无退路。",
+      "leadsTo": [
+        "evt-1644"
+      ]
+    },
+    {
+      "id": "evt-1643-plague",
+      "eraId": "ming-qing",
+      "year": 1643,
+      "placeId": "dadu",
+      "title": "崇祯十六年大疫",
+      "dynastyTag": "明",
+      "people": [],
+      "personIds": [],
+      "summary": "崇祯十六年（1643）春夏，在华北蔓延数年、经晋北商路传来的鼠疫在北京大爆发，京城内外死亡惨重。此前数年华北连年大旱蝗灾，农村已濒于崩溃，朝廷仍不断加派兵饷。",
+      "impact": "疫病、干旱和加派叠在一起，削弱了京师的人口、防御与人心。次年李自成军逼近北京时守军空额严重，崇祯帝自缢。把明亡全归于疫病并不公允，但它是这个过程中的重要一环。",
+      "leadsTo": [
+        "evt-1644"
+      ],
+      "lede": "鼠疫传入北京，大旱之后的明朝又添一重危机。",
+      "kind": "灾害",
+      "geoWhy": "研究者推断，疫情沿晋北通往京师的商路、驿道传入，人口密集的北京成为放大器。"
+    },
+    {
+      "id": "evt-1644",
+      "eraId": "ming-qing",
+      "year": 1644,
+      "placeId": "dadu",
+      "title": "甲申之变与清入关",
+      "dynastyTag": "明清之际",
+      "people": [
+        "李自成",
+        "吴三桂",
+        "多尔衮"
+      ],
+      "personIds": [
+        "person-li-zicheng",
+        "person-wu-sangui",
+        "person-dorgon"
+      ],
+      "summary": "李自成入京，崇祯自缢；吴三桂引清军败李自成于山海关一线，清迁都北京。甲申之变是农民军破京、明廷自溃与关外清军入关的三重叠加——北京易手只是序章，统一战争还要打到西南与台湾。",
+      "impact": "征服王朝再次入主，但迅速沿用明省制、科举与儒家话语。内地十八省与边疆军府并立的版图结构，在清前期成型并影响至今。1644年的地理意义是：北京再次成为征服者继承汉地行政的枢纽，而南明的流亡证明半壁法统可以延宕，却难以逆转漕运与华北被占领的事实。",
+      "leadsTo": [
+        "evt-kangxi-taiwan",
+        "evt-opium"
+      ],
+      "lede": "李自成破京，清军入关，明清易代。",
+      "kind": "政治",
+      "geoWhy": "山海关扼辽西走廊，过了它就是华北平原。"
+    },
+    {
+      "id": "evt-zhengchenggong",
+      "eraId": "ming-qing",
+      "year": 1661,
+      "placeId": "taiwan_fu",
+      "title": "郑成功收复台湾",
+      "dynastyTag": "南明",
+      "people": [
+        "郑成功"
+      ],
+      "personIds": [],
+      "summary": "永历十五年（1661），郑成功率两万余名将士自厦门出发，经澎湖在台湾鹿耳门登陆，围攻荷兰人据守的热兰遮城和赤嵌城，次年二月荷兰总督投降。郑氏在台湾设承天府，作为反清抗争的基地。",
+      "impact": "郑成功结束了荷兰对台湾近四十年的殖民统治，使台湾成为汉族移民的垦殖地，开启了大规模的汉人开发。郑氏政权存续到1683年，被清军施琅攻灭，台湾由此纳入清朝版图。",
+      "leadsTo": [
+        "evt-kangxi-taiwan"
+      ],
+      "lede": "郑成功率军渡海，次年迫降荷兰殖民者收复台湾。",
+      "kind": "军事",
+      "geoWhy": "鹿耳门水道浅窄，荷兰人以为大船无法通过，郑军借涨潮驶入台江内海，绕开了要塞火力。"
+    },
+    {
+      "id": "evt-huguang-sichuan",
+      "eraId": "ming-qing",
+      "year": 1680,
+      "placeId": "chengdu",
+      "title": "湖广填四川",
+      "dynastyTag": "清",
+      "people": [],
+      "personIds": [],
+      "summary": "明末清初的战乱、瘟疫和虎患使四川人口骤减，不少州县十室九空。康熙年间起，政府招徕移民垦荒，湖广、广东、陕西等地的农民大批入川，迁移持续到乾隆年间。",
+      "impact": "移民重建了四川的农业和市镇，也把湖广的方言、饮食和宗族传统带进了盆地。四川成为清代重要的粮食产区，“湖广填四川”成了许多川人家谱里的共同记忆。",
+      "leadsTo": [],
+      "lede": "湖广填四川，战乱后的盆地重新有了人口。",
+      "kind": "经济",
+      "geoWhy": "四川盆地四周环山，战乱中人口损失大却土地肥沃，长江水路使湖广移民可以溯江而入。",
+      "placeIds": [
+        "chengdu",
+        "chongqing"
+      ]
+    },
+    {
+      "id": "evt-kangxi-taiwan",
+      "eraId": "ming-qing",
+      "year": 1683,
+      "placeId": "fuzhou",
+      "title": "施琅平台与东南海疆",
+      "dynastyTag": "清",
+      "people": [
+        "康熙",
+        "施琅"
+      ],
+      "personIds": [
+        "person-kangxi",
+        "person-shi-lang"
+      ],
+      "summary": "康熙二十二年施琅克台湾，郑氏政权结束，清设府县。东南海上抗清基地与郑氏贸易网络被纳入版籍，海患形态为之一变。收台把「海外延宕的明郑」收进省府视野，也把台湾从抗清基地改写成须设官征税的边疆岛屿。",
+      "impact": "台湾进入省府行政视野的开端；也强化清廷对海洋「防」优先于「通」的取向——与后来条约口岸冲突的伏笔在此。康熙收台之后，清廷更关心的是海防与迁界遗留，而不是把台湾建成远洋贸易枢纽；这一「防海」偏好，要到鸦片战争才被外力打断。",
+      "leadsTo": [
+        "evt-opium"
+      ],
+      "lede": "施琅攻取台湾，明郑覆灭，台湾设府。",
+      "kind": "军事"
+    },
+    {
+      "id": "evt-yaksa",
+      "eraId": "ming-qing",
+      "year": 1685,
+      "placeId": "aihun",
+      "title": "雅克萨之战",
+      "dynastyTag": "清",
+      "people": [
+        "康熙帝"
+      ],
+      "personIds": [
+        "person-kangxi"
+      ],
+      "summary": "康熙二十四年（1685），清军进攻俄国人占据的雅克萨城，俄方投降；俄人随后返回重建，次年清军再度围城。双方最终经谈判于1689年签订《尼布楚条约》。",
+      "impact": "雅克萨之战遏制了沙俄向黑龙江流域扩张，使清朝能在有利位置上与俄国谈判划界。这条边界在两个世纪里大体稳定，直到十九世纪中叶《瑷珲条约》和《北京条约》改变了它。",
+      "leadsTo": [
+        "evt-nerchinsk"
+      ],
+      "lede": "清军两次围雅克萨，为尼布楚谈判铺路。",
+      "kind": "军事",
+      "geoWhy": "黑龙江与结雅河等支流的交汇处是水路与狩猎道的交汇点，谁控制雅克萨，谁就控制上游的毛皮贸易和航道。"
+    },
+    {
+      "id": "evt-nerchinsk",
+      "eraId": "ming-qing",
+      "year": 1689,
+      "placeId": "aihun",
+      "title": "尼布楚谈判与东北边界",
+      "dynastyTag": "清",
+      "people": [],
+      "personIds": [],
+      "summary": "清与沙俄在尼布楚定约，划定黑龙江流域一段边界并规范贸易。这是中国历史上较早以近代条约语言处理北方陆疆的实践，现场却落在清军与俄军对峙的东北森林—河谷地理上。瑷珲、雅克萨等城点因此进入边界叙事。",
+      "impact": "东北从「龙兴之地」的内政空间，开始同时成为国际法上的边界地带。咸丰后瑷珲、北京诸约的剧变，正是在这一条约地理传统上的失守与改写。",
+      "leadsTo": [
+        "evt-opium"
+      ],
+      "lede": "中俄签尼布楚条约，以河山划定东北边界。",
+      "kind": "政治"
+    },
+    {
+      "id": "evt-zouxikou",
+      "eraId": "ming-qing",
+      "year": 1700,
+      "placeId": "datong",
+      "title": "走西口",
+      "dynastyTag": "清",
+      "people": [],
+      "personIds": [],
+      "summary": "清代中叶前后，山西、陕西北部的农民和商人经杀虎口、张家口等关口出长城，进入内蒙古草原垦荒、佣工和经商，称“走西口”。清政府起初限制移民，后来逐步放开，移民遂形成长期的人口流动。",
+      "impact": "走西口使内蒙古南部由牧区变成半农半牧区，归化城（今呼和浩特）、包头等城镇因此兴起。晋商也借此打通了蒙古、俄罗斯的商路，为后来票号的出现提供了资本和网络。",
+      "leadsTo": [
+        "evt-rishengchang"
+      ],
+      "lede": "走西口，山西人出杀虎口，北上草原经商垦荒。",
+      "kind": "经济",
+      "geoWhy": "山西北部耕地少、灾荒多，而长城以北草场可垦，杀虎口一类关口正好把两种生态连起来。"
+    },
+    {
+      "id": "evt-chengde",
+      "eraId": "ming-qing",
+      "year": 1713,
+      "placeId": "chengde",
+      "title": "承德避暑山庄与外八庙",
+      "dynastyTag": "清",
+      "people": [
+        "康熙帝",
+        "乾隆帝"
+      ],
+      "personIds": [
+        "person-kangxi",
+        "person-qianlong"
+      ],
+      "summary": "康熙四十二年（1703）开始兴建热河行宫，1713年主体建成，称避暑山庄，乾隆时期继续扩建，并陆续在周围兴建外八庙。清帝每年夏秋在这里理政，木兰围场的秋狝和对蒙古、西藏上层的接见也在此进行。",
+      "impact": "山庄把承德变成清代的第二政治中心，满洲皇帝在这里与蒙古王公、西藏的班禅、新疆回归的土尔扈特首领会面，并用仿建的布达拉宫和须弥福寿庙等建筑表达对藏传佛教的尊崇。",
+      "leadsTo": [],
+      "lede": "承德避暑山庄建成，清帝在这里会见蒙藏王公。",
+      "kind": "民族",
+      "geoWhy": "承德位于长城以北的燕山与蒙古高原之间，距北京约两百公里，既便于控制蒙古，又避开北京的暑热。"
+    },
+    {
+      "id": "evt-yazhang",
+      "eraId": "ming-qing",
+      "year": 1720,
+      "placeId": "lhasa",
+      "title": "清军入藏与驻藏大臣",
+      "dynastyTag": "清",
+      "people": [],
+      "personIds": [],
+      "summary": "清出兵安藏并逐步确立驻藏大臣制度，把拉萨—日喀则政治带纳入帝国边政体系。高原驿路、粮台与金瓶掣签等安排，使西藏不再只是朝贡叙事中的远方，而成为可派官、可驻军、可干预转世程序的边疆行政区。",
+      "impact": "西南边疆的「内地化」在高原以另一种节奏展开：不是府县密布，而是宗教领袖、驻扎大臣与朝贡—朝觐路线并存。近代中英藏印交涉，都在这一地理—制度框架上展开。",
+      "leadsTo": [
+        "evt-miaojiang"
+      ],
+      "lede": "清军入藏驱逐准噶尔势力，开启驻藏大臣制度。",
+      "kind": "政治"
+    },
+    {
+      "id": "evt-miaojiang",
+      "eraId": "ming-qing",
+      "year": 1726,
+      "placeId": "kunming",
+      "title": "改土归流推进",
+      "dynastyTag": "清",
+      "people": [
+        "鄂尔泰"
+      ],
+      "personIds": [],
+      "summary": "雍正朝大规模改土归流，西南土司区改设流官，伴随军事行动与移民，把帝国行政密度推向云贵高原深处。改土归流不是简单「文明开化」，而是用绿营、文书与汉民移垦去压缩土司自治空间，把西南写成可征税、可设学的省县网络。",
+      "impact": "「内地化」伴随冲突与文化断裂，是理解近代民族国家边疆问题的前史；省县文书到达之处，土司自治空间收缩。雍正的西南政策证明：帝制晚期的空间经营可以深入山地与河谷，但代价是长期动荡与族群关系的重新洗牌——近代边疆问题的许多线索，都从这里引出。",
+      "leadsTo": [
+        "evt-opium"
+      ],
+      "lede": "雍正改土归流，西南土司区改设流官。",
+      "kind": "政治"
+    },
+    {
+      "id": "evt-junjichu",
+      "eraId": "ming-qing",
+      "year": 1729,
+      "placeId": "dadu",
+      "title": "雍正设军机处",
+      "dynastyTag": "清",
+      "people": [
+        "雍正帝"
+      ],
+      "personIds": [],
+      "summary": "雍正七年（1729），清廷因对准噶尔用兵而设军机处，原意是保密和快速传递军情，由皇帝挑选亲信大臣在内廷办事，不设官署、没有固定编制，按皇帝口授拟写谕旨。",
+      "impact": "军机处逐渐取代内阁，成为实际的中枢机构，皇权进一步集中。它使清朝能够高效指挥广阔疆域的军政事务，也使朝政高度依赖皇帝个人的勤勉与能力。",
+      "leadsTo": [],
+      "lede": "雍正设军机处，皇权集中到极致。",
+      "kind": "政治"
+    },
+    {
+      "id": "evt-pingzhun",
+      "eraId": "ming-qing",
+      "year": 1755,
+      "placeId": "ili",
+      "title": "清军平定准噶尔",
+      "dynastyTag": "清",
+      "people": [
+        "乾隆帝",
+        "阿睦尔撒纳"
+      ],
+      "personIds": [
+        "person-qianlong"
+      ],
+      "summary": "乾隆二十年（1755），清军分北、西两路攻入伊犁，准噶尔汗达瓦齐被俘；之后阿睦尔撒纳叛清，清军再度用兵，到1757年彻底平定准噶尔，天山南北归入清朝版图。",
+      "impact": "平定准噶尔结束了蒙古诸部与清朝一个多世纪的争夺，清朝在伊犁设将军，新疆开始成为稳定的行政区。与此同时，准噶尔人口在战争和天花中损失惨重，伊犁河谷空旷，后来被满、锡伯、索伦等屯垦移民填补。",
+      "leadsTo": [
+        "evt-ilibing"
+      ],
+      "lede": "清军两度进军伊犁，准噶尔汗国覆亡。",
+      "kind": "民族",
+      "geoWhy": "伊犁河谷是天山北麓水草最丰美的地区，谁控制它，就控制了天山南北与中亚之间的通道。"
+    },
+    {
+      "id": "evt-guangzhou-yikou",
+      "eraId": "ming-qing",
+      "year": 1757,
+      "placeId": "guangzhou",
+      "title": "广州一口通商",
+      "dynastyTag": "清",
+      "people": [
+        "乾隆帝"
+      ],
+      "personIds": [
+        "person-qianlong"
+      ],
+      "summary": "乾隆二十二年（1757），清廷下令外国商船只能到广州贸易，撤销闽、浙、江三处海关对西洋商船的贸易权，由广州的行商（十三行）负责接待和担保。",
+      "impact": "广州成为清中叶对外贸易的唯一窗口，茶叶、丝绸和瓷器流向欧美，白银流入中国。体制的僵化也积累了矛盾：英国要求扩大通商、减轻限制，成为鸦片战争的远因。",
+      "leadsTo": [
+        "evt-opium"
+      ],
+      "lede": "乾隆限广州一口通商，十三行垄断对外贸易。",
+      "kind": "经济",
+      "geoWhy": "广州位于珠江口，背靠岭南，距北京远，便于朝廷把外国商人集中在远离京师的一处管理。"
+    },
+    {
+      "id": "evt-ilibing",
+      "eraId": "ming-qing",
+      "year": 1762,
+      "placeId": "ili",
+      "title": "伊犁将军与新疆军府",
+      "dynastyTag": "清",
+      "people": [],
+      "personIds": [],
+      "summary": "乾隆平准部后设伊犁将军，以伊犁河谷为枢纽统辖天山南北军政。卡伦、屯田、换防与南疆伯克制并行，把准噶尔盆地到喀什噶尔的广阔地带编进帝国西北军府地理。这是清极盛版图在内亚的制度落点。",
+      "impact": "近代新疆建省、铁路与屯垦，都继承「北疆军府—南疆绿洲」的空间分工。理解中国西北边疆，伊犁不是边城点缀，而是整盘棋的枢纽。",
+      "leadsTo": [
+        "evt-kangxi-taiwan"
+      ],
+      "route": [
+        [
+          103.8,
+          36.1
+        ],
+        [
+          94.7,
+          40.1
+        ],
+        [
+          82.9,
+          41.7
+        ],
+        [
+          76.0,
+          39.5
+        ]
+      ],
+      "lede": "清设伊犁将军，新疆实行军府制。",
+      "kind": "政治"
+    },
+    {
+      "id": "evt-tuerhute",
+      "eraId": "ming-qing",
+      "year": 1771,
+      "placeId": "ili",
+      "title": "土尔扈特东归",
+      "dynastyTag": "清",
+      "people": [
+        "渥巴锡"
+      ],
+      "personIds": [],
+      "summary": "乾隆三十六年（1771），原居伏尔加河下游的土尔扈特部在首领渥巴锡带领下，不堪俄国压迫，率数万人东返，历经半年多的长途跋涉，途中损失惨重，最终在伊犁河流域受到清政府安置。",
+      "impact": "东归使清朝的西北疆域更加稳固，土尔扈特人被分地安置在新疆和青海，渥巴锡还在承德被乾隆接见。这次迁移也被视为蒙古民族回归中国的象征，清廷并为此立碑纪事。",
+      "leadsTo": [],
+      "lede": "土尔扈特万里东归，重返伊犁河谷。",
+      "kind": "民族",
+      "geoWhy": "从伏尔加河经哈萨克草原到伊犁河谷，是欧亚草原带上一条天然通道，伊犁正是它的出口。"
+    },
+    {
+      "id": "evt-siku",
+      "eraId": "ming-qing",
+      "year": 1782,
+      "placeId": "dadu",
+      "title": "《四库全书》编成",
+      "dynastyTag": "清",
+      "people": [
+        "乾隆帝",
+        "纪昀"
+      ],
+      "personIds": [
+        "person-qianlong"
+      ],
+      "summary": "乾隆三十八年（1773）开四库全书馆，由纪昀等主持，到1782年第一部《四库全书》抄成，收书三千四百余种、近八万卷，分经史子集四部，前后共抄七部，分藏南北各地。",
+      "impact": "这是中国历史上最大的官修丛书，保存了大量古籍，同时也借编纂之机审查、销毁和删改了许多被认为违碍的书籍。后人对它既有保存文献之功的肯定，也有文化高压的批评。",
+      "leadsTo": [],
+      "lede": "《四库全书》编成，收书三千四百余种。",
+      "kind": "文化",
+      "geoWhy": "七部分藏北京、承德、沈阳和镇江、扬州、杭州，既按地区向士人开放，也分散了保存的风险。"
+    },
+    {
+      "id": "evt-rishengchang",
+      "eraId": "ming-qing",
+      "year": 1823,
+      "placeId": "pingyao",
+      "title": "日升昌创办与山西票号",
+      "dynastyTag": "清",
+      "people": [],
+      "personIds": [],
+      "summary": "道光初年（约1823），山西平遥的西裕成颜料庄改组为日升昌，开始办理异地汇兑，客户把银子交到一地的分号，凭汇票在另一地取银，免去运送现银的风险。此后山西票号陆续兴起，鼎盛时在全国和日本、新加坡等地设有分号。",
+      "impact": "票号解决了跨区域大额资金的流通问题，让晋商掌握了清代中后期的金融命脉。甲午战争以后新式银行兴起，加之辛亥革命的冲击，票号在二十世纪初迅速衰落。",
+      "leadsTo": [],
+      "lede": "日升昌创办，平遥票号开启异地汇兑。",
+      "kind": "经济",
+      "geoWhy": "平遥位于晋中盆地，处于商路汇聚点，晋商长年在外贸易，对安全可靠的远距离汇兑需求最强。"
+    },
+    {
+      "id": "evt-opium",
+      "eraId": "modern",
+      "year": 1840,
+      "placeId": "guangzhou",
+      "title": "鸦片战争",
+      "dynastyTag": "清",
+      "people": [
+        "林则徐",
+        "琦善"
+      ],
+      "personIds": [
+        "person-linzx"
+      ],
+      "summary": "道光年间林则徐虎门销烟后，英军以舰队打击沿海与长江口，清廷被迫议和。战争表象是鸦片与商欠，结构是工业海权对农业帝国贸易体系的强制改写；战场选择本身就暴露了水师与岸防的时代落差。广州一口通商的旧秩序，在蒸汽与舷炮面前无法自保。战场选在珠江口与长江口，暴露水师岸防与工业海权的时代落差，威胁方向永久改道。",
+      "impact": "《南京条约》开启条约口岸与协定关税时代：「天下」秩序让位于主权—条约法叙事。广州一口通商的终结，是中国近代空间重组的第一声；此后政策辩论再难绕开「海上来的规则」。鸦片战争把战争从长城与草原，搬到了珠江口与长江口——中国的威胁方向自此永久改道。",
+      "leadsTo": [
+        "evt-nanjing-treaty",
+        "evt-taiping"
+      ],
+      "lede": "鸦片战争爆发，中国被卷入条约体系。",
+      "kind": "军事"
+    },
+    {
+      "id": "evt-nanjing-treaty",
+      "eraId": "modern",
+      "year": 1842,
+      "placeId": "jiankang",
+      "title": "《南京条约》与五口",
+      "dynastyTag": "清",
+      "people": [],
+      "personIds": [],
+      "summary": "《南京条约》把开口岸写成可执行的国际法义务：关税、领事裁判与租界地产，共同把沿海纵深凿成多孔的主权空间；上海、广州等口岸成为新的权力节点。",
+      "impact": "港口—租界—买办网络成为新权力地理；内地省城相对重要性下降，沿海纵深被打开，国家主权在空间上「多孔化」。五口通商之后，真正改写中国的不只是割地，而是一套可复制的口岸城市模板——上海只是最早、也最成功的那一个。",
+      "leadsTo": [
+        "evt-taiping",
+        "evt-shanghai"
+      ],
+      "lede": "《南京条约》开五口、割香港，多孔主权形成。",
+      "kind": "政治",
+      "placeIds": [
+        "jiankang",
+        "guangzhou",
+        "xiamen",
+        "fuzhou",
+        "ningbo",
+        "shanghai"
+      ]
+    },
+    {
+      "id": "evt-shanghai",
+      "eraId": "modern",
+      "year": 1843,
+      "placeId": "shanghai",
+      "title": "上海开埠",
+      "dynastyTag": "清",
+      "people": [],
+      "personIds": [],
+      "summary": "道光二十三年上海开埠后，租界、洋行与江南丝茶、钱庄网络结合，数十年内超越广州、苏州，成为全国贸易与信息中心。上海把长江口与江南腹地焊成一座条约口岸超级城市：租界司法、买办信用与航运网络，共同制造出中国近代最强的市场与媒体节点。",
+      "impact": "「双城」结构出现：政治法统在北京/南京摇摆，经济—文化现代性在上海沉淀。理解二十世纪中国，必须把上海当作独立变量。上海不只是「发达城市」，而是另一套权力地理——它能养活革命、养活买办，也能养活与首都并行的舆论与资金中心。政治法统在北京/南京摇摆，现代性在上海沉淀；上海是可养活革命、买办与舆论的独立变量。",
+      "leadsTo": [
+        "evt-self-strengthen",
+        "evt-nanking-1927"
+      ],
+      "lede": "上海开埠，背靠江南成为条约口岸巨城。",
+      "kind": "经济",
+      "geoWhy": "上海位于长江入海口，背靠江南腹地，开埠后迅速取代广州。"
+    },
+    {
+      "id": "evt-taiping",
+      "eraId": "modern",
+      "year": 1853,
+      "placeId": "jiankang",
+      "title": "太平天国定都天京",
+      "dynastyTag": "太平天国",
+      "people": [
+        "洪秀全"
+      ],
+      "personIds": [
+        "person-hong-xiuquan"
+      ],
+      "summary": "咸丰三年太平军破南京为天京，南北对峙十余年，江南人口与城镇遭巨创，旧绅士社会与市镇网络被战争重塑。太平天国把上帝信仰、军政合一与江南财赋争夺绑在一起，使内战同时成为宗教战争、社会革命与地缘争夺；南京再次成为南方政权的心脏。",
+      "impact": "湘淮军与地方督抚崛起，晚清「外重」格局奠立；辛亥前的权力分散与地方军事化，都能在这场内战里找到源头。太平天国留给晚清的，不只是人口创伤，更是「中央靠地方军队救命」的政治习惯——督抚权重从此难再收回。",
+      "leadsTo": [
+        "evt-self-strengthen"
+      ],
+      "lede": "太平天国定都天京，与清廷对峙十余年。",
+      "kind": "军事"
+    },
+    {
+      "id": "evt-huanghe-1855",
+      "eraId": "modern",
+      "year": 1855,
+      "placeId": "kaifeng",
+      "title": "铜瓦厢决口与黄河北返",
+      "dynastyTag": "清",
+      "people": [],
+      "personIds": [],
+      "summary": "咸丰五年六月十九（1855年8月1日），黄河在河南兰考铜瓦厢决口，河水冲向东北，夺山东大清河入渤海，结束了六百多年的南流入海局面。清廷因太平天国战事无力堵口，改道由此成为定局。",
+      "impact": "苏北、淮北的黄河故道成了废黄河，运河山东段缺水，漕运衰落，河运改海运的趋势加快。山东西部成为新的黄泛区，下游堤防体系重建后沿用至今。",
+      "leadsTo": [],
+      "lede": "铜瓦厢决口，黄河离开淮北，改由山东入渤海。",
+      "kind": "灾害",
+      "geoWhy": "南流河床高出两岸，决口后水流沿地势最低的山东大清河入渤海，没有回到淤高的旧道。",
+      "compare": {
+        "label": "铜瓦厢改道前后",
+        "beforeYear": 1850,
+        "afterYear": 1860
+      },
+      "source": [
+        {
+          "work": "《清史稿·河渠志》",
+          "loc": "志一百三·河渠三：咸丰五年，河复决铜瓦厢，东注大清河入海",
+          "url": "https://www.gushiwen.cn/guwen/bookv_0e212ed34dde.aspx"
+        }
+      ]
+    },
+    {
+      "id": "evt-aihui-beijing",
+      "eraId": "modern",
+      "year": 1858,
+      "placeId": "aihun",
+      "title": "《瑷珲条约》与《北京条约》",
+      "dynastyTag": "清",
+      "people": [
+        "奕山",
+        "奕訢"
+      ],
+      "personIds": [],
+      "summary": "咸丰八年（1858），黑龙江将军奕山在沙俄压力下签订《瑷珲条约》，黑龙江以北六十余万平方公里划归俄国，乌苏里江以东由两国共管。1860年《北京条约》又把乌苏里江以东约四十万平方公里划给俄国。",
+      "impact": "清朝因此失去了东北的出海口，俄国获得海参崴等太平洋港口，东北亚的地缘格局从此改变。《尼布楚条约》以外兴安岭为界的旧边界被废弃，东北边疆的防务压力转到黑龙江和乌苏里江沿线。",
+      "leadsTo": [
+        "evt-crr"
+      ],
+      "lede": "《瑷珲条约》《北京条约》割让黑龙江、乌苏里江以东。",
+      "kind": "政治",
+      "geoWhy": "黑龙江与乌苏里江是东北亚水路干线，条约把两江变成国界，也让俄国直通日本海。",
+      "placeIds": [
+        "aihun",
+        "dadu"
+      ]
+    },
+    {
+      "id": "evt-self-strengthen",
+      "eraId": "modern",
+      "year": 1861,
+      "placeId": "tianjin",
+      "title": "洋务自强与北洋枢纽",
+      "dynastyTag": "清",
+      "people": [
+        "李鸿章",
+        "曾国藩"
+      ],
+      "personIds": [
+        "person-li-hongzhang",
+        "person-zeng-guofan"
+      ],
+      "summary": "咸同至光绪初，总理衙门、江南制造局、轮船招商与北洋海防展开，试图在不动摇帝制前提下引入军工与航运，天津—上海成为洋务双节点。自强运动把「师夷长技」落成江南与北洋的船厂、学堂与电报，却把政治参与与宪制问题刻意留在门外。",
+      "impact": "技术官僚改革可延长帝国寿命，却无法解决政治参与与军事国家化问题。洋务的地理遗产是沿海—沿江工业带初现；只改器不改制，会在下一场海战里被一次性清算。",
+      "leadsTo": [
+        "evt-jiawu"
+      ],
+      "lede": "洋务运动办船厂、学堂与电报，只改器不改制。",
+      "kind": "科技"
+    },
+    {
+      "id": "evt-fuzhou-shipyard",
+      "eraId": "modern",
+      "year": 1866,
+      "placeId": "fuzhou",
+      "title": "福建船政局创办",
+      "dynastyTag": "清",
+      "people": [
+        "左宗棠",
+        "沈葆桢"
+      ],
+      "personIds": [],
+      "summary": "同治五年（1866），闽浙总督左宗棠在福州马尾创办福建船政局，聘请法国人为监督，设船厂和船政学堂，后由沈葆桢主持。它先后造出数十艘兵船和商船，并培养了一批海军与造船人才。",
+      "impact": "船政局是洋务运动中规模最大的近代工业，也为北洋海军和南洋水师提供了军官，严复、邓世昌、刘步蟾等人都出身船政学堂。1884年马江海战中，福建水师被法国舰队摧毁，船政局也遭重创。",
+      "leadsTo": [
+        "evt-jiawu"
+      ],
+      "lede": "左宗棠创办福州船政局，中国第一座近代造船厂。",
+      "kind": "科技",
+      "geoWhy": "马尾位于闽江口，水深港阔，临近福州又远离大城，适合造船和练兵。"
+    },
+    {
+      "id": "evt-dingwu-famine",
+      "eraId": "modern",
+      "year": 1876,
+      "placeId": "taiyuan",
+      "title": "丁戊奇荒",
+      "dynastyTag": "清",
+      "people": [
+        "李提摩太"
+      ],
+      "personIds": [],
+      "summary": "光绪二年至五年（1876–1879），山西、河南、直隶、山东、陕西等省连续大旱，粮食绝收。研究者估计死亡人数近千万，山西灾情最重。灾荒集中在丁丑、戊寅两年，史称“丁戊奇荒”。",
+      "impact": "灾区交通全靠驮运，赈粮运不进山西，灾情被进一步放大。英国传教士李提摩太等人参与救济，赈灾成为近代中国民间和国际救济活动的起点之一，修铁路以便运粮也成了朝野争论的议题。",
+      "leadsTo": [],
+      "lede": "华北五省连年大旱，丁戊奇荒死者近千万。",
+      "kind": "灾害",
+      "geoWhy": "晋陕豫的黄土旱作区缺水利、少仓储，又没有铁路，粮食运不进内陆山区。",
+      "source": [
+        {
+          "work": "李文海等《中国近代十大灾荒》",
+          "loc": "丁戊奇荒章（上海人民出版社，1994）"
+        }
+      ]
+    },
+    {
+      "id": "evt-zuo-xinjiang",
+      "eraId": "modern",
+      "year": 1876,
+      "placeId": "urumqi",
+      "title": "左宗棠收复新疆",
+      "dynastyTag": "清",
+      "people": [
+        "左宗棠"
+      ],
+      "personIds": [],
+      "summary": "光绪二年至四年（1876—1878），左宗棠率湘军西进，先后收复乌鲁木齐、吐鲁番和南疆各城，击败阿古柏政权，此后又通过谈判收回被俄国占据的伊犁大部分地区。1884年清廷正式设立新疆省。",
+      "impact": "收复新疆保住了清朝的西北疆域，建省使新疆与内地的行政体制接轨，屯垦与教育事业逐步展开。它也引发了“海防与塞防”之争：同一时期清廷的财力在东南海防与西北塞防之间被迫取舍。",
+      "leadsTo": [],
+      "lede": "左宗棠西征，收复新疆，1884年建省。",
+      "kind": "军事",
+      "geoWhy": "天山北路粮草较足，是进兵南疆的后方；左宗棠先取乌鲁木齐、再下吐鲁番，用屯田就地解决补给。"
+    },
+    {
+      "id": "evt-jiawu",
+      "eraId": "modern",
+      "year": 1895,
+      "placeId": "shenyang",
+      "title": "甲午战争与《马关条约》",
+      "dynastyTag": "清—日本",
+      "people": [
+        "李鸿章"
+      ],
+      "personIds": [
+        "person-li-hongzhang"
+      ],
+      "summary": "光绪二十一年甲午战争，北洋海军覆灭，《马关条约》割台湾、赔巨款、承认朝鲜「独立」，日本取东亚工业—军事新中心之势公开化。黄海与威海卫的溃败证明：无近代参谋、财政与政治支撑，铁甲舰也救不了旧式国家。",
+      "impact": "维新与革命同时加速；列强划分势力范围与路矿权，半殖民地空间结构成型。台湾割让与巨额赔款把危机感推进到制度层面，改革时间表被压缩。",
+      "leadsTo": [
+        "evt-wuxu",
+        "evt-boxer"
+      ],
+      "lede": "甲午战败，《马关条约》割台湾，洋务成果破产。",
+      "kind": "军事"
+    },
+    {
+      "id": "evt-chuang-guandong",
+      "eraId": "modern",
+      "year": 1897,
+      "placeId": "shenyang",
+      "title": "闯关东与东北移民垦殖",
+      "dynastyTag": "清",
+      "people": [],
+      "personIds": [],
+      "summary": "清代长期限制汉人移居东北，咸丰十年（1860）后逐步放垦，光绪二十三年（1897）起吉林、黑龙江全面招民开垦。山东、河北的农民在灾荒和战乱中大批渡海或出山海关，进入东北开荒。",
+      "impact": "从清末到民国，迁入东北的关内移民累计达上千万人，东北由人烟稀少的边疆变成重要的农业区和工业区，汉族人口成为主体。大量劳动力也支撑了中东铁路、南满铁路沿线的城市和大豆产业。",
+      "leadsTo": [
+        "evt-crr"
+      ],
+      "lede": "闯关东，华北农民大规模迁入东北垦殖。",
+      "kind": "经济",
+      "geoWhy": "山东半岛与辽东半岛隔渤海相望，山海关又打开陆路通道，东北黑土平原人少地多，与华北形成互补。"
+    },
+    {
+      "id": "evt-wuxu",
+      "eraId": "modern",
+      "year": 1898,
+      "placeId": "dadu",
+      "title": "戊戌变法",
+      "dynastyTag": "清",
+      "people": [
+        "康有为",
+        "梁启超",
+        "光绪"
+      ],
+      "personIds": [
+        "person-kang-youwei",
+        "person-liang-qichao"
+      ],
+      "summary": "光绪二十四年百日维新改科举、兴学堂、振商务，旋被政变扼杀，改革派流亡，革命派话语上升。戊戌把「制度必须变」第一次推到紫禁城日程上，又用政变证明：没有兵权与地方拥护的宫廷改革，会在一百天内被旧势力掐灭。",
+      "impact": "维新失败后，和平转型窗口关闭；此后「刀与血」的建国叙事压过「制度渐进」，二十世纪中国政治的激进气质由此加固。改革派流亡海外，国内则把制度实验的成本算进下一轮革命动员。",
+      "leadsTo": [
+        "evt-xinhai"
+      ],
+      "lede": "戊戌变法仅百日，和平改革的窗口关闭。",
+      "kind": "政治"
+    },
+    {
+      "id": "evt-boxer",
+      "eraId": "modern",
+      "year": 1900,
+      "placeId": "dadu",
+      "title": "义和团与八国联军",
+      "dynastyTag": "清",
+      "people": [],
+      "personIds": [],
+      "summary": "义和团与朝廷短暂合流，把华北乡村动员推到与列强直接对撞；八国联军进京，使「天朝」安全感在地理上被当场拆除，京津门户洞开。",
+      "impact": "「天朝」安全感彻底打碎；新政与练新军在屈辱财政下展开，反而培养了清王朝的掘墓人——新军与地方咨议力量。辛丑之后，首都驻军与巨额赔款把主权空洞化写成日常景观；新政越练兵，越给辛亥准备了可倒戈的武装。",
+      "leadsTo": [
+        "evt-xinhai"
+      ],
+      "lede": "义和团围攻使馆，八国联军攻入北京。",
+      "kind": "军事"
+    },
+    {
+      "id": "evt-dunhuang-library",
+      "eraId": "modern",
+      "year": 1900,
+      "placeId": "dunhuang",
+      "title": "敦煌藏经洞发现",
+      "dynastyTag": "清",
+      "people": [
+        "王圆箓"
+      ],
+      "personIds": [],
+      "summary": "光绪二十六年（1900），道士王圆箓清理莫高窟第16窟积沙时，发现封闭近千年的藏经洞，内有写本、刻本和绢画等数万件，时间从4世纪末到11世纪初，文字有汉文、藏文、粟特文、于阗文等。",
+      "impact": "藏经洞文书补写了中古西北的政治、宗教、经济和民族史，催生了敦煌学。但清政府保护乏力，1907年起斯坦因、伯希和等人低价购走大批文书，今天分藏于英、法、俄、中、日等国。",
+      "leadsTo": [],
+      "lede": "敦煌藏经洞开启，数万件中古文书重见天日。",
+      "kind": "文化",
+      "geoWhy": "河西极干旱的沙漠气候，使纸质文书在封闭洞窟里近千年不朽。"
+    },
+    {
+      "id": "evt-crr",
+      "eraId": "modern",
+      "year": 1903,
+      "placeId": "harbin",
+      "title": "中东铁路与东北都市带",
+      "dynastyTag": "清—俄",
+      "people": [],
+      "personIds": [],
+      "summary": "中东铁路贯通后，哈尔滨等站区城市迅速崛起，东北平原被铁路线改写成可快速调兵与运粮的走廊。铁路权、附属地与移民浪潮叠加，使东北成为列强争夺与中国近代化同步展开的特殊地理单元。",
+      "impact": "九一八前后的战略价值，很大程度由铁路网预先决定。谁控制干线，谁就控制东北的空间节奏——这是工业时代对骑马时代边疆的改写。",
+      "leadsTo": [
+        "evt-918"
+      ],
+      "route": [
+        [
+          117.4,
+          49.6
+        ],
+        [
+          123.9,
+          47.3
+        ],
+        [
+          126.9,
+          45.5
+        ],
+        [
+          131.9,
+          43.4
+        ]
+      ],
+      "lede": "中东铁路通车，东北都市沿铁路生长。",
+      "kind": "经济"
+    },
+    {
+      "id": "evt-keju-abolish",
+      "eraId": "modern",
+      "year": 1905,
+      "placeId": "dadu",
+      "title": "清廷废科举",
+      "dynastyTag": "清",
+      "people": [
+        "袁世凯",
+        "张之洞"
+      ],
+      "personIds": [],
+      "summary": "光绪三十一年（1905），清廷接受袁世凯、张之洞等人奏请，宣布自次年起停止乡试、会试，各省科举一律停止，同时兴办新式学堂。科举自隋唐以来延续约一千三百年，至此终止。",
+      "impact": "科举被废后，读书人不再有一条统一的上升通道，新式学堂和留学成为新的出路，传统士绅阶层逐渐瓦解。这也切断了乡村精英与中央政权之间的制度联系，为辛亥革命后的社会变化埋下伏笔。",
+      "leadsTo": [
+        "evt-xinhai"
+      ],
+      "lede": "清廷下诏废科举，延续一千三百年的选官制度终结。",
+      "kind": "文化"
+    },
+    {
+      "id": "evt-jingzhang-railway",
+      "eraId": "modern",
+      "year": 1909,
+      "placeId": "dadu",
+      "title": "京张铁路通车",
+      "dynastyTag": "清",
+      "people": [
+        "詹天佑"
+      ],
+      "personIds": [],
+      "summary": "宣统元年（1909），由詹天佑主持设计和施工的京张铁路建成通车，自北京丰台至张家口，全长约两百公里，是中国人自行设计、建造并投入运营的第一条干线铁路。八达岭一带采用“人”字形线路攀越陡坡。",
+      "impact": "京张铁路打开了北京通往察哈尔和蒙古高原的通道，也证明中国工程师可以独立完成复杂的铁路工程，削弱了列强对铁路建设的垄断。此后铁路在晚清民国成为国家整合边疆、运输军队与物资的主要手段。",
+      "leadsTo": [],
+      "lede": "京张铁路通车，中国人自行设计建造的第一条干线铁路。",
+      "kind": "科技",
+      "geoWhy": "线路要穿越军都山和八达岭，坡陡弯多，人字形线路和长隧道解决了山区爬坡。"
+    },
+    {
+      "id": "evt-xinhai",
+      "eraId": "modern",
+      "year": 1911,
+      "placeId": "wuchang",
+      "title": "武昌起义",
+      "dynastyTag": "清→民国",
+      "people": [],
+      "personIds": [],
+      "summary": "宣统三年武昌新军起事，各省独立，清帝退位，中华民国形式上统一于「五族共和」旗帜下，帝制作为国家形式终结。武昌首义把新军、咨议局与铁路风潮拧成同一根导火索；清廷失去的不只是皇冠，还有各省对北京调度权的承认。",
+      "impact": "军阀地盘与不平等条约仍在，主权国家建构才刚开始。地图从王朝紫禁城，转向党派—军队—口岸的新博弈场。辛亥解决了「要不要皇帝」，却把「谁有权统一中国」交给二十年的军阀与党争——政治地理进入多中心武装竞争时代。",
+      "leadsTo": [
+        "evt-may4"
+      ],
+      "lede": "武昌首义，各省响应，清廷失去对省的调度权。",
+      "kind": "政治"
+    },
+    {
+      "id": "evt-may4",
+      "eraId": "modern",
+      "year": 1919,
+      "placeId": "dadu",
+      "title": "五四运动",
+      "dynastyTag": "民国",
+      "people": [],
+      "personIds": [],
+      "summary": "1919年巴黎和会外交失败引发学生与市民抗议，新文化运动政治化，反帝反军阀成为公开议程，政党动员的社会基础扩大。五四把北京的街头、大学与报刊写成新的政治舞台：外交失败被翻译成国内动员，青年第一次以「国民」身份大规模进入公共空间。",
+      "impact": "现代中国的文化与政治主体意识成型；整个二十世纪革命路径，都受这场把「青年」与「国民」推上街的事件塑形。五四之后，文化论争与救亡论争缠在一起，政党开始学会用学生与市民运动改写政治时间表——这是近代群众政治的地理与社会起点。",
+      "leadsTo": [
+        "evt-nanking-1927"
+      ],
+      "lede": "五四运动，青年以国民身份大规模走上街头。",
+      "kind": "文化"
+    },
+    {
+      "id": "evt-haiyuan-quake",
+      "eraId": "modern",
+      "year": 1920,
+      "placeId": "xiaoguan",
+      "title": "海原大地震",
+      "dynastyTag": "民国",
+      "people": [],
+      "personIds": [],
+      "summary": "1920年12月16日，宁夏海原发生约8.5级地震，震中烈度12度，波及甘肃、宁夏、陕西等地，死亡约二十三万人。地震发生在当晚八时许，山体大面积滑坡，堵塞河谷形成数十处堰塞湖。",
+      "impact": "黄土高原上的滑坡和窑洞倒塌是死亡惨重的主因。这次地震之后，中国地质学界开始系统调查和研究地震，留下了对活动断裂带的早期记录。",
+      "leadsTo": [],
+      "lede": "海原大地震，黄土高原上近二十三万人遇难。",
+      "kind": "灾害",
+      "geoWhy": "海原断裂带穿过黄土高原，震后黄土大面积滑坡，窑洞成片倒塌。",
+      "source": [
+        {
+          "work": "国家地震局兰州地震研究所、宁夏回族自治区地震局《一九二〇年海原大地震》",
+          "loc": "地震出版社，1980"
+        }
+      ]
+    },
+    {
+      "id": "evt-beifa-1926",
+      "eraId": "modern",
+      "year": 1926,
+      "placeId": "guangzhou",
+      "title": "国民革命军北伐",
+      "dynastyTag": "民国",
+      "people": [
+        "蒋介石"
+      ],
+      "personIds": [
+        "person-chiang"
+      ],
+      "summary": "1926年7月，国民革命军自广东誓师北伐，先取湖南，再攻武昌，1927年占领南京、上海。1928年北伐军占领北京，年底东北易帜，全国形式上统一。",
+      "impact": "北伐打破了北洋军阀割据的局面，使国民政府的统治范围扩展到长江中下游和华北，但内部国共分裂、军阀势力仍然存在。南京国民政府由此建立，成为此后十年名义上的中央政权。",
+      "leadsTo": [
+        "evt-nanking-1927"
+      ],
+      "lede": "国民革命军北伐，从广州打到长江。",
+      "kind": "军事",
+      "geoWhy": "北伐路线沿湘江北上、取武汉，再沿长江东下，利用了粤汉铁路和长江水路的运输线。"
+    },
+    {
+      "id": "evt-nanking-1927",
+      "eraId": "modern",
+      "year": 1927,
+      "placeId": "jiankang",
+      "title": "南京国民政府",
+      "dynastyTag": "民国",
+      "people": [
+        "蒋介石"
+      ],
+      "personIds": [
+        "person-chiang"
+      ],
+      "summary": "北伐中的宁汉分流后，国民政府定都南京，开展形式上的统一与近代化市政、关税自主等努力，法统首都再次回到长江下游。南京国民政府试图用党治、关税与市政工程重建中央权威，同时面对北方军阀、苏区与日本压力的多线撕扯。",
+      "impact": "近代中国再次以南京为法统象征；与北京、上海、延安等权力节点并峙，直到1949年政治地理再次重写。1927年后的南京十年，证明半壁近代化与不完全统一可以并存——首都法统在长江，实权却往往要与地方武装和口岸资本分享。",
+      "leadsTo": [],
+      "lede": "国民政府定都南京，试图重建中央权威。",
+      "kind": "政治"
+    },
+    {
+      "id": "evt-918",
+      "eraId": "modern",
+      "year": 1931,
+      "placeId": "shenyang",
+      "title": "九一八与东北沦陷",
+      "dynastyTag": "民国",
+      "people": [],
+      "personIds": [],
+      "summary": "日军在沈阳发动九一八事变，数月内占领东北主要铁路与城市。中国失去工业基础最好、又与苏联日本交界的边疆板块，全国抗战的地缘前提从此改变。沈阳、长春、哈尔滨连成的都市带，成为殖民统治与抵抗运动的共同舞台。",
+      "impact": "东北问题从「边疆经营」变为「收回失地」的核心诉求。战后工业内迁、冷战格局与共和国初期的工业布局，都带着九一八切断的那条地理伤疤。",
+      "leadsTo": [
+        "evt-nanking-1927"
+      ],
+      "route": [
+        [
+          123.4,
+          41.8
+        ],
+        [
+          126.6,
+          43.8
+        ],
+        [
+          126.9,
+          45.5
+        ]
+      ],
+      "lede": "九一八事变，日军控制沈阳进而占领东北。",
+      "kind": "军事"
+    },
+    {
+      "id": "evt-1931-flood",
+      "eraId": "modern",
+      "year": 1931,
+      "placeId": "wuchang",
+      "title": "1931年江淮大水",
+      "dynastyTag": "民国",
+      "people": [],
+      "personIds": [],
+      "summary": "1931年夏，长江中下游和淮河流域同时发生特大洪水，汉口、南京、芜湖等城市被淹，汉口街市水深数尺、淹没约三个月。灾区涉及数省，死者以数十万计，另有数以千万计的人受灾。",
+      "impact": "洪水暴露了湖泊围垦、堤防年久失修和灾后救济体制的薄弱，国民政府成立救济水灾委员会，并借美国小麦赈济。这次大水也成为中国近代水利建设和灾害研究的重要转折之一。",
+      "leadsTo": [],
+      "lede": "1931年江淮大水，汉口被淹数月。",
+      "kind": "灾害",
+      "geoWhy": "研究者认为长江中游湖泊被围垦后蓄洪空间缩小，暴雨叠加时水位更高。"
+    },
+    {
+      "id": "evt-zunyi",
+      "eraId": "modern",
+      "year": 1935,
+      "placeId": "zunyi",
+      "title": "遵义会议",
+      "dynastyTag": "民国",
+      "people": [
+        "毛泽东"
+      ],
+      "personIds": [],
+      "summary": "1935年1月，中央红军在长征途中攻占贵州遵义，召开政治局扩大会议，总结第五次反“围剿”和长征初期的军事失败，确立了毛泽东在红军中的领导地位。",
+      "impact": "遵义会议结束了博古、李德的军事指挥，使红军摆脱了被动局面，此后进行了四渡赤水等机动作战。会议是中国共产党历史上的重要转折点，也使长征从突围转向了战略转移。",
+      "leadsTo": [],
+      "lede": "遵义会议，红军在长征途中确定新的领导。",
+      "kind": "政治",
+      "geoWhy": "遵义位于乌江以南、川黔交界的山区，国民党军力量薄弱，红军借此休整并召开会议。"
+    },
+    {
+      "id": "evt-xian-1936",
+      "eraId": "modern",
+      "year": 1936,
+      "placeId": "changan",
+      "title": "西安事变",
+      "dynastyTag": "民国",
+      "people": [
+        "张学良",
+        "杨虎城",
+        "蒋介石"
+      ],
+      "personIds": [
+        "person-chiang"
+      ],
+      "summary": "1936年12月12日，东北军张学良、西北军杨虎城在西安扣留前来督促“剿共”的蒋介石，要求停止内战、联共抗日。经中共代表周恩来等斡旋，蒋介石接受抗日主张后获释。",
+      "impact": "事变促成了内战局面的结束，国共两党在1937年再度合作，全国抗战的政治基础由此奠定。它也使陕北成为中共的大本营，西安的战略地位在抗战中进一步提高。",
+      "leadsTo": [
+        "evt-lugouqiao"
+      ],
+      "lede": "西安事变，推动国共合作抗日。",
+      "kind": "政治",
+      "geoWhy": "西安是西北军政重镇，东北军在东北沦陷后被调到陕甘，与红军驻地相邻，抗日情绪强烈。"
+    },
+    {
+      "id": "evt-chongqing",
+      "eraId": "modern",
+      "year": 1937,
+      "placeId": "chongqing",
+      "title": "战时陪都与西南大后方",
+      "dynastyTag": "民国",
+      "people": [],
+      "personIds": [],
+      "summary": "全面抗战后国民政府西迁重庆，川渝盆地与云贵成为大后方。工厂、高校与机关沿长江与公路内迁，中国政治地理临时从沿海—华北转向西南山地与河谷。陪都体制证明：在失去东部平原后，仍可依托盆地与交通线维持国家机器。",
+      "impact": "西南第一次承担全国尺度的战时中枢功能。日后三线建设、成渝工业与西南交通网，都能在抗战大后方地理中找到前史；盆地与河谷成为国家机器的备用舞台。",
+      "leadsTo": [
+        "evt-may4"
+      ],
+      "highlightPlaceIds": [
+        "chongqing",
+        "chengdu",
+        "kunming"
+      ],
+      "lede": "国民政府迁重庆，四川盆地成为抗战后方。",
+      "kind": "政治",
+      "geoWhy": "四川盆地四周环山、三峡为门，易守难攻，长江水路可转运东部工业与高校。",
+      "placeIds": [
+        "chongqing",
+        "wuchang",
+        "yichang"
+      ]
+    },
+    {
+      "id": "evt-lugouqiao",
+      "eraId": "modern",
+      "year": 1937,
+      "placeId": "dadu",
+      "title": "七七事变（卢沟桥）",
+      "dynastyTag": "民国",
+      "people": [],
+      "personIds": [],
+      "summary": "1937年7月7日夜，日军在北平西南的卢沟桥附近以士兵失踪为由要求进城搜查，遭到中国守军拒绝并发生冲突。次日起日军进攻宛平城，战事迅速扩大为全面侵华战争。",
+      "impact": "卢沟桥事变标志着全民族抗战的开始，国共合作随后建立，全国各地开始了大规模的战争动员。战争使大批机关、工厂和学校内迁西南，也使重庆和西南腹地的地位急剧上升。",
+      "leadsTo": [
+        "evt-chongqing"
+      ],
+      "lede": "七七事变，全面抗战开始。",
+      "kind": "军事",
+      "geoWhy": "卢沟桥位于永定河上，扼北平西南门户，平汉铁路自此南下，控制它就控制了北平与华北平原的通道。"
+    },
+    {
+      "id": "evt-huayuankou",
+      "eraId": "modern",
+      "year": 1938,
+      "placeId": "zhengzhou",
+      "title": "花园口扒堤与黄泛区",
+      "dynastyTag": "民国",
+      "people": [],
+      "personIds": [],
+      "summary": "1938年6月，国民政府为阻止日军西进，在郑州花园口炸开黄河大堤，河水夺颍河、涡河入淮，在豫东、皖北、苏北形成大片黄泛区。1947年堵口复堤，河水才回到北道。",
+      "impact": "黄泛区受灾面积极广、死亡人数很大，各种估计不一，常见的说法是数十万至近九十万人。这是以水代兵再次造成的人为灾难，也再次证明黄河下游决口的后果：整个淮河流域的水系和农田被泥沙改写。",
+      "leadsTo": [
+        "evt-chongqing"
+      ],
+      "lede": "花园口扒堤阻敌，黄河再度南泛九年。",
+      "kind": "灾害",
+      "geoWhy": "黄河在花园口以下是高出两岸的悬河，一旦扒口，水流顺颍河、涡河漫入淮河流域。"
+    },
+    {
+      "id": "evt-dianmian-road",
+      "eraId": "modern",
+      "year": 1938,
+      "placeId": "kunming",
+      "title": "滇缅公路通车",
+      "dynastyTag": "民国",
+      "people": [],
+      "personIds": [],
+      "summary": "1938年，云南各族民工在短短九个月内修成自昆明至滇缅边境畹町的公路，全长近一千公里，翻越横断山区的澜沧江、怒江，与缅甸的腊戍相接，成为抗战中后期重要的国际运输线。",
+      "impact": "沿海港口被封锁后，大量军需物资经仰光、滇缅公路运入中国。1942年日军占领缅甸后公路中断，盟军改建中印公路。这条路的修建依靠数十万民工，也付出了很大的伤亡代价。",
+      "leadsTo": [],
+      "lede": "滇缅公路通车，抗战时期的“生命线”。",
+      "kind": "经济",
+      "geoWhy": "公路要横切怒江、澜沧江深切峡谷，修建极艰难；但这是当时从缅甸进入西南大后方最近的通道。"
+    }
+  ],
+  "people": [
+    {
+      "id": "person-qin-shihuang",
+      "name": "秦始皇",
+      "years": "前259–前210",
+      "blurb": "完成军事统一并推行标准化行政的君主；后世帝制的人格符号，也是「暴秦」叙事的投射对象。"
+    },
+    {
+      "id": "person-shangyang",
+      "name": "商鞅",
+      "years": "前390?–前338",
+      "blurb": "把秦国改造成军功—编户国家的关键立法者；个人结局与制度遗产的撕裂，是理解法家政治的入口。"
+    },
+    {
+      "id": "person-han-gaozu",
+      "name": "汉高祖刘邦",
+      "years": "前256–前195",
+      "blurb": "在秦制废墟上重建帝国；郡国并行与关中本位的奠基者。",
+      "aliases": [
+        "刘邦"
+      ]
+    },
+    {
+      "id": "person-han-wudi",
+      "name": "汉武帝",
+      "years": "前156–前87",
+      "blurb": "推恩、盐铁、开边与独尊儒术并举；帝国扩张与财政国家化的高峰。"
+    },
+    {
+      "id": "person-zhangqian",
+      "name": "张骞",
+      "years": "？–前114",
+      "blurb": "凿空西域的使臣；其报告把中亚从神话写成地理。"
+    },
+    {
+      "id": "person-tang-taizong",
+      "name": "唐太宗",
+      "years": "598–649",
+      "blurb": "贞观君臣与天可汗秩序的象征；唐世界性的人格化。"
+    },
+    {
+      "id": "person-song-taizu",
+      "name": "宋太祖",
+      "years": "927–976",
+      "blurb": "以政变立国却完成强干弱枝；文官国家转向的开启者。",
+      "aliases": [
+        "赵匡胤"
+      ]
+    },
+    {
+      "id": "person-kubilai",
+      "name": "忽必烈",
+      "years": "1215–1294",
+      "blurb": "把草原征服转化为中原式王朝「元」；大都与行省的奠基人。"
+    },
+    {
+      "id": "person-ming-taizu",
+      "name": "明太祖朱元璋",
+      "years": "1328–1398",
+      "blurb": "极端集权的重建者；卫所与废相塑造了明政治的基本约束。",
+      "aliases": [
+        "朱元璋",
+        "明太祖"
+      ]
+    },
+    {
+      "id": "person-yongle",
+      "name": "明成祖",
+      "years": "1360–1424",
+      "blurb": "迁都北京与下西洋；把帝国重心重新钉在北边。",
+      "aliases": [
+        "朱棣"
+      ]
+    },
+    {
+      "id": "person-linzx",
+      "name": "林则徐",
+      "years": "1785–1850",
+      "blurb": "禁烟派代表；个人清望与结构失败并置，成为近代史教益的常用镜像。"
+    },
+    {
+      "id": "person-qin-xiaogong",
+      "name": "秦孝公",
+      "years": "前381–前338",
+      "blurb": "任用商鞅变法，把秦国改造成耕战国家。"
+    },
+    {
+      "id": "person-zhou-wu",
+      "name": "周武王",
+      "years": "？–约前1043",
+      "blurb": "灭商建周，分封兄弟与功臣镇抚东方。",
+      "aliases": [
+        "姬发"
+      ]
+    },
+    {
+      "id": "person-zhou-gong",
+      "name": "周公",
+      "years": "生卒不详",
+      "blurb": "辅佐成王，主持营建成周并制礼作乐。",
+      "aliases": [
+        "周公旦"
+      ]
+    },
+    {
+      "id": "person-guan-zhong",
+      "name": "管仲",
+      "years": "？–前645",
+      "blurb": "辅佐齐桓公整顿军赋户籍，开春秋霸政。"
+    },
+    {
+      "id": "person-qi-huan",
+      "name": "齐桓公",
+      "years": "？–前643",
+      "blurb": "春秋首霸，尊王攘夷，主持葵丘会盟。"
+    },
+    {
+      "id": "person-confucius",
+      "name": "孔子",
+      "years": "前551–前479",
+      "blurb": "儒家创始人，后世礼乐与教育传统的源头。"
+    },
+    {
+      "id": "person-bai-qi",
+      "name": "白起",
+      "years": "？–前257",
+      "blurb": "秦国名将，长平之战中歼灭赵军主力。"
+    },
+    {
+      "id": "person-li-bing",
+      "name": "李冰",
+      "years": "生卒不详",
+      "blurb": "战国末年的蜀郡守，主持修建都江堰。"
+    },
+    {
+      "id": "person-chen-sheng",
+      "name": "陈胜",
+      "years": "？–前208",
+      "blurb": "与吴广在大泽乡起事，点燃反秦战争。"
+    },
+    {
+      "id": "person-xiang-yu",
+      "name": "项羽",
+      "years": "前232–前202",
+      "blurb": "灭秦主力统帅，自封西楚霸王，败于刘邦。"
+    },
+    {
+      "id": "person-modun",
+      "name": "冒顿单于",
+      "years": "？–前174",
+      "blurb": "统一草原诸部，建立匈奴游牧帝国。"
+    },
+    {
+      "id": "person-huo-qubing",
+      "name": "霍去病",
+      "years": "前140–前117",
+      "blurb": "汉武帝时骠骑将军，两击匈奴并打通河西走廊。"
+    },
+    {
+      "id": "person-sang-hongyang",
+      "name": "桑弘羊",
+      "years": "前152–前80",
+      "blurb": "汉武帝时理财大臣，推行盐铁官营与均输平准。"
+    },
+    {
+      "id": "person-wang-mang",
+      "name": "王莽",
+      "years": "前45–23",
+      "blurb": "新朝建立者，以托古改制著称，终败于农民起义。"
+    },
+    {
+      "id": "person-ban-chao",
+      "name": "班超",
+      "years": "32–102",
+      "blurb": "东汉西域都护，重新控制天山南路诸国。"
+    },
+    {
+      "id": "person-cai-lun",
+      "name": "蔡伦",
+      "years": "？–121",
+      "blurb": "东汉宦官，总结并推广造纸术。"
+    },
+    {
+      "id": "person-zhang-heng",
+      "name": "张衡",
+      "years": "78–139",
+      "blurb": "东汉科学家，制浑天仪和候风地动仪。"
+    },
+    {
+      "id": "person-zhang-jue",
+      "name": "张角",
+      "years": "？–184",
+      "blurb": "太平道首领，黄巾起义领袖。"
+    },
+    {
+      "id": "person-cao-pi",
+      "name": "曹丕",
+      "years": "187–226",
+      "blurb": "代汉称帝，魏的建立者。"
+    },
+    {
+      "id": "person-liu-bei",
+      "name": "刘备",
+      "years": "161–223",
+      "blurb": "蜀汉的建立者，夷陵之战败于东吴。"
+    },
+    {
+      "id": "person-lu-xun",
+      "name": "陆逊",
+      "years": "183–245",
+      "blurb": "东吴名将，夷陵之战火攻大破蜀军。"
+    },
+    {
+      "id": "person-sima-rui",
+      "name": "司马睿",
+      "years": "276–323",
+      "blurb": "东晋开国之君，在建康重建朝廷。"
+    },
+    {
+      "id": "person-wang-dao",
+      "name": "王导",
+      "years": "276–339",
+      "blurb": "东晋初年宰辅，联合南北士族稳定江左。"
+    },
+    {
+      "id": "person-xie-an",
+      "name": "谢安",
+      "years": "320–385",
+      "blurb": "东晋名相，指挥淝水之战。"
+    },
+    {
+      "id": "person-fu-jian",
+      "name": "苻坚",
+      "years": "338–385",
+      "blurb": "前秦君主，统一北方后南下，败于淝水。"
+    },
+    {
+      "id": "person-tan-yao",
+      "name": "昙曜",
+      "years": "生卒不详",
+      "blurb": "北魏高僧，奏请并主持开凿云冈石窟。"
+    },
+    {
+      "id": "person-xiaowen",
+      "name": "北魏孝文帝",
+      "years": "467–499",
+      "blurb": "迁都洛阳并推行全面汉化。",
+      "aliases": [
+        "拓跋宏"
+      ]
+    },
+    {
+      "id": "person-yang-jian",
+      "name": "杨坚",
+      "years": "541–604",
+      "blurb": "隋文帝，灭陈统一南北。"
+    },
+    {
+      "id": "person-yang-guang",
+      "name": "杨广",
+      "years": "569–618",
+      "blurb": "开通大运河、营建东都，也因徭役与对外用兵而亡国。",
+      "aliases": [
+        "隋炀帝"
+      ]
+    },
+    {
+      "id": "person-wencheng",
+      "name": "文成公主",
+      "years": "？–680",
+      "blurb": "唐宗室女，嫁吐蕃赞普松赞干布。"
+    },
+    {
+      "id": "person-songtsen",
+      "name": "松赞干布",
+      "years": "？–650",
+      "blurb": "吐蕃赞普，统一青藏高原并迁都逻些。"
+    },
+    {
+      "id": "person-zhang-jiuling",
+      "name": "张九龄",
+      "years": "678–740",
+      "blurb": "唐宰相，奏凿大庾岭路。"
+    },
+    {
+      "id": "person-an-lushan",
+      "name": "安禄山",
+      "years": "？–757",
+      "blurb": "安史之乱的发动者。"
+    },
+    {
+      "id": "person-xuanzong",
+      "name": "唐玄宗",
+      "years": "685–762",
+      "blurb": "开元盛世与天宝之乱时的皇帝。"
+    },
+    {
+      "id": "person-guo-ziyi",
+      "name": "郭子仪",
+      "years": "697–781",
+      "blurb": "唐中兴名将，平安史之乱、退吐蕃。"
+    },
+    {
+      "id": "person-yang-yan",
+      "name": "杨炎",
+      "years": "727–781",
+      "blurb": "唐宰相，推行两税法。"
+    },
+    {
+      "id": "person-huang-chao",
+      "name": "黄巢",
+      "years": "？–884",
+      "blurb": "唐末农民起义领袖，攻入长安。"
+    },
+    {
+      "id": "person-shi-jingtang",
+      "name": "石敬瑭",
+      "years": "892–942",
+      "blurb": "后晋建立者，割幽云十六州给契丹。"
+    },
+    {
+      "id": "person-kou-zhun",
+      "name": "寇准",
+      "years": "961–1023",
+      "blurb": "北宋宰相，促成澶渊之盟。"
+    },
+    {
+      "id": "person-li-yuanhao",
+      "name": "李元昊",
+      "years": "1003–1048",
+      "blurb": "西夏开国皇帝。"
+    },
+    {
+      "id": "person-bi-sheng",
+      "name": "毕昇",
+      "years": "生卒不详",
+      "blurb": "北宋布衣，活字印刷的发明者。"
+    },
+    {
+      "id": "person-shen-kuo",
+      "name": "沈括",
+      "years": "1031–1095",
+      "blurb": "北宋科学家，《梦溪笔谈》作者。"
+    },
+    {
+      "id": "person-wang-anshi",
+      "name": "王安石",
+      "years": "1021–1086",
+      "blurb": "北宋宰相，主持熙宁变法。"
+    },
+    {
+      "id": "person-yue-fei",
+      "name": "岳飞",
+      "years": "1103–1142",
+      "blurb": "南宋抗金名将。"
+    },
+    {
+      "id": "person-wanyan-liang",
+      "name": "完颜亮",
+      "years": "1122–1161",
+      "blurb": "金海陵王，迁都燕京并南征。",
+      "aliases": [
+        "海陵王"
+      ]
+    },
+    {
+      "id": "person-guo-shoujing",
+      "name": "郭守敬",
+      "years": "1231–1316",
+      "blurb": "元代天文学家、水利专家，修授时历。"
+    },
+    {
+      "id": "person-liu-futong",
+      "name": "刘福通",
+      "years": "？–1363",
+      "blurb": "红巾军领袖，推动元末起义。"
+    },
+    {
+      "id": "person-zheng-he",
+      "name": "郑和",
+      "years": "约1371–1433",
+      "blurb": "明代航海家，率船队七下西洋。"
+    },
+    {
+      "id": "person-li-shizhen",
+      "name": "李时珍",
+      "years": "1518–1593",
+      "blurb": "明代医药学家，《本草纲目》作者。"
+    },
+    {
+      "id": "person-zhang-juzheng",
+      "name": "张居正",
+      "years": "1525–1582",
+      "blurb": "明万历首辅，推行一条鞭法。"
+    },
+    {
+      "id": "person-ricci",
+      "name": "利玛窦",
+      "years": "1552–1610",
+      "blurb": "意大利传教士，在北京刊印《坤舆万国全图》。"
+    },
+    {
+      "id": "person-li-zhizao",
+      "name": "李之藻",
+      "years": "1565–1630",
+      "blurb": "明末学者，与利玛窦合作译刻西学。"
+    },
+    {
+      "id": "person-li-zicheng",
+      "name": "李自成",
+      "years": "1606–1645",
+      "blurb": "明末农民军领袖，攻入北京。"
+    },
+    {
+      "id": "person-nurhaci",
+      "name": "努尔哈赤",
+      "years": "1559–1626",
+      "blurb": "后金开国者，创立八旗制度。"
+    },
+    {
+      "id": "person-huangtaiji",
+      "name": "皇太极",
+      "years": "1592–1643",
+      "blurb": "改国号为清，征服漠南蒙古。"
+    },
+    {
+      "id": "person-wu-sangui",
+      "name": "吴三桂",
+      "years": "1612–1678",
+      "blurb": "明末辽东总兵，开山海关降清，后举兵反清。"
+    },
+    {
+      "id": "person-dorgon",
+      "name": "多尔衮",
+      "years": "1612–1650",
+      "blurb": "清入关初期的摄政王。"
+    },
+    {
+      "id": "person-shi-lang",
+      "name": "施琅",
+      "years": "1621–1696",
+      "blurb": "清初水师将领，攻取台湾。"
+    },
+    {
+      "id": "person-kangxi",
+      "name": "康熙帝",
+      "years": "1654–1722",
+      "blurb": "平三藩、收台湾、签尼布楚条约。",
+      "aliases": [
+        "康熙"
+      ]
+    },
+    {
+      "id": "person-qianlong",
+      "name": "乾隆帝",
+      "years": "1711–1799",
+      "blurb": "平定准噶尔，清朝疆域与人口达到极盛。"
+    },
+    {
+      "id": "person-hong-xiuquan",
+      "name": "洪秀全",
+      "years": "1814–1864",
+      "blurb": "太平天国领袖，定都天京。"
+    },
+    {
+      "id": "person-zeng-guofan",
+      "name": "曾国藩",
+      "years": "1811–1872",
+      "blurb": "湘军创建者，镇压太平天国，参与洋务。"
+    },
+    {
+      "id": "person-li-hongzhang",
+      "name": "李鸿章",
+      "years": "1823–1901",
+      "blurb": "晚清重臣，洋务运动与北洋海军的主持者。"
+    },
+    {
+      "id": "person-kang-youwei",
+      "name": "康有为",
+      "years": "1858–1927",
+      "blurb": "戊戌变法的主要倡导者。"
+    },
+    {
+      "id": "person-liang-qichao",
+      "name": "梁启超",
+      "years": "1873–1929",
+      "blurb": "维新派思想家与报人。"
+    },
+    {
+      "id": "person-chiang",
+      "name": "蒋介石",
+      "years": "1887–1975",
+      "blurb": "国民政府领导人，抗战期间迁都重庆。"
+    }
+  ]
+}

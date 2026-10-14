@@ -150,6 +150,33 @@ export function atmosphereLayerAtHeight(heightKm: number): AtmosphereLayer | nul
   );
 }
 
+/** 大气「居民」锚点的类型中文名（场景图例与层详情面板共用）。 */
+export const KEYPOINT_CATEGORY_NAMES: Record<string, string> = {
+  aircraft: "航空器",
+  spacecraft: "航天器",
+  animal: "生物",
+  phenomenon: "现象",
+  boundary: "界线",
+  orbit: "轨道",
+};
+
+/** 锚点类型 → 场景标记色（呈现决定；色值不进数据文件）。 */
+export const KEYPOINT_COLORS: Record<string, string> = {
+  aircraft: "#fb923c",
+  spacecraft: "#ffd54a",
+  animal: "#4ade80",
+  phenomenon: "#38bdf8",
+  boundary: "#e2e8f0",
+  orbit: "#c084fc",
+};
+
+/** 某大气层里的居民锚点（按真实高度落层，按高度升序）。 */
+export function atmosphereKeyPointsInLayer(layerId: string) {
+  return data.atmosphere.keyPoints
+    .filter((point) => atmosphereLayerAtHeight(point.heightKm)?.id === layerId)
+    .sort((a, b) => a.heightKm - b.heightKm);
+}
+
 // ---------- 源头目录 ----------
 
 export function sourceTitle(sourceId: string): string {

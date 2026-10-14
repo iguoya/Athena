@@ -1,0 +1,139 @@
+@import "tailwindcss";
+@import "maplibre-gl/dist/maplibre-gl.css";
+
+:root {
+  --bg: #f3efe6;
+  --surface: #faf7f0;
+  --ink: #2a2118;
+  --muted: #6b5e4e;
+  --line: #d9cfc0;
+  --accent: #9a3412;
+  --accent-soft: #f3e0d4;
+  --era: #1e3a5f;
+  --map-bg: #e8dfd0;
+  font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+  color: var(--ink);
+  background: var(--bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1c1916;
+    --surface: #26211c;
+    --ink: #f0e6d8;
+    --muted: #a89888;
+    --line: #3d342c;
+    --accent: #d97757;
+    --accent-soft: #3d2a22;
+    --era: #8ba4c4;
+    --map-bg: #2a241e;
+  }
+}
+
+@theme inline {
+  --color-page: var(--bg);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-era: var(--era);
+  --color-map: var(--map-bg);
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 0%, #f7e8d8 0%, transparent 55%),
+    radial-gradient(ellipse 60% 40% at 90% 10%, #e7efe8 0%, transparent 50%),
+    var(--bg);
+}
+
+.maplibregl-map {
+  font-family: inherit;
+}
+
+.marker-dot {
+  border-radius: 9999px;
+  background: var(--accent);
+  border: 1.5px solid #fff8ef;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 28%, transparent);
+  cursor: pointer;
+}
+
+.marker-dot[data-tier="capital"] {
+  width: 15px;
+  height: 15px;
+  background: var(--era);
+}
+
+.marker-dot[data-tier="metropolis"] {
+  width: 12px;
+  height: 12px;
+}
+
+.marker-dot[data-tier="pass"] {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: #5c4a32;
+  box-shadow: none;
+}
+
+.marker-dot[data-tier="prefecture"],
+.marker-dot[data-tier="other"] {
+  width: 7px;
+  height: 7px;
+  background: #8a7355;
+  box-shadow: none;
+  opacity: 0.85;
+}
+
+.marker-dot[data-active="true"] {
+  width: 18px;
+  height: 18px;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 40%, transparent);
+  opacity: 1;
+}
+
+.marker-label {
+  max-width: 9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* P1 都城迁移：主都实心星、陪都空心小标 */
+.capital-star {
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 12px solid var(--era);
+  filter: drop-shadow(0 0 0 1.5px #fff8ef);
+  position: relative;
+  cursor: pointer;
+}
+.capital-star::after {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 4px;
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 12px solid var(--era);
+}
+.capital-alt {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  border: 1.5px solid var(--era);
+  background: transparent;
+  box-shadow: 0 0 0 1px #fff8ef;
+  cursor: pointer;
+  opacity: 0.85;
+}

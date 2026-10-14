@@ -1,0 +1,17 @@
+{
+  "name": "@athena/maps",
+  "private": true,
+  "packageManager": "pnpm@10.15.1",
+  "version": "0.1.0",
+  "description": "历史地理纯呈现：纸本墨线 Style、公域/自研水系岸线、本机学术层约定（ADR 0157、0158）",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./paper-style": "./src/paper-style.ts",
+    "./geo/coastline.json": "./geo/coastline.json",
+    "./geo/hydro.json": "./geo/hydro.json",
+    "./geo/corridors.json": "./geo/corridors.json",
+    "./geo/relief-east-asia.webp": "./geo/relief-east-asia.webp",
+    "./geo/relief-east-asia.json": "./geo/relief-east-asia.json"
+  }
+}

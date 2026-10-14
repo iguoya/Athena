@@ -1,0 +1,302 @@
+{
+  "_": "行军/出使/迁徙/航海路线，供“行军线”动画使用（ADR 0158）。waypoints 按顺序连线；每个点可带 year（该点到达的大致年份，公元前为负），应用据此随年份轴逐段画出。坐标 [lon,lat] 为示意，地名取自通行叙述，年份为约数（yearApprox=true）。eventId 指向 atlas.json 的事件，可缺省。group 把同一人物的去程/回程或同一事件的多路线归在一起。kind：expedition 出使远行 / voyage 航海 / migration 人口迁徙 / campaign 军事行动 / flight 政权迁移。",
+  "routes": [
+    {
+      "id": "route-zhangqian-out",
+      "group": "zhangqian",
+      "name": "张骞第一次出使·去程",
+      "kind": "expedition",
+      "eventId": "evt-silk-road",
+      "from": -139,
+      "to": -127,
+      "yearApprox": true,
+      "note": "为联络大月氏夹击匈奴，自长安出陇西，途中被匈奴扣留约十年，后西逃经大宛、康居抵大月氏。",
+      "waypoints": [
+        {"label": "长安", "placeId": "changan", "lon": 108.94, "lat": 34.27, "year": -139},
+        {"label": "陇西（临洮）", "lon": 103.85, "lat": 35.38, "year": -139},
+        {"label": "河西·被匈奴所获", "lon": 100.45, "lat": 38.9, "year": -138},
+        {"label": "匈奴控制区（滞留约十年）", "lon": 108.0, "lat": 42.0, "year": -130},
+        {"label": "焉耆一带", "lon": 86.57, "lat": 42.07, "year": -129},
+        {"label": "龟兹", "placeId": "kuqa", "lon": 82.96, "lat": 41.72, "year": -128},
+        {"label": "疏勒", "placeId": "kashgar", "lon": 75.99, "lat": 39.47, "year": -128},
+        {"label": "大宛", "lon": 71.8, "lat": 40.4, "year": -128},
+        {"label": "康居", "lon": 67.0, "lat": 39.65, "year": -128},
+        {"label": "大月氏", "lon": 67.0, "lat": 37.0, "year": -127}
+      ]
+    },
+    {
+      "id": "route-zhangqian-back",
+      "group": "zhangqian",
+      "name": "张骞第一次出使·归程",
+      "kind": "expedition",
+      "eventId": "evt-silk-road",
+      "from": -127,
+      "to": -126,
+      "yearApprox": true,
+      "note": "改走昆仑山北麓，又被匈奴扣留一年多，趁匈奴内乱逃回长安，历时十三年。带回的西域地理信息促成了河西经营。",
+      "waypoints": [
+        {"label": "大月氏", "lon": 67.0, "lat": 37.0, "year": -127},
+        {"label": "莎车", "placeId": "shache", "lon": 77.25, "lat": 38.4, "year": -127},
+        {"label": "于阗", "placeId": "hotan", "lon": 79.9, "lat": 37.1, "year": -127},
+        {"label": "羌中（昆仑山北麓）", "lon": 92.0, "lat": 36.5, "year": -126},
+        {"label": "长安", "placeId": "changan", "lon": 108.94, "lat": 34.27, "year": -126}
+      ]
+    },
+    {
+      "id": "route-banchao",
+      "group": "banchao",
+      "name": "班超经营西域",
+      "kind": "expedition",
+      "eventId": "evt-ban-chao",
+      "from": 73,
+      "to": 94,
+      "yearApprox": true,
+      "note": "永平十六年（73）随窦固出击匈奴后出使西域，历二十余年，凭数十人至数千人的兵力，重新控制天山南路诸国。",
+      "waypoints": [
+        {"label": "酒泉", "placeId": "jiuquan", "lon": 98.5, "lat": 39.75, "year": 73},
+        {"label": "鄯善", "lon": 88.17, "lat": 39.0, "year": 73},
+        {"label": "于阗", "placeId": "hotan", "lon": 79.9, "lat": 37.1, "year": 74},
+        {"label": "疏勒", "placeId": "kashgar", "lon": 75.99, "lat": 39.47, "year": 74},
+        {"label": "龟兹（西域都护治所）", "placeId": "kuqa", "lon": 82.96, "lat": 41.72, "year": 91},
+        {"label": "焉耆", "lon": 86.57, "lat": 42.07, "year": 94}
+      ]
+    },
+    {
+      "id": "route-yongjia-east",
+      "group": "yongjia",
+      "name": "永嘉南渡·东线",
+      "kind": "migration",
+      "eventId": "evt-jiankang-capital",
+      "from": 311,
+      "to": 317,
+      "yearApprox": true,
+      "note": "永嘉五年（311）洛阳陷落后，中原士民沿淮泗南下，聚居于京口、建康一带，后称“侨州郡县”。",
+      "waypoints": [
+        {"label": "洛阳", "placeId": "luoyang", "lon": 112.45, "lat": 34.62, "year": 311},
+        {"label": "徐州", "placeId": "xuzhou", "lon": 117.2, "lat": 34.27, "year": 313},
+        {"label": "扬州", "placeId": "yangzhou", "lon": 119.42, "lat": 32.4, "year": 315},
+        {"label": "建康", "placeId": "jiankang", "lon": 118.8, "lat": 32.05, "year": 317}
+      ]
+    },
+    {
+      "id": "route-yongjia-middle",
+      "group": "yongjia",
+      "name": "永嘉南渡·中线",
+      "kind": "migration",
+      "eventId": "evt-jiankang-capital",
+      "from": 311,
+      "to": 317,
+      "yearApprox": true,
+      "note": "取南阳、襄阳，沿汉水入荆州与湘江流域。荆襄后来成为东晋、南朝的上游重镇。",
+      "waypoints": [
+        {"label": "洛阳", "placeId": "luoyang", "lon": 112.45, "lat": 34.62, "year": 311},
+        {"label": "南阳", "placeId": "nanyang", "lon": 112.53, "lat": 33.0, "year": 312},
+        {"label": "襄阳", "placeId": "xiangyang", "lon": 112.15, "lat": 32.04, "year": 313},
+        {"label": "江陵", "placeId": "jiangling", "lon": 112.2, "lat": 30.35, "year": 314},
+        {"label": "长沙", "placeId": "changsha", "lon": 112.95, "lat": 28.2, "year": 316}
+      ]
+    },
+    {
+      "id": "route-yongjia-west",
+      "group": "yongjia",
+      "name": "永嘉南渡·西线",
+      "kind": "migration",
+      "eventId": "evt-jiankang-capital",
+      "from": 311,
+      "to": 317,
+      "yearApprox": true,
+      "note": "关中流民越秦岭入汉中，再入益州，后来在蜀中建立成汉政权。",
+      "waypoints": [
+        {"label": "长安", "placeId": "changan", "lon": 108.94, "lat": 34.27, "year": 311},
+        {"label": "汉中", "placeId": "hanzhong", "lon": 107.03, "lat": 33.07, "year": 313},
+        {"label": "成都", "placeId": "chengdu", "lon": 104.07, "lat": 30.67, "year": 315}
+      ]
+    },
+    {
+      "id": "route-xiaowendi",
+      "group": "xiaowendi",
+      "name": "孝文帝南迁洛阳",
+      "kind": "flight",
+      "eventId": "evt-xiaowendi",
+      "from": 493,
+      "to": 494,
+      "yearApprox": false,
+      "note": "太和十七年（493）以南征为名率军离开平城，抵洛阳后定都，次年正式迁都，随后推行汉化诸措施。",
+      "waypoints": [
+        {"label": "平城", "placeId": "datong", "lon": 113.3, "lat": 40.1, "year": 493},
+        {"label": "并州（太原）", "placeId": "taiyuan", "lon": 112.55, "lat": 37.87, "year": 493},
+        {"label": "河内", "lon": 112.9, "lat": 35.1, "year": 493},
+        {"label": "洛阳", "placeId": "luoyang", "lon": 112.45, "lat": 34.62, "year": 494}
+      ]
+    },
+    {
+      "id": "route-xuanzang",
+      "group": "xuanzang",
+      "name": "玄奘西行取经",
+      "kind": "expedition",
+      "from": 629,
+      "to": 645,
+      "yearApprox": true,
+      "note": "贞观初年（一说贞观三年）私出玉门，经西域诸国入天竺，在那烂陀寺学习，后携经卷自于阗回长安，所著《大唐西域记》是中古中亚、南亚历史地理的主要依据。",
+      "waypoints": [
+        {"label": "长安", "placeId": "changan", "lon": 108.94, "lat": 34.27, "year": 629},
+        {"label": "凉州", "placeId": "wuwei", "lon": 102.6, "lat": 37.9, "year": 629},
+        {"label": "瓜州", "lon": 95.8, "lat": 40.5, "year": 629},
+        {"label": "伊吾", "placeId": "hami", "lon": 93.5, "lat": 42.8, "year": 630},
+        {"label": "高昌", "placeId": "turpan", "lon": 89.2, "lat": 42.9, "year": 630},
+        {"label": "屈支（龟兹）", "placeId": "kuqa", "lon": 82.96, "lat": 41.72, "year": 630},
+        {"label": "凌山（天山隘口）", "lon": 78.8, "lat": 41.4, "year": 630},
+        {"label": "碎叶", "lon": 75.2, "lat": 42.8, "year": 630},
+        {"label": "飒秣建（撒马尔罕）", "lon": 66.97, "lat": 39.65, "year": 630},
+        {"label": "缚喝（巴尔赫）", "lon": 66.9, "lat": 36.76, "year": 631},
+        {"label": "梵衍那（巴米扬）", "lon": 67.8, "lat": 34.8, "year": 631},
+        {"label": "布路沙布逻（白沙瓦）", "lon": 71.6, "lat": 34.0, "year": 632},
+        {"label": "曲女城", "lon": 79.9, "lat": 27.05, "year": 636},
+        {"label": "那烂陀寺", "lon": 85.44, "lat": 25.14, "year": 637},
+        {"label": "于阗", "placeId": "hotan", "lon": 79.9, "lat": 37.1, "year": 644},
+        {"label": "敦煌", "placeId": "dunhuang", "lon": 94.66, "lat": 40.14, "year": 645},
+        {"label": "长安", "placeId": "changan", "lon": 108.94, "lat": 34.27, "year": 645}
+      ]
+    },
+    {
+      "id": "route-xuanzong-shu",
+      "group": "anshi",
+      "name": "唐玄宗奔蜀",
+      "kind": "flight",
+      "eventId": "evt-an-lushan",
+      "from": 756,
+      "to": 756,
+      "yearApprox": false,
+      "note": "天宝十五载（756）六月潼关失守，玄宗仓皇离长安，经马嵬驿兵变后入蜀，太子李亨北上灵武即位。长安在地理上再次成为“守不住、也离不开”的前线。",
+      "waypoints": [
+        {"label": "长安", "placeId": "changan", "lon": 108.94, "lat": 34.27, "year": 756},
+        {"label": "马嵬驿", "lon": 108.3, "lat": 34.4, "year": 756},
+        {"label": "陈仓", "lon": 107.2, "lat": 34.36, "year": 756},
+        {"label": "汉中", "placeId": "hanzhong", "lon": 107.03, "lat": 33.07, "year": 756},
+        {"label": "剑阁", "placeId": "jiange", "lon": 105.5, "lat": 32.2, "year": 756},
+        {"label": "成都", "placeId": "chengdu", "lon": 104.07, "lat": 30.67, "year": 756}
+      ]
+    },
+    {
+      "id": "route-jingkang-nandu",
+      "group": "nandu",
+      "name": "宋室南渡",
+      "kind": "flight",
+      "eventId": "evt-marak",
+      "from": 1127,
+      "to": 1138,
+      "yearApprox": true,
+      "note": "高宗赵构在应天府即位后，被金军一路追击南下，经扬州、建康、杭州，一度出海避至明州、温州，最终于绍兴八年（1138）定都临安。",
+      "waypoints": [
+        {"label": "开封", "placeId": "kaifeng", "lon": 114.35, "lat": 34.8, "year": 1127},
+        {"label": "应天府（商丘）", "lon": 115.65, "lat": 34.4, "year": 1127},
+        {"label": "扬州", "placeId": "yangzhou", "lon": 119.42, "lat": 32.4, "year": 1129},
+        {"label": "建康", "placeId": "jiankang", "lon": 118.8, "lat": 32.05, "year": 1129},
+        {"label": "杭州", "placeId": "hangzhou", "lon": 120.15, "lat": 30.25, "year": 1129},
+        {"label": "明州", "placeId": "ningbo", "lon": 121.55, "lat": 29.87, "year": 1130},
+        {"label": "温州", "placeId": "wenzhou", "lon": 120.7, "lat": 28.0, "year": 1130},
+        {"label": "临安（杭州）", "placeId": "hangzhou", "lon": 120.15, "lat": 30.25, "year": 1138}
+      ]
+    },
+    {
+      "id": "route-zhenghe-first",
+      "group": "zhenghe",
+      "name": "郑和第一次下西洋",
+      "kind": "voyage",
+      "eventId": "evt-zhenghe",
+      "from": 1405,
+      "to": 1407,
+      "yearApprox": false,
+      "note": "永乐三年（1405）自刘家港出发，经占城、爪哇、旧港、满剌加、锡兰至古里。此后六次航行延伸到波斯湾、红海和东非，宣德八年（1433）结束。",
+      "waypoints": [
+        {"label": "南京", "placeId": "jiankang", "lon": 118.8, "lat": 32.05, "year": 1405},
+        {"label": "刘家港", "lon": 121.1, "lat": 31.45, "year": 1405},
+        {"label": "福州长乐", "placeId": "fuzhou", "lon": 119.6, "lat": 26.0, "year": 1405},
+        {"label": "占城", "lon": 109.2, "lat": 13.8, "year": 1406},
+        {"label": "爪哇", "lon": 112.7, "lat": -7.25, "year": 1406},
+        {"label": "旧港", "lon": 104.75, "lat": -2.98, "year": 1406},
+        {"label": "满剌加", "lon": 102.25, "lat": 2.2, "year": 1407},
+        {"label": "锡兰", "lon": 79.85, "lat": 6.93, "year": 1407},
+        {"label": "古里", "lon": 75.78, "lat": 11.25, "year": 1407}
+      ]
+    },
+    {
+      "id": "route-taiping",
+      "group": "taiping",
+      "name": "太平军出广西至定都天京",
+      "kind": "campaign",
+      "eventId": "evt-taiping",
+      "from": 1851,
+      "to": 1853,
+      "yearApprox": false,
+      "note": "1851 年金田起事，经永安、桂林、全州，入湖南，下武昌，沿长江东下，1853 年攻克南京。这条线说明南方水系对内战的决定作用：湘江—长江，一路顺流。",
+      "waypoints": [
+        {"label": "金田", "lon": 110.2, "lat": 23.5, "year": 1851},
+        {"label": "永安", "lon": 111.3, "lat": 24.2, "year": 1851},
+        {"label": "桂林", "placeId": "guilin", "lon": 110.28, "lat": 25.28, "year": 1852},
+        {"label": "全州", "lon": 111.07, "lat": 25.93, "year": 1852},
+        {"label": "长沙", "placeId": "changsha", "lon": 112.95, "lat": 28.2, "year": 1852},
+        {"label": "岳州", "placeId": "yueyang", "lon": 113.1, "lat": 29.37, "year": 1852},
+        {"label": "武昌", "placeId": "wuchang", "lon": 114.3, "lat": 30.55, "year": 1853},
+        {"label": "安庆", "lon": 117.05, "lat": 30.5, "year": 1853},
+        {"label": "南京（天京）", "placeId": "jiankang", "lon": 118.8, "lat": 32.05, "year": 1853}
+      ]
+    },
+    {
+      "id": "route-changzheng",
+      "group": "changzheng",
+      "name": "中央红军长征",
+      "kind": "campaign",
+      "from": 1934,
+      "to": 1936,
+      "yearApprox": false,
+      "note": "1934 年 10 月自江西瑞金出发，先西行突破湘江，进入贵州遵义，后渡金沙江、过大渡河、越雪山草地，1935 年 10 月抵陕北吴起，1936 年 10 月三大主力会师于会宁。",
+      "waypoints": [
+        {"label": "瑞金", "lon": 116.03, "lat": 25.88, "year": 1934},
+        {"label": "湘江（全州一带）", "lon": 111.07, "lat": 25.93, "year": 1934},
+        {"label": "遵义", "placeId": "zunyi", "lon": 106.93, "lat": 27.7, "year": 1935},
+        {"label": "皎平渡（金沙江）", "lon": 102.9, "lat": 26.1, "year": 1935},
+        {"label": "泸定桥", "lon": 102.23, "lat": 29.9, "year": 1935},
+        {"label": "懋功", "lon": 102.8, "lat": 30.7, "year": 1935},
+        {"label": "毛儿盖（草地）", "lon": 102.7, "lat": 32.9, "year": 1935},
+        {"label": "腊子口", "lon": 103.7, "lat": 34.0, "year": 1935},
+        {"label": "吴起镇", "lon": 108.2, "lat": 36.9, "year": 1935},
+        {"label": "会宁", "lon": 105.05, "lat": 35.7, "year": 1936}
+      ]
+    },
+    {
+      "id": "route-kangzhan-chongqing",
+      "group": "kangzhan",
+      "name": "国民政府西迁重庆",
+      "kind": "flight",
+      "eventId": "evt-chongqing",
+      "from": 1937,
+      "to": 1938,
+      "yearApprox": false,
+      "note": "1937 年 11 月国民政府宣布迁都重庆，机关西迁武汉，武汉失守前又沿长江入川；1938 年 10 月前后宜昌大撤退把东部工业和人员转运入川。",
+      "waypoints": [
+        {"label": "南京", "placeId": "jiankang", "lon": 118.8, "lat": 32.05, "year": 1937},
+        {"label": "武汉", "placeId": "wuchang", "lon": 114.3, "lat": 30.6, "year": 1937},
+        {"label": "宜昌", "placeId": "yichang", "lon": 111.3, "lat": 30.7, "year": 1938},
+        {"label": "重庆", "placeId": "chongqing", "lon": 106.55, "lat": 29.56, "year": 1938}
+      ]
+    },
+    {
+      "id": "route-xinan-lianda",
+      "group": "kangzhan",
+      "name": "高校内迁·西南联大",
+      "kind": "migration",
+      "from": 1937,
+      "to": 1938,
+      "yearApprox": false,
+      "note": "北大、清华、南开 1937 年南迁长沙组成临时大学，1938 年春再迁昆明，改称西南联合大学。师生一部分经湘黔滇步行入滇。",
+      "waypoints": [
+        {"label": "北平", "placeId": "dadu", "lon": 116.4, "lat": 39.9, "year": 1937},
+        {"label": "天津", "placeId": "tianjin", "lon": 117.2, "lat": 39.1, "year": 1937},
+        {"label": "长沙", "placeId": "changsha", "lon": 112.95, "lat": 28.2, "year": 1937},
+        {"label": "贵阳", "placeId": "guiyang", "lon": 106.7, "lat": 26.6, "year": 1938},
+        {"label": "昆明", "placeId": "kunming", "lon": 102.7, "lat": 25.0, "year": 1938}
+      ]
+    }
+  ]
+}

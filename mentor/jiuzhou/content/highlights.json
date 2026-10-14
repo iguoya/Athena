@@ -1,0 +1,584 @@
+{
+  "_": "事件 → 地图提亮映射（ADR 0158 Q4：相关州/走廊/河提亮）。键为 atlas.json 的 event id；未列出的事件不提亮。hydro 引用 hydro.json 的 id，corridors 引用 corridors.json 的 id，features 引用 features.json 的 id，routes 引用 routes.json 的 id，places 引用 atlas.json 的 place id。why 为一句地理因果：这件事为什么发生在这里。",
+  "highlights": {
+    "evt-erlitou": {
+      "hydro": [
+        "huanghe"
+      ],
+      "places": [
+        "luoyang"
+      ],
+      "why": "伊洛盆地是黄河中游四面环山的小平原，河、洛交汇，易守且能集聚农业人口。"
+    },
+    "evt-anyang-yin": {
+      "hydro": [
+        "huanghe"
+      ],
+      "places": [
+        "anyang"
+      ],
+      "why": "殷墟在太行山东麓与华北平原交界处，向东控平原、向西依山地，有洹河水源。"
+    },
+    "evt-muye": {
+      "hydro": [
+        "huanghe"
+      ],
+      "places": [
+        "anyang"
+      ],
+      "why": "周人从关中东出，渡过黄河中游的孟津一线进入殷商腹地，牧野在朝歌以南。"
+    },
+    "evt-luoyi": {
+      "hydro": [
+        "huanghe"
+      ],
+      "places": [
+        "luoyang"
+      ],
+      "why": "洛邑居天下之中，向西通关中、向东控中原，成为周人统治东方的支点。"
+    },
+    "evt-pingwang-dongqian": {
+      "hydro": [
+        "weishui"
+      ],
+      "places": [
+        "luoyang",
+        "changan"
+      ],
+      "why": "犬戎破镐京、关中失守后，周室东退到洛邑，依托伊洛盆地和旧有成周设施。"
+    },
+    "evt-guanyuan": {
+      "places": [
+        "linzi"
+      ],
+      "why": "齐据海岱，有渔盐之利，临淄成东方最大的工商都市，是霸政得以持续的物质基础。"
+    },
+    "evt-shangyang": {
+      "hydro": [
+        "weishui"
+      ],
+      "places": [
+        "xianyang"
+      ],
+      "why": "秦以关中为根据地，渭水平原的粮食与四塞地形，使耕战国家能够持续扩张。"
+    },
+    "evt-hangu-debate": {
+      "places": [
+        "hangu",
+        "tongguan"
+      ],
+      "hydro": [
+        "huanghe"
+      ],
+      "why": "函谷关扼崤函通道，卡住黄河拐弯处东西之间最窄的一段，是关中与关东的咽喉。"
+    },
+    "evt-changping": {
+      "places": [
+        "handan"
+      ],
+      "why": "上党居太行之巅，秦占上党便能自高处压住赵国所在的河北平原，赵都邯郸门户洞开。"
+    },
+    "evt-dujiangyan": {
+      "places": [
+        "dujiangyan",
+        "chengdu"
+      ],
+      "why": "岷江出山口的扇形平原，借分水鱼嘴把山洪化为灌溉，成都平原由此成为“天府”。"
+    },
+    "evt-zhengguoqu": {
+      "features": [
+        "canal-zhengguo"
+      ],
+      "hydro": [
+        "weishui"
+      ],
+      "why": "泾水浑浊含泥，引来淤灌关中北部盐碱地，使关中成为秦统一的粮仓。"
+    },
+    "evt-qin-unify": {
+      "features": [
+        "road-zhidao",
+        "wall-qin"
+      ],
+      "why": "统一是军事、道路、郡县与边防同时铺开的结果：直道通北边，长城连旧塞。"
+    },
+    "evt-lingnan": {
+      "corridors": [
+        "nanling"
+      ],
+      "hydro": [
+        "zhujiang"
+      ],
+      "why": "岭南与中原被南岭隔开，秦军借湘江—漓江通道进入珠江流域，才得以设南海郡。"
+    },
+    "evt-lingqu": {
+      "corridors": [
+        "nanling"
+      ],
+      "hydro": [
+        "changjiang",
+        "zhujiang"
+      ],
+      "why": "灵渠在湘江与漓江分水岭上凿通一条水道，把长江水系与珠江水系连在一起。"
+    },
+    "evt-han-found": {
+      "hydro": [
+        "weishui"
+      ],
+      "places": [
+        "changan"
+      ],
+      "why": "汉初定都关中，依渭水平原与四塞之险，而山东粮食须由黄河、渭水漕运入关。"
+    },
+    "evt-silk-road": {
+      "corridors": [
+        "hexi"
+      ],
+      "routes": [
+        "route-zhangqian-out",
+        "route-zhangqian-back"
+      ],
+      "why": "祁连山北麓的河西走廊是干旱区里一条连续的绿洲带，也是通西域唯一可走的大道。"
+    },
+    "evt-xinan-yi": {
+      "corridors": [
+        "chama"
+      ],
+      "why": "西南夷道翻越横断山，是后来茶马古道的前身，汉朝借此试探通往身毒的路径。"
+    },
+    "evt-hexi-jun": {
+      "corridors": [
+        "hexi"
+      ],
+      "features": [
+        "wall-han-hexi"
+      ],
+      "places": [
+        "wuwei",
+        "zhangye",
+        "jiuquan",
+        "dunhuang"
+      ],
+      "why": "四郡沿绿洲串成一线，用长城和烽燧护卫，把匈奴与羌人隔开，并打通西域门户。"
+    },
+    "evt-ban-chao": {
+      "corridors": [
+        "hexi"
+      ],
+      "routes": [
+        "route-banchao"
+      ],
+      "why": "西域南北两道绕塔克拉玛干沙漠边缘的绿洲而行，控制绿洲就控制了丝路。"
+    },
+    "evt-yiling": {
+      "hydro": [
+        "changjiang"
+      ],
+      "places": [
+        "yichang"
+      ],
+      "why": "夷陵在三峡东口，吴军据高地、顺流而下，蜀军则被迫沿江岸连营，难以展开。"
+    },
+    "evt-jiankang-capital": {
+      "hydro": [
+        "changjiang"
+      ],
+      "routes": [
+        "route-yongjia-east",
+        "route-yongjia-middle",
+        "route-yongjia-west"
+      ],
+      "why": "长江天险加淮泗水网使北方骑兵难以南下，南渡人口分东、中、西三路进入江南与荆益。"
+    },
+    "evt-feishui": {
+      "hydro": [
+        "huaihe"
+      ],
+      "places": [
+        "shouchun"
+      ],
+      "why": "淮河—淝水一线是南北之间的水网缓冲带，北方骑兵优势到这里被消解。"
+    },
+    "evt-xiaowendi": {
+      "routes": [
+        "route-xiaowendi"
+      ],
+      "places": [
+        "datong",
+        "luoyang"
+      ],
+      "why": "平城地处农牧交错带，北魏要真正治理中原，需要把统治中心迁到农业更稠密的洛阳。"
+    },
+    "evt-sui-unify": {
+      "hydro": [
+        "changjiang"
+      ],
+      "why": "隋灭陈必须越过长江，先在上游和下游同时展开，长江从天险变成了统一的内部航道。"
+    },
+    "evt-yangzhou-canal": {
+      "features": [
+        "ca-hangou",
+        "ca-tongji",
+        "ca-yongji",
+        "ca-jiangnan"
+      ],
+      "hydro": [
+        "yunhe"
+      ],
+      "why": "隋把黄河、淮河、长江三大水系用人工河连成南北干线，让江南粮赋可直达洛阳与北边。"
+    },
+    "evt-zhenguan": {
+      "corridors": [
+        "hexi"
+      ],
+      "why": "唐击破东突厥，使河西—漠南连成一片，丝路与草原道路同时处于唐的控制之下。"
+    },
+    "evt-meiguan": {
+      "corridors": [
+        "meiguan"
+      ],
+      "places": [
+        "dayuling"
+      ],
+      "why": "大庾岭是赣江与北江之间的分水岭，凿通梅关后，岭南货物才能大量北上。"
+    },
+    "evt-an-lushan": {
+      "routes": [
+        "route-xuanzong-shu"
+      ],
+      "places": [
+        "changan"
+      ],
+      "why": "安禄山自范阳南下，沿华北平原直逼两京；长安失守后，唐朝只能靠蜀地与江淮续命。"
+    },
+    "evt-youyun": {
+      "places": [
+        "yanmenguan",
+        "juyongguan",
+        "gubeikou"
+      ],
+      "why": "燕山、雁门诸关是华北平原的北大门；十六州割让后，中原失去这条山地防线。"
+    },
+    "evt-kaifeng-capital": {
+      "features": [
+        "ca-tongji",
+        "hr-han-tang"
+      ],
+      "hydro": [
+        "yunhe"
+      ],
+      "places": [
+        "kaifeng"
+      ],
+      "why": "开封是四战之地，无险可守，靠汴河把江淮粮食源源运来养兵，国防与漕运绑在一起。"
+    },
+    "evt-chanyuan": {
+      "features": [
+        "hr-song-north"
+      ],
+      "why": "宋辽对峙的河北平原上，北流黄河与塘泊成为天然的防骑兵屏障。"
+    },
+    "evt-jingkang": {
+      "features": [
+        "hr-song-north"
+      ],
+      "places": [
+        "kaifeng"
+      ],
+      "why": "开封北无山川阻隔，金军渡过黄河后可直扑城下。"
+    },
+    "evt-marak": {
+      "routes": [
+        "route-jingkang-nandu"
+      ],
+      "hydro": [
+        "changjiang"
+      ],
+      "why": "南渡路线沿淮泗到江南，再入海避敌，说明江南水网和海路是南宋存续的条件。"
+    },
+    "evt-linan": {
+      "features": [
+        "ca-jiangnan"
+      ],
+      "places": [
+        "hangzhou"
+      ],
+      "why": "杭州背山面湖、近海通江，又处江南河南端，南宋把全国的税赋与海运都接到这里。"
+    },
+    "evt-xiangyang-siege": {
+      "places": [
+        "xiangyang"
+      ],
+      "hydro": [
+        "changjiang"
+      ],
+      "why": "襄阳扼汉水与南阳盆地之口，蒙古得襄阳便可沿汉水入长江，从上游压向南宋腹地。"
+    },
+    "evt-yuan-dadu": {
+      "features": [
+        "ca-jizhou",
+        "ca-huitong",
+        "ca-tonghui"
+      ],
+      "hydro": [
+        "yunhe"
+      ],
+      "places": [
+        "dadu"
+      ],
+      "why": "大都远离江南产粮区，元代用截弯取直的会通河、通惠河，把运河直接修到城下。"
+    },
+    "evt-zhenghe": {
+      "routes": [
+        "route-zhenghe-first"
+      ],
+      "places": [
+        "fuzhou"
+      ],
+      "why": "东南沿海的季风与港口是航线的前提，船队沿占城—马六甲—锡兰—古里分段中转。"
+    },
+    "evt-ming-beijing": {
+      "features": [
+        "wall-ming",
+        "ca-tonghui"
+      ],
+      "places": [
+        "dadu"
+      ],
+      "why": "迁都北京把国防前线与漕运终点叠在一起，北方防务与江南粮饷从此互相依赖。"
+    },
+    "evt-tumu": {
+      "features": [
+        "wall-ming"
+      ],
+      "places": [
+        "datong",
+        "juyongguan"
+      ],
+      "why": "土木堡在居庸关外，皇帝在这里被围，暴露了明北边防线深度有限的弱点。"
+    },
+    "evt-1644": {
+      "features": [
+        "wall-ming"
+      ],
+      "places": [
+        "shanhaiguan"
+      ],
+      "why": "山海关扼辽西走廊，过了它就是华北平原；吴三桂开关，等于拆掉最后一道屏障。"
+    },
+    "evt-kangxi-taiwan": {
+      "places": [
+        "taiwan_fu"
+      ],
+      "why": "台湾隔海峡，施琅取澎湖而台湾自下，东南海疆因此纳入清的直接治理。"
+    },
+    "evt-nerchinsk": {
+      "hydro": [
+        "heilongjiang"
+      ],
+      "corridors": [
+        "dongbei"
+      ],
+      "why": "黑龙江与外兴安岭一线是清俄争议的核心，条约把水系作为划界的骨架。"
+    },
+    "evt-taiping": {
+      "routes": [
+        "route-taiping"
+      ],
+      "hydro": [
+        "changjiang"
+      ],
+      "why": "湘江—长江一路顺流，太平军借水路由广西出湖南、取武昌、下南京，占据长江中下游。"
+    },
+    "evt-shanghai": {
+      "hydro": [
+        "changjiang"
+      ],
+      "places": [
+        "shanghai"
+      ],
+      "why": "上海位于长江入海口，背靠江南腹地，开埠后迅速取代广州成为对外贸易中心。"
+    },
+    "evt-crr": {
+      "corridors": [
+        "crr",
+        "dongbei"
+      ],
+      "why": "中东铁路纵贯东北，把哈尔滨、长春、大连连成一线，改变了东北的城市与产业布局。"
+    },
+    "evt-918": {
+      "corridors": [
+        "dongbei",
+        "crr"
+      ],
+      "places": [
+        "shenyang"
+      ],
+      "why": "东北有铁路干线和资源基础，日本控制沈阳就等于控制了整个东北的交通与重工业。"
+    },
+    "evt-chongqing": {
+      "routes": [
+        "route-kangzhan-chongqing",
+        "route-xinan-lianda"
+      ],
+      "hydro": [
+        "changjiang"
+      ],
+      "places": [
+        "chongqing"
+      ],
+      "why": "四川盆地四周环山、三峡为门，易守难攻，长江水路把东部工业和高校转运入川。"
+    },
+    "evt-yongping-buddhism": {
+      "corridors": [
+        "hexi"
+      ],
+      "places": [
+        "luoyang"
+      ],
+      "why": "佛教沿丝路经河西走廊先到都城洛阳，白马寺建在京师城外。"
+    },
+    "evt-mogao": {
+      "corridors": [
+        "hexi"
+      ],
+      "places": [
+        "dunhuang"
+      ],
+      "why": "敦煌是河西走廊西端、丝路南北道分岔处；砾岩崖壁不宜石雕，只能做泥塑和壁画。"
+    },
+    "evt-yungang": {
+      "places": [
+        "datong"
+      ],
+      "why": "平城是北魏首都，武州山的砂岩质地松软易凿，工程可由京师直接调度。"
+    },
+    "evt-nestorian-stele": {
+      "corridors": [
+        "hexi"
+      ],
+      "places": [
+        "changan"
+      ],
+      "why": "长安是丝路东端，波斯、粟特和叙利亚系的商团与教团都汇聚在这里。"
+    },
+    "evt-compass-sea": {
+      "places": [
+        "guangzhou"
+      ],
+      "why": "广州设市舶司最早，外商海船云集，航海对可靠辨向工具的需求最迫切。"
+    },
+    "evt-duchong-breach": {
+      "hydro": [
+        "huanghe",
+        "huaihe"
+      ],
+      "features": [
+        "hr-song-north",
+        "hr-yuan-ming"
+      ],
+      "places": [
+        "kaifeng"
+      ],
+      "why": "豫东平原地势平缓，河床高于两岸，决堤后水流顺地势涌向东南的泗水与淮河。"
+    },
+    "evt-huanghe-1194": {
+      "hydro": [
+        "huanghe",
+        "huaihe"
+      ],
+      "features": [
+        "hr-song-north",
+        "hr-yuan-ming"
+      ],
+      "why": "黄河在豫东平原是游荡性河道，泥沙淤高河床，南岸决口后借泗水、淮河水道入海。"
+    },
+    "evt-huanghe-1855": {
+      "hydro": [
+        "huanghe"
+      ],
+      "features": [
+        "hr-yuan-ming",
+        "hr-modern"
+      ],
+      "why": "南流河床高出两岸，决口后水流沿地势最低的山东大清河入渤海，没有回到淤高的旧道。"
+    },
+    "evt-huaxian-quake": {
+      "hydro": [
+        "weishui"
+      ],
+      "places": [
+        "tongguan",
+        "changan"
+      ],
+      "why": "渭河盆地边缘有活动断裂，当地多黄土窑洞，震后崩塌掩埋，死亡因此特别惨重。"
+    },
+    "evt-1643-plague": {
+      "places": [
+        "datong",
+        "dadu"
+      ],
+      "why": "研究者推断，疫情沿晋北通往京师的商路、驿道传入，人口密集的北京成为放大器。"
+    },
+    "evt-dingwu-famine": {
+      "hydro": [
+        "huanghe"
+      ],
+      "places": [
+        "taiyuan"
+      ],
+      "why": "晋陕豫的黄土旱作区缺水利、少仓储，又没有铁路，粮食运不进内陆山区。"
+    },
+    "evt-dunhuang-library": {
+      "corridors": [
+        "hexi"
+      ],
+      "places": [
+        "dunhuang"
+      ],
+      "why": "河西极干旱的沙漠气候，使纸质文书在封闭洞窟里近千年不朽。"
+    },
+    "evt-haiyuan-quake": {
+      "places": [
+        "xiaoguan"
+      ],
+      "hydro": [
+        "huanghe"
+      ],
+      "why": "海原断裂带穿过黄土高原，震后黄土大面积滑坡，窑洞成片倒塌。"
+    },
+    "evt-huanghe-11": {
+      "features": [
+        "hr-ancient",
+        "hr-han-tang"
+      ],
+      "hydro": [
+        "huanghe"
+      ],
+      "why": "决口改道改写入海口，华北平原河网与农区边界一起动。"
+    },
+    "evt-huanghe-1048": {
+      "features": [
+        "hr-song-north"
+      ],
+      "hydro": [
+        "huanghe"
+      ],
+      "why": "北流河道与辽宋边境重叠，治河即边防。"
+    },
+    "evt-kaifeng-flood-1642": {
+      "places": [
+        "kaifeng"
+      ],
+      "hydro": [
+        "huanghe"
+      ],
+      "why": "开封低于黄河堤，决堤水沙直灌城厢。"
+    },
+    "evt-confucian-temple": {
+      "places": [
+        "qufu"
+      ],
+      "why": "曲阜近泗水，是东周礼乐记忆最集中的乡土锚点。"
+    }
+  }
+}

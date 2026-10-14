@@ -18,15 +18,27 @@
     "polarRadiusKm": 6356.7523142,
     "inverseFlattening": 298.257223563,
     "meanRadiusKm": 6371.0,
-    "sourceIds": ["wgs84"],
+    "sourceIds": [
+      "wgs84"
+    ],
     "note": "真实地球是扁椭球而不是正球：赤道半径比极半径长约 21.4 km。椭球参数只在渲染与标注中生效；分层深度仍以平均半径球模型近似（PREM 本身是球对称模型）。"
   },
   "surface": {
     "textureFile": "earth-blue-marble.png",
-    "sourceIds": ["blue-marble"],
+    "sourceIds": [
+      "blue-marble"
+    ],
     "features": [
-      { "name": "珠穆朗玛峰", "heightKm": 8.849, "note": "海拔最高点（2020 中尼共同宣布值 8848.86 m）" },
-      { "name": "马里亚纳海沟（挑战者深渊）", "heightKm": -10.935, "note": "海洋最深处（约 10935 m）" }
+      {
+        "name": "珠穆朗玛峰",
+        "heightKm": 8.849,
+        "note": "海拔最高点（2020 中尼共同宣布值 8848.86 m）"
+      },
+      {
+        "name": "马里亚纳海沟（挑战者深渊）",
+        "heightKm": -10.935,
+        "note": "海洋最深处（约 10935 m）"
+      }
     ]
   },
   "interior": {
@@ -39,10 +51,16 @@
         "bottomDepthKm": 35,
         "bottomDepthKmContinental": 35,
         "bottomDepthKmOceanic": 7,
-        "bottomDepthRangeKm": [30, 70],
+        "bottomDepthRangeKm": [
+          30,
+          70
+        ],
         "colorHint": "#8A7968",
         "description": "莫霍面以上的固体岩石外层。大陆地壳厚（典型 35 km，造山带可达 70 km），大洋地壳薄（5–10 km，典型 7 km）——「平均 35 km」是大致印象值，不是任何一点的实测值。人类最深的钻孔（科拉 SG-3，12.26 km）只进入了它的三分之一。",
-        "sourceIds": ["usgs", "prem"]
+        "sourceIds": [
+          "usgs",
+          "prem"
+        ]
       },
       {
         "id": "upper-mantle",
@@ -52,7 +70,10 @@
         "bottomDepthKm": 410,
         "colorHint": "#C4632F",
         "description": "从莫霍面到 410 km 不连续面。顶部刚性部分与地壳合成岩石圈，其下的软流圈是板块运动的润滑层；橄榄石在约 410 km 发生相变（α→β 尖晶石结构），密度跳升。",
-        "sourceIds": ["prem", "usgs"]
+        "sourceIds": [
+          "prem",
+          "usgs"
+        ]
       },
       {
         "id": "transition-zone",
@@ -62,7 +83,9 @@
         "bottomDepthKm": 660,
         "colorHint": "#B25830",
         "description": "410–660 km：地幔矿物（橄榄石族）连续相变的地带，660 km 的 γ 尖晶石→桥镁石+镁方铁矿相变是上下地幔的分界，俯冲板片多滞留于此。",
-        "sourceIds": ["prem"]
+        "sourceIds": [
+          "prem"
+        ]
       },
       {
         "id": "lower-mantle",
@@ -72,7 +95,9 @@
         "bottomDepthKm": 2891,
         "colorHint": "#A34A2A",
         "description": "660 km 到核幔边界（古登堡面，2891 km）。体积占地球的一半以上；底部 D″ 层（约 200–300 km 厚）是地幔对流与热柱的源头区。",
-        "sourceIds": ["prem"]
+        "sourceIds": [
+          "prem"
+        ]
       },
       {
         "id": "outer-core",
@@ -82,7 +107,10 @@
         "bottomDepthKm": 5150,
         "colorHint": "#D98E3B",
         "description": "液态铁镍层（横波不能通过，由此确认其液态）。对流运动配合地球自转通过发电机效应产生地磁场。核幔边界上的密度跳跃是全地球最大的一次（约 4.3 g/cm³）。",
-        "sourceIds": ["prem", "usgs"]
+        "sourceIds": [
+          "prem",
+          "usgs"
+        ]
       },
       {
         "id": "inner-core",
@@ -92,40 +120,169 @@
         "bottomDepthKm": 6371,
         "colorHint": "#E8C56A",
         "description": "固态铁镍球（压力约 330–360 GPa 使熔点反超温度）。莱曼 1936 年由地震波发现。它比外核转得略快（差旋）的证据仍有争论。",
-        "sourceIds": ["prem", "usgs"]
+        "sourceIds": [
+          "prem",
+          "usgs"
+        ]
       }
     ],
     "boundaries": [
-      { "id": "moho", "name": "莫霍面", "depthKm": 35, "note": "壳幔分界，莫霍洛维奇 1909 年发现；深度：大陆 30–70 km，海洋 5–10 km" },
-      { "id": "d410", "name": "410 km 不连续面", "depthKm": 410, "note": "橄榄石 α→β 相变" },
-      { "id": "d660", "name": "660 km 不连续面", "depthKm": 660, "note": "上下地幔分界，γ 尖晶石分解相变" },
-      { "id": "cmb", "name": "古登堡面", "depthKm": 2891, "note": "核幔边界，古登堡 1914 年定出；固态地幔之上的液态外核" },
-      { "id": "icb", "name": "莱曼面", "depthKm": 5150, "note": "内外核边界，莱曼 1936 年发现固态内核" }
+      {
+        "id": "moho",
+        "name": "莫霍面",
+        "depthKm": 35,
+        "note": "壳幔分界，莫霍洛维奇 1909 年发现；深度：大陆 30–70 km，海洋 5–10 km"
+      },
+      {
+        "id": "d410",
+        "name": "410 km 不连续面",
+        "depthKm": 410,
+        "note": "橄榄石 α→β 相变"
+      },
+      {
+        "id": "d660",
+        "name": "660 km 不连续面",
+        "depthKm": 660,
+        "note": "上下地幔分界，γ 尖晶石分解相变"
+      },
+      {
+        "id": "cmb",
+        "name": "古登堡面",
+        "depthKm": 2891,
+        "note": "核幔边界，古登堡 1914 年定出；固态地幔之上的液态外核"
+      },
+      {
+        "id": "icb",
+        "name": "莱曼面",
+        "depthKm": 5150,
+        "note": "内外核边界，莱曼 1936 年发现固态内核"
+      }
     ],
     "keyPoints": [
-      { "name": "科拉超深钻孔 SG-3", "depthKm": 12.262, "note": "人类钻探到达的最深处（1970–1992），未穿透地壳" },
-      { "name": "深源地震下限", "depthKm": 700, "note": "观测到的地震震源最深约 700 km，再深处岩石呈塑性" }
+      {
+        "name": "科拉超深钻孔 SG-3",
+        "depthKm": 12.262,
+        "note": "人类钻探到达的最深处（1970–1992），未穿透地壳"
+      },
+      {
+        "name": "深源地震下限",
+        "depthKm": 700,
+        "note": "观测到的地震震源最深约 700 km，再深处岩石呈塑性"
+      }
     ],
     "premSegments": [
-      { "topDepthKm": 0, "bottomDepthKm": 35, "topDensity": 2.72, "bottomDensity": 2.9, "note": "地壳（大陆典型值；大洋地壳 2.6–3.0）" },
-      { "topDepthKm": 35, "bottomDepthKm": 410, "topDensity": 3.32, "bottomDensity": 3.5, "note": "上地幔" },
-      { "topDepthKm": 410, "bottomDepthKm": 660, "topDensity": 3.72, "bottomDensity": 3.99, "note": "过渡带；410 界面两侧 3.5→3.72 为常用近似" },
-      { "topDepthKm": 660, "bottomDepthKm": 2891, "topDensity": 4.38, "bottomDensity": 5.57, "note": "下地幔；660 界面两侧 3.99→4.38" },
-      { "topDepthKm": 2891, "bottomDepthKm": 5150, "topDensity": 9.9, "bottomDensity": 12.17, "note": "外核；古登堡面上密度跳升约 4.3 g/cm³" },
-      { "topDepthKm": 5150, "bottomDepthKm": 6371, "topDensity": 12.76, "bottomDensity": 13.09, "note": "内核；地心密度 13.09 g/cm³" }
+      {
+        "topDepthKm": 0,
+        "bottomDepthKm": 35,
+        "topDensity": 2.72,
+        "bottomDensity": 2.9,
+        "note": "地壳（大陆典型值；大洋地壳 2.6–3.0）"
+      },
+      {
+        "topDepthKm": 35,
+        "bottomDepthKm": 410,
+        "topDensity": 3.32,
+        "bottomDensity": 3.5,
+        "note": "上地幔"
+      },
+      {
+        "topDepthKm": 410,
+        "bottomDepthKm": 660,
+        "topDensity": 3.72,
+        "bottomDensity": 3.99,
+        "note": "过渡带；410 界面两侧 3.5→3.72 为常用近似"
+      },
+      {
+        "topDepthKm": 660,
+        "bottomDepthKm": 2891,
+        "topDensity": 4.38,
+        "bottomDensity": 5.57,
+        "note": "下地幔；660 界面两侧 3.99→4.38"
+      },
+      {
+        "topDepthKm": 2891,
+        "bottomDepthKm": 5150,
+        "topDensity": 9.9,
+        "bottomDensity": 12.17,
+        "note": "外核；古登堡面上密度跳升约 4.3 g/cm³"
+      },
+      {
+        "topDepthKm": 5150,
+        "bottomDepthKm": 6371,
+        "topDensity": 12.76,
+        "bottomDensity": 13.09,
+        "note": "内核；地心密度 13.09 g/cm³"
+      }
     ],
     "premNote": "密度单位 g/cm³。取 PREM（Dziewonski & Anderson 1981）的界面值做线性内插近似；PREM 原模型在层内是三次多项式，内插误差远小于界面跳变量。剖面着色与探针读数由这些数值生成。",
     "tempProfile": [
-      { "depthKm": 0, "tempC": 15, "rangeC": null, "note": "地表平均气温" },
-      { "depthKm": 35, "tempC": 500, "rangeC": [400, 600], "note": "陆壳莫霍面" },
-      { "depthKm": 410, "tempC": 1500, "rangeC": [1400, 1600], "note": "410 相变面" },
-      { "depthKm": 660, "tempC": 1650, "rangeC": [1600, 1700], "note": "660 相变面" },
-      { "depthKm": 2891, "tempC": 3800, "rangeC": [3700, 4000], "note": "核幔边界" },
-      { "depthKm": 5150, "tempC": 5400, "rangeC": [5000, 5700], "note": "内外核边界（铁在 330 GPa 下的熔点约束）" },
-      { "depthKm": 6371, "tempC": 5430, "rangeC": [5000, 5700], "note": "地心；与内核边界几乎同温（绝热）" }
+      {
+        "depthKm": 0,
+        "tempC": 15,
+        "rangeC": null,
+        "note": "地表平均气温"
+      },
+      {
+        "depthKm": 35,
+        "tempC": 500,
+        "rangeC": [
+          400,
+          600
+        ],
+        "note": "陆壳莫霍面"
+      },
+      {
+        "depthKm": 410,
+        "tempC": 1500,
+        "rangeC": [
+          1400,
+          1600
+        ],
+        "note": "410 相变面"
+      },
+      {
+        "depthKm": 660,
+        "tempC": 1650,
+        "rangeC": [
+          1600,
+          1700
+        ],
+        "note": "660 相变面"
+      },
+      {
+        "depthKm": 2891,
+        "tempC": 3800,
+        "rangeC": [
+          3700,
+          4000
+        ],
+        "note": "核幔边界"
+      },
+      {
+        "depthKm": 5150,
+        "tempC": 5400,
+        "rangeC": [
+          5000,
+          5700
+        ],
+        "note": "内外核边界（铁在 330 GPa 下的熔点约束）"
+      },
+      {
+        "depthKm": 6371,
+        "tempC": 5430,
+        "rangeC": [
+          5000,
+          5700
+        ],
+        "note": "地心；与内核边界几乎同温（绝热）"
+      }
     ],
     "tempNote": "地球内部没有直接测温手段（最深钻孔 12.26 km，为半径的 0.2%），温度由相变实验与绝热压缩模型推算。线性内插为示意性参考廓线，rangeC 给出文献共识区间。",
-    "sourceIds": ["prem", "usgs", "interior-temp"]
+    "sourceIds": [
+      "prem",
+      "usgs",
+      "interior-temp"
+    ]
   },
   "atmosphere": {
     "layers": [
@@ -138,7 +295,10 @@
         "topHeightNote": "平均 12 km；极地约 8 km，热带 16–18 km",
         "colorHint": "#6FA8DC",
         "description": "天气发生的地方，含约 75–80% 的大气质量与几乎全部水汽；温度随高度递减（平均每公里 6.5 °C），递减率归零处即对流层顶。",
-        "sourceIds": ["wmo", "ussa1976"]
+        "sourceIds": [
+          "wmo",
+          "ussa1976"
+        ]
       },
       {
         "id": "stratosphere",
@@ -148,7 +308,10 @@
         "topHeightKm": 50,
         "colorHint": "#4A6FB5",
         "description": "臭氧层（15–35 km，浓度峰值约 22 km）吸收紫外使温度随高度回升，层结稳定所以平飞巡航（10–12 km）选在它的下缘。温度不再下降是「平流」名字的由来。",
-        "sourceIds": ["wmo", "ussa1976"]
+        "sourceIds": [
+          "wmo",
+          "ussa1976"
+        ]
       },
       {
         "id": "mesosphere",
@@ -158,7 +321,10 @@
         "topHeightKm": 85,
         "colorHint": "#3A4E8C",
         "description": "温度再次随高度递减，到中间层顶（约 −86 °C）降到全大气最冷。流星大多在 75–100 km 烧蚀；这里的大气密度已低到难以直接探测，曾被称为「忽略层」。",
-        "sourceIds": ["wmo", "ussa1976"]
+        "sourceIds": [
+          "wmo",
+          "ussa1976"
+        ]
       },
       {
         "id": "thermosphere",
@@ -169,7 +335,10 @@
         "topHeightNote": "顶界随太阳活动在 500–1000 km 间波动，600 km 为中等活动的常用值",
         "colorHint": "#2C3E6B",
         "description": "吸收极紫外与 X 射线，温度随高度急剧上升（可达 500–2000 K，随太阳活动强烈变化——「温度」在此主要衡量粒子动能，密度已近真空）。极光（100–300 km）与国际空间站轨道（约 400 km）都在这一层。",
-        "sourceIds": ["wmo", "atmos-thermo"]
+        "sourceIds": [
+          "wmo",
+          "atmos-thermo"
+        ]
       },
       {
         "id": "exosphere",
@@ -180,7 +349,10 @@
         "topHeightNote": "没有明确上界：粒子平均自由程超过标高后逐颗逃逸，通常画到 10000 km 渐隐；地冕的钠/氢痕迹可追到数十万公里",
         "colorHint": "#1F2A44",
         "description": "最外层。碰撞已可忽略，粒子沿弹道运动，快的逃入太空——「上界」因此是渐变而非界面。地球静止轨道（35786 km）与多数卫星在此范围内的轨道上运行。",
-        "sourceIds": ["wmo", "atmos-thermo"]
+        "sourceIds": [
+          "wmo",
+          "atmos-thermo"
+        ]
       }
     ],
     "karmanLineKm": 100,
@@ -188,48 +360,421 @@
     "scaleHeightKm": 8.5,
     "scaleHeightNote": "大气密度标高：高度每升 8.5 km 密度约降为 1/e（≈37%）。渲染的蓝色光晕按 exp(−h/H) 衰减，不是均匀涂层。",
     "composition": [
-      { "gas": "N₂ 氮", "volumePercent": 78.08 },
-      { "gas": "O₂ 氧", "volumePercent": 20.95 },
-      { "gas": "Ar 氩", "volumePercent": 0.93 },
-      { "gas": "CO₂ 二氧化碳", "volumePercent": 0.042, "note": "2024 年全球均值约 422.7 ppm（NOAA）" }
+      {
+        "gas": "N₂ 氮",
+        "volumePercent": 78.08
+      },
+      {
+        "gas": "O₂ 氧",
+        "volumePercent": 20.95
+      },
+      {
+        "gas": "Ar 氩",
+        "volumePercent": 0.93
+      },
+      {
+        "gas": "CO₂ 二氧化碳",
+        "volumePercent": 0.042,
+        "note": "2024 年全球均值约 422.7 ppm（NOAA）"
+      }
     ],
     "compositionNote": "海平面附近干空气的体积混合比（CRC 手册常用值）。水汽 0–4% 随地点与天气变化，不计入干空气表。",
     "ussa1976": {
       "tempPointsC": [
-        { "heightKm": 0, "tempC": 15.0 },
-        { "heightKm": 11, "tempC": -56.5 },
-        { "heightKm": 20, "tempC": -56.5 },
-        { "heightKm": 32, "tempC": -44.5 },
-        { "heightKm": 47, "tempC": -2.5 },
-        { "heightKm": 51, "tempC": -2.5 },
-        { "heightKm": 71, "tempC": -58.5 },
-        { "heightKm": 86, "tempC": -86.3 }
+        {
+          "heightKm": 0,
+          "tempC": 15.0
+        },
+        {
+          "heightKm": 11,
+          "tempC": -56.5
+        },
+        {
+          "heightKm": 20,
+          "tempC": -56.5
+        },
+        {
+          "heightKm": 32,
+          "tempC": -44.5
+        },
+        {
+          "heightKm": 47,
+          "tempC": -2.5
+        },
+        {
+          "heightKm": 51,
+          "tempC": -2.5
+        },
+        {
+          "heightKm": 71,
+          "tempC": -58.5
+        },
+        {
+          "heightKm": 86,
+          "tempC": -86.3
+        }
       ],
       "pressurePointsHPa": [
-        { "heightKm": 0, "pressureHPa": 1013.25 },
-        { "heightKm": 11, "pressureHPa": 226.32 },
-        { "heightKm": 20, "pressureHPa": 54.75 },
-        { "heightKm": 32, "pressureHPa": 8.68 },
-        { "heightKm": 47, "pressureHPa": 1.11 },
-        { "heightKm": 51, "pressureHPa": 0.67 },
-        { "heightKm": 71, "pressureHPa": 0.04 },
-        { "heightKm": 86, "pressureHPa": 0.0037 }
+        {
+          "heightKm": 0,
+          "pressureHPa": 1013.25
+        },
+        {
+          "heightKm": 11,
+          "pressureHPa": 226.32
+        },
+        {
+          "heightKm": 20,
+          "pressureHPa": 54.75
+        },
+        {
+          "heightKm": 32,
+          "pressureHPa": 8.68
+        },
+        {
+          "heightKm": 47,
+          "pressureHPa": 1.11
+        },
+        {
+          "heightKm": 51,
+          "pressureHPa": 0.67
+        },
+        {
+          "heightKm": 71,
+          "pressureHPa": 0.04
+        },
+        {
+          "heightKm": 86,
+          "pressureHPa": 0.0037
+        }
       ],
       "note": "US Standard Atmosphere 1976 的分段线性温度廓线（0–86 km，中纬度年平均）与标准表压力采样点。压力图表用对数轴。",
-      "sourceIds": ["ussa1976"]
+      "sourceIds": [
+        "ussa1976"
+      ]
     },
     "keyPoints": [
-      { "name": "客机巡航", "heightKm": 11, "note": "10–12 km，对流层顶附近的长途巡航高度" },
-      { "name": "臭氧浓度峰值", "heightKm": 22, "note": "约 20–25 km" },
-      { "name": "气象气球探空上限", "heightKm": 35, "note": "常规探空气球在此高度爆裂" },
-      { "name": "流星烧蚀", "heightKm": 80, "note": "大多在 75–100 km" },
-      { "name": "卡门线", "heightKm": 100, "note": "航天与航空的分界约定" },
-      { "name": "极光", "heightKm": 200, "note": "典型发光高度 100–300 km" },
-      { "name": "国际空间站", "heightKm": 408, "note": "平均轨道高度约 400–420 km" },
-      { "name": "哈勃空间望远镜", "heightKm": 535, "note": "约 530–540 km" },
-      { "name": "地球静止轨道", "heightKm": 35786, "note": "42 164 km 半长轴对应的赤道轨道半径；位于外逸层内" }
+      {
+        "name": "消费级无人机",
+        "heightKm": 0.12,
+        "category": "aircraft",
+        "country": "多国",
+        "icon": "🛩️",
+        "note": "法规限高通常 120 m（如中国《无人驾驶航空器飞行管理暂行条例》对微型/轻型机的管控高度）",
+        "sourceIds": [
+          "aviation-performance"
+        ]
+      },
+      {
+        "name": "直升机通航作业",
+        "heightKm": 0.6,
+        "category": "aircraft",
+        "country": "多国",
+        "icon": "🚁",
+        "note": "城市与山区作业的典型高度带 0.3–3 km",
+        "sourceIds": [
+          "aviation-performance"
+        ]
+      },
+      {
+        "name": "热气球观光",
+        "heightKm": 3,
+        "category": "aircraft",
+        "country": "多国",
+        "icon": "🎈",
+        "note": "观光飞行的典型巡航高度 2–3 km",
+        "sourceIds": [
+          "aviation-performance"
+        ]
+      },
+      {
+        "name": "斑头雁迁徙",
+        "heightKm": 8.8,
+        "category": "animal",
+        "note": "候鸟中数一数二的高飞者：卫星跟踪证实其迁徙往返横越喜马拉雅（约 8 800 m）",
+        "icon": "🦢"
+      },
+      {
+        "name": "C919 巡航",
+        "heightKm": 10.1,
+        "category": "aircraft",
+        "country": "中国",
+        "note": "干线客机典型巡航约 33 000 ft（10.1 km）",
+        "sourceIds": [
+          "aviation-performance"
+        ],
+        "icon": "✈️"
+      },
+      {
+        "name": "鲁氏秃鹫",
+        "heightKm": 11.3,
+        "category": "animal",
+        "note": "鸟类飞行高度纪录：11 300 m（一次与飞机相撞的记录）",
+        "icon": "🦅"
+      },
+      {
+        "name": "波音 787 巡航",
+        "heightKm": 11.5,
+        "category": "aircraft",
+        "country": "美国",
+        "note": "宽体客机典型巡航约 38 000 ft（11.5 km），对流层顶附近",
+        "sourceIds": [
+          "aviation-performance"
+        ],
+        "icon": "✈️"
+      },
+      {
+        "name": "RQ-4 全球鹰",
+        "heightKm": 18.3,
+        "category": "aircraft",
+        "country": "美国",
+        "icon": "🛩️",
+        "note": "高空长航时侦察无人机，实用升限约 18.3 km（公开参数）",
+        "sourceIds": [
+          "aviation-performance"
+        ]
+      },
+      {
+        "name": "歼-20 升限",
+        "heightKm": 19,
+        "category": "aircraft",
+        "country": "中国",
+        "note": "公开估计实用升限 18–20 km 量级（无官方数值）",
+        "sourceIds": [
+          "aviation-performance"
+        ],
+        "icon": "🛩️"
+      },
+      {
+        "name": "F-22 升限",
+        "heightKm": 19.8,
+        "category": "aircraft",
+        "country": "美国",
+        "note": "实用升限约 65 000 ft（19.8 km），公开参数",
+        "sourceIds": [
+          "aviation-performance"
+        ],
+        "icon": "🛩️"
+      },
+      {
+        "name": "U-2 高空侦察",
+        "heightKm": 21.3,
+        "category": "aircraft",
+        "country": "美国",
+        "note": "70 000 ft 级高空侦察机，至今现役",
+        "sourceIds": [
+          "aviation-performance"
+        ],
+        "icon": "✈️"
+      },
+      {
+        "name": "臭氧浓度峰值",
+        "heightKm": 22,
+        "category": "phenomenon",
+        "note": "约 20–25 km；吸收紫外线使平流层温度回升",
+        "icon": "☁️"
+      },
+      {
+        "name": "SR-71 巡航",
+        "heightKm": 25.9,
+        "category": "aircraft",
+        "country": "美国",
+        "note": "85 000 ft 级双三侦察机（25.9 km），1998 年退役",
+        "sourceIds": [
+          "aviation-performance"
+        ],
+        "icon": "✈️"
+      },
+      {
+        "name": "平流层微生物",
+        "heightKm": 30,
+        "category": "animal",
+        "note": "高空科学气球在 20–41 km 采样到活细菌孢子（如 2013 年印度 ISRO 实验）",
+        "icon": "🦠"
+      },
+      {
+        "name": "气象气球探空上限",
+        "heightKm": 35,
+        "category": "phenomenon",
+        "note": "常规探空气球在此高度爆裂",
+        "icon": "🎈"
+      },
+      {
+        "name": "红牛 Stratos 跳伞",
+        "heightKm": 38.97,
+        "category": "aircraft",
+        "country": "奥地利/美国",
+        "icon": "🪂",
+        "note": "2012 年 Felix Baumgartner 从 38 969 m 的氦气球跳下，成为不借助载具超音速第一人",
+        "sourceIds": [
+          "flight-records-public"
+        ]
+      },
+      {
+        "name": "超压科学气球",
+        "heightKm": 40,
+        "category": "aircraft",
+        "country": "多国",
+        "icon": "🎈",
+        "note": "NASA 与中科院的超压气球可在 35–40 km 长期驻空，载科学载荷巡天",
+        "sourceIds": [
+          "flight-records-public"
+        ]
+      },
+      {
+        "name": "Eustace 跳伞纪录",
+        "heightKm": 41.4,
+        "category": "aircraft",
+        "country": "美国",
+        "icon": "🪂",
+        "note": "2014 年 Alan Eustace 从 41 419 m 跳下，至今仍是人类最高跳伞纪录",
+        "sourceIds": [
+          "flight-records-public"
+        ]
+      },
+      {
+        "name": "流星烧蚀",
+        "heightKm": 80,
+        "category": "phenomenon",
+        "note": "大多在 75–100 km 烧蚀发光",
+        "icon": "✨"
+      },
+      {
+        "name": "夜光云",
+        "heightKm": 83,
+        "category": "phenomenon",
+        "note": "约 76–85 km 的中间层顶冰晶云，夏季高纬可见",
+        "icon": "🌌"
+      },
+      {
+        "name": "卡门线",
+        "heightKm": 100,
+        "category": "boundary",
+        "note": "航天与航空的分界约定",
+        "icon": "🚀"
+      },
+      {
+        "name": "极光",
+        "heightKm": 200,
+        "category": "phenomenon",
+        "note": "典型发光高度 100–300 km",
+        "icon": "🌌"
+      },
+      {
+        "name": "天宫空间站",
+        "heightKm": 390,
+        "category": "spacecraft",
+        "country": "中国",
+        "note": "380–400 km 近圆轨道；乘组由神舟载人飞船往返",
+        "sourceIds": [
+          "space-orbits-public"
+        ],
+        "icon": "🛰️"
+      },
+      {
+        "name": "和平号空间站",
+        "heightKm": 390,
+        "category": "spacecraft",
+        "country": "俄罗斯",
+        "note": "苏联/俄罗斯第三代空间站，平均轨道约 390 km，2001 年受控再入",
+        "sourceIds": [
+          "space-orbits-public"
+        ],
+        "icon": "🛰️"
+      },
+      {
+        "name": "国际空间站",
+        "heightKm": 408,
+        "category": "spacecraft",
+        "country": "多国（美俄欧日加）",
+        "note": "平均轨道高度约 400–420 km，2000 年起持续载人",
+        "sourceIds": [
+          "space-orbits-public"
+        ],
+        "icon": "🛰️"
+      },
+      {
+        "name": "天空实验室",
+        "heightKm": 435,
+        "category": "spacecraft",
+        "country": "美国",
+        "note": "美国首座空间站（1973–1979），平均轨道约 435 km，已坠毁",
+        "sourceIds": [
+          "space-orbits-public"
+        ],
+        "icon": "🛰️"
+      },
+      {
+        "name": "墨子号",
+        "heightKm": 500,
+        "category": "spacecraft",
+        "country": "中国",
+        "note": "世界首颗量子科学实验卫星（2016），太阳同步轨道约 500 km",
+        "sourceIds": [
+          "space-orbits-public"
+        ],
+        "icon": "🛰️"
+      },
+      {
+        "name": "哈勃空间望远镜",
+        "heightKm": 535,
+        "category": "spacecraft",
+        "country": "美国",
+        "note": "约 530–540 km，1990 年发射至今",
+        "sourceIds": [
+          "space-orbits-public"
+        ],
+        "icon": "🔭"
+      },
+      {
+        "name": "星链星座",
+        "heightKm": 550,
+        "category": "spacecraft",
+        "country": "美国",
+        "note": "主壳层约 550 km（FCC 申报），在轨数千颗",
+        "sourceIds": [
+          "space-orbits-public"
+        ],
+        "icon": "🛰️"
+      },
+      {
+        "name": "GPS 卫星",
+        "heightKm": 20180,
+        "category": "spacecraft",
+        "country": "美国",
+        "note": "中圆轨道约 20 180 km，6 个轨道面",
+        "sourceIds": [
+          "space-orbits-public"
+        ],
+        "icon": "🛰️"
+      },
+      {
+        "name": "北斗 MEO 卫星",
+        "heightKm": 21500,
+        "category": "spacecraft",
+        "country": "中国",
+        "note": "北斗中圆轨道约 21 500 km；混合星座另有 GEO/IGSO 在 35 786 km",
+        "sourceIds": [
+          "space-orbits-public"
+        ],
+        "icon": "🛰️"
+      },
+      {
+        "name": "地球静止轨道",
+        "heightKm": 35786,
+        "category": "orbit",
+        "note": "42 164 km 半长轴对应的赤道轨道：天链（中）、TDRS（美）、北斗 GEO 等聚集于此",
+        "sourceIds": [
+          "space-orbits-public"
+        ],
+        "icon": "🛰️"
+      }
     ],
-    "sourceIds": ["wmo", "ussa1976", "atmos-thermo"]
+    "sourceIds": [
+      "wmo",
+      "ussa1976",
+      "atmos-thermo"
+    ]
   },
   "demos": {
     "airNote": "巡航高度与速度取公开手册量级（窄体/宽体客机、双发制空战斗机）；航线沿大圆（球面最短路径）插值，飞行用时 = 距离 ÷ 巡航速度的真实值，动画进度跟随顶栏的模拟时钟倍率。真实比例下 11 km 巡航高度只有地球半径的 0.17%——航线贴着地表，请用「贴近大气层」观察。",
@@ -263,15 +808,27 @@
       {
         "id": "pek-sha",
         "name": "北京 → 上海",
-        "from": [116.4, 39.9],
-        "to": [121.47, 31.23],
+        "from": [
+          116.4,
+          39.9
+        ],
+        "to": [
+          121.47,
+          31.23
+        ],
         "note": "国内干线的量级：大圆距离约 1080 km"
       },
       {
         "id": "pek-jfk",
         "name": "北京 → 纽约（跨极地大圆）",
-        "from": [116.4, 39.9],
-        "to": [-74.0, 40.7],
+        "from": [
+          116.4,
+          39.9
+        ],
+        "to": [
+          -74.0,
+          40.7
+        ],
         "note": "大圆航线从北极附近掠过——平面地图上「绕远」的路线才是球面最短"
       }
     ],
@@ -332,8 +889,14 @@
         "apogeeKm": 140,
         "stageMinutes": 6,
         "route": {
-          "from": [-142.5, 7.99],
-          "to": [-137.5, 7.99],
+          "from": [
+            -142.5,
+            7.99
+          ],
+          "to": [
+            -137.5,
+            7.99
+          ],
           "fromLabel": "示意发射点（海上）",
           "toLabel": "示意落点（海上）"
         },
@@ -342,17 +905,26 @@
     ],
     "referenceIsland": {
       "name": "虚构示意海岛（中太平洋）",
-      "lonLat": [-140.0, 8.0],
+      "lonLat": [
+        -140.0,
+        8.0
+      ],
       "radiusKm": 200,
       "note": "纯属虚构的尺度参照：位置选在开阔洋面、不对应任何真实岛屿或地点，只用来对比「岛的宽度」与「弹道的高度」"
     },
     "launch": {
       "name": "示意演示点（华北）",
-      "lonLat": [108.0, 36.0],
+      "lonLat": [
+        108.0,
+        36.0
+      ],
       "bearingDeg": 75,
       "note": "抽象演示点与固定发射方位角（向东跨太平洋）：演示射程几何，不指涉任何真实目标或靶场"
     },
-    "sourceIds": ["aviation-performance", "missile-ranges-public"]
+    "sourceIds": [
+      "aviation-performance",
+      "missile-ranges-public"
+    ]
   },
   "sources": {
     "wgs84": {
@@ -394,6 +966,14 @@
     "missile-ranges-public": {
       "title": "导弹射程为公开报道的估计量级（国际防务智库与公开百科的常见引用区间），弹道形状为教学示意",
       "url": "https://www.tandfonline.com/doi/abs/10.1080/16161262.2020.1731969"
+    },
+    "space-orbits-public": {
+      "title": "航天器轨道与性能参数取各国公开资料量级：NASA NSSDC 航天器档案、机构与运营商公告（天宫、ISS、星链、北斗、GPS 等常用轨道高度）",
+      "url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/query"
+    },
+    "flight-records-public": {
+      "title": "航空极限纪录与高空作业高度取公开报道与认证机构口径（FAI 国际航空运动联合会的世界航空纪录）",
+      "url": "https://www.fai.org/world-air-sports-records"
     }
   }
 }

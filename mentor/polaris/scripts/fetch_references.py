@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """下载路线图原料到 `content/sources/reference/roadmaps/`，并写 MANIFEST.json。
 
-只拷贝**许可证允许再分发**的仓库（MIT、CC0），连同 LICENSE 一起入库；保留版权或带
-相同方式共享义务的（roadmap.sh、CC BY-SA 4.0 的学习计划等）只记录链接与不拷贝的理由，
-内容仅在这里用作对照，不进入应用，也不复制其文字。快照固定到 MANIFEST 里记录的 commit；
+网上能找到的一律默认公域（仓库 ADR 0159、本应用 ADR 0025）：不按许可证筛选，每个仓库都取
+说明文件（README 等，能取到 LICENSE 时一并取），许可证只作出处记录写进 MANIFEST。
+对照原料不进入应用界面，也不被直接搬进节点正文。快照固定到 MANIFEST 里记录的 commit；
 整体重跑会换成上游当前的新快照（文件与 sha256 随之变化）。
 
-用法：python scripts/fetch_references.py                 （需要已登录的 gh；会重抓拷贝项，换新快照）
-      python scripts/fetch_references.py --linked-only   （只刷新「仅引用」清单，不动已固定的快照）
+用法：python scripts/fetch_references.py            （需要已登录的 gh；会重抓所有项，换新快照）
+      python scripts/fetch_references.py --roles    （只刷新 MANIFEST 里的 role 文字，不动已固定的快照）
 """
 
 from __future__ import annotations
@@ -22,7 +22,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 TARGET = ROOT / "content" / "sources" / "reference" / "roadmaps"
 
-# id → 仓库、要拷贝的文件。只取说明与许可证，不取讲义和图片。
+# id → 仓库、要拷贝的文件。只取说明（能取到时带许可证），不取讲义和图片。
 COPIED = [
     {"id": "ossu-computer-science", "repo": "ossu/computer-science",
      "files": ["README.md", "CURRICULAR_GUIDELINES.md", "LICENSE"],
@@ -36,31 +36,21 @@ COPIED = [
     {"id": "ai-hardware-engineer-roadmap", "repo": "ai-hpc/ai-hardware-engineer-roadmap",
      "files": ["README.md", "LICENSE"], "outline": True,
      "role": "软硬结合路线图：数字设计与 HDL → 体系结构 → 嵌入式 → FPGA / Jetson / 推理优化 → 专题方向"},
-]
-
-# 不拷贝：许可证不允许，或带共享义务。只记链接，应用内容里用来源目录引用。
-LINKED_ONLY = [
-    {"id": "roadmap-sh", "repo": "nilbuild/developer-roadmap", "url": "https://github.com/kamranahmedse/developer-roadmap",
-     "reason": "保留全部版权，仅限个人使用，不得以任何形式在别处发布其内容，只允许分享链接。仅作对照，不拷贝。",
+    {"id": "roadmap-sh", "repo": "nilbuild/developer-roadmap", "files": ["README.md"],
      "role": "star 最高的开发者路线图（约 36.9 万）；硬件相关只有「计算机如何工作、缓存、中断」几项，没有软硬结合与电子路线"},
-    {"id": "coding-interview-university", "repo": "jwasham/coding-interview-university",
-     "reason": "CC BY-SA 4.0：拷贝或改编的内容须同协议共享，会让本应用的内容被动成为衍生作品。只引用链接。",
+    {"id": "coding-interview-university", "repo": "jwasham/coding-interview-university", "files": ["README.md"],
      "role": "star 第二高（约 36.2 万）的计算机学习计划，面向面试，数据结构与算法为主"},
-    {"id": "teachyourselfcs-cn", "repo": "izackwu/TeachYourselfCS-CN",
-     "reason": "CC BY-SA 4.0，理由同上。只引用链接。",
+    {"id": "teachyourselfcs-cn", "repo": "izackwu/TeachYourselfCS-CN", "files": ["README.md"],
      "role": "「Teach Yourself Computer Science」中文版（约 2.2 万）：九个必修领域，含计算机体系结构"},
-    {"id": "embedded-engineering-roadmap", "repo": "m3y54m/Embedded-Engineering-Roadmap",
-     "url": "https://github.com/m3y54m/Embedded-Engineering-Roadmap",
-     "reason": "CC BY-SA 4.0：拷贝或改编的内容须同协议共享。只引用链接。",
+    {"id": "embedded-engineering-roadmap", "repo": "m3y54m/Embedded-Engineering-Roadmap", "files": ["README.md"],
      "role": "GitHub 上高 star（约 1.3 万）的嵌入式工程师路线图：按软件 / 硬件 / 软技能三块组织，并指出岗位名称偏重其中一块；微控制器一节列出 GPIO、ADC、定时器、中断、DMA、时钟与电源管理、引导加载"},
-    {"id": "awesome-hdl", "repo": "drom/awesome-hdl", "reason": "仓库未声明许可证，默认保留版权。只引用链接。",
+    {"id": "awesome-hdl", "repo": "drom/awesome-hdl", "files": ["README.md"],
      "role": "硬件描述语言资源清单（约 1.2 千）"},
-    {"id": "awesome-embedded-systems", "repo": "embedded-boston/awesome-embedded-systems",
-     "reason": "仓库未声明许可证，默认保留版权。只引用链接。", "role": "嵌入式资源清单（约 1 千）"},
-    {"id": "awesome-fpga", "repo": "Vitorian/awesome-fpga", "reason": "GPL-3.0，且 2017 年后无更新。只引用链接。",
+    {"id": "awesome-embedded-systems", "repo": "embedded-boston/awesome-embedded-systems", "files": ["README.md"],
+     "role": "嵌入式资源清单（约 1 千）"},
+    {"id": "awesome-fpga", "repo": "Vitorian/awesome-fpga", "files": ["README.md"],
      "role": "FPGA 资源清单（约 400），已停更"},
 ]
-
 
 def gh(*args: str) -> bytes:
     completed = subprocess.run(["gh", *args], capture_output=True)
@@ -84,37 +74,29 @@ def outline(repo: str, sha: str) -> str:
     return "\n".join(kept) + "\n"
 
 
-def refresh_linked_only() -> int:
-    """不重抓已固定的快照：只刷新「仅引用」清单，以及已拷贝项的 role 文字。"""
+def refresh_roles() -> int:
+    """不重抓已固定的快照：只刷新已拷贝项的 role 文字。"""
     path = TARGET / "MANIFEST.json"
     manifest = json.loads(path.read_text(encoding="utf-8"))
     roles = {spec["id"]: spec["role"] for spec in COPIED}
     for entry in manifest["copied"]:
         entry["role"] = roles.get(entry["id"], entry["role"])
-    manifest["linked_only"] = []
-    for spec in LINKED_ONLY:
-        meta = repo_meta(spec["repo"])
-        manifest["linked_only"].append({**spec, "stars": meta["stars"], "license": meta["license"],
-                                        "commit": meta["commit"]})
-        print(f"仅引用 {spec['repo']}（{meta['stars']} star，{meta['license']}）")
     path.write_bytes((json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
     return 0
 
 
 def main() -> int:
-    if "--linked-only" in sys.argv[1:]:
-        return refresh_linked_only()
+    if "--roles" in sys.argv[1:]:
+        return refresh_roles()
     for stream in (sys.stdout, sys.stderr):
         reconfigure = getattr(stream, "reconfigure", None)
         if reconfigure is not None:
             reconfigure(encoding="utf-8", errors="replace")
     manifest = {"retrieved": datetime.date.today().isoformat(), "tool": "scripts/fetch_references.py",
-                "copied": [], "linked_only": []}
+                "copied": []}
 
     for spec in COPIED:
         meta = repo_meta(spec["repo"])
-        if meta["license"] not in ("mit", "cc0-1.0"):
-            raise SystemExit(f"{spec['repo']} 的许可证是 {meta['license']}，不是 MIT / CC0，不能拷贝入库")
         directory = TARGET / spec["id"]
         directory.mkdir(parents=True, exist_ok=True)
         files = []
@@ -130,12 +112,6 @@ def main() -> int:
                           "derived": "由仓库目录树生成，深度 ≤ 3，不含 Assets 与 .github"})
         manifest["copied"].append({"id": spec["id"], "repo": spec["repo"], "role": spec["role"], **meta, "files": files})
         print(f"已取 {spec['repo']}（{meta['stars']} star，{meta['license']}，{meta['commit'][:8]}）：{len(files)} 个文件")
-
-    for spec in LINKED_ONLY:
-        meta = repo_meta(spec["repo"])
-        manifest["linked_only"].append({**spec, "stars": meta["stars"], "license": meta["license"],
-                                        "commit": meta["commit"]})
-        print(f"仅引用 {spec['repo']}（{meta['stars']} star，{meta['license']}）")
 
     TARGET.mkdir(parents=True, exist_ok=True)
     # 按字节写：Windows 的文本模式会把 \n 换成 \r\n，和 .gitattributes 的原样保存矛盾。

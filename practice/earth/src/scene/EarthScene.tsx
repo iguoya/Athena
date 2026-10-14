@@ -12,9 +12,12 @@ import {
   EXOSPHERE_FADE_KM,
   interiorLayerRadii,
   interiorLayers,
+  KEYPOINT_COLORS,
   kmToScene,
+  atmosphereLayerAtHeight,
 } from "../content/load";
 import { DemoLayer } from "./DemoLayer";
+import { ATMOS_RULER_DIR } from "./viewpoints";
 import { useEarth } from "../state/store";
 
 // 剖切平面：切掉 x>0 与 z>0 的四分之一（THREE 约定 normal·p + c < 0 的部分被裁）。
@@ -27,18 +30,15 @@ const CLIP_PLANES = [
 const POLAR_SCALE = data.shape.polarRadiusKm / data.shape.equatorialRadiusKm;
 
 // 剖面上的径向标尺方向（单位向量，组内坐标）：盘 A（x=0，z<0 半圆）放内部锚点与探针，
-// 盘 B（z=0，x<0 半圆）放大气锚点——各占一片截面，互不打架。大气标尺接近水平：
-// 竖着伸的话 35786 km 的锚点会把标签顶出窗口外。
+// 盘 B（z=0，x<0 半圆）放大气锚点——各占一片截面，互不打架。大气标尺方向在 viewpoints
+// （全球模式与剖面共用）；这里只留剖面专用的两个。
 const PROBE_DIR = new THREE.Vector3(0, -0.55, -0.835).normalize();
 const INTERIOR_RULER_DIR = new THREE.Vector3(0, 0.5, -0.866).normalize();
-const ATMOS_RULER_DIR = new THREE.Vector3(-0.93, 0.34, 0).normalize();
 
-/** 「贴近大气层」的观察点：地表沿大气标尺方向的点（大气薄壳与锚点标尺居中） */
-export const ATMOS_FOCUS_TARGET: [number, number, number] = [
-  ATMOS_RULER_DIR.x * 1.02,
-  ATMOS_RULER_DIR.y * 1.02,
-  ATMOS_RULER_DIR.z * 1.02,
-];
+/** 大气居民在标签里的层级归属（按高度算，标签与面板共用文案口径）。 */
+function layerNameAtHeight(heightKm: number): string {
+  return atmosphereLayerAtHeight(heightKm)?.name ?? "太空";
+}
 
 /** 真实自转：恒星日 86164 s（23h56m4s），从北极看逆时针（西向东）。 */
 const SIDEREAL_DAY_S = 86164;
@@ -239,19 +239,33 @@ function Label({
   position,
   text,
   strong = false,
+  offsetX = 0,
   offsetY = 0,
+  color,
+  side,
 }: {
   position: [number, number, number];
   text: string;
   strong?: boolean;
+  /** 额外的像素级偏移（side 的百分比挪位之后叠加） */
+  offsetX?: number;
   offsetY?: number;
+  /** 类型色：以色点前缀标记，文字保持默认色（整行着色在深底上难读） */
+  color?: string;
+  /** 横向挪位：right = 标签整体挪到锚点右侧，left = 左侧（标签分列防遮挡） */
+  side?: "left" | "right";
 }) {
+  const shift = side === "left" ? "-105%" : side === "right" ? "105%" : "0%";
   return (
     <Html position={position} center style={{ pointerEvents: "none" }} zIndexRange={[50, 40]}>
       <div
         className={`earth-label ${strong ? "earth-label-strong" : ""}`}
-        style={{ whiteSpace: "nowrap", transform: `translateY(${offsetY}px)` }}
+        style={{
+          whiteSpace: "nowrap",
+          transform: `translate(calc(${shift} + ${offsetX}px), ${offsetY}px)`,
+        }}
       >
+        {color && <span style={{ color }}>● </span>}
         {text}
       </div>
     </Html>
@@ -288,7 +302,8 @@ function InteriorRuler({ showLabels }: { showLabels: boolean }) {
   );
 }
 
-/** 大气锚点标尺：一条伸向 35786 km（地球静止轨道）的刻度线——真实比例下大气外的世界。 */
+/** 大气锚点标尺：一条伸向 35786 km（地球静止轨道）的刻度线——真实比例下大气外的世界。
+    锚点按类型着色（图例见 HUD）；剖面与全球模式共用，是全球视角下观察空中分层的主线索。 */
 function AtmosphereRuler({ showLabels }: { showLabels: boolean }) {
   const geoKm = data.atmosphere.keyPoints;
   const maxKm = Math.max(...geoKm.map((p) => p.heightKm));
@@ -301,21 +316,81 @@ function AtmosphereRuler({ showLabels }: { showLabels: boolean }) {
   return (
     <>
       <primitive object={line} />
-      {/* 真实比例下 11–535 km 的锚点都挤在地表附近，标签沿标尺方向梯次错开才读得了 */}
-      {geoKm.map((point, index) => {
-        const r = kmToScene(EARTH_RADIUS_KM + point.heightKm);
+      {/* 真实比例下贴地的锚点都挤在地表附近：人造物（航空器/航天器）的标签放标尺右侧、
+          自然物与现象放左侧，两侧分列才读得清；间距密集时滚轮放大细看。 */}
+      {(() => {
+        const seq = { left: 0, right: 0 };
+        return geoKm.map((point) => {
+          const r = kmToScene(EARTH_RADIUS_KM + point.heightKm);
+          const position = ATMOS_RULER_DIR.clone().multiplyScalar(r);
+          const color = KEYPOINT_COLORS[point.category ?? "phenomenon"];
+          const humanMade =
+            point.category === "aircraft" || point.category === "spacecraft";
+          const side: "left" | "right" = humanMade ? "right" : "left";
+          const row = seq[side]++;
+          return (
+            <group key={point.name}>
+              <mesh position={position} renderOrder={22}>
+                <sphereGeometry args={[0.0045, 8, 8]} />
+                <meshBasicMaterial color={color} />
+              </mesh>
+              {showLabels && (
+                <Label
+                  position={position.toArray()}
+                  text={`${point.name} · ${point.heightKm} km · ${layerNameAtHeight(point.heightKm)}`}
+                  offsetY={
+                    row * (side === "right" ? 24 : 27) +
+                    (point.heightKm > 300 && side === "right" ? 45 : 0) -
+                    (side === "right" ? 100 : 60)
+                  }
+                  color={color}
+                  side={side}
+                />
+              )}
+            </group>
+          );
+        });
+      })()}
+    </>
+  );
+}
+
+/** 大气层界环（全球模式专用）：每层顶界一个完整大圆环（世界系固定平面，与大气标尺同面）。
+    层名标在环与标尺的交点、向左再偏一列（现象列之外），沿标尺读层名正符合层级标尺的读法；
+    外逸层没有顶界，名字借热层顶环的位置（再往下错开一格）标注。 */
+function AtmosphereLayerRings({ showLabels }: { showLabels: boolean }) {
+  return (
+    <>
+      {atmosphereLayers.map((layer, index) => {
+        const top = layer.topHeightKm;
+        const markKm = top ?? 600;
+        const r = kmToScene(EARTH_RADIUS_KM + markKm);
         const position = ATMOS_RULER_DIR.clone().multiplyScalar(r);
+        const text =
+          top === null
+            ? `${layer.name} ${layer.bottomHeightKm} km ↗ 渐隐`
+            : `${layer.name} ${layer.bottomHeightKm}–${top} km`;
         return (
-          <group key={point.name}>
-            <mesh position={position} renderOrder={22}>
-              <sphereGeometry args={[0.006, 8, 8]} />
-              <meshBasicMaterial color="#9db8dd" />
-            </mesh>
+          <group key={layer.id}>
+            {top !== null && (
+              <mesh renderOrder={21}>
+                <ringGeometry args={[r - kmToScene(4), r + kmToScene(4), 160, 1, 0, Math.PI * 2]} />
+                <meshBasicMaterial
+                  color={layer.colorHint}
+                  transparent
+                  opacity={0.85}
+                  side={THREE.DoubleSide}
+                  depthWrite={false}
+                />
+              </mesh>
+            )}
             {showLabels && (
               <Label
                 position={position.toArray()}
-                text={`${point.name} · ${point.heightKm} km`}
-                offsetY={index * 15 - 20}
+                text={text}
+                strong
+                offsetX={-390}
+                offsetY={index * 30 - 260}
               />
             )}
           </group>
@@ -452,10 +527,13 @@ export function EarthScene() {
               ),
             )}
             <InteriorRuler showLabels={showLabels} />
-            <AtmosphereRuler showLabels={showLabels} />
             <Probe />
           </>
         )}
+        {/* 大气分层标注两种模式都在：全球视角下它是观察空中的主线索（默认第一眼），
+            剖面模式下锚点照旧落在盘 B 上 */}
+        <AtmosphereLayerRings showLabels={showLabels && !cutaway} />
+        <AtmosphereRuler showLabels={showLabels} />
       </group>
       {/* 地球本体：先沿自转轴压扁（WGS 84），再倾斜黄赤交角，最后绕轴自转 */}
       <group rotation={[0, 0, -AXIAL_TILT]}>

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """把写课要用的公开教材拉到 content/sources/reference/。
 
-Beej 允许私下镜像；c-faq 只供本机查阅，不进 git（见 .gitignore）。
+网上能找到的资料一律直接用（仓库 ADR 0159、本应用 ADR 0009）；体积大的 PDF 按工程理由不入库。
 汇编线（ADR 0005 第 9 条）的来源：DIS 汇编章、各 ABI 规范、GNU as 手册、Intel SDM。
 Arm 的 ISA 文档（DDI 0602、DDI 0487）对脚本返回 403，只在 catalog 里登记网址。
 
@@ -74,7 +74,7 @@ SYSV_ABI_PDF = (
     "https://gitlab.com/x86-psABIs/x86-64-ABI/-/jobs/artifacts/master/raw/x86-64-ABI/abi.pdf?job=build"
 )
 AAPCS64_RST = "https://raw.githubusercontent.com/ARM-software/abi-aa/main/aapcs64/aapcs64.rst"
-# Intel 合订本的固定入口，会重定向到当前版本（抓取时是 325462-093）。26 MB，PDF 不进 git。
+# Intel 合订本的固定入口，会重定向到当前版本（抓取时是 325462-093）。26 MB，体积大，PDF 不入库。
 INTEL_SDM_PDF = "https://cdrdv2.intel.com/v1/dl/getContent/671200"
 LARGE_TIMEOUT = 300
 

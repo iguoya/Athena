@@ -1,0 +1,1110 @@
+{
+  "_": "主题叙事：每条是一串地图镜头，比全史自动播放更有叙述性。step 字段：year 驱动年份轴；eventId 可选，指向 atlas.json；view 为 [lon,lat] 与 zoom；caption 是一句话旁白（含地理因果）；show 列出要点亮的图层，引用 features.json / routes.json / hydro.json / corridors.json 的 id 和 atlas.json 的 place id。叙述围绕“空间如何决定历史、历史如何改造空间”，不是事件列表的重排。",
+  "stories": [
+    {
+      "id": "story-water-empire",
+      "title": "水与帝国",
+      "tagline": "黄河改道与大运河：国家如何靠一条水路养活自己",
+      "steps": [
+        {
+          "year": -246,
+          "eventId": "evt-zhengguoqu",
+          "view": {
+            "lon": 109.0,
+            "lat": 34.8,
+            "zoom": 6.0
+          },
+          "caption": "郑国渠引泾灌溉关中北部，关中成沃野——秦统一先靠粮仓。",
+          "show": {
+            "features": [
+              "canal-zhengguo"
+            ],
+            "hydro": [
+              "weishui"
+            ]
+          }
+        },
+        {
+          "year": -214,
+          "eventId": "evt-lingqu",
+          "view": {
+            "lon": 110.7,
+            "lat": 25.6,
+            "zoom": 6.5
+          },
+          "caption": "灵渠接通湘、漓，长江水系与珠江水系第一次相连。",
+          "show": {
+            "corridors": [
+              "nanling"
+            ],
+            "hydro": [
+              "changjiang",
+              "zhujiang"
+            ]
+          }
+        },
+        {
+          "year": 11,
+          "view": {
+            "lon": 115.5,
+            "lat": 36.5,
+            "zoom": 5.2
+          },
+          "caption": "王莽时黄河改道：河水从天津入海一路南移到山东，华北平原中部从此少了一条大河。",
+          "show": {
+            "features": [
+              "hr-ancient",
+              "hr-han-tang"
+            ]
+          }
+        },
+        {
+          "year": 605,
+          "eventId": "evt-yangzhou-canal",
+          "view": {
+            "lon": 116.0,
+            "lat": 34.5,
+            "zoom": 4.6
+          },
+          "caption": "隋炀帝开通济渠、永济渠、江南河：黄河、淮河、长江被一条人工水道串起。",
+          "show": {
+            "features": [
+              "ca-hangou",
+              "ca-tongji",
+              "ca-yongji",
+              "ca-jiangnan"
+            ],
+            "hydro": [
+              "yunhe"
+            ]
+          }
+        },
+        {
+          "year": 1048,
+          "view": {
+            "lon": 115.8,
+            "lat": 37.5,
+            "zoom": 5.2
+          },
+          "caption": "北宋庆历八年黄河北流，与辽宋边境重叠：河成了边防的一部分，治河是国防问题。",
+          "show": {
+            "features": [
+              "hr-song-north"
+            ]
+          }
+        },
+        {
+          "year": 1128,
+          "eventId": "evt-duchong-breach",
+          "view": {
+            "lon": 115.5,
+            "lat": 34.8,
+            "zoom": 5.2
+          },
+          "caption": "杜充为阻金军决开黄河，水向东南入泗、淮——黄河从此开始摇摆南泛。",
+          "show": {
+            "features": [
+              "hr-song-north",
+              "hr-yuan-ming"
+            ],
+            "hydro": [
+              "huaihe"
+            ],
+            "places": [
+              "kaifeng"
+            ]
+          }
+        },
+        {
+          "year": 1194,
+          "view": {
+            "lon": 117.0,
+            "lat": 34.5,
+            "zoom": 5.2
+          },
+          "caption": "金代黄河夺淮入黄海，淮河失去入海口，苏北水患与清口治理成了明清漕运的头号难题。",
+          "show": {
+            "features": [
+              "hr-yuan-ming"
+            ],
+            "hydro": [
+              "huaihe"
+            ]
+          },
+          "eventId": "evt-huanghe-1194"
+        },
+        {
+          "year": 1293,
+          "eventId": "evt-yuan-dadu",
+          "view": {
+            "lon": 116.5,
+            "lat": 37.0,
+            "zoom": 4.6
+          },
+          "caption": "元代开会通河、通惠河，运河截弯取直直达大都——京杭大运河成型。",
+          "show": {
+            "features": [
+              "ca-jizhou",
+              "ca-huitong",
+              "ca-tonghui"
+            ],
+            "hydro": [
+              "yunhe"
+            ]
+          }
+        },
+        {
+          "year": 1855,
+          "view": {
+            "lon": 116.5,
+            "lat": 36.2,
+            "zoom": 5.0
+          },
+          "caption": "铜瓦厢决口，黄河再度改道山东入渤海；故道成“废黄河”，运河山东段因缺水而衰落。",
+          "show": {
+            "features": [
+              "hr-modern",
+              "hr-yuan-ming"
+            ]
+          },
+          "eventId": "evt-huanghe-1855"
+        }
+      ]
+    },
+    {
+      "id": "story-two-capitals",
+      "title": "东西两都",
+      "tagline": "长安与洛阳之争：关中与中原哪一处才是天下的重心",
+      "steps": [
+        {
+          "year": -1036,
+          "eventId": "evt-luoyi",
+          "view": {
+            "lon": 112.45,
+            "lat": 34.62,
+            "zoom": 6.0
+          },
+          "caption": "周营成周、洛邑，居天下之中，既通关中又控东方。",
+          "show": {
+            "places": [
+              "luoyang"
+            ],
+            "hydro": [
+              "huanghe"
+            ]
+          }
+        },
+        {
+          "year": -318,
+          "eventId": "evt-hangu-debate",
+          "view": {
+            "lon": 110.5,
+            "lat": 34.6,
+            "zoom": 6.0
+          },
+          "caption": "函谷关锁崤函通道：关中据险而富，关东平坦而难守，东西对峙由此定型。",
+          "show": {
+            "places": [
+              "hangu",
+              "tongguan"
+            ]
+          }
+        },
+        {
+          "year": -202,
+          "eventId": "evt-han-found",
+          "view": {
+            "lon": 109.0,
+            "lat": 34.3,
+            "zoom": 6.0
+          },
+          "caption": "汉高祖定都长安：地形四塞，但粮食要从山东漕运入关。",
+          "show": {
+            "places": [
+              "changan"
+            ],
+            "hydro": [
+              "weishui"
+            ]
+          }
+        },
+        {
+          "year": 494,
+          "eventId": "evt-xiaowendi",
+          "view": {
+            "lon": 113.0,
+            "lat": 37.5,
+            "zoom": 5.0
+          },
+          "caption": "北魏孝文帝自平城迁洛阳：统治中心从农牧交错带移入农业核心区。",
+          "show": {
+            "routes": [
+              "route-xiaowendi"
+            ],
+            "places": [
+              "datong",
+              "luoyang"
+            ]
+          }
+        },
+        {
+          "year": 605,
+          "eventId": "evt-yangzhou-canal",
+          "view": {
+            "lon": 114.0,
+            "lat": 34.2,
+            "zoom": 5.2
+          },
+          "caption": "隋唐两京并用：洛阳靠运河接江淮，长安靠关中，皇帝常东西往来“就食”。",
+          "show": {
+            "features": [
+              "ca-tongji"
+            ],
+            "places": [
+              "luoyang",
+              "changan"
+            ]
+          }
+        },
+        {
+          "year": 755,
+          "eventId": "evt-an-lushan",
+          "view": {
+            "lon": 108.0,
+            "lat": 33.5,
+            "zoom": 5.2
+          },
+          "caption": "安史之乱后关中残破、粮食依赖江淮，长安的优势不再。",
+          "show": {
+            "routes": [
+              "route-xuanzong-shu"
+            ],
+            "places": [
+              "changan"
+            ]
+          }
+        },
+        {
+          "year": 960,
+          "eventId": "evt-kaifeng-capital",
+          "view": {
+            "lon": 114.35,
+            "lat": 34.8,
+            "zoom": 6.0
+          },
+          "caption": "北宋都开封：靠汴河运江南粮食养禁军，四战之地却无险可守。",
+          "show": {
+            "features": [
+              "ca-tongji"
+            ],
+            "places": [
+              "kaifeng"
+            ]
+          }
+        },
+        {
+          "year": 1421,
+          "eventId": "evt-ming-beijing",
+          "view": {
+            "lon": 116.4,
+            "lat": 39.9,
+            "zoom": 5.5
+          },
+          "caption": "明永乐迁都北京：国防前线与漕运终点叠合，国都从此靠北方、赋税靠南方。",
+          "show": {
+            "features": [
+              "wall-ming",
+              "ca-tonghui"
+            ],
+            "places": [
+              "dadu"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "story-farm-nomad",
+      "title": "农耕与游牧的拉锯",
+      "tagline": "一道年降水400毫米的线，如何塑造两千年的边疆",
+      "steps": [
+        {
+          "year": -214,
+          "eventId": "evt-qin-unify",
+          "view": {
+            "lon": 112.0,
+            "lat": 38.5,
+            "zoom": 4.3
+          },
+          "caption": "蒙恬连缀战国旧塞成秦长城，线条沿农牧交错带延伸。",
+          "show": {
+            "features": [
+              "wall-qin",
+              "road-zhidao"
+            ]
+          }
+        },
+        {
+          "year": -121,
+          "eventId": "evt-hexi-jun",
+          "view": {
+            "lon": 98.5,
+            "lat": 39.0,
+            "zoom": 5.0
+          },
+          "caption": "汉代设河西四郡，沿走廊修长城，不是挡牧人，而是护住通往西域的路。",
+          "show": {
+            "features": [
+              "wall-han-hexi"
+            ],
+            "corridors": [
+              "hexi"
+            ]
+          }
+        },
+        {
+          "year": 494,
+          "eventId": "evt-xiaowendi",
+          "view": {
+            "lon": 113.0,
+            "lat": 39.5,
+            "zoom": 4.8
+          },
+          "caption": "北魏迁洛后，北边军镇从中心沦为边缘，六镇之变由此埋下。",
+          "show": {
+            "routes": [
+              "route-xiaowendi"
+            ],
+            "places": [
+              "datong"
+            ]
+          }
+        },
+        {
+          "year": 938,
+          "eventId": "evt-youyun",
+          "view": {
+            "lon": 116.0,
+            "lat": 40.0,
+            "zoom": 5.5
+          },
+          "caption": "幽云十六州入契丹，燕山、雁门诸关易手，华北平原的北门洞开。",
+          "show": {
+            "places": [
+              "yanmenguan",
+              "juyongguan",
+              "gubeikou"
+            ]
+          }
+        },
+        {
+          "year": 1005,
+          "eventId": "evt-chanyuan",
+          "view": {
+            "lon": 115.5,
+            "lat": 37.5,
+            "zoom": 5.0
+          },
+          "caption": "澶渊之盟：宋以岁币买边界，北流黄河与塘泊一线的防御成了谈判筹码。",
+          "show": {
+            "features": [
+              "hr-song-north"
+            ]
+          }
+        },
+        {
+          "year": 1449,
+          "eventId": "evt-tumu",
+          "view": {
+            "lon": 114.5,
+            "lat": 40.3,
+            "zoom": 5.5
+          },
+          "caption": "土木之变，明军在居庸关外被围，此后明朝转向全线筑墙。",
+          "show": {
+            "features": [
+              "wall-ming"
+            ],
+            "places": [
+              "datong",
+              "juyongguan"
+            ]
+          }
+        },
+        {
+          "year": 1644,
+          "eventId": "evt-1644",
+          "view": {
+            "lon": 119.0,
+            "lat": 40.3,
+            "zoom": 5.8
+          },
+          "caption": "山海关开，辽西走廊这最后一道屏障失守，长城在军事上不再有意义。",
+          "show": {
+            "features": [
+              "wall-ming"
+            ],
+            "places": [
+              "shanhaiguan"
+            ],
+            "corridors": [
+              "liaoxi"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "story-silk-road",
+      "title": "丝路兴衰",
+      "tagline": "走廊上的绿洲：从张骞到海上丝路",
+      "steps": [
+        {
+          "year": -139,
+          "eventId": "evt-silk-road",
+          "view": {
+            "lon": 90.0,
+            "lat": 39.0,
+            "zoom": 3.6
+          },
+          "caption": "张骞出使大月氏，十三年而归，为汉朝带回一张西域地图。",
+          "show": {
+            "routes": [
+              "route-zhangqian-out",
+              "route-zhangqian-back"
+            ],
+            "corridors": [
+              "hexi"
+            ]
+          }
+        },
+        {
+          "year": -121,
+          "eventId": "evt-hexi-jun",
+          "view": {
+            "lon": 98.5,
+            "lat": 39.0,
+            "zoom": 5.0
+          },
+          "caption": "河西四郡设立，把绿洲串成可守的走廊。",
+          "show": {
+            "corridors": [
+              "hexi"
+            ],
+            "features": [
+              "wall-han-hexi"
+            ]
+          }
+        },
+        {
+          "year": 73,
+          "eventId": "evt-ban-chao",
+          "view": {
+            "lon": 85.0,
+            "lat": 39.5,
+            "zoom": 4.2
+          },
+          "caption": "班超凭少量兵力经营天山南路，说明控制绿洲比控制土地更重要。",
+          "show": {
+            "routes": [
+              "route-banchao"
+            ]
+          }
+        },
+        {
+          "year": 630,
+          "eventId": "evt-zhenguan",
+          "view": {
+            "lon": 90.0,
+            "lat": 40.0,
+            "zoom": 3.8
+          },
+          "caption": "唐击破东突厥，丝路与草原通道同归唐的势力范围。",
+          "show": {
+            "corridors": [
+              "hexi"
+            ]
+          }
+        },
+        {
+          "year": 630,
+          "view": {
+            "lon": 85.0,
+            "lat": 36.0,
+            "zoom": 3.2
+          },
+          "caption": "玄奘借丝路西行，所记《大唐西域记》成为中亚、南亚历史地理的重要文献。",
+          "show": {
+            "routes": [
+              "route-xuanzang"
+            ]
+          }
+        },
+        {
+          "year": 1280,
+          "eventId": "evt-quanzhou-trade",
+          "view": {
+            "lon": 118.5,
+            "lat": 25.0,
+            "zoom": 5.0
+          },
+          "caption": "宋元海上贸易兴起，泉州成“东方第一大港”，贸易中心从西北转向东南沿海。",
+          "show": {
+            "places": [
+              "quanzhou"
+            ]
+          }
+        },
+        {
+          "year": 1405,
+          "eventId": "evt-zhenghe",
+          "view": {
+            "lon": 105.0,
+            "lat": 14.0,
+            "zoom": 3.4
+          },
+          "caption": "郑和船队沿占城—马六甲—锡兰—古里分段中转，把官方朝贡航线推到印度洋。",
+          "show": {
+            "routes": [
+              "route-zhenghe-first"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "story-south-shift",
+      "title": "重心南移",
+      "tagline": "三次大迁徙，如何让江南成为全国的粮仓",
+      "steps": [
+        {
+          "year": 311,
+          "eventId": "evt-jiankang-capital",
+          "view": {
+            "lon": 114.5,
+            "lat": 32.5,
+            "zoom": 4.6
+          },
+          "caption": "永嘉之乱后，北方士民分东、中、西三路南迁，建康、荆襄、巴蜀成为新的人口落脚地。",
+          "show": {
+            "routes": [
+              "route-yongjia-east",
+              "route-yongjia-middle",
+              "route-yongjia-west"
+            ]
+          }
+        },
+        {
+          "year": 383,
+          "eventId": "evt-feishui",
+          "view": {
+            "lon": 117.0,
+            "lat": 32.5,
+            "zoom": 5.5
+          },
+          "caption": "淝水之战：淮河—淝水一线的水网挡住北方骑兵，南方得以延续。",
+          "show": {
+            "hydro": [
+              "huaihe"
+            ],
+            "places": [
+              "shouchun"
+            ]
+          }
+        },
+        {
+          "year": 605,
+          "eventId": "evt-yangzhou-canal",
+          "view": {
+            "lon": 116.0,
+            "lat": 33.5,
+            "zoom": 4.6
+          },
+          "caption": "隋开运河，江南粮赋第一次系统性地北送，经济重心已经在南，政治重心还在北。",
+          "show": {
+            "features": [
+              "ca-tongji",
+              "ca-jiangnan"
+            ]
+          }
+        },
+        {
+          "year": 755,
+          "eventId": "evt-an-lushan",
+          "view": {
+            "lon": 110.0,
+            "lat": 33.5,
+            "zoom": 4.4
+          },
+          "caption": "安史之乱后，北方残破，唐朝财政依赖江淮，这个转折在地图上是税赋来源的位移。",
+          "show": {
+            "routes": [
+              "route-xuanzong-shu"
+            ]
+          }
+        },
+        {
+          "year": 1127,
+          "eventId": "evt-marak",
+          "view": {
+            "lon": 117.0,
+            "lat": 32.0,
+            "zoom": 4.4
+          },
+          "caption": "靖康之变，宋室南渡，经济与政治重心首次在同一片土地上重合。",
+          "show": {
+            "routes": [
+              "route-jingkang-nandu"
+            ]
+          }
+        },
+        {
+          "year": 1138,
+          "eventId": "evt-linan",
+          "view": {
+            "lon": 120.15,
+            "lat": 30.25,
+            "zoom": 6.2
+          },
+          "caption": "南宋定都临安：靠江南河与海运把东南财富集中在一座城里。",
+          "show": {
+            "features": [
+              "ca-jiangnan"
+            ],
+            "places": [
+              "hangzhou"
+            ]
+          }
+        },
+        {
+          "year": 1280,
+          "eventId": "evt-quanzhou-trade",
+          "view": {
+            "lon": 118.5,
+            "lat": 25.0,
+            "zoom": 5.0
+          },
+          "caption": "海上贸易使东南沿海成为新的财富来源，南方不再只是粮仓。",
+          "show": {
+            "places": [
+              "quanzhou"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "story-border-form",
+      "title": "边疆如何成型",
+      "tagline": "清代：条约、军府与流官怎样把边疆写进地图",
+      "steps": [
+        {
+          "year": 1683,
+          "eventId": "evt-kangxi-taiwan",
+          "view": {
+            "lon": 121.0,
+            "lat": 24.0,
+            "zoom": 6.0
+          },
+          "caption": "施琅取澎湖而台湾自下，东南海疆被纳入直接治理。",
+          "show": {
+            "places": [
+              "taiwan_fu"
+            ]
+          }
+        },
+        {
+          "year": 1689,
+          "eventId": "evt-nerchinsk",
+          "view": {
+            "lon": 125.0,
+            "lat": 51.0,
+            "zoom": 4.2
+          },
+          "caption": "《尼布楚条约》以河流与山脉划界，是清代第一份近代意义的边界条约。",
+          "show": {
+            "hydro": [
+              "heilongjiang"
+            ],
+            "corridors": [
+              "dongbei"
+            ]
+          }
+        },
+        {
+          "year": 1720,
+          "eventId": "evt-yazhang",
+          "view": {
+            "lon": 91.0,
+            "lat": 30.0,
+            "zoom": 4.8
+          },
+          "caption": "清军入藏、设驻藏大臣，青藏高原纳入中央的直接监督。",
+          "show": {
+            "places": [
+              "lhasa"
+            ]
+          }
+        },
+        {
+          "year": 1726,
+          "eventId": "evt-miaojiang",
+          "view": {
+            "lon": 106.5,
+            "lat": 26.5,
+            "zoom": 5.0
+          },
+          "caption": "改土归流：把西南土司区换成流官治理，地方的权力来源由世袭变成任命。",
+          "show": {
+            "places": [
+              "guiyang",
+              "kunming"
+            ]
+          }
+        },
+        {
+          "year": 1762,
+          "eventId": "evt-ilibing",
+          "view": {
+            "lon": 83.0,
+            "lat": 43.5,
+            "zoom": 4.5
+          },
+          "caption": "设伊犁将军，新疆实行军府制，天山南北归入统一的军政体系。",
+          "show": {
+            "places": [
+              "ili",
+              "urumqi"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "story-modern-sea-rail",
+      "title": "近代的海与铁路",
+      "tagline": "开埠与铁路：沿海与东北如何被重新组织",
+      "steps": [
+        {
+          "year": 1842,
+          "eventId": "evt-nanjing-treaty",
+          "view": {
+            "lon": 118.0,
+            "lat": 28.0,
+            "zoom": 4.3
+          },
+          "caption": "《南京条约》开五口：广州、厦门、福州、宁波、上海，中国海岸线上第一次出现一串条约港。",
+          "show": {
+            "places": [
+              "guangzhou",
+              "xiamen",
+              "fuzhou",
+              "ningbo",
+              "shanghai"
+            ]
+          }
+        },
+        {
+          "year": 1843,
+          "eventId": "evt-shanghai",
+          "view": {
+            "lon": 121.5,
+            "lat": 31.2,
+            "zoom": 6.0
+          },
+          "caption": "上海居长江入海口，背靠江南，开埠后迅速取代广州成为对外贸易中心。",
+          "show": {
+            "hydro": [
+              "changjiang"
+            ],
+            "places": [
+              "shanghai"
+            ]
+          }
+        },
+        {
+          "year": 1853,
+          "eventId": "evt-taiping",
+          "view": {
+            "lon": 114.0,
+            "lat": 28.0,
+            "zoom": 4.3
+          },
+          "caption": "太平军沿湘江—长江顺流东下，战争改变了长江流域的人口与城市格局。",
+          "show": {
+            "routes": [
+              "route-taiping"
+            ],
+            "hydro": [
+              "changjiang"
+            ]
+          }
+        },
+        {
+          "year": 1903,
+          "eventId": "evt-crr",
+          "view": {
+            "lon": 126.0,
+            "lat": 44.0,
+            "zoom": 4.6
+          },
+          "caption": "中东铁路通车：哈尔滨、长春、大连连成一线，东北的城市与产业沿铁路生长。",
+          "show": {
+            "corridors": [
+              "crr",
+              "dongbei"
+            ]
+          }
+        },
+        {
+          "year": 1931,
+          "eventId": "evt-918",
+          "view": {
+            "lon": 124.0,
+            "lat": 42.5,
+            "zoom": 5.0
+          },
+          "caption": "控制沈阳就控制了东北铁路干线与重工业，这是九一八事变选择地点的原因。",
+          "show": {
+            "corridors": [
+              "dongbei",
+              "crr"
+            ],
+            "places": [
+              "shenyang"
+            ]
+          }
+        },
+        {
+          "year": 1937,
+          "eventId": "evt-chongqing",
+          "view": {
+            "lon": 111.0,
+            "lat": 30.5,
+            "zoom": 4.6
+          },
+          "caption": "国民政府西迁、高校与工厂入川，四川盆地第一次成为全国后方。",
+          "show": {
+            "routes": [
+              "route-kangzhan-chongqing",
+              "route-xinan-lianda"
+            ],
+            "hydro": [
+              "changjiang"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "story-disaster-geo",
+      "title": "天灾的地理",
+      "tagline": "为什么同样的灾害，在这里格外惨重",
+      "steps": [
+        {
+          "year": 1556,
+          "eventId": "evt-huaxian-quake",
+          "view": {
+            "lon": 109.8,
+            "lat": 34.5,
+            "zoom": 6.0
+          },
+          "caption": "渭河盆地边缘断裂活动，加上遍地黄土窑洞——华县地震死者史载八十三万有奇。",
+          "show": {
+            "hydro": [
+              "weishui"
+            ],
+            "places": [
+              "tongguan",
+              "changan"
+            ]
+          }
+        },
+        {
+          "year": 1643,
+          "eventId": "evt-1643-plague",
+          "view": {
+            "lon": 114.5,
+            "lat": 39.8,
+            "zoom": 5.0
+          },
+          "caption": "鼠疫沿晋北到京师的商路传入，人口密集的北京把它放大成一场政治危机。",
+          "show": {
+            "places": [
+              "datong",
+              "dadu"
+            ]
+          }
+        },
+        {
+          "year": 1855,
+          "eventId": "evt-huanghe-1855",
+          "view": {
+            "lon": 116.5,
+            "lat": 36.0,
+            "zoom": 5.0
+          },
+          "caption": "南流河床淤高，铜瓦厢一决，黄河顺最低处改走山东大清河入渤海。",
+          "show": {
+            "features": [
+              "hr-yuan-ming",
+              "hr-modern"
+            ]
+          }
+        },
+        {
+          "year": 1876,
+          "eventId": "evt-dingwu-famine",
+          "view": {
+            "lon": 112.5,
+            "lat": 36.5,
+            "zoom": 4.8
+          },
+          "caption": "晋陕豫黄土旱作区缺水利、无铁路，赈粮运不进山西，丁戊奇荒死者近千万。",
+          "show": {
+            "places": [
+              "taiyuan"
+            ],
+            "hydro": [
+              "huanghe"
+            ]
+          }
+        },
+        {
+          "year": 1920,
+          "eventId": "evt-haiyuan-quake",
+          "view": {
+            "lon": 105.6,
+            "lat": 36.5,
+            "zoom": 5.2
+          },
+          "caption": "海原断裂穿过黄土高原，地震引发大面积滑坡，近二十三万人遇难。",
+          "show": {
+            "places": [
+              "xiaoguan"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "story-paper-knowledge",
+      "title": "纸与知识的流动",
+      "tagline": "从洛阳的纸，到北京的世界地图",
+      "steps": [
+        {
+          "year": 105,
+          "eventId": "evt-cailun-paper",
+          "view": {
+            "lon": 112.45,
+            "lat": 34.62,
+            "zoom": 5.8
+          },
+          "caption": "蔡伦在洛阳总结造纸术，廉价纸张开始取代简牍。",
+          "show": {
+            "places": [
+              "luoyang"
+            ]
+          }
+        },
+        {
+          "year": 366,
+          "eventId": "evt-mogao",
+          "view": {
+            "lon": 94.7,
+            "lat": 40.1,
+            "zoom": 5.4
+          },
+          "caption": "莫高窟始凿于丝路咽喉，佛教艺术沿河西走廊一路向东。",
+          "show": {
+            "corridors": [
+              "hexi"
+            ],
+            "places": [
+              "dunhuang"
+            ]
+          }
+        },
+        {
+          "year": 781,
+          "eventId": "evt-nestorian-stele",
+          "view": {
+            "lon": 108.94,
+            "lat": 34.27,
+            "zoom": 5.8
+          },
+          "caption": "长安的景教碑用汉文和叙利亚文并刻，丝路东端容纳多种宗教。",
+          "show": {
+            "places": [
+              "changan"
+            ]
+          }
+        },
+        {
+          "year": 1041,
+          "eventId": "evt-bisheng-type",
+          "view": {
+            "lon": 120.15,
+            "lat": 30.25,
+            "zoom": 5.8
+          },
+          "caption": "宋代刻书重镇在杭州、成都、建阳；毕昇的活字出现在这样的书籍市场里。",
+          "show": {
+            "places": [
+              "hangzhou"
+            ]
+          }
+        },
+        {
+          "year": 1408,
+          "eventId": "evt-yongle-dadian",
+          "view": {
+            "lon": 118.8,
+            "lat": 32.05,
+            "zoom": 5.8
+          },
+          "caption": "《永乐大典》在南京编成，迁都后随国都北移，也在战乱中散失。",
+          "show": {
+            "places": [
+              "jiankang",
+              "dadu"
+            ]
+          }
+        },
+        {
+          "year": 1602,
+          "eventId": "evt-ricci-map",
+          "view": {
+            "lon": 116.4,
+            "lat": 39.9,
+            "zoom": 5.5
+          },
+          "caption": "利玛窦在北京刻《坤舆万国全图》，五大洲第一次进入中文图版。",
+          "show": {
+            "places": [
+              "dadu"
+            ]
+          }
+        },
+        {
+          "year": 1900,
+          "eventId": "evt-dunhuang-library",
+          "view": {
+            "lon": 94.7,
+            "lat": 40.1,
+            "zoom": 5.4
+          },
+          "caption": "极干旱的气候让藏经洞文书不朽近千年，一朝开启，数万件中古文书重见天日。",
+          "show": {
+            "corridors": [
+              "hexi"
+            ],
+            "places": [
+              "dunhuang"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

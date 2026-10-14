@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "调试（C/C++ 扩展）",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/example-buttons-button.exe",
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "build",
+      "MIMode": "gdb",
+      "miDebuggerPath": "C:/msys64/mingw64/bin/gdb.exe",
+      "environment": [
+        {
+          "name": "PATH",
+          "value": "C:/msys64/mingw64/bin;${env:PATH}"
+        }
+      ]
+    },
+    {
+      "name": "调试（CodeLLDB 扩展）",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/example-buttons-button.exe",
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "build",
+      "env": {
+        "PATH": "C:/msys64/mingw64/bin;${env:PATH}"
+      }
+    }
+  ]
+}

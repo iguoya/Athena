@@ -178,8 +178,25 @@ export interface Ussa1976 {
   sourceIds: string[];
 }
 
+/** 大气「居民」的类型：决定场景锚点颜色与面板分组。 */
+export type AtmosphereKeyPointCategory =
+  | "aircraft"
+  | "spacecraft"
+  | "animal"
+  | "phenomenon"
+  | "boundary"
+  | "orbit";
+
 export interface AtmosphereKeyPoint {
   name: string;
   heightKm: number;
   note: string;
+  /** 类型（场景与面板用它着色/分组）；缺省按现象处理 */
+  category?: AtmosphereKeyPointCategory;
+  /** 国家/归属，如「中国」「美国」「多国」；自然现象与动物不填 */
+  country?: string;
+  /** 可查出处；动物与自然现象为观测/公开报道，常不单独列 */
+  sourceIds?: string[];
+  /** 展示图标（emoji，数据跟着条目走；场景标签与航空视图共用） */
+  icon?: string;
 }
