@@ -87,3 +87,22 @@
 - 在线学术瓦片叠加（CCTS）。
 - 3D 场景。
 - 地图配置导出 JSON 预设。
+
+## 五、2026-10-14 补充调研：互联网上的历史地理应用，取什么
+
+调研方式：搜索加读页面。**能确认的只写能确认的**——华夏舆图、左图右史两个站点的页面抓不到交互细节
+（只确认了数据来源与组织方式）；OldMapsOnline 的页面被 403 拦截，其功能只来自搜索摘要。
+下表「出处」列给到能核对的链接，未能核对的标「摘要」。
+
+| 应用 | 已确认的特点 | 我们取什么 | 状态 |
+|---|---|---|---|
+| [Chronas](https://cogimator.net/en/sites/chronas-org/) | 底部按时代分段的时间条，拖动时边界、名称、配色同时重绘；小政权与大帝国并存；每个区域带标注；提供「经典版」界面；开源、可贡献 | 年份拖动即重绘（已有）；**小政权不省略**（T-106 继续补）；每个政权块带名称标注（T-019 已做） | 已吸收大半 |
+| OldMapsOnline / TimeMap（[摘要](https://www.mentalfloss.com/posts/old-maps-online-interactive-tool)） | 全球时间轴上叠统治者、战役、人物；古地图可叠在现代图上并调不透明度；对比工具；接 Wikipedia | 学术层叠加加**不透明度滑块**；事件旁挂人物与战役（已有） | 不透明度滑块未做 |
+| [左图右史 / 谭其骧《中国历史地图集》](https://history-map.osgeo.cn/) | 谭图 8 册 20 组，原图经纠正后用 WebGIS 发布；另有 [MapHub 纠正版](https://osgeo.cn/post/8a9e7/) 与离线软件（切换朝代视图位置不变，[摘要](https://cadicex.github.io/history_map/)） | 切换年份/朝代时**保持视图位置**；谭图扫描件作为可选对照层（工程量大，列入暂缓） | 保持视图待核 |
+| [发现中国](https://www.appinn.com/ageeye-china-maps/) 与 华夏舆图 | 夏到民国初，底图来自谭图与中研院 CCTS；用户能看「某地在历史上属于哪里、谁管辖」 | **点任意一点，列出历代归属**——我们已有 19 个学术切片，浏览器里做点在面内判断即可（T-028） | 新任务 |
+| [ORBIS（斯坦福罗马世界网络模型）](https://middleagesforeducators.princeton.edu/orbis-stanford-geospatial-network-model-roman-world) | 以时间和费用而非距离描述连通性；按月份、交通方式模拟；等时/等费用的距离变形图。结论：决定连通性的是成本，不是距离 | 「为什么发生在这里」的最强证据就是**通行成本**：给路线与漕运算里程和日程（T-029），以后可做等时圈 | 新任务 |
+| [Pelagios / Linked Places / World-Historical Gazetteer](https://blog.whgazetteer.org/tag/linked-places-format/) | 地点记录=多个名称（带时间）+类型+几何+与其他地点的关系，可与 CHGIS 之类互联 | 我们的 `places.names[]` 已是同构；**给地点补 CHGIS 的 `sys_id`/名称对应**（T-110 顺带），方便以后互联 | 内容侧待做 |
+
+**不照搬的**：3D 地球（Chronas，已列暂缓）；用户众包编辑（与图谱/参考类定位冲突）；付费分级（自用）。
+
+**排序结论**：投入产出最高的是 T-028「点图问沿革」（数据已就绪、只缺前端）和 T-029「路线通行成本」（把 geoWhy 变成可算的证据）。
