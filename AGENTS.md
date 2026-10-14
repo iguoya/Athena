@@ -196,6 +196,7 @@ python3 scripts/check.py --sources-only   # 只跑跨应用检查（skill 两处
 ## 必读文档
 
 - `docs/decisions/`：跨应用 ADR；影响仓库结构或多个应用的新决策先新增 ADR 再动代码。
+- [docs/HANDOFF.md](docs/HANDOFF.md)：云会话做不到、需要人工或本地代理协助的事（ADR 0164）；接手前先读。
 - [docs/REPOSITORY.md](docs/REPOSITORY.md)、[docs/ENGINEERING.md](docs/ENGINEERING.md)、
   [docs/TEACHING.md](docs/TEACHING.md)：本文件各节的完整阐述与取舍。
 - 各应用自己的 `AGENTS.md` 与 `docs/`。

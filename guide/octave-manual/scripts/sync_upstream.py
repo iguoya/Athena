@@ -299,7 +299,9 @@ def find_end(lines: list[str], i: int, env: str) -> int:
     return len(lines) - 1
 
 
-ALLOWED_FIGURES: set[str] = set()  # 当前页要收的图（scope.json 的 figures）
+ALLOWED_FIGURES: set[str] = set()  # 当前页要收的图（scope.json 的 figures + figures_more）
+STAGE2_FIGURES: set[str] = set()   # 其中属于进阶的图
+STAGE2_FUNCTIONS: set[str] = set()  # 当前页属于进阶的函数（scope.json 的 functions_more）
 
 
 def sig_text(rest: str) -> tuple[str, str]:
@@ -365,7 +367,7 @@ def parse_blocks(lines: list[str]) -> list[dict]:
                 if cm:
                     k = match_brace(body, cm.end() - 1)
                     cap = unit(inline(body[cm.end():k]))
-                blocks.append({"k": "figure", "id": im.group(1), "caption": cap})
+                blocks.append({"k": "figure", "id": im.group(1), "caption": cap, **({"stage": 2} if im.group(1) in STAGE2_FIGURES else {})})
             i = e + 1
             continue
         # 整块丢弃
@@ -423,7 +425,7 @@ def parse_blocks(lines: list[str]) -> list[dict]:
                 name = name or nm
                 sigs.append(sg)
                 j += 1
-            blocks.append({"k": "def", "name": name, "sigs": sigs, "blocks": parse_blocks(lines[j:e])})
+            blocks.append({"k": "def", "name": name, "sigs": sigs, **({"stage": 2} if name in STAGE2_FUNCTIONS else {}), "blocks": parse_blocks(lines[j:e])})
             i = e + 1
             continue
         if env == "table" or env == "ftable" or env == "vtable":
@@ -559,6 +561,8 @@ def page_lines(spec: dict) -> tuple[list[str], str]:
 
 def expand_docstrings(lines: list[str], spec: dict) -> list[str]:
     allow = spec.get("functions")
+    if allow is not None:
+        allow = list(allow) + list(spec.get("functions_more", []))
     names: list[str] = []
     for l in lines:
         m = re.match(r"\s*@DOCSTRING\((\w+)\)", l)
@@ -602,7 +606,11 @@ def prune_headings(blocks: list[dict]) -> list[dict]:
 
 def section_data(spec: dict) -> dict:
     ALLOWED_FIGURES.clear()
-    ALLOWED_FIGURES.update(spec.get("figures", []))
+    ALLOWED_FIGURES.update(spec.get("figures", []) + spec.get("figures_more", []))
+    STAGE2_FIGURES.clear()
+    STAGE2_FIGURES.update(spec.get("figures_more", []))
+    STAGE2_FUNCTIONS.clear()
+    STAGE2_FUNCTIONS.update(spec.get("functions_more", []))
     lines, title_en = page_lines(spec)
     lines = expand_docstrings(lines, spec)
     blocks = prune_headings(parse_blocks(lines))

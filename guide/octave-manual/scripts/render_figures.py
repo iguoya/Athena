@@ -122,7 +122,7 @@ def draw(name: str, d: dict):
 
 def figure_names() -> list[str]:
     scope = json.loads((ROOT / "content" / "scope.json").read_text(encoding="utf-8"))
-    return [f for part in scope["parts"] for it in part["items"] for f in it.get("figures", [])]
+    return [f for part in scope["parts"] for it in part["items"] for f in it.get("figures", []) + it.get("figures_more", [])]
 
 
 def main() -> int:

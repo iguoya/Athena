@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Inline, renderMath } from "./Inline";
 import { answerMatches, candidates } from "./answer";
 import type { AttemptRow, Block, Exercise, SectionData, Unit } from "./types";
@@ -241,18 +241,42 @@ function ExerciseCard({
   );
 }
 
+/** 基础 / 进阶：stage 2 的函数与图默认折叠；折叠后下面没有内容的小标题也一并去掉。 */
+export function visibleBlocks(blocks: Block[], advanced: boolean): { blocks: Block[]; hidden: number } {
+  const hide = (b: Block) => !advanced && (b.k === "def" || b.k === "figure") && b.stage === 2;
+  const hidden = blocks.filter((b) => hide(b) && b.k === "def").length;
+  let out = blocks.filter((b) => !hide(b));
+  for (;;) {
+    const next = out.filter((b, k) => {
+      if (b.k !== "heading") return true;
+      const nx = out[k + 1];
+      return !(nx === undefined || (nx.k === "heading" && (nx.level ?? 9) <= (b.level ?? 9)));
+    });
+    if (next.length === out.length) break;
+    out = next;
+  }
+  return { blocks: out, hidden };
+}
+
 export function SectionView({
-  data, exercises, mode, attempts, onAttempt,
+  data, exercises, mode, advanced, onAdvanced, attempts, onAttempt,
 }: {
-  data: SectionData; exercises: Exercise[] | null; mode: ViewMode;
+  data: SectionData; exercises: Exercise[] | null; mode: ViewMode; advanced: boolean; onAdvanced: (v: boolean) => void;
   attempts: AttemptRow[]; onAttempt: (itemId: string, correct: boolean) => void;
 }) {
+  const shown = useMemo(() => visibleBlocks(data.blocks, advanced), [data.blocks, advanced]);
   const lastBy = new Map<string, AttemptRow>();
   for (const a of attempts) if (a.knowledge_id === data.id) lastBy.set(a.item_id, a); // 已按 answered_at 升序，后者覆盖前者
   return (
     <div className="section-view">
       <h1>{data.title_zh}<small>{data.title_en}</small></h1>
-      <Blocks blocks={data.blocks} mode={mode} />
+      {!advanced && shown.hidden > 0 && (
+        <p className="stage-note">
+          本页先只讲基础部分。另有 {shown.hidden} 个进阶函数已折叠。
+          <button className="link" onClick={() => onAdvanced(true)}>展开进阶内容</button>
+        </p>
+      )}
+      <Blocks blocks={shown.blocks} mode={mode} />
       {exercises && exercises.length > 0 && (
         <div className="exercises">
           <h2>试一试<small>{exercises.length} 道 · 在本机 Octave 里动手，再回来核对结果</small></h2>

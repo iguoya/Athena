@@ -1,5 +1,5 @@
 {
- "_": "课表范围（ADR 0163）：GNU Octave 官方手册按「用 Octave 学线代与高数」裁剪。每页取手册某章的若干节（sections），并只收列出的函数说明（functions）；没列的函数、没列的节不进课表，也不留占位。页序是学习顺序，不是手册章序。页 id 取自上游文件名。",
+ "_": "课表范围（ADR 0163）：GNU Octave 官方手册按「用 Octave 学线代与高数」裁剪。每页取手册某章的若干节（sections），并只收列出的函数说明（functions）；没列的函数、没列的节不进课表，也不留占位。页序是学习顺序，不是手册章序。页 id 取自上游文件名。 每页的函数分两档：functions 是基础（前期只读这些，求简明、有成果），functions_more 是进阶（界面默认折叠，译文与练习照常入库）。",
  "parts": [
   {
    "id": "manual",
@@ -17,8 +17,15 @@
       "Predicates for Numeric Objects"
      ],
      "functions": [
-      "double",
       "logical",
+      "ismatrix",
+      "isvector",
+      "isscalar",
+      "issquare",
+      "issymmetric"
+     ],
+     "functions_more": [
+      "double",
       "true",
       "false",
       "isnumeric",
@@ -26,13 +33,8 @@
       "isfloat",
       "isreal",
       "iscomplex",
-      "ismatrix",
-      "isvector",
       "isrow",
       "iscolumn",
-      "isscalar",
-      "issquare",
-      "issymmetric",
       "ishermitian",
       "isdefinite",
       "isdiag",
@@ -56,6 +58,9 @@
       "sub2ind",
       "ind2sub",
       "mldivide",
+      "isequal"
+     ],
+     "functions_more": [
       "mrdivide",
       "mpower",
       "mtimes",
@@ -64,7 +69,6 @@
       "rdivide",
       "transpose",
       "ctranspose",
-      "isequal",
       "and",
       "or",
       "not"
@@ -83,10 +87,20 @@
      "functions": [
       "any",
       "all",
+      "find",
+      "reshape",
+      "sort",
+      "diag",
+      "eye",
+      "ones",
+      "zeros",
+      "linspace",
+      "magic"
+     ],
+     "functions_more": [
       "diff",
       "isinf",
       "isnan",
-      "find",
       "fliplr",
       "flipud",
       "flip",
@@ -95,24 +109,16 @@
       "horzcat",
       "vertcat",
       "permute",
-      "reshape",
       "circshift",
-      "sort",
       "tril",
       "triu",
       "vec",
-      "diag",
       "blkdiag",
-      "eye",
-      "ones",
-      "zeros",
       "repmat",
-      "linspace",
       "logspace",
       "rand",
       "randi",
       "randn",
-      "magic",
       "hilb",
       "vander",
       "toeplitz",
@@ -136,20 +142,38 @@
      "functions": [
       "exp",
       "log",
+      "sqrt",
+      "abs",
+      "sin",
+      "cos",
+      "tan",
+      "sum",
+      "prod",
+      "cumsum",
+      "floor",
+      "round",
+      "max",
+      "min",
+      "dot",
+      "cross",
+      "factorial",
+      "mod",
+      "e",
+      "pi",
+      "Inf",
+      "NaN",
+      "eps"
+     ],
+     "functions_more": [
       "log10",
       "log2",
-      "sqrt",
       "nthroot",
-      "abs",
       "arg",
       "conj",
       "imag",
       "real",
       "deg2rad",
       "rad2deg",
-      "sin",
-      "cos",
-      "tan",
       "asin",
       "acos",
       "atan",
@@ -159,27 +183,16 @@
       "atan2",
       "sind",
       "cosd",
-      "sum",
-      "prod",
-      "cumsum",
       "cumprod",
       "sumsq",
       "ceil",
       "fix",
-      "floor",
-      "round",
-      "max",
-      "min",
       "hypot",
       "gradient",
-      "dot",
-      "cross",
-      "factorial",
       "factor",
       "gcd",
       "lcm",
       "rem",
-      "mod",
       "primes",
       "sign",
       "gamma",
@@ -187,12 +200,7 @@
       "beta",
       "cart2pol",
       "pol2cart",
-      "e",
-      "pi",
-      "I",
-      "Inf",
-      "NaN",
-      "eps"
+      "I"
      ]
     },
     {
@@ -209,7 +217,8 @@
      "functions": [
       "bsxfun",
       "arrayfun"
-     ]
+     ],
+     "functions_more": []
     },
     {
      "id": "plot",
@@ -221,6 +230,25 @@
      ],
      "functions": [
       "plot",
+      "contour",
+      "axis",
+      "mesh",
+      "surf",
+      "meshgrid",
+      "title",
+      "legend",
+      "xlabel",
+      "grid",
+      "subplot",
+      "figure",
+      "hold",
+      "print"
+     ],
+     "figures": [
+      "plot",
+      "mesh"
+     ],
+     "functions_more": [
       "semilogx",
       "semilogy",
       "loglog",
@@ -229,20 +257,15 @@
       "stairs",
       "stem",
       "scatter",
-      "contour",
       "contourf",
       "polar",
-      "axis",
       "xlim",
       "fill",
       "area",
       "fplot",
       "ezplot",
-      "mesh",
       "meshc",
-      "surf",
       "surfc",
-      "meshgrid",
       "plot3",
       "view",
       "contour3",
@@ -251,26 +274,16 @@
       "peaks",
       "scatter3",
       "waterfall",
-      "title",
-      "legend",
       "text",
-      "xlabel",
       "clabel",
-      "grid",
       "colorbar",
-      "subplot",
-      "figure",
-      "hold",
       "clf",
       "close",
-      "print",
       "saveas"
      ],
-     "figures": [
-      "plot",
+     "figures_more": [
       "hist",
       "polar",
-      "mesh",
       "plot3"
      ]
     },
@@ -288,22 +301,24 @@
       "det",
       "eig",
       "inv",
-      "linsolve",
       "norm",
       "null",
       "orth",
-      "pinv",
       "rank",
-      "rcond",
       "trace",
       "rref",
-      "cond",
-      "vecnorm",
       "chol",
       "lu",
       "qr",
+      "svd"
+     ],
+     "functions_more": [
+      "linsolve",
+      "pinv",
+      "rcond",
+      "cond",
+      "vecnorm",
       "schur",
-      "svd",
       "expm",
       "logm",
       "sqrtm",
@@ -324,16 +339,18 @@
      ],
      "functions": [
       "polyval",
-      "polyvalm",
       "roots",
-      "compan",
       "conv",
+      "polyder",
+      "polyint",
+      "polyfit"
+     ],
+     "functions_more": [
+      "polyvalm",
+      "compan",
       "deconv",
       "polygcd",
       "residue",
-      "polyder",
-      "polyint",
-      "polyfit",
       "poly",
       "polyout",
       "polyreduce"
@@ -349,11 +366,15 @@
      ],
      "functions": [
       "interp1",
-      "spline",
-      "interp2"
+      "spline"
      ],
      "figures": [
-      "interpderiv1",
+      "interpderiv1"
+     ],
+     "functions_more": [
+      "interp2"
+     ],
+     "figures_more": [
       "interpderiv2"
      ]
     },
@@ -367,12 +388,14 @@
      ],
      "functions": [
       "quad",
+      "quadgk",
+      "integral",
+      "trapz"
+     ],
+     "functions_more": [
       "quadv",
       "quadl",
-      "quadgk",
       "quadcc",
-      "integral",
-      "trapz",
       "cumtrapz",
       "dblquad",
       "integral2",
@@ -388,10 +411,12 @@
       "Matlab-compatible solvers"
      ],
      "functions": [
-      "lsode",
       "ode45",
+      "odeset"
+     ],
+     "functions_more": [
+      "lsode",
       "ode23",
-      "odeset",
       "odeget"
      ]
     },
@@ -406,9 +431,11 @@
      "functions": [
       "fsolve",
       "fzero",
-      "fminbnd",
-      "fminunc",
       "fminsearch"
+     ],
+     "functions_more": [
+      "fminbnd",
+      "fminunc"
      ]
     }
    ]

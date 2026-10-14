@@ -17,6 +17,7 @@ export default function App() {
   const [err, setErr] = useState<string | null>(null);
   const [sel, setSel] = useState<string>(() => location.hash.slice(1) || (store.get("octave.sel") ?? ""));
   const [mode, setMode] = useState<ViewMode>(() => (store.get("octave.mode") as ViewMode) ?? "zh");
+  const [advanced, setAdvanced] = useState<boolean>(() => store.get("octave.adv") === "1");
   const [data, setData] = useState<SectionData | null>(null);
   const [exercises, setExercises] = useState<Exercise[] | null>(null);
   const [attempts, setAttempts] = useState<AttemptRow[]>([]);
@@ -42,6 +43,7 @@ export default function App() {
   }, [sel]);
 
   useEffect(() => store.set("octave.mode", mode), [mode]);
+  useEffect(() => store.set("octave.adv", advanced ? "1" : "0"), [advanced]);
 
   const onAttempt = useCallback((itemId: string, correct: boolean) => {
     const sectionId = itemId.split(".")[0];
@@ -73,6 +75,11 @@ export default function App() {
               <button key={m} className={mode === m ? "on" : ""} onClick={() => setMode(m)}>{label}</button>
             ))}
           </div>
+          <div className="modes" role="group" aria-label="内容深度">
+            {([[false, "基础"], [true, "进阶"]] as const).map(([v, label]) => (
+              <button key={String(v)} className={advanced === v ? "on" : ""} onClick={() => setAdvanced(v)}>{label}</button>
+            ))}
+          </div>
         </div>
         {cur.chapters.map((ch) => (
           <div key={ch.id} className="chapter">
@@ -96,7 +103,7 @@ export default function App() {
       <main id="main" className="main">
         {data ? (
           <>
-            <SectionView data={data} exercises={exercises} mode={mode} attempts={attempts} onAttempt={onAttempt} />
+            <SectionView data={data} exercises={exercises} mode={mode} advanced={advanced} onAdvanced={setAdvanced} attempts={attempts} onAttempt={onAttempt} />
             <div className="pager">
               <button disabled={idx <= 0} onClick={() => go(-1)}>← 上一节</button>
               <button disabled={idx >= pages.length - 1} onClick={() => go(1)}>下一节 →</button>

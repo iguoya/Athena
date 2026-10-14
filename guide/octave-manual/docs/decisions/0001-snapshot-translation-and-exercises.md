@@ -19,4 +19,8 @@
 
 - 同步（不是使用）需要装有钉点同版本的 Octave。
 - 手册里对被裁掉章节的交叉引用会成为悬空文字，照译不补。
-- 手册里的图（`@float` 与 `@image`，由 `*images.m` 生成）暂不移植；绘图页的图像由使用者在自己的 Octave 里运行得到。
+- 手册里的图（`@float` 与 `@image`）收成 `figure` 块，只收 `scope.json` 里 `figures`（基础）与 `figures_more`（进阶）列出的；
+  SVG 由 `scripts/render_figures.py` 生成：数据由真 Octave 算，图形由 matplotlib 重绘（云环境 Octave 无显示、图形后端创建坐标轴就失败）。
+  有图形能力的机器上应改用 Octave 原生渲染覆盖同名文件，见仓库 `docs/HANDOFF.md`。
+7. **厚度分档**（主仓库 ADR 0164）：`scope.json` 每页的 `functions` 是基础、`functions_more` 是进阶，快照里进阶的函数卡片与图带 `stage: 2`，
+   界面默认折叠。译文与练习不受影响。

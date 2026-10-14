@@ -15,8 +15,8 @@ export type Block =
   | { k: "solution" | "proof" | "proofof" | "outcome"; title: Unit | null; blocks: Block[] }
   | { k: "list"; ordered: boolean; items: Block[][] }
   | { k: "code"; text: string }
-  | { k: "figure"; id: string; caption: Unit | null }
-  | { k: "def"; name: string; sigs: string[]; blocks: Block[] }
+  | { k: "figure"; id: string; caption: Unit | null; stage?: number }
+  | { k: "def"; name: string; sigs: string[]; stage?: number; blocks: Block[] }
   | { k: "dl"; items: Array<{ term: Unit; blocks: Block[] }> }
   | { k: "table"; spec: string; rows: Array<Array<Unit | string>> };
 
