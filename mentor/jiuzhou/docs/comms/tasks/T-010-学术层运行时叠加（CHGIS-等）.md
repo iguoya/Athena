@@ -4,7 +4,7 @@ title: 学术层运行时叠加（CHGIS 等）
 owner: cursor
 status: todo
 priority: P1
-depends: 
+depends: T-026
 created: 2026-10-13 22:43
 updated: 2026-10-13 22:43
 ---
