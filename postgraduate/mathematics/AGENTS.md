@@ -80,7 +80,7 @@
 | `content/` | 课表、知识点、题目与推导模板；**唯一内容源** |
 | `src/` | 前端：路线图 / 讲解 / 三类实验 / 错题本 |
 | `src-tauri/` | 窗口、读内容、进度，拉起符号引擎进程并转发。**不做数学** |
-| `engine/` | 符号引擎：`engine.py`（常驻进程）与自带的 `.venv`（不入库） |
+| `engine/` | 符号引擎：`engine.py`（常驻进程）、`test_engine.py`（三取一与 unknown 不折叠等不变量测试）与自带的 `.venv`（不入库） |
 | `app.json` | 声明怎么构建、怎么启动、怎么算就绪；由 `launcher` 执行（ADR 0046） |
 | `docs/decisions/` | 本应用 ADR |
 | `docs/RULES.md` | 「定位」「技术栈」「开发与验证」的完整原文与取舍过程 |

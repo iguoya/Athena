@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -98,6 +99,12 @@ def main() -> int:
         # 引擎测试要用 engine/.venv 里的 Python。先建好——它是本应用最核心的
         # 那条链路（Rust↔Python↔SymPy），不该因为环境没准备就被跳过。
         run([sys.executable, "scripts/setup-engine.py"], "准备符号引擎环境")
+        # 引擎自己的不变量（equal / different / unknown 三取一，unknown 不折叠成 different，
+        # 超时回 unknown）：用引擎自带的解释器直接跑，不经过 Rust。
+        venv_python = (
+            Path("engine/.venv/Scripts/python.exe") if os.name == "nt" else Path("engine/.venv/bin/python")
+        )
+        run([str(venv_python), "-m", "unittest", "discover", "-s", "engine"], "符号引擎不变量测试")
         cargo = tool("cargo")
         run(
             [cargo, "check", "--manifest-path", "src-tauri/Cargo.toml", "--all-targets"],
