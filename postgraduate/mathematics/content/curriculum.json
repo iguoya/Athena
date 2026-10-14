@@ -2812,6 +2812,35 @@
               }
             ]
           },
+          "experiments": [
+            {
+              "kind": "predict",
+              "id": "ker_line",
+              "title": "先猜，再验",
+              "prompt": "矩阵 `[[1,2],[2,4]]` 的两根箭头共线（第二列是第一列的 2 倍），平面被压成了一条线。方向 `(2,−1)` 上的箭头，搬完会落到哪里？",
+              "verify_m": [
+                1,
+                2,
+                2,
+                4
+              ],
+              "options": [
+                {
+                  "text": "原点",
+                  "ok": true,
+                  "why": "取 2 份第一列、−1 份第二列：2×(1,2) − (2,4) = (0,0)。这个方向正好把两根共线的箭头抵消掉，整条线上的点都被搬到原点——这就是「白走的方向」。"
+                },
+                {
+                  "text": "还在原地 (2,−1)",
+                  "misread": "那是「搬完方向不变」的情形（特征方向）。这里的问题是它被抵消得一点不剩，不是原地不动。"
+                },
+                {
+                  "text": "(4,−2)，被拉长一倍",
+                  "misread": "那是 `[[2,0],[0,2]]` 这样的放大才会发生的事。这个矩阵把平面压扁了，压扁的方向上的箭头不是变长而是消失。"
+                }
+              ]
+            }
+          ],
           "drills": {
             "title": "随堂练习",
             "intro": "三道题。第三道要自己验算一次。",
@@ -3264,6 +3293,35 @@
               "note": "这道题值得看的地方：网页排名反复迭代最后收敛到一个固定排名，靠的就是这件事——**收敛到的那个分布，正是特征值 1 的特征向量**。它不是巧合，而是「总量守恒」这个条件逼出来的。"
             }
           ],
+          "experiments": [
+            {
+              "kind": "predict",
+              "id": "it_long",
+              "title": "先猜，再验",
+              "prompt": "矩阵 `[[1.5,0.5],[0.5,1.5]]` 有两个特征值：2（方向 `(1,1)`）和 1（方向 `(1,−1)`），就是图上的两条虚线。同一个起点反复搬很多次，会越来越贴近哪一条？",
+              "verify_m": [
+                1.5,
+                0.5,
+                0.5,
+                1.5
+              ],
+              "options": [
+                {
+                  "text": "特征值 2 的那条，方向 (1,1)",
+                  "ok": true,
+                  "why": "每搬一次，(1,1) 方向上的成分翻一倍，(1,−1) 方向上的成分一点不变。搬得越多，前者越占上风，箭头就越贴近 (1,1) 那条线。"
+                },
+                {
+                  "text": "特征值 1 的那条，方向 (1,−1)",
+                  "misread": "特征值 1 的方向上每次长度不变，而另一个方向每次翻倍。反复之后，增长最快的方向把别的方向都盖过去了。"
+                },
+                {
+                  "text": "哪一条也不贴近，会到处乱跑",
+                  "misread": "这个搬动没有旋转，每一步都只是沿两条虚线各自伸缩，所以走向是确定的。"
+                }
+              ]
+            }
+          ],
           "drills": {
             "title": "随堂练习",
             "intro": "两道题，都在刚才那道例题上改一个条件。**不用算到底**，判断趋势就行。",
@@ -3392,6 +3450,137 @@
             ],
             "focus": "eig",
             "caption": "同一次搬动，换一副基底写出来就是另一个矩阵——但绿虚线的方向、面积倍数不会变。"
+          },
+          "hook": {
+            "kind": "real_problem",
+            "text": "同一次旋转，按「北边朝上」画一遍、再按「船头朝上」画一遍，两张图上写下的数字完全不一样，可海面上发生的事没有变。**数字变了，事情没变**——那什么东西是不会跟着变的？"
+          },
+          "experiments": [
+            {
+              "kind": "predict",
+              "id": "sm_det",
+              "title": "先猜，再验",
+              "prompt": "矩阵 `[[2,1],[1,2]]` 与 `diag(3,1)` 相似：换到它的特征方向当坐标轴，看到的就是后者。这次搬动让面积变成原来的几倍？",
+              "verify_m": [
+                2,
+                1,
+                1,
+                2
+              ],
+              "options": [
+                {
+                  "text": "3 倍",
+                  "ok": true,
+                  "why": "diag(3,1) 是横向拉 3 倍、纵向拉 1 倍，面积 3×1 = 3 倍。相似矩阵描述的是同一次搬动，面积倍数一样。对照直接算：2×2 − 1×1 = 3。"
+                },
+                {
+                  "text": "4 倍",
+                  "misread": "只乘了主对角线 2×2。面积倍数还要减去另一条对角线：2×2 − 1×1 = 3。"
+                },
+                {
+                  "text": "1 倍",
+                  "misread": "diag(3,1) 里出现了 1，但那只是其中一个方向不变；另一个方向拉了 3 倍，面积倍数是 3×1 = 3。"
+                }
+              ]
+            }
+          ],
+          "drills": {
+            "title": "随堂练习",
+            "intro": "先做这一道：相似的矩阵之间，什么会跟着坐标变，什么不会。",
+            "items": [
+              {
+                "id": "sm1",
+                "kind": "choice",
+                "stem": "教材里 `A = [[3,0,2],[6,4,3],[-4,0,-3]]` 可以换成对角阵 `D = diag(1,-1,4)`（`P⁻¹AP = D`，所以 A 与 D 相似）。下面哪个量，A 和 D 一定相同？",
+                "hint": "相似就是同一次搬动换了副坐标。哪些量只跟搬动本身有关、跟坐标无关？",
+                "context": "同一个结构用不同的坐标系建模，写出来的矩阵各不相同；总的缩放倍数、固有的拉伸方向是结构自己的性质，不该因为换坐标而变。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Diagonalization · 定义 Diagonalizable matrix 与例 Diagonalizing a matrix（第一个）",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Eigenvalues-Diagonalization.tex",
+                    "note": "取教材例中的 A 与 D，题问相似矩阵共有的量；两个行列式由本应用验算，都是 −4"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "行列式，都是 −4",
+                    "ok": true,
+                    "why": "行列式是这次搬动的体积倍数，换坐标不会让它变。算一下：A 的行列式是 −4，D = diag(1,−1,4) 的是 1×(−1)×4 = −4。"
+                  },
+                  {
+                    "text": "矩阵里零的个数",
+                    "misread": "A 里有 2 个 0，D 里有 6 个。零出现在哪里完全看坐标怎么选，换一副坐标就会变。"
+                  },
+                  {
+                    "text": "左上角那个数",
+                    "misread": "A 的左上角是 3，D 的是 1。矩阵里每个位置上的数都跟着坐标走，不能拿来比。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "sm2",
+                "kind": "choice",
+                "stem": "`A = [[1,1],[0,1]]` 与单位矩阵 `I` 相似吗？",
+                "varies": "从「哪些量相同」转到「相同的量够不够判相似」。",
+                "hint": "如果有可逆的 P 使 `P⁻¹IP = A`，先把左边算出来。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Diagonalization · 例 A matrix that cannot be diagonalized",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Eigenvalues-Diagonalization.tex",
+                    "note": "教材用这个 A 说明它不能对角化；本题取最简单的对角阵 I 来对比，结论由 P⁻¹IP = I 直接得到"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "不相似",
+                    "ok": true,
+                    "why": "对任何可逆的 P，P⁻¹IP = P⁻¹P = I，结果永远是 I，不可能变成 A。单位矩阵只和它自己相似。"
+                  },
+                  {
+                    "text": "相似，两者的特征值都是 1",
+                    "misread": "特征值相同只是相似的必要条件，不是充分条件。A 带着一个「剪切」，I 什么也没做，换坐标改不掉这个差别。"
+                  },
+                  {
+                    "text": "相似，两者的行列式都是 1",
+                    "misread": "行列式相同同样只是必要条件。光凭一两个数相同，判不了相似。"
+                  }
+                ],
+                "pass": 2
+              },
+              {
+                "id": "sm3",
+                "kind": "choice",
+                "stem": "矩阵 A 与 B 相似，B 与 C 相似。A 与 C 一定相似吗？",
+                "hint": "把两个等式写出来：`P⁻¹AP = B`，`Q⁻¹BQ = C`，再把前一个代进后一个。",
+                "source_refs": [
+                  {
+                    "relation": "authored",
+                    "note": "教材给出相似的定义（存在可逆的 P 使 P⁻¹AP = B），没有单独陈述传递性；这一问由定义直接推出，没有现成题可改编"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "一定相似",
+                    "ok": true,
+                    "why": "把 B = P⁻¹AP 代入 Q⁻¹BQ = C，得 (PQ)⁻¹A(PQ) = C，PQ 仍是可逆矩阵，所以 A 与 C 相似。换一次坐标再换一次，合起来还是换了一次。"
+                  },
+                  {
+                    "text": "不一定，要看 P 与 Q 能不能交换",
+                    "misread": "(PQ)⁻¹ = Q⁻¹P⁻¹，顺序刚好配得上，用不着 P、Q 可交换。"
+                  },
+                  {
+                    "text": "一定不相似",
+                    "misread": "两次换坐标合起来仍是一次换坐标，所以必然相似。"
+                  }
+                ],
+                "pass": 2
+              }
+            ]
           }
         },
         {
@@ -3448,6 +3637,140 @@
             ],
             "focus": "eig",
             "caption": "对角阵在做的事：两个方向各自拉伸，不转也不混。此时特征方向正好是坐标轴本身。"
+          },
+          "hook": {
+            "kind": "real_problem",
+            "text": "一个系统每一步都按同一条规则往前推，要推一百步。如果能换到一副坐标，让每个方向各算各的、互不干扰，那一百步就只是每个方向各自乘一百次。"
+          },
+          "experiments": [
+            {
+              "kind": "predict",
+              "id": "dg_axes",
+              "title": "先猜，再验",
+              "prompt": "矩阵 `[[2,1],[1,2]]` 图上有两条绿虚线（特征方向）。把坐标轴换成这两条虚线之后，这次搬动在新坐标里写出来是什么样？",
+              "verify_m": [
+                2,
+                1,
+                1,
+                2
+              ],
+              "options": [
+                {
+                  "text": "一个对角阵 diag(3,1)：沿两条虚线各自拉伸 3 倍和 1 倍",
+                  "ok": true,
+                  "why": "虚线方向上的箭头搬完仍在原来的线上，只是被拉长：一条拉 3 倍，一条拉 1 倍（不变）。换到这两个方向当坐标轴，矩阵里就只剩对角线上的拉伸倍数。"
+                },
+                {
+                  "text": "一个旋转矩阵",
+                  "misread": "旋转会把每个方向都转走，而虚线方向上的箭头搬完还在原来的线上，没有转。"
+                },
+                {
+                  "text": "还是原来的矩阵，换坐标没用",
+                  "misread": "换坐标会改变矩阵的写法。换成特征方向，非对角线上的数就消失了，这正是对角化的好处。"
+                }
+              ]
+            }
+          ],
+          "drills": {
+            "title": "随堂练习",
+            "intro": "先做这一道：矩阵换成对角的以后，算起来好在哪。",
+            "items": [
+              {
+                "id": "dg3",
+                "kind": "choice",
+                "stem": "对角阵 `diag(2,3,4)` 的 4 次方，中间那个对角元是多少？",
+                "hint": "对角阵相乘，每个对角元各算各的。",
+                "context": "一个系统反复推进 n 步，换到特征向量的坐标里，只要对每个对角元求 n 次方，再换回来。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Diagonalization · 例 Sums, products, and powers of diagonal matrices",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Eigenvalues-Diagonalization.tex",
+                    "note": "取教材例中的 diag(2,3,4)，教材算出 A⁴ = diag(16,81,256)；本题只问中间一格"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "81",
+                    "ok": true,
+                    "why": "对角阵相乘是对角元各算各的，中间那个就是 3⁴ = 81。教材里 A⁴ = diag(16, 81, 256)。"
+                  },
+                  {
+                    "text": "12",
+                    "misread": "那是把 3 和 4 相乘了。四次方是同一个数自乘四次，不是和旁边的数相乘。"
+                  },
+                  {
+                    "text": "243",
+                    "misread": "243 = 3⁵，多乘了一次。四次方是 3×3×3×3。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "dg1",
+                "kind": "choice",
+                "stem": "教材里 `A = [[2,0,0],[1,4,-1],[-2,-4,4]]` 的特征值是 2（重根）和 6；λ=2 能找到 2 个线性无关的特征向量，λ=6 找到 1 个。对角化之后，D 的对角线上 2 出现几次？",
+                "hint": "P 的每一列是一个特征向量，D 的对角元是它对应的特征值。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Diagonalization · 例 Diagonalizing a matrix（第二个）",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Eigenvalues-Diagonalization.tex",
+                    "note": "取教材该例的矩阵与结果（P⁻¹AP = diag(2,2,6)）；题问重根的特征值在对角线上占几格，特征值与特征向量个数已用 SymPy 复核"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "2 次",
+                    "ok": true,
+                    "why": "λ=2 有两个线性无关的特征向量，P 里就有两列对应它，D 里对应的位置各写一个 2；再加一个 6，对角线是 2、2、6。"
+                  },
+                  {
+                    "text": "1 次",
+                    "misread": "特征值 2 是重根，并且对应两个线性无关的特征向量。对角线要为每一个特征向量留一格，所以 2 要写两次。"
+                  },
+                  {
+                    "text": "3 次",
+                    "misread": "三个对角元里只有两个对应 λ=2，第三个对应 λ=6。"
+                  }
+                ],
+                "pass": 2
+              },
+              {
+                "id": "dg2",
+                "kind": "choice",
+                "stem": "`A = [[1,1],[0,1]]` 不能对角化，真正的原因是哪一条？",
+                "varies": "从「怎么对角化」转到「为什么有的矩阵做不到」。",
+                "hint": "对角化需要凑齐几个线性无关的特征向量？这个矩阵有几个？",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Diagonalization · 例 A matrix that cannot be diagonalized 与定理 Diagonalization and eigenvectors",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Eigenvalues-Diagonalization.tex",
+                    "note": "取教材同一个矩阵，把「为什么不能」问成辨析，排除重根、不可逆这两个常见的错误归因"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "线性无关的特征向量只有 1 个，凑不齐 2 个",
+                    "ok": true,
+                    "why": "A 的唯一特征值是 1，解 (A−I)v = 0 得到的解空间只有一维，只有一个线性无关的特征向量。n 阶矩阵需要 n 个才能对角化。"
+                  },
+                  {
+                    "text": "它的特征值是重根",
+                    "misread": "重根本身不妨碍。单位阵的特征值 1 也是重根，可它本来就是对角阵。要看重根对应的特征向量够不够。"
+                  },
+                  {
+                    "text": "它不可逆",
+                    "misread": "det A = 1，A 是可逆的。可逆与否和能不能对角化是两回事。"
+                  }
+                ],
+                "pass": 2
+              }
+            ]
           }
         },
         {
@@ -3500,6 +3823,139 @@
             ],
             "focus": null,
             "caption": "这两个箭头既不垂直也不等长。正交化要把它们扶成互相垂直、长度为 1 的一组。"
+          },
+          "hook": {
+            "kind": "real_problem",
+            "text": "一根歪着的杆子在地上投下一道影子。把一个箭头拆成「顺着某个方向的那部分」和「垂直于它的那部分」，是后面所有「找最近的点」「让误差最小」的共同动作。"
+          },
+          "experiments": [
+            {
+              "kind": "predict",
+              "id": "or_len",
+              "title": "先猜，再验",
+              "prompt": "矩阵 `[[0,−1],[1,0]]` 是把平面旋转 90°（它是个正交矩阵）。一根长度为 1 的箭头搬完之后，长度是多少？",
+              "verify_m": [
+                0,
+                -1,
+                1,
+                0
+              ],
+              "options": [
+                {
+                  "text": "还是 1，长度不变",
+                  "ok": true,
+                  "why": "旋转只改变方向，不改变长度。例如 (1,0) 被搬到 (0,1)，长度仍是 1。正交矩阵的定义就是保持长度和夹角。"
+                },
+                {
+                  "text": "√2，变长了",
+                  "misread": "(1,0) 搬完是 (0,1)，长度还是 1。√2 是 (1,1) 的长度，和这个搬动无关。"
+                },
+                {
+                  "text": "0，被压没了",
+                  "misread": "压没的是行列式为 0 的矩阵。旋转的面积倍数是 1，什么也没有压掉。"
+                }
+              ]
+            }
+          ],
+          "drills": {
+            "title": "随堂练习",
+            "intro": "先做这一道：正交的变换对箭头的长度做了什么。",
+            "items": [
+              {
+                "id": "or3",
+                "kind": "choice",
+                "stem": "`Q = [[3/5, −4/5],[4/5, 3/5]]` 是一个正交矩阵，`x = (3,4)`。向量 `Qx` 的长度是多少？",
+                "hint": "正交矩阵对向量的长度做了什么？",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Orthogonal maps · 命题 Norm-preserving linear maps are isometries 与 Matrix of an orthogonal transformation",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/InnerProductSpaces-OrthogonalMaps.tex",
+                    "note": "取教材「正交变换保持长度」的结论，代入具体的 Q 与 x；|Qx| 与 |x| 均已验算为 5"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "5",
+                    "ok": true,
+                    "why": "正交矩阵保持长度（教材：保持范数的线性映射是等距变换，对应 QᵀQ = I）。|x| = √(9+16) = 5，所以 |Qx| 也是 5。"
+                  },
+                  {
+                    "text": "25",
+                    "misread": "25 是长度的平方，而且 Q 不改变它。"
+                  },
+                  {
+                    "text": "7",
+                    "misread": "7 = 3 + 4 是把两个分量直接相加，不是长度。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "or1",
+                "kind": "choice",
+                "stem": "施密特正交化：取 `v₁ = (1,1)`、`v₂ = (1,0)`，令 `u₁ = v₁`。`u₂ = v₂ − (u₁·v₂)/(u₁·u₁)·u₁` 等于多少？",
+                "hint": "先算 u₁·v₂ 和 u₁·u₁，用比值乘 u₁，最后拿 v₂ 去减。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Gram-Schmidt · 命题 Gram-Schmidt orthogonalization procedure for 2 vectors",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/InnerProductSpaces-GramSchmidt.tex",
+                    "note": "套用教材 2 个向量的公式，取标准内积和一组具体的数；结果已用 SymPy 验算"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "(1/2, −1/2)",
+                    "ok": true,
+                    "why": "u₁·v₂ = 1，u₁·u₁ = 2，倍数是 1/2；(1/2)·(1,1) = (1/2, 1/2)，用 v₂ 去减得 (1/2, −1/2)。验证：与 u₁ 的内积是 1/2 − 1/2 = 0，垂直。"
+                  },
+                  {
+                    "text": "(1/2, 1/2)",
+                    "misread": "这是被减掉的那一部分（v₂ 在 u₁ 方向上的投影），不是剩下的。"
+                  },
+                  {
+                    "text": "(1, 0)",
+                    "misread": "那是 v₂ 本身，等于一点没减。(1,0) 与 u₁ = (1,1) 的内积是 1，并不垂直。"
+                  }
+                ],
+                "pass": 2
+              },
+              {
+                "id": "or2",
+                "kind": "choice",
+                "stem": "矩阵 `Q = [[3/5, −4/5],[4/5, 3/5]]` 是正交矩阵吗？",
+                "varies": "从「怎么造正交的一组」转到「怎么认出正交矩阵」。",
+                "hint": "正交矩阵的两列要互相垂直，并且各自长度为 1。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Orthogonal maps · 命题 Conditions for orthogonal matrices",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/InnerProductSpaces-OrthogonalMaps.tex",
+                    "note": "用教材的等价条件「列构成标准正交组」判断一个具体矩阵；3-4-5 这组数由本应用选定，并验算了 QᵀQ = I"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "是",
+                    "ok": true,
+                    "why": "两列是 (3/5, 4/5) 和 (−4/5, 3/5)：长度都是 √(9/25 + 16/25) = 1，内积 −12/25 + 12/25 = 0。列构成标准正交组，所以 QᵀQ = I。"
+                  },
+                  {
+                    "text": "不是，因为元素不是整数",
+                    "misread": "正交与元素是不是整数无关，只看列是不是标准正交。"
+                  },
+                  {
+                    "text": "不是，因为两列不垂直",
+                    "misread": "两列的内积是 −12/25 + 12/25 = 0，恰好垂直。"
+                  }
+                ],
+                "pass": 2
+              }
+            ]
           }
         }
       ]
@@ -3542,11 +3998,15 @@
             "aha": "「对称」看起来只是写法上的巧合（左上到右下翻折过来一样）。它在几何上的意思是：这次变换==没有扭转，只是沿着几条互相垂直的轴各自拉伸==。"
           },
           "sources": {
-            "textbook_only": true,
-            "note": "两个在线来源都未覆盖，严格表述以同济《工程数学·线性代数》5.5 为准",
+            "rigorous": {
+              "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+              "title": "Diagonalization of real symmetric matrices（实对称矩阵的对角化）",
+              "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/InnerProductSpaces-Diagonalization.tex"
+            },
             "textbook": [
               "线性代数 5.5 对称矩阵的对角化"
-            ]
+            ],
+            "note": "严格表述依据 Selinger 开源教材对应小节（已读）；同济教材坐标只用来和习题集对齐"
           },
           "widget": "transform2d",
           "widget_preset": {
@@ -3558,6 +4018,139 @@
             ],
             "focus": "eig",
             "caption": "对称矩阵的两条绿虚线正好成直角。把右上角改成 0（变成不对称），再看它们还垂不垂直。"
+          },
+          "hook": {
+            "kind": "real_problem",
+            "text": "把一块方形橡皮膜纯拉伸（不扭转）之后，总能在膜上找到两个互相垂直的方向：沿着它们，膜只是各自被拉长，没有歪。"
+          },
+          "experiments": [
+            {
+              "kind": "predict",
+              "id": "sy_angle",
+              "title": "先猜，再验",
+              "prompt": "矩阵 `[[2,1],[1,2]]` 是个对称矩阵，图上有两条绿虚线（特征方向）。这两条虚线之间的夹角是多少？",
+              "verify_m": [
+                2,
+                1,
+                1,
+                2
+              ],
+              "options": [
+                {
+                  "text": "90°，互相垂直",
+                  "ok": true,
+                  "why": "两条虚线的方向是 (1,1) 和 (1,−1)，内积 1 − 1 = 0，成直角。这不是巧合——对称矩阵的特征方向总是互相垂直的。"
+                },
+                {
+                  "text": "45°",
+                  "misread": "45° 是 (1,1) 与横轴的夹角，不是两条虚线之间的夹角。(1,1) 与 (1,−1) 一条向右上、一条向右下，夹角是 90°。"
+                },
+                {
+                  "text": "60°",
+                  "misread": "没有什么理由是 60°。算一下 (1,1) 与 (1,−1) 的内积就知道了：1 − 1 = 0。"
+                }
+              ]
+            }
+          ],
+          "drills": {
+            "title": "随堂练习",
+            "intro": "先做这一道：对称矩阵的两个特征方向有什么特别。",
+            "items": [
+              {
+                "id": "sy1",
+                "kind": "choice",
+                "stem": "对称矩阵 `A = [[2,1],[1,2]]` 的特征值是 3 和 1，特征向量分别可取 `(1,1)` 和 `(1,−1)`。这两个特征向量的内积是多少？",
+                "hint": "把对应位置相乘，再相加。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Diagonalization of real symmetric matrices · 命题 Eigenvalues and eigenvectors of real symmetric matrices (b)",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/InnerProductSpaces-Diagonalization.tex",
+                    "note": "取一个具体的 2 阶实对称矩阵验证「不同特征值的特征向量正交」；特征值与特征向量已用 SymPy 复核"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "0",
+                    "ok": true,
+                    "why": "1×1 + 1×(−1) = 0，两个特征向量垂直。这不是巧合：实对称矩阵属于不同特征值的特征向量一定正交。"
+                  },
+                  {
+                    "text": "2",
+                    "misread": "2 = 1 + 1 只是把第一个向量的分量加起来了。内积要把两个向量对应的分量相乘再相加。"
+                  },
+                  {
+                    "text": "1",
+                    "misread": "只算了第一分量的乘积 1×1，漏了第二分量的乘积 1×(−1) = −1。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "sy2",
+                "kind": "choice",
+                "stem": "旋转 90° 的矩阵 `[[0,−1],[1,0]]` 的特征值是 ±i，不是实数。这与「实对称矩阵的特征值都是实数」矛盾吗？",
+                "varies": "从「对称矩阵有什么性质」转到「性质的前提是什么」。",
+                "hint": "先看这个矩阵本身是不是对称的。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "同上 · 命题 (a)：实对称矩阵的特征值都是实数",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/InnerProductSpaces-Diagonalization.tex",
+                    "note": "把命题用在一个不满足前提的矩阵上，考「前提」；旋转矩阵的复特征值由本应用用 SymPy 验算"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "不矛盾，旋转矩阵不是对称矩阵",
+                    "ok": true,
+                    "why": "它的转置是 [[0,1],[−1,0]]，与自己不相等，所以不是对称矩阵，定理管不到它。"
+                  },
+                  {
+                    "text": "矛盾，说明这个定理有问题",
+                    "misread": "定理只对实对称矩阵成立，旋转矩阵不在它的范围内。"
+                  },
+                  {
+                    "text": "不矛盾，因为 ±i 其实也算实数",
+                    "misread": "i 不是实数。不矛盾的原因是前提不满足，不是 i 的性质。"
+                  }
+                ],
+                "pass": 2
+              },
+              {
+                "id": "sy3",
+                "kind": "choice",
+                "stem": "实对称矩阵一定能对角化吗？",
+                "hint": "想想对角化一节那个失败的例子，它对称吗？",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "同上 · 定理 Diagonalization of real symmetric matrices",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/InnerProductSpaces-Diagonalization.tex",
+                    "note": "取教材定理，并与对角化一节那个不能对角化的反例 [[1,1],[0,1]] 对照（它不对称）"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "一定能，而且可以用正交矩阵对角化",
+                    "ok": true,
+                    "why": "这是实对称矩阵的对角化定理：存在正交矩阵 Q，使 QᵀAQ 是对角阵——特征向量可以取成标准正交的一组。"
+                  },
+                  {
+                    "text": "不一定，像 `[[1,1],[0,1]]` 就不行",
+                    "misread": "[[1,1],[0,1]] 不是对称矩阵（它的转置不等于自己）。对称矩阵不会出现这种「特征向量凑不齐」的情形。"
+                  },
+                  {
+                    "text": "能对角化，但特征向量未必互相垂直",
+                    "misread": "不同特征值的特征向量必然正交；同一个特征值有重数时，也总能选成正交的。"
+                  }
+                ],
+                "pass": 2
+              }
+            ]
           }
         },
         {
@@ -3591,12 +4184,16 @@
             "aha": "配方法消交叉项，和「换到特征向量坐标」是同一件事的两种做法。==交叉项的存在只说明：你用的坐标轴，和这个图形自己的轴没对齐==。"
           },
           "sources": {
-            "textbook_only": true,
-            "note": "两个在线来源都未覆盖，严格表述以同济 5.6–5.7 为准",
+            "rigorous": {
+              "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+              "title": "Quadratic forms（二次型及其标准形）",
+              "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/InnerProductSpaces-Application-QuadraticForms.tex"
+            },
             "textbook": [
               "线性代数 5.6 二次型及其标准形",
               "线性代数 5.7 用配方法化二次型成标准形"
-            ]
+            ],
+            "note": "严格表述依据 Selinger 开源教材对应小节（已读）；同济教材坐标只用来和习题集对齐"
           },
           "widget": "transform2d",
           "widget_preset": {
@@ -3608,6 +4205,139 @@
             ],
             "focus": "eig",
             "caption": "二次型的矩阵总是对称的。这两条绿虚线的方向，就是那个椭圆的两根主轴。"
+          },
+          "hook": {
+            "kind": "real_problem",
+            "text": "椭圆轨道、受压钢板上的应力分布，写成方程都带着一项 xy。这一项并不说明图形有什么特别，只说明你选的坐标轴没有对准它自己的轴。"
+          },
+          "experiments": [
+            {
+              "kind": "predict",
+              "id": "qd_axis",
+              "title": "先猜，再验",
+              "prompt": "二次型 `2x² + 2xy + 2y² = 1` 画出来是一个椭圆，矩阵 `[[2,1],[1,2]]` 的特征值是 3（方向 `(1,1)`）和 1（方向 `(1,−1)`）。椭圆的**长轴**沿哪个方向？",
+              "verify_m": [
+                2,
+                1,
+                1,
+                2
+              ],
+              "options": [
+                {
+                  "text": "沿 (1,−1)，特征值较小的那个方向",
+                  "ok": true,
+                  "why": "沿特征值 λ 的方向，椭圆的半轴长是 1/√λ。λ = 1 时是 1，λ = 3 时只有约 0.58。特征值越小，那个方向上椭圆越长。"
+                },
+                {
+                  "text": "沿 (1,1)，特征值较大的那个方向",
+                  "misread": "特征值大，意味着沿这个方向走同样的距离，二次型涨得更快，所以更早碰到「=1」的曲线——这个方向上椭圆反而更短。"
+                },
+                {
+                  "text": "沿横轴",
+                  "misread": "椭圆的主轴沿特征向量的方向，不是沿坐标轴；交叉项 2xy 正说明坐标轴没有对准它的轴。"
+                }
+              ]
+            }
+          ],
+          "drills": {
+            "title": "随堂练习",
+            "intro": "先做这一道：把交叉项消掉以后，标准形里剩下什么。",
+            "items": [
+              {
+                "id": "qd2",
+                "kind": "choice",
+                "stem": "二次型 `2x² + 2xy + 2y²` 的矩阵是 `[[2,1],[1,2]]`，特征值 3 和 1。沿特征向量的方向做正交变量代换，标准形是？",
+                "hint": "标准形的系数是矩阵的什么？",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Quadratic forms · 命题 Diagonalization of quadratic forms",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/InnerProductSpaces-Application-QuadraticForms.tex",
+                    "note": "套用教材：正交变量代换后，标准形的系数是特征值；矩阵与特征值由本应用选定并验算"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "3u² + v²",
+                    "ok": true,
+                    "why": "标准形里的系数就是特征值：一个方向上是 3，另一个方向上是 1，交叉项消失。"
+                  },
+                  {
+                    "text": "2u² + 2v²",
+                    "misread": "2 和 2 是原矩阵的对角元，它们随坐标变。标准形的系数是特征值，不是对角元。"
+                  },
+                  {
+                    "text": "3u² + 2uv + v²",
+                    "misread": "标准形不再有交叉项，交叉项正是代换要消掉的。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "qd1",
+                "kind": "choice",
+                "stem": "把二次型 `x² + 4xy + 3y²` 写成 `xᵀAx`，A 取对称矩阵，A 是？",
+                "hint": "交叉项的系数 4，要平分到 A 的两个非对角位置上。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Quadratic forms · 定义 Matrix form of a quadratic form",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/InnerProductSpaces-Application-QuadraticForms.tex",
+                    "note": "教材规定二次型的矩阵取对称形式；系数取 x² + 4xy + 3y² 这一组，展开已用 SymPy 验算"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "[[1,2],[2,3]]",
+                    "ok": true,
+                    "why": "xᵀAx = a·x² + 2b·xy + c·y²，所以 4xy 对应 2b = 4，b = 2，A = [[1,2],[2,3]]。"
+                  },
+                  {
+                    "text": "[[1,4],[4,3]]",
+                    "misread": "这样展开会得到 8xy。对称矩阵的两个非对角位置各出一份 xy，4 要平分成两个 2。"
+                  },
+                  {
+                    "text": "[[1,4],[0,3]]",
+                    "misread": "它展开后虽然也得到 4xy，但不对称。二次型的矩阵取对称的那一个，才是唯一的。"
+                  }
+                ],
+                "pass": 2
+              },
+              {
+                "id": "qd3",
+                "kind": "choice",
+                "stem": "曲线 `2x² + 2xy + 2y² = 1` 沿着 `(1,1)` 方向，从原点到曲线的距离是多少？",
+                "hint": "把点写成 t·(1,1)/√2，代入方程，解出 t。",
+                "context": "椭圆在特征值大的方向上收得更紧：沿特征值越大的轴，同样的偏移让二次型涨得越快。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Quadratic forms · 命题 Principal axes of a quadratic form",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/InnerProductSpaces-Application-QuadraticForms.tex",
+                    "note": "教材：主轴方向上的截距是 ±1/√λ；取 λ=3 对应的 (1,1) 方向，距离 √3/3 已验算"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "√3/3（约 0.58）",
+                    "ok": true,
+                    "why": "沿 (1,1)/√2 方向取点 t·(1,1)/√2，代入方程得 3t² = 1，t = 1/√3 = √3/3。"
+                  },
+                  {
+                    "text": "1/3",
+                    "misread": "漏了开方：主轴方向的截距是 1/√λ，不是 1/λ。λ = 3 时是 1/√3。"
+                  },
+                  {
+                    "text": "1",
+                    "misread": "距离是 1 的是另一条主轴 (1,−1)（对应特征值 1）。(1,1) 方向对应特征值 3，椭圆在这个方向上更窄。"
+                  }
+                ],
+                "pass": 2
+              }
+            ]
           }
         },
         {
@@ -3640,11 +4370,15 @@
             "aha": "这个概念会在高数里再出现一次：==判断多元函数的一个驻点是不是极小值，用的就是二阶偏导矩阵正不正定==。线代和高数在这里接上了头。"
           },
           "sources": {
-            "textbook_only": true,
-            "note": "两个在线来源都未覆盖，严格表述以同济 5.8 为准",
+            "rigorous": {
+              "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+              "title": "Positive definite matrices（正定矩阵）",
+              "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/InnerProductSpaces-Positive.tex"
+            },
             "textbook": [
               "线性代数 5.8 正定二次型"
-            ]
+            ],
+            "note": "严格表述依据 Selinger 开源教材对应小节（已读）；同济教材坐标只用来和习题集对齐"
           },
           "widget": "transform2d",
           "widget_preset": {
@@ -3656,6 +4390,140 @@
             ],
             "focus": "eig",
             "caption": "这个矩阵的特征值都是正的：两条虚线方向上都是拉伸，没有翻转，面积倍数也为正。"
+          },
+          "hook": {
+            "kind": "real_problem",
+            "text": "小球放进碗里，会滚回碗底；放在马鞍上，会滑走。区别只在于：往任何方向偏一点，位能是只增不减，还是有的方向会降下去。"
+          },
+          "experiments": [
+            {
+              "kind": "predict",
+              "id": "df_flip",
+              "title": "先猜，再验",
+              "prompt": "矩阵 `[[1,2],[2,1]]` 的每个元素都是正数。搬动之后，平面会不会被「翻过来」（面积倍数是负数）？",
+              "verify_m": [
+                1,
+                2,
+                2,
+                1
+              ],
+              "options": [
+                {
+                  "text": "会，面积倍数是 1×1 − 2×2 = −3",
+                  "ok": true,
+                  "why": "元素全是正数，不代表行列式是正的。这里非对角线上的 2 太大，把一个方向翻了过来。特征值是 3 和 −1，有一个是负的，所以它不是正定的。"
+                },
+                {
+                  "text": "不会，因为元素全是正数",
+                  "misread": "面积倍数是 1×1 − 2×2 = −3。元素的正负不决定行列式的正负，要看两条对角线谁大。"
+                },
+                {
+                  "text": "不会，因为它是对称矩阵",
+                  "misread": "对称矩阵的行列式也可以是负的。对称只保证特征值是实数，不保证它们是正数。"
+                }
+              ]
+            }
+          ],
+          "drills": {
+            "title": "随堂练习",
+            "intro": "先做这一道：怎么用特征值看一个对称矩阵是不是正定。",
+            "items": [
+              {
+                "id": "df1",
+                "kind": "choice",
+                "stem": "`A = [[2,1],[1,2]]`（特征值 3 和 1）是正定矩阵吗？",
+                "hint": "对称矩阵正定，等价于特征值满足什么？",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Positive definite matrices · 命题 Characterization of positive (semi)definite matrices using eigenvalues",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/InnerProductSpaces-Positive.tex",
+                    "note": "用教材的特征值判据判断一个具体矩阵；特征值已用 SymPy 复核"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "是",
+                    "ok": true,
+                    "why": "A 对称，并且特征值 3、1 都大于 0，按特征值判据就是正定：对每个非零的 x，xᵀAx > 0。"
+                  },
+                  {
+                    "text": "不是，因为非对角元素不为零",
+                    "misread": "非对角元素是否为零与正不正定无关，要看特征值。"
+                  },
+                  {
+                    "text": "不是，因为两个特征值不相等",
+                    "misread": "特征值是否相等无关，要看是否都大于 0。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "df2",
+                "kind": "choice",
+                "stem": "`A = [[1,2],[2,1]]` 的每个元素都是正数。它正定吗？",
+                "varies": "从「用特征值判」转到「用一个反例判」。",
+                "hint": "试一个 x，比如 `x = (1,−1)`，算 xᵀAx 的符号。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Positive definite matrices · 定义 Positive semidefinite and positive definite matrices 与命题 Characterization",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/InnerProductSpaces-Positive.tex",
+                    "note": "取教材定义的反面：只要找到一个非零 x 使 xᵀAx < 0，就不正定；矩阵与取值已验算（特征值 3 与 −1，x=(1,−1) 时为 −2）"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "不是，x = (1,−1) 时 xᵀAx = −2",
+                    "ok": true,
+                    "why": "xᵀAx = x² + 4xy + y²，代入 (1,−1) 得 1 − 4 + 1 = −2 < 0。它的特征值是 3 和 −1，有一个是负的。元素全为正说明不了什么。"
+                  },
+                  {
+                    "text": "是，因为元素全是正数",
+                    "misread": "正定看的是 xᵀAx 对所有非零的 x 是不是正的，与矩阵元素的符号无关。"
+                  },
+                  {
+                    "text": "是，因为对角元是正数",
+                    "misread": "对角元为正只是必要条件。这里非对角元太大，把 (1,−1) 这个方向拉成了负的。"
+                  }
+                ],
+                "pass": 2
+              },
+              {
+                "id": "df3",
+                "kind": "choice",
+                "stem": "`A = [[1,1],[1,1]]`（特征值 2 和 0）属于哪一类？",
+                "hint": "正定要求特征值严格大于 0，半正定只要求不小于 0。",
+                "context": "多元函数在驻点处的二阶偏导矩阵正定，这个驻点就是极小值点；半正定的边界情形要另想办法。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Positive definite matrices · 定义 Positive semidefinite and positive definite matrices",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/InnerProductSpaces-Positive.tex",
+                    "note": "取教材「半正定」与「正定」的边界情形：有一个特征值恰好是 0；特征值已验算"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "半正定，但不正定",
+                    "ok": true,
+                    "why": "特征值 2、0 都不小于 0，所以半正定；有一个等于 0，不是全部大于 0，所以不正定。x = (1,−1) 时 xᵀAx = 0 而 x ≠ 0，正是不正定的证据。"
+                  },
+                  {
+                    "text": "正定，因为没有负的特征值",
+                    "misread": "正定要求每个特征值都严格大于 0；有一个 0 就不够。"
+                  },
+                  {
+                    "text": "连半正定都不是",
+                    "misread": "半正定只要求特征值都不小于 0，等于 0 是允许的。"
+                  }
+                ],
+                "pass": 2
+              }
+            ]
           }
         }
       ]

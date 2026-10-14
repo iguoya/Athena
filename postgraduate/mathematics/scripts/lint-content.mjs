@@ -601,6 +601,12 @@ for (const t of topics) {
     console.error(`课表：${t.id} 缺 overview 层（ADR 0012 第 1 节）`);
     hits++;
   }
+  // 前端判定一节「答对」（图谱上的绿框）只看「先猜再验」，不看练习题（main.ts 的 topicPassed）。
+  // 缺了它，这一节在第一遍里永远点不亮——补了练习题也一样。
+  if (!(t.experiments ?? []).some((e) => e.kind === "predict" && e.options?.length)) {
+    console.error(`课表：${t.id} 没有带选项的「先猜再验」（predict）——缺了它这一节在第一遍里永远点不亮`);
+    hits++;
+  }
   // 严格表述必须可核对：每节都要指到具体的外部出处（ADR 0017 第 3 节）
   const sr = t.sources;
   if (!sr || (!sr.intuition && !sr.rigorous && !sr.textbook_only)) {
