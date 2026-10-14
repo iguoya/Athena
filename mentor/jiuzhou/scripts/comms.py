@@ -16,6 +16,10 @@
   python scripts/comms.py task new --owner cursor --title 标题 --priority P0 --body-file x.md   # 仅 Claude Code
   python scripts/comms.py check                           # 校验任务与消息结构
   python scripts/comms.py presence [NAME]                 # 判断对方是否在线（online / quiet / unreachable）
+  python scripts/comms.py reply FILE --from NAME --body 正文   # 回复一条消息（自动串成一个线程）
+  python scripts/comms.py thread FILE|ID                  # 按时间顺序看一个线程
+  python scripts/comms.py notify NAME                     # 给 hook 用：有未读时只打印 1~3 行摘要，没有则静默
+  python scripts/comms.py watch NAME [--timeout 3300]      # 阻塞等待新消息，来了就打印并退出（后台运行即可被唤醒）
   python scripts/comms.py ping NAME|all                   # 发一条「联络」消息，之后用 presence 看有没有回应
 """
 
@@ -25,6 +29,7 @@ import argparse
 import re
 import subprocess
 import sys
+import time
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -153,11 +158,91 @@ def cmd_send(a):
     MSGS.mkdir(parents=True, exist_ok=True)
     name = f"{stamp()}__{getattr(a, 'from')}__{a.to}__{slug(a.subject)}.md"
     meta = {"from": getattr(a, "from"), "to": a.to, "subject": a.subject, "created": now()}
+    if getattr(a, "thread", None):
+        meta["thread"] = a.thread
     if a.task:
         find_task(a.task)
         meta["task"] = a.task
     (MSGS / name).write_text(dump(meta, "\n" + body.strip() + "\n"), encoding="utf-8")
     print("已发送：", name)
+
+
+def msg_id(p: Path) -> str:
+    """消息 id = 文件名里的时间戳；线程 id = 线程根消息的 id。"""
+    return p.name[:15]
+
+
+def find_msg(key: str) -> Path:
+    hits = [p for p in sorted(MSGS.glob("*.md")) if key in p.name]
+    if not hits:
+        raise SystemExit(f"找不到消息：{key}")
+    return hits[-1] if len(hits) > 1 and key.count("__") == 0 and not key[:1].isdigit() else hits[0]
+
+
+def cmd_reply(a):
+    """回复一条消息：收件人自动取原发件人，标题加「Re: 」，线程 id 沿用或以原消息为根。"""
+    orig = find_msg(a.file)
+    om, _ = parse(orig)
+    me = getattr(a, "from")
+    check_agent(me)
+    to = om.get("from") if om.get("from") != me else om.get("to")
+    subj = om.get("subject", "")
+    ns = argparse.Namespace(**{"from": me, "to": to, "subject": subj if subj.startswith("Re: ") else "Re: " + subj,
+                               "body": a.body, "body_file": a.body_file, "task": om.get("task"),
+                               "thread": om.get("thread") or msg_id(orig)})
+    cmd_send(ns)
+
+
+def cmd_thread(a):
+    key = a.key
+    root = None
+    for p in sorted(MSGS.glob("*.md")):
+        if key in p.name:
+            m, _ = parse(p)
+            root = m.get("thread") or msg_id(p)
+            break
+    if root is None:
+        raise SystemExit(f"找不到线程：{key}")
+    chain = []
+    for p in sorted(MSGS.glob("*.md")):
+        m, b = parse(p)
+        if (m.get("thread") or msg_id(p)) == root:
+            chain.append((p, m, b))
+    print(f"=== 线程 {root}（{len(chain)} 条）===")
+    for p, m, b in chain:
+        print()
+        print(f"--- {m.get('created')} {m.get('from')} → {m.get('to')} · {m.get('subject')}")
+        print(b.strip())
+
+
+def cmd_notify(a):
+    """给 hook 用的轻量提示：没有未读就什么都不打印（不打扰），有则最多 3 行摘要。"""
+    check_agent(a.name)
+    msgs = messages_for(a.name)
+    if not msgs:
+        return 0
+    print(f"[九州通讯] {a.name} 有 {len(msgs)} 条未读，运行 python mentor/jiuzhou/scripts/comms.py inbox {a.name} 查看：")
+    for p, m, _ in msgs[-3:]:
+        print(f"  - {m.get('from')} · {m.get('subject')}")
+    return 0
+
+
+def cmd_watch(a):
+    """阻塞等待 NAME 的新未读消息；来了就打印并退出 0，超时退出 3。在后台运行，来消息时进程结束即可被唤醒。"""
+    check_agent(a.name)
+    known = {p.name for p, _, _ in messages_for(a.name)}
+    deadline = time.time() + a.timeout
+    while time.time() < deadline:
+        fresh = [(p, m, b) for p, m, b in messages_for(a.name) if p.name not in known]
+        if fresh:
+            for p, m, b in fresh:
+                print(f"--- {p.name}")
+                print(f"来自 {m.get('from')} · {m.get('created')} · 主题：{m.get('subject')}")
+                print(b.strip())
+            return 0
+        time.sleep(a.interval)
+    print(f"{a.name}：{a.timeout} 秒内没有新消息")
+    return 3
 
 
 def cmd_ack(a):
@@ -420,7 +505,7 @@ def main() -> int:
     s = sub.add_parser("send")
     s.add_argument("--from", dest="from", required=True); s.add_argument("--to", required=True)
     s.add_argument("--subject", required=True); s.add_argument("--body"); s.add_argument("--body-file")
-    s.add_argument("--task"); s.set_defaults(fn=cmd_send)
+    s.add_argument("--task"); s.add_argument("--thread"); s.set_defaults(fn=cmd_send)
     s = sub.add_parser("ack"); s.add_argument("name"); s.add_argument("--all", action="store_true")
     s.add_argument("files", nargs="*"); s.set_defaults(fn=cmd_ack)
     s = sub.add_parser("status"); s.add_argument("task"); s.add_argument("status")
@@ -431,6 +516,12 @@ def main() -> int:
     n.add_argument("--priority", default="P1"); n.add_argument("--depends"); n.add_argument("--body-file")
     n.set_defaults(fn=cmd_task_new)
     s = sub.add_parser("check"); s.set_defaults(fn=cmd_check)
+    s = sub.add_parser("reply"); s.add_argument("file"); s.add_argument("--from", dest="from", required=True)
+    s.add_argument("--body"); s.add_argument("--body-file"); s.set_defaults(fn=cmd_reply)
+    s = sub.add_parser("thread"); s.add_argument("key"); s.set_defaults(fn=cmd_thread)
+    s = sub.add_parser("notify"); s.add_argument("name"); s.set_defaults(fn=cmd_notify)
+    s = sub.add_parser("watch"); s.add_argument("name"); s.add_argument("--timeout", type=int, default=3300)
+    s.add_argument("--interval", type=int, default=3); s.set_defaults(fn=cmd_watch)
     s = sub.add_parser("presence"); s.add_argument("name", nargs="?"); s.set_defaults(fn=cmd_presence)
     s = sub.add_parser("ping"); s.add_argument("name"); s.set_defaults(fn=cmd_ping)
     a = ap.parse_args()
