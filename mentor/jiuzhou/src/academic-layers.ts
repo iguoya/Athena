@@ -1,8 +1,10 @@
 /**
  * T-010：构建期打包 packages/maps/geo/academic/，按年份筛政区面。
  * 字段容错：name / fromYear|beg_yr|beg|from / toYear|end_yr|end|to
+ * T-028：点任意一点跨切片 PIP，列历代归属。
  */
 import indexJson from "../../../packages/maps/geo/academic/index.json";
+import { pointInGeometry } from "@/geo-pip";
 
 export type AcademicSliceMeta = {
   id: string;
@@ -116,4 +118,97 @@ export function academicAtYear(year: number): Fc {
     }
   }
   return { type: "FeatureCollection", features };
+}
+
+/** T-028：历代归属一行（命中或该切片无覆盖） */
+export type BelongingHit = {
+  sliceId: string;
+  sliceTitle: string;
+  fromYear: number;
+  toYear: number;
+  name: string;
+  type_ch?: string;
+  source: string;
+  approximate: boolean;
+};
+
+export type BelongingRow =
+  | { kind: "hit"; hit: BelongingHit }
+  | {
+      kind: "empty";
+      sliceId: string;
+      sliceTitle: string;
+      fromYear: number;
+      toYear: number;
+      approximate: boolean;
+    };
+
+export type BelongingResult = {
+  lon: number;
+  lat: number;
+  rows: BelongingRow[];
+};
+
+/** 对全部学术切片做点在面内；每切片至多一条命中，无命中写 empty。 */
+export function academicBelongingAt(lon: number, lat: number): BelongingResult {
+  const rows: BelongingRow[] = [];
+  for (const slice of academicIndex.slices) {
+    const approximate = slice.lineage === "hartwell-v5";
+    const fc = byFile.get(slice.file);
+    let hit: BelongingHit | null = null;
+    if (fc) {
+      for (const f of fc.features) {
+        const geom = f.geometry as {
+          type?: string;
+          coordinates?: unknown;
+        };
+        if (!pointInGeometry(lon, lat, geom)) continue;
+        const raw = (f.properties ?? {}) as Record<string, unknown>;
+        const { from, to } = featureYears(raw, slice);
+        const name = String(raw.name ?? raw.NAME_CH ?? raw.NAME ?? "");
+        if (!name) continue;
+        hit = {
+          sliceId: slice.id,
+          sliceTitle: slice.title,
+          fromYear: from,
+          toYear: to,
+          name,
+          type_ch: raw.type_ch != null ? String(raw.type_ch) : undefined,
+          source: String(raw.source ?? slice.lineage),
+          approximate,
+        };
+        break;
+      }
+    }
+    if (hit) {
+      rows.push({ kind: "hit", hit });
+    } else {
+      rows.push({
+        kind: "empty",
+        sliceId: slice.id,
+        sliceTitle: slice.title,
+        fromYear: slice.fromYear,
+        toYear: slice.toYear,
+        approximate,
+      });
+    }
+  }
+  rows.sort((a, b) => {
+    const ay = a.kind === "hit" ? a.hit.fromYear : a.fromYear;
+    const by = b.kind === "hit" ? b.hit.fromYear : b.fromYear;
+    return ay - by;
+  });
+  return { lon, lat, rows };
+}
+
+/** 当前年对应的切片行是否应加粗 */
+export function belongingRowActiveAt(
+  row: BelongingRow,
+  year: number,
+): boolean {
+  const y = Math.round(year);
+  if (row.kind === "hit") {
+    return y >= row.hit.fromYear && y <= row.hit.toYear;
+  }
+  return y >= row.fromYear && y <= row.toYear;
 }

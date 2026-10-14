@@ -301,6 +301,27 @@ export function routeLineAtYear(
   return pts.length >= 2 ? pts : null;
 }
 
+/** 棋子停在当年份已到达的途经点（单点亦可）。
+ * 起点年停在该年第一站（避免郑和 1405 直接跳到福州）；其后停在已到达的最远站。 */
+export function routePieceAtYear(
+  route: MarchRoute,
+  year: number,
+): RouteWaypoint | null {
+  const reached: RouteWaypoint[] = [];
+  for (const w of route.waypoints) {
+    const wy = w.year ?? route.from;
+    if (wy > year) break;
+    reached.push(w);
+  }
+  if (!reached.length) return null;
+  if (year === route.from) {
+    return (
+      reached.find((w) => (w.year ?? route.from) === year) ?? reached[0]!
+    );
+  }
+  return reached[reached.length - 1]!;
+}
+
 /** 当年份落在区间内、或绑定当前事件、或主题 show 点名时可见。 */
 export function routesVisibleAt(
   routes: MarchRoute[],

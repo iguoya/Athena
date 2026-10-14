@@ -195,6 +195,48 @@ def check_atlas() -> None:
     )
 
 
+def check_derived_geo() -> None:
+    """T-030：派生 GeoJSON 不得比源文件旧。"""
+    print("== derived geo freshness ==", flush=True)
+    repo = PROJECT_ROOT.parents[1]
+    problems: list[str] = []
+
+    terr_src = PROJECT_ROOT / "content" / "territories.json"
+    terr_out = repo / "packages" / "maps" / "geo" / "territories-clipped.json"
+    if not terr_out.is_file():
+        problems.append(
+            "missing packages/maps/geo/territories-clipped.json — "
+            "run: python packages/maps/scripts/clip_territories.py"
+        )
+    elif terr_src.is_file() and terr_src.stat().st_mtime > terr_out.stat().st_mtime + 1.0:
+        problems.append(
+            "content/territories.json is newer than territories-clipped.json — "
+            "re-run: python packages/maps/scripts/clip_territories.py"
+        )
+
+    land_out = repo / "packages" / "maps" / "geo" / "land.json"
+    build_script = repo / "packages" / "maps" / "scripts" / "build_base_layers.py"
+    if not land_out.is_file():
+        problems.append(
+            "missing packages/maps/geo/land.json — "
+            "run: python packages/maps/scripts/build_base_layers.py"
+        )
+    elif (
+        build_script.is_file()
+        and build_script.stat().st_mtime > land_out.stat().st_mtime + 1.0
+    ):
+        problems.append(
+            "packages/maps/scripts/build_base_layers.py is newer than land.json — "
+            "re-run: python packages/maps/scripts/build_base_layers.py"
+        )
+
+    if problems:
+        for p in problems:
+            print(f"  {p}")
+        raise SystemExit(f"derived geo: {len(problems)} problems")
+    print("territories-clipped / land.json OK", flush=True)
+
+
 def ensure_dependencies() -> None:
     if (PROJECT_ROOT / "node_modules").is_dir():
         return
@@ -213,6 +255,7 @@ def main() -> int:
     arguments = parser.parse_args()
 
     check_atlas()
+    check_derived_geo()
     run(
         [sys.executable, str(PROJECT_ROOT / "scripts" / "check_layers.py")],
         "layer overlays",

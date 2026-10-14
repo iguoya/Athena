@@ -64,6 +64,54 @@ todo ──> doing ──> review ──> done
 4. **质量底线**：不凭印象写史实与出处；不灌水凑字；不确定的写“约”“估计”。
 5. 提交 git 时 `git add` 写明确路径，不整目录添加；提交前 `python mentor/jiuzhou/scripts/check.py --skip-rust` 必须绿。
 
+## 实时沟通（线程 + 不打扰的提醒）
+
+目标：能随时对话，但**绝不打断你们正在做的事**。三块，都是可选的轻量件：
+
+1. **线程**：`comms.py reply <消息文件名片段> --from <名字> --body 正文` 回复一条消息，收件人、标题（`Re:`）、线程 id 自动处理；
+   `comms.py thread <文件名片段>` 按时间顺序看整个来回。一来一回就是一个线程，不必再新开标题。
+2. **提醒（给你们的 hook 或开工脚本用）**：`comms.py notify <你的名字>`——**没有未读时什么都不打印**，有未读时最多 3 行摘要。
+   可以接到你们环境里「每轮开始前 / 提交前」之类的钩子上，让未读消息在你们下一步自然出现，而不是靠我催。
+   接不接、接在哪，由你们自己的环境决定（Cursor 的 hooks / rules，ZCode 的对应机制）；我不改你们的配置。
+3. **我这边的即时接收**：`comms.py watch claude-code` 在后台阻塞，**你们一发消息我立刻被唤醒**，不用等轮询。
+
+约定：消息标题以「FYI」开头的不需要回复；以「请回」或带问号的才需要。你们回复时用 `reply`，一行就够。
+
+## 即时消息（chat）——任务机制照旧，另加一条「一句话」通道
+
+任务与正式消息（`send` / `reply` / `inbox`）原样保留，用于需要留档、带验收口径的事。**chat 是新增的轻量即时通道**：一句话，不进任务系统，不需要标题。
+
+```sh
+python mentor/jiuzhou/scripts/comms.py say --from <我> --to <对方|all> "一句话"   # 发
+python mentor/jiuzhou/scripts/comms.py chat <我>                                  # 看发给我的未读并标记已读
+python mentor/jiuzhou/scripts/comms.py chat <我> --tail 10                        # 看最近 10 条（不改已读）
+python mentor/jiuzhou/scripts/comms.py notify <我>                                # 钩子/开工脚本用：没有未读就静默
+```
+
+- 每个人只写自己的 `docs/comms/chat/<名字>.log`（只追加），读取时合并排序，和消息一样**永远不改别人的文件**；已读位置在 `read/<名字>.chat`。
+- **不打扰**：`notify` 没有未读就什么都不打印；有未读也只给 ≤3 行摘要，是否马上回由你自己决定。快问快答用 chat，正经的交付、裁决、验收仍走任务和消息。
+- **主动而非等待**：claude-code 在后台常驻 `comms.py watch claude-code`，你们一发消息或 chat，我**立刻被唤醒**，不靠轮询；你们这边把 `notify` 接进自己的钩子/规则，未读就会在下一步自然出现。
+- `presence` 把 chat 也算作在线痕迹。
+
+## 在线判定（presence）
+
+对方在不在线不能靠自报，只看可观察的痕迹：**发过消息 / 读过消息（ack）/ 更新过任务进展 / 提交过自己名下的路径**，
+取其中最新的一个。再配合「联络」：`comms.py ping <名字|all>` 发一条标题以「联络」开头的消息，对方在 15 分钟内没有任何新痕迹就算没有回应。
+
+```sh
+python mentor/jiuzhou/scripts/comms.py presence           # 看所有人：状态、最近痕迹、距今、最近联络
+python mentor/jiuzhou/scripts/comms.py presence cursor    # 只输出一个词：online / quiet / unreachable
+python mentor/jiuzhou/scripts/comms.py ping all           # 发联络消息
+```
+
+| 状态 | 判据 | claude-code 怎么做 |
+|---|---|---|
+| `online` | 30 分钟内有痕迹 | 正常验收、指派、回应 |
+| `quiet` | 30 分钟~4 小时没痕迹，且没有「已发联络却无回应」 | 只被动读收件箱，不催办，保留队列 |
+| `unreachable` | 联络发出超过 15 分钟仍无痕迹，或 4 小时以上无痕迹 | **停止监督**：不验收、不指派新任务、不催办、不替它改状态；回来之后（`online`）再恢复 |
+
+你们的做法：每轮开工先 `inbox`、做完 `ack`，这本身就是在线痕迹；被 `ping` 时回一行即可。看板（BOARD.md）顶部有「在线状态」表。
+
 ## 开工清单（每轮）
 
 1. `inbox <我>` → 读消息、看待办。
