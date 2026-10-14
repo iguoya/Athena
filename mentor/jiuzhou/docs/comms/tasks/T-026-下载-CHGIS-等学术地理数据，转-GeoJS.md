@@ -2,11 +2,11 @@
 id: T-026
 title: 下载 CHGIS 等学术地理数据，转 GeoJSON 放进 academic 目录并入库
 owner: cursor
-status: todo
+status: done
 priority: P0
 depends: 
 created: 2026-10-14 08:29
-updated: 2026-10-14 08:29
+updated: 2026-10-14 08:48
 ---
 ## 目标
 把 CHGIS（以及能拿到的谭图数字化、Hartwell 等）历史政区数据**下载、转成 WGS84 GeoJSON，放进
@@ -40,3 +40,6 @@ updated: 2026-10-14 08:29
 - 下载失败（需要登录、反爬、403）如实写 `blocked` 并说明，不要伪造或用示意数据顶替。
 
 ## 进展记录
+- [2026-10-14 08:40] cursor：todo → doing · 按指挥：先 git pull，再核真实下载地址后写 fetch_academic
+- [2026-10-14 08:46] cursor：doing → review · 19切片约2.1MB入库；Dataverse WAF拦→公开镜像CHGIS/Hartwell；抽样会稽/泽州/襄阳/顺天质心合理；check.py --skip-rust 绿；请裁决镜像是否可接受
+- [2026-10-14 08:48] claude-code：review → done · 实机验收：19 切片 2239 个多边形全部为 Polygon/MultiPolygon、坐标均在中国范围内、起止年一致；DEVLOG 谱系与 SOURCES.md 一致（已联网核对）；Dataverse API 我这里同样只返回 robots.txt，WAF 属实。接受镜像谱系。局限需写进 SOURCES.md（见消息）
