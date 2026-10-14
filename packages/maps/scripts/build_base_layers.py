@@ -5,7 +5,7 @@
 前置：
   .cache/maps/natural-earth/ne_50m_land.zip
   .cache/maps/natural-earth/ne_50m_admin_0_countries.zip
-  pip install pyshp
+  pip install pyshp shapely
 
 写出：
   packages/maps/geo/land.json
@@ -17,17 +17,20 @@
 from __future__ import annotations
 
 import json
-import math
 import zipfile
 from pathlib import Path
 
 import shapefile
+from shapely.geometry import MultiPolygon, box, mapping
+from shapely.geometry import shape as sshape
+from shapely.validation import make_valid
 
 REPO = Path(__file__).resolve().parents[3]
 NE = REPO / ".cache" / "maps" / "natural-earth"
 OUT = REPO / "packages" / "maps" / "geo"
 
 BBOX = (70.0, 5.0, 145.0, 55.0)  # W S E N
+CLIP_BOX = box(BBOX[0] - 2, BBOX[1] - 2, BBOX[2] + 2, BBOX[3] + 2)
 # 东亚邻国（非中国），用更淡陆色
 NEIGHBOR_ISO = {
     "PRK",
@@ -79,66 +82,33 @@ def extract_shp(zip_name: str, member_stem: str) -> Path:
     return shp
 
 
-def point_in_bbox(x: float, y: float) -> bool:
-    return BBOX[0] <= x <= BBOX[2] and BBOX[1] <= y <= BBOX[3]
+def clip_geometry(shape, tol: float) -> dict | None:
+    """真正的几何裁剪：与略大于 BBOX 的矩形求交，保留洞，再保拓扑简化。
 
-
-def ring_hits_bbox(ring: list[tuple[float, float]]) -> bool:
-    return any(point_in_bbox(x, y) for x, y in ring)
-
-
-def clip_ring_soft(ring: list[tuple[float, float]]) -> list[list[float]]:
-    """软裁：只保留落在框内或框边附近的点；过稀则跳过。"""
-    out: list[list[float]] = []
-    for x, y in ring:
-        if (
-            BBOX[0] - 2 <= x <= BBOX[2] + 2
-            and BBOX[1] - 2 <= y <= BBOX[3] + 2
-        ):
-            out.append([round(x, 3), round(y, 3)])
-    return out
-
-
-def douglas_peucker(
-    pts: list[list[float]], tol: float
-) -> list[list[float]]:
-    if len(pts) < 3:
-        return pts
-
-    def perp(a, b, p):
-        (x1, y1), (x2, y2), (x, y) = a, b, p
-        dx, dy = x2 - x1, y2 - y1
-        if dx == 0 and dy == 0:
-            return math.hypot(x - x1, y - y1)
-        t = max(0.0, min(1.0, ((x - x1) * dx + (y - y1) * dy) / (dx * dx + dy * dy)))
-        return math.hypot(x - (x1 + t * dx), y - (y1 + t * dy))
-
-    stack = [(0, len(pts) - 1)]
-    keep = {0, len(pts) - 1}
-    while stack:
-        i, j = stack.pop()
-        max_d, max_i = 0.0, None
-        for k in range(i + 1, j):
-            d = perp(pts[i], pts[j], pts[k])
-            if d > max_d:
-                max_d, max_i = d, k
-        if max_i is not None and max_d > tol:
-            keep.add(max_i)
-            stack.append((i, max_i))
-            stack.append((max_i, j))
-    return [pts[i] for i in sorted(keep)]
-
-
-def simplify_ring(ring: list[list[float]], tol: float) -> list[list[float]]:
-    if len(ring) < 4:
-        return ring
-    closed = ring[0] == ring[-1]
-    body = ring[:-1] if closed else ring
-    simp = douglas_peucker(body, tol)
-    if closed:
-        if simp[0] != simp[-1]:
-            simp.append(simp[0][:])
-    return simp if len(simp) >= 4 else ring
+    旧的「软裁」只丢框外的点再把环闭合，会在环上拉出一条斜弦，把整块内陆（蒙古、新疆、
+    华北）切掉，下游用陆地面裁疆域时清等大国损失近半。
+    """
+    geom = make_valid(sshape(shape.__geo_interface__))
+    clipped = geom.intersection(CLIP_BOX)
+    if clipped.is_empty:
+        return None
+    polys = [
+        g
+        for g in getattr(clipped, "geoms", [clipped])
+        if g.geom_type in ("Polygon", "MultiPolygon") and not g.is_empty
+    ]
+    out = []
+    for g in polys:
+        for part in getattr(g, "geoms", [g]):
+            simp = part.simplify(tol, preserve_topology=True)
+            if simp.is_empty or simp.geom_type != "Polygon":
+                continue
+            if len(simp.exterior.coords) < 5:
+                continue
+            out.append(simp)
+    if not out:
+        return None
+    return mapping(out[0] if len(out) == 1 else MultiPolygon(out))
 
 
 def shapes_to_features(
@@ -155,35 +125,11 @@ def shapes_to_features(
         props = prop_fn(rec)
         if props is None:
             continue
-        shape = sr.shape
-        parts = list(shape.parts) + [len(shape.points)]
-        polys: list[list[list[list[float]]]] = []
-        # shapefile polygon: one or more rings; treat each part as ring,
-        # group into MultiPolygon of single-ring polygons for simplicity
-        rings_out: list[list[list[float]]] = []
-        for i in range(len(parts) - 1):
-            raw = [(p[0], p[1]) for p in shape.points[parts[i] : parts[i + 1]]]
-            if not ring_hits_bbox(raw):
-                continue
-            clipped = clip_ring_soft(raw)
-            if len(clipped) < 4:
-                continue
-            simp = simplify_ring(clipped, tol)
-            if len(simp) < 4:
-                continue
-            rings_out.append(simp)
-        if not rings_out:
+        geometry = clip_geometry(sr.shape, tol)
+        if geometry is None:
             continue
-        # exterior = first ring; rest as separate polygons (good enough for land)
-        for ring in rings_out:
-            polys.append([ring])
-        geom = (
-            {"type": "Polygon", "coordinates": polys[0]}
-            if len(polys) == 1
-            else {"type": "MultiPolygon", "coordinates": polys}
-        )
         features.append(
-            {"type": "Feature", "properties": props, "geometry": geom}
+            {"type": "Feature", "properties": props, "geometry": geometry}
         )
     return features
 
