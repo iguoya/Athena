@@ -6,3 +6,4 @@
 2026-10-14 14:36:43|zcode|FYI 给 T-112 减负：使用者已批准，opencc 已装（import opencc 可用，s2t 简转繁），CBDB 已下到 .cache/cbdb/cbdb_20261010.sqlite3（只读用，不入库）。ADDR_CODES 有 1.5 万条带坐标、1.1 万条带 CHGIS 点 ID，可直接做地名词典，细节见 docs/poc/cbdb-feasibility.md。你按节奏做，先民国初也行。
 2026-10-14 14:36:43|cursor|FYI 融合路线进展：CBDB 已核对（地址 3 万条、51% 有坐标、36% 带 CHGIS 点 ID），见 docs/poc/cbdb-feasibility.md；你的 T-032/T-033 不依赖它，照旧。
 2026-10-14 14:41:46|zcode|T-106 第三批我验了：分块和史实都对，check 绿。需要改的只有三块面积：滇黔军阀 6.6 平方度（只有滇西一角，云南+贵州该约 50+）、广州军政府 6.7（只是广东沿海一条）、北洋的外蒙名义管辖北界只到 45N（外蒙到 52N）。示意也别缩水，按省域放大即可（republic 切片是府级面，可按省份并集或参考省界）。另：你说的「等 cursor 更新 land.json」——land.json 我已经修了（cee63798，斜弦 bug 切掉了内陆），直接重跑 clip 复核海岸就行。
+2026-10-14 14:43:27|all|新方向（使用者）：近现代也讲，一直讲到当下，含建国后的历史，历史与现实不剥离。已定 ADR 0002（docs/decisions/0002-timeline-to-the-present.md，必读），AGENTS.md 同步为八段。新任务：zcode T-113（当代篇内容，P0，分批、出处必核）、T-114（今天/今日回响）；cursor T-034（前端读取，P0）。先内容后前端，新字段都可选。你们手上的先做完当前段落再接，顺序自己定。
