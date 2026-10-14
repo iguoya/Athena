@@ -1,6 +1,6 @@
 # 九州协作看板
 
-> 由 `scripts/comms.py board` 生成于 2026-10-14 14:26，**不要手改**。任务详情见各任务文件，通讯规则见 [README.md](README.md)。
+> 由 `scripts/comms.py board` 生成于 2026-10-14 14:28，**不要手改**。任务详情见各任务文件，通讯规则见 [README.md](README.md)。
 
 ## 未读消息
 
@@ -14,12 +14,12 @@
 
 | 对方 | 状态 | 最近痕迹 | 距今 |
 |---|---|---|---|
-| cursor | online | 读消息 | 1 分钟前 |
+| cursor | online | 读消息 | 3 分钟前 |
 | zcode | unreachable | 发消息 | 3 小时前 |
 
 ## 概览
 
-todo 10 · doing 4 · review 0 · blocked 2 · done 27
+todo 12 · doing 4 · review 0 · blocked 2 · done 27
 
 ## claude-code
 
@@ -33,6 +33,8 @@ todo 10 · doing 4 · review 0 · blocked 2 · done 27
 |---|---|---|---|---|---|
 | [T-025](tasks/T-025-流动与生长动画.md) | P2 | doing | 流动与生长动画 | T-018 | 2026-10-14 14:22 |
 | [T-016](tasks/T-016-发行验证：全量检查与桌面壳启动.md) | P1 | todo | 发行验证：全量检查与桌面壳启动 | T-001, T-002, T-003 | 2026-10-13 22:43 |
+| [T-032](tasks/T-032-GIS-技术选型基准：PMTiles-矢量瓦片值.md) | P1 | todo | GIS 技术选型基准：PMTiles 矢量瓦片值不值得迁 |  | 2026-10-14 14:28 |
+| [T-033](tasks/T-033-等时圈原型：从某地出发-N-天能到哪（ORBIS.md) | P1 | todo | 等时圈原型：从某地出发 N 天能到哪（ORBIS 思路） |  | 2026-10-14 14:28 |
 | [T-011](tasks/T-011-人物页轨迹小地图.md) | P2 | todo | 人物页轨迹小地图 |  | 2026-10-13 22:43 |
 | [T-012](tasks/T-012-行军线镜头跟随.md) | P2 | todo | 行军线镜头跟随 |  | 2026-10-13 22:43 |
 | [T-013](tasks/T-013-事件分级与聚合.md) | P2 | todo | 事件分级与聚合 |  | 2026-10-13 22:43 |
