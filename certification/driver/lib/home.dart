@@ -21,6 +21,7 @@ import "speed/numbers_page.dart";
 import "core/progress.dart";
 import "study/reinforce.dart";
 import "study/reinforce_page.dart";
+import "study/review_queue.dart";
 import "speed/recall_cards.dart";
 import "speed/speed_topics.dart";
 import "study/session.dart";
@@ -257,35 +258,14 @@ class _HomePageState extends State<HomePage> {
     wrong.sort(
       (a, b) => (wrongCounts[b.id] ?? 0).compareTo(wrongCounts[a.id] ?? 0),
     );
-    // 考前复习：累计错够次数进来；与强化练习共用「已修补」判据才出去——最近一次答对、
-    // 且累计答对达到答错的 2 倍，再错又回来（ADR 0033、0128）。全部从作答记录派生，不另存一张表。
-    final eligible = [
-      for (final q in widget.bank.questions)
-        if ((wrongCounts[q.id] ?? 0) >= reviewMinWrong) q,
-    ];
-    int correctOf(Question q) => (attempts[q.id] ?? 0) - (wrongCounts[q.id] ?? 0);
-    bool stillWrong(Question q) => (streaks[q.id] ?? 0) == 0;
-    int left(Question q) => correctsToRepair(
-          wrong: wrongCounts[q.id] ?? 0,
-          correct: correctOf(q),
-          lastCorrect: !stillWrong(q),
-        );
-    final review = [
-      for (final q in eligible)
-        if (inReview(
-          wrongCount: wrongCounts[q.id] ?? 0,
-          correctCount: correctOf(q),
-          streak: streaks[q.id] ?? 0,
-        ))
-          q,
-    ]..sort((a, b) {
-        // 还错着的先练；同样状态下离移出还差得越多越靠前，再按错的次数。
-        final byOpen = (stillWrong(b) ? 1 : 0).compareTo(stillWrong(a) ? 1 : 0);
-        if (byOpen != 0) return byOpen;
-        final byLeft = left(b).compareTo(left(a));
-        if (byLeft != 0) return byLeft;
-        return (wrongCounts[b.id] ?? 0).compareTo(wrongCounts[a.id] ?? 0);
-      });
+    // 考前复习：累计错够次数进来，与强化练习共用「已修补」判据才出去（ADR 0033、0128）；
+    // 筛选与排序在纯函数 buildReviewQueue 里，单独有测试。
+    final review = buildReviewQueue(
+      questions: widget.bank.questions,
+      wrongCounts: wrongCounts,
+      attempts: attempts,
+      streaks: streaks,
+    );
     // 强化练习：错题、薄弱章节、间隔到期合成一张题单（主仓库 ADR 0076）。
     final allAttempts = await widget.store.allAttempts();
     final histories = HistorySet.build(allAttempts);
@@ -328,10 +308,10 @@ class _HomePageState extends State<HomePage> {
       _avgMs = avgMs;
       _wrongCount = wrong.length;
       _wrongQuestions = wrong;
-      _reviewQuestions = review;
+      _reviewQuestions = review.items;
       _drillRuns = drillRuns;
       _reviewStreaks = streaks;
-      _reviewGraduated = eligible.length - review.length;
+      _reviewGraduated = review.graduated;
       _wrongCounts = wrongCounts;
       _exams = exams;
       _notices = notices;
