@@ -1,0 +1,129 @@
+[
+ {
+  "id": "ex1",
+  "stem": "方程 $\\cos x = x$ 没有初等函数形式的解。把它改写成 $f(x) = \\cos x - x = 0$，用 `fzero` 求根。先预测根在 $0$ 到 $1$ 之间还是别处（画一画 $y=\\cos x$ 与 $y=x$ 的交点），再运行：\n\n```octave\n[x, fval, info] = fzero (@(x) cos (x) - x, 0.5)\nformat long\nx\n```\n\n根 `x` 是多少？",
+  "check": {
+   "kind": "numbers",
+   "ask": "写出根 `x`，误差在 $10^{-6}$ 以内即可。",
+   "answer": [
+    0.7390851332151607
+   ],
+   "hint": "第二个参数是初始猜测值（一个数）。$\\cos x$ 在 $[0,1]$ 上单调递减、$x$ 单调递增，交点唯一。"
+  },
+  "verify": "x = fzero (@(x) cos (x) - x, 0.5); result = x;",
+  "sol": "在 $[0,1]$ 上 $f(0) = 1 > 0$、$f(1) = \\cos 1 - 1 < 0$，$f$ 单调递减，所以恰有一个根。从 $0.5$ 出发，`fzero` 找到 $x \\approx 0.739085$（这个数也叫 Dottie 数）。`info = 1` 表示正常收敛，`fval` 是根处的函数值，接近 0。\n\n```octave\n>> [x, fval, info] = fzero (@(x) cos (x) - x, 0.5)\nx = 0.7391\nfval = 0\ninfo = 1\n>> format long\n>> x\nx = 0.739085133215161\n```",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "nonlin · fzero",
+    "note": "自编，答案由 Octave 8.4 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex2",
+  "stem": "`fzero` 的第二个参数有两种形式：一个数（初值），或两个数 `[a b]`（区间）。方程 $x^2 - 1 = 0$ 有两个根 $\\pm 1$。先预测，再运行：\n\n```octave\nf = @(x) x.^2 - 1;\nfzero (f, [-2 2])\n```\n\n这条命令会怎样？",
+  "check": {
+   "kind": "choice",
+   "options": [
+    {
+     "text": "返回 1，`fzero` 总是返回区间里较大的根",
+     "ok": false,
+     "why": "`fzero` 没有「取较大根」的规则。给区间时它依赖端点处函数值异号来保证区间里有根，这里 $f(-2) = f(2) = 3$ 同号，它拒绝开始。"
+    },
+    {
+     "text": "返回 0，即区间的中点",
+     "ok": false,
+     "why": "$x=0$ 是 $f$ 的极小点而不是根（$f(0) = -1$）。`fzero` 求的是根，不是中点或极值点。"
+    },
+    {
+     "text": "返回 [-1 1]，一次给出区间里的所有根",
+     "ok": false,
+     "why": "`fzero` 每次只返回一个根，返回值是标量。要找多个根，需要用不同的区间或初值分别调用。"
+    },
+    {
+     "text": "报错：`not a valid initial bracketing`，因为区间两端的函数值同号",
+     "ok": true,
+     "why": "给区间时 `fzero` 要求 $f(a)$ 与 $f(b)$ 异号（变号区间），才能保证中间有根。$f(-2) = f(2) = 3$ 同号，所以报错，哪怕区间里实际上有两个根。"
+    }
+   ]
+  },
+  "sol": "给区间时，`fzero` 要求端点处函数值异号，这样中间值定理保证区间里有根；本题 $f(-2) = f(2) = 3$ 同号（区间里有两个根，正负相抵），不满足条件，报错。区间要换成能夹住单个根的，例如 `[0 2]` 或 `[-2 0]`；给一个初值也行，`fzero` 会向外扩张去找变号区间。\n\n```octave\n>> f = @(x) x.^2 - 1;\n>> fzero (f, [-2 2])\nerror: fzero: not a valid initial bracketing\n>> fzero (f, [0 2])\nans = 1\n>> fzero (f, [-2 0])\nans = -1\n>> fzero (f, 0.5)\nans = 1\n>> fzero (f, -0.5)\nans = -1\n```\n\n用初值时，找到哪个根取决于从哪里出发。",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "nonlin · fzero",
+    "note": "自编，答案由 Octave 8.4 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex3",
+  "stem": "圆 $x^2 + y^2 = 5$ 与双曲线 $xy = 2$ 的交点，是方程组 $F(x,y) = 0$ 的解。`fsolve` 是迭代法，需要初值，不同初值可能落到不同的解。先预测这两个初值各自收敛到哪个交点，再运行：\n\n```octave\ng = @(v) [v(1)^2 + v(2)^2 - 5; v(1)*v(2) - 2];\n[xa, fa, ia] = fsolve (g, [3; 0.5]);\n[xb, fb, ib] = fsolve (g, [-3; -0.5]);\nround (xa)\nround (xb)\n```\n\n`fsolve` 的容差只到约 $10^{-6}$，所以用 `round` 取整比较。",
+  "check": {
+   "kind": "numbers",
+   "ask": "依次写出 `round (xa)` 的两个数（$x$、$y$）和 `round (xb)` 的两个数。",
+   "answer": [
+    2,
+    1,
+    -2,
+    -1
+   ],
+   "hint": "圆与双曲线的 4 个交点是 $(2,1)$、$(1,2)$、$(-2,-1)$、$(-1,-2)$。初值 $(3, 0.5)$ 在第一象限，离哪个交点更近？"
+  },
+  "verify": "g = @(v) [v(1)^2 + v(2)^2 - 5; v(1)*v(2) - 2]; xa = fsolve (g, [3; 0.5]); xb = fsolve (g, [-3; -0.5]); result = [round(xa); round(xb)];",
+  "sol": "四个交点是 $(2,1)$、$(1,2)$、$(-2,-1)$、$(-1,-2)$。两个初值分别落在第一、第三象限，各自收敛到最近的 $(2,1)$ 与 $(-2,-1)$。`info = 1` 表示已收敛，但收敛到哪一个解取决于初值，换初值 `[0.5; 3]` 会得到 $(1,2)$。未取整的 `xa` 是 `2.0000, 1.0000`，实际偏差约 $10^{-6}$ 量级。\n\n```octave\n>> g = @(v) [v(1)^2 + v(2)^2 - 5; v(1)*v(2) - 2];\n>> [xa, fa, ia] = fsolve (g, [3; 0.5]);\n>> [xb, fb, ib] = fsolve (g, [-3; -0.5]);\n>> round (xa)\nans =\n\n   2\n   1\n\n>> round (xb)\nans =\n\n  -2\n  -1\n\n>> [ia ib]\nans =\n\n   1   1\n\n```",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "nonlin · fsolve",
+    "note": "自编，答案由 Octave 8.4 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex4",
+  "stem": "`fminbnd` 在**给定区间内**找一元函数的极小点。函数 $f(x) = x^2 - 4x$ 的无约束极小点是 $x=2$。先预测，把区间换成 $[3, 5]$ 后结果是什么，再运行：\n\n```octave\n[x, fval] = fminbnd (@(x) x.^2 - 4*x, 3, 5)\nround (100*x)\nround (fval)\n```\n\n`fminbnd` 对精度只做到约 $10^{-4}$ 量级，所以对 `x` 乘 100 后取整、对 `fval` 取整来比较。",
+  "check": {
+   "kind": "numbers",
+   "ask": "依次写出 `round (100*x)` 与 `round (fval)`。",
+   "answer": [
+    300,
+    -3
+   ],
+   "hint": "$f'(x) = 2x - 4$，在 $[3,5]$ 内恒为正，$f$ 在这个区间上单调递增。区间内的最小值出现在哪里？"
+  },
+  "verify": "[x, fval] = fminbnd (@(x) x.^2 - 4*x, 3, 5); result = [round(100*x), round(fval)];",
+  "sol": "区间 $[3,5]$ 不含无约束极小点 $x=2$，$f' = 2x - 4 > 0$，$f$ 在区间上递增，最小值在左端点 $x=3$，$f(3) = -3$。`fminbnd` 返回的是**区间内**的极小点，边界极小也照常返回（略偏内侧，如 `3.00005`）。把区间扩到 $[0, 5]$ 才会得到 $x = 2$，$f = -4$。\n\n```octave\n>> [x, fval] = fminbnd (@(x) x.^2 - 4*x, 3, 5)\nx = 3.0000\nfval = -2.9999\n>> round (100*x)\nans = 300\n>> round (fval)\nans = -3\n>> [x, fval] = fminbnd (@(x) x.^2 - 4*x, 0, 5)\nx = 2.0000\nfval = -4\n```",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "nonlin · fminbnd",
+    "note": "自编，答案由 Octave 8.4 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex5",
+  "stem": "二元函数 $f(x,y) = (x-1)^2 + (y+2)^2 + 3$ 的极小点可以由配方直接得到，但用 `fminsearch`（不用导数的 Nelder-Mead 单纯形法）也能数值地找到它。先预测极小点与极小值，再运行：\n\n```octave\n[x, fval] = fminsearch (@(v) (v(1)-1)^2 + (v(2)+2)^2 + 3, [0; 0])\nround (100*x)\nround (fval)\n```\n\n`fminsearch` 的默认精度约 $10^{-4}$，所以对 `x` 乘 100 后取整、对 `fval` 取整来比较。",
+  "check": {
+   "kind": "numbers",
+   "ask": "依次写出 `round (100*x)` 的两个数和 `round (fval)`。",
+   "answer": [
+    100,
+    -200,
+    3
+   ],
+   "hint": "两个平方项都不小于 0，极小值在两个平方项同时为 0 处取得，函数的第 1、2 个自变量分别是 `v(1)`、`v(2)`。"
+  },
+  "verify": "[x, fval] = fminsearch (@(v) (v(1)-1)^2 + (v(2)+2)^2 + 3, [0; 0]); result = [round(100*x); round(fval)];",
+  "sol": "两个平方项同时为 0 时 $f$ 最小：$x = 1,\\ y = -2$，$f_{\\min} = 3$。`fminsearch` 的目标函数接收**一个向量参数**，所以写成 `v(1)`、`v(2)`，而不是两个标量参数。得到的 `x` 是 `0.9999, -2.0000`，乘 100 取整为 $100, -200$。\n\n```octave\n>> [x, fval] = fminsearch (@(v) (v(1)-1)^2 + (v(2)+2)^2 + 3, [0; 0])\nx =\n\n   0.9999\n  -2.0000\n\nfval = 3.0000\n>> round (100*x)\nans =\n\n   100\n  -200\n\n>> round (fval)\nans = 3\n```",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "nonlin · fminsearch",
+    "note": "自编，答案由 Octave 8.4 复算"
+   }
+  ]
+ }
+]

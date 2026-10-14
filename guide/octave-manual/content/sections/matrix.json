@@ -1198,9 +1198,9 @@
     {
      "k": "p",
      "t": {
-      "en": "If invoked with a single scalar argument *n*, return a square",
-      "sha": "2490854dc61e",
-      "zh": "如果只用一个标量参数 *n* 调用，则返回一个方阵"
+      "en": "If invoked with a single scalar argument *n*, return a square NxN identity matrix.",
+      "sha": "3d05c6ece65f",
+      "zh": "如果只用一个标量参数 *n* 调用，则返回一个 NxN 的单位方阵。"
      }
     },
     {
@@ -1272,9 +1272,9 @@
     {
      "k": "p",
      "t": {
-      "en": "If invoked with a single scalar integer argument *n*, return a square",
-      "sha": "31e20588af6c",
-      "zh": "如果只用一个标量整数参数 *n* 调用，则返回一个方阵"
+      "en": "If invoked with a single scalar integer argument *n*, return a square NxN matrix.",
+      "sha": "f83be7361de5",
+      "zh": "如果只用一个标量整数参数 *n* 调用，则返回一个 NxN 的方阵。"
      }
     },
     {
@@ -1350,9 +1350,9 @@
     {
      "k": "p",
      "t": {
-      "en": "If invoked with a single scalar integer argument, return a square",
-      "sha": "4b532c927903",
-      "zh": "如果只用一个标量整数参数调用，则返回一个方阵"
+      "en": "If invoked with a single scalar integer argument, return a square NxN matrix.",
+      "sha": "3bf5a2063b09",
+      "zh": "如果只用一个标量整数参数调用，则返回一个 NxN 的方阵。"
      }
     },
     {
@@ -1608,9 +1608,9 @@
     {
      "k": "p",
      "t": {
-      "en": "To compute the pseudo-random sequence, `rand` uses the Mersenne Twister with a period of $2^{19937}-1$ (See M. Matsumoto and T. Nishimura, *Mersenne Twister: A 623-dimensionally equidistributed uniform pseudorandom number generator*, pp. 3--30, January 1998, http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html). Do **not** use for cryptography without securely hashing several returned values together, otherwise the generator state can be learned after reading 624 consecutive values.",
-      "sha": "38986fa33ebd",
-      "zh": "`rand` 用周期为 $2^{19937}-1$ 的 Mersenne Twister 来计算伪随机序列（参见 M. Matsumoto 和 T. Nishimura 的 *Mersenne Twister: A 623-dimensionally equidistributed uniform pseudorandom number generator*，第 3--30 页，1998 年 1 月，http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html）。**不要**把它用于密码学，除非先把若干个返回值一起做安全散列，否则读取 624 个连续值之后，就能推知生成器的状态。"
+      "en": "To compute the pseudo-random sequence, `rand` uses the Mersenne Twister with a period of $2^{19937}-1$ (See M. Matsumoto and T. Nishimura, *Mersenne Twister: A 623-dimensionally equidistributed uniform pseudorandom number generator*, ACM Trans. on Modeling and Computer Simulation Vol. 8, No. 1, pp. 3--30, January 1998, http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html). Do **not** use for cryptography without securely hashing several returned values together, otherwise the generator state can be learned after reading 624 consecutive values.",
+      "sha": "022e5b75e1fd",
+      "zh": "`rand` 用周期为 $2^{19937}-1$ 的 Mersenne Twister 来计算伪随机序列（参见 M. Matsumoto 和 T. Nishimura 的 *Mersenne Twister: A 623-dimensionally equidistributed uniform pseudorandom number generator*，ACM Trans. on Modeling and Computer Simulation，第 8 卷第 1 期，第 3--30 页，1998 年 1 月，http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html）。**不要**把它用于密码学，除非先把若干个返回值一起做安全散列，否则读取 624 个连续值之后，就能推知生成器的状态。"
      }
     },
     {

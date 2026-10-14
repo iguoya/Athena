@@ -1,0 +1,182 @@
+[
+  {
+    "id": "ex1",
+    "stem": "先预测 `K` 长什么样，再运行：\n\n```octave\nK = repmat (eye (2), 2, 2);\nsize (K)\nsum (K(:))\nrank (K)\n```\n\n`K` 的尺寸、全部元素之和、秩分别是多少？",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写四个数：`size (K)` 的两个数、`sum (K(:))`、`rank (K)`。",
+      "answer": [
+        4,
+        4,
+        8,
+        2
+      ],
+      "hint": "回头看 `repmat` 与 `eye`：`repmat (A, m, n)` 把 `A` 整块当作元素，排成 m 行 n 列。秩看线性无关的行有几行。"
+    },
+    "verify": "K = repmat (eye (2), 2, 2); result = [size(K), sum(K(:)), rank(K)];",
+    "sol": "`K` 是由四块 $I_2$ 拼成的 $\\begin{pmatrix}I&I\\\\I&I\\end{pmatrix}$，尺寸 $4\\times4$，共 8 个 1。第 3、4 行与第 1、2 行完全相同，独立的行只有两行，所以秩为 2。\n\n```octave\n>> K = repmat (eye (2), 2, 2)\nK =\n\n   1   0   1   0\n   0   1   0   1\n   1   0   1   0\n   0   1   0   1\n>> size (K)\nans =\n\n   4   4\n>> sum (K(:))\nans = 8\n>> rank (K)\nans = 2\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "matrix · repmat, eye",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex2",
+    "stem": "先预测，再运行：\n\n```octave\nB = reshape (1:6, 2, 3)\n```\n\n`B` 的第一行 `B(1,:)` 是什么？",
+    "check": {
+      "kind": "choice",
+      "options": [
+        {
+          "text": "`1 2 3`",
+          "ok": false,
+          "why": "这是按行优先填充的结果（C、Python 的习惯）。Octave 的 `reshape` 按列优先取元素、按列优先放回。"
+        },
+        {
+          "text": "`1 3 5`",
+          "ok": true,
+          "why": "元素按列优先放入：第一列是 `1 2`，第二列 `3 4`，第三列 `5 6`；第一行取每列的首项，得到 `1 3 5`。"
+        },
+        {
+          "text": "`2 4 6`",
+          "ok": false,
+          "why": "这是第二行。第一行取每列的第一个元素，即 `1 3 5`。"
+        },
+        {
+          "text": "报错：`1:6` 是 1×6 行向量，不能直接变成 2×3",
+          "ok": false,
+          "why": "只要元素总数相同（6 = 2×3），`reshape` 就能工作，不要求原来的形状与目标形状相似。"
+        }
+      ],
+      "hint": "回头看 `reshape`：元素按什么顺序读取？结果又按什么顺序填？"
+    },
+    "sol": "`reshape` 先把输入按列优先展开成一条长向量，再按列优先填进新形状。想按行填，需要先转置再 reshape，再转置回来。\n\n```octave\n>> B = reshape (1:6, 2, 3)\nB =\n\n   1   3   5\n   2   4   6\n>> B(1,:)\nans =\n\n   1   3   5\n>> B(:)'\nans =\n\n   1   2   3   4   5   6\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "matrix · reshape",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex3",
+    "stem": "排序不仅要得到排好的值，还常要知道「谁排到了哪里」。先预测下面两个下标向量，再运行：\n\n```octave\nx = [30 10 20 10];\n[s, idx] = sort (x)\n[s2, idx2] = sort (x, \"descend\")\n```\n\n`x` 中有两个 10，它们在 `idx` 与 `idx2` 里的先后次序是怎样的？",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写八个数：`idx` 的四个数，再写 `idx2` 的四个数。",
+      "answer": [
+        2,
+        4,
+        3,
+        1,
+        1,
+        3,
+        2,
+        4
+      ],
+      "hint": "回头看 `sort` 对相等元素的约定：相等元素按它们在原向量中出现的先后顺序列出。降序排序时这条也成立吗？"
+    },
+    "verify": "x = [30 10 20 10]; [s, idx] = sort (x); [s2, idx2] = sort (x, \"descend\"); result = [idx, idx2];",
+    "sol": "升序时两个 10 位于原向量的第 2、4 位，排在最前，`idx` 以 `2 4` 开头，随后是 20 的位置 3 和 30 的位置 1。降序时 30 的位置 1 最先，然后是 20 的位置 3，两个 10 仍按原先后顺序，是 `2 4`，而不是倒过来的 `4 2`。\n\n```octave\n>> x = [30 10 20 10];\n>> [s, idx] = sort (x)\ns =\n\n   10   10   20   30\n\nidx =\n\n   2   4   3   1\n>> [s2, idx2] = sort (x, \"descend\")\ns2 =\n\n   30   20   10   10\n\nidx2 =\n\n   1   3   2   4\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "matrix · sort",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex4",
+    "stem": "先预测，再运行：\n\n```octave\nA = magic (4)\nd = diag (A, 1)\nL = tril (A, -1);\nsum (L(:))\n```\n\n`diag (A, 1)` 取出哪条对角线？`tril (A, -1)` 保留哪些位置？",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写四个数：`d` 的三个元素，再写 `tril (A, -1)` 全部元素之和。",
+      "answer": [
+        2,
+        10,
+        12,
+        54
+      ],
+      "hint": "回头看 `diag` 与 `tril`：第二个参数 k 为正表示向右上偏移，为负表示向左下偏移；`tril (A, -1)` 不含主对角线。"
+    },
+    "verify": "A = magic (4); d = diag (A, 1); L = tril (A, -1); result = [d(:)', sum(L(:))];",
+    "sol": "`diag (A, 1)` 是主对角线上方的那一条，元素 $A_{12},A_{23},A_{34}$，即 2、10、12。`tril (A, -1)` 只留严格下三角，元素为 $5+9+7+4+14+15=54$。\n\n```octave\n>> A = magic (4)\nA =\n\n   16    2    3   13\n    5   11   10    8\n    9    7    6   12\n    4   14   15    1\n>> d = diag (A, 1)\nd =\n\n    2\n   10\n   12\n>> L = tril (A, -1)\nL =\n\n    0    0    0    0\n    5    0    0    0\n    9    7    0    0\n    4   14   15    0\n>> sum (L(:))\nans = 54\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "matrix · diag, tril, magic",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex5",
+    "stem": "`find` 要两个输出时，给出非零元素的行、列下标。先预测，再运行：\n\n```octave\nA = magic (4);\n[r, c] = find (A > 12)\n```\n\n`A > 12` 为真的位置在哪里？它们在结果里按什么顺序排列？",
+    "check": {
+      "kind": "numbers",
+      "ask": "把 `r` 的四个数写在前，`c` 的四个数写在后，共八个数。",
+      "answer": [
+        1,
+        4,
+        4,
+        1,
+        1,
+        2,
+        3,
+        4
+      ],
+      "hint": "回头看 `find`：多维下标按列优先的顺序给出。先把 `magic (4)` 写出来，逐列找大于 12 的元素。"
+    },
+    "verify": "A = magic (4); [r, c] = find (A > 12); result = [r(:); c(:)];",
+    "sol": "`magic (4)` 大于 12 的元素是 16（第 1 行第 1 列）、14（第 4 行第 2 列）、15（第 4 行第 3 列）、13（第 1 行第 4 列）。`find` 沿列扫描，所以顺序是按列号 1、2、3、4 排好的。单输出的 `find (A > 12)` 给出线性下标 $r+4(c-1)$，即 1、8、12、13。\n\n```octave\n>> A = magic (4);\n>> [r, c] = find (A > 12)\nr =\n\n   1\n   4\n   4\n   1\n\nc =\n\n   1\n   2\n   3\n   4\n>> idx = find (A > 12)\nidx =\n\n    1\n    8\n   12\n   13\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "matrix · find",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex6",
+    "stem": "先预测，再运行：\n\n```octave\nM = [1 2 3; 4 0 6];\nall (M)\n```\n\n`all (M)` 的结果是什么？",
+    "check": {
+      "kind": "choice",
+      "options": [
+        {
+          "text": "`0`（单个值：整个矩阵并非全部非零）",
+          "ok": false,
+          "why": "`all` 对矩阵是逐列运算，返回行向量。要得到整个矩阵的单个值，要写 `all (all (M))` 或 `all (M(:))`。"
+        },
+        {
+          "text": "`1; 0`（每行一个值的列向量）",
+          "ok": false,
+          "why": "这是 `all (M, 2)` 的结果，沿第 2 维（逐行）判断。默认沿第一个长度不为 1 的维度，即逐列。"
+        },
+        {
+          "text": "`1 1 1`",
+          "ok": false,
+          "why": "这是 `any (M)` 的结果：每一列都至少有一个非零元素。`all` 要求整列全部非零。"
+        },
+        {
+          "text": "`1 0 1`",
+          "ok": true,
+          "why": "第 1、3 列全部非零得 1，第 2 列含有 0 得 0。"
+        }
+      ],
+      "hint": "回头看 `any` 与 `all`：对矩阵默认沿哪个维度运算？返回的是标量、行向量还是列向量？"
+    },
+    "sol": "`all` 与 `any` 对矩阵默认逐列判断，返回行向量；`dim` 为 2 时逐行判断，返回列向量。\n\n```octave\n>> M = [1 2 3; 4 0 6];\n>> all (M)\nans =\n\n  1  0  1\n>> all (M, 2)\nans =\n\n  1\n  0\n>> any (M)\nans =\n\n  1  1  1\n>> all (all (M))\nans = 0\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "matrix · any, all",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  }
+]

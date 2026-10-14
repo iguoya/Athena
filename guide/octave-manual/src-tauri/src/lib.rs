@@ -111,6 +111,19 @@ fn get_exercises(state: State<AppState>, section_id: String) -> Result<Value, St
     read_json(&path)
 }
 
+/// 一幅图的 SVG（content/figures/<图名>.svg，由 scripts/render_figures.py 渲染）；还没有就返回 null。
+#[tauri::command]
+fn get_figure(state: State<AppState>, fig_id: String) -> Result<Option<String>, String> {
+    if !is_safe_id(&fig_id) {
+        return Err(format!("非法图引用：{fig_id}"));
+    }
+    let path = state.content_root.join("figures").join(format!("{fig_id}.svg"));
+    if !path.is_file() {
+        return Ok(None);
+    }
+    fs::read_to_string(&path).map(Some).map_err(|e| format!("读 {} 失败：{}", path.display(), e))
+}
+
 #[tauri::command]
 fn record_attempt(state: State<AppState>, knowledge_id: String, item_id: String, correct: bool) -> Result<(), String> {
     let conn = open_store(&state.store_path)?;
@@ -148,7 +161,7 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .manage(state)
-        .invoke_handler(tauri::generate_handler![get_curriculum, get_section, get_exercises, record_attempt, get_attempts])
+        .invoke_handler(tauri::generate_handler![get_curriculum, get_section, get_exercises, get_figure, record_attempt, get_attempts])
         .run(tauri::generate_context!())
         .expect("error while running athena-octave-manual");
 }

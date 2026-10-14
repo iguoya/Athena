@@ -5,9 +5,9 @@
   {
    "k": "p",
    "t": {
-    "en": "This chapter documents the linear algebra functions provided in Octave. Reference material for many of these functions may be found in Johns Hopkins, 1989, and in the *LAPACK Users' Guide*, SIAM, 1992. The *LAPACK Users' Guide* is available at: *http://www.netlib.org/lapack/lug/*",
-    "sha": "8377a54db4e8",
-    "zh": "本章介绍 Octave 提供的线性代数函数。这些函数中许多的参考资料可以在 Johns Hopkins, 1989 和 *LAPACK Users' Guide*, SIAM, 1992 中找到。*LAPACK Users' Guide* 可在这里获取：*http://www.netlib.org/lapack/lug/*"
+    "en": "This chapter documents the linear algebra functions provided in Octave. Reference material for many of these functions may be found in Golub and Van Loan, *Matrix Computations, 2nd Ed.*, Johns Hopkins, 1989, and in the *LAPACK Users' Guide*, SIAM, 1992. The *LAPACK Users' Guide* is available at: *http://www.netlib.org/lapack/lug/*",
+    "sha": "859b785832b9",
+    "zh": "本章介绍 Octave 提供的线性代数函数。这些函数中许多的参考资料可以在 Golub 和 Van Loan 的 *Matrix Computations, 2nd Ed.*（Johns Hopkins，1989 年）以及 *LAPACK Users' Guide*（SIAM，1992 年）中找到。*LAPACK Users' Guide* 可在这里获取：*http://www.netlib.org/lapack/lug/*"
    }
   },
   {
@@ -751,9 +751,9 @@
         {
          "k": "p",
          "t": {
-          "en": "`sqrt (sum (diag (A' * A)))`.",
-          "sha": "58c8ebbb5b99",
-          "zh": "`sqrt (sum (diag (A' * A)))`。"
+          "en": "Frobenius norm of *A*, `sqrt (sum (diag (A' * A)))`.",
+          "sha": "eb8c5cca3a47",
+          "zh": "*A* 的 Frobenius 范数，即 `sqrt (sum (diag (A' * A)))`。"
          }
         }
        ]
@@ -828,7 +828,16 @@
         "sha": "991517f07dde",
         "zh": "*p* = `\"fro\"`"
        },
-       "blocks": []
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Frobenius norm of *A*, `sqrt (sumsq (abs (A)))`.",
+          "sha": "f8574978f4de",
+          "zh": "*A* 的 Frobenius 范数，即 `sqrt (sumsq (abs (A)))`。"
+         }
+        }
+       ]
       },
       {
        "term": {
@@ -1626,9 +1635,9 @@
     {
      "k": "p",
      "t": {
-      "en": "If the final argument is the scalar 0 or the string `\"econ\"`, an economy factorization is returned. If the original matrix *A* has size rows in *R* and N columns in *Q* and omit the zeros in *R*. If M N, there is no difference between the economy and standard factorizations. When calculating an economy factorization and *A* is dense, the output *P* is always a vector rather than a matrix. If *A* is sparse, output *P* is a sparse permutation matrix.",
-      "sha": "7f9fd7379f49",
-      "zh": "如果最后一个参数是标量 0 或字符串 `\"econ\"`，则返回经济型分解。如果原矩阵 *A* 的大小，*R* 中的行数以及 *Q* 中的 N 列，并省略 *R* 中的零。如果 M N，经济型分解与标准分解没有区别。计算经济型分解且 *A* 是稠密矩阵时，输出 *P* 总是向量而不是矩阵。如果 *A* 是稀疏矩阵，输出 *P* 是稀疏置换矩阵。"
+      "en": "If the final argument is the scalar 0 or the string `\"econ\"`, an economy factorization is returned. If the original matrix *A* has size MxN and M > N, then the economy factorization will calculate just N rows in *R* and N columns in *Q* and omit the zeros in *R*. If M N, there is no difference between the economy and standard factorizations. When calculating an economy factorization and *A* is dense, the output *P* is always a vector rather than a matrix. If *A* is sparse, output *P* is a sparse permutation matrix.",
+      "sha": "44256460bca2",
+      "zh": "如果最后一个参数是标量 0 或字符串 `\"econ\"`，则返回经济型分解。如果原矩阵 *A* 的大小为 MxN 且 M > N，则经济型分解只计算 *R* 中的 N 行以及 *Q* 中的 N 列，并省略 *R* 中的零。如果 M N，经济型分解与标准分解没有区别。计算经济型分解且 *A* 是稠密矩阵时，输出 *P* 总是向量而不是矩阵。如果 *A* 是稀疏矩阵，输出 *P* 是稀疏置换矩阵。"
      }
     },
     {
@@ -1933,9 +1942,9 @@
     {
      "k": "p",
      "t": {
-      "en": "However, the Taylor series is *not* the way to compute the matrix exponential; see Moler and Van Loan, *Nineteen Dubious Ways to Compute the Exponential of a Matrix*, SIAM Review, 1978. This routine uses Ward's diagonal Pad@'e approximation method with three step preconditioning (SIAM Journal on Numerical Analysis, 1977). Diagonal Pad@'e approximations are rational polynomials of matrices $D_q(A)^{-1}N_q(A)$ whose Taylor series matches the first $2 q + 1$ terms of the Taylor series above; direct evaluation of the Taylor series (with the same preconditioning steps) may be desirable in lieu of the Pad@'e approximation when $D_q(A)$ is ill-conditioned. See also: `logm`, `sqrtm`.",
-      "sha": "f857bac4e30d",
-      "zh": "不过，Taylor 级数*不是*计算矩阵指数的方法；参见 Moler 与 Van Loan 的 *Nineteen Dubious Ways to Compute the Exponential of a Matrix*, SIAM Review, 1978。这个例程使用 Ward 的对角 Padé 近似法，并配以三步预处理（SIAM Journal on Numerical Analysis, 1977）。对角 Padé 近似是矩阵的有理多项式 $D_q(A)^{-1}N_q(A)$，其 Taylor 级数与上面 Taylor 级数的前 $2 q + 1$ 项一致；当 $D_q(A)$ 病态时，可以考虑直接计算 Taylor 级数（使用相同的预处理步骤）来代替 Padé 近似。另见：`logm`、`sqrtm`。"
+      "en": "However, the Taylor series is *not* the way to compute the matrix exponential; see Moler and Van Loan, *Nineteen Dubious Ways to Compute the Exponential of a Matrix*, SIAM Review, 1978. This routine uses Ward's diagonal Padé approximation method with three step preconditioning (SIAM Journal on Numerical Analysis, 1977). Diagonal Padé approximations are rational polynomials of matrices $D_q(A)^{-1}N_q(A)$ whose Taylor series matches the first $2 q + 1$ terms of the Taylor series above; direct evaluation of the Taylor series (with the same preconditioning steps) may be desirable in lieu of the Padé approximation when $D_q(A)$ is ill-conditioned. See also: `logm`, `sqrtm`.",
+      "sha": "53f6de991089",
+      "zh": "不过，Taylor 级数*不是*计算矩阵指数的方法；参见 Moler 与 Van Loan 的 *Nineteen Dubious Ways to Compute the Exponential of a Matrix*，SIAM Review，1978 年。这个例程使用 Ward 的对角 Padé 近似法，并配以三步预处理（SIAM Journal on Numerical Analysis，1977 年）。对角 Padé 近似是矩阵的有理多项式 $D_q(A)^{-1}N_q(A)$，其 Taylor 级数与上面 Taylor 级数的前 $2 q + 1$ 项一致；当 $D_q(A)$ 病态时，可以考虑直接计算 Taylor 级数（使用相同的预处理步骤）来代替 Padé 近似。另见：`logm`、`sqrtm`。"
      }
     }
    ]
@@ -1960,8 +1969,8 @@
     {
      "k": "p",
      "t": {
-      "en": "The implementation utilizes a Pad@'e approximant and the identity",
-      "sha": "58f705798cef",
+      "en": "The implementation utilizes a Padé approximant and the identity",
+      "sha": "507ebb13c47b",
       "zh": "实现使用了 Padé 近似式和恒等式"
      }
     },

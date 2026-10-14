@@ -22,6 +22,7 @@ import re
 import shutil
 import subprocess
 import sys
+import unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -78,9 +79,11 @@ STRONG_CMDS = {"strong", "b"}
 PLAIN_CMDS = {"sc", "nospell", "w", "r", "sansserif", "titlefont", "math_plain"}
 DROP_CMDS = {"sortas", "anchor", "cindex", "findex", "vindex", "kindex", "image", "footnotestyle", "noindent", "tie_"}
 SPECIAL = {"@": "@", "{": "{", "}": "}", "*": " ", ":": "", ".": ".", "-": "", "!": "!", "?": "?", " ": " ", "\n": " "}
+ACCENTS = {"'": "\u0301", "`": "\u0300", "^": "\u0302", '"': "\u0308", "~": "\u0303", ",": "\u0327"}
 GLYPHS = {"dots": "…", "result": "⇒", "print": "-|", "error": "error→", "equiv": "≡", "TeX": "TeX", "LaTeX": "LaTeX",
           "tie": " ", "minus": "−", "bullet": "•", "pounds": "£", "copyright": "©", "expansion": "→", "arrow": "→",
-          "enddots": "…", "pi": "π", "textdegree": "°", "AA": "Å"}
+          "enddots": "…", "pi": "π", "textdegree": "°", "AA": "Å", "backslashchar": "\\", "comma": ",",
+          "hashchar": "#", "atchar": "@", "lbracechar": "{", "rbracechar": "}"}
 
 
 def match_brace(s: str, i: int) -> int:
@@ -182,6 +185,12 @@ def conv(s: str, code: bool = False) -> str:
             i += 1
             continue
         nx = s[i + 1]
+        if nx in ACCENTS:
+            m = re.match(r"\{?([A-Za-z])\}?", s[i + 2:])
+            if m:
+                out.append(unicodedata.normalize("NFC", m.group(1) + ACCENTS[nx]))
+                i += 2 + m.end()
+                continue
         if nx in SPECIAL:
             out.append(SPECIAL[nx])
             i += 2
@@ -214,7 +223,11 @@ def conv(s: str, code: bool = False) -> str:
                 out.append(math_tex(body) if code else f"${math_tex(body)}$")
             elif name in ("ref", "xref", "pxref", "inforef"):
                 label = conv(split_args(body)[0], True)
-                if label.startswith("XREF"):  # 函数文档里指向另一个函数的内部锚点（XREFnorm → norm）
+                if label.startswith("fig:"):
+                    out.append("the figure")
+                elif label.startswith("tab:"):
+                    out.append("the table")
+                elif label.startswith("XREF"):  # 函数文档里指向另一个函数的内部锚点（XREFnorm → norm）
                     out.append(label[4:] if code else f"`{label[4:]}`")
                 else:
                     out.append({"xref": f"See {label}", "pxref": f"see {label}"}.get(name, label))
@@ -263,12 +276,12 @@ def verbatim(lines: list[str]) -> str:
 # 块结构
 
 SKIP_LINE = re.compile(r"^@(c|comment|cindex|findex|vindex|kindex|opindex|prindex|tindex|anchor|noindent|need|page|sp|node|include|"
-                       r"setfilename|settitle|group|end group|refill|top|vskip|exdent|ifclear|ifset|set|clear|nospell|"
+                       r"setfilename|settitle|group|end group|refill|top|vskip|exdent|ifclear|ifset|set|clear|"
                        r"headitem_end)\b", re.I)
 HEADING_RE = re.compile(r"^@(chapter|section|subsection|subsubsection|unnumbered\w*|heading|subheading|subsubheading|appendix\w*)\s+(.*)$")
 DEF_RE = re.compile(r"^@(deftypefnx?|deftypevrx?|defvrx?|deffnx?)\s+(.*)$")
 VERBATIM_ENVS = {"example", "smallexample", "display", "smalldisplay", "format", "verbatim", "lisp"}
-SKIP_ENVS = {"menu", "ifnottex", "ifinfo", "ifhtml", "iftex", "float", "ifnothtml_", "direntry", "titlepage", "copying", "macro"}
+SKIP_ENVS = {"menu", "ifnottex", "ifinfo", "ifhtml", "iftex", "ifnothtml_", "direntry", "titlepage", "copying", "macro"}
 KEEP_ENVS = {"ifnotinfo", "ifnothtml", "ifnotplaintext", "group", "ifplaintext_"}
 
 
@@ -284,6 +297,9 @@ def find_end(lines: list[str], i: int, env: str) -> int:
             if depth == 0:
                 return k
     return len(lines) - 1
+
+
+ALLOWED_FIGURES: set[str] = set()  # 当前页要收的图（scope.json 的 figures）
 
 
 def sig_text(rest: str) -> tuple[str, str]:
@@ -338,6 +354,20 @@ def parse_blocks(lines: list[str]) -> list[dict]:
             continue
         em = re.match(r"@(\w+)\b", t)
         env = em.group(1) if em else ""
+        if env == "float":
+            e = find_end(lines, i, "float")
+            body = "\n".join(lines[i + 1:e])
+            im = re.search(r"@image\{([\w-]+)", body)
+            cm = re.search(r"@caption\{", body)
+            flush()
+            if im and im.group(1) in ALLOWED_FIGURES:
+                cap = None
+                if cm:
+                    k = match_brace(body, cm.end() - 1)
+                    cap = unit(inline(body[cm.end():k]))
+                blocks.append({"k": "figure", "id": im.group(1), "caption": cap})
+            i = e + 1
+            continue
         # 整块丢弃
         if env in SKIP_ENVS:
             i = find_end(lines, i, env) + 1
@@ -571,6 +601,8 @@ def prune_headings(blocks: list[dict]) -> list[dict]:
 
 
 def section_data(spec: dict) -> dict:
+    ALLOWED_FIGURES.clear()
+    ALLOWED_FIGURES.update(spec.get("figures", []))
     lines, title_en = page_lines(spec)
     lines = expand_docstrings(lines, spec)
     blocks = prune_headings(parse_blocks(lines))
@@ -579,7 +611,7 @@ def section_data(spec: dict) -> dict:
 
 def units(blocks: list[dict]):
     for b in blocks:
-        for key in ("t", "title", "term"):
+        for key in ("t", "title", "term", "caption"):
             if isinstance(b.get(key), dict) and "sha" in b[key]:
                 yield b[key]
         if "blocks" in b:

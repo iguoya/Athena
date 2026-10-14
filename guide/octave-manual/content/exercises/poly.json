@@ -53,7 +53,7 @@
       ],
       "hint": "首项系数是 1；次高项系数等于 $-\\operatorname{tr}A$，常数项等于 $(-1)^n\\det A$。`roots` 求的是 `c` 对应多项式的零点，它们和 $A$ 的特征值有什么关系？"
     },
-    "verify": "A = [2 1 0; 1 2 1; 0 1 2]; c = poly (A); result = [c, sort(roots (c))'];",
+    "verify": "A = [2 1 0; 1 2 1; 0 1 2]; c = poly (A); result = [c, sort(roots (c))']",
     "sol": "`poly (A)` 给出 $\\lambda^3-6\\lambda^2+10\\lambda-4$：$-6=-\\operatorname{tr}A$，$-4=-\\det A$。`roots` 求这个多项式的零点，就是 $A$ 的特征值 $2-\\sqrt2,\\ 2,\\ 2+\\sqrt2$。`roots` 本身不保证顺序，所以先 `sort`。\n\n```octave\n>> c = poly (A)\nc =\n\n    1   -6   10   -4\n\n>> r = sort (roots (c))\nr =\n\n   0.5858\n   2.0000\n   3.4142\n```\n\n`eig (A)` 给出同样的三个数。",
     "source_refs": [
       {
@@ -80,7 +80,7 @@
       ],
       "hint": "回忆长除法。注意 `deconv` 返回的余式 `r` 和 `y` 一样长，前面补了 0。"
     },
-    "verify": "y = [1 -5 6 2]; a = [1 -2]; [b, r] = deconv (y, a); result = [b, r];",
+    "verify": "y = [1 -5 6 2]; a = [1 -2]; [b, r] = deconv (y, a); result = [b, r]",
     "sol": "长除法：$x^3-5x^2+6x+2=(x-2)(x^2-3x)+2$，商是 $x^2-3x$，即 `[1 -3 0]`，余式是常数 2。`deconv` 把余式补成与 `y` 等长的 `[0 0 0 2]`，所以 `conv (a, b) + r` 正好还原 `y`。\n\n```octave\n>> [b, r] = deconv (y, a)\nb =\n\n   1  -3   0\n\nr =\n\n   0   0   0   2\n\n>> conv (a, b) + r\nans =\n\n   1  -5   6   2\n```",
     "source_refs": [
       {
@@ -139,8 +139,8 @@
       ],
       "hint": "数据精确落在二次曲线上，二次拟合会找回原来的系数；一次拟合是最小二乘直线，先看 `p1` 的两个系数再代入。"
     },
-    "verify": "x = -1:3; y = 2*x.^2 - 3*x + 1; p2 = polyfit (x, y, 2); p1 = polyfit (x, y, 1); result = [polyval(p2, 6), polyval(p1, 6)];",
-    "sol": "二次拟合找回 $2x^2-3x+1$，在 6 处是 $72-18+1=55$。一次拟合得到最小二乘直线 $y=x+3$（5 个点的 $x$ 关于 0 对称，斜率是 $\\sum xy/\\sum x^2$），在 6 处是 9，与真实值 55 差得很远：拟合次数低于数据的真实次数时，外推尤其不可靠。\n\n```octave\n>> p2 = polyfit (x, y, 2)\np2 =\n\n   2  -3   1\n\n>> p1 = polyfit (x, y, 1)\np1 =\n\n   1   3\n\n>> [polyval(p2, 6), polyval(p1, 6)]\nans =\n\n   55    9\n```\n\n不同机器上 `p2` 的元素可能带有 1e-15 量级的舍入误差，`polyval` 的结果可能显示成 `55.000`，这是正常的。",
+    "verify": "x = -1:3; y = 2*x.^2 - 3*x + 1; p2 = polyfit (x, y, 2); p1 = polyfit (x, y, 1); result = [polyval(p2, 6), polyval(p1, 6)]",
+    "sol": "二次拟合找回 $2x^2-3x+1$，在 6 处是 $72-18+1=55$。一次拟合得到最小二乘直线 $y=x+3$（斜率 $=\\sum(x-\\bar x)(y-\\bar y)/\\sum(x-\\bar x)^2=10/10$，截距 $=\\bar y-\\bar x=4-1$），在 6 处是 9，与真实值 55 差得很远：拟合次数低于数据的真实次数时，外推尤其不可靠。\n\n```octave\n>> p2 = polyfit (x, y, 2)\np2 =\n\n   2  -3   1\n\n>> p1 = polyfit (x, y, 1)\np1 =\n\n   1   3\n\n>> [polyval(p2, 6), polyval(p1, 6)]\nans =\n\n   55    9\n```\n\n不同机器上 `p2` 的元素可能带有 1e-15 量级的舍入误差，`polyval` 的结果可能显示成 `55.000`，这是正常的。",
     "source_refs": [
       {
         "relation": "authored",
@@ -165,7 +165,7 @@
       ],
       "hint": "分子次数高于分母，先做多项式除法得到整式部分 `k`；余下的真分式按分母的根 `p` 展开，`r(i)` 对应 `p(i)`。"
     },
-    "verify": "b = [1 0 0 1]; a = [1 3 2]; [r, p, k, e] = residue (b, a); result = [r(:); p(:); k(:)];",
+    "verify": "b = [1 0 0 1]; a = [1 3 2]; [r, p, k, e] = residue (b, a); result = [r(:); p(:); k(:)]",
     "sol": "分母 $(s+1)(s+2)$，极点 `p = [-2; -1]`。分子 $s^3+1=(s+1)(s^2-s+1)$ 含因子 $s+1$，约去后 $\\dfrac{s^2-s+1}{s+2}=s-3+\\dfrac{7}{s+2}$。所以整式部分 `k = [1 -3]`，$s=-2$ 处留数 7，而 $s=-1$ 处留数 0（被分子约掉了）。`r(i)` 与 `p(i)` 按下标一一对应。\n\n```octave\n>> [r, p, k, e] = residue (b, a)\nr =\n\n   7\n   0\n\np =\n\n  -2\n  -1\n\nk =\n\n   1  -3\n\ne =\n\n   1\n   1\n```\n\n`[b2, a2] = residue (r, p, k)` 可以把结果合回分式。",
     "source_refs": [
       {

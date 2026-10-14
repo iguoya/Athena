@@ -12,7 +12,7 @@
       ],
       "hint": "线性是两端点 $y$ 值的平均；`\"spline\"` 在 5 个点上用的是 not-a-knot 三次样条，数据本身是三次多项式，想想会发生什么；`\"nearest\"` 在正中间（平局）时取哪一侧，要实际运行才知道。"
     },
-    "verify": "x = 0:4; y = x.^3; result = [interp1(x, y, 2.5), interp1(x, y, 2.5, \"spline\"), interp1(x, y, 2.5, \"nearest\")];",
+    "verify": "x = 0:4; y = x.^3; result = [interp1(x, y, 2.5), interp1(x, y, 2.5, \"spline\"), interp1(x, y, 2.5, \"nearest\")]",
     "sol": "线性：$(8+27)/2=17.5$。`\"spline\"`：数据来自三次多项式，not-a-knot 样条恰好能重现它，结果是 $2.5^3=15.625$。`\"nearest\"`：2.5 到 2 和 3 一样近，Octave 取较大的一侧（$x=3$），得 $27$。同一个点，三种方法差别很大，线性插值对凸函数总是偏高。\n\n```octave\n>> interp1 (x, y, 2.5)\nans = 17.500\n>> interp1 (x, y, 2.5, \"spline\")\nans = 15.625\n>> interp1 (x, y, 2.5, \"nearest\")\nans = 27\n```",
     "source_refs": [
       {
@@ -72,7 +72,7 @@
       ],
       "hint": "`a` 用最后一段直线外推；`spline` 函数本身会沿三次多项式继续，而 `interp1` 的 `\"spline\"` 方法在没写 `\"extrap\"` 时按 *extrap* 缺省处理。"
     },
-    "verify": "x = [0 1 2 3]; y = [0 1 4 9]; result = [interp1(x, y, 4, \"linear\", \"extrap\"), spline(x, y, 4), isnan(interp1(x, y, 4, \"spline\"))];",
+    "verify": "x = [0 1 2 3]; y = [0 1 4 9]; result = [interp1(x, y, 4, \"linear\", \"extrap\"), spline(x, y, 4), isnan(interp1(x, y, 4, \"spline\"))]",
     "sol": "`a`：最后一段从 (2, 4) 到 (3, 9)，斜率 5，外推到 4 得 $9+5=14$。`b`：4 个点的 not-a-knot 样条就是过它们的唯一三次多项式，即 $x^2$，所以 $4^2=16$，`spline` 函数直接给出外推值。`c`：`interp1` 的 `\"spline\"` 方法在没有 `\"extrap\"` 时仍遵守缺省，范围外填 `NA`，所以 `isnan (c)` 是 1。\n\n```octave\n>> a = interp1 (x, y, 4, \"linear\", \"extrap\")\na = 14\n>> b = spline (x, y, 4)\nb = 16\n>> c = interp1 (x, y, 4, \"spline\")\nc =  NA\n>> isnan (c)\nans = 1\n```",
     "source_refs": [
       {
@@ -95,7 +95,7 @@
       ],
       "hint": "省略 `x` 时，`y(1)` 对应 $x=1$，`y(2)` 对应 $x=2$，依此类推；再对相邻两点做线性插值。"
     },
-    "verify": "y = [10 20 40 80]; result = interp1 (y, [1.5 3.2 4]);",
+    "verify": "y = [10 20 40 80]; result = interp1 (y, [1.5 3.2 4])",
     "sol": "1.5 在 $y_1=10$ 与 $y_2=20$ 的中点：15。3.2 在 $y_3=40$ 与 $y_4=80$ 之间，离 $y_3$ 0.2 段：$40+0.2\\times40=48$。4 恰好是最后一个采样点，结果是 $y_4=80$。\n\n```octave\n>> yi = interp1 (y, [1.5 3.2 4])\nyi =\n\n   15   48   80\n\n>> interp1 (y, 5)\nans =  NA\n```\n\n`interp1 (1:4, y, [1.5 3.2 4])` 与它等价；超出 1 到 4 的 5 仍然得 `NA`。",
     "source_refs": [
       {

@@ -115,6 +115,32 @@ def code_spans(s: str) -> list[str]:
     return sorted(re.findall(r"`[^`]+`", s))
 
 
+def check_figures(sections: dict) -> None:
+    """快照里的每个 figure 块都要有 content/figures/<id>.svg（scripts/render_figures.py 渲染）。"""
+    need = set()
+
+    def walk(bl):
+        for b in bl:
+            if b.get("k") == "figure":
+                need.add(b["id"])
+            if "blocks" in b:
+                walk(b["blocks"])
+            if b.get("k") == "list":
+                for it in b["items"]:
+                    walk(it)
+            if b.get("k") == "dl":
+                for it in b["items"]:
+                    walk(it["blocks"])
+
+    for data in sections.values():
+        if data:
+            walk(data["blocks"])
+    for fid in sorted(need):
+        if not (CONTENT / "figures" / f"{fid}.svg").is_file():
+            fail(f"缺图 content/figures/{fid}.svg（跑 render_figures.py）")
+    print(f"插图 {len(need)} 幅")
+
+
 def check_translations(sections: dict) -> None:
     total = done = 0
     for pid, data in sections.items():
@@ -145,12 +171,14 @@ def octave_available() -> bool:
 
 def octave_numbers(code: str) -> list[float]:
     """跑一段 Octave 代码，把变量 result（数或数组，按列展开）逐个打印出来并读回。"""
-    prog = "format long; " + code + "\n; printf('%.17g\\n', double(result(:)));"
+    # 没写分号的语句会把「result = …」打到标准输出：只认标记之后的数
+    prog = "format long; " + code + "\nprintf('@@RESULT@@\\n'); printf('%.17g\\n', double(result(:)));"
     r = subprocess.run([OCTAVE, "--no-gui", "--no-window-system", "--norc", "--quiet", "--eval", prog],
                        capture_output=True, text=True, timeout=120)
     if r.returncode != 0:
         raise RuntimeError(r.stderr.strip().splitlines()[-1] if r.stderr.strip() else "octave 失败")
-    return [float(x) for x in r.stdout.split()]
+    tail = r.stdout.split("@@RESULT@@", 1)[1]
+    return [float(x) for x in tail.split()]
 
 
 def verify_answer(ex: dict, where: str) -> None:
@@ -238,6 +266,7 @@ def main() -> int:
     args = ap.parse_args()
     sections = check_structure()
     check_translations(sections)
+    check_figures(sections)
     check_exercises(sections)
     if (ROOT / "upstream" / "octave").is_dir():
         run([sys.executable, "scripts/sync_upstream.py", "--check"], "快照与上游一致性")

@@ -92,9 +92,18 @@
   {
    "k": "p",
    "t": {
-    "en": "displays a sine wave shown in fig:plot. On most systems, this command will open a separate plot window to display the graph.",
-    "sha": "3c47df07bdec",
-    "zh": "会显示一条正弦波，如图 fig:plot 所示。在大多数系统上，这条命令会打开一个单独的绘图窗口来显示图形。"
+    "en": "displays a sine wave shown in the figure. On most systems, this command will open a separate plot window to display the graph.",
+    "sha": "f20871d49776",
+    "zh": "会显示图中所示的正弦波。在大多数系统上，这条命令会打开一个单独的绘图窗口来显示图形。"
+   }
+  },
+  {
+   "k": "figure",
+   "id": "plot",
+   "caption": {
+    "en": "Simple Two-Dimensional Plot.",
+    "sha": "8de1782ae675",
+    "zh": "简单的二维图。"
    }
   },
   {
@@ -289,7 +298,7 @@
        "term": {
         "en": "linestyle",
         "sha": "3ad5bfb9d634",
-        "zh": "线型"
+        "zh": "线型（linestyle）"
        },
        "blocks": [
         {
@@ -352,7 +361,7 @@
        "term": {
         "en": "marker",
         "sha": "af764f988057",
-        "zh": "标记"
+        "zh": "标记（marker）"
        },
        "blocks": [
         {
@@ -547,7 +556,7 @@
        "term": {
         "en": "color",
         "sha": "6dd0fe800114",
-        "zh": "颜色"
+        "zh": "颜色（color）"
        },
        "blocks": [
         {
@@ -928,9 +937,18 @@
   {
    "k": "p",
    "t": {
-    "en": "produces the histogram of 10,000 normally distributed random numbers shown in fig:hist. Note that, `randn (\"state\", 1);`, initializes the random number generator for `randn` to a known value so that the returned values are reproducible; This guarantees that the figure produced is identical to the one in this manual.",
-    "sha": "7af4c09795fb",
-    "zh": "会生成如图 fig:hist 所示的直方图，数据是 10,000 个服从正态分布的随机数。注意，`randn (\"state\", 1);` 把 `randn` 的随机数发生器初始化为一个已知的值，使返回的数值可以复现；这保证了生成的图与本手册中的图完全相同。"
+    "en": "produces the histogram of 10,000 normally distributed random numbers shown in the figure. Note that, `randn (\"state\", 1);`, initializes the random number generator for `randn` to a known value so that the returned values are reproducible; This guarantees that the figure produced is identical to the one in this manual.",
+    "sha": "93a52b34119d",
+    "zh": "会生成图中所示的、由 10,000 个正态分布随机数构成的直方图。注意，`randn (\"state\", 1);` 把 `randn` 的随机数生成器初始化为一个已知的值，使返回的数值可以复现；这保证了生成的图与本手册中的图完全一致。"
+   }
+  },
+  {
+   "k": "figure",
+   "id": "hist",
+   "caption": {
+    "en": "Histogram.",
+    "sha": "679648919b33",
+    "zh": "直方图。"
    }
   },
   {
@@ -1427,7 +1445,7 @@
        "term": {
         "en": "linestyle",
         "sha": "3ad5bfb9d634",
-        "zh": "线型"
+        "zh": "线型（linestyle）"
        },
        "blocks": [
         {
@@ -1461,7 +1479,7 @@
        "term": {
         "en": "color",
         "sha": "6dd0fe800114",
-        "zh": "颜色"
+        "zh": "颜色（color）"
        },
        "blocks": [
         {
@@ -1478,7 +1496,7 @@
        "term": {
         "en": "marker",
         "sha": "af764f988057",
-        "zh": "标记"
+        "zh": "标记（marker）"
        },
        "blocks": [
         {
@@ -1968,9 +1986,9 @@
   {
    "k": "p",
    "t": {
-    "en": "produces the figure shown in fig:errorbar.",
-    "sha": "1d72c06b00d6",
-    "zh": "生成如图 fig:errorbar 所示的图形。"
+    "en": "produces the figure shown in the figure.",
+    "sha": "e59f28995bcc",
+    "zh": "生成图中所示的图形。"
    }
   },
   {
@@ -1988,9 +2006,18 @@
   {
    "k": "p",
    "t": {
-    "en": "produces the spiral plot shown in fig:polar.",
-    "sha": "33844c3f3af6",
-    "zh": "生成如图 fig:polar 所示的螺旋线图。"
+    "en": "produces the spiral plot shown in the figure.",
+    "sha": "39bc36091d73",
+    "zh": "生成图中所示的螺旋线极坐标图。"
+   }
+  },
+  {
+   "k": "figure",
+   "id": "polar",
+   "caption": {
+    "en": "Polar plot.",
+    "sha": "3f1b847d2547",
+    "zh": "极坐标图。"
    }
   },
   {
@@ -3223,9 +3250,18 @@
   {
    "k": "p",
    "t": {
-    "en": "produces the familiar “sombrero” plot shown in fig:mesh. Note the use of the function `meshgrid` to create matrices of X and Y coordinates to use for plotting the Z data. The `ndgrid` function is similar to `meshgrid`, but works for N-dimensional matrices.",
-    "sha": "7a1413c733e7",
-    "zh": "生成我们熟悉的“墨西哥草帽”图，如图 fig:mesh 所示。注意这里用 `meshgrid` 函数生成了 X 和 Y 坐标的矩阵，用来绘制 Z 数据。`ndgrid` 函数与 `meshgrid` 类似，但适用于 N 维矩阵。"
+    "en": "produces the familiar “sombrero” plot shown in the figure. Note the use of the function `meshgrid` to create matrices of X and Y coordinates to use for plotting the Z data. The `ndgrid` function is similar to `meshgrid`, but works for N-dimensional matrices.",
+    "sha": "556abb361d28",
+    "zh": "生成图中所示的大家熟悉的“草帽”图。注意这里用函数 `meshgrid` 创建了 X 和 Y 坐标的矩阵，用来绘制 Z 数据。`ndgrid` 函数与 `meshgrid` 类似，但适用于 N 维矩阵。"
+   }
+  },
+  {
+   "k": "figure",
+   "id": "mesh",
+   "caption": {
+    "en": "Mesh plot.",
+    "sha": "c69051498ddf",
+    "zh": "网格图。"
    }
   },
   {
@@ -3251,9 +3287,18 @@
   {
    "k": "p",
    "t": {
-    "en": "displays the spiral in three dimensions shown in fig:plot3.",
-    "sha": "7e388260ce1a",
-    "zh": "显示如图 fig:plot3 所示的三维螺旋线。"
+    "en": "displays the spiral in three dimensions shown in the figure.",
+    "sha": "4f340ccfccae",
+    "zh": "显示图中所示的三维螺旋线。"
+   }
+  },
+  {
+   "k": "figure",
+   "id": "plot3",
+   "caption": {
+    "en": "Three-dimensional spiral.",
+    "sha": "775f9131eea4",
+    "zh": "三维螺旋线。"
    }
   },
   {
@@ -4351,7 +4396,7 @@
        "term": {
         "en": "`autoupdate`: `\"off\"` | {`\"on\"`}",
         "sha": "cfd4d6c16c98",
-        "zh": ""
+        "zh": "`autoupdate`: `\"off\"` | {`\"on\"`}"
        },
        "blocks": [
         {
@@ -4359,7 +4404,7 @@
          "t": {
           "en": "Control whether the number of legend items is updated automatically when objects are added to (or deleted from) the peer axes. For example:",
           "sha": "0e40653f6d7d",
-          "zh": ""
+          "zh": "控制在对应坐标轴中添加（或删除）对象时，图例条目的数量是否自动更新。例如："
          }
         },
         {
@@ -4372,7 +4417,7 @@
        "term": {
         "en": "`box`: `\"off\"` | {`\"on\"`}",
         "sha": "b9eb95ebef45",
-        "zh": ""
+        "zh": "`box`: `\"off\"` | {`\"on\"`}"
        },
        "blocks": [
         {
@@ -4380,7 +4425,7 @@
          "t": {
           "en": "Control whether the legend has a surrounding box.",
           "sha": "f88b44318b0e",
-          "zh": ""
+          "zh": "控制图例是否带有外框。"
          }
         }
        ]
@@ -4389,7 +4434,7 @@
        "term": {
         "en": "`location`: `\"best\"` | `\"bestoutside\"` |",
         "sha": "8a0485b5fea5",
-        "zh": ""
+        "zh": "`location`: `\"best\"` | `\"bestoutside\"` |"
        },
        "blocks": [
         {
@@ -4397,7 +4442,7 @@
          "t": {
           "en": "`\"east\"` | `\"eastoutside\"` | `\"none\"` | `\"north\"` | {`\"northeast\"`} | `\"northeastoutside\"` | `\"northoutside\"` | `\"northwest\"`| `\"northwestoutside\"` | `\"south\"` | `\"southeast\"` | `\"southeastoutside\"` | `\"southoutside\"` | `\"southwest\"` | `\"southwestoutside\"` | `\"west\"` | `\"westoutside\"` Control the location of the legend.",
           "sha": "09c280610569",
-          "zh": ""
+          "zh": "`\"east\"` | `\"eastoutside\"` | `\"none\"` | `\"north\"` | {`\"northeast\"`} | `\"northeastoutside\"` | `\"northoutside\"` | `\"northwest\"`| `\"northwestoutside\"` | `\"south\"` | `\"southeast\"` | `\"southeastoutside\"` | `\"southoutside\"` | `\"southwest\"` | `\"southwestoutside\"` | `\"west\"` | `\"westoutside\"` 控制图例的位置。"
          }
         }
        ]
@@ -4406,7 +4451,7 @@
        "term": {
         "en": "`numcolumns`: scalar interger, def. `1`",
         "sha": "72cc4b92b747",
-        "zh": ""
+        "zh": "`numcolumns`: 标量整数，默认 `1`"
        },
        "blocks": [
         {
@@ -4414,7 +4459,7 @@
          "t": {
           "en": "Control the number of columns used in the layout of the legend items. For example:",
           "sha": "61b025bec063",
-          "zh": ""
+          "zh": "控制图例条目排布时使用的列数。例如："
          }
         },
         {
@@ -4426,7 +4471,7 @@
          "t": {
           "en": "Setting `numcolumns` also forces the `numcolumnsmode` property to be set to `\"manual\"`.",
           "sha": "a85c126adaea",
-          "zh": ""
+          "zh": "设置 `numcolumns` 也会强制把 `numcolumnsmode` 属性设为 `\"manual\"`。"
          }
         }
        ]
@@ -4435,7 +4480,7 @@
        "term": {
         "en": "`orientation`: `\"horizontal\"` | {`\"vertical\"`}",
         "sha": "c48db496e874",
-        "zh": ""
+        "zh": "`orientation`: `\"horizontal\"` | {`\"vertical\"`}"
        },
        "blocks": [
         {
@@ -4443,7 +4488,7 @@
          "t": {
           "en": "Control whether the legend items are arranged vertically (column-wise) or horizontally (row-wise).",
           "sha": "8bd249a3463b",
-          "zh": ""
+          "zh": "控制图例条目是纵向排列（按列）还是横向排列（按行）。"
          }
         }
        ]
@@ -4452,7 +4497,7 @@
        "term": {
         "en": "`string`: string | cell array of strings",
         "sha": "a18349eccfbd",
-        "zh": ""
+        "zh": "`string`: 字符串 | 字符串元胞数组"
        },
        "blocks": [
         {
@@ -4460,7 +4505,7 @@
          "t": {
           "en": "List of labels for the legend items. For example:",
           "sha": "c0c13e3be90d",
-          "zh": ""
+          "zh": "图例条目的标签列表。例如："
          }
         },
         {
@@ -4473,7 +4518,7 @@
        "term": {
         "en": "`textcolor`: colorspec, def. `[0 0 0]`",
         "sha": "7991a8a986a1",
-        "zh": ""
+        "zh": "`textcolor`: 颜色说明，默认 `[0 0 0]`"
        },
        "blocks": [
         {
@@ -4481,7 +4526,7 @@
          "t": {
           "en": "Control the color of the text strings for legend item.",
           "sha": "cd1bc4366c1f",
-          "zh": ""
+          "zh": "控制图例条目文字的颜色。"
          }
         }
        ]
@@ -4493,7 +4538,7 @@
      "t": {
       "en": "The full list of supported legend specific properties can be found at Legend Properties.",
       "sha": "87dec612bc03",
-      "zh": ""
+      "zh": "所支持的图例专用属性的完整列表见 Legend Properties 一节。"
      }
     },
     {
@@ -4501,7 +4546,7 @@
      "t": {
       "en": "A legend is implemented as an additional axes object with the `tag` property set to `\"legend\"`. Properties of the legend object may be manipulated directly by using `set`.",
       "sha": "fed43af81ad2",
-      "zh": ""
+      "zh": "图例实现为一个额外的坐标轴对象，其 `tag` 属性设为 `\"legend\"`。图例对象的属性可以直接用 `set` 修改。"
      }
     },
     {
@@ -4509,15 +4554,15 @@
      "t": {
       "en": "The optional output value *hleg* is a handle to the legend object.",
       "sha": "9b736d7d8ad0",
-      "zh": ""
+      "zh": "可选的输出值 *hleg* 是图例对象的句柄。"
      }
     },
     {
      "k": "p",
      "t": {
-      "en": "Implementation Note: The legend label text is either provided in the call to `legend` or is taken from the `DisplayName` property of the graphics objects. Only data objects, such as line, patch, and surface, have this property whereas axes, figures, etc. do not so they are never present in a legend. If no labels or `DisplayName` properties are available, then the label text is simply `\"data1\"`, `\"data2\"`, …,",
-      "sha": "321ceab2b015",
-      "zh": ""
+      "en": "Implementation Note: The legend label text is either provided in the call to `legend` or is taken from the `DisplayName` property of the graphics objects. Only data objects, such as line, patch, and surface, have this property whereas axes, figures, etc. do not so they are never present in a legend. If no labels or `DisplayName` properties are available, then the label text is simply `\"data1\"`, `\"data2\"`, …, `\"dataN\"`.",
+      "sha": "55f88aaaa18a",
+      "zh": "实现说明：图例的标签文字要么在调用 `legend` 时给出，要么取自图形对象的 `DisplayName` 属性。只有线、补片、曲面这类数据对象才有这个属性，而坐标轴、图形窗口等没有，所以它们不会出现在图例中。如果既没有标签也没有 `DisplayName` 属性，标签文字就是 `\"data1\"`、`\"data2\"`、…、`\"dataN\"`。"
      }
     },
     {
@@ -4525,7 +4570,7 @@
      "t": {
       "en": "The legend `FontSize` property is initially set to 90% of the axes `FontSize` to which it is attached. Use `set` to override this if necessary.",
       "sha": "46c06b1ad743",
-      "zh": ""
+      "zh": "图例的 `FontSize` 属性初始值为它所依附的坐标轴 `FontSize` 的 90%。如有必要，可用 `set` 覆盖。"
      }
     }
    ]
@@ -4546,7 +4591,7 @@
      "t": {
       "en": "Create a text object with text *string* at position *x*, *y*, (*z*) on the current axes.",
       "sha": "10a70ea16e0e",
-      "zh": ""
+      "zh": "在当前坐标轴的位置 *x*、*y*、(*z*) 处创建一个文本对象，文字内容为 *string*。"
      }
     },
     {
@@ -4554,7 +4599,7 @@
      "t": {
       "en": "Multiple locations can be specified if *x*, *y*, (*z*) are vectors. Multiple strings can be specified with a character matrix or a cell array of strings.",
       "sha": "6633a4b323fb",
-      "zh": ""
+      "zh": "如果 *x*、*y*、(*z*) 是向量，可以指定多个位置。多个字符串可以用字符矩阵或字符串元胞数组指定。"
      }
     },
     {
@@ -4562,7 +4607,7 @@
      "t": {
       "en": "Optional property/value pairs may be used to control the appearance of the text.",
       "sha": "52449767e068",
-      "zh": ""
+      "zh": "可选的属性/值对可用来控制文字的外观。"
      }
     },
     {
@@ -4570,7 +4615,7 @@
      "t": {
       "en": "If the first argument *hax* is an axes handle, then add text to this axes, rather than the current axes returned by `gca`.",
       "sha": "1bcd8299f65b",
-      "zh": ""
+      "zh": "如果第一个参数 *hax* 是坐标轴句柄，则把文字添加到这个坐标轴，而不是 `gca` 返回的当前坐标轴。"
      }
     },
     {
@@ -4578,7 +4623,7 @@
      "t": {
       "en": "The optional return value *h* is a vector of graphics handles to the created text objects.",
       "sha": "5e95b3c502f6",
-      "zh": ""
+      "zh": "可选的返回值 *h* 是一个向量，其元素是所创建文本对象的图形句柄。"
      }
     },
     {
@@ -4586,7 +4631,7 @@
      "t": {
       "en": "Example 1 : multi-line text via 3 different methods",
       "sha": "e6b082a3bc75",
-      "zh": ""
+      "zh": "例 1：用 3 种不同的方法写多行文字"
      }
     },
     {
@@ -4598,7 +4643,7 @@
      "t": {
       "en": "Example 2 : text at multiple locations",
       "sha": "9265d41293c4",
-      "zh": ""
+      "zh": "例 2：在多个位置放置文字"
      }
     },
     {
@@ -4610,7 +4655,7 @@
      "t": {
       "en": "Example 2 : adjust appearance using text properties",
       "sha": "77007b86b0d6",
-      "zh": ""
+      "zh": "例 2：用文本属性调整外观"
      }
     },
     {
@@ -4622,7 +4667,7 @@
      "t": {
       "en": "Programming Notes: The full list of properties is documented at Text Properties.",
       "sha": "b0967bc8f1fe",
-      "zh": ""
+      "zh": "编程注记：完整的属性列表见 Text Properties 一节。"
      }
     },
     {
@@ -4630,7 +4675,7 @@
      "t": {
       "en": "Any numeric entries in a cell array will be converted to text using `sprintf (\"%g\")`. For more precise control of the appearance convert any numeric entries to strings using `num2str`, `sprintf`, etc., before calling `text`. See also: `gtext`, `title`, `xlabel`, `ylabel`, `zlabel`.",
       "sha": "a83806cf7568",
-      "zh": ""
+      "zh": "元胞数组中的任何数值条目都会用 `sprintf (\"%g\")` 转换成文字。如果想更精确地控制外观，请在调用 `text` 之前用 `num2str`、`sprintf` 等把数值条目转换成字符串。另见：`gtext`、`title`、`xlabel`、`ylabel`、`zlabel`。"
      }
     }
    ]
@@ -4650,7 +4695,7 @@
      "t": {
       "en": "Specify the string used to label the x-axis of the current axis.",
       "sha": "852a970d78b8",
-      "zh": ""
+      "zh": "指定用作当前坐标轴 x 轴标签的字符串。"
      }
     },
     {
@@ -4658,7 +4703,7 @@
      "t": {
       "en": "An optional list of *property*/*value* pairs can be used to change the properties of the created text label.",
       "sha": "de387d7a5ac3",
-      "zh": ""
+      "zh": "可以用一个可选的 *property*/*value* 属性–值对列表来修改所创建文本标签的属性。"
      }
     },
     {
@@ -4666,7 +4711,7 @@
      "t": {
       "en": "The full list of text object properties is documented at Text Properties.",
       "sha": "4a9f9eb17174",
-      "zh": ""
+      "zh": "文本对象属性的完整列表见 Text Properties 一节。"
      }
     },
     {
@@ -4682,7 +4727,7 @@
      "t": {
       "en": "The optional return value *h* is a graphics handle to the created text object. See also: `ylabel`, `zlabel`, `datetick`, `title`, `text`.",
       "sha": "2611af7e51e9",
-      "zh": ""
+      "zh": "可选的返回值 *h* 是所创建文本对象的图形句柄。另见：`ylabel`、`zlabel`、`datetick`、`title`、`text`。"
      }
     }
    ]
@@ -4704,7 +4749,7 @@
      "t": {
       "en": "Add labels to the contours of a contour plot.",
       "sha": "3adaf8b35f79",
-      "zh": ""
+      "zh": "给等高线图的等高线添加标签。"
      }
     },
     {
@@ -4712,7 +4757,7 @@
      "t": {
       "en": "The contour levels are specified by the contour matrix *c* which is returned by `contour`, `contourc`, `contourf`, and `contour3`. Contour labels are rotated to match the local line orientation and centered on the line. The position of labels along the contour line is chosen randomly.",
       "sha": "f72d035ee9ab",
-      "zh": ""
+      "zh": "等高线的取值由等高线矩阵 *c* 给出，*c* 由 `contour`、`contourc`、`contourf` 和 `contour3` 返回。等高线标签会旋转到与所在线段方向一致，并居中放在线上。标签在等高线上的位置是随机选取的。"
      }
     },
     {
@@ -4720,7 +4765,7 @@
      "t": {
       "en": "If the argument *h* is a handle to a contour group object, then label this plot rather than the one in the current axes returned by `gca`.",
       "sha": "5504d02081b6",
-      "zh": ""
+      "zh": "如果参数 *h* 是等高线组对象的句柄，则给这幅图加标签，而不是给 `gca` 返回的当前坐标轴中的那幅图加标签。"
      }
     },
     {
@@ -4728,7 +4773,7 @@
      "t": {
       "en": "By default, all contours are labeled. However, the contours to label can be specified by the vector *v*. If the `\"manual\"` argument is given then the contours to label can be selected with the mouse.",
       "sha": "2b1c053e3ee1",
-      "zh": ""
+      "zh": "默认情况下，所有等高线都会加标签。不过，可以用向量 *v* 指定要加标签的等高线。如果给出 `\"manual\"` 参数，则可以用鼠标选择要加标签的等高线。"
      }
     },
     {
@@ -4736,7 +4781,7 @@
      "t": {
       "en": "Additional property/value pairs that are valid properties of text objects can be given and are passed to the underlying text objects. Moreover, the contour group property `\"LabelSpacing\"` is available which determines the spacing between labels on a contour to be specified. The default is 144 points, or 2 inches.",
       "sha": "79cf839fd352",
-      "zh": ""
+      "zh": "可以给出额外的属性/值对，只要它们是文本对象的有效属性，就会传给底层的文本对象。此外，还可以使用等高线组的属性 `\"LabelSpacing\"`，它决定同一条等高线上各标签之间的间距，默认为 144 点，即 2 英寸。"
      }
     },
     {
@@ -4744,7 +4789,7 @@
      "t": {
       "en": "The optional return value *hlabels* is a vector of graphics handles to the text objects representing each label. The `\"userdata\"` property of the text objects contains the numerical value of the contour label.",
       "sha": "23e33bc08e2b",
-      "zh": ""
+      "zh": "可选的返回值 *hlabels* 是一个向量，其元素是表示各标签的文本对象的图形句柄。文本对象的 `\"userdata\"` 属性中保存着该等高线标签的数值。"
      }
     },
     {
@@ -4752,7 +4797,7 @@
      "t": {
       "en": "The full list of text object properties is documented at Text Properties.",
       "sha": "4a9f9eb17174",
-      "zh": ""
+      "zh": "文本对象属性的完整列表见 Text Properties 一节。"
      }
     },
     {
@@ -4764,7 +4809,7 @@
      "t": {
       "en": "See also: `contour`, `contourf`, `contour3`, `meshc`, `surfc`, `text`.",
       "sha": "05df53c30264",
-      "zh": ""
+      "zh": "另见：`contour`、`contourf`、`contour3`、`meshc`、`surfc`、`text`。"
      }
     }
    ]
@@ -4787,7 +4832,7 @@
      "t": {
       "en": "Control the display of plot grid lines.",
       "sha": "0b62962ef97c",
-      "zh": ""
+      "zh": "控制图中网格线的显示。"
      }
     },
     {
@@ -4795,7 +4840,7 @@
      "t": {
       "en": "The function state input may be either `\"on\"` or `\"off\"`. If it is omitted, the current grid state is toggled.",
       "sha": "1b1dabc64143",
-      "zh": ""
+      "zh": "函数的 state 输入可以是 `\"on\"` 或 `\"off\"`。如果省略，则切换当前的网格状态。"
      }
     },
     {
@@ -4803,7 +4848,7 @@
      "t": {
       "en": "When the first argument is `\"minor\"` all subsequent commands modify the minor grid rather than the major grid.",
       "sha": "0cde4392269b",
-      "zh": ""
+      "zh": "当第一个参数是 `\"minor\"` 时，之后的所有命令修改的是次网格，而不是主网格。"
      }
     },
     {
@@ -4819,7 +4864,7 @@
      "t": {
       "en": "To control the grid lines for an individual axes use the `set` function. For example:",
       "sha": "6b994a8cdbab",
-      "zh": ""
+      "zh": "要控制单个坐标轴的网格线，使用 `set` 函数。例如："
      }
     },
     {
@@ -4831,7 +4876,7 @@
      "t": {
       "en": "See also: `axis`, `box`.",
       "sha": "5865a4473086",
-      "zh": ""
+      "zh": "另见：`axis`、`box`。"
      }
     }
    ]
@@ -4856,7 +4901,7 @@
      "t": {
       "en": "Add a colorbar to the current axes.",
       "sha": "43e2ba9f12ee",
-      "zh": ""
+      "zh": "给当前坐标轴添加颜色条。"
      }
     },
     {
@@ -4864,7 +4909,7 @@
      "t": {
       "en": "A colorbar displays the current colormap along with numerical rulings so that the color scale can be interpreted.",
       "sha": "e117aeda74dc",
-      "zh": ""
+      "zh": "颜色条显示当前的色图，并配有数值刻度，以便解读颜色所代表的数值。"
      }
     },
     {
@@ -4872,7 +4917,7 @@
      "t": {
       "en": "The optional input *loc* determines the location of the colorbar. If present, it must be the last argument to `colorbar`. Valid values for *loc* are",
       "sha": "ef078c360825",
-      "zh": ""
+      "zh": "可选输入 *loc* 决定颜色条的位置。如果给出，它必须是 `colorbar` 的最后一个参数。*loc* 的有效取值有"
      }
     },
     {
@@ -4882,7 +4927,7 @@
        "term": {
         "en": "`\"EastOutside\"`",
         "sha": "03b583940006",
-        "zh": ""
+        "zh": "`\"EastOutside\"`"
        },
        "blocks": [
         {
@@ -4890,7 +4935,7 @@
          "t": {
           "en": "Place the colorbar outside the plot to the right. This is the default.",
           "sha": "5f9a43241cf0",
-          "zh": ""
+          "zh": "把颜色条放在图的外面右侧。这是默认值。"
          }
         }
        ]
@@ -4899,7 +4944,7 @@
        "term": {
         "en": "`\"East\"`",
         "sha": "c36a484661e7",
-        "zh": ""
+        "zh": "`\"East\"`"
        },
        "blocks": [
         {
@@ -4907,7 +4952,7 @@
          "t": {
           "en": "Place the colorbar inside the plot to the right.",
           "sha": "1d49e8ef1181",
-          "zh": ""
+          "zh": "把颜色条放在图的里面右侧。"
          }
         }
        ]
@@ -4916,7 +4961,7 @@
        "term": {
         "en": "`\"WestOutside\"`",
         "sha": "27b99f1e2779",
-        "zh": ""
+        "zh": "`\"WestOutside\"`"
        },
        "blocks": [
         {
@@ -4924,7 +4969,7 @@
          "t": {
           "en": "Place the colorbar outside the plot to the left.",
           "sha": "321120315b55",
-          "zh": ""
+          "zh": "把颜色条放在图的外面左侧。"
          }
         }
        ]
@@ -4933,7 +4978,7 @@
        "term": {
         "en": "`\"West\"`",
         "sha": "4270224a0b06",
-        "zh": ""
+        "zh": "`\"West\"`"
        },
        "blocks": [
         {
@@ -4941,7 +4986,7 @@
          "t": {
           "en": "Place the colorbar inside the plot to the left.",
           "sha": "0e575556e226",
-          "zh": ""
+          "zh": "把颜色条放在图的里面左侧。"
          }
         }
        ]
@@ -4950,7 +4995,7 @@
        "term": {
         "en": "`\"NorthOutside\"`",
         "sha": "fedaac7b1849",
-        "zh": ""
+        "zh": "`\"NorthOutside\"`"
        },
        "blocks": [
         {
@@ -4958,7 +5003,7 @@
          "t": {
           "en": "Place the colorbar above the plot.",
           "sha": "932026005fe8",
-          "zh": ""
+          "zh": "把颜色条放在图的上方。"
          }
         }
        ]
@@ -4967,7 +5012,7 @@
        "term": {
         "en": "`\"North\"`",
         "sha": "44d7dd12eb1b",
-        "zh": ""
+        "zh": "`\"North\"`"
        },
        "blocks": [
         {
@@ -4975,7 +5020,7 @@
          "t": {
           "en": "Place the colorbar at the top of the plot.",
           "sha": "a7c8731601b3",
-          "zh": ""
+          "zh": "把颜色条放在图的顶部。"
          }
         }
        ]
@@ -4984,7 +5029,7 @@
        "term": {
         "en": "`\"SouthOutside\"`",
         "sha": "60db51c82c0d",
-        "zh": ""
+        "zh": "`\"SouthOutside\"`"
        },
        "blocks": [
         {
@@ -4992,7 +5037,7 @@
          "t": {
           "en": "Place the colorbar under the plot.",
           "sha": "f1596e3b9952",
-          "zh": ""
+          "zh": "把颜色条放在图的下方。"
          }
         }
        ]
@@ -5001,7 +5046,7 @@
        "term": {
         "en": "`\"South\"`",
         "sha": "77594d3a0f1f",
-        "zh": ""
+        "zh": "`\"South\"`"
        },
        "blocks": [
         {
@@ -5009,7 +5054,7 @@
          "t": {
           "en": "Place the colorbar at the bottom of the plot.",
           "sha": "8aadb4e7c270",
-          "zh": ""
+          "zh": "把颜色条放在图的底部。"
          }
         }
        ]
@@ -5021,7 +5066,7 @@
      "t": {
       "en": "To remove a colorbar from a plot use any one of the following keywords for the *delete_option*: `\"off\"`, `\"delete\"`, `\"hide\"`.",
       "sha": "dbd3dd6c1f33",
-      "zh": ""
+      "zh": "要从图中移除颜色条，可以对 *delete_option* 使用下列任一关键字：`\"off\"`、`\"delete\"`、`\"hide\"`。"
      }
     },
     {
@@ -5029,7 +5074,7 @@
      "t": {
       "en": "If the first argument *hax* is an axes handle, then the colorbar is added to this axes, rather than the current axes returned by `gca`. Alternatively, If the argument `\"peer\"` is given, then the following argument is treated as the axes handle in which to add the colorbar. The `\"peer\"` calling syntax may be removed in the future and is not recommended.",
       "sha": "561454521d21",
-      "zh": ""
+      "zh": "如果第一个参数 *hax* 是坐标轴句柄，则颜色条添加到这个坐标轴，而不是 `gca` 返回的当前坐标轴。另外，如果给出 `\"peer\"` 参数，则其后的参数被当作要添加颜色条的坐标轴句柄。`\"peer\"` 这种调用语法以后可能会取消，不建议使用。"
      }
     },
     {
@@ -5037,7 +5082,7 @@
      "t": {
       "en": "If the first argument *hcb* is a handle to a colorbar object, then operate on this colorbar directly.",
       "sha": "9f00ee184957",
-      "zh": ""
+      "zh": "如果第一个参数 *hcb* 是颜色条对象的句柄，则直接作用于这个颜色条。"
      }
     },
     {
@@ -5045,7 +5090,7 @@
      "t": {
       "en": "Additional property/value pairs are passed directly to the underlying axes object. The full list of properties is documented at Axes Properties.",
       "sha": "a06948c0bd1c",
-      "zh": ""
+      "zh": "额外的属性/值对会直接传给底层的坐标轴对象。完整的属性列表见 Axes Properties 一节。"
      }
     },
     {
@@ -5053,7 +5098,7 @@
      "t": {
       "en": "The optional return value *h* is a graphics handle to the created colorbar object.",
       "sha": "99647f601b6b",
-      "zh": ""
+      "zh": "可选的返回值 *h* 是所创建颜色条对象的图形句柄。"
      }
     },
     {
@@ -5061,7 +5106,7 @@
      "t": {
       "en": "Implementation Note: A colorbar is created as an additional axes object with the `\"tag\"` property set to `\"colorbar\"`. The created object has the extra property `\"location\"` which controls the positioning of the colorbar. See also: `colormap`.",
       "sha": "4c860d7f0d72",
-      "zh": ""
+      "zh": "实现说明：颜色条是作为一个额外的坐标轴对象创建的，其 `\"tag\"` 属性设为 `\"colorbar\"`。所创建的对象还有一个额外的属性 `\"location\"`，用来控制颜色条的位置。另见：`colormap`。"
      }
     }
    ]
@@ -5072,7 +5117,7 @@
    "t": {
     "en": "Multiple Plots on One Page",
     "sha": "43663f13d2b5",
-    "zh": ""
+    "zh": "一页多图"
    }
   },
   {
@@ -5080,7 +5125,7 @@
    "t": {
     "en": "Octave can display more than one plot in a single figure. The simplest way to do this is to use the `subplot` function to divide the plot area into a series of subplot windows that are indexed by an integer. For example,",
     "sha": "9816bba6ea0e",
-    "zh": ""
+    "zh": "Octave 可以在同一个图形窗口中显示多幅图。最简单的做法是用 `subplot` 函数把绘图区域划分成一系列用整数编号的子窗口。例如，"
    }
   },
   {
@@ -5092,7 +5137,7 @@
    "t": {
     "en": "creates a figure with two separate axes, one displaying a sine wave and the other a cosine wave. The first call to subplot divides the figure into two plotting areas (two rows and one column) and makes the first plot area active. The grid of plot areas created by `subplot` is numbered in row-major order (left to right, top to bottom). After plotting a sine wave, the next call to subplot activates the second subplot area, but does not re-partition the figure.",
     "sha": "7a515695addf",
-    "zh": ""
+    "zh": "创建一个含有两个独立坐标轴的图形窗口，一个显示正弦波，另一个显示余弦波。第一次调用 subplot 把图形窗口分成两个绘图区（两行一列），并让第一个绘图区成为当前区。`subplot` 创建的绘图区网格按行优先的顺序编号（从左到右、从上到下）。画完正弦波之后，下一次调用 subplot 激活第二个子绘图区，但不会重新划分图形窗口。"
    }
   },
   {
@@ -5115,7 +5160,7 @@
      "t": {
       "en": "Set up a plot grid with *rows* by *cols* subwindows and set the current axes for plotting (`gca`) to the location given by *index*.",
       "sha": "422d566302c3",
-      "zh": ""
+      "zh": "建立由 *rows* 行 *cols* 列子窗口组成的绘图网格，并把绘图用的当前坐标轴（`gca`）设置到 *index* 所指定的位置。"
      }
     },
     {
@@ -5123,7 +5168,7 @@
      "t": {
       "en": "If an axes handle *hax* is provided after the (*rows*, *cols*, *index*) arguments, the corresponding axes is turned into a subplot.",
       "sha": "9d5c5e210f2d",
-      "zh": ""
+      "zh": "如果在 (*rows*, *cols*, *index*) 参数之后提供了坐标轴句柄 *hax*，则把对应的坐标轴变成子图。"
      }
     },
     {
@@ -5131,7 +5176,7 @@
      "t": {
       "en": "If only one numeric argument is supplied, then it must be a three digit value specifying the number of rows in digit 1, the number of columns in digit 2, and the plot index in digit 3.",
       "sha": "797d34e15d19",
-      "zh": ""
+      "zh": "如果只提供一个数值参数，它必须是一个三位数，第 1 位表示行数，第 2 位表示列数，第 3 位表示绘图的索引。"
      }
     },
     {
@@ -5139,7 +5184,7 @@
      "t": {
       "en": "The plot index runs row-wise; First, all columns in a row are numbered and then the next row is filled.",
       "sha": "01322340764d",
-      "zh": ""
+      "zh": "绘图索引按行排列：先给一行中的所有列编号，再填下一行。"
      }
     },
     {
@@ -5147,7 +5192,7 @@
      "t": {
       "en": "For example, a plot with 2x3 grid will have plot indices running as follows: \\vskip 10pt \\hfil\\vbox{\\offinterlineskip\\hrule \\halign{\\vrule#&&\\qquad\\hfil#\\hfil\\qquad\\vrule\\cr height13pt&1&2&3\\cr height12pt&&&\\cr\\noalign{\\hrule} height13pt&4&5&6\\cr height12pt&&&\\cr\\noalign{\\hrule}}} \\hfil \\vskip 10pt",
       "sha": "86dca4a4c6af",
-      "zh": ""
+      "zh": "例如，2x3 的绘图网格，其绘图索引的排列如下： \\vskip 10pt \\hfil\\vbox{\\offinterlineskip\\hrule \\halign{\\vrule#&&\\qquad\\hfil#\\hfil\\qquad\\vrule\\cr height13pt&1&2&3\\cr height12pt&&&\\cr\\noalign{\\hrule} height13pt&4&5&6\\cr height12pt&&&\\cr\\noalign{\\hrule}}} \\hfil \\vskip 10pt"
      }
     },
     {
@@ -5155,7 +5200,7 @@
      "t": {
       "en": "*index* may also be a vector. In this case, the new axes will enclose the grid locations specified. The first demo illustrates this:",
       "sha": "08f81e44c10b",
-      "zh": ""
+      "zh": "*index* 也可以是向量。此时新坐标轴将覆盖所指定的各个网格位置。第一个演示说明了这一点："
      }
     },
     {
@@ -5167,7 +5212,7 @@
      "t": {
       "en": "The index of the subplot to make active may also be specified by its axes handle, *hax*, returned from a previous `subplot` command.",
       "sha": "01116bbbdd97",
-      "zh": ""
+      "zh": "要激活的子图也可以通过它的坐标轴句柄 *hax* 指定，该句柄由之前的 `subplot` 命令返回。"
      }
     },
     {
@@ -5175,7 +5220,7 @@
      "t": {
       "en": "If the option `\"align\"` is given then the plot boxes of the subwindows will align, but this may leave no room for axes tick marks or labels.",
       "sha": "81789fb50ee2",
-      "zh": ""
+      "zh": "如果给出 `\"align\"` 选项，则各子窗口的绘图框会对齐，但这样可能没有给坐标轴刻度线或标签留出空间。"
      }
     },
     {
@@ -5183,7 +5228,7 @@
      "t": {
       "en": "If the option `\"replace\"` is given then the subplot axes will be reset, rather than just switching the current axes for plotting to the requested subplot.",
       "sha": "c70d398d01fe",
-      "zh": ""
+      "zh": "如果给出 `\"replace\"` 选项，则子图的坐标轴会被重置，而不是仅仅把绘图用的当前坐标轴切换到所要求的子图。"
      }
     },
     {
@@ -5191,7 +5236,7 @@
      "t": {
       "en": "The `\"position\"` property can be used to exactly position the subplot axes within the current figure. The option *pos* is a 4-element vector [x, y, width, height] that determines the location and size of the axes. The values in *pos* are normalized in the range [0,1].",
       "sha": "77e34ab7fc6c",
-      "zh": ""
+      "zh": "`\"position\"` 属性可用来在当前图形窗口中精确定位子图的坐标轴。选项 *pos* 是一个 4 元素向量 [x, y, width, height]，决定坐标轴的位置和大小。*pos* 中的值按 [0,1] 的范围归一化。"
      }
     },
     {
@@ -5199,7 +5244,7 @@
      "t": {
       "en": "Any property/value pairs are passed directly to the underlying axes object. The full list of properties is documented at Axes Properties.",
       "sha": "969bccc28e77",
-      "zh": ""
+      "zh": "任何属性/值对都会直接传给底层的坐标轴对象。完整的属性列表见 Axes Properties 一节。"
      }
     },
     {
@@ -5207,7 +5252,7 @@
      "t": {
       "en": "Any previously existing axes that would be (partly) covered by the newly created axes are deleted.",
       "sha": "a0752ca92310",
-      "zh": ""
+      "zh": "任何已有的、会被新建坐标轴（部分）遮住的坐标轴都会被删除。"
      }
     },
     {
@@ -5215,7 +5260,7 @@
      "t": {
       "en": "If the output *hax* is requested, subplot returns the axes handle for the subplot. This is useful for modifying the properties of a subplot using `set`.",
       "sha": "c351f84c163d",
-      "zh": ""
+      "zh": "如果要求输出 *hax*，subplot 返回该子图的坐标轴句柄。这对于用 `set` 修改子图的属性很有用。"
      }
     },
     {
@@ -5223,7 +5268,7 @@
      "t": {
       "en": "Under some circumstances, `subplot` might not be able to identify axes that it could re-use and might replace them. If `subplot` axes should be referenced repeatedly, consider creating and storing their axes handles beforehand instead of calling `subplot` repeatedly for the same position.",
       "sha": "a4f2b6eef640",
-      "zh": ""
+      "zh": "在某些情况下，`subplot` 可能无法识别出可以重用的坐标轴，而把它们替换掉。如果需要反复引用 `subplot` 的坐标轴，可以考虑事先创建并保存它们的坐标轴句柄，而不是对同一位置反复调用 `subplot`。"
      }
     },
     {
@@ -5243,7 +5288,7 @@
      "t": {
       "en": "See also: `axes`, `plot`, `gca`, `set`.",
       "sha": "02d3ac7e39e8",
-      "zh": ""
+      "zh": "另见：`axes`、`plot`、`gca`、`set`。"
      }
     }
    ]
@@ -5254,7 +5299,7 @@
    "t": {
     "en": "Multiple Plot Windows",
     "sha": "3cf8cdd574e2",
-    "zh": ""
+    "zh": "多个绘图窗口"
    }
   },
   {
@@ -5262,7 +5307,7 @@
    "t": {
     "en": "You can open multiple plot windows using the `figure` function. For example,",
     "sha": "4a3399f535ec",
-    "zh": ""
+    "zh": "可以用 `figure` 函数打开多个绘图窗口。例如，"
    }
   },
   {
@@ -5274,7 +5319,7 @@
    "t": {
     "en": "creates two figures, with the first displaying a sine wave and the second a cosine wave. Figure numbers must be positive integers.",
     "sha": "f05ae2698b3e",
-    "zh": ""
+    "zh": "创建两个图形窗口，第一个显示正弦波，第二个显示余弦波。图形窗口的编号必须是正整数。"
    }
   },
   {
@@ -5293,7 +5338,7 @@
      "t": {
       "en": "Create a new figure window for plotting.",
       "sha": "d454bdfafd61",
-      "zh": ""
+      "zh": "创建一个新的绘图用图形窗口。"
      }
     },
     {
@@ -5301,7 +5346,7 @@
      "t": {
       "en": "If no arguments are specified, a new figure with the next available number is created.",
       "sha": "30bd909b3737",
-      "zh": ""
+      "zh": "如果没有指定参数，则创建一个编号为下一个可用编号的新图形窗口。"
      }
     },
     {
@@ -5309,7 +5354,7 @@
      "t": {
       "en": "If called with an integer *n*, and no such numbered figure exists, then a new figure with the specified number is created. If the figure already exists then it is made visible and becomes the current figure for plotting.",
       "sha": "e197e6c0ba1d",
-      "zh": ""
+      "zh": "如果以整数 *n* 调用，且不存在这个编号的图形窗口，则创建一个具有指定编号的新图形窗口。如果该图形窗口已经存在，则让它可见，并成为绘图用的当前图形窗口。"
      }
     },
     {
@@ -5317,7 +5362,7 @@
      "t": {
       "en": "Multiple property-value pairs may be specified for the figure object, but they must appear in pairs.",
       "sha": "75465b8499ef",
-      "zh": ""
+      "zh": "可以为图形窗口对象指定多组属性–值对，但它们必须成对出现。"
      }
     },
     {
@@ -5325,7 +5370,7 @@
      "t": {
       "en": "The optional return value *h* is a graphics handle to the created figure object.",
       "sha": "fd3d21b3ab4f",
-      "zh": ""
+      "zh": "可选的返回值 *h* 是所创建图形窗口对象的图形句柄。"
      }
     },
     {
@@ -5333,7 +5378,7 @@
      "t": {
       "en": "Programming Note: The full list of properties is documented at Figure Properties. See also: `axes`, `gcf`, `shg`, `clf`, `close`.",
       "sha": "590b48305e45",
-      "zh": ""
+      "zh": "编程注记：完整的属性列表见 Figure Properties 一节。另见：`axes`、`gcf`、`shg`、`clf`、`close`。"
      }
     }
    ]
@@ -5344,7 +5389,7 @@
    "t": {
     "en": "Manipulation of Plot Windows",
     "sha": "669a86f5401e",
-    "zh": ""
+    "zh": "操作绘图窗口"
    }
   },
   {
@@ -5352,7 +5397,7 @@
    "t": {
     "en": "By default, Octave refreshes the plot window when a prompt is printed, or when waiting for input. The `drawnow` function is used to cause a plot window to be updated.",
     "sha": "5f1d819c6e3a",
-    "zh": ""
+    "zh": "默认情况下，Octave 在打印提示符或等待输入时刷新绘图窗口。`drawnow` 函数用来让绘图窗口立即更新。"
    }
   },
   {
@@ -5360,7 +5405,7 @@
    "t": {
     "en": "Only figures that are modified will be updated. The `refresh` function can also be used to cause an update of the current figure, even if it is not modified.",
     "sha": "c0c220aaf004",
-    "zh": ""
+    "zh": "只有被修改过的图形窗口才会更新。`refresh` 函数也可用来更新当前图形窗口，即使它没有被修改过。"
    }
   },
   {
@@ -5368,7 +5413,7 @@
    "t": {
     "en": "Normally, high-level plot functions like `plot` or `mesh` call `newplot` to determine whether the state of the target axes should be initialized (the default) or if subsequent plots should be drawn on top of previous ones. To have two plots drawn over one another, use the `hold` function or manually change the axes `axesnextplot` property. For example,",
     "sha": "bfaf0234cd6d",
-    "zh": ""
+    "zh": "通常，`plot` 或 `mesh` 这样的高层绘图函数会调用 `newplot`，来判断目标坐标轴的状态是否应该初始化（默认），还是应该让后续的图画在之前的图上面。要让两幅图叠画在一起，使用 `hold` 函数，或者手动修改坐标轴的 `axesnextplot` 属性。例如，"
    }
   },
   {
@@ -5380,7 +5425,7 @@
    "t": {
     "en": "displays sine and cosine waves on the same axes. If the hold state is off, consecutive plotting commands like this will only display the last plot.",
     "sha": "4243f75ea5e6",
-    "zh": ""
+    "zh": "在同一个坐标轴上显示正弦波和余弦波。如果 hold 状态是关闭的，像这样连续的绘图命令只会显示最后一幅图。"
    }
   },
   {
@@ -5398,7 +5443,7 @@
      "t": {
       "en": "Toggle or set the `\"hold\"` state of the plotting engine which determines whether new graphic objects are added to the plot or replace the existing objects.",
       "sha": "dcb81c4e8566",
-      "zh": ""
+      "zh": "切换或设置绘图引擎的 `\"hold\"` 状态，它决定新的图形对象是添加到图中，还是替换已有对象。"
      }
     },
     {
@@ -5408,7 +5453,7 @@
        "term": {
         "en": "`hold on`",
         "sha": "abab7422d60c",
-        "zh": ""
+        "zh": "`hold on`"
        },
        "blocks": [
         {
@@ -5416,7 +5461,7 @@
          "t": {
           "en": "Retain plot data and settings so that subsequent plot commands are displayed on a single graph. Line color and line style are advanced for each new plot added.",
           "sha": "d029d7e00510",
-          "zh": ""
+          "zh": "保留绘图数据和设置，使后续的绘图命令都显示在同一幅图上。每添加一幅新图，线的颜色和线型就依次前进。"
          }
         }
        ]
@@ -5425,7 +5470,7 @@
        "term": {
         "en": "`hold all (deprecated)`",
         "sha": "963ced9b297d",
-        "zh": ""
+        "zh": "`hold all (deprecated)`"
        },
        "blocks": [
         {
@@ -5433,7 +5478,7 @@
          "t": {
           "en": "Equivalent to `hold on`.",
           "sha": "c62cf59a4ddd",
-          "zh": ""
+          "zh": "等价于 `hold on`。"
          }
         }
        ]
@@ -5442,7 +5487,7 @@
        "term": {
         "en": "`hold off`",
         "sha": "a019c99f008f",
-        "zh": ""
+        "zh": "`hold off`"
        },
        "blocks": [
         {
@@ -5450,7 +5495,7 @@
          "t": {
           "en": "Restore default graphics settings which clear the graph and reset axes properties before each new plot command. (default).",
           "sha": "4c37aa8259b3",
-          "zh": ""
+          "zh": "恢复默认的图形设置，即每条新绘图命令执行之前清除图形并重置坐标轴属性（默认）。"
          }
         }
        ]
@@ -5459,7 +5504,7 @@
        "term": {
         "en": "`hold`",
         "sha": "78a6a87e3742",
-        "zh": ""
+        "zh": "`hold`"
        },
        "blocks": [
         {
@@ -5467,7 +5512,7 @@
          "t": {
           "en": "Toggle the current hold state.",
           "sha": "851dc22c2287",
-          "zh": ""
+          "zh": "切换当前的 hold 状态。"
          }
         }
        ]
@@ -5479,7 +5524,7 @@
      "t": {
       "en": "When given the additional argument *hax*, the hold state is modified for this axes rather than the current axes returned by `gca`.",
       "sha": "7c2d23ed605f",
-      "zh": ""
+      "zh": "给定额外的参数 *hax* 时，修改的是这个坐标轴的 hold 状态，而不是 `gca` 返回的当前坐标轴的 hold 状态。"
      }
     },
     {
@@ -5487,7 +5532,7 @@
      "t": {
       "en": "To query the current hold state use the `ishold` function. See also: `ishold`, `cla`, `clf`, `newplot`.",
       "sha": "c7cfd7f017f3",
-      "zh": ""
+      "zh": "要查询当前的 hold 状态，使用 `ishold` 函数。另见：`ishold`、`cla`、`clf`、`newplot`。"
      }
     }
    ]
@@ -5497,7 +5542,7 @@
    "t": {
     "en": "To clear the current figure, call the `clf` function. To clear the current axis, call the `cla` function. To bring the current figure to the top of the window stack, call the `shg` function. To delete a graphics object, call `delete` on its index. To close the figure window, call the `close` function.",
     "sha": "8758092b454e",
-    "zh": ""
+    "zh": "要清除当前图形窗口，调用 `clf` 函数。要清除当前坐标轴，调用 `cla` 函数。要把当前图形窗口提到窗口堆叠的最上面，调用 `shg` 函数。要删除某个图形对象，对它的索引调用 `delete`。要关闭图形窗口，调用 `close` 函数。"
    }
   },
   {
@@ -5516,7 +5561,7 @@
      "t": {
       "en": "Clear the current figure window.",
       "sha": "a19d7d390543",
-      "zh": ""
+      "zh": "清除当前图形窗口。"
      }
     },
     {
@@ -5524,7 +5569,7 @@
      "t": {
       "en": "`clf` operates by deleting child graphics objects with visible handles (HandleVisibility = `\"on\"`).",
       "sha": "3873a5446159",
-      "zh": ""
+      "zh": "`clf` 的工作方式是删除句柄可见（HandleVisibility = `\"on\"`）的子图形对象。"
      }
     },
     {
@@ -5532,7 +5577,7 @@
      "t": {
       "en": "If the optional argument `\"reset\"` is specified, delete all child objects including those with hidden handles and reset all figure properties to their defaults. However, the following properties are not reset: Position, Units, PaperPosition, PaperUnits.",
       "sha": "f85aa512ab04",
-      "zh": ""
+      "zh": "如果指定可选参数 `\"reset\"`，则删除所有子对象（包括句柄不可见的），并把图形窗口的所有属性重置为默认值。不过，以下属性不会被重置：Position、Units、PaperPosition、PaperUnits。"
      }
     },
     {
@@ -5540,7 +5585,7 @@
      "t": {
       "en": "If the first argument *hfig* is a figure handle, then operate on this figure rather than the current figure returned by `gcf`.",
       "sha": "74270030d1e9",
-      "zh": ""
+      "zh": "如果第一个参数 *hfig* 是图形窗口句柄，则作用于这个图形窗口，而不是 `gcf` 返回的当前图形窗口。"
      }
     },
     {
@@ -5548,7 +5593,7 @@
      "t": {
       "en": "The optional return value *h* is the graphics handle of the figure window that was cleared. See also: `cla`, `close`, `delete`, `reset`.",
       "sha": "80e0c573e711",
-      "zh": ""
+      "zh": "可选的返回值 *h* 是被清除的图形窗口的图形句柄。另见：`cla`、`close`、`delete`、`reset`。"
      }
     }
    ]
@@ -5571,7 +5616,7 @@
      "t": {
       "en": "Close figure window(s).",
       "sha": "823e5ec215df",
-      "zh": ""
+      "zh": "关闭图形窗口。"
      }
     },
     {
@@ -5579,7 +5624,7 @@
      "t": {
       "en": "When called with no arguments, close the current figure. This is equivalent to `close (gcf)`. If the input *h* is a graphic handle, or vector of graphics handles, then close each figure in *h*. The figure to close may also be specified by name *figname* which is matched against the `\"Name\"` property of all figures.",
       "sha": "ac7ae8155755",
-      "zh": ""
+      "zh": "不带参数调用时，关闭当前图形窗口，等价于 `close (gcf)`。如果输入 *h* 是图形句柄或图形句柄的向量，则关闭 *h* 中的每个图形窗口。要关闭的图形窗口也可以用名称 *figname* 指定，它会与所有图形窗口的 `\"Name\"` 属性匹配。"
      }
     },
     {
@@ -5587,7 +5632,7 @@
      "t": {
       "en": "If the argument `\"all\"` is given then all figures with visible handles (HandleVisibility = `\"on\"`) are closed.",
       "sha": "15b484f45d05",
-      "zh": ""
+      "zh": "如果给出参数 `\"all\"`，则关闭所有句柄可见（HandleVisibility = `\"on\"`）的图形窗口。"
      }
     },
     {
@@ -5595,7 +5640,7 @@
      "t": {
       "en": "If the additional argument `\"hidden\"` is given then all figures, including hidden ones, are closed.",
       "sha": "1170a1ddfc29",
-      "zh": ""
+      "zh": "如果给出额外的参数 `\"hidden\"`，则关闭所有图形窗口，包括隐藏的。"
      }
     },
     {
@@ -5603,7 +5648,7 @@
      "t": {
       "en": "If the additional argument `\"force\"` is given then figures are closed even when `\"closerequestfcn\"` has been altered to prevent closing the window.",
       "sha": "e45f70222497",
-      "zh": ""
+      "zh": "如果给出额外的参数 `\"force\"`，即使 `\"closerequestfcn\"` 已被改动、以防止窗口被关闭，图形窗口也会被关闭。"
      }
     },
     {
@@ -5611,7 +5656,7 @@
      "t": {
       "en": "If the optional output *status* is requested then Octave returns 1 if the figure windows were closed successfully.",
       "sha": "163ae092d827",
-      "zh": ""
+      "zh": "如果要求可选的输出 *status*，则在图形窗口成功关闭时，Octave 返回 1。"
      }
     },
     {
@@ -5619,7 +5664,7 @@
      "t": {
       "en": "Implementation Note: `close` operates by making the handle *h* the current figure, and then calling the function specified by the `\"closerequestfcn\"` property of the figure. By default, the function `closereq` is used. It is possible that the function invoked will delay or abort removing the figure. To remove a figure without executing any callback functions use `delete`. When writing a callback function to close a window do not use `close` to avoid recursion.",
       "sha": "584d34c9b00b",
-      "zh": ""
+      "zh": "实现说明：`close` 的工作方式是先把句柄 *h* 对应的图形窗口设为当前图形窗口，再调用该图形窗口的 `\"closerequestfcn\"` 属性所指定的函数。默认使用函数 `closereq`。被调用的函数有可能延迟或中止对图形窗口的移除。要不执行任何回调函数就移除图形窗口，使用 `delete`。编写用于关闭窗口的回调函数时，不要使用 `close`，以免递归。"
      }
     },
     {
@@ -5627,7 +5672,7 @@
      "t": {
       "en": "See also: `closereq`, `delete`.",
       "sha": "eae48a756e7b",
-      "zh": ""
+      "zh": "另见：`closereq`、`delete`。"
      }
     }
    ]
@@ -5638,7 +5683,7 @@
    "t": {
     "en": "Use of the \"interpreter\" Property",
     "sha": "8228d19452d2",
-    "zh": ""
+    "zh": "“interpreter” 属性的用法"
    }
   },
   {
@@ -5646,7 +5691,7 @@
    "t": {
     "en": "`text` (such as titles, labels, legend item) and `axes` objects feature an `textinterpreter` and a `axesticklabelinterpreter` property respectively. It determines the manner in which special control sequences in the text are rendered.",
     "sha": "d18a0dc090a6",
-    "zh": ""
+    "zh": "`text` 对象（如标题、标签、图例条目）和 `axes` 对象分别具有 `textinterpreter` 和 `axesticklabelinterpreter` 属性，它决定文字中特殊控制序列的渲染方式。"
    }
   },
   {
@@ -5654,7 +5699,7 @@
    "t": {
     "en": "The interpreter property can take three values: `\"none\"`, `\"tex\"`, `\"latex\"`.",
     "sha": "3088b35c7c3c",
-    "zh": ""
+    "zh": "interpreter 属性可以取三个值：`\"none\"`、`\"tex\"`、`\"latex\"`。"
    }
   },
   {
@@ -5663,7 +5708,7 @@
    "t": {
     "en": "\"none\" interpreter",
     "sha": "7e9e282f7bba",
-    "zh": ""
+    "zh": "“none” 解释器"
    }
   },
   {
@@ -5671,7 +5716,7 @@
    "t": {
     "en": "If the interpreter is set to `\"none\"` then no special rendering occurs—the displayed text is a verbatim copy of the specified text.",
     "sha": "db64906cd842",
-    "zh": ""
+    "zh": "如果解释器设为 `\"none\"`，则不做任何特殊渲染——显示的文字就是所指定文字的原样拷贝。"
    }
   },
   {
@@ -5680,15 +5725,15 @@
    "t": {
     "en": "\"tex\" interpreter",
     "sha": "78eaa1c6b190",
-    "zh": ""
+    "zh": "“tex” 解释器"
    }
   },
   {
    "k": "p",
    "t": {
-    "en": "The `\"tex\"` interpreter implements a subset of TeX functionality when rendering text. This allows the insertion of special glyphs such as Greek characters or mathematical symbols. Special characters are inserted by using a backslash (\\) character followed by a code, as shown in tab:extended.",
-    "sha": "5a943dc6ac32",
-    "zh": ""
+    "en": "The `\"tex\"` interpreter implements a subset of TeX functionality when rendering text. This allows the insertion of special glyphs such as Greek characters or mathematical symbols. Special characters are inserted by using a backslash (\\) character followed by a code, as shown in the table.",
+    "sha": "3632e577521b",
+    "zh": "`\"tex\"` 解释器在渲染文字时实现了 TeX 功能的一个子集，可以插入希腊字母、数学符号等特殊字形。插入特殊字符的方法是先写一个反斜杠（\\）字符，再写一个代码，如下表所示。"
    }
   },
   {
@@ -5696,7 +5741,7 @@
    "t": {
     "en": "Besides special glyphs, the formatting of the text can be changed within the string by using the codes",
     "sha": "6d9ea4ce1f53",
-    "zh": ""
+    "zh": "除了特殊字形，还可以在字符串中使用下列代码来改变文字的格式"
    }
   },
   {
@@ -5708,12 +5753,12 @@
      {
       "en": "\\bf",
       "sha": "bcd817e4b6be",
-      "zh": ""
+      "zh": "\\bf"
      },
      {
       "en": "Bold font",
       "sha": "bf04002b0249",
-      "zh": ""
+      "zh": "粗体"
      }
     ],
     [
@@ -5721,12 +5766,12 @@
      {
       "en": "\\it",
       "sha": "4310a617be71",
-      "zh": ""
+      "zh": "\\it"
      },
      {
       "en": "Italic font",
       "sha": "3d4bb709bc89",
-      "zh": ""
+      "zh": "斜体"
      }
     ],
     [
@@ -5734,12 +5779,12 @@
      {
       "en": "\\sl",
       "sha": "c7c5efed4cfb",
-      "zh": ""
+      "zh": "\\sl"
      },
      {
       "en": "Oblique Font",
       "sha": "ea7fc7a21764",
-      "zh": ""
+      "zh": "倾斜字体"
      }
     ],
     [
@@ -5747,12 +5792,12 @@
      {
       "en": "\\rm",
       "sha": "d54d87dc4924",
-      "zh": ""
+      "zh": "\\rm"
      },
      {
       "en": "Normal font",
       "sha": "2bcc1e172b7a",
-      "zh": ""
+      "zh": "正常字体"
      }
     ]
    ]
@@ -5762,7 +5807,7 @@
    "t": {
     "en": "These codes may be used in conjunction with the { and } characters to limit the change to a part of the string. For example,",
     "sha": "77180f5e7b95",
-    "zh": ""
+    "zh": "这些代码可以与 { 和 } 字符配合使用，把改变限制在字符串的一部分。例如，"
    }
   },
   {
@@ -5774,7 +5819,7 @@
    "t": {
     "en": "where the character `'a'` will not appear in bold font. Note that to avoid having Octave interpret the backslash character in the strings, the strings themselves should be in single quotes.",
     "sha": "c5e00ac7dd28",
-    "zh": ""
+    "zh": "其中字符 `'a'` 不会以粗体显示。注意，为了避免 Octave 解释字符串中的反斜杠字符，字符串本身应该用单引号括起来。"
    }
   },
   {
@@ -5782,7 +5827,7 @@
    "t": {
     "en": "It is also possible to change the fontname and size within the text",
     "sha": "26de3b2a26b8",
-    "zh": ""
+    "zh": "也可以在文字中改变字体名称和字号"
    }
   },
   {
@@ -5794,19 +5839,19 @@
      {
       "en": "\\fontname{*fontname*}",
       "sha": "873ab7b08964",
-      "zh": ""
+      "zh": "\\fontname{*fontname*}"
      },
      {
       "en": "Specify the font to use",
       "sha": "05e2bc4d0b44",
-      "zh": ""
+      "zh": "指定要使用的字体"
      }
     ],
     [
      {
       "en": "Specify the size of the font to use",
       "sha": "eb399d9ecc21",
-      "zh": ""
+      "zh": "指定要使用的字号"
      }
     ]
    ]
@@ -5816,7 +5861,7 @@
    "t": {
     "en": "The color of the text may also be changed inline using either a string (e.g., \"red\") or numerically with a Red-Green-Blue (RGB) specification (e.g., [1 0 0], also red).",
     "sha": "5f0c6144f9e4",
-    "zh": ""
+    "zh": "文字的颜色同样可以在文字中改变：既可以用字符串（例如 “red”），也可以用红-绿-蓝（RGB）的数值形式（例如 [1 0 0]，同样是红色）。"
    }
   },
   {
@@ -5828,19 +5873,19 @@
      {
       "en": "\\color{*color*}",
       "sha": "f6dbbbd10e62",
-      "zh": ""
+      "zh": "\\color{*color*}"
      },
      {
       "en": "Specify the color as a string",
       "sha": "2d2d4eb1dda4",
-      "zh": ""
+      "zh": "用字符串指定颜色"
      }
     ],
     [
      {
       "en": "Specify the color numerically",
       "sha": "df7b7d3112b2",
-      "zh": ""
+      "zh": "用数值指定颜色"
      }
     ]
    ]
@@ -5850,7 +5895,7 @@
    "t": {
     "en": "Finally, superscripting and subscripting can be controlled with the `'^'` and `'_'` characters. If the `'^'` or `'_'` is followed by a { character, then all of the block surrounded by the { } pair is superscripted or subscripted. Without the { } pair, only the character immediately following the `'^'` or `'_'` is changed.",
     "sha": "fc5299c49247",
-    "zh": ""
+    "zh": "最后，上标和下标可以用 `'^'` 和 `'_'` 字符控制。如果 `'^'` 或 `'_'` 后面跟的是 { 字符，则被 { } 括起来的整块内容都成为上标或下标。没有 { } 时，只有紧跟在 `'^'` 或 `'_'` 之后的那一个字符变成上标或下标。"
    }
   },
   {
@@ -5858,7 +5903,7 @@
    "t": {
     "en": "**Caution: Degree Symbol**",
     "sha": "dfc5eb7c5140",
-    "zh": ""
+    "zh": "**注意：度数符号**"
    }
   },
   {
@@ -5866,7 +5911,7 @@
    "t": {
     "en": "Conformance to both TeX and MATLAB with respect to the `\\circ` symbol is impossible. While TeX translates this symbol to Unicode 2218 (U+2218), MATLAB maps this to Unicode 00B0 (U+00B0) instead. Octave has chosen to follow the TeX specification, but has added the additional symbol `\\deg` which maps to the degree symbol (U+00B0).",
     "sha": "2de54af166a4",
-    "zh": ""
+    "zh": "`\\circ` 符号无法同时与 TeX 和 MATLAB 保持一致。TeX 把这个符号转换为 Unicode 2218（U+2218），而 MATLAB 则把它映射到 Unicode 00B0（U+00B0）。Octave 选择遵循 TeX 的规范，但额外增加了符号 `\\deg`，它映射到度数符号（U+00B0）。"
    }
   },
   {
@@ -5875,7 +5920,7 @@
    "t": {
     "en": "\"latex\" interpreter",
     "sha": "712373515e2f",
-    "zh": ""
+    "zh": "“latex” 解释器"
    }
   },
   {
@@ -5883,7 +5928,7 @@
    "t": {
     "en": "The `\"latex\"` interpreter only works if an external LaTeX tool chain is present. Three binaries are needed: `latex`, `dvipng`, and `dvisvgm`. If those binaries are installed but not on the path, one can still provide their respective path using the following environment variables: `OCTAVE_LATEX_BINARY`, `OCTAVE_DVIPNG_BINARY`, and `OCTAVE_DVISVG_BINARY`.",
     "sha": "45d3daa1f560",
-    "zh": ""
+    "zh": "`\"latex\"` 解释器只有在系统中装有外部 LaTeX 工具链时才能工作。需要三个可执行文件：`latex`、`dvipng` 和 `dvisvgm`。如果这些程序已安装但不在搜索路径上，仍然可以通过下列环境变量提供它们各自的路径：`OCTAVE_LATEX_BINARY`、`OCTAVE_DVIPNG_BINARY` 和 `OCTAVE_DVISVG_BINARY`。"
    }
   },
   {
@@ -5891,7 +5936,7 @@
    "t": {
     "en": "Note that Octave does not parse or validate the text strings when in `\"latex\"` mode—it is the responsibility of the programmer to generate valid strings which may include wrapping sections that should appear in Math mode with `'$'` characters. See, for example, https://www.latex-project.org/help/documentation/ for documentation about LaTeX typesetting.",
     "sha": "91c86bae776e",
-    "zh": ""
+    "zh": "注意，在 `\"latex\"` 模式下，Octave 不会解析或校验文字字符串——生成有效的字符串是程序员的责任，其中应当出现在数学模式下的部分可以用 `'$'` 字符括起来。有关 LaTeX 排版的文档，可参见 https://www.latex-project.org/help/documentation/ 等。"
    }
   },
   {
@@ -5899,7 +5944,7 @@
    "t": {
     "en": "For debugging purpose, a convenience environment variable, `OCTAVE_LATEX_DEBUG_FLAG`, can be set to trigger more verbose output when Octave fails to have a given text compiled by an external LaTeX engine. For example, `\"x^2\"` is not a valid LaTeX string and the following example should fail",
     "sha": "decbe1e03a0d",
-    "zh": ""
+    "zh": "为方便调试，可以设置环境变量 `OCTAVE_LATEX_DEBUG_FLAG`，让 Octave 在无法用外部 LaTeX 引擎编译给定文字时输出更详细的信息。例如，`\"x^2\"` 不是有效的 LaTeX 字符串，下面的例子应当会失败"
    }
   },
   {
@@ -5911,7 +5956,7 @@
    "t": {
     "en": "Searching the terminal output you should find some helpful info about the origin of the failure:",
     "sha": "ee60119bbffd",
-    "zh": ""
+    "zh": "在终端输出中查找，应当能找到一些有助于判断失败原因的信息："
    }
   },
   {
@@ -5923,7 +5968,7 @@
    "t": {
     "en": "If no usable LaTeX tool chain is found at the first text rendering, using the `\"latex\"` interpreter is equivalent to `\"none\"`.",
     "sha": "04ce2b484839",
-    "zh": ""
+    "zh": "如果在第一次渲染文字时没有找到可用的 LaTeX 工具链，则使用 `\"latex\"` 解释器就等价于 `\"none\"`。"
    }
   },
   {
@@ -5932,7 +5977,7 @@
    "t": {
     "en": "Printing and Saving Plots",
     "sha": "1f1fd4f742bd",
-    "zh": ""
+    "zh": "打印与保存图形"
    }
   },
   {
@@ -5940,7 +5985,7 @@
    "t": {
     "en": "The `print` command allows you to send plots to you printer and to save plots in a variety of formats. For example,",
     "sha": "b99155aceda0",
-    "zh": ""
+    "zh": "`print` 命令可以把图形发送到打印机，也可以把图形保存成多种格式。例如，"
    }
   },
   {
@@ -5952,7 +5997,7 @@
    "t": {
     "en": "prints the current figure to a color PostScript printer. And,",
     "sha": "487d1dc84f02",
-    "zh": ""
+    "zh": "把当前图形窗口打印到彩色 PostScript 打印机。而"
    }
   },
   {
@@ -5964,7 +6009,7 @@
    "t": {
     "en": "saves the current figure to an encapsulated PostScript file called `foo.eps`.",
     "sha": "52616553728d",
-    "zh": ""
+    "zh": "把当前图形窗口保存为名为 `foo.eps` 的封装 PostScript 文件。"
    }
   },
   {
@@ -5972,7 +6017,7 @@
    "t": {
     "en": "The current graphic toolkits produce very similar graphic displays, but differ in their capability to display unusual text and in their ability to print such text. In general, the `\"tex\"` interpreter (default) is the best all-around performer for both on-screen display and printing. However, for the reproduction of complicated text formulas the `\"latex\"` interpreter is preferred. When printing with the `-painters` renderer, the default for all vector formats, two options may be considered:",
     "sha": "8de654bb22cb",
-    "zh": ""
+    "zh": "当前的图形工具包生成的图形显示非常相似，但在显示和打印特殊文字的能力上有所不同。总的来说，`\"tex\"` 解释器（默认）在屏幕显示和打印两方面都是综合表现最好的。不过，要复现复杂的文字公式，则更适合使用 `\"latex\"` 解释器。使用 `-painters` 渲染器（所有矢量格式的默认渲染器）打印时，可以考虑两种做法："
    }
   },
   {
@@ -5985,7 +6030,7 @@
       "t": {
        "en": "Use the `-svgconvert` option to allow for rendering LaTeX formulas. Note that the glyph are rendered as path and the original textual info are lost.",
        "sha": "b010e48790dc",
-       "zh": ""
+       "zh": "使用 `-svgconvert` 选项，以便渲染 LaTeX 公式。注意，字形会被渲染成路径，原有的文字信息会丢失。"
       }
      }
     ],
@@ -5995,7 +6040,7 @@
       "t": {
        "en": "Use one of the `-d*latex*` devices to produce a .tex file (plus supporting .eps or .pdf files) to be further processed by an external LaTeX engine. Note that the `print` function will first set the interpreter of all strings to `\"latex\"`, which means all strings must be valid LaTeX strings.",
        "sha": "0181b32a0d50",
-       "zh": ""
+       "zh": "使用某个 `-d*latex*` 设备生成 .tex 文件（以及配套的 .eps 或 .pdf 文件），再交给外部 LaTeX 引擎进一步处理。注意，`print` 函数会先把所有字符串的解释器设为 `\"latex\"`，这意味着所有字符串都必须是有效的 LaTeX 字符串。"
       }
      }
     ]
@@ -6006,7 +6051,7 @@
    "t": {
     "en": "A complete example showing the capabilities of text printing using the `-dpdflatexstandalone` option is:",
     "sha": "de5d84bf01bc",
-    "zh": ""
+    "zh": "下面是一个完整的例子，展示了用 `-dpdflatexstandalone` 选项打印文字的能力："
    }
   },
   {
@@ -6016,9 +6061,9 @@
   {
    "k": "p",
    "t": {
-    "en": "The result of this example can be seen in fig:extendedtext",
-    "sha": "dfca0449e6d1",
-    "zh": ""
+    "en": "The result of this example can be seen in the figure",
+    "sha": "85a51f009ff1",
+    "zh": "这个例子的结果见图"
    }
   },
   {
@@ -6037,7 +6082,7 @@
      "t": {
       "en": "Format a figure for printing and either save it to a file, send it to a printer, or return an RGB image.",
       "sha": "50b699e57e33",
-      "zh": ""
+      "zh": "为打印设置图形的格式，然后将其保存到文件、发送到打印机，或返回一幅 RGB 图像。"
      }
     },
     {
@@ -6045,7 +6090,7 @@
      "t": {
       "en": "*filename* defines the name of the output file. If the filename has no suffix then one is inferred from the specified device and appended to the filename. When neither a filename nor the `\"-RGBImage\"` option is present, the output is sent to the printer. The various options and filename arguments may be given in any order, except for the figure handle argument *hfig* which must be first if it is present.",
       "sha": "0c8c255cdce0",
-      "zh": ""
+      "zh": "*filename* 定义输出文件的名称。如果文件名没有后缀，则根据指定的设备推断出一个后缀并附加到文件名上。如果既没有文件名，也没有 `\"-RGBImage\"` 选项，输出就发送到打印机。各个选项和文件名参数可以按任意顺序给出，唯一的例外是图形窗口句柄参数 *hfig*：如果有的话，它必须放在最前面。"
      }
     },
     {
@@ -6053,7 +6098,7 @@
      "t": {
       "en": "Example: Print to a file using PDF and JPEG formats.",
       "sha": "b2011a485ac9",
-      "zh": ""
+      "zh": "例：以 PDF 和 JPEG 格式打印到文件。"
      }
     },
     {
@@ -6065,7 +6110,7 @@
      "t": {
       "en": "If the first argument is a handle *hfig* to a figure object then it specifies the figure to print. By default, the current figure returned by `gcf` is printed.",
       "sha": "62db5644bc8c",
-      "zh": ""
+      "zh": "如果第一个参数是图形窗口对象的句柄 *hfig*，则它指定要打印的图形窗口。默认打印 `gcf` 返回的当前图形窗口。"
      }
     },
     {
@@ -6073,7 +6118,7 @@
      "t": {
       "en": "For outputs to paged formats, for example, PostScript and PDF, the page size is specified by the figure's `papersize` property together with the `paperunits` property. The location and size of the plot on the page are specified by the figure's `paperposition` property. The orientation of the page is specified by the figure's `paperorientation` property.",
       "sha": "bf033244988f",
-      "zh": ""
+      "zh": "对于分页格式（例如 PostScript 和 PDF）的输出，页面大小由图形窗口的 `papersize` 属性和 `paperunits` 属性共同指定。图在页面上的位置和大小由图形窗口的 `paperposition` 属性指定。页面的方向由图形窗口的 `paperorientation` 属性指定。"
      }
     },
     {
@@ -6081,7 +6126,7 @@
      "t": {
       "en": "For non-page formats—for example, image formats like JPEG—the width and height of the output are specified by the figure's `paperposition(3:4)` property values.",
       "sha": "9400cca11467",
-      "zh": ""
+      "zh": "对于非分页格式（例如 JPEG 这样的图像格式），输出的宽度和高度由图形窗口的 `paperposition(3:4)` 属性值指定。"
      }
     },
     {
@@ -6089,7 +6134,7 @@
      "t": {
       "en": "The `print` command supports many *options*:",
       "sha": "32e33882b9dc",
-      "zh": ""
+      "zh": "`print` 命令支持许多*选项*："
      }
     },
     {
@@ -6099,7 +6144,7 @@
        "term": {
         "en": "`-fh`",
         "sha": "73e695c58b56",
-        "zh": ""
+        "zh": "`-fh`"
        },
        "blocks": [
         {
@@ -6107,7 +6152,7 @@
          "t": {
           "en": "Specify the handle, *h*, of the figure to be printed.",
           "sha": "84065a09da43",
-          "zh": ""
+          "zh": "指定要打印的图形窗口的句柄 *h*。"
          }
         },
         {
@@ -6115,7 +6160,7 @@
          "t": {
           "en": "Example: Print figure 1.",
           "sha": "afa48b6cee86",
-          "zh": ""
+          "zh": "例：打印 1 号图形窗口。"
          }
         },
         {
@@ -6128,7 +6173,7 @@
        "term": {
         "en": "`-Pprinter`",
         "sha": "22646d658b63",
-        "zh": ""
+        "zh": "`-Pprinter`"
        },
        "blocks": [
         {
@@ -6136,7 +6181,7 @@
          "t": {
           "en": "Set the *printer* name to which the plot is sent if no *filename* is specified.",
           "sha": "8d0142e4a530",
-          "zh": ""
+          "zh": "设置在没有指定 *filename* 时接收图形的 *printer* 打印机名称。"
          }
         },
         {
@@ -6144,7 +6189,7 @@
          "t": {
           "en": "Example: Print to printer named PS_printer using PostScript format.",
           "sha": "4b2046718796",
-          "zh": ""
+          "zh": "例：以 PostScript 格式打印到名为 PS_printer 的打印机。"
          }
         },
         {
@@ -6157,7 +6202,7 @@
        "term": {
         "en": "`-RGBImage`",
         "sha": "676a9225f1d4",
-        "zh": ""
+        "zh": "`-RGBImage`"
        },
        "blocks": [
         {
@@ -6165,7 +6210,7 @@
          "t": {
           "en": "Return an M-by-N-by-3 RGB image of the figure. The size of the image depends on the formatting options. This is similar to taking a screen capture of the plot, but formatting options may be changed such as the resolution or monochrome/color.",
           "sha": "0eb4af9ad9d2",
-          "zh": ""
+          "zh": "返回图形窗口的 M×N×3 的 RGB 图像。图像的大小取决于格式选项。这类似于对图形进行屏幕截图，但可以改变分辨率、单色/彩色等格式选项。"
          }
         },
         {
@@ -6173,7 +6218,7 @@
          "t": {
           "en": "Example: Get the pixels of a figure image.",
           "sha": "ce46b5fdc33d",
-          "zh": ""
+          "zh": "例：获取图形窗口图像的像素。"
          }
         },
         {
@@ -6186,15 +6231,15 @@
        "term": {
         "en": "`-image | -opengl`, `-vector | -painters`",
         "sha": "abb516681dcd",
-        "zh": ""
+        "zh": "`-image | -opengl`, `-vector | -painters`"
        },
        "blocks": [
         {
          "k": "p",
          "t": {
-          "en": "Specifies whether the pixel-based renderer (`-image` or `-opengl`) or vector-based renderer (`-vector` or `-painters`) is used. This is equivalent to changing the figure's `\"Renderer\"` property. When the figure Octave will use the `\"opengl\"` renderer for raster formats (e.g., JPEG) and `\"painters\"` for vector formats (e.g., PDF). These options are only supported for the \"qt\" graphics toolkit.",
-          "sha": "fd73e864bb10",
-          "zh": ""
+          "en": "Specifies whether the pixel-based renderer (`-image` or `-opengl`) or vector-based renderer (`-vector` or `-painters`) is used. This is equivalent to changing the figure's `\"Renderer\"` property. When the figure `\"RendererMode\"` property is `\"auto\"` (the default) Octave will use the `\"opengl\"` renderer for raster formats (e.g., JPEG) and `\"painters\"` for vector formats (e.g., PDF). These options are only supported for the \"qt\" graphics toolkit.",
+          "sha": "0a5719ffa43c",
+          "zh": "指定使用基于像素的渲染器（`-image` 或 `-opengl`）还是基于矢量的渲染器（`-vector` 或 `-painters`）。这等价于修改图形窗口的 `\"Renderer\"` 属性。当图形窗口的 `\"RendererMode\"` 属性为 `\"auto\"`（默认值）时，Octave 会对栅格格式（例如 JPEG）使用 `\"opengl\"` 渲染器，对矢量格式（例如 PDF）使用 `\"painters\"`。这些选项只在 “qt” 图形工具包下受支持。"
          }
         }
        ]
@@ -6203,7 +6248,7 @@
        "term": {
         "en": "`-svgconvert (default)`, `-nosvgconvert`",
         "sha": "9691169870b9",
-        "zh": ""
+        "zh": "`-svgconvert (default)`, `-nosvgconvert`"
        },
        "blocks": [
         {
@@ -6211,7 +6256,7 @@
          "t": {
           "en": "When using the `-painters` renderer, this enables or disables the SVG based backend toolchain with enhanced characteristics:",
           "sha": "b62d87180157",
-          "zh": ""
+          "zh": "使用 `-painters` 渲染器时，这两个选项启用或禁用基于 SVG 的后端工具链，它具有如下增强特性："
          }
         },
         {
@@ -6221,7 +6266,7 @@
            "term": {
             "en": "Font handling:",
             "sha": "1f804736a9a6",
-            "zh": ""
+            "zh": "字体处理："
            },
            "blocks": [
             {
@@ -6229,7 +6274,7 @@
              "t": {
               "en": "For interpreters \"none\" and \"tex\", the actual font is embedded in the output file which allows for printing arbitrary characters and fonts in all vector formats.",
               "sha": "4d9a4dce96f7",
-              "zh": ""
+              "zh": "对于解释器 “none” 和 “tex”，实际使用的字体会嵌入输出文件，因此在所有矢量格式中都可以打印任意字符和字体。"
              }
             },
             {
@@ -6237,7 +6282,7 @@
              "t": {
               "en": "Strings using the `\"latex\"` interpreter, are rendered using path objects. This looks good but note that textual info (font, characters…) are lost.",
               "sha": "3fe47953cb03",
-              "zh": ""
+              "zh": "使用 `\"latex\"` 解释器的字符串用路径对象渲染。这样看起来效果不错，但请注意文字信息（字体、字符……）会丢失。"
              }
             }
            ]
@@ -6246,7 +6291,7 @@
            "term": {
             "en": "Output Simplification:",
             "sha": "4c79c7bc55bf",
-            "zh": ""
+            "zh": "输出简化："
            },
            "blocks": [
             {
@@ -6254,7 +6299,7 @@
              "t": {
               "en": "By default, the option `-painters` renders patch and surface objects using assemblies of triangles. This may lead to anti-aliasing artifacts when viewing the file. The `-svgconvert` option reconstructs polygons in order to avoid those artifacts (particularly for 2-D figures).",
               "sha": "663630c2513d",
-              "zh": ""
+              "zh": "默认情况下，`-painters` 选项用一组三角形渲染补片对象和曲面对象，这可能导致查看文件时出现抗锯齿伪影。`-svgconvert` 选项会重建多边形，以避免这些伪影（尤其是对二维图形）。"
              }
             }
            ]
@@ -6263,7 +6308,7 @@
            "term": {
             "en": "Transparency:",
             "sha": "8a59392abe94",
-            "zh": ""
+            "zh": "透明度："
            },
            "blocks": [
             {
@@ -6271,7 +6316,7 @@
              "t": {
               "en": "Allows for printing transparent graphics objects in PDF format. For PostScript formats the presence of any transparent object will cause the output to be rasterized.",
               "sha": "b8449c23501a",
-              "zh": ""
+              "zh": "允许以 PDF 格式打印透明的图形对象。对于 PostScript 格式，只要存在任何透明对象，输出就会被栅格化。"
              }
             }
            ]
@@ -6283,7 +6328,7 @@
          "t": {
           "en": "Caution: If Octave was built against Qt version earlier than 5.13, `-svgconvert` may lead to inaccurate rendering of image objects.",
           "sha": "a1e58ae0ea90",
-          "zh": ""
+          "zh": "注意：如果 Octave 是针对早于 5.13 的 Qt 版本构建的，`-svgconvert` 可能导致图像对象的渲染不准确。"
          }
         }
        ]
@@ -6292,7 +6337,7 @@
        "term": {
         "en": "`-polymerge`, `-nopolymerge`, `-polymerge-all`",
         "sha": "e915fb27c922",
-        "zh": ""
+        "zh": "`-polymerge`, `-nopolymerge`, `-polymerge-all`"
        },
        "blocks": [
         {
@@ -6300,7 +6345,7 @@
          "t": {
           "en": "When using the SVG based backend `-svgconvert`, faces are rendered as triangles. In some cases, some viewers might display fine lines where those triangles share an edge. These options control whether all triangles that share edges are merged into polygons (`-polymerge-all` which might take some time for graphics consisting of many triangles -- including line markers), only consecutive polygons are merged (`-polymerge`), or no triangles are merged at all (`-no-polymerge`). By default, only consecutive triangles sharing an edge are merged, unless the printed figure contains patch or surface graphics objects in which case all triangles that are sharing an edge are merged.",
           "sha": "3c62a5e57485",
-          "zh": ""
+          "zh": "使用基于 SVG 的后端 `-svgconvert` 时，面被渲染成三角形。在某些情况下，一些查看器可能会在这些三角形共享的边上显示细线。这几个选项控制：是把所有共享边的三角形都合并成多边形（`-polymerge-all`，对于由大量三角形组成的图形——包括线的标记——可能需要一些时间），还是只合并相邻的多边形（`-polymerge`），还是完全不合并三角形（`-no-polymerge`）。默认情况下，只合并共享边的相邻三角形；但如果打印的图形窗口中包含补片或曲面图形对象，则合并所有共享边的三角形。"
          }
         }
        ]
@@ -6309,7 +6354,7 @@
        "term": {
         "en": "`-portrait`, `-landscape`",
         "sha": "620e58a481de",
-        "zh": ""
+        "zh": "`-portrait`, `-landscape`"
        },
        "blocks": [
         {
@@ -6317,7 +6362,7 @@
          "t": {
           "en": "Specify the orientation of the plot for printed output. For non-printed output the aspect ratio of the output corresponds to the plot area defined by the `\"paperposition\"` property in the orientation specified. This option is equivalent to changing the figure's `\"paperorientation\"` property.",
           "sha": "706b0c340fd7",
-          "zh": ""
+          "zh": "指定打印输出时图形的方向。对于非打印输出，输出的纵横比对应于 `\"paperposition\"` 属性在所指定方向下定义的绘图区域。该选项等价于修改图形窗口的 `\"paperorientation\"` 属性。"
          }
         }
        ]
@@ -6326,7 +6371,7 @@
        "term": {
         "en": "`-fillpage`, `-bestfit`",
         "sha": "7d81caa962dc",
-        "zh": ""
+        "zh": "`-fillpage`, `-bestfit`"
        },
        "blocks": [
         {
@@ -6334,7 +6379,7 @@
          "t": {
           "en": "When using a page-based format (PDF, PostScript, printer) ignore the `\"paperposition\"` property and have the plot occupy the entire page. The option `-fillpage` will stretch the plot to occupy the page with 0.25 inch margins all around. The option `-bestfit` will expand the plot to take up as much room as possible on the page **without** distorting the original aspect ratio of the plot.",
           "sha": "3441149973a8",
-          "zh": ""
+          "zh": "使用基于页面的格式（PDF、PostScript、打印机）时，忽略 `\"paperposition\"` 属性，让图占满整个页面。选项 `-fillpage` 会拉伸图，使其占满页面，四周留 0.25 英寸的边距。选项 `-bestfit` 会在**不**扭曲图原有纵横比的前提下，把图放大到页面上尽可能大。"
          }
         }
        ]
@@ -6343,7 +6388,7 @@
        "term": {
         "en": "`-color`, `-mono`",
         "sha": "572b1f507749",
-        "zh": ""
+        "zh": "`-color`, `-mono`"
        },
        "blocks": [
         {
@@ -6351,7 +6396,7 @@
          "t": {
           "en": "Color or monochrome output.",
           "sha": "66c954d30bbb",
-          "zh": ""
+          "zh": "彩色或单色输出。"
          }
         }
        ]
@@ -6360,7 +6405,7 @@
        "term": {
         "en": "`-solid`, `-dashed`",
         "sha": "5c05c412ae49",
-        "zh": ""
+        "zh": "`-solid`, `-dashed`"
        },
        "blocks": [
         {
@@ -6368,7 +6413,7 @@
          "t": {
           "en": "Force all lines to be solid or dashed, respectively.",
           "sha": "b9300b67fb6e",
-          "zh": ""
+          "zh": "分别强制所有线为实线或虚线。"
          }
         }
        ]
@@ -6377,7 +6422,7 @@
        "term": {
         "en": "`-noui`",
         "sha": "38a4248aab40",
-        "zh": ""
+        "zh": "`-noui`"
        },
        "blocks": [
         {
@@ -6385,7 +6430,7 @@
          "t": {
           "en": "Don't print uicontrol objects such as pushbuttons which may overlay the plot. This is the default behavior and it is not possible to include uicontrol objects in the output without using an external screen capture tool.",
           "sha": "663382c8a08b",
-          "zh": ""
+          "zh": "不打印可能覆盖在图上的 uicontrol 对象（例如按钮）。这是默认行为，不借助外部屏幕截图工具就无法把 uicontrol 对象包含在输出中。"
          }
         }
        ]
@@ -6394,7 +6439,7 @@
        "term": {
         "en": "`-rNUM`",
         "sha": "683c1fd7fc4b",
-        "zh": ""
+        "zh": "`-rNUM`"
        },
        "blocks": [
         {
@@ -6402,7 +6447,7 @@
          "t": {
           "en": "Resolution of bitmaps in dots per inch (DPI). For both metafiles and SVG the default is the screen resolution; for other formats the default is 150 DPI. To specify screen resolution, use `\"-r0\"`.",
           "sha": "c3469da6ffde",
-          "zh": ""
+          "zh": "位图的分辨率，单位为每英寸点数（DPI）。对于图元文件和 SVG，默认值是屏幕分辨率；对于其他格式，默认值是 150 DPI。要指定屏幕分辨率，使用 `\"-r0\"`。"
          }
         },
         {
@@ -6410,7 +6455,7 @@
          "t": {
           "en": "Example: high resolution raster output.",
           "sha": "683f6635ad38",
-          "zh": ""
+          "zh": "例：高分辨率栅格输出。"
          }
         },
         {
@@ -6423,7 +6468,7 @@
        "term": {
         "en": "`-Sxsize,ysize`",
         "sha": "ab2a453e50cc",
-        "zh": ""
+        "zh": "`-Sxsize,ysize`"
        },
        "blocks": [
         {
@@ -6431,7 +6476,7 @@
          "t": {
           "en": "Plot size in pixels for raster formats including PNG, JPEG, PNG, and *unusually* SVG. For all vector formats, including PDF, PS, and EPS, the plot size is specified in points. This option is equivalent to changing the width and height of the output by setting the figure property `paperposition(3:4)`. When using the command form of the print function you must quote the *xsize*,*ysize* option to prevent the Octave interpreter from recognizing the embedded comma (','). For example, by writing \"-S640,480\".",
           "sha": "824354656ef3",
-          "zh": ""
+          "zh": "栅格格式（包括 PNG、JPEG、PNG，以及不太常见的 SVG）的图形大小，单位为像素。对于所有矢量格式（包括 PDF、PS 和 EPS），图形大小以点为单位。该选项等价于通过设置图形窗口的属性 `paperposition(3:4)` 来改变输出的宽度和高度。使用 print 函数的命令形式时，必须给 *xsize*,*ysize* 选项加上引号，以免 Octave 解释器把其中的逗号（','）识别为语法符号。例如写成 “-S640,480”。"
          }
         }
        ]
@@ -6440,7 +6485,7 @@
        "term": {
         "en": "`-tight`, `-loose`",
         "sha": "2185524e6cef",
-        "zh": ""
+        "zh": "`-tight`, `-loose`"
        },
        "blocks": [
         {
@@ -6448,7 +6493,7 @@
          "t": {
           "en": "Force a tight or loose bounding box for EPS files. The default is tight.",
           "sha": "ed6722a4822b",
-          "zh": ""
+          "zh": "强制 EPS 文件使用紧凑或宽松的边界框。默认是紧凑。"
          }
         }
        ]
@@ -6457,7 +6502,7 @@
        "term": {
         "en": "`-preview`",
         "sha": "5d94916ad3bd",
-        "zh": ""
+        "zh": "`-preview`"
        },
        "blocks": [
         {
@@ -6465,7 +6510,7 @@
          "t": {
           "en": "Add a preview to EPS files. Supported formats are:",
           "sha": "cb1ebbeb12fc",
-          "zh": ""
+          "zh": "给 EPS 文件添加预览图。支持的格式有："
          }
         },
         {
@@ -6475,7 +6520,7 @@
            "term": {
             "en": "`-interchange`",
             "sha": "59f01a57f5bc",
-            "zh": ""
+            "zh": "`-interchange`"
            },
            "blocks": [
             {
@@ -6483,7 +6528,7 @@
              "t": {
               "en": "Provide an interchange preview.",
               "sha": "af4ab05cf378",
-              "zh": ""
+              "zh": "提供交换格式预览。"
              }
             }
            ]
@@ -6492,7 +6537,7 @@
            "term": {
             "en": "`-metafile`",
             "sha": "e651d31e1ae8",
-            "zh": ""
+            "zh": "`-metafile`"
            },
            "blocks": [
             {
@@ -6500,7 +6545,7 @@
              "t": {
               "en": "Provide a metafile preview.",
               "sha": "c776cf487306",
-              "zh": ""
+              "zh": "提供图元文件预览。"
              }
             }
            ]
@@ -6509,7 +6554,7 @@
            "term": {
             "en": "`-pict`",
             "sha": "d445510f8642",
-            "zh": ""
+            "zh": "`-pict`"
            },
            "blocks": [
             {
@@ -6517,7 +6562,7 @@
              "t": {
               "en": "Provide a pict preview.",
               "sha": "ebfe311e7d43",
-              "zh": ""
+              "zh": "提供 pict 预览。"
              }
             }
            ]
@@ -6526,7 +6571,7 @@
            "term": {
             "en": "`-tiff`",
             "sha": "e8a24219deaf",
-            "zh": ""
+            "zh": "`-tiff`"
            },
            "blocks": [
             {
@@ -6534,7 +6579,7 @@
              "t": {
               "en": "Provide a TIFF preview.",
               "sha": "5cd2d5fef539",
-              "zh": ""
+              "zh": "提供 TIFF 预览。"
              }
             }
            ]
@@ -6547,7 +6592,7 @@
        "term": {
         "en": "`-append`",
         "sha": "a7df11cfbae3",
-        "zh": ""
+        "zh": "`-append`"
        },
        "blocks": [
         {
@@ -6555,7 +6600,7 @@
          "t": {
           "en": "Append PostScript or PDF output to an existing file of the same type.",
           "sha": "785a6da4cd10",
-          "zh": ""
+          "zh": "把 PostScript 或 PDF 输出追加到同类型的已有文件末尾。"
          }
         }
        ]
@@ -6564,7 +6609,7 @@
        "term": {
         "en": "`-Ffontname`, `-Ffontname:size`, `-F:size`",
         "sha": "2374e6af0326",
-        "zh": ""
+        "zh": "`-Ffontname`, `-Ffontname:size`, `-F:size`"
        },
        "blocks": [
         {
@@ -6572,7 +6617,7 @@
          "t": {
           "en": "Use *fontname* and/or *fontsize* for all text. *fontname* is ignored for some devices: fig, etc.",
           "sha": "9f7ccaa49c29",
-          "zh": ""
+          "zh": "所有文字使用 *fontname* 字体和/或 *fontsize* 字号。对某些设备（fig 等），*fontname* 会被忽略。"
          }
         }
        ]
@@ -6581,7 +6626,7 @@
        "term": {
         "en": "`-ddevice`",
         "sha": "748a318877b2",
-        "zh": ""
+        "zh": "`-ddevice`"
        },
        "blocks": [
         {
@@ -6589,7 +6634,7 @@
          "t": {
           "en": "The available output format is specified by the option *device*, and is one of the following (devices marked with a `'*'` are only available with the Gnuplot toolkit):",
           "sha": "072cf08c10fa",
-          "zh": ""
+          "zh": "可用的输出格式由选项 *device* 指定，取值为下列之一（标有 `'*'` 的设备只在 Gnuplot 工具包下可用）："
          }
         },
         {
@@ -6597,7 +6642,7 @@
          "t": {
           "en": "Vector Formats",
           "sha": "c53abc884f54",
-          "zh": ""
+          "zh": "矢量格式"
          }
         },
         {
@@ -6607,7 +6652,7 @@
            "term": {
             "en": "`svg`",
             "sha": "162ed5f06072",
-            "zh": ""
+            "zh": "`svg`"
            },
            "blocks": [
             {
@@ -6615,7 +6660,7 @@
              "t": {
               "en": "Scalable Vector Graphics.",
               "sha": "1a8ac2128526",
-              "zh": ""
+              "zh": "可缩放矢量图形（Scalable Vector Graphics）。"
              }
             }
            ]
@@ -6624,7 +6669,7 @@
            "term": {
             "en": "`pdf`, `pdfcrop`",
             "sha": "c5418fe5cb51",
-            "zh": ""
+            "zh": "`pdf`, `pdfcrop`"
            },
            "blocks": [
             {
@@ -6632,7 +6677,7 @@
              "t": {
               "en": "Portable Document Format. The `pdf` device formats the figure for printing on paper. The size of the surrounding page and the position of the figure inside the page are defined by the `figurepaperorientation`.",
               "sha": "af60e7870d7b",
-              "zh": ""
+              "zh": "便携式文档格式（Portable Document Format）。`pdf` 设备把图形排成适合打印在纸上的格式。外围页面的大小和图在页面内的位置由 `figurepaperorientation` 定义。"
              }
             },
             {
@@ -6640,7 +6685,7 @@
              "t": {
               "en": "Use `pdfcrop` if you don't want the surrounding page.",
               "sha": "8ce0aae7f863",
-              "zh": ""
+              "zh": "如果不想要外围页面，使用 `pdfcrop`。"
              }
             },
             {
@@ -6648,7 +6693,7 @@
              "t": {
               "en": "Caution: with `-nosvgconvert` option, PDF inherits the same limitations as PostScript (limited set of fonts and lack of transparency).",
               "sha": "eaef800886ee",
-              "zh": ""
+              "zh": "注意：使用 `-nosvgconvert` 选项时，PDF 与 PostScript 有同样的局限（可用字体有限，且不支持透明）。"
              }
             }
            ]
@@ -6657,7 +6702,7 @@
            "term": {
             "en": "`eps(2)`, `epsc(2)`",
             "sha": "a863223ea588",
-            "zh": ""
+            "zh": "`eps(2)`, `epsc(2)`"
            },
            "blocks": [
             {
@@ -6665,7 +6710,7 @@
              "t": {
               "en": "Encapsulated PostScript (level 1 and 2, mono and color).",
               "sha": "be944082f9d6",
-              "zh": ""
+              "zh": "封装 PostScript（1 级和 2 级，单色和彩色）。"
              }
             },
             {
@@ -6673,7 +6718,7 @@
              "t": {
               "en": "The OpenGL-based graphics toolkits always generate PostScript level 3.0. They have limited support for text unless using the `-svgconvert` option (the default). Limitations include using only ASCII characters (e.g., no Greek letters) and support for just three base PostScript fonts: Helvetica (the default), Times, or Courier. Any other font will be replaced by Helvetica.",
               "sha": "e591c28216ce",
-              "zh": ""
+              "zh": "基于 OpenGL 的图形工具包总是生成 3.0 级的 PostScript。除非使用 `-svgconvert` 选项（默认），否则它们对文字的支持有限。局限包括只能使用 ASCII 字符（例如不能用希腊字母），且只支持三种基本 PostScript 字体：Helvetica（默认）、Times 或 Courier。任何其他字体都会被替换成 Helvetica。"
              }
             }
            ]
@@ -6682,7 +6727,7 @@
            "term": {
             "en": "`ps(2)`, `psc(2)`",
             "sha": "ba3c73e1baa1",
-            "zh": ""
+            "zh": "`ps(2)`, `psc(2)`"
            },
            "blocks": [
             {
@@ -6690,7 +6735,7 @@
              "t": {
               "en": "Same as `eps` except that the figure is formatted for printing on paper. The size of the surrounding page and position of the figure inside the page are defined by the `figurepaperorientation`.",
               "sha": "196b43476586",
-              "zh": ""
+              "zh": "与 `eps` 相同，只是图形排成适合打印在纸上的格式。外围页面的大小和图在页面内的位置由 `figurepaperorientation` 定义。"
              }
             }
            ]
@@ -6699,7 +6744,7 @@
            "term": {
             "en": "`pslatex`, `epslatex`, `pdflatex`, `pslatexstandalone`, `epslatexstandalone`, `pdflatexstandalone`",
             "sha": "969117b8e9f7",
-            "zh": ""
+            "zh": "`pslatex`, `epslatex`, `pdflatex`, `pslatexstandalone`, `epslatexstandalone`, `pdflatexstandalone`"
            },
            "blocks": [
             {
@@ -6707,7 +6752,7 @@
              "t": {
               "en": "Generate a LaTeX file `filename.tex` for the text portions of a plot and a file `filename.(ps|eps|pdf)` for the remaining graphics. The graphics file suffix .ps|eps|pdf is determined by the specified device type. The LaTeX file produced by the `standalone` option can be processed directly by LaTeX. The file generated without the `standalone` option is intended to be included from another LaTeX document. In either case, the LaTeX file contains an `\\includegraphics` command so that the generated graphics file is automatically included when the LaTeX file is processed. The text that is written to the LaTeX file contains the strings **exactly** as they were specified in the plot. If any special characters of the TeX mode interpreter were used, the file must be edited before LaTeX processing. Specifically, the special characters must be enclosed with dollar signs (`$ … $`), and other characters that are recognized by LaTeX may also need editing (e.g., braces). The `pdflatex` device, and any of the `standalone` formats, are not available with the Gnuplot toolkit.",
               "sha": "0414d6f47682",
-              "zh": ""
+              "zh": "为图中的文字部分生成 LaTeX 文件 `filename.tex`，为其余的图形部分生成文件 `filename.(ps|eps|pdf)`。图形文件的后缀 .ps|eps|pdf 由所指定的设备类型决定。带 `standalone` 选项生成的 LaTeX 文件可以直接交给 LaTeX 处理；不带 `standalone` 选项生成的文件则是为了被另一个 LaTeX 文档引入。无论哪种情况，LaTeX 文件中都含有一条 `\\includegraphics` 命令，因此处理该 LaTeX 文件时，生成的图形文件会被自动包含进来。写入 LaTeX 文件的文字，其字符串与绘图时指定的**完全一致**。如果用到了 TeX 模式解释器的任何特殊字符，必须先编辑文件，再交给 LaTeX 处理。具体来说，特殊字符必须用美元符号括起来（`$ … $`），LaTeX 能识别的其他字符（例如花括号）也可能需要编辑。`pdflatex` 设备以及任何 `standalone` 格式，在 Gnuplot 工具包下都不可用。"
              }
             }
            ]
@@ -6716,7 +6761,7 @@
            "term": {
             "en": "`epscairo*`, `pdfcairo*`, `epscairolatex*`, `pdfcairolatex*`, `epscairolatexstandalone*`, `pdfcairolatexstandalone*`",
             "sha": "dc88109a90b4",
-            "zh": ""
+            "zh": "`epscairo*`, `pdfcairo*`, `epscairolatex*`, `pdfcairolatex*`, `epscairolatexstandalone*`, `pdfcairolatexstandalone*`"
            },
            "blocks": [
             {
@@ -6724,7 +6769,7 @@
              "t": {
               "en": "Generate output with Cairo renderer. The devices `epscairo` and `pdfcairo` are synonymous with the `epsc` device. The LaTeX variants generate a LaTeX file, `filename.tex`, for the text portions of a plot, and an image file, `filename.(eps|pdf)`, for the graph portion of the plot. The `standalone` variants behave as described for `epslatexstandalone` above.",
               "sha": "5555bae41e23",
-              "zh": ""
+              "zh": "用 Cairo 渲染器生成输出。设备 `epscairo` 和 `pdfcairo` 与 `epsc` 设备同义。LaTeX 变体为图中的文字部分生成 LaTeX 文件 `filename.tex`，为图的图形部分生成图像文件 `filename.(eps|pdf)`。`standalone` 变体的行为与上面 `epslatexstandalone` 所述相同。"
              }
             }
            ]
@@ -6733,7 +6778,7 @@
            "term": {
             "en": "`canvas*`",
             "sha": "9504c0d49585",
-            "zh": ""
+            "zh": "`canvas*`"
            },
            "blocks": [
             {
@@ -6741,7 +6786,7 @@
              "t": {
               "en": "Javascript-based drawing on an HTML5 canvas viewable in a web browser.",
               "sha": "f170b5fc3fb2",
-              "zh": ""
+              "zh": "基于 Javascript、绘制在 HTML5 canvas 上的图形，可在网页浏览器中查看。"
              }
             }
            ]
@@ -6750,7 +6795,7 @@
            "term": {
             "en": "`emf`, `meta`",
             "sha": "166276edb37e",
-            "zh": ""
+            "zh": "`emf`, `meta`"
            },
            "blocks": [
             {
@@ -6758,7 +6803,7 @@
              "t": {
               "en": "Microsoft Enhanced Metafile",
               "sha": "be274f51974d",
-              "zh": ""
+              "zh": "Microsoft 增强型图元文件（Enhanced Metafile）"
              }
             }
            ]
@@ -6767,7 +6812,7 @@
            "term": {
             "en": "`fig`",
             "sha": "31267f8cf41d",
-            "zh": ""
+            "zh": "`fig`"
            },
            "blocks": [
             {
@@ -6775,7 +6820,7 @@
              "t": {
               "en": "XFig. For the Gnuplot graphics toolkit, the additional options `-textspecial` or `-textnormal` (default) can be used to control whether the special flag should be set for the text in the figure.",
               "sha": "0494f3da4ad6",
-              "zh": ""
+              "zh": "XFig。对于 Gnuplot 图形工具包，可以使用额外的选项 `-textspecial` 或 `-textnormal`（默认）来控制是否对图中的文字设置 special 标志。"
              }
             }
            ]
@@ -6784,7 +6829,7 @@
            "term": {
             "en": "`latex*`, `eepic*`",
             "sha": "dea757d22c3d",
-            "zh": ""
+            "zh": "`latex*`, `eepic*`"
            },
            "blocks": [
             {
@@ -6792,7 +6837,7 @@
              "t": {
               "en": "LaTeX picture environment and extended picture environment.",
               "sha": "7a62d1b77798",
-              "zh": ""
+              "zh": "LaTeX picture 环境和扩展 picture 环境。"
              }
             }
            ]
@@ -6801,7 +6846,7 @@
            "term": {
             "en": "`tikz`, `tikzstandalone*`",
             "sha": "9acf0599460d",
-            "zh": ""
+            "zh": "`tikz`, `tikzstandalone*`"
            },
            "blocks": [
             {
@@ -6809,7 +6854,7 @@
              "t": {
               "en": "Generate a LaTeX file using PGF/TikZ format. The OpenGL-based toolkits create a PGF file while Gnuplot creates a TikZ file. The `tikzstandalone` device produces a LaTeX document which includes the TikZ file.",
               "sha": "033131e72447",
-              "zh": ""
+              "zh": "生成 PGF/TikZ 格式的 LaTeX 文件。基于 OpenGL 的工具包创建 PGF 文件，而 Gnuplot 创建 TikZ 文件。`tikzstandalone` 设备生成的 LaTeX 文档包含这个 TikZ 文件。"
              }
             }
            ]
@@ -6821,7 +6866,7 @@
          "t": {
           "en": "Raster Formats",
           "sha": "ade1d1989b14",
-          "zh": ""
+          "zh": "栅格格式"
          }
         },
         {
@@ -6831,7 +6876,7 @@
            "term": {
             "en": "`png`",
             "sha": "0ec50f538937",
-            "zh": ""
+            "zh": "`png`"
            },
            "blocks": [
             {
@@ -6839,7 +6884,7 @@
              "t": {
               "en": "Portable Network Graphics",
               "sha": "0655d96b4660",
-              "zh": ""
+              "zh": "便携式网络图形（Portable Network Graphics）"
              }
             }
            ]
@@ -6848,7 +6893,7 @@
            "term": {
             "en": "`jpg`, `jpeg`",
             "sha": "ff191ef856a8",
-            "zh": ""
+            "zh": "`jpg`, `jpeg`"
            },
            "blocks": [
             {
@@ -6856,7 +6901,7 @@
              "t": {
               "en": "JPEG image",
               "sha": "6876b7ffd1cc",
-              "zh": ""
+              "zh": "JPEG 图像"
              }
             }
            ]
@@ -6865,7 +6910,7 @@
            "term": {
             "en": "`tif`, `tiff`, `tiffn`",
             "sha": "08243956591d",
-            "zh": ""
+            "zh": "`tif`, `tiff`, `tiffn`"
            },
            "blocks": [
             {
@@ -6873,7 +6918,7 @@
              "t": {
               "en": "TIFF image with LZW compression (tif, tiff) or uncompressed (tiffn).",
               "sha": "7ab9631450ba",
-              "zh": ""
+              "zh": "TIFF 图像，使用 LZW 压缩（tif、tiff）或不压缩（tiffn）。"
              }
             }
            ]
@@ -6882,7 +6927,7 @@
            "term": {
             "en": "`gif`",
             "sha": "2be97b5c0270",
-            "zh": ""
+            "zh": "`gif`"
            },
            "blocks": [
             {
@@ -6890,7 +6935,7 @@
              "t": {
               "en": "GIF image",
               "sha": "d092a7791722",
-              "zh": ""
+              "zh": "GIF 图像"
              }
             }
            ]
@@ -6899,7 +6944,7 @@
            "term": {
             "en": "`pbm`",
             "sha": "8ec68a5cdb53",
-            "zh": ""
+            "zh": "`pbm`"
            },
            "blocks": [
             {
@@ -6907,7 +6952,7 @@
              "t": {
               "en": "PBMplus",
               "sha": "b16905a41ac6",
-              "zh": ""
+              "zh": "PBMplus"
              }
             }
            ]
@@ -6916,7 +6961,7 @@
            "term": {
             "en": "`dumb*`",
             "sha": "10a63260f4d9",
-            "zh": ""
+            "zh": "`dumb*`"
            },
            "blocks": [
             {
@@ -6924,7 +6969,7 @@
              "t": {
               "en": "ASCII art",
               "sha": "5ea03c1bb5af",
-              "zh": ""
+              "zh": "ASCII 字符画"
              }
             }
            ]
@@ -6936,7 +6981,7 @@
          "t": {
           "en": "If the device is omitted, it is inferred from the file extension, or if there is no filename then it is sent to the printer as PostScript.",
           "sha": "6a4e5e9b1011",
-          "zh": ""
+          "zh": "如果省略设备，则根据文件扩展名推断；如果也没有文件名，则以 PostScript 格式发送到打印机。"
          }
         }
        ]
@@ -6945,7 +6990,7 @@
        "term": {
         "en": "`-dghostscript_device`",
         "sha": "d1f3e0f285db",
-        "zh": ""
+        "zh": "`-dghostscript_device`"
        },
        "blocks": [
         {
@@ -6953,7 +6998,7 @@
          "t": {
           "en": "Additional devices are supported by Ghostscript. Some examples are:",
           "sha": "be5674f80d63",
-          "zh": ""
+          "zh": "Ghostscript 支持更多设备。一些例子如下："
          }
         },
         {
@@ -6963,7 +7008,7 @@
            "term": {
             "en": "`ljet2p`",
             "sha": "2c924e649e74",
-            "zh": ""
+            "zh": "`ljet2p`"
            },
            "blocks": [
             {
@@ -6971,7 +7016,7 @@
              "t": {
               "en": "HP LaserJet IIP",
               "sha": "102e38a619ad",
-              "zh": ""
+              "zh": "HP LaserJet IIP"
              }
             }
            ]
@@ -6980,7 +7025,7 @@
            "term": {
             "en": "`pcx24b`",
             "sha": "fb48cc8182f7",
-            "zh": ""
+            "zh": "`pcx24b`"
            },
            "blocks": [
             {
@@ -6988,7 +7033,7 @@
              "t": {
               "en": "24-bit color PCX file format",
               "sha": "fe2a7ad95d6c",
-              "zh": ""
+              "zh": "24 位彩色 PCX 文件格式"
              }
             }
            ]
@@ -6997,7 +7042,7 @@
            "term": {
             "en": "`ppm`",
             "sha": "0f8296273030",
-            "zh": ""
+            "zh": "`ppm`"
            },
            "blocks": [
             {
@@ -7005,7 +7050,7 @@
              "t": {
               "en": "Portable Pixel Map file format",
               "sha": "71cf4f31be70",
-              "zh": ""
+              "zh": "Portable Pixel Map 文件格式"
              }
             }
            ]
@@ -7017,7 +7062,7 @@
          "t": {
           "en": "For a complete list of available formats and devices type `system (\"gs -h\")`.",
           "sha": "997235694649",
-          "zh": ""
+          "zh": "要查看可用格式和设备的完整列表，输入 `system (\"gs -h\")`。"
          }
         },
         {
@@ -7025,7 +7070,7 @@
          "t": {
           "en": "When Ghostscript output is sent to a printer the size is determined by the figure's `\"papersize\"` property. When the output is sent to a file the size is determined by the plot box defined by the figure's `\"paperposition\"` property.",
           "sha": "b3db139b9af2",
-          "zh": ""
+          "zh": "当 Ghostscript 的输出发送到打印机时，大小由图形窗口的 `\"papersize\"` 属性决定。当输出发送到文件时，大小由图形窗口的 `\"paperposition\"` 属性所定义的绘图框决定。"
          }
         }
        ]
@@ -7034,7 +7079,7 @@
        "term": {
         "en": "`-Gghostscript_command`",
         "sha": "4f192c7b46aa",
-        "zh": ""
+        "zh": "`-Gghostscript_command`"
        },
        "blocks": [
         {
@@ -7042,7 +7087,7 @@
          "t": {
           "en": "Specify the command for calling Ghostscript. For Unix the default is `\"gs\"` and for Windows it is `\"gswin32c\"`.",
           "sha": "e7b4f3a49544",
-          "zh": ""
+          "zh": "指定调用 Ghostscript 的命令。在 Unix 上默认是 `\"gs\"`，在 Windows 上是 `\"gswin32c\"`。"
          }
         }
        ]
@@ -7051,7 +7096,7 @@
        "term": {
         "en": "`-TextAlphaBits=n`, `-GraphicsAlphaBits=n`",
         "sha": "86130d2b6dd3",
-        "zh": ""
+        "zh": "`-TextAlphaBits=n`, `-GraphicsAlphaBits=n`"
        },
        "blocks": [
         {
@@ -7059,7 +7104,7 @@
          "t": {
           "en": "Octave is able to produce output for various printers, bitmaps, and vector formats by using Ghostscript. For bitmap and printer output anti-aliasing is applied using Ghostscript's TextAlphaBits and GraphicsAlphaBits options. The default number of bits are 4 and 1 respectively. Allowed values for *N* are 1, 2, or 4.",
           "sha": "31f0dc1de125",
-          "zh": ""
+          "zh": "Octave 可以借助 Ghostscript 为各种打印机、位图和矢量格式生成输出。对于位图和打印机输出，会使用 Ghostscript 的 TextAlphaBits 和 GraphicsAlphaBits 选项做抗锯齿处理，二者的默认位数分别是 4 和 1。*N* 的允许取值为 1、2 或 4。"
          }
         }
        ]
@@ -7071,7 +7116,7 @@
      "t": {
       "en": "See also: `saveas`, `getframe`, `savefig`, `hgsave`, `orient`, `figure`.",
       "sha": "7ef9f1774559",
-      "zh": ""
+      "zh": "另见：`saveas`、`getframe`、`savefig`、`hgsave`、`orient`、`figure`。"
      }
     }
    ]
@@ -7089,7 +7134,7 @@
      "t": {
       "en": "Save graphics object *h* to the file *filename* in graphics format *fmt*.",
       "sha": "9502afed0622",
-      "zh": ""
+      "zh": "把图形对象 *h* 以图形格式 *fmt* 保存到文件 *filename*。"
      }
     },
     {
@@ -7097,7 +7142,7 @@
      "t": {
       "en": "If *h* is the handle to a figure object, that figure object is saved. If *h* is the handle to a different graphics object, the figure containing that graphics object is saved.",
       "sha": "2a130292e91d",
-      "zh": ""
+      "zh": "如果 *h* 是图形窗口对象的句柄，则保存该图形窗口对象。如果 *h* 是其他图形对象的句柄，则保存包含该图形对象的图形窗口。"
      }
     },
     {
@@ -7105,7 +7150,7 @@
      "t": {
       "en": "All device formats accepted by `print` may be used. Common formats are:",
       "sha": "112ff55185f1",
-      "zh": ""
+      "zh": "`print` 接受的所有设备格式都可以使用。常见的格式有："
      }
     },
     {
@@ -7115,7 +7160,7 @@
        "term": {
         "en": "`ofig`",
         "sha": "d17e6c0d9f76",
-        "zh": ""
+        "zh": "`ofig`"
        },
        "blocks": [
         {
@@ -7123,7 +7168,7 @@
          "t": {
           "en": "Octave figure file format (default)",
           "sha": "23b94f030024",
-          "zh": ""
+          "zh": "Octave 图形文件格式（默认）"
          }
         }
        ]
@@ -7132,7 +7177,7 @@
        "term": {
         "en": "`mfig`",
         "sha": "d5984b3c529a",
-        "zh": ""
+        "zh": "`mfig`"
        },
        "blocks": [
         {
@@ -7140,7 +7185,7 @@
          "t": {
           "en": "Two files: Octave m-file `filename.m` containing code to open Octave figure file `filename.ofig`",
           "sha": "2aee4c852e6e",
-          "zh": ""
+          "zh": "两个文件：Octave m 文件 `filename.m`，其中的代码用来打开 Octave 图形文件 `filename.ofig`"
          }
         }
        ]
@@ -7149,7 +7194,7 @@
        "term": {
         "en": "`ps`",
         "sha": "6d26ef055f2b",
-        "zh": ""
+        "zh": "`ps`"
        },
        "blocks": [
         {
@@ -7157,7 +7202,7 @@
          "t": {
           "en": "PostScript",
           "sha": "b11760ac6da6",
-          "zh": ""
+          "zh": "PostScript"
          }
         }
        ]
@@ -7166,7 +7211,7 @@
        "term": {
         "en": "`eps`",
         "sha": "a8205a9b68fc",
-        "zh": ""
+        "zh": "`eps`"
        },
        "blocks": [
         {
@@ -7174,7 +7219,7 @@
          "t": {
           "en": "Encapsulated PostScript",
           "sha": "8b734915f4d6",
-          "zh": ""
+          "zh": "封装 PostScript"
          }
         }
        ]
@@ -7183,7 +7228,7 @@
        "term": {
         "en": "`pdf`",
         "sha": "8e8ca6bb0c0b",
-        "zh": ""
+        "zh": "`pdf`"
        },
        "blocks": [
         {
@@ -7191,7 +7236,7 @@
          "t": {
           "en": "Portable Document Format",
           "sha": "9c1704c3bf01",
-          "zh": ""
+          "zh": "便携式文档格式"
          }
         }
        ]
@@ -7200,7 +7245,7 @@
        "term": {
         "en": "`jpg`",
         "sha": "c87ebd2843b6",
-        "zh": ""
+        "zh": "`jpg`"
        },
        "blocks": [
         {
@@ -7208,7 +7253,7 @@
          "t": {
           "en": "JPEG Image",
           "sha": "df134372d2a1",
-          "zh": ""
+          "zh": "JPEG 图像"
          }
         }
        ]
@@ -7217,7 +7262,7 @@
        "term": {
         "en": "`png`",
         "sha": "0ec50f538937",
-        "zh": ""
+        "zh": "`png`"
        },
        "blocks": [
         {
@@ -7225,7 +7270,7 @@
          "t": {
           "en": "Portable Network Graphics image",
           "sha": "3432b68b664f",
-          "zh": ""
+          "zh": "便携式网络图形图像"
          }
         }
        ]
@@ -7234,7 +7279,7 @@
        "term": {
         "en": "`emf`",
         "sha": "24c9da3e0340",
-        "zh": ""
+        "zh": "`emf`"
        },
        "blocks": [
         {
@@ -7242,7 +7287,7 @@
          "t": {
           "en": "Enhanced MetaFile",
           "sha": "90ab99285684",
-          "zh": ""
+          "zh": "增强型图元文件"
          }
         }
        ]
@@ -7251,7 +7296,7 @@
        "term": {
         "en": "`tif`",
         "sha": "d9b711e0a493",
-        "zh": ""
+        "zh": "`tif`"
        },
        "blocks": [
         {
@@ -7259,7 +7304,7 @@
          "t": {
           "en": "TIFF Image, compressed",
           "sha": "e8a3bf50ae3d",
-          "zh": ""
+          "zh": "TIFF 图像，有压缩"
          }
         }
        ]
@@ -7271,7 +7316,7 @@
      "t": {
       "en": "If *fmt* is omitted it is extracted from the extension of *filename*. The default format when there is no extension is `\"ofig\"`.",
       "sha": "82e680926843",
-      "zh": ""
+      "zh": "如果省略 *fmt*，则从 *filename* 的扩展名中提取。没有扩展名时的默认格式是 `\"ofig\"`。"
      }
     },
     {
@@ -7283,7 +7328,7 @@
      "t": {
       "en": "See also: `print`, `savefig`, `hgsave`, `orient`.",
       "sha": "7b0dc1925b7a",
-      "zh": ""
+      "zh": "另见：`print`、`savefig`、`hgsave`、`orient`。"
      }
     }
    ]
@@ -7293,7 +7338,7 @@
    "t": {
     "en": "`print` and `saveas` are used when work on a plot has finished and the output must be in a publication-ready format. During intermediate stages it is often better to save the graphics object and all of its associated information so that changes—to colors, axis limits, marker styles, etc.—can be made easily from within Octave. The `hgsave`/`hgload` commands can be used to save and re-create a graphics object.",
     "sha": "2bbfe714eda5",
-    "zh": ""
+    "zh": "`print` 和 `saveas` 用于图形工作完成、输出必须是可发表格式的时候。在中间阶段，更好的做法往往是保存图形对象及其所有相关信息，这样就可以在 Octave 里方便地修改颜色、坐标轴范围、标记样式等。`hgsave`/`hgload` 命令可用来保存和重建图形对象。"
    }
   },
   {
@@ -7302,7 +7347,7 @@
    "t": {
     "en": "Interacting with Plots",
     "sha": "c221ade3db33",
-    "zh": ""
+    "zh": "与图形交互"
    }
   },
   {
@@ -7310,15 +7355,15 @@
    "t": {
     "en": "The user can select points on a plot with the `ginput` function or select the position at which to place text on the plot with the `gtext` function using the mouse.",
     "sha": "acd0cbacd515",
-    "zh": ""
+    "zh": "用户可以用 `ginput` 函数在图上选取点，也可以用 `gtext` 函数通过鼠标选择在图上放置文字的位置。"
    }
   },
   {
    "k": "p",
    "t": {
-    "en": "More sophisticated user interaction mechanisms can be obtained using the",
-    "sha": "57fb89501aab",
-    "zh": ""
+    "en": "More sophisticated user interaction mechanisms can be obtained using the ui* family of functions, see UI Elements.",
+    "sha": "340c9efa157d",
+    "zh": "更复杂的用户交互机制可以通过使用 ui* 系列函数来实现，见 UI Elements。"
    }
   },
   {
@@ -7327,7 +7372,7 @@
    "t": {
     "en": "Test Plotting Functions",
     "sha": "a6b783c8ea10",
-    "zh": ""
+    "zh": "测试绘图函数"
    }
   },
   {
@@ -7335,7 +7380,7 @@
    "t": {
     "en": "The functions `sombrero` and `peaks` provide a way to check that plotting is working. Typing either `sombrero` or `peaks` at the Octave prompt should display a three-dimensional plot.",
     "sha": "680831b3f15e",
-    "zh": ""
+    "zh": "`sombrero` 和 `peaks` 函数提供了一种检查绘图功能是否正常的方法。在 Octave 提示符下输入 `sombrero` 或 `peaks`，都应该显示一幅三维图。"
    }
   },
   {
@@ -7353,7 +7398,7 @@
      "t": {
       "en": "Plot the familiar 3-D sombrero function.",
       "sha": "777e2eee3cea",
-      "zh": ""
+      "zh": "绘制我们熟悉的三维墨西哥草帽函数。"
      }
     },
     {
@@ -7361,7 +7406,7 @@
      "t": {
       "en": "The function plotted is",
       "sha": "efb35fe06069",
-      "zh": ""
+      "zh": "所绘制的函数是"
      }
     },
     {
@@ -7373,7 +7418,7 @@
      "t": {
       "en": "Called without a return argument, `sombrero` plots the surface of the above function over the meshgrid [-8,8] using `surf`.",
       "sha": "3e54d8112d96",
-      "zh": ""
+      "zh": "不带返回参数调用时，`sombrero` 用 `surf` 在网格 [-8,8] 上绘制上述函数的曲面。"
      }
     },
     {
@@ -7381,7 +7426,7 @@
      "t": {
       "en": "If *n* is a scalar the plot is made with *n* grid lines. The default value for *n* is 41.",
       "sha": "e3339292fd49",
-      "zh": ""
+      "zh": "如果 *n* 是标量，则图中有 *n* 条网格线。*n* 的默认值是 41。"
      }
     },
     {
@@ -7389,7 +7434,7 @@
      "t": {
       "en": "When called with output arguments, return the data for the function evaluated over the meshgrid. This can subsequently be plotted with `surf (x, y, z)`.",
       "sha": "ca6346797d30",
-      "zh": ""
+      "zh": "带输出参数调用时，返回该函数在网格上的取值数据，之后可以用 `surf (x, y, z)` 绘制。"
      }
     },
     {
@@ -7397,7 +7442,7 @@
      "t": {
       "en": "See also: `peaks`, `meshgrid`, `mesh`, `surf`.",
       "sha": "d04eafaf3754",
-      "zh": ""
+      "zh": "另见：`peaks`、`meshgrid`、`mesh`、`surf`。"
      }
     }
    ]
@@ -7418,7 +7463,7 @@
      "t": {
       "en": "Plot a function with lots of local maxima and minima.",
       "sha": "5ec1a338b1f0",
-      "zh": ""
+      "zh": "绘制一个含有许多局部极大值和极小值的函数。"
      }
     },
     {
@@ -7426,7 +7471,7 @@
      "t": {
       "en": "The function has the form",
       "sha": "0265a6ef2bb7",
-      "zh": ""
+      "zh": "该函数的形式为"
      }
     },
     {
@@ -7438,7 +7483,7 @@
      "t": {
       "en": "Called without a return argument, `peaks` plots the surface of the above function using `surf`.",
       "sha": "f2b56d67ac13",
-      "zh": ""
+      "zh": "不带返回参数调用时，`peaks` 用 `surf` 绘制上述函数的曲面。"
      }
     },
     {
@@ -7446,7 +7491,7 @@
      "t": {
       "en": "If *n* is a scalar, `peaks` plots the value of the above function on an *n*-by-*n* mesh over the range [-3,3]. The default value for *n* is 49.",
       "sha": "94b9a03fd9d8",
-      "zh": ""
+      "zh": "如果 *n* 是标量，`peaks` 在区间 [-3,3] 上的 *n*×*n* 网格上绘制上述函数的值。*n* 的默认值是 49。"
      }
     },
     {
@@ -7454,7 +7499,7 @@
      "t": {
       "en": "If *n* is a vector, then it represents the grid values over which to calculate the function. If *x* and *y* are specified then the function value is calculated over the specified grid of vertices.",
       "sha": "35c1613125da",
-      "zh": ""
+      "zh": "如果 *n* 是向量，则它表示用来计算函数值的网格取值。如果指定了 *x* 和 *y*，则在所指定的顶点网格上计算函数值。"
      }
     },
     {
@@ -7462,7 +7507,7 @@
      "t": {
       "en": "When called with output arguments, return the data for the function evaluated over the meshgrid. This can subsequently be plotted with `surf (x, y, z)`.",
       "sha": "ca6346797d30",
-      "zh": ""
+      "zh": "带输出参数调用时，返回该函数在网格上的取值数据，之后可以用 `surf (x, y, z)` 绘制。"
      }
     },
     {
@@ -7470,7 +7515,7 @@
      "t": {
       "en": "See also: `sombrero`, `meshgrid`, `mesh`, `surf`.",
       "sha": "60bc390b58dc",
-      "zh": ""
+      "zh": "另见：`sombrero`、`meshgrid`、`mesh`、`surf`。"
      }
     }
    ]

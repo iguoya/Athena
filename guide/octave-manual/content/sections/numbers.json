@@ -340,9 +340,9 @@
   {
    "k": "p",
    "t": {
-    "en": "A matrix may have one or both dimensions zero, and operations on empty matrices are handled as described by Carl de Boor in *An Empty Exercise*, SIGNUM, Volume 25, pages 2--6, 1990 and *A System-Theoretic Appropriate Realization of the Empty Matrix Concept*, IEEE Transactions on Automatic Control, Volume 38, Number 5, May 1993. Briefly, given a scalar $s$, an $m\\times n$ matrix $M_{m\\times n}$, and an $m\\times n$ empty matrix $[\\,]_{m\\times n}$ (with either one or both dimensions equal to zero), the following are true: $$ \\begin{aligned}% s \\cdot [\\,]_{m\\times n} = [\\,]_{m\\times n} \\cdot s &= [\\,]_{m\\times n}\\\\ [\\,]_{m\\times n} + [\\,]_{m\\times n} &= [\\,]_{m\\times n}\\\\ [\\,]_{0\\times m} \\cdot M_{m\\times n} &= [\\,]_{0\\times n}\\\\ M_{m\\times n} \\cdot [\\,]_{n\\times 0} &= [\\,]_{m\\times 0}\\\\ [\\,]_{m\\times 0} \\cdot [\\,]_{0\\times n} &= 0_{m\\times n}\\end{aligned} $$",
-    "sha": "aa65d791ed6a",
-    "zh": "矩阵的一个或两个维数可以为零，对空矩阵的运算按 Carl de Boor 在 *An Empty Exercise*（SIGNUM，第 25 卷，第 2--6 页，1990 年）和 *A System-Theoretic Appropriate Realization of the Empty Matrix Concept*（IEEE Transactions on Automatic Control，第 38 卷第 5 期，1993 年 5 月）中的约定处理。简单地说，给定标量 $s$、$m\\times n$ 矩阵 $M_{m\\times n}$ 和 $m\\times n$ 空矩阵 $[\\,]_{m\\times n}$（其中一个或两个维数等于零），下列各式成立： $$ \\begin{aligned}% s \\cdot [\\,]_{m\\times n} = [\\,]_{m\\times n} \\cdot s &= [\\,]_{m\\times n}\\\\ [\\,]_{m\\times n} + [\\,]_{m\\times n} &= [\\,]_{m\\times n}\\\\ [\\,]_{0\\times m} \\cdot M_{m\\times n} &= [\\,]_{0\\times n}\\\\ M_{m\\times n} \\cdot [\\,]_{n\\times 0} &= [\\,]_{m\\times 0}\\\\ [\\,]_{m\\times 0} \\cdot [\\,]_{0\\times n} &= 0_{m\\times n}\\end{aligned} $$"
+    "en": "A matrix may have one or both dimensions zero, and operations on empty matrices are handled as described by Carl de Boor in *An Empty Exercise*, SIGNUM, Volume 25, pages 2--6, 1990 and C. N. Nett and W. M. Haddad, in *A System-Theoretic Appropriate Realization of the Empty Matrix Concept*, IEEE Transactions on Automatic Control, Volume 38, Number 5, May 1993. Briefly, given a scalar $s$, an $m\\times n$ matrix $M_{m\\times n}$, and an $m\\times n$ empty matrix $[\\,]_{m\\times n}$ (with either one or both dimensions equal to zero), the following are true: $$ \\begin{aligned}% s \\cdot [\\,]_{m\\times n} = [\\,]_{m\\times n} \\cdot s &= [\\,]_{m\\times n}\\\\ [\\,]_{m\\times n} + [\\,]_{m\\times n} &= [\\,]_{m\\times n}\\\\ [\\,]_{0\\times m} \\cdot M_{m\\times n} &= [\\,]_{0\\times n}\\\\ M_{m\\times n} \\cdot [\\,]_{n\\times 0} &= [\\,]_{m\\times 0}\\\\ [\\,]_{m\\times 0} \\cdot [\\,]_{0\\times n} &= 0_{m\\times n}\\end{aligned} $$",
+    "sha": "2e329934dcf5",
+    "zh": "矩阵的一个或两个维数可以为零，对空矩阵的运算按 Carl de Boor 在 *An Empty Exercise*（SIGNUM，第 25 卷，第 2--6 页，1990 年）和 C. N. Nett 与 W. M. Haddad 在 *A System-Theoretic Appropriate Realization of the Empty Matrix Concept*（IEEE Transactions on Automatic Control，第 38 卷第 5 期，1993 年 5 月）中的约定处理。简单地说，给定标量 $s$、$m\\times n$ 矩阵 $M_{m\\times n}$ 和 $m\\times n$ 空矩阵 $[\\,]_{m\\times n}$（其中一个或两个维数等于零），下列各式成立： $$ \\begin{aligned}% s \\cdot [\\,]_{m\\times n} = [\\,]_{m\\times n} \\cdot s &= [\\,]_{m\\times n}\\\\ [\\,]_{m\\times n} + [\\,]_{m\\times n} &= [\\,]_{m\\times n}\\\\ [\\,]_{0\\times m} \\cdot M_{m\\times n} &= [\\,]_{0\\times n}\\\\ M_{m\\times n} \\cdot [\\,]_{n\\times 0} &= [\\,]_{m\\times 0}\\\\ [\\,]_{m\\times 0} \\cdot [\\,]_{0\\times n} &= 0_{m\\times n}\\end{aligned} $$"
    }
   },
   {
@@ -934,9 +934,9 @@
     {
      "k": "p",
      "t": {
-      "en": "A vector is a 2-D array where one of the dimensions is equal to 1 (either array (a scalar) is also a vector. See also: `isscalar`, `ismatrix`, `iscolumn`, `isrow`, `size`.",
-      "sha": "133da1cd0590",
-      "zh": "向量是二维数组，其中某一个维度等于 1（要么 array（标量）也是向量。另见：`isscalar`、`ismatrix`、`iscolumn`、`isrow`、`size`。"
+      "en": "A vector is a 2-D array where one of the dimensions is equal to 1 (either 1xN or Nx1). As a consequence of this definition, a 1x1 array (a scalar) is also a vector. See also: `isscalar`, `ismatrix`, `iscolumn`, `isrow`, `size`.",
+      "sha": "28b3c202cd02",
+      "zh": "向量是二维数组，其中某一个维度等于 1（要么是 1xN，要么是 Nx1）。按照这个定义，1x1 数组（标量）也是向量。另见：`isscalar`、`ismatrix`、`iscolumn`、`isrow`、`size`。"
      }
     }
    ]

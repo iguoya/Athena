@@ -110,9 +110,9 @@
     {
      "k": "p",
      "t": {
-      "en": "If `\"Updating\"` is `\"on\"`, the function will attempt to use number of Jacobian calculations. If your user function always calculates the Jacobian (regardless of number of output arguments) then this option provides no advantage and should be disabled.",
-      "sha": "3d1f4a6733cb",
-      "zh": "如果 `\"Updating\"` 为 `\"on\"`，函数会尝试使用一定数量的雅可比矩阵计算。如果你的用户函数无论输出参数个数多少，每次都会计算雅可比矩阵，那么这个选项没有好处，应当关闭。"
+      "en": "If `\"Updating\"` is `\"on\"`, the function will attempt to use Broyden updates to update the Jacobian, in order to reduce the number of Jacobian calculations. If your user function always calculates the Jacobian (regardless of number of output arguments) then this option provides no advantage and should be disabled.",
+      "sha": "4300acf5968b",
+      "zh": "如果 `\"Updating\"` 为 `\"on\"`，函数会尝试用 Broyden 更新来更新雅可比矩阵，以减少雅可比矩阵的计算次数。如果你的用户函数无论输出参数个数多少，每次都会计算雅可比矩阵，那么这个选项没有好处，应当关闭。"
      }
     },
     {
@@ -636,9 +636,9 @@
        {
         "k": "p",
         "t": {
-         "en": "Number of function evaluations.",
-         "sha": "447236baca27",
-         "zh": "函数求值的次数。"
+         "en": "funcCount Number of function evaluations.",
+         "sha": "fac1fbe1bcb8",
+         "zh": "funcCount 函数求值的次数。"
         }
        }
       ],
@@ -1115,9 +1115,9 @@
     {
      "k": "p",
      "t": {
-      "en": "The search begins at the point *x0* and iterates using the algorithm is better-suited to functions which have discontinuities or for which a gradient-based search such as `fminunc` fails.",
-      "sha": "81241d18847a",
-      "zh": "搜索从点 *x0* 开始，并使用该算法迭代；该算法更适合处理有不连续点的函数，或基于梯度的搜索（如 `fminunc`）失效的函数。"
+      "en": "The search begins at the point *x0* and iterates using the Nelder & Mead Simplex algorithm (a derivative-free method). This algorithm is better-suited to functions which have discontinuities or for which a gradient-based search such as `fminunc` fails.",
+      "sha": "1575861ab0cd",
+      "zh": "搜索从点 *x0* 开始，并使用 Nelder & Mead 单纯形算法（一种无需导数的方法）迭代。该算法更适合处理有不连续点的函数，或基于梯度的搜索（如 `fminunc`）失效的函数。"
      }
     },
     {
@@ -1316,9 +1316,9 @@
     {
      "k": "p",
      "t": {
-      "en": "The fourth output is a structure *output* containing runtime about the algorithm. Fields in the structure are `funcCount` containing the number of function calls to *fcn*, `iterations` containing the number of iteration steps, `algorithm` with the name of the search algorithm (always: with the exit message.",
-      "sha": "c12484c9674f",
-      "zh": "第四个输出是结构体 *output*，包含算法的运行信息。结构体的字段有：`funcCount`，*fcn* 的调用次数；`iterations`，迭代步数；`algorithm`，搜索算法的名称（始终为：带有退出信息。"
+      "en": "The fourth output is a structure *output* containing runtime about the algorithm. Fields in the structure are `funcCount` containing the number of function calls to *fcn*, `iterations` containing the number of iteration steps, `algorithm` with the name of the search algorithm (always: `\"Nelder-Mead simplex direct search\"`), and `message` with the exit message.",
+      "sha": "fd96bb4ea264",
+      "zh": "第四个输出是结构体 *output*，包含算法的运行信息。结构体的字段有：`funcCount`，*fcn* 的调用次数；`iterations`，迭代步数；`algorithm`，搜索算法的名称（始终为：`\"Nelder-Mead simplex direct search\"`）；`message`，带有退出信息。"
      }
     },
     {

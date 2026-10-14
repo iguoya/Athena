@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { invoke } from "@tauri-apps/api/core";
+import { useEffect, useState } from "react";
 import { Inline, renderMath } from "./Inline";
 import { answerMatches, candidates } from "./answer";
 import type { AttemptRow, Block, Exercise, SectionData, Unit } from "./types";
@@ -30,6 +31,19 @@ function U({ u, mode }: { u: Unit; mode: ViewMode }) {
     );
   }
   return <Inline text={has ? u.zh : u.en} />;
+}
+
+/** 一幅插图：svg 由 scripts/render_figures.py 预先渲染进 content/figures/；缺图时显示占位。 */
+function Fig({ id }: { id: string }) {
+  const [svg, setSvg] = useState<string | null | undefined>(undefined);
+  useEffect(() => {
+    let alive = true;
+    invoke<string | null>("get_figure", { figId: id }).then((v) => alive && setSvg(v)).catch(() => alive && setSvg(null));
+    return () => { alive = false; };
+  }, [id]);
+  if (svg === undefined) return null;
+  if (!svg) return <div className="figure-note">手册此处有一幅图（{id}），尚未渲染。</div>;
+  return <div className="figure-svg" dangerouslySetInnerHTML={{ __html: svg }} />;
 }
 
 /** 交互式会话（doctest）：`>>>`/`...` 开头的是输入，其余是工具的输出。逐字显示，不做语法高亮。 */
@@ -100,6 +114,13 @@ function BlockView({ b, mode }: { b: Block; mode: ViewMode }) {
     }
     case "code":
       return <CodeBlock text={b.text} />;
+    case "figure":
+      return (
+        <figure className="figure">
+          <Fig id={b.id} />
+          {b.caption && <figcaption><U u={b.caption} mode={mode} /></figcaption>}
+        </figure>
+      );
     case "def":
       return (
         <section className="fn-card" id={`fn-${b.name}`}>

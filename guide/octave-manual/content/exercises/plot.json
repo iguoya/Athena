@@ -127,7 +127,7 @@
         {
           "text": "$1\\times 15$：把所有格点排成一行。",
           "ok": false,
-          "why": "`mesh` 画曲面需要保留行列结构，行向量会被当成线框的一条线。"
+          "why": "`Z` 要保留二维的行列结构，每个格点各占一个位置，而不是排成一行。"
         },
         {
           "text": "$3\\times 5$：行数是 `numel (y)`，列数是 `numel (x)`。",
@@ -141,7 +141,7 @@
         }
       ]
     },
-    "sol": "`meshgrid (x, y)` 返回的矩阵行方向变化的是 $y$、列方向变化的是 $x$，所以大小为 `numel (y)` 乘 `numel (x)`，这里是 $3\\times 5$。用向量化表达式（`.*`、`.^`）算出的 `Z` 自动沿用这个形状。\n\n```octave\n>> size (X)\nans =\n\n   3   5\n\n>> Z = X - Y.^2;\n>> size (Z)\nans =\n\n   3   5\n```\n\n`mesh (x, y, Z)` 画出 3 条（对应 `y`）沿 `x` 方向的折线与 5 条沿 `y` 方向的折线交织成的网；若把 `Z` 转置成 $5\\times 3$ 再传入，维数与 `x`、`y` 不匹配，会得到错误提示。",
+    "sol": "`meshgrid (x, y)` 返回的矩阵行方向变化的是 $y$、列方向变化的是 $x$，所以大小为 `numel (y)` 乘 `numel (x)`，这里是 $3\\times 5$。用向量化表达式（`.*`、`.^`）算出的 `Z` 自动沿用这个形状。\n\n```octave\n>> size (X)\nans =\n\n   3   5\n\n>> Z = X - Y.^2;\n>> size (Z)\nans =\n\n   3   5\n```\n\n`mesh (x, y, Z)` 画出 3 条（对应 `y`）沿 `x` 方向的折线与 5 条沿 `y` 方向的折线交织成的网。",
     "source_refs": [
       {
         "relation": "authored",
