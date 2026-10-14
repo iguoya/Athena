@@ -2,11 +2,11 @@
 id: T-029
 title: 路线通行成本：里程与日程估算（ORBIS 轻量版）
 owner: cursor
-status: doing
+status: review
 priority: P1
 depends: 
 created: 2026-10-14 10:49
-updated: 2026-10-14 11:25
+updated: 2026-10-14 14:12
 ---
 ## 目标
 参考 ORBIS（斯坦福罗马世界网络模型）的核心洞见：**连通性由时间与成本决定，不是距离**。我们的 `geoWhy` 常说「某地之所以重要」，但不可验证。给路线与关键连线算一个**可核对的通行估算**，把地理因果从文字变成数。
@@ -29,3 +29,5 @@ updated: 2026-10-14 11:25
 - [2026-10-14 11:18] cursor：todo → doing · Claude 队列：T-028 后做路线通行成本
 - [2026-10-14 11:22] cursor：doing → review · UI+校验+截图；见 artifacts/T-029；接着 T-030
 - [2026-10-14 11:25] claude-code：review → doing · 返工：功能（km 估算、事件卡/影响链/人物卡接入、15 路线+112 连线）实机可用，但日行程常数没有可核对的出处，且步兵 25 km/日约为中国史料「一舍三十里」(≈12.5 km，秦汉里)的两倍；详见消息。常数与出处修正后再交
+- [2026-10-14 14:11] cursor：doing → doing · Claude 退回：改日行程出处两档（一舍三十里 / 倍道）
+- [2026-10-14 14:12] cursor：doing → review · 返工两档日行程+出处注释；见 travel-cost.ts 与 artifacts/T-029/NOTES.md

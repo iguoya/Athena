@@ -35,9 +35,24 @@ import { featuresCollection, routesCollection } from "@/content/layer-geo";
 import { CompareMaps } from "@/CompareMaps";
 import {
   academicAtYear,
+  academicBelongingAt,
+  belongingRowActiveAt,
   type AcademicProps,
+  type BelongingResult,
 } from "@/academic-layers";
 import { powerAtPoint } from "@/geo-pip";
+import {
+  PlaceGlyph,
+  PLACE_GLYPH_LEGEND,
+  placeGlyphKind,
+} from "@/PlaceGlyph";
+import {
+  estimatePath,
+  estimateTravel,
+  haversineKm,
+  TRAVEL_RATE_SOURCES,
+  type TravelEstimate,
+} from "@/travel-cost";
 import {
   type Atlas,
   type Capital,
@@ -61,6 +76,8 @@ import {
   nearestEventAtOrBefore,
   placeAliveAt,
   placeNameAt,
+  routePieceAtYear,
+  routesVisibleAt,
 } from "@/content/types";
 
 type Fc = {
@@ -117,6 +134,69 @@ function landmarkMinZoom(size: number): number {
 }
 
 const CHINA_VIEW = { longitude: 105.5, latitude: 35.5, zoom: 3.45 };
+
+/** T-028：历代归属列表 */
+function BelongingList({
+  result,
+  year,
+}: {
+  result: BelongingResult;
+  year: number;
+}) {
+  const hitCount = result.rows.filter((r) => r.kind === "hit").length;
+  return (
+    <>
+      <p className="mt-1 text-[11px] text-muted">
+        {result.lon.toFixed(2)}°E · {result.lat.toFixed(2)}°N · 命中 {hitCount}/
+        {result.rows.length} 切片
+      </p>
+      <ul className="mt-2 max-h-72 space-y-1 overflow-y-auto text-[12px]">
+        {result.rows.map((row) => {
+          const active = belongingRowActiveAt(row, year);
+          const key = row.kind === "hit" ? row.hit.sliceId : row.sliceId;
+          if (row.kind === "empty") {
+            return (
+              <li
+                key={key}
+                className={cn(
+                  "rounded px-2 py-1.5 text-muted",
+                  active && "bg-accent-soft/40 font-semibold text-ink",
+                )}
+              >
+                <span className="text-era">{row.sliceTitle}</span>
+                <span className="text-[10px] text-muted">
+                  {" "}
+                  {formatYear(row.fromYear)}–{formatYear(row.toYear)}
+                  {row.approximate ? " · 近似" : ""}
+                </span>
+                <span className="mt-0.5 block">该时期学术层无覆盖</span>
+              </li>
+            );
+          }
+          const h = row.hit;
+          return (
+            <li
+              key={key}
+              className={cn(
+                "rounded px-2 py-1.5",
+                active ? "bg-accent-soft font-semibold text-accent" : "text-ink",
+              )}
+            >
+              <span className="text-era">{h.sliceTitle}</span>
+              {" · "}
+              {h.name}
+              {h.type_ch ? `（${h.type_ch}）` : ""}
+              <span className="mt-0.5 block text-[10px] font-normal text-muted">
+                {formatYear(h.fromYear)}–{formatYear(h.toYear)}
+                {h.approximate ? " · 近似（Hartwell）" : ""}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    </>
+  );
+}
 
 /** T-020：精度三档（前端推出，不改 content） */
 type PrecisionTier = "academic" | "snapshot" | "schematic";
@@ -300,8 +380,14 @@ export default function App() {
   const mapRef = useRef<MapRef>(null);
   const mapBoxRef = useRef<HTMLDivElement>(null);
   const [academicPick, setAcademicPick] = useState<AcademicProps | null>(null);
+  /** T-028：点图历代归属 */
+  const [belonging, setBelonging] = useState<BelongingResult | null>(null);
   /** T-019：暗角与纸纹，默认开 */
   const [paperAmbience, setPaperAmbience] = useState(true);
+  /** T-030：学术层不透明度倍率，1 = 现状（0.2 / 近似 0.14） */
+  const [academicOpacity, setAcademicOpacity] = useState(1);
+  /** T-030：仅在选事件/切轴/故事时取景，纯拖年不抢镜头 */
+  const frameKeyRef = useRef<string | null>(null);
   /** 势力名标签随缩放淡出 */
   const [mapZoom, setMapZoom] = useState(CHINA_VIEW.zoom);
   /** T-020：点击疆域 / 学术面卡片 */
@@ -690,6 +776,7 @@ export default function App() {
         active || lit || focused || capital || inEvent ? 1 : 0;
       const sortKey = mustShow ? -1 : (tierRank[place.tier] ?? 5);
       const label = formatPlaceLabel(place, displayYear, nameMode);
+      const alive = placeAliveAt(place, displayYear);
       return {
         type: "Feature" as const,
         properties: {
@@ -698,8 +785,10 @@ export default function App() {
           modern: place.modern,
           secondary: label.secondary ?? "",
           tier: place.tier,
+          glyph: placeGlyphKind(place),
           sortKey,
           mustShow,
+          alive: alive ? 1 : 0,
           active: active || lit || focused || capital ? 1 : 0,
         },
         geometry: {
@@ -726,6 +815,7 @@ export default function App() {
   useEffect(() => {
     const map = mapRef.current?.getMap();
     if (!map) return;
+    const mapInst = map;
     function overlaps(
       box: { x0: number; y0: number; x1: number; y1: number },
       taken: Array<{ x0: number; y0: number; x1: number; y1: number }>,
@@ -741,8 +831,7 @@ export default function App() {
       );
     }
     function recompute() {
-      const m = mapRef.current?.getMap();
-      if (!m) return;
+      const m = mapInst;
       const feats = [...placesGeo.features].sort(
         (a, b) =>
           Number(a.properties?.sortKey ?? 9) -
@@ -1068,6 +1157,55 @@ export default function App() {
     [displayYear, selected?.id, showRouteIds, litRoutes],
   );
 
+  /** T-024：可见路线上的印章棋子（每条一枚，停在已到达的最远途经点） */
+  const routePieces = useMemo(() => {
+    const visible = routesVisibleAt(marchRoutes, displayYear, {
+      eventId: selected?.id,
+      showIds: showRouteIds,
+    });
+    const byGroup = new Set<string>();
+    const out: Array<{
+      routeId: string;
+      lon: number;
+      lat: number;
+      seal: string;
+      label: string;
+      eventId?: string;
+      placeId?: string;
+      atEventPlace: boolean;
+    }> = [];
+    for (const r of visible) {
+      if (byGroup.has(r.group)) continue;
+      const wp = routePieceAtYear(r, displayYear);
+      if (!wp) continue;
+      byGroup.add(r.group);
+      let seal = r.name.slice(0, 1);
+      if (r.eventId) {
+        const ev = atlas.events.find((e) => e.id === r.eventId);
+        const pid = ev?.personIds?.[0];
+        const person = pid
+          ? atlas.people.find((p) => p.id === pid)
+          : atlas.people.find((p) => (ev?.people ?? []).includes(p.name));
+        if (person?.name) seal = person.name.slice(0, 1);
+        else if (ev?.people?.[0]) seal = ev.people[0].slice(0, 1);
+      }
+      const evPlace = r.eventId
+        ? atlas.events.find((e) => e.id === r.eventId)?.placeId
+        : undefined;
+      out.push({
+        routeId: r.id,
+        lon: wp.lon,
+        lat: wp.lat,
+        seal,
+        label: wp.label,
+        eventId: r.eventId,
+        placeId: wp.placeId,
+        atEventPlace: Boolean(evPlace && wp.placeId === evPlace),
+      });
+    }
+    return out;
+  }, [displayYear, selected?.id, showRouteIds]);
+
   /** 旧 atlas.events[].route 折线，与 content/routes.json 并存。 */
   const legacyRouteData = useMemo(() => {
     const route = selected?.route;
@@ -1084,7 +1222,7 @@ export default function App() {
     };
   }, [selected]);
 
-  /** T-008：选中事件的 leadsTo → 弧线 + 中点年份标签 */
+  /** T-008：选中事件的 leadsTo → 弧线 + 中点年份标签；T-029 附通行估算 */
   const leadsToArcs = useMemo(() => {
     if (!selected?.leadsTo?.length) {
       return {
@@ -1095,6 +1233,7 @@ export default function App() {
           eventId: string;
           year: number;
           title: string;
+          travel?: TravelEstimate;
         }>,
       };
     }
@@ -1109,6 +1248,7 @@ export default function App() {
       eventId: string;
       year: number;
       title: string;
+      travel?: TravelEstimate;
     }> = [];
     for (const id of selected.leadsTo) {
       const next = eventById(id);
@@ -1119,12 +1259,16 @@ export default function App() {
         [from.lon, from.lat],
         [to.lon, to.lat],
       );
+      const travel = estimateTravel(
+        haversineKm(from.lon, from.lat, to.lon, to.lat),
+      );
       features.push({
         type: "Feature",
         properties: {
           eventId: next.id,
           year: next.year,
           title: next.title,
+          km: travel.km,
         },
         geometry: { type: "LineString", coordinates: coords },
       });
@@ -1135,6 +1279,7 @@ export default function App() {
         eventId: next.id,
         year: next.year,
         title: next.title,
+        travel,
       });
     }
     return {
@@ -1143,6 +1288,29 @@ export default function App() {
         : null,
       labels,
     };
+  }, [selected]);
+
+  /** T-029：当前事件绑定的行军线通行估算 */
+  const selectedRouteCosts = useMemo(() => {
+    if (!selected) return [] as Array<{ name: string; travel: TravelEstimate }>;
+    const out: Array<{ name: string; travel: TravelEstimate }> = [];
+    for (const r of marchRoutes) {
+      if (r.eventId !== selected.id) continue;
+      const coords = r.waypoints.map(
+        (w) => [w.lon, w.lat] as [number, number],
+      );
+      const travel = estimatePath(coords);
+      if (!travel) continue;
+      out.push({ name: r.name, travel });
+    }
+    if (selected.route && selected.route.length >= 2) {
+      const coords = selected.route.map(
+        (p) => [p[0], p[1]] as [number, number],
+      );
+      const travel = estimatePath(coords);
+      if (travel) out.push({ name: "事件附带路线", travel });
+    }
+    return out;
   }, [selected]);
 
   const storyCaption = activeStoryStep?.caption ?? null;
@@ -1203,10 +1371,11 @@ export default function App() {
   useEffect(() => {
     type JzDebug = {
       layers: () => string[];
-      rendered: (layerId: string) => number;
+      rendered: (layerId: string) => number | null;
       year: () => number;
       setYear: (y: number) => void;
       setZoom: (z: number) => void;
+      flyTo: (lon: number, lat: number, z?: number) => void;
       snapshotsShown: () => { group: string; powers: string[] } | null;
       schematicShown: () => boolean;
       hostPower: () => string | null;
@@ -1215,6 +1384,18 @@ export default function App() {
       powerEventTitles: () => string[];
       selectedId: () => string | null;
       selectEvent: (id: string) => boolean;
+      queryBelonging: (
+        lon: number,
+        lat: number,
+      ) => { hits: number; empty: number };
+      /** T-029 */
+      estimateTravel: (
+        lon1: number,
+        lat1: number,
+        lon2: number,
+        lat2: number,
+      ) => TravelEstimate;
+      routeCosts: () => Array<{ id: string; name: string; summary: string }>;
     };
     /** 验收用源 id / 角色名（land、china、countries、territory），图层 id 是 land-fill 等 */
     function resolveRenderedLayers(map: {
@@ -1242,6 +1423,8 @@ export default function App() {
         return (style?.layers ?? []).map((l) => l.id);
       },
       rendered: (layerId: string) => {
+        /** T-030：隐藏态勿当「地图空白」 */
+        if (typeof document !== "undefined" && document.hidden) return null;
         const map = mapRef.current?.getMap();
         if (!map) return 0;
         const ids = resolveRenderedLayers(map, layerId);
@@ -1258,15 +1441,19 @@ export default function App() {
         setAxis("year");
         yearRef.current = y;
         setYear(y);
-        const near = nearestEventAtOrBefore(timelineAll, y);
-        if (near) {
-          const i = timelineAll.findIndex((e) => e.id === near.id);
-          if (i >= 0) setIndex(i);
-        }
+        /** T-030：纯改年不改选中事件，避免抢镜头 */
       },
       setZoom: (z: number) => {
         mapRef.current?.getMap()?.easeTo({ zoom: z, duration: 0 });
         setMapZoom(z);
+      },
+      flyTo: (lon: number, lat: number, z?: number) => {
+        mapRef.current?.flyTo({
+          center: [lon, lat],
+          zoom: z ?? 4,
+          duration: 0,
+        });
+        if (typeof z === "number") setMapZoom(z);
       },
       snapshotsShown: () => {
         if (territoryModeRef.current !== "snapshot" || !territoryDataRef.current) {
@@ -1304,6 +1491,32 @@ export default function App() {
         if (i >= 0) setIndex(i);
         return true;
       },
+      /** T-028 */
+      queryBelonging: (lon: number, lat: number) => {
+        const r = academicBelongingAt(lon, lat);
+        setBelonging(r);
+        setFocusPlaceId(null);
+        setDrawerRight(true);
+        return {
+          hits: r.rows.filter((x) => x.kind === "hit").length,
+          empty: r.rows.filter((x) => x.kind === "empty").length,
+        };
+      },
+      /** T-029 */
+      estimateTravel: (lon1, lat1, lon2, lat2) =>
+        estimateTravel(haversineKm(lon1, lat1, lon2, lat2)),
+      routeCosts: () =>
+        marchRoutes
+          .map((r) => {
+            const travel = estimatePath(
+              r.waypoints.map((w) => [w.lon, w.lat] as [number, number]),
+            );
+            if (!travel) return null;
+            return { id: r.id, name: r.name, summary: travel.summary };
+          })
+          .filter((x): x is { id: string; name: string; summary: string } =>
+            Boolean(x),
+          ),
     };
     (window as unknown as { __jzDebug?: JzDebug }).__jzDebug = api;
     return () => {
@@ -1386,6 +1599,17 @@ export default function App() {
     setSearchOpen(false);
   }
 
+  /** T-024：棋子停在事件地点时弹出对应事件卡 */
+  useEffect(() => {
+    for (const p of routePieces) {
+      if (p.atEventPlace && p.eventId && selected?.id !== p.eventId) {
+        goToEvent(p.eventId);
+        break;
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- goToEvent 稳定闭包；只跟棋子/选中走
+  }, [routePieces, selected?.id]);
+
   /** T-027：容器尺寸变化时 map.resize（窗口缩放 / 侧栏开合） */
   useEffect(() => {
     const el = mapBoxRef.current;
@@ -1397,11 +1621,17 @@ export default function App() {
     return () => ro.disconnect();
   }, []);
 
-  /** T-027：有快照则 fitBounds 整片疆域；无快照才跟事件地点 */
+  /**
+   * T-027 / T-030：有快照则 fitBounds；无快照跟事件地点。
+   * 只在选事件 / 切轴 / 故事 / 疆域模式变化时取景；纯拖年份或派生 territoryData
+   * 刷新不抢镜头。
+   */
   useEffect(() => {
     if (activeStoryStep) return;
     const map = mapRef.current;
     if (!map) return;
+    const key = `${selected?.id ?? ""}|${axis}|${territoryMode}`;
+    if (frameKeyRef.current === key) return;
     if (territoryMode === "snapshot" && territoryData?.features?.length) {
       const box = bboxOfFeatures(territoryData.features);
       if (box) {
@@ -1412,10 +1642,14 @@ export default function App() {
           ],
           { padding: 56, duration: 700, maxZoom: 5.2 },
         );
+        frameKeyRef.current = key;
         return;
       }
     }
-    if (!selected) return;
+    if (!selected) {
+      frameKeyRef.current = key;
+      return;
+    }
     const place = placeById(selected.placeId);
     if (!place) return;
     map.flyTo({
@@ -1423,13 +1657,13 @@ export default function App() {
       zoom: Math.max(map.getZoom(), 4.0),
       duration: 700,
     });
+    frameKeyRef.current = key;
   }, [
     selected?.id,
     axis,
     activeStoryStep,
     territoryMode,
     territoryData,
-    displayYear,
   ]);
 
   useEffect(() => {
@@ -1479,6 +1713,8 @@ export default function App() {
   function flyPlace(place: Place) {
     setStoryId(null);
     setFocusPlaceId(place.id);
+    setBelonging(academicBelongingAt(place.lon, place.lat));
+    setDrawerRight(true);
     setQuery("");
     mapRef.current?.flyTo({
       center: [place.lon, place.lat],
@@ -1498,6 +1734,11 @@ export default function App() {
 
   const focusPlace = focusPlaceId ? placeById(focusPlaceId) : null;
   const panelPlace = selected ? placeById(selected.placeId) : focusPlace;
+  /** T-028：地点剖面的历代归属（同坐标） */
+  const placeBelonging = useMemo(() => {
+    if (!focusPlace) return null;
+    return academicBelongingAt(focusPlace.lon, focusPlace.lat);
+  }, [focusPlace]);
 
   return (
     <div className="flex h-screen flex-col text-ink">
@@ -1789,15 +2030,8 @@ export default function App() {
                 setIndex(v);
                 setYear(timeline[v]?.year ?? year);
               } else {
+                /** T-030：按年 scrub 只改年，不改选中事件、不抢镜头 */
                 setYear(v);
-                const near = nearestEventAtOrBefore(
-                  timelineAll.filter((ev) => kindOn.has(eventKindOf(ev))),
-                  v,
-                );
-                if (near) {
-                  const i = timeline.findIndex((x) => x.id === near.id);
-                  if (i >= 0) setIndex(i);
-                }
               }
             }}
             className="absolute inset-0 w-full cursor-pointer opacity-0"
@@ -1956,6 +2190,17 @@ export default function App() {
               )}
             </label>
             <p className="mb-1 px-2 text-[10px] tracking-widest text-muted">
+              城邑符号
+            </p>
+            <ul className="mb-3 grid grid-cols-2 gap-x-2 gap-y-1 px-2 text-[11px] text-ink/85">
+              {PLACE_GLYPH_LEGEND.map(({ kind, label }) => (
+                <li key={kind} className="flex items-center gap-1.5">
+                  <PlaceGlyph kind={kind} alive />
+                  <span>{label}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="mb-1 px-2 text-[10px] tracking-widest text-muted">
               精度（数据可靠度）
             </p>
             <ul className="mb-3 space-y-1 px-2 text-[11px] text-ink/85">
@@ -1992,6 +2237,26 @@ export default function App() {
                 </li>
               ))}
             </ul>
+            <label className="mb-3 block px-2 text-[11px] text-ink/85">
+              <span className="flex items-center justify-between gap-2">
+                <span className="tracking-widest text-muted">学术层透明度</span>
+                <span className="tabular-nums text-muted">
+                  {Math.round(academicOpacity * 100)}%
+                </span>
+              </span>
+              <input
+                type="range"
+                min={0}
+                max={150}
+                step={5}
+                value={Math.round(academicOpacity * 100)}
+                onChange={(e) =>
+                  setAcademicOpacity(Number(e.target.value) / 100)
+                }
+                className="mt-1 w-full accent-[var(--color-accent,#b5483a)]"
+                aria-label="学术层不透明度"
+              />
+            </label>
             <p className="mb-1 px-2 text-xs tracking-widest text-muted">
               主题叙事
             </p>
@@ -2055,7 +2320,6 @@ export default function App() {
             style={{ width: "100%", height: "100%" }}
             attributionControl={false}
             interactiveLayerIds={[
-              "places-circle",
               "leads-arc-line",
               "academic-fill",
               "territory-fill",
@@ -2110,19 +2374,8 @@ export default function App() {
                 setPlaying(false);
                 setAcademicPick(null);
                 setPrecisionPick(null);
+                setBelonging(null);
                 goToEvent(nextId);
-                return;
-              }
-              const placeHit = e.features?.find(
-                (x) => x.layer?.id === "places-circle",
-              );
-              if (placeHit) {
-                const id = placeHit.properties?.id as string | undefined;
-                if (!id) return;
-                setAcademicPick(null);
-                setPrecisionPick(null);
-                const place = placeById(id);
-                if (place) flyPlace(place);
                 return;
               }
               const acad = e.features?.find(
@@ -2151,6 +2404,7 @@ export default function App() {
                     ? "Hartwell 县域拼接近似，西部/关中等可能有空白。"
                     : undefined,
                 });
+                setBelonging(null);
                 return;
               }
               const terr = e.features?.find(
@@ -2162,6 +2416,7 @@ export default function App() {
                 const power = String(terr.properties.power ?? "疆域");
                 const schem = terr.layer?.id === "territory-schematic-fill";
                 setAcademicPick(null);
+                setBelonging(null);
                 setPrecisionPick({
                   title: power,
                   tier: schem ? "schematic" : "snapshot",
@@ -2174,9 +2429,14 @@ export default function App() {
                 }
                 return;
               }
+              /** T-028：空白处 → 历代归属 */
               setAcademicPick(null);
               setPrecisionPick(null);
               setPowerBrowse(null);
+              setFocusPlaceId(null);
+              const { lng, lat } = e.lngLat;
+              setBelonging(academicBelongingAt(lng, lat));
+              setDrawerRight(true);
             }}
           >
             <NavigationControl position="top-right" showCompass={false} />
@@ -2542,8 +2802,8 @@ export default function App() {
                     "fill-opacity": [
                       "case",
                       ["==", ["get", "approximate"], true],
-                      0.14,
-                      0.2,
+                      Math.min(0.55, 0.14 * academicOpacity),
+                      Math.min(0.7, 0.2 * academicOpacity),
                     ],
                   }}
                 />
@@ -2554,7 +2814,7 @@ export default function App() {
                   paint={{
                     "line-color": "#5c4a32",
                     "line-width": 0.9,
-                    "line-opacity": 0.72,
+                    "line-opacity": Math.min(1, 0.72 * academicOpacity),
                   }}
                 />
                 <Layer
@@ -2614,6 +2874,53 @@ export default function App() {
                 />
               </Source>
             )}
+            {belonging && !focusPlace && (
+              <Marker
+                longitude={belonging.lon}
+                latitude={belonging.lat}
+                anchor="bottom"
+              >
+                <div
+                  className="h-0 w-0 border-x-[6px] border-b-[10px] border-x-transparent border-b-[#c23a2b] drop-shadow"
+                  title="沿革查询点"
+                />
+              </Marker>
+            )}
+            {routePieces.map((piece) => (
+              <Marker
+                key={`piece-${piece.routeId}`}
+                longitude={piece.lon}
+                latitude={piece.lat}
+                anchor="center"
+                onClick={(ev) => {
+                  ev.originalEvent.stopPropagation();
+                  if (piece.eventId) {
+                    setPlaying(false);
+                    goToEvent(piece.eventId);
+                  }
+                }}
+              >
+                <button
+                  type="button"
+                  className="group flex flex-col items-center gap-0.5 border-0 bg-transparent p-0"
+                  title={piece.label}
+                >
+                  <span
+                    className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#f3efe6] text-[15px] font-bold text-[#f3efe6] shadow-md ring-2 ring-[#8b1a12]/55"
+                    style={{
+                      background:
+                        "radial-gradient(circle at 35% 30%, #e8573a 0%, #c23a2b 55%, #8b1a12 100%)",
+                      fontFamily: "serif",
+                    }}
+                  >
+                    {piece.seal}
+                  </span>
+                  <span className="max-w-[6.5rem] truncate rounded bg-[#c23a2b]/90 px-1 py-0.5 text-[9px] font-medium text-[#f3efe6] shadow-sm">
+                    {piece.label}
+                  </span>
+                </button>
+              </Marker>
+            ))}
             {leadsToArcs.lines && (
               <Source id="leads-arc" type="geojson" data={leadsToArcs.lines}>
                 <Layer
@@ -2643,9 +2950,14 @@ export default function App() {
                 <button
                   type="button"
                   className="rounded border border-era/40 bg-page/95 px-1.5 py-0.5 text-[10px] text-era shadow-sm hover:bg-accent-soft"
-                  title={lb.title}
+                  title={
+                    lb.travel
+                      ? `${lb.title} · ${lb.travel.summary}`
+                      : lb.title
+                  }
                 >
                   → {formatYear(lb.year)}
+                  {lb.travel ? ` · ${lb.travel.km}km` : ""}
                 </button>
               </Marker>
             ))}
@@ -2752,41 +3064,38 @@ export default function App() {
                 ))}
               </>
             )}
-            <Source id="places" type="geojson" data={placesGeo}>
-              <Layer
-                id="places-circle"
-                type="circle"
-                paint={{
-                  "circle-radius": [
-                    "match",
-                    ["get", "tier"],
-                    "capital",
-                    6,
-                    "metropolis",
-                    5,
-                    "pass",
-                    4,
-                    3,
-                  ],
-                  "circle-color": [
-                    "case",
-                    ["==", ["get", "active"], 1],
-                    MAP_TOKENS.highlight,
-                    [
-                      "match",
-                      ["get", "tier"],
-                      "capital",
-                      MAP_TOKENS.era,
-                      "metropolis",
-                      MAP_TOKENS.highlight,
-                      "#8a7355",
-                    ],
-                  ],
-                  "circle-stroke-width": 1.2,
-                  "circle-stroke-color": "#fff8ef",
-                }}
-              />
-            </Source>
+            {placesGeo.features.map((f) => {
+              const id = String(f.properties?.id ?? "");
+              const place = placeById(id);
+              if (!place) return null;
+              const coords = f.geometry.coordinates as [number, number];
+              const active = Number(f.properties?.active ?? 0) === 1;
+              const alive = Number(f.properties?.alive ?? 1) === 1;
+              const kind = placeGlyphKind(place);
+              return (
+                <Marker
+                  key={`glyph-${id}`}
+                  longitude={coords[0]}
+                  latitude={coords[1]}
+                  anchor="center"
+                  onClick={(ev) => {
+                    ev.originalEvent.stopPropagation();
+                    setAcademicPick(null);
+                    setPrecisionPick(null);
+                    flyPlace(place);
+                  }}
+                >
+                  <button
+                    type="button"
+                    className="cursor-pointer border-0 bg-transparent p-0"
+                    title={`${placeNameAt(place, displayYear)} · ${place.modern}`}
+                    aria-label={place.modern}
+                  >
+                    <PlaceGlyph kind={kind} active={active} alive={alive} />
+                  </button>
+                </Marker>
+              );
+            })}
             {showLandmarks &&
               landmarks
                 .filter((lm) => landmarkLabelIds.includes(lm.id))
@@ -3177,6 +3486,27 @@ export default function App() {
               : "max-[899px]:translate-x-full",
           )}
         >
+          {belonging && !focusPlace && (
+            <div className="mb-5 rounded-md border border-line bg-page/70 p-3">
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <p className="text-xs tracking-widest text-muted">历代归属</p>
+                  <h2 className="text-lg font-semibold text-era">学术层点查</h2>
+                </div>
+                <button
+                  type="button"
+                  className="text-xs text-muted hover:text-accent"
+                  onClick={() => setBelonging(null)}
+                >
+                  关闭
+                </button>
+              </div>
+              <BelongingList result={belonging} year={displayYear} />
+              <p className="mt-2 text-[10px] leading-snug text-muted">
+                切片局限见 academic/SOURCES.md；无覆盖不等于历史上无建制。
+              </p>
+            </div>
+          )}
           {powerBrowse && territoryMode === "snapshot" && (
             <div className="mb-5 rounded-md border border-line bg-page/70 p-3">
               <div className="flex items-start justify-between gap-2">
@@ -3288,12 +3618,24 @@ export default function App() {
                   <p className="mt-3 text-xs tracking-widest text-muted">
                     相关路线 · {personRoutes.length}
                   </p>
-                  <ul className="mt-1 space-y-1 text-sm">
-                    {personRoutes.map((r) => (
-                      <li key={r.id} className="px-2 text-muted">
-                        {r.name}
-                      </li>
-                    ))}
+                  <ul className="mt-1 space-y-2 text-sm">
+                    {personRoutes.map((r) => {
+                      const travel = estimatePath(
+                        r.waypoints.map(
+                          (w) => [w.lon, w.lat] as [number, number],
+                        ),
+                      );
+                      return (
+                        <li key={r.id} className="px-2 text-muted">
+                          <span className="text-ink">{r.name}</span>
+                          {travel && (
+                            <span className="mt-0.5 block text-[11px]">
+                              {travel.summary}
+                            </span>
+                          )}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </>
               )}
@@ -3334,13 +3676,24 @@ export default function App() {
                 <button
                   type="button"
                   className="shrink-0 text-xs text-muted hover:text-ink"
-                  onClick={() => setFocusPlaceId(null)}
+                  onClick={() => {
+                    setFocusPlaceId(null);
+                    setBelonging(null);
+                  }}
                 >
                   关闭
                 </button>
               </div>
               {focusPlace.role && (
                 <p className="mt-2 text-sm leading-6">{focusPlace.role}</p>
+              )}
+              {placeBelonging && (
+                <>
+                  <p className="mt-3 text-xs tracking-widest text-muted">
+                    沿革（学术层）
+                  </p>
+                  <BelongingList result={placeBelonging} year={displayYear} />
+                </>
               )}
               <p className="mt-3 text-xs tracking-widest text-muted">
                 相关事件 · {placeRelatedEvents.length}
@@ -3416,6 +3769,41 @@ export default function App() {
                   <div className="mt-3 rounded-md border border-era/25 bg-era/5 p-3">
                     <p className="text-xs tracking-widest text-era">地理因果</p>
                     <p className="mt-2 text-[15px] leading-7">{geoWhyText}</p>
+                  </div>
+                )}
+                {(selectedRouteCosts.length > 0 ||
+                  leadsToArcs.labels.some((l) => l.travel)) && (
+                  <div className="mt-3 rounded-md border border-line bg-page/70 p-3">
+                    <p className="text-xs tracking-widest text-muted">
+                      通行估算
+                    </p>
+                    <ul className="mt-2 space-y-2 text-[13px] leading-6">
+                      {selectedRouteCosts.map((row) => (
+                        <li key={row.name}>
+                          <span className="font-medium">{row.name}</span>
+                          <span className="mt-0.5 block text-muted">
+                            {row.travel.summary}
+                          </span>
+                        </li>
+                      ))}
+                      {leadsToArcs.labels.map((lb) =>
+                        lb.travel ? (
+                          <li key={`lead-cost-${lb.eventId}`}>
+                            <span className="font-medium">
+                              影响链 → {lb.title}
+                            </span>
+                            <span className="mt-0.5 block text-muted">
+                              {lb.travel.summary}
+                            </span>
+                          </li>
+                        ) : null,
+                      )}
+                    </ul>
+                    <p className="mt-2 text-[10px] leading-snug text-muted">
+                      大圆折线距离；日行程为约数（
+                      {TRAVEL_RATE_SOURCES.map((s) => s.title).join("；")}
+                      ）。不是精确军制。
+                    </p>
                   </div>
                 )}
                 {panelPlace && (
@@ -3522,17 +3910,25 @@ export default function App() {
                       {selected.leadsTo.map((id) => {
                         const next = eventById(id);
                         if (!next) return null;
+                        const lb = leadsToArcs.labels.find(
+                          (x) => x.eventId === id,
+                        );
                         return (
                           <li key={id}>
                             <button
                               type="button"
-                              className="text-sm text-era underline-offset-2 hover:underline"
+                              className="text-left text-sm text-era underline-offset-2 hover:underline"
                               onClick={() => {
                                 setPlaying(false);
                                 goToEvent(next.id);
                               }}
                             >
                               {formatYear(next.year)} · {next.title}
+                              {lb?.travel && (
+                                <span className="mt-0.5 block text-[11px] font-normal text-muted no-underline">
+                                  {lb.travel.summary}
+                                </span>
+                              )}
                             </button>
                           </li>
                         );
