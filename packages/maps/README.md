@@ -12,8 +12,14 @@
 
 ## 学术层（直接入库，ADR 0159）
 
-CHGIS / Hartwell / 谭图数字化等转成 WGS84 GeoJSON 后放 `geo/academic/`，随仓库提交；
-每批数据旁写明来源、版本、下载地址与许可。数据尚未入库时，九州只用上面的示意层。
+CHGIS / Hartwell 等转成 WGS84 GeoJSON 后放 `geo/academic/`，随仓库提交；
+出处与字段见 `geo/academic/SOURCES.md`，切片索引见 `geo/academic/index.json`。
+
+```sh
+python packages/maps/scripts/fetch_academic.py
+```
+
+中间物在 `.cache/maps/chgis/`（可删）。官方 Dataverse 若被 WAF 拦住，脚本会改走已记录的公开镜像并在 SOURCES 写明。
 
 ### Natural Earth 河网再加密（可选）
 

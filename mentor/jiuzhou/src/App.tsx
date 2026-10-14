@@ -27,6 +27,10 @@ import capitalsJson from "@content/capitals.json";
 import { featuresCollection, routesCollection } from "@/content/layer-geo";
 import { CompareMaps } from "@/CompareMaps";
 import {
+  academicAtYear,
+  type AcademicProps,
+} from "@/academic-layers";
+import {
   type Atlas,
   type Capital,
   type CapitalsDoc,
@@ -77,6 +81,44 @@ const allCapitals = (capitalsJson as unknown as CapitalsDoc).capitals;
 const capitalTrail = mainCapitalTrail(allCapitals);
 
 const CHINA_VIEW = { longitude: 105.5, latitude: 35.5, zoom: 3.45 };
+
+/** GeoJSON 外包矩形 [west, south, east, north]；无坐标则 null */
+function bboxOfFeatures(
+  features: Array<{ geometry?: object | null }>,
+): [number, number, number, number] | null {
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  function walk(node: unknown, depth: number) {
+    if (!Array.isArray(node)) return;
+    if (depth === 0 && typeof node[0] === "number" && typeof node[1] === "number") {
+      const x = node[0] as number;
+      const y = node[1] as number;
+      if (x < minX) minX = x;
+      if (y < minY) minY = y;
+      if (x > maxX) maxX = x;
+      if (y > maxY) maxY = y;
+      return;
+    }
+    for (const child of node) walk(child, depth - 1);
+  }
+  for (const f of features) {
+    const g = f.geometry as { type?: string; coordinates?: unknown } | null;
+    if (!g?.coordinates) continue;
+    const depth =
+      g.type === "Point"
+        ? 0
+        : g.type === "MultiPoint" || g.type === "LineString"
+          ? 1
+          : g.type === "MultiLineString" || g.type === "Polygon"
+            ? 2
+            : 3;
+    walk(g.coordinates, depth);
+  }
+  if (!Number.isFinite(minX)) return null;
+  return [minX, minY, maxX, maxY];
+}
 
 /** 自动播放：秒→年（ADR 0001 / T-006） */
 const YEAR_RATES = [
@@ -195,6 +237,8 @@ export default function App() {
   /** 古名（默认）/ 今名 / 双显（T-009） */
   const [nameMode, setNameMode] = useState<NameMode>("historic");
   const mapRef = useRef<MapRef>(null);
+  const mapBoxRef = useRef<HTMLDivElement>(null);
+  const [academicPick, setAcademicPick] = useState<AcademicProps | null>(null);
   const yearRef = useRef(year);
   const holdUntilRef = useRef(0);
   const territoryModeRef = useRef<string | null>(null);
@@ -259,6 +303,12 @@ export default function App() {
           : selected.compare.beforeYear
         : Math.round(year)
       : (selected?.year ?? Math.round(year));
+
+  /** T-010：包内学术层按年筛选 */
+  const academicData = useMemo(
+    () => academicAtYear(displayYear),
+    [displayYear],
+  );
 
   const era =
     atlas.eras.find((e) => e.id === selected?.eraId) ??
@@ -1085,17 +1135,51 @@ export default function App() {
     setSearchOpen(false);
   }
 
+  /** T-027：容器尺寸变化时 map.resize（窗口缩放 / 侧栏开合） */
+  useEffect(() => {
+    const el = mapBoxRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() => {
+      mapRef.current?.getMap()?.resize();
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  /** T-027：有快照则 fitBounds 整片疆域；无快照才跟事件地点 */
   useEffect(() => {
     if (activeStoryStep) return;
+    const map = mapRef.current;
+    if (!map) return;
+    if (territoryMode === "snapshot" && territoryData?.features?.length) {
+      const box = bboxOfFeatures(territoryData.features);
+      if (box) {
+        map.fitBounds(
+          [
+            [box[0], box[1]],
+            [box[2], box[3]],
+          ],
+          { padding: 56, duration: 700, maxZoom: 5.2 },
+        );
+        return;
+      }
+    }
     if (!selected) return;
     const place = placeById(selected.placeId);
-    if (!place || !mapRef.current) return;
-    mapRef.current.flyTo({
+    if (!place) return;
+    map.flyTo({
       center: [place.lon, place.lat],
-      zoom: Math.max(mapRef.current.getZoom(), 4.0),
+      zoom: Math.max(map.getZoom(), 4.0),
       duration: 700,
     });
-  }, [selected?.id, axis, activeStoryStep]);
+  }, [
+    selected?.id,
+    axis,
+    activeStoryStep,
+    territoryMode,
+    territoryData,
+    displayYear,
+  ]);
 
   useEffect(() => {
     if (!activeStory || !activeStoryStep) return;
@@ -1654,15 +1738,22 @@ export default function App() {
               onClose={() => setCompareMode(false)}
             />
           )}
-          <div className="absolute inset-0">
+          <div ref={mapBoxRef} className="absolute inset-0">
           <MapGl
             ref={mapRef}
             initialViewState={CHINA_VIEW}
             mapStyle={PAPER_STYLE}
             style={{ width: "100%", height: "100%" }}
             attributionControl={false}
-            interactiveLayerIds={["places-circle", "leads-arc-line"]}
+            interactiveLayerIds={[
+              "places-circle",
+              "leads-arc-line",
+              "academic-fill",
+            ]}
             cursor="pointer"
+            onLoad={() => {
+              mapRef.current?.getMap()?.resize();
+            }}
             onClick={(e) => {
               const arc = e.features?.find(
                 (x) => x.layer?.id === "leads-arc-line",
@@ -1670,16 +1761,42 @@ export default function App() {
               const nextId = arc?.properties?.eventId as string | undefined;
               if (nextId) {
                 setPlaying(false);
+                setAcademicPick(null);
                 goToEvent(nextId);
                 return;
               }
-              const f = e.features?.find(
+              const placeHit = e.features?.find(
                 (x) => x.layer?.id === "places-circle",
               );
-              const id = f?.properties?.id as string | undefined;
-              if (!id) return;
-              const place = placeById(id);
-              if (place) flyPlace(place);
+              if (placeHit) {
+                const id = placeHit.properties?.id as string | undefined;
+                if (!id) return;
+                setAcademicPick(null);
+                const place = placeById(id);
+                if (place) flyPlace(place);
+                return;
+              }
+              const acad = e.features?.find(
+                (x) => x.layer?.id === "academic-fill",
+              );
+              if (acad?.properties) {
+                const p = acad.properties as AcademicProps;
+                setAcademicPick({
+                  name: String(p.name ?? ""),
+                  name_py: p.name_py ? String(p.name_py) : undefined,
+                  type_ch: p.type_ch ? String(p.type_ch) : undefined,
+                  fromYear: Number(p.fromYear),
+                  toYear: Number(p.toYear),
+                  source: String(p.source ?? ""),
+                  sliceId: String(p.sliceId ?? ""),
+                  sliceTitle: String(p.sliceTitle ?? ""),
+                  approximate:
+                    Boolean(p.approximate) ||
+                    String(p.source) === "hartwell-v5",
+                });
+                return;
+              }
+              setAcademicPick(null);
             }}
           >
             <NavigationControl position="top-right" showCompass={false} />
@@ -1925,6 +2042,49 @@ export default function App() {
                     "line-width": 1.2,
                     "line-opacity": 0.45,
                     "line-dasharray": [2.5, 2],
+                  }}
+                />
+              </Source>
+            )}
+            {academicData.features.length > 0 && (
+              <Source id="academic" type="geojson" data={academicData}>
+                <Layer
+                  id="academic-fill"
+                  type="fill"
+                  paint={{
+                    "fill-color": [
+                      "case",
+                      ["==", ["get", "approximate"], true],
+                      "#b08968",
+                      "#7c6a4a",
+                    ],
+                    "fill-opacity": [
+                      "case",
+                      ["==", ["get", "approximate"], true],
+                      0.14,
+                      0.2,
+                    ],
+                  }}
+                />
+                <Layer
+                  id="academic-line"
+                  type="line"
+                  filter={["!=", ["get", "approximate"], true]}
+                  paint={{
+                    "line-color": "#5c4a32",
+                    "line-width": 0.9,
+                    "line-opacity": 0.72,
+                  }}
+                />
+                <Layer
+                  id="academic-line-approx"
+                  type="line"
+                  filter={["==", ["get", "approximate"], true]}
+                  paint={{
+                    "line-color": "#9a7b5a",
+                    "line-width": 0.9,
+                    "line-opacity": 0.65,
+                    "line-dasharray": [1.6, 1.2],
                   }}
                 />
               </Source>
@@ -2230,6 +2390,44 @@ export default function App() {
               <span className="rotate-[-18deg] select-none text-6xl font-semibold tracking-[0.4em] text-ink/10">
                 示意
               </span>
+            </div>
+          )}
+          {academicPick && (
+            <div className="absolute bottom-28 left-4 z-10 max-w-xs rounded-md border border-line bg-surface/95 px-3 py-2 shadow-md">
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <p className="text-sm font-semibold text-ink">
+                    {academicPick.name}
+                    {academicPick.type_ch ? (
+                      <span className="ml-1 text-xs font-normal text-muted">
+                        {academicPick.type_ch}
+                      </span>
+                    ) : null}
+                  </p>
+                  {academicPick.name_py ? (
+                    <p className="text-xs text-muted">{academicPick.name_py}</p>
+                  ) : null}
+                  <p className="mt-1 text-xs text-ink/80">
+                    {formatYear(academicPick.fromYear)} –{" "}
+                    {formatYear(academicPick.toYear)}
+                    <span className="text-muted">
+                      {" "}
+                      · {academicPick.sliceTitle}
+                    </span>
+                  </p>
+                  <p className="text-[11px] text-muted">
+                    来源 {academicPick.source}
+                    {academicPick.approximate ? " · 近似（Hartwell）" : ""}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="text-xs text-muted hover:text-ink"
+                  onClick={() => setAcademicPick(null)}
+                >
+                  关闭
+                </button>
+              </div>
             </div>
           )}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-page/95 via-page/70 to-transparent px-4 pb-3 pt-8">
