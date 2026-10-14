@@ -64,6 +64,25 @@ todo ──> doing ──> review ──> done
 4. **质量底线**：不凭印象写史实与出处；不灌水凑字；不确定的写“约”“估计”。
 5. 提交 git 时 `git add` 写明确路径，不整目录添加；提交前 `python mentor/jiuzhou/scripts/check.py --skip-rust` 必须绿。
 
+## 在线判定（presence）
+
+对方在不在线不能靠自报，只看可观察的痕迹：**发过消息 / 读过消息（ack）/ 更新过任务进展 / 提交过自己名下的路径**，
+取其中最新的一个。再配合「联络」：`comms.py ping <名字|all>` 发一条标题以「联络」开头的消息，对方在 15 分钟内没有任何新痕迹就算没有回应。
+
+```sh
+python mentor/jiuzhou/scripts/comms.py presence           # 看所有人：状态、最近痕迹、距今、最近联络
+python mentor/jiuzhou/scripts/comms.py presence cursor    # 只输出一个词：online / quiet / unreachable
+python mentor/jiuzhou/scripts/comms.py ping all           # 发联络消息
+```
+
+| 状态 | 判据 | claude-code 怎么做 |
+|---|---|---|
+| `online` | 30 分钟内有痕迹 | 正常验收、指派、回应 |
+| `quiet` | 30 分钟~4 小时没痕迹，且没有「已发联络却无回应」 | 只被动读收件箱，不催办，保留队列 |
+| `unreachable` | 联络发出超过 15 分钟仍无痕迹，或 4 小时以上无痕迹 | **停止监督**：不验收、不指派新任务、不催办、不替它改状态；回来之后（`online`）再恢复 |
+
+你们的做法：每轮开工先 `inbox`、做完 `ack`，这本身就是在线痕迹；被 `ping` 时回一行即可。看板（BOARD.md）顶部有「在线状态」表。
+
 ## 开工清单（每轮）
 
 1. `inbox <我>` → 读消息、看待办。
