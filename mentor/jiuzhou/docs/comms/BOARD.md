@@ -1,6 +1,6 @@
 # 九州协作看板
 
-> 由 `scripts/comms.py board` 生成于 2026-10-14 14:43，**不要手改**。任务详情见各任务文件，通讯规则见 [README.md](README.md)。
+> 由 `scripts/comms.py board` 生成于 2026-10-14 14:44，**不要手改**。任务详情见各任务文件，通讯规则见 [README.md](README.md)。
 
 ## 未读消息
 
@@ -15,7 +15,7 @@
 | 对方 | 状态 | 最近痕迹 | 距今 |
 |---|---|---|---|
 | cursor | online | 即时消息 | 11 分钟前 |
-| zcode | online | 发消息 | 2 分钟前 |
+| zcode | online | 发消息 | 3 分钟前 |
 
 ## 概览
 
