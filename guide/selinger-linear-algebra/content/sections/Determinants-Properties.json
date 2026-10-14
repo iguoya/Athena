@@ -1,0 +1,1278 @@
+{
+ "id": "Determinants-Properties",
+ "title_en": "Properties of determinants",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Use the determinant of a square matrix to decide whether the matrix is invertible.",
+         "sha": "e055a7d3c8c4",
+         "zh": "用方阵的行列式判断该矩阵是否可逆。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "From the determinants of two matrices, calculate the determinant of their product.",
+         "sha": "9ebbd5743206",
+         "zh": "已知两个矩阵的行列式，计算它们乘积的行列式。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "From the determinant of a matrix, calculate the determinant of its inverse.",
+         "sha": "82e4d8d02f53",
+         "zh": "已知一个矩阵的行列式，计算它的逆矩阵的行列式。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "From the determinant of a matrix, calculate the determinant of its transpose.",
+         "sha": "f6c9ef5f53ca",
+         "zh": "已知一个矩阵的行列式，计算它的转置的行列式。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Calculate the determinant of $kA$, if the determinant of $A$ is known.",
+         "sha": "e30bbdd076a6",
+         "zh": "已知 $A$ 的行列式，计算 $kA$ 的行列式。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Without calculation, find the determinant of a matrix containing a row or column of zeros, or a matrix containing a row (or column) that is a scalar multiple of another row (or column).",
+         "sha": "2d101c701c30",
+         "zh": "不经计算，求出含有全零行（或全零列）的矩阵的行列式，以及含有某一行（或列）是另一行（或列）的标量倍的矩阵的行列式。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Use algebraic properties to reason about determinants.",
+         "sha": "2ce350198244",
+         "zh": "利用代数性质推理行列式的问题。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "One reason that the determinant is such an important quantity is that it permits us to tell whether a square matrix is invertible.",
+    "sha": "54f7b3c1117d",
+    "zh": "行列式之所以是一个如此重要的量，原因之一是它让我们能够判断一个方阵是否可逆。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Determinants and invertible matrices",
+    "sha": "15ac4d1584aa",
+    "zh": "行列式与可逆矩阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n\\times n$-matrix. Then $A$ is invertible if and only if $\\det(A) \\neq 0$.",
+      "sha": "0ee9c81912f4",
+      "zh": "设 $A$ 是 $n\\times n$ 矩阵。则 $A$ 可逆当且仅当 $\\det(A) \\neq 0$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We know that every matrix $A$ can be converted to echelon form by elementary row operations. We also know from Theorem “Effect of row operations on the determinant” that no elementary row operation changes whether the determinant is zero or not. Let $R$ be an echelon form of $A$. Because $R$ is an echelon form, it is also an upper triangular matrix. Case 1: $A$ is invertible. In that case, the rank of $R$ is $n$, and every diagonal entry of $R$ is a pivot entry (therefore non-zero). It follows that $\\det(R)\\neq 0$, which implies $\\det(A)\\neq 0$. Case 2: $A$ is not invertible. In that case, the triangular matrix $R$ contains a row of zeros. It follows that $\\det(R)=0$, and therefore $\\det(A)=0$.",
+      "sha": "f689e51075d1",
+      "zh": "我们知道，每个矩阵 $A$ 都可以通过初等行变换化为行阶梯形。由定理“初等行变换对行列式的影响”我们还知道，任何一个初等行变换都不会改变行列式是否为零。设 $R$ 是 $A$ 的一个行阶梯形。因为 $R$ 是行阶梯形，所以它也是上三角矩阵。情形 1：$A$ 可逆。此时 $R$ 的秩为 $n$，$R$ 的每个对角元素都是主元（因此非零）。由此得 $\\det(R)\\neq 0$，从而 $\\det(A)\\neq 0$。情形 2：$A$ 不可逆。此时三角矩阵 $R$ 含有一个全零行。由此得 $\\det(R)=0$，因此 $\\det(A)=0$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Determinants and invertible matrices",
+    "sha": "15ac4d1584aa",
+    "zh": "行列式与可逆矩阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine which of the following matrices are invertible by computing their determinants.",
+      "sha": "2072694a6620",
+      "zh": "通过计算行列式，判断下列哪些矩阵可逆。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rr}\n      3 & 6 \\\\\n      2 & 4 \\\\\n    \\end{array}\\right],\\quad\n    B = \\left[\\begin{array}{rr}\n      2 & 3 \\\\\n      5 & 1 \\\\\n    \\end{array}\\right],\\quad\n    C = \\left[\\begin{array}{rrr}\n      1 & 2 & -5 \\\\\n      2 & 0 & 2  \\\\\n      3 & 1 & 0  \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have $\\det(A) = 3\\cdot 4 - 2\\cdot 6 = 0$ and $\\det(B) = 2\\cdot 1-5\\cdot 3 = -13$. Therefore, $B$ is invertible and $A$ is not invertible. A quick way to compute the determinant of $C$ is to expand it along the third row. We have",
+      "sha": "d9ced8393711",
+      "zh": "我们有 $\\det(A) = 3\\cdot 4 - 2\\cdot 6 = 0$，$\\det(B) = 2\\cdot 1-5\\cdot 3 = -13$。因此 $B$ 可逆，$A$ 不可逆。计算 $C$ 的行列式有一个快捷的办法：沿第三行展开。我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(C)\n    = 3\\left|\\begin{array}{rr}\n      2 & -5 \\\\\n      0 & 2 \\\\\n    \\end{array}\\right|\n    - 1\\left|\\begin{array}{rr}\n      1 & -5 \\\\\n      2 & 2 \\\\\n    \\end{array}\\right|\n    = 3\\cdot 4 - 1\\cdot 12 = 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, $C$ is not invertible.",
+      "sha": "d5cb6159966d",
+      "zh": "因此 $C$ 不可逆。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "As an application of Theorem “Determinants and invertible matrices”, we note that the determinant of an $n\\times n$-matrix can be used to predict whether a homogeneous system of equations has non-trivial solutions.",
+    "sha": "b4b94207d195",
+    "zh": "作为定理“行列式与可逆矩阵”的一个应用，我们指出：$n\\times n$ 矩阵的行列式可以用来预测齐次方程组是否有非零解。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "corollary",
+   "title": {
+    "en": "Determinants and homogeneous systems",
+    "sha": "512156617bdb",
+    "zh": "行列式与齐次方程组"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n\\times n$-matrix. Then the homogeneous system $A\\vect{v}=\\vect{0}$ has non-trivial solutions if and only if $\\det(A)=0$.",
+      "sha": "be83f3491e52",
+      "zh": "设 $A$ 是 $n\\times n$ 矩阵。则齐次方程组 $A\\vect{v}=\\vect{0}$ 有非零解当且仅当 $\\det(A)=0$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We know from Theorem “Rank and solutions of homogeneous system of equations” that the homogeneous system has a non-trivial solution if and only if $\\rank(A)<n$. This is the case if and only if $A$ is not invertible, i.e., if and only if $\\det(A)=0$.",
+      "sha": "426a1cc5ea78",
+      "zh": "由定理“齐次方程组的秩与解”我们知道，齐次方程组有非零解当且仅当 $\\rank(A)<n$。这当且仅当 $A$ 不可逆，也就是当且仅当 $\\det(A)=0$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Another reason the determinant is important is that it compatible with matrix product.",
+    "sha": "a113dae1a29a",
+    "zh": "行列式重要的另一个原因是它与矩阵的乘法相容。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Determinant of a product",
+    "sha": "b1782dd90d06",
+    "zh": "乘积的行列式"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ and $B$ be $n\\times n$-matrices. Then",
+      "sha": "3f4287558aa7",
+      "zh": "设 $A$ 和 $B$ 是 $n\\times n$ 矩阵。则"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(AB) =\\det(A)\\det(B)"
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We first prove this in case $A=E$ is an elementary matrix. Remember from Section 〔引用〕 that elementary matrices correspond to elementary row operations.",
+      "sha": "9760da6603c4",
+      "zh": "我们先在 $A=E$ 是初等矩阵的情形下证明。回忆第〔引用〕节：初等矩阵对应初等行变换。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $E$ is an elementary matrix for swapping two rows, then $\\det(E)=-1$. Also, by Theorem “Effect of row operations on the determinant”(1), $\\det(EB)=-\\det(B)$. Therefore $\\det(EB)=\\det(E)\\det(B)$.",
+         "sha": "3bfd7f28d90e",
+         "zh": "如果 $E$ 是交换两行的初等矩阵，则 $\\det(E)=-1$。又由定理“初等行变换对行列式的影响”(1)，$\\det(EB)=-\\det(B)$。因此 $\\det(EB)=\\det(E)\\det(B)$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $E$ is an elementary matrix for multiplying a row by a non-zero scalar $k$, then $\\det(E)=k$. Also, by Theorem “Effect of row operations on the determinant”(2), $\\det(EB)=k\\det(B)$. Therefore $\\det(EB)=\\det(E)\\det(B)$.",
+         "sha": "b3676d690523",
+         "zh": "如果 $E$ 是把某一行乘以非零标量 $k$ 的初等矩阵，则 $\\det(E)=k$。又由定理“初等行变换对行列式的影响”(2)，$\\det(EB)=k\\det(B)$。因此 $\\det(EB)=\\det(E)\\det(B)$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $E$ is an elementary matrix for adding a multiple of one row to another, then $\\det(E)=1$. Also, by Theorem “Effect of row operations on the determinant”(3), $\\det(EB)=\\det(B)$. Therefore $\\det(EB)=\\det(E)\\det(B)$.",
+         "sha": "3e481242b0eb",
+         "zh": "如果 $E$ 是把某一行的若干倍加到另一行上的初等矩阵，则 $\\det(E)=1$。又由定理“初等行变换对行列式的影响”(3)，$\\det(EB)=\\det(B)$。因此 $\\det(EB)=\\det(E)\\det(B)$。"
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Now consider the case where $A$ is an arbitrary matrix. Case 1: $A$ is invertible. Then by Theorem “Product of elementary matrices”, we can write $A$ as a product of elementary matrices $A=E_1E_2\\cdots E_k$. By repeatedly using the formula $\\det(EB)=\\det(E)\\det(B)$ that we proved above, we have",
+      "sha": "7a300d7f8179",
+      "zh": "现在考虑 $A$ 是任意矩阵的情形。情形 1：$A$ 可逆。则由定理“初等矩阵的乘积”，可以把 $A$ 写成初等矩阵的乘积 $A=E_1E_2\\cdots E_k$。反复使用上面已证明的公式 $\\det(EB)=\\det(E)\\det(B)$，我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(AB) = \\det(E_1E_2\\cdots E_kB) = \\det(E_1)\\det(E_2)\\cdots\\det(E_k)\\det(B)\n    = \\det(A)\\det(B)."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Case 2: $A$ is not invertible. Then $AB$ is also not invertible (because if $C$ were an inverse of $AB$, we would have $ABC=I$, and therefore, $BC$ would be an inverse of $A$). Therefore, by Theorem “Determinants and invertible matrices”, we have $\\det(A)=0$ and $\\det(AB)=0$. It follows that $\\det(AB)=\\det(A)\\det(B)$.",
+      "sha": "e02054a6a59e",
+      "zh": "情形 2：$A$ 不可逆。则 $AB$ 也不可逆（因为如果 $C$ 是 $AB$ 的逆，就有 $ABC=I$，于是 $BC$ 就是 $A$ 的逆）。因此，由定理“行列式与可逆矩阵”，有 $\\det(A)=0$ 且 $\\det(AB)=0$。由此得 $\\det(AB)=\\det(A)\\det(B)$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "The determinant of a product",
+    "sha": "afeaf40ffe19",
+    "zh": "乘积的行列式"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compare $\\det(AB)$ and $\\det(A)\\det(B)$, where",
+      "sha": "773601cbc2e4",
+      "zh": "比较 $\\det(AB)$ 与 $\\det(A)\\det(B)$，其中"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{rr}\n      1 & 2 \\\\\n      -3 & 2\n    \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    B=\\left[\\begin{array}{rr}\n      3 & 2 \\\\\n      4 & 1\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We first compute $AB$:",
+      "sha": "f3f396c3e498",
+      "zh": "我们先计算 $AB$："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "AB=\\left[\\begin{array}{rr}\n      1 & 2 \\\\\n      -3 & 2\n    \\end{array}\\right] \\left[\\begin{array}{rr}\n      3 & 2 \\\\\n      4 & 1\n    \\end{array}\\right] = \\left[\\begin{array}{rr}\n      11 & 4 \\\\\n      -1 & -4\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The three determinants are",
+      "sha": "083251a1fb36",
+      "zh": "这三个行列式是"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(AB) = \\left|\\begin{array}{rr}\n      11 & 4 \\\\\n      -1 & -4\n    \\end{array}\\right| = -40,\n    \\quad\n    \\det(A) = \\left|\\begin{array}{rr}\n      1 & 2 \\\\\n      -3 & 2\n    \\end{array}\\right| = 8,\n    \\quad\\text{and}\\quad\n    \\det(B) = \\left|\\begin{array}{rr}\n      3 & 2 \\\\\n      4 & 1\n    \\end{array}\\right| = -5."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore $\\det(A)\\det(B) = 8\\cdot(-5) = -40 = \\det(AB)$.",
+      "sha": "73699e6b5494",
+      "zh": "因此 $\\det(A)\\det(B) = 8\\cdot(-5) = -40 = \\det(AB)$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The following proposition summarizes some properties of determinants we have discussed so far, as well as additional properties.",
+    "sha": "9deb8e4ec463",
+    "zh": "下面的命题总结了到目前为止我们讨论过的一些行列式的性质，并补充了另外几条性质。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Properties of determinants",
+    "sha": "81abb291cec1",
+    "zh": "行列式的性质"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A,B$ be $n\\times n$-matrices. Then:",
+      "sha": "bb6e0544568e",
+      "zh": "设 $A,B$ 是 $n\\times n$ 矩阵。则："
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\det(AB)=\\det(A)\\det(B)$.",
+         "sha": "fbdfc5636ca2",
+         "zh": "$\\det(AB)=\\det(A)\\det(B)$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\det(I) = 1$.",
+         "sha": "6b5013cc7921",
+         "zh": "$\\det(I) = 1$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$A$ is invertible if and only if $\\det(A)\\neq 0$. Moreover, if this is the case, then",
+         "sha": "bc9878233b2f",
+         "zh": "$A$ 可逆当且仅当 $\\det(A)\\neq 0$。而且，在此情形下，"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\det(A^{-1}) = \\frac{1}{\\det(A)}."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\det(kA)=k^n\\det(A)$.",
+         "sha": "00487c29b227",
+         "zh": "$\\det(kA)=k^n\\det(A)$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\det(A^T) = \\det(A)$.",
+         "sha": "7fab78e5ab6e",
+         "zh": "$\\det(A^T) = \\det(A)$。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Property 1 is a restatement of Theorem “The determinant of a product”. Property 2 follows from Theorem “Determinant of a triangular matrix”, because the identity matrix is an upper triangular matrix. Property 3: The first part is Theorem “Determinants and invertible matrices”. For the second part, assume $A$ is invertible. Then by properties 1 and 2, $\\det(A)\\det(A^{-1}) = \\det(AA^{-1}) = \\det(I) = 1$. The claim follows by dividing both sides of the equation by $\\det(A)$. Property 4 follows from Theorem “Effect of row operations on the determinant”(2), because $kA$ is obtained from $A$ by multiplying all $n$ rows by $k$. Each time we multiple one row by $k$, the determinant is multiplied by $k$. Property 5 follows because expanding $\\det(A)$ along columns amounts to the same thing as expanding $\\det(A^T)$ along rows.",
+      "sha": "f3852a1f87e2",
+      "zh": "性质 1 是定理“乘积的行列式”的重新表述。性质 2 由定理“三角矩阵的行列式”得到，因为单位矩阵是上三角矩阵。性质 3：第一部分就是定理“行列式与可逆矩阵”。对于第二部分，设 $A$ 可逆。则由性质 1 和性质 2，$\\det(A)\\det(A^{-1}) = \\det(AA^{-1}) = \\det(I) = 1$。等式两边同除以 $\\det(A)$，结论即得。性质 4 由定理“初等行变换对行列式的影响”(2)得到，因为 $kA$ 是把 $A$ 的全部 $n$ 行都乘以 $k$ 得到的，而每乘一行 $k$，行列式就乘以 $k$。性质 5 成立是因为：沿列展开 $\\det(A)$，与沿行展开 $\\det(A^T)$，所做的计算是一回事。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We end this section with a few useful ways of spotting matrices of determinant 0.",
+    "sha": "4091b3b36cf0",
+    "zh": "本节最后，我们介绍几种判断矩阵行列式为 0 的有用方法。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Special matrices with zero determinant",
+    "sha": "178bf420feb0",
+    "zh": "行列式为零的特殊矩阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n\\times n$-matrix.",
+      "sha": "0655796292a3",
+      "zh": "设 $A$ 是 $n\\times n$ 矩阵。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $A$ has a row consisting only of zeros, or a column consisting only of zeros, then $\\det(A)=0$.",
+         "sha": "4cf124b4138b",
+         "zh": "如果 $A$ 有一行全是零，或者有一列全是零，则 $\\det(A)=0$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $A$ has a row that is a scalar multiple of another row, or a column that is a scalar multiple of another column, then $\\det(A)=0$.",
+         "sha": "2767764ae915",
+         "zh": "如果 $A$ 有一行是另一行的标量倍，或者有一列是另一列的标量倍，则 $\\det(A)=0$。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The first property follows by cofactor expansion: simply expand the determinant along the row or column that consists only of zeros. For the second property, assume that $A$ has a row that is a scalar multiple of another row. We can then perform an elementary row operation to create a row of zeros. By Theorem “Effect of row operations on the determinant”(3), the determinant is unchanged, so that $\\det(A)=0$. In the case that $A$ has a column that is a scalar multiple of another column, we apply the same reasoning to $A^T$ and use the fact that $\\det(A)=\\det(A^T)$.",
+      "sha": "818dfe40b8f4",
+      "zh": "第一条性质由余子式展开得到：只需沿全是零的那一行或那一列展开行列式即可。对于第二条性质，设 $A$ 有一行是另一行的标量倍。这时可以做一次初等行变换得到一个全零行。由定理“初等行变换对行列式的影响”(3)，行列式不变，所以 $\\det(A)=0$。如果 $A$ 有一列是另一列的标量倍，则对 $A^T$ 用同样的推理，并利用 $\\det(A)=\\det(A^T)$ 这一事实。"
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let",
+      "sha": "ef5fe1edf379",
+      "zh": "设"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{cc}\n      a & b \\\\\n      c & d \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "An operation is done to get from $A$ to a matrix $B$. In each case, identify which operation was done and explain how it will affect the value of the determinant.",
+      "sha": "333efd9dc3e9",
+      "zh": "对 $A$ 做了某个运算得到矩阵 $B$。在每种情形下，指出做的是什么运算，并说明它会如何影响行列式的值。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "math",
+        "tex": "B = \\left[\\begin{array}{cc}\n        a & c \\\\\n        b & d \\\\\n      \\end{array}\\right]"
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "B = \\left[\\begin{array}{cc}\n        c & d \\\\\n        a & b \\\\\n      \\end{array}\\right]"
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "B = \\left[\\begin{array}{cc}\n        a   & b   \\\\\n        a+c & b+d \\\\\n      \\end{array}\\right]"
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "B = \\left[\\begin{array}{cc}\n        a  & b  \\\\\n        2c & 2d \\\\\n      \\end{array}\\right]"
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "B = \\left[\\begin{array}{cc}\n        b & a \\\\\n        d & c \\\\\n      \\end{array}\\right]"
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The transpose was taken and $\\det(B) = \\det(A)$.",
+         "sha": "96a4843a362a",
+         "zh": "取了转置，且 $\\det(B) = \\det(A)$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Two rows were switched and $\\det(B) = -\\det(A)$.",
+         "sha": "6da4ba98d94a",
+         "zh": "交换了两行，且 $\\det(B) = -\\det(A)$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The first row was added to the second row and $\\det(B) = \\det(A)$.",
+         "sha": "fba096b98595",
+         "zh": "把第一行加到了第二行上，且 $\\det(B) = \\det(A)$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The second row was multiplied by 2 and $\\det(B) = 2\\det(A)$.",
+         "sha": "7e5f73fef4f6",
+         "zh": "把第二行乘以了 2，且 $\\det(B) = 2\\det(A)$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Two columns were switched and $\\det(B) = -\\det(A)$.",
+         "sha": "14846d2cda28",
+         "zh": "交换了两列，且 $\\det(B) = -\\det(A)$。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of determinants · 习题 1（上游 exercises/Determinants-Properties.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Properties.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n\\times n$-matrix and suppose there are $n-1$ rows such that the remaining row is a linear combinations of these $n-1$ rows. Show $\\det(A) = 0$.",
+      "sha": "174c6c8baac6",
+      "zh": "设 $A$ 是 $n\\times n$ 矩阵，并设其中有 $n-1$ 行，使得剩下的那一行是这 $n-1$ 行的线性组合。证明 $\\det(A) = 0$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "By assumption, we can obtain a row of zeros by doing row operations. Row operations do not change whether the determinant is zero, so the determinant must have been zero all along.",
+      "sha": "5f761b8ca718",
+      "zh": "由假设，通过行变换可以得到一个全零行。行变换不改变行列式是否为零，所以行列式本来就是零。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of determinants · 习题 2（上游 exercises/Determinants-Properties.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Properties.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n\\times n$-matrix. Show that if $\\det(A) \\neq 0$ and $A\\vect{x}=\\vect{0}$, then $\\vect{x}=\\vect{0}$.",
+      "sha": "2f8d70f477ad",
+      "zh": "设 $A$ 是 $n\\times n$ 矩阵。证明：如果 $\\det(A) \\neq 0$ 且 $A\\vect{x}=\\vect{0}$，则 $\\vect{x}=\\vect{0}$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If $\\det(A) \\neq 0$, then $A^{-1}$ exists. Therefore $\\vect{x} = A^{-1}A\\vect{x} = A^{-1}\\vect{0} = \\vect{0}$.",
+      "sha": "af74ac01641d",
+      "zh": "如果 $\\det(A) \\neq 0$，则 $A^{-1}$ 存在。因此 $\\vect{x} = A^{-1}A\\vect{x} = A^{-1}\\vect{0} = \\vect{0}$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of determinants · 习题 3（上游 exercises/Determinants-Properties.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Properties.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Using only Theorems “Determinant of a triangular matrix” and “The determinant of a product”, show that $\\det(kA) = k^n\\det(A)$ for an $n\\times n$-matrix $A$ and scalar $k$.",
+      "sha": "01945ef2b8b1",
+      "zh": "只使用定理“三角矩阵的行列式”和定理“乘积的行列式”，证明：对 $n\\times n$ 矩阵 $A$ 和标量 $k$，有 $\\det(kA) = k^n\\det(A)$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix $kI$ has $k$ down the main diagonal and has determinant equal to $k^n$ by Theorem “Determinant of a triangular matrix”. Using Theorem “The determinant of a product”, it follows that $\\det(kA) = \\det(kIA) = \\det(kI) \\det(A) = k^n\\det(A)$.",
+      "sha": "f4a56617174d",
+      "zh": "矩阵 $kI$ 的主对角线上全是 $k$，由定理“三角矩阵的行列式”，它的行列式等于 $k^n$。再用定理“乘积的行列式”，得 $\\det(kA) = \\det(kIA) = \\det(kI) \\det(A) = k^n\\det(A)$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of determinants · 习题 4（上游 exercises/Determinants-Properties.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Properties.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Construct two random $2\\times 2$-matrices $A$ and $B$ and verify that $\\det(A)\\det(B) = \\det(AB)$.",
+      "sha": "686f08747c4e",
+      "zh": "随便构造两个 $2\\times 2$ 矩阵 $A$ 和 $B$，验证 $\\det(A)\\det(B) = \\det(AB)$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "math",
+     "tex": "\\det\n      \\paren{\\left[\\begin{array}{cc}\n          1 & 2 \\\\\n          3 & 4\n        \\end{array}\\right] \\left[\\begin{array}{rr}\n          -1 & 2 \\\\\n          -5 & 6\n        \\end{array}\\right]} = -8,"
+    },
+    {
+     "k": "math",
+     "tex": "\\det\\paren{\\left[\\begin{array}{cc}\n        1 & 2 \\\\\n        3 & 4\n      \\end{array}\\right]}\\det\\paren{\\left[\\begin{array}{rr}\n        -1 & 2 \\\\\n        -5 & 6\n      \\end{array}\\right]} = -2\\times 4 = -8."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of determinants · 习题 5（上游 exercises/Determinants-Properties.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Properties.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Is it true that $\\det(A+B) = \\det(A) + \\det(B)$? If this is so, explain why. If it is not so, give a counterexample.",
+      "sha": "1063810e795a",
+      "zh": "$\\det(A+B) = \\det(A) + \\det(B)$ 成立吗？如果成立，请解释原因；如果不成立，请给出反例。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "This is not true at all. Consider $A = \\left[\\begin{array}{cc} 1 & 0 \\\\ 0 & 1 \\end{array}\\right]$ and $B = \\left[\\begin{array}{rr} -1 & 0 \\\\ 0 & -1 \\end{array}\\right]$. Then $\\det(A)=1$, $\\det(B)=1$, and $\\det(A+B)=0$.",
+      "sha": "e153f20a42fe",
+      "zh": "这完全不成立。考虑 $A = \\left[\\begin{array}{cc} 1 & 0 \\\\ 0 & 1 \\end{array}\\right]$ 和 $B = \\left[\\begin{array}{rr} -1 & 0 \\\\ 0 & -1 \\end{array}\\right]$。则 $\\det(A)=1$，$\\det(B)=1$，而 $\\det(A+B)=0$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of determinants · 习题 6（上游 exercises/Determinants-Properties.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Properties.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "An $n\\times n$-matrix is called **nilpotent** if there exists some positive integer $k$ such that $A^k = 0$. If $A$ is a nilpotent matrix, what are the possible values of $\\det(A)$?",
+      "sha": "2873c07be16a",
+      "zh": "如果存在某个正整数 $k$ 使得 $A^k = 0$，则称 $n\\times n$ 矩阵为**幂零矩阵**（nilpotent）。如果 $A$ 是幂零矩阵，$\\det(A)$ 可能取哪些值？"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $A^k=0$, we have $\\det(A)^k=\\det(A^k)=\\det(0)=0$. Therefore, it must be the case that $\\det(A)=0$.",
+      "sha": "1aa03696eda0",
+      "zh": "因为 $A^k=0$，所以 $\\det(A)^k=\\det(A^k)=\\det(0)=0$。因此必有 $\\det(A)=0$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of determinants · 习题 7（上游 exercises/Determinants-Properties.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Properties.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex8",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A square matrix is said to be **orthogonal** if $A^TA = I$. Thus the inverse of an orthogonal matrix is its transpose. What are the possible values of $\\det(A)$ if $A$ is an orthogonal matrix?",
+      "sha": "ec39b5f48757",
+      "zh": "如果方阵满足 $A^TA = I$，则称它为**正交矩阵**（orthogonal）。因此正交矩阵的逆就是它的转置。如果 $A$ 是正交矩阵，$\\det(A)$ 可能取哪些值？"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If $A$ is orthogonal, we have $\\det(A)^2 = \\det(A^T)\\det(A) = \\det(A^TA) = \\det(I) = 1$. Therefore the only possible values for $\\det(A)$ are $\\pm 1$.",
+      "sha": "cc452c02351d",
+      "zh": "如果 $A$ 是正交矩阵，则 $\\det(A)^2 = \\det(A^T)\\det(A) = \\det(A^TA) = \\det(I) = 1$。因此 $\\det(A)$ 唯一可能的取值是 $\\pm 1$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of determinants · 习题 8（上游 exercises/Determinants-Properties.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Properties.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex9",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ and $B$ be two $n\\times n$-matrices. We say that $A$ is **similar** to $B$, in symbols $A\\similar B$, if there exists an invertible matrix $P$ such that $A = P^{-1}BP$. Show that if $A\\similar B$, then $\\det(A) = \\det(B)$.",
+      "sha": "af8b2e1b1498",
+      "zh": "设 $A$ 和 $B$ 是两个 $n\\times n$ 矩阵。如果存在可逆矩阵 $P$ 使得 $A = P^{-1}BP$，我们就说 $A$ 与 $B$ **相似**（similar），记作 $A\\similar B$。证明：如果 $A\\similar B$，则 $\\det(A) = \\det(B)$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\det(A) = \\det(P^{-1}BP) = \\det(P^{-1}) \\det(B) \\det(P) = \\frac{1}{\\det(P)} \\det(B) \\det(P) = \\det(B)$.",
+      "sha": "7afc81d8fb34",
+      "zh": "$\\det(A) = \\det(P^{-1}BP) = \\det(P^{-1}) \\det(B) \\det(P) = \\frac{1}{\\det(P)} \\det(B) \\det(P) = \\det(B)$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of determinants · 习题 9（上游 exercises/Determinants-Properties.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Properties.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex10",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the determinant of",
+      "sha": "fa80e9cb736f",
+      "zh": "求下面矩阵的行列式"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{ccc}\n      1 & 1 & 1 \\\\\n      1 & a & a^2 \\\\\n      1 & b & b^2 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For which values of $a$ and $b$ is this matrix invertible? Hint: after you compute the determinant, you can factor out $(a-1)$ and $(b-1)$ from it.",
+      "sha": "f8c6b18ffd29",
+      "zh": "$a$ 和 $b$ 取哪些值时这个矩阵可逆？提示：算出行列式之后，可以从中提出因子 $(a-1)$ 和 $(b-1)$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The determinant is",
+      "sha": "79b23aebfed8",
+      "zh": "行列式是"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left|\\begin{array}{ccc}\n        1 & 1 & 1 \\\\\n        1 & a & a^2 \\\\\n        1 & b & b^2 \\\\\n      \\end{array}\\right|\n      = \\left|\\begin{array}{cc}\n        a & a^2 \\\\\n        b & b^2 \\\\\n      \\end{array}\\right|\n      - \\left|\\begin{array}{cc}\n        1 & 1 \\\\\n        b & b^2 \\\\\n      \\end{array}\\right|\n      + \\left|\\begin{array}{cc}\n        1 & 1 \\\\\n        a & a^2 \\\\\n      \\end{array}\\right|\n      = ab^2 - a^2b - b^2 + b + a^2 - a\n      = (a-1)(b-1)(b-a)."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore the determinant is $0$ if $a=1$, $b=1$, or $a=b$. In all other cases, the determinant is non-zero and the matrix is invertible.",
+      "sha": "0073558831e4",
+      "zh": "因此，当 $a=1$、$b=1$ 或 $a=b$ 时行列式为 $0$；其他情形下，行列式非零，矩阵可逆。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of determinants · 习题 10（上游 exercises/Determinants-Properties.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Properties.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex11",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Assume $A$, $B$, and $C$ are $n\\times n$-matrices and $ABC$ is invertible. Use determinants to show that each of $A,B$, and $C$ is invertible.",
+      "sha": "20432d28eb09",
+      "zh": "设 $A$、$B$、$C$ 是 $n\\times n$ 矩阵，且 $ABC$ 可逆。用行列式证明 $A,B$ 和 $C$ 都可逆。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "This follows because $\\det(ABC) = \\det(A)\\det(B)\\det(C)$ and if this product is non-zero, then each determinant in the product is non-zero. Therefore, each of these matrices is invertible.",
+      "sha": "cb32f7aa9944",
+      "zh": "这是因为 $\\det(ABC) = \\det(A)\\det(B)\\det(C)$，而如果这个乘积非零，则乘积中的每个行列式都非零。因此，这几个矩阵都可逆。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of determinants · 习题 11（上游 exercises/Determinants-Properties.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Properties.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex12",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $A$ is an upper triangular matrix. Show that $A^{-1}$ exists if and only if all elements of the main diagonal are non-zero. Is it true that $A^{-1}$ will also be upper triangular? Explain. Could the same be concluded for lower triangular matrices?",
+      "sha": "c0555e214614",
+      "zh": "设 $A$ 是上三角矩阵。证明：$A^{-1}$ 存在当且仅当主对角线上的所有元素都非零。$A^{-1}$ 也一定是上三角矩阵吗？请说明理由。对下三角矩阵能得出同样的结论吗？"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The given condition is what it takes for the determinant to be non-zero. Recall that the determinant of an upper triangular matrix is just the product of the entries on the main diagonal. The inverse will also be upper triangular; this can be seen by noting that every invertible upper triangular can be written as a product of upper triangular elementary matrices; the inverse of each such elementary matrix is upper triangular, and therefore so is their product. The analogous statement about lower triangular matrices is also true.",
+      "sha": "d2d06c878387",
+      "zh": "所给的条件正是行列式非零的条件。回忆一下，上三角矩阵的行列式就是主对角线上各元素的乘积。逆矩阵也是上三角矩阵；这可以这样看出：每个可逆的上三角矩阵都可以写成上三角初等矩阵的乘积；每个这样的初等矩阵的逆都是上三角矩阵，所以它们的乘积也是上三角矩阵。关于下三角矩阵的类似命题也成立。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of determinants · 习题 12（上游 exercises/Determinants-Properties.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Properties.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex13",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Specify whether each statement is true or false. If true, provide a proof. If false, provide a counterexample.",
+      "sha": "2cd296b4a697",
+      "zh": "判断下列每个命题是真还是假。若为真，给出证明；若为假，给出反例。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $A$ is a $3\\times 3$-matrix with determinant zero, then one column must be a multiple of some other column.",
+         "sha": "59db8b37d03b",
+         "zh": "如果 $A$ 是行列式为零的 $3\\times 3$ 矩阵，则必有某一列是另一列的倍数。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If any two columns of a square matrix are equal, then the determinant of the matrix equals zero.",
+         "sha": "d6d403807f24",
+         "zh": "如果方阵有两列相等，则该矩阵的行列式等于零。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "For two $n\\times n$-matrices $A$ and $B$, $\\det(A+B) = \\det(A) + \\det(B)$.",
+         "sha": "4e1b169f5843",
+         "zh": "对两个 $n\\times n$ 矩阵 $A$ 和 $B$，$\\det(A+B) = \\det(A) + \\det(B)$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "For an $n\\times n$-matrix $A$, $\\det(3A) = 3\\det(A)$.",
+         "sha": "a6a0dd60938d",
+         "zh": "对 $n\\times n$ 矩阵 $A$，$\\det(3A) = 3\\det(A)$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $A^{-1}$ exists, then $\\det(A^{-1}) = \\det(A)^{-1}$.",
+         "sha": "183601a02269",
+         "zh": "如果 $A^{-1}$ 存在，则 $\\det(A^{-1}) = \\det(A)^{-1}$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $B$ is obtained by multiplying a single row of $A$ by $4$, then $\\det(B) = 4\\det(A)$.",
+         "sha": "81b42cc5613b",
+         "zh": "如果 $B$ 是把 $A$ 的某一行乘以 $4$ 得到的，则 $\\det(B) = 4\\det(A)$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "For an $n\\times n$-matrix $A$, we have $\\det(-A) = (-1)^n\\det(A)$.",
+         "sha": "8b5065adfddb",
+         "zh": "对 $n\\times n$ 矩阵 $A$，有 $\\det(-A) = (-1)^n\\det(A)$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $A$ is a real $n\\times n$-matrix, then $\\det(A^TA) \\geq 0$.",
+         "sha": "7b0e8cdcf85c",
+         "zh": "如果 $A$ 是实 $n\\times n$ 矩阵，则 $\\det(A^TA) \\geq 0$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $A^k = 0$ for some positive integer $k$, then $\\det(A) = 0$.",
+         "sha": "53fcd5c5766e",
+         "zh": "如果对某个正整数 $k$ 有 $A^k = 0$，则 $\\det(A) = 0$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $A\\vect{x} = 0$ for some $\\vect{x} \\neq 0$, then $\\det(A) = 0$.",
+         "sha": "e72118b0ba6c",
+         "zh": "如果对某个 $\\vect{x} \\neq 0$ 有 $A\\vect{x} = 0$，则 $\\det(A) = 0$。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. Consider $\\left[\\begin{array}{rrr} 1 & 1 & 0 \\\\ 1 & 2 & 1 \\\\ 0 & 1 & 1 \\\\ \\end{array}\\right]$.",
+         "sha": "986dc70692dc",
+         "zh": "假。考虑 $\\left[\\begin{array}{rrr} 1 & 1 & 0 \\\\ 1 & 2 & 1 \\\\ 0 & 1 & 1 \\\\ \\end{array}\\right]$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True.",
+         "sha": "9306de2f79be",
+         "zh": "真。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False.",
+         "sha": "1371fc30a5c6",
+         "zh": "假。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False.",
+         "sha": "1371fc30a5c6",
+         "zh": "假。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True.",
+         "sha": "9306de2f79be",
+         "zh": "真。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True.",
+         "sha": "9306de2f79be",
+         "zh": "真。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True.",
+         "sha": "9306de2f79be",
+         "zh": "真。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True.",
+         "sha": "9306de2f79be",
+         "zh": "真。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True.",
+         "sha": "9306de2f79be",
+         "zh": "真。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True.",
+         "sha": "9306de2f79be",
+         "zh": "真。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of determinants · 习题 13（上游 exercises/Determinants-Properties.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Properties.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "行列式的性质"
+}

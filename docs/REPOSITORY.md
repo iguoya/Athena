@@ -66,6 +66,10 @@ mentor/<id>/   导师类（图谱/参考类）：给方向和查阅依据，不�
   jiuzhou/       九州（Tauri 2 + React + MapLibre）——中国历史地理图鉴，「兴趣」圈，图谱/参考类（ADR 0156）
 guide/<id>/    手册类教程：跟随一本外部手册/官方教程精读，章节结构与编号以原书为准（ADR 0143）
   gtkmm/       gtkmm 官方教程精读（Tauri 2 + React）——《Programming with gtkmm 4》全量翻译为编排基准
+  selinger-linear-algebra/  Selinger《Linear Algebra: A First Course》按考研数学二线代考纲裁剪的精读（Tauri 2 + React，「数学」圈，ADR 0162）
+  siefken-linear-algebra/   Siefken《MAT223 Workbook: Linear Algebra》精读：几何直观先行的一学期线代（Tauri 2 + React，「数学」圈，ADR 0162）
+  octave-manual/            GNU Octave 官方手册按线代与高数需要裁剪的精读（Tauri 2 + React，「数学」圈，ADR 0163）
+  sympy-tutorial/           SymPy 官方入门教程精读：符号计算做微积分与矩阵运算（Tauri 2 + React，「数学」圈，ADR 0163）
 tools/         配套工具：做出能用的工具，不建进度库（ADR 0146）
   math-tools/  数学工具（Tauri 2 + React）——数学学习的配套工具（ADR 0084、0146）
 launcher/      启动器：macos/（Swift 菜单栏常驻）、core/、gui/
@@ -113,6 +117,10 @@ archive/       历史归档，不参与构建
 | `microcontroller` | 硬件实验台（嵌入第 2/5 章实践课程，ADR 0103） | `athena-microcontroller` | `mcu.` |
 | `rtos` | 实时操作系统（嵌入第 4 章实践课程，ADR 0106） | `athena-rtos` | `rtos.` |
 | `gtkmm` | gtkmm 官方教程精读 | `athena-gtkmm` | `gtkmm.` |
+| `selinger-linear-algebra` | Selinger 线性代数精读（「数学」圈，ADR 0162） | `athena-selinger-linear-algebra` | `selinger.` |
+| `siefken-linear-algebra` | Siefken 线性代数精读（「数学」圈，ADR 0162） | `athena-siefken-linear-algebra` | `siefken.` |
+| `octave-manual` | Octave 手册精读（「数学」圈，ADR 0163） | `athena-octave-manual` | `octave.` |
+| `sympy-tutorial` | SymPy 教程精读（「数学」圈，ADR 0163） | `athena-sympy-tutorial` | `sympy.` |
 | `polaris` | 北极星 | `athena-polaris` | （无进度库） |
 | `organization` | 计算机组成原理（408，ADR 0115） | `athena-organization` | `org.` |
 | `cs408` | 408 计算机学科专业基础（考研考试主应用，ADR 0116） | `athena-cs408` | `cs408.` |

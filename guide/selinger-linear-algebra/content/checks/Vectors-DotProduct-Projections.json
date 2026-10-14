@@ -1,0 +1,132 @@
+{
+  "ex1": {
+    "kind": "numbers",
+    "ask": "写出点积的值。",
+    "answer": [
+      17.0
+    ],
+    "hint": "点积是对应分量乘积之和。"
+  },
+  "ex4": {
+    "kind": "numbers",
+    "ask": "写出 $\\cos\\theta$ 的值（可写成 -3/sqrt(231) 之类的形式，也可写小数）。",
+    "answer": [
+      -0.19738550848793068
+    ],
+    "hint": "用夹角公式 $\\cos\\theta=\\dfrac{\\vect{u}\\dotprod\\vect{v}}{\\norm{\\vect{u}}\\norm{\\vect{v}}}$，分别算点积和两个长度。"
+  },
+  "ex5": {
+    "kind": "numbers",
+    "ask": "写出 $\\cos\\theta$ 的值（分数或小数均可）。",
+    "answer": [
+      -0.5555555555555556
+    ],
+    "hint": "用夹角公式；分母的两个根号乘起来可能是整数。"
+  },
+  "ex7": {
+    "kind": "choice",
+    "ask": "三角形 $A=(2,0,-3)$、$B=(5,-2,1)$、$C=(7,5,3)$ 的直角在哪个顶点？",
+    "options": [
+      {
+        "text": "顶点 $A$",
+        "why": "$\\longvect{AB}=(3,-2,4)$，$\\longvect{AC}=(5,5,6)$，点积 $15-10+24=29\\ne0$，不垂直。"
+      },
+      {
+        "text": "顶点 $B$",
+        "ok": true,
+        "why": "$\\longvect{BA}\\dotprod\\longvect{BC}=(-3,2,-4)\\dotprod(2,7,2)=-6+14-8=0$，所以 $\\angle B=90^\\circ$。"
+      },
+      {
+        "text": "顶点 $C$",
+        "why": "$\\longvect{CA}=(-5,-5,-6)$，$\\longvect{CB}=(-2,-7,-2)$，点积 $10+35+12=57\\ne0$，不垂直。"
+      },
+      {
+        "text": "没有直角",
+        "why": "只需看有没有某个顶点处的两条边点积为 0，$B$ 处就是。"
+      }
+    ]
+  },
+  "ex8": {
+    "kind": "numbers",
+    "ask": "写出 $\\proj_{\\vect{v}}(\\vect{w})$ 的三个分量（分数或小数均可）。",
+    "answer": [
+      -0.35714285714285715,
+      -0.7142857142857143,
+      -1.0714285714285714
+    ],
+    "hint": "用公式 $\\dfrac{\\vect{v}\\dotprod\\vect{w}}{\\vect{v}\\dotprod\\vect{v}}\\vect{v}$，注意是投影到 $\\vect{v}$ 上（分母用 $\\vect{v}$ 的长度平方）。"
+  },
+  "ex9": {
+    "kind": "numbers",
+    "ask": "写出 $\\proj_{\\vect{v}}(\\vect{w})$ 的三个分量（分数或小数均可）。",
+    "answer": [
+      -0.5,
+      0.0,
+      -1.5
+    ],
+    "hint": "用公式 $\\dfrac{\\vect{v}\\dotprod\\vect{w}}{\\vect{v}\\dotprod\\vect{v}}\\vect{v}$；点积为负时投影与 $\\vect{v}$ 反向。"
+  },
+  "ex10": {
+    "kind": "numbers",
+    "ask": "写出 $\\proj_{\\vect{v}}(\\vect{w})$ 的四个分量（分数或小数均可）。",
+    "answer": [
+      -0.07142857142857142,
+      -0.14285714285714285,
+      -0.21428571428571427,
+      0.0
+    ],
+    "hint": "用公式 $\\dfrac{\\vect{v}\\dotprod\\vect{w}}{\\vect{v}\\dotprod\\vect{v}}\\vect{v}$，$\\R^4$ 中同样适用。"
+  },
+  "ex11": {
+    "kind": "numbers",
+    "ask": "写出标量 $\\comp_{\\vect{v}}(\\vect{w})$ 的值（可写成 sqrt 形式或小数）。",
+    "answer": [
+      2.1213203435596424
+    ],
+    "hint": "分量是标量：$\\dfrac{\\vect{v}\\dotprod\\vect{w}}{\\norm{\\vect{v}}}$，分母是长度本身，不是平方。"
+  },
+  "ex12": {
+    "kind": "numbers",
+    "ask": "写出标量 $\\comp_{\\vect{v}}(\\vect{w})$ 的值。",
+    "answer": [
+      0.0
+    ],
+    "hint": "分量是 $\\dfrac{\\vect{v}\\dotprod\\vect{w}}{\\norm{\\vect{v}}}$；先算分子点积，想想它说明两向量什么关系。"
+  },
+  "ex13": {
+    "kind": "choice",
+    "ask": "$\\proj_{\\vect{0}}(\\vect{w})$ 有意义吗？",
+    "options": [
+      {
+        "text": "有意义，结果是 $\\vect{0}$",
+        "why": "直觉上「零向量乘什么都是零」，但投影公式的分母是 $\\vect{0}\\dotprod\\vect{0}=0$，要除以零；而且零向量不指定任何方向。"
+      },
+      {
+        "text": "有意义，结果是 $\\vect{w}$",
+        "why": "投影到某方向上的结果必须落在该方向的直线上，$\\vect{0}$ 没有方向，更谈不上结果是 $\\vect{w}$。"
+      },
+      {
+        "text": "没有意义，因为 $\\vect{0}$ 没有方向，公式分母为 $0$",
+        "ok": true,
+        "why": "投影的定义要求 $\\vect{u}$ 非零：公式 $\\frac{\\vect{u}\\dotprod\\vect{w}}{\\vect{u}\\dotprod\\vect{u}}\\vect{u}$ 在 $\\vect{u}=\\vect{0}$ 时分母为 0。"
+      },
+      {
+        "text": "只有当 $\\vect{w}=\\vect{0}$ 时才有意义",
+        "why": "此时分子分母都是 0，得到 $0/0$，仍然没有定义。"
+      }
+    ]
+  },
+  "ex14": {
+    "kind": "numbers",
+    "ask": "依次写出 $\\vect{a}$ 的三个分量，再写出 $\\vect{b}$ 的三个分量（共 6 个数；分数或小数均可）。",
+    "answer": [
+      -1.5,
+      1.5,
+      -3.0,
+      4.5,
+      0.5,
+      -2.0
+    ],
+    "hint": "平行于 $\\vect{u}$ 的那部分就是 $\\proj_{\\vect{u}}(\\vect{v})$；另一部分用 $\\vect{b}=\\vect{v}-\\vect{a}$。"
+  }
+}

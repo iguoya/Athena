@@ -1,0 +1,27 @@
+\begin{tikzpicture}[scale=3]
+      \begin{scope}[color=black]
+        \draw[->] (-1.5,0) -- (1.5,0) node[right] {$x$};
+        \draw[->] (0,-1.5) -- (0,1.5) node[below right] {$y$};
+        \draw (-1,0) -- +(0,-.1) node[below] {$-1$};
+        \draw (1,0) -- +(0,-.1) node[below] {$1$};
+        \draw (0,-1) -- +(-.1,0) node[left] {$-1$};
+        \draw (0,1) -- +(-.1,0) node[left] {$1$};
+      \end{scope}
+      \begin{scope}[color=blue,cm={(1/sqrt(5),2/sqrt(5),-2/sqrt(5),1/sqrt(5),(0,0))}]
+        \draw[thick,red] (0,0) circle [x radius={1/sqrt(7)}, y radius={1/sqrt(2)}];
+        \draw[->,blue!50] (-1.5,0) -- (1.5,0);
+        \draw[->,blue!50] (0,-1.5) -- (0,1.5);
+        \draw[blue!50] (-1,0) -- +(0,.1) +(0,0.2) node {$-1$};
+        \draw[blue!50] (1,0) -- +(0,.1) +(0,0.2) node {$1$};
+        \draw[blue!50] (0,-1) -- +(-.1,0) +(-0.2,0) node {$-1$};
+        \draw[blue!50] (0,1) -- +(-.1,0) +(-0.2,0) node {$1$};
+        \draw ({-1/sqrt(7)},0) -- +(0,.1) +(-0.15,0.2) node {$-\frac{1}{\sqrt{7}}$};
+        \draw ({1/sqrt(7)},0) -- +(0,.1) +(0.1,0.15) node {$\frac{1}{\sqrt{7}}$};
+        \draw (0,{-1/sqrt(2)}) -- +(-.1,0) +(-0.25,0) node {$-\frac{1}{\sqrt{2}}$};
+        \draw (0,{1/sqrt(2)}) -- +(-.1,0) +(-0.225,0) node {$\frac{1}{\sqrt{2}}$};
+        
+        
+        \draw[thick,blue,->] (0,0) -- (1,0) node[right] {$\vect{u}_1$};
+        \draw[thick,blue,->] (0,0) -- (0,1) node[above] {$\vect{u}_2$};
+      \end{scope}
+    \end{tikzpicture}

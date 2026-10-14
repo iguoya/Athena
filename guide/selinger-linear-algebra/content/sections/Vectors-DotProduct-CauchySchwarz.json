@@ -1,0 +1,235 @@
+{
+ "id": "Vectors-DotProduct-CauchySchwarz",
+ "title_en": "The Cauchy-Schwarz and triangle inequalities",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "The **Cauchy-Schwarz inequality** is a fundamental inequality satisfied by the dot product. It is given in the following proposition.",
+    "sha": "50dac17da30d",
+    "zh": "**柯西—施瓦茨不等式**（Cauchy-Schwarz inequality）是点积满足的一个基本不等式，由下面的命题给出。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Cauchy-Schwarz inequality",
+    "sha": "3c57397ed673",
+    "zh": "柯西—施瓦茨不等式"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The dot product satisfies the inequality",
+      "sha": "e8981b1c2f13",
+      "zh": "点积满足不等式"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\abs{\\vect{u}\\dotprod \\vect{v}}\\leq \\norm{\\vect{u}} \\norm{\\vect{v}} \\tag{1}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Furthermore equality is obtained if and only if one of $\\vect{u}$ or $\\vect{v}$ is a scalar multiple of the other.",
+      "sha": "0fda53954dd4",
+      "zh": "而且，等号成立当且仅当 $\\vect{u}$ 与 $\\vect{v}$ 中有一个是另一个的标量倍数。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "First note that if $\\vect{u}=\\vect{0}$, then both sides of (1) are equal to zero, and so the inequality holds in this case. Therefore, we will assume in what follows that $\\vect{u}\\neq \\vect{0}$. Define a function of $t\\in \\R$ by",
+      "sha": "8c9c07c6fd85",
+      "zh": "先注意，如果 $\\vect{u}=\\vect{0}$，那么 (1) 式两边都等于零，不等式成立。因此下面假设 $\\vect{u}\\neq \\vect{0}$。对 $t\\in \\R$，定义函数"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(t) =(t\\vect{u}+\\vect{v}) \\dotprod (t\\vect{u}+\\vect{v})."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Then by Proposition “Properties of the dot product”, $f(t) \\geq 0$ for all $t\\in \\R$. Also from Proposition “Properties of the dot product”, we have",
+      "sha": "b7b648b45774",
+      "zh": "于是由命题“点积的性质”，对所有 $t\\in \\R$ 都有 $f(t) \\geq 0$。同样由命题“点积的性质”，有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}f(t)\n    &=& t\\vect{u}\\dotprod (t\\vect{u}+\\vect{v})\n        + \\vect{v}\\dotprod (t\\vect{u}+\\vect{v}) \\\\\n    &=& t^2\\vect{u}\\dotprod \\vect{u}+t(\\vect{u}\\dotprod \\vect{v})\n        + t \\vect{v}\\dotprod \\vect{u}\n        + \\vect{v}\\dotprod \\vect{v} \\\\\n    &=& t^2\\norm{\\vect{u}}^2\n        + 2t(\\vect{u}\\dotprod \\vect{v})\n        + \\norm{\\vect{v}}^2.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This means the graph of $y=f(t)$ is a parabola which opens upwards and is never negative. It follows that this function has at most one root. From the quadratic formula, we know that a quadratic function $at^2+bt+c$ has one or zero roots if and only if $b^2-4ac\\leq 0$. Applying this reasoning to the function $f(t)$, we obtain",
+      "sha": "f494b039f372",
+      "zh": "这说明 $y=f(t)$ 的图像是一条开口向上且永不取负值的抛物线，所以这个函数至多有一个根。由求根公式可知，二次函数 $at^2+bt+c$ 有一个根或没有根，当且仅当 $b^2-4ac\\leq 0$。把这个推理用到函数 $f(t)$ 上，得到"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(2(\\vect{u}\\dotprod\\vect{v}))^2-4\\norm{\\vect{u}}^2\\norm{\\vect{v}}^2\n    \\leq 0,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which is equivalent to $\\abs{\\vect{u}\\dotprod \\vect{v}} \\leq \\norm{\\vect{u}} \\norm{\\vect{v}}$.",
+      "sha": "2f3b449158ec",
+      "zh": "这等价于 $\\abs{\\vect{u}\\dotprod \\vect{v}} \\leq \\norm{\\vect{u}} \\norm{\\vect{v}}$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "An important consequence of the Cauchy-Schwarz inequality is the so-called **triangle inequality**, which states that the length of one side of a triangle is less than or equal the sum of the lengths of the two other sides.",
+    "sha": "1a1856e5b00c",
+    "zh": "柯西—施瓦茨不等式的一个重要推论是所谓的**三角不等式**（triangle inequality），它说的是：三角形一条边的长度小于或等于另外两条边的长度之和。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Triangle inequality",
+    "sha": "e26f833d1f48",
+    "zh": "三角不等式"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For\\/ $\\vect{u},\\vect{v}\\in \\R^n$, we have",
+      "sha": "76a436118aee",
+      "zh": "对 $\\vect{u},\\vect{v}\\in \\R^n$，有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\norm{\\vect{u} + \\vect{v}} \\leq \\norm{\\vect{u}} + \\norm{\\vect{v}}. \\tag{2}"
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "259ae243176c"
+     ],
+     "caption": null
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "By properties of the dot product and the Cauchy-Schwarz inequality, we have",
+      "sha": "70ca2c662c5d",
+      "zh": "由点积的性质和柯西—施瓦茨不等式，有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\norm{\\vect{u}+\\vect{v}}^2\n    &=& (\\vect{u}+\\vect{v})\\dotprod(\\vect{u}+\\vect{v}) \\\\\n    &=& (\\vect{u}\\dotprod\\vect{u})+(\\vect{u}\\dotprod\\vect{v})+(\\vect{v}\\dotprod\\vect{u})+(\\vect{v}\\dotprod\\vect{v}) \\\\\n    &=& \\norm{\\vect{u}}^2+2(\\vect{u}\\dotprod\\vect{v})+\\norm{\\vect{v}}^2 \\\\\n    &\\leq& \\norm{\\vect{u}}^2+2\\abs{\\vect{u}\\dotprod\\vect{v}}+\\norm{\\vect{v}}^2 \\\\\n    &\\leq& \\norm{\\vect{u}}^2+2\\norm{\\vect{u}}\\norm{\\vect{v}}+\\norm{\\vect{v}}^2 \\\\\n    &=& (\\norm{\\vect{u}}+\\norm{\\vect{v}})^2.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore,",
+      "sha": "236a32def63c",
+      "zh": "因此，"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\norm{\\vect{u}+\\vect{v}}^2\\leq(\\norm{\\vect{u}}+\\norm{\\vect{v}})^2."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Taking square roots of both sides, we obtain (2).",
+      "sha": "5376a09157de",
+      "zh": "两边取平方根，就得到 (2) 式。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Triangle inequality",
+    "sha": "e26f833d1f48",
+    "zh": "三角不等式"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use the triangle inequality to show",
+      "sha": "9cc6fdf77c59",
+      "zh": "利用三角不等式证明"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\norm{\\vect{u}} -\\norm{\\vect{v}} \\leq \\norm{\\vect{u}-\\vect{v}}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "holds for all vectors $\\vect{u},\\vect{v}\\in\\R^n$.",
+      "sha": "1c5b7af22f92",
+      "zh": "对所有向量 $\\vect{u},\\vect{v}\\in\\R^n$ 都成立。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have",
+      "sha": "a2214cd5b1a4",
+      "zh": "我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\norm{\\vect{u}}\n    = \\norm{(\\vect{u}-\\vect{v})+\\vect{v}} \\\\\n    \\leq \\norm{\\vect{u}-\\vect{v}}+\\norm{\\vect{v}},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where we have used the triangle inequality in the last step. Note that this is an inequality between real numbers. Bringing $\\norm{\\vect{v}}$ to the other side of the equation, we have",
+      "sha": "a935cee57e15",
+      "zh": "其中最后一步用到了三角不等式。注意这是实数之间的不等式。把 $\\norm{\\vect{v}}$ 移到另一边，得到"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\norm{\\vect{u}} - \\norm{\\vect{v}} \\leq \\norm{\\vect{u}-\\vect{v}}."
+    }
+   ]
+  }
+ ],
+ "exercises": [],
+ "title_zh": "柯西—施瓦茨不等式与三角不等式"
+}

@@ -1,0 +1,1325 @@
+{
+ "id": "module5",
+ "title_en": "Projections & Vector Components",
+ "blocks": [
+  {
+   "k": "outcome",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The definition of the projection of a vector onto a set and the definition of the vector component of one vector in the direction of another.",
+         "sha": "c9196aadbb54",
+         "zh": "向量在一个集合上的投影的定义，以及一个向量在另一个向量方向上的分量的定义。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The relationship between projection, orthogonality, and vector components.",
+         "sha": "9d2f36a6530a",
+         "zh": "投影、正交与向量分量之间的关系。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How to project a vector onto a line.",
+         "sha": "b69fc7105b26",
+         "zh": "如何把一个向量投影到一条直线上。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Consider the following situation: you're designing a 3d video game, but your users only have 2d screens. Or, you have a 900-dimensional dataset, but you want to visualize it on a continuum (i.e., as a line). Each of these is an example of finding the best approximation to particular points given restrictions. In general, this operation is called a *projection* 〔注： What we define as a *projection* is sometimes called the *orthogonal projection* to distinguish it from other types of projections.〕, and in the world of linear algebra, it has a very particular meaning.",
+    "sha": "6a13f5089619",
+    "zh": "设想这样的情形：你在设计一款 3D 电子游戏，可你的用户只有 2D 的屏幕；或者你有一个 900 维的数据集，却想把它显示在一条连续的数轴上（也就是一条直线上）。这些都是在受限制的条件下，为某些点寻找最佳近似的例子。一般地，这种运算叫作*投影*〔注：我们这里定义的*投影*，有时称为*正交投影*，以区别于其他类型的投影。〕，在线性代数里，它有非常明确的含义。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Projection",
+    "sha": "8aa49fe84036",
+    "zh": "投影"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $X\\subseteq \\R^n$ be a set. The *projection* of the vector $\\vec v\\in\\R^n$ onto $X$, written $\\Proj_{X}\\vec v$, is the closest point in $X$ to $\\vec v$.",
+      "sha": "4a40b97df6bd",
+      "zh": "设 $X\\subseteq \\R^n$ 是一个集合。向量 $\\vec v\\in\\R^n$ 在 $X$ 上的*投影*记作 $\\Proj_{X}\\vec v$，是 $X$ 中离 $\\vec v$ 最近的点。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\mathcal{P}_{xy}\\subseteq\\R^3$ be the $xy$-plane in $\\R^3$ and let $\\vec v=\\mat{1\\\\2\\\\3}$. Intuitively, $\\Proj_{\\mathcal{P}_{xy}}\\!\\!\\vec v$ is the “shadow” that $\\vec v$ would cast on ${\\mathcal{P}_{xy}}$ if the sun were directly overhead. Upon drawing a picture, we conclude $\\Proj_{\\mathcal{P}_{xy}}\\vec v=\\mat{1\\\\2\\\\0}.$",
+    "sha": "4a4d94eb1630",
+    "zh": "设 $\\mathcal{P}_{xy}\\subseteq\\R^3$ 是 $\\R^3$ 中的 $xy$ 平面，并设 $\\vec v=\\mat{1\\\\2\\\\3}$。直观地看，$\\Proj_{\\mathcal{P}_{xy}}\\!\\!\\vec v$ 就是太阳正好在头顶时 $\\vec v$ 投在 ${\\mathcal{P}_{xy}}$ 上的“影子”。画出图来，我们得出 $\\Proj_{\\mathcal{P}_{xy}}\\vec v=\\mat{1\\\\2\\\\0}.$"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "321d31edf4bb"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Continuing, let $\\ell_y\\subseteq \\R^3$ be the $y$-axis in $\\R^3$. It's a little bit harder to visualize what $\\Proj_{\\ell_y}\\vec v$ is, so let's appeal to some definitions.",
+    "sha": "9f873356cb39",
+    "zh": "接着，设 $\\ell_y\\subseteq \\R^3$ 是 $\\R^3$ 中的 $y$ 轴。$\\Proj_{\\ell_y}\\vec v$ 是什么，就不那么容易想象了，所以我们回到定义上来。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "By definition, every vector in $\\ell_y$ takes the form $\\vec u_t=\\mat{0\\\\t\\\\0}$ for some $t\\in \\R$. The distance between $\\vec u_t$ and $\\vec v$ is",
+    "sha": "f43a2171d30e",
+    "zh": "按定义，$\\ell_y$ 中的每个向量都形如 $\\vec u_t=\\mat{0\\\\t\\\\0}$（某个 $t\\in \\R$）。$\\vec u_t$ 与 $\\vec v$ 之间的距离为"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Norm{\\vec u_t-\\vec v}=\\norm*{\\mat{0\\\\t\\\\0}-\\mat{1\\\\2\\\\3}} = \\sqrt{1^2+(t-2)^2+3^2}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Since $(t-2)^2$ is always positive, the quantity $\\sqrt{1^2+(t-2)^2+3^2}$ is minimized when $(t-2)^2=0$; that is, when $t=2$. Thus, we see $\\vec u_2$ is the closest vector in $\\ell_y$ to $\\vec v$ and so,",
+    "sha": "136769e12c53",
+    "zh": "因为 $(t-2)^2$ 总是非负的，所以当 $(t-2)^2=0$，即 $t=2$ 时，$\\sqrt{1^2+(t-2)^2+3^2}$ 取得最小值。于是 $\\vec u_2$ 是 $\\ell_y$ 中离 $\\vec v$ 最近的向量，所以"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Proj_{\\ell_y}\\vec v=\\vec u_2=\\mat{0\\\\2\\\\0}."
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\ell\\subseteq \\R^2$ be the line given in vector form by $\\vec x=t\\mat{1\\\\1}+\\mat{3\\\\-2}$, and let $\\vec v=\\mat{-1\\\\-1}$. Use the definition of projection to find $\\Proj_\\ell \\vec v$.",
+      "sha": "4cc697e02c57",
+      "zh": "设 $\\ell\\subseteq \\R^2$ 是向量式为 $\\vec x=t\\mat{1\\\\1}+\\mat{3\\\\-2}$ 的直线，并设 $\\vec v=\\mat{-1\\\\-1}$。用投影的定义求 $\\Proj_\\ell \\vec v$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec u_t=t\\mat{1\\\\1}+\\mat{3\\\\-2}\\in\\ell$. By definition, the distance between $\\vec v$ and $\\vec u_t$ is given by",
+      "sha": "964b05376c3a",
+      "zh": "设 $\\vec u_t=t\\mat{1\\\\1}+\\mat{3\\\\-2}\\in\\ell$。按定义，$\\vec v$ 与 $\\vec u_t$ 之间的距离为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Norm{\\vec u_t-\\vec v}=\\norm*{\\left(t\\mat{1\\\\1}+\\mat{3\\\\-2}\\right)-\\mat{-1\\\\-1}} = \\norm*{\\mat{t+4\\\\t-1}}\n\t    =\\sqrt{2t^2+6t+17}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The quantity $2t^2+6t+17$ is minimized when $t=-\\frac{3}{2}$, and so the closest point in $\\ell$ to $\\vec v$ is $\\vec u_{-3/2}$. Thus,",
+      "sha": "1007b3c09248",
+      "zh": "当 $t=-\\frac{3}{2}$ 时，$2t^2+6t+17$ 取得最小值，所以 $\\ell$ 中离 $\\vec v$ 最近的点是 $\\vec u_{-3/2}$。因此，"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Proj_\\ell \\vec v=-\\tfrac{3}{2}\\mat{1\\\\1}+\\mat{3\\\\-2}=\\mat{3/2\\\\-7/2}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Every example of a projection so far shares a geometric property. In the case of lines and planes, the vector from the projection to the original point is a normal vector for the line or plane (provided it's non-zero).",
+    "sha": "b5edb628cc5a",
+    "zh": "到目前为止，所有投影的例子都有一条共同的几何性质：对直线和平面来说，从投影点指向原来那个点的向量（只要它非零）是这条直线或这个平面的法向量。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "22957d9f079e"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Stated precisely, if $X$ is a line or plane and $\\vec v\\notin X$ is a vector, then $\\vec v-\\Proj_X\\vec v$ is a normal vector for $X$. Using this fact, we can find projections onto lines and planes without needing to compute any distances!",
+    "sha": "fa81b2c195fe",
+    "zh": "精确地说，如果 $X$ 是一条直线或一个平面，$\\vec v\\notin X$ 是一个向量，那么 $\\vec v-\\Proj_X\\vec v$ 是 $X$ 的法向量。利用这条事实，我们不必计算任何距离，就能求出向直线和平面的投影！"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\ell\\subseteq \\R^2$ be the line given in vector form by $\\vec x=t\\mat{1\\\\1}+\\mat{3\\\\-2}$, and let $\\vec v=\\mat{-1\\\\-1}$. Use the fact that $\\vec v-\\Proj_\\ell\\vec v$ is a normal vector to $\\ell$ to find $\\Proj_\\ell \\vec v$.",
+      "sha": "0c2038edfbb2",
+      "zh": "设 $\\ell\\subseteq \\R^2$ 是向量式为 $\\vec x=t\\mat{1\\\\1}+\\mat{3\\\\-2}$ 的直线，并设 $\\vec v=\\mat{-1\\\\-1}$。利用 $\\vec v-\\Proj_\\ell\\vec v$ 是 $\\ell$ 的法向量这一事实，求 $\\Proj_\\ell \\vec v$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\vec v-\\Proj_\\ell\\vec v$ is a normal vector to $\\ell$, we know $\\vec v-\\Proj_\\ell\\vec v$ is orthogonal to $\\vec d=\\mat{1\\\\1}$. Let $\\mat{x\\\\y}=\\Proj_\\ell\\vec v$ for some unknown $x,y\\in\\R$. We now know",
+      "sha": "8134f8a110ec",
+      "zh": "因为 $\\vec v-\\Proj_\\ell\\vec v$ 是 $\\ell$ 的法向量，所以 $\\vec v-\\Proj_\\ell\\vec v$ 与 $\\vec d=\\mat{1\\\\1}$ 正交。设 $\\mat{x\\\\y}=\\Proj_\\ell\\vec v$，其中 $x,y\\in\\R$ 是未知数。于是我们知道"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(\\vec v-\\Proj_\\ell\\vec v)\\cdot\\vec d=\\left(\\mat{-1\\\\-1}-\\mat{x\\\\y}\\right)\\cdot\\mat{1\\\\1}\n\t\t=\\mat{-1-x\\\\-1-y}\\cdot \\mat{1\\\\1}=-2-x-y=0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "That is,",
+      "sha": "f8e33e066d83",
+      "zh": "也就是说，"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "x+y=-2."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Also, since $\\Proj_\\ell\\vec v\\in\\ell$, we know",
+      "sha": "042c42bc59aa",
+      "zh": "另外，因为 $\\Proj_\\ell\\vec v\\in\\ell$，所以"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Proj_\\ell\\vec v = \\mat{x\\\\y}=t\\mat{1\\\\1}+\\mat{3\\\\-2}=\\mat{t+3\\\\t-2}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "From this, we have that $x-t=3$ and $y-t=-2$. Combined with Equation 〔引用〕, we have three equations and three unknowns which produce the following system of linear equations.",
+      "sha": "92764ccbf436",
+      "zh": "由此得 $x-t=3$ 和 $y-t=-2$。再结合方程〔引用〕，我们有三个方程、三个未知数，得到下面的线性方程组。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}x+y &= -2 \\\\ x-t &= 3 \\\\ y-t &= -2\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Solving this system, we conclude that $x=3/2$ and $y=-7/2$ (we don't care about the value of $t$). Therefore $\\Proj_\\ell\\vec v = \\mat{3/2\\\\-7/2}$.",
+      "sha": "c57fb677512e",
+      "zh": "解这个方程组，得 $x=3/2$，$y=-7/2$（我们不关心 $t$ 的值）。因此 $\\Proj_\\ell\\vec v = \\mat{3/2\\\\-7/2}$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": "要点"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "When projecting onto lines and planes, right angles appear in key places.",
+      "sha": "fe248093f3ba",
+      "zh": "向直线和平面投影时，直角会出现在关键的位置上。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Projections Onto Other Sets",
+    "sha": "0c9fbce58835",
+    "zh": "向其他集合的投影"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For projections onto lines and planes, we can use what we know about normal vectors to simplify our life. The same is true when projecting onto other sets, but we must always keep the definition in mind.",
+    "sha": "c037ab021e57",
+    "zh": "对于向直线和平面的投影，我们可以借助法向量的知识让事情变简单。向其他集合投影时也是如此，但我们必须始终牢记定义。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal T\\subseteq \\R^2$ be the filled in triangle with vertices $\\mat{0\\\\0}$, $\\mat{1\\\\0}$, and $\\mat{0\\\\2}$, and let",
+      "sha": "b2ac13d4cfe8",
+      "zh": "设 $\\mathcal T\\subseteq \\R^2$ 是以 $\\mat{0\\\\0}$、$\\mat{1\\\\0}$、$\\mat{0\\\\2}$ 为顶点的实心三角形（包括内部），并设"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec a=\\mat{1/4\\\\1/4}\\qquad \\vec b=\\mat{1\\\\1}\\qquad \\vec c=\\matc{3\\\\1/2}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Find $\\Proj_{\\mathcal T}\\vec a$, $\\Proj_{\\mathcal T}\\vec b$, and $\\Proj_{\\mathcal T}\\vec c$.",
+      "sha": "594274e9eac6",
+      "zh": "求 $\\Proj_{\\mathcal T}\\vec a$、$\\Proj_{\\mathcal T}\\vec b$ 和 $\\Proj_{\\mathcal T}\\vec c$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We'll start by drawing a picture.",
+      "sha": "1d9e70fdc33f",
+      "zh": "我们先画一幅图。"
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "ed3234a0770f"
+     ],
+     "caption": null
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "From the picture, we see that $\\vec a\\in \\mathcal T$ and so",
+      "sha": "221d27460009",
+      "zh": "从图上看出 $\\vec a\\in \\mathcal T$，所以"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Proj_{\\mathcal T}\\vec a=\\vec a."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We also see that $\\vec b$ is closest to the hypotenuse of $\\mathcal T$, and so $\\Proj_{\\mathcal T}\\vec b$ is the same as the projection of $\\vec b$ onto the line $y=-2x+2$. Computing, we find",
+      "sha": "6c82530c53c2",
+      "zh": "还可以看出 $\\vec b$ 离 $\\mathcal T$ 的斜边最近，所以 $\\Proj_{\\mathcal T}\\vec b$ 就是 $\\vec b$ 在直线 $y=-2x+2$ 上的投影。计算得"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Proj_{\\mathcal T}\\vec b=\\mat{3/5\\\\4/5}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Finally, drawing concentric circles centered at $\\vec c$, we see that the lower-right corner of $\\mathcal T$ is the closest point in $\\mathcal T$ to $\\vec c$.",
+      "sha": "7b7564481327",
+      "zh": "最后，以 $\\vec c$ 为圆心画一组同心圆，可以看出 $\\mathcal T$ 的右下角是 $\\mathcal T$ 中离 $\\vec c$ 最近的点。"
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "f2618c71e8ee"
+     ],
+     "caption": null
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "And so,",
+      "sha": "491afbeb4ec3",
+      "zh": "所以，"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Proj_{\\mathcal T}\\vec c =\\mat{1\\\\0}."
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Subtleties of Projections",
+    "sha": "c49c6d36c007",
+    "zh": "投影的一些细节"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "You might be wondering, what is $\\Proj_X\\vec v$ if $\\vec v$ is equidistant from *two* closest points in $X$? Or, what if $X$ is an *open* set (for example, an open interval in $\\R^1$)? Then there might not be a closest point in $X$ to $\\vec v$. In both these cases, we say $\\Proj_X\\vec v$ is *undefined*.",
+    "sha": "5b6d95211df0",
+    "zh": "你也许会想：如果 $\\vec v$ 到 $X$ 中*两个*最近点的距离相等，$\\Proj_X\\vec v$ 是什么？又或者，如果 $X$ 是*开*集（例如 $\\R^1$ 中的开区间）呢？这时 $X$ 中可能没有离 $\\vec v$ 最近的点。在这两种情形下，我们都说 $\\Proj_X\\vec v$ *没有定义*。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Formally, for a fixed set $X$, we consider $P(\\vec v)=\\Proj_X\\vec v$ as a function that inputs and outputs vectors. And, as a function, $P$ has a domain consisting of exactly the vectors $\\vec v$ for which $P(\\vec v)$ is defined. As it happens, if $X$ is a line or a plane in $\\R^n$, the domain of $P$ is all of $\\R^n$, and in this text, we will be sensible and only ask about projections that exist.",
+    "sha": "44b3ceec06e6",
+    "zh": "正式地说，对固定的集合 $X$，我们把 $P(\\vec v)=\\Proj_X\\vec v$ 看成一个以向量为输入、以向量为输出的函数。作为函数，$P$ 的定义域恰由使 $P(\\vec v)$ 有定义的那些向量 $\\vec v$ 组成。碰巧的是，如果 $X$ 是 $\\R^n$ 中的一条直线或一个平面，$P$ 的定义域就是整个 $\\R^n$；在本书中，我们只讨论存在的投影，这样才合乎情理。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Vector Components",
+    "sha": "6e704b83a47b",
+    "zh": "向量分量"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We've seen before that dot products can be used to measure how much one vector points in the direction of another. But, we can go further. Suppose $\\vec v\\neq \\vec 0$ and $\\vec u$ are vectors. We might want to *decompose* $\\vec u$ into the sum of two vectors, one which is in the direction of $\\vec v$ and the other which is orthogonal to $\\vec v$. The tool that does this is the *vector component*.",
+    "sha": "c931c69452f6",
+    "zh": "我们之前见过，点积可以用来衡量一个向量在多大程度上指向另一个向量的方向。不过，我们还可以更进一步。设 $\\vec v\\neq \\vec 0$ 和 $\\vec u$ 是向量。我们也许想把 $\\vec u$ *分解*成两个向量之和，其中一个在 $\\vec v$ 的方向上，另一个与 $\\vec v$ 正交。完成这件事的工具就是*向量分量*。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Vector Components",
+    "sha": "6e704b83a47b",
+    "zh": "向量分量"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec u$ and $\\vec v\\neq \\vec 0$ be vectors. The *vector component of $\\vec u$ in the $\\vec v$ direction*, written $\\Comp_{\\vec v}\\vec u$, is the vector in the direction of $\\vec v$ so that $\\vec u-\\Comp_{\\vec v}\\vec u$ is orthogonal to $\\vec v$.",
+      "sha": "89652334cc13",
+      "zh": "设 $\\vec u$ 与 $\\vec v\\neq \\vec 0$ 是向量。$\\vec u$ 在 $\\vec v$ 方向上的*向量分量*记作 $\\Comp_{\\vec v}\\vec u$，是这样一个在 $\\vec v$ 方向上的向量：使得 $\\vec u-\\Comp_{\\vec v}\\vec u$ 与 $\\vec v$ 正交。"
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "6110849672cd"
+     ],
+     "caption": null
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "From the definition, it's obvious that",
+    "sha": "b750be95e23a",
+    "zh": "由定义直接就能看出"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec u=\\Vcomp_{\\vec v}\\vec u + (\\vec u-\\Vcomp_{\\vec v}\\vec u)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "is a decomposition of $\\vec u$ into the sum of two vectors, one ($\\Vcomp_{\\vec v}\\vec u$) is in the direction of $\\vec v$, and the other ($\\vec u-\\Vcomp_{\\vec v}\\vec u$) is orthogonal to $\\vec v$.",
+    "sha": "74bf2f83c0fb",
+    "zh": "是 $\\vec u$ 分解成两个向量之和的一种分解：其中一个（$\\Vcomp_{\\vec v}\\vec u$）在 $\\vec v$ 的方向上，另一个（$\\vec u-\\Vcomp_{\\vec v}\\vec u$）与 $\\vec v$ 正交。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the vector component of $\\vec a=\\mat{1\\\\2}$ in the direction of $\\vec b=\\mat{1\\\\1}$.",
+      "sha": "a18c22252a21",
+      "zh": "求 $\\vec a=\\mat{1\\\\2}$ 在 $\\vec b=\\mat{1\\\\1}$ 方向上的向量分量。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\Vcomp_{\\vec b}\\vec a$ is a vector in the direction of $\\vec b$, we know",
+      "sha": "152e49249e2f",
+      "zh": "因为 $\\Vcomp_{\\vec b}\\vec a$ 是 $\\vec b$ 方向上的向量，所以"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Vcomp_{\\vec b}\\vec a = k\\vec b"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for some $k\\in \\R$. Since $\\vec a-\\Vcomp_{\\vec b}\\vec a$ is orthogonal to $\\vec b$, we know",
+      "sha": "8d52bb880364",
+      "zh": "其中 $k\\in \\R$。因为 $\\vec a-\\Vcomp_{\\vec b}\\vec a$ 与 $\\vec b$ 正交，所以"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(\\vec a-\\Vcomp_{\\vec b}\\vec a)\\cdot \\vec b=0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Combining these facts, we see",
+      "sha": "cccadc064dfa",
+      "zh": "把这些事实合起来，得"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(\\vec a-\\Vcomp_{\\vec b}\\vec a)\\cdot \\vec b = \\bigg(\\underbrace{\\mat{1\\\\2}}_{\\vec a}-\\underbrace{\\mat{k\\\\k}}_{k\\vec b}\\bigg)\\cdot \n\t\t\\underbrace{\\mat{1\\\\1}}_{\\vec b} =(1-k)+(2-k)=3-2k=0,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so $k=3/2$. Therefore",
+      "sha": "1420fb9cfbff",
+      "zh": "所以 $k=3/2$。因此"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Vcomp_{\\vec b}\\vec a=k\\vec b=\\mat{3/2\\\\3/2}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Since we'll be computing vector components often, let's try to find a formula for $\\Vcomp_{\\vec v}\\vec u$.",
+    "sha": "8f1f7b55b611",
+    "zh": "既然我们会经常计算向量分量，不妨来找一个求 $\\Vcomp_{\\vec v}\\vec u$ 的公式。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "By definition, $\\Vcomp_{\\vec v}\\vec u$ is a vector in the direction of $\\vec v$, so",
+    "sha": "7ea1f5358457",
+    "zh": "按定义，$\\Vcomp_{\\vec v}\\vec u$ 是 $\\vec v$ 方向上的向量，所以"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Vcomp_{\\vec v}\\vec u = k\\vec v."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Further, from the definition $\\vec u-\\Vcomp_{\\vec v}\\vec u$ is orthogonal to $\\vec v$, and so",
+    "sha": "1b7eec690dc8",
+    "zh": "此外，按定义 $\\vec u-\\Vcomp_{\\vec v}\\vec u$ 与 $\\vec v$ 正交，所以"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec v\\cdot (\\vec u-\\Vcomp_{\\vec v}\\vec u) = \\vec v\\cdot (\\vec u-k\\vec v)=\\vec v\\cdot \\vec u-k\\vec v\\cdot \\vec v=0."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Because $\\vec v\\neq \\vec 0$, we know $\\vec v\\cdot \\vec v\\neq 0$. Therefore, we may rearrange and solve for $k$ to find",
+    "sha": "4f05dd9f3e4d",
+    "zh": "因为 $\\vec v\\neq \\vec 0$，所以 $\\vec v\\cdot \\vec v\\neq 0$。因此，我们可以整理并解出 $k$，得"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "k=\\frac{\\vec v\\cdot \\vec u}{\\vec v\\cdot \\vec v},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "which means",
+    "sha": "eee2fd622722",
+    "zh": "这就是说"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Vcomp_{\\vec v}\\vec u = \\left(\\frac{\\vec v\\cdot \\vec u}{\\vec v\\cdot \\vec v}\\right)\\vec v."
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "The Relationship Between Vector Components and Projections",
+    "sha": "4c3f05289af7",
+    "zh": "向量分量与投影的关系"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Vector components and projections onto lines are closely related. So closely related that many textbooks use the single word *projection* to talk about both vector components and projections 〔注： We will not.〕. Let's take a moment to explore this relationship.",
+    "sha": "18fe45ef7d14",
+    "zh": "向量分量与向直线的投影关系非常密切，密切到许多教科书用同一个词*投影*来同时指这两样东西〔注：我们不这样做。〕。让我们花点时间来探讨这种关系。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\vec v=\\mat{2\\\\4}$ and $\\vec u=\\mat{3\\\\1}$ and let $\\ell=\\Span\\Set{\\vec v}$. Drawing a picture of $\\ell$, $\\vec u$, and $\\Proj_\\ell\\vec u$, we see that $\\Proj_\\ell\\vec u$ satisfies all the properties of $\\Vcomp_{\\vec v}\\vec u$.",
+    "sha": "e038a6102df4",
+    "zh": "设 $\\vec v=\\mat{2\\\\4}$，$\\vec u=\\mat{3\\\\1}$，并设 $\\ell=\\Span\\Set{\\vec v}$。画出 $\\ell$、$\\vec u$ 和 $\\Proj_\\ell\\vec u$ 的图，可以看出 $\\Proj_\\ell\\vec u$ 满足 $\\Vcomp_{\\vec v}\\vec u$ 的全部性质。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "1c379ea1532e"
+   ],
+   "caption": null
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "5a311fe4585f"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Since $\\ell=\\Span\\Set{\\vec v}$ and $\\Proj_\\ell\\vec u\\in\\ell$, we know that $\\Proj_\\ell\\vec u$ is in the direction of $\\vec v$. Further, using geometric arguments, we know $\\vec u-\\Proj_\\ell\\vec u$ is a normal vector for $\\ell$ and is therefore orthogonal to its direction vector $\\vec v$! What's more, we didn't use anything in particular about $\\vec u$ and $\\vec v$ when making this argument (other than $\\vec v\\neq \\vec 0$). This means, we have established a general fact.",
+    "sha": "7997068d5ef3",
+    "zh": "因为 $\\ell=\\Span\\Set{\\vec v}$ 且 $\\Proj_\\ell\\vec u\\in\\ell$，所以 $\\Proj_\\ell\\vec u$ 在 $\\vec v$ 的方向上。再者，由几何论证知 $\\vec u-\\Proj_\\ell\\vec u$ 是 $\\ell$ 的法向量，因此与它的方向向量 $\\vec v$ 正交！而且，在这个论证过程中，我们没有用到 $\\vec u$ 和 $\\vec v$ 的任何特殊性（除了 $\\vec v\\neq \\vec 0$）。这就是说，我们得到了一条一般性的事实。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For vectors $\\vec u$ and $\\vec v\\neq 0$, we have",
+      "sha": "bcf2ffeb6de0",
+      "zh": "对向量 $\\vec u$ 与 $\\vec v\\neq 0$，我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Proj_{\\Span\\Set{\\vec v}}\\vec u=\\Vcomp_{\\vec v}\\vec u."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This is great news because vector components are easy to compute using dot products while projections are usually hard to compute.",
+    "sha": "94ac238a720a",
+    "zh": "这是个好消息，因为向量分量用点积很容易计算，而投影通常很难计算。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the projection of $\\vec a=\\mat{3\\\\7}$ onto $L=\\Span\\Set{\\mat{1\\\\-4}}$.",
+      "sha": "6957e70f4d62",
+      "zh": "计算 $\\vec a=\\mat{3\\\\7}$ 在 $L=\\Span\\Set{\\mat{1\\\\-4}}$ 上的投影。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec b = \\mat{1\\\\-4}$. Since $L=\\Span\\Set{\\vec b}$ and $\\vec b\\neq \\vec 0$, by the theorem above, we have",
+      "sha": "63e2ef71a258",
+      "zh": "设 $\\vec b = \\mat{1\\\\-4}$。因为 $L=\\Span\\Set{\\vec b}$ 且 $\\vec b\\neq \\vec 0$，由上面的定理，我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Proj_L \\vec a = \\Vcomp_{\\vec b} \\vec a = \\left(\\frac{\\vec b\\cdot \\vec a}{\\vec b\\cdot \\vec b}\\right)\\vec b \n\t    = \\tfrac{3-28}{1+16}\\mat{1\\\\-4}=\\mat{-25/17\\\\100/17}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It's worth noting, however, that vector components are equal to projections *only in the case when you're projecting onto a span*. In general, projections and vector components are unrelated.",
+    "sha": "92f229cbdd69",
+    "zh": "不过值得注意的是，向量分量等于投影*只在向一个张成的空间投影时才成立*。一般来说，投影与向量分量并不相关。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec a=\\mat{3\\\\7}$, $\\vec b=\\mat{1\\\\-4}$, and let $D$ be the line given in vector form by $\\vec x=t\\vec b+\\vec a$. Show that $\\Proj_D\\vec a\\neq \\Vcomp_{\\vec b}\\vec a$.",
+      "sha": "3c654f40864e",
+      "zh": "设 $\\vec a=\\mat{3\\\\7}$，$\\vec b=\\mat{1\\\\-4}$，并设 $D$ 是向量式为 $\\vec x=t\\vec b+\\vec a$ 的直线。证明 $\\Proj_D\\vec a\\neq \\Vcomp_{\\vec b}\\vec a$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By definition, $\\Proj_{D}\\vec a$ is the closest point in $D$ to $\\vec a$. Since $\\vec a\\in D$, we must have",
+      "sha": "d4d5a801c3c5",
+      "zh": "按定义，$\\Proj_{D}\\vec a$ 是 $D$ 中离 $\\vec a$ 最近的点。因为 $\\vec a\\in D$，所以必有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Proj_{D}\\vec a = \\vec a = \\mat{3\\\\7}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We already computed $\\Vcomp_{\\vec b}\\vec a=\\mat{-25/17\\\\100/17}$ in the previous example, and so we see",
+      "sha": "53ca76a93fc4",
+      "zh": "在上一个例子中我们已经算出 $\\Vcomp_{\\vec b}\\vec a=\\mat{-25/17\\\\100/17}$，因此"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Vcomp_{\\vec b}\\vec a=\\mat{-25/17\\\\100/17}\\neq \\mat{3\\\\7}=\\Proj_{D}\\vec a."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": "要点"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "When projecting onto the span of a single vector, you can use vector components as a computational shortcut, but if the set isn't a span, you cannot.",
+      "sha": "e227ad74d918",
+      "zh": "向单个向量张成的空间投影时，你可以把向量分量当作计算的捷径；但如果这个集合不是张成的空间，就不能这样做。"
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $T=\\Set{\\mat{0\\\\0}, \\mat{-1\\\\2}, \\mat{1\\\\-2}}$. Find $\\Proj_{T} \\mat{3 \\\\ 1}$.",
+      "sha": "e582ab4ac758",
+      "zh": "设 $T=\\Set{\\mat{0\\\\0}, \\mat{-1\\\\2}, \\mat{1\\\\-2}}$。求 $\\Proj_{T} \\mat{3 \\\\ 1}$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The distances from $\\mat{ 3 \\\\ 1 }$ to $\\mat{0\\\\0}$, $\\mat{-1\\\\2}$, and $\\mat{1\\\\-2}$ are $\\sqrt{10}$, $\\sqrt{17}$, and $\\sqrt{13}$, respectively. So $\\Proj_{T} \\mat{3 \\\\ 1}= \\mat{ 0 \\\\ 0}$.",
+      "sha": "f4ff5663cbf4",
+      "zh": "$\\mat{ 3 \\\\ 1 }$ 到 $\\mat{0\\\\0}$、$\\mat{-1\\\\2}$、$\\mat{1\\\\-2}$ 的距离分别是 $\\sqrt{10}$、$\\sqrt{17}$、$\\sqrt{13}$。所以 $\\Proj_{T} \\mat{3 \\\\ 1}= \\mat{ 0 \\\\ 0}$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Projections & Vector Components · 练习题 1（上游 book/modules/module5-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module5-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $C=\\Set{ \\vec v \\in \\R^2\\given \\norm{ \\vec v} = 1}$ be the unit circle in $\\R^{2}$. Find $\\Proj_{C} \\mat{2 \\\\ 0}$. Justify your answer.",
+      "sha": "1722ffdd775f",
+      "zh": "设 $C=\\Set{ \\vec v \\in \\R^2\\given \\norm{ \\vec v} = 1}$ 是 $\\R^{2}$ 中的单位圆。求 $\\Proj_{C} \\mat{2 \\\\ 0}$，并说明理由。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $\\vec v=\\mat{x\\\\y}\\in C$. We would like to minimize $\\left \\Vert \\mat{ x \\\\ y }- \\mat{ 2 \\\\ 0 }\\right \\Vert$, or equivalently $\\left \\Vert \\mat{ x \\\\ y }- \\mat{ 2 \\\\ 0 }\\right \\Vert^{2}$. This expression can be rewritten as",
+      "sha": "617a585cc196",
+      "zh": "设 $\\vec v=\\mat{x\\\\y}\\in C$。我们想让 $\\left \\Vert \\mat{ x \\\\ y }- \\mat{ 2 \\\\ 0 }\\right \\Vert$ 最小，或者说让 $\\left \\Vert \\mat{ x \\\\ y }- \\mat{ 2 \\\\ 0 }\\right \\Vert^{2}$ 最小。这个表达式可以改写为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left \\Vert \\mat{ x \\\\ y }- \\mat{ 2 \\\\ 0 }\\right\n\t\t\t\t\\Vert^{2} = (x-2)^{2}+y^{2} = (x^{2}+y^{2})-4x+4"
+    },
+    {
+     "k": "math",
+     "tex": "= \\left\\Vert \\vec v \\right \\Vert^{2}-4x+4 = 5 - 4x."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $x \\leq 1$, the above expression is minimized when $x = 1$ (and thus $y = 0$). That is,",
+      "sha": "7edc56b88c63",
+      "zh": "因为 $x \\leq 1$，所以上面的表达式在 $x = 1$（从而 $y = 0$）时最小。也就是说，"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Proj_{C} \\mat{2 \\\\ 0}= \\mat{ 1 \\\\ 0 }."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Projections & Vector Components · 练习题 2（上游 book/modules/module5-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module5-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\ell=\\Span \\Set{ \\mat{2 \\\\ 1}}$, $L=\\Span \\Set{ \\mat{2 \\\\ 1}}+\\Set{\\mat{4\\\\0}}$, and let $S$ be the set of convex linear combinations of $\\mat{2 \\\\ 1}$ and $\\mat{4 \\\\ 2}$. For $\\vec v = \\mat{ 1 \\\\ 0}$, find",
+      "sha": "bbc0f068b6eb",
+      "zh": "设 $\\ell=\\Span \\Set{ \\mat{2 \\\\ 1}}$，$L=\\Span \\Set{ \\mat{2 \\\\ 1}}+\\Set{\\mat{4\\\\0}}$，并设 $S$ 是 $\\mat{2 \\\\ 1}$ 与 $\\mat{4 \\\\ 2}$ 的凸线性组合构成的集合。对 $\\vec v = \\mat{ 1 \\\\ 0}$，求"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Proj_{\\ell} \\vec v$.",
+         "sha": "c10d8dbe12e0",
+         "zh": "$\\Proj_{\\ell} \\vec v$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Proj_{L} \\vec v$.",
+         "sha": "7fca827f7fb9",
+         "zh": "$\\Proj_{L} \\vec v$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Proj_{S} \\vec v$.",
+         "sha": "899a01201232",
+         "zh": "$\\Proj_{S} \\vec v$。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec u=\\mat{ 2 \\\\ 1 }$. Then $\\Proj_{\\ell} \\vec v=t\\vec u$ for some $t\\in \\R$ which minimizes",
+         "sha": "f4dd7737b095",
+         "zh": "设 $\\vec u=\\mat{ 2 \\\\ 1 }$。那么 $\\Proj_{\\ell} \\vec v=t\\vec u$，其中 $t\\in \\R$ 使得下式最小"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\left \\Vert \\vec v - t \\vec u\n\t\t\t\t\t\t\\right \\Vert^{2} = \\left \\Vert \\vec\n\t\t\t\t\t\tu \\right \\Vert^{2} t^{2} - (2\n\t\t\t\t\t\t\\vec u \\cdot \\vec v) t + \\left \\Vert\n\t\t\t\t\t\t\\vec v \\right \\Vert^{2}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "This quantity is minimized when $t = \\frac{\\vec u \\cdot \\vec v}{\\left \\Vert \\vec u \\right \\Vert^2}= \\frac{2}{5}$, so",
+         "sha": "b882f29fca84",
+         "zh": "当 $t = \\frac{\\vec u \\cdot \\vec v}{\\left \\Vert \\vec u \\right \\Vert^2}= \\frac{2}{5}$ 时，这个量最小，所以"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Proj_{\\ell} \\vec v = \\tfrac{2}{5}\\vec\n\t\t\t\t\t\tu=\\tfrac 15 \\mat{4\\\\2}."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec u=\\mat{ 2 \\\\ 1 }$. Then $\\Proj_{L} \\mat{ 1 \\\\ 0}=\\mat{4\\\\0}+t\\vec u$ for some $t\\in \\R$ which minimizes",
+         "sha": "85ab606eddda",
+         "zh": "设 $\\vec u=\\mat{ 2 \\\\ 1 }$。那么 $\\Proj_{L} \\mat{ 1 \\\\ 0}=\\mat{4\\\\0}+t\\vec u$，其中 $t\\in \\R$ 使得下式最小"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\left \\Vert \\mat{ 1 \\\\ 0}- \\mat{4\\\\0}-t\n\t\t\t\t\t\t\\vec u \\right \\Vert^{2} = (-3-2t)^{2}+(0-t)^{2}"
+       },
+       {
+        "k": "math",
+        "tex": "= 9+12t+5t^{2}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "The quantity $9+12t+5t^{2}=5(t+\\frac 65 )^{2}+\\frac 95$ is minimized when $t = -\\frac 65$, so",
+         "sha": "06284ce6589c",
+         "zh": "当 $t = -\\frac 65$ 时，$9+12t+5t^{2}=5(t+\\frac 65 )^{2}+\\frac 95$ 取得最小值，所以"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Proj_{L} \\vec v = \\mat{4\\\\0}-\\tfrac\n\t\t\t\t\t\t65\\vec u=\\tfrac 15 \\mat{8\\\\-6}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The set $S$ is equal to $\\Set{t \\vec u: 1 \\leq t \\leq 2}$ (check this), and so $S\\subseteq \\ell$. We found $\\Proj_{\\ell}\\vec v=\\mat{4/5\\\\2/5}$ which is not in $S$. Therefore, $\\Proj_{S}\\vec v$ must be one of the endpoints of $S$. Checking both endpoints, we conclude $\\Proj_{S} \\vec v = \\mat{2 \\\\ 1}$.",
+         "sha": "82896f54f2f2",
+         "zh": "集合 $S$ 等于 $\\Set{t \\vec u: 1 \\leq t \\leq 2}$（请你验证），所以 $S\\subseteq \\ell$。我们已求得 $\\Proj_{\\ell}\\vec v=\\mat{4/5\\\\2/5}$，它不在 $S$ 中。因此 $\\Proj_{S}\\vec v$ 一定是 $S$ 的某个端点。检验两个端点，得到 $\\Proj_{S} \\vec v = \\mat{2 \\\\ 1}$。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Projections & Vector Components · 练习题 3（上游 book/modules/module5-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module5-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $T$ be the set of convex linear combinations of $\\Set{\\mat{1\\\\1}, \\mat{-1\\\\1},\\mat{-1\\\\-2}}$. Find $\\Proj_{T}(\\vec v)$, for",
+      "sha": "dca649e42f27",
+      "zh": "设 $T$ 是 $\\Set{\\mat{1\\\\1}, \\mat{-1\\\\1},\\mat{-1\\\\-2}}$ 的凸线性组合构成的集合。对下列各个向量，求 $\\Proj_{T}(\\vec v)$ 的值"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec v = \\mat{3\\\\3}$",
+         "sha": "82a3e0a4229b",
+         "zh": "$\\vec v = \\mat{3\\\\3}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec v = \\mat{0\\\\0}$",
+         "sha": "2f7bf0c31485",
+         "zh": "$\\vec v = \\mat{0\\\\0}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec v = \\mat{1\\\\-2}$",
+         "sha": "09fcbaeb8431",
+         "zh": "$\\vec v = \\mat{1\\\\-2}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec v = \\mat{0\\\\-4}$",
+         "sha": "0f9e383f6f4f",
+         "zh": "$\\vec v = \\mat{0\\\\-4}$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Geometrically, $T$ is a filled in triangle with vertices $\\mat{1\\\\1}, \\mat{-1\\\\1}$ and $\\mat{-1\\\\-2}$. So for points outside the triangle, the closest point in $T$ will be on the nearest side of $T$, and so we can project onto $T$ by projecting onto line segments.",
+      "sha": "20dbad32a689",
+      "zh": "从几何上看，$T$ 是以 $\\mat{1\\\\1}, \\mat{-1\\\\1}$ 和 $\\mat{-1\\\\-2}$ 为顶点的实心三角形。所以对三角形外面的点，$T$ 中离它最近的点会落在 $T$ 离它最近的那条边上，因此我们可以通过向线段投影来向 $T$ 投影。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Proj_{T} \\mat{3\\\\3}= \\mat{1\\\\1}$; since $\\mat{3\\\\3}$ is above $T$, the closest point will be on the line segment $y=1$, $-1\\leq x \\leq 1$.",
+         "sha": "4ef0ce00a0a3",
+         "zh": "$\\Proj_{T} \\mat{3\\\\3}= \\mat{1\\\\1}$；因为 $\\mat{3\\\\3}$ 在 $T$ 的上方，所以最近的点会落在线段 $y=1$，$-1\\leq x \\leq 1$ 上。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Proj_{T} \\mat{0\\\\0}= \\mat{0\\\\0}$, since $\\vec 0\\in T$.",
+         "sha": "f90ad18f5f47",
+         "zh": "$\\Proj_{T} \\mat{0\\\\0}= \\mat{0\\\\0}$，因为 $\\vec 0\\in T$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Proj_{T} \\mat{1\\\\-2}= \\frac{1}{13}\\mat{-5\\\\-14}$; let $\\ell$ be the line segment $\\vec x= \\mat{1\\\\1}+t\\mat{-2\\\\-3}, 0\\leq t \\leq 1$. Then $\\Proj_{T} \\mat{1\\\\-2}= \\Proj_{\\ell} \\mat{1\\\\-2}$, and then either by minimizing the length function, or drawing a perpendicular line to $\\ell$, we find the closest point is when $t=\\frac{9}{13}$.",
+         "sha": "2b8224213ec9",
+         "zh": "$\\Proj_{T} \\mat{1\\\\-2}= \\frac{1}{13}\\mat{-5\\\\-14}$；设 $\\ell$ 是线段 $\\vec x= \\mat{1\\\\1}+t\\mat{-2\\\\-3}, 0\\leq t \\leq 1$。那么 $\\Proj_{T} \\mat{1\\\\-2}= \\Proj_{\\ell} \\mat{1\\\\-2}$，然后无论是通过让长度函数取最小，还是作 $\\ell$ 的垂线，我们都得到最近的点出现在 $t=\\frac{9}{13}$ 时。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Proj_{T} \\mat{0\\\\-4}= \\mat{-1\\\\-2}$, as in $(c)$, but now the minimizer is at $t>1$, so the constraints $0\\leq t \\leq 1$ force us to take the closest point on the line segment.",
+         "sha": "29bde2be27df",
+         "zh": "$\\Proj_{T} \\mat{0\\\\-4}= \\mat{-1\\\\-2}$，与 $(c)$ 类似，但这次最小值点在 $t>1$ 处，所以约束 $0\\leq t \\leq 1$ 迫使我们取线段上最近的那个点。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Projections & Vector Components · 练习题 4（上游 book/modules/module5-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module5-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Explain in your own words how to find $\\Proj_{\\ell}(\\vec v)$ when $\\ell=\\Span\\Set{\\vec d}$ for some $\\vec d \\neq \\vec 0$.",
+      "sha": "94833b264a80",
+      "zh": "用你自己的话解释：当对某个 $\\vec d \\neq \\vec 0$ 有 $\\ell=\\Span\\Set{\\vec d}$ 时，如何求 $\\Proj_{\\ell}(\\vec v)$。"
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Projections & Vector Components · 练习题 5（上游 book/modules/module5-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module5-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec e_{1}=\\mat{1 \\\\ 0}$, $\\vec e_{2} =\\mat{0 \\\\ 1}$, and $\\vec u = \\mat{2 \\\\ 3}$.",
+      "sha": "7a494a585dfd",
+      "zh": "设 $\\vec e_{1}=\\mat{1 \\\\ 0}$，$\\vec e_{2} =\\mat{0 \\\\ 1}$，$\\vec u = \\mat{2 \\\\ 3}$。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Draw $\\vec e_{1}$, $\\vec e_{2}$, $\\vec u$, $\\Comp_{\\vec e_1}\\vec u$, and $\\Comp_{\\vec e_2}\\vec u$ on the same grid.",
+         "sha": "f77c34593881",
+         "zh": "在同一个网格上画出 $\\vec e_{1}$、$\\vec e_{2}$、$\\vec u$、$\\Comp_{\\vec e_1}\\vec u$ 和 $\\Comp_{\\vec e_2}\\vec u$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Write down two characterizing properties for $\\Comp_{\\vec e_2}\\vec u$.",
+         "sha": "7fa5151ad1d8",
+         "zh": "写出刻画 $\\Comp_{\\vec e_2}\\vec u$ 的两条性质。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Check that $\\vec u - \\Comp_{\\vec e_1}\\vec u$ satisfies the above properties.",
+         "sha": "32ad8079ee06",
+         "zh": "检验 $\\vec u - \\Comp_{\\vec e_1}\\vec u$ 满足上面的性质。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Comp_{\\xhat}\\vec u+\\Comp_{\\yhat}\\vec u=\\vec u$. Does this always happen? Explain.",
+         "sha": "31f82b020b16",
+         "zh": "$\\Comp_{\\xhat}\\vec u+\\Comp_{\\yhat}\\vec u=\\vec u$。这种情况总会发生吗？请解释。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Projections & Vector Components · 练习题 6（上游 book/modules/module5-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module5-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "In this problem, we will find the projection of a vector onto a plane in $\\R^{3}$. Let $\\vec u=\\mat{1\\\\2\\\\-2}$, $\\vec v = \\mat{0\\\\1\\\\1}$, $\\vec a = \\mat{6\\\\4\\\\-2}$, and let $\\mathcal P=\\Span\\Set{\\vec u,\\vec v}$.",
+      "sha": "bb8318bad10c",
+      "zh": "在这道题里，我们来求一个向量在 $\\R^{3}$ 中某个平面上的投影。设 $\\vec u=\\mat{1\\\\2\\\\-2}$，$\\vec v = \\mat{0\\\\1\\\\1}$，$\\vec a = \\mat{6\\\\4\\\\-2}$，并设 $\\mathcal P=\\Span\\Set{\\vec u,\\vec v}$。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find $\\Comp_{\\vec u}(\\vec a)$ and $\\Comp_{\\vec v}(\\vec a)$.",
+         "sha": "8b1ef5a93379",
+         "zh": "求 $\\Comp_{\\vec u}(\\vec a)$ 和 $\\Comp_{\\vec v}(\\vec a)$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Show that $\\vec a-\\Comp_{\\vec u}(\\vec a)-\\Comp_{\\vec v}(\\vec a)$ is a normal vector for $\\mathcal P$.",
+         "sha": "5a43c18bb6b3",
+         "zh": "证明 $\\vec a-\\Comp_{\\vec u}(\\vec a)-\\Comp_{\\vec v}(\\vec a)$ 是 $\\mathcal P$ 的法向量。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Use 〔引用〕 to find $\\Proj_{\\mathcal P} (\\vec a)$.",
+         "sha": "04668c7b76f9",
+         "zh": "利用〔引用〕求 $\\Proj_{\\mathcal P} (\\vec a)$。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Using the formula for vector components, we have",
+         "sha": "dc932bfdb316",
+         "zh": "用向量分量的公式，我们有"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Comp_{\\vec u}(\\vec a) = \\frac{\\vec\n\t\t\t\t\t\ta \\cdot \\vec u}{\\vec u \\cdot\n\t\t\t\t\t\t\\vec u}\\vec u = \\frac{18}{9}\\vec\n\t\t\t\t\t\tu = \\mat{2\\\\4\\\\-4}"
+       },
+       {
+        "k": "math",
+        "tex": "\\Comp_{\\vec v}(\\vec a) = \\frac{\\vec\n\t\t\t\t\t\ta \\cdot \\vec v}{\\vec v \\cdot\n\t\t\t\t\t\t\\vec v}\\vec v = \\frac{2}{2}\\vec\n\t\t\t\t\t\tv = \\mat{0\\\\1\\\\1}."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec b = \\vec a-\\Comp_{\\vec u}(\\vec a)-\\Comp_{\\vec v}(\\vec a)$. Directly computing, we have $\\vec b = \\mat{ 4 \\\\-1 \\\\1 }$.",
+         "sha": "08538482379b",
+         "zh": "设 $\\vec b = \\vec a-\\Comp_{\\vec u}(\\vec a)-\\Comp_{\\vec v}(\\vec a)$。直接计算，得 $\\vec b = \\mat{ 4 \\\\-1 \\\\1 }$。"
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "To show $\\vec b$ is orthogonal to $P$, we need to check that",
+         "sha": "0951fd176162",
+         "zh": "要证明 $\\vec b$ 与 $P$ 正交，需要检验"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vec b \\cdot \\vec u = 4-2-2 = 0"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "and",
+         "sha": "cffa50a32cb1",
+         "zh": "以及"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vec b \\cdot \\vec v = 0-1+1 = 0."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Hence $\\vec b$ is a normal vector to $P$. (Note that this only worked because $\\vec u\\cdot \\vec v = 0$. Subtracting each vector component from $\\vec a$ will not produce a normal vector in general.)",
+         "sha": "99c5f4ef308b",
+         "zh": "所以 $\\vec b$ 是 $P$ 的法向量。（注意，这只是因为 $\\vec u\\cdot \\vec v = 0$ 才行得通。一般来说，从 $\\vec a$ 里减去各个向量分量，并不会得到法向量。）"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Since $\\vec b$ is orthogonal to $P$ and $\\vec a - \\vec b$ is a linear combination of $\\vec u$ and $\\vec v$, the vector $\\vec a - \\vec b=\\mat{2\\\\5\\\\-3}$ is the closest point to $\\vec a$ on $P$.",
+         "sha": "cfcf0fb73352",
+         "zh": "因为 $\\vec b$ 与 $P$ 正交，且 $\\vec a - \\vec b$ 是 $\\vec u$ 与 $\\vec v$ 的线性组合，所以向量 $\\vec a - \\vec b=\\mat{2\\\\5\\\\-3}$ 是 $P$ 上离 $\\vec a$ 最近的点。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Projections & Vector Components · 练习题 7（上游 book/modules/module5-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module5-exercises.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "投影与向量分量"
+}

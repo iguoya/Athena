@@ -1,0 +1,254 @@
+{
+ "id": "Determinants-TwoAndThree",
+ "title_en": "Determinants of $2\\times 2$- and $3\\times 3$-matrices",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Calculate the determinant of $2\\times 2$-matrices and $3\\times 3$-matrices.",
+         "sha": "0529fbf7b4cb",
+         "zh": "计算 $2\\times 2$ 矩阵和 $3\\times 3$ 矩阵的行列式。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $A$ be an $n\\times n$-matrix. The **determinant** of $A$, denoted by $\\det(A)$, is a very important number which we will explore throughout this chapter.",
+    "sha": "366628c1a511",
+    "zh": "设 $A$ 是 $n\\times n$ 矩阵。$A$ 的**行列式**（determinant）记作 $\\det(A)$，它是一个非常重要的数，我们将在本章中逐步深入地研究它。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The determinant of a $2\\times 2$-matrix is given by the following formula.",
+    "sha": "9228b9fb4e71",
+    "zh": "$2\\times 2$ 矩阵的行列式由下面的公式给出。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Determinant of a $2\\times 2$-matrix",
+    "sha": "b46aba75e795",
+    "zh": "$2\\times 2$ 矩阵的行列式"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\left[\\begin{array}{rr} a & b \\\\ c & d \\end{array}\\right]$. Then",
+      "sha": "0c5d596502f9",
+      "zh": "设 $A=\\left[\\begin{array}{rr} a & b \\\\ c & d \\end{array}\\right]$，则"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(A) = ad-bc."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "A $2\\times 2$ determinant",
+    "sha": "996b1955f73d",
+    "zh": "一个 $2\\times 2$ 行列式"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find $\\det(A)$ for the matrix $A = \\left[\\begin{array}{rr} 2 & 4 \\\\ -1 & 6 \\end{array}\\right]$.",
+      "sha": "57a502387c9b",
+      "zh": "求矩阵 $A = \\left[\\begin{array}{rr} 2 & 4 \\\\ -1 & 6 \\end{array}\\right]$ 的 $\\det(A)$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have $\\det(A) = 2\\cdot 6 - 4\\cdot(-1) = 12 + 4 = 16$.",
+      "sha": "de2b02158720",
+      "zh": "我们有 $\\det(A) = 2\\cdot 6 - 4\\cdot(-1) = 12 + 4 = 16$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The determinant is also often denoted by enclosing the matrix with two vertical lines. Thus",
+    "sha": "c9ab26c8eadc",
+    "zh": "行列式也常常用两条竖线把矩阵括起来表示。于是"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\det \\left[\\begin{array}{cc}\n    a & b \\\\\n    c & d\n  \\end{array}\\right] =\\left|\\begin{array}{cc}\n    a & b \\\\\n    c & d\n  \\end{array}\\right|\n  = ad - bc."
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Determinant of a $3\\times 3$-matrix",
+    "sha": "37dafa809035",
+    "zh": "$3\\times 3$ 矩阵的行列式"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\left[\\begin{array}{ccc} a_{11} & a_{12} & a_{13} \\\\ a_{21} & a_{22} & a_{23} \\\\ a_{31} & a_{32} & a_{33} \\\\ \\end{array}\\right]$. Then",
+      "sha": "b89930be3cc6",
+      "zh": "设 $A=\\left[\\begin{array}{ccc} a_{11} & a_{12} & a_{13} \\\\ a_{21} & a_{22} & a_{23} \\\\ a_{31} & a_{32} & a_{33} \\\\ \\end{array}\\right]$，则"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(A)\n    = a_{11}a_{22}a_{33}\n    + a_{12}a_{23}a_{31}\n    + a_{13}a_{21}a_{32}\n    - a_{31}a_{22}a_{13}\n    - a_{32}a_{23}a_{11}\n    - a_{33}a_{21}a_{12}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The following picture may help in memorizing the formula:",
+    "sha": "c49bcc955cd0",
+    "zh": "下面的图可以帮助记忆这个公式："
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "e148033990b1"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Here, we have written down the matrix $A$, then repeated the first two columns next to it. The blue lines correspond to the positive terms of the determinant: $\\color{blue}a_{11}a_{22}a_{33}$, $\\color{blue}a_{12}a_{23}a_{31}$, and $\\color{blue}a_{13}a_{21}a_{32}$. The pink lines correspond to the negative terms: $\\color{red}a_{31}a_{22}a_{13}$, $\\color{red}a_{32}a_{23}a_{11}$, and $\\color{red}a_{33}a_{21}a_{12}$.",
+    "sha": "cfe969a9fc55",
+    "zh": "这里我们先写出矩阵 $A$，再把它的前两列重复写在右边。蓝线对应行列式中的正项：$\\color{blue}a_{11}a_{22}a_{33}$、$\\color{blue}a_{12}a_{23}a_{31}$ 和 $\\color{blue}a_{13}a_{21}a_{32}$。粉线对应负项：$\\color{red}a_{31}a_{22}a_{13}$、$\\color{red}a_{32}a_{23}a_{11}$ 和 $\\color{red}a_{33}a_{21}a_{12}$。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "A $3\\times 3$ determinant",
+    "sha": "fc23fbd73c4c",
+    "zh": "一个 $3\\times 3$ 行列式"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find $\\det(A)$, where",
+      "sha": "93de224b35fd",
+      "zh": "求 $\\det(A)$，其中"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rrr}\n      0 & 1 & 2 \\\\\n      3 & 1 & 0 \\\\\n      1 & 1 & -1 \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have",
+      "sha": "a2214cd5b1a4",
+      "zh": "我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(A) ~=~\n    \\left|\\begin{array}{rrr}\n      0 & 1 & 2 \\\\\n      3 & 1 & 0 \\\\\n      1 & 1 & -1 \\\\\n    \\end{array}\\right|\n    ~=~\n    0\\cdot 1\\cdot (-1)\n    + 1\\cdot 0 \\cdot 1\n    + 2 \\cdot 3 \\cdot 1\n    - 1\\cdot 1\\cdot 2\n    - 1\\cdot 0\\cdot 0\n    - (-1)\\cdot 3\\cdot 1\n    ~=~ 7."
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the determinants of the following matrices.",
+      "sha": "1a6752df1074",
+      "zh": "求下列矩阵的行列式。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(a)~\\left[\\begin{array}{rr}\n      1 & 3 \\\\\n      0 & 2\n    \\end{array}\\right]\n    \\quad\n    (b)~\\left[\\begin{array}{rr}\n      0 & 3 \\\\\n      0 & 2\n    \\end{array}\\right]\n    \\quad\n    (c)~\\left[\\begin{array}{rr}\n      4 & 3 \\\\\n      6 & 2\n    \\end{array}\\right]\n    \\quad\n    (d)~\\left[\\begin{array}{rr}\n      -3 & 4 \\\\\n      -1 & 2\n    \\end{array}\\right]"
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Determinants of $2\\times 2$- and $3\\times 3$-matrices · 习题 1（上游 exercises/Determinants-TwoAndThree.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-TwoAndThree.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the following determinants.",
+      "sha": "665a0f6ca96e",
+      "zh": "求下列行列式。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(a)~\\left|\\begin{array}{rrr}\n      1 & 2 & 3 \\\\\n      4 & 5 & 6 \\\\\n      7 & 8 & 9 \\\\\n    \\end{array}\\right|\n    \\quad\n    (b)~\\left|\\begin{array}{rrr}\n      1  & 0 & 2 \\\\\n      2  & 5 & 3 \\\\\n      -1 & 0 & 0 \\\\\n    \\end{array}\\right|\n    \\quad\n    (c)~\\left|\\begin{array}{rrr}\n      3 &  4 & 1 \\\\\n      0 & -1 & 1 \\\\\n      1 &  2 & 1 \\\\\n    \\end{array}\\right|\n    \\quad\n    (d)~\\left|\\begin{array}{rrr}\n      0  & -2 &  1 \\\\\n      4  & 1  & -3 \\\\\n      -1 & 3  &  1 \\\\\n    \\end{array}\\right|"
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Determinants of $2\\times 2$- and $3\\times 3$-matrices · 习题 2（上游 exercises/Determinants-TwoAndThree.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-TwoAndThree.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "二阶与三阶行列式"
+}

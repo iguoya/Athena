@@ -1,0 +1,966 @@
+{
+ "id": "Vectors-DotProduct-Projections",
+ "title_en": "Projections",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "It is sometimes important to find the component of a vector in a particular direction. Consider the following picture:",
+    "sha": "2bfc4a96f9fe",
+    "zh": "有时需要求一个向量在某个特定方向上的分量。看下面的图："
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "a84efc36a5c8"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Here, $\\vect{u}$ is a non-zero vector specifying a *direction*, and $\\vect{v}$ is any vector. We have given the label $Q$ to the tip of $\\vect{v}$. The point $P$ lies at the place along $\\vect{u}$ that is closest to $Q$, or equivalently, such that $(0,P,Q)$ forms a right triangle. The distance from $0$ to $P$ (measured positively in the direction of $\\vect{u}$) is called the **component** of $\\vect{v}$ in the direction of $\\vect{u}$, and is denoted $\\comp_{\\vect{u}}(\\vect{v})$. The vector $\\longvect{0P}$ is called the **projection** of $\\vect{v}$ onto $\\vect{u}$, and is denoted $\\proj_{\\vect{u}}(\\vect{v})$. We wish to find formulas for these quantities.",
+    "sha": "811d5c3f9a0a",
+    "zh": "这里 $\\vect{u}$ 是指定一个*方向*的非零向量，$\\vect{v}$ 是任意向量。我们把 $\\vect{v}$ 的终点记为 $Q$。点 $P$ 位于 $\\vect{u}$ 所在直线上离 $Q$ 最近的位置，等价地说，就是使 $(0,P,Q)$ 构成直角三角形的位置。从 $0$ 到 $P$ 的距离（沿 $\\vect{u}$ 的方向为正）称为 $\\vect{v}$ 在 $\\vect{u}$ 方向上的**分量**（component），记作 $\\comp_{\\vect{u}}(\\vect{v})$。向量 $\\longvect{0P}$ 称为 $\\vect{v}$ 在 $\\vect{u}$ 上的**投影**（projection），记作 $\\proj_{\\vect{u}}(\\vect{v})$。我们要求出这两个量的公式。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\theta$ be the included angle between $\\vect{v}$ and $\\vect{u}$. From trigonometry, considering the right triangle $(0,P,Q)$, we know that",
+    "sha": "8bb994ee767d",
+    "zh": "设 $\\theta$ 是 $\\vect{v}$ 与 $\\vect{u}$ 的夹角。考虑直角三角形 $(0,P,Q)$，由三角学知道"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\cos \\theta = \\frac{|0P|}{|0Q|} = \\frac{|0P|}{\\norm{\\vect{v}}},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and therefore",
+    "sha": "6cc521113306",
+    "zh": "因此"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "|0P| = \\norm{\\vect{v}} \\cos \\theta. \\tag{1}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "On the other hand, from Proposition “The dot product and the included angle”, we have",
+    "sha": "923123eea38c",
+    "zh": "另一方面，由命题“点积与夹角”，有"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vect{u}\\dotprod \\vect{v}=\\norm{\\vect{u}} \\norm{\\vect{v}} \\cos \\theta,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and therefore",
+    "sha": "6cc521113306",
+    "zh": "因此"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\norm{\\vect{v}} \\cos \\theta = \\frac{\\vect{u}\\dotprod \\vect{v}}{\\norm{\\vect{u}}}. \\tag{2}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Putting equations (1) and (2) together, we obtain the desired formula for the component of $\\vect{v}$ in the direction of $\\vect{u}$:",
+    "sha": "b167939053d1",
+    "zh": "把 (1) 式和 (2) 式合起来，就得到 $\\vect{v}$ 在 $\\vect{u}$ 方向上的分量的公式："
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\comp_{\\vect{u}}(\\vect{v})\n  = |0P|\n  = \\frac{\\vect{u}\\dotprod \\vect{v}}{\\norm{\\vect{u}}}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Note that it is possible for this quantity to be negative; this happens when the angle between $\\vect{v}$ and $\\vect{u}$ is obtuse. In this case, $\\vect{v}$ will have a negative component along $\\vect{u}$.",
+    "sha": "07738007249d",
+    "zh": "注意这个量可能为负：当 $\\vect{v}$ 与 $\\vect{u}$ 的夹角是钝角时就会这样。此时 $\\vect{v}$ 沿 $\\vect{u}$ 的分量为负。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The vector $\\proj_{\\vect{u}}(\\vect{v})=\\longvect{0P}$ can now be computed by re-scaling $\\vect{u}$ to the correct length. Specifically, we first normalize $\\vect{u}$ by dividing it by its own length, and then multiply by $|0P|$. In formulas:",
+    "sha": "2072d51badfd",
+    "zh": "接下来，把 $\\vect{u}$ 缩放到合适的长度，就能算出向量 $\\proj_{\\vect{u}}(\\vect{v})=\\longvect{0P}$。具体做法是：先把 $\\vect{u}$ 除以它自己的长度，使它单位化，再乘以 $|0P|$。写成公式就是："
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\proj_{\\vect{u}}(\\vect{v})\n  = \\longvect{0P}\n  = \\frac{|0P|}{\\norm{\\vect{u}}}\\vect{u}\n  = \\frac{\\vect{u}\\dotprod \\vect{v}}{\\norm{\\vect{u}}^2}\\,\\vect{u}\n  = \\frac{\\vect{u}\\dotprod \\vect{v}}{\\vect{u}\\dotprod \\vect{u}}\\,\\vect{u}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The following definition summarizes what we have just found.",
+    "sha": "144241033a84",
+    "zh": "下面的定义总结了我们刚刚得到的结果。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Vector projection",
+    "sha": "e576f57d8ac2",
+    "zh": "向量投影"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u}$ be a non-zero vector and $\\vect{v}$ any vector. Then the \\textbfcomponent of $\\vect{v}$ in the direction of $\\vect{u}$ is defined to be the scalar",
+      "sha": "e0b7bead909f",
+      "zh": "设 $\\vect{u}$ 是非零向量，$\\vect{v}$ 是任意向量。则 $\\vect{v}$ 在 $\\vect{u}$ 方向上的**分量**定义为标量"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\comp_{\\vect{u}}(\\vect{v})\n    = \\frac{\\vect{u}\\dotprod \\vect{v}}{\\norm{\\vect{u}}}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The \\textbfprojection of $\\vect{v}$ onto $\\vect{u}$ is defined to be the vector",
+      "sha": "5677b2dcaa6d",
+      "zh": "$\\vect{v}$ 在 $\\vect{u}$ 上的**投影**定义为向量"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\proj_{\\vect{u}}(\\vect{v}) =\n      \\frac{\\vect{u}\\dotprod \\vect{v}}{\\vect{u}\\dotprod \\vect{u}}\\, \\vect{u}\n    =\n    \\frac{\\vect{u}\\dotprod \\vect{v}}{\\norm{\\vect{u}}^2}\\,\\vect{u}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "These two operations are also called the **scalar projection** and **vector projection**, respectively.",
+      "sha": "e3b226ce1c6b",
+      "zh": "这两种运算也分别称为**标量投影**（scalar projection）和**向量投影**（vector projection）。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Find the projection of one vector onto another",
+    "sha": "0fd203e229d5",
+    "zh": "求一个向量在另一个向量上的投影"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find $\\proj_{\\vect{u}}(\\vect{v})$ if",
+      "sha": "f18444427a63",
+      "zh": "求 $\\proj_{\\vect{u}}(\\vect{v})$，其中"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}=\n    \\left[\\begin{array}{r}\n      2 \\\\\n      3 \\\\\n      -4\n    \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    \\vect{v}=\n    \\left[\\begin{array}{r}\n      1 \\\\\n      -2 \\\\\n      1\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We can use the formula provided in Definition “Vector projection” to find $\\proj_{\\vect{u}}(\\vect{v})$. First, compute $\\vect{u} \\dotprod \\vect{v}$. This is given by",
+      "sha": "e774e03ec713",
+      "zh": "我们可以用定义“向量投影”给出的公式来求 $\\proj_{\\vect{u}}(\\vect{v})$。首先计算 $\\vect{u} \\dotprod \\vect{v}$，它等于"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{r}\n      2 \\\\\n      3 \\\\\n      -4\n    \\end{array}\\right]\n    \\dotprod\n    \\left[\\begin{array}{r}\n      1 \\\\\n      -2 \\\\\n      1\n    \\end{array}\\right]\n    = (2)(1) + (3)(-2) + (-4)(1)\n    = -8."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Similarly, $\\vect{u} \\dotprod \\vect{u}$ is given by",
+      "sha": "b18909e5fcc4",
+      "zh": "同样，$\\vect{u} \\dotprod \\vect{u}$ 等于"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{r}\n       2 \\\\\n       3 \\\\\n       -4\n     \\end{array}\\right]\n     \\dotprod\n     \\left[\\begin{array}{r}\n       2 \\\\\n       3 \\\\\n       -4\n     \\end{array}\\right]\n     = 2^2 + 3^2 + (-4)^2\n     = 29."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, the projection is equal to",
+      "sha": "beb2d8b0adae",
+      "zh": "因此，投影等于"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\proj_{\\vect{u}}(\\vect{v})\n    =-\\frac{8}{29}\n        \\left[\\begin{array}{r}\n          2 \\\\\n          3 \\\\\n          -4\n        \\end{array}\\right]\n    =\n        \\left[\\begin{array}{r}\n          -16/29 \\\\\n          -24/29 \\\\\n          32/29\n        \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "An important application of projections is that every vector $\\vect{v}$ can be uniquely written as a sum of two orthogonal vectors, one of which is a scalar multiple of some given non-zero vector $\\vect{u}$, and the other of which is orthogonal to $\\vect{u}$.",
+    "sha": "74f6d13e1d9d",
+    "zh": "投影的一个重要应用是：每个向量 $\\vect{v}$ 都可以唯一地写成两个正交向量之和，其中一个是给定的非零向量 $\\vect{u}$ 的标量倍数，另一个与 $\\vect{u}$ 正交。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Decomposition into components",
+    "sha": "de68cb6471f7",
+    "zh": "分解为分量"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u}$ be a non-zero vector, and let $\\vect{v}$ be any vector. Then there exist unique vectors $\\vect{v}_{\\coll}$ and $\\vect{v}_{\\bot}$ such that",
+      "sha": "8799bb78a26e",
+      "zh": "设 $\\vect{u}$ 是非零向量，$\\vect{v}$ 是任意向量。则存在唯一的一对向量 $\\vect{v}_{\\coll}$ 与 $\\vect{v}_{\\bot}$，使得"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}=\\vect{v}_{\\coll}+\\vect{v}_{\\bot} \\tag{3}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where $\\vect{v}_{\\coll}$ is a scalar multiple of $\\vect{u}$, and $\\vect{v}_{\\bot}$ is orthogonal to $\\vect{u}$.",
+      "sha": "39f6306d0b44",
+      "zh": "其中 $\\vect{v}_{\\coll}$ 是 $\\vect{u}$ 的标量倍数，$\\vect{v}_{\\bot}$ 与 $\\vect{u}$ 正交。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "ddfd6e6c6932"
+     ],
+     "caption": null
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To show that such a decomposition exists, let",
+      "sha": "6797932c6c3d",
+      "zh": "先证这样的分解存在。令"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}_{\\coll} = \\proj_{\\vect{u}}(\\vect{v}) = \\frac{\\vect{u}\\dotprod \\vect{v}}{\\vect{u}\\dotprod \\vect{u}}\\, \\vect{u},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and define $\\vect{v}_{\\bot} = \\vect{v}-\\vect{v}_{\\coll}$. By definition, (3) is satisfied, and $\\vect{v}_{\\coll}$ is a scalar multiple of $\\vect{u}$. We must show that $\\vect{v}_{\\bot}$ is orthogonal to $\\vect{u}$. For this, we verify that their dot product equals zero:",
+      "sha": "f68949a7746e",
+      "zh": "并定义 $\\vect{v}_{\\bot} = \\vect{v}-\\vect{v}_{\\coll}$。按定义 (3) 式成立，且 $\\vect{v}_{\\coll}$ 是 $\\vect{u}$ 的标量倍数。我们还要证明 $\\vect{v}_{\\bot}$ 与 $\\vect{u}$ 正交，为此验证它们的点积等于零："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\vect{u}\\dotprod\\vect{v}_{\\bot}\n    &=& \\vect{u}\\dotprod(\\vect{v}-\\vect{v}_{\\coll}) \\\\\n    &=& \\vect{u}\\dotprod\\vect{v}-\\vect{u}\\dotprod\\vect{v}_{\\coll} \\\\\n    &=& \\vect{u}\\dotprod \\vect{v}-\\frac{\\vect{u}\\dotprod \\vect{v}}{\\vect{u}\\dotprod\\vect{u}}\\,\\vect{u}\\dotprod \\vect{u} \\\\\n    &=& \\vect{u}\\dotprod\\vect{v}-\\vect{u}\\dotprod \\vect{v} \\\\\n    &=& 0.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To show uniqueness, suppose that (3) holds and $\\vect{v}_{\\coll}= k \\vect{u}$. Taking the dot product of both sides of (3) with $\\vect{u}$ and using $\\vect{u}\\dotprod\\vect{v}_{\\bot}=0$, this yields",
+      "sha": "22a83b0bb26c",
+      "zh": "再证唯一性。设 (3) 式成立，且 $\\vect{v}_{\\coll}= k \\vect{u}$。把 (3) 式两边与 $\\vect{u}$ 做点积，并利用 $\\vect{u}\\dotprod\\vect{v}_{\\bot}=0$，得到"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{ll}\n      \\vect{u}\\dotprod \\vect{v} & = \\vect{u}\\dotprod( \\vect{v}_{\\coll}+\\vect{v}_{\\bot}) \\\\\n                                & =  \\vect{u} \\dotprod k\\vect{u} + \\vect{u}\\dotprod\\vect{v}_{\\bot} \\\\\n                                & = k \\norm{\\vect{u}}^2,\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which implies $k =\\vect{u}\\dotprod \\vect{v} / \\norm{\\vect{u}}^2$. Thus there can be no more than one such vector $\\vect{v}_{\\coll}$. Since $\\vect{v}_{\\bot}$ must equal $\\vect{v}-\\vect{v}_{\\coll}$, it follows that there can be no more than one choice for both $\\vect{v}_{\\coll}$ and $\\vect{v}_{\\bot}$, proving their uniqueness.",
+      "sha": "92757560781e",
+      "zh": "这推出 $k =\\vect{u}\\dotprod \\vect{v} / \\norm{\\vect{u}}^2$。所以这样的向量 $\\vect{v}_{\\coll}$ 至多有一个。又因为 $\\vect{v}_{\\bot}$ 必须等于 $\\vect{v}-\\vect{v}_{\\coll}$，所以 $\\vect{v}_{\\coll}$ 与 $\\vect{v}_{\\bot}$ 的取法都至多有一种，唯一性得证。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Decomposition into components",
+    "sha": "de68cb6471f7",
+    "zh": "分解为分量"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Decompose the vector $\\vect{v}$ into $\\vect{v}=\\vect{a}+\\vect{b}$ where $\\vect{a}$ is parallel to $\\vect{u}$ and $\\vect{b}$ is orthogonal to $\\vect{u}$.",
+      "sha": "8b21248d29b4",
+      "zh": "把向量 $\\vect{v}$ 分解为 $\\vect{v}=\\vect{a}+\\vect{b}$，其中 $\\vect{a}$ 与 $\\vect{u}$ 平行，$\\vect{b}$ 与 $\\vect{u}$ 正交。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v} = \\left[\\begin{array}{r} -5\\\\3\\\\-5 \\end{array}\\right],\\quad\n    \\vect{u} = \\left[\\begin{array}{r} 1\\\\2\\\\-2 \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We can let $\\vect{a}=\\vect{v}_{\\coll}$ and $\\vect{b}=\\vect{v}_{\\bot}$ as in the proof of Theorem “Decomposition into components”. Then",
+      "sha": "747a95d5c092",
+      "zh": "如定理“分解为分量”的证明那样，取 $\\vect{a}=\\vect{v}_{\\coll}$，$\\vect{b}=\\vect{v}_{\\bot}$。则"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{a} ~=~ \\vect{v}_{\\coll}\n    ~=~ \\proj_{\\vect{u}}(\\vect{v})\n    ~=~ \\frac{\\vect{u}\\dotprod \\vect{v}}{\\vect{u}\\dotprod \\vect{u}}\\, \\vect{u}\n    ~=~ \\frac{11}{9}\\, \\left[\\begin{array}{r} 1\\\\2\\\\-2 \\end{array}\\right]\n    ~=~ \\left[\\begin{array}{r} 11/9\\\\22/9\\\\-22/9 \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and",
+      "sha": "cffa50a32cb1",
+      "zh": "并且"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{b} ~=~ \\vect{v}_{\\bot}\n    ~=~ \\vect{v}-\\vect{v}_{\\coll}\n    ~=~ \\left[\\begin{array}{r} -5\\\\3\\\\-5 \\end{array}\\right]\n    - \\left[\\begin{array}{r} 11/9\\\\22/9\\\\-22/9 \\end{array}\\right]\n    ~=~ \\left[\\begin{array}{r} -56/9\\\\5/9 \\\\-23/9 \\end{array}\\right]."
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find $\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\\\ 4 \\end{array}\\right] \\dotprod \\left[\\begin{array}{r} 2 \\\\ 0 \\\\ 1 \\\\ 3 \\end{array}\\right]$.",
+      "sha": "118643d6a87f",
+      "zh": "求 $\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\\\ 4 \\end{array}\\right] \\dotprod \\left[\\begin{array}{r} 2 \\\\ 0 \\\\ 1 \\\\ 3 \\end{array}\\right]$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\\\ 4 \\end{array}\\right] \\dotprod \\left[\\begin{array}{r} 2 \\\\ 0 \\\\ 1 \\\\ 3 \\end{array}\\right] = 17$.",
+      "sha": "80c57b7acf4a",
+      "zh": "$\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\\\ 4 \\end{array}\\right] \\dotprod \\left[\\begin{array}{r} 2 \\\\ 0 \\\\ 1 \\\\ 3 \\end{array}\\right] = 17$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Projections · 习题 1（上游 exercises/Vectors-DotProduct-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-DotProduct-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{a},\\vect{b}$ be vectors. Show that $(\\vect{a}\\dotprod \\vect{b}) = \\frac{1}{4}(\\norm{\\vect{a}+\\vect{b}}^2 - \\norm{\\vect{a}-\\vect{b}}^2)$.",
+      "sha": "33059cdfca09",
+      "zh": "设 $\\vect{a},\\vect{b}$ 是向量。证明 $(\\vect{a}\\dotprod \\vect{b}) = \\frac{1}{4}(\\norm{\\vect{a}+\\vect{b}}^2 - \\norm{\\vect{a}-\\vect{b}}^2)$。"
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Projections · 习题 2（上游 exercises/Vectors-DotProduct-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-DotProduct-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Using the properties of the dot product, prove the parallelogram identity:",
+      "sha": "04ba47d4c54b",
+      "zh": "利用点积的性质，证明平行四边形恒等式："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\norm{\\vect{a}+\\vect{b}}^2+\\norm{\\vect{a}-\\vect{b}}^2\n    = 2\\norm{\\vect{a}}^2+2\\norm{\\vect{b}}^2"
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Projections · 习题 3（上游 exercises/Vectors-DotProduct-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-DotProduct-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find $\\cos \\theta$ where $\\theta$ is the angle between the vectors",
+      "sha": "f5b20050eb29",
+      "zh": "设 $\\theta$ 是下列两个向量的夹角，求 $\\cos \\theta$。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}\n    =\n    \\left[\\begin{array}{r}\n      3 \\\\\n      -1 \\\\\n      -1\n    \\end{array}\\right],\n    \\vect{v}\n    =\n    \\left[\\begin{array}{r}\n      1 \\\\\n      4 \\\\\n      2\n    \\end{array}\\right]"
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\displaystyle\\cos\\theta=\\frac{\\left[\\begin{array}{ccc} 3 & -1 & -1 \\end{array}\\right]^T \\dotprod \\left[\\begin{array}{ccc} 1 & 4 & 2 \\end{array}\\right]^T} {\\sqrt{9+1+1}\\sqrt{1+16+4}}= \\frac{-3}{\\sqrt{11}\\sqrt{21}}$.",
+      "sha": "42ae97192ec2",
+      "zh": "$\\displaystyle\\cos\\theta=\\frac{\\left[\\begin{array}{ccc} 3 & -1 & -1 \\end{array}\\right]^T \\dotprod \\left[\\begin{array}{ccc} 1 & 4 & 2 \\end{array}\\right]^T} {\\sqrt{9+1+1}\\sqrt{1+16+4}}= \\frac{-3}{\\sqrt{11}\\sqrt{21}}$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Projections · 习题 1（上游 exercises/Vectors-DotProduct-Geometric.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-DotProduct-Geometric.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find $\\cos \\theta$ where $\\theta$ is the angle between the vectors",
+      "sha": "f5b20050eb29",
+      "zh": "设 $\\theta$ 是下列两个向量的夹角，求 $\\cos \\theta$。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}\n    =\n    \\left[\\begin{array}{r}\n      1 \\\\\n      -2 \\\\\n      1\n    \\end{array}\\right],\n    \\vect{v}\n    =\n    \\left[\\begin{array}{r}\n      1 \\\\\n      2 \\\\\n      -7\n    \\end{array}\\right]"
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\displaystyle\\cos\\theta = \\frac{-10}{\\sqrt{1+4+1}\\sqrt{1+4+49}}$.",
+      "sha": "ed997573122d",
+      "zh": "$\\displaystyle\\cos\\theta = \\frac{-10}{\\sqrt{1+4+1}\\sqrt{1+4+49}}$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Projections · 习题 2（上游 exercises/Vectors-DotProduct-Geometric.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-DotProduct-Geometric.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use the formula given in Proposition “The dot product and the included angle” to verify the Cauchy Schwarz inequality and to show that equality occurs if and only if one of the vectors is a scalar multiple of the other.",
+      "sha": "7488996b8d49",
+      "zh": "利用命题“点积与夹角”给出的公式，验证柯西—施瓦茨不等式，并证明等号成立当且仅当其中一个向量是另一个向量的标量倍数。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "This formula says that $\\vect{u}\\dotprod \\vect{v}=\\norm{\\vect{u}} \\norm{\\vect{v}} \\cos \\theta$ where $\\theta$ is the included angle between the two vectors. Thus",
+      "sha": "c38fdfa2fddf",
+      "zh": "这个公式说的是 $\\vect{u}\\dotprod \\vect{v}=\\norm{\\vect{u}} \\norm{\\vect{v}} \\cos \\theta$，其中 $\\theta$ 是两个向量的夹角。因此"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\norm{\\vect{u}\\dotprod \\vect{v}} =\\norm{\\vect{u}}\n      \\norm{\\vect{v}} \\norm{\\cos \\theta} \\leq\n      \\norm{\\vect{u}} \\norm{\\vect{v}}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and equality holds if and only if $\\theta =0$ or $\\pi$. This means that the two vectors either point in the same direction or opposite directions. Hence one is a multiple of the other.",
+      "sha": "82a57101f28b",
+      "zh": "并且等号成立当且仅当 $\\theta =0$ 或 $\\pi$。这意味着两个向量方向相同或方向相反，所以其中一个是另一个的倍数。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Projections · 习题 3（上游 exercises/Vectors-DotProduct-Geometric.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-DotProduct-Geometric.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Show that the triangle with vertices $A=(2,0,-3)$, $B=(5,-2,1)$ and $C=(7,5,3)$ is a right triangle.",
+      "sha": "5f49b2fba52a",
+      "zh": "证明顶点为 $A=(2,0,-3)$、$B=(5,-2,1)$、$C=(7,5,3)$ 的三角形是直角三角形。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "This triangle has sides $\\overrightarrow{AB}$, $\\overrightarrow{BC}$, $\\overrightarrow{CA}$. The direction of the sides does not matter, since scalar multiplication preserves orthogonality.",
+      "sha": "cca2ccc868d4",
+      "zh": "这个三角形的边是 $\\overrightarrow{AB}$、$\\overrightarrow{BC}$、$\\overrightarrow{CA}$。边的方向取哪一个无关紧要，因为标量乘法不改变正交性。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}\\overrightarrow{PQ}&=(5,-2,1)-(2,0,3)=(3,-2,4), \\\\\n      \\overrightarrow{QR}&=(7,5,3)-(5,-2,1)=(2,7,2), \\\\\n      \\overrightarrow{RP}&=(2,0,-3)-(7,5,3)=(-5,-5,-6).\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If any pair of these is orthogonal then we are done:",
+      "sha": "f2fb505aaf69",
+      "zh": "只要其中有一对向量正交就证完了："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\overrightarrow{AB}\\cdot\\overrightarrow{BC}\n      =(3,-2,4)\\cdot (2,7,2)=6-14+8=0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The triangle has a right angle at $B$.",
+      "sha": "29b00f7ee987",
+      "zh": "这个三角形在 $B$ 处是直角。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Projections · 习题 1（上游 exercises/Vectors-DotProduct-Orthogonal.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-DotProduct-Orthogonal.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex8",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find $\\proj_{\\vect{v}}(\\vect{w})$ where $\\vect{w}=\\left[\\begin{array}{r} 1 \\\\ 0 \\\\ -2 \\end{array}\\right]$ and $\\vect{v}=\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\end{array}\\right]$.",
+      "sha": "5002217dbade",
+      "zh": "设 $\\vect{w}=\\left[\\begin{array}{r} 1 \\\\ 0 \\\\ -2 \\end{array}\\right]$，$\\vect{v}=\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\end{array}\\right]$，求 $\\proj_{\\vect{v}}(\\vect{w})$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\displaystyle \\def\\arraystretch{1.2} \\frac{\\vect{v}\\dotprod \\vect{w}}{\\vect{v}\\dotprod \\vect{v}}\\,\\vect{v}=\\frac{-5}{14}\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\end{array}\\right] =\\left[\\begin{array}{c} -\\frac{5}{14} \\\\ -\\frac{5}{7} \\\\ -\\frac{15}{14} \\end{array}\\right]$.",
+      "sha": "4b9e85fe0b92",
+      "zh": "$\\displaystyle \\def\\arraystretch{1.2} \\frac{\\vect{v}\\dotprod \\vect{w}}{\\vect{v}\\dotprod \\vect{v}}\\,\\vect{v}=\\frac{-5}{14}\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\end{array}\\right] =\\left[\\begin{array}{c} -\\frac{5}{14} \\\\ -\\frac{5}{7} \\\\ -\\frac{15}{14} \\end{array}\\right]$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Projections · 习题 1（上游 exercises/Vectors-DotProduct-Projections.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-DotProduct-Projections.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex9",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find $\\proj_{\\vect{v}}(\\vect{w})$ where $\\vect{w}=\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ -2 \\end{array}\\right]$ and $\\vect{v}=\\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 3 \\end{array}\\right]$.",
+      "sha": "68cba740abb0",
+      "zh": "设 $\\vect{w}=\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ -2 \\end{array}\\right]$，$\\vect{v}=\\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 3 \\end{array}\\right]$，求 $\\proj_{\\vect{v}}(\\vect{w})$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\displaystyle \\def\\arraystretch{1.2} \\frac{\\vect{v}\\dotprod \\vect{w}}{\\vect{v}\\dotprod \\vect{v}}\\,\\vect{v}=\\frac{-5}{10}\\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 3 \\end{array}\\right] =\\left[\\begin{array}{r} -\\frac{1}{2} \\\\ 0~ \\\\ -\\frac{3}{2} \\end{array}\\right]$.",
+      "sha": "6513059d5103",
+      "zh": "$\\displaystyle \\def\\arraystretch{1.2} \\frac{\\vect{v}\\dotprod \\vect{w}}{\\vect{v}\\dotprod \\vect{v}}\\,\\vect{v}=\\frac{-5}{10}\\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 3 \\end{array}\\right] =\\left[\\begin{array}{r} -\\frac{1}{2} \\\\ 0~ \\\\ -\\frac{3}{2} \\end{array}\\right]$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Projections · 习题 2（上游 exercises/Vectors-DotProduct-Projections.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-DotProduct-Projections.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex10",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find $\\proj_{\\vect{v}}(\\vect{w})$ where $\\vect{w}=\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ -2 \\\\ 1 \\end{array}\\right]$ and $\\vect{v}=\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\\\ 0 \\end{array}\\right]$.",
+      "sha": "461a5ae18743",
+      "zh": "设 $\\vect{w}=\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ -2 \\\\ 1 \\end{array}\\right]$，$\\vect{v}=\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\\\ 0 \\end{array}\\right]$，求 $\\proj_{\\vect{v}}(\\vect{w})$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\displaystyle \\def\\arraystretch{1.2} \\frac{\\vect{v}\\dotprod \\vect{w}}{\\vect{v}\\dotprod \\vect{v}}\\,\\vect{v}=\\frac{\\left[\\begin{array}{cccc} 1 & 2 & 3 & 0 \\end{array}\\right]^T \\dotprod \\left[\\begin{array}{cccc} 1 & 2 & -2 & 1 \\end{array}\\right]^T}{1+4+9}\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\\\ 0 \\end{array}\\right] =\\left[\\begin{array}{r} -\\frac{1}{14} \\\\ -\\frac{2}{14} \\\\ -\\frac{3}{14} \\\\ 0~ \\end{array}\\right]$.",
+      "sha": "c0dee82da142",
+      "zh": "$\\displaystyle \\def\\arraystretch{1.2} \\frac{\\vect{v}\\dotprod \\vect{w}}{\\vect{v}\\dotprod \\vect{v}}\\,\\vect{v}=\\frac{\\left[\\begin{array}{cccc} 1 & 2 & 3 & 0 \\end{array}\\right]^T \\dotprod \\left[\\begin{array}{cccc} 1 & 2 & -2 & 1 \\end{array}\\right]^T}{1+4+9}\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\\\ 0 \\end{array}\\right] =\\left[\\begin{array}{r} -\\frac{1}{14} \\\\ -\\frac{2}{14} \\\\ -\\frac{3}{14} \\\\ 0~ \\end{array}\\right]$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Projections · 习题 3（上游 exercises/Vectors-DotProduct-Projections.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-DotProduct-Projections.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex11",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find $\\comp_{\\vect{v}}(\\vect{w})$ where $\\vect{w}=\\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 2 \\end{array}\\right]$ and $\\vect{v}=\\left[\\begin{array}{r} 0 \\\\ 3 \\\\ 3 \\end{array}\\right]$.",
+      "sha": "239fece99e95",
+      "zh": "设 $\\vect{w}=\\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 2 \\end{array}\\right]$，$\\vect{v}=\\left[\\begin{array}{r} 0 \\\\ 3 \\\\ 3 \\end{array}\\right]$，求 $\\comp_{\\vect{v}}(\\vect{w})$。"
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Projections · 习题 4（上游 exercises/Vectors-DotProduct-Projections.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-DotProduct-Projections.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex12",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find $\\comp_{\\vect{v}}(\\vect{w})$ where $\\vect{w}=\\left[\\begin{array}{r} 1 \\\\ -1 \\\\ 0 \\end{array}\\right]$ and $\\vect{v}=\\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 2 \\end{array}\\right]$.",
+      "sha": "7e30f2ffad27",
+      "zh": "设 $\\vect{w}=\\left[\\begin{array}{r} 1 \\\\ -1 \\\\ 0 \\end{array}\\right]$，$\\vect{v}=\\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 2 \\end{array}\\right]$，求 $\\comp_{\\vect{v}}(\\vect{w})$。"
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Projections · 习题 5（上游 exercises/Vectors-DotProduct-Projections.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-DotProduct-Projections.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex13",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Does it make sense to speak of $\\proj_{\\vect{0}}(\\vect{w})$?",
+      "sha": "3f4995a6c49b",
+      "zh": "谈论 $\\proj_{\\vect{0}}(\\vect{w})$ 有意义吗？"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "No, it does not. The vector $\\vect{0}$ has no direction. The formula for $\\proj_{\\vect{0}}(\\vect{w})$ doesn't make sense either.",
+      "sha": "c4ee13a7857e",
+      "zh": "没有意义。零向量 $\\vect{0}$ 没有方向，$\\proj_{\\vect{0}}(\\vect{w})$ 的公式也没有意义。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Projections · 习题 6（上游 exercises/Vectors-DotProduct-Projections.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-DotProduct-Projections.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex14",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Decompose the vector $\\vect{v}$ into $\\vect{v}=\\vect{a}+\\vect{b}$ where $\\vect{a}$ is parallel to $\\vect{u}$ and $\\vect{b}$ is orthogonal to $\\vect{u}$.",
+      "sha": "8b21248d29b4",
+      "zh": "把向量 $\\vect{v}$ 分解为 $\\vect{v}=\\vect{a}+\\vect{b}$，其中 $\\vect{a}$ 与 $\\vect{u}$ 平行，$\\vect{b}$ 与 $\\vect{u}$ 正交。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v} = \\left[\\begin{array}{r} 3\\\\2\\\\-5 \\end{array}\\right],\\quad\n    \\vect{u} = \\left[\\begin{array}{r} 1\\\\-1\\\\2 \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "math",
+     "tex": "\\vect{a} ~=~ \\left[\\begin{array}{c} -3/2\\\\3/2\\\\-3 \\end{array}\\right],\\quad\n      \\vect{b} ~=~ \\left[\\begin{array}{c} 9/2\\\\1/2\\\\-2 \\end{array}\\right]."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Projections · 习题 7（上游 exercises/Vectors-DotProduct-Projections.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-DotProduct-Projections.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex15",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Prove the Cauchy Schwarz inequality in $\\R^n$ as follows. For $\\vect{u},\\vect{v}$ vectors, consider",
+      "sha": "7eae5ade37f1",
+      "zh": "按下面的方法证明 $\\R^n$ 中的柯西—施瓦茨不等式。对向量 $\\vect{u},\\vect{v}$，考虑"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(\\vect{u}-\n    \\proj_{\\vect{v}}(\\vect{u})) \\dotprod (\\vect{u}-\n    \\proj_{\\vect{v}}(\\vect{u})) \\geq 0"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Simplify using the axioms of the dot product and then put in the formula for the projection. Notice that this expression equals $0$ and you get equality in the Cauchy Schwarz inequality if and only if $\\vect{u}=\\proj_{\\vect{v}}(\\vect{u})$. What is the geometric meaning of $\\vect{u}=\\proj_{\\vect{v}}(\\vect{u})$?",
+      "sha": "4cf23ae4676b",
+      "zh": "利用点积的公理化简，然后代入投影公式。注意这个表达式等于 $0$，并且柯西—施瓦茨不等式取等号当且仅当 $\\vect{u}=\\proj_{\\vect{v}}(\\vect{u})$。$\\vect{u}=\\proj_{\\vect{v}}(\\vect{u})$ 的几何意义是什么？"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "math",
+     "tex": "\\paren{\\vect{u}-\\frac{\\vect{v}\\dotprod\\vect{u}}{\\norm{\\vect{v}}^2}\\,\\vect{v}}\n      \\dotprod\n      \\paren{\\vect{u}-\\frac{\\vect{v}\\dotprod\\vect{u}}{\\norm{\\vect{v}}^2}\\,\\vect{v}}\n      = \\norm{\\vect{u}}^2 - 2(\\vect{v}\\dotprod \\vect{u})^2\\frac{1}{\\norm{\\vect{v}}^2}+(\\vect{v}\\dotprod \\vect{u})^2\\frac{1}{\\norm{\\vect{v}}^2}\n      \\geq 0,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so",
+      "sha": "9af790b3a93d",
+      "zh": "所以"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\norm{\\vect{u}}^2\\norm{\\vect{v}}^2\n      \\geq (\\vect{v}\\dotprod \\vect{u})^2."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We get equality exactly when $\\displaystyle\\vect{u}=\\proj_{\\vect{v}}(\\vect{u}) = \\frac{\\vect{v}\\dotprod \\vect{u}}{\\norm{\\vect{v}}^2}\\,\\vect{v}$, or in other words, when $\\vect{u}$ is a multiple of $\\vect{v}$.",
+      "sha": "e079cd5b4842",
+      "zh": "恰好在 $\\displaystyle\\vect{u}=\\proj_{\\vect{v}}(\\vect{u}) = \\frac{\\vect{v}\\dotprod \\vect{u}}{\\norm{\\vect{v}}^2}\\,\\vect{v}$ 时取等号，换句话说，恰好在 $\\vect{u}$ 是 $\\vect{v}$ 的倍数时取等号。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Projections · 习题 8（上游 exercises/Vectors-DotProduct-Projections.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-DotProduct-Projections.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex16",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{v},\\vect{w}$ $\\vect{u}$ be vectors. Show that $(\\vect{w}+\\vect{u})_{\\perp}=\\vect{w}_{\\perp}+\\vect{u}_{\\perp}$, where $\\vect{w}_{\\perp}=\\vect{w}-\\proj_{\\vect{v}}(\\vect{w})$.",
+      "sha": "eda835913d05",
+      "zh": "设 $\\vect{v},\\vect{w}$ $\\vect{u}$ 是向量。证明 $(\\vect{w}+\\vect{u})_{\\perp}=\\vect{w}_{\\perp}+\\vect{u}_{\\perp}$，其中 $\\vect{w}_{\\perp}=\\vect{w}-\\proj_{\\vect{v}}(\\vect{w})$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\vect{w}-\\proj_{\\vect{v}}(\\vect{w})+\\vect{u}-\\proj_{\\vect{v}}(\\vect{u})\n      &=& \\vect{w}+\\vect{u}-(\\proj_{\\vect{v}}(\\vect{w})+\\proj_{\\vect{v}}(\\vect{u})) \\\\\n      &=&\\vect{w}+\\vect{u}-\\proj_{\\vect{v}}(\\vect{w}+\\vect{u}).\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This follows because",
+      "sha": "041a82a30f3f",
+      "zh": "这是因为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\proj_{\\vect{v}}(\\vect{w})+\\proj_{\\vect{v}}(\\vect{u})\n      &=& \\frac{\\vect{v}\\dotprod\\vect{w}}{\\norm{\\vect{v}}^2}\\vect{v}\n          + \\frac{\\vect{v}\\dotprod\\vect{u}}{\\norm{\\vect{v}}^2}\\vect{v} \\\\\n      &=& \\frac{\\vect{v}\\dotprod(\\vect{w}+\\vect{u})}{\\norm{\\vect{v}}^2}\\vect{v} \\\\\n      &=& \\proj_{\\vect{v}}(\\vect{w}+\\vect{u}).\\end{array}"
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Projections · 习题 9（上游 exercises/Vectors-DotProduct-Projections.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-DotProduct-Projections.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex17",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Show that",
+      "sha": "c4819341faea",
+      "zh": "证明"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}\\dotprod(\\vect{v}-\\proj_{\\vect{u}}(\\vect{v}))=0"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and conclude every vector in $\\R^n$ can be written as the sum of two vectors, one which is orthogonal and one which is parallel to the given vector.",
+      "sha": "30969f2ffd5e",
+      "zh": "并由此得出：$\\R^n$ 中每个向量都可以写成两个向量之和，其中一个与给定向量正交，另一个与给定向量平行。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\displaystyle\\vect{u}\\dotprod(\\vect{v}-\\proj_{\\vect{u}}(\\vect{v})) = \\vect{u} \\dotprod \\vect{v}-\\frac{\\vect{u}\\cdot\\vect{v}}{\\norm{\\vect{u}}^2}\\vect{u}\\dotprod\\vect{u} = \\vect{u} \\dotprod \\vect{v} - \\vect{u} \\dotprod \\vect{v} =0$. Therefore, we can write $\\vect{v} = (\\vect{v} - \\proj_{\\vect{u}}(\\vect{v})) + \\proj_{\\vect{u}}(\\vect{v})$. The first is orthogonal to $\\vect{u}$ and the second is a multiple of $\\vect{u}$ so is parallel to $\\vect{u}$.",
+      "sha": "7711562a2b50",
+      "zh": "$\\displaystyle\\vect{u}\\dotprod(\\vect{v}-\\proj_{\\vect{u}}(\\vect{v})) = \\vect{u} \\dotprod \\vect{v}-\\frac{\\vect{u}\\cdot\\vect{v}}{\\norm{\\vect{u}}^2}\\vect{u}\\dotprod\\vect{u} = \\vect{u} \\dotprod \\vect{v} - \\vect{u} \\dotprod \\vect{v} =0$。因此可以写成 $\\vect{v} = (\\vect{v} - \\proj_{\\vect{u}}(\\vect{v})) + \\proj_{\\vect{u}}(\\vect{v})$。前一项与 $\\vect{u}$ 正交，后一项是 $\\vect{u}$ 的倍数，因而与 $\\vect{u}$ 平行。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Projections · 习题 10（上游 exercises/Vectors-DotProduct-Projections.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-DotProduct-Projections.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "投影"
+}

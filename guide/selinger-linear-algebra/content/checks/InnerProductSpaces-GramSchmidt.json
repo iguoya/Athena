@@ -1,0 +1,89 @@
+{
+  "ex1": {
+    "kind": "numbers",
+    "ask": "$\\mathbf u_1$ 取第一个向量，按 Gram–Schmidt 公式（不做缩放、不取单位化），依次写出 $\\mathbf u_2$ 的三个分量。",
+    "answer": [
+      1.0,
+      4.0,
+      -3.0
+    ],
+    "hint": "$\\mathbf u_2=\\mathbf v_2-\\dfrac{\\langle\\mathbf v_2,\\mathbf u_1\\rangle}{\\langle\\mathbf u_1,\\mathbf u_1\\rangle}\\mathbf u_1$。"
+  },
+  "ex2": {
+    "kind": "numbers",
+    "ask": "$\\mathbf u_1$ 取第一个向量，按 Gram–Schmidt 公式（不做缩放、不取单位化），依次写出 $\\mathbf u_2$ 的四个分量。",
+    "answer": [
+      3.0,
+      -1.0,
+      1.0,
+      -1.0
+    ],
+    "hint": "$\\mathbf u_2=\\mathbf v_2-\\dfrac{\\langle\\mathbf v_2,\\mathbf u_1\\rangle}{\\langle\\mathbf u_1,\\mathbf u_1\\rangle}\\mathbf u_1$。"
+  },
+  "ex3": {
+    "kind": "numbers",
+    "ask": "按 Gram–Schmidt 公式（$\\mathbf u_1$ 取第一个向量，不缩放），依次写出 $\\mathbf u_2$ 的四个分量和 $\\mathbf u_3$ 的四个分量，共 8 个数。",
+    "answer": [
+      0.0,
+      3.0,
+      0.0,
+      -1.0,
+      0.0,
+      1.0,
+      0.0,
+      3.0
+    ],
+    "hint": "$\\mathbf u_3$ 要同时减去 $\\mathbf v_3$ 在 $\\mathbf u_1$、$\\mathbf u_2$ 上的投影；注意 $\\mathbf u_2$ 要用已经算出的那个，不是 $\\mathbf v_2$。"
+  },
+  "ex4": {
+    "kind": "numbers",
+    "ask": "按 Gram–Schmidt 公式（$\\mathbf u_1=\\mathbf v_1$，不缩放），依次写出 $\\mathbf u_2$ 的三个分量和 $\\mathbf u_3$ 的三个分量，共 6 个数。",
+    "answer": [
+      1.0,
+      1.0,
+      -1.0,
+      -1.0,
+      1.0,
+      0.0
+    ],
+    "hint": "内积是 $\\mathbf v^TA\\mathbf w$，投影公式里的分子分母都要用它，不是普通点积。"
+  },
+  "ex5": {
+    "kind": "numbers",
+    "ask": "按 Gram–Schmidt 公式（$\\mathbf u_1=\\mathbf v_1$，不缩放），依次写出 $\\mathbf u_2$ 的四个分量和 $\\mathbf u_3$ 的四个分量，共 8 个数。",
+    "answer": [
+      1.0,
+      1.0,
+      -1.0,
+      1.0,
+      -1.0,
+      1.0,
+      1.0,
+      0.0
+    ],
+    "hint": "内积是 $\\mathbf v^TA\\mathbf w$，投影公式里的分子分母都要用它；先算 $A\\mathbf u_i$ 可以省不少事。"
+  },
+  "ex6": {
+    "kind": "numbers",
+    "ask": "按 Gram–Schmidt 公式（$\\mathbf u_1=1$，$\\mathbf u_2$ 由 $x$ 得到，不缩放），把 $\\mathbf u_3$ 写成 $c_0+c_1x+c_2x^2$，依次写出 $c_0,c_1,c_2$。",
+    "answer": [
+      0.6666666666666666,
+      -2.0,
+      1.0
+    ],
+    "hint": "内积是 $\\int_0^2 fg\\,dx$（注意上限是 2）；$\\mathbf u_3=x^2-\\dfrac{\\langle x^2,u_1\\rangle}{\\langle u_1,u_1\\rangle}u_1-\\dfrac{\\langle x^2,u_2\\rangle}{\\langle u_2,u_2\\rangle}u_2$。"
+  },
+  "ex7": {
+    "kind": "numbers",
+    "ask": "这里的子空间即第 1 题的 $\\mathrm{span}\\{(1,2,3)^T,(2,6,0)^T\\}$。取第 1 题得到的正交基 $\\mathbf u_1=(1,2,3)^T$、$\\mathbf u_2=(1,4,-3)^T$ 各自单位化（方向不变，不改符号），依次写出两个单位向量共 6 个分量。",
+    "answer": [
+      0.2672612419124244,
+      0.5345224838248488,
+      0.8017837257372732,
+      0.19611613513818404,
+      0.7844645405527362,
+      -0.5883484054145521
+    ],
+    "hint": "单位化就是除以各自的长度 $\\|\\mathbf u_i\\|$。"
+  }
+}

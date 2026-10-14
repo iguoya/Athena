@@ -1,0 +1,32 @@
+\begin{tikzpicture}[baseline = (current bounding box.north)]
+				\begin{axis}[
+					anchor=origin,
+					disabledatascaling,
+					xmin=-5,xmax=1,
+					ymin=-6,ymax=8,
+					xtick={-5,...,1},
+					ytick={-6,-4,-2,0,2,4,6,8},
+					x=1cm,y=0.5cm,
+					grid=both,
+					grid style={line width=.1pt, draw=gray!10},
+					axis lines=middle,
+					minor tick num=0,
+					enlargelimits={abs=0.5},
+					axis line style={latex-latex},
+					ticklabel style={font=\tiny,fill=white},
+					xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+					ylabel style={at={(ticklabel* cs:1)},anchor=south west}
+				]
+					\coordinate (P) at (-2,0);
+					\coordinate (Q) at (0,-2);
+					\coordinate (U) at (1,4);
+					\coordinate (V) at (-5,8);
+					\coordinate (W) at (-2,-6);
+					\fill [mygreen, opacity=.3] (U) -- (V) -- (W) -- cycle;
+					\fill [mypink] (P) circle[radius=2pt] node [above, yshift=1pt] {$P$};
+					\fill [mypink] (Q) circle[radius=2pt] node [right, xshift=1pt] {$Q$};
+					\fill [black] (U) circle[radius=2pt] node [above, yshift=1pt] {$\vec u$};
+					\fill [black] (V) circle[radius=2pt] node [below left] {$\vec v$};
+					\fill [black] (W) circle[radius=2pt] node [left, xshift=-1pt] {$\vec w$};
+				\end{axis}
+			\end{tikzpicture}

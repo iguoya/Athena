@@ -1,0 +1,178 @@
+[
+  {
+    "id": "ex1",
+    "stem": "多项式 $p(x)=2x^3-3x+1$ 要用系数向量表示。先预测下面四个向量里哪一个对应 $p$，再用 `polyval (c, 2)` 逐个验证（$p(2)=11$）：\n\n```octave\nc1 = [2 -3 1];\nc2 = [1 -3 0 2];\nc3 = [2 0 -3 1];\nc4 = [2 -3 0 1];\nfor c = {c1, c2, c3, c4}\n  disp (polyval (c{1}, 2))\nendfor\n```\n\n哪一个向量是 $p$ 的系数向量？",
+    "check": {
+      "kind": "choice",
+      "options": [
+        {
+          "text": "`c1 = [2 -3 1]`",
+          "ok": false,
+          "why": "这是 $2x^2-3x+1$：缺的 $x^2$ 项没有用 0 占位，每个系数都向右错了一位。`polyval (c1, 2)` 得 3。"
+        },
+        {
+          "text": "`c2 = [1 -3 0 2]`",
+          "ok": false,
+          "why": "这是升幂写法（常数项在前），把顺序整个颠倒了；Octave 要求降幂。`polyval (c2, 2)` 得 -2，对应的是 $x^3-3x^2+2$。"
+        },
+        {
+          "text": "`c3 = [2 0 -3 1]`",
+          "ok": true,
+          "why": "降幂排列，缺的 $x^2$ 项用 0 占位：$2x^3+0x^2-3x+1$，`polyval (c3, 2)` 得 11。"
+        },
+        {
+          "text": "`c4 = [2 -3 0 1]`",
+          "ok": false,
+          "why": "位置对了一半：0 放在了 $x$ 项的位置，对应 $2x^3-3x^2+1$，`polyval (c4, 2)` 得 5。"
+        }
+      ]
+    },
+    "sol": "系数向量按降幂排列，长度是 次数 $+1$，没有的项必须用 0 占位，否则后面的系数会整体移位。\n\n```octave\n>> polyval ([2 -3 1], 2)\nans = 3\n>> polyval ([1 -3 0 2], 2)\nans = -2\n>> polyval ([2 0 -3 1], 2)\nans = 11\n>> polyval ([2 -3 0 1], 2)\nans = 5\n```\n\n只有 `c3` 给出 11。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "poly · 多项式的表示 · polyval",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex2",
+    "stem": "矩阵 $A$ 的特征多项式是 $\\det(\\lambda I-A)$，`poly (A)` 返回它的系数。先预测，再运行：\n\n```octave\nA = [2 1 0; 1 2 1; 0 1 2];\nc = poly (A)\nr = sort (roots (c))\n```\n\n依次写出 `c` 的 4 个系数，再写出排序后的 3 个根（共 7 个数）。",
+    "check": {
+      "kind": "numbers",
+      "ask": "先写 `c` 的 4 个系数（降幂），再写 `sort (roots (c))` 的 3 个根（从小到大），共 7 个数。",
+      "answer": [
+        1.0,
+        -6.0,
+        10.0,
+        -4.0,
+        0.5857864376269049,
+        2.0,
+        3.414213562373095
+      ],
+      "hint": "首项系数是 1；次高项系数等于 $-\\operatorname{tr}A$，常数项等于 $(-1)^n\\det A$。`roots` 求的是 `c` 对应多项式的零点，它们和 $A$ 的特征值有什么关系？"
+    },
+    "verify": "A = [2 1 0; 1 2 1; 0 1 2]; c = poly (A); result = [c, sort(roots (c))']",
+    "sol": "`poly (A)` 给出 $\\lambda^3-6\\lambda^2+10\\lambda-4$：$-6=-\\operatorname{tr}A$，$-4=-\\det A$。`roots` 求这个多项式的零点，就是 $A$ 的特征值 $2-\\sqrt2,\\ 2,\\ 2+\\sqrt2$。`roots` 本身不保证顺序，所以先 `sort`。\n\n```octave\n>> c = poly (A)\nc =\n\n    1   -6   10   -4\n\n>> r = sort (roots (c))\nr =\n\n   0.5858\n   2.0000\n   3.4142\n```\n\n`eig (A)` 给出同样的三个数。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "poly · 多项式的根 · poly / roots",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex3",
+    "stem": "多项式除法：把 $x^3-5x^2+6x+2$ 除以 $x-2$。先手算商和余式，再运行：\n\n```octave\ny = [1 -5 6 2];\na = [1 -2];\n[b, r] = deconv (y, a)\nconv (a, b) + r\n```\n\n把 `b` 的 3 个元素和 `r` 的 4 个元素依次写出（共 7 个数）。",
+    "check": {
+      "kind": "numbers",
+      "ask": "先写 `b` 的 3 个元素，再写 `r` 的 4 个元素，共 7 个数。",
+      "answer": [
+        1.0,
+        -3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.0
+      ],
+      "hint": "回忆长除法。注意 `deconv` 返回的余式 `r` 和 `y` 一样长，前面补了 0。"
+    },
+    "verify": "y = [1 -5 6 2]; a = [1 -2]; [b, r] = deconv (y, a); result = [b, r]",
+    "sol": "长除法：$x^3-5x^2+6x+2=(x-2)(x^2-3x)+2$，商是 $x^2-3x$，即 `[1 -3 0]`，余式是常数 2。`deconv` 把余式补成与 `y` 等长的 `[0 0 0 2]`，所以 `conv (a, b) + r` 正好还原 `y`。\n\n```octave\n>> [b, r] = deconv (y, a)\nb =\n\n   1  -3   0\n\nr =\n\n   0   0   0   2\n\n>> conv (a, b) + r\nans =\n\n   1  -5   6   2\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "poly · 多项式的乘积 · conv / deconv",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex4",
+    "stem": "先预测，再运行：\n\n```octave\nq = polyint ([3 2 1])\nd = polyder ([3 2 1])\n```\n\n`polyint ([3 2 1])` 返回的是哪一个向量？",
+    "check": {
+      "kind": "choice",
+      "options": [
+        {
+          "text": "`[6 2]`",
+          "ok": false,
+          "why": "这是 `polyder ([3 2 1])`，即导数 $6x+2$ 的系数。`polyint` 做的是反方向的运算。"
+        },
+        {
+          "text": "`[1 1 1]`",
+          "ok": false,
+          "why": "每一项的系数确实按 $3/3,\\ 2/2,\\ 1/1$ 处理了，但漏掉了积分后多出来的一项：次数升高一次，向量必须长一位，末尾是积分常数。"
+        },
+        {
+          "text": "`[0 1 1 1]`",
+          "ok": false,
+          "why": "积分常数是常数项，在降幂向量的末尾而不是开头；放在开头等于把 $x^3$ 项的系数设成 0。"
+        },
+        {
+          "text": "`[1 1 1 0]`",
+          "ok": true,
+          "why": "$\\int(3x^2+2x+1)\\,dx=x^3+x^2+x+C$，`polyint` 默认 $C=0$，所以末尾补一个 0；`polyint (p, k)` 可以指定 $C=k$。"
+        }
+      ]
+    },
+    "sol": "积分后次数升一，向量长度加一；积分常数默认 0，放在末尾（常数项的位置）。\n\n```octave\n>> polyint ([3 2 1])\nans =\n\n   1   1   1   0\n\n>> polyder ([3 2 1])\nans =\n\n   6   2\n\n>> polyint ([3 2 1], 4)\nans =\n\n   1   1   1   4\n```\n\n`polyder (polyint (p))` 会还原 `p`：`polyder ([1 1 1 0])` 得 `[3 2 1]`。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "poly · 导数与积分 · polyint / polyder",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex5",
+    "stem": "下面的数据恰好落在抛物线 $y=2x^2-3x+1$ 上。先预测，再运行：\n\n```octave\nx = -1:3;\ny = 2*x.^2 - 3*x + 1;\np2 = polyfit (x, y, 2)\np1 = polyfit (x, y, 1)\n[polyval(p2, 6), polyval(p1, 6)]\n```\n\n最后一行的两个数分别是多少？",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写出二次拟合与一次拟合在 $x=6$ 处的值。",
+      "answer": [
+        55.0,
+        9.0
+      ],
+      "hint": "数据精确落在二次曲线上，二次拟合会找回原来的系数；一次拟合是最小二乘直线，先看 `p1` 的两个系数再代入。"
+    },
+    "verify": "x = -1:3; y = 2*x.^2 - 3*x + 1; p2 = polyfit (x, y, 2); p1 = polyfit (x, y, 1); result = [polyval(p2, 6), polyval(p1, 6)]",
+    "sol": "二次拟合找回 $2x^2-3x+1$，在 6 处是 $72-18+1=55$。一次拟合得到最小二乘直线 $y=x+3$（斜率 $=\\sum(x-\\bar x)(y-\\bar y)/\\sum(x-\\bar x)^2=10/10$，截距 $=\\bar y-\\bar x=4-1$），在 6 处是 9，与真实值 55 差得很远：拟合次数低于数据的真实次数时，外推尤其不可靠。\n\n```octave\n>> p2 = polyfit (x, y, 2)\np2 =\n\n   2  -3   1\n\n>> p1 = polyfit (x, y, 1)\np1 =\n\n   1   3\n\n>> [polyval(p2, 6), polyval(p1, 6)]\nans =\n\n   55    9\n```\n\n不同机器上 `p2` 的元素可能带有 1e-15 量级的舍入误差，`polyval` 的结果可能显示成 `55.000`，这是正常的。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "poly · 多项式插值 · polyfit",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex6",
+    "stem": "部分分式展开是高数里积分有理函数的基本工具。先手算 $\\dfrac{s^3+1}{s^2+3s+2}$ 的展开，再运行：\n\n```octave\nb = [1 0 0 1];\na = [1 3 2];\n[r, p, k, e] = residue (b, a)\n```\n\n把 `r` 的 2 个元素、`p` 的 2 个元素、`k` 的 2 个元素依次写出（共 6 个数）。",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写出 `r`（2 个）、`p`（2 个）、`k`（2 个），共 6 个数。",
+      "answer": [
+        7.0,
+        0.0,
+        -2.0,
+        -1.0,
+        1.0,
+        -3.0
+      ],
+      "hint": "分子次数高于分母，先做多项式除法得到整式部分 `k`；余下的真分式按分母的根 `p` 展开，`r(i)` 对应 `p(i)`。"
+    },
+    "verify": "b = [1 0 0 1]; a = [1 3 2]; [r, p, k, e] = residue (b, a); result = [r(:); p(:); k(:)]",
+    "sol": "分母 $(s+1)(s+2)$，极点 `p = [-2; -1]`。分子 $s^3+1=(s+1)(s^2-s+1)$ 含因子 $s+1$，约去后 $\\dfrac{s^2-s+1}{s+2}=s-3+\\dfrac{7}{s+2}$。所以整式部分 `k = [1 -3]`，$s=-2$ 处留数 7，而 $s=-1$ 处留数 0（被分子约掉了）。`r(i)` 与 `p(i)` 按下标一一对应。\n\n```octave\n>> [r, p, k, e] = residue (b, a)\nr =\n\n   7\n   0\n\np =\n\n  -2\n  -1\n\nk =\n\n   1  -3\n\ne =\n\n   1\n   1\n```\n\n`[b2, a2] = residue (r, p, k)` 可以把结果合回分式。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "poly · 多项式的乘积 · residue",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  }
+]

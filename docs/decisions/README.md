@@ -155,3 +155,6 @@
 | [0155](0155-progress-local-first-sync-to-router.md) | 学习进度本地优先、不进 git：本地库放用户数据目录，启动器外置同步代理在能连路由器时推拉到 PG（通用 JSONB 接口、按表声明合并规则），同步对使用者透明；一次全迁，确认中心收到前不撤库出 git | 已接受；修订 0053、0067 决策 2；推广 0067~0070 |
 | [0160](0160-append-tombstones.md) | 事件表用墓碑表达删除：只标记、不实质删除，原数据保留；墓碑单向幂等，事件表整张为空时不推断全删 | 已接受（补充 0155 决策 5） |
 | [0161](0161-shared-course-shell-crate.md) | 课程应用的 Tauri 壳收成一个共用 crate `athena-course-shell`：六个应用只传名字配置，顺手收紧案例路径校验与 -pthread | 已接受（局部修订 0132） |
+| [0162](0162-linear-algebra-books-in-guide.md) | 线性代数手册类教程：Selinger、Siefken 两本书各一个 `guide/` 应用，按考纲裁剪、互不干扰便于对比；跟随原书、内容与习题并存；新开「数学」圈 | 已接受（沿用 0143，增补 0148 的 group 取值） |
+| [0163](0163-math-tool-tutorials-in-guide.md) | 数学工具教程：一本书或一门课对应一个 `guide/` 应用；只做 GitHub 上能逐字入库的源，首批 Octave 官方手册（裁剪）与 SymPy 官方教程；示例用真工具复跑、练习自编并经工具核对；GeoGebra 与 Lachniet 小册拿不到，如实写明 | 已接受（沿用 0143、0162） |
+| [0164](0164-cloud-limits-handoff-and-content-thickness.md) | 云会话做不到的事统一记进 docs/HANDOFF.md（现状、原因、接手步骤、验收）；新应用内容前期要薄（基础/进阶两层，默认折叠进阶）；数学工具多本好书就一本一个应用；阶段性成果及时合并主分支 | 已接受（补充 0162、0163） |

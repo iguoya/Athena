@@ -1,0 +1,268 @@
+[
+ {
+  "id": "ex1",
+  "stem": "先预测，再运行：\n\n```octave\nA = [2 -1 0; -1 2 -1; 0 -1 2];\ndet (A)\ndet (2*A)\n```\n\n$A$ 是 3 阶矩阵。写出这两个结果。提示：把整个 $A$ 乘以 2，每一行都乘了 2。",
+  "check": {
+   "kind": "numbers",
+   "ask": "依次写出 det (A) 与 det (2*A) 两个数。",
+   "answer": [
+    4.0,
+    32.0
+   ],
+   "hint": "行列式对每一行都是线性的：整个矩阵乘 $k$，每行各提出一个 $k$，共提出 $n$ 次。回头看 $\\det(kA)$ 与阶数 $n$ 的关系；$\\det A$ 可以用按第一行展开手算。"
+  },
+  "verify": "A = [2 -1 0; -1 2 -1; 0 -1 2]; result = [det(A), det(2*A)];",
+  "sol": "按第一行展开：$\\det A = 2(4-1) - (-1)(-2-0) = 6-2 = 4$。整个矩阵乘 2，三行各提出一个 2，所以 $\\det(2A)=2^3\\det A=32$（而不是 $2\\times 4$）。\n\n```octave\n>> det (A)\nans = 4.0000\n>> det (2*A)\nans = 32.000\n```\n\n注意显示 `4.0000` 而不是 `4`：`det` 经过浮点 LU 分解，结果是 3.9999999999999991，与 4 差一个舍入误差，所以不要用 `det (A) == 4` 做判断。",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "linalg · det",
+    "note": "自编，答案由 Octave 8.4 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex2",
+  "stem": "先预测，再运行：\n\n```octave\nB = [1 2; 2 4];\nX = inv (B)\n```\n\n第二行是第一行的 2 倍，$\\det B = 0$，$B$ 没有逆。Octave 对这种情形会怎么做？",
+  "check": {
+   "kind": "choice",
+   "ask": "选出 `inv (B)` 实际发生的事。",
+   "options": [
+    {
+     "text": "报错并中止，不返回任何结果，因为奇异矩阵没有逆。",
+     "ok": false,
+     "why": "这是 MATLAB 之外的常见想象。Octave 的 `inv` 对奇异矩阵只发警告，语句照常执行，变量 `X` 也被赋了值。"
+    },
+    {
+     "text": "打印 `warning: matrix singular to machine precision`，并返回全是 `Inf` 的矩阵。",
+     "ok": true,
+     "why": "正确。警告之后返回的是各元素为 `Inf` 的矩阵，程序继续往下走；所以不能指望异常来拦住奇异矩阵。"
+    },
+    {
+     "text": "返回 Moore-Penrose 伪逆 `pinv (B)`，不打印任何东西。",
+     "ok": false,
+     "why": "`inv` 与 `pinv` 是两个函数。`pinv (B)` 对奇异矩阵有有限结果，而 `inv (B)` 给出的是 `Inf`。"
+    },
+    {
+     "text": "返回全零矩阵，并打印 `X = 0`。",
+     "ok": false,
+     "why": "零矩阵不会满足任何逆的性质，Octave 也没有这样的约定；实际返回的元素是 `Inf`。"
+    }
+   ]
+  },
+  "sol": "$B$ 的两行成比例，秩为 1，不可逆。Octave 在 LAPACK 的 LU 分解里发现零主元，给出警告并把结果填成 `Inf`：\n\n```octave\n>> X = inv (B)\nwarning: matrix singular to machine precision\nX =\n\n   Inf   Inf\n   Inf   Inf\n\n>> [X, r] = inv (B)\nX =\n\n   Inf   Inf\n   Inf   Inf\n\nr = 0\n```\n\n带第二个输出 `rcond` 时不再警告，直接把倒条件数 `r = 0` 交给你判断。写程序时用这个 `rcond`（或 `rank`、`cond`）判奇异。",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "linalg · inv",
+    "note": "自编，答案由 Octave 8.4 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex3",
+  "stem": "解线性方程组 $Ax=b$，先预测，再运行：\n\n```octave\nA = [2 1 1; 1 3 2; 1 0 0];\nb = [4; 5; 6];\nx = A \\ b\nnorm (A*x - b) < 1e-10\n```\n\n写出解向量 $x$ 的三个分量。",
+  "check": {
+   "kind": "numbers",
+   "ask": "按 x(1)、x(2)、x(3) 的顺序写出三个数。",
+   "answer": [
+    6.0,
+    15.0,
+    -23.0
+   ],
+   "hint": "第三行只含 $x_1$，先读出它，再回代到前两行。工具上，`A \\ b` 是左除，不是 `b / A`，也不必先求 `inv (A)`。"
+  },
+  "verify": "A = [2 1 1; 1 3 2; 1 0 0]; b = [4; 5; 6]; result = A \\ b;",
+  "sol": "第三行给 $x_1=6$；代入第一行得 $x_2+x_3=-8$，代入第二行得 $3x_2+2x_3=-1$，解得 $x_2=15$，$x_3=-23$。\n\n```octave\n>> x = A \\ b\nx =\n\n    6\n   15\n  -23\n\n>> norm (A*x - b) < 1e-10\nans = 1\n```\n\n`inv (A) * b` 在这里也能得到同样的数（手册说的是它更慢、更不准，而不是答案一定不同）。养成写 `A \\ b` 的习惯：它直接做分解求解，不构造逆矩阵。",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "linalg · inv, linsolve",
+    "note": "自编，答案由 Octave 8.4 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex4",
+  "stem": "先预测，再运行：\n\n```octave\nC = [1 2 1 0 1; 2 4 0 1 1; 3 6 1 1 2];\nrank (C)\nsize (null (C))\nsize (orth (C))\n```\n\n$C$ 是 $3\\times 5$ 矩阵：第 2 列是第 1 列的 2 倍，第 5 列是第 3、4 列之和，第 3 行是前两行之和。写出秩、零空间基的列数（零度）、值域基的列数。",
+  "check": {
+   "kind": "numbers",
+   "ask": "依次写出 rank (C)、columns (null (C))、columns (orth (C)) 三个数。",
+   "answer": [
+    2.0,
+    3.0,
+    2.0
+   ],
+   "hint": "回到秩—零度定理：$\\operatorname{rank}A + \\dim\\ker A = n$（$n$ 是列数）。`null` 与 `orth` 返回的基有符号和旋转的自由度，所以只数列数。"
+  },
+  "verify": "C = [1 2 1 0 1; 2 4 0 1 1; 3 6 1 1 2]; result = [rank(C), columns(null(C)), columns(orth(C))];",
+  "sol": "第 3 行等于前两行之和，所以秩不超过 2；前两行不成比例，所以秩恰为 2。零度 $=5-2=3$（列数减秩），值域基有 2 列。\n\n```octave\n>> rank (C)\nans = 2\n>> size (null (C))\nans =\n\n   5   3\n\n>> size (orth (C))\nans =\n\n   3   2\n```\n\n`null (C)` 是 $5\\times 3$（每列是满足 $Cz=0$ 的一个向量），`orth (C)` 是 $3\\times 2$。`norm (C * null (C)) < 1e-10` 会得到 1，可以自己验证。",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "linalg · rank, null, orth",
+    "note": "自编，答案由 Octave 8.4 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex5",
+  "stem": "把下面的矩阵看作三个方程、三个未知数的增广矩阵 $[A\\mid b]$（前三列是系数，第四列是右端）。先预测，再运行：\n\n```octave\nD = [1 2 1 3; 2 4 3 8; 1 2 2 5];\n[R, k] = rref (D)\n```\n\n写出主元列的编号 `k`，再写出 `R(1,2)`、`R(1,4)`、`R(2,4)`。",
+  "check": {
+   "kind": "numbers",
+   "ask": "依次写出 k 的两个元素，以及 R(1,2)、R(1,4)、R(2,4)，共五个数。",
+   "answer": [
+    1.0,
+    3.0,
+    2.0,
+    1.0,
+    2.0
+   ],
+   "hint": "回头复习行最简形：第 2 列没有主元，对应自由变量。化简后的每个非零行写成一个方程，`R(1,2)` 是第一个方程里 $x_2$ 的系数。"
+  },
+  "verify": "D = [1 2 1 3; 2 4 3 8; 1 2 2 5]; [R, k] = rref (D); result = [k, R(1,2), R(1,4), R(2,4)];",
+  "sol": "第 2 行减 2 倍第 1 行得 $(0,0,1,2)$，第 3 行减第 1 行得 $(0,0,1,2)$，再把重复行消成 0。主元在第 1、3 列，第 2 列是自由列。\n\n```octave\n>> [R, k] = rref (D)\nR =\n\n   1   2   0   1\n   0   0   1   2\n   0   0   0   0\n\nk =\n\n   1   3\n```\n\n读出方程：$x_1+2x_2=1$，$x_3=2$。通解 $x=(1-2t,\\ t,\\ 2)^T$，$t$ 任意。秩为 2 小于未知数个数 3，所以有无穷多解。",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "linalg · rref",
+    "note": "自编，答案由 Octave 8.4 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex6",
+  "stem": "对实对称矩阵，特征值与迹、行列式、正定性联系在一起。先预测，再运行：\n\n```octave\nS = [2 1 0; 1 2 1; 0 1 2];\nlambda = sort (eig (S))\n[R, p] = chol (S);\np\nnorm (R'*R - S) < 1e-12\n```\n\n`eig` 返回的顺序手册里写明是不保证的，所以这里自己 `sort`。",
+  "check": {
+   "kind": "numbers",
+   "ask": "依次写出 lambda 的三个元素（从小到大）、p、以及最后一行的 0/1 结果，共五个数。",
+   "answer": [
+    0.5857864376269049,
+    2.0,
+    3.414213562373095,
+    0.0,
+    1.0
+   ],
+   "hint": "特征多项式 $\\det(S-\\lambda I)=(2-\\lambda)\\big[(2-\\lambda)^2-2\\big]$。`chol` 的第二个输出 `p` 为 0 表示分解成功，即矩阵正定；全部特征值为正等价于正定。"
+  },
+  "verify": "S = [2 1 0; 1 2 1; 0 1 2]; [R, p] = chol (S); result = [sort(eig(S))', p, double(norm(R'*R - S) < 1e-12)];",
+  "sol": "按第一行展开：$\\det(S-\\lambda I)=(2-\\lambda)\\big[(2-\\lambda)^2-1\\big]-(2-\\lambda)=(2-\\lambda)\\big[(2-\\lambda)^2-2\\big]$，根为 $2,\\ 2\\pm\\sqrt2$。三个根都大于 0，所以 $S$ 正定，`chol` 成功（`p = 0`）。\n\n```octave\n>> lambda = sort (eig (S))\nlambda =\n\n   0.5858\n   2.0000\n   3.4142\n\n>> p\np = 0\n>> norm (R'*R - S) < 1e-12\nans = 1\n>> [sum(lambda), trace(S)]\nans =\n\n   6   6\n>> [prod(lambda), det(S)]\nans =\n\n   4   4\n```\n\n三个特征值之和等于迹 6，积等于行列式 4。若换成 `[1 2; 2 1]`（特征值 $-1,\\ 3$），`[R, p] = chol (...)` 得到 `p = 2`，表示分解在第 2 阶失败。",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "linalg · eig, chol, trace",
+    "note": "自编，答案由 Octave 8.4 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex7",
+  "stem": "对角化的检验：$AV=VD$ 是否成立，$V$ 的列是否正交。先预测，再运行：\n\n```octave\nA = [1 2; 3 2];\n[V, D] = eig (A)\nnorm (A*V - V*D) < 1e-10\nnorm (V'*V - eye (2)) < 1e-10\n```\n\n注意 $A$ 不是对称矩阵。把 `A = [2 1; 1 2]` 再试一遍，对比最后一行的结果。",
+  "check": {
+   "kind": "numbers",
+   "ask": "按顺序写出 D 的两个对角元素（从小到大），以及最后两行的 0/1 结果，共四个数。",
+   "answer": [
+    -1.0,
+    4.0,
+    1.0,
+    0.0
+   ],
+   "hint": "特征方程 $\\lambda^2-3\\lambda-4=0$。$AV=VD$ 对任何可对角化矩阵都成立；$V^TV=I$ 需要 $A$ 是实对称的，回头想想这个条件。"
+  },
+  "verify": "A = [1 2; 3 2]; [V, D] = eig (A); result = [diag(D)', double(norm (A*V - V*D) < 1e-10), double(norm (V'*V - eye (2)) < 1e-10)];",
+  "sol": "$\\lambda^2-\\operatorname{tr}(A)\\lambda+\\det A=\\lambda^2-3\\lambda-4=(\\lambda-4)(\\lambda+1)$，所以特征值是 $-1$ 与 $4$。特征向量方向分别为 $(1,-1)^T$ 与 $(2,3)^T$，两者不垂直，所以 $V^TV\\ne I$；`eig` 把每列归一成单位长度，但不会让它们正交。\n\n```octave\n>> [V, D] = eig (A)\nV =\n\n  -0.7071  -0.5547\n   0.7071  -0.8321\n\nD =\n\nDiagonal Matrix\n\n  -1   0\n   0   4\n\n>> norm (A*V - V*D) < 1e-10\nans = 1\n>> norm (V'*V - eye (2)) < 1e-10\nans = 0\n```\n\n对 `[2 1; 1 2]` 重做，最后一行变成 1：实对称矩阵的特征向量可以取成标准正交组，这是考研里「实对称矩阵必可正交对角化」的数值体现。",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "linalg · eig",
+    "note": "自编，答案由 Octave 8.4 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex8",
+  "stem": "矩阵范数与条件数。先预测，再运行：\n\n```octave\nM = [1 -2; 3 4];\nnorm (M, 1)\nnorm (M, Inf)\nnorm (M, 'fro')\nnorm (M)\ncond (M)\n```\n\n`norm (M)` 不带第二个参数。五个结果各是什么？",
+  "check": {
+   "kind": "numbers",
+   "ask": "依次写出五个结果，至少保留四位小数。",
+   "answer": [
+    6.0,
+    7.0,
+    5.477225575051661,
+    5.116672736016927,
+    2.618033988749894
+   ],
+   "hint": "1-范数是各列绝对值之和的最大值，Inf-范数是各行绝对值之和的最大值，Frobenius 范数是全体元素平方和的平方根。`norm` 默认的 $p$ 是 2（手册里写明），`cond` 默认也是 2-范数。"
+  },
+  "verify": "M = [1 -2; 3 4]; result = [norm(M,1), norm(M,Inf), norm(M,'fro'), norm(M), cond(M)];",
+  "sol": "列和：$|1|+|3|=4$，$|-2|+|4|=6$，取最大得 6。行和：$1+2=3$，$3+4=7$，取最大得 7。Frobenius：$\\sqrt{1+4+9+16}=\\sqrt{30}\\approx5.4772$。2-范数是最大奇异值，也就是 $\\sqrt{\\lambda_{\\max}(M^TM)}$。\n\n```octave\n>> norm (M, 1)\nans = 6\n>> norm (M, Inf)\nans = 7\n>> norm (M, 'fro')\nans = 5.4772\n>> norm (M)\nans = 5.1167\n>> svd (M)\nans =\n\n   5.1167\n   1.9544\n\n>> cond (M)\nans = 2.6180\n```\n\n`norm (M)` 与 `svd (M)` 的第一个值相同，说明默认是 2-范数而不是 Frobenius 范数。`cond (M)` 是最大与最小奇异值之比：$5.1167/1.9544\\approx2.618$。",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "linalg · norm, cond, svd",
+    "note": "自编，答案由 Octave 8.4 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex9",
+  "stem": "手册在 `det` 的说明里提醒：不要用行列式判断矩阵是否奇异。用下面的例子体会为什么：\n\n```octave\nH = 0.1 * eye (20);\ndet (H)\ncond (H)\nrank (H)\n```\n\n$H$ 是 20 阶的 $0.1I$。先预测三个输出，再运行。",
+  "check": {
+   "kind": "choice",
+   "ask": "关于这个 $H$，哪一个判断正确？",
+   "options": [
+    {
+     "text": "`det (H)` 约为 $10^{-20}$，说明 $H$ 几乎奇异，`inv (H)` 不可信。",
+     "ok": false,
+     "why": "把行列式的大小当成奇异程度，是这道题要纠正的误区。行列式随整体缩放按 $k^n$ 变化，不反映病态。"
+    },
+    {
+     "text": "`rank (H)` 小于 20，因为行列式那么小。",
+     "ok": false,
+     "why": "`rank` 基于奇异值，不基于行列式；`rank (H)` 实际是 20。"
+    },
+    {
+     "text": "`cond (H)` 约为 $10^{20}$，即行列式的倒数。",
+     "ok": false,
+     "why": "条件数是最大与最小奇异值之比，不是行列式的倒数。这里所有奇异值都是 0.1，比值为 1。"
+    },
+    {
+     "text": "`cond (H)` 为 1，`rank (H)` 为 20，$H$ 条件极好；`det (H)` 小只是因为 $0.1^{20}=10^{-20}$ 的尺度。",
+     "ok": true,
+     "why": "正确。奇异性看条件数（或 `rcond`、`rank`），行列式只是体积缩放因子。"
+    }
+   ]
+  },
+  "sol": "$H=0.1I$ 的 20 个奇异值全是 0.1，所以 $\\kappa_2(H)=0.1/0.1=1$，是条件最好的矩阵之一；而 $\\det H=0.1^{20}=10^{-20}$ 只反映了尺度。\n\n```octave\n>> det (H)\nans = 1.0000e-20\n>> cond (H)\nans = 1\n>> rank (H)\nans = 20\n```\n\n反过来，`det` 较大的矩阵也可能高度病态。判断可逆性用 `cond`、`rcond` 或 `rank`，这正是手册 `det` 条目建议的做法。",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "linalg · det, cond, rank",
+    "note": "自编，答案由 Octave 8.4 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex10",
+  "stem": "最小二乘拟合直线 $y=c_0+c_1t$：四个点 $t=1,2,3,4$，对应 $y=2,3,5,6$。设计矩阵每行是 $(1,\\ t)$。先预测，再运行：\n\n```octave\nG = [1 1; 1 2; 1 3; 1 4];\ny = [2; 3; 5; 6];\nx1 = pinv (G) * y\nx2 = G \\ y\nnorm (G' * (G*x1 - y)) < 1e-10\n```\n\n四个方程、两个未知数，没有精确解。写出最小二乘解 $(c_0,c_1)$ 及最后一行的 0/1 结果。",
+  "check": {
+   "kind": "numbers",
+   "ask": "依次写出 x1(1)、x1(2) 和最后一行的结果，共三个数。",
+   "answer": [
+    0.5,
+    1.4,
+    1.0
+   ],
+   "hint": "最小二乘解满足正规方程 $G^TGx=G^Ty$。对列满秩的 $G$，`pinv (G) * y` 与 `G \\ y` 给出同一个解；最后一行检验的是正规方程的残差。"
+  },
+  "verify": "G = [1 1; 1 2; 1 3; 1 4]; y = [2; 3; 5; 6]; x1 = pinv (G) * y; result = [x1', double(norm (G' * (G*x1 - y)) < 1e-10)];",
+  "sol": "正规方程：$G^TG=\\begin{pmatrix}4&10\\\\10&30\\end{pmatrix}$，$G^Ty=(16,\\ 47)^T$，行列式 $4\\cdot30-10^2=20$。由克莱姆法则 $c_0=(30\\cdot16-10\\cdot47)/20=0.5$，$c_1=(4\\cdot47-10\\cdot16)/20=1.4$。\n\n```octave\n>> x1 = pinv (G) * y\nx1 =\n\n   0.5000\n   1.4000\n\n>> x2 = G \\ y\nx2 =\n\n   0.5000\n   1.4000\n\n>> norm (G' * (G*x1 - y)) < 1e-10\nans = 1\n```\n\n拟合直线是 $y=0.5+1.4t$。两种写法结果一致；`G \\ y` 对超定方程组自动取最小二乘解，`pinv` 则在 $G$ 秩亏时仍给出最小范数解。",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "linalg · pinv",
+    "note": "自编，答案由 Octave 8.4 复算"
+   }
+  ]
+ }
+]

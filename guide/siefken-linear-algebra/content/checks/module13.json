@@ -1,0 +1,76 @@
+{
+  "ex1": {
+    "kind": "numbers",
+    "ask": "依次写出：$[\\vec x]_{\\mathcal E}$ 的 2 个分量，$[\\vec x]_{\\mathcal B}$ 的 2 个分量，再按行写出 $\\BasisChange{\\mathcal A}{\\mathcal B}$ 的 4 个元素（共 8 个数；分数可写成 9/7）。",
+    "answer": [
+      1.0,
+      3.0,
+      1.2857142857142858,
+      1.4285714285714286,
+      1.1428571428571428,
+      -0.14285714285714285,
+      0.7142857142857143,
+      -0.7142857142857143
+    ],
+    "hint": "$[\\vec x]_{\\mathcal E}$ 是 $\\mathcal A$ 的基向量按 $[\\vec x]_{\\mathcal A}$ 的系数做线性组合；换到 $\\mathcal B$ 要解 $\\mathcal B$ 的基向量矩阵乘未知坐标等于该向量；$\\BasisChange{\\mathcal A}{\\mathcal B}=\\BasisChange{\\mathcal E}{\\mathcal B}\\BasisChange{\\mathcal A}{\\mathcal E}$。"
+  },
+  "ex2": {
+    "kind": "numbers",
+    "ask": "先依次写出 $\\vec b_1,\\vec b_2,\\vec b_3$ 在标准基下的坐标（每个 3 个分量，共 9 个数），再按行写出 $\\BasisChange{\\mathcal E}{\\mathcal A}$ 的 9 个元素（共 18 个数；分数可写成 2/5）。",
+    "answer": [
+      2.0,
+      1.0,
+      0.0,
+      3.0,
+      -1.0,
+      0.0,
+      3.0,
+      -1.0,
+      1.0,
+      0.4,
+      0.2,
+      0.0,
+      0.2,
+      -0.4,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "hint": "$\\vec b_j$ 在 $\\mathcal A$ 下的坐标已给出，把它们当作系数去组合 $\\mathcal A$ 的基向量即得标准坐标；$\\BasisChange{\\mathcal E}{\\mathcal A}$ 是 $\\BasisChange{\\mathcal A}{\\mathcal E}$ 的逆。"
+  },
+  "ex3": {
+    "kind": "numbers",
+    "ask": "依次对 (1)–(4) 四个变换，按行写出 $[\\mathcal T]_{\\mathcal B}$ 的 4 个元素（共 16 个数）。",
+    "answer": [
+      -1.0,
+      -2.0,
+      1.0,
+      1.0,
+      0.0,
+      -1.0,
+      0.0,
+      1.0,
+      2.0,
+      0.0,
+      0.0,
+      2.0,
+      -1.0,
+      0.0,
+      1.0,
+      1.0
+    ],
+    "hint": "$[\\mathcal T]_{\\mathcal B}$ 的第 $j$ 列是 $\\mathcal T\\vec b_j$ 的 $\\mathcal B$ 坐标；也可以用 $[\\mathcal T]_{\\mathcal B}=\\BasisChange{\\mathcal E}{\\mathcal B}[\\mathcal T]_{\\mathcal E}\\BasisChange{\\mathcal B}{\\mathcal E}$。"
+  },
+  "ex4": {
+    "kind": "numbers",
+    "ask": "依次判断 (1)–(4) 四个命题的真假：真写 1，假写 0（共 4 个数）。",
+    "answer": [
+      1,
+      1,
+      1,
+      0
+    ],
+    "hint": "回顾相似的定义 $B=PAP^{-1}$ 与换基矩阵的性质；(4) 想想相似矩阵必须共有什么量，再试一个具体的对角矩阵。"
+  }
+}

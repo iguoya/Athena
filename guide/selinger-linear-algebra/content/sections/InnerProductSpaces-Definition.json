@@ -1,0 +1,1360 @@
+{
+ "id": "InnerProductSpaces-Definition",
+ "title_en": "Real inner product spaces",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Check whether an operation is an inner product.",
+         "sha": "5dd5ce55cc7c",
+         "zh": "判断某个运算是否为内积。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Give an example of a vector space on which more than one inner product can be defined.",
+         "sha": "5f83d596f1df",
+         "zh": "举出一个可以定义不止一种内积的向量空间的例子。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Calculate the inner product of vectors in various examples of inner product spaces.",
+         "sha": "f2675e119108",
+         "zh": "在各种内积空间的例子中计算向量的内积。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Calculate the norm of a vector and the angle between two vectors.",
+         "sha": "31e89da3b45f",
+         "zh": "计算向量的范数以及两个向量的夹角。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Use the Cauchy-Schwarz inequality and the triangle inequality to reason about the size of inner products and norms of vectors.",
+         "sha": "71d3e380de8a",
+         "zh": "运用柯西—施瓦茨不等式和三角不等式，推断向量内积与范数的大小。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In this section, we fix $K$ to be the field of real numbers.",
+    "sha": "3d84feee4ca0",
+    "zh": "本节中，我们取 $K$ 为实数域。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Real inner product space",
+    "sha": "2ee8b6c8050d",
+    "zh": "实内积空间"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A **(real) inner product space** is a real vector space $V$ equipped with an operation that assigns to any pair of vectors $\\vect{u},\\vect{v}\\in V$ a real number $\\iprod{\\vect{u},\\vect{v}}$, called the **inner product** of $\\vect{u}$ and $\\vect{v}$. This operation must satisfy the following properties:",
+      "sha": "ca36720c0f81",
+      "zh": "**（实）内积空间**（inner product space）是配有一种运算的实向量空间 $V$：这种运算给任意一对向量 $\\vect{u},\\vect{v}\\in V$ 指定一个实数 $\\iprod{\\vect{u},\\vect{v}}$，称为 $\\vect{u}$ 与 $\\vect{v}$ 的**内积**。这种运算必须满足下列性质："
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Symmetry: $\\iprod{\\vect{u},\\vect{v}} = \\iprod{\\vect{v},\\vect{u}}$.",
+         "sha": "b0943a91724c",
+         "zh": "对称性：$\\iprod{\\vect{u},\\vect{v}} = \\iprod{\\vect{v},\\vect{u}}$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Linearity: $\\iprod{\\vect{u},k\\vect{v}+\\ell\\vect{w}} = k\\iprod{\\vect{u},\\vect{v}}+\\ell\\iprod{\\vect{u},\\vect{w}}$.",
+         "sha": "0a8ba58222bc",
+         "zh": "线性：$\\iprod{\\vect{u},k\\vect{v}+\\ell\\vect{w}} = k\\iprod{\\vect{u},\\vect{v}}+\\ell\\iprod{\\vect{u},\\vect{w}}$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The positive definite property: $\\iprod{\\vect{u},\\vect{u}} \\geq 0$, and moreover, $\\iprod{\\vect{u},\\vect{u}}=0$ if and only if $\\vect{u} = \\vect{0}$.",
+         "sha": "b36fe85db215",
+         "zh": "正定性：$\\iprod{\\vect{u},\\vect{u}} \\geq 0$，并且 $\\iprod{\\vect{u},\\vect{u}}=0$ 当且仅当 $\\vect{u} = \\vect{0}$。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "$\\R^n$ with the usual dot product",
+    "sha": "8756885bc95a",
+    "zh": "配有通常点积的 $\\R^n$"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$V=\\R^n$, with the usual dot product",
+      "sha": "fe260f2e0ce2",
+      "zh": "$V=\\R^n$，配有通常的点积"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{u},\\vect{v}} = \\vect{u}\\dotprod\\vect{v} =\n    u_1v_1 + \\ldots + u_nv_n"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is an inner product space.",
+      "sha": "5d0e17402328",
+      "zh": "是一个内积空间。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The relevant properties were shown in Proposition “Properties of the dot product”.",
+      "sha": "4a0b4c09e1bb",
+      "zh": "相关性质已在命题“点积的性质”中证明过。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There exist other inner product operations on $\\R^n$ besides the dot product. The following is an example.",
+    "sha": "ba36214abe1e",
+    "zh": "除点积之外，$\\R^n$ 上还有其他的内积运算。下面是一个例子。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "$\\R^2$ with a non-standard inner product",
+    "sha": "ce3354777dd8",
+    "zh": "$\\R^2$ 上的非标准内积"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $V=\\R^2$, and consider the matrix $A=\\left[\\begin{array}{cc} 1 & 1 \\\\ 1 & 2 \\end{array}\\right]$. Define an operation $\\iprod{-,-}$ by",
+      "sha": "e3c84e8475e2",
+      "zh": "设 $V=\\R^2$，取矩阵 $A=\\left[\\begin{array}{cc} 1 & 1 \\\\ 1 & 2 \\end{array}\\right]$。按下式定义运算 $\\iprod{-,-}$："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{u},\\vect{v}} = \\vect{u}^T A \\vect{v} =\n    \\left[\\begin{array}{cc} u_1 & u_2 \\end{array}\\right]\n    \\left[\\begin{array}{cc} 1 & 1 \\\\ 1 & 2 \\end{array}\\right]\n    \\left[\\begin{array}{c} v_1 \\\\ v_2 \\end{array}\\right]\n    = u_1v_1 + u_1v_2 + u_2v_1 + 2u_2v_2."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Then $\\R^2$, with this operation, is an inner product space.",
+      "sha": "1c8397805345",
+      "zh": "那么配上这个运算的 $\\R^2$ 是一个内积空间。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We must show the three properties are satisfied. For symmetry, note that a scalar is equal to its own transpose. Therefore",
+      "sha": "d30c23ea6f57",
+      "zh": "我们必须验证三条性质都成立。先看对称性：注意一个标量等于它自己的转置。因此"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{u},\\vect{v}}\n    ~=~ \\vect{u}^T A \\vect{v}\n    ~=~ (\\vect{u}^T A \\vect{v})^T\n    ~=~ \\vect{v}^T A^T \\vect{u}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "But this is equal to $\\iprod{\\vect{v},\\vect{u}}$ because $A$ is a symmetric matrix, i.e., $A^T=A$. For linearity, note that, by properties of matrix multiplication,",
+      "sha": "4906c8f11167",
+      "zh": "但这等于 $\\iprod{\\vect{v},\\vect{u}}$，因为 $A$ 是对称矩阵，即 $A^T=A$。再看线性：由矩阵乘法的性质，"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{u},k\\vect{v}+\\ell\\vect{w}}\n    ~=~ \\vect{u}^T A(k\\vect{v}+\\ell\\vect{w})\n    ~=~ k\\vect{u}^T A\\vect{v} + \\ell\\vect{u}^T A\\vect{w}\n    ~=~ k\\iprod{\\vect{u},\\vect{v}} + \\ell\\iprod{\\vect{u},\\vect{w}}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For the positive definite property, we have",
+      "sha": "eef0a0d12174",
+      "zh": "对于正定性，我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{u},\\vect{u}}\n    ~=~ u_1^2 + 2u_1u_2 + 2u_2^2\n    ~=~ (u_1^2 + 2u_1u_2 + u_2^2) + u_2^2\n    ~=~ (u_1+u_2)^2 + u_2^2\n    ~\\geq~ 0,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "because the sum of two squares is always non-negative. Moreover, if equality holds in the last equation, then we must have $u_1+u_2=0$ and $u_2=0$, and this is only possible if $\\vect{u}=\\vect{0}$.",
+      "sha": "a45228919dcd",
+      "zh": "这是因为两个平方数之和总是非负的。此外，若最后一个式子取等号，则必有 $u_1+u_2=0$ 且 $u_2=0$，而这只有在 $\\vect{u}=\\vect{0}$ 时才可能。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Continuous functions on an interval",
+    "sha": "35ea6e2dc0d3",
+    "zh": "区间上的连续函数"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $a<b$ be real numbers, and let",
+      "sha": "d6ea917cc4de",
+      "zh": "设 $a<b$ 为实数，并设"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[a,b] = \\set{x \\mid a \\leq x \\leq b}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "be the closed interval. Let $V=C[a,b]$ be the vector space of all continuous functions $f:[a,b]\\to\\R$. Given two functions $f,g\\in C[a,b]$, define",
+      "sha": "8f7a23829f50",
+      "zh": "为闭区间。设 $V=C[a,b]$ 为所有连续函数 $f:[a,b]\\to\\R$ 构成的向量空间。对 $f,g\\in C[a,b]$，定义"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{f,g} = \\int_{a}^{b} f(x)g(x)\\,dx."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is an inner product.",
+      "sha": "fec3d4e0124f",
+      "zh": "这是一个内积。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "This follows from well-known properties of integrals. For symmetry, we have",
+      "sha": "156b706d82f1",
+      "zh": "这可由积分的常用性质得出。先看对称性，我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{f,g}\n    ~=~ \\int_{a}^{b} f(x)g(x)\\,dx\n    ~=~ \\int_{a}^{b} g(x)f(x)\\,dx\n    ~=~ \\iprod{g,f}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For linearity, we have",
+      "sha": "08d18be6d8de",
+      "zh": "再看线性，我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{f,kg+\\ell h}\n    ~=~ \\int_{a}^{b} f(x)(kg(x)+\\ell h(x))\\,dx\n    ~=~ k\\int_{a}^{b} f(x)g(x)\\,dx+\\ell\\int_{a}^{b} f(x)h(x)\\,dx\n    ~=~ k\\iprod{f,g}+\\ell\\iprod{f,h}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For the positive definite property, we have",
+      "sha": "eef0a0d12174",
+      "zh": "对于正定性，我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{f,f}\n    = \\int_{a}^{b} f(x)^2\\,dx\n    \\geq 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is $\\geq 0$ because $a<b$ and the integral over a non-negative function is non-negative. Moreover, since $f$ is continuous, we know from calculus that the last integral can only be equal to $0$ if $f$ is the constant zero function.",
+      "sha": "c3c7835dbd7a",
+      "zh": "这个值 $\\geq 0$，因为 $a<b$，而非负函数的积分是非负的。此外，由于 $f$ 连续，由微积分知道，最后一个积分只有在 $f$ 是恒为零的常值函数时才可能等于 $0$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Polynomials",
+    "sha": "c926349e876d",
+    "zh": "多项式"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\Poly$ be the vector space of polynomials (of any degree) with real coefficients. Let $a<b$ be real numbers, and consider the inner product defined by",
+      "sha": "01d2ee9ee0f4",
+      "zh": "设 $\\Poly$ 为实系数多项式（次数不限）构成的向量空间。设 $a<b$ 为实数，考虑由下式定义的内积："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{p,q} = \\int_{a}^{b} p(x)q(x)\\,dx."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is an inner product space.",
+      "sha": "f755674334f4",
+      "zh": "这是一个内积空间。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The proof is the same as for $C[a,b]$.",
+      "sha": "c5c66d2aa87d",
+      "zh": "证明与 $C[a,b]$ 的情形相同。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Real Hilbert space",
+    "sha": "d8ef9f3ce69a",
+    "zh": "实希尔伯特空间"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\Hilb_{\\R}$ be the vector space of all infinite sequences of real numbers $a=(a_0,a_1,a_2,\\ldots)$ satisfying",
+      "sha": "cd70f6608995",
+      "zh": "设 $\\Hilb_{\\R}$ 为所有满足下式的实数无穷序列 $a=(a_0,a_1,a_2,\\ldots)$ 构成的向量空间："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "a_0^2 + a_1^2 + a_2^2 + \\ldots < \\infty."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "These are called the **square summable** sequences. (One needs to do a little bit of work to show that it is indeed a vector space; in particular, to show that the sum of two square summable sequences is square summable.) On this space, we can define an inner product as follows:",
+      "sha": "ad0bcdbf5299",
+      "zh": "这样的序列称为**平方可和**序列。（需要做一点工作才能说明它确实是向量空间；特别是要说明两个平方可和序列的和仍是平方可和的。）在这个空间上，我们可以如下定义内积："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{a,b} = a_0b_0 + a_1b_1 + a_2b_2 + \\ldots."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The details will be worked out in Exercise “Real Hilbert space”. This inner product space is called **(real) Hilbert space**.",
+      "sha": "ff1537662228",
+      "zh": "具体细节将在习题“实希尔伯特空间”中完成。这个内积空间称为**（实）希尔伯特空间**（Hilbert space）。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We now look at some properties of inner products. The first thing to note is that while the axioms require linearity in the right component, symmetry ensures that linearity in the left component also holds.",
+    "sha": "999173fb7271",
+    "zh": "下面来看内积的一些性质。首先要注意，公理只要求对右边的分量线性，但由对称性，对左边的分量线性也成立。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Left linearity",
+    "sha": "a02dce98e9a7",
+    "zh": "左线性"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $V$ be an inner product space. Then $\\iprod{k\\vect{u}+\\ell\\vect{v},\\vect{w}} = k\\iprod{\\vect{u},\\vect{w}} + \\ell\\iprod{\\vect{v},\\vect{w}}$.",
+      "sha": "349fe484488e",
+      "zh": "设 $V$ 为内积空间。则 $\\iprod{k\\vect{u}+\\ell\\vect{v},\\vect{w}} = k\\iprod{\\vect{u},\\vect{w}} + \\ell\\iprod{\\vect{v},\\vect{w}}$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "This follows directly from symmetry. We have",
+      "sha": "8e27f5b2d5ee",
+      "zh": "这可直接由对称性得出。我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{k\\vect{u}+\\ell\\vect{v},\\vect{w}}\n    = \\iprod{\\vect{w},k\\vect{u}+\\ell\\vect{v}}\n    = k\\iprod{\\vect{w},\\vect{u}}\n    + \\ell\\iprod{\\vect{w},\\vect{v}}\n    = k\\iprod{\\vect{u},\\vect{w}}\n    + \\ell\\iprod{\\vect{v},\\vect{w}}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We also note that as a consequence of right linearity, we have $\\iprod{\\vect{u},\\vect{0}}=0$. This can be seen by letting $k=\\ell=0$ in the equation for right linearity. Similarly, $\\iprod{\\vect{0},\\vect{w}}=0$ follows from left linearity.",
+    "sha": "449c62c304d1",
+    "zh": "我们还注意到，由右线性可得 $\\iprod{\\vect{u},\\vect{0}}=0$：在右线性的等式中取 $k=\\ell=0$ 即可。类似地，由左线性可得 $\\iprod{\\vect{0},\\vect{w}}=0$。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Another important property of inner products is the Cauchy-Schwarz inequality. We have already encountered this in the context of the dot product in Section “Compute a dot product”.",
+    "sha": "79d923370b13",
+    "zh": "内积的另一条重要性质是柯西—施瓦茨不等式。我们在点积的情形中已经遇到过它，见节“计算点积”。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Cauchy-Schwarz inequality",
+    "sha": "3c57397ed673",
+    "zh": "柯西—施瓦茨不等式"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u},\\vect{v}$ be vectors in an inner product space. Then",
+      "sha": "11d829a6d02e",
+      "zh": "设 $\\vect{u},\\vect{v}$ 为内积空间中的向量。则"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{u},\\vect{v}}^2\n    \\leq \\iprod{\\vect{u},\\vect{u}} \\cdot \\iprod{\\vect{v},\\vect{v}}. \\tag{1}"
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The proof is almost identical to that of Proposition “Cauchy-Schwarz inequality”. First note that if $\\vect{u}=\\vect{0}$, then both sides of (1) are equal to zero, and so there is nothing to show. Therefore, we will assume in what follows that $\\vect{u}\\neq \\vect{0}$. Define a function of $t\\in \\R$ by",
+      "sha": "cf3951e3de22",
+      "zh": "证明与命题“柯西—施瓦茨不等式”几乎一样。首先注意，若 $\\vect{u}=\\vect{0}$，则 (1) 式两边都等于零，因此没有什么需要证明的。所以下面假设 $\\vect{u}\\neq \\vect{0}$。按下式定义关于 $t\\in \\R$ 的函数"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(t) = \\iprod{t\\vect{u}+\\vect{v}, t\\vect{u}+\\vect{v}}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Then by the positive definite property, we know that $f(t)\\geq 0$ for all $t\\in \\R$. Also from linearity and symmetry, we have",
+      "sha": "24e3871563a1",
+      "zh": "那么由正定性可知，对所有 $t\\in \\R$ 都有 $f(t)\\geq 0$。再由线性与对称性，我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}f(t) &=& \\iprod{t\\vect{u}, t\\vect{u}+\\vect{v}} +\n             \\iprod{\\vect{v}, t\\vect{u}+\\vect{v}} \\\\\n         &=& t^2\\iprod{\\vect{u}, \\vect{u}}+t\\iprod{\\vect{u}, \\vect{v}} + t\\iprod{\\vect{v}, \\vect{u}}+\n             \\iprod{\\vect{v}, \\vect{v}} \\\\\n         &=&t^2\\iprod{\\vect{u},\\vect{u}}+2t\\iprod{\\vect{u}, \\vect{v}}\n             + \\iprod{\\vect{v}, \\vect{v}}.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This means the graph of $y=f(t)$ is a parabola which opens upwards and is never negative. It follows that this function has at most one root. From the quadratic formula, we know that a quadratic function $at^2+bt+c$ has one or zero roots if and only if $b^2-4ac\\leq 0$. Applying this reasoning to the function $f(t)$, we obtain",
+      "sha": "f494b039f372",
+      "zh": "这说明 $y=f(t)$ 的图像是一条开口向上、永不取负值的抛物线。因此这个函数至多有一个根。由求根公式知，二次函数 $at^2+bt+c$ 有一个或零个根当且仅当 $b^2-4ac\\leq 0$。把这个推理用到函数 $f(t)$ 上，得到"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(2\\iprod{\\vect{u}, \\vect{v}})^2\n    - 4\\iprod{\\vect{u},\\vect{u}}\\iprod{\\vect{v},\\vect{v}} < 0,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which is equivalent to $\\iprod{\\vect{u},\\vect{v}}^2 \\leq \\iprod{\\vect{u},\\vect{u}} \\cdot \\iprod{\\vect{v},\\vect{v}}$.",
+      "sha": "85f958307006",
+      "zh": "这等价于 $\\iprod{\\vect{u},\\vect{v}}^2 \\leq \\iprod{\\vect{u},\\vect{u}} \\cdot \\iprod{\\vect{v},\\vect{v}}$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can use the inner product to define the norm of a vector.",
+    "sha": "3c9fd1183b2f",
+    "zh": "我们可以用内积来定义向量的范数。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Norm",
+    "sha": "963e9c87f5c0",
+    "zh": "范数"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u}$ be a vector in an inner product space. Then the **norm** of $\\vect{u}$ is defined as",
+      "sha": "3b98f3fbb834",
+      "zh": "设 $\\vect{u}$ 为内积空间中的向量。则 $\\vect{u}$ 的**范数**定义为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\norm{\\vect{u}} = \\sqrt{\\iprod{\\vect{u},\\vect{u}}}."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Norm in $C[-1,1]$",
+    "sha": "472c8a7a9903",
+    "zh": "$C[-1,1]$ 中的范数"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Calculate the norm of $f(x) = x^2$ in $C[-1,1]$.",
+      "sha": "360dca99f961",
+      "zh": "计算 $C[-1,1]$ 中 $f(x) = x^2$ 的范数。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "In the vector space $C[-1,1]$, the inner product is defined as",
+      "sha": "b9c26741cc01",
+      "zh": "在向量空间 $C[-1,1]$ 中，内积定义为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{f,g} = \\int_{-1}^{1} f(x)g(x)\\,dx."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We therefore have",
+      "sha": "4382e190c10d",
+      "zh": "因此我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{f,f}\n    = \\int_{-1}^{1} f(x)^2\\, dx\n    = \\int_{-1}^{1} x^4\\, dx\n    = \\bigbracket{\\frac{1}{5}x^5}_{-1}^{1}\n    = \\frac{2}{5}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, $\\norm{f} = \\sqrt{\\iprod{f,f}} = \\sqrt{\\frac{2}{5}}$.",
+      "sha": "91940d817076",
+      "zh": "所以，$\\norm{f} = \\sqrt{\\iprod{f,f}} = \\sqrt{\\frac{2}{5}}$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A vector $\\vect{u}$ in an inner product space is called **normalized** or a **unit vector** if $\\norm{\\vect{u}} = 1$. We note that if $\\vect{v}$ is any non-zero vector in an inner product space, then",
+    "sha": "dff0b77b0cdd",
+    "zh": "内积空间中的向量 $\\vect{u}$ 若满足 $\\norm{\\vect{u}} = 1$，就称为**规范化的**或**单位向量**。注意，若 $\\vect{v}$ 是内积空间中任意一个非零向量，则"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vect{u} = \\frac{1}{\\norm{\\vect{v}}} \\vect{v}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "is normalized.",
+    "sha": "e4d928d1d78e",
+    "zh": "是规范化的。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "By the Cauchy-Schwarz inequality, we have the following properties:",
+    "sha": "f834b41ef8fe",
+    "zh": "由柯西—施瓦茨不等式，我们有以下性质："
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Inner product and norm",
+    "sha": "572ab7c043d5",
+    "zh": "内积与范数"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u},\\vect{v}$ be vectors in an inner product space. Then",
+      "sha": "11d829a6d02e",
+      "zh": "设 $\\vect{u},\\vect{v}$ 为内积空间中的向量。则"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\abs{\\iprod{\\vect{u},\\vect{v}}} \\leq \\norm{\\vect{u}}\\norm{\\vect{v}}."
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The Cauchy-Schwarz inequality states that $\\iprod{\\vect{u},\\vect{v}}^2 \\leq \\norm{\\vect{u}}^2\\norm{\\vect{v}}^2$. The claim follows by taking the square root of both sides of the equation.",
+      "sha": "c04fa4afadcd",
+      "zh": "柯西—施瓦茨不等式说明 $\\iprod{\\vect{u},\\vect{v}}^2 \\leq \\norm{\\vect{u}}^2\\norm{\\vect{v}}^2$。在两边取平方根，即得所要的结论。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Triangle inequality",
+    "sha": "e26f833d1f48",
+    "zh": "三角不等式"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u},\\vect{v}$ be vectors in an inner product space. Then",
+      "sha": "11d829a6d02e",
+      "zh": "设 $\\vect{u},\\vect{v}$ 为内积空间中的向量。则"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\norm{\\vect{u}+\\vect{v}} \\leq \\norm{\\vect{u}} + \\norm{\\vect{v}}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is called the **triangle inequality**.",
+      "sha": "ae2c18c70395",
+      "zh": "这称为**三角不等式**。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The proof is essentially the same as that of Proposition “Triangle inequality”. We have",
+      "sha": "37740c3cc2ee",
+      "zh": "证明与命题“三角不等式”的证明本质上相同。我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\norm{\\vect{u}+\\vect{v}}^2\n    &=& \\iprod{\\vect{u}+\\vect{v},\\vect{u}+\\vect{v}} \\\\\n    &=& \\iprod{\\vect{u},\\vect{u}}+\\iprod{\\vect{u},\\vect{v}}+\\iprod{\\vect{v},\\vect{u}}+\\iprod{\\vect{v},\\vect{v}} \\\\\n    &=&\\norm{\\vect{u}}^2+2\\iprod{\\vect{u},\\vect{v}}+\\norm{\\vect{v}}^2 \\\\\n    &\\leq& \\norm{\\vect{u}}^2+2\\abs{\\iprod{\\vect{u},\\vect{v}}}+\\norm{\\vect{v}}^2 \\\\\n    &\\leq& \\norm{\\vect{u}}^2+2\\norm{\\vect{u}}\\norm{\\vect{v}}+\\norm{\\vect{v}}^2 \\\\\n    &=& (\\norm{\\vect{u}}+\\norm{\\vect{v}})^2.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The triangle inequality follows by taking square roots of both sides.",
+      "sha": "4d05e93bd449",
+      "zh": "在两边取平方根，即得三角不等式。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Generalizing the situation in $\\R^n$, we can define the angle between any two vectors in an inner product space. Note that by the Cauchy-Schwarz inequality,",
+    "sha": "4ec0f262ed63",
+    "zh": "把 $\\R^n$ 中的情形推广，我们可以对内积空间中任意两个向量定义夹角。注意，由柯西—施瓦茨不等式，"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\frac{\\abs{\\iprod{\\vect{u},\\vect{v}}}}{\\norm{\\vect{u}}\\norm{\\vect{v}}}\n  \\leq 1,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and therefore,",
+    "sha": "13f04dbd2c4a",
+    "zh": "因此，"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "-1 \\leq \\frac{\\iprod{\\vect{u},\\vect{v}}}{\\norm{\\vect{u}}\\norm{\\vect{v}}}\n  \\leq 1."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This ensures that the following definition is well-defined.",
+    "sha": "e41d18e60ad8",
+    "zh": "这保证了下面的定义是良定义的。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Angle between two vectors",
+    "sha": "7ec38f7883a1",
+    "zh": "两个向量的夹角"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u},\\vect{v}$ be vectors in an inner product space. The **angle** between $\\vect{u}$ and $\\vect{v}$ is, by definition, the unique $\\theta$ such that $0\\leq\\theta\\leq\\pi$ and",
+      "sha": "d1ac8388c0e5",
+      "zh": "设 $\\vect{u},\\vect{v}$ 为内积空间中的向量。$\\vect{u}$ 与 $\\vect{v}$ 的**夹角**，按定义是唯一的 $\\theta$，它满足 $0\\leq\\theta\\leq\\pi$ 且"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\cos\\theta = \\frac{\\iprod{\\vect{u},\\vect{v}}}{\\norm{\\vect{u}}\\norm{\\vect{v}}}."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Find the angle between two vectors",
+    "sha": "90223f9b01fb",
+    "zh": "求两个向量的夹角"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the angle between $1$ and $x^2$ in $C[-1,1]$.",
+      "sha": "4c22ab63903b",
+      "zh": "求 $C[-1,1]$ 中 $1$ 与 $x^2$ 的夹角。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have",
+      "sha": "a2214cd5b1a4",
+      "zh": "我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\iprod{1,1} &=& \\int_{-1}^1 1\\cdot 1\\,dx ~=~ 2, \\\\\n    \\iprod{x^2,x^2} &=& \\int_{-1}^1 x^2\\cdot x^2\\,dx ~=~ \\frac{2}{5}, \\\\\n    \\iprod{1, x^2} &=& \\int_{-1}^1 1\\cdot x^2\\,dx ~=~ \\frac{2}{3}.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore",
+      "sha": "f6f36ec125f2",
+      "zh": "因此"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\cos\\theta\n    ~=~ \\frac{\\iprod{1,x^2}}{\\norm{1}\\norm{x^2}}\n    ~=~ \\frac{\\frac{2}{3}}{\\sqrt{2}\\sqrt{\\frac{2}{5}}}\n    ~=~ \\frac{\\sqrt{5}}{3}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The angle $\\theta$ is $\\cos^{-1}(\\frac{\\sqrt{5}}{3})$, which is approximately $0.7297$ radians or $41.81$ degrees.",
+      "sha": "d1f0ef38f7c9",
+      "zh": "夹角 $\\theta$ 为 $\\cos^{-1}(\\frac{\\sqrt{5}}{3})$，约为 $0.7297$ 弧度，即 $41.81$ 度。"
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each matrix $A$, determine whether the formula $\\iprod{\\vect{u},\\vect{v}} = \\vect{u}^T A\\vect{v}$ determines an inner product on $\\R^2$.",
+      "sha": "cf429078666b",
+      "zh": "对下列每个矩阵 $A$，判断公式 $\\iprod{\\vect{u},\\vect{v}} = \\vect{u}^T A\\vect{v}$ 是否确定 $\\R^2$ 上的一个内积。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(a)~ A = \\left[\\begin{array}{cc} 1 & 0 \\\\ 0 & 2 \\end{array}\\right],\\quad\n    (b)~ A = \\left[\\begin{array}{cc} 3 & 1 \\\\ 1 & 3 \\end{array}\\right],\\quad\n    (c)~ A = \\left[\\begin{array}{cc} 1 & 1 \\\\ 0 & 2 \\end{array}\\right],\\quad\n    (d)~ A = \\left[\\begin{array}{cc} 1 & 0 \\\\ 0 & -1 \\end{array}\\right],\\quad\n    (e)~ A = \\left[\\begin{array}{cc} 1 & 1 \\\\ 1 & 1 \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes, it is an inner product. Since $A=A^T$, symmetry and linearity follow as in Example “$\\R^2$ with a non-standard inner product”. For the positive definite property, note that $\\iprod{\\vect{u},\\vect{u}} = u_1^2 + 2u_2^2\\geq 0$, and equality holds if and only if $u_1,u_2=0$.",
+         "sha": "60ac47ca7970",
+         "zh": "是，它是内积。由于 $A=A^T$，对称性和线性的证明与例“$\\R^2$ 上的非标准内积”相同。对于正定性，注意 $\\iprod{\\vect{u},\\vect{u}} = u_1^2 + 2u_2^2\\geq 0$，并且等号成立当且仅当 $u_1,u_2=0$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes, it is an inner product. Since $A=A^T$, symmetry and linearity follow as in Example “$\\R^2$ with a non-standard inner product”. For the positive definite property, we have $\\iprod{\\vect{u},\\vect{u}} = 3u_1^2 + 2u_1u^2 + 3u_2^2 = (u_1+u_2)^2 + 2u_1^2 + 2u_2^2 \\geq 0$. Equality holds if and only if $u_1+u_2$, $u_1$, and $u_2$ are all zero, which is the case if and only if $\\vect{u}=0$.",
+         "sha": "d709ea9161f1",
+         "zh": "是，它是内积。由于 $A=A^T$，对称性和线性的证明与例“$\\R^2$ 上的非标准内积”相同。对于正定性，我们有 $\\iprod{\\vect{u},\\vect{u}} = 3u_1^2 + 2u_1u^2 + 3u_2^2 = (u_1+u_2)^2 + 2u_1^2 + 2u_2^2 \\geq 0$。等号成立当且仅当 $u_1+u_2$、$u_1$ 和 $u_2$ 全为零，而这当且仅当 $\\vect{u}=0$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "No, it is not symmetric. For example, $\\iprod{ \\left[\\begin{array}{c}1\\\\0\\end{array}\\right], \\left[\\begin{array}{c}0\\\\1\\end{array}\\right] } = 1$ but $\\iprod{ \\left[\\begin{array}{c}0\\\\1\\end{array}\\right], \\left[\\begin{array}{c}1\\\\0\\end{array}\\right] } = 0$.",
+         "sha": "779fe6d3d689",
+         "zh": "不是，它不满足对称性。例如，$\\iprod{ \\left[\\begin{array}{c}1\\\\0\\end{array}\\right], \\left[\\begin{array}{c}0\\\\1\\end{array}\\right] } = 1$，但 $\\iprod{ \\left[\\begin{array}{c}0\\\\1\\end{array}\\right], \\left[\\begin{array}{c}1\\\\0\\end{array}\\right] } = 0$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "No, it is not positive definite. For example, $\\iprod{ \\left[\\begin{array}{c}0\\\\1\\end{array}\\right], \\left[\\begin{array}{c}0\\\\1\\end{array}\\right] } = -1$.",
+         "sha": "b6c4d8b828e7",
+         "zh": "不是，它不满足正定性。例如，$\\iprod{ \\left[\\begin{array}{c}0\\\\1\\end{array}\\right], \\left[\\begin{array}{c}0\\\\1\\end{array}\\right] } = -1$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "No, it is not positive definite. For example, $\\iprod{ \\left[\\begin{array}{c}1\\\\-1\\end{array}\\right], \\left[\\begin{array}{c}1\\\\-1\\end{array}\\right] } = 0$ although $\\left[\\begin{array}{c}1\\\\-1\\end{array}\\right]\\neq \\vect{0}$.",
+         "sha": "d8f1dc5719d8",
+         "zh": "不是，它不满足正定性。例如，$\\iprod{ \\left[\\begin{array}{c}1\\\\-1\\end{array}\\right], \\left[\\begin{array}{c}1\\\\-1\\end{array}\\right] } = 0$，但 $\\left[\\begin{array}{c}1\\\\-1\\end{array}\\right]\\neq \\vect{0}$。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Real inner product spaces · 习题 1（上游 exercises/InnerProductSpaces-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the inner product space $C[0,1]$ as in Example “Continuous functions on an interval”. Compute the following inner products:",
+      "sha": "9e55a05f739e",
+      "zh": "考虑例“区间上的连续函数”中的内积空间 $C[0,1]$。计算下列内积："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(a)~ \\iprod{1,x}, \\quad\n    (b)~ \\iprod{x,x^2}, \\quad\n    (c)~ \\iprod{1+x,2+x^2}."
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\iprod{1,x} = \\int_{0}^{1} 1\\cdot x\\,dx = \\int_{0}^{1} x\\,dx = \\frac{1}{2}$.",
+         "sha": "923bf942a9f3",
+         "zh": "$\\iprod{1,x} = \\int_{0}^{1} 1\\cdot x\\,dx = \\int_{0}^{1} x\\,dx = \\frac{1}{2}$."
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\iprod{x,x^2} = \\int_{0}^{1} x\\cdot x^2\\,dx = \\int_{0}^{1} x^3\\,dx = \\frac{1}{4}$.",
+         "sha": "08cdfcba5e58",
+         "zh": "$\\iprod{x,x^2} = \\int_{0}^{1} x\\cdot x^2\\,dx = \\int_{0}^{1} x^3\\,dx = \\frac{1}{4}$."
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\iprod{1+x,2+x^2} = \\int_{0}^{1} (1+x)(2+x^2)\\,dx = \\int_{0}^{1} 2 + x^2 + 2x + x^3\\,dx = \\frac{43}{12}.$",
+         "sha": "aba9c8be5a98",
+         "zh": "$\\iprod{1+x,2+x^2} = \\int_{0}^{1} (1+x)(2+x^2)\\,dx = \\int_{0}^{1} 2 + x^2 + 2x + x^3\\,dx = \\frac{43}{12}.$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Real inner product spaces · 习题 2（上游 exercises/InnerProductSpaces-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the inner product space $C[0,1]$ as in Example “Continuous functions on an interval”. Compute the following norms:",
+      "sha": "8bcf1747d6be",
+      "zh": "考虑例“区间上的连续函数”中的内积空间 $C[0,1]$。计算下列范数："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(a)~ \\norm{1}, \\quad\n    (b)~ \\norm{x}, \\quad\n    (c)~ \\norm{x^2+1}."
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\norm{1}^2 = \\iprod{1,1} = \\int_{0}^{1} 1\\,dx = 1$, therefore $\\norm{1}=1$.",
+         "sha": "389876f1a454",
+         "zh": "$\\norm{1}^2 = \\iprod{1,1} = \\int_{0}^{1} 1\\,dx = 1$，因此 $\\norm{1}=1$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\norm{x}^2 = \\iprod{x,x} = \\int_{0}^{1} x^2\\,dx = \\frac{1}{3}$, therefore $\\norm{x} = \\frac{1}{\\sqrt{3}}$.",
+         "sha": "2d651d07c901",
+         "zh": "$\\norm{x}^2 = \\iprod{x,x} = \\int_{0}^{1} x^2\\,dx = \\frac{1}{3}$，因此 $\\norm{x} = \\frac{1}{\\sqrt{3}}$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\norm{x^2+1}^2 = \\iprod{x^2+1,x^2+1} = \\int_{0}^{1} x^4 + 2x^2 + 1\\,dx = \\frac{1}{5} + \\frac{2}{3} + 1 = \\frac{28}{15}$, therefore $\\norm{x^2+1} = \\sqrt{\\frac{28}{15}}$.",
+         "sha": "171e1591cb3f",
+         "zh": "$\\norm{x^2+1}^2 = \\iprod{x^2+1,x^2+1} = \\int_{0}^{1} x^4 + 2x^2 + 1\\,dx = \\frac{1}{5} + \\frac{2}{3} + 1 = \\frac{28}{15}$，因此 $\\norm{x^2+1} = \\sqrt{\\frac{28}{15}}$。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Real inner product spaces · 习题 3（上游 exercises/InnerProductSpaces-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For $\\vect{u},\\vect{v}$ vectors in $\\R^3$, define the product $\\vect{u}\\ast \\vect{v} = u_1v_1+2u_2v_2+3u_3v_3$. Show that",
+      "sha": "cece7cfb717c",
+      "zh": "对 $\\R^3$ 中的向量 $\\vect{u},\\vect{v}$，定义乘积 $\\vect{u}\\ast \\vect{v} = u_1v_1+2u_2v_2+3u_3v_3$。证明："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\abs{\\vect{u}\\ast \\vect{v}} \\leq (\\vect{u}\\ast \\vect{u})^{1/2}\n    (\\vect{v}\\ast \\vect{v})^{1/2}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Hint: first show that the operation $\\iprod{\\vect{u},\\vect{v}}=\\vect{u}\\ast\\vect{v}$ is an inner product on $\\R^3$, then use Proposition “Inner product and norm”.",
+      "sha": "5a2a11711751",
+      "zh": "提示：先证明运算 $\\iprod{\\vect{u},\\vect{v}}=\\vect{u}\\ast\\vect{v}$ 是 $\\R^3$ 上的内积，再用命题“内积与范数”。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The operation $\\iprod{\\vect{u},\\vect{v}}=\\vect{u}\\ast\\vect{v}$ is an inner product on $\\R^3$. Symmetry and linearity are straightforward to check, as is the positive definite property. Therefore, the claimed inequality holds by Proposition “Cauchy-Schwarz inequality”.",
+      "sha": "050826f0a72e",
+      "zh": "运算 $\\iprod{\\vect{u},\\vect{v}}=\\vect{u}\\ast\\vect{v}$ 是 $\\R^3$ 上的内积。对称性和线性可以直接验证，正定性也一样。因此，由命题“柯西—施瓦茨不等式”，所述不等式成立。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Real inner product spaces · 习题 4（上游 exercises/InnerProductSpaces-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "In $C[-1,1]$, find (a) the angle between $x$ and $x^2$, (b) the angle between $x$ and $x^3$.",
+      "sha": "d3426686e1bc",
+      "zh": "在 $C[-1,1]$ 中，求 (a) $x$ 与 $x^2$ 的夹角，(b) $x$ 与 $x^3$ 的夹角。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "We have $\\iprod{x,x} = \\int_{-1}^1 x^2\\,dx = \\frac{2}{3}$, $\\iprod{x^2,x^2} = \\int_{-1}^1 x^4\\,dx = \\frac{2}{5}$, and $\\iprod{x, x^2} = \\int_{-1}^1 x^3\\,dx = 0$. Therefore",
+         "sha": "899530bbbb58",
+         "zh": "我们有 $\\iprod{x,x} = \\int_{-1}^1 x^2\\,dx = \\frac{2}{3}$，$\\iprod{x^2,x^2} = \\int_{-1}^1 x^4\\,dx = \\frac{2}{5}$，以及 $\\iprod{x, x^2} = \\int_{-1}^1 x^3\\,dx = 0$。因此"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\cos\\theta\n        ~=~ \\frac{\\iprod{x,x^2}}{\\norm{x}\\norm{x^2}}\n        ~=~ 0."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Therefore, the angle $\\theta$ is $\\pi/2$ radians, or $90$ degrees. In other words, $x$ and $x^2$ are orthogonal in $C[-1,1]$.",
+         "sha": "8b5c070c752d",
+         "zh": "所以，夹角 $\\theta$ 为 $\\pi/2$ 弧度，即 $90$ 度。换句话说，$x$ 与 $x^2$ 在 $C[-1,1]$ 中正交。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "We have $\\iprod{x,x} = \\int_{-1}^1 x^2\\,dx = \\frac{2}{3}$, $\\iprod{x^3,x^3} = \\int_{-1}^1 x^6\\,dx = \\frac{2}{7}$, and $\\iprod{x, x^3} = \\int_{-1}^1 x^4\\,dx = \\frac{2}{5}$. Therefore",
+         "sha": "9fc40168d76b",
+         "zh": "我们有 $\\iprod{x,x} = \\int_{-1}^1 x^2\\,dx = \\frac{2}{3}$，$\\iprod{x^3,x^3} = \\int_{-1}^1 x^6\\,dx = \\frac{2}{7}$，以及 $\\iprod{x, x^3} = \\int_{-1}^1 x^4\\,dx = \\frac{2}{5}$。因此"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\cos\\theta\n        ~=~ \\frac{\\iprod{x,x^3}}{\\norm{x}\\norm{x^3}}\n        ~=~ \\frac{\\frac{2}{5}}{\\sqrt{\\frac{2}{3}}\\sqrt{\\frac{2}{7}}}\n        ~=~ \\frac{\\sqrt{21}}{5}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "The angle $\\theta$ is $\\cos^{-1}(\\frac{\\sqrt{21}}{5})$, which is approximately $0.4115$ radians or $23.58$ degrees.",
+         "sha": "d842d7f55412",
+         "zh": "夹角 $\\theta$ 为 $\\cos^{-1}(\\frac{\\sqrt{21}}{5})$，约为 $0.4115$ 弧度，即 $23.58$ 度。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Real inner product spaces · 习题 5（上游 exercises/InnerProductSpaces-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": ". In this exercise, we will work out the details of Example “Real Hilbert space”. We must show that $\\Hilb_{\\R}$ is a vector space. We will do this by showing that it is a subspace of $\\Seq_{\\R}$. Further, we must show that the inner product is well-defined. This requires some knowledge of convergent series from calculus.",
+      "sha": "1d03a01e5f07",
+      "zh": ". 本题中，我们来补全例“实希尔伯特空间”的细节。我们必须证明 $\\Hilb_{\\R}$ 是向量空间，做法是证明它是 $\\Seq_{\\R}$ 的子空间。此外，还必须证明内积是良定义的，这需要一些微积分中关于收敛级数的知识。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Assume $a=(a_0,a_1,\\ldots)$ and $b=(b_0,b_1,\\ldots)$ are square summable sequences. Show that the series $a_0b_0 + a_1b_1 + a_2b_2 + \\ldots$ converges to a real number. Hint: consider the series $\\abs{a_0b_0} + \\abs{a_1b_2} + \\ldots$ and use the Cauchy-Schwarz inequality and the absolute convergence test.",
+         "sha": "6db1ab29f9b8",
+         "zh": "设 $a=(a_0,a_1,\\ldots)$ 与 $b=(b_0,b_1,\\ldots)$ 是平方可和序列。证明级数 $a_0b_0 + a_1b_1 + a_2b_2 + \\ldots$ 收敛到一个实数。提示：考虑级数 $\\abs{a_0b_0} + \\abs{a_1b_2} + \\ldots$，并用柯西—施瓦茨不等式和绝对收敛判别法。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Using the result of part (a), show that $\\Hilb_{\\R}$ is a subspace of $\\Seq_{\\R}$.",
+         "sha": "32e0ac16c6b2",
+         "zh": "利用 (a) 部分的结果，证明 $\\Hilb_{\\R}$ 是 $\\Seq_{\\R}$ 的子空间。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Show that the operation $\\iprod{a,b} = a_0b_0 + a_1b_1 + a_2b_2 + \\ldots$ is an inner product on $\\Hilb_{\\R}$.",
+         "sha": "a660154bd7ec",
+         "zh": "证明运算 $\\iprod{a,b} = a_0b_0 + a_1b_1 + a_2b_2 + \\ldots$ 是 $\\Hilb_{\\R}$ 上的内积。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) By assumption, $a$ and $b$ are square summable. Let $N=a_0^2 + a_1^2 + \\ldots$ and $M=b_0^2 + b_1^2 + \\ldots$. By the Cauchy-Schwarz inequality, for all $n$, we have",
+      "sha": "bafcb742c926",
+      "zh": "(a) 由假设，$a$ 与 $b$ 都是平方可和的。设 $N=a_0^2 + a_1^2 + \\ldots$，$M=b_0^2 + b_1^2 + \\ldots$。由柯西—施瓦茨不等式，对所有 $n$，我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\abs{a_0}\\abs{b_0} + \\ldots + \\abs{a_n}\\abs{b_n}\n      ~\\leq~ \\sqrt{\\abs{a_0}^2 + \\ldots + \\abs{a_n}^2} \\sqrt{\\abs{b_0}^2 + \\ldots + \\abs{b_n}^2}\n      ~\\leq~ \\sqrt{N}\\sqrt{M}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore the series $\\abs{a_0b_0} + \\abs{a_1b_1} + \\ldots$ is bounded. By the absolute convergence test from calculus, it follows that the series $a_0b_0 + a_1b_1 + \\ldots$ converges.",
+      "sha": "59586063583a",
+      "zh": "因此级数 $\\abs{a_0b_0} + \\abs{a_1b_1} + \\ldots$ 有界。由微积分中的绝对收敛判别法，级数 $a_0b_0 + a_1b_1 + \\ldots$ 收敛。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "(b) It is clear that the zero sequence is square summable, and also that a scalar multiple of a square summable sequence is square summable. Hence $\\Hilb_{\\R}$ contains the zero vector and is closed under scalar multiplication. To show that it is closed under addition, assume $a,b\\in\\Hilb_{\\R}$, and let $c=a+b$. We must show that $c$ is square summable. But",
+      "sha": "a68ee3c6cf25",
+      "zh": "(b) 零序列当然是平方可和的，平方可和序列的标量倍也仍是平方可和的。因此 $\\Hilb_{\\R}$ 含有零向量，且对标量乘法封闭。要证明它对加法封闭，设 $a,b\\in\\Hilb_{\\R}$，并令 $c=a+b$。我们必须证明 $c$ 是平方可和的。而"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "c_0^2 + c_1^2 + \\ldots\n      ~=~\n      (a_0+b_0)^2 + (a_1+b_1)^2 + \\ldots\n      ~=~ (a_0^2 + a_1^2 + \\ldots) + (b_0^2 + b_1^2 + \\ldots)\n      + (2a_0b_0 + 2a_1b_1 + \\ldots)."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The series $a_0^2 + a_1^2 + \\ldots$ and $b_0^2 + b_1^2 + \\ldots$ converge by assumption, and the series $2a_0b_0 + 2a_1b_1 + \\ldots$ converges by part (a). It follows that $\\Hilb_{\\R}$ is closed under addition.",
+      "sha": "cfa7773aa32c",
+      "zh": "级数 $a_0^2 + a_1^2 + \\ldots$ 与 $b_0^2 + b_1^2 + \\ldots$ 由假设收敛，级数 $2a_0b_0 + 2a_1b_1 + \\ldots$ 由 (a) 部分收敛。由此可知 $\\Hilb_{\\R}$ 对加法封闭。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "(c) Symmetry and linearity follow straightforwardly from properties of convergent series. For example,",
+      "sha": "696686eb3853",
+      "zh": "(c) 对称性与线性可直接由收敛级数的性质得到。例如，"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\iprod{a,kb+\\ell c}\n      &=& a_0(kb_0+\\ell c_0) + a_1(kb_1+\\ell c_1) + \\ldots \\\\\n      &=& k(a_0b_0 + a_1b_1 + \\ldots) + \\ell(a_0c_0 + a_1c_1 + \\ldots) \\\\\n      &=& k\\iprod{a,b} + \\ell\\iprod{a,c}.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "As for the positive definite property, note that",
+      "sha": "2e446f923b82",
+      "zh": "至于正定性，注意"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{a,a}\n      ~=~ a_0^2 + a_1^2 + \\ldots\n      ~\\geq~ 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Moreover, since all terms in the series are $\\geq 0$, it follows that $\\iprod{a,a}=0$ if and only if $a_i=0$ for all $i$.",
+      "sha": "ed45e63a7b72",
+      "zh": "此外，由于级数中所有项都 $\\geq 0$，可知 $\\iprod{a,a}=0$ 当且仅当对所有 $i$ 都有 $a_i=0$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Real inner product spaces · 习题 6（上游 exercises/InnerProductSpaces-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Definition.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "实内积空间"
+}

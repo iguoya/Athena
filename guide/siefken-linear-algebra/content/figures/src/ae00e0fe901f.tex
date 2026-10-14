@@ -1,0 +1,35 @@
+\begin{tikzpicture}
+		\def\dotMarkRightAngle[size=#1](#2,#3,#4){
+		 \draw ($(#3)!#1!(#2)$) --
+		       ($($(#3)!#1!(#2)$)!#1!90:(#2)$) --
+		       ($(#3)!#1!(#4)$);
+		 \path (#3) -- ($($(#3)!#1!(#2)$)!#1!90:(#2)$);
+		}
+		\begin{axis}[
+		    anchor=origin,
+		    name=plot1,
+		    disabledatascaling,
+		    xmin=-3,xmax=3,
+		    ymin=-2,ymax=2,
+			xtick={-4,...,4},
+			ytick={-2,...,4},
+		    x=1cm,y=1cm,
+		    grid=both,
+		    grid style={line width=.1pt, draw=gray!10},
+		    axis lines=middle,
+		    minor tick num=0,
+		    enlargelimits={abs=0.5},
+		    axis line style={latex-latex},
+		    ticklabel style={font=\tiny,fill=white},
+		    xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+		    ylabel style={at={(ticklabel* cs:1)},anchor=south west}
+		]
+			\coordinate (A) at (1,2);
+			\coordinate (O) at (0,0);
+			\coordinate (B) at (2,-1);
+			\dotMarkRightAngle[size=6pt](B,O,A);
+			\draw[mypink, thick] ($-2*(-2,1)$) -- ($2*(-2,1)$);
+			\draw[mygreen, thick, ->] (0,0) -- (1,2) node[midway, below right] {$\vec n$};
+		\end{axis}
+		\node[mypink, above right] at (2,-1.2) {$\ell=\Span\Set*{\mat{-2\\1}}$};
+	\end{tikzpicture}

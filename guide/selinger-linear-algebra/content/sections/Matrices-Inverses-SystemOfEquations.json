@@ -1,0 +1,125 @@
+{
+ "id": "Matrices-Inverses-SystemOfEquations",
+ "title_en": "Using the inverse to solve a system of equations",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "One way in which the inverse of a matrix is useful is to find the solution of a system of linear equations. Recall from Definition “The matrix form of a system of linear equations” that we can write a system of equations in matrix form, which is in the form",
+    "sha": "000ccb3d61ca",
+    "zh": "矩阵的逆的一个用处是求线性方程组的解。回忆定义“线性方程组的矩阵形式”：线性方程组可以写成矩阵形式，即"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A\\vect{x}=\\vect{b}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Suppose we find the inverse $A^{-1}$ of the matrix $A$. Then we can multiply both sides of this equation by $A^{-1}$ on the left and simplify to obtain",
+    "sha": "84b8e6629a58",
+    "zh": "假设我们求出了矩阵 $A$ 的逆 $A^{-1}$。那么在这个等式两边左乘 $A^{-1}$ 并化简，得到"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vect{x} = A^{-1}\\vect{b}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Therefore we can find $\\vect{x}$, the solution to the system, by computing $\\vect{x} = A^{-1}\\vect{b}$. Note that once we have found $A^{-1}$, we can easily get the solution for different right-hand sides (different $\\vect{b}$). It is always just $A^{-1}\\vect{b}$.",
+    "sha": "3565a77b5726",
+    "zh": "因此，只要计算 $\\vect{x} = A^{-1}\\vect{b}$，就能求出方程组的解 $\\vect{x}$。注意，一旦求出了 $A^{-1}$，对于不同的右端（不同的 $\\vect{b}$），我们都能轻松得到解，它总是 $A^{-1}\\vect{b}$。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Using the inverse to solve a system of equations",
+    "sha": "e2447067a893",
+    "zh": "用逆解方程组"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the following system of equations. Use the inverse of a suitable matrix to solve this system.",
+      "sha": "ba3e4c092f54",
+      "zh": "考虑下面的方程组。用某个合适的矩阵的逆来解这个方程组。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{c}\n      x+z=1 \\\\\n      x-y+z=3 \\\\\n      x+y-z=2\n    \\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "First, we can write the system in matrix form",
+      "sha": "5c2608ec61be",
+      "zh": "首先，把方程组写成矩阵形式"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A\\vect{x} =\n    \\left[\\begin{array}{rrr}\n      1 & 0 & 1 \\\\\n      1 & -1 & 1 \\\\\n      1 & 1 & -1\n    \\end{array}\\right] \\left[\\begin{array}{r}\n      x \\\\\n      y \\\\\n      z\n    \\end{array}\\right] =\\left[\\begin{array}{r}\n      1 \\\\\n      3 \\\\\n      2\n    \\end{array}\\right] = \\vect{b}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The inverse of $A$ is",
+      "sha": "619763da8848",
+      "zh": "$A$ 的逆是"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A^{-1} =\n    \\def\\arraystretch{1.2}\n    \\left[\\begin{array}{rrr}\n      0 & \\frac{1}{2} & \\frac{1}{2} \\\\\n      1 & -1 & 0 \\\\\n      1 & -\\frac{1}{2} & -\\frac{1}{2}\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "From here, the solution to the system $A\\vect{x}=\\vect{b}$ is found by $\\vect{x}=A^{-1}\\vect{b}$, i.e.,",
+      "sha": "beb4524685ab",
+      "zh": "由此，方程组 $A\\vect{x}=\\vect{b}$ 的解由 $\\vect{x}=A^{-1}\\vect{b}$ 给出，即"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\def\\arraystretch{1.2}\n    \\left[\\begin{array}{r}\n      x \\\\\n      y \\\\\n      z\n    \\end{array}\\right]\n    =\n    \\left[\\begin{array}{rrr}\n      0 & \\frac{1}{2} & \\frac{1}{2} \\\\\n      1 & -1 & 0 \\\\\n      1 & -\\frac{1}{2} & -\\frac{1}{2}\n    \\end{array}\\right] \\left[\\begin{array}{r}\n      1 \\\\\n      3 \\\\\n      2\n    \\end{array}\\right] =\\left[\\begin{array}{r}\n      \\frac{5}{2} \\\\\n      -2 \\\\\n      -\\frac{3}{2}\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "What if the right-hand side had been $\\vect{b}=\\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 3 \\end{array}\\right]$? In this case, the solution would be given by",
+    "sha": "4e3b6f7ab070",
+    "zh": "如果右端换成 $\\vect{b}=\\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 3 \\end{array}\\right]$ 会怎样？这时解为"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\def\\arraystretch{1.2}\n  \\left[\\begin{array}{r}\n    x \\\\\n    y \\\\\n    z\n  \\end{array}\\right] = \\left[\\begin{array}{rrr}\n    0 & \\frac{1}{2} & \\frac{1}{2} \\\\\n    1 & -1 & 0 \\\\\n    1 & -\\frac{1}{2} & -\\frac{1}{2}\n  \\end{array}\\right] \\left[\\begin{array}{r}\n    0 \\\\\n    1 \\\\\n    3\n  \\end{array}\\right] =\\left[\\begin{array}{r}\n    2 \\\\\n    -1 \\\\\n    -2\n  \\end{array}\\right]."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This illustrates that for a system $A\\vect{x}=\\vect{b}$ where $A^{-1}$ exists, it is easy to find the solution when the vector $\\vect{b}$ is changed.",
+    "sha": "aec41f69d543",
+    "zh": "这说明，对于 $A^{-1}$ 存在的方程组 $A\\vect{x}=\\vect{b}$，当向量 $\\vect{b}$ 改变时，很容易求出相应的解。"
+   }
+  }
+ ],
+ "exercises": [],
+ "title_zh": "用逆矩阵解方程组"
+}

@@ -1,0 +1,2099 @@
+{
+ "id": "linalg",
+ "title_en": "Linear Algebra",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "This chapter documents the linear algebra functions provided in Octave. Reference material for many of these functions may be found in Golub and Van Loan, *Matrix Computations, 2nd Ed.*, Johns Hopkins, 1989, and in the *LAPACK Users' Guide*, SIAM, 1992. The *LAPACK Users' Guide* is available at: *http://www.netlib.org/lapack/lug/*",
+    "sha": "859b785832b9",
+    "zh": "本章介绍 Octave 提供的线性代数函数。这些函数中许多的参考资料可以在 Golub 和 Van Loan 的 *Matrix Computations, 2nd Ed.*（Johns Hopkins，1989 年）以及 *LAPACK Users' Guide*（SIAM，1992 年）中找到。*LAPACK Users' Guide* 可在这里获取：*http://www.netlib.org/lapack/lug/*"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A common text for engineering courses is G. Strang, *Linear Algebra and Its Applications, 4th Edition*. It has become a widespread reference for linear algebra. An alternative is P. Lax *Linear Algebra and Its Applications*, and also is a good choice. It claims to be suitable for high school students with substantial mathematical interests as well as first-year undergraduates.",
+    "sha": "287422119341",
+    "zh": "工科课程常用的一本教材是 G. Strang, *Linear Algebra and Its Applications, 4th Edition*。它已成为线性代数的一本被广泛使用的参考书。另一本是 P. Lax 的 *Linear Algebra and Its Applications*，也是不错的选择。据称它既适合对数学有浓厚兴趣的高中生，也适合大学一年级学生。"
+   }
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Techniques Used for Linear Algebra",
+    "sha": "4277b4841d1f",
+    "zh": "线性代数所用的技术"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Octave includes a polymorphic solver that selects an appropriate matrix factorization depending on the properties of the matrix itself. Generally, the cost of determining the matrix type is small relative to the cost of factorizing the matrix itself. In any case the matrix type is cached once it is calculated so that it is not re-determined each time it is used in a linear equation.",
+    "sha": "135e3c5cc173",
+    "zh": "Octave 包含一个多态求解器，它会根据矩阵本身的性质选择合适的矩阵分解。一般来说，判断矩阵类型的代价相对于分解矩阵本身的代价很小。无论如何，矩阵类型一旦算出就会被缓存，这样在线性方程组中每次使用该矩阵时都不必重新判断。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The selection tree for how the linear equation is solved or a matrix inverse is formed is given by:",
+    "sha": "6b7896052d90",
+    "zh": "求解线性方程组或求矩阵逆时的选择流程如下："
+   }
+  },
+  {
+   "k": "list",
+   "ordered": true,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "If the matrix is upper or lower triangular sparse use a forward or backward substitution using the LAPACK xTRTRS function, and goto 4.",
+       "sha": "96f9f4c9dea8",
+       "zh": "如果矩阵是稀疏的上三角或下三角矩阵，使用 LAPACK 的 xTRTRS 函数做前代或回代，然后转到第 4 步。"
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "If the matrix is square, Hermitian with a real positive diagonal, attempt Cholesky factorization using the LAPACK xPOTRF function.",
+       "sha": "95a166757a17",
+       "zh": "如果矩阵是方阵，且是对角线元素为正实数的厄米矩阵，则尝试用 LAPACK 的 xPOTRF 函数做 Cholesky 分解。"
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "If the Cholesky factorization failed or the matrix is not Hermitian with a real positive diagonal, and the matrix is square, factorize using the LAPACK xGETRF function.",
+       "sha": "4dc80f1ca77a",
+       "zh": "如果 Cholesky 分解失败，或者矩阵不是对角线元素为正实数的厄米矩阵，而矩阵是方阵，则用 LAPACK 的 xGETRF 函数进行分解。"
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "If the matrix is not square, or any of the previous solvers flags a singular or near singular matrix, find a least squares solution using the LAPACK xGELSD function.",
+       "sha": "8faac08fafa0",
+       "zh": "如果矩阵不是方阵，或者前面任一求解器指出矩阵是奇异或接近奇异的，则用 LAPACK 的 xGELSD 函数求最小二乘解。"
+      }
+     }
+    ]
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The user can force the type of the matrix with the `matrix_type` function. This overcomes the cost of discovering the type of the matrix. However, it should be noted that identifying the type of the matrix incorrectly will lead to unpredictable results, and so `matrix_type` should be used with care.",
+    "sha": "2660c55789c0",
+    "zh": "用户可以用 `matrix_type` 函数强制指定矩阵的类型，这样就省去了判断矩阵类型的开销。不过要注意，错误地指定矩阵类型会导致不可预测的结果，所以使用 `matrix_type` 时应当小心。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It should be noted that the test for whether a matrix is a candidate for Cholesky factorization, performed above, and by the `matrix_type` function, does not make certain that the matrix is Hermitian. However, the attempt to factorize the matrix will quickly detect a non-Hermitian matrix.",
+    "sha": "a5f0f0a56459",
+    "zh": "需要注意，上面所做的、以及 `matrix_type` 函数所做的“矩阵是否适合做 Cholesky 分解”的检验，并不能确定矩阵一定是厄米矩阵。不过，尝试分解时会很快发现非厄米矩阵。"
+   }
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Basic Matrix Functions",
+    "sha": "8a00c0a675f6",
+    "zh": "基本矩阵函数"
+   }
+  },
+  {
+   "k": "def",
+   "name": "cond",
+   "sigs": [
+    "c = cond (A)",
+    "c = cond (A, p)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the *p*-norm condition number of a matrix with respect to inversion.",
+      "sha": "2341b439e37f",
+      "zh": "计算矩阵关于求逆的 *p* 范数条件数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`cond (A)` is defined as ${\\parallel A \\parallel_p * \\parallel A^{-1} \\parallel_p .}$",
+      "sha": "f97a5c31ea81",
+      "zh": "`cond (A)` 的定义为 ${\\parallel A \\parallel_p * \\parallel A^{-1} \\parallel_p .}$"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By default, `p = 2` is used which implies a (relatively slow) singular value decomposition. Other possible selections are `p = 1, Inf, \"fro\"` which are generally faster. For a full discussion of possible *p* values, `norm`.",
+      "sha": "1b2a3d6a371a",
+      "zh": "默认使用 `p = 2`，这意味着要做（相对较慢的）奇异值分解。其他可选的取值有 `p = 1, Inf, \"fro\"`，它们通常更快。关于 *p* 各种可能取值的完整讨论，参见 `norm`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The condition number of a matrix quantifies the sensitivity of the matrix inversion operation when small changes are made to matrix elements. Ideally the condition number will be close to 1. When the number is large this indicates small changes (such as underflow or round-off error) will produce large changes in the resulting output. In such cases the solution results from numerical computing are not likely to be accurate. See also: `condest`, `rcond`, `condeig`, `norm`, `svd`.",
+      "sha": "4e422c812746",
+      "zh": "矩阵的条件数衡量矩阵元素发生微小变化时，矩阵求逆运算的敏感程度。理想情况下条件数接近 1。条件数很大时，说明微小的变化（例如下溢或舍入误差）会使输出结果产生很大的变化。这时数值计算得到的解很可能并不准确。另见：`condest`、`rcond`、`condeig`、`norm`、`svd`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "det",
+   "sigs": [
+    "d = det (A)",
+    "[d, rcond] = det (A)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the determinant of *A*.",
+      "sha": "b76b2ce3bf8a",
+      "zh": "计算 *A* 的行列式。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Return an estimate of the reciprocal condition number if requested.",
+      "sha": "8acc6f1a44e0",
+      "zh": "如有请求，则返回条件数倒数的估计值。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Programming Notes: Routines from LAPACK are used for full matrices and code from UMFPACK is used for sparse matrices.",
+      "sha": "cca8deaab8a9",
+      "zh": "编程注记：对满矩阵使用 LAPACK 的例程，对稀疏矩阵使用 UMFPACK 的代码。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The determinant should not be used to check a matrix for singularity. For that, use any of the condition number functions: `cond`, `condest`, `rcond`. See also: `cond`, `condest`, `rcond`.",
+      "sha": "1edcaad25663",
+      "zh": "不应使用行列式来检查矩阵是否奇异。为此，请使用任一条件数函数：`cond`、`condest`、`rcond`。另见：`cond`、`condest`、`rcond`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "eig",
+   "sigs": [
+    "lambda = eig (A)",
+    "lambda = eig (A, B)",
+    "[V, lambda] = eig (A)",
+    "[V, lambda] = eig (A, B)",
+    "[V, lambda, W] = eig (A)",
+    "[V, lambda, W] = eig (A, B)",
+    "[…] = eig (A, balanceOption)",
+    "[…] = eig (A, B, algorithm)",
+    "[…] = eig (…, eigvalOption)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the eigenvalues (*lambda*) and optionally the right eigenvectors (*V*) and the left eigenvectors (*W*) of a matrix or pair of matrices.",
+      "sha": "4bb6d7292c5e",
+      "zh": "计算一个矩阵或一对矩阵的特征值（*lambda*），以及可选的右特征向量（*V*）和左特征向量（*W*）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The flag *balanceOption* can be one of:",
+      "sha": "6677ed14593b",
+      "zh": "标志 *balanceOption* 可以取下列之一："
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "`\"balance\"` (default)",
+        "sha": "e16053e32f43",
+        "zh": "`\"balance\"`（默认）"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Preliminary balancing is on.",
+          "sha": "c85ec437fbcb",
+          "zh": "开启预先平衡。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`\"nobalance\"`",
+        "sha": "0bb123fec563",
+        "zh": "`\"nobalance\"`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Disables preliminary balancing.",
+          "sha": "5e5f1ff8c40c",
+          "zh": "关闭预先平衡。"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The flag *eigvalOption* can be one of:",
+      "sha": "0e1804ea0a52",
+      "zh": "标志 *eigvalOption* 可以取下列之一："
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "`\"matrix\"`",
+        "sha": "279c03f9d1ea",
+        "zh": "`\"matrix\"`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Return the eigenvalues in a diagonal matrix. (default if 2 or 3 outputs are requested)",
+          "sha": "859867659035",
+          "zh": "把特征值放在一个对角矩阵中返回。（请求 2 个或 3 个输出时为默认）"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`\"vector\"`",
+        "sha": "85e402d55f13",
+        "zh": "`\"vector\"`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Return the eigenvalues in a column vector. (default if only 1 output is requested, e.g., *lambda* = eig (*A*))",
+          "sha": "cac976eb79da",
+          "zh": "把特征值放在一个列向量中返回。（只请求 1 个输出时为默认，例如 *lambda* = eig (*A*)）"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The flag *algorithm* can be one of:",
+      "sha": "a0d5c1996040",
+      "zh": "标志 *algorithm* 可以取下列之一："
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "`\"chol\"`",
+        "sha": "a77a02f4aa02",
+        "zh": "`\"chol\"`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Use the Cholesky factorization of B. (default if *A* is symmetric (Hermitian) and *B* is symmetric (Hermitian) positive definite)",
+          "sha": "cc30d9277255",
+          "zh": "使用 B 的 Cholesky 分解。（当 *A* 是对称（厄米）矩阵、且 *B* 是对称（厄米）正定矩阵时为默认）"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`\"qz\"`",
+        "sha": "e201818e81f5",
+        "zh": "`\"qz\"`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Use the QZ algorithm. (used whenever *A* or *B* are not symmetric)",
+          "sha": "e113bb8350a6",
+          "zh": "使用 QZ 算法。（只要 *A* 或 *B* 不对称就使用）"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "table",
+     "spec": "grid",
+     "rows": [
+      [
+       "",
+       {
+        "en": "no flag",
+        "sha": "44af2d949737",
+        "zh": "无标志"
+       },
+       {
+        "en": "chol",
+        "sha": "e56a49cbbbe4",
+        "zh": "chol"
+       },
+       {
+        "en": "qz",
+        "sha": "ea9d3ee7ec65",
+        "zh": "qz"
+       }
+      ],
+      [
+       {
+        "en": "`\"chol\"`",
+        "sha": "a77a02f4aa02",
+        "zh": "`\"chol\"`"
+       },
+       {
+        "en": "`\"qz\"`",
+        "sha": "e201818e81f5",
+        "zh": "`\"qz\"`"
+       }
+      ],
+      [
+       {
+        "en": "`\"qz\"`",
+        "sha": "e201818e81f5",
+        "zh": "`\"qz\"`"
+       },
+       {
+        "en": "`\"qz\"`",
+        "sha": "e201818e81f5",
+        "zh": "`\"qz\"`"
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The eigenvalues returned by `eig` are not ordered. See also: `eigs`, `svd`.",
+      "sha": "50cd9aa4edd0",
+      "zh": "`eig` 返回的特征值没有排序。另见：`eigs`、`svd`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "inv",
+   "sigs": [
+    "x = inv (A)",
+    "[x, rcond] = inv (A)",
+    "[…] = inverse (…)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the inverse of the square matrix *A*.",
+      "sha": "aec2d91983a0",
+      "zh": "计算方阵 *A* 的逆。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Return an estimate of the reciprocal condition number if requested, otherwise warn of an ill-conditioned matrix if the reciprocal condition number is small.",
+      "sha": "42f9f72413d9",
+      "zh": "如有请求，则返回条件数倒数的估计值；否则，当条件数的倒数很小时，对病态矩阵给出警告。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In general it is best to avoid calculating the inverse of a matrix directly. For example, it is both faster and more accurate to solve systems of equations (*A**$x$ = $b$) with `y = A \\ b`, rather than `y = inv (A) * b`.",
+      "sha": "60d40dd1d6b3",
+      "zh": "一般来说，最好避免直接计算矩阵的逆。例如，求解方程组（*A**$x$ = $b$）时，用 `y = A \\ b` 既比 `y = inv (A) * b` 更快，也更准确。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If called with a sparse matrix, then in general *x* will be a full matrix requiring significantly more storage. Avoid forming the inverse of a sparse matrix if possible.",
+      "sha": "f1a99b52b7b0",
+      "zh": "如果对稀疏矩阵调用，那么一般来说 *x* 会是一个满矩阵，需要多得多的存储空间。应尽量避免求稀疏矩阵的逆。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`inverse` is an alias and may be used identically in place of `inv`. See also: `ldivide`, `rdivide`, `pinv`.",
+      "sha": "0065b4a94b89",
+      "zh": "`inverse` 是别名，可以与 `inv` 完全相同地互换使用。另见：`ldivide`、`rdivide`、`pinv`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "linsolve",
+   "sigs": [
+    "x = linsolve (A, b)",
+    "x = linsolve (A, b, opts)",
+    "[x, R] = linsolve (…)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Solve the linear system `A*x = b`.",
+      "sha": "de50c695a069",
+      "zh": "求解线性方程组 `A*x = b`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "With no options, this function is equivalent to the left division operator (`x = A \\ b`) or the matrix-left-divide function (`x = mldivide (A, b)`).",
+      "sha": "a687e7a2a69f",
+      "zh": "不带选项时，这个函数等价于左除运算符（`x = A \\ b`）或矩阵左除函数（`x = mldivide (A, b)`）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Octave ordinarily examines the properties of the matrix *A* and chooses a solver that best matches the matrix. By passing a structure *opts* to `linsolve` you can inform Octave directly about the matrix *A*. In this case Octave will skip the matrix examination and proceed directly to solving the linear system.",
+      "sha": "9e0cf03ef031",
+      "zh": "Octave 通常会检查矩阵 *A* 的性质，并选择最适合该矩阵的求解器。通过向 `linsolve` 传入结构体 *opts*，你可以直接告诉 Octave 关于矩阵 *A* 的信息。这时 Octave 会跳过对矩阵的检查，直接求解线性方程组。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "**Warning:** If the matrix *A* does not have the properties listed in the *opts* structure then the result will not be accurate AND no warning will be given. When in doubt, let Octave examine the matrix and choose the appropriate solver as this step takes little time and the result is cached so that it is only done once per linear system.",
+      "sha": "86a56095e2c2",
+      "zh": "**警告：**如果矩阵 *A* 不具备 *opts* 结构体中列出的性质，那么结果将不准确，而且不会给出任何警告。拿不准时，让 Octave 自己检查矩阵并选择合适的求解器，因为这一步花费很少，而且结果会被缓存，每个线性方程组只需做一次。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Possible *opts* fields (set value to true/false):",
+      "sha": "4dc6018330f3",
+      "zh": "可用的 *opts* 字段（取值设为 true/false）："
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "LT",
+        "sha": "6c62fb7313eb",
+        "zh": "LT"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "*A* is lower triangular",
+          "sha": "cbc4b03a4242",
+          "zh": "*A* 是下三角矩阵"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "UT",
+        "sha": "a7439191c896",
+        "zh": "UT"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "*A* is upper triangular",
+          "sha": "33182389cfee",
+          "zh": "*A* 是上三角矩阵"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "UHESS",
+        "sha": "85ef7b3eed88",
+        "zh": "UHESS"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "*A* is upper Hessenberg (currently makes no difference)",
+          "sha": "dc341b26998e",
+          "zh": "*A* 是上 Hessenberg 矩阵（目前不起作用）"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "SYM",
+        "sha": "83f865021ac3",
+        "zh": "SYM"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "*A* is symmetric or complex Hermitian (currently makes no difference)",
+          "sha": "19167b0cbb60",
+          "zh": "*A* 是对称矩阵或复厄米矩阵（目前不起作用）"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "POSDEF",
+        "sha": "ef16a101e58c",
+        "zh": "POSDEF"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "*A* is positive definite",
+          "sha": "3aec2160e6ad",
+          "zh": "*A* 是正定矩阵"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "RECT",
+        "sha": "75e1bc97e17f",
+        "zh": "RECT"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "*A* is general rectangular (currently makes no difference)",
+          "sha": "37b937b01a48",
+          "zh": "*A* 是一般的矩形矩阵（目前不起作用）"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "TRANSA",
+        "sha": "c1cc2d085389",
+        "zh": "TRANSA"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Solve `A'*x = b` if true rather than `A*x = b`",
+          "sha": "b11f7ead5509",
+          "zh": "若为 true，则求解 `A'*x = b`，而不是 `A*x = b`"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional second output *R* is the inverse condition number of *A* (zero if matrix is singular). See also: `mldivide`, `matrix_type`, `rcond`.",
+      "sha": "2ad85ee531cd",
+      "zh": "可选的第二个输出 *R* 是 *A* 的条件数的倒数（矩阵奇异时为零）。另见：`mldivide`、`matrix_type`、`rcond`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "norm",
+   "sigs": [
+    "n = norm (A)",
+    "n = norm (A, p)",
+    "n = norm (A, p, opt)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the p-norm of the matrix *A*.",
+      "sha": "9855e83bb964",
+      "zh": "计算矩阵 *A* 的 p 范数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the second argument is not given, `p = 2` is used.",
+      "sha": "c0fc081582f3",
+      "zh": "如果没有给出第二个参数，则使用 `p = 2`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *A* is a matrix (or sparse matrix):",
+      "sha": "d06d24884aa9",
+      "zh": "如果 *A* 是矩阵（或稀疏矩阵）："
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "*p* = `1`",
+        "sha": "4676480e8831",
+        "zh": "*p* = `1`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "1-norm, the largest column sum of the absolute values of *A*.",
+          "sha": "8498494d0a13",
+          "zh": "1 范数，即 *A* 各元素绝对值的最大列和。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "*p* = `2`",
+        "sha": "93bd947a44fa",
+        "zh": "*p* = `2`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Largest singular value of *A*.",
+          "sha": "4d718412cc55",
+          "zh": "*A* 的最大奇异值。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "*p* = `Inf` or `\"inf\"`",
+        "sha": "4449f5a13a68",
+        "zh": "*p* = `Inf` 或 `\"inf\"`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Infinity norm, the largest row sum of the absolute values of *A*.",
+          "sha": "e62dd316522e",
+          "zh": "无穷范数，即 *A* 各元素绝对值的最大行和。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "*p* = `\"fro\"`",
+        "sha": "991517f07dde",
+        "zh": "*p* = `\"fro\"`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Frobenius norm of *A*, `sqrt (sum (diag (A' * A)))`.",
+          "sha": "eb8c5cca3a47",
+          "zh": "*A* 的 Frobenius 范数，即 `sqrt (sum (diag (A' * A)))`。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "other *p*, `p > 1`",
+        "sha": "748481b6ca1a",
+        "zh": "其他 *p*，`p > 1`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "maximum `norm (A*x, p)` such that `norm (x, p) == 1`",
+          "sha": "f971df5e9554",
+          "zh": "满足 `norm (x, p) == 1` 时 `norm (A*x, p)` 的最大值"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *A* is a vector or a scalar:",
+      "sha": "cdc8eb5b64d0",
+      "zh": "如果 *A* 是向量或标量："
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "*p* = `Inf` or `\"inf\"`",
+        "sha": "4449f5a13a68",
+        "zh": "*p* = `Inf` 或 `\"inf\"`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "`max (abs (A))`.",
+          "sha": "7c387203a6a7",
+          "zh": "`max (abs (A))`。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "*p* = `-Inf`",
+        "sha": "2f2d16b5393c",
+        "zh": "*p* = `-Inf`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "`min (abs (A))`.",
+          "sha": "9df6d8c56a5a",
+          "zh": "`min (abs (A))`。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "*p* = `\"fro\"`",
+        "sha": "991517f07dde",
+        "zh": "*p* = `\"fro\"`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Frobenius norm of *A*, `sqrt (sumsq (abs (A)))`.",
+          "sha": "f8574978f4de",
+          "zh": "*A* 的 Frobenius 范数，即 `sqrt (sumsq (abs (A)))`。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "*p* = 0",
+        "sha": "ad298d27841b",
+        "zh": "*p* = 0"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Hamming norm—the number of nonzero elements.",
+          "sha": "d8ddecd076dc",
+          "zh": "Hamming 范数，即非零元素的个数。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "other *p*, `p > 1`",
+        "sha": "748481b6ca1a",
+        "zh": "其他 *p*，`p > 1`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "p-norm of *A*, `(sum (abs (A) .^ p)) ^ (1/p)`.",
+          "sha": "7c186588b773",
+          "zh": "*A* 的 p 范数，`(sum (abs (A) .^ p)) ^ (1/p)`。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "other *p* `p < 1`",
+        "sha": "7ab56fd0aec0",
+        "zh": "其他 *p*，`p < 1`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "the p-pseudonorm defined as above.",
+          "sha": "235d818ebb2a",
+          "zh": "按上式定义的 p 伪范数。"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *opt* is the value `\"rows\"`, treat each row as a vector and compute its norm. The result is returned as a column vector. Similarly, if *opt* is `\"columns\"` or `\"cols\"` then compute the norms of each column and return a row vector. See also: `normest`, `normest1`, `vecnorm`, `cond`, `svd`.",
+      "sha": "36c0600cda23",
+      "zh": "如果 *opt* 的值为 `\"rows\"`，则把每一行当作一个向量并计算其范数，结果以列向量返回。类似地，如果 *opt* 为 `\"columns\"` 或 `\"cols\"`，则计算每一列的范数并返回行向量。另见：`normest`、`normest1`、`vecnorm`、`cond`、`svd`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "null",
+   "sigs": [
+    "Z = null (A)",
+    "Z = null (A, tol)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return an orthonormal basis *Z* of the null space of *A*.",
+      "sha": "d4eb989fdf87",
+      "zh": "返回 *A* 的零空间的一组标准正交基 *Z*。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The dimension of the null space *Z* is taken as the number of singular values of *A* not greater than *tol*. If the argument *tol* is missing, it is computed as",
+      "sha": "4763bbfe8c4c",
+      "zh": "零空间 *Z* 的维数取为 *A* 的不大于 *tol* 的奇异值的个数。如果缺省参数 *tol*，则按下式计算"
+     }
+    },
+    {
+     "k": "code",
+     "text": " max (size (A)) * max (svd (A, 0)) * eps"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `orth`, `svd`.",
+      "sha": "b23d4ea67294",
+      "zh": "另见：`orth`、`svd`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "orth",
+   "sigs": [
+    "B = orth (A)",
+    "B = orth (A, tol)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return an orthonormal basis of the range space of *A*.",
+      "sha": "ad604f35eb7b",
+      "zh": "返回 *A* 的值域空间的一组标准正交基。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The dimension of the range space is taken as the number of singular values of *A* greater than *tol*. If the argument *tol* is missing, it is computed as",
+      "sha": "a6e898c26914",
+      "zh": "值域空间的维数取为 *A* 的大于 *tol* 的奇异值的个数。如果缺省参数 *tol*，则按下式计算"
+     }
+    },
+    {
+     "k": "code",
+     "text": " max (size (A)) * max (svd (A)) * eps"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `null`.",
+      "sha": "29e4767baa17",
+      "zh": "另见：`null`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "pinv",
+   "sigs": [
+    "B = pinv (A)",
+    "B = pinv (A, tol)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the Moore-Penrose pseudoinverse of *A*.",
+      "sha": "5e5ac9f55c40",
+      "zh": "返回 *A* 的 Moore-Penrose 伪逆。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Singular values less than *tol* are ignored.",
+      "sha": "b10936704e60",
+      "zh": "小于 *tol* 的奇异值会被忽略。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the second argument is omitted, it is taken to be",
+      "sha": "95bed98cae0f",
+      "zh": "如果省略第二个参数，则取为"
+     }
+    },
+    {
+     "k": "code",
+     "text": "tol = max ([rows(x), columns(x)]) * norm (x) * eps"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `inv`, `ldivide`.",
+      "sha": "d1c03438655a",
+      "zh": "另见：`inv`、`ldivide`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "rank",
+   "sigs": [
+    "k = rank (A)",
+    "k = rank (A, tol)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the rank of matrix *A*, using the singular value decomposition.",
+      "sha": "7598b9ebafc6",
+      "zh": "利用奇异值分解计算矩阵 *A* 的秩。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The rank is taken to be the number of singular values of *A* that are greater than the specified tolerance *tol*. If the second argument is omitted, it is taken to be",
+      "sha": "355a770e955e",
+      "zh": "秩取为 *A* 的大于指定容差 *tol* 的奇异值的个数。如果省略第二个参数，则取为"
+     }
+    },
+    {
+     "k": "code",
+     "text": " tol = max (size (A)) * sigma(1) * eps;"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where `eps` is machine precision and `sigma(1)` is the largest singular value of *A*.",
+      "sha": "e90dc6c88d9c",
+      "zh": "其中 `eps` 是机器精度，`sigma(1)` 是 *A* 的最大奇异值。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The rank of a matrix is the number of linearly independent rows or columns and equals the dimension of the row and column space. The function `orth` may be used to compute an orthonormal basis of the column space.",
+      "sha": "739d3671ed4a",
+      "zh": "矩阵的秩是线性无关的行（或列）的个数，等于行空间和列空间的维数。函数 `orth` 可用来计算列空间的一组标准正交基。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For testing if a system `A*x = b` of linear equations is solvable, one can use",
+      "sha": "7cf6c76e50ab",
+      "zh": "要检验线性方程组 `A*x = b` 是否有解，可以使用"
+     }
+    },
+    {
+     "k": "code",
+     "text": " rank (A) == rank ([A b])"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In this case, `x = A \\ b` finds a particular solution *x*. The general solution is *x* plus the null space of matrix *A*. The function `null` may be used to compute a basis of the null space.",
+      "sha": "1b71de31bc5f",
+      "zh": "此时，`x = A \\ b` 求出一个特解 *x*。通解是 *x* 再加上矩阵 *A* 的零空间中的向量。函数 `null` 可用来计算零空间的一组基。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Example:",
+      "sha": "c63737abd734",
+      "zh": "例："
+     }
+    },
+    {
+     "k": "code",
+     "text": " A = [1 2 3\n      4 5 6\n      7 8 9];\n rank (A)\n   ⇒ 2"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In this example, the number of linearly independent rows is only 2 because the final row is a linear combination of the first two rows:",
+      "sha": "5d0c9fd4333b",
+      "zh": "在这个例子中，线性无关的行只有 2 行，因为最后一行是前两行的线性组合："
+     }
+    },
+    {
+     "k": "code",
+     "text": " A(3,:) == -A(1,:) + 2 * A(2,:)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `null`, `orth`, `sprank`, `svd`, `eps`.",
+      "sha": "32376cacc738",
+      "zh": "另见：`null`、`orth`、`sprank`、`svd`、`eps`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "rcond",
+   "sigs": [
+    "c = rcond (A)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the 1-norm estimate of the reciprocal condition number as returned by LAPACK.",
+      "sha": "646172cb00d0",
+      "zh": "计算 LAPACK 所返回的、条件数倒数的 1 范数估计值。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the matrix is well-conditioned then *c* will be near 1 and if the matrix is poorly conditioned it will be close to 0.",
+      "sha": "ddf36fac78b3",
+      "zh": "如果矩阵是良态的，则 *c* 接近 1；如果矩阵是病态的，则 *c* 接近 0。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix *A* must not be sparse. If the matrix is sparse then `condest (A)` or `rcond (full (A))` should be used instead. See also: `cond`, `condest`.",
+      "sha": "36c1b3e5f942",
+      "zh": "矩阵 *A* 不能是稀疏矩阵。如果矩阵是稀疏的，应改用 `condest (A)` 或 `rcond (full (A))`。另见：`cond`、`condest`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "trace",
+   "sigs": [
+    "t = trace (A)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the trace of *A*, the sum of the elements along the main diagonal.",
+      "sha": "bac78cb5b655",
+      "zh": "计算 *A* 的迹，即主对角线上各元素之和。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The implementation is straightforward: `sum (diag (A))`. See also: `eig`.",
+      "sha": "e7af9987c233",
+      "zh": "实现很直接：`sum (diag (A))`。另见：`eig`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "rref",
+   "sigs": [
+    "r = rref (A)",
+    "r = rref (A, tol)",
+    "[r, k] = rref (…)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the reduced row echelon form of *A*.",
+      "sha": "8995fadad60d",
+      "zh": "返回 *A* 的行最简形。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*tol* defaults to `eps * max (size (A)) * norm (A, inf)`.",
+      "sha": "ac96e52d1297",
+      "zh": "*tol* 默认为 `eps * max (size (A)) * norm (A, inf)`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional return argument *k* contains the vector of \"bound variables\", which are those columns on which elimination has been performed.",
+      "sha": "bb8d688313bd",
+      "zh": "可选的返回参数 *k* 包含“约束变量”（bound variables）的向量，它们是做过消元的那些列。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "vecnorm",
+   "sigs": [
+    "n = vecnorm (A)",
+    "n = vecnorm (A, p)",
+    "n = vecnorm (A, p, dim)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the vector p-norm of the elements of array *A* along dimension *dim*.",
+      "sha": "9dc1afe68855",
+      "zh": "返回数组 *A* 的元素沿维度 *dim* 的向量 p 范数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The p-norm of a vector is defined as",
+      "sha": "a939cf6fc12f",
+      "zh": "向量的 p 范数定义为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "{\\Vert A \\Vert}_p = \\left[ \\sum_{i=1}^N {| A_i |}^p \\right] ^ {1/p}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The input *p* must be a positive scalar. If omitted it defaults to 2 (Euclidean norm or distance). Other special values of *p* are 1 (Manhattan norm, sum of absolute values) and `Inf` (absolute value of largest element).",
+      "sha": "22504b53de9b",
+      "zh": "输入 *p* 必须是正标量。如果省略，则默认为 2（欧几里得范数或距离）。*p* 的其他特殊值有 1（曼哈顿范数，即绝对值之和）和 `Inf`（最大元素的绝对值）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The input *dim* specifies the dimension of the array on which the function operates and must be a positive integer. If omitted the first non-singleton dimension is used.",
+      "sha": "5620c09fa66a",
+      "zh": "输入 *dim* 指定函数运算所沿的数组维度，必须是正整数。如果省略，则使用第一个非单一维度。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `norm`.",
+      "sha": "a89ce6a365e6",
+      "zh": "另见：`norm`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Matrix Factorizations",
+    "sha": "da4ac3de1ae5",
+    "zh": "矩阵分解"
+   }
+  },
+  {
+   "k": "def",
+   "name": "chol",
+   "sigs": [
+    "R = chol (A)",
+    "[R, p] = chol (A)",
+    "[R, p, Q] = chol (A)",
+    "[R, p, Q] = chol (A, \"vector\")",
+    "[L, …] = chol (…, \"lower\")",
+    "[R, …] = chol (…, \"upper\")"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the upper Cholesky factor, *R*, of the real symmetric or complex Hermitian positive definite matrix *A*.",
+      "sha": "b021651b738a",
+      "zh": "计算实对称或复厄米正定矩阵 *A* 的上 Cholesky 因子 *R*。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The upper Cholesky factor *R* is computed by using the upper triangular part of matrix *A* and is defined by $ R^T R = A $.",
+      "sha": "8687473461b0",
+      "zh": "上 Cholesky 因子 *R* 利用矩阵 *A* 的上三角部分计算，定义为 $ R^T R = A $。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Calling `chol` using the optional `\"upper\"` flag has the same behavior. In contrast, using the optional `\"lower\"` flag, `chol` returns the lower triangular factorization, computed by using the lower triangular part of matrix *A*, such that $ L L^T = A $.",
+      "sha": "010458b77ccd",
+      "zh": "使用可选的 `\"upper\"` 标志调用 `chol`，行为相同。相反，使用可选的 `\"lower\"` 标志时，`chol` 返回下三角分解，它利用矩阵 *A* 的下三角部分计算，满足 $ L L^T = A $。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Called with one output argument `chol` fails if matrix *A* is not positive definite. Note that if matrix *A* is not real symmetric or complex Hermitian then the lower triangular part is considered to be the (complex conjugate) transpose of the upper triangular part, or vice versa, given the `\"lower\"` flag.",
+      "sha": "2bf1ce919bd2",
+      "zh": "只带一个输出参数调用时，如果矩阵 *A* 不是正定的，`chol` 会失败。注意，如果矩阵 *A* 不是实对称或复厄米矩阵，那么下三角部分被视为上三角部分的（复共轭）转置；若给出 `\"lower\"` 标志，则反之。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Called with two or more output arguments *p* flags whether the matrix *A* was positive definite and `chol` does not fail. A zero value of *p* indicates that matrix *A* is positive definite and *R* gives the factorization. Otherwise, *p* will have a positive value.",
+      "sha": "401597c350b1",
+      "zh": "带两个或更多输出参数调用时，*p* 标示矩阵 *A* 是否正定，此时 `chol` 不会失败。*p* 为零表示矩阵 *A* 正定，*R* 给出分解；否则 *p* 取正值。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If called with three output arguments matrix *A* must be sparse and a sparsity preserving row/column permutation is applied to matrix *A* prior to the factorization. That is *R* is the factorization of `A(Q,Q)` such that $ R^T R = Q^T A Q$.",
+      "sha": "e49dc176acd2",
+      "zh": "如果带三个输出参数调用，矩阵 *A* 必须是稀疏的，并且在分解之前会对矩阵 *A* 施加一个保持稀疏性的行列置换。也就是说，*R* 是 `A(Q,Q)` 的分解，满足 $ R^T R = Q^T A Q$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The sparsity preserving permutation is generally returned as a matrix. However, given the optional flag `\"vector\"`, *Q* will be returned as a vector such that $ R^T R = A (Q, Q)$.",
+      "sha": "2ad441d005a9",
+      "zh": "保持稀疏性的置换通常以矩阵形式返回。不过，若给出可选标志 `\"vector\"`，*Q* 将以向量形式返回，满足 $ R^T R = A (Q, Q)$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In general the lower triangular factorization is significantly faster for sparse matrices. See also: `hess`, `lu`, `qr`, `qz`, `schur`, `svd`, `ichol`, `cholinv`, `chol2inv`, `cholupdate`, `cholinsert`, `choldelete`, `cholshift`.",
+      "sha": "0aadc892492b",
+      "zh": "一般来说，对稀疏矩阵而言，下三角分解要快得多。另见：`hess`、`lu`、`qr`、`qz`、`schur`、`svd`、`ichol`、`cholinv`、`chol2inv`、`cholupdate`、`cholinsert`、`choldelete`、`cholshift`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "lu",
+   "sigs": [
+    "[L, U] = lu (A)",
+    "[L, U, P] = lu (A)",
+    "[L, U, P, Q] = lu (S)",
+    "[L, U, P, Q, R] = lu (S)",
+    "[…] = lu (S, thresh)",
+    "y = lu (…)",
+    "[…] = lu (…, \"vector\")"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the LU decomposition of *A*.",
+      "sha": "b6911166cdac",
+      "zh": "计算 *A* 的 LU 分解。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *A* is full then subroutines from LAPACK are used, and if *A* is sparse then UMFPACK is used.",
+      "sha": "6ae7e69ee7de",
+      "zh": "如果 *A* 是满矩阵，则使用 LAPACK 的子程序；如果 *A* 是稀疏矩阵，则使用 UMFPACK。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The result is returned in a permuted form, according to the optional return value *P*. For example, given the matrix `A = [1, 2; 3, 4]`,",
+      "sha": "497cdbd16883",
+      "zh": "结果以置换后的形式返回，具体取决于可选的返回值 *P*。例如，给定矩阵 `A = [1, 2; 3, 4]`，"
+     }
+    },
+    {
+     "k": "code",
+     "text": "[L, U, P] = lu (A)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "returns",
+      "sha": "414e681ebabc",
+      "zh": "返回"
+     }
+    },
+    {
+     "k": "code",
+     "text": "L =\n\n  1.00000  0.00000\n  0.33333  1.00000\n\nU =\n\n  3.00000  4.00000\n  0.00000  0.66667\n\nP =\n\n  0  1\n  1  0"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix is not required to be square.",
+      "sha": "392773183bac",
+      "zh": "矩阵不要求是方阵。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with two or three output arguments and a sparse input matrix, `lu` does not attempt to perform sparsity preserving column permutations. Called with a fourth output argument, the sparsity preserving column transformation *Q* is returned, such that `P * A * Q = L * U`. This is the **preferred** way to call `lu` with sparse input matrices.",
+      "sha": "d552e6d3444d",
+      "zh": "当带两个或三个输出参数、且输入为稀疏矩阵时，`lu` 不会尝试进行保持稀疏性的列置换。带第四个输出参数调用时，会返回保持稀疏性的列变换 *Q*，满足 `P * A * Q = L * U`。这是用稀疏输入矩阵调用 `lu` 的**首选**方式。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Called with a fifth output argument and a sparse input matrix, `lu` attempts to use a scaling factor *R* on the input matrix such that `P * (R \\ A) * Q = L * U`. This typically leads to a sparser and more stable factorization.",
+      "sha": "6eadbccdb22a",
+      "zh": "带第五个输出参数、且输入为稀疏矩阵时，`lu` 会尝试对输入矩阵使用缩放因子 *R*，使 `P * (R \\ A) * Q = L * U`。这通常会得到更稀疏、更稳定的分解。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "An additional input argument *thresh* that defines the pivoting threshold can be given. *thresh* can be a scalar, in which case it defines the UMFPACK pivoting tolerance for both symmetric and unsymmetric cases. If *thresh* is a 2-element vector, then the first element defines the pivoting tolerance for the unsymmetric UMFPACK pivoting strategy and the second for the symmetric strategy. By default, the values defined by `spparms` are used ([0.1, 0.001]).",
+      "sha": "c6fc59071a22",
+      "zh": "可以再给一个额外的输入参数 *thresh*，用来定义选主元的阈值。*thresh* 可以是标量，此时它同时定义对称与非对称情形下 UMFPACK 的选主元容差。如果 *thresh* 是含 2 个元素的向量，则第一个元素定义 UMFPACK 非对称选主元策略的选主元容差，第二个元素定义对称策略的容差。默认使用 `spparms` 所定义的值（[0.1, 0.001]）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Given the string argument `\"vector\"`, `lu` returns the values of *P* and *Q* as vector values, such that for full matrix, `A(P,:) = L * U`, and `R(P,:) * A(:,Q) = L * U`.",
+      "sha": "5e7c12876144",
+      "zh": "若给出字符串参数 `\"vector\"`，`lu` 会把 *P* 和 *Q* 的值以向量形式返回，使得对于满矩阵，`A(P,:) = L * U`，且 `R(P,:) * A(:,Q) = L * U`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "With two output arguments, returns the permuted forms of the upper and lower triangular matrices, such that `A = L * U`. With one output argument *y*, then the matrix returned by the LAPACK routines is returned. If the input matrix is sparse then the matrix *L* is embedded into *U* to give a return value similar to the full case. For both full and sparse matrices, `lu` loses the permutation information. See also: `luupdate`, `ilu`, `chol`, `hess`, `qr`, `qz`, `schur`, `svd`.",
+      "sha": "9ba314e03d8b",
+      "zh": "带两个输出参数时，返回上、下三角矩阵的置换形式，使得 `A = L * U`。带一个输出参数 *y* 时，返回 LAPACK 例程所给出的矩阵。如果输入矩阵是稀疏的，则矩阵 *L* 会被嵌入 *U* 中，得到与满矩阵情形类似的返回值。无论满矩阵还是稀疏矩阵，`lu` 都会丢失置换信息。另见：`luupdate`、`ilu`、`chol`、`hess`、`qr`、`qz`、`schur`、`svd`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "qr",
+   "sigs": [
+    "[Q, R] = qr (A)",
+    "[Q, R, P] = qr (A)",
+    "X = qr (A)  # non-sparse A",
+    "R = qr (A)  # sparse A",
+    "X = qr (A, B) # sparse A",
+    "[C, R] = qr (A, B)",
+    "[…] = qr (…, 0)",
+    "[…] = qr (…, \"econ\")",
+    "[…] = qr (…, \"vector\")",
+    "[…] = qr (…, \"matrix\")"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the QR factorization of *A*, using standard LAPACK subroutines.",
+      "sha": "a89cb4c4dbfb",
+      "zh": "使用标准的 LAPACK 子程序计算 *A* 的 QR 分解。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The QR factorization is $QR = A$ where $Q$ is an orthogonal matrix and $R$ is upper triangular.",
+      "sha": "fedb54ef7ea0",
+      "zh": "QR 分解为 $QR = A$，其中 $Q$ 是正交矩阵，$R$ 是上三角矩阵。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For example, given the matrix `A = [1, 2; 3, 4]`,",
+      "sha": "de96b9d54d89",
+      "zh": "例如，给定矩阵 `A = [1, 2; 3, 4]`，"
+     }
+    },
+    {
+     "k": "code",
+     "text": "[Q, R] = qr (A)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "returns",
+      "sha": "414e681ebabc",
+      "zh": "返回"
+     }
+    },
+    {
+     "k": "code",
+     "text": "Q =\n\n  -0.31623  -0.94868\n  -0.94868   0.31623\n\nR =\n\n  -3.16228  -4.42719\n   0.00000  -0.63246"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which multiplied together return the original matrix",
+      "sha": "f6c3c00a9ca2",
+      "zh": "它们相乘即得到原矩阵"
+     }
+    },
+    {
+     "k": "code",
+     "text": "Q * R\n  ⇒\n     1.0000   2.0000\n     3.0000   4.0000"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If just a single return value is requested then it is either *R*, if *A* is sparse, or *X*, such that `R = triu (X)` if *A* is full. (Note: unlike most commands, the single return value is not the first return value when multiple values are requested.)",
+      "sha": "3734f43ee9b3",
+      "zh": "如果只请求一个返回值，那么当 *A* 是稀疏矩阵时它是 *R*；当 *A* 是满矩阵时它是 *X*，满足 `R = triu (X)`。（注意：与大多数命令不同，请求多个返回值时，这个单一返回值并不是第一个返回值。）"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If a third output *P* is requested, then `qr` calculates the permuted QR factorization $QR = AP$ where $Q$ is an orthogonal matrix, $R$ is upper triangular, and $P$ is a permutation matrix.",
+      "sha": "b62a73156713",
+      "zh": "如果请求第三个输出 *P*，则 `qr` 计算带置换的 QR 分解 $QR = AP$，其中 $Q$ 是正交矩阵，$R$ 是上三角矩阵，$P$ 是置换矩阵。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *A* is dense, the permuted QR factorization has the additional property that the diagonal entries of *R* are ordered by decreasing magnitude. In other words, `abs (diag (R))` will be ordered from largest to smallest.",
+      "sha": "9717731b777b",
+      "zh": "如果 *A* 是稠密矩阵，带置换的 QR 分解还具有一个额外的性质：*R* 的对角元素按绝对值递减排列。换句话说，`abs (diag (R))` 会从大到小排列。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *A* is sparse, *P* is a fill-reducing ordering of the columns of *A*. In that case, the diagonal entries of *R* are not ordered by decreasing magnitude.",
+      "sha": "dfc343865ebb",
+      "zh": "如果 *A* 是稀疏矩阵，*P* 是 *A* 的各列的一个减少填充的排序。此时 *R* 的对角元素不按绝对值递减排列。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For example, given the matrix `A = [1, 2; 3, 4]`,",
+      "sha": "de96b9d54d89",
+      "zh": "例如，给定矩阵 `A = [1, 2; 3, 4]`，"
+     }
+    },
+    {
+     "k": "code",
+     "text": "[Q, R, P] = qr (A)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "returns",
+      "sha": "414e681ebabc",
+      "zh": "返回"
+     }
+    },
+    {
+     "k": "code",
+     "text": "Q =\n\n  -0.44721  -0.89443\n  -0.89443   0.44721\n\nR =\n\n  -4.47214  -3.13050\n   0.00000   0.44721\n\nP =\n\n   0  1\n   1  0"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the input matrix *A* is sparse, the sparse QR factorization is computed by using SPQR or CXSPARSE (e.g., if SPQR is not available). Because the matrix *Q* is, in general, a full matrix, it is recommended to request only one return value *R*. In that case, the computation avoids the construction of *Q* and returns a sparse *R* such that `R = chol (A' * A)`.",
+      "sha": "39a836cc665c",
+      "zh": "如果输入矩阵 *A* 是稀疏的，则使用 SPQR 或 CXSPARSE（例如在 SPQR 不可用时）计算稀疏 QR 分解。因为矩阵 *Q* 一般是满矩阵，建议只请求一个返回值 *R*。这样，计算会避免构造 *Q*，并返回稀疏的 *R*，使得 `R = chol (A' * A)`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *A* is dense, an additional matrix *B* is supplied and two return values are requested, then `qr` returns *C*, where `C = Q' * B`. This allows the least squares approximation of `A \\ B` to be calculated as",
+      "sha": "50ad7ae121dc",
+      "zh": "如果 *A* 是稠密矩阵，且额外提供了矩阵 *B* 并请求两个返回值，则 `qr` 返回 *C*，其中 `C = Q' * B`。这样，`A \\ B` 的最小二乘近似可以这样计算"
+     }
+    },
+    {
+     "k": "code",
+     "text": "[C, R] = qr (A, B)\nX = R \\ C"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *A* is a sparse MxN matrix and an additional matrix *B* is supplied, one or two return values are possible. If one return value *X* is requested and M < N, then *X* is the minimum 2-norm solution of `A \\ B`. If M >= N, *X* is the least squares approximation of `A \\ B`. If two return values are requested, *C* and *R* have the same meaning as in the dense case (*C* is dense and *R* is sparse). The version with one return parameter should be preferred because it uses less memory and can handle rank-deficient matrices better.",
+      "sha": "fcc0d62c98a6",
+      "zh": "如果 *A* 是稀疏的 MxN 矩阵，且额外提供了矩阵 *B*，则可以有一个或两个返回值。如果请求一个返回值 *X* 且 M < N，则 *X* 是 `A \\ B` 的最小 2 范数解。如果 M >= N，*X* 是 `A \\ B` 的最小二乘近似。如果请求两个返回值，*C* 和 *R* 的含义与稠密情形相同（*C* 是稠密的，*R* 是稀疏的）。应当优先使用只带一个返回参数的版本，因为它占用的内存更少，并且能更好地处理秩亏矩阵。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the final argument is the string `\"vector\"` then *P* is a permutation vector (of the columns of *A*) instead of a permutation matrix. In this case, the defining relationship is:",
+      "sha": "d90ee34ab6d0",
+      "zh": "如果最后一个参数是字符串 `\"vector\"`，则 *P* 是（*A* 的各列的）置换向量，而不是置换矩阵。此时，定义关系为："
+     }
+    },
+    {
+     "k": "code",
+     "text": "Q * R = A(:, P)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The default, however, is to return a permutation matrix and this may be explicitly specified by using a final argument of `\"matrix\"`.",
+      "sha": "44e55d61822d",
+      "zh": "不过，默认是返回置换矩阵，也可以用最后一个参数 `\"matrix\"` 显式指定。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the final argument is the scalar 0 or the string `\"econ\"`, an economy factorization is returned. If the original matrix *A* has size MxN and M > N, then the economy factorization will calculate just N rows in *R* and N columns in *Q* and omit the zeros in *R*. If M N, there is no difference between the economy and standard factorizations. When calculating an economy factorization and *A* is dense, the output *P* is always a vector rather than a matrix. If *A* is sparse, output *P* is a sparse permutation matrix.",
+      "sha": "44256460bca2",
+      "zh": "如果最后一个参数是标量 0 或字符串 `\"econ\"`，则返回经济型分解。如果原矩阵 *A* 的大小为 MxN 且 M > N，则经济型分解只计算 *R* 中的 N 行以及 *Q* 中的 N 列，并省略 *R* 中的零。如果 M N，经济型分解与标准分解没有区别。计算经济型分解且 *A* 是稠密矩阵时，输出 *P* 总是向量而不是矩阵。如果 *A* 是稀疏矩阵，输出 *P* 是稀疏置换矩阵。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Background: The QR factorization has applications in the solution of least squares problems",
+      "sha": "8a072b76d13b",
+      "zh": "背景：QR 分解可用于求解最小二乘问题"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\min_x \\left\\Vert A x - b \\right\\Vert_2"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for overdetermined systems of equations (i.e., $A$ is a tall, thin matrix).",
+      "sha": "8a2006ec7a30",
+      "zh": "针对超定方程组（即 $A$ 是又高又瘦的矩阵）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The permuted QR factorization `[Q, R, P] = qr (A)` allows the construction of an orthogonal basis of `span (A)`.",
+      "sha": "08054a8613f1",
+      "zh": "带置换的 QR 分解 `[Q, R, P] = qr (A)` 可用来构造 `span (A)` 的一组正交基。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `chol`, `hess`, `lu`, `qz`, `schur`, `svd`, `qrupdate`, `qrinsert`, `qrdelete`, `qrshift`.",
+      "sha": "99fa53277df0",
+      "zh": "另见：`chol`、`hess`、`lu`、`qz`、`schur`、`svd`、`qrupdate`、`qrinsert`、`qrdelete`、`qrshift`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "schur",
+   "sigs": [
+    "S = schur (A)",
+    "S = schur (A, \"real\")",
+    "S = schur (A, \"complex\")",
+    "S = schur (A, opt)",
+    "[U, S] = schur (…)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the Schur decomposition of *A*.",
+      "sha": "df5393a107e9",
+      "zh": "计算 *A* 的 Schur 分解。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The Schur decomposition of a square matrix *A* is defined as",
+      "sha": "cfd8276de545",
+      "zh": "方阵 *A* 的 Schur 分解定义为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "S = U^T A U"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where *U* is a unitary matrix ($U^T U$ is identity) and *S* is upper triangular. The eigenvalues of *A* (and *S*) are the diagonal elements of *S*. If the matrix *A* is real, then the real Schur decomposition is computed, in which the matrix *U* is orthogonal and *S* is block upper triangular with blocks of size at most $2 \\times 2$ along the diagonal.",
+      "sha": "9e1e21a1e29d",
+      "zh": "其中 *U* 是酉矩阵（$U^T U$ 是单位矩阵），*S* 是上三角矩阵。*A*（以及 *S*）的特征值就是 *S* 的对角元素。如果矩阵 *A* 是实矩阵，则计算实 Schur 分解，此时矩阵 *U* 是正交矩阵，*S* 是分块上三角矩阵，其对角线上各块的大小至多为 $2 \\times 2$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The default for real matrices is a real Schur decomposition. A complex decomposition may be forced by passing the flag `\"complex\"`.",
+      "sha": "c443f206e376",
+      "zh": "对实矩阵，默认计算实 Schur 分解。传入标志 `\"complex\"` 可强制计算复分解。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The eigenvalues are optionally ordered along the diagonal according to the value of *opt*:",
+      "sha": "d824bd87f6ba",
+      "zh": "可以根据 *opt* 的值，对对角线上的特征值进行排序："
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "`opt = \"a\"`",
+        "sha": "8ce43ecbf08d",
+        "zh": "`opt = \"a\"`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Move eigenvalues with negative real parts to the leading block of *S*. Mnemonic: `\"a\"` for Algebraic Riccati Equations, where this ordering is useful.",
+          "sha": "cdb0d54e536e",
+          "zh": "把实部为负的特征值移到 *S* 的前导块中。助记：`\"a\"` 代表代数 Riccati 方程（Algebraic Riccati Equations），这种排序在其中有用。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`opt = \"d\"`",
+        "sha": "daaac8dc2c00",
+        "zh": "`opt = \"d\"`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Move eigenvalues with magnitude less than one to the leading block of *S*. Mnemonic: `\"d\"` for Discrete Algebraic Riccati Equations, where this ordering is useful.",
+          "sha": "4bc3dc2b480b",
+          "zh": "把模小于 1 的特征值移到 *S* 的前导块中。助记：`\"d\"` 代表离散代数 Riccati 方程（Discrete Algebraic Riccati Equations），这种排序在其中有用。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`opt = \"u\"`",
+        "sha": "c93eec222f53",
+        "zh": "`opt = \"u\"`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Unordered. No particular ordering of eigenvalues (default).",
+          "sha": "6f15d8561ec5",
+          "zh": "不排序。特征值没有特定顺序（默认）。"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The leading *k* columns of *U* always span the *A*-invariant subspace corresponding to the *k* leading eigenvalues of *S*. See also: `rsf2csf`, `ordschur`, `ordeig`, `lu`, `chol`, `hess`, `qr`, `qz`, `svd`, `eig`.",
+      "sha": "2ead1b735a04",
+      "zh": "*U* 的前 *k* 列始终张成与 *S* 的前 *k* 个特征值对应的 *A* 不变子空间。另见：`rsf2csf`、`ordschur`、`ordeig`、`lu`、`chol`、`hess`、`qr`、`qz`、`svd`、`eig`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "svd",
+   "sigs": [
+    "s = svd (A)",
+    "[U, S, V] = svd (A)",
+    "[U, S, V] = svd (A, \"econ\")",
+    "[U, S, V] = svd (A, 0)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the singular value decomposition of *A*.",
+      "sha": "4360b01152b9",
+      "zh": "计算 *A* 的奇异值分解。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The singular value decomposition is defined by the relation",
+      "sha": "4f2591fbb468",
+      "zh": "奇异值分解由下面的关系定义"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = U S V^{\\dagger}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The function `svd` normally returns only the vector of singular values. When called with three return values, it computes $U$, $S$, and $V$. For example,",
+      "sha": "ec01639602d2",
+      "zh": "函数 `svd` 通常只返回奇异值向量。带三个返回值调用时，它会计算 $U$、$S$ 和 $V$。例如，"
+     }
+    },
+    {
+     "k": "code",
+     "text": "svd (hilb (3))"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "returns",
+      "sha": "414e681ebabc",
+      "zh": "返回"
+     }
+    },
+    {
+     "k": "code",
+     "text": "ans =\n\n  1.4083189\n  0.1223271\n  0.0026873"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and",
+      "sha": "cffa50a32cb1",
+      "zh": "以及"
+     }
+    },
+    {
+     "k": "code",
+     "text": "[u, s, v] = svd (hilb (3))"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "returns",
+      "sha": "414e681ebabc",
+      "zh": "返回"
+     }
+    },
+    {
+     "k": "code",
+     "text": "u =\n\n  -0.82704   0.54745   0.12766\n  -0.45986  -0.52829  -0.71375\n  -0.32330  -0.64901   0.68867\n\ns =\n\n  1.40832  0.00000  0.00000\n  0.00000  0.12233  0.00000\n  0.00000  0.00000  0.00269\n\nv =\n\n  -0.82704   0.54745   0.12766\n  -0.45986  -0.52829  -0.71375\n  -0.32330  -0.64901   0.68867"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When given a second argument that is not 0, `svd` returns an economy-sized decomposition, eliminating the unnecessary rows or columns of *U* or *V*.",
+      "sha": "6c012b8dfc4d",
+      "zh": "当给出的第二个参数不为 0 时，`svd` 返回经济型分解，去掉 *U* 或 *V* 中不必要的行或列。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the second argument is exactly 0, then the choice of decomposition is based on the matrix *A*. If *A* has more rows than columns then an economy-sized decomposition is returned, otherwise a regular decomposition is calculated.",
+      "sha": "3f8dcccc1d1c",
+      "zh": "如果第二个参数恰好为 0，则根据矩阵 *A* 来选择分解方式：如果 *A* 的行数多于列数，就返回经济型分解，否则计算常规分解。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Algorithm Notes: When calculating the full decomposition (left and right singular matrices in addition to singular values) there is a choice of two routines in LAPACK. The default routine used by Octave is `gesvd`. The alternative is `gesdd` which is 5X faster, but may use more memory and may be inaccurate for some input matrices. There is a third routine `gejsv`, suitable for better accuracy at extreme scale. See the documentation for `svd_driver` for more information on choosing a driver. See also: `svd_driver`, `svds`, `eig`, `lu`, `chol`, `hess`, `qr`, `qz`.",
+      "sha": "e504b0e88b0f",
+      "zh": "算法说明：计算完整分解（除奇异值外还有左、右奇异矩阵）时，LAPACK 中有两个例程可选。Octave 默认使用的例程是 `gesvd`。另一个是 `gesdd`，它快 5 倍，但可能占用更多内存，并且对某些输入矩阵可能不准确。还有第三个例程 `gejsv`，适合在极端尺度下获得更好的精度。关于如何选择驱动程序的更多信息，参见 `svd_driver` 的文档。另见：`svd_driver`、`svds`、`eig`、`lu`、`chol`、`hess`、`qr`、`qz`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Functions of a Matrix",
+    "sha": "11b4d38b9cdf",
+    "zh": "矩阵的函数"
+   }
+  },
+  {
+   "k": "def",
+   "name": "expm",
+   "sigs": [
+    "r = expm (A)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the exponential of a matrix.",
+      "sha": "73e3923ce3c2",
+      "zh": "返回矩阵的指数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix exponential is defined as the infinite Taylor series",
+      "sha": "991c11ab8c41",
+      "zh": "矩阵指数定义为无穷 Taylor 级数"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\exp (A) = I + A + {A^2 \\over 2!} + {A^3 \\over 3!} + \\cdots"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "However, the Taylor series is *not* the way to compute the matrix exponential; see Moler and Van Loan, *Nineteen Dubious Ways to Compute the Exponential of a Matrix*, SIAM Review, 1978. This routine uses Ward's diagonal Padé approximation method with three step preconditioning (SIAM Journal on Numerical Analysis, 1977). Diagonal Padé approximations are rational polynomials of matrices $D_q(A)^{-1}N_q(A)$ whose Taylor series matches the first $2 q + 1$ terms of the Taylor series above; direct evaluation of the Taylor series (with the same preconditioning steps) may be desirable in lieu of the Padé approximation when $D_q(A)$ is ill-conditioned. See also: `logm`, `sqrtm`.",
+      "sha": "53f6de991089",
+      "zh": "不过，Taylor 级数*不是*计算矩阵指数的方法；参见 Moler 与 Van Loan 的 *Nineteen Dubious Ways to Compute the Exponential of a Matrix*，SIAM Review，1978 年。这个例程使用 Ward 的对角 Padé 近似法，并配以三步预处理（SIAM Journal on Numerical Analysis，1977 年）。对角 Padé 近似是矩阵的有理多项式 $D_q(A)^{-1}N_q(A)$，其 Taylor 级数与上面 Taylor 级数的前 $2 q + 1$ 项一致；当 $D_q(A)$ 病态时，可以考虑直接计算 Taylor 级数（使用相同的预处理步骤）来代替 Padé 近似。另见：`logm`、`sqrtm`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "logm",
+   "sigs": [
+    "s = logm (A)",
+    "s = logm (A, opt_iters)",
+    "[s, iters] = logm (…)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the matrix logarithm of the square matrix *A*.",
+      "sha": "a30057320fb3",
+      "zh": "计算方阵 *A* 的矩阵对数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The implementation utilizes a Padé approximant and the identity",
+      "sha": "507ebb13c47b",
+      "zh": "实现使用了 Padé 近似式和恒等式"
+     }
+    },
+    {
+     "k": "code",
+     "text": " logm (A) = 2^k * logm (A^(1 / 2^k))"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional input *opt_iters* is the maximum number of square roots to compute and defaults to 100.",
+      "sha": "f805fd4a7304",
+      "zh": "可选输入 *opt_iters* 是最多计算平方根的次数，默认为 100。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional output *iters* is the number of square roots actually computed. See also: `expm`, `sqrtm`.",
+      "sha": "8508fa2af775",
+      "zh": "可选输出 *iters* 是实际计算的平方根次数。另见：`expm`、`sqrtm`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "sqrtm",
+   "sigs": [
+    "s = sqrtm (A)",
+    "[s, error_estimate] = sqrtm (A)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the matrix square root of the square matrix *A*.",
+      "sha": "a66724f877fc",
+      "zh": "计算方阵 *A* 的矩阵平方根。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Ref: N.J. Higham. *A New sqrtm for MATLAB*. Numerical Analysis Report No. 336, Manchester Centre for Computational Mathematics, Manchester, England, January 1999. See also: `expm`, `logm`.",
+      "sha": "f3a21383f190",
+      "zh": "参考文献：N.J. Higham. *A New sqrtm for MATLAB*. Numerical Analysis Report No. 336, Manchester Centre for Computational Mathematics, Manchester, England, January 1999。另见：`expm`、`logm`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "kron",
+   "sigs": [
+    "C = kron (A, B)",
+    "C = kron (A1, A2, …)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Form the Kronecker product of two or more matrices.",
+      "sha": "1d7194b26da1",
+      "zh": "构造两个或更多矩阵的 Kronecker 积。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is defined block by block as",
+      "sha": "64ad3c2cd6f4",
+      "zh": "它按分块定义为"
+     }
+    },
+    {
+     "k": "code",
+     "text": "c = [ a(i,j)*b ]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For example:",
+      "sha": "059c3e8cce26",
+      "zh": "例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "kron (1:4, ones (3, 1))\n     ⇒  1  2  3  4\n         1  2  3  4\n         1  2  3  4"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If there are more than two input arguments *A1*, *A2*, …, *An* the Kronecker product is computed as",
+      "sha": "2e20a0458b9c",
+      "zh": "如果输入参数多于两个，即 *A1*、*A2*、…、*An*，则 Kronecker 积按下式计算"
+     }
+    },
+    {
+     "k": "code",
+     "text": "kron (kron (A1, A2), …, An)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since the Kronecker product is associative, this is well-defined.",
+      "sha": "def2db0952bb",
+      "zh": "由于 Kronecker 积满足结合律，这样的定义是良定的（well-defined）。"
+     }
+    }
+   ]
+  }
+ ],
+ "title_zh": "线性代数"
+}

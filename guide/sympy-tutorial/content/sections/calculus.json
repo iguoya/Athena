@@ -1,0 +1,546 @@
+{
+ "id": "calculus",
+ "title_en": "Calculus",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "This section covers how to do basic calculus tasks such as derivatives, integrals, limits, and series expansions in SymPy. If you are not familiar with the math of any part of this section, you may safely skip it.",
+    "sha": "52b693b3bbfe",
+    "zh": "这一节讲怎样在 SymPy 里做基本的微积分运算，比如导数、积分、极限和级数展开。如果你对这一节里某部分的数学内容不熟悉，放心跳过就好。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> from sympy import *\n>>> x, y, z = symbols('x y z')\n>>> init_printing(use_unicode=True)"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Derivatives",
+    "sha": "c69b8cfee20f",
+    "zh": "导数"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To take derivatives, use the `diff` function.",
+    "sha": "acba46ec70a9",
+    "zh": "求导数用 `diff` 函数。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> diff(cos(x), x)\n-sin(x)\n>>> diff(exp(x**2), x)\n     ⎛ 2⎞\n     ⎝x ⎠\n2⋅x⋅ℯ"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "`diff` can take multiple derivatives at once. To take multiple derivatives, pass the variable as many times as you wish to following find the third derivative of $x^4$.",
+    "sha": "6d36933da77b",
+    "zh": "`diff` 可以一次求多阶导数。想求多阶导数，把变量重复传入相应的次数就行，比如下面求 $x^4$ 的三阶导数。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> diff(x**4, x, x, x)\n24⋅x\n>>> diff(x**4, x, 3)\n24⋅x"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "You can also take derivatives with respect to many variables at once. Just pass each derivative in order, using the same syntax as for single variable derivatives. For example, each of the following will compute $\\frac{\\partial^7}{\\partial x\\partial y^2\\partial z^4} e^{x y z}$.",
+    "sha": "d4db44d4073b",
+    "zh": "你也可以同时对多个变量求导。只需按顺序依次传入各个求导变量，写法和单变量求导一样。比如，下面每一种写法算的都是 $\\frac{\\partial^7}{\\partial x\\partial y^2\\partial z^4} e^{x y z}$。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> expr = exp(x*y*z)\n>>> diff(expr, x, y, y, z, z, z, z)\n 3  2 ⎛ 3  3  3       2  2  2                ⎞  x⋅y⋅z\nx ⋅y ⋅⎝x ⋅y ⋅z  + 14⋅x ⋅y ⋅z  + 52⋅x⋅y⋅z + 48⎠⋅ℯ\n>>> diff(expr, x, y, 2, z, 4)\n 3  2 ⎛ 3  3  3       2  2  2                ⎞  x⋅y⋅z\nx ⋅y ⋅⎝x ⋅y ⋅z  + 14⋅x ⋅y ⋅z  + 52⋅x⋅y⋅z + 48⎠⋅ℯ\n>>> diff(expr, x, y, y, z, 4)\n 3  2 ⎛ 3  3  3       2  2  2                ⎞  x⋅y⋅z\nx ⋅y ⋅⎝x ⋅y ⋅z  + 14⋅x ⋅y ⋅z  + 52⋅x⋅y⋅z + 48⎠⋅ℯ"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "`diff` can also be called as a method. The two ways of calling `diff` are exactly the same, and are provided only for convenience.",
+    "sha": "7e03f8ad1b7b",
+    "zh": "`diff` 也可以当作方法来调用。调用 `diff` 的这两种方式完全等价，提供两种只是为了方便。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> expr.diff(x, y, y, z, 4)\n 3  2 ⎛ 3  3  3       2  2  2                ⎞  x⋅y⋅z\nx ⋅y ⋅⎝x ⋅y ⋅z  + 14⋅x ⋅y ⋅z  + 52⋅x⋅y⋅z + 48⎠⋅ℯ"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To create an unevaluated derivative, use the `Derivative` class. It has the same syntax as `diff`.",
+    "sha": "637b9d964d8a",
+    "zh": "想创建一个未求值的导数，用 `Derivative` 类，语法和 `diff` 相同。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> deriv = Derivative(expr, x, y, y, z, 4)\n>>> deriv\n     7\n    ∂     ⎛ x⋅y⋅z⎞\n──────────⎝ℯ     ⎠\n  4   2\n∂z  ∂y  ∂x"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To evaluate an unevaluated derivative, use the `doit` method.",
+    "sha": "263299af5de8",
+    "zh": "想对未求值的导数求值，用 `doit` 方法。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> deriv.doit()\n 3  2 ⎛ 3  3  3       2  2  2                ⎞  x⋅y⋅z\nx ⋅y ⋅⎝x ⋅y ⋅z  + 14⋅x ⋅y ⋅z  + 52⋅x⋅y⋅z + 48⎠⋅ℯ"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "These unevaluated objects are useful for delaying the evaluation of the derivative, or for printing purposes. They are also used when SymPy does not know how to compute the derivative of an expression (for example, if it contains an undefined function, which are described in the Solving Differential Equations section).",
+    "sha": "76ac6313894b",
+    "zh": "这些未求值的对象可以用来推迟导数的求值，也可以用于打印。当 SymPy 不知道怎么求某个表达式的导数时（比如表达式里含有未定义的函数，这类函数在“求解微分方程”一节里介绍），也会用到它们。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Derivatives of unspecified order can be created using tuple `(x, n)` where `n` is the order of the derivative with respect to `x`.",
+    "sha": "0534ac67bc19",
+    "zh": "阶数不确定的导数，可以用元组 `(x, n)` 来创建，其中 `n` 是对 `x` 求导的阶数。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> m, n, a, b = symbols('m n a b')\n>>> expr = (a*x + b)**m\n>>> expr.diff((x, n))\n  n\n ∂ ⎛         m⎞\n───⎝(a⋅x + b) ⎠\n  n\n∂x"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Integrals",
+    "sha": "58ee21eb085c",
+    "zh": "积分"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To compute an integral, use the `integrate` function. There are two kinds of integrals, definite and indefinite. To compute an indefinite integral, that is, an antiderivative, or primitive, just pass the variable after the expression.",
+    "sha": "737eec4ad3f7",
+    "zh": "计算积分用 `integrate` 函数。积分有两种：定积分和不定积分。要算不定积分，也就是求原函数（antiderivative，也叫 primitive），只需在表达式后面传入变量。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> integrate(cos(x), x)\nsin(x)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Note that SymPy does not include the constant of integration. If you want it, you can add one yourself, or rephrase your problem as a differential equation and use `dsolve` to solve it, which does add the constant (see Solving Differential Equations).",
+    "sha": "158bf6250021",
+    "zh": "注意，SymPy 的结果里不含积分常数。如果你需要它，可以自己加上去；也可以把问题改写成微分方程，用 `dsolve` 来解，它会带上这个常数（见“求解微分方程”）。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "note",
+   "title": {
+    "en": "Quick Tip",
+    "sha": "4de3b8e1c5e6",
+    "zh": "小提示"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\infty$ in SymPy is `oo` (that's the lowercase letter \"oh\" twice). This is because `oo` looks like $\\infty$, and is easy to type.",
+      "sha": "98a42a957596",
+      "zh": "SymPy 里的 $\\infty$ 写作 `oo`（就是连着两个小写字母“哦”）。原因是 `oo` 长得像 $\\infty$，而且好敲。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To compute a definite integral, pass the argument `(integration_variable, lower_limit, upper_limit)`. For example, to compute",
+    "sha": "04bb3d76b627",
+    "zh": "计算定积分，要传入参数 `(integration_variable, lower_limit, upper_limit)`，即（积分变量，下限，上限）。比如要计算"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\int_0^\\infty e^{-x}\\,dx,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "we would do",
+    "sha": "2ca23cbc8288",
+    "zh": "我们这样做"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> integrate(exp(-x), (x, 0, oo))\n1"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "As with indefinite integrals, you can pass multiple limit tuples to perform a multiple integral. For example, to compute",
+    "sha": "fbc3a19cc52b",
+    "zh": "和不定积分一样，你可以传入多个上下限元组来计算多重积分。比如要计算"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\int_{-\\infty}^{\\infty}\\int_{-\\infty}^{\\infty} e^{- x^{2} - y^{2}}\\, dx\\, dy,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "do",
+    "sha": "eadcd9bd2a09",
+    "zh": "这样做"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> integrate(exp(-x**2 - y**2), (x, -oo, oo), (y, -oo, oo))\nπ"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If `integrate` is unable to compute an integral, it returns an unevaluated `Integral` object.",
+    "sha": "df786d3aeb56",
+    "zh": "如果 `integrate` 算不出某个积分，它会返回一个未求值的 `Integral` 对象。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> expr = integrate(x**x, x)\n>>> print(expr)\nIntegral(x**x, x)\n>>> expr\n⌠\n⎮  x\n⎮ x  dx\n⌡"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "As with `Derivative`, you can create an unevaluated integral using `Integral`. To later evaluate this integral, call `doit`.",
+    "sha": "eacf51f26b9a",
+    "zh": "和 `Derivative` 一样，你可以用 `Integral` 创建未求值的积分。之后想对这个积分求值，调用 `doit` 即可。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> expr = Integral(log(x)**2, x)\n>>> expr\n⌠\n⎮    2\n⎮ log (x) dx\n⌡\n>>> expr.doit()\n         2\nx⋅log (x) - 2⋅x⋅log(x) + 2⋅x"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "`integrate` uses powerful algorithms that are always improving to compute both definite and indefinite integrals, including heuristic pattern matching type algorithms, a partial implementation of the Risch algorithm（https://en.wikipedia.org/wiki/Risch_algorithm）, and an algorithm using Meijer G-functions（https://en.wikipedia.org/wiki/Meijer_g-function） that is useful for computing integrals in terms of special functions, especially definite integrals. Here is a sampling of some of the power of `integrate`.",
+    "sha": "5c061b47ac4d",
+    "zh": "`integrate` 用的是不断改进的强大算法来计算定积分和不定积分，包括启发式的模式匹配类算法、Risch 算法（https://en.wikipedia.org/wiki/Risch_algorithm）的部分实现，以及用 Meijer G 函数（https://en.wikipedia.org/wiki/Meijer_g-function）的算法，后者适合把积分结果用特殊函数表示出来，尤其适合算定积分。下面列出一些例子，感受一下 `integrate` 的本事。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> integ = Integral((x**4 + x**2*exp(x) - x**2 - 2*x*exp(x) - 2*x -\n...     exp(x))*exp(x)/((x - 1)**2*(x + 1)**2*(exp(x) + 1)), x)\n>>> integ\n⌠\n⎮ ⎛ 4    2  x    2        x          x⎞  x\n⎮ ⎝x  + x ⋅ℯ  - x  - 2⋅x⋅ℯ  - 2⋅x - ℯ ⎠⋅ℯ\n⎮ ──────────────────────────────────────── dx\n⎮               2        2 ⎛ x    ⎞\n⎮        (x - 1) ⋅(x + 1) ⋅⎝ℯ  + 1⎠\n⌡\n>>> integ.doit()\n                 x\n   ⎛ x    ⎞     ℯ\nlog⎝ℯ  + 1⎠ + ──────\n               2\n              x  - 1"
+  },
+  {
+   "k": "code",
+   "text": ">>> integ = Integral(sin(x**2), x)\n>>> integ\n⌠\n⎮    ⎛ 2⎞\n⎮ sin⎝x ⎠ dx\n⌡\n>>> integ.doit()\n         ⎛√2⋅x⎞\n3⋅√2⋅√π⋅S⎜────⎟⋅Γ(3/4)\n         ⎝ √π ⎠\n──────────────────────\n       8⋅Γ(7/4)"
+  },
+  {
+   "k": "code",
+   "text": ">>> integ = Integral(x**y*exp(-x), (x, 0, oo))\n>>> integ\n∞\n⌠\n⎮  y  -x\n⎮ x ⋅ℯ   dx\n⌡\n0\n>>> integ.doit()\n⎧ Γ(y + 1)    for re(y) > -1\n⎪\n⎪∞\n⎪⌠\n⎨⎮  y  -x\n⎪⎮ x ⋅ℯ   dx    otherwise\n⎪⌡\n⎪0\n⎩"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This last example returned a `Piecewise` expression because the integral does not converge unless $\\Re(y) > -1.$",
+    "sha": "3e9c9ab3ed11",
+    "zh": "最后这个例子返回了一个 `Piecewise` 表达式，因为只有在 $\\Re(y) > -1.$ 时这个积分才收敛。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Numeric Integration",
+    "sha": "fab8324564c2",
+    "zh": "数值积分"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Numeric integration is a method employed in mathematical analysis to estimate the definite integral of a function across a simplified range. SymPy not only facilitates symbolic integration but also provides support for numeric integration. It leverages the precision capabilities of the `mpmath` library to enhance the accuracy of numeric integration calculations.",
+    "sha": "89077f5785ed",
+    "zh": "数值积分是数学分析中的一种方法，用来在一个简化的范围上估算函数的定积分。SymPy 不仅支持符号积分，也支持数值积分。它借助 `mpmath` 库的高精度能力，来提高数值积分的计算精度。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> from sympy import Integral, Symbol, sqrt\n>>> x = Symbol('x')\n>>> integral = Integral(sqrt(2)*x, (x, 0, 1))\n>>> integral\n1\n⌠\n⎮ √2⋅x dx\n⌡\n0\n>>> integral.evalf()\n0.707106781186548"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To compute the integral with a specified precision:",
+    "sha": "3dc670d79623",
+    "zh": "按指定精度计算积分："
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> integral.evalf(50)\n0.70710678118654752440084436210484903928483593768847"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Numeric integration becomes a viable approach in situations where symbolic integration is impractical or impossible. This method allows for the computation of integrals through numerical techniques, even when dealing with infinite intervals or integrands:",
+    "sha": "5f39a66601e4",
+    "zh": "在符号积分行不通或做不出来的时候，数值积分就是一条可行的路。即便积分区间或被积函数涉及无穷，这种方法也能通过数值技术把积分算出来："
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> Integral(exp(-(x ** 2)), (x, -oo, oo)).evalf()\n1.77245385090552"
+  },
+  {
+   "k": "code",
+   "text": ">>> Integral(1 / sqrt(x), (x, 0, 1)).evalf()\n2.00000000000000"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Limits",
+    "sha": "61a0ae3b849d",
+    "zh": "极限"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "SymPy can compute symbolic limits with the `limit` function. The syntax to compute",
+    "sha": "98fdf9ede284",
+    "zh": "SymPy 可以用 `limit` 函数计算符号极限。要计算"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\lim_{x\\to x_0} f(x)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "is `limit(f(x), x, x0)`.",
+    "sha": "78117c2699c0",
+    "zh": "语法是 `limit(f(x), x, x0)`。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> limit(sin(x)/x, x, 0)\n1"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "`limit` should be used instead of `subs` whenever the point of evaluation is a singularity. Even though SymPy has objects to represent $\\infty$, using them for evaluation is not reliable because they do not keep track of things like rate of growth. Also, things like $\\infty - \\infty$ and $\\frac{\\infty}{\\infty}$ return $\\mathrm{nan}$ (not-a-number). For example",
+    "sha": "fdc4e0fd71a7",
+    "zh": "只要求值的点是奇点，就应该用 `limit` 而不是 `subs`。虽然 SymPy 有表示 $\\infty$ 的对象，但拿它们来代入求值并不可靠，因为它们不记录增长速度之类的信息。此外，$\\infty - \\infty$ 和 $\\frac{\\infty}{\\infty}$ 这样的式子会返回 $\\mathrm{nan}$（not-a-number，非数）。例如"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> expr = x**2/exp(x)\n>>> expr.subs(x, oo)\nnan\n>>> limit(expr, x, oo)\n0"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Like `Derivative` and `Integral`, `limit` has an unevaluated counterpart, `Limit`. To evaluate it, use `doit`.",
+    "sha": "232aa0dcc958",
+    "zh": "和 `Derivative`、`Integral` 一样，`limit` 也有对应的未求值版本 `Limit`。要对它求值，用 `doit`。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> expr = Limit((cos(x) - 1)/x, x, 0)\n>>> expr\n     ⎛cos(x) - 1⎞\n lim ⎜──────────⎟\nx─→0⁺⎝    x     ⎠\n>>> expr.doit()\n0"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To evaluate a limit at one side only, pass `'+'` or `'-'` as a fourth argument to `limit`. For example, to compute",
+    "sha": "8f1d7a39cc7d",
+    "zh": "想只算单侧极限，把 `'+'` 或 `'-'` 作为第四个参数传给 `limit`。比如，要计算"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\lim_{x\\to 0^+}\\frac{1}{x},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "do",
+    "sha": "eadcd9bd2a09",
+    "zh": "这样做"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> limit(1/x, x, 0, '+')\n∞"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "As opposed to",
+    "sha": "0ec8ad04d045",
+    "zh": "而不是"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> limit(1/x, x, 0, '-')\n-∞"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Series Expansion",
+    "sha": "ba8355b59dd7",
+    "zh": "级数展开"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "SymPy can compute asymptotic series expansions of functions around a point. To compute the expansion of $f(x)$ around the point $x = x_0$ terms of order $x^n$, use `f(x).series(x, x0, n)`. `x0` and `n` can be omitted, in which case the defaults `x0=0` and `n=6` will be used.",
+    "sha": "b544c372c04f",
+    "zh": "SymPy 可以计算函数在某一点附近的渐近级数展开。要计算 $f(x)$ 在点 $x = x_0$ 附近、展开到 $x^n$ 阶的项，用 `f(x).series(x, x0, n)`。`x0` 和 `n` 可以省略，省略时取默认值 `x0=0` 和 `n=6`。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> expr = exp(sin(x))\n>>> expr.series(x, 0, 4)\n         2\n        x     ⎛ 4⎞\n1 + x + ── + O⎝x ⎠\n        2"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The $O\\left(x^4\\right)$ term at the end represents the Landau order term at $x=0$ (not to be confused with big O notation used in computer science, which generally represents the Landau order term at $x$ where $x \\rightarrow \\infty$) . It means that all x terms with power greater than or equal to $x^4$ are omitted. Order terms can be created and manipulated outside of `series`. They automatically absorb higher order terms.",
+    "sha": "6fa5e2a4baca",
+    "zh": "末尾的 $O\\left(x^4\\right)$ 项表示 $x=0$ 处的朗道阶项（Landau order term）（别和计算机科学里常用的大 O 记号混淆，后者一般表示 $x \\rightarrow \\infty$ 时 $x$ 处的朗道阶项）。它的意思是：x 的次数大于或等于 $x^4$ 的项都被省略了。阶项可以在 `series` 之外创建和运算，它们会自动吸收更高阶的项。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> x + x**3 + x**6 + O(x**4)\n     3    ⎛ 4⎞\nx + x  + O⎝x ⎠\n>>> x*O(1)\nO(x)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If you do not want the order term, use the `removeO` method.",
+    "sha": "ac71b7498ea1",
+    "zh": "如果你不想要阶项，用 `removeO` 方法。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> expr.series(x, 0, 4).removeO()\n 2\nx\n── + x + 1\n2"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The `O` notation supports arbitrary limit points (other than 0):",
+    "sha": "d7c7c2699947",
+    "zh": "`O` 记号支持任意的极限点（不限于 0）："
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> exp(x - 6).series(x, x0=6)\n            2          3          4          5\n     (x - 6)    (x - 6)    (x - 6)    (x - 6)         ⎛       6       ⎞\n-5 + ──────── + ──────── + ──────── + ──────── + x + O⎝(x - 6) ; x → 6⎠\n        2          6          24        120"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Finite differences",
+    "sha": "6b6b7c5d0483",
+    "zh": "有限差分"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "So far we have looked at expressions with analytic derivatives and primitive functions respectively. But what if we want to have an expression to estimate a derivative of a curve for which we lack a closed form representation, or for which we don't know the functional values for yet. One approach would be to use a finite difference approach.",
+    "sha": "443def1ebbda",
+    "zh": "到目前为止，我们看的都是分别有解析导数和原函数的表达式。但如果我们想估算一条曲线的导数，而这条曲线没有闭式表示，或者我们还不知道它的函数值，该怎么办？一种办法是使用有限差分（finite difference）。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The simplest way the differentiate using finite differences is to use the `differentiate_finite` function:",
+    "sha": "93e96a6277b7",
+    "zh": "用有限差分求导，最简单的办法是使用 `differentiate_finite` 函数："
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> f, g = symbols('f g', cls=Function)\n>>> differentiate_finite(f(x)*g(x))\n-f(x - 1/2)⋅g(x - 1/2) + f(x + 1/2)⋅g(x + 1/2)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If you already have a `Derivative` instance, you can use the `as_finite_difference` method to generate approximations of the derivative to arbitrary order:",
+    "sha": "d0f0e573288a",
+    "zh": "如果你手头已经有一个 `Derivative` 实例，可以用 `as_finite_difference` 方法生成任意阶的导数近似："
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> f = Function('f')\n>>> dfdx = f(x).diff(x)\n>>> dfdx.as_finite_difference()\n-f(x - 1/2) + f(x + 1/2)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "here the first order derivative was approximated around x using a minimum number of points (2 for 1st order derivative) evaluated equidistantly using a step-size of 1. We can use arbitrary steps (possibly containing symbolic expressions):",
+    "sha": "e2136361c8a4",
+    "zh": "这里一阶导数是在 x 附近用最少的点（一阶导数用 2 个点）近似的，这些点等距分布，步长为 1。我们也可以使用任意的步长（可以含有符号表达式）："
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> f = Function('f')\n>>> d2fdx2 = f(x).diff(x, 2)\n>>> h = Symbol('h')\n>>> d2fdx2.as_finite_difference([-3*h,-h,2*h])\nf(-3⋅h)   f(-h)   2⋅f(2⋅h)\n─────── - ───── + ────────\n     2        2        2\n  5⋅h      3⋅h     15⋅h"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If you are just interested in evaluating the weights, you can do so manually:",
+    "sha": "e02050d39f65",
+    "zh": "如果你只关心权重的计算，可以手动来算："
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> finite_diff_weights(2, [-3, -1, 2], 0)[-1][-1]\n[1/5, -1/3, 2/15]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "note that we only need the last element in the last sublist returned from `finite_diff_weights`. The reason for this is that the function also generates weights for lower derivatives and using fewer points (see the documentation of `finite_diff_weights` for more details).",
+    "sha": "4b269b3bf985",
+    "zh": "注意，我们只需要 `finite_diff_weights` 返回的最后一个子列表里的最后一个元素。原因是这个函数还会同时生成低阶导数、使用更少点数时的权重（详见 `finite_diff_weights` 的文档）。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If using `finite_diff_weights` directly looks complicated, and the `as_finite_difference` method of `Derivative` instances is not flexible enough, you can use `apply_finite_diff` which takes `order`, `x_list`, `y_list` and `x0` as parameters:",
+    "sha": "5493468e66bf",
+    "zh": "如果直接用 `finite_diff_weights` 看起来很复杂，而 `Derivative` 实例的 `as_finite_difference` 方法又不够灵活，你可以用 `apply_finite_diff`，它接受 `order`、`x_list`、`y_list` 和 `x0` 作为参数："
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> x_list = [-3, 1, 2]\n>>> y_list = symbols('a b c')\n>>> apply_finite_diff(1, x_list, y_list, 0)\n  3⋅a   b   2⋅c\n- ─── - ─ + ───\n   20   4    5"
+  }
+ ],
+ "title_zh": "微积分"
+}

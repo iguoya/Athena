@@ -1,0 +1,456 @@
+{
+ "id": "SystemsofEquations-Algebraic",
+ "title_en": "Algebraic view of systems of equations",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Recognize the difference between a linear equation and a non-linear equation.",
+         "sha": "1de1f214fe58",
+         "zh": "区分线性方程与非线性方程。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether a tuple of real numbers is a solution for a system of linear equations.",
+         "sha": "e96f3da48f63",
+         "zh": "判断一组实数构成的数组是否是某个线性方程组的解。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Understand what it means for a system of linear equations to be consistent or inconsistent.",
+         "sha": "053277a64305",
+         "zh": "理解线性方程组相容（有解）与不相容（无解）的含义。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We have taken an in-depth look at graphical representations of systems of equations, as well as how to find possible solutions graphically. Our attention now turns to working with systems algebraically.",
+    "sha": "22fa1e2fa4d2",
+    "zh": "前面我们仔细看了方程组的图形表示，以及怎样用图形求出可能的解。现在转而用代数的方法来研究方程组。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Linear equation",
+    "sha": "03d7ae7fb546",
+    "zh": "线性方程"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A **linear equation** is an equation of the form",
+      "sha": "1c1e55360c1c",
+      "zh": "**线性方程**（linear equation）是形如下式的方程"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "a_1x_1 + a_2x_2 + \\ldots + a_nx_n = b."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Here, $a_1,\\ldots,a_n$ are real numbers called the **coefficients** of the equation, $b$ is a real number called the **constant term** of the equation, and $x_1,\\ldots,x_n$ are **variables**.",
+      "sha": "f1eb36670171",
+      "zh": "这里 $a_1,\\ldots,a_n$ 是实数，叫作方程的 **系数**（coefficients），$b$ 是实数，叫作方程的 **常数项**（constant term），$x_1,\\ldots,x_n$ 是 **变量**（variables）。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Real numbers, such as the coefficients $a_1,\\ldots,a_n$, the constant term $b$, or the values of the variables $x_1,\\ldots,x_n$, will also be called **scalars**. For now, the word “scalar” is just a synonym for “real number”. Later, in Section 〔引用〕, we will discover other kinds of scalars.",
+    "sha": "d09813317578",
+    "zh": "实数，例如系数 $a_1,\\ldots,a_n$、常数项 $b$，或者变量 $x_1,\\ldots,x_n$ 取的值，也称为 **标量**（scalars）。目前，“标量”一词只是“实数”的同义词。之后在第 〔引用〕 节中，我们会遇到其他种类的标量。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Linear vs. non-linear equation",
+    "sha": "1d957efbedb3",
+    "zh": "线性方程与非线性方程"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following equations are linear?",
+      "sha": "a8c9f78bb516",
+      "zh": "下面哪些方程是线性的？"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{c}\n      2x+3y=5 \\\\\n      2x^2+3y=5 \\\\\n      2\\sqrt{x} + 3y = 5 \\\\\n      (\\sqrt{2}) x + 3y = 5^2\n    \\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The equation $2x+3y=5$ is linear. The equation $2x^2+3y=5$ is not linear, because it contains the square of a variable instead of a variable. The equation $2\\sqrt{x} + 3y = 5$ is also not linear, because the square root is applied to one of the variables. On the other hand, the equation $(\\sqrt{2}) x + 3y = 5^2$ is linear, because $\\sqrt{2}$ and $5^2$ are real numbers, and can therefore be used as coefficients and constant terms.",
+      "sha": "2b1fe169e40c",
+      "zh": "方程 $2x+3y=5$ 是线性的。方程 $2x^2+3y=5$ 不是线性的，因为它含有的是变量的平方，而不是变量本身。方程 $2\\sqrt{x} + 3y = 5$ 也不是线性的，因为平方根作用在了其中一个变量上。另一方面，方程 $(\\sqrt{2}) x + 3y = 5^2$ 是线性的，因为 $\\sqrt{2}$ 和 $5^2$ 都是实数，可以用作系数和常数项。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We also permit minor notational variants of linear equations. The equation $2x-3y=5$ is linear although Definition “Linear equation” does not mention subtraction, because it can be regarded as just another notation for $2x+(-3)y = 5$. Similarly, the equation $2x=5+3y$ can be regarded as linear, because it can be easily rewritten as $2x-3y=5$ by bringing all the variables (and their coefficients) to the left-hand side. When we need to emphasize that some linear equation is literally of the form $a_1x_1 + a_2x_2 + \\ldots + a_nx_n = b$, we say that the equation is in **standard form**. Thus, the standard form of the equation $2x=5+3y$ is $2x+(-3)y=5$.",
+    "sha": "edb90cde175f",
+    "zh": "我们也允许线性方程在写法上有一些小的变化。方程 $2x-3y=5$ 是线性的，尽管定义“线性方程”里没有提到减法，因为它可以看作 $2x+(-3)y = 5$ 的另一种写法。同样，方程 $2x=5+3y$ 也可以看作线性的，因为把所有变量（连同它们的系数）移到左边，就很容易把它改写成 $2x-3y=5$。当需要强调某个线性方程的写法恰好就是 $a_1x_1 + a_2x_2 + \\ldots + a_nx_n = b$ 这种形式时，我们说这个方程是 **标准形式**（standard form）。于是，方程 $2x=5+3y$ 的标准形式是 $2x+(-3)y=5$。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A **solution** to a linear equation is an assignment of real numbers to the variables, making the equation true. More precisely, if $r_1,\\ldots,r_n$ are real numbers, the assignment $x_1=r_1$, …, $x_n=r_n$ is a solution to the equation in Definition “Linear equation” if the real number $a_1r_1 + a_2r_2 + \\ldots + a_nr_n$ is equal to the real number $b$. To save space, we often write solutions in **tuple notation** \\footnoteThe terminology “tuple” arose as follows. A collection of two items is called a “pair”, a collection of three items is called a “triple”, followed by “quadruple”, “quintuple”, “sextuple”, and so on. You have to know Latin to know what the next ones are called. To avoid these Latin terms, mathematicians started saying $4$-tuple, $5$-tuple, $6$-tuple and so on, and more generally, $n$-tuple for an ordered collection of $n$ items. When $n$ doesn't matter or is clear from the context, we often just say “tuple”. as $(x_1,\\ldots,x_n) = (r_1,\\ldots,r_n)$. When there is no doubt about the order of the variables, we also often simply write the solution as $(r_1,\\ldots,r_n)$.",
+    "sha": "108cb41f73d2",
+    "zh": "线性方程的一个 **解**（solution）是给变量指定一组实数值，使方程成立。更准确地说，如果 $r_1,\\ldots,r_n$ 是实数，当实数 $a_1r_1 + a_2r_2 + \\ldots + a_nr_n$ 等于实数 $b$ 时，赋值 $x_1=r_1$，…，$x_n=r_n$ 就是定义“线性方程”中那个方程的一个解。为了节省篇幅，我们常用 **元组记号**（tuple notation）\\footnote“元组”（tuple）这个词的来历是这样的。两个对象的一组叫“pair”，三个的一组叫“triple”，接着是“quadruple”“quintuple”“sextuple”等等。不懂拉丁文的话，就不知道后面的该叫什么。为了避开这些拉丁文的词，数学家开始说 $4$-元组、$5$-元组、$6$-元组等等，更一般地，把 $n$ 个对象的有序组叫作 $n$-元组。当 $n$ 无关紧要或从上下文可知时，我们常常只说“元组”。把解写成 $(x_1,\\ldots,x_n) = (r_1,\\ldots,r_n)$。在变量的顺序不会引起疑问时，我们也常常直接把解写成 $(r_1,\\ldots,r_n)$。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Solutions of a linear equation",
+    "sha": "82dce9b3d5cf",
+    "zh": "线性方程的解"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the linear equation $2x+3y-4z=5$. Which of the following are solutions? (a) $(x,y,z)=(1,1,0)$, (b) $(x,y,z)=(0,3,1)$, (c) $(x,y,z)=(1,1,1)$.",
+      "sha": "6857e5de6830",
+      "zh": "考虑线性方程 $2x+3y-4z=5$。下面哪些是它的解？(a) $(x,y,z)=(1,1,0)$，(b) $(x,y,z)=(0,3,1)$，(c) $(x,y,z)=(1,1,1)$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The assignment $(x,y,z) = (1,1,0)$ is a solution because $2(1)+3(1)-4(0) = 5$. The assignment $(x,y,z) = (0,3,1)$ is also a solution, because $2(0) + 3(3) - 4(1) = 5$. On the other hand, $(x,y,z) = (1,1,1)$ is not a solution, because $2(1) + 3(1)-4(1) = 1 \\neq 5$.",
+      "sha": "e8b6b28062cd",
+      "zh": "赋值 $(x,y,z) = (1,1,0)$ 是解，因为 $2(1)+3(1)-4(0) = 5$。赋值 $(x,y,z) = (0,3,1)$ 也是解，因为 $2(0) + 3(3) - 4(1) = 5$。另一方面，$(x,y,z) = (1,1,1)$ 不是解，因为 $2(1) + 3(1)-4(1) = 1 \\neq 5$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A system of linear equations is just several linear equations taken together.",
+    "sha": "64b403056f55",
+    "zh": "线性方程组就是把几个线性方程放在一起。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "System of linear equations",
+    "sha": "b825d7f1eb79",
+    "zh": "线性方程组"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A **system of linear equations** is a list of equations",
+      "sha": "a2eff89d4249",
+      "zh": "**线性方程组**（system of linear equations）是下面这样的一列方程"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{ccc}\n      a_{11}x_1+a_{12}x_2+\\ldots+a_{1n}x_n&=&b_1 \\\\\n      a_{21}x_1+a_{22}x_2+\\ldots+a_{2n}x_n&=&b_2 \\\\\n      \\vdots \\\\\n      a_{m1}x_1+a_{m2}x_2+\\ldots+a_{mn}x_n&=&b_m,\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where $a_{ij}$ and $b_i$ are scalars (i.e., real numbers). The above is a system of $m$ equations in the $n$ variables $x_1,x_2\\ldots,x_n$. As before, the numbers $a_{ij}$ are called the **coefficients** and the numbers $b_i$ are called the **constant terms** of the system of equations.",
+      "sha": "69e39ea0bb49",
+      "zh": "其中 $a_{ij}$ 和 $b_i$ 是标量（即实数）。上面是一个含 $n$ 个变量 $x_1,x_2\\ldots,x_n$ 的 $m$ 个方程组成的方程组。与前面一样，数 $a_{ij}$ 叫作方程组的 **系数**，数 $b_i$ 叫作方程组的 **常数项**。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The relative size of $m$ and $n$ is not important here. We may have more variables than equations, more equations than variables, or an equal number of equations and variables.",
+    "sha": "555ba563acaf",
+    "zh": "这里 $m$ 和 $n$ 的大小关系并不重要。变量可以比方程多，方程可以比变量多，方程和变量的个数也可以相等。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A **solution** to a system of linear equations is an assignment of real numbers to the variables that is a solution to *all* of the equations in the system.",
+    "sha": "1727f793e63d",
+    "zh": "线性方程组的一个 **解** 是给变量指定一组实数值，使得方程组中*所有*方程都成立。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Solutions of a system of linear equations",
+    "sha": "74f53f0ae2fc",
+    "zh": "线性方程组的解"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the system of linear equations",
+      "sha": "8c410a506b52",
+      "zh": "考虑线性方程组"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{ccccccc}\n      2x&+&3y&-&4z &=& 5 \\\\\n      -2x&+&y&+&2z &=& -1.\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following are solutions of the system? (a) $(x,y,z)=(1,1,0)$, (b) $(x,y,z)=(6,3,4)$, (c) $(x,y,z)=(0,3,1)$.",
+      "sha": "0667fd56d87f",
+      "zh": "下面哪些是这个方程组的解？(a) $(x,y,z)=(1,1,0)$，(b) $(x,y,z)=(6,3,4)$，(c) $(x,y,z)=(0,3,1)$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The assignment $(x,y,z)=(1,1,0)$ is a solution of this system of equations, because it is a solution to the first equation and the second equation. Also, $(x,y,z)=(6,3,4)$ is another solution of this system of equations (check this!). On the other hand, $(x,y,z)=(0,3,1)$ is not a solution of the system, because although it is a solution to the first equation, it is not a solution to the second equation.",
+      "sha": "f80b5dae0202",
+      "zh": "赋值 $(x,y,z)=(1,1,0)$ 是这个方程组的解，因为它既是第一个方程的解，也是第二个方程的解。另外，$(x,y,z)=(6,3,4)$ 是这个方程组的另一个解（自己验证一下！）。另一方面，$(x,y,z)=(0,3,1)$ 不是这个方程组的解，因为虽然它是第一个方程的解，却不是第二个方程的解。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Recall from Section 〔引用〕 that a system of equations either has a unique solution, infinitely many solutions, or no solution. It is very important to us whether a system of equations has solutions or not. For this reason, we introduce the following terminology:",
+    "sha": "fd914ab6948a",
+    "zh": "回忆第 〔引用〕 节：方程组要么有唯一解，要么有无穷多个解，要么无解。方程组有没有解，对我们来说非常重要。为此引入下面的术语："
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Consistent and inconsistent systems",
+    "sha": "5bafdd44347b",
+    "zh": "相容与不相容的方程组"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A system of linear equations is called **consistent** if there exists at least one solution. It is called **inconsistent** if there is no solution.",
+      "sha": "8fb27947213f",
+      "zh": "如果线性方程组至少有一个解，就称它是 **相容的**（consistent）；如果它没有解，就称它是 **不相容的**（inconsistent）。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If we think of each equation as a condition that must be satisfied by the variables, consistent means that there is some choice of values for the variables which can satisfy **all** of the conditions. Inconsistent means that there is no such choice of values for the variables. In the following sections, you will learn a method for determining whether a system of equations is consistent or not, and in case it is consistent, to find all of its solutions.",
+    "sha": "1f830c3b13fd",
+    "zh": "如果把每个方程看作变量必须满足的一个条件，那么相容就是说：存在某种取值，能让变量同时满足 **所有** 条件；不相容就是说：不存在这样的取值。在后面的几节里，你会学到一种方法，用来判断方程组是否相容，并在相容时求出它的全部解。"
+   }
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following equations are linear?",
+      "sha": "a8c9f78bb516",
+      "zh": "下面哪些方程是线性的？"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$2x-3y+4z = -10$",
+         "sha": "55f383b944cc",
+         "zh": "$2x-3y+4z = -10$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$2.123x_1 + 5.541x_2 - 9.101x_3 = 11.012$",
+         "sha": "fb50f56d0331",
+         "zh": "$2.123x_1 + 5.541x_2 - 9.101x_3 = 11.012$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$x^2+y^2+z^2 = 1$",
+         "sha": "d6da6e735239",
+         "zh": "$x^2+y^2+z^2 = 1$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\frac{1}{\\sqrt{2}}x+4^3y = \\sin(\\frac{\\pi}{3})$",
+         "sha": "8c8b9e049940",
+         "zh": "$\\frac{1}{\\sqrt{2}}x+4^3y = \\sin(\\frac{\\pi}{3})$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$x+yz = 3$",
+         "sha": "c14cefb1f894",
+         "zh": "$x+yz = 3$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "All of them except (c) and (e).",
+      "sha": "be62191bf5a3",
+      "zh": "除了 (c) 和 (e) 以外都是。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Algebraic view of systems of equations · 习题 1（上游 exercises/SystemsofEquations-Algebraic.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-Algebraic.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the system of equations",
+      "sha": "0d9d2b83bf86",
+      "zh": "考虑方程组"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{ccccccccc}\n      x&+&2y&+&3z&+&4w &=& 4 \\\\\n      x&+&y&+&z&+&w &=& 2 \\\\\n      x&+&2y&+&2z&+&w &=& 2.\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For each of the following tuples $(x,y,z,w)$ of real numbers, determine whether it is a solution of the first equation, second equation, and/or third equation. Which ones are solutions to the system of equations?",
+      "sha": "c870a17135d6",
+      "zh": "对下面每个由实数构成的元组 $(x,y,z,w)$，判断它是否是第一个方程、第二个方程和／或第三个方程的解。哪些是这个方程组的解？"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) $(2,0,-2,2)$ (b) $(2,2,-2,0)$ (c) $(1,1,-1,1)$ (d) $(3,0,-1,1)$ (e) $(2,-2,2,0)$",
+      "sha": "04618ecf8062",
+      "zh": "(a) $(2,0,-2,2)$ (b) $(2,2,-2,0)$ (c) $(1,1,-1,1)$ (d) $(3,0,-1,1)$ (e) $(2,-2,2,0)$"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) is a solution to equations 1 and 2, (b) is a solution to equations 2 and 3, (c) is a solution to equations 1, 2, and 3, (d) is a solution to 1 and 3, and (e) is a solution to equations 1, 2, and 3. Only (c) and (e) are solutions to the system of equations.",
+      "sha": "c94f254cf3cf",
+      "zh": "(a) 是方程 1 和 2 的解，(b) 是方程 2 和 3 的解，(c) 是方程 1、2、3 的解，(d) 是方程 1 和 3 的解，(e) 是方程 1、2、3 的解。只有 (c) 和 (e) 是这个方程组的解。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Algebraic view of systems of equations · 习题 2（上游 exercises/SystemsofEquations-Algebraic.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-Algebraic.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "方程组的代数视角"
+}

@@ -1,0 +1,346 @@
+{
+ "id": "Matrices-ElementaryMatrices-RowOperations",
+ "title_en": "Elementary matrices and row operations",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "Recall from Definition “Elementary row operations” that there are three kinds of elementary row operations on matrices:",
+    "sha": "cf1eb39dc1d8",
+    "zh": "回忆定义“初等行变换”：矩阵的初等行变换有三种："
+   }
+  },
+  {
+   "k": "list",
+   "ordered": true,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Switch two rows.",
+       "sha": "cd7f828eab18",
+       "zh": "交换两行。"
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Multiply a row by a non-zero number.",
+       "sha": "ed27051f3a60",
+       "zh": "用一个非零数乘某一行。"
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Add a multiple of one row to another row.",
+       "sha": "411a9a431e37",
+       "zh": "把某一行的倍数加到另一行上。"
+      }
+     }
+    ]
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The purpose of this section is to show that each of these row operations corresponds to a special type of invertible matrix called an **elementary matrix**.",
+    "sha": "89574dc8ca96",
+    "zh": "这一节的目的是说明：这些行变换中的每一种，都对应一类特殊的可逆矩阵，称为**初等矩阵**（elementary matrix）。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Elementary matrix for switching two rows",
+    "sha": "712441c9375e",
+    "zh": "交换两行的初等矩阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let",
+      "sha": "ef5fe1edf379",
+      "zh": "设"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "E ~=~ \\left[\\begin{array}{lll}\n      1 & 0 & 0 \\\\\n      0 & 0 & 1 \\\\\n      0 & 1 & 0 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "What is the effect of multiplying $E$ by an arbitrary $3\\times n$-matrix $A$?",
+      "sha": "596da5c06891",
+      "zh": "用 $E$ 乘任意一个 $3\\times n$ 矩阵 $A$，效果是什么？"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider an arbitrary $3\\times n$-matrix",
+      "sha": "ff269d6b3e04",
+      "zh": "考虑任意一个 $3\\times n$ 矩阵"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A ~=~ \\left[\\begin{array}{cccc}\n      a_{11} & a_{12} & \\cdots & a_{1n} \\\\\n      a_{21} & a_{22} & \\cdots & a_{2n} \\\\\n      a_{31} & a_{32} & \\cdots & a_{3n} \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We compute the product $EA$ by the row method:",
+      "sha": "daeb65d7f390",
+      "zh": "我们用按行的方法计算乘积 $EA$："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "EA ~=~ \\left[\\begin{array}{lll}\n      1 & 0 & 0 \\\\\n      0 & 0 & 1 \\\\\n      0 & 1 & 0 \\\\\n    \\end{array}\\right]\n    \\left[\\begin{array}{cccc}\n      a_{11} & a_{12} & \\cdots & a_{1n} \\\\\n      a_{21} & a_{22} & \\cdots & a_{2n} \\\\\n      a_{31} & a_{32} & \\cdots & a_{3n} \\\\\n    \\end{array}\\right]\n    ~=~\n    \\left[\\begin{array}{cccc}\n      a_{11} & a_{12} & \\cdots & a_{1n} \\\\\n      a_{31} & a_{32} & \\cdots & a_{3n} \\\\\n      a_{21} & a_{22} & \\cdots & a_{2n} \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "So the effect of multiplying $A$ by $E$ on the left is exactly the same as switching rows 2 and 3. We say that $E$ is the **elementary matrix for switching rows 2 and 3**.",
+      "sha": "de45b8f22865",
+      "zh": "所以，用 $E$ 左乘 $A$ 的效果，恰好与交换第 2 行和第 3 行相同。我们称 $E$ 为**交换第 2 行和第 3 行的初等矩阵**。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Elementary matrix for multiplying a row by a non-zero number",
+    "sha": "4eaae59de80e",
+    "zh": "用非零数乘某一行的初等矩阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let",
+      "sha": "ef5fe1edf379",
+      "zh": "设"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "E ~=~ \\left[\\begin{array}{lll}\n      1 & 0 & 0 \\\\\n      0 & k & 0 \\\\\n      0 & 0 & 1 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "What is the effect of multiplying $E$ by an arbitrary $3\\times n$-matrix $A$?",
+      "sha": "596da5c06891",
+      "zh": "用 $E$ 乘任意一个 $3\\times n$ 矩阵 $A$，效果是什么？"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We compute the product $EA$ by the row method:",
+      "sha": "daeb65d7f390",
+      "zh": "我们用按行的方法计算乘积 $EA$："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "EA ~=~ \\left[\\begin{array}{lll}\n      1 & 0 & 0 \\\\\n      0 & k & 0 \\\\\n      0 & 0 & 1 \\\\\n    \\end{array}\\right]\n    \\left[\\begin{array}{cccc}\n      a_{11} & a_{12} & \\cdots & a_{1n} \\\\\n      a_{21} & a_{22} & \\cdots & a_{2n} \\\\\n      a_{31} & a_{32} & \\cdots & a_{3n} \\\\\n    \\end{array}\\right]\n    ~=~\n    \\left[\\begin{array}{rrrr}\n      a_{11} & a_{12} & \\cdots & a_{1n} \\\\\n      ka_{21} & ka_{22} & \\cdots & ka_{2n} \\\\\n      a_{31} & a_{32} & \\cdots & a_{3n} \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "So the effect of multiplying $A$ by $E$ on the left is exactly the same as multiplying row 2 by the scalar $k$. We say that $E$ is the \\textbfelementary matrix for multiplying row 2 by $k$.",
+      "sha": "0ebe66530979",
+      "zh": "所以，用 $E$ 左乘 $A$ 的效果，恰好与用标量 $k$ 乘第 2 行相同。我们称 $E$ 为**用 $k$ 乘第 2 行的初等矩阵**。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Elementary matrix for adding a multiple of one row to another row",
+    "sha": "a8e829d7e311",
+    "zh": "把某一行的倍数加到另一行的初等矩阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let",
+      "sha": "ef5fe1edf379",
+      "zh": "设"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "E ~=~ \\left[\\begin{array}{lll}\n      1 & 0 & 0 \\\\\n      0 & 1 & 0 \\\\\n      0 & k & 1 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "What is the effect of multiplying $E$ by an arbitrary $3\\times n$-matrix $A$?",
+      "sha": "596da5c06891",
+      "zh": "用 $E$ 乘任意一个 $3\\times n$ 矩阵 $A$，效果是什么？"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Once again we compute the product $EA$:",
+      "sha": "350966e4d8ad",
+      "zh": "我们再一次计算乘积 $EA$："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "EA ~=~ \\left[\\begin{array}{lll}\n      1 & 0 & 0 \\\\\n      0 & 1 & 0 \\\\\n      0 & k & 1 \\\\\n    \\end{array}\\right]\n    \\left[\\begin{array}{cccc}\n      a_{11} & a_{12} & \\cdots & a_{1n} \\\\\n      a_{21} & a_{22} & \\cdots & a_{2n} \\\\\n      a_{31} & a_{32} & \\cdots & a_{3n} \\\\\n    \\end{array}\\right]\n    ~=~\n    \\left[\\begin{array}{cccc}\n      a_{11} & a_{12} & \\cdots & a_{1n} \\\\\n      a_{21} & a_{22} & \\cdots & a_{2n} \\\\\n      a_{31}+ka_{21} & a_{32}+ka_{22} & \\cdots & a_{3n}+ka_{2n} \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "So the effect of multiplying $A$ by $E$ on the left is exactly the same as adding $k$ times row 2 to row 3. We say that $E$ is the \\textbfelementary matrix for adding $k$ times row 2 to row 3.",
+      "sha": "a4682b9b7415",
+      "zh": "所以，用 $E$ 左乘 $A$ 的效果，恰好与把第 2 行的 $k$ 倍加到第 3 行上相同。我们称 $E$ 为**把第 2 行的 $k$ 倍加到第 3 行的初等矩阵**。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "As these examples show, performing each type of elementary row operation is the same as multiplying (on the left) by a certain invertible matrix. These matrices are called the **elementary matrices**. In the above examples, we have only considered $3\\times 3$-elementary matrices, but they exist for other sizes too. The following definition makes this precise. It also shows how to calculate the elementary matrix corresponding to any elementary row operation.",
+    "sha": "91b27f732453",
+    "zh": "正如这些例子所示，做每一种初等行变换，都等同于（在左边）乘一个特定的可逆矩阵。这些矩阵称为**初等矩阵**。上面的例子里只考虑了 $3\\times 3$ 的初等矩阵，但其他大小的初等矩阵也存在。下面的定义把这一点说清楚，同时也说明了怎样求出任意一个初等行变换所对应的初等矩阵。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Elementary matrices and row operations",
+    "sha": "5759c97f71b6",
+    "zh": "初等矩阵与行变换"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $E$ be an $n\\times n$-matrix. Then $E$ is an **elementary matrix** if it is the result of applying one elementary row operation to the $n\\times n$ identity matrix.",
+      "sha": "6f68e63b092d",
+      "zh": "设 $E$ 是 $n\\times n$ 矩阵。如果它是对 $n\\times n$ 单位矩阵做一次初等行变换的结果，则 $E$ 称为**初等矩阵**。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Finding an elementary matrix",
+    "sha": "e3c96d219276",
+    "zh": "求初等矩阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the elementary row operation of adding $5$ times row 3 to row 1 of a $4\\times n$-matrix. Find the elementary matrix $E$ corresponding to this row operation.",
+      "sha": "d7f182a7605d",
+      "zh": "考虑对 $4\\times n$ 矩阵“把第 3 行的 $5$ 倍加到第 1 行”这一初等行变换。求这个行变换所对应的初等矩阵 $E$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Following Definition “Elementary matrices and row operations”, all we have to do is apply the desired row operation to the $4\\times 4$-identity matrix:",
+      "sha": "2854e537e2ed",
+      "zh": "按照定义“初等矩阵与行变换”，我们只需把所要的行变换作用到 $4\\times 4$ 单位矩阵上："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrr}\n      1 & 0 & 0 & 0 \\\\\n      0 & 1 & 0 & 0 \\\\\n      0 & 0 & 1 & 0 \\\\\n      0 & 0 & 0 & 1 \\\\\n    \\end{array}\\right]\n    \\quad\n    \\stackrel{R_1\\rowop R_1+5R_3}{\\roweq}\n    \\quad\n    \\left[\\begin{array}{rrrr}\n      1 & 0 & 5 & 0 \\\\\n      0 & 1 & 0 & 0 \\\\\n      0 & 0 & 1 & 0 \\\\\n      0 & 0 & 0 & 1 \\\\\n    \\end{array}\\right]\n    ~=~ E."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can double-check that multiplying $E$ by any $4\\times n$-matrix does indeed have the desired effect:",
+    "sha": "2215017f2865",
+    "zh": "我们可以再检验一下：用 $E$ 乘任意 $4\\times n$ 矩阵，确实产生所要的效果："
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\left[\\begin{array}{rrrr}\n    1 & 0 & 5 & 0 \\\\\n    0 & 1 & 0 & 0 \\\\\n    0 & 0 & 1 & 0 \\\\\n    0 & 0 & 0 & 1 \\\\\n  \\end{array}\\right]\n  \\left[\\begin{array}{cccc}\n    a_{11} & a_{12} & \\cdots & a_{1n} \\\\\n    a_{21} & a_{22} & \\cdots & a_{2n} \\\\\n    a_{31} & a_{32} & \\cdots & a_{3n} \\\\\n    a_{41} & a_{42} & \\cdots & a_{4n} \\\\\n  \\end{array}\\right]\n  ~=~\n  \\left[\\begin{array}{cccc}\n    a_{11}+5a_{31} & a_{12}+5a_{32} & \\cdots & a_{1n}+5a_{3n} \\\\\n    a_{21} & a_{22} & \\cdots & a_{2n} \\\\\n    a_{31} & a_{32} & \\cdots & a_{3n} \\\\\n    a_{41} & a_{42} & \\cdots & a_{4n} \\\\\n  \\end{array}\\right]."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The fact that this always works is the content of the following theorem.",
+    "sha": "991cf9e3573a",
+    "zh": "这总是成立的，这一事实就是下面定理的内容。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Multiplication by an elementary matrix and row operations",
+    "sha": "7d9a9c61b57a",
+    "zh": "用初等矩阵相乘与行变换"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Performing any of the three elementary row operations on a matrix $A$ is the same as taking the product $EA$, where $E$ is the elementary matrix obtained by applying the desired row operation to the identity matrix.",
+      "sha": "5b4871596033",
+      "zh": "对矩阵 $A$ 做三种初等行变换中的任何一种，都等同于计算乘积 $EA$，其中 $E$ 是把所要的行变换作用到单位矩阵上得到的初等矩阵。"
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [],
+ "title_zh": "初等矩阵与行变换"
+}

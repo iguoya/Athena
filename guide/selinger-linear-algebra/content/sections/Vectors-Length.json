@@ -1,0 +1,815 @@
+{
+ "id": "Vectors-Length",
+ "title_en": "Length of a vector",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Compute the distance between points in $n$-dimensional space.",
+         "sha": "15f4c5df046c",
+         "zh": "计算 $n$ 维空间中两点之间的距离。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Compute the length of a vector algebraically and geometrically.",
+         "sha": "bf3825136f93",
+         "zh": "用代数方法和几何方法计算向量的长度。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find vectors that are a given distance from other vectors.",
+         "sha": "76794e61e357",
+         "zh": "求与其他向量的距离为给定值的向量。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Use algebraic properties of the length operation to prove equalities.",
+         "sha": "36ec7f228be6",
+         "zh": "运用长度运算的代数性质证明等式。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Normalize a vector.",
+         "sha": "d4ea4da3bce2",
+         "zh": "把一个向量单位化。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In this section, we explore what is meant by the length of a vector in $\\R^n$. We develop this concept by first looking at the distance between two points in $\\R^n$. Consider two points $P=(p_1,p_2)$ and $Q=(q_1,q_2)$ in the plane, as in the following picture.",
+    "sha": "d0abe2a8a50e",
+    "zh": "这一节我们来探讨 $\\R^n$ 中向量的长度是什么意思。为了引出这个概念，我们先看 $\\R^n$ 中两点之间的距离。考虑平面上的两个点 $P=(p_1,p_2)$ 和 $Q=(q_1,q_2)$，如下图所示。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "fa2263adc74b"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The distance between $P$ and $Q$ is shown in the picture as a solid line, which is the hypotenuse of a right triangle. The lengths of the two other sides of this triangle are $\\abs{p_1-q_1}$ and $\\abs{p_2-q_2}$. Therefore, the Pythagorean Theorem implies the length of the hypotenuse (and thus the distance between $P$ and $Q$) equals",
+    "sha": "6b31a05c6e5f",
+    "zh": "$P$ 与 $Q$ 之间的距离在图中用实线表示，它是一个直角三角形的斜边。这个三角形另外两条边的长度是 $\\abs{p_1-q_1}$ 和 $\\abs{p_2-q_2}$。因此，由勾股定理，斜边的长度（也就是 $P$ 与 $Q$ 之间的距离）等于"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "d(P,Q)\n  =\\sqrt{\\abs{p_1-q_1}^2+\\abs{p_2-q_2}^2}\n  =\\sqrt{(p_1-q_1)^2+(p_2-q_2)^2}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Now consider two points $P=(p_1,p_2,p_3)$ and $Q = (q_1,q_2,q_3)$ in $3$-dimensional space.",
+    "sha": "fe1b75e8a436",
+    "zh": "现在考虑 $3$ 维空间中的两个点 $P=(p_1,p_2,p_3)$ 和 $Q = (q_1,q_2,q_3)$。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "795721aa9ed0"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We will use the Pythagorean Theorem twice to find the length of the solid line connecting $P$ and $Q$. First, by the Pythagorean Theorem applied to the right triangle $QSR$, the length of the line joining $R$ and $Q$ equals",
+    "sha": "aa0e972c3716",
+    "zh": "我们要用两次勾股定理来求连接 $P$ 和 $Q$ 的实线的长度。第一次，对直角三角形 $QSR$ 用勾股定理，得到连接 $R$ 和 $Q$ 的线段的长度等于"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "d(R,Q) = \\sqrt{(p_1-q_1)^2+(p_2-q_2)^2}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Second, by the Pythagorean Theorem applied to the triangle $QRP$, the length of the line joining $P$ and $Q$ equals",
+    "sha": "812258b6a834",
+    "zh": "第二次，对三角形 $QRP$ 用勾股定理，得到连接 $P$ 和 $Q$ 的线段的长度等于"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "d(P,Q)=\\sqrt{d(R,Q)^2+(p_3-q_3)^2}\n  =\\sqrt{(p_1-q_1)^2+(p_2-q_2)^2+(p_3-q_3)^2}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This discussion motivates the following definition for the distance between points in $\\R^n$.",
+    "sha": "825f2b6afbde",
+    "zh": "上面的讨论引出了下面关于 $\\R^n$ 中两点之间距离的定义。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Distance between points",
+    "sha": "026ad06d4714",
+    "zh": "点之间的距离"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $P=(p_1,\\ldots,p_n)$ and $Q=(q_1,\\ldots,q_n)$ be two points in $\\R^n$. Then the **distance** between these points is defined as",
+      "sha": "72fdfdf75af9",
+      "zh": "设 $P=(p_1,\\ldots,p_n)$ 和 $Q=(q_1,\\ldots,q_n)$ 是 $\\R^n$ 中的两个点。这两点之间的**距离**定义为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "d(P, Q) = \\sqrt{(p_1-q_1)^2 + \\ldots + (p_n-q_n)^2}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This formula is also called the **distance formula**. We may also write $\\abs{PQ}$ for the distance between $P$ and $Q$.",
+      "sha": "49a1c6fbaf07",
+      "zh": "这个公式也称为**距离公式**。我们也可以用 $\\abs{PQ}$ 表示 $P$ 与 $Q$ 之间的距离。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In the following example, we use Definition “Distance between points” to find the distance between two points in $\\R^4$.",
+    "sha": "5db4d3277ddf",
+    "zh": "在下面的例中，我们用定义“点之间的距离”来求 $\\R^4$ 中两点之间的距离。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Distance between points",
+    "sha": "026ad06d4714",
+    "zh": "点之间的距离"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the distance between the points $P=(1,2,-4,6)$ and $Q=(2,3,-1,0)$ in $\\R^4$.",
+      "sha": "54995d681144",
+      "zh": "求 $\\R^4$ 中的点 $P=(1,2,-4,6)$ 和 $Q=(2,3,-1,0)$ 之间的距离。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Using the distance formula, we have",
+      "sha": "f88ba6c575e0",
+      "zh": "用距离公式，我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "d(P,Q)\n    = \\sqrt{(1-2)^2+(2-3)^2+(-4-(-1))^2+(6-0)^2}\n    = \\sqrt{1^2+1^2+3^2+6^2}\n    = \\sqrt{47}."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "The plane between two points",
+    "sha": "719830877ab2",
+    "zh": "到两点距离相等的平面"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Describe the points in $\\R^3$ that are equally distant from the two points $Q=(1,2,3)$ and $R=(0,1,2)$.",
+      "sha": "547a07a9dd82",
+      "zh": "描述 $\\R^3$ 中到两个点 $Q=(1,2,3)$ 和 $R=(0,1,2)$ 距离相等的那些点。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $P = (p_1,p_2,p_3)$ be such a point. Then $P$ is the same distance from $Q$ and $R$, thus $d(P,Q)=d(P,R)$. By the distance formula, we have",
+      "sha": "2159b964b543",
+      "zh": "设 $P = (p_1,p_2,p_3)$ 是这样的一个点。那么 $P$ 到 $Q$ 和到 $R$ 的距离相同，即 $d(P,Q)=d(P,R)$。由距离公式，我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\sqrt{(p_1-1)^2+(p_2-2)^2+(p_3-3)^2}=\n    \\sqrt{(p_1-0)^2+(p_2-1)^2+(p_3-2)^2}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Squaring both sides, we obtain",
+      "sha": "e588ebee799a",
+      "zh": "两边平方，得到"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(p_1 -1)^2+(p_2 -2)^2+(p_3 -3)^2\n    = p_1^2+(p_2-1)^2+(p_3 -2)^2,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so",
+      "sha": "9af790b3a93d",
+      "zh": "于是"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\allowbreak (p_1^2-2p_1+1)+(p_2^2-4p_2+4)+(p_3^2-6p_3+9)=p_1^2+(p_2^2-2p_2+1)+(p_3^2-4p_3+4)."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Simplifying, this becomes",
+      "sha": "d0ab400f1678",
+      "zh": "化简后变成"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "-2p_1-4p_2-6p_3+14=-2p_2-4p_3+5,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which can finally be written as",
+      "sha": "cf0afc9fd2dc",
+      "zh": "最后可以写成"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "2p_1+2p_2+2p_3=9. \\tag{1}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, the points $P = (p_1,p_2,p_3)$ that are the same distance from $Q$ and $R$ form a plane whose equation is given by (1).",
+      "sha": "a5f01042440b",
+      "zh": "因此，到 $Q$ 和 $R$ 距离相同的点 $P = (p_1,p_2,p_3)$ 构成一个平面，它的方程由 (1) 给出。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can now use our understanding of the distance between two points to define what is meant by the length of a vector.",
+    "sha": "fabe472f890f",
+    "zh": "现在我们可以利用对两点之间距离的理解，来定义向量的长度是什么意思。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Length of a vector",
+    "sha": "629c3fa7a7c3",
+    "zh": "向量的长度"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let",
+      "sha": "ef5fe1edf379",
+      "zh": "设"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u} = \\left[\\begin{array}{c}u_1\\\\\\vdots\\\\u_n\\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "be a vector in $\\R^n$. Then the **length** of $\\vect{u}$, written $\\norm{\\vect{u}}$, is given by",
+      "sha": "7d017325d627",
+      "zh": "是 $\\R^n$ 中的向量。那么 $\\vect{u}$ 的**长度**记作 $\\norm{\\vect{u}}$，由下式给出"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\norm{\\vect{u}} = \\sqrt{u_1^2 + \\ldots + u_n^2}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The length of a vector is also sometimes called its **magnitude** or its **norm**.",
+      "sha": "022bd1237de4",
+      "zh": "向量的长度有时也称为它的**大小**（magnitude）或**范数**（norm）。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This definition corresponds to Definition “Distance between points”, if we consider the vector $\\vect{u}$ to have its tail at the point $0 = (0,\\ldots,0)$ and its tip at the point $U = (u_1,\\ldots, u_n)$. Then the length of $\\vect{u}$ is equal to the distance between $0$ and $U$. In general, $\\norm{\\longvect{PQ}} = d(P,Q)$.",
+    "sha": "6bac23254aae",
+    "zh": "这个定义与定义“点之间的距离”是对应的：只要把向量 $\\vect{u}$ 看作起点在点 $0 = (0,\\ldots,0)$、终点在点 $U = (u_1,\\ldots, u_n)$ 的向量，那么 $\\vect{u}$ 的长度就等于 $0$ 与 $U$ 之间的距离。一般地，$\\norm{\\longvect{PQ}} = d(P,Q)$。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Reconsider Example “Distance between points”. We could have also computed the distance between $P$ and $Q$ as the length of the vector connecting them. This vector is $\\longvect{PQ} = \\mat{1,1,3,-6}^T$, and its length is",
+    "sha": "2867c3ff2b91",
+    "zh": "回到例“点之间的距离”。我们也可以把 $P$ 与 $Q$ 之间的距离算作连接它们的向量的长度。这个向量是 $\\longvect{PQ} = \\mat{1,1,3,-6}^T$，它的长度是"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\norm{\\longvect{PQ}} = \\sqrt{1^2+1^2+3^2+6^2} = \\sqrt{47}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The following proposition states a few important properties of the length of vectors.",
+    "sha": "677ad99eda3e",
+    "zh": "下面的命题给出了向量长度的几条重要性质。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Properties of length",
+    "sha": "987c3a000639",
+    "zh": "长度的性质"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The following hold for all vectors $\\vect{u},\\vect{v}$ and scalars $k$.",
+      "sha": "8eef18b1993c",
+      "zh": "对所有向量 $\\vect{u},\\vect{v}$ 和标量 $k$，下列各式成立。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\norm{\\vect{u}}\\geq 0$",
+         "sha": "dee02ff76866",
+         "zh": "$\\norm{\\vect{u}}\\geq 0$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\norm{\\vect{u}}=0$ if and only if $\\vect{u}=\\vect{0}$.",
+         "sha": "cb4db7cb29a1",
+         "zh": "$\\norm{\\vect{u}}=0$ 当且仅当 $\\vect{u}=\\vect{0}$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\norm{k\\vect{u}} = |k|\\,\\norm{\\vect{u}}$.",
+         "sha": "dba681704036",
+         "zh": "$\\norm{k\\vect{u}} = |k|\\,\\norm{\\vect{u}}$。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We conclude this section by giving a special name to vectors of length $1$.",
+    "sha": "84361c3f4937",
+    "zh": "本节最后，我们给长度为 $1$ 的向量起一个专门的名字。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Unit vector",
+    "sha": "11664b384c60",
+    "zh": "单位向量"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A vector\\/ $\\vect{u}\\in\\R^n$ is called a **unit vector** if it has length $1$, that is, if",
+      "sha": "653b44060984",
+      "zh": "如果向量 $\\vect{u}\\in\\R^n$ 的长度为 $1$，即满足下式，就称它为**单位向量**："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\norm{\\vect{u}} = 1."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\vect{v}$ be a non-zero vector in $\\R^n$. Then there is a unit vector $\\vect{u}$ that points in the same direction as $\\vect{v}$, but has length 1. This vector is given by",
+    "sha": "339faf374010",
+    "zh": "设 $\\vect{v}$ 是 $\\R^n$ 中的非零向量。那么存在一个单位向量 $\\vect{u}$，它与 $\\vect{v}$ 方向相同，但长度为 1。这个向量由下式给出"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vect{u} = \\frac{1}{\\norm{\\vect{v}}} \\vect{v}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We often use the term **normalize** to refer to this process. When we normalize a vector, we find the corresponding unit vector.",
+    "sha": "76d528beaaa3",
+    "zh": "我们常用**单位化**这个词来称呼这一过程。把一个向量单位化，就是求出与它对应的单位向量。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Normalizing a vector",
+    "sha": "3ce5665bdd29",
+    "zh": "把向量单位化"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the vector $\\vect{v} = \\mat{1, -3, 4}^T$. Find the unit vector $\\vect{u}$ that has the same direction as $\\vect{v}$",
+      "sha": "100bd34d6686",
+      "zh": "考虑向量 $\\vect{v} = \\mat{1, -3, 4}^T$。求与 $\\vect{v}$ 方向相同的单位向量 $\\vect{u}$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have $\\norm{\\vect{v}} = \\sqrt{1^2 + (-3)^2 + 4^2} = \\sqrt{26}$, and therefore",
+      "sha": "cdb2e75aeb03",
+      "zh": "我们有 $\\norm{\\vect{v}} = \\sqrt{1^2 + (-3)^2 + 4^2} = \\sqrt{26}$，因此"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}\n    = \\frac{1}{\\norm{\\vect{v}}} \\vect{v}\n    = \\frac{1}{\\sqrt{26}} \\mat{1, -3, 4}^T\n    = \\mat{\\frac{1}{\\sqrt{26}}, -\\frac{3}{\\sqrt{26}}, \\frac{4}{\\sqrt{26}}}^T."
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the distance between the points $P=(0,1,3)$ and $Q=(2,-1,0)$ in $\\R^3$.",
+      "sha": "4eee5e8f6477",
+      "zh": "求 $\\R^3$ 中的点 $P=(0,1,3)$ 和 $Q=(2,-1,0)$ 之间的距离。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\sqrt{17}$.",
+      "sha": "37dbca85294b",
+      "zh": "$\\sqrt{17}$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Length of a vector · 习题 1（上游 exercises/Vectors-Length.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-Length.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the distance between the points $P=(1,3,-1,0)$ and $Q=(2,2,3,3)$ in $\\R^4$.",
+      "sha": "a0f3ba713e51",
+      "zh": "求 $\\R^4$ 中的点 $P=(1,3,-1,0)$ 和 $Q=(2,2,3,3)$ 之间的距离。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\sqrt{27}$.",
+      "sha": "312f383bfe18",
+      "zh": "$\\sqrt{27}$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Length of a vector · 习题 2（上游 exercises/Vectors-Length.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-Length.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Describe the points in $\\R^3$ that are equally distant from the two points $Q=(1,1,1)$ and $R=(-1,-1,-1)$.",
+      "sha": "2dcb048ce0c4",
+      "zh": "描述 $\\R^3$ 中到两个点 $Q=(1,1,1)$ 和 $R=(-1,-1,-1)$ 距离相等的那些点。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The form the plane $x+y+z=0$.",
+      "sha": "d8012b31d375",
+      "zh": "它们构成平面 $x+y+z=0$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Length of a vector · 习题 3（上游 exercises/Vectors-Length.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-Length.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Describe the points in $\\R^3$ that have distance $1$ from the origin.",
+      "sha": "284e643af03f",
+      "zh": "描述 $\\R^3$ 中到原点的距离为 $1$ 的那些点。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "They form a sphere of radius $1$, given by the equation $x^2+y^2+z^2=1$.",
+      "sha": "2500af867df6",
+      "zh": "它们构成一个半径为 $1$ 的球面，方程为 $x^2+y^2+z^2=1$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Length of a vector · 习题 4（上游 exercises/Vectors-Length.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-Length.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the length of each of the following vectors.",
+      "sha": "4c9717dc0fcf",
+      "zh": "求下列每个向量的长度。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}=\\left[\\begin{array}{c}-3\\\\2\\end{array}\\right], \\quad\n    \\vect{v}=\\left[\\begin{array}{c}1\\\\-2\\\\5\\end{array}\\right], \\quad\n    \\vect{w}=\\left[\\begin{array}{c}1\\\\4\\\\-2\\\\1\\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\norm{\\vect{u}} = \\sqrt{13}$, $\\norm{\\vect{v}} = \\sqrt{30}$, $\\norm{\\vect{w}} = \\sqrt{22}$.",
+      "sha": "a78646d3d121",
+      "zh": "$\\norm{\\vect{u}} = \\sqrt{13}$，$\\norm{\\vect{v}} = \\sqrt{30}$，$\\norm{\\vect{w}} = \\sqrt{22}$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Length of a vector · 习题 5（上游 exercises/Vectors-Length.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-Length.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Prove the properties of Proposition “Properties of length”.",
+      "sha": "09fd0d6e63c9",
+      "zh": "证明命题“长度的性质”中的各条性质。"
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Length of a vector · 习题 6（上游 exercises/Vectors-Length.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-Length.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Prove that for all vectors $\\vect{u}\\in\\R^n$, we have $\\norm{-\\vect{u}} = \\norm{\\vect{u}}$.",
+      "sha": "490126fb59e6",
+      "zh": "证明：对所有向量 $\\vect{u}\\in\\R^n$，都有 $\\norm{-\\vect{u}} = \\norm{\\vect{u}}$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "This follows from the last property of Proposition “Properties of length”: $\\norm{-\\vect{u}} = \\norm{(-1)\\vect{u}} = \\abs{-1}\\norm{\\vect{u}} = \\norm{\\vect{u}}$.",
+      "sha": "0412091098d4",
+      "zh": "这可由命题“长度的性质”的最后一条性质得到：$\\norm{-\\vect{u}} = \\norm{(-1)\\vect{u}} = \\abs{-1}\\norm{\\vect{u}} = \\norm{\\vect{u}}$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Length of a vector · 习题 7（上游 exercises/Vectors-Length.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-Length.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex8",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following are unit vectors?",
+      "sha": "b34985ba2a55",
+      "zh": "下列向量中哪些是单位向量？"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}=\\frac{1}{2}\\left[\\begin{array}{c}1\\\\1\\\\1\\end{array}\\right], \\quad\n    \\vect{v}=\\frac{1}{3}\\left[\\begin{array}{c}1\\\\1\\\\1\\end{array}\\right], \\quad\n    \\vect{w}=\\frac{1}{2}\\left[\\begin{array}{c}1\\\\1\\\\1\\\\1\\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Only $\\vect{w}$ is a unit vector.",
+      "sha": "096d3dc3cef7",
+      "zh": "只有 $\\vect{w}$ 是单位向量。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Length of a vector · 习题 8（上游 exercises/Vectors-Length.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-Length.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex9",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Normalize the following vectors.",
+      "sha": "bd153995b130",
+      "zh": "把下列向量单位化。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}=\\left[\\begin{array}{r}1\\\\2\\end{array}\\right], \\quad\n    \\vect{v}=\\left[\\begin{array}{r}-2\\\\3\\\\2\\end{array}\\right], \\quad\n    \\vect{w}=\\left[\\begin{array}{r}5\\\\-3\\\\1\\\\-1\\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "math",
+     "tex": "\\frac{1}{\\norm{\\vect{u}}}\\vect{u} = \\frac{1}{\\sqrt{5}}\\left[\\begin{array}{r}1\\\\2\\end{array}\\right],\\quad\n      \\frac{1}{\\norm{\\vect{v}}}\\vect{v} = \\frac{1}{\\sqrt{17}}\\left[\\begin{array}{r}-2\\\\3\\\\2\\end{array}\\right],\\quad\n      \\frac{1}{\\norm{\\vect{w}}}\\vect{w} = \\frac{1}{6}\\left[\\begin{array}{r}5\\\\-3\\\\1\\\\-1\\end{array}\\right]."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Length of a vector · 习题 9（上游 exercises/Vectors-Length.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-Length.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "向量的长度"
+}

@@ -1,0 +1,38 @@
+{
+  "ex1": {
+    "kind": "numbers",
+    "ask": "只做第 (1) 题的 (1)、(2) 两小题。依次按行写出 $\\mathcal R\\circ\\mathcal P$ 的矩阵（4 个数）和 $\\mathcal P\\circ\\mathcal R$ 的矩阵（4 个数），共 8 个数，无理数写成小数。",
+    "answer": [
+      0,
+      0.7071067811865475,
+      0,
+      -0.7071067811865475,
+      0,
+      0,
+      -0.7071067811865475,
+      -0.7071067811865475
+    ],
+    "hint": "复合 $\\mathcal R\\circ\\mathcal P$ 是先做 $\\mathcal P$ 再做 $\\mathcal R$；矩阵的列是 $\\xhat,\\yhat$ 经复合后的像，或用矩阵乘法（右边的先作用）。"
+  },
+  "ex2": {
+    "kind": "numbers",
+    "ask": "按行写出 $M_{\\mathcal T}$ 的四个元素。",
+    "answer": [
+      6,
+      12,
+      3,
+      14
+    ],
+    "hint": "$\\mathcal T=\\mathcal A\\circ\\mathcal B$ 是先 $\\mathcal B$ 后 $\\mathcal A$，对应矩阵乘积 $M_{\\mathcal A}M_{\\mathcal B}$ 而不是 $M_{\\mathcal B}M_{\\mathcal A}$。"
+  },
+  "ex3": {
+    "kind": "numbers",
+    "ask": "写出 $1\\times3$ 矩阵 $M_{\\mathcal T}$ 的三个元素。",
+    "answer": [
+      10,
+      9,
+      0
+    ],
+    "hint": "$\\mathcal T=\\mathcal B\\circ\\mathcal A$，先用 $M_{\\mathcal A}$ 再用 $M_{\\mathcal B}$；先检查形状：$(1\\times2)(2\\times3)$。"
+  }
+}

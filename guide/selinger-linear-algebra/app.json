@@ -1,0 +1,70 @@
+{
+ "id": "selinger-linear-algebra",
+ "title": "Selinger 线性代数",
+ "group": "数学",
+ "description": "Selinger《Linear Algebra: A First Course》按考研数学二线代考纲裁剪的精读：原文逐段对照译文，例题与习题并存，习题带可核对的最终答案。",
+ "icon": {
+  "type": "theme",
+  "name": "accessories-calculator-symbolic",
+  "symbol": "x.squareroot",
+  "letter": "线",
+  "accent": "#1f5fbf",
+  "file": "icon.svg",
+  "renders": {
+   "src-tauri/icons/32x32.png": 32,
+   "src-tauri/icons/128x128.png": 128,
+   "src-tauri/icons/128x128@2x.png": 256,
+   "src-tauri/icons/icon.png": 512,
+   "src-tauri/icons/icon.ico": "ico",
+   "src-tauri/icons/icon.icns": "icns",
+   "src-tauri/icons/StoreLogo.png": 50,
+   "src-tauri/icons/Square30x30Logo.png": 30,
+   "src-tauri/icons/Square44x44Logo.png": 44,
+   "src-tauri/icons/Square71x71Logo.png": 71,
+   "src-tauri/icons/Square89x89Logo.png": 89,
+   "src-tauri/icons/Square107x107Logo.png": 107,
+   "src-tauri/icons/Square142x142Logo.png": 142,
+   "src-tauri/icons/Square150x150Logo.png": 150,
+   "src-tauri/icons/Square284x284Logo.png": 284,
+   "src-tauri/icons/Square310x310Logo.png": 310
+  }
+ },
+ "dev": {
+  "env": {
+   "ATHENA_SELINGER_LINEAR_ALGEBRA_ROOT": "${dir}"
+  },
+  "prepare": [
+   {
+    "when_missing": "node_modules",
+    "run": [
+     "pnpm",
+     "install"
+    ],
+    "label": "安装前端依赖"
+   }
+  ],
+  "run": [
+   "pnpm",
+   "run",
+   "tauri:dev"
+  ],
+  "ready": {
+   "http": "http://localhost:1517"
+  },
+  "match": "src-tauri/target",
+  "binary": "athena-selinger-linear-algebra"
+ },
+ "progress": {
+  "dir": "AthenaSelingerLinearAlgebra",
+  "tables": {
+   "attempts": {
+    "mode": "append",
+    "key": [
+     "knowledge_id",
+     "item_id",
+     "answered_at"
+    ]
+   }
+  }
+ }
+}

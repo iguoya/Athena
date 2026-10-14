@@ -1,0 +1,2797 @@
+{
+ "id": "arith",
+ "title_en": "Arithmetic",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "Unless otherwise noted, all of the functions described in this chapter will work for real and complex scalar, vector, or matrix arguments. Functions described as *mapping functions* apply the given operation individually to each element when given a matrix argument. For example:",
+    "sha": "ee1169ea5e42",
+    "zh": "除非另有说明，本章描述的所有函数都适用于实数和复数的标量、向量或矩阵参数。被称为*映射函数*（mapping function）的函数，在参数为矩阵时，会对每个元素分别施加给定的运算。例如："
+   }
+  },
+  {
+   "k": "code",
+   "text": "sin ([1, 2; 3, 4])\n     ⇒  0.84147   0.90930\n         0.14112  -0.75680"
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Exponents and Logarithms",
+    "sha": "5c1b4ec7a3c9",
+    "zh": "指数与对数"
+   }
+  },
+  {
+   "k": "def",
+   "name": "exp",
+   "sigs": [
+    "y = exp (x)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute $e^{x}$ for each element of *x*.",
+      "sha": "cd232e121c74",
+      "zh": "对*x*的每个元素计算 $e^{x}$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To compute the matrix exponential, see Linear Algebra. See also: `log`.",
+      "sha": "1c953cfa8bd4",
+      "zh": "矩阵指数请参见“线性代数”一章。另见：`log`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "log",
+   "sigs": [
+    "y = log (x)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the natural logarithm, $\\ln{(x)},$ for each element of *x*.",
+      "sha": "6077b683cf2a",
+      "zh": "对*x*的每个元素计算自然对数 $\\ln{(x)},$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To compute the matrix logarithm, see Linear Algebra. See also: `exp`, `log1p`, `log2`, `log10`, `logspace`.",
+      "sha": "290f21b1f56a",
+      "zh": "矩阵对数请参见“线性代数”一章。另见：`exp`、`log1p`、`log2`、`log10`、`logspace`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "log10",
+   "sigs": [
+    "y = log10 (x)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the base-10 logarithm of each element of *x*. See also: `log`, `log2`, `logspace`, `exp`.",
+      "sha": "404a63f6ad21",
+      "zh": "对*x*的每个元素计算以 10 为底的对数。另见：`log`、`log2`、`logspace`、`exp`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "log2",
+   "sigs": [
+    "y = log2 (x)",
+    "[f, e] = log2 (x)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the base-2 logarithm of each element of *x*.",
+      "sha": "e510ff51a6d4",
+      "zh": "对*x*的每个元素计算以 2 为底的对数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If called with one output, compute the base-2 logarithm such that $2^y = x$.",
+      "sha": "46c701965d08",
+      "zh": "若只有一个输出，则计算以 2 为底的对数，使得 $2^y = x$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If called with two output arguments, split *x* into binary mantissa (*f*) and exponent (*e*) such that $x = f \\cdot 2^e$ where ${1 \\over 2} \\le \\left| f \\right| < 1$ and *e* is an integer. If $x = 0$, $f = e = 0$. See also: `pow2`, `log`, `log10`, `exp`.",
+      "sha": "38e36bad6de4",
+      "zh": "若有两个输出参数，则把*x*拆成二进制的尾数（*f*）和指数（*e*），使得 $x = f \\cdot 2^e$，其中 ${1 \\over 2} \\le \\left| f \\right| < 1$，且*e*是整数。若 $x = 0$，则 $f = e = 0$。另见：`pow2`、`log`、`log10`、`exp`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "sqrt",
+   "sigs": [
+    "y = sqrt (x)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the square root of each element of *x*.",
+      "sha": "b03cb0f949cb",
+      "zh": "对*x*的每个元素计算平方根。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *x* is negative, a complex result is returned.",
+      "sha": "73bfa2d1ec69",
+      "zh": "若*x*为负数，则返回复数结果。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To compute the matrix square root, see Linear Algebra. See also: `realsqrt`, `nthroot`.",
+      "sha": "62d8fd609bb4",
+      "zh": "矩阵平方根请参见“线性代数”一章。另见：`realsqrt`、`nthroot`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "nthroot",
+   "sigs": [
+    "y = nthroot (x, n)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the real (non-complex) *n*-th root of *x*.",
+      "sha": "c2105a0c1862",
+      "zh": "计算*x*的实的（非复数的）*n*次方根。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*x* must have all real entries and *n* must be a scalar. If *n* is an even integer and *x* has negative entries then `nthroot` aborts and issues an error.",
+      "sha": "5e807e4c0869",
+      "zh": "*x*的所有元素必须是实数，*n*必须是标量。若*n*是偶数而*x*有负元素，则 `nthroot` 会中止并报错。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Example:",
+      "sha": "c63737abd734",
+      "zh": "例："
+     }
+    },
+    {
+     "k": "code",
+     "text": " nthroot (-1, 3)\n ⇒ -1\n (-1) ^ (1 / 3)\n ⇒ 0.50000 - 0.86603i"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `realsqrt`, `sqrt`, `cbrt`.",
+      "sha": "3d00d35d77d2",
+      "zh": "另见：`realsqrt`、`sqrt`、`cbrt`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Complex Arithmetic",
+    "sha": "17c8f0c3ffad",
+    "zh": "复数运算"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In the descriptions of the following functions, $z$ is the complex number $x + iy$, where $i$ is defined as $\\sqrt{-1}$.",
+    "sha": "d883852c3873",
+    "zh": "在下面各函数的说明中，$z$ 是复数 $x + iy$，其中 $i$ 定义为 $\\sqrt{-1}$。"
+   }
+  },
+  {
+   "k": "def",
+   "name": "abs",
+   "sigs": [
+    "z = abs (x)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the magnitude of *x*.",
+      "sha": "ccfd930a4618",
+      "zh": "计算*x*的模。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The magnitude is defined as $|z| = \\sqrt{x^2 + y^2}$.",
+      "sha": "340b92260345",
+      "zh": "模的定义是 $|z| = \\sqrt{x^2 + y^2}$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For example:",
+      "sha": "059c3e8cce26",
+      "zh": "例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "abs (3 + 4i)\n     ⇒ 5"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `arg`.",
+      "sha": "ae1e14c95c47",
+      "zh": "另见：`arg`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "arg",
+   "sigs": [
+    "theta = arg (z)",
+    "theta = angle (z)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the argument, i.e., angle of *z*.",
+      "sha": "e04cff0187f6",
+      "zh": "计算*z*的辐角，即角度。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is defined as, $\\theta = atan2 (y, x),$ in radians.",
+      "sha": "c76a7954ab3c",
+      "zh": "定义为 $\\theta = atan2 (y, x),$，单位是弧度。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For example:",
+      "sha": "059c3e8cce26",
+      "zh": "例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "arg (3 + 4i)\n     ⇒ 0.92730"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `abs`.",
+      "sha": "70823e1e44cd",
+      "zh": "另见：`abs`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "conj",
+   "sigs": [
+    "zc = conj (z)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the complex conjugate of *z*.",
+      "sha": "843c99704d0a",
+      "zh": "返回*z*的共轭复数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The complex conjugate is defined as $\\bar{z} = x - iy$. See also: `real`, `imag`.",
+      "sha": "7daa3dd12d82",
+      "zh": "共轭复数的定义是 $\\bar{z} = x - iy$。另见：`real`、`imag`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "imag",
+   "sigs": [
+    "y = imag (z)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the imaginary part of *z* as a real number. See also: `real`, `conj`.",
+      "sha": "3d9a2d91553b",
+      "zh": "以实数形式返回*z*的虚部。另见：`real`、`conj`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "real",
+   "sigs": [
+    "x = real (z)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the real part of *z*. See also: `imag`, `conj`.",
+      "sha": "075ce819121e",
+      "zh": "返回*z*的实部。另见：`imag`、`conj`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Trigonometry",
+    "sha": "89225146f512",
+    "zh": "三角函数"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Octave provides the following trigonometric functions where angles are specified in radians. To convert from degrees to radians multiply by $\\pi/180$ or use the `deg2rad` function. For example, `sin (30 * pi/180)` returns the sine of 30 degrees. As an alternative, Octave provides a number of trigonometric functions which work directly on an argument specified in degrees. These functions are named after the base trigonometric function with a `d` suffix. As an example, `sin` expects an angle in radians while `sind` expects an angle in degrees.",
+    "sha": "96d1065b0ec0",
+    "zh": "Octave 提供下列三角函数，角度以弧度为单位。要把度换成弧度，可乘以 $\\pi/180$，或使用 `deg2rad` 函数。例如，`sin (30 * pi/180)` 返回 30 度角的正弦。另一种办法是，Octave 还提供了一批直接接受以度为单位的参数的三角函数，它们的名字是在基本三角函数名后加后缀 `d`。例如，`sin` 期望的角度单位是弧度，而 `sind` 期望的是度。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Octave uses the C library trigonometric functions. It is expected that these functions are defined by the ISO/IEC 9899 Standard. This Standard is available at: http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1124.pdf. Section F.9.1 deals with the trigonometric functions. The behavior of most of the functions is relatively straightforward. However, there are some exceptions to the standard behavior. Many of the exceptions involve the behavior for -0. The most complex case is atan2. Octave exactly implements the behavior given in the Standard. Including $atan2(\\pm0, -0)$ returns $\\pm \\pi$.",
+    "sha": "51fbcd6f882e",
+    "zh": "Octave 使用 C 库中的三角函数，这些函数应当符合 ISO/IEC 9899 标准的规定。该标准可在以下网址获得：http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1124.pdf。标准的 F.9.1 节讨论三角函数。大多数函数的行为都比较直观，但也有一些例外，其中许多与 -0 的行为有关。最复杂的情形是 atan2。Octave 严格实现了标准给出的行为，包括 $atan2(\\pm0, -0)$ 返回 $\\pm \\pi$。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It should be noted that MATLAB uses different definitions which apparently do not distinguish -0.",
+    "sha": "ca76e2d1abdb",
+    "zh": "需要注意，MATLAB 使用不同的定义，看起来并不区分 -0。"
+   }
+  },
+  {
+   "k": "def",
+   "name": "deg2rad",
+   "sigs": [
+    "rad = deg2rad (deg)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Convert degrees to radians.",
+      "sha": "5c74125f9eb5",
+      "zh": "把度转换为弧度。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The input *deg* must be a scalar, vector, or N-dimensional array of double or single floating point values. *deg* may be complex in which case the real and imaginary components are converted separately.",
+      "sha": "67a6faf6f57f",
+      "zh": "输入*deg*必须是标量、向量或 N 维数组，元素为 double 或 single 浮点值。*deg*可以是复数，此时实部和虚部分别转换。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The output *rad* is the same size and shape as *deg* with degrees converted to radians using the conversion constant `pi/180`.",
+      "sha": "43753e751cfa",
+      "zh": "输出*rad*与*deg*的大小和形状相同，由度按换算常数 `pi/180` 转换为弧度得到。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Example:",
+      "sha": "c63737abd734",
+      "zh": "例："
+     }
+    },
+    {
+     "k": "code",
+     "text": " deg2rad ([0, 90, 180, 270, 360])\n   ⇒  0.00000   1.57080   3.14159   4.71239   6.28319"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `rad2deg`.",
+      "sha": "e5815936e3b5",
+      "zh": "另见：`rad2deg`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "rad2deg",
+   "sigs": [
+    "deg = rad2deg (rad)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Convert radians to degrees.",
+      "sha": "d816cb09c7b3",
+      "zh": "把弧度转换为度。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The input *rad* must be a scalar, vector, or N-dimensional array of double or single floating point values. *rad* may be complex in which case the real and imaginary components are converted separately.",
+      "sha": "a27193848656",
+      "zh": "输入*rad*必须是标量、向量或 N 维数组，元素为 double 或 single 浮点值。*rad*可以是复数，此时实部和虚部分别转换。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The output *deg* is the same size and shape as *rad* with radians converted to degrees using the conversion constant `180/pi`.",
+      "sha": "135100d1abc1",
+      "zh": "输出*deg*与*rad*的大小和形状相同，由弧度按换算常数 `180/pi` 转换为度得到。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Example:",
+      "sha": "c63737abd734",
+      "zh": "例："
+     }
+    },
+    {
+     "k": "code",
+     "text": " rad2deg ([0, pi/2, pi, 3/2*pi, 2*pi])\n   ⇒  0    90   180   270   360"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `deg2rad`.",
+      "sha": "3a8025415df0",
+      "zh": "另见：`deg2rad`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "sin",
+   "sigs": [
+    "y = sin (x)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the sine for each element of *x* in radians. See also: `asin`, `sind`, `sinh`.",
+      "sha": "7b5c46fcec74",
+      "zh": "对*x*的每个元素计算正弦，*x*以弧度为单位。另见：`asin`、`sind`、`sinh`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "cos",
+   "sigs": [
+    "y = cos (x)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the cosine for each element of *x* in radians. See also: `acos`, `cosd`, `cosh`.",
+      "sha": "022cc7af59ec",
+      "zh": "对*x*的每个元素计算余弦，*x*以弧度为单位。另见：`acos`、`cosd`、`cosh`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "tan",
+   "sigs": [
+    "y = tan (z)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the tangent for each element of *x* in radians. See also: `atan`, `tand`, `tanh`.",
+      "sha": "e9ac2a06b5b1",
+      "zh": "对*x*的每个元素计算正切，*x*以弧度为单位。另见：`atan`、`tand`、`tanh`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "asin",
+   "sigs": [
+    "y = asin (x)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the inverse sine in radians for each element of *x*. See also: `sin`, `asind`.",
+      "sha": "06c453d00c8c",
+      "zh": "对*x*的每个元素计算反正弦，结果以弧度为单位。另见：`sin`、`asind`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "acos",
+   "sigs": [
+    "y = acos (x)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the inverse cosine in radians for each element of *x*. See also: `cos`, `acosd`.",
+      "sha": "7789b8bc6980",
+      "zh": "对*x*的每个元素计算反余弦，结果以弧度为单位。另见：`cos`、`acosd`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "atan",
+   "sigs": [
+    "y = atan (x)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the inverse tangent in radians for each element of *x*. See also: `tan`, `atand`.",
+      "sha": "ee88b4861a48",
+      "zh": "对*x*的每个元素计算反正切，结果以弧度为单位。另见：`tan`、`atand`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "sinh",
+   "sigs": [
+    "y = sinh (x)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the hyperbolic sine for each element of *x*. See also: `asinh`, `cosh`, `tanh`.",
+      "sha": "32d8d5421945",
+      "zh": "对*x*的每个元素计算双曲正弦。另见：`asinh`、`cosh`、`tanh`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "cosh",
+   "sigs": [
+    "y = cosh (x)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the hyperbolic cosine for each element of *x*. See also: `acosh`, `sinh`, `tanh`.",
+      "sha": "e1b9ba5f4791",
+      "zh": "对*x*的每个元素计算双曲余弦。另见：`acosh`、`sinh`、`tanh`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "tanh",
+   "sigs": [
+    "y = tanh (x)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute hyperbolic tangent for each element of *x*. See also: `atanh`, `sinh`, `cosh`.",
+      "sha": "fa42cb34ab87",
+      "zh": "对*x*的每个元素计算双曲正切。另见：`atanh`、`sinh`、`cosh`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "atan2",
+   "sigs": [
+    "angle = atan2 (y, x)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute atan (*y* / *x*) for corresponding elements of *y* and *x*.",
+      "sha": "4f554e440b85",
+      "zh": "对*y*和*x*中对应的元素计算 atan (*y* / *x*)。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*y* and *x* must match in size and orientation. The signs of elements of *y* and *x* are used to determine the quadrants of each resulting value.",
+      "sha": "7e21afd30dde",
+      "zh": "*y*和*x*的大小和方向必须一致。*y*和*x*各元素的符号用来确定每个结果所在的象限。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This function is equivalent to `arg (complex (x, y))`. See also: `tan`, `tand`, `tanh`, `atanh`.",
+      "sha": "63620e285d12",
+      "zh": "该函数等价于 `arg (complex (x, y))`。另见：`tan`、`tand`、`tanh`、`atanh`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Octave provides the following trigonometric functions where angles are specified in degrees. These functions produce true zeros at the appropriate intervals rather than the small round-off error that occurs when using radians. For example:",
+    "sha": "64be205ad4ee",
+    "zh": "Octave 提供下列三角函数，角度以度为单位。在相应的位置上，这些函数给出的是真正的零，而不是用弧度计算时出现的微小舍入误差。例如："
+   }
+  },
+  {
+   "k": "code",
+   "text": "cosd (90)\n     ⇒ 0\ncos (pi/2)\n     ⇒ 6.1230e-17"
+  },
+  {
+   "k": "def",
+   "name": "sind",
+   "sigs": [
+    "y = sind (x)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the sine for each element of *x* in degrees.",
+      "sha": "07553306ddeb",
+      "zh": "对*x*的每个元素计算正弦，*x*以度为单位。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The function is more accurate than `sin` for large values of *x* and for multiples of 180 degrees (`x/180` is an integer) where `sind` returns 0 rather than a small value on the order of eps. See also: `asind`, `sin`.",
+      "sha": "25fc5501bdc5",
+      "zh": "对于较大的*x*，以及 180 度的整数倍（`x/180` 为整数）的情形，该函数比 `sin` 更精确：`sind` 返回 0，而不是 eps 量级的小数。另见：`asind`、`sin`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "cosd",
+   "sigs": [
+    "y = cosd (x)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the cosine for each element of *x* in degrees.",
+      "sha": "dba6bbbf6dfe",
+      "zh": "对*x*的每个元素计算余弦，*x*以度为单位。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The function is more accurate than `cos` for large values of *x* and for multiples of 90 degrees (`x = 90 + 180*n` with n an integer) where `cosd` returns 0 rather than a small value on the order of eps. See also: `acosd`, `cos`.",
+      "sha": "6e076bd2ed0a",
+      "zh": "对于较大的*x*，以及 90 度的倍数（`x = 90 + 180*n`，n 为整数）的情形，该函数比 `cos` 更精确：`cosd` 返回 0，而不是 eps 量级的小数。另见：`acosd`、`cos`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Finally, there are two trigonometric functions that calculate special arguments with increased accuracy.",
+    "sha": "abac66b4f40b",
+    "zh": "最后，还有两个三角函数，用来以更高的精度计算特殊的参数。"
+   }
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Sums and Products",
+    "sha": "aa8d10d925f7",
+    "zh": "求和与求积"
+   }
+  },
+  {
+   "k": "def",
+   "name": "sum",
+   "sigs": [
+    "y = sum (x)",
+    "y = sum (x, dim)",
+    "y = sum (…, \"native\")",
+    "y = sum (…, \"double\")",
+    "y = sum (…, \"extra\")"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Sum of elements along dimension *dim*.",
+      "sha": "ad99c98c8740",
+      "zh": "沿维度*dim*对元素求和。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *dim* is omitted, it defaults to the first non-singleton dimension.",
+      "sha": "803374b94b4a",
+      "zh": "若省略*dim*，则默认取第一个长度不为 1 的维度。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional `\"type\"` input determines the class of the variable used for calculations. By default, operations on floating point inputs (double or single) are performed in their native data type, while operations on integer, logical, and character data types are performed using doubles. If the argument `\"native\"` is given, then the operation is performed in the same type as the original argument.",
+      "sha": "d24ebf68f834",
+      "zh": "可选的 `\"type\"` 输入决定计算所用变量的类别。默认情况下，对浮点输入（double 或 single）的运算在其原生数据类型下进行，而对整数、逻辑和字符类型的运算则使用 double 进行。若给出参数 `\"native\"`，则运算使用与原参数相同的类型。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For example:",
+      "sha": "059c3e8cce26",
+      "zh": "例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "sum ([true, true])\n   ⇒ 2\nsum ([true, true], \"native\")\n   ⇒ true"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If `\"double\"` is given the sum is performed in double precision even for single precision inputs.",
+      "sha": "aae60938e908",
+      "zh": "若给出 `\"double\"`，则即使输入是单精度，求和也以双精度进行。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For double precision inputs, the `\"extra\"` option will use a more accurate algorithm than straightforward summation. For single precision inputs, `\"extra\"` is the same as `\"double\"`. For all other data type `\"extra\"` has no effect. See also: `cumsum`, `sumsq`, `prod`.",
+      "sha": "410202243b91",
+      "zh": "对于双精度输入，`\"extra\"` 选项会采用比直接求和更精确的算法。对于单精度输入，`\"extra\"` 与 `\"double\"` 相同。对其他所有数据类型，`\"extra\"` 不起作用。另见：`cumsum`、`sumsq`、`prod`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "prod",
+   "sigs": [
+    "y = prod (x)",
+    "y = prod (x, dim)",
+    "y = prod (…, \"native\")",
+    "y = prod (…, \"double\")"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Product of elements along dimension *dim*.",
+      "sha": "7dd5c36dbfbe",
+      "zh": "沿维度*dim*对元素求积。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *dim* is omitted, it defaults to the first non-singleton dimension.",
+      "sha": "803374b94b4a",
+      "zh": "若省略*dim*，则默认取第一个长度不为 1 的维度。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional `\"type\"` input determines the class of the variable used for calculations. If the argument `\"native\"` is given, then the operation is performed in the same type as the original argument, rather than the default double type.",
+      "sha": "e9e47664a890",
+      "zh": "可选的 `\"type\"` 输入决定计算所用变量的类别。若给出参数 `\"native\"`，则运算使用与原参数相同的类型，而不是默认的 double 类型。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For example:",
+      "sha": "059c3e8cce26",
+      "zh": "例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "prod ([true, true])\n   ⇒ 1\nprod ([true, true], \"native\")\n   ⇒ true"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "On the contrary, if `\"double\"` is given, the operation is performed in double precision even for single precision inputs. See also: `cumprod`, `sum`.",
+      "sha": "2dfdf0f05b0f",
+      "zh": "反之，若给出 `\"double\"`，则即使输入是单精度，运算也以双精度进行。另见：`cumprod`、`sum`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "cumsum",
+   "sigs": [
+    "y = cumsum (x)",
+    "y = cumsum (x, dim)",
+    "y = cumsum (…, \"native\")",
+    "y = cumsum (…, \"double\")"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Cumulative sum of elements along dimension *dim*.",
+      "sha": "c57672a68dd5",
+      "zh": "沿维度*dim*对元素做累加。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *dim* is omitted, it defaults to the first non-singleton dimension. For example:",
+      "sha": "64354cbcc549",
+      "zh": "若省略*dim*，则默认取第一个长度不为 1 的维度。例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "cumsum ([1, 2; 3, 4; 5, 6])\n   ⇒  1   2\n       4   6\n       9  12"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For an explanation of the optional parameters `\"native\"` and `\"double\"`, `sum`. See also: `sum`, `cumprod`.",
+      "sha": "b31acad0ff3f",
+      "zh": "可选参数 `\"native\"` 和 `\"double\"` 的含义，请参见 `sum`。另见：`sum`、`cumprod`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "cumprod",
+   "sigs": [
+    "y = cumprod (x)",
+    "y = cumprod (x, dim)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Cumulative product of elements along dimension *dim*.",
+      "sha": "43a433badeed",
+      "zh": "沿维度*dim*对元素做累乘。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *dim* is omitted, it defaults to the first non-singleton dimension. For example:",
+      "sha": "64354cbcc549",
+      "zh": "若省略*dim*，则默认取第一个长度不为 1 的维度。例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "cumprod ([1, 2; 3, 4; 5, 6])\n   ⇒  1   2\n       3   8\n      15  48"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `prod`, `cumsum`.",
+      "sha": "d59caaf9b1a0",
+      "zh": "另见：`prod`、`cumsum`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "sumsq",
+   "sigs": [
+    "y = sumsq (x)",
+    "y = sumsq (x, dim)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Sum of squares of elements along dimension *dim*.",
+      "sha": "c7995ff3bc78",
+      "zh": "沿维度*dim*对元素求平方和。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *dim* is omitted, it defaults to the first non-singleton dimension.",
+      "sha": "803374b94b4a",
+      "zh": "若省略*dim*，则默认取第一个长度不为 1 的维度。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This function is conceptually equivalent to computing",
+      "sha": "8cadc07d5c45",
+      "zh": "该函数在概念上等价于计算"
+     }
+    },
+    {
+     "k": "code",
+     "text": "sum (x .* conj (x), dim)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "but it uses less memory and avoids calling `conj` if *x* is real. See also: `sum`, `prod`.",
+      "sha": "4ab88819486f",
+      "zh": "但它占用的内存更少，并且当*x*为实数时避免调用 `conj`。另见：`sum`、`prod`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Utility Functions",
+    "sha": "8bf056ede575",
+    "zh": "实用函数"
+   }
+  },
+  {
+   "k": "def",
+   "name": "ceil",
+   "sigs": [
+    "y = ceil (x)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the smallest integer not less than *x*.",
+      "sha": "5d101462b43b",
+      "zh": "返回不小于*x*的最小整数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is equivalent to rounding towards positive infinity.",
+      "sha": "b17ef95948b7",
+      "zh": "这等价于向正无穷方向取整。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *x* is complex, return `ceil (real (x)) + ceil (imag (x)) * I`.",
+      "sha": "e0688280c303",
+      "zh": "若*x*是复数，则返回 `ceil (real (x)) + ceil (imag (x)) * I`。"
+     }
+    },
+    {
+     "k": "code",
+     "text": "ceil ([-2.7, 2.7])\n    ⇒ -2    3"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `floor`, `round`, `fix`.",
+      "sha": "816df0f7ec53",
+      "zh": "另见：`floor`、`round`、`fix`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "fix",
+   "sigs": [
+    "y = fix (x)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Truncate fractional portion of *x* and return the integer portion.",
+      "sha": "37a01526dd67",
+      "zh": "截去*x*的小数部分，返回整数部分。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is equivalent to rounding towards zero. If *x* is complex, return `fix (real (x)) + fix (imag (x)) * I`.",
+      "sha": "e60098837f59",
+      "zh": "这等价于向零方向取整。若*x*是复数，则返回 `fix (real (x)) + fix (imag (x)) * I`。"
+     }
+    },
+    {
+     "k": "code",
+     "text": "fix ([-2.7, 2.7])\n   ⇒ -2    2"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `ceil`, `floor`, `round`.",
+      "sha": "aab243c4ab91",
+      "zh": "另见：`ceil`、`floor`、`round`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "floor",
+   "sigs": [
+    "y = floor (x)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the largest integer not greater than *x*.",
+      "sha": "7eae6f1b64b3",
+      "zh": "返回不大于*x*的最大整数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is equivalent to rounding towards negative infinity. If *x* is complex, return `floor (real (x)) + floor (imag (x)) * I`.",
+      "sha": "8ee20bc133b5",
+      "zh": "这等价于向负无穷方向取整。若*x*是复数，则返回 `floor (real (x)) + floor (imag (x)) * I`。"
+     }
+    },
+    {
+     "k": "code",
+     "text": "floor ([-2.7, 2.7])\n     ⇒ -3    2"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `ceil`, `round`, `fix`.",
+      "sha": "85f92b7da7c6",
+      "zh": "另见：`ceil`、`round`、`fix`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "round",
+   "sigs": [
+    "y = round (x)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the integer nearest to *x*.",
+      "sha": "bfd558c893c0",
+      "zh": "返回与*x*最接近的整数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *x* is complex, return `round (real (x)) + round (imag (x)) * I`. If there are two nearest integers, return the one further away from zero.",
+      "sha": "bb4fe2a80e0c",
+      "zh": "若*x*是复数，则返回 `round (real (x)) + round (imag (x)) * I`。若有两个整数同样接近，则返回离零更远的那个。"
+     }
+    },
+    {
+     "k": "code",
+     "text": "round ([-2.7, 2.7])\n     ⇒ -3    3"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `ceil`, `floor`, `fix`, `roundb`.",
+      "sha": "fd46196f3d75",
+      "zh": "另见：`ceil`、`floor`、`fix`、`roundb`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "max",
+   "sigs": [
+    "m = max (x)",
+    "m = max (x, [], dim)",
+    "[m, im] = max (x)",
+    "m = max (x, y)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find maximum values in the array *x*.",
+      "sha": "99dcb47a83a8",
+      "zh": "求数组*x*中的最大值。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For a vector argument, return the maximum value. For a matrix argument, return a row vector with the maximum value of each column. For a multi-dimensional array, `max` operates along the first non-singleton dimension.",
+      "sha": "f302c75048bd",
+      "zh": "对向量参数，返回其最大值。对矩阵参数，返回一个行向量，其元素是每一列的最大值。对多维数组，`max` 沿第一个长度不为 1 的维度运算。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the optional third argument *dim* is present then operate along this dimension. In this case the second argument is ignored and should be set to the empty matrix.",
+      "sha": "5a7589da97e6",
+      "zh": "若给出可选的第三个参数*dim*，则沿该维度运算。此时第二个参数会被忽略，应设为空矩阵。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For two inputs (*x* and *y*), return the pairwise maximum according to the rules for Broadcasting.",
+      "sha": "e476bc7c4782",
+      "zh": "对于两个输入（*x*和*y*），按照“广播”的规则返回逐对的最大值。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Thus,",
+      "sha": "e38f4f305df3",
+      "zh": "于是，"
+     }
+    },
+    {
+     "k": "code",
+     "text": "max (max (x))"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "returns the largest element of the 2-D matrix *x*, and",
+      "sha": "c69e2adf3c78",
+      "zh": "返回二维矩阵*x*中最大的元素，而"
+     }
+    },
+    {
+     "k": "code",
+     "text": "max (2:5, pi)\n    ⇒  3.1416  3.1416  4.0000  5.0000"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "compares each element of the range `2:5` with `pi`, and returns a row vector of the maximum values.",
+      "sha": "6dc9f8204805",
+      "zh": "把区间 `2:5` 的每个元素与 `pi` 比较，返回由较大值组成的行向量。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For complex arguments, the magnitude of the elements are used for comparison. If the magnitudes are identical, then the results are ordered by phase angle in the range (-pi, pi]. Hence,",
+      "sha": "f98a453a9d09",
+      "zh": "对复数参数，用元素的模来比较。若模相同，则按辐角排序，辐角取值范围为 (-pi, pi]。因此，"
+     }
+    },
+    {
+     "k": "code",
+     "text": "max ([-1 i 1 -i])\n    ⇒ -1"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "because all entries have magnitude 1, but -1 has the largest phase angle with value pi.",
+      "sha": "7a34ea3cabdf",
+      "zh": "因为所有元素的模都是 1，而 -1 的辐角最大，为 pi。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If called with one input and two output arguments, `max` also returns the first index of the maximum value(s). Thus,",
+      "sha": "b82409934be8",
+      "zh": "若只有一个输入而有两个输出参数，`max` 还会返回最大值第一次出现的下标。因此，"
+     }
+    },
+    {
+     "k": "code",
+     "text": "[x, ix] = max ([1, 3, 5, 2, 5])\n    ⇒  x = 5\n        ix = 3"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `min`, `cummax`, `cummin`.",
+      "sha": "a659d96fed4e",
+      "zh": "另见：`min`、`cummax`、`cummin`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "min",
+   "sigs": [
+    "m = min (x)",
+    "m = min (x, [], dim)",
+    "[m, im] = min (x)",
+    "m = min (x, y)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find minimum values in the array *x*.",
+      "sha": "b2b7e574491f",
+      "zh": "求数组*x*中的最小值。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For a vector argument, return the minimum value. For a matrix argument, return a row vector with the minimum value of each column. For a multi-dimensional array, `min` operates along the first non-singleton dimension.",
+      "sha": "f9d0a60bfcf5",
+      "zh": "对向量参数，返回其最小值。对矩阵参数，返回一个行向量，其元素是每一列的最小值。对多维数组，`min` 沿第一个长度不为 1 的维度运算。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the optional third argument *dim* is present then operate along this dimension. In this case the second argument is ignored and should be set to the empty matrix.",
+      "sha": "5a7589da97e6",
+      "zh": "若给出可选的第三个参数*dim*，则沿该维度运算。此时第二个参数会被忽略，应设为空矩阵。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For two inputs (*x* and *y*), return the pairwise minimum according to the rules for Broadcasting.",
+      "sha": "8dd5c9da17fb",
+      "zh": "对于两个输入（*x*和*y*），按照“广播”的规则返回逐对的最小值。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Thus,",
+      "sha": "e38f4f305df3",
+      "zh": "于是，"
+     }
+    },
+    {
+     "k": "code",
+     "text": "min (min (x))"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "returns the smallest element of the 2-D matrix *x*, and",
+      "sha": "f7aeff48467a",
+      "zh": "返回二维矩阵*x*中最小的元素，而"
+     }
+    },
+    {
+     "k": "code",
+     "text": "min (2:5, pi)\n    ⇒  2.0000  3.0000  3.1416  3.1416"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "compares each element of the range `2:5` with `pi`, and returns a row vector of the minimum values.",
+      "sha": "f99fea32964f",
+      "zh": "把区间 `2:5` 的每个元素与 `pi` 比较，返回由较小值组成的行向量。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For complex arguments, the magnitude of the elements are used for comparison. If the magnitudes are identical, then the results are ordered by phase angle in the range (-pi, pi]. Hence,",
+      "sha": "f98a453a9d09",
+      "zh": "对复数参数，用元素的模来比较。若模相同，则按辐角排序，辐角取值范围为 (-pi, pi]。因此，"
+     }
+    },
+    {
+     "k": "code",
+     "text": "min ([-1 i 1 -i])\n    ⇒ -i"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "because all entries have magnitude 1, but -i has the smallest phase angle with value -pi/2.",
+      "sha": "f2d023a483ff",
+      "zh": "因为所有元素的模都是 1，而 -i 的辐角最小，为 -pi/2。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If called with one input and two output arguments, `min` also returns the first index of the minimum value(s). Thus,",
+      "sha": "422029491409",
+      "zh": "若只有一个输入而有两个输出参数，`min` 还会返回最小值第一次出现的下标。因此，"
+     }
+    },
+    {
+     "k": "code",
+     "text": "[x, ix] = min ([1, 3, 0, 2, 0])\n    ⇒  x = 0\n        ix = 3"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `max`, `cummin`, `cummax`.",
+      "sha": "5a3a014258bd",
+      "zh": "另见：`max`、`cummin`、`cummax`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "hypot",
+   "sigs": [
+    "h = hypot (x, y)",
+    "h = hypot (x, y, z, …)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the element-by-element square root of the sum of the squares of *x* and *y*.",
+      "sha": "f57d5a93d847",
+      "zh": "逐元素地计算*x*与*y*的平方和的平方根。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is equivalent to `sqrt (x.^2 + y.^2)`, but is calculated in a manner that avoids overflows for large values of *x* or *y*.",
+      "sha": "dcf1ea597c8a",
+      "zh": "这等价于 `sqrt (x.^2 + y.^2)`，但计算方式能避免*x*或*y*很大时发生溢出。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`hypot` can also be called with more than 2 arguments; in this case, the arguments are accumulated from left to right:",
+      "sha": "d80782d5c41b",
+      "zh": "`hypot` 也可以带多于 2 个参数调用；此时各参数从左到右依次累积："
+     }
+    },
+    {
+     "k": "code",
+     "text": "hypot (hypot (x, y), z)\nhypot (hypot (hypot (x, y), z), w), etc."
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "gradient",
+   "sigs": [
+    "dx = gradient (m)",
+    "[dx, dy, dz, …] = gradient (m)",
+    "[…] = gradient (m, s)",
+    "[…] = gradient (m, x, y, z, …)",
+    "[…] = gradient (f, x0)",
+    "[…] = gradient (f, x0, s)",
+    "[…] = gradient (f, x0, x, y, …)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Calculate the gradient of sampled data or a function.",
+      "sha": "efe418643f1f",
+      "zh": "计算采样数据或函数的梯度。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *m* is a vector, calculate the one-dimensional gradient of *m*. If *m* is a matrix the gradient is calculated for each dimension.",
+      "sha": "ec25cfd7863a",
+      "zh": "若*m*是向量，则计算*m*的一维梯度。若*m*是矩阵，则对每个维度分别计算梯度。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`[dx, dy] = gradient (m)` calculates the one-dimensional gradient for *x* and *y* direction if *m* is a matrix. Additional return arguments can be use for multi-dimensional matrices.",
+      "sha": "b794a32ef217",
+      "zh": "若*m*是矩阵，`[dx, dy] = gradient (m)` 计算*x*方向和*y*方向的一维梯度。对于多维数组，可以使用更多的返回参数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "A constant spacing between two points can be provided by the *s* parameter. If *s* is a scalar, it is assumed to be the spacing for all dimensions. Otherwise, separate values of the spacing can be supplied by the *x*, … arguments. Scalar values specify an equidistant spacing. Vector values for the *x*, … arguments specify the coordinate for that dimension. The length must match their respective dimension of *m*.",
+      "sha": "e14ae5932254",
+      "zh": "可以用参数*s*给出两点之间的恒定间距。若*s*是标量，则认为它是所有维度上的间距。否则，可以通过参数*x*、…分别给出各维度的间距。标量表示等间距。*x*、…参数若为向量，则给出该维度上的坐标，其长度必须与*m*对应维度的长度一致。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "At boundary points a linear extrapolation is applied. Interior points are calculated with the first approximation of the numerical gradient",
+      "sha": "dc391cc3f13c",
+      "zh": "在边界点处采用线性外推。内部各点用数值梯度的一阶近似来计算"
+     }
+    },
+    {
+     "k": "code",
+     "text": " y'(i) = 1/(x(i+1)-x(i-1)) * (y(i-1)-y(i+1))."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the first argument *f* is a function handle, the gradient of the function at the points in *x0* is approximated using central difference. For example, `gradient (@cos, 0)` approximates the gradient of the cosine function in the point $x0 = 0$. As with sampled data, the spacing values between the points from which the gradient is estimated can be set via the *s* or *dx*, *dy*, … arguments. By default a spacing of 1 is used. See also: `diff`, `del2`.",
+      "sha": "78a733a24ed9",
+      "zh": "若第一个参数*f*是函数句柄，则用中心差分来近似该函数在*x0*中各点处的梯度。例如，`gradient (@cos, 0)` 近似的是余弦函数在点 $x0 = 0$ 处的梯度。与采样数据的情形一样，估计梯度时所用各点之间的间距，可以通过*s*或*dx*、*dy*、…参数设置。默认间距为 1。另见：`diff`、`del2`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "dot",
+   "sigs": [
+    "z = dot (x, y)",
+    "z = dot (x, y, dim)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the dot product of two vectors.",
+      "sha": "a713b90810c8",
+      "zh": "计算两个向量的点积。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *x* and *y* are matrices, calculate the dot products along the first non-singleton dimension.",
+      "sha": "f1758ee5060c",
+      "zh": "若*x*和*y*是矩阵，则沿第一个长度不为 1 的维度计算点积。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the optional argument *dim* is given, calculate the dot products along this dimension.",
+      "sha": "88186999c7bf",
+      "zh": "若给出可选参数*dim*，则沿该维度计算点积。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Implementation Note: This is equivalent to `sum (conj (X) .* Y, dim)`, but avoids forming a temporary array and is faster. When *X* and *Y* are column vectors, the result is equivalent to `X' * Y`. Although, `dot` is defined for integer arrays, the output may differ from the expected result due to the limited range of integer objects. See also: `cross`, `divergence`.",
+      "sha": "d74e0b8e61e5",
+      "zh": "实现说明：这等价于 `sum (conj (X) .* Y, dim)`，但避免了构造临时数组，速度更快。当*X*和*Y*是列向量时，结果等价于 `X' * Y`。虽然 `dot` 对整数数组有定义，但由于整数类型的取值范围有限，输出可能与预期结果不同。另见：`cross`、`divergence`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "cross",
+   "sigs": [
+    "z = cross (x, y)",
+    "z = cross (x, y, dim)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the vector cross product of two 3-dimensional vectors *x* and *y*.",
+      "sha": "54327fec71f9",
+      "zh": "计算两个三维向量*x*和*y*的向量叉积。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *x* and *y* are matrices, the cross product is applied along the first dimension with three elements.",
+      "sha": "24c7a5334cf0",
+      "zh": "若*x*和*y*是矩阵，则沿第一个恰有三个元素的维度计算叉积。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional argument *dim* forces the cross product to be calculated along the specified dimension.",
+      "sha": "0c18fb4665da",
+      "zh": "可选参数*dim*强制沿指定的维度计算叉积。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Example Code:",
+      "sha": "91ca892a5cac",
+      "zh": "示例代码："
+     }
+    },
+    {
+     "k": "code",
+     "text": " cross ([1, 1, 0], [0, 1, 1])\n   ⇒\n        1   -1   1"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `dot`, `curl`, `divergence`.",
+      "sha": "16b5560080b6",
+      "zh": "另见：`dot`、`curl`、`divergence`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "factorial",
+   "sigs": [
+    "f = factorial (n)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the factorial of *n* where *n* is a real non-negative integer.",
+      "sha": "6d0ed3c006e8",
+      "zh": "返回*n*的阶乘，其中*n*是非负实整数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *n* is a scalar, this is equivalent to `prod (1:n)`. For vector or matrix arguments, return the factorial of each element in the array.",
+      "sha": "2687c953b6e4",
+      "zh": "若*n*是标量，这等价于 `prod (1:n)`。对于向量或矩阵参数，返回数组中每个元素的阶乘。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For non-integers see the generalized factorial function `gamma`. Note that the factorial function grows large quite quickly, and even with double precision values overflow will occur if *n* > 171. For such cases consider `gammaln`. See also: `prod`, `gamma`, `gammaln`.",
+      "sha": "e98084bca84e",
+      "zh": "对于非整数，请参见广义阶乘函数 `gamma`。注意，阶乘增长得非常快，即使使用双精度，当*n* > 171 时也会溢出。这种情形可以考虑 `gammaln`。另见：`prod`、`gamma`、`gammaln`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "factor",
+   "sigs": [
+    "pf = factor (q)",
+    "[pf, n] = factor (q)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the prime factorization of *q*.",
+      "sha": "419b7c3df5ce",
+      "zh": "返回*q*的素因数分解。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The prime factorization is defined as `prod (pf) == q` where every element of *pf* is a prime number. If `q == 1`, return 1. The output *pf* is of the same numeric class as the input.",
+      "sha": "d50926c51c0b",
+      "zh": "素因数分解的定义是 `prod (pf) == q`，其中*pf*的每个元素都是素数。若 `q == 1`，则返回 1。输出*pf*的数值类别与输入相同。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "With two output arguments, return the unique prime factors *pf* and their multiplicities. That is, `prod (pf .^ n) == q`.",
+      "sha": "d6eb37fda18f",
+      "zh": "若有两个输出参数，则返回互不相同的素因数*pf*及其重数。也就是说，`prod (pf .^ n) == q`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Implementation Note: If the input *q* is `single` or `double`, then it must not exceed the corresponding `flintmax`. For larger inputs, cast them to `uint64` if they're less than 2^64:",
+      "sha": "586dda9b2c0d",
+      "zh": "实现说明：若输入*q*是 `single` 或 `double`，则它不得超过相应的 `flintmax`。对于更大的输入，若小于 2^64，可将其转换为 `uint64`："
+     }
+    },
+    {
+     "k": "code",
+     "text": " factor (uint64 (18446744073709011493))\n    ⇒     571111    761213  42431951"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For even larger inputs, use `sym` if you have the Symbolic package installed and loaded:",
+      "sha": "1360aff0e0f3",
+      "zh": "对于更大的输入，若你已安装并加载了 Symbolic 软件包，可以使用 `sym`："
+     }
+    },
+    {
+     "k": "code",
+     "text": " factor (sym ('9444733049654361449941'))\n    ⇒ (sym)\n               1           1\n  1099511627689 ⋅8589934669"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `gcd`, `lcm`, `isprime`, `primes`.",
+      "sha": "e2fcbc078507",
+      "zh": "另见：`gcd`、`lcm`、`isprime`、`primes`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "gcd",
+   "sigs": [
+    "g = gcd (a1, a2, …)",
+    "[g, v1, …] = gcd (a1, a2, …)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the greatest common divisor of *a1*, *a2*, ….",
+      "sha": "8a4bf9175b0d",
+      "zh": "计算*a1*、*a2*、…的最大公约数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "All arguments must be the same size or scalar. For arrays, the greatest common divisor is calculated for each element individually. All elements must be ordinary or Gaussian (complex) integers. Note that for Gaussian integers, the gcd is only unique up to a phase factor (multiplication by 1, -1, i, or -i), so an arbitrary greatest common divisor among the four possible is returned.",
+      "sha": "0444ce038e18",
+      "zh": "所有参数的大小必须相同，或者是标量。对于数组，对每个元素分别计算最大公约数。所有元素必须是普通整数或高斯（复）整数。注意，对于高斯整数，gcd 至多在相差一个相位因子（乘以 1、-1、i 或 -i）的意义下唯一，因此函数会在这四种可能的最大公约数中任意返回一个。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Optional return arguments *v1*, …, contain integer vectors such that,",
+      "sha": "c4bee239f9db",
+      "zh": "可选的返回参数*v1*、…包含整数向量，使得"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "$g = v_1 a_1 + v_2 a_2 + \\cdots$",
+      "sha": "5a2f1f597567",
+      "zh": "$g = v_1 a_1 + v_2 a_2 + \\cdots$"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Example code:",
+      "sha": "1fabb1683d22",
+      "zh": "示例代码："
+     }
+    },
+    {
+     "k": "code",
+     "text": "gcd ([15, 9], [20, 18])\n   ⇒  5  9"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Programming tip: To find the GCD of all the elements of a single array, use `num2cell` instead of nested calls or a loop:",
+      "sha": "03478134f4e4",
+      "zh": "编程提示：要求单个数组所有元素的最大公约数，请使用 `num2cell`，而不要用嵌套调用或循环："
+     }
+    },
+    {
+     "k": "code",
+     "text": "x = [30 42 70 105];    # vector or array of inputs\ngcd (num2cell (x) {:})\n   ⇒     1"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `lcm`, `factor`, `isprime`.",
+      "sha": "01a8b58536c1",
+      "zh": "另见：`lcm`、`factor`、`isprime`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "lcm",
+   "sigs": [
+    "l = lcm (x, y)",
+    "l = lcm (x, y, …)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the least common multiple of *x* and *y*, or of the list of all arguments.",
+      "sha": "b601a4188b47",
+      "zh": "计算*x*和*y*的最小公倍数，或所有参数的最小公倍数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "All inputs must be of the same size, or scalar. All elements must be real integer or Gaussian (complex) integer. For complex inputs, the result is unique only up to a phase factor (multiplication by +1, +i, -1, or -i), and one of the four is returned arbitrarily.",
+      "sha": "071dd4127457",
+      "zh": "所有输入的大小必须相同，或者是标量。所有元素必须是实整数或高斯（复）整数。对于复数输入，结果至多在相差一个相位因子（乘以 +1、+i、-1 或 -i）的意义下唯一，函数会在这四种可能中任意返回一个。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Example code:",
+      "sha": "1fabb1683d22",
+      "zh": "示例代码："
+     }
+    },
+    {
+     "k": "code",
+     "text": " lcm (5:8, 9:12)\n    ⇒  45  30  77  24"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Programming tip: To find the LCM of all the elements of a single array, use `num2cell` instead of nested calls or a loop:",
+      "sha": "4409b3484552",
+      "zh": "编程提示：要求单个数组所有元素的最小公倍数，请使用 `num2cell`，而不要用嵌套调用或循环："
+     }
+    },
+    {
+     "k": "code",
+     "text": " x = 1:10;    # vector or array of inputs\n lcm (num2cell (x) {:})\n    ⇒     2520"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `factor`, `gcd`, `isprime`.",
+      "sha": "7f79ae3056a5",
+      "zh": "另见：`factor`、`gcd`、`isprime`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "rem",
+   "sigs": [
+    "r = rem (x, y)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return the remainder of the division `x / y`.",
+      "sha": "e6a6570b0b9d",
+      "zh": "返回除法 `x / y` 的余数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The remainder is computed using the expression",
+      "sha": "ad2dad2cae02",
+      "zh": "余数用下面的表达式计算"
+     }
+    },
+    {
+     "k": "code",
+     "text": "x - y .* fix (x ./ y)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "An error message is printed if the dimensions of the arguments do not agree, or if either argument is complex.",
+      "sha": "4ad0088143ec",
+      "zh": "若参数的维度不一致，或者任一参数是复数，则打印错误信息。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Programming Notes: When calculating with floating point numbers (double, single), values within a few eps of an integer will be rounded to that integer before computation for compatibility with MATLAB. Any floating point integers greater than `flintmax` (2^53 for double) will not compute correctly. For larger integer values convert the input to `uint64` before calling this function.",
+      "sha": "f43de43668d5",
+      "zh": "编程注记：为了与 MATLAB 兼容，对浮点数（double、single）做计算时，与某个整数相差在几个 eps 以内的值，会先舍入为该整数再计算。大于 `flintmax`（double 为 2^53）的浮点整数无法正确计算。对于更大的整数值，调用本函数前请先把输入转换为 `uint64`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By convention,",
+      "sha": "015c5677e1c1",
+      "zh": "按照惯例，"
+     }
+    },
+    {
+     "k": "code",
+     "text": "rem (x, 0) = NaN  if x is a floating point variable\nrem (x, 0) = 0    if x is an integer variable\nrem (x, y)  returns a value with the signbit from x"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For the opposite conventions see the `mod` function. In general, `rem` is best when computing the remainder after division of two *positive* numbers. For negative numbers, or when the values are periodic, `mod` is a better choice. See also: `mod`.",
+      "sha": "1018b9072d88",
+      "zh": "相反的约定请参见 `mod` 函数。一般来说，计算两个*正*数相除后的余数时，`rem` 最合适。对于负数，或者数值具有周期性时，`mod` 是更好的选择。另见：`mod`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "mod",
+   "sigs": [
+    "m = mod (x, y)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the modulo of *x* and *y*.",
+      "sha": "c7dea765158c",
+      "zh": "计算*x*对*y*取模的结果。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Conceptually this is given by",
+      "sha": "0dccc7a23bce",
+      "zh": "从概念上说，它由下式给出"
+     }
+    },
+    {
+     "k": "code",
+     "text": "x - y .* floor (x ./ y)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and is written such that the correct modulus is returned for integer types. This function handles negative values correctly. That is, `mod (-1, 3)` is 2, not -1, as `rem (-1, 3)` returns.",
+      "sha": "c63c941593a2",
+      "zh": "其写法保证对整数类型返回正确的模。该函数能正确处理负值。也就是说，`mod (-1, 3)` 为 2，而不是 `rem (-1, 3)` 返回的 -1。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "An error results if the dimensions of the arguments do not agree, or if either of the arguments is complex.",
+      "sha": "3a2dbd11f236",
+      "zh": "若参数的维度不一致，或者任一参数是复数，则报错。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Programming Notes: When calculating with floating point numbers (double, single), values within a few eps of an integer will be rounded to that integer before computation for compatibility with MATLAB. Any floating point integers greater than `flintmax` (2^53 for double) will not compute correctly. For larger integer values convert the input to `uint64` before calling this function.",
+      "sha": "f43de43668d5",
+      "zh": "编程注记：为了与 MATLAB 兼容，对浮点数（double、single）做计算时，与某个整数相差在几个 eps 以内的值，会先舍入为该整数再计算。大于 `flintmax`（double 为 2^53）的浮点整数无法正确计算。对于更大的整数值，调用本函数前请先把输入转换为 `uint64`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By convention,",
+      "sha": "015c5677e1c1",
+      "zh": "按照惯例，"
+     }
+    },
+    {
+     "k": "code",
+     "text": "mod (x, 0) = x\nmod (x, y)      returns a value with the signbit from y"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For the opposite conventions see the `rem` function. In general, `mod` is a better choice than `rem` when any of the inputs are negative numbers or when the values are periodic. See also: `rem`.",
+      "sha": "fde6a7699693",
+      "zh": "相反的约定请参见 `rem` 函数。一般来说，只要输入中有负数，或者数值具有周期性，`mod` 就比 `rem` 更好。另见：`rem`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "primes",
+   "sigs": [
+    "p = primes (n)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return all primes up to *n*.",
+      "sha": "059e364ef2e2",
+      "zh": "返回不超过*n*的所有素数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The output data class (double, single, uint32, etc.) is the same as the input class of *n*. The algorithm used is the Sieve of Eratosthenes.",
+      "sha": "e74af6ef8731",
+      "zh": "输出的数据类别（double、single、uint32 等）与输入*n*的类别相同。所用算法是埃拉托斯特尼筛法。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note: For a specific number *n* of primes, call `list_primes (n)`. Alternatively, call `primes (n*log (k*n))(1:n)` where *k* is about 5 or 6. This works because the distance from one prime to the next is proportional to the logarithm of the prime, on average. On integrating, there are about *n* primes less than `n * log (5*n)`.",
+      "sha": "a7df069c55e3",
+      "zh": "注：若要得到指定个数*n*的素数，请调用 `list_primes (n)`。也可以调用 `primes (n*log (k*n))(1:n)`，其中*k*约为 5 或 6。这样做可行，是因为平均而言，相邻两个素数的间距与素数的对数成正比。积分估算可知，小于 `n * log (5*n)` 的素数大约有*n*个。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `list_primes`, `isprime`.",
+      "sha": "7fd685cad963",
+      "zh": "另见：`list_primes`、`isprime`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "sign",
+   "sigs": [
+    "y = sign (x)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the *signum* function.",
+      "sha": "9ab262217e37",
+      "zh": "计算*符号*函数（signum）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is defined as",
+      "sha": "e5fefbd13aaa",
+      "zh": "其定义为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "{\\rm sign} (@var{x}) = \\begin{cases}1,&x>0\\\\ 0,&x=0\\\\ -1,&x<0.\\end{cases}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For complex arguments, `sign` returns `x ./ abs (x)`.",
+      "sha": "471ce3a8a122",
+      "zh": "对复数参数，`sign` 返回 `x ./ abs (x)`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note that `sign (-0.0)` is 0. Although IEEE 754 floating point allows zero to be signed, 0.0 and -0.0 compare equal. If you must test whether zero is signed, use the `signbit` function. See also: `signbit`.",
+      "sha": "ac661b551d7c",
+      "zh": "注意，`sign (-0.0)` 为 0。虽然 IEEE 754 浮点数允许零带符号，但 0.0 与 -0.0 比较时相等。如果一定要检测零是否带符号，请使用 `signbit` 函数。另见：`signbit`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Special Functions",
+    "sha": "2ca36f193636",
+    "zh": "特殊函数"
+   }
+  },
+  {
+   "k": "def",
+   "name": "beta",
+   "sigs": [
+    "y = beta (a, b)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the Beta function for real inputs *a* and *b*.",
+      "sha": "88343f3d5cf8",
+      "zh": "对实数输入*a*和*b*计算 Beta 函数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The Beta function definition is",
+      "sha": "8fe23697bc07",
+      "zh": "Beta 函数的定义是"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "B (a, b) = {\\Gamma (a) \\Gamma (b) \\over \\Gamma (a + b)}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The Beta function can grow quite large and it is often more useful to work with the logarithm of the output rather than the function directly. `betaln`, for computing the logarithm of the Beta function in an efficient manner. See also: `betaln`, `betainc`, `betaincinv`.",
+      "sha": "6d153461d8a7",
+      "zh": "Beta 函数可能增长得非常大，通常直接处理输出的对数比处理函数本身更有用。`betaln` 用来高效地计算 Beta 函数的对数。另见：`betaln`、`betainc`、`betaincinv`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "erf",
+   "sigs": [
+    "v = erf (z)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the error function.",
+      "sha": "4092048c4c00",
+      "zh": "计算误差函数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The error function is defined as",
+      "sha": "fc376b13b1bb",
+      "zh": "误差函数的定义是"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "{\\rm erf} (z) = {2 \\over \\sqrt{\\pi}}\\int_0^z e^{-t^2} dt"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `erfc`, `erfcx`, `erfi`, `dawson`, `erfinv`, `erfcinv`.",
+      "sha": "87abf9015583",
+      "zh": "另见：`erfc`、`erfcx`、`erfi`、`dawson`、`erfinv`、`erfcinv`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "gamma",
+   "sigs": [
+    "v = gamma (z)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the Gamma function.",
+      "sha": "4a7715b8e46d",
+      "zh": "计算 Gamma 函数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The Gamma function is defined as",
+      "sha": "699376aaeded",
+      "zh": "Gamma 函数的定义是"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Gamma (z) = \\int_0^\\infty t^{z-1} e^{-t} dt."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Programming Note: The gamma function can grow quite large even for small input values. In many cases it may be preferable to use the natural logarithm of the gamma function (`gammaln`) in calculations to minimize loss of precision. The final result is then `exp (result_using_gammaln).` See also: `gammainc`, `gammaln`, `factorial`.",
+      "sha": "8093a66d80a2",
+      "zh": "编程注记：即使输入值很小，Gamma 函数也可能增长得非常大。在许多情形下，计算时最好使用 Gamma 函数的自然对数（`gammaln`），以尽量减少精度损失。最终结果再由 `exp (result_using_gammaln).` 得到。另见：`gammainc`、`gammaln`、`factorial`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Coordinate Transformations",
+    "sha": "08b65cb23b30",
+    "zh": "坐标变换"
+   }
+  },
+  {
+   "k": "def",
+   "name": "cart2pol",
+   "sigs": [
+    "[theta, r] = cart2pol (x, y)",
+    "[theta, r, z] = cart2pol (x, y, z)",
+    "[theta, r] = cart2pol (C)",
+    "[theta, r, z] = cart2pol (C)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Transform Cartesian coordinates to polar or cylindrical coordinates.",
+      "sha": "73bb90c8db56",
+      "zh": "把笛卡尔坐标变换为极坐标或柱坐标。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The inputs *x*, *y* (, and *z*) must be the same shape, or scalar. If called with a single matrix argument then each row of *C* represents the Cartesian coordinate pair (*x*, *y*) or triplet (*x*, *y*, *z*).",
+      "sha": "584132a12087",
+      "zh": "输入*x*、*y*（以及*z*）的形状必须相同，或者是标量。若只带一个矩阵参数调用，则*C*的每一行表示笛卡尔坐标对（*x*，*y*）或三元组（*x*，*y*，*z*）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The outputs *theta*, *r* (, and *z*) match the shape of the inputs. For a matrix input *C* the outputs will be column vectors with rows corresponding to the rows of the input matrix.",
+      "sha": "54ac3548cb53",
+      "zh": "输出*theta*、*r*（以及*z*）的形状与输入一致。对于矩阵输入*C*，输出是列向量，其各行与输入矩阵的各行一一对应。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*theta* describes the angle relative to the positive x-axis measured in the xy-plane.",
+      "sha": "4091fbe409db",
+      "zh": "*theta*表示在 xy 平面内，相对于 x 轴正方向测得的角度。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*r* is the distance to the z-axis (0, 0, z).",
+      "sha": "e37b650622ba",
+      "zh": "*r*是到 z 轴（0, 0, z）的距离。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*z*, if present, is unchanged by the transformation.",
+      "sha": "c32d17d4c85c",
+      "zh": "*z*若存在，则在变换中保持不变。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The coordinate transformation is computed using:",
+      "sha": "7ca325ecc761",
+      "zh": "坐标变换按下式计算："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\theta = \\arctan \\left ( {y \\over x} \\right )"
+    },
+    {
+     "k": "math",
+     "tex": "r = \\sqrt{x^2 + y^2}"
+    },
+    {
+     "k": "math",
+     "tex": "z = z"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note: For MATLAB compatibility, this function no longer returns a full coordinate matrix when called with a single return argument. See also: `pol2cart`, `cart2sph`, `sph2cart`.",
+      "sha": "d4957374291a",
+      "zh": "注：为了与 MATLAB 兼容，只带一个返回参数调用时，该函数不再返回完整的坐标矩阵。另见：`pol2cart`、`cart2sph`、`sph2cart`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "pol2cart",
+   "sigs": [
+    "[x, y] = pol2cart (theta, r)",
+    "[x, y, z] = pol2cart (theta, r, z)",
+    "[x, y] = pol2cart (P)",
+    "[x, y, z] = pol2cart (P)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Transform polar or cylindrical coordinates to Cartesian coordinates.",
+      "sha": "fe3bb8bbc59a",
+      "zh": "把极坐标或柱坐标变换为笛卡尔坐标。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The inputs *theta*, *r*, (and *z*) must be the same shape, or scalar. If called with a single matrix argument then each row of *P* represents the polar coordinate pair (*theta*, *r*) or the cylindrical triplet (*theta*, *r*, *z*).",
+      "sha": "73690490fc6d",
+      "zh": "输入*theta*、*r*（以及*z*）的形状必须相同，或者是标量。若只带一个矩阵参数调用，则*P*的每一行表示极坐标对（*theta*，*r*）或柱坐标三元组（*theta*，*r*，*z*）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The outputs *x*, *y* (, and *z*) match the shape of the inputs. For a matrix input *P* the outputs will be column vectors with rows corresponding to the rows of the input matrix.",
+      "sha": "6e806790d6a7",
+      "zh": "输出*x*、*y*（以及*z*）的形状与输入一致。对于矩阵输入*P*，输出是列向量，其各行与输入矩阵的各行一一对应。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*theta* describes the angle relative to the positive x-axis measured in the xy-plane.",
+      "sha": "4091fbe409db",
+      "zh": "*theta*表示在 xy 平面内，相对于 x 轴正方向测得的角度。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*r* is the distance to the z-axis (0, 0, z).",
+      "sha": "e37b650622ba",
+      "zh": "*r*是到 z 轴（0, 0, z）的距离。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*z*, if present, is unchanged by the transformation.",
+      "sha": "c32d17d4c85c",
+      "zh": "*z*若存在，则在变换中保持不变。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The coordinate transformation is computed using:",
+      "sha": "7ca325ecc761",
+      "zh": "坐标变换按下式计算："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "x = r \\cos \\theta"
+    },
+    {
+     "k": "math",
+     "tex": "y = r \\sin \\theta"
+    },
+    {
+     "k": "math",
+     "tex": "z = z"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note: For MATLAB compatibility, this function no longer returns a full coordinate matrix when called with a single return argument. See also: `cart2pol`, `sph2cart`, `cart2sph`.",
+      "sha": "2e407ce9a9ab",
+      "zh": "注：为了与 MATLAB 兼容，只带一个返回参数调用时，该函数不再返回完整的坐标矩阵。另见：`cart2pol`、`sph2cart`、`cart2sph`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Mathematical Constants",
+    "sha": "bb100702636d",
+    "zh": "数学常数"
+   }
+  },
+  {
+   "k": "def",
+   "name": "e",
+   "sigs": [
+    "A = e",
+    "A = e (n)",
+    "A = e (n, m)",
+    "A = e (n, m, k, …)",
+    "A = e (…, class)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a scalar, matrix, or N-dimensional array whose elements are all equal to the base of natural logarithms.",
+      "sha": "d9075e78a583",
+      "zh": "返回标量、矩阵或 N 维数组，其所有元素都等于自然对数的底。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The constant $e$ satisfies the equation $\\log (e) = 1$.",
+      "sha": "285c111e5731",
+      "zh": "常数 $e$ 满足方程 $\\log (e) = 1$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with no arguments, return a scalar with the value $e$.",
+      "sha": "ef7582e0d3bc",
+      "zh": "不带参数调用时，返回值为 $e$ 的标量。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with a single argument, return a square matrix with the dimension specified.",
+      "sha": "b82cbbab95e9",
+      "zh": "只带一个参数调用时，返回指定维数的方阵。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with more than one scalar argument the first two arguments are taken as the number of rows and columns and any further arguments specify additional matrix dimensions.",
+      "sha": "0b7967a7b99e",
+      "zh": "带多于一个标量参数调用时，前两个参数作为行数和列数，其余参数指定矩阵的更多维度。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional argument *class* specifies the return type and may be either `\"double\"` or `\"single\"`. See also: `log`, `exp`, `pi`, `I`.",
+      "sha": "871cde4ea3dd",
+      "zh": "可选参数*class*指定返回类型，可以是 `\"double\"` 或 `\"single\"`。另见：`log`、`exp`、`pi`、`I`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "pi",
+   "sigs": [
+    "p = pi",
+    "p = pi (n)",
+    "p = pi (n, m)",
+    "p = pi (n, m, k, …)",
+    "p = pi (…, class)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a scalar, matrix, or N-dimensional array whose elements are all equal to the ratio of the circumference of a circle to its diameter($\\pi$).",
+      "sha": "87fdcf0d5301",
+      "zh": "返回标量、矩阵或 N 维数组，其所有元素都等于圆的周长与直径之比（$\\pi$）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with no arguments, return a scalar with the value of $\\pi$.",
+      "sha": "0f498922c658",
+      "zh": "不带参数调用时，返回值为 $\\pi$ 的标量。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with a single argument, return a square matrix with the dimension specified.",
+      "sha": "b82cbbab95e9",
+      "zh": "只带一个参数调用时，返回指定维数的方阵。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with more than one scalar argument the first two arguments are taken as the number of rows and columns and any further arguments specify additional matrix dimensions.",
+      "sha": "0b7967a7b99e",
+      "zh": "带多于一个标量参数调用时，前两个参数作为行数和列数，其余参数指定矩阵的更多维度。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional argument *class* specifies the return type and may be either `\"double\"` or `\"single\"`. See also: `e`, `I`.",
+      "sha": "48c4bc50f48b",
+      "zh": "可选参数*class*指定返回类型，可以是 `\"double\"` 或 `\"single\"`。另见：`e`、`I`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "I",
+   "sigs": [
+    "A = I",
+    "A = I (n)",
+    "A = I (n, m)",
+    "A = I (n, m, k, …)",
+    "A = I (…, class)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a scalar, matrix, or N-dimensional array whose elements are all equal to the pure imaginary unit, defined as $\\sqrt{-1}$.",
+      "sha": "5f3d148b369b",
+      "zh": "返回标量、矩阵或 N 维数组，其所有元素都等于纯虚数单位，定义为 $\\sqrt{-1}$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "I, and its equivalents i, j, and J, are functions so any of the names may be reused for other purposes (such as i for a counter variable).",
+      "sha": "eb68d77d4b32",
+      "zh": "I 及其等价写法 i、j 和 J 都是函数，因此这些名字都可以另作他用（例如用 i 做计数变量）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with no arguments, return a scalar with the value $i$.",
+      "sha": "ab1e414c1dac",
+      "zh": "不带参数调用时，返回值为 $i$ 的标量。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with a single argument, return a square matrix with the dimension specified.",
+      "sha": "b82cbbab95e9",
+      "zh": "只带一个参数调用时，返回指定维数的方阵。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with more than one scalar argument the first two arguments are taken as the number of rows and columns and any further arguments specify additional matrix dimensions.",
+      "sha": "0b7967a7b99e",
+      "zh": "带多于一个标量参数调用时，前两个参数作为行数和列数，其余参数指定矩阵的更多维度。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional argument *class* specifies the return type and may be either `\"double\"` or `\"single\"`. See also: `e`, `pi`, `log`, `exp`.",
+      "sha": "e67338ba5638",
+      "zh": "可选参数*class*指定返回类型，可以是 `\"double\"` 或 `\"single\"`。另见：`e`、`pi`、`log`、`exp`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "Inf",
+   "sigs": [
+    "A = Inf",
+    "A = Inf (n)",
+    "A = Inf (n, m)",
+    "A = Inf (n, m, k, …)",
+    "A = Inf (…, class)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a scalar, matrix or N-dimensional array whose elements are all equal to the IEEE representation for positive infinity.",
+      "sha": "19de49312eb0",
+      "zh": "返回标量、矩阵或 N 维数组，其所有元素都等于 IEEE 表示中的正无穷。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Infinity is produced when results are too large to be represented using the IEEE floating point format for numbers. Two common examples which produce infinity are division by zero and overflow.",
+      "sha": "c4dad01495f7",
+      "zh": "当结果太大、无法用 IEEE 浮点格式表示时，就会产生无穷。两个常见的例子是除以零和溢出。"
+     }
+    },
+    {
+     "k": "code",
+     "text": "[ 1/0 e^800 ]\n⇒ Inf   Inf"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with no arguments, return a scalar with the value `Inf`.",
+      "sha": "bf6bca76d584",
+      "zh": "不带参数调用时，返回值为 `Inf` 的标量。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with a single argument, return a square matrix with the dimension specified.",
+      "sha": "b82cbbab95e9",
+      "zh": "只带一个参数调用时，返回指定维数的方阵。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with more than one scalar argument the first two arguments are taken as the number of rows and columns and any further arguments specify additional matrix dimensions.",
+      "sha": "0b7967a7b99e",
+      "zh": "带多于一个标量参数调用时，前两个参数作为行数和列数，其余参数指定矩阵的更多维度。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional argument *class* specifies the return type and may be either `\"double\"` or `\"single\"`. See also: `isinf`, `NaN`.",
+      "sha": "9b0c3b02cc83",
+      "zh": "可选参数*class*指定返回类型，可以是 `\"double\"` 或 `\"single\"`。另见：`isinf`、`NaN`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "NaN",
+   "sigs": [
+    "val = NaN",
+    "val = NaN (n)",
+    "val = NaN (n, m)",
+    "val = NaN (n, m, k, …)",
+    "val = NaN (…, \"like\", var)",
+    "val = NaN (…, class)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a scalar, matrix, or N-dimensional array whose elements are all equal to the IEEE symbol NaN (Not a Number).",
+      "sha": "68e2e34e7add",
+      "zh": "返回标量、矩阵或 N 维数组，其所有元素都等于 IEEE 符号 NaN（Not a Number，非数）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "NaN is the result of operations which do not produce a well defined numerical result. Common operations which produce a NaN are arithmetic with infinity ($\\infty - \\infty$), zero divided by zero ($0/0$), and any operation involving another NaN value (5 + NaN).",
+      "sha": "c62d01b2794b",
+      "zh": "NaN 是那些得不到明确数值结果的运算的结果。产生 NaN 的常见运算有：无穷的算术运算（$\\infty - \\infty$）、零除以零（$0/0$），以及任何涉及另一个 NaN 值的运算（5 + NaN）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note that NaN always compares not equal to NaN (NaN != NaN). This behavior is specified by the IEEE standard for floating point arithmetic. To find NaN values, use the `isnan` function.",
+      "sha": "4eb3c3665876",
+      "zh": "注意，NaN 与 NaN 比较时总是不相等（NaN != NaN）。这一行为由 IEEE 浮点算术标准规定。要找出 NaN 值，请使用 `isnan` 函数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with no arguments, return a scalar with the value `NaN`.",
+      "sha": "a6e6c72c7e11",
+      "zh": "不带参数调用时，返回值为 `NaN` 的标量。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with a single argument, return a square matrix with the dimension specified.",
+      "sha": "b82cbbab95e9",
+      "zh": "只带一个参数调用时，返回指定维数的方阵。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with more than one scalar argument the first two arguments are taken as the number of rows and columns and any further arguments specify additional matrix dimensions.",
+      "sha": "0b7967a7b99e",
+      "zh": "带多于一个标量参数调用时，前两个参数作为行数和列数，其余参数指定矩阵的更多维度。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If a variable *var* is specified after `\"like\"`, the output *val* will have the same data type, complexity, and sparsity as *var*.",
+      "sha": "7e1238148006",
+      "zh": "若在 `\"like\"` 之后指定变量*var*，则输出*val*的数据类型、是否复数、是否稀疏都与*var*相同。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The optional argument *class* specifies the return type and may be either `\"double\"` or `\"single\"`. See also: `isnan`, `Inf`.",
+      "sha": "d0266a63864f",
+      "zh": "可选参数*class*指定返回类型，可以是 `\"double\"` 或 `\"single\"`。另见：`isnan`、`Inf`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "eps",
+   "sigs": [
+    "d = eps",
+    "d = eps (x)",
+    "d = eps (n, m)",
+    "d = eps (n, m, k, …)",
+    "d = eps (…, class)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a scalar, matrix or N-dimensional array whose elements are all eps, the machine precision.",
+      "sha": "cf5a8c5945fa",
+      "zh": "返回标量、矩阵或 N 维数组，其所有元素都等于 eps，即机器精度。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "More precisely, `eps` is the relative spacing between any two adjacent numbers in the machine's floating point system. This number is obviously system dependent. On machines that support IEEE floating point arithmetic, `eps` is approximately $2.2204\\times10^{-16}$ for double precision and $1.1921\\times10^{-7}$ for single precision.",
+      "sha": "b60d008b8eb0",
+      "zh": "更准确地说，`eps` 是机器浮点数系统中任意两个相邻数之间的相对间距。这个数当然取决于具体的系统。在支持 IEEE 浮点算术的机器上，`eps` 对双精度约为 $2.2204\\times10^{-16}$，对单精度约为 $1.1921\\times10^{-7}$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with no arguments, return a scalar with the value `eps (1.0)`.",
+      "sha": "21177490fee4",
+      "zh": "不带参数调用时，返回值为 `eps (1.0)` 的标量。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Given a single argument *x*, return the distance between *x* and the next largest value.",
+      "sha": "03f370409c7b",
+      "zh": "给定单个参数*x*，返回*x*与下一个更大的值之间的距离。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When called with more than one argument the first two arguments are taken as the number of rows and columns and any further arguments specify additional matrix dimensions. The optional argument *class* specifies the return type and may be either `\"double\"` or `\"single\"`. See also: `realmax`, `realmin`, `intmax`, `flintmax`.",
+      "sha": "fc487eed0f75",
+      "zh": "带多于一个参数调用时，前两个参数作为行数和列数，其余参数指定矩阵的更多维度。可选参数*class*指定返回类型，可以是 `\"double\"` 或 `\"single\"`。另见：`realmax`、`realmin`、`intmax`、`flintmax`。"
+     }
+    }
+   ]
+  }
+ ],
+ "title_zh": "算术与初等函数"
+}

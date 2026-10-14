@@ -1,0 +1,69 @@
+\begin{tikzpicture}
+		\begin{axis}[
+		    anchor=origin,
+		    name=plot1,
+		    disabledatascaling,
+		    xmin=-2,xmax=2,
+		    ymin=-2.1,ymax=2.1,
+			xtick={-4,...,4},
+			ytick={-2,...,4},
+		    x=1cm,y=1cm,
+		    grid=both,
+		    grid style={line width=.1pt, draw=gray!10},
+		    axis lines=middle,
+		    minor tick num=0,
+		    enlargelimits={abs=0.5},
+		    axis line style={latex-latex},
+		    ticklabel style={font=\tiny,fill=white},
+		    xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+		    ylabel style={at={(ticklabel* cs:1)},anchor=south west}
+		]
+			\begin{scope}[cm={2,.5,-.5,1,(0,0)}, mypink, thick]
+				\addplot[mark=none]{0};
+				\addplot[mark=none]{-1};
+				\addplot[mark=none]{-2};
+				\addplot[mark=none]{1};
+				\addplot[mark=none]{2};
+				\addplot[mark=none]({1},{x});
+				\addplot[mark=none]({0},{x});
+				\addplot[mark=none]({-1},{x});
+				\addplot[mark=none]({-.5},{x});
+				\addplot[mark=none]({.5},{x});
+			\end{scope}
+		\end{axis}
+		\begin{axis}[
+			name=plot2,
+			at={($(plot1.east) + (1cm, 0)$)},
+			anchor=west,
+		    disabledatascaling,
+		    xmin=-2,xmax=2,
+		    ymin=-2.1,ymax=2.1,
+			xtick={-4,...,4},
+			ytick={-2,...,4},
+		    x=1cm,y=1cm,
+		    grid=both,
+		    grid style={line width=.1pt, draw=gray!10},
+		    axis lines=middle,
+		    minor tick num=0,
+		    enlargelimits={abs=0.5},
+		    axis line style={latex-latex},
+		    ticklabel style={font=\tiny,fill=white},
+		    xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+		    ylabel style={at={(ticklabel* cs:1)},anchor=south west}
+		]
+			\begin{scope}[BlueGreen, thick]
+				\addplot[mark=none, smooth, samples=50]({x},{.5*sin(deg(2*x))});
+				\addplot[mark=none, smooth, samples=50]({x},{.5*sin(deg(2*x))+1});
+				\addplot[mark=none, smooth, samples=50]({x},{.5*sin(deg(2*x))+2});
+				\addplot[mark=none, smooth, samples=50]({x},{.5*sin(deg(2*x))-1});
+				\addplot[mark=none, smooth, samples=50]({x},{.5*sin(deg(2*x))-2});
+				\addplot[mark=none, smooth, samples=50]({.5*cos(deg(2*x))+0},{x});
+				\addplot[mark=none, smooth, samples=50]({.5*cos(deg(2*x))+1},{x});
+				\addplot[mark=none, smooth, samples=50]({.5*cos(deg(2*x))+2},{x});
+				\addplot[mark=none, smooth, samples=50]({.5*cos(deg(2*x))-1},{x});
+				\addplot[mark=none, smooth, samples=50]({.5*cos(deg(2*x))-2},{x});
+			\end{scope}
+		\end{axis}
+		\node[yshift=-.5cm] at (plot1.south) {Linear};
+		\node[yshift=-.5cm] at (plot2.south) {Non-linear};
+	\end{tikzpicture}

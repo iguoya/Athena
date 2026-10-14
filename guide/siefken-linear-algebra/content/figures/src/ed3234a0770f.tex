@@ -1,0 +1,29 @@
+\begin{tikzpicture}
+		\begin{axis}[
+		    anchor=origin,
+		    name=plot1,
+		    disabledatascaling,
+		    xmin=-1,xmax=3,
+		    ymin=-1,ymax=2,
+			xtick={-4,...,4},
+			ytick={-2,...,4},
+		    x=1cm,y=1cm,
+		    grid=both,
+		    grid style={line width=.1pt, draw=black!10},
+		    axis lines=middle,
+		    minor tick num=0,
+		    enlargelimits={abs=0.5},
+		    axis line style={latex-latex},
+		    ticklabel style={font=\tiny,fill=\currentbackgroundcolor},
+		    xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+		    ylabel style={at={(ticklabel* cs:1)},anchor=south west}
+		]
+			\coordinate (A) at (1/4,1/4);
+			\coordinate (B) at (3,1/2);
+			\coordinate (C) at (1,1);
+			\fill[blue, opacity=.3] (0,0) -- (1,0) -- (0,2) node[above right, opacity=.7] {$\mathcal T$};
+			\fill[mypink] (A) circle[radius=2pt] node[above right] {$\vec a$};
+			\fill[mygreen] (B) circle[radius=2pt] node[above right] {$\vec c$};
+			\fill[myorange] (C) circle[radius=2pt] node[above right] {$\vec b$};
+		\end{axis}
+	\end{tikzpicture}

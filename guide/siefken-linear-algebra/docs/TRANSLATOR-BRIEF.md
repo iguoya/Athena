@@ -1,0 +1,56 @@
+# 译员须知（并行翻译用）
+
+本应用的译文是逐段手写的（原文不手写，由 `scripts/sync_upstream.py` 从上游生成）。这份文档写给每位译员：
+你会领到一节或几节，只改这几节的快照文件，不碰别的。
+
+## 先读
+
+1. `AGENTS.md` 的「内容规则」一节；2. `docs/GLOSSARY.md`（术语对照与译文约定）；
+3. 语气与公式处理的样例（只看写法，内容不相干）：`../selinger-linear-algebra/content/sections/Matrices-Inverses-Computing.json`
+   与 `../selinger-linear-algebra/content/sections/SpanIndependenceBasis-Span.json`——每个单元的 `en` 对应的 `zh`。
+
+## 流程（每一节各走一遍，不要把几节混在一起导出）
+
+```sh
+cd guide/siefken-linear-algebra
+python3 scripts/tr.py export <节 id> > /tmp/ex-<节 id>.json     # 待译单元 [{"sha","en"}]
+# 写译文到 /tmp/tr-<节 id>.txt（格式见下），长节可分几批、几个文件
+python3 scripts/tr.py import <节 id> /tmp/tr-<节 id>.txt        # 校验并写回
+```
+
+译文文件格式：每条一行 `@@ <sha>`，下一行起是译文（可多行，会被合并成一行）。公式里的反斜杠不用转义。
+`import` 会拒绝有问题的条目并写明原因；改好重导，直到「拒绝 0 条、还剩 0 个单元未译」。
+**先 `export` 对应节再翻译**：sha 属于具体的节，别把另一节的内容当成这一节的。
+
+## 译文要求
+
+- **公式原样保留**：`$…$` 逐字符不动（含空格、反斜杠、花括号）；译文里公式的数量与内容必须与原文一致（导入时校验）。
+  常见漏法：原文里单独的 `$y$`、`$2$`；脚注（`〔注：…〕`）里的公式。只能改公式之外的文字。
+- `**粗体**`、`*斜体*`、`〔引用〕`、`〔注：…〕` 标记保留；`〔引用〕` 位置的内容原书是交叉引用，译文里原样保留这个标记。
+  对某个定理/例的引用写成「定理“…”」「例“…”」，引号里是那个盒子的标题（标题的译法要与该盒子标题单元的译文一致）。
+- **忠实、通俗易懂**，面向准备考研数学的学习者：不省略条件，不改变数学含义（「当且仅当」不能译成「如果」）；
+  定义、定理、例、解、证明里的每个句子都要译，不压缩、不概括；原书的提问保留为提问。
+- 术语按 GLOSSARY，全书同一个词只用一种译法；遇到 GLOSSARY 没有的词，查国内通行译法（同济《线性代数》等），
+  最后在汇报里列出。**不要自己改 GLOSSARY。**
+- 不用「显然」「容易看出」「不难证明」「易知」「众所周知」等把难度推给读者的词（检查会拦）。
+- 习题答案里的「Solution is: …」译成「解为：…」。
+- 中文标点用全角（，。；：？！），公式与中文之间不强求空格；粗体/斜体标记与相邻中文之间不加空格。
+- 人名、英文变量名、固定的英文缩写保留原样。
+
+## 汇报
+
+只汇报：翻译了多少节、多少单元；是否每节都「拒绝 0、剩余 0」；GLOSSARY 之外你定的新术语译法；
+需要别处核对一致的引用译名。不要改任何别的文件，不运行 git、`sync_upstream.py`、`check.py`。
+
+## 本书的特点与补充术语（Siefken 工作册）
+
+- 语气：原书口语、亲切，常对读者说话（"you"）、用问句引导；译文也保持口语化，但数学陈述要精确。
+- 「Exercises / Problems」译「练习题」；`**Takeaway**` 之类的「要点」框保持为要点；`\th` 记号（如 $i\th$）属于公式，原样保留。
+- 本书常用词：translated span 平移张成；restricted linear combination 受限线性组合；normal form（直线、平面的）法式；
+  vector component / component of $\vec v$ in the direction of $\vec u$ 向量分量 / $\vec v$ 在 $\vec u$ 方向上的分量；
+  projection 投影；volume change 体积变化因子；orthonormal 标准正交；change of basis 基变换；coordinate vector 坐标向量；
+  range 值域；null space 零空间；rank 秩；nullity 零度；rank–nullity theorem 秩—零度定理；composition 复合；
+  invertible / inverse function 可逆 / 逆函数；elementary matrix 初等矩阵；determinant 行列式；eigenvector / eigenvalue 特征向量 / 特征值；
+  characteristic polynomial 特征多项式；diagonalization 对角化；geometric / algebraic multiplicity 几何 / 代数重数；
+  hyperplane 超平面；set-builder notation 集合构造记号；subset / superset 子集 / 超集（上位集）；empty set 空集。
+- 数学符号如 $\vec v$、$\mat{\cdot}$、$\Set{\cdot}$ 都在公式里，不会动；公式之外的英文词（如 "span"）译成中文，首次出现可附英文。

@@ -1,0 +1,1358 @@
+{
+ "id": "nonlin",
+ "title_en": "Nonlinear Equations",
+ "blocks": [
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Solvers",
+    "sha": "fde68155d35f",
+    "zh": "求解器"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Octave can solve sets of nonlinear equations of the form",
+    "sha": "acb3ed8648f6",
+    "zh": "Octave 可以求解如下形式的非线性方程（nonlinear equation）组"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "f (x) = 0"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "using the function `fsolve`, which is based on the MINPACK subroutine `hybrd`. This is an iterative technique so a starting point must be provided. This also has the consequence that convergence is not guaranteed even if a solution exists.",
+    "sha": "0994ecd504b4",
+    "zh": "所用的函数是 `fsolve`，它基于 MINPACK 的子程序 `hybrd`。这是一种迭代方法，因此必须给出一个起始点；这也意味着，即使解存在，也不保证一定收敛。"
+   }
+  },
+  {
+   "k": "def",
+   "name": "fsolve",
+   "sigs": [
+    "x = fsolve (fcn, x0)",
+    "x = fsolve (fcn, x0, options)",
+    "[x, fval] = fsolve (…)",
+    "[x, fval, info] = fsolve (…)",
+    "[x, fval, info, output] = fsolve (…)",
+    "[x, fval, info, output, fjac] = fsolve (…)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Solve a system of nonlinear equations defined by the function *fcn*.",
+      "sha": "e4a7204be2bc",
+      "zh": "求解由函数 *fcn* 定义的非线性方程组。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*fcn* is a function handle, inline function, or string containing the name of the function to evaluate. *fcn* should accept a vector (array) defining the unknown variables, and return a vector of left-hand sides of the equations. Right-hand sides are defined to be zeros. In other words, this function attempts to determine a vector *x* such that `fcn (x)` gives (approximately) all zeros.",
+      "sha": "1d566ddaaa5c",
+      "zh": "*fcn* 可以是函数句柄、内联函数，或包含待求值函数名的字符串。*fcn* 应接受一个表示未知变量的向量（数组），并返回由各方程左端组成的向量；右端一律规定为零。换句话说，该函数试图求出一个向量 *x*，使 `fcn (x)` 的各分量（近似地）全为零。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*x0* is an initial guess for the solution. The shape of *x0* is preserved in all calls to *fcn*, but otherwise is treated as a column vector.",
+      "sha": "e12d86e7a7b1",
+      "zh": "*x0* 是解的初始猜测值。每次调用 *fcn* 时，*x0* 的形状都保持不变，但在其他方面按列向量处理。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*options* is a structure specifying additional parameters which control the algorithm. Currently, `fsolve` recognizes these options: `\"AutoScaling\"`, `\"ComplexEqn\"`, `\"FinDiffType\"`, `\"FunValCheck\"`, `\"Jacobian\"`, `\"MaxFunEvals\"`, `\"MaxIter\"`, `\"OutputFcn\"`, `\"TolFun\"`, `\"TolX\"`, `\"TypicalX\"`, and `\"Updating\"`.",
+      "sha": "52ac3ee965e6",
+      "zh": "*options* 是一个结构体，用来指定控制算法的附加参数。目前 `fsolve` 识别这些选项：`\"AutoScaling\"`、`\"ComplexEqn\"`、`\"FinDiffType\"`、`\"FunValCheck\"`、`\"Jacobian\"`、`\"MaxFunEvals\"`、`\"MaxIter\"`、`\"OutputFcn\"`、`\"TolFun\"`、`\"TolX\"`、`\"TypicalX\"` 和 `\"Updating\"`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If `\"AutoScaling\"` is `\"on\"`, the variables will be automatically scaled according to the column norms of the (estimated) Jacobian. As a result, `\"TolFun\"` becomes scaling-independent. By default, this option is `\"off\"` because it may sometimes deliver unexpected (though mathematically correct) results.",
+      "sha": "684c5fc50962",
+      "zh": "如果 `\"AutoScaling\"` 为 `\"on\"`，各变量会按（估计出的）雅可比（Jacobian）矩阵的列范数自动缩放，于是 `\"TolFun\"` 就与缩放无关了。该选项默认为 `\"off\"`，因为它有时会给出出人意料（不过在数学上正确）的结果。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If `\"ComplexEqn\"` is `\"on\"`, `fsolve` will attempt to solve complex equations in complex variables, assuming that the equations possess a complex derivative (i.e., are holomorphic). If this is not what you want, you should unpack the real and imaginary parts of the system to get a real system.",
+      "sha": "edf5def522ba",
+      "zh": "如果 `\"ComplexEqn\"` 为 `\"on\"`，`fsolve` 会尝试求解复变量的复方程，并假定这些方程具有复导数（即是全纯（holomorphic）的）。如果这不是你想要的，应当把方程组拆成实部和虚部，得到一个实方程组。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If `\"Jacobian\"` is `\"on\"`, it specifies that *fcn*—when called with 2 output arguments—also returns the Jacobian matrix of right-hand sides at the requested point.",
+      "sha": "a22837cdbc1f",
+      "zh": "如果 `\"Jacobian\"` 为 `\"on\"`，表示 *fcn*——在以 2 个输出参数调用时——还会返回各方程右端在指定点处的雅可比矩阵。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`\"MaxFunEvals\"` proscribes the maximum number of function evaluations before optimization is halted. The default value is `100 * number_of_variables`, i.e., `100 * length (x0)`. The value must be a positive integer.",
+      "sha": "3b4040a7971a",
+      "zh": "`\"MaxFunEvals\"` 规定在优化停止之前函数求值次数的上限。默认值为 `100 * number_of_variables`，即 `100 * length (x0)`。该值必须是正整数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If `\"Updating\"` is `\"on\"`, the function will attempt to use Broyden updates to update the Jacobian, in order to reduce the number of Jacobian calculations. If your user function always calculates the Jacobian (regardless of number of output arguments) then this option provides no advantage and should be disabled.",
+      "sha": "4300acf5968b",
+      "zh": "如果 `\"Updating\"` 为 `\"on\"`，函数会尝试用 Broyden 更新来更新雅可比矩阵，以减少雅可比矩阵的计算次数。如果你的用户函数无论输出参数个数多少，每次都会计算雅可比矩阵，那么这个选项没有好处，应当关闭。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`\"TolX\"` specifies the termination tolerance in the unknown variables, while `\"TolFun\"` is a tolerance for equations. Default is `1e-6` for both `\"TolX\"` and `\"TolFun\"`.",
+      "sha": "3b7e5620b092",
+      "zh": "`\"TolX\"` 指定未知变量方面的终止容差（tolerance），而 `\"TolFun\"` 是方程方面的容差。`\"TolX\"` 和 `\"TolFun\"` 的默认值都是 `1e-6`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For a description of the other options, `optimset`. To initialize an options structure with default values for `fsolve` use `options = optimset (\"fsolve\")`.",
+      "sha": "17c955cff9d8",
+      "zh": "其他选项的说明，见 `optimset`。要用默认值初始化 `fsolve` 的选项结构体，请使用 `options = optimset (\"fsolve\")`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The first output *x* is the solution while the second output *fval* contains the value of the function *fcn* evaluated at *x* (ideally a vector of all zeros).",
+      "sha": "13ce4d19fd95",
+      "zh": "第一个输出 *x* 是解，第二个输出 *fval* 是函数 *fcn* 在 *x* 处的值（理想情况下是全零向量）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The third output *info* reports whether the algorithm succeeded and may take one of the following values:",
+      "sha": "f7a0fa98d2a7",
+      "zh": "第三个输出 *info* 表明算法是否成功，取值可能是下列之一："
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "1",
+        "sha": "356a192b7913",
+        "zh": "1"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Converged to a solution point. Relative residual error is less than specified by `TolFun`.",
+          "sha": "3dd4af1619f6",
+          "zh": "收敛到一个解点。相对残差小于 `TolFun` 所指定的值。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "2",
+        "sha": "da4b9237bacc",
+        "zh": "2"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Last relative step size was less than `TolX`.",
+          "sha": "0936d9909a62",
+          "zh": "最后一次的相对步长小于 `TolX`。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "3",
+        "sha": "77de68daecd8",
+        "zh": "3"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Last relative decrease in residual was less than `TolFun`.",
+          "sha": "d71127081e90",
+          "zh": "最后一次残差的相对下降量小于 `TolFun`。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "0",
+        "sha": "b6589fc6ab0d",
+        "zh": "0"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Iteration limit (either `MaxIter` or `MaxFunEvals`) exceeded.",
+          "sha": "18bdadc580b4",
+          "zh": "超过迭代次数上限（`MaxIter` 或 `MaxFunEvals`）。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "-1",
+        "sha": "7984b0a0e139",
+        "zh": "-1"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Stopped by `OutputFcn`.",
+          "sha": "860484347089",
+          "zh": "被 `OutputFcn` 终止。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "-2",
+        "sha": "3d81ef27eba9",
+        "zh": "-2"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "The Jacobian became excessively small and the search stalled.",
+          "sha": "d36a0cbec849",
+          "zh": "雅可比矩阵变得过小，搜索停滞。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "-3",
+        "sha": "def03a29bf06",
+        "zh": "-3"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "The trust region radius became excessively small.",
+          "sha": "a30001a043cd",
+          "zh": "信赖域半径变得过小。"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*output* is a structure containing runtime information about the `fsolve` algorithm. Fields in the structure are:",
+      "sha": "e5d12e057d3b",
+      "zh": "*output* 是一个结构体，包含 `fsolve` 算法的运行信息。结构体的字段有："
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "`iterations`",
+        "sha": "e38e97fdbab0",
+        "zh": "`iterations`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Number of iterations through loop.",
+          "sha": "6a3a1dbd595a",
+          "zh": "循环的迭代次数。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`successful`",
+        "sha": "b071435a3ac3",
+        "zh": "`successful`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Number of successful iterations.",
+          "sha": "d48162b102e5",
+          "zh": "成功迭代的次数。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`funcCount`",
+        "sha": "ac3ce2d30030",
+        "zh": "`funcCount`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Number of function evaluations.",
+          "sha": "447236baca27",
+          "zh": "函数求值的次数。"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The final output *fjac* contains the value of the Jacobian evaluated at *x*.",
+      "sha": "1a0af0d6cf77",
+      "zh": "最后一个输出 *fjac* 是雅可比矩阵在 *x* 处的值。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note: If you only have a single nonlinear equation of one variable, using `fzero` is usually a much better idea.",
+      "sha": "8d51ecc0ad27",
+      "zh": "注意：如果只有一个单变量的非线性方程，通常用 `fzero` 要好得多。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note about user-supplied Jacobians: As an inherent property of the algorithm, a Jacobian is always requested for a solution vector whose residual vector is already known, and it is the last accepted successful step. Often this will be one of the last two calls, but not always. If the savings by reusing intermediate results from residual calculation in Jacobian calculation are significant, the best strategy is to employ `OutputFcn`: After a vector is evaluated for residuals, if `OutputFcn` is called with that vector, then the intermediate results should be saved for future Jacobian evaluation, and should be kept until a Jacobian evaluation is requested or until `OutputFcn` is called with a different vector, in which case they should be dropped in favor of this most recent vector. A short example how this can be achieved follows:",
+      "sha": "65deefdafa20",
+      "zh": "关于用户自备雅可比矩阵的说明：由算法的固有性质决定，每次索要雅可比矩阵时，所给的解向量其残差向量都已经算过，而且它是最近一次被接受的成功步。这通常是最后两次调用之一，但并非总是如此。如果在计算雅可比矩阵时复用残差计算的中间结果能省下可观的开销，最好的做法是借助 `OutputFcn`：在某个向量的残差算出之后，若 `OutputFcn` 以该向量被调用，就应当把中间结果保存下来，留给之后的雅可比矩阵计算使用，并一直保留到有人索要雅可比矩阵，或 `OutputFcn` 以另一个向量被调用为止；后一种情况下应丢弃旧的中间结果，改用最新的向量。下面是实现这一做法的一个简短例子："
+     }
+    },
+    {
+     "k": "code",
+     "text": " function [fval, fjac] = user_fcn (x, optimvalues, state)\n persistent sav = [], sav0 = [];\n if (nargin == 1)\n   ## evaluation call\n   if (nargout == 1)\n     sav0.x = x; # mark saved vector\n     ## calculate fval, save results to sav0.\n   elseif (nargout == 2)\n     ## calculate fjac using sav.\n   endif\n else\n   ## outputfcn call.\n   if (all (x == sav0.x))\n     sav = sav0;\n   endif\n   ## maybe output iteration status, etc.\n endif\n endfunction\n\n ## …\n\n fsolve (@user_fcn, x0, optimset (\"OutputFcn\", @user_fcn, …))"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `fzero`, `optimset`.",
+      "sha": "73c3088427f4",
+      "zh": "另见：`fzero`、`optimset`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The following is a complete example. To solve the set of equations",
+    "sha": "48ce51c013d4",
+    "zh": "下面是一个完整的例子。要求解方程组"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}-2x^2 + 3xy + 4\\sin(y) - 6 &= 0\\\\ 3x^2 - 2xy^2 + 3\\cos(x) + 4 &= 0\\end{aligned}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "you first need to write a function to compute the value of the given function. For example:",
+    "sha": "b5b63d212e74",
+    "zh": "首先需要写一个函数来计算给定函数的值。例如："
+   }
+  },
+  {
+   "k": "code",
+   "text": "function y = f (x)\n  y = zeros (2, 1);\n  y(1) = -2*x(1)^2 + 3*x(1)*x(2)   + 4*sin(x(2)) - 6;\n  y(2) =  3*x(1)^2 - 2*x(1)*x(2)^2 + 3*cos(x(1)) + 4;\nendfunction"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Then, call `fsolve` with a specified initial condition to find the roots of the system of equations. For example, given the function `f` defined above,",
+    "sha": "78f0ab560823",
+    "zh": "然后给定初始条件调用 `fsolve`，求出方程组的根。例如，对上面定义的函数 `f`，"
+   }
+  },
+  {
+   "k": "code",
+   "text": "[x, fval, info] = fsolve (@f, [1; 2])"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "results in the solution",
+    "sha": "02d866e5c03c",
+    "zh": "得到的解为"
+   }
+  },
+  {
+   "k": "code",
+   "text": "x =\n\n  0.57983\n  2.54621\n\nfval =\n\n  -5.7184e-10\n   5.5460e-10\n\ninfo = 1"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A value of `info = 1` indicates that the solution has converged.",
+    "sha": "699a707ffb71",
+    "zh": "`info = 1` 表示解已经收敛。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When no Jacobian is supplied (as in the example above) it is approximated numerically. This requires more function evaluations, and hence is less efficient. In the example above we could compute the Jacobian analytically as",
+    "sha": "28412b6fe0f7",
+    "zh": "没有提供雅可比矩阵时（如上面的例子），它会被数值近似。这需要更多的函数求值，因而效率较低。在上面的例子里，我们可以用解析方法算出雅可比矩阵："
+   }
+  },
+  {
+   "k": "code",
+   "text": "function [y, jac] = f (x)\n  y = zeros (2, 1);\n  y(1) = -2*x(1)^2 + 3*x(1)*x(2)   + 4*sin(x(2)) - 6;\n  y(2) =  3*x(1)^2 - 2*x(1)*x(2)^2 + 3*cos(x(1)) + 4;\n  if (nargout == 2)\n    jac = zeros (2, 2);\n    jac(1,1) =  3*x(2) - 4*x(1);\n    jac(1,2) =  4*cos(x(2)) + 3*x(1);\n    jac(2,1) = -2*x(2)^2 - 3*sin(x(1)) + 6*x(1);\n    jac(2,2) = -4*x(1)*x(2);\n  endif\nendfunction"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The Jacobian can then be used with the following call to `fsolve`:",
+    "sha": "6e5c28d71251",
+    "zh": "然后可以用下面的调用，把雅可比矩阵交给 `fsolve`："
+   }
+  },
+  {
+   "k": "code",
+   "text": "[x, fval, info] = fsolve (@f, [1; 2], optimset (\"jacobian\", \"on\"));"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "which gives the same solution as before.",
+    "sha": "a09c27d0805e",
+    "zh": "得到的解与之前相同。"
+   }
+  },
+  {
+   "k": "def",
+   "name": "fzero",
+   "sigs": [
+    "x = fzero (fcn, x0)",
+    "x = fzero (fcn, x0, options)",
+    "[x, fval] = fzero (…)",
+    "[x, fval, info] = fzero (…)",
+    "[x, fval, info, output] = fzero (…)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find a zero of a univariate function.",
+      "sha": "b22c96403de3",
+      "zh": "求一元函数的零点。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*fcn* is a function handle, inline function, or string containing the name of the function to evaluate.",
+      "sha": "aa58618f34cb",
+      "zh": "*fcn* 可以是函数句柄、内联函数，或包含待求值函数名的字符串。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*x0* should be a two-element vector specifying two points which bracket a zero. In other words, there must be a change in sign of the function between *x0*(1) and *x0*(2). More mathematically, the following must hold",
+      "sha": "dd0afd165c23",
+      "zh": "*x0* 应当是一个两元素的向量，给出夹住零点的两个点。换句话说，函数在 *x0*(1) 与 *x0*(2) 之间必须变号。更数学地说，下式必须成立："
+     }
+    },
+    {
+     "k": "code",
+     "text": " sign (fcn(x0(1))) * sign (fcn(x0(2))) <= 0"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *x0* is a single scalar then several nearby and distant values are probed in an attempt to obtain a valid bracketing. If this is not successful, the function fails.",
+      "sha": "a0b51148ae45",
+      "zh": "如果 *x0* 是单个标量，则会探测附近和较远处的若干个值，试图得到一个有效的夹住零点的区间。如果没有成功，函数就会失败。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*options* is a structure specifying additional options. Currently, `fzero` recognizes these options: `\"Display\"`, `\"FunValCheck\"`, `\"MaxFunEvals\"`, `\"MaxIter\"`, `\"OutputFcn\"`, and `\"TolX\"`.",
+      "sha": "b60d83f5ef6c",
+      "zh": "*options* 是一个结构体，用来指定附加选项。目前 `fzero` 识别这些选项：`\"Display\"`、`\"FunValCheck\"`、`\"MaxFunEvals\"`、`\"MaxIter\"`、`\"OutputFcn\"` 和 `\"TolX\"`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`\"MaxFunEvals\"` proscribes the maximum number of function evaluations before the search is halted. The default value is `Inf`. The value must be a positive integer.",
+      "sha": "99a223742f4a",
+      "zh": "`\"MaxFunEvals\"` 规定在搜索停止之前函数求值次数的上限。默认值为 `Inf`。该值必须是正整数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`\"MaxIter\"` proscribes the maximum number of algorithm iterations before the search is halted. The default value is `Inf`. The value must be a positive integer.",
+      "sha": "b0d1c1e8da4e",
+      "zh": "`\"MaxIter\"` 规定在搜索停止之前算法迭代次数的上限。默认值为 `Inf`。该值必须是正整数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`\"TolX\"` specifies the termination tolerance for the solution *x*. The default value is `eps`.",
+      "sha": "41a256e61e99",
+      "zh": "`\"TolX\"` 指定解 *x* 的终止容差。默认值为 `eps`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For a description of the other options, `optimset`. To initialize an options structure with default values for `fzero` use `options = optimset (\"fzero\")`.",
+      "sha": "5fe265f1603a",
+      "zh": "其他选项的说明，见 `optimset`。要用默认值初始化 `fzero` 的选项结构体，请使用 `options = optimset (\"fzero\")`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "On exit, the function returns *x*, the approximate zero point, and *fval*, the function evaluated at *x*.",
+      "sha": "eb911efc3ec4",
+      "zh": "退出时，函数返回 *x*（零点的近似值）和 *fval*（函数在 *x* 处的值）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The third output *info* reports whether the algorithm succeeded and may take one of the following values:",
+      "sha": "f7a0fa98d2a7",
+      "zh": "第三个输出 *info* 表明算法是否成功，取值可能是下列之一："
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "1 The algorithm converged to a solution.",
+         "sha": "915a0f6a78b1",
+         "zh": "1 算法收敛到了一个解。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "0 Maximum number of iterations or function evaluations has been reached.",
+         "sha": "f1a633a902e4",
+         "zh": "0 已达到迭代次数或函数求值次数的上限。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "-1 The algorithm has been terminated by a user `OutputFcn`.",
+         "sha": "cc3aa352cf20",
+         "zh": "-1 算法被用户的 `OutputFcn` 终止。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "-5 The algorithm may have converged to a singular point.",
+         "sha": "45dfb0c34676",
+         "zh": "-5 算法可能收敛到了一个奇异点。"
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*output* is a structure containing runtime information about the `fzero` algorithm. Fields in the structure are:",
+      "sha": "ecdfeb83e322",
+      "zh": "*output* 是一个结构体，包含 `fzero` 算法的运行信息。结构体的字段有："
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "iterations Number of iterations through loop.",
+         "sha": "1e464999d00b",
+         "zh": "iterations 循环的迭代次数。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "funcCount Number of function evaluations.",
+         "sha": "fac1fbe1bcb8",
+         "zh": "funcCount 函数求值的次数。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "algorithm The string `\"bisection, interpolation\"`.",
+         "sha": "906ece27721c",
+         "zh": "algorithm 字符串 `\"bisection, interpolation\"`。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "bracketx A two-element vector with the final bracketing of the zero along the x-axis.",
+         "sha": "6618bede5089",
+         "zh": "bracketx 一个两元素的向量，给出沿 x 轴最终夹住零点的区间。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "brackety A two-element vector with the final bracketing of the zero along the y-axis.",
+         "sha": "76bcd277aead",
+         "zh": "brackety 一个两元素的向量，给出沿 y 轴最终夹住零点的区间。"
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `optimset`, `fsolve`.",
+      "sha": "1cd3889e97af",
+      "zh": "另见：`optimset`、`fsolve`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Minimizers",
+    "sha": "f1f13893991e",
+    "zh": "极小化求解器"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Often it is useful to find the minimum value of a function rather than just the zeroes where it crosses the x-axis. `fminbnd` is designed for the simpler, but very common, case of a univariate function where the interval to search is bounded. For unbounded minimization of a function with potentially many variables use `fminunc` or `fminsearch`. The two functions use different internal algorithms and some knowledge of the objective function is required. For functions which can be differentiated, `fminunc` is appropriate. For functions with discontinuities, or for which a gradient search would fail, use `fminsearch`. See Optimization, for minimization with the presence of constraint functions. Note that searches can be made for maxima by simply inverting the objective function ($F_{max} = -F_{min}$).",
+    "sha": "c38ecb55b9ed",
+    "zh": "我们常常需要求函数的最小值，而不只是它与 x 轴相交的零点。`fminbnd` 针对的是更简单、但也非常常见的情形：单变量函数，且搜索区间有界。若要对可能含有多个变量的函数做无约束极小化，请使用 `fminunc` 或 `fminsearch`。这两个函数的内部算法不同，使用时需要对目标函数有一定了解。对于可微的函数，适合用 `fminunc`；对于有不连续点的函数，或梯度搜索会失败的函数，请用 `fminsearch`。存在约束函数时的极小化，参见 Optimization 一节。注意，求极大值只需把目标函数取反即可（$F_{max} = -F_{min}$）。"
+   }
+  },
+  {
+   "k": "def",
+   "name": "fminbnd",
+   "sigs": [
+    "x = fminbnd (fcn, a, b)",
+    "x = fminbnd (fcn, a, b, options)",
+    "[x, fval, info, output] = fminbnd (…)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find a minimum point of a univariate function.",
+      "sha": "7c5f996c8b95",
+      "zh": "求一元函数的极小点。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*fcn* is a function handle, inline function, or string containing the name of the function to evaluate.",
+      "sha": "aa58618f34cb",
+      "zh": "*fcn* 可以是函数句柄、内联函数，或包含待求值函数名的字符串。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The starting interval is specified by *a* (left boundary) and *b* (right boundary). The endpoints must be finite.",
+      "sha": "be7e871b5688",
+      "zh": "起始区间由 *a*（左端点）和 *b*（右端点）给定。两个端点必须是有限值。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*options* is a structure specifying additional parameters which control the algorithm. Currently, `fminbnd` recognizes these options: `\"Display\"`, `\"FunValCheck\"`, `\"MaxFunEvals\"`, `\"MaxIter\"`, `\"OutputFcn\"`, `\"TolX\"`.",
+      "sha": "b58bc5bc416c",
+      "zh": "*options* 是一个结构体，用来指定控制算法的附加参数。目前 `fminbnd` 识别这些选项：`\"Display\"`、`\"FunValCheck\"`、`\"MaxFunEvals\"`、`\"MaxIter\"`、`\"OutputFcn\"`、`\"TolX\"`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`\"MaxFunEvals\"` proscribes the maximum number of function evaluations before optimization is halted. The default value is 500. The value must be a positive integer.",
+      "sha": "f671900fa3f8",
+      "zh": "`\"MaxFunEvals\"` 规定在优化停止之前函数求值次数的上限。默认值为 500。该值必须是正整数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`\"MaxIter\"` proscribes the maximum number of algorithm iterations before optimization is halted. The default value is 500. The value must be a positive integer.",
+      "sha": "3ebcaf4d2cb3",
+      "zh": "`\"MaxIter\"` 规定在优化停止之前算法迭代次数的上限。默认值为 500。该值必须是正整数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`\"TolX\"` specifies the termination tolerance for the solution *x*. The default is `1e-4`.",
+      "sha": "5cb0c3fe9808",
+      "zh": "`\"TolX\"` 指定解 *x* 的终止容差。默认值为 `1e-4`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For a description of the other options, `optimset`. To initialize an options structure with default values for `fminbnd` use `options = optimset (\"fminbnd\")`.",
+      "sha": "4becc4f4e72a",
+      "zh": "其他选项的说明，见 `optimset`。要用默认值初始化 `fminbnd` 的选项结构体，请使用 `options = optimset (\"fminbnd\")`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "On exit, the function returns *x*, the approximate minimum point, and *fval*, the function evaluated *x*.",
+      "sha": "cb8d1338af08",
+      "zh": "退出时，函数返回 *x*（极小点的近似值）和 *fval*（函数在 *x* 处的值）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The third output *info* reports whether the algorithm succeeded and may take one of the following values:",
+      "sha": "f7a0fa98d2a7",
+      "zh": "第三个输出 *info* 表明算法是否成功，取值可能是下列之一："
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "1 The algorithm converged to a solution.",
+         "sha": "915a0f6a78b1",
+         "zh": "1 算法收敛到了一个解。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "0 Iteration limit (either `MaxIter` or `MaxFunEvals`) exceeded.",
+         "sha": "f6ff0b77e0ba",
+         "zh": "0 超过迭代次数上限（`MaxIter` 或 `MaxFunEvals`）。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "-1 The algorithm was terminated by a user `OutputFcn`.",
+         "sha": "51200013ef0a",
+         "zh": "-1 算法被用户的 `OutputFcn` 终止。"
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Programming Notes: The search for a minimum is restricted to be in the finite interval bound by *a* and *b*. If you have only one initial point to begin searching from then you will need to use an unconstrained minimization algorithm such as `fminunc` or `fminsearch`. `fminbnd` internally uses a Golden Section search strategy. See also: `fzero`, `fminunc`, `fminsearch`, `optimset`.",
+      "sha": "dbee8df864b5",
+      "zh": "编程注记：对极小值的搜索被限制在由 *a* 和 *b* 围成的有限区间内。如果只有一个起始点可供出发，就需要使用无约束极小化算法，例如 `fminunc` 或 `fminsearch`。`fminbnd` 内部使用黄金分割搜索策略。另见：`fzero`、`fminunc`、`fminsearch`、`optimset`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "fminunc",
+   "sigs": [
+    "x = fminunc (fcn, x0)",
+    "x = fminunc (fcn, x0, options)",
+    "[x, fval] = fminunc (fcn, …)",
+    "[x, fval, info] = fminunc (fcn, …)",
+    "[x, fval, info, output] = fminunc (fcn, …)",
+    "[x, fval, info, output, grad] = fminunc (fcn, …)",
+    "[x, fval, info, output, grad, hess] = fminunc (fcn, …)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Solve an unconstrained optimization problem defined by the function *fcn*.",
+      "sha": "f1d0f29cd124",
+      "zh": "求解由函数 *fcn* 定义的无约束优化问题。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`fminunc` attempts to determine a vector *x* such that `fcn (x)` is a local minimum.",
+      "sha": "bbc5829c140e",
+      "zh": "`fminunc` 试图求出一个向量 *x*，使 `fcn (x)` 是局部极小值。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*fcn* is a function handle, inline function, or string containing the name of the function to evaluate. *fcn* should accept a vector (array) defining the unknown variables, and return the objective function value, optionally with gradient.",
+      "sha": "0ea2df7d3bd7",
+      "zh": "*fcn* 可以是函数句柄、内联函数，或包含待求值函数名的字符串。*fcn* 应接受一个表示未知变量的向量（数组），并返回目标函数值，也可以同时返回梯度。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*x0* determines a starting guess. The shape of *x0* is preserved in all calls to *fcn*, but otherwise is treated as a column vector.",
+      "sha": "a9ea1dea691b",
+      "zh": "*x0* 给出起始猜测值。每次调用 *fcn* 时，*x0* 的形状都保持不变，但在其他方面按列向量处理。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*options* is a structure specifying additional parameters which control the algorithm. Currently, `fminunc` recognizes these options: `\"AutoScaling\"`, `\"FinDiffType\"`, `\"FunValCheck\"`, `\"GradObj\"`, `\"MaxFunEvals\"`, `\"MaxIter\"`, `\"OutputFcn\"`, `\"TolFun\"`, `\"TolX\"`, `\"TypicalX\"`.",
+      "sha": "a302a8691f93",
+      "zh": "*options* 是一个结构体，用来指定控制算法的附加参数。目前 `fminunc` 识别这些选项：`\"AutoScaling\"`、`\"FinDiffType\"`、`\"FunValCheck\"`、`\"GradObj\"`、`\"MaxFunEvals\"`、`\"MaxIter\"`、`\"OutputFcn\"`、`\"TolFun\"`、`\"TolX\"`、`\"TypicalX\"`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If `\"AutoScaling\"` is `\"on\"`, the variables will be automatically scaled according to the column norms of the (estimated) Jacobian. As a result, `\"TolFun\"` becomes scaling-independent. By default, this option is `\"off\"` because it may sometimes deliver unexpected (though mathematically correct) results.",
+      "sha": "684c5fc50962",
+      "zh": "如果 `\"AutoScaling\"` 为 `\"on\"`，各变量会按（估计出的）雅可比（Jacobian）矩阵的列范数自动缩放，于是 `\"TolFun\"` 就与缩放无关了。该选项默认为 `\"off\"`，因为它有时会给出出人意料（不过在数学上正确）的结果。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If `\"GradObj\"` is `\"on\"`, it specifies that *fcn*—when called with two output arguments—also returns the Jacobian matrix of partial first derivatives at the requested point.",
+      "sha": "bbc021f7fe2d",
+      "zh": "如果 `\"GradObj\"` 为 `\"on\"`，表示 *fcn*——在以两个输出参数调用时——还会返回指定点处由一阶偏导数组成的雅可比矩阵。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`\"MaxFunEvals\"` proscribes the maximum number of function evaluations before optimization is halted. The default value is `100 * number_of_variables`, i.e., `100 * length (x0)`. The value must be a positive integer.",
+      "sha": "3b4040a7971a",
+      "zh": "`\"MaxFunEvals\"` 规定在优化停止之前函数求值次数的上限。默认值为 `100 * number_of_variables`，即 `100 * length (x0)`。该值必须是正整数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`\"MaxIter\"` proscribes the maximum number of algorithm iterations before optimization is halted. The default value is 400. The value must be a positive integer.",
+      "sha": "9249dac20cf3",
+      "zh": "`\"MaxIter\"` 规定在优化停止之前算法迭代次数的上限。默认值为 400。该值必须是正整数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`\"TolX\"` specifies the termination tolerance for the unknown variables *x*, while `\"TolFun\"` is a tolerance for the objective function value *fval*. The default is `1e-6` for both options.",
+      "sha": "317665eea066",
+      "zh": "`\"TolX\"` 指定未知变量 *x* 的终止容差，而 `\"TolFun\"` 是目标函数值 *fval* 的容差。两个选项的默认值都是 `1e-6`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For a description of the other options, `optimset`.",
+      "sha": "5729dcaa4d41",
+      "zh": "其他选项的说明，见 `optimset`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "On return, *x* is the location of the minimum and *fval* contains the value of the objective function at *x*.",
+      "sha": "ecfe6f87c676",
+      "zh": "返回时，*x* 是极小点的位置，*fval* 是目标函数在 *x* 处的值。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*info* may be one of the following values:",
+      "sha": "36676d2b459b",
+      "zh": "*info* 可能是下列值之一："
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "1",
+        "sha": "356a192b7913",
+        "zh": "1"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Converged to a solution point. Relative gradient error is less than specified by `TolFun`.",
+          "sha": "e48b6fb42d13",
+          "zh": "收敛到一个解点。相对梯度误差小于 `TolFun` 所指定的值。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "2",
+        "sha": "da4b9237bacc",
+        "zh": "2"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Last relative step size was less than `TolX`.",
+          "sha": "0936d9909a62",
+          "zh": "最后一次的相对步长小于 `TolX`。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "3",
+        "sha": "77de68daecd8",
+        "zh": "3"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Last relative change in function value was less than `TolFun`.",
+          "sha": "287babbb2027",
+          "zh": "最后一次函数值的相对变化小于 `TolFun`。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "0",
+        "sha": "b6589fc6ab0d",
+        "zh": "0"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Iteration limit exceeded—either maximum number of algorithm iterations `MaxIter` or maximum number of function evaluations `MaxFunEvals`.",
+          "sha": "b2742c07b502",
+          "zh": "超过迭代次数上限——即算法迭代次数上限 `MaxIter`，或函数求值次数上限 `MaxFunEvals`。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "-1",
+        "sha": "7984b0a0e139",
+        "zh": "-1"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Algorithm terminated by `OutputFcn`.",
+          "sha": "66d612cec587",
+          "zh": "算法被 `OutputFcn` 终止。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "-3",
+        "sha": "def03a29bf06",
+        "zh": "-3"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "The trust region radius became excessively small.",
+          "sha": "a30001a043cd",
+          "zh": "信赖域半径变得过小。"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Optionally, `fminunc` can return a structure with convergence statistics (*output*), the output gradient (*grad*) at the solution *x*, and approximate Hessian (*hess*) at the solution *x*.",
+      "sha": "6ef91ae75069",
+      "zh": "`fminunc` 还可以选择性地返回：含收敛统计信息的结构体（*output*）、解 *x* 处的输出梯度（*grad*），以及解 *x* 处的近似黑塞（Hessian）矩阵（*hess*）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Application Notes: If the objective function is a single nonlinear equation of one variable then using `fminbnd` is usually a better choice.",
+      "sha": "dfd612854369",
+      "zh": "应用说明：如果目标函数是单个单变量的非线性方程，通常用 `fminbnd` 是更好的选择。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The algorithm used by `fminunc` is a gradient search which depends on the objective function being differentiable. If the function has discontinuities it may be better to use a derivative-free algorithm such as `fminsearch`. See also: `fminbnd`, `fminsearch`, `optimset`.",
+      "sha": "e865bb3a1e59",
+      "zh": "`fminunc` 所用的算法是梯度搜索，它要求目标函数可微。如果函数有不连续点，改用 `fminsearch` 这类不需要导数的算法可能更好。另见：`fminbnd`、`fminsearch`、`optimset`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "fminsearch",
+   "sigs": [
+    "x = fminsearch (fcn, x0)",
+    "x = fminsearch (fcn, x0, options)",
+    "x = fminsearch (problem)",
+    "[x, fval, exitflag, output] = fminsearch (…)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find a value of *x* which minimizes the multi-variable function *fcn*.",
+      "sha": "753d2a75552c",
+      "zh": "求一个 *x* 值，使多变量函数 *fcn* 取极小。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*fcn* is a function handle, inline function, or string containing the name of the function to evaluate.",
+      "sha": "aa58618f34cb",
+      "zh": "*fcn* 可以是函数句柄、内联函数，或包含待求值函数名的字符串。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The search begins at the point *x0* and iterates using the Nelder & Mead Simplex algorithm (a derivative-free method). This algorithm is better-suited to functions which have discontinuities or for which a gradient-based search such as `fminunc` fails.",
+      "sha": "1575861ab0cd",
+      "zh": "搜索从点 *x0* 开始，并使用 Nelder & Mead 单纯形算法（一种无需导数的方法）迭代。该算法更适合处理有不连续点的函数，或基于梯度的搜索（如 `fminunc`）失效的函数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Options for the search are provided in the parameter *options* using the function `optimset`. Currently, `fminsearch` accepts the options: `\"Display\"`, `\"FunValCheck\"`,`\"MaxFunEvals\"`, `\"MaxIter\"`, `\"OutputFcn\"`, `\"TolFun\"`, `\"TolX\"`.",
+      "sha": "369a0a86068c",
+      "zh": "搜索的选项通过参数 *options* 给出，它由函数 `optimset` 生成。目前 `fminsearch` 接受这些选项：`\"Display\"`、`\"FunValCheck\"`、`\"MaxFunEvals\"`、`\"MaxIter\"`、`\"OutputFcn\"`、`\"TolFun\"`、`\"TolX\"`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`\"MaxFunEvals\"` proscribes the maximum number of function evaluations before optimization is halted. The default value is `200 * number_of_variables`, i.e., `200 * length (x0)`. The value must be a positive integer.",
+      "sha": "e2a10052b453",
+      "zh": "`\"MaxFunEvals\"` 规定在优化停止之前函数求值次数的上限。默认值为 `200 * number_of_variables`，即 `200 * length (x0)`。该值必须是正整数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`\"MaxIter\"` proscribes the maximum number of algorithm iterations before optimization is halted. The default value is `200 * number_of_variables`, i.e., `200 * length (x0)`. The value must be a positive integer.",
+      "sha": "3894e03e5683",
+      "zh": "`\"MaxIter\"` 规定在优化停止之前算法迭代次数的上限。默认值为 `200 * number_of_variables`，即 `200 * length (x0)`。该值必须是正整数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For a description of the other options, `optimset`. To initialize an options structure with default values for `fminsearch` use `options = optimset (\"fminsearch\")`.",
+      "sha": "c8a0c30b6ac0",
+      "zh": "其他选项的说明，见 `optimset`。要用默认值初始化 `fminsearch` 的选项结构体，请使用 `options = optimset (\"fminsearch\")`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`fminsearch` may also be called with a single structure argument with the following fields:",
+      "sha": "013f0456a615",
+      "zh": "`fminsearch` 也可以只用一个结构体参数调用，该结构体包含以下字段："
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "`objective`",
+        "sha": "fc39379bc160",
+        "zh": "`objective`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "The objective function.",
+          "sha": "92a3ebb4cd3c",
+          "zh": "目标函数。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`x0`",
+        "sha": "1582c75b1770",
+        "zh": "`x0`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "The initial point.",
+          "sha": "1e142840a654",
+          "zh": "初始点。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`solver`",
+        "sha": "fb95d6541862",
+        "zh": "`solver`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "Must be set to `\"fminsearch\"`.",
+          "sha": "f89ad6ee4a39",
+          "zh": "必须设为 `\"fminsearch\"`。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "`options`",
+        "sha": "7f08e7a507ab",
+        "zh": "`options`"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "A structure returned from `optimset` or an empty matrix to indicate that defaults should be used.",
+          "sha": "6907cf81a518",
+          "zh": "由 `optimset` 返回的结构体，或用空矩阵表示使用默认值。"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The field `options` is optional. All others are required.",
+      "sha": "f1863808d6ca",
+      "zh": "字段 `options` 是可选的，其余字段都是必需的。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "On exit, the function returns *x*, the minimum point, and *fval*, the function value at the minimum.",
+      "sha": "4049696470f2",
+      "zh": "退出时，函数返回 *x*（极小点）和 *fval*（极小点处的函数值）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The third output *exitflag* reports whether the algorithm succeeded and may take one of the following values:",
+      "sha": "323cb1c865fa",
+      "zh": "第三个输出 *exitflag* 表明算法是否成功，取值可能是下列之一："
+     }
+    },
+    {
+     "k": "dl",
+     "items": [
+      {
+       "term": {
+        "en": "1",
+        "sha": "356a192b7913",
+        "zh": "1"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "if the algorithm converged (size of the simplex is smaller than `TolX` **AND** the step in function value between iterations is smaller than `TolFun`).",
+          "sha": "03468dc6ee5f",
+          "zh": "算法收敛（单纯形的大小小于 `TolX`，**并且**相邻两次迭代之间函数值的变化小于 `TolFun`）。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "0",
+        "sha": "b6589fc6ab0d",
+        "zh": "0"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "if the maximum number of iterations or the maximum number of function evaluations are exceeded.",
+          "sha": "20879de47429",
+          "zh": "迭代次数或函数求值次数超过上限。"
+         }
+        }
+       ]
+      },
+      {
+       "term": {
+        "en": "-1",
+        "sha": "7984b0a0e139",
+        "zh": "-1"
+       },
+       "blocks": [
+        {
+         "k": "p",
+         "t": {
+          "en": "if the iteration is stopped by the `\"OutputFcn\"`.",
+          "sha": "adecc32e6a64",
+          "zh": "迭代被 `\"OutputFcn\"` 终止。"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The fourth output is a structure *output* containing runtime about the algorithm. Fields in the structure are `funcCount` containing the number of function calls to *fcn*, `iterations` containing the number of iteration steps, `algorithm` with the name of the search algorithm (always: `\"Nelder-Mead simplex direct search\"`), and `message` with the exit message.",
+      "sha": "fd96bb4ea264",
+      "zh": "第四个输出是结构体 *output*，包含算法的运行信息。结构体的字段有：`funcCount`，*fcn* 的调用次数；`iterations`，迭代步数；`algorithm`，搜索算法的名称（始终为：`\"Nelder-Mead simplex direct search\"`）；`message`，带有退出信息。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Example:",
+      "sha": "c63737abd734",
+      "zh": "例："
+     }
+    },
+    {
+     "k": "code",
+     "text": " fminsearch (@(x) (x(1)-5).^2+(x(2)-8).^4, [0;0])"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note: If you need to find the minimum of a single variable function it is probably better to use `fminbnd`. See also: `fminbnd`, `fminunc`, `optimset`.",
+      "sha": "719f36fefabd",
+      "zh": "注意：如果需要求单变量函数的极小值，用 `fminbnd` 大概更好。另见：`fminbnd`、`fminunc`、`optimset`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The function `humps` is a useful function for testing zero and extrema finding functions.",
+    "sha": "fdf27aa7a38b",
+    "zh": "函数 `humps` 是用来测试求零点和求极值函数的一个有用函数。"
+   }
+  }
+ ],
+ "title_zh": "方程求根与最优化"
+}

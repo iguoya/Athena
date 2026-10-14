@@ -1,0 +1,720 @@
+{
+ "id": "SystemsofEquations-HomogeneousSystems",
+ "title_en": "Homogeneous systems",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether a homogeneous system of equations has non-trivial solutions from its rank.",
+         "sha": "742feeab77a4",
+         "zh": "根据秩判断齐次方程组是否有非零解"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the basic solutions of a homogeneous system of equations.",
+         "sha": "69313d7776fc",
+         "zh": "求齐次方程组的基础解"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Understand the relationship between the general solution of a system of equations and that of its associated homogeneous system.",
+         "sha": "cdacac74c727",
+         "zh": "理解方程组的通解与其对应的齐次方程组的通解之间的关系"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There is a special type of system of linear equations that requires additional study. This type of system is called a *homogeneous* 〔注：The word “homogeneous” has 5 syllables. In scientific usage, it is not the same as the word “ \\homogenous”.〕 system of equations. Our focus in this section is to consider what types of solutions are possible for a homogeneous system of equations, and how the solutions of non-homogeneous systems are related to those of their homogeneous counterparts.",
+    "sha": "3920a6d1951f",
+    "zh": "有一类特殊的线性方程组需要专门研究，它叫做*齐次*〔注：英文 “homogeneous” 一词有 5 个音节；在科学用法中，它与 “ \\homogenous” 并不是同一个词。〕方程组。本节要讨论齐次方程组可能有哪些类型的解，以及非齐次方程组的解与对应的齐次方程组的解有什么联系。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Homogeneous system of equations",
+    "sha": "104925cf7741",
+    "zh": "齐次方程组"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A system of equations is called **homogeneous** if each of the constant terms is equal to $0$. A homogeneous system therefore has the form",
+      "sha": "1b0e987fd563",
+      "zh": "如果方程组中每一个常数项都等于 $0$，这个方程组就叫做**齐次**方程组。因此，齐次方程组具有如下形式"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{c}\n      a_{11}x_1 + a_{12}x_2 + \\ldots + a_{1n}x_n = 0 \\\\\n      a_{21}x_1 + a_{22}x_2 + \\ldots + a_{2n}x_n = 0  \\\\\n      \\vdots \\\\\n      a_{m1}x_1 + a_{m2}x_2 + \\ldots + a_{mn}x_n = 0,\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where $a_{ij}$ are coefficients and $x_j$ are variables.",
+      "sha": "4487f53a3633",
+      "zh": "其中 $a_{ij}$ 是系数，$x_j$ 是变量。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The first thing we note is that a homogeneous system is always consistent. Indeed, it always has the solution $x_1=0$, $x_2=0$, $\\ldots$, $x_n=0$. This solution is called the **trivial solution**.",
+    "sha": "3d878f52a56c",
+    "zh": "首先要注意的是，齐次方程组总是相容的。事实上，它总有解 $x_1=0$，$x_2=0$，$\\ldots$，$x_n=0$。这个解叫做**零解**。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If the system has a solution in which not all of the $x_1,\\ldots, x_n$ are equal to zero, then we call this solution **non-trivial**. When working with homogeneous systems of equations, since the trivial solution always exists, we are usually interested in finding whether there are non-trivial solutions.",
+    "sha": "830c30f0b1c7",
+    "zh": "如果方程组有一个解，其中 $x_1,\\ldots, x_n$ 并不全为零，我们就称这个解为**非零解**。处理齐次方程组时，由于零解总是存在的，我们通常关心的是它有没有非零解。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The following theorem is a special case of Theorem “Rank and solutions of consistent system of equations”. Recall that the *rank* of a system is the number of pivot variables in its echelon form.",
+    "sha": "6e75350323fe",
+    "zh": "下面的定理是定理“相容方程组的秩与解”的特例。回想一下，方程组的*秩*是指它的阶梯形中主元变量的个数。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Rank and solutions of homogeneous system of equations",
+    "sha": "5650745f574d",
+    "zh": "齐次方程组的秩与解"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider a homogeneous system of $m$ equations in $n$ variables, and assume that the coefficient matrix has rank $r$. Then the system is consistent, and",
+      "sha": "7a4ff235ff0d",
+      "zh": "考虑含 $n$ 个变量的 $m$ 个方程组成的齐次方程组，并设其系数矩阵的秩为 $r$。那么这个方程组是相容的，并且"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "if $r=n$, then the system has only the trivial solution;",
+         "sha": "d22f1b2068a1",
+         "zh": "若 $r=n$，则方程组只有零解；"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "if $r<n$, then the system has infinitely many solutions.",
+         "sha": "b7dcdcfcdb62",
+         "zh": "若 $r<n$，则方程组有无穷多个解。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Homogeneous system with more variables than equations",
+    "sha": "e2f92fb88903",
+    "zh": "变量个数多于方程个数的齐次方程组"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "True or false: Suppose a homogeneous system has more variables than equations. Then the system has infinitely many solutions.",
+      "sha": "34d412f4f259",
+      "zh": "判断对错：设一个齐次方程组的变量个数多于方程个数，那么这个方程组有无穷多个解。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "This is true. If the system has $m$ equations and $n$ variables, then the rank can be at most $m$. Since $m<n$, the system has infinitely many solutions. Note that it is not possible for a homogeneous system to be inconsistent, since there is always the trivial solution.",
+      "sha": "d83e8e22ef15",
+      "zh": "这是对的。设方程组有 $m$ 个方程、$n$ 个变量，那么秩至多为 $m$。因为 $m<n$，所以方程组有无穷多个解。注意，齐次方程组不可能不相容，因为零解总是存在的。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Homogeneous system with an equal number of variables and equations",
+    "sha": "22a16fff017e",
+    "zh": "变量个数与方程个数相等的齐次方程组"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "True or false: Suppose a homogeneous system has the same number of variables as equations. Then the system has a unique solution.",
+      "sha": "cdd7de44dc34",
+      "zh": "判断对错：设一个齐次方程组的变量个数与方程个数相同，那么这个方程组有唯一解。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "This is false in general. While it is possible for such a system to have a unique solution, it is also possible for it to have infinitely many. Let there be $n$ equations and $n$ variables. Then depending on the echelon form, the rank $r$ could be either equal to $n$, in which case there is a unique solution, or less than $n$, in which case there are infinitely many.",
+      "sha": "6ebc910320ae",
+      "zh": "一般来说这是错的。这样的方程组可能有唯一解，也可能有无穷多个解。设有 $n$ 个方程、$n$ 个变量。根据阶梯形的不同，秩 $r$ 可能等于 $n$，这时有唯一解；也可能小于 $n$，这时有无穷多个解。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We now consider an example of solving a homogeneous system of equations.",
+    "sha": "358621304083",
+    "zh": "下面来看一个求解齐次方程组的例子。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Solutions to a homogeneous system of equations",
+    "sha": "18e714172807",
+    "zh": "齐次方程组的解"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the general solution to the following homogeneous system of equations. Does the system have non-trivial solutions?",
+      "sha": "78a4505b3fc1",
+      "zh": "求下面齐次方程组的通解。这个方程组有非零解吗？"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{c}\n      2x + y + z + 4w = 0 \\\\\n      x + 2y - z + 5w = 0\n    \\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Notice that this system has $m = 2$ equations and $n = 4$ variables, so $n>m$. Therefore by our previous discussion, we expect this system to have infinitely many solutions. In particular, it will have non-trivial solutions.",
+      "sha": "d60724e65099",
+      "zh": "注意这个方程组有 $m = 2$ 个方程、$n = 4$ 个变量，所以 $n>m$。因此，根据前面的讨论，我们预期这个方程组有无穷多个解，尤其是会有非零解。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The process we use to find the solutions for a homogeneous system of equations is the same process we used for non-homogeneous equations. We construct the augmented matrix and reduce it to reduced echelon form.",
+      "sha": "68cca38f8f50",
+      "zh": "求齐次方程组的解所用的步骤，与求非齐次方程组的解所用的步骤相同：写出增广矩阵，把它化成简化行阶梯形。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrr|r}\n      2 & 1 & 1 & 4 & 0 \\\\\n      1 & 2 & -1 & 5 & 0\n    \\end{array}\\right]\n    \\roweq\n    \\left[\\begin{array}{rrrr|r}\n      1 & 0 &  1 & 1 & 0 \\\\\n      0 & 1 & -1 & 2 & 0\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The corresponding system of equations is",
+      "sha": "2b4d5f6606e1",
+      "zh": "对应的方程组为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{r}\n      x + z + w = 0 \\\\\n      y - z + 2w = 0. \\\\\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The free variables are $z$ and $w$. We set them equal to parameters $z=s$ and $w=t$. Then our general solution has the form",
+      "sha": "d230888be86d",
+      "zh": "自由变量是 $z$ 和 $w$。我们把它们设为参数 $z=s$，$w=t$。于是通解的形式为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{c}\n      x = -s-t \\\\\n      y = s-2t \\\\\n      z = s \\\\\n      w = t.\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Hence this system has infinitely many solutions, with two parameters $s$ and $t$.",
+      "sha": "d3598f80c021",
+      "zh": "因此这个方程组有无穷多个解，含有 $s$ 和 $t$ 两个参数。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let us write the solution of the last example in another form. Specifically, it can be written as",
+    "sha": "690bee7ede38",
+    "zh": "我们把上一个例子的解换一种形式来写。具体地说，它可以写成"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\left[\\begin{array}{r}\n    x \\\\\n    y \\\\\n    z \\\\\n    w\n  \\end{array}\\right]\n  =\n  s\n  \\left[\\begin{array}{r}\n    -1 \\\\\n    1 \\\\\n    1 \\\\\n    0\n  \\end{array}\\right]\n  +\n  t\n  \\left[\\begin{array}{r}\n    -1 \\\\\n    -2 \\\\\n    0 \\\\\n    1\n  \\end{array}\\right]. \\tag{1}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Notice that we have constructed a column from the coefficients of $s$ in each equation, and another column from the coefficients of $t$. We will discuss this notation more in later chapters. For now, consider what happens when we choose the parameters to be $s=1$ and $t=0$. In this case, we get the solution",
+    "sha": "89e1e905f427",
+    "zh": "注意，我们用各个方程里 $s$ 的系数构成了一列，又用 $t$ 的系数构成了另一列。这种记法在后面的章节里还会详细讨论。现在先来看看：取参数 $s=1$、$t=0$ 时会怎样？这时得到的解是"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\left[\\begin{array}{r}\n    -1 \\\\\n    1 \\\\\n    1 \\\\\n    0\n  \\end{array}\\right], \\tag{2}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "which is the same as the column of coefficients for $s$. This is called a **basic solution** of the homogeneous system of equations. The other basic solution is obtained by setting $s=0$ and $t=1$. In this case,",
+    "sha": "97df72391fba",
+    "zh": "它与 $s$ 的系数所构成的列相同。这叫做该齐次方程组的一个**基础解**。另一个基础解是令 $s=0$、$t=1$ 得到的，这时"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\left[\\begin{array}{r}\n    -1 \\\\\n    -2 \\\\\n    0 \\\\\n    1\n  \\end{array}\\right]. \\tag{3}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The basic solutions of a system are columns constructed from the coefficients on parameters in the solution. If $X_1$ and $X_2$ are the basic solutions (2) and (3), then the general solution (1) is of the form $sX_1+tX_2$. We say that the general solution of the homogeneous system is a **linear combination** of its basic solutions.",
+    "sha": "eee3c2f29ef1",
+    "zh": "方程组的基础解，就是由解中各参数的系数构成的列。如果 $X_1$ 和 $X_2$ 是基础解 (2) 和 (3)，那么通解 (1) 的形式是 $sX_1+tX_2$。我们说，齐次方程组的通解是它的各个基础解的**线性组合**。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We explore this further in the following example.",
+    "sha": "5345afe4ad9e",
+    "zh": "下面的例子对此作进一步探讨。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Basic solutions of a homogeneous system",
+    "sha": "a1221bb41c72",
+    "zh": "齐次方程组的基础解"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the following homogeneous system of equations.",
+      "sha": "1094bde8106f",
+      "zh": "考虑下面的齐次方程组。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{c}\n      x + 4y + 3z = 0 \\\\\n      3x + 12y + 9z = 0.\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the basic solutions to this system.",
+      "sha": "3b569b12e832",
+      "zh": "求这个方程组的基础解。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The augmented matrix of this system and the resulting reduced echelon form are",
+      "sha": "78a330caf2bf",
+      "zh": "这个方程组的增广矩阵及其化成的简化行阶梯形为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr|r}\n      1 & 4 & 3 & 0 \\\\\n      3 & 12 & 9 & 0\n    \\end{array}\\right]\n    \\roweq\n    \\left[\\begin{array}{rrr|r}\n      1 & 4 & 3 & 0 \\\\\n      0 & 0 & 0 & 0\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When written in equations, this system is given by",
+      "sha": "1856017b3e8a",
+      "zh": "写成方程的形式，这个方程组为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "x + 4y + 3z = 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Notice that $x$ is the only pivot variable, and $y$ and $z$ are free variables. Let $y = s$ and $z=t$ for parameters $s$ and $t$. Then the general solution is",
+      "sha": "54e99e98f8b7",
+      "zh": "注意 $x$ 是唯一的主元变量，而 $y$ 和 $z$ 是自由变量。设 $y = s$，$z=t$，其中 $s$ 和 $t$ 是参数。那么通解为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{c}\n      x = -4s - 3t \\\\\n      y = s \\\\\n      z = t,\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which can be written as",
+      "sha": "9e7a7eba74ea",
+      "zh": "可以写成"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{r}\n      x \\\\\n      y \\\\\n      z\n    \\end{array}\\right]\n    =\n    s\n    \\left[\\begin{array}{r}\n      -4 \\\\\n      1 \\\\\n      0\n    \\end{array}\\right]\n    +\n    t\n    \\left[\\begin{array}{r}\n      -3 \\\\\n      0 \\\\\n      1\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "You can see here that we have two columns of coefficients corresponding to parameters, specifically one for $s$ and one for $t$. Therefore, this system has two basic solutions! They are",
+      "sha": "fc9e18a3a3be",
+      "zh": "你可以看到，这里有两列系数分别对应两个参数，即一列对应 $s$，一列对应 $t$。因此这个方程组有两个基础解！它们是"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "X_1=\n    \\left[\\begin{array}{r}\n      -4 \\\\\n      1 \\\\\n      0\n    \\end{array}\\right],\\quad X_2 = \\left[\\begin{array}{r}\n      -3 \\\\\n      0 \\\\\n      1\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can take any non-homogeneous system of equations and get a new homogeneous system by keeping the left-hand sides the same and setting all of the constant terms equal to $0$. This is called the **associated homogeneous system** of the system of equations. We end this section by investigating how the solutions of a system of equations are related to the solutions of its associated homogeneous system.",
+    "sha": "3ecd59fb5ee8",
+    "zh": "对任意一个非齐次方程组，保持左端不变，把所有常数项都改成 $0$，就得到一个新的齐次方程组。它叫做原方程组**对应的齐次方程组**。本节最后，我们来研究一个方程组的解与其对应的齐次方程组的解之间有什么关系。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Non-homogeneous vs. homogeneous system",
+    "sha": "0d6860048bd6",
+    "zh": "非齐次方程组与齐次方程组"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Solve the system of equations",
+      "sha": "388d982a424c",
+      "zh": "解方程组"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{c}\n      x + 4y + 3z = 2 \\\\\n      3x + 12y + 9z = 6.\n    \\end{array} \\tag{4}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "How are the solutions related to those of the associated homogeneous system in Example “Basic solutions of a homogeneous system”?",
+      "sha": "c5615b6cd237",
+      "zh": "它的解与例“齐次方程组的基础解”中对应的齐次方程组的解有什么关系？"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We note that the associated homogeneous system of (4) is the system we saw in Example “Basic solutions of a homogeneous system”. We solve the system (4) in the usual way by reducing its augmented matrix to reduced echelon form",
+      "sha": "db49a5e858c4",
+      "zh": "注意，方程组 (4) 对应的齐次方程组，就是例“齐次方程组的基础解”里的那个方程组。我们照常把方程组 (4) 的增广矩阵化成简化行阶梯形"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr|r}\n      1 & 4 & 3 & 2 \\\\\n      3 & 12 & 9 & 6\n    \\end{array}\\right]\n    \\roweq\n    \\left[\\begin{array}{rrr|r}\n      1 & 4 & 3 & 2 \\\\\n      0 & 0 & 0 & 0\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and then assigning parameters $y=s$, $z=t$ to the free variables. From the equation $x+4y+3z=2$, the general solution is",
+      "sha": "dd231d005d8d",
+      "zh": "然后给自由变量赋参数 $y=s$，$z=t$。由方程 $x+4y+3z=2$，得通解"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{c}\n      x = 2 -4s - 3t \\\\\n      y = s \\\\\n      z = t,\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which can be written as",
+      "sha": "9e7a7eba74ea",
+      "zh": "可以写成"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{r}\n      x \\\\\n      y \\\\\n      z\n    \\end{array}\\right]\n    =\n    \\left[\\begin{array}{r}\n      2 \\\\\n      0 \\\\\n      0\n    \\end{array}\\right]\n    +\n    s\n    \\left[\\begin{array}{r}\n      -4 \\\\\n      1 \\\\\n      0\n    \\end{array}\\right]\n    +\n    t\n    \\left[\\begin{array}{r}\n      -3 \\\\\n      0 \\\\\n      1\n    \\end{array}\\right]. \\tag{5}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We see that the general solution is almost exactly the same as that of the homogeneous system in Example “Basic solutions of a homogeneous system”. The only difference is the additional column",
+      "sha": "7f30233a7372",
+      "zh": "可以看到，这个通解与例“齐次方程组的基础解”中齐次方程组的通解几乎完全一样，唯一的区别是多了一列"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{r}\n      2 \\\\\n      0 \\\\\n      0\n    \\end{array}\\right] \\tag{6}"
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Note that the column (6), by itself, is a solution of the non-homogeneous system. It is not the most general solution, but rather the particular solution resulting from the parameters $s=0$ and $t=0$. We can therefore interpret equation (5) as saying that the general solution of the non-homogeneous system is equal to a particular solution of the non-homogeneous system, plus the general solution of the associated homogeneous system. The same is true in general, and we summarize it as a theorem.",
+    "sha": "648a4f8362bc",
+    "zh": "注意，列 (6) 本身就是非齐次方程组的一个解。它不是最一般的解，而是参数取 $s=0$、$t=0$ 时得到的特解。因此，我们可以把等式 (5) 解读为：非齐次方程组的通解，等于非齐次方程组的一个特解，加上对应的齐次方程组的通解。这一结论对一般情形同样成立，我们把它总结成一个定理。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Non-homogeneous vs. homogeneous system",
+    "sha": "0d6860048bd6",
+    "zh": "非齐次方程组与齐次方程组"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be a system of equations, and let $B$ be the associated homogeneous system. Then",
+      "sha": "6f434d749c30",
+      "zh": "设 $A$ 是一个方程组，$B$ 是它对应的齐次方程组。那么"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\text{the general solution of $A$}\n    = \\text{a particular solution of $A$}\n    + \\text{the general solution of $B$}."
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the basic solutions of each of the following homogeneous systems of equations.",
+      "sha": "72e6a65032a1",
+      "zh": "求下列每个齐次方程组的基础解。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(a)~\n    \\begin{array}{rcl}\n      2x + 3y + 4z &=& 0 \\\\\n      x - 2y + z &=& 0 \\\\\n      4x - y + 6z &=& 0\n    \\end{array}\n    \\quad\n    (b)~\n    \\begin{array}{rcl}\n       x -  y +  z &=& 0 \\\\\n      -x - 2y - 4z &=& 0 \\\\\n      2x +  y + 5z &=& 0\n    \\end{array}\n    \\quad\n    (c)~\n    \\begin{array}{rcl}\n      x +  y -  z + 2w &=& 0 \\\\\n      x + 3y +  z + 6w &=& 0 \\\\\n      x + 2y      + 4w &=& 0\n    \\end{array}"
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Homogeneous systems · 习题 1（上游 exercises/SystemsofEquations-HomogeneousSystems.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-HomogeneousSystems.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following homogeneous systems of linear equations have non-trivial solutions?",
+      "sha": "d6ded6d78d62",
+      "zh": "下列齐次线性方程组中，哪些有非零解？"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "4 equations in 3 variables, rank 3.",
+         "sha": "fa5b90df9318",
+         "zh": "4 个方程、3 个变量，秩为 3。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "3 equations in 4 variables, rank 3.",
+         "sha": "d6c40bb824e4",
+         "zh": "3 个方程、4 个变量，秩为 3。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "4 equations in 3 variables, rank 2.",
+         "sha": "6d92b9aa1972",
+         "zh": "4 个方程、3 个变量，秩为 2。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "3 equations in 4 variables, rank 2.",
+         "sha": "a6e38d3e0086",
+         "zh": "3 个方程、4 个变量，秩为 2。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The systems (b), (c), and (d) have non-trivial solutions, because the rank is less than the number of variables.",
+      "sha": "92d89a4a2320",
+      "zh": "方程组 (b)、(c)、(d) 有非零解，因为秩小于变量个数。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Homogeneous systems · 习题 2（上游 exercises/SystemsofEquations-HomogeneousSystems.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-HomogeneousSystems.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "My system of equations has a solution $(x,y,z) = (1,2,4)$. The associated homogeneous system has basic solutions $(x,y,z) = (1,0,1)$ and $(x,y,z)=(0,1,-1)$. What is the general solution of my system of equations?",
+      "sha": "638f9d478330",
+      "zh": "我的方程组有一个解 $(x,y,z) = (1,2,4)$。它对应的齐次方程组有基础解 $(x,y,z) = (1,0,1)$ 和 $(x,y,z)=(0,1,-1)$。我的方程组的通解是什么？"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The general solution is $(x,y,z) = (1,2,4)+s(1,0,1)+t(0,1,-1)$, or equivalently, $(x,y,z) = (1+s, 2+t, 4+s-t)$, where $s$ and $t$ are parameters.",
+      "sha": "d6bae539e518",
+      "zh": "通解为 $(x,y,z) = (1,2,4)+s(1,0,1)+t(0,1,-1)$，或者等价地写成 $(x,y,z) = (1+s, 2+t, 4+s-t)$，其中 $s$ 和 $t$ 是参数。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Homogeneous systems · 习题 3（上游 exercises/SystemsofEquations-HomogeneousSystems.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-HomogeneousSystems.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "齐次方程组"
+}

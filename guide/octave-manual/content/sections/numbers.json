@@ -1,0 +1,1286 @@
+{
+ "id": "numbers",
+ "title_en": "Numeric Data Types",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "A *numeric constant* may be a scalar, a vector, or a matrix, and it may contain complex values.",
+    "sha": "22872c00a437",
+    "zh": "**数值常量**（numeric constant）可以是标量、向量或矩阵，并且可以包含复数值。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The simplest form of a numeric constant, a scalar, is a single number. Note that by default numeric constants are represented within Octave by IEEE 754 double precision (binary64) floating-point format (complex constants are stored as pairs of binary64 values). It is, however, possible to represent real integers as described in Integer Data Types.",
+    "sha": "0c7c51ff476a",
+    "zh": "数值常量最简单的形式是标量，即一个单独的数。注意，Octave 默认用 IEEE 754 双精度（binary64）浮点格式表示数值常量（复数常量以一对 binary64 值存储）。不过，实整数也可以用其他方式表示，详见 Integer Data Types。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If the numeric constant is a real integer, it can be defined in decimal, hexadecimal, or binary notation. Hexadecimal notation starts with `0x` or `0X`, binary notation starts with `0b` or `0B`, otherwise decimal notation is assumed. As a consequence, `0b` is not a hexadecimal number, in fact, it is not a valid number at all.",
+    "sha": "ea2e707eaf21",
+    "zh": "如果数值常量是实整数，可以用十进制、十六进制或二进制记法书写。十六进制以 `0x` 或 `0X` 开头，二进制以 `0b` 或 `0B` 开头，否则按十进制处理。因此，`0b` 不是十六进制数，事实上它根本不是合法的数。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For better readability, digits may be partitioned by the underscore separator `_`, which is ignored by the Octave interpreter. Here are some examples of real-valued integer constants, which all represent the same value and are internally stored as binary64:",
+    "sha": "1ac49eab5e85",
+    "zh": "为了便于阅读，数字可以用下划线 `_` 分组，Octave 解释器会忽略它。下面是几个实整数常量的例子，它们表示同一个值，内部都以 binary64 存储："
+   }
+  },
+  {
+   "k": "code",
+   "text": "42            # decimal notation\n0x2A          # hexadecimal notation\n0b101010      # binary notation\n0b10_1010     # underscore notation\nround (42.1)  # also binary64"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In decimal notation, the numeric constant may be denoted as decimal fraction or even in scientific (exponential) notation. Note that this is not possible for hexadecimal or binary notation. Again, in the following example all numeric constants represent the same value:",
+    "sha": "972a3680b7e2",
+    "zh": "在十进制记法中，数值常量可以写成小数，也可以写成科学（指数）记法。注意，十六进制和二进制记法不能这样写。同样，下面例子中的数值常量都表示同一个值："
+   }
+  },
+  {
+   "k": "code",
+   "text": ".105\n1.05e-1\n.00105e+2"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Unlike most programming languages, complex numeric constants are denoted as the sum of real and imaginary parts. The imaginary part is denoted by a real-valued numeric constant followed immediately by a complex value indicator (`i`, `j`, `I`, or `J` which represents $\\sqrt{-1}$). No spaces are allowed between the numeric constant and the complex value indicator. Some examples of complex numeric constants that all represent the same value:",
+    "sha": "2f82307e8b29",
+    "zh": "与大多数编程语言不同，复数常量写成实部与虚部之和。虚部由一个实数常量紧跟复数标记（`i`、`j`、`I` 或 `J`，表示 $\\sqrt{-1}$）构成，数值常量与复数标记之间不允许有空格。下面是几个复数常量的例子，它们表示同一个值："
+   }
+  },
+  {
+   "k": "code",
+   "text": "3 + 42i\n3 + 42j\n3 + 42I\n3 + 42J\n3.0 + 42.0i\n3.0 + 0x2Ai\n3.0 + 0b10_1010i\n0.3e1 + 420e-1i"
+  },
+  {
+   "k": "def",
+   "name": "double",
+   "sigs": [
+    "y = double (x)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Convert *x* to double precision type. See also: `single`.",
+      "sha": "a0f0dae92e27",
+      "zh": "把 *x* 转换为双精度类型。另见：`single`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Matrices",
+    "sha": "cff7d0ab91ae",
+    "zh": "矩阵"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It is easy to define a matrix of values in Octave. The size of the matrix is determined automatically, so it is not necessary to explicitly state the dimensions. The expression",
+    "sha": "bdcccf923849",
+    "zh": "在 Octave 里定义一个由若干值组成的矩阵很容易。矩阵的大小会自动确定，所以不必显式给出各个维数。表达式"
+   }
+  },
+  {
+   "k": "code",
+   "text": "a = [1, 2; 3, 4]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "results in the matrix",
+    "sha": "3551686443ce",
+    "zh": "得到矩阵"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "a = \\left[ \\begin{matrix} 1 & 2 \\\\ 3 & 4\\end{matrix} \\right]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Elements of a matrix may be arbitrary expressions, provided that the dimensions all make sense when combining the various pieces. For example, given the above matrix, the expression",
+    "sha": "12572fe0d53b",
+    "zh": "矩阵的元素可以是任意表达式，只要拼接各部分时维数能够对得上。例如，对于上面这个矩阵，表达式"
+   }
+  },
+  {
+   "k": "code",
+   "text": "[ a, a ]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "produces the matrix",
+    "sha": "c9cddad59e85",
+    "zh": "得到矩阵"
+   }
+  },
+  {
+   "k": "code",
+   "text": "ans =\n\n  1  2  1  2\n  3  4  3  4"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "but the expression",
+    "sha": "baeea185c47b",
+    "zh": "但表达式"
+   }
+  },
+  {
+   "k": "code",
+   "text": "[ a, 1 ]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "produces the error",
+    "sha": "3a5cc613b2ab",
+    "zh": "会产生错误"
+   }
+  },
+  {
+   "k": "code",
+   "text": "error: number of rows must match (1 != 2) near line 13, column 6"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "(assuming that this expression was entered as the first thing on line 13, of course).",
+    "sha": "7deba7dc26e0",
+    "zh": "（当然，这是假设该表达式是在第 13 行一开头输入的。）"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Inside the square brackets that delimit a matrix expression, Octave looks at the surrounding context to determine whether spaces and newline characters should be converted into element and row separators, or simply ignored, so an expression like",
+    "sha": "ef538aaaf6eb",
+    "zh": "在界定矩阵表达式的方括号内，Octave 会根据上下文判断：空格和换行符应当被当作元素分隔符和行分隔符，还是直接忽略。所以像下面这样的表达式"
+   }
+  },
+  {
+   "k": "code",
+   "text": "a = [ 1 2\n      3 4 ]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "will work. However, some possible sources of confusion remain. For example, in the expression",
+    "sha": "01a0b08f9f83",
+    "zh": "是可以正常工作的。不过，仍然有一些容易引起混淆的情形。例如，在表达式"
+   }
+  },
+  {
+   "k": "code",
+   "text": "[ 1 - 1 ]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "the `-` is treated as a binary operator and the result is the scalar 0, but in the expression",
+    "sha": "7da556a41004",
+    "zh": "中，`-` 被当作二元运算符，结果是标量 0；而在表达式"
+   }
+  },
+  {
+   "k": "code",
+   "text": "[ 1 -1 ]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "the `-` is treated as a unary operator and the result is the vector `[ 1, -1 ]`. Similarly, the expression",
+    "sha": "d2131d3774ba",
+    "zh": "中，`-` 被当作一元运算符，结果是向量 `[ 1, -1 ]`。类似地，表达式"
+   }
+  },
+  {
+   "k": "code",
+   "text": "[ sin (pi) ]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "will be parsed as",
+    "sha": "65e0606ee2d3",
+    "zh": "会被解析为"
+   }
+  },
+  {
+   "k": "code",
+   "text": "[ sin, (pi) ]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and will result in an error since the `sin` function will be called with no arguments. To get around this, you must omit the space between `sin` and the opening parenthesis, or enclose the expression in a set of parentheses:",
+    "sha": "2aa039d29b73",
+    "zh": "并且会出错，因为调用 `sin` 函数时没有给出参数。要避开这个问题，必须去掉 `sin` 与左括号之间的空格，或者把整个表达式放进一对括号里："
+   }
+  },
+  {
+   "k": "code",
+   "text": "[ (sin (pi)) ]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Whitespace surrounding the single quote character (`'`, used as a transpose operator and for delimiting character strings) can also cause confusion. Given `a = 1`, the expression",
+    "sha": "26071062416e",
+    "zh": "单引号字符（`'`，既用作转置运算符，也用来界定字符串）两侧的空白同样可能引起混淆。设 `a = 1`，表达式"
+   }
+  },
+  {
+   "k": "code",
+   "text": "[ 1 a' ]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "results in the single quote character being treated as a transpose operator and the result is the vector `[ 1, 1 ]`, but the expression",
+    "sha": "be66abbf1a4b",
+    "zh": "会让单引号被当作转置运算符，结果是向量 `[ 1, 1 ]`；而表达式"
+   }
+  },
+  {
+   "k": "code",
+   "text": "[ 1 a ' ]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "produces the error message",
+    "sha": "acc0ff02ccb5",
+    "zh": "会产生如下错误信息"
+   }
+  },
+  {
+   "k": "code",
+   "text": "parse error:\n\n  syntax error\n\n>>> [ 1 a ' ]\n              ^"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "because not doing so would cause trouble when parsing the valid expression",
+    "sha": "546625fe83fe",
+    "zh": "因为如果不这样处理，就会在解析合法表达式"
+   }
+  },
+  {
+   "k": "code",
+   "text": "[ a 'foo' ]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For clarity, it is probably best to always use commas and semicolons to separate matrix elements and rows.",
+    "sha": "c782908117ea",
+    "zh": "时出问题。为了清晰起见，最好始终用逗号和分号来分隔矩阵的元素和行。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The maximum number of elements in a matrix is fixed when Octave is compiled. The allowable number can be queried with the function `sizemax`. Note that other factors, such as the amount of memory available on your machine, may limit the maximum size of matrices to something smaller.",
+    "sha": "091078847164",
+    "zh": "矩阵元素个数的上限在编译 Octave 时就已固定，可以用函数 `sizemax` 查询允许的数量。注意，其他因素（比如你机器上的可用内存）可能把矩阵的最大尺寸限制得更小。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When you type a matrix or the name of a variable whose value is a matrix, Octave responds by printing the matrix in with neatly aligned rows and columns. If the rows of the matrix are too large to fit on the screen, Octave splits the matrix and displays a header before each section to indicate which columns are being displayed. You can use the following variables to control the format of the output.",
+    "sha": "36aea23346be",
+    "zh": "当你输入一个矩阵，或输入值为矩阵的变量名时，Octave 会把矩阵按整齐对齐的行列打印出来。如果矩阵的行太宽，屏幕放不下，Octave 就会把矩阵拆开，并在每一段前显示一个表头，说明当前显示的是哪几列。你可以用下面这些变量来控制输出的格式。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It is possible to achieve a wide range of output styles by using different values of `output_precision`. Reasonable combinations can be set using the `format` function. See Basic Input and Output.",
+    "sha": "8ce2530d5e23",
+    "zh": "通过设置不同的 `output_precision` 值，可以得到各种各样的输出样式。用 `format` 函数可以设定一些合理的组合，参见 Basic Input and Output。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Octave automatically switches to scientific notation when values become very large or very small. This guarantees that you will see several significant figures for every value in a matrix. If you would prefer to see all values in a matrix printed in a fixed point format, you can use the function `fixed_point_format`. But doing so is not recommended, because it can produce output that can easily be misinterpreted.",
+    "sha": "22811737bb8a",
+    "zh": "当数值变得很大或很小时，Octave 会自动切换到科学记法，这样可以保证矩阵中每个值都能显示出若干位有效数字。如果你希望矩阵中所有的值都以定点格式打印，可以使用函数 `fixed_point_format`，但不推荐这样做，因为它产生的输出很容易被误读。"
+   }
+  },
+  {
+   "k": "heading",
+   "level": 3,
+   "t": {
+    "en": "Empty Matrices",
+    "sha": "f967304b6a08",
+    "zh": "空矩阵"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A matrix may have one or both dimensions zero, and operations on empty matrices are handled as described by Carl de Boor in *An Empty Exercise*, SIGNUM, Volume 25, pages 2--6, 1990 and C. N. Nett and W. M. Haddad, in *A System-Theoretic Appropriate Realization of the Empty Matrix Concept*, IEEE Transactions on Automatic Control, Volume 38, Number 5, May 1993. Briefly, given a scalar $s$, an $m\\times n$ matrix $M_{m\\times n}$, and an $m\\times n$ empty matrix $[\\,]_{m\\times n}$ (with either one or both dimensions equal to zero), the following are true: $$ \\begin{aligned}% s \\cdot [\\,]_{m\\times n} = [\\,]_{m\\times n} \\cdot s &= [\\,]_{m\\times n}\\\\ [\\,]_{m\\times n} + [\\,]_{m\\times n} &= [\\,]_{m\\times n}\\\\ [\\,]_{0\\times m} \\cdot M_{m\\times n} &= [\\,]_{0\\times n}\\\\ M_{m\\times n} \\cdot [\\,]_{n\\times 0} &= [\\,]_{m\\times 0}\\\\ [\\,]_{m\\times 0} \\cdot [\\,]_{0\\times n} &= 0_{m\\times n}\\end{aligned} $$",
+    "sha": "2e329934dcf5",
+    "zh": "矩阵的一个或两个维数可以为零，对空矩阵的运算按 Carl de Boor 在 *An Empty Exercise*（SIGNUM，第 25 卷，第 2--6 页，1990 年）和 C. N. Nett 与 W. M. Haddad 在 *A System-Theoretic Appropriate Realization of the Empty Matrix Concept*（IEEE Transactions on Automatic Control，第 38 卷第 5 期，1993 年 5 月）中的约定处理。简单地说，给定标量 $s$、$m\\times n$ 矩阵 $M_{m\\times n}$ 和 $m\\times n$ 空矩阵 $[\\,]_{m\\times n}$（其中一个或两个维数等于零），下列各式成立： $$ \\begin{aligned}% s \\cdot [\\,]_{m\\times n} = [\\,]_{m\\times n} \\cdot s &= [\\,]_{m\\times n}\\\\ [\\,]_{m\\times n} + [\\,]_{m\\times n} &= [\\,]_{m\\times n}\\\\ [\\,]_{0\\times m} \\cdot M_{m\\times n} &= [\\,]_{0\\times n}\\\\ M_{m\\times n} \\cdot [\\,]_{n\\times 0} &= [\\,]_{m\\times 0}\\\\ [\\,]_{m\\times 0} \\cdot [\\,]_{0\\times n} &= 0_{m\\times n}\\end{aligned} $$"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "By default, dimensions of the empty matrix are printed along with the empty matrix symbol, `[]`. The built-in variable `print_empty_dimensions` controls this behavior.",
+    "sha": "d9aefca17f81",
+    "zh": "默认情况下，空矩阵会连同它的各维大小和空矩阵符号 `[]` 一起打印出来。内置变量 `print_empty_dimensions` 控制这一行为。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Empty matrices may also be used in assignment statements as a convenient way to delete rows or columns of matrices. See Assignment Ops.",
+    "sha": "e3de7f52f74f",
+    "zh": "空矩阵还可以用在赋值语句中，作为删除矩阵的行或列的便捷办法，参见 Assignment Ops。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When Octave parses a matrix expression, it examines the elements of the list to determine whether they are all constants. If they are, it replaces the list with a single matrix constant.",
+    "sha": "baa175ac5121",
+    "zh": "Octave 解析矩阵表达式时，会检查列表中的各个元素是否全是常量。如果是，就把这个列表替换成一个单独的矩阵常量。"
+   }
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Ranges",
+    "sha": "0d5fda95e394",
+    "zh": "区间"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A *range* is a convenient way to write a row vector with evenly spaced elements. A range expression is defined by the value of the first element in the range, an optional value for the increment between elements, and a maximum value which the elements of the range will not exceed. The base, increment, and limit are separated by colons (the `:` character) and may contain any arithmetic expressions and function calls. If the increment is omitted, it is assumed to be 1. For example, the range",
+    "sha": "3fadec36cb08",
+    "zh": "**区间**（range）是书写等间距行向量的便捷方式。区间表达式由三部分确定：区间第一个元素的值、元素之间增量的可选值，以及区间内元素不会超过的最大值。基值、增量和上限之间用冒号（`:` 字符）隔开，可以是任意算术表达式和函数调用。如果省略增量，则默认为 1。例如，区间"
+   }
+  },
+  {
+   "k": "code",
+   "text": "1 : 5"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "defines the set of values `[ 1, 2, 3, 4, 5 ]`, and the range",
+    "sha": "65c91587848e",
+    "zh": "定义了值的集合 `[ 1, 2, 3, 4, 5 ]`，而区间"
+   }
+  },
+  {
+   "k": "code",
+   "text": "1 : 3 : 5"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "defines the set of values `[ 1, 4 ]`.",
+    "sha": "6f90b6866e46",
+    "zh": "定义了值的集合 `[ 1, 4 ]`。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Although a range constant specifies a row vector, Octave does *not* normally convert range constants to vectors unless it is necessary to do so. This allows you to write a constant like `1 : 10000` without using 80,000 bytes of storage on a typical workstation.",
+    "sha": "3c94973a3245",
+    "zh": "虽然区间常量表示的是一个行向量，但 Octave 通常*不会*把区间常量转换成向量，除非确有必要。这样你就可以写 `1 : 10000` 这样的常量，而不必在一台典型的工作站上占用 80,000 字节的存储。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A common example of when it does become necessary to convert ranges into vectors occurs when they appear within a vector (i.e., inside square brackets). For instance, whereas",
+    "sha": "db6a0b3e577a",
+    "zh": "确有必要把区间转换成向量的一个常见情形，是区间出现在向量内部（即在方括号里面）。例如，"
+   }
+  },
+  {
+   "k": "code",
+   "text": "x = 0 : 0.1 : 1;"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "defines *x* to be a variable of type `range` and occupies 24 bytes of memory, the expression",
+    "sha": "25ff0a89110a",
+    "zh": "把 *x* 定义为 `range` 类型的变量，占用 24 字节内存，而表达式"
+   }
+  },
+  {
+   "k": "code",
+   "text": "y = [ 0 : 0.1 : 1];"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "defines *y* to be of type `matrix` and occupies 88 bytes of memory.",
+    "sha": "71bd853b9dac",
+    "zh": "把 *y* 定义为 `matrix` 类型的变量，占用 88 字节内存。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This space saving optimization may be disabled using the function *optimize_range*.",
+    "sha": "bb360d28795b",
+    "zh": "可以用函数 *optimize_range* 关闭这种节省空间的优化。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Note that the upper (or lower, if the increment is negative) bound on the range is not always included in the set of values. This can be useful in some contexts. For example:",
+    "sha": "9fa1b76d523d",
+    "zh": "注意，区间的上界（增量为负时则是下界）并不总是包含在值的集合里。这在某些场合很有用。例如："
+   }
+  },
+  {
+   "k": "code",
+   "text": "## x is some predefined range or vector or matrix or array\nx(1:2:end) += 1;   # increment all  odd-numbered elements\nx(2:2:end) -= 1;   # decrement all even-numbered elements"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The above code works correctly whether *x* has an odd number of elements or not, so no need to treat the two cases differently.",
+    "sha": "7e54fed1121d",
+    "zh": "无论 *x* 的元素个数是奇数还是偶数，上面的代码都能正确工作，所以不必把这两种情形分开处理。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Octave uses floating point arithmetic to compute the values in the range. As a result, defining ranges with floating-point values can result in pitfalls like these:",
+    "sha": "d47c00b6f74e",
+    "zh": "Octave 用浮点运算来计算区间中的值。因此，用浮点数定义区间可能会掉进下面这样的陷阱："
+   }
+  },
+  {
+   "k": "code",
+   "text": "a = -2\nb = (0.3 - 0.2 - 0.1)\nx = a : b"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Due to floating point rounding, *b* may or may not equal zero exactly, and if it does not, it may be above zero or below zero, hence the final range *x* may or may not include zero as its final value. Similarly:",
+    "sha": "acb85b92bc1c",
+    "zh": "由于浮点舍入，*b* 可能恰好等于零，也可能不等于零；如果不等于零，它可能大于零，也可能小于零。所以最终的区间 *x* 可能包含零作为最后一个值，也可能不包含。类似地："
+   }
+  },
+  {
+   "k": "code",
+   "text": "x = 1.80 : 0.05 : 1.90\ny = 1.85 : 0.05 : 1.90"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "is not as predictable as it looks. As of Octave 8.3, the results obtained are that *x* has three elements (1.80, 1.85, and 1.90), and *y* has only one element (1.85 but not 1.90). Thus, when using floating points in ranges, changing the start of the range can easily affect the end of the range even though the ending value was not touched in the above example.",
+    "sha": "b5caeeb05fde",
+    "zh": "并不像看上去那样可以预测。对于 Octave 8.3，得到的结果是：*x* 有三个元素（1.80、1.85 和 1.90），而 *y* 只有一个元素（有 1.85，没有 1.90）。因此，在区间中使用浮点数时，改变区间的起点就很容易影响区间的终点，尽管在上面的例子里终点的值并没有动过。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To avoid such pitfalls with floating-points in ranges, you should use one of the following patterns. This change to the previous code:",
+    "sha": "6273e5f8ca18",
+    "zh": "为了避免区间中浮点数带来的这类陷阱，应当采用下面的写法之一。把前面的代码改成"
+   }
+  },
+  {
+   "k": "code",
+   "text": "x = (0:2) * 0.05 + 1.80\ny = (0:1) * 0.05 + 1.85"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "makes it much safer and much more repeatable across platforms, compilers, and compiler settings. If you know the number of elements, you can also use the `linspace` function (see Special Utility Matrices), which will include the endpoints of a range. You can also make judicious use of `round`, `floor`, `ceil`, `fix`, etc to set the limits and the increment without getting interference from floating-point rounding. For example, the earlier example can be made safer and much more repeatable with one of the following:",
+    "sha": "0ea1623b761f",
+    "zh": "会让结果安全得多，并且在不同平台、编译器和编译器设置下也更加一致。如果你知道元素的个数，也可以使用 `linspace` 函数（参见 Special Utility Matrices），它会包含区间的两个端点。你还可以审慎地使用 `round`、`floor`、`ceil`、`fix` 等函数来设定上限和增量，避免受到浮点舍入的干扰。例如，前面的例子可以改写成下面几种形式之一，这样会安全得多，结果也一致得多："
+   }
+  },
+  {
+   "k": "code",
+   "text": "a = -2\nb = round ((0.3 - 0.2 - 0.1) * 1e12) / 1e12   # rounds to 12 digits\nc = floor (0.3 - 0.2 - 0.1)                   # floors as integer\nd = floor ((0.3 - 0.2 - 0.1) * 1e12) / 1e12   # floors at 12 digits\nx = a : b\ny = a : c\nz = a : d"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When adding a scalar to a range, subtracting a scalar from it (or subtracting a range from a scalar) and multiplying by scalar, Octave will attempt to avoid unpacking the range and keep the result as a range, too, if it can determine that it is safe to do so. For instance, doing",
+    "sha": "89801f7a126b",
+    "zh": "对区间加上一个标量、从区间中减去一个标量（或从标量中减去一个区间）、以及乘以一个标量时，如果 Octave 能判断这样做是安全的，它就会尽量避免展开区间，让结果仍然是区间。例如，执行"
+   }
+  },
+  {
+   "k": "code",
+   "text": "a = 2*(1:1e7) - 1;"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "will produce the same result as `1:2:2e7-1`, but without ever forming a vector with ten million elements.",
+    "sha": "20c085d6e74a",
+    "zh": "会得到与 `1:2:2e7-1` 相同的结果，但整个过程不会生成含有一千万个元素的向量。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Using zero as an increment in the colon notation, as `1:0:1` is not allowed, because a division by zero would occur in determining the number of range elements. However, ranges with zero increment (i.e., all elements equal) are useful, especially in indexing, and Octave allows them to be constructed using the built-in function `ones`. Note that because a range must be a row vector, `ones (1, 10)` produces a range, while `ones (10, 1)` does not.",
+    "sha": "6adf28cdc268",
+    "zh": "在冒号记法中使用零作为增量（如 `1:0:1`）是不允许的，因为在确定区间的元素个数时会出现除以零。不过，增量为零的区间（即所有元素都相等）很有用，尤其是在索引中，Octave 允许用内置函数 `ones` 来构造它们。注意，因为区间必须是行向量，所以 `ones (1, 10)` 产生一个区间，而 `ones (10, 1)` 不是。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When Octave parses a range expression, it examines the elements of the expression to determine whether they are all constants. If they are, it replaces the range expression with a single range constant.",
+    "sha": "7c9f706844a8",
+    "zh": "Octave 解析区间表达式时，会检查表达式中的各个元素是否全是常量。如果是，就把这个区间表达式替换成一个单独的区间常量。"
+   }
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Logical Values",
+    "sha": "c8bf1f632fed",
+    "zh": "逻辑值"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Octave has built-in support for logical values, i.e., variables that are either `true` or `false`. When comparing two variables, the result will be a logical value whose value depends on whether or not the comparison is true.",
+    "sha": "99b1c7f76bc5",
+    "zh": "Octave 内置支持逻辑值，也就是取值要么为 `true` 要么为 `false` 的变量。比较两个变量时，结果是一个逻辑值，它的取值取决于比较是否成立。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The basic logical operations are `&`, `|`, and `!`, which correspond to “Logical And”, “Logical Or”, and “Logical Negation”. These operations all follow the usual rules of logic.",
+    "sha": "9ba3610d11aa",
+    "zh": "基本的逻辑运算是 `&`、`|` 和 `!`，分别对应“逻辑与”“逻辑或”和“逻辑非”。这些运算都遵循通常的逻辑规则。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It is also possible to use logical values as part of standard numerical calculations. In this case `true` is converted to `1`, and `false` to 0, both represented using double precision floating point numbers. So, the result of `true*22 - false/6` is `22`.",
+    "sha": "c6d9a6a2d45d",
+    "zh": "逻辑值也可以参与普通的数值计算。这时 `true` 被转换为 `1`，`false` 被转换为 0，二者都用双精度浮点数表示。所以，`true*22 - false/6` 的结果是 `22`。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Logical values can also be used to index matrices and cell arrays. When indexing with a logical array the result will be a vector containing the values corresponding to `true` parts of the logical array. The following example illustrates this.",
+    "sha": "851de127d64f",
+    "zh": "逻辑值还可以用来索引矩阵和元胞数组（cell array）。用逻辑数组做索引时，结果是一个向量，其中的值对应于逻辑数组里为 `true` 的位置。下面的例子说明了这一点。"
+   }
+  },
+  {
+   "k": "code",
+   "text": "data = [ 1, 2; 3, 4 ];\nidx = (data <= 2);\ndata(idx)\n     ⇒ ans = [ 1; 2 ]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Instead of creating the `idx` array it is possible to replace `data(idx)` with `data( data <= 2 )` in the above code.",
+    "sha": "7e17fcbad86f",
+    "zh": "不必创建 `idx` 数组，在上面的代码中可以直接把 `data(idx)` 换成 `data( data <= 2 )`。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Logical values can also be constructed by casting numeric objects to logical values, or by using the `true` or `false` functions.",
+    "sha": "72a9e850ab5e",
+    "zh": "逻辑值也可以通过把数值对象强制转换为逻辑值来构造，或者使用 `true` 或 `false` 函数。"
+   }
+  },
+  {
+   "k": "def",
+   "name": "logical",
+   "sigs": [
+    "TF = logical (x)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Convert the numeric object *x* to logical type.",
+      "sha": "46743dc9d26b",
+      "zh": "把数值对象 *x* 转换为逻辑类型。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Any nonzero values will be converted to true (1) while zero values will be converted to false (0). The non-numeric value NaN cannot be converted and will produce an error.",
+      "sha": "7acc98c5dc33",
+      "zh": "任何非零的值都会被转换为 true（1），零值被转换为 false（0）。非数值 NaN 不能被转换，会产生错误。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Compatibility Note: Octave accepts complex values as input, whereas MATLAB issues an error. See also: `double`, `single`, `char`.",
+      "sha": "228328ed03bf",
+      "zh": "兼容性说明：Octave 接受复数值作为输入，而 MATLAB 会报错。另见：`double`、`single`、`char`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "true",
+   "sigs": [
+    "val = true (x)",
+    "val = true (n, m)",
+    "val = true (n, m, k, …)",
+    "val = true (…, \"like\", var)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a matrix or N-dimensional array whose elements are all logical 1.",
+      "sha": "1f09432e9c35",
+      "zh": "返回元素全为逻辑 1 的矩阵或 N 维数组。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If invoked with a single scalar integer argument, return a square matrix of the specified size.",
+      "sha": "176687ffe03c",
+      "zh": "如果只给出一个标量整数参数，则返回指定大小的方阵。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If invoked with two or more scalar integer arguments, or a vector of integer values, return an array with given dimensions.",
+      "sha": "f095314c765b",
+      "zh": "如果给出两个或更多个标量整数参数，或者一个整数值向量，则返回具有给定各维大小的数组。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If a logical variable *var* is specified after `\"like\"`, the output *val* will have the same sparsity as *var*. See also: `false`.",
+      "sha": "273cb78d5800",
+      "zh": "如果在 `\"like\"` 之后指定了逻辑变量 *var*，则输出 *val* 与 *var* 具有相同的稀疏性。另见：`false`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "false",
+   "sigs": [
+    "val = false (x)",
+    "val = false (n, m)",
+    "val = false (n, m, k, …)",
+    "val = false (…, \"like\", var)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return a matrix or N-dimensional array whose elements are all logical 0.",
+      "sha": "9fffd466b3e3",
+      "zh": "返回元素全为逻辑 0 的矩阵或 N 维数组。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If invoked with a single scalar integer argument, return a square matrix of the specified size.",
+      "sha": "176687ffe03c",
+      "zh": "如果只给出一个标量整数参数，则返回指定大小的方阵。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If invoked with two or more scalar integer arguments, or a vector of integer values, return an array with given dimensions.",
+      "sha": "f095314c765b",
+      "zh": "如果给出两个或更多个标量整数参数，或者一个整数值向量，则返回具有给定各维大小的数组。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If a logical variable *var* is specified after `\"like\"`, the output *val* will have the same sparsity as *var*. See also: `true`.",
+      "sha": "3323bf31b071",
+      "zh": "如果在 `\"like\"` 之后指定了逻辑变量 *var*，则输出 *val* 与 *var* 具有相同的稀疏性。另见：`true`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Predicates for Numeric Objects",
+    "sha": "29b8af6211d4",
+    "zh": "数值对象的判定函数"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Since the type of a variable may change during the execution of a program, it can be necessary to do type checking at run-time. Doing this also allows you to change the behavior of a function depending on the type of the input. As an example, this naive implementation of `abs` returns the absolute value of the input if it is a real number, and the length of the input if it is a complex number.",
+    "sha": "7750601de87d",
+    "zh": "由于变量的类型在程序运行过程中可能改变，有时需要在运行时检查类型。这样做还可以让函数根据输入的类型改变行为。举个例子，下面这个 `abs` 的简单实现：如果输入是实数，就返回它的绝对值；如果输入是复数，就返回输入的长度。"
+   }
+  },
+  {
+   "k": "code",
+   "text": "function a = abs (x)\n  if (isreal (x))\n    a = sign (x) .* x;\n  elseif (iscomplex (x))\n    a = sqrt (real(x).^2 + imag(x).^2);\n  endif\nendfunction"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The following functions are available for determining the type of a variable.",
+    "sha": "5580a978bc64",
+    "zh": "下面这些函数可以用来判断变量的类型。"
+   }
+  },
+  {
+   "k": "def",
+   "name": "isnumeric",
+   "sigs": [
+    "tf = isnumeric (x)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return true if *x* is a numeric object, i.e., an integer, real, or complex array.",
+      "sha": "bc6adcddc3b8",
+      "zh": "如果 *x* 是数值对象，即整数、实数或复数数组，则返回 true。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Logical and character arrays are not considered to be numeric. See also: `isinteger`, `isfloat`, `isreal`, `iscomplex`, `ischar`, `islogical`, `isstring`, `iscell`, `isstruct`, `isa`.",
+      "sha": "dc83d6c87e19",
+      "zh": "逻辑数组和字符数组不算数值。另见：`isinteger`、`isfloat`、`isreal`、`iscomplex`、`ischar`、`islogical`、`isstring`、`iscell`、`isstruct`、`isa`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "islogical",
+   "sigs": [
+    "tf = islogical (x)",
+    "tf = isbool (x)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return true if *x* is a logical object. See also: `ischar`, `isfloat`, `isinteger`, `isstring`, `isnumeric`, `isa`.",
+      "sha": "b63eb0eae3c6",
+      "zh": "如果 *x* 是逻辑对象，则返回 true。另见：`ischar`、`isfloat`、`isinteger`、`isstring`、`isnumeric`、`isa`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "isfloat",
+   "sigs": [
+    "tf = isfloat (x)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return true if *x* is a floating-point numeric object.",
+      "sha": "2fb4b3a643b4",
+      "zh": "如果 *x* 是浮点数值对象，则返回 true。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Objects of class double or single are floating-point objects. See also: `isinteger`, `ischar`, `islogical`, `isnumeric`, `isstring`, `isa`.",
+      "sha": "7d7e20b7e896",
+      "zh": "class 为 double 或 single 的对象是浮点对象。另见：`isinteger`、`ischar`、`islogical`、`isnumeric`、`isstring`、`isa`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "isreal",
+   "sigs": [
+    "tf = isreal (x)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return true if *x* is a non-complex matrix or scalar.",
+      "sha": "e0045202f2a7",
+      "zh": "如果 *x* 是非复数的矩阵或标量，则返回 true。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For compatibility with MATLAB, this includes logical and character matrices. See also: `iscomplex`, `isnumeric`, `isa`.",
+      "sha": "1e08f7031894",
+      "zh": "为了与 MATLAB 兼容，这包括逻辑矩阵和字符矩阵。另见：`iscomplex`、`isnumeric`、`isa`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "iscomplex",
+   "sigs": [
+    "tf = iscomplex (x)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return true if *x* is a complex-valued numeric object. See also: `isreal`, `isnumeric`, `ischar`, `isfloat`, `islogical`, `isstring`, `isa`.",
+      "sha": "efd42ec52778",
+      "zh": "如果 *x* 是复值数值对象，则返回 true。另见：`isreal`、`isnumeric`、`ischar`、`isfloat`、`islogical`、`isstring`、`isa`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "ismatrix",
+   "sigs": [
+    "tf = ismatrix (x)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return true if *x* is a 2-D array.",
+      "sha": "c34483870d54",
+      "zh": "如果 *x* 是二维数组，则返回 true。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "A matrix is an object with two dimensions (`ndims (x) == 2`) for which `size (x)` returns `[M, N]` with non-negative M and N. See also: `isscalar`, `isvector`, `iscell`, `isstruct`, `issparse`, `isa`.",
+      "sha": "fdc34a4e4c06",
+      "zh": "矩阵是具有两个维度的对象（`ndims (x) == 2`），对它调用 `size (x)` 会返回 `[M, N]`，其中 M 和 N 为非负数。另见：`isscalar`、`isvector`、`iscell`、`isstruct`、`issparse`、`isa`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "isvector",
+   "sigs": [
+    "tf = isvector (x)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return true if *x* is a vector.",
+      "sha": "d3d6bbe3e0a9",
+      "zh": "如果 *x* 是向量，则返回 true。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "A vector is a 2-D array where one of the dimensions is equal to 1 (either 1xN or Nx1). As a consequence of this definition, a 1x1 array (a scalar) is also a vector. See also: `isscalar`, `ismatrix`, `iscolumn`, `isrow`, `size`.",
+      "sha": "28b3c202cd02",
+      "zh": "向量是二维数组，其中某一个维度等于 1（要么是 1xN，要么是 Nx1）。按照这个定义，1x1 数组（标量）也是向量。另见：`isscalar`、`ismatrix`、`iscolumn`、`isrow`、`size`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "isrow",
+   "sigs": [
+    "tf = isrow (x)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return true if *x* is a row vector.",
+      "sha": "a5e3695ef046",
+      "zh": "如果 *x* 是行向量，则返回 true。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "A row vector is a 2-D array for which `size (x)` returns `[1, N]` with non-negative N. See also: `iscolumn`, `isscalar`, `isvector`, `ismatrix`, `size`.",
+      "sha": "b394d18964e0",
+      "zh": "行向量是二维数组，对它调用 `size (x)` 会返回 `[1, N]`，其中 N 为非负数。另见：`iscolumn`、`isscalar`、`isvector`、`ismatrix`、`size`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "iscolumn",
+   "sigs": [
+    "tf = iscolumn (x)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return true if *x* is a column vector.",
+      "sha": "ba19a9b92f6d",
+      "zh": "如果 *x* 是列向量，则返回 true。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "A column vector is a 2-D array for which `size (x)` returns `[N, 1]` with non-negative N. See also: `isrow`, `isscalar`, `isvector`, `ismatrix`, `size`.",
+      "sha": "ddcbbf3f375a",
+      "zh": "列向量是二维数组，对它调用 `size (x)` 会返回 `[N, 1]`，其中 N 为非负数。另见：`isrow`、`isscalar`、`isvector`、`ismatrix`、`size`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "isscalar",
+   "sigs": [
+    "tf = isscalar (x)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return true if *x* is a scalar.",
+      "sha": "2a11b44228b0",
+      "zh": "如果 *x* 是标量，则返回 true。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "A scalar is an object with two dimensions for which `size (x)` returns `[1, 1]`. See also: `isvector`, `ismatrix`, `size`.",
+      "sha": "19f38dd82876",
+      "zh": "标量是具有两个维度的对象，对它调用 `size (x)` 会返回 `[1, 1]`。另见：`isvector`、`ismatrix`、`size`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "issquare",
+   "sigs": [
+    "tf = issquare (x)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return true if *x* is a 2-D square array.",
+      "sha": "83f065ef1a04",
+      "zh": "如果 *x* 是二维方阵（方形数组），则返回 true。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "A square array is a 2-D object for which `size (x)` returns `[N, N]` where N is a non-negative integer. See also: `isscalar`, `isvector`, `ismatrix`, `size`.",
+      "sha": "6bc7eade6789",
+      "zh": "方形数组是二维对象，对它调用 `size (x)` 会返回 `[N, N]`，其中 N 是非负整数。另见：`isscalar`、`isvector`、`ismatrix`、`size`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "issymmetric",
+   "sigs": [
+    "tf = issymmetric (A)",
+    "tf = issymmetric (A, tol)",
+    "tf = issymmetric (A, \"skew\")",
+    "tf = issymmetric (A, \"skew\", tol)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return true if *A* is a symmetric or skew-symmetric matrix within the tolerance specified by *tol*.",
+      "sha": "ccef96dcff82",
+      "zh": "如果 *A* 在 *tol* 指定的容差内是对称或反对称矩阵，则返回 true。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The default tolerance is zero (uses faster code).",
+      "sha": "3f36540e01f3",
+      "zh": "默认容差为零（使用更快的代码）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The type of symmetry to check may be specified with the additional input `\"nonskew\"` (default) for regular symmetry or `\"skew\"` for skew-symmetry.",
+      "sha": "469100c0745e",
+      "zh": "要检查的对称类型可以通过额外的输入指定：`\"nonskew\"`（默认）表示普通对称，`\"skew\"` 表示反对称。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Background: A matrix is symmetric if the transpose of the matrix is equal to the original matrix: `A == A.'`. If a tolerance is given then symmetry is determined by `norm (A - A.', Inf) / norm (A, Inf) < tol`.",
+      "sha": "28bf9f668e05",
+      "zh": "背景：如果矩阵的转置等于原矩阵，则该矩阵是对称的：`A == A.'`。如果给定了容差，则按 `norm (A - A.', Inf) / norm (A, Inf) < tol` 判定对称性。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "A matrix is skew-symmetric if the transpose of the matrix is equal to the negative of the original matrix: `A == -A.'`. If a tolerance is given then skew-symmetry is determined by `norm (A + A.', Inf) / norm (A, Inf) < tol`. See also: `ishermitian`, `isdefinite`.",
+      "sha": "58df512f4933",
+      "zh": "如果矩阵的转置等于原矩阵的相反数，则该矩阵是反对称的：`A == -A.'`。如果给定了容差，则按 `norm (A + A.', Inf) / norm (A, Inf) < tol` 判定反对称性。另见：`ishermitian`、`isdefinite`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "ishermitian",
+   "sigs": [
+    "tf = ishermitian (A)",
+    "tf = ishermitian (A, tol)",
+    "tf = ishermitian (A, \"skew\")",
+    "tf = ishermitian (A, \"skew\", tol)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return true if *A* is a Hermitian or skew-Hermitian matrix within the tolerance specified by *tol*.",
+      "sha": "340294b772d6",
+      "zh": "如果 *A* 在 *tol* 指定的容差内是厄米（共轭对称）或反厄米矩阵，则返回 true。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The default tolerance is zero (uses faster code).",
+      "sha": "3f36540e01f3",
+      "zh": "默认容差为零（使用更快的代码）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The type of symmetry to check may be specified with the additional input `\"nonskew\"` (default) for regular Hermitian or `\"skew\"` for skew-Hermitian.",
+      "sha": "2a3202d1c1af",
+      "zh": "要检查的对称类型可以通过额外的输入指定：`\"nonskew\"`（默认）表示普通厄米，`\"skew\"` 表示反厄米。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Background: A matrix is Hermitian if the complex conjugate transpose of the matrix is equal to the original matrix: `A == A'`. If a tolerance is given then the calculation is `norm (A - A', Inf) / norm (A, Inf) < tol`.",
+      "sha": "3c0a64c7f303",
+      "zh": "背景：如果矩阵的共轭转置等于原矩阵，则该矩阵是厄米矩阵：`A == A'`。如果给定了容差，则按 `norm (A - A', Inf) / norm (A, Inf) < tol` 计算。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "A matrix is skew-Hermitian if the complex conjugate transpose of the matrix is equal to the negative of the original matrix: `A == -A'`. If a tolerance is given then the calculation is `norm (A + A', Inf) / norm (A, Inf) < tol`. See also: `issymmetric`, `isdefinite`.",
+      "sha": "6abfa5a8c3e4",
+      "zh": "如果矩阵的共轭转置等于原矩阵的相反数，则该矩阵是反厄米矩阵：`A == -A'`。如果给定了容差，则按 `norm (A + A', Inf) / norm (A, Inf) < tol` 计算。另见：`issymmetric`、`isdefinite`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "isdefinite",
+   "sigs": [
+    "tf = isdefinite (A)",
+    "tf = isdefinite (A, tol)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return true if *A* is symmetric positive definite matrix within the tolerance specified by *tol*.",
+      "sha": "6e409c76a993",
+      "zh": "如果 *A* 在 *tol* 指定的容差内是对称正定矩阵，则返回 true。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If *tol* is omitted, use a tolerance of `100 * eps * norm (A, \"fro\")`.",
+      "sha": "3900b2dbc77f",
+      "zh": "如果省略 *tol*，则使用容差 `100 * eps * norm (A, \"fro\")`。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Background: A positive definite matrix has eigenvalues which are all greater than zero. A positive semi-definite matrix has eigenvalues which are all greater than or equal to zero. The matrix *A* is very likely to be positive semi-definite if the following two conditions hold for a suitably small tolerance *tol*.",
+      "sha": "225f28a44f75",
+      "zh": "背景：正定矩阵的特征值全部大于零；半正定矩阵的特征值全部大于或等于零。如果对一个足够小的容差 *tol*，下面两个条件同时成立，则矩阵 *A* 很可能是半正定的。"
+     }
+    },
+    {
+     "k": "code",
+     "text": " isdefinite (A) ⇒ 0\n isdefinite (A + 5*tol, tol) ⇒ 1"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `issymmetric`, `ishermitian`.",
+      "sha": "c1830b0fd89b",
+      "zh": "另见：`issymmetric`、`ishermitian`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "isdiag",
+   "sigs": [
+    "tf = isdiag (A)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return true if *A* is a diagonal matrix. See also: `isbanded`, `istril`, `istriu`, `diag`, `bandwidth`.",
+      "sha": "643753899791",
+      "zh": "如果 *A* 是对角矩阵，则返回 true。另见：`isbanded`、`istril`、`istriu`、`diag`、`bandwidth`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "istril",
+   "sigs": [
+    "tf = istril (A)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return true if *A* is a lower triangular matrix.",
+      "sha": "9ea6f0dd108b",
+      "zh": "如果 *A* 是下三角矩阵，则返回 true。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "A lower triangular matrix has nonzero entries only on the main diagonal and below. See also: `istriu`, `isbanded`, `isdiag`, `tril`, `bandwidth`.",
+      "sha": "38dada0e8497",
+      "zh": "下三角矩阵只在主对角线及其下方有非零元素。另见：`istriu`、`isbanded`、`isdiag`、`tril`、`bandwidth`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "def",
+   "name": "istriu",
+   "sigs": [
+    "tf = istriu (A)"
+   ],
+   "stage": 2,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Return true if *A* is an upper triangular matrix.",
+      "sha": "0e2a44eb4b81",
+      "zh": "如果 *A* 是上三角矩阵，则返回 true。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "An upper triangular matrix has nonzero entries only on the main diagonal and above. See also: `isdiag`, `isbanded`, `istril`, `triu`, `bandwidth`.",
+      "sha": "3ca2b264b9e5",
+      "zh": "上三角矩阵只在主对角线及其上方有非零元素。另见：`isdiag`、`isbanded`、`istril`、`triu`、`bandwidth`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If instead of knowing properties of variables, you wish to know which variables are defined and to gather other information about the workspace itself, see Status of Variables.",
+    "sha": "c79532f4ca7e",
+    "zh": "如果你想了解的不是变量的性质，而是哪些变量已经定义，以及工作区本身的其他信息，参见 Status of Variables。"
+   }
+  }
+ ],
+ "title_zh": "数值类型与矩阵"
+}

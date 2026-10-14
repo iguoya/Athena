@@ -1,0 +1,225 @@
+[
+ {
+  "id": "ex1",
+  "stem": "先在纸上算 $AB$ 再转置，预测 `(A*B).T` 的四个元素；然后运行：\n\n```python\nfrom sympy import *\nA = Matrix([[1, 2, 0], [3, -1, 4]])\nB = Matrix([[2, 1], [0, -3], [5, 1]])\n(A*B).T\n```\n\n$A$ 是 $2\\times3$，$B$ 是 $3\\times2$，所以 `(A*B).T` 是 $2\\times2$ 矩阵。",
+  "check": {
+   "kind": "numbers",
+   "ask": "按行从左到右、从上到下写出 `(A*B).T` 的 4 个元素。",
+   "answer": [
+    2.0,
+    26.0,
+    -5.0,
+    10.0
+   ],
+   "hint": "先确认 $AB$ 的形状，再用「第 $i$ 行乘第 $j$ 列」算每个元素；转置把第 $i$ 行第 $j$ 列的元素换到第 $j$ 行第 $i$ 列。"
+  },
+  "verify": "A = Matrix([[1, 2, 0], [3, -1, 4]])\nB = Matrix([[2, 1], [0, -3], [5, 1]])\nresult = list((A*B).T)",
+  "sol": "$AB$ 的第一行是 $(1\\cdot2+2\\cdot0+0\\cdot5,\\ 1\\cdot1+2\\cdot(-3)+0\\cdot1)=(2,-5)$，第二行是 $(3\\cdot2+(-1)\\cdot0+4\\cdot5,\\ 3\\cdot1+(-1)(-3)+4\\cdot1)=(26,10)$。转置后第一行是 $(2,26)$，第二行是 $(-5,10)$。\n\n```python\n>>> A = Matrix([[1, 2, 0], [3, -1, 4]])\n>>> B = Matrix([[2, 1], [0, -3], [5, 1]])\n>>> A*B\nMatrix([\n[ 2, -5],\n[26, 10]])\n>>> (A*B).T\nMatrix([\n[ 2, 26],\n[-5, 10]])\n>>> B.T*A.T == (A*B).T\nTrue\n```\n\n最后一行验证了 $(AB)^T=B^TA^T$：乘积的转置要把两个因子的顺序反过来。",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "matrices · 基本方法（乘法与转置）",
+    "note": "自编，答案由 SymPy 1.14 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex2",
+  "stem": "先预测：若 $\\det M=d$，则 $\\det(2M)$ 与 $\\det(M^{-1})$ 各与 $d$ 有什么关系？再运行：\n\n```python\nfrom sympy import *\nM = Matrix([[2, 1, 0], [1, 3, 1], [0, 1, 4]])\nM.det()\n(2*M).det()\n(M**-1).det()\n```",
+  "check": {
+   "kind": "numbers",
+   "ask": "依次写出 `M.det()`、`(2*M).det()`、`(M**-1).det()` 三个数。",
+   "answer": [
+    18.0,
+    144.0,
+    0.05555555555555555
+   ],
+   "hint": "回头看行列式的性质：数乘一个 $n$ 阶矩阵时，每一行都乘了这个数；逆矩阵的行列式与原行列式互为倒数。"
+  },
+  "verify": "M = Matrix([[2, 1, 0], [1, 3, 1], [0, 1, 4]])\nresult = [M.det(), (2*M).det(), (M**-1).det()]",
+  "sol": "按第一行展开：$\\det M=2(3\\cdot4-1)-1(1\\cdot4-0)=22-4=18$。$2M$ 的 3 行各乘了 2，所以 $\\det(2M)=2^3\\cdot18=144$，不是 $2\\cdot18$。$MM^{-1}=I$ 给出 $\\det(M^{-1})=1/18$。\n\n```python\n>>> M = Matrix([[2, 1, 0], [1, 3, 1], [0, 1, 4]])\n>>> M.det()\n18\n>>> (2*M).det()\n144\n>>> (M**-1).det()\n1/18\n```\n\n`1/18` 是有理数，不是浮点数 `0.0555...`；答案框里写小数即可。",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "matrices · 进阶方法 · 行列式",
+    "note": "自编，答案由 SymPy 1.14 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex3",
+  "stem": "先预测，再运行：\n\n```python\nfrom sympy import *\nG = Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])\nG.det()\nG.rank()\nG**-1\n```\n\n三行输出里最后一行会发生什么？",
+  "check": {
+   "kind": "choice",
+   "options": [
+    {
+     "ok": false,
+     "why": "方阵只是可逆的必要条件，还要行列式非零。",
+     "text": "`G**-1` 返回一个 $3\\times3$ 的逆矩阵，因为 `G` 是方阵。"
+    },
+    {
+     "ok": true,
+     "why": "行列式为 0 等价于秩小于阶数，等价于不可逆；三个量互相印证。",
+     "text": "`G**-1` 抛出 `NonInvertibleMatrixError`，因为 `G.det()` 为 0、`G.rank()` 为 2，小于阶数 3。"
+    },
+    {
+     "ok": false,
+     "why": "`G` 是 $3\\times3$ 的方阵；报错的原因是奇异，不是形状。",
+     "text": "`G**-1` 抛出错误，因为 `G` 不是方阵。"
+    },
+    {
+     "ok": false,
+     "why": "行列式为 0 只说明奇异，`G` 的元素并不全为 0。",
+     "text": "`G.det()` 为 0，说明 `G` 是零矩阵，所以 `G**-1` 无意义。"
+    }
+   ],
+   "hint": "回头看行列式、秩与可逆性的关系：$n$ 阶方阵可逆 $\\iff\\det\\ne0\\iff$ 秩为 $n$。"
+  },
+  "sol": "第 3 行 $=$ 2×第 2 行 $-$ 第 1 行，三行线性相关，所以秩为 2、行列式为 0，不可逆。\n\n```python\n>>> G = Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])\n>>> G.det()\n0\n>>> G.rank()\n2\n>>> G**-1\nNonInvertibleMatrixError: Matrix det == 0; not invertible.\n```",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "matrices · 基本方法（逆矩阵）· 进阶方法",
+    "note": "自编，答案由 SymPy 1.14 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex4",
+  "stem": "先用 $A^{-1}=\\dfrac{1}{\\det A}A^{*}$ 估计分母会是多少，再运行：\n\n```python\nfrom sympy import *\nK = Matrix([[2, 1, 1], [1, 3, 2], [1, 0, 3]])\nK.det()\nK**-1\n```\n\n逆矩阵的元素是分数。",
+  "check": {
+   "kind": "numbers",
+   "ask": "按行从左到右、从上到下写出 `K**-1` 的 9 个元素（写成小数，保留全部精度）。",
+   "answer": [
+    0.6428571428571429,
+    -0.21428571428571427,
+    -0.07142857142857142,
+    -0.07142857142857142,
+    0.35714285714285715,
+    -0.21428571428571427,
+    -0.21428571428571427,
+    0.07142857142857142,
+    0.35714285714285715
+   ],
+   "hint": "回头复习伴随矩阵公式：逆矩阵的每个元素是某个代数余子式除以 $\\det K$；先看 `K.det()` 是多少。"
+  },
+  "verify": "K = Matrix([[2, 1, 1], [1, 3, 2], [1, 0, 3]])\nresult = list(K**-1)",
+  "sol": "$\\det K=2(9-0)-1(3-2)+1(0-3)=18-1-3=14$，所以逆矩阵的元素都以 14 为分母。\n\n```python\n>>> K = Matrix([[2, 1, 1], [1, 3, 2], [1, 0, 3]])\n>>> K.det()\n14\n>>> K**-1\nMatrix([\n[ 9/14, -3/14, -1/14],\n[-1/14,  5/14, -3/14],\n[-3/14,  1/14,  5/14]])\n>>> K*K**-1 == eye(3)\nTrue\n```\n\n手算时的伴随矩阵是 `K.adjugate()`，除以 14 就是上面的结果。",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "matrices · 基本方法（逆矩阵）",
+    "note": "自编，答案由 SymPy 1.14 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex5",
+  "stem": "`R` 是 $4\\times5$ 矩阵。先看一眼行与行的关系，预测它的秩；再运行：\n\n```python\nfrom sympy import *\nR = Matrix([[1, 2, 1, 3, 2], [2, 4, 0, 2, 6], [3, 6, 1, 5, 8], [0, 0, 1, 2, -1]])\nR.rref()\nR.rank()\nlen(R.nullspace())\nlen(R.columnspace())\n```\n\n基向量不唯一，所以这里只关心个数。",
+  "check": {
+   "kind": "numbers",
+   "ask": "依次写出 `R.rank()`、`len(R.nullspace())`、`len(R.columnspace())` 三个整数。",
+   "answer": [
+    2.0,
+    3.0,
+    2.0
+   ],
+   "hint": "回头看 `rref` 的主元列：主元个数是秩，也是列空间的维数；零空间的维数是列数减去秩。"
+  },
+  "verify": "R = Matrix([[1, 2, 1, 3, 2], [2, 4, 0, 2, 6], [3, 6, 1, 5, 8], [0, 0, 1, 2, -1]])\nresult = [R.rank(), len(R.nullspace()), len(R.columnspace())]",
+  "sol": "第 3 行等于第 1、2 行之和，所以 4 行里至多 2 行线性无关。`rref` 的主元列是第 0、2 列，秩为 2；零空间维数 $=5-2=3$；列空间由主元列张成，维数 2。\n\n```python\n>>> R = Matrix([[1, 2, 1, 3, 2], [2, 4, 0, 2, 6], [3, 6, 1, 5, 8], [0, 0, 1, 2, -1]])\n>>> R.rref()\n(Matrix([\n[1, 2, 0, 1,  3],\n[0, 0, 1, 2, -1],\n[0, 0, 0, 0,  0],\n[0, 0, 0, 0,  0]]), (0, 2))\n>>> R.rank()\n2\n>>> len(R.nullspace())\n3\n>>> len(R.columnspace())\n2\n```\n\n三者满足 $\\operatorname{rank}+\\dim\\mathrm{Null}=5$（列数）。`columnspace` 返回的是 `R` 中主元列对应的原列，个数等于秩。",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "matrices · 进阶方法 · RREF / 零空间 / 列空间",
+    "note": "自编，答案由 SymPy 1.14 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex6",
+  "stem": "`W` 的特征多项式可以手算。先预测特征值和各自的代数重数，再运行：\n\n```python\nfrom sympy import *\nW = Matrix([[3, 1, 0], [0, 3, 0], [1, 0, -2]])\nW.eigenvals()\n```\n\n返回的是 `{特征值: 代数重数}` 字典，字典的顺序不作要求。",
+  "check": {
+   "kind": "numbers",
+   "ask": "把特征值按从小到大排序，每个特征值后面紧跟它的代数重数，写成 $\\lambda_1, m_1, \\lambda_2, m_2$（共 4 个数）。",
+   "answer": [
+    -2.0,
+    1.0,
+    3.0,
+    2.0
+   ],
+   "hint": "回头复习 $\\det(\\lambda I-W)$ 的求法；`W` 的第 2 行只有一个非零元素，按这一行展开会很快。"
+  },
+  "verify": "W = Matrix([[3, 1, 0], [0, 3, 0], [1, 0, -2]])\nd = W.eigenvals()\nresult = [v for k in sorted(d) for v in (k, d[k])]",
+  "sol": "$\\det(\\lambda I-W)$ 按第 2 行展开得 $(\\lambda-3)\\cdot\\big[(\\lambda-3)(\\lambda+2)\\big]=(\\lambda-3)^2(\\lambda+2)$。\n\n```python\n>>> W = Matrix([[3, 1, 0], [0, 3, 0], [1, 0, -2]])\n>>> W.eigenvals()\n{3: 2, -2: 1}\n>>> factor(W.charpoly(symbols('lamda')).as_expr())\n(lamda - 3)**2*(lamda + 2)\n```\n\n所以特征值 $-2$ 的代数重数为 1，特征值 $3$ 的代数重数为 2，答案是 $-2,1,3,2$。",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "matrices · 进阶方法 · 特征值",
+    "note": "自编，答案由 SymPy 1.14 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex7",
+  "stem": "先预测，再运行：\n\n```python\nfrom sympy import *\nJ = Matrix([[2, 1], [0, 2]])\nJ.eigenvals()\nJ.eigenvects()\nJ.diagonalize()\n```\n\n最后一行抛出了 `MatrixError`。原因是什么？",
+  "check": {
+   "kind": "choice",
+   "options": [
+    {
+     "ok": true,
+     "why": "可对角化需要每个特征值的几何重数等于代数重数，这里不满足。",
+     "text": "特征值 2 的代数重数是 2，但它只有 1 个线性无关的特征向量，几何重数 1 小于代数重数。"
+    },
+    {
+     "ok": false,
+     "why": "重特征值不是障碍：`2*eye(2)` 也有重特征值 2，却已经是对角阵。",
+     "text": "`J` 有重特征值，凡是有重特征值的矩阵都不能对角化。"
+    },
+    {
+     "ok": false,
+     "why": "`J.det()` 是 4，`J` 可逆；可逆与可对角化是两回事。",
+     "text": "`J` 不可逆，所以不能对角化。"
+    },
+    {
+     "ok": false,
+     "why": "对称矩阵一定可对角化，但可对角化不要求对称，教程里的 $4\\times4$ 例子就不对称。",
+     "text": "`J` 不是对称矩阵，SymPy 只能对角化对称矩阵。"
+    }
+   ],
+   "hint": "回头看 `eigenvects` 的返回：每个元组里代数重数与特征向量个数是否相等。"
+  },
+  "sol": "$J-2I=\\begin{pmatrix}0&1\\\\0&0\\end{pmatrix}$ 的零空间只有 1 维，凑不出两个线性无关的特征向量。\n\n```python\n>>> J = Matrix([[2, 1], [0, 2]])\n>>> J.eigenvals()\n{2: 2}\n>>> J.eigenvects()\n[(2, 2, [Matrix([\n[1],\n[0]])])]\n>>> J.det()\n4\n>>> (2*eye(2)).eigenvals()\n{2: 2}\n>>> J.diagonalize()\nMatrixError: Matrix is not diagonalizable\n```",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "matrices · 进阶方法 · 特征值、特征向量与对角化",
+    "note": "自编，答案由 SymPy 1.14 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex8",
+  "stem": "用对角化算矩阵的高次幂：$H^{10}=PD^{10}P^{-1}$，而对角阵的幂只需把对角线元素各自取幂。先预测 `D` 的对角线，再运行：\n\n```python\nfrom sympy import *\nH = Matrix([[4, 1], [2, 3]])\nP, D = H.diagonalize()\nP*D*P**-1 == H\nP*D**10*P**-1\n```",
+  "check": {
+   "kind": "numbers",
+   "ask": "按行从左到右、从上到下写出 `P*D**10*P**-1` 的 4 个元素。",
+   "answer": [
+    6510758.0,
+    3254867.0,
+    6509734.0,
+    3255891.0
+   ],
+   "hint": "先确认第三行输出是 `True`；然后看 `D` 的对角线元素，各自取 10 次幂后再乘回去。"
+  },
+  "verify": "H = Matrix([[4, 1], [2, 3]])\nP, D = H.diagonalize()\nresult = list(P*D**10*P**-1)",
+  "sol": "$H$ 的特征值是 2 和 5（$\\lambda^2-7\\lambda+10=0$），所以 $D^{10}=\\mathrm{diag}(2^{10},5^{10})$，$H^{10}=PD^{10}P^{-1}$。\n\n```python\n>>> H = Matrix([[4, 1], [2, 3]])\n>>> P, D = H.diagonalize()\n>>> D\nMatrix([\n[2, 0],\n[0, 5]])\n>>> P*D*P**-1 == H\nTrue\n>>> P*D**10*P**-1\nMatrix([\n[6510758, 3254867],\n[6509734, 3255891]])\n>>> H**10 == P*D**10*P**-1\nTrue\n```\n\n`H**10` 直接连乘也给同样的结果；对角化的价值在于 $n$ 很大或要符号地写出 $H^n$ 的通式时。",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "matrices · 进阶方法 · 对角化",
+    "note": "自编，答案由 SymPy 1.14 复算"
+   }
+  ]
+ }
+]

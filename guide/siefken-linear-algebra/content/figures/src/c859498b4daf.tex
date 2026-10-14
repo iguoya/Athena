@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+		\coordinate (A) at (2,0);
+		\coordinate (B) at (0,2);
+		\coordinate (C) at ($(B)+2*(A)$);
+		\coordinate (O) at (0,0);
+		\draw[fill,gray!30!white] (O) -- +(C) -- +($(A)+(C)$) -- +(A) -- (O);
+		\draw[->,thick,myred!60!white] (0,0) -- +(A) node [midway,below] {$\vec e_j$};
+		\draw[->,thick,gray,dashed] (0,0) -- +(B);
+		\draw[->,thick,gray,dashed] (B) -- +($2*(A)$);
+		\draw[->,thick,mypink] (0,0) -- +(C) node [midway,above left] {$\vec e_i+\alpha\vec e_j$};
+		\draw[black,dashed,<->] ($2.3*(A)$) -- ($2.3*(A)+(0,2)$) node [midway,right] {$\text{height}=1$};
+	\end{tikzpicture}

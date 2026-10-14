@@ -1,0 +1,1886 @@
+{
+ "id": "appendix1",
+ "title_en": "Systems of Linear Equations",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "An *equation* encodes a relationship between quantities. For example, writing",
+    "sha": "51974a6a2404",
+    "zh": "*方程*（equation）表达的是若干量之间的关系。例如，写下"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\underbrace{\\text{Slices of cake}}_C = \\underbrace{\\text{Slices you ate}}_M + \\underbrace{\\text{Slices your brother ate}}_B"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "specifies a precise relationship between the quantities $C$, $M$, and $B$. Without more information, $C$, $M$, and $B$ could be almost anything. As such, we call $C$, $M$, and $B$ *variables* or *unknowns*. However, the relationship *between* them is precisely defined.",
+    "sha": "5d7b59c94058",
+    "zh": "就给出了 $C$、$M$、$B$ 三个量之间的一个确定关系。没有更多信息时，$C$、$M$、$B$ 几乎可以取任何值，所以我们把 $C$、$M$、$B$ 称为*变量*或*未知数*。但是，它们*之间*的关系是完全确定的。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Additional relationships give rise to additional equations, which we express concisely as a *system of equations*, that is, a list of equations. For example, suppose you know the cake had six pieces and your brother ate twice as many pieces as you. We might now write the system",
+    "sha": "e854d7946f30",
+    "zh": "更多的关系会带来更多的方程，我们把它们简洁地写成一个*方程组*（system of equations），也就是一列方程。例如，假设你知道蛋糕一共切成了六块，而你弟弟吃的块数是你的两倍。现在可以写出方程组"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}C &= M + B \\\\\n  \t\tB &= 2M \\\\\n  \t\tC &= 6\\end{aligned}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "which should be interpreted as: “the relationship $C=M+B$ holds *and* the relationship $B=2M$ holds *and* the relationship $C=6$ holds.” All this information, taken together, is enough to deduce the unknowns: $M=2$, $B=4$, and $C=6$.",
+    "sha": "a9b1e1366d20",
+    "zh": "它应当这样理解：“关系 $C=M+B$ 成立，*并且*关系 $B=2M$ 成立，*并且*关系 $C=6$ 成立。”把这些信息合在一起，就足以推出各个未知数：$M=2$，$B=4$，$C=6$。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Systems of equations naturally appear in linear algebra through vector equations. Suppose $\\vec u=\\mat{1\\\\2}$, $\\vec v=\\mat{2\\\\3}$, and $\\vec w=\\mat{1\\\\1}$. You might wonder if $\\vec w$ was a linear combination of $\\vec u$ and $\\vec v$. The answer is *yes* if and only if the vector equation",
+    "sha": "bb68cafc9788",
+    "zh": "方程组很自然地通过向量方程出现在线性代数里。设 $\\vec u=\\mat{1\\\\2}$，$\\vec v=\\mat{2\\\\3}$，$\\vec w=\\mat{1\\\\1}$。你可能想知道 $\\vec w$ 是不是 $\\vec u$ 与 $\\vec v$ 的线性组合。答案是“是”，当且仅当向量方程"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec w=a\\vec u+b\\vec v"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "has a solution for some $a$ and $b$. Written in coordinates, this equation is equivalent to",
+    "sha": "4d79f2ce027a",
+    "zh": "对某些 $a$ 和 $b$ 有解。写成坐标形式，这个方程等价于"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mat{1\\\\1}=a\\mat{1\\\\2}+b\\mat{2\\\\3} = \\mat{a+2b\\\\2a+3b}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Equating coordinates, a system of equations appears:",
+    "sha": "456bbc646e6d",
+    "zh": "令各坐标分别相等，就得到一个方程组："
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}a+2b &= 1 \\\\ 2a+3b &= 1\\end{aligned}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Every vector equation, by way of coordinates, corresponds to a system of equations. And, fortunately for us, there is an *algorithm* to find all solutions to these systems 〔注： Saying there is an *algorithm* for “$X$” means that there is a specific set of (non-random) rules that *always* accomplishes “$X$”. As a consequence, doing “$X$” never requires special insight. For example, there *is* an algorithm for multiplying numbers, but there *is not* an algorithm for factoring polynomials of degree 5 or greater.〕.",
+    "sha": "69fa917fbaed",
+    "zh": "每个向量方程，通过坐标，都对应一个方程组。而且我们很幸运：求这类方程组的全部解有一套*算法*〔注：说存在求解“$X$”的*算法*，意思是有一套明确的（非随机的）规则，*总能*完成“$X$”。因此，做“$X$”这件事从不需要特别的灵感。例如，乘法运算*有*算法，但 5 次及以上多项式的因式分解*没有*算法。〕。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Systems of Linear Equations",
+    "sha": "42e86245ea1b",
+    "zh": "线性方程组"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There's no guarantee that a general equation, like $x^4-e^x+7=0$, has a solution, and it might be impossible to decide if an arbitrary equation has a solution, let alone what the solutions are! 〔注： Fermat's Last Theorem famously claimed that $a^n+b^n=c^n$ has no positive integer solutions for $n\\geq 3$. However, it took 350 years of human ingenuity before anyone was able rigorously back up the claim.〕 However, for *linear* equations and systems of linear equations we can *always* tell whether there is a solution and what the solution(s) are.",
+    "sha": "6efd889efad2",
+    "zh": "一般的方程，比如 $x^4-e^x+7=0$，并不保证有解，而且对任意给定的方程，我们甚至可能无法判定它有没有解，更别说解是什么了！〔注：费马大定理有一个著名的论断：当 $n\\geq 3$ 时，$a^n+b^n=c^n$ 没有正整数解。然而，人类花了 350 年的智慧，才有人严格证明了这个论断。〕不过，对于*线性*方程和线性方程组，我们*总能*判断有没有解，以及解是什么。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Linear Equation",
+    "sha": "b2001adaf00a",
+    "zh": "线性方程"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A *linear equation* in the variables $x_1,\\ldots,x_n$ is one that can be expressed as",
+      "sha": "a0692952887b",
+      "zh": "关于变量 $x_1,\\ldots,x_n$ 的*线性方程*，是指可以写成如下形式的方程"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "a_1x_1+a_2x_2+\\cdots+a_nx_n=c"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for constants $a_1,\\ldots, a_n$ and $c$. A *system of linear equations* is a system of equations consisting of one or more linear equations.",
+      "sha": "788e75468247",
+      "zh": "其中 $a_1,\\ldots, a_n$ 和 $c$ 为常数。*线性方程组*是由一个或多个线性方程组成的方程组。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Every vector equation corresponds to an *equivalent* system of linear equations and vice versa, where equivalent means “expresses the same relationships between variables”.",
+    "sha": "22cd236ce953",
+    "zh": "每个向量方程都对应一个*等价*的线性方程组，反之亦然；这里“等价”的意思是“表达的变量之间的关系相同”。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Write down the vector equation corresponding to the system of linear equations $\\begin{aligned}2x+3y+z &= 2 \\\\ y-z &= -1\\end{aligned}$ and the system of linear equations corresponding to the vector equation $t\\vec w+\\vec u=r\\vec v$ where $\\vec w=\\mat{1\\\\-1}$, $\\vec u=\\mat{2\\\\3}$, and $\\vec v=\\mat{4\\\\4}$.",
+      "sha": "96402f578b00",
+      "zh": "写出线性方程组 $\\begin{aligned}2x+3y+z &= 2 \\\\ y-z &= -1\\end{aligned}$ 对应的向量方程，以及向量方程 $t\\vec w+\\vec u=r\\vec v$ 对应的线性方程组，其中 $\\vec w=\\mat{1\\\\-1}$，$\\vec u=\\mat{2\\\\3}$，$\\vec v=\\mat{4\\\\4}$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The system $\\begin{aligned}2x+3y+z &= 2 \\\\ 0x+y-z &= -1\\end{aligned}$ corresponds to the vector equation",
+      "sha": "9620cd898a36",
+      "zh": "方程组 $\\begin{aligned}2x+3y+z &= 2 \\\\ 0x+y-z &= -1\\end{aligned}$ 对应的向量方程是"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "x\\mat{2\\\\0} + y\\mat{3\\\\1} + z\\mat{1\\\\-1} = \\mat{2\\\\-1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "As for the vector equation $t\\vec w+\\vec u=r\\vec v$, rewriting each vector in coordinates gives us a corresponding system of linear equations:",
+      "sha": "b610da2b00e7",
+      "zh": "至于向量方程 $t\\vec w+\\vec u=r\\vec v$，把每个向量都写成坐标形式，就得到对应的线性方程组："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}t\\vec w + \\vec u = r\\vec v\n\t\t\t\\rightarrow\n\t\t\tt\\mat{1\\\\-1} + \\mat{2\\\\3} &= r\\mat{4\\\\4}\\\\\n\t\t\t\\mat{t+2\\\\-t+3} &= \\mat{4r\\\\4r}\n\t\t\t\\rightarrow\n\t\t\t\\begin{aligned}t-4r &= -2 \\\\ -t-4r &= -3\\end{aligned}.\\end{aligned}"
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": "要点"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Every vector equation corresponds to a system of linear equations and every system of linear equations corresponds to a vector equation.",
+      "sha": "ad7ed411dc7f",
+      "zh": "每个向量方程都对应一个线性方程组，每个线性方程组也都对应一个向量方程。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Solution Sets",
+    "sha": "7a9125925b38",
+    "zh": "解集"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Before looking at how to solve systems of linear equations, let's agree on some terminology.",
+    "sha": "6ce076473a77",
+    "zh": "在讨论如何求解线性方程组之前，先约定一些术语。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A *solution* to an equation is a particular choice of values for the variables that satisfy (i.e. make true) the equation. For example",
+    "sha": "43fa69029b96",
+    "zh": "方程的一个*解*（solution）是对变量的一组特定取值，这组取值满足（即使之成立）这个方程。例如"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "x+y=4"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "has a solution $x=y=2$. However, $x=y=2$ is just one of *many* possible solutions; we also have $x=4$ and $y=0$ or $x=-2$ and $y=6$. The *solution set*, also called the *complete solution*, to an equation (or system of equations) is the set of all possible solutions. For example, the solution set to Equation 〔引用〕 is $S=\\Set{(x,y)\\given y=4-x}$. In this case, $S$ contains infinitely many solutions, including $(x,y)=(2,2)$, the first solution we found.",
+    "sha": "a12c9aaaf219",
+    "zh": "有一个解 $x=y=2$。但是，$x=y=2$ 只是*众多*可能的解之一；还有 $x=4$、$y=0$，或者 $x=-2$、$y=6$。一个方程（或方程组）的*解集*（solution set），也称为*完全解*，是所有可能的解组成的集合。例如，方程〔引用〕的解集是 $S=\\Set{(x,y)\\given y=4-x}$。这时 $S$ 含有无穷多个解，其中包括 $(x,y)=(2,2)$，也就是我们最先找到的那个解。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Solution sets look a lot like sets of vectors: the set $S=\\Set{(x,y)\\given y=4-x}$ could be thought of as a subset of $\\R^2$ where we identify a solution $x=a$ and $y=b$ with the column vector $\\mat{a\\\\b}$. Drawing $S$ as a subset of $\\R^2$, we see a familiar picture.",
+    "sha": "6e1af180a0da",
+    "zh": "解集看起来很像向量集合：集合 $S=\\Set{(x,y)\\given y=4-x}$ 可以看作 $\\R^2$ 的子集，只要把解 $x=a$、$y=b$ 与列向量 $\\mat{a\\\\b}$ 对应起来。把 $S$ 画成 $\\R^2$ 的子集，我们看到一幅熟悉的图像。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "0ed9d904721e"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It's the graph of the line given in $y=mx+b$ form by $y=-x+4$. In other words, *via solution sets, equations and systems of equations can represent geometric objects.*",
+    "sha": "fd4fab46da74",
+    "zh": "它是用 $y=mx+b$ 形式写出的直线 $y=-x+4$ 的图像。换句话说，*通过解集，方程和方程组可以表示几何对象。*"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Consistent & Inconsistent Systems",
+    "sha": "b171abaec191",
+    "zh": "相容与不相容的方程组"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Consider the following equations (as separate equations, not as a system):",
+    "sha": "f6133faa4890",
+    "zh": "考虑下面几个方程（它们是各自独立的方程，不是一个方程组）："
+   }
+  },
+  {
+   "k": "math",
+   "tex": "x^2=0\\qquad\\text{with solution set}\\qquad S_x\\subseteq \\R,"
+  },
+  {
+   "k": "math",
+   "tex": "y^2=4\\qquad\\text{with solution set}\\qquad S_y\\subseteq \\R,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and",
+    "sha": "cffa50a32cb1",
+    "zh": "以及"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "z^2=-1\\qquad\\text{with solution set}\\qquad S_z\\subseteq \\R."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "$S_x=\\Set{0}$ consists of a single number. $S_y=\\Set{2,-2}$ consists of two numbers, and $S_z=\\Set{}$ consists of no numbers 〔注： We're not allowing complex numbers at the moment.〕. In this case, we would call the first two equations *consistent* and the third equation *inconsistent*.",
+    "sha": "ea594928d3c5",
+    "zh": "$S_x=\\Set{0}$ 只含一个数，$S_y=\\Set{2,-2}$ 含两个数，而 $S_z=\\Set{}$ 不含任何数〔注：我们暂时不允许使用复数。〕。这时，我们把前两个方程称为*相容*（consistent）的，把第三个方程称为*不相容*（inconsistent）的。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Consistent & Inconsistent",
+    "sha": "9e1c3d6993a1",
+    "zh": "相容与不相容"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "An equation or system of equations is called *consistent* if it has at least one solution. That is, its solution set is non-empty. Otherwise, an equation or system of equations is called *inconsistent*.",
+      "sha": "720c7dfc03f9",
+      "zh": "如果一个方程或方程组至少有一个解（也就是说，它的解集非空），就称它是*相容*的；否则称它是*不相容*的。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Why the word *consistent*? This comes from the term *logically consistent* which means “able to be true”. An equation is an assertion that the left hand side equals the right hand side. If that can never happen, the assertion is not logically consistent.",
+    "sha": "47bbfd56a73d",
+    "zh": "为什么用“*相容*”这个词？它来自“*逻辑相容*”（logically consistent）这个术语，意思是“可以为真”。方程是一个断言，断言左边等于右边。如果这件事永远不可能发生，这个断言在逻辑上就是不相容的。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This terminology becomes more clear with systems. Consider the system",
+    "sha": "628dca963cef",
+    "zh": "对方程组来说，这个术语更清楚。考虑方程组"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}x-y &= 0 \\\\ x-y &= 1\\end{aligned}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "From the first equation, we deduce $y=x$. From the second equation, we deduce $x=1+y$. Since $x=x$, we know that $y=x=1+y$ and therefore $y=1+y$. However, this is never true! There is a logical inconsistency between the two equations. In isolation they're fine, but taken together they're not.",
+    "sha": "6b5d74b73dae",
+    "zh": "由第一个方程，我们推出 $y=x$。由第二个方程，我们推出 $x=1+y$。因为 $x=x$，所以 $y=x=1+y$，从而 $y=1+y$。但这永远不成立！这两个方程之间存在逻辑上的不相容。单独看它们都没问题，放在一起就不行了。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Equivalent Systems",
+    "sha": "d0e46118bf2c",
+    "zh": "同解方程组"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Two systems of equations are logically equivalent if they express the same relationships between their variables. For example, the equations $x=2y$ and $\\tfrac{1}{2}x=y$ express the exact same relationship between the variables $x$ and $y$. This can be formalized using solution sets.",
+    "sha": "2470e5f2f075",
+    "zh": "如果两个方程组表达的变量之间的关系相同，它们在逻辑上就是等价的。例如，方程 $x=2y$ 与 $\\tfrac{1}{2}x=y$ 表达的是变量 $x$ 与 $y$ 之间完全相同的关系。这可以用解集来严格表述。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Equivalent Systems",
+    "sha": "d0e46118bf2c",
+    "zh": "同解方程组"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Two equations or systems of equations are called *equivalent* if they have the same solution sets.",
+      "sha": "321e84d7f1b8",
+      "zh": "如果两个方程或方程组有相同的解集，就称它们是*同解*（等价）的。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Again, $x=2y$ and $\\tfrac{1}{2}x=y$ both have the same solution set (a line through the origin of slope $\\tfrac{1}{2}$), and so they are equivalent.",
+    "sha": "8be549f3706c",
+    "zh": "再看，$x=2y$ 与 $\\tfrac{1}{2}x=y$ 有相同的解集（一条过原点、斜率为 $\\tfrac{1}{2}$ 的直线），所以它们是等价的。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Philosophical note: the process of “doing algebra” can be viewed as the process of *manipulating equations/systems into easier to understand equivalent equations/systems*. When you're asked to algebraically solve $x^2-4=0$. You might first factor to get the equivalent equation $(x-2)(x+2)=0$. Then, since non-zero numbers cannot multiply to give zero, we know $x-2=0$ or $x+2=0$, which in turn is equivalent to $x=\\pm2$. It's always been about equivalent systems! 〔注： Technically, up to this point we've been talking about *conjunctive* systems, which means that a solution must hold for all equations of a system. The system $x=\\pm 2$ is a *disjunctive* system, which means a solution only needs to hold for *one* of the equations ($x=2$ or $x=-2$), but the idea is the same.〕",
+    "sha": "9ea415f44282",
+    "zh": "一点哲学上的说明：“做代数”的过程可以看成*把方程（组）变形成更容易理解的同解方程（组）*的过程。当你被要求用代数方法解 $x^2-4=0$ 时，可能会先因式分解，得到同解方程 $(x-2)(x+2)=0$。然后，因为两个非零数的乘积不会是零，所以 $x-2=0$ 或 $x+2=0$，这又与 $x=\\pm2$ 同解。一直以来，说的都是同解方程组！〔注：严格说来，到目前为止我们谈的都是*合取*方程组，意思是解必须同时满足方程组中的所有方程。而方程组 $x=\\pm 2$ 是*析取*方程组，意思是解只需要满足*其中一个*方程即可（$x=2$ 或 $x=-2$），但思想是一样的。〕"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Row Reduction",
+    "sha": "e63b6cecfa76",
+    "zh": "行化简"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Consider the vector equation",
+    "sha": "96c9a86cbc6b",
+    "zh": "考虑向量方程"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "t\\vec u+s\\vec v+r\\vec w = \\vec p\\qquad\\text{where}\\qquad \\vec u=\\mat{1\\\\2\\\\1},\\ \n\t\t\\vec v=\\mat{2\\\\1\\\\-4},\\ \\vec w=\\mat{-2\\\\-5\\\\1},\\ \\vec p=\\mat{-15\\\\-21\\\\18}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "By expanding in terms of coordinates, we get an equivalent system of linear equations.",
+    "sha": "e7a4108b956a",
+    "zh": "按坐标展开，我们得到一个等价的线性方程组。"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}t+2s-2r &= -15@\\qquad\\text{row}_1 \\\\ 2t+s-5r &= -21@\\qquad\\text{row}_2 \\\\ t-4s+r &= 18@\\qquad\\text{row}_3\\end{aligned}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The most general way to solve any system is by *substitution*. For System 〔引用〕, we could solve the first equation for $t$, substitute the result in the remaining equations, solve the next equation for $s$, etc.. However, because System 〔引用〕 is a *linear* system, there's an alternate method: *row reduction* 〔注： Row reduction is sometimes referred to as *Gaussian elimination*, *Gauss-Jordan elimination*, or just *elimination*; though there are subtle differences between Gaussian and Gauss-Jordan elimination, they aren't important, and we'll refer to all similar methods as *row reduction*.〕.",
+    "sha": "6618b950f639",
+    "zh": "解任何方程组最一般的方法是*代入法*。对于方程组〔引用〕，我们可以由第一个方程解出 $t$，把结果代入其余的方程，再由下一个方程解出 $s$，依此类推。不过，因为方程组〔引用〕是*线性*方程组，还有另一种方法：*行化简*（row reduction）〔注：行化简有时也称为*高斯消元法*、*高斯—若尔当消元法*，或者简称*消元法*；高斯消元法与高斯—若尔当消元法之间有一些细微的差别，但并不重要，我们把所有类似的方法统称为*行化简*。〕。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Study the following manipulations of System 〔引用〕 and convince yourself that each operation produces a system equivalent to the one it came from.",
+    "sha": "7958b747682b",
+    "zh": "仔细看下面对方程组〔引用〕做的各步变形，并让自己相信：每一步操作得到的方程组都与它的上一个方程组等价。"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}\\left\\{\\begin{aligned}t+2s-2r &= -15 \\\\ 2t+s-5r &= -21 \\\\ t-4s+r &= 18\\end{aligned}\\right.\n\t\t&\\xrightarrow{\\text{row}_3\\mapsto\\text{row}_3-\\text{row}_1}\n\t\\left\\{\\begin{aligned}t+2s-2r &= -15 \\\\ 2t+s-5r &= -21 \\\\ -6s+3r &= 33\\end{aligned}\\right.\\\\[4pt]\n\t\t&\\xrightarrow{\\text{row}_2\\mapsto\\text{row}_2-2\\text{row}_1}\n\t\\left\\{\\begin{aligned}t+2s-2r &= -15 \\\\ -3s-r &= 9 \\\\ -6s+3r &= 33\\end{aligned}\\right.\\\\[4pt]\n\t\t&\\xrightarrow{\\text{row}_3\\mapsto\\text{row}_3-2\\text{row}_2}\n\t\\left\\{\\begin{aligned}t+2s-2r &= -15 \\\\ -3s-r &= 9 \\\\ 5r &= 15\\end{aligned}\\right.\\end{aligned}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "From the final system, System 〔引用〕, it's easy to see that $r=3$. From there, we can substitute $r=3$ into the second row of System 〔引用〕 to find $s=-4$ and we can substitute both $r$ and $s$ into the first row of System 〔引用〕 to find $t=-1$.",
+    "sha": "4e720c013810",
+    "zh": "从最后得到的方程组〔引用〕可以直接看出 $r=3$。接着，把 $r=3$ 代入方程组〔引用〕的第二行，得到 $s=-4$；再把 $r$ 和 $s$ 一起代入方程组〔引用〕的第一行，得到 $t=-1$。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "By adding and subtracting rows, we “reduced” the number of variables from some equations until they were easy to solve. As an added benefit, every system along the way to System 〔引用〕 was nicely organized and formatted. In fact, the systems are so well organized that we can save time by not writing the variables and keeping track of the numbers in an *augmented matrix* 〔注： A *matrix* is a box of numbers. An *augmented matrix* is a matrix with extra information associated with it. 〕. That is, instead of writing",
+    "sha": "945e10f0d93f",
+    "zh": "通过对行做加减，我们把某些方程里的变量“化简”掉，直到方程容易求解。另一个好处是，从开头一直到方程组〔引用〕的每一个方程组，排版都整齐有序。事实上，这些方程组整齐到我们可以不写变量，只记录其中的数，放进一个*增广矩阵*（augmented matrix）里〔注：*矩阵*就是一个数表。*增广矩阵*是带有额外信息的矩阵。〕。也就是说，我们不写"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}t+2s-2r &= -15 \\\\ 2t+s-5r &= -21 \\\\ t-4s+r &= 18\\end{aligned}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "we will write",
+    "sha": "b1baaf4eaef6",
+    "zh": "而是写"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{bmatrix}[rrr|r]\n\t\t\t1&2&-2 & -15\\\\\n\t\t\t2&1&-5&-21\\\\\n\t\t\t1&-4&1&18\n\t\t\\end{bmatrix}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We call the matrix an *augmented matrix* to stress that it contains two types of information: the *coefficients* of the variables $t$, $s$, and $r$ and the *constants* on the right hand side of the equations. An (optional) vertical line separates the two types of numbers.",
+    "sha": "f2cc9e0141a0",
+    "zh": "我们把这个矩阵称为*增广矩阵*，是为了强调它包含两类信息：变量 $t$、$s$、$r$ 的*系数*，以及方程右边的*常数*。（可选的）一条竖线把这两类数分隔开。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Now, the process of row reduction looks like this:",
+    "sha": "b69a0663f385",
+    "zh": "现在，行化简的过程是这样的："
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}{\\footnotesize\n\t\t\\begin{aligned}t+2s-2r &= -15 \\\\ 2t+s-5r &= -21 \\\\ t-4s+r &= 18\\end{aligned}\n\t\t} \\rightarrow\n\t\t\\begin{bmatrix}[rrr|r]\n\t\t\t1&2&-2 & -15\\\\\n\t\t\t2&1&-5&-21\\\\\n\t\t\t1&-4&1&18\n\t\t\\end{bmatrix}\n\t\t&\\xrightarrow{\\text{row}_3\\mapsto\\text{row}_3-\\text{row}_1}\n\t\t\\begin{bmatrix}[rrr|r]\n\t\t\t1&2&-2 & -15\\\\\n\t\t\t2&1&-5&-21\\\\\n\t\t\t0&-6&3&33\n\t\t\\end{bmatrix}\\\\\n\t\t&\\xrightarrow{\\text{row}_2\\mapsto\\text{row}_2-2\\text{row}_1}\n\t\t\\begin{bmatrix}[rrr|r]\n\t\t\t1&2&-2 & -15\\\\\n\t\t\t0&-3&-1&9\\\\\n\t\t\t0&-6&3&33\n\t\t\\end{bmatrix}\\\\\n\t\t&\\xrightarrow{\\text{row}_3\\mapsto\\text{row}_3-2\\text{row}_2}\n\t\t\\begin{bmatrix}[rrr|r]\n\t\t\t1&2&-2 & -15\\\\\n\t\t\t0&-3&-1&9\\\\\n\t\t\t0&0&5&15\n\t\t\\end{bmatrix}\n\t\t\\rightarrow\n\t\t{\\footnotesize\n\t\t\t\\begin{aligned}t+2s-2r &= -15 \\\\ -3s-r &= 9 \\\\ 5r &= 15\\end{aligned}\n\t\t}\\end{aligned}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The operations are identical, but we write augmented matrices instead of equations.",
+    "sha": "ee65a2d88641",
+    "zh": "操作完全一样，只是我们写的是增广矩阵，而不是方程。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": "要点"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Augmented matrices are a notational tool that makes the process of doing row reduction more efficient.",
+      "sha": "a0e565352bab",
+      "zh": "增广矩阵是一种记号工具，能让行化简的过程更高效。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "The Rules of Row Reduction",
+    "sha": "eebd2ff7f206",
+    "zh": "行化简的规则"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "So far, we've been able to row reduce systems by adding a multiple of one row to another 〔注： Technically, we subtracted, but that's just adding a negative.〕, but to fully solve *any* system, we need additional operations 〔注： If you're clever, you can think up alternatives to the elementary row operations that work just as well, but there's good reason to favor the three elementary row operations. We'll see them when discussing matrix decompositions.〕.",
+    "sha": "f30801b858bb",
+    "zh": "到目前为止，我们都是把一行的若干倍加到另一行上来化简方程组〔注：严格说来，我们做的是减法，不过减法就是加上一个负数。〕，但要彻底解出*任意*方程组，我们还需要别的运算〔注：如果你足够聪明，可以想出初等行变换的其他替代方案，它们同样有效，但我们有充分的理由偏爱这三种初等行变换。在讨论矩阵分解时，我们会看到这些理由。〕。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Elementary Row Operations",
+    "sha": "e0490747c0ac",
+    "zh": "初等行变换"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The three *elementary row operations*, which can be performed on a matrix or system of equations, are",
+      "sha": "0736048efa75",
+      "zh": "可以对矩阵或方程组进行的三种*初等行变换*是"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "swapping two rows (written $\\text{row}_i\\leftrightarrow \\text{row}_j$),",
+         "sha": "91d88a233c42",
+         "zh": "交换两行（记作 $\\text{row}_i\\leftrightarrow \\text{row}_j$），"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "multiplying a row by a non-zero scalar (written $\\text{row}_i\\mapsto k\\,\\text{row}_i$), and",
+         "sha": "dbac246278fb",
+         "zh": "用一个非零的标量乘某一行（记作 $\\text{row}_i\\mapsto k\\,\\text{row}_i$），以及"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "adding a multiple of one row to another (written $\\text{row}_i\\mapsto \\text{row}_i+ k\\,\\text{row}_j$).",
+         "sha": "bc866e50cb5c",
+         "zh": "把某一行的倍数加到另一行上（记作 $\\text{row}_i\\mapsto \\text{row}_i+ k\\,\\text{row}_j$）。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Notice that each elementary row operation can be undone. For example, if you perform $\\text{row}_i\\mapsto k\\,\\text{row}_i$, you can undo it with $\\text{row}_i\\mapsto \\tfrac{1}{k}\\,\\text{row}_i$. Therefore, applying an elementary row operation to a system is guaranteed to produce an equivalent system.",
+    "sha": "7fd83f047915",
+    "zh": "注意，每一种初等行变换都可以撤销。例如，如果你做了 $\\text{row}_i\\mapsto k\\,\\text{row}_i$，就可以用 $\\text{row}_i\\mapsto \\tfrac{1}{k}\\,\\text{row}_i$ 把它撤销。因此，对方程组做一次初等行变换，必定得到一个等价的方程组。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The strategy for solving a system is now summarized as:",
+    "sha": "ff47ce70c1e9",
+    "zh": "解方程组的策略现在可以总结为："
+   }
+  },
+  {
+   "k": "list",
+   "ordered": true,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Rewrite the system as an augmented matrix.",
+       "sha": "09e17f56ca06",
+       "zh": "把方程组改写成增广矩阵。"
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Use elementary row operations to zero-out the lower triangle of the augmented matrix.",
+       "sha": "c67b2396af92",
+       "zh": "用初等行变换把增广矩阵的下三角部分化为零。"
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Convert the matrix back to a system of equations.",
+       "sha": "7ed1e3c8a8c1",
+       "zh": "把矩阵转换回方程组。"
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Read off the solution (substituting when necessary).",
+       "sha": "bd3433054890",
+       "zh": "读出解（必要时进行代入）。"
+      }
+     }
+    ]
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find a solution to the following system:",
+      "sha": "d1e3bdd03715",
+      "zh": "求下面方程组的一个解："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}a+3b+2c &= 1 \\\\ 2a+7b+5c &= 2 \\\\ -a-4b &= 11\\end{aligned}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To do so, we rewrite the system as an augmented matrix then row reduce.",
+      "sha": "8f6d240123f6",
+      "zh": "为此，我们先把方程组改写成增广矩阵，再做行化简。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}{\\footnotesize\n\t\t\t\\begin{aligned}a+3b+2c &= 1 \\\\ 2a+7b+5c &= 2 \\\\ -a-4b &= 11\\end{aligned}\n\t\t\t} \\rightarrow\n\t\t\t\\begin{bmatrix}[rrr|r]\n\t\t\t\t1&3&2 & 1\\\\\n\t\t\t\t2&7&5 & 2\\\\\n\t\t\t\t-1&-4&0 & 11\n\t\t\t\\end{bmatrix}\n\t\t\t&\\xrightarrow{\\text{row}_2\\mapsto\\text{row}_2-2\\text{row}_1}\n\t\t\t\\begin{bmatrix}[rrr|r]\n\t\t\t\t1&3&2 & 1\\\\\n\t\t\t\t0&1&1 & 0\\\\\n\t\t\t\t-1&-4&0 & 11\n\t\t\t\\end{bmatrix}\\\\\n\t\t\t&\\xrightarrow{\\text{row}_3\\mapsto\\text{row}_3+\\text{row}_1+\\text{row}_2}\n\t\t\t\\begin{bmatrix}[rrr|r]\n\t\t\t\t1&3&2 & 1\\\\\n\t\t\t\t0&1&1 & 0\\\\\n\t\t\t\t0&0&3 & 12\n\t\t\t\\end{bmatrix}\n\t\t\t\\rightarrow\n\t\t\t{\\footnotesize\n\t\t\t\t\\begin{aligned}a+3b+2c &= 1 \\\\ b+c &= 0 \\\\ 3c &= 12\\end{aligned}\n\t\t\t}\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The third row reveals that $c=4$; substituting into the second row, we find $b=-4$. Now we can substitute $b=-4$ and $c=4$ into the first row and we obtain $a=5$.",
+      "sha": "7afc936a1713",
+      "zh": "第三行告诉我们 $c=4$；代入第二行，得到 $b=-4$。再把 $b=-4$ 和 $c=4$ 代入第一行，得到 $a=5$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Thus, the solution is $\\mat{a\\\\b\\\\c}=\\mat{5\\\\-4\\\\4}$. Since this is the only solution to the system, the solution set is $\\Set{\\mat{5\\\\-4\\\\4}}$.",
+      "sha": "d6b6144a3851",
+      "zh": "所以解是 $\\mat{a\\\\b\\\\c}=\\mat{5\\\\-4\\\\4}$。因为这是方程组唯一的解，所以解集是 $\\Set{\\mat{5\\\\-4\\\\4}}$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Solve the system",
+      "sha": "8cba04adf08a",
+      "zh": "解方程组"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}3t+s+13r &= -2 \\\\ t+5r &= 1 \\\\ -t+s-6r &= -8 \\\\ t+s+4r &= -6\\end{aligned}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Again, we row reduce the corresponding augmented matrix to find an equivalent system from which we can more easily compute the solution.",
+      "sha": "fa066f3c0a42",
+      "zh": "同样地，我们对相应的增广矩阵做行化简，得到一个等价的方程组，从中更容易算出解。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}{\\footnotesize\n\t\t\t\\begin{aligned}3t+s+13r &= -2 \\\\ t+5r &= 1 \\\\ -t+s-6r &= -8 \\\\ t+s+4r &= -6\\end{aligned}\n\t\t\t} \\rightarrow\n\t\t\t\\begin{bmatrix}[rrr|r]\n\t\t\t\t3&1&13 & -2\\\\\n\t\t\t\t1&0&5 & 1\\\\\n\t\t\t\t-1&1&-6 & -8\\\\\n\t\t\t\t1&1&4 & -6\n\t\t\t\\end{bmatrix}\n\t\t\t&\\xrightarrow{\\text{row}_1\\leftrightarrow\\text{row}_2}\n\t\t\t\\begin{bmatrix}[rrr|r]\n\t\t\t\t1&0&5 & 1\\\\\n\t\t\t\t3&1&13 & -2\\\\\n\t\t\t\t-1&1&-6 & -8\\\\\n\t\t\t\t1&1&4 & -6\n\t\t\t\\end{bmatrix}\\\\\n\t\t\t&\\xrightarrow{\\text{row}_2\\mapsto\\text{row}_2-3\\text{row}_1}\n\t\t\t\\begin{bmatrix}[rrr|r]\n\t\t\t\t1&0&5 & 1\\\\\n\t\t\t\t0&1&-2 & -5\\\\\n\t\t\t\t-1&1&-6 & -8\\\\\n\t\t\t\t1&1&4 & -6\n\t\t\t\\end{bmatrix}\\\\\n\t\t\t&\\xrightarrow{\\text{row}_3\\mapsto\\text{row}_3+\\text{row}_1-\\text{row}_2}\n\t\t\t\\begin{bmatrix}[rrr|r]\n\t\t\t\t1&0&5 & 1\\\\\n\t\t\t\t0&1&-2 & -5\\\\\n\t\t\t\t0&0&1 & -2\\\\\n\t\t\t\t1&1&4 & -6\n\t\t\t\\end{bmatrix}\\\\\n\t\t\t&\\xrightarrow{\\text{row}_4\\mapsto\\text{row}_4-\\text{row}_1-\\text{row}_2}\n\t\t\t\\begin{bmatrix}[rrr|r]\n\t\t\t\t1&0&5 & 1\\\\\n\t\t\t\t0&1&-2 & -5\\\\\n\t\t\t\t0&0&1 & -2\\\\\n\t\t\t\t0&0&1 & -2\n\t\t\t\\end{bmatrix}\\\\\n\t\t\t&\\xrightarrow{\\text{row}_4\\mapsto\\text{row}_4-\\text{row}_3}\n\t\t\t\\begin{bmatrix}[rrr|r]\n\t\t\t\t1&0&5 & 1\\\\\n\t\t\t\t0&1&-2 & -5\\\\\n\t\t\t\t0&0&1 & -2\\\\\n\t\t\t\t0&0&0 & 0\n\t\t\t\\end{bmatrix}\n\t\t\t\\rightarrow\n\t\t\t{\\footnotesize\n\t\t\t\t\\begin{aligned}t+5r &= 1 \\\\ s-2r &= -5 \\\\ r &= -2 \\\\ 0 &= 0\\end{aligned}\n\t\t\t}\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Our equivalent system reveals $r=-2$, which we can substitute back into the first and second rows to find that $t=11$ and $s=-9$.",
+      "sha": "700bd600a728",
+      "zh": "这个等价的方程组给出 $r=-2$，把它代回第一行和第二行，得到 $t=11$，$s=-9$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "As a vector, the solution is $\\mat{t\\\\s\\\\r}=\\mat{11\\\\-9\\\\-2}$ and so the solution set is $\\Set{\\mat{11\\\\-9\\\\-2}}$.",
+      "sha": "3cf007d60c72",
+      "zh": "写成向量，解是 $\\mat{t\\\\s\\\\r}=\\mat{11\\\\-9\\\\-2}$，所以解集是 $\\Set{\\mat{11\\\\-9\\\\-2}}$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In the examples so far, we've stopped row reducing when the equations became simple enough to solve by inspection. However, we could continue row reducing until the system is as simple as possible.",
+    "sha": "21181dc71eef",
+    "zh": "在前面的例子里，我们一旦把方程化到简单得可以直接看出解，就停止了行化简。然而，我们也可以继续行化简，直到方程组简单到不能再简单。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Solve the system",
+      "sha": "8cba04adf08a",
+      "zh": "解方程组"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}a+3b+2c &= 1 \\\\ 2a+7b+5c &= 2 \\\\ -a-4b &= 11\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Notice that we solved this system using a combination of row reduction and substitution in a previous example. This time, let us use only row reduction.",
+      "sha": "9b254308a439",
+      "zh": "注意，在前面的一个例子里，我们是结合行化简与代入来解这个方程组的。这一次，我们只用行化简。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The augmented matrix for this system is",
+      "sha": "55ac99b4cba3",
+      "zh": "这个方程组的增广矩阵是"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{bmatrix}[rrr|r]\n\t\t\t\t1&3&2 & 1\\\\\n\t\t\t\t2&7&5 & 2\\\\\n\t\t\t\t-1&-4&0 & 11\n\t\t\t\\end{bmatrix}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Based on the work from the previous example, we know it can be reduced to",
+      "sha": "00a02b7c673d",
+      "zh": "根据前面例子里的计算，我们知道它可以化简为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{bmatrix}[rrr|r]\n\t\t\t\t1&3&2 & 1\\\\\n\t\t\t\t0&1&1 & 0\\\\\n\t\t\t\t0&0&3 & 12\n\t\t\t\\end{bmatrix}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Now let us continue row reducing.",
+      "sha": "28370e9ea2a1",
+      "zh": "现在继续行化简。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}\\begin{bmatrix}[rrr|r]\n\t\t\t\t1&3&2 & 1\\\\\n\t\t\t\t0&1&1 & 0\\\\\n\t\t\t\t0&0&3 & 12\n\t\t\t\\end{bmatrix}\n\t\t\t&\\xrightarrow{\\text{row}_3\\mapsto\\tfrac{1}{3}\\,\\text{row}_3}\n\t\t\t\\begin{bmatrix}[rrr|r]\n\t\t\t\t1&3&2 & 1\\\\\n\t\t\t\t0&1&1 & 0\\\\\n\t\t\t\t0&0&1 & 4\n\t\t\t\\end{bmatrix}\\\\\n\t\t\t&\\xrightarrow{\\text{row}_2\\mapsto\\text{row}_2-\\text{row}_3}\n\t\t\t\\begin{bmatrix}[rrr|r]\n\t\t\t\t1&3&2 & 1\\\\\n\t\t\t\t0&1&0 & -4\\\\\n\t\t\t\t0&0&1 & 4\n\t\t\t\\end{bmatrix}\\\\\n\t\t\t&\\xrightarrow{\\text{row}_1\\mapsto\\text{row}_1-3\\text{row}_2-2\\text{row}_3}\n\t\t\t\\begin{bmatrix}[rrr|r]\n\t\t\t\t1&0&0 & 5\\\\\n\t\t\t\t0&1&0 & -4\\\\\n\t\t\t\t0&0&1 & 4\n\t\t\t\\end{bmatrix}\n\t\t\t\\rightarrow\n\t\t\t{\\footnotesize\n\t\t\t\t\\begin{aligned}a &= 5 \\\\ b &= -4 \\\\ c &= 4\\end{aligned}\n\t\t\t}\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The solution is $\\mat{a\\\\b\\\\c}=\\mat{5\\\\-4\\\\4}$ and the solution set is $\\Set{\\mat{5\\\\-4\\\\4}}$, which is the same as we got before.",
+      "sha": "d6120a5bc1aa",
+      "zh": "解是 $\\mat{a\\\\b\\\\c}=\\mat{5\\\\-4\\\\4}$，解集是 $\\Set{\\mat{5\\\\-4\\\\4}}$，与之前得到的一样。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "What happens when you apply row reduction to an inconsistent system? Let's see. Consider the system",
+    "sha": "7932649d8845",
+    "zh": "对不相容的方程组做行化简会发生什么？我们来看看。考虑方程组"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}x+y &= 1 \\\\ 4x+4y &= 7\\end{aligned}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Before continuing, convince yourself that this system is inconsistent. The augmented matrix for System 〔引用〕 is",
+    "sha": "14875d6f033e",
+    "zh": "继续之前，先让自己相信这个方程组是不相容的。方程组〔引用〕的增广矩阵是"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{bmatrix}[cc|c]1&1&1\\\\4&4&7\\end{bmatrix}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We apply the row operation $\\text{row}_2\\mapsto \\text{row}_2-4\\text{row}_1$ to get",
+    "sha": "60e65f93b625",
+    "zh": "我们做行变换 $\\text{row}_2\\mapsto \\text{row}_2-4\\text{row}_1$，得到"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{bmatrix}[cc|c]1&1&1\\\\0&0&3\\end{bmatrix},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "which corresponds to the system",
+    "sha": "59bfbf8e320a",
+    "zh": "它对应的方程组是"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}x+y &= 1 \\\\ 0x+0y &= 3\\end{aligned}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "But, the last equation says $0x+0y=3$, which is not true for any choice of $x$ and $y$! Thus, we see applying row reduction to an inconsistent system reveals its inconsistency.",
+    "sha": "918ecc2858d5",
+    "zh": "但最后一个方程说 $0x+0y=3$，无论 $x$、$y$ 取什么值，它都不成立！由此可见，对不相容的方程组做行化简，会暴露出它的不相容性。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find a solution to the following system:",
+      "sha": "d1e3bdd03715",
+      "zh": "求下面方程组的一个解："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}x+z &= 4 \\\\ x+y+2z &= -8 \\\\ x+3y+4z &= -18\\end{aligned}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "As usual we rewrite the system as an augmented matrix and then row reduce.",
+      "sha": "2420c69cdafb",
+      "zh": "和往常一样，我们把方程组改写成增广矩阵，然后做行化简。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}{\\footnotesize\n\t\t\t\\begin{aligned}x+z &= 4 \\\\ x+y+2z &= -8 \\\\ x+3y+4z &= -18\\end{aligned}\n\t\t\t} \\rightarrow\n\t\t\t\\begin{bmatrix}[rrr|r]\n\t\t\t\t1&0&1 & 4\\\\\n\t\t\t\t1&1&2 & -8\\\\\n\t\t\t\t1&3&4 & -18\n\t\t\t\\end{bmatrix}\n\t\t\t&\\xrightarrow{\\text{row}_3\\mapsto\\text{row}_3-\\text{row}_2}\n\t\t\t\\begin{bmatrix}[rrr|r]\n\t\t\t\t1&0&1 & 4\\\\\n\t\t\t\t1&1&2 & -8\\\\\n\t\t\t\t0&2&2 & -10\n\t\t\t\\end{bmatrix}\\\\\n\t\t\t&\\xrightarrow{\\text{row}_2\\mapsto\\text{row}_2-\\text{row}_1}\n\t\t\t\\begin{bmatrix}[rrr|r]\n\t\t\t\t1&0&1 & 4\\\\\n\t\t\t\t0&1&1 & -12\\\\\n\t\t\t\t0&2&2 & -10\n\t\t\t\\end{bmatrix}\\\\\n\t\t\t&\\xrightarrow{\\text{row}_3\\mapsto\\text{row}_3-2\\text{row}_2}\n\t\t\t\\begin{bmatrix}[rrr|r]\n\t\t\t\t1&0&1 & 4\\\\\n\t\t\t\t0&1&1 & -12\\\\\n\t\t\t\t0&0&0 & 14\n\t\t\t\\end{bmatrix}\n\t\t\t\\rightarrow\n\t\t\t{\\footnotesize\n\t\t\t\t\\begin{aligned}x+z &= 4 \\\\ y+z &= -12 \\\\ 0x+0y+0z &= 14\\end{aligned}\n\t\t\t}\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The equation $0x + 0y + 0z = 14$ is never true and so the system is inconsistent. Since there are no values of $x$, $y$, and $z$ that satisfy the system, the solution set is $\\Set{}$, the empty set.",
+      "sha": "dd576f2d18e7",
+      "zh": "方程 $0x + 0y + 0z = 14$ 永远不成立，所以这个方程组不相容。因为没有任何 $x$、$y$、$z$ 的取值能满足这个方程组，所以解集是 $\\Set{}$，即空集。"
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each equation given below, determine if it is a linear equation. If not, explain what makes it nonlinear.",
+      "sha": "0e187547bbfc",
+      "zh": "对下面给出的每个方程，判断它是否为线性方程。如果不是，说明是什么使它成为非线性的。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\cos(4)x_{1}+\\mathrm{e}y_{2}+\\pi z_{3}=\\mathrm{e}^{\\pi}$",
+         "sha": "f5d2f122bd76",
+         "zh": "$\\cos(4)x_{1}+\\mathrm{e}y_{2}+\\pi z_{3}=\\mathrm{e}^{\\pi}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$4x_{1}+2x_{2}+5x_{4}=4x_{2}+4x_{5}+5$",
+         "sha": "a81ad648d8db",
+         "zh": "$4x_{1}+2x_{2}+5x_{4}=4x_{2}+4x_{5}+5$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$5x+2y+8z=\\cos(y)$",
+         "sha": "a7525b0d9011",
+         "zh": "$5x+2y+8z=\\cos(y)$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$12x+3xy+5z=2$",
+         "sha": "28fb3459235d",
+         "zh": "$12x+3xy+5z=2$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\cos(4)x+\\sin(4)y=\\tan(4)x$",
+         "sha": "53c09953cccf",
+         "zh": "$\\cos(4)x+\\sin(4)y=\\tan(4)x$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\frac{x}{y}=1$",
+         "sha": "1b0a25df9193",
+         "zh": "$\\frac{x}{y}=1$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Linear equation.",
+         "sha": "d9865cec3aad",
+         "zh": "是线性方程。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Linear equation.",
+         "sha": "d9865cec3aad",
+         "zh": "是线性方程。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not a linear equation because of the $\\cos(y)$ term.",
+         "sha": "09f08c8c160a",
+         "zh": "不是线性方程，因为含有 $\\cos(y)$ 项。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not a linear equation because of the $3xy$ term.",
+         "sha": "95ad017039f0",
+         "zh": "不是线性方程，因为含有 $3xy$ 项。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Linear equation.",
+         "sha": "d9865cec3aad",
+         "zh": "是线性方程。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not a linear equation because of the $\\frac{x}{y}$ term. Note that it is *almost* equivalent to the equation $x=y$, but they are not equivalent because $x = 0,y = 0$ is a solution to the latter equation but not the former.",
+         "sha": "044c5990c903",
+         "zh": "不是线性方程，因为含有 $\\frac{x}{y}$ 项。注意，它*几乎*与方程 $x=y$ 等价，但并不等价，因为 $x = 0,y = 0$ 是后一个方程的解，却不是前一个方程的解。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Systems of Linear Equations · 练习题 1（上游 book/modules/appendix1-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix1-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Convert each vector equation given below to a system of linear equations.",
+      "sha": "b2083fa17985",
+      "zh": "把下面给出的每个向量方程转换成线性方程组。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$x\\mat{1 \\\\ -1 \\\\ 0}+y\\mat{0 \\\\ 1 \\\\ 0}+z\\mat{4 \\\\ 6 \\\\ 1}=\\mat {2 \\\\ -5 \\\\ 2}$",
+         "sha": "4c521f7a199b",
+         "zh": "$x\\mat{1 \\\\ -1 \\\\ 0}+y\\mat{0 \\\\ 1 \\\\ 0}+z\\mat{4 \\\\ 6 \\\\ 1}=\\mat {2 \\\\ -5 \\\\ 2}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$x\\mat{7 \\\\ 16}+y\\mat{8 \\\\ 13}=\\mat{11 \\\\ 30}$",
+         "sha": "85fabff0acbe",
+         "zh": "$x\\mat{7 \\\\ 16}+y\\mat{8 \\\\ 13}=\\mat{11 \\\\ 30}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec u+t\\vec u - s(\\vec v+\\vec w)=\\vec 0$ where $\\vec u=\\mat{1\\\\1}$, $\\vec v=\\mat{2\\\\-1}$, and $\\vec w=\\mat{3\\\\4}$.",
+         "sha": "56bedc385532",
+         "zh": "$\\vec u+t\\vec u - s(\\vec v+\\vec w)=\\vec 0$，其中 $\\vec u=\\mat{1\\\\1}$，$\\vec v=\\mat{2\\\\-1}$，$\\vec w=\\mat{3\\\\4}$。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\begin{aligned}x+4z &= 2 \\\\ -x+y+6z &= -5 \\\\ z &= 2\\end{aligned}$",
+         "sha": "f6a28395d27d",
+         "zh": "$\\begin{aligned}x+4z &= 2 \\\\ -x+y+6z &= -5 \\\\ z &= 2\\end{aligned}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\begin{aligned}7x+8y &= 11 \\\\ 16x+13y &= 30\\end{aligned}$",
+         "sha": "82fc44fd9b0b",
+         "zh": "$\\begin{aligned}7x+8y &= 11 \\\\ 16x+13y &= 30\\end{aligned}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\begin{aligned}t-5s &= -1 \\\\ t-3s &= -1\\end{aligned}$",
+         "sha": "15b5b32a62c9",
+         "zh": "$\\begin{aligned}t-5s &= -1 \\\\ t-3s &= -1\\end{aligned}$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Systems of Linear Equations · 练习题 2（上游 book/modules/appendix1-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix1-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Convert each system of linear equations given below to a vector equation.",
+      "sha": "0db002908634",
+      "zh": "把下面给出的每个线性方程组转换成向量方程。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\begin{aligned}4x_2+2x_3 &= 0 \\\\ x_1+2x_3 &= 0 \\\\ 9x_2+2x_3 &= 1\\end{aligned}$",
+         "sha": "c8f03495ad17",
+         "zh": "$\\begin{aligned}4x_2+2x_3 &= 0 \\\\ x_1+2x_3 &= 0 \\\\ 9x_2+2x_3 &= 1\\end{aligned}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\begin{aligned}0x+0y+0z &= 0 \\\\ x+y+z &= 3\\end{aligned}$",
+         "sha": "bb5857259d57",
+         "zh": "$\\begin{aligned}0x+0y+0z &= 0 \\\\ x+y+z &= 3\\end{aligned}$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$x_{1}\\mat{0 \\\\ 1 \\\\ 0}+x_{2}\\mat{4 \\\\ 0 \\\\ 9}+x_{3}\\mat{2 \\\\ 2 \\\\ 2} =\\mat{0 \\\\ 0 \\\\ 1}$",
+         "sha": "e6b2058b796e",
+         "zh": "$x_{1}\\mat{0 \\\\ 1 \\\\ 0}+x_{2}\\mat{4 \\\\ 0 \\\\ 9}+x_{3}\\mat{2 \\\\ 2 \\\\ 2} =\\mat{0 \\\\ 0 \\\\ 1}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$x\\mat{0 \\\\ 1}+y\\mat{0 \\\\ 1}+z\\mat{0 \\\\ 1}=\\mat {0 \\\\ 3}$",
+         "sha": "2d7b106ff465",
+         "zh": "$x\\mat{0 \\\\ 1}+y\\mat{0 \\\\ 1}+z\\mat{0 \\\\ 1}=\\mat {0 \\\\ 3}$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Systems of Linear Equations · 练习题 3（上游 book/modules/appendix1-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix1-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the vector equation $x\\mat{2 \\\\ 4}+y\\mat{8 \\\\ 16}=\\vec b$ where $\\vec b$ is unknown.",
+      "sha": "d3f4aaee6ed4",
+      "zh": "考虑向量方程 $x\\mat{2 \\\\ 4}+y\\mat{8 \\\\ 16}=\\vec b$，其中 $\\vec b$ 未知。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Show that if $\\vec b=\\mat{7 \\\\ 14}$, the system is consistent.",
+         "sha": "734c3a45deb6",
+         "zh": "证明：如果 $\\vec b=\\mat{7 \\\\ 14}$，这个方程组是相容的。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Are there other vectors $\\vec b$ that make the system consistent? If so, how many? Justify your answer.",
+         "sha": "2ad95ca13c1d",
+         "zh": "还有其他的向量 $\\vec b$ 能使这个方程组相容吗？如果有，有多少个？说明你的理由。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Show that if $\\vec b=\\mat{5 \\\\ 12}$, the system is inconsistent.",
+         "sha": "593f970c916a",
+         "zh": "证明：如果 $\\vec b=\\mat{5 \\\\ 12}$，这个方程组是不相容的。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Are there other vectors $\\vec b$ that make the system inconsistent? If so, how many? Justify your answer.",
+         "sha": "120c7ed0ca5f",
+         "zh": "还有其他的向量 $\\vec b$ 能使这个方程组不相容吗？如果有，有多少个？说明你的理由。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $\\vec b=\\mat{7 \\\\ 14}$, then the vector equation becomes",
+         "sha": "71dbad2065b3",
+         "zh": "如果 $\\vec b=\\mat{7 \\\\ 14}$，向量方程就变成"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "x\\mat{2 \\\\ 4}+y\\mat{8 \\\\ 16}=\\mat{7 \\\\ 14}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Converting it to a system of linear equations and row reducing we get",
+         "sha": "0c12f998d417",
+         "zh": "把它转换成线性方程组并做行化简，得到"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}2x+8y &= 7 \\\\ 4x+16y &= 14\\end{aligned}\\rightarrow \\begin{aligned}x+4y &= 3.5 \\\\ 0x+0y &= 0\\end{aligned}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "The solution to this system is then",
+         "sha": "7e0a8a567099",
+         "zh": "于是这个方程组的解是"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\left\\{\n\t\t\t\t\t\t\\begin{array}\n\t\t\t\t\t\t\t{ccc} x & = & 3.5-4t \\\\ y & = & t\n\t\t\t\t\t\t\\end{array}\\right. (t\\in \\R)."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "This system is consistent.",
+         "sha": "ad1478dccbba",
+         "zh": "这个方程组是相容的。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "There are vectors $\\vec{b}$ that makes the system consistent. For instance, any vector $\\vec b = \\vec b=\\mat{t \\\\ 2t}$ where $t\\in\\R$ makes the system consistent. Since there are infinitely many real numbers, we conclude that there are infinitely many vectors $\\vec b$ that makes the system consistent.",
+         "sha": "a001cad5fe88",
+         "zh": "有一些向量 $\\vec{b}$ 使方程组相容。例如，任何形如 $\\vec b = \\vec b=\\mat{t \\\\ 2t}$（其中 $t\\in\\R$）的向量都使方程组相容。因为实数有无穷多个，所以我们得出结论：使方程组相容的向量 $\\vec b$ 有无穷多个。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $\\vec b=\\mat{5 \\\\ 14}$, then the vector equation becomes",
+         "sha": "8858887b3190",
+         "zh": "如果 $\\vec b=\\mat{5 \\\\ 14}$，向量方程就变成"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "x\\mat{2 \\\\ 4}+y\\mat{8 \\\\ 16}=\\mat{5 \\\\ 12}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Converting it to a system of linear equations and row reducing we get",
+         "sha": "0c12f998d417",
+         "zh": "把它转换成线性方程组并做行化简，得到"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}2x+8y &= 5 \\\\ 4x+16y &= 12\\end{aligned}\\rightarrow \\begin{aligned}x+4y &= 2.5 \\\\ 0x+0y &= 2\\end{aligned}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "This system is inconsistent.",
+         "sha": "2d96f71524d1",
+         "zh": "这个方程组是不相容的。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "There are vectors $\\vec b$ that makes the system inconsistent. For instance, $\\mat{10 \\\\ 24}$ is is such a vector. In general, any vector $\\vec b$ with $\\vec b=\\mat{5t \\\\ 12t}$ where $t\\in\\R$ ($t\\ne 0$) makes the system inconsistent. Since there are infinitely many real numbers, we conclude that there are infinitely many vectors $\\vec b$ that makes the system inconsistent.",
+         "sha": "315613a68918",
+         "zh": "有一些向量 $\\vec b$ 使方程组不相容。例如，$\\mat{10 \\\\ 24}$ 就是这样的向量。一般地，任何形如 $\\vec b=\\mat{5t \\\\ 12t}$（其中 $t\\in\\R$，$t\\ne 0$）的向量 $\\vec b$ 都使方程组不相容。因为实数有无穷多个，所以我们得出结论：使方程组不相容的向量 $\\vec b$ 有无穷多个。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Systems of Linear Equations · 练习题 4（上游 book/modules/appendix1-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix1-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "On Kokoro's farm, there is a cage with $35$ animals, some of which are chickens and some of which are rabbits. Kokoro counted the total number of legs in the cage and found that there were $94$ legs in all (notably, each chicken has exactly two legs and each rabbit has four legs). Kokoro decides to use this information to figure out how many chickens and how many rabbits there are 〔注： This problem based on a classical Chinese problem from the ancient Chinese treatise *Mathematical Classic of Master Sun* (or *Sunzi Suanjing*) written during 3rd to 5th centuries \\textsca.d.〕.",
+      "sha": "b7c9e06da366",
+      "zh": "在 Kokoro 的农场里，有一个笼子装着 $35$ 只动物，其中一些是鸡，一些是兔。Kokoro 数了笼子里腿的总数，发现一共有 $94$ 条腿（要注意，每只鸡恰有两条腿，每只兔有四条腿）。Kokoro 决定用这条信息算出鸡和兔各有多少只〔注：这道题改编自一道中国古代的经典问题，出自公元 3 至 5 世纪写成的中国古代算书《孙子算经》（*Sunzi Suanjing*，英文名 *Mathematical Classic of Master Sun*）。〕。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Set up a system of linear equations that you could solve to answer Kokoro's question.",
+         "sha": "3b2e97859afa",
+         "zh": "列出一个线性方程组，通过求解它就能回答 Kokoro 的问题。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Is the system consistent? If so, answer Kokoro's question.",
+         "sha": "407078be29d1",
+         "zh": "这个方程组相容吗？如果相容，回答 Kokoro 的问题。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Kokoro wants to set up three other cages. For each described cage below, explain using complete English sentences, whether such a configuration is possible. Justify your answers using linear algebra.",
+         "sha": "dd8860533a90",
+         "zh": "Kokoro 想再布置三个笼子。对下面描述的每个笼子，用完整的句子说明这样的配置是否可能，并用线性代数说明你的理由。"
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Kokoro wants to set up a cage with *cats* and *dogs* (notably, each cat has exactly four legs and each dog has four legs) so that there are $35$ animals in total, and the total number of legs is $94$.",
+            "sha": "4b5218925973",
+            "zh": "Kokoro 想布置一个装*猫*和*狗*的笼子（要注意，每只猫恰有四条腿，每只狗也有四条腿），使动物总共有 $35$ 只，腿的总数为 $94$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Kokoro wants to set up a cage with *cats* and *dogs* so that there are $35$ animals in total, and the total number of legs is $140$.",
+            "sha": "f6439317d5b8",
+            "zh": "Kokoro 想布置一个装*猫*和*狗*的笼子，使动物总共有 $35$ 只，腿的总数为 $140$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Kokoro wants to set up a cage with *chickens* and *rabbits* so that there are $42$ animals in total, and the total number of legs is $77$.",
+            "sha": "0e3d1acae90b",
+            "zh": "Kokoro 想布置一个装*鸡*和*兔*的笼子，使动物总共有 $42$ 只，腿的总数为 $77$。"
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $x$ be the number of chickens, and let $y$ be the number of rabbits. Using the information given in the problem, we have",
+         "sha": "4f99e751b7ea",
+         "zh": "设 $x$ 为鸡的只数，$y$ 为兔的只数。根据题目给出的信息，有"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}x+y &= 35 \\\\ 2x+4y &= 94\\end{aligned}."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Row reducing",
+         "sha": "b86d22540911",
+         "zh": "对"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}x+y &= 35 \\\\ 2x+4y &= 94\\end{aligned},"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "we get",
+         "sha": "d2d344955680",
+         "zh": "做行化简，得到"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}x+y &= 35 \\\\ y &= 12\\end{aligned}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "This shows that the system is consistent. The solution to this system is $x=23, y=12$. Thus, there are 23 chickens and 12 rabbits in the farm.",
+         "sha": "ac8f0733dace",
+         "zh": "这说明方程组是相容的。这个方程组的解是 $x=23, y=12$。因此，农场的笼子里有 23 只鸡和 12 只兔。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Before discussing each configuration, we point out that a configuration is possible if there exists a natural number solution to the system of linear equations associated with the configuration.",
+         "sha": "82bad0ec8485",
+         "zh": "在逐个讨论各种配置之前，先指出：一种配置是可能的，当且仅当与该配置对应的线性方程组存在自然数解。"
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "For the first configuration, let $x$ be the number of cats, and let $y$ be the number of dogs. Using the information given in the problem, we have",
+            "sha": "d2fd2c2889bf",
+            "zh": "对第一种配置，设 $x$ 为猫的只数，$y$ 为狗的只数。根据题目给出的信息，有"
+           }
+          },
+          {
+           "k": "math",
+           "tex": "\\begin{aligned}x+y &= 35 \\\\ 4x+4y &= 94\\end{aligned}."
+          },
+          {
+           "k": "p",
+           "t": {
+            "en": "Row reducing this system, we get",
+            "sha": "a167ce1ff60e",
+            "zh": "对这个方程组做行化简，得到"
+           }
+          },
+          {
+           "k": "math",
+           "tex": "\\begin{aligned}x+y &= 35 \\\\ 0x+0y &= -46\\end{aligned}."
+          },
+          {
+           "k": "p",
+           "t": {
+            "en": "This system is inconsistent, which means there's no solution to this system. Therefore, Kokoro's first configuration is not possible.",
+            "sha": "469b03278935",
+            "zh": "这个方程组是不相容的，也就是说它无解。因此，Kokoro 的第一种配置是不可能的。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "For the second configuration, let $x$ be the number of cats, and let $y$ be the number of dogs. Using the information given in the problem, we have",
+            "sha": "8ccefec58d77",
+            "zh": "对第二种配置，设 $x$ 为猫的只数，$y$ 为狗的只数。根据题目给出的信息，有"
+           }
+          },
+          {
+           "k": "math",
+           "tex": "\\begin{aligned}x+y &= 35 \\\\ 4x+4y &= 140\\end{aligned}."
+          },
+          {
+           "k": "p",
+           "t": {
+            "en": "Row reducing this system, we get",
+            "sha": "a167ce1ff60e",
+            "zh": "对这个方程组做行化简，得到"
+           }
+          },
+          {
+           "k": "math",
+           "tex": "\\begin{aligned}x+y &= 35 \\\\ 0x+0y &= 0\\end{aligned}."
+          },
+          {
+           "k": "p",
+           "t": {
+            "en": "This system is consistent, and the complete solution is given by",
+            "sha": "f9119efcbc21",
+            "zh": "这个方程组是相容的，完全解为"
+           }
+          },
+          {
+           "k": "math",
+           "tex": "\\begin{aligned}x &= 35-t \\\\ y &= t\\end{aligned}(t\\in \\R)."
+          },
+          {
+           "k": "p",
+           "t": {
+            "en": "Take $t=1$, and we get a natural number solution $x=34,y=1$. (In fact, there is more than one natural number solution.) Therefore, Kokoro's second configuration is possible.",
+            "sha": "6c6bc91fe030",
+            "zh": "取 $t=1$，得到自然数解 $x=34,y=1$。（事实上，自然数解不止一个。）因此，Kokoro 的第二种配置是可能的。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "For the third configuration, let $x$ be the number of chickens, and let $y$ be the number of rabbits. Using the information given in the problem, we have",
+            "sha": "40b4f400d290",
+            "zh": "对第三种配置，设 $x$ 为鸡的只数，$y$ 为兔的只数。根据题目给出的信息，有"
+           }
+          },
+          {
+           "k": "math",
+           "tex": "\\begin{aligned}x+y &= 42 \\\\ 2x+4y &= 77\\end{aligned}."
+          },
+          {
+           "k": "p",
+           "t": {
+            "en": "Row reducing this system, we get",
+            "sha": "a167ce1ff60e",
+            "zh": "对这个方程组做行化简，得到"
+           }
+          },
+          {
+           "k": "math",
+           "tex": "\\begin{aligned}x+y &= 42 \\\\ y &= -\\frac{7}{2}\\end{aligned}."
+          },
+          {
+           "k": "p",
+           "t": {
+            "en": "This system is consistent and the unique solution is $x = \\frac{91}{2}, y = -\\frac{7}{2}$ However, there cannot be 91/2 of a chicken, so Kokoro's third configuration is not possible.",
+            "sha": "473365b8c659",
+            "zh": "这个方程组是相容的，唯一解是 $x = \\frac{91}{2}, y = -\\frac{7}{2}$。但是鸡不可能有 91/2 只，所以 Kokoro 的第三种配置是不可能的。"
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Systems of Linear Equations · 练习题 5（上游 book/modules/appendix1-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix1-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each statement below, determine whether it is true or false. Justify your answer.",
+      "sha": "e3b37b865c04",
+      "zh": "判断下面每个命题是真是假，并说明你的理由。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A system of linear equations of 4 variables with 3 equations is always consistent.",
+         "sha": "46d86382b89a",
+         "zh": "含 4 个变量、3 个方程的线性方程组总是相容的。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Any system of linear equation with $0x_{1}+0x_{2}+\\cdots+0x_{n} =0$ being one of the equations must be consistent.",
+         "sha": "bf6a799cfcb4",
+         "zh": "只要方程 $0x_{1}+0x_{2}+\\cdots+0x_{n} =0$ 是某个线性方程组中的一个方程，这个方程组就一定相容。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "There are $m,c\\in \\R$ so that the $y$-axis is the solution set to the equation $y=mx+c$.",
+         "sha": "ac6a2a9cf6be",
+         "zh": "存在 $m,c\\in \\R$，使得 $y$ 轴是方程 $y=mx+c$ 的解集。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "There are $m,c\\in \\R$ so that the $x$-axis is the solution set to the equation $y=mx+c$.",
+         "sha": "9b3b76e35af1",
+         "zh": "存在 $m,c\\in \\R$，使得 $x$ 轴是方程 $y=mx+c$ 的解集。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "There are $m_{1},m_{2},c\\in \\R$ so that the $x$-axis (in $\\R^{3}$) is the solution set to the equation $z=m_{1}x+m_{2}y+c$.",
+         "sha": "0d10955ac924",
+         "zh": "存在 $m_{1},m_{2},c\\in \\R$，使得（$\\R^{3}$ 中的）$x$ 轴是方程 $z=m_{1}x+m_{2}y+c$ 的解集。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A system of exactly one equation can have an empty solution set.",
+         "sha": "1d353016dd29",
+         "zh": "只含一个方程的方程组，其解集可以是空集。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. A counterexample is given by",
+         "sha": "78ca6bc87e86",
+         "zh": "假。反例如下："
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\left\\{\\begin{array}{rcrcrcrl}x_{1}&+&x_{2}&+&x_{3}&+&x_{4}&=1\\\\x_{1}&+&x_{2}&+&x_{3}&+&x_{4}&=2\\\\x_{1}&+&x_{2}&+&x_{3}&+&x_{4}&=3\\end{array}\\right.."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. A counterexample is given by",
+         "sha": "78ca6bc87e86",
+         "zh": "假。反例如下："
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\left\\{\\begin{array}{rcrl}0x_{1}&+&0x_{2}&=0\\\\0x_{1}&+&0x_{2}&=1\\end{array}\\right.."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. Assume the $y$-axis can be represented as the complete solution to $y=mx+c$ for some $m,c$. Since $(x,y)=(0,0)$ and $(x,y)=(0,1)$ are both on the $y$ axis, we know $0=0m+c$ and $1=0m+c$. This gives $0=1$, which is false. Therefore, there's no $m,c\\in \\R$ so that the $y$-axis is the solution set to the equation $y = mx + c$.",
+         "sha": "15290a6eec39",
+         "zh": "假。假设 $y$ 轴可以表示为对某些 $m,c$ 而言 $y=mx+c$ 的完全解。因为 $(x,y)=(0,0)$ 与 $(x,y)=(0,1)$ 都在 $y$ 轴上，所以 $0=0m+c$ 且 $1=0m+c$。这给出 $0=1$，而这是错的。因此，不存在 $m,c\\in \\R$ 使得 $y$ 轴是方程 $y = mx + c$ 的解集。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True. Take $m=0$, $c=0$. The equation then becomes $y=0$. A complete solution to this equation is given by $\\mat{t \\\\ 0}$ ($t\\in \\R$), which is exactly the $x$-axis.",
+         "sha": "242ffefbe3b0",
+         "zh": "真。取 $m=0$，$c=0$，方程就变成 $y=0$。这个方程的完全解是 $\\mat{t \\\\ 0}$（$t\\in \\R$），恰好就是 $x$ 轴。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. The $x$-axis in $\\R^{3}$ can be described as $\\Set{\\mat{x \\\\ 0 \\\\ 0}\\in\\R^3: x\\in\\R}$. Assume the $x$-axis can be represented as the complete solution to $z=m_{1}x+m_{2} y+c$ for some $m_{1},m_{2},c$. Since $(x,y,z)=(0,0,0)$ is on the $x$ axis, we know $c=0$. Since $(x,y,z)=(1,0,0)$ is on the $x$ axis, we know that $m_{1}=0$. The equation then becomes $z=m_{2}y$. However, for each choice of $m_{2}$, $x=0, y=1, z=m_{2}$ is a solution to the system which does not lie in the $x$-axis. Therefore, there's no there's no $m_{1}, m_{2},c\\in \\R$ so that the $x$-axis is the solution set to the equation $z = m_{1}x + m_{2}y+ c$.",
+         "sha": "de10ac52fa1e",
+         "zh": "假。$\\R^{3}$ 中的 $x$ 轴可以描述为 $\\Set{\\mat{x \\\\ 0 \\\\ 0}\\in\\R^3: x\\in\\R}$。假设 $x$ 轴可以表示为对某些 $m_{1},m_{2},c$ 而言 $z=m_{1}x+m_{2} y+c$ 的完全解。因为 $(x,y,z)=(0,0,0)$ 在 $x$ 轴上，所以 $c=0$。因为 $(x,y,z)=(1,0,0)$ 在 $x$ 轴上，所以 $m_{1}=0$。于是方程变成 $z=m_{2}y$。但是，无论 $m_{2}$ 取什么值，$x=0, y=1, z=m_{2}$ 都是这个方程组的解，而它不在 $x$ 轴上。因此，不存在 $m_{1}, m_{2},c\\in \\R$ 使得 $x$ 轴是方程 $z = m_{1}x + m_{2}y+ c$ 的解集。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True. An example is given by",
+         "sha": "a026f1de787f",
+         "zh": "真。一个例子如下："
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}0x+0y &= 1\\end{aligned}."
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Systems of Linear Equations · 练习题 6（上游 book/modules/appendix1-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix1-exercises.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "线性方程组"
+}

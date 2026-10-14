@@ -1,0 +1,1337 @@
+{
+ "id": "InnerProductSpaces-Application-QuadraticForms",
+ "title_en": "Application: Simplification of quadratic forms",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether or not a function of several variables is a quadratic form.",
+         "sha": "c0db8f5b31ca",
+         "zh": "判断若干个变量的函数是不是二次型（quadratic form）。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Convert a quadratic form to and from matrix form.",
+         "sha": "af106f5c5021",
+         "zh": "在二次型与它的矩阵形式之间相互转换。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Apply a change of variables to a quadratic form.",
+         "sha": "0e6e1c6e621b",
+         "zh": "对二次型做变量替换。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Diagonalize a quadratic form.",
+         "sha": "a3ac62ece3c9",
+         "zh": "把二次型对角化。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the principal axes of a quadratic form.",
+         "sha": "75809dc8819a",
+         "zh": "求二次型的主轴（principal axes）。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Sketch quadratic curves, such as circles and ellipses.",
+         "sha": "ea2beab1f8e2",
+         "zh": "画出圆、椭圆等二次曲线的草图。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In this section, we will explore an application of the diagonalization of symmetric matrices, namely, the simplification of quadratic forms. Quadratic forms are special kinds of functions that arise, for example, in calculus when we approximate some quantity up to terms of second order.",
+    "sha": "48a98d1989b7",
+    "zh": "这一节讲对称矩阵对角化的一个应用，即二次型的化简。二次型是一类特殊的函数，例如在微积分中，当我们把某个量近似到二阶项时，就会遇到它。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Quadratic form",
+    "sha": "9b864f702b7f",
+    "zh": "二次型"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A **quadratic form** is a polynomial in $n$ variables in which each term is of degree 2. For example, the following is a quadratic form in $3$ variables:",
+      "sha": "d3219761966f",
+      "zh": "**二次型**是 $n$ 个变量的多项式，其中每一项的次数都是 2。例如，下面是一个含 $3$ 个变量的二次型："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y,z) = 3x^2 + 3y^2 + 2xy - 4xz + 4yz."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "More generally, a quadratic form is a function of the form",
+      "sha": "c883e18b9bdd",
+      "zh": "更一般地，二次型是形如下式的函数："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x_1,\\ldots,x_n) = q_1\\,x_1^2 + \\ldots + q_n\\,x_n^2 + q_{12}\\,x_1x_2 +\n    \\ldots + q_{ij}\\,x_ix_j + \\ldots + q_{n-1,n}\\,x_{n-1}x_n."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The numbers $q_1,\\ldots,q_n,q_{12},\\ldots,q_{n-1,n}$, which may be positive, negative, or zero, are called the **coefficients** of the quadratic form.",
+      "sha": "00d05b47c6ec",
+      "zh": "数 $q_1,\\ldots,q_n,q_{12},\\ldots,q_{n-1,n}$ 可以是正数、负数或零，称为这个二次型的**系数**。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Quadratic forms",
+    "sha": "e10f7bf577ed",
+    "zh": "二次型"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following are quadratic forms?",
+      "sha": "ec335f208709",
+      "zh": "下面的函数中，哪些是二次型？"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$f(x,y,z) = 2xy + 3xz - 5yz$.",
+            "sha": "d391430d87d9",
+            "zh": "$f(x,y,z) = 2xy + 3xz - 5yz$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$g(x,y,z) = x^2 + 2xy + y^2 + 3$.",
+            "sha": "de757fc12413",
+            "zh": "$g(x,y,z) = x^2 + 2xy + y^2 + 3$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$h(x,y,z) = (x+y)^2 - z^2$.",
+            "sha": "2d71253e5d39",
+            "zh": "$h(x,y,z) = (x+y)^2 - z^2$。"
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The function $f$ is a quadratic form. The function $g$ is not a quadratic form, because the constant term, $+3$, is not of degree 2. It should be either a coefficient times the square of a variable, or a coefficient times the product of two variables. The function $h$ is a quadratic form. We can simplify it to $h(x,y,z) = x^2 + 2xy + y^2 - z^2$.",
+      "sha": "e9d22483f79a",
+      "zh": "函数 $f$ 是二次型。函数 $g$ 不是二次型，因为常数项 $+3$ 的次数不是 2。每一项必须是某个系数乘以一个变量的平方，或者某个系数乘以两个变量的乘积。函数 $h$ 是二次型。我们可以把它化简为 $h(x,y,z) = x^2 + 2xy + y^2 - z^2$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Matrix form of a quadratic form",
+    "sha": "558cbb0511d0",
+    "zh": "二次型的矩阵形式"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be a symmetric $n\\times n$-matrix, and let $\\vect{v} = \\mat{x_1,\\ldots,x_n}^T$. Then",
+      "sha": "325bdb509267",
+      "zh": "设 $A$ 是一个 $n\\times n$ 对称矩阵，$\\vect{v} = \\mat{x_1,\\ldots,x_n}^T$。则"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x_1,\\ldots,x_n) = \\vect{v}^T A\\vect{v}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is a quadratic form in $n$ variables. Conversely, every quadratic form in $n$ variables can be uniquely written in this way. We call this the **matrix form** of the quadratic form.",
+      "sha": "542daaef19b4",
+      "zh": "是 $n$ 个变量的二次型。反过来，$n$ 个变量的每个二次型都可以唯一地写成这种形式。我们把它称为这个二次型的**矩阵形式**。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Matrix form of a quadratic form",
+    "sha": "558cbb0511d0",
+    "zh": "二次型的矩阵形式"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the coefficients of the quadratic form $f(x,y,z) = \\vect{v}^T A\\vect{v}$, where",
+      "sha": "a11c51f6086c",
+      "zh": "求二次型 $f(x,y,z) = \\vect{v}^T A\\vect{v}$ 的系数，其中"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rrr}\n      1 &  2 &  4 \\\\\n      2 &  0 & -1 \\\\\n      4 & -1 & -2 \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have",
+      "sha": "a2214cd5b1a4",
+      "zh": "我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y,z)\n    ~=~\n    \\left[\\begin{array}{ccc} x & y & z \\end{array}\\right]\n    \\left[\\begin{array}{rrr}\n      1 &  2 &  4 \\\\\n      2 &  0 & -1 \\\\\n      4 & -1 & -2 \\\\\n    \\end{array}\\right]\n    \\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right]\n    ~=~ x^2 - 2z^2 + 4xy + 8xz - 2yz."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note that there is a term $2xy$ and a term $2yx$, which together yield $4xy$. Similarly the term $4xz$ and $4zx$ are combined into $8xz$, and the terms $-yz$ and $-zy$ are combined into $-2yz$.",
+      "sha": "30285d08d0ef",
+      "zh": "注意，这里有一项 $2xy$ 和一项 $2yx$，合起来是 $4xy$。同样，项 $4xz$ 和 $4zx$ 合并成 $8xz$，项 $-yz$ 和 $-zy$ 合并成 $-2yz$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Matrix form of a quadratic form",
+    "sha": "558cbb0511d0",
+    "zh": "二次型的矩阵形式"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Write the quadratic form",
+      "sha": "93d4090411f0",
+      "zh": "把二次型"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y,z) = 5x^2 - y^2 + z^2 + 2xy - 4xz + 3yz"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "in matrix form.",
+      "sha": "2638a59cbec0",
+      "zh": "写成矩阵形式。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We can write this as",
+      "sha": "f50f5e14282d",
+      "zh": "我们可以把它写成"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y,z)\n    ~=~\n    \\left[\\begin{array}{ccc} x & y & z \\end{array}\\right]\n    \\left[\\begin{array}{rrr}\n      5  &   1 &  -2 \\\\\n      1  &  -1 & 1.5 \\\\\n      -2 & 1.5 &   1 \\\\\n    \\end{array}\\right]\n    \\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note: since the matrix $A$ must be symmetric, we have no choice but to split the term $2xy$ evenly into $1xy$ and $1yx$. This explains why the $(1,2)$- and $(2,1)$-entries of the matrix are $1$. Also, $-4xz$ has been split into $-2xz$ and $-2zx$, and $3yz$ has been split into $1.5yz$ and $1.5zy$. In general, the matrix of the quadratic form",
+      "sha": "2ac2f7949a6f",
+      "zh": "注意：因为矩阵 $A$ 必须是对称的，所以我们别无选择，只能把项 $2xy$ 平均拆成 $1xy$ 和 $1yx$。这就解释了为什么矩阵的 $(1,2)$ 位置和 $(2,1)$ 位置上的元素都是 $1$。同样，$-4xz$ 被拆成 $-2xz$ 和 $-2zx$，$3yz$ 被拆成 $1.5yz$ 和 $1.5zy$。一般地，二次型"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y,z) = ax^2 + by^2 + cz^2 + dxy + exz + fyz"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is",
+      "sha": "b47f363e2b43",
+      "zh": "的矩阵是"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\def\\arraystretch{1.3}\n    A = \\left[\\begin{array}{rrr}\n      a & \\frac{d}{2} & \\frac{e}{2} \\\\\n      \\frac{d}{2} & b & \\frac{f}{2} \\\\\n      \\frac{e}{2} & \\frac{f}{2} & c \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We will now turn to the question of how to simplify quadratic forms. The primary tool we have for doing so is a **change of variables**. This means replacing the variables $x_1,\\ldots,x_n$ by new variables $y_1,\\ldots,y_n$ that are linear combinations of $x_1,\\ldots,x_n$.",
+    "sha": "8532f68cfcb1",
+    "zh": "下面来看怎样化简二次型。我们手头最主要的工具是**变量替换**（change of variables）。它的意思是：把变量 $x_1,\\ldots,x_n$ 换成新的变量 $y_1,\\ldots,y_n$，而新变量是 $x_1,\\ldots,x_n$ 的线性组合。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Change of variables",
+    "sha": "ca8b1aa839c3",
+    "zh": "变量替换"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Apply the change of variables",
+      "sha": "f49e63257653",
+      "zh": "对二次型"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}x &=& u \\\\\n    y &=& v-w \\\\\n    z &=& w\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "to the quadratic form",
+      "sha": "a50c5cf0c674",
+      "zh": "做变量替换"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "3x^2 + y^2 + 2xy + 2xz + 2yz"
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have",
+      "sha": "a2214cd5b1a4",
+      "zh": "我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{l}\n      3x^2 + y^2 + 2xy + 2xz + 2yz \\\\\n      =~~ 3u^2 + (v-w)^2 + 2u(v-w) + 2uw + 2(v-w)w \\\\\n      =~~ 3u^2 + v^2 - w^2 + 2uv.\n    \\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The simplest kind of quadratic form is one that involves only squared variables, and no products of two different variables. We call such quadratic forms **diagonal**.",
+    "sha": "7cc82ab93660",
+    "zh": "最简单的二次型只含有变量的平方项，不含两个不同变量的乘积项。我们把这样的二次型称为**对角**二次型。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Diagonal quadratic form",
+    "sha": "704f1032e33e",
+    "zh": "对角二次型"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A quadratic form is **diagonal** if it is of the form",
+      "sha": "57211bb7af10",
+      "zh": "如果二次型形如下式，就称它是**对角**的："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x_1,\\ldots,x_n) = q_1\\,x_1^2 + \\ldots + q_n\\,x_n^2."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Diagonalization of quadratic forms",
+    "sha": "f2181491c424",
+    "zh": "二次型的对角化"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Every quadratic form can be made diagonal by a change of variables.",
+      "sha": "1965a49f9a35",
+      "zh": "每个二次型都可以通过变量替换化为对角二次型。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We first write the quadratic form in matrix form, i.e.,",
+      "sha": "6593f20c6fc1",
+      "zh": "我们先把二次型写成矩阵形式，即"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x_1,\\ldots,x_n) = \\vect{v}^T A \\vect{v},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where $A$ is a symmetric matrix and $\\vect{v}=\\mat{x_1,\\ldots,x_n}^T$. By Theorem “Diagonalization of real symmetric matrices”, $A$ is orthogonally diagonalizable. So let $P$ be an orthogonal matrix such that",
+      "sha": "86298e93a049",
+      "zh": "其中 $A$ 是对称矩阵，$\\vect{v}=\\mat{x_1,\\ldots,x_n}^T$。由定理“实对称矩阵的对角化”，$A$ 可以正交对角化。于是设 $P$ 是一个正交矩阵，使得"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "P^{-1}AP\n    ~=~ P^TAP\n    ~=~ D\n    ~=~ \\left[\\begin{array}{ccc}\n      \\eigenvar_1 & \\cdots & 0      \\\\\n      \\vdots & \\ddots & \\vdots \\\\\n      0      & \\cdots & \\eigenvar_{nn} \\\\\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is diagonal. Let $\\vect{w}=\\mat{y_1,\\ldots,y_n}^T$ be a new set of variables such that $\\vect{v} = P \\vect{w}$. Then",
+      "sha": "e44d7a2649be",
+      "zh": "是对角矩阵。设 $\\vect{w}=\\mat{y_1,\\ldots,y_n}^T$ 是一组新变量，满足 $\\vect{v} = P \\vect{w}$。则"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}^T A \\vect{v}\n    ~=~ \\vect{w}^T P^TAP \\vect{w}\n    ~=~ \\vect{w}^T D \\vect{w}\n    ~=~ \\eigenvar_1y_1^2 + \\ldots + \\eigenvar_ny_n^2."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "So the quadratic form is diagonal in the variables $y_1,\\ldots,y_n$.",
+      "sha": "81319ec4cb6a",
+      "zh": "所以在变量 $y_1,\\ldots,y_n$ 下，这个二次型是对角的。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Diagonalization of quadratic forms",
+    "sha": "f2181491c424",
+    "zh": "二次型的对角化"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the quadratic form",
+      "sha": "530eac874db6",
+      "zh": "考虑二次型"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y) = 3x^2 + 4xy + 6y^2."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Perform a change of variables so that the quadratic form becomes diagonal.",
+      "sha": "ff3c8a8a2277",
+      "zh": "作一个变量替换，使二次型化为对角形式。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We first write $f(x,y)$ in matrix form:",
+      "sha": "49286fe464e2",
+      "zh": "我们先把 $f(x,y)$ 写成矩阵形式："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y)\n    = \\left[\\begin{array}{cc} x & y \\end{array}\\right]\n    \\left[\\begin{array}{rr} 3 & 2 \\\\ 2 & 6 \\end{array}\\right]\n    \\left[\\begin{array}{c} x \\\\ y \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Next, we orthogonally diagonalize the matrix $A = \\left[\\begin{array}{rr} 3 & 2 \\\\ 2 & 6 \\end{array}\\right]$. In Example “Diagonalization of real symmetric matrices”, we found that $P^{-1}AP = D$, where",
+      "sha": "25c3a89a8bab",
+      "zh": "接着，把矩阵 $A = \\left[\\begin{array}{rr} 3 & 2 \\\\ 2 & 6 \\end{array}\\right]$ 正交对角化。在例“实对称矩阵的对角化”中，我们求得 $P^{-1}AP = D$，其中"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "P = \\frac{1}{\\sqrt{5}} \\left[\\begin{array}{rr} 1 & -2 \\\\ 2 & 1 \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    D = \\left[\\begin{array}{rr} 7 & 0 \\\\ 0 & 2 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $P$ is orthogonal, we also have $P^TAP=D$. Next, let $u,v$ be new variables such that",
+      "sha": "32e784e89d59",
+      "zh": "因为 $P$ 是正交矩阵，所以也有 $P^TAP=D$。接下来，设 $u,v$ 是新变量，满足"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{c} x \\\\ y \\end{array}\\right]\n    = P \\left[\\begin{array}{c} u \\\\ v \\end{array}\\right]\n    = \\left[\\begin{array}{c} (u-2v)/\\sqrt{5} \\\\ (2u+v)/\\sqrt{5} \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Then the change of variables gives",
+      "sha": "3447175c5dc9",
+      "zh": "则变量替换给出"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y)\n    ~=~ \\left[\\begin{array}{cc} x & y \\end{array}\\right]\n    A\n    \\left[\\begin{array}{c} x \\\\ y \\end{array}\\right]\n    ~=~\n    \\left[\\begin{array}{cc} u & v \\end{array}\\right]\n    P^TAP\n    \\left[\\begin{array}{c} u \\\\ v \\end{array}\\right]\n    ~=~\n    \\left[\\begin{array}{cc} u & v \\end{array}\\right]\n    D\n    \\left[\\begin{array}{c} u \\\\ v \\end{array}\\right]\n    ~=~\n    7u^2 + 2v^2."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Diagonalization of quadratic forms",
+    "sha": "f2181491c424",
+    "zh": "二次型的对角化"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Diagonalize the quadratic form",
+      "sha": "e839690678bf",
+      "zh": "把二次型"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y,z) = 3x^2 + 3y^2 + 2xy - 4xz + 4yz."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix form of $f(x,y,z)$ is",
+      "sha": "aac9e31917fb",
+      "zh": "对角化。$f(x,y,z)$ 的矩阵形式是"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y,z)\n    = \\left[\\begin{array}{ccc} x & y & z \\end{array}\\right]\n    \\left[\\begin{array}{rrr}\n      3  & 1 & -2 \\\\\n      1  & 3 &  2 \\\\\n      -2 & 2 &  0 \\\\\n    \\end{array}\\right]\n    \\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right]\n    = \\vect{v}^T A\\vect{v}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We orthogonally diagonalize the matrix $A$. In Example “Diagonalization of real symmetric matrices”, we found that $P^{-1}AP = D$, where",
+      "sha": "1d41615ed357",
+      "zh": "我们把矩阵 $A$ 正交对角化。在例“实对称矩阵的对角化”中，我们求得 $P^{-1}AP = D$，其中"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "P = \\left[\\begin{array}{ccc}\n      \\frac{1}{\\sqrt{2}} & -\\frac{1}{\\sqrt{3}} & \\frac{1}{\\sqrt{6}}  \\\\\n      \\frac{1}{\\sqrt{2}} & \\frac{1}{\\sqrt{3}}  & -\\frac{1}{\\sqrt{6}} \\\\\n      0                  & \\frac{1}{\\sqrt{3}}  & \\frac{2}{\\sqrt{6}}  \\\\\n    \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    D = \\left[\\begin{array}{rrr} 4 & 0 & 0 \\\\ 0 & 4 & 0 \\\\ 0 & 0 & -2 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $u,v,w$ be new variables such that",
+      "sha": "a825bb2dca29",
+      "zh": "设 $u,v,w$ 是新变量，满足"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right]\n    = P \\left[\\begin{array}{c} u \\\\ v \\\\ w \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Then the change of variables gives",
+      "sha": "3447175c5dc9",
+      "zh": "则变量替换给出"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}f(x,y,z)\n    &=& \\left[\\begin{array}{ccc} x & y & z \\end{array}\\right]\n    A\n    \\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] \\\\\n    &=&\n    \\left[\\begin{array}{ccc} u & v & w \\end{array}\\right]\n    P^TAP\n    \\left[\\begin{array}{c} u \\\\ v \\\\ w \\end{array}\\right] \\\\\n    &=&\n    \\left[\\begin{array}{ccc} u & v & w \\end{array}\\right]\n    D\n    \\left[\\begin{array}{c} u \\\\ v \\\\ w \\end{array}\\right] \\\\\n    &=&\n    4u^2 + 4v^2 - 2w^2.\\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Next, we turn our attention to the task of sketching the solutions of quadratic equations in 2 or more variables.",
+    "sha": "82f60b2e513d",
+    "zh": "接下来，我们来讨论如何画出二元或更多元二次方程的解的草图。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Sketching circles and ellipses",
+    "sha": "7afbf0ce1f33",
+    "zh": "画圆和椭圆"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Sketch the following curves:",
+      "sha": "e9204ee611c8",
+      "zh": "画出下列曲线的草图："
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$x^2+y^2=1$,",
+            "sha": "6a5090de6d1c",
+            "zh": "$x^2+y^2=1$，"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$x^2+2y^2=1$.",
+            "sha": "79302ccfd6c3",
+            "zh": "$x^2+2y^2=1$。"
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) The curve $x^2+y^2=1$ is the familiar unit circle.",
+      "sha": "fc386f26239f",
+      "zh": "(a) 曲线 $x^2+y^2=1$ 就是我们熟悉的单位圆。"
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "2bfdd0c4a046"
+     ],
+     "caption": null
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "(b) The curve $x^2+2y^2=1$ is the same, except that it has been stretched by a factor of $1/\\sqrt{2}$ in the $y$-direction. In other words, it is an ellipse with $x$-intercepts $\\pm 1$ and $y$-intercepts $\\pm 1/\\sqrt{2}$.",
+      "sha": "39755eb897fb",
+      "zh": "(b) 曲线 $x^2+2y^2=1$ 与单位圆相同，只是在 $y$ 方向上伸缩了 $1/\\sqrt{2}$ 倍。换句话说，它是一个椭圆，$x$ 轴上的截距是 $\\pm 1$，$y$ 轴上的截距是 $\\pm 1/\\sqrt{2}$。"
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "f5ab1d2c060e"
+     ],
+     "caption": null
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In general, for $a,b>0$, the curve $ax^2 + by^2 = 1$ is an ellipse with $x$-intercepts $\\pm 1/\\sqrt{a}$ and $y$-intercepts $\\pm 1/\\sqrt{b}$. Similarly, for $a,b,c>0$, the equation $ax^2 + by^2 + cz^2 = 1$ describes a $3$-dimensional ellipsoid with $x$-intercepts $\\pm 1/\\sqrt{a}$, $y$-intercepts $\\pm 1/\\sqrt{b}$, and $z$-intercepts $\\pm 1/\\sqrt{c}$:",
+    "sha": "3b797c7b0927",
+    "zh": "一般地，对 $a,b>0$，曲线 $ax^2 + by^2 = 1$ 是一个椭圆，它在 $x$ 轴上的截距是 $\\pm 1/\\sqrt{a}$，在 $y$ 轴上的截距是 $\\pm 1/\\sqrt{b}$。类似地，对 $a,b,c>0$，方程 $ax^2 + by^2 + cz^2 = 1$ 描述的是一个 $3$ 维椭球，它在 $x$ 轴上的截距是 $\\pm 1/\\sqrt{a}$，在 $y$ 轴上的截距是 $\\pm 1/\\sqrt{b}$，在 $z$ 轴上的截距是 $\\pm 1/\\sqrt{c}$："
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "559f40bf5635"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Each ellipse or ellipsoid has a set of **principal axes**, which are its axes of symmetry. When the quadratic forms are diagonal, as in the above examples, the principal axes are the standard coordinate axes. When the quadratic forms are not diagonal, the principal axes are the eigenvectors of the matrix $A$. This is the content of the following proposition.",
+    "sha": "bf06acfb2372",
+    "zh": "每个椭圆或椭球都有一组**主轴**（principal axes），也就是它的对称轴。当二次型是对角的，就像上面的例子那样，主轴就是标准坐标轴。当二次型不是对角的时，主轴就是矩阵 $A$ 的特征向量所在的方向。这就是下面这个命题的内容。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Principal axes of a quadratic form",
+    "sha": "6a7131aed21f",
+    "zh": "二次型的主轴"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider a quadratic form in matrix form, $f(\\vect{v}) = \\vect{v}^TA\\vect{v}$, where $A$ is a positive definite $n\\times n$-matrix. Let $\\set{\\vect{u}_1,\\ldots,\\vect{u}_n}$ be an orthonormal set of eigenvectors of $A$, and let $\\eigenvar_1,\\ldots,\\eigenvar_n$ be the corresponding eigenvalues. Then the solutions of the equation",
+      "sha": "edbc493d8379",
+      "zh": "考虑矩阵形式的二次型 $f(\\vect{v}) = \\vect{v}^TA\\vect{v}$，其中 $A$ 是 $n\\times n$ 正定矩阵。设 $\\set{\\vect{u}_1,\\ldots,\\vect{u}_n}$ 是 $A$ 的一组标准正交的特征向量，$\\eigenvar_1,\\ldots,\\eigenvar_n$ 是对应的特征值。则方程"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}^TA\\vect{v} = 1"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "form an $n$-dimensional ellipsoid whose principal axes are parallel to $\\vect{u}_1,\\ldots,\\vect{u}_n$ and whose $\\vect{u}_i$-intercepts are $\\pm\\frac{1}{\\sqrt{\\eigenvar_i}}$.",
+      "sha": "abb35413db80",
+      "zh": "的解构成一个 $n$ 维椭球，它的主轴平行于 $\\vect{u}_1,\\ldots,\\vect{u}_n$，并且它在 $\\vect{u}_i$ 方向上的截距是 $\\pm\\frac{1}{\\sqrt{\\eigenvar_i}}$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $P$ be the orthogonal matrix whose columns are $\\vect{u}_1,\\ldots,\\vect{u}_n$. From the proof of Proposition “Diagonalization of quadratic forms”, we know that the equation $\\vect{v}^TA\\vect{v} = 1$ is equivalent to $\\eigenvar_1y_1^2 + \\ldots + \\eigenvar_ny_n^2=1$, where $y_1,\\ldots,y_n$ are variables such that",
+      "sha": "7cc1ef6fab6a",
+      "zh": "设 $P$ 是以 $\\vect{u}_1,\\ldots,\\vect{u}_n$ 为列的正交矩阵。由命题“二次型的对角化”的证明可知，方程 $\\vect{v}^TA\\vect{v} = 1$ 等价于 $\\eigenvar_1y_1^2 + \\ldots + \\eigenvar_ny_n^2=1$，其中 $y_1,\\ldots,y_n$ 是满足下式的变量："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v} = P\\left[\\begin{array}{c} y_1 \\\\ \\vdots \\\\ y_n \\end{array}\\right]. \\tag{1}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $A$ is positive definite, we have $\\eigenvar_1,\\ldots,\\eigenvar_n>0$ by Proposition “Using eigenvalues to check whether a matrix is positive definite”. We therefore know that in the $(y_1,\\ldots,y_n)$-coordinate system, the equation $\\eigenvar_1y_1^2 + \\ldots + \\eigenvar_ny_n^2 = 1$ describes an ellipsoid whose $y_1$-intercepts are $\\pm1/\\sqrt{\\eigenvar_1}$, whose $y_2$-intercepts are $\\pm1/\\sqrt{\\eigenvar_2}$, and so on. The only thing that remains to do is to figure out the direction of the coordinate axes. The $y_1$-axis points in the direction of the point with coordinates $(y_1,\\ldots,y_n) = (1,0,\\ldots,0)$. Using the change of variables formula (1), we find that this corresponds to the first column of $P$, i.e., $\\vect{v}=\\vect{u}_1$. Similarly, the $y_2$-axis points in the direction of $\\vect{u}_2$, and so on.",
+      "sha": "8418f28bac8b",
+      "zh": "因为 $A$ 是正定的，由命题“用特征值判断矩阵是否正定”，有 $\\eigenvar_1,\\ldots,\\eigenvar_n>0$。因此我们知道，在 $(y_1,\\ldots,y_n)$ 坐标系中，方程 $\\eigenvar_1y_1^2 + \\ldots + \\eigenvar_ny_n^2 = 1$ 描述的是这样一个椭球：它在 $y_1$ 轴上的截距是 $\\pm1/\\sqrt{\\eigenvar_1}$，在 $y_2$ 轴上的截距是 $\\pm1/\\sqrt{\\eigenvar_2}$，依此类推。剩下要做的，只是弄清楚各个坐标轴的方向。$y_1$ 轴指向坐标为 $(y_1,\\ldots,y_n) = (1,0,\\ldots,0)$ 的那个点的方向。利用变量替换公式 (1)，我们发现这对应于 $P$ 的第一列，即 $\\vect{v}=\\vect{u}_1$。同样，$y_2$ 轴指向 $\\vect{u}_2$ 的方向，依此类推。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Sketching a quadratic curve",
+    "sha": "2b829466629d",
+    "zh": "画二次曲线"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Sketch the curve $3x^2 + 4xy + 6y^2 = 1$.",
+      "sha": "715737b5cc46",
+      "zh": "画出曲线 $3x^2 + 4xy + 6y^2 = 1$ 的草图。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix for the quadratic form $3x^2 + 4xy + 6y^2$ is",
+      "sha": "6000d726c38a",
+      "zh": "二次型 $3x^2 + 4xy + 6y^2$ 的矩阵是"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rr} 3 & 2 \\\\ 2 & 6 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "From Example “Diagonalization of quadratic forms”, we know that the normalized eigenvectors of $A$ are",
+      "sha": "18f454e2e7d7",
+      "zh": "由例“二次型的对角化”，我们知道 $A$ 的单位化特征向量是"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1\n    ~=~ \\frac{1}{\\sqrt{5}} \\left[\\begin{array}{r} 1 \\\\ 2 \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    \\vect{u}_2\n    ~=~ \\frac{1}{\\sqrt{5}} \\left[\\begin{array}{r} -2 \\\\ 1 \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "with respective eigenvalues $\\eigenvar_1 = 7$ and $\\eigenvar_2 = 2$. Therefore, by Proposition “Principal axes of a quadratic form”, the curve $3x^2 + 4xy + 6y^2 = 1$ is an ellipse with principal axes $\\vect{u}_1$ and $\\vect{u}_2$, and with respective intercepts $\\pm1/\\sqrt{7}$ and $\\pm1/\\sqrt{2}$.",
+      "sha": "ac30fd9e324c",
+      "zh": "对应的特征值分别为 $\\eigenvar_1 = 7$ 和 $\\eigenvar_2 = 2$。因此，由命题“二次型的主轴”，曲线 $3x^2 + 4xy + 6y^2 = 1$ 是一个椭圆，主轴为 $\\vect{u}_1$ 和 $\\vect{u}_2$，在两条主轴上的截距分别为 $\\pm1/\\sqrt{7}$ 和 $\\pm1/\\sqrt{2}$。"
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "5d1c0edc5464"
+     ],
+     "caption": null
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following are quadratic forms?",
+      "sha": "ec335f208709",
+      "zh": "下面的函数中，哪些是二次型？"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$f_1(x,y,z) = (x+y+z)^2$.",
+         "sha": "9bf2b9af9e25",
+         "zh": "$f_1(x,y,z) = (x+y+z)^2$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$f_2(x,y,z) = x^2 + y^2 + z^2$.",
+         "sha": "741c8db44b0c",
+         "zh": "$f_2(x,y,z) = x^2 + y^2 + z^2$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$f_3(x,y,z) = (x+y)^2 + (x+z)^2 + (y+z)^2$.",
+         "sha": "1344f2e17bbc",
+         "zh": "$f_3(x,y,z) = (x+y)^2 + (x+z)^2 + (y+z)^2$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$f_4(x,y,z) = x^2 - y^2$.",
+         "sha": "77921573bb8f",
+         "zh": "$f_4(x,y,z) = x^2 - y^2$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$f_5(x,y,z) = x^2 + 2xyz + (y+z)^2$.",
+         "sha": "43a943b98254",
+         "zh": "$f_5(x,y,z) = x^2 + 2xyz + (y+z)^2$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$f_6(x,y,z) = x(y+z)$.",
+         "sha": "9193e50850f1",
+         "zh": "$f_6(x,y,z) = x(y+z)$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$f_7(x,y,z) = x^2y^2z^2$.",
+         "sha": "c0fe367d823d",
+         "zh": "$f_7(x,y,z) = x^2y^2z^2$。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "All of them except (e) and (g).",
+      "sha": "9ba17bb17c0f",
+      "zh": "除 (e) 和 (g) 外，其余都是。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: Simplification of quadratic forms · 习题 1（上游 exercises/InnerProductSpaces-Application-QuadraticForms.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Application-QuadraticForms.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the coefficients of the quadratic form $f(x,y,z) = \\vect{v}^T A\\vect{v}$, where",
+      "sha": "a11c51f6086c",
+      "zh": "求二次型 $f(x,y,z) = \\vect{v}^T A\\vect{v}$ 的系数，其中"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rrr}\n      0 &  1 &  2 \\\\\n      1 & -3 & -4 \\\\\n      2 & -4 &  5 \\\\\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: Simplification of quadratic forms · 习题 2（上游 exercises/InnerProductSpaces-Application-QuadraticForms.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Application-QuadraticForms.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Write the quadratic form",
+      "sha": "93d4090411f0",
+      "zh": "把二次型"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y,z) = (x+y)^2 + 2(x-z)^2 + 3yz"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "in matrix form.",
+      "sha": "2638a59cbec0",
+      "zh": "写成矩阵形式。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$f(x,y,z) = \\vect{v}^T A\\vect{v}$, where",
+      "sha": "ebc0931a8c57",
+      "zh": "$f(x,y,z) = \\vect{v}^T A\\vect{v}$，其中"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{ccc}\n        3  &  1  & -2  \\\\\n        1  &  1  & 1.5 \\\\\n        -2 & 1.5 &  2  \\\\\n      \\end{array}\\right]."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: Simplification of quadratic forms · 习题 3（上游 exercises/InnerProductSpaces-Application-QuadraticForms.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Application-QuadraticForms.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Apply the change of variables $x = u+2w$, $y = v$, $z = w-v$ to the quadratic form",
+      "sha": "52ac19e409f5",
+      "zh": "对二次型作变量替换 $x = u+2w$，$y = v$，$z = w-v$："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "x^2 + 7y^2 + 5z^2 - 4xy - 4xz + 11yz."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$3u^2 + v^2 + vw + w^2$.",
+      "sha": "1d8ca7db989d",
+      "zh": "$3u^2 + v^2 + vw + w^2$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: Simplification of quadratic forms · 习题 4（上游 exercises/InnerProductSpaces-Application-QuadraticForms.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Application-QuadraticForms.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Perform a change of variables so that the quadratic form $f(x,y) = 3x^2 - 2xy + 3y^2$ becomes diagonal.",
+      "sha": "0d73140a6af0",
+      "zh": "作一个变量替换，使二次型 $f(x,y) = 3x^2 - 2xy + 3y^2$ 化为对角形式。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$x=u+v$ and $y=u-v$ gives $f = 4u^2 + 8v^2$.",
+      "sha": "8b2df2cc98fc",
+      "zh": "$x=u+v$，$y=u-v$，得 $f = 4u^2 + 8v^2$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: Simplification of quadratic forms · 习题 5（上游 exercises/InnerProductSpaces-Application-QuadraticForms.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Application-QuadraticForms.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Diagonalize the quadratic form",
+      "sha": "e839690678bf",
+      "zh": "把二次型"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y,z) = 3x^2 + 3y^2 + 4z^2 + 2xz - 2yz."
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: Simplification of quadratic forms · 习题 6（上游 exercises/InnerProductSpaces-Application-QuadraticForms.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Application-QuadraticForms.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the principal axes of the following curves, and sketch them:",
+      "sha": "c107a9c3e380",
+      "zh": "求下列曲线的主轴，并画出草图："
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$x^2+\\frac{1}{2}y^2=1$,",
+         "sha": "daefe8c4c96d",
+         "zh": "$x^2+\\frac{1}{2}y^2=1$，"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$2x^2 + 4xy + 5y^2 = 1$.",
+         "sha": "8b4e85b81b3d",
+         "zh": "$2x^2 + 4xy + 5y^2 = 1$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$3x^2 + 2xy + 3y^2 = 1$.",
+         "sha": "bf732a6dc752",
+         "zh": "$3x^2 + 2xy + 3y^2 = 1$。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Eigenvalues: $\\eigenvar_1=1$, $\\eigenvar_2=\\frac{1}{2}$. Principal axes: $\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 0 \\end{array}\\right]$ and $\\vect{u}_2 = \\left[\\begin{array}{r} 0 \\\\ 1 \\end{array}\\right]$. $\\vect{u}_1$-intercept: $1$, $\\vect{u}_2$-intercept: $\\sqrt{2}$.",
+         "sha": "b01fa1fa7522",
+         "zh": "特征值：$\\eigenvar_1=1$，$\\eigenvar_2=\\frac{1}{2}$。主轴：$\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 0 \\end{array}\\right]$ 和 $\\vect{u}_2 = \\left[\\begin{array}{r} 0 \\\\ 1 \\end{array}\\right]$。$\\vect{u}_1$ 方向的截距：$1$，$\\vect{u}_2$ 方向的截距：$\\sqrt{2}$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Eigenvalues: $\\eigenvar_1=1$, $\\eigenvar_2=6$. Principal axes: $\\vect{u}_1 = \\frac{1}{\\sqrt{5}}\\left[\\begin{array}{r} 2 \\\\ -1 \\end{array}\\right]$ and $\\vect{u}_2 = \\frac{1}{\\sqrt{5}}\\left[\\begin{array}{r} 1 \\\\ 2 \\end{array}\\right]$. $\\vect{u}_1$-intercept: $1$, $\\vect{u}_2$-intercept: $\\frac{1}{\\sqrt{6}}$.",
+         "sha": "3bbbcd30d75d",
+         "zh": "特征值：$\\eigenvar_1=1$，$\\eigenvar_2=6$。主轴：$\\vect{u}_1 = \\frac{1}{\\sqrt{5}}\\left[\\begin{array}{r} 2 \\\\ -1 \\end{array}\\right]$ 和 $\\vect{u}_2 = \\frac{1}{\\sqrt{5}}\\left[\\begin{array}{r} 1 \\\\ 2 \\end{array}\\right]$。$\\vect{u}_1$ 方向的截距：$1$，$\\vect{u}_2$ 方向的截距：$\\frac{1}{\\sqrt{6}}$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Eigenvalues: $\\eigenvar_1=2$, $\\eigenvar_2=4$. Principal axes: $\\vect{u}_1 = \\frac{1}{\\sqrt{2}}\\left[\\begin{array}{r} 1 \\\\ -1 \\end{array}\\right]$ and $\\vect{u}_2 = \\frac{1}{\\sqrt{2}}\\left[\\begin{array}{r} 1 \\\\ 1 \\end{array}\\right]$. $\\vect{u}_1$-intercept: $\\frac{1}{\\sqrt{2}}$, $\\vect{u}_2$-intercept: $\\frac{1}{2}$.",
+         "sha": "3dfd5c6d2223",
+         "zh": "特征值：$\\eigenvar_1=2$，$\\eigenvar_2=4$。主轴：$\\vect{u}_1 = \\frac{1}{\\sqrt{2}}\\left[\\begin{array}{r} 1 \\\\ -1 \\end{array}\\right]$ 和 $\\vect{u}_2 = \\frac{1}{\\sqrt{2}}\\left[\\begin{array}{r} 1 \\\\ 1 \\end{array}\\right]$。$\\vect{u}_1$ 方向的截距：$\\frac{1}{\\sqrt{2}}$，$\\vect{u}_2$ 方向的截距：$\\frac{1}{2}$。"
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "20b2ce86dd3f",
+      "c52037680931",
+      "7ddb3bdcf18e"
+     ],
+     "caption": null
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: Simplification of quadratic forms · 习题 7（上游 exercises/InnerProductSpaces-Application-QuadraticForms.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Application-QuadraticForms.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex8",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the principal axes of the ellipsoid $2x^2 + 2y^2 + 3z^2 + 2xz - 2yz$.",
+      "sha": "31459cc8ee6d",
+      "zh": "求椭球 $2x^2 + 2y^2 + 3z^2 + 2xz - 2yz$ 的主轴。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The principal axes are $\\frac{1}{\\sqrt{3}}\\left[\\begin{array}{r} 1 \\\\ -1 \\\\ -1 \\end{array}\\right]$, $\\frac{1}{\\sqrt{2}}\\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 0 \\end{array}\\right]$, $\\frac{1}{\\sqrt{6}}\\left[\\begin{array}{r} 1 \\\\ -1 \\\\ 2 \\end{array}\\right]$.",
+      "sha": "2be7658e1e07",
+      "zh": "主轴为 $\\frac{1}{\\sqrt{3}}\\left[\\begin{array}{r} 1 \\\\ -1 \\\\ -1 \\end{array}\\right]$，$\\frac{1}{\\sqrt{2}}\\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 0 \\end{array}\\right]$，$\\frac{1}{\\sqrt{6}}\\left[\\begin{array}{r} 1 \\\\ -1 \\\\ 2 \\end{array}\\right]$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: Simplification of quadratic forms · 习题 8（上游 exercises/InnerProductSpaces-Application-QuadraticForms.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Application-QuadraticForms.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "应用：二次型的化简"
+}

@@ -1,0 +1,97 @@
+/* 配色与排版：长文阅读优先（行宽 ≤ 约 40 个汉字、行高 1.85），明暗两套。*/
+:root {
+  --bg: #fbfaf7; --panel: #f3f1ec; --line: #e0ddd5; --ink: #23221f; --muted: #6b6a64;
+  --accent: #1f5fbf; --accent-soft: #e6eefb; --ok: #1d7a3f; --bad: #b3302a; --warn: #8a5a00;
+  --def: #1f5fbf; --thm: #8c1d3a; --ex: #1d6b5f; --out: #8a6a10;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17181b; --panel: #1f2125; --line: #2e3138; --ink: #e6e4de; --muted: #9a998f;
+    --accent: #7eaaf0; --accent-soft: #1f2a3d; --ok: #62c07f; --bad: #ec7b74; --warn: #d9a441;
+    --def: #7eaaf0; --thm: #e88aa3; --ex: #5fc1b1; --out: #d9b44a;
+  }
+}
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.85 "Noto Sans SC", system-ui, sans-serif; }
+button { font: inherit; color: inherit; cursor: pointer; }
+.boot, .boot-error { padding: 40px; color: var(--muted); }
+.boot-error { color: var(--bad); }
+
+.app { display: grid; grid-template-columns: 330px 1fr; height: 100%; }
+@media (max-width: 860px) { .app { grid-template-columns: 1fr; } .side { max-height: 40vh; } }
+.side { overflow-y: auto; background: var(--panel); border-right: 1px solid var(--line); padding: 16px 12px 40px; }
+.brand h1 { font-size: 18px; margin: 4px 6px 2px; }
+.brand p { font-size: 13px; color: var(--muted); margin: 0 6px 10px; }
+.modes { display: flex; gap: 6px; margin: 0 6px 14px; }
+.modes button { flex: 1; padding: 4px 0; border: 1px solid var(--line); background: var(--bg); border-radius: 6px; font-size: 14px; }
+.modes button.on { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+.chapter h2 { font-size: 13px; letter-spacing: .03em; color: var(--muted); margin: 18px 6px 4px; font-weight: 600; }
+.item { display: flex; justify-content: space-between; gap: 8px; width: 100%; text-align: left; padding: 5px 8px; border: 0; background: none; border-radius: 6px; font-size: 14.5px; line-height: 1.5; }
+.item:hover { background: var(--accent-soft); }
+.item.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.item.l3 { padding-left: 22px; }
+.item .meta { color: var(--muted); font-size: 12px; white-space: nowrap; font-weight: 400; }
+.group-title { font-size: 14px; font-weight: 600; margin: 8px 8px 0; color: var(--ink); }
+.group-title.l3 { margin-left: 22px; }
+
+.main { overflow-y: auto; padding: 28px 40px 80px; }
+.section-view { max-width: 760px; margin: 0 auto; }
+.section-view h1 { font-size: 28px; margin: 0 0 18px; line-height: 1.3; }
+.section-view h1 small, .exercises h2 small { display: block; font-size: 14px; color: var(--muted); font-weight: 400; margin-top: 2px; }
+.exercises h2 { font-size: 22px; margin: 44px 0 14px; border-top: 1px solid var(--line); padding-top: 24px; }
+.sub-heading { font-size: 18px; margin: 26px 0 8px; }
+.para { margin: 0 0 12px; }
+.en-under { display: block; color: var(--muted); font-size: 14px; line-height: 1.6; margin-top: 2px; }
+.tag-todo { margin-left: 8px; font-size: 11px; padding: 1px 6px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); vertical-align: 2px; }
+.display-math { margin: 10px 0 14px; overflow-x: auto; overflow-y: hidden; }
+.math-error { color: var(--bad); font-family: monospace; }
+.list-ord, .list-bul { margin: 0 0 12px; padding-left: 1.6em; }
+.list-ord > li, .list-bul > li { margin-bottom: 4px; }
+.list-ord > li > .para:last-child, .list-bul > li > .para:last-child { margin-bottom: 0; }
+
+.box { margin: 18px 0; padding: 12px 16px 6px; border-left: 4px solid var(--line); background: var(--panel); border-radius: 0 8px 8px 0; position: relative; }
+.box > header { display: flex; gap: 10px; align-items: baseline; margin-bottom: 6px; }
+.box-kind { font-weight: 700; font-size: 14px; letter-spacing: .04em; }
+.box-title { font-weight: 600; }
+.box-definition { border-color: var(--def); } .box-definition .box-kind { color: var(--def); }
+.box-theorem, .box-proposition, .box-lemma, .box-corollary { border-color: var(--thm); } .box-theorem .box-kind, .box-proposition .box-kind, .box-lemma .box-kind, .box-corollary .box-kind { color: var(--thm); }
+.box-example, .box-solution, .box-algorithm, .box-procedure, .box-discussion, .box-problem { border-color: var(--ex); } .box-example .box-kind, .box-solution .box-kind, .box-algorithm .box-kind, .box-procedure .box-kind { color: var(--ex); }
+.box-proof { border-color: var(--muted); background: transparent; } .box-proof .box-kind { color: var(--muted); }
+.box-outcome { border-color: var(--out); } .box-outcome .box-kind { color: var(--out); }
+.qed { position: absolute; right: 12px; bottom: 6px; color: var(--muted); font-size: 12px; }
+.figure-note { margin: 14px 0; padding: 10px 14px; border: 1px dashed var(--line); border-radius: 8px; color: var(--muted); font-size: 14px; }
+.book-table { border-collapse: collapse; margin: 12px 0 16px; }
+.book-table td { border: 1px solid var(--line); padding: 4px 12px; text-align: center; }
+
+.exercise { margin: 16px 0; padding: 14px 18px 12px; border: 1px solid var(--line); border-radius: 10px; }
+.exercise > header { display: flex; gap: 12px; align-items: baseline; margin-bottom: 6px; }
+.ex-n { font-weight: 700; color: var(--accent); }
+.ex-state { font-size: 12px; } .ex-state.ok { color: var(--ok); } .ex-state.bad { color: var(--bad); }
+.check { display: flex; gap: 10px; align-items: end; flex-wrap: wrap; margin: 10px 0; }
+.check label { flex: 1; min-width: 260px; font-size: 14px; color: var(--muted); }
+.check input { display: block; width: 100%; margin-top: 4px; padding: 6px 10px; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; }
+.check button { padding: 6px 16px; border: 1px solid var(--accent); background: var(--accent-soft); color: var(--accent); border-radius: 6px; }
+.check.choice { flex-direction: column; align-items: stretch; }
+.check.choice button { text-align: left; border-color: var(--line); background: var(--bg); color: var(--ink); }
+.check.choice button.ok { border-color: var(--ok); } .check.choice button.bad { border-color: var(--bad); }
+.verdict { margin: 6px 0; font-size: 15px; } .verdict.ok { color: var(--ok); } .verdict.bad { color: var(--bad); }
+.link { border: 0; background: none; color: var(--accent); padding: 4px 0; font-size: 14px; }
+.sol { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--line); }
+.pager { max-width: 760px; margin: 40px auto 0; display: flex; justify-content: space-between; }
+.pager button { padding: 8px 18px; border: 1px solid var(--line); background: var(--panel); border-radius: 8px; }
+.pager button:disabled { opacity: .4; cursor: default; }
+
+.figure { margin: 16px 0; text-align: center; }
+.figure-svg { display: inline-block; max-width: 100%; padding: 10px; background: #fff; border-radius: 8px; border: 1px solid var(--line); overflow-x: auto; }
+.figure-svg svg { max-width: 100%; height: auto; }
+.figure figcaption { margin-top: 6px; font-size: 14px; color: var(--muted); }
+
+/* 工具教程：交互式会话与行内代码 */
+code { font: 0.92em/1.4 ui-monospace, "SF Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; }
+pre.code { margin: 12px 0; padding: 10px 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow-x: auto; font: 14px/1.55 ui-monospace, "SF Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace; white-space: pre; }
+pre.code .code-in { color: var(--accent); }
+pre.code .code-out { color: var(--ink); }
+.box-note, .box-tip, .box-hint, .box-seealso { border-color: var(--def); } .box-note .box-kind, .box-tip .box-kind, .box-hint .box-kind, .box-seealso .box-kind { color: var(--def); }
+.box-warning, .box-important, .box-attention, .box-deprecated { border-color: var(--warn); } .box-warning .box-kind, .box-important .box-kind, .box-attention .box-kind, .box-deprecated .box-kind { color: var(--warn); }
+.box-versionadded, .box-versionchanged { border-color: var(--muted); } .box-versionadded .box-kind, .box-versionchanged .box-kind { color: var(--muted); }

@@ -1,0 +1,47 @@
+\begin{tikzpicture}
+	\tikzset{test/.style n args={3}{
+	    postaction={
+	    decorate,
+	    decoration={
+	    markings,
+	    mark=between positions 0 and \pgfdecoratedpathlength step 0.5pt with {
+	    \pgfmathsetmacro\myval{multiply(
+		divide(
+		\pgfkeysvalueof{/pgf/decoration/mark info/distance from start}, \pgfdecoratedpathlength
+		),
+		100
+	    )};
+	    \pgfsetfillcolor{#3!\myval!#2};
+	    \pgfpathcircle{\pgfpointorigin}{#1};
+	    \pgfusepath{fill};}
+	}}}}
+		\begin{axis}[
+		    anchor=origin,
+		    name=plot1,
+		    disabledatascaling,
+		    xmin=-1,xmax=3,
+		    ymin=-1,ymax=2,
+			xtick={-4,...,4},
+			ytick={-2,...,4},
+		    x=1cm,y=1cm,
+		    grid=both,
+		    grid style={line width=.1pt, draw=black!10},
+		    axis lines=middle,
+		    minor tick num=0,
+		    enlargelimits={abs=0.5},
+		    axis line style={latex-latex},
+		    ticklabel style={font=\tiny,fill=\currentbackgroundcolor},
+		    xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+		    ylabel style={at={(ticklabel* cs:1)},anchor=south west}
+		]
+			\coordinate (A) at (2,1);
+			\coordinate (B) at (1,-1);
+			\coordinate (C) at ($.3*(A)+.7*(B)$);
+			\coordinate (D) at ($.7*(A)+.3*(B)$);
+			\fill[mypink] (A) circle[radius=2pt];
+			\fill[mygreen] (B) circle[radius=2pt];
+		\end{axis}
+		\draw [test={0.8pt}{mypink}{mygreen}, thick] (A) to node[midway, above left, mygreen!40!mypink] {$A$}(B) ;
+		\node[above right, mypink] at (A) {$\vec a$};
+		\node[below right, mygreen] at (B) {$\vec b$};
+	\end{tikzpicture}

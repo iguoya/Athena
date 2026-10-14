@@ -1,0 +1,34 @@
+\begin{tikzpicture}[scale=2]
+		\begin{scope}[cm={1,0,0,1,(0,0)}, mypink, very thick]
+			\begin{scope}[mygreen]
+				\draw[ ->, yshift=-1pt] (0,0) -- (1,0) node [midway, below] {$\xhat$};
+				\draw[densely dotted, ->] (0,0) -- (0,1) node [midway, right] {$\yhat$};
+			\end{scope}
+			\begin{scope}[]
+				\draw[ ->] (0,0) -- (1,0) node [above right] {$\vec x_1$};
+				\draw[densely dotted, ->] (0,0) -- (-.9,.7) node [above left] {$\vec x_2$};
+			\end{scope}
+		\end{scope}
+		\begin{scope}[cm={1,0,0,1,(3,0)}, mypink, very thick]
+			\begin{scope}[thin, black!30!white, dashed]
+				\draw(-.9,.7) edge[bend left=20] 
+					coordinate[pos=.3] (I1) 
+					coordinate[pos=.6] (I2) 
+					coordinate[pos=.85] (I3) 
+					(0,1);
+				\draw[->, densely dotted] (0,0) -- (I1);
+				\draw[->, densely dotted] (0,0) -- (I2);
+				\draw[->, densely dotted] (0,0) -- (I3);
+			\end{scope}
+			\begin{scope}[mygreen]
+				\draw[ ->, yshift=-1pt] (0,0) -- (1,0) node [midway, below] {$\xhat$};
+				\draw[densely dotted, ->] (0,0) -- (0,1) node [midway, right] {$\yhat$};
+			\end{scope}
+			\begin{scope}[]
+				\draw[ ->] (0,0) -- (1,0) node [above right] {$\vec x_1$};
+				\draw[densely dotted, ->] (0,0) -- (-.9,.7) node [above left] {$\vec x_2$};
+			\end{scope}
+		\end{scope}
+		\node[above, mypink] at (0,1.2) {$\mathcal X=\Set{\vec x_1,\vec x_2}$};
+		\node[above] at (3,1.2) {Continuous transform of $\mathcal X$ to $\mathcal E$};
+	\end{tikzpicture}

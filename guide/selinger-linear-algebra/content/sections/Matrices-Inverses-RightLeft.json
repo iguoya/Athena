@@ -1,0 +1,1094 @@
+{
+ "id": "Matrices-Inverses-RightLeft",
+ "title_en": "Right and left inverses",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "So far, we have only talked about the inverses of square matrices. But what about matrices that are not square? Can they be invertible? It turns out that non-square matrices can never be invertible. However, they can have left inverses or right inverses.",
+    "sha": "98b7e8546f4f",
+    "zh": "到目前为止，我们只讨论了方阵的逆。那么不是方阵的矩阵呢？它们能可逆吗？结果是：非方阵永远不可逆。不过，它们可以有左逆或右逆。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Left and right inverses",
+    "sha": "1596ab8ad56f",
+    "zh": "左逆与右逆"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $m\\times n$-matrix and $B$ an $n\\times m$-matrix. We say that $B$ is a **left inverse** of $A$ if",
+      "sha": "ff3e1434a9c7",
+      "zh": "设 $A$ 是 $m\\times n$ 矩阵，$B$ 是 $n\\times m$ 矩阵。如果满足下式，则称 $B$ 是 $A$ 的**左逆**（left inverse）："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "BA=I."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We say that $B$ is a **right inverse** of $A$ if",
+      "sha": "1b3904450577",
+      "zh": "如果满足下式，则称 $B$ 是 $A$ 的**右逆**（right inverse）："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "AB=I."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If $A$ has a left inverse, we also say that $A$ is **left invertible**. Similarly, if $A$ has a right inverse, we say that $A$ is **right invertible**.",
+      "sha": "e5d4a25932ba",
+      "zh": "如果 $A$ 有左逆，我们也说 $A$ **左可逆**（left invertible）。类似地，如果 $A$ 有右逆，则说 $A$ **右可逆**（right invertible）。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Right inverse",
+    "sha": "5585c4e5afd6",
+    "zh": "右逆"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let",
+      "sha": "ef5fe1edf379",
+      "zh": "设"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rrr}\n      1 & 0 & 0 \\\\\n      0 & 1 & 0 \\\\\n    \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    B = \\left[\\begin{array}{rr}\n      1 & 0 \\\\\n      0 & 1 \\\\\n      0 & 0 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Show that $B$ is a right inverse, but not a left inverse, of $A$.",
+      "sha": "b6f7f2d4bb0b",
+      "zh": "证明 $B$ 是 $A$ 的右逆，但不是左逆。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We compute",
+      "sha": "1cf66dc13d5a",
+      "zh": "我们计算"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "AB\n    ~=~ \\left[\\begin{array}{rrr}\n      1 & 0 & 0 \\\\\n      0 & 1 & 0 \\\\\n    \\end{array}\\right]\n    \\left[\\begin{array}{rr}\n      1 & 0 \\\\\n      0 & 1 \\\\\n      0 & 0 \\\\\n    \\end{array}\\right]\n    ~=~ \\left[\\begin{array}{rrr}\n      1 & 0 \\\\\n      0 & 1 \\\\\n    \\end{array}\\right]\n    ~=~ I,"
+    },
+    {
+     "k": "math",
+     "tex": "BA\n    ~=~ \\left[\\begin{array}{rr}\n      1 & 0 \\\\\n      0 & 1 \\\\\n      0 & 0 \\\\\n    \\end{array}\\right]\n    \\left[\\begin{array}{rrr}\n      1 & 0 & 0 \\\\\n      0 & 1 & 0 \\\\\n    \\end{array}\\right]\n    ~=~ \\left[\\begin{array}{rrr}\n      1 & 0 & 0 \\\\\n      0 & 1 & 0 \\\\\n      0 & 0 & 0 \\\\\n    \\end{array}\\right]\n    ~\\neq~ I."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, $B$ is a right inverse, but not a left inverse, of $A$.",
+      "sha": "261642adc38f",
+      "zh": "所以 $B$ 是 $A$ 的右逆，但不是左逆。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Recall from Definition “The inverse of a matrix” that $B$ is called an **inverse** of $A$ if it is both a left inverse and a right inverse. A crucial fact is that invertible matrices are always square.",
+    "sha": "d7baead4b072",
+    "zh": "回忆定义“矩阵的逆”：如果 $B$ 既是左逆又是右逆，就称它为 $A$ 的**逆**。一个关键的事实是：可逆矩阵一定是方阵。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Invertible matrices are square",
+    "sha": "7fbfdaefbfc4",
+    "zh": "可逆矩阵是方阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $m\\times n$-matrix.",
+      "sha": "f7881d65c69d",
+      "zh": "设 $A$ 是 $m\\times n$ 矩阵。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $A$ is left invertible, then $m\\geq n$.",
+         "sha": "c855a660c125",
+         "zh": "如果 $A$ 左可逆，则 $m\\geq n$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $A$ is right invertible, then $m\\leq n$.",
+         "sha": "7079523c869f",
+         "zh": "如果 $A$ 右可逆，则 $m\\leq n$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $A$ is invertible, then $m=n$.",
+         "sha": "63219d58f606",
+         "zh": "如果 $A$ 可逆，则 $m=n$。"
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In particular, only square matrices can be invertible.",
+      "sha": "63860bbeba6d",
+      "zh": "特别地，只有方阵才可能可逆。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "To prove the first claim, assume that $A$ is left invertible, i.e., assume that $BA=I$ for some $n\\times m$-matrix $B$. We must show that $m\\geq n$. Assume, for the sake of obtaining a contradiction, that this is not the case, i.e., that $m<n$. Then the matrix $A$ has more columns than rows. It follows that the homogeneous system of equations $A\\vect{x}=\\vect{0}$ has a non-trivial solution; let $\\vect{x}$ be such a solution. We obtain a contradiction by a similar method as in Example “A non-zero matrix with no inverse”. Namely, we have",
+      "sha": "39b27bedec58",
+      "zh": "先证第一个结论。假设 $A$ 左可逆，即对某个 $n\\times m$ 矩阵 $B$ 有 $BA=I$。我们要证明 $m\\geq n$。用反证法：假设不是这样，即 $m<n$。那么矩阵 $A$ 的列数多于行数。由此可知，齐次方程组 $A\\vect{x}=\\vect{0}$ 有非零解；设 $\\vect{x}$ 是这样的一个解。我们用与例“没有逆的非零矩阵”类似的方法推出矛盾。具体地，我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{x} ~=~ I\\,\\vect{x} ~=~ (BA)\\vect{x} ~=~ B(A\\vect{x}) ~=~ B\\vect{0} ~=~\n    \\vect{0},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "contradicting the fact that $\\vect{x}$ was non-trivial. Since we got a contradiction from the assumption that $m<n$, it follows that $m\\geq n$.",
+      "sha": "94764b902c83",
+      "zh": "这与 $\\vect{x}$ 是非零解矛盾。从假设 $m<n$ 得出了矛盾，所以 $m\\geq n$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The second claim is proved similarly, but exchanging the roles of $A$ and $B$. The third claim follows directly from the first two claims, because every invertible matrix is both left and right invertible.",
+      "sha": "70924e1eb8b1",
+      "zh": "第二个结论的证明类似，只要把 $A$ 和 $B$ 的角色互换。第三个结论可由前两个结论直接得到，因为每个可逆矩阵既是左可逆的，又是右可逆的。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Of course, not all square matrices are invertible. In particular, zero matrices are not invertible, along with many other square matrices.",
+    "sha": "2fa92412ed7a",
+    "zh": "当然，并不是所有方阵都可逆。特别地，零矩阵不可逆，还有许多其他方阵也不可逆。"
+   }
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each of the following pairs of matrices, determine whether $B$ is an inverse of $A$.",
+      "sha": "6893992b2f13",
+      "zh": "对下面每一对矩阵，判断 $B$ 是否为 $A$ 的逆。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "math",
+        "tex": "A = \\left[\\begin{array}{rr}\n        2 & 4 \\\\\n        1 & 3 \\\\\n      \\end{array}\\right],\n      \\quad\n      B = \\frac{1}{2}\\left[\\begin{array}{rr}\n        3 & -4 \\\\\n        -1 & 2 \\\\\n      \\end{array}\\right]."
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "A = \\left[\\begin{array}{rr}\n        1 & -2 \\\\\n        4 & -7 \\\\\n      \\end{array}\\right],\n      \\quad\n      B = \\left[\\begin{array}{rr}\n        -1 & 2 \\\\\n        -4 & 7 \\\\\n      \\end{array}\\right]."
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "A = \\left[\\begin{array}{rrr}\n        4 & 1 & 3 \\\\\n        2 & 1 & 2 \\\\\n        1 & 0 & 1 \\\\\n      \\end{array}\\right],\n      \\quad\n      B = \\left[\\begin{array}{rrr}\n        1 & -1 & -1 \\\\\n        0 & 1 & -2 \\\\\n        -1 & 1 & 2 \\\\\n      \\end{array}\\right]."
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) Yes. (b) No. (c) Yes.",
+      "sha": "16aac7c6af5f",
+      "zh": "(a) 是。(b) 不是。(c) 是。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Right and left inverses · 习题 1（上游 exercises/Matrices-Inverses-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Inverses-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $AB=AC$ and $A$ is an invertible $n\\times n$-matrix. Does it follow that $B=C$? Explain why or why not.",
+      "sha": "bd88b7876062",
+      "zh": "设 $AB=AC$，且 $A$ 是可逆的 $n\\times n$ 矩阵。是否由此可得 $B=C$？说明理由。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Yes $B=C$. Multiply $AB = AC$ on the left by $A^{-1}$.",
+      "sha": "7fa7cc0c6401",
+      "zh": "是的，$B=C$。在 $AB = AC$ 两边左乘 $A^{-1}$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Right and left inverses · 习题 2（上游 exercises/Matrices-Inverses-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Inverses-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $AB=AC$ and $A$ is a non-invertible $n\\times n$-matrix. Does it follow that $B=C$? Explain why or why not.",
+      "sha": "1d96bffebdb8",
+      "zh": "设 $AB=AC$，且 $A$ 是不可逆的 $n\\times n$ 矩阵。是否由此可得 $B=C$？说明理由。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "No. For example, let $A=\\left[\\begin{array}{cc}1&1\\\\1&1\\end{array}\\right]$, $B=\\left[\\begin{array}{cc}1&2\\\\3&4\\end{array}\\right]$, and $C=\\left[\\begin{array}{cc}2&3\\\\2&3\\end{array}\\right]$. Then $AB=AC$ but $B\\neq C$.",
+      "sha": "9a74500daa21",
+      "zh": "不能。例如，取 $A=\\left[\\begin{array}{cc}1&1\\\\1&1\\end{array}\\right]$，$B=\\left[\\begin{array}{cc}1&2\\\\3&4\\end{array}\\right]$，$C=\\left[\\begin{array}{cc}2&3\\\\2&3\\end{array}\\right]$。则 $AB=AC$，但 $B\\neq C$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Right and left inverses · 习题 3（上游 exercises/Matrices-Inverses-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Inverses-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each of the following matrices, find the inverse if possible. If the inverse does not exist, explain why.",
+      "sha": "42de462e7ed2",
+      "zh": "对下面每个矩阵，如果逆存在，求出它；如果逆不存在，说明原因。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{rr}\n      2 & 1 \\\\\n      -1 & 3\n    \\end{array}\\right],\n    \\quad\n    B=\\left[\\begin{array}{rr}\n      0 & 1 \\\\\n      5 & 3\n    \\end{array}\\right],\n    \\quad\n    C=\\left[\\begin{array}{rr}\n      2 & 1 \\\\\n      3 & 0\n    \\end{array}\\right],\n    \\quad\n    D=\\left[\\begin{array}{rr}\n      2 & 1 \\\\\n      4 & 2\n    \\end{array}\\right],\n    \\quad\n    E=\\left[\\begin{array}{rrr}\n      0 & 1 & 2 \\\\\n      1 & 2 & 5 \\\\\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "\\def\\arraystretch1.2 $A^{-1} = \\left[\\begin{array}{rr} \\frac{3}{7} & -\\frac{1}{7} \\\\ \\frac{1}{7} & \\frac{2}{7} \\end{array}\\right]$, $B^{-1} = \\left[\\begin{array}{cc} -\\frac{3}{5} & \\frac{1}{5} \\\\ 1 & 0 \\end{array}\\right]$, $C^{-1} = \\left[\\begin{array}{cc} 0 & \\frac{1}{3} \\\\ 1 & -\\frac{2}{3} \\end{array}\\right]$. $D^{-1}$ does not exist because the reduced echelon form of $D$ is $\\left[\\begin{array}{cc} 1 & \\frac{1}{2} \\\\ 0 & 0 \\end{array}\\right]$, which has a row of zeros. $E^{-1}$ does not exist because $E$ is not a square matrix.",
+      "sha": "2f3edee67fb3",
+      "zh": "$A^{-1} = \\left[\\begin{array}{rr} \\frac{3}{7} & -\\frac{1}{7} \\\\ \\frac{1}{7} & \\frac{2}{7} \\end{array}\\right]$，$B^{-1} = \\left[\\begin{array}{cc} -\\frac{3}{5} & \\frac{1}{5} \\\\ 1 & 0 \\end{array}\\right]$，$C^{-1} = \\left[\\begin{array}{cc} 0 & \\frac{1}{3} \\\\ 1 & -\\frac{2}{3} \\end{array}\\right]$。$D^{-1}$ 不存在，因为 $D$ 的简化行阶梯形是 $\\left[\\begin{array}{cc} 1 & \\frac{1}{2} \\\\ 0 & 0 \\end{array}\\right]$，它有一行全为零。$E^{-1}$ 不存在，因为 $E$ 不是方阵。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Right and left inverses · 习题 1（上游 exercises/Matrices-Inverses-Computing.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Inverses-Computing.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each of the following matrices, find the inverse if possible. If the inverse does not exist, explain why.",
+      "sha": "42de462e7ed2",
+      "zh": "对下面每个矩阵，如果逆存在，求出它；如果逆不存在，说明原因。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{rrr}\n      1 & 2 & 3 \\\\\n      2 & 1 & 4 \\\\\n      1 & 0 & 2\n    \\end{array}\\right],\n    \\quad\n    B=\\left[\\begin{array}{rrr}\n      1 & 0 & 3 \\\\\n      2 & 3 & 4 \\\\\n      1 & 0 & 2\n    \\end{array}\\right],\n    \\quad\n    C=\\left[\\begin{array}{rrr}\n      1 & 2 & 3 \\\\\n      2 & 1 & 4 \\\\\n      4 & 5 & 10\n    \\end{array}\\right],\n    \\quad\n    D=\\left[\\begin{array}{rrrr}\n      1 & 2 & 0 & 2 \\\\\n      1 & 1 & 2 & 0 \\\\\n      2 & 1 & -3 & 2 \\\\\n      1 & 2 & 1 & 2\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "\\def\\arraystretch1.2 $A^{-1} = \\left[\\begin{array}{rrr} -2 & 4 & -5 \\\\ 0 & 1 & -2 \\\\ 1 & -2 & 3 \\end{array}\\right]$, $B^{-1} = \\left[\\begin{array}{rrr} -2 & 0 & 3 \\\\ 0 & \\frac{1}{3} & -\\frac{2}{3} \\\\ 1 & 0 & -1 \\end{array}\\right]$. $C^{-1}$ does not exist because the reduced echelon form of $C$ is $\\left[\\begin{array}{ccc} 1 & 0 & \\frac{5}{3} \\\\ 0 & 1 & \\frac{2}{3} \\\\ 0 & 0 & 0 \\end{array}\\right]$, which has a row of zeros. $D^{-1} = \\left[\\begin{array}{rrrr} -1 & \\frac{1}{2} & \\frac{1}{2} & \\frac{1}{2} \\\\ 3 & \\frac{1}{2} & - \\frac{1}{2} & - \\frac{5}{2} \\\\ -1 & 0 & 0 & 1 \\\\ -2 & - \\frac{3}{4} & \\frac{1}{4} & \\frac{9}{4} \\end{array}\\right]$.",
+      "sha": "7ea6e8e5c68c",
+      "zh": "$A^{-1} = \\left[\\begin{array}{rrr} -2 & 4 & -5 \\\\ 0 & 1 & -2 \\\\ 1 & -2 & 3 \\end{array}\\right]$，$B^{-1} = \\left[\\begin{array}{rrr} -2 & 0 & 3 \\\\ 0 & \\frac{1}{3} & -\\frac{2}{3} \\\\ 1 & 0 & -1 \\end{array}\\right]$。$C^{-1}$ 不存在，因为 $C$ 的简化行阶梯形是 $\\left[\\begin{array}{ccc} 1 & 0 & \\frac{5}{3} \\\\ 0 & 1 & \\frac{2}{3} \\\\ 0 & 0 & 0 \\end{array}\\right]$，它有一行全为零。$D^{-1} = \\left[\\begin{array}{rrrr} -1 & \\frac{1}{2} & \\frac{1}{2} & \\frac{1}{2} \\\\ 3 & \\frac{1}{2} & - \\frac{1}{2} & - \\frac{5}{2} \\\\ -1 & 0 & 0 & 1 \\\\ -2 & - \\frac{3}{4} & \\frac{1}{4} & \\frac{9}{4} \\end{array}\\right]$."
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Right and left inverses · 习题 2（上游 exercises/Matrices-Inverses-Computing.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Inverses-Computing.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be a $2\\times 2$ invertible matrix, with $A=\\left[\\begin{array}{cc} a & b \\\\ c & d \\end{array}\\right]$. Find a formula for $A^{-1}$ in terms of $a,b,c,d$.",
+      "sha": "f12e0d2a493c",
+      "zh": "设 $A$ 是 $2\\times 2$ 可逆矩阵，$A=\\left[\\begin{array}{cc} a & b \\\\ c & d \\end{array}\\right]$。求用 $a,b,c,d$ 表示 $A^{-1}$ 的公式。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\def\\arraystretch{1.3} \\left[\\begin{array}{cc} a & b \\\\ c & d \\end{array}\\right]^{-1}= \\left[\\begin{array}{cc} \\frac{d}{ad-bc} & -\\frac{b}{ad-bc} \\\\ -\\frac{c}{ad-bc} & \\frac{a}{ad-bc} \\end{array}\\right]$.",
+      "sha": "331f23bcd1b8",
+      "zh": "$\\def\\arraystretch{1.3} \\left[\\begin{array}{cc} a & b \\\\ c & d \\end{array}\\right]^{-1}= \\left[\\begin{array}{cc} \\frac{d}{ad-bc} & -\\frac{b}{ad-bc} \\\\ -\\frac{c}{ad-bc} & \\frac{a}{ad-bc} \\end{array}\\right]$."
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Right and left inverses · 习题 3（上游 exercises/Matrices-Inverses-Computing.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Inverses-Computing.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Using the inverse of the matrix, find the solution to the systems:",
+      "sha": "d440946116b9",
+      "zh": "利用矩阵的逆，求下列方程组的解："
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "math",
+        "tex": "\\left[\\begin{array}{rr}\n        2 & 4  \\\\\n        1 & 1\n      \\end{array}\\right]\n      \\left[\\begin{array}{c}\n        x \\\\\n        y\n      \\end{array}\\right] =\\left[\\begin{array}{r}\n        1 \\\\\n        2\n      \\end{array}\\right],"
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "\\left[\\begin{array}{rr}\n        2 & 4 \\\\\n        1 & 1\n      \\end{array}\\right] \\left[\\begin{array}{c}\n        x \\\\\n        y\n      \\end{array}\\right] =\\left[\\begin{array}{r}\n        2 \\\\\n        0\n      \\end{array}\\right]."
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Now give the solution in terms of $a$ and $b$ to",
+      "sha": "64da19ac57fd",
+      "zh": "现在用 $a$ 和 $b$ 表示下列方程组的解："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr}\n      2 & 4 \\\\\n      1 & 1\n    \\end{array}\\right]\n    \\left[\\begin{array}{c}\n      x \\\\\n      y\n    \\end{array}\\right]\n    =\n    \\left[\\begin{array}{c}\n      a \\\\\n      b\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Right and left inverses · 习题 4（上游 exercises/Matrices-Inverses-Computing.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Inverses-Computing.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex8",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Using the inverse of the matrix, find the solution to the systems:",
+      "sha": "d440946116b9",
+      "zh": "利用矩阵的逆，求下列方程组的解："
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "math",
+        "tex": "\\left[\\begin{array}{rrr}\n        1 & 0 & 3 \\\\\n        2 & 3 & 4 \\\\\n        1 & 0 & 2\n      \\end{array}\\right] \\left[\\begin{array}{c}\n        x \\\\\n        y \\\\\n        z\n      \\end{array}\\right] =\\left[\\begin{array}{r}\n        1 \\\\\n        0 \\\\\n        1\n      \\end{array}\\right],"
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "\\left[\\begin{array}{rrr}\n        1 & 0 & 3 \\\\\n        2 & 3 & 4 \\\\\n        1 & 0 & 2\n      \\end{array}\\right] \\left[\\begin{array}{c}\n        x \\\\\n        y \\\\\n        z\n      \\end{array}\\right] =\\left[\\begin{array}{r}\n        3 \\\\\n        -1 \\\\\n        -2\n      \\end{array}\\right]."
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Now give the solution in terms of $a,b$, and $c$ to the following:",
+      "sha": "b9de6fdca285",
+      "zh": "现在用 $a,b$ 和 $c$ 表示下列方程组的解："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n      1 & 0 & 3 \\\\\n      2 & 3 & 4 \\\\\n      1 & 0 & 2\n    \\end{array}\\right] \\left[\\begin{array}{c}\n      x \\\\\n      y \\\\\n      z\n    \\end{array}\\right] =\\left[\\begin{array}{c}\n      a \\\\\n      b \\\\\n      c\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\def\\arraystretch{1.2} \\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] =\\left[\\begin{array}{r} 1 \\\\ -\\frac{2}{3} \\\\ 0 \\end{array}\\right]$.",
+         "sha": "60ec6ad28e26",
+         "zh": "$\\def\\arraystretch{1.2} \\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] =\\left[\\begin{array}{r} 1 \\\\ -\\frac{2}{3} \\\\ 0 \\end{array}\\right]$."
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] = \\left[\\begin{array}{r} -12 \\\\ 1 \\\\ 5 \\end{array}\\right]$.",
+         "sha": "bd875b531513",
+         "zh": "$\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] = \\left[\\begin{array}{r} -12 \\\\ 1 \\\\ 5 \\end{array}\\right]$."
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\def\\arraystretch{1.2} \\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] = \\left[\\begin{array}{c} 3c-2a \\\\ \\frac{1}{3}b-\\frac{2}{3}c \\\\ a-c \\end{array}\\right]$.",
+      "sha": "55d8969323ac",
+      "zh": "$\\def\\arraystretch{1.2} \\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] = \\left[\\begin{array}{c} 3c-2a \\\\ \\frac{1}{3}b-\\frac{2}{3}c \\\\ a-c \\end{array}\\right]$."
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Right and left inverses · 习题 5（上游 exercises/Matrices-Inverses-Computing.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Inverses-Computing.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex9",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Show that if $A$ is an $n\\times n$ invertible matrix and $X$ and $B$ are $n\\times 1$-matrices such that $AX=B$, then $X=A^{-1}B$.",
+      "sha": "7c073c608853",
+      "zh": "证明：如果 $A$ 是 $n\\times n$ 可逆矩阵，$X$ 和 $B$ 是 $n\\times 1$ 矩阵，且 $AX=B$，则 $X=A^{-1}B$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Multiply both sides of $AX=B$ on the left by $A^{-1}$.",
+      "sha": "a357a93b64bf",
+      "zh": "在 $AX=B$ 两边左乘 $A^{-1}$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Right and left inverses · 习题 6（上游 exercises/Matrices-Inverses-Computing.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Inverses-Computing.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex10",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Prove that if $A^{-1}$ exists and $AX=0$ then $X=0$.",
+      "sha": "560c8c8a3972",
+      "zh": "证明：如果 $A^{-1}$ 存在且 $AX=0$，则 $X=0$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Multiply on both sides on the left by $A^{-1}$. Thus $0=A^{-1}0=A^{-1}(AX) =(A^{-1}A) X=IX = X$.",
+      "sha": "d814c2499f46",
+      "zh": "两边左乘 $A^{-1}$。于是 $0=A^{-1}0=A^{-1}(AX) =(A^{-1}A) X=IX = X$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Right and left inverses · 习题 7（上游 exercises/Matrices-Inverses-Computing.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Inverses-Computing.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex11",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Show $(AB)^{-1}=B^{-1}A^{-1}$ by verifying that",
+      "sha": "16bde865fa1d",
+      "zh": "通过验证下面两式，证明 $(AB)^{-1}=B^{-1}A^{-1}$："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "AB(B^{-1}A^{-1}) = I\n    \\quad\\text{and}\\quad\n    B^{-1}A^{-1}(AB) = I."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$(AB) B^{-1}A^{-1}=A(BB^{-1}) A^{-1}=AA^{-1}=I$ and $B^{-1}A^{-1}( AB) =B^{-1}(A^{-1}A) B=B^{-1}IB=B^{-1}B=I$.",
+      "sha": "c213365f12f6",
+      "zh": "$(AB) B^{-1}A^{-1}=A(BB^{-1}) A^{-1}=AA^{-1}=I$ 且 $B^{-1}A^{-1}( AB) =B^{-1}(A^{-1}A) B=B^{-1}IB=B^{-1}B=I$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Right and left inverses · 习题 8（上游 exercises/Matrices-Inverses-Computing.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Inverses-Computing.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex12",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Is it possible to have matrices $A$ and $B$ such that $AB=I$, while $BA=0$? If it is possible, give an example of such matrices. If it is not possible, explain why.",
+      "sha": "62cf9958acfd",
+      "zh": "是否可能有矩阵 $A$ 和 $B$，使得 $AB=I$，而 $BA=0$？如果可能，给出这样的矩阵的例子；如果不可能，说明原因。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "It is not possible, because in that case, we would have $A=IA=(AB)A=A(BA)=A0=0$, and therefore $AB=0$, contradicting $AB=I$.",
+      "sha": "58464c899877",
+      "zh": "不可能。因为若是这样，就会有 $A=IA=(AB)A=A(BA)=A0=0$，从而 $AB=0$，这与 $AB=I$ 矛盾。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Right and left inverses · 习题 9（上游 exercises/Matrices-Inverses-Computing.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Inverses-Computing.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex13",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Show that $(ABC)^{-1}=C^{-1}B^{-1}A^{-1}$ by verifying that",
+      "sha": "45649aeb0fed",
+      "zh": "通过验证下面两式，证明 $(ABC)^{-1}=C^{-1}B^{-1}A^{-1}$："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(ABC) (C^{-1}B^{-1}A^{-1}) = I\n    \\quad\\text{and}\\quad\n    (C^{-1}B^{-1}A^{-1})(ABC) = I."
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Right and left inverses · 习题 10（上游 exercises/Matrices-Inverses-Computing.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Inverses-Computing.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex14",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If $A$ is invertible, show that $A^2$ is invertible and $(A^2)^{-1}=(A^{-1})^2$.",
+      "sha": "6d677a686940",
+      "zh": "如果 $A$ 可逆，证明 $A^2$ 可逆，且 $(A^2)^{-1}=(A^{-1})^2$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "This follows from Problem 〔引用〕 by taking $A=B$.",
+      "sha": "fe036f9d77af",
+      "zh": "在习题〔引用〕中取 $A=B$ 即得。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Right and left inverses · 习题 11（上游 exercises/Matrices-Inverses-Computing.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Inverses-Computing.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex15",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If $A$ is invertible, show $(A^{-1})^{-1}=A$. Hint: Use the uniqueness of inverses.",
+      "sha": "ffd6fc4b6efb",
+      "zh": "如果 $A$ 可逆，证明 $(A^{-1})^{-1}=A$。提示：利用逆的唯一性。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$A^{-1}A=AA^{-1}=I$ and so $A$ is an inverse of $A^{-1}$. Since $(A^{-1})^{-1}$, by definition, is also an inverse of $A^{-1}$, we have $(A^{-1})^{-1}=A$ by uniqueness.",
+      "sha": "ed328e0d0678",
+      "zh": "$A^{-1}A=AA^{-1}=I$，所以 $A$ 是 $A^{-1}$ 的逆。而 $(A^{-1})^{-1}$ 按定义也是 $A^{-1}$ 的逆，所以由唯一性得 $(A^{-1})^{-1}=A$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Right and left inverses · 习题 12（上游 exercises/Matrices-Inverses-Computing.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Inverses-Computing.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex16",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine whether $B$ is a right inverse, left inverse, both, or neither of $A$.",
+      "sha": "5206ec2c2fd1",
+      "zh": "判断 $B$ 是 $A$ 的右逆、左逆、既是右逆又是左逆，还是两者都不是。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "math",
+        "tex": "A = \\left[\\begin{array}{rrr}\n        4 & 2 & 1 \\\\\n        2 & 1 & 1 \\\\\n      \\end{array}\\right],\n      \\quad\n      B = \\left[\\begin{array}{rrr}\n        1 & -1 \\\\\n        -1 & 1 \\\\\n        -1 & 2 \\\\\n      \\end{array}\\right]."
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "A = \\left[\\begin{array}{rrr}\n        1 & 0 \\\\\n        0 & 1 \\\\\n        0 & 2 \\\\\n      \\end{array}\\right],\n      \\quad\n      B = \\left[\\begin{array}{rrr}\n        1 & 2 & -1 \\\\\n        0 & 1 & 0 \\\\\n      \\end{array}\\right]."
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "A = \\left[\\begin{array}{rrr}\n        1 & 2 \\\\\n        3 & 7 \\\\\n      \\end{array}\\right],\n      \\quad\n      B = \\left[\\begin{array}{rrr}\n        7 & -2 \\\\\n        -3 & 1 \\\\\n      \\end{array}\\right]."
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "A = \\left[\\begin{array}{rrr}\n        1 & 2 \\\\\n        3 & 1 \\\\\n      \\end{array}\\right],\n      \\quad\n      B = \\left[\\begin{array}{rrr}\n        -1 & 2 \\\\\n        1 & -1 \\\\\n      \\end{array}\\right]."
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) $B$ is a right inverse of $A$, (b) $B$ is a left inverse of $A$, (c) $B$ is both a right inverse and left inverse of $A$, (d) $B$ is neither a right inverse nor a left inverse of $A$.",
+      "sha": "8354ac571705",
+      "zh": "(a) $B$ 是 $A$ 的右逆，(b) $B$ 是 $A$ 的左逆，(c) $B$ 既是 $A$ 的右逆又是左逆，(d) $B$ 既不是 $A$ 的右逆也不是左逆。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Right and left inverses · 习题 13（上游 exercises/Matrices-Inverses-Computing.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Inverses-Computing.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex17",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Show that right inverses are not unique by giving an example of matrices $A,B,C$ such that both $B$ and $C$ are right inverses of $A$, but $B\\neq C$.",
+      "sha": "0857218c2a7a",
+      "zh": "通过给出矩阵 $A,B,C$ 的例子，说明右逆不唯一：$B$ 和 $C$ 都是 $A$ 的右逆，但 $B\\neq C$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$A=\\left[\\begin{array}{rrr} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ \\end{array}\\right]$, $B=\\left[\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\\\ 0 & 0 \\\\ \\end{array}\\right]$, $C=\\left[\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\\\ 1 & 1 \\\\ \\end{array}\\right]$.",
+      "sha": "7c795045b8b7",
+      "zh": "$A=\\left[\\begin{array}{rrr} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ \\end{array}\\right]$，$B=\\left[\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\\\ 0 & 0 \\\\ \\end{array}\\right]$，$C=\\left[\\begin{array}{rr} 1 & 0 \\\\ 0 & 1 \\\\ 1 & 1 \\\\ \\end{array}\\right]$."
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Right and left inverses · 习题 14（上游 exercises/Matrices-Inverses-Computing.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Inverses-Computing.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex18",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Solve the following system of equations by using the inverse of a suitable matrix.",
+      "sha": "4d61f2b330cd",
+      "zh": "利用某个合适的矩阵的逆，解下面的方程组。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{c}\n      8x + 2y + 3z = -1 \\\\\n      y - 2z = 2 \\\\\n      x + z = 1\n    \\end{array}"
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The system can be written in matrix form as $A\\vect{v}=\\vect{b}$, where",
+      "sha": "de13a6159b4c",
+      "zh": "这个方程组可以写成矩阵形式 $A\\vect{v}=\\vect{b}$，其中"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{ccc}\n        8 & 2 & 3 \\\\\n        0 & 1 & -2 \\\\\n        1 & 0 & 1 \\\\\n      \\end{array}\\right]\n      \\quad\\text{and}\\quad\n      \\vect{b} = \\left[\\begin{array}{c} -1 \\\\ 2 \\\\ 1 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The inverse of $A$ is",
+      "sha": "619763da8848",
+      "zh": "$A$ 的逆是"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A^{-1} = \\left[\\begin{array}{ccc}\n        1 & -2 & -7 \\\\\n        -2 & 5 & 16 \\\\\n        -1 & 2 & 8 \\\\\n      \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore,",
+      "sha": "236a32def63c",
+      "zh": "因此，"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v} = A^{-1}\\vect{b} =\n      \\left[\\begin{array}{c} -12 \\\\ 28 \\\\ 13 \\end{array}\\right]."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Right and left inverses · 习题 1（上游 exercises/Matrices-Inverses-SystemOfEquations.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Inverses-SystemOfEquations.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex19",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose that $A,B,C,D$ are $n\\times n$-matrices, and that all relevant matrices are invertible. Further, suppose that $(A+B)^{-1} = CB^{-1}$. Solve this equation for $A$ (in terms of $B$ and $C$), $B$ (in terms of $A$ and $C$), and $C$ (in terms of $A$ and $B$).",
+      "sha": "3fe6cacbec52",
+      "zh": "设 $A,B,C,D$ 是 $n\\times n$ 矩阵，且所有涉及的矩阵都可逆。再设 $(A+B)^{-1} = CB^{-1}$。从这个等式中分别解出 $A$（用 $B$ 和 $C$ 表示）、$B$（用 $A$ 和 $C$ 表示）、$C$（用 $A$ 和 $B$ 表示）。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "To solve for $A$, we invert both sides of the equation $(A+B)^{-1} = CB^{-1}$ and use matrix algebra to get $A+B = (CB^{-1})^{-1} = (B^{-1})^{-1}C^{-1} = BC^{-1}$. Therefore, $A = BC^{-1} - B$.",
+      "sha": "fd6bb7d67834",
+      "zh": "要解出 $A$，对等式 $(A+B)^{-1} = CB^{-1}$ 两边求逆，并利用矩阵代数得 $A+B = (CB^{-1})^{-1} = (B^{-1})^{-1}C^{-1} = BC^{-1}$。所以 $A = BC^{-1} - B$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To solve for $B$, we note that $A = BC^{-1} - B = B(C^{-1}-I)$. Multiplying both sides of the equation on the right by the inverse of $C^{-1}-I$, we get $B = A(C^{-1}-I)^{-1}$.",
+      "sha": "004c8529d203",
+      "zh": "要解出 $B$，注意 $A = BC^{-1} - B = B(C^{-1}-I)$。在等式两边右乘 $C^{-1}-I$ 的逆，得 $B = A(C^{-1}-I)^{-1}$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To solve for $C$, we take the original equation $(A+B)^{-1} = CB^{-1}$ and right-multiply both sides of the equation $B$. This yields $C = (A+B)^{-1}B$.",
+      "sha": "ca35703f7217",
+      "zh": "要解出 $C$，对原等式 $(A+B)^{-1} = CB^{-1}$ 的两边右乘 $B$，得 $C = (A+B)^{-1}B$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Right and left inverses · 习题 1（上游 exercises/Matrices-Inverses-Properties.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Inverses-Properties.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex20",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following matrices is right invertible? Find a right inverse if one exists. If possible, find two different right inverses.",
+      "sha": "593d16ce52e2",
+      "zh": "下列矩阵中哪些是右可逆的？如果右逆存在，求出一个右逆。如果可能，求出两个不同的右逆。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{ccc}\n      1 & 2 & 3 \\\\\n      0 & 1 & 0 \\\\\n    \\end{array}\\right]\n    \\qquad\n    B=\\left[\\begin{array}{ccc}\n      1 & 1 & 2 \\\\\n      2 & 2 & 4 \\\\\n    \\end{array}\\right]\n    \\qquad\n    C=\\left[\\begin{array}{cc}\n      1 & 2 \\\\\n      1 & 0 \\\\\n      0 & 1 \\\\\n    \\end{array}\\right]\n    \\qquad\n    D=\\left[\\begin{array}{cc}\n      1 & 2 \\\\\n      2 & 3 \\\\\n    \\end{array}\\right]"
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix $A$ is right invertible. Two possible right inverses are",
+      "sha": "3df8d9f33d3b",
+      "zh": "矩阵 $A$ 是右可逆的。两个可能的右逆是"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{cc}\n        1 & -2 \\\\\n        0 & 1 \\\\\n        0 & 0 \\\\\n      \\end{array}\\right]\n      \\quad\\text{and}\\quad\n      \\left[\\begin{array}{cc}\n        -2 & 1 \\\\\n        0 & 1 \\\\\n        1 & -1 \\\\\n      \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrices $B$ and $C$ are not right invertible. The matrix $D$ is right invertible with inverse",
+      "sha": "fde51870f146",
+      "zh": "矩阵 $B$ 和 $C$ 不是右可逆的。矩阵 $D$ 是右可逆的，其逆为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{cc}\n        -3 & 2 \\\\\n        2 & -1 \\\\\n      \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $D$ is square, its right inverse is actually an inverse, and therefore unique.",
+      "sha": "3e685cf35ec1",
+      "zh": "因为 $D$ 是方阵，它的右逆其实就是它的逆，因此是唯一的。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Right and left inverses · 习题 1（上游 exercises/Matrices-Inverses-RightLeft.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Inverses-RightLeft.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex21",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following matrices is left invertible? Find a left inverse if one exists. If possible, find two different left inverses.",
+      "sha": "2a89c8f3d9bc",
+      "zh": "下列矩阵中哪些是左可逆的？如果左逆存在，求出一个左逆。如果可能，求出两个不同的左逆。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{ccc}\n      1 & 2 & 1 \\\\\n      0 & 1 & 0 \\\\\n    \\end{array}\\right]\n    \\qquad\n    B=\\left[\\begin{array}{ccc}\n      1 & 1 \\\\\n      2 & 3 \\\\\n    \\end{array}\\right]\n    \\qquad\n    C=\\left[\\begin{array}{cc}\n      1 & 0 \\\\\n      0 & 1 \\\\\n      2 & 1 \\\\\n    \\end{array}\\right]\n    \\qquad\n    D=\\left[\\begin{array}{cc}\n      1 & 0 \\\\\n      2 & 0 \\\\\n      3 & 0 \\\\\n    \\end{array}\\right]"
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Right and left inverses · 习题 2（上游 exercises/Matrices-Inverses-RightLeft.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Inverses-RightLeft.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "左逆与右逆"
+}
