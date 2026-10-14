@@ -3486,7 +3486,7 @@
           ],
           "drills": {
             "title": "随堂练习",
-            "intro": "先做这一道：相似的矩阵之间，什么会跟着坐标变，什么不会。",
+            "intro": "五道题，每道换一个角度看相似：哪些量不变、特征值怎么读、不相似的例子、能不能传递、哪种「变换」不算换坐标。",
             "items": [
               {
                 "id": "sm1",
@@ -3521,6 +3521,38 @@
                 "pass": 1
               },
               {
+                "id": "sm4",
+                "kind": "choice",
+                "stem": "教材里 `A = [[3,0,2],[6,4,3],[-4,0,-3]]` 与 `D = diag(1,-1,4)` 相似。不用解方程，A 的三个特征值是哪三个？",
+                "varies": "从「哪些量不变」落到特征值这一个具体的量。",
+                "hint": "相似矩阵的特征值一样。对角阵的特征值在哪里？",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Diagonalization · 例 Diagonalizing a matrix（第一个）",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Eigenvalues-Diagonalization.tex",
+                    "note": "取教材同一个例子，反过来问：由相似的对角阵直接读出特征值；教材已给出 A 的特征值 1、−1、4，SymPy 复核一致"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "1、−1、4",
+                    "ok": true,
+                    "why": "相似矩阵描述同一次搬动，特征值一样；对角阵的特征值就是对角线上的数。教材里解 A 的特征方程，得到的正是 1、−1、4。"
+                  },
+                  {
+                    "text": "3、4、−3",
+                    "misread": "那是 A 自己的对角线。只有对角阵（或三角阵）的特征值才能直接从对角线上读，一般的矩阵不行。"
+                  },
+                  {
+                    "text": "只有 −4 一个",
+                    "misread": "−4 是行列式，等于三个特征值的乘积 1×(−1)×4，不是特征值本身。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
                 "id": "sm2",
                 "kind": "choice",
                 "stem": "`A = [[1,1],[0,1]]` 与单位矩阵 `I` 相似吗？",
@@ -3550,7 +3582,7 @@
                     "misread": "行列式相同同样只是必要条件。光凭一两个数相同，判不了相似。"
                   }
                 ],
-                "pass": 2
+                "pass": 1
               },
               {
                 "id": "sm3",
@@ -3578,7 +3610,36 @@
                     "misread": "两次换坐标合起来仍是一次换坐标，所以必然相似。"
                   }
                 ],
-                "pass": 2
+                "pass": 1
+              },
+              {
+                "id": "sm5",
+                "kind": "choice",
+                "stem": "`A = I`（单位矩阵）。把第一行乘 2，得到 `B = [[2,0],[0,1]]`。A 与 B 相似吗？",
+                "varies": "换成一个常见的混淆：初等变换和换坐标是不是一回事。",
+                "hint": "先算两个矩阵的行列式。",
+                "source_refs": [
+                  {
+                    "relation": "authored",
+                    "note": "教材只给出相似的定义（P⁻¹AP = B）；「初等行变换不等于换坐标」是一个常见的混淆，这一问由定义直接推出（det I = 1，det B = 2），没有现成题可改编"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "不相似：行列式不同（1 与 2）",
+                    "ok": true,
+                    "why": "相似矩阵的行列式一样，而 det I = 1、det B = 2。行变换相当于只在左边乘一个矩阵，换坐标则是左边乘 P⁻¹、右边乘 P，两者不是一回事。"
+                  },
+                  {
+                    "text": "相似：B 是 A 做了一次初等变换得到的",
+                    "misread": "初等行变换改变的是这个矩阵本身（搬动变了）；相似是同一个搬动换了写法。把第一行乘 2，面积倍数就从 1 变成了 2。"
+                  },
+                  {
+                    "text": "相似：两个都是对角阵",
+                    "misread": "都是对角阵不够。对角元不同（1,1 与 2,1），就是两次不同的搬动；相似的对角阵只可能是对角元重新排列。"
+                  }
+                ],
+                "pass": 1
               }
             ]
           }
@@ -3673,7 +3734,7 @@
           ],
           "drills": {
             "title": "随堂练习",
-            "intro": "先做这一道：矩阵换成对角的以后，算起来好在哪。",
+            "intro": "五道题，每道换一个角度看对角化：对角阵好算在哪、重根怎么占格、`AP = PD` 怎么逐列读、特征值的顺序为什么要对上、什么情形做不到。",
             "items": [
               {
                 "id": "dg3",
@@ -3736,13 +3797,77 @@
                     "misread": "三个对角元里只有两个对应 λ=2，第三个对应 λ=6。"
                   }
                 ],
-                "pass": 2
+                "pass": 1
+              },
+              {
+                "id": "dg4",
+                "kind": "choice",
+                "stem": "教材里 `A = [[3,0,2],[6,4,3],[-4,0,-3]]`，`P` 的三列是 `(−1,1,1)`、`(−1,0,2)`、`(0,1,0)`，`D = diag(1,−1,4)`。检验 `AP = PD` 时，`AP` 的第一列应该等于什么？",
+                "varies": "从「会算」转到「会读」：把 AP = PD 一列一列读成特征方程。",
+                "hint": "AP 的第一列，就是 A 乘上 P 的第一列。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Diagonalization · 例 Diagonalizing a matrix 末尾「也可以检验 AP = PD」与定理 Diagonalization and eigenvectors 的证明",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Eigenvalues-Diagonalization.tex",
+                    "note": "取教材例中的 A、P、D，问 AP = PD 逐列怎么读；AP 与 PD 的第一列已用 SymPy 验算，都是 (−1,1,1)"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "P 的第一列本身（乘 1）",
+                    "ok": true,
+                    "why": "AP 的第一列是 A 乘 P 的第一列：A·(−1,1,1)ᵀ = (−1,1,1)ᵀ；PD 的第一列是 P 的第一列乘 D 的第一个对角元 1。两边相等，就是在说「(−1,1,1) 是特征值 1 的特征向量」。"
+                  },
+                  {
+                    "text": "P 的第二列",
+                    "misread": "第一列对应第一个特征值 1，第二列才对应 −1。AP 的第 i 列只和 P 的第 i 列有关。"
+                  },
+                  {
+                    "text": "全是 0",
+                    "misread": "A·(−1,1,1)ᵀ = (−1,1,1)ᵀ，不是零向量。特征向量被搬完不会消失，除非它的特征值是 0。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "dg5",
+                "kind": "choice",
+                "stem": "还是上一题的 `P` 和 `D`。如果把 `P` 的第一列和第二列对调，`D` 里的对角元要怎么排才还成立？",
+                "varies": "从「会读」转到「顺序为什么要对上」。",
+                "hint": "P 的第 i 列配的是 D 的第几个对角元？",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Diagonalization · 例 Diagonalizing a matrix（第二个）末尾的说明",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Eigenvalues-Diagonalization.tex",
+                    "note": "教材指出 D 里特征值的顺序必须与 P 里特征向量的顺序一致；本题把它落到教材第一个例子的具体数上，并验算了对调后 AP₂ = P₂D₂（D₂ = diag(−1,1,4)）"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "diag(−1, 1, 4)：对角元跟着列一起换",
+                    "ok": true,
+                    "why": "P 的第 i 列是特征向量，D 的第 i 个对角元是它的特征值，必须一一配对。列对调了，对角元也要跟着对调。"
+                  },
+                  {
+                    "text": "不用改，对角元的顺序无所谓",
+                    "misread": "顺序有所谓：AP = PD 是逐列对应的。不改的话，第一列会被配上错误的特征值，等式不成立。"
+                  },
+                  {
+                    "text": "diag(1, 4, −1)",
+                    "misread": "只有前两列对调了，对应的对角元也只对调前两个：1 与 −1 互换，4 留在第三位。"
+                  }
+                ],
+                "pass": 1
               },
               {
                 "id": "dg2",
                 "kind": "choice",
                 "stem": "`A = [[1,1],[0,1]]` 不能对角化，真正的原因是哪一条？",
-                "varies": "从「怎么对角化」转到「为什么有的矩阵做不到」。",
+                "varies": "从「怎么读」转到「为什么有的矩阵做不到」。",
                 "hint": "对角化需要凑齐几个线性无关的特征向量？这个矩阵有几个？",
                 "source_refs": [
                   {
@@ -3768,7 +3893,7 @@
                     "misread": "det A = 1，A 是可逆的。可逆与否和能不能对角化是两回事。"
                   }
                 ],
-                "pass": 2
+                "pass": 1
               }
             ]
           }
@@ -3859,7 +3984,7 @@
           ],
           "drills": {
             "title": "随堂练习",
-            "intro": "先做这一道：正交的变换对箭头的长度做了什么。",
+            "intro": "五道题，每道换一个角度看正交：正交变换对长度做了什么、减掉投影怎么算、为什么减完就垂直、怎么认出正交矩阵、垂直和标准化差在哪。",
             "items": [
               {
                 "id": "or3",
@@ -3921,7 +4046,39 @@
                     "misread": "那是 v₂ 本身，等于一点没减。(1,0) 与 u₁ = (1,1) 的内积是 1，并不垂直。"
                   }
                 ],
-                "pass": 2
+                "pass": 1
+              },
+              {
+                "id": "or5",
+                "kind": "choice",
+                "stem": "施密特公式 `u₂ = v₂ − (u₁·v₂)/(u₁·u₁)·u₁` 里，为什么减完之后的 `u₂` 一定与 `u₁` 垂直？",
+                "varies": "从「怎么算」转到「为什么对」。",
+                "hint": "公式里减掉的那一项，是 v₂ 的什么？",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Gram-Schmidt · 命题 Gram-Schmidt orthogonalization procedure for 2 vectors",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/InnerProductSpaces-GramSchmidt.tex",
+                    "note": "教材命题断言 {u₁, u₂} 是正交基；本题问其中的道理（减去投影），不是公式的计算"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "u₂ 是 v₂ 减去它在 u₁ 方向上的那一份，剩下的部分就不再有 u₁ 方向的成分",
+                    "ok": true,
+                    "why": "公式减掉的正是 v₂ 沿 u₁ 的投影，剩下的是「垂直于 u₁ 的那部分」。这就是「减掉投影」这一个动作的全部意思。"
+                  },
+                  {
+                    "text": "因为 v₂ 本来就垂直于 u₁",
+                    "misread": "v₂ 一般并不垂直于 u₁。例如 v₂ = (1,0)、u₁ = (1,1)，内积是 1，不是 0——正因为不垂直才需要这一步。"
+                  },
+                  {
+                    "text": "因为 u₂ 被除以了它自己的长度",
+                    "misread": "除以长度只改变长短，不改变方向，与垂不垂直无关；而且公式里根本没有这一步。"
+                  }
+                ],
+                "pass": 1
               },
               {
                 "id": "or2",
@@ -3953,7 +4110,39 @@
                     "misread": "两列的内积是 −12/25 + 12/25 = 0，恰好垂直。"
                   }
                 ],
-                "pass": 2
+                "pass": 1
+              },
+              {
+                "id": "or4",
+                "kind": "choice",
+                "stem": "矩阵 `[[1,1],[−1,1]]` 的两列互相垂直。它是正交矩阵吗？",
+                "varies": "换一个边界情形：垂直，但没有标准化。",
+                "hint": "算一下每一列的长度，再算 PᵀP。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Orthogonal maps · 定义 Orthogonal matrix（PᵀP = I）与命题 Conditions for orthogonal matrices",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/InnerProductSpaces-OrthogonalMaps.tex",
+                    "note": "用教材的定义 PᵀP = I 判一个具体矩阵：这里 PᵀP = 2I，两列垂直但长度都是 √2，没有标准化；已验算"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "不是：两列虽然垂直，长度却都是 √2，不是 1",
+                    "ok": true,
+                    "why": "正交矩阵要求列构成**标准**正交组：既垂直，又各自长度为 1。这个矩阵的 PᵀP = 2I，不是 I。把每一列除以 √2，才是正交矩阵。"
+                  },
+                  {
+                    "text": "是，两列垂直就够了",
+                    "misread": "垂直只是一半。教材的定义是 PᵀP = I，对角线上的 1 就是在要求每一列长度为 1。"
+                  },
+                  {
+                    "text": "不是，因为两列不垂直",
+                    "misread": "两列的内积是 1×1 + (−1)×1 = 0，恰好垂直。不是正交矩阵的原因是长度。"
+                  }
+                ],
+                "pass": 1
               }
             ]
           }
@@ -4054,7 +4243,7 @@
           ],
           "drills": {
             "title": "随堂练习",
-            "intro": "先做这一道：对称矩阵的两个特征方向有什么特别。",
+            "intro": "五道题，每道换一个角度看对称矩阵：特征方向为什么垂直、前提不满足会怎样、结论是什么、对称性一丢会失去什么、怎么认出能正交对角化的矩阵。",
             "items": [
               {
                 "id": "sy1",
@@ -4117,7 +4306,7 @@
                     "misread": "i 不是实数。不矛盾的原因是前提不满足，不是 i 的性质。"
                   }
                 ],
-                "pass": 2
+                "pass": 1
               },
               {
                 "id": "sy3",
@@ -4148,7 +4337,71 @@
                     "misread": "不同特征值的特征向量必然正交；同一个特征值有重数时，也总能选成正交的。"
                   }
                 ],
-                "pass": 2
+                "pass": 1
+              },
+              {
+                "id": "sy4",
+                "kind": "choice",
+                "stem": "把 `[[2,1],[1,2]]` 的右上角改成 0，得到 `[[2,0],[1,2]]`（不再对称）。它还能对角化吗？",
+                "varies": "把前提拿掉：对称性一丢会怎样。",
+                "hint": "数一数特征值 2 有几个线性无关的特征向量。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Diagonalization · 例 A matrix that cannot be diagonalized 的判法（数线性无关的特征向量）",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Eigenvalues-Diagonalization.tex",
+                    "note": "用教材「不能对角化」那个例子的判法，验证一个只改了一个元素、不再对称的矩阵：特征值 2 的解空间只有 (0,1) 一个方向；已用 SymPy 验算"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "不能：特征值 2 只有一个线性无关的特征向量",
+                    "ok": true,
+                    "why": "解 (A − 2I)v = 0，即 [[0,0],[1,0]]v = 0，解空间只有 (0,1) 一个方向，凑不齐两个线性无关的特征向量。对称这个前提一丢，「总能对角化」就没了。"
+                  },
+                  {
+                    "text": "能，只是特征向量不再垂直",
+                    "misread": "问题不只是垂不垂直：特征值 2 的特征向量只有一个方向，根本凑不齐两个，没法对角化。"
+                  },
+                  {
+                    "text": "能，特征值 2 重复了两次，对角线上写两个 2 就行",
+                    "misread": "重复的特征值要有相应数目的线性无关特征向量才行。这里只有一个，写两个 2 也找不到第二列。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "sy5",
+                "kind": "choice",
+                "stem": "下面哪一个矩阵，一定可以用正交矩阵对角化？",
+                "varies": "从「性质」转到「判断哪个矩阵满足前提」。",
+                "hint": "先看哪一个是对称矩阵。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Diagonalization of real symmetric matrices · 定理 Diagonalization of real symmetric matrices",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/InnerProductSpaces-Diagonalization.tex",
+                    "note": "取教材定理「实对称矩阵可以正交对角化」判断三个具体矩阵；另外两个分别是教材里不能对角化的例子和旋转矩阵，已验算"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "`[[0,1],[1,0]]`",
+                    "ok": true,
+                    "why": "它是实对称矩阵（转置等于自己），按定理一定可以用正交矩阵对角化。特征值 1 与 −1，特征向量 (1,1)、(1,−1) 垂直。"
+                  },
+                  {
+                    "text": "`[[1,1],[0,1]]`",
+                    "misread": "它不对称，而且教材专门拿它说明「不能对角化」，当然更谈不上正交对角化。"
+                  },
+                  {
+                    "text": "`[[0,−1],[1,0]]`",
+                    "misread": "它是旋转 90°，不对称，特征值是 ±i，不是实数，在实数范围内对角化不了。"
+                  }
+                ],
+                "pass": 1
               }
             ]
           }
@@ -4241,7 +4494,7 @@
           ],
           "drills": {
             "title": "随堂练习",
-            "intro": "先做这一道：把交叉项消掉以后，标准形里剩下什么。",
+            "intro": "五道题，每道换一个角度看二次型：标准形的系数是什么、怎么写出对称矩阵、主轴方向的截距、公式为什么要求正定、系数为 0 时图形变成什么。",
             "items": [
               {
                 "id": "qd2",
@@ -4303,7 +4556,7 @@
                     "misread": "它展开后虽然也得到 4xy，但不对称。二次型的矩阵取对称的那一个，才是唯一的。"
                   }
                 ],
-                "pass": 2
+                "pass": 1
               },
               {
                 "id": "qd3",
@@ -4335,7 +4588,71 @@
                     "misread": "距离是 1 的是另一条主轴 (1,−1)（对应特征值 1）。(1,1) 方向对应特征值 3，椭圆在这个方向上更窄。"
                   }
                 ],
-                "pass": 2
+                "pass": 1
+              },
+              {
+                "id": "qd4",
+                "kind": "choice",
+                "stem": "教材说：当 A 正定时，`vᵀAv = 1` 是椭圆，沿特征向量方向的截距是 `±1/√λ`。如果有一个特征值 λ 是**负数**，沿那个方向会发生什么？",
+                "varies": "从「怎么算」转到「公式的前提为什么必要」。",
+                "hint": "沿这个方向走 t 步，二次型的值是多少？",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Quadratic forms · 命题 Principal axes of a quadratic form（前提：A 正定）",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/InnerProductSpaces-Application-QuadraticForms.tex",
+                    "note": "取教材命题的前提追问：为什么要求正定。λt² = 1 在 λ < 0 时无实数解这一步论证是本应用补的"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "曲线碰不到这个方向：沿它走 t，vᵀAv = λt² 是负的，永远等不于 1",
+                    "ok": true,
+                    "why": "沿特征向量 u 方向取点 t·u，二次型的值是 λt²。λ 为负时它永远小于 0，不可能等于 1，所以曲线在这个方向上根本没有交点——不再是椭圆。"
+                  },
+                  {
+                    "text": "截距变成 ±1/λ，只是方向反了",
+                    "misread": "公式里是 1/√λ，对负的 λ 没有实数值。真实情况是方程 λt² = 1 无解，不是「方向反了」。"
+                  },
+                  {
+                    "text": "没有影响，取绝对值就行",
+                    "misread": "取绝对值得到的点并不在曲线上：负特征值的方向上 vᵀAv 恒为负，不可能等于 1。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "qd5",
+                "kind": "choice",
+                "stem": "二次型 `x² + 2xy + y²` 的矩阵是 `[[1,1],[1,1]]`，特征值 2 和 0。它的标准形是？",
+                "varies": "换成边界情形：有一个特征值是 0。",
+                "hint": "标准形的系数是什么？其中一个是不是 0？",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Quadratic forms · 命题 Diagonalization of quadratic forms",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/InnerProductSpaces-Application-QuadraticForms.tex",
+                    "note": "套用教材：标准形的系数是特征值，取其中一个特征值为 0 的边界情形；x² + 2xy + y² = (x+y)² = 2u²（u = (x+y)/√2）已验算"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "2u²（另一项的系数是 0）",
+                    "ok": true,
+                    "why": "标准形的系数是特征值 2 和 0，所以是 2u² + 0·v²，也就是 2u²。这也说明 x² + 2xy + y² = (x+y)²，本来就只和 x+y 有关。"
+                  },
+                  {
+                    "text": "u² + v²",
+                    "misread": "1 和 1 是原矩阵的对角元，随坐标变；标准形的系数是特征值，不是对角元。"
+                  },
+                  {
+                    "text": "2u² + 2v²",
+                    "misread": "特征值是 2 和 0，不是 2 和 2。可以直接验证：(x+y)² 不可能出现另一个独立的平方项。"
+                  }
+                ],
+                "pass": 1
               }
             ]
           }
@@ -4426,7 +4743,7 @@
           ],
           "drills": {
             "title": "随堂练习",
-            "intro": "先做这一道：怎么用特征值看一个对称矩阵是不是正定。",
+            "intro": "五道题，每道换一个角度看正定：用特征值判、从特征多项式里读线索、找反例推翻、半正定的边界、放进函数图形里看是碗还是别的。",
             "items": [
               {
                 "id": "df1",
@@ -4460,10 +4777,42 @@
                 "pass": 1
               },
               {
+                "id": "df4",
+                "kind": "choice",
+                "stem": "教材里 `A = [[5,0,2],[0,5,1],[2,1,1]]` 的特征多项式是 `−λ³ + 11λ² − 30λ`。光看它**没有常数项**，能说明什么？",
+                "varies": "换一个角度：不解特征值，从特征多项式上读。",
+                "hint": "常数项为 0，意味着 λ 取什么值时多项式为 0？",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Positive definite matrices · 例 Using Descartes' rule of signs to check if a matrix is positive definite（第一个）",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/InnerProductSpaces-Positive.tex",
+                    "note": "取教材该例的矩阵与特征多项式；教材判为半正定而非正定，本题问其中最容易读出的一条线索（常数项为 0）；特征值 0、5、6 已验算"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "λ = 0 是特征值，所以 A 最多是半正定，不可能正定",
+                    "ok": true,
+                    "why": "常数项为 0，就是 det(A − 0·I) = 0，λ = 0 已经是特征值。正定要求每个特征值都大于 0，所以一眼就能排除正定。教材最后判的就是半正定。"
+                  },
+                  {
+                    "text": "A 一定正定，因为系数里有 11 和 30",
+                    "misread": "系数的大小说明不了什么。正定看的是特征值是不是全大于 0，而这里有一个恰好是 0。"
+                  },
+                  {
+                    "text": "说明不了什么，要把特征值全解出来才知道",
+                    "misread": "不用全解：常数项为 0 就足以排除正定。从特征多项式里读信息，比解方程快。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
                 "id": "df2",
                 "kind": "choice",
                 "stem": "`A = [[1,2],[2,1]]` 的每个元素都是正数。它正定吗？",
-                "varies": "从「用特征值判」转到「用一个反例判」。",
+                "varies": "从「读特征多项式」转到「用一个反例推翻」。",
                 "hint": "试一个 x，比如 `x = (1,−1)`，算 xᵀAx 的符号。",
                 "source_refs": [
                   {
@@ -4489,7 +4838,7 @@
                     "misread": "对角元为正只是必要条件。这里非对角元太大，把 (1,−1) 这个方向拉成了负的。"
                   }
                 ],
-                "pass": 2
+                "pass": 1
               },
               {
                 "id": "df3",
@@ -4521,7 +4870,40 @@
                     "misread": "半正定只要求特征值都不小于 0，等于 0 是允许的。"
                   }
                 ],
-                "pass": 2
+                "pass": 1
+              },
+              {
+                "id": "df5",
+                "kind": "choice",
+                "stem": "二元函数 `f(x,y) = x² + xy + y²` 对应的矩阵是 `[[1,1/2],[1/2,1]]`，特征值 3/2 和 1/2。在原点附近，f 的图形像什么？",
+                "varies": "放进函数图形里：碗、马鞍、平台分别对应哪种特征值。",
+                "hint": "两个特征值的符号是什么？",
+                "context": "多元函数在驻点处的二阶偏导矩阵正定，这个驻点就是极小值点；有负的特征值就是马鞍。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Positive definite matrices · 定义 Positive semidefinite and positive definite matrices 与命题 Characterization",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/InnerProductSpaces-Positive.tex",
+                    "note": "按教材定义：正定 ⟺ 对非零 x 有 xᵀAx > 0，特征值判据同上；把「碗 / 马鞍 / 平台」的几何说法对应到三种特征值情形是本应用加的；矩阵与特征值已验算"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "一只碗：原点是最低点，除原点外 f 处处大于 0",
+                    "ok": true,
+                    "why": "两个特征值 3/2、1/2 都大于 0，矩阵正定，所以对每个非零的 (x,y) 都有 f > 0，原点是最低点。"
+                  },
+                  {
+                    "text": "一个马鞍：沿有的方向升、沿有的方向降",
+                    "misread": "马鞍要有一个特征值是负的。这里两个都是正的，所以每个方向都是往上升。"
+                  },
+                  {
+                    "text": "一个平台：沿某个方向 f 保持为 0",
+                    "misread": "那要有一个特征值恰好是 0（半正定的边界情形）。这里最小的特征值是 1/2，大于 0。"
+                  }
+                ],
+                "pass": 1
               }
             ]
           }
