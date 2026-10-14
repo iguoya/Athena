@@ -1,18 +1,18 @@
 # 九州协作看板
 
-> 由 `scripts/comms.py board` 生成于 2026-10-14 08:38，**不要手改**。任务详情见各任务文件，通讯规则见 [README.md](README.md)。
+> 由 `scripts/comms.py board` 生成于 2026-10-14 08:44，**不要手改**。任务详情见各任务文件，通讯规则见 [README.md](README.md)。
 
 ## 未读消息
 
 | 角色 | 未读 |
 |---|---|
 | claude-code | 0 |
-| cursor | 3 |
-| zcode | 1 |
+| cursor | 0 |
+| zcode | 2 |
 
 ## 概览
 
-todo 23 · doing 1 · review 2 · blocked 2 · done 10
+todo 22 · doing 2 · review 0 · blocked 2 · done 12
 
 ## claude-code
 
@@ -24,9 +24,7 @@ todo 23 · doing 1 · review 2 · blocked 2 · done 10
 
 | 任务 | 优先级 | 状态 | 标题 | 依赖 | 更新 |
 |---|---|---|---|---|---|
-| [T-008](tasks/T-008-影响链：leadsTo-画成弧线箭头.md) | P1 | review | 影响链：leadsTo 画成弧线箭头 |  | 2026-10-13 23:11 |
-| [T-009](tasks/T-009-古今地名三态切换.md) | P1 | review | 古今地名三态切换 |  | 2026-10-13 23:13 |
-| [T-026](tasks/T-026-下载-CHGIS-等学术地理数据，转-GeoJS.md) | P0 | todo | 下载 CHGIS 等学术地理数据，转 GeoJSON 放进 academic 目录并入库 |  | 2026-10-14 08:29 |
+| [T-026](tasks/T-026-下载-CHGIS-等学术地理数据，转-GeoJS.md) | P0 | doing | 下载 CHGIS 等学术地理数据，转 GeoJSON 放进 academic 目录并入库 |  | 2026-10-14 08:40 |
 | [T-010](tasks/T-010-学术层运行时叠加（CHGIS-等）.md) | P1 | todo | 学术层运行时叠加（CHGIS 等） | T-026 | 2026-10-13 22:43 |
 | [T-016](tasks/T-016-发行验证：全量检查与桌面壳启动.md) | P1 | todo | 发行验证：全量检查与桌面壳启动 | T-001, T-002, T-003 | 2026-10-13 22:43 |
 | [T-017](tasks/T-017-疆域按陆地面裁剪，贴合海岸.md) | P1 | todo | 疆域按陆地面裁剪，贴合海岸 | T-001 | 2026-10-13 22:51 |
@@ -51,6 +49,8 @@ todo 23 · doing 1 · review 2 · blocked 2 · done 10
 | [T-005](tasks/T-005-搜索框移到顶栏.md) | P1 | done | 搜索框移到顶栏 |  | 2026-10-13 23:13 |
 | [T-006](tasks/T-006-播放按“年-秒”推进.md) | P1 | done | 播放按“年/秒”推进 |  | 2026-10-13 23:13 |
 | [T-007](tasks/T-007-彩色地形底图（Natural-Earth-I-栅格）.md) | P1 | done | 彩色地形底图（Natural Earth I 栅格） | T-001 | 2026-10-14 08:32 |
+| [T-008](tasks/T-008-影响链：leadsTo-画成弧线箭头.md) | P1 | done | 影响链：leadsTo 画成弧线箭头 |  | 2026-10-14 08:44 |
+| [T-009](tasks/T-009-古今地名三态切换.md) | P1 | done | 古今地名三态切换 |  | 2026-10-14 08:44 |
 
 ## zcode
 
