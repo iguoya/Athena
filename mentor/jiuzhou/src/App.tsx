@@ -30,6 +30,7 @@ import routesJson from "@content/routes.json";
 import highlightsJson from "@content/highlights.json";
 import storiesJson from "@content/stories.json";
 import capitalsJson from "@content/capitals.json";
+import landmarksJson from "@content/landmarks.json";
 import { featuresCollection, routesCollection } from "@/content/layer-geo";
 import { CompareMaps } from "@/CompareMaps";
 import {
@@ -86,6 +87,34 @@ const eventHighlights = (highlightsJson as unknown as HighlightsDoc)
 const stories = (storiesJson as unknown as StoriesDoc).stories;
 const allCapitals = (capitalsJson as unknown as CapitalsDoc).capitals;
 const capitalTrail = mainCapitalTrail(allCapitals);
+
+type LandmarkKind =
+  | "mountain"
+  | "plateau"
+  | "basin"
+  | "plain"
+  | "desert"
+  | "lake"
+  | "sea";
+type Landmark = {
+  id: string;
+  name: string;
+  kind: LandmarkKind;
+  lon: number;
+  lat: number;
+  size: 1 | 2 | 3;
+  rotate?: number;
+};
+const landmarks = (
+  landmarksJson as { landmarks: Landmark[] }
+).landmarks;
+
+/** size → 最低缩放：3@3.5、2@4.5、1@5.5 */
+function landmarkMinZoom(size: number): number {
+  if (size >= 3) return 3.5;
+  if (size >= 2) return 4.5;
+  return 5.5;
+}
 
 const CHINA_VIEW = { longitude: 105.5, latitude: 35.5, zoom: 3.45 };
 
@@ -256,6 +285,8 @@ export default function App() {
   const [storyId, setStoryId] = useState<string | null>(null);
   const [storyStep, setStoryStep] = useState(0);
   const [showCapitals, setShowCapitals] = useState(true);
+  /** T-022：山川湖海注记，默认开 */
+  const [showLandmarks, setShowLandmarks] = useState(true);
   const [compareMode, setCompareMode] = useState(false);
   const [leftYear, setLeftYear] = useState(-260);
   const [rightYear, setRightYear] = useState(-221);
@@ -689,11 +720,26 @@ export default function App() {
     nameMode,
   ]);
 
-  /** T-003：DOM 标签 + 屏幕包围盒碰撞（离线，不依赖 glyphs） */
+  /** T-003 / T-022：城邑优先；再插 size≥3 自然注记；再补其余城邑与小注记 */
   const [placeLabelIds, setPlaceLabelIds] = useState<string[]>([]);
+  const [landmarkLabelIds, setLandmarkLabelIds] = useState<string[]>([]);
   useEffect(() => {
     const map = mapRef.current?.getMap();
     if (!map) return;
+    function overlaps(
+      box: { x0: number; y0: number; x1: number; y1: number },
+      taken: Array<{ x0: number; y0: number; x1: number; y1: number }>,
+    ) {
+      return taken.some(
+        (t) =>
+          !(
+            box.x1 < t.x0 ||
+            box.x0 > t.x1 ||
+            box.y1 < t.y0 ||
+            box.y0 > t.y1
+          ),
+      );
+    }
     function recompute() {
       const m = mapRef.current?.getMap();
       if (!m) return;
@@ -706,7 +752,9 @@ export default function App() {
       const taken: Array<{ x0: number; y0: number; x1: number; y1: number }> =
         [];
       const ids: string[] = [];
-      for (const f of feats) {
+      const lmIds: string[] = [];
+
+      function tryPlace(f: (typeof feats)[0]): boolean {
         const props = f.properties as {
           id: string;
           name: string;
@@ -719,7 +767,7 @@ export default function App() {
           props.tier !== "metropolis" &&
           !props.mustShow
         ) {
-          continue;
+          return false;
         }
         const coords = f.geometry.coordinates as [number, number];
         const pt = m.project(coords);
@@ -731,21 +779,70 @@ export default function App() {
           x1: pt.x + w / 2,
           y1: pt.y + 8 + h,
         };
-        const hit = taken.some(
-          (t) =>
-            !(
-              box.x1 < t.x0 ||
-              box.x0 > t.x1 ||
-              box.y1 < t.y0 ||
-              box.y0 > t.y1
-            ),
-        );
-        if (hit) continue;
+        if (overlaps(box, taken)) return false;
         taken.push(box);
         ids.push(props.id);
-        if (ids.length >= 48) break;
+        return true;
       }
+
+      function tryLandmark(lm: Landmark): boolean {
+        if (zoom < landmarkMinZoom(lm.size)) return false;
+        const pt = m.project([lm.lon, lm.lat]);
+        const fontPx = lm.size >= 3 ? 13 : lm.size >= 2 ? 11 : 10;
+        const w = Math.min(160, 10 + lm.name.length * (fontPx * 0.85));
+        const h = fontPx + 6;
+        const box = {
+          x0: pt.x - w / 2,
+          y0: pt.y - h / 2,
+          x1: pt.x + w / 2,
+          y1: pt.y + h / 2,
+        };
+        if (overlaps(box, taken)) return false;
+        taken.push(box);
+        lmIds.push(lm.id);
+        return true;
+      }
+
+      /** 1) 事件/都城等 mustShow 与高等级城邑 */
+      for (const f of feats) {
+        const props = f.properties as { mustShow: number; tier: string };
+        if (
+          props.mustShow ||
+          props.tier === "capital" ||
+          props.tier === "metropolis"
+        ) {
+          tryPlace(f);
+          if (ids.length >= 24) break;
+        }
+      }
+
+      /** 2) 大号自然注记（秦岭/太行/高原/黄海等） */
+      if (showLandmarks) {
+        for (const lm of [...landmarks].sort((a, b) => b.size - a.size)) {
+          if (lm.size < 3) continue;
+          tryLandmark(lm);
+          if (lmIds.length >= 16) break;
+        }
+      }
+
+      /** 3) 其余城邑 */
+      for (const f of feats) {
+        if (ids.includes(String(f.properties?.id ?? ""))) continue;
+        tryPlace(f);
+        if (ids.length >= 40) break;
+      }
+
+      /** 4) 中小号自然注记 */
+      if (showLandmarks) {
+        for (const lm of [...landmarks].sort((a, b) => b.size - a.size)) {
+          if (lmIds.includes(lm.id)) continue;
+          tryLandmark(lm);
+          if (lmIds.length >= 36) break;
+        }
+      }
+
       setPlaceLabelIds(ids);
+      setLandmarkLabelIds(lmIds);
     }
     map.on("load", recompute);
     map.on("moveend", recompute);
@@ -757,7 +854,7 @@ export default function App() {
       map.off("moveend", recompute);
       map.off("zoomend", recompute);
     };
-  }, [placesGeo]);
+  }, [placesGeo, showLandmarks]);
 
   /** 快照势力名：多边形质心 */
   const powerCentroids = useMemo(() => {
@@ -1109,6 +1206,7 @@ export default function App() {
       rendered: (layerId: string) => number;
       year: () => number;
       setYear: (y: number) => void;
+      setZoom: (z: number) => void;
       snapshotsShown: () => { group: string; powers: string[] } | null;
       schematicShown: () => boolean;
       hostPower: () => string | null;
@@ -1165,6 +1263,10 @@ export default function App() {
           const i = timelineAll.findIndex((e) => e.id === near.id);
           if (i >= 0) setIndex(i);
         }
+      },
+      setZoom: (z: number) => {
+        mapRef.current?.getMap()?.easeTo({ zoom: z, duration: 0 });
+        setMapZoom(z);
       },
       snapshotsShown: () => {
         if (territoryModeRef.current !== "snapshot" || !territoryDataRef.current) {
@@ -1832,7 +1934,7 @@ export default function App() {
                 </span>
               )}
             </label>
-            <label className="mb-2 flex cursor-pointer items-center gap-2 px-2 text-xs">
+            <label className="mb-1 flex cursor-pointer items-center gap-2 px-2 text-xs">
               <input
                 type="checkbox"
                 checked={paperAmbience}
@@ -1840,6 +1942,18 @@ export default function App() {
                 className="accent-[var(--accent)]"
               />
               纸本质感
+            </label>
+            <label className="mb-2 flex cursor-pointer items-center gap-2 px-2 text-xs">
+              <input
+                type="checkbox"
+                checked={showLandmarks}
+                onChange={(e) => setShowLandmarks(e.target.checked)}
+                className="accent-[var(--accent)]"
+              />
+              山川注记
+              {showLandmarks && landmarkLabelIds.length > 0 && (
+                <span className="text-muted">· {landmarkLabelIds.length}</span>
+              )}
             </label>
             <p className="mb-1 px-2 text-[10px] tracking-widest text-muted">
               精度（数据可靠度）
@@ -2673,6 +2787,63 @@ export default function App() {
                 }}
               />
             </Source>
+            {showLandmarks &&
+              landmarks
+                .filter((lm) => landmarkLabelIds.includes(lm.id))
+                .map((lm) => {
+                  const isBg =
+                    lm.kind === "sea" ||
+                    lm.kind === "plateau" ||
+                    lm.kind === "plain" ||
+                    lm.kind === "basin" ||
+                    lm.kind === "desert";
+                  const fontPx = lm.size >= 3 ? 13 : lm.size >= 2 ? 11 : 10;
+                  const tracking =
+                    lm.kind === "mountain"
+                      ? "0.22em"
+                      : isBg
+                        ? "0.32em"
+                        : "0.12em";
+                  const opacity =
+                    lm.kind === "sea"
+                      ? 0.55
+                      : lm.kind === "plateau" || lm.kind === "plain"
+                        ? 0.48
+                        : lm.kind === "basin" || lm.kind === "desert"
+                          ? 0.52
+                          : lm.kind === "lake"
+                            ? 0.7
+                            : 0.78;
+                  const color =
+                    lm.kind === "sea" || lm.kind === "lake"
+                      ? "#3d6a7a"
+                      : lm.kind === "desert"
+                        ? "#8a6a3a"
+                        : "#5c4a32";
+                  return (
+                    <Marker
+                      key={`lm-${lm.id}`}
+                      longitude={lm.lon}
+                      latitude={lm.lat}
+                      anchor="center"
+                    >
+                      <span
+                        className="pointer-events-none select-none whitespace-nowrap font-medium"
+                        style={{
+                          fontSize: fontPx,
+                          letterSpacing: tracking,
+                          color,
+                          opacity,
+                          transform: `rotate(${lm.rotate ?? 0}deg)`,
+                          textShadow:
+                            "0 0 2px #f3efe6, 1px 0 0 #f3efe6, -1px 0 0 #f3efe6, 0 1px 0 #f3efe6, 0 -1px 0 #f3efe6",
+                        }}
+                      >
+                        {lm.name}
+                      </span>
+                    </Marker>
+                  );
+                })}
             {placesGeo.features
               .filter((f) =>
                 placeLabelIds.includes(String(f.properties?.id ?? "")),
