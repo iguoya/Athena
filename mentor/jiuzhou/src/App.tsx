@@ -36,6 +36,7 @@ import {
   academicAtYear,
   type AcademicProps,
 } from "@/academic-layers";
+import { powerAtPoint } from "@/geo-pip";
 import {
   type Atlas,
   type Capital,
@@ -283,6 +284,8 @@ export default function App() {
     tier: PrecisionTier;
     title: string;
   } | null>(null);
+  /** T-021：点击政权后浏览其境内事件；与选中事件的宿主政权共用高亮 */
+  const [powerBrowse, setPowerBrowse] = useState<string | null>(null);
   const yearRef = useRef(year);
   const holdUntilRef = useRef(0);
   const territoryModeRef = useRef<string | null>(null);
@@ -795,7 +798,61 @@ export default function App() {
     return out;
   }, [territoryData]);
 
-  /** T-019：注入 POWER_COLORS，供 fill 表达式读取 */
+  /** T-021：选中事件地点落在哪个快照政权内 */
+  const hostPower = useMemo(() => {
+    if (!territoryData || territoryMode !== "snapshot" || !selected) {
+      return null;
+    }
+    const place = placeById(selected.placeId);
+    if (!place) return null;
+    return powerAtPoint(place.lon, place.lat, territoryData.features);
+  }, [territoryData, territoryMode, selected]);
+
+  const litPower = powerBrowse ?? hostPower;
+
+  /** 点政权：当前快照时间窗内、地点落在该色块内的事件 */
+  const powerEvents = useMemo(() => {
+    if (!powerBrowse || !territoryData || territoryMode !== "snapshot") {
+      return [] as EventItem[];
+    }
+    const feats = territoryData.features.filter(
+      (f) => (f.properties as TerrProps).power === powerBrowse,
+    );
+    if (!feats.length) return [];
+    const p0 = feats[0]!.properties as TerrProps;
+    const from = typeof p0.fromYear === "number" ? p0.fromYear : -9999;
+    const to = typeof p0.toYear === "number" ? p0.toYear : 9999;
+    /** 快照窗再向前后各放宽，便于点到秦时能看到拔郢/灭巴蜀等同境事件 */
+    const softFrom = from - 100;
+    const softTo = to + 40;
+    const out: EventItem[] = [];
+    for (const e of timelineAll) {
+      if (e.year < softFrom || e.year > softTo) continue;
+      const ids = [e.placeId, ...(e.placeIds ?? [])];
+      let hit = false;
+      for (const pid of ids) {
+        const pl = placeById(pid);
+        if (!pl) continue;
+        if (powerAtPoint(pl.lon, pl.lat, feats) === powerBrowse) {
+          hit = true;
+          break;
+        }
+      }
+      if (hit) out.push(e);
+    }
+    return out.sort((a, b) => a.year - b.year || a.id.localeCompare(b.id));
+  }, [powerBrowse, territoryData, territoryMode, timelineAll]);
+
+  const hostPowerRef = useRef<string | null>(null);
+  const powerBrowseRef = useRef<string | null>(null);
+  const powerEventsRef = useRef<EventItem[]>([]);
+  const selectedRef = useRef<EventItem | undefined>(undefined);
+  hostPowerRef.current = hostPower;
+  powerBrowseRef.current = powerBrowse;
+  powerEventsRef.current = powerEvents;
+  selectedRef.current = selected;
+
+  /** T-019 / T-021：注入颜色与 lit 高亮 */
   const territoryPaintData = useMemo(() => {
     if (!territoryData) return null;
     return {
@@ -803,17 +860,20 @@ export default function App() {
       features: territoryData.features.map((f) => {
         const p = (f.properties ?? {}) as TerrProps;
         const color = powerColor(p.power, p.color ?? MAP_TOKENS.territory);
+        const lit = litPower && p.power === litPower ? 1 : 0;
         return {
           ...f,
           properties: {
             ...p,
             color,
             edge: powerEdgeColor(color),
+            lit,
+            dim: litPower && !lit ? 1 : 0,
           },
         };
       }),
     };
-  }, [territoryData]);
+  }, [territoryData, litPower]);
 
   const [drawerLeft, setDrawerLeft] = useState(false);
   const [drawerRight, setDrawerRight] = useState(false);
@@ -1051,6 +1111,12 @@ export default function App() {
       setYear: (y: number) => void;
       snapshotsShown: () => { group: string; powers: string[] } | null;
       schematicShown: () => boolean;
+      hostPower: () => string | null;
+      powerBrowse: () => string | null;
+      setPowerBrowse: (p: string | null) => void;
+      powerEventTitles: () => string[];
+      selectedId: () => string | null;
+      selectEvent: (id: string) => boolean;
     };
     /** 验收用源 id / 角色名（land、china、countries、territory），图层 id 是 land-fill 等 */
     function resolveRenderedLayers(map: {
@@ -1117,12 +1183,31 @@ export default function App() {
         return { group, powers };
       },
       schematicShown: () => territoryModeRef.current === "schematic",
+      hostPower: () => hostPowerRef.current,
+      powerBrowse: () => powerBrowseRef.current,
+      setPowerBrowse: (p: string | null) => setPowerBrowse(p),
+      powerEventTitles: () => powerEventsRef.current.map((e) => e.title),
+      selectedId: () => selectedRef.current?.id ?? null,
+      selectEvent: (id: string) => {
+        const ev = timelineAll.find((e) => e.id === id);
+        if (!ev) return false;
+        setPlaying(false);
+        setStoryId(null);
+        /** 走「按年」路径，避免 timeline 过滤导致 index 对不上 */
+        setAxis("year");
+        setYear(ev.year);
+        yearRef.current = ev.year;
+        setFocusPlaceId(ev.placeId);
+        const i = timelineAll.findIndex((e) => e.id === id);
+        if (i >= 0) setIndex(i);
+        return true;
+      },
     };
     (window as unknown as { __jzDebug?: JzDebug }).__jzDebug = api;
     return () => {
       delete (window as unknown as { __jzDebug?: JzDebug }).__jzDebug;
     };
-  }, [timelineAll]);
+  }, [timelineAll, timeline]);
 
   /** `/` 聚焦搜索，`Esc` 清空并失焦（T-005） */
   useEffect(() => {
@@ -1967,10 +2052,17 @@ export default function App() {
                   title: power,
                   tier: schem ? "schematic" : "snapshot",
                 });
+                if (!schem && power) {
+                  setPowerBrowse(power);
+                  setDrawerRight(true);
+                } else {
+                  setPowerBrowse(null);
+                }
                 return;
               }
               setAcademicPick(null);
               setPrecisionPick(null);
+              setPowerBrowse(null);
             }}
           >
             <NavigationControl position="top-right" showCompass={false} />
@@ -2245,8 +2337,15 @@ export default function App() {
                       ["get", "color"],
                       MAP_TOKENS.territory,
                     ],
-                    /** 半透明叠在地形上，近似 multiply 透底 */
-                    "fill-opacity": 0.5,
+                    /** T-021：宿主/浏览政权提亮，其余略淡 */
+                    "fill-opacity": [
+                      "case",
+                      ["==", ["get", "lit"], 1],
+                      0.62,
+                      ["==", ["get", "dim"], 1],
+                      0.22,
+                      0.5,
+                    ],
                   }}
                 />
                 <Layer
@@ -2268,8 +2367,18 @@ export default function App() {
                       ["get", "color"],
                       MAP_TOKENS.territory,
                     ],
-                    "line-width": 1.7,
-                    "line-opacity": 0.9,
+                    "line-width": [
+                      "case",
+                      ["==", ["get", "lit"], 1],
+                      2.8,
+                      1.7,
+                    ],
+                    "line-opacity": [
+                      "case",
+                      ["==", ["get", "dim"], 1],
+                      0.45,
+                      0.9,
+                    ],
                   }}
                 />
               </Source>
@@ -2897,6 +3006,59 @@ export default function App() {
               : "max-[899px]:translate-x-full",
           )}
         >
+          {powerBrowse && territoryMode === "snapshot" && (
+            <div className="mb-5 rounded-md border border-line bg-page/70 p-3">
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <p className="text-xs tracking-widest text-muted">政权事件</p>
+                  <h2 className="text-xl font-semibold text-era">
+                    {powerBrowse}
+                  </h2>
+                  <p className="mt-1 text-[11px] text-muted">
+                    当前快照窗口内、地点落在该色块内的事件
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="text-xs text-muted hover:text-accent"
+                  onClick={() => setPowerBrowse(null)}
+                >
+                  关闭
+                </button>
+              </div>
+              <p className="mt-3 text-xs tracking-widest text-muted">
+                共 {powerEvents.length} 条
+              </p>
+              <ul className="mt-1 max-h-56 space-y-1 overflow-y-auto">
+                {powerEvents.length === 0 && (
+                  <li className="px-2 text-xs text-muted">
+                    窗口内没有落点在此的事件（或地点在空白/海上）。
+                  </li>
+                )}
+                {powerEvents.map((ev) => (
+                  <li key={ev.id}>
+                    <button
+                      type="button"
+                      className={cn(
+                        "w-full rounded px-2 py-1.5 text-left text-sm hover:bg-line/40",
+                        ev.id === selected?.id && "bg-accent-soft",
+                      )}
+                      onClick={() => {
+                        setPlaying(false);
+                        goToEvent(ev.id);
+                      }}
+                    >
+                      <span className="text-xs text-muted">
+                        {formatYear(ev.year)}
+                        {ev.kind ? ` · ${ev.kind}` : ""}
+                      </span>
+                      <span className="block font-medium">{ev.title}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           {(focusPerson || focusPersonName) && (
             <div className="mb-5 rounded-md border border-line bg-page/70 p-3">
               <div className="flex items-start justify-between gap-2">
@@ -3058,6 +3220,22 @@ export default function App() {
                   {selected.dynastyTag ? ` · ${selected.dynastyTag}` : ""}
                   {selected.kind ? ` · ${selected.kind}` : ""}
                 </p>
+                {hostPower && (
+                  <p className="mt-1 text-sm text-era">
+                    发生在{" "}
+                    <button
+                      type="button"
+                      className="font-medium underline decoration-era/40 underline-offset-2 hover:text-accent"
+                      onClick={() => {
+                        setPowerBrowse(hostPower);
+                        setDrawerRight(true);
+                      }}
+                    >
+                      {hostPower}
+                    </button>{" "}
+                    境内
+                  </p>
+                )}
                 {selected.lede && (
                   <p className="mt-2 text-[15px] leading-7 text-ink/90">
                     {selected.lede}
