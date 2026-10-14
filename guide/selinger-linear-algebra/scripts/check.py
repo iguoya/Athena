@@ -35,7 +35,7 @@ def load(path: Path):
 
 
 def inline_math(s: str) -> list[str]:
-    """与 src/inline.ts 的 splitInline 同一规则：收尾的 $ 必须在花括号深度 0。"""
+    """与 src/splitInline.ts 的 splitInline 同一规则：收尾的 $ 必须在花括号深度 0。"""
     out, i = [], 0
     while i < len(s):
         c = s[i]

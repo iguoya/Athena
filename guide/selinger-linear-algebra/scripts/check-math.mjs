@@ -13,7 +13,7 @@ const out = join(mkdtempSync(join(tmpdir(), "macros-")), "macros.mjs");
 await esbuild.build({ absWorkingDir: root, entryPoints: ["src/macros.ts"], bundle: true, format: "esm", outfile: out, logLevel: "error" });
 const { MACROS } = await import(pathToFileURL(out).href);
 const out2 = join(mkdtempSync(join(tmpdir(), "inline-")), "inline.mjs");
-await esbuild.build({ absWorkingDir: root, entryPoints: ["src/inline.ts"], bundle: true, format: "esm", outfile: out2, logLevel: "error" });
+await esbuild.build({ absWorkingDir: root, entryPoints: ["src/splitInline.ts"], bundle: true, format: "esm", outfile: out2, logLevel: "error" });
 const { splitInline } = await import(pathToFileURL(out2).href);
 
 const dir = join(root, "content", "sections");

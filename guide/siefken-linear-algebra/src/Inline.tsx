@@ -1,7 +1,7 @@
 import katex from "katex";
 import { Fragment, useMemo } from "react";
 import { MACROS } from "./macros";
-import { splitInline } from "./inline";
+import { splitInline } from "./splitInline";
 
 export function renderMath(tex: string, display: boolean): string {
   try {
