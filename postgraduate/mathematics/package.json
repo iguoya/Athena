@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/lint-content.mjs && node scripts/test-speech.mjs && tsc && vite build",
+    "build": "node scripts/lint-content.mjs && node scripts/test-speech.mjs && node scripts/test-calculus.mjs && tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
     "tauri:dev": "tauri dev",

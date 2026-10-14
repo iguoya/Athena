@@ -840,3 +840,21 @@ h2.title .title-plain {
 }
 .d-src a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent); }
 .d-src a:hover { opacity: .8; }
+
+/* ── 函数图像组件（ADR 0028）── */
+#fcv {
+  width: 100%; height: auto; display: block; touch-action: none; cursor: ew-resize;
+  border: 1px solid var(--line); border-radius: 10px;
+}
+.fn-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+.fn-chips button, .rule-row button {
+  font: inherit; font-size: 15px; padding: 5px 11px; cursor: pointer;
+  background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: 999px;
+}
+.fn-chips button.on, .rule-row button.on { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.fs { display: grid; grid-template-columns: 6.5em 1fr 4.2em; gap: 10px; align-items: center; margin: 0 0 12px; }
+.fs .k { color: var(--muted); font-size: 16px; }
+.fs .v { font-variant-numeric: tabular-nums; font-weight: 600; text-align: right; }
+.fs input[type="range"] { width: 100%; accent-color: var(--accent); }
+.rule-row { display: flex; gap: 8px; margin: 0 0 14px; }
+.panel .read { margin-top: 4px; }

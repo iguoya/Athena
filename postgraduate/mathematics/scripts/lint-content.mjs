@@ -500,6 +500,14 @@ const sourceStat =
 for (const ch of cur.chapters) {
   for (const t of ch.topics) {
     for (const [i, ln] of (t.walkthrough?.lines ?? []).entries()) {
+      // 函数图像组件的节（ADR 0028）用 f 帧：必须是对象，字段由 FuncView 消费
+      if (t.widget === "function") {
+        if (!ln.f || typeof ln.f !== "object") {
+          console.error(`动画 ${t.id} 第 ${i + 1} 帧：函数组件的节需要 f 帧`);
+          hits++;
+        }
+        continue;
+      }
       const m = ln.m;
       if (!Array.isArray(m) || m.length !== 4) {
         console.error(`动画 ${t.id} 第 ${i + 1} 帧：m 必须是四个数`);
