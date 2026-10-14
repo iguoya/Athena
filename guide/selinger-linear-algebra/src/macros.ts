@@ -1,0 +1,28 @@
+// 上游 styles/LyryxLinAlgStyle.sty 里的数学宏，翻成 KaTeX 的 macros 表。
+// 只收书里实际用到的；新增宏时由 scripts/check-math.mjs 报出「未知命令」。
+export const MACROS: Record<string, string> = {
+  "\\R": "\\mathbb{R}", "\\N": "\\mathbb{N}", "\\Z": "\\mathbb{Z}", "\\Q": "\\mathbb{Q}", "\\C": "\\mathbb{C}",
+  "\\Poly": "\\mathbf{P}", "\\Mat": "\\mathbf{M}", "\\Func": "\\mathbf{Func}", "\\Seq": "\\mathbf{Seq}",
+  "\\Lin": "\\mathbf{Lin}", "\\Hilb": "\\mathbf{Hilb}",
+  "\\sspan": "\\operatorname{span}", "\\col": "\\operatorname{col}", "\\row": "\\operatorname{row}",
+  "\\nullspace": "\\operatorname{null}", "\\rank": "\\operatorname{rank}", "\\nullity": "\\operatorname{nullity}",
+  "\\proj": "\\operatorname{proj}", "\\comp": "\\operatorname{comp}", "\\cof": "\\operatorname{cof}",
+  "\\adj": "\\operatorname{adj}", "\\tr": "\\operatorname{tr}", "\\shift": "\\operatorname{shift}",
+  "\\unshift": "\\operatorname{unshift}",
+  "\\vect": "\\mathbf{#1}", "\\longvect": "\\overrightarrow",
+  "\\eigenvar": "\\lambda", "\\eigenvarA": "\\lambda", "\\eigenvarB": "\\mu",
+  "\\dotprod": "\\cdot", "\\iprod": "\\langle #1\\rangle", "\\bigiprod": "\\left\\langle #1\\right\\rangle",
+  "\\boxprod": "\\left[#1\\right]",
+  "\\norm": "\\left\\|#1\\right\\|", "\\mat": "\\left[#1\\right]", "\\abs": "\\left|#1\\right|",
+  "\\set": "\\left\\{#1\\right\\}", "\\paren": "\\left(#1\\right)", "\\coll": "\\|",
+  "\\th": "^{\\,\\mathrm{th}}", "\\st": "^{\\,\\mathrm{st}}", "\\nd": "^{\\,\\mathrm{nd}}", "\\rd": "^{\\,\\mathrm{rd}}",
+  "\\ijth": "i\\!j^{\\,\\mathrm{th}}",
+  "\\rowop": "\;\\leftarrow\;", "\\rowswap": "\;\\leftrightarrow\;",
+  "\\coord": "\\left[#1\\right]", "\\bigbracket": "\\left[#1\\right]",
+  "\\minor": "M_{#2}", "\\cofactor": "C_{#2}",
+  "\\roweq": "\\simeq", "\\similar": "\\sim", "\\iso": "\\cong", "\\Hw": "W", "\\Hd": "D", "\\adjoint": "*",
+  "\\conjugate": "\\overline{#1}", "\\centroid": "\\overline{#1}", "\\orth": "\\perp",
+  "\\ket": "|#1\\rangle", "\\bra": "\\langle #1|", "\\braket": "\\langle #1|#2\\rangle",
+  "\\m": "\\mathrm{m}", "\\kg": "\\mathrm{kg}", "\\s": "\\mathrm{s}", "\\volt": "\\mathrm{V}", "\\amp": "\\mathrm{A}",
+  "\\ohm": "\\Omega", "\\degC": "{}^{\\circ}\\mathrm{C}",
+};

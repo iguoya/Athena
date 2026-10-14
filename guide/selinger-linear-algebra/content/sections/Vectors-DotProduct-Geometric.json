@@ -1,0 +1,182 @@
+{
+ "id": "Vectors-DotProduct-Geometric",
+ "title_en": "The geometric significance of the dot product",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "The **included angle** of two vectors $\\vect{u}$ and $\\vect{v}$ is the angle $\\theta$ between the vectors such that $0 \\leq \\theta \\leq \\pi$.",
+    "sha": "9c58f233aa84",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The dot product can be used to determine the included angle between two vectors.",
+    "sha": "592d0bc14925",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "The dot product and the included angle",
+    "sha": "58c2ee7c1259",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u}$ and $\\vect{v}$ be two vectors in $\\R^n$, and let $\\theta$ be the included angle. Then the following equation holds.",
+      "sha": "d1c85f5ed59f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}\\dotprod \\vect{v}=\\norm{\\vect{u}} \\norm{\\vect{v}} \\cos \\theta."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In words, the dot product of two vectors equals the product of the magnitude (or length) of the two vectors multiplied by the cosine of the included angle. Note that this gives a geometric description of the dot product that does not depend explicitly on the coordinates of the vectors.",
+    "sha": "dea5b567bd91",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Find the angle between two vectors",
+    "sha": "90223f9b01fb",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the angle between the vectors",
+      "sha": "5bb147157e48",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}\n  =\n  \\left[\\begin{array}{r}\n    2 \\\\\n    2\n  \\end{array}\\right]\n  \\quad\\text{and}\\quad\n  \\vect{v}\n  =\n  \\left[\\begin{array}{r}\n    0 \\\\\n    3\n  \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "By Proposition “The dot product and the included angle”,",
+      "sha": "05fae33ce0e4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}\\dotprod \\vect{v}=\\norm{\\vect{u}} \\norm{\\vect{v}} \\cos \\theta."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Hence,",
+      "sha": "07d3bfe7a296",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\cos \\theta =\\frac{\\vect{u}\\dotprod \\vect{v}}{\\norm{\\vect{u}}\\norm{\\vect{v}}}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "First, we compute $\\vect{u}\\dotprod \\vect{v} = (2)(0) + (2)(3) = 6$. Then,",
+      "sha": "a6f667accded",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{l}\n      \\norm{\\vect{u}} = \\sqrt{2^2+2^2}=\\sqrt{8}, \\\\\n      \\norm{\\vect{v}} = \\sqrt{0^2+3^2}=3.\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, we have",
+      "sha": "a51f95f5d499",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\cos \\theta =\\frac{6}{3\\sqrt{8}} = \\frac{1}{\\sqrt{2}}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Taking the inverse cosine of both sides of the equation, we find that $\\theta =\\frac{\\pi}{4}$ radians, or 45 degrees.",
+      "sha": "7408d154e46b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Computing a dot product from an angle",
+    "sha": "f1212d340c6b",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u},\\vect{v}$ be vectors with $\\norm{\\vect{u}} = 3$ and $\\norm{\\vect{v}} = 4$. Suppose the angle between $\\vect{u}$ and $\\vect{v}$ is $\\pi / 3$. Find $\\vect{u}\\dotprod \\vect{v}$.",
+      "sha": "2f515347acf9",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "From Proposition “The dot product and the included angle”, we have",
+      "sha": "eac3d267228f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}\\dotprod \\vect{v}\n    =\\norm{\\vect{u}} \\norm{\\vect{v}} \\cos \\theta\n    =3\\cdot 4\\cdot \\cos\\paren{\\frac{\\pi}{3}}\n    =3\\cdot 4\\cdot \\frac{1}{2}=6."
+    }
+   ]
+  }
+ ],
+ "exercises": [],
+ "title_zh": "点积的几何意义"
+}

@@ -1,0 +1,126 @@
+{
+ "id": "Matrices-ElementaryMatrices-Product",
+ "title_en": "Writing an invertible matrix as a product of elementary matrices",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "Recall from Algorithm “Finding the inverse of a matrix” that an $n\\times n$-matrix $A$ is invertible if and only if $A$ can be carried to the $n\\times n$ identity matrix using elementary row operations. Combining this with our discussion of elementary matrices we see that $A$ is invertible if and only if it can be written as a product of elementary matrices. This is the content of the following theorem.",
+    "sha": "4688baf35031",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Product of elementary matrices",
+    "sha": "93f10577e6ac",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n \\times n$-matrix. Then $A$ is invertible if and only if it can be written as a product of elementary matrices.",
+      "sha": "b26b9797926c",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If $A$ is an invertible $n\\times n$-matrix, then its reduced echelon form is the $n\\times n$ identity matrix $I$. By Theorem “The form $R=UA$”, we can write $I=UA$, where $U = E_k\\cdots E_2E_1$ is a product of elementary matrices. Then",
+      "sha": "a5c17ad09c21",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A ~=~ U^{-1} ~=~ E_1^{-1}E_2^{-1}\\cdots E_k^{-1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By Theorem “Inverse of an elementary matrix”, if $E_i$ is an elementary matrix, then so is $E_i^{-1}$. Therefore, $A$ has been written as a product of elementary matrices. Conversely, if $A$ can be written as a product of elementary matrices, then $A$ is clearly invertible, because each elementary matrix is invertible.",
+      "sha": "28722dde54f5",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Product of elementary matrices",
+    "sha": "93f10577e6ac",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A = \\left[\\begin{array}{rrr} 0 & 1 & 0 \\\\ 1 & 1 & 0 \\\\ 0 & -2 & 1 \\end{array}\\right]$. Write $A$ as a product of elementary matrices.",
+      "sha": "8ac0ddea7c1a",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Following the process of Theorem “Product of elementary matrices”, we first row-reduce $A$ to its reduced echelon form, recording each row operation as an elementary matrix.",
+      "sha": "9e08df98f5a8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n      0 & 1 & 0 \\\\\n      1 & 1 & 0 \\\\\n      0 & -2 & 1 \\\\\n    \\end{array}\\right]\n    \\quad\\stackrel{R_1\\rowswap R_2}{\\roweq}\\quad\n    \\left[\\begin{array}{rrr}\n      1 & 1 & 0 \\\\\n      0 & 1 & 0 \\\\\n      0 & -2 & 1 \\\\\n    \\end{array}\\right]\n    \\quad\\text{with elementary matrix}\\quad\n    E_1 ~=~ \\left[\\begin{array}{rrr}\n      0 & 1 & 0 \\\\\n      1 & 0 & 0 \\\\\n      0 & 0 & 1\n    \\end{array}\\right],"
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n      1 & 1 & 0 \\\\\n      0 & 1 & 0 \\\\\n      0 & -2 & 1 \\\\\n    \\end{array}\\right]\n    \\quad\\stackrel{R_1\\rowop R_1-R_2}{\\roweq}\\quad\n    \\left[\\begin{array}{rrr}\n      1 & 0 & 0 \\\\\n      0 & 1 & 0 \\\\\n      0 & -2 & 1 \\\\\n    \\end{array}\\right]\n    \\quad\\text{with elementary matrix}\\quad\n    E_2 ~=~  \\left[\\begin{array}{rrr}\n      1 & -1 & 0 \\\\\n      0 & 1 & 0 \\\\\n      0 & 0 & 1\n    \\end{array}\\right],"
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n      1 & 0 & 0 \\\\\n      0 & 1 & 0 \\\\\n      0 & -2 & 1 \\\\\n    \\end{array}\\right]\n    \\quad\\stackrel{R_3\\rowop R_3+2R_2}{\\roweq}\\quad\n    \\left[\\begin{array}{rrr}\n      1 & 0 & 0 \\\\\n      0 & 1 & 0 \\\\\n      0 & 0 & 1 \\\\\n    \\end{array}\\right]\n    \\quad\\text{with elementary matrix}\\quad\n    E_3 ~=~ \\left[\\begin{array}{rrr}\n      1 & 0 & 0 \\\\\n      0 & 1 & 0 \\\\\n      0 & 2 & 1 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Notice that the reduced echelon form of $A$ is $I$. Hence $I = UA$ where $U=E_3E_2E_1$. It follows that $A = U^{-1} = E_1^{-1}E_2^{-1}E_3^{-1}$, and so we have succeeded in writing $A$ as a product of elementary matrices",
+      "sha": "fb6b5abc2570",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A\n    ~=~ E_1^{-1}E_2^{-1}E_3^{-1}\n    ~=~\n    \\left[\\begin{array}{rrr}\n      0 & 1 & 0 \\\\\n      1 & 0 & 0 \\\\\n      0 & 0 & 1\n    \\end{array}\\right]\n    \\left[\\begin{array}{rrr}\n      1 & 1 & 0 \\\\\n      0 & 1 & 0 \\\\\n      0 & 0 & 1\n    \\end{array}\\right]\n    \\left[\\begin{array}{rrr}\n      1 & 0 & 0 \\\\\n      0 & 1 & 0 \\\\\n      0 & -2 & 1\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In particular, it follows that $A$ is invertible.",
+      "sha": "742cd8ebbcf0",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [],
+ "title_zh": "把可逆矩阵写成初等矩阵的积"
+}

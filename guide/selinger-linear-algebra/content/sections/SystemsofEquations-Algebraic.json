@@ -1,0 +1,456 @@
+{
+ "id": "SystemsofEquations-Algebraic",
+ "title_en": "Algebraic view of systems of equations",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Recognize the difference between a linear equation and a non-linear equation.",
+         "sha": "1de1f214fe58",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether a tuple of real numbers is a solution for a system of linear equations.",
+         "sha": "e96f3da48f63",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Understand what it means for a system of linear equations to be consistent or inconsistent.",
+         "sha": "053277a64305",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We have taken an in-depth look at graphical representations of systems of equations, as well as how to find possible solutions graphically. Our attention now turns to working with systems algebraically.",
+    "sha": "22fa1e2fa4d2",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Linear equation",
+    "sha": "03d7ae7fb546",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A **linear equation** is an equation of the form",
+      "sha": "1c1e55360c1c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "a_1x_1 + a_2x_2 + \\ldots + a_nx_n = b."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Here, $a_1,\\ldots,a_n$ are real numbers called the **coefficients** of the equation, $b$ is a real number called the **constant term** of the equation, and $x_1,\\ldots,x_n$ are **variables**.",
+      "sha": "f1eb36670171",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Real numbers, such as the coefficients $a_1,\\ldots,a_n$, the constant term $b$, or the values of the variables $x_1,\\ldots,x_n$, will also be called **scalars**. For now, the word “scalar” is just a synonym for “real number”. Later, in Section 〔引用〕, we will discover other kinds of scalars.",
+    "sha": "d09813317578",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Linear vs. non-linear equation",
+    "sha": "1d957efbedb3",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following equations are linear?",
+      "sha": "a8c9f78bb516",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{c}\n      2x+3y=5 \\\\\n      2x^2+3y=5 \\\\\n      2\\sqrt{x} + 3y = 5 \\\\\n      (\\sqrt{2}) x + 3y = 5^2\n    \\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The equation $2x+3y=5$ is linear. The equation $2x^2+3y=5$ is not linear, because it contains the square of a variable instead of a variable. The equation $2\\sqrt{x} + 3y = 5$ is also not linear, because the square root is applied to one of the variables. On the other hand, the equation $(\\sqrt{2}) x + 3y = 5^2$ is linear, because $\\sqrt{2}$ and $5^2$ are real numbers, and can therefore be used as coefficients and constant terms.",
+      "sha": "2b1fe169e40c",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We also permit minor notational variants of linear equations. The equation $2x-3y=5$ is linear although Definition “Linear equation” does not mention subtraction, because it can be regarded as just another notation for $2x+(-3)y = 5$. Similarly, the equation $2x=5+3y$ can be regarded as linear, because it can be easily rewritten as $2x-3y=5$ by bringing all the variables (and their coefficients) to the left-hand side. When we need to emphasize that some linear equation is literally of the form $a_1x_1 + a_2x_2 + \\ldots + a_nx_n = b$, we say that the equation is in **standard form**. Thus, the standard form of the equation $2x=5+3y$ is $2x+(-3)y=5$.",
+    "sha": "edb90cde175f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A **solution** to a linear equation is an assignment of real numbers to the variables, making the equation true. More precisely, if $r_1,\\ldots,r_n$ are real numbers, the assignment $x_1=r_1$, …, $x_n=r_n$ is a solution to the equation in Definition “Linear equation” if the real number $a_1r_1 + a_2r_2 + \\ldots + a_nr_n$ is equal to the real number $b$. To save space, we often write solutions in **tuple notation** \\footnoteThe terminology “tuple” arose as follows. A collection of two items is called a “pair”, a collection of three items is called a “triple”, followed by “quadruple”, “quintuple”, “sextuple”, and so on. You have to know Latin to know what the next ones are called. To avoid these Latin terms, mathematicians started saying $4$-tuple, $5$-tuple, $6$-tuple and so on, and more generally, $n$-tuple for an ordered collection of $n$ items. When $n$ doesn't matter or is clear from the context, we often just say “tuple”. as $(x_1,\\ldots,x_n) = (r_1,\\ldots,r_n)$. When there is no doubt about the order of the variables, we also often simply write the solution as $(r_1,\\ldots,r_n)$.",
+    "sha": "108cb41f73d2",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Solutions of a linear equation",
+    "sha": "82dce9b3d5cf",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the linear equation $2x+3y-4z=5$. Which of the following are solutions? (a) $(x,y,z)=(1,1,0)$, (b) $(x,y,z)=(0,3,1)$, (c) $(x,y,z)=(1,1,1)$.",
+      "sha": "6857e5de6830",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The assignment $(x,y,z) = (1,1,0)$ is a solution because $2(1)+3(1)-4(0) = 5$. The assignment $(x,y,z) = (0,3,1)$ is also a solution, because $2(0) + 3(3) - 4(1) = 5$. On the other hand, $(x,y,z) = (1,1,1)$ is not a solution, because $2(1) + 3(1)-4(1) = 1 \\neq 5$.",
+      "sha": "e8b6b28062cd",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A system of linear equations is just several linear equations taken together.",
+    "sha": "64b403056f55",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "System of linear equations",
+    "sha": "b825d7f1eb79",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A **system of linear equations** is a list of equations",
+      "sha": "a2eff89d4249",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{ccc}\n      a_{11}x_1+a_{12}x_2+\\ldots+a_{1n}x_n&=&b_1 \\\\\n      a_{21}x_1+a_{22}x_2+\\ldots+a_{2n}x_n&=&b_2 \\\\\n      \\vdots \\\\\n      a_{m1}x_1+a_{m2}x_2+\\ldots+a_{mn}x_n&=&b_m,\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where $a_{ij}$ and $b_i$ are scalars (i.e., real numbers). The above is a system of $m$ equations in the $n$ variables $x_1,x_2\\ldots,x_n$. As before, the numbers $a_{ij}$ are called the **coefficients** and the numbers $b_i$ are called the **constant terms** of the system of equations.",
+      "sha": "69e39ea0bb49",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The relative size of $m$ and $n$ is not important here. We may have more variables than equations, more equations than variables, or an equal number of equations and variables.",
+    "sha": "555ba563acaf",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A **solution** to a system of linear equations is an assignment of real numbers to the variables that is a solution to *all* of the equations in the system.",
+    "sha": "1727f793e63d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Solutions of a system of linear equations",
+    "sha": "74f53f0ae2fc",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the system of linear equations",
+      "sha": "8c410a506b52",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{ccccccc}\n      2x&+&3y&-&4z &=& 5 \\\\\n      -2x&+&y&+&2z &=& -1.\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following are solutions of the system? (a) $(x,y,z)=(1,1,0)$, (b) $(x,y,z)=(6,3,4)$, (c) $(x,y,z)=(0,3,1)$.",
+      "sha": "0667fd56d87f",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The assignment $(x,y,z)=(1,1,0)$ is a solution of this system of equations, because it is a solution to the first equation and the second equation. Also, $(x,y,z)=(6,3,4)$ is another solution of this system of equations (check this!). On the other hand, $(x,y,z)=(0,3,1)$ is not a solution of the system, because although it is a solution to the first equation, it is not a solution to the second equation.",
+      "sha": "f80b5dae0202",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Recall from Section 〔引用〕 that a system of equations either has a unique solution, infinitely many solutions, or no solution. It is very important to us whether a system of equations has solutions or not. For this reason, we introduce the following terminology:",
+    "sha": "fd914ab6948a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Consistent and inconsistent systems",
+    "sha": "5bafdd44347b",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A system of linear equations is called **consistent** if there exists at least one solution. It is called **inconsistent** if there is no solution.",
+      "sha": "8fb27947213f",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If we think of each equation as a condition that must be satisfied by the variables, consistent means that there is some choice of values for the variables which can satisfy **all** of the conditions. Inconsistent means that there is no such choice of values for the variables. In the following sections, you will learn a method for determining whether a system of equations is consistent or not, and in case it is consistent, to find all of its solutions.",
+    "sha": "1f830c3b13fd",
+    "zh": ""
+   }
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following equations are linear?",
+      "sha": "a8c9f78bb516",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$2x-3y+4z = -10$",
+         "sha": "55f383b944cc",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$2.123x_1 + 5.541x_2 - 9.101x_3 = 11.012$",
+         "sha": "fb50f56d0331",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$x^2+y^2+z^2 = 1$",
+         "sha": "d6da6e735239",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\frac{1}{\\sqrt{2}}x+4^3y = \\sin(\\frac{\\pi}{3})$",
+         "sha": "8c8b9e049940",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$x+yz = 3$",
+         "sha": "c14cefb1f894",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "All of them except (c) and (e).",
+      "sha": "be62191bf5a3",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Algebraic view of systems of equations · 习题 1（上游 exercises/SystemsofEquations-Algebraic.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-Algebraic.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the system of equations",
+      "sha": "0d9d2b83bf86",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{ccccccccc}\n      x&+&2y&+&3z&+&4w &=& 4 \\\\\n      x&+&y&+&z&+&w &=& 2 \\\\\n      x&+&2y&+&2z&+&w &=& 2.\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For each of the following tuples $(x,y,z,w)$ of real numbers, determine whether it is a solution of the first equation, second equation, and/or third equation. Which ones are solutions to the system of equations?",
+      "sha": "c870a17135d6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) $(2,0,-2,2)$ \\quad (b) $(2,2,-2,0)$ \\quad (c) $(1,1,-1,1)$ \\quad (d) $(3,0,-1,1)$ \\quad (e) $(2,-2,2,0)$",
+      "sha": "0385ceb874b7",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) is a solution to equations 1 and 2, (b) is a solution to equations 2 and 3, (c) is a solution to equations 1, 2, and 3, (d) is a solution to 1 and 3, and (e) is a solution to equations 1, 2, and 3. Only (c) and (e) are solutions to the system of equations.",
+      "sha": "c94f254cf3cf",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Algebraic view of systems of equations · 习题 2（上游 exercises/SystemsofEquations-Algebraic.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-Algebraic.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "方程组的代数视角"
+}

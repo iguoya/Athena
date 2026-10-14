@@ -1,0 +1,402 @@
+{
+ "id": "SystemsofEquations-Geometric",
+ "title_en": "Geometric view of systems of equations",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Relate the types of solution sets of a system of two (three) variables to the intersections of lines in a plane (the intersection of planes in $3$-dimensional space)",
+         "sha": "6c95b4caefec",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "As you may remember, linear equations like $2x+3y=6$ can be graphed as straight lines in the coordinate plane. We say that this equation is in two variables, in this case $x$ and $y$. Suppose you have two such equations, each of which can be graphed as a straight line, and consider the resulting graph of two lines. What would it mean if there exists a point of intersection between the two lines? This point, which lies on *both* graphs, gives $x$ and $y$ values for which both equations are true. In other words, this point gives the ordered pair ($x,y$) that satisfies both equations. If the point $(x, y )$ is a point of intersection, we say that $(x, y)$ is a **solution** to the two equations. In linear algebra, we often are concerned with finding the solution(s) to a system of equations, if such solutions exist. First, we consider graphical representations of solutions and later we will consider the algebraic methods for finding solutions.",
+    "sha": "06ee14385ae1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When looking for the intersection of two lines in the plane, several situations may arise. The following picture demonstrates the possible situations when considering two equations (two lines in the plane) involving two variables.",
+    "sha": "36c799bd1204",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In the first diagram, there is a unique point of intersection, which means that there is only one (unique) solution to the two equations. In the second, there are no points of intersection and no solution. There is no solution because the two lines are parallel and they never intersect. The third situation that can occur, as demonstrated in diagram three, is that the two lines are really the same line. For example, $x+y=1$ and $2x+2y=2$ are two equations that yield the same line when graphed. In this case there are infinitely many points that are solutions of these two equations, as every ordered pair which is on the graph of the line satisfies both equations.",
+    "sha": "04e647854c04",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When considering linear systems of equations, there are always three possibilities for the number of solutions: there is exactly one solution, there are infinitely many solutions, or there is no solution. When we speak of *solving* a system of equations, we usually mean finding *all* of its solutions. This can mean finding one solution (if the solution is unique), finding infinitely many solutions, or finding that there is no solution.",
+    "sha": "5fa8b4a3cd4c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "A graphical solution",
+    "sha": "c64896b43fd1",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use a graph to solve the following system of equations:",
+      "sha": "86dce2e5cb02",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\n      x+y&=&3 \\\\\n      y-x&=&5.\n    \\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Through graphing the above equations and identifying the point of intersection, we can find the solution(s). Remember that we must have either one solution, infinitely many, or no solutions at all. The following graph shows the two equations, as well as the intersection. Remember, the point of intersection represents the solution of the two equations, or the $(x,y)$ which satisfy both equations. In this case, there is one point of intersection at $(-1, 4)$ which means we have one unique solution, $x = -1$, $y = 4$.",
+      "sha": "6fb873b0b62a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "caption": null
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In the above example, we investigated the intersection point of two equations in two variables, $x$ and $y$. Now we will consider the graphical solutions of three equations in two variables.",
+    "sha": "5d6244184f91",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Consider a system of three equations in two variables. Again, these equations can be graphed as straight lines in the plane, so that the resulting graph contains three straight lines. Recall the three possibilities for the number of solutions: no solution, one solution, and infinitely many solutions. With three lines, there are more complex ways of achieving these situations. For example, you can imagine the case of three intersecting lines having no common point of intersection. Perhaps you can also imagine three intersecting lines which do intersect at a single point. These two situations are illustrated below.",
+    "sha": "6f442c7a75c0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Consider the first picture above. While all three lines intersect with one another, there is no common point of intersection where all three lines meet at one point. Hence, there is no solution to the three equations. Remember, a solution is a point $(x, y)$ which satisfies **all** three equations. In the case of the second picture, the lines intersect at a common point. This means that there is one solution to the three equations whose graphs are the given lines. You should take a moment now to draw the graph of a system which results in three parallel lines. Next, try the graph of three identical lines. Which type of solution is represented in each of these graphs?",
+    "sha": "66de51f5d6fa",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We have now considered the graphical solutions of systems of two equations in two variables, as well as three equations in two variables. However, there is no reason to limit our investigation to equations in two variables. We will now consider equations in three variables.",
+    "sha": "bdbdc0b95d8e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "You may recall that equations in three variables, such as $2x+4y-5z=8$, form a plane. Above, we were looking for intersections of lines in order to identify any possible solutions. When graphically solving systems of equations in three variables, we look for intersections of planes. These points of intersection give the $(x, y, z)$ that satisfy all the equations in the system. What types of solutions are possible when working with three variables? Consider the following picture involving two planes, which are given by two equations in three variables.",
+    "sha": "d71731897ec4",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Notice how these two planes intersect in a line. This means that the points $(x,y,z)$ on this line satisfy both equations in the system. Since the line contains infinitely many points, this system has infinitely many solutions.",
+    "sha": "d989227c2e81",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It could also happen that the two planes fail to intersect. However, is it possible to have two planes intersect at a single point? Take a moment to attempt drawing this situation, and convince yourself that it is not possible! This means that when we have only two equations in three variables, there is no way to have a unique solution! Hence, the only possibilities for the number of solutions of two equations in three variables are no solution or infinitely many solutions.",
+    "sha": "62a51d711159",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Now imagine adding a third plane. In other words, consider three equations in three variables. What types of solutions are now possible? Consider the following diagram.",
+    "sha": "64ded89044b8",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In this diagram, there is no point which lies in all three planes. There is no intersection between **all** three planes so there is no solution. The picture illustrates the situation in which the line of intersection of the new plane with one of the original planes forms a line parallel to the line of intersection of the first two planes. However, in three dimensions, it is possible for two lines to fail to intersect even though they are not parallel. Such lines are called **skew lines**.",
+    "sha": "e7c5cfb37585",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Recall that when working with two equations in three variables, it was not possible to have a unique solution. Is it possible when considering three equations in three variables? In fact, it is possible, and we demonstrate this situation in the following picture.",
+    "sha": "dafdaf101873",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In this case, the three planes have a single point of intersection. Can you think of other possibilities? Another is that the three planes could intersect in a line, resulting in infinitely many solutions, as in the following diagram.",
+    "sha": "e14bb6ca91d9",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We have now seen how three equations in three variables can have no solution, a unique solution, or intersect in a line resulting in infinitely many solutions. It is also possible that all three equations describe the same plane, which also leads to infinitely many solutions.",
+    "sha": "60629bc86c1c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "You can see that when working with equations in three variables, there are many more possibilities for achieving solutions (or no solutions) than when working with two variables. It may prove enlightening to spend time imagining (and drawing) many possible scenarios, and you should take some time to try a few.",
+    "sha": "6c7bdb40842c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "You should also take some time to imagine (and draw) graphs of systems in more than three variables. Equations like $x+y-2z+4w=8$ with more than three variables are often called **hyperplanes**. You may soon realize that it is tricky to draw the graphs of hyperplanes! In fact, most people cannot visualize more than three dimensions. Fortunately, through the tools of linear algebra, we can examine systems of equations in four variables, five variables, or even hundreds or thousands of variables, without ever needing to graph them. Instead we will use *algebra* to manipulate and solve these systems of equations. We will introduce these algebraic tools in the following sections.",
+    "sha": "56cf5f10f68d",
+    "zh": ""
+   }
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Graphically, find the point $(x,y)$ which lies on both of the lines $x+3y=1$ and $4x-y=3$. That is, graph each line and see where they intersect.",
+      "sha": "66835490dd7e",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\begin{array}{c} x+3y=1 \\\\ 4x-y=3 \\end{array}$, Solution is: $\\mat{x=\\frac{10}{13},y=\\frac{1}{13}}$.",
+      "sha": "22a8e89b6d3a",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Geometric view of systems of equations · 习题 1（上游 exercises/SystemsofEquations-Geometric.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-Geometric.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Graphically, find the point of intersection of the two lines $3x+y=3$ and $x+2y=1$. That is, graph each line and see where they intersect.",
+      "sha": "a1709e295a44",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\begin{array}{c} 3x+y=3 \\\\ x+2y=1 \\end{array}$, Solution is: $\\mat{x=1,y=0}$",
+      "sha": "d7288fb5be0d",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Geometric view of systems of equations · 习题 2（上游 exercises/SystemsofEquations-Geometric.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-Geometric.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "You have a system of $k$ equations in two variables, $k\\geq 2$. Explain the geometric significance of",
+      "sha": "35b14abf12c3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "No solution.",
+         "sha": "7db93a1b86f7",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A unique solution.",
+         "sha": "1f4d045c1a3a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "An infinite number of solutions.",
+         "sha": "7f90a2cebe73",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Geometric view of systems of equations · 习题 3（上游 exercises/SystemsofEquations-Geometric.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-Geometric.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Draw a picture of three planes such that no two of the planes are parallel, but the three planes have no common intersection.",
+      "sha": "5d95469db326",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "\\quad",
+      "sha": "d4c9cc7a55ec",
+      "zh": ""
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "caption": null
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Geometric view of systems of equations · 习题 4（上游 exercises/SystemsofEquations-Geometric.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-Geometric.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "方程组的几何视角"
+}

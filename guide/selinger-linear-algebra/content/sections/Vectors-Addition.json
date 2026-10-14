@@ -1,0 +1,486 @@
+{
+ "id": "Vectors-Addition",
+ "title_en": "Addition",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Compute sums and differences of vectors algebraically and geometrically.",
+         "sha": "1993f0bec064",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Use the laws of vector addition to prove equalities between vector expressions.",
+         "sha": "f2edef9e8b6a",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Addition of vectors in $\\R^n$ is defined as follows.",
+    "sha": "602e5fb02897",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Addition of vectors in $\\R^n$",
+    "sha": "f61c7eee4d09",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For vectors $\\vect{u}=\\left[\\begin{array}{c} u_1 \\\\ \\vdots \\\\ u_n \\end{array}\\right],\\; \\vect{v}= \\left[\\begin{array}{c} v_1 \\\\ \\vdots \\\\ v_n \\end{array}\\right] \\in \\R^n$, the sum $\\vect{u}+\\vect{v}\\in \\R^n$ is defined by",
+      "sha": "3c4f095d45b3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}+\\vect{v} = \\left[\\begin{array}{c}\n      u_1 \\\\\n      \\vdots \\\\\n      u_n\n    \\end{array}\\right] +  \\left[\\begin{array}{c}\n      v_1 \\\\\n      \\vdots \\\\\n      v_n\n    \\end{array}\\right]\n    = \\left[\\begin{array}{c}\n      u_1+v_1 \\\\\n      \\vdots \\\\\n      u_n+v_n\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To add vectors, we simply add corresponding components. Therefore, in order to add vectors, they must be the same size. For example, $\\mat{1, 2, 3}^T + \\mat{4, 5, 6}^T = \\mat{1+4, 2+5, 3+6}^T = \\mat{5, 7, 9}^T$.",
+    "sha": "7b06eb21a524",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The geometric significance of vector addition in $\\R^n$ is given in the following proposition.",
+    "sha": "ca5cca8450c1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Geometry of vector addition",
+    "sha": "cb6b6cac6d3e",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u}$ and $\\vect{v}$ be two vectors in $\\R^n$. Slide $\\vect{v}$ so that the tail of $\\vect{v}$ is on the tip of $\\vect{u}$. Then draw the arrow which goes from the tail of $\\vect{u}$ to the tip of $\\vect{v}$. This arrow represents the vector $\\vect{u}+\\vect{v}$.",
+      "sha": "6910e5ecd57c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "caption": null
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Commutative law",
+    "sha": "5167b173c6d8",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u}$ and $\\vect{v}$ be two vectors. Using the geometry of vector addition, explain why $\\vect{u}+\\vect{v} = \\vect{v} + \\vect{u}$.",
+      "sha": "c76bf4192a04",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "In the following diagram, the vectors $\\vect{u}$ and $\\vect{v}$ form a parallelogram. Therefore, whether we line up the tail of $\\vect{u}$ with the tip of $\\vect{v}$ or vice versa, we obtain the same vector, which is both $\\vect{u}+\\vect{v}$ and $\\vect{v}+\\vect{u}$.",
+      "sha": "5038807124f9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "caption": null
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Negative",
+    "sha": "c70827c69d7f",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The **negative** of a vector $\\vect{u}=\\left[\\begin{array}{c} u_1 \\\\ \\vdots \\\\ u_n \\end{array}\\right]\\in\\R^n$ is defined by $-\\vect{u} = \\left[\\begin{array}{c} -u_1 \\\\ \\vdots \\\\ -u_n \\end{array}\\right]$.",
+      "sha": "4369010eb325",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Geometrically, the vector $-\\vect{u}$ has the same magnitude as $\\vect{u}$, but the opposite direction.",
+    "sha": "9a4a35de1a96",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To define the **subtraction** of two vectors, we simply regard $\\vect{u}-\\vect{v}$ as an abbreviation for $\\vect{u} + (-\\vect{v})$, exactly as we do with real numbers. Algebraically, this just amounts to componentwise subtraction:",
+    "sha": "0a4f66aabc0c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\left[\\begin{array}{c}\n    u_1 \\\\\n    \\vdots \\\\\n    u_n\n  \\end{array}\\right] - \\left[\\begin{array}{c}\n    v_1 \\\\\n    \\vdots \\\\\n    v_n\n  \\end{array}\\right]\n  = \\left[\\begin{array}{c}\n    u_1-v_1 \\\\\n    \\vdots \\\\\n    u_n-v_n\n  \\end{array}\\right]."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The following example illustrates how to subtract vectors geometrically.",
+    "sha": "625713c08bbc",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Graphing vector addition",
+    "sha": "7d8ad98023ad",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the following picture of vectors $\\vect{u}$ and $\\vect{v}$.",
+      "sha": "c475132d0366",
+      "zh": ""
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "caption": null
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Sketch a picture of $\\vect{u}+\\vect{v}$ and $\\vect{u}-\\vect{v}$.",
+      "sha": "7ea156a1b656",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We will first sketch $\\vect{u}+\\vect{v}$. Begin by drawing $\\vect{u}$ and then at the point of $\\vect{u}$, place the tail of $\\vect{v}$ as shown. Then $\\vect{u}+\\vect{v}$ is the vector which results from drawing a vector from the tail of $\\vect{u}$ to the tip of $\\vect{v}$.",
+      "sha": "51d28c0674bf",
+      "zh": ""
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "caption": null
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Next consider $\\vect{u}-\\vect{v}$. This means $\\vect{u}+(-\\vect{v} )$. From the above geometric description of vector addition, $-\\vect{v}$ is the vector which has the same length but which points in the opposite direction to $\\vect{v}$. Here is a picture of $-\\vect{v}$",
+      "sha": "53adf29470c2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "caption": null
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The following picture fully represents $\\vect{u}-\\vect{v}$:",
+      "sha": "b6973e5451e6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "caption": null
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Given any two vectors $\\vect{u}$ and $\\vect{v}$ one can create a parallelogram with sides these vectors and diagonals $\\vect{u}+\\vect{v}$ and $\\vect{v}-\\vect{u}$:",
+      "sha": "d4254a6234b7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "caption": null
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Addition of vectors satisfies some important properties which are outlined in the following proposition. Recall that $\\vect{0}$ is the **zero vector**, the vector from $\\R^n$ in which all components are equal to $0$.",
+    "sha": "b15f1998fc32",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Properties of vector addition",
+    "sha": "a820d3b33a5d",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The following properties hold for vectors $\\vect{u},\\vect{v},\\vect{w}\\in\\R^n$.",
+      "sha": "11edee64240a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The commutative law of addition",
+         "sha": "37aa9065ee93",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vect{u}+\\vect{v}=\\vect{v}+\\vect{u}."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The associative law of addition",
+         "sha": "2838a627edd2",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "(\\vect{u}+\\vect{v})+\\vect{w} = \\vect{u}+(\\vect{v}+\\vect{w})."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The existence of an additive unit",
+         "sha": "a24b4e2e8416",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vect{u}+\\vect{0}=\\vect{u}."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The existence of an additive inverse",
+         "sha": "0f90684c663f",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vect{u}+(-\\vect{u}) =\\vect{0}."
+       }
+      ]
+     ]
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find $\\left[\\begin{array}{c} 1 \\\\ 2 \\\\ 3 \\end{array}\\right] + \\left[\\begin{array}{c} 1 \\\\ 5 \\\\ 1 \\end{array}\\right] + \\left[\\begin{array}{c} -1 \\\\ 2 \\\\ -4 \\end{array}\\right]$.",
+      "sha": "429b10c681bc",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\left[\\begin{array}{r} 1 \\\\ 9 \\\\ 0 \\end{array}\\right]$.",
+      "sha": "271331ff4dce",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Addition · 习题 1（上游 exercises/Vectors-Addition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-Addition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use the properties of vector addition from Proposition “Properties of vector addition” to show the following equalities. Justify every step.",
+      "sha": "e820c8662a24",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(\\vect{u}+\\vect{v})+\\vect{w} = (\\vect{v}+\\vect{w})+\\vect{u}$.",
+         "sha": "cfc2bef818c9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(\\vect{u}+\\vect{0})+(\\vect{v}+(-\\vect{u})) = \\vect{v}$.",
+         "sha": "66df328c8fc8",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(\\vect{u}+\\vect{v})+\\vect{w} = (\\vect{v}+\\vect{u})+\\vect{w} = \\vect{v}+(\\vect{u}+\\vect{w}) = \\vect{v}+(\\vect{w}+\\vect{u}) = (\\vect{v}+\\vect{w})+\\vect{u}$. Here we have used the commutative law, the associative law, the commutative law, and the associative law, in that order.",
+         "sha": "6687f59aa672",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(\\vect{u}+\\vect{0})+(\\vect{v}+(-\\vect{u})) = \\vect{u}+(\\vect{v}+(-\\vect{u})) = \\vect{u}+((-\\vect{u})+\\vect{v}) = (\\vect{u}+(-\\vect{u}))+\\vect{v} = \\vect{0}+\\vect{v} = \\vect{v}+\\vect{0} = \\vect{v}$. Here we have used the additive unit, the commutative law, the associative law, the additive inverse, the commutative law, and the additive unit, in that order.",
+         "sha": "57f4a229648f",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Addition · 习题 2（上游 exercises/Vectors-Addition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-Addition.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "向量加法"
+}

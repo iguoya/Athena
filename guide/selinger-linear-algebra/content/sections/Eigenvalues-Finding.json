@@ -1,0 +1,1100 @@
+{
+ "id": "Eigenvalues-Finding",
+ "title_en": "Finding eigenvalues",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the characteristic polynomial, eigenvalues, and eigenvectors of a matrix.",
+         "sha": "a67efca804b7",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the eigenvalues of a triangular matrix.",
+         "sha": "800d66629535",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In the previous section, we saw how to find the eigenvectors corresponding to a given eigenvalue $\\eigenvar$, if $\\eigenvar$ is already known. But we have not yet seen how to find the eigenvalues of a matrix. However, the calculations in Examples “Find eigenvectors for the given eigenvalue” and “Basis of eigenspace” suggest a way forward. We can see that the following are equivalent:",
+    "sha": "bd66b8f9e1d7",
+    "zh": ""
+   }
+  },
+  {
+   "k": "list",
+   "ordered": true,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "$\\eigenvar$ is an eigenvalue of $A$.",
+       "sha": "6ce01da3aaba",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "There exists a non-zero vector $\\vect{v}$ such that $A\\vect{v}=\\eigenvar\\vect{v}$.",
+       "sha": "83094b808f89",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "The homogeneous system of equations $(A-\\eigenvar I)\\vect{v}=\\vect{0}$ has a non-trivial solution.",
+       "sha": "4454728e0f33",
+       "zh": ""
+      }
+     }
+    ]
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Indeed, the equivalence between 1 and 2 is just the definition of an eigenvalue, and the equivalence between 2 and 3 is just algebra. By Corollary “Determinants and homogeneous systems”, we know that the system $(A-\\eigenvar I)\\vect{v}=\\vect{0}$ has a non-trivial solution if and only if $\\det(A-\\eigenvar I)=0$. Therefore, we have proved the following theorem:",
+    "sha": "ea6ba2953c1e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Eigenvalues",
+    "sha": "79c9960d10dd",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be a square matrix, and let $\\eigenvar$ be a scalar. Then $\\eigenvar$ is an eigenvalue of $A$ if and only if",
+      "sha": "d9eb287fddc5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(A-\\eigenvar I)=0."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Finding the eigenvalues",
+    "sha": "54bd26b31264",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the eigenvalues of the matrix",
+      "sha": "cb608726cc1d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rr}\n      -5 & 2 \\\\\n      -7 & 4 \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "By Theorem “Eigenvalues”, a scalar $\\eigenvar$ is an eigenvalue of $A$ if and only if $\\det(A-\\eigenvar I)=0$. We calculate the determinant:",
+      "sha": "8a889c06ec5e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\det(A-\\eigenvar I)\n    &=&\n    \\left|\\begin{array}{cc}\n      -5-\\eigenvar & 2 \\\\\n      -7 & 4-\\eigenvar \\\\\n    \\end{array}\\right| \\\\\n    &=& (-5-\\eigenvar)(4-\\eigenvar) + 14 \\\\\n    &=& \\eigenvar^2 + \\eigenvar - 6.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, $\\eigenvar$ is an eigenvalue if and only if $\\eigenvar^2 + \\eigenvar - 6 = 0$. We can find the roots of this equation using the quadratic formula, or equivalently, by factoring the left-hand side:",
+      "sha": "aae1d1bd1a73",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\eigenvar^2 + \\eigenvar - 6 = 0\n    \\iff\n    (\\eigenvar+3)(\\eigenvar-2) = 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, the eigenvalues are $\\eigenvar=-3$ and $\\eigenvar=2$.",
+      "sha": "aa1ba5623c55",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Finding the eigenvalues",
+    "sha": "54bd26b31264",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the eigenvalues of the matrix",
+      "sha": "cb608726cc1d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{rrr}\n      5 & -4 & 4 \\\\\n      2 & -1 & 2 \\\\\n      0 &  0 & 2 \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Once again, we calculate $\\det(A-\\eigenvar I)$:",
+      "sha": "c936c7cf359d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\det(A-\\eigenvar I)\n    &=&\n        \\left|\\begin{array}{ccc}\n          5-\\eigenvar & -4 & 4 \\\\\n          2 & -1-\\eigenvar & 2 \\\\\n          0 &  0 & 2-\\eigenvar \\\\\n        \\end{array}\\right| \\\\\n    &=&\n        (5-\\eigenvar)(-1-\\eigenvar)(2-\\eigenvar) - 2(-4)(2-\\eigenvar) \\\\\n    &=& -\\eigenvar^3 + 6\\eigenvar^2 - 11\\eigenvar + 6 \\\\\n    &=& (3-\\eigenvar)(1-\\eigenvar)(2-\\eigenvar).\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The eigenvalues are the roots of this polynomial, i.e., the solutions of the equation $(\\eigenvar-3)(\\eigenvar-1)(2-\\eigenvar)=0$. Therefore, the eigenvalues of $A$ are $\\eigenvar=1$, $\\eigenvar=2$, and $\\eigenvar=3$.",
+      "sha": "5766b7d15fbc",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "No real eigenvalue",
+    "sha": "d82cb9fd0453",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the eigenvalues of the matrix",
+      "sha": "cb608726cc1d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{rr}\n      0 & -1 \\\\\n      1 &  0 \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have",
+      "sha": "a2214cd5b1a4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(A-\\eigenvar I)\n    ~=~\n        \\left|\\begin{array}{cc}\n          -\\eigenvar & -1 \\\\\n          1 & -\\eigenvar \\\\\n        \\end{array}\\right| \\\\\n    ~=~\n        \\eigenvar^2 + 1."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\eigenvar^2+1 = 0$ does not have any solutions in the real numbers, the matrix $A$ has no real eigenvalues. (However, if we were working over the field of complex numbers rather than real numbers, this matrix would have eigenvalues $\\eigenvar=\\pm i$).",
+      "sha": "644279111337",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "As the examples show, the quantity $\\det(A-\\eigenvar I)$ is always a polynomial in the variable $\\eigenvar$. A **polynomial** is an expression of the form",
+    "sha": "f56a5a7d7713",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "p(\\eigenvar) = a_n\\eigenvar^n + a_{n-1}\\eigenvar^{n-1} + \\ldots + a_1\\eigenvar + a_0,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "where $a_0,\\ldots,a_n$ are constants called the **coefficients** of the polynomial. The polynomial $\\det(A-\\eigenvar I)$ has a special name:",
+    "sha": "c3eba17e89bc",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Characteristic polynomial",
+    "sha": "f4a59bec863e",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be a square matrix. The expression",
+      "sha": "c8042f706c9c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "p(\\eigenvar) = \\det(A-\\eigenvar I)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is called the **characteristic polynomial** of $A$.",
+      "sha": "13c0f813f9c5",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Characteristic polynomial",
+    "sha": "f4a59bec863e",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the characteristic polynomial of the matrix",
+      "sha": "efc3b1f34f03",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rrr}\n      3  & 0 &  2 \\\\\n      6  & 4 &  3 \\\\\n      -4 & 0 & -3 \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The characteristic polynomial is",
+      "sha": "d7f6efee0d4a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\det(A-\\eigenvar I) \n    &=&\n        \\left|\\begin{array}{ccc}\n          3-\\eigenvar  & 0 &  2 \\\\\n          6  & 4-\\eigenvar &  3 \\\\\n          -4 & 0 & -3-\\eigenvar \\\\\n        \\end{array}\\right| \\\\\n    &=&\n        (3-\\eigenvar)\\left|\\begin{array}{ccc}\n          4-\\eigenvar & 3 \\\\\n          0 & -3-\\eigenvar \\\\\n        \\end{array}\\right|\n    + 2 \\left|\\begin{array}{ccc}\n          6  & 4-\\eigenvar \\\\\n          -4 & 0 \\\\\n        \\end{array}\\right| \\\\\n    &=& (3-\\eigenvar)(4-\\eigenvar)(-3-\\eigenvar) + 8(4-\\eigenvar) \\\\\n    &=& -\\eigenvar^3 + 4\\eigenvar^2 + \\eigenvar - 4.\\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It is time to summarize the method for finding the eigenvalues and eigenvectors of a matrix.",
+    "sha": "2783ed2370b4",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "procedure",
+   "title": {
+    "en": "Finding eigenvalues and eigenvectors",
+    "sha": "3c0ec1ad6e88",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n\\times n$-matrix. To find the eigenvalues and eigenvectors of $A$:",
+      "sha": "146b96466a9a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Calculate the characteristic polynomial $\\det(A-\\eigenvar I)$.",
+         "sha": "964757a1a3e4",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The eigenvalues are the roots of the characteristic polynomial.",
+         "sha": "4d2d5d303705",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "For each eigenvalue $\\eigenvar$, find a basis for the eigenvectors by solving the homogeneous system",
+         "sha": "295d94b436a6",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "(A-\\eigenvar I)\\vect{v} = \\vect{0}."
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To double-check your work, make sure that $A\\vect{v}=\\eigenvar\\vect{v}$ for each eigenvalue $\\eigenvar$ and associated eigenvector $\\vect{v}$.",
+      "sha": "6849fd38c178",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Finding eigenvalues and eigenvectors",
+    "sha": "3c0ec1ad6e88",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the eigenvalues and eigenvectors of the matrix",
+      "sha": "95c965d190fc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rrr}\n      3  & 0 &  2 \\\\\n      6  & 4 &  3 \\\\\n      -4 & 0 & -3 \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We already found the characteristic polynomial in Example “Characteristic polynomial”. It is",
+      "sha": "37909640f9d4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "p(\\eigenvar)\n    = \\det(A-\\eigenvar I)\n    = -\\eigenvar^3 + 4\\eigenvar^2 + \\eigenvar - 4."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Finding the roots of a cubic polynomial can be a bit tricky, but with some trial and error, we can find that $\\eigenvar=1$ is a root. We can therefore factor out $(\\eigenvar-1)$:",
+      "sha": "48cbbd8b413a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "p(\\eigenvar) = (\\eigenvar-1)(-\\eigenvar^2+3\\eigenvar+4)."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Then we can use the quadratic formula to find the remaining two roots:",
+      "sha": "8db6e53820d0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\eigenvar = \\frac{-3\\pm\\sqrt{9+16}}{-2},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which yields the two roots $\\eigenvar=-1$ and $\\eigenvar=4$. Therefore, we have",
+      "sha": "a57736a3250b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "p(\\eigenvar) = -(\\eigenvar-1)(\\eigenvar+1)(\\eigenvar-4),"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and the eigenvalues of $A$ are $\\eigenvar=1$, $\\eigenvar=-1$, and $\\eigenvar=4$. We now find the eigenvectors for each eigenvalue.",
+      "sha": "9a13cdd1d60f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "\\bf\\underlineFor $\\eigenvar=1$: We must solve $(A-I)\\vect{v}=\\vect{0}$, i.e.,",
+         "sha": "22bf040a5ea0",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\left[\\begin{array}{rrr}\n        2  & 0 &  2 \\\\\n        6  & 3 &  3 \\\\\n        -4 & 0 & -4 \\\\\n      \\end{array}\\right]\\vect{v}=\\vect{0}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "The basic solution is",
+         "sha": "244c81d11d31",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vect{v}_1 = \\left[\\begin{array}{r} -1 \\\\ 1 \\\\ 1 \\end{array}\\right]."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "\\bf\\underlineFor $\\eigenvar=-1$: We must solve $(A+I)\\vect{v}=\\vect{0}$, i.e.,",
+         "sha": "53d394dbbccd",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\left[\\begin{array}{rrr}\n        4  & 0 &  2 \\\\\n        6  & 5 &  3 \\\\\n        -4 & 0 & -2 \\\\\n      \\end{array}\\right]\\vect{v}=\\vect{0}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "The basic solution is",
+         "sha": "244c81d11d31",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vect{v}_2 = \\left[\\begin{array}{r} -1 \\\\ 0 \\\\ 2 \\end{array}\\right]."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "\\bf\\underlineFor $\\eigenvar=4$: We must solve $(A-4I)\\vect{v}=\\vect{0}$, i.e.,",
+         "sha": "13e0791e77c9",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\left[\\begin{array}{rrr}\n        -1  & 0 &  2 \\\\\n        6  & 0 &  3 \\\\\n        -4 & 0 & -7 \\\\\n      \\end{array}\\right]\\vect{v}=\\vect{0}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "The basic solution is",
+         "sha": "244c81d11d31",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vect{v}_3 = \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 0 \\end{array}\\right]."
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "A zero eigenvalue",
+    "sha": "062a9ddc6c55",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let",
+      "sha": "ef5fe1edf379",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{rrr}\n      2 & 2 & -2 \\\\\n      1 & 3 & -1 \\\\\n      -1 & 1 & 1 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the eigenvalues and eigenvectors of $A$.",
+      "sha": "00eac244d61d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "To find the eigenvalues of $A$, we first compute the characteristic polynomial.",
+      "sha": "a020c1382991",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(A-\\eigenvar I) =\n    \\left|\\begin{array}{ccc}\n      2-\\eigenvar & 2 & -2 \\\\\n      1 & 3-\\eigenvar & -1 \\\\\n      -1 & 1 & 1-\\eigenvar \\\\\n    \\end{array}\\right|\n    = -\\eigenvar^3+6 \\eigenvar^2-8\\eigenvar."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "You can verify that the roots of this polynomial are $\\eigenvar_1 = 0$, $\\eigenvar_2 = 2$, $\\eigenvar_3 = 4$. Notice that while eigenvectors can never equal $\\vect{0}$, it is possible to have an eigenvalue equal to $0$. Now we will find the basic eigenvectors.",
+      "sha": "b25eb7c7752d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "\\bf\\underlineFor $\\eigenvar_1 =0$: We must solve the equation $(A-0I)\\vect{v} = \\vect{0}$. This equation becomes $A\\vect{v}=\\vect{0}$. We write the augmented matrix for this system and reduce to echelon form:",
+         "sha": "9c35ddb1b198",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\left[\\begin{array}{rrr|r}\n        2 & 2 & -2 & 0 \\\\\n        1 & 3 & -1 & 0 \\\\\n        -1 & 1 & 1 & 0 \\\\\n      \\end{array}\\right]\n      \\roweq\\ldots\\roweq\n      \\left[\\begin{array}{rrr|r}\n        1 & 0 & -1 & 0 \\\\\n        0 & 1 &  0 & 0 \\\\\n        0 & 0 &  0 & 0 \\\\\n      \\end{array}\\right]."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "The basic solution is",
+         "sha": "244c81d11d31",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vect{v}_1\n      =\n      \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 1 \\end{array}\\right]."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "\\bf\\underlineFor $\\eigenvar_2=2$: We solve the equation $(A-2I)\\vect{v} = \\vect{0}$:",
+         "sha": "06da36c5c7bf",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\left[\\begin{array}{rrr|r}\n        0  & 2 & -2 & 0 \\\\\n        1  & 1 & -1 & 0 \\\\\n        -1 & 1 & -1 & 0 \\\\\n      \\end{array}\\right]\n      \\roweq\\ldots\\roweq\n      \\left[\\begin{array}{rrr|r}\n        1  & 0 &  0 & 0 \\\\\n        0  & 1 & -1 & 0 \\\\\n        0  & 0 &  0 & 0 \\\\\n      \\end{array}\\right]."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "The basic solution is",
+         "sha": "244c81d11d31",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vect{v}_2\n      =\n      \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 1 \\end{array}\\right]."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "\\bf\\underlineFor $\\eigenvar_3=4$: We solve the equation $(A-4I)\\vect{v} = \\vect{0}$:",
+         "sha": "966fdd48a9aa",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\left[\\begin{array}{rrr|r}\n        -2 & 2  & -2 & 0 \\\\\n        1  & -1 & -1 & 0 \\\\\n        -1 &  1 & -3 & 0 \\\\\n      \\end{array}\\right]\n      \\roweq\\ldots\\roweq\n      \\left[\\begin{array}{rrr|r}\n        1 & -1 & 0 & 0 \\\\\n        0 &  0 & 1 & 0 \\\\\n        0 &  0 & 0 & 0 \\\\\n      \\end{array}\\right]."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "The basic solution is",
+         "sha": "244c81d11d31",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vect{v}_3\n      =\n      \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 0 \\end{array}\\right]."
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Thus we have found the eigenvectors $\\vect{v}_1$ for $\\eigenvar_1$, $\\vect{v}_2$ for $\\eigenvar_2$, and $\\vect{v}_3$ for $\\eigenvar_3$. We can double-check our answers by checking the equation $A\\vect{v}=\\eigenvar\\vect{v}$ in each case:",
+      "sha": "05b413444d4e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}A\\vect{v}_1\n    &=&\n    \\left[\\begin{array}{rrr}\n      2 & 2 & -2 \\\\\n      1 & 3 & -1 \\\\\n      -1 & 1 & 1 \\\\\n    \\end{array}\\right]\n    \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 1 \\end{array}\\right]\n    =\n    \\left[\\begin{array}{r} 0 \\\\ 0 \\\\ 0 \\end{array}\\right]\n    = 0\\vect{v}_1,\n    \\\\\n    A\\vect{v}_2\n    &=&\n    \\left[\\begin{array}{rrr}\n      2 & 2 & -2 \\\\\n      1 & 3 & -1 \\\\\n      -1 & 1 & 1 \\\\\n    \\end{array}\\right]\n    \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 1 \\end{array}\\right]\n    =\n    \\left[\\begin{array}{r} 0 \\\\ 2 \\\\ 2 \\end{array}\\right]\n    = 2\\vect{v}_2,\n    \\\\\n    A\\vect{v}_3\n    &=&\n    \\left[\\begin{array}{rrr}\n      2 & 2 & -2 \\\\\n      1 & 3 & -1 \\\\\n      -1 & 1 & 1 \\\\\n    \\end{array}\\right]\n    \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 0 \\end{array}\\right]\n    =\n    \\left[\\begin{array}{r} 4 \\\\ 4 \\\\ 0 \\end{array}\\right]\n    = 4\\vect{v}_3.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, our eigenvectors and eigenvalues are correct.",
+      "sha": "003922e67d4d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We conclude this section by considering the eigenvalues of a triangular matrix. Recall from Definition “Triangular matrices” that a matrix is **upper triangular** if all entries below the main diagonal are zero, and **lower triangular** if all entries above the main diagonal are zero.",
+    "sha": "e8137ca267a9",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Eigenvalues of a triangular matrix",
+    "sha": "4af0a643f0f6",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the eigenvalues of",
+      "sha": "cf6c617d14d4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{rrr}\n      1 & 2 & 4 \\\\\n      0 & 4 & 7 \\\\\n      0 & 0 & 6 \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We calculate $\\det(A - \\eigenvar I) = 0$ as follows:",
+      "sha": "44aee47df2fe",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\det (A - \\eigenvar I) =\n    \\det \\left[\\begin{array}{ccc}\n      1-\\eigenvar & 2 & 4 \\\\\n      0 & 4-\\eigenvar & 7 \\\\\n      0 & 0 & 6-\\eigenvar \\\\\n    \\end{array}\\right] = (1-\\eigenvar)(4-\\eigenvar)(6-\\eigenvar).\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Solving the equation $(1-\\eigenvar)(4-\\eigenvar)(6-\\eigenvar) = 0$ results in the eigenvalues $\\eigenvar_1 = 1$, $\\eigenvar_2 = 4$, and $\\eigenvar_3 = 6$. Thus the eigenvalues are the entries on the main diagonal of $A$.",
+      "sha": "51569f62c15e",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Clearly, the same is true for any (upper or lower) triangular matrix. We therefore have the following proposition:",
+    "sha": "90c72d7db80a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Eigenvalues of a triangular matrix",
+    "sha": "4af0a643f0f6",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an upper or lower triangular matrix. Then the eigenvalues of $A$ are the entries on the main diagonal.",
+      "sha": "04ce9f8c599a",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the characteristic polynomial of the matrix",
+      "sha": "efc3b1f34f03",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr}\n      3 &  -2 \\\\\n      1 &   0 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Use the quadratic formula to find the eigenvalues.",
+      "sha": "0dca489bd92d",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Finding eigenvalues · 习题 1（上游 exercises/Eigenvalues-Finding.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Finding.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the characteristic polynomial, eigenvalues, and basic eigenvectors of the matrix",
+      "sha": "86abefe9d024",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr}\n      9 &  10 \\\\\n      -5 &  -6 \\\\\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Finding eigenvalues · 习题 2（上游 exercises/Eigenvalues-Finding.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Finding.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the characteristic polynomial, eigenvalues, and basic eigenvectors of the matrix",
+      "sha": "86abefe9d024",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n      0 &   3 &  -1 \\\\\n      -2 &   4 &  -2 \\\\\n      2 &  -3 &   3 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "One eigenvalue is $1$.",
+      "sha": "1b4e751809de",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Finding eigenvalues · 习题 3（上游 exercises/Eigenvalues-Finding.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Finding.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the characteristic polynomial, eigenvalues, and basic eigenvectors of the matrix",
+      "sha": "86abefe9d024",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n      3 &   0 &  -2 \\\\\n      -2 &   1 &   2 \\\\\n      0 &   0 &   1 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "One eigenvalue is $3$.",
+      "sha": "a7d6bb37cb95",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Finding eigenvalues · 习题 4（上游 exercises/Eigenvalues-Finding.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Finding.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the characteristic polynomial, eigenvalues, and basic eigenvectors of the matrix",
+      "sha": "86abefe9d024",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n      9 & 2 & 8 \\\\\n      2 & -6 & -2 \\\\\n      -8 & 2 & -5\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "One eigenvalue is $-3$.",
+      "sha": "132d9c87e600",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Finding eigenvalues · 习题 5（上游 exercises/Eigenvalues-Finding.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Finding.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following matrices have no real eigenvalue?",
+      "sha": "05b49023d94d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rr}\n      1 & 1 \\\\\n      1 & -1 \\\\\n    \\end{array}\\right],\n    \\quad\n    B = \\left[\\begin{array}{rr}\n      1 & -1 \\\\\n      1 & 1 \\\\\n    \\end{array}\\right],\n    \\quad\n    C = \\left[\\begin{array}{rr}\n      0 & 1 \\\\\n      1 & 0 \\\\\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Finding eigenvalues · 习题 6（上游 exercises/Eigenvalues-Finding.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Finding.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the eigenvalues and eigenvectors of the following triangular matrix:",
+      "sha": "8ad6b6095c0d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n      3 & 2 & 2 \\\\\n      0 & 1 & -2 \\\\\n      0 & 0 & -1 \\\\\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Finding eigenvalues · 习题 7（上游 exercises/Eigenvalues-Finding.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Finding.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex8",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Is it possible for a non-zero matrix to have only $0$ as an eigenvalue?",
+      "sha": "a7860ea45634",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Yes. $\\left[\\begin{array}{cc} 0 & 1 \\\\ 0 & 0 \\end{array}\\right]$ works.",
+      "sha": "f8a3de0b6e3c",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Finding eigenvalues · 习题 8（上游 exercises/Eigenvalues-Finding.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Finding.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "求特征值"
+}

@@ -1,0 +1,1177 @@
+{
+ "id": "Determinants-Application-Inverse",
+ "title_en": "Application: A formula for the inverse of a matrix",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the cofactor matrix and the adjugate of a matrix.",
+         "sha": "2d26db81c2ef",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the inverse of a matrix using the adjugate formula.",
+         "sha": "d5f3a2ecee71",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The determinant of a matrix also provides a way to find the inverse of a matrix. Recall the definition of the inverse of a matrix from Definition “The inverse of a matrix”. If $A$ is an $n\\times n$-matrix, we say that $A^{-1}$ is the inverse of $A$ if $AA^{-1} = I$ and $A^{-1}A=I$.",
+    "sha": "7cef1536abc9",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We now define a new matrix called the **cofactor matrix** of $A$. The cofactor matrix of $A$ is the matrix whose $\\ijth$ entry is the $\\ijth$ cofactor of $A$.",
+    "sha": "a42a43c788ad",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "The cofactor matrix",
+    "sha": "11399636f78d",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n\\times n$-matrix. Then the \\textbfcofactor matrix of $A$, denoted $\\cof(A)$, is defined by",
+      "sha": "79ee7199ba65",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\cof(A)\n    ~=~ \\mat{C_{ij}}\n    ~=~ \\left[\\begin{array}{cccc}\n      C_{11} & C_{12} & \\cdots & C_{1n} \\\\\n      C_{21} & C_{22} & \\cdots & C_{2n} \\\\\n      \\vdots & \\vdots & \\ddots & \\vdots \\\\\n      C_{n1} & C_{n2} & \\cdots & C_{nn} \\\\\n    \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where $C_{ij}$ is the $\\ijth$ cofactor of $A$.",
+      "sha": "b3b909ebc8a7",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We will use the cofactor matrix to create a formula for the inverse of $A$. First, we define the **adjugate** of $A$, denoted $\\adj(A)$, to be the transpose of the cofactor matrix:",
+    "sha": "9e58cb6034ae",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\adj(A) = \\cof(A)^T."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The adjugate is also sometimes called the **classical adjoint** of $A$.",
+    "sha": "1da69d3074c0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Cofactor matrix and adjugate",
+    "sha": "ea00c5b5436b",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the cofactor matrix and the adjugate of $A$, where",
+      "sha": "8fcb79ece10d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rrr}\n      1 & 2 & 3 \\\\\n      3 & 0 & 1 \\\\\n      1 & 2 & 1 \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We first find $\\cof(A)$. To do so, we need to compute the cofactors of $A$. We have:",
+      "sha": "17624d150691",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}C_{11} ~=~ +M_{11}\n    &=&\n    \\left|\\begin{array}{ccc}\n      \\cancel{\\cancel{1}} & 2 & 3 \\\\\n      3 & 0 & 1 \\\\\n      1 & 2 & 1 \\\\\n    \\end{array}\\right|\n    ~=~ \\left|\\begin{array}{rr}\n      0 & 1 \\\\\n      2 & 1 \\\\\n    \\end{array}\\right|\n    ~=~ -2,\n    \\\\\n    C_{12} ~=~ -M_{12}\n    &=&\n    -\\left|\\begin{array}{ccc}\n      \\cancel{1} & \\cancel{2} & 3 \\\\\n      3 & 0 & 1 \\\\\n      1 & 2 & 1 \\\\\n    \\end{array}\\right|\n    ~=~ -\\left|\\begin{array}{rr}\n      3 & 1 \\\\\n      1 & 1 \\\\\n    \\end{array}\\right|\n    ~=~ -2,\n    \\\\\n    C_{13} ~=~ +M_{13}\n    &=&\n    \\left|\\begin{array}{ccc}\n      \\cancel{1} & 2 & \\cancel{3} \\\\\n      3 & 0 & 1 \\\\\n      1 & 2 & 1 \\\\\n    \\end{array}\\right|\n    ~=~ \\left|\\begin{array}{rr}\n      3 & 0 \\\\\n      1 & 2 \\\\\n    \\end{array}\\right|\n    ~=~ 6,\n    \\\\\n    C_{21} ~=~ -M_{21}\n    &=&\n    -\\left|\\begin{array}{ccc}\n      \\cancel{1} & 2 & 3 \\\\\n      \\cancel{3} & 0 & 1 \\\\\n      1 & 2 & 1 \\\\\n    \\end{array}\\right|\n    ~=~ -\\left|\\begin{array}{rr}\n      2 & 3 \\\\\n      2 & 1 \\\\\n    \\end{array}\\right|\n    ~=~ 4,\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so on. Continuing in this way, we find the cofactor matrix",
+      "sha": "5622db936460",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\cof(A)\n    =\n    \\left[\\begin{array}{rrr}\n      -2 & -2 & 6 \\\\\n      4 & -2 & 0 \\\\\n      2 & 8 & -6 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Finally, the adjugate is the transpose of the cofactor matrix:",
+      "sha": "e18be9c145cc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\adj(A) = \\cof(A)^T =\n    \\left[\\begin{array}{rrr}\n      -2 & 4 & 2 \\\\\n      -2 & -2 & 8 \\\\\n      6 & 0 & -6 \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The following theorem provides a formula for $A^{-1}$ using the determinant and the adjugate of $A$.",
+    "sha": "d360522c7ccd",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Formula for the inverse",
+    "sha": "3c617b266fb1",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n\\times n$-matrix. Then",
+      "sha": "a5d64f27e763",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A \\, \\adj(A) = \\adj(A)\\,A = \\det(A)\\,I."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Moreover, $A$ is invertible if and only if $\\det(A) \\neq 0$. In this case, we have:",
+      "sha": "c1bc408f4fcf",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A^{-1} = \\frac{1}{\\det(A)} \\adj(A)."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We call this the **adjugate formula** for the matrix inverse.",
+      "sha": "0920717c125d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Recall that the $(i,j)$-entry of $\\adj(A)$ is equal to $C_{ji}$. Thus the $(i,j)$-entry of $B=A\\,\\adj(A)$ is:",
+      "sha": "f294f486ce0a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}B_{ij}\n    &=& a_{i1}\\adj(A)_{1j} + a_{i2}\\adj(A)_{2j} + \\ldots + a_{in}\\adj(A)_{nj} \\\\\n    &=& a_{i1}C_{j1} + a_{i2}C_{j2} + \\ldots + a_{in}C_{jn}.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By the cofactor expansion theorem, we see that this expression for $B_{ij}$ is equal to the determinant of the matrix obtained from $A$ by replacing its $j$th row by $\\mat{a_{i1}, a_{i2}, \\dots a_{in}}$, i.e., by its $i$th row.",
+      "sha": "c6edc1ec7648",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If $i=j$ then this matrix is $A$ itself and therefore $B_{ii}=\\det(A)$. If on the other hand $i\\neq j$, then this matrix has its $i$th row equal to its $j$th row, and therefore $B_{ij}=0$ in this case. Thus we obtain:",
+      "sha": "11e91b0dce38",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A \\, \\adj(A) = {\\det(A)} I."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By a similar argument (using columns instead of rows), we can verify that:",
+      "sha": "50b16336ff48",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\adj(A)\\,A = {\\det(A)} I."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This proves the first part of the theorem. For the second part, assume that $A$ is invertible. Then by Theorem “Determinants and invertible matrices”, $\\det(A)\\neq 0$. Dividing the formula from the first part of the theorem by $\\det(A)$, we obtain",
+      "sha": "c80ee1774218",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A\\paren{\\frac{1}{\\det(A)}\\adj(A)} ~=~ \\paren{\\frac{1}{\\det(A)}\\adj(A)}A ~=~ I,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and therefore",
+      "sha": "6cc521113306",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A^{-1} = \\frac{1}{\\det(A)} \\adj(A)."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This completes the proof.",
+      "sha": "f0759f66940d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Finding the inverse using a formula",
+    "sha": "e6c4ab88e99d",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use the adjugate formula to find the inverse of the matrix",
+      "sha": "b60c2a1e9d6d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{rrr}\n      1 & 2 & 3 \\\\\n      3 & 0 & 1 \\\\\n      1 & 2 & 1 \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We must compute",
+      "sha": "a0e2f2ba62f3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A^{-1} ~=~ \\frac{1}{\\det(A)} \\adj(A)."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We will start by computing the determinant. We expand along the second row:",
+      "sha": "5c85f74aaf0e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(A)\n    ~=~ \\left|\\begin{array}{rrr}\n      1 & 2 & 3 \\\\\n      3 & 0 & 1 \\\\\n      1 & 2 & 1 \\\\\n    \\end{array}\\right|\n    ~=~ -3 \\left|\\begin{array}{rr}\n      2 & 3 \\\\\n      2 & 1 \\\\\n    \\end{array}\\right|\n    - 1 \\left|\\begin{array}{rr}\n      1 & 2 \\\\\n      1 & 2 \\\\\n    \\end{array}\\right|\n    ~=~ -3(-4) -1(0) ~=~ 12."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We have already calculated the adjugate $\\adj(A)$ in Example “Cofactor matrix and adjugate”:",
+      "sha": "915f8d264e1f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\adj(A) ~=~\n    \\left[\\begin{array}{rrr}\n      -2 & 4 & 2 \\\\\n      -2 & -2 & 8 \\\\\n      6 & 0 & -6 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, the inverse of $A$ is given by",
+      "sha": "2f0a505e6577",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\def\\arraystretch{1.4}\n    A^{-1}\n    ~=~ \\frac{1}{\\det(A)}\\adj(A)\n    ~=~ \\frac{1}{12}\\left[\\begin{array}{rrr}\n      -2 & 4 & 2 \\\\\n      -2 & -2 & 8 \\\\\n      6 & 0 & -6 \\\\\n    \\end{array}\\right]\n    ~=~ \\left[\\begin{array}{rrr}\n      -\\frac{1}{6} & \\frac{1}{3} & \\frac{1}{6} \\\\\n      -\\frac{1}{6} & -\\frac{1}{6} & \\frac{2}{3} \\\\\n      \\frac{1}{2} & 0 & -\\frac{1}{2} \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since it is very easy to make a mistake in this calculation, we double-check our answer by computing $A^{-1}A$:",
+      "sha": "c61025c0ffed",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\def\\arraystretch{1.4}\n    A^{-1}A ~=~\n    \\allowbreak \\left[\\begin{array}{rrr}\n      -\\frac{1}{6} & \\frac{1}{3} &\n      \\frac{1}{6} \\\\\n      -\\frac{1}{6} & -\\frac{1}{6} &\n      \\frac{2}{3} \\\\\n      \\frac{1}{2} & 0 & -\\frac{1}{2}\n    \\end{array}\\right] \\left[\\begin{array}{rrr}\n      1 & 2 & 3 \\\\\n      3 & 0 & 1 \\\\\n      1 & 2 & 1\n    \\end{array}\\right] ~=~ \\left[\\begin{array}{rrr}\n      1 & 0 & 0 \\\\\n      0 & 1 & 0 \\\\\n      0 & 0 & 1\n    \\end{array}\\right]\n    ~=~\n    I."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Finding the inverse using a formula",
+    "sha": "e6c4ab88e99d",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use the adjugate formula to find the inverse of the matrix",
+      "sha": "b60c2a1e9d6d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{rrr}\n      0  &  2 &  1 \\\\\n      -1 &  2 &  2 \\\\\n      2  & -2 & -2 \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We start by calculating the determinant:",
+      "sha": "e6e5a13419b5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(A)\n    ~=~ \\left|\\begin{array}{rrr}\n      0  &  2 &  1 \\\\\n      -1 &  2 &  2 \\\\\n      2  & -2 & -2 \\\\\n    \\end{array}\\right|\n    ~=~ -2 \\left|\\begin{array}{rr}\n      -1 &  2 \\\\\n      2  & -2 \\\\\n    \\end{array}\\right|\n    + 1 \\left|\\begin{array}{rrr}\n      -1 &  2 \\\\\n      2  & -2 \\\\\n    \\end{array}\\right|\n    ~=~ -2\\cdot (-2) + 1\\cdot(-2) ~=~ 2."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Next, we compute the cofactor matrix:",
+      "sha": "c5a4b9093fbe",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\cof(A)\n    ~=~\n    \\left[\\begin{array}{ccc}\n      ~~~\\left|\\begin{array}{rr}\n       2 &  2 \\\\\n       -2 & -2 \\\\\n      \\end{array}\\right|\n      &\n      -\\left|\\begin{array}{rr}\n      -1 &  2 \\\\\n      2  & -2 \\\\\n      \\end{array}\\right|\n      &\n      ~~~\\left|\\begin{array}{rr}\n      -1 &  2 \\\\\n      2  & -2 \\\\\n      \\end{array}\\right|\n      \\\\\\\\[-1ex]\n      -\\left|\\begin{array}{rr}\n      2 &  1 \\\\\n      -2 & -2 \\\\\n      \\end{array}\\right|\n      &\n      ~~~\\left|\\begin{array}{rr}\n      0 &  1 \\\\\n      2 & -2 \\\\\n      \\end{array}\\right|\n      &\n      -\\left|\\begin{array}{rr}\n      0  &  2 \\\\\n      2  & -2 \\\\\n      \\end{array}\\right|\n      \\\\\\\\[-1ex]\n      ~~~\\left|\\begin{array}{rr}\n      2 &  1 \\\\\n      2 &  2 \\\\\n      \\end{array}\\right|\n      &\n      -\\left|\\begin{array}{rr}\n      0  &  1 \\\\\n      -1 &  2 \\\\\n      \\end{array}\\right|\n      &\n      ~~~\\left|\\begin{array}{rr}\n      0  &  2 \\\\\n      -1 &  2 \\\\\n      \\end{array}\\right|\n    \\end{array}\\right]\n    ~=~ \\left[\\begin{array}{rrr}\n      0 &  2 & -2 \\\\\n      2 & -2 &  4 \\\\\n      2 & -1 &  2 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The adjugate is the transpose of the cofactor matrix:",
+      "sha": "da19ce2ce7be",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\adj(A) ~=~ \\cof(A)^T\n    ~=~ \\left[\\begin{array}{rrr}\n      0  &  2 &  2 \\\\\n      2  & -2 & -1 \\\\\n      -2 &  4 &  2 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We therefore have",
+      "sha": "4382e190c10d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\def\\arraystretch{1.2}\n    A^{-1}\n    ~=~\n    \\frac{1}{\\det(A)}\\adj(A)\n    ~=~\n    \\frac{1}{2}\n    \\left[\\begin{array}{rrr}\n      0  &  2 &  2 \\\\\n      2  & -2 & -1 \\\\\n      -2 &  4 &  2 \\\\\n    \\end{array}\\right]\n    ~=~\n    \\left[\\begin{array}{rrr}\n      0  &  1 &  1 \\\\\n      1  & -1 & -\\frac{1}{2} \\\\\n      -1 &  2 &  1 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Once again, we double-check our work by computing $A^{-1}A$:",
+      "sha": "1e213516c458",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\def\\arraystretch{1.2}\n    A^{-1}A ~=~\n    \\left[\\begin{array}{rrr}\n      0  &  1 &  1 \\\\\n      1  & -1 & -\\frac{1}{2} \\\\\n      -1 &  2 &  1 \\\\\n    \\end{array}\\right]\n    \\left[\\begin{array}{rrr}\n      0  &  2 &  1 \\\\\n      -1 &  2 &  2 \\\\\n      2  & -2 & -2 \\\\\n    \\end{array}\\right]\n    ~=~ \\left[\\begin{array}{rrr}\n      1 & 0 & 0 \\\\\n      0 & 1 & 0 \\\\\n      0 & 0 & 1\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It is always a good idea to double-check your work. At the end of the calculation, it is very easy to compute $A^{-1}A$ and check whether it is equal to $I$. If they are not equal, be sure to go back and double-check each step. One common mistake is to forget to take the transpose of the cofactor matrix, so be sure not to forget this step.",
+    "sha": "004fcb1bf652",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In practice, it is usually much faster to compute the inverse by the method of Section 〔引用〕, because this only requires solving a single system of equations, rather than computing a large number of cofactors. However, there are some situations where the adjugate formula is useful. One such situation is when the matrix has complicated entries that are functions rather than numbers. The following example illustrates this.",
+    "sha": "1d482250ac43",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Inverse for non-constant matrix",
+    "sha": "a58bb8bac8f6",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let",
+      "sha": "ef5fe1edf379",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A(t) =\\left[\\begin{array}{ccc}\n      e^{t} & 0 & 0 \\\\\n      0 & \\cos t & \\sin t \\\\\n      0 & -\\sin t & \\cos t\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Show that $A(t)^{-1}$ exists and find it.",
+      "sha": "e43852b8c1a9",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "First note that",
+      "sha": "92ec7b73d583",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(A(t)) ~=~ e^{t}(\\cos^2 t + \\sin^2 t) ~=~ e^{t}\\neq 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore $A(t)^{-1}$ exists for all values of the variable $t$. The cofactor matrix is",
+      "sha": "39572ac985f2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\cof(A(t))\n    ~=~ \\left[\\begin{array}{ccc}\n      1 & 0 & 0 \\\\\n      0 & e^{t}\\cos t & e^{t}\\sin t \\\\\n      0 & -e^{t}\\sin t & e^{t}\\cos t\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The adjugate is the transpose of the cofactor matrix, and therefore the inverse is",
+      "sha": "a74ec15e6003",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A(t)^{-1}\n    ~=~ \\frac{1}{\\det(A(t))}\\adj(A(t))\n    ~=~\n    \\frac{1}{e^{t}}\\left[\\begin{array}{ccc}\n      1 & 0 & 0 \\\\\n      0 & e^{t}\\cos t & -e^{t}\\sin t \\\\\n      0 & e^{t}\\sin t & e^{t}\\cos t\n    \\end{array}\\right]\n    ~=~ \\left[\\begin{array}{ccc}\n      e^{-t} & 0 & 0 \\\\\n      0 & \\cos t & -\\sin t \\\\\n      0 & \\sin t & \\cos t\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Another situation where the adjugate formula is useful is the case of a $2\\times 2$-matrix. In this case both the determinant and the adjugate are especially easy to compute. For a $2\\times 2$-matrix",
+    "sha": "e002a651af37",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A ~=~ \\left[\\begin{array}{rr}\n    a & b \\\\\n    c & d\n  \\end{array}\\right],"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "we have",
+    "sha": "8419df2ab51f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{array}{rcl}\\det(A) &=& ad-bc\n  \\\\\n  \\adj(A) &=&\n  \\left[\\begin{array}{rr}\n    d & -b \\\\\n    -c & a\n  \\end{array}\\right].\\end{array}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Therefore, $A$ is invertible if and only if $ad-bc\\neq 0$, and in that case, the inverse is given by",
+    "sha": "e615b13be5d8",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A^{-1} ~=~\n  \\frac{1}{ad-bc}\n  \\left[\\begin{array}{rr}\n    d & -b \\\\\n    -c & a\n  \\end{array}\\right]. \\tag{1}"
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Inverse of a $2\\times 2$-matrix",
+    "sha": "09b77040c87d",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the inverse of",
+      "sha": "f1203726627d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A ~=~ \\left[\\begin{array}{rr}\n      7 & 5 \\\\\n      2 & 2 \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We use formula (1) to compute the inverse:",
+      "sha": "917b55d441bf",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\def\\arraystretch{1.4}\n    A^{-1} ~=~\n    \\frac{1}{7\\cdot 2-2\\cdot 5}\n    \\left[\\begin{array}{rr}\n      2 & -5 \\\\\n      -2 & 7\n    \\end{array}\\right]\n    ~=~\n    \\left[\\begin{array}{rr}\n      \\frac{1}{2} & -\\frac{5}{4} \\\\\n      -\\frac{1}{2} & \\frac{7}{4}\n    \\end{array}\\right]."
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the cofactor matrix and the adjugate of each of the following matrices.",
+      "sha": "6ec1e6852ffe",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A =\n    \\left[\\begin{array}{rr}\n      1 & 0 \\\\\n      3 & 2 \\\\\n    \\end{array}\\right],\n    \\quad\n    B =\n    \\left[\\begin{array}{rrr}\n      1  & 0  & 1  \\\\\n      -1 & 1  & -2 \\\\\n      2  & -1 & 3  \\\\\n    \\end{array}\\right],\n    \\quad\n    C =\n    \\left[\\begin{array}{rrr}\n      1 &  1 & 3 \\\\\n      2 &  3 & 1 \\\\\n      1 & -1 & 1 \\\\\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: A formula for the inverse of a matrix · 习题 1（上游 exercises/Determinants-Applications-Inverse.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Applications-Inverse.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each of the following matrices, determine whether it is invertible by checking whether the determinant is non-zero. If the determinant is non-zero, use the adjugate formula to find the inverse.",
+      "sha": "ed7f69b314fb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A =\n    \\left[\\begin{array}{rrr}\n      1 & 2 & 3 \\\\\n      0 & 2 & 1 \\\\\n      3 & 1 & 0 \\\\\n    \\end{array}\\right],\n    \\quad\n    B =\n    \\left[\\begin{array}{rrr}\n      1 & 2 & 0 \\\\\n      0 & 2 & 1 \\\\\n      3 & 1 & 1 \\\\\n    \\end{array}\\right],\n    \\quad\n    C =\n    \\left[\\begin{array}{rrr}\n      1 & 3 & 3 \\\\\n      2 & 4 & 1 \\\\\n      0 & 1 & 1 \\\\\n    \\end{array}\\right],\n    \\quad\n    D =\n    \\left[\\begin{array}{rrr}\n      1 & 2 & 3 \\\\\n      0 & 2 & 1 \\\\\n      2 & 6 & 7 \\\\\n    \\end{array}\\right],\n    \\quad\n    E =\n    \\left[\\begin{array}{rrr}\n      1 & 0 & 3 \\\\\n      1 & 0 & 1 \\\\\n      3 & 1 & 0 \\\\\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\det(A) = -13$ and so $A$ is invertible. This inverse is",
+         "sha": "9b89ee3519f3",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{array}{rcl}\\frac{1}{-13}\\left[\\begin{array}{rrr}\n          \\left|\\begin{array}{cc}\n            2 & 1 \\\\\n            1 & 0 \\\\\n          \\end{array}\\right| & -\\left|\\begin{array}{cc}\n            0 & 1 \\\\\n            3 & 0 \\\\\n          \\end{array}\\right| & \\left|\\begin{array}{cc}\n            0 & 2 \\\\\n            3 & 1 \\\\\n          \\end{array}\\right| \\\\\\\\[-1ex]\n          -\\left|\\begin{array}{cc}\n            2 & 3 \\\\\n            1 & 0 \\\\\n          \\end{array}\\right| & \\left|\\begin{array}{cc}\n            1 & 3 \\\\\n            3 & 0 \\\\\n          \\end{array}\\right| & -\\left|\\begin{array}{cc}\n            1 & 2 \\\\\n            3 & 1 \\\\\n          \\end{array}\\right| \\\\\\\\[-1ex]\n          \\left|\\begin{array}{cc}\n            2 & 3 \\\\\n            2 & 1 \\\\\n          \\end{array}\\right| & -\\left|\\begin{array}{cc}\n            1 & 3 \\\\\n            0 & 1 \\\\\n          \\end{array}\\right| & \\left|\\begin{array}{cc}\n            1 & 2 \\\\\n            0 & 2 \\\\\n          \\end{array}\\right|\\end{array}\\right]^T &=&\\frac{1}{-13}\\left[\\begin{array}{rrr}\n          -1 & 3  & -6 \\\\\n          3  & -9 & 5  \\\\\n          -4 & -1 & 2  \\\\\n        \\end{array}\\right]^T\n        \\\\\n              &=& \\def\\arraystretch{1.3}\n                  \\left[\\begin{array}{rrr}\n                    \\frac{1}{13} & -\\frac{3}{13} & \\frac{4}{13} \\\\\n                    -\\frac{3}{13} & \\frac{9}{13} & \\frac{1}{13} \\\\\n                    \\frac{6}{13} & -\\frac{5}{13} & -\\frac{2}{13} \\\\\n                  \\end{array}\\right].\\end{array}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\det(B) = 7$, so $B$ is invertible. The inverse is $\\displaystyle \\def\\arraystretch{1.3} \\frac{1}{7} \\left[\\begin{array}{rrr} 1 & 3 & -6 \\\\ -2 & 1 & 5 \\\\ 2 & -1 & 2 \\\\ \\end{array}\\right]^T = \\left[\\begin{array}{rrr} \\frac{1}{7} & -\\frac{2}{7} & \\frac{2}{7} \\\\ \\frac{3}{7} & \\frac{1}{7} & -\\frac{1}{7} \\\\ -\\frac{6}{7} & \\frac{5}{7} & \\frac{2}{7} \\\\ \\end{array}\\right].$",
+         "sha": "404e24804339",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\det(C) = 3$, so $C$ is invertible. The inverse is $\\def\\arraystretch{1.3} \\left[\\begin{array}{rrr} 1 & 0 & -3 \\\\ -\\frac{2}{3} & \\frac{1}{3} & \\frac{5}{3} \\\\ \\frac{2}{3} & -\\frac{1}{3} & -\\frac{2}{3} \\\\ \\end{array}\\right]$.",
+         "sha": "43dfe73eadaa",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\det(D) = 0$, so $D$ is not invertible.",
+         "sha": "845554b07df4",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\det(E) = 2$, and so $E$ is invertible. The inverse is $\\def\\arraystretch{1.3} \\left[\\begin{array}{rrr} -\\frac{1}{2} & \\frac{3}{2} & 0 \\\\ \\frac{3}{2} & -\\frac{9}{2} & 1 \\\\ \\frac{1}{2} & -\\frac{1}{2} & 0 \\\\ \\end{array}\\right]$.",
+         "sha": "c1188dd61d5c",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: A formula for the inverse of a matrix · 习题 2（上游 exercises/Determinants-Applications-Inverse.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Applications-Inverse.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine whether each of the following matrices is invertible. If so, use the adjugate formula to find the inverse. If the inverse does not exist, explain why.",
+      "sha": "48237b9f0cea",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rr}\n      1 & 1 \\\\\n      1 & 2 \\\\\n    \\end{array}\\right],\n    \\quad\n    B = \\left[\\begin{array}{rrr}\n      1 & 2 & 3 \\\\\n      0 & 2 & 1 \\\\\n      4 & 1 & 1 \\\\\n    \\end{array}\\right],\n    \\quad\n    C = \\left[\\begin{array}{rrr}\n      1 & 2 & 1 \\\\\n      2 & 3 & 0 \\\\\n      0 & 1 & 2 \\\\\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\det(A) = 1$, so $A$ is invertible. The inverse is $A^{-1} = \\left[\\begin{array}{rr} 2 & -1 \\\\ -1 & 1 \\\\ \\end{array}\\right]$.",
+         "sha": "7a8e7d5db98d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\det(B) = -15$, so $B$ is invertible. The inverse is $\\displaystyle B^{-1} = \\frac{1}{15}\\left[\\begin{array}{rrr} -1 & -1 & 4 \\\\ -4 & 11 & 1 \\\\ 8 & -7 & -2 \\\\ \\end{array}\\right]$.",
+         "sha": "0c4136d4800e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\det(C) = 0$, so $C$ is not invertible.",
+         "sha": "4acaf0701008",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: A formula for the inverse of a matrix · 习题 3（上游 exercises/Determinants-Applications-Inverse.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Applications-Inverse.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use the adjugate formula to find the inverse of the matrix",
+      "sha": "b60c2a1e9d6d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{rrr}\n      3 & 0 & 3 \\\\\n      -1 & 2 & -3 \\\\\n      -5 & 4 & -3\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have",
+      "sha": "a2214cd5b1a4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(A)=36,\n      \\quad\n      \\cof(A)\n      ~=~ \\left[\\begin{array}{rrr}\n        6  & 12 & 6   \\\\\n        12 & 6  & -12 \\\\\n        -6 & 6  & 6   \\\\\n      \\end{array}\\right],\n      \\quad\n      \\adj(A)\n      ~=~ \\left[\\begin{array}{rrr}\n        6  &  12 & -6 \\\\\n        12 &   6 &  6 \\\\\n        6  & -12 &  6 \\\\\n      \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and therefore",
+      "sha": "6cc521113306",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\def\\arraystretch{1.4}\n      A^{-1}\n      ~=~\n      \\frac{1}{36}\n      \\left[\\begin{array}{rrr}\n        6  &  12 & -6 \\\\\n        12 &   6 &  6 \\\\\n        6  & -12 &  6 \\\\\n      \\end{array}\\right]\n      ~=~\n      \\left[\\begin{array}{rrr}\n        \\frac{1}{6}  &  \\frac{1}{3} & -\\frac{1}{6} \\\\\n        \\frac{1}{3} &   \\frac{1}{6} &  \\frac{1}{6} \\\\\n        \\frac{1}{6}  & -\\frac{1}{3} &  \\frac{1}{6} \\\\\n      \\end{array}\\right]."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: A formula for the inverse of a matrix · 习题 4（上游 exercises/Determinants-Applications-Inverse.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Applications-Inverse.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use the adjugate formula to find the inverse of the matrix",
+      "sha": "b60c2a1e9d6d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{rrr}\n      1 &  1 & 0 \\\\\n      3 &  1 & 2 \\\\\n      2 & -2 & 5 \\\\\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have",
+      "sha": "a2214cd5b1a4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(A)\n      ~=~ 2,\n      \\quad\n      \\cof(A)\n      ~=~ \\left[\\begin{array}{rrr}\n        -9 & 11 &  8  \\\\\n        -2 &  2 &  2  \\\\\n        5  & -5 & -4 \\\\\n      \\end{array}\\right],\n      \\quad\n      \\adj(A)\n      ~=~ \\left[\\begin{array}{rrr}\n        -9 & -2 &  5 \\\\\n        11 &  2 & -5 \\\\\n        8  &  2 & -4 \\\\\n      \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and therefore",
+      "sha": "6cc521113306",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\def\\arraystretch{1.4}\n      A^{-1}\n      ~=~\n      \\frac{1}{2}\n      \\left[\\begin{array}{rrr}\n        -9 & -2 &  5 \\\\\n        11 &  2 & -5 \\\\\n        8  &  2 & -4 \\\\\n      \\end{array}\\right]\n      ~=~\n      \\left[\\begin{array}{rrr}\n        -\\frac{9}{2} & -1 & \\frac{5}{2} \\\\\n        \\frac{11}{2} &  1 & -\\frac{5}{2} \\\\\n        4  &  1 & -2 \\\\\n      \\end{array}\\right]."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: A formula for the inverse of a matrix · 习题 5（上游 exercises/Determinants-Applications-Inverse.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Applications-Inverse.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the matrix",
+      "sha": "c5c7ab8caadb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A =\n    \\left[\\begin{array}{ccc}\n      1 & 0 & 0 \\\\\n      0 & \\cos t & -\\sin t \\\\\n      0 & \\sin t & \\cos t \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Does there exist a value of $t$ for which this matrix fails to be invertible? Explain.",
+      "sha": "cf7527c750bb",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "No. It has non-zero determinant $\\det(A)=\\cos^2 t+\\sin^2 t = 1$ for all $t$, so it is invertible for all $t$.",
+      "sha": "43deb6195e43",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: A formula for the inverse of a matrix · 习题 6（上游 exercises/Determinants-Applications-Inverse.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Applications-Inverse.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the matrix",
+      "sha": "c5c7ab8caadb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A =\n    \\left[\\begin{array}{rrr}\n      1 & t & t^2 \\\\\n      0 & 1 & 2t \\\\\n      t & 0 & 2\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Does there exist a value of $t$ for which this matrix fails to be invertible? Explain.",
+      "sha": "cf7527c750bb",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\det(A) = \\left|\\begin{array}{ccc} 1 & t & t^2 \\\\ 0 & 1 & 2t \\\\ t & 0 & 2 \\end{array}\\right| = t^3+2$, and so $A$ has no inverse when $t=-\\sqrt[3]{2}$.",
+      "sha": "ed8fff5127a9",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: A formula for the inverse of a matrix · 习题 7（上游 exercises/Determinants-Applications-Inverse.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Applications-Inverse.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex8",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the matrix",
+      "sha": "c5c7ab8caadb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A =\n    \\left[\\begin{array}{ccc}\n      e^{t} & \\cosh t & \\sinh t \\\\\n      e^{t} & \\sinh t & \\cosh t \\\\\n      e^{t} & \\cosh t & \\sinh t\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Does there exist a value of $t$ for which this matrix fails to be invertible? Explain.",
+      "sha": "cf7527c750bb",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Since the matrix $A$ has two identical rows, we have $\\det(A)=0$ for all $t$. So this matrix is non-invertible for all $t$.",
+      "sha": "ecb56b526c96",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: A formula for the inverse of a matrix · 习题 8（上游 exercises/Determinants-Applications-Inverse.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Applications-Inverse.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex9",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the matrix",
+      "sha": "c5c7ab8caadb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A =\n    \\left[\\begin{array}{ccc}\n      e^{t} & e^{-t}\\cos t & e^{-t}\\sin t \\\\\n      e^{t} & -e^{-t}\\cos t-e^{-t}\\sin t & -e^{-t}\\sin t+e^{-t}\\cos t \\\\\n      e^{t} & 2e^{-t}\\sin t & -2e^{-t}\\cos t\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Does there exist a value of $t$ for which this matrix fails to be invertible? Explain.",
+      "sha": "cf7527c750bb",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "math",
+     "tex": "\\det \\left[\\begin{array}{ccc}\n        e^{t} & e^{-t}\\cos t & e^{-t}\\sin t \\\\\n        e^{t} & -e^{-t}\\cos t-e^{-t}\\sin t & -e^{-t}\\sin t+e^{-t}\\cos t \\\\\n        e^{t} & 2e^{-t}\\sin t & -2e^{-t}\\cos t\n      \\end{array}\\right] = 5e^{-t} \\neq 0"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so this matrix is always invertible.",
+      "sha": "3dce44af0829",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: A formula for the inverse of a matrix · 习题 9（上游 exercises/Determinants-Applications-Inverse.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Applications-Inverse.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex10",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use the adjugate formula to find the inverse of the matrix",
+      "sha": "b60c2a1e9d6d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{ccc}\n      e^{t} & 0 & 0 \\\\\n      0 & \\cos t & \\sin t \\\\\n      0 & \\cos t-\\sin t & \\cos t+\\sin t\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "math",
+     "tex": "\\det \\left[\\begin{array}{ccc}\n        e^{t} & 0 & 0 \\\\\n        0 & \\cos t & \\sin t \\\\\n        0 & \\cos t-\\sin t & \\cos t+\\sin t\n      \\end{array}\\right] = e^{t}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Hence the inverse is",
+      "sha": "fa3f55bdec42",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "e^{-t}\\left[\\begin{array}{ccc}\n        1 & 0 & 0 \\\\\n        0 & e^{t}\\cos t+e^{t}\\sin t & -e^t(\\cos t-\\sin t) \\\\\n        0 & -e^{t}\\sin t & e^{t}\\cos t\n      \\end{array}\\right]^T \\\\\n      ~=~ \\left[\\begin{array}{ccc}\n        e^{-t} & 0 & 0 \\\\\n        0 & \\cos t+\\sin t  & -\\sin t \\\\\n        0 & \\sin t-\\cos t  & \\cos t\n      \\end{array}\\right]."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: A formula for the inverse of a matrix · 习题 10（上游 exercises/Determinants-Applications-Inverse.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Applications-Inverse.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex11",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the inverse, if it exists, of the matrix",
+      "sha": "e98e57e3ec76",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A =\n    \\left[\\begin{array}{ccc}\n      e^{t} & \\cos t & \\sin t \\\\\n      e^{t} & -\\sin t & \\cos t \\\\\n      e^{t} & -\\cos t & -\\sin t\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "math",
+     "tex": "\\def\\arraystretch{1.3}\n      \\left[\\begin{array}{ccc}\n        e^{t} & \\cos t & \\sin t \\\\\n        e^{t} & -\\sin t & \\cos t \\\\\n        e^{t} & -\\cos t & -\\sin t\n      \\end{array}\\right]^{-1} \\\\\n      ~=~\\left[\\begin{array}{ccc}\n        \\frac{1}{2}e^{-t} & 0 & \\frac{1}{2}e^{-t} \\\\\n        \\frac{1}{2}\\cos t+\\frac{1}{2}\\sin t & -\\sin t & \\frac{1}{2}\\sin t-\\frac{1}{2}\n        \\cos t \\\\\n        \\frac{1}{2}\\sin t-\\frac{1}{2}\\cos t & \\cos t & -\\frac{1}{2}\\cos t-\\frac{1}{2}\n        \\sin t\n      \\end{array}\\right]."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: A formula for the inverse of a matrix · 习题 11（上游 exercises/Determinants-Applications-Inverse.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-Applications-Inverse.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "应用：逆矩阵公式"
+}

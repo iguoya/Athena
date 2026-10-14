@@ -1,0 +1,604 @@
+{
+ "id": "Eigenvalues-Properties",
+ "title_en": "Properties of eigenvectors and eigenvalues",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Know that eigenvectors corresponding to distinct eigenvalues are linearly independent.",
+         "sha": "4e654cc449c6",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Compute the algebraic and geometric multiplicity of an eigenvalue.",
+         "sha": "a4c5d81f3779",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether a matrix is diagonalizable from the geometric multiplicities of its eigenvalues.",
+         "sha": "4a16c8f8614f",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In this section, we state some useful properties of eigenvectors and eigenvalues. The first question we consider is whether eigenvectors for different eigenvalues are linearly independent. This is indeed the case, as the following proposition shows:",
+    "sha": "b3b11101e778",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Eigenvectors for different eigenvalues are linearly independent",
+    "sha": "74c9e0d08f83",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be a square matrix, and suppose that $A$ has distinct eigenvalues $\\eigenvar_1,\\ldots,\\eigenvar_k$ with corresponding eigenvectors $\\vect{v}_1,\\ldots,\\vect{v}_k$. Then $\\vect{v}_1,\\ldots,\\vect{v}_k$ are linearly independent.",
+      "sha": "ebe812d8e017",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose, for the sake of obtaining a contradiction, that $\\vect{v}_1,\\ldots,\\vect{v}_k$ are linearly dependent. Let $m$ the the smallest index such that $\\vect{v}_m$ is redundant, i.e., such that $\\vect{v}_m$ is a linear combination of previous vectors. Say",
+      "sha": "6ba60c548ee6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}_m = a_1\\vect{v}_1 + \\ldots + a_{m-1}\\vect{v}_{m-1}. \\tag{1}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Multiplying the equation by $A$, we get",
+      "sha": "1aaf8071345f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A\\vect{v}_m = a_1A\\vect{v}_1 + \\ldots + a_{m-1}A\\vect{v}_{m-1},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and therefore, since $\\vect{v}_1,\\ldots,\\vect{v}_m$ are eigenvectors,",
+      "sha": "087c610ece1c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\eigenvar_m\\vect{v}_m = a_1\\eigenvar_1\\vect{v}_1 + \\ldots + a_{m-1}\\eigenvar_{m-1}\\vect{v}_{m-1}. \\tag{2}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Subtracting $\\eigenvar_m$ times equation (1) from (2), we get",
+      "sha": "9affe1f1895e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{0} = a_1(\\eigenvar_1-\\eigenvar_m)\\vect{v}_1 + \\ldots + a_{m-1}(\\eigenvar_{m-1}-\\eigenvar_{m})\\vect{v}_{m-1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\vect{v}_1,\\ldots,\\vect{v}_{m-1}$ are, by assumption, linearly independent (because $\\vect{v}_m$ was the leftmost redundant vector), it follows that $a_1(\\eigenvar_1-\\eigenvar_m)=0$, …, $a_{m-1}(\\eigenvar_{m-1}-\\eigenvar_{m-1})=0$. Since the eigenvalues $\\eigenvar_1,\\ldots,\\eigenvar_m$ are, by assumption, distinct, it follows that $a_1,\\ldots,a_{m-1}=0$. But then (1) implies that $\\vect{v}_m=\\vect{0}$, contradicting the assumption that $\\vect{v}_m$ is an eigenvector (and therefore non-zero).",
+      "sha": "72ae94b07f3e",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "An immediate consequence of this proposition is that an $n\\times n$-matrix with $n$ distinct eigenvalues is diagonalizable.",
+    "sha": "5f6896e4e6d8",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "corollary",
+   "title": {
+    "en": "Distinct eigenvalues",
+    "sha": "71e3e5fd47b2",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n\\times n$-matrix and suppose it has $n$ distinct eigenvalues. Then $A$ is diagonalizable.",
+      "sha": "3d1927773c01",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Each of the $n$ eigenvalues has an eigenvector, and by Proposition “Eigenvectors for different eigenvalues are linearly independent”, they are linearly independent. Then $A$ is diagonalizable by Theorem “Diagonalization and eigenvectors”.",
+      "sha": "d97d13f3464a",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The next issue we consider is that of “repeated” eigenvalues. There are two senses in which an eigenvalue can occur “more than once”. The first is if the eigenvalue appears as a repeated root of the characteristic polynomial. For example, if the characteristic polynomial is $p(\\eigenvar) = (1-\\eigenvar)(1-\\eigenvar)(3-\\eigenvar)$, then we say that the root $\\eigenvar=1$ appears with multiplicity two, and the root $\\eigenvar=3$ appears with multiplicity one. We call this the **algebraic multiplicity** of the eigenvalue.",
+    "sha": "0f06e585b235",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The second sense in which an eigenvalue can occur “more than once” is when an eigenvalue has more than one linearly independent eigenvector. In other words, when the eigenspace has dimension greater than 1. We call this the **geometric multiplicity** of the eigenvalue.",
+    "sha": "d1213c2ec3d6",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The following definition summarizes these concepts.",
+    "sha": "87865d7c7176",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Algebraic and geometric multiplicity",
+    "sha": "7085c689913b",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\hat\\eigenvar$ be an eigenvalue of a square matrix $A$. Then the **algebraic multiplicity** of $\\hat\\eigenvar$ is the largest power $k$ such that $(\\hat\\eigenvar-\\eigenvar)^k$ is a factor of the characteristic polynomial. The **geometric multiplicity** of $\\hat\\eigenvar$ is the dimension of its eigenspace $E_{\\hat\\eigenvar}$.",
+      "sha": "d7b5bb596769",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "One would hope that the algebraic and geometric multiplicities are always equal. Unfortunately, this is not the case, as the following example shows.",
+    "sha": "fa2d135b32be",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Algebraic and geometric multiplicity",
+    "sha": "7085c689913b",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let",
+      "sha": "ef5fe1edf379",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rrrrr}\n      3 & 1 & 0 & 0 & 0 \\\\\n      0 & 3 & 0 & 0 & 0 \\\\\n      0 & 0 & 4 & 0 & 0 \\\\\n      0 & 0 & 0 & 4 & 0 \\\\\n      0 & 0 & 0 & 0 & 5 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the algebraic and geometric multiplicity of each eigenvalue of $A$.",
+      "sha": "c7a6d8b925cf",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The characteristic polynomial is $(3-\\eigenvar)^2(4-\\eigenvar)^2(5-\\eigenvar)$. Therefore, the eigenvalues are $3$, $4$, and $5$, with algebraic multiplicity $2$, $2$, and $1$, respectively. To compute the geometric multiplicity, we need to find each eigenspace. For $\\eigenvar=3$, we must solve $(A-3I)\\vect{v} = \\vect{0}$, or equivalently,",
+      "sha": "71ca6031d71a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrrr|r}\n      0 & 1 & 0 & 0 & 0 & 0 \\\\\n      0 & 0 & 0 & 0 & 0 & 0 \\\\\n      0 & 0 & 1 & 0 & 0 & 0 \\\\\n      0 & 0 & 0 & 1 & 0 & 0 \\\\\n      0 & 0 & 0 & 0 & 2 & 0 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This system has rank 4, and the only basic solution is $\\mat{1,0,0,0,0}^T$. Thus, the eigenspace $E_3$ is $1$-dimensional, and the geometric multiplicity of $\\eigenvar=3$ is 1. A similar calculation show that $\\eigenvar=4$ has geometric multiplicity $2$ and $\\eigenvar=5$ has geometric multiplicity $1$. The information is summarized in the following table:",
+      "sha": "fa9d93c320c3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "table",
+     "spec": "|l|c|c|c|",
+     "rows": [
+      [
+       {
+        "en": "Eigenvalue",
+        "sha": "63d7d37bfd74",
+        "zh": ""
+       },
+       "$\\eigenvar=3$",
+       "$\\eigenvar=4$",
+       "$\\eigenvar=5$"
+      ],
+      [
+       {
+        "en": "Algebraic multiplicity",
+        "sha": "e0365b31a710",
+        "zh": ""
+       },
+       "2",
+       "2",
+       "1"
+      ],
+      [
+       {
+        "en": "Geometric multiplicity",
+        "sha": "f2dc0807793e",
+        "zh": ""
+       },
+       "1",
+       "2",
+       "1"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In the example, the geometric multiplicity is either smaller than or equal to the algebraic multiplicity. The following proposition states that this is always the case.",
+    "sha": "c7495fcc1a48",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Algebraic and geometric multiplicity",
+    "sha": "7085c689913b",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\hat\\eigenvar$ be an eigenvalue of a matrix $A$, with algebraic multiplicity $k$ and geometric multiplicity $m$. Then",
+      "sha": "acba65a2a2eb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "1 \\leq m \\leq k."
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "It is clear that $m\\geq 1$, because each eigenvalue, by definition, must have at least one associated eigenvector. Therefore, the eigenspace is at least $1$-dimensional. We must show $m\\leq k$. Assume that $A$ is an $n\\times n$-matrix. By assumption, the geometric multiplicity of $\\hat\\eigenvar$ is $m$, so the eigenspace $E_{\\hat\\eigenvar}$ has dimension $m$. So there exist $m$ linearly independent eigenvectors $\\vect{v}_1,\\ldots,\\vect{v}_m$ for the eigenvalue $\\hat\\eigenvar$. Extend $\\vect{v}_1,\\ldots,\\vect{v}_m$ to a basis $\\vect{v}_1,\\ldots,\\vect{v}_n$ of $\\R^n$, and let $P$ be the invertible matrix that has $\\vect{v}_1,\\ldots,\\vect{v}_n$ as its columns. Let $B=P^{-1}AP$. Since the first $m$ columns of $P$ are eigenvectors of $A$ for the eigenvalue $\\hat\\eigenvar$, it follows that $B$ is of the form",
+      "sha": "a492cde404e7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{ccccccc}\n      \\hat\\eigenvar & 0 & \\cdots & 0 & * & \\cdots & * \\\\\n      0 & \\hat\\eigenvar & \\cdots & 0 & * & \\cdots & * \\\\\n      \\vdots & \\vdots & \\ddots & \\vdots & \\ddots & \\vdots \\\\\n      0 & 0 & \\cdots & \\hat\\eigenvar & * & \\cdots & * \\\\\n      0 & 0 & \\cdots & 0 & * & \\cdots & * \\\\\n      \\vdots & \\vdots & \\ddots & \\vdots & \\ddots & \\vdots \\\\\n      0 & 0 & \\cdots & 0 & * & \\cdots & * \\\\\n    \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "i.e., the first $m$ columns of $B$ are like those of a diagonal matrix. Then from the cofactor method for computing determinants, we know that $\\det(B-\\eigenvar I)$ contains the factor $(\\hat\\eigenvar-\\eigenvar)^m$. But since $A$ and $B$ are similar matrices, they have the same characteristic polynomial. Therefore, $\\det(A-\\eigenvar I)$ also has $(\\hat\\eigenvar-\\eigenvar)^m$ as a factor. It follows, by definition of algebraic multiplicity, that $m\\leq k$, as desired.",
+      "sha": "3a2993bdb24e",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We know from Theorem “Diagonalization and eigenvectors” that an $n\\times n$-matrix is diagonalizable if and only if it has $n$ linearly independent eigenvectors. We can re-state this in terms of geometric multiplicity as follows.",
+    "sha": "de9d32786eb2",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Geometric multiplicity and diagonalization",
+    "sha": "5e8ec9bd5c68",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "An $n\\times n$-matrix $A$ is diagonalizable if and only if the sum of the geometric multiplicities of all the eigenvalues of $A$ is $n$.",
+      "sha": "cbe3eaf08c94",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "By Proposition “Eigenvectors for different eigenvalues are linearly independent”, eigenvectors corresponding to different eigenvalues are linearly independent. Therefore, by taking a basis of each eigenspace, we can obtain exactly as many linearly independent eigenvectors as the sum of the dimensions of all the eigenspaces, i.e., the sum of the geometric multiplicities of all eigenvalues. By Theorem “Diagonalization and eigenvectors”, $A$ is diagonalizable if and only if this number is $n$.",
+      "sha": "62334ab50d62",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the algebraic and geometric multiplicity of each eigenvalue of the following matrices. Which of the matrices are diagonalizable?",
+      "sha": "267858862c51",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(a)\\quad\n    A = \\left[\\begin{array}{rr} 1 & 1 \\\\ -1 & 3 \\end{array}\\right],\n    \\quad\n    (b)\\quad\n    B = \\left[\\begin{array}{rr} -7 & 8 \\\\ -4 & 5 \\end{array}\\right],"
+    },
+    {
+     "k": "math",
+     "tex": "(c)\\quad\n    C = \\left[\\begin{array}{rrr}\n      2 & -1 & -1 \\\\\n      0 & 4 & 2 \\\\\n      0 & -1 & 1 \\\\\n    \\end{array}\\right],\n    \\quad\n    (d)\\quad\n    D = \\left[\\begin{array}{rrr}\n      3 & 1 & -1 \\\\\n      0 & 2 & 1 \\\\\n      0 & -1 & 4 \\\\\n    \\end{array}\\right],\n    \\quad\n    (e)\\quad\n    E = \\left[\\begin{array}{rrr}\n      -2 & 0 & 1 \\\\\n      -1 & -1 & 1 \\\\\n      -2 & 1 & 0 \\\\\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\eigenvar=2$ has algebraic multiplicity 2 and geometric multiplicity 1. Since the sum of the geometric multiplicities of all eigenvalues is $1$, the matrix is not diagonalizable.",
+         "sha": "0a4c00dc9e62",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\eigenvar=1$ has algebraic and geometric multiplicity 1; $\\eigenvar=-3$ has algebraic and geometric multiplicity 1. Since the sum of the geometric multiplicities is $2$, the matrix is diagonalizable.",
+         "sha": "7c289c2ad720",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\eigenvar=2$ has algebraic and geometric multiplicity 2, $\\eigenvar=3$ has algebraic and geometric multiplicity 1. Since the sum of the geometric multiplicities is $3$, the matrix is diagonalizable.",
+         "sha": "b1faa4d4c460",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\eigenvar=3$ has algebraic multiplicity 3 and geometric multiplicity 2. Since the sum of the geometric multiplicities of all eigenvalues is $2$, the matrix is not diagonalizable.",
+         "sha": "838e7d6a2c5e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\eigenvar = -1$ has algebraic multiplicity 3 and geometric multiplicity 1. Since the sum of the geometric multiplicities of all eigenvalues is $1$, the matrix is not diagonalizable.",
+         "sha": "ab3ce1d420e9",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of eigenvectors and eigenvalues · 习题 1（上游 exercises/Eigenvalues-Properties.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Properties.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine which of the following matrices are diagonalizable.",
+      "sha": "c65a824425b2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$A$ is a $3\\times 3$-matrix with eigenvalues $-1$ and $3$. The eigenvalue $-1$ has algebraic multiplicity $2$ and geometric multiplicity $1$. The eigenvalue $3$ has algebraic and geometric multiplicity $1$.",
+         "sha": "a7e9c9835fe2",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$B$ is a $4\\times 4$-matrix with eigenvalues $2$ and $-2$. The eigenvalue $2$ has algebraic and geometric multiplicity $1$. The eigenvalue $-2$ has algebraic and geometric multiplicity $3$.",
+         "sha": "07e1d5fdd9d9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$C$ is a $5\\times 5$-matrix with eigenvalues $1$ and $3$. The eigenvalue $1$ has algebraic and geometric multiplicity $2$, and the eigenvalue $3$ has algebraic and geometric multiplicity $1$.",
+         "sha": "32b39869f15d",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not diagonalizable.",
+         "sha": "247f30ccab8f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Diagonalizable.",
+         "sha": "8b93fc6d045d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not diagonalizable.",
+         "sha": "247f30ccab8f",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of eigenvectors and eigenvalues · 习题 2（上游 exercises/Eigenvalues-Properties.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Properties.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "特征向量与特征值的性质"
+}

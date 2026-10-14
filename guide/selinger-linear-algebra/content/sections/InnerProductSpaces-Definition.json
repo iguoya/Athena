@@ -1,0 +1,1360 @@
+{
+ "id": "InnerProductSpaces-Definition",
+ "title_en": "Real inner product spaces",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Check whether an operation is an inner product.",
+         "sha": "5dd5ce55cc7c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Give an example of a vector space on which more than one inner product can be defined.",
+         "sha": "5f83d596f1df",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Calculate the inner product of vectors in various examples of inner product spaces.",
+         "sha": "f2675e119108",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Calculate the norm of a vector and the angle between two vectors.",
+         "sha": "31e89da3b45f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Use the Cauchy-Schwarz inequality and the triangle inequality to reason about the size of inner products and norms of vectors.",
+         "sha": "71d3e380de8a",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In this section, we fix $K$ to be the field of real numbers.",
+    "sha": "3d84feee4ca0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Real inner product space",
+    "sha": "2ee8b6c8050d",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A **(real) inner product space** is a real vector space $V$ equipped with an operation that assigns to any pair of vectors $\\vect{u},\\vect{v}\\in V$ a real number $\\iprod{\\vect{u},\\vect{v}}$, called the **inner product** of $\\vect{u}$ and $\\vect{v}$. This operation must satisfy the following properties:",
+      "sha": "ca36720c0f81",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Symmetry: $\\iprod{\\vect{u},\\vect{v}} = \\iprod{\\vect{v},\\vect{u}}$.",
+         "sha": "b0943a91724c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Linearity: $\\iprod{\\vect{u},k\\vect{v}+\\ell\\vect{w}} = k\\iprod{\\vect{u},\\vect{v}}+\\ell\\iprod{\\vect{u},\\vect{w}}$.",
+         "sha": "0a8ba58222bc",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The positive definite property: $\\iprod{\\vect{u},\\vect{u}} \\geq 0$, and moreover, $\\iprod{\\vect{u},\\vect{u}}=0$ if and only if $\\vect{u} = \\vect{0}$.",
+         "sha": "b36fe85db215",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "$\\R^n$ with the usual dot product",
+    "sha": "8756885bc95a",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$V=\\R^n$, with the usual dot product",
+      "sha": "fe260f2e0ce2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{u},\\vect{v}} = \\vect{u}\\dotprod\\vect{v} =\n    u_1v_1 + \\ldots + u_nv_n"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is an inner product space. inner product space!Rn@$R^n$",
+      "sha": "b67fc6a9bae9",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The relevant properties were shown in Proposition “Properties of the dot product”.",
+      "sha": "4a0b4c09e1bb",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There exist other inner product operations on $\\R^n$ besides the dot product. The following is an example.",
+    "sha": "ba36214abe1e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "$\\R^2$ with a non-standard inner product",
+    "sha": "ce3354777dd8",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $V=\\R^2$, and consider the matrix $A=\\left[\\begin{array}{cc} 1 & 1 \\\\ 1 & 2 \\end{array}\\right]$. Define an operation $\\iprod{-,-}$ by",
+      "sha": "e3c84e8475e2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{u},\\vect{v}} = \\vect{u}^T A \\vect{v} =\n    \\left[\\begin{array}{cc} u_1 & u_2 \\end{array}\\right]\n    \\left[\\begin{array}{cc} 1 & 1 \\\\ 1 & 2 \\end{array}\\right]\n    \\left[\\begin{array}{c} v_1 \\\\ v_2 \\end{array}\\right]\n    = u_1v_1 + u_1v_2 + u_2v_1 + 2u_2v_2."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Then $\\R^2$, with this operation, is an inner product space.",
+      "sha": "1c8397805345",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We must show the three properties are satisfied. For symmetry, note that a scalar is equal to its own transpose. Therefore",
+      "sha": "d30c23ea6f57",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{u},\\vect{v}}\n    ~=~ \\vect{u}^T A \\vect{v}\n    ~=~ (\\vect{u}^T A \\vect{v})^T\n    ~=~ \\vect{v}^T A^T \\vect{u}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "But this is equal to $\\iprod{\\vect{v},\\vect{u}}$ because $A$ is a symmetric matrix, i.e., $A^T=A$. For linearity, note that, by properties of matrix multiplication,",
+      "sha": "4906c8f11167",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{u},k\\vect{v}+\\ell\\vect{w}}\n    ~=~ \\vect{u}^T A(k\\vect{v}+\\ell\\vect{w})\n    ~=~ k\\vect{u}^T A\\vect{v} + \\ell\\vect{u}^T A\\vect{w}\n    ~=~ k\\iprod{\\vect{u},\\vect{v}} + \\ell\\iprod{\\vect{u},\\vect{w}}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For the positive definite property, we have",
+      "sha": "eef0a0d12174",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{u},\\vect{u}}\n    ~=~ u_1^2 + 2u_1u_2 + 2u_2^2\n    ~=~ (u_1^2 + 2u_1u_2 + u_2^2) + u_2^2\n    ~=~ (u_1+u_2)^2 + u_2^2\n    ~\\geq~ 0,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "because the sum of two squares is always non-negative. Moreover, if equality holds in the last equation, then we must have $u_1+u_2=0$ and $u_2=0$, and this is only possible if $\\vect{u}=\\vect{0}$.",
+      "sha": "a45228919dcd",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Continuous functions on an interval",
+    "sha": "35ea6e2dc0d3",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $a<b$ be real numbers, and let",
+      "sha": "d6ea917cc4de",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[a,b] = \\set{x \\mid a \\leq x \\leq b}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "be the closed interval. Let $V=C[a,b]$ Cab@$C[a,b]$ be the vector space of all continuous functions $f:[a,b]\\to\\R$. Given two functions $f,g\\in C[a,b]$, define",
+      "sha": "17c60eee2d0d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{f,g} = \\int_{a}^{b} f(x)g(x)\\,dx."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is an inner product.",
+      "sha": "fec3d4e0124f",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "This follows from well-known properties of integrals. For symmetry, we have",
+      "sha": "156b706d82f1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{f,g}\n    ~=~ \\int_{a}^{b} f(x)g(x)\\,dx\n    ~=~ \\int_{a}^{b} g(x)f(x)\\,dx\n    ~=~ \\iprod{g,f}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For linearity, we have",
+      "sha": "08d18be6d8de",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{f,kg+\\ell h}\n    ~=~ \\int_{a}^{b} f(x)(kg(x)+\\ell h(x))\\,dx\n    ~=~ k\\int_{a}^{b} f(x)g(x)\\,dx+\\ell\\int_{a}^{b} f(x)h(x)\\,dx\n    ~=~ k\\iprod{f,g}+\\ell\\iprod{f,h}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For the positive definite property, we have",
+      "sha": "eef0a0d12174",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{f,f}\n    = \\int_{a}^{b} f(x)^2\\,dx\n    \\geq 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is $\\geq 0$ because $a<b$ and the integral over a non-negative function is non-negative. Moreover, since $f$ is continuous, we know from calculus that the last integral can only be equal to $0$ if $f$ is the constant zero function.",
+      "sha": "c3c7835dbd7a",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Polynomials",
+    "sha": "c926349e876d",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\Poly$ be the vector space of polynomials (of any degree) with real coefficients. Let $a<b$ be real numbers, and consider the inner product defined by",
+      "sha": "01d2ee9ee0f4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{p,q} = \\int_{a}^{b} p(x)q(x)\\,dx."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is an inner product space.",
+      "sha": "f755674334f4",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The proof is the same as for $C[a,b]$.",
+      "sha": "c5c66d2aa87d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Real Hilbert space",
+    "sha": "d8ef9f3ce69a",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\Hilb_{\\R}$ be the vector space of all infinite sequences of real numbers $a=(a_0,a_1,a_2,\\ldots)$ satisfying",
+      "sha": "cd70f6608995",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "a_0^2 + a_1^2 + a_2^2 + \\ldots < \\infty."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "These are called the **square summable** sequences. (One needs to do a little bit of work to show that it is indeed a vector space; in particular, to show that the sum of two square summable sequences is square summable.) On this space, we can define an inner product as follows:",
+      "sha": "ad0bcdbf5299",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{a,b} = a_0b_0 + a_1b_1 + a_2b_2 + \\ldots."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The details will be worked out in Exercise “Real Hilbert space”. This inner product space is called **(real) Hilbert space**.",
+      "sha": "ff1537662228",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We now look at some properties of inner products. The first thing to note is that while the axioms require linearity in the right component, symmetry ensures that linearity in the left component also holds.",
+    "sha": "999173fb7271",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Left linearity",
+    "sha": "a02dce98e9a7",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $V$ be an inner product space. Then $\\iprod{k\\vect{u}+\\ell\\vect{v},\\vect{w}} = k\\iprod{\\vect{u},\\vect{w}} + \\ell\\iprod{\\vect{v},\\vect{w}}$.",
+      "sha": "349fe484488e",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "This follows directly from symmetry. We have",
+      "sha": "8e27f5b2d5ee",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{k\\vect{u}+\\ell\\vect{v},\\vect{w}}\n    = \\iprod{\\vect{w},k\\vect{u}+\\ell\\vect{v}}\n    = k\\iprod{\\vect{w},\\vect{u}}\n    + \\ell\\iprod{\\vect{w},\\vect{v}}\n    = k\\iprod{\\vect{u},\\vect{w}}\n    + \\ell\\iprod{\\vect{v},\\vect{w}}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We also note that as a consequence of right linearity, we have $\\iprod{\\vect{u},\\vect{0}}=0$. This can be seen by letting $k=\\ell=0$ in the equation for right linearity. Similarly, $\\iprod{\\vect{0},\\vect{w}}=0$ follows from left linearity.",
+    "sha": "449c62c304d1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Another important property of inner products is the Cauchy-Schwarz inequality. We have already encountered this in the context of the dot product in Section “Compute a dot product”.",
+    "sha": "79d923370b13",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Cauchy-Schwarz inequality",
+    "sha": "3c57397ed673",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u},\\vect{v}$ be vectors in an inner product space. Then",
+      "sha": "11d829a6d02e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{u},\\vect{v}}^2\n    \\leq \\iprod{\\vect{u},\\vect{u}} \\cdot \\iprod{\\vect{v},\\vect{v}}. \\tag{1}"
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The proof is almost identical to that of Proposition “Cauchy-Schwarz inequality”. First note that if $\\vect{u}=\\vect{0}$, then both sides of (1) are equal to zero, and so there is nothing to show. Therefore, we will assume in what follows that $\\vect{u}\\neq \\vect{0}$. Define a function of $t\\in \\R$ by",
+      "sha": "cf3951e3de22",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(t) = \\iprod{t\\vect{u}+\\vect{v}, t\\vect{u}+\\vect{v}}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Then by the positive definite property, we know that $f(t)\\geq 0$ for all $t\\in \\R$. Also from linearity and symmetry, we have",
+      "sha": "24e3871563a1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}f(t) &=& \\iprod{t\\vect{u}, t\\vect{u}+\\vect{v}} +\n             \\iprod{\\vect{v}, t\\vect{u}+\\vect{v}} \\\\\n         &=& t^2\\iprod{\\vect{u}, \\vect{u}}+t\\iprod{\\vect{u}, \\vect{v}} + t\\iprod{\\vect{v}, \\vect{u}}+\n             \\iprod{\\vect{v}, \\vect{v}} \\\\\n         &=&t^2\\iprod{\\vect{u},\\vect{u}}+2t\\iprod{\\vect{u}, \\vect{v}}\n             + \\iprod{\\vect{v}, \\vect{v}}.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This means the graph of $y=f(t)$ is a parabola which opens upwards and is never negative. It follows that this function has at most one root. From the quadratic formula, we know that a quadratic function $at^2+bt+c$ has one or zero roots if and only if $b^2-4ac\\leq 0$. Applying this reasoning to the function $f(t)$, we obtain",
+      "sha": "f494b039f372",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(2\\iprod{\\vect{u}, \\vect{v}})^2\n    - 4\\iprod{\\vect{u},\\vect{u}}\\iprod{\\vect{v},\\vect{v}} < 0,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which is equivalent to $\\iprod{\\vect{u},\\vect{v}}^2 \\leq \\iprod{\\vect{u},\\vect{u}} \\cdot \\iprod{\\vect{v},\\vect{v}}$.",
+      "sha": "85f958307006",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can use the inner product to define the norm of a vector.",
+    "sha": "3c9fd1183b2f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Norm",
+    "sha": "963e9c87f5c0",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u}$ be a vector in an inner product space. Then the **norm** of $\\vect{u}$ is defined as",
+      "sha": "3b98f3fbb834",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\norm{\\vect{u}} = \\sqrt{\\iprod{\\vect{u},\\vect{u}}}."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Norm in $C[-1,1]$",
+    "sha": "472c8a7a9903",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Calculate the norm of $f(x) = x^2$ in $C[-1,1]$.",
+      "sha": "360dca99f961",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "In the vector space $C[-1,1]$, the inner product is defined as",
+      "sha": "b9c26741cc01",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{f,g} = \\int_{-1}^{1} f(x)g(x)\\,dx."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We therefore have",
+      "sha": "4382e190c10d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{f,f}\n    = \\int_{-1}^{1} f(x)^2\\, dx\n    = \\int_{-1}^{1} x^4\\, dx\n    = \\bigbracket{\\frac{1}{5}x^5}_{-1}^{1}\n    = \\frac{2}{5}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, $\\norm{f} = \\sqrt{\\iprod{f,f}} = \\sqrt{\\frac{2}{5}}$.",
+      "sha": "91940d817076",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A vector $\\vect{u}$ in an inner product space is called **normalized** or a **unit vector** if $\\norm{\\vect{u}} = 1$. We note that if $\\vect{v}$ is any non-zero vector in an inner product space, then",
+    "sha": "dff0b77b0cdd",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vect{u} = \\frac{1}{\\norm{\\vect{v}}} \\vect{v}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "is normalized.",
+    "sha": "e4d928d1d78e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "By the Cauchy-Schwarz inequality, we have the following properties:",
+    "sha": "f834b41ef8fe",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Inner product and norm",
+    "sha": "572ab7c043d5",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u},\\vect{v}$ be vectors in an inner product space. Then",
+      "sha": "11d829a6d02e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\abs{\\iprod{\\vect{u},\\vect{v}}} \\leq \\norm{\\vect{u}}\\norm{\\vect{v}}."
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The Cauchy-Schwarz inequality states that $\\iprod{\\vect{u},\\vect{v}}^2 \\leq \\norm{\\vect{u}}^2\\norm{\\vect{v}}^2$. The claim follows by taking the square root of both sides of the equation.",
+      "sha": "c04fa4afadcd",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Triangle inequality",
+    "sha": "e26f833d1f48",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u},\\vect{v}$ be vectors in an inner product space. Then",
+      "sha": "11d829a6d02e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\norm{\\vect{u}+\\vect{v}} \\leq \\norm{\\vect{u}} + \\norm{\\vect{v}}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is called the **triangle inequality**.",
+      "sha": "ae2c18c70395",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The proof is essentially the same as that of Proposition “Triangle inequality”. We have",
+      "sha": "37740c3cc2ee",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\norm{\\vect{u}+\\vect{v}}^2\n    &=& \\iprod{\\vect{u}+\\vect{v},\\vect{u}+\\vect{v}} \\\\\n    &=& \\iprod{\\vect{u},\\vect{u}}+\\iprod{\\vect{u},\\vect{v}}+\\iprod{\\vect{v},\\vect{u}}+\\iprod{\\vect{v},\\vect{v}} \\\\\n    &=&\\norm{\\vect{u}}^2+2\\iprod{\\vect{u},\\vect{v}}+\\norm{\\vect{v}}^2 \\\\\n    &\\leq& \\norm{\\vect{u}}^2+2\\abs{\\iprod{\\vect{u},\\vect{v}}}+\\norm{\\vect{v}}^2 \\\\\n    &\\leq& \\norm{\\vect{u}}^2+2\\norm{\\vect{u}}\\norm{\\vect{v}}+\\norm{\\vect{v}}^2 \\\\\n    &=& (\\norm{\\vect{u}}+\\norm{\\vect{v}})^2.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The triangle inequality follows by taking square roots of both sides.",
+      "sha": "4d05e93bd449",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Generalizing the situation in $\\R^n$, we can define the angle between any two vectors in an inner product space. Note that by the Cauchy-Schwarz inequality,",
+    "sha": "4ec0f262ed63",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\frac{\\abs{\\iprod{\\vect{u},\\vect{v}}}}{\\norm{\\vect{u}}\\norm{\\vect{v}}}\n  \\leq 1,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and therefore,",
+    "sha": "13f04dbd2c4a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "-1 \\leq \\frac{\\iprod{\\vect{u},\\vect{v}}}{\\norm{\\vect{u}}\\norm{\\vect{v}}}\n  \\leq 1."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This ensures that the following definition is well-defined.",
+    "sha": "e41d18e60ad8",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Angle between two vectors",
+    "sha": "7ec38f7883a1",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u},\\vect{v}$ be vectors in an inner product space. The **angle** between $\\vect{u}$ and $\\vect{v}$ is, by definition, the unique $\\theta$ such that $0\\leq\\theta\\leq\\pi$ and",
+      "sha": "d1ac8388c0e5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\cos\\theta = \\frac{\\iprod{\\vect{u},\\vect{v}}}{\\norm{\\vect{u}}\\norm{\\vect{v}}}."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Find the angle between two vectors",
+    "sha": "90223f9b01fb",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the angle between $1$ and $x^2$ in $C[-1,1]$.",
+      "sha": "4c22ab63903b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have",
+      "sha": "a2214cd5b1a4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\iprod{1,1} &=& \\int_{-1}^1 1\\cdot 1\\,dx ~=~ 2, \\\\\n    \\iprod{x^2,x^2} &=& \\int_{-1}^1 x^2\\cdot x^2\\,dx ~=~ \\frac{2}{5}, \\\\\n    \\iprod{1, x^2} &=& \\int_{-1}^1 1\\cdot x^2\\,dx ~=~ \\frac{2}{3}.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore",
+      "sha": "f6f36ec125f2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\cos\\theta\n    ~=~ \\frac{\\iprod{1,x^2}}{\\norm{1}\\norm{x^2}}\n    ~=~ \\frac{\\frac{2}{3}}{\\sqrt{2}\\sqrt{\\frac{2}{5}}}\n    ~=~ \\frac{\\sqrt{5}}{3}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The angle $\\theta$ is $\\cos^{-1}(\\frac{\\sqrt{5}}{3})$, which is approximately $0.7297$ radians or $41.81$ degrees.",
+      "sha": "d1f0ef38f7c9",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each matrix $A$, determine whether the formula $\\iprod{\\vect{u},\\vect{v}} = \\vect{u}^T A\\vect{v}$ determines an inner product on $\\R^2$.",
+      "sha": "cf429078666b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(a)~ A = \\left[\\begin{array}{cc} 1 & 0 \\\\ 0 & 2 \\end{array}\\right],\\quad\n    (b)~ A = \\left[\\begin{array}{cc} 3 & 1 \\\\ 1 & 3 \\end{array}\\right],\\quad\n    (c)~ A = \\left[\\begin{array}{cc} 1 & 1 \\\\ 0 & 2 \\end{array}\\right],\\quad\n    (d)~ A = \\left[\\begin{array}{cc} 1 & 0 \\\\ 0 & -1 \\end{array}\\right],\\quad\n    (e)~ A = \\left[\\begin{array}{cc} 1 & 1 \\\\ 1 & 1 \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes, it is an inner product. Since $A=A^T$, symmetry and linearity follow as in Example “$\\R^2$ with a non-standard inner product”. For the positive definite property, note that $\\iprod{\\vect{u},\\vect{u}} = u_1^2 + 2u_2^2\\geq 0$, and equality holds if and only if $u_1,u_2=0$.",
+         "sha": "60ac47ca7970",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes, it is an inner product. Since $A=A^T$, symmetry and linearity follow as in Example “$\\R^2$ with a non-standard inner product”. For the positive definite property, we have $\\iprod{\\vect{u},\\vect{u}} = 3u_1^2 + 2u_1u^2 + 3u_2^2 = (u_1+u_2)^2 + 2u_1^2 + 2u_2^2 \\geq 0$. Equality holds if and only if $u_1+u_2$, $u_1$, and $u_2$ are all zero, which is the case if and only if $\\vect{u}=0$.",
+         "sha": "d709ea9161f1",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "No, it is not symmetric. For example, $\\iprod{ \\left[\\begin{array}{c}1\\\\0\\end{array}\\right], \\left[\\begin{array}{c}0\\\\1\\end{array}\\right] } = 1$ but $\\iprod{ \\left[\\begin{array}{c}0\\\\1\\end{array}\\right], \\left[\\begin{array}{c}1\\\\0\\end{array}\\right] } = 0$.",
+         "sha": "779fe6d3d689",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "No, it is not positive definite. For example, $\\iprod{ \\left[\\begin{array}{c}0\\\\1\\end{array}\\right], \\left[\\begin{array}{c}0\\\\1\\end{array}\\right] } = -1$.",
+         "sha": "b6c4d8b828e7",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "No, it is not positive definite. For example, $\\iprod{ \\left[\\begin{array}{c}1\\\\-1\\end{array}\\right], \\left[\\begin{array}{c}1\\\\-1\\end{array}\\right] } = 0$ although $\\left[\\begin{array}{c}1\\\\-1\\end{array}\\right]\\neq \\vect{0}$.",
+         "sha": "d8f1dc5719d8",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Real inner product spaces · 习题 1（上游 exercises/InnerProductSpaces-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the inner product space $C[0,1]$ as in Example “Continuous functions on an interval”. Compute the following inner products:",
+      "sha": "9e55a05f739e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(a)~ \\iprod{1,x}, \\quad\n    (b)~ \\iprod{x,x^2}, \\quad\n    (c)~ \\iprod{1+x,2+x^2}."
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\iprod{1,x} = \\int_{0}^{1} 1\\cdot x\\,dx = \\int_{0}^{1} x\\,dx = \\frac{1}{2}$.",
+         "sha": "923bf942a9f3",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\iprod{x,x^2} = \\int_{0}^{1} x\\cdot x^2\\,dx = \\int_{0}^{1} x^3\\,dx = \\frac{1}{4}$.",
+         "sha": "08cdfcba5e58",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\iprod{1+x,2+x^2} = \\int_{0}^{1} (1+x)(2+x^2)\\,dx = \\int_{0}^{1} 2 + x^2 + 2x + x^3\\,dx = \\frac{43}{12}.$",
+         "sha": "aba9c8be5a98",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Real inner product spaces · 习题 2（上游 exercises/InnerProductSpaces-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the inner product space $C[0,1]$ as in Example “Continuous functions on an interval”. Compute the following norms:",
+      "sha": "8bcf1747d6be",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(a)~ \\norm{1}, \\quad\n    (b)~ \\norm{x}, \\quad\n    (c)~ \\norm{x^2+1}."
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\norm{1}^2 = \\iprod{1,1} = \\int_{0}^{1} 1\\,dx = 1$, therefore $\\norm{1}=1$.",
+         "sha": "389876f1a454",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\norm{x}^2 = \\iprod{x,x} = \\int_{0}^{1} x^2\\,dx = \\frac{1}{3}$, therefore $\\norm{x} = \\frac{1}{\\sqrt{3}}$.",
+         "sha": "2d651d07c901",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\norm{x^2+1}^2 = \\iprod{x^2+1,x^2+1} = \\int_{0}^{1} x^4 + 2x^2 + 1\\,dx = \\frac{1}{5} + \\frac{2}{3} + 1 = \\frac{28}{15}$, therefore $\\norm{x^2+1} = \\sqrt{\\frac{28}{15}}$.",
+         "sha": "171e1591cb3f",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Real inner product spaces · 习题 3（上游 exercises/InnerProductSpaces-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For $\\vect{u},\\vect{v}$ vectors in $\\R^3$, define the product $\\vect{u}\\ast \\vect{v} = u_1v_1+2u_2v_2+3u_3v_3$. Show that",
+      "sha": "cece7cfb717c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\abs{\\vect{u}\\ast \\vect{v}} \\leq (\\vect{u}\\ast \\vect{u})^{1/2}\n    (\\vect{v}\\ast \\vect{v})^{1/2}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Hint: first show that the operation $\\iprod{\\vect{u},\\vect{v}}=\\vect{u}\\ast\\vect{v}$ is an inner product on $\\R^3$, then use Proposition “Inner product and norm”.",
+      "sha": "5a2a11711751",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The operation $\\iprod{\\vect{u},\\vect{v}}=\\vect{u}\\ast\\vect{v}$ is an inner product on $\\R^3$. Symmetry and linearity are straightforward to check, as is the positive definite property. Therefore, the claimed inequality holds by Proposition “Cauchy-Schwarz inequality”.",
+      "sha": "050826f0a72e",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Real inner product spaces · 习题 4（上游 exercises/InnerProductSpaces-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "In $C[-1,1]$, find (a) the angle between $x$ and $x^2$, (b) the angle between $x$ and $x^3$.",
+      "sha": "d3426686e1bc",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "We have $\\iprod{x,x} = \\int_{-1}^1 x^2\\,dx = \\frac{2}{3}$, $\\iprod{x^2,x^2} = \\int_{-1}^1 x^4\\,dx = \\frac{2}{5}$, and $\\iprod{x, x^2} = \\int_{-1}^1 x^3\\,dx = 0$. Therefore",
+         "sha": "899530bbbb58",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\cos\\theta\n        ~=~ \\frac{\\iprod{x,x^2}}{\\norm{x}\\norm{x^2}}\n        ~=~ 0."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Therefore, the angle $\\theta$ is $\\pi/2$ radians, or $90$ degrees. In other words, $x$ and $x^2$ are orthogonal in $C[-1,1]$.",
+         "sha": "8b5c070c752d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "We have $\\iprod{x,x} = \\int_{-1}^1 x^2\\,dx = \\frac{2}{3}$, $\\iprod{x^3,x^3} = \\int_{-1}^1 x^6\\,dx = \\frac{2}{7}$, and $\\iprod{x, x^3} = \\int_{-1}^1 x^4\\,dx = \\frac{2}{5}$. Therefore",
+         "sha": "9fc40168d76b",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\cos\\theta\n        ~=~ \\frac{\\iprod{x,x^3}}{\\norm{x}\\norm{x^3}}\n        ~=~ \\frac{\\frac{2}{5}}{\\sqrt{\\frac{2}{3}}\\sqrt{\\frac{2}{7}}}\n        ~=~ \\frac{\\sqrt{21}}{5}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "The angle $\\theta$ is $\\cos^{-1}(\\frac{\\sqrt{21}}{5})$, which is approximately $0.4115$ radians or $23.58$ degrees.",
+         "sha": "d842d7f55412",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Real inner product spaces · 习题 5（上游 exercises/InnerProductSpaces-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": ". In this exercise, we will work out the details of Example “Real Hilbert space”. We must show that $\\Hilb_{\\R}$ is a vector space. We will do this by showing that it is a subspace of $\\Seq_{\\R}$. Further, we must show that the inner product is well-defined. This requires some knowledge of convergent series from calculus.",
+      "sha": "1d03a01e5f07",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Assume $a=(a_0,a_1,\\ldots)$ and $b=(b_0,b_1,\\ldots)$ are square summable sequences. Show that the series $a_0b_0 + a_1b_1 + a_2b_2 + \\ldots$ converges to a real number. Hint: consider the series $\\abs{a_0b_0} + \\abs{a_1b_2} + \\ldots$ and use the Cauchy-Schwarz inequality and the absolute convergence test.",
+         "sha": "6db1ab29f9b8",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Using the result of part (a), show that $\\Hilb_{\\R}$ is a subspace of $\\Seq_{\\R}$.",
+         "sha": "32e0ac16c6b2",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Show that the operation $\\iprod{a,b} = a_0b_0 + a_1b_1 + a_2b_2 + \\ldots$ is an inner product on $\\Hilb_{\\R}$.",
+         "sha": "a660154bd7ec",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) By assumption, $a$ and $b$ are square summable. Let $N=a_0^2 + a_1^2 + \\ldots$ and $M=b_0^2 + b_1^2 + \\ldots$. By the Cauchy-Schwarz inequality, for all $n$, we have",
+      "sha": "bafcb742c926",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\abs{a_0}\\abs{b_0} + \\ldots + \\abs{a_n}\\abs{b_n}\n      ~\\leq~ \\sqrt{\\abs{a_0}^2 + \\ldots + \\abs{a_n}^2} \\sqrt{\\abs{b_0}^2 + \\ldots + \\abs{b_n}^2}\n      ~\\leq~ \\sqrt{N}\\sqrt{M}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore the series $\\abs{a_0b_0} + \\abs{a_1b_1} + \\ldots$ is bounded. By the absolute convergence test from calculus, it follows that the series $a_0b_0 + a_1b_1 + \\ldots$ converges.",
+      "sha": "59586063583a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "(b) It is clear that the zero sequence is square summable, and also that a scalar multiple of a square summable sequence is square summable. Hence $\\Hilb_{\\R}$ contains the zero vector and is closed under scalar multiplication. To show that it is closed under addition, assume $a,b\\in\\Hilb_{\\R}$, and let $c=a+b$. We must show that $c$ is square summable. But",
+      "sha": "a68ee3c6cf25",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "c_0^2 + c_1^2 + \\ldots\n      ~=~\n      (a_0+b_0)^2 + (a_1+b_1)^2 + \\ldots\n      ~=~ (a_0^2 + a_1^2 + \\ldots) + (b_0^2 + b_1^2 + \\ldots)\n      + (2a_0b_0 + 2a_1b_1 + \\ldots)."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The series $a_0^2 + a_1^2 + \\ldots$ and $b_0^2 + b_1^2 + \\ldots$ converge by assumption, and the series $2a_0b_0 + 2a_1b_1 + \\ldots$ converges by part (a). It follows that $\\Hilb_{\\R}$ is closed under addition.",
+      "sha": "cfa7773aa32c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "(c) Symmetry and linearity follow straightforwardly from properties of convergent series. For example,",
+      "sha": "696686eb3853",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\iprod{a,kb+\\ell c}\n      &=& a_0(kb_0+\\ell c_0) + a_1(kb_1+\\ell c_1) + \\ldots \\\\\n      &=& k(a_0b_0 + a_1b_1 + \\ldots) + \\ell(a_0c_0 + a_1c_1 + \\ldots) \\\\\n      &=& k\\iprod{a,b} + \\ell\\iprod{a,c}.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "As for the positive definite property, note that",
+      "sha": "2e446f923b82",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{a,a}\n      ~=~ a_0^2 + a_1^2 + \\ldots\n      ~\\geq~ 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Moreover, since all terms in the series are $\\geq 0$, it follows that $\\iprod{a,a}=0$ if and only if $a_i=0$ for all $i$.",
+      "sha": "ed45e63a7b72",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Real inner product spaces · 习题 6（上游 exercises/InnerProductSpaces-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Definition.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "实内积空间"
+}

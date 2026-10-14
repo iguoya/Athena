@@ -1,0 +1,118 @@
+{
+ "id": "Vectors-DotProduct-Orthogonal",
+ "title_en": "Orthogonal vectors",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "Two non-zero vectors are said to be **orthogonal**, sometimes also called **perpendicular**, if the included angle is $\\pi /2$ radians ($90^{\\circ})$. By convention, we also say that the zero vector is orthogonal to all vectors.",
+    "sha": "6fcbff0f0d1b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Orthogonal vectors",
+    "sha": "9bd471900e1b",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u}$ and $\\vect{v}$ be vectors in $\\R^n$. Then $\\vect{u}$ and $\\vect{v}$ are orthogonal if and only if",
+      "sha": "e1be73e2c286",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u} \\dotprod \\vect{v} = 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We also write $\\vect{u}\\orth\\vect{v}$ to indicate that $\\vect{u}$ and $\\vect{v}$ are orthogonal.",
+      "sha": "3ceba1fd9095",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If $\\vect{u}$ or $\\vect{v}$ is zero, the vectors are orthogonal by definition, and the dot product is $0$ in that case, so the proposition holds. Now assume $\\vect{u}$ and $\\vect{v}$ are both non-zero. Then by Proposition “The dot product and the included angle”, we have $\\vect{u} \\dotprod \\vect{v} = 0$ if and only if $\\norm{\\vect{u}} \\norm{\\vect{v}} \\cos \\theta$ if and only if $\\cos\\theta=0$. Recall that the included angle is between $0$ and $\\pi$. Therefore, $\\cos\\theta=0$ if and only if $\\theta=\\pi/2$.",
+      "sha": "e23a745b7a79",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Determine whether two vectors are orthogonal",
+    "sha": "74999a93579c",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine whether the vectors",
+      "sha": "8672c5ee7a0c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}=\n    \\left[\\begin{array}{r}\n      2 \\\\\n      1 \\\\\n      -1\n    \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    \\vect{v}\n    =\n    \\left[\\begin{array}{r}\n      1 \\\\\n      3 \\\\\n      5\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "are orthogonal.",
+      "sha": "338be2962b55",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "In order to determine if these two vectors are orthogonal, we compute the dot product. We have",
+      "sha": "686012c12284",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u} \\dotprod \\vect{v}\n    =\n    (2)(1) + (1)(3) + (-1)(5)\n    =\n    0,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and therefore, by Proposition “Determine whether two vectors are orthogonal”, the two vectors are orthogonal.",
+      "sha": "c377b2c8ebaa",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [],
+ "title_zh": "正交向量"
+}

@@ -1,0 +1,234 @@
+{
+ "id": "Matrices-Inverses-Definition",
+ "title_en": "Definition and uniqueness",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "We now define a matrix operation which in some ways plays the role of division. We cannot divide by a matrix, but we can multiply by the inverse of a matrix, which is almost as good.",
+    "sha": "9d77eb1d0b00",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "The inverse of a matrix",
+    "sha": "fafc1d51394a",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ and $B$ be $n\\times n$-matrices. We say that $B$ is an **inverse** of $A$ if",
+      "sha": "465f87e4c021",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "BA=I\\quad\\text{and}\\quad\n    AB=I."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If this is the case, we also write $B=A^{-1}$. When a matrix has an inverse, it is called **invertible**.",
+      "sha": "a3c3a92ea164",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Verifying the inverse of a matrix",
+    "sha": "4d551b130615",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\left[\\begin{array}{rr} 1 & 1 \\\\ 1 & 2 \\end{array}\\right]$. Check that $B=\\left[\\begin{array}{rr} 2 & -1 \\\\ -1 & 1 \\end{array}\\right]$ is an inverse of $A$.",
+      "sha": "ec9a25f950a0",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "To check this, multiply",
+      "sha": "e5c909aad697",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "AB = \\left[\\begin{array}{rr}\n      1 & 1 \\\\\n      1 & 2\n    \\end{array}\\right] \\left[\\begin{array}{rr}\n      2 & -1 \\\\\n      -1 & 1\n    \\end{array}\\right] =\\allowbreak \\left[\\begin{array}{rr}\n      1 & 0 \\\\\n      0 & 1\n    \\end{array}\\right] = I"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and",
+      "sha": "cffa50a32cb1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "BA = \\left[\\begin{array}{rr}\n      2 & -1 \\\\\n      -1 & 1\n    \\end{array}\\right] \\left[\\begin{array}{rr}\n      1 & 1 \\\\\n      1 & 2\n    \\end{array}\\right] =\\allowbreak \\left[\\begin{array}{rr}\n      1 & 0 \\\\\n      0 & 1\n    \\end{array}\\right] = I."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This shows that $B$ is indeed an inverse of $A$.",
+      "sha": "9fc35e0c0497",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Unlike multiplication of scalars, it can happen that $A\\neq 0$ but $A$ does not have an inverse. This is illustrated in the following example.",
+    "sha": "6acfb5dcbedd",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "A non-zero matrix with no inverse",
+    "sha": "f9020dd033ed",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\left[\\begin{array}{rr} 1 & 1 \\\\ 1 & 1 \\end{array}\\right]$. Show that $A$ is not invertible.",
+      "sha": "19277a54a35e",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "One might think $A$ has an inverse because it does not equal zero. However, note that",
+      "sha": "84de24f19edf",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr}\n      1 & 1 \\\\\n      1 & 1\n    \\end{array}\\right] \\left[\\begin{array}{r}\n      -1 \\\\\n      1\n    \\end{array}\\right] =\\left[\\begin{array}{r}\n      0 \\\\\n      0\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If an inverse $A^{-1}$ existed, we would have the following:",
+      "sha": "8fb0ad623616",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\left[\\begin{array}{r}\n      -1 \\\\\n      1\n    \\end{array}\\right]\n    &=&\n        I\\left[\\begin{array}{r}\n          -1 \\\\\n          1\n        \\end{array}\\right] \\\\\n    &=&\n        (A^{-1}A) \\left[\\begin{array}{r}\n          -1 \\\\\n          1\n        \\end{array}\\right] \\\\\n    &=&\n        A^{-1}\\paren{A\\left[\\begin{array}{r}\n            -1 \\\\\n            1\n          \\end{array}\\right]} \\\\\n    &=&\n        A^{-1}\\paren{\\left[\\begin{array}{r}\n            0 \\\\\n            0\n          \\end{array}\\right]} \\\\\n    &=&\n        \\left[\\begin{array}{r}\n          0 \\\\\n          0\n        \\end{array}\\right].\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This says that",
+      "sha": "16daf8405b64",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{r}\n      -1 \\\\\n      1\n    \\end{array}\\right]\n    =\n    \\left[\\begin{array}{r}\n      0 \\\\\n      0\n    \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which is impossible! Therefore, $A$ does not have an inverse.",
+      "sha": "3f273432d626",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Can a matrix have more than one inverse? It turns out that this is not the case: the following theorem shows that if $A$ has an inverse, then the inverse is unique. We can therefore speak of “the” inverse, rather than just “an” inverse, of $A$.",
+    "sha": "0e103154f31f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Uniqueness of inverse",
+    "sha": "d9e882651134",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $A$ is an $n\\times n$-matrix such that both $B$ and $C$ are inverses of $A$. Then $B=C$.",
+      "sha": "f097d36e1aa2",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "By assumption, both $B$ and $C$ are inverses of $A$, so we have $AB=I$, $BA=I$, $AC=I$, and $CA=I$. Using the associative and unit properties of matrix multiplication, we have:",
+      "sha": "3c1f69cacddd",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "B = BI = B(AC) = (BA)C = IC = C."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, $B=C$, as desired.",
+      "sha": "e67facb0727f",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [],
+ "title_zh": "定义与唯一性"
+}

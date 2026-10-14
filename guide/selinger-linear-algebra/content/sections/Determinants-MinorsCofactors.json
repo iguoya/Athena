@@ -1,0 +1,757 @@
+{
+ "id": "Determinants-MinorsCofactors",
+ "title_en": "Minors and cofactors",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Compute minors and cofactors of matrices.",
+         "sha": "f27f958ea039",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Use cofactor expansion to compute the determinant of an $n\\times n$-matrix.",
+         "sha": "c92adbaf5ae8",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Determinants of larger matrices can be computed in terms of the determinants of smaller matrices. We begin with the following definition.",
+    "sha": "06f0b5866e92",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "The $\\ijth$ minor of a matrix",
+    "sha": "81936ef9995a",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n\\times n$-matrix. The $\\ijth$ **minor** of $A$, denoted by $M_{ij}$, is the determinant of the $(n-1)\\times(n-1)$-matrix that is obtained by deleting the $i\\th$ row and the $j\\th$ column of $A$.",
+      "sha": "956806e580e2",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Hence, there is a minor associated with each entry of $A$. The following example illustrates this definition.",
+    "sha": "d401095fb684",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Finding minors of a matrix",
+    "sha": "4666d91e7767",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let",
+      "sha": "ef5fe1edf379",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rrr}\n      1 & 2 & 3 \\\\\n      4 & 3 & 2 \\\\\n      3 & 2 & 1\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the minors $M_{12}$ and $M_{33}$.",
+      "sha": "ad1ef52afb1e",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "First we will find $M_{12}$. By definition, this is the determinant of the $2\\times 2$-matrix that results when we delete the first row and the second column of $A$. This minor is given by",
+      "sha": "20f385434740",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "M_{12}\n    ~=~\n    \\left|\\begin{array}{ccc}\n      \\cancel{1} & \\cancel{2} & 3 \\\\\n      4 & 3 & 2 \\\\\n      3 & 2 & 1 \\\\\n    \\end{array}\\right|\n    ~=~\n    \\left|\\begin{array}{rr}\n      4 & 2 \\\\\n      3 & 1\n    \\end{array}\\right|\n    ~=~ 4\\cdot 1 - 2\\cdot 3\n    ~=~ -2."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Similarly, $M_{33}$ is the determinant of the $2\\times 2$-matrix that is obtained by deleting the third row and the third column of $A$. This minor is therefore",
+      "sha": "55845478c000",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "M_{33}\n    ~=~\n    \\left|\\begin{array}{ccc}\n      1 & 2 & \\cancel{3} \\\\\n      4 & 3 & 2 \\\\\n      \\cancel{3} & 2 & 1 \\\\\n    \\end{array}\\right|\n    ~=~\n    \\left|\\begin{array}{rr}\n      1 & 2 \\\\\n      4 & 3\n    \\end{array}\\right|\n    ~=~ -5."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We now define the $\\ijth$ cofactor of a matrix $A$, which is either plus or minus the $\\ijth$ minor.",
+    "sha": "af7df56cc444",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "The $\\ijth$ cofactor of a matrix",
+    "sha": "d60d8b85b9d5",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $A$ is an $n\\times n$-matrix. The $\\ijth$ **cofactor**, denoted by $C_{ij}$, is defined to be",
+      "sha": "185a3bec63de",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "C_{ij} = (-1)^{i+j} M_{ij}"
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In other words, the $\\ijth$ cofactor is equal to the corresponding minor if $i+j$ is even, and the negative of the minor if $i+j$ is odd. For remembering the signs, the following picture is sometimes helpful:",
+    "sha": "919e5dbb60d9",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\left[\\begin{array}{cccc}\n    + & - & + & - \\\\\n    - & + & - & + \\\\\n    + & - & + & - \\\\\n    - & + & - & + \\\\\n  \\end{array}\\right]."
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Finding cofactors of a matrix",
+    "sha": "b73c48c4bc6f",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the matrix",
+      "sha": "c5c7ab8caadb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{rrr}\n      1 & 2 & 3 \\\\\n      4 & 3 & 2 \\\\\n      3 & 2 & 1\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the cofactors $C_{12}$ and $C_{33}$.",
+      "sha": "e1011ae02909",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have already computed the corresponding minors in Example “Finding minors of a matrix”. For the cofactors, we have:",
+      "sha": "cc5d986d7807",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}C_{12} &=& (-1)^{1+2}M_{12} ~=~ -M_{12} ~=~ -(-2) ~=~ 2, \\\\\n    C_{33} &=& (-1)^{3+3}M_{33} ~=~ +M_{33} ~=~ +(-5) ~=~ -5.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note that $1+2$ is odd, so $C_{12}=-M_{12}$. On the other hand, $3+3$ is even, so $C_{33}=M_{33}$.",
+      "sha": "5d25f81f4ecc",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "You may wish to find the remaining cofactors of the above matrix. Remember that there is a cofactor for every entry in the matrix.",
+    "sha": "f6a0ce45bf02",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We have now established the tools we need to find the determinant of an $n\\times n$-matrix.",
+    "sha": "390d4ee7db31",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "The determinant of an $n\\times n$-matrix",
+    "sha": "de2e8343fb33",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n\\times n$-matrix. Then $\\det(A)$ is calculated by picking a row (or column) and taking the product of each entry in that row (column) with its cofactor and adding these products together. This process is known as \\textbfexpanding along the $i\\th$ row (or column).",
+      "sha": "bad8d58748ef",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In formulas, the process of expanding along the $i\\th$ row is given as follows:",
+      "sha": "34d1fd945bb2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(A) =\n    a_{i1}C_{i1} + a_{i2}C_{i2} + \\ldots + a_{in}C_{in}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Similarly, the process of expanding along the $j\\th$ column is:",
+      "sha": "0c69342974e1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(A) =\n    a_{1j}C_{1j} + a_{2j}C_{2j} + \\ldots + a_{nj}C_{nj}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When calculating the determinant, you can choose to expand any row or any column. Regardless of which row or column you expand, you will always get the same number, which is the determinant of the matrix $A$. This method of evaluating a determinant by expanding along a row or a column is also called **cofactor expansion** or **Laplace expansion**.",
+    "sha": "48d54b8ffea7",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Finding a determinant by cofactor expansion",
+    "sha": "34a1687554f1",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find $\\det(A)$ using the method of cofactor expansion, where",
+      "sha": "e1b82d194536",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rrr}\n      1 & 2 & 3 \\\\\n      4 & 3 & 2 \\\\\n      3 & 2 & 1\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "First, we will calculate $\\det(A)$ by expanding along the first column. Using Definition “The determinant of an $n\\times n$-matrix”, the determinant is",
+      "sha": "ba6501734d3e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\det(A)\n    &=& a_{11}C_{11} + a_{21}C_{21} + a_{31}C_{31} \\\\\n    &=& a_{11}M_{11} - a_{21}M_{21} + a_{31}M_{31} \\\\\\\\[-2ex]\n    &=&\n        1 \\left|\\begin{array}{rr}\n          3 & 2 \\\\\n          2 & 1 \\\\\n        \\end{array}\\right|\n        - 4 \\left|\\begin{array}{rr}\n          2 & 3 \\\\\n          2 & 1 \\\\\n        \\end{array}\\right|\n        + 3 \\left|\\begin{array}{rr}\n          2 & 3 \\\\\n          3 & 2\n        \\end{array}\\right| \\\\\\\\[-1ex]\n    &=& 1 (-1) - 4 (-4) + 3 (-5) \\\\\n    &=& 0.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "As mentioned in Definition “The determinant of an $n\\times n$-matrix”, we can choose to expand along any row or column. Let's try now by expanding along the second row. The calculation is as follows.",
+      "sha": "2cf99e3d0de5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(A)\n    ~=~ -4 \\left|\\begin{array}{rr}\n      2 & 3 \\\\\n      2 & 1\n    \\end{array}\\right|\n    + 3 \\left|\\begin{array}{rr}\n      1 & 3 \\\\\n      3 & 1\n    \\end{array}\\right|\n    - 2 \\left|\\begin{array}{rr}\n      1 & 2 \\\\\n      3 & 2\n    \\end{array}\\right|\n    ~=~ -4(-4) + 3(-8) - 2(-4)\n    ~=~ 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "You can see that for both methods, we obtained $\\det(A) = 0$.",
+      "sha": "897c01c76dc5",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "You should try to compute the above determinant by expanding along other rows and columns. This is a good way to check your work, because you should come up with the same number each time!",
+    "sha": "a2308a06b235",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "The determinant is well-defined",
+    "sha": "941388936915",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Expanding an $n\\times n$-matrix along any row or column always gives the same answer, which is the determinant.",
+      "sha": "64c8ee32a301",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Determinant of a four by four matrix",
+    "sha": "96e4f12e384c",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Calculate $\\left|\\begin{array}{rrrr} 1 & 2 & 3 & 0 \\\\ 2 & 4 & 2 & 3 \\\\ 0 & 3 & 0 & 5 \\\\ 3 & 0 & 3 & 2 \\end{array}\\right|$.",
+      "sha": "86387b72384b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Using the cofactor method, we can expand this determinant along any row or column. But notice that the third row contains two zeros. This makes the cofactor expansion particularly convenient. So let us expand along the third row. We have:",
+      "sha": "2366db719fbb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left|\\begin{array}{rrrr}\n      1 & 2 & 3 & 0 \\\\\n      2 & 4 & 2 & 3 \\\\\n      0 & 3 & 0 & 5 \\\\\n      3 & 0 & 3 & 2\n    \\end{array}\\right|\n    =\n    0 \\left|\\begin{array}{rrr}\n      2 & 3 & 0 \\\\\n      4 & 2 & 3 \\\\\n      0 & 3 & 2\n    \\end{array}\\right|\n    -3 \\left|\\begin{array}{rrr}\n      1 & 3 & 0 \\\\\n      2 & 2 & 3 \\\\\n      3 & 3 & 2\n    \\end{array}\\right|\n    +0 \\left|\\begin{array}{rrr}\n      1 & 2 & 0 \\\\\n      2 & 4 & 3 \\\\\n      3 & 0 & 2\n    \\end{array}\\right|\n    -5 \\left|\\begin{array}{rrr}\n      1 & 2 & 3 \\\\\n      2 & 4 & 2 \\\\\n      3 & 0 & 3\n    \\end{array}\\right|."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note that we only need to compute two of the $3\\times 3$ determinants, since the remaining two are multiplied by $0$. We can compute each $3\\times 3$ determinant using the method of Definition “A $3\\times 3$ determinant”. We find:",
+      "sha": "f909925026a1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left|\\begin{array}{rrrr}\n      1 & 2 & 3 & 0 \\\\\n      2 & 4 & 2 & 3 \\\\\n      0 & 3 & 0 & 5 \\\\\n      3 & 0 & 3 & 2\n    \\end{array}\\right|\n    =\n    -3 \\left|\\begin{array}{rrr}\n      1 & 3 & 0 \\\\\n      2 & 2 & 3 \\\\\n      3 & 3 & 2\n    \\end{array}\\right|\n    -5 \\left|\\begin{array}{rrr}\n      1 & 2 & 3 \\\\\n      2 & 4 & 2 \\\\\n      3 & 0 & 3\n    \\end{array}\\right|\n    = -3 \\cdot 10 - 5\\cdot (-24)\n    = 90."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We remark that the cofactor expansion is mainly useful for calculating determinants of small matrices, or matrices containing many zeros. Indeed, imagine calculating the determinant of a $10\\times 10$-matrix by the cofactor method. This requires calculating the determinants of ten $9\\times 9$-matrices, each of which requires calculating the determinants of nine $8\\times 8$-matrices, each of which requires calculating the determinants of eight $7\\times 7$-matrices, and so on. Calculating the determinant of a $10\\times 10$-matrix by the cofactor method would therefore require $10\\cdot 9\\cdot 8\\cdot \\ldots \\cdot 2\\cdot 1 = 3628800$ steps!",
+    "sha": "b6d44560b6ff",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In the next few sections, we will explore some important properties and characteristics of the determinant, including a much more efficient method of calculating determinants of large matrices.",
+    "sha": "5c8eebb5eded",
+    "zh": ""
+   }
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A = \\left[\\begin{array}{rrr} 1 & 2 & 4 \\\\ 0 & 1 & 3 \\\\ -2 & 5 & 1 \\end{array}\\right]$. Find the following minors and cofactors:",
+      "sha": "096b92940c8b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$M_{11}$,",
+         "sha": "9376cfa07bac",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$M_{21}$,",
+         "sha": "a910f24b57c2",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$M_{32}$,",
+         "sha": "2a950a58b869",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$C_{11}$,",
+         "sha": "bdcabd45710e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$C_{21}$,",
+         "sha": "bae48111ab0d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$C_{32}$.",
+         "sha": "5efc9c4b2a61",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Minors and cofactors · 习题 1（上游 exercises/Determinants-MinorsCofactors.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-MinorsCofactors.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A = \\left[\\begin{array}{rrrr} 0 & -1 & 3 & 1 \\\\ 1 & 0 & 2 & 2 \\\\ 2 & 3 & -1 & 0 \\\\ 1 & 1 & 0 & 1 \\\\ \\end{array}\\right]$. Find $M_{11}$, $M_{21}$, $M_{32}$, $C_{11}$, $C_{21}$, and $C_{32}$.",
+      "sha": "5fae2bfb05d3",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Minors and cofactors · 习题 2（上游 exercises/Determinants-MinorsCofactors.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-MinorsCofactors.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the determinants of the following matrices using cofactor expansion along any row or column.",
+      "sha": "f2c9d3f54015",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rrr} 1 & 2 & 0 \\\\ 3 & -2 & 2 \\\\ 0 & 3 & 1 \\\\ \\end{array}\\right]$",
+         "sha": "cc077f20f525",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rrr} 1 & -2 & 2 \\\\ 3 & 0 & 0 \\\\ 4 & 3 & 1 \\\\ \\end{array}\\right]$",
+         "sha": "359bdf174d8a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rrrr} 1 & 2 & -2 & 2 \\\\ 1 & 3 & 2 & 3 \\\\ 4 & 0 & 1 & 0 \\\\ 1 & 2 & 1 & 2 \\\\ \\end{array}\\right]$",
+         "sha": "db37b0fbe314",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) $-14$. (b) $24$. (c) $0$.",
+      "sha": "f49881ea62bd",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Minors and cofactors · 习题 3（上游 exercises/Determinants-MinorsCofactors.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-MinorsCofactors.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the following determinant by expanding (a) along the first row and (b) along the second column.",
+      "sha": "c4c688b57ae3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left|\\begin{array}{rrr}\n      1 & 2 & 1 \\\\\n      2 & 1 & 3 \\\\\n      2 & 1 & 1\n    \\end{array}\\right|"
+    }
+   ],
+   "sol": [
+    {
+     "k": "math",
+     "tex": "\\left|\\begin{array}{ccc}\n        1 & 2 & 1 \\\\\n        2 & 1 & 3 \\\\\n        2 & 1 & 1\n      \\end{array}\\right| =  6."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Minors and cofactors · 习题 4（上游 exercises/Determinants-MinorsCofactors.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-MinorsCofactors.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the following determinant by expanding (a) along the first column and (b) along the third row.",
+      "sha": "cd786db8cae3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left|\\begin{array}{rrrr}\n      2 & 3 & 1 & 1 \\\\\n      4 & 3 & 1 & 2 \\\\\n      1 & 1 & 0 & 1 \\\\\n      3 & 2 & 1 & 2 \\\\\n    \\end{array}\\right|"
+    }
+   ],
+   "sol": [
+    {
+     "k": "math",
+     "tex": "\\left|\\begin{array}{rrrr}\n      2 & 3 & 1 & 1 \\\\\n      4 & 3 & 1 & 2 \\\\\n      1 & 1 & 0 & 1 \\\\\n      3 & 2 & 1 & 2 \\\\\n      \\end{array}\\right| =  2."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Minors and cofactors · 习题 5（上游 exercises/Determinants-MinorsCofactors.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-MinorsCofactors.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the following determinant by expanding (a) along the second row and (b) along the first column.",
+      "sha": "622417d2d70d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left|\\begin{array}{rrrr}\n      1 & 2 & -1 & 1 \\\\\n      0 & 1 &  2 & 1 \\\\\n      0 & 2 &  1 & 3 \\\\\n      1 & 4 &  0 & 2 \\\\\n    \\end{array}\\right|"
+    }
+   ],
+   "sol": [
+    {
+     "k": "math",
+     "tex": "\\left|\\begin{array}{rrrr}\n      1 & 2 & -1 & 1 \\\\\n      0 & 1 &  2 & 1 \\\\\n      0 & 2 &  1 & 3 \\\\\n      1 & 4 &  0 & 2 \\\\\n      \\end{array}\\right| = 6."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Minors and cofactors · 习题 6（上游 exercises/Determinants-MinorsCofactors.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-MinorsCofactors.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the determinant by cofactor expansion. Pick the easiest row or column to use.",
+      "sha": "e9c8f33eb291",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left|\\begin{array}{rrrr}\n      1 & 0 & 0 & 1 \\\\\n      2 & 1 & 1 & 0 \\\\\n      0 & 0 & 0 & 2 \\\\\n      2 & 1 & 3 & 1\n    \\end{array}\\right|"
+    }
+   ],
+   "sol": [
+    {
+     "k": "math",
+     "tex": "\\left|\\begin{array}{cccc}\n        1 & 0 & 0 & 1 \\\\\n        2 & 1 & 1 & 0 \\\\\n        0 & 0 & 0 & 2 \\\\\n        2 & 1 & 3 & 1\n      \\end{array}\\right| = -4."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Minors and cofactors · 习题 7（上游 exercises/Determinants-MinorsCofactors.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Determinants-MinorsCofactors.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "余子式与代数余子式"
+}

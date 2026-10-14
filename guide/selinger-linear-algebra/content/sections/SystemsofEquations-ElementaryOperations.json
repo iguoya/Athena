@@ -1,0 +1,953 @@
+{
+ "id": "SystemsofEquations-ElementaryOperations",
+ "title_en": "Elementary operations",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Use elementary operations to simplify a system of equations.",
+         "sha": "7f04ad6de226",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Solve some systems of equations by back substitution.",
+         "sha": "735d17500393",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Write a system of equations in augmented matrix form.",
+         "sha": "9184f25fc00b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Perform elementary row operations on augmented matrices.",
+         "sha": "63eb602748bf",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Our strategy for solving systems of linear equations is to successively transform a difficult system of equations into a simpler equivalent system. Here, by an “equivalent” system of equations we mean one that has the same solutions as the original one. We will perform the process of simplifying a system of equations by applying certain basic steps called “elementary operations”.",
+    "sha": "2ec429734f7d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Equivalent systems",
+    "sha": "430f6f50fe50",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Two systems of equations are called **equivalent** if they have the same solutions. This means that every solution of the first system is also a solution of the second system, and every solution of the second system is also a solution of the first system.",
+      "sha": "aba8bdcf2712",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "How can we know whether two systems of equations are equivalent? It turns out that the following basic operations always transform a system of equations into an equivalent system. In fact, these operations are the *key tool* we use in linear algebra to solve systems of equations.",
+    "sha": "a923cf3a3546",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Elementary operations",
+    "sha": "97b701a83c60",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "**Elementary operations** are the following operations:",
+      "sha": "a1225bd44e7a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Interchange the order in which the equations are listed.",
+         "sha": "38ce33db99eb",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Multiply any equation by a non-zero scalar.",
+         "sha": "1100547c9bb9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Add a multiple of one equation to another equation.",
+         "sha": "b6692072a489",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The most important property of the elementary operations is that they do not change the solutions to the system of equations. Before proving that this is true in general, we will first verify it in an example.",
+    "sha": "5dfe5ac24a9a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Equivalent systems",
+    "sha": "430f6f50fe50",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Show that the systems",
+      "sha": "d7c991bf8818",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\n      x+2y&=&7 \\\\\n      -2x  &=& -6\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and",
+      "sha": "cffa50a32cb1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\n      x+2y&=&7 \\\\\n      4y &=& 8\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "are equivalent.",
+      "sha": "e92e297a0952",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We can see that the second system is obtained from the first one by applying an elementary operation, namely, adding 2 times the first equation to the second equation:",
+      "sha": "9a5b863383c3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "-2x + 2(x+2y) = -6 + 2(7)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By simplifying, we obtain $4y = 8$.",
+      "sha": "d9db1325051b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To verify that the two systems are indeed equivalent, let us first solve the first system. From the second equation, we see that $x=3$. Substituting $x=3$ into the first equation, the equation becomes $3+2y=7$, which we can solve to find $y=2$. Therefore, the only solution to the first system of equations is $(x,y) = (3,2)$.",
+      "sha": "9cf09109663a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Now let us solve the second system. From the second equation, we find that $y=2$. Substituting $y=2$ into the first equation, we get $x+4=7$, which we can solve to find $x=3$. Therefore, the only solution to the second system of equations is $(x,y) = (3,2)$. Since the two systems have the same solutions, they are equivalent.",
+      "sha": "431f27f0a123",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This example illustrates how an elementary operation applied to a system of two equations in two variables does not affect the set of solutions. The same is true for any size of system in any number of variables. In the following theorem, we use the notation $E_i$ to represent the left-hand side of an equation, while $b_i$ denotes a constant term.",
+    "sha": "f7f5574b2e8b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Elementary operations and solutions",
+    "sha": "8ba3459d4d6f",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose you have a system of two linear equations in any number of variables",
+      "sha": "14746acd43e3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{c}\n      E_1=b_1 \\\\\n      E_2=b_2.\n    \\end{array} \\tag{1}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Then the following systems are equivalent to (1):",
+      "sha": "f46e666a1469",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "math",
+        "tex": "\\begin{array}{c}\n        E_2=b_2 \\\\\n        E_1=b_1.\n      \\end{array} \\tag{2}"
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "\\begin{array}{c}\n        E_1=b_1 \\\\\n        kE_2=kb_2 \\\\\n      \\end{array} \\tag{3}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "for any scalar $k$, provided $k\\neq0$.",
+         "sha": "9605dade50a0",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "\\begin{array}{c}\n        E_1=b_1 \\\\\n        E_2+kE_1=b_2+kb_1\n      \\end{array} \\tag{4}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "for any scalar $k$ (including $k=0$).",
+         "sha": "90c297edb181",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "By definition, a solution of (1) is an assignment of scalars to the variables that is a solution to $E_1=b_1$ and to $E_2=b_2$. But that is exactly the same thing as a solution of (2).",
+         "sha": "cee2d0260896",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "To prove that the systems (1) and (3) have the same solution set, let $(x_1,\\ldots,x_n)$ be any solution of (1). Then $E_1=b_1$ and $E_2=b_2$ are both true. Multiplying both sides of the last equation by $k$, we know that $kE_2=kb_2$ is true, and so $(x_1,\\ldots,x_n)$ is a solution of (3). Conversely, let $(x_1,\\ldots,x_n)$ be any solution of (3). Then $E_1=b_1$ and $kE_2=kb_2$ are true. Because $k\\neq 0$, we are allowed to divide both sides of the last equation by $k$, and therefore $E_2=b_2$ is true. Hence, $(x_1,\\ldots,x_n)$ is also a solution of (1). Since we have shown that every solution of (1) is a solution of (3) and vice versa, the two systems are equivalent.",
+         "sha": "a973830c0979",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "To prove that the systems (1) and (4) have the same solution set, let $(x_1,\\ldots,x_n)$ be any solution of (1). Then $E_1=b_1$ and $E_2=b_2$ are both true. We multiply both sides of the first equation by $k$ to obtain $kE_1=kb_1$. Then $kE_1+E_2 = kb_1+b_2$, and hence $(x_1,\\ldots,x_n)$ is a solution of (4). For the converse direction, assume $(x_1,\\ldots,x_n)$ is a solution of $E_1=b_1$ and $kE_1+E_2 = kb_1+b_2$. From the first equation, we have $kE_1=kb_1$, and subtracting this from the second equation, we get $E_2=b_2$, hence $(x_1,\\ldots,x_n)$ is a solution of (1). Note that unlike in case 2., there was no need to divide by $k$, and therefore it was not necessary to require $k\\neq 0$.",
+         "sha": "f6214b7bcd3b",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We will now use elementary operations to solve a system of three equations and three variables.",
+    "sha": "822f2d0fe26c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Solving a system of equations with elementary operations",
+    "sha": "11fa53963ccd",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Solve the system of equations",
+      "sha": "388d982a424c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{ccccccc}\n      x&+&3y&+&6z&=&25 \\\\\n      2x&+&7y&+&14z&=&58 \\\\\n       &&2y&+&5z&=&19.\n    \\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "By Theorem “Elementary operations and solutions”, we can do elementary operations on this system without changing the solution set. We will therefore use elementary operations to try to simplify the system of equations. First, we add $(-2)$ times the first equation to the second equation. This yields the system",
+      "sha": "ae4febf77d91",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{ccccccc}\n      x&+&3y&+&6z&=&25 \\\\\n       &&y&+&2z&=&8 \\\\\n       &&2y&+&5z&=&19.\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Next, we add $(-2)$ times the second equation to the third equation. This yields the system",
+      "sha": "c0c613f134ba",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{ccccccc}\n      x&+&3y&+&6z&=&25 \\\\\n       &&y&+&2z&=&8 \\\\\n       &&&&z&=&3.\n    \\end{array} \\tag{5}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "At this point, it is easy to find the solution. The last equation tells us that $z=3$. We can substitute this value of $z$ back into the second equation to get",
+      "sha": "a3ad4a641a35",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "y+2(3)=8,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which we can simplify and solve for $y$ to find that $y=2$. Finally, we can substitute the values $z=3$ and $y=2$ back into the first equation to get",
+      "sha": "0fa4999b7846",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "x+3(2)+6(3)=25."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Simplifying and solving for $x$, we find that $x=1$. Hence, the solution to the system is $(x,y,z)=(1,2,3)$.",
+      "sha": "aa09ad5747e8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The process we followed for solving (5) by first computing $z$, then $y$, then $x$ is called **back substitution**. Alternatively, we could have continued from (5) with more elementary operations as follows. Add $(-2)$ times the third equation to the second and then add $(-6)$ times the third to the first. This yields",
+      "sha": "ace61134ab20",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\allowbreak\n    \\begin{array}{ccccccc}\n      x&+&3y&&&=&7 \\\\\n       &&y&&&=&2 \\\\\n       &&&&z&=&3.\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Now add $(-3)$ times the second to the first. This yields",
+      "sha": "c7ea3015a43a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\allowbreak\n    \\begin{array}{ccccccc}\n      x&&&&&=&1 \\\\\n       &&y&&&=&2 \\\\\n       &&&&z&=&3,\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "a system which has the same solution set as the original system. This second method avoided back substitution and led to the same solution set. It is your decision which you prefer to use, as both methods lead to the correct solution, $(x,y,z) = (1,2,3)$.",
+      "sha": "ff8ebdf67c46",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Note how we have written each system of equations so that “like” variables line up on columns: one column for $x$, one column for $y$, and one column for $z$. This makes it easier to perform elementary operations. It is often useful to simplify the notation further, writing systems of equations in **augmented matrix** notation. Recall the system of equations from Example “Solving a system of equations with elementary operations”:",
+    "sha": "53c9562270cd",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{array}{ccccccc}\n    x&+&3y&+&6z&=&25 \\\\\n    2x&+&7y&+&14z&=&58 \\\\\n     &&2y&+&5z&=&19.\n  \\end{array}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This system can be written as an augmented matrix as follows:",
+    "sha": "c128dbf107d9",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\left[\\begin{array}{rrr|r}\n    1 & 3 & 6 & 25 \\\\\n    2 & 7 & 14 & 58 \\\\\n    0 & 2 & 5 & 19\n  \\end{array}\\right]."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A **matrix** is just a $2$-dimensional array of numbers. An augmented matrix has two parts separated by a vertical line. Notice that the augmented matrix notation has exactly the same information as the original system of equations. All the coefficients are written on the left side of the vertical line, and all the constant terms are written on the right side of the vertical line. These two parts of the augmented matrix are also called the **coefficient matrix** and the **constant matrix**. Each row of the augmented matrix corresponds to one linear equation. For example, the top row $\\left[\\begin{array}{rrrrr} 1 & 3 & 6 & | & 25 \\end{array}\\right]$ corresponds to the equation",
+    "sha": "10643e646ed7",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "x+3y+6z=25."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Each column of the coefficient matrix contains the coefficients for one particular variable. For example, the first column $\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 0 \\end{array}\\right]$ contains all of the coefficients for the variable $x$. If a variable does not appear in an equation, the corresponding coefficient is $0$. In general, the augmented matrix of a linear system of equations is defined as follows.",
+    "sha": "038da65a6f72",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Augmented matrix of a system of linear equations",
+    "sha": "89aa5faf6fc9",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The **augmented matrix** of the system of linear equations",
+      "sha": "0feeae08560b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{c}\n      a_{11}x_1 + \\ldots + a_{1n}x_n = b_1 \\\\\n      \\vdots \\\\\n      a_{m1}x_1 + \\ldots + a_{mn}x_n = b_m\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is",
+      "sha": "b47f363e2b43",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{ccc|c}\n      a_{11} & \\cdots & a_{1n} &  b_1 \\\\\n      \\vdots &  & \\vdots &  \\vdots \\\\\n      a_{m1} & \\cdots & a_{mn} &  b_m\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can consider elementary operations in the context of the augmented matrix. The elementary operations can be used on the rows of an augmented matrix just as we used them on equations previously. For example, instead of adding a multiple of one equation to another, we will now be adding a multiple of one row to another. Note that Theorem “Elementary operations and solutions” implies that any elementary row operation used on an augmented matrix will not change the solutions to the corresponding system of equations. For reference, here are the three kinds of elementary row operations, along with a shorthand notation we are going to use for them.",
+    "sha": "aaefc0079c05",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Elementary row operations",
+    "sha": "f2b20615b51a",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The **elementary row operations** are the following:",
+      "sha": "5ef935ce3cdc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Switch two rows. (Notation: $R_i\\rowswap R_j$ to switch rows $i$ and $j$).",
+         "sha": "962020df0164",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Multiply a row by a non-zero number. (Notation: $R_i\\rowop kR_i$ to multiply row $i$ by $k$).",
+         "sha": "4ae7b7e85c15",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Add a multiple of one row to another row. (Notation: $R_i\\rowop R_i+kR_j$ to add $k$ times row $j$ to row $i$.)",
+         "sha": "c6c3eabf0e18",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We write “$\\roweq$” to indicate that two augmented matrices are equivalent, i.e., that the corresponding systems of equations have the same set of solutions.",
+    "sha": "1e7ae4624f5f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Elementary row operations",
+    "sha": "f2b20615b51a",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Repeat the calculations of Example “Solving a system of equations with elementary operations”, using the notations we just introduced.",
+      "sha": "7b71de18894f",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have:",
+      "sha": "96d01ae743fe",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr|r}\n      1 & 3 & 6 &  25 \\\\\n      2 & 7 & 14 &  58 \\\\\n      0 & 2 & 5 &  19\n    \\end{array}\\right]\n    \\stackrel{R_2\\rowop R_2-2R_1}{\\roweq}\n    \\left[\\begin{array}{rrr|r}\n      1 & 3 & 6 & 25 \\\\\n      0 & 1 & 2 & 8 \\\\\n      0 & 2 & 5 & 19\n    \\end{array}\\right]\n    \\stackrel{R_3\\rowop R_3-2R_2}{\\roweq}\n    \\left[\\begin{array}{rrr|r}\n      1 & 3 & 6 & 25 \\\\\n      0 & 1 & 2 & 8 \\\\\n      0 & 0 & 1 & 3\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The final augmented matrix corresponds to the system",
+      "sha": "33a9da59dde7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{ccccccc}\n      x&+&3y&+&6z&=&25 \\\\\n       &&y&+&2z&=&8 \\\\\n       &&&&z&=&3,\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which is the same as (5). We can solve it by back substitution to obtain the solution $x=1$, $y=2$, and $z=3$.",
+      "sha": "b28bd629ed57",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Alternatively, we can continue with additional row operations:",
+      "sha": "069ff9ce8a20",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr|r}\n      1 & 3 & 6 & 25 \\\\\n      0 & 1 & 2 & 8 \\\\\n      0 & 0 & 1 & 3\n    \\end{array}\\right]\n    \\stackrel{R_1\\rowop R_1-6R_3}{\\stackrel{R_2\\rowop R_2-2R_3}{\\roweq}}\n    \\left[\\begin{array}{rrr|r}\n      1 & 3 & 0 & 7 \\\\\n      0 & 1 & 0 & 2 \\\\\n      0 & 0 & 1 & 3\n    \\end{array}\\right]\n    \\stackrel{R_1\\rowop R_1-3R_2}{\\roweq}\n    \\left[\\begin{array}{rrr|r}\n      1 & 0 & 0 & 1 \\\\\n      0 & 1 & 0 & 2 \\\\\n      0 & 0 & 1 & 3\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Notice how this notation is much more succinct than what we used in Example “Solving a system of equations with elementary operations”.",
+      "sha": "a30657bc1326",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We end this section with a final word of caution: logically, you can only perform one elementary row operation at a time. For example, it would not be correct to simultaneously add $R_1$ to $R_2$ and add $R_2$ to $R_1$. What is permitted is to first add $R_1$ to $R_2$, then then add the *new* $R_2$ to $R_1$. Although we may sometimes try to save space by skipping an intermediate step, as in the last example where we applied the row operations $R_1\\rowop R_1-6R_3$ and $R_2\\rowop R_2-2R_3$ in one step, it is important to realize that logically, each row operation must be performed separately before the next one can be done. When in doubt, the only safe course of action is not to skip any steps.",
+    "sha": "2d1f0cc295c0",
+    "zh": ""
+   }
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use elementary operations to solve the system of equations",
+      "sha": "4d3d8bacbb5f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{c}\n      3x+y=3 \\\\\n      x+2y=1.\n    \\end{array}"
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$(x,y) = (1,0)$.",
+      "sha": "c080bf7152c2",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Elementary operations · 习题 1（上游 exercises/SystemsofEquations-ElementaryOperations.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-ElementaryOperations.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use elementary operations to find the point $(x,y)$ that lies on both lines $x+3y=1$ and $4x-y=3$.",
+      "sha": "a76ce44bb415",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\begin{array}{c} x+3y=1 \\\\ 4x-y=3 \\end{array}$, Solution is: $(x,y) = \\paren{\\frac{10}{13},\\frac{1}{13}}$",
+      "sha": "6526c4df678d",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Elementary operations · 习题 2（上游 exercises/SystemsofEquations-ElementaryOperations.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-ElementaryOperations.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use elementary operations to determine whether the three lines $x+2y=1$, $2x-y=1$, and $4x+3y=3$ have a common point of intersection. If so, find the point, and if not, tell why they don't have such a common point of intersection.",
+      "sha": "7c991c98cec7",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\begin{array}{c} x+2y=1 \\\\ 2x-y=1 \\\\ 4x+3y=3 \\end{array}$, Solution is: $(x,y) = \\paren{\\frac{3}{5},\\frac{1}{5}}$",
+      "sha": "531dab6e4682",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Elementary operations · 习题 3（上游 exercises/SystemsofEquations-ElementaryOperations.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-ElementaryOperations.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Do the three planes, $x+y-3z=2$, $2x+y+z=1$, and $3x+2y-2z=0$ have a common point of intersection? If so, find one and if not, tell why there is no such point.",
+      "sha": "fd3df74240c0",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "No solution exists. $\\begin{array}{ccccccc} x &+& y &-& 3z &=& 2 \\\\ 2x &+& y &+& z &=& 1 \\\\ 3x &+& 2y &-& 2z &=& 0 \\end{array}$, after elementary operations: $\\begin{array}{ccccccc} x & & &+& 4z &=& 0 \\\\ & & y &-& 7z &=& 0 \\\\ & & & & 0 &=& 1 \\end{array}$. Thus one of the equations says $0=1$ in an equivalent system of equations.",
+      "sha": "08cd86cc6ece",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Elementary operations · 习题 4（上游 exercises/SystemsofEquations-ElementaryOperations.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-ElementaryOperations.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Solve the following system of equations by back substitution.",
+      "sha": "752f9d61c62d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{ccccccc}\n      x &+& 3y &-& 2z &=& 5 \\\\\n        & & y  &+& 3z &=& 4 \\\\\n        & &    & & z  &=& 1.\n    \\end{array}"
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$(x,y,z) = (4,1,1)$.",
+      "sha": "1ad1ac93755c",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Elementary operations · 习题 5（上游 exercises/SystemsofEquations-ElementaryOperations.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-ElementaryOperations.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Write the following system of linear equations as an augmented matrix. Caution: you first have to simplify and rearrange the equations so that “like” variables are lined up in columns. Write the variables in the order $x$, $y$, $z$.",
+      "sha": "f39bb7c20a8b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{c}\n      x - 3z + 2y = 5 \\\\\n      6 - x = 4 + y - z \\\\\n      2x + 3 = x + 3y.\n    \\end{array}"
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\begin{array}{ccccccc} x &+& 2y &-& 3z &=& 5 \\\\ -x &-& y &+& z &=& -2 \\\\ x &-& 3y && &=& -3. \\\\ \\end{array}$ As an augmented matrix: $\\left[\\begin{array}{rrr|r} 1 & 2 & -3 & 5 \\\\ -1 & -1 & 1 & -2 \\\\ 1 & -3 & 0 & -3 \\end{array}\\right].$",
+      "sha": "82f17b78e17b",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Elementary operations · 习题 6（上游 exercises/SystemsofEquations-ElementaryOperations.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-ElementaryOperations.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Four times the weight of Gaston is 150kg more than the weight of Ichabod. Four times the weight of Ichabod is 660kg less than seventeen times the weight of Gaston. Four times the weight of Gaston plus the weight of Siegfried equals 290kg. Brunhilde would balance all three of the others. Find the weights of the four people.",
+      "sha": "d5222a0d1ccb",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\begin{array}{c} 4g-I=150 \\\\ 4I-17g=-660 \\\\ 4g+s=290 \\\\ g+I+s-b=0 \\end{array}$, Solution is: $\\set{g=60,I=90,b=200,s=50}$",
+      "sha": "a7dfd18df827",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Elementary operations · 习题 7（上游 exercises/SystemsofEquations-ElementaryOperations.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-ElementaryOperations.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "初等变换"
+}

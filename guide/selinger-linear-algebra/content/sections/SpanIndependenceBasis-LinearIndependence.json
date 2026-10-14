@@ -1,0 +1,1626 @@
+{
+ "id": "SpanIndependenceBasis-LinearIndependence",
+ "title_en": "Linear independence",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the redundant vectors in a set of vectors.",
+         "sha": "369d2bc52806",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether a set of vectors is linearly independent.",
+         "sha": "5773291f67bf",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find a linearly independent subset of a set of spanning vectors.",
+         "sha": "ceb781be733f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Write a vector as a unique linear combination of a set of linearly independent vectors.",
+         "sha": "256a868a9e7a",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Redundant vectors and linear independence",
+    "sha": "9bdb6882a73b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In Example “Span of redundant vectors”, we encountered three vectors $\\vect{u}$, $\\vect{v}$, and $\\vect{w}$ such that $\\sspan\\set{\\vect{u},\\vect{v},\\vect{w}} = \\sspan\\set{\\vect{u},\\vect{v}}$. If this happens, then the vector $\\vect{w}$ does not contribute anything to the span of $\\set{\\vect{u},\\vect{v},\\vect{w}}$, and we say that $\\vect{w}$ is **redundant**. The following definition generalizes this notion.",
+    "sha": "ae874f6eb04b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Redundant vectors, linear dependence, and linear independence",
+    "sha": "1d2a8c1ff3d5",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider a sequence of $k$ vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$. We say that the vector $\\vect{u}_j$ is **redundant** if it can be written as a linear combination of earlier vectors in the sequence, i.e., if",
+      "sha": "ff7f397d9141",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_j = a_1\\,\\vect{u}_1 + a_2\\,\\vect{u}_2 + \\ldots + a_{j-1}\\,\\vect{u}_{j-1}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for some scalars $a_1,\\ldots,a_{j-1}$. We say that the sequence of vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$ is **linearly dependent** if it contains one or more redundant vectors. Otherwise, we say that the vectors are **linearly independent**.",
+      "sha": "ea58b48f9702",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Redundant vectors",
+    "sha": "f22e0bee1e9a",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the redundant vectors in the following sequence of vectors. Are the vectors linearly independent?",
+      "sha": "f8ca8d32511d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{c} 0 \\\\ 0 \\\\ 0 \\\\ 0\\end{array}\\right],\n    \\quad\n    \\vect{u}_2 = \\left[\\begin{array}{c} 1 \\\\ 2 \\\\ 2 \\\\ 3\\end{array}\\right],\n    \\quad\n    \\vect{u}_3 = \\left[\\begin{array}{c} 1 \\\\ 1 \\\\ 1 \\\\ 1\\end{array}\\right],\n    \\quad\n    \\vect{u}_4 = \\left[\\begin{array}{c} 2 \\\\ 3 \\\\ 3 \\\\ 4\\end{array}\\right],\n    \\quad\n    \\vect{u}_5 = \\left[\\begin{array}{c} 0 \\\\ 1 \\\\ 2 \\\\ 3\\end{array}\\right],\n    \\quad\n    \\vect{u}_6 = \\left[\\begin{array}{c} 3 \\\\ 3 \\\\ 2 \\\\ 2\\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The vector $\\vect{u}_1$ is redundant, because it is a linear combination of earlier vectors. (Although there are no earlier vectors, recall from Example “Span of the empty set” that the empty sum of vectors is equal to the zero vector $\\vect{0}$. Therefore, $\\vect{u}_1$ is indeed an (empty) linear combination of earlier vectors.)",
+         "sha": "ed8eba2a9894",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The vector $\\vect{u}_2$ is not redundant, because it cannot be written as a linear combination of $\\vect{u}_1$. This is because the system of equations",
+         "sha": "a881e7e7619f",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\left[\\begin{array}{l|l}\n        0 & 1 \\\\\n        0 & 2 \\\\\n        0 & 2 \\\\\n        0 & 3 \\\\\n      \\end{array}\\right]"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "has no solution.",
+         "sha": "9113246045a7",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The vector $\\vect{u}_3$ is not redundant, because it cannot be written as a linear combination of $\\vect{u}_1$ and $\\vect{u}_2$. This is because the system of equations",
+         "sha": "7030e6ea28a0",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\left[\\begin{array}{ll|l}\n        0 & 1 & 1 \\\\\n        0 & 2 & 1 \\\\\n        0 & 2 & 1 \\\\\n        0 & 3 & 1 \\\\\n      \\end{array}\\right]"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "has no solution.",
+         "sha": "9113246045a7",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The vector $\\vect{u}_4$ is redundant, because $\\vect{u}_4 = \\vect{u}_2 + \\vect{u}_3$.",
+         "sha": "544cfcd96116",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The vector $\\vect{u}_5$ is not redundant, because it cannot be written as a linear combination of $\\vect{u}_1$, $\\vect{u}_2$, $\\vect{u}_3$, and $\\vect{u}_4$. This is because the system of equations",
+         "sha": "74be21ca5be7",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\left[\\begin{array}{llll|l}\n        0 & 1 & 1 & 2 & 0 \\\\\n        0 & 2 & 1 & 3 & 1 \\\\\n        0 & 2 & 1 & 3 & 2 \\\\\n        0 & 3 & 1 & 4 & 3 \\\\\n      \\end{array}\\right]"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "has no solution.",
+         "sha": "9113246045a7",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The vector $\\vect{u}_6$ is redundant, because $\\vect{u}_6 = \\vect{u}_2 + 2\\vect{u}_3-\\vect{u}_5$.",
+         "sha": "5ad0f3296281",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In summary, the vectors $\\vect{u}_1$, $\\vect{u}_4$, and $\\vect{u}_6$ are redundant, and the vectors $\\vect{u}_2$, $\\vect{u}_3$, and $\\vect{u}_5$ are not. It follows that the vectors $\\vect{u}_1,\\ldots,\\vect{u}_6$ are linearly dependent.",
+      "sha": "a8d3079717ff",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "The casting-out algorithm",
+    "sha": "1e14c3c93631",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The last example shows that it can be a lot of work to find the redundant vectors in a sequence of $k$ vectors. Doing so in the naive way require us to solve up to $k$ systems of linear equations! Fortunately, there is a much faster and easier method, the so-called *casting-out algorithm*.",
+    "sha": "ab75367b99b6",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "algorithm",
+   "title": {
+    "en": "Casting-out algorithm",
+    "sha": "e6072df530f2",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "**Input:** a list of $k$ vectors $\\vect{u}_1,\\ldots,\\vect{u}_k\\in\\R^n$.",
+      "sha": "3d352706cad8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "**Output:** the set of indices $j$ such that $\\vect{u}_j$ is redundant.",
+      "sha": "7cd0eafde487",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "**Algorithm:** Write the vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$ as the columns of an $n\\times k$-matrix, and reduce to echelon form. Every *non-pivot* column, if any, corresponds to a redundant vector.",
+      "sha": "37dee6449571",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Casting-out algorithm",
+    "sha": "e6072df530f2",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use the casting-out algorithm to find the redundant vectors among the vectors from Example “Redundant vectors”.",
+      "sha": "289c6b5bfec2",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Following the casting-out algorithm, we write the vectors $\\vect{u}_1,\\ldots,\\vect{u}_6$ as the columns of a matrix and reduce to echelon form.",
+      "sha": "b3eb979cbca3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrrrr}\n      0 & 1 & 1 & 2 & 0 & 3 \\\\\n      0 & 2 & 1 & 3 & 1 & 3 \\\\\n      0 & 2 & 1 & 3 & 2 & 2 \\\\\n      0 & 3 & 1 & 4 & 3 & 2 \\\\\n    \\end{array}\\right]\n    \\roweq\\ldots\\roweq\n    \\left[\\begin{array}{rrrrrr}\n      0 & \\boxed{1} & 1 & 2 & 0 & 3 \\\\\n      0 & 0 & \\boxed{1} & 1 & -1 & 3 \\\\\n      0 & 0 & 0 & 0 & \\boxed{1} & -1 \\\\\n      0 & 0 & 0 & 0 & 0 & 0 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The pivot columns are columns $2$, $3$, and $5$. The non-pivot columns are columns $1$, $4$, and $6$. Therefore, the vectors $\\vect{u}_1$, $\\vect{u}_4$, and $\\vect{u}_6$ are redundant. Note that this is the same answer we got in Example “Redundant vectors”.",
+      "sha": "389285ca7f84",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The above version of the casting-out algorithm only tells us which of the vectors (if any) are redundant, but it does not give us a specific way to write the redundant vectors as linear combinations of previous vectors. However, we can easily get this additional information if we reduce the matrix all the way to reduced echelon form. We call this version of the algorithm the *extended casting-out algorithm*.",
+    "sha": "1c65ec2f19f4",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "algorithm",
+   "title": {
+    "en": "Extended casting-out algorithm",
+    "sha": "02d9fd1e699a",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "**Input:** a list of $k$ vectors $\\vect{u}_1,\\ldots,\\vect{u}_k\\in\\R^n$.",
+      "sha": "3d352706cad8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "**Output:** the set of indices $j$ such that $\\vect{u}_j$ is redundant, and a set of coefficients for writing each redundant vector as a linear combination of previous vectors.",
+      "sha": "5eb6fa8bbb58",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "**Algorithm:** Write the vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$ as the columns of an $n\\times k$-matrix, and reduce to reduced echelon form. Every *non-pivot* column, if any, corresponds to a redundant vector. If $\\vect{u}_j$ is a redundant vector, then the entries in the $j\\th$ column of the reduced echelon form are coefficients for writing $\\vect{u}_j$ as a linear combination of previous non-redundant vectors.",
+      "sha": "dbaa200d0088",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Extended casting-out algorithm",
+    "sha": "02d9fd1e699a",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use the casting-out algorithm to find the redundant vectors among the vectors from Example “Redundant vectors”, and write each redundant vector as a linear combination of previous non-redundant vectors.",
+      "sha": "fbb0a77df939",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Once again, we write the vectors $\\vect{u}_1,\\ldots,\\vect{u}_6$ as the columns of a matrix. This time we use the extended casting-out algorithm, which means we reduce the matrix to reduced echelon form instead of echelon form.",
+      "sha": "eb09b2d37e20",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrrrr}\n      0 & 1 & 1 & 2 & 0 & 3 \\\\\n      0 & 2 & 1 & 3 & 1 & 3 \\\\\n      0 & 2 & 1 & 3 & 2 & 2 \\\\\n      0 & 3 & 1 & 4 & 3 & 2 \\\\\n    \\end{array}\\right]\n    \\roweq\\ldots\\roweq\n    \\left[\\begin{array}{rrrrrr}\n      0 & \\boxed{1} & 0 & 1 & 0 & 1 \\\\\n      0 & 0 & \\boxed{1} & 1 & 0 & 2 \\\\\n      0 & 0 & 0 & 0 & \\boxed{1} & -1 \\\\\n      0 & 0 & 0 & 0 & 0 & 0 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "As before, the non-pivot columns are columns $1$, $4$, and $6$, and therefore, the vectors $\\vect{u}_1$, $\\vect{u}_4$, and $\\vect{u}_6$ are redundant. The non-redundant vectors are $\\vect{u}_2$, $\\vect{u}_3$, and $\\vect{u}_5$. Moreover, the entries in the sixth column are $1$, $2$, and $-1$. Note that this means that the sixth column can be written as $1$ times the second column plus $2$ times the third column plus $(-1)$ times the fourth column. The same coefficients can be used to write $\\vect{u}_6$ as a linear combination of previous *non-redundant* columns, namely:",
+      "sha": "d4c88d306ffc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_6 = 1\\,\\vect{u}_2 + 2\\,\\vect{u}_3 - 1\\,\\vect{u}_5."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Also, the entries in the fourth column are $1$ and $1$, which are the coefficients for writing $\\vect{u}_4$ as a linear combination of previous non-redundant columns, namely:",
+      "sha": "09cbe3e6ee59",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_4 = 1\\,\\vect{u}_2 + 1\\,\\vect{u}_3."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Finally, there are no non-zero entries in the first column. This means that $\\vect{u}_1$ is the empty linear combination",
+      "sha": "b61b76dd5e86",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\vect{0}."
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Alternative characterization of linear independence",
+    "sha": "eb728792cd7e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Our definition of redundant vectors depends on the order in which the vectors are written. This is because each redundant vector must be a linear combination of *earlier* vectors in the sequence. For example, in the sequence of vectors",
+    "sha": "f82f44a5b2ce",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vect{u}=\\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 1 \\end{array}\\right],\\quad\n  \\vect{v}=\\left[\\begin{array}{r} 3 \\\\ 2 \\\\ 1 \\end{array}\\right],\\quad\n  \\vect{w}=\\left[\\begin{array}{r} 11 \\\\ 8 \\\\ 5 \\end{array}\\right],"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "the vector $\\vect{w}$ is redundant, because it is a linear combination of earlier vectors $\\vect{w} = 2\\,\\vect{u}+3\\,\\vect{v}$. Neither $\\vect{u}$ nor $\\vect{v}$ are redundant. On the other hand, in the sequence of vectors",
+    "sha": "b3b0a4d02e68",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vect{u}=\\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 1 \\end{array}\\right],\\quad\n  \\vect{w}=\\left[\\begin{array}{r} 11 \\\\ 8 \\\\ 5 \\end{array}\\right],\\quad\n  \\vect{v}=\\left[\\begin{array}{r} 3 \\\\ 2 \\\\ 1 \\end{array}\\right],"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "$\\vect{v}$ is redundant because $\\vect{v} = \\frac{1}{3}\\vect{w} - \\frac{2}{3}\\vect{u}$, but neither $\\vect{u}$ nor $\\vect{w}$ are redundant. Note that none of the vectors have changed; only the order in which they are written is different. Yet $\\vect{w}$ is the redundant vector in the first sequence, and $\\vect{v}$ is the redundant vector in the second sequence.",
+    "sha": "4a2f2818b75a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Because we defined linear independence in terms of the absence of redundant vectors, you may suspect that the concept of linear independence also depends on the order in which the vectors are written. However, this is not the case. The following theorem gives an alternative characterization of linear independence that is more symmetric (it does not depend on the order of the vectors).",
+    "sha": "58415207615d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Characterization of linear independence",
+    "sha": "e3d4390e20bf",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u}_1,\\ldots,\\vect{u}_k$ be vectors. Then $\\vect{u}_1,\\ldots,\\vect{u}_k$ are linearly independent if and only if the homogeneous equation",
+      "sha": "6f79d0ee7bdf",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "a_1\\,\\vect{u}_1 + \\ldots + a_k\\,\\vect{u}_k = \\vect{0}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "has only the trivial solution.",
+      "sha": "76dc5ff6227d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be the $n\\times k$-matrix whose columns are $\\vect{u}_1,\\ldots,\\vect{u}_k$. We know from the theory of homogeneous systems that the system $a_1\\,\\vect{u}_1 + \\ldots + a_k\\,\\vect{u}_k = \\vect{0}$ has no non-trivial solution if and only if every column of the echelon form of $A$ is a pivot column. By the casting-out algorithm, this is the case if and only if none of the vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$ are redundant, i.e., if and only if the vectors are linearly independent.",
+      "sha": "c9c0c714cfff",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Characterization of linear independence",
+    "sha": "e3d4390e20bf",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use the method of Theorem “Characterization of linear independence” to determine whether the following vectors are linearly independent in $\\R^4$.",
+      "sha": "b8dc522cfaa8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 2 \\\\ 0 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 1 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\\\ 2 \\end{array}\\right],\\quad\n    \\vect{u}_4 = \\left[\\begin{array}{r} 2 \\\\ 3 \\\\ 7 \\\\ 1 \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We must check whether the equation",
+      "sha": "97056224655e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "a_1 \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 2 \\\\ 0 \\end{array}\\right]\n    + a_2 \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 1 \\\\ 1 \\end{array}\\right]\n    + a_3 \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\\\ 2 \\end{array}\\right]\n    + a_4 \\left[\\begin{array}{r} 2 \\\\ 3 \\\\ 7 \\\\ 1 \\end{array}\\right]\n    = \\left[\\begin{array}{r} 0 \\\\ 0 \\\\ 0 \\\\ 0 \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "has a non-trivial solution. If it does, the vectors are linearly dependent. On the other hand, if there is only the trivial solution, the vectors are linearly independent. We write the augmented matrix and solve:",
+      "sha": "883c9d992260",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrr|r}\n      1 & 0 & 1 & 2 & 0 \\\\\n      1 & 1 & 2 & 3 & 0 \\\\\n      2 & 1 & 3 & 7 & 0 \\\\\n      0 & 1 & 2 & 1 & 0 \\\\\n    \\end{array}\\right]\n    \\roweq\n    \\ldots\n    \\roweq\n    \\left[\\begin{array}{rrrr|r}\n      \\boxed{1} & 0 & 1 & 2 & 0 \\\\\n      0 & \\boxed{1} & 1 & 1 & 0 \\\\\n      0 & 0 & \\boxed{1} & 0 & 0 \\\\\n      0 & 0 & 0 & \\boxed{2} & 0 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since every column is a pivot column, there are no free variables; the system of equations has a unique solution, which is $a_1=a_2=a_3=a_4=0$, i.e., the trivial solution. Therefore, the vectors $\\vect{u}_1,\\ldots,\\vect{u}_4$ are linearly independent.",
+      "sha": "2ad717890de6",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Characterization of linear independence",
+    "sha": "e3d4390e20bf",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use the method of Theorem “Characterization of linear independence” to determine whether the following vectors are linearly independent in $\\R^3$.",
+      "sha": "7df1d02c12bf",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 0 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 1 \\\\ 3 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} 0 \\\\ 4 \\\\ 2 \\end{array}\\right],\\quad"
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "As in the previous example, we must check whether the equation $a_1\\,\\vect{u}_1 + a_2\\,\\vect{u}_2 + a_3\\,\\vect{u}_3 = \\vect{0}$ has a non-trivial solution. Once again, we write the augmented matrix and solve:",
+      "sha": "d0f53b83e954",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr|r}\n      1 & 1 & 0 & 0 \\\\\n      1 & 3 & 4 & 0 \\\\\n      0 & 1 & 2 & 0 \\\\\n    \\end{array}\\right]\n    \\roweq\n    \\ldots\n    \\roweq\n    \\left[\\begin{array}{rrr|r}\n      \\boxed{1} & 1 & 0 & 0 \\\\\n      0 & \\boxed{2} & 4 & 0 \\\\\n      0 & 0 & 0 & 0 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since column $3$ is not a pivot column, $a_3$ is a free variable. Therefore, the system has a non-trivial solution, and the vectors are linearly dependent.",
+      "sha": "bbfe0323cc06",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "With a small amount of extra work, we can find an actual non-trivial solution of $a_1\\,\\vect{u}_1 + a_2\\,\\vect{u}_2 + a_3\\,\\vect{u}_3 = \\vect{0}$. All we have to do is set $a_3=1$ and do a back substitution. We find that $(a_1,a_2,a_3)=(2,-2,1)$ is a solution. In other words,",
+      "sha": "36bdf7924409",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "2\\vect{u}_1 - 2\\vect{u}_2 + \\vect{u}_3 = \\vect{0}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We can also use this information to write $\\vect{u}_3$ as a linear combination of previous vectors, namely, $\\vect{u}_3 = -2\\vect{u}_1 + 2\\vect{u}_2$.",
+      "sha": "ceae25adfddd",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The characterization of linear independence in Theorem “Characterization of linear independence” is mostly useful for theoretical reasons. However, it can also help in solving problems such as the following.",
+    "sha": "3212d8092930",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Related sets of vectors",
+    "sha": "d188966473b7",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u},\\vect{v},\\vect{w}$ be linearly independent vectors in $\\R^n$. Are the vectors $\\vect{u}+\\vect{v}$, $2\\vect{u}+\\vect{w}$, and $\\vect{v}-5\\vect{w}$ linearly independent?",
+      "sha": "8c2e1efd677b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "By Theorem “Characterization of linear independence”, to check whether the vectors are linearly independent, we must check whether the equation",
+      "sha": "9f107d43a8c6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "a(\\vect{u}+\\vect{v}) + b(2\\vect{u}+\\vect{w}) +\n    c(\\vect{v}-5\\vect{w})=\\vect{0} \\tag{1}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "has non-trivial solutions. If it does, the vectors are linearly dependent, if it does not, they are linearly independent. We can simplify the equation as follows:",
+      "sha": "6a27d6d18c3c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(a+2b)\\vect{u} + (a+c)\\vect{v} + (b-5c)\\vect{w}=\\vect{0}. \\tag{2}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\vect{u}$, $\\vect{v}$, and $\\vect{w}$ are linearly independent, we know, again by Theorem “Characterization of linear independence”, that equation (2) only has the trivial solution. Therefore,",
+      "sha": "a4dc0f007236",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}a + 2b & = & 0, \\\\\n    a + c & = & 0, \\\\\n    b - 5c & = & 0.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We can solve this system of three equations in three variables, and we find that it has the unique solution $a=b=c=0$. Therefore, $a=b=c=0$ is the only solution to equation (1), which means that the vectors $\\vect{u}+\\vect{v}$, $2\\vect{u}+\\vect{w}$, and $\\vect{v}-5\\vect{w}$ are linearly independent.",
+      "sha": "f4aaa61bde5f",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Properties of linear independence",
+    "sha": "2092508829df",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The following are some properties of linearly independent sets.",
+    "sha": "2d1a164e3ec7",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Properties of linear independence",
+    "sha": "2092508829df",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "**Linear independence and reordering.** If a sequence $\\vect{u}_1,\\ldots,\\vect{u}_k$ of $k$ vectors is linearly independent, then so is any reordering of the sequence (i.e., whether or not the vectors are linearly independent does not depend on the order in which the vectors are written down).",
+         "sha": "a685719aa87b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "**Linear independence of a subset.** If $\\vect{u}_1,\\ldots,\\vect{u}_k$ are linearly independent, then so are $\\vect{u}_1,\\ldots,\\vect{u}_j$ for any $j<k$.",
+         "sha": "8861e5f48383",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "**Linear independence and dimension.** Let $\\vect{u}_1,\\ldots,\\vect{u}_k$ be a sequence of $k$ vectors in $\\R^n$. If $k>n$, then the vectors are linearly dependent (i.e., not linearly independent).",
+         "sha": "82c802618ca1",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "This follows from Theorem “Characterization of linear independence”, because whether or not the equation $a_1\\vect{u}_1 + \\ldots + a_k\\vect{u}_k = \\vect{0}$ has a non-trivial solution does not depend on the order in which the vectors are written.",
+         "sha": "ddc4f8b9854d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If one of the vectors in the sequence $\\vect{u}_1,\\ldots,\\vect{u}_j$ were redundant, then it would be redundant in the longer sequence $\\vect{u}_1,\\ldots,\\vect{u}_k$ as well.",
+         "sha": "b5458f868b67",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $A$ be the $n\\times k$-matrix that has the vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$ as its columns and suppose that $k>n$. Then the rank of $A$ is at most $n$, so the echelon form of $A$ has some non-pivot columns. Therefore, the system $a_1\\vect{u}_1 + \\ldots + a_k\\vect{u}_k = \\vect{0}$ has non-trivial solutions, and the vectors are linearly dependent by Theorem “Characterization of linear independence”.",
+         "sha": "8338e6ae67f6",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Linear dependence",
+    "sha": "345b019de937",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Are the following vectors linearly independent?",
+      "sha": "d6c23f6d7784",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{r}\n        1 \\\\\n        4\n      \\end{array}\\right],\\quad\n      \\left[\\begin{array}{r}\n        2 \\\\\n        3\n      \\end{array}\\right],\\quad\n      \\left[\\begin{array}{r}\n        3 \\\\\n        2\n      \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Since these are $3$ vectors in $\\R^2$, they are linearly dependent by Proposition “Properties of linear independence”. No calculation is necessary.",
+      "sha": "0a355b8c421e",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Linear independence and linear combinations",
+    "sha": "1d89e9f769f7",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In general, there is more than one way of writing a given vector as a linear combination of some spanning vectors. For example, consider",
+    "sha": "3d86b110a92f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 0 \\end{array}\\right],\\quad\n  \\vect{u}_2 = \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 1 \\end{array}\\right],\\quad\n  \\vect{u}_3 = \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 1 \\end{array}\\right],\\quad\n  \\vect{v} = \\left[\\begin{array}{r} 1 \\\\ 3 \\\\ 2 \\end{array}\\right]."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can write $\\vect{v}$ in many different ways as a linear combination of $\\vect{u}_1,\\ldots,\\vect{u}_3$, for example",
+    "sha": "d18735663230",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{array}{rcc}\n    \\vect{v} &=& -\\vect{u}_1 + 2\\vect{u}_3, \\\\\n    \\vect{v} &=& \\vect{u}_2 + \\vect{u}_3, \\\\\n    \\vect{v} &=& \\vect{u}_1 + 2\\vect{u}_2, \\\\\n    \\vect{v} &=& 2\\vect{u}_1 + 3\\vect{u}_2 - \\vect{u}_3. \\\\\n  \\end{array}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "However, when the vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$ are linearly independent, this does not happen. In this case, the linear combination is always unique, as the following theorem shows.",
+    "sha": "2f2d253254b1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Unique linear combination",
+    "sha": "989632e3ba54",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Assume $\\vect{u}_1,\\ldots,\\vect{u}_k$ are linearly independent. Then every vector $\\vect{v}\\in\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ can be written as a linear combination of $\\vect{u}_1,\\ldots,\\vect{u}_k$ in a unique way.",
+      "sha": "43b8431cb7ea",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We already know that every vector $\\vect{v}\\in\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ can be written as a linear combination of $\\vect{u}_1,\\ldots,\\vect{u}_k$, because that is the definition of span. So what must be proved is the uniqueness. Suppose, therefore, that there are two ways of writing $\\vect{v}$ as such a linear combination, i.e., that",
+      "sha": "617a7a5ac5a7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{l}\n    \\vect{v} = a_1\\,\\vect{u}_1 + a_2\\,\\vect{u}_2 + \\ldots + a_k\\,\\vect{u}_k\\quad\\text{and} \\\\\n    \\vect{v} = b_1\\,\\vect{u}_1 + b_2\\,\\vect{u}_2 + \\ldots + b_k\\,\\vect{u}_k. \\\\\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Subtracting one equation from the other, we get",
+      "sha": "f245d8019025",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{0} = (a_1-b_1)\\vect{u}_1 + (a_2-b_2)\\vect{u}_2 + \\ldots + (a_k-b_k)\\vect{u}_k."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\vect{u}_1,\\ldots,\\vect{u}_k$ are linearly independent, we know by Theorem “Characterization of linear independence” that the last equation only has the trivial solution, i.e., $a_1-b_1=0$, $a_2-b_2=0$, …, $a_k-b_k=0$. It follows that $a_1=b_1$, $a_2=b_2$, …, $a_k=b_k$. We have shown that any two ways of writing $\\vect{v}$ as a linear combination of $\\vect{u}_1,\\ldots,\\vect{u}_k$ are equal. Therefore, there is only one way of doing so.",
+      "sha": "8c5f39206f7f",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Removing redundant vectors",
+    "sha": "37bea116bfb0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Consider the span of some vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$. As we just saw in the previous subsection, the span is especially nice when the vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$ are linearly independent, because in that case, every element $\\vect{v}$ of the span can be *uniquely* written in the form $\\vect{v} = a_1\\,\\vect{u}_1 + \\ldots + a_k\\,\\vect{u}_k$.",
+    "sha": "6bb5e71e9b4b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "But what if we have a span of some vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$ that are not linearly independent? It turns out that we can always find some linearly independent vectors that span the same set. In fact, this can be done by simply removing the redundant vectors from $\\vect{u}_1,\\ldots,\\vect{u}_k$. This is the subject of the following theorem.",
+    "sha": "7f77543c3030",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Removing redundant vectors",
+    "sha": "37bea116bfb0",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u}_1,\\ldots,\\vect{u}_k$ be a sequence of vectors, and suppose that $\\vect{u}_{j_1},\\ldots,\\vect{u}_{j_\\ell}$ is the subsequence of vectors that is obtained by removing all of the redundant vectors. Then $\\vect{u}_{j_1},\\ldots,\\vect{u}_{j_\\ell}$ are linearly independent and",
+      "sha": "8faa6b02aff0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\sspan\\set{\\vect{u}_{j_1},\\ldots,\\vect{u}_{j_\\ell}}\n    =\n    \\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}."
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Remove the redundant vectors one by one, from right to left. Each time a redundant vector is removed, the span does not change; the proof of this is similar to Example “Span of redundant vectors”. Moreover, the resulting sequence of vectors $\\sspan\\set{\\vect{u}_{j_1},\\ldots,\\vect{u}_{j_\\ell}}$ is linearly independent, because if any of these vectors were a linear combination of earlier ones, then it would have been redundant in the original sequence of vectors, and would have therefore been removed.",
+      "sha": "e2da77d0c9be",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Finding a linearly independent set of spanning vectors",
+    "sha": "d1b5eb33ed5e",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find a subset of $\\set{\\vect{u}_1,\\ldots,\\vect{u}_4}$ that is linearly independent and has the same span as $\\set{\\vect{u}_1,\\ldots,\\vect{u}_4}$.",
+      "sha": "e43fda0f3614",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ -2 \\\\ 3 \\end{array}\\right],\n    \\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} -2 \\\\ 0 \\\\ 4 \\\\ -6 \\end{array}\\right],\n    \\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 2 \\\\ 1 \\end{array}\\right],\n    \\quad\n    \\vect{u}_4 = \\left[\\begin{array}{r} 3 \\\\ 4 \\\\ 2 \\\\ 5 \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We use the casting-out algorithm to find the redundant vectors:",
+      "sha": "a3fc6071d415",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrr}\n      1  & -2 & 1 & 3 \\\\\n      0  &  0 & 2 & 4 \\\\\n      -2 &  4 & 2 & 2 \\\\\n      3  & -6 & 1 & 5 \\\\\n    \\end{array}\\right]\n    \\roweq\\ldots\\roweq\n    \\left[\\begin{array}{rrrr}\n      \\boxed{1}  & -2 & 1 & 3 \\\\\n      0  &  0 & \\boxed{2} & 4 \\\\\n      0  &  0 & 0 & 0 \\\\\n      0  &  0 & 0 & 0 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, the redundant vectors are $\\vect{u}_2$ and $\\vect{u}_4$. We remove them (“cast them out”) and are left with $\\vect{u}_1$ and $\\vect{u}_3$. Therefore, by Theorem “Finding a linearly independent set of spanning vectors”, $\\set{\\vect{u}_1,\\vect{u}_3}$ is linearly independent and $\\sspan\\set{\\vect{u}_1,\\vect{u}_3} = \\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_4}$.",
+      "sha": "3f9efad95f96",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following vectors are redundant? If there are redundant vectors, write each of them as a linear combination of previous vectors.",
+      "sha": "8d6253e2a063",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 2 \\\\ 0 \\\\ 2 \\end{array}\\right],\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{u}_4 = \\left[\\begin{array}{r} 1 \\\\ 6 \\\\ 1 \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\vect{u}_2$ and $\\vect{u}_4$ are redundant. We have $\\vect{u}_2=2\\vect{u}_1$ and $\\vect{u}_4=3\\vect{u}_3-2\\vect{u}_1$.",
+      "sha": "a7baccd6e77d",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear independence · 习题 1（上游 exercises/SpanIndependenceBasis-LinearIndependence.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-LinearIndependence.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following vectors are redundant? If there are redundant vectors, write each of them as a linear combination of previous vectors.",
+      "sha": "8d6253e2a063",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} -1 \\\\ -2 \\\\ 2 \\\\ 3 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} -3 \\\\ -4 \\\\ 3 \\\\ 3 \\end{array}\\right],\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} 0 \\\\ -1 \\\\ 4 \\\\ 3 \\end{array}\\right],\\quad\n    \\vect{u}_4 = \\left[\\begin{array}{r} 0 \\\\ 2 \\\\ -3 \\\\ -6 \\end{array}\\right]."
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear independence · 习题 2（上游 exercises/SpanIndependenceBasis-LinearIndependence.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-LinearIndependence.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use the method of Theorem “Characterization of linear independence” to determine whether the following vectors are linearly independent. If they are linearly dependent, find a non-trivial linear combination of the vectors that is equal to $\\vect{0}$.",
+      "sha": "6bfb18056841",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 2 \\\\ 3 \\\\ 2 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} -1 \\\\ 0 \\\\ 2 \\end{array}\\right],\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} -3 \\\\ -4 \\\\ -2 \\end{array}\\right],\\quad\n    \\vect{u}_4 = \\left[\\begin{array}{r} 5 \\\\ 6 \\\\ 2 \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The vectors are linearly dependent. We have $\\vect{u}_2+3\\vect{u}_3+2\\vect{u}_4=\\vect{0}$.",
+      "sha": "582cb33a0dfd",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear independence · 习题 3（上游 exercises/SpanIndependenceBasis-LinearIndependence.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-LinearIndependence.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use the method of Theorem “Characterization of linear independence” to determine whether the following vectors are linearly independent. If they are linearly dependent, find a non-trivial linear combination of the vectors that is equal to $\\vect{0}$.",
+      "sha": "6bfb18056841",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ -1 \\\\ 0 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 1 \\\\ 6 \\\\ 7 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} 3 \\\\ 5 \\\\ 8 \\\\ 3 \\end{array}\\right],\\quad\n    \\vect{u}_4 = \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 1 \\\\ 1 \\end{array}\\right]."
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear independence · 习题 4（上游 exercises/SpanIndependenceBasis-LinearIndependence.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-LinearIndependence.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Are the following vectors linearly independent? If not, write one of them as a linear combination of the others.",
+      "sha": "db9f563f2700",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u} = \\left[\\begin{array}{r} 1 \\\\ 3 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{v} = \\left[\\begin{array}{r} 1 \\\\ 4 \\\\ 2 \\end{array}\\right],\\quad\n    \\vect{w} = \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ -1 \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The vectors are linearly dependent. We have $\\vect{w} = 3\\vect{u}-2\\vect{v}$.",
+      "sha": "d623facf6ce0",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear independence · 习题 5（上游 exercises/SpanIndependenceBasis-LinearIndependence.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-LinearIndependence.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find a linearly independent set of vectors that has the same span as the given vectors.",
+      "sha": "9f2ba7685888",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 2 \\\\ 0 \\\\ 3 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 1 \\\\ 3 \\\\ 5 \\end{array}\\right],\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} 3 \\\\ 3 \\\\ 8 \\end{array}\\right],\\quad\n    \\vect{u}_4 = \\left[\\begin{array}{r} 3 \\\\ -3 \\\\ 1 \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\left[\\begin{array}{rrrr} 2 & 1 & 3 & 3 \\\\ 0 & 3 & 3 & -3 \\\\ 3 & 5 & 8 & 1 \\\\ \\end{array}\\right] \\roweq \\left[\\begin{array}{rrrr} 1 & 4 & 5 & -2 \\\\ 0 & 1 & 1 & -1 \\\\ 0 & 0 & 0 & 0 \\\\ \\end{array}\\right]$. Linearly independent subset: $\\set{\\vect{u}_1,\\vect{u}_2}$.",
+      "sha": "4d0570238921",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear independence · 习题 6（上游 exercises/SpanIndependenceBasis-LinearIndependence.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-LinearIndependence.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find a linearly independent set of vectors that has the same span as the given vectors.",
+      "sha": "9f2ba7685888",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 3 \\\\ 3 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 2 \\\\ 6 \\\\ 6 \\\\ 2 \\end{array}\\right],\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ -3 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{u}_4 = \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 1 \\\\ 1 \\end{array}\\right]."
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear independence · 习题 7（上游 exercises/SpanIndependenceBasis-LinearIndependence.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-LinearIndependence.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex8",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Here are some vectors in $\\R^4$.",
+      "sha": "8358aac99e20",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ -1 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ -1 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} 1 \\\\ -2 \\\\ -1 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{u}_4 = \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 0 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{u}_5 = \\left[\\begin{array}{r} 1 \\\\ -1 \\\\ -1 \\\\ 1 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Explain why these vectors cannot possibly be linearly independent. Then obtain a linearly independent subset of these vectors that has the same span as these vectors.",
+      "sha": "7ed90b45e0e4",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear independence · 习题 8（上游 exercises/SpanIndependenceBasis-LinearIndependence.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-LinearIndependence.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex9",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Here are some vectors in $\\R^4$.",
+      "sha": "8358aac99e20",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ -1 \\\\ -1 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} -3 \\\\ 3 \\\\ 3 \\\\ -3 \\end{array}\\right],\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ -1 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{u}_4 = \\left[\\begin{array}{r} 2 \\\\ -9 \\\\ -2 \\\\ 2 \\end{array}\\right],\\quad\n    \\vect{u}_5 = \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 0 \\\\ 1 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Explain why these vectors cannot possibly be linearly independent. Then find a non-trivial linear combination of these vectors that equals $\\vect{0}$.",
+      "sha": "133912486ab9",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear independence · 习题 9（上游 exercises/SpanIndependenceBasis-LinearIndependence.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-LinearIndependence.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex10",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Here are some vectors.",
+      "sha": "caf1c2356548",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ -2 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 2 \\\\ 2 \\\\ -4 \\end{array}\\right],\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} 2 \\\\ 7 \\\\ -4 \\end{array}\\right],\\quad\n    \\vect{u}_4 = \\left[\\begin{array}{r} 5 \\\\ 7 \\\\ -10 \\end{array}\\right],\\quad\n    \\vect{u}_5 = \\left[\\begin{array}{r} 12 \\\\ 17 \\\\ -24 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Describe the span of these vectors as the span of as few vectors as possible.",
+      "sha": "e929b583a57d",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrrr}\n        1 & 2 & 2 & 5 & 12 \\\\\n        1 & 2 & 7 & 7 & 17 \\\\\n        -2 & -4 & -4 & -10 & -24 \\\\\n      \\end{array}\\right]\n      \\roweq\n      \\left[\\begin{array}{rrrrr}\n        1 & 1 & 2 & 5 & 12 \\\\\n        0 & 0 & 5 & 2 & 5 \\\\\n        0 & 0 & 0 & 0 & 0 \\\\\n      \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Linearly independent subset: $\\set{\\vect{u}_1,\\vect{u}_3}$. Since the rank is $2$, this is the smallest possible.",
+      "sha": "0e3f048871f2",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear independence · 习题 10（上游 exercises/SpanIndependenceBasis-LinearIndependence.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-LinearIndependence.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex11",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Here are some vectors.",
+      "sha": "caf1c2356548",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ -2 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 1 \\\\ 3 \\\\ -2 \\end{array}\\right],\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} 1 \\\\ -2 \\\\ -2 \\end{array}\\right],\\quad\n    \\vect{u}_4 = \\left[\\begin{array}{r} -1 \\\\ 0 \\\\ 2 \\end{array}\\right],\\quad\n    \\vect{u}_5 = \\left[\\begin{array}{r} 1 \\\\ 3 \\\\ -1 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Describe the span of these vectors as the span of as few vectors as possible.",
+      "sha": "e929b583a57d",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear independence · 习题 11（上游 exercises/SpanIndependenceBasis-LinearIndependence.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-LinearIndependence.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex12",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "In this exercise, we use scalars from the field $\\Z_3$ of integers modulo $3$ instead of real numbers (see Section 〔引用〕, “Fields”). Use the extended casting-out algorithm to determine which of the following vectors are redundant. If there are redundant vectors, write each of them as a linear combination of previous vectors.",
+      "sha": "d32e43f87fcd",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 2 \\\\ 1 \\\\ 0 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 2 \\end{array}\\right],\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} 2 \\\\ 0 \\\\ 2 \\end{array}\\right],\\quad\n    \\vect{u}_4 = \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 1 \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We write the vectors as the columns of a matrix and reduce to reduced echelon form over $\\Z_3$:",
+      "sha": "e3e5975fa988",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrr}\n        2 & 1 & 2 & 0 \\\\\n        1 & 1 & 0 & 1 \\\\\n        0 & 2 & 2 & 1 \\\\\n      \\end{array}\\right]\n      \\quad\\roweq\\ldots\\roweq\\quad\n      \\left[\\begin{array}{rrrr}\n        1 & 0 & 2 & 2 \\\\\n        0 & 1 & 1 & 2 \\\\\n        0 & 0 & 0 & 0 \\\\\n      \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\vect{u}_3$ and $\\vect{u}_4$ are redundant. We have $\\vect{u}_3=2\\vect{u}_1+1\\vect{u}_2$ and $\\vect{u}_4=2\\vect{u}_1+2\\vect{u}_2$.",
+      "sha": "122ff6bd4cf9",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear independence · 习题 12（上游 exercises/SpanIndependenceBasis-LinearIndependence.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-LinearIndependence.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex13",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u},\\vect{v},\\vect{w}$ be linearly independent vectors in $\\R^n$. Are the vectors $\\vect{u}+\\vect{v}$, $2\\vect{u}+\\vect{w}$, and $\\vect{w}-2\\vect{v}$ linearly independent?",
+      "sha": "6cffb17685bb",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "From $a(\\vect{u}+\\vect{v}) + b(2\\vect{u}+\\vect{w}) + c(\\vect{w}-2\\vect{v})=\\vect{0}$ we get $(a+2b)\\vect{u} + (a-2c)\\vect{v} + (b+c)\\vect{w}=\\vect{0}$. Since $\\vect{u},\\vect{v},\\vect{w}$ are linearly independent, this last system has only the trivial solution, so $a+2b=0$, $a-2c=0$, and $b+c=0$. However, these three equations have non-trivial solutions, for example $(a,b,c)=(2,-1,1)$. So the vectors $\\vect{u}+\\vect{v}$, $2\\vect{u}+\\vect{w}$, and $\\vect{w}-2\\vect{v}$ are linearly dependent.",
+      "sha": "cb89da2eb7e3",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear independence · 习题 13（上游 exercises/SpanIndependenceBasis-LinearIndependence.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-LinearIndependence.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex14",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u},\\vect{v},\\vect{w}$ be linearly independent vectors in $\\R^n$. Are the vectors $\\vect{u}+\\vect{v}$, $\\vect{u}+\\vect{w}$, and $\\vect{w}+\\vect{v}$ linearly independent?",
+      "sha": "237d9759c0de",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "From $a(\\vect{u}+\\vect{v}) + b(\\vect{u}+\\vect{w}) + c(\\vect{w}+\\vect{v})=\\vect{0}$ we get $(a+b)\\vect{u} + (a+c)\\vect{v} + (b+c)\\vect{w}=\\vect{0}$. Since $\\vect{u},\\vect{v},\\vect{w}$ are linearly independent, this last system has only the trivial solution, so $a+b=0$, $a+c=0$, and $b+c=0$. Solving, we find the unique solution $(a,b,c)=(0,0,0)$. So the vectors $\\vect{u}+\\vect{v}$, $\\vect{u}+\\vect{w}$, and $\\vect{w}+\\vect{v}$ are linearly independent.",
+      "sha": "4f7f38436cd7",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear independence · 习题 14（上游 exercises/SpanIndependenceBasis-LinearIndependence.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-LinearIndependence.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex15",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $A$ is an $m\\times n$-matrix and $\\set{\\vect{w}_1,\\ldots,\\vect{w}_k}$ is a linearly independent set of vectors in $\\R^m$. Now suppose $A\\vect{z}_i=\\vect{w}_i$. Show $\\set{\\vect{z}_1,\\ldots,\\vect{z}_k}$ is also linearly independent.",
+      "sha": "b52521784541",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Assume $a_1\\vect{z}_1+\\ldots+a_k\\vect{z}_k=\\vect{0}$. Multiplying both sides of the equation by $A$, we get",
+      "sha": "894f00e861e8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "a_1A\\vect{z}_1+\\ldots+a_kA\\vect{z}_k=\n      a_1\\vect{w}_1+\\ldots+a_k\\vect{w}_k=\\vect{0}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since the $\\vect{w}_i$ are linearly independent, it follows that each $a_i=0$. Therefore the $\\vect{z}_i$ are linearly independent as well.",
+      "sha": "e673dc57dd4f",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear independence · 习题 15（上游 exercises/SpanIndependenceBasis-LinearIndependence.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-LinearIndependence.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "线性无关"
+}

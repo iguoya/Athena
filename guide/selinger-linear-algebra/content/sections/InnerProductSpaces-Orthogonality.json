@@ -1,0 +1,1256 @@
+{
+ "id": "InnerProductSpaces-Orthogonality",
+ "title_en": "Orthogonality",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether two vectors in an inner product space are orthogonal.",
+         "sha": "2fc144188e14",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the orthogonal complement of a set of vectors.",
+         "sha": "00ca79a2af54",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether a set of vectors is orthogonal and/or orthonormal.",
+         "sha": "cfb111e2993f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Check whether a basis is orthogonal and/or orthonormal.",
+         "sha": "122514a6cf4e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Calculate the Fourier coefficients of a vector with respect to an orthogonal basis.",
+         "sha": "90be3cee530a",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Orthogonality",
+    "sha": "42a095b4f15b",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u}$ and $\\vect{v}$ be vectors in an inner product space. We say that $\\vect{u}$ and $\\vect{v}$ are **orthogonal** if",
+      "sha": "53cb1171dda6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{u}, \\vect{v}} = 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We also write $\\vect{u}\\orth\\vect{v}$ to indicate that $\\vect{u}$ and $\\vect{v}$ are orthogonal.",
+      "sha": "3ceba1fd9095",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We note that the zero vector $\\vect{0}$ is orthogonal to all vectors, because $\\iprod{\\vect{u},\\vect{0}} = 0$ follows from the linearity of the inner product. We also note that $\\vect{u}\\orth\\vect{v}$ if and only if $\\vect{v}\\orth\\vect{u}$; this follows from the symmetry of the inner product.",
+    "sha": "47227d3a9b4f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Orthogonal complement",
+    "sha": "e4810c870b68",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $S$ be a subset of an inner product space $V$. The **orthogonal complement** of $S$ is the set",
+      "sha": "209c8248a24e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "S^{\\orth} = \\set{\\vect{v}\\in V \\mid\n      \\text{\n        $\\iprod{\\vect{v},\\vect{w}} = 0$ for all $\\vect{w}\\in S$\n      }}."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Orthogonal complement",
+    "sha": "e4810c870b68",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If $S$ is any subset of an inner product space $V$, then $S^{\\orth}$ is a subspace.",
+      "sha": "13d91be894d8",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We clearly have $\\vect{0}\\in S^{\\orth}$, because $\\vect{0}$ is orthogonal to all vectors. To show that $S^{\\orth}$ is closed under addition, assume $\\vect{v}, \\vect{v}'\\in S^{\\orth}$. We have to show $\\vect{v}+\\vect{v}'\\in S^{\\orth}$. So take an arbitrary $\\vect{w}\\in S$. Then we have",
+      "sha": "2b081ae3e2c0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{v}+\\vect{v}',\\vect{w}}\n    = \\iprod{\\vect{v},\\vect{w}} + \\iprod{\\vect{v}',\\vect{w}}\n    = 0 + 0 = 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, $\\vect{v}+\\vect{v}'\\in S^{\\orth}$. Finally, to show that $S^{\\orth}$ is closed under scalar multiplication, assume $\\vect{v}\\in S^{\\orth}$ and $k\\in\\R$. We have to show $k\\vect{v}\\in S^{\\orth}$. So take an arbitrary $\\vect{w}\\in S$. Then we have",
+      "sha": "0d032fba866b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{k\\vect{v},\\vect{w}}\n    = k\\iprod{\\vect{v},\\vect{w}}\n    = k0 = 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, $k\\vect{v}\\in S^{\\orth}$. It follows that $S^{\\orth}$ is a subspace of $V$.",
+      "sha": "64a385f990a6",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Here is an illustration of a subspace $S$ of $\\R^3$ and its orthogonal complement $S^{\\orth}$:",
+    "sha": "2140b31e7477",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "caption": null
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Orthogonal complement",
+    "sha": "e4810c870b68",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the inner product space $\\Poly_3$ of polynomials of degree at most $3$, with the inner product defined by",
+      "sha": "e650d383dd2d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{f,g} = \\int_{-1}^{1} f(x)g(x)\\,dx."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the orthogonal complement of $\\set{x^2}$.",
+      "sha": "fc0e1d72f00d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have to compute the set of all polynomials of the form $p(x)=ax^3+bx^2+cx+d$ that are orthogonal to $x^2$. So let us compute the inner product:",
+      "sha": "7c4c1220a74f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\iprod{p(x), x^2}\n    &=& \\int_{-1}^{1} (ax^3+bx^2+cx+d)x^2\\,dx \\\\\n    &=& \\int_{-1}^{1} ax^5+bx^4+cx^3+dx^2\\,dx \\\\\n    &=& 0a  + \\frac{2}{5}b + 0c + \\frac{2}{3}d.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Setting this equal to $0$, we see that $\\iprod{p(x), x^2}=0$ if and only if $\\frac{2}{5}b + \\frac{2}{3}d = 0$, or equivalently, $3b+5d=0$. The basic solutions are",
+      "sha": "3a3fd5fa4de4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{c} a \\\\ b \\\\ c \\\\ d \\end{array}\\right]\n    = \\left[\\begin{array}{c} 1 \\\\ 0 \\\\ 0 \\\\ 0 \\end{array}\\right],\\quad\n    \\left[\\begin{array}{c} a \\\\ b \\\\ c \\\\ d \\end{array}\\right]\n    = \\left[\\begin{array}{c} 0 \\\\ 5 \\\\ 0 \\\\ -3 \\end{array}\\right],\\quad\n    \\left[\\begin{array}{c} a \\\\ b \\\\ c \\\\ d \\end{array}\\right]\n    = \\left[\\begin{array}{c} 0 \\\\ 0 \\\\ 1 \\\\ 0 \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "giving the following basis for the space of polynomials orthogonal to $x^2$:",
+      "sha": "2c6c09e727be",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\set{x^3,\\quad 5x^2-3, \\quad x}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We now consider orthogonal sets and bases.",
+    "sha": "fdb5359d3c9d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Orthogonal and orthonormal sets of vectors",
+    "sha": "77a30e23e09f",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A set of vectors $\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ in an inner product space is called an **orthogonal set** if the vectors are non-zero and pairwise orthogonal, i.e., for all $i$, $\\vect{u}_i\\neq\\vect{0}$ and for all $i\\neq j$, $\\vect{u}_i\\orth\\vect{u}_j$.",
+      "sha": "2a5b215ce954",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Moreover, the set of vectors $\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ is called **orthonormal** if it is orthogonal and each vector is normalized, i.e., $\\norm{\\vect{u}_i}=1$.",
+      "sha": "93e9eb94f9d9",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The interest of orthogonal and orthonormal sets of vectors lies, among other things, in the fact that they are automatically linearly independent.",
+    "sha": "6977f2e3678e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Orthogonal set is linearly independent",
+    "sha": "1165f60a6477",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If $\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ is an orthogonal set of vectors, then $\\vect{u}_1,\\ldots,\\vect{u}_k$ are linearly independent.",
+      "sha": "abf15b389de6",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Assume $\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ is an orthogonal set. To show that $\\vect{u}_1,\\ldots,\\vect{u}_k$ are linearly independent, assume",
+      "sha": "f44001dbc1b7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "a_1\\vect{u}_1 + \\ldots + a_k\\vect{u}_k = \\vect{0}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We must show that $a_1,\\ldots,a_k = 0$. So pick some $i\\in\\set{1,\\ldots,k}$. We compute",
+      "sha": "d6a50c5291f1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\iprod{\\vect{u}_i, a_1\\vect{u}_1 + \\ldots + a_k\\vect{u}_k}\n    &=& a_1\\iprod{\\vect{u}_i,\\vect{u}_1}\n        + \\ldots\n        + a_i\\iprod{\\vect{u}_i,\\vect{u}_i}\n        + \\ldots\n        + a_k\\iprod{\\vect{u}_i,\\vect{u}_k} \\\\\n    &=& 0\n        + \\ldots\n        + a_i\\iprod{\\vect{u}_i,\\vect{u}_i}\n        + \\ldots\n        + 0 \\\\\n    &=& a_i \\iprod{\\vect{u}_i,\\vect{u}_i}.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "On the other hand,",
+      "sha": "3d6f6cddc5dd",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{u}_i, a_1\\vect{u}_1 + \\ldots + a_k\\vect{u}_k}\n    = \\iprod{\\vect{u}_i, \\vect{0}} = 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "It follows that $a_i \\iprod{\\vect{u}_i,\\vect{u}_i} = 0$. Since $\\iprod{\\vect{u}_i,\\vect{u}_i}\\neq 0$, it follows that $a_i=0$. Since the choice of $i$ was arbitrary, it follows that $a_1,\\ldots,a_k = 0$, and $\\vect{u}_1,\\ldots,\\vect{u}_k$ are linearly independent.",
+      "sha": "f7e48c4a508f",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "An orthogonal set of functions",
+    "sha": "91ee253b241c",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the inner product space $C[0,2\\pi]$. The following functions form an (infinite) orthogonal set:",
+      "sha": "092f818460f5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}g_0(x) &=& 1 \\\\\n    f_1(x) &=& \\sin x \\\\\n    g_1(x) &=& \\cos x \\\\\n    f_2(x) &=& \\sin 2x \\\\\n    g_2(x) &=& \\cos 2x \\\\\n    &\\vdots& \\\\\n    f_k(x) &=& \\sin kx \\\\\n    g_k(x) &=& \\cos kx \\\\\n    &\\vdots&\\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have to check that any two functions are orthogonal to each other. This is true because of trigonometric identities. We have the following trigonometric formulas:",
+      "sha": "2b026d25f313",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\sin\\alpha\\sin\\beta &=& \\frac{1}{2}(\\cos(\\alpha-\\beta) - \\cos(\\alpha+\\beta)), \\\\\n    \\cos\\alpha\\cos\\beta &=& \\frac{1}{2}(\\cos(\\alpha-\\beta) + \\cos(\\alpha+\\beta)), \\\\\n    \\sin\\alpha\\cos\\beta &=& \\frac{1}{2}(\\sin(\\alpha-\\beta) + \\sin(\\alpha+\\beta)).\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Using these, we can compute the relevant inner products. Assume $i\\neq j$. Then",
+      "sha": "793b3ecbd04e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\iprod{g_i,g_j}\n    &=& \\int_{0}^{2\\pi} \\cos(ix)\\cos(jx)\\,dx \\\\\n    &=& \\frac{1}{2}\\int_{0}^{2\\pi} \\cos((i-j)x) + \\cos((i+j)x)\\,dx \\\\\n    &=& \\frac{1}{2}\\bigbracket{\\frac{1}{(i-j)} \\sin((i-j)x) + \\frac{1}{(i+j)}\n      \\sin((i+j)x)}_0^{2\\pi} \\\\\n    &=& 0,\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and therefore $g_i\\orth g_j$. The proofs of $f_i\\orth f_j$ and $f_i\\orth g_j$ are similar.",
+      "sha": "7cdbaf387e0d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Orthogonal and orthonormal bases",
+    "sha": "17f6994741f6",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $V$ be an inner product space, and let $W$ be a subspace of $V$. We say that $\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ is an **orthogonal basis** for $W$ if it is an orthogonal set and spans $W$.",
+      "sha": "eb3559e3a3b2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If, moreover, each $\\vect{u}_i$ is normalized, we say that $\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ is an **orthonormal basis** for $W$.",
+      "sha": "b540bc12f673",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We note that, by Proposition “Orthogonal set is linearly independent”, every orthogonal (or orthonormal) basis is automatically linearly independent, and therefore an actual basis of $W$.",
+    "sha": "f6050189aae4",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Orthogonal, orthonormal, and non-orthogonal bases",
+    "sha": "fff328c1c104",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider $\\R^2$ as an inner product space with the usual dot product.",
+      "sha": "6da610de6c41",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\set{\\left[\\begin{array}{r} 1 \\\\ 0 \\end{array}\\right], \\left[\\begin{array}{r} 0 \\\\ 1 \\end{array}\\right]}$ is an orthonormal basis of $\\R^2$.",
+         "sha": "c9d359d53a3d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\set{\\frac{1}{\\sqrt{2}}\\left[\\begin{array}{r} 1 \\\\ 1 \\end{array}\\right], \\frac{1}{\\sqrt{2}}\\left[\\begin{array}{r} 1 \\\\ -1 \\end{array}\\right]}$ is an orthonormal basis of $\\R^2$.",
+         "sha": "e61a6fd058ea",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\set{\\left[\\begin{array}{r} 2 \\\\ 0 \\end{array}\\right], \\left[\\begin{array}{r} 0 \\\\ 3 \\end{array}\\right]}$ is an orthogonal basis of $\\R^2$, but not orthonormal.",
+         "sha": "a2a290a34f76",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\set{\\left[\\begin{array}{r} 1 \\\\ 1 \\end{array}\\right], \\left[\\begin{array}{r} 1 \\\\ -1 \\end{array}\\right]}$ is an orthogonal basis of $\\R^2$, but not orthonormal.",
+         "sha": "9bab59492901",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\set{\\left[\\begin{array}{r} 1 \\\\ 0 \\end{array}\\right], \\left[\\begin{array}{r} 1 \\\\ 1 \\end{array}\\right]}$ is a basis of $\\R^2$, but neither orthogonal nor orthonormal.",
+         "sha": "b3b44cfa876e",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "So why are we interested in orthogonal and orthonormal bases? The main reason is that finding coordinates is *much easier* when the bases are orthogonal (and even better when they are orthonormal). We have the following property:",
+    "sha": "ca2bcdd1ce3d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Fourier coefficients",
+    "sha": "4b5d855665ef",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $B=\\set{\\vect{u}_1,\\ldots,\\vect{u}_n}$ be an orthogonal basis of some space $W$, and suppose $\\vect{v}\\in W$. Then",
+      "sha": "e0fd72572d7e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v} = a_1\\vect{u}_1 + \\ldots + a_n\\vect{u}_n,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where",
+      "sha": "46148cc3b4d2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "a_i = \\frac{\\iprod{\\vect{u}_i,\\vect{v}}}{\\iprod{\\vect{u}_i,\\vect{u}_i}}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In this situation, the coordinates $a_1,\\ldots,a_n$ are also called the **Fourier coefficients** of $\\vect{v}$ (with respect to the orthogonal basis $B$).",
+      "sha": "badbce5a04ae",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In case $B$ is an orthonormal basis, the formula is even simpler. In that case:",
+      "sha": "70be4750f2ff",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "a_i = \\iprod{\\vect{u}_i,\\vect{v}}."
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $B$ is a basis of $W$, we know that there exist coefficients $a_1,\\ldots,a_n$ such that $\\vect{v} = a_1\\vect{u}_1 + \\ldots + a_n\\vect{u}_n$. It remains to verify that the coefficients satisfy the required formula. This is a simple calculation. We have",
+      "sha": "d5fad474af52",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\iprod{\\vect{u}_i,\\vect{v}}\n    &=& \\iprod{\\vect{u}_i, a_1\\vect{u}_1 + \\ldots + a_n\\vect{u}_n} \\\\\n    &=& a_1\\iprod{\\vect{u}_i,\\vect{u}_1}\n        + \\ldots\n        + a_i\\iprod{\\vect{u}_i,\\vect{u}_i}\n        + \\ldots\n        + a_n\\iprod{\\vect{u}_i,\\vect{u}_n} \\\\\n    &=& 0\n        + \\ldots\n        + a_i\\iprod{\\vect{u}_i,\\vect{u}_i}\n        + \\ldots\n        + 0 \\\\\n    &=& a_i \\iprod{\\vect{u}_i,\\vect{u}_i}.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\vect{u}_i\\neq \\vect{0}$, we have $\\iprod{\\vect{u}_i,\\vect{u}_i}\\neq 0$ by the positive definite property. We can therefore divide both sides of the equation by $\\iprod{\\vect{u}_i,\\vect{u}_i}$ to obtain",
+      "sha": "1b653626a35f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "a_i = \\frac{\\iprod{\\vect{u}_i,\\vect{v}}}{\\iprod{\\vect{u}_i,\\vect{u}_i}},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "as desired. Finally, if the basis is orthonormal, then $\\iprod{\\vect{u}_i,\\vect{u}_i}=1$, and the denominator disappears, so that $a_i = \\iprod{\\vect{u}_i,\\vect{v}}$.",
+      "sha": "ac56176a3438",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Fourier coefficients",
+    "sha": "4b5d855665ef",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $B=\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3}$ is an orthogonal basis for an inner product space $V$, such that $\\norm{\\vect{u}_1}=1$, $\\norm{\\vect{u}_2}=\\sqrt{2}$, and $\\norm{\\vect{u}_3}=2$. Moreover, suppose that $\\vect{v}\\in V$ is a vector such that $\\iprod{\\vect{u}_1,\\vect{v}} = 3$, $\\iprod{\\vect{u}_2,\\vect{v}} = -1$, and $\\iprod{\\vect{u}_3,\\vect{v}} = 2$. Find the coordinates of $\\vect{v}$ with respect to $B$.",
+      "sha": "76253790cf7a",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have to find $a_1,a_2,a_3$ such that",
+      "sha": "1415e8725d9f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v} = a_1\\vect{u}_1 + a_2\\vect{u}_2 + a_3\\vect{u}_3."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We have sufficient information to compute $a_1,a_2,a_3$. Namely,",
+      "sha": "184423a1fc48",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}a_1\n    &=& \\frac{\\iprod{\\vect{u}_1,\\vect{v}}}{\\iprod{\\vect{u}_1,\\vect{u}_1}}\n        ~=~ \\frac{\\iprod{\\vect{u}_1,\\vect{v}}}{\\norm{\\vect{u}_1}^2}\n        ~=~ \\frac{3}{1} ~=~ 3, \\\\\n    a_2\n    &=& \\frac{\\iprod{\\vect{u}_2,\\vect{v}}}{\\iprod{\\vect{u}_2,\\vect{u}_2}}\n        ~=~ \\frac{\\iprod{\\vect{u}_2,\\vect{v}}}{\\norm{\\vect{u}_2}^2}\n        ~=~ \\frac{-1}{2} ~=~ -0.5, \\\\\n    a_3\n    &=& \\frac{\\iprod{\\vect{u}_3,\\vect{v}}}{\\iprod{\\vect{u}_3,\\vect{u}_3}}\n        ~=~ \\frac{\\iprod{\\vect{u}_3,\\vect{v}}}{\\norm{\\vect{u}_3}^2}\n        ~=~ \\frac{2}{4} ~=~ 0.5.\\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Proposition “Fourier coefficients” shows that if $\\set{\\vect{u}_1,\\ldots,\\vect{u}_n}$ is an orthogonal basis, then we can solve $\\vect{v} = a_1\\vect{u}_1 + \\ldots + a_n\\vect{u}_n$ without having to solve a system of equations. While this is a useful thing to be able to do, perhaps it is merely a convenience (solving a system of equations would also be fine). However, there is another very useful property of Fourier coefficients. The coefficient $a_i$ only depends on the basis vector $\\vect{u}_i$, and not on any of the other basis vectors. This is useful in situations where only *part* of an orthogonal basis is known. We can calculate the corresponding coefficients without having to know the rest of the basis.",
+    "sha": "d7c5bd084a1c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Finding partial coordinates",
+    "sha": "8cb38e3e6e0d",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $B=\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3,\\vect{u}_4}$ is an orthogonal basis of $\\R^4$. We have been told that",
+      "sha": "cd9760e67185",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{c} 1 \\\\ 2 \\\\ -1 \\\\ 0 \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{c} 0 \\\\ 1 \\\\ 2 \\\\ 3 \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "but it is not known what $\\vect{u}_3$ and $\\vect{u}_4$ are. Find the first two coordinates of the vector",
+      "sha": "53a8d3a4fe86",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v} = \\left[\\begin{array}{c} 1 \\\\ 0 \\\\ 2 \\\\ 0 \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "with respect to the basis $B$.",
+      "sha": "c20d6b735305",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have $\\vect{v} = a_1\\vect{u}_1 + a_2\\vect{u}_2 + a_3\\vect{u}_3 + a_4\\vect{u}_4$, where",
+      "sha": "ae568cd75873",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "a_1\n    = \\frac{\\iprod{\\vect{u}_1,\\vect{v}}}{\\iprod{\\vect{u}_1,\\vect{u}_1}}\n    = \\frac{-1}{6}\n    \\quad\\text{and}\\quad\n    a_2\n    = \\frac{\\iprod{\\vect{u}_2,\\vect{v}}}{\\iprod{\\vect{u}_2,\\vect{u}_2}}\n    = \\frac{4}{14}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "So the first two coordinates are $-\\frac{1}{6}$ and $\\frac{2}{7}$.",
+      "sha": "bd7a84aa5def",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A word of warning is in order: Fourier coefficients do not work when the basis is not orthogonal. Consider the following picture, where $\\vect{u}_1$ and $\\vect{u}_2$ are not orthogonal.",
+    "sha": "888774cd746e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The *coordinates* of $\\vect{v}$ with respect to $\\vect{u}_1,\\vect{u}_2$ are $(2,1)$, because $\\vect{v}=2\\vect{u}_1+1\\vect{u}_2$, as indicated by the shaded parallelogram. On the other hand, the formula for the *Fourier coefficients* is concerned with the orthogonal projections of $\\vect{v}$ onto $\\vect{u}_1$ and $\\vect{u}_2$, as indicated by the dashed lines. It yields the coefficients",
+    "sha": "3eb064386e81",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{array}{rcl}a_1 &=& \\frac{\\iprod{\\vect{u}_1,\\vect{v}}}{\\iprod{\\vect{u}_1,\\vect{u}_1}} ~\\approx~ 2.5, \\\\\n  a_2 &=& \\frac{\\iprod{\\vect{u}_2,\\vect{v}}}{\\iprod{\\vect{u}_2,\\vect{u}_2}} ~\\approx~ 1.8.\\end{array}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "These are not the same as the coordinates of $\\vect{v}$, because the dashed lines are orthogonal to $\\vect{u}_1$ and $\\vect{u}_2$, instead of parallel to them. In summary, the Fourier coefficients of a vector are equal to its coordinates *only if the basis is orthogonal*.",
+    "sha": "0840e4cd0d9e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When $\\vect{u}_1,\\ldots,\\vect{u}_k$ are orthogonal, we have a convenient formula for the norm of $a_1\\vect{u}_1+\\ldots+a_k\\vect{u}_k$:",
+    "sha": "12d18053b69e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Norm of orthogonal linear combination",
+    "sha": "27f4cb650a6d",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $V$ be an inner product space, and suppose that $\\vect{u}_1,\\ldots,\\vect{u}_k$ are orthogonal. Then",
+      "sha": "917d894bb7e7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\norm{a_1\\vect{u}_1+\\ldots+a_k\\vect{u}_k}^2\n    = a_1^2\\norm{\\vect{u}_1}^2 + \\ldots + a_k^2\\norm{\\vect{u}_k}^2."
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have",
+      "sha": "a2214cd5b1a4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\norm{a_1\\vect{u}_1+\\ldots+a_k\\vect{u}_k}^2\n    &=&\n    \\iprod{a_1\\vect{u}_1+\\ldots+a_k\\vect{u}_k,a_1\\vect{u}_1+\\ldots+a_k\\vect{u}_k} \\\\\n    &=& \\begin{array}{cccccccc}\n          &   a_1^2\\iprod{\\vect{u}_1,\\vect{u}_1}\n          &+& a_1a_2\\iprod{\\vect{u}_1,\\vect{u}_2}\n          &+& \\ldots\n          &+& a_1a_n\\iprod{\\vect{u}_1,\\vect{u}_n} \\\\\n          +&  a_2a_1\\iprod{\\vect{u}_2,\\vect{u}_1}\n          &+& a_2^2\\iprod{\\vect{u}_2,\\vect{u}_2}\n          &+& \\ldots\n          &+& a_2a_n\\iprod{\\vect{u}_2,\\vect{u}_n} \\\\\n          +&  \\vdots\n          && \\vdots\n          &&\n          && \\vdots \\\\\n          +&  a_na_1\\iprod{\\vect{u}_n,\\vect{u}_1}\n          &+& a_na_2\\iprod{\\vect{u}_n,\\vect{u}_2}\n          &+& \\ldots\n          &+& a_n^2\\iprod{\\vect{u}_n,\\vect{u}_n}\n        \\end{array} \\\\\n    &=& a_1^2\\norm{\\vect{u}_1}^2 + \\ldots + a_k^2\\norm{\\vect{u}_k}^2.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Here we have used the fact that $\\iprod{\\vect{u}_i,\\vect{u}_j}=0$ when $i\\neq j$.",
+      "sha": "5c6640f13c10",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We conclude this section by making a connection between arbitrary inner products and dot products. Once an orthonormal basis has been chosen on an inner product space, computing inner products is essentially the same as computing dot products. The following proposition makes this more precise.",
+    "sha": "f5317f9c34e5",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Inner product and dot product",
+    "sha": "8dfe5640237f",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $V$ be an inner product space, and suppose that $B=\\set{\\vect{u}_1,\\ldots\\vect{u}_n}$ is an orthonormal basis. Then for any pair of vectors $\\vect{v},\\vect{w}\\in V$, their inner product is equal to the dot product of their coordinate vectors with respect to the basis $B$, i.e.",
+      "sha": "30ccf4f21e78",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{v},\\vect{w}}\n    = \\coord{\\vect{v}}_B \\dotprod \\coord{\\vect{w}}_B."
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "By definition of coordinate vectors, we have",
+      "sha": "0abaf5ef0a71",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\coord{\\vect{v}}_B\n    = \\left[\\begin{array}{c} a_1 \\\\ \\vdots \\\\ a_n \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    \\coord{\\vect{w}}_B\n    = \\left[\\begin{array}{c} b_1 \\\\ \\vdots \\\\ b_n \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where $\\vect{v} = a_1\\vect{u}_1 + \\ldots + a_n\\vect{u}_n$ and $\\vect{w} = b_1\\vect{u}_1 + \\ldots + b_n\\vect{u}_n$. We calculate",
+      "sha": "5618f3a1f415",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\iprod{\\vect{v},\\vect{w}}\n    &=& \\iprod{a_1\\vect{u}_1 + \\ldots + a_n\\vect{u}_n, b_1\\vect{u}_1 +\n        \\ldots + b_n\\vect{u}_n} \\\\\n    &=& \\begin{array}{cccccccc}\n          &   a_1b_1\\iprod{\\vect{u}_1,\\vect{u}_1}\n          &+& a_1b_2\\iprod{\\vect{u}_1,\\vect{u}_2}\n          &+& \\ldots\n          &+& a_1b_n\\iprod{\\vect{u}_1,\\vect{u}_n} \\\\\n          +&  a_2b_1\\iprod{\\vect{u}_2,\\vect{u}_1}\n          &+& a_2b_2\\iprod{\\vect{u}_2,\\vect{u}_2}\n          &+& \\ldots\n          &+& a_2b_n\\iprod{\\vect{u}_2,\\vect{u}_n} \\\\\n          +&  \\vdots\n          && \\vdots\n          &&\n          && \\vdots \\\\\n          +&  a_nb_1\\iprod{\\vect{u}_n,\\vect{u}_1}\n          &+& a_nb_2\\iprod{\\vect{u}_n,\\vect{u}_2}\n          &+& \\ldots\n          &+& a_nb_n\\iprod{\\vect{u}_n,\\vect{u}_n}\n        \\end{array} \\\\\n    &=& a_1b_1 + a_2b_2 + \\ldots + a_nb_n \\\\\n    &=& \\coord{\\vect{v}}_B \\dotprod \\coord{\\vect{w}}_B.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Here we have used the fact that $\\iprod{\\vect{u}_i,\\vect{u}_j}=1$ when $i=j$ and $\\iprod{\\vect{u}_i,\\vect{u}_j}=0$ otherwise, which holds because $B$ is orthonormal.",
+      "sha": "bbb0e64e7456",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\left[\\begin{array}{ccc} 1 & 1 & 0 \\\\ 1 & 2 & 0 \\\\ 0 & 0 & 2 \\end{array}\\right]$, and consider $\\R^3$ with the inner product given by $\\iprod{\\vect{u},\\vect{v}} = \\vect{u}^TA\\vect{v}$. Which of the following vectors are orthogonal to each other?",
+      "sha": "7a6949f1a4fc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{c}  1 \\\\  1 \\\\  1 \\end{array}\\right],\\quad  \n    \\vect{u}_2 = \\left[\\begin{array}{c} -1 \\\\  2 \\\\ -2 \\end{array}\\right],\\quad  \n    \\vect{u}_3 = \\left[\\begin{array}{c}  7 \\\\ -5 \\\\ -2 \\end{array}\\right],\\quad  \n    \\vect{u}_4 = \\left[\\begin{array}{c} 10 \\\\ -2 \\\\ -7 \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have $\\iprod{\\vect{u}_1,\\vect{u}_2} = \\vect{u}_1^T A \\vect{u}_2 = 0$, $\\iprod{\\vect{u}_1,\\vect{u}_3} = \\vect{u}_1^T A \\vect{u}_3 = -5$, $\\iprod{\\vect{u}_1,\\vect{u}_4} = \\vect{u}_1^T A \\vect{u}_4 = 0$, $\\iprod{\\vect{u}_2,\\vect{u}_3} = \\vect{u}_2^T A \\vect{u}_3 = 0$, $\\iprod{\\vect{u}_2,\\vect{u}_4} = \\vect{u}_2^T A \\vect{u}_4 = 32$, and $\\iprod{\\vect{u}_3,\\vect{u}_4} = \\vect{u}_3^T A \\vect{u}_4 = 54$. Therefore, $\\vect{u}_1\\orth\\vect{u}_2$, $\\vect{u}_1\\orth\\vect{u}_4$, and $\\vect{u}_2\\orth\\vect{u}_3$. None of the other pairs of vectors are orthogonal.",
+      "sha": "02973ce2460e",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Orthogonality · 习题 1（上游 exercises/InnerProductSpaces-Orthogonality.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Orthogonality.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "On $C[-1,1]$, which of the following functions are orthogonal to each other?",
+      "sha": "6d4886638c19",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f_1(x) = x,\\quad\n    f_2(x) = x^2,\\quad\n    f_3(x) = x^3-x,\\quad\n    f_4(x) = 1-x^4."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$f_1\\orth f_2$, $f_1\\orth f_4$, $f_2\\orth f_3$, and $f_3\\orth f_4$.",
+      "sha": "72b9cb178413",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Orthogonality · 习题 2（上游 exercises/InnerProductSpaces-Orthogonality.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Orthogonality.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the inner product space $\\Poly_3$ of polynomials of degree at most $3$, with the inner product defined by",
+      "sha": "e650d383dd2d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{f,g} = \\int_{-1}^{1} f(x)g(x)\\,dx."
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the orthogonal complement of $\\set{x^2,x}$.",
+         "sha": "7181413e3a07",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the orthogonal complement of $\\set{x+1}$.",
+         "sha": "d5d0359967cb",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $p(x)=ax^3+bx^2+cx+d$. Then $\\iprod{p(x), x^2} = \\frac{2}{5}b + \\frac{2}{3}d$ and $\\iprod{p(x), x} = \\frac{2}{5}a + \\frac{2}{3}c$. Therefore, $p(x)$ is in the orthogonal complement of $\\set{x^2,x}$ if and only if $\\frac{2}{5}b + \\frac{2}{3}d=0$ and $\\frac{2}{5}a + \\frac{2}{3}c=0$. It follows that $b=-\\frac{5}{3}d$ and $a=-\\frac{5}{3}c$. The general solution is $p(x) = -\\frac{5}{3}cx^3 - \\frac{5}{3}dx^2 + cx + d$. A basis for the orthogonal complement is $\\set{-\\frac{5}{3} x^3 + x, -\\frac{5}{3} x^2 + 1}$.",
+         "sha": "a692c3aed321",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A basis for the orthogonal complement of $\\set{x+1}$ is $\\set{5x^3-1, 3x^2-1, 3x-1}$.",
+         "sha": "a84e37d1d77c",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Orthogonality · 习题 3（上游 exercises/InnerProductSpaces-Orthogonality.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Orthogonality.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider $\\R^3$ as an inner product space with the usual dot product. For each of the following bases of $\\R^3$, state whether it is orthonormal, orthogonal, or neither.",
+      "sha": "b892c7cc51ef",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\set{ \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 0 \\end{array}\\right], \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 0 \\end{array}\\right], \\left[\\begin{array}{r} 0 \\\\ 0 \\\\ 1 \\end{array}\\right] }$.",
+         "sha": "99a636d0643c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\set{ \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 1 \\end{array}\\right], \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 1 \\end{array}\\right], \\left[\\begin{array}{r} 0 \\\\ 0 \\\\ 1 \\end{array}\\right] }$.",
+         "sha": "8946f10a0e47",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\set{ \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 2 \\end{array}\\right], \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 0 \\end{array}\\right], \\left[\\begin{array}{r} -2 \\\\ 0 \\\\ 1 \\end{array}\\right] }$.",
+         "sha": "5a8a707b9d83",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\def\\arraystretch{1.2} \\set{ \\left[\\begin{array}{r} \\frac{3}{5} \\\\ \\frac{4}{5} \\\\ 0 \\end{array}\\right], \\left[\\begin{array}{r} 0 \\\\ 0 \\\\ -1 \\end{array}\\right], \\left[\\begin{array}{r} \\frac{4}{5} \\\\ -\\frac{3}{5} \\\\ 0 \\end{array}\\right] }$.",
+         "sha": "34a1707c6f9f",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) Orthonormal (therefore also orthogonal). (b) Neither orthogonal nor orthonormal. (c) Orthogonal (not orthonormal). (d) Orthonormal (therefore also orthogonal).",
+      "sha": "8d4e179d44a8",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Orthogonality · 习题 4（上游 exercises/InnerProductSpaces-Orthogonality.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Orthogonality.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $B=\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3}$ is an orthogonal basis for an inner product space $V$, such that $\\norm{\\vect{u}_1}=2$, $\\norm{\\vect{u}_2}=\\sqrt{3}$, and $\\norm{\\vect{u}_3}=\\sqrt{5}$. Moreover, suppose that $\\vect{v}\\in V$ is a vector such that $\\iprod{\\vect{v},\\vect{u}_1} = 1$, $\\iprod{\\vect{v},\\vect{u}_2} = 2$, and $\\iprod{\\vect{v},\\vect{u}_3} = -4$. Find the coordinates of $\\vect{v}$ with respect to $B$.",
+      "sha": "59a3836e3392",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\vect{v} = \\frac{1}{4}\\vect{u}_1 + \\frac{2}{3}\\vect{u}_2 - \\frac{4}{5}\\vect{u}_3$.",
+      "sha": "caeed0dd5a1c",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Orthogonality · 习题 5（上游 exercises/InnerProductSpaces-Orthogonality.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Orthogonality.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $B=\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3}$ is an orthogonal basis of $\\R^3$. We have been told that",
+      "sha": "02317363b207",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{c} 1 \\\\ 1 \\\\ 0 \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "but it is not known what $\\vect{u}_2$ and $\\vect{u}_3$ are. Find the first coordinate of the vector",
+      "sha": "796b7aeac62b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v} = \\left[\\begin{array}{c} 1 \\\\ 0 \\\\ 2 \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "with respect to the basis $B$.",
+      "sha": "c20d6b735305",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have $\\vect{v} = a_1\\vect{u}_1 + a_2\\vect{u}_2 + a_3\\vect{u}_3$ where $a_1 = \\frac{\\iprod{\\vect{u}_1,\\vect{v}}}{\\iprod{\\vect{u}_1,\\vect{u}_1}} = \\frac{1}{2}$. So the first coordinate is $\\frac{1}{2}$.",
+      "sha": "812409fcf23e",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Orthogonality · 习题 6（上游 exercises/InnerProductSpaces-Orthogonality.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Orthogonality.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "正交性"
+}

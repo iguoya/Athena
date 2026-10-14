@@ -1,0 +1,1320 @@
+{
+ "id": "InnerProductSpaces-Application-QuadraticForms",
+ "title_en": "Application: Simplification of quadratic forms",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether or not a function of several variables is a quadratic form.",
+         "sha": "c0db8f5b31ca",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Convert a quadratic form to and from matrix form.",
+         "sha": "af106f5c5021",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Apply a change of variables to a quadratic form.",
+         "sha": "0e6e1c6e621b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Diagonalize a quadratic form.",
+         "sha": "a3ac62ece3c9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the principal axes of a quadratic form.",
+         "sha": "75809dc8819a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Sketch quadratic curves, such as circles and ellipses.",
+         "sha": "ea2beab1f8e2",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In this section, we will explore an application of the diagonalization of symmetric matrices, namely, the simplification of quadratic forms. Quadratic forms are special kinds of functions that arise, for example, in calculus when we approximate some quantity up to terms of second order.",
+    "sha": "48a98d1989b7",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Quadratic form",
+    "sha": "9b864f702b7f",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A **quadratic form** is a polynomial in $n$ variables in which each term is of degree 2. For example, the following is a quadratic form in $3$ variables:",
+      "sha": "d3219761966f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y,z) = 3x^2 + 3y^2 + 2xy - 4xz + 4yz."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "More generally, a quadratic form is a function of the form",
+      "sha": "c883e18b9bdd",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x_1,\\ldots,x_n) = q_1\\,x_1^2 + \\ldots + q_n\\,x_n^2 + q_{12}\\,x_1x_2 +\n    \\ldots + q_{ij}\\,x_ix_j + \\ldots + q_{n-1,n}\\,x_{n-1}x_n."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The numbers $q_1,\\ldots,q_n,q_{12},\\ldots,q_{n-1,n}$, which may be positive, negative, or zero, are called the **coefficients** of the quadratic form.",
+      "sha": "00d05b47c6ec",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Quadratic forms",
+    "sha": "e10f7bf577ed",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following are quadratic forms?",
+      "sha": "ec335f208709",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$f(x,y,z) = 2xy + 3xz - 5yz$.",
+            "sha": "d391430d87d9",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$g(x,y,z) = x^2 + 2xy + y^2 + 3$.",
+            "sha": "de757fc12413",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$h(x,y,z) = (x+y)^2 - z^2$.",
+            "sha": "2d71253e5d39",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The function $f$ is a quadratic form. The function $g$ is not a quadratic form, because the constant term, $+3$, is not of degree 2. It should be either a coefficient times the square of a variable, or a coefficient times the product of two variables. The function $h$ is a quadratic form. We can simplify it to $h(x,y,z) = x^2 + 2xy + y^2 - z^2$.",
+      "sha": "e9d22483f79a",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Matrix form of a quadratic form",
+    "sha": "558cbb0511d0",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be a symmetric $n\\times n$-matrix, and let $\\vect{v} = \\mat{x_1,\\ldots,x_n}^T$. Then",
+      "sha": "325bdb509267",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x_1,\\ldots,x_n) = \\vect{v}^T A\\vect{v}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is a quadratic form in $n$ variables. Conversely, every quadratic form in $n$ variables can be uniquely written in this way. We call this the **matrix form** of the quadratic form.",
+      "sha": "542daaef19b4",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Matrix form of a quadratic form",
+    "sha": "558cbb0511d0",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the coefficients of the quadratic form $f(x,y,z) = \\vect{v}^T A\\vect{v}$, where",
+      "sha": "a11c51f6086c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rrr}\n      1 &  2 &  4 \\\\\n      2 &  0 & -1 \\\\\n      4 & -1 & -2 \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have",
+      "sha": "a2214cd5b1a4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y,z)\n    ~=~\n    \\left[\\begin{array}{ccc} x & y & z \\end{array}\\right]\n    \\left[\\begin{array}{rrr}\n      1 &  2 &  4 \\\\\n      2 &  0 & -1 \\\\\n      4 & -1 & -2 \\\\\n    \\end{array}\\right]\n    \\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right]\n    ~=~ x^2 - 2z^2 + 4xy + 8xz - 2yz."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note that there is a term $2xy$ and a term $2yx$, which together yield $4xy$. Similarly the term $4xz$ and $4zx$ are combined into $8xz$, and the terms $-yz$ and $-zy$ are combined into $-2yz$.",
+      "sha": "30285d08d0ef",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Matrix form of a quadratic form",
+    "sha": "558cbb0511d0",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Write the quadratic form",
+      "sha": "93d4090411f0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y,z) = 5x^2 - y^2 + z^2 + 2xy - 4xz + 3yz"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "in matrix form.",
+      "sha": "2638a59cbec0",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We can write this as",
+      "sha": "f50f5e14282d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y,z)\n    ~=~\n    \\left[\\begin{array}{ccc} x & y & z \\end{array}\\right]\n    \\left[\\begin{array}{rrr}\n      5  &   1 &  -2 \\\\\n      1  &  -1 & 1.5 \\\\\n      -2 & 1.5 &   1 \\\\\n    \\end{array}\\right]\n    \\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note: since the matrix $A$ must be symmetric, we have no choice but to split the term $2xy$ evenly into $1xy$ and $1yx$. This explains why the $(1,2)$- and $(2,1)$-entries of the matrix are $1$. Also, $-4xz$ has been split into $-2xz$ and $-2zx$, and $3yz$ has been split into $1.5yz$ and $1.5zy$. In general, the matrix of the quadratic form",
+      "sha": "2ac2f7949a6f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y,z) = ax^2 + by^2 + cz^2 + dxy + exz + fyz"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is",
+      "sha": "b47f363e2b43",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\def\\arraystretch{1.3}\n    A = \\left[\\begin{array}{rrr}\n      a & \\frac{d}{2} & \\frac{e}{2} \\\\\n      \\frac{d}{2} & b & \\frac{f}{2} \\\\\n      \\frac{e}{2} & \\frac{f}{2} & c \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We will now turn to the question of how to simplify quadratic forms. The primary tool we have for doing so is a **change of variables**. This means replacing the variables $x_1,\\ldots,x_n$ by new variables $y_1,\\ldots,y_n$ that are linear combinations of $x_1,\\ldots,x_n$.",
+    "sha": "8532f68cfcb1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Change of variables",
+    "sha": "ca8b1aa839c3",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Apply the change of variables",
+      "sha": "f49e63257653",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}x &=& u \\\\\n    y &=& v-w \\\\\n    z &=& w\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "to the quadratic form",
+      "sha": "a50c5cf0c674",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "3x^2 + y^2 + 2xy + 2xz + 2yz"
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have",
+      "sha": "a2214cd5b1a4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{l}\n      3x^2 + y^2 + 2xy + 2xz + 2yz \\\\\n      =~~ 3u^2 + (v-w)^2 + 2u(v-w) + 2uw + 2(v-w)w \\\\\n      =~~ 3u^2 + v^2 - w^2 + 2uv.\n    \\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The simplest kind of quadratic form is one that involves only squared variables, and no products of two different variables. We call such quadratic forms **diagonal**.",
+    "sha": "7cc82ab93660",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Diagonal quadratic form",
+    "sha": "704f1032e33e",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A quadratic form is **diagonal** if it is of the form",
+      "sha": "57211bb7af10",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x_1,\\ldots,x_n) = q_1\\,x_1^2 + \\ldots + q_n\\,x_n^2."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Diagonalization of quadratic forms",
+    "sha": "f2181491c424",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Every quadratic form can be made diagonal by a change of variables.",
+      "sha": "1965a49f9a35",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We first write the quadratic form in matrix form, i.e.,",
+      "sha": "6593f20c6fc1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x_1,\\ldots,x_n) = \\vect{v}^T A \\vect{v},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where $A$ is a symmetric matrix and $\\vect{v}=\\mat{x_1,\\ldots,x_n}^T$. By Theorem “Diagonalization of real symmetric matrices”, $A$ is orthogonally diagonalizable. So let $P$ be an orthogonal matrix such that",
+      "sha": "86298e93a049",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "P^{-1}AP\n    ~=~ P^TAP\n    ~=~ D\n    ~=~ \\left[\\begin{array}{ccc}\n      \\eigenvar_1 & \\cdots & 0      \\\\\n      \\vdots & \\ddots & \\vdots \\\\\n      0      & \\cdots & \\eigenvar_{nn} \\\\\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is diagonal. Let $\\vect{w}=\\mat{y_1,\\ldots,y_n}^T$ be a new set of variables such that $\\vect{v} = P \\vect{w}$. Then",
+      "sha": "e44d7a2649be",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}^T A \\vect{v}\n    ~=~ \\vect{w}^T P^TAP \\vect{w}\n    ~=~ \\vect{w}^T D \\vect{w}\n    ~=~ \\eigenvar_1y_1^2 + \\ldots + \\eigenvar_ny_n^2."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "So the quadratic form is diagonal in the variables $y_1,\\ldots,y_n$.",
+      "sha": "81319ec4cb6a",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Diagonalization of quadratic forms",
+    "sha": "f2181491c424",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the quadratic form",
+      "sha": "530eac874db6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y) = 3x^2 + 4xy + 6y^2."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Perform a change of variables so that the quadratic form becomes diagonal.",
+      "sha": "ff3c8a8a2277",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We first write $f(x,y)$ in matrix form:",
+      "sha": "49286fe464e2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y)\n    = \\left[\\begin{array}{cc} x & y \\end{array}\\right]\n    \\left[\\begin{array}{rr} 3 & 2 \\\\ 2 & 6 \\end{array}\\right]\n    \\left[\\begin{array}{c} x \\\\ y \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Next, we orthogonally diagonalize the matrix $A = \\left[\\begin{array}{rr} 3 & 2 \\\\ 2 & 6 \\end{array}\\right]$. In Example “Diagonalization of real symmetric matrices”, we found that $P^{-1}AP = D$, where",
+      "sha": "25c3a89a8bab",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "P = \\frac{1}{\\sqrt{5}} \\left[\\begin{array}{rr} 1 & -2 \\\\ 2 & 1 \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    D = \\left[\\begin{array}{rr} 7 & 0 \\\\ 0 & 2 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $P$ is orthogonal, we also have $P^TAP=D$. Next, let $u,v$ be new variables such that",
+      "sha": "32e784e89d59",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{c} x \\\\ y \\end{array}\\right]\n    = P \\left[\\begin{array}{c} u \\\\ v \\end{array}\\right]\n    = \\left[\\begin{array}{c} (u-2v)/\\sqrt{5} \\\\ (2u+v)/\\sqrt{5} \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Then the change of variables gives",
+      "sha": "3447175c5dc9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y)\n    ~=~ \\left[\\begin{array}{cc} x & y \\end{array}\\right]\n    A\n    \\left[\\begin{array}{c} x \\\\ y \\end{array}\\right]\n    ~=~\n    \\left[\\begin{array}{cc} u & v \\end{array}\\right]\n    P^TAP\n    \\left[\\begin{array}{c} u \\\\ v \\end{array}\\right]\n    ~=~\n    \\left[\\begin{array}{cc} u & v \\end{array}\\right]\n    D\n    \\left[\\begin{array}{c} u \\\\ v \\end{array}\\right]\n    ~=~\n    7u^2 + 2v^2."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Diagonalization of quadratic forms",
+    "sha": "f2181491c424",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Diagonalize the quadratic form",
+      "sha": "e839690678bf",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y,z) = 3x^2 + 3y^2 + 2xy - 4xz + 4yz."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix form of $f(x,y,z)$ is",
+      "sha": "aac9e31917fb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y,z)\n    = \\left[\\begin{array}{ccc} x & y & z \\end{array}\\right]\n    \\left[\\begin{array}{rrr}\n      3  & 1 & -2 \\\\\n      1  & 3 &  2 \\\\\n      -2 & 2 &  0 \\\\\n    \\end{array}\\right]\n    \\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right]\n    = \\vect{v}^T A\\vect{v}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We orthogonally diagonalize the matrix $A$. In Example “Diagonalization of real symmetric matrices”, we found that $P^{-1}AP = D$, where",
+      "sha": "1d41615ed357",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "P = \\left[\\begin{array}{ccc}\n      \\frac{1}{\\sqrt{2}} & -\\frac{1}{\\sqrt{3}} & \\frac{1}{\\sqrt{6}}  \\\\\n      \\frac{1}{\\sqrt{2}} & \\frac{1}{\\sqrt{3}}  & -\\frac{1}{\\sqrt{6}} \\\\\n      0                  & \\frac{1}{\\sqrt{3}}  & \\frac{2}{\\sqrt{6}}  \\\\\n    \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    D = \\left[\\begin{array}{rrr} 4 & 0 & 0 \\\\ 0 & 4 & 0 \\\\ 0 & 0 & -2 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $u,v,w$ be new variables such that",
+      "sha": "a825bb2dca29",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right]\n    = P \\left[\\begin{array}{c} u \\\\ v \\\\ w \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Then the change of variables gives",
+      "sha": "3447175c5dc9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}f(x,y,z)\n    &=& \\left[\\begin{array}{ccc} x & y & z \\end{array}\\right]\n    A\n    \\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] \\\\\n    &=&\n    \\left[\\begin{array}{ccc} u & v & w \\end{array}\\right]\n    P^TAP\n    \\left[\\begin{array}{c} u \\\\ v \\\\ w \\end{array}\\right] \\\\\n    &=&\n    \\left[\\begin{array}{ccc} u & v & w \\end{array}\\right]\n    D\n    \\left[\\begin{array}{c} u \\\\ v \\\\ w \\end{array}\\right] \\\\\n    &=&\n    4u^2 + 4v^2 - 2w^2.\\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Next, we turn our attention to the task of sketching the solutions of quadratic equations in 2 or more variables.",
+    "sha": "82f60b2e513d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Sketching circles and ellipses",
+    "sha": "7afbf0ce1f33",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Sketch the following curves:",
+      "sha": "e9204ee611c8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$x^2+y^2=1$,",
+            "sha": "6a5090de6d1c",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$x^2+2y^2=1$.",
+            "sha": "79302ccfd6c3",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) The curve $x^2+y^2=1$ is the familiar unit circle.",
+      "sha": "fc386f26239f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "caption": null
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "(b) The curve $x^2+2y^2=1$ is the same, except that it has been stretched by a factor of $1/\\sqrt{2}$ in the $y$-direction. In other words, it is an ellipse with $x$-intercepts $\\pm 1$ and $y$-intercepts $\\pm 1/\\sqrt{2}$.",
+      "sha": "39755eb897fb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "caption": null
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In general, for $a,b>0$, the curve $ax^2 + by^2 = 1$ is an ellipse with $x$-intercepts $\\pm 1/\\sqrt{a}$ and $y$-intercepts $\\pm 1/\\sqrt{b}$. Similarly, for $a,b,c>0$, the equation $ax^2 + by^2 + cz^2 = 1$ describes a $3$-dimensional ellipsoid with $x$-intercepts $\\pm 1/\\sqrt{a}$, $y$-intercepts $\\pm 1/\\sqrt{b}$, and $z$-intercepts $\\pm 1/\\sqrt{c}$:",
+    "sha": "3b797c7b0927",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Each ellipse or ellipsoid has a set of **principal axes**, which are its axes of symmetry. When the quadratic forms are diagonal, as in the above examples, the principal axes are the standard coordinate axes. When the quadratic forms are not diagonal, the principal axes are the eigenvectors of the matrix $A$. This is the content of the following proposition.",
+    "sha": "bf06acfb2372",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Principal axes of a quadratic form",
+    "sha": "6a7131aed21f",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider a quadratic form in matrix form, $f(\\vect{v}) = \\vect{v}^TA\\vect{v}$, where $A$ is a positive definite $n\\times n$-matrix. Let $\\set{\\vect{u}_1,\\ldots,\\vect{u}_n}$ be an orthonormal set of eigenvectors of $A$, and let $\\eigenvar_1,\\ldots,\\eigenvar_n$ be the corresponding eigenvalues. Then the solutions of the equation",
+      "sha": "edbc493d8379",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}^TA\\vect{v} = 1"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "form an $n$-dimensional ellipsoid whose principal axes are parallel to $\\vect{u}_1,\\ldots,\\vect{u}_n$ and whose $\\vect{u}_i$-intercepts are $\\pm\\frac{1}{\\sqrt{\\eigenvar_i}}$.",
+      "sha": "abb35413db80",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $P$ be the orthogonal matrix whose columns are $\\vect{u}_1,\\ldots,\\vect{u}_n$. From the proof of Proposition “Diagonalization of quadratic forms”, we know that the equation $\\vect{v}^TA\\vect{v} = 1$ is equivalent to $\\eigenvar_1y_1^2 + \\ldots + \\eigenvar_ny_n^2=1$, where $y_1,\\ldots,y_n$ are variables such that",
+      "sha": "7cc1ef6fab6a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v} = P\\left[\\begin{array}{c} y_1 \\\\ \\vdots \\\\ y_n \\end{array}\\right]. \\tag{1}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $A$ is positive definite, we have $\\eigenvar_1,\\ldots,\\eigenvar_n>0$ by Proposition “Using eigenvalues to check whether a matrix is positive definite”. We therefore know that in the $(y_1,\\ldots,y_n)$-coordinate system, the equation $\\eigenvar_1y_1^2 + \\ldots + \\eigenvar_ny_n^2 = 1$ describes an ellipsoid whose $y_1$-intercepts are $\\pm1/\\sqrt{\\eigenvar_1}$, whose $y_2$-intercepts are $\\pm1/\\sqrt{\\eigenvar_2}$, and so on. The only thing that remains to do is to figure out the direction of the coordinate axes. The $y_1$-axis points in the direction of the point with coordinates $(y_1,\\ldots,y_n) = (1,0,\\ldots,0)$. Using the change of variables formula (1), we find that this corresponds to the first column of $P$, i.e., $\\vect{v}=\\vect{u}_1$. Similarly, the $y_2$-axis points in the direction of $\\vect{u}_2$, and so on.",
+      "sha": "8418f28bac8b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Sketching a quadratic curve",
+    "sha": "2b829466629d",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Sketch the curve $3x^2 + 4xy + 6y^2 = 1$.",
+      "sha": "715737b5cc46",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix for the quadratic form $3x^2 + 4xy + 6y^2$ is",
+      "sha": "6000d726c38a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rr} 3 & 2 \\\\ 2 & 6 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "From Example “Diagonalization of quadratic forms”, we know that the normalized eigenvectors of $A$ are",
+      "sha": "18f454e2e7d7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1\n    ~=~ \\frac{1}{\\sqrt{5}} \\left[\\begin{array}{r} 1 \\\\ 2 \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    \\vect{u}_2\n    ~=~ \\frac{1}{\\sqrt{5}} \\left[\\begin{array}{r} -2 \\\\ 1 \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "with respective eigenvalues $\\eigenvar_1 = 7$ and $\\eigenvar_2 = 2$. Therefore, by Proposition “Principal axes of a quadratic form”, the curve $3x^2 + 4xy + 6y^2 = 1$ is an ellipse with principal axes $\\vect{u}_1$ and $\\vect{u}_2$, and with respective intercepts $\\pm1/\\sqrt{7}$ and $\\pm1/\\sqrt{2}$.",
+      "sha": "ac30fd9e324c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "caption": null
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following are quadratic forms?",
+      "sha": "ec335f208709",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$f_1(x,y,z) = (x+y+z)^2$.",
+         "sha": "9bf2b9af9e25",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$f_2(x,y,z) = x^2 + y^2 + z^2$.",
+         "sha": "741c8db44b0c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$f_3(x,y,z) = (x+y)^2 + (x+z)^2 + (y+z)^2$.",
+         "sha": "1344f2e17bbc",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$f_4(x,y,z) = x^2 - y^2$.",
+         "sha": "77921573bb8f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$f_5(x,y,z) = x^2 + 2xyz + (y+z)^2$.",
+         "sha": "43a943b98254",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$f_6(x,y,z) = x(y+z)$.",
+         "sha": "9193e50850f1",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$f_7(x,y,z) = x^2y^2z^2$.",
+         "sha": "c0fe367d823d",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "All of them except (e) and (g).",
+      "sha": "9ba17bb17c0f",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: Simplification of quadratic forms · 习题 1（上游 exercises/InnerProductSpaces-Application-QuadraticForms.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Application-QuadraticForms.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the coefficients of the quadratic form $f(x,y,z) = \\vect{v}^T A\\vect{v}$, where",
+      "sha": "a11c51f6086c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rrr}\n      0 &  1 &  2 \\\\\n      1 & -3 & -4 \\\\\n      2 & -4 &  5 \\\\\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: Simplification of quadratic forms · 习题 2（上游 exercises/InnerProductSpaces-Application-QuadraticForms.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Application-QuadraticForms.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Write the quadratic form",
+      "sha": "93d4090411f0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y,z) = (x+y)^2 + 2(x-z)^2 + 3yz"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "in matrix form.",
+      "sha": "2638a59cbec0",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$f(x,y,z) = \\vect{v}^T A\\vect{v}$, where",
+      "sha": "ebc0931a8c57",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{ccc}\n        3  &  1  & -2  \\\\\n        1  &  1  & 1.5 \\\\\n        -2 & 1.5 &  2  \\\\\n      \\end{array}\\right]."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: Simplification of quadratic forms · 习题 3（上游 exercises/InnerProductSpaces-Application-QuadraticForms.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Application-QuadraticForms.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Apply the change of variables $x = u+2w$, $y = v$, $z = w-v$ to the quadratic form",
+      "sha": "52ac19e409f5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "x^2 + 7y^2 + 5z^2 - 4xy - 4xz + 11yz."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$3u^2 + v^2 + vw + w^2$.",
+      "sha": "1d8ca7db989d",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: Simplification of quadratic forms · 习题 4（上游 exercises/InnerProductSpaces-Application-QuadraticForms.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Application-QuadraticForms.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Perform a change of variables so that the quadratic form $f(x,y) = 3x^2 - 2xy + 3y^2$ becomes diagonal.",
+      "sha": "0d73140a6af0",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$x=u+v$ and $y=u-v$ gives $f = 4u^2 + 8v^2$.",
+      "sha": "8b2df2cc98fc",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: Simplification of quadratic forms · 习题 5（上游 exercises/InnerProductSpaces-Application-QuadraticForms.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Application-QuadraticForms.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Diagonalize the quadratic form",
+      "sha": "e839690678bf",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f(x,y,z) = 3x^2 + 3y^2 + 4z^2 + 2xz - 2yz."
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: Simplification of quadratic forms · 习题 6（上游 exercises/InnerProductSpaces-Application-QuadraticForms.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Application-QuadraticForms.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the principal axes of the following curves, and sketch them:",
+      "sha": "c107a9c3e380",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$x^2+\\frac{1}{2}y^2=1$,",
+         "sha": "daefe8c4c96d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$2x^2 + 4xy + 5y^2 = 1$.",
+         "sha": "8b4e85b81b3d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$3x^2 + 2xy + 3y^2 = 1$.",
+         "sha": "bf732a6dc752",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Eigenvalues: $\\eigenvar_1=1$, $\\eigenvar_2=\\frac{1}{2}$. Principal axes: $\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 0 \\end{array}\\right]$ and $\\vect{u}_2 = \\left[\\begin{array}{r} 0 \\\\ 1 \\end{array}\\right]$. $\\vect{u}_1$-intercept: $1$, $\\vect{u}_2$-intercept: $\\sqrt{2}$.",
+         "sha": "b01fa1fa7522",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Eigenvalues: $\\eigenvar_1=1$, $\\eigenvar_2=6$. Principal axes: $\\vect{u}_1 = \\frac{1}{\\sqrt{5}}\\left[\\begin{array}{r} 2 \\\\ -1 \\end{array}\\right]$ and $\\vect{u}_2 = \\frac{1}{\\sqrt{5}}\\left[\\begin{array}{r} 1 \\\\ 2 \\end{array}\\right]$. $\\vect{u}_1$-intercept: $1$, $\\vect{u}_2$-intercept: $\\frac{1}{\\sqrt{6}}$.",
+         "sha": "3bbbcd30d75d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Eigenvalues: $\\eigenvar_1=2$, $\\eigenvar_2=4$. Principal axes: $\\vect{u}_1 = \\frac{1}{\\sqrt{2}}\\left[\\begin{array}{r} 1 \\\\ -1 \\end{array}\\right]$ and $\\vect{u}_2 = \\frac{1}{\\sqrt{2}}\\left[\\begin{array}{r} 1 \\\\ 1 \\end{array}\\right]$. $\\vect{u}_1$-intercept: $\\frac{1}{\\sqrt{2}}$, $\\vect{u}_2$-intercept: $\\frac{1}{2}$.",
+         "sha": "3dfd5c6d2223",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "caption": null
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: Simplification of quadratic forms · 习题 7（上游 exercises/InnerProductSpaces-Application-QuadraticForms.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Application-QuadraticForms.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex8",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the principal axes of the ellipsoid $2x^2 + 2y^2 + 3z^2 + 2xz - 2yz$.",
+      "sha": "31459cc8ee6d",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The principal axes are $\\frac{1}{\\sqrt{3}}\\left[\\begin{array}{r} 1 \\\\ -1 \\\\ -1 \\end{array}\\right]$, $\\frac{1}{\\sqrt{2}}\\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 0 \\end{array}\\right]$, $\\frac{1}{\\sqrt{6}}\\left[\\begin{array}{r} 1 \\\\ -1 \\\\ 2 \\end{array}\\right]$.",
+      "sha": "2be7658e1e07",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: Simplification of quadratic forms · 习题 8（上游 exercises/InnerProductSpaces-Application-QuadraticForms.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Application-QuadraticForms.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "应用：二次型的化简"
+}

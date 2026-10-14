@@ -1,0 +1,2642 @@
+{
+ "id": "SpanIndependenceBasis-Basis",
+ "title_en": "Basis and dimension",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "\\setlength\\itemsep0em",
+         "sha": "e920e02c490b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find a basis for a subspace of $\\R^n$.",
+         "sha": "416cf41af652",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Use the casting-out algorithm to find a basis for a subspace given as a span.",
+         "sha": "d599ff277220",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Use basic solutions to find a basis for a subspace given as the solution space of a homogeneous system of equations.",
+         "sha": "2256cc9ff667",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the coordinates of a vector with respect to a basis.",
+         "sha": "599c8e25027b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the dimension of a subspace of $\\R^n$.",
+         "sha": "5a87dc1ae49b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Extend a set of linearly independent vectors to a basis.",
+         "sha": "053f00a0dfd8",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Shrink a spanning set to a basis by removing redundant vectors.",
+         "sha": "e096db5a47ab",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether $k$ vectors form a basis of a $k$-dimensional space.",
+         "sha": "b80630a553e4",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Definition of basis",
+    "sha": "a5a3768205cd",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We saw in Proposition “Spans are subspaces” that spans are subspaces of\\/ $\\R^n$. Interestingly, the converse is also true: every subspace of\\/ $\\R^n$ is the span of some finite set of vectors.",
+    "sha": "9d9bdeae5381",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Subspaces are spans",
+    "sha": "3d35826f4cf6",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $V$ be a subspace of\\/ $\\R^n$. Then there exist linearly independent vectors $\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ in $V$ such that",
+      "sha": "0cae6ddf271f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "V= \\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}."
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We proceed as follows.",
+      "sha": "bf086ccfa89f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $V=\\set{\\vect{0}}$, then $V$ is the empty span, and we are done.",
+         "sha": "4ff127606069",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Otherwise, $V$ contains some non-zero vector. Pick a non-zero vector $\\vect{u}_1$ in $V$. If $V=\\sspan\\set{\\vect{u}_1}$, we are done.",
+         "sha": "8890f2ce2727",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Otherwise, pick a vector $\\vect{u}_2$ in $V$ that is not in $\\sspan\\set{\\vect{u}_1}$. If $V=\\sspan\\set{\\vect{u}_1,\\vect{u}_2}$, we are done.",
+         "sha": "c319bd180678",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Otherwise, pick a vector $\\vect{u}_3$ in $V$ that is not in $\\sspan\\set{\\vect{u}_1,\\vect{u}_2}$. If $V=\\sspan\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3}$, we are done.",
+         "sha": "deda38cd52d7",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Otherwise, pick a vector $\\vect{u}_4$ in $V$ that is not in $\\sspan\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3}$, and so on.",
+         "sha": "91ad2764d326",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Continue in this way. Note that after the $j\\th$ step of this process, the vectors $\\vect{u}_1,\\ldots,\\vect{u}_j$ are linearly independent. This is because, by construction, no vector is in the span of the previous vectors, and therefore no vector is redundant. By Proposition “Properties of linear independence”(〔引用〕), there can be at most $n$ linearly independent vectors in $\\R^n$. Therefore the process must stop after $k$ steps for some $k\\leq n$. But then $V=\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$, as desired.",
+      "sha": "4d669f3adb90",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In summary, every subspace of\\/ $\\R^n$ is spanned by a finite, linearly independent collection of vectors. Such a collection of vectors is called a **basis** of the subspace.",
+    "sha": "8b9d08a6c74c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Basis of a subspace",
+    "sha": "9b4e1dcd215c",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $V$ be a subspace of\\/ $\\R^n$. Then $\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ is a **basis** for $V$ if the following two conditions hold:",
+      "sha": "b8935350bf5a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}=V$, and",
+         "sha": "4baca7cbd74d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vect{u}_1,\\ldots,\\vect{u}_k$ are linearly independent.",
+         "sha": "096640542003",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Note that the plural of basis is **bases**.",
+    "sha": "8f18147bbc45",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Examples of bases",
+    "sha": "54b4259bf624",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Standard basis of\\/ $\\R^n$",
+    "sha": "4c374b1f196c",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{e}_i$ be the vector in $\\R^n$ whose $i\\th$ component is $1$ and all of whose other components are $0$. In other words, $\\vect{e}_i$ is the $i\\th$ column of the identity matrix.",
+      "sha": "cd7f54de8c9d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{e}_1 = \\left[\\begin{array}{c} 1 \\\\ 0 \\\\ 0 \\\\ \\vdots \\\\ 0 \\end{array}\\right],\\quad\n    \\vect{e}_2 = \\left[\\begin{array}{c} 0 \\\\ 1 \\\\ 0 \\\\ \\vdots \\\\ 0 \\end{array}\\right],\\quad\n    \\vect{e}_3 = \\left[\\begin{array}{c} 0 \\\\ 0 \\\\ 1 \\\\ \\vdots \\\\ 0 \\end{array}\\right],\\quad\n    \\ldots~,\\quad\n    \\vect{e}_n = \\left[\\begin{array}{c} 0 \\\\ 0 \\\\ 0 \\\\ \\vdots \\\\ 1\\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Then $\\set{\\vect{e}_1,\\vect{e}_2,\\ldots,\\vect{e}_n}$ is a basis for $\\R^n$. It is called the **standard basis** of\\/ $\\R^n$.",
+      "sha": "e0a671494f93",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "To see that it is a basis of\\/ $\\R^n$, first notice that the vectors $\\vect{e}_1,\\vect{e}_2,\\ldots,\\vect{e}_n$ span $\\R^n$. Indeed, every vector $\\vect{v} = \\mat{x_1,\\ldots,x_n}^T\\in\\R^n$ can be written as $\\vect{v} = x_1\\vect{e}_1+\\ldots+x_n\\vect{e}_n$. Second, the vectors $\\vect{e}_1,\\vect{e}_2,\\ldots,\\vect{e}_n$ are evidently linearly independent, because none of these vectors can be written as a linear combination of previous vectors. Since the vectors span $\\R^n$ and are linearly independent, they form a basis of\\/ $\\R^n$.",
+      "sha": "7ab10fcbaab7",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "A non-standard basis of\\/ $\\R^3$",
+    "sha": "bdc31d629c10",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "basis!of Rn@of\\/ $\\R^n$ Check that the vectors",
+      "sha": "91e45f3f73f3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 0 \\end{array}\\right],\\quad\n    \\text{and}\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} -1 \\\\ 0 \\\\ 1 \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "form a basis of\\/ $\\R^3$.",
+      "sha": "8406cac5f243",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We must check that the vectors $\\vect{u}_1,\\vect{u}_2,\\vect{u}_3$ are linearly independent and span $\\R^3$. To check linear independence, we use the casting-out algorithm.",
+      "sha": "0a8298416874",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n      1 & 0 & -1 \\\\\n      2 & 1 & 0 \\\\\n      1 & 0 & 1 \\\\\n    \\end{array}\\right]\n    \\quad\\roweq\\quad\n    \\left[\\begin{array}{rrr}\n      \\boxed{1} & 0 & -1 \\\\\n      0 & \\boxed{1} & 2 \\\\\n      0 & 0 & \\boxed{2} \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since all columns are pivot columns, there are no redundant vectors, so $\\vect{u}_1,\\vect{u}_2,\\vect{u}_3$ are linearly independent. To check that they span all of\\/ $\\R^3$, let $\\vect{w}=\\mat{x,y,z}^T$ be an arbitrary element of\\/ $\\R^3$. We must show that $\\vect{w}$ is a linear combination of $\\vect{u}_1,\\vect{u}_2,\\vect{u}_3$. This amounts to solving the system of equations",
+      "sha": "42263fb38236",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "a_1\\,\\vect{u}_1+a_2\\,\\vect{u}_2+a_3\\,\\vect{u}_3 = \\vect{w},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "or in augmented matrix form,",
+      "sha": "ece65a9befdf",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr|c}\n      1 & 0 & -1 & x \\\\\n      2 & 1 & 0  & y \\\\\n      1 & 0 & 1  & z \\\\\n    \\end{array}\\right]\n    \\quad\\roweq\\quad\n    \\left[\\begin{array}{rrr|c}\n      1 & 0 & -1 & x    \\\\\n      0 & 1 & 2  & y-2x \\\\\n      0 & 0 & 2  & z-x  \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The system is clearly consistent, so it has a solution, and therefore $\\vect{w}$ is indeed a linear combination of $\\vect{u}_1,\\vect{u}_2,\\vect{u}_3$. Since $\\vect{w}$ was an arbitrary vector of\\/ $\\R^3$, it follows that $\\vect{u}_1,\\vect{u}_2,\\vect{u}_3$ span $\\R^3$.",
+      "sha": "212f6715b3f9",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Generalizing the last example, we find that a set of $n$ vectors forms a basis of\\/ $\\R^n$ if and only if the matrix having those vectors as its columns is invertible. This is the content of the following proposition.",
+    "sha": "b1087b57744a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Invertible matrices and bases of\\/ $\\R^n$",
+    "sha": "72992b698ebb",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "basis!of Rn@of\\/ $\\R^n$ Let $A$ be an $n\\times n$-matrix. Then the columns of $A$ form a basis of\\/ $\\R^n$ if and only if $A$ is invertible.",
+      "sha": "2cf296cf4f10",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We turn to the question of finding bases for subspaces of\\/ $\\R^n$.",
+    "sha": "369f30a87bcf",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Basis of a span",
+    "sha": "63d01e656729",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let",
+      "sha": "ef5fe1edf379",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 2 \\\\ 0 \\\\ -2 \\end{array}\\right],\n    \\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} -1 \\\\ 0 \\\\ 1 \\end{array}\\right],\n    \\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} 1 \\\\ 3 \\\\ 5 \\end{array}\\right],\n    \\quad\n    \\vect{u}_4 = \\left[\\begin{array}{r} 3 \\\\ 5 \\\\ 7 \\end{array}\\right],\n    \\quad\n    \\vect{u}_5 = \\left[\\begin{array}{r} -1 \\\\ 1 \\\\ 3 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Find a basis of $\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_5}$.",
+      "sha": "d84744bf6afe",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $S=\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_5}$. By Theorem “Finding a linearly independent set of spanning vectors”, we know that if we remove the redundant vectors from $\\set{\\vect{u}_1,\\ldots,\\vect{u}_5}$, then the remaining vectors will be linearly independent and will still span $S$. In other words, the remaining vectors will be a basis for $S$. We use the casting-out algorithm to identity the redundant vectors:",
+      "sha": "b86c22b19ada",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrrr}\n      2 & -1 & 1 & 3 & -1 \\\\\n      0 & 0 & 3 & 5 & 1 \\\\\n      -2 & 1 & 5 & 7 & 3 \\\\\n    \\end{array}\\right]\n    ~\\roweq~\n    \\left[\\begin{array}{rrrrr}\n      2 & -1 & 1 & 3 & -1 \\\\\n      0 & 0 & 3 & 5 & 1 \\\\\n      0 & 0 & 6 & 10 & 2 \\\\\n    \\end{array}\\right]\n    ~\\roweq~\n    \\left[\\begin{array}{rrrrr}\n      \\boxed{2} & -1 & 1 & 3 & -1 \\\\\n      0 & 0 & \\boxed{3} & 5 & 1 \\\\\n      0 & 0 & 0 & 0 & 0 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since columns $2$, $4$, and $5$ are the non-pivot columns, it follows that the vectors $\\vect{u}_2$, $\\vect{u}_4$, and $\\vect{u}_5$ are redundant. Therefore, the desired basis is $\\set{\\vect{u}_1,\\vect{u}_3}$.",
+      "sha": "43cbc5a03b09",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Basis of the solution space of a homogeneous system of equations",
+    "sha": "26ea38fb072a",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find a basis for the solution space of the system of equations",
+      "sha": "93f76f42ffd4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rrrrrrrrrrr}\n     x &+& y  &-& z &+& 3w &-& 2v &=& 0, \\\\\n     x &+& y &+& z &-& 11w &+& 8v &=& 0, \\\\\n    4x &+& 4y &-& 3z &+& 5w &-& 3v &=& 0. \\\\\n    \\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We solve the system of equations in the usual way:",
+      "sha": "ba31cf58277a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrrr|r}\n      1 & 1 & -1 & 3 & -2 & 0 \\\\\n      1 & 1 &  1 & -11 & 8 & 0 \\\\\n      4 & 4 & -3 & 5 & -3 & 0 \\\\\n    \\end{array}\\right]\n    ~\\roweq~\n    \\left[\\begin{array}{rrrrr|r}\n      1 & 1 & -1 & 3 & -2 & 0 \\\\\n      0 & 0 & 2 & -14 & 10 & 0 \\\\\n      0 & 0 & 1 & -7 & 5 & 0 \\\\\n    \\end{array}\\right]\n    ~\\roweq~\n    \\left[\\begin{array}{rrrrr|r}\n      \\boxed{1} & 1 & 0 & -4 & 3 & 0 \\\\\n      0 & 0 & \\boxed{1} & -7 & 5 & 0 \\\\\n      0 & 0 & 0 &  0 & 0 & 0 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "From the reduced echelon form, we see that $y$, $w$, and $v$ are free variables. The general solution is:",
+      "sha": "cde3265f8f10",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{c} x \\\\ y \\\\ z \\\\ w \\\\ v \\end{array}\\right]\n    \\quad=\\quad\n    t \\left[\\begin{array}{r} -3 \\\\ 0 \\\\ -5 \\\\ 0 \\\\ 1 \\end{array}\\right]\n    ~+~ s \\left[\\begin{array}{r} 4 \\\\ 0 \\\\ 7 \\\\ 1 \\\\ 0 \\end{array}\\right]\n    ~+~ r \\left[\\begin{array}{r} -1 \\\\ 1 \\\\ 0 \\\\ 0 \\\\ 0 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Thus, the solution space is spanned by the vectors",
+      "sha": "35bee118070d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\set{\\left[\\begin{array}{r} -3 \\\\ 0 \\\\ -5 \\\\ 0 \\\\ 1 \\end{array}\\right],\n    \\left[\\begin{array}{r} 4 \\\\ 0 \\\\ 7 \\\\ 1 \\\\ 0 \\end{array}\\right],\n    \\left[\\begin{array}{r} -1 \\\\ 1 \\\\ 0 \\\\ 0 \\\\ 0 \\end{array}\\right]\n    }."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Moreover, these vectors are evidently linearly independent, because each vector contains a $1$ in a position where all the previous vectors have $0$ (and therefore, none of the vectors can be written as a linear combination of previous vectors). It follows that the above three vectors form a basis of the solution space.",
+      "sha": "97e365a27129",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Note that the basis vectors of the solution space are exactly what we called the **basic solutions** in Section 〔引用〕.",
+    "sha": "6d34a32d9376",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Bases and coordinate systems",
+    "sha": "8e05350919fb",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $V$ be a subspace of\\/ $\\R^n$. A basis of $V$ is essentially the same thing as a coordinate system for $V$. To see why, let $B=\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ be some basis of $V$. This means that the vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$ are linearly independent and span $V$. Because the basis vectors are spanning, every vector $\\vect{v}\\in V$ can be written as a linear combination of basis vectors",
+    "sha": "4fca6984a878",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vect{v} = a_1\\,\\vect{u}_1 + \\ldots + a_k\\,\\vect{u}_k."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Moreover, because the basis vectors are linearly independent, it follows by Theorem “Unique linear combination” that the coefficients $a_1,\\ldots,a_k$ are unique. We say that $a_1,\\ldots,a_k$ are the \\textbfcoordinates of $\\vect{v}$ with respect to the basis $B$, and we write",
+    "sha": "e8f098eff996",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\coord{\\vect{v}}_B = \\left[\\begin{array}{c} a_1 \\\\ \\vdots \\\\ a_k \\end{array}\\right]."
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "caption": null
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Find a vector from its coordinates in a basis",
+    "sha": "535780ac8614",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the vector $\\vect{v}$ that has coordinates",
+      "sha": "6ce82adc9e29",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\coord{\\vect{v}}_B = \\left[\\begin{array}{r} 1 \\\\ -1 \\\\ 2 \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "with respect to the basis $B=\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3}$ of\\/ $\\R^3$, where",
+      "sha": "b9cdb75f9091",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 0 \\end{array}\\right],\\quad\n    \\text{and}\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} -1 \\\\ 0 \\\\ 1\\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "This simply means that $\\vect{v} = 1\\vect{u}_1 - 1\\vect{u}_2 + 2\\vect{u}_3$. We calculate",
+      "sha": "62fbd7b783c5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v} =\n    1\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 1 \\end{array}\\right]\n    - 1\\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 0 \\end{array}\\right]\n    + 2\\left[\\begin{array}{r} -1 \\\\ 0 \\\\ 1 \\end{array}\\right]\n    = \\left[\\begin{array}{r} -1 \\\\ 1 \\\\ 3  \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In case the basis is the standard basis, the coordinates are just the usual ones, as the following example illustrates:",
+    "sha": "28123980e4a3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Find a vector from its coordinates in the standard basis",
+    "sha": "4790ffe93d25",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the vector $\\vect{v}$ that has coordinates",
+      "sha": "6ce82adc9e29",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\coord{\\vect{v}}_B = \\left[\\begin{array}{r} 1 \\\\ -1 \\\\ 2 \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where $B$ is the standard basis of\\/ $\\R^3$.",
+      "sha": "2b9acf0045bd",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The standard basis is",
+      "sha": "78df54af62b7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{e}_1 = \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 0 \\end{array}\\right],\\quad\n    \\vect{e}_2 = \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 0 \\end{array}\\right],\\quad\n    \\text{and}\\quad\n    \\vect{e}_3 = \\left[\\begin{array}{r} 0 \\\\ 0 \\\\ 1\\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We have to calculate",
+      "sha": "702f261abf73",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v} = 1\\vect{e}_1 - 1\\vect{e}_2 + 2\\vect{e}_3\n    = \\left[\\begin{array}{r} 1 \\\\ -1 \\\\ 2  \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We see that the coordinates of any vector with respect to the standard basis are just the usual components of the vector.",
+      "sha": "e72815e569b0",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can also ask to find the coordinates of a given vector in a given basis.",
+    "sha": "c12e4d5a27e2",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Find the coordinates of a vector with respect to a basis",
+    "sha": "ed71d88e6eb6",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the coordinates of the vector",
+      "sha": "193a5b75cab7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v} = \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "with respect to the basis $B=\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3}$ of\\/ $\\R^3$, where",
+      "sha": "b9cdb75f9091",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 0 \\end{array}\\right],\\quad\n    \\text{and}\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} -1 \\\\ 0 \\\\ 1\\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "To find the coordinates, we must solve the system of equations $\\vect{v} = a_1\\,\\vect{u}_1+a_2\\,\\vect{u}_2+a_3\\,\\vect{u}_3$. We solve:",
+      "sha": "2e28bf5ed83d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr|r}\n      1 & 0 & -1 & 1 \\\\\n      2 & 1 & 0 & 2 \\\\\n      1 & 0 & 1 & 3 \\\\\n    \\end{array}\\right]\n    \\quad\\roweq\\quad\n    \\left[\\begin{array}{rrr|r}\n      1 & 0 & -1 & 1 \\\\\n      0 & 1 & 2 & 0 \\\\\n      0 & 0 & 2 & 2 \\\\\n    \\end{array}\\right]\n    \\quad\\roweq\\quad\n    \\left[\\begin{array}{rrr|r}\n      1 & 0 & 0 & 2 \\\\\n      0 & 1 & 0 & -2 \\\\\n      0 & 0 & 1 & 1 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, the unique solution is $(a_1,a_2,a_3) = (2,-2,1)$. The coordinates of $\\vect{v}$ with respect to the basis $B$ are",
+      "sha": "cf59d279f466",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\coord{\\vect{v}}_B\n    = \\left[\\begin{array}{r} a_1 \\\\ a_2 \\\\ a_3 \\end{array}\\right]\n    = \\left[\\begin{array}{r} 2 \\\\ -2 \\\\ 1 \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Dimension",
+    "sha": "45e147abd920",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "One of the most important properties of bases is that any two bases for the same space must be of the same size. To show this, we will need the the following fundamental result, called the Exchange Lemma. This lemma states that spanning sets have at least as many vectors as linearly independent sets.",
+    "sha": "bdb1ddbe12b5",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "lemma",
+   "title": {
+    "en": "Exchange Lemma",
+    "sha": "9b5f057a554b",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "exchange lemma!in Rn@in $\\R^n$ Suppose $\\vect{u}_1,\\ldots,\\vect{u}_r$ are linearly independent elements of $\\sspan\\set{\\vect{v}_1,\\ldots,\\vect{v}_s}$. Then $r\\leq s$.",
+      "sha": "6d7b222c674c",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Since each $\\vect{u}_j$ is an element of $\\sspan\\set{\\vect{v}_1,\\ldots,\\vect{v}_s}$, there exist scalars $a_{ij}$ such that",
+      "sha": "1d0886250d3c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_j = a_{1j}\\,\\vect{v}_1 + \\ldots + a_{sj}\\,\\vect{v}_s."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A = \\mat{a_{ij}}$. Note that this matrix has $s$ rows and $r$ columns, i.e., it is an $s\\times r$-matrix. Now suppose, for the sake of obtaining a contradiction, that $r>s$. Then by Theorem “Rank and solutions of homogeneous system of equations”, the system $A\\vect{x}=\\vect{0}$ has a non-trivial solution $\\vect{x}$, i.e., there exists $\\vect{x}\\neq\\vect{0}$ such that $A\\vect{x}=\\vect{0}$. In other words, for all $i=1,\\ldots,s$,",
+      "sha": "0f78a04e3b91",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "a_{i1}x_1 + \\ldots + a_{ir}x_r = 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore,",
+      "sha": "236a32def63c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}x_1\\,\\vect{u}_1 + \\ldots + x_r\\,\\vect{u}_r\n    &=&\n        x_1(a_{11}\\,\\vect{v}_1 + \\ldots + a_{s1}\\,\\vect{v}_s)\n        + \\ldots\n        + x_r(a_{1r}\\,\\vect{v}_1 + \\ldots + a_{sr}\\,\\vect{v}_s)\n    \\\\\n    &=&\n        (a_{11}x_1 + \\ldots + a_{1r}x_r)\\vect{v}_1\n        + \\ldots\n        + (a_{s1}x_1 + \\ldots + a_{sr}x_r)\\vect{v}_s\n    \\\\\n    &=& 0\\,\\vect{v}_1 + \\ldots + 0\\,\\vect{v}_s\n    \\\\\n    &=& 0.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This contradicts the assumption that $\\vect{u}_1,\\ldots,\\vect{u}_r$ are linearly independent. Since we assumed $r>s$ and obtained a contradiction, it follows that $r\\leq s$, as desired.",
+      "sha": "0b5af6e0e0cc",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Armed with the Exchange Lemma, we are now ready to show that any two bases of a space are of the same size.",
+    "sha": "b1413be6af36",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Bases are of the same size",
+    "sha": "aea99bcce5a3",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $V$ be a subspace of\\/ $\\R^n$, and let $B_1$ and $B_2$ be bases of $V$. Suppose $B_1$ contains $s$ vectors and $B_2$ contains $r$ vectors. Then $s=r$.",
+      "sha": "1715907c3685",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "This follows right away from the Exchange Lemma. Indeed, observe that $B_1 = \\set{\\vect{u}_1,\\ldots,\\vect{u}_s}$ is a spanning set for $V$ while $B_2 = \\set{\\vect{v}_1,\\ldots,\\vect{v}_r}$ is linearly independent, so $s\\geq r$. Similarly $B_2 = \\set{\\vect{v}_1,\\ldots,\\vect{v}_r}$ is a spanning set for $V$ while $B_1 = \\set{\\vect{u}_1,\\ldots, \\vect{u}_s}$ is linearly independent, so $r\\geq s$.",
+      "sha": "6a50e8e0ca6b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Because every basis of $V$ has the same number of vectors, we give this number a special name. It is called the **dimension** of $V$.",
+    "sha": "ff338f9b0cd6",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Dimension of a subspace",
+    "sha": "37d37c7b9143",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $V$ be a subspace of\\/ $\\R^n$. Then the **dimension** dimension!of subspace of $\\R^n$ of $V$, written $\\dim(V)$, is defined to be the number of vectors in a basis.",
+      "sha": "bdf1c2a7ed5d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Dimension of\\/ $\\R^n$",
+    "sha": "f517bcdbffd2",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "What is the dimension of $\\R^n$?",
+      "sha": "629bbe2bad8c",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The standard basis of $\\R^n$ is $\\set{\\vect{e}_1,\\ldots,\\vect{e}_n}$. Since it has $n$ vectors, so $\\dim(\\R^n) = n$.",
+      "sha": "0c9e4f5e8f79",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Dimension of a subspace",
+    "sha": "37d37c7b9143",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let",
+      "sha": "ef5fe1edf379",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "V=\\set{\\left.\n      \\left[\\begin{array}{c} x \\\\ y \\\\ z\\end{array}\\right]\\in\\R^3 ~\\right\\vert~\n      x-y+2z = 0\n    }."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "What is the dimension of\\/ $V$?",
+      "sha": "518850ab36c1",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We know that $V$ is a subspace of $\\R^3$, because it is the solution space of a system of a homogeneous system of equations (in this case, one equation in three variables). We can take $y=t$ and $z=s$ as the free variables and solve for $x=y-2z=t-2s$. Therefore, a general element of $V$ is of the form",
+      "sha": "889b295f54eb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{c} x \\\\ y \\\\ z\\end{array}\\right]\n    ~=~ \\left[\\begin{array}{c} t-2s \\\\ t \\\\ s \\end{array}\\right]\n    ~=~~ t \\left[\\begin{array}{c} 1 \\\\ 1 \\\\ 0 \\end{array}\\right]\n    + s \\left[\\begin{array}{c} -2 \\\\ 0 \\\\ 1 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Thus,",
+      "sha": "e38f4f305df3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "V = \\sspan\\set{\n      \\left[\\begin{array}{c} 1 \\\\ 1 \\\\ 0 \\end{array}\\right],~\n      \\left[\\begin{array}{c} -2 \\\\ 0 \\\\ 1 \\end{array}\\right]\n    }."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since the two spanning vectors are linearly independent, they form a basis of $V$, and thus $\\dim(V)=2$.",
+      "sha": "6d0d1f51bf32",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Note that the dimension of the solution space of a system of equations is equal to the number of parameters in the general solution, which is equal to the number of free variables. For this reason, the dimension is also sometimes called the number of **degrees of freedom**.",
+    "sha": "08c3bfc22a1b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Dimension of a span",
+    "sha": "b92da92e6208",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let",
+      "sha": "ef5fe1edf379",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "W = \\sspan\\set{\n      \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ -1 \\\\ 1 \\end{array}\\right],~\n      \\left[\\begin{array}{r} 1 \\\\ 3 \\\\ -1 \\\\ 1 \\end{array}\\right],~\n      \\left[\\begin{array}{r} 8 \\\\ 19 \\\\ -8 \\\\ 8 \\end{array}\\right],~\n      \\left[\\begin{array}{r} -6 \\\\ -15 \\\\ 6 \\\\ -6 \\end{array}\\right],~\n      \\left[\\begin{array}{r} 1 \\\\ 3 \\\\ 0 \\\\ 1 \\end{array}\\right],~\n      \\left[\\begin{array}{r} 1 \\\\ 5 \\\\ 0 \\\\ 1 \\end{array}\\right]\n    }."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "What is the dimension of $W$?",
+      "sha": "0819ea85c75c",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let",
+      "sha": "ef5fe1edf379",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ -1 \\\\ 1 \\end{array}\\right],~~\n    \\vect{u}_2 = \\left[\\begin{array}{r} 1 \\\\ 3 \\\\ -1 \\\\ 1 \\end{array}\\right],~~\n    \\vect{u}_3 = \\left[\\begin{array}{r} 8 \\\\ 19 \\\\ -8 \\\\ 8 \\end{array}\\right],~~\n    \\vect{u}_4 = \\left[\\begin{array}{r} -6 \\\\ -15 \\\\ 6 \\\\ -6 \\end{array}\\right],~~\n    \\vect{u}_5 = \\left[\\begin{array}{r} 1 \\\\ 3 \\\\ 0 \\\\ 1 \\end{array}\\right],~~\n    \\vect{u}_6 = \\left[\\begin{array}{r} 1 \\\\ 5 \\\\ 0 \\\\ 1 \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "so that $W=\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_6}$. We use the casting-out algorithm to remove any redundant vectors from $\\vect{u}_1,\\ldots,\\vect{u}_6$. The remaining vectors will be linearly independent, and therefore a basis of the span.",
+      "sha": "7fa0642ed46d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrrrr}\n      1 & 1 & 8 & -6 & 1 & 1 \\\\\n      2 & 3 & 19 & -15 & 3 & 5 \\\\\n      -1 & -1 & -8 & 6 & 0 & 0 \\\\\n      1 & 1 & 8 & -6 & 1 & 1\n    \\end{array}\\right]\n    \\quad\\roweq\\quad\n    \\left[\\begin{array}{rrrrrr}\n      \\boxed{1} & 0 & 5 & -3 & 0 & -2 \\\\\n      0 & \\boxed{1} & 3 & -3 & 0 & 2 \\\\\n      0 & 0 & 0 & 0 & \\boxed{1} & 1 \\\\\n      0 & 0 & 0 & 0 & 0 & 0\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, the vectors $\\vect{u}_3$, $\\vect{u}_4$, and $\\vect{u}_6$ are redundant, and $\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_5}$ is a basis of $W$. It follows that $\\dim(W)=3$.",
+      "sha": "6eae3c327836",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "More properties of bases and dimension",
+    "sha": "e9a951c502c4",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We begin by noting that every subspace $V$ of $\\R^n$ has a basis.",
+    "sha": "32b4912ea808",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Existence of bases",
+    "sha": "fef4917ddc4a",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Every subspace of $\\R^n$ has a basis.",
+      "sha": "a977c4a93366",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "This is just a restatement of Theorem “Subspaces are spans”.",
+      "sha": "d28133697ae4",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Of course, the theorem does not mean that the basis is unique. Usually, a subspace of $\\R^n$ will have many different bases. The theorem just states that there exists at least one.",
+    "sha": "6f9eadc38d7a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Sometimes, when we are looking for a basis of a space, we may already have a number of linearly independent vectors. We would like to obtain a basis by adding some *additional* linearly independent vectors to the ones we already have. The following lemma guarantees that this can always be done.",
+    "sha": "23ef5d69b595",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "lemma",
+   "title": {
+    "en": "Linearly independent set can be extended to a basis",
+    "sha": "49419d633a66",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $V$ be a subspace of $\\R^n$, and let $\\vect{u}_1,\\ldots,\\vect{u}_{\\ell}$ be linearly independent elements of $V$. Then it is possible to extend $\\set{\\vect{u}_1,\\ldots,\\vect{u}_{\\ell}}$ to a basis of $V$. In other words, there exist zero or more vectors $\\vect{w}_1,\\ldots,\\vect{w}_s$ such that",
+      "sha": "ae2facd8354d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\set{\\vect{u}_1,\\ldots,\\vect{u}_{\\ell},\\vect{w}_1,\\ldots,\\vect{w}_s}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is a basis of $V$.",
+      "sha": "e4896950fd67",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "By Theorem “Existence of bases”, we know that $V$ has some basis, say $\\set{\\vect{v}_1,\\ldots,\\vect{v}_k}$. However, this may not be the basis we are looking for, because maybe it does not contain the vectors $\\vect{u}_1,\\ldots,\\vect{u}_{\\ell}$. Consider the sequence of $\\ell+k$ vectors",
+      "sha": "26ef30c016fa",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1,\\ldots,\\vect{u}_{\\ell},\\vect{v}_1,\\ldots,\\vect{v}_k."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $V$ is spanned by the vectors $\\vect{v}_1,\\ldots,\\vect{v}_k$, it is certainly also spanned by the larger set of vectors $\\vect{u}_1,\\ldots,\\vect{u}_{\\ell},\\vect{v}_1,\\ldots,\\vect{v}_k$. From Theorem “Finding a linearly independent set of spanning vectors”, we know that we can obtain a basis of $V$ by removing the redundant vectors from $\\vect{u}_1,\\ldots,\\vect{u}_{\\ell},\\vect{v}_1,\\ldots,\\vect{v}_k$. On the other hand, $\\vect{u}_1,\\ldots,\\vect{u}_{\\ell}$ are linearly independent, so none of them can be redundant. It follows that the resulting basis of $V$ contains all of the vectors $\\vect{u}_1,\\ldots,\\vect{u}_{\\ell}$. In other words, we have found a basis of $V$ that is an extension of $\\vect{u}_1,\\ldots,\\vect{u}_{\\ell}$, which is what had to be shown.",
+      "sha": "2fb85d1c033d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Extending a linearly independent set to a basis",
+    "sha": "c8ba743df35d",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Extend $\\set{\\vect{u}_1,\\vect{u}_2}$ to a basis of $\\R^4$, where",
+      "sha": "049fde9a2f41",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ -1 \\\\ 2 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ -2 \\\\ 4 \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\set{\\vect{e}_1,\\ldots,\\vect{e}_4}$ be the standard basis of $\\R^4$. We obtain the desired basis by applying the casting-out algorithm to $\\vect{u}_1,\\vect{u}_2,\\vect{e}_1,\\vect{e}_2,\\vect{e}_3,\\vect{e}_4$:",
+      "sha": "edba41ba5234",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrrrr}\n      1  & 1  & 1 & 0 & 0 & 0 \\\\\n      1  & 2  & 0 & 1 & 0 & 0 \\\\\n      -1 & -2 & 0 & 0 & 1 & 0 \\\\\n      2  & 4  & 0 & 0 & 0 & 1 \\\\\n    \\end{array}\\right]\n    \\quad\\roweq\\quad\n    \\left[\\begin{array}{rrrrrr}\n      \\boxed{1} &  1 &  1 & 0  & 0 & 0 \\\\\n      0 &  \\boxed{1} & -1 & 1  & 0 & 0 \\\\\n      0 &  0 &  0 & \\boxed{1}  & 1 & 0 \\\\\n      0 &  0 &  0 & 0  & \\boxed{2} & 1 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, we cast out the vectors $\\vect{e}_1$ and $\\vect{e}_4$ and keep the rest. The resulting basis is",
+      "sha": "47b0d78eba3c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\set{\\vect{u}_1,\\vect{u}_2,\\vect{e}_2,\\vect{e}_3}\n    = \\set{\n      \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ -1 \\\\ 2 \\end{array}\\right],~\n      \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ -2 \\\\ 4 \\end{array}\\right],~\n      \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 0 \\\\ 0 \\end{array}\\right],~\n      \\left[\\begin{array}{r} 0 \\\\ 0 \\\\ 1 \\\\ 0 \\end{array}\\right]\n    }."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Extending a linearly independent set to a basis",
+    "sha": "c8ba743df35d",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let",
+      "sha": "ef5fe1edf379",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "V = \\set{\\left.\n        \\left[\\begin{array}{c} x \\\\ y \\\\ z \\\\ w \\end{array}\\right]\n        ~\\right\\vert~\n      x+2y+z-w = 0\n    }."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note that $\\vect{u}_1,\\vect{u}_2\\in V$, where",
+      "sha": "f15cadc3b536",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{c} 1 \\\\ -1 \\\\ 1 \\\\ 0 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{c} -2 \\\\ 1 \\\\ 1 \\\\ 1 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Extend $\\set{\\vect{u}_1,\\vect{u}_2}$ to a basis of $V$.",
+      "sha": "dd89a5bda166",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We first find a basis of $V$ by solving the linear equation $x+2y+z-w = 0$. Taking $y=r$, $z=s$, and $w=t$ as the free variables, we get $x=-2y-z+w = -2r-s+t$, and therefore the general solution is",
+      "sha": "98e6afd5de6a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{c} x \\\\ y \\\\ z \\\\ w \\end{array}\\right]\n    ~=~ \\left[\\begin{array}{c} -2r-s+t \\\\ r \\\\ s \\\\ t \\end{array}\\right]\n    ~=~~ r\\left[\\begin{array}{c} -2 \\\\ 1 \\\\ 0 \\\\ 0 \\end{array}\\right]\n    + s\\left[\\begin{array}{c} -1 \\\\ 0 \\\\ 1 \\\\ 0 \\end{array}\\right]\n    + t\\left[\\begin{array}{c} 1 \\\\ 0 \\\\ 0 \\\\ 1 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, the vectors $\\set{\\vect{v}_1,\\vect{v}_2,\\vect{v}_3}$ form a basis of $V$, where",
+      "sha": "ded850ec2b51",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}_1 = \\left[\\begin{array}{c} -2 \\\\ 1 \\\\ 0 \\\\ 0 \\end{array}\\right],\\quad\n    \\vect{v}_2 = \\left[\\begin{array}{c} -1 \\\\ 0 \\\\ 1 \\\\ 0 \\end{array}\\right],\\quad\n    \\vect{v}_3 = \\left[\\begin{array}{c} 1 \\\\ 0 \\\\ 0 \\\\ 1 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "However, this is not the basis we are looking for, because it does not extend $\\set{\\vect{u}_1,\\vect{u}_2}$. To get a basis of $V$ that extends $\\set{\\vect{u}_1,\\vect{u}_2}$, we perform the casting-out algorithm on the vectors $\\vect{u}_1,\\vect{u}_2,\\vect{v}_1,\\vect{v}_2,\\vect{v}_3$:",
+      "sha": "61112f65e6cb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrrr}\n      1  & -2 & -2 & -1 & 1 \\\\\n      -1 & 1  & 1  & 0  & 0 \\\\\n      1  & 1  & 0  & 1  & 0 \\\\\n      0  & 1  & 0  & 0  & 1 \\\\\n    \\end{array}\\right]\n    \\quad\\roweq\\quad\\ldots\\quad\\roweq\\quad\n    \\left[\\begin{array}{rrrrr}\n      \\boxed{1}  & -2 & -2 & -1 & 1 \\\\\n      0  & \\boxed{1}  & 1  & 1  & -1 \\\\\n      0  & 0  & \\boxed{1}  & 1  & -2 \\\\\n      0  & 0  & 0  & 0  & 0 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Casting out $\\vect{v}_2$ and $\\vect{v}_3$, we find that the desired basis is $\\set{\\vect{u}_1,\\vect{u}_2,\\vect{v}_1}$.",
+      "sha": "4a9955b1c82b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We also have a kind of opposite of Lemma “Extending a linearly independent set to a basis”: every spanning set can be shrunk to a basis.",
+    "sha": "5590459f951c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "lemma",
+   "title": {
+    "en": "Spanning set can be shrunk to a basis",
+    "sha": "26c3fa3c333e",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $V$ be a subspace of $\\R^n$, and let $\\vect{u}_1,\\ldots,\\vect{u}_{\\ell}$ be a set of vectors spanning $V$. Then it is possible to obtain a basis of $V$ by “shrinking” the set, i.e., by removing zero or more vectors from it.",
+      "sha": "0b85a6d3964a",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "This is merely a restatement of Theorem “Finding a linearly independent set of spanning vectors”. We obtain the linearly independent subset by removing the redundant vectors, which can be achieved by the casting-out algorithm. See also Example “Finding a linearly independent set of spanning vectors”.",
+      "sha": "4a81c1bc0420",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The following proposition tells us something about the size of a linearly independent set of vectors or the size of a spanning set of vectors.",
+    "sha": "9b7c174cf312",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Size of a linearly independent or spanning set of vectors",
+    "sha": "14ad5aebb8fc",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $V$ be a $k$-dimensional subspace of $\\R^n$. Then",
+      "sha": "b7062a98a0af",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Every linearly independent set of vectors in $V$ has at most $k$ vectors.",
+            "sha": "6d800b0961a1",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Every spanning set of vectors in $V$ has at least $k$ vectors.",
+            "sha": "78f6c47ea525",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Both properties follow from the Exchange Lemma (Lemma “Exchange Lemma”). Since $V$ is $k$-dimensional, it has some basis consisting of $k$ vectors $\\vect{v}_1,\\ldots,\\vect{v}_k$.",
+      "sha": "608f5f8a8150",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Suppose $\\vect{u}_1,\\ldots\\vect{u}_r$ are linearly independent vectors in $V$. Since $\\vect{u}_1,\\ldots\\vect{u}_r$ are linearly independent and $\\vect{v}_1,\\ldots,\\vect{v}_k$ are spanning, the Exchange Lemma implies that $r\\leq k$.",
+            "sha": "2e10d54ebe53",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Suppose the vectors $\\vect{u}_1,\\ldots\\vect{u}_s$ span $V$. Since $\\vect{v}_1,\\ldots,\\vect{v}_k$ are linearly independent and $\\vect{u}_1,\\ldots\\vect{u}_s$ are spanning, the Exchange Lemma implies that $k\\leq s$.",
+            "sha": "d29e49c6dfac",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The next proposition often comes in handy when we need to check that some set of vectors is a basis for a subspace $V$, where the dimension of $V$ is already known. If $\\dim(V)=k$, we know that any basis has to have size $k$. Interestingly, to check that a set of $k$ vectors is a basis of $V$, it is sufficient to check *either* that it is linearly independent *or* that it is spanning. This can save half the work in checking that some set of vectors is a basis (but it only works if the number of vectors is exactly $k$, the dimension of $V$).",
+    "sha": "93312d1ae75a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Basis test for $k$ vectors in $k$-dimensional space",
+    "sha": "457b684e4e0d",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $V$ be a $k$-dimensional subspace of $\\R^n$, and consider $k$ vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$ in $V$.",
+      "sha": "97d302f051b7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $\\vect{u}_1,\\ldots,\\vect{u}_k$ are linearly independent, then they form a basis for $V$.",
+         "sha": "6e136bdf25d6",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $\\vect{u}_1,\\ldots,\\vect{u}_k$ span $V$, then they form a basis for $V$.",
+         "sha": "164634d04194",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The first claim is an easy consequence of Lemma “Extending a linearly independent set to a basis”. Assume that $\\vect{u}_1,\\ldots,\\vect{u}_k$ are linearly independent. By Lemma “Extending a linearly independent set to a basis”, we can add zero or more vectors to $\\vect{u}_1,\\ldots,\\vect{u}_k$ to obtain a basis of $V$. On the other hand, since $V$ is $k$-dimensional, every basis must have exactly $k$ elements, so that the only possibility is that we have added zero vectors. Therefore, $\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ is already a basis of $V$, as claimed.",
+      "sha": "ea494f335d10",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To prove the second claim, assume that $V=\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$. By Theorem “Subspaces are spans”, there exists a linearly independent subset of $\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ that spans $V$, i.e., that is a basis for $V$. But since $\\dim(V)=k$, every basis must have exactly $k$ elements, so that the only possible such subset is $\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ itself. Therefore, $\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ is a basis of $V$, as claimed.",
+      "sha": "8b49d6cc48f1",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It is important to note that Proposition “Basis test for $k$ vectors in $k$-dimensional space” does *not* say that every linearly independent set of vectors in $V$ is a basis. For example, a set of $k-1$ or fewer linearly independent vectors will not be spanning. Also, the proposition does *not* say that every spanning set of vectors in $V$ is a basis. For example, a set of $k+1$ or more spanning vectors will not be linearly independent. Rather, what the proposition is saying is that if we have exactly $k$ vectors in a $k$-dimensional space, then linear independence implies spanning and vice versa.",
+    "sha": "962d7438d5fd",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Basis test for $3$ vectors in $3$-dimensional space",
+    "sha": "2471967ba09b",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Do the vectors",
+      "sha": "8cbd83831c37",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 1 \\end{array}\\right],\\quad\n    \\text{and}\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 2 \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "form a basis of\\/ $\\R^3$?",
+      "sha": "77373161f95a",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "This is similar to Example “A non-standard basis of\\/ $\\R^3$”. But because we know that $\\R^3$ is a $3$-dimensional space, and because we have exactly $3$ vectors, by Proposition “Basis test for $k$ vectors in $k$-dimensional space”, we only need to check *either* whether $\\vect{u}_1,\\vect{u}_2,\\vect{u}_3$ are linearly independent *or* whether they are spanning. We check whether they are linearly independent by using the casting-out algorithm.",
+      "sha": "50bd0674fccb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n      1 & 1 & 1 \\\\\n      2 & 1 & 1 \\\\\n      3 & 1 & 2 \\\\\n    \\end{array}\\right]\n    \\quad\\roweq\\quad\n    \\left[\\begin{array}{rrr}\n      1 & 1 & 1 \\\\\n      0 & -1 & -1 \\\\\n      0 & 0 & -1 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since the matrix has rank 3, the vectors $\\vect{u}_1,\\vect{u}_2,\\vect{u}_3$ are linearly independent. Therefore, by Proposition “Basis test for $k$ vectors in $k$-dimensional space”, they form a basis of $\\R^3$.",
+      "sha": "394de1dfa4a1",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The following proposition is also a consequence of Lemma “Extending a linearly independent set to a basis”. It says that smaller subspaces have smaller dimension.",
+    "sha": "863ecf491775",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Subspace of a subspace",
+    "sha": "b2018ce05ecf",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $V$ and $W$ be subspaces of\\/ $\\R^n$, and suppose that $V\\subseteq W$. Then $\\dim(V)\\leq\\dim(W)$, with equality only when $V=W$.",
+      "sha": "93555e363a68",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider any basis $\\vect{u}_1,\\ldots,\\vect{u}_k$ of $V$. Because $V\\subseteq W$, the vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$ are linearly independent elements of $W$, and therefore can be extended to a basis of $W$ by Lemma “Extending a linearly independent set to a basis”. The resulting basis of $W$ has at least $k$ elements, i.e., $\\dim(V)\\leq\\dim(W)$. To prove the last claim, assume moreover that $\\dim(V)=\\dim(W)$. In that case, $\\dim(W)=k$, so that the $k$ linearly independent vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$ form a basis of $W$ by Proposition “Basis test for $k$ vectors in $k$-dimensional space”. Since both $V$ and $W$ are spanned by $\\vect{u}_1,\\ldots,\\vect{u}_k$, we must have $V=W$, as claimed.",
+      "sha": "b1c82ae88fae",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each of the following subspaces of $\\R^4$, find a basis and determine the dimension.",
+      "sha": "ce566d668bbb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V_1 = \\sspan\\set{ \\left[\\begin{array}{r} 2 \\\\ 1 \\\\ 1 \\\\ 1 \\end{array}\\right],~ \\left[\\begin{array}{r} -1 \\\\ 0 \\\\ -1 \\\\ -1 \\end{array}\\right],~ \\left[\\begin{array}{r} 5 \\\\ 2 \\\\ 3 \\\\ 3 \\end{array}\\right],~ \\left[\\begin{array}{r} -1 \\\\ 1 \\\\ -2 \\\\ -2 \\end{array}\\right] }$.",
+         "sha": "1fc86784897c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V_2 = \\sspan\\set{ \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 1 \\\\ -1 \\end{array}\\right],~ \\left[\\begin{array}{r} -1 \\\\ -1 \\\\ -2 \\\\ 2 \\end{array}\\right],~ \\left[\\begin{array}{r} 2 \\\\ 3 \\\\ 5 \\\\ -5 \\end{array}\\right],~ \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 2 \\\\ -2 \\end{array}\\right] }$.",
+         "sha": "6e3ef5589537",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V_3 = \\sspan\\set{ \\left[\\begin{array}{r} -2 \\\\ 1 \\\\ 1 \\\\ -3 \\end{array}\\right],~ \\left[\\begin{array}{r} -9 \\\\ 4 \\\\ 3 \\\\ -9 \\end{array}\\right],~ \\left[\\begin{array}{r} -33 \\\\ 15 \\\\ 12 \\\\ -36 \\end{array}\\right],~ \\left[\\begin{array}{r} -22 \\\\ 10 \\\\ 8 \\\\ -24 \\end{array}\\right] }$.",
+         "sha": "73fc41da42b9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V_4 = \\sspan\\set{ \\left[\\begin{array}{r} -1 \\\\ 1 \\\\ -1 \\\\ -2 \\end{array}\\right],~ \\left[\\begin{array}{r} -4 \\\\ 3 \\\\ -2 \\\\ -4 \\end{array}\\right],~ \\left[\\begin{array}{r} -3 \\\\ 2 \\\\ -1 \\\\ -2 \\end{array}\\right],~ \\left[\\begin{array}{r} -1 \\\\ 1 \\\\ -2 \\\\ -4 \\end{array}\\right],~ \\left[\\begin{array}{r} -7 \\\\ 5 \\\\ -3 \\\\ -6 \\end{array}\\right] }$.",
+         "sha": "6befc34179aa",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Basis and dimension · 习题 1（上游 exercises/SpanIndependenceBasis-Basis.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Basis.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find a basis and the dimension of each of the following subspaces of $\\R^n$.",
+      "sha": "9b2ea3ab77f1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$S_1 = \\set{\\left.\\left[\\begin{array}{c} 4u+v-5w \\\\ 12u+6v-6w \\\\ 4u+4v+4w \\end{array}\\right] ~\\right\\vert~u,v,w\\in \\R}.$",
+         "sha": "bcc7dcdda309",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$S_2 = \\set{\\left.\\left[\\begin{array}{c} 2u+6v+7w \\\\ -3u-9v-12w \\\\ 2u+6v+6w \\\\ u+3v+3w \\end{array}\\right] ~\\right\\vert~u,v,w\\in \\R}.$",
+         "sha": "e4467bcee43a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$S_3 = \\set{\\left.\\left[\\begin{array}{c} 2u+v \\\\ 6v-3u+3w \\\\ 3v-6u+3w \\end{array}\\right] ~\\right\\vert~u,v,w\\in \\R}.$",
+         "sha": "7a7dcd3e6412",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Basis and dimension · 习题 2（上游 exercises/SpanIndependenceBasis-Basis.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Basis.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find a basis and the dimension of each of the following subspaces of $\\R^n$.",
+      "sha": "9b2ea3ab77f1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$W_1 = \\set{\\left.\\left[\\begin{array}{c} u \\\\ v \\\\ w \\end{array}\\right] ~\\right\\vert~ \\text{$u+v=0$ and $u-2w=0$}}.$",
+         "sha": "b8db38ac1e9e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$W_2 = \\set{\\left.\\left[\\begin{array}{c} u \\\\ v \\\\ w \\end{array}\\right] ~\\right\\vert~ \\text{$u+v+w=0$}}.$",
+         "sha": "db506505a065",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$S = \\set{\\left.\\left[\\begin{array}{c} u \\\\ v \\\\ w \\\\ x \\end{array}\\right] ~\\right\\vert~ \\text{$u+v=w+x$ and $u+w=v+x$}}.$",
+         "sha": "ee6eede4c4ca",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Basis and dimension · 习题 3（上游 exercises/SpanIndependenceBasis-Basis.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Basis.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the vector $\\vect{v}$ that has coordinates",
+      "sha": "6ce82adc9e29",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\coord{\\vect{v}}_B = \\left[\\begin{array}{r} 2 \\\\ 1 \\\\ -3 \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "with respect to the basis $B=\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3}$ of\\/ $\\R^3$, where",
+      "sha": "b9cdb75f9091",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 2 \\\\ 4 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 1 \\\\ -1 \\\\ 0 \\end{array}\\right],\\quad\n    \\text{and}\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} -1 \\\\ 0 \\\\ 3\\end{array}\\right]."
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Basis and dimension · 习题 4（上游 exercises/SpanIndependenceBasis-Basis.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Basis.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the coordinates of each of $\\vect{v}$, $\\vect{w}$ with respect to the basis $B=\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3}$, where",
+      "sha": "927637e12750",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v} = \\left[\\begin{array}{r} 4 \\\\ 3 \\\\ 8 \\end{array}\\right],\\quad\n    \\vect{w} = \\left[\\begin{array}{r} -1 \\\\ -1 \\\\ 3 \\end{array}\\right],\\quad\n    \\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 3 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} 2 \\\\ 2 \\\\ 1 \\end{array}\\right]."
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Basis and dimension · 习题 5（上游 exercises/SpanIndependenceBasis-Basis.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Basis.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Extend $\\set{\\vect{u}_1,\\vect{u}_2}$ to a basis of $\\R^3$, where",
+      "sha": "6dde4316d443",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 3 \\\\ 3 \\\\ -6 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 0 \\\\ -1 \\\\ 2 \\end{array}\\right]."
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Basis and dimension · 习题 6（上游 exercises/SpanIndependenceBasis-Basis.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Basis.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let",
+      "sha": "ef5fe1edf379",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "V ~=~ \\set{\\left.\n        \\left[\\begin{array}{c} x \\\\ y \\\\ z \\\\ w \\end{array}\\right]\n        ~\\right\\vert~\n      x+y+z+2w = 0\n    }."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note that $\\vect{u}_1,\\vect{u}_2\\in V$, where",
+      "sha": "f15cadc3b536",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{c} 1 \\\\ 1 \\\\ 0 \\\\ -1 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{c} -2 \\\\ -2 \\\\ -2 \\\\ 3 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Is $\\set{\\vect{u}_1,\\vect{u}_2}$ a basis of $V$? If not, extend it to a basis of $V$ by adding additional basis vectors.",
+      "sha": "4e3a58fa208f",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Basis and dimension · 习题 7（上游 exercises/SpanIndependenceBasis-Basis.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Basis.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex8",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Shrink $\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3,\\vect{u}_4}$ to a basis of $\\R^3$ by removing redundant vectors, where",
+      "sha": "4aeb781aa216",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 0 \\\\ -1 \\\\ 2 \\end{array}\\right],\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} 2 \\\\ 3 \\\\ 8 \\end{array}\\right],\\quad\n    \\vect{u}_4 = \\left[\\begin{array}{r} -7 \\\\ 2 \\\\ 1 \\end{array}\\right]."
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Basis and dimension · 习题 8（上游 exercises/SpanIndependenceBasis-Basis.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Basis.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex9",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use one of the basis tests of Proposition “Basis test for $k$ vectors in $k$-dimensional space” to determine whether the vectors",
+      "sha": "372dcd4fb471",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 4 \\\\ -2 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} -2 \\\\ 4 \\\\ 1 \\end{array}\\right],\\quad\n    \\text{and}\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} 1 \\\\ -2 \\\\ 4 \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "form a basis of\\/ $\\R^3$.",
+      "sha": "8406cac5f243",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Basis and dimension · 习题 9（上游 exercises/SpanIndependenceBasis-Basis.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Basis.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex10",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use one of the basis tests of Proposition “Basis test for $k$ vectors in $k$-dimensional space” to determine whether the vectors",
+      "sha": "372dcd4fb471",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 2 \\\\ -1 \\\\ -1 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} -1 \\\\ 2 \\\\ -1 \\end{array}\\right],\\quad\n    \\text{and}\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} -1 \\\\ -1 \\\\ 2 \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "form a basis of\\/ $\\R^3$.",
+      "sha": "8406cac5f243",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Basis and dimension · 习题 10（上游 exercises/SpanIndependenceBasis-Basis.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Basis.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex11",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "In this exercise, we use scalars from the field $\\Z_5$ of integers modulo $5$ instead of real numbers (see Section 〔引用〕, “Fields”). Find a basis and the dimension of each of the following subspaces of $(\\Z_5)^n$.",
+      "sha": "3062ff49a6fb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V_1 = \\sspan\\set{ \\left[\\begin{array}{r} 2 \\\\ 3 \\\\ 1 \\\\ 4 \\end{array}\\right],~ \\left[\\begin{array}{r} 1 \\\\ 4 \\\\ 3 \\\\ 2 \\end{array}\\right],~ \\left[\\begin{array}{r} 4 \\\\ 1 \\\\ 2 \\\\ 3 \\end{array}\\right],~ \\left[\\begin{array}{r} 2 \\\\ 2 \\\\ 1 \\\\ 0 \\end{array}\\right] }$.",
+         "sha": "c5298372e45c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V_2 = \\set{\\left.\\left[\\begin{array}{c} u \\\\ v \\\\ w \\end{array}\\right] ~\\right\\vert~ \\text{$2u+v=0$ and $u+4w=0$}}.$",
+         "sha": "c2c7307e34d3",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V_3 = \\set{\\left.\\left[\\begin{array}{c} u \\\\ v \\\\ w \\end{array}\\right] ~\\right\\vert~ \\text{$u+2v+3w=0$}}.$",
+         "sha": "061d6c14aaef",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Basis $\\set{\\left[\\begin{array}{r} 2 \\\\ 3 \\\\ 1 \\\\ 4 \\end{array}\\right], \\left[\\begin{array}{r} 2 \\\\ 2 \\\\ 1 \\\\ 0 \\end{array}\\right]}$, dimension 2.",
+         "sha": "ac2bec6faba3",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Basis $\\set{\\left[\\begin{array}{r} 1 \\\\ 3 \\\\ 1 \\end{array}\\right]}$, dimension 1.",
+         "sha": "aa178aa26f64",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Basis $\\set{\\left[\\begin{array}{r} 2 \\\\ 0 \\\\ 1 \\end{array}\\right], \\left[\\begin{array}{r} 3 \\\\ 1 \\\\ 0 \\end{array}\\right]}$, dimension 2.",
+         "sha": "03213c49aa64",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Basis and dimension · 习题 11（上游 exercises/SpanIndependenceBasis-Basis.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Basis.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex12",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "In this exercise, we use scalars from the field $\\Z_7$ of integers modulo $7$ instead of real numbers. Find the coordinates of $\\vect{v}$ with respect to the basis $B=\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3}$ in $(\\Z_7)^3$, where",
+      "sha": "4eabf6dfec23",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v} = \\left[\\begin{array}{r} 3 \\\\ 1 \\\\ 4 \\end{array}\\right],\\quad\n    \\vect{u}_1 = \\left[\\begin{array}{r} 2 \\\\ 4 \\\\ 2 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 1 \\\\ 3 \\\\ 3 \\end{array}\\right],\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} 4 \\\\ 1 \\\\ 2 \\end{array}\\right]."
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Basis and dimension · 习题 12（上游 exercises/SpanIndependenceBasis-Basis.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Basis.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex13",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "In this exercise, we use scalars from the field $\\Z_2$ of integers modulo $2$ instead of real numbers. Extend $\\set{\\vect{u}_1,\\vect{u}_2}$ to a basis of $(\\Z_2)^4$, where",
+      "sha": "ba15c236ce60",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 1 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 1 \\\\ 1 \\end{array}\\right]."
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Basis and dimension · 习题 13（上游 exercises/SpanIndependenceBasis-Basis.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Basis.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex14",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "True or false? Explain.",
+      "sha": "c20e31a27c52",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Every set of $5$ vectors in $\\R^5$ is linearly independent.",
+         "sha": "e79c42b4308f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Every set of $4$ vectors in $\\R^5$ is linearly independent.",
+         "sha": "5af6c5fbfe37",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Every set of $6$ vectors in $\\R^5$ is linearly dependent.",
+         "sha": "5993682d4436",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "No set of $4$ vectors spans $\\R^5$.",
+         "sha": "90005ac9c803",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Every linearly independent set of $5$ vectors in $\\R^5$ is a basis of $\\R^5$.",
+         "sha": "4edf8c4f3310",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Every linearly independent set of $4$ vectors in $\\R^5$ is a basis of $\\R^5$.",
+         "sha": "cca6aef99814",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Some linearly independent set of $4$ vectors in $\\R^5$ is a basis of $\\R^5$.",
+         "sha": "1e621b5911ac",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Every spanning set of $6$ vectors in $\\R^5$ is a basis of $\\R^5$.",
+         "sha": "4b0360b4db21",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Every linearly independent set of $4$ vectors in $\\R^5$ spans a $4$-dimensional subspace of $\\R^5$.",
+         "sha": "a82b7b5e71bb",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "No. For example, the vectors $\\set{\\vect{0},\\vect{0},\\vect{0},\\vect{0},\\vect{0}}$ are linearly dependent.",
+         "sha": "f80e1fd53938",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "No. For example, the vectors $\\set{\\vect{0},\\vect{0},\\vect{0},\\vect{0}}$ are linearly dependent.",
+         "sha": "86c5ef5b5e59",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes, by Proposition “Size of a linearly independent or spanning set of vectors”.",
+         "sha": "806a625b3620",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Correct, by Proposition “Size of a linearly independent or spanning set of vectors”.",
+         "sha": "6e88b290cbdb",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes, by Proposition “Basis test for $k$ vectors in $k$-dimensional space”.",
+         "sha": "a9dfe0718a83",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "No, in fact no such set is a basis of $\\R^5$, since every basis of $\\R^5$ consists of $5$ vectors by Theorem “Bases are of the same size”.",
+         "sha": "a619642b381b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "No, as noted in the previous answer.",
+         "sha": "5b91c6689ecb",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "No, no basis of $\\R^5$ can have $6$ elements.",
+         "sha": "32415bed515d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes, because a linearly independent set of vectors is a basis of the subspace it spans.",
+         "sha": "ea25f4a03a05",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Basis and dimension · 习题 14（上游 exercises/SpanIndependenceBasis-Basis.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Basis.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex15",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If you have $6$ vectors in $\\R^5$, is it possible they are linearly independent? Explain.",
+      "sha": "4aecbc6482a2",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "No. As a $5$-dimensional space, $\\R^5$ is spanned by $5$ vectors. By the Exchange Lemma, any linearly independent set can have size at most $5$.",
+      "sha": "ba1f0b3cb7df",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Basis and dimension · 习题 15（上游 exercises/SpanIndependenceBasis-Basis.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Basis.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex16",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $V$ and $W$ both have dimension equal to $7$ and they are subspaces of $\\R^{10}$. What are the possibilities for the dimension of $V\\cap W$? **Hint:** Remember that a linear independent set can be extended to form a basis.",
+      "sha": "c0655498ecd6",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Basis and dimension · 习题 16（上游 exercises/SpanIndependenceBasis-Basis.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Basis.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex17",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $V$ has dimension $p$ and $W$ has dimension $q$ and they are each contained in a subspace, $U$ which has dimension equal to $n$ where $n>\\max (p,q)$. What are the possibilities for the dimension of $V\\cap W$? **Hint:** Remember that a linearly independent set can be extended to form a basis.",
+      "sha": "ac46e0bbbb6b",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\set{x_1,\\ldots,x_k}$ be a basis for $V\\cap W$. Then there are bases for $V$ and $W$ which are respectively",
+      "sha": "60cb009fbbff",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\set{x_1,\\ldots,x_k,y_{k+1},\\ldots,y_p},\\ \\set{\n          x_1,\\ldots,x_k,z_{k+1},\\ldots,z_q}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "None of the $y_i$ are in $W$ (or else they would be in $V\\cap W$, and therefore a linear combination of $x_1,\\ldots,x_k$). Similarly, none of the $z_j$ are in $V$. It follows that $k+p-k+q-k\\leq n$, and so",
+      "sha": "0aaade3a3484",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "p+q-n\\leq k"
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Basis and dimension · 习题 17（上游 exercises/SpanIndependenceBasis-Basis.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Basis.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "基与维数"
+}

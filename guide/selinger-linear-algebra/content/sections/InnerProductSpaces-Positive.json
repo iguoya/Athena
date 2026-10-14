@@ -1,0 +1,884 @@
+{
+ "id": "InnerProductSpaces-Positive",
+ "title_en": "Positive semidefinite and positive definite matrices",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether a matrix is positive semidefinite and/or positive definite, either directly or by looking at the eigenvalues.",
+         "sha": "8217036a2d4e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether a matrix is positive semidefinite and/or positive definite using Descartes' rule of signs.",
+         "sha": "9c2e24e37e8e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether a matrix defines an inner product.",
+         "sha": "9fcd7033a3f7",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In Example “$\\R^2$ with a non-standard inner product”, we saw that it is sometimes possible to define an inner product on $\\R^n$ from an $n\\times n$-matrix $A$ by the formula",
+    "sha": "4b42f0a4b2e0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\iprod{\\vect{u},\\vect{v}} = \\vect{u}^T A \\vect{v}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We will now explore in more detail under what conditions this formula defines an inner product.",
+    "sha": "3dc2b22066e0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Positive semidefinite and positive definite matrices",
+    "sha": "7251451602b5",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n\\times n$-matrix over the real numbers.",
+      "sha": "4c66fdc5215e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$A$ is called **symmetric** if $A=A^T$.",
+         "sha": "44cbfa4cec06",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$A$ is called **positive semidefinite** if it is symmetric and for all $\\vect{v}\\in\\R^n$, we have $\\vect{v}^TA\\vect{v}\\geq 0$.",
+         "sha": "eece9747bf55",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$A$ is called **positive definite** if it is positive semidefinite and $\\vect{v}^TA\\vect{v}=0$ if and only if $\\vect{v}=\\vect{0}$.",
+         "sha": "973ac4e6a2d0",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Equivalently, the positive definite property can also be stated as follows: $A$ is positive definite if it is symmetric and for all $\\vect{v}\\in\\R^n$ with $\\vect{v}\\neq\\vect{0}$, we have $\\vect{v}^TA\\vect{v}>0$.",
+    "sha": "97ea19d6e652",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Positive semidefinite and positive definite matrices",
+    "sha": "7251451602b5",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following matrices are positive semidefinite? Which ones are positive definite?",
+      "sha": "4dffc2dbbb26",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{cc} 2 & -1 \\\\ -1 & 1 \\end{array}\\right],\\quad\n    B = \\left[\\begin{array}{cc} 1 & 2 \\\\ 2 & 1 \\end{array}\\right],\\quad\n    C = \\left[\\begin{array}{cc} 1 & -1 \\\\ -1 & 1 \\end{array}\\right],\\quad\n    D = \\left[\\begin{array}{cc} 2 & 0 \\\\ 2 & 1 \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix $A$ is positive definite. To see why, consider any vector $\\vect{v}=\\left[\\begin{array}{c} x \\\\ y \\end{array}\\right]$. Then",
+      "sha": "4a49ef86a8b1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}^TA\\vect{v}\n    ~=~\n    \\left[\\begin{array}{cc} x & y \\end{array}\\right]\n    \\left[\\begin{array}{cc} 2 & -1 \\\\ -1 & 1 \\end{array}\\right]\n    \\left[\\begin{array}{c} x \\\\ y \\end{array}\\right]\n    ~=~ 2x^2 - 2xy + y^2\n    ~=~ x^2 + (x-y)^2\n    ~\\geq~ 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This inequality implies that $A$ is positive semidefinite. Moreover, $\\vect{v}^TA\\vect{v}=0$ if and only if $x=0$ and $x-y=0$, which implies $x=y=0$. So $\\vect{v}=\\vect{0}$ is the only solution of $\\vect{v}^TA\\vect{v}=0$, and $A$ is positive definite.",
+      "sha": "a86ef63466e2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix $B$ is not positive semidefinite (and therefore not positive definite either). For example, consider $\\vect{v}=\\left[\\begin{array}{c} 1 \\\\ -1 \\end{array}\\right]$. Then",
+      "sha": "ff7256be0b13",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}^TB\\vect{v}\n    ~=~\n    \\left[\\begin{array}{cc} 1 & -1 \\end{array}\\right]\n    \\left[\\begin{array}{cc} 1 & 2 \\\\ 2 & 1 \\end{array}\\right]\n    \\left[\\begin{array}{c} 1 \\\\ -1 \\end{array}\\right]\n    ~=~ 1-2-2+1\n    ~=~ -2\n    ~<~ 0,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "showing that $B$ is not positive semidefinite.",
+      "sha": "866031922bb9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix $C$ is positive semidefinite, but not positive definite. To see why, consider $\\vect{v}=\\left[\\begin{array}{c} x \\\\ y \\end{array}\\right]$. Then",
+      "sha": "e58dae89ea9d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}^TC\\vect{v}\n    ~=~\n    \\left[\\begin{array}{cc} x & y \\end{array}\\right]\n    \\left[\\begin{array}{cc} 1 & -1 \\\\ -1 & 1 \\end{array}\\right]\n    \\left[\\begin{array}{c} x \\\\ y \\end{array}\\right]\n    ~=~ x^2 - 2xy + y^2\n    ~=~ (x-y)^2\n    ~\\geq~ 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, $C$ is positive semidefinite. However, it is not positive definite because, for example, for $\\vect{v}=\\left[\\begin{array}{c} 1 \\\\ 1 \\end{array}\\right]$, we have $\\vect{v}\\neq\\vect{0}$ but $\\vect{v}^TC\\vect{v}=0$.",
+      "sha": "12c83dc2264e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix $D$ is not symmetric, and therefore neither positive semidefinite nor positive definite.",
+      "sha": "67e4be396e08",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The interest of positive definite matrices lies in the following proposition.",
+    "sha": "40ac497c3572",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Positive definite matrices and inner products on $\\R^n$",
+    "sha": "5de067c1d0d0",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n\\times n$-matrix over the real numbers. Then the formula",
+      "sha": "c1b1d9cc8e48",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{u},\\vect{v}} = \\vect{u}^T A \\vect{v}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "defines an inner product on $\\R^n$ if and only if $A$ is positive definite. Moreover, every inner product on $\\R^n$ arises from some positive definite matrix $A$ in this way.",
+      "sha": "7be83fbe1ff0",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Define $\\iprod{\\vect{u},\\vect{v}} = \\vect{u}^T A \\vect{v}$. We will check each of the three properties of an inner product from Definition “Real inner product space”. Linearity holds for all matrices $A$, because",
+      "sha": "0ca83df78368",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{u},k\\vect{v}}\n    ~=~ \\vect{u}^T A (k\\vect{v})\n    ~=~ k(\\vect{u}^T A \\vect{v})\n    ~=~ k\\iprod{\\vect{u},\\vect{v}}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and",
+      "sha": "cffa50a32cb1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{u},\\vect{v}+\\vect{v}'}\n    ~=~ \\vect{u}^T A (\\vect{v}+\\vect{v}')\n    ~=~ \\vect{u}^T A \\vect{v} + \\vect{u}^T A \\vect{v}'\n    ~=~ \\iprod{\\vect{u},\\vect{v}} + \\iprod{\\vect{u},\\vect{v}'}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For symmetry, first observe that for all $\\vect{u},\\vect{v}$,",
+      "sha": "1a03fb1bb2c4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{v},\\vect{u}}\n    ~=~ \\vect{v}^T A \\vect{u}\n    ~=~ (\\vect{v}^T A \\vect{u})^T\n    ~=~ \\vect{u}^T A^T \\vect{v}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore $\\iprod{\\vect{u},\\vect{v}}=\\iprod{\\vect{v},\\vect{u}}$ if and only if $\\vect{u}^T A \\vect{v} = \\vect{u}^T A^T \\vect{v}$. This holds for all $\\vect{u},\\vect{v}$ if and only if $A=A^T$. Therefore, symmetry holds if and only if $A$ is symmetric. Finally, the positive definite property of the inner product holds, by definition, if and only if $A$ is positive definite.",
+      "sha": "0e12d2b76319",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To prove the second part, consider any inner product $\\iprod{\\vect{u},\\vect{v}}$ on $\\R^n$. Let $\\vect{e}_1,\\ldots,\\vect{e}_n$ be the standard basis vectors, and define $a_{ij} = \\iprod{\\vect{e}_i,\\vect{e}_j}$. Then $A=\\mat{a_{ij}}$ is a matrix. We claim that $\\iprod{\\vect{u},\\vect{v}}=\\vect{u}^TA\\vect{v}$ for all $\\vect{u},\\vect{v}$. Indeed, let $\\vect{u}=u_1\\vect{e}_1+\\ldots+u_n\\vect{e}_n$ and $\\vect{v}=v_1\\vect{e}_1+\\ldots+v_n\\vect{e}_n$. Then",
+      "sha": "3ebdc47574ab",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\iprod{\\vect{u},\\vect{v}}\n    &=& \\iprod{u_1\\vect{e}_1+\\ldots+u_n\\vect{e}_n,~ v_1\\vect{e}_1+\\ldots+v_n\\vect{e}_n} \\\\\n    &=& u_1v_1\\iprod{\\vect{e}_1, \\vect{e}_1}\n    +   u_1v_2\\iprod{\\vect{e}_1, \\vect{e}_2}\n    + \\ldots\n    +   u_nv_n\\iprod{\\vect{e}_n, \\vect{e}_n} \\\\\n    &=& u_1v_1a_{11}\n    +   u_1v_2a_{12}\n    + \\ldots\n    +   u_nv_na_{nn} \\\\\n    &=& \\vect{u}^TA\\vect{v}.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By the first part, $A$ is positive definite.",
+      "sha": "9088683a1f7e",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Given a symmetric matrix $A$, it is not always an easy task to determine whether $A$ is positive definite (or semidefinite) by using the definition directly. This would require checking the condition $\\vect{v}^TA\\vect{v}\\geq 0$ for *all* vectors $\\vect{v}$, of which there are infinitely many. The following proposition gives us a more practical method for determining whether a matrix is positive (semi)definite.",
+    "sha": "aef481ba415c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Characterization of positive (semi)definite matrices using eigenvalues",
+    "sha": "d48803f30605",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be a symmetric $n\\times n$-matrix, and let $\\eigenvar_1,\\ldots,\\eigenvar_n$ be its eigenvalues. Then $A$ is positive semidefinite if and only if $\\eigenvar_1,\\ldots,\\eigenvar_n\\geq 0$. Moreover, $A$ is positive definite if and only if $\\eigenvar_1,\\ldots,\\eigenvar_n>0$.",
+      "sha": "8dbf6d8caa8f",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "By Theorem “Diagonalization of real symmetric matrices”, we know that $A$ is orthogonally diagonalizable, i.e., $D=P^TAP$, where $P$ is an orthogonal matrix and",
+      "sha": "3478ffe856e8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "D = \\left[\\begin{array}{ccc}\n      \\eigenvar_1 & \\cdots & 0 \\\\\n      \\vdots & \\ddots & \\vdots \\\\\n      0 & \\cdots & \\eigenvar_n\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{v}=\\mat{x_1,\\ldots,x_n}^T$ be any vector, and let $\\vect{w}=P\\vect{v}$. Then $\\vect{w}^TA\\vect{w} = \\vect{v}^TP^TAP\\vect{v} = \\vect{v}^TD\\vect{v}$, so that $A$ is positive (semi)definite if and only if $D$ is positive (semi)definite. Also, we have $\\vect{v}^TD\\vect{v} = \\eigenvar_1x_1^2 + \\ldots + \\eigenvar_nx_n^2$. Therefore $\\vect{v}^TD\\vect{v}\\geq 0$ for all $\\vect{v}$ if and only if $\\eigenvar_1,\\ldots,\\eigenvar_n\\geq 0$. Moreover, $\\vect{v}^TD\\vect{v}>0$ for all $\\vect{v}\\neq \\vect{0}$ if and only if $\\eigenvar_1,\\ldots,\\eigenvar_n>0$, as claimed.",
+      "sha": "d766c7aab3c2",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Using eigenvalues to check whether a matrix is positive definite",
+    "sha": "6783a36b8754",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use eigenvalues to determine whether the matrix",
+      "sha": "b8ed346c2b73",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{ccc}\n      5 & 0 & 2 \\\\\n      0 & 5 & 1 \\\\\n      2 & 1 & 1 \\\\\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is positive definite, positive semidefinite, or neither.",
+      "sha": "f861207e3646",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The characteristic polynomial is",
+      "sha": "d7f6efee0d4a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(A-\\eigenvar I)\n    ~=~ \\left|\\begin{array}{ccc}\n      5-\\eigenvar & 0 & 2 \\\\\n      0 & 5-\\eigenvar & 1 \\\\\n      2 & 1 & 1-\\eigenvar \\\\\n    \\end{array}\\right|\n    ~=~ -\\eigenvar^3 + 11\\eigenvar^2 - 30\\eigenvar\n    ~=~ -\\eigenvar(\\eigenvar-5)(\\eigenvar-6)."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The eigenvalues are $\\eigenvar_1=0$, $\\eigenvar_2=5$, and $\\eigenvar_3=6$. Therefore, the matrix $A$ is positive semidefinite, but not positive definite.",
+      "sha": "87adccc8e75b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "While Proposition “Using eigenvalues to check whether a matrix is positive definite” gives us a method to determine whether a matrix $A$ is positive definite (or semidefinite), it still requires finding all of the eigenvalues of $A$, i.e., to factor the characteristic polynomial. This can be a difficult calculation, especially if the degree of the polynomial is large or if the roots are not integers. Fortunately, there is a better way to determine whether a matrix is positive definite (or semidefinite) by directly looking at the characteristic polynomial, without having to calculate its roots. The method was found by Ren\\'e Descartes in 1637 and is called *Descartes' rule of signs*. The general form of Descartes' rule of signs is actually more complicated than what we consider here. We state a version that has been specialized to characteristic polynomials of symmetric matrices.",
+    "sha": "051e9d7f87e7",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $a_0,\\ldots,a_n$ be a sequence of real numbers. We say that $a_0,\\ldots,a_n$ have **strongly alternating signs** if $a_0>0$, $a_1<0$, $a_2>0$, and so on (i.e., $a_i>0$ when $i$ is even, and $a_i<0$ when $i$ is odd). We say that $a_0,\\ldots,a_n$ have **weakly alternating signs** if $a_0\\geq 0$, $a_1\\leq 0$, $a_2\\geq 0$, and so on (i.e., $a_i\\geq 0$ when $i$ is even, and $a_i\\leq 0$ when $i$ is odd).",
+    "sha": "e02b64edbf2a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Descartes' rule of signs for positive (semi)definite matrices",
+    "sha": "d7edadd11f4b",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be a symmetric $n\\times n$-matrix, and let",
+      "sha": "650178a9a5aa",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "p(\\eigenvar) = a_n\\eigenvar^n + a_{n-1}\\eigenvar^{n-1} + \\ldots + a_1\\eigenvar + a_0"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "be its characteristic polynomial. Then:",
+      "sha": "56e09f6ef483",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$A$ is positive definite if and only if $a_0,\\ldots,a_n$ have strongly alternating signs.",
+         "sha": "941a0e4484e1",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$A$ is positive semidefinite if and only if $a_0,\\ldots,a_n$ have weakly alternating signs.",
+         "sha": "a874401ac405",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We first prove a general fact about polynomials. Suppose $d_1,\\ldots,d_n$ are real numbers and",
+      "sha": "25287e3144cc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(x+d_1)(x+d_2)\\cdots(x+d_n) = b_nx^n + b_{n-1}x^{n-1} + \\ldots +\n    b_1x + b_0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Then $d_1,\\ldots,d_n > 0$ if and only if $b_0,\\ldots,b_n > 0$. Moreover, $d_1,\\ldots,d_n \\geq 0$ if and only if $b_0,\\ldots,b_n \\geq 0$.",
+      "sha": "a51d31ec927d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Proof: To prove the first claim, assume $d_1,\\ldots,d_n > 0$. It is easy to see that by multiplying out $(x+d_1)(x+d_2)\\cdots(x+d_n)$, we can only obtain positive coefficients, so $b_0,\\ldots,b_n > 0$. Conversely, assume $b_0,\\ldots,b_n > 0$. Then for every $x\\geq 0$, we clearly have $b_nx^n + b_{n-1}x^{n-1} + \\ldots + b_1x + b_0 > 0$, and therefore no such $x\\geq 0$ can be a root of this polynomial. In other words, all of the roots must be negative. Since the roots are $-d_1,\\ldots,-d_n$, it follows that $d_1,\\ldots,d_n>0$. The proof of the second claim (using “$\\geq$” instead of “$>$”) is similar.",
+      "sha": "e1ee8c3425b9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We are now ready to prove Proposition “Descartes' rule of signs for positive (semi)definite matrices”. By Theorem “Diagonalization of real symmetric matrices”, we know that $A$ is diagonalizable, i.e., $A=PDP^{-1}$ for some real diagonal matrix $D$. Note that $A$ and $D$ have the same characteristic polynomial. If $d_1,\\ldots,d_n$ are the diagonal entries of $D$, the characteristic polynomial can therefore be written in two different ways:",
+      "sha": "3aad850599ff",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "p(\\eigenvar)\n    = (d_1-\\eigenvar)(d_2-\\eigenvar)\\cdots(d_n-\\eigenvar)\n    = a_0 + a_1\\eigenvar + a_2\\eigenvar^2 + a_3\\eigenvar^3 + \\ldots + a_n\\eigenvar^n."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Now let $\\eigenvar=-x$ and consider",
+      "sha": "a10770e9b710",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "p(-x) = (d_1+x)(d_2+x)\\cdots(d_n+x)\n    = a_0 - a_1 x + a_2 x^2 - a_3x^3 + \\ldots \\pm a_n x^n."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We have: $A$ is positive definite if and only if $d_1,\\ldots,d_n>0$, if and only if $a_0,-a_1,a_2,-a_3,\\ldots > 0$, if and only if $a_0,\\ldots,a_n$ are strongly alternating. Moreover, $A$ is positive semidefinite if and only if $d_1,\\ldots,d_n\\geq 0$, if and only if $a_0,-a_1,a_2,-a_3,\\ldots \\geq 0$, if and only if $a_0,\\ldots,a_n$ are weakly alternating.",
+      "sha": "1b2d00289c28",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Using Descartes' rule of signs to check if a matrix is positive definite",
+    "sha": "f652e80d96c3",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use Descartes' rule of signs to check whether the matrix",
+      "sha": "025f694ec107",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{ccc}\n      5 & 0 & 2 \\\\\n      0 & 5 & 1 \\\\\n      2 & 1 & 1 \\\\\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is positive definite, positive semidefinite, or neither.",
+      "sha": "f861207e3646",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We already found the characteristic polynomial in Example “Using eigenvalues to check whether a matrix is positive definite”: it is $-\\eigenvar^3 + 11\\eigenvar^2 - 30\\eigenvar$. The coefficients are $a_0=0$, $a_1=-30$, $a_2=11$, and $a_3=-1$. Note that we have included all of the coefficients, even ones that are zero. Since the signs are weakly alternating, but not strongly alternating, the matrix is positive semidefinite, but not positive definite.",
+      "sha": "baeea72d0192",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Using Descartes' rule of signs to check if a matrix is positive definite",
+    "sha": "f652e80d96c3",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use Descartes' rule of signs to determine which of the following matrices are positive definite and/or positive semidefinite.",
+      "sha": "867ed84d488a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{ccc}\n      2 & 1 & 2 \\\\\n      1 & 1 & 0 \\\\\n      2 & 0 & 2 \\\\\n    \\end{array}\\right],\n    \\quad\n    B = \\left[\\begin{array}{ccc}\n      2  &  1 & -2 \\\\\n      1  &  1 & -1 \\\\\n      -2 & -1 &  2 \\\\\n    \\end{array}\\right],\n    \\quad\n    C = \\left[\\begin{array}{ccc}\n      2  & -1 & 2 \\\\\n      -1 &  2 & 0 \\\\\n      2  &  0 & 3 \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The characteristic polynomials are:",
+      "sha": "18255c213d7f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{lcl}\n      \\det(A-\\eigenvar I) &=& -\\eigenvar^3 + 5\\eigenvar^2 - 3\\eigenvar - 2, \\\\\n      \\det(B-\\eigenvar I) &=& -\\eigenvar^3 + 5\\eigenvar^2 - 2\\eigenvar + 0, \\\\\n      \\det(C-\\eigenvar I) &=& -\\eigenvar^3 + 7\\eigenvar^2 - 11\\eigenvar + 1. \\\\\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For $A$, the coefficients are not weakly alternating, so $A$ is not positive semidefinite. For $B$, the coefficients are weakly, but not strongly alternating (note that $a_0=0$), and therefore $B$ is positive semidefinite, but not positive definite. For $C$, the coefficients are strongly alternating, so $C$ is positive definite.",
+      "sha": "6c75c27e4430",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine by direct calculation (i.e., without calculating the characteristic polynomial or the eigenvalues) which of the following matrices are positive definite, positive semidefinite, or neither.",
+      "sha": "0d865932559f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rr}\n      1 & 1 \\\\\n      1 & 1 \\\\\n    \\end{array}\\right],\\quad\n    B = \\left[\\begin{array}{rr}\n      1  & -2 \\\\\n      -2 &  5 \\\\\n    \\end{array}\\right],\\quad\n    C = \\left[\\begin{array}{rr}\n      2 & 3 \\\\\n      1 & 3 \\\\\n    \\end{array}\\right],\\quad\n    D = \\left[\\begin{array}{rrr}\n      2 & 1 & 1 \\\\\n      1 & 1 & 0 \\\\\n      1 & 0 & 1 \\\\\n    \\end{array}\\right],\\quad\n    E = \\left[\\begin{array}{rrr}\n      1 & 0 &  0 \\\\\n      0 & 2 &  0 \\\\\n      0 & 0 & -1 \\\\\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) Positive semidefinite. (b) Positive definite. (c) Not symmetric (therefore neither). (d) Positive semidefinite. (e) Neither.",
+      "sha": "a3deae251278",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Positive semidefinite and positive definite matrices · 习题 1（上游 exercises/InnerProductSpaces-Positive.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Positive.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Calculate the eigenvalues of each symmetric matrix, then determine for each matrix whether it is positive definite, positive semidefinite, or neither.",
+      "sha": "be1d2a1268ea",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rr}\n      2 & 2 \\\\\n      2 & 5 \\\\\n    \\end{array}\\right],\\quad\n    B = \\left[\\begin{array}{rr}\n      4  & -6 \\\\\n      -6 &  9 \\\\\n    \\end{array}\\right],\\quad\n    C = \\left[\\begin{array}{rrr}\n      2 &  1 &  0 \\\\\n      1 &  1 & -1 \\\\\n      0 & -1 &  2 \\\\\n    \\end{array}\\right],\\quad\n    D = \\left[\\begin{array}{rrr}\n      3 & -4 &  2 \\\\\n     -4 &  4 &  0 \\\\\n      2 &  0 &  4 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is positive definite, positive semidefinite, or neither.",
+      "sha": "f861207e3646",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) Eigenvalues: $\\set{1,6}$. Positive definite. (b) Eigenvalues: $\\set{0,13}$. Positive semidefinite. (c) Eigenvalues: $\\set{0,2,3}$. Positive semidefinite. (d) Eigenvalues: $\\set{-1,4,8}$. Neither.",
+      "sha": "812a17b53c22",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Positive semidefinite and positive definite matrices · 习题 2（上游 exercises/InnerProductSpaces-Positive.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Positive.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following formulas define an inner product on $\\R^3$? Here, $\\vect{u}=\\mat{u_1,u_2,u_3}^T$ and $\\vect{v}=\\mat{v_1,v_2,v_3}^T$.",
+      "sha": "dea2c9082d98",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\iprod{\\vect{u},\\vect{v}} = u_1v_1 + 2u_1v_2 + 2u_2v_1 + 3u_2v_2 + 3u_3v_3$.",
+         "sha": "a011bda3443c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\iprod{\\vect{u},\\vect{v}} = u_1v_1 - u_1v_2 - u_2v_1 + 2u_2v_2 + u_3v_3$.",
+         "sha": "547761c3ce8a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\iprod{\\vect{u},\\vect{v}} = u_1v_1 - u_1v_2 - u_2v_1 + u_2v_2 + 4u_3v_3$.",
+         "sha": "1386beec568e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\iprod{\\vect{u},\\vect{v}} = u_1v_1 - u_1v_2 - u_2v_1 + 3u_2v_2 - u_2v_3 - u_3v_2 + u_3v_3$.",
+         "sha": "d93f02b7441f",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) No (neither positive definite nor semidefinite). (b) Yes. (c) No (positive semidefinite but not definite). (d) Yes.",
+      "sha": "8660e762bb0b",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Positive semidefinite and positive definite matrices · 习题 3（上游 exercises/InnerProductSpaces-Positive.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Positive.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use Descartes' rule of signs to determine which of the following matrices are positive definite and/or positive semidefinite.",
+      "sha": "867ed84d488a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{cc}\n      2 & 2 \\\\\n      2 & 1 \\\\\n    \\end{array}\\right],\n    \\quad\n    B = \\left[\\begin{array}{ccc}\n      2  & -1 & 0 \\\\\n      -1 &  1 & 0 \\\\\n      0  &  0 & 1 \\\\\n    \\end{array}\\right],\n    \\quad\n    C = \\left[\\begin{array}{cccc}\n      2  & 1 & -1 &  1 \\\\\n      1  & 1 &  0 &  0 \\\\\n      -1 & 0 &  2 & -1 \\\\\n      1  & 0 & -1 &  1 \\\\\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The characteristic polynomials are:",
+      "sha": "18255c213d7f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{lcl}\n        \\det(A-\\eigenvar I) &=& \\eigenvar^2 - 3\\eigenvar - 2, \\\\\n        \\det(B-\\eigenvar I) &=& -\\eigenvar^3 + 4\\eigenvar^2 - 4\\eigenvar + 1, \\\\\n        \\det(C-\\eigenvar I) &=& \\eigenvar^4 - 6\\eigenvar^3 + 9\\eigenvar^2 - 3\\eigenvar + 0.\n      \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For $A$, the coefficients are not weakly alternating, so $A$ is not positive semidefinite. For $B$, the coefficients are strongly alternating, so $B$ is positive definite. For $C$, the coefficients are weakly, but not strongly alternating, so $C$ is positive semidefinite, but not positive definite.",
+      "sha": "272627bfbf22",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Positive semidefinite and positive definite matrices · 习题 4（上游 exercises/InnerProductSpaces-Positive.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Positive.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "半正定与正定矩阵"
+}

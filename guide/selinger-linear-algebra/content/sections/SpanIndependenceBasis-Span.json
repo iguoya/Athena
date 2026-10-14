@@ -1,0 +1,603 @@
+{
+ "id": "SpanIndependenceBasis-Span",
+ "title_en": "Spans",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine the span of a set of vectors.",
+         "sha": "0611518178f9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine if a vector is contained in a specified span.",
+         "sha": "830bbca6a598",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\vect{u}$ and $\\vect{v}$ be two non-parallel vectors in $\\R^n$. We can picture the set of their linear combinations as follows:",
+    "sha": "1e5f7dbf80cc",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "As the picture shows, the linear combinations of $\\vect{u}$ and $\\vect{v}$ form a $2$-dimensional plane through the origin. We say that this plane is **spanned** by the vectors $\\vect{u}$ and $\\vect{v}$. This concept generalizes to more than two vectors. For example, three vectors may span a $3$-dimensional space (although sometimes, they span only a $2$-dimensional space, or even a line). This motivates the following definition.",
+    "sha": "feccc0fb6786",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Span of a set of vectors",
+    "sha": "3d49acbed829",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The set of all linear combinations of the vectors $\\vect{u}_1, \\ldots,\\vect{u}_k$ in $\\R^n$ is known as the **span** of these vectors and is written as $\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$. Using set notation, we can write",
+      "sha": "0cd9792833e9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}\n    ~=~ \\set{a_1\\vect{u}_1+\\ldots+a_k\\vect{u}_k \\mid a_1,\\ldots,a_k\\in\\R}."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Vectors in a span",
+    "sha": "a49d58f5821a",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u}=\\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 1 \\end{array}\\right]$ and $\\vect{v}=\\left[\\begin{array}{r} 3 \\\\ 2 \\\\ 1 \\end{array}\\right]$. Which of the following vectors are elements of $\\sspan\\set{\\vect{u},\\vect{v}}$?",
+      "sha": "6fd1a2a34a5a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(a)\\quad\\vect{w} = \\left[\\begin{array}{r} 2 \\\\ 3 \\\\ 4 \\end{array}\\right],\n    \\qquad\n    (b)\\quad\\vect{z} = \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 2 \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) For a vector to be in $\\sspan\\set{\\vect{u},\\vect{v}}$, it must be a linear combination of $\\vect{u}$ and $\\vect{v}$. Therefore, $\\vect{w}\\in\\sspan\\set{\\vect{u},\\vect{v}}$ if and only if we can find find scalars $a,b$ such that $a\\,\\vect{u} + b\\,\\vect{v} = \\vect{w}$. We must therefore solve the equation",
+      "sha": "bfd3a0259e26",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "a \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 1 \\end{array}\\right]\n    + b \\left[\\begin{array}{r} 3 \\\\ 2 \\\\ 1 \\end{array}\\right]\n    = \\left[\\begin{array}{r} 2 \\\\ 3 \\\\ 4 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We write this as an augmented matrix and solve.",
+      "sha": "bf3896166411",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr|r}\n      1 & 3 & 2 \\\\\n      1 & 2 & 3 \\\\\n      1 & 1 & 4 \\\\\n    \\end{array}\\right]\n    \\roweq\\ldots\\roweq\n    \\left[\\begin{array}{rr|r}\n      1 & 0 & 5 \\\\\n      0 & 1 & -1 \\\\\n      0 & 0 & 0 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The solution is $a=5$ and $b=-1$. This means that $\\vect{w} = 5\\vect{u} + (-1)\\vect{v}$. Therefore, $\\vect{w}$ is an element of $\\sspan\\set{\\vect{u},\\vect{v}}$.",
+      "sha": "46193dc24353",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "(b) We repeat the same method with the vector $\\vect{z}$. This time, we have to find $a,b$ such that $a\\,\\vect{u} + b\\,\\vect{v} = \\vect{z}$. The system of equations is",
+      "sha": "c108663ad8b9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr|r}\n      1 & 3 & 1 \\\\\n      1 & 2 & 1 \\\\\n      1 & 1 & 2 \\\\\n    \\end{array}\\right]\n    \\roweq\\ldots\\roweq\n    \\left[\\begin{array}{rr|r}\n      1 & 3 & 1 \\\\\n      0 & -1 & 0 \\\\\n      0 & 0 & 1 \\\\\n    \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which is inconsistent. Therefore, there is no solution. We conclude that $\\vect{z}$ is not an element of $\\sspan\\set{\\vect{u},\\vect{v}}$.",
+      "sha": "3c3beb777835",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Describing the span",
+    "sha": "6be99c1c6547",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Describe the span of the vectors $\\vect{u}=\\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 1 \\end{array}\\right]$ and $\\vect{v}=\\left[\\begin{array}{r} 3 \\\\ 2 \\\\ 1 \\end{array}\\right]$ in $\\R^3$.",
+      "sha": "ecc51b867ce1",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{w} = \\mat{x, y, z}^T$ be any vector. Proceeding as in the previous example, we know that $\\vect{w}$ is an element of $\\sspan\\set{\\vect{u},\\vect{v}}$ if and only if the equation",
+      "sha": "5877839d3afd",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "a \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 1 \\end{array}\\right]\n    + b \\left[\\begin{array}{r} 3 \\\\ 2 \\\\ 1 \\end{array}\\right]\n    = \\left[\\begin{array}{r} x \\\\ y \\\\ z \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is consistent. Note that the variables of this equation are $a,b$; we regard $x,y,z$ as constants for the moment. We write the augmented matrix of this system and reduce to echelon form:",
+      "sha": "90eb4e754bd5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr|c}\n      1 & 3 & x \\\\\n      1 & 2 & y \\\\\n      1 & 1 & z \\\\\n    \\end{array}\\right]\n    \\stackrel{R_2\\leftarrow R_2-R_1}{\\stackrel{R_2\\leftarrow R_3-R_1}{\\roweq}}\n    \\left[\\begin{array}{rr|c}\n      1 & 3 & x \\\\\n      0 & -1 & y-x \\\\\n      0 & -2 & z-x \\\\\n    \\end{array}\\right]\n    \\stackrel{R_3\\leftarrow R_3-2R_2}{\\roweq}\n    \\left[\\begin{array}{rr|c}\n      1 & 3 & x \\\\\n      0 & -1 & y-x \\\\\n      0 & 0 & (z-x)-2(y-x) \\\\\n    \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "From the echelon form, we see that the system is consistent if and only if $(z-x)-2(y-x)=0$, or equivalently $x - 2y + z = 0$. Therefore, the vector $\\vect{w}$ is in $\\sspan\\set{\\vect{u},\\vect{v}}$ if and only if $x - 2y + z = 0$. In other words, the span of $\\vect{u}$ and $\\vect{v}$ is the plane $x - 2y + z = 0$.",
+      "sha": "e7240e09210d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Span of redundant vectors",
+    "sha": "df2defc2bdcf",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u}=\\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 1 \\end{array}\\right]$, $\\vect{v}=\\left[\\begin{array}{r} 3 \\\\ 2 \\\\ 1 \\end{array}\\right]$, and $\\vect{w}=\\left[\\begin{array}{r} 11 \\\\ 8 \\\\ 5 \\end{array}\\right]$. Show that $\\sspan\\set{\\vect{u},\\vect{v},\\vect{w}} = \\sspan\\set{\\vect{u},\\vect{v}}$.",
+      "sha": "fc935d79313e",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Observe that $\\vect{w} = 2\\,\\vect{u}+3\\,\\vect{v}$. Therefore, $\\vect{w}$ is already in the span of $\\vect{u}$ and $\\vect{v}$. Two sets are equal if they have the same elements, i.e., each element of the first set is an element of the second set and vice versa. Therefore, to show $\\sspan\\set{\\vect{u},\\vect{v},\\vect{w}} = \\sspan\\set{\\vect{u},\\vect{v}}$, we must show (a) that every element of $\\sspan\\set{\\vect{u},\\vect{v},\\vect{w}}$ is an element of $\\sspan\\set{\\vect{u},\\vect{v}}$ and (b) vice versa.",
+      "sha": "9d9cc0ce3418",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) Let $\\vect{z}$ be an arbitrary element of $\\sspan\\set{\\vect{u},\\vect{v},\\vect{w}}$. Then, by definition of span, there exist scalars $a,b,c$ such that",
+      "sha": "567a90ca60f9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\vect{z} &=& a\\,\\vect{u} + b\\,\\vect{v} + c\\,\\vect{w}.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "But as observed above, we have $\\vect{w} = 2\\,\\vect{u}+3\\,\\vect{v}$, and therefore we can also write",
+      "sha": "67d7b6bd0c45",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\vect{z}\n    &=& a\\,\\vect{u} + b\\,\\vect{v} + c(2\\,\\vect{u}+3\\,\\vect{v}) \\\\\n    &=& (a+2c)\\vect{u} + (b+3c)\\vect{v}.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "It follows that $\\vect{z}$ is a linear combination of $\\vect{u}$ and $\\vect{v}$, and therefore, $\\vect{z}\\in \\sspan\\set{\\vect{u},\\vect{v}}$.",
+      "sha": "9364496e0045",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "(b) Clearly every linear combination of $\\vect{u}$ and $\\vect{v}$ is also a linear combination of $\\vect{u}$, $\\vect{v}$, and $\\vect{w}$, namely, taking the coefficient of $\\vect{w}$ to be $0$. Therefore, every element of $\\sspan\\set{\\vect{u},\\vect{v}}$ is an element of $\\sspan\\set{\\vect{u},\\vect{v},\\vect{w}}$.",
+      "sha": "776da6e7af3c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Because we have shown that every element of $\\sspan\\set{\\vect{u},\\vect{v},\\vect{w}}$ is an element of $\\sspan\\set{\\vect{u},\\vect{v}}$ and vice versa, it follows that $\\sspan\\set{\\vect{u},\\vect{v},\\vect{w}}$ and $\\sspan\\set{\\vect{u},\\vect{v}}$ are the same set of vectors.",
+      "sha": "dc78e856da40",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In the situation of the last example, we say that the vector $\\vect{w}$ is **redundant**; it does not contribute anything to $\\sspan\\set{\\vect{u},\\vect{v},\\vect{w}}$. Geometrically, the three vectors $\\vect{u}$, $\\vect{v}$, and $\\vect{w}$ lie in a plane. Since the two vectors $\\vect{u}$ and $\\vect{v}$ are sufficient to span this plane, the third vector $\\vect{w}$ is not really needed. We will study this situation more systematically in the next section.",
+    "sha": "7401f33b79ba",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Span of the empty set",
+    "sha": "3f69a39c007f",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We talked about the span of $k$ vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$. What if $k=0$? What is the span of an empty set of vectors?",
+      "sha": "3ce3954453d5",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider what happens when we compute the sum of three numbers. We usually write this as $b_1+b_2+b_3$. We can also compute the sum of three numbers by starting from $0$ and then adding each of the three numbers to it. I.e., the sum can be computed as $0+b_1+b_2+b_3$. Similarly, we can write the sum of two numbers as $0+b_1+b_2$, and the sum of just one number as $0+b_1$. Continuing the pattern, it follows that the sum of zero numbers should be $0$:",
+      "sha": "e331567b37b5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "table",
+     "spec": "ll",
+     "rows": [
+      [
+       {
+        "en": "Sum of 3 numbers:",
+        "sha": "27aac7ebc222",
+        "zh": ""
+       },
+       "$0+b_1+b_2+b_3$."
+      ],
+      [
+       {
+        "en": "Sum of 2 numbers:",
+        "sha": "7c570712c3ae",
+        "zh": ""
+       },
+       "$0+b_1+b_2$."
+      ],
+      [
+       {
+        "en": "Sum of 1 numbers:",
+        "sha": "727bfc0e1629",
+        "zh": ""
+       },
+       "$0+b_1$."
+      ],
+      [
+       {
+        "en": "Sum of 0 numbers:",
+        "sha": "3fbc4fc30f55",
+        "zh": ""
+       },
+       "$0$."
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The sum of zero numbers is also called the **empty sum**. It is equal to the unit of addition, i.e., $0$. By an analogous argument, the empty sum of vectors is equal to the unit of vector addition, i.e., to the zero vector $\\vect{0}$. In general, if we have $k$ vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$, the span consists of all vectors of the form $a_1\\vect{u}_1+\\ldots+a_k\\vect{u}_k$, which is a sum of $k$ vectors. In case $k=0$, the span consists only of the empty sum, i.e., the zero vector $\\vect{0}$, which we also call the **empty linear combination**. Therefore, the span of the empty set of vectors is $\\set{\\vect{0}}$.",
+      "sha": "74f5a1d3af60",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the vectors",
+      "sha": "ed6958d3bf3c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ -2 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ -2 \\end{array}\\right],\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} 1 \\\\ -3 \\\\ -2 \\end{array}\\right],\\quad\n    \\vect{u}_4 = \\left[\\begin{array}{r} -1 \\\\ 1 \\\\ 2 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following vectors are in $\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_4}$? For each vector that is in the span, exhibit a linear combination of $\\vect{u}_1,\\ldots,\\vect{u}_4$ that equals this vector.",
+      "sha": "46bc3b80b78d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(a)\\quad\n    \\vect{x} = \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ -1 \\end{array}\\right],\n    \\qquad\n    (b)\\quad\n    \\vect{y} = \\left[\\begin{array}{r} 2 \\\\ -3 \\\\ -4 \\end{array}\\right],\n    \\qquad\n    (c)\\quad\n    \\vect{z} = \\left[\\begin{array}{r} 1 \\\\ 5 \\\\ -2 \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) $\\vect{x}$ is not in the span. (b) $\\vect{y} = 7\\vect{u}_1-5\\vect{u}_2$. (c) $\\vect{z} = -3\\vect{u}_1+4\\vect{u}_2$.",
+      "sha": "fa8d71026ed1",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Spans · 习题 1（上游 exercises/SpanIndependenceBasis-Span.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Span.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Describe the span of the vectors $\\vect{u}=\\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 2 \\end{array}\\right]$ and $\\vect{v}=\\left[\\begin{array}{r} 2 \\\\ -1 \\\\ 1 \\end{array}\\right]$ in $\\R^3$.",
+      "sha": "2f8f39fb8e47",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "It is the plane $2x + 3y - z = 0$.",
+      "sha": "9349ff432cdf",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Spans · 习题 2（上游 exercises/SpanIndependenceBasis-Span.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Span.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Describe the span of the following vectors in $\\R^4$:",
+      "sha": "2fc7b75cc997",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1=\\left[\\begin{array}{r} 1 \\\\ 1 \\\\ -1 \\\\ -1 \\end{array}\\right],\\quad\n    \\vect{u}_2=\\left[\\begin{array}{r} 5 \\\\ 1 \\\\ 1 \\\\ 0 \\end{array}\\right],\\quad\n    \\vect{u}_3=\\left[\\begin{array}{r} 0 \\\\ -2 \\\\ 2 \\\\ 1 \\end{array}\\right],\\quad\n    \\vect{u}_4=\\left[\\begin{array}{r} 3 \\\\ 1 \\\\ 1 \\\\ 1 \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "It is the hyperplane given by the equation $x - 2y - 3z + 2w = 0$.",
+      "sha": "6f42d152f588",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Spans · 习题 3（上游 exercises/SpanIndependenceBasis-Span.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Span.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u}=\\left[\\begin{array}{r} 2 \\\\ 1 \\\\ 0 \\end{array}\\right]$, $\\vect{v}=\\left[\\begin{array}{r} 1 \\\\ 3 \\\\ 5 \\end{array}\\right]$, and $\\vect{w}=\\left[\\begin{array}{r} 1 \\\\ 0 \\\\ -1 \\end{array}\\right]$. Show that $\\sspan\\set{\\vect{u},\\vect{v},\\vect{w}} = \\sspan\\set{\\vect{u},\\vect{v}}$.",
+      "sha": "b2aa3f413d4d",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Spans · 习题 4（上游 exercises/SpanIndependenceBasis-Span.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Span.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ is a set of vectors from $\\R^n$. Show that $\\vect{0}\\in\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$.",
+      "sha": "c204877df10d",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$0\\vect{u}_1+\\ldots+0\\vect{u}_k = \\vect{0}$.",
+      "sha": "25cc4db2d808",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Spans · 习题 5（上游 exercises/SpanIndependenceBasis-Span.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Span.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "In this exercise, we use scalars from the field $\\Z_5$ of integers modulo $5$ instead of real numbers (see Section 〔引用〕, “Fields”). Consider the vectors",
+      "sha": "aead8c265524",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r} 1 \\\\ 4 \\\\ 3 \\end{array}\\right],\\quad\n    \\vect{u}_2 = \\left[\\begin{array}{r} 0 \\\\ 2 \\\\ 3 \\end{array}\\right],\\quad\n    \\vect{u}_3 = \\left[\\begin{array}{r} 2 \\\\ 1 \\\\ 3 \\end{array}\\right],\\quad\n    \\vect{u}_4 = \\left[\\begin{array}{r} 3 \\\\ 1 \\\\ 0 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following vectors are in $\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_4}$? For each vector that is in the span, exhibit a linear combination of $\\vect{u}_1,\\ldots,\\vect{u}_4$ that equals this vector.",
+      "sha": "46bc3b80b78d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(a)\\quad\n    \\vect{x} = \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 4 \\end{array}\\right],\n    \\qquad\n    (b)\\quad\n    \\vect{y} = \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 2 \\end{array}\\right],\n    \\qquad\n    (c)\\quad\n    \\vect{z} = \\left[\\begin{array}{r} 2 \\\\ 0 \\\\ 4 \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) $\\vect{x} = 3\\vect{u}_2$. (b) $\\vect{y}$ is not in the span. (c) $\\vect{z} = 2\\vect{u}_1 + 1\\vect{u}_2$.",
+      "sha": "f0054ad8c10a",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Spans · 习题 6（上游 exercises/SpanIndependenceBasis-Span.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Span.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "张成"
+}

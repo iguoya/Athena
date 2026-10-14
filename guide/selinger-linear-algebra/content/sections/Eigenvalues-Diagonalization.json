@@ -1,0 +1,849 @@
+{
+ "id": "Eigenvalues-Diagonalization",
+ "title_en": "Diagonalization",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Compute sums, products, and powers of diagonal matrices.",
+         "sha": "c9bba2fa2347",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether a square matrix is diagonalizable, and diagonalize it if possible.",
+         "sha": "0d4a37a49df4",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A square matrix $D$ is called a **diagonal matrix** if all entries except those on the main diagonal are zero. Such matrices look like the following:",
+    "sha": "dc54cff48d19",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\left[\\begin{array}{ccccc}\n    d_{11} & 0 & \\cdots & 0 \\\\\n    0 & d_{22} & \\cdots & 0 \\\\\n    \\vdots & \\vdots & \\ddots & \\vdots \\\\\n    0 & 0 & \\cdots & d_{nn} \\\\\n  \\end{array}\\right]."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Diagonal matrices are particularly easy to work with. For example, the sum of two diagonal matrices is diagonal. Also, the product of two diagonal matrices is diagonal, and is computed by taking the product of corresponding diagonal entries.",
+    "sha": "75a1d75b5a38",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Sums, products, and powers of diagonal matrices",
+    "sha": "73f61910af82",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute $A+B$, $AB$, and $A^4$, where",
+      "sha": "d9200efe08ec",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rrr}\n      2 & 0 & 0 \\\\\n      0 & 3 & 0 \\\\\n      0 & 0 & 4 \\\\\n    \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    B = \\left[\\begin{array}{rrr}\n      1 & 0 & 0 \\\\\n      0 & -2 & 0 \\\\\n      0 & 0 & 2 \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have",
+      "sha": "a2214cd5b1a4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A+B =\n    \\left[\\begin{array}{ccc}\n      2+1 & 0 & 0 \\\\\n      0 & 3-2 & 0 \\\\\n      0 & 0 & 4+2 \\\\\n    \\end{array}\\right]\n    =\n    \\left[\\begin{array}{rrr}\n      3 & 0 & 0 \\\\\n      0 & 1 & 0 \\\\\n      0 & 0 & 6 \\\\\n    \\end{array}\\right],"
+    },
+    {
+     "k": "math",
+     "tex": "AB =\n    \\left[\\begin{array}{ccc}\n      2\\cdot 1 & 0 & 0 \\\\\n      0 & 3\\cdot(-2) & 0 \\\\\n      0 & 0 & 4\\cdot 2 \\\\\n    \\end{array}\\right]\n    =\n    \\left[\\begin{array}{rrr}\n      2 & 0 & 0 \\\\\n      0 & -6 & 0 \\\\\n      0 & 0 & 8 \\\\\n    \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and",
+      "sha": "cffa50a32cb1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A^4 =\n    \\left[\\begin{array}{ccc}\n      2^4 & 0 & 0 \\\\\n      0 & 3^4 & 0 \\\\\n      0 & 0 & 4^4 \\\\\n    \\end{array}\\right]\n    =\n    \\left[\\begin{array}{ccc}\n      16 & 0 & 0 \\\\\n      0 & 81 & 0 \\\\\n      0 & 0 & 256 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Notice that all operations are computed componentwise on the diagonal. Therefore, multiplication of diagonal matrices is much simpler than multiplication of general matrices.",
+      "sha": "ecedb3eabe4c",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "One of the most important problem solving techniques in linear algebra is **diagonalization**. In a nutshell, the point of diagonalization is to simplify a problem by replacing an arbitrary matrix by a diagonal matrix. We say that two square matrices $A$ and $B$ are **similar** if there exists an invertible matrix $P$ such that $P^{-1}AP = B$. A matrix is **diagonalizable** if it is similar to a diagonal matrix. This is summarized in the following definition.",
+    "sha": "17488cf9b038",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Diagonalizable matrix",
+    "sha": "04f91e820889",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n\\times n$-matrix. Then $A$ is said to be **diagonalizable** if there exists an invertible matrix $P$ and a diagonal matrix $D$ such that",
+      "sha": "cc8f845c5b69",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "P^{-1}AP=D."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The key connection between diagonalizability, eigenvectors, and eigenvalues is the following theorem.",
+    "sha": "350435b79a60",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Diagonalization and eigenvectors",
+    "sha": "5101afa34506",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "An $n\\times n$-matrix $A$ is diagonalizable if and only if $A$ has $n$ linearly independent eigenvectors.",
+      "sha": "160b39105afd",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Moreover, in this case, let $P$ be the invertible matrix whose columns are $n$ linearly independent eigenvectors of $A$, and let $D$ be the diagonal matrix whose diagonal entries are the corresponding eigenvalues. Then $P^{-1}AP=D$.",
+      "sha": "c73aeb96db57",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Assume that $A$ has $n$ linearly independent eigenvectors $\\vect{v}_1,\\ldots,\\vect{v}_n$. Let $\\eigenvar_1,\\ldots,\\eigenvar_n$ be the corresponding eigenvalues, so that",
+      "sha": "02cb78f7526d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A\\vect{v}_i = \\eigenvar_i\\vect{v}_i \\tag{1}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for all $i=1,\\ldots,n$. Let $P$ be the matrix that has $\\vect{v}_1,\\ldots,\\vect{v}_n$ as its columns. Then $P$ is invertible because $\\vect{v}_1,\\ldots,\\vect{v}_n$ are linearly independent. Let $D$ be the diagonal matrix that has $\\eigenvar_1,\\ldots,\\eigenvar_n$ as its diagonal entries. By the column method of matrix multiplication, the $i\\th$ column of $AP$ is $A\\vect{v}_i$. Also by the column method of matrix multiplication, the $i\\th$ column of $PD$ is $\\eigenvar_i\\vect{v}_i$. Therefore, by (1), the matrices $AP$ and $PD$ have the same columns, i.e.,",
+      "sha": "41861f3efc76",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "AP = PD."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "It follows that $P^{-1}AP = D$, as desired.",
+      "sha": "85487459e363",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Conversely, assume that $A$ is diagonalizable. Then there exists an invertible matrix $P$ and a diagonal matrix $D$ such that $P^{-1}AP=D$, or equivalently, $AP=PD$. Let $\\vect{v}_1,\\ldots,\\vect{v}_n$ be the columns of $P$ and let $\\eigenvar_1,\\ldots,\\eigenvar_n$ be the diagonal entries of $D$. Again we find that the $i\\th$ column of $AP$ is $A\\vect{v}_i$ and the $i\\th$ column of $PD$ is $\\eigenvar_i\\vect{v}_i$, and therefore $A\\vect{v}_i = \\eigenvar_i\\vect{v}_i$ holds for all $i$. It follows that $\\vect{v}_1,\\ldots,\\vect{v}_n$ are eigenvectors of $A$. Since $P$ is invertible, $\\vect{v}_1,\\ldots,\\vect{v}_n$ are linearly independent, so $A$ has $n$ linearly independent eigenvectors.",
+      "sha": "1f273ab16e6c",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Diagonalizing a matrix",
+    "sha": "29696dba1022",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Diagonalize the matrix",
+      "sha": "bedff2e3c840",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{rrr}\n      3  & 0 &  2 \\\\\n      6  & 4 &  3 \\\\\n      -4 & 0 & -3 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In other words, find an invertible matrix $P$ and a diagonal matrix $D$ such that $P^{-1}AP=D$.",
+      "sha": "8912a502df9c",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "By Theorem “Diagonalization and eigenvectors”, we use the eigenvectors of $A$ as the columns of $P$ and the corresponding eigenvalues as the diagonal entries of $D$. We already found the eigenvectors and -values of $A$ in Example “Finding eigenvalues and eigenvectors”. They were",
+      "sha": "ff09867d09f2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}_1 = \\left[\\begin{array}{r} -1 \\\\ 1 \\\\ 1 \\end{array}\\right].\n    \\quad\n    \\vect{v}_2 = \\left[\\begin{array}{r} -1 \\\\ 0 \\\\ 2 \\end{array}\\right].\n    \\quad\\text{and}\\quad\n    \\vect{v}_3 = \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 0 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "with corresponding eigenvalues $\\eigenvar_1=1$, $\\eigenvar_2=-1$, and $\\eigenvar_3=4$. Therefore we can use",
+      "sha": "94db22e01514",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "P = \\left[\\begin{array}{rrr}\n      -1 & -1 & 0 \\\\\n      1  &  0 & 1 \\\\\n      1  &  2 & 0 \\\\\n    \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    D = \\left[\\begin{array}{rrr}\n      1 &  0 & 0 \\\\\n      0 & -1 & 0 \\\\\n      0 &  0 & 4 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To double-check that $P^{-1}AP$ is indeed equal to $D$, we first compute the inverse of $P$:",
+      "sha": "a2f214703628",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "P^{-1} =\n    \\left[\\begin{array}{rrr}\n      -2 & 0 & -1 \\\\\n      1  & 0 &  1 \\\\\n      2  & 1 &  1 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Then",
+      "sha": "b7d93209feaa",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "P^{-1}AP\n    ~=~\n    \\left[\\begin{array}{rrr}\n      -2 & 0 & -1 \\\\\n      1  & 0 &  1 \\\\\n      2  & 1 &  1 \\\\\n    \\end{array}\\right]\n    \\left[\\begin{array}{rrr}\n      3  & 0 &  2 \\\\\n      6  & 4 &  3 \\\\\n      -4 & 0 & -3 \\\\\n    \\end{array}\\right]\n    \\left[\\begin{array}{rrr}\n      -1 & -1 & 0 \\\\\n      1  &  0 & 1 \\\\\n      1  &  2 & 0 \\\\\n    \\end{array}\\right]\n    =\n    \\left[\\begin{array}{rrr}\n      1 &  0 & 0 \\\\\n      0 & -1 & 0 \\\\\n      0 &  0 & 4 \\\\\n    \\end{array}\\right]\n    = D."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Alternatively, we could have checked that $AP=PD$, which would not have required computing $P^{-1}$.",
+      "sha": "3ab693c38be5",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Diagonalizing a matrix",
+    "sha": "29696dba1022",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Diagonalize the matrix",
+      "sha": "bedff2e3c840",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{rrr}\n      2  &  0 &  0 \\\\\n      1  &  4 & -1 \\\\\n      -2 & -4 &  4 \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "First, we will find the characteristic polynomial of $A$:",
+      "sha": "3c970359926c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\det(A-\\eigenvar I)\n    &=&\n        \\left|\\begin{array}{ccc}\n          2-\\eigenvar &  0 &  0 \\\\\n          1 &  4-\\eigenvar & -1 \\\\\n          -2 & -4 & 4-\\eigenvar \\\\\n        \\end{array}\\right|\n    \\\\\\\\[-1ex]\n    &=& (2-\\eigenvar)\n        \\left|\\begin{array}{cc}\n          4-\\eigenvar & -1 \\\\\n          -4 & 4-\\eigenvar \\\\\n        \\end{array}\\right|\n    \\\\\\\\[-2ex]\n    &=& (2-\\eigenvar)\\paren{(4-\\eigenvar)(4-\\eigenvar)-4}\n    \\\\\n    &=& (2-\\eigenvar)(12-8\\eigenvar+\\eigenvar^2)\n    \\\\\n    &=& (2-\\eigenvar)(2-\\eigenvar)(6-\\eigenvar).\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, the eigenvalues are $\\eigenvar=2$ and $\\eigenvar=6$. Next, we need to find the eigenvectors. We first find the eigenvectors for $\\eigenvar = 2$. We solve $(A-2I)\\vect{v} = \\vect{0}$:",
+      "sha": "40c0a8f1f9a8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr|r}\n      0  &  0 &  0 & 0 \\\\\n      1  &  2 & -1 & 0 \\\\\n      -2 & -4 &  2 & 0 \\\\\n    \\end{array}\\right]\n    \\roweq\n    \\left[\\begin{array}{rrr|r}\n      1  &  2 & -1 & 0 \\\\\n      0  &  0 &  0 & 0 \\\\\n      0  &  0 &  0 & 0 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The general solution is",
+      "sha": "4729807d8eef",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "t\\left[\\begin{array}{r} -2 \\\\ 1 \\\\ 0 \\end{array}\\right]\n    + s \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 1 \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where $t,s$ are parameters. Thus, the basic eigenvectors for $\\eigenvar=2$ are",
+      "sha": "ae3a0b79911a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}_1 = \\left[\\begin{array}{r} -2 \\\\ 1 \\\\ 0 \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    \\vect{v}_2 = \\left[\\begin{array}{r}  1 \\\\ 0 \\\\ 1 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Doing a similar calculation, we find that the basic eigenvector for $\\eigenvar=6$ is",
+      "sha": "44f1fac729ef",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}_3 = \\left[\\begin{array}{r}  0 \\\\ 1 \\\\ -2 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By Theorem “Diagonalization and eigenvectors”, we use the eigenvectors of $A$ as the columns of $P$ and the corresponding eigenvalues as the diagonal entries of $D$. Therefore,",
+      "sha": "9a060ffb7d2c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "P=\n    \\left[\\begin{array}{rrr}\n      -2 & 1 & 0 \\\\\n      1 & 0 & 1 \\\\\n      0 & 1 & -2\n    \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    D = \\left[\\begin{array}{rrr}\n      2 & 0 & 0 \\\\\n      0 & 2 & 0 \\\\\n      0 & 0 & 6\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We can double-check this answer by computing",
+      "sha": "d27ec5ce8c01",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\def\\arraystretch{1.3}\n    P^{-1}AP\n    ~=~ \\left[\\begin{array}{rrr}\n      -\\frac{1}{4} & \\frac{1}{2} & \\frac{1}{4} \\\\\n      \\frac{1}{2} & 1 & \\frac{1}{2} \\\\\n      \\frac{1}{4} & \\frac{1}{2} & -\\frac{1}{4}\n    \\end{array}\\right] \\left[\\begin{array}{rrr}\n      2 & 0 & 0 \\\\\n      1 & 4 & -1 \\\\\n      -2 & -4 & 4\n    \\end{array}\\right] \\left[\\begin{array}{rrr}\n      -2 & 1 & 0 \\\\\n      1 & 0 & 1 \\\\\n      0 & 1 & -2\n    \\end{array}\\right] \\\\\n    ~=~ \\left[\\begin{array}{rrr}\n      2 & 0 & 0 \\\\\n      0 & 2 & 0 \\\\\n      0 & 0 & 6\n    \\end{array}\\right]\n    ~=~ D."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Notice that the eigenvalues on the main diagonal of $D$ *must* be in the same order as the corresponding eigenvectors in $P$. Since the eigenvectors $\\vect{v}_1$ and $\\vect{v}_2$ are both for the eigenvalue $\\eigenvar=2$, the entry $2$ appears twice in the matrix $D$.",
+      "sha": "54df72d7dca3",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The following example shows that not all matrices are diagonalizable.",
+    "sha": "66c0578712dc",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "A matrix that cannot be diagonalized",
+    "sha": "94b8d9a4f77e",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Show that the matrix $A = \\left[\\begin{array}{rr} 1 & 1 \\\\ 0 & 1 \\end{array}\\right]$ cannot be diagonalized.",
+      "sha": "81326359b841",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Through the usual procedure, we find that the characteristic polynomial is $(1-\\eigenvar)^2$, and therefore the only eigenvalue is $\\eigenvar=1$. To find the eigenvectors, we solve the equation $(A-I)\\vect{v} = \\vect{0}$:",
+      "sha": "2461ee5f2693",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr|r}\n      0 & 1 & 0 \\\\\n      0 & 0 & 0 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The general solution is",
+      "sha": "4729807d8eef",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v} = t\\left[\\begin{array}{r} 1 \\\\ 0 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Because the solution space is $1$-dimensional, there is only one basic eigenvector:",
+      "sha": "ca3a83069451",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}_1 = \\left[\\begin{array}{r} 1 \\\\ 0 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since the matrix $A$ has only one basic eigenvector, we cannot find two linearly independent eigenvectors. Therefore, by Theorem “Diagonalization and eigenvectors”, $A$ cannot be diagonalized.",
+      "sha": "6a800193f64a",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $D=\\left[\\begin{array}{rrr} -2 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 2 \\\\ \\end{array}\\right]$ and $E=\\left[\\begin{array}{rrr} 1 & 0 & 0 \\\\ 0 & -1 & 0 \\\\ 0 & 0 & 3 \\\\ \\end{array}\\right]$. Find $D+E$, $DE$, and $D^7$.",
+      "sha": "5bddf16cc5f4",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Diagonalization · 习题 1（上游 exercises/Eigenvalues-Diagonalization.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Diagonalization.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the eigenvalues and eigenvectors of the matrix",
+      "sha": "95c965d190fc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n      -13 & -28 & 28 \\\\\n      4 & 9 & -8 \\\\\n      -4 & -8 & 9\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "One eigenvalue is $3$. Diagonalize if possible.",
+      "sha": "7ee1aa97df11",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The eigenvectors and eigenvalues are:",
+      "sha": "53e1f61f3559",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\set{\\left[\\begin{array}{c}\n          2 \\\\\n          0 \\\\\n          1\n        \\end{array}\\right],\n        \\left[\\begin{array}{c}\n          -2 \\\\\n          1 \\\\\n          0\n        \\end{array}\\right]} ~\\text{for eigenvalue}~ {1},\n      \\quad\n      \\set{\\left[\\begin{array}{c}\n          7 \\\\\n          -2 \\\\\n          2\n        \\end{array}\\right]} ~\\text{for eigenvalue}~ {3}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix $P$ needed to diagonalize the above matrix is",
+      "sha": "f273aca99cc9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n        2 & -2 & 7 \\\\\n        0 & 1 & -2 \\\\\n        1 & 0 & 2\n      \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and the diagonal matrix $D$ is",
+      "sha": "f112fe4a16b7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n        1 & 0 & 0  \\\\\n        0 & 1 & 0 \\\\\n        0 & 0 & 3\n      \\end{array}\\right]."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Diagonalization · 习题 2（上游 exercises/Eigenvalues-Diagonalization.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Diagonalization.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the eigenvalues and eigenvectors of the matrix",
+      "sha": "95c965d190fc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n      5 & -18 & -32 \\\\\n      0 & 5 & 4 \\\\\n      2 & -5 & -11\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "One eigenvalue is $1$. Diagonalize if possible.",
+      "sha": "4b735d9bd434",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The eigenvalues are $-1$ and $1$. The eigenvectors corresponding to the eigenvalues are:",
+      "sha": "bb108dad9f67",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\set{\\left[\\begin{array}{c}\n          10 \\\\\n          -2 \\\\\n          3\n        \\end{array}\\right]} ~\\text{for eigenvalue}~ {-1},\n      \\quad\n      \\set{\\left[\\begin{array}{c}\n          7 \\\\\n          -2 \\\\\n          2\n        \\end{array}\\right]} ~\\text{for eigenvalue}~ {1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since there are only 2 linearly independent eigenvectors, this matrix is not diagonalizable.",
+      "sha": "145c10aacd6e",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Diagonalization · 习题 3（上游 exercises/Eigenvalues-Diagonalization.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Diagonalization.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the eigenvalues and eigenvectors of the matrix",
+      "sha": "95c965d190fc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n      8 &   0 &  10 \\\\\n      -6 &  -3 &  -6 \\\\\n      -5 &   0 &  -7 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "One eigenvalue is $-3$. Diagonalize if possible.",
+      "sha": "75d442ac0b01",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The eigenvectors and eigenvalues are:",
+      "sha": "53e1f61f3559",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\set{\\left[\\begin{array}{c}\n          0 \\\\\n          1 \\\\\n          0\n        \\end{array}\\right]} ~\\text{for eigenvalue}~ {-3},\n      \\quad\n      \\set{\\left[\\begin{array}{c}\n          -2 \\\\\n          1 \\\\\n          1\n        \\end{array}\\right]} ~\\text{for eigenvalue}~ {3},\n      \\quad\n      \\set{\\left[\\begin{array}{c}\n          -1 \\\\\n          0 \\\\\n          1\n        \\end{array}\\right]} ~\\text{for eigenvalue}~ {-2}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix $P$ needed to diagonalize the above matrix is",
+      "sha": "f273aca99cc9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n        0 &  -2 &  -1 \\\\\n        1 &   1 &   0 \\\\\n        0 &   1 &   1 \\\\\n      \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and the diagonal matrix $D$ is",
+      "sha": "f112fe4a16b7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n        -3 &   0 &   0 \\\\\n        0 &   3 &   0 \\\\\n        0 &   0 &  -2 \\\\\n      \\end{array}\\right]."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Diagonalization · 习题 4（上游 exercises/Eigenvalues-Diagonalization.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Diagonalization.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the eigenvalues and eigenvectors of the matrix",
+      "sha": "95c965d190fc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n      -1 & -2 & 2 \\\\\n      0 & 5 & -8 \\\\\n      0 & 4 & -7 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "One eigenvalue is $1$. Diagonalize if possible.",
+      "sha": "4b735d9bd434",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Diagonalization · 习题 5（上游 exercises/Eigenvalues-Diagonalization.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Diagonalization.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the eigenvalues and eigenvectors of the matrix",
+      "sha": "95c965d190fc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n      2 &  -1 &   6 \\\\\n      -4 &  -1 &  -6 \\\\\n      -2 &   1 &  -6 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "One eigenvalue is $0$. Diagonalize if possible.",
+      "sha": "ce317a5e94a8",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Diagonalization · 习题 6（上游 exercises/Eigenvalues-Diagonalization.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Diagonalization.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the eigenvalues and eigenvectors of the matrix",
+      "sha": "95c965d190fc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n      3 &  -1 &   0 \\\\\n      1 &   4 &  -1 \\\\\n      -1 & -1 &   4 \\\\\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "One eigenvalue is $3$. Diagonalize if possible.",
+      "sha": "7ee1aa97df11",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Diagonalization · 习题 7（上游 exercises/Eigenvalues-Diagonalization.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Diagonalization.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "对角化"
+}

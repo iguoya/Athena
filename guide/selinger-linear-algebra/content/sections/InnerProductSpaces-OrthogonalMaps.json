@@ -1,0 +1,785 @@
+{
+ "id": "InnerProductSpaces-OrthogonalMaps",
+ "title_en": "Orthogonal functions and orthogonal matrices",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether a linear transformation is an isometry and/or orthogonal.",
+         "sha": "5e70926eb838",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether a matrix is orthogonal.",
+         "sha": "b12bdf5b7d6f",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Isometries and orthogonal maps",
+    "sha": "01c2845bb8a1",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $V,W$ be real inner product spaces, and let $T:V\\to W$ be a linear transformation. We say that $T$ is an **isometry** if for all $\\vect{u},\\vect{v}\\in V$,",
+      "sha": "4e1292927e20",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{T(\\vect{u}),T(\\vect{v})} = \\iprod{\\vect{u},\\vect{v}}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Moreover, $T$ is called an **orthogonal transformation**, or simply **orthogonal**, if it is an isometry and invertible.",
+      "sha": "eb4593105eae",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In particular, if $T$ is an isometry, we have $\\norm{T\\vect{v}} = \\sqrt{\\iprod{T\\vect{v},T\\vect{v}}} = \\sqrt{\\iprod{\\vect{v},\\vect{v}}} = \\norm{\\vect{v}}$, so isometries preserve the norm. (This is fact where the name “isometry” comes from: from Greek “isos”, meaning “equal”, and “metron”, meaning “measure”). Conversely, any norm-preserving linear function is an isometry, as the following proposition shows.",
+    "sha": "d7e67e733aec",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Norm-preserving linear maps are isometries",
+    "sha": "66656aef79a6",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $T:V\\to W$ be a linear function such that for all $\\vect{v}\\in V$, $\\norm{T\\vect{v}} = \\norm{\\vect{v}}$. Then $T$ is an isometry.",
+      "sha": "378c55e4bd9b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We first note that for all $\\vect{u},\\vect{v}\\in V$,",
+      "sha": "9d3dbe7a294b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{u},\\vect{v}}\n    ~=~ \\frac{1}{2}(\\iprod{\\vect{u},\\vect{v}} + \\iprod{\\vect{v},\\vect{u}})\n    ~=~ \\frac{1}{2}(\\iprod{\\vect{u}+\\vect{v},\\vect{u}+\\vect{v}}\n    - \\iprod{\\vect{u},\\vect{u}} - \\iprod{\\vect{v},\\vect{v}})\n    ~=~ \\frac{1}{2}(\\norm{\\vect{u}+\\vect{v}}^2\n    - \\norm{\\vect{u}}^2 - \\norm{\\vect{v}}^2)."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Now suppose $T$ is norm-preserving and linear. Then for all $\\vect{u},\\vect{v}\\in V$,",
+      "sha": "ef1aa544d108",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\iprod{T(\\vect{u}),T(\\vect{v})}\n    &=& \\frac{1}{2}(\\norm{T(\\vect{u})+T(\\vect{v})}^2 - \\norm{T(\\vect{u})}^2 -\n        \\norm{T(\\vect{v})}^2) \\\\\n    &=& \\frac{1}{2}(\\norm{T(\\vect{u}+\\vect{v})}^2 - \\norm{T(\\vect{u})}^2 -\n        \\norm{T(\\vect{v})}^2) \\\\\n    &=& \\frac{1}{2}(\\norm{\\vect{u}+\\vect{v}}^2 -\n        \\norm{\\vect{u}}^2 - \\norm{\\vect{v}^2}) \\\\\n    &=& \\iprod{\\vect{u},\\vect{v}}.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, $T$ is an isometry.",
+      "sha": "34c7a7b054c6",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We also note that if $T$ is an isometry and $\\vect{u}\\orth\\vect{v}$, then $T(\\vect{u})\\orth T(\\vect{v})$, because $\\iprod{T(\\vect{u}),T(\\vect{v})} = \\iprod{\\vect{u},\\vect{v}} = 0$. So isometries preserve right angles. In fact, isometries also preserve arbitrary angles, due to the formula $\\cos\\theta = \\frac{\\iprod{\\vect{u},\\vect{v}}}{\\norm{\\vect{u}}\\,\\norm{\\vect{v}}} = \\frac{\\iprod{T(\\vect{u}),T(\\vect{v})}} {\\norm{T(\\vect{u})}\\,\\norm{T(\\vect{v})}}$.",
+    "sha": "3ae874283e4f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Orthogonal transformations on $R^n$",
+    "sha": "8c6bac67c9ba",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $T_1,T_2,T_3:\\R^2\\to\\R^2$ be the linear transformations with matrices",
+      "sha": "39fe5304fe35",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\coord{T_1} = \\left[\\begin{array}{cc} 0 & -1 \\\\ 1 & 0 \\end{array}\\right],\n    \\quad\n    \\coord{T_2} = \\left[\\begin{array}{cc} 2 & 0 \\\\ 0 & 2 \\end{array}\\right],\n    \\quad\\text{and}\\quad\n    \\coord{T_3} = \\left[\\begin{array}{cc} 1 & 1 \\\\ 0 & 1 \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "respectively. $T_1$ is a counterclockwise rotation by $90^{\\circ}$, $T_2$ is a scaling by a factor of $2$, and $T_3$ is a shearing. Then $T_1$ is orthogonal, but $T_2$ and $T_3$ are not. Note that $T_1$, being a rotation, preserves lengths and angles. $T_2$ preserves angles but not lengths. $T_3$ preserves neither lengths nor angles.",
+      "sha": "18a83acf935e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "caption": null
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "The matrix of an orthogonal transformation",
+    "sha": "210b8f009c0c",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $V,W$ be finite-dimensional real inner product spaces and let $T:V\\to W$ be a linear transformation. Let $B$ and $C$ be orthonormal bases of $V$ and $W$, respectively, and let $P=\\coord{T}_{C,B}$ be the matrix of $T$ with respect to the bases $B$ and $C$. Then",
+      "sha": "6b2d9d766b41",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$T$ is an isometry if and only if $P^TP = I$.",
+            "sha": "8222c4eea55e",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$T$ is orthogonal if and only if $P^TP = I$ and $\\dim V=\\dim W$.",
+            "sha": "ab580c5689f4",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) Recall from Proposition “Inner product and dot product” that for all $\\vect{u},\\vect{v}\\in V$, we have $\\iprod{\\vect{u},\\vect{v}} = \\coord{\\vect{u}}_B\\dotprod \\coord{\\vect{v}}_B$. Consider two vectors $\\vect{u},\\vect{v}\\in V$ and let $\\vect{t}=\\coord{u}_B$ and $\\vect{s}=\\coord{v}_B$. We have:",
+      "sha": "cc82b6d61cf0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\iprod{T(\\vect{u}),T(\\vect{v})} = \\iprod{\\vect{u},\\vect{v}}\n    &\\iff& \\coord{T(\\vect{u})}_C\\dotprod \\coord{T(\\vect{v})}_C\n           = \\coord{\\vect{u}}_B\\dotprod \\coord{\\vect{v}}_B \\\\\n    &\\iff& (\\coord{T}_{C,B}\\coord{\\vect{u}}_B)\\dotprod (\\coord{T}_{C,B}\\coord{\\vect{v}}_B)\n           = \\coord{\\vect{u}}_B\\dotprod \\coord{\\vect{v}}_B \\\\\n    &\\iff& (P\\vect{t})\\dotprod (P\\vect{s})\n           = \\vect{t}\\dotprod \\vect{s} \\\\\n    &\\iff& \\vect{t}^T P^T P\\vect{s}\n           = \\vect{t}^T \\vect{s} \\\\\n    &\\iff& \\vect{t}^T P^T P\\vect{s}\n           = \\vect{t}^T I \\vect{s}.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, $T$ is an isometry if and only if $\\vect{t}^T P^T P\\vect{s} = \\vect{t}^T I \\vect{s}$ holds for all $\\vect{t},\\vect{s}\\in\\R^m$. If $P^TP=I$, then this is clearly true. Conversely, assume $\\vect{t}^T P^T P\\vect{s} = \\vect{t}^T I \\vect{s}$ holds for all $\\vect{t},\\vect{s}\\in\\R^m$. Then by taking $\\vect{t}$ and $\\vect{s}$ to be the $i\\th$ and $j\\th$ standard basis vector, it follows that the $(i,j)$-entry of $P^TP$ is equal to the $(i,j)$-entry of $I$, for all $i$ and $j$. Therefore, $P^TP=I$.",
+      "sha": "2412c83f2c25",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "(b) By definition, $T$ is orthogonal if and only if it is an isometry and invertible. Therefore, if $T$ is orthogonal, then $P^TP=I$ by part (a) and $\\dim V=\\dim W$ because every invertible matrix is square (see Theorem “Invertible matrices are square”). Conversely, assume that $P^TP=I$ and $\\dim V=\\dim W$. Then $T$ is an isometry by part (a). Also, by Theorem “Right invertible square matrices are invertible”, since $P$ is square and $P^T$ is a left inverse of $P$, the matrix $P$, and therefore the linear transformation $T$, is invertible. Therefore, $T$ is orthogonal.",
+      "sha": "174b44056566",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Orthogonal transformations",
+    "sha": "e7dc04a41e98",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following matrices define orthogonal transformations? Which ones define isometries?",
+      "sha": "0ada6cf8d3a6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rr}\n      0  & 1 \\\\\n      -1 & 0 \\\\\n    \\end{array}\\right],\\quad\n    B = \\left[\\begin{array}{rr}\n      1 & 1 \\\\\n      1 & 0 \\\\\n    \\end{array}\\right],\\quad\n    C = \\frac{1}{\\sqrt{2}}\\left[\\begin{array}{rr}\n      1 & 1 \\\\\n      1 & -1 \\\\\n    \\end{array}\\right],\\quad\n    D = \\frac{1}{3}\\left[\\begin{array}{rr}\n      1 & -2 \\\\\n      2 & -1 \\\\\n      2 &  2 \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have",
+      "sha": "a2214cd5b1a4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A^TA = \\left[\\begin{array}{rr}\n      0  & 1 \\\\\n      -1 & 0 \\\\\n    \\end{array}\\right]\\left[\\begin{array}{rr}\n      0  & -1 \\\\\n      1 & 0 \\\\\n    \\end{array}\\right] = \\left[\\begin{array}{rr}\n      1 & 0 \\\\\n      0 & 1 \\\\\n    \\end{array}\\right] = I,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and therefore $A$ defines an isometry and (since it is also a square matrix) an orthogonal transformation. We have",
+      "sha": "31f10cb89ba5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "B^TB = \\left[\\begin{array}{rr}\n      1 & 1 \\\\\n      1 & 0 \\\\\n    \\end{array}\\right]\\left[\\begin{array}{rr}\n      1 & 1 \\\\\n      1 & 0 \\\\\n    \\end{array}\\right] = \\left[\\begin{array}{rr}\n      2 & 1 \\\\\n      1 & 1 \\\\\n    \\end{array}\\right] \\neq I,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "so the linear transformation defined by $B$ is neither an isometry nor orthogonal. A similar pair of calculations shows that $C^TC=I$ and $D^TD=I$, so both $C$ and $D$ are isometries. Since $C$ is a square matrix, it is also orthogonal. $D$ is not a square matrix, and therefore not orthogonal.",
+      "sha": "e02efa192462",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In light of Proposition “The matrix of an orthogonal transformation”, we say that an $n\\times n$-matrix $P$ is orthogonal if $P^TP=I$.",
+    "sha": "0472ebaeada0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Orthogonal matrix",
+    "sha": "1134c0bab38a",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "An $n\\times n$-matrix $P$ is called **orthogonal** if $P^TP=I$.",
+      "sha": "8eb44e7424c3",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The following proposition gives several equivalent ways of checking whether an $n\\times n$-matrix $P$ is orthogonal.",
+    "sha": "24783bf9170b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Conditions for orthogonal matrices",
+    "sha": "553e4769164c",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The following are equivalent for an $n\\times n$-matrix $P$:",
+      "sha": "efd5b328602b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$P$ is orthogonal.",
+            "sha": "b5dfd93ae754",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$P^TP=I$.",
+            "sha": "b9c301157ed8",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$P$ is invertible and $P^{-1}=P^T$.",
+            "sha": "fe9a530ff755",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$PP^T=I$.",
+            "sha": "984cc5563acc",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$P^T$ is orthogonal.",
+            "sha": "dc3158cda4bd",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "The columns of $P$ form an orthonormal set of vectors.",
+            "sha": "5e4bba8b6286",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "The rows of $P$ form an orthonormal set of vectors.",
+            "sha": "b84e170d5001",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The equivalence (a) \\textiff (b) is just the definition of orthogonality, bearing in mind that $P$ is assumed to be a square matrix. The equivalences (b) \\textiff (c) \\textiff (d) follow from Theorem “Right invertible square matrices are invertible”, since a square matrix is invertible if and only if it is left invertible if and only if it is right invertible. The equivalence (d) \\textiff (e) is again just the definition of orthogonality, this time applied to $P^T$. To show (b) \\textiff (f), let $\\vect{a}_1,\\ldots,\\vect{a}_n$ be the columns of $P$, and let $\\vect{e}_1,\\ldots,\\vect{e}_n$ be the standard basis vectors of $\\R^n$. Then we have $P^TP = I$ if and only if for all $i,j$, the $(i,j)$-entry of $P^TP$ is equal to the $(i,j)$-entry of $I$. But the $(i,j)$-entry of $P^TP$ is $\\vect{e}_i^TP^TP\\vect{e}_j = \\vect{a}_i^T\\vect{a}_j = \\vect{a}_i\\dotprod\\vect{a}_j$. On the other hand, the $(i,j)$-entry of $I$ is $1$ if $i=j$ and $0$ if $i\\neq j$. It follows that $P^TP=I$ if and only if for all $i,j$,",
+      "sha": "cf01349b23e2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{a}_i\\dotprod\\vect{a}_j=\\begin{cases}\n      1 & \\text{when $i=j$ and} \\\\\n      0 & \\text{otherwise}.\n    \\end{cases}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "But this is exactly what it means for $\\vect{a}_1,\\ldots,\\vect{a}_n$ to form an orthonormal set. The proof of (d) \\textiff (g) is completely analogous, using rows instead of columns.",
+      "sha": "f50d24b84c2a",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Orthogonal matrices",
+    "sha": "b8e2ef2bcd41",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine which of the following matrices are orthogonal by checking whether the columns form an orthonormal set.",
+      "sha": "74d03d88d439",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rrr}\n      0 & -1 & 0 \\\\\n      1 & 0 & 0 \\\\\n      0 & 0 & 1 \\\\\n    \\end{array}\\right],\n    \\quad\n    B = \\frac{1}{3}\n    \\left[\\begin{array}{rrr}\n      2  & -1 &  2 \\\\\n      -1 &  2 &  2 \\\\\n      2  &  2 & -1 \\\\\n    \\end{array}\\right],\n    \\quad\n    C =\n    \\left[\\begin{array}{rrr}\n      3 &  4 & 0 \\\\\n      4 & -3 & 0 \\\\\n      0 &  0 & 5 \\\\\n    \\end{array}\\right],\n    \\quad\n    D = \\frac{1}{3}\n    \\left[\\begin{array}{rrr}\n      2  &  1 &  2 \\\\\n      1  &  2 &  2 \\\\\n      2  &  2 &  1 \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "By Proposition “Orthogonal matrices”, it suffices to check whether the columns of each matrix are orthonormal. This is the case for $A$ and $B$. For example, the columns of $B$ are",
+      "sha": "6b5710950e74",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{b}_1 = \\frac{1}{3}\\left[\\begin{array}{r} 2 \\\\ -1 \\\\ 2 \\end{array}\\right],\n    \\quad\n    \\vect{b}_2 = \\frac{1}{3}\\left[\\begin{array}{r} -1 \\\\ 2 \\\\ 2 \\end{array}\\right],\n    \\quad\\text{and}\\quad\n    \\vect{b}_3 = \\frac{1}{3}\\left[\\begin{array}{r} 2 \\\\ 2 \\\\ -1 \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and we have",
+      "sha": "38670b8d131b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{b}_1\\dotprod \\vect{b}_1 =\n    \\frac{1}{9}\n    \\left[\\begin{array}{r} 2 \\\\ -1 \\\\ 2 \\end{array}\\right]\n    \\dotprod\n    \\left[\\begin{array}{r} 2 \\\\ -1 \\\\ 2 \\end{array}\\right]\n    = 1,\\qquad\n    \\vect{b}_1\\dotprod \\vect{b}_2 =\n    \\frac{1}{9}\n    \\left[\\begin{array}{r} 2 \\\\ -1 \\\\ 2 \\end{array}\\right]\n    \\dotprod\n    \\left[\\begin{array}{r} -1 \\\\ 2 \\\\ 2 \\end{array}\\right]\n    = 0,"
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{b}_2\\dotprod \\vect{b}_2 =\n    \\frac{1}{9}\n    \\left[\\begin{array}{r} -1 \\\\ 2 \\\\ 2 \\end{array}\\right]\n    \\dotprod\n    \\left[\\begin{array}{r} -1 \\\\ 2 \\\\ 2 \\end{array}\\right]\n    = 1,\\qquad\n    \\vect{b}_1\\dotprod \\vect{b}_3 =\n    \\frac{1}{9}\n    \\left[\\begin{array}{r} 2 \\\\ -1 \\\\ 2 \\end{array}\\right]\n    \\dotprod\n    \\left[\\begin{array}{r} 2 \\\\ 2 \\\\ -1 \\end{array}\\right]\n    = 0,"
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{b}_3\\dotprod \\vect{b}_3 =\n    \\frac{1}{9}\n    \\left[\\begin{array}{r} 2 \\\\ 2 \\\\ -1 \\end{array}\\right]\n    \\dotprod\n    \\left[\\begin{array}{r} 2 \\\\ 2 \\\\ -1 \\end{array}\\right]\n    = 1,\\qquad\n    \\vect{b}_2\\dotprod \\vect{b}_3 =\n    \\frac{1}{9}\n    \\left[\\begin{array}{r} -1 \\\\ 2 \\\\ 2 \\end{array}\\right]\n    \\dotprod\n    \\left[\\begin{array}{r} 2 \\\\ 2 \\\\ -1 \\end{array}\\right]\n    = 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "So the columns of $B$ are orthonormal. The columns of $C$ are orthogonal, but not normalized, so $C$ is not an orthogonal matrix. The columns of $D$ are normalized, but not orthogonal, so $D$ is not an orthogonal matrix either.",
+      "sha": "3da35528b0b4",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Properties of orthogonal matrices",
+    "sha": "5ac2ebfb99c1",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "If $P,Q$ are orthogonal $n\\times n$-matrices, then $PQ$ is orthogonal.",
+            "sha": "1c4612e3177c",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "The identity matrix is orthogonal.",
+            "sha": "daab41cb94f0",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "If $P$ is orthogonal, then so is $P^{-1}$.",
+            "sha": "49560d69d421",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "If $P$ is an orthogonal $n\\times n$-matrix and $Q$ is an orthogonal $m\\times m$-matrix, then the $(n+m)\\times(n+m)$-matrix",
+            "sha": "cdb823219e38",
+            "zh": ""
+           }
+          },
+          {
+           "k": "math",
+           "tex": "\\left[\\begin{array}{c|c}\n        P & 0 \\\\\\hline\n        0 & Q\n      \\end{array}\\right]"
+          },
+          {
+           "k": "p",
+           "t": {
+            "en": "is orthogonal.",
+            "sha": "4d64ba8517a6",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following linear transformations $T:\\R^3\\to\\R^3$ are orthogonal?",
+      "sha": "c288bc35b05f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A rotation by 30 degrees about the $z$-axis.",
+         "sha": "6896d96ab0b6",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A reflection about the plane $x=y$.",
+         "sha": "7798194a94df",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A scaling by a factor of $2$.",
+         "sha": "b5c94974e5b0",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A scaling by a factor of $-1$.",
+         "sha": "bb118e61f6ea",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) Yes. (b) Yes. (c) No. (d) Yes.",
+      "sha": "c0e9c01cac65",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Orthogonal functions and orthogonal matrices · 习题 1（上游 exercises/InnerProductSpaces-OrthogonalMaps.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-OrthogonalMaps.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following matrices define orthogonal transformations? Which ones define isometries?",
+      "sha": "0ada6cf8d3a6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rr}\n      1 &  0 \\\\\n      0 & -1 \\\\\n    \\end{array}\\right],\\quad\n    B = \\frac{1}{2}\\left[\\begin{array}{rr}\n      1 & 1 \\\\\n      -1 & 1 \\\\\n    \\end{array}\\right],\\quad\n    C = \\frac{1}{\\sqrt{5}}\\left[\\begin{array}{rr}\n      1 & -2 \\\\\n      2 &  1 \\\\\n    \\end{array}\\right],\\quad\n    D = \\frac{1}{4}\\left[\\begin{array}{rr}\n      1 &  2 \\\\\n      2 &  2 \\\\\n      2 & -1 \\\\\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$A$ and $C$ are orthogonal (and therefore isometries). $D$ is an isometry but not orthogonal. $B$ is neither orthogonal nor an isometry.",
+      "sha": "90a7a419f955",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Orthogonal functions and orthogonal matrices · 习题 2（上游 exercises/InnerProductSpaces-OrthogonalMaps.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-OrthogonalMaps.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine which of the following matrices are orthogonal by checking whether the columns form an orthonormal set.",
+      "sha": "74d03d88d439",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\frac{1}{3}\n    \\left[\\begin{array}{rrr}\n      1  &  2 &  2 \\\\\n      2  &  1 & -2 \\\\\n      -2 &  2 & -1 \\\\\n    \\end{array}\\right],\n    \\quad\n    B = \\left[\\begin{array}{rrr}\n      0 & 0 & 2 \\\\\n      0 & 2 & 0 \\\\\n      2 & 0 & 0 \\\\\n    \\end{array}\\right],\n    \\quad\n    C = \\frac{1}{3}\n    \\left[\\begin{array}{rrr}\n      2  & -1 &  2 \\\\\n      -1 &  2 & -2 \\\\\n      2  & -2 &  1 \\\\\n    \\end{array}\\right],\n    \\quad\n    D =\n    \\frac{1}{5}\n    \\left[\\begin{array}{rrr}\n      3 &  4 & 0 \\\\\n      4 & -3 & 0 \\\\\n      0 &  0 & 5 \\\\\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$A$ and $D$ are orthogonal, but $B$ and $C$ are not.",
+      "sha": "87948b453ff0",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Orthogonal functions and orthogonal matrices · 习题 3（上游 exercises/InnerProductSpaces-OrthogonalMaps.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-OrthogonalMaps.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "正交映射与正交矩阵"
+}

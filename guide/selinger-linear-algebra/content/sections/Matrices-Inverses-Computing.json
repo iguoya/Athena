@@ -1,0 +1,342 @@
+{
+ "id": "Matrices-Inverses-Computing",
+ "title_en": "Computing inverses",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "In Example “Verifying the inverse of a matrix”, we verified that a matrix $A$ had an inverse. But we did not actually compute the inverse: the inverse $B$ was already given, and we merely checked that $AB=I$ and $BA=I$. We now explore a method for finding the inverse when it is not already known what it is.",
+    "sha": "c4ac37922d15",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Finding the inverse of a matrix",
+    "sha": "1445be7f5700",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the inverse of the matrix",
+      "sha": "bd30cfadd3c1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{rr}\n      1 & -2 \\\\\n      2 & -3\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "To find $A^{-1}$, we need to find a matrix $\\left[\\begin{array}{rr} x & z \\\\ y & w \\end{array}\\right]$ such that",
+      "sha": "a875d332be4c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr}\n      1 & -2 \\\\\n      2 & -3\n    \\end{array}\\right] \\left[\\begin{array}{rr}\n      x & z \\\\\n      y & w\n    \\end{array}\\right] =\\left[\\begin{array}{rr}\n      1 & 0 \\\\\n      0 & 1\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We can multiply these two matrices, and see that in order for this equation to be true, we must solve the systems of equations",
+      "sha": "36ebd2549c4b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{c}\n      x  - 2y = 1, \\\\\n      2x - 3y = 0,\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and",
+      "sha": "cffa50a32cb1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{c}\n      z  - 2w = 0, \\\\\n      2z - 3w = 1.\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Writing the augmented matrix for these two systems gives",
+      "sha": "3f234bc0f6d4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr|r}\n      1 & -2 & 1 \\\\\n      2 & -3 & 0\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for the first system and",
+      "sha": "9b747f9615a9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr|r}\n      1 & -2 & 0 \\\\\n      2 & -3 & 1\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for the second one. Note that both systems have $A$ as their coefficient matrix. Since both systems have the same coefficient matrix, they both require exactly the same row operations, and we can use the method of Example “Multiple systems sharing the same left-hand side” to solve both systems at the same time. To do so, we create a single augmented matrix containing both of the right-hand sides:",
+      "sha": "43ecfb7f3c73",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr|rr}\n      1 & -2 & 1 & 0 \\\\\n      2 & -3 & 0 & 1\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Then we perform row operations until the coefficient matrix is in reduced echelon form:",
+      "sha": "c8742fa4f2d1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr|rr}\n      1 & -2 & 1 & 0 \\\\\n      2 & -3 & 0 & 1\n    \\end{array}\\right]\n    \\stackrel{R_2\\rowop R_2-2R_1}{\\roweq}\n    \\left[\\begin{array}{rr|rr}\n      1 & -2 &  1 & 0 \\\\\n      0 &  1 & -2 & 1\n    \\end{array}\\right]\n    \\stackrel{R_1\\rowop R_1+2R_2}{\\roweq}\n    \\left[\\begin{array}{rr|rr}\n      1 & 0 & -3 & 2 \\\\\n      0 & 1 & -2 & 1\n    \\end{array}\\right]. \\tag{1}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This corresponds to the following reduced echelon form s for the two original systems of equations:",
+      "sha": "78a943126d17",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr|r}\n      1 & 0 & -3 \\\\\n      0 & 1 & -2\n    \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    \\left[\\begin{array}{rr|rr}\n      1 & 0 & 2 \\\\\n      0 & 1 & 1\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The solution of the first system is $x=-3$ and $y=-2$. The solution for the second system is $z=2$ and $w=1$. If we take the values found for $x$, $y$, $z$, and $w$ and put them into our inverse matrix, we see that the inverse is",
+      "sha": "6591fccabfbe",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A^{-1} =\n    \\left[\\begin{array}{rr}\n      x & z \\\\\n      y & w\n    \\end{array}\\right]\n    =\n    \\left[\\begin{array}{rr}\n      -3 & 2 \\\\\n      -2 & 1\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Notice that this is exactly the right-hand side in the last augmented matrix of (1). In other words, all we really had to do to find the inverse were the row operations in (1). The inverse can be read off directly from the result.",
+      "sha": "a4fdf71280ef",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The example suggests a general method for finding the inverse of a matrix, which we summarize in the following algorithm.",
+    "sha": "ccae8216d64a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "algorithm",
+   "title": {
+    "en": "Finding the inverse of a matrix",
+    "sha": "1445be7f5700",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $A$ is an $n\\times n$-matrix. To find $A^{-1}$ if it exists, form the augmented $n\\times 2n$-matrix",
+      "sha": "4977c5c0b7c4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{A\\mid I}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If possible, do row operations until you obtain an $n\\times 2n$-matrix of the form",
+      "sha": "029cae20c3e5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{I\\mid B}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If this can be done, then $A$ is invertible and $A^{-1}=B$. If it is not possible (i.e., if the reduced echelon form of $A$ has less than $n$ pivot entries), then $A$ is not invertible.",
+      "sha": "680b0b3a227c",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This algorithm shows how to find the inverse if it exists. It also tells us if $A$ does not have an inverse.",
+    "sha": "be9b6399dda5",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Finding the inverse of a matrix",
+    "sha": "1445be7f5700",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\left[\\begin{array}{rrr} 1 & 2 & 2 \\\\ 1 & 0 & 2 \\\\ 3 & 1 & -1 \\end{array}\\right]$. Find $A^{-1}$ if it exists.",
+      "sha": "07a128ef1647",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We set up the augmented matrix and reduce it to reduced echelon form.",
+      "sha": "48d15237b91c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\mat{A\\mid I} &=&\n    \\left[\\begin{array}{rrr|rrr}\n      1 & 2 &  2 & 1 & 0 & 0 \\\\\n      1 & 0 &  2 & 0 & 1 & 0 \\\\\n      3 & 1 & -1 & 0 & 0 & 1\n    \\end{array}\\right]\\\\[1ex]\n    &\\stackrel{R_2\\rowop R_2-R_1}{\\stackrel{R_3\\rowop R_3-3R_1}{\\roweq}}&\n    \\left[\\begin{array}{rrr|rrr}\n      1 &  2 &  2 &  1 & 0 & 0 \\\\\n      0 & -2 &  0 & -1 & 1 & 0 \\\\\n      0 & -5 & -7 & -3 & 0 & 1\n    \\end{array}\\right]\\\\[1ex]\n    &\\stackrel{R_1\\rowop 7R_1}{\\stackrel{R_3\\rowop -2R_3}{\\roweq}}&\n    \\left[\\begin{array}{rrr|rrr}\n      7 & 14 & 14 &  7 & 0 &  0 \\\\\n      0 & -2 &  0 & -1 & 1 &  0 \\\\\n      0 & 10 & 14 &  6 & 0 & -2\n    \\end{array}\\right]\\\\[1ex]\n    &\\stackrel{R_1\\rowop R_1+7R_2}{\\stackrel{R_3\\rowop R_3+5R_2}{\\roweq}}&\n    \\left[\\begin{array}{rrr|rrr}\n      7 &  0 & 14 &  0 & 7 &  0 \\\\\n      0 & -2 &  0 & -1 & 1 &  0 \\\\\n      0 &  0 & 14 &  1 & 5 & -2\n    \\end{array}\\right]\\\\[1ex]\n    &\\stackrel{R_1\\rowop R_1-R_3}{\\roweq}&\n    \\left[\\begin{array}{rrr|rrr}\n      7 &  0 &  0 & -1 & 2 &  2 \\\\\n      0 & -2 &  0 & -1 & 1 &  0 \\\\\n      0 &  0 & 14 &  1 & 5 & -2\n    \\end{array}\\right]\\\\[-1ex]\n    &\\stackrel{R_1\\rowop \\frac{1}{7}R_1}{\\stackrel{R_2\\rowop -\\frac{1}{2}R_2}{\\stackrel{R_3\\rowop \\frac{1}{14}R_3}{\\roweq}}}&\n    \\def\\arraystretch{1.5}\n    \\left[\\begin{array}{rrr|rrr}\n      1 & 0 & 0 & -\\frac{1}{7} & \\frac{2}{7} & \\frac{2}{7} \\\\\n      0 & 1 & 0 & \\frac{1}{2} & -\\frac{1}{2} & 0           \\\\\n      0 & 0 & 1 & \\frac{1}{14} & \\frac{5}{14} & -\\frac{1}{7}\n    \\end{array}\\right].\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Notice that the last augmented matrix is of the form $\\mat{I\\mid B}$, where the left-hand side is the $3 \\times 3$ identity matrix. Therefore, the inverse is the $3 \\times 3$-matrix on the right-hand side, given by",
+      "sha": "b802767654d8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A^{-1} ~=~\n    \\def\\arraystretch{1.5}\n    \\left[\\begin{array}{rrr}\n      -\\frac{1}{7} & \\frac{2}{7} & \\frac{2}{7} \\\\\n      \\frac{1}{2} & -\\frac{1}{2} & 0 \\\\\n      \\frac{1}{14} & \\frac{5}{14} & -\\frac{1}{7}\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When looking for the inverse of a matrix, it can happen that the left-hand side cannot be row reduced to the identity matrix. The following is an example of this situation.",
+    "sha": "c4d602a71f63",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "A non-invertible matrix",
+    "sha": "2c943af9e333",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\left[\\begin{array}{rrr} 1 & -2 & 2 \\\\ 1 & 0 & 2 \\\\ 2 & -2 & 4 \\end{array}\\right]$. Find $A^{-1}$ if it exists.",
+      "sha": "94ec2d616995",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We write the augmented matrix",
+      "sha": "bd289b53b547",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{A\\mid I}\n    ~=~\n    \\left[\\begin{array}{rrr|rrr}\n      1 & -2 & 2 & 1 & 0 & 0 \\\\\n      1 &  0 & 2 & 0 & 1 & 0 \\\\\n      2 & -2 & 4 & 0 & 0 & 1\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and proceed to do row operations attempting to obtain $\\mat{I\\mid A^{-1}}$. After a few row operations, we have",
+      "sha": "5aca2afed01c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr|rrr}\n      \\boxed{1} & -2 & 2 & 1 & 0 & 0 \\\\\n      0 & \\boxed{2} & 0 & -1 & 1 & 0 \\\\\n      0 & 0 & 0 & -1 & -1 & 1\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "At this point, we see that the coefficient matrix has rank $2$, i.e., there are only two pivot entries. This means there is no way to obtain $I$ on the left-hand side of this augmented matrix. Hence, there is no way to complete the algorithm, and the inverse of $A$ does not exist.",
+      "sha": "a3a89be22a25",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If the algorithm provides an inverse, it is always possible to double-check that your answer is correct. To do so, use the method demonstrated in Example “Verifying the inverse of a matrix”. Check that the products $AA^{-1}$ and $A^{-1}A$ both equal the identity matrix. Through this method, you can always ensure that you have calculated $A^{-1}$ properly.",
+    "sha": "c3a8afbed509",
+    "zh": ""
+   }
+  }
+ ],
+ "exercises": [],
+ "title_zh": "求逆矩阵"
+}

@@ -1,0 +1,421 @@
+{
+ "id": "Vectors-ScalarMultiplication",
+ "title_en": "Scalar multiplication",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Multiply a scalar by a vector algebraically and geometrically.",
+         "sha": "8178a9834f72",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Use the laws of scalar multiplication to prove equalities between vector expressions.",
+         "sha": "94b3b6eaae34",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Scalar multiplication of vectors in $\\R^n$ is defined as follows.",
+    "sha": "fc2c9836d04c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Scalar multiplication of vectors in $\\R^n$",
+    "sha": "3e1e7e8af625",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If $k\\in\\R$ is a scalar and $\\vect{u}\\in \\R^n$ is a vector, then their **scalar multiplication** $k\\vect{u}\\in \\R^n$ is defined by",
+      "sha": "ca568d09837e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "k\\vect{u}=k\\left[\\begin{array}{c}\n      u_1 \\\\\n      \\vdots \\\\\n      u_n\n    \\end{array}\\right] = \\left[\\begin{array}{c}\n      ku_1 \\\\\n      \\vdots \\\\\n      ku_n\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For example $3 \\mat{1, 2, 3}^T = \\mat{3, 6, 9}^T$ and $-2\\mat{1, 2, 3}^T = \\mat{-2, -4, -6}^T$.",
+    "sha": "086abb8fc2b7",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Geometric meaning of scalar multiplication",
+    "sha": "64a42ec85d7b",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u}=\\mat{2,1}^T$, and draw the following vectors to scale: $2\\vect{u}$, $\\vect{u}$, $\\frac{1}{2}\\vect{u}$, $0\\vect{u}$, $-\\frac{1}{2}\\vect{u}$, $-\\vect{u}$, and $-2\\vect{u}$. What is the geometric meaning of scalar multiplication?",
+      "sha": "d635fc41af19",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Here is a picture of the seven vectors. We draw their tails in different places to make their relationship easier to see.",
+      "sha": "ca8524729650",
+      "zh": ""
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "caption": null
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We see that the vector $k\\vect{u}$ has the same direction as $\\vect{u}$ when $k$ is positive, and the opposite direction when $k$ is negative. Further, the length of the vector is scaled by a factor of $\\abs{k}$. It increases if $\\abs{k}>1$ and decreases if $\\abs{k}<1$. For example, the vector $2\\vect{u}$ is exactly twice as long as $\\vect{u}$. (It is because of this scaling property that scalars are called scalars ).",
+      "sha": "26b1f3f93895",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Just as with addition, scalar multiplication of vectors satisfies several important properties. These are outlined in the following proposition.",
+    "sha": "87d6385f149d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Properties of scalar multiplication",
+    "sha": "7d68ef43927f",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The following properties hold for vectors $\\vect{u},\\vect{v}\\in\\R^n$ and $k,\\ell$ scalars.",
+      "sha": "76e1207169b8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The distributive law over vector addition",
+         "sha": "b65401499baa",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "k(\\vect{u} + \\vect{v}) = k\\vect{u} + k\\vect{v}."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The distributive law over scalar addition",
+         "sha": "4de77d618b4e",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "(k + \\ell) \\vect{u} = k\\vect{u} + \\ell\\vect{u}."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The associative law for scalar multiplication",
+         "sha": "f580deaf17bc",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "k(\\ell\\vect{u}) = (k\\ell)\\vect{u}."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The rule for multiplication by $1$",
+         "sha": "6380e14af27a",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "1\\vect{u}=\\vect{u}."
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We will show the proof of:",
+      "sha": "2f73b6c23808",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "k(\\vect{u} + \\vect{v}) = k\\vect{u} + k\\vect{v}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Assume $\\vect{u}=\\mat{u_1,\\ldots,u_n}^T$ and $\\vect{v}=\\mat{v_1,\\ldots,v_n}^T$. We have:",
+      "sha": "a69a356e5272",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{ll}\n      k(\\vect{u} + \\vect{v}) & = k\\mat{u_1 + v_1,\\ldots,u_n + v_n}^T \\\\\n                             & = \\mat{k(u_1 + v_1), \\ldots, k(u_n + v_n)}^T \\\\\n                             & = \\mat{ku_1 + k v_1, \\ldots, ku_n + kv_n}^T \\\\\n                             & = \\mat{ku_1, \\ldots, ku_n}^T + \\mat{kv_1, \\ldots, kv_n}^T \\\\\n                             & = k\\vect{u} + k\\vect{v}.\n    \\end{array}"
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the vectors $\\vect{u}$ and $\\vect{v}$ drawn below.",
+      "sha": "58e4ad18dd90",
+      "zh": ""
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "caption": null
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Draw $-\\vect{u}$, $2\\vect{v}$, and $-\\frac{1}{2}\\vect{v}$.",
+      "sha": "f84e42d7b5e9",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "caption": null
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Scalar multiplication · 习题 1（上游 exercises/Vectors-ScalarMultiplication.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-ScalarMultiplication.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find $-3\\left[\\begin{array}{r} 5 \\\\ -1 \\\\ 2 \\\\ -3 \\end{array}\\right] + 5\\left[\\begin{array}{r} -8 \\\\ 2 \\\\ -3 \\\\ 6 \\end{array}\\right]$.",
+      "sha": "653fe1ed196e",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\left[\\begin{array}{r} -55 \\\\ 13 \\\\ -21 \\\\ 39 \\end{array}\\right]$.",
+      "sha": "c29619e38d3a",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Scalar multiplication · 习题 2（上游 exercises/Vectors-ScalarMultiplication.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-ScalarMultiplication.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use the properties of scalar multiplication from Proposition “Properties of scalar multiplication” and the properties of vector addition from Proposition “Properties of vector addition” to prove the following equalities. Justify every step.",
+      "sha": "b290e50f1b53",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(k+\\ell)(\\vect{u}+\\vect{v}) = k\\vect{u} + k\\vect{v} + \\ell\\vect{u} + \\ell\\vect{v}$.",
+         "sha": "a81f9cddab04",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$0\\vect{u} = \\vect{0}$.",
+         "sha": "c92bf03f1115",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(-1)\\vect{u} = -\\vect{u}$.",
+         "sha": "caab7f58a260",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$-(k\\vect{u}) = k(-\\vect{u}) = (-k)\\vect{u}$.",
+         "sha": "9528041556a2",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(k+\\ell)(\\vect{u}+\\vect{v}) = (k+\\ell)\\vect{u} + (k+\\ell)\\vect{v} = k\\vect{u} + k\\vect{v} + \\ell\\vect{u} + \\ell\\vect{v}$. Here we used the distributive law over vector addition in the first step, and the distributive law over scalar addition in the second step.",
+         "sha": "095bd680bc75",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "We have $0\\vect{u} = (0+0)\\vect{u} = 0\\vect{u} + 0\\vect{u}$ by properties of scalars and by the distributive law, respectively. Adding $-(0\\vect{u})$ to both sides of the equation, and using the additive unit law and associativity, we have $\\vect{0} = 0\\vect{u}$.",
+         "sha": "3eebca5bad12",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "We have $(-1)\\vect{u} = (-1)\\vect{u} + \\vect{0} = (-1)\\vect{u} + (\\vect{u} + (-\\vect{u})) = ((-1)\\vect{u} + \\vect{u}) + (-\\vect{u}) = ((-1)\\vect{u} + 1\\vect{u}) + (-\\vect{u}) = ((-1)+1)\\vect{u} + (-\\vect{u}) = 0\\vect{u} + (-\\vect{u}) = \\vect{0} + (-\\vect{u}) = -\\vect{u}$. Here, we have used the additive unit law, the additive inverse law, the associative law, the rule for multiplication by 1, the distributive law, properties of scalars, the property of part (b), and the additive unit law, respectively.",
+         "sha": "6ce480b23261",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Scalar multiplication · 习题 3（上游 exercises/Vectors-ScalarMultiplication.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-ScalarMultiplication.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "向量数乘"
+}

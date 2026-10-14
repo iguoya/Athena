@@ -1,0 +1,821 @@
+{
+ "id": "Matrices-Transpose",
+ "title_en": "The transpose",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Calculate the transpose of a matrix.",
+         "sha": "18b613110e2a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether a matrix is symmetric, antisymmetric, or neither.",
+         "sha": "802e6dce0b3f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Manipulate algebraic expressions involving the transpose of matrices.",
+         "sha": "ba8c01edc535",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Another important operation on matrices is that of taking the **transpose**. The transpose of a matrix is obtained by turning the rows into columns and vice versa.",
+    "sha": "69280042cab3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "The transpose of a matrix",
+    "sha": "c356295cf4c6",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $m\\times n$-matrix. Then the **transpose** of $A$, denoted $A^T$, is the $n\\times m$-matrix whose $(i,j)$-entry is the $(j,i)$-entry of $A$.",
+      "sha": "4e63f7d724a1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{ccc}\n      a_{11} & \\cdots & a_{1n} \\\\\n      a_{21} & \\cdots & a_{2n} \\\\\n      \\vdots & \\ddots & \\vdots \\\\\n      a_{m1} & \\cdots & a_{mn} \\\\\n    \\end{array}\\right],\n    \\quad\n    A^T = \\left[\\begin{array}{cccc}\n      a_{11} & a_{21} & \\cdots & a_{m1} \\\\\n      \\vdots & \\vdots & \\ddots & \\vdots \\\\\n      a_{1n} & a_{2n} & \\cdots & a_{mn} \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "The transpose of a matrix",
+    "sha": "c356295cf4c6",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the transpose of the following matrix:",
+      "sha": "ccc8815ca9a7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rrr}\n      1 & 2 & 6 \\\\\n      3 & 5 & 4\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The transpose is",
+      "sha": "5c6690b15fd8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A^T =\n    \\left[\\begin{array}{rr}\n      1 & 3 \\\\\n      2 & 5 \\\\\n      6 & 4\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Notice that $A$ is a $2\\times 3$-matrix, while $A^T$ is a $3\\times 2$-matrix.",
+      "sha": "d5c118fee54f",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We have already used a special case of the transpose since Chapter 〔引用〕, when we wrote $\\left[\\begin{array}{rrr}1&2&3\\end{array}\\right]^T$ as a space-saving notation for the column vector",
+    "sha": "c1b421b5cb32",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\left[\\begin{array}{c}\n    1 \\\\\n    2 \\\\\n    3 \\\\\n  \\end{array}\\right]."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The transpose of a matrix satisfies the following properties:",
+    "sha": "e29831d2d0ec",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Properties of the transpose",
+    "sha": "1bec05ee5e2a",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ and $B$ be matrices of appropriate sizes, and $r$ a scalar. Then the following hold.",
+      "sha": "e9fd512f537f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(A^T)^T = A$.",
+         "sha": "dac3f6aa2d0a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(A+B)^T=A^T+B^T$.",
+         "sha": "411392e5cd85",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(rA)^T=rA^T$.",
+         "sha": "6ef0f489f6ec",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(AB)^T=B^TA^T$.",
+         "sha": "7fddfe66cfc9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$0^T = 0$.",
+         "sha": "cbab1a1effa0",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$I^T = I$.",
+         "sha": "30d807c1a3bb",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(A^{-1})^T = (A^T)^{-1}$, if $A$ is invertible.",
+         "sha": "7718a364ae64",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Recall that a column vector is the same thing as a $n\\times 1$-matrix. Using the transpose, we can make precise the connection between the dot product and the matrix product. Namely, let",
+    "sha": "ae9596e52e59",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vect{v}=\\left[\\begin{array}{c}v_1\\\\\\vdots\\\\v_n\\end{array}\\right]\n  \\quad\\text{and}\\quad\n  \\vect{w}=\\left[\\begin{array}{c}w_1\\\\\\vdots\\\\w_n\\end{array}\\right]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "by column vectors. Then",
+    "sha": "dc784da5fd4d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vect{v}\\dotprod\\vect{w}\n  ~=~\n  v_1w_1 + \\ldots + v_nw_n\n  ~=~\n  \\left[\\begin{array}{ccc} v_1 & \\cdots & v_n \\end{array}\\right]\n  \\left[\\begin{array}{c} w_1 \\\\ \\vdots \\\\ w_n \\end{array}\\right]\n  ~=~\n  \\vect{v}^T\\vect{w}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In other words, the dot product of column vectors $\\vect{v}$ and $\\vect{w}$ is the same thing as the matrix product $\\vect{v}^T\\vect{w}$.",
+    "sha": "bc6a297536c0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can also use the notion of transpose to define what it means for a matrix to be **symmetric** and **antisymmetric**.",
+    "sha": "c0ee290169af",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Symmetric and antisymmetric matrices",
+    "sha": "161b8fbb4b1b",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "An $n\\times n$-matrix $A$ is said to be **symmetric** if $A^T=A$. It is said to be **antisymmetric** (sometimes also called **skew symmetric** ) if $A^T=-A$.",
+      "sha": "1a80c87b2197",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Symmetric and antisymmetric matrices",
+    "sha": "161b8fbb4b1b",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let",
+      "sha": "ef5fe1edf379",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{rrr}\n      2 & 1 & 3 \\\\\n      1 & 5 & -3 \\\\\n      3 & -3 & 7\n    \\end{array}\\right],\n    \\quad\n    B=\\left[\\begin{array}{rrr}\n      0 & 1 & 3 \\\\\n      -1 & 0 & 2 \\\\\n      -3 & -2 & 0\n    \\end{array}\\right],\n    \\quad\\text{and}\\quad\n    C=\\left[\\begin{array}{rrr}\n      0 & 1 &  3 \\\\\n      1 & 5 & -3 \\\\\n      1 & 3 &  0\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Then $A$ is symmetric because $A^T=A$, $B$ is antisymmetric because $B^T=-B$, and $C$ is neither symmetric nor antisymmetric because $C^T$ is equal to neither $C$ nor $-C$.",
+      "sha": "a34aed56c602",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $X=\\left[\\begin{array}{rrr} -1 & -1 & 1 \\end{array}\\right]$ and $Y=\\left[\\begin{array}{rrr} 0 & 1 & 2 \\end{array}\\right]$. Find $X^TY$ and $XY^T$ if possible.",
+      "sha": "026057ebb010",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$X^TY = \\left[\\begin{array}{rrr} 0 & -1 & -2 \\\\ 0 & -1 & -2 \\\\ 0 & 1 & 2 \\end{array}\\right]$, $XY^T = 1$.",
+      "sha": "ab4072fb09ad",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The transpose · 习题 1（上游 exercises/Matrices-Transpose.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Transpose.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the matrices",
+      "sha": "4321c47911b9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A =\\left[\\begin{array}{rr}\n      1 & 2 \\\\\n      3 & 2 \\\\\n      1 & -1\n    \\end{array}\\right],\n    \\quad\n    B=\\left[\\begin{array}{rrr}\n      2 & -5 & 2 \\\\\n      -3 & 2 & 1\n    \\end{array}\\right],\n    \\quad\n    C =\\left[\\begin{array}{rr}\n      1 & 2 \\\\\n      5 & 0\n    \\end{array}\\right],\n    \\quad\n    D=\\left[\\begin{array}{rr}\n      -1 & 1 \\\\\n      4 & -3\n    \\end{array}\\right],\n    \\quad\n    E=\\left[\\begin{array}{r}\n      1 \\\\\n      3\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the following if possible. If it is not possible explain why.",
+      "sha": "d6469ba930c3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$-3A{^T}$.",
+         "sha": "1fa06e2063f9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$3B - A^T$.",
+         "sha": "6130d28d2af8",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$E^TB$.",
+         "sha": "1cd4bfec1d1c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$EE^T$.",
+         "sha": "8b6bbbe5509b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$B^TB$.",
+         "sha": "bd27b3e32f71",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$CA^T$.",
+         "sha": "1bac289005fa",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$D^TBE$.",
+         "sha": "5211281690a0",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rrr} -3 & -9 & -3 \\\\ -6 & -6 & 3 \\end{array}\\right]$.",
+         "sha": "a2d45e0521e1",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rrr} 5 & -18 & 5 \\\\ -11 & 4 & 4 \\end{array}\\right]$.",
+         "sha": "03e4763ef988",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rrr} -7 & 1 & 5 \\end{array}\\right]$.",
+         "sha": "329eb2c5d781",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rr} 1 & 3 \\\\ 3 & 9 \\end{array}\\right]$.",
+         "sha": "b2fe5f6716a5",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rrr} 13 & -16 & 1 \\\\ -16 & 29 & -8 \\\\ 1 & -8 & 5 \\end{array}\\right]$.",
+         "sha": "27cbc40f0ad9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rrr} 5 & 7 & -1 \\\\ 5 & 15 & 5 \\end{array}\\right]$.",
+         "sha": "dc1590d07d33",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not possible because $B$ is a $2\\times 3$-matrix and $E$ is a $2\\times 1$-matrix, cannot multiply $BE$.",
+         "sha": "f87909c4b9b5",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The transpose · 习题 2（上游 exercises/Matrices-Transpose.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Transpose.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following matrices are symmetric, antisymmetric, both, or neither?",
+      "sha": "cb6bcd5f5ca6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rr}\n      0 & 1 \\\\\n      -1 & 0 \\\\\n    \\end{array}\\right],\n    \\quad\n    B = \\left[\\begin{array}{rr}\n      2 & 1 \\\\\n      1 & 3 \\\\\n    \\end{array}\\right],\n    \\quad\n    C = \\left[\\begin{array}{rr}\n      1 & 2 \\\\\n      -2 & 0 \\\\\n    \\end{array}\\right],\n    \\quad\n    D = \\left[\\begin{array}{rr}\n      0 & 0 \\\\\n      0 & 0 \\\\\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$A$ is antisymmetric, $B$ is symmetric, $C$ is neither, and $D$ is both.",
+      "sha": "11a0857ead9f",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The transpose · 习题 3（上游 exercises/Matrices-Transpose.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Transpose.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $A$ is a matrix that is both symmetric and antisymmetric. Show that $A=0$.",
+      "sha": "ce0ecf4f9011",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have $A=A^T=-A$. Therefore, each entry $a_{ij}$ of $A$ is equal to its own negation. This implies that $a_{ij}=0$, and therefore $A$ is the zero matrix.",
+      "sha": "b664984329d9",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The transpose · 习题 4（上游 exercises/Matrices-Transpose.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Transpose.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n\\times n$-matrix. Show $A$ equals the sum of a symmetric and an antisymmetric matrix. **Hint:** Show that $\\frac{1}{2}(A^T+A)$ is symmetric and then consider using this as one of the matrices.",
+      "sha": "53c10a651614",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$A=\\frac{1}{2}(A+A^T)+\\frac{1}{2}(A-A^T)$.",
+      "sha": "8ba95dc929ef",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The transpose · 习题 5（上游 exercises/Matrices-Transpose.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Transpose.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Show that the main diagonal of every antisymmetric matrix consists of only zeros. Recall that the main diagonal consists of every entry of the matrix which is of the form $a_{ii}$.",
+      "sha": "82a5f79c7c95",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If $A$ is antisymmetric then $A=-A^T$. It follows that $a_{ii}=-a_{ii}$ and so each $a_{ii}=0$.",
+      "sha": "d961c966d07d",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The transpose · 习题 6（上游 exercises/Matrices-Transpose.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Transpose.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Show that for $m \\times n$-matrices $A,B$ and scalars $r, s$, the following holds:",
+      "sha": "74b5af53b4ce",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(rA + sB)^T = rA^T + sB^T."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "This follows from properties 〔引用〕 and 〔引用〕 of Proposition “Properties of the transpose”.",
+      "sha": "978383c7ad8d",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The transpose · 习题 7（上游 exercises/Matrices-Transpose.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Transpose.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex8",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be a real $m\\times n$-matrix and let $\\vect{u}\\in \\R^n$ and $\\vect{v}\\in \\R^m$. Show $(A\\vect{u})\\dotprod \\vect{v}=\\vect{u}\\dotprod (A^T\\vect{v})$.",
+      "sha": "c512320bb20d",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$(A\\vect{u})\\dotprod \\vect{v} = (A\\vect{u})^T\\vect{v} = (\\vect{u}^TA^T)\\vect{v} = \\vect{u}^T(A^T\\vect{v}) = \\vect{u}\\dotprod (A^T\\vect{v})$.",
+      "sha": "b9aec16f20bc",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The transpose · 习题 8（上游 exercises/Matrices-Transpose.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Transpose.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex9",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Show that if $A$ is an invertible $n\\times n$-matrix, then so is $A^T$ and $(A^T)^{-1}=(A^{-1})^T$.",
+      "sha": "2b3e45925dce",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We need to show that $(A^{-1})^T$ is the inverse of $A^T$. From properties of the transpose,",
+      "sha": "dd9f915a18ce",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}A^T(A^{-1})^T &=& (A^{-1}A)^T=I^T=I, \\\\\n      (A^{-1})^TA^T &=& (AA^{-1})^T=I^T=I.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Hence $A^T$ is invertible and $(A^T)^{-1}=(A^{-1})^T$.",
+      "sha": "abc6528af8de",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The transpose · 习题 9（上游 exercises/Matrices-Transpose.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Transpose.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex10",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $A$ is invertible and symmetric. Show that $A^{-1}$ is symmetric.",
+      "sha": "59324929018b",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have $(A^{-1})^T = (A^T)^{-1} = A^{-1}$, and therefore $A^{-1}$ is equal to its own transpose, hence symmetric.",
+      "sha": "5efce38305e7",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The transpose · 习题 10（上游 exercises/Matrices-Transpose.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Transpose.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "转置"
+}

@@ -1,0 +1,120 @@
+{
+ "id": "Matrices-ElementaryMatrices-Inverses",
+ "title_en": "Inverses of elementary matrices",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "Suppose we have applied a row operation to a matrix $A$. Consider the row operation required to return $A$ to its original form, i.e., to undo the row operation. It turns out that this action is described by the inverse of an elementary matrix. The following theorem ensures that the inverse of each elementary matrix is itself an elementary matrix.",
+    "sha": "1042e8fa6e32",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Inverses of elementary matrices",
+    "sha": "ac48bdae7504",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Every elementary matrix is invertible and its inverse is also an elementary matrix.",
+      "sha": "52ae302d4a7a",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In fact, the inverse of an elementary matrix is constructed by doing the *reverse* row operation on $I$. $E^{-1}$ is obtained by performing the row operation which would carry $E$ back to $I$.",
+    "sha": "f737ab9e82b2",
+    "zh": ""
+   }
+  },
+  {
+   "k": "list",
+   "ordered": false,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "If $E$ is obtained by switching rows $i$ and $j$, then $E^{-1}$ is also obtained by switching rows $i$ and $j$.",
+       "sha": "7afde0fe9dae",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "If $E$ is obtained by multiplying row $i$ by the scalar $k$, then $E^{-1}$ is obtained by multiplying row $i$ by the scalar $\\frac{1}{k}$.",
+       "sha": "f0146a87c514",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "If $E$ is obtained by adding $k$ times row $i$ to row $j$, then $E^{-1}$ is obtained by subtracting $k$ times row $i$ from row $j$.",
+       "sha": "5cf2c7acbad0",
+       "zh": ""
+      }
+     }
+    ]
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Inverse of an elementary matrix",
+    "sha": "6ba3ecc4c461",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find $E^{-1}$, where $E$ is the elementary matrix",
+      "sha": "2a2e7b2e9fb0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "E\n    =\n    \\left[\\begin{array}{rr}\n      1 & 0 \\\\\n      0 & 2\n    \\end{array}\\right]"
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$E$ is obtained from the $2\\times 2$ identity matrix by multiplying the second row by $2$. In order to carry $E$ back to the identity, we need to multiply the second row of $E$ by $\\frac{1}{2}$. Hence, $E^{-1}$ is given by",
+      "sha": "ccae05616db9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "E^{-1}\n    =\n    \\left[\\begin{array}{rr}\n      1 & 0 \\\\\n      0 & \\frac{1}{2}\n    \\end{array}\\right]."
+    }
+   ]
+  }
+ ],
+ "exercises": [],
+ "title_zh": "初等矩阵的逆"
+}

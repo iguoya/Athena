@@ -1,0 +1,467 @@
+{
+ "id": "Eigenvalues-Application-Power",
+ "title_en": "Application: Matrix powers",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Use diagonalization to raise a matrix to a high power.",
+         "sha": "83470aa3bd59",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Use diagonalization to compute a square root of a matrix.",
+         "sha": "5af7dce06a61",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Suppose we have a matrix $A$ and we want to find $A^{50}$. One could try to multiply $A$ with itself 50 times, but this is a lot of work (try it!). However, diagonalization allows us to compute high powers of a matrix relatively easily. Suppose $A$ is diagonalizable, so that $P^{-1}AP=D$. We can rearrange this equation to write $A=PDP^{-1}$. Now, consider $A^2$. Since $A=PDP^{-1}$, it follows that",
+    "sha": "96a94930c504",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A^2 = (PDP^{-1})^2=PDP^{-1}PDP^{-1}=PD^2P^{-1}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Similarly,",
+    "sha": "cc4fb6a72656",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A^3 = (PDP^{-1})^3=PDP^{-1}PDP^{-1}PDP^{-1}=PD^3P^{-1}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In general,",
+    "sha": "570c87e36b0a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A^n = (PDP^{-1})^n=PD^nP^{-1}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Therefore, we have reduced the problem to finding $D^n$. But as we saw in Example “Sums, products, and powers of diagonal matrices”, computing a power of a diagonal matrix is easy. To compute $D^n$, we only need to raise every entry on the diagonal to the power of $n$. Through this method, we can compute large powers of matrices.",
+    "sha": "273bb93321d4",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Raising a matrix to a high power",
+    "sha": "2b0d73e7635d",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\left[\\begin{array}{rrr} 2 & 1 & 0 \\\\ 0 & 1 & 0 \\\\ -1 & -1 & 1 \\end{array}\\right]$. Find $A^{50}$.",
+      "sha": "fe71edd9eb88",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "First, we will diagonalize $A$. Following the usual steps, we find that the eigenvalues are $\\eigenvar=1$ and $\\eigenvar=2$. The basic eigenvectors corresponding to $\\eigenvar=1$ are",
+      "sha": "7bd33c9dc1b3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}_1 = \\left[\\begin{array}{r} 0 \\\\ 0 \\\\ 1 \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    \\vect{v}_2 = \\left[\\begin{array}{r} -1 \\\\ 1 \\\\ 0 \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and the basic eigenvector corresponding to $\\eigenvar = 2$ is",
+      "sha": "329038ae2eea",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}_3 = \\left[\\begin{array}{r} -1 \\\\ 0 \\\\ 1 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Now we construct $P$ by using the basic eigenvectors of $A$ as the columns of $P$. Thus",
+      "sha": "fb2e91b4f55e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "P =\n    \\left[\\begin{array}{rrr}\n      0 & -1 & -1 \\\\\n      0 & 1 & 0 \\\\\n      1 & 0 & 1\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The inverse of $P$ is",
+      "sha": "474d6ae549df",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "P^{-1}=\\left[\\begin{array}{rrr}\n      1 & 1 & 1 \\\\\n      0 & 1 & 0 \\\\\n      -1 & -1 & 0\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Then",
+      "sha": "b7d93209feaa",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "P^{-1}AP\n    ~=~\n    \\left[\\begin{array}{rrr}\n      1 & 1 & 1 \\\\\n      0 & 1 & 0 \\\\\n      -1 & -1 & 0\n    \\end{array}\\right] \\left[\\begin{array}{rrr}\n      2 & 1 & 0 \\\\\n      0 & 1 & 0 \\\\\n      -1 & -1 & 1\n    \\end{array}\\right] \\left[\\begin{array}{rrr}\n      0 & -1 & -1 \\\\\n      0 & 1 & 0 \\\\\n      1 & 0 & 1\n    \\end{array}\\right] \\\\\n    ~=~\n    \\left[\\begin{array}{rrr}\n      1 & 0 & 0 \\\\\n      0 & 1 & 0 \\\\\n      0 & 0 & 2\n    \\end{array}\\right] \\\\\n    ~=~\n    D."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Now it follows by rearranging the equation that $A=PDP^{-1}$, and therefore, as noted above,",
+      "sha": "98fbec991521",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}A^{50}\n    \\quad=\\quad\n    PD^{50}P^{-1}\n    &=&\\left[\\begin{array}{rrr}\n      0 & -1 & -1 \\\\\n      0 & 1 & 0 \\\\\n      1 & 0 & 1\n    \\end{array}\\right] \\left[\\begin{array}{rrr}\n      1^{50} & 0      & 0 \\\\\n      0      & 1^{50} & 0 \\\\\n      0      & 0      & 2^{50}\n    \\end{array}\\right] \\left[\\begin{array}{rrr}\n      1 & 1 & 1 \\\\\n      0 & 1 & 0 \\\\\n      -1 & -1 & 0\n    \\end{array}\\right] \\\\\n    &=&\\left[\\begin{array}{ccc}\n      2^{50} & -1+2^{50} & 0 \\\\\n      0 & 1 & 0 \\\\\n      1-2^{50} & 1-2^{50} & 1\n    \\end{array}\\right].\\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Thus, through diagonalization, we have efficiently computed a high power of $A$. The following example shows that we can also use the same technique for finding a square root of a matrix.",
+    "sha": "1452d2d78482",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Square root of a matrix",
+    "sha": "7edb535e8938",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\left[\\begin{array}{rrr} 1 & 3 & 3 \\\\ -1 & 5 & 3 \\\\ 1 & -1 & 1 \\\\ \\end{array}\\right]$. Find a square root of $A$, i.e., find a matrix $B$ such that $A=B^2$.",
+      "sha": "c7aa36f4948e",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We first diagonalize $A$. The characteristic polynomial is",
+      "sha": "6d1f1e7b858d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\left|\\begin{array}{ccc}\n      1-\\eigenvar  &  3 & 3 \\\\\n      -1 &  5-\\eigenvar & 3 \\\\\n      1  & -1 & 1-\\eigenvar \\\\\n    \\end{array}\\right|\n    &=&\n    (1-\\eigenvar)(5-\\eigenvar)(1-\\eigenvar) + 9 + 3\n    - 3(5-\\eigenvar) + 3(1-\\eigenvar) + 3(1-\\eigenvar)\n    \\\\\n    &=& -\\eigenvar^3 + 7\\eigenvar^2 - 14\\eigenvar + 8,\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "with roots $\\eigenvar=1$, $\\eigenvar=2$, and $\\eigenvar=4$. The corresponding eigenvectors are",
+      "sha": "34a0b2fa0fdc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}_1 = \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ -1 \\end{array}\\right],\n    \\quad\n    \\vect{v}_2 = \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ -1 \\end{array}\\right],\n    \\quad\\text{and}\\quad\n    \\vect{v}_3 = \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 0 \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "respectively. Therefore we have $P^{-1}AP = D$, where",
+      "sha": "7436627a931d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "P = \\left[\\begin{array}{rrr}\n      1  &  0 & 1 \\\\\n      1  &  1 & 1 \\\\\n      -1 & -1 & 0 \\\\\n    \\end{array}\\right],\n    \\quad\n    P^{-1} = \\left[\\begin{array}{rrr}\n      1  & -1 & -1 \\\\\n      -1 &  1 &  0 \\\\\n      0  &  1 &  1 \\\\\n    \\end{array}\\right],\n    \\quad\\text{and}\\quad\n    D = \\left[\\begin{array}{rrr}\n      1 & 0 & 0 \\\\\n      0 & 2 & 0 \\\\\n      0 & 0 & 4 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We can equivalently write $A = PDP^{-1}$. Finding a square root of a diagonal matrix is easy:",
+      "sha": "87dedc7aefdb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "D^{\\frac{1}{2}} =\n    \\left[\\begin{array}{ccc}\n      1 & 0        & 0 \\\\\n      0 & \\sqrt{2} & 0 \\\\\n      0 & 0        & 2 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If we now define $B=PD^{\\frac{1}{2}}P^{-1}$, we clearly have $B^2 = PD^{\\frac{1}{2}}P^{-1}PD^{\\frac{1}{2}}P^{-1} = PDP^{-1} = A$. So the desired square root of $A$ is",
+      "sha": "140cbf168f03",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "B\n    ~=~\n    PD^{\\frac{1}{2}}P^{-1}\n    ~=~\n    \\left[\\begin{array}{rrr}\n      1  &  0 & 1 \\\\\n      1  &  1 & 1 \\\\\n      -1 & -1 & 0 \\\\\n    \\end{array}\\right]\n    \\left[\\begin{array}{ccc}\n      1 & 0        & 0 \\\\\n      0 & \\sqrt{2} & 0 \\\\\n      0 & 0        & 2 \\\\\n    \\end{array}\\right]\n    \\left[\\begin{array}{rrr}\n      1  & -1 & -1 \\\\\n      -1 &  1 &  0 \\\\\n      0  &  1 &  1 \\\\\n    \\end{array}\\right]\n    ~=~\n    \\left[\\begin{array}{ccc}\n      1           &  1          &  1 \\\\\n      1-\\sqrt{2}  &  1+\\sqrt{2} &  1 \\\\\n      -1+\\sqrt{2} &  1-\\sqrt{2} &  1 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Finally, we verify that we have computed $B$ correctly by squaring it and double-checking that we really get $A$.",
+      "sha": "5baa3ba94618",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "B^2 ~=~\n    \\left[\\begin{array}{ccc}\n      1           &  1          &  1 \\\\\n      1-\\sqrt{2}  &  1+\\sqrt{2} &  1 \\\\\n      -1+\\sqrt{2} &  1-\\sqrt{2} &  1 \\\\\n    \\end{array}\\right]\n    \\left[\\begin{array}{ccc}\n      1           &  1          &  1 \\\\\n      1-\\sqrt{2}  &  1+\\sqrt{2} &  1 \\\\\n      -1+\\sqrt{2} &  1-\\sqrt{2} &  1 \\\\\n    \\end{array}\\right]\n    ~=~\n    \\left[\\begin{array}{rrr}\n      1  &  3 & 3 \\\\\n      -1 &  5 & 3 \\\\\n      1  & -1 & 1 \\\\\n    \\end{array}\\right]\n    ~=~\n    A."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We note that the square root of a matrix is not unique. In fact, $D$ has 8 different square roots, all of the form",
+      "sha": "298b46fed21f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{ccc}\n      \\pm 1 & 0            & 0 \\\\\n      0     & \\pm \\sqrt{2} & 0 \\\\\n      0     & 0            & \\pm 2 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "It follows that $A$ has 8 different square roots as well. We leave it as an exercise to compute them all.",
+      "sha": "bfca2d65d885",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The same method can also be used to compute other powers of a matrix, for example a cube root.",
+    "sha": "20ae5b226130",
+    "zh": ""
+   }
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A = \\left[\\begin{array}{rr} 1 & 2 \\\\ 2 & 1 \\end{array}\\right]$. Find $A^{10}$ by diagonalization.",
+      "sha": "5ce6f4aac356",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "First we write $A = PDP^{-1}$.",
+      "sha": "969cd6bb8daa",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\def\\arraystretch{1.3}\n      \\left[\\begin{array}{rr}\n        1 & 2 \\\\\n        2 & 1\n      \\end{array}\\right]\n      =\n      \\left[\\begin{array}{rr}\n        -1 & 1 \\\\\n        1 & 1\n      \\end{array}\\right]\n      \\left[\\begin{array}{rr}\n        -1 & 0 \\\\\n        0 & 3\n      \\end{array}\\right]\n      \\left[\\begin{array}{rr}\n        -\\frac{1}{2} & \\frac{1}{2} \\\\\n        \\frac{1}{2} & \\frac{1}{2}\n      \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore $A^{10} = PD^{10}P^{-1}$.",
+      "sha": "b5e1efff5609",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\def\\arraystretch{1.3}\n      \\left[\\begin{array}{rr}\n        1 & 2 \\\\\n        2 & 1\n      \\end{array}\\right]^{10}\n      ~=~\n      \\left[\\begin{array}{rr}\n        -1 & 1 \\\\\n        1 & 1\n      \\end{array}\\right]\n      \\left[\\begin{array}{rr}\n        (-1)^{10} & 0 \\\\\n        0 & 3^{10}\n      \\end{array}\\right]\n      \\left[\\begin{array}{rr}\n        -\\frac{1}{2} & \\frac{1}{2} \\\\\n        \\frac{1}{2} & \\frac{1}{2}\n      \\end{array}\\right] \\\\\n      ~=~\n      \\frac{1}{2}\\left[\\begin{array}{cc}\n        3^{10}+1 & 3^{10}-1 \\\\\n        3^{10}-1 & 3^{10}+1\n      \\end{array}\\right]."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: Matrix powers · 习题 1（上游 exercises/Eigenvalues-Application-Power.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Application-Power.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A = \\left[\\begin{array}{rrr} 1 & 4 & 1 \\\\ 0 & 2 & 5 \\\\ 0 & 0 & 5 \\end{array}\\right]$. Find $A^{50}$ by diagonalization.",
+      "sha": "60767ffb4128",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: Matrix powers · 习题 2（上游 exercises/Eigenvalues-Application-Power.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Application-Power.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A = \\left[\\begin{array}{rrr} 1 & -2 & -1 \\\\ 2 & -1 & 1 \\\\ -2 & 3 & 1 \\end{array}\\right]$. Find $A^{100}$ by diagonalization.",
+      "sha": "6a468fa53d96",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: Matrix powers · 习题 3（上游 exercises/Eigenvalues-Application-Power.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Application-Power.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A = \\left[\\begin{array}{rr} -5 & -6 \\\\ 9 & 10 \\\\ \\end{array}\\right]$. Find a square root of $A$, i.e., find a matrix $B$ such that $B^2=A$.",
+      "sha": "a9c41f94c0e2",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$B=\\left[\\begin{array}{rr} -1 & -2 \\\\ 3 & 4 \\\\ \\end{array}\\right]$.",
+      "sha": "873c38b0abe4",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: Matrix powers · 习题 4（上游 exercises/Eigenvalues-Application-Power.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Application-Power.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A = \\left[\\begin{array}{rrr} -2 & 0 & 6 \\\\ -3 & 1 & 6 \\\\ -3 & 0 & 7 \\\\ \\end{array}\\right]$. Find a square root of $A$.",
+      "sha": "460b469c343d",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$A = \\left[\\begin{array}{rrr} 0 & 0 & 2 \\\\ -1 & 1 & 2 \\\\ -1 & 0 & 3 \\\\ \\end{array}\\right]$.",
+      "sha": "f2c0ab3af41d",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Application: Matrix powers · 习题 5（上游 exercises/Eigenvalues-Application-Power.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Application-Power.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "应用：矩阵的幂"
+}

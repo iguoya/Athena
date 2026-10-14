@@ -1,0 +1,769 @@
+{
+ "id": "LinearTransformationsRn-Matrix",
+ "title_en": "The matrix of a linear transformation",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the matrix corresponding to a linear transformation $T:\\R^n\\to\\R^m$.",
+         "sha": "8ad7abe9c3b7",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "An important example of linear transformations are the so-called **matrix transformations**.",
+    "sha": "301a0c573328",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Matrix transformations are linear transformations",
+    "sha": "ec7a3862ad6f",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $m\\times n$-matrix, and consider the vector function $T:\\R^n\\to \\R^m$ defined by $T(\\vect{v}) = A\\vect{v}$. Then $T$ is a linear transformation.",
+      "sha": "7da610fc7131",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "This follows from the laws of matrix multiplication. Namely, by the distributive law, we have $A(\\vect{v}+\\vect{w}) = A\\vect{v} + A\\vect{w}$, showing that $T$ preserves addition. And by the compatibility of matrix multiplication and scalar multiplication, we have $A(k\\vect{v}) = k(A\\vect{v})$, showing that $T$ preserves scalar multiplication.",
+      "sha": "f2ff450852b0",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In fact, matrix transformations are not just an example of linear transformations, but they are essentially the *only* example. One of the central theorems in linear algebra is that all linear transformations $T:\\R^n\\to\\R^m$ are in fact matrix transformations. Therefore, a matrix can be regarded as a notation for a linear transformation, and vice versa. This is the subject of the following theorem.",
+    "sha": "f24f750eae9e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Linear transformations are matrix transformations",
+    "sha": "2fd05b02ca2b",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $T:\\R^n\\to\\R^m$ be any linear transformation. Then there exists an $m\\times n$-matrix $A$ linear transformation!matrix of!in Rn@in $\\R^n$ matrix!of a linear transformation!in Rn@in $\\R^n$ such that for all $\\vect{v}\\in\\R^n$,",
+      "sha": "9bd8973e1841",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "T(\\vect{v}) = A\\vect{v}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In other words, $T$ is a matrix transformation.",
+      "sha": "a9d7629a68f7",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $T:\\R^n\\to \\R^m$ is a linear transformation and consider the standard basis $\\set{\\vect{e}_1,\\ldots,\\vect{e}_n}$ of $\\R^n$. For all $i$, define $\\vect{u}_i = T(\\vect{e}_i)$, and let $A$ be the matrix that has $\\vect{u}_1,\\ldots,\\vect{u}_n$ as its columns. We claim that $A$ is the desired matrix, i.e., that $T(\\vect{v}) = A\\vect{v}$ holds for all $\\vect{v}\\in\\R^n$.",
+      "sha": "d1dc04d8e397",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To see this, let",
+      "sha": "36ea5df70e19",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v} =\n    \\left[\\begin{array}{c} x_1 \\\\ \\vdots \\\\ x_n \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "be some arbitrary element of $\\R^n$. Then $\\vect{v} = x_1\\vect{e}_1 + \\ldots + x_n\\vect{e}_n$, and we have:",
+      "sha": "6ba7ff0e8b77",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcll}\n      T(\\vect{v})\n      &=& T(x_1\\vect{e}_1 + \\ldots + x_n\\vect{e}_n)\n      \\\\\n      &=& T(x_1\\vect{e}_1) + \\ldots + T(x_n\\vect{e}_n)\n      & \\text{by linearity} \\\\\n      &=& x_1T(\\vect{e}_1) + \\ldots + x_nT(\\vect{e}_n)\n      & \\text{by linearity} \\\\\n      &=& x_1\\vect{u}_1 + \\ldots + x_n\\vect{u}_n\n      & \\text{by definition of $\\vect{u}_i$} \\\\\n      &=& A\\vect{v}\n      & \\text{by the column method of matrix multiplication.}\n    \\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In summary, the matrix corresponding to the linear transformation $T$ has as its columns the vectors $T(\\vect{e}_1),\\ldots,T(\\vect{e}_n)$, i.e., the images of the standard basis vectors. We can visualize this matrix as follows:",
+    "sha": "5d79a11c63da",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A=\n  \\left[\\begin{array}{ccc}\n    | &  & | \\\\\n    T(\\vect{e}_1) & \\cdots & T(\\vect{e}_n) \\\\\n    | &  & |\n  \\end{array}\\right]."
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "The matrix of a linear transformation",
+    "sha": "0dd052569401",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $T:\\R^3\\rightarrow \\R^2$ is a linear transformation where",
+      "sha": "6f8269f7a5ec",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "T\\paren{\\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 0 \\end{array}\\right]}\n    = \\left[\\begin{array}{r} 1 \\\\ 2 \\end{array}\\right],\\quad\n    T\\paren{\\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 0 \\end{array}\\right]}\n    = \\left[\\begin{array}{r} 9 \\\\ -3 \\end{array}\\right],\\quad\\text{and}\\quad\n    T\\paren{\\left[\\begin{array}{r} 0 \\\\ 0 \\\\ 1 \\end{array}\\right]}\n    = \\left[\\begin{array}{r} 1 \\\\ 1 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the matrix $A$ such that $T(\\vect{v})=A\\vect{v}$ for all $\\vect{v}$.",
+      "sha": "4ada8dc47e46",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "By Theorem “The matrix of a linear transformation”, the columns of $A$ are $T(\\vect{e}_1)$, $T(\\vect{e}_2)$, and $T(\\vect{e}_3)$. Therefore,",
+      "sha": "8798a48279aa",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{rrr}\n      1 & 9 & 1 \\\\\n      2 & -3 & 1\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "The matrix of a linear transformation",
+    "sha": "0dd052569401",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $T:\\R^3\\to\\R^2$ be the linear transformation defined by",
+      "sha": "836a2c500b7f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "T\\paren{\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right]}\n    =\n    \\left[\\begin{array}{c} x+y \\\\ x+2y-z \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for all $x,y,z\\in\\R$. Find the matrix of this linear transformation.",
+      "sha": "9d0c3c54c09b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We compute the images of the standard basis vectors:",
+      "sha": "9c999a23d851",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}T(\\vect{e}_1)\n    &=& T\\paren{\\left[\\begin{array}{c} 1 \\\\ 0 \\\\ 0 \\end{array}\\right]}\n    ~=~ \\left[\\begin{array}{c} 1 \\\\ 1 \\end{array}\\right], \\\\\n    T(\\vect{e}_2)\n    &=& T\\paren{\\left[\\begin{array}{c} 0 \\\\ 1 \\\\ 0 \\end{array}\\right]}\n    ~=~ \\left[\\begin{array}{c} 1 \\\\ 2 \\end{array}\\right], \\\\\n    T(\\vect{e}_3)\n    &=& T\\paren{\\left[\\begin{array}{c} 0 \\\\ 0 \\\\ 1 \\end{array}\\right]}\n    ~=~ \\left[\\begin{array}{c} 0 \\\\ -1 \\end{array}\\right].\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix $A$ has $T(\\vect{e}_1)$, $T(\\vect{e}_2)$, and $T(\\vect{e}_3)$ as its columns. Therefore,",
+      "sha": "a8a3c2033f55",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{rrr}\n      1 & 1 & 0 \\\\\n      1 & 2 & -1\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Matrix of a projection map",
+    "sha": "f5b66a665749",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u} = \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\end{array}\\right]$ and let $T: \\R^3 \\to \\R^3$ be the projection map defined by",
+      "sha": "4bfb89268ee1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "T(\\vect{v}) = \\proj_{\\vect{u}}(\\vect{v})"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for all $\\vect{v} \\in \\R^3$.",
+      "sha": "8703fb94087c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Is $T$ a linear transformation?",
+         "sha": "0466dde561f6",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If yes, find the matrix of $T$.",
+         "sha": "7c5886ad6b94",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Recall the formula for the projection of $\\vect{v}$ onto $\\vect{u}$:",
+         "sha": "dc4d1cab507c",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\proj_{\\vect{u}}(\\vect{v})\n      = \\frac{\\vect{u}\\dotprod \\vect{v}}{\\vect{u}\\dotprod \\vect{u}}\\,\\vect{u}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "In the situation we are interested in, $\\vect{u}$ is a fixed vector, and $\\vect{v}$ is the input to the function $T$. Given any two vectors $\\vect{v},\\vect{w}$, and using the distributive laws of the dot product and scalar multiplication, we have:",
+         "sha": "e4c9fbb88229",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\proj_{\\vect{u}}(\\vect{v}+\\vect{w})\n      = \\frac{\\vect{u}\\dotprod(\\vect{v}+\\vect{w})}{\\vect{u}\\dotprod \\vect{u}}\\,\\vect{u}\n      = \\paren{\\frac{\\vect{u}\\dotprod \\vect{v}}{\\vect{u}\\dotprod \\vect{u}}\n        + \\frac{\\vect{u}\\dotprod \\vect{w}}{\\vect{u}\\dotprod \\vect{u}}}\\,\\vect{u}\n      = \\frac{\\vect{u}\\dotprod \\vect{v}}{\\vect{u}\\dotprod \\vect{u}}\\,\\vect{u}\n      + \\frac{\\vect{u}\\dotprod \\vect{w}}{\\vect{u}\\dotprod \\vect{u}}\\,\\vect{u}\n      = \\proj_{\\vect{u}}(\\vect{v})\n      + \\proj_{\\vect{u}}(\\vect{w})."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Therefore, the function $T(\\vect{v}) = \\proj_{\\vect{u}}(\\vect{v})$ preserves addition. Also, given any scalar $k$, we have",
+         "sha": "c257fc10fc7d",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\proj_{\\vect{u}}(k\\vect{v})\n      = \\frac{\\vect{u}\\dotprod (k\\vect{v})}{\\vect{u}\\dotprod \\vect{u}}\\,\\vect{u}\n      = \\paren{k\\frac{\\vect{u}\\dotprod \\vect{v}}{\\vect{u}\\dotprod \\vect{u}}}\\,\\vect{u}\n      = k\\paren{\\frac{\\vect{u}\\dotprod \\vect{v}}{\\vect{u}\\dotprod \\vect{u}}\\,\\vect{u}}\n      = k\\,\\proj_{\\vect{u}}(\\vect{v})."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Therefore, the function $T$ preserves scalar multiplication. It follows that $T$ is a linear transformation.",
+         "sha": "a18a36181fd4",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "To find the matrix of $T$, we must compute the images of the standard basis vectors $T(\\vect{e}_1),\\ldots,T(\\vect{e}_3)$. We compute",
+         "sha": "2f8eda14e20f",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{array}{rcl}T(\\vect{e}_1)\n      &=& \\proj_{\\vect{u}}(\\vect{e}_1)\n      ~=~ \\frac{\\vect{u}\\dotprod\\vect{e}_1}{\\vect{u}\\dotprod \\vect{u}}\\,\\vect{u}\n      ~=~ \\frac{1}{14}\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\end{array}\\right], \\\\\n      T(\\vect{e}_2)\n      &=& \\proj_{\\vect{u}}(\\vect{e}_2)\n      ~=~ \\frac{\\vect{u}\\dotprod\\vect{e}_2}{\\vect{u}\\dotprod \\vect{u}}\\,\\vect{u}\n      ~=~ \\frac{2}{14}\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\end{array}\\right], \\\\\n      T(\\vect{e}_3)\n      &=& \\proj_{\\vect{u}}(\\vect{e}_3)\n      ~=~ \\frac{\\vect{u}\\dotprod\\vect{e}_3}{\\vect{u}\\dotprod \\vect{u}}\\,\\vect{u}\n      ~=~ \\frac{3}{14}\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\end{array}\\right].\\end{array}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Hence the matrix of $T$ is",
+         "sha": "6a94b8d0432e",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "A = \\frac{1}{14}\\left[\\begin{array}{rrr}\n        1 & 2 & 3 \\\\\n        2 & 4 & 6 \\\\\n        3 & 6 & 9\n      \\end{array}\\right]."
+       }
+      ]
+     ]
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each of the following vector functions $T:\\R^n\\to\\R^n$, show that $T$ is a linear transformation and find the corresponding matrix $A$ such that $T(\\vect{x}) = A\\vect{x}$.",
+      "sha": "5e9d040faef4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$T$ multiplies the $j\\th$ component of $\\vect{v}$ by a non-zero number $b$.",
+         "sha": "d84af2b8f6c8",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$T$ adds $b$ times the $j\\th$ component of $\\vect{v}$ to the $i\\th$ component.",
+         "sha": "e808527fc0ff",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$T$ switches the $i\\th$ and $j\\th$ components.",
+         "sha": "4f780f10332f",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The matrix of $T$ is the elementary matrix that is like the identity matrix, except that the $(j,j)$-entry is $b$.",
+         "sha": "28045002ccb5",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The matrix of $T$ is the elementary matrix that is like the identity matrix, except that the $(i,j)$-entry is $b$.",
+         "sha": "9fcb8f2dfde8",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The matrix of $T$ is the elementary matrix that switches the $i\\th$ and the $j\\th$ rows.",
+         "sha": "dc0dd2d8fa23",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The matrix of a linear transformation · 习题 1（上游 exercises/LinearTransformationsRn-Matrix.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/LinearTransformationsRn-Matrix.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Assume that $T:\\R^n\\rightarrow \\R^m$ is a linear transformation, and that $\\vect{u}_1,\\ldots,\\vect{u}_n$ is a basis of $\\R^n$. For all $i=1,\\ldots,n$, let $\\vect{v}_i = T(\\vect{u}_i)$. Let $A$ be the matrix that has $\\vect{u}_1,\\ldots,\\vect{u}_n$ as its columns, and let $B$ be the matrix that has $\\vect{v}_1,\\ldots,\\vect{v}_n$ as its columns. Show that $A$ is invertible and the matrix of $T$ is $BA^{-1}$.",
+      "sha": "595ee4f002bf",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\vect{u}_1,\\ldots,\\vect{u}_n$ is a basis of $\\R^n$, we know that $A$ is invertible by Proposition “Invertible matrices and bases of\\/ $\\R^n$”. For each $i=1,\\ldots,n$, since $A\\vect{e}_i = \\vect{u}_i$, we have $A^{-1}\\vect{u}_i=\\vect{e}_i$, and therefore",
+      "sha": "a0432fbb703e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "BA^{-1}\\vect{u}_i = B\\vect{e}_i = \\vect{v}_i = T(\\vect{u}_i)."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Now let $\\vect{w}$ be some arbitrary vector in $\\R^n$. Since $\\vect{u}_1,\\ldots,\\vect{u}_n$ is a basis, there exists $a_1,\\ldots,a_n$ such that $\\vect{w} = a_1\\vect{u}_1+\\ldots+a_n\\vect{u}_n$. Then",
+      "sha": "f0ca80f28867",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}BA^{-1}\\vect{w}\n      &=& BA^{-1}(a_1\\vect{u}_1+\\ldots+a_n\\vect{u}_n) \\\\\n      &=& a_1(BA^{-1}\\vect{u}_1) + \\ldots + a_n(BA^{-1}\\vect{u}_n) \\\\\n      &=& a_1T(\\vect{u}_1) + \\ldots + a_nT(\\vect{u}_n) \\\\\n      &=& T(a_1\\vect{u}_1+\\ldots+a_n\\vect{u}_n) ~=~ T(\\vect{w}).\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, $BA^{-1}$ is the matrix of $T$.",
+      "sha": "9a70e15e571d",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The matrix of a linear transformation · 习题 2（上游 exercises/LinearTransformationsRn-Matrix.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/LinearTransformationsRn-Matrix.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $T$ is a linear transformation such that",
+      "sha": "43d0b8345880",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "T\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ -6 \\end{array}\\right]\n    ~=~\n    \\left[\\begin{array}{r} 5 \\\\ 1 \\\\ 3 \\end{array}\\right],\n    \\quad\n    T\\left[\\begin{array}{r} -1 \\\\ -1 \\\\ 5 \\end{array}\\right]\n    ~=~\n    \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 5 \\end{array}\\right],\n    \\quad\\text{and}\\quad\n    T\\left[\\begin{array}{r} 0 \\\\ -1 \\\\ 2 \\end{array}\\right]\n    ~=~\n    \\left[\\begin{array}{r} 5 \\\\ 3 \\\\ -2 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the matrix of $T$. Hint: use Exercise 〔引用〕.",
+      "sha": "9fac358349e9",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n        5 & 1 & 5 \\\\\n        1 & 1 & 3 \\\\\n        3 & 5 & -2\n      \\end{array}\\right]\n      \\left[\\begin{array}{rrr}\n        1 & -1 & 0 \\\\\n        2 & -1 & -1 \\\\\n        -6 & 5 & 2\n      \\end{array}\\right]^{-1}\n      = \\left[\\begin{array}{rrr}\n        5 & 1 & 5 \\\\\n        1 & 1 & 3 \\\\\n        3 & 5 & -2\n      \\end{array}\\right]\n      \\left[\\begin{array}{rrr}\n        3 & 2 & 1 \\\\\n        2 & 2 & 1 \\\\\n        4 & 1 & 1\n      \\end{array}\\right]\n      = \\left[\\begin{array}{rrr}\n        37 & 17 & 11 \\\\\n        17 & 7 & 5 \\\\\n        11 & 14 & 6\n      \\end{array}\\right]."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The matrix of a linear transformation · 习题 3（上游 exercises/LinearTransformationsRn-Matrix.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/LinearTransformationsRn-Matrix.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $T$ is a linear transformation such that",
+      "sha": "43d0b8345880",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "T\\left[\\begin{array}{r} 1 \\\\ 1 \\\\ -8 \\end{array}\\right]\n    ~=~\n    \\left[\\begin{array}{r} 1 \\\\ 3 \\\\ 1 \\end{array}\\right],\n    \\quad\n    T\\left[\\begin{array}{r} -1 \\\\ 0 \\\\ 6 \\end{array}\\right]\n    ~=~\n    \\left[\\begin{array}{r} 2 \\\\ 4 \\\\ 1 \\end{array}\\right],\n    \\quad\\text{and}\\quad\n    T\\left[\\begin{array}{r} 0 \\\\ -1 \\\\ 3 \\end{array}\\right]\n    ~=~\n    \\left[\\begin{array}{r} 6 \\\\ 1 \\\\ -1 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the matrix of $T$. Hint: use Exercise 〔引用〕.",
+      "sha": "9fac358349e9",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n        1 & 2 & 6 \\\\\n        3 & 4 & 1 \\\\\n        1 & 1 & -1\n      \\end{array}\\right]\n      \\left[\\begin{array}{ccc}\n        1 & -1 & 0 \\\\\n        1 & 0 & -1 \\\\\n        -8 & 6 & 3\n      \\end{array}\\right]^{-1}\n      = \\left[\\begin{array}{rrr}\n        1 & 2 & 6 \\\\\n        3 & 4 & 1 \\\\\n        1 & 1 & -1\n      \\end{array}\\right]\n      \\left[\\begin{array}{ccc}\n        6 & 3 & 1 \\\\\n        5 & 3 & 1 \\\\\n        6 & 2 & 1\n      \\end{array}\\right]\n      = \\left[\\begin{array}{ccc}\n        52 & 21 & 9 \\\\\n        44 & 23 & 8 \\\\\n        5 & 4 & 1\n      \\end{array}\\right]."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The matrix of a linear transformation · 习题 4（上游 exercises/LinearTransformationsRn-Matrix.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/LinearTransformationsRn-Matrix.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the following linear transformations $T:\\R^3\\rightarrow \\R^2$. For each, determine the matrix $A$ such that $T(\\vect{x})=A\\vect{x}$.",
+      "sha": "848e900f7c72",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$T\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] =\\left[\\begin{array}{c} x+2y+3z \\\\ 2y-3x+z \\end{array}\\right]$",
+         "sha": "631817b1d11f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$T\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] =\\left[\\begin{array}{c} 7x+2y+z \\\\ 3x-11y+2z \\end{array}\\right]$",
+         "sha": "0e316eca560c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$T\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] =\\left[\\begin{array}{c} 3x+2y+z \\\\ x+2y+6z \\end{array}\\right]$",
+         "sha": "0783ebe6b689",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$T\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] =\\left[\\begin{array}{c} 2y-5x+z \\\\ x+y+z \\end{array}\\right]$",
+         "sha": "19bf3bf8721c",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The matrix of a linear transformation · 习题 5（上游 exercises/LinearTransformationsRn-Matrix.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/LinearTransformationsRn-Matrix.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the matrix for $T(\\vect{w}) = \\proj_{\\vect{v}}(\\vect{w})$, where $\\vect{v}=\\mat{1, -2, 3}^T$.",
+      "sha": "12c61ec2ced1",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Recall that the desired matrix has $i\\th$ column equal to $\\displaystyle\\proj_{\\vect{u}}(\\vect{e}_i) = \\frac{\\vect{u}\\dotprod\\vect{e}_i}{\\norm{\\vect{u}}^2}\\vect{u}$. Therefore, the matrix is",
+      "sha": "e2d27cd5bded",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\frac{1}{14}\\left[\\begin{array}{rrr}\n        1 & -2 & 3 \\\\\n        -2 & 4 & -6 \\\\\n        3 & -6 & 9\n      \\end{array}\\right]."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The matrix of a linear transformation · 习题 6（上游 exercises/LinearTransformationsRn-Matrix.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/LinearTransformationsRn-Matrix.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the matrix for $T(\\vect{w}) = \\proj_{\\vect{v}}(\\vect{w})$, where $\\vect{v}=\\mat{1,5,3}^T$.",
+      "sha": "91a44c5730a8",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "math",
+     "tex": "\\frac{1}{35}\\left[\\begin{array}{rrr}\n        1 & 5 & 3 \\\\\n        5 & 25 & 15 \\\\\n        3 & 15 & 9\n      \\end{array}\\right]."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The matrix of a linear transformation · 习题 7（上游 exercises/LinearTransformationsRn-Matrix.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/LinearTransformationsRn-Matrix.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "线性变换的矩阵"
+}

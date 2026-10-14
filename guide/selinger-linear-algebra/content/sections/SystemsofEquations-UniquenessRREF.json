@@ -1,0 +1,466 @@
+{
+ "id": "SystemsofEquations-UniquenessRREF",
+ "title_en": "Uniqueness of the reduced echelon form",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether two systems of equations are row equivalent, by comparing their reduced echelon form.",
+         "sha": "a8c23b13ddfe",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "For two homogeneous systems of equations that are not row equivalent, find a solution to one system that is not a solution to the other.",
+         "sha": "76ac03b19349",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We have seen in earlier sections that every matrix can be brought into reduced echelon form by a sequence of elementary row operations. Here we will prove that the resulting matrix is unique; in other words, the resulting matrix in reduced echelon form does not depend upon the particular sequence of elementary row operations or the order in which they were performed.",
+    "sha": "9d3d6f5f246c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $A$ be the augmented matrix of a homogeneous system of linear equations in the variables $x_1, x_2,\\ldots, x_n$ which is also in reduced echelon form. Recall that the matrix $A$ divides the set of variables in two different types: $x_i$ is a *pivot variable* when column $i$ is a pivot column, and a *free variable* otherwise.",
+    "sha": "f840bbced63d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Pivot and free variables",
+    "sha": "be2ac8b8ac47",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the pivot and free variables in the following system, and find the general solution.",
+      "sha": "ff99777e6249",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{c}\n      x+2y-z+w=0 \\\\\n      x+y-z+w=0 \\\\\n      x+3y-z+w=0\n    \\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The reduced echelon form of the augmented matrix is",
+      "sha": "49a7d3eadb53",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrr|r}\n      \\boxed{1} & 0 & -1 & 1 & 0 \\\\\n      0 & \\boxed{1} & 0 & 0 & 0 \\\\\n      0 & 0 & 0 & 0 & 0\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "From this, we see that columns $1$ and $2$ are pivot columns. Therefore, $x$ and $y$ are pivot variables and $z$ and $w$ are free variables. We can write the solution to this system as",
+      "sha": "faa3f761d141",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\n      x &=& s-t \\\\\n      y &=& 0 \\\\\n      z &=& s \\\\\n      w &=& t.\n    \\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In general, all solutions can be written in terms of the free variables. In such a description, the free variables are written as parameters, while the pivot variables are written as functions of these parameters. Indeed, a pivot variable $x_i$ is a function of *only* those free variables $x_j$ with $j>i$. This leads to the following observation.",
+    "sha": "be09df288f4d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Pivot and free variables",
+    "sha": "be2ac8b8ac47",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If $x_i$ is a pivot variable of a homogeneous system of linear equations, then any solution of the system with $x_j=0$ for all those free variables $x_j$ with $j>i$ must also have $x_i=0$.",
+      "sha": "7980b35efdb2",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Using this proposition, we prove a lemma which will be used in the proof of the main result of this section.",
+    "sha": "e1eb5b85ad6d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "lemma",
+   "title": {
+    "en": "Solutions and the reduced echelon form of a matrix",
+    "sha": "8bccd3d027a7",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ and $B$ be two augmented matrices for two homogeneous systems of $m$ equations in $n$ variables, such that $A$ and $B$ are each in reduced echelon form. If $A$ and $B$ are different, then the two systems do not have exactly the same solutions.",
+      "sha": "a2097872014b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "With respect to the linear systems associated with the matrices $A$ and $B$, there are two cases to consider:",
+      "sha": "496d32d4ce27",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Case $1$: the two systems have the same pivot variables",
+         "sha": "564d00a19bb5",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Case $2$: the two systems do not have the same pivot variables",
+         "sha": "757ab987649a",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In case $1$, the two matrices will have exactly the same pivot positions. However, since $A$ and $B$ are not identical, there is some row of $A$ which is different from the corresponding row of $B$ and yet the rows each have a pivot in the same column position. Let $i$ be the index of this column position. Since the matrices are in reduced echelon form, the two rows must differ at some entry in a column $j>i$. Let these entries be $a$ in $A$ and $b$ in $B$, where $a \\neq b$. Since $A$ is in reduced echelon form, if $x_j$ were a pivot variable for its linear system, we would have $a=0$. Similarly, if $x_j$ were a pivot variable for the linear system of the matrix $B$, we would have $b=0$. Since $a$ and $b$ are unequal, they cannot both be equal to $0$, and hence $x_j$ cannot be a pivot variable for both linear systems. However, since the systems have the same pivot variables, $x_j$ must then be a free variable for each system. We now look at the solutions of the systems in which $x_j$ is set equal to $1$ and all other free variables are set equal to $0$. For this choice of parameters, the solution of the system for matrix $A$ has $x_i=-a$, while the solution of the system for matrix $B$ has $x_i=-b$, so that the two systems have different solutions.",
+      "sha": "11286e0ceaae",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In case $2$, there is a variable $x_i$ which is a pivot variable for one matrix, let's say $A$, and a free variable for the other matrix $B$. The system for matrix $B$ has a solution in which $x_i=1$ and $x_j=0$ for all other free variables $x_j$. However, by Proposition “Pivot and free variables” this cannot be a solution of the system for the matrix $A$. This completes the proof of case $2$.",
+      "sha": "79227ba051bf",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Now, we say that the matrix $B$ is **row equivalent** to the matrix $A$ if $B$ can be obtained from $A$ by performing a sequence of elementary row operations. By Theorem “Elementary operations and solutions”, we know that row equivalent systems have exactly the same solutions. Now, we can use Lemma “Solutions and the reduced echelon form of a matrix” to prove the main result of this section, which is that each matrix $A$ has a unique reduced echelon form.",
+    "sha": "9ad59bb62138",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Uniqueness of the reduced echelon form",
+    "sha": "d8a88d04b167",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Every matrix $A$ is row equivalent to a unique matrix in reduced echelon form.",
+      "sha": "34b504f7db5f",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "By Gauss-Jordan elimination, we already know that every matrix is row equivalent to some reduced echelon form. What we must show is that the resulting reduced echelon form is unique, i.e., does not depend on the order in which row operations are performed.",
+      "sha": "32d136b3a98d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, let $A$ be an $m \\times n$-matrix and let $B$ and $C$ be matrices in reduced echelon form, each row equivalent to $A$. We have to show that $B=C$.",
+      "sha": "a97eb749b6d7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A^{+}$ be the matrix $A$ augmented with a new rightmost column consisting entirely of zeros. Similarly, augment matrices $B$ and $C$ each with a rightmost column of zeros to obtain $B^{+}$ and $C^{+}$. Note that $B^{+}$ and $C^{+}$ are augmented matrices in reduced echelon form, and that both $B^{+}$ and $C^{+}$ are row equivalent to $A^{+}$, because the addition of a column of zeros does not change the effect of any row operations.",
+      "sha": "00d1d0e895e1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Now, $A^{+}$, $B^{+}$, and $C^{+}$ can all be considered as augmented matrices of homogeneous linear systems in the variables $x_1, x_2,\\ldots, x_n$. Because all three systems are row equivalent, they have exactly the same solutions. By Lemma “Solutions and the reduced echelon form of a matrix”, we conclude that $B^{+}=C^{+}$. Omitting the final column of zeros, we must also have $B=C$.",
+      "sha": "d417210a3220",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Row equivalent systems",
+    "sha": "6d8efdecb184",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine whether the following two systems of equations are row equivalent.",
+      "sha": "1aea5543a6e6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\n      2x + 3y + z &=& 12 \\\\\n      x - 2y + 4z &=& -1 \\\\\n      x + 2z &=& 3,\n    \\end{array}\n    \\quad\\quad\n    \\begin{array}{rcl}\n      x + 2y &=& 7 \\\\\n      3x - y + 7z &=& 7 \\\\\n      y - z &=& 2.\n    \\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The augmented matrices for the two systems are:",
+      "sha": "decd600785dd",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr|r}\n      2 & 3 & 1 & 12 \\\\\n      1 & -2 & 4 & -1 \\\\\n      1 & 0 & 2 & 3\n    \\end{array}\\right],\n    \\quad\\quad\n    \\left[\\begin{array}{rrr|r}\n      1 & 2 & 0 & 7 \\\\\n      3 & -1 & 7 & 7 \\\\\n      0 & 1 & -1 & 2\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The reduced echelon form s of the two augmented matrices are:",
+      "sha": "b083302e825f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr|r}\n      1 & 0 & 2 & 3 \\\\\n      0 & 1 & -1 & 2 \\\\\n      0 & 0 & 0 & 0\n    \\end{array}\\right],\n    \\quad\\quad\n    \\left[\\begin{array}{rrr|r}\n      1 & 0 & 2 & 3 \\\\\n      0 & 1 & -1 & 2 \\\\\n      0 & 0 & 0 & 0\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since both systems have the same reduced echelon form, they are row equivalent.",
+      "sha": "f6bc9c09c348",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Non-row equivalent systems",
+    "sha": "6ae76246e1c4",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine whether the following two systems of equations are row equivalent. If they are not row equivalent, find a solution to one system that is not a solution to the other.",
+      "sha": "4c69ee82062e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\n      x - 2y - 5z &=& 0 \\\\\n      x + z &=& 0 \\\\\n      x + y + 4z &=& 0,\n    \\end{array}\n    \\quad\\quad\n    \\begin{array}{rcl}\n      2x + 2y + z &=& 0 \\\\\n      x + y + 3z &=& 0 \\\\\n      -x - y + 2z &=& 0.\n    \\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The augmented matrices for the two systems are:",
+      "sha": "decd600785dd",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr|r}\n      1 & -2 & -5 & 0 \\\\\n      1 & 0 & 1 & 0 \\\\\n      1 & 1 & 4 & 0\n    \\end{array}\\right],\n    \\quad\\quad\n    \\left[\\begin{array}{rrr|r}\n      2 & 2 & 1 & 0 \\\\\n      1 & 1 & 3 & 0 \\\\\n      -1 & -1 & 2 & 0\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The reduced echelon form s of the two augmented matrices are:",
+      "sha": "b083302e825f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr|r}\n      1 & 0 & 1 & 0 \\\\\n      0 & 1 & 3 & 0 \\\\\n      0 & 0 & 0 & 0\n    \\end{array}\\right],\n    \\quad\\quad\n    \\left[\\begin{array}{rrr|r}\n      1 & 1 & 0 & 0 \\\\\n      0 & 0 & 1 & 0 \\\\\n      0 & 0 & 0 & 0\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since the two systems have different reduced echelon form s, they are not row equivalent. Following the proof of Lemma “Solutions and the reduced echelon form of a matrix”, we see that $z$ is a free variable for the first system, but a pivot variable for the second system. Therefore, there exists a solution of the first system with $z=1$, namely $(x,y,z) = (-1,-3,1)$. But there exists no solution for the second system with $z=1$, and in particular, $(x,y,z) = (-1,-3,1)$ is not a solution of the second system.",
+      "sha": "e70eb7d0ff12",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We finish this section by pointing out an important consequence of Theorem “Uniqueness of the reduced echelon form ”, namely that the rank of a matrix is well-defined. Recall that in Definition “Rank of a matrix”, we defined the rank of a matrix $A$ to be the number of pivot entries of “any” echelon form of $A$. It was not clear, however, why different echelon form s of $A$ could not have different numbers of pivot entries. Now we can answer this question. By the Gauss-Jordan algorithm, we know that every echelon form can be converted to a reduced echelon form without changing the number or position of the pivots. Since the reduced echelon form is unique, it follows that all echelon form s of $A$ have the same number of pivot entries (and in fact the same pivot columns). Therefore, the rank of $A$ is a well-defined quantity.",
+    "sha": "467afd27bfa5",
+    "zh": ""
+   }
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The following are augmented matrices for four systems of equations. Determine which of them, if any, are row equivalent.",
+      "sha": "b4a1e0535975",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrr|r}\n       1 & 3 &  5 &  1 & 12 \\\\\n      -1 & 1 & -1 &  2 &  5 \\\\\n       2 & 0 &  4 & -2 &  0\n    \\end{array}\\right]\n    \\quad\n    \\left[\\begin{array}{rrrr|r}\n      1 & 2 & 4 & -1 &  8 \\\\\n      2 & 4 & 3 &  1 & 15 \\\\\n      3 & 6 & 1 & -1 &  8\n    \\end{array}\\right]\n    \\quad\n    \\left[\\begin{array}{rrrr|r}\n      3 & 6 & -3 & 1 & 6 \\\\\n      2 & 4 & 2 & 1 & 13 \\\\\n      0 & 0 & 1 & 0 & 2\n    \\end{array}\\right]\n    \\quad\n    \\left[\\begin{array}{rrrr|r}\n      1 & 2 & 4 & 1 & 10 \\\\\n      0 & 1 & 1 & 1 & 5 \\\\\n      2 & 1 & 5 & 0 & 8\n    \\end{array}\\right]"
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Uniqueness of the reduced echelon form · 习题 1（上游 exercises/SystemsofEquations-UniquenessRREF.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-UniquenessRREF.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find a tuple $(x,y,z)$ that is a solution to one system of equations but not the other.",
+      "sha": "07951da562c7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrr|r}\n      1 & 0 & 1 & 5 & 0 \\\\\n      2 & 1 & 4 & 3 & 0 \\\\\n      3 & 1 & 5 & 9 & 0 \\\\\n    \\end{array}\\right]\n    \\quad\n    \\left[\\begin{array}{rrrr|r}\n      1 & 0 & 3 & 6 & 0 \\\\\n      2 & 1 & 8 & 2 & 0 \\\\\n      2 & 0 & 6 & 13 & 0 \\\\\n    \\end{array}\\right]"
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Uniqueness of the reduced echelon form · 习题 2（上游 exercises/SystemsofEquations-UniquenessRREF.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-UniquenessRREF.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "简化行阶梯形的唯一性"
+}
