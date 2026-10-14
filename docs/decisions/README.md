@@ -156,3 +156,4 @@
 | [0160](0160-append-tombstones.md) | 事件表用墓碑表达删除：只标记、不实质删除，原数据保留；墓碑单向幂等，事件表整张为空时不推断全删 | 已接受（补充 0155 决策 5） |
 | [0161](0161-shared-course-shell-crate.md) | 课程应用的 Tauri 壳收成一个共用 crate `athena-course-shell`：六个应用只传名字配置，顺手收紧案例路径校验与 -pthread | 已接受（局部修订 0132） |
 | [0162](0162-linear-algebra-books-in-guide.md) | 线性代数手册类教程：Selinger、Siefken 两本书各一个 `guide/` 应用，按考纲裁剪、互不干扰便于对比；跟随原书、内容与习题并存；新开「数学」圈 | 已接受（沿用 0143，增补 0148 的 group 取值） |
+| [0163](0163-math-tool-tutorials-in-guide.md) | 数学工具教程：一本书或一门课对应一个 `guide/` 应用；只做 GitHub 上能逐字入库的源，首批 Octave 官方手册（裁剪）与 SymPy 官方教程；示例用真工具复跑、练习自编并经工具核对；GeoGebra 与 Lachniet 小册拿不到，如实写明 | 已接受（沿用 0143、0162） |
