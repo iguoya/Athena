@@ -16,7 +16,7 @@
         "t": {
          "en": "How to create *change-of-basis* matrices.",
          "sha": "daf60b5e949f",
-         "zh": ""
+         "zh": "如何构造*基变换*矩阵。"
         }
        }
       ],
@@ -26,7 +26,7 @@
         "t": {
          "en": "How to write a linear transformation in multiple bases.",
          "sha": "6cccbe396f94",
-         "zh": ""
+         "zh": "如何在多个基下表示同一个线性变换。"
         }
        }
       ]
@@ -39,7 +39,7 @@
    "t": {
     "en": "Given a basis $\\mathcal A$ for $\\R^n$, every vector $\\vec x\\in\\R^n$ uniquely corresponds to the list of numbers $[\\vec x]_{\\mathcal A}$ (its coordinates with respect to $\\mathcal A$), and the operation of writing a vector in a basis is *invertible*.",
     "sha": "71f0cbdb47af",
-    "zh": ""
+    "zh": "给定 $\\R^n$ 的一个基 $\\mathcal A$，每个向量 $\\vec x\\in\\R^n$ 都唯一地对应一列数 $[\\vec x]_{\\mathcal A}$（它关于 $\\mathcal A$ 的坐标），并且把向量写成某个基下坐标的操作是*可逆的*。"
    }
   },
   {
@@ -47,7 +47,7 @@
    "t": {
     "en": "If we have two bases, $\\mathcal A$ and $\\mathcal B$, for $\\R^n$, we have two equally valid ways of representing a vector in coordinates.",
     "sha": "6e680f5133de",
-    "zh": ""
+    "zh": "如果 $\\R^n$ 有两个基 $\\mathcal A$ 和 $\\mathcal B$，那么用坐标表示一个向量就有两种同样有效的方式。"
    }
   },
   {
@@ -63,7 +63,7 @@
    "t": {
     "en": "Not only that, but there must be a function that converts between $[\\vec x]_{\\mathcal A}$ and $[\\vec x]_{\\mathcal B}$. The function works as follows: input the list of numbers $[\\vec x]_{\\mathcal A}$, use those numbers as coefficients of the $\\mathcal A$ basis vectors to get the true vector $\\vec x$, and then find the coordinates of that vector with respect to the $\\mathcal B$ basis.",
     "sha": "ad6989d965de",
-    "zh": ""
+    "zh": "不仅如此，一定还有一个函数在 $[\\vec x]_{\\mathcal A}$ 与 $[\\vec x]_{\\mathcal B}$ 之间做转换。这个函数是这样工作的：输入那列数 $[\\vec x]_{\\mathcal A}$，把这些数当作基 $\\mathcal A$ 中各向量的系数，得到真正的向量 $\\vec x$，再求这个向量关于基 $\\mathcal B$ 的坐标。"
    }
   },
   {
@@ -76,7 +76,7 @@
      "t": {
       "en": "Let $\\mathcal A=\\Set{\\vec a_1,\\vec a_2}$ where $\\vec a_1=\\mat{1\\\\1}_{\\mathcal E}$ and $\\vec a_2=\\mat{1\\\\-1}_{\\mathcal E}$ and let $\\mathcal B=\\Set{\\vec b_1,\\vec b_2}$ where $\\vec b_1=\\mat{2\\\\1}_{\\mathcal E}$ and $\\vec b_2=\\mat{5\\\\3}_{\\mathcal E}$ be bases for $\\R^2$. Given that $[\\vec x]_{\\mathcal A}=\\mat{2\\\\-3}$, find $[\\vec x]_{\\mathcal B}$.",
       "sha": "bef47862f3ff",
-      "zh": ""
+      "zh": "设 $\\mathcal A=\\Set{\\vec a_1,\\vec a_2}$，其中 $\\vec a_1=\\mat{1\\\\1}_{\\mathcal E}$，$\\vec a_2=\\mat{1\\\\-1}_{\\mathcal E}$；设 $\\mathcal B=\\Set{\\vec b_1,\\vec b_2}$，其中 $\\vec b_1=\\mat{2\\\\1}_{\\mathcal E}$，$\\vec b_2=\\mat{5\\\\3}_{\\mathcal E}$；它们都是 $\\R^2$ 的基。已知 $[\\vec x]_{\\mathcal A}=\\mat{2\\\\-3}$，求 $[\\vec x]_{\\mathcal B}$。"
      }
     },
     {
@@ -84,7 +84,7 @@
      "t": {
       "en": "By definition,",
       "sha": "5c48b19627be",
-      "zh": ""
+      "zh": "由定义，"
      }
     },
     {
@@ -96,7 +96,7 @@
      "t": {
       "en": "We need to rewrite $\\vec x$ as a linear combination of $\\vec b_1=2\\xhat+\\yhat$ and $\\vec b_2=5\\xhat+3\\yhat$. That is, we need to solve the equation",
       "sha": "d3d5aa3fcbf4",
-      "zh": ""
+      "zh": "我们需要把 $\\vec x$ 改写成 $\\vec b_1=2\\xhat+\\yhat$ 与 $\\vec b_2=5\\xhat+3\\yhat$ 的线性组合。也就是说，要解方程"
      }
     },
     {
@@ -108,7 +108,7 @@
      "t": {
       "en": "Equating the coefficients of $\\xhat$ and $\\yhat$, we get",
       "sha": "e76d60512f50",
-      "zh": ""
+      "zh": "比较 $\\xhat$ 与 $\\yhat$ 的系数，得到"
      }
     },
     {
@@ -120,7 +120,7 @@
      "t": {
       "en": "which has a unique solution $(\\alpha,\\beta)=(-28,11)$. We conclude",
       "sha": "2dc331aceeb6",
-      "zh": ""
+      "zh": "它有唯一解 $(\\alpha,\\beta)=(-28,11)$。于是得出"
      }
     },
     {
@@ -134,7 +134,7 @@
    "t": {
     "en": "For a basis $\\mathcal A$, the invertible function that takes a vector $\\vec x$ and generates the coordinates $[\\vec x]_{\\mathcal A}$ is a linear function. Therefore, for bases $\\mathcal A$ and $\\mathcal B$, the function that converts $[\\vec x]_{\\mathcal A}$ to $[\\vec x]_{\\mathcal B}$ must have a matrix. This matrix is called the *change of basis* matrix.",
     "sha": "d2f8944bc434",
-    "zh": ""
+    "zh": "对于基 $\\mathcal A$，把向量 $\\vec x$ 变成坐标 $[\\vec x]_{\\mathcal A}$ 的这个可逆函数是线性函数。因此，对于基 $\\mathcal A$ 和 $\\mathcal B$，把 $[\\vec x]_{\\mathcal A}$ 转换成 $[\\vec x]_{\\mathcal B}$ 的函数必然有一个矩阵。这个矩阵叫作*基变换*矩阵。"
    }
   },
   {
@@ -143,7 +143,7 @@
    "title": {
     "en": "Change of Basis Matrix",
     "sha": "e7e83e0dd889",
-    "zh": ""
+    "zh": "基变换矩阵"
    },
    "blocks": [
     {
@@ -151,7 +151,7 @@
      "t": {
       "en": "Let $\\mathcal A$ and $\\mathcal B$ be bases for $\\R^n$. The matrix $M$ is called a *change of basis* matrix (which converts from $\\mathcal A$ to $\\mathcal B$) if for all $\\vec x\\in \\R^n$",
       "sha": "797438ab1b64",
-      "zh": ""
+      "zh": "设 $\\mathcal A$ 与 $\\mathcal B$ 是 $\\R^n$ 的基。如果对所有 $\\vec x\\in \\R^n$ 都有下式成立，则称矩阵 $M$ 为（从 $\\mathcal A$ 变换到 $\\mathcal B$ 的）*基变换*矩阵"
      }
     },
     {
@@ -163,7 +163,7 @@
      "t": {
       "en": "Notationally, $\\BasisChange{\\mathcal A}{\\mathcal B}$ stands for the change of basis matrix converting from $\\mathcal A$ to $\\mathcal B$, and we may write $M=\\BasisChange{\\mathcal A}{\\mathcal B}$.",
       "sha": "1a3a12ee1e02",
-      "zh": ""
+      "zh": "记号上，$\\BasisChange{\\mathcal A}{\\mathcal B}$ 表示从 $\\mathcal A$ 变换到 $\\mathcal B$ 的基变换矩阵，我们可以写 $M=\\BasisChange{\\mathcal A}{\\mathcal B}$。"
      }
     }
    ]
@@ -178,7 +178,7 @@
      "t": {
       "en": "Let $\\mathcal A=\\Set{\\vec a_1,\\vec a_2}$ where $\\vec a_1=\\mat{1\\\\1}_{\\mathcal E}$ and $\\vec a_2=\\mat{1\\\\-1}_{\\mathcal E}$ and let $\\mathcal B=\\Set{\\vec b_1,\\vec b_2}$ where $\\vec b_1=\\mat{2\\\\1}_{\\mathcal E}$ and $\\vec b_2=\\mat{5\\\\3}_{\\mathcal E}$ be bases for $\\R^2$. Find the change of basis matrix $\\BasisChange{\\mathcal A}{\\mathcal B}$.",
       "sha": "8a6956124adf",
-      "zh": ""
+      "zh": "设 $\\mathcal A=\\Set{\\vec a_1,\\vec a_2}$，其中 $\\vec a_1=\\mat{1\\\\1}_{\\mathcal E}$，$\\vec a_2=\\mat{1\\\\-1}_{\\mathcal E}$；设 $\\mathcal B=\\Set{\\vec b_1,\\vec b_2}$，其中 $\\vec b_1=\\mat{2\\\\1}_{\\mathcal E}$，$\\vec b_2=\\mat{5\\\\3}_{\\mathcal E}$；它们都是 $\\R^2$ 的基。求基变换矩阵 $\\BasisChange{\\mathcal A}{\\mathcal B}$。"
      }
     },
     {
@@ -186,7 +186,7 @@
      "t": {
       "en": "We know $\\BasisChange{\\mathcal A}{\\mathcal B}$ will be a $2\\times 2$ matrix and that",
       "sha": "18e458ca19fa",
-      "zh": ""
+      "zh": "我们知道 $\\BasisChange{\\mathcal A}{\\mathcal B}$ 是一个 $2\\times 2$ 矩阵，并且"
      }
     },
     {
@@ -198,7 +198,7 @@
      "t": {
       "en": "Therefore, we need to compute $[\\vec a_1]_{\\mathcal B}$ and $[\\vec a_2]_{\\mathcal B}$. Repeating the procedure from the previous example, we find",
       "sha": "429a3307ccea",
-      "zh": ""
+      "zh": "因此，我们需要算出 $[\\vec a_1]_{\\mathcal B}$ 与 $[\\vec a_2]_{\\mathcal B}$。重复上一个例子中的步骤，得到"
      }
     },
     {
@@ -210,7 +210,7 @@
      "t": {
       "en": "and so",
       "sha": "9af790b3a93d",
-      "zh": ""
+      "zh": "于是"
      }
     },
     {
@@ -224,7 +224,7 @@
    "t": {
     "en": "We can now enhance our diagram from earlier.",
     "sha": "be09fe6b129a",
-    "zh": ""
+    "zh": "现在我们可以把前面的示意图补充完整了。"
    }
   },
   {
@@ -240,7 +240,7 @@
    "t": {
     "en": "The notation $\\BasisChange{\\mathcal A}{\\mathcal B}$ for the matrix that changes from the $\\mathcal A$ basis to the $\\mathcal B$ basis is suggestive. Suppose we have another basis $\\mathcal C$. We can obtain $\\BasisChange{\\mathcal A}{\\mathcal C}$ by multiplying $\\BasisChange{\\mathcal A}{\\mathcal B}$ on the left by $\\BasisChange{\\mathcal B}{\\mathcal C}$. That is,",
     "sha": "9a9d6d80c07a",
-    "zh": ""
+    "zh": "用 $\\BasisChange{\\mathcal A}{\\mathcal B}$ 表示从基 $\\mathcal A$ 变到基 $\\mathcal B$ 的矩阵，这个记号很有提示性。假设还有另一个基 $\\mathcal C$。把 $\\BasisChange{\\mathcal B}{\\mathcal C}$ 左乘 $\\BasisChange{\\mathcal A}{\\mathcal B}$，就得到 $\\BasisChange{\\mathcal A}{\\mathcal C}$。也就是说，"
    }
   },
   {
@@ -252,7 +252,7 @@
    "t": {
     "en": "The backwards arrow “$\\leftarrow$” in the change-of-basis matrix notation comes because when we multiply a vector and a matrix, the matrix is always to the *left* of the vector. So,",
     "sha": "7e660b777b04",
-    "zh": ""
+    "zh": "基变换矩阵的记号里用的是向后的箭头“$\\leftarrow$”，这是因为向量和矩阵相乘时，矩阵总是写在向量的*左边*。所以，"
    }
   },
   {
@@ -264,7 +264,7 @@
    "t": {
     "en": "As such, the notation for the change of basis matrix chains, allowing you to figure out what's going on without too much trouble.",
     "sha": "71956b06d019",
-    "zh": ""
+    "zh": "这样，基变换矩阵的记号可以连着写下去，让你不费多少力气就能看清是怎么回事。"
    }
   },
   {
@@ -272,7 +272,7 @@
    "t": {
     "en": "Change of Basis Matrix in Detail",
     "sha": "49b227f86f6f",
-    "zh": ""
+    "zh": "基变换矩阵详解"
    }
   },
   {
@@ -280,7 +280,7 @@
    "t": {
     "en": "Let $\\mathcal A$ and $\\mathcal B$ be bases for $\\R^n$ and $M=\\BasisChange{\\mathcal A}{\\mathcal B}$ be the matrix that changes from the $\\mathcal A$ to the $\\mathcal B$ basis. Since we can change vectors back from $\\mathcal B$ to $\\mathcal A$, we know $M$ is invertible and",
     "sha": "400065523cad",
-    "zh": ""
+    "zh": "设 $\\mathcal A$ 与 $\\mathcal B$ 是 $\\R^n$ 的基，$M=\\BasisChange{\\mathcal A}{\\mathcal B}$ 是从基 $\\mathcal A$ 变到基 $\\mathcal B$ 的矩阵。因为我们可以把向量从 $\\mathcal B$ 变回 $\\mathcal A$，所以 $M$ 是可逆的，并且"
    }
   },
   {
@@ -292,7 +292,7 @@
    "t": {
     "en": "Just playing with notation, we see",
     "sha": "45da8e32ffea",
-    "zh": ""
+    "zh": "只是摆弄一下记号，我们就看到"
    }
   },
   {
@@ -304,7 +304,7 @@
    "t": {
     "en": "which makes sense. The matrices $\\BasisChange{\\mathcal A}{\\mathcal A}$ and $\\BasisChange{\\mathcal B}{\\mathcal B}$ take vectors and rewrite them in the same basis, which is to say, they do nothing to the vectors.",
     "sha": "ad24ecae01ec",
-    "zh": ""
+    "zh": "这是合理的。矩阵 $\\BasisChange{\\mathcal A}{\\mathcal A}$ 与 $\\BasisChange{\\mathcal B}{\\mathcal B}$ 把向量重新写成同一个基下的坐标，也就是说，它们对向量什么也没做。"
    }
   },
   {
@@ -312,7 +312,7 @@
    "t": {
     "en": "The argument above shows that every change of basis matrix is invertible. The converse is also true.",
     "sha": "e3b3c982a4f5",
-    "zh": ""
+    "zh": "上面的论证说明每个基变换矩阵都可逆。反过来也成立。"
    }
   },
   {
@@ -325,7 +325,7 @@
      "t": {
       "en": "An $n\\times n$ matrix is invertible if and only if it is a change of basis matrix.",
       "sha": "a0671fcf19c4",
-      "zh": ""
+      "zh": "一个 $n\\times n$ 矩阵可逆，当且仅当它是基变换矩阵。"
      }
     }
    ]
@@ -339,7 +339,7 @@
      "t": {
       "en": "Suppose $M=\\BasisChange{\\mathcal A}{\\mathcal B}$ is a change-of-basis matrix. Then",
       "sha": "24288f9b1bac",
-      "zh": ""
+      "zh": "设 $M=\\BasisChange{\\mathcal A}{\\mathcal B}$ 是基变换矩阵。那么"
      }
     },
     {
@@ -351,7 +351,7 @@
      "t": {
       "en": "and so $M$ is invertible.",
       "sha": "e6921a36541b",
-      "zh": ""
+      "zh": "所以 $M$ 可逆。"
      }
     },
     {
@@ -359,7 +359,7 @@
      "t": {
       "en": "Alternatively, suppose $M=[C_1|C_2|\\cdots|C_n]$ is an invertible $n\\times n$ matrix with columns $C_1$, …, $C_n$. Let $\\vec c_i=[C_i]_{\\mathcal E}$. That is, $\\vec c_i$ is the vector which comes from interpreting $C_i$ as coordinates with respect to the standard basis.",
       "sha": "cbe6c9b7d65f",
-      "zh": ""
+      "zh": "反过来，设 $M=[C_1|C_2|\\cdots|C_n]$ 是列为 $C_1$，…，$C_n$ 的 $n\\times n$ 可逆矩阵。令 $\\vec c_i=[C_i]_{\\mathcal E}$。也就是说，$\\vec c_i$ 是把 $C_i$ 看作关于标准基的坐标时所对应的向量。"
      }
     },
     {
@@ -367,7 +367,7 @@
      "t": {
       "en": "Since $M$ is invertible, $\\Rref(M)=I$, and so $\\Set{\\vec c_1,\\ldots,\\vec c_n}$ is a linearly independent set of $n$ vectors. Therefore $\\mathcal C=\\Set{\\vec c_1,\\ldots,\\vec c_n}$ is a basis for $\\R^n$. Now, observe",
       "sha": "ab39911da869",
-      "zh": ""
+      "zh": "因为 $M$ 可逆，所以 $\\Rref(M)=I$，从而 $\\Set{\\vec c_1,\\ldots,\\vec c_n}$ 是由 $n$ 个向量组成的线性无关集。因此 $\\mathcal C=\\Set{\\vec c_1,\\ldots,\\vec c_n}$ 是 $\\R^n$ 的一个基。现在注意到"
      }
     },
     {
@@ -379,7 +379,7 @@
      "t": {
       "en": "for $i=1,\\ldots, n$, and so $M=\\BasisChange{\\mathcal C}{\\mathcal E}$ is a change-of-basis matrix.",
       "sha": "694a192a8f3d",
-      "zh": ""
+      "zh": "对 $i=1,\\ldots, n$ 成立，所以 $M=\\BasisChange{\\mathcal C}{\\mathcal E}$ 是基变换矩阵。"
      }
     }
    ]
@@ -389,7 +389,7 @@
    "t": {
     "en": "The proof of the above theorem highlights something interesting. Let $\\mathcal A=\\Set{\\vec a_1,\\ldots, \\vec a_n}$ be a basis for $\\R^n$. It is always the case that",
     "sha": "6edc59bf9bd8",
-    "zh": ""
+    "zh": "上面这个定理的证明点出了一件有意思的事。设 $\\mathcal A=\\Set{\\vec a_1,\\ldots, \\vec a_n}$ 是 $\\R^n$ 的一个基。总是有"
    }
   },
   {
@@ -401,7 +401,7 @@
    "t": {
     "en": "has a $1$ in the $i$th position and zeros elsewhere. Now, let $\\mathcal B=\\Set{\\vec b_1,\\ldots,\\vec b_n}$ be another basis for $\\R^n$ and define the matrix $M=\\mat{[\\vec a_1]_{\\mathcal B}&[\\vec a_2]_{\\mathcal B}&\\cdots&[\\vec a_n]_{\\mathcal B}}$ to be the matrix with columns $[\\vec a_1]_{\\mathcal B},\\ldots, [\\vec a_n]_{\\mathcal B}$. Since multiplying a matrix by $[\\vec a_i]_{\\mathcal A}$ will pick out the $i$th column, we have that",
     "sha": "4fa2f75ded8b",
-    "zh": ""
+    "zh": "它的第 $i$ 个位置是 $1$，其余位置都是零。现在，设 $\\mathcal B=\\Set{\\vec b_1,\\ldots,\\vec b_n}$ 是 $\\R^n$ 的另一个基，并定义矩阵 $M=\\mat{[\\vec a_1]_{\\mathcal B}&[\\vec a_2]_{\\mathcal B}&\\cdots&[\\vec a_n]_{\\mathcal B}}$，即列为 $[\\vec a_1]_{\\mathcal B},\\ldots, [\\vec a_n]_{\\mathcal B}$ 的矩阵。因为矩阵乘以 $[\\vec a_i]_{\\mathcal A}$ 会取出第 $i$ 列，所以有"
    }
   },
   {
@@ -413,7 +413,7 @@
    "t": {
     "en": "In other words,",
     "sha": "e583468a1518",
-    "zh": ""
+    "zh": "换句话说，"
    }
   },
   {
@@ -425,7 +425,7 @@
    "t": {
     "en": "Transformations and Bases",
     "sha": "348a5f2bbaf3",
-    "zh": ""
+    "zh": "变换与基"
    }
   },
   {
@@ -433,7 +433,7 @@
    "t": {
     "en": "A linear transformation $\\mathcal T:\\R^n\\to\\R^n$ always has a matrix associated with it. This matrix is defined as the matrix $M$ so that",
     "sha": "d4d3db5ac1ea",
-    "zh": ""
+    "zh": "线性变换 $\\mathcal T:\\R^n\\to\\R^n$ 总有一个与之相伴的矩阵。这个矩阵定义为满足下式的矩阵 $M$："
    }
   },
   {
@@ -445,7 +445,7 @@
    "t": {
     "en": "But, what if we swapped out $\\mathcal E$ for a different basis?",
     "sha": "3a76e4c3b41d",
-    "zh": ""
+    "zh": "可是，如果把 $\\mathcal E$ 换成别的基会怎样呢？"
    }
   },
   {
@@ -454,7 +454,7 @@
    "title": {
     "en": "Linear Transformation in a Basis",
     "sha": "89944e43b54c",
-    "zh": ""
+    "zh": "基下的线性变换"
    },
    "blocks": [
     {
@@ -462,7 +462,7 @@
      "t": {
       "en": "Let $\\mathcal T:\\R^n\\to\\R^n$ be a linear transformation and let $\\mathcal B$ be a basis for $\\R^n$. The \\emphmatrix for $\\mathcal T$ with respect to $\\mathcal B$, notated $[\\mathcal T]_{\\mathcal B}$, is the $n\\times n$ matrix satisfying",
       "sha": "97926f6823da",
-      "zh": ""
+      "zh": "设 $\\mathcal T:\\R^n\\to\\R^n$ 是线性变换，$\\mathcal B$ 是 $\\R^n$ 的一个基。*$\\mathcal T$ 关于 $\\mathcal B$ 的矩阵*记作 $[\\mathcal T]_{\\mathcal B}$，它是满足下式的 $n\\times n$ 矩阵："
      }
     },
     {
@@ -474,7 +474,7 @@
      "t": {
       "en": "In this case, we say the matrix $[\\mathcal T]_{\\mathcal B}$ is the representation of $\\mathcal T$ in the $\\mathcal B$ basis.",
       "sha": "d510e9e01715",
-      "zh": ""
+      "zh": "此时，我们说矩阵 $[\\mathcal T]_{\\mathcal B}$ 是 $\\mathcal T$ 在基 $\\mathcal B$ 下的表示。"
      }
     }
    ]
@@ -484,7 +484,7 @@
    "t": {
     "en": "Just like there are many ways to write down coordinates for a vector—one per choice of basis—there are many ways to write down a matrix for a linear transformation. Up to this point, when we've said “$M$ is a matrix for $\\mathcal T$”, what we meant is “$M=[\\mathcal T]_{\\mathcal E}$”. And, like with vectors, if we talk about a matrix for a linear transformation without specifying the basis, we mean the matrix for the transformation with respect to the standard basis.",
     "sha": "7384317f74e0",
-    "zh": ""
+    "zh": "正如向量的坐标有很多种写法（每选一个基就有一种），线性变换的矩阵也有很多种写法。到目前为止，我们说“$M$ 是 $\\mathcal T$ 的一个矩阵”时，意思是“$M=[\\mathcal T]_{\\mathcal E}$”。而且和向量一样，如果谈到线性变换的矩阵却没有指明基，那么指的就是该变换关于标准基的矩阵。"
    }
   },
   {
@@ -497,7 +497,7 @@
      "t": {
       "en": "Let $\\mathcal B=\\Set{\\vec b_1,\\vec b_2}$ where $\\vec b_1=\\mat{2\\\\-3}_{\\mathcal E}$ and $\\vec b_2=\\mat{5\\\\-7}_{\\mathcal E}$ be a basis for $\\R^2$ and let $\\mathcal T:\\R^2\\to\\R^2$ be the transformation that stretches in the $\\vec e_1$ direction by a factor of $2$. Find $[\\mathcal T]_{\\mathcal E}$ and $[\\mathcal T]_{\\mathcal B}$.",
       "sha": "997fbe8b70d3",
-      "zh": ""
+      "zh": "设 $\\mathcal B=\\Set{\\vec b_1,\\vec b_2}$ 是 $\\R^2$ 的基，其中 $\\vec b_1=\\mat{2\\\\-3}_{\\mathcal E}$，$\\vec b_2=\\mat{5\\\\-7}_{\\mathcal E}$；设 $\\mathcal T:\\R^2\\to\\R^2$ 是沿 $\\vec e_1$ 方向拉伸为原来 $2$ 倍的变换。求 $[\\mathcal T]_{\\mathcal E}$ 与 $[\\mathcal T]_{\\mathcal B}$。"
      }
     },
     {
@@ -505,7 +505,7 @@
      "t": {
       "en": "Since $\\mathcal T\\xhat=2\\xhat$ and $\\mathcal T\\yhat=\\yhat$, We know",
       "sha": "6d693c12835c",
-      "zh": ""
+      "zh": "因为 $\\mathcal T\\xhat=2\\xhat$，$\\mathcal T\\yhat=\\yhat$，所以我们知道"
      }
     },
     {
@@ -517,7 +517,7 @@
      "t": {
       "en": "and so",
       "sha": "9af790b3a93d",
-      "zh": ""
+      "zh": "于是"
      }
     },
     {
@@ -529,7 +529,7 @@
      "t": {
       "en": "We can find $[\\mathcal T]_{\\mathcal B}$ in two ways: directly from the definition, or by using change of basis matrices. First, we will work directly from the definition.",
       "sha": "1b11808e564f",
-      "zh": ""
+      "zh": "求 $[\\mathcal T]_{\\mathcal B}$ 有两种办法：直接由定义求，或者用基变换矩阵求。我们先直接从定义出发。"
      }
     },
     {
@@ -537,7 +537,7 @@
      "t": {
       "en": "To find $[\\mathcal T]_{\\mathcal B}$, we need to figure out what $\\mathcal T$ does to $\\vec b_1$ and $\\vec b_2$. However, since $\\mathcal T$ is described in term of $\\xhat$ and $\\yhat$, it might be easier to express $\\xhat$ and $\\yhat$ in the $\\mathcal B$ basis, and then analyze $\\mathcal T$.",
       "sha": "cd4c26e235d8",
-      "zh": ""
+      "zh": "要求 $[\\mathcal T]_{\\mathcal B}$，需要弄清 $\\mathcal T$ 对 $\\vec b_1$ 和 $\\vec b_2$ 做了什么。不过，既然 $\\mathcal T$ 是用 $\\xhat$ 和 $\\yhat$ 描述的，也许先把 $\\xhat$ 与 $\\yhat$ 用基 $\\mathcal B$ 表示出来，再分析 $\\mathcal T$，会更容易。"
      }
     },
     {
@@ -545,7 +545,7 @@
      "t": {
       "en": "Computing, \\[",
       "sha": "948e16a321db",
-      "zh": ""
+      "zh": "计算得， \\["
      }
     },
     {
@@ -557,7 +557,7 @@
      "t": {
       "en": ". \\] Now we know \\[",
       "sha": "3840837bed1b",
-      "zh": ""
+      "zh": ". \\] 现在我们知道 \\["
      }
     },
     {
@@ -569,7 +569,7 @@
      "t": {
       "en": ". \\] Since $[\\mathcal T]_{\\mathcal B}$ is a $2\\times 2$ matrix, we can use what we know to solve for its entries, finding",
       "sha": "4ebe903efeb2",
-      "zh": ""
+      "zh": ". \\] 因为 $[\\mathcal T]_{\\mathcal B}$ 是 $2\\times 2$ 矩阵，我们可以利用已知的信息解出它的各元素，得到"
      }
     },
     {
@@ -581,7 +581,7 @@
      "t": {
       "en": "Let's try finding $[\\mathcal T]_{\\mathcal B}$ using change of basis matrices. We already know $[\\mathcal T]_{\\mathcal E}$, and so",
       "sha": "a29b2c37b36c",
-      "zh": ""
+      "zh": "我们再试试用基变换矩阵来求 $[\\mathcal T]_{\\mathcal B}$。我们已经知道 $[\\mathcal T]_{\\mathcal E}$，所以"
      }
     },
     {
@@ -593,7 +593,7 @@
      "t": {
       "en": "Further, we know",
       "sha": "7858692db31a",
-      "zh": ""
+      "zh": "另外，我们知道"
      }
     },
     {
@@ -605,7 +605,7 @@
      "t": {
       "en": "Putting it all together,",
       "sha": "78c8083627c0",
-      "zh": ""
+      "zh": "把这些合在一起，"
      }
     },
     {
@@ -619,7 +619,7 @@
    "t": {
     "en": "Similar Matrices",
     "sha": "d71fe7b0dd54",
-    "zh": ""
+    "zh": "相似矩阵"
    }
   },
   {
@@ -627,7 +627,7 @@
    "t": {
     "en": "Just like some bases are better than others to represent particular vectors, some bases are better than others to represent a particular linear transformation.",
     "sha": "f846d72b9358",
-    "zh": ""
+    "zh": "正如有些基更适合表示某些特定的向量，有些基也更适合表示某个特定的线性变换。"
    }
   },
   {
@@ -640,7 +640,7 @@
      "t": {
       "en": "Let $\\mathcal B=\\Set{\\vec b_1,\\vec b_2}$ where $\\vec b_1=\\mat{2\\\\-3}_{\\mathcal E}$ and $\\vec b_2=\\mat{5\\\\-7}_{\\mathcal E}$ be a basis for $\\R^2$ and let $\\mathcal S:\\R^2\\to\\R^2$ be the transformation that stretches in the $\\vec b_1=2\\vec e_1-3\\vec e_2$ direction by a factor of $2$ and reflects vectors in the $\\vec b_2=5\\xhat-7\\yhat$ direction. Find $[\\mathcal S]_{\\mathcal E}$ and $[\\mathcal S]_{\\mathcal B}$.",
       "sha": "dccd76601a87",
-      "zh": ""
+      "zh": "设 $\\mathcal B=\\Set{\\vec b_1,\\vec b_2}$ 是 $\\R^2$ 的基，其中 $\\vec b_1=\\mat{2\\\\-3}_{\\mathcal E}$，$\\vec b_2=\\mat{5\\\\-7}_{\\mathcal E}$；设 $\\mathcal S:\\R^2\\to\\R^2$ 是这样的变换：沿 $\\vec b_1=2\\vec e_1-3\\vec e_2$ 方向拉伸为原来的 $2$ 倍，并对 $\\vec b_2=5\\xhat-7\\yhat$ 方向上的向量做反射。求 $[\\mathcal S]_{\\mathcal E}$ 与 $[\\mathcal S]_{\\mathcal B}$。"
      }
     },
     {
@@ -648,7 +648,7 @@
      "t": {
       "en": "In this example, $\\mathcal S$ is described in terms of the $\\mathcal B$ basis. We know",
       "sha": "e52cb98f29af",
-      "zh": ""
+      "zh": "在这个例子中，$\\mathcal S$ 是用基 $\\mathcal B$ 来描述的。我们知道"
      }
     },
     {
@@ -660,7 +660,7 @@
      "t": {
       "en": "Therefore,",
       "sha": "236a32def63c",
-      "zh": ""
+      "zh": "因此，"
      }
     },
     {
@@ -672,7 +672,7 @@
      "t": {
       "en": "To find $[\\mathcal S]_{\\mathcal E}$, we will use change of basis matrices. Notice that",
       "sha": "a5b167af32d2",
-      "zh": ""
+      "zh": "要求 $[\\mathcal S]_{\\mathcal E}$，我们将用基变换矩阵。注意到"
      }
     },
     {
@@ -684,7 +684,7 @@
      "t": {
       "en": "and that",
       "sha": "978d1db63d64",
-      "zh": ""
+      "zh": "并且"
      }
     },
     {
@@ -696,7 +696,7 @@
      "t": {
       "en": "Therefore",
       "sha": "f6f36ec125f2",
-      "zh": ""
+      "zh": "因此"
      }
     },
     {
@@ -710,7 +710,7 @@
    "t": {
     "en": "In the example above, $[\\mathcal S]_{\\mathcal B}$ is a much nicer matrix than $[\\mathcal S]_{\\mathcal E}$. However, the two matrices relate to each other. After all,",
     "sha": "cc6030b62a4e",
-    "zh": ""
+    "zh": "在上面的例子中，$[\\mathcal S]_{\\mathcal B}$ 是比 $[\\mathcal S]_{\\mathcal E}$ 简单得多的矩阵。不过，这两个矩阵彼此相关。毕竟，"
    }
   },
   {
@@ -722,7 +722,7 @@
    "t": {
     "en": "In this case, we call these matrices *similar* 〔注： Another commonly used term is *conjugate*.〕.",
     "sha": "99a5d4e38d48",
-    "zh": ""
+    "zh": "这时，我们称这两个矩阵是*相似*的〔注： 另一个常用的说法是*共轭*。〕。"
    }
   },
   {
@@ -731,7 +731,7 @@
    "title": {
     "en": "Similar Matrices",
     "sha": "d71fe7b0dd54",
-    "zh": ""
+    "zh": "相似矩阵"
    },
    "blocks": [
     {
@@ -739,7 +739,7 @@
      "t": {
       "en": "The matrices $A$ and $B$ are called *similar matrices*, denoted $A\\sim B$, if $A$ and $B$ represent the same linear transformation but in possibly different bases. Equivalently, $A\\sim B$ if there is an invertible matrix $X$ so that",
       "sha": "538ed0db668f",
-      "zh": ""
+      "zh": "如果矩阵 $A$ 与 $B$ 表示的是同一个线性变换，只是所取的基可能不同，就称 $A$ 与 $B$ 为*相似矩阵*，记作 $A\\sim B$。等价地说，$A\\sim B$ 当且仅当存在可逆矩阵 $X$，使得"
      }
     },
     {
@@ -753,7 +753,7 @@
    "t": {
     "en": "The $X$ in the definition of similar matrices is always a change-of-basis matrix.",
     "sha": "1f21a7d70d6e",
-    "zh": ""
+    "zh": "相似矩阵的定义中的 $X$ 总是一个基变换矩阵。"
    }
   },
   {
@@ -761,7 +761,7 @@
    "t": {
     "en": "When studying a linear transformation, you can pick any basis to represent it in and study the resulting matrix. Different choices of basis will give you different perspectives on the linear transformation. In what's to follow, we will work to find the “best” basis in which to study a given linear transformation 〔注： If you cannot wait, the “best” basis will turn out to be the *eigen basis* (provided it exists).〕.",
     "sha": "3242dcbfa8a8",
-    "zh": ""
+    "zh": "研究一个线性变换时，你可以任选一个基来表示它，然后研究得到的矩阵。基选得不同，看这个线性变换的角度也就不同。在后面的内容中，我们要努力找出研究给定线性变换的“最佳”基〔注： 如果你等不及了：“最佳”基其实就是*特征基*（如果它存在的话）。〕。"
    }
   }
  ],
@@ -774,7 +774,7 @@
      "t": {
       "en": "Let",
       "sha": "ef5fe1edf379",
-      "zh": ""
+      "zh": "设"
      }
     },
     {
@@ -786,7 +786,7 @@
      "t": {
       "en": "be bases for $\\R^2$. Define $\\vec x\\in \\R^2$ by $[\\vec x]_{\\mathcal A}=\\mat{1\\\\-1}$.",
       "sha": "2c17d35aff8e",
-      "zh": ""
+      "zh": "是 $\\R^2$ 的基。定义 $\\vec x\\in \\R^2$，使 $[\\vec x]_{\\mathcal A}=\\mat{1\\\\-1}$。"
      }
     },
     {
@@ -799,7 +799,7 @@
         "t": {
          "en": "Find $[\\vec x]_{\\mathcal E}$ and $[\\vec x]_{\\mathcal B}$.",
          "sha": "da5d85de61a4",
-         "zh": ""
+         "zh": "求 $[\\vec x]_{\\mathcal E}$ 和 $[\\vec x]_{\\mathcal B}$。"
         }
        }
       ],
@@ -809,7 +809,7 @@
         "t": {
          "en": "Find the change of basis matrices $\\BasisChange{\\mathcal A}{\\mathcal E}$, $\\BasisChange{\\mathcal E}{\\mathcal A}$, $\\BasisChange{\\mathcal A}{\\mathcal B}$, and $\\BasisChange{\\mathcal B}{\\mathcal A}$.",
          "sha": "c441022ec9b8",
-         "zh": ""
+         "zh": "求基变换矩阵 $\\BasisChange{\\mathcal A}{\\mathcal E}$、$\\BasisChange{\\mathcal E}{\\mathcal A}$、$\\BasisChange{\\mathcal A}{\\mathcal B}$ 和 $\\BasisChange{\\mathcal B}{\\mathcal A}$。"
         }
        }
       ]
@@ -827,7 +827,7 @@
         "t": {
          "en": "Note that by definition",
          "sha": "b5708e71c6f7",
-         "zh": ""
+         "zh": "注意由定义，"
         }
        },
        {
@@ -839,7 +839,7 @@
         "t": {
          "en": "Since $[\\vec x]_{\\mathcal A}=\\mat{1\\\\-1}$, it follows that",
          "sha": "844be17a95c7",
-         "zh": ""
+         "zh": "因为 $[\\vec x]_{\\mathcal A}=\\mat{1\\\\-1}$，所以"
         }
        },
        {
@@ -851,7 +851,7 @@
         "t": {
          "en": "It thus follows that $[\\vec x]_{\\mathcal E}=\\mat{1\\\\3}$.",
          "sha": "457ed16aa096",
-         "zh": ""
+         "zh": "于是 $[\\vec x]_{\\mathcal E}=\\mat{1\\\\3}$。"
         }
        },
        {
@@ -859,7 +859,7 @@
         "t": {
          "en": "To find $[\\vec x]_{\\mathcal B}$, we must first express the two elements of $\\mathcal A$ as linear combinations of the two elements of $\\mathcal B$. This involves solving two systems of linear equations:",
          "sha": "0bbb7c466133",
-         "zh": ""
+         "zh": "要求 $[\\vec x]_{\\mathcal B}$，必须先把 $\\mathcal A$ 的两个元素分别表示成 $\\mathcal B$ 的两个元素的线性组合。这需要解两个线性方程组："
         }
        },
        {
@@ -871,7 +871,7 @@
         "t": {
          "en": "and",
          "sha": "cffa50a32cb1",
-         "zh": ""
+         "zh": "和"
         }
        },
        {
@@ -883,7 +883,7 @@
         "t": {
          "en": "Written as column vectors, these are",
          "sha": "f257e62c2345",
-         "zh": ""
+         "zh": "写成列向量的形式，就是"
         }
        },
        {
@@ -895,7 +895,7 @@
         "t": {
          "en": "and",
          "sha": "cffa50a32cb1",
-         "zh": ""
+         "zh": "和"
         }
        },
        {
@@ -907,7 +907,7 @@
         "t": {
          "en": "Solving the systems and applying the definition, we obtain",
          "sha": "1576dff0bb73",
-         "zh": ""
+         "zh": "解出这两个方程组并应用定义，得到"
         }
        },
        {
@@ -919,7 +919,7 @@
         "t": {
          "en": "Now we have",
          "sha": "2068fdc8561d",
-         "zh": ""
+         "zh": "现在我们有"
         }
        },
        {
@@ -933,7 +933,7 @@
         "t": {
          "en": "By definition, $\\BasisChange{\\mathcal A}{\\mathcal E}$ is the matrix $M$ satisfying",
          "sha": "eddc809b0109",
-         "zh": ""
+         "zh": "由定义，$\\BasisChange{\\mathcal A}{\\mathcal E}$ 是满足下式的矩阵 $M$"
         }
        },
        {
@@ -945,7 +945,7 @@
         "t": {
          "en": "for all vectors $\\vec x$. In particular, it must satisfy",
          "sha": "2dcfed014a42",
-         "zh": ""
+         "zh": "对所有向量 $\\vec x$ 成立。特别地，它必须满足"
         }
        },
        {
@@ -957,7 +957,7 @@
         "t": {
          "en": "It thus follows that $M$ satisfies",
          "sha": "2181f7f241bc",
-         "zh": ""
+         "zh": "于是 $M$ 满足"
         }
        },
        {
@@ -969,7 +969,7 @@
         "t": {
          "en": "Solving for $M$ gives",
          "sha": "19918a14f93b",
-         "zh": ""
+         "zh": "解出 $M$ 得"
         }
        },
        {
@@ -981,7 +981,7 @@
         "t": {
          "en": "To find $\\BasisChange{\\mathcal E}{\\mathcal A}$, we simply need to compute $M^{-1}$. Following the explicit inverse formula for $2\\times2$ matrices, we see that",
          "sha": "debc0e15b29c",
-         "zh": ""
+         "zh": "要求 $\\BasisChange{\\mathcal E}{\\mathcal A}$，只需计算 $M^{-1}$。按照 $2\\times2$ 矩阵的逆矩阵公式，得到"
         }
        },
        {
@@ -993,7 +993,7 @@
         "t": {
          "en": "To compute $\\BasisChange{\\mathcal A}{\\mathcal B}$, we note that",
          "sha": "596707eb6e6b",
-         "zh": ""
+         "zh": "要计算 $\\BasisChange{\\mathcal A}{\\mathcal B}$，注意到"
         }
        },
        {
@@ -1005,7 +1005,7 @@
         "t": {
          "en": "We compute $\\BasisChange{\\mathcal E}{\\mathcal B}$ readily as",
          "sha": "1f10fb4b3de0",
-         "zh": ""
+         "zh": "$\\BasisChange{\\mathcal E}{\\mathcal B}$ 很容易算出来："
         }
        },
        {
@@ -1017,7 +1017,7 @@
         "t": {
          "en": "Thus,",
          "sha": "e38f4f305df3",
-         "zh": ""
+         "zh": "于是，"
         }
        },
        {
@@ -1029,7 +1029,7 @@
         "t": {
          "en": "Therefore,",
          "sha": "236a32def63c",
-         "zh": ""
+         "zh": "因此，"
         }
        },
        {
@@ -1041,7 +1041,7 @@
         "t": {
          "en": "Taking inverse gives $\\BasisChange{\\mathcal B}{\\mathcal A}$.",
          "sha": "90d5dcf6f0c9",
-         "zh": ""
+         "zh": "取逆就得到 $\\BasisChange{\\mathcal B}{\\mathcal A}$。"
         }
        }
       ]
@@ -1065,7 +1065,7 @@
      "t": {
       "en": "Let",
       "sha": "ef5fe1edf379",
-      "zh": ""
+      "zh": "设"
      }
     },
     {
@@ -1077,7 +1077,7 @@
      "t": {
       "en": "be bases for $\\R^3$ where",
       "sha": "552b95979c63",
-      "zh": ""
+      "zh": "是 $\\R^3$ 的基，其中"
      }
     },
     {
@@ -1094,7 +1094,7 @@
         "t": {
          "en": "Find the representation of $\\vec b_1$, $\\vec b_2$, and $\\vec b_3$ in the standard basis.",
          "sha": "b2c5f89b6a95",
-         "zh": ""
+         "zh": "求 $\\vec b_1$、$\\vec b_2$ 和 $\\vec b_3$ 在标准基下的表示。"
         }
        }
       ],
@@ -1104,7 +1104,7 @@
         "t": {
          "en": "Find the change of basis matrices $\\BasisChange{\\mathcal E}{\\mathcal A}$ and $\\BasisChange{\\mathcal B}{\\mathcal E}$.",
          "sha": "9997a9bce9f6",
-         "zh": ""
+         "zh": "求基变换矩阵 $\\BasisChange{\\mathcal E}{\\mathcal A}$ 和 $\\BasisChange{\\mathcal B}{\\mathcal E}$。"
         }
        }
       ],
@@ -1114,7 +1114,7 @@
         "t": {
          "en": "Use $\\BasisChange{\\mathcal E}{\\mathcal A}$ and $\\BasisChange{\\mathcal B}{\\mathcal E}$ to compute $\\BasisChange{\\mathcal B}{\\mathcal A}$.",
          "sha": "420c459d9789",
-         "zh": ""
+         "zh": "用 $\\BasisChange{\\mathcal E}{\\mathcal A}$ 和 $\\BasisChange{\\mathcal B}{\\mathcal E}$ 计算 $\\BasisChange{\\mathcal B}{\\mathcal A}$。"
         }
        }
       ]
@@ -1132,7 +1132,7 @@
         "t": {
          "en": "By definition, we have \\[",
          "sha": "d54a6f61a8da",
-         "zh": ""
+         "zh": "由定义，我们有 \\["
         }
        },
        {
@@ -1144,7 +1144,7 @@
         "t": {
          "en": "\\]",
          "sha": "43d96b94aff4",
-         "zh": ""
+         "zh": "\\]"
         }
        }
       ],
@@ -1154,7 +1154,7 @@
         "t": {
          "en": "We have that",
          "sha": "f58db818e606",
-         "zh": ""
+         "zh": "我们有"
         }
        },
        {
@@ -1166,7 +1166,7 @@
         "t": {
          "en": "By part (a), we have",
          "sha": "51bd39998320",
-         "zh": ""
+         "zh": "由 (a) 小题，我们有"
         }
        },
        {
@@ -1178,7 +1178,7 @@
         "t": {
          "en": "Inverting the former, we see that",
          "sha": "25c6c5216e8f",
-         "zh": ""
+         "zh": "对前一个式子求逆，得到"
         }
        },
        {
@@ -1192,7 +1192,7 @@
         "t": {
          "en": "We have \\[",
          "sha": "09aa320a4407",
-         "zh": ""
+         "zh": "我们有 \\["
         }
        },
        {
@@ -1204,7 +1204,7 @@
         "t": {
          "en": "\\]",
          "sha": "43d96b94aff4",
-         "zh": ""
+         "zh": "\\]"
         }
        }
       ]
@@ -1228,7 +1228,7 @@
      "t": {
       "en": "Let $\\mathcal B=\\Set{\\mat{1\\\\0}_{\\mathcal E},\\mat{1\\\\1}_{\\mathcal E}}$. For each linear transformation $\\mathcal T:\\R^{2}\\to\\R^{2}$ defined below, compute $[\\mathcal T]_{\\mathcal E}$ and $[\\mathcal T]_{\\mathcal B}$.",
       "sha": "ddf356b552b1",
-      "zh": ""
+      "zh": "设 $\\mathcal B=\\Set{\\mat{1\\\\0}_{\\mathcal E},\\mat{1\\\\1}_{\\mathcal E}}$。对下面定义的每个线性变换 $\\mathcal T:\\R^{2}\\to\\R^{2}$，计算 $[\\mathcal T]_{\\mathcal E}$ 和 $[\\mathcal T]_{\\mathcal B}$。"
      }
     },
     {
@@ -1241,7 +1241,7 @@
         "t": {
          "en": "Let $\\mathcal T$ be the transformation that rotates every vector counter clockwise by $90^{\\circ}$.",
          "sha": "e87a36030f5e",
-         "zh": ""
+         "zh": "设 $\\mathcal T$ 是把每个向量逆时针旋转 $90^{\\circ}$ 的变换。"
         }
        }
       ],
@@ -1251,7 +1251,7 @@
         "t": {
          "en": "Let $\\mathcal T$ be the transformation that projects every vector onto the $y$-axis.",
          "sha": "c8d513b693d4",
-         "zh": ""
+         "zh": "设 $\\mathcal T$ 是把每个向量投影到 $y$ 轴上的变换。"
         }
        }
       ],
@@ -1261,7 +1261,7 @@
         "t": {
          "en": "Let $\\mathcal T$ be the transformation that doubles every vector.",
          "sha": "21be0619dc09",
-         "zh": ""
+         "zh": "设 $\\mathcal T$ 是把每个向量变为原来 2 倍的变换。"
         }
        }
       ],
@@ -1271,7 +1271,7 @@
         "t": {
          "en": "Let $\\mathcal T$ be the transformation that reflects every vector over the line $y=x$.",
          "sha": "7edc5f827314",
-         "zh": ""
+         "zh": "设 $\\mathcal T$ 是把每个向量关于直线 $y=x$ 做反射的变换。"
         }
        }
       ]
@@ -1289,7 +1289,7 @@
         "t": {
          "en": "$[\\mathcal T]_{\\mathcal E}=\\mat{0&-1\\\\1&0}$ and $[\\mathcal T]_{\\mathcal B}= \\begin{bmatrix} -1 & -2 \\\\ 1 & 1 \\end{bmatrix}$",
          "sha": "956d54e89427",
-         "zh": ""
+         "zh": "$[\\mathcal T]_{\\mathcal E}=\\mat{0&-1\\\\1&0}$ 且 $[\\mathcal T]_{\\mathcal B}= \\begin{bmatrix} -1 & -2 \\\\ 1 & 1 \\end{bmatrix}$"
         }
        }
       ],
@@ -1299,7 +1299,7 @@
         "t": {
          "en": "$[\\mathcal T]_{\\mathcal E}= \\begin{bmatrix} 0 & 0 \\\\ 0 & 1 \\end{bmatrix}$",
          "sha": "1744c6f29ea9",
-         "zh": ""
+         "zh": "$[\\mathcal T]_{\\mathcal E}= \\begin{bmatrix} 0 & 0 \\\\ 0 & 1 \\end{bmatrix}$"
         }
        },
        {
@@ -1307,7 +1307,7 @@
         "t": {
          "en": "To compute $[\\mathcal T]_{\\mathcal B}$, note that $\\mathcal T\\vec b_1=\\mathcal T\\vec e_1=\\vec 0$ and $\\mathcal T\\vec b_2=\\mathcal T(\\vec e_1+\\vec e_2)=\\vec e_2$. Further, $\\vec e_2=-\\vec b_1+\\vec b_2$. Therefore, $[\\mathcal T]_{\\mathcal B}= \\begin{bmatrix} 0 & -1 \\\\ 0 & 1 \\end{bmatrix}$.",
          "sha": "cc6826307018",
-         "zh": ""
+         "zh": "要计算 $[\\mathcal T]_{\\mathcal B}$，注意 $\\mathcal T\\vec b_1=\\mathcal T\\vec e_1=\\vec 0$，$\\mathcal T\\vec b_2=\\mathcal T(\\vec e_1+\\vec e_2)=\\vec e_2$。又有 $\\vec e_2=-\\vec b_1+\\vec b_2$。因此 $[\\mathcal T]_{\\mathcal B}= \\begin{bmatrix} 0 & -1 \\\\ 0 & 1 \\end{bmatrix}$。"
         }
        }
       ],
@@ -1317,7 +1317,7 @@
         "t": {
          "en": "$[\\mathcal T]_{\\mathcal E}=[\\mathcal T]_{\\mathcal B}= \\begin{bmatrix} 2 & 0 \\\\ 0 & 2 \\end{bmatrix}$",
          "sha": "c64a9358f34c",
-         "zh": ""
+         "zh": "$[\\mathcal T]_{\\mathcal E}=[\\mathcal T]_{\\mathcal B}= \\begin{bmatrix} 2 & 0 \\\\ 0 & 2 \\end{bmatrix}$"
         }
        }
       ],
@@ -1327,7 +1327,7 @@
         "t": {
          "en": "Note that $\\mathcal T\\vec e_1=\\vec e_2$ and $\\mathcal T\\vec e_2=\\vec e_1$, so $[\\mathcal T]_{\\mathcal E}= \\begin{bmatrix} 0 & 1 \\\\ 1 & 0 \\end{bmatrix}$. To compute $[\\mathcal T]_{\\mathcal B}$, we simply observe that $\\vec b_1=\\vec e_1$ and $\\vec b_2=\\vec e_1+\\vec e_2$. Thus, $\\mathcal T\\vec b_1=\\vec e_2=-\\vec b_1+\\vec b_2$ and $\\mathcal T\\vec b_2=\\vec e_1+\\vec e_2=\\vec b_2$. Therefore, $[\\mathcal T]_{\\mathcal B}= \\begin{bmatrix} -1 & 0 \\\\ 1 & 1 \\end{bmatrix}$.",
          "sha": "aea2ebf24ef5",
-         "zh": ""
+         "zh": "注意 $\\mathcal T\\vec e_1=\\vec e_2$，$\\mathcal T\\vec e_2=\\vec e_1$，所以 $[\\mathcal T]_{\\mathcal E}= \\begin{bmatrix} 0 & 1 \\\\ 1 & 0 \\end{bmatrix}$。要计算 $[\\mathcal T]_{\\mathcal B}$，只需看到 $\\vec b_1=\\vec e_1$，$\\vec b_2=\\vec e_1+\\vec e_2$。于是 $\\mathcal T\\vec b_1=\\vec e_2=-\\vec b_1+\\vec b_2$，$\\mathcal T\\vec b_2=\\vec e_1+\\vec e_2=\\vec b_2$。因此 $[\\mathcal T]_{\\mathcal B}= \\begin{bmatrix} -1 & 0 \\\\ 1 & 1 \\end{bmatrix}$。"
         }
        }
       ]
@@ -1351,7 +1351,7 @@
      "t": {
       "en": "For each statement below, determine whether it is true or false. Justify your answer.",
       "sha": "e3b37b865c04",
-      "zh": ""
+      "zh": "判断下面每个陈述是真还是假，并说明理由。"
      }
     },
     {
@@ -1364,7 +1364,7 @@
         "t": {
          "en": "Any invertible $n \\times n$ matrix can be viewed as a change of basis matrix.",
          "sha": "6b98b91198d8",
-         "zh": ""
+         "zh": "任何可逆的 $n \\times n$ 矩阵都可以看作基变换矩阵。"
         }
        }
       ],
@@ -1374,7 +1374,7 @@
         "t": {
          "en": "Any $n \\times n$ matrix is similar to itself.",
          "sha": "e4d75909dcf9",
-         "zh": ""
+         "zh": "任何 $n \\times n$ 矩阵都与它自己相似。"
         }
        }
       ],
@@ -1384,7 +1384,7 @@
         "t": {
          "en": "Let $A$ be an $m \\times n$ matrix. If $m \\neq n$, then there is no matrix that is similar to $A$.",
          "sha": "4ec22cfb0cc6",
-         "zh": ""
+         "zh": "设 $A$ 是 $m \\times n$ 矩阵。如果 $m \\neq n$，那么不存在与 $A$ 相似的矩阵。"
         }
        }
       ],
@@ -1394,7 +1394,7 @@
         "t": {
          "en": "Any invertible $n \\times n$ matrix $A$ is similar to $A^{-1}$ since $AA^{-1}=I$.",
          "sha": "f68ca853d0f1",
-         "zh": ""
+         "zh": "任何可逆的 $n \\times n$ 矩阵 $A$ 都与 $A^{-1}$ 相似，因为 $AA^{-1}=I$。"
         }
        }
       ]
@@ -1412,7 +1412,7 @@
         "t": {
          "en": "True. A square matrix $M$ is invertible if and only if it is a change of basis matrix.",
          "sha": "6220b3b6f877",
-         "zh": ""
+         "zh": "真。方阵 $M$ 可逆，当且仅当它是基变换矩阵。"
         }
        }
       ],
@@ -1422,7 +1422,7 @@
         "t": {
          "en": "True. Any square matrix $M$ satsifies $M=IMI^{-1}$.",
          "sha": "25e9fbc9acf8",
-         "zh": ""
+         "zh": "真。任何方阵 $M$ 都满足 $M=IMI^{-1}$。"
         }
        }
       ],
@@ -1432,7 +1432,7 @@
         "t": {
          "en": "True. The definition of similarity requires the existence of an invertible matrix $P$, i.e. a square matrix, and a matrix $B$ such that $B=PAP^{-1}$. If $A$ is not a square matrix, then either $PA$ or $AP^{-1}$ is not defined, so such a matrix $P$ cannot exist.",
          "sha": "3212e8f84796",
-         "zh": ""
+         "zh": "真。相似的定义要求存在可逆矩阵 $P$（也就是方阵）和矩阵 $B$，使得 $B=PAP^{-1}$。如果 $A$ 不是方阵，那么 $PA$ 与 $AP^{-1}$ 中至少有一个没有定义，所以这样的矩阵 $P$ 不可能存在。"
         }
        }
       ],
@@ -1442,7 +1442,7 @@
         "t": {
          "en": "False. For example, $A=\\begin{bmatrix} 2 & 0 \\\\ 0 & -1 \\end{bmatrix}$ is not similar to its inverse.",
          "sha": "23680406de5a",
-         "zh": ""
+         "zh": "假。例如，$A=\\begin{bmatrix} 2 & 0 \\\\ 0 & -1 \\end{bmatrix}$ 与它的逆矩阵不相似。"
         }
        }
       ]

@@ -16,7 +16,7 @@
         "t": {
          "en": "The definition of a linear transformation.",
          "sha": "b9ff75b48e51",
-         "zh": ""
+         "zh": "线性变换的定义。"
         }
        }
       ],
@@ -26,7 +26,7 @@
         "t": {
          "en": "The definition of the image of a set under a transformation.",
          "sha": "8c9c66b3b406",
-         "zh": ""
+         "zh": "集合在变换下的像的定义。"
         }
        }
       ],
@@ -36,7 +36,7 @@
         "t": {
          "en": "How to prove whether a transformation is linear or not.",
          "sha": "e92bcbfb10ba",
-         "zh": ""
+         "zh": "如何证明一个变换是不是线性的。"
         }
        }
       ],
@@ -46,7 +46,7 @@
         "t": {
          "en": "How to find a matrix for a linear transformation.",
          "sha": "28bb9e1956f8",
-         "zh": ""
+         "zh": "如何求线性变换对应的矩阵。"
         }
        }
       ],
@@ -56,7 +56,7 @@
         "t": {
          "en": "The difference between a matrix and a linear transformation.",
          "sha": "2efb4c18ae43",
-         "zh": ""
+         "zh": "矩阵与线性变换的区别。"
         }
        }
       ]
@@ -69,7 +69,7 @@
    "t": {
     "en": "Now that we have a handle on the basics of vectors, we can start thinking about *transformations*. Transformation (or map) is another word for a function, and transformations show up any time you need to describe vectors changing. For example, the transformation",
     "sha": "34aa3eedc719",
-    "zh": ""
+    "zh": "掌握了向量的基础知识之后，我们可以开始考虑*变换*了。变换（或称映射）是函数的另一种叫法，只要需要描述向量如何变化，就会用到变换。例如，变换"
    }
   },
   {
@@ -81,7 +81,7 @@
    "t": {
     "en": "stretches all vectors in the $\\xhat$ direction by a factor of $2$.",
     "sha": "d1f04080b31d",
-    "zh": ""
+    "zh": "把所有向量在 $\\xhat$ 方向上拉伸为原来的 $2$ 倍。"
    }
   },
   {
@@ -97,7 +97,7 @@
    "t": {
     "en": "The transformation",
     "sha": "8165110bf577",
-    "zh": ""
+    "zh": "变换"
    }
   },
   {
@@ -109,7 +109,7 @@
    "t": {
     "en": "translates all vectors $3$ units in the $\\xhat$ direction.",
     "sha": "e1539b1e0bc7",
-    "zh": ""
+    "zh": "把所有向量沿 $\\xhat$ 方向平移 $3$ 个单位。"
    }
   },
   {
@@ -125,7 +125,7 @@
    "t": {
     "en": "Images of Sets",
     "sha": "8851de80c838",
-    "zh": ""
+    "zh": "集合的像"
    }
   },
   {
@@ -133,7 +133,7 @@
    "t": {
     "en": "Recall the transformation $S:\\R^2\\to\\R^2$ defined by $\\mat{x\\\\y}\\mapsto\\mat{2x\\\\y}$. If we had a bunch of vectors in the plane, applying $S$ would stretch those vectors in the $\\xhat$ direction by a factor of $2$. For example, let $\\mathcal C$ be the circle of radius $1$ centered at $\\vec 0$. Applying $S$ to all the vectors that make up $\\mathcal C$ produces an ellipse.",
     "sha": "89c0fd694e94",
-    "zh": ""
+    "zh": "回忆由 $\\mat{x\\\\y}\\mapsto\\mat{2x\\\\y}$ 定义的变换 $S:\\R^2\\to\\R^2$。如果平面上有一堆向量，施加 $S$ 会把这些向量在 $\\xhat$ 方向上拉伸为原来的 $2$ 倍。例如，设 $\\mathcal C$ 是以 $\\vec 0$ 为圆心、半径为 $1$ 的圆。对组成 $\\mathcal C$ 的所有向量施加 $S$，得到的是一个椭圆。"
    }
   },
   {
@@ -149,7 +149,7 @@
    "t": {
     "en": "The operation of applying a transformation to a specific set of vectors and seeing what results is called taking the *image* of a set.",
     "sha": "5cbbafc6dae7",
-    "zh": ""
+    "zh": "把一个变换作用在某个特定的向量集合上，看看得到的结果，这种操作称为取集合的*像*。"
    }
   },
   {
@@ -158,7 +158,7 @@
    "title": {
     "en": "Image of a Set",
     "sha": "caf16220cb91",
-    "zh": ""
+    "zh": "集合的像"
    },
    "blocks": [
     {
@@ -166,7 +166,7 @@
      "t": {
       "en": "Let $L:\\R^n\\to \\R^m$ be a transformation and let $X\\subseteq \\R^n$ be a set. The \\emphimage of the set $X$ under $L$, denoted $L(X)$, is the set",
       "sha": "38669a41380a",
-      "zh": ""
+      "zh": "设 $L:\\R^n\\to \\R^m$ 是一个变换，$X\\subseteq \\R^n$ 是一个集合。集合 $X$ 在 $L$ 下的\\emph像（image），记作 $L(X)$，是集合"
      }
     },
     {
@@ -180,7 +180,7 @@
    "t": {
     "en": "In plain language, the image of a set $X$ under a transformation $L$ is the set of all outputs of $L$ when the inputs come from $X$.",
     "sha": "517618db69fc",
-    "zh": ""
+    "zh": "通俗地说，集合 $X$ 在变换 $L$ 下的像，就是当输入取自 $X$ 时，$L$ 的所有输出组成的集合。"
    }
   },
   {
@@ -188,7 +188,7 @@
    "t": {
     "en": "If you think of sets in $\\R^n$ as black-and-white “pictures” (a point is black if it's in the set and white if it's not), then the image of a set under a transformation is the output after applying the transformation to the “picture”.",
     "sha": "d7fdef54e36e",
-    "zh": ""
+    "zh": "如果把 $\\R^n$ 中的集合看成黑白“图片”（点在集合里就是黑的，不在就是白的），那么集合在变换下的像，就是对这张“图片”施加变换之后得到的输出。"
    }
   },
   {
@@ -196,7 +196,7 @@
    "t": {
     "en": "Images allow one to describe complicated geometric figures in terms of an original figure and a transformation. For example, let $\\mathcal R:\\R^2\\to\\R^2$ be rotation counter clockwise by $30^\\circ$ and let $X=\\Set{x\\xhat+y\\yhat\\given x,y\\in[0,1]}$ be the filled-in unit square. Then, $\\mathcal R(X)$ is the filled-in unit square that meets the $x$-axis at an angle of $30^\\circ$. Try describing that using set builder notation!",
     "sha": "26a24a33091b",
-    "zh": ""
+    "zh": "利用像，可以用原来的图形加上一个变换来描述复杂的几何图形。例如，设 $\\mathcal R:\\R^2\\to\\R^2$ 是逆时针旋转 $30^\\circ$，设 $X=\\Set{x\\xhat+y\\yhat\\given x,y\\in[0,1]}$ 是填满的单位正方形。那么 $\\mathcal R(X)$ 就是与 $x$ 轴成 $30^\\circ$ 角相交的填满的单位正方形。试试用集合构造记号来描述它吧！"
    }
   },
   {
@@ -212,7 +212,7 @@
    "t": {
     "en": "Linear Transformations",
     "sha": "75e0a5944d0f",
-    "zh": ""
+    "zh": "线性变换"
    }
   },
   {
@@ -220,7 +220,7 @@
    "t": {
     "en": "Linear algebra's main focus is the study of a special category of transformations: the *linear* transformations. Linear transformations include rotations, dilations (stretches), shears, and more.",
     "sha": "4d0cd59c4d29",
-    "zh": ""
+    "zh": "线性代数主要研究一类特殊的变换：*线性*变换。线性变换包括旋转、伸缩（拉伸）、剪切等等。"
    }
   },
   {
@@ -236,7 +236,7 @@
    "t": {
     "en": "Linear transformations are an important type of transformation because (i) we have a complete theory of linear transformations (non-linear transformations are notoriously difficult to understand), and (ii) many non-linear transformations can be approximated by linear ones 〔注：Just like in one-variable calculus where if you zoom into a function at a point its graph looks like a line, if you zoom into a (non-linear) transformation at a point, it looks like a linear one.〕. All this is to say that linear transformations are worthy of our study.",
     "sha": "22fd5ac58d44",
-    "zh": ""
+    "zh": "线性变换之所以重要，是因为：（i）我们对线性变换有一套完整的理论（而非线性变换是出了名的难以理解）；（ii）许多非线性变换可以用线性变换来近似 〔注：就像一元微积分中，把函数在某一点附近放大，它的图像看起来就像一条直线；把（非线性的）变换在某一点附近放大，它看起来也像一个线性变换。〕。总之，线性变换值得我们好好研究。"
    }
   },
   {
@@ -244,7 +244,7 @@
    "t": {
     "en": "Without further ado, let's define what it means for a transformation to be linear.",
     "sha": "7c39469acd93",
-    "zh": ""
+    "zh": "闲话少说，我们来定义一个变换“线性”是什么意思。"
    }
   },
   {
@@ -253,7 +253,7 @@
    "title": {
     "en": "Linear Transformation",
     "sha": "f4cfa1ccc1bd",
-    "zh": ""
+    "zh": "线性变换"
    },
    "blocks": [
     {
@@ -261,7 +261,7 @@
      "t": {
       "en": "Let $V$ and $W$ be subspaces. A function $T:V\\to W$ is called a *linear transformation* if",
       "sha": "cf4bd2b0afd9",
-      "zh": ""
+      "zh": "设 $V$ 和 $W$ 是子空间。如果函数 $T:V\\to W$ 满足"
      }
     },
     {
@@ -273,7 +273,7 @@
      "t": {
       "en": "for all vectors $\\vec u,\\vec v\\in V$ and all scalars $\\alpha$.",
       "sha": "55e9ed8bef86",
-      "zh": ""
+      "zh": "对所有向量 $\\vec u,\\vec v\\in V$ 和所有标量 $\\alpha$ 成立，就称它为*线性变换*。"
      }
     }
    ]
@@ -283,7 +283,7 @@
    "t": {
     "en": "In plain language, the transformation $T$ is linear, or has the property of *linearity*, if it distributes over addition and scalar multiplication. In other words, $T$ *distributes over linear combinations*.",
     "sha": "fe7063a573cb",
-    "zh": ""
+    "zh": "通俗地说，如果变换 $T$ 对加法和数乘都满足分配律，就称它是线性的，或称它具有*线性*性质。换句话说，$T$ *对线性组合满足分配律*。"
    }
   },
   {
@@ -296,7 +296,7 @@
      "t": {
       "en": "Let $S:\\R^2\\to\\R^2$ and $T:\\R^2\\to\\R^2$ be defined by",
       "sha": "8eea3ed1f6f2",
-      "zh": ""
+      "zh": "设 $S:\\R^2\\to\\R^2$ 与 $T:\\R^2\\to\\R^2$ 的定义为"
      }
     },
     {
@@ -308,7 +308,7 @@
      "t": {
       "en": "For each of $S$ and $T$, determine whether the transformation is linear.",
       "sha": "d582ff236918",
-      "zh": ""
+      "zh": "对 $S$ 和 $T$ 分别判断该变换是否是线性的。"
      }
     },
     {
@@ -316,7 +316,7 @@
      "t": {
       "en": "Let $\\vec u=\\mat{u_1\\\\u_2}$, $\\vec v=\\mat{v_1\\\\v_2}$ be vectors, and let $\\alpha$ be a scalar.",
       "sha": "d598f791ab3c",
-      "zh": ""
+      "zh": "设 $\\vec u=\\mat{u_1\\\\u_2}$，$\\vec v=\\mat{v_1\\\\v_2}$ 为向量，$\\alpha$ 为标量。"
      }
     },
     {
@@ -324,7 +324,7 @@
      "t": {
       "en": "We first consider $\\mathcal S$. We need to verify that $\\mathcal S(\\vec u+\\vec v)=\\mathcal S(\\vec u)+\\mathcal S(\\vec v)$ and $\\mathcal S(\\alpha\\vec u)=\\alpha\\mathcal S(\\vec u)$.",
       "sha": "44b1fe9ab022",
-      "zh": ""
+      "zh": "我们先考虑 $\\mathcal S$。需要验证 $\\mathcal S(\\vec u+\\vec v)=\\mathcal S(\\vec u)+\\mathcal S(\\vec v)$ 与 $\\mathcal S(\\alpha\\vec u)=\\alpha\\mathcal S(\\vec u)$。"
      }
     },
     {
@@ -332,7 +332,7 @@
      "t": {
       "en": "Computing, we see",
       "sha": "62e4de9dd472",
-      "zh": ""
+      "zh": "计算可得"
      }
     },
     {
@@ -344,7 +344,7 @@
      "t": {
       "en": "and",
       "sha": "cffa50a32cb1",
-      "zh": ""
+      "zh": "以及"
      }
     },
     {
@@ -356,7 +356,7 @@
      "t": {
       "en": "and so $\\mathcal S$ satisfies all the properties of a linear transformation.",
       "sha": "458ca9b1831b",
-      "zh": ""
+      "zh": "所以 $\\mathcal S$ 满足线性变换的所有性质。"
      }
     },
     {
@@ -364,7 +364,7 @@
      "t": {
       "en": "Next we consider $\\mathcal T$. Notice that $\\mathcal T(\\vec u+\\vec v)=\\matc{u_1+v_1\\\\u_2+v_2+4}$ doesn't look like $\\mathcal T(\\vec u)+\\mathcal T(\\vec v)=\\matc{u_1+v_1\\\\u_2+v_2+8}$. Therefore, we will guess that $\\mathcal T$ is not linear and look for a counter example.",
       "sha": "3fa31b822229",
-      "zh": ""
+      "zh": "接下来考虑 $\\mathcal T$。注意 $\\mathcal T(\\vec u+\\vec v)=\\matc{u_1+v_1\\\\u_2+v_2+4}$ 看起来与 $\\mathcal T(\\vec u)+\\mathcal T(\\vec v)=\\matc{u_1+v_1\\\\u_2+v_2+8}$ 并不相同。因此，我们猜测 $\\mathcal T$ 不是线性的，并去找一个反例。"
      }
     },
     {
@@ -372,7 +372,7 @@
      "t": {
       "en": "Using $\\xhat=\\mat{1\\\\0}$ and $\\yhat=\\mat{0\\\\1}$, we see",
       "sha": "ea05870562ae",
-      "zh": ""
+      "zh": "取 $\\xhat=\\mat{1\\\\0}$ 与 $\\yhat=\\mat{0\\\\1}$，可得"
      }
     },
     {
@@ -384,7 +384,7 @@
      "t": {
       "en": "Since at least one required property of a linear transformation is violated, $\\mathcal T$ cannot be a linear transformation.",
       "sha": "213e1e796766",
-      "zh": ""
+      "zh": "由于线性变换所要求的性质至少有一条不成立，所以 $\\mathcal T$ 不可能是线性变换。"
      }
     }
    ]
@@ -394,7 +394,7 @@
    "t": {
     "en": "Function Notation vs. Linear Transformation Notation",
     "sha": "ee3ab622f29f",
-    "zh": ""
+    "zh": "函数记号与线性变换记号"
    }
   },
   {
@@ -402,7 +402,7 @@
    "t": {
     "en": "Linear transformations are just special types of functions. In calculus, it is traditional to use lower case letters for a function and parenthesis “(” and “)” around the input to the function.",
     "sha": "786d319f7f19",
-    "zh": ""
+    "zh": "线性变换只是一类特殊的函数。在微积分中，习惯用小写字母表示函数，并用括号“（”和“）”把函数的输入括起来。"
    }
   },
   {
@@ -414,7 +414,7 @@
    "t": {
     "en": "For (linear) transformations, it is traditional to use capital letters to describe the function/transformation and parenthesis around the input are optional.",
     "sha": "2852f51b80bd",
-    "zh": ""
+    "zh": "对（线性）变换来说，习惯用大写字母表示函数／变换，输入外面的括号可以省略。"
    }
   },
   {
@@ -426,7 +426,7 @@
    "t": {
     "en": "Since sets are also traditionally written using capital letters, sometimes a font variant is used to when writing the transformation or the set. For example, we might use a regular $X$ to denote a set and a calligraphic $\\mathcal T$ to describe a transformation.",
     "sha": "7b716746048a",
-    "zh": ""
+    "zh": "由于集合通常也用大写字母表示，有时会换用不同的字体来分别书写变换和集合。例如，我们可以用普通的 $X$ 表示集合，用花体的 $\\mathcal T$ 表示变换。"
    }
   },
   {
@@ -434,7 +434,7 @@
    "t": {
     "en": "Another difference you might not be used to is that, in linear algebra, we make a careful distinction between a function and its output. Let $f:\\R\\to\\R$ be a function. In calculus, you might consider the phrases “the function $f$” and “the function $f(x)$” to both make sense. In linear algebra, the first phrase is valid and the second is *not*. By writing $f(x)$, we are indicating “the output of the function $f$ when $x$ is input”. So, properly we should say “the *number* $f(x)$”.",
     "sha": "010c63926d99",
-    "zh": ""
+    "zh": "另一个你可能不太习惯的区别是：在线性代数中，我们会仔细区分函数和它的输出。设 $f:\\R\\to\\R$ 是一个函数。在微积分里，你可能觉得“函数 $f$”和“函数 $f(x)$”这两种说法都说得通。在线性代数中，前一种说法是对的，后一种则*不对*。写下 $f(x)$，表示的是“把 $x$ 输入函数 $f$ 时的输出”。所以严格地说，应该称之为“*数* $f(x)$”。"
    }
   },
   {
@@ -442,7 +442,7 @@
    "t": {
     "en": "This distinction might seem pedantic now, but by keeping our functions as functions and our numbers/vectors as numbers/vectors, we can avoid some major confusion in the future.",
     "sha": "63fda1650fa4",
-    "zh": ""
+    "zh": "这种区分现在看起来也许有些咬文嚼字，但只要始终把函数当作函数、把数／向量当作数／向量，就能避免日后的许多重大混淆。"
    }
   },
   {
@@ -450,7 +450,7 @@
    "t": {
     "en": "The “look” of a Linear Transformation",
     "sha": "9dbc25e0708e",
-    "zh": ""
+    "zh": "线性变换的“样子”"
    }
   },
   {
@@ -458,7 +458,7 @@
    "t": {
     "en": "Images under linear transformations have a certain look to them. Based just on the word *linear* you can probably guess which figure below represents the image of a grid under a linear transformation.",
     "sha": "feb85c7d4c16",
-    "zh": ""
+    "zh": "线性变换下的像有某种特定的样子。仅从“线性”这个词出发，你大概就能猜出下面哪幅图表示的是网格在线性变换下的像。"
    }
   },
   {
@@ -474,7 +474,7 @@
    "t": {
     "en": "Let's prove some basic facts about linear transformations.",
     "sha": "c72e517df2d7",
-    "zh": ""
+    "zh": "我们来证明线性变换的一些基本事实。"
    }
   },
   {
@@ -487,7 +487,7 @@
      "t": {
       "en": "If $T:\\R^n\\to\\R^m$ is a linear transformation, then $T(\\vec 0)=\\vec 0$.",
       "sha": "07a7c887a8b7",
-      "zh": ""
+      "zh": "如果 $T:\\R^n\\to\\R^m$ 是线性变换，那么 $T(\\vec 0)=\\vec 0$。"
      }
     }
    ]
@@ -501,7 +501,7 @@
      "t": {
       "en": "Suppose $T:\\R^n\\to\\R^m$ is a linear transformation and $\\vec v\\in \\R^n$. We know that $0\\vec v=\\vec 0$, so by linearity we have",
       "sha": "3fe37b396099",
-      "zh": ""
+      "zh": "设 $T:\\R^n\\to\\R^m$ 是线性变换，$\\vec v\\in \\R^n$。我们知道 $0\\vec v=\\vec 0$，所以由线性可得"
      }
     },
     {
@@ -520,7 +520,7 @@
      "t": {
       "en": "If $T:\\R^n\\to\\R^m$ is a linear transformation, then $T$ takes lines to lines (or points).",
       "sha": "2414c572dabb",
-      "zh": ""
+      "zh": "如果 $T:\\R^n\\to\\R^m$ 是线性变换，那么 $T$ 把直线变成直线（或一个点）。"
      }
     }
    ]
@@ -534,7 +534,7 @@
      "t": {
       "en": "Suppose $T:\\R^n\\to\\R^m$ is a linear transformation and let $\\ell\\subseteq\\R^n$ be the line given in vector form by $\\vec x=t\\vec d+\\vec p$. We want to prove that $T(\\ell)$, the image of $\\ell$ under the transformation $T$, is a line or a point.",
       "sha": "bca8550a5312",
-      "zh": ""
+      "zh": "设 $T:\\R^n\\to\\R^m$ 是线性变换，$\\ell\\subseteq\\R^n$ 是向量形式为 $\\vec x=t\\vec d+\\vec p$ 的直线。我们要证明 $T(\\ell)$，即 $\\ell$ 在变换 $T$ 下的像，是一条直线或一个点。"
      }
     },
     {
@@ -542,7 +542,7 @@
      "t": {
       "en": "By definition, every point in $\\ell$ takes the form $t\\vec d+\\vec p$ for some scalar $t$. Therefore, every point in $T(\\ell)$ takes the form $T(t\\vec d+\\vec p)$ for some scalar $t$. But, $T$ is a linear transformation, so",
       "sha": "5ab0835dc66a",
-      "zh": ""
+      "zh": "根据定义，$\\ell$ 中的每个点都形如 $t\\vec d+\\vec p$，其中 $t$ 为某个标量。因此 $T(\\ell)$ 中的每个点都形如 $T(t\\vec d+\\vec p)$，其中 $t$ 为某个标量。而 $T$ 是线性变换，所以"
      }
     },
     {
@@ -554,7 +554,7 @@
      "t": {
       "en": "If $T(\\vec d)\\neq \\vec 0$, then $\\vec x=tT(\\vec d)+T(\\vec p)$ describes a line in vector form and so $T(\\ell)$ is a line. If $T(\\vec d)=\\vec 0$, then $T(\\ell) = \\Set{t\\vec 0+T(\\vec p)\\given \\text{$t$ is a scalar}}=\\Set{T(\\vec p)}$ is a point.",
       "sha": "44cba9e96f57",
-      "zh": ""
+      "zh": "如果 $T(\\vec d)\\neq \\vec 0$，那么 $\\vec x=tT(\\vec d)+T(\\vec p)$ 是一条直线的向量形式，所以 $T(\\ell)$ 是一条直线。如果 $T(\\vec d)=\\vec 0$，那么 $T(\\ell) = \\Set{t\\vec 0+T(\\vec p)\\given \\text{$t$ is a scalar}}=\\Set{T(\\vec p)}$ 是一个点。"
      }
     }
    ]
@@ -569,7 +569,7 @@
      "t": {
       "en": "If $T:\\R^n\\to\\R^m$ is a linear transformation, then $T$ takes parallel lines to parallel lines (or points).",
       "sha": "cf855f2fb197",
-      "zh": ""
+      "zh": "如果 $T:\\R^n\\to\\R^m$ 是线性变换，那么 $T$ 把平行直线变成平行直线（或点）。"
      }
     }
    ]
@@ -583,7 +583,7 @@
      "t": {
       "en": "Suppose $T:\\R^n\\to\\R^m$ is a linear transformation and let $\\ell_1$ and $\\ell_2$ be parallel lines. Then, we may describe $\\ell_1$ in vector form as $\\vec x=t\\vec d+\\vec p_1$ and we may describe $\\ell_2$ in vector form as $\\vec x=t\\vec d+\\vec p_2$. Note that since the lines are parallel, the direction vectors are the same.",
       "sha": "0a1992bc62ee",
-      "zh": ""
+      "zh": "设 $T:\\R^n\\to\\R^m$ 是线性变换，$\\ell_1$ 与 $\\ell_2$ 是平行直线。那么可以把 $\\ell_1$ 的向量形式写成 $\\vec x=t\\vec d+\\vec p_1$，把 $\\ell_2$ 的向量形式写成 $\\vec x=t\\vec d+\\vec p_2$。注意，因为两条直线平行，它们的方向向量相同。"
      }
     },
     {
@@ -591,7 +591,7 @@
      "t": {
       "en": "Now, $T(\\ell_1)$ can be described in vector form by",
       "sha": "7f7085820d92",
-      "zh": ""
+      "zh": "于是 $T(\\ell_1)$ 的向量形式可以写成"
      }
     },
     {
@@ -603,7 +603,7 @@
      "t": {
       "en": "and $T(\\ell_2)$ can be described in vector form by",
       "sha": "e05acc55fab5",
-      "zh": ""
+      "zh": "而 $T(\\ell_2)$ 的向量形式可以写成"
      }
     },
     {
@@ -615,7 +615,7 @@
      "t": {
       "en": "Written this way and provided $T(\\ell_1)$ and $T(\\ell_2)$ are actually lines, we immediately see that $T(\\ell_1)$ and $T(\\ell_2)$ have the same direction vectors and hence are parallel.",
       "sha": "8b3f5314c57d",
-      "zh": ""
+      "zh": "这样写出来之后，只要 $T(\\ell_1)$ 与 $T(\\ell_2)$ 确实是直线，我们立刻就看到 $T(\\ell_1)$ 与 $T(\\ell_2)$ 的方向向量相同，因而它们平行。"
      }
     },
     {
@@ -623,7 +623,7 @@
      "t": {
       "en": "If $T(\\ell_1)$ is instead a point, then we must have $T(\\vec d)=\\vec 0$, and so $T(\\ell_2)$ must also be a point.",
       "sha": "0c8cb689e6a3",
-      "zh": ""
+      "zh": "如果 $T(\\ell_1)$ 是一个点，那么必有 $T(\\vec d)=\\vec 0$，所以 $T(\\ell_2)$ 也必然是一个点。"
      }
     }
    ]
@@ -638,7 +638,7 @@
      "t": {
       "en": "If $T:\\R^n\\to\\R^m$ is a linear transformation, then $T$ takes subspaces to subspaces.",
       "sha": "712a5552238a",
-      "zh": ""
+      "zh": "如果 $T:\\R^n\\to\\R^m$ 是线性变换，那么 $T$ 把子空间变成子空间。"
      }
     }
    ]
@@ -652,7 +652,7 @@
      "t": {
       "en": "Let $T:\\R^n\\to\\R^m$ be a linear transformation and let $V\\subseteq \\R^n$ be a subspace. We need to show that $T(V)$ satisfies the properties of a subspace.",
       "sha": "4a9bb307428f",
-      "zh": ""
+      "zh": "设 $T:\\R^n\\to\\R^m$ 是线性变换，$V\\subseteq \\R^n$ 是子空间。我们需要证明 $T(V)$ 满足子空间的各条性质。"
      }
     },
     {
@@ -660,7 +660,7 @@
      "t": {
       "en": "Since $V$ is non-empty, we know $T(V)$ is non-empty.",
       "sha": "ee4afe9876fb",
-      "zh": ""
+      "zh": "因为 $V$ 非空，所以 $T(V)$ 非空。"
      }
     },
     {
@@ -668,7 +668,7 @@
      "t": {
       "en": "Let $\\vec x,\\vec y\\in T(V)$. By definition, there are vectors $\\vec u,\\vec v\\in V$ so that",
       "sha": "6678c4ffbe8b",
-      "zh": ""
+      "zh": "设 $\\vec x,\\vec y\\in T(V)$。根据定义，存在向量 $\\vec u,\\vec v\\in V$ 使得"
      }
     },
     {
@@ -680,7 +680,7 @@
      "t": {
       "en": "Since $T$ is linear, we know",
       "sha": "265b6ccda55d",
-      "zh": ""
+      "zh": "因为 $T$ 是线性的，所以"
      }
     },
     {
@@ -692,7 +692,7 @@
      "t": {
       "en": "Because $V$ is a subspace, we know $\\vec u+\\vec v\\in V$ and so we conclude $\\vec x+\\vec y=T(\\vec u+\\vec v)\\in T(V)$.",
       "sha": "7fb8747f95f0",
-      "zh": ""
+      "zh": "因为 $V$ 是子空间，所以 $\\vec u+\\vec v\\in V$，从而 $\\vec x+\\vec y=T(\\vec u+\\vec v)\\in T(V)$。"
      }
     },
     {
@@ -700,7 +700,7 @@
      "t": {
       "en": "Similarly, for any scalar $\\alpha$ we have",
       "sha": "738f1ef7b34a",
-      "zh": ""
+      "zh": "类似地，对任意标量 $\\alpha$ 有"
      }
     },
     {
@@ -712,7 +712,7 @@
      "t": {
       "en": "Since $V$ is a subspace, $\\alpha\\vec u\\in V$ and so $\\alpha\\vec x=T(\\alpha\\vec u)\\in T(V)$.",
       "sha": "28dfa0ba913e",
-      "zh": ""
+      "zh": "因为 $V$ 是子空间，所以 $\\alpha\\vec u\\in V$，从而 $\\alpha\\vec x=T(\\alpha\\vec u)\\in T(V)$。"
      }
     }
    ]
@@ -722,7 +722,7 @@
    "t": {
     "en": "Linear Transformations and Proofs",
     "sha": "54f64f09e979",
-    "zh": ""
+    "zh": "线性变换与证明"
    }
   },
   {
@@ -730,7 +730,7 @@
    "t": {
     "en": "When proving things in math, you have all of logic at your disposal, and that freedom can be combined with creativity to show some truly amazing things. But, for better or for worse, proving whether or not a transformation is linear usually doesn't require substantial creativity.",
     "sha": "6ab77cd5cd39",
-    "zh": ""
+    "zh": "在数学中做证明时，整个逻辑体系都可以由你调用，把这种自由与创造力结合起来，可以证明一些真正令人惊叹的结论。但不管是好是坏，证明一个变换是不是线性的，通常并不需要多大的创造力。"
    }
   },
   {
@@ -738,7 +738,7 @@
    "t": {
     "en": "Let $T:\\R^n\\to\\R^n$ be defined by $T(\\vec v)=2\\vec v$. To show that $T$ is linear, we need to show that for *all* inputs $\\vec x$ and $\\vec y$ and for *all* scalars $\\alpha$ we have",
     "sha": "cfab97fc9147",
-    "zh": ""
+    "zh": "设 $T:\\R^n\\to\\R^n$ 由 $T(\\vec v)=2\\vec v$ 定义。要证明 $T$ 是线性的，我们需要证明：对*所有*输入 $\\vec x$ 与 $\\vec y$ 以及*所有*标量 $\\alpha$ 都有"
    }
   },
   {
@@ -750,7 +750,7 @@
    "t": {
     "en": "But, there are an infinite number of choices for $\\vec x$, $\\vec y$, and $\\alpha$. How can we argue about all of them at once?",
     "sha": "4ad5c8df8722",
-    "zh": ""
+    "zh": "但是 $\\vec x$、$\\vec y$ 和 $\\alpha$ 有无穷多种取法。我们怎样才能一次性地讨论所有这些情形呢？"
    }
   },
   {
@@ -758,7 +758,7 @@
    "t": {
     "en": "Consider the following proof that $T$ is linear.",
     "sha": "d22209a1f864",
-    "zh": ""
+    "zh": "来看下面这个 $T$ 是线性的证明。"
    }
   },
   {
@@ -770,7 +770,7 @@
      "t": {
       "en": "Let $\\vec x,\\vec y\\in \\R^n$ and let $\\alpha$ be a scalar. By applying the definition of $T$, we see",
       "sha": "cd00b21d6d5a",
-      "zh": ""
+      "zh": "设 $\\vec x,\\vec y\\in \\R^n$，$\\alpha$ 为标量。由 $T$ 的定义可得"
      }
     },
     {
@@ -782,7 +782,7 @@
      "t": {
       "en": "Similarly,",
       "sha": "cc4fb6a72656",
-      "zh": ""
+      "zh": "类似地，"
      }
     },
     {
@@ -794,7 +794,7 @@
      "t": {
       "en": "Since $T$ satisfies the two properties of a linear transformation, $T$ is a linear transformation.",
       "sha": "0bfd676f31a1",
-      "zh": ""
+      "zh": "因为 $T$ 满足线性变换的两条性质，所以 $T$ 是线性变换。"
      }
     }
    ]
@@ -804,7 +804,7 @@
    "t": {
     "en": "This proof starts out with “\\colormypinklet $\\vec x,\\vec y\\in \\R^n$ and let $\\alpha$ be a scalar”. In what follows, the only properties of $\\vec x$ and $\\vec y$ we use come from the fact that they're in $\\R^n$ (the domain of $T$) and the only fact about $\\alpha$ we use is that it's a scalar. Because of this, $\\vec x$, and $\\vec y$ are considered *arbitrary* vectors and $\\alpha$ is an *arbitrary* scalar. Put another way, the argument that followed would work for every single pair of vectors $\\vec x,\\vec y\\in \\R^n$ and for every scalar $\\alpha$. Thus, by fixing arbitrary vectors at the start of our proof, we are (i) able to argue about all vectors at once while (ii) having named vectors that we can actually use in equations.",
     "sha": "fa30d97177e6",
-    "zh": ""
+    "zh": "这个证明以“\\colormypinklet $\\vec x,\\vec y\\in \\R^n$ and let $\\alpha$ be a scalar”开头。接下来，我们对 $\\vec x$ 和 $\\vec y$ 用到的唯一性质，就是它们属于 $\\R^n$（$T$ 的定义域）；对 $\\alpha$ 用到的唯一事实，就是它是标量。正因如此，$\\vec x$ 和 $\\vec y$ 被看作*任意*向量，$\\alpha$ 被看作*任意*标量。换个说法，后面的论证对每一对向量 $\\vec x,\\vec y\\in \\R^n$ 和每一个标量 $\\alpha$ 都成立。因此，在证明一开始就固定任意的向量，我们既（i）能够一次性地讨论所有向量，又（ii）有了可以真正代入等式的、起了名字的向量。"
    }
   },
   {
@@ -813,7 +813,7 @@
    "title": {
     "en": "Takeaway",
     "sha": "e59a7ab66086",
-    "zh": ""
+    "zh": "要点"
    },
    "blocks": [
     {
@@ -821,7 +821,7 @@
      "t": {
       "en": "Starting a linearity proof with “\\emphlet $\\vec x,\\vec y\\in \\R^n$ and let $\\alpha$ be a scalar” allows you to argue about all vectors and scalars simultaneously.",
       "sha": "827c89968359",
-      "zh": ""
+      "zh": "用“\\emphlet $\\vec x,\\vec y\\in \\R^n$ and let $\\alpha$ be a scalar”开始线性性的证明，可以让你同时讨论所有的向量和标量。"
      }
     }
    ]
@@ -831,7 +831,7 @@
    "t": {
     "en": "The proof given above is very typical, and almost every proof of the linearity of a function $T:\\R^n\\to\\R^m$ will look something like",
     "sha": "37029cdcb397",
-    "zh": ""
+    "zh": "上面给出的证明非常典型，几乎每个关于函数 $T:\\R^n\\to\\R^m$ 线性性的证明看起来都与下面类似"
    }
   },
   {
@@ -843,7 +843,7 @@
      "t": {
       "en": "Let $\\vec x,\\vec y\\in \\R^n$ and let $\\alpha$ be a scalar. By applying the definition of $T$, we see",
       "sha": "cd00b21d6d5a",
-      "zh": ""
+      "zh": "设 $\\vec x,\\vec y\\in \\R^n$，$\\alpha$ 为标量。由 $T$ 的定义可得"
      }
     },
     {
@@ -855,7 +855,7 @@
      "t": {
       "en": "Similarly,",
       "sha": "cc4fb6a72656",
-      "zh": ""
+      "zh": "类似地，"
      }
     },
     {
@@ -867,7 +867,7 @@
      "t": {
       "en": "Since $T$ satisfies the two properties of a linear transformation, $T$ is a linear transformation.",
       "sha": "0bfd676f31a1",
-      "zh": ""
+      "zh": "因为 $T$ 满足线性变换的两条性质，所以 $T$ 是线性变换。"
      }
     }
    ]
@@ -877,7 +877,7 @@
    "t": {
     "en": "This isn't to say that proving whether or not a transformation is linear is *easy*, but all the cleverness and insight required appears in the “\\colormypinkapplication(s) of the definition” parts.",
     "sha": "4c970387f76e",
-    "zh": ""
+    "zh": "这并不是说证明一个变换是不是线性的就*容易*，但所需要的全部巧思和洞察，都出现在“\\colormypinkapplication(s) of the definition”那几部分里。"
    }
   },
   {
@@ -885,7 +885,7 @@
    "t": {
     "en": "What about showing a transformation is *not* linear? Here we don't need to show something true for all vectors and all scalars. We only need to show something is false for *one* pair of vectors or *one* pair of a vector and a scalar.",
     "sha": "bc730d7d0409",
-    "zh": ""
+    "zh": "那么，要证明一个变换*不是*线性的呢？这时我们不需要证明某个结论对所有向量、所有标量都成立，只需要说明某个结论对*一对*向量，或*一组*向量与标量不成立就够了。"
    }
   },
   {
@@ -893,7 +893,7 @@
    "t": {
     "en": "When proving a transformation is not linear, we can pick one of the properties of linearity (distribution over vector addition or distribution over scalar multiplication) and a *single example* where that property fails\\footnote It's often tempting to argue that the properties of linearity fail for all inputs, but this is a dangerous path! For instance, if $T(\\vec 0)=\\vec 0$, then $T(\\vec a)=T(\\vec a+\\vec 0)=T(\\vec a)+T(\\vec 0)=T(\\vec a)$ *regardless* of whether $T$ is linear or not..",
     "sha": "dbd1d227ae60",
-    "zh": ""
+    "zh": "证明一个变换不是线性的时候，我们可以选取线性的某一条性质（对向量加法的分配律或对数乘的分配律），再给出这条性质不成立的*一个例子*\\footnote It's often tempting to argue that the properties of linearity fail for all inputs, but this is a dangerous path! For instance, if $T(\\vec 0)=\\vec 0$, then $T(\\vec a)=T(\\vec a+\\vec 0)=T(\\vec a)+T(\\vec 0)=T(\\vec a)$ *regardless* of whether $T$ is linear or not.。"
    }
   },
   {
@@ -906,7 +906,7 @@
      "t": {
       "en": "Let $T:\\R^n\\to\\R^n$ be defined by $T(\\vec x)=\\vec x+\\xhat$. Show that $T$ is *not* linear.",
       "sha": "34a069a1aa8a",
-      "zh": ""
+      "zh": "设 $T:\\R^n\\to\\R^n$ 由 $T(\\vec x)=\\vec x+\\xhat$ 定义。证明 $T$ *不是*线性的。"
      }
     },
     {
@@ -918,7 +918,7 @@
        "t": {
         "en": "We will show that $T$ does not distribute with respect to scalar multiplication.",
         "sha": "5ca2ded57f81",
-        "zh": ""
+        "zh": "我们来证明 $T$ 对数乘不满足分配律。"
        }
       },
       {
@@ -926,7 +926,7 @@
        "t": {
         "en": "Observe that",
         "sha": "9c5a5933ea1a",
-        "zh": ""
+        "zh": "注意到"
        }
       },
       {
@@ -938,7 +938,7 @@
        "t": {
         "en": "Therefore, $T$ cannot be a linear transformation.",
         "sha": "c83fe4bd20b3",
-        "zh": ""
+        "zh": "因此，$T$ 不可能是线性变换。"
        }
       }
      ]
@@ -950,7 +950,7 @@
    "t": {
     "en": "Matrix Transformations",
     "sha": "357de6e9b634",
-    "zh": ""
+    "zh": "矩阵变换"
    }
   },
   {
@@ -958,7 +958,7 @@
    "t": {
     "en": "We already know two ways to interpret matrix multiplication—linear combinations of the columns and dot products with the rows—and we're about to have a third.",
     "sha": "6e2fb3fe0f4d",
-    "zh": ""
+    "zh": "我们已经知道理解矩阵乘法的两种方式——列的线性组合，以及与各行做点积——现在要来讲第三种了。"
    }
   },
   {
@@ -966,7 +966,7 @@
    "t": {
     "en": "Let $M=\\mat{1&2\\\\-1&1}$. For a vector $\\vec v\\in \\R^2$, $M\\vec v$ is another vector in $\\R^2$. In this way, we can think of multiplication by $M$ as a transformation on $\\R^2$. Define",
     "sha": "edb9314d8535",
-    "zh": ""
+    "zh": "设 $M=\\mat{1&2\\\\-1&1}$。对向量 $\\vec v\\in \\R^2$，$M\\vec v$ 是 $\\R^2$ 中的另一个向量。这样，我们可以把乘以 $M$ 看作 $\\R^2$ 上的一个变换。定义"
    }
   },
   {
@@ -978,7 +978,7 @@
    "t": {
     "en": "Because $T$ is defined by a matrix, we call $T$ a *matrix transformation*. It turns out all matrix transformations are linear transformations and most linear transformations are matrix transformations 〔注： If you believe in the axiom of choice and you allow infinitely sized matrices, every linear transformation can be expressed as a matrix transformation.〕.",
     "sha": "a4c4a117bb95",
-    "zh": ""
+    "zh": "因为 $T$ 是由矩阵定义的，我们称 $T$ 为*矩阵变换*。事实证明，所有矩阵变换都是线性变换，而大多数线性变换都是矩阵变换 〔注：如果你承认选择公理，并且允许无穷大的矩阵，那么每个线性变换都可以表示成矩阵变换。〕。"
    }
   },
   {
@@ -986,7 +986,7 @@
    "t": {
     "en": "When it comes to specifying linear transformations, matrices are heroes, providing a compact notation (just like they did for systems of linear equations). For example, we could say, “The linear transformation $T:\\R^2\\to\\R^2$ that doubles the $x$-coordinate and triples the $y$-coordinate”, or we could say, “The matrix transformation given by $\\mat{2&0\\\\0&3}$”.",
     "sha": "1fd2c5948be8",
-    "zh": ""
+    "zh": "在描述线性变换时，矩阵堪称英雄，提供了一种紧凑的记号（就像它们对线性方程组所做的那样）。例如，我们可以说“把 $x$ 坐标变为两倍、把 $y$ 坐标变为三倍的线性变换 $T:\\R^2\\to\\R^2$”，也可以说“由 $\\mat{2&0\\\\0&3}$ 给出的矩阵变换”。"
    }
   },
   {
@@ -994,7 +994,7 @@
    "t": {
     "en": "When talking about matrices and linear transformations, we must keep in mind that they are not the same thing. A matrix is a box of numbers and has no meaning until we give it meaning. A linear transformation is a function that inputs vectors and outputs vectors. We can *specify* a linear transformation using a matrix, but a matrix by itself is *not* a linear transformation\\footnote Consider the function defined by $f(x)=2x$. You would never say that the function $f$ is $2$!.",
     "sha": "e17dc9c681e4",
-    "zh": ""
+    "zh": "谈论矩阵和线性变换时，我们必须记住它们不是一回事。矩阵是一个数字方框，在我们赋予它意义之前没有任何含义。线性变换是一个输入向量、输出向量的函数。我们可以用矩阵来*描述*一个线性变换，但矩阵本身*不是*线性变换\\footnote Consider the function defined by $f(x)=2x$. You would never say that the function $f$ is $2$!。"
    }
   },
   {
@@ -1003,7 +1003,7 @@
    "title": {
     "en": "Takeaway",
     "sha": "e59a7ab66086",
-    "zh": ""
+    "zh": "要点"
    },
    "blocks": [
     {
@@ -1011,7 +1011,7 @@
      "t": {
       "en": "Matrices and linear transformations are closely related, but they aren't the same thing.",
       "sha": "fbffbc02eb2e",
-      "zh": ""
+      "zh": "矩阵与线性变换密切相关，但它们不是一回事。"
      }
     }
    ]
@@ -1021,7 +1021,7 @@
    "t": {
     "en": "So what are some correct ways to specify a linear transformation using a matrix? For a matrix $M$, the following are correct.",
     "sha": "760e2a47434e",
-    "zh": ""
+    "zh": "那么，用矩阵来描述线性变换，有哪些正确的说法呢？对矩阵 $M$，下面这些说法都是正确的。"
    }
   },
   {
@@ -1034,7 +1034,7 @@
       "t": {
        "en": "The transformation $T$ defined by $T(\\vec x)=M\\vec x$.",
        "sha": "ff79dd158fb0",
-       "zh": ""
+       "zh": "由 $T(\\vec x)=M\\vec x$ 定义的变换 $T$。"
       }
      }
     ],
@@ -1044,7 +1044,7 @@
       "t": {
        "en": "The transformation given by multiplication by $M$.",
        "sha": "a4476f187836",
-       "zh": ""
+       "zh": "乘以 $M$ 所给出的变换。"
       }
      }
     ],
@@ -1054,7 +1054,7 @@
       "t": {
        "en": "The transformation induced by $M$.",
        "sha": "c8680de2919e",
-       "zh": ""
+       "zh": "由 $M$ 诱导的变换。"
       }
      }
     ],
@@ -1064,7 +1064,7 @@
       "t": {
        "en": "The matrix transformation given by $M$.",
        "sha": "5c00f574451c",
-       "zh": ""
+       "zh": "由 $M$ 给出的矩阵变换。"
       }
      }
     ],
@@ -1074,7 +1074,7 @@
       "t": {
        "en": "The linear transformation whose matrix is $M$.",
        "sha": "7fc11d1311cb",
-       "zh": ""
+       "zh": "矩阵为 $M$ 的线性变换。"
       }
      }
     ]
@@ -1085,7 +1085,7 @@
    "t": {
     "en": "Finding a Matrix for a Linear Transformation",
     "sha": "a045feccecea",
-    "zh": ""
+    "zh": "求线性变换的矩阵"
    }
   },
   {
@@ -1093,7 +1093,7 @@
    "t": {
     "en": "Every linear transformation from $\\R^n$ to $\\R^m$ has a matrix, and we can use basic algebra to find an appropriate matrix.",
     "sha": "abfc9695515d",
-    "zh": ""
+    "zh": "从 $\\R^n$ 到 $\\R^m$ 的每个线性变换都有矩阵，而且用基本的代数运算就能求出一个合适的矩阵。"
    }
   },
   {
@@ -1101,7 +1101,7 @@
    "t": {
     "en": "Let $T:\\R^n\\to\\R^m$ be a linear transformation. Since $T$ inputs vectors with $n$ coordinates and outputs vectors with $m$ coordinates, we know any matrix for $T$ must be $m\\times n$. The process of finding a matrix for $T$ can now be summarized as follows: (i) create an $m\\times n$ matrix of variables, (ii) use known input-output pairs for $T$ to set up a system of equations involving the unknown variables, (iii) solve for the variables.",
     "sha": "ce06b1ed409b",
-    "zh": ""
+    "zh": "设 $T:\\R^n\\to\\R^m$ 是线性变换。因为 $T$ 的输入是有 $n$ 个坐标的向量、输出是有 $m$ 个坐标的向量，所以 $T$ 的任何矩阵一定是 $m\\times n$ 的。求 $T$ 的矩阵的过程可以概括为：（i）写出一个由变量组成的 $m\\times n$ 矩阵；（ii）利用 $T$ 已知的输入—输出对，列出关于未知变量的方程组；（iii）解出这些变量。"
    }
   },
   {
@@ -1114,7 +1114,7 @@
      "t": {
       "en": "Let $\\mathcal T:\\R^2\\to\\R^2$ be defined by $\\mathcal T\\mat{x\\\\y}=\\matc{2x+y\\\\x}$. Find a matrix, $M$, for $\\mathcal T$.",
       "sha": "6a118909c417",
-      "zh": ""
+      "zh": "设 $\\mathcal T:\\R^2\\to\\R^2$ 由 $\\mathcal T\\mat{x\\\\y}=\\matc{2x+y\\\\x}$ 定义。求 $\\mathcal T$ 的一个矩阵 $M$。"
      }
     },
     {
@@ -1122,7 +1122,7 @@
      "t": {
       "en": "Because $\\mathcal T$ is a transformation for $\\R^2\\to\\R^2$, $M$ will be a $2\\times 2$ matrix. Let",
       "sha": "5e4a327c06f0",
-      "zh": ""
+      "zh": "因为 $\\mathcal T$ 是 $\\R^2\\to\\R^2$ 的变换，所以 $M$ 是 $2\\times 2$ 矩阵。设"
      }
     },
     {
@@ -1134,7 +1134,7 @@
      "t": {
       "en": "We now need to use input-output pairs to “calibrate” $M$. We know",
       "sha": "020920f52495",
-      "zh": ""
+      "zh": "现在需要用输入—输出对来“校准” $M$。我们知道"
      }
     },
     {
@@ -1146,7 +1146,7 @@
      "t": {
       "en": "Since $M$ is a matrix for $\\mathcal T$, we know $\\mathcal T\\vec x=M\\vec x$ for all $\\vec x$, and so",
       "sha": "7fb96b8b0d67",
-      "zh": ""
+      "zh": "因为 $M$ 是 $\\mathcal T$ 的矩阵，所以对所有 $\\vec x$ 都有 $\\mathcal T\\vec x=M\\vec x$，于是"
      }
     },
     {
@@ -1158,7 +1158,7 @@
      "t": {
       "en": "and",
       "sha": "cffa50a32cb1",
-      "zh": ""
+      "zh": "以及"
      }
     },
     {
@@ -1170,7 +1170,7 @@
      "t": {
       "en": "This gives us the system of equations",
       "sha": "99bf72231f57",
-      "zh": ""
+      "zh": "这给出方程组"
      }
     },
     {
@@ -1182,7 +1182,7 @@
      "t": {
       "en": "and solving this system tells us",
       "sha": "47a5f2f7769b",
-      "zh": ""
+      "zh": "解这个方程组可得"
      }
     },
     {
@@ -1201,7 +1201,7 @@
      "t": {
       "en": "For each transformation listed below, prove whether or not it is a linear transformation.",
       "sha": "34affa4c3493",
-      "zh": ""
+      "zh": "对下面列出的每个变换，证明它是不是线性变换。"
      }
     },
     {
@@ -1214,7 +1214,7 @@
         "t": {
          "en": "$\\mathcal{A}:\\R^{2}\\to\\R^{2}$ defined by $\\mathcal{A}\\mat{x\\\\y}=\\mat{-x\\\\y}$.",
          "sha": "57db1b2aa1a9",
-         "zh": ""
+         "zh": "$\\mathcal{A}:\\R^{2}\\to\\R^{2}$ 由 $\\mathcal{A}\\mat{x\\\\y}=\\mat{-x\\\\y}$ 定义。"
         }
        }
       ],
@@ -1224,7 +1224,7 @@
         "t": {
          "en": "$\\mathcal{B}:\\R^{2}\\to\\R^{2}$ defined by $\\mathcal{B}\\mat{x\\\\y}=\\matc{-x-1\\\\y}$.",
          "sha": "8c1cd994b221",
-         "zh": ""
+         "zh": "$\\mathcal{B}:\\R^{2}\\to\\R^{2}$ 由 $\\mathcal{B}\\mat{x\\\\y}=\\matc{-x-1\\\\y}$ 定义。"
         }
        }
       ],
@@ -1234,7 +1234,7 @@
         "t": {
          "en": "$\\Ident:\\R^{2}\\to\\R^{2}$, the function that leaves its input unchanged.",
          "sha": "b0cde5c04b79",
-         "zh": ""
+         "zh": "$\\Ident:\\R^{2}\\to\\R^{2}$，保持输入不变的函数。"
         }
        }
       ],
@@ -1244,7 +1244,7 @@
         "t": {
          "en": "$\\mathcal{C}:\\R^{2}\\to\\R^{2}$, where $\\mathcal{C}$ sends all vectors above the $x$-axis to $\\vec 0$ and all vectors on or below the $x$-axis to $-\\yhat$.",
          "sha": "9517123c3466",
-         "zh": ""
+         "zh": "$\\mathcal{C}:\\R^{2}\\to\\R^{2}$，其中 $\\mathcal{C}$ 把 $x$ 轴上方的所有向量变为 $\\vec 0$，把 $x$ 轴上及轴下方的所有向量变为 $-\\yhat$。"
         }
        }
       ]
@@ -1262,7 +1262,7 @@
         "t": {
          "en": "Yes. $\\mathcal{A}$ is a linear transformation. Let $\\vec{u}= \\mat{u_1\\\\u_2}$ and $\\vec{v}= \\mat{v_1 \\\\ v_2}$ be two vectors and $\\alpha$ be a scalar. $\\mathcal{A}(\\vec{u}+ \\vec{v}) = \\mathcal{A}\\mat{u_1 + v_1 \\\\ u_2 + v_2}= \\mat {-u_1 - v_1 \\\\ u_2 + v_2 }= \\mat{-u_1 \\\\ u_2 }+ \\mat { - v_1 \\\\ v_2 }= \\mathcal{A}\\mat{u_1\\\\u_2}+ \\mathcal{A}\\mat {v_1 \\\\ v_2}= \\mathcal{A}(\\vec{u}) +\\mathcal{A}(\\vec{v})$ and $\\mathcal{A}(\\alpha \\vec{u}) = \\mathcal{A}\\mat {\\alpha u_1 \\\\ \\alpha u_2}= \\mat { - \\alpha u_1 \\\\ \\alpha u_2}= \\alpha \\mat{ - u_1 \\\\u_2}= \\alpha \\mathcal{A}\\mat{ u_1 \\\\u_2}= \\alpha \\mathcal{A}(\\vec {u})$ So $\\mathcal{A}$ satisfies all the properties of a linear transformation.",
          "sha": "ec968d638c67",
-         "zh": ""
+         "zh": "是。$\\mathcal{A}$ 是线性变换。设 $\\vec{u}= \\mat{u_1\\\\u_2}$ 与 $\\vec{v}= \\mat{v_1 \\\\ v_2}$ 是两个向量，$\\alpha$ 是标量。$\\mathcal{A}(\\vec{u}+ \\vec{v}) = \\mathcal{A}\\mat{u_1 + v_1 \\\\ u_2 + v_2}= \\mat {-u_1 - v_1 \\\\ u_2 + v_2 }= \\mat{-u_1 \\\\ u_2 }+ \\mat { - v_1 \\\\ v_2 }= \\mathcal{A}\\mat{u_1\\\\u_2}+ \\mathcal{A}\\mat {v_1 \\\\ v_2}= \\mathcal{A}(\\vec{u}) +\\mathcal{A}(\\vec{v})$ 以及 $\\mathcal{A}(\\alpha \\vec{u}) = \\mathcal{A}\\mat {\\alpha u_1 \\\\ \\alpha u_2}= \\mat { - \\alpha u_1 \\\\ \\alpha u_2}= \\alpha \\mat{ - u_1 \\\\u_2}= \\alpha \\mathcal{A}\\mat{ u_1 \\\\u_2}= \\alpha \\mathcal{A}(\\vec {u})$ 所以 $\\mathcal{A}$ 满足线性变换的所有性质。"
         }
        }
       ],
@@ -1272,7 +1272,7 @@
         "t": {
          "en": "No. $\\mathcal{B}\\mat{0\\\\0}= \\mat{-1\\\\0}\\neq \\mat{0\\\\0}$",
          "sha": "9b93830ba592",
-         "zh": ""
+         "zh": "不是。$\\mathcal{B}\\mat{0\\\\0}= \\mat{-1\\\\0}\\neq \\mat{0\\\\0}$"
         }
        }
       ],
@@ -1282,7 +1282,7 @@
         "t": {
          "en": "Yes. Let $\\vec{u}= \\mat{u_1\\\\u_2}$ and $\\vec{v}= \\mat {v_1 \\\\ v_2}$ be two vectors and $\\alpha$ be a scalar. $\\mathbf{id}(\\vec{u}+\\vec{v}) = \\mathbf{id}\\mat {u_1 + v_1 \\\\ u_2 + v_2}= \\mat{u_1 + v_1 \\\\ u_2 + v_2 }= \\mat{u_1 \\\\ u_2 }+ \\mat{ v_1 \\\\ v_2 }= \\mathbf{id}\\mat {u_1\\\\u_2}+ \\mathbf{id}\\mat{v_1 \\\\ v_2}= \\mathbf{id}(\\vec{u} ) +\\mathbf{id}(\\vec{v})$ and $\\mathbf{id}(\\alpha \\vec{u}) =\\mathbf{id}\\mat {\\alpha u_1 \\\\ \\alpha u_2}= \\mat{ \\alpha u_1 \\\\ \\alpha u_2}= \\alpha \\mat{ u_1 \\\\u_2}= \\alpha \\; \\mathbf{id}\\mat { u_1 \\\\u_2}= \\alpha \\; \\mathbf{id}(\\vec{u})$ So $\\mathbf{id}$ satisfies all the properties of a linear transformation.",
          "sha": "ddcdf8ba3dd6",
-         "zh": ""
+         "zh": "是。设 $\\vec{u}= \\mat{u_1\\\\u_2}$ 与 $\\vec{v}= \\mat {v_1 \\\\ v_2}$ 是两个向量，$\\alpha$ 是标量。$\\mathbf{id}(\\vec{u}+\\vec{v}) = \\mathbf{id}\\mat {u_1 + v_1 \\\\ u_2 + v_2}= \\mat{u_1 + v_1 \\\\ u_2 + v_2 }= \\mat{u_1 \\\\ u_2 }+ \\mat{ v_1 \\\\ v_2 }= \\mathbf{id}\\mat {u_1\\\\u_2}+ \\mathbf{id}\\mat{v_1 \\\\ v_2}= \\mathbf{id}(\\vec{u} ) +\\mathbf{id}(\\vec{v})$ 以及 $\\mathbf{id}(\\alpha \\vec{u}) =\\mathbf{id}\\mat {\\alpha u_1 \\\\ \\alpha u_2}= \\mat{ \\alpha u_1 \\\\ \\alpha u_2}= \\alpha \\mat{ u_1 \\\\u_2}= \\alpha \\; \\mathbf{id}\\mat { u_1 \\\\u_2}= \\alpha \\; \\mathbf{id}(\\vec{u})$ 所以 $\\mathbf{id}$ 满足线性变换的所有性质。"
         }
        }
       ],
@@ -1292,7 +1292,7 @@
         "t": {
          "en": "No. As $\\vec{0}$ is on the $x$-axis, $\\mathcal{C}(\\vec{0}) = - \\vec{e}_{2}\\neq \\vec{0}$.",
          "sha": "1735728e1113",
-         "zh": ""
+         "zh": "不是。因为 $\\vec{0}$ 在 $x$ 轴上，所以 $\\mathcal{C}(\\vec{0}) = - \\vec{e}_{2}\\neq \\vec{0}$。"
         }
        }
       ]
@@ -1316,7 +1316,7 @@
      "t": {
       "en": "Draw the image of the unit circle under each transformation listed in 〔引用〕.",
       "sha": "568c6ccd2b31",
-      "zh": ""
+      "zh": "画出〔引用〕中列出的每个变换下单位圆的像。"
      }
     }
    ],
@@ -1331,7 +1331,7 @@
         "t": {
          "en": "Notice $\\mathcal{A}$ is just reflection about $y$-axis. If you reflect all points on the circle about the $y$-axis you get back the unit circle.",
          "sha": "a12620e13bd6",
-         "zh": ""
+         "zh": "注意 $\\mathcal{A}$ 就是关于 $y$ 轴的反射。把圆上所有的点关于 $y$ 轴反射，得到的仍是单位圆。"
         }
        }
       ],
@@ -1341,7 +1341,7 @@
         "t": {
          "en": "$\\mathcal{B}\\mat{x\\\\y}= \\matc{-x-1\\\\y}= \\mat{-x\\\\y}+ \\mat {-1\\\\0}$. So the transformation $\\mathcal{B}$ reflects over the $y$-axis and then translates. We already know the first operation keeps the circle as it is. So the final image is just a translated circle, that is unit circle with center at (-1,0).",
          "sha": "b7519465048d",
-         "zh": ""
+         "zh": "$\\mathcal{B}\\mat{x\\\\y}= \\matc{-x-1\\\\y}= \\mat{-x\\\\y}+ \\mat {-1\\\\0}$。所以变换 $\\mathcal{B}$ 先关于 $y$ 轴反射，再做平移。我们已经知道第一步操作不改变这个圆，所以最终的像就是一个平移后的圆，也就是圆心在 (-1,0) 的单位圆。"
         }
        }
       ],
@@ -1351,7 +1351,7 @@
         "t": {
          "en": "$\\Ident$ leaves all points unchanged. So the image of the unit circle under $\\Ident$ is still the unit circle.",
          "sha": "fa5009c034e8",
-         "zh": ""
+         "zh": "$\\Ident$ 保持所有点不变。所以单位圆在 $\\Ident$ 下的像仍是单位圆。"
         }
        }
       ],
@@ -1361,7 +1361,7 @@
         "t": {
          "en": "The unit circle under $\\mathcal{C}$ is the set $\\Set{(0,0), (0,-1)}$.",
          "sha": "2fc6e8df8722",
-         "zh": ""
+         "zh": "单位圆在 $\\mathcal{C}$ 下的像是集合 $\\Set{(0,0), (0,-1)}$。"
         }
        }
       ]
@@ -1385,7 +1385,7 @@
      "t": {
       "en": "Let $M=\\mat{1&-2&3\\\\-4&5&-6}$ and let $T_{M}$ be the corresponding matrix transformation.",
       "sha": "a46db7170096",
-      "zh": ""
+      "zh": "设 $M=\\mat{1&-2&3\\\\-4&5&-6}$，$T_{M}$ 是对应的矩阵变换。"
      }
     },
     {
@@ -1398,7 +1398,7 @@
         "t": {
          "en": "Determine the domain and codomain of $T_{M}$.",
          "sha": "c2ef4f3cc090",
-         "zh": ""
+         "zh": "确定 $T_{M}$ 的定义域和陪域。"
         }
        }
       ],
@@ -1408,7 +1408,7 @@
         "t": {
          "en": "Calculate $T_{M}\\left(\\mat{2\\\\-1\\\\1}\\right)$.",
          "sha": "9fe59bbdb6a3",
-         "zh": ""
+         "zh": "计算 $T_{M}\\left(\\mat{2\\\\-1\\\\1}\\right)$。"
         }
        }
       ],
@@ -1418,7 +1418,7 @@
         "t": {
          "en": "Find the image of the standard basis vectors of the domain under $T_{M}$.",
          "sha": "cd9742cb4453",
-         "zh": ""
+         "zh": "求定义域中的标准基向量在 $T_{M}$ 下的像。"
         }
        }
       ]
@@ -1436,7 +1436,7 @@
         "t": {
          "en": "Recall that an $m \\times n$ matrix represents a transformation from $\\R^{n}\\rightarrow \\R^{m}$. The given matrix $M$ is $2 \\times 3$, so $T_{M}: \\R^{3}\\rightarrow \\R^{2}$. Thus the domain of $T_{M}$ is $\\R^{3}$ and codomain is $\\R^{2}.$",
          "sha": "9fd160c5fad9",
-         "zh": ""
+         "zh": "回忆一下，$m \\times n$ 矩阵表示从 $\\R^{n}\\rightarrow \\R^{m}$ 的变换。给定的矩阵 $M$ 是 $2 \\times 3$ 的，所以 $T_{M}: \\R^{3}\\rightarrow \\R^{2}$。因此 $T_{M}$ 的定义域是 $\\R^{3}$，陪域是 $\\R^{2}.$"
         }
        }
       ],
@@ -1446,7 +1446,7 @@
         "t": {
          "en": "$T_{M}\\left( \\mat{2\\\\-1\\\\1}\\right) = \\mat {1 & -2 & 3 \\\\ -4 & 5 & -6}\\mat{2\\\\-1\\\\1}= \\mat{7\\\\ -19}$",
          "sha": "8d1e2d122350",
-         "zh": ""
+         "zh": "$T_{M}\\left( \\mat{2\\\\-1\\\\1}\\right) = \\mat {1 & -2 & 3 \\\\ -4 & 5 & -6}\\mat{2\\\\-1\\\\1}= \\mat{7\\\\ -19}$"
         }
        }
       ],
@@ -1456,7 +1456,7 @@
         "t": {
          "en": "$T_{M}(\\vec{e}_{1}) = \\mat{1\\\\-4}$, $\\;\\;\\; T_{M}(\\vec{e} _{2}) = \\mat{-2 \\\\ 5}$, $\\;\\;\\; T_{M}(\\vec{e}_{3}) = \\mat{3\\\\-6}$",
          "sha": "fcf2e241a3f4",
-         "zh": ""
+         "zh": "$T_{M}(\\vec{e}_{1}) = \\mat{1\\\\-4}$, $\\;\\;\\; T_{M}(\\vec{e} _{2}) = \\mat{-2 \\\\ 5}$, $\\;\\;\\; T_{M}(\\vec{e}_{3}) = \\mat{3\\\\-6}$"
         }
        }
       ]
@@ -1480,7 +1480,7 @@
      "t": {
       "en": "Find a matrix for each transformation below, or explain why no such matrix exists.",
       "sha": "3ccb10b21ed2",
-      "zh": ""
+      "zh": "对下面的每个变换，求出它的矩阵，或者说明为什么这样的矩阵不存在。"
      }
     },
     {
@@ -1493,7 +1493,7 @@
         "t": {
          "en": "$\\mathcal{S}:\\R^{2}\\to\\R^{2}$, where $\\mathcal{S}$ is the transformation that doubles every vector.",
          "sha": "3b58fc2584aa",
-         "zh": ""
+         "zh": "$\\mathcal{S}:\\R^{2}\\to\\R^{2}$，其中 $\\mathcal{S}$ 是把每个向量变为两倍的变换。"
         }
        }
       ],
@@ -1503,7 +1503,7 @@
         "t": {
          "en": "$\\mathcal{R}:\\R^{2}\\to\\R^{2}$, where $\\mathcal{R}$ is rotation clockwise by $135^{\\circ}$.",
          "sha": "25f99bb504da",
-         "zh": ""
+         "zh": "$\\mathcal{R}:\\R^{2}\\to\\R^{2}$，其中 $\\mathcal{R}$ 是顺时针旋转 $135^{\\circ}$。"
         }
        }
       ],
@@ -1513,7 +1513,7 @@
         "t": {
          "en": "$\\mathcal{T}:\\R^{2}\\to\\R^{2}$, where $\\mathcal{T}$ translates every vector by $3\\xhat$.",
          "sha": "60eb88e35b2f",
-         "zh": ""
+         "zh": "$\\mathcal{T}:\\R^{2}\\to\\R^{2}$，其中 $\\mathcal{T}$ 把每个向量平移 $3\\xhat$。"
         }
        }
       ],
@@ -1523,7 +1523,7 @@
         "t": {
          "en": "$\\mathcal{P}:\\R^{2}\\to\\R^{2}$, where $\\mathcal{P}$ is projection onto the $y$-axis.",
          "sha": "9e384ed7b12d",
-         "zh": ""
+         "zh": "$\\mathcal{P}:\\R^{2}\\to\\R^{2}$，其中 $\\mathcal{P}$ 是向 $y$ 轴的投影。"
         }
        }
       ],
@@ -1533,7 +1533,7 @@
         "t": {
          "en": "$\\mathcal{F}:\\R^{2}\\to\\R^{2}$, where $\\mathcal{F}$ is reflection over the line $y=x$.",
          "sha": "849c38d8805b",
-         "zh": ""
+         "zh": "$\\mathcal{F}:\\R^{2}\\to\\R^{2}$，其中 $\\mathcal{F}$ 是关于直线 $y=x$ 的反射。"
         }
        }
       ]
@@ -1551,7 +1551,7 @@
         "t": {
          "en": "$\\mat{2 & 0 \\\\ 0& 2}$",
          "sha": "fd33d0443ec8",
-         "zh": ""
+         "zh": "$\\mat{2 & 0 \\\\ 0& 2}$"
         }
        }
       ],
@@ -1561,7 +1561,7 @@
         "t": {
          "en": "To determine the image of $\\vec{e}_{1}, \\vec{e}_{2}$, we use trigonometry. Note $\\mathcal{R}\\mat{1\\\\0}= \\mat {- \\cos (45^{o}) \\\\ - \\sin (45^{o})}= \\mat {- 1/ \\sqrt{2} \\\\ - 1/ \\sqrt{2}}$ and $\\mathcal{R}\\mat{0\\\\1}= \\mat { \\cos (45^{o}) \\\\ - \\sin (45^{o})}= \\mat { 1/ \\sqrt{2} \\\\ -1/ \\sqrt{2}}$. To see this draw pictures, draw angles and remember that $\\vec{e}_{1}$ and $\\vec{e}_{2}$ are unit vectors. Thus the matrix of $\\mathcal{R}$ is $\\mat {- \\frac{1 }{\\sqrt{2}} & \\frac{1 }{\\sqrt{2}}\\\\ - \\frac{1}{\\sqrt{2}} & -\\frac{1}{\\sqrt{2}}}$.",
          "sha": "244f7f26b809",
-         "zh": ""
+         "zh": "为求 $\\vec{e}_{1}, \\vec{e}_{2}$ 的像，我们用三角函数。注意 $\\mathcal{R}\\mat{1\\\\0}= \\mat {- \\cos (45^{o}) \\\\ - \\sin (45^{o})}= \\mat {- 1/ \\sqrt{2} \\\\ - 1/ \\sqrt{2}}$ 以及 $\\mathcal{R}\\mat{0\\\\1}= \\mat { \\cos (45^{o}) \\\\ - \\sin (45^{o})}= \\mat { 1/ \\sqrt{2} \\\\ -1/ \\sqrt{2}}$。要看出这一点，请画图、标出角度，并记住 $\\vec{e}_{1}$ 和 $\\vec{e}_{2}$ 是单位向量。因此 $\\mathcal{R}$ 的矩阵是 $\\mat {- \\frac{1 }{\\sqrt{2}} & \\frac{1 }{\\sqrt{2}}\\\\ - \\frac{1}{\\sqrt{2}} & -\\frac{1}{\\sqrt{2}}}$。"
         }
        }
       ],
@@ -1571,7 +1571,7 @@
         "t": {
          "en": "No such matrix exists as this is not a linear transformation.",
          "sha": "e426e1c0518b",
-         "zh": ""
+         "zh": "这样的矩阵不存在，因为这不是线性变换。"
         }
        }
       ],
@@ -1581,7 +1581,7 @@
         "t": {
          "en": "$\\mat{0 & 0 \\\\ 0 & 1}$",
          "sha": "f4673aff6782",
-         "zh": ""
+         "zh": "$\\mat{0 & 0 \\\\ 0 & 1}$"
         }
        }
       ],
@@ -1591,7 +1591,7 @@
         "t": {
          "en": "$\\mat{0 & 1 \\\\ 1 & 0}$",
          "sha": "b5eb66e80a85",
-         "zh": ""
+         "zh": "$\\mat{0 & 1 \\\\ 1 & 0}$"
         }
        }
       ]
@@ -1615,7 +1615,7 @@
      "t": {
       "en": "Let $S:\\R^{n}\\to\\R^{m}$ and $T:\\R^{n}\\to\\R^{m}$ be linear transformations, and define the transformation $R:\\R^{n}\\to\\R^{m}$ by $R (\\vec x)=S(\\vec x)+T(\\vec x)$. Show that $R$ is also linear.",
       "sha": "d56c5a94d9e4",
-      "zh": ""
+      "zh": "设 $S:\\R^{n}\\to\\R^{m}$ 与 $T:\\R^{n}\\to\\R^{m}$ 是线性变换，并定义变换 $R:\\R^{n}\\to\\R^{m}$ 为 $R (\\vec x)=S(\\vec x)+T(\\vec x)$。证明 $R$ 也是线性的。"
      }
     }
    ],
@@ -1625,7 +1625,7 @@
      "t": {
       "en": "Let $\\vec{u}$ and $\\vec{v}$ be two vectors in $\\R^{n}$ and $c$ be a scalar. Then we have, $R(\\vec{u}+ \\vec{v}) = S(\\vec{u}+ \\vec{v}) + T(\\vec{u}+ \\vec{v})$. Since given that both $S, T$ are linear transformations, we get $S(\\vec{u}+ \\vec{v}) + T(\\vec{u}+ \\vec{v}) = S(\\vec{u})+ S(\\vec{v}) + T(\\vec{u})+T (\\vec{v}) = (S(\\vec{u})+ T(\\vec{u})) + (S(\\vec{v})+ T (\\vec{v})) = R(\\vec{u})+ R(\\vec{v})$. Hence we have, $R(\\vec{u}+ \\vec{v})=R(\\vec{u})+ R(\\vec{v})$. Similarly, $R(c \\vec{u})= S(c \\vec{u})+T(c \\vec{u}) = cS( \\vec{u})+cT( \\vec{u}) = cR( \\vec{u})$. Thus $R$ is also linear.",
       "sha": "ffef8fd99a21",
-      "zh": ""
+      "zh": "设 $\\vec{u}$ 和 $\\vec{v}$ 是 $\\R^{n}$ 中的两个向量，$c$ 是标量。那么 $R(\\vec{u}+ \\vec{v}) = S(\\vec{u}+ \\vec{v}) + T(\\vec{u}+ \\vec{v})$。因为已知 $S, T$ 都是线性变换，所以 $S(\\vec{u}+ \\vec{v}) + T(\\vec{u}+ \\vec{v}) = S(\\vec{u})+ S(\\vec{v}) + T(\\vec{u})+T (\\vec{v}) = (S(\\vec{u})+ T(\\vec{u})) + (S(\\vec{v})+ T (\\vec{v})) = R(\\vec{u})+ R(\\vec{v})$。因此 $R(\\vec{u}+ \\vec{v})=R(\\vec{u})+ R(\\vec{v})$。类似地，$R(c \\vec{u})= S(c \\vec{u})+T(c \\vec{u}) = cS( \\vec{u})+cT( \\vec{u}) = cR( \\vec{u})$。于是 $R$ 也是线性的。"
      }
     }
    ],
@@ -1646,7 +1646,7 @@
      "t": {
       "en": "For a fixed vector $\\vec a\\in\\R^{3}$, define the function $D_{\\vec a}$ by $D_{\\vec a}(\\vec x) = \\vec a\\cdot\\vec x$.",
       "sha": "6788edaae5c6",
-      "zh": ""
+      "zh": "对固定的向量 $\\vec a\\in\\R^{3}$，定义函数 $D_{\\vec a}$ 为 $D_{\\vec a}(\\vec x) = \\vec a\\cdot\\vec x$。"
      }
     },
     {
@@ -1659,7 +1659,7 @@
         "t": {
          "en": "Identify the domain and codomain of $D_{\\vec a}$.",
          "sha": "a7ff8da38fc9",
-         "zh": ""
+         "zh": "指出 $D_{\\vec a}$ 的定义域和陪域。"
         }
        }
       ],
@@ -1669,7 +1669,7 @@
         "t": {
          "en": "Show that when $\\vec a=\\xhat$, then $D_{\\vec a}$ is a linear transformation.",
          "sha": "7d4e9d5beb69",
-         "zh": ""
+         "zh": "证明当 $\\vec a=\\xhat$ 时，$D_{\\vec a}$ 是线性变换。"
         }
        }
       ],
@@ -1679,7 +1679,7 @@
         "t": {
          "en": "Is $D_{\\vec a}$ a linear transformation for all $\\vec a$? Prove your claim.",
          "sha": "d036b8526bc1",
-         "zh": ""
+         "zh": "对所有的 $\\vec a$，$D_{\\vec a}$ 都是线性变换吗？证明你的结论。"
         }
        }
       ],
@@ -1689,7 +1689,7 @@
         "t": {
          "en": "Find a matrix for $D_{\\vec a}$ or explain why no such matrix exists.",
          "sha": "39156ef4b152",
-         "zh": ""
+         "zh": "求 $D_{\\vec a}$ 的矩阵，或者说明为什么这样的矩阵不存在。"
         }
        }
       ]
@@ -1707,7 +1707,7 @@
         "t": {
          "en": "Since dot product is only defined for vectors in the same space, if $\\vec{a}\\in \\R^{3}$, $\\vec{x}$ must also be in $\\R^{3}$. So the domain of $D_{\\vec{a}}$ is $\\R^{3}.$",
          "sha": "4c8f2e27c1fb",
-         "zh": ""
+         "zh": "点积只对同一空间中的向量有定义，所以如果 $\\vec{a}\\in \\R^{3}$，那么 $\\vec{x}$ 也必须在 $\\R^{3}$ 中。因此 $D_{\\vec{a}}$ 的定义域是 $\\R^{3}.$"
         }
        }
       ],
@@ -1717,7 +1717,7 @@
         "t": {
          "en": "Let $\\vec{u}= \\mat{u_1\\\\u_2\\\\u_3}$ and $\\vec{v}= \\mat{v_1 \\\\ v_2\\\\v_3}$ be two vectors and $\\alpha$ be a scalar. Then",
          "sha": "c826cf176831",
-         "zh": ""
+         "zh": "设 $\\vec{u}= \\mat{u_1\\\\u_2\\\\u_3}$ 与 $\\vec{v}= \\mat{v_1 \\\\ v_2\\\\v_3}$ 是两个向量，$\\alpha$ 是标量。那么"
         }
        },
        {
@@ -1729,7 +1729,7 @@
         "t": {
          "en": "and",
          "sha": "cffa50a32cb1",
-         "zh": ""
+         "zh": "以及"
         }
        },
        {
@@ -1743,7 +1743,7 @@
         "t": {
          "en": "Yes, $D_{\\vec{a}}$ is a linear transformation for all vectors $\\vec{a}$. The properties of linear transformation can be proved from properties of dot product. Let $\\vec{u}$ and $\\vec {v}$ be two vectors and $\\alpha$ be a scalar. Then $D_{\\vec{a}}(\\vec{u}+ \\vec{v})= \\vec{a}\\cdot (\\vec{u}+ \\vec {v}) = \\vec{a}\\cdot \\vec{u}+ \\vec{a}\\cdot \\vec{v}= D _{\\vec{a}}(\\vec{u}) + D_{\\vec{a}}(\\vec{v})$ and",
          "sha": "4855a4816682",
-         "zh": ""
+         "zh": "是的，对所有向量 $D_{\\vec{a}}$，$\\vec{a}$ 都是线性变换。线性变换的各条性质可以由点积的性质推出。设 $\\vec{u}$ 与 $\\vec {v}$ 是两个向量，$\\alpha$ 是标量。那么 $D_{\\vec{a}}(\\vec{u}+ \\vec{v})= \\vec{a}\\cdot (\\vec{u}+ \\vec {v}) = \\vec{a}\\cdot \\vec{u}+ \\vec{a}\\cdot \\vec{v}= D _{\\vec{a}}(\\vec{u}) + D_{\\vec{a}}(\\vec{v})$ 并且"
         }
        },
        {
@@ -1757,7 +1757,7 @@
         "t": {
          "en": "$D_{\\vec{a}}: \\R^{3}\\rightarrow \\R$. Thus the matrix, say $M_{D}$, will be $1 \\times 3$. If $\\vec{a}= \\mat{a_1\\\\a_2\\\\ a_3}$ Then, $M_{D}= \\mat {a_1 & a_2 & a_3}$",
          "sha": "ef937142cc10",
-         "zh": ""
+         "zh": "$D_{\\vec{a}}: \\R^{3}\\rightarrow \\R$。因此它的矩阵，记作 $M_{D}$，是 $1 \\times 3$ 的。如果 $\\vec{a}= \\mat{a_1\\\\a_2\\\\ a_3}$，那么 $M_{D}= \\mat {a_1 & a_2 & a_3}$"
         }
        }
       ]
@@ -1781,7 +1781,7 @@
      "t": {
       "en": "Let $T:\\R^{2}\\to\\R^{2}$ be a transformation with the property that $T(V)$ is a subspace whenever $V$ is a subspace. Is this enough information to conclude that $T$ is a linear transformation? Justify your answer.",
       "sha": "10140b72e635",
-      "zh": ""
+      "zh": "设 $T:\\R^{2}\\to\\R^{2}$ 是一个变换，它具有如下性质：只要 $V$ 是子空间，$T(V)$ 就是子空间。仅凭这些信息，能否断定 $T$ 是线性变换？请说明理由。"
      }
     }
    ],
@@ -1791,7 +1791,7 @@
      "t": {
       "en": "No. Here is a (counter) example of a transformation which is not linear: $T: \\R^{2}\\rightarrow \\R^{2}$ is such that $T$ keeps the coordinates of the points on $x$-axis unchanged and sends every other point to $\\vec {0}$. That is, $T$ is given by $T \\mat{x\\\\y}= \\mat{0\\\\0}$ if $y\\neq 0$, and $T\\mat{x\\\\0}= \\mat{x\\\\0}$.",
       "sha": "1fba2c259adf",
-      "zh": ""
+      "zh": "不能。下面是一个不是线性变换的（反）例：$T: \\R^{2}\\rightarrow \\R^{2}$ 这样定义，使得 $T$ 保持 $x$ 轴上点的坐标不变，并把其他所有点变为 $\\vec {0}$。也就是说，$T$ 由下式给出：当 $y\\neq 0$ 时 $T \\mat{x\\\\y}= \\mat{0\\\\0}$，并且 $T\\mat{x\\\\0}= \\mat{x\\\\0}$。"
      }
     },
     {
@@ -1799,7 +1799,7 @@
      "t": {
       "en": "Then $T$ satisfies the given condition: $T(\\R^{2})$ is the $x$-axis which is a subspace. $T(\\vec{0})= \\vec{0}\\Rightarrow \\{T(\\vec{0}) \\} = \\{\\vec{0}\\}$, so $T$ sends the zero subspace to the zero subspace. Other subspaces of $\\R^{2}$ are lines through the origin. $T$ sends all such lines except for the $x$-axis to the subspace $\\{ \\vec{0}\\}$. $T$ sends the subspace $x$-axis to $x$-axis. Thus $T(V)$ is a subspace whenever $V$ is a subspace. But clearly $T$ is not linear. Take for example: $T \\mat{1\\\\1}= \\mat{0\\\\0}$ by construction. But $\\mat{1\\\\1}= \\mat{1\\\\0}+ \\mat{0\\\\1}$ and $\\left( T\\mat{1\\\\0}+ T \\mat{0\\\\1}\\right)= \\mat{1\\\\0}+ \\mat{0\\\\0}= \\mat{1\\\\0}\\neq T \\mat{1\\\\1}$",
       "sha": "c81f9111ea5d",
-      "zh": ""
+      "zh": "那么 $T$ 满足给定的条件：$T(\\R^{2})$ 是 $x$ 轴，它是子空间。$T(\\vec{0})= \\vec{0}\\Rightarrow \\{T(\\vec{0}) \\} = \\{\\vec{0}\\}$，所以 $T$ 把零子空间变到零子空间。$\\R^{2}$ 的其他子空间是过原点的直线。$T$ 把除 $x$ 轴之外的所有这样的直线变成子空间 $\\{ \\vec{0}\\}$。$T$ 把子空间 $x$ 轴变到 $x$ 轴。因此只要 $T(V)$ 是子空间，$V$ 就是子空间。但是 $T$ 并不是线性的。例如：根据构造，$T \\mat{1\\\\1}= \\mat{0\\\\0}$。但 $\\mat{1\\\\1}= \\mat{1\\\\0}+ \\mat{0\\\\1}$，而 $\\left( T\\mat{1\\\\0}+ T \\mat{0\\\\1}\\right)= \\mat{1\\\\0}+ \\mat{0\\\\0}= \\mat{1\\\\0}\\neq T \\mat{1\\\\1}$"
      }
     }
    ],
@@ -1820,7 +1820,7 @@
      "t": {
       "en": "For each statement below, determine whether it is true or false. Justify your answer.",
       "sha": "e3b37b865c04",
-      "zh": ""
+      "zh": "对下面每个陈述，判断它是真还是假。说明你的理由。"
      }
     },
     {
@@ -1833,7 +1833,7 @@
         "t": {
          "en": "Every transformation from $\\R^{n}$ to $\\R^{m}$ can be represented by a matrix.",
          "sha": "7ba7b724ef8a",
-         "zh": ""
+         "zh": "从 $\\R^{n}$ 到 $\\R^{m}$ 的每个变换都可以用矩阵表示。"
         }
        }
       ],
@@ -1843,7 +1843,7 @@
         "t": {
          "en": "The image of a subspace under a linear transformation is not a subspace.",
          "sha": "f94e1efe19a2",
-         "zh": ""
+         "zh": "子空间在线性变换下的像不是子空间。"
         }
        }
       ],
@@ -1853,7 +1853,7 @@
         "t": {
          "en": "A transformation that takes every vector in the domain to $\\vec 0$ is not linear.",
          "sha": "9d80f6b111d6",
-         "zh": ""
+         "zh": "把定义域中每个向量都变为 $\\vec 0$ 的变换不是线性的。"
         }
        }
       ],
@@ -1863,7 +1863,7 @@
         "t": {
          "en": "Every matrix is a linear transformation.",
          "sha": "541afdd478b8",
-         "zh": ""
+         "zh": "每个矩阵都是线性变换。"
         }
        }
       ],
@@ -1873,7 +1873,7 @@
         "t": {
          "en": "Parallel lines stay parallel under a linear transformation.",
          "sha": "26d0397606b9",
-         "zh": ""
+         "zh": "平行直线在线性变换下仍然平行。"
         }
        }
       ]
@@ -1891,7 +1891,7 @@
         "t": {
          "en": "False. Take $T: \\R^{2}\\rightarrow \\R^{2}$ given by $T \\mat{x\\\\y}= \\mat{x-1\\\\0}$. If there were a matrix $\\mat{a & b \\\\ c& d}$ representing this transformation, then consider $T\\mat{1\\\\0}$ and $T\\mat{2\\\\0}$. $T\\mat{1\\\\0}=\\mat{a & b \\\\ c& d}\\mat{1\\\\0}=\\mat{0\\\\0}$ which implies that $a=0, c=0$. But $T\\mat{2\\\\0}=\\mat {a & b \\\\ c& d}\\mat{2\\\\0}= \\mat{1\\\\0}$ which implies $a= \\tfrac{1}{2},c=0$ — a contradiction! So no such matrix exists. The correct statement is the following: Every “linear\" transformation from $\\mathbb{R}^{n}$ to $\\mathbb{R}^{m}$ can be represented by a matrix.",
          "sha": "84a375766ad5",
-         "zh": ""
+         "zh": "假。取 $T: \\R^{2}\\rightarrow \\R^{2}$，由 $T \\mat{x\\\\y}= \\mat{x-1\\\\0}$ 给出。如果有矩阵 $\\mat{a & b \\\\ c& d}$ 表示这个变换，那么考虑 $T\\mat{1\\\\0}$ 和 $T\\mat{2\\\\0}$。$T\\mat{1\\\\0}=\\mat{a & b \\\\ c& d}\\mat{1\\\\0}=\\mat{0\\\\0}$，这说明 $a=0, c=0$。但 $T\\mat{2\\\\0}=\\mat {a & b \\\\ c& d}\\mat{2\\\\0}= \\mat{1\\\\0}$，这说明 $a= \\tfrac{1}{2},c=0$——矛盾！所以这样的矩阵不存在。正确的陈述是：从 $\\mathbb{R}^{n}$ 到 $\\mathbb{R}^{m}$ 的每个“线性”变换都可以用矩阵表示。"
         }
        }
       ],
@@ -1901,7 +1901,7 @@
         "t": {
          "en": "False. This follows directly from the theorem given in this chapter that if $T: \\mathbb{R}^{n}\\rightarrow \\mathbb{R} ^{m}$ is a linear transformation, then $T$ takes subspaces to subspaces.",
          "sha": "d324139a172d",
-         "zh": ""
+         "zh": "假。这直接由本章给出的定理得到：如果 $T: \\mathbb{R}^{n}\\rightarrow \\mathbb{R} ^{m}$ 是线性变换，那么 $T$ 把子空间变成子空间。"
         }
        }
       ],
@@ -1911,7 +1911,7 @@
         "t": {
          "en": "False. The transformation is linear. Check the properties. Note: this transformation is sometimes called “the zero transformation.'",
          "sha": "a9b0f139c433",
-         "zh": ""
+         "zh": "假。这个变换是线性的，检验各条性质即可。注：这个变换有时称为“零变换”。"
         }
        }
       ],
@@ -1921,7 +1921,7 @@
         "t": {
          "en": "False. A matrix is just a box of numbers, it has no meaning unless we give it meaning. We can specify a linear transformation by using a matrix, but a matrix by itself is not a linear transformation.",
          "sha": "f53b28c2587f",
-         "zh": ""
+         "zh": "假。矩阵只是一个数字方框，在我们赋予它意义之前没有任何含义。我们可以用矩阵来描述线性变换，但矩阵本身不是线性变换。"
         }
        }
       ],
@@ -1931,7 +1931,7 @@
         "t": {
          "en": "False. There is a theorem in this module which explains this point. Suppose $T:\\mathbb{R}^{2}\\rightarrow \\mathbb{R}^{2}$ is the tranformation which takes all vectors to the zero vector, $\\ell_{1}$ is given by the equation $y=x+1$ and $\\ell _{2}$ is given by the equation $y=x+2$. Then $T$ is a linear transformation but $T(\\ell_{1})=T(\\ell_{2})=\\Set{(0,0)}$. Hence it doesn't make sense to say $\\ell_{1}$ and $\\ell_{2}$ are parallel under $T$.",
          "sha": "f786a37bf212",
-         "zh": ""
+         "zh": "假。本模块中有一个定理解释了这一点。设 $T:\\mathbb{R}^{2}\\rightarrow \\mathbb{R}^{2}$ 是把所有向量变为零向量的变换，$\\ell_{1}$ 由方程 $y=x+1$ 给出，$\\ell _{2}$ 由方程 $y=x+2$ 给出。那么 $T$ 是线性变换，但 $T(\\ell_{1})=T(\\ell_{2})=\\Set{(0,0)}$。因此说 $\\ell_{1}$ 和 $\\ell_{2}$ 在 $T$ 下平行是没有意义的。"
         }
        }
       ]
@@ -1955,7 +1955,7 @@
      "t": {
       "en": "Let $\\mathcal T:\\R^2\\to\\R^2$ be the transformation that doubles the length of its input. The following statements about $\\mathcal T$ are either incorrect or incomplete. Fix each statement so that it is correct and complete.",
       "sha": "9ef217a7b564",
-      "zh": ""
+      "zh": "设 $\\mathcal T:\\R^2\\to\\R^2$ 是把输入的长度变为两倍的变换。下面关于 $\\mathcal T$ 的陈述要么不正确，要么不完整。请把每条陈述改正，使它正确而完整。"
      }
     },
     {
@@ -1968,7 +1968,7 @@
         "t": {
          "en": "$\\mathcal T=\\mat{2&0\\\\0&2}$.",
          "sha": "16ef53dafa52",
-         "zh": ""
+         "zh": "$\\mathcal T=\\mat{2&0\\\\0&2}$。"
         }
        }
       ],
@@ -1978,7 +1978,7 @@
         "t": {
          "en": "Since $\\mathcal T\\vec x=2\\vec x$ for every $\\vec x$, we can say $\\mathcal T=2$.",
          "sha": "49b5b8abf1ed",
-         "zh": ""
+         "zh": "因为对每个 $\\vec x$ 都有 $\\mathcal T\\vec x=2\\vec x$，所以我们可以说 $\\mathcal T=2$。"
         }
        }
       ],
@@ -1988,7 +1988,7 @@
         "t": {
          "en": "$\\mathcal T$ is a linear transformation because $2(\\vec x+\\vec y)=2\\vec x+2\\vec y$.",
          "sha": "489f9c4424c7",
-         "zh": ""
+         "zh": "$\\mathcal T$ 是线性变换，因为 $2(\\vec x+\\vec y)=2\\vec x+2\\vec y$。"
         }
        }
       ]
@@ -2006,7 +2006,7 @@
         "t": {
          "en": "$\\mathcal T$ can be defined by $\\mathcal T\\vec x=\\mat{2&0\\\\0&2}\\vec x$.",
          "sha": "76e095c177d1",
-         "zh": ""
+         "zh": "$\\mathcal T$ 可以定义为 $\\mathcal T\\vec x=\\mat{2&0\\\\0&2}\\vec x$。"
         }
        }
       ],
@@ -2016,7 +2016,7 @@
         "t": {
          "en": "Since $\\mathcal T\\vec x=2\\vec x$ for every $\\vec x\\in\\R^2$ we can define $\\mathcal T$ as the function which multiplies its input by the scalar two.",
          "sha": "4ee022f1bf9a",
-         "zh": ""
+         "zh": "因为对每个 $\\vec x\\in\\R^2$ 都有 $\\mathcal T\\vec x=2\\vec x$，所以我们可以把 $\\mathcal T$ 定义为把输入乘以标量二的函数。"
         }
        }
       ],
@@ -2026,7 +2026,7 @@
         "t": {
          "en": "$\\mathcal T$ is a linear transformation because $\\mathcal T(\\vec x+\\vec y)=2(\\vec x+\\vec y)=2\\vec x+2\\vec y= \\mathcal T\\vec x+\\mathcal T\\vec y$ and $\\mathcal T(\\alpha\\vec x)=2\\alpha\\vec x=\\alpha2\\vec x=\\alpha\\mathcal T\\vec x$ for all $\\vec x,\\vec y\\in \\R^2$ and all scalars $\\alpha$.",
          "sha": "22e6519a9fc0",
-         "zh": ""
+         "zh": "$\\mathcal T$ 是线性变换，因为对所有 $\\vec x,\\vec y\\in \\R^2$ 和所有标量 $\\alpha$，都有 $\\mathcal T(\\vec x+\\vec y)=2(\\vec x+\\vec y)=2\\vec x+2\\vec y= \\mathcal T\\vec x+\\mathcal T\\vec y$ 以及 $\\mathcal T(\\alpha\\vec x)=2\\alpha\\vec x=\\alpha2\\vec x=\\alpha\\mathcal T\\vec x$。"
         }
        }
       ]

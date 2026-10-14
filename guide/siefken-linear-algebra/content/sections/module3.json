@@ -16,7 +16,7 @@
         "t": {
          "en": "The definition of span and how to visualize spans.",
          "sha": "8f613aa2543f",
-         "zh": ""
+         "zh": "张成（span）的定义，以及如何把张成画出来。"
         }
        }
       ],
@@ -26,7 +26,7 @@
         "t": {
          "en": "How to express lines/planes/volumes through the origin as spans.",
          "sha": "a4e0c86f28c5",
-         "zh": ""
+         "zh": "如何把过原点的直线、平面、体表示成张成。"
         }
        }
       ],
@@ -36,7 +36,7 @@
         "t": {
          "en": "How to express lines/planes/volumes *not* through the origin as *translated* spans using set addition.",
          "sha": "b63cb7135794",
-         "zh": ""
+         "zh": "如何利用集合加法，把*不*过原点的直线、平面、体表示成*平移*张成。"
         }
        }
       ],
@@ -46,7 +46,7 @@
         "t": {
          "en": "Geometric and algebraic definitions of linear independence and linear dependence.",
          "sha": "696238ac124b",
-         "zh": ""
+         "zh": "线性无关与线性相关的几何定义和代数定义。"
         }
        }
       ],
@@ -56,7 +56,7 @@
         "t": {
          "en": "How to find linearly independent subsets.",
          "sha": "0ac4118889dc",
-         "zh": ""
+         "zh": "如何找出线性无关的子集。"
         }
        }
       ]
@@ -69,7 +69,7 @@
    "t": {
     "en": "Let $\\vec u=\\mat{1\\\\1}$ and $\\vec v=\\mat{1\\\\-2}$. Can the vector $\\vec w=\\mat{2\\\\5}$ be obtained as a linear combination of $\\vec u$ and $\\vec v$?",
     "sha": "f9e86af28a42",
-    "zh": ""
+    "zh": "设 $\\vec u=\\mat{1\\\\1}$，$\\vec v=\\mat{1\\\\-2}$。向量 $\\vec w=\\mat{2\\\\5}$ 能否表示成 $\\vec u$ 与 $\\vec v$ 的线性组合？"
    }
   },
   {
@@ -77,7 +77,7 @@
    "t": {
     "en": "By drawing a picture, the answer appears to be *yes*.",
     "sha": "6dc18ca9c948",
-    "zh": ""
+    "zh": "画一张图就能看出，答案似乎是*能*。"
    }
   },
   {
@@ -101,7 +101,7 @@
    "t": {
     "en": "Algebraically, we can use the definition of a *linear combination* to set up a system of equations. We know $\\vec w$ can be expressed as a linear combination of $\\vec u$ and $\\vec v$ if and only if the vector equation",
     "sha": "a0ac3b25f9cc",
-    "zh": ""
+    "zh": "用代数的办法，可以借助*线性组合*的定义列出一个方程组。我们知道，$\\vec w$ 能表示成 $\\vec u$ 与 $\\vec v$ 的线性组合，当且仅当向量方程"
    }
   },
   {
@@ -113,7 +113,7 @@
    "t": {
     "en": "has a solution. By inspection, we see $\\alpha=3$ and $\\beta=-1$ solve this equation.",
     "sha": "071946c0c4d9",
-    "zh": ""
+    "zh": "有解。观察可知，$\\alpha=3$，$\\beta=-1$ 就是这个方程的解。"
    }
   },
   {
@@ -121,7 +121,7 @@
    "t": {
     "en": "After initial success, we might ask the following: \\emphwhat are all the locations in $\\R^2$ that can be obtained as a linear combination of $\\vec u$ and $\\vec v$? Geometrically, it appears any location can be reached. To verify this algebraically, consider the vector equation",
     "sha": "44e3df2427ec",
-    "zh": ""
+    "zh": "初战告捷之后，我们不妨再问：*$\\R^2$ 中哪些位置都可以表示成 $\\vec u$ 与 $\\vec v$ 的线性组合？*从几何上看，似乎任何位置都能到达。为了用代数的办法验证这一点，考虑向量方程"
    }
   },
   {
@@ -133,7 +133,7 @@
    "t": {
     "en": "Here $\\vec x$ represents an arbitrary point in $\\R^2$. If equation 〔引用〕 always has a solution 〔注： The official terminology would be to say that the equations are always *consistent*.〕, any vector in $\\R^2$ can be obtained as a linear combination of $\\vec u$ and $\\vec v$.",
     "sha": "bb80ca2eaff1",
-    "zh": ""
+    "zh": "这里 $\\vec x$ 代表 $\\R^2$ 中任意一点。如果方程〔引用〕总是有解〔注： 官方术语是说这些方程总是*相容*的。〕，那么 $\\R^2$ 中任何向量都可以表示成 $\\vec u$ 与 $\\vec v$ 的线性组合。"
    }
   },
   {
@@ -141,7 +141,7 @@
    "t": {
     "en": "We can solve this equation for $\\alpha$ and $\\beta$ by considering the equations arising from the first and second coordinates. Namely,",
     "sha": "44e17267c27c",
-    "zh": ""
+    "zh": "我们可以分别列出第一、第二个坐标所对应的方程，来求解 $\\alpha$ 与 $\\beta$。即"
    }
   },
   {
@@ -153,7 +153,7 @@
    "t": {
     "en": "Subtracting the second equation from the first, we get $x-y=3\\beta$ and so $\\beta=(x-y)/3$. Plugging $\\beta$ into the first equation and solving, we get $\\alpha=(2x+y)/3$. Thus, equation 〔引用〕 *always* has the solution",
     "sha": "9146bdb62da1",
-    "zh": ""
+    "zh": "用第一个方程减去第二个方程，得 $x-y=3\\beta$，所以 $\\beta=(x-y)/3$。把 $\\beta$ 代入第一个方程并求解，得 $\\alpha=(2x+y)/3$。因此方程〔引用〕*总是*有解"
    }
   },
   {
@@ -165,7 +165,7 @@
    "t": {
     "en": "There is a formal term for the set of vectors that can be obtained as linear combinations of others: *span*.",
     "sha": "e6ef4601c43e",
-    "zh": ""
+    "zh": "由其他向量的线性组合所能得到的全体向量，有一个正式的名称：*张成*。"
    }
   },
   {
@@ -174,7 +174,7 @@
    "title": {
     "en": "Span",
     "sha": "080e88efe900",
-    "zh": ""
+    "zh": "张成"
    },
    "blocks": [
     {
@@ -182,7 +182,7 @@
      "t": {
       "en": "The *span* of a set of vectors $V$ is the set of all linear combinations of vectors in $V$. That is, \\begindmath* \\Span V = \\Set\\vec v \\given \\vec v= \\alpha_1\\vec v_1+\\alpha_2\\vec v_2 + \\cdots +\\alpha_n\\vec v_n \\allowbreak for some \\allowbreak \\vec v_1,\\vec v_2,…,\\vec v_n\\in V and scalars \\alpha_1,\\alpha_2,…,\\alpha_n. \\enddmath*",
       "sha": "d44c4ec41e9e",
-      "zh": ""
+      "zh": "向量集合 $V$ 的*张成*，是 $V$ 中向量的所有线性组合构成的集合。也就是说，\\begindmath* \\Span V = \\Set\\vec v \\given \\vec v= \\alpha_1\\vec v_1+\\alpha_2\\vec v_2 + \\cdots +\\alpha_n\\vec v_n \\allowbreak for some \\allowbreak \\vec v_1,\\vec v_2,…,\\vec v_n\\in V and scalars \\alpha_1,\\alpha_2,…,\\alpha_n. \\enddmath*"
      }
     },
     {
@@ -190,7 +190,7 @@
      "t": {
       "en": "Additionally, we define $\\Span\\Set{} = \\Set{\\vec 0}$.",
       "sha": "c2d9b7bd781f",
-      "zh": ""
+      "zh": "此外，我们规定 $\\Span\\Set{} = \\Set{\\vec 0}$。"
      }
     }
    ]
@@ -200,7 +200,7 @@
    "t": {
     "en": "We just showed above that $\\Span\\Set{\\mat{1\\\\1},\\mat{1\\\\-2}}=\\R^2$. Alternatively, we may use span as a verb and say the set $\\Set{\\mat{1\\\\1},\\mat{1\\\\-2}}$ *spans* $\\R^2$.",
     "sha": "a86dbe70eccf",
-    "zh": ""
+    "zh": "上面我们刚刚证明了 $\\Span\\Set{\\mat{1\\\\1},\\mat{1\\\\-2}}=\\R^2$。也可以把“张成”当作动词来用，说集合 $\\Set{\\mat{1\\\\1},\\mat{1\\\\-2}}$ *张成* $\\R^2$。"
    }
   },
   {
@@ -213,7 +213,7 @@
      "t": {
       "en": "Let $\\vec u=\\mat{-1\\\\2}$ and $\\vec v=\\mat{1\\\\-2}$. Find $\\Span\\Set{\\vec u,\\vec v}$.",
       "sha": "ba310ec4d976",
-      "zh": ""
+      "zh": "设 $\\vec u=\\mat{-1\\\\2}$，$\\vec v=\\mat{1\\\\-2}$。求 $\\Span\\Set{\\vec u,\\vec v}$。"
      }
     },
     {
@@ -221,7 +221,7 @@
      "t": {
       "en": "By the definition of span,",
       "sha": "845b2554f1e4",
-      "zh": ""
+      "zh": "由张成的定义，"
      }
     },
     {
@@ -233,7 +233,7 @@
      "t": {
       "en": "We need to determine for which $x$ and $y$ the vector equation $\\mat{x\\\\y} = \\alpha\\mat{-1\\\\2}+\\beta\\mat{1\\\\-2}$ is consistent.",
       "sha": "df9e808e1e44",
-      "zh": ""
+      "zh": "我们需要确定，当 $x$ 与 $y$ 取什么值时，向量方程 $\\mat{x\\\\y} = \\alpha\\mat{-1\\\\2}+\\beta\\mat{1\\\\-2}$ 是相容的。"
      }
     },
     {
@@ -241,7 +241,7 @@
      "t": {
       "en": "From the first and second coordinates, we get the system",
       "sha": "2e8ab83b56b0",
-      "zh": ""
+      "zh": "由第一、第二个坐标，得到方程组"
      }
     },
     {
@@ -253,7 +253,7 @@
      "t": {
       "en": "Adding 2 times the first equation to the second, we get $2x+y=0$ and so $y=-2x$. Therefore, if $\\mat{x\\\\y}$ makes the above system consistent, we must have",
       "sha": "4f276e3a8c8e",
-      "zh": ""
+      "zh": "把第一个方程的 2 倍加到第二个方程上，得 $2x+y=0$，所以 $y=-2x$。因此，如果 $\\mat{x\\\\y}$ 能使上面的方程组相容，就必须有"
      }
     },
     {
@@ -265,7 +265,7 @@
      "t": {
       "en": "for some $t$. Thus,",
       "sha": "89b763840ea3",
-      "zh": ""
+      "zh": "其中 $t$ 为某个数。于是，"
      }
     },
     {
@@ -277,7 +277,7 @@
      "t": {
       "en": "which is a line through the origin with direction $\\vec v$.",
       "sha": "42992f193bef",
-      "zh": ""
+      "zh": "这是一条过原点、方向为 $\\vec v$ 的直线。"
      }
     }
    ]
@@ -292,7 +292,7 @@
      "t": {
       "en": "Let $\\vec a=\\mat{1\\\\2\\\\1}$, $\\vec b=\\mat{0\\\\1\\\\0}$, and $\\vec c=\\mat{1\\\\1\\\\2}$. Show that $\\R^3=\\Span\\Set{\\vec a,\\vec b,\\vec c}$.",
       "sha": "b87f1c1cd719",
-      "zh": ""
+      "zh": "设 $\\vec a=\\mat{1\\\\2\\\\1}$，$\\vec b=\\mat{0\\\\1\\\\0}$，$\\vec c=\\mat{1\\\\1\\\\2}$。证明 $\\R^3=\\Span\\Set{\\vec a,\\vec b,\\vec c}$。"
      }
     },
     {
@@ -300,7 +300,7 @@
      "t": {
       "en": "If the equation",
       "sha": "9ddd2a2a2aa9",
-      "zh": ""
+      "zh": "如果方程"
      }
     },
     {
@@ -312,7 +312,7 @@
      "t": {
       "en": "is always consistent, then any vector in $\\R^3$ can be obtained as a linear combination of $\\vec a, \\vec b$, and $\\vec c$.",
       "sha": "cf4a8ba829a8",
-      "zh": ""
+      "zh": "总是相容的，那么 $\\R^3$ 中任何向量都可以表示成 $\\vec a, \\vec b$ 与 $\\vec c$ 的线性组合。"
      }
     },
     {
@@ -320,7 +320,7 @@
      "t": {
       "en": "Reading off the coordinates, we get the system",
       "sha": "302f55869c05",
-      "zh": ""
+      "zh": "按坐标逐个读出，得到方程组"
      }
     },
     {
@@ -332,7 +332,7 @@
      "t": {
       "en": "Solving this system, we see \\[",
       "sha": "ee98aa913121",
-      "zh": ""
+      "zh": "解这个方程组，可得 \\["
      }
     },
     {
@@ -344,7 +344,7 @@
      "t": {
       "en": "\\] is always a solution (no matter the values of $x$, $y$, and $z$). Therefore, $\\Span\\Set{\\vec a,\\vec b,\\vec c}=\\R^3$.",
       "sha": "3bcb553900d9",
-      "zh": ""
+      "zh": "\\] 总是一组解（无论 $x$、$y$、$z$ 取什么值）。因此 $\\Span\\Set{\\vec a,\\vec b,\\vec c}=\\R^3$。"
      }
     }
    ]
@@ -354,7 +354,7 @@
    "t": {
     "en": "Representing Lines & Planes as Spans",
     "sha": "8417d98d1840",
-    "zh": ""
+    "zh": "把直线和平面表示成张成"
    }
   },
   {
@@ -362,7 +362,7 @@
    "t": {
     "en": "If spans remind you of vector forms of lines and planes, your intuition is keen. Consider the line $\\ell$ given in vector form by",
     "sha": "ea90b0a2cbaa",
-    "zh": ""
+    "zh": "如果张成让你想起直线和平面的向量形式，那说明你的直觉很敏锐。考虑向量形式给出的直线 $\\ell$："
    }
   },
   {
@@ -374,7 +374,7 @@
    "t": {
     "en": "The line $\\ell$ passes through the origin, and if we unravel its definition, we see",
     "sha": "4b1bbf6e0d71",
-    "zh": ""
+    "zh": "直线 $\\ell$ 过原点，把它的定义展开来看，就有"
    }
   },
   {
@@ -386,7 +386,7 @@
    "t": {
     "en": "Similarly, if $\\mathcal P$ is a plane given in vector form by",
     "sha": "48fec3f4addd",
-    "zh": ""
+    "zh": "类似地，如果平面 $\\mathcal P$ 的向量形式为"
    }
   },
   {
@@ -398,7 +398,7 @@
    "t": {
     "en": "then",
     "sha": "6f8f8e9f7673",
-    "zh": ""
+    "zh": "那么"
    }
   },
   {
@@ -410,7 +410,7 @@
    "t": {
     "en": "If the “$\\vec p$” in our vector form is $\\vec 0$, then that vector form actually defines a span. This means (if you accept that every line/plane through the origin has a vector form) that every line/plane through the origin can be written as a span. Conversely, if $X=\\Span\\Set{\\vec v_1,\\ldots,\\vec v_n}$ is a span, we know $\\vec 0=0\\vec v_1+\\cdots+0\\vec v_n\\in X$, and so every span passes through the origin.",
     "sha": "5e29254633aa",
-    "zh": ""
+    "zh": "如果向量形式里的“$\\vec p$”是 $\\vec 0$，那么这个向量形式其实就定义了一个张成。这意味着（只要你接受每条过原点的直线、每个过原点的平面都有向量形式）每条过原点的直线、每个过原点的平面都可以写成张成。反过来，如果 $X=\\Span\\Set{\\vec v_1,\\ldots,\\vec v_n}$ 是一个张成，我们知道 $\\vec 0=0\\vec v_1+\\cdots+0\\vec v_n\\in X$，所以每个张成都过原点。"
    }
   },
   {
@@ -418,7 +418,7 @@
    "t": {
     "en": "As it turns out, spans exactly describe points, lines, planes, and volumes 〔注： We use the word *volume* to indicate the higher-dimensional analogue of a plane.〕 through the origin.",
     "sha": "682aa7bc150a",
-    "zh": ""
+    "zh": "事实上，张成恰好描述了过原点的点、直线、平面和体〔注： 我们用“体”这个词表示平面在更高维中的类比。〕。"
    }
   },
   {
@@ -431,7 +431,7 @@
      "t": {
       "en": "The line $\\ell_1\\subseteq\\R^2$ is described by the equation $x+2y=0$ and the line $\\ell_2\\subseteq \\R^2$ is described by the equation $4x-2y=6$. If possible, describe $\\ell_1$ and $\\ell_2$ using spans.",
       "sha": "60c3831dc5b7",
-      "zh": ""
+      "zh": "直线 $\\ell_1\\subseteq\\R^2$ 由方程 $x+2y=0$ 描述，直线 $\\ell_2\\subseteq \\R^2$ 由方程 $4x-2y=6$ 描述。如果可能，请用张成来描述 $\\ell_1$ 和 $\\ell_2$。"
      }
     },
     {
@@ -439,7 +439,7 @@
      "t": {
       "en": "We can express $\\ell_1$ in vector form by",
       "sha": "e7c9ff4d111d",
-      "zh": ""
+      "zh": "我们可以把 $\\ell_1$ 写成向量形式："
      }
     },
     {
@@ -451,7 +451,7 @@
      "t": {
       "en": "and so",
       "sha": "9af790b3a93d",
-      "zh": ""
+      "zh": "于是"
      }
     },
     {
@@ -463,7 +463,7 @@
      "t": {
       "en": "However, $\\ell_2$ does not pass through $\\vec 0$, and so $\\ell_2$ cannot be written as a span.",
       "sha": "dec90be42077",
-      "zh": ""
+      "zh": "然而 $\\ell_2$ 不过 $\\vec 0$，所以 $\\ell_2$ 不能写成张成。"
      }
     }
    ]
@@ -474,7 +474,7 @@
    "title": {
     "en": "Takeaway",
     "sha": "e59a7ab66086",
-    "zh": ""
+    "zh": "要点"
    },
    "blocks": [
     {
@@ -482,7 +482,7 @@
      "t": {
       "en": "Lines and planes through the origin, and only lines and planes through the origin, can be expressed as spans.",
       "sha": "ce1adc450a9e",
-      "zh": ""
+      "zh": "过原点的直线和平面，并且只有过原点的直线和平面，可以表示成张成。"
      }
     }
    ]
@@ -492,7 +492,7 @@
    "t": {
     "en": "Set Addition",
     "sha": "9de47b61bb3b",
-    "zh": ""
+    "zh": "集合加法"
    }
   },
   {
@@ -500,7 +500,7 @@
    "t": {
     "en": "We're going to work around the fact that only objects which pass through the origin can be written as spans, but first let's take a detour and learn about *set addition*.",
     "sha": "61ab3675e663",
-    "zh": ""
+    "zh": "只有过原点的对象才能写成张成，这个限制我们要想办法绕开；不过在此之前，先岔开一步，学一学*集合加法*。"
    }
   },
   {
@@ -509,7 +509,7 @@
    "title": {
     "en": "Set Addition",
     "sha": "9de47b61bb3b",
-    "zh": ""
+    "zh": "集合加法"
    },
    "blocks": [
     {
@@ -517,7 +517,7 @@
      "t": {
       "en": "If $A$ and $B$ are sets of vectors, then the *set sum* of $A$ and $B$, denoted $A+B$, is",
       "sha": "99dd9cdaea44",
-      "zh": ""
+      "zh": "如果 $A$ 与 $B$ 是向量的集合，那么 $A$ 与 $B$ 的*集合和*记作 $A+B$，定义为"
      }
     },
     {
@@ -531,7 +531,7 @@
    "t": {
     "en": "Set sums are very different than regular sums despite using the same symbol, “$+$”\\footnote For example, $A+\\Set{}=\\Set{}$, which might seem counterintuitive for an “addition” operation.. However, they are very useful. Let $C=\\Set{\\vec x\\in\\R^2\\given \\norm{\\vec x}=1}$ be the unit circle centered at the origin, and consider the sets",
     "sha": "6491cfae0ca3",
-    "zh": ""
+    "zh": "集合和与普通的和很不一样，尽管用的是同一个符号“$+$”\\footnote 例如 $A+\\Set{}=\\Set{}$，对一种“加法”运算来说，这可能有点反直觉。。不过，集合和非常有用。设 $C=\\Set{\\vec x\\in\\R^2\\given \\norm{\\vec x}=1}$ 是以原点为圆心的单位圆，考虑集合"
    }
   },
   {
@@ -543,7 +543,7 @@
    "t": {
     "en": "Rewriting, we see $X=\\Set{\\vec x+\\yhat\\given \\norm{\\vec x}=1}$ is just $C$ translated by $\\yhat$. Similarly, $Y=\\Set{\\vec x+\\vec v\\given \\norm{\\vec x}=1\\text{ and }\\vec v=3\\xhat\\text{ or }\\vec v=\\yhat}=(C+\\Set{3\\xhat})\\cup (C+\\Set{\\yhat})$, and so $Y$ is the union of two translated copies of $C$\\footnote If you want to stretch your mind, consider what $C+C$ is as a set.. Finally, $Z$ is the union of three translated copies of $C$.",
     "sha": "da0f99e0f28b",
-    "zh": ""
+    "zh": "改写一下可以看出，$X=\\Set{\\vec x+\\yhat\\given \\norm{\\vec x}=1}$ 就是把 $C$ 沿 $\\yhat$ 平移得到的集合。类似地，$Y=\\Set{\\vec x+\\vec v\\given \\norm{\\vec x}=1\\text{ and }\\vec v=3\\xhat\\text{ or }\\vec v=\\yhat}=(C+\\Set{3\\xhat})\\cup (C+\\Set{\\yhat})$，所以 $Y$ 是 $C$ 的两个平移副本的并集\\footnote 如果你想拓展一下思路，不妨想想 $C+C$ 作为集合是什么。。最后，$Z$ 是 $C$ 的三个平移副本的并集。"
    }
   },
   {
@@ -575,7 +575,7 @@
    "t": {
     "en": "Translated Spans",
     "sha": "7795dc3c267a",
-    "zh": ""
+    "zh": "平移张成"
    }
   },
   {
@@ -583,7 +583,7 @@
    "t": {
     "en": "Set addition allows us to easily create parallel lines and planes by translation. For example, consider the lines $\\ell_1$ and $\\ell_2$ given in vector form as $\\vec x=t\\vec d$ and $\\vec x=t\\vec d+\\vec p$, respectively, where $\\vec d=\\mat{2\\\\1}$ and $\\vec p=\\mat{-1\\\\1}$. These lines differ from each other by a translation. That is, every point in $\\ell_2$ can be obtained by adding $\\vec p$ to a corresponding point in $\\ell_1$. Using the idea of set addition, we can express this relationship by the equation",
     "sha": "e518c1bc04ba",
-    "zh": ""
+    "zh": "借助集合加法，我们可以很方便地通过平移得到平行的直线和平面。例如，考虑直线 $\\ell_1$ 与 $\\ell_2$，它们的向量形式分别为 $\\vec x=t\\vec d$ 与 $\\vec x=t\\vec d+\\vec p$，其中 $\\vec d=\\mat{2\\\\1}$，$\\vec p=\\mat{-1\\\\1}$。这两条直线之间相差一个平移：也就是说，$\\ell_2$ 中的每个点，都可以由 $\\vec p$ 加上 $\\ell_1$ 中对应的点得到。利用集合加法的想法，可以用等式"
    }
   },
   {
@@ -611,7 +611,7 @@
    "t": {
     "en": "Note: it would be incorrect to write “$\\ell_2=\\ell_1+\\vec p$”. Because $\\ell_1$ is a set and $\\vec p$ is not a set, “$\\ell_1+\\vec p$” does not make mathematical sense.",
     "sha": "a4ff862bc1fb",
-    "zh": ""
+    "zh": "注意：写成“$\\ell_2=\\ell_1+\\vec p$”是不对的。因为 $\\ell_1$ 是集合而 $\\vec p$ 不是集合，所以“$\\ell_1+\\vec p$”在数学上没有意义。"
    }
   },
   {
@@ -624,7 +624,7 @@
      "t": {
       "en": "Recall $\\ell_2\\subseteq\\R^2$ is the line described by the equation $4x-2y=6$. Describe $\\ell_2$ as a translated span.",
       "sha": "9ba33e7713d4",
-      "zh": ""
+      "zh": "回忆一下，$\\ell_2\\subseteq\\R^2$ 是由方程 $4x-2y=6$ 描述的直线。把 $\\ell_2$ 写成平移张成。"
      }
     },
     {
@@ -632,7 +632,7 @@
      "t": {
       "en": "We can express $\\ell_2$ in vector form with the equation",
       "sha": "8260a641d9b7",
-      "zh": ""
+      "zh": "我们可以用方程把 $\\ell_2$ 写成向量形式："
      }
     },
     {
@@ -644,7 +644,7 @@
      "t": {
       "en": "Therefore,",
       "sha": "236a32def63c",
-      "zh": ""
+      "zh": "因此，"
      }
     },
     {
@@ -658,7 +658,7 @@
    "t": {
     "en": "We can now see translated spans provide an alternative notation to vector form for specifying lines and planes. If $Q$ is described in vector form by",
     "sha": "0ecaf8d626c7",
-    "zh": ""
+    "zh": "现在我们看到，要描述直线和平面，平移张成是向量形式之外的另一种记法。如果 $Q$ 的向量形式为"
    }
   },
   {
@@ -670,7 +670,7 @@
    "t": {
     "en": "then",
     "sha": "6f8f8e9f7673",
-    "zh": ""
+    "zh": "那么"
    }
   },
   {
@@ -683,7 +683,7 @@
    "title": {
     "en": "Takeaway",
     "sha": "e59a7ab66086",
-    "zh": ""
+    "zh": "要点"
    },
    "blocks": [
     {
@@ -691,7 +691,7 @@
      "t": {
       "en": "All lines and planes, whether through the origin or not, can be expressed as translated spans.",
       "sha": "89b1d1a2dcb6",
-      "zh": ""
+      "zh": "所有直线和平面，不论是否过原点，都可以表示成平移张成。"
      }
     }
    ]
@@ -701,7 +701,7 @@
    "t": {
     "en": "Linear Independence & Linear Dependence",
     "sha": "e1e3209c60ee",
-    "zh": ""
+    "zh": "线性无关与线性相关"
    }
   },
   {
@@ -709,7 +709,7 @@
    "t": {
     "en": "Let",
     "sha": "ef5fe1edf379",
-    "zh": ""
+    "zh": "设"
    }
   },
   {
@@ -721,7 +721,7 @@
    "t": {
     "en": "Since $\\vec w=\\vec u+\\vec v$, we know that $\\vec w\\in\\Span\\Set{\\vec u,\\vec v}$. Geometrically, this is also clear because $\\Span\\Set{\\vec u,\\vec v}$ is the $xy$-plane in $\\R^3$ and $\\vec w$ lies on that plane.",
     "sha": "5db45d76e2bd",
-    "zh": ""
+    "zh": "因为 $\\vec w=\\vec u+\\vec v$，所以 $\\vec w\\in\\Span\\Set{\\vec u,\\vec v}$。从几何上看这也是清楚的：$\\Span\\Set{\\vec u,\\vec v}$ 就是 $\\R^3$ 中的 $xy$ 平面，而 $\\vec w$ 就落在这个平面上。"
    }
   },
   {
@@ -729,7 +729,7 @@
    "t": {
     "en": "What about $\\Span\\Set{\\vec u,\\vec v,\\vec w}$? Intuitively, since $\\vec w$ is already a linear combination of $\\vec u$ and $\\vec v$, we can't get anywhere *new* by taking linear combinations of $\\vec u$, $\\vec v$, *and* $\\vec w$ compared to linear combinations of just $\\vec u$ and $\\vec v$. So $\\Span\\Set{\\vec u,\\vec v}=\\Span\\Set{\\vec u,\\vec v,\\vec w}$.",
     "sha": "82025b798f83",
-    "zh": ""
+    "zh": "那么 $\\Span\\Set{\\vec u,\\vec v,\\vec w}$ 呢？直观上，$\\vec w$ 本来就是 $\\vec u$ 与 $\\vec v$ 的线性组合，所以和只取 $\\vec u$、$\\vec v$ 的线性组合相比，取 $\\vec u$、$\\vec v$ *和* $\\vec w$ 的线性组合并不能到达任何*新*的地方。因此 $\\Span\\Set{\\vec u,\\vec v}=\\Span\\Set{\\vec u,\\vec v,\\vec w}$。"
    }
   },
   {
@@ -737,7 +737,7 @@
    "t": {
     "en": "Can we prove this from the definitions? Yes! Suppose $\\vec r\\in \\Span\\Set{\\vec u,\\vec v,\\vec w}$. By definition,",
     "sha": "0795bd53e967",
-    "zh": ""
+    "zh": "这个结论能从定义出发证明吗？能！设 $\\vec r\\in \\Span\\Set{\\vec u,\\vec v,\\vec w}$。由定义，"
    }
   },
   {
@@ -749,7 +749,7 @@
    "t": {
     "en": "for some $\\alpha,\\beta,\\gamma\\in\\R$. Since $\\vec w=\\vec u+\\vec v$, we see",
     "sha": "eb9dc01b5232",
-    "zh": ""
+    "zh": "其中 $\\alpha,\\beta,\\gamma\\in\\R$。因为 $\\vec w=\\vec u+\\vec v$，所以"
    }
   },
   {
@@ -761,7 +761,7 @@
    "t": {
     "en": "Thus, $\\Span\\Set{\\vec u,\\vec v,\\vec w}\\subseteq \\Span\\Set{\\vec u,\\vec v}$. Conversely, if $\\vec s\\in\\Span\\Set{\\vec u,\\vec v}$, by definition,",
     "sha": "b57396e6e825",
-    "zh": ""
+    "zh": "因此 $\\Span\\Set{\\vec u,\\vec v,\\vec w}\\subseteq \\Span\\Set{\\vec u,\\vec v}$。反过来，若 $\\vec s\\in\\Span\\Set{\\vec u,\\vec v}$，由定义，"
    }
   },
   {
@@ -773,7 +773,7 @@
    "t": {
     "en": "for some $a,b\\in \\R$, and so $\\vec s\\in\\Span\\Set{\\vec u,\\vec v,\\vec w}$. Thus $\\Span\\Set{\\vec u,\\vec v}\\subseteq\\Span\\Set{\\vec u,\\vec v,\\vec w}$. We conclude $\\Span\\Set{\\vec u,\\vec v}=\\Span\\Set{\\vec u,\\vec v,\\vec w}$.",
     "sha": "a2bf234d566c",
-    "zh": ""
+    "zh": "其中 $a,b\\in \\R$，于是 $\\vec s\\in\\Span\\Set{\\vec u,\\vec v,\\vec w}$。因此 $\\Span\\Set{\\vec u,\\vec v}\\subseteq\\Span\\Set{\\vec u,\\vec v,\\vec w}$。我们得出 $\\Span\\Set{\\vec u,\\vec v}=\\Span\\Set{\\vec u,\\vec v,\\vec w}$。"
    }
   },
   {
@@ -781,7 +781,7 @@
    "t": {
     "en": "In this case, $\\vec w$ was a redundant vector—it wasn't needed for the span. When a set contains a redundant vector, we call the set *linearly dependent*.",
     "sha": "9fe967f0329e",
-    "zh": ""
+    "zh": "在这个例子里，$\\vec w$ 是一个多余的向量——张成里并不需要它。当一个集合含有多余的向量时，我们称这个集合*线性相关*。"
    }
   },
   {
@@ -790,7 +790,7 @@
    "title": {
     "en": "Linearly Dependent & Independent (Geometric)",
     "sha": "f8ad044b720e",
-    "zh": ""
+    "zh": "线性相关与线性无关（几何定义）"
    },
    "blocks": [
     {
@@ -798,7 +798,7 @@
      "t": {
       "en": "We say the vectors $\\vec v_{1},\\vec v_{2},\\ldots,\\vec v_{n}$ are *linearly dependent* if for at least one $i$,",
       "sha": "a43d4092ea39",
-      "zh": ""
+      "zh": "我们说向量 $\\vec v_{1},\\vec v_{2},\\ldots,\\vec v_{n}$ *线性相关*，如果至少有一个 $i$ 使得"
      }
     },
     {
@@ -810,7 +810,7 @@
      "t": {
       "en": "Otherwise, they are called *linearly independent*.",
       "sha": "6311aa15e3cd",
-      "zh": ""
+      "zh": "否则，称它们*线性无关*。"
      }
     }
    ]
@@ -820,7 +820,7 @@
    "t": {
     "en": "We will also refer to sets of vectors (for example $\\Set{\\vec v_1,\\ldots,\\vec v_n}$) as being linearly independent or linearly dependent. For technical reasons, we didn't state the definition in terms of sets\\footnote The issue is, every element of a set is unique. Clearly, the vectors $\\vec v$ and $\\vec v$ are linearly dependent, but $\\Set{\\vec v,\\vec v}=\\Set{\\vec v}$, and so $\\Set{\\vec v,\\vec v}$ is technically a linearly independent set. This issue would be resolved by talking about *multisets* instead of sets, but it isn't worth the hassle..",
     "sha": "36f404471270",
-    "zh": ""
+    "zh": "我们也会说向量的集合（例如 $\\Set{\\vec v_1,\\ldots,\\vec v_n}$）线性无关或线性相关。出于技术原因，我们没有用集合来叙述这个定义\\footnote 问题在于，集合里的每个元素都是唯一的。向量 $\\vec v$ 与 $\\vec v$ 显然线性相关，但 $\\Set{\\vec v,\\vec v}=\\Set{\\vec v}$，所以严格来说 $\\Set{\\vec v,\\vec v}$ 是线性无关的集合。改用*多重集*来谈就能解决这个问题，但不值得这么麻烦。。"
    }
   },
   {
@@ -828,7 +828,7 @@
    "t": {
     "en": "The geometric definition of linear dependence says that the vectors $\\vec v_1,\\ldots,\\vec v_n$ are linearly dependent if you can remove at least one vector without changing the span. In other words, $\\vec v_1,\\ldots,\\vec v_n$ are linearly dependent *if there is a redundant vector*.",
     "sha": "dee452403817",
-    "zh": ""
+    "zh": "线性相关的几何定义是说：如果能去掉至少一个向量而不改变张成，那么向量 $\\vec v_1,\\ldots,\\vec v_n$ 线性相关。换句话说，$\\vec v_1,\\ldots,\\vec v_n$ 线性相关，*当且仅当其中有一个多余的向量*。"
    }
   },
   {
@@ -841,7 +841,7 @@
      "t": {
       "en": "Let $\\vec a=\\mat{1\\\\2}$, $\\vec b=\\mat{2\\\\3}$, $\\vec c=\\mat{4\\\\6}$, and $\\vec d=\\mat{4\\\\5}$. Determine whether $\\Set{\\vec a,\\vec b,\\vec c,\\vec d}$ is linearly independent or linearly dependent.",
       "sha": "9477e3de2867",
-      "zh": ""
+      "zh": "设 $\\vec a=\\mat{1\\\\2}$，$\\vec b=\\mat{2\\\\3}$，$\\vec c=\\mat{4\\\\6}$，$\\vec d=\\mat{4\\\\5}$。判断 $\\Set{\\vec a,\\vec b,\\vec c,\\vec d}$ 是线性无关还是线性相关。"
      }
     },
     {
@@ -849,7 +849,7 @@
      "t": {
       "en": "By inspection, we see $\\vec c=2\\vec b$. Therefore,",
       "sha": "413d01cbffb0",
-      "zh": ""
+      "zh": "观察可知 $\\vec c=2\\vec b$。因此，"
      }
     },
     {
@@ -861,7 +861,7 @@
      "t": {
       "en": "and so $\\Set{\\vec a,\\vec b,\\vec c,\\vec d}$ is linearly dependent.",
       "sha": "39c7b75ede58",
-      "zh": ""
+      "zh": "所以 $\\Set{\\vec a,\\vec b,\\vec c,\\vec d}$ 线性相关。"
      }
     }
    ]
@@ -876,7 +876,7 @@
      "t": {
       "en": "The planes $\\mathcal P$ and $\\mathcal Q$ are given in vector form by",
       "sha": "d234869b4143",
-      "zh": ""
+      "zh": "平面 $\\mathcal P$ 与 $\\mathcal Q$ 的向量形式分别为"
      }
     },
     {
@@ -888,7 +888,7 @@
      "t": {
       "en": "Determine if $\\mathcal P$ and $\\mathcal Q$ are the same plane.",
       "sha": "1f8f7cd66f96",
-      "zh": ""
+      "zh": "判断 $\\mathcal P$ 与 $\\mathcal Q$ 是否为同一个平面。"
      }
     },
     {
@@ -896,7 +896,7 @@
      "t": {
       "en": "We could answer this question using techniques from Module 〔引用〕, but for variety, let's see if we can answer the question using spans and linear dependence.",
       "sha": "d8f611a6e6ec",
-      "zh": ""
+      "zh": "我们可以用模块〔引用〕中的方法回答这个问题，不过为了换换花样，我们看看能不能用张成和线性相关来回答。"
      }
     },
     {
@@ -904,7 +904,7 @@
      "t": {
       "en": "Let $\\vec a_1=\\mat{1\\\\2\\\\1}$ and $\\vec a_2=\\mat{2\\\\2\\\\1}$ be direction vectors for $\\mathcal P$ and let $\\vec b_1=\\mat{3\\\\4\\\\2}$ and $\\vec b_2=\\mat{2\\\\2\\\\1}$ be direction vectors for $\\mathcal Q$ and notice $\\mathcal P=\\Span\\Set{\\vec a_1,\\vec a_2}$ and $\\mathcal Q=\\Span\\Set{\\vec b_1,\\vec b_2}$.",
       "sha": "560f6a45d227",
-      "zh": ""
+      "zh": "设 $\\vec a_1=\\mat{1\\\\2\\\\1}$ 与 $\\vec a_2=\\mat{2\\\\2\\\\1}$ 是 $\\mathcal P$ 的方向向量，设 $\\vec b_1=\\mat{3\\\\4\\\\2}$ 与 $\\vec b_2=\\mat{2\\\\2\\\\1}$ 是 $\\mathcal Q$ 的方向向量，并注意 $\\mathcal P=\\Span\\Set{\\vec a_1,\\vec a_2}$，$\\mathcal Q=\\Span\\Set{\\vec b_1,\\vec b_2}$。"
      }
     },
     {
@@ -912,7 +912,7 @@
      "t": {
       "en": "By definition $\\mathcal P=\\mathcal Q$ if (i) every point in $\\mathcal P$ is a point in $\\mathcal Q$ and (ii) every point in $\\mathcal Q$ is a point in $\\mathcal P$.",
       "sha": "ab4218e7a30c",
-      "zh": ""
+      "zh": "由定义，$\\mathcal P=\\mathcal Q$ 当且仅当 (i) $\\mathcal P$ 中每个点都是 $\\mathcal Q$ 中的点，并且 (ii) $\\mathcal Q$ 中每个点都是 $\\mathcal P$ 中的点。"
      }
     },
     {
@@ -920,7 +920,7 @@
      "t": {
       "en": "Focusing on (i), let $\\vec p=t\\vec a_1+s\\vec a_2\\in \\mathcal P$ be an arbitrary point in $\\mathcal P$. We need to show $\\vec p\\in\\mathcal Q$. Since $\\Set{\\vec b_1,\\vec b_2}$ is linearly independent and $\\mathcal Q=\\Span\\Set{\\vec b_1,\\vec b_2}$, showing $\\vec p\\in\\mathcal Q$ is equivalent to showing $\\Set{\\vec p,\\vec b_1,\\vec b_2}$ is a linearly *dependent* set.",
       "sha": "6c45287b5ebd",
-      "zh": ""
+      "zh": "先看 (i)。设 $\\vec p=t\\vec a_1+s\\vec a_2\\in \\mathcal P$ 是 $\\mathcal P$ 中任意一点。我们需要证明 $\\vec p\\in\\mathcal Q$。因为 $\\Set{\\vec b_1,\\vec b_2}$ 线性无关且 $\\mathcal Q=\\Span\\Set{\\vec b_1,\\vec b_2}$，所以证明 $\\vec p\\in\\mathcal Q$ 等价于证明 $\\Set{\\vec p,\\vec b_1,\\vec b_2}$ 是线性*相关*的集合。"
      }
     },
     {
@@ -928,7 +928,7 @@
      "t": {
       "en": "To see this, start by observing",
       "sha": "eb983ae0940c",
-      "zh": ""
+      "zh": "为此，先观察到"
      }
     },
     {
@@ -940,7 +940,7 @@
      "t": {
       "en": "are both linearly dependent sets: $\\vec a_1=\\vec b_1-\\vec b_2\\in\\Span\\Set{\\vec b_1,\\vec b_2}$ and $\\vec a_2=\\vec b_2\\in\\Span\\Set{\\vec b_1,\\vec b_2}$. Therefore, $\\vec a_1\\in\\mathcal Q$ and $\\vec a_2\\in\\mathcal Q$. Since both $\\vec a_1$ and $\\vec a_2$ are in $\\mathcal Q$ and $\\mathcal Q=\\Span\\Set{\\vec b_1, \\vec b_2}$ is itself a span, we know that every linear combination of $\\vec a_1$ and $\\vec a_2$ must be in $\\mathcal Q$. In particular, $\\vec p=t\\vec a_1+s\\vec a_2\\in\\mathcal Q$, which is what we wanted to show.",
       "sha": "45f1e9b0b90b",
-      "zh": ""
+      "zh": "都是线性相关的集合：$\\vec a_1=\\vec b_1-\\vec b_2\\in\\Span\\Set{\\vec b_1,\\vec b_2}$，且 $\\vec a_2=\\vec b_2\\in\\Span\\Set{\\vec b_1,\\vec b_2}$。因此 $\\vec a_1\\in\\mathcal Q$，$\\vec a_2\\in\\mathcal Q$。既然 $\\vec a_1$ 与 $\\vec a_2$ 都在 $\\mathcal Q$ 中，而 $\\mathcal Q=\\Span\\Set{\\vec b_1, \\vec b_2}$ 本身是一个张成，那么 $\\vec a_1$ 与 $\\vec a_2$ 的每个线性组合都必在 $\\mathcal Q$ 中。特别地，$\\vec p=t\\vec a_1+s\\vec a_2\\in\\mathcal Q$，这正是我们要证明的。"
      }
     },
     {
@@ -948,7 +948,7 @@
      "t": {
       "en": "We can show (ii) similarly by observing that $\\vec b_1\\in\\mathcal P$ and $\\vec b_2\\in \\mathcal P$ and so any point $\\vec q=t\\vec b_1+s\\vec b_2\\in\\mathcal Q$ must also be in $\\mathcal P$.",
       "sha": "d4a5f351255c",
-      "zh": ""
+      "zh": "类似地可以证明 (ii)：因为 $\\vec b_1\\in\\mathcal P$ 且 $\\vec b_2\\in \\mathcal P$，所以任意一点 $\\vec q=t\\vec b_1+s\\vec b_2\\in\\mathcal Q$ 也必在 $\\mathcal P$ 中。"
      }
     }
    ]
@@ -958,7 +958,7 @@
    "t": {
     "en": "We can also think of linear independence/dependence from an algebraic perspective. Suppose the vectors $\\vec u$, $\\vec v$, and $\\vec w$ satisfy",
     "sha": "e1c31fc6332b",
-    "zh": ""
+    "zh": "我们也可以从代数的角度来理解线性无关与线性相关。设向量 $\\vec u$、$\\vec v$、$\\vec w$ 满足"
    }
   },
   {
@@ -970,7 +970,7 @@
    "t": {
     "en": "The set $\\Set{\\vec u,\\vec v,\\vec w}$ is linearly dependent since $\\vec w\\in\\Span\\Set{\\vec u,\\vec v}$, but equation 〔引用〕 can be rearranged to get",
     "sha": "9c9509abe8af",
-    "zh": ""
+    "zh": "集合 $\\Set{\\vec u,\\vec v,\\vec w}$ 线性相关，因为 $\\vec w\\in\\Span\\Set{\\vec u,\\vec v}$；而方程〔引用〕可以移项改写成"
    }
   },
   {
@@ -982,7 +982,7 @@
    "t": {
     "en": "Here we have expressed $\\vec 0$ as a linear combination of $\\vec u$, $\\vec v$, and $\\vec w$. By itself, this is nothing special. After all, we know $\\vec 0=0\\vec u+0\\vec v+0\\vec w$ is a linear combination of $\\vec u$, $\\vec v$, and $\\vec w$. However, the right side of equation 〔引用〕 has non-zero coefficients, which makes the linear combination *non-trivial*.",
     "sha": "684d2be60c33",
-    "zh": ""
+    "zh": "这里我们把 $\\vec 0$ 表示成了 $\\vec u$、$\\vec v$、$\\vec w$ 的线性组合。单看这一点并没有什么特别。毕竟我们知道 $\\vec 0=0\\vec u+0\\vec v+0\\vec w$ 就是 $\\vec u$、$\\vec v$、$\\vec w$ 的一个线性组合。但是，方程〔引用〕的右边有非零的系数，这使得这个线性组合是*非平凡的*。"
    }
   },
   {
@@ -991,7 +991,7 @@
    "title": {
     "en": "Trivial Linear Combination",
     "sha": "bc9e1b77c327",
-    "zh": ""
+    "zh": "平凡线性组合"
    },
    "blocks": [
     {
@@ -999,7 +999,7 @@
      "t": {
       "en": "The linear combination $\\alpha_1\\vec v_1+\\cdots+\\alpha_n\\vec v_n$ is called *trivial* if $\\alpha_1=\\cdots=\\alpha_n=0$. If at least one $\\alpha_i\\neq 0$, the linear combination is called *non-trivial*.",
       "sha": "8538254e8cd2",
-      "zh": ""
+      "zh": "如果 $\\alpha_1=\\cdots=\\alpha_n=0$，线性组合 $\\alpha_1\\vec v_1+\\cdots+\\alpha_n\\vec v_n$ 称为*平凡的*。如果至少有一个 $\\alpha_i\\neq 0$，这个线性组合称为*非平凡的*。"
      }
     }
    ]
@@ -1009,7 +1009,7 @@
    "t": {
     "en": "We can always write $\\vec 0$ as a linear combination of vectors if we let all the coefficients be zero, but it turns out we can only write $\\vec 0$ as a *non-trivial* linear combination of vectors if those vectors are linearly dependent. This is the inspiration for another definition of linear independence/dependence.",
     "sha": "1357525867b9",
-    "zh": ""
+    "zh": "只要让所有系数都取零，我们总能把 $\\vec 0$ 写成这些向量的线性组合；但事实表明，只有当这些向量线性相关时，才能把 $\\vec 0$ 写成这些向量的*非平凡*线性组合。这启发了线性无关/线性相关的另一种定义。"
    }
   },
   {
@@ -1018,7 +1018,7 @@
    "title": {
     "en": "Linearly Dependent & Independent (Algebraic)",
     "sha": "2928bf938d0a",
-    "zh": ""
+    "zh": "线性相关与线性无关（代数定义）"
    },
    "blocks": [
     {
@@ -1026,7 +1026,7 @@
      "t": {
       "en": "The vectors $\\vec v_{1},\\vec v_{2},\\ldots,\\vec v_{n}$ are *linearly dependent* if there is a non-trivial linear combination of $\\vec v_{1},\\ldots,\\vec v_{n}$ that equals the zero vector. Otherwise they are linearly independent.",
       "sha": "209b0b5f34a1",
-      "zh": ""
+      "zh": "如果存在 $\\vec v_{1},\\ldots,\\vec v_{n}$ 的一个非平凡线性组合等于零向量，那么向量 $\\vec v_{1},\\vec v_{2},\\ldots,\\vec v_{n}$ *线性相关*。否则它们线性无关。"
      }
     }
    ]
@@ -1036,7 +1036,7 @@
    "t": {
     "en": "The idea of a “redundant vector” coming from the geometric definition of linear dependence is easy to visualize, but it can be hard to prove things with—checking for linear independence with the geometric definition involves verifying for every vector that it is not in the span of the others. The algebraic definition on the other hand is less obvious, but the reasoning is easier. You only need to analyze solutions to one equation!",
     "sha": "7e9a798892e0",
-    "zh": ""
+    "zh": "几何定义中“多余的向量”这个想法很容易想象，但用它来证明东西却可能比较困难——用几何定义检验线性无关，需要对每个向量验证它不在其余向量的张成中。相比之下，代数定义没有那么一目了然，但推理起来更容易。你只需要分析一个方程的解！"
    }
   },
   {
@@ -1049,7 +1049,7 @@
      "t": {
       "en": "Let $\\vec u=\\mat{1\\\\2}$, $\\vec v=\\mat{2\\\\3}$, and $\\vec w=\\mat{4\\\\5}$. Use the algebraic definition of linear independence to determine whether $\\Set{\\vec u,\\vec v,\\vec w}$ is linearly independent or dependent.",
       "sha": "a256dcd27502",
-      "zh": ""
+      "zh": "设 $\\vec u=\\mat{1\\\\2}$，$\\vec v=\\mat{2\\\\3}$，$\\vec w=\\mat{4\\\\5}$。用线性无关的代数定义判断 $\\Set{\\vec u,\\vec v,\\vec w}$ 是线性无关还是线性相关。"
      }
     },
     {
@@ -1057,7 +1057,7 @@
      "t": {
       "en": "We need to determine if there is a non-trivial solution to",
       "sha": "91ab44c77d95",
-      "zh": ""
+      "zh": "我们需要确定"
      }
     },
     {
@@ -1069,7 +1069,7 @@
      "t": {
       "en": "This vector equation is equivalent to the system of equations",
       "sha": "8ac1ffa1093e",
-      "zh": ""
+      "zh": "这个向量方程是否有非平凡解。这个向量方程等价于方程组"
      }
     },
     {
@@ -1081,7 +1081,7 @@
      "t": {
       "en": "Solving this system using row reduction, we see the complete solution set can be expressed as",
       "sha": "8d17d12893f3",
-      "zh": ""
+      "zh": "用行化简解这个方程组，可知完整的解集可以表示为"
      }
     },
     {
@@ -1093,7 +1093,7 @@
      "t": {
       "en": "In particular, $(x,y,z)=(2,-3,1)$ is a non-trivial solution to this system. Therefore $\\Set{\\vec u,\\vec v,\\vec w}$ is linearly dependent.",
       "sha": "2cf4fa4edc19",
-      "zh": ""
+      "zh": "特别地，$(x,y,z)=(2,-3,1)$ 是这个方程组的一组非平凡解。因此 $\\Set{\\vec u,\\vec v,\\vec w}$ 线性相关。"
      }
     }
    ]
@@ -1108,7 +1108,7 @@
      "t": {
       "en": "The geometric and algebraic definitions of linear independence are equivalent.",
       "sha": "b21b9ece4347",
-      "zh": ""
+      "zh": "线性无关的几何定义与代数定义是等价的。"
      }
     }
    ]
@@ -1122,7 +1122,7 @@
      "t": {
       "en": "To show the two definitions are equivalent, we need to show that geometric $\\implies$ algebraic and algebraic $\\implies$ geometric.",
       "sha": "6e772c2fe8ca",
-      "zh": ""
+      "zh": "要证明这两个定义等价，我们需要证明：几何定义 $\\implies$ 代数定义，以及代数定义 $\\implies$ 几何定义。"
      }
     },
     {
@@ -1130,7 +1130,7 @@
      "t": {
       "en": "(geometric $\\implies$ algebraic) Suppose $\\vec v_1,\\ldots,\\vec v_n$ are linearly dependent by the geometric definition. That means that for some $i$, we have",
       "sha": "f526ed951c49",
-      "zh": ""
+      "zh": "（几何 $\\implies$ 代数）设 $\\vec v_1,\\ldots,\\vec v_n$ 按几何定义线性相关。这意味着对某个 $i$，有"
      }
     },
     {
@@ -1142,7 +1142,7 @@
      "t": {
       "en": "Fix such an $i$. Then, by the definition of span we know",
       "sha": "cc8aa9f7d88b",
-      "zh": ""
+      "zh": "取定这样的 $i$。于是，由张成的定义我们知道"
      }
     },
     {
@@ -1154,7 +1154,7 @@
      "t": {
       "en": "and so",
       "sha": "9af790b3a93d",
-      "zh": ""
+      "zh": "于是"
      }
     },
     {
@@ -1166,7 +1166,7 @@
      "t": {
       "en": "This must be a non-trivial linear combination because the coefficient of $\\vec v_i$ is $-1\\neq 0$. Therefore, $\\vec v_1,\\ldots,\\vec v_n$ is linearly dependent by the algebraic definition.",
       "sha": "c74348a9a9f4",
-      "zh": ""
+      "zh": "这必是一个非平凡的线性组合，因为 $\\vec v_i$ 的系数是 $-1\\neq 0$。因此，按代数定义，$\\vec v_1,\\ldots,\\vec v_n$ 线性相关。"
      }
     },
     {
@@ -1174,7 +1174,7 @@
      "t": {
       "en": "(algebraic $\\implies$ geometric) Suppose $\\vec v_1,\\ldots,\\vec v_n$ are linearly dependent by the algebraic definition. That means there exist $\\alpha_1,\\ldots,\\alpha_n$, not all zero, so that",
       "sha": "79f98cfff5b9",
-      "zh": ""
+      "zh": "（代数 $\\implies$ 几何）设 $\\vec v_1,\\ldots,\\vec v_n$ 按代数定义线性相关。这意味着存在不全为零的 $\\alpha_1,\\ldots,\\alpha_n$，使得"
      }
     },
     {
@@ -1186,7 +1186,7 @@
      "t": {
       "en": "Fix $i$ so that $\\alpha_i\\neq 0$ (why do we know there is such an $i$?). Rearranging we get",
       "sha": "a119e45289c4",
-      "zh": ""
+      "zh": "取定 $i$ 使得 $\\alpha_i\\neq 0$（为什么我们知道这样的 $i$ 存在？）。移项得"
      }
     },
     {
@@ -1198,7 +1198,7 @@
      "t": {
       "en": "and since $\\alpha_i\\neq 0$, we can multiply both sides by $\\frac{-1}{\\alpha_i}$ to get",
       "sha": "10654beca6fb",
-      "zh": ""
+      "zh": "又因为 $\\alpha_i\\neq 0$，我们可以在两边同乘 $\\frac{-1}{\\alpha_i}$，得到"
      }
     },
     {
@@ -1210,7 +1210,7 @@
      "t": {
       "en": "This shows that",
       "sha": "4544b90fccd9",
-      "zh": ""
+      "zh": "这说明"
      }
     },
     {
@@ -1222,7 +1222,7 @@
      "t": {
       "en": "and so $\\vec v_1,\\ldots,\\vec v_n$ is linearly dependent by the geometric definition.",
       "sha": "d635157600e5",
-      "zh": ""
+      "zh": "所以，按几何定义，$\\vec v_1,\\ldots,\\vec v_n$ 线性相关。"
      }
     }
    ]
@@ -1232,7 +1232,7 @@
    "t": {
     "en": "Linear Independence and Unique Solutions",
     "sha": "5cb0049f5c25",
-    "zh": ""
+    "zh": "线性无关与唯一解"
    }
   },
   {
@@ -1240,7 +1240,7 @@
    "t": {
     "en": "The algebraic definition of linear independence can teach us something about solutions to systems of equations.",
     "sha": "0faf864470f3",
-    "zh": ""
+    "zh": "线性无关的代数定义可以告诉我们一些关于方程组解的事情。"
    }
   },
   {
@@ -1248,7 +1248,7 @@
    "t": {
     "en": "Recall the linearly dependent vectors",
     "sha": "b75f17bfc223",
-    "zh": ""
+    "zh": "回忆一下线性相关的向量"
    }
   },
   {
@@ -1260,7 +1260,7 @@
    "t": {
     "en": "which satisfy the non-trivial relationship $\\vec u+\\vec v-\\vec w=\\vec 0$. Since $\\vec u+\\vec v-\\vec w=\\vec 0$ is a non-trivial relationship giving $\\vec 0$, we can use it to generate others. For example,",
     "sha": "68be133f5fdd",
-    "zh": ""
+    "zh": "它们满足非平凡关系 $\\vec u+\\vec v-\\vec w=\\vec 0$。既然 $\\vec u+\\vec v-\\vec w=\\vec 0$ 是一个给出 $\\vec 0$ 的非平凡关系，我们就可以用它产生别的关系。例如，"
    }
   },
   {
@@ -1272,7 +1272,7 @@
    "t": {
     "en": "are all different non-trivial linear combinations that give $\\vec 0$. In other words, if the equation $\\alpha\\vec u+\\beta \\vec v+\\gamma \\vec w=\\vec 0$ has a non-trivial solution, it has *infinitely many* non-trivial solutions. Conversely, if the equation $\\alpha\\vec u+\\beta \\vec v+\\gamma \\vec w=\\vec 0$ has infinitely many solutions, one of them has to be non-trivial!",
     "sha": "b912b51e2b74",
-    "zh": ""
+    "zh": "都是给出 $\\vec 0$ 的不同的非平凡线性组合。换句话说，如果方程 $\\alpha\\vec u+\\beta \\vec v+\\gamma \\vec w=\\vec 0$ 有一个非平凡解，那么它就有*无穷多个*非平凡解。反过来，如果方程 $\\alpha\\vec u+\\beta \\vec v+\\gamma \\vec w=\\vec 0$ 有无穷多个解，那么其中必有一个是非平凡的！"
    }
   },
   {
@@ -1280,7 +1280,7 @@
    "t": {
     "en": "Equations where one side is $\\vec 0$ show up often and are called *homogeneous* equations.",
     "sha": "f0aed9059354",
-    "zh": ""
+    "zh": "一边为 $\\vec 0$ 的方程经常出现，称为*齐次*方程。"
    }
   },
   {
@@ -1289,7 +1289,7 @@
    "title": {
     "en": "Homogeneous System",
     "sha": "6900b63d4207",
-    "zh": ""
+    "zh": "齐次方程组"
    },
    "blocks": [
     {
@@ -1297,7 +1297,7 @@
      "t": {
       "en": "A system of linear equations or a vector equation in the variables $\\alpha_1$, …, $\\alpha_n$ is called *homogeneous* if it takes the form",
       "sha": "ada5e991bd58",
-      "zh": ""
+      "zh": "如果关于变量 $\\alpha_1$，…，$\\alpha_n$ 的线性方程组或向量方程具有如下形式"
      }
     },
     {
@@ -1309,7 +1309,7 @@
      "t": {
       "en": "where the right side of the equation is $\\vec 0$.",
       "sha": "a7241d8144ad",
-      "zh": ""
+      "zh": "其中方程右边是 $\\vec 0$，就称它为*齐次*的。"
      }
     }
    ]
@@ -1319,7 +1319,7 @@
    "t": {
     "en": "This insight links linear independence and homogeneous systems together, and is encapsulated in the following theorem.",
     "sha": "f28ae9ca715e",
-    "zh": ""
+    "zh": "这一见解把线性无关与齐次方程组联系在一起，并总结为下面的定理。"
    }
   },
   {
@@ -1332,7 +1332,7 @@
      "t": {
       "en": "The vectors $\\vec v_1$, …, $\\vec v_n$ are linearly independent if and only if the homogeneous equation",
       "sha": "3848bc485ccb",
-      "zh": ""
+      "zh": "向量 $\\vec v_1$，…，$\\vec v_n$ 线性无关，当且仅当齐次方程"
      }
     },
     {
@@ -1344,7 +1344,7 @@
      "t": {
       "en": "has a unique solution.",
       "sha": "2fa6ad7e2f9e",
-      "zh": ""
+      "zh": "有唯一解。"
      }
     }
    ]
@@ -1354,7 +1354,7 @@
    "t": {
     "en": "This theorem has a practical application: suppose you wanted to decide if the vectors $\\vec a$, $\\vec b$, and $\\vec c$ were linearly dependent. You could (i) find a non-trivial solution to $x\\vec a+y\\vec b+z\\vec c=\\vec 0$, or (ii) merely show that $x\\vec a+y\\vec b+z\\vec c=\\vec 0$ has more than one solution. Sometimes one is easier than the other.",
     "sha": "a5c179101dc4",
-    "zh": ""
+    "zh": "这个定理有实际用处：假设你想判断向量 $\\vec a$、$\\vec b$、$\\vec c$ 是否线性相关。你可以 (i) 找出 $x\\vec a+y\\vec b+z\\vec c=\\vec 0$ 的一个非平凡解，或者 (ii) 只需说明 $x\\vec a+y\\vec b+z\\vec c=\\vec 0$ 有不止一个解。有时其中一种做法比另一种容易。"
    }
   },
   {
@@ -1362,7 +1362,7 @@
    "t": {
     "en": "Linear Independence and Vector Form",
     "sha": "96ff62107657",
-    "zh": ""
+    "zh": "线性无关与向量形式"
    }
   },
   {
@@ -1370,7 +1370,7 @@
    "t": {
     "en": "The equation",
     "sha": "09704de1fbc6",
-    "zh": ""
+    "zh": "方程"
    }
   },
   {
@@ -1382,7 +1382,7 @@
    "t": {
     "en": "represents a plane in vector form whenever $\\vec d_1$ and $\\vec d_2$ are non-zero, non-parallel vectors. In other words, $\\vec x=t_1\\vec d_1+t_2\\vec d_2$ represents a plane whenever $\\Set{\\vec d_1,\\vec d_2}$ is linearly independent.",
     "sha": "78a79bbc19ef",
-    "zh": ""
+    "zh": "只要 $\\vec d_1$ 与 $\\vec d_2$ 是非零且不平行的向量，就以向量形式表示一个平面。换句话说，只要 $\\Set{\\vec d_1,\\vec d_2}$ 线性无关，$\\vec x=t_1\\vec d_1+t_2\\vec d_2$ 就表示一个平面。"
    }
   },
   {
@@ -1390,7 +1390,7 @@
    "t": {
     "en": "Does this reasoning work for lines too? The equation",
     "sha": "25eb187663c6",
-    "zh": ""
+    "zh": "这个道理对直线也成立吗？方程"
    }
   },
   {
@@ -1402,7 +1402,7 @@
    "t": {
     "en": "represents a line in vector form precisely when $\\vec d\\neq \\vec 0$. And $\\Set{\\vec d}$ is linearly independent exactly when $\\vec d\\neq 0$.",
     "sha": "53acd3dd3fbc",
-    "zh": ""
+    "zh": "以向量形式表示一条直线，恰好在 $\\vec d\\neq \\vec 0$ 时成立。而 $\\Set{\\vec d}$ 线性无关，恰好在 $\\vec d\\neq 0$ 时成立。"
    }
   },
   {
@@ -1410,7 +1410,7 @@
    "t": {
     "en": "This reasoning generalizes to volumes. The equation",
     "sha": "bbadb865c31d",
-    "zh": ""
+    "zh": "这个道理可以推广到体。方程"
    }
   },
   {
@@ -1422,7 +1422,7 @@
    "t": {
     "en": "represents a *volume* in vector form exactly when $\\Set{\\vec d_1,\\vec d_2,\\vec d_3}$ is linearly independent. To see this, suppose $\\Set{\\vec d_1,\\vec d_2,\\vec d_3}$ were linearly dependent. That means one or more vectors could be removed from $\\Set{\\vec d_1,\\vec d_2,\\vec d_3}$ without changing its span. Therefore, if $\\Set{\\vec d_1,\\vec d_2,\\vec d_3}$ is linearly dependent $\\vec x=t_1\\vec d_1+t_2\\vec d_2+t_3\\vec d_3$ at best represents a plane (though it could be a line or a point).",
     "sha": "9aeb2570e3c3",
-    "zh": ""
+    "zh": "以向量形式表示一个*体*，恰好当 $\\Set{\\vec d_1,\\vec d_2,\\vec d_3}$ 线性无关时成立。为了看清这一点，假设 $\\Set{\\vec d_1,\\vec d_2,\\vec d_3}$ 线性相关。这意味着可以从 $\\Set{\\vec d_1,\\vec d_2,\\vec d_3}$ 中去掉一个或多个向量而不改变它的张成。因此，如果 $\\Set{\\vec d_1,\\vec d_2,\\vec d_3}$ 线性相关，那么 $\\vec x=t_1\\vec d_1+t_2\\vec d_2+t_3\\vec d_3$ 至多表示一个平面（也可能是一条直线或一个点）。"
    }
   },
   {
@@ -1430,7 +1430,7 @@
    "t": {
     "en": "We now have a way of testing the validity of a vector-form representation of a line/plane/volume. Just check whether the chosen direction vectors are linearly independent!",
     "sha": "8bf41a8b425e",
-    "zh": ""
+    "zh": "现在我们有了一个检验直线/平面/体的向量形式表示是否合理的办法。只要看所选的方向向量是否线性无关就行！"
    }
   },
   {
@@ -1439,7 +1439,7 @@
    "title": {
     "en": "Takeaway",
     "sha": "e59a7ab66086",
-    "zh": ""
+    "zh": "要点"
    },
    "blocks": [
     {
@@ -1447,7 +1447,7 @@
      "t": {
       "en": "When writing an object in vector form, the direction vectors must always be linearly independent.",
       "sha": "33218b45b481",
-      "zh": ""
+      "zh": "用向量形式写一个对象时，方向向量必须始终线性无关。"
      }
     }
    ]
@@ -1462,7 +1462,7 @@
      "t": {
       "en": "Let $A=\\Set{\\mat{1\\\\2\\\\0},\\mat{0\\\\1\\\\0},\\mat{1\\\\1\\\\0}}$.",
       "sha": "961b929f6e23",
-      "zh": ""
+      "zh": "设 $A=\\Set{\\mat{1\\\\2\\\\0},\\mat{0\\\\1\\\\0},\\mat{1\\\\1\\\\0}}$。"
      }
     },
     {
@@ -1475,7 +1475,7 @@
         "t": {
          "en": "Is $A$ linearly independent or dependent?",
          "sha": "46757d82b5f6",
-         "zh": ""
+         "zh": "$A$ 是线性无关还是线性相关？"
         }
        }
       ],
@@ -1485,7 +1485,7 @@
         "t": {
          "en": "Describe the span of $A$.",
          "sha": "a9b95d316c13",
-         "zh": ""
+         "zh": "描述 $A$ 的张成。"
         }
        }
       ],
@@ -1495,7 +1495,7 @@
         "t": {
          "en": "Can $A$ be extended (i.e., can vectors be added to $A$) so that $A$ spans all of $\\R^3$?",
          "sha": "a983e7e4361c",
-         "zh": ""
+         "zh": "能否扩充 $A$（即，能否向 $A$ 中添加向量），使 $A$ 张成整个 $\\R^3$？"
         }
        }
       ]
@@ -1513,7 +1513,7 @@
         "t": {
          "en": "$A$ is linearly dependent.",
          "sha": "c1cdf81d1c90",
-         "zh": ""
+         "zh": "$A$ 线性相关。"
         }
        }
       ],
@@ -1523,7 +1523,7 @@
         "t": {
          "en": "$\\Span(A)$ is the plane $\\Set{\\mat{x \\\\y \\\\0} \\in\\R^3: x,y\\in\\R}$.",
          "sha": "1bde8af18535",
-         "zh": ""
+         "zh": "$\\Span(A)$ 是平面 $\\Set{\\mat{x \\\\y \\\\0} \\in\\R^3: x,y\\in\\R}$。"
         }
        }
       ],
@@ -1533,7 +1533,7 @@
         "t": {
          "en": "Yes. If $A'=A\\cup\\Set{\\mat{0\\\\0\\\\1}}$, then $\\Span(A')=\\R^3$.",
          "sha": "21e76fec513a",
-         "zh": ""
+         "zh": "能。若 $A'=A\\cup\\Set{\\mat{0\\\\0\\\\1}}$，则 $\\Span(A')=\\R^3$。"
         }
        }
       ]
@@ -1557,7 +1557,7 @@
      "t": {
       "en": "For each set below, determine whether it spans a point, line, plane, volume, or other.",
       "sha": "a3bb671bc66c",
-      "zh": ""
+      "zh": "对下面的每个集合，判断它张成的是点、直线、平面、体，还是其他。"
      }
     },
     {
@@ -1570,7 +1570,7 @@
         "t": {
          "en": "$\\Set{\\mat{1\\\\1}}$",
          "sha": "a3debc96c445",
-         "zh": ""
+         "zh": "$\\Set{\\mat{1\\\\1}}$"
         }
        }
       ],
@@ -1580,7 +1580,7 @@
         "t": {
          "en": "$\\Set{\\mat{1\\\\3},\\mat{2\\\\6}}$",
          "sha": "08dc3d9c867b",
-         "zh": ""
+         "zh": "$\\Set{\\mat{1\\\\3},\\mat{2\\\\6}}$"
         }
        }
       ],
@@ -1590,7 +1590,7 @@
         "t": {
          "en": "$\\Set{\\mat{2\\\\4},\\mat{4\\\\2}}$",
          "sha": "48cabaec29f4",
-         "zh": ""
+         "zh": "$\\Set{\\mat{2\\\\4},\\mat{4\\\\2}}$"
         }
        }
       ],
@@ -1600,7 +1600,7 @@
         "t": {
          "en": "$\\Set{\\mat{1\\\\2},\\mat{-1\\\\-2}}$",
          "sha": "36abd09fe9e2",
-         "zh": ""
+         "zh": "$\\Set{\\mat{1\\\\2},\\mat{-1\\\\-2}}$"
         }
        }
       ],
@@ -1610,7 +1610,7 @@
         "t": {
          "en": "$\\Set{\\mat{1\\\\2},\\mat{-1\\\\2}}$",
          "sha": "eda55e3796d9",
-         "zh": ""
+         "zh": "$\\Set{\\mat{1\\\\2},\\mat{-1\\\\2}}$"
         }
        }
       ],
@@ -1620,7 +1620,7 @@
         "t": {
          "en": "$\\Set{}$",
          "sha": "07039a8dc4ed",
-         "zh": ""
+         "zh": "$\\Set{}$"
         }
        }
       ],
@@ -1630,7 +1630,7 @@
         "t": {
          "en": "$\\Set{\\mat{1\\\\2},\\mat{2\\\\3},\\mat{3\\\\4}}$",
          "sha": "faaf62614c4a",
-         "zh": ""
+         "zh": "$\\Set{\\mat{1\\\\2},\\mat{2\\\\3},\\mat{3\\\\4}}$"
         }
        }
       ],
@@ -1640,7 +1640,7 @@
         "t": {
          "en": "$\\Set{\\mat{5\\\\4\\\\-3},\\mat{1\\\\1\\\\0},\\mat{2\\\\2\\\\2}}$",
          "sha": "668322e7e3cd",
-         "zh": ""
+         "zh": "$\\Set{\\mat{5\\\\4\\\\-3},\\mat{1\\\\1\\\\0},\\mat{2\\\\2\\\\2}}$"
         }
        }
       ],
@@ -1650,7 +1650,7 @@
         "t": {
          "en": "$\\Set{\\mat{1\\\\-2\\\\0},\\mat{4\\\\-5\\\\1}}$",
          "sha": "3e0b6a0ca572",
-         "zh": ""
+         "zh": "$\\Set{\\mat{1\\\\-2\\\\0},\\mat{4\\\\-5\\\\1}}$"
         }
        }
       ],
@@ -1660,7 +1660,7 @@
         "t": {
          "en": "$\\Set{\\mat{1\\\\-2\\\\0},\\mat{4\\\\-5\\\\1},\\mat{5\\\\-7\\\\1}}$",
          "sha": "0daa010a2dfa",
-         "zh": ""
+         "zh": "$\\Set{\\mat{1\\\\-2\\\\0},\\mat{4\\\\-5\\\\1},\\mat{5\\\\-7\\\\1}}$"
         }
        }
       ]
@@ -1678,7 +1678,7 @@
         "t": {
          "en": "Line",
          "sha": "ea9676003762",
-         "zh": ""
+         "zh": "直线"
         }
        }
       ],
@@ -1688,7 +1688,7 @@
         "t": {
          "en": "Line",
          "sha": "ea9676003762",
-         "zh": ""
+         "zh": "直线"
         }
        }
       ],
@@ -1698,7 +1698,7 @@
         "t": {
          "en": "Plane",
          "sha": "a59e151e43c3",
-         "zh": ""
+         "zh": "平面"
         }
        }
       ],
@@ -1708,7 +1708,7 @@
         "t": {
          "en": "Line",
          "sha": "ea9676003762",
-         "zh": ""
+         "zh": "直线"
         }
        }
       ],
@@ -1718,7 +1718,7 @@
         "t": {
          "en": "Plane",
          "sha": "a59e151e43c3",
-         "zh": ""
+         "zh": "平面"
         }
        }
       ],
@@ -1728,7 +1728,7 @@
         "t": {
          "en": "Point",
          "sha": "f79a28423ed1",
-         "zh": ""
+         "zh": "点"
         }
        }
       ],
@@ -1738,7 +1738,7 @@
         "t": {
          "en": "Plane",
          "sha": "a59e151e43c3",
-         "zh": ""
+         "zh": "平面"
         }
        }
       ],
@@ -1748,7 +1748,7 @@
         "t": {
          "en": "Volume",
          "sha": "3b18e8e33250",
-         "zh": ""
+         "zh": "体"
         }
        }
       ],
@@ -1758,7 +1758,7 @@
         "t": {
          "en": "Plane",
          "sha": "a59e151e43c3",
-         "zh": ""
+         "zh": "平面"
         }
        }
       ],
@@ -1768,7 +1768,7 @@
         "t": {
          "en": "Plane",
          "sha": "a59e151e43c3",
-         "zh": ""
+         "zh": "平面"
         }
        }
       ]
@@ -1797,7 +1797,7 @@
         "t": {
          "en": "For each set in question 〔引用〕, determine whether it is linearly independent or dependent.",
          "sha": "421da69571c0",
-         "zh": ""
+         "zh": "对题〔引用〕中的每个集合，判断它是线性无关还是线性相关。"
         }
        }
       ],
@@ -1807,7 +1807,7 @@
         "t": {
          "en": "Is the set $\\Set{\\mat{1\\\\2\\\\3},\\mat{5\\\\6\\\\7}, \\mat{9\\\\10\\\\11}, \\mat{13\\\\14\\\\15}}$ linearly independent or dependent?",
          "sha": "b5cbc15669ff",
-         "zh": ""
+         "zh": "集合 $\\Set{\\mat{1\\\\2\\\\3},\\mat{5\\\\6\\\\7}, \\mat{9\\\\10\\\\11}, \\mat{13\\\\14\\\\15}}$ 是线性无关还是线性相关？"
         }
        }
       ],
@@ -1817,7 +1817,7 @@
         "t": {
          "en": "Can you find a set of $n+1$ vectors in $\\R^{n}$ that is linearly independent? Explain.",
          "sha": "4262d98f99b7",
-         "zh": ""
+         "zh": "你能在 $\\R^{n}$ 中找到由 $n+1$ 个向量组成的线性无关集合吗？请说明理由。"
         }
        }
       ]
@@ -1840,7 +1840,7 @@
            "t": {
             "en": "Linearly Independent",
             "sha": "6cca2f58500b",
-            "zh": ""
+            "zh": "线性无关"
            }
           }
          ],
@@ -1850,7 +1850,7 @@
            "t": {
             "en": "Linearly Dependent",
             "sha": "5749cf6b3b71",
-            "zh": ""
+            "zh": "线性相关"
            }
           }
          ],
@@ -1860,7 +1860,7 @@
            "t": {
             "en": "Linearly Independent",
             "sha": "6cca2f58500b",
-            "zh": ""
+            "zh": "线性无关"
            }
           }
          ],
@@ -1870,7 +1870,7 @@
            "t": {
             "en": "Lineraly Dependent",
             "sha": "a327883e148e",
-            "zh": ""
+            "zh": "线性相关"
            }
           }
          ],
@@ -1880,7 +1880,7 @@
            "t": {
             "en": "Linearly Independent",
             "sha": "6cca2f58500b",
-            "zh": ""
+            "zh": "线性无关"
            }
           }
          ],
@@ -1890,7 +1890,7 @@
            "t": {
             "en": "Linearly Independent",
             "sha": "6cca2f58500b",
-            "zh": ""
+            "zh": "线性无关"
            }
           }
          ],
@@ -1900,7 +1900,7 @@
            "t": {
             "en": "Linearly Dependent",
             "sha": "5749cf6b3b71",
-            "zh": ""
+            "zh": "线性相关"
            }
           }
          ],
@@ -1910,7 +1910,7 @@
            "t": {
             "en": "Linearly Independent",
             "sha": "6cca2f58500b",
-            "zh": ""
+            "zh": "线性无关"
            }
           }
          ],
@@ -1920,7 +1920,7 @@
            "t": {
             "en": "Linearly Independent",
             "sha": "6cca2f58500b",
-            "zh": ""
+            "zh": "线性无关"
            }
           }
          ],
@@ -1930,7 +1930,7 @@
            "t": {
             "en": "Linearly Dependent",
             "sha": "5749cf6b3b71",
-            "zh": ""
+            "zh": "线性相关"
            }
           }
          ]
@@ -1943,7 +1943,7 @@
         "t": {
          "en": "Linearly Dependent",
          "sha": "5749cf6b3b71",
-         "zh": ""
+         "zh": "线性相关"
         }
        }
       ],
@@ -1953,7 +1953,7 @@
         "t": {
          "en": "No. The solutions to the vector equation $\\alpha_{1}\\vec x_{1}+\\alpha_{2}\\vec x_{2}+\\ldots+\\alpha_{n+1}\\vec x_{n+1}=0$ for $\\alpha_{1},\\alpha_{2},\\ldots,\\alpha_{n+1} \\in \\R$ are the solutions to a system of $n$ equations in $n+1$ variables. This system is consistent since $\\alpha_{1}=\\alpha_{2}=\\ldots=\\alpha_{n+1}=0$ is a solution. The row reduced echelon form of the corresponding augmented matrix has at least one free variable column since there are more columns than rows. Hence there are infinitely many solutions, and in particular there exists a non-trivial solution to the above vector equation.",
          "sha": "be099db11801",
-         "zh": ""
+         "zh": "不能。向量方程 $\\alpha_{1}\\vec x_{1}+\\alpha_{2}\\vec x_{2}+\\ldots+\\alpha_{n+1}\\vec x_{n+1}=0$（其中 $\\alpha_{1},\\alpha_{2},\\ldots,\\alpha_{n+1} \\in \\R$）的解，就是一个含 $n$ 个方程、$n+1$ 个变量的方程组的解。这个方程组是相容的，因为 $\\alpha_{1}=\\alpha_{2}=\\ldots=\\alpha_{n+1}=0$ 是一组解。由于列数多于行数，对应的增广矩阵的简化行阶梯形至少有一个自由变量列。因此有无穷多个解，特别地，上述向量方程存在非平凡解。"
         }
        }
       ]
@@ -1982,7 +1982,7 @@
         "t": {
          "en": "If possible, express the following lines in $\\R^{2}$ as spans. Otherwise, justify why the line cannot be expressed as a span.",
          "sha": "dd4b121bb1c6",
-         "zh": ""
+         "zh": "如果可能，把下列 $\\R^{2}$ 中的直线表示成张成。否则，说明为什么这条直线不能表示成张成。"
         }
        },
        {
@@ -1995,7 +1995,7 @@
            "t": {
             "en": "$x=0$",
             "sha": "34ea5b6f6de5",
-            "zh": ""
+            "zh": "$x=0$"
            }
           }
          ],
@@ -2005,7 +2005,7 @@
            "t": {
             "en": "$2x+3y=0$",
             "sha": "647976ade4ac",
-            "zh": ""
+            "zh": "$2x+3y=0$"
            }
           }
          ],
@@ -2015,7 +2015,7 @@
            "t": {
             "en": "$5x-4y=0$",
             "sha": "b7e5943b78ac",
-            "zh": ""
+            "zh": "$5x-4y=0$"
            }
           }
          ],
@@ -2025,7 +2025,7 @@
            "t": {
             "en": "$-x-y=-1$",
             "sha": "f3d4e6c0bb06",
-            "zh": ""
+            "zh": "$-x-y=-1$"
            }
           }
          ],
@@ -2035,7 +2035,7 @@
            "t": {
             "en": "$9x-15y=8$",
             "sha": "82f1e5efce08",
-            "zh": ""
+            "zh": "$9x-15y=8$"
            }
           }
          ]
@@ -2048,7 +2048,7 @@
         "t": {
          "en": "For each line in question 〔引用〕 that cannot be expressed as a span, express it as a translated span.",
          "sha": "86c387586580",
-         "zh": ""
+         "zh": "对题〔引用〕中每条不能表示成张成的直线，把它表示成平移张成。"
         }
        }
       ],
@@ -2058,7 +2058,7 @@
         "t": {
          "en": "Each equation below specifies a line or a plane in $\\R^3$. If possible, express the specified line or plane as a span. Otherwise, justify why it cannot be expressed as a span.",
          "sha": "c22be2dbdb4e",
-         "zh": ""
+         "zh": "下面每个方程给出 $\\R^3$ 中的一条直线或一个平面。如果可能，把给出的直线或平面表示成张成。否则，说明为什么它不能表示成张成。"
         }
        },
        {
@@ -2071,7 +2071,7 @@
            "t": {
             "en": "$2x-y+z=4$",
             "sha": "2e0d97e8b061",
-            "zh": ""
+            "zh": "$2x-y+z=4$"
            }
           }
          ],
@@ -2081,7 +2081,7 @@
            "t": {
             "en": "$x+6y-z=0$",
             "sha": "132f5735ee14",
-            "zh": ""
+            "zh": "$x+6y-z=0$"
            }
           }
          ],
@@ -2091,7 +2091,7 @@
            "t": {
             "en": "$x+3z=0$",
             "sha": "6773e2895f07",
-            "zh": ""
+            "zh": "$x+3z=0$"
            }
           }
          ],
@@ -2101,7 +2101,7 @@
            "t": {
             "en": "$y=1$",
             "sha": "6c3b4834614e",
-            "zh": ""
+            "zh": "$y=1$"
            }
           }
          ],
@@ -2111,7 +2111,7 @@
            "t": {
             "en": "$x=0$ and $z=0$",
             "sha": "0382b6f422ba",
-            "zh": ""
+            "zh": "$x=0$ 且 $z=0$"
            }
           }
          ],
@@ -2121,7 +2121,7 @@
            "t": {
             "en": "$2x-y=2$ and $z=-1$",
             "sha": "7298ac45dbfe",
-            "zh": ""
+            "zh": "$2x-y=2$ 且 $z=-1$"
            }
           }
          ]
@@ -2134,7 +2134,7 @@
         "t": {
          "en": "For lines or planes in question 〔引用〕 that cannot be expressed as spans, express as a translated span.",
          "sha": "e5988af1c823",
-         "zh": ""
+         "zh": "对题〔引用〕中不能表示成张成的直线或平面，把它们表示成平移张成。"
         }
        }
       ]
@@ -2157,7 +2157,7 @@
            "t": {
             "en": "$\\Span\\Set{\\mat{0\\\\-1}}$",
             "sha": "ad01da5757ef",
-            "zh": ""
+            "zh": "$\\Span\\Set{\\mat{0\\\\-1}}$"
            }
           }
          ],
@@ -2167,7 +2167,7 @@
            "t": {
             "en": "$\\Span\\Set{\\mat{3\\\\-2}}$",
             "sha": "86713919b3e2",
-            "zh": ""
+            "zh": "$\\Span\\Set{\\mat{3\\\\-2}}$"
            }
           }
          ],
@@ -2177,7 +2177,7 @@
            "t": {
             "en": "$\\Span\\Set{\\mat{4\\\\5}}$",
             "sha": "d9cb45d3e8e8",
-            "zh": ""
+            "zh": "$\\Span\\Set{\\mat{4\\\\5}}$"
            }
           }
          ],
@@ -2187,7 +2187,7 @@
            "t": {
             "en": "Not possible since $\\mat{0\\\\0}$ is not on the line.",
             "sha": "a325a55dc178",
-            "zh": ""
+            "zh": "不可能，因为 $\\mat{0\\\\0}$ 不在这条直线上。"
            }
           }
          ],
@@ -2197,7 +2197,7 @@
            "t": {
             "en": "Not possible since $\\mat{0\\\\0}$ is not on the line.",
             "sha": "a325a55dc178",
-            "zh": ""
+            "zh": "不可能，因为 $\\mat{0\\\\0}$ 不在这条直线上。"
            }
           }
          ]
@@ -2210,7 +2210,7 @@
         "t": {
          "en": "〔引用〕: $\\Span\\Set{\\mat{1\\\\-1}} + \\Set{\\mat{1\\\\0}}$ 〔引用〕: $\\Span\\Set{\\mat{5\\\\3}} + \\Set{\\mat{8/9\\\\0}}$",
          "sha": "8a1bf734ee58",
-         "zh": ""
+         "zh": "〔引用〕：$\\Span\\Set{\\mat{1\\\\-1}} + \\Set{\\mat{1\\\\0}}$ 〔引用〕：$\\Span\\Set{\\mat{5\\\\3}} + \\Set{\\mat{8/9\\\\0}}$"
         }
        }
       ],
@@ -2225,7 +2225,7 @@
            "t": {
             "en": "Not possible since $\\vec 0$ is not in the plane.",
             "sha": "cfaad78453bc",
-            "zh": ""
+            "zh": "不可能，因为 $\\vec 0$ 不在这个平面内。"
            }
           }
          ],
@@ -2235,7 +2235,7 @@
            "t": {
             "en": "$\\Span\\Set{\\mat{6\\\\-1\\\\0}, \\mat{1\\\\0\\\\1}}$",
             "sha": "71e749adff8c",
-            "zh": ""
+            "zh": "$\\Span\\Set{\\mat{6\\\\-1\\\\0}, \\mat{1\\\\0\\\\1}}$"
            }
           }
          ],
@@ -2245,7 +2245,7 @@
            "t": {
             "en": "$\\Span\\Set{\\mat{3\\\\0\\\\-1}, \\mat{0\\\\1\\\\0}}$",
             "sha": "f17535928f48",
-            "zh": ""
+            "zh": "$\\Span\\Set{\\mat{3\\\\0\\\\-1}, \\mat{0\\\\1\\\\0}}$"
            }
           }
          ],
@@ -2255,7 +2255,7 @@
            "t": {
             "en": "Impossible since $\\vec 0$ is not in the plane.",
             "sha": "c83db3cd1755",
-            "zh": ""
+            "zh": "不可能，因为 $\\vec 0$ 不在这个平面内。"
            }
           }
          ],
@@ -2265,7 +2265,7 @@
            "t": {
             "en": "$\\Span\\Set{\\mat{0\\\\1\\\\0}}$",
             "sha": "809b677c3b86",
-            "zh": ""
+            "zh": "$\\Span\\Set{\\mat{0\\\\1\\\\0}}$"
            }
           }
          ],
@@ -2275,7 +2275,7 @@
            "t": {
             "en": "Not possible since $\\vec 0$ is not in the plane.",
             "sha": "cfaad78453bc",
-            "zh": ""
+            "zh": "不可能，因为 $\\vec 0$ 不在这个平面内。"
            }
           }
          ]
@@ -2288,7 +2288,7 @@
         "t": {
          "en": "〔引用〕: $\\Span\\Set{\\mat{1\\\\2\\\\0}, \\mat{0\\\\1\\\\1}} + \\Set{\\mat{2\\\\0\\\\0}}$ 〔引用〕: $\\Span\\Set{\\mat{1\\\\0\\\\0}, \\mat{0\\\\0\\\\1}} + \\Set{\\mat{0\\\\1\\\\0}}$ 〔引用〕: $\\Span\\Set{\\mat{1\\\\2\\\\0}} + \\Set{\\mat{1\\\\0\\\\-1}}$",
          "sha": "e56f0da6d749",
-         "zh": ""
+         "zh": "〔引用〕：$\\Span\\Set{\\mat{1\\\\2\\\\0}, \\mat{0\\\\1\\\\1}} + \\Set{\\mat{2\\\\0\\\\0}}$ 〔引用〕：$\\Span\\Set{\\mat{1\\\\0\\\\0}, \\mat{0\\\\0\\\\1}} + \\Set{\\mat{0\\\\1\\\\0}}$ 〔引用〕：$\\Span\\Set{\\mat{1\\\\2\\\\0}} + \\Set{\\mat{1\\\\0\\\\-1}}$"
         }
        }
       ]
@@ -2312,7 +2312,7 @@
      "t": {
       "en": "Determine if the following planes, expressed in vector form, are the same plane.",
       "sha": "97b3eb7fc03e",
-      "zh": ""
+      "zh": "判断下列以向量形式给出的平面是否为同一个平面。"
      }
     },
     {
@@ -2325,7 +2325,7 @@
         "t": {
          "en": "$\\vec x = t\\mat{1\\\\2}+ s\\mat{2\\\\7}$ and $\\vec x = t\\mat{3\\\\5}+ s\\mat{8\\\\4}$.",
          "sha": "b01b90e7a40d",
-         "zh": ""
+         "zh": "$\\vec x = t\\mat{1\\\\2}+ s\\mat{2\\\\7}$ 与 $\\vec x = t\\mat{3\\\\5}+ s\\mat{8\\\\4}$。"
         }
        }
       ],
@@ -2335,7 +2335,7 @@
         "t": {
          "en": "$\\vec x = t\\mat{2\\\\2\\\\3}+ s\\mat{1\\\\0\\\\5}$ and $\\vec x = t\\mat{1\\\\0\\\\5}+ s\\mat{4\\\\2\\\\13}$.",
          "sha": "283ae88d228b",
-         "zh": ""
+         "zh": "$\\vec x = t\\mat{2\\\\2\\\\3}+ s\\mat{1\\\\0\\\\5}$ 与 $\\vec x = t\\mat{1\\\\0\\\\5}+ s\\mat{4\\\\2\\\\13}$。"
         }
        }
       ],
@@ -2345,7 +2345,7 @@
         "t": {
          "en": "$\\vec x = t\\mat{1\\\\2\\\\1}+ s\\mat{2\\\\2\\\\1}$ and $\\vec x = t\\mat{0\\\\1\\\\0}+ s\\mat{1\\\\2\\\\1}$.",
          "sha": "3ac04d9f0fcc",
-         "zh": ""
+         "zh": "$\\vec x = t\\mat{1\\\\2\\\\1}+ s\\mat{2\\\\2\\\\1}$ 与 $\\vec x = t\\mat{0\\\\1\\\\0}+ s\\mat{1\\\\2\\\\1}$。"
         }
        }
       ]
@@ -2363,7 +2363,7 @@
         "t": {
          "en": "Same plane ($\\R^2$).",
          "sha": "8021afeab314",
-         "zh": ""
+         "zh": "同一个平面（$\\R^2$）。"
         }
        }
       ],
@@ -2373,7 +2373,7 @@
         "t": {
          "en": "Same plane ($2\\mat{1\\\\0\\\\5} + \\mat{2\\\\2\\\\3} = \\mat{4\\\\2\\\\13}$).",
          "sha": "7261c863de87",
-         "zh": ""
+         "zh": "同一个平面（$2\\mat{1\\\\0\\\\5} + \\mat{2\\\\2\\\\3} = \\mat{4\\\\2\\\\13}$）。"
         }
        }
       ],
@@ -2383,7 +2383,7 @@
         "t": {
          "en": "Different plane ($\\mat{2\\\\2\\\\1}$ is not in the second plane).",
          "sha": "e07623d975cf",
-         "zh": ""
+         "zh": "不同的平面（$\\mat{2\\\\2\\\\1}$ 不在第二个平面内）。"
         }
        }
       ]
@@ -2407,7 +2407,7 @@
      "t": {
       "en": "Show that the set $\\Set{\\mat{2\\\\0\\\\7},\\mat{1\\\\1\\\\1},\\mat{6\\\\4\\\\11}}$ is linearly dependent in two ways. First, using the geometric definition of linear dependence and then using the algebraic definition.",
       "sha": "dd43cc649d22",
-      "zh": ""
+      "zh": "分别用两种方式证明集合 $\\Set{\\mat{2\\\\0\\\\7},\\mat{1\\\\1\\\\1},\\mat{6\\\\4\\\\11}}$ 线性相关：先用线性相关的几何定义，再用代数定义。"
      }
     }
    ],
@@ -2417,7 +2417,7 @@
      "t": {
       "en": "The set is linearly dependent since: $\\mat{6\\\\4\\\\11}= \\mat{2\\\\0\\\\7}+ 4\\mat{1\\\\1\\\\1}$ (geometric) or $\\mat{2\\\\0\\\\7}+ 4\\mat{1\\\\1\\\\1}+ (-1)\\mat{6\\\\4\\\\11}=\\vec 0$ (algebraic).",
       "sha": "14bb28ad956e",
-      "zh": ""
+      "zh": "这个集合线性相关，因为：$\\mat{6\\\\4\\\\11}= \\mat{2\\\\0\\\\7}+ 4\\mat{1\\\\1\\\\1}$（几何定义），或 $\\mat{2\\\\0\\\\7}+ 4\\mat{1\\\\1\\\\1}+ (-1)\\mat{6\\\\4\\\\11}=\\vec 0$（代数定义）。"
      }
     }
    ],
@@ -2438,7 +2438,7 @@
      "t": {
       "en": "Choose vectors $\\vec p$, $\\vec d_{1}$, $\\vec d_{2}$, $\\vec d_{3}$ in $\\R^{4}$ such that the vector equation $\\vec x = t_{1}\\vec d_{1} + t_{2}\\vec d_{2} + t_{3}\\vec d_{3}+\\vec p$ specifies:",
       "sha": "6c8cf758d8e7",
-      "zh": ""
+      "zh": "选取 $\\R^{4}$ 中的向量 $\\vec p$、$\\vec d_{1}$、$\\vec d_{2}$、$\\vec d_{3}$，使向量方程 $\\vec x = t_{1}\\vec d_{1} + t_{2}\\vec d_{2} + t_{3}\\vec d_{3}+\\vec p$ 分别表示："
      }
     },
     {
@@ -2451,7 +2451,7 @@
         "t": {
          "en": "A hyperplane passing through the origin.",
          "sha": "0a33198d304e",
-         "zh": ""
+         "zh": "一个过原点的超平面。"
         }
        }
       ],
@@ -2461,7 +2461,7 @@
         "t": {
          "en": "A plane not passing through the origin.",
          "sha": "2324d18cc2a3",
-         "zh": ""
+         "zh": "一个不过原点的平面。"
         }
        }
       ],
@@ -2471,7 +2471,7 @@
         "t": {
          "en": "A line passing through the origin.",
          "sha": "32311723005f",
-         "zh": ""
+         "zh": "一条过原点的直线。"
         }
        }
       ],
@@ -2481,7 +2481,7 @@
         "t": {
          "en": "The point $(2,2,2,3)$.",
          "sha": "e704d472f708",
-         "zh": ""
+         "zh": "点 $(2,2,2,3)$。"
         }
        }
       ]
@@ -2499,7 +2499,7 @@
         "t": {
          "en": "$\\vec{d}_{1}= \\mat{1\\\\0\\\\0\\\\0}$, $\\vec{d}_{2}= \\mat{0\\\\1\\\\0\\\\0}$, $\\vec{d}_{3}=\\mat{0\\\\0\\\\1\\\\0}$, $\\vec{p}= \\mat{0\\\\0\\\\0\\\\0}$",
          "sha": "bd74967d8f85",
-         "zh": ""
+         "zh": "$\\vec{d}_{1}= \\mat{1\\\\0\\\\0\\\\0}$，$\\vec{d}_{2}= \\mat{0\\\\1\\\\0\\\\0}$，$\\vec{d}_{3}=\\mat{0\\\\0\\\\1\\\\0}$，$\\vec{p}= \\mat{0\\\\0\\\\0\\\\0}$"
         }
        }
       ],
@@ -2509,7 +2509,7 @@
         "t": {
          "en": "$\\vec{d}_{1}= \\mat{1\\\\0\\\\0\\\\0}$, and $\\vec{d}_{2}= \\mat{0\\\\1\\\\0\\\\0}$, $\\vec{d}_{3}=\\mat{1\\\\1\\\\0\\\\0}$, $\\vec{p}= \\mat{0\\\\0\\\\1\\\\0}$",
          "sha": "59b09c2b0ba6",
-         "zh": ""
+         "zh": "$\\vec{d}_{1}= \\mat{1\\\\0\\\\0\\\\0}$，$\\vec{d}_{2}= \\mat{0\\\\1\\\\0\\\\0}$，$\\vec{d}_{3}=\\mat{1\\\\1\\\\0\\\\0}$，$\\vec{p}= \\mat{0\\\\0\\\\1\\\\0}$"
         }
        }
       ],
@@ -2519,7 +2519,7 @@
         "t": {
          "en": "$\\vec{d}_{1}= \\mat{1\\\\0\\\\0\\\\0}$, $\\vec{d}_{2}= \\mat{2\\\\0\\\\0\\\\0}$, $\\vec{d}_{3}= \\mat{-1\\\\0\\\\0\\\\0}$, $\\vec{p}= \\mat{0\\\\0\\\\0\\\\0}$",
          "sha": "16825ea8d451",
-         "zh": ""
+         "zh": "$\\vec{d}_{1}= \\mat{1\\\\0\\\\0\\\\0}$，$\\vec{d}_{2}= \\mat{2\\\\0\\\\0\\\\0}$，$\\vec{d}_{3}= \\mat{-1\\\\0\\\\0\\\\0}$，$\\vec{p}= \\mat{0\\\\0\\\\0\\\\0}$"
         }
        }
       ],
@@ -2529,7 +2529,7 @@
         "t": {
          "en": "$\\vec {d}_{1} = \\vec {d}_{2} = \\vec {d}_{3} = \\vec {0}$, $\\vec {p} = \\mat{2\\\\2\\\\2\\\\3}$",
          "sha": "12656b251f1a",
-         "zh": ""
+         "zh": "$\\vec {d}_{1} = \\vec {d}_{2} = \\vec {d}_{3} = \\vec {0}$，$\\vec {p} = \\mat{2\\\\2\\\\2\\\\3}$"
         }
        }
       ]
@@ -2553,7 +2553,7 @@
      "t": {
       "en": "Classify the sets $A=\\Set{}$ and $B=\\Set{\\vec 0}$ as linearly independent or dependent.",
       "sha": "b95ebe6d7d39",
-      "zh": ""
+      "zh": "判断集合 $A=\\Set{}$ 与 $B=\\Set{\\vec 0}$ 是线性无关还是线性相关。"
      }
     }
    ],
@@ -2563,7 +2563,7 @@
      "t": {
       "en": "The set $A$ is linearly independent. Since $A$ contains no vectors, there is no way to write $\\vec 0$ as a non-trivial linear combination of vectors in $A$. However, $B$ is linearly dependent, since $\\vec 0=7\\vec 0$ is a non-trivial linear combination of vectors in $B$ that gives the zero vector.",
       "sha": "221142435a6a",
-      "zh": ""
+      "zh": "集合 $A$ 线性无关。因为 $A$ 不含任何向量，所以无法把 $\\vec 0$ 写成 $A$ 中向量的非平凡线性组合。然而 $B$ 线性相关，因为 $\\vec 0=7\\vec 0$ 是 $B$ 中向量的一个给出零向量的非平凡线性组合。"
      }
     }
    ],
@@ -2584,7 +2584,7 @@
      "t": {
       "en": "Let $S=\\Set{\\mat{1\\\\3},\\mat{0\\\\-1}}$ and let $T=\\Set{\\mat{-1\\\\-1},\\mat{0\\\\2},\\mat{0\\\\0}}$. Draw the sets $S$, $T$, and $T+S$.",
       "sha": "9558764db752",
-      "zh": ""
+      "zh": "设 $S=\\Set{\\mat{1\\\\3},\\mat{0\\\\-1}}$，$T=\\Set{\\mat{-1\\\\-1},\\mat{0\\\\2},\\mat{0\\\\0}}$。画出集合 $S$、$T$ 与 $T+S$。"
      }
     }
    ],
@@ -2631,7 +2631,7 @@
      "t": {
       "en": "Let $S=\\Set{\\mat{1\\\\1},\\mat{0\\\\-1}, \\mat{0\\\\0}}$.",
       "sha": "45e67ee31c50",
-      "zh": ""
+      "zh": "设 $S=\\Set{\\mat{1\\\\1},\\mat{0\\\\-1}, \\mat{0\\\\0}}$。"
      }
     },
     {
@@ -2644,7 +2644,7 @@
         "t": {
          "en": "Draw $S$, $S+S$, and $(S+S)+S$.",
          "sha": "a67c216a6158",
-         "zh": ""
+         "zh": "画出 $S$、$S+S$ 与 $(S+S)+S$。"
         }
        }
       ],
@@ -2654,7 +2654,7 @@
         "t": {
          "en": "Is $(S+S)+S=S+(S+S)$? Does the expression $S+S+S$ make sense?",
          "sha": "8f7a54f70d0a",
-         "zh": ""
+         "zh": "$(S+S)+S=S+(S+S)$ 成立吗？表达式 $S+S+S$ 有意义吗？"
         }
        }
       ],
@@ -2664,7 +2664,7 @@
         "t": {
          "en": "Draw $S+S+S+S+\\cdots$.",
          "sha": "a76a8c76c48a",
-         "zh": ""
+         "zh": "画出 $S+S+S+S+\\cdots$。"
         }
        }
       ]
@@ -2682,7 +2682,7 @@
         "t": {
          "en": "The set $S$:",
          "sha": "79ecb9d5c906",
-         "zh": ""
+         "zh": "集合 $S$："
         }
        },
        {
@@ -2698,7 +2698,7 @@
         "t": {
          "en": "The set $S+S$:",
          "sha": "09815d83c561",
-         "zh": ""
+         "zh": "集合 $S+S$："
         }
        },
        {
@@ -2714,7 +2714,7 @@
         "t": {
          "en": "The set $(S+S)+S$:",
          "sha": "591e3cca0de1",
-         "zh": ""
+         "zh": "集合 $(S+S)+S$："
         }
        },
        {
@@ -2732,7 +2732,7 @@
         "t": {
          "en": "The set $(S+S)+S$ and $S+(S+S)$ are equal since vector addition is associative. This means that $S+S+S$ is well-defined and we can drop the parentheses, so the expression $S+S+S$ makes sense.",
          "sha": "5dfbfdc07e6b",
-         "zh": ""
+         "zh": "集合 $(S+S)+S$ 与 $S+(S+S)$ 相等，因为向量加法满足结合律。这意味着 $S+S+S$ 有明确的定义，可以去掉括号，所以表达式 $S+S+S$ 是有意义的。"
         }
        }
       ],
@@ -2750,7 +2750,7 @@
         "t": {
          "en": "Notice that we obtain the orange points when we add an additional $S$ to the set sum. Since we are considering the infinite sum $S+S+S+S+\\cdots$, the process continues infinitely.",
          "sha": "8a6cd940af01",
-         "zh": ""
+         "zh": "注意，每多加一个 $S$ 到集合和中，就得到图中橙色的点。由于我们考虑的是无穷和 $S+S+S+S+\\cdots$，这个过程会无限地继续下去。"
         }
        }
       ]
@@ -2774,7 +2774,7 @@
      "t": {
       "en": "Let $D\\subseteq\\R^2$ be the unit disk centered at the origin and let $L\\subseteq \\R^2$ be the line segment from $(0,0)$ to $(0,2)$.",
       "sha": "181afd2a1a2a",
-      "zh": ""
+      "zh": "设 $D\\subseteq\\R^2$ 是以原点为圆心的单位圆盘，设 $L\\subseteq \\R^2$ 是从 $(0,0)$ 到 $(0,2)$ 的线段。"
      }
     },
     {
@@ -2787,7 +2787,7 @@
         "t": {
          "en": "How many points are in $D$, $L$, and $D+L$?",
          "sha": "9cedd7d6023e",
-         "zh": ""
+         "zh": "$D$、$L$ 与 $D+L$ 中各有多少个点？"
         }
        }
       ],
@@ -2797,7 +2797,7 @@
         "t": {
          "en": "Draw $D+L$.",
          "sha": "0c725a66d539",
-         "zh": ""
+         "zh": "画出 $D+L$。"
         }
        }
       ],
@@ -2807,7 +2807,7 @@
         "t": {
          "en": "Find the area of $D+L$.",
          "sha": "92ee2f903bed",
-         "zh": ""
+         "zh": "求 $D+L$ 的面积。"
         }
        }
       ],
@@ -2817,7 +2817,7 @@
         "t": {
          "en": "Suppose $S\\subseteq\\R^2$ makes a smiley face when drawn and the “thickness” of each line composing this smiley face is $0.01$ units. Can you find a set $A$ so that the set $S+A$ represents a smiley face where the lines have a thickness of $0.05$? If so, give an example of such an $A$. Otherwise, explain why it is impossible.",
          "sha": "e0e03a17eacb",
-         "zh": ""
+         "zh": "设 $S\\subseteq\\R^2$ 画出来是一张笑脸，且构成这张笑脸的每条线的“粗细”为 $0.01$ 个单位。你能找到一个集合 $A$，使得集合 $S+A$ 表示一张线条粗细为 $0.05$ 的笑脸吗？如果能，请给出这样一个 $A$ 的例子；否则，说明为什么不可能。"
         }
        }
       ]
@@ -2835,7 +2835,7 @@
         "t": {
          "en": "There are infinitely many points in each of D, L, and $D+L$.",
          "sha": "a73ef6bf8270",
-         "zh": ""
+         "zh": "D、L 与 $D+L$ 中各有无穷多个点。"
         }
        }
       ],
@@ -2855,7 +2855,7 @@
         "t": {
          "en": "$D+L$ can be decomposed into $2$ unit radius half-circles and a square with side length $2$. The area of $D+L$ is then $\\pi+4$.",
          "sha": "2249d727a217",
-         "zh": ""
+         "zh": "$D+L$ 可以分解为 $2$ 个单位半径的半圆和一个边长为 $2$ 的正方形。于是 $D+L$ 的面积是 $\\pi+4$。"
         }
        }
       ],
@@ -2865,7 +2865,7 @@
         "t": {
          "en": "We can take A to be a circle of radius $0.02$ units.",
          "sha": "b8c0b376fea3",
-         "zh": ""
+         "zh": "我们可以取 A 为半径 $0.02$ 个单位的圆。"
         }
        }
       ]
@@ -2889,7 +2889,7 @@
      "t": {
       "en": "Let $\\vec v_{1}, \\vec v_{2}, \\vec v_{3}$ be vectors. For each of the following statements, justify whether the statement is true or false.",
       "sha": "e1860f5d99fc",
-      "zh": ""
+      "zh": "设 $\\vec v_{1}, \\vec v_{2}, \\vec v_{3}$ 是向量。对下列每个陈述，判断它是真还是假，并说明理由。"
      }
     },
     {
@@ -2902,7 +2902,7 @@
         "t": {
          "en": "If $\\vec v_{1}$ can be written as a linear combination of $\\vec v_{2}$ and $\\vec v_{3}$, then $\\Set{\\vec v_1,\\vec v_2,\\vec v_3}$ is linearly dependent.",
          "sha": "2f3f374a1199",
-         "zh": ""
+         "zh": "如果 $\\vec v_{1}$ 可以写成 $\\vec v_{2}$ 与 $\\vec v_{3}$ 的线性组合，那么 $\\Set{\\vec v_1,\\vec v_2,\\vec v_3}$ 线性相关。"
         }
        }
       ],
@@ -2912,7 +2912,7 @@
         "t": {
          "en": "If $\\Set{\\vec v_1,\\vec v_2,\\vec v_3}$ is linearly dependent, then $\\vec v_{1}$ can be written as a linear combination of $\\vec v_{2}$ and $\\vec v_{3}$.",
          "sha": "f2fe201816bf",
-         "zh": ""
+         "zh": "如果 $\\Set{\\vec v_1,\\vec v_2,\\vec v_3}$ 线性相关，那么 $\\vec v_{1}$ 可以写成 $\\vec v_{2}$ 与 $\\vec v_{3}$ 的线性组合。"
         }
        }
       ],
@@ -2922,7 +2922,7 @@
         "t": {
          "en": "If $\\vec v_{1}=k\\vec v_{2}$ for some real number $k$, then $\\Set{\\vec v_1,\\vec v_2}$ is linearly dependent.",
          "sha": "1ec6077538b8",
-         "zh": ""
+         "zh": "如果对某个实数 $k$ 有 $\\vec v_{1}=k\\vec v_{2}$，那么 $\\Set{\\vec v_1,\\vec v_2}$ 线性相关。"
         }
        }
       ],
@@ -2932,7 +2932,7 @@
         "t": {
          "en": "If $\\vec v_{1}$ is not a scalar multiple of $\\vec v_{2}$, then $\\Set{\\vec v_1,\\vec v_2,\\vec v_3}$ is linearly independent.",
          "sha": "d8e71cab12be",
-         "zh": ""
+         "zh": "如果 $\\vec v_{1}$ 不是 $\\vec v_{2}$ 的标量倍，那么 $\\Set{\\vec v_1,\\vec v_2,\\vec v_3}$ 线性无关。"
         }
        }
       ],
@@ -2942,7 +2942,7 @@
         "t": {
          "en": "All spans contain $\\vec 0$.",
          "sha": "6a4bdaba639e",
-         "zh": ""
+         "zh": "所有张成都含有 $\\vec 0$。"
         }
        }
       ]
@@ -2960,7 +2960,7 @@
         "t": {
          "en": "True. This follows from the geometric definition of linear dependence.",
          "sha": "9f58a0ab42cc",
-         "zh": ""
+         "zh": "真。这可由线性相关的几何定义得出。"
         }
        }
       ],
@@ -2970,7 +2970,7 @@
         "t": {
          "en": "False. $\\Set{\\mat{1\\\\0},\\mat{0\\\\0},\\mat{0\\\\1}}$ is linearly dependent, but $\\mat{1\\\\0}$ is not a linear combination of $\\mat{0\\\\0}$ and $\\mat{0\\\\1}$.",
          "sha": "27c198ac2812",
-         "zh": ""
+         "zh": "假。$\\Set{\\mat{1\\\\0},\\mat{0\\\\0},\\mat{0\\\\1}}$ 线性相关，但 $\\mat{1\\\\0}$ 不是 $\\mat{0\\\\0}$ 与 $\\mat{0\\\\1}$ 的线性组合。"
         }
        }
       ],
@@ -2980,7 +2980,7 @@
         "t": {
          "en": "True. $\\vec{v}_{1}$ is a linear combination of $\\vec{v}_{2}$ and so $\\Set{\\vec {v}_{1},\\vec{v}_{2}}$ is linearly dependent by the definition of linear dependence.",
          "sha": "0f25b2621de2",
-         "zh": ""
+         "zh": "真。$\\vec{v}_{1}$ 是 $\\vec{v}_{2}$ 的线性组合，所以由线性相关的定义，$\\Set{\\vec {v}_{1},\\vec{v}_{2}}$ 线性相关。"
         }
        }
       ],
@@ -2990,7 +2990,7 @@
         "t": {
          "en": "False. $\\Set{\\mat{1\\\\0},\\mat{0\\\\0},\\mat{0\\\\1}}$ is linearly dependent, but $\\mat{1\\\\0}$ is not a scalar multiple of $\\mat{0\\\\1}$.",
          "sha": "f9dc09c6b19e",
-         "zh": ""
+         "zh": "假。$\\Set{\\mat{1\\\\0},\\mat{0\\\\0},\\mat{0\\\\1}}$ 线性相关，但 $\\mat{1\\\\0}$ 不是 $\\mat{0\\\\1}$ 的标量倍。"
         }
        }
       ],
@@ -3000,7 +3000,7 @@
         "t": {
          "en": "True. The linear combination of any finite set with all coefficients zero is $\\vec {0}$.",
          "sha": "53ebec9b36fa",
-         "zh": ""
+         "zh": "真。任何有限集合中的向量，取全部系数为零所得的线性组合都是 $\\vec {0}$。"
         }
        }
       ]

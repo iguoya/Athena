@@ -7,7 +7,7 @@
    "t": {
     "en": "Module 〔引用〕 discusses the theory of determinants and gives a general algorithm for computing determinants by using elementary matrices. But, since $2\\times 2$ and $3\\times 3$ matrices arise so often in day-to-day life, 〔注： The day-to-day life of a mathematics student, at least!〕 it is worth learning some special-purpose formulas for computing the determinants of $2\\times 2$ and $3\\times 3$ matrices.",
     "sha": "1048da743c7c",
-    "zh": ""
+    "zh": "模块〔引用〕讨论了行列式的理论，并给出了利用初等矩阵计算行列式的一般算法。不过，由于 $2\\times 2$ 和 $3\\times 3$ 矩阵在日常生活中出现得非常频繁〔注：至少在数学专业学生的日常生活中是这样！〕，值得学一学计算 $2\\times 2$ 和 $3\\times 3$ 矩阵行列式的专用公式。"
    }
   },
   {
@@ -15,7 +15,7 @@
    "t": {
     "en": "It should be noted that these formulas are *special*. Though there do exist formulas for determinants of $n\\times n$ matrices, \\emphthey are exponentially more complex than the formulas for $2\\times 2$ and $3\\times 3$ matrices. As such, determinants of large matrices are usually computed using row reduction/elementary matrices and not formulas 〔注： General determinant formulas are primarily useful as theoretical tools for writing proofs.〕.",
     "sha": "1e015a7c44ca",
-    "zh": ""
+    "zh": "要注意，这些公式是*特殊*的。虽然 $n\\times n$ 矩阵的行列式也有公式，但\\emphthey are exponentially more complex than the formulas for $2\\times 2$ and $3\\times 3$ matrices。因此，大矩阵的行列式通常用行化简（初等矩阵）来计算，而不用公式〔注：一般的行列式公式主要是写证明时的理论工具。〕。"
    }
   },
   {
@@ -23,7 +23,7 @@
    "t": {
     "en": "Computing $2\\times 2$ Determinants",
     "sha": "5ed5ac721775",
-    "zh": ""
+    "zh": "计算 $2\\times 2$ 行列式"
    }
   },
   {
@@ -31,7 +31,7 @@
    "t": {
     "en": "For a $2\\times 2$ matrix, we can calculate its determinant directly from its entries.",
     "sha": "a8be7dc984ee",
-    "zh": ""
+    "zh": "对 $2\\times 2$ 矩阵，我们可以直接由它的元素算出行列式。"
    }
   },
   {
@@ -44,7 +44,7 @@
      "t": {
       "en": "Let $M=\\mat{a & b \\\\ c & d}$. Then,",
       "sha": "b5a9cf2ee90d",
-      "zh": ""
+      "zh": "设 $M=\\mat{a & b \\\\ c & d}$。那么，"
      }
     },
     {
@@ -58,7 +58,7 @@
    "t": {
     "en": "The $2\\times 2$ determinant formula can be deduced from Volume Theorem I. Let $M=\\mat{a&b\\\\c&d}$ and let $\\vec c_1=\\mat{a\\\\c}$ and $\\vec c_2=\\mat{b\\\\d}$ be the columns of $M$. We need to compute the area of the parallelogram $\\mathcal P$, with sides $\\vec c_1$ and $\\vec c_2$.",
     "sha": "2a10c50bf9e6",
-    "zh": ""
+    "zh": "$2\\times 2$ 行列式公式可以由体积定理 I（Volume Theorem I）推出。设 $M=\\mat{a&b\\\\c&d}$，并设 $\\vec c_1=\\mat{a\\\\c}$ 和 $\\vec c_2=\\mat{b\\\\d}$ 是 $M$ 的两列。我们要计算以 $\\vec c_1$ 和 $\\vec c_2$ 为边的平行四边形 $\\mathcal P$ 的面积。"
    }
   },
   {
@@ -74,7 +74,7 @@
    "t": {
     "en": "We can compute the area of $\\mathcal P$ by computing the area of a rectangle that contains $\\mathcal P$ and subtracting off any area that we “over counted”.",
     "sha": "c197eef3704d",
-    "zh": ""
+    "zh": "我们可以这样算 $\\mathcal P$ 的面积：先算出包含 $\\mathcal P$ 的一个矩形的面积，再减去“多算了”的那些面积。"
    }
   },
   {
@@ -98,7 +98,7 @@
    "t": {
     "en": "Thus,",
     "sha": "e38f4f305df3",
-    "zh": ""
+    "zh": "于是，"
    }
   },
   {
@@ -110,7 +110,7 @@
    "t": {
     "en": "Using the coordinates for $\\vec c_1$ and $\\vec c_2$, we get",
     "sha": "ecf8775176de",
-    "zh": ""
+    "zh": "代入 $\\vec c_1$ 和 $\\vec c_2$ 的坐标，得到"
    }
   },
   {
@@ -130,7 +130,7 @@
    "t": {
     "en": "Equation 〔引用〕 is beautiful and simple, but its derivation should give you pause. Volume Theorem I refers to *oriented* volume and we didn't make any reference to orientation in our figures! Indeed, we played tricks with pictures. We drew $\\vec c_1$ and $\\vec c_2$ in a right-handed orientation in the first quadrant, even though the vectors $\\mat{a\\\\c}$ and $\\mat{b\\\\d}$ could be in *any* quadrant (and one or both could even be the zero vector)! To fully justify Equation 〔引用〕, we need to consider cases based on all the possible ways $\\vec c_1$ and $\\vec c_2$ can form a parallelogram. However, it turns out that every case gives the same answer: $\\det\\left(\\mat{a&b\\\\c&d}\\right)=ad-bc$.",
     "sha": "43cd077af6d4",
-    "zh": ""
+    "zh": "式〔引用〕既漂亮又简单，但它的推导应当让你停下来想一想。体积定理 I 说的是*有向*体积，而我们的图里根本没有提到方向！确实，我们在图上耍了花招：我们把 $\\vec c_1$ 和 $\\vec c_2$ 画成了第一象限里的右手方向，可是向量 $\\mat{a\\\\c}$ 和 $\\mat{b\\\\d}$ 可能在*任何*象限（其中一个或两个甚至可能是零向量）！要完整地论证式〔引用〕，就得根据 $\\vec c_1$ 和 $\\vec c_2$ 构成平行四边形的所有可能情形分别讨论。不过，结果是每种情形给出同样的答案：$\\det\\left(\\mat{a&b\\\\c&d}\\right)=ad-bc$。"
    }
   },
   {
@@ -143,7 +143,7 @@
      "t": {
       "en": "Directly compute the determinant of $M=\\mat{1 & 6 \\\\ 2 & 7}$ using the $2\\times 2$ formula. Then, find the determinant of $M$ after decomposing it into the product of elementary matrices.",
       "sha": "63c31ff799c1",
-      "zh": ""
+      "zh": "直接计算 $M=\\mat{1 & 6 \\\\ 2 & 7}$ 的行列式，要用 $2\\times 2$ 公式。然后，把它分解成初等矩阵的乘积，再求 $M$ 的行列式。"
      }
     },
     {
@@ -151,7 +151,7 @@
      "t": {
       "en": "Using the $2\\times 2$ formula, we get",
       "sha": "fb19d224c130",
-      "zh": ""
+      "zh": "用 $2\\times 2$ 公式，得到"
      }
     },
     {
@@ -163,7 +163,7 @@
      "t": {
       "en": "Alternatively, row reducing and keeping track of the elementary matrices for each step, we see",
       "sha": "7260e4aaed15",
-      "zh": ""
+      "zh": "另一种做法是进行行化简，并记录每一步对应的初等矩阵，得到"
      }
     },
     {
@@ -175,7 +175,7 @@
      "t": {
       "en": "and so",
       "sha": "9af790b3a93d",
-      "zh": ""
+      "zh": "所以"
      }
     },
     {
@@ -187,7 +187,7 @@
      "t": {
       "en": "$E_1^{-1}$ and $E_3^{-1}$ both have determinant $1$, and $E_2^{-1}$ has determinant $-5$. Thus,",
       "sha": "883d40516e5a",
-      "zh": ""
+      "zh": "$E_1^{-1}$ 和 $E_3^{-1}$ 的行列式都是 $1$，而 $E_2^{-1}$ 的行列式是 $-5$。因此，"
      }
     },
     {
@@ -199,7 +199,7 @@
      "t": {
       "en": "which is exactly what we got using the formula.",
       "sha": "99eaf006521a",
-      "zh": ""
+      "zh": "这恰好就是用公式得到的结果。"
      }
     }
    ]
@@ -209,7 +209,7 @@
    "t": {
     "en": "Computing $3\\times 3$ Determinants",
     "sha": "bb9195ddb174",
-    "zh": ""
+    "zh": "计算 $3\\times 3$ 行列式"
    }
   },
   {
@@ -217,7 +217,7 @@
    "t": {
     "en": "The formula for a $3\\times 3$ matrix is more complicated than the $2\\times 2$ formula.",
     "sha": "084b4639354e",
-    "zh": ""
+    "zh": "$3\\times 3$ 矩阵的行列式公式比 $2\\times 2$ 的公式复杂。"
    }
   },
   {
@@ -230,7 +230,7 @@
      "t": {
       "en": "Let $M=\\mat{a & b & c \\\\ d & e & f \\\\ g & h & i}$. Then",
       "sha": "72040366e705",
-      "zh": ""
+      "zh": "设 $M=\\mat{a & b & c \\\\ d & e & f \\\\ g & h & i}$。那么"
      }
     },
     {
@@ -244,7 +244,7 @@
    "t": {
     "en": "Fortunately, there is a clever mnemonic for remembering this formula called *the Rule of Sarrus* or *the diagonal trick*.",
     "sha": "9f52a82598c2",
-    "zh": ""
+    "zh": "幸运的是，有一个巧妙的记忆方法，叫作*萨吕法则*（Rule of Sarrus）或*对角线技巧*。"
    }
   },
   {
@@ -252,7 +252,7 @@
    "t": {
     "en": "\\bfseries Rule of Sarrus",
     "sha": "2f5780ed788a",
-    "zh": ""
+    "zh": "\\bfseries 萨吕法则"
    }
   },
   {
@@ -260,7 +260,7 @@
    "t": {
     "en": "Let $M=\\mat{a & b & c \\\\ d & e & f \\\\ g & h & i}$. To compute the determinant of $M$ using the Rule of Sarrus, apply the following four steps.",
     "sha": "aea6ca8d77cb",
-    "zh": ""
+    "zh": "设 $M=\\mat{a & b & c \\\\ d & e & f \\\\ g & h & i}$。要用萨吕法则计算 $M$ 的行列式，按下面四步进行。"
    }
   },
   {
@@ -273,7 +273,7 @@
       "t": {
        "en": "[leftmargin=2.4cm]",
        "sha": "008c492232b0",
-       "zh": ""
+       "zh": "[leftmargin=2.4cm]"
       }
      }
     ],
@@ -283,7 +283,7 @@
       "t": {
        "en": "Augment $M$ with copies of its *first two columns*.",
        "sha": "af2aad3690e1",
-       "zh": ""
+       "zh": "在 $M$ 的右边再接上它的*前两列*的拷贝，得到增广后的矩阵。"
       }
      },
      {
@@ -297,7 +297,7 @@
       "t": {
        "en": "Multiply together and then *add* the entries along the three diagonals of the new matrix. These are called the *diagonal products*.",
        "sha": "351eafd081f4",
-       "zh": ""
+       "zh": "把新矩阵中沿三条对角线（从左上到右下）的元素分别相乘，再把三个乘积*相加*。这些乘积叫作*对角线乘积*。"
       }
      },
      {
@@ -315,7 +315,7 @@
       "t": {
        "en": "Multiply together and then *subtract* the entries along the three anti-diagonals. These are called the *anti-diagonal products*.",
        "sha": "103f2548cbb6",
-       "zh": ""
+       "zh": "把沿三条反对角线（从右上到左下）的元素分别相乘，再*减去*这三个乘积。这些乘积叫作*反对角线乘积*。"
       }
      },
      {
@@ -333,7 +333,7 @@
       "t": {
        "en": "Add the diagonal products and subtract the anti-diagonal products to get the determinant.",
        "sha": "96a1e07cf4e6",
-       "zh": ""
+       "zh": "把对角线乘积相加，再减去反对角线乘积，就得到行列式。"
       }
      },
      {
@@ -353,7 +353,7 @@
      "t": {
       "en": "Use the diagonal trick to compute $\\det\\left(\\mat{1 & 4 & 0 \\\\ -2 & 3 & 1 \\\\ 0 & 2 & 1}\\right)$.",
       "sha": "349d7400f557",
-      "zh": ""
+      "zh": "用对角线技巧计算 $\\det\\left(\\mat{1 & 4 & 0 \\\\ -2 & 3 & 1 \\\\ 0 & 2 & 1}\\right)$。"
      }
     },
     {
@@ -377,7 +377,7 @@
      "t": {
       "en": "Thus,",
       "sha": "e38f4f305df3",
-      "zh": ""
+      "zh": "于是，"
      }
     },
     {
@@ -391,7 +391,7 @@
    "t": {
     "en": "It may be tempting to apply the Rule of Sarrus to $4\\times 4$ and larger matrices, but *don't do it!* There is a formula for $4\\times 4$ determinants, but *it's not given by the Rule of Sarrus*\\footnote Because your curiosity is never ending, here's the formula. For a matrix $4\\times 4$ matrix $A=[a_{ij}]$, we have $\\det(A)= a_{1 1} a_{2 2} a_{3 3} a_{4 4} - a_{1 1} a_{2 2} a_{3 4} a_{4 3} - a_{1 1} a_{2 3} a_{3 2} a_{4 4} + a_{1 1} a_{2 3} a_{3 4} a_{4 2} + a_{1 1} a_{2 4} a_{3 2} a_{4 3} - a_{1 1} a_{2 4} a_{3 3} a_{4 2} - a_{1 2} a_{2 1} a_{3 3} a_{4 4} + a_{1 2} a_{2 1} a_{3 4} a_{4 3} + a_{1 2} a_{2 3} a_{3 1} a_{4 4} - a_{1 2} a_{2 3} a_{3 4} a_{4 1} - a_{1 2} a_{2 4} a_{3 1} a_{4 3} + a_{1 2} a_{2 4} a_{3 3} a_{4 1} + a_{1 3} a_{2 1} a_{3 2} a_{4 4} - a_{1 3} a_{2 1} a_{3 4} a_{4 2} - a_{1 3} a_{2 2} a_{3 1} a_{4 4} + a_{1 3} a_{2 2} a_{3 4} a_{4 1} + a_{1 3} a_{2 4} a_{3 1} a_{4 2} - a_{1 3} a_{2 4} a_{3 2} a_{4 1} - a_{1 4} a_{2 1} a_{3 2} a_{4 3} + a_{1 4} a_{2 1} a_{3 3} a_{4 2} + a_{1 4} a_{2 2} a_{3 1} a_{4 3} - a_{1 4} a_{2 2} a_{3 3} a_{4 1} - a_{1 4} a_{2 3} a_{3 1} a_{4 2} + a_{1 4} a_{2 3} a_{3 2} a_{4 1}$. This formula involves $24$ products. The $5\\times 5$ formula involves $120$ products and the $6\\times 6$ formula involves $720$ products. It only gets worse from there.",
     "sha": "50292a71178c",
-    "zh": ""
+    "zh": "不要想着把萨吕法则用到 $4\\times 4$ 及更大的矩阵上，*千万别这么做！* $4\\times 4$ 行列式确实有公式，但*它并不是由萨吕法则给出的*\\footnote 既然你的好奇心永无止境，这里给出这个公式。对 $4\\times 4$ 矩阵 $A=[a_{ij}]$，有 $\\det(A)= a_{1 1} a_{2 2} a_{3 3} a_{4 4} - a_{1 1} a_{2 2} a_{3 4} a_{4 3} - a_{1 1} a_{2 3} a_{3 2} a_{4 4} + a_{1 1} a_{2 3} a_{3 4} a_{4 2} + a_{1 1} a_{2 4} a_{3 2} a_{4 3} - a_{1 1} a_{2 4} a_{3 3} a_{4 2} - a_{1 2} a_{2 1} a_{3 3} a_{4 4} + a_{1 2} a_{2 1} a_{3 4} a_{4 3} + a_{1 2} a_{2 3} a_{3 1} a_{4 4} - a_{1 2} a_{2 3} a_{3 4} a_{4 1} - a_{1 2} a_{2 4} a_{3 1} a_{4 3} + a_{1 2} a_{2 4} a_{3 3} a_{4 1} + a_{1 3} a_{2 1} a_{3 2} a_{4 4} - a_{1 3} a_{2 1} a_{3 4} a_{4 2} - a_{1 3} a_{2 2} a_{3 1} a_{4 4} + a_{1 3} a_{2 2} a_{3 4} a_{4 1} + a_{1 3} a_{2 4} a_{3 1} a_{4 2} - a_{1 3} a_{2 4} a_{3 2} a_{4 1} - a_{1 4} a_{2 1} a_{3 2} a_{4 3} + a_{1 4} a_{2 1} a_{3 3} a_{4 2} + a_{1 4} a_{2 2} a_{3 1} a_{4 3} - a_{1 4} a_{2 2} a_{3 3} a_{4 1} - a_{1 4} a_{2 3} a_{3 1} a_{4 2} + a_{1 4} a_{2 3} a_{3 2} a_{4 1}$。这个公式含有 $24$ 个乘积；$5\\times 5$ 的公式含有 $120$ 个乘积，$6\\times 6$ 的公式含有 $720$ 个乘积。再往后只会更糟。"
    }
   },
   {
@@ -399,7 +399,7 @@
    "t": {
     "en": ".",
     "sha": "3a52ce780950",
-    "zh": ""
+    "zh": "。"
    }
   },
   {
@@ -407,7 +407,7 @@
    "t": {
     "en": "Like the $2\\times 2$ formula for determinants, we can derive the $3\\times 3$ formula directly from the definition. However, it takes quite a bit more work\\footnote If you're interested in proving the $3\\times 3$ determinant formula, try using the elementary matrix approach rather than computing the volume of a parallelepiped directly..",
     "sha": "16245761ced3",
-    "zh": ""
+    "zh": "和 $2\\times 2$ 的行列式公式一样，$3\\times 3$ 的公式也可以直接由定义推出。不过要多费不少功夫\\footnote 如果你有兴趣证明 $3\\times 3$ 行列式公式，试试用初等矩阵的方法，而不要直接去算平行六面体的体积。。"
    }
   },
   {
@@ -415,7 +415,7 @@
    "t": {
     "en": "Determinant Formulas and Orientation",
     "sha": "339a5f799b5f",
-    "zh": ""
+    "zh": "行列式公式与定向"
    }
   },
   {
@@ -423,7 +423,7 @@
    "t": {
     "en": "Determinants and orientation are connected and our determinant formulas (if we accept them as true) give us an alternative way to determine the orientation of a basis.",
     "sha": "051e03d61d30",
-    "zh": ""
+    "zh": "行列式与定向（orientation）是相联系的，我们的行列式公式（如果承认它们成立）给出了判断基的定向的另一种方法。"
    }
   },
   {
@@ -431,7 +431,7 @@
    "t": {
     "en": "Let $\\mathcal B=\\Set{\\vec b_1,\\vec b_2}$ be an ordered basis for $\\R^2$, and let $M=[\\vec b_1|\\vec b_2]$ be the matrix whose columns are $\\vec b_1$ and $\\vec b_2$. Since $\\mathcal B$ is linearly independent, we know that $\\det(M)\\neq 0$. Further, applying the definition of the determinant, we know",
     "sha": "e054c1790181",
-    "zh": ""
+    "zh": "设 $\\mathcal B=\\Set{\\vec b_1,\\vec b_2}$ 是 $\\R^2$ 的有序基，设 $M=[\\vec b_1|\\vec b_2]$ 是以 $\\vec b_1$ 和 $\\vec b_2$ 为列的矩阵。因为 $\\mathcal B$ 线性无关，所以 $\\det(M)\\neq 0$。再根据行列式的定义，可知"
    }
   },
   {
@@ -443,7 +443,7 @@
    "t": {
     "en": "means that $\\mathcal B$ is a right-handed basis and $\\det(M)<0$ means $\\mathcal B$ is a left-handed basis.",
     "sha": "d40c1640563b",
-    "zh": ""
+    "zh": "表示 $\\mathcal B$ 是右手基，而 $\\det(M)<0$ 表示 $\\mathcal B$ 是左手基。"
    }
   },
   {
@@ -456,7 +456,7 @@
      "t": {
       "en": "Use a determinant to decide whether the ordered basis $\\Set{\\mat{1\\\\2},\\mat{-3\\\\2}}$ is left-handed or right-handed.",
       "sha": "6dd18a161a11",
-      "zh": ""
+      "zh": "用行列式判断有序基 $\\Set{\\mat{1\\\\2},\\mat{-3\\\\2}}$ 是左手的还是右手的。"
      }
     },
     {
@@ -464,7 +464,7 @@
      "t": {
       "en": "Let $A = \\mat{1 & -3 \\\\ 2 & 2}$ be the matrix whose columns are the elements of the given ordered basis.",
       "sha": "e5bb35fb1a70",
-      "zh": ""
+      "zh": "设 $A = \\mat{1 & -3 \\\\ 2 & 2}$ 是以给定有序基的元素为列的矩阵。"
      }
     },
     {
@@ -472,7 +472,7 @@
      "t": {
       "en": "Using the formula for $2 \\times 2$ determinants gives us",
       "sha": "cb05bc462e7d",
-      "zh": ""
+      "zh": "用 $2 \\times 2$ 行列式公式得到"
      }
     },
     {
@@ -484,7 +484,7 @@
      "t": {
       "en": "and so we conclude $\\Set{\\mat{1\\\\2},\\mat{-3\\\\2}}$ is a right-handed basis.",
       "sha": "1a715fcdfd34",
-      "zh": ""
+      "zh": "所以我们得出结论：$\\Set{\\mat{1\\\\2},\\mat{-3\\\\2}}$ 是右手基。"
      }
     }
    ]
@@ -494,7 +494,7 @@
    "t": {
     "en": "Recall the ordered basis $\\mathcal Q=\\Set{\\xhat, \\vec u_{\\theta}}$ where $\\vec u_\\theta = \\mat{\\cos\\theta\\\\\\sin\\theta}$ is the unit vector which forms an angle of $\\theta$ with the positive $x$-axis.",
     "sha": "4dad893c4039",
-    "zh": ""
+    "zh": "回忆有序基 $\\mathcal Q=\\Set{\\xhat, \\vec u_{\\theta}}$，其中 $\\vec u_\\theta = \\mat{\\cos\\theta\\\\\\sin\\theta}$ 是与 $x$ 轴正方向成 $\\theta$ 角的单位向量。"
    }
   },
   {
@@ -510,7 +510,7 @@
    "t": {
     "en": "Visually, we can see that $\\mathcal Q$ should be right-handed when $\\theta\\in(0,\\pi)$, left handed when $\\theta\\in(\\pi,2\\pi)$ and $\\mathcal Q$ is not a basis when $\\theta=0$ or $\\theta =\\pi$.",
     "sha": "959a9442e1be",
-    "zh": ""
+    "zh": "从图上可以看出，当 $\\theta\\in(0,\\pi)$ 时 $\\mathcal Q$ 应是右手基，当 $\\theta\\in(\\pi,2\\pi)$ 时是左手基，而当 $\\theta=0$ 或 $\\theta =\\pi$ 时 $\\mathcal Q$ 不是基。"
    }
   },
   {
@@ -518,7 +518,7 @@
    "t": {
     "en": "But what does the determinant say?",
     "sha": "03accf49f5e7",
-    "zh": ""
+    "zh": "但行列式是怎么说的呢？"
    }
   },
   {
@@ -526,7 +526,7 @@
    "t": {
     "en": "Computing the determinant of the matrix $Q=[\\xhat|\\,\\vec u_\\theta]$ directly using the $2\\times 2$ determinant formula, we get",
     "sha": "cf912fd714ed",
-    "zh": ""
+    "zh": "直接用 $2\\times 2$ 行列式公式计算矩阵 $Q=[\\xhat|\\,\\vec u_\\theta]$ 的行列式，得到"
    }
   },
   {
@@ -538,7 +538,7 @@
    "t": {
     "en": "Notice that $\\det(Q)=\\sin\\theta>0$ when $\\theta\\in(0,\\pi)$, $\\det(Q)=\\sin\\theta < 0$ when $\\theta\\in(\\pi,2\\pi)$ and $\\det(Q)=\\sin\\theta=0$ when $\\theta\\in\\Set{0,\\pi}$.",
     "sha": "131d89dae3f1",
-    "zh": ""
+    "zh": "注意，当 $\\theta\\in(0,\\pi)$ 时 $\\det(Q)=\\sin\\theta>0$，当 $\\theta\\in(\\pi,2\\pi)$ 时 $\\det(Q)=\\sin\\theta < 0$，当 $\\theta\\in\\Set{0,\\pi}$ 时 $\\det(Q)=\\sin\\theta=0$。"
    }
   },
   {
@@ -546,7 +546,7 @@
    "t": {
     "en": "The determinant supports our intuition.",
     "sha": "2a57049db232",
-    "zh": ""
+    "zh": "行列式印证了我们的直觉。"
    }
   }
  ],
@@ -559,7 +559,7 @@
      "t": {
       "en": "For each matrix given below, calculate its determinant using both row reduction/elementary matrices and the $2\\times 2$ determinant formula.",
       "sha": "25d551cad5c8",
-      "zh": ""
+      "zh": "对下面给出的每个矩阵，分别用行化简（初等矩阵）和 $2\\times 2$ 行列式公式计算它的行列式。"
      }
     },
     {
@@ -572,7 +572,7 @@
         "t": {
          "en": "$\\mat{1 & 0 \\\\ 2 & 4}$",
          "sha": "0b8c592e80e0",
-         "zh": ""
+         "zh": "$\\mat{1 & 0 \\\\ 2 & 4}$"
         }
        }
       ],
@@ -582,7 +582,7 @@
         "t": {
          "en": "$\\mat{1 & 5 \\\\ 1 & 5}$",
          "sha": "7f7957b0e19b",
-         "zh": ""
+         "zh": "$\\mat{1 & 5 \\\\ 1 & 5}$"
         }
        }
       ],
@@ -592,7 +592,7 @@
         "t": {
          "en": "$\\mat{1 & 0 \\\\ 0 & 1}$",
          "sha": "6664daefb96d",
-         "zh": ""
+         "zh": "$\\mat{1 & 0 \\\\ 0 & 1}$"
         }
        }
       ],
@@ -602,7 +602,7 @@
         "t": {
          "en": "$\\mat{1 & 1 \\\\ 0 & 0}$",
          "sha": "1e2f33bbbac5",
-         "zh": ""
+         "zh": "$\\mat{1 & 1 \\\\ 0 & 0}$"
         }
        }
       ]
@@ -620,7 +620,7 @@
         "t": {
          "en": "$4$",
          "sha": "c7cab1a05e1e",
-         "zh": ""
+         "zh": "$4$"
         }
        }
       ],
@@ -630,7 +630,7 @@
         "t": {
          "en": "$0$",
          "sha": "bc1f9d9bf8a1",
-         "zh": ""
+         "zh": "$0$"
         }
        }
       ],
@@ -640,7 +640,7 @@
         "t": {
          "en": "$1$",
          "sha": "dce34f4dfb24",
-         "zh": ""
+         "zh": "$1$"
         }
        }
       ],
@@ -650,7 +650,7 @@
         "t": {
          "en": "$0$",
          "sha": "bc1f9d9bf8a1",
-         "zh": ""
+         "zh": "$0$"
         }
        }
       ]
@@ -674,7 +674,7 @@
      "t": {
       "en": "For each matrix given below, calculate its determinant using both row reduction/elementary matrices and the $3\\times 3$ determinant formula.",
       "sha": "5fa068dfc5f9",
-      "zh": ""
+      "zh": "对下面给出的每个矩阵，分别用行化简（初等矩阵）和 $3\\times 3$ 行列式公式计算它的行列式。"
      }
     },
     {
@@ -687,7 +687,7 @@
         "t": {
          "en": "$\\mat{1 & 0 & 0 \\\\ 1 & 0 & 2 \\\\ 1 & 6 & 5}$",
          "sha": "5e68682e6f2e",
-         "zh": ""
+         "zh": "$\\mat{1 & 0 & 0 \\\\ 1 & 0 & 2 \\\\ 1 & 6 & 5}$"
         }
        }
       ],
@@ -697,7 +697,7 @@
         "t": {
          "en": "$\\mat{1 & -4 & 1 \\\\ 2 & 6 & 5 \\\\ 2 & 2 & 3}$",
          "sha": "51c6ad1e1da1",
-         "zh": ""
+         "zh": "$\\mat{1 & -4 & 1 \\\\ 2 & 6 & 5 \\\\ 2 & 2 & 3}$"
         }
        }
       ],
@@ -707,7 +707,7 @@
         "t": {
          "en": "$\\mat{-1 & 0 & -8 \\\\ 1 & -3 & -8 \\\\ 1 & -2 & -1}$",
          "sha": "3927460bf3d8",
-         "zh": ""
+         "zh": "$\\mat{-1 & 0 & -8 \\\\ 1 & -3 & -8 \\\\ 1 & -2 & -1}$"
         }
        }
       ],
@@ -717,7 +717,7 @@
         "t": {
          "en": "$\\mat{2 & 0 & 0 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 3}$",
          "sha": "2852851634ca",
-         "zh": ""
+         "zh": "$\\mat{2 & 0 & 0 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 3}$"
         }
        }
       ],
@@ -727,7 +727,7 @@
         "t": {
          "en": "$\\mat{0 & 0 & 0 \\\\ 0 & 0 & 0 \\\\ 0 & 0 & 0}$",
          "sha": "124a20bdffd6",
-         "zh": ""
+         "zh": "$\\mat{0 & 0 & 0 \\\\ 0 & 0 & 0 \\\\ 0 & 0 & 0}$"
         }
        }
       ]
@@ -745,7 +745,7 @@
         "t": {
          "en": "$-12$",
          "sha": "dcadf6b880a7",
-         "zh": ""
+         "zh": "$-12$"
         }
        }
       ],
@@ -755,7 +755,7 @@
         "t": {
          "en": "$-16$",
          "sha": "09372266f72f",
-         "zh": ""
+         "zh": "$-16$"
         }
        }
       ],
@@ -765,7 +765,7 @@
         "t": {
          "en": "$5$",
          "sha": "79069377f913",
-         "zh": ""
+         "zh": "$5$"
         }
        }
       ],
@@ -775,7 +775,7 @@
         "t": {
          "en": "$12$",
          "sha": "edf074831eb5",
-         "zh": ""
+         "zh": "$12$"
         }
        }
       ],
@@ -785,7 +785,7 @@
         "t": {
          "en": "$0$",
          "sha": "bc1f9d9bf8a1",
-         "zh": ""
+         "zh": "$0$"
         }
        }
       ]
@@ -809,7 +809,7 @@
      "t": {
       "en": "For each ordered set given below, use a determinant to decide whether it is a right-handed basis, a left-handed basis, or not a basis.",
       "sha": "02c17ec23c70",
-      "zh": ""
+      "zh": "对下面给出的每个有序向量组，用行列式判断它是右手基、左手基，还是根本不是基。"
      }
     },
     {
@@ -822,7 +822,7 @@
         "t": {
          "en": "$\\Set{\\mat{1 \\\\ -3},\\mat{1 \\\\ 2}}$",
          "sha": "1c33db810d69",
-         "zh": ""
+         "zh": "$\\Set{\\mat{1 \\\\ -3},\\mat{1 \\\\ 2}}$"
         }
        }
       ],
@@ -832,7 +832,7 @@
         "t": {
          "en": "$\\Set{\\mat{1 \\\\ -3},\\mat{-2 \\\\ 6}}$",
          "sha": "cac612341bb8",
-         "zh": ""
+         "zh": "$\\Set{\\mat{1 \\\\ -3},\\mat{-2 \\\\ 6}}$"
         }
        }
       ],
@@ -842,7 +842,7 @@
         "t": {
          "en": "$\\Set{\\mat{1 \\\\ 0 \\\\ 3},\\mat{1 \\\\ 2 \\\\ 5},\\mat{1 \\\\ -1 \\\\ 1}}$",
          "sha": "57802ef22e88",
-         "zh": ""
+         "zh": "$\\Set{\\mat{1 \\\\ 0 \\\\ 3},\\mat{1 \\\\ 2 \\\\ 5},\\mat{1 \\\\ -1 \\\\ 1}}$"
         }
        }
       ],
@@ -852,7 +852,7 @@
         "t": {
          "en": "$\\Set{\\mat{1 \\\\ 4 \\\\ 9},\\mat{1 \\\\ 2 \\\\ 3},\\mat{1 \\\\ 1 \\\\ 1}}$",
          "sha": "1eb965b1928a",
-         "zh": ""
+         "zh": "$\\Set{\\mat{1 \\\\ 4 \\\\ 9},\\mat{1 \\\\ 2 \\\\ 3},\\mat{1 \\\\ 1 \\\\ 1}}$"
         }
        }
       ],
@@ -862,7 +862,7 @@
         "t": {
          "en": "$\\Set{\\mat{4 \\\\ 2 \\\\ 4},\\mat{4 \\\\ 2 \\\\ 0},\\mat{2 \\\\ 1 \\\\ 6}}$",
          "sha": "c069765ca28c",
-         "zh": ""
+         "zh": "$\\Set{\\mat{4 \\\\ 2 \\\\ 4},\\mat{4 \\\\ 2 \\\\ 0},\\mat{2 \\\\ 1 \\\\ 6}}$"
         }
        }
       ]
@@ -880,7 +880,7 @@
         "t": {
          "en": "Since $\\det\\left(\\mat{1 & 1 \\\\ -3 & 2}\\right)=5>0$, the ordered set $\\Set{\\mat{1 \\\\ -3},\\mat{1 \\\\ 2}}$ is a right-handed basis.",
          "sha": "c9050b869340",
-         "zh": ""
+         "zh": "因为 $\\det\\left(\\mat{1 & 1 \\\\ -3 & 2}\\right)=5>0$，所以有序向量组 $\\Set{\\mat{1 \\\\ -3},\\mat{1 \\\\ 2}}$ 是右手基。"
         }
        }
       ],
@@ -890,7 +890,7 @@
         "t": {
          "en": "Since $\\det\\left(\\mat{1 & -2 \\\\ -3 & 6}\\right)=0$, the set $\\Set{\\mat{1 \\\\ -3},\\mat{-2 \\\\ 6}}$ is not linearly independent and so is not a basis.",
          "sha": "79febc9cdfa2",
-         "zh": ""
+         "zh": "因为 $\\det\\left(\\mat{1 & -2 \\\\ -3 & 6}\\right)=0$，所以向量组 $\\Set{\\mat{1 \\\\ -3},\\mat{-2 \\\\ 6}}$ 线性相关，因此不是基。"
         }
        }
       ],
@@ -900,7 +900,7 @@
         "t": {
          "en": "Since $\\det\\left(\\mat{1 & 1 & 1 \\\\ 0 & 2 & -1 \\\\ 3 & 5 & 1}\\right)=-2< 0$, the ordered set $\\Set{\\mat{1 \\\\ 0 \\\\ 3},\\mat{1 \\\\ 2 \\\\ 5},\\mat{1 \\\\ -1 \\\\ 1}}$ is a left-handed basis.",
          "sha": "5aed567b259b",
-         "zh": ""
+         "zh": "因为 $\\det\\left(\\mat{1 & 1 & 1 \\\\ 0 & 2 & -1 \\\\ 3 & 5 & 1}\\right)=-2< 0$，所以有序向量组 $\\Set{\\mat{1 \\\\ 0 \\\\ 3},\\mat{1 \\\\ 2 \\\\ 5},\\mat{1 \\\\ -1 \\\\ 1}}$ 是左手基。"
         }
        }
       ],
@@ -910,7 +910,7 @@
         "t": {
          "en": "Since $\\det\\left(\\mat{1 & 1 & 1 \\\\ 4 & 2 & 1 \\\\ 9 & 3 & 1}\\right)=-2<0$, the ordered set $\\Set{\\mat{1 \\\\ 4 \\\\ 9},\\mat{1 \\\\ 2 \\\\ 3},\\mat{1 \\\\ 1 \\\\ 1}}$ is a left-handed basis.",
          "sha": "ce5606020237",
-         "zh": ""
+         "zh": "因为 $\\det\\left(\\mat{1 & 1 & 1 \\\\ 4 & 2 & 1 \\\\ 9 & 3 & 1}\\right)=-2<0$，所以有序向量组 $\\Set{\\mat{1 \\\\ 4 \\\\ 9},\\mat{1 \\\\ 2 \\\\ 3},\\mat{1 \\\\ 1 \\\\ 1}}$ 是左手基。"
         }
        }
       ],
@@ -920,7 +920,7 @@
         "t": {
          "en": "Since $\\det\\left(\\mat{4 & 4 & 2 \\\\ 2 & 2 & 1 \\\\ 4 & 0 & 6}\\right)=0$, the set $\\Set{\\mat{4 \\\\ 2 \\\\ 4},\\mat{4 \\\\ 2 \\\\ 0},\\mat{2 \\\\ 1 \\\\ 6}}$ is not linearly independent and so is not a basis.",
          "sha": "afb3d3dddba4",
-         "zh": ""
+         "zh": "因为 $\\det\\left(\\mat{4 & 4 & 2 \\\\ 2 & 2 & 1 \\\\ 4 & 0 & 6}\\right)=0$，所以向量组 $\\Set{\\mat{4 \\\\ 2 \\\\ 4},\\mat{4 \\\\ 2 \\\\ 0},\\mat{2 \\\\ 1 \\\\ 6}}$ 线性相关，因此不是基。"
         }
        }
       ]
@@ -944,7 +944,7 @@
      "t": {
       "en": "Find all values of $a,b\\in \\R$ so that the ordered set $\\Set{\\mat{a^2 \\\\ ab},\\mat{ab \\\\ b}}$ is (a) a right-handed basis, (b) a left-handed basis, (c) not a basis.",
       "sha": "870fff3d6972",
-      "zh": ""
+      "zh": "求出所有的 $a,b\\in \\R$，使得有序向量组 $\\Set{\\mat{a^2 \\\\ ab},\\mat{ab \\\\ b}}$ 分别是 (a) 右手基，(b) 左手基，(c) 不是基。"
      }
     }
    ],
@@ -954,7 +954,7 @@
      "t": {
       "en": "Before answering, note that $\\det\\left(\\mat{a^2 & ab \\\\ ab & b}\\right)=a^{2}b-a^{2}b^{2}=a^{2}( b -b^{2})$.",
       "sha": "0dedfdfaf213",
-      "zh": ""
+      "zh": "在回答之前，先注意 $\\det\\left(\\mat{a^2 & ab \\\\ ab & b}\\right)=a^{2}b-a^{2}b^{2}=a^{2}( b -b^{2})$。"
      }
     },
     {
@@ -967,7 +967,7 @@
         "t": {
          "en": "If $\\Set{\\mat{a^2 \\\\ ab},\\mat{ab \\\\ b}}$ is a right-handed basis, then $\\det\\left(\\mat{a^2 & ab \\\\ ab & b}\\right)=a^{2}( b-b^{2})>0$. This implies that $a^{2}$ and $b-b^{2}$ are both nonzero and have the same sign. Since $a^{2}\\ge 0$, we must have $a^{2}>0$ and $b-b^{2}>0$. The roots of $b-b^{2}$ are $b=0$ and $b=1$, so $b-b^{2}>0$ implies $0<b<1$. Therefore, $\\Set{\\mat{a^2 \\\\ ab},\\mat{ab \\\\ b}}$ is a right-handed basis when $a\\ne 0$ and $0<b<1$.",
          "sha": "ae1077cade18",
-         "zh": ""
+         "zh": "如果 $\\Set{\\mat{a^2 \\\\ ab},\\mat{ab \\\\ b}}$ 是右手基，那么 $\\det\\left(\\mat{a^2 & ab \\\\ ab & b}\\right)=a^{2}( b-b^{2})>0$。这说明 $a^{2}$ 和 $b-b^{2}$ 都不为零，并且符号相同。因为 $a^{2}\\ge 0$，所以必有 $a^{2}>0$ 且 $b-b^{2}>0$。$b-b^{2}$ 的根是 $b=0$ 和 $b=1$，所以 $b-b^{2}>0$ 推出 $0<b<1$。因此，当 $a\\ne 0$ 且 $0<b<1$ 时，$\\Set{\\mat{a^2 \\\\ ab},\\mat{ab \\\\ b}}$ 是右手基。"
         }
        }
       ],
@@ -977,7 +977,7 @@
         "t": {
          "en": "If $\\Set{\\mat{a^2 \\\\ ab},\\mat{ab \\\\ b}}$ is a left-handed basis, then $\\det\\left(\\mat{a^2 & ab \\\\ ab & b}\\right)=a^{2}( b-b^{2})<0$. This implies that $a^{2}$ and $b-b^{2}$ are both nonzero and have different signs. Since $a^{2}\\ge 0$, this implies that $a^{2}>0$ and $b-b^{2}<0$. Roots of $b-b^{2}$ are $b=0$ and $b=1$, so $b-b^{2}<0$ implies $b<0$ or $b>1$. Therefore, $\\Set{\\mat{a^2 \\\\ ab},\\mat{ab \\\\ b}}$ is a left-handed basis when $a\\ne 0$ and either $b<0$ or $b>1$.",
          "sha": "f0f187033efa",
-         "zh": ""
+         "zh": "如果 $\\Set{\\mat{a^2 \\\\ ab},\\mat{ab \\\\ b}}$ 是左手基，那么 $\\det\\left(\\mat{a^2 & ab \\\\ ab & b}\\right)=a^{2}( b-b^{2})<0$。这说明 $a^{2}$ 和 $b-b^{2}$ 都不为零，并且符号相反。因为 $a^{2}\\ge 0$，所以 $a^{2}>0$ 且 $b-b^{2}<0$。$b-b^{2}$ 的根是 $b=0$ 和 $b=1$，所以 $b-b^{2}<0$ 推出 $b<0$ 或 $b>1$。因此，当 $a\\ne 0$ 且 $b<0$ 或 $b>1$ 时，$\\Set{\\mat{a^2 \\\\ ab},\\mat{ab \\\\ b}}$ 是左手基。"
         }
        }
       ],
@@ -987,7 +987,7 @@
         "t": {
          "en": "If $\\Set{\\mat{a^2 \\\\ ab},\\mat{ab \\\\ b}}$ is not a basis, then $\\det\\left(\\mat{a^2 & ab \\\\ ab & b}\\right)=a^{2}( b-b^{2})=0$. This implies that $a^{2}=0$ or $b-b^{2}=0$. Therefore, $\\Set* {\\mat{a^2 \\\\ ab},\\mat{ab \\\\ b}}$ is not a basis if one of the following conditions holds: $a=0$, $b=1$, or $b=0$.",
          "sha": "15be11dddf13",
-         "zh": ""
+         "zh": "如果 $\\Set{\\mat{a^2 \\\\ ab},\\mat{ab \\\\ b}}$ 不是基，那么 $\\det\\left(\\mat{a^2 & ab \\\\ ab & b}\\right)=a^{2}( b-b^{2})=0$。这说明 $a^{2}=0$ 或 $b-b^{2}=0$。因此，只要下列条件之一成立，$\\Set* {\\mat{a^2 \\\\ ab},\\mat{ab \\\\ b}}$ 就不是基：$a=0$，$b=1$，或 $b=0$。"
         }
        }
       ]
@@ -1011,7 +1011,7 @@
      "t": {
       "en": "Let $M=\\mat{a & b \\\\ c & d}$. The *adjugate matrix* (sometimes called the *classical adjoint*) of $M$, notated $M^{\\text{adj}}$, is the matrix given by $M^{\\text{adj}}=\\mat{d & -b \\\\ -c & a}$. Prove that if $M$ is invertible, then $\\displaystyle M^{-1}=\\frac{M^{\\text{adj}}}{\\det(M)}$.",
       "sha": "23316e0c8c8e",
-      "zh": ""
+      "zh": "设 $M=\\mat{a & b \\\\ c & d}$。$M$ 的*伴随矩阵*（adjugate matrix，有时也叫*古典伴随*）记作 $M^{\\text{adj}}$，是矩阵 $M^{\\text{adj}}=\\mat{d & -b \\\\ -c & a}$。证明：如果 $M$ 可逆，那么 $\\displaystyle M^{-1}=\\frac{M^{\\text{adj}}}{\\det(M)}$。"
      }
     }
    ],
@@ -1021,7 +1021,7 @@
      "t": {
       "en": "Since",
       "sha": "22a4ed66c623",
-      "zh": ""
+      "zh": "因为"
      }
     },
     {
@@ -1037,7 +1037,7 @@
      "t": {
       "en": "and",
       "sha": "cffa50a32cb1",
-      "zh": ""
+      "zh": "并且"
      }
     },
     {
@@ -1053,7 +1053,7 @@
      "t": {
       "en": "we conclude that",
       "sha": "0d58a9bbcd63",
-      "zh": ""
+      "zh": "所以我们得出"
      }
     },
     {
@@ -1078,7 +1078,7 @@
      "t": {
       "en": "For each statement below, determine whether it is true or false. Justify your answer.",
       "sha": "e3b37b865c04",
-      "zh": ""
+      "zh": "对下面的每个命题，判断它是真是假，并说明理由。"
      }
     },
     {
@@ -1091,7 +1091,7 @@
         "t": {
          "en": "A $2\\times 2$ matrix $M$ has determinant $1$ if and only if $M= I_{2\\times 2}$.",
          "sha": "d3f857d7ff3b",
-         "zh": ""
+         "zh": "$2\\times 2$ 矩阵 $M$ 的行列式为 $1$，当且仅当 $M= I_{2\\times 2}$。"
         }
        }
       ],
@@ -1101,7 +1101,7 @@
         "t": {
          "en": "A $3\\times 3$ matrix $M$ has determinant $1$ if and only if $\\VolChange (\\mathcal{T}_{M})$ is equal to 1, where $\\mathcal{T}_{M}$ is the transformation given by $\\mathcal{T}_{M}(\\vec x)=M\\vec x$.",
          "sha": "a03228aeedf6",
-         "zh": ""
+         "zh": "$3\\times 3$ 矩阵 $M$ 的行列式为 $1$，当且仅当 $\\VolChange (\\mathcal{T}_{M})$ 等于 1，其中 $\\mathcal{T}_{M}$ 是由 $\\mathcal{T}_{M}(\\vec x)=M\\vec x$ 给出的变换。"
         }
        }
       ],
@@ -1111,7 +1111,7 @@
         "t": {
          "en": "For vectors $\\vec a,\\vec b\\in \\R^{2}$, it is always the case that $\\det([\\vec a|\\vec b])=-\\det([\\vec b|\\vec a])$.",
          "sha": "75eb62f97b4c",
-         "zh": ""
+         "zh": "对向量 $\\vec a,\\vec b\\in \\R^{2}$，总有 $\\det([\\vec a|\\vec b])=-\\det([\\vec b|\\vec a])$。"
         }
        }
       ],
@@ -1121,7 +1121,7 @@
         "t": {
          "en": "For a $2\\times 2$ or $3\\times 3$ matrix $M$, multiplying a single entry of $M$ by $4$ will change $\\det(M)$ by a factor of $4$.",
          "sha": "eccfcdac6a46",
-         "zh": ""
+         "zh": "对 $2\\times 2$ 或 $3\\times 3$ 矩阵 $M$，把 $M$ 的某一个元素乘以 $4$，会使 $\\det(M)$ 变为原来的 $4$ 倍。"
         }
        }
       ],
@@ -1131,7 +1131,7 @@
         "t": {
          "en": "For a square matrix $A$, it is always the case that $\\det(A^{T}A)\\geq 0$.",
          "sha": "d53cab7cdc81",
-         "zh": ""
+         "zh": "对方阵 $A$，总有 $\\det(A^{T}A)\\geq 0$。"
         }
        }
       ]
@@ -1149,7 +1149,7 @@
         "t": {
          "en": "False. A counterexample is $M=\\mat{2 & 0 \\\\ 0 & \\frac{1}{2}}$.",
          "sha": "79a122a4998e",
-         "zh": ""
+         "zh": "假。反例是 $M=\\mat{2 & 0 \\\\ 0 & \\frac{1}{2}}$。"
         }
        }
       ],
@@ -1159,7 +1159,7 @@
         "t": {
          "en": "False. A counterexample is $M=\\mat{-1 & 0 & 0 \\\\ 0 & -1 & 0 \\\\ 0 & 0 & -1}$. $M$ does not change volume, but it does reverse orientation.",
          "sha": "e8d1a45777c5",
-         "zh": ""
+         "zh": "假。反例是 $M=\\mat{-1 & 0 & 0 \\\\ 0 & -1 & 0 \\\\ 0 & 0 & -1}$。$M$ 不改变体积，但会反转定向。"
         }
        }
       ],
@@ -1169,7 +1169,7 @@
         "t": {
          "en": "True. Note that $[\\vec a|\\vec b]$ is just $[\\vec b|\\vec a]$ with its columns swapped. The oriented volume of the parallelogram generated by $\\vec a$ and $\\vec b$ is equal to the negative of the oriented volume of the parallelogram generated by $(\\vec b,\\vec a)$. Using Volume Theorem I, we have $\\det([\\vec a|\\vec b])=-\\det([\\vec b|\\vec a])$.",
          "sha": "cf26f0efeb60",
-         "zh": ""
+         "zh": "真。注意 $[\\vec a|\\vec b]$ 就是把 $[\\vec b|\\vec a]$ 的两列交换。由 $\\vec a$ 和 $\\vec b$ 生成的平行四边形的有向体积，等于由 $(\\vec b,\\vec a)$ 生成的平行四边形的有向体积的相反数。由体积定理 I，得 $\\det([\\vec a|\\vec b])=-\\det([\\vec b|\\vec a])$。"
         }
        }
       ],
@@ -1179,7 +1179,7 @@
         "t": {
          "en": "False. A counterexample is $M=\\mat{1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1}$. We multiply the $(1,2)$-entry by $4$ to get another matrix $M'$. Note that $M'$ is still $\\mat{1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1 }$, and $\\det(M)=1=\\det(M')\\ne 4\\det(M)$.",
          "sha": "4d428f9c59f5",
-         "zh": ""
+         "zh": "假。反例是 $M=\\mat{1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1}$。我们把 $(1,2)$ 元素乘以 $4$，得到另一个矩阵 $M'$。注意 $M'$ 仍然是 $\\mat{1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1 }$，并且 $\\det(M)=1=\\det(M')\\ne 4\\det(M)$。"
         }
        }
       ],
@@ -1189,7 +1189,7 @@
         "t": {
          "en": "True. Note that $\\det(A^{T}A)=\\det(A^{T})\\det(A)=\\det(A)\\det(A)=\\det(A)^{2}\\ge 0$.",
          "sha": "30845624656a",
-         "zh": ""
+         "zh": "真。注意 $\\det(A^{T}A)=\\det(A^{T})\\det(A)=\\det(A)\\det(A)=\\det(A)^{2}\\ge 0$。"
         }
        }
       ]

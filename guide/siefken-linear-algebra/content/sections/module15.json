@@ -16,7 +16,7 @@
         "t": {
          "en": "The definition of eigenvalues and eigenvectors.",
          "sha": "46a44bb7199b",
-         "zh": ""
+         "zh": "特征值与特征向量的定义。"
         }
        }
       ],
@@ -26,7 +26,7 @@
         "t": {
          "en": "That eigenvectors give a particularly nice basis in which to study a linear transformation.",
          "sha": "a482c0743de5",
-         "zh": ""
+         "zh": "特征向量为研究线性变换提供了一组特别好用的基。"
         }
        }
       ],
@@ -36,7 +36,7 @@
         "t": {
          "en": "How the characteristic polynomial relates to eigenvalues.",
          "sha": "7fa54a336a59",
-         "zh": ""
+         "zh": "特征多项式与特征值的关系。"
         }
        }
       ]
@@ -49,7 +49,7 @@
    "t": {
     "en": "From here on out, we will only be considering linear transformations with the same domain and codomain (i.e., transformations $\\mathcal T:\\R^n\\to\\R^n$). Why? Because that will allow us to *compare* input and output vectors. By comparing inputs and outputs, we may describe a linear transformation as a stretch, twist, shear, rotation, projection, or some combination of all of these operations.",
     "sha": "82c4a6ec6314",
-    "zh": ""
+    "zh": "从现在起，我们只考虑定义域与陪域相同的线性变换（也就是 $\\mathcal T:\\R^n\\to\\R^n$ 这样的变换）。为什么？因为这样我们就可以把输入向量和输出向量*放在一起比较*。通过比较输入与输出，我们可以把一个线性变换描述成拉伸、扭转、剪切、旋转、投影，或者这些操作的某种组合。"
    }
   },
   {
@@ -65,7 +65,7 @@
    "t": {
     "en": "It's the stretched vectors that we're most interested in now. If $\\mathcal T$ stretches the vector $\\vec v$, then $\\mathcal T$, in that direction, can be described by $\\vec v\\mapsto \\alpha\\vec v$, which is an easy-to-understand linear transformation. The “stretch” directions for a linear transformation have a special name—*eigen directions*—and the vectors that are stretched are called *eigenvectors*.",
     "sha": "f26344f023f0",
-    "zh": ""
+    "zh": "现在我们最感兴趣的是被拉伸的那些向量。如果 $\\mathcal T$ 拉伸了向量 $\\vec v$，那么在这个方向上，$\\mathcal T$ 可以写成 $\\vec v\\mapsto \\alpha\\vec v$，这是一个很容易理解的线性变换。线性变换的“拉伸”方向有一个专门的名字——*特征方向*（eigen directions），被拉伸的向量叫做*特征向量*。"
    }
   },
   {
@@ -74,7 +74,7 @@
    "title": {
     "en": "Eigenvector",
     "sha": "fe951c61295b",
-    "zh": ""
+    "zh": "特征向量"
    },
    "blocks": [
     {
@@ -82,7 +82,7 @@
      "t": {
       "en": "Let $X$ be a linear transformation or a matrix. An *eigenvector* for $X$ is a non-zero vector that doesn't change directions when $X$ is applied. That is, $\\vec v\\neq \\vec 0$ is an eigenvector for $X$ if",
       "sha": "7af5f052c5f3",
-      "zh": ""
+      "zh": "设 $X$ 是一个线性变换或一个矩阵。$X$ 的*特征向量*（eigenvector）是这样一个非零向量：作用 $X$ 之后，它的方向不变。也就是说，若向量 $\\vec v\\neq \\vec 0$ 满足下式，则它是 $X$ 的特征向量："
      }
     },
     {
@@ -94,7 +94,7 @@
      "t": {
       "en": "for some scalar $\\lambda$. We call $\\lambda$ the *eigenvalue* of $X$ corresponding to the eigenvector $\\vec v$.",
       "sha": "b90ab637d7ad",
-      "zh": ""
+      "zh": "其中 $\\lambda$ 为某个标量。我们把 $\\lambda$ 称为 $X$ 的、对应于特征向量 $\\vec v$ 的*特征值*（eigenvalue）。"
      }
     }
    ]
@@ -104,7 +104,7 @@
    "t": {
     "en": "The word *eigen* is German for characteristic, representative, or intrinsic, and we will see that eigenvectors provide one of the best contexts in which to understand a linear transformation.",
     "sha": "a92f2b79c1a1",
-    "zh": ""
+    "zh": "*eigen* 这个词在德语中意为“特有的、有代表性的、固有的”，后面我们会看到，特征向量是理解线性变换的最佳切入点之一。"
    }
   },
   {
@@ -117,7 +117,7 @@
      "t": {
       "en": "Let $\\mathcal P:\\R^2\\to\\R^2$ be projection onto the line $\\ell$ given by $y=x$. Find the eigenvectors and eigenvalues of $\\mathcal P$.",
       "sha": "bba9323464ec",
-      "zh": ""
+      "zh": "设 $\\mathcal P:\\R^2\\to\\R^2$ 是向直线 $\\ell$（方程为 $y=x$）的投影。求 $\\mathcal P$ 的特征向量和特征值。"
      }
     },
     {
@@ -125,7 +125,7 @@
      "t": {
       "en": "We are looking for vectors $\\vec v\\neq \\vec 0$ such that $\\mathcal P\\vec v=\\lambda \\vec v$ for some $\\lambda$. Since $\\mathcal P(\\ell)=\\ell$, we know for any $\\vec v\\in \\ell$",
       "sha": "aaf07fe5514b",
-      "zh": ""
+      "zh": "我们要找的是满足 $\\mathcal P\\vec v=\\lambda \\vec v$（$\\lambda$ 为某个数）的向量 $\\vec v\\neq \\vec 0$。由于 $\\mathcal P(\\ell)=\\ell$，所以对任意 $\\vec v\\in \\ell$ 都有"
      }
     },
     {
@@ -137,7 +137,7 @@
      "t": {
       "en": "Therefore, any non-zero multiple of $\\mat{1\\\\1}$ is an eigenvector for $\\mathcal P$ with corresponding eigenvalue $1$.",
       "sha": "e31c8d3f879b",
-      "zh": ""
+      "zh": "因此，$\\mat{1\\\\1}$ 的任何非零倍数都是 $\\mathcal P$ 的特征向量，对应的特征值为 $1$。"
      }
     },
     {
@@ -145,7 +145,7 @@
      "t": {
       "en": "By considering the null space of $\\mathcal P$, we see, for example,",
       "sha": "a812cbd76995",
-      "zh": ""
+      "zh": "再考虑 $\\mathcal P$ 的零空间，例如可以看到"
      }
     },
     {
@@ -157,7 +157,7 @@
      "t": {
       "en": "and so $\\mat{1\\\\-1}$ and all its non-zero multiples are eigenvectors of $\\mathcal P$ with corresponding eigenvalue $0$.",
       "sha": "db486ad6a553",
-      "zh": ""
+      "zh": "所以 $\\mat{1\\\\-1}$ 及其所有非零倍数都是 $\\mathcal P$ 的特征向量，对应的特征值为 $0$。"
      }
     }
    ]
@@ -167,7 +167,7 @@
    "t": {
     "en": "Finding Eigenvectors",
     "sha": "390d17b933ba",
-    "zh": ""
+    "zh": "求特征向量"
    }
   },
   {
@@ -175,7 +175,7 @@
    "t": {
     "en": "Sometimes you can find the eigenvectors/values of a linear transformation just by thinking about it. For example, for reflections, projections, and dilations, the eigen directions are geometrically clear. However, for an arbitrary matrix transformation, it may not be obvious.",
     "sha": "917bad9cbfd4",
-    "zh": ""
+    "zh": "有时只要想一想，就能找到线性变换的特征向量和特征值。例如，对于反射、投影和伸缩，特征方向在几何上是一目了然的。但对于一般的矩阵变换，就未必这么明显了。"
    }
   },
   {
@@ -183,7 +183,7 @@
    "t": {
     "en": "Our goal now will be to see if we can leverage linear algebra knowledge to find eigenvectors/values. So that we don't have to switch back and forth between thinking about linear transformations and thinking about matrices, let's just think about matrices for now.",
     "sha": "21bfc4e2ad34",
-    "zh": ""
+    "zh": "我们现在的目标是看看能否借助已有的线性代数知识来求特征向量和特征值。为了不在“线性变换”和“矩阵”两种想法之间来回切换，眼下我们只考虑矩阵。"
    }
   },
   {
@@ -191,7 +191,7 @@
    "t": {
     "en": "Let $M$ be a square matrix. The vector $\\vec v\\neq \\vec 0$ is an eigenvector for $M$ if and only if there exists a scalar $\\lambda$ so that",
     "sha": "264ddd75bb34",
-    "zh": ""
+    "zh": "设 $M$ 是方阵。向量 $\\vec v\\neq \\vec 0$ 是 $M$ 的特征向量，当且仅当存在标量 $\\lambda$ 使得"
    }
   },
   {
@@ -203,7 +203,7 @@
    "t": {
     "en": "Put another way, $\\vec v\\neq \\vec 0$ is an eigenvector for $M$ if and only if",
     "sha": "e662ad1c46ed",
-    "zh": ""
+    "zh": "换一种说法，$\\vec v\\neq \\vec 0$ 是 $M$ 的特征向量，当且仅当"
    }
   },
   {
@@ -215,7 +215,7 @@
    "t": {
     "en": "The middle equation provides a key insight. The operation $\\vec v\\mapsto M\\vec v-\\lambda\\vec v$ can be achieved by multiplying $\\vec v$ by the single matrix $E_\\lambda=M-\\lambda I$.",
     "sha": "b49a6d605e32",
-    "zh": ""
+    "zh": "中间那个等式给了我们关键的启示：$\\vec v\\mapsto M\\vec v-\\lambda\\vec v$ 这个操作，可以用 $\\vec v$ 乘以单个矩阵 $E_\\lambda=M-\\lambda I$ 来实现。"
    }
   },
   {
@@ -223,7 +223,7 @@
    "t": {
     "en": "Now we have that $\\vec v\\neq \\vec 0$ is an eigenvector for $M$ if and only if",
     "sha": "8d5d32ce5f84",
-    "zh": ""
+    "zh": "于是，$\\vec v\\neq \\vec 0$ 是 $M$ 的特征向量，当且仅当"
    }
   },
   {
@@ -235,7 +235,7 @@
    "t": {
     "en": "or, phrased another way, $\\vec v$ is a non-zero vector satisfying $\\vec v\\in \\Null(E_\\lambda)$.",
     "sha": "80828dfbf434",
-    "zh": ""
+    "zh": "或者换个说法，$\\vec v$ 是满足 $\\vec v\\in \\Null(E_\\lambda)$ 的非零向量。"
    }
   },
   {
@@ -243,7 +243,7 @@
    "t": {
     "en": "We've reduced the problem of finding eigenvectors/values of $M$ to finding the null space of $E_\\lambda$, a related matrix.",
     "sha": "75d53cf3576b",
-    "zh": ""
+    "zh": "这样，求 $M$ 的特征向量和特征值的问题，就化成了求一个相关矩阵 $E_\\lambda$ 的零空间。"
    }
   },
   {
@@ -251,7 +251,7 @@
    "t": {
     "en": "Characteristic Polynomial",
     "sha": "92607926a386",
-    "zh": ""
+    "zh": "特征多项式"
    }
   },
   {
@@ -259,7 +259,7 @@
    "t": {
     "en": "Let $M$ be an $n\\times n$ matrix and define $E_\\lambda=M-\\lambda I$. Every eigenvector for $M$ must be in the null space of $E_\\lambda$ for some $\\lambda$. However, because eigenvectors must be non-zero, the only chance we have of finding an eigenvector is if $\\Null(E_\\lambda)\\neq \\Set{\\vec 0}$. In other words, we would like to know when $\\Null(E_\\lambda)$ is *non-trivial*.",
     "sha": "893b42de335b",
-    "zh": ""
+    "zh": "设 $M$ 是 $n\\times n$ 矩阵，并令 $E_\\lambda=M-\\lambda I$。$M$ 的每个特征向量，对某个 $\\lambda$ 来说，必定在 $E_\\lambda$ 的零空间中。然而特征向量必须非零，所以只有当 $\\Null(E_\\lambda)\\neq \\Set{\\vec 0}$ 时，我们才有可能找到特征向量。换句话说，我们想知道什么时候 $\\Null(E_\\lambda)$ 是*非平凡的*。"
    }
   },
   {
@@ -267,7 +267,7 @@
    "t": {
     "en": "We're well equipped to answer this question. Because $E_\\lambda$ is an $n\\times n$ matrix, we know $E_\\lambda$ has a non-trivial null space if and only if $E_\\lambda$ is not invertible which is true if and only if $\\det(E_\\lambda)=0$. Every $\\lambda$ defines a different $E_\\lambda$ where eigenvectors could be hiding. By viewing $\\det(E_\\lambda)$ \\emphas a function of $\\lambda$, we can use our mathematical knowledge of single-variable functions to figure out when $\\det(E_\\lambda)=0$.",
     "sha": "2baaec280c33",
-    "zh": ""
+    "zh": "我们已经有足够的工具回答这个问题。因为 $E_\\lambda$ 是 $n\\times n$ 矩阵，所以 $E_\\lambda$ 的零空间非平凡，当且仅当 $E_\\lambda$ 不可逆，而这又当且仅当 $\\det(E_\\lambda)=0$。每个 $\\lambda$ 都对应一个不同的 $E_\\lambda$，特征向量可能就藏在其中。把 $\\det(E_\\lambda)$ 看作 $\\lambda$ 的函数，我们就可以用单变量函数的知识来弄清楚 $\\det(E_\\lambda)=0$ 何时成立。"
    }
   },
   {
@@ -275,7 +275,7 @@
    "t": {
     "en": "The quantity $\\det(E_\\lambda)$, viewed as a function of $\\lambda$, has a special name—it's called the *characteristic polynomial* 〔注： This time the term is traditionally given the English name, rather than being called the *eigenpolynomial*.〕.",
     "sha": "083482c739e9",
-    "zh": ""
+    "zh": "把 $\\det(E_\\lambda)$ 看作 $\\lambda$ 的函数，它有一个专门的名字——*特征多项式*（characteristic polynomial）〔注： 这个术语按惯例直接用英文名（characteristic），而不叫“eigen 多项式”。〕。"
    }
   },
   {
@@ -284,7 +284,7 @@
    "title": {
     "en": "Characteristic Polynomial",
     "sha": "92607926a386",
-    "zh": ""
+    "zh": "特征多项式"
    },
    "blocks": [
     {
@@ -292,7 +292,7 @@
      "t": {
       "en": "For a matrix $A$, the *characteristic polynomial* of $A$ is",
       "sha": "bfe501ab3b41",
-      "zh": ""
+      "zh": "对矩阵 $A$，$A$ 的*特征多项式*为"
      }
     },
     {
@@ -311,7 +311,7 @@
      "t": {
       "en": "Find the characteristic polynomial of $A=\\mat{1&2\\\\3&4}$.",
       "sha": "e300728861bb",
-      "zh": ""
+      "zh": "求 $A=\\mat{1&2\\\\3&4}$ 的特征多项式。"
      }
     },
     {
@@ -319,7 +319,7 @@
      "t": {
       "en": "By the definition of the characteristic polynomial of A, we have",
       "sha": "dbabbdd2b8d7",
-      "zh": ""
+      "zh": "由特征多项式的定义，有"
      }
     },
     {
@@ -333,7 +333,7 @@
    "t": {
     "en": "For an $n\\times n$ matrix $A$, $\\Char(A)$ has some nice properties.",
     "sha": "6d3aa888f2bc",
-    "zh": ""
+    "zh": "对 $n\\times n$ 矩阵 $A$，$\\Char(A)$ 有一些很好的性质。"
    }
   },
   {
@@ -346,7 +346,7 @@
       "t": {
        "en": "$\\Char(A)$ is a polynomial\\footnote A priori, it's not obvious that $\\det(A-\\lambda I)$ should be a polynomial as opposed to some other type of function..",
        "sha": "977b36784c28",
-       "zh": ""
+       "zh": "$\\Char(A)$ 是一个多项式〔注： 事先并不明显 $\\det(A-\\lambda I)$ 一定是多项式，而不是别的什么类型的函数。〕。"
       }
      }
     ],
@@ -356,7 +356,7 @@
       "t": {
        "en": "$\\Char(A)$ has degree $n$.",
        "sha": "60d04738bf32",
-       "zh": ""
+       "zh": "$\\Char(A)$ 的次数为 $n$。"
       }
      }
     ],
@@ -366,7 +366,7 @@
       "t": {
        "en": "The coefficient of the $\\lambda^n$ term in $\\Char(A)$ is $\\pm1$; $+1$ if $n$ is even and $-1$ if $n$ is odd.",
        "sha": "bdb6ba07fdc4",
-       "zh": ""
+       "zh": "$\\Char(A)$ 中 $\\lambda^n$ 项的系数是 $\\pm1$：当 $n$ 为偶数时是 $+1$，当 $n$ 为奇数时是 $-1$。"
       }
      }
     ],
@@ -376,7 +376,7 @@
       "t": {
        "en": "$\\Char(A)$ evaluated at $\\lambda = 0$ is $\\det(A)$.",
        "sha": "8cb51b03ed4b",
-       "zh": ""
+       "zh": "$\\Char(A)$ 在 $\\lambda = 0$ 处的值为 $\\det(A)$。"
       }
      }
     ],
@@ -386,7 +386,7 @@
       "t": {
        "en": "The roots of $\\Char(A)$ are precisely the eigenvalues of $A$.",
        "sha": "322b36d700e6",
-       "zh": ""
+       "zh": "$\\Char(A)$ 的根恰好就是 $A$ 的特征值。"
       }
      }
     ]
@@ -397,7 +397,7 @@
    "t": {
     "en": "We will just accept these properties as facts, but each of them can be proved with the tools we've developed.",
     "sha": "b5b228dca18f",
-    "zh": ""
+    "zh": "我们先直接接受这些性质，不过其中每一条都可以用我们已有的工具证明。"
    }
   },
   {
@@ -405,7 +405,7 @@
    "t": {
     "en": "Using the Characteristic Polynomial to find Eigenvalues",
     "sha": "4f06db3bf03c",
-    "zh": ""
+    "zh": "用特征多项式求特征值"
    }
   },
   {
@@ -413,7 +413,7 @@
    "t": {
     "en": "With the characteristic polynomial in hand, finding eigenvectors/values becomes easier.",
     "sha": "d4372cde2b0d",
-    "zh": ""
+    "zh": "有了特征多项式，求特征向量和特征值就容易多了。"
    }
   },
   {
@@ -426,7 +426,7 @@
      "t": {
       "en": "Find the eigenvectors/values of $A=\\mat{1&2\\\\3&2}$.",
       "sha": "78da31eced48",
-      "zh": ""
+      "zh": "求 $A=\\mat{1&2\\\\3&2}$ 的特征向量和特征值。"
      }
     },
     {
@@ -434,7 +434,7 @@
      "t": {
       "en": "Like the previous example, we first compute $\\Char(A)$.",
       "sha": "4d87cacd330a",
-      "zh": ""
+      "zh": "和上一个例子一样，我们先计算 $\\Char(A)$。"
      }
     },
     {
@@ -446,7 +446,7 @@
      "t": {
       "en": "Next, we solve for when $\\chr(A)=0$ to find eigenvalues, which are $\\lambda_1=-1$ and $\\lambda_2=4$.",
       "sha": "1b14c33d83b6",
-      "zh": ""
+      "zh": "接下来，解 $\\chr(A)=0$ 来求特征值，得到 $\\lambda_1=-1$ 和 $\\lambda_2=4$。"
      }
     },
     {
@@ -454,7 +454,7 @@
      "t": {
       "en": "We know non-zero vectors in $\\Null(A-\\lambda_1I)$ are eigenvectors with eigenvalue $-1$. Computing,",
       "sha": "cd49c281ade3",
-      "zh": ""
+      "zh": "我们知道，$\\Null(A-\\lambda_1I)$ 中的非零向量就是特征值为 $-1$ 的特征向量。计算得"
      }
     },
     {
@@ -466,7 +466,7 @@
      "t": {
       "en": "And so the eigenvectors of $A$ corresponding to eigenvalue $\\lambda_1=-1$ are the non-zero multiples of $\\mat{1\\\\-1}$.",
       "sha": "4aff795e0fb9",
-      "zh": ""
+      "zh": "所以，$A$ 的对应于特征值 $\\lambda_1=-1$ 的特征向量就是 $\\mat{1\\\\-1}$ 的所有非零倍数。"
      }
     },
     {
@@ -474,7 +474,7 @@
      "t": {
       "en": "Similarly, for $\\lambda_2=4$, we compute",
       "sha": "f829ba4f699c",
-      "zh": ""
+      "zh": "同样，对 $\\lambda_2=4$，计算得"
      }
     },
     {
@@ -486,7 +486,7 @@
      "t": {
       "en": "and so the eigenvectors for $A$ with eigenvalue $4$ are the non-zero multiples of $\\mat{2\\\\3}$.",
       "sha": "10a8eeec41df",
-      "zh": ""
+      "zh": "所以，$A$ 的特征值为 $4$ 的特征向量就是 $\\mat{2\\\\3}$ 的所有非零倍数。"
      }
     }
    ]
@@ -496,7 +496,7 @@
    "t": {
     "en": "Using the characteristic polynomial, we can show that every eigenvalue for a matrix is a root of some polynomial (the characteristic polynomial). In general, finding roots of polynomials is a hard problem 〔注： In fact, numerically approximating eigenvalues turns out to be easier than finding roots of a polynomial, so many numerical root finding algorithms actually create a matrix with an appropriate characteristic polynomial and use numerical linear algebra to approximate its roots.〕, and it's not one we will focus on. However, it's handy to have the quadratic formula in your back pocket for factoring particularly stubborn polynomials.",
     "sha": "803cbf2b7d9c",
-    "zh": ""
+    "zh": "利用特征多项式，我们可以说明矩阵的每个特征值都是某个多项式（即特征多项式）的根。一般来说，求多项式的根是个难题〔注： 事实上，数值逼近特征值比求多项式的根更容易，所以许多数值求根算法其实是先构造一个特征多项式合适的矩阵，再用数值线性代数来逼近它的根。〕，这不是我们要重点讲的。不过，遇到特别难分解的多项式时，手边有求根公式（二次方程的求根公式）会很方便。"
    }
   },
   {
@@ -509,7 +509,7 @@
      "t": {
       "en": "Find the eigenvectors/values of $A=\\mat{1&2\\\\3&4}$.",
       "sha": "a2c844b7eb27",
-      "zh": ""
+      "zh": "求 $A=\\mat{1&2\\\\3&4}$ 的特征向量和特征值。"
      }
     },
     {
@@ -517,7 +517,7 @@
      "t": {
       "en": "First, we find the roots of $\\Char(A)$ by setting it to $0$.",
       "sha": "d214fa593ea2",
-      "zh": ""
+      "zh": "首先，令 $\\Char(A)$ 等于 $0$ 来求它的根。"
      }
     },
     {
@@ -529,7 +529,7 @@
      "t": {
       "en": "By the quadratic formula\\footnote Recall that the roots of $ax^2+bx+c$ are given by $\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}$., we find that",
       "sha": "43e7c1a77ba5",
-      "zh": ""
+      "zh": "由求根公式〔注： 回忆一下，$ax^2+bx+c$ 的根为 $\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}$。〕，得到"
      }
     },
     {
@@ -541,7 +541,7 @@
      "t": {
       "en": "are the roots of $\\Char(A)$.",
       "sha": "d831f3578d00",
-      "zh": ""
+      "zh": "是 $\\Char(A)$ 的根。"
      }
     },
     {
@@ -549,7 +549,7 @@
      "t": {
       "en": "Following the procedure outlined above, we need to find $\\Null(A-\\lambda_1I)$ and $\\Null(A-\\lambda_2I)$.",
       "sha": "fb24af5d3634",
-      "zh": ""
+      "zh": "按照上面的步骤，我们需要求 $\\Null(A-\\lambda_1I)$ 和 $\\Null(A-\\lambda_2I)$。"
      }
     },
     {
@@ -557,7 +557,7 @@
      "t": {
       "en": "We will start by row reducing $A-\\lambda_1I$.",
       "sha": "64ed40ef1989",
-      "zh": ""
+      "zh": "我们先对 $A-\\lambda_1I$ 做行化简。"
      }
     },
     {
@@ -569,7 +569,7 @@
      "t": {
       "en": "Thus, we conclude that the eigenvectors with eigenvalue $\\frac{5-\\sqrt{33}}{2}$ are the non-zero multiples of $\\matc{\\frac{3+\\sqrt{33}}{6}\\\\-1}$. Similarly, the eigenvectors with eigenvalue $\\frac{5+\\sqrt{33}}{2}$ are the non-zero multiples of $\\matc{\\frac{3-\\sqrt{33}}{6}\\\\-1}$.",
       "sha": "8c79e51a9513",
-      "zh": ""
+      "zh": "由此得出，特征值为 $\\frac{5-\\sqrt{33}}{2}$ 的特征向量是 $\\matc{\\frac{3+\\sqrt{33}}{6}\\\\-1}$ 的所有非零倍数。同样，特征值为 $\\frac{5+\\sqrt{33}}{2}$ 的特征向量是 $\\matc{\\frac{3-\\sqrt{33}}{6}\\\\-1}$ 的所有非零倍数。"
      }
     }
    ]
@@ -579,7 +579,7 @@
    "t": {
     "en": "Transformations without Eigenvectors",
     "sha": "2105df9761b2",
-    "zh": ""
+    "zh": "没有特征向量的变换"
    }
   },
   {
@@ -587,7 +587,7 @@
    "t": {
     "en": "Are there linear transformations without eigenvectors? Well, it depends on exactly what you mean. Let $\\mathcal R:\\R^2\\to\\R^2$ be rotation counter-clockwise by $90^\\circ$. Are there any non-zero vectors that don't change direction when $\\mathcal R$ is applied? Certainly not.",
     "sha": "c72aae0ed85a",
-    "zh": ""
+    "zh": "有没有不含特征向量的线性变换呢？这要看你到底指什么。设 $\\mathcal R:\\R^2\\to\\R^2$ 是逆时针旋转 $90^\\circ$。作用 $\\mathcal R$ 之后，有没有方向不变的非零向量？当然没有。"
    }
   },
   {
@@ -595,7 +595,7 @@
    "t": {
     "en": "Let's examine further. We know $M_R=\\mat{0&-1\\\\1&0}$ is a matrix for $\\mathcal R$, and",
     "sha": "058b157fd470",
-    "zh": ""
+    "zh": "我们再仔细看看。已知 $M_R=\\mat{0&-1\\\\1&0}$ 是 $\\mathcal R$ 的一个矩阵，并且"
    }
   },
   {
@@ -607,7 +607,7 @@
    "t": {
     "en": "The polynomial $\\lambda^2+1$ has no real roots, which means that $M_R$ (and $\\mathcal R$) have no real eigenvalues. However, $\\lambda^2+1$ does have *complex* roots of $\\pm i$. So far, we've always thought of scalars as real numbers, but if we allow complex numbers as scalars and view $\\mathcal R$ as a transformation from $\\mathbb C^2\\to\\mathbb C^2$, it would have eigenvalues and eigenvectors.",
     "sha": "4cd76506f3a2",
-    "zh": ""
+    "zh": "多项式 $\\lambda^2+1$ 没有实根，这意味着 $M_R$（以及 $\\mathcal R$）没有实特征值。不过，$\\lambda^2+1$ 有*复*根 $\\pm i$。到目前为止，我们一直把标量看作实数；但如果允许复数作为标量，并把 $\\mathcal R$ 看作 $\\mathbb C^2\\to\\mathbb C^2$ 的变换，那么它就有特征值和特征向量了。"
    }
   },
   {
@@ -615,7 +615,7 @@
    "t": {
     "en": "Complex numbers play an invaluable role in advanced linear algebra and applications of linear algebra to physics. We will leave the following theorem as food for thought 〔注： The theorem is a direct corollary of the fundamental theorem of algebra.〕.",
     "sha": "21f481f473e5",
-    "zh": ""
+    "zh": "复数在高等线性代数以及线性代数在物理中的应用里起着不可替代的作用。下面这个定理留给你当作思考的材料〔注： 这个定理是代数学基本定理的直接推论。〕。"
    }
   },
   {
@@ -628,7 +628,7 @@
      "t": {
       "en": "If $A$ is a square matrix, then $A$ always has an eigenvalue provided complex eigenvalues are permitted.",
       "sha": "c3d537084b34",
-      "zh": ""
+      "zh": "若 $A$ 是方阵，那么只要允许复特征值，$A$ 就一定有特征值。"
      }
     }
    ]
@@ -643,7 +643,7 @@
      "t": {
       "en": "For each linear transformation defined below, find its eigenvectors and eigenvalues. If it has no eigenvectors/values, explain why not.",
       "sha": "5932b409d8cb",
-      "zh": ""
+      "zh": "对下面定义的每个线性变换，求它的特征向量和特征值。如果它没有特征向量或特征值，请说明原因。"
      }
     },
     {
@@ -656,7 +656,7 @@
         "t": {
          "en": "$\\mathcal S:\\R^{2}\\to\\R^{2}$, where $\\mathcal S$ stretches every vector by the factor of $3$.",
          "sha": "c2a8725710bb",
-         "zh": ""
+         "zh": "$\\mathcal S:\\R^{2}\\to\\R^{2}$，其中 $\\mathcal S$ 把每个向量拉伸为原来的 $3$ 倍。"
         }
        }
       ],
@@ -666,7 +666,7 @@
         "t": {
          "en": "$\\mathcal R:\\R^{2}\\to\\R^{2}$, where $\\mathcal R$ rotates every vector clockwise by $\\frac{\\pi}{4}$.",
          "sha": "53b77d7e2252",
-         "zh": ""
+         "zh": "$\\mathcal R:\\R^{2}\\to\\R^{2}$，其中 $\\mathcal R$ 把每个向量顺时针旋转 $\\frac{\\pi}{4}$。"
         }
        }
       ],
@@ -676,7 +676,7 @@
         "t": {
          "en": "$\\mathcal P:\\R^{2}\\to\\R^{2}$, where $\\mathcal P$ projects every vector onto the line $\\ell$ given by $y=-x$.",
          "sha": "b0db027c7968",
-         "zh": ""
+         "zh": "$\\mathcal P:\\R^{2}\\to\\R^{2}$，其中 $\\mathcal P$ 把每个向量投影到直线 $\\ell$（方程为 $y=-x$）上。"
         }
        }
       ],
@@ -686,7 +686,7 @@
         "t": {
          "en": "$\\mathcal F:\\R^{2}\\to\\R^{2}$, where $\\mathcal F$ reflects every vector over the line $\\ell$ given by $y=-x$.",
          "sha": "e05d1bdf931e",
-         "zh": ""
+         "zh": "$\\mathcal F:\\R^{2}\\to\\R^{2}$，其中 $\\mathcal F$ 把每个向量关于直线 $\\ell$（方程为 $y=-x$）作反射。"
         }
        }
       ],
@@ -696,7 +696,7 @@
         "t": {
          "en": "$T:\\R^{3}\\to\\R^{3}$, where $T$ is a linear transformation induced by the matrix $\\mat{1&2&3\\\\3&4&5\\\\5&6&7}$.",
          "sha": "86444473eec7",
-         "zh": ""
+         "zh": "$T:\\R^{3}\\to\\R^{3}$，其中 $T$ 是由矩阵 $\\mat{1&2&3\\\\3&4&5\\\\5&6&7}$ 诱导的线性变换。"
         }
        }
       ],
@@ -706,7 +706,7 @@
         "t": {
          "en": "$U:\\R^{3}\\to\\R^{2}$, where $U$ is a linear transformation induced by the matrix $\\mat{1&2&3\\\\3&4&5}$.",
          "sha": "953e7a56fbc3",
-         "zh": ""
+         "zh": "$U:\\R^{3}\\to\\R^{2}$，其中 $U$ 是由矩阵 $\\mat{1&2&3\\\\3&4&5}$ 诱导的线性变换。"
         }
        }
       ]
@@ -724,7 +724,7 @@
         "t": {
          "en": "Every non-zero vector in $\\R^{2}$ is an eigenvector with eigenvalue 3.",
          "sha": "ef61d36792e1",
-         "zh": ""
+         "zh": "$\\R^{2}$ 中的每个非零向量都是特征向量，特征值为 3。"
         }
        }
       ],
@@ -734,7 +734,7 @@
         "t": {
          "en": "$\\Char(R)$ has no real root, so $R$ has no real eigenvalue or eigenvectors.",
          "sha": "d6926705c893",
-         "zh": ""
+         "zh": "$\\Char(R)$ 没有实根，所以 $R$ 没有实特征值，也没有实特征向量。"
         }
        }
       ],
@@ -744,7 +744,7 @@
         "t": {
          "en": "There are two eigenvalues. $0$ is an eigenvalue with eigenvector $\\mat{1 \\\\ 1}$, and $1$ is an eigenvalue with eigenvector $\\mat{1\\\\-1}$.",
          "sha": "fce6ae2c6e6b",
-         "zh": ""
+         "zh": "有两个特征值。$0$ 是特征值，对应的特征向量为 $\\mat{1 \\\\ 1}$；$1$ 也是特征值，对应的特征向量为 $\\mat{1\\\\-1}$。"
         }
        }
       ],
@@ -754,7 +754,7 @@
         "t": {
          "en": "There are two eigenvalues. $-1$ is an eigenvalue with eigenvector $\\mat{1\\\\1}$, and $1$ is an eigenvalue with eigenvector $\\mat{1 \\\\ -1}$.",
          "sha": "c21b95c284b2",
-         "zh": ""
+         "zh": "有两个特征值。$-1$ 是特征值，对应的特征向量为 $\\mat{1\\\\1}$；$1$ 也是特征值，对应的特征向量为 $\\mat{1 \\\\ -1}$。"
         }
        }
       ],
@@ -764,7 +764,7 @@
         "t": {
          "en": "$\\Char(T) = - \\lambda ( \\lambda^{2} - 12 \\lambda - 12)$. Then, we have three eigevalues. $0$ is an eigenvalue with eigenvector $\\mat{1 \\\\ -2 \\\\ 1}$, $6 + 4 \\sqrt{3}$ is an eigenvalue with eigenvector $\\mat{2 \\\\ 2 + \\sqrt{3} \\\\ 2\\sqrt{3}}$, and $6 - 4\\sqrt{3}$ is an eigenvalue with eigenvector $\\mat{2 \\\\ 2 - \\sqrt{3} \\\\ 2-2\\sqrt{3}}$.",
          "sha": "90351244926a",
-         "zh": ""
+         "zh": "$\\Char(T) = - \\lambda ( \\lambda^{2} - 12 \\lambda - 12)$。于是有三个特征值。$0$ 是特征值，对应的特征向量为 $\\mat{1 \\\\ -2 \\\\ 1}$；$6 + 4 \\sqrt{3}$ 是特征值，对应的特征向量为 $\\mat{2 \\\\ 2 + \\sqrt{3} \\\\ 2\\sqrt{3}}$；$6 - 4\\sqrt{3}$ 是特征值，对应的特征向量为 $\\mat{2 \\\\ 2 - \\sqrt{3} \\\\ 2-2\\sqrt{3}}$。"
         }
        }
       ],
@@ -774,7 +774,7 @@
         "t": {
          "en": "$U$ is induced by a $2 \\times 3$ matrix, and eigenvalues/eigenvectors are only defined for linear maps from $\\R^{n}$ to itself. So, $U$ has no eigenvalues or eigenvectors.",
          "sha": "05c0be00c1af",
-         "zh": ""
+         "zh": "$U$ 是由 $2 \\times 3$ 矩阵诱导的，而特征值和特征向量只对 $\\R^{n}$ 到自身的线性映射才有定义。所以 $U$ 没有特征值，也没有特征向量。"
         }
        }
       ]
@@ -798,7 +798,7 @@
      "t": {
       "en": "Let $A = \\mat{a&b\\\\c&d}$, where $a,b,c,d \\in \\R$.",
       "sha": "1650588dc1dc",
-      "zh": ""
+      "zh": "设 $A = \\mat{a&b\\\\c&d}$，其中 $a,b,c,d \\in \\R$。"
      }
     },
     {
@@ -811,7 +811,7 @@
         "t": {
          "en": "Find the characteristic polynomial of $A$.",
          "sha": "3a7d370b9bea",
-         "zh": ""
+         "zh": "求 $A$ 的特征多项式。"
         }
        }
       ],
@@ -821,7 +821,7 @@
         "t": {
          "en": "Find conditions on $a,b,c,d$ so that $A$ has (i) two distinct real eigenvalues, (ii) exactly one real eigenvalue, (iii) no real eigenvalues.",
          "sha": "db0fe7255106",
-         "zh": ""
+         "zh": "求 $a,b,c,d$ 满足的条件，使得 $A$ 分别（i）有两个不同的实特征值，（ii）恰有一个实特征值，（iii）没有实特征值。"
         }
        }
       ]
@@ -839,7 +839,7 @@
         "t": {
          "en": "By definition,",
          "sha": "5c48b19627be",
-         "zh": ""
+         "zh": "由定义，"
         }
        },
        {
@@ -853,7 +853,7 @@
         "t": {
          "en": "By the quadratic formula, the discriminant $\\Delta$ of $\\Char(A)$ is $\\Delta = (a + d)^{2} - 4(ad - bc) = (a - d)^{2} + 4 bc$. So, $A$ has two distinct real eigenvalues if $(a - d)^{2} + 4bc > 0$, one real eigenvalue if $(a - d)^{2} + 4bc = 0$, and no real eigenvalues if $(a - d)^{2} + 4bc < 0.$",
          "sha": "fb351b4ca9bc",
-         "zh": ""
+         "zh": "由求根公式，$\\Char(A)$ 的判别式 $\\Delta$ 为 $\\Delta = (a + d)^{2} - 4(ad - bc) = (a - d)^{2} + 4 bc$。于是，若 $(a - d)^{2} + 4bc > 0$，则 $A$ 有两个不同的实特征值；若 $(a - d)^{2} + 4bc = 0$，则只有一个实特征值；若 $(a - d)^{2} + 4bc < 0.$，则没有实特征值。"
         }
        }
       ]
@@ -877,7 +877,7 @@
      "t": {
       "en": "Let $B=\\mat{1&2\\\\0&4}$.",
       "sha": "a71eada3411e",
-      "zh": ""
+      "zh": "设 $B=\\mat{1&2\\\\0&4}$。"
      }
     },
     {
@@ -890,7 +890,7 @@
         "t": {
          "en": "Find the eigenvalues of $B$.",
          "sha": "206940366f63",
-         "zh": ""
+         "zh": "求 $B$ 的特征值。"
         }
        }
       ],
@@ -900,7 +900,7 @@
         "t": {
          "en": "Find the eigenvalues of $B^{T}$.",
          "sha": "a5b037f32c75",
-         "zh": ""
+         "zh": "求 $B^{T}$ 的特征值。"
         }
        }
       ],
@@ -910,7 +910,7 @@
         "t": {
          "en": "A vector $\\vec v\\neq\\vec 0$ is called a *left-eigenvector* for $B$ if $\\vec vB=\\lambda \\vec v$ for some scalar $\\lambda$ (Here we consider $\\vec v$ a *row* vector). Find all left eigenvectors for $B$.",
          "sha": "465fe9d5cb56",
-         "zh": ""
+         "zh": "如果对某个标量 $\\lambda$ 有 $\\vec vB=\\lambda \\vec v$，则称向量 $\\vec v\\neq\\vec 0$ 为 $B$ 的*左特征向量*（这里把 $\\vec v$ 看作*行*向量）。求 $B$ 的所有左特征向量。"
         }
        }
       ]
@@ -928,7 +928,7 @@
         "t": {
          "en": "$\\Char(B) = \\det\\mat{1 -\\lambda & 2 \\\\ 0 & 4 - \\lambda}= (1 - \\lambda)(4 - \\lambda)$. So, $B$ has eigenvalues $1$ and $4$.",
          "sha": "173da7061893",
-         "zh": ""
+         "zh": "$\\Char(B) = \\det\\mat{1 -\\lambda & 2 \\\\ 0 & 4 - \\lambda}= (1 - \\lambda)(4 - \\lambda)$。所以 $B$ 的特征值为 $1$ 和 $4$。"
         }
        }
       ],
@@ -938,7 +938,7 @@
         "t": {
          "en": "$\\Char(B) = \\Char(B^{T})$, so $B^{T}$ also has eigenvalues $1$ and $4$.",
          "sha": "07ca8157bb0c",
-         "zh": ""
+         "zh": "$\\Char(B) = \\Char(B^{T})$，所以 $B^{T}$ 的特征值也是 $1$ 和 $4$。"
         }
        }
       ],
@@ -948,7 +948,7 @@
         "t": {
          "en": "The equation $\\vec{v}^{T}B = \\lambda \\vec{v}^{T}$ holds if and only if $B^{T} \\vec{v}= \\lambda \\vec{v}$. Here, we interpret $\\vec{v}$ as a column vector and $\\vec{v}^{T}$ as a row vector.",
          "sha": "8635ab0b0410",
-         "zh": ""
+         "zh": "等式 $\\vec{v}^{T}B = \\lambda \\vec{v}^{T}$ 成立，当且仅当 $B^{T} \\vec{v}= \\lambda \\vec{v}$。这里我们把 $\\vec{v}$ 看作列向量，把 $\\vec{v}^{T}$ 看作行向量。"
         }
        },
        {
@@ -956,7 +956,7 @@
         "t": {
          "en": "We observe that $B^{T}$ has eigenvector $\\mat{-3 \\\\ 2}$ with eigenvalue $1$ and an eigenvector $\\mat{0\\\\1}$ with eigenvalue $4$. Hence $B$ has left eigenvectors $\\mat{-3 & 2}$ with eigenvalue $1$ and left eigenvector $\\mat{0 & 1}$ with eigenvalue $4$. It follows that all non-zero scalar multiples of $\\mat{ -3 & 2 }$ and $\\mat{ 0 & 1 }$ are also left eigenvectors.",
          "sha": "411cebd18e43",
-         "zh": ""
+         "zh": "可以看到，$B^{T}$ 有特征向量 $\\mat{-3 \\\\ 2}$，特征值为 $1$；还有特征向量 $\\mat{0\\\\1}$，特征值为 $4$。因此 $B$ 有左特征向量 $\\mat{-3 & 2}$，特征值为 $1$；以及左特征向量 $\\mat{0 & 1}$，特征值为 $4$。由此可知，$\\mat{ -3 & 2 }$ 与 $\\mat{ 0 & 1 }$ 的所有非零标量倍数也是左特征向量。"
         }
        }
       ]
@@ -980,7 +980,7 @@
      "t": {
       "en": "For each statement below, determine whether it is true or false. Justify you answer.",
       "sha": "bf5e46f6341f",
-      "zh": ""
+      "zh": "判断下列各命题的真假，并说明理由。"
      }
     },
     {
@@ -993,7 +993,7 @@
         "t": {
          "en": "Zero cannot be an eigenvalue of any matrix.",
          "sha": "b67eca5bd1ca",
-         "zh": ""
+         "zh": "零不可能是任何矩阵的特征值。"
         }
        }
       ],
@@ -1003,7 +1003,7 @@
         "t": {
          "en": "$\\vec 0$ cannot be an eigenvector of any matrix.",
          "sha": "e596acc47956",
-         "zh": ""
+         "zh": "$\\vec 0$ 不可能是任何矩阵的特征向量。"
         }
        }
       ],
@@ -1013,7 +1013,7 @@
         "t": {
          "en": "A $2\\times 2$ matrix always has a real eigenvalue.",
          "sha": "815f2b3d8d18",
-         "zh": ""
+         "zh": "$2\\times 2$ 矩阵总有实特征值。"
         }
        }
       ],
@@ -1023,7 +1023,7 @@
         "t": {
          "en": "A $3\\times 3$ matrix always has a real eigenvalue.",
          "sha": "8590b11af4ce",
-         "zh": ""
+         "zh": "$3\\times 3$ 矩阵总有实特征值。"
         }
        }
       ],
@@ -1033,7 +1033,7 @@
         "t": {
          "en": "A $3\\times 2$ matrix always has a real eigenvalue.",
          "sha": "cedf4d541169",
-         "zh": ""
+         "zh": "$3\\times 2$ 矩阵总有实特征值。"
         }
        }
       ],
@@ -1043,7 +1043,7 @@
         "t": {
          "en": "The matrix $M = \\mat{3&3&3&3\\\\3&3&3&3\\\\3&3&3&3\\\\3&3&3&3}$ has exactly one eigenvalue.",
          "sha": "91d1dfa5d388",
-         "zh": ""
+         "zh": "矩阵 $M = \\mat{3&3&3&3\\\\3&3&3&3\\\\3&3&3&3\\\\3&3&3&3}$ 恰有一个特征值。"
         }
        }
       ],
@@ -1053,7 +1053,7 @@
         "t": {
          "en": "An invertible square matrix can never have zero as an eigenvalue.",
          "sha": "662f21ca0595",
-         "zh": ""
+         "zh": "可逆方阵绝不可能以零为特征值。"
         }
        }
       ],
@@ -1063,7 +1063,7 @@
         "t": {
          "en": "A non-invertible square matrix *always* has zero as an eigenvalue.",
          "sha": "b29047d9edc6",
-         "zh": ""
+         "zh": "不可逆方阵*总是*以零为特征值。"
         }
        }
       ]
@@ -1081,7 +1081,7 @@
         "t": {
          "en": "False. $0$ is an eigenvalue of $\\mat{0 & 0 \\\\ 0 & 0}$.",
          "sha": "74f8a21411e9",
-         "zh": ""
+         "zh": "假。$0$ 是 $\\mat{0 & 0 \\\\ 0 & 0}$ 的特征值。"
         }
        }
       ],
@@ -1091,7 +1091,7 @@
         "t": {
          "en": "True. An eigenvector is a nonzero vector by definition.",
          "sha": "27ff66df8f13",
-         "zh": ""
+         "zh": "真。按定义，特征向量是非零向量。"
         }
        }
       ],
@@ -1101,7 +1101,7 @@
         "t": {
          "en": "False. $\\mat{0 & 1 \\\\ -1 & 0}$ has no real eigenvalue.",
          "sha": "d0ecc01036a4",
-         "zh": ""
+         "zh": "假。$\\mat{0 & 1 \\\\ -1 & 0}$ 没有实特征值。"
         }
        }
       ],
@@ -1111,7 +1111,7 @@
         "t": {
          "en": "True. Its characteristic polynomial has degree $3$ and hence has at least one real root.",
          "sha": "47d7a21c516f",
-         "zh": ""
+         "zh": "真。它的特征多项式次数为 $3$，因此至少有一个实根。"
         }
        }
       ],
@@ -1121,7 +1121,7 @@
         "t": {
          "en": "False. Eigenvalues are not defined for a non-square matrix.",
          "sha": "3b0b5aef23a3",
-         "zh": ""
+         "zh": "假。非方阵没有定义特征值。"
         }
        }
       ],
@@ -1131,7 +1131,7 @@
         "t": {
          "en": "False. $\\mat{3 & 3 & 3 & 3 \\\\ 3 & 3 & 3 & 3\\\\3 & 3 & 3 & 3\\\\3 & 3 & 3 & 3}$ has $0$ as an eigenvalue with eigenvector $\\mat{1 \\\\ -1 \\\\ 0 \\\\ 0}$. It also has eigenvalue $12$ with eigenvector $\\mat{1 \\\\ 1 \\\\ 1 \\\\ 1}$.",
          "sha": "3615e430a206",
-         "zh": ""
+         "zh": "假。$\\mat{3 & 3 & 3 & 3 \\\\ 3 & 3 & 3 & 3\\\\3 & 3 & 3 & 3\\\\3 & 3 & 3 & 3}$ 有特征值 $0$，对应的特征向量为 $\\mat{1 \\\\ -1 \\\\ 0 \\\\ 0}$；它还有特征值 $12$，对应的特征向量为 $\\mat{1 \\\\ 1 \\\\ 1 \\\\ 1}$。"
         }
        }
       ],
@@ -1141,7 +1141,7 @@
         "t": {
          "en": "True. Any eigenvector with eigenvalue $0$ lies in the null space of the matrix, which implies that the null space has dimension at least one.",
          "sha": "6a3f077dd5de",
-         "zh": ""
+         "zh": "真。特征值为 $0$ 的任何特征向量都在该矩阵的零空间中，这意味着零空间的维数至少为一。"
         }
        }
       ],
@@ -1151,7 +1151,7 @@
         "t": {
          "en": "True. Suppose $A$ was a non-invertible square matrix. Then, we must have $\\Nullity(A)>0$, and so $\\Null(A)$ contains at least one non-zero vector, $\\vec v$. By definition $A\\vec v=\\vec 0=0\\vec v$, and so $\\vec v$ is an eigenvector for $A$ with eigenvalue $0$.",
          "sha": "5516d77ae296",
-         "zh": ""
+         "zh": "真。设 $A$ 是不可逆方阵。那么必有 $\\Nullity(A)>0$，所以 $\\Null(A)$ 至少含有一个非零向量 $\\vec v$。按定义 $A\\vec v=\\vec 0=0\\vec v$，因此 $\\vec v$ 是 $A$ 的特征向量，特征值为 $0$。"
         }
        }
       ]

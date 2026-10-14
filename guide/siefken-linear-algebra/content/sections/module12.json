@@ -16,7 +16,7 @@
         "t": {
          "en": "The definition of an inverse function and an inverse matrix.",
          "sha": "7deaeb58e76c",
-         "zh": ""
+         "zh": "逆函数与逆矩阵的定义。"
         }
        }
       ],
@@ -26,7 +26,7 @@
         "t": {
          "en": "How to decompose a matrix into the product of elementary matrices and how to use elementary matrices to compute inverses.",
          "sha": "16fe6ffddd79",
-         "zh": ""
+         "zh": "怎样把一个矩阵分解成初等矩阵的乘积，以及怎样用初等矩阵来计算逆。"
         }
        }
       ],
@@ -36,7 +36,7 @@
         "t": {
          "en": "How the order of matrix multiplication matters.",
          "sha": "fbe3015cb812",
-         "zh": ""
+         "zh": "矩阵相乘的顺序为什么重要。"
         }
        }
       ],
@@ -46,7 +46,7 @@
         "t": {
          "en": "How row-reduction and matrix inverses relate.",
          "sha": "7409552ccb36",
-         "zh": ""
+         "zh": "行化简与矩阵的逆有什么联系。"
         }
        }
       ]
@@ -59,7 +59,7 @@
    "t": {
     "en": "We should think of transformations or functions as machines that perform some manipulation of their input and then give an output. This perspective allows us to divide functions into two natural categories: those that can be undone and those that cannot. The official term for a function that can be undone is an *invertible* function.",
     "sha": "22abd60f7226",
-    "zh": ""
+    "zh": "我们可以把变换或函数想成一台机器：它对输入做某种加工，然后给出输出。这个视角让我们很自然地把函数分成两类：能被“撤销”的和不能被撤销的。能被撤销的函数，正式的叫法是*可逆*函数。"
    }
   },
   {
@@ -67,7 +67,7 @@
    "t": {
     "en": "Invertible Functions",
     "sha": "5dbaef070ba2",
-    "zh": ""
+    "zh": "可逆函数"
    }
   },
   {
@@ -75,7 +75,7 @@
    "t": {
     "en": "The simplest function is the *identity function*.",
     "sha": "5be8ffedc6c9",
-    "zh": ""
+    "zh": "最简单的函数是*恒等函数*。"
    }
   },
   {
@@ -84,7 +84,7 @@
    "title": {
     "en": "Identity Function",
     "sha": "e9634ef12983",
-    "zh": ""
+    "zh": "恒等函数"
    },
    "blocks": [
     {
@@ -92,7 +92,7 @@
      "t": {
       "en": "Let $X$ be a set. The *identity function* with domain and codomain $X$, notated $\\Ident:X\\to X$, is the function satisfying",
       "sha": "099f38078389",
-      "zh": ""
+      "zh": "设 $X$ 是一个集合。定义域和陪域（上域）都是 $X$ 的*恒等函数*，记作 $\\Ident:X\\to X$，是满足下式的函数："
      }
     },
     {
@@ -104,7 +104,7 @@
      "t": {
       "en": "for all $x\\in X$.",
       "sha": "99ff93d72c58",
-      "zh": ""
+      "zh": "对所有 $x\\in X$ 成立。"
      }
     }
    ]
@@ -114,7 +114,7 @@
    "t": {
     "en": "The identity function is the function that does nothing to its input 〔注： Technically, for every set there exists a unique identity function with that set as the domain/codomain, but we won't belabor this point.〕. When doing precise mathematics, we often prove a function or composition of functions does nothing to its input by showing it is *equal* to the identity function\\footnote This is similar to saying that we know $\\vec x=\\vec y$ if and only if $\\vec x-\\vec y=\\vec 0$..",
     "sha": "d5e409cc94a6",
-    "zh": ""
+    "zh": "恒等函数就是对输入什么都不做的函数〔注：严格地说，每个集合都有唯一一个以它为定义域和陪域的恒等函数，但我们不在这一点上纠缠。〕。在做严格的数学论证时，我们常常通过证明某个函数或函数的复合*等于*恒等函数，来说明它对输入什么都没有改变〔注：这和下面的说法类似：$\\vec x=\\vec y$ 当且仅当 $\\vec x-\\vec y=\\vec 0$。〕。"
    }
   },
   {
@@ -122,7 +122,7 @@
    "t": {
     "en": "In plain terms, a function is invertible if it can be undone. More precisely a function is invertible if there exists an inverse function that when composed with the original function produces the identity function and vice versa.",
     "sha": "39d3503666ae",
-    "zh": ""
+    "zh": "通俗地说，一个函数可逆，就是它能被撤销。更精确地说，一个函数可逆，是指存在一个逆函数，它与原函数复合后得到恒等函数，反过来复合也是如此。"
    }
   },
   {
@@ -131,7 +131,7 @@
    "title": {
     "en": "Inverse Function",
     "sha": "712328f21123",
-    "zh": ""
+    "zh": "逆函数"
    },
    "blocks": [
     {
@@ -139,7 +139,7 @@
      "t": {
       "en": "Let $f:X\\to Y$ be a function. We say $f$ is *invertible* if there exists a function $g:Y\\to X$ so that $f\\circ g=\\Ident$ and $g\\circ f=\\Ident$. In this case, we call $g$ an *inverse* of $f$ and write",
       "sha": "0c2869810afb",
-      "zh": ""
+      "zh": "设 $f:X\\to Y$ 是一个函数。如果存在函数 $g:Y\\to X$，使得 $f\\circ g=\\Ident$ 且 $g\\circ f=\\Ident$，就说 $f$ 是*可逆*的。此时，称 $g$ 是 $f$ 的一个*逆*，并记作"
      }
     },
     {
@@ -153,7 +153,7 @@
    "t": {
     "en": "Let's consider an example. You have some money in your pockets. Let $l:\\Set{\\text{nickels in left pocket}}\\to \\N$ be the function that adds up the value of all the nickels in your left pocket. Let $r:\\Set{\\text{nickels in either pocket}}\\to \\N$ be the function that adds up the value of all the nickels in both of your pockets. In this case, $l$ would be invertible—if you know that $l(\\text{\\# nickels})=25$, you must have had $5$ nickels in your left pocket. We can write down a formula for $l^{-1}$ as",
     "sha": "5c5053b65df4",
-    "zh": ""
+    "zh": "来看一个例子。你的口袋里有一些钱。设 $l:\\Set{\\text{nickels in left pocket}}\\to \\N$ 是把你左口袋里所有五分镍币的面值加起来的函数；设 $r:\\Set{\\text{nickels in either pocket}}\\to \\N$ 是把你两个口袋里所有五分镍币的面值加起来的函数。这时 $l$ 是可逆的——如果你知道 $l(\\text{\\# nickels})=25$，那么左口袋里一定有 $5$ 枚镍币。我们可以把 $l^{-1}$ 的公式写成"
    }
   },
   {
@@ -165,7 +165,7 @@
    "t": {
     "en": "However, $r$ is not invertible. If $r(\\text{\\# nickels})=25$, you *might* have had $5$ nickels in your left pocket, but you might have $3$ nickels in your left pocket and $2$ in your right. We just don't know, so no inverse to $r$ can exist.",
     "sha": "abbb61dfb3a8",
-    "zh": ""
+    "zh": "但是，$r$ 不可逆。如果 $r(\\text{\\# nickels})=25$，你的左口袋里*可能*有 $5$ 枚镍币，也可能左口袋里有 $3$ 枚、右口袋里有 $2$ 枚。我们无从分辨，所以 $r$ 不可能有逆。"
    }
   },
   {
@@ -173,7 +173,7 @@
    "t": {
     "en": "What we've just learned is that for a function to be invertible, it must be *one-to-one*.",
     "sha": "fc9a085da7de",
-    "zh": ""
+    "zh": "刚才我们学到的是：函数要想可逆，就必须是*一一的*（单射）。"
    }
   },
   {
@@ -182,7 +182,7 @@
    "title": {
     "en": "One-to-one",
     "sha": "261f46f06dea",
-    "zh": ""
+    "zh": "一一映射（单射）"
    },
    "blocks": [
     {
@@ -190,7 +190,7 @@
      "t": {
       "en": "Let $f:X\\to Y$ be a function. We say $f$ is *one-to-one* (or *injective*) if distinct inputs to $f$ produce distinct outputs. That is $f(x)=f(y)$ implies $x=y$.",
       "sha": "e59893d6d745",
-      "zh": ""
+      "zh": "设 $f:X\\to Y$ 是一个函数。如果 $f$ 把不同的输入变成不同的输出，就说 $f$ 是*一一的*（或称*单射*）。也就是说，由 $f(x)=f(y)$ 可以推出 $x=y$。"
      }
     }
    ]
@@ -200,7 +200,7 @@
    "t": {
     "en": "Whenever a function $f$ is one-to-one, there exists a function $g$ so that $g\\circ f=\\Ident$. However, this is not enough to declare that $f$ is invertible\\footnote In this situation, we say that $f$ is *left*-invertible. because we also need $f\\circ g=\\Ident$. To ensure this, we need $f$ to be *onto*.",
     "sha": "bd0c4a897114",
-    "zh": ""
+    "zh": "只要函数 $f$ 是一一的，就存在函数 $g$ 使得 $g\\circ f=\\Ident$。但这还不足以断定 $f$ 可逆〔注：这种情形下，我们说 $f$ 是*左*可逆的。〕，因为我们还需要 $f\\circ g=\\Ident$。要保证这一点，就需要 $f$ 是*满*的。"
    }
   },
   {
@@ -209,7 +209,7 @@
    "title": {
     "en": "Onto",
     "sha": "0d76772d8af2",
-    "zh": ""
+    "zh": "满射"
    },
    "blocks": [
     {
@@ -217,7 +217,7 @@
      "t": {
       "en": "Let $f:X\\to Y$ be a function. We say $f$ is *onto* (or *surjective*) if every point in the codomain of $f$ gets mapped to. That is $\\Range(f)=Y$.",
       "sha": "0bfc641007ae",
-      "zh": ""
+      "zh": "设 $f:X\\to Y$ 是一个函数。如果 $f$ 的陪域中每一个点都被映射到，就说 $f$ 是*满*的（或称*满射*）。也就是说 $\\Range(f)=Y$。"
      }
     }
    ]
@@ -227,7 +227,7 @@
    "t": {
     "en": "Every invertible function is both one-to-one and onto, and every one-to-one and onto function is invertible. And, as we will learn, this has implications for the rank and nullity of linear transformations.",
     "sha": "189ef3817494",
-    "zh": ""
+    "zh": "每个可逆函数既是一一的又是满的，每个既一一又满的函数也都可逆。而且，我们接下来会看到，这对线性变换的秩和零度有重要的影响。"
    }
   },
   {
@@ -235,7 +235,7 @@
    "t": {
     "en": "Invertibility and Linear Transformations",
     "sha": "4fbea04ec4a5",
-    "zh": ""
+    "zh": "可逆性与线性变换"
    }
   },
   {
@@ -243,7 +243,7 @@
    "t": {
     "en": "Let's now focus on linear transformations. We know that a linear transformation $\\mathcal T:\\R^n\\to\\R^m$ is invertible if and only if it is one-to-one and onto.",
     "sha": "840e398e3eed",
-    "zh": ""
+    "zh": "现在把注意力放到线性变换上。我们知道，线性变换 $\\mathcal T:\\R^n\\to\\R^m$ 可逆当且仅当它既是一一的又是满的。"
    }
   },
   {
@@ -251,7 +251,7 @@
    "t": {
     "en": "If $\\mathcal T$ is one-to-one, that means that distinct inputs to $\\mathcal T$ yield distinct outputs. In other words, the solution to $\\mathcal T(\\vec x)=\\vec b$ is always unique. But, the set of all solutions to $\\mathcal T(\\vec x)=\\vec b$ can be expressed as",
     "sha": "d01ef41fcf96",
-    "zh": ""
+    "zh": "如果 $\\mathcal T$ 是一一的，就意味着 $\\mathcal T$ 把不同的输入变成不同的输出。换句话说，$\\mathcal T(\\vec x)=\\vec b$ 的解总是唯一的。而 $\\mathcal T(\\vec x)=\\vec b$ 的全部解构成的集合可以表示为"
    }
   },
   {
@@ -263,7 +263,7 @@
    "t": {
     "en": "Therefore, $\\mathcal T$ is one-to-one if and only if $\\Nullity(\\mathcal T)=0$. If $\\mathcal T$ is onto, then $\\Range(\\mathcal T)=\\R^m$ and so $\\Rank(\\mathcal T)=m$.",
     "sha": "70ac1c1d0017",
-    "zh": ""
+    "zh": "因此，$\\mathcal T$ 是一一的当且仅当 $\\Nullity(\\mathcal T)=0$。如果 $\\mathcal T$ 是满的，那么 $\\Range(\\mathcal T)=\\R^m$，于是 $\\Rank(\\mathcal T)=m$。"
    }
   },
   {
@@ -271,7 +271,7 @@
    "t": {
     "en": "Now, suppose $\\mathcal T$ is one-to-one and onto. By the rank-nullity theorem,",
     "sha": "cd563a088927",
-    "zh": ""
+    "zh": "现在设 $\\mathcal T$ 既是一一的又是满的。由秩—零度定理，"
    }
   },
   {
@@ -283,7 +283,7 @@
    "t": {
     "en": "and so $\\mathcal T$ has the same domain and codomain (at least a domain and codomain of the same dimension).",
     "sha": "023574b66059",
-    "zh": ""
+    "zh": "所以 $\\mathcal T$ 的定义域和陪域相同（至少是维数相同）。"
    }
   },
   {
@@ -291,7 +291,7 @@
    "t": {
     "en": "Using the rank-nullity theorem, we can start developing a list of properties that are equivalent to invertibility of a linear transformation.",
     "sha": "5ad47ae72b20",
-    "zh": ""
+    "zh": "利用秩—零度定理，我们可以开始整理一份与线性变换可逆等价的性质清单。"
    }
   },
   {
@@ -304,7 +304,7 @@
       "t": {
        "en": "$\\mathcal T:\\R^n\\to\\R^m$ is invertible if and only if $\\Nullity(\\mathcal T)=0$ and $\\Rank(\\mathcal T)=m$.",
        "sha": "52dec867b495",
-       "zh": ""
+       "zh": "$\\mathcal T:\\R^n\\to\\R^m$ 可逆当且仅当 $\\Nullity(\\mathcal T)=0$ 且 $\\Rank(\\mathcal T)=m$。"
       }
      }
     ],
@@ -314,7 +314,7 @@
       "t": {
        "en": "$\\mathcal T:\\R^n\\to\\R^m$ is invertible if and only if $m=n$ and $\\Nullity(\\mathcal T)=0$.",
        "sha": "df0860b9e63c",
-       "zh": ""
+       "zh": "$\\mathcal T:\\R^n\\to\\R^m$ 可逆当且仅当 $m=n$ 且 $\\Nullity(\\mathcal T)=0$。"
       }
      }
     ],
@@ -324,7 +324,7 @@
       "t": {
        "en": "$\\mathcal T:\\R^n\\to\\R^m$ is invertible if and only if $m=n$ and $\\Rank(\\mathcal T)=m$.",
        "sha": "1e7ff4e68df6",
-       "zh": ""
+       "zh": "$\\mathcal T:\\R^n\\to\\R^m$ 可逆当且仅当 $m=n$ 且 $\\Rank(\\mathcal T)=m$。"
       }
      }
     ]
@@ -340,7 +340,7 @@
      "t": {
       "en": "Let $\\mathcal P:\\R^2\\to\\R^2$ be projection onto the $x$-axis and let $\\mathcal R:\\R^2\\to\\R^2$ be rotation counter-clockwise by $15^\\circ$. Classify each of $\\mathcal P$ and $\\mathcal R$ as invertible or not.",
       "sha": "c7d6e604757d",
-      "zh": ""
+      "zh": "设 $\\mathcal P:\\R^2\\to\\R^2$ 是向 $x$ 轴的投影，$\\mathcal R:\\R^2\\to\\R^2$ 是逆时针旋转 $15^\\circ$。请判断 $\\mathcal P$ 和 $\\mathcal R$ 各自是否可逆。"
      }
     },
     {
@@ -348,7 +348,7 @@
      "t": {
       "en": "Notice that $\\mathcal P(\\yhat)=\\mathcal P(2\\yhat)=\\vec 0$, therefore $\\mathcal P$ is not one-to-one and so is not invertible.",
       "sha": "a06416e013a8",
-      "zh": ""
+      "zh": "注意到 $\\mathcal P(\\yhat)=\\mathcal P(2\\yhat)=\\vec 0$，因此 $\\mathcal P$ 不是一一的，从而不可逆。"
      }
     },
     {
@@ -356,7 +356,7 @@
      "t": {
       "en": "Let $\\mathcal Q: \\R^2\\to\\R^2$ be rotation clockwise by $15^\\circ$. $\\mathcal R$ and $\\mathcal Q$ will undo each other. Phrased mathematically,",
       "sha": "d64d3e9576b6",
-      "zh": ""
+      "zh": "设 $\\mathcal Q: \\R^2\\to\\R^2$ 是顺时针旋转 $15^\\circ$。$\\mathcal R$ 和 $\\mathcal Q$ 会互相撤销。用数学语言表述就是"
      }
     },
     {
@@ -368,7 +368,7 @@
      "t": {
       "en": "Therefore, $\\mathcal Q$ is an inverse of $\\mathcal R$, and so $\\mathcal R$ is invertible.",
       "sha": "551bed841b6e",
-      "zh": ""
+      "zh": "因此，$\\mathcal Q$ 是 $\\mathcal R$ 的一个逆，所以 $\\mathcal R$ 可逆。"
      }
     }
    ]
@@ -378,7 +378,7 @@
    "t": {
     "en": "One important fact about linear transformations is that if a linear transformation is invertible, its inverse is also a linear transformation.",
     "sha": "ea55e651a99e",
-    "zh": ""
+    "zh": "关于线性变换有一个重要事实：如果一个线性变换可逆，那么它的逆也是线性变换。"
    }
   },
   {
@@ -391,7 +391,7 @@
      "t": {
       "en": "Let $\\mathcal T$ be an invertible linear transformation. Then $\\mathcal T^{-1}$ is also a linear transformation.",
       "sha": "dd339a1a4d4e",
-      "zh": ""
+      "zh": "设 $\\mathcal T$ 是一个可逆的线性变换，则 $\\mathcal T^{-1}$ 也是线性变换。"
      }
     }
    ]
@@ -405,7 +405,7 @@
      "t": {
       "en": "Let $\\mathcal T$ be an invertible linear transformation and let $\\mathcal T^{-1}$ be its inverse. We need to show that (i) $\\mathcal T^{-1}$ distributes over addition and (ii) $\\mathcal T^{-1}$ distributes over scalar multiplication.",
       "sha": "17132aa1d556",
-      "zh": ""
+      "zh": "设 $\\mathcal T$ 是一个可逆的线性变换，$\\mathcal T^{-1}$ 是它的逆。我们需要证明：(i) $\\mathcal T^{-1}$ 对加法满足分配律；(ii) $\\mathcal T^{-1}$ 对标量乘法满足分配律。"
      }
     },
     {
@@ -418,7 +418,7 @@
         "t": {
          "en": "First observe that since $\\mathcal T\\circ \\mathcal T^{-1}=\\Ident$ and because $\\mathcal T$ is linear, we have",
          "sha": "7ac4ceac92da",
-         "zh": ""
+         "zh": "首先注意到，由于 $\\mathcal T\\circ \\mathcal T^{-1}=\\Ident$，并且 $\\mathcal T$ 是线性的，所以有"
         }
        },
        {
@@ -430,7 +430,7 @@
         "t": {
          "en": "Since $\\mathcal T^{-1}\\circ \\mathcal T=\\Ident$, by using the fact that $\\vec a+\\vec b=\\mathcal T(\\mathcal T^{-1}\\vec a+ \\mathcal T^{-1}\\vec b)$ we know",
          "sha": "8880c4bcf30c",
-         "zh": ""
+         "zh": "由于 $\\mathcal T^{-1}\\circ \\mathcal T=\\Ident$，再利用 $\\vec a+\\vec b=\\mathcal T(\\mathcal T^{-1}\\vec a+ \\mathcal T^{-1}\\vec b)$ 这一事实，我们得到"
         }
        },
        {
@@ -444,7 +444,7 @@
         "t": {
          "en": "Similar to the proof of (i), we see",
          "sha": "f2720075aae8",
-         "zh": ""
+         "zh": "与 (i) 的证明类似，可得"
         }
        },
        {
@@ -461,7 +461,7 @@
    "t": {
     "en": "Invertibility and Matrices",
     "sha": "fe2a243b2d1d",
-    "zh": ""
+    "zh": "可逆性与矩阵"
    }
   },
   {
@@ -469,7 +469,7 @@
    "t": {
     "en": "In the world of matrices, the *identity matrix* takes the place of the identity function.",
     "sha": "0ee7443dd054",
-    "zh": ""
+    "zh": "在矩阵的世界里，*单位矩阵*相当于恒等函数。"
    }
   },
   {
@@ -478,7 +478,7 @@
    "title": {
     "en": "Identity Matrix",
     "sha": "c8c548935fe1",
-    "zh": ""
+    "zh": "单位矩阵"
    },
    "blocks": [
     {
@@ -486,7 +486,7 @@
      "t": {
       "en": "An *identity matrix* is a square matrix with ones on the diagonal and zeros everywhere else. The $n\\times n$ identity matrix is denoted $I_{n\\times n}$, or just $I$ when its size is implied.",
       "sha": "0eb66342256d",
-      "zh": ""
+      "zh": "*单位矩阵*是对角线上全是 1、其余位置全是 0 的方阵。$n\\times n$ 单位矩阵记作 $I_{n\\times n}$；当大小不言自明时，就简记为 $I$。"
      }
     }
    ]
@@ -496,7 +496,7 @@
    "t": {
     "en": "We can now define what it means for a matrix to be invertible 〔注： This should look very similar to what it means for a function to be invertible.〕.",
     "sha": "df1f9448dab2",
-    "zh": ""
+    "zh": "现在可以来定义矩阵可逆是什么意思了〔注：这和函数可逆的定义应当看起来非常相似。〕。"
    }
   },
   {
@@ -505,7 +505,7 @@
    "title": {
     "en": "Matrix Inverse",
     "sha": "ed67dccb0e17",
-    "zh": ""
+    "zh": "矩阵的逆"
    },
    "blocks": [
     {
@@ -513,7 +513,7 @@
      "t": {
       "en": "The *inverse* of a matrix $A$ is a matrix $B$ such that $AB=I$ and $BA=I$. In this case, $B$ is called the inverse of $A$ and is notated $A^{-1}$.",
       "sha": "fa0d9fe198f1",
-      "zh": ""
+      "zh": "矩阵 $A$ 的*逆*是满足 $AB=I$ 且 $BA=I$ 的矩阵 $B$。此时，称 $B$ 为 $A$ 的逆，记作 $A^{-1}$。"
      }
     }
    ]
@@ -528,7 +528,7 @@
      "t": {
       "en": "Determine whether the matrices $A=\\mat{2&5\\\\-3&-7}$ and $B=\\mat{-7&-5\\\\3&2}$ are inverses of each other.",
       "sha": "d0e1edc1965c",
-      "zh": ""
+      "zh": "判断矩阵 $A=\\mat{2&5\\\\-3&-7}$ 与 $B=\\mat{-7&-5\\\\3&2}$ 是否互为逆矩阵。"
      }
     },
     {
@@ -540,7 +540,7 @@
      "t": {
       "en": "Therefore, $A$ and $B$ are inverses of each other.",
       "sha": "cc2811332b5a",
-      "zh": ""
+      "zh": "因此，$A$ 与 $B$ 互为逆矩阵。"
      }
     }
    ]
@@ -555,7 +555,7 @@
      "t": {
       "en": "Determine whether the matrices $A=\\mat{2&5&0\\\\-3&-7&0}$ and $B=\\mat{-7&-5\\\\3&2\\\\1&1}$ are inverses of each other.",
       "sha": "752569da08ce",
-      "zh": ""
+      "zh": "判断矩阵 $A=\\mat{2&5&0\\\\-3&-7&0}$ 与 $B=\\mat{-7&-5\\\\3&2\\\\1&1}$ 是否互为逆矩阵。"
      }
     },
     {
@@ -567,7 +567,7 @@
      "t": {
       "en": "but",
       "sha": "786e97b3ee9f",
-      "zh": ""
+      "zh": "但是"
      }
     },
     {
@@ -579,7 +579,7 @@
      "t": {
       "en": "Therefore, $A$ and $B$ are not inverses of each other.",
       "sha": "29947605d9b9",
-      "zh": ""
+      "zh": "因此，$A$ 与 $B$ 不互为逆矩阵。"
      }
     }
    ]
@@ -589,7 +589,7 @@
    "t": {
     "en": "Since every matrix induces a linear transformation, we can use the facts we know about invertible linear transformations to produce facts about invertible matrices. In particular:",
     "sha": "c754d3bbe8fa",
-    "zh": ""
+    "zh": "因为每个矩阵都诱导出一个线性变换，所以我们可以利用已知的可逆线性变换的事实，得到关于可逆矩阵的事实。特别地："
    }
   },
   {
@@ -602,7 +602,7 @@
       "t": {
        "en": "An $n\\times m$ matrix $A$ is invertible if and only if $\\Nullity(A)=0$ and $\\Rank(A)=n$.",
        "sha": "11478972f794",
-       "zh": ""
+       "zh": "$n\\times m$ 矩阵 $A$ 可逆当且仅当 $\\Nullity(A)=0$ 且 $\\Rank(A)=n$。"
       }
      }
     ],
@@ -612,7 +612,7 @@
       "t": {
        "en": "An $n\\times n$ matrix $A$ is invertible if and only if $\\Nullity(A)=0$.",
        "sha": "d1319227fe2f",
-       "zh": ""
+       "zh": "$n\\times n$ 矩阵 $A$ 可逆当且仅当 $\\Nullity(A)=0$。"
       }
      }
     ],
@@ -622,7 +622,7 @@
       "t": {
        "en": "An $n\\times n$ matrix $A$ is invertible if and only if $\\Rank(A)=n$.",
        "sha": "78555923e38c",
-       "zh": ""
+       "zh": "$n\\times n$ 矩阵 $A$ 可逆当且仅当 $\\Rank(A)=n$。"
       }
      }
     ]
@@ -633,7 +633,7 @@
    "t": {
     "en": "Matrix Algebra",
     "sha": "d76dbf52f516",
-    "zh": ""
+    "zh": "矩阵代数"
    }
   },
   {
@@ -641,7 +641,7 @@
    "t": {
     "en": "The linear equation $ax=b$ has solution $x=\\frac{b}{a}$ whenever $a\\neq 0$. We arrive at this solution by dividing both sides of the equation by $a$. Does a similar process exist for solving the matrix equation $A\\vec x=\\vec b$? It sure does!",
     "sha": "f753a9eee0d7",
-    "zh": ""
+    "zh": "只要 $a\\neq 0$，线性方程 $ax=b$ 就有解 $x=\\frac{b}{a}$。我们是把方程两边同时除以 $a$ 得到这个解的。解矩阵方程 $A\\vec x=\\vec b$ 时有没有类似的做法呢？当然有！"
    }
   },
   {
@@ -649,7 +649,7 @@
    "t": {
     "en": "Unfortunately, we cannot divide by a matrix, but to solve $A\\vec x=\\vec b$, we don't need to “divide” by a matrix, we just need to eliminate $A$ from the left side. This could be accomplished by using an inverse.",
     "sha": "aab17028a5b6",
-    "zh": ""
+    "zh": "遗憾的是，我们不能“除以”一个矩阵；但要解 $A\\vec x=\\vec b$，并不需要“除以”矩阵，只需要把 $A$ 从左边消去。这可以借助逆来做到。"
    }
   },
   {
@@ -657,7 +657,7 @@
    "t": {
     "en": "Suppose $A$ is invertible, then",
     "sha": "ca0a320f9531",
-    "zh": ""
+    "zh": "设 $A$ 可逆，则"
    }
   },
   {
@@ -669,7 +669,7 @@
    "t": {
     "en": "Thus, if we have the inverse of a matrix handy, we can use it to solve a system of equations.",
     "sha": "59154574ae1a",
-    "zh": ""
+    "zh": "由此可见，只要手头有矩阵的逆，就可以用它来解方程组。"
    }
   },
   {
@@ -682,7 +682,7 @@
      "t": {
       "en": "Use the fact that $\\mat{2&5\\\\-3&-7}^{-1}=\\mat{-7&-5\\\\3&2}$ to solve the system $\\begin{aligned}2x+5y &= 2 \\\\ -3x-7y &= 1\\end{aligned}$.",
       "sha": "0346db95abe6",
-      "zh": ""
+      "zh": "利用 $\\mat{2&5\\\\-3&-7}^{-1}=\\mat{-7&-5\\\\3&2}$ 这一事实，解方程组 $\\begin{aligned}2x+5y &= 2 \\\\ -3x-7y &= 1\\end{aligned}$。"
      }
     },
     {
@@ -690,7 +690,7 @@
      "t": {
       "en": "The system can be rewritten as",
       "sha": "2a9e8d9a246e",
-      "zh": ""
+      "zh": "这个方程组可以改写为"
      }
     },
     {
@@ -702,7 +702,7 @@
      "t": {
       "en": "Multiplying both sides by $\\mat{2&5\\\\-3&-7}^{-1}$ gives",
       "sha": "5bc82aa73904",
-      "zh": ""
+      "zh": "两边同时乘以 $\\mat{2&5\\\\-3&-7}^{-1}$，得到"
      }
     },
     {
@@ -716,7 +716,7 @@
    "t": {
     "en": "It's important to note that, unlike in the case with regular scalars, the order of matrix multiplication matters. So, whereas with scalars you could get away with something like",
     "sha": "44f2b5efc691",
-    "zh": ""
+    "zh": "要特别注意：与普通的标量不同，矩阵乘法的顺序是重要的。对标量来说，你可以这样做："
    }
   },
   {
@@ -728,7 +728,7 @@
    "t": {
     "en": "with matrices $A\\vec x=\\vec b$ *does not imply* $A^{-1}A\\vec x=\\vec b A^{-1}$. In fact, if $\\vec b$ is a column vector, the expression $\\vec bA^{-1}$ is almost always undefined!",
     "sha": "7c26939cd175",
-    "zh": ""
+    "zh": "对矩阵来说，由 $A\\vec x=\\vec b$ *不能推出* $A^{-1}A\\vec x=\\vec b A^{-1}$。事实上，如果 $\\vec b$ 是列向量，那么 $\\vec bA^{-1}$ 这个式子几乎总是没有定义的！"
    }
   },
   {
@@ -736,7 +736,7 @@
    "t": {
     "en": "Finding a Matrix Inverse",
     "sha": "67d996502981",
-    "zh": ""
+    "zh": "求矩阵的逆"
    }
   },
   {
@@ -744,7 +744,7 @@
    "t": {
     "en": "Whereas before we only knew how to solve a matrix equation $A\\vec x=\\vec b$ using row reduction, we now know how to use $A^{-1}$ to solve the same system. In fact, $A^{-1}$ is the exact matrix so that $\\vec x=A^{-1}\\vec b$ is the solution to $A\\vec x=\\vec b$. Therefore, by picking different $\\vec b$'s and solving for $\\vec x$, we can find $A^{-1}$.",
     "sha": "ca349056d2af",
-    "zh": ""
+    "zh": "以前，我们只会用行化简来解矩阵方程 $A\\vec x=\\vec b$；现在我们知道还可以用 $A^{-1}$ 来解同一个方程组。事实上，$A^{-1}$ 恰好就是使 $\\vec x=A^{-1}\\vec b$ 成为 $A\\vec x=\\vec b$ 之解的那个矩阵。因此，选取不同的 $\\vec b$ 并求出对应的 $\\vec x$，就可以求出 $A^{-1}$。"
    }
   },
   {
@@ -757,7 +757,7 @@
      "t": {
       "en": "Let $A=\\mat{2&5\\\\-3&-7}$. Find $A^{-1}$.",
       "sha": "2ff1cb17fb35",
-      "zh": ""
+      "zh": "设 $A=\\mat{2&5\\\\-3&-7}$，求 $A^{-1}$。"
      }
     },
     {
@@ -765,7 +765,7 @@
      "t": {
       "en": "We know $A^{-1}=\\mat{a&b\\\\c&d}$ will be a $2\\times 2$ matrix, and we know $\\vec x=A^{-1}\\vec b$ will always be the unique solution to $A\\vec x=\\vec b$. Therefore, we can find $A^{-1}$ by finding $\\vec x,\\vec b$ pairs that satisfy $A\\vec x=\\vec b$.",
       "sha": "2ece35b7b4bd",
-      "zh": ""
+      "zh": "我们知道 $A^{-1}=\\mat{a&b\\\\c&d}$ 是一个 $2\\times 2$ 矩阵，也知道 $\\vec x=A^{-1}\\vec b$ 总是 $A\\vec x=\\vec b$ 的唯一解。因此，只要找出满足 $A\\vec x=\\vec b$ 的 $\\vec x,\\vec b$ 对，就可以求出 $A^{-1}$。"
      }
     },
     {
@@ -773,7 +773,7 @@
      "t": {
       "en": "Using row reduction, we see",
       "sha": "9824d9061a37",
-      "zh": ""
+      "zh": "用行化简，可得"
      }
     },
     {
@@ -785,7 +785,7 @@
      "t": {
       "en": "Therefore",
       "sha": "f6f36ec125f2",
-      "zh": ""
+      "zh": "因此"
      }
     },
     {
@@ -797,7 +797,7 @@
      "t": {
       "en": "and so",
       "sha": "9af790b3a93d",
-      "zh": ""
+      "zh": "所以"
      }
     },
     {
@@ -811,7 +811,7 @@
    "t": {
     "en": "Elementary Matrices",
     "sha": "3677be65ec96",
-    "zh": ""
+    "zh": "初等矩阵"
    }
   },
   {
@@ -819,7 +819,7 @@
    "t": {
     "en": "Finding the inverse of a matrix can be a lot of work. However if you already know how to undo what the matrix does, finding the inverse might not be so hard. For example, if $R_{30}$ is the matrix that rotates vectors in $\\R^2$ counter-clockwise by $30^\\circ$, its inverse must be $R_{-30}$, the matrix that rotates vectors in $\\R^2$ *clockwise* by $30^\\circ$.",
     "sha": "f0f338358947",
-    "zh": ""
+    "zh": "求矩阵的逆可能要费不少功夫。不过，如果你已经知道这个矩阵的作用该怎样撤销，求逆也许就不那么难了。例如，若 $R_{30}$ 是把 $\\R^2$ 中的向量逆时针旋转 $30^\\circ$ 的矩阵，那么它的逆必然是 $R_{-30}$，即把 $\\R^2$ 中的向量*顺时针*旋转 $30^\\circ$ 的矩阵。"
    }
   },
   {
@@ -827,7 +827,7 @@
    "t": {
     "en": "Like before when we analyzed linear transformations by breaking them up into compositions of simpler linear transformations, another strategy for finding an inverse matrix is to break a matrix into simpler ones whose inverses we can just write down.",
     "sha": "7f51a7c9e4c7",
-    "zh": ""
+    "zh": "就像之前我们把线性变换拆成若干更简单的线性变换的复合来分析一样，求逆矩阵的另一种策略是：把一个矩阵拆成若干更简单的矩阵，而这些简单矩阵的逆可以直接写出来。"
    }
   },
   {
@@ -835,7 +835,7 @@
    "t": {
     "en": "Some of the simplest matrices around are the *elementary matrices*.",
     "sha": "705f2204704b",
-    "zh": ""
+    "zh": "最简单的一类矩阵就是*初等矩阵*。"
    }
   },
   {
@@ -844,7 +844,7 @@
    "title": {
     "en": "Elementary Matrix",
     "sha": "f1b201eb3321",
-    "zh": ""
+    "zh": "初等矩阵"
    },
    "blocks": [
     {
@@ -852,7 +852,7 @@
      "t": {
       "en": "A matrix is called an *elementary matrix* if it is an identity matrix with a single elementary row operation applied.",
       "sha": "74aa70888cdf",
-      "zh": ""
+      "zh": "对单位矩阵施行一次初等行变换得到的矩阵，称为*初等矩阵*。"
      }
     }
    ]
@@ -862,7 +862,7 @@
    "t": {
     "en": "Examples of elementary matrices include",
     "sha": "6c3969e3e0aa",
-    "zh": ""
+    "zh": "初等矩阵的例子有"
    }
   },
   {
@@ -874,7 +874,7 @@
    "t": {
     "en": "These matrices are obtained from the row operations “multiply the last row by $-5$”, “add $7$ times the last row to the first”, and “swap the first two rows”.",
     "sha": "c3fe7e9be4df",
-    "zh": ""
+    "zh": "这些矩阵分别来自行变换“把最后一行乘以 $-5$”“把最后一行的 $7$ 倍加到第一行”以及“交换前两行”。"
    }
   },
   {
@@ -882,7 +882,7 @@
    "t": {
     "en": "Elementary matrices are useful because multiplying by an elementary matrix performs the corresponding elementary row operation! See for yourself:",
     "sha": "434ed11d74e4",
-    "zh": ""
+    "zh": "初等矩阵之所以有用，是因为乘以一个初等矩阵就相当于施行对应的初等行变换！你可以亲自验证："
    }
   },
   {
@@ -894,7 +894,7 @@
    "t": {
     "en": "As a refresher, the elementary row operations are:",
     "sha": "47928c66871c",
-    "zh": ""
+    "zh": "作为复习，初等行变换有："
    }
   },
   {
@@ -907,7 +907,7 @@
       "t": {
        "en": "multiply a row by a non-zero constant;",
        "sha": "5081afb19d3a",
-       "zh": ""
+       "zh": "把某一行乘以一个非零常数；"
       }
      }
     ],
@@ -917,7 +917,7 @@
       "t": {
        "en": "add a multiple of one row to another; and",
        "sha": "9bffa691aca3",
-       "zh": ""
+       "zh": "把某一行的若干倍加到另一行；"
       }
      }
     ],
@@ -927,7 +927,7 @@
       "t": {
        "en": "swap two rows.",
        "sha": "2f69845d0019",
-       "zh": ""
+       "zh": "交换两行。"
       }
      }
     ]
@@ -938,7 +938,7 @@
    "t": {
     "en": "Each one of these operations can be undone, and so every elementary matrix is invertible. What's more, the inverse is another elementary matrix that is easy to write down.",
     "sha": "c959dd73811d",
-    "zh": ""
+    "zh": "这些变换每一个都可以被撤销，所以每个初等矩阵都是可逆的。不仅如此，它的逆也是一个初等矩阵，而且很容易写出来。"
    }
   },
   {
@@ -951,7 +951,7 @@
      "t": {
       "en": "Find the inverse of $E= \\mat{1&0&7\\\\0&1&0\\\\0&0&1}$.",
       "sha": "9c3f48747ef3",
-      "zh": ""
+      "zh": "求 $E= \\mat{1&0&7\\\\0&1&0\\\\0&0&1}$ 的逆。"
      }
     },
     {
@@ -959,7 +959,7 @@
      "t": {
       "en": "Since $E$ corresponds to the row operation “add $7$ times the last row to the first”, $E^{-1}$ must correspond to the row operation “subtract $7$ times the last row from the first”. Therefore,",
       "sha": "e2204fb73c17",
-      "zh": ""
+      "zh": "$E$ 对应的行变换是“把最后一行的 $7$ 倍加到第一行”，所以 $E^{-1}$ 一定对应行变换“从第一行减去最后一行的 $7$ 倍”。因此，"
      }
     },
     {
@@ -973,7 +973,7 @@
    "t": {
     "en": "Elementary Matrices and Inverses",
     "sha": "ecdcec0e04cb",
-    "zh": ""
+    "zh": "初等矩阵与逆"
    }
   },
   {
@@ -981,7 +981,7 @@
    "t": {
     "en": "For a matrix $M$ to be invertible, we know that $M$ must be square and $\\Nullity(M)=0$. That means, $M$ is invertible if and only if $\\Rref(M)=I$. In other words, $M$ is invertible if there is a sequence of elementary row operations that turn $M$ into $I$. Each one of these row operations can be represented by an elementary matrix, which gives us the following theorem.",
     "sha": "d1cf9abe3176",
-    "zh": ""
+    "zh": "矩阵 $M$ 要可逆，我们知道 $M$ 必须是方阵，并且 $\\Nullity(M)=0$。也就是说，$M$ 可逆当且仅当 $\\Rref(M)=I$。换句话说，如果存在一系列初等行变换把 $M$ 变成 $I$，那么 $M$ 就是可逆的。每一个这样的行变换都可以用一个初等矩阵来表示，于是得到下面的定理。"
    }
   },
   {
@@ -994,7 +994,7 @@
      "t": {
       "en": "A matrix $M$ is invertible if and only if there are elementary matrices $E_1,\\ldots, E_k$ so that",
       "sha": "10f9011c7bc1",
-      "zh": ""
+      "zh": "矩阵 $M$ 可逆，当且仅当存在初等矩阵 $E_1,\\ldots, E_k$，使得"
      }
     },
     {
@@ -1008,7 +1008,7 @@
    "t": {
     "en": "Now, suppose $M$ is invertible and let $E_1,\\ldots,E_k$ be elementary matrices so that $E_k\\cdots E_2E_1M=I$. We now know",
     "sha": "c71ef88a22db",
-    "zh": ""
+    "zh": "现在，设 $M$ 可逆，并设 $E_1,\\ldots,E_k$ 是初等矩阵，满足 $E_k\\cdots E_2E_1M=I$。我们现在知道"
    }
   },
   {
@@ -1020,7 +1020,7 @@
    "t": {
     "en": "If we can argue that $MQ=I$, then $Q$ will be the inverse of $M$!",
     "sha": "3d641772b81c",
-    "zh": ""
+    "zh": "如果我们能论证 $MQ=I$，那么 $Q$ 就是 $M$ 的逆！"
    }
   },
   {
@@ -1033,7 +1033,7 @@
      "t": {
       "en": "If $A$ is a square matrix and $AB=I$ for some matrix $B$, then $BA=I$.",
       "sha": "2aeaab7220a9",
-      "zh": ""
+      "zh": "如果 $A$ 是方阵，并且对某个矩阵 $B$ 有 $AB=I$，那么 $BA=I$。"
      }
     }
    ]
@@ -1047,7 +1047,7 @@
      "t": {
       "en": "Suppose $A$ is a square matrix and that $AB=I$. Since $AB=I$, $B$ must also be square. Since $\\Null(B)\\subseteq\\Null(AB)$, we know $\\Nullity(B)\\leq \\Nullity(AB)=\\Nullity(I)=0$, and so $B$ is invertible (since it's a square matrix whose nullity is $0$). Let $B^{-1}$ be the inverse of $B$. Observe now that",
       "sha": "2107590ed456",
-      "zh": ""
+      "zh": "设 $A$ 是方阵，并且 $AB=I$。由于 $AB=I$，$B$ 也必须是方阵。又因为 $\\Null(B)\\subseteq\\Null(AB)$，我们知道 $\\Nullity(B)\\leq \\Nullity(AB)=\\Nullity(I)=0$，所以 $B$ 是可逆的（它是方阵，且零度为 $0$）。设 $B^{-1}$ 是 $B$ 的逆。现在观察"
      }
     },
     {
@@ -1059,7 +1059,7 @@
      "t": {
       "en": "and so $A=B^{-1}$. Finally, substituting $B^{-1}$ for $A$ shows",
       "sha": "db0b89e55f2a",
-      "zh": ""
+      "zh": "所以 $A=B^{-1}$。最后，把 $B^{-1}$ 代回 $A$，就得到"
      }
     },
     {
@@ -1073,7 +1073,7 @@
    "t": {
     "en": "In light of this theorem, we now have a new algorithm for finding the inverse of a matrix—find elementary matrices that turn the matrix into the identity matrix and multiply those elementary matrices together to find the inverse.",
     "sha": "9c116d7372d9",
-    "zh": ""
+    "zh": "有了这个定理，我们就多了一种求矩阵的逆的算法：找出把矩阵变成单位矩阵的初等矩阵，再把这些初等矩阵乘起来，就得到逆矩阵。"
    }
   },
   {
@@ -1086,7 +1086,7 @@
      "t": {
       "en": "Let $A=\\mat{1&2&0\\\\0&4&0\\\\0&-1&1}$. Find $A^{-1}$ using elementary matrices.",
       "sha": "9d8b2f6a4048",
-      "zh": ""
+      "zh": "设 $A=\\mat{1&2&0\\\\0&4&0\\\\0&-1&1}$。用初等矩阵求 $A^{-1}$。"
      }
     },
     {
@@ -1094,7 +1094,7 @@
      "t": {
       "en": "We can row-reduce $A$ with the following steps:",
       "sha": "76363de45842",
-      "zh": ""
+      "zh": "我们可以用下面的步骤对 $A$ 做行化简："
      }
     },
     {
@@ -1106,7 +1106,7 @@
      "t": {
       "en": "The elementary matrices corresponding to these steps are",
       "sha": "7bc921bdad81",
-      "zh": ""
+      "zh": "这些步骤对应的初等矩阵是"
      }
     },
     {
@@ -1118,7 +1118,7 @@
      "t": {
       "en": "We now have",
       "sha": "ed21e57020f0",
-      "zh": ""
+      "zh": "于是我们有"
      }
     },
     {
@@ -1130,7 +1130,7 @@
      "t": {
       "en": "and so",
       "sha": "9af790b3a93d",
-      "zh": ""
+      "zh": "所以"
      }
     },
     {
@@ -1144,7 +1144,7 @@
    "t": {
     "en": "Decomposition into Elementary Matrices",
     "sha": "c0cfbd7bbc2e",
-    "zh": ""
+    "zh": "分解成初等矩阵"
    }
   },
   {
@@ -1152,7 +1152,7 @@
    "t": {
     "en": "If $A$ is an invertible matrix, then the double-inverse of $A$ (i.e., $(A^{-1})^{-1}$) is $A$ itself 〔注： Formally we say that the operation of taking a matrix inverse is an *involution*.〕. This is easily proved. By definition, $(A^{-1})^{-1}$ is a matrix $B$ so that $BA^{-1}=I$ and $A^{-1}B=I$. But $B=A$ satisfies this condition!",
     "sha": "d8f02da55bba",
-    "zh": ""
+    "zh": "如果 $A$ 是可逆矩阵，那么 $A$ 的逆的逆（即 $(A^{-1})^{-1}$）就是 $A$ 本身 〔注： 正式的说法是：取矩阵的逆这个运算是一个*对合*。〕。这很容易证明。按定义，$(A^{-1})^{-1}$ 是满足 $BA^{-1}=I$ 且 $A^{-1}B=I$ 的矩阵 $B$。而 $B=A$ 恰好满足这个条件！"
    }
   },
   {
@@ -1160,7 +1160,7 @@
    "t": {
     "en": "Now, suppose $M$ is an invertible matrix. Then, there exists a sequence of elementary matrices $E_1,\\ldots, E_k$ so that $E_k\\cdots E_2E_1M=I$ and",
     "sha": "f5aaf0fb4b03",
-    "zh": ""
+    "zh": "现在，设 $M$ 是可逆矩阵。那么存在一系列初等矩阵 $E_1,\\ldots, E_k$，使得 $E_k\\cdots E_2E_1M=I$，并且"
    }
   },
   {
@@ -1172,7 +1172,7 @@
    "t": {
     "en": "Therefore",
     "sha": "f6f36ec125f2",
-    "zh": ""
+    "zh": "因此"
    }
   },
   {
@@ -1184,7 +1184,7 @@
    "t": {
     "en": "Thinking carefully about what $(E_k\\cdots E_2E_1)^{-1}$ should be, we see that",
     "sha": "2e6904e31ffc",
-    "zh": ""
+    "zh": "仔细想一想 $(E_k\\cdots E_2E_1)^{-1}$ 应该是什么，我们看到"
    }
   },
   {
@@ -1196,7 +1196,7 @@
    "t": {
     "en": "and so",
     "sha": "9af790b3a93d",
-    "zh": ""
+    "zh": "所以"
    }
   },
   {
@@ -1208,7 +1208,7 @@
    "t": {
     "en": "(Notice the order of matrix multiplication reversed!) Each $E_i^{-1}$ is also an elementary matrix, and so we have just shown that every invertible matrix can be written as the product of elementary matrices. This is actually a double-sided implication (if and only if).",
     "sha": "b4ec3a4b10cb",
-    "zh": ""
+    "zh": "（注意矩阵乘法的顺序反过来了！）每个 $E_i^{-1}$ 也是初等矩阵，所以我们刚刚证明了：每个可逆矩阵都可以写成初等矩阵的乘积。这其实是一个双向的蕴含（当且仅当）。"
    }
   },
   {
@@ -1221,7 +1221,7 @@
      "t": {
       "en": "A matrix $M$ is invertible if and only if it can be written as the product of elementary matrices.",
       "sha": "a6b3b7f3c1fc",
-      "zh": ""
+      "zh": "矩阵 $M$ 可逆，当且仅当它可以写成若干初等矩阵的乘积。"
      }
     }
    ]
@@ -1235,7 +1235,7 @@
      "t": {
       "en": "Suppose $M$ is invertible. Then, there exists a sequence of elementary matrices $E_1,\\ldots,E_k$ so that $E_k\\cdots E_1M=I$. It follows that",
       "sha": "b419da2b6fa8",
-      "zh": ""
+      "zh": "设 $M$ 可逆。那么存在一系列初等矩阵 $E_1,\\ldots,E_k$，使得 $E_k\\cdots E_1M=I$。由此得到"
      }
     },
     {
@@ -1247,7 +1247,7 @@
      "t": {
       "en": "is the product of elementary matrices. Conversely, since the product of invertible matrices is invertible and every elementary matrix is invertible, the product of elementary matrices must be invertible. Therefore, if $M$ is not invertible, it *cannot* be written as the product of elementary matrices.",
       "sha": "1778e160b3a2",
-      "zh": ""
+      "zh": "是初等矩阵的乘积。反过来，由于可逆矩阵的乘积是可逆的，而每个初等矩阵都是可逆的，所以初等矩阵的乘积一定可逆。因此，如果 $M$ 不可逆，它就*不可能*写成初等矩阵的乘积。"
      }
     }
    ]
@@ -1262,7 +1262,7 @@
      "t": {
       "en": "Determine whether the following linear transformations are one-to-one, onto, or both. As well, determine whether or not they are invertible. Justify your answers.",
       "sha": "a6079cdf38ef",
-      "zh": ""
+      "zh": "判断下列线性变换是一一的、满的，还是两者都是；同时判断它们是否可逆。请说明理由。"
      }
     },
     {
@@ -1275,7 +1275,7 @@
         "t": {
          "en": "$\\mathcal S:\\R^{2}\\to\\R^{2}$, where $\\mathcal S$ is the linear transformation that doubles every vector.",
          "sha": "43ad548690dd",
-         "zh": ""
+         "zh": "$\\mathcal S:\\R^{2}\\to\\R^{2}$，其中 $\\mathcal S$ 是把每个向量变成两倍的线性变换。"
         }
        }
       ],
@@ -1285,7 +1285,7 @@
         "t": {
          "en": "$\\mathcal R:\\R^{2}\\to\\R^{2}$, where $\\mathcal R$ the linear transformation that rotates every vector clockwise by $72^{\\circ}$.",
          "sha": "64970bec81e4",
-         "zh": ""
+         "zh": "$\\mathcal R:\\R^{2}\\to\\R^{2}$，其中 $\\mathcal R$ 是把每个向量顺时针旋转 $72^{\\circ}$ 的线性变换。"
         }
        }
       ],
@@ -1295,7 +1295,7 @@
         "t": {
          "en": "$\\mathcal P:\\R^{2}\\to\\R^{2}$, where $\\mathcal P$ the linear transformation that projects every vector onto the $y$-axis.",
          "sha": "ef205fdfbd05",
-         "zh": ""
+         "zh": "$\\mathcal P:\\R^{2}\\to\\R^{2}$，其中 $\\mathcal P$ 是把每个向量投影到 $y$ 轴上的线性变换。"
         }
        }
       ],
@@ -1305,7 +1305,7 @@
         "t": {
          "en": "$\\mathcal F:\\R^{2}\\to\\R^{2}$, where $\\mathcal F$ is the linear transformation that reflects every vector over the line $y=x$.",
          "sha": "47a956bd2670",
-         "zh": ""
+         "zh": "$\\mathcal F:\\R^{2}\\to\\R^{2}$，其中 $\\mathcal F$ 是把每个向量关于直线 $y=x$ 作反射的线性变换。"
         }
        }
       ],
@@ -1315,7 +1315,7 @@
         "t": {
          "en": "$\\mathcal T:\\R^{3}\\to\\R^{3}$, where $\\mathcal T$ is the linear transformation induced by the matrix $M_{\\mathcal T} = \\mat{1&2&3\\\\4&5&6\\\\7&8&9}$.",
          "sha": "4723398931c7",
-         "zh": ""
+         "zh": "$\\mathcal T:\\R^{3}\\to\\R^{3}$，其中 $\\mathcal T$ 是由矩阵 $M_{\\mathcal T} = \\mat{1&2&3\\\\4&5&6\\\\7&8&9}$ 诱导的线性变换。"
         }
        }
       ],
@@ -1325,7 +1325,7 @@
         "t": {
          "en": "$\\mathcal U:\\R^{3}\\to\\R^{2}$, where $\\mathcal U$ is the linear transformation induced by the matrix $M_{\\mathcal U} = \\mat{1&2&3\\\\3&4&5}$.",
          "sha": "c32d1daf6b2c",
-         "zh": ""
+         "zh": "$\\mathcal U:\\R^{3}\\to\\R^{2}$，其中 $\\mathcal U$ 是由矩阵 $M_{\\mathcal U} = \\mat{1&2&3\\\\3&4&5}$ 诱导的线性变换。"
         }
        }
       ]
@@ -1343,7 +1343,7 @@
         "t": {
          "en": "$\\mathcal S$ is both one-to-one and onto. No two distinct vectors can be doubled to become the same vector, thus the transformation is one-to-one. Every vector is double of the vector that is half of itself, thus the transformation is onto. $\\mathcal S$ is invertible, its inverse is the transformation that halves every vector.",
          "sha": "1fef1cfb79bf",
-         "zh": ""
+         "zh": "$\\mathcal S$ 既是一一的又是满的。不会有两个不同的向量变成两倍之后得到同一个向量，所以这个变换是一一的。每个向量都是它的一半的两倍，所以这个变换是满的。$\\mathcal S$ 可逆，它的逆是把每个向量减半的变换。"
         }
        }
       ],
@@ -1353,7 +1353,7 @@
         "t": {
          "en": "$\\mathcal R$ is both one-to-one and onto. No two distinct vectors can be rotated by $72^{\\circ}$ clockwise to become the same vector, thus the transformation is one-to-one. Every vector is the $72^{\\circ}$ clockwise rotation of the vector that is the $72^{\\circ}$ counter-clockwise rotation of itself, thus the transformation is onto. $\\mathcal R$ is invertible, its inverse is the transformation that rotates every vector counter-clockwise by $72^{\\circ}$.",
          "sha": "bc94b66416b1",
-         "zh": ""
+         "zh": "$\\mathcal R$ 既是一一的又是满的。不会有两个不同的向量顺时针旋转 $72^{\\circ}$ 之后得到同一个向量，所以这个变换是一一的。每个向量都是“它自己逆时针旋转 $72^{\\circ}$ 所得向量”顺时针旋转 $72^{\\circ}$ 的结果，所以这个变换是满的。$\\mathcal R$ 可逆，它的逆是把每个向量逆时针旋转 $72^{\\circ}$ 的变换。"
         }
        }
       ],
@@ -1363,7 +1363,7 @@
         "t": {
          "en": "$\\mathcal P$ is neither one-to-one nor onto. Every vector on the x-axis is sent to the origin so there are distinct inputs that do not map to distinct outputs, thus the transformation is not one-to-one. Vectors that do not lie on the y-axis are not in the range of the transformation, thus the transformation is not onto. $\\mathcal P$ is not invertible.",
          "sha": "fa3688c4a5fc",
-         "zh": ""
+         "zh": "$\\mathcal P$ 既不是一一的也不是满的。x 轴上的每个向量都被送到原点，所以存在不同的输入没有对应到不同的输出，因此这个变换不是一一的。不在 y 轴上的向量都不在这个变换的值域里，因此这个变换不是满的。$\\mathcal P$ 不可逆。"
         }
        }
       ],
@@ -1373,7 +1373,7 @@
         "t": {
          "en": "$\\mathcal F$ is both one-to-one and onto. No two distinct vectors can be reflected to become the same vector, thus the transformation is one-to-one. Every vector is the reflection of the vector that is the reflection of itself, thus the transformation is onto. $\\mathcal F$ is invertible, its inverse is itself—the reflection about the line $y=x$.",
          "sha": "eb4a2970d393",
-         "zh": ""
+         "zh": "$\\mathcal F$ 既是一一的又是满的。不会有两个不同的向量经过反射后变成同一个向量，所以这个变换是一一的。每个向量都是“它自己的反射”的反射，所以这个变换是满的。$\\mathcal F$ 可逆，它的逆就是它自己——关于直线 $y=x$ 的反射。"
         }
        }
       ],
@@ -1383,7 +1383,7 @@
         "t": {
          "en": "$\\mathcal T$ is neither one-to-one nor onto. The RREF of $M_{\\mathcal T}$ is $\\mat{1&0&-1\\\\0&1&0\\\\0&0&0}$. $\\Rank(\\mathcal T)$ = $\\Rank(M_{\\mathcal T})$ = 2. by the rank-nullity theorem the nullity is 1. An entire line of vectors is getting mapped to $\\vec{0}$ so there are distinct inputs that do not map to distinct outputs, thus the transformation is not one-to-one. The range of $\\mathcal T$ = the column space of $M_{\\mathcal T}$ which is not all of $\\R^{3}$, Thus the transformation is not onto. $\\mathcal T$ is not invertible.",
          "sha": "47ac44671d67",
-         "zh": ""
+         "zh": "$\\mathcal T$ 既不是一一的也不是满的。$M_{\\mathcal T}$ 的 RREF 是 $\\mat{1&0&-1\\\\0&1&0\\\\0&0&0}$。$\\Rank(\\mathcal T)$ = $\\Rank(M_{\\mathcal T})$ = 2。由秩—零度定理，零度是 1。整整一条直线上的向量都被映成 $\\vec{0}$，所以存在不同的输入没有对应到不同的输出，因此这个变换不是一一的。$\\mathcal T$ 的值域 = $M_{\\mathcal T}$ 的列空间，它不是整个 $\\R^{3}$，因此这个变换不是满的。$\\mathcal T$ 不可逆。"
         }
        }
       ],
@@ -1393,7 +1393,7 @@
         "t": {
          "en": "$\\mathcal U$ is onto but is not one-to-one. Because $\\mathcal U$ maps from $\\R^{3}$ to $\\R^{2}$, the rank is at most 2, so by the Rank-Nullity Theorem, the nullity must be at least 1. More than one vector is getting mapped to $\\vec{0}$ so there are distinct inputs that do not map to distinct outputs, thus the transformation is not one-to-one. Since $\\Rref(M_{\\mathcal U})$ is $\\mat{1&0&-1\\\\0&1&2}$. $\\Rank(\\mathcal U)=\\Rank(M_{\\mathcal U})=2$, which is the dimension of the codomain, thus the transformation is onto. $\\mathcal U$ is not invertible.",
          "sha": "ffb7d93a5401",
-         "zh": ""
+         "zh": "$\\mathcal U$ 是满的，但不是一一的。因为 $\\mathcal U$ 是从 $\\R^{3}$ 到 $\\R^{2}$ 的映射，所以秩至多为 2，于是由秩—零度定理，零度至少是 1。不止一个向量被映成 $\\vec{0}$，所以存在不同的输入没有对应到不同的输出，因此这个变换不是一一的。因为 $\\Rref(M_{\\mathcal U})$ 是 $\\mat{1&0&-1\\\\0&1&2}$，所以 $\\Rank(\\mathcal U)=\\Rank(M_{\\mathcal U})=2$，这正是陪域的维数，因此这个变换是满的。$\\mathcal U$ 不可逆。"
         }
        }
       ]
@@ -1417,7 +1417,7 @@
      "t": {
       "en": "Invert the following matrices or explain why they are not invertible.",
       "sha": "2d4abd8ed2f4",
-      "zh": ""
+      "zh": "求下列矩阵的逆，或说明它们为什么不可逆。"
      }
     },
     {
@@ -1430,7 +1430,7 @@
         "t": {
          "en": "$M_{1} = \\mat{2&3\\\\1&-1}$",
          "sha": "accc26ef20fb",
-         "zh": ""
+         "zh": "$M_{1} = \\mat{2&3\\\\1&-1}$"
         }
        }
       ],
@@ -1440,7 +1440,7 @@
         "t": {
          "en": "$M_{2} = \\mat{1&0\\\\1&0}$",
          "sha": "fdf3cb193469",
-         "zh": ""
+         "zh": "$M_{2} = \\mat{1&0\\\\1&0}$"
         }
        }
       ],
@@ -1450,7 +1450,7 @@
         "t": {
          "en": "$M_{3} = \\mat{0&2&1\\\\1&0&1\\\\-2&3&0}$",
          "sha": "8898042e3f39",
-         "zh": ""
+         "zh": "$M_{3} = \\mat{0&2&1\\\\1&0&1\\\\-2&3&0}$"
         }
        }
       ],
@@ -1460,7 +1460,7 @@
         "t": {
          "en": "$M_{4} = \\mat{2&0&1&8\\\\1&-5&2&2\\\\3&-1&0&7}$",
          "sha": "9cb32a699e70",
-         "zh": ""
+         "zh": "$M_{4} = \\mat{2&0&1&8\\\\1&-5&2&2\\\\3&-1&0&7}$"
         }
        }
       ],
@@ -1470,7 +1470,7 @@
         "t": {
          "en": "$M_{5} = \\mat{0&-3&1&2\\\\1&0&-1&1\\\\2&-1&0&0\\\\0&0&1&3}$",
          "sha": "46f393c9a88b",
-         "zh": ""
+         "zh": "$M_{5} = \\mat{0&-3&1&2\\\\1&0&-1&1\\\\2&-1&0&0\\\\0&0&1&3}$"
         }
        }
       ]
@@ -1488,7 +1488,7 @@
         "t": {
          "en": "To find the inverse we row reduce $M_{1}$, applying each of the row operations to the identity matrix.",
          "sha": "e2fc9bc5979e",
-         "zh": ""
+         "zh": "为了求逆，我们对 $M_{1}$ 做行化简，并把每一步行变换同时作用在单位矩阵上。"
         }
        },
        {
@@ -1496,7 +1496,7 @@
         "t": {
          "en": "$\\left[\\begin{array}{cc|cc} 2&3&1&0\\\\ 1&-1&0&1\\\\ \\end{array}\\right]$",
          "sha": "1e9098c5510b",
-         "zh": ""
+         "zh": "$\\left[\\begin{array}{cc|cc} 2&3&1&0\\\\ 1&-1&0&1\\\\ \\end{array}\\right]$"
         }
        },
        {
@@ -1504,7 +1504,7 @@
         "t": {
          "en": "$\\left[\\begin{array}{cc|cc} 1&\\frac{3}{2}&\\frac{1}{2}&0\\\\ 1&-1&0&1\\\\ \\end{array}\\right]$",
          "sha": "319b8b7e6daf",
-         "zh": ""
+         "zh": "$\\left[\\begin{array}{cc|cc} 1&\\frac{3}{2}&\\frac{1}{2}&0\\\\ 1&-1&0&1\\\\ \\end{array}\\right]$"
         }
        },
        {
@@ -1512,7 +1512,7 @@
         "t": {
          "en": "$\\left[\\begin{array}{cc|cc} 1&\\frac{3}{2}&\\frac{1}{2}&0\\\\ 0&-\\frac{5}{2}&-\\frac{1}{2}&1\\\\ \\end{array}\\right]$",
          "sha": "bbc1c369eca5",
-         "zh": ""
+         "zh": "$\\left[\\begin{array}{cc|cc} 1&\\frac{3}{2}&\\frac{1}{2}&0\\\\ 0&-\\frac{5}{2}&-\\frac{1}{2}&1\\\\ \\end{array}\\right]$"
         }
        },
        {
@@ -1520,7 +1520,7 @@
         "t": {
          "en": "$\\left[\\begin{array}{cc|cc} 1&\\frac{3}{2}&\\frac{1}{2}&0\\\\ 0&1&\\frac{1}{5}&-\\frac{2}{5}\\\\ \\end{array}\\right]$",
          "sha": "7dd34847705e",
-         "zh": ""
+         "zh": "$\\left[\\begin{array}{cc|cc} 1&\\frac{3}{2}&\\frac{1}{2}&0\\\\ 0&1&\\frac{1}{5}&-\\frac{2}{5}\\\\ \\end{array}\\right]$"
         }
        },
        {
@@ -1528,7 +1528,7 @@
         "t": {
          "en": "$\\left[\\begin{array}{cc|cc} 1&0&\\frac{1}{5}&\\frac{3}{5}\\\\ 0&1&\\frac{1}{5}&-\\frac{2}{5}\\\\ \\end{array}\\right]$",
          "sha": "9f64c82bfc53",
-         "zh": ""
+         "zh": "$\\left[\\begin{array}{cc|cc} 1&0&\\frac{1}{5}&\\frac{3}{5}\\\\ 0&1&\\frac{1}{5}&-\\frac{2}{5}\\\\ \\end{array}\\right]$"
         }
        },
        {
@@ -1536,7 +1536,7 @@
         "t": {
          "en": "So $M_{1}^{-1}=\\mat{\\frac{1}{5}&\\frac{3}{5}\\\\ \\frac{1}{5}&-\\frac{2}{5}\\\\}$.",
          "sha": "246531ea72a1",
-         "zh": ""
+         "zh": "所以 $M_{1}^{-1}=\\mat{\\frac{1}{5}&\\frac{3}{5}\\\\ \\frac{1}{5}&-\\frac{2}{5}\\\\}$。"
         }
        }
       ],
@@ -1546,7 +1546,7 @@
         "t": {
          "en": "$M_{2}$ does not row reduce to the identity matrix so it is not invertible.",
          "sha": "7b1cec9a9c8e",
-         "zh": ""
+         "zh": "$M_{2}$ 不能行化简成单位矩阵，所以它不可逆。"
         }
        }
       ],
@@ -1556,7 +1556,7 @@
         "t": {
          "en": "$M_{3}^{-1}=\\mat{3&-3&-2\\\\2&-2&-1\\\\-3&4&2}$",
          "sha": "f1e4e77d73e4",
-         "zh": ""
+         "zh": "$M_{3}^{-1}=\\mat{3&-3&-2\\\\2&-2&-1\\\\-3&4&2}$"
         }
        }
       ],
@@ -1566,7 +1566,7 @@
         "t": {
          "en": "$M_{4}$ is not invertible because it is not a square matrix.",
          "sha": "2e459af95b13",
-         "zh": ""
+         "zh": "$M_{4}$ 不可逆，因为它不是方阵。"
         }
        }
       ],
@@ -1576,7 +1576,7 @@
         "t": {
          "en": "$M_{5}^{-1}=\\frac{1}{23}\\mat{-4&-1&12&3\\\\-8&-2&1&6\\\\-3&-18&9&8\\\\1&6&-3&5}$",
          "sha": "34a36d5655ae",
-         "zh": ""
+         "zh": "$M_{5}^{-1}=\\frac{1}{23}\\mat{-4&-1&12&3\\\\-8&-2&1&6\\\\-3&-18&9&8\\\\1&6&-3&5}$"
         }
        }
       ]
@@ -1600,7 +1600,7 @@
      "t": {
       "en": "Solve the following systems in two ways: (i) by using row reduction, and (ii) by using inverse matrices.",
       "sha": "be319b574574",
-      "zh": ""
+      "zh": "用两种方法解下列方程组：(i) 行化简；(ii) 逆矩阵。"
      }
     },
     {
@@ -1613,7 +1613,7 @@
         "t": {
          "en": "$\\begin{aligned}2x+y &= 5 \\\\ 3x+7y &= 3\\end{aligned}$",
          "sha": "0997b69b41c9",
-         "zh": ""
+         "zh": "$\\begin{aligned}2x+y &= 5 \\\\ 3x+7y &= 3\\end{aligned}$"
         }
        }
       ],
@@ -1623,7 +1623,7 @@
         "t": {
          "en": "$\\begin{aligned}2x+2y+3z &= 4 \\\\ 2x+2y+z &= 0 \\\\ 4x+5y+6z &= 2\\end{aligned}$",
          "sha": "0a17aaf42024",
-         "zh": ""
+         "zh": "$\\begin{aligned}2x+2y+3z &= 4 \\\\ 2x+2y+z &= 0 \\\\ 4x+5y+6z &= 2\\end{aligned}$"
         }
        }
       ]
@@ -1648,7 +1648,7 @@
      "t": {
       "en": "Let $A=\\mat{1&3&5\\\\0&2&0\\\\-1&0&2}$.",
       "sha": "8adb1eac4879",
-      "zh": ""
+      "zh": "设 $A=\\mat{1&3&5\\\\0&2&0\\\\-1&0&2}$。"
      }
     },
     {
@@ -1661,7 +1661,7 @@
         "t": {
          "en": "Express $A^{-1}$ as the product of elementary matrices.",
          "sha": "c860e9d36bff",
-         "zh": ""
+         "zh": "把 $A^{-1}$ 表示成初等矩阵的乘积。"
         }
        }
       ],
@@ -1671,7 +1671,7 @@
         "t": {
          "en": "Express $A$ as the product of elementary matrices.",
          "sha": "0e34f2cd097f",
-         "zh": ""
+         "zh": "把 $A$ 表示成初等矩阵的乘积。"
         }
        }
       ]
@@ -1696,7 +1696,7 @@
      "t": {
       "en": "For each statement below, determine whether it is true or false. Justify your answer.",
       "sha": "e3b37b865c04",
-      "zh": ""
+      "zh": "判断下列每个命题是真是假，并说明理由。"
      }
     },
     {
@@ -1709,7 +1709,7 @@
         "t": {
          "en": "For an arbitrary linear transformation $T:\\R^{m}\\to\\R^{n}$, if $n \\neq m$, then the linear transformation is not invertible.",
          "sha": "5541ffd6dcb7",
-         "zh": ""
+         "zh": "对任意线性变换 $T:\\R^{m}\\to\\R^{n}$，如果 $n \\neq m$，那么这个线性变换不可逆。"
         }
        }
       ],
@@ -1719,7 +1719,7 @@
         "t": {
          "en": "The matrix $M = \\mat{1&0&0\\\\1&1&0}$ is an elementary matrix.",
          "sha": "b1a2aed723eb",
-         "zh": ""
+         "zh": "矩阵 $M = \\mat{1&0&0\\\\1&1&0}$ 是初等矩阵。"
         }
        }
       ],
@@ -1729,7 +1729,7 @@
         "t": {
          "en": "Every elementary matrix is invertible.",
          "sha": "797aedcdffb7",
-         "zh": ""
+         "zh": "每个初等矩阵都可逆。"
         }
        }
       ],
@@ -1739,7 +1739,7 @@
         "t": {
          "en": "The product of elementary matrices is sometimes an elementary matrix.",
          "sha": "d59ee31c77a9",
-         "zh": ""
+         "zh": "初等矩阵的乘积有时是初等矩阵。"
         }
        }
       ],
@@ -1749,7 +1749,7 @@
         "t": {
          "en": "The product of elementary matrices is always an elementary matrix.",
          "sha": "2b47331cdab7",
-         "zh": ""
+         "zh": "初等矩阵的乘积总是初等矩阵。"
         }
        }
       ],
@@ -1759,7 +1759,7 @@
         "t": {
          "en": "A matrix that induces an invertible linear transformation is necessarily invertible.",
          "sha": "1ae74c430963",
-         "zh": ""
+         "zh": "诱导出可逆线性变换的矩阵一定可逆。"
         }
        }
       ],
@@ -1769,7 +1769,7 @@
         "t": {
          "en": "A transformation that is one-to-one and onto is always invertible.",
          "sha": "92d6449ebb7a",
-         "zh": ""
+         "zh": "既是一一的又是满的变换一定可逆。"
         }
        }
       ],
@@ -1779,7 +1779,7 @@
         "t": {
          "en": "For two matricies $A$ and $B$, if $AB=I$, then $A$ and $B$ are invertible.",
          "sha": "4513a7d89cf1",
-         "zh": ""
+         "zh": "对两个矩阵 $A$ 和 $B$，如果 $AB=I$，那么 $A$ 和 $B$ 都可逆。"
         }
        }
       ]
@@ -1797,7 +1797,7 @@
         "t": {
          "en": "True. If $m<n$ then $T$ cannot be onto. If $m>n$ then $T$ cannot be one-to-one. In both cases, $T$ cannot be invertible. We may conclude that the dimension of the domain and codomain must be equal in order for a transformation to be invertible.",
          "sha": "e8e3b75dbe43",
-         "zh": ""
+         "zh": "真。如果 $m<n$，那么 $T$ 不可能是满的；如果 $m>n$，那么 $T$ 不可能是一一的。两种情形下，$T$ 都不可能可逆。我们可以得出结论：一个变换要可逆，定义域与陪域的维数必须相等。"
         }
        }
       ],
@@ -1807,7 +1807,7 @@
         "t": {
          "en": "False. Elementary matricies are one row operation away from the identity matrix. The identity matrix of any size is always square. There is no identity matrix such that performing one row operation on it yields $M$. We may conclude that elementary matricies are always square.",
          "sha": "4b58e9daa782",
-         "zh": ""
+         "zh": "假。初等矩阵与单位矩阵之间只差一次行变换。任意大小的单位矩阵总是方阵。而对任何单位矩阵做一次行变换，都得不到 $M$。我们可以得出结论：初等矩阵总是方阵。"
         }
        }
       ],
@@ -1817,7 +1817,7 @@
         "t": {
          "en": "True. The inverse of an elementary matrix $E$ is another elementary matrix $E^{-1}$ which corresponds to the row operation that turns $E$ into the identity matrix. $E^{-1}$ is the “opposite\" row operation.",
          "sha": "dd8393fa3892",
-         "zh": ""
+         "zh": "真。初等矩阵 $E$ 的逆是另一个初等矩阵 $E^{-1}$，它对应把 $E$ 变回单位矩阵的那个行变换。$E^{-1}$ 就是那个“相反的”行变换。"
         }
        }
       ],
@@ -1827,7 +1827,7 @@
         "t": {
          "en": "True. Let $E_{1}$ correspond to multiplying row 1 by 4. Let $E_{2}$ correspond to multiplying row 1 by 2. The product $E_{2}E_{1}$ corresponds to multiplying row 1 by 8, which is also a single row operation and thus has a corresponding elementary matrix.",
          "sha": "bea5be1faedf",
-         "zh": ""
+         "zh": "真。设 $E_{1}$ 对应把第 1 行乘以 4，$E_{2}$ 对应把第 1 行乘以 2。乘积 $E_{2}E_{1}$ 对应把第 1 行乘以 8，这也是一个单独的行变换，因此有对应的初等矩阵。"
         }
        }
       ],
@@ -1837,7 +1837,7 @@
         "t": {
          "en": "False. Let $E_{1}$ correspond to multiplying row 1 by 4. Let $E _{2}$ correspond to multiplying row 2 by 2. The product $E_{2}E_{1}$ corresponds to multiplying row 1 by 4 and row 2 by 2, which is not a single row operation and thus does not have a corresponding elementary matrix.",
          "sha": "c2be1ec2aa14",
-         "zh": ""
+         "zh": "假。设 $E_{1}$ 对应把第 1 行乘以 4，$E _{2}$ 对应把第 2 行乘以 2。乘积 $E_{2}E_{1}$ 对应把第 1 行乘以 4 并把第 2 行乘以 2，这不是单独的一次行变换，因此没有对应的初等矩阵。"
         }
        }
       ],
@@ -1847,7 +1847,7 @@
         "t": {
          "en": "True.",
          "sha": "9306de2f79be",
-         "zh": ""
+         "zh": "真。"
         }
        }
       ],
@@ -1857,7 +1857,7 @@
         "t": {
          "en": "True.",
          "sha": "9306de2f79be",
-         "zh": ""
+         "zh": "真。"
         }
        }
       ],
@@ -1867,7 +1867,7 @@
         "t": {
          "en": "False. Let $A = \\mat{1&0&0\\\\0&1&0}$. Let $B = \\mat{1&0\\\\0&1\\\\0&0}$. $AB = I$. $BA = \\mat{1&0&0\\\\0&1&0\\\\0&0&0}\\neq I$. $A$ and $B$ are not invertible. It is required that $AB = BA = I$ in order for matrices $A$ and $B$ to be invertible.",
          "sha": "bd01aebef083",
-         "zh": ""
+         "zh": "假。设 $A = \\mat{1&0&0\\\\0&1&0}$，$B = \\mat{1&0\\\\0&1\\\\0&0}$。则 $AB = I$，而 $BA = \\mat{1&0&0\\\\0&1&0\\\\0&0&0}\\neq I$。$A$ 和 $B$ 都不可逆。矩阵 $A$ 和 $B$ 要可逆，必须有 $AB = BA = I$。"
         }
        }
       ]

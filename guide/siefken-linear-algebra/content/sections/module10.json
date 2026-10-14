@@ -16,7 +16,7 @@
         "t": {
          "en": "How to break a complicated transformation into the composition of simpler ones.",
          "sha": "14d9b60e9d5d",
-         "zh": ""
+         "zh": "如何把一个复杂的变换拆成若干个较简单变换的复合。"
         }
        }
       ],
@@ -26,7 +26,7 @@
         "t": {
          "en": "How the composition of linear transformations relates to matrix multiplication.",
          "sha": "488882df1c52",
-         "zh": ""
+         "zh": "线性变换的复合与矩阵乘法之间有什么关系。"
         }
        }
       ]
@@ -39,7 +39,7 @@
    "t": {
     "en": "In life, we encounter situations where we do one thing after another. For example, you put on your socks and then your shoes. We might call this whole operation (of first putting on your socks and then your shoes) “getting dressed”, and it is an example of *function composition*.",
     "sha": "efa676985182",
-    "zh": ""
+    "zh": "生活中，我们常常要一件接一件地做事。比如，你先穿袜子，再穿鞋。我们可以把先穿袜子再穿鞋的整个过程叫作“穿好衣服”，这就是一个*函数复合*的例子。"
    }
   },
   {
@@ -48,7 +48,7 @@
    "title": {
     "en": "Composition of Functions",
     "sha": "79dde1a89123",
-    "zh": ""
+    "zh": "函数的复合"
    },
    "blocks": [
     {
@@ -56,7 +56,7 @@
      "t": {
       "en": "Let $f:A\\to B$ and $g:B\\to C$. The *composition* of $g$ and $f$, notated $g\\circ f$, is the function $h:A\\to C$ defined by",
       "sha": "36df61593ff0",
-      "zh": ""
+      "zh": "设 $f:A\\to B$，$g:B\\to C$。$g$ 与 $f$ 的*复合*记作 $g\\circ f$，它是函数 $h:A\\to C$，定义为"
      }
     },
     {
@@ -70,7 +70,7 @@
    "t": {
     "en": "We can formalize the shoes-socks example with mathematical notation.",
     "sha": "4b332728b6df",
-    "zh": ""
+    "zh": "我们可以用数学记号把穿袜子、穿鞋的例子形式化。"
    }
   },
   {
@@ -82,7 +82,7 @@
    "t": {
     "en": "Or, if $X$ represented putting on socks, $S$ represented putting on shoes, and $D$ represented getting dressed, $D=S\\circ X$.",
     "sha": "972093f21353",
-    "zh": ""
+    "zh": "或者，设 $X$ 表示穿袜子，$S$ 表示穿鞋，$D$ 表示穿好衣服，则 $D=S\\circ X$。"
    }
   },
   {
@@ -90,7 +90,7 @@
    "t": {
     "en": "This real-life example has utility when talking to children. Getting dressed is a complicated operation, but by breaking it up into simpler operations, even a young child can understand the process. In this vein, we can understand complicated linear transformations by breaking them up into the composition of simpler ones.",
     "sha": "3b8accafe076",
-    "zh": ""
+    "zh": "这个生活中的例子在和小孩子说话时很有用。穿好衣服是一个复杂的操作，但把它拆成较简单的操作之后，连很小的孩子也能明白整个过程。同样的道理，我们也可以把复杂的线性变换拆成较简单变换的复合，从而理解它。"
    }
   },
   {
@@ -98,7 +98,7 @@
    "t": {
     "en": "For example, define",
     "sha": "6a4e05639b30",
-    "zh": ""
+    "zh": "例如，定义"
    }
   },
   {
@@ -110,7 +110,7 @@
    "t": {
     "en": "It's hard to understand what $\\mathcal T$ does just by looking at inputs and outputs. However, if we were keen enough to notice that",
     "sha": "a895ad96762c",
-    "zh": ""
+    "zh": "光看输入和输出，很难弄清 $\\mathcal T$ 到底做了什么。但是，如果我们足够敏锐，注意到"
    }
   },
   {
@@ -122,7 +122,7 @@
    "t": {
     "en": "where $\\mathcal R$ was rotation counter-clockwise by $45^\\circ$ and $\\mathcal S$ was a stretch in the $\\xhat$ direction by a factor of $2$, suddenly $\\mathcal T$ wouldn't be such a mystery.",
     "sha": "d118694d0cc0",
-    "zh": ""
+    "zh": "其中 $\\mathcal R$ 是逆时针旋转 $45^\\circ$，$\\mathcal S$ 是沿 $\\xhat$ 方向拉伸为原来的 $2$ 倍，那么 $\\mathcal T$ 一下子就不再神秘了。"
    }
   },
   {
@@ -130,7 +130,7 @@
    "t": {
     "en": "How does one figure out the “simple transformations” that when composed give the full transformation? In truth, there are many, many methods and there are whole books written about how to find these decompositions efficiently. We will encounter two algorithms for this 〔注： Phrased in terms of matrices instead of linear transformations, the decompositions we will study are called: (i) decomposition into *elementary* matrices, and (ii) *diagonalization*.〕, but for now our methods will be ad hoc.",
     "sha": "a077a7dac5a1",
-    "zh": ""
+    "zh": "怎样找出那些“简单变换”，使它们复合起来恰好是整个变换呢？实际上，方法有很多很多，甚至有整本书专门讲如何高效地求这类分解。我们会遇到其中的两种算法〔注： 如果用矩阵而不是线性变换来表述，我们要学的这两种分解分别叫作：(i) 分解为*初等*矩阵的乘积，(ii) *对角化*。〕，但眼下我们只用临时凑出来的办法。"
    }
   },
   {
@@ -143,7 +143,7 @@
      "t": {
       "en": "Let $\\mathcal U:\\R^2\\to\\R^2$ be the transformation given by $M=\\matc{\\sqrt{2}/2&-\\sqrt{2}/2\\\\0&0}$, let $\\mathcal R:\\R^2\\to\\R^2$ be rotation counter clockwise by $45^\\circ$, and let $\\mathcal P:\\R^2\\to\\R^2$ be projection onto the $x$-axis. Write $\\mathcal U$ as the composition (in some order) of $\\mathcal R$ and $\\mathcal P$.",
       "sha": "235c59ed7e83",
-      "zh": ""
+      "zh": "设 $\\mathcal U:\\R^2\\to\\R^2$ 是矩阵为 $M=\\matc{\\sqrt{2}/2&-\\sqrt{2}/2\\\\0&0}$ 的变换，设 $\\mathcal R:\\R^2\\to\\R^2$ 是逆时针旋转 $45^\\circ$，设 $\\mathcal P:\\R^2\\to\\R^2$ 是向 $x$ 轴的投影。把 $\\mathcal U$ 写成 $\\mathcal R$ 与 $\\mathcal P$ 的复合（顺序待定）。"
      }
     },
     {
@@ -151,7 +151,7 @@
      "t": {
       "en": "We will use $\\xhat$ and $\\yhat$ to determine whether $\\mathcal U$ is $\\mathcal R\\circ\\mathcal P$ or $\\mathcal P\\circ \\mathcal R$.",
       "sha": "633396072d18",
-      "zh": ""
+      "zh": "我们用 $\\xhat$ 和 $\\yhat$ 来判断 $\\mathcal U$ 是 $\\mathcal R\\circ\\mathcal P$ 还是 $\\mathcal P\\circ \\mathcal R$。"
      }
     },
     {
@@ -159,7 +159,7 @@
      "t": {
       "en": "Computing,",
       "sha": "93e1b46c5023",
-      "zh": ""
+      "zh": "计算得，"
      }
     },
     {
@@ -171,7 +171,7 @@
      "t": {
       "en": "For $\\mathcal R\\circ \\mathcal P$:",
       "sha": "065915696db3",
-      "zh": ""
+      "zh": "对 $\\mathcal R\\circ \\mathcal P$："
      }
     },
     {
@@ -183,7 +183,7 @@
      "t": {
       "en": "For $\\mathcal P\\circ \\mathcal R$:",
       "sha": "5e894fb81a24",
-      "zh": ""
+      "zh": "对 $\\mathcal P\\circ \\mathcal R$："
      }
     },
     {
@@ -195,7 +195,7 @@
      "t": {
       "en": "Since $\\mathcal P\\circ \\mathcal R$ agrees with $\\mathcal U$ on the standard basis (i.e., $\\mathcal P\\circ\\mathcal R$ and $\\mathcal U$ output the same vectors when $\\xhat$ and $\\yhat$ are input), they must agree for all vectors. Therefore $\\mathcal U=\\mathcal P\\circ \\mathcal R$.",
       "sha": "02023a21299b",
-      "zh": ""
+      "zh": "因为 $\\mathcal P\\circ \\mathcal R$ 在标准基上与 $\\mathcal U$ 一致（也就是说，输入 $\\xhat$ 和 $\\yhat$ 时，$\\mathcal P\\circ\\mathcal R$ 与 $\\mathcal U$ 输出相同的向量），所以它们对所有向量都一致。因此 $\\mathcal U=\\mathcal P\\circ \\mathcal R$。"
      }
     }
    ]
@@ -205,7 +205,7 @@
    "t": {
     "en": "Compositions and Matrix Products",
     "sha": "1d828d095b92",
-    "zh": ""
+    "zh": "复合与矩阵乘积"
    }
   },
   {
@@ -213,7 +213,7 @@
    "t": {
     "en": "Let $\\mathcal A:\\R^2\\to\\R^2$ and $\\mathcal B:\\R^2\\to\\R^2$ be matrix transformations with matrices",
     "sha": "943a583eab53",
-    "zh": ""
+    "zh": "设 $\\mathcal A:\\R^2\\to\\R^2$ 与 $\\mathcal B:\\R^2\\to\\R^2$ 是矩阵变换，它们的矩阵分别为"
    }
   },
   {
@@ -225,7 +225,7 @@
    "t": {
     "en": "(Make sure you understand why $\\mathcal A\\neq M_A$ before continuing!)",
     "sha": "ad95ef7d970b",
-    "zh": ""
+    "zh": "（继续往下读之前，请先弄明白为什么 $\\mathcal A\\neq M_A$！）"
    }
   },
   {
@@ -233,7 +233,7 @@
    "t": {
     "en": "Define $\\mathcal T=\\mathcal A\\circ \\mathcal B$. Since $\\mathcal T:\\R^2\\to\\R^2$ is a linear transformation, we know $\\mathcal T$ has a matrix $M_T$ which is $2\\times 2$. We can find $M_T$ by the usual methods. First, compute some input-output pairs for $\\mathcal T$.",
     "sha": "adeb0e7162b9",
-    "zh": ""
+    "zh": "定义 $\\mathcal T=\\mathcal A\\circ \\mathcal B$。因为 $\\mathcal T:\\R^2\\to\\R^2$ 是线性变换，所以我们知道 $\\mathcal T$ 有一个 $2\\times 2$ 的矩阵 $M_T$。我们可以用通常的办法求出 $M_T$。首先，算出 $\\mathcal T$ 的几组输入—输出对。"
    }
   },
   {
@@ -245,7 +245,7 @@
    "t": {
     "en": "Letting $M_T=\\mat{a&b\\\\c&d}$, we use the input-output pairs to see",
     "sha": "4b3b1bc2302c",
-    "zh": ""
+    "zh": "设 $M_T=\\mat{a&b\\\\c&d}$，利用这些输入—输出对可得"
    }
   },
   {
@@ -257,7 +257,7 @@
    "t": {
     "en": "and so",
     "sha": "9af790b3a93d",
-    "zh": ""
+    "zh": "于是"
    }
   },
   {
@@ -269,7 +269,7 @@
    "t": {
     "en": "We found $M_T$, the matrix for $\\mathcal T$, using traditional techniques, but could we have used $M_A$ and $M_B$ to somehow find $M_T$? As it turns out, yes, we could have!",
     "sha": "f095595af49e",
-    "zh": ""
+    "zh": "我们用传统方法求出了 $\\mathcal T$ 的矩阵 $M_T$，但能不能借助 $M_A$ 和 $M_B$ 来求 $M_T$ 呢？结果是，可以！"
    }
   },
   {
@@ -277,7 +277,7 @@
    "t": {
     "en": "By definition,",
     "sha": "5c48b19627be",
-    "zh": ""
+    "zh": "由定义，"
    }
   },
   {
@@ -289,7 +289,7 @@
    "t": {
     "en": "since $\\mathcal A$ and $\\mathcal B$ are matrix transformations. Therefore,",
     "sha": "1e23a95c1dcd",
-    "zh": ""
+    "zh": "这是因为 $\\mathcal A$ 与 $\\mathcal B$ 都是矩阵变换。因此，"
    }
   },
   {
@@ -301,7 +301,7 @@
    "t": {
     "en": "But, matrix multiplication is *associative* 〔注： If an operation is associative, it means that where you put the parenthesis doesn't matter.〕, and so",
     "sha": "538573f39392",
-    "zh": ""
+    "zh": "但是，矩阵乘法满足*结合律*〔注： 运算满足结合律，意思是括号加在哪里都无所谓。〕，所以"
    }
   },
   {
@@ -313,7 +313,7 @@
    "t": {
     "en": "Thus $M_AM_B$ must be a matrix for $\\mathcal A\\circ \\mathcal B=\\mathcal T$. Indeed, computing the matrix product, we see",
     "sha": "b8c406e8ce72",
-    "zh": ""
+    "zh": "这样，$M_AM_B$ 必定是 $\\mathcal A\\circ \\mathcal B=\\mathcal T$ 的一个矩阵。事实上，算出矩阵乘积就能看到"
    }
   },
   {
@@ -325,7 +325,7 @@
    "t": {
     "en": "The fact that matrix multiplication corresponds to function composition is no coincidence. It is the very reason matrix multiplication is defined the way it is. This is reiterated in the following theorem.",
     "sha": "f59608dbc8ab",
-    "zh": ""
+    "zh": "矩阵乘法对应于函数复合，并不是巧合。矩阵乘法之所以被定义成现在这个样子，正是出于这个原因。下面的定理再次强调了这一点。"
    }
   },
   {
@@ -338,7 +338,7 @@
      "t": {
       "en": "If $\\mathcal P:\\R^a\\to\\R^b$ and $\\mathcal Q:\\R^c\\to \\R^a$ are matrix transformations with matrices $M_P$ and $M_Q$, then $\\mathcal P\\circ \\mathcal Q$ is a matrix transformation whose matrix is given by the matrix product $M_PM_Q$.",
       "sha": "0d95a3b1e94d",
-      "zh": ""
+      "zh": "若 $\\mathcal P:\\R^a\\to\\R^b$ 与 $\\mathcal Q:\\R^c\\to \\R^a$ 是矩阵变换，矩阵分别为 $M_P$ 和 $M_Q$，则 $\\mathcal P\\circ \\mathcal Q$ 是矩阵变换，它的矩阵就是矩阵乘积 $M_PM_Q$。"
      }
     }
    ]
@@ -348,7 +348,7 @@
    "t": {
     "en": "It should now be clear why the order of matrix multiplication matters. The order of function composition matters (you must put on your socks before your shoes!), and since matrix multiplication corresponds to function composition, the order of matrix multiplication must matter.",
     "sha": "10e163461286",
-    "zh": ""
+    "zh": "现在应该清楚了：为什么矩阵乘法的顺序很重要。函数复合的顺序很重要（你必须先穿袜子再穿鞋！），而矩阵乘法对应于函数复合，所以矩阵乘法的顺序也必然很重要。"
    }
   }
  ],
@@ -366,7 +366,7 @@
         "t": {
          "en": "Let $\\mathcal U:\\R^{2}\\to\\R^{2}$ be the matrix transformation given by $\\mat{0&0\\\\-\\sqrt{2}/2 & -\\sqrt{2}/2}$. Further, let $\\mathcal P:\\R^{2}\\to\\R^{2}$ be the projection onto the $y$-axis, and let $\\mathcal R:\\R^{2}\\to\\R^{2}$ be the rotation clockwise by $135^{\\circ}$.",
          "sha": "08a56e1ac8e6",
-         "zh": ""
+         "zh": "设 $\\mathcal U:\\R^{2}\\to\\R^{2}$ 是由 $\\mat{0&0\\\\-\\sqrt{2}/2 & -\\sqrt{2}/2}$ 给出的矩阵变换。再设 $\\mathcal P:\\R^{2}\\to\\R^{2}$ 是向 $y$ 轴的投影，$\\mathcal R:\\R^{2}\\to\\R^{2}$ 是顺时针旋转 $135^{\\circ}$。"
         }
        },
        {
@@ -379,7 +379,7 @@
            "t": {
             "en": "Find a matrix for $\\mathcal R \\circ \\mathcal P$.",
             "sha": "e6f93c8c83cf",
-            "zh": ""
+            "zh": "求 $\\mathcal R \\circ \\mathcal P$ 的一个矩阵。"
            }
           }
          ],
@@ -389,7 +389,7 @@
            "t": {
             "en": "Find a matrix for $\\mathcal P \\circ \\mathcal R$.",
             "sha": "9739ccb3d4d3",
-            "zh": ""
+            "zh": "求 $\\mathcal P \\circ \\mathcal R$ 的一个矩阵。"
            }
           }
          ],
@@ -399,7 +399,7 @@
            "t": {
             "en": "Write $\\mathcal U$ as the composition (in some order) of $\\mathcal R$ and $\\mathcal P$.",
             "sha": "2002bd2ecebd",
-            "zh": ""
+            "zh": "把 $\\mathcal U$ 写成 $\\mathcal R$ 与 $\\mathcal P$ 的复合（顺序待定）。"
            }
           }
          ]
@@ -412,7 +412,7 @@
         "t": {
          "en": "Let $\\mathcal V:\\R^{2}\\to\\R^{2}$ be the matrix transformation given by $\\mat{0&2\\\\2&0}$. Further, let $\\mathcal S:\\R^{2}\\to\\R^{2}$ be the transformation that doubles every vector, and let $\\mathcal F:\\R^{2}\\to\\R^{2}$ be the transformation reflecting over the line $y=x$.",
          "sha": "0446d78d73af",
-         "zh": ""
+         "zh": "设 $\\mathcal V:\\R^{2}\\to\\R^{2}$ 是由 $\\mat{0&2\\\\2&0}$ 给出的矩阵变换。再设 $\\mathcal S:\\R^{2}\\to\\R^{2}$ 是把每个向量变为原来 2 倍的变换，$\\mathcal F:\\R^{2}\\to\\R^{2}$ 是关于直线 $y=x$ 的反射。"
         }
        },
        {
@@ -425,7 +425,7 @@
            "t": {
             "en": "Find a matrix for $\\mathcal F \\circ \\mathcal S$.",
             "sha": "5467a2a6f707",
-            "zh": ""
+            "zh": "求 $\\mathcal F \\circ \\mathcal S$ 的一个矩阵。"
            }
           }
          ],
@@ -435,7 +435,7 @@
            "t": {
             "en": "Find a matrix for $\\mathcal S \\circ \\mathcal F$.",
             "sha": "52abe38492b5",
-            "zh": ""
+            "zh": "求 $\\mathcal S \\circ \\mathcal F$ 的一个矩阵。"
            }
           }
          ],
@@ -445,7 +445,7 @@
            "t": {
             "en": "Write $\\mathcal V$ as the composition (in some order) of $\\mathcal F$ and $\\mathcal S$.",
             "sha": "3e09dbe7c5ba",
-            "zh": ""
+            "zh": "把 $\\mathcal V$ 写成 $\\mathcal F$ 与 $\\mathcal S$ 的复合（顺序待定）。"
            }
           }
          ]
@@ -470,7 +470,7 @@
         "t": {
          "en": "We can use the effect of the transformation on the standard basis to compute the matrix.",
          "sha": "b69bf1ca0eab",
-         "zh": ""
+         "zh": "我们可以利用变换对标准基的作用来计算矩阵。"
         }
        },
        {
@@ -495,7 +495,7 @@
            "t": {
             "en": "Since $M_{\\mathcal U}=M_{\\mathcal P \\circ \\mathcal R}$ and $\\tfrac{1}{\\sqrt{2}}=\\tfrac{\\sqrt{2}}{2}$, we can assert that $\\mathcal U=\\mathcal P \\circ \\mathcal R$.",
             "sha": "ac06a6ccbe44",
-            "zh": ""
+            "zh": "因为 $M_{\\mathcal U}=M_{\\mathcal P \\circ \\mathcal R}$，且 $\\tfrac{1}{\\sqrt{2}}=\\tfrac{\\sqrt{2}}{2}$，所以可以断定 $\\mathcal U=\\mathcal P \\circ \\mathcal R$。"
            }
           }
          ]
@@ -512,7 +512,7 @@
         "t": {
          "en": "We can use the effect of the transformation on the standard basis to compute the matrix.",
          "sha": "b69bf1ca0eab",
-         "zh": ""
+         "zh": "我们可以利用变换对标准基的作用来计算矩阵。"
         }
        },
        {
@@ -525,7 +525,7 @@
            "t": {
             "en": "$M_{\\mathcal F \\circ \\mathcal S}=\\mat{\\mathcal F( \\mathcal S(\\xhat))& \\mathcal F(\\mathcal S(\\yhat))}=\\mat{0&2\\\\2&0}$",
             "sha": "c54d906f3abd",
-            "zh": ""
+            "zh": "$M_{\\mathcal F \\circ \\mathcal S}=\\mat{\\mathcal F( \\mathcal S(\\xhat))& \\mathcal F(\\mathcal S(\\yhat))}=\\mat{0&2\\\\2&0}$"
            }
           }
          ],
@@ -535,7 +535,7 @@
            "t": {
             "en": "$M_{\\mathcal S \\circ \\mathcal F}=\\mat{\\mathcal S( \\mathcal F(\\xhat))& \\mathcal S(\\mathcal F(\\yhat))}=\\mat{0&2\\\\2&0}$",
             "sha": "ad24c001b54d",
-            "zh": ""
+            "zh": "$M_{\\mathcal S \\circ \\mathcal F}=\\mat{\\mathcal S( \\mathcal F(\\xhat))& \\mathcal S(\\mathcal F(\\yhat))}=\\mat{0&2\\\\2&0}$"
            }
           }
          ],
@@ -545,7 +545,7 @@
            "t": {
             "en": "$\\mathcal S\\circ \\mathcal F= \\mathcal V = \\mathcal F \\circ \\mathcal S$.",
             "sha": "fac0f685a7d4",
-            "zh": ""
+            "zh": "$\\mathcal S\\circ \\mathcal F= \\mathcal V = \\mathcal F \\circ \\mathcal S$。"
            }
           }
          ]
@@ -572,7 +572,7 @@
      "t": {
       "en": "Let $\\mathcal A: \\R^{2}\\to \\R^{2}$ and $\\mathcal B: \\R^{2}\\to \\R^{2}$ be matrix transformations with matrices",
       "sha": "b8bae2ee9c3e",
-      "zh": ""
+      "zh": "设 $\\mathcal A: \\R^{2}\\to \\R^{2}$ 与 $\\mathcal B: \\R^{2}\\to \\R^{2}$ 是矩阵变换，它们的矩阵分别为"
      }
     },
     {
@@ -584,7 +584,7 @@
      "t": {
       "en": "and let $M_{\\mathcal T}$ be the matrix for $\\mathcal T=\\mathcal A\\circ\\mathcal B$.",
       "sha": "010ae9e8a79c",
-      "zh": ""
+      "zh": "并设 $M_{\\mathcal T}$ 是 $\\mathcal T=\\mathcal A\\circ\\mathcal B$ 的矩阵。"
      }
     },
     {
@@ -597,7 +597,7 @@
         "t": {
          "en": "Find $M_{\\mathcal T}$ by computing input-output pairs for $\\mathcal T$.",
          "sha": "856d5318790f",
-         "zh": ""
+         "zh": "通过计算 $\\mathcal T$ 的输入—输出对来求 $M_{\\mathcal T}$。"
         }
        }
       ],
@@ -607,7 +607,7 @@
         "t": {
          "en": "Find $M_{\\mathcal T}$ by using matrix multiplication applied to $M_{\\mathcal A}$ and $M_{\\mathcal B}$.",
          "sha": "f40fd927d5c0",
-         "zh": ""
+         "zh": "对 $M_{\\mathcal A}$ 和 $M_{\\mathcal B}$ 做矩阵乘法来求 $M_{\\mathcal T}$。"
         }
        }
       ]
@@ -629,7 +629,7 @@
         "t": {
          "en": "Therefore, $M_{\\mathcal T}=\\mat{6&12\\\\3&14}$.",
          "sha": "35bbdb69106a",
-         "zh": ""
+         "zh": "因此，$M_{\\mathcal T}=\\mat{6&12\\\\3&14}$。"
         }
        }
       ],
@@ -639,7 +639,7 @@
         "t": {
          "en": "$M_{\\mathcal T}= M_{\\mathcal A}M_{\\mathcal B}= \\mat{2&2\\\\1&3}\\mat{3&2\\\\0&4}= \\mat{6&12\\\\3&14}$",
          "sha": "3c682cb66727",
-         "zh": ""
+         "zh": "$M_{\\mathcal T}= M_{\\mathcal A}M_{\\mathcal B}= \\mat{2&2\\\\1&3}\\mat{3&2\\\\0&4}= \\mat{6&12\\\\3&14}$"
         }
        }
       ]
@@ -663,7 +663,7 @@
      "t": {
       "en": "Let $\\mathcal A: \\R^{3}\\to \\R^{2}$ and $\\mathcal B: \\R^{2}\\to \\R^{1}$ be matrix transformations with matrices",
       "sha": "6abf965220ad",
-      "zh": ""
+      "zh": "设 $\\mathcal A: \\R^{3}\\to \\R^{2}$ 与 $\\mathcal B: \\R^{2}\\to \\R^{1}$ 是矩阵变换，它们的矩阵分别为"
      }
     },
     {
@@ -675,7 +675,7 @@
      "t": {
       "en": "and let $M_{\\mathcal T}$ be the matrix for $\\mathcal T=\\mathcal B\\circ \\mathcal A$.",
       "sha": "46a02b1a41ad",
-      "zh": ""
+      "zh": "并设 $M_{\\mathcal T}$ 是 $\\mathcal T=\\mathcal B\\circ \\mathcal A$ 的矩阵。"
      }
     },
     {
@@ -688,7 +688,7 @@
         "t": {
          "en": "Find $M_{\\mathcal T}$ by computing input-output pairs for $\\mathcal T$.",
          "sha": "856d5318790f",
-         "zh": ""
+         "zh": "通过计算 $\\mathcal T$ 的输入—输出对来求 $M_{\\mathcal T}$。"
         }
        }
       ],
@@ -698,7 +698,7 @@
         "t": {
          "en": "Find $M_{\\mathcal T}$ by using matrix multiplication applied to $M_{\\mathcal A}$ and $M_{\\mathcal B}$.",
          "sha": "f40fd927d5c0",
-         "zh": ""
+         "zh": "对 $M_{\\mathcal A}$ 和 $M_{\\mathcal B}$ 做矩阵乘法来求 $M_{\\mathcal T}$。"
         }
        }
       ]
@@ -716,7 +716,7 @@
         "t": {
          "en": "$\\mathcal T = \\mathcal B \\circ \\mathcal A$, thus $\\mathcal T: \\R^{3}\\to \\R$.",
          "sha": "5ee9670194b7",
-         "zh": ""
+         "zh": "$\\mathcal T = \\mathcal B \\circ \\mathcal A$，所以 $\\mathcal T: \\R^{3}\\to \\R$。"
         }
        },
        {
@@ -724,7 +724,7 @@
         "t": {
          "en": "$\\mathcal T \\mat{1\\\\0\\\\0}= (\\mathcal B \\circ \\mathcal A) \\mat{1\\\\0\\\\0}= \\mathcal B \\mat{2\\\\2}= 10$",
          "sha": "8e0352b6766b",
-         "zh": ""
+         "zh": "$\\mathcal T \\mat{1\\\\0\\\\0}= (\\mathcal B \\circ \\mathcal A) \\mat{1\\\\0\\\\0}= \\mathcal B \\mat{2\\\\2}= 10$"
         }
        },
        {
@@ -732,7 +732,7 @@
         "t": {
          "en": "$\\mathcal T \\mat{0\\\\1\\\\0}= (\\mathcal B \\circ \\mathcal A) \\mat{0\\\\1\\\\0}= \\mathcal B \\mat{1\\\\3}= 9$",
          "sha": "5a8b5d099501",
-         "zh": ""
+         "zh": "$\\mathcal T \\mat{0\\\\1\\\\0}= (\\mathcal B \\circ \\mathcal A) \\mat{0\\\\1\\\\0}= \\mathcal B \\mat{1\\\\3}= 9$"
         }
        },
        {
@@ -740,7 +740,7 @@
         "t": {
          "en": "$\\mathcal T \\mat{0\\\\0\\\\1}= (\\mathcal B \\circ \\mathcal A) \\mat{0\\\\0\\\\1}= \\mathcal B \\mat{0\\\\0}= 0$.",
          "sha": "909ad9f3c52a",
-         "zh": ""
+         "zh": "$\\mathcal T \\mat{0\\\\0\\\\1}= (\\mathcal B \\circ \\mathcal A) \\mat{0\\\\0\\\\1}= \\mathcal B \\mat{0\\\\0}= 0$。"
         }
        },
        {
@@ -748,7 +748,7 @@
         "t": {
          "en": "Therefore $M_{\\mathcal T}= \\mat{10&9&0}$",
          "sha": "ada5e3c203b6",
-         "zh": ""
+         "zh": "因此 $M_{\\mathcal T}= \\mat{10&9&0}$"
         }
        }
       ],
@@ -758,7 +758,7 @@
         "t": {
          "en": "$M_{\\mathcal T}= M_{\\mathcal B}M_{\\mathcal A}= \\mat{3&2}\\mat{2&1&0\\\\2&3&0}= \\mat{10&9&0}$",
          "sha": "1e3bdafa6afc",
-         "zh": ""
+         "zh": "$M_{\\mathcal T}= M_{\\mathcal B}M_{\\mathcal A}= \\mat{3&2}\\mat{2&1&0\\\\2&3&0}= \\mat{10&9&0}$"
         }
        }
       ]

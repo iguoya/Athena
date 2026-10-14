@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useState } from "react";
 import { Inline, renderMath } from "./Inline";
+import { answerMatches, candidates } from "./answer";
 import type { AttemptRow, Block, Check, Exercise, SectionData, Unit } from "./types";
 
 export type ViewMode = "zh" | "both" | "en";
@@ -129,25 +130,6 @@ function BlockView({ b, mode }: { b: Block; mode: ViewMode }) {
   }
 }
 
-/** 数字答案解析：支持 -3、0.5、1/2、(1, -2, 3) 之类；返回出现的全部数。 */
-export function parseNumbers(s: string): number[] | null {
-  const toks = s.replace(/，/g, ",").replace(/−/g, "-").match(/-?\d+(?:\.\d+)?(?:\s*\/\s*-?\d+(?:\.\d+)?)?/g);
-  if (!toks) return null;
-  const out: number[] = [];
-  for (const t of toks) {
-    if (t.includes("/")) {
-      const [a, b] = t.split("/").map((x) => parseFloat(x));
-      if (!b) return null;
-      out.push(a / b);
-    } else out.push(parseFloat(t));
-  }
-  return out;
-}
-
-export function numbersMatch(got: number[], want: number[]): boolean {
-  return got.length === want.length && got.every((v, i) => Math.abs(v - want[i]) < 1e-6);
-}
-
 function ExerciseCard({
   ex, n, mode, check, sectionId, last, onAttempt,
 }: {
@@ -162,8 +144,12 @@ function ExerciseCard({
 
   const submitNumbers = () => {
     if (check?.kind !== "numbers") return;
-    const got = parseNumbers(input);
-    const ok = !!got && numbersMatch(got, check.answer);
+    if (candidates(input).length === 0) {
+      // 没认出任何数：提示写法，不记作答（不是答错，是没读懂输入）
+      setVerdict({ ok: false, note: "没有认出答案。可以写整数、小数、分数（如 3/4）、根号（sqrt(2)），多个数用逗号隔开。" });
+      return;
+    }
+    const ok = answerMatches(input, check.answer);
     setVerdict({ ok, note: ok ? undefined : check.hint });
     onAttempt(itemId, ok);
   };
@@ -186,8 +172,8 @@ function ExerciseCard({
       {check?.kind === "numbers" && (
         <div className="check">
           <label>
-            先算出最终答案{check.unit ? `（${check.unit}）` : ""}，再核对：
-            <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && submitNumbers()} placeholder="例如 1, -2 或 3/4" />
+            <Inline text={check.ask} />
+            <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && submitNumbers()} placeholder="先自己算，再填；例如 1, -2 或 3/4" />
           </label>
           <button onClick={submitNumbers}>核对</button>
         </div>

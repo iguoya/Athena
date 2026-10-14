@@ -55,8 +55,8 @@ export interface Curriculum {
 
 /** 手写的核对点（content/checks/<节>.json）：每道题一个最终答案，可机器判。 */
 export type Check =
-  | { kind: "numbers"; answer: number[]; hint?: string; unit?: string }
-  | { kind: "choice"; options: Array<{ text: string; ok?: boolean; why: string }>; hint?: string };
+  | { kind: "numbers"; ask: string; answer: number[]; hint?: string }
+  | { kind: "choice"; ask?: string; options: Array<{ text: string; ok?: boolean; why: string }>; hint?: string };
 
 export interface AttemptRow {
   knowledge_id: string;
