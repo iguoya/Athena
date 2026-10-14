@@ -46,6 +46,12 @@
 | general solution | 通解 | particular solution | 特解 |
 | constant matrix | 常数矩阵 | non-homogeneous | 非齐次 | associated homogeneous system | 对应的齐次方程组 |
 | pivot variable | 主元变量（亦称基本变量，全书用「主元变量」） | echelon form | 行阶梯形（原文无 row 字样时也这样译） |
+| conjunctive / disjunctive system | 合取 / 析取方程组 | rooted / unrooted vector | 有根向量 / 无根向量 |
+| multiset | 多重集 | set sum | 集合的和 |
+| universe of discourse | 论域 | Rule of Sarrus | 萨吕斯法则 |
+| Column Picture / Row Picture | 列的观点 / 行的观点 | Compatibility（矩阵乘法小节） | 可乘条件 |
+| Elementary Row Operations（框标题） | 初等行变换 | Row Reduction Algorithm（框标题） | 行化简算法 |
+| Consistent & Inconsistent（框标题） | 相容与不相容 | Reduced Row Echelon Form (RREF)（框标题） | 简化行阶梯形（RREF） |
 
 ## 译文约定
 
