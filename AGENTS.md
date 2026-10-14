@@ -44,19 +44,19 @@ electronics/<id>/ 电子信息圈：firmware microcontroller rtos（嵌入式系
 postgraduate/<id>/ 考研应用（ADR 0149）：cs408（408 考试主应用）及本体挂它的 data-structures algorithms
                 organization os network（ADR 0116、0118、0119），加考研公共课 mathematics ascent；
                 os、network 兼作软设承接章
+guide/<id>/     手册类教程：跟随一本外部手册/官方教程精读，首批 gtkmm（ADR 0143）
 mentor/<id>/    导师类（图谱/参考类）：polaris（路线图与指南针）、competitions（「大赛」圈的赛历，
                 ADR 0114）、jiuzhou（「兴趣」圈的九州历史地理图鉴，ADR 0156）；给方向和查阅
                 依据，不教课、不建进度库（ADR 0144）
-guide/<id>/    手册类教程：跟随一本外部手册/官方教程精读，首批 gtkmm（ADR 0143）
 practice/<id>/  项目应用：pocket_cube nas_admin c-gui-lab（ADR 0060）、earth（真实比例的
- 地球分层 3D 可视化，自 subjects/ 迁入，ADR 0128）、cpp（旧 gtkmm 窗口，ADR 0141）
+                地球分层 3D 可视化，自 subjects/ 迁入，ADR 0128）、cpp（旧 gtkmm 窗口，ADR 0141）
 certification/  考证应用：driver（驾考，ADR 0142）、software（软件设计师）、
                 embedded（嵌入式系统设计师，ADR 0147）。id 不动
 tools/          配套工具：math-tools（数学工具，ADR 0146）。id 仍是 math-tools
 launcher/       启动器：core/ gui/ macos/
 docs/           跨应用 ADR（decisions/）与本文件各节的完整阐述
 scripts/        统一验证入口 check.py、跨应用检查
-packages/       课程应用共用的纯呈现件（@athena/viz 等，ADR 0137）；不是应用
+packages/       课程应用共用件：@athena/viz（纯呈现，ADR 0137）、athena-course-shell（课程壳 Rust crate，ADR 0161）；不是应用
 archive/        历史归档，不参与构建
 ```
 

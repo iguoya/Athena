@@ -22,15 +22,3 @@ base64 = "0.22"
 # Windows 上没有系统 sqlite3，链系统库这条路走不通（ADR 0047）。
 rusqlite = { version = "0.32", features = ["bundled"] }
 dirs-next = "2"
-
-[profile.dev]
-# 少带调试信息，链接明显快一截；断到行号仍够用
-debug = 1
-incremental = true
-
-[profile.release]
-codegen-units = 1
-lto = true
-opt-level = 3
-panic = "abort"
-strip = true

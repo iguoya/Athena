@@ -153,7 +153,7 @@ fn run_chapter_sync(id: String) -> Result<String, String> {
     if !dir.join("CMakeLists.txt").is_file() {
         return Err(format!("{dir_name} 没有 CMakeLists.txt"));
     }
-    // 八章共享一份 raylib 下载缓存：FetchContent 只在第一次联网拉源码。
+    // 十章共享一份 raylib 下载缓存：FetchContent 只在第一次联网拉源码。
     let cache = root.join(".cache").join("fetchcontent");
     std::fs::create_dir_all(&cache).map_err(|e| e.to_string())?;
     let cache_arg = format!("-DFETCHCONTENT_BASE_DIR={}", cache.display());
@@ -189,9 +189,14 @@ fn passed_questions() -> Result<Vec<String>, String> {
     let conn = open_db()?;
     let mut stmt = conn
         .prepare(
-            "SELECT function_id FROM attempts
-             WHERE id IN (SELECT MAX(id) FROM attempts GROUP BY function_id)
-               AND correct = 1",
+            // 「最近一次」按作答时间认，同一秒再按行号：同步拉回的旧记录入库晚、id 更大，
+            // 按 id 认会把别的设备昨天的答错当成最近一次，盖掉本机刚答对的（ADR 0155）。
+            "SELECT DISTINCT a.function_id FROM attempts a
+             WHERE a.correct = 1
+               AND NOT EXISTS (SELECT 1 FROM attempts b
+                               WHERE b.function_id = a.function_id
+                                 AND (b.answered_at > a.answered_at
+                                      OR (b.answered_at = a.answered_at AND b.id > a.id)))",
         )
         .map_err(|e| e.to_string())?;
     let rows = stmt

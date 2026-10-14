@@ -500,6 +500,14 @@ const sourceStat =
 for (const ch of cur.chapters) {
   for (const t of ch.topics) {
     for (const [i, ln] of (t.walkthrough?.lines ?? []).entries()) {
+      // 函数图像组件的节（ADR 0028）用 f 帧：必须是对象，字段由 FuncView 消费
+      if (t.widget === "function") {
+        if (!ln.f || typeof ln.f !== "object") {
+          console.error(`动画 ${t.id} 第 ${i + 1} 帧：函数组件的节需要 f 帧`);
+          hits++;
+        }
+        continue;
+      }
       const m = ln.m;
       if (!Array.isArray(m) || m.length !== 4) {
         console.error(`动画 ${t.id} 第 ${i + 1} 帧：m 必须是四个数`);
@@ -599,6 +607,12 @@ for (const t of topics) {
   }
   if (!t.overview) {
     console.error(`课表：${t.id} 缺 overview 层（ADR 0012 第 1 节）`);
+    hits++;
+  }
+  // 前端判定一节「答对」（图谱上的绿框）只看「先猜再验」，不看练习题（main.ts 的 topicPassed）。
+  // 缺了它，这一节在第一遍里永远点不亮——补了练习题也一样。
+  if (!(t.experiments ?? []).some((e) => e.kind === "predict" && e.options?.length)) {
+    console.error(`课表：${t.id} 没有带选项的「先猜再验」（predict）——缺了它这一节在第一遍里永远点不亮`);
     hits++;
   }
   // 严格表述必须可核对：每节都要指到具体的外部出处（ADR 0017 第 3 节）

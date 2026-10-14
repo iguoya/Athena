@@ -54,8 +54,8 @@
 - **模型文件**：约 20MB 以内的小模型直接入库；大模型（如 GGUF）不入库，由白名单脚本按固定地址下载
   并用 sha256 校验，缓存目录被 git 忽略。
 - **内容**：`content/course.json`（本目录唯一课表）；出处目录 `content/sources.json`。
-- **进度**：SQLite，写入本应用自己的 `progress/learning.db`（随仓库走，ADR 0053），首次运行时建，
-  知识点 ID 前缀 `edge.`。骨架阶段还没有进度库。
+- **进度**：SQLite，写入本应用自己的用户数据目录 `<data_dir>/<目录名>/learning.db`，不进 git，由启动器同步到路由器（ADR 0155，取代 0053）；骨架阶段还没有库，建库时同批在 `app.json` 声明 `progress`，首次运行时建。
+  知识点 ID 前缀 `edge.`。
 - 端口 **1515**（strictPort）；进程/二进制 `athena-edge-ai`。
 
 ## 内容与教学分层

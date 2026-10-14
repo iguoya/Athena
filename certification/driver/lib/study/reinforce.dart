@@ -69,17 +69,17 @@ class QuestionHistory {
   /// 累计答对的次数（不管在练习、模拟考还是强化练习里）。
   int get correct => attempts - wrong;
 
-  /// 错题能不能从强化练习的备选库移出：累计答对的次数达到答错次数的 [retireRatio] 倍
-  /// （本应用 ADR 0079，取代主仓库 ADR 0086、0088 的验收规则与本应用 ADR 0075 的常驻规则）。
-  /// 这是动态的：错一次、对两次就移出；之后再答错，比例掉下去，会自动回到备选库；
+  /// 错题能不能从强化练习的备选库移出：即「已修补」（[isRepaired]，ADR 0128），
+  /// 与考前复习共用同一个判据——最近一次答对，且累计答对达到答错的 [repairRatio] 倍。
+  /// 这是动态的：错一次、对两次就移出；之后再答错，会自动回到备选库；
   /// 错得越多，要对的次数也越多（错 3 次要对 6 次）。
-  bool get retiredFromWrongPool => wrong > 0 && correct >= retireRatio * wrong;
+  bool get retiredFromWrongPool => isRepaired(wrong: wrong, correct: correct, lastCorrect: lastCorrect);
 
   /// 还要再答对几次才够移出；已经够了是 0；没答错过的题不在备选库里，也是 0。
-  int get correctsToRetire => wrong == 0 ? 0 : max(0, retireRatio * wrong - correct);
+  int get correctsToRetire => correctsToRepair(wrong: wrong, correct: correct, lastCorrect: lastCorrect);
 
   /// 对的次数是错的次数的几倍才移出（「对的比错的多一倍」）。
-  static const retireRatio = 2;
+  static const retireRatio = repairRatio;
 
   static const recentWindow = 5;
 }
@@ -584,7 +584,7 @@ PassEstimate estimatePass({
 /// 「已修补」是累计答对已达到答错 2 倍、移出强化练习备选库的题（ADR 0079）
 /// ——它们不再参与抽取，但值得回头扫一眼。
 class StubbornQuestion {
-  const StubbornQuestion(this.question, this.wrong, this.attempts, this.repaired);
+  const StubbornQuestion(this.question, this.wrong, this.attempts, this.repaired, this.correctsToRetire);
 
   final Question question;
   final int wrong;
@@ -596,8 +596,8 @@ class StubbornQuestion {
   /// 累计答对的次数。
   int get correct => attempts - wrong;
 
-  /// 还要再答对几次才够移出；已移出是 0。
-  int get correctsToRetire => repaired ? 0 : max(0, QuestionHistory.retireRatio * wrong - correct);
+  /// 还要再答对几次才够移出；已移出是 0（[correctsToRepair]，最近一次答错时至少 1）。
+  final int correctsToRetire;
 
   /// 稳定编号：题库 id 去掉 `drive.` 前缀，反馈题目问题时报这个号。
   String get serial => question.serial;
@@ -612,7 +612,7 @@ List<StubbornQuestion> stubbornQuestions(HistorySet histories, Map<String, Quest
     if (h.wrong < minWrong) continue;
     final q = byId[entry.key];
     if (q == null) continue;
-    out.add(StubbornQuestion(q, h.wrong, h.attempts, h.retiredFromWrongPool));
+    out.add(StubbornQuestion(q, h.wrong, h.attempts, h.retiredFromWrongPool, h.correctsToRetire));
   }
   out.sort((a, b) {
     if (a.repaired != b.repaired) return a.repaired ? 1 : -1;

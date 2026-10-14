@@ -119,6 +119,34 @@ class MergeTests(ProgressApiCase):
         self.assertEqual((r["accepted"], r["ignored"]), (0, 1))
         self.assertEqual(self.pull().get_json()["rows"][0]["data"], {"ok": 1})
 
+    def test_append_墓碑标记删除但保留原数据(self):
+        # ADR 0160：事件表的删除也是一个新增的事实（墓碑），不是真删——原数据留着，可审计、可恢复。
+        self.push([row(tbl="attempts", pk="q1|t1", mode="append", stamp=T1, data={"ok": 1})])
+        r = self.push([row(tbl="attempts", pk="q1|t1", mode="append", stamp=T2, deleted=True)], device="pc-b").get_json()
+        self.assertEqual((r["accepted"], r["ignored"]), (1, 0))
+        got = self.pull().get_json()["rows"][0]
+        self.assertTrue(got["deleted"])
+        self.assertEqual(got["data"], {"ok": 1})
+        self.assertEqual(got["device"], "pc-b")
+
+    def test_append_墓碑只增不减_重复与复活都被忽略(self):
+        self.push([row(tbl="attempts", pk="q1|t1", mode="append", stamp=T1, data={"ok": 1})])
+        self.push([row(tbl="attempts", pk="q1|t1", mode="append", stamp=T2, deleted=True)], device="pc-b")
+        top = self.pull().get_json()["next"]
+        again = self.push([row(tbl="attempts", pk="q1|t1", mode="append", stamp=T3, deleted=True)], device="pc-c").get_json()
+        revive = self.push([row(tbl="attempts", pk="q1|t1", mode="append", stamp=T3, data={"ok": 0})], device="pc-c").get_json()
+        self.assertEqual((again["accepted"], revive["accepted"]), (0, 0))
+        got = self.pull().get_json()
+        self.assertEqual(got["next"], top, "被忽略的写入不该分配新序号")
+        self.assertTrue(got["rows"][0]["deleted"])
+
+    def test_append_对没见过的键直接落墓碑(self):
+        r = self.push([row(tbl="attempts", pk="q9|t9", mode="append", stamp=T1, deleted=True)]).get_json()
+        self.assertEqual(r["accepted"], 1)
+        got = self.pull().get_json()["rows"][0]
+        self.assertTrue(got["deleted"])
+        self.assertIsNone(got["data"])
+
     def test_删除是一行带标记的记录并清掉数据(self):
         self.push([row(stamp=T1)])
         self.push([row(stamp=T2, deleted=True)], device="pc-b")
@@ -155,6 +183,12 @@ class ValidationTests(ProgressApiCase):
         self.assert_invalid(self.push([row(stamp="2026-10-13 01:00:00")]), "stamp")
         self.assert_invalid(self.push([row(stamp="2026-10-13T01:00:00+08:00")]), "stamp")
 
+    def test_时间的小数位必须是三位毫秒(self):
+        # 字符串比较只在格式一致时等于时间比较：无小数、微秒与毫秒混用会把先后比反
+        # （"03.5Z" < "03Z"、"03.123456Z" < "03.123Z"），所以只认固定三位。
+        for bad in ("2026-10-13T01:00:00Z", "2026-10-13T01:00:00.5Z", "2026-10-13T01:00:00.123456Z"):
+            self.assert_invalid(self.push([row(stamp=bad)]), "stamp")
+
     def test_模式只有两种(self):
         self.assert_invalid(self.push([row(mode="merge")]), "mode")
 
@@ -187,6 +221,21 @@ class ValidationTests(ProgressApiCase):
     def test_拉取参数必须是整数(self):
         r = self.client.get(BASE + "/pull?app=x&since=abc", headers={"X-Athena-User": "1"})
         self.assert_invalid(r, "since")
+
+
+class SchemaTests(ProgressApiCase):
+    def test_旧表也会补上序号索引(self):
+        from sqlalchemy import inspect, text
+
+        from nas_admin.progress_api import store
+
+        self.push([row()])  # 触发建表
+        with self.engine.begin() as conn:
+            conn.execute(text("DROP INDEX athena_progress_rows_seq"))  # 模拟索引上线前已部署的旧表
+        store._ready_for.discard(self.engine)
+        store.ensure_table(self.engine)
+        names = {i["name"] for i in inspect(self.engine).get_indexes("athena_progress_rows")}
+        self.assertIn("athena_progress_rows_seq", names)
 
 
 class AccessTests(ProgressApiCase):

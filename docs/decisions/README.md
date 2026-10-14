@@ -153,3 +153,5 @@
 | [0142](0142-certification-root-for-driver.md) | 驾考迁到仓库根 `certification/driver`，与 `exercise` 平级；id 仍是 `driver` | 已接受 |
 | [0154](0154-docs-site-on-github-pages.md) | 文档站用 MkDocs Material 发布到 GitHub Pages：站点无自有内容，源是 `docs/` 与根文档，暂存时改写链接；`pages.yml` 在文档路径推送时触发，是 0064 的有意例外 | 已接受 |
 | [0155](0155-progress-local-first-sync-to-router.md) | 学习进度本地优先、不进 git：本地库放用户数据目录，启动器外置同步代理在能连路由器时推拉到 PG（通用 JSONB 接口、按表声明合并规则），同步对使用者透明；一次全迁，确认中心收到前不撤库出 git | 已接受；修订 0053、0067 决策 2；推广 0067~0070 |
+| [0160](0160-append-tombstones.md) | 事件表用墓碑表达删除：只标记、不实质删除，原数据保留；墓碑单向幂等，事件表整张为空时不推断全删 | 已接受（补充 0155 决策 5） |
+| [0161](0161-shared-course-shell-crate.md) | 课程应用的 Tauri 壳收成一个共用 crate `athena-course-shell`：六个应用只传名字配置，顺手收紧案例路径校验与 -pthread | 已接受（局部修订 0132） |

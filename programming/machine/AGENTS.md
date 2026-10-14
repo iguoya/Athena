@@ -48,8 +48,8 @@ C 的保证）。
 - **教案**：`qml/lessons/*.qml` + 共用组件 `qml/components/`
 - **课表**：`content/curriculum.json`（章、先修、难度、指向哪份 QML、`source_refs`）
 - **题库**：`content/exercises.json`（随堂 / 课后，每题带 `source_refs`）
-- **进度**：后续自建库，前缀 `machine.`（ADR 0037、0005），位置按 ADR 0053 放
-  `progress/learning.db` 并随仓库走；本期考核只当场计分
+- **进度**：后续自建库，前缀 `machine.`（ADR 0037、0005），位置按 ADR 0155 放
+  用户数据目录、不进 git；本期考核只当场计分
 
 
 ## 目录

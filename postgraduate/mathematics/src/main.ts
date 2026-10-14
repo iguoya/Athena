@@ -6,6 +6,8 @@ import { invoke } from "@tauri-apps/api/core";
 import appIcon from "../icon.svg";
 import { TransformView, type Mat2, type Readout } from "./transform-view";
 import { GraphView, type GraphNode } from "./graph-view";
+import { FuncView, type FuncMode, type FuncState, type Readout as FuncReadout } from "./func-view";
+import { FUNCTIONS } from "./calculus";
 import {
   renderDrills,
   numberOk,
@@ -50,6 +52,26 @@ interface PredictOption {
   /** 选错时说明这个选项通常是怎么想的——不是「你错了」（ADR 0014 第 5 节） */
   misread?: string;
 }
+/** 函数图像的一帧：可选地换函数，再把状态演到 state */
+interface FuncFrame extends Partial<FuncState> {
+  fn?: string;
+}
+/** 「动手试」里函数图像组件的预设（ADR 0028） */
+interface FunctionPreset {
+  fn: string;
+  mode: FuncMode;
+  xmin?: number;
+  xmax?: number;
+  state?: Partial<FuncState>;
+  caption?: string;
+  /** 面板上显示哪几个滑块；不列的不出现，只暴露这一节需要的自由度 */
+  controls?: Array<"x0" | "h" | "n" | "rule">;
+  /** 可切换的函数（白名单 id）；缺省只用 fn 一个 */
+  fns?: string[];
+  /** 一键预设：label + 要演到的帧 */
+  presets?: Array<{ label: string; frame: FuncFrame }>;
+}
+
 interface Experiment {
   kind: string;
   id: string;
@@ -57,6 +79,8 @@ interface Experiment {
   prompt: string;
   /** 作答后把画布演到这个矩阵，让人自己看结果 */
   verify_m?: number[];
+  /** 函数图像组件的同类字段：作答后把图演到这个状态（ADR 0028） */
+  verify_f?: FuncFrame;
   options?: PredictOption[];
 }
 /**
@@ -146,6 +170,7 @@ interface Topic {
     note?: string;
   };
   widget?: string;
+  function_preset?: FunctionPreset;
   widget_preset?: {
     m: number[];
     focus?: string | null;
@@ -163,7 +188,13 @@ interface Topic {
   };
   walkthrough?: {
     title: string;
-    lines: Array<{ say: string; m: number[]; target?: [number, number] }>;
+    lines: Array<{
+      say: string;
+      /** 矩阵组件的一帧；函数组件的节改用 f */
+      m?: number[];
+      target?: [number, number];
+      f?: FuncFrame;
+    }>;
   };
   experiments?: Experiment[];
   /**
@@ -371,7 +402,7 @@ function renderSide() {
   );
   parts.push(
     `<button class="topic${view.kind === "graph" ? " active" : ""}" data-graph="1">
-       线性代数图谱
+       知识图谱
        <span class="meta">${all.length} 节 · 按先修关系连起来</span>
      </button>`,
   );
@@ -517,8 +548,9 @@ function renderGraphPage() {
 
   main.innerHTML = `
     <div class="page wide">
-      <h2 class="title">线性代数图谱</h2>
-      <p class="tagline">一切从「矩阵就是把平面搬一次」发散出去，最后收敛到二次型。
+      <h2 class="title">知识图谱</h2>
+      <p class="tagline">线性代数从「矩阵就是把平面搬一次」发散出去，收敛到二次型；
+      高等数学从「函数图像」出发，走到微积分基本定理。
       连线是先修关系，由课表算出来，不是画上去的。</p>
       <div class="g-legend">
         <span><i class="sw-todo"></i>未走</span>
@@ -682,7 +714,9 @@ function renderTopic(id: string) {
   const pre = t.widget_preset;
   const f = (k: string) => (pre?.focus === k ? ' class="focus"' : "");
   const widgetHtml =
-    t.widget === "transform2d"
+    t.widget === "function" && t.function_preset
+      ? functionWidgetHtml(t.function_preset)
+      : t.widget === "transform2d"
       ? `<div id="s-widget" class="stage">
         <div>
         <canvas id="cv" width="1360" height="1020"></canvas>
@@ -873,6 +907,7 @@ function renderTopic(id: string) {
   if (t.derivation) bindDerivation(t.derivation, t.id);
 
   if (t.widget === "transform2d") mountCanvas(pre?.m, pre?.readout ?? "full", pre?.target);
+  if (t.widget === "function" && t.function_preset) mountFunction(t.function_preset);
   if (walk) bindWalkthrough(t);
   if (predict) bindPredict(t, predict);
   bindDrills();
@@ -1373,6 +1408,7 @@ function stopGuide() {
   stopSpeech();
   const view = (window as unknown as { __view?: TransformView }).__view;
   view?.cancelAnimation();
+  funcView?.cancelAnimation();
   const line = document.getElementById("walk-line");
   if (line && !line.dataset.keep) {
     line.classList.remove("is-on");
@@ -1470,6 +1506,26 @@ async function runWalkthrough(t: Topic) {
   const lines = t.walkthrough?.lines ?? [];
   const view = (window as unknown as { __view?: TransformView }).__view;
   const lineEl = document.getElementById("walk-line");
+  if (t.widget === "function") {
+    if (!funcView || !lines.length || !lineEl) return;
+    stopGuide();
+    const token = ++guideToken;
+    document.getElementById("s-widget")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    for (const step of lines) {
+      if (token !== guideToken) return;
+      lineEl.textContent = step.say;
+      lineEl.classList.add("is-on");
+      const motion = playFuncFrame(step.f ?? {});
+      const voice = speechAvailable()
+        ? speak(step.say)
+        : new Promise<void>((r) => setTimeout(r, 1600));
+      await Promise.all([motion, voice]);
+    }
+    if (token !== guideToken) return;
+    lineEl.textContent = "演完了。现在自己拖一拖，看数怎么跟着变。";
+    lineEl.classList.remove("is-on");
+    return;
+  }
   if (!view || !lines.length || !lineEl) return;
   stopGuide();
   const token = ++guideToken;
@@ -1481,7 +1537,7 @@ async function runWalkthrough(t: Topic) {
       view.setTarget(step.target);
       view.fitPoints([step.target]);
     }
-    const [a, b, c, d] = step.m;
+    const [a, b, c, d] = step.m ?? [1, 0, 0, 1];
     lineEl.textContent = step.say;
     lineEl.classList.add("is-on");
     const motion = view.animateTo({ a, b, c, d });
@@ -1552,6 +1608,136 @@ function mountCanvas(
   (window as unknown as { __view: TransformView }).__view = v;
 }
 
+// ── 函数图像组件（ADR 0028）──────────────────
+let funcView: FuncView | null = null;
+
+/** h 滑块用对数刻度：0～100 对应 2 → 0.002，才能一路滑到「几乎是 0」 */
+const hFromSlider = (u: number) => 2 * Math.pow(10, (-3 * u) / 100);
+const sliderFromH = (h: number) => Math.round((-100 / 3) * Math.log10(h / 2));
+
+function functionWidgetHtml(p: FunctionPreset): string {
+  const ctl = new Set(p.controls ?? []);
+  const xmin = p.xmin ?? -3;
+  const xmax = p.xmax ?? 3;
+  const chips =
+    p.fns && p.fns.length > 1
+      ? `<div class="fn-chips">${p.fns
+          .map((id) => {
+            const fn = FUNCTIONS.find((x) => x.id === id);
+            return fn ? `<button type="button" data-fn="${id}">${fn.label.replace("f(x) = ", "")}</button>` : "";
+          })
+          .join("")}</div>`
+      : "";
+  const slider = (id: string, label: string, min: number, max: number, step: number) =>
+    `<label class="fs"><span class="k">${label}</span>
+       <input type="range" id="fs-${id}" min="${min}" max="${max}" step="${step}">
+       <span class="v" id="fs-${id}-v"></span></label>`;
+  return `<div id="s-widget" class="stage">
+    <div>
+      <canvas id="fcv" width="1360" height="1020"></canvas>
+      ${p.caption ? `<p class="cv-cap">${rich(p.caption)}</p>` : ""}
+    </div>
+    <div class="panel">
+      <h3 id="f-title"></h3>
+      ${chips}
+      ${ctl.has("x0") ? slider("x0", "x", xmin, xmax, 0.05) : ""}
+      ${ctl.has("h") ? slider("h", "离多近 h", 0, 100, 1) : ""}
+      ${ctl.has("n") ? slider("n", "分成几份", 1, 200, 1) : ""}
+      ${
+        ctl.has("rule")
+          ? `<div class="rule-row"><button type="button" data-rule="left">左端点</button><button type="button" data-rule="mid">中点</button><button type="button" data-rule="right">右端点</button></div>`
+          : ""
+      }
+      <div class="read" id="f-read"></div>
+      ${
+        p.presets?.length
+          ? `<div class="presets">${p.presets
+              .map((x, i) => `<button type="button" data-fpre="${i}">${x.label}</button>`)
+              .join("")}</div>`
+          : ""
+      }
+    </div>
+  </div>`;
+}
+
+function mountFunction(p: FunctionPreset) {
+  const cv = document.getElementById("fcv") as HTMLCanvasElement;
+  const v = new FuncView(cv, p);
+  funcView = v;
+  const title = document.getElementById("f-title")!;
+  const read = document.getElementById("f-read")!;
+  const sl = (id: string) => document.getElementById(`fs-${id}`) as HTMLInputElement | null;
+  const out = (id: string) => document.getElementById(`fs-${id}-v`);
+
+  v.onChange = (rows: FuncReadout, st: FuncState) => {
+    title.textContent = v.fn.label;
+    read.innerHTML = rows
+      .map(([k, val, alert]) => `<div><span class="k">${k}</span><span class="v${alert ? " alert" : ""}">${val}</span></div>`)
+      .join("");
+    // 滑块跟着状态走（讲解动画、预设会改状态），但别和手指抢：正在拖的那个不回写
+    const sync = (id: string, value: number, text: string) => {
+      const el = sl(id);
+      if (el && document.activeElement !== el) el.value = String(value);
+      const o = out(id);
+      if (o) o.textContent = text;
+    };
+    sync("x0", st.x0, String(+st.x0.toFixed(2)));
+    sync("h", sliderFromH(Math.max(st.h, 0.002)), String(+st.h.toPrecision(2)));
+    sync("n", Math.round(st.n), String(Math.round(st.n)));
+    document
+      .querySelectorAll<HTMLButtonElement>("[data-rule]")
+      .forEach((b) => b.classList.toggle("on", b.dataset.rule === st.rule));
+    document
+      .querySelectorAll<HTMLButtonElement>("[data-fn]")
+      .forEach((b) => b.classList.toggle("on", b.dataset.fn === v.fn.id));
+  };
+
+  const stop = () => {
+    v.cancelAnimation();
+    stopGuide();
+  };
+  sl("x0")?.addEventListener("input", (e) => {
+    stop();
+    v.set({ x0: parseFloat((e.target as HTMLInputElement).value) });
+  });
+  sl("h")?.addEventListener("input", (e) => {
+    stop();
+    v.set({ h: hFromSlider(parseFloat((e.target as HTMLInputElement).value)) });
+  });
+  sl("n")?.addEventListener("input", (e) => {
+    stop();
+    v.set({ n: parseInt((e.target as HTMLInputElement).value, 10) });
+  });
+  document.querySelectorAll<HTMLButtonElement>("[data-rule]").forEach((b) =>
+    b.addEventListener("click", () => {
+      stop();
+      v.set({ rule: b.dataset.rule as FuncState["rule"] });
+    }),
+  );
+  document.querySelectorAll<HTMLButtonElement>("[data-fn]").forEach((b) =>
+    b.addEventListener("click", () => {
+      stop();
+      v.setFn(b.dataset.fn!);
+    }),
+  );
+  document.querySelectorAll<HTMLButtonElement>("[data-fpre]").forEach((b) =>
+    b.addEventListener("click", () => {
+      stop();
+      void playFuncFrame(p.presets![Number(b.dataset.fpre)].frame);
+    }),
+  );
+  v.onUserEdit = () => stopGuide();
+  v.draw();
+}
+
+/** 先换函数（如果帧里指定了），再把状态演过去 */
+async function playFuncFrame(frame: FuncFrame): Promise<void> {
+  if (!funcView) return;
+  const { fn, ...state } = frame;
+  if (fn && fn !== funcView.fn.id) funcView.setFn(fn);
+  await funcView.animateTo(state);
+}
+
 function fmtPair(x: number, y: number): string {
   return `(${x.toFixed(2)}, ${y.toFixed(2)})`;
 }
@@ -1611,7 +1797,8 @@ function bindPredict(t: Topic, e: Experiment) {
       const chosen = (e.options ?? []).find((o) => o.text === picked);
       const right = (e.options ?? []).find((o) => o.ok);
 
-      // 选完立刻把画布演到待验的矩阵：让人自己看，而不是只读一段文字
+      // 选完立刻把画布演到待验的状态：让人自己看，而不是只读一段文字
+      if (e.verify_f) void playFuncFrame(e.verify_f);
       if (e.verify_m?.length === 4) {
         const [a, bb, c, d] = e.verify_m;
         void (window as unknown as { __view?: TransformView }).__view?.animateTo({

@@ -1,3 +1,5 @@
+import "dart:math" show max;
+
 import "../subject2/guide.dart";
 class SourceRef {
   const SourceRef({
@@ -887,17 +889,30 @@ List<Question> practiceQueue(List<Question> pending, Set<String> wrongIds) {
 /// 累计答错到几次进考前复习（ADR 0033）。
 const reviewMinWrong = 2;
 
-/// 移出考前复习要累计答对几次：比答错多 1～2 次（ADR 0035）。
-/// 错 2 次多 1 次（对 3 次），错 3 次及以上多 2 次（错 3 对 5、错 8 对 10）。
-/// 答对按累计算，错之前答对过的也算，所以错得再多也有出路，只是要多做几轮。
-int reviewExitCorrect(int wrongCount) => wrongCount + (wrongCount >= 3 ? 2 : 1);
+/// 错题「已修补」要累计答对到答错的几倍（ADR 0128，沿用 ADR 0079 的 2 倍）。
+const repairRatio = 2;
 
-/// 这道题现在该不该留在考前复习：错够了次数，且还没做到「最近一次答对、
-/// 累计答对够数」。[streak] 是最后一次错之后的连对次数，只用来判断最近一次对不对——
-/// 刚答错的题哪怕累计答对够了也不放出去。
+/// 一道错题算不算已修补：答错过、**最近一次答对**、且累计答对达到答错的 [repairRatio] 倍。
+/// 强化练习的备选库和考前复习共用这一个判据（ADR 0128，统一 0035 与 0079 的两套门槛）。
+///
+/// 累计按全部作答算，答错之前答对过的也计入，所以错得再多也有出路；但「最近一次答对」
+/// 是硬条件——刚答错的题哪怕累计答对够了也不放出去，否则一道一直答对的题第一次答错
+/// 就会被直接判成已修补，错了也不进复习。
+bool isRepaired({required int wrong, required int correct, required bool lastCorrect}) =>
+    wrong > 0 && lastCorrect && correct >= repairRatio * wrong;
+
+/// 还要再答对几次才算已修补：没答错过或已修补是 0；最近一次答错时至少还差 1 次，
+/// 即使累计答对已经够数（要靠这一次对把「最近一次」翻回来）。
+int correctsToRepair({required int wrong, required int correct, required bool lastCorrect}) {
+  if (wrong == 0) return 0;
+  return max(lastCorrect ? 0 : 1, repairRatio * wrong - correct);
+}
+
+/// 这道题现在该不该留在考前复习：累计答错够 [reviewMinWrong] 次，且还没修补。
+/// [streak] 是最后一次错之后的连对次数，只用来判断最近一次对不对。
 bool inReview({required int wrongCount, required int correctCount, required int streak}) =>
     wrongCount >= reviewMinWrong &&
-    !(streak > 0 && correctCount >= reviewExitCorrect(wrongCount));
+    !isRepaired(wrong: wrongCount, correct: correctCount, lastCorrect: streak > 0);
 
 List<Question> dailyQuestions(Iterable<Question> questions) {
   return [for (final question in questions) if (!question.isRare) question];

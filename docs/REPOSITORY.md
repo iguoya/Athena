@@ -184,6 +184,8 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
   仅对学习应用生效），schema、内容块与通用代码的抽象待成熟（ADR 0132，原方向 ADR 0130）。
   例外是仓库根 `packages/` 下的纯呈现件（ADR 0137）：`@athena/viz` 这类不触及 schema、
   内容、进度的组件抽成一份共用，应用以 `link:` 挂接；`src/` 内不许再留拷贝（结构卫生检查拦截）。
+  另一个例外是 `packages/athena-course-shell`（ADR 0161）：数据结构、算法、408、组成原理、Linux、设计模式
+  六个应用原本各抄一份的 Tauri 壳收成一个 Rust crate，应用只传 `ShellConfig` 名字配置，以路径依赖挂接。
 - **约束也各守各的，不从别的应用继承**（ADR 0062）：每个应用的约束只来自仓库级大原则和它
   自己的 `AGENTS.md` 与 ADR。不写「沿用 X 应用的做法」「对齐 X 应用 ADR」作为约束来源——
   来源一改，继承方不会知道，规则就悄悄过时。在本应用也成立的做法，自己写下来、自己说明
@@ -193,7 +195,7 @@ C++ 教程的界面、桌面条目和安装包都叫这门课自己的名字。�
  的库，也不假设别人跑过。库放在**用户数据目录**（`<目录名>/learning.db`，目录名登记在 `app.json`
  的 `progress.dir`），不进版本库、也不推 GitHub；离开路由器环境照常使用。能连上路由器时，启动器的
  同步代理（`launcher/core/src/progress_sync.rs`）按 `app.json` 里 `progress.tables` 声明的合并规则
- （`append` 事件并集、`lww` 更新时间新者胜）把本地库与中心 PostgreSQL 互推，失败只写日志、
+ （`append` 事件并集、删除用墓碑——ADR 0160；`lww` 更新时间新者胜）把本地库与中心 PostgreSQL 互推，失败只写日志、
  不进界面。换机器靠连上路由器自动拉回，而不是 clone。`launcher progress backup` 导出文本快照。
  知识点 ID 用自己的前缀（C 与机器 `machine.`，数据结构 `dsa.`）。**例外**：`driver`（ADR 0067、0068、
  0127）有自己的通路（`/api/driver/v1`），个人数据存 PG，客户端本地只留缓存与待发队列。
