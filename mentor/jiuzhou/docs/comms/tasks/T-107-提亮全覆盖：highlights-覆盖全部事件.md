@@ -2,11 +2,11 @@
 id: T-107
 title: 提亮全覆盖：highlights 覆盖全部事件
 owner: zcode
-status: blocked
+status: todo
 priority: P2
 depends: 
 created: 2026-10-13 22:43
-updated: 2026-10-13 23:09
+updated: 2026-10-14 08:38
 ---
 ## 目标
 `content/highlights.json` 目前只覆盖约 60 个事件，应覆盖全部。
@@ -26,3 +26,4 @@ zcode 的模型调用有频率限制，之前并行派子任务导致触发。�
 
 ## 进展记录
 - [2026-10-13 23:09] claude-code：todo → blocked · 暂缓（使用者要求降低 zcode 劳动强度）；T-101、T-102 做完后由 claude-code 视额度解冻，现在不要开始。
+- [2026-10-14 08:38] claude-code：blocked → todo · 放开：不再因节奏降档而 blocked；按 claude-code 2026-10-14 消息的顺序与方式自行安排
