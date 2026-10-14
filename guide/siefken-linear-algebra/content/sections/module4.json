@@ -1,0 +1,2030 @@
+{
+ "id": "module4",
+ "title_en": "Dot Products & Normal Forms",
+ "blocks": [
+  {
+   "k": "outcome",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Geometric and algebraic definitions of the dot product.",
+         "sha": "bc8bc73fc98b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How dot products relate to the length of a vector and the angle between two vectors.",
+         "sha": "647867eab4e0",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The *normal form* of lines, planes, and hyperplanes.",
+         "sha": "381d24a2fedd",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\vec a$ and $\\vec b$ be vectors rooted at the same point and let $\\theta$ denote the *smaller* of the two angles between them (so $0\\leq \\theta \\leq \\pi$). The *dot product* of $\\vec a$ and $\\vec b$ is defined to be",
+    "sha": "d3051183f0f2",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec a\\cdot \\vec b=\\norm{\\vec a}\\norm{\\vec b}\\cos \\theta."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We will call this the *geometric definition of the dot product*.",
+    "sha": "dd6c68a5be2a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "0134d1eacb22"
+   ],
+   "caption": null
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "de487422b0b7"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The dot product is also sometimes called the *scalar product* because the result is a scalar.",
+    "sha": "4bd29b364989",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Algebraically, we can define the dot product in terms of coordinates:",
+    "sha": "0db2dd231a4b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\matc{a_1\\\\a_2\\\\\\vdots\\\\a_n}\\cdot \\matc{b_1\\\\b_2\\\\\\vdots\\\\b_n}\n\t=a_1b_1+a_2b_2+\\cdots+a_nb_n."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We will call this the *algebraic definition of the dot product*.",
+    "sha": "3ce2e82f7b55",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "By switching between algebraic and geometric definitions, we can use the dot product to find quantities that are otherwise difficult to find.",
+    "sha": "18d8d248b642",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the angle between the vectors $\\vec v=(1,2,3)$ and $\\vec w=(1,1,-2)$.",
+      "sha": "3f931b56de89",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "From the algebraic definition of the dot product, we know",
+      "sha": "645775cf9f04",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec v\\cdot \\vec w = 1(1)+2(1)+3(-2) = -3."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "From the geometric definition, we know",
+      "sha": "ef013757e0e6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec v\\cdot \\vec w=\\norm{\\vec v}\\norm{\\vec w}\\cos\\theta\n\t\t=\\sqrt{14}\\sqrt{6}\\cos\\theta=2\\sqrt{21}\\cos\\theta."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Equating the two definitions of $\\vec v\\cdot \\vec w$, we see",
+      "sha": "6986c1a3899d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\cos\\theta = \\frac{-3}{2\\sqrt{21}}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so $\\theta=\\arccos\\Big(\\tfrac{-3}{2\\sqrt{21}}\\Big)$.",
+      "sha": "e395140c36a2",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The dot product has several interesting properties. Since the angle between $\\vec a$ and itself is $0$, the geometric definition of the dot product tells us",
+    "sha": "b29aabfc322f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec a\\cdot \\vec a=\\Norm{\\vec a}\\Norm{\\vec a}\\cos 0 = \\Norm{\\vec a}^2."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In other words,",
+    "sha": "e583468a1518",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Norm{\\vec a}=\\sqrt{\\vec a\\cdot \\vec a},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and so dot products can be used to compute the length of vectors\\footnote Oftentimes in non-geometric settings, the dot product between two vectors is defined first and then the length of $\\vec a$ is actually *defined* to be $\\sqrt{\\vec a\\cdot \\vec a}$..",
+    "sha": "75997478cf9c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "From the algebraic definition of the dot product, we can deduce several distributive laws. Namely, for any vectors $\\vec a$, $\\vec b$, and $\\vec c$ and any scalar $k$ we have",
+    "sha": "379b7ff65986",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "(\\vec a+\\vec b)\\cdot\\vec c = \\vec a\\cdot \\vec c+\\vec b\\cdot \\vec c\\qquad\n\t\\vec a\\cdot(\\vec b+\\vec c)=\\vec a\\cdot \\vec b+\\vec a\\cdot \\vec c"
+  },
+  {
+   "k": "math",
+   "tex": "(k\\vec a)\\cdot \\vec b = k(\\vec a\\cdot \\vec b)=\\vec a\\cdot (k\\vec b)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and",
+    "sha": "cffa50a32cb1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec a\\cdot \\vec b=\\vec b\\cdot \\vec a."
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Orthogonality",
+    "sha": "42a095b4f15b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Recall that for vectors $\\vec a$ and $\\vec b$, the relationship $\\vec a\\cdot \\vec b=0$ can hold for two reasons: (i) either $\\vec a=\\vec 0$, $\\vec b=\\vec 0$, or both or (ii) $\\vec a$ and $\\vec b$ meet at $90^{\\circ}$. Thus, the dot product can be used to tell if two vectors are perpendicular. There is some strangeness with the zero vector here, but it turns out this strangeness simplifies our lives mathematically.",
+    "sha": "628923ee33e9",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Orthogonal",
+    "sha": "3e7b316f6808",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Two vectors $\\vec u$ and $\\vec v$ are *orthogonal* to each other if $\\vec u\\cdot \\vec v=0$. The word orthogonal is synonymous with the word perpendicular.",
+      "sha": "8705a8611950",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The definition of orthogonal encapsulates both the idea of two vectors forming a right angle and the idea of one of them being $\\vec 0$.",
+    "sha": "64e9706c9592",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Before we continue, let's pin down exactly what we mean by the *direction* of a vector. There are many ways we could define this term, but we'll go with the following.",
+    "sha": "7aa52956e92c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Direction",
+    "sha": "fd8e45bac7d3",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The vector $\\vec u$ points in the *direction* of the vector $\\vec v$ if $\\vec u=k\\vec v$ for some scalar $k$. The vector $\\vec u$ points in the *positive direction* of $\\vec v$ if $\\vec u=k\\vec v$ for some positive scalar $k$.",
+      "sha": "1d43e42faacb",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The vector $2\\xhat$ points in the direction of $\\xhat$ since $\\frac{1}{2}(2\\xhat)=\\xhat$. Since $\\frac{1}{2}>0$, $2\\xhat$ also points in the positive direction of $\\xhat$. In contrast, $-\\xhat$ points in the direction $\\xhat$ but not the positive direction of $\\xhat$.",
+    "sha": "2c734329bb5f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When it comes to the relationship between two vectors, there are two extremes: they point in the same direction, or they are orthogonal. The dot product can be used to tell you which of these cases you're in, and more than that, it can tell you to what extent one vector points in the direction of another (even if they don't point in the same direction).",
+    "sha": "d2850f504767",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec a=\\mat{1\\\\2}$, $\\vec b=\\mat{3\\\\3}$, $\\vec c=\\mat{2\\\\1}$, and $\\vec v=\\mat{3\\\\4}$. Which vector out of $\\vec a$, $\\vec b$, and $\\vec c$ has a direction closest to the direction of $\\vec v$?",
+      "sha": "5fef8f27d66b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We would like to know when $\\theta$, the angle between a pair of the given vectors, is smallest. This is equivalent to finding when $\\cos\\theta$ is closest to 1 (since $\\cos0=1$). By equating the geometric and algebraic definitions of the dot product, we know",
+      "sha": "337ea01a86f8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\cos\\theta = \\frac{\\vec p\\cdot\\vec q}{\\norm{\\vec p}\\norm{\\vec q}}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\alpha$, $\\beta$, and $\\gamma$ be the angles between the vector $\\vec v$ and the vectors $\\vec a$, $\\vec b$, $\\vec c$, respectively. Computing, we find",
+      "sha": "85886a38d1e9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}\\cos \\alpha &= \\frac{3+8}{5\\sqrt{5}}=\\frac{11\\sqrt{5}}{25} \\approx 0.9838699101 \\\\\n\t\t\\cos \\beta &= \\frac{9+12}{5\\sqrt{18}} =\\frac{7\\sqrt{2}}{10} \\approx 0.989949437\\\\\n\t    \\cos \\gamma &= \\frac{6+4}{5\\sqrt{5}}=\\frac{2\\sqrt{5}}{5} \\approx 0.894427191.\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\cos \\beta$ is the closest to $1$, we know $\\vec b$ has a direction closest to that of $\\vec v$.",
+      "sha": "aa32f0d3cfe3",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Normal Form of Lines and Planes",
+    "sha": "43122da726cb",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\vec n=\\mat{1\\\\2}$. If a vector $\\vec v=\\mat{v_1\\\\v_2}$ is orthogonal to $\\vec n$, then",
+    "sha": "7e1d46bcfc19",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec n\\cdot\\vec v=v_1+2v_2=0,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and so $v_1=-2v_2$. In other words, $\\vec v$ is orthogonal to $\\vec n$ exactly when $\\vec v\\in\\Span\\Set{\\mat{-2\\\\1}}$. What have we learned? The set of all vectors orthogonal to $\\vec n$ forms a line $\\ell=\\Span\\Set{\\mat{-2\\\\1}}$. In this case, we call $\\vec n$ a *normal vector* for $\\ell$.",
+    "sha": "954ce7bbd553",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "ae00e0fe901f"
+   ],
+   "caption": null
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Normal Vector",
+    "sha": "420321b55894",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A *normal vector* to a line (or plane or hyperplane) is a non-zero vector that is orthogonal to all direction vectors for the line (or plane or hyperplane).",
+      "sha": "ebdcf7f710c2",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In $\\R^2$, normal vectors provide yet another way to describe lines, including lines which don't pass through the origin.",
+    "sha": "f22fb43656fe",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\vec n=\\mat{1\\\\2}$ as before, and fix $\\vec p=\\mat{1\\\\1}$. If we draw the set of all vectors orthogonal to $\\vec n$ but \\emphroot all the vectors at $\\vec p$, again we get a line, but this time the line passes through $\\vec p$.",
+    "sha": "3ef41e8398d0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "25be66eb3589"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In fact, the line we get is $\\ell_2=\\Span\\Set{\\mat{-2\\\\1}}+\\Set{\\mat{1\\\\1}}=\\ell+\\Set{\\vec p}$, which is just $\\ell$ (the parallel line through the origin) translated by $\\vec p$.",
+    "sha": "bae29c45f0ea",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let's relate this to dot products and normal vectors. By definition, for every $\\vec v\\in \\ell$, we have $\\vec n\\cdot \\vec v=0$. Since $\\ell_2$ is a translate of $\\ell$ by $\\vec p$, we deduce the relationship that for every $\\vec v\\in \\ell_2$,",
+    "sha": "ed0b1f5c3f19",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec n\\cdot(\\vec v-\\vec p) = 0."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When a line is expressed as above, we say it is expressed in *normal form*.",
+    "sha": "d7263768daac",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Normal Form of a Line",
+    "sha": "5ba94f29746b",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A line $\\ell\\subseteq \\R^2$ is expressed in *normal form* if there exist vectors $\\vec n\\neq \\vec 0$ and $\\vec p$ so that $\\ell$ is the solution set to the equation",
+      "sha": "35eb50d0fba2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec n\\cdot (\\vec x-\\vec p)=0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The equation $\\vec n\\cdot (\\vec x-\\vec p)=0$ is called the \\emphnormal form of $\\ell$.",
+      "sha": "8291d854fecf",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Though the definition doesn't explicitly state it, if a line $\\ell\\in \\R^2$ is expressed in normal form as $\\vec n\\cdot (\\vec x-\\vec p)=0$, then $\\vec n$ \\emphis necessarily a normal vector for $\\ell$. (Think about what the solution set to $\\vec n\\cdot (\\vec x-\\vec p)=0$ would be if $\\vec n$ happened to be $\\vec 0$!)",
+    "sha": "d1d4e833cfc5",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "What about in $\\R^3$? Fix a non-zero vector $\\vec n\\in\\R^3$ and let $\\mathcal Q\\subseteq\\R^3$ be the set of vectors orthogonal to $\\vec n$. $\\mathcal Q$ is a plane through the origin, and again, we call $\\vec n$ a *normal vector* of the plane $\\mathcal Q$.",
+    "sha": "c013a7b9d1d7",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "2d25e924258d"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In a similar way to the line, $\\mathcal Q$ is the set of solutions to $\\vec n\\cdot \\vec x=0$. And, for any $\\vec p\\in\\R^3$, the translated plane $\\mathcal Q+\\Set{\\vec p}$ is the solution set to",
+    "sha": "029e5d231d14",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec n\\cdot (\\vec x-\\vec p)=0."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Thus, we see planes in $\\R^3$ have a normal form just like lines in $\\R^2$ do.",
+    "sha": "1f4825cbd2fa",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find vector form and normal form of the plane $\\mathcal P$ passing through the points $A=(1,0,0)$, $B=(0,1,0)$ and $C=(0,0,1)$.",
+      "sha": "fa1d20441a5f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To find vector form of $\\mathcal P$, we need a point on the plane and two direction vectors. We have three points on the plane, so we can obtain two direction vectors by subtracting these points in different ways. Let",
+      "sha": "ecff3ade7f43",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec d_1=\\overrightarrow{AB} = \\mat{-1\\\\1\\\\0}\\qquad\\vec d_2=\\overrightarrow{AC}=\n\t\t\\mat{-1\\\\0\\\\1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Using the point $A$, we may now express $\\mathcal P$ in vector form by",
+      "sha": "e1b3c7aeded5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{x\\\\y\\\\z} = t\\mat{-1\\\\1\\\\0}+s\\mat{-1\\\\0\\\\1}+\\mat{1\\\\0\\\\0}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To write $\\mathcal P$ in normal form, we need to find a normal vector for $\\mathcal P$. By inspection, we see that $\\vec n=(1,1,1)$ is a normal vector to $\\mathcal P$. (If we weren't so insightful, we could also solve the system $\\vec n\\cdot \\vec d_1=0$ and $\\vec n\\cdot\\vec d_2=0$ to find a normal vector.) Now, we may express $\\mathcal P$ in normal form as",
+      "sha": "e32df6f7a2a3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{1\\\\1\\\\1}\\cdot\\left(\\mat{x\\\\y\\\\z}-\\mat{1\\\\0\\\\0}\\right)=0."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In $\\R^2$, only lines have a normal form, and in $\\R^3$ only planes have a normal form. In general, we call objects in $\\R^n$ which have a normal form *hyperplanes*.",
+    "sha": "0c6bf50a7a30",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Hyperplane",
+    "sha": "50ac305642ca",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The set $X\\subseteq \\R^n$ is called a *hyperplane* if there exists $\\vec n\\neq \\vec 0$ and $\\vec p$ so that $X$ is the set of solutions to the equation",
+      "sha": "4258575f816d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec n\\cdot (\\vec x-\\vec p)=0."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Hyperplanes always have dimension one less than the space they're contained in. So, hyperplanes in $\\R^2$ are (one-dimensional) lines, hyperplanes in $\\R^3$ are regular (two-dimensional) planes, and hyperplanes in $\\R^4$ are (three-dimensional) volumes.",
+    "sha": "748a22266532",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Hyperplanes and Linear Equations",
+    "sha": "42af953092f3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Suppose $\\vec n,\\vec p\\in \\R^3$ and $\\vec n\\neq \\vec 0$. Then, solutions to",
+    "sha": "2e2ece27c428",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec n\\cdot(\\vec x-\\vec p)=0"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "define a plane $\\mathcal P$. But, $\\vec n\\cdot (\\vec x-\\vec p)=0$ if and only if",
+    "sha": "aff2cc284e55",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec n\\cdot\\vec x = \\vec n\\cdot \\vec p = \\alpha."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Since $\\vec n$ and $\\vec p$ are fixed, $\\alpha$ is a constant. Expanding using coordinates, we see",
+    "sha": "f8a11fb2b2ce",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec n\\cdot(\\vec x-\\vec p)=\\vec n\\cdot\\vec x-\\alpha=\n\t\tn_xx+n_yy+n_zz-\\alpha=0"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and so $\\mathcal P$ is the set of solutions to",
+    "sha": "64b0cb18dc14",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "n_xx+n_yy+n_zz=\\alpha."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Equation 〔引用〕 is sometimes called *scalar form* of a plane. For us, it will not be important to distinguish between scalar and normal form, but what is important is that we can use the row reduction algorithm to write the complete solution to 〔引用〕, and this complete solution will necessarily be written in vector form.",
+    "sha": "1b680fbbb29e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal Q\\subseteq \\R^3$ be the plane passing through $\\vec p$ and with normal vector $\\vec n$ where",
+      "sha": "ed2358151080",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec p=\\mat{1\\\\1\\\\0}\\qquad\\text{and}\\qquad\\vec n=\\mat{1\\\\1\\\\1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Write $\\mathcal Q$ in vector form.",
+      "sha": "f7825c1b2e23",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We know $\\mathcal Q$ is the set of solutions to $\\vec n\\cdot (\\vec x-\\vec p)=0$. In scalar form, this equation becomes",
+      "sha": "5efabb83264e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec n\\cdot (\\vec x-\\vec p)=\\vec n\\cdot \\vec x-\\vec n\\cdot \\vec p = x+y+z-2=0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Rearranging, we see $\\mathcal Q$ is the set of all solutions to",
+      "sha": "5fa180d5e76b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "x+y+z=2."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Using the row reduction algorithm to write the complete solution\\footnote In some sense, this is overkill because the equation corresponds to the augmented matrix $\\mat{1&1&1&\\!\\!\\!\\!|\\!\\!\\!\\!&2}$, which is already row reduced., we get",
+      "sha": "75450402340c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{x\\\\y\\\\z}=t\\mat{-1\\\\1\\\\0}+s\\mat{-1\\\\0\\\\1}+\\mat{2\\\\0\\\\0}."
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the following dot products.",
+      "sha": "aed0a225ef75",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{9\\\\4} \\cdot \\mat{10\\\\-3}$",
+         "sha": "3d9dd4ca42e5",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\36\\\\2} \\cdot \\mat{0\\\\0\\\\1}$",
+         "sha": "2532a8a5a3b2",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{7\\\\6\\\\-3} \\cdot \\left(\\mat{5\\\\11\\\\-1} + \\mat{-2\\\\-6\\\\-1}\\right)$",
+         "sha": "c06a7185af5b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\3\\\\0\\\\-5\\\\5} \\cdot \\mat{1\\\\2\\\\2\\\\1\\\\2}$",
+         "sha": "493a1176bae6",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left(\\frac{1}{2}\\mat{2\\\\5\\\\4}\\right) \\cdot \\mat{1\\\\0\\\\-1}$",
+         "sha": "e15280aea35c",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$78$",
+         "sha": "76d15d808807",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$2$",
+         "sha": "41c544263a26",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$57$",
+         "sha": "4b14ef560aca",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$12$",
+         "sha": "edf074831eb5",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$-1$",
+         "sha": "bae5aba07d37",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 1（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the length of the following vectors.",
+      "sha": "0abc7a276f3d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{2\\\\0}$",
+         "sha": "b22908e466dd",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\2\\\\3}$",
+         "sha": "86398dc5ab4f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$4\\mat{5\\\\-6\\\\15\\\\2}$",
+         "sha": "54d8f9ccf956",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$2$",
+         "sha": "41c544263a26",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\sqrt{14}$",
+         "sha": "85b4f6a1c096",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$4\\sqrt{290}$",
+         "sha": "d854bff387cc",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 2（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each pair of vectors listed below, determine if the angle between the vectors is greater than, less than, or equal to $90^\\circ$.",
+      "sha": "0e7a752b4584",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\0}$ and $\\mat{-3\\\\4}$",
+         "sha": "dc01b56ca625",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\0\\\\1}$ and $\\mat{-5\\\\4\\\\-3}$",
+         "sha": "cf01a7447a28",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\2\\\\3}$ and $\\mat{-1\\\\-1\\\\2}$",
+         "sha": "8beb2bf1c2a9",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Greater than $90^\\circ$",
+         "sha": "9b6eab68841c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Greater than $90^\\circ$",
+         "sha": "9b6eab68841c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Less than $90^\\circ$",
+         "sha": "f5418b1000d6",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 3（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each vector, find two *unit* vectors orthogonal to it.",
+      "sha": "a4bbb262f61b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{0\\\\1}$",
+         "sha": "05442c10ea0a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\2}$",
+         "sha": "60a01aeaa29b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\3\\\\5}$",
+         "sha": "f771b0eb5cda",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{-13\\\\-4\\\\5}$",
+         "sha": "f44dbd94129d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{0\\\\1\\\\1\\\\\\frac{1}{2}}$",
+         "sha": "ade79dce2458",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\0}$ and $\\mat{-1\\\\0}$",
+         "sha": "53d79cf2a51f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\dfrac{1}{\\sqrt{5}}\\mat{2\\\\-1}$ and $\\dfrac{1}{\\sqrt{5}}\\mat{-2\\\\1}$",
+         "sha": "3209cb8715c4",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\dfrac{1}{\\sqrt{10}}\\mat{3\\\\-1\\\\0}$ and $\\dfrac{1}{\\sqrt{26}}\\mat{5\\\\0\\\\-1}$",
+         "sha": "47d1e3a875a7",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\dfrac{1}{\\sqrt{6}}\\mat{1\\\\-2\\\\1}$ and $\\dfrac{1}{\\sqrt{41}}\\mat{0\\\\5\\\\4}$",
+         "sha": "735a9b2b520b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\0\\\\0\\\\0}$ and $\\dfrac{1}{\\sqrt{2}}\\mat{0\\\\1\\\\-1\\\\0}$",
+         "sha": "7d4ac395929f",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 4（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the distance between the following pairs of vectors.",
+      "sha": "29c63c16f9d2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{-1\\\\1}$ and $\\mat{-1\\\\-4}$",
+         "sha": "d605f8043297",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{2\\\\-6\\\\5}$ and $\\mat{-4\\\\7\\\\-3}$",
+         "sha": "05101841bbfb",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\1\\\\1}$ and $\\mat{-1\\\\-1\\\\-1}$",
+         "sha": "4a15f4823a07",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{0\\\\0\\\\0\\\\0\\\\0}$ and $\\mat{1\\\\1\\\\1\\\\1\\\\1}$",
+         "sha": "374e96730f5b",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$5$",
+         "sha": "79069377f913",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\sqrt{269}$",
+         "sha": "101f865f3eb2",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$2\\sqrt{3}$",
+         "sha": "e455d80f4657",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\sqrt{5}$",
+         "sha": "82e93b4bff53",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 5（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Which vector out of $\\mat{1\\\\0}$, $\\mat{0\\\\1}$, and $\\mat{4\\\\1}$ has a direction closest to that of $\\mat{3\\\\5}$?",
+         "sha": "8a20d156b452",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Which vector out of $\\mat{2\\\\3\\\\4}$, $\\mat{1\\\\-1\\\\-1}$, and $\\mat{-3\\\\0\\\\1}$ has a direction closest to that of $\\mat{1\\\\0\\\\1}$?",
+         "sha": "2603fb2164ae",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{0\\\\1}$",
+         "sha": "05442c10ea0a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{2\\\\3\\\\4}$",
+         "sha": "e7b73e1d34ed",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 6（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each plane specified, express the plane in both vector form and normal form.",
+      "sha": "98ec1f2e13cc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The plane $\\mathcal P\\subseteq\\R^3$ passing through the points $A=(2,0,0)$, $B=(0,3,0)$ and $C=(0,0,-1)$.",
+         "sha": "551ae50721cd",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The plane $\\mathcal Q\\subseteq\\R^3$ passing through the points $D=(1,1,1)$, $E=(1,-2,1)$ and $F=(0,12,0)$.",
+         "sha": "b8f0c41af4b6",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec x=t\\mat{2\\\\0\\\\1}+s\\mat{0\\\\3\\\\1}+\\mat{2\\\\0\\\\0}$ and $\\mat{3\\\\2\\\\-6}\\cdot\\left(\\vec x-\\mat{2\\\\0\\\\0}\\right)=0$",
+         "sha": "3078b8cf2d6f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec x=t\\mat{1\\\\1\\\\1}+s\\mat{0\\\\1\\\\0}$; $\\mat{1\\\\0\\\\-1}\\cdot\\vec x=0$",
+         "sha": "27e8acd7d118",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 7（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex8",
+   "stem": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\mathcal A\\subseteq \\R^3$ be the plane passing through $\\mat{0\\\\1\\\\1}$ and with normal vector $\\mat{-1\\\\-1\\\\-1}$. Write $\\mathcal A$ in vector form.",
+         "sha": "dfa9f60f5d29",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\mathcal B\\subseteq \\R^3$ be the plane passing through $\\mat{1\\\\2\\\\3}$ and with normal vector $\\mat{1\\\\-1\\\\0}$. Write $\\mathcal B$ in vector form.",
+         "sha": "fa24b09b9d34",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec x = t\\mat{-1\\\\1\\\\0}+s\\mat{0\\\\1\\\\-1} + \\mat{0\\\\1\\\\1}$",
+         "sha": "766b63e7459a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec x = t\\mat{1\\\\1\\\\0}+s\\mat{0\\\\0\\\\1}+\\mat{1\\\\2\\\\3}$",
+         "sha": "53dd5f9c5c57",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 8（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex9",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "In this problem we will prove some algebraic properties of the dot product.",
+      "sha": "3cc0f6d204fa",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Show by direct computation",
+         "sha": "8b0c69fc5a86",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\left(\\mat{1\\\\2} + \\mat{3\\\\4}\\right) \\cdot \\mat{5\\\\6} =\n\t\t\t\\mat{1\\\\2} \\cdot \\mat{5\\\\6} + \\mat{3\\\\4} \\cdot \\mat{5\\\\6}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "For $\\vec x,\\vec y,\\vec z\\in \\R^2$, justify whether or not it always holds that",
+         "sha": "fc36c6d5374d",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "(\\vec x + \\vec y) \\cdot \\vec z = \\vec x \\cdot \\vec z + \\vec y \\cdot \\vec z."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Does the same conclusion hold true when $\\vec x,\\vec y,\\vec z\\in \\R^n$?",
+         "sha": "390eb98b180f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Show by direct computation",
+         "sha": "8b0c69fc5a86",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\left(6\\mat{2\\\\3}\\right) \\cdot \\mat{4\\\\5} =\n\t\t\t6\\left(\\mat{2\\\\3} \\cdot \\mat{4\\\\5}\\right)"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "For $\\vec x,\\vec y\\in \\R^2$ and $k \\in \\R$, Justify whether or not it always holds that",
+         "sha": "ee5dfd390bad",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "(k\\vec x) \\cdot \\vec y = k(\\vec x \\cdot \\vec y)."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Does the same conclusion hold true when $\\vec x,\\vec y\\in \\R^n$?",
+         "sha": "18837cacb1bc",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The dot product is called *distributive*. Is this a good word to describe the dot product? Why?",
+         "sha": "fa3d64096581",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "We get the value $56$ on both sides.",
+         "sha": "00cc97209541",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Writing the vectors in terms of the coefficients, we get",
+         "sha": "99f302a197dd",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "(x_1+y_1)z_1+(x_2+y_2)z_2=x_1z_1+y_1z_1+x_2z_2+y_2z_2"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "which is always true.",
+         "sha": "763f79bef4fb",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "In the general case, the left side will be the sum of $(x_i+y_i)z_i$ and the right side will be the sum of $x_iz_i+y_iz_i$. Since these two terms are always equal, the two sums are equal. So yes, the same conclusion hold true in all dimensions.",
+         "sha": "d1320cc797c0",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "We get the value $138$ on both sides.",
+         "sha": "9a95a9762284",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Writing it in terms of the coefficients, we get",
+         "sha": "b9c7fcdee30d",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "(kx_1)y_1+(kx_2)y_2=k(x_1y_1+x_2y_2)"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "which is always true.",
+         "sha": "763f79bef4fb",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "In the general case, the left side will be the sum of $kx_iy_i$ and the right side will be the product of $k$ and the sum of $x_iy_i$. Distributing the product of $k$ onto the sum, we get that these two results are equal. So yes, the same conclusion hold true in all dimensions.",
+         "sha": "a1d39b306c7f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The dot product distributes onto sums, just like the typical multiplication of real numbers.",
+         "sha": "450093d47aa6",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 9（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex10",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec u, \\vec v \\in \\R^{n}$. In this problem, we will prove $\\Abs{\\vec u \\cdot \\vec v}\\leq \\Norm{\\vec u}\\Norm{\\vec v}$. This is called the *Cauchy-Schwarz inequality*.",
+      "sha": "bac4fa13a7b1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Assuming the geometric definition $\\vec u \\cdot \\vec v = \\Norm{\\vec u}\\Norm{\\vec v}\\cos \\theta$ where $\\theta$ is the angle between $\\vec u$ and $\\vec v$, prove the *Cauchy-Schwarz inequality*.",
+         "sha": "ca4a0b3d1394",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The *Cauchy-Schwartz inequality* can also be proved using *only* the algebraic definition of the dot product. Keep in mind the following facts which come from the algebraic definition: Let $\\vec x, \\vec y, \\vec z \\in \\R^{n}, k \\in \\R$. (i) $\\Norm{\\vec x}= \\sqrt {\\vec x \\cdot \\vec x}$; (ii) $(\\vec x + \\vec y) \\cdot \\vec z = \\vec x \\cdot \\vec z + \\vec y \\cdot \\vec z$; (iii) $(k\\vec x) \\cdot \\vec y = k(\\vec x \\cdot \\vec y)$; (iv) $\\vec x \\cdot \\vec y = \\vec y \\cdot \\vec x$.",
+         "sha": "61e9db03824d",
+         "zh": ""
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Explain why the result is immediate if one (or both) of $\\vec u, \\vec v$ is the zero vector.",
+            "sha": "24379ef1025d",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Assume $\\vec u, \\vec v$ are non-zero vectors. Consider the function $f: \\R \\to \\R$ where $f(t) = \\Norm{t\\vec u - \\vec v}^{2}$. Convince yourself that $f(t) \\geq 0$ for all $t \\in \\R$.",
+            "sha": "10886a871f52",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Simplify $f(t)$ into a quadratic formula so that $f(t) = at^{2}- bt + c$ by determining its coefficients $a, b, c$ in terms of $\\vec u, \\vec v$.",
+            "sha": "aaf5c58bd493",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Prove $\\Abs{\\vec u \\cdot \\vec v}\\leq \\Norm{\\vec u}\\Norm{\\vec v}$, the *Cauchy-Schwarz inequality*. Hint: Consider $f(\\frac{b}{2a})$.",
+            "sha": "0e3d5254bdc7",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Prove $\\Abs{\\vec u \\cdot \\vec v}= \\Norm{\\vec u}\\Norm{\\vec v}$ if the vectors $\\vec u, \\vec v$ are scalar multiples of each other.",
+            "sha": "7cd0464d1dd9",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 10（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex11",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec u, \\vec v \\in \\R^{n}$. In this problem, we will prove $\\Norm{\\vec u + \\vec v}\\leq \\Norm{\\vec u}+ \\Norm{\\vec v}$. This is called the *Triangle Inequality*.",
+      "sha": "afa391f9e6be",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Pick your favorite vectors $\\vec u, \\vec v$ and draw a picture of $\\vec u, \\vec v$, and $\\vec u + \\vec v$. Root your vectors so that they form the edges of a triangle. Can you explain why the *Triangle Inequality* is true?",
+         "sha": "6fb3a4a79cc2",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Express $\\Norm{\\vec u + \\vec v}$ in terms of dot products and square roots.",
+         "sha": "571bbb54f0bb",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Prove the *Triangle Inequality*.",
+         "sha": "080855205ba9",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 11（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex12",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal{A}= \\{\\vec v_{1},\\dots, \\vec v_{k}\\} \\subset \\R^{n}$. $A$ is a set of mutually orthogonal vectors if for all $i \\neq j$, we have $\\vec v_{i}\\cdot \\vec v_{j}= 0$.",
+      "sha": "cf05854ca0e1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Suppose $\\mathcal{A}$ is a set of mutually orthogonal vectors. Is $\\mathcal{A}$ a linearly independent set? Why or Why not?",
+         "sha": "9660db4787b2",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Suppose $\\mathcal{A}$ is a set of mutually orthogonal and non-zero vectors. Is $\\mathcal{A}$ a linearly independent set? Why or Why not?",
+         "sha": "d5141bddba0f",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{A}$ is linearly dependent if $\\vec{0}\\in\\mathcal{A}$, and is linearly independent otherwise.",
+         "sha": "9ce128be117c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Suppose",
+         "sha": "3c2db9ddb042",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\alpha_1\\vec{v}_1+\\cdots+\\alpha_n\\vec{v}_n=\\vec{0}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "for some $\\alpha_{1}, \\dots, \\alpha_{n}\\in\\R$.",
+         "sha": "e12f7b7d01b4",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "For any $i=1, \\dots, n$, take the dot product of $\\vec{v}_i$ with both sides of this equation, we have $\\alpha_i\\Norm{\\vec{v_i}}^2=0$. Since $\\vec{v}_i$ is a non-zero vector, this implies that $\\alpha_i=0$.",
+         "sha": "98a0f244befc",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Then, $\\alpha_1=\\cdots=\\alpha_n=0$ and therefore $\\mathcal{A}$ is linearly independent.",
+         "sha": "7cfe7a43d84f",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 12（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "点积与法式"
+}

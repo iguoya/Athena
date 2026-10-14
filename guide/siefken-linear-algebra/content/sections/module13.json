@@ -1,0 +1,1463 @@
+{
+ "id": "module13",
+ "title_en": "Change of Basis II",
+ "blocks": [
+  {
+   "k": "outcome",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How to create *change-of-basis* matrices.",
+         "sha": "daf60b5e949f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How to write a linear transformation in multiple bases.",
+         "sha": "6cccbe396f94",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Given a basis $\\mathcal A$ for $\\R^n$, every vector $\\vec x\\in\\R^n$ uniquely corresponds to the list of numbers $[\\vec x]_{\\mathcal A}$ (its coordinates with respect to $\\mathcal A$), and the operation of writing a vector in a basis is *invertible*.",
+    "sha": "71f0cbdb47af",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If we have two bases, $\\mathcal A$ and $\\mathcal B$, for $\\R^n$, we have two equally valid ways of representing a vector in coordinates.",
+    "sha": "6e680f5133de",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "a7d76545e375"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Not only that, but there must be a function that converts between $[\\vec x]_{\\mathcal A}$ and $[\\vec x]_{\\mathcal B}$. The function works as follows: input the list of numbers $[\\vec x]_{\\mathcal A}$, use those numbers as coefficients of the $\\mathcal A$ basis vectors to get the true vector $\\vec x$, and then find the coordinates of that vector with respect to the $\\mathcal B$ basis.",
+    "sha": "ad6989d965de",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal A=\\Set{\\vec a_1,\\vec a_2}$ where $\\vec a_1=\\mat{1\\\\1}_{\\mathcal E}$ and $\\vec a_2=\\mat{1\\\\-1}_{\\mathcal E}$ and let $\\mathcal B=\\Set{\\vec b_1,\\vec b_2}$ where $\\vec b_1=\\mat{2\\\\1}_{\\mathcal E}$ and $\\vec b_2=\\mat{5\\\\3}_{\\mathcal E}$ be bases for $\\R^2$. Given that $[\\vec x]_{\\mathcal A}=\\mat{2\\\\-3}$, find $[\\vec x]_{\\mathcal B}$.",
+      "sha": "bef47862f3ff",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By definition,",
+      "sha": "5c48b19627be",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec x=2\\vec a_1-3\\vec a_2=2(\\xhat+\\yhat)-3(\\xhat-\\yhat)=-\\xhat+5\\yhat."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We need to rewrite $\\vec x$ as a linear combination of $\\vec b_1=2\\xhat+\\yhat$ and $\\vec b_2=5\\xhat+3\\yhat$. That is, we need to solve the equation",
+      "sha": "d3d5aa3fcbf4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec x=-\\xhat+5\\yhat = \\alpha(2\\xhat+\\yhat)+\\beta(5\\xhat+3\\yhat)=(2\\alpha+5\\beta)\\xhat+(\\alpha+3\\beta)\\yhat."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Equating the coefficients of $\\xhat$ and $\\yhat$, we get",
+      "sha": "e76d60512f50",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}2\\alpha+5\\beta &= -1 \\\\ \\alpha+3\\beta &= 5\\end{aligned},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which has a unique solution $(\\alpha,\\beta)=(-28,11)$. We conclude",
+      "sha": "2dc331aceeb6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\vec x]_{\\mathcal B} =\\mat{-28\\\\11}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For a basis $\\mathcal A$, the invertible function that takes a vector $\\vec x$ and generates the coordinates $[\\vec x]_{\\mathcal A}$ is a linear function. Therefore, for bases $\\mathcal A$ and $\\mathcal B$, the function that converts $[\\vec x]_{\\mathcal A}$ to $[\\vec x]_{\\mathcal B}$ must have a matrix. This matrix is called the *change of basis* matrix.",
+    "sha": "d2f8944bc434",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Change of Basis Matrix",
+    "sha": "e7e83e0dd889",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal A$ and $\\mathcal B$ be bases for $\\R^n$. The matrix $M$ is called a *change of basis* matrix (which converts from $\\mathcal A$ to $\\mathcal B$) if for all $\\vec x\\in \\R^n$",
+      "sha": "797438ab1b64",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "M[\\vec x]_{\\mathcal A}=[\\vec x]_{\\mathcal B}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Notationally, $\\BasisChange{\\mathcal A}{\\mathcal B}$ stands for the change of basis matrix converting from $\\mathcal A$ to $\\mathcal B$, and we may write $M=\\BasisChange{\\mathcal A}{\\mathcal B}$.",
+      "sha": "1a3a12ee1e02",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal A=\\Set{\\vec a_1,\\vec a_2}$ where $\\vec a_1=\\mat{1\\\\1}_{\\mathcal E}$ and $\\vec a_2=\\mat{1\\\\-1}_{\\mathcal E}$ and let $\\mathcal B=\\Set{\\vec b_1,\\vec b_2}$ where $\\vec b_1=\\mat{2\\\\1}_{\\mathcal E}$ and $\\vec b_2=\\mat{5\\\\3}_{\\mathcal E}$ be bases for $\\R^2$. Find the change of basis matrix $\\BasisChange{\\mathcal A}{\\mathcal B}$.",
+      "sha": "8a6956124adf",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We know $\\BasisChange{\\mathcal A}{\\mathcal B}$ will be a $2\\times 2$ matrix and that",
+      "sha": "18e458ca19fa",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\BasisChange{\\mathcal A}{\\mathcal B}[\\vec a_1]_{\\mathcal A}=[\\vec a_1]_{\\mathcal B}\\qquad\n\t\t\\text{and}\\qquad\n\t\t\\BasisChange{\\mathcal A}{\\mathcal B}[\\vec a_2]_{\\mathcal A}=[\\vec a_2]_{\\mathcal B}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, we need to compute $[\\vec a_1]_{\\mathcal B}$ and $[\\vec a_2]_{\\mathcal B}$. Repeating the procedure from the previous example, we find",
+      "sha": "429a3307ccea",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\vec a_1]_{\\mathcal B}=\\mat{-2\\\\1}\\qquad \\text{and}\\qquad [\\vec a_2]_{\\mathcal B}=\\mat{8\\\\-3},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so",
+      "sha": "9af790b3a93d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\BasisChange{\\mathcal A}{\\mathcal B}=\\mat{-2&8\\\\1&-3}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can now enhance our diagram from earlier.",
+    "sha": "be09fe6b129a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "d5e4575fd329"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The notation $\\BasisChange{\\mathcal A}{\\mathcal B}$ for the matrix that changes from the $\\mathcal A$ basis to the $\\mathcal B$ basis is suggestive. Suppose we have another basis $\\mathcal C$. We can obtain $\\BasisChange{\\mathcal A}{\\mathcal C}$ by multiplying $\\BasisChange{\\mathcal A}{\\mathcal B}$ on the left by $\\BasisChange{\\mathcal B}{\\mathcal C}$. That is,",
+    "sha": "9a9d6d80c07a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\BasisChange{\\mathcal A}{\\mathcal C}=\\BasisChange{\\mathcal B}{\\mathcal C}\\BasisChange{\\mathcal A}{\\mathcal B}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The backwards arrow “$\\leftarrow$” in the change-of-basis matrix notation comes because when we multiply a vector and a matrix, the matrix is always to the *left* of the vector. So,",
+    "sha": "7e660b777b04",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "[\\vec x]_{\\mathcal C}=\n\t\\BasisChange{\\mathcal A}{\\mathcal C}[\\vec x]_{\\mathcal A}\n\t=\\BasisChange{\\mathcal B}{\\mathcal C}\\BasisChange{\\mathcal A}{\\mathcal B}[\\vec x]_{\\mathcal A}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "As such, the notation for the change of basis matrix chains, allowing you to figure out what's going on without too much trouble.",
+    "sha": "71956b06d019",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Change of Basis Matrix in Detail",
+    "sha": "49b227f86f6f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\mathcal A$ and $\\mathcal B$ be bases for $\\R^n$ and $M=\\BasisChange{\\mathcal A}{\\mathcal B}$ be the matrix that changes from the $\\mathcal A$ to the $\\mathcal B$ basis. Since we can change vectors back from $\\mathcal B$ to $\\mathcal A$, we know $M$ is invertible and",
+    "sha": "400065523cad",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "M^{-1}=\\BasisChange{\\mathcal B}{\\mathcal A}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Just playing with notation, we see",
+    "sha": "45da8e32ffea",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "M^{-1}M=\\BasisChange{\\mathcal B}{\\mathcal A}\\BasisChange{\\mathcal A}{\\mathcal B}=\\BasisChange{\\mathcal A}{\\mathcal A} = I\\qquad\n\tMM^{-1}=\\BasisChange{\\mathcal A}{\\mathcal B}\\BasisChange{\\mathcal B}{\\mathcal A}=\\BasisChange{\\mathcal B}{\\mathcal B} = I,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "which makes sense. The matrices $\\BasisChange{\\mathcal A}{\\mathcal A}$ and $\\BasisChange{\\mathcal B}{\\mathcal B}$ take vectors and rewrite them in the same basis, which is to say, they do nothing to the vectors.",
+    "sha": "ad24ecae01ec",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The argument above shows that every change of basis matrix is invertible. The converse is also true.",
+    "sha": "e3b3c982a4f5",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "An $n\\times n$ matrix is invertible if and only if it is a change of basis matrix.",
+      "sha": "a0671fcf19c4",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $M=\\BasisChange{\\mathcal A}{\\mathcal B}$ is a change-of-basis matrix. Then",
+      "sha": "24288f9b1bac",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "M^{-1}=\\BasisChange{\\mathcal B}{\\mathcal A},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so $M$ is invertible.",
+      "sha": "e6921a36541b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Alternatively, suppose $M=[C_1|C_2|\\cdots|C_n]$ is an invertible $n\\times n$ matrix with columns $C_1$, …, $C_n$. Let $\\vec c_i=[C_i]_{\\mathcal E}$. That is, $\\vec c_i$ is the vector which comes from interpreting $C_i$ as coordinates with respect to the standard basis.",
+      "sha": "cbe6c9b7d65f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $M$ is invertible, $\\Rref(M)=I$, and so $\\Set{\\vec c_1,\\ldots,\\vec c_n}$ is a linearly independent set of $n$ vectors. Therefore $\\mathcal C=\\Set{\\vec c_1,\\ldots,\\vec c_n}$ is a basis for $\\R^n$. Now, observe",
+      "sha": "ab39911da869",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "M[\\vec c_i]_{\\mathcal C} = C_i=[\\vec c_i]_{\\mathcal E}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for $i=1,\\ldots, n$, and so $M=\\BasisChange{\\mathcal C}{\\mathcal E}$ is a change-of-basis matrix.",
+      "sha": "694a192a8f3d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The proof of the above theorem highlights something interesting. Let $\\mathcal A=\\Set{\\vec a_1,\\ldots, \\vec a_n}$ be a basis for $\\R^n$. It is always the case that",
+    "sha": "6edc59bf9bd8",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "[\\vec a_i]_{\\mathcal A}=\\matc{\\vdots\\\\0\\\\1\\\\0\\\\0\\\\\\vdots}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "has a $1$ in the $i$th position and zeros elsewhere. Now, let $\\mathcal B=\\Set{\\vec b_1,\\ldots,\\vec b_n}$ be another basis for $\\R^n$ and define the matrix $M=\\mat{[\\vec a_1]_{\\mathcal B}&[\\vec a_2]_{\\mathcal B}&\\cdots&[\\vec a_n]_{\\mathcal B}}$ to be the matrix with columns $[\\vec a_1]_{\\mathcal B},\\ldots, [\\vec a_n]_{\\mathcal B}$. Since multiplying a matrix by $[\\vec a_i]_{\\mathcal A}$ will pick out the $i$th column, we have that",
+    "sha": "4fa2f75ded8b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "M[\\vec a_i]_{\\mathcal A} = [\\vec a_i]_{\\mathcal B}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In other words,",
+    "sha": "e583468a1518",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "M=\\BasisChange{\\mathcal A}{\\mathcal B}."
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Transformations and Bases",
+    "sha": "348a5f2bbaf3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A linear transformation $\\mathcal T:\\R^n\\to\\R^n$ always has a matrix associated with it. This matrix is defined as the matrix $M$ so that",
+    "sha": "d4d3db5ac1ea",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "[\\mathcal T\\vec x]_{\\mathcal E}=M[\\vec x]_{\\mathcal E}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "But, what if we swapped out $\\mathcal E$ for a different basis?",
+    "sha": "3a76e4c3b41d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Linear Transformation in a Basis",
+    "sha": "89944e43b54c",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal T:\\R^n\\to\\R^n$ be a linear transformation and let $\\mathcal B$ be a basis for $\\R^n$. The \\emphmatrix for $\\mathcal T$ with respect to $\\mathcal B$, notated $[\\mathcal T]_{\\mathcal B}$, is the $n\\times n$ matrix satisfying",
+      "sha": "97926f6823da",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\mathcal T\\vec x]_{\\mathcal B} = [\\mathcal T]_{\\mathcal B}[\\vec x]_{\\mathcal B}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In this case, we say the matrix $[\\mathcal T]_{\\mathcal B}$ is the representation of $\\mathcal T$ in the $\\mathcal B$ basis.",
+      "sha": "d510e9e01715",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Just like there are many ways to write down coordinates for a vector—one per choice of basis—there are many ways to write down a matrix for a linear transformation. Up to this point, when we've said “$M$ is a matrix for $\\mathcal T$”, what we meant is “$M=[\\mathcal T]_{\\mathcal E}$”. And, like with vectors, if we talk about a matrix for a linear transformation without specifying the basis, we mean the matrix for the transformation with respect to the standard basis.",
+    "sha": "7384317f74e0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal B=\\Set{\\vec b_1,\\vec b_2}$ where $\\vec b_1=\\mat{2\\\\-3}_{\\mathcal E}$ and $\\vec b_2=\\mat{5\\\\-7}_{\\mathcal E}$ be a basis for $\\R^2$ and let $\\mathcal T:\\R^2\\to\\R^2$ be the transformation that stretches in the $\\vec e_1$ direction by a factor of $2$. Find $[\\mathcal T]_{\\mathcal E}$ and $[\\mathcal T]_{\\mathcal B}$.",
+      "sha": "997fbe8b70d3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\mathcal T\\xhat=2\\xhat$ and $\\mathcal T\\yhat=\\yhat$, We know",
+      "sha": "6d693c12835c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\mathcal T]_{\\mathcal E}\\mat{1\\\\0}=\\mat{2\\\\0}\\qquad\\text{and}\\qquad\n\t\t[\\mathcal T]_{\\mathcal E}\\mat{0\\\\1}=\\mat{0\\\\1}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so",
+      "sha": "9af790b3a93d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\mathcal T]_{\\mathcal E}=\\mat{2&0\\\\0&1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We can find $[\\mathcal T]_{\\mathcal B}$ in two ways: directly from the definition, or by using change of basis matrices. First, we will work directly from the definition.",
+      "sha": "1b11808e564f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To find $[\\mathcal T]_{\\mathcal B}$, we need to figure out what $\\mathcal T$ does to $\\vec b_1$ and $\\vec b_2$. However, since $\\mathcal T$ is described in term of $\\xhat$ and $\\yhat$, it might be easier to express $\\xhat$ and $\\yhat$ in the $\\mathcal B$ basis, and then analyze $\\mathcal T$.",
+      "sha": "cd4c26e235d8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Computing, \\[",
+      "sha": "948e16a321db",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}[\\xhat]_{\\mathcal B} &= \\BasisChange{\\mathcal E}{\\mathcal B}\\mat{1\\\\0} = \\mat{2&5\\\\-3&-7}^{-1}\\mat{1\\\\0}=\\mat{-7\\\\3}\\\\[0pt]\n\t\t\t[\\yhat]_{\\mathcal B} &= \\BasisChange{\\mathcal E}{\\mathcal B}\\mat{0\\\\1} = \\mat{2&5\\\\-3&-7}^{-1}\\mat{0\\\\1}=\\mat{-5\\\\2}\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": ". \\] Now we know \\[",
+      "sha": "3840837bed1b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}[\\mathcal T]_{\\mathcal B}[\\xhat]_{\\mathcal B}&=[\\mathcal T\\xhat]_{\\mathcal B}=[2\\xhat]_{\\mathcal B}=\\mat{-14\\\\6}\\\\[0pt]\n\t\t\t[\\mathcal T]_{\\mathcal B}[\\yhat]_{\\mathcal B}&=[\\mathcal T\\yhat]_{\\mathcal B}=[\\yhat]_{\\mathcal B}=\\mat{-5\\\\2}\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": ". \\] Since $[\\mathcal T]_{\\mathcal B}$ is a $2\\times 2$ matrix, we can use what we know to solve for its entries, finding",
+      "sha": "4ebe903efeb2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\mathcal T]_{\\mathcal B}=\\mat{-13&-35\\\\6&16}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Let's try finding $[\\mathcal T]_{\\mathcal B}$ using change of basis matrices. We already know $[\\mathcal T]_{\\mathcal E}$, and so",
+      "sha": "a29b2c37b36c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\mathcal T]_{\\mathcal B} = \\BasisChange{\\mathcal E}{\\mathcal B}[\\mathcal T]_{\\mathcal E}\\BasisChange{\\mathcal B}{\\mathcal E}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Further, we know",
+      "sha": "7858692db31a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\BasisChange{\\mathcal B}{\\mathcal E}=\\mat{2&5\\\\-3&-7}\\qquad \\text{and}\\qquad\n\t\t\\BasisChange{\\mathcal E}{\\mathcal B}=\\mat{2&5\\\\-3&-7}^{-1}=\\mat{-7&-5\\\\3&2}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Putting it all together,",
+      "sha": "78c8083627c0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\mathcal T]_{\\mathcal B}=\\mat{-7&-5\\\\3&2}\\mat{2&0\\\\0&1}\\mat{2&5\\\\-3&-7} = \\mat{-13&-35\\\\6&16}."
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Similar Matrices",
+    "sha": "d71fe7b0dd54",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Just like some bases are better than others to represent particular vectors, some bases are better than others to represent a particular linear transformation.",
+    "sha": "f846d72b9358",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal B=\\Set{\\vec b_1,\\vec b_2}$ where $\\vec b_1=\\mat{2\\\\-3}_{\\mathcal E}$ and $\\vec b_2=\\mat{5\\\\-7}_{\\mathcal E}$ be a basis for $\\R^2$ and let $\\mathcal S:\\R^2\\to\\R^2$ be the transformation that stretches in the $\\vec b_1=2\\vec e_1-3\\vec e_2$ direction by a factor of $2$ and reflects vectors in the $\\vec b_2=5\\xhat-7\\yhat$ direction. Find $[\\mathcal S]_{\\mathcal E}$ and $[\\mathcal S]_{\\mathcal B}$.",
+      "sha": "dccd76601a87",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In this example, $\\mathcal S$ is described in terms of the $\\mathcal B$ basis. We know",
+      "sha": "e52cb98f29af",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mathcal S\\vec b_1=2\\vec b_1\\qquad\\text{and}\\qquad\\mathcal S\\vec b_2=-\\vec b_2."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore,",
+      "sha": "236a32def63c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\mathcal S]_{\\mathcal B}=\\mat{2&0\\\\0&-1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To find $[\\mathcal S]_{\\mathcal E}$, we will use change of basis matrices. Notice that",
+      "sha": "a5b167af32d2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\mathcal S]_{\\mathcal E} = \\BasisChange{\\mathcal B}{\\mathcal E}[\\mathcal S]_{\\mathcal B}\\BasisChange{\\mathcal E}{\\mathcal B},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and that",
+      "sha": "978d1db63d64",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\BasisChange{\\mathcal B}{\\mathcal E}=\\mat{2&5\\\\-3&-7}\\qquad \\text{and}\\qquad\n\t\t\\BasisChange{\\mathcal E}{\\mathcal B}=\\mat{2&5\\\\-3&-7}^{-1}=\\mat{-7&-5\\\\3&2}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore",
+      "sha": "f6f36ec125f2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\mathcal S]_{\\mathcal E} = \\mat{2&5\\\\-3&-7}\\mat{2&0\\\\0&-1}\\mat{-7&-5\\\\3&2}=\\mat{-43&-30\\\\63&44}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In the example above, $[\\mathcal S]_{\\mathcal B}$ is a much nicer matrix than $[\\mathcal S]_{\\mathcal E}$. However, the two matrices relate to each other. After all,",
+    "sha": "cc6030b62a4e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "[\\mathcal S]_{\\mathcal B}=\\BasisChange{\\mathcal E}{\\mathcal B}[\\mathcal S]_{\\mathcal E}\\BasisChange{\\mathcal B}{\\mathcal E}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In this case, we call these matrices *similar* 〔注： Another commonly used term is *conjugate*.〕.",
+    "sha": "99a5d4e38d48",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Similar Matrices",
+    "sha": "d71fe7b0dd54",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrices $A$ and $B$ are called *similar matrices*, denoted $A\\sim B$, if $A$ and $B$ represent the same linear transformation but in possibly different bases. Equivalently, $A\\sim B$ if there is an invertible matrix $X$ so that",
+      "sha": "538ed0db668f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=XBX^{-1}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The $X$ in the definition of similar matrices is always a change-of-basis matrix.",
+    "sha": "1f21a7d70d6e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When studying a linear transformation, you can pick any basis to represent it in and study the resulting matrix. Different choices of basis will give you different perspectives on the linear transformation. In what's to follow, we will work to find the “best” basis in which to study a given linear transformation 〔注： If you cannot wait, the “best” basis will turn out to be the *eigen basis* (provided it exists).〕.",
+    "sha": "3242dcbfa8a8",
+    "zh": ""
+   }
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let",
+      "sha": "ef5fe1edf379",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mathcal A=\\Set{\\mat{2\\\\1}_{\\mathcal E},\n\t\t\t\\mat{1\\\\-2}_{\\mathcal E}}\\quad\\text{and}\\quad\n\t\t\t\\mathcal B=\\Set{\\mat{3\\\\-1}_{\\mathcal E},\n\t\t\t\\mat{-2\\\\3}_{\\mathcal E}}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "be bases for $\\R^2$. Define $\\vec x\\in \\R^2$ by $[\\vec x]_{\\mathcal A}=\\mat{1\\\\-1}$.",
+      "sha": "2c17d35aff8e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find $[\\vec x]_{\\mathcal E}$ and $[\\vec x]_{\\mathcal B}$.",
+         "sha": "da5d85de61a4",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the change of basis matrices $\\BasisChange{\\mathcal A}{\\mathcal E}$, $\\BasisChange{\\mathcal E}{\\mathcal A}$, $\\BasisChange{\\mathcal A}{\\mathcal B}$, and $\\BasisChange{\\mathcal B}{\\mathcal A}$.",
+         "sha": "c441022ec9b8",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Note that by definition",
+         "sha": "b5708e71c6f7",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "A=\\Set{2\\vec e_1+\\vec e_2, \\vec e_1-2\\vec e_2}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Since $[\\vec x]_{\\mathcal A}=\\mat{1\\\\-1}$, it follows that",
+         "sha": "844be17a95c7",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vec x=(2\\vec e_1+\\vec e_2)-(\\vec e_1-2\\vec e_2)=\\vec e_1+3\\vec e_2."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "It thus follows that $[\\vec x]_{\\mathcal E}=\\mat{1\\\\3}$.",
+         "sha": "457ed16aa096",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "To find $[\\vec x]_{\\mathcal B}$, we must first express the two elements of $\\mathcal A$ as linear combinations of the two elements of $\\mathcal B$. This involves solving two systems of linear equations:",
+         "sha": "0bbb7c466133",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "2\\vec e_1+\\vec e_2=x_1(3\\vec e_1-\\vec e_2)+x_2(-2\\vec e_1+3\\vec e_2)"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "and",
+         "sha": "cffa50a32cb1",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vec e_1-2\\vec e_2=y_1(3\\vec e_1-\\vec e_2)+y_2(-2\\vec e_1+3\\vec e_2)."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Written as column vectors, these are",
+         "sha": "f257e62c2345",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{2\\\\1}=x_1\\mat{3\\\\-1}+x_2\\mat{-2\\\\3}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "and",
+         "sha": "cffa50a32cb1",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{1\\\\-2}=y_1\\mat{3\\\\-1}+y_2\\mat{-2\\\\3}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Solving the systems and applying the definition, we obtain",
+         "sha": "1576dff0bb73",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "[\\vec a_1]_{\\mathcal B}=\\mat{x_1\\\\x_2}=\\frac{1}{7}\\mat{8\\\\5},\\quad\n\t\t\t\t\t[\\vec a_2]_{\\mathcal B}=\\mat{y_1\\\\y_2}=\\frac{1}{7}\\mat{-1\\\\-5}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Now we have",
+         "sha": "2068fdc8561d",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "[\\vec x]_{\\mathcal B}=[\\vec a_1]_{\\mathcal B}-[\\vec a_2]_{\\mathcal B}=\\frac{1}{7}\\mat{8\\\\5}-\\frac{1}{7}\\mat{-1\\\\-5}=\\frac{1}{7}\\mat{9\\\\10}."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "By definition, $\\BasisChange{\\mathcal A}{\\mathcal E}$ is the matrix $M$ satisfying",
+         "sha": "eddc809b0109",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "M[\\vec x]_{\\mathcal A}=[\\vec x]_{\\mathcal E}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "for all vectors $\\vec x$. In particular, it must satisfy",
+         "sha": "2dcfed014a42",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "M[\\vec a_1]_{\\mathcal A}=[\\vec a_1]_{\\mathcal E},\\quad\n\t\t\t\t\tM[\\vec a_2]_{\\mathcal A}=[\\vec a_2]_{\\mathcal E}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "It thus follows that $M$ satisfies",
+         "sha": "2181f7f241bc",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "M\\mat{1\\\\0}=\\mat{2\\\\1},\\quad\n\t\t\t\t\tM\\mat{0\\\\1}=\\mat{1\\\\-2}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Solving for $M$ gives",
+         "sha": "19918a14f93b",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "M=\n\t\t\t\t\t\\begin{bmatrix}\n\t\t\t\t\t\t2 & 1 \\\\ 1 & -2\n\t\t\t\t\t\\end{bmatrix}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "To find $\\BasisChange{\\mathcal E}{\\mathcal A}$, we simply need to compute $M^{-1}$. Following the explicit inverse formula for $2\\times2$ matrices, we see that",
+         "sha": "debc0e15b29c",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\BasisChange{\\mathcal E}{\\mathcal A}=M^{-1}=\\frac{1}{5}\n\t\t\t\t\t\\begin{bmatrix}\n\t\t\t\t\t\t2 & 1 \\\\ 1 & -2\n\t\t\t\t\t\\end{bmatrix}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "To compute $\\BasisChange{\\mathcal A}{\\mathcal B}$, we note that",
+         "sha": "596707eb6e6b",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\BasisChange{\\mathcal A}{\\mathcal B}=\\BasisChange{\\mathcal E}{\\mathcal B}\\BasisChange{\\mathcal A}{\\mathcal E}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "We compute $\\BasisChange{\\mathcal E}{\\mathcal B}$ readily as",
+         "sha": "1f10fb4b3de0",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\BasisChange{\\mathcal B}{\\mathcal E}=\n\t\t\t\t\t\\begin{bmatrix}\n\t\t\t\t\t\t3 & -2 \\\\ -1 & 3\n\t\t\t\t\t\\end{bmatrix}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Thus,",
+         "sha": "e38f4f305df3",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\BasisChange{\\mathcal E}{\\mathcal B}=\\BasisChange{\\mathcal B}{\\mathcal E}^{-1}=\\frac{1}{7}\n\t\t\t\t\t\\begin{bmatrix}\n\t\t\t\t\t\t3 & 2 \\\\ 1 & 3\n\t\t\t\t\t\\end{bmatrix}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Therefore,",
+         "sha": "236a32def63c",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\BasisChange{\\mathcal A}{\\mathcal B}=\\frac{1}{7}\n\t\t\t\t\t\\begin{bmatrix}\n\t\t\t\t\t\t3 & 2 \\\\ 1 & 3\n\t\t\t\t\t\\end{bmatrix}\n\t\t\t\t\t\\begin{bmatrix}\n\t\t\t\t\t\t2 & 1 \\\\ 1 & -2\n\t\t\t\t\t\\end{bmatrix}=\n\t\t\t\t\t\\frac{1}{7}\n\t\t\t\t\t\\begin{bmatrix}\n\t\t\t\t\t\t8 & -1 \\\\ 5 & -5\n\t\t\t\t\t\\end{bmatrix}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Taking inverse gives $\\BasisChange{\\mathcal B}{\\mathcal A}$.",
+         "sha": "90d5dcf6f0c9",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Change of Basis II · 练习题 1（上游 book/modules/module13-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module13-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let",
+      "sha": "ef5fe1edf379",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mathcal A=\\Set{\n\t\t\t\t\\mat{2\\\\1\\\\0}_{\\mathcal E},\n\t\t\t\t\\mat{1\\\\-2\\\\0}_{\\mathcal E},\n\t\t\t\t\\mat{0\\\\0\\\\1}_{\\mathcal E}\n\t\t\t}\\quad\\text{and}\\quad\n\t\t\t\\mathcal B=\\Set{\\vec b_1,\\vec b_2,\\vec b_3\n\t\t\t}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "be bases for $\\R^3$ where",
+      "sha": "552b95979c63",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec b_1=\\mat{1\\\\0\\\\0}_{\\mathcal A}\n\t\t\t\\qquad\n\t\t\t\\vec b_2=\\mat{1\\\\1\\\\0}_{\\mathcal A}\n\t\t\t\\qquad\n\t\t\t\\vec b_3=\\mat{1\\\\1\\\\1}_{\\mathcal A}."
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the representation of $\\vec b_1$, $\\vec b_2$, and $\\vec b_3$ in the standard basis.",
+         "sha": "b2c5f89b6a95",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the change of basis matrices $\\BasisChange{\\mathcal E}{\\mathcal A}$ and $\\BasisChange{\\mathcal B}{\\mathcal E}$.",
+         "sha": "9997a9bce9f6",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Use $\\BasisChange{\\mathcal E}{\\mathcal A}$ and $\\BasisChange{\\mathcal B}{\\mathcal E}$ to compute $\\BasisChange{\\mathcal B}{\\mathcal A}$.",
+         "sha": "420c459d9789",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "By definition, we have \\[",
+         "sha": "d54a6f61a8da",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}[\\vec b_1]_{\\mathcal E}&=[\\vec a_1]_{\\mathcal E}=[2\\vec e_1+\\vec e_2]_{\\mathcal E} \\\\&= \\mat{2\\\\1\\\\0},\\\\\n\t\t\t\t\t\t[\\vec b_2]_{\\mathcal E}&=[\\vec a_1]_{\\mathcal E}+[\\vec a_2]_{\\mathcal E}\\\\\n\t\t\t\t\t\t&=[(2\\vec e_1+\\vec e_2)+(\\vec e_1-2\\vec e_2)]_{\\mathcal E}\\\\\n\t\t\t\t\t\t&=[3\\vec e_1-\\vec e_2]_{\\mathcal E}\n\t\t\t\t\t\t\\\\&=\\mat{3\\\\-1\\\\0},\\\\\n\t\t\t\t\t\t[\\vec b_3]_{\\mathcal E}&=[\\vec a_1]_{\\mathcal E}+[\\vec a_2]_{\\mathcal E}+[\\vec a_3]_{\\mathcal E}\\\\\n\t\t\t\t\t\t&=[(2\\vec e_1+\\vec e_2)+(\\vec e_1-2\\vec e_2)+(\\vec e_3)]_{\\mathcal E}\\\\\n\t\t\t\t\t\t&=[3\\vec e_1-\\vec e_2+\\vec e_3]_{\\mathcal E}\\\\&=\\mat{3\\\\-1\\\\1}.\\end{aligned}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "\\]",
+         "sha": "43d96b94aff4",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "We have that",
+         "sha": "f58db818e606",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\BasisChange{\\mathcal A}{\\mathcal E}=\n\t\t\t\t\t\\begin{bmatrix}\n\t\t\t\t\t\t2 & 1 & 0\\\\\n\t\t\t\t\t\t1 & -2 & 0\\\\\n\t\t\t\t\t\t0 & 0 & 1\n\t\t\t\t\t\\end{bmatrix}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "By part (a), we have",
+         "sha": "51bd39998320",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\BasisChange{\\mathcal B}{\\mathcal E}=\n\t\t\t\t\t\\begin{bmatrix}\n\t\t\t\t\t\t2 & 3 & 3\\\\\n\t\t\t\t\t\t1 & -1 & -1\\\\\n\t\t\t\t\t\t0 & 0 & 1\n\t\t\t\t\t\\end{bmatrix}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Inverting the former, we see that",
+         "sha": "25c6c5216e8f",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\BasisChange{\\mathcal E}{\\mathcal A}=\\frac{1}{5}\n\t\t\t\t\t\\begin{bmatrix}\n\t\t\t\t\t\t2 & 1 & 0\\\\\n\t\t\t\t\t\t1 & -2 & 0\\\\\n\t\t\t\t\t\t0 & 0 & 5\n\t\t\t\t\t\\end{bmatrix}."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "We have \\[",
+         "sha": "09aa320a4407",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}\\BasisChange{\\mathcal B}{\\mathcal A}\n\t\t\t\t\t\t&=\\BasisChange{\\mathcal E}{\\mathcal A}\\BasisChange{\\mathcal B}{\\mathcal E}\\\\\n\t\t\t\t\t\t&=\\frac{1}{5}\n\t\t\t\t\t\t\\begin{bmatrix}\n\t\t\t\t\t\t\t2 & 1 & 0\\\\\n\t\t\t\t\t\t\t1 & -2 & 0\\\\\n\t\t\t\t\t\t\t0 & 0 & 5\n\t\t\t\t\t\t\\end{bmatrix}\n\t\t\t\t\t\t\\begin{bmatrix}\n\t\t\t\t\t\t\t2 & 3 & 3\\\\\n\t\t\t\t\t\t\t1 & -1 & -1\\\\\n\t\t\t\t\t\t\t0 & 0 & 1\n\t\t\t\t\t\t\\end{bmatrix}\\\\\n\t\t\t\t\t\t&=\n\t\t\t\t\t\t\\begin{bmatrix}\n\t\t\t\t\t\t\t1 & 1 & 1\\\\\n\t\t\t\t\t\t\t0 & 1 & 1\\\\\n\t\t\t\t\t\t\t0 & 0 & 1\n\t\t\t\t\t\t\\end{bmatrix}.\\end{aligned}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "\\]",
+         "sha": "43d96b94aff4",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Change of Basis II · 练习题 2（上游 book/modules/module13-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module13-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal B=\\Set{\\mat{1\\\\0}_{\\mathcal E},\\mat{1\\\\1}_{\\mathcal E}}$. For each linear transformation $\\mathcal T:\\R^{2}\\to\\R^{2}$ defined below, compute $[\\mathcal T]_{\\mathcal E}$ and $[\\mathcal T]_{\\mathcal B}$.",
+      "sha": "ddf356b552b1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\mathcal T$ be the transformation that rotates every vector counter clockwise by $90^{\\circ}$.",
+         "sha": "e87a36030f5e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\mathcal T$ be the transformation that projects every vector onto the $y$-axis.",
+         "sha": "c8d513b693d4",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\mathcal T$ be the transformation that doubles every vector.",
+         "sha": "21be0619dc09",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\mathcal T$ be the transformation that reflects every vector over the line $y=x$.",
+         "sha": "7edc5f827314",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$[\\mathcal T]_{\\mathcal E}=\\mat{0&-1\\\\1&0}$ and $[\\mathcal T]_{\\mathcal B}= \\begin{bmatrix} -1 & -2 \\\\ 1 & 1 \\end{bmatrix}$",
+         "sha": "956d54e89427",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$[\\mathcal T]_{\\mathcal E}= \\begin{bmatrix} 0 & 0 \\\\ 0 & 1 \\end{bmatrix}$",
+         "sha": "1744c6f29ea9",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "To compute $[\\mathcal T]_{\\mathcal B}$, note that $\\mathcal T\\vec b_1=\\mathcal T\\vec e_1=\\vec 0$ and $\\mathcal T\\vec b_2=\\mathcal T(\\vec e_1+\\vec e_2)=\\vec e_2$. Further, $\\vec e_2=-\\vec b_1+\\vec b_2$. Therefore, $[\\mathcal T]_{\\mathcal B}= \\begin{bmatrix} 0 & -1 \\\\ 0 & 1 \\end{bmatrix}$.",
+         "sha": "cc6826307018",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$[\\mathcal T]_{\\mathcal E}=[\\mathcal T]_{\\mathcal B}= \\begin{bmatrix} 2 & 0 \\\\ 0 & 2 \\end{bmatrix}$",
+         "sha": "c64a9358f34c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Note that $\\mathcal T\\vec e_1=\\vec e_2$ and $\\mathcal T\\vec e_2=\\vec e_1$, so $[\\mathcal T]_{\\mathcal E}= \\begin{bmatrix} 0 & 1 \\\\ 1 & 0 \\end{bmatrix}$. To compute $[\\mathcal T]_{\\mathcal B}$, we simply observe that $\\vec b_1=\\vec e_1$ and $\\vec b_2=\\vec e_1+\\vec e_2$. Thus, $\\mathcal T\\vec b_1=\\vec e_2=-\\vec b_1+\\vec b_2$ and $\\mathcal T\\vec b_2=\\vec e_1+\\vec e_2=\\vec b_2$. Therefore, $[\\mathcal T]_{\\mathcal B}= \\begin{bmatrix} -1 & 0 \\\\ 1 & 1 \\end{bmatrix}$.",
+         "sha": "aea2ebf24ef5",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Change of Basis II · 练习题 3（上游 book/modules/module13-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module13-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each statement below, determine whether it is true or false. Justify your answer.",
+      "sha": "e3b37b865c04",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Any invertible $n \\times n$ matrix can be viewed as a change of basis matrix.",
+         "sha": "6b98b91198d8",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Any $n \\times n$ matrix is similar to itself.",
+         "sha": "e4d75909dcf9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $A$ be an $m \\times n$ matrix. If $m \\neq n$, then there is no matrix that is similar to $A$.",
+         "sha": "4ec22cfb0cc6",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Any invertible $n \\times n$ matrix $A$ is similar to $A^{-1}$ since $AA^{-1}=I$.",
+         "sha": "f68ca853d0f1",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True. A square matrix $M$ is invertible if and only if it is a change of basis matrix.",
+         "sha": "6220b3b6f877",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True. Any square matrix $M$ satsifies $M=IMI^{-1}$.",
+         "sha": "25e9fbc9acf8",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True. The definition of similarity requires the existence of an invertible matrix $P$, i.e. a square matrix, and a matrix $B$ such that $B=PAP^{-1}$. If $A$ is not a square matrix, then either $PA$ or $AP^{-1}$ is not defined, so such a matrix $P$ cannot exist.",
+         "sha": "3212e8f84796",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. For example, $A=\\begin{bmatrix} 2 & 0 \\\\ 0 & -1 \\end{bmatrix}$ is not similar to its inverse.",
+         "sha": "23680406de5a",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Change of Basis II · 练习题 4（上游 book/modules/module13-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module13-exercises.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "基变换 II"
+}

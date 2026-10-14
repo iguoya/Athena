@@ -1,0 +1,2577 @@
+{
+ "id": "module11",
+ "title_en": "Range & Nullspace of a Linear Transformation",
+ "blocks": [
+  {
+   "k": "outcome",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The definition of the range and null space of a linear transformation.",
+         "sha": "f3d447ed73e6",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How to precisely notate the matrix for a linear transformation.",
+         "sha": "0ebf2038191a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The fundamental subspaces corresponding to a matrix (row space, column space, null space) and how they relate to the range and null space of a linear transformation.",
+         "sha": "12573634aade",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How to find a basis for the fundamental subspaces of a matrix.",
+         "sha": "0b71a5238ef6",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The definition of rank and the rank-nullity theorem.",
+         "sha": "5543679ccb75",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Associated with every linear transformation are two specially named subspaces: the range and the null space.",
+    "sha": "b2e4e014d4a4",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Range",
+    "sha": "a16c5bbe4bf9",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Range",
+    "sha": "a16c5bbe4bf9",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The *range* (or *image*) of a linear transformation $T:V\\to W$ is the set of vectors that $T$ can output. That is,",
+      "sha": "f00d51740ee5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Range(T)=\\Set{\\vec y\\in W \\given \\vec y=T\\vec x\\text{ for some }\\vec\n\t\tx\\in V}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The range of a linear transformation has the exact same definition as the range of a function—it's the set of all outputs. In other words, the range of a linear transformation is the *image* of the entire domain with respect to that linear transformation\\footnote Some people say “the *image* of $T$” as a short way of saying “the image of the entire domain of $T$ under $T$”. Used in this sense $\\text{Image}(T)=\\Range(T)$.. However, unlike the range of an arbitrary function, the range of a linear transformation is always a subspace.",
+    "sha": "af7cf7873e8c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $T:\\R^n\\to\\R^m$ be a linear transformation. Then $\\Range(T)\\subseteq \\R^m$ is a subspace.",
+      "sha": "8d12589900d6",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\Range(T)=T(\\R^n)$ and $\\R^n$ is non-empty, we know that $\\Range(T)$ is non-empty. Therefore, to show that $\\Range(T)$ is a subspace, what remains to be shown is (i) that it's closed under vector addition, and (ii) that it is closed under scalar multiplication.",
+      "sha": "c722b6b9a2f1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "[label=(\\roman*)]",
+         "sha": "9abe58dd4f9f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec x,\\vec y\\in\\Range(T)$. By definition, there exist $\\vec u,\\vec v\\in\\R^n$ such that $\\vec x=T(\\vec u)$ and $\\vec y=T(\\vec v)$. Since $T$ is linear,",
+         "sha": "ac31ac9b8286",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vec x+\\vec y=T(\\vec u)+T(\\vec v)=T(\\vec u+\\vec v),"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "and so $\\vec x+\\vec y\\in\\Range(T)$.",
+         "sha": "df7fbac27776",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec x\\in\\Range(T)$ and let $\\alpha$ be a scalar. By definition, there exists $\\vec u\\in\\R^n$ such that $\\vec x=T(\\vec u)$, and so by the linearity of $T$,",
+         "sha": "479657f4f6e4",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\alpha\\vec x=\\alpha T(\\vec u)=T(\\alpha\\vec u)."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Therefore $\\alpha\\vec x\\in\\Range(T)$.",
+         "sha": "1bc316feab02",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When analyzing subspaces, we are often interested in how big they are. That information is captured by a number—the *dimension* of the subspace. For transformations, we also have a notion of how “big” they are, which is captured in a number called the *rank*.",
+    "sha": "3dabcda51a85",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Rank of a Linear Transformation",
+    "sha": "2bf668824219",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For a linear transformation $T:\\R^n\\to \\R^m$, the *rank* of $T$, denoted $\\Rank(T)$, is the dimension of the range of $T$.",
+      "sha": "599415a49989",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The rank of a linear transformation can be used to measure its complexity or compressibility. A rank $0$ transformation must send all vectors to $\\vec 0$. A rank $1$ transformation must send all vectors to a line, etc.. So, by knowing just a single number—the rank—you can judge how complicated the set of outputs of a linear transformation will be.",
+    "sha": "32063178b830",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal P$ be the plane given by $x+y+z=0$, and let $T:\\R^3\\to\\R^3$ be projection onto $\\mathcal P$. Find $\\Range(T)$ and $\\Rank(T)$.",
+      "sha": "bcb55bc955b4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "First we will find $\\Range(T)$. Since $T$ is a projection onto $\\mathcal P$, we know $\\Range(T)\\subseteq \\mathcal P$. Because $T(\\vec p)=\\vec p$ for all $\\vec p\\in \\mathcal P$, we know $\\mathcal P\\subseteq \\Range(T)$, and so",
+      "sha": "1a0f89ca7271",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Range(T)=\\mathcal P."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\mathcal P$ is a plane, we know $\\Dim(\\mathcal P)=2=\\Dim(\\Range(T))=\\Rank(T)$.",
+      "sha": "356864a046a3",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Null Space",
+    "sha": "9ec02f7f875d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The second special subspace is called the *null space*.",
+    "sha": "8bd1a4c60096",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Null Space",
+    "sha": "9ec02f7f875d",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The *null space* (or *kernel*) of a linear transformation $T:V\\to W$ is the set of vectors that get mapped to the zero vector under $T$. That is,",
+      "sha": "6d9b095b087a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Null(T)=\\Set{\\vec x\\in V \\given T\\vec x=\\vec 0}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We've seen null spaces before. In the context of matrices when we asked questions like, “Are these column vectors linearly independent?” Now that we understand linear transformation and subspaces, we can consider this question anew.",
+    "sha": "9a792e8d28bf",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Just like the range of a linear transformation, the null space of a linear transformation is always a subspace.",
+    "sha": "2a6c066b62a9",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $T:\\R^n\\to\\R^m$ be a linear transformation. Then $\\Null(T)\\subseteq \\R^n$ is a subspace.",
+      "sha": "e398afed6dc5",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $T$ is linear, $T(\\vec 0)=\\vec 0$ and so $\\vec 0\\in\\Null(T)$ which shows that $\\Null(T)$ is non-empty. Therefore, to show that $\\Null(T)$ is a subspace, we only need to show (i) that it's closed under vector addition, and (ii) that it is closed under scalar multiplication.",
+      "sha": "a9b9cf99874c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "[label=(\\roman*)]",
+         "sha": "9abe58dd4f9f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec x,\\vec y\\in\\Null(T)$. By definition, $T(\\vec x)=T(\\vec y)=\\vec 0$. By linearity we see",
+         "sha": "32514e9cd6a1",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "T(\\vec x+\\vec y)=T(\\vec x)+T(\\vec y)=\\vec 0+\\vec 0=\\vec 0,"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "and so $\\vec x+\\vec y\\in\\Null(T)$.",
+         "sha": "2afa8d3e7810",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec x\\in\\Null(T)$ and let $\\alpha$ be a scalar. By definition, $T(\\vec x)=\\vec 0$, and so by the linearity of $T$,",
+         "sha": "ec56cc924280",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "T(\\alpha\\vec x)=\\alpha T(\\vec x)=\\alpha\\vec 0=\\vec 0."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Therefore $\\alpha\\vec x\\in\\Null(T)$.",
+         "sha": "eb891670502a",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Akin to the rank–range connection, there is a special number called the *nullity* which specifies the dimension of the null space.",
+    "sha": "9741141a0fde",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Nullity",
+    "sha": "bc56d6bd0258",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For a linear transformation $T:\\R^n\\to \\R^m$, the *nullity* of $T$, denoted $\\Nullity(T)$, is the dimension of the null space of $T$.",
+      "sha": "56e1b5e869c1",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal P$ be the plane given by $x+y+z=0$, and let $T:\\R^3\\to\\R^3$ be projection onto $\\mathcal P$. Find $\\Null(T)$ and $\\Nullity(T)$.",
+      "sha": "d57a94a00bcc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "First we will find $\\Null(T)$. Since $T$ is a projection onto $\\mathcal P$ (and because $\\mathcal P$ passes through $\\vec 0$), we know every normal vector for $\\mathcal P$ will get sent to $\\vec 0$ when $T$ is applied. And, besides $\\vec 0$ itself, these are the only vectors that get sent to $\\vec 0$. Therefore",
+      "sha": "715c457c7aa3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Null(T)=\\Set{\\text{normal vectors}}\\cup\\Set{\\vec 0}=\\Span\\Set{\\mat{1\\\\1\\\\1}}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\Null(T)$ is a line, we know $\\Nullity(T)=1.$",
+      "sha": "70995694fa5c",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Fundamental Subspaces of a Matrix",
+    "sha": "3fdbe3e43c2b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Every linear transformation has a range and a null space. Analogously, every matrix is associated with three fundamental subspaces.",
+    "sha": "04ac956d4825",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Fundamental Subspaces",
+    "sha": "74dcd9bd0218",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Associated with any matrix $M$ are three fundamental subspaces: the *row space* of $M$, denoted $\\Row(M)$, is the span of the rows of $M$; the *column space* of $M$, denoted $\\Col(M)$, is the span of the columns of $M$; and the *null space* of $M$, denoted $\\Null(M)$, is the set of solutions to $M\\vec x=\\vec 0$.",
+      "sha": "716b918d32db",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Computationally, it's much easier to find the row space/column space/null space of a matrix than it is to find the range/null space of a linear transformation because we can turn matrix questions into systems of linear equations.",
+    "sha": "62dcd1fcf314",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the null space of $M=\\mat{1&2&5\\\\2&-2&-2}$.",
+      "sha": "c25ee2787bc7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To find the null space of $M$, we need to solve the homogeneous matrix equation $M\\vec x=\\vec 0$. Row reducing, we see",
+      "sha": "be3643273d4b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Rref(M)=\\mat{1&0&1\\\\0&1&2},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so the $z$ column is a free variable column. Therefore, the complete solution can be expressed in vector form as",
+      "sha": "d87b9a1cca16",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{x\\\\y\\\\z}=t\\mat{-1\\\\-2\\\\1},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so",
+      "sha": "9af790b3a93d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Null(M)=\\Span\\Set{\\mat{-1\\\\-2\\\\1}}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The column space and row space are just as easy to compute, since it just involves picking a basis from the existing row or column vectors.",
+    "sha": "ccd9fbfc5ef6",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $M=\\mat{1&2&5\\\\2&-2&-2}$. Find a basis for the row space and the column space of $M$.",
+      "sha": "7b3f1ffeb94b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "First the column space. We need to pick a basis for $\\Span\\Set{\\mat{1\\\\2},\\mat{2\\\\-2},\\mat{5\\\\-2}}$, which is the same thing as picking a maximal linearly independent subset of $\\Set{\\mat{1\\\\2},\\mat{2\\\\-2},\\mat{5\\\\-2}}$.",
+      "sha": "a3c27d1bbd62",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Putting these vectors as columns in a matrix and row reducing, we see",
+      "sha": "fafa92a63d09",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Rref\\left(\\mat{1&2&5\\\\2&-2&-2}\\right) = \\mat{1&0&1\\\\0&1&2}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The first and second columns are the only pivot columns and so the first and second *original* vectors form a maximal linearly independent subset. Thus,",
+      "sha": "480b3272a34c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Col(M) = \\Span\\Set{\\mat{1\\\\2},\\mat{2\\\\-2}} = \\R^2\\qquad\\text{and a basis is}\\qquad \\Set{\\mat{1\\\\2},\\mat{2\\\\-2}}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To find the row space, we need to pick a basis for $\\Span\\Set{\\mat{1\\\\2\\\\5},\\mat{2\\\\-2\\\\-2}}$. Repeating a similar procedure, we see",
+      "sha": "47814a438976",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Rref\\left(\\mat{1&2\\\\2&-2\\\\5&-2}\\right) = \\mat{1&0\\\\0&1\\\\0&0},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so $\\Set{\\mat{1\\\\2\\\\5},\\mat{2\\\\-2\\\\-2}}$ is linearly independent. Therefore",
+      "sha": "a3b40d31e719",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Row(M)=\\Span\\Set{\\mat{1\\\\2\\\\5},\\mat{2\\\\-2\\\\-2}}\\qquad\\text{and a basis is}\\qquad \\Set{\\mat{1\\\\2\\\\5},\\mat{2\\\\-2\\\\-2}}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When talking about fundamental subspaces, we often switch between talking about column vectors and row vectors belonging to a matrix. The operation of swapping rows for columns is called the *transpose*.",
+    "sha": "d1ab8195ebc3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Transpose",
+    "sha": "fa257429d853",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $M$ be an $n\\times m$ matrix defined by",
+      "sha": "e053e0c535c1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "M=\\matc{\n\t\t\ta_{11}&a_{12}&a_{13}&\\cdots & a_{1m}\\\\\n\t\ta_{21}&a_{22}&a_{23}&\\cdots&a_{2m}\\\\\n\t\t\\vdots &\\vdots&\\vdots &\\ddots&\\vdots\\\\\n\t\ta_{n1}&a_{n2}&a_{n3}&\\cdots&a_{nm}}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The *transpose* of $M$, notated $M^T$, is the $m\\times n$ matrix produced by swapping the rows and columns of $M$. That is",
+      "sha": "c78fbd4da9c5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "M^T=\\matc{\n\t\ta_{11}&a_{21}&\\cdots&a_{n1}\\\\\n\t\ta_{12}&a_{22}&\\cdots&a_{n2}\\\\\n\t\ta_{13}&a_{23}&\\cdots&a_{n3}\\\\\n\t\t\\vdots&\\vdots&\\ddots&\\vdots\\\\\n\t\ta_{1m}&a_{2m}&\\cdots&a_{nm}}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Using the transpose, we can make statements like",
+    "sha": "537619b30ffb",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Col(M)=\\Row(M^T)\\qquad\\text{and}\\qquad \\Row(M)=\\Col(M^T)."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In addition, it helps us state the following theorem.",
+    "sha": "137fb48d0386",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Row-Col Dimension",
+    "sha": "1440c7cc6d7e",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For a matrix $A$, the dimension of the row space equals the dimension of the column space.",
+      "sha": "1be0452317dc",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For this proof, we will rely on what we know about the row reduction algorithm and what the reduced row echelon form of a matrix tells us.",
+      "sha": "c068b1dbcb5b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*Claim 1*: $\\Row(\\Rref(A))\\subseteq \\Row(A)$. To see this, observe that to get $\\Rref(A)$, we take linear combinations of the rows of $A$. Therefore, it must be that the span of the rows of $\\Rref(A)$ is contained in the span of the rows of $A$.",
+      "sha": "514b7293b21c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*Claim 2*: $\\Row(\\Rref(A))=\\Row(A)$. To see this, observe that every elementary row operation is reversible. Therefore every row in $A$ can be obtained as a linear combination of rows in $\\Rref(A)$ (by just reversing the steps). Thus the row vectors of $\\Rref(A)$ and the row vectors of $A$ must have the same span.",
+      "sha": "43542d5ee3bf",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*Claim 3*: The non-zero rows of $\\Rref(A)$ form a basis for $\\Row(A)$. We already know that the non-zero rows of $\\Rref(A)$ span $\\Row(A)$, so we only need to argue that they are linearly independent. However, this follows immediately from the fact that $\\Rref(A)$ is in reduced row echelon form. Above and below every pivot in $\\Rref(A)$ are zeros. Therefore, a row in $\\Rref(A)$ with a pivot cannot be written as a linear combination of any other row. Since every non-zero row has a pivot, this proves the claim.",
+      "sha": "1a4f5b6777eb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Now, note the following two facts.",
+      "sha": "7bfb0bdad794",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The columns of $A$ corresponding to pivot columns of $\\Rref(A)$ form a basis for $\\Col(A)$.",
+         "sha": "e77c3b511a36",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The non-zero rows of $\\Rref(A)$ form a basis for $\\Row(A)$.",
+         "sha": "6e74c710daa8",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To complete the proof, note that every pivot of $\\Rref(A)$ lies in exactly one row and one column. Therefore, the number of basis vectors in $\\Row(A)$ is the same as the number of basis vectors in $\\Col(A)$.",
+      "sha": "04499a4edd36",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Equations, Null Spaces, and Geometry",
+    "sha": "0550521a27b0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $M=\\mat{1&2&5\\\\2&-2&-2}$. Using the typical row-reduction steps, we know that the complete solution to $M\\vec x=\\vec 0$ (i.e., the null space of $M$) can be expressed in vector form as",
+    "sha": "336203044a92",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec x=t\\mat{-1\\\\-2\\\\1}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Similarly, the complete solution to $M\\vec x=\\vec b$ where $\\vec b=\\mat{1\\\\2}$ can be expressed in vector form as",
+    "sha": "aed34f5d6bc3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec x=t\\mat{-1\\\\-2\\\\1}+\\mat{1\\\\0\\\\0}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The set of solutions to $M\\vec x=\\vec 0$ and $M\\vec x=\\vec b$ look very similar. In fact,",
+    "sha": "cc4cbe351400",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Set{\\text{solutions to $M\\vec x=\\vec b$}} = \\Set{\\text{solutions to $M\\vec x=\\vec 0$}}+\\Set{\\vec p}\\qquad\\text{where}\n\t\\qquad \\vec p=\\mat{1\\\\0\\\\0}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Or, phrased another way, the solution set to $M\\vec x=\\vec b$ is",
+    "sha": "0e953b9d32f6",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Null(M)+\\Set{\\vec p}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In the context of what we already know about lines and translated spans, this makes perfect sense. We know that the solution set to $M\\vec x=\\vec b$ is a line (which doesn't pass through the origin) and may therefore be written as a translated span $\\Span\\Set{\\vec d}+\\Set{\\vec p}$. Here $\\vec d$ is a direction vector for the line and $\\vec p$ is a point on the line.",
+    "sha": "12acd4f84dc7",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Because $\\vec p\\in\\Span\\Set{\\vec d}+\\Set{\\vec p}$, we call $\\vec p$ a *particular solution* to $M\\vec x=\\vec b$. Using a similar argument, we can show that for any matrix $A$, and any vector $\\vec b$, the set of all solutions to $A\\vec x=\\vec b$ (provided there are any) can be expressed as",
+    "sha": "3937fe28d131",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "V+\\Set{\\vec p}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "where $V$ is a subspace and $\\vec p$ is a particular solution. In fact, we can do better. We can say $V=\\Null(A)$.",
+    "sha": "13472c64b1a7",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be a matrix, $\\vec b$ be a vector, and let $\\vec p$ be a particular solution to $A\\vec x=\\vec b$. Then, the set of all solutions to $A\\vec x=\\vec b$ is",
+      "sha": "ab831c3faa33",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Null(A)+\\Set{\\vec p}."
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $S=\\Set{\\text{all solutions to $A\\vec x=\\vec b$}}$ and assume $\\vec p\\in S$. We will show $S=\\Null(A)+\\Set{\\vec p}$.",
+      "sha": "cbeefc27f2c8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "First we will show $\\Null(A)+\\Set{\\vec p}\\subseteq S$. Let $\\vec v\\in \\Null(A)+\\Set{\\vec p}$. By definition, $\\vec v=\\vec n+\\vec p$ for some $\\vec n\\in \\Null(A)$. Now, by linearity of matrix multiplication and the definition of the null space,",
+      "sha": "c3314861cd1e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A\\vec v=A(\\vec n+\\vec p)=A\\vec n+A\\vec p=\\vec 0+\\vec b=\\vec b,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so $\\vec v\\in S$.",
+      "sha": "28a4664226be",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Next we will show $S\\subseteq \\Null(A)+\\Set{\\vec p}$. First observe that for any $\\vec u,\\vec v\\in S$ we have",
+      "sha": "f13c8746bbee",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A(\\vec u-\\vec v)=A\\vec u-A\\vec v=\\vec b-\\vec b=\\vec 0,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so $\\vec u-\\vec v\\in \\Null(A)$.",
+      "sha": "0cab3597e483",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Fix $\\vec w\\in S$. By our previous observation, $\\vec w-\\vec p\\in \\Null(A)$. Therefore",
+      "sha": "5d77f2b4ee11",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec w=(\\vec w-\\vec p)+\\vec p\\in \\Null(A)+\\Set{\\vec p},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which completes the proof.",
+      "sha": "b83d76baf86f",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "To write the complete solution to $A\\vec x=\\vec b$, all you need is the null space of $A$ and a particular solution to $A\\vec x=\\vec b$.",
+      "sha": "de4ed93f6db2",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Null spaces are also closely connected with row spaces. Let $\\mathcal P\\subseteq \\R^3$ be the plane with equation $x+2y+2z=0$. We can rewrite this equation as a matrix equation and as the equation of a plane in normal form.",
+    "sha": "b17daf84e7bf",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\underbrace{\\mat{1&2&2}\\mat{x\\\\y\\\\z}=\\vec 0}_{\\text{a matrix equation}}\\qquad\\qquad\n\t\\underbrace{\\mat{1\\\\2\\\\2}\\cdot \\mat{x\\\\y\\\\z}=0}_{\\text{normal form}}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Now we see that $\\mathcal P=\\Null\\left(\\mat{1&2&2}\\right)$ and that every non-zero vector in $\\Row\\left(\\mat{1&2&2}\\right)$ is a normal vector for $\\mathcal P$. In other words, $\\Null\\left(\\mat{1&2&2}\\right)$ is orthogonal to $\\Row\\left(\\mat{1&2&2}\\right)$.",
+    "sha": "9268cbe8d6cc",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This is no coincidence. Let $M$ be a matrix and let $\\vec r_1,\\ldots,\\vec r_n$ be the rows of $M$. By definition,",
+    "sha": "93d42b19533c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "M\\vec x=\\matc{\\vec r_1\\cdot \\vec x\\\\\\vdots\\\\\\vec r_n\\cdot \\vec x},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and so solutions to $M\\vec x=\\vec 0$ are precisely the vectors which are orthogonal to every row of $M$. In other words, $\\Null(M)$ consists of all vectors orthogonal to the rows of $M$. Conversely, $\\Row(M)$ consists of all vectors orthogonal to everything in $\\Null(M)$. We can use this fact to approach questions in a new way.",
+    "sha": "5049bd649821",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec a=\\mat{1\\\\2\\\\5}$ and $\\vec b=\\mat{2\\\\-2\\\\-2}$. Find the set of all vectors orthogonal to both $\\vec a$ and $\\vec b$.",
+      "sha": "246e08f304b4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $M=\\mat{1&2&5\\\\2&-2&-2}$ be the matrix whose rows are $\\vec a$ and $\\vec b$. Since $\\Null(M)$ consists of all vectors orthogonal to $\\Row(M)$, the set we are looking for is $\\Null(M)$. Computing via row reduction, we find",
+      "sha": "ed592d12e639",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Null(M)=\\Span\\Set{\\mat{-1\\\\-2\\\\1}}."
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Transformations and Matrices",
+    "sha": "7c7967524a33",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Matrices are connected to systems of linear equations via matrix equations (like $A\\vec x=\\vec b$) and to linear transformations through matrix transformations (like $\\mathcal T(\\vec x)=M\\vec x$). This means that we can think about systems of equations in terms of linear transformations and we can gain insight about linear transformations by looking at systems of equations!",
+    "sha": "e81d65d53136",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In preparation for this, let's reconsider matrix transformations and be pedantic about our notation.",
+    "sha": "fe58c0a9b7be",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\mathcal T:\\R^n\\to\\R^n$ be a linear transformation and let $M$ be its corresponding matrix. $\\mathcal T$ is a function that inputs and outputs *vectors*. $M$ is a box of numbers, which has no meaning by itself, but we know how to multiply $M$ by lists of numbers (or other boxes of numbers). Therefore, strictly speaking, the expression “$M\\vec x$” doesn't make sense. The quantity “$\\vec x$” is a vector, but we only know how to multiply $M$ by lists of numbers.",
+    "sha": "b802841035f4",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Ah! But we know how to turn $\\vec x$ into a list of numbers. Just pick a basis! The expression",
+    "sha": "0f8db7ad6678",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "M[\\vec x]_{\\mathcal E}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "makes perfect sense since $[\\vec x]_{\\mathcal E}$ is a list of numbers. Continuing to be pedantic, we know $\\mathcal T(\\vec x)\\neq M[\\vec x]_{\\mathcal E}$ since the left side is a vector and the right side is a list of numbers. We can fix this by either turning the right side into a vector or the left side into a list of numbers. Doing this, we see the precise relationship between a linear transformation $\\mathcal T:\\R^n\\to\\R^n$ and its matrix $M$ is",
+    "sha": "035d6f9e9a03",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "[\\mathcal T(\\vec x)]_{\\mathcal E}=M[\\vec x]_{\\mathcal E}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If we have a matrix $M$, by picking a basis (usually the standard basis), we can define a linear transformation by first taking the input vector and rewriting it in the basis, next multiplying by the matrix, and finally taking the list of numbers and using them as coefficients for a linear combination involving the basis vectors. This is what we actually mean when we say that a matrix *induces* a linear transformation.",
+    "sha": "5ac2471146e3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Induced Transformation",
+    "sha": "ca58ce3802bb",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $M$ be an $n\\times m$ matrix. We say $M$ *induces* a linear transformation $\\mathcal T_{M}:\\R^{m}\\to\\R^{n}$ defined by",
+      "sha": "7402cc2266f7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\mathcal T_{M}\\vec v]_{\\mathcal E'}= M[\\vec v]_{\\mathcal E},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where $\\mathcal E$ is the standard basis for $\\R^{m}$ and $\\mathcal E'$ is the standard basis for $\\R^{n}$.",
+      "sha": "e0d8dfe34653",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Previously, we would write “$\\mathcal T(\\vec x)=M\\vec x$” which hides the fact that when we relate a matrix and a linear transformation, there is a basis hidden in the background. And, like before, when we're only considering a single basis, we can be sloppy with our notation and write things like “$M\\vec x$”, but when there are multiple bases or when we're trying to be extra precise, we must make sure our boxes/lists of numbers and our transformations/vectors stay separate.",
+    "sha": "6ef2044d5ecf",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal T$ be the transformation induced by the matrix $M=\\mat{1&2&5\\\\2&-2&-2}$, and let $\\vec v=3\\xhat-3\\zhat$. Compute $\\mathcal T(\\vec v)$.",
+      "sha": "37cb2c64bbd3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\mathcal T$ is induced by $M=\\mat{1&2&5\\\\2&-2&-2}$, by definition,",
+      "sha": "0308168ce0d3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\mathcal T_{M}\\vec v]_{\\mathcal E'}= M[\\vec v]_{\\mathcal E}=\\mat{1&2&5\\\\2&-2&-2}[\\vec v]_{\\mathcal E}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Further, since $\\vec v=3\\xhat-3\\zhat$, by definition we have $[\\vec v]_{\\mathcal E}=\\mat{3\\\\0\\\\-3}$. Therefore,",
+      "sha": "c75a773ac182",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\mathcal T_{M}\\vec v]_{\\mathcal E'}=\\mat{1&2&5\\\\2&-2&-2}\\mat{3\\\\0\\\\-3}=\\mat{-12\\\\12}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In other words, $\\mathcal T(\\vec v) = \\mat{-12\\\\12}_{\\mathcal E'}=-12\\xhat+12\\yhat$.",
+      "sha": "cda659e01bac",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Using induced transformations, we can extend linear-transformation definitions to matrix definitions. In particular, we can define the rank and nullity of a matrix.",
+    "sha": "0ad632fbf987",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Rank of a Matrix",
+    "sha": "980ffe3fe023",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $M$ be a matrix. The *rank* of $M$, denoted $\\Rank(M)$, is the rank of the linear transformation induced by $M$.",
+      "sha": "31fd5a77b3ab",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Nullity of a Matrix",
+    "sha": "6066560c924c",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $M$ be a matrix. The *nullity* of $M$, denoted $\\Nullity(M)$, is the nullity of the linear transformation induced by $M$.",
+      "sha": "44f87f2856b5",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Range vs. Column Space & Null Space vs. Null Space",
+    "sha": "fd599fa58c80",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $M=\\mat{C_1&C_2&\\cdots &C_m}$ be an $m\\times m$ matrix with columns $C_1$, …, $C_m$, and let $\\mathcal T$ be the transformation induced by $M$. The column space of $M$ is the set of all linear combinations of the columns of $M$. But, let's be precise. The columns of $M$ are lists of numbers, so to talk about the column space of $M$, we need to turn them into vectors. Fortunately, we have a nice notation for that. Since $C_i$ is a list of numbers, $[C_i]_{\\mathcal E}$ is a (true) vector, and",
+    "sha": "a23bbdc7b903",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Col(M)=\\Span\\Set{\\hspace{1pt}[C_1]_{\\mathcal E},[C_2]_{\\mathcal E},\\ldots,[C_m]_{\\mathcal E}}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Can we connect this to the range of $\\mathcal T$? Well, by the definition of matrix multiplication, we know that",
+    "sha": "cb43defa7f27",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "M\\matc{1\\\\0\\\\\\vdots\\\\0}=M[\\vec e_1]_{\\mathcal E} = C_1"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and in general $M[\\vec e_i]_{\\mathcal E}=C_i$. By the definition of induced transformation, we know",
+    "sha": "ff4e28ca9bff",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "[\\mathcal T(\\vec e_i)]_{\\mathcal E} = M[\\vec e_i]_{\\mathcal E} = C_i,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and so",
+    "sha": "9af790b3a93d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mathcal T(\\vec e_i)= [C_i]_{\\mathcal E}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Every input to $\\mathcal T$ can be written as a linear combination of $\\vec e_i$'s (because $\\mathcal E$ is a basis) and so, because $\\mathcal T$ is linear, every output of $\\mathcal T$ can be written as a linear combination of $[C_i]_{\\mathcal E}$'s. In other words,",
+    "sha": "371fd1d04b5e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Range(\\mathcal T)=\\Col(M)."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This means that when trying to answer a question about the range of a linear transformation, we could think about the column space of its matrix instead (or vice versa).",
+    "sha": "77ef0493f2f2",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal T:\\R^3\\to\\R^2$ be defined by",
+      "sha": "9d2c9346a5ba",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mathcal T\\mat{x\\\\y\\\\z} = \\matc{2x-z\\\\4x-2z}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Find $\\Range(\\mathcal T)$ and $\\Rank(\\mathcal T)$.",
+      "sha": "fad05e125711",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $M$ be a matrix for $\\mathcal T$. We know $\\Range(\\mathcal T)=\\Col(M)$ and $\\Rank(\\mathcal T)=\\Dim(\\Range(\\mathcal T)) =\\Dim(\\Col(M))$. By inspection, we see that",
+      "sha": "c7058ce52152",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "M=\\mat{2&0&-1\\\\4&0&-2}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Again, by inspection, we see that $\\Set{\\mat{2\\\\4}}$ is a basis for $\\Col(M)$ and $\\Col(M)$ is one dimensional. Therefore,",
+      "sha": "eadb6756d7ad",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Range(\\mathcal T) = \\Span\\Set{\\mat{2\\\\4}}\\qquad \\text{and}\\qquad \\Rank(\\mathcal T)=1."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There is an alternative definition of the rank of a matrix which commonly appears. We'll state it as a theorem.",
+    "sha": "22c1dc5501c1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $M$ be a matrix. The rank of $M$ is equal to the number of pivots in $\\Rref(M)$.",
+      "sha": "f79eea904014",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We know that $\\Rank(M)=\\Dim(\\Range(\\mathcal T_M))=\\Dim(\\Col(M))$ where $\\mathcal T_M$ is the transformation induced by $M$. Further, a basis for $\\Col(M)$ consists of a maximal linearly independent subset of the columns of $M$. To find such a subset, we row reduce $M$ and look at the columns of $M$ that correspond to pivot columns of $\\Rref(M)$.",
+      "sha": "267f1f362ee2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "When all is said and done, the number of elements in a basis for $\\Col(M)$ will be the number of pivots in $\\Rref(M)$, which is the same as $\\Rank(M)$.",
+      "sha": "f7a17029d40c",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If $\\mathcal T$ is a linear transformation and $M$ is a corresponding matrix, $\\Range(\\mathcal T)=\\Col(M)$, and answering questions about $M$ answers questions about $\\mathcal T$.",
+      "sha": "425347f179e0",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Just like the range–column-space relationship, we also have a null-space–null-space relationship. More specifically, if $\\mathcal T$ is a linear transformation with matrix $M$, then $\\Null(\\mathcal T)=\\Null(M)$. From this fact, we deduce the following theorem.",
+    "sha": "5855019e2f0e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal T$ be a linear transformation and let $M$ be a matrix for $\\mathcal T$. Then $\\Nullity(\\mathcal T)$ is equal to the number of free variable columns in $\\Rref(M)$.",
+      "sha": "f51305b8ff01",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We know $\\Nullity(\\mathcal T)=\\Dim(\\Null(\\mathcal T))=\\Dim(\\Null(M))$. Further, we know that the complete solution to $M\\vec x=\\vec 0$ will take the form",
+      "sha": "f3da8010b0f4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec x=t_1\\vec d_1+\\cdots +t_k\\vec d_k"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where $k$ is the number of free variable columns in $\\Rref(M)$. The algorithm for writing the complete solution to $M\\vec x=\\vec 0$ ensures that $\\Set{\\vec d_1,\\ldots,\\vec d_k}$ is a basis for $\\Null(M)$, and so $\\Nullity(\\mathcal T)=k$, which completes the proof.",
+      "sha": "4189b29bca1b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Combining these facts, we can reformulate the Row-Col Dimension theorem as a theorem about ranks.",
+    "sha": "25770f77d2f9",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For a matrix $A$, we have $\\Rank(A)=\\Rank(A^T)$.",
+      "sha": "81f844500b4f",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "By the Row-Col Dimension theorem, we know $\\dim(\\Col(A))=\\dim(\\Row(A))$. By the definition of the transpose, we know $\\Row(A)=\\Col(A^T)$. Therefore,",
+      "sha": "c166666f3209",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\dim(\\Col(A))=\\dim(\\Col(A^T)),"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which is another way of saying $\\Rank(A)=\\Rank(A^T)$.",
+      "sha": "5e3181cdf0a3",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "The Rank-Nullity Theorem",
+    "sha": "700feba8f8fb",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The rank and the nullity of a linear transformation/matrix are connected by a powerful theorem.",
+    "sha": "b4bf7502c609",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Rank-nullity Theorem for Matrices",
+    "sha": "55d5b18d1413",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For a matrix $A$,",
+      "sha": "dbbab64002a3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Rank(A)+\\Nullity(A)=\\ \\#\\text{ of columns in $A$}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The rank-nullity theorem's statement is simple, but it is surprisingly useful. For example, consider the question: how many normal directions does a plane have in $\\R^3$ or in $\\R^4$ or in $\\R^5$?",
+    "sha": "c2ead836b0ce",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We already know the answer in $\\R^3$: a plane has a two-dimensional set of direction vectors and a one-dimensional set (a line) of normal vectors\\footnote Technically, the set of normal vectors for a plane in $\\R^3$ is a line without $\\vec 0$, since $\\vec 0$ is never considered a normal vector.. But, we can verify this fact using the rank-nullity theorem.",
+    "sha": "6e18a7f8d745",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let",
+    "sha": "ef5fe1edf379",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "M=\\mat{1&2&2}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and let $\\mathcal P=\\Null(M)$. We know $\\mathcal P$ is a plane with equation $x+2y+2z=0$ and therefore is two dimensional. Further, non-zero vectors in the row space of $M$ are normal vectors for $\\mathcal P$. Since $\\Null(M)$ is two-dimensional and $M$ has three columns, the rank-nullity theorem tells us that $\\Rank(M)=1$. Therefore $\\Dim(\\Col(M))=\\Dim(\\Row(M))=1$. We conclude the set of normal vectors to $\\mathcal P=\\Null(M)$ is a line (if we include $\\vec 0$).",
+    "sha": "f55b1e5d7c54",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "By contrast, let $\\mathcal Q\\subseteq \\R^4$ be the plane in $\\R^4$ given in vector form by",
+    "sha": "6b0b6acc8a9f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec x=t\\mat{1\\\\2\\\\2\\\\2}+s\\mat{-1\\\\1\\\\-1\\\\1}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "How many normal vectors does $\\mathcal Q$ have? Well, the matrix $A=\\mat{1&2&2&2\\\\-1&1&-1&1}$ has rank $2$ and therefore has nullity $2$. This means there exist two linearly independent normal directions for $\\mathcal Q$\\footnote Notice that we are using the complementary argument to the example in $\\R^3$. For this example, the plane is the *row space* and the set of normal vectors is the null space (ignoring $\\vec 0$, of course)..",
+    "sha": "30422fcd99c2",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There is an equivalent rank-nullity theorem for linear transformations.",
+    "sha": "aff552eb9655",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Rank-nullity Theorem for Linear Transformations",
+    "sha": "78b6f2a6a0d0",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal T$ be a linear transformation. Then",
+      "sha": "7c92926a9d6f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Rank(\\mathcal T)+\\Nullity(\\mathcal T)=\\Dim(\\text{domain of $\\mathcal T$})."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Just like the rank-nullity theorem for matrices, the rank-nullity theorem for linear transformations can give insights about linear transformations that would be otherwise hard to see.",
+    "sha": "b090d45d2a85",
+    "zh": ""
+   }
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For the following matrices, find their null space, column space, and row space.",
+      "sha": "6c328b1ffd6d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$M_{1}=\\mat{1&2&1\\\\3&1&-2\\\\8&6&-2}$.",
+         "sha": "e5dad0bc935a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$M_{2}=\\mat{0&2&1\\\\3&2&5}$.",
+         "sha": "93d5d7ac0015",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$M_{3}=\\mat{1&2\\\\3&1\\\\4&0}$.",
+         "sha": "d95e4a6536bc",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$M_{4}=\\mat{1&-2&0&-1\\\\3&5&-1&0\\\\2&3&-2&0\\\\0&0&0&1}$.",
+         "sha": "914f2fe63cbf",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$M_{1}= \\mat{1&2&1\\\\3&1&-2\\\\8&6&-2}$; $\\rref(M_{1})=\\mat{1&0&-1\\\\0&1&1\\\\0&0&0}$.",
+         "sha": "b771a92f9eb6",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Null(M_{1})=\\Set{\\vec{x} \\in \\R^3: M_1 \\vec{x}=\\vec 0}$; therefore, we need to solve $\\mat{M_1|\\vec0}$.",
+         "sha": "f808fcc3dca3",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}\\Null(M_{1}) & = \\Set{\\vec x \\in \\R^3:\\vec x = s\\mat{1\\\\-1\\\\1} \\; \\text{for some } s\\in\\R} \\\\\n\t\t\t\t\t\t             & = \\Span\\Set{\\mat{1\\\\-1\\\\1}}\\end{aligned}"
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}\\Col(M_{1}) & = \\Span\\Set{\\mat{1\\\\3\\\\8},\\mat{2\\\\1\\\\6},\\mat{1\\\\-2\\\\-2}} \\\\\n\t\t\t\t\t\t            & = \\Span\\Set{\\mat{1\\\\3\\\\8},\\mat{2\\\\1\\\\6}}\\end{aligned}"
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}\\Row(M_{1}) & = \\Span\\Set{\\mat{1\\\\2\\\\1},\\mat{3\\\\1\\\\-2},\\mat{8\\\\6\\\\-2}} \\\\\n\t\t\t\t\t\t            & = \\Span\\Set{\\mat{1\\\\2\\\\1},\\mat{3\\\\1\\\\-2}}                \\\\\n\t\t\t\t\t\t            & = \\Span\\Set{\\mat{1\\\\0\\\\-1},\\mat{0\\\\1\\\\1}}\\end{aligned}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\rref(M_{2})=\\mat{1&0&4/3\\\\0&1&1/2}$.",
+         "sha": "f9cb3d2ae29e",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}\\Null(M_{2}) & =\\Span\\Set{\\mat{4/3\\\\1/2\\\\-1}}           \\\\\n\t\t\t\t\t\t\\Col(M_{2})  & =\\Span\\Set{\\mat{0\\\\3},\\mat{2\\\\2}}=\\R^{2} \\\\\n\t\t\t\t\t\t\\Row(M_{2})  & =\\Span\\Set{\\mat{0\\\\2\\\\1},\\mat{3\\\\2\\\\5}}\\end{aligned}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\rref(M_{3})=\\mat{1&0\\\\0&1\\\\0&0}$.",
+         "sha": "baa7245cd539",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}\\Null(M_{3}) & =\\Set{\\mat{0\\\\0}}                        \\\\\n\t\t\t\t\t\t\\Col(M_{3})  & =\\Span\\Set{\\mat{1\\\\3\\\\4},\\mat{2\\\\1\\\\0}}  \\\\\n\t\t\t\t\t\t\\Row(M_{3})  & =\\Span\\Set{\\mat{1\\\\2},\\mat{3\\\\1}}=\\R^{2}\\end{aligned}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\rref(M_{4})=I_{4\\times4}$.",
+         "sha": "0e2863dd1770",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}\\Null(M_{4}) & =\\Set{\\mat{0\\\\0\\\\0\\\\0}} \\\\\n\t\t\t\t\t\t\\Col(M_{4})  & =\\R^{4}                  \\\\\n\t\t\t\t\t\t\\Row(M_{4})  & =\\R^{4}\\end{aligned}"
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Range & Nullspace of a Linear Transformation · 练习题 1（上游 book/modules/module11-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module11-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal{P}$ be the plane given by $3x+4y+5z=0$, and let $T:\\R ^{3}\\to\\R^{3}$ be projection onto $\\mathcal{P}$.",
+      "sha": "813883aff104",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find $\\Range(T)$ and $\\Rank(T)$.",
+         "sha": "482873b81046",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find $\\Null(T)$ and $\\Nullity(T)$.",
+         "sha": "bee9927309df",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Since $T$ is the projection onto $\\mathcal{P}$, $T(\\vec{x})=\\vec{x}$ for any $\\vec{x}\\in\\mathcal{P}$ and thus $\\mathcal{P}\\subseteq\\Range(T)$.",
+         "sha": "8937af57e2cb",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec{y}\\in\\Range(T)$. This means that $\\vec{y}=T(\\vec{x} )$ for some $\\vec{x}\\in\\R^{3}$. By definition of a projection, $\\vec{y}$ is the closest point in $\\mathcal{P}$ to $\\vec{x}$, so $\\vec{y}\\in\\mathcal{P}$ and thus $\\Range(T)\\subseteq\\mathcal{P}$.",
+         "sha": "0a5a04444aac",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "This shows that $\\Range(T)=\\mathcal{P}$.",
+         "sha": "3536f4aada35",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Since $\\Range(T)=\\mathcal{P}$ is a plane, we have $\\Rank(T)=\\Dim (\\Range(T))=\\Dim(\\mathcal{P})=2$.",
+         "sha": "ed8806f3c5b3",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "By the rank-nullity theorem,",
+         "sha": "e9f7b69c33f5",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Rank(T)+\\Nullity(T)=\\Dim(\\text{domain of $T$})."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Thus,",
+         "sha": "e38f4f305df3",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Nullity(T)=\\Dim(\\text{domain of $T$})-\\Rank(T)=3-2=1."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Since $\\vec{n}=\\mat{3\\\\4\\\\5}$ is normal to $\\mathcal{P}$, we have $T(\\vec{n})=\\vec{0}$ and thus $\\vec{n}\\in\\Null(T)$. Since $\\Nullity(T)=1$ and $\\vec{n}$ is a non-zero vector in $\\Null( T)$, we have",
+         "sha": "33a9fcf8b960",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Null(T)=\\Span\\Set{\\mat{3\\\\4\\\\5}}."
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Range & Nullspace of a Linear Transformation · 练习题 2（上游 book/modules/module11-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module11-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the range and null space of the following linear transformations.",
+      "sha": "99bdee8aa372",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{P}:\\R^{2}\\to\\R^{2}$, where $\\mathcal{P}$ is projection on to the line $y=x$.",
+         "sha": "6dffecdc924b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\theta\\in \\R$ and let $\\mathcal{R}:\\R^{2}\\to\\R^{2}$ to be the transformation which rotates all vectors by counter-clockwise by $\\theta$ radians.",
+         "sha": "8d16f95cf5e4",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{F}:\\R^{2}\\to\\R^{2}$, where $\\mathcal{F}$ reflects over the $x$-axis.",
+         "sha": "a82cf4c1313e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{M}:\\R^{3}\\to\\R^{3}$ where $\\mathcal{M}$ is the matrix transformation given by $\\mat{1&2&3\\\\4&5&6\\\\7&8&9}$.",
+         "sha": "267d02a1742f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{Q}:\\R^{3}\\to\\R^{1}$ defined by $\\mathcal{Q}\\mat{x\\\\y\\\\z} =x+z$.",
+         "sha": "b295a4bc8802",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Similar to Problem 2.(a),",
+         "sha": "045da61b0695",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}\\Range(P) & =\\Set{\\text{line given by the equation } y=x}  \\\\\n\t\t\t\t\t\t          & =\\Span\\Set{\\mat{1\\\\1}}                         \\\\\n\t\t\t\t\t\t\\Null(P)  & =\\Set{\\text{line given by the equation } y=-x} \\\\\n\t\t\t\t\t\t          & =\\Span\\Set{\\mat{1\\\\-1}}\\end{aligned}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Notice that if we have a non-zero vector, after rotation the vector still remains non-zero as rotation does not change magnitude of vectors. Thus, $\\Null(R)=\\Set{\\mat{0\\\\0}}$. From the rank-nullity theorem, $\\Rank(R) = 2$ implies that $\\Range(R) = \\R^{2}$.",
+         "sha": "ae18214a2438",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Since $F\\mat{x\\\\y}= \\mat{x\\\\-y}$, if $F\\mat{x\\\\y}= \\mat{0\\\\0}$, then $x=y=0$. Thus, $\\Null(F)=\\Set *{\\mat{0\\\\0}}$. From the rank-nullity theorem, $\\Rank(F)=2$ implies that $\\Range(F)=\\R^{2}$.",
+         "sha": "516d3a5ce68f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let M be the matrix of the transformation $\\mathcal{M}$. $\\Rref(M)= \\mat{1&0&-1\\\\0&1&2\\\\0&0&0}$ So, $\\Range(M)=\\Col(M) =\\Span\\Set{\\mat{1\\\\4\\\\7},\\mat{2\\\\5\\\\8}}$ and $\\Null(M)=\\Span \\Set{\\mat{1\\\\-2\\\\1}}$.",
+         "sha": "183b8497e73a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Notice that $\\Range(Q)\\subseteq\\R$. For any $t\\in\\R^{1}$, we have $Q\\mat{t\\\\0\\\\0}=t+0=t$ and thus $t\\in\\Range(Q)$. Hence, $\\Range(Q) = \\R^{1}$. For $\\vec x \\in \\R^{3}$, $Q(\\vec x)=Q\\mat {x\\\\y\\\\z}=x+z=0$. Thus, $\\Null(Q)$ is the plane given by the equation $x+z=0$ Alternatively, $\\Null(Q) = \\Span\\Set{\\mat{1\\\\0\\\\-1},\\mat{0\\\\1\\\\0}}$",
+         "sha": "40eb8822769e",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Range & Nullspace of a Linear Transformation · 练习题 3（上游 book/modules/module11-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module11-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\mathcal{T}$ be the transformation induced by the matrix $\\mat {7&5\\\\-2&-2}$, and $\\vec v=3\\xhat-3\\yhat$. Compute $\\mathcal{T}\\vec v$ and $[\\mathcal{T}\\vec v]_{\\mathcal{E}}$.",
+         "sha": "e8e5639604ad",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\mathcal{T}$ be the transformation induced by the matrix $\\mat {3&7&5\\\\1&-2&-2}$, and $\\vec v=2\\xhat+0\\yhat+4\\zhat$. Compute $\\mathcal{T} \\vec v$ and $[\\mathcal{T}\\vec v]_{\\mathcal{E}}$.",
+         "sha": "f3f955bce7fc",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$[\\vec v]_{\\varepsilon}= \\mat{3\\\\-3}\\;$ So, $[T\\vec v]_{\\varepsilon}= \\mat{7&5\\\\-2&-2}\\mat{3\\\\-3}=\\mat{6\\\\0}$",
+         "sha": "04463d4257d8",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Thus $T\\vec v =6\\vec e_{1}.$",
+         "sha": "d43dfad7cfa1",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$[\\vec v]_{\\varepsilon}= \\mat{2\\\\0\\\\4}\\;$ So, $[T\\vec v]_{\\varepsilon}= \\mat{3&7&5\\\\1&-2&-2}\\mat{2\\\\0\\\\4}=\\mat {26\\\\-6}$",
+         "sha": "97dcf6e36ba5",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Thus $T\\vec v =26\\vec e_{1}-6\\vec e_{2}\\;$ [Here $\\vec e_{1}, \\vec e_{2}\\in \\R^{2}$]",
+         "sha": "4ac70d576d39",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Range & Nullspace of a Linear Transformation · 练习题 4（上游 book/modules/module11-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module11-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each statement below, determine whether it is true or false. Justify your answer.",
+      "sha": "e3b37b865c04",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $A$ be an arbitrary matrix. Then $\\Col(A)=\\Col(A^{T})$.",
+         "sha": "b4e9618f881e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $T:\\R^{m}\\to\\R^{n}$ be a transformation (not necessarily linear). If $\\Null(T)=\\Set{\\vec x\\in\\R^m \\given T(\\vec x)=\\vec 0}$ is a subspace, then $T$ is linear.",
+         "sha": "6b1e93d18043",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $T:\\R^{m}\\to\\R^{n}$ be a linear transformation. Then $\\Nullity(T) \\geq n$.",
+         "sha": "7cb818cf4bcd",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $T:\\R^{m}\\to\\R^{n}$ be a linear transformation induced by a matrix $M$. If $\\Rank(T) = n$, then $\\Nullity(M) = 0$.",
+         "sha": "880aada4fe24",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. $\\Range(A)$ and $\\Range(A^{T})$ need not even be in the same space.",
+         "sha": "dff090a175ed",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "For example, take $A=\\mat{1&0\\\\0&1\\\\0&0}, A^{T}=\\mat{1&0&0\\\\0&1&0}$ Then $\\Range(A)=\\Set{xy-\\text{plane in }\\R^3}$, whereas $\\Range(A^{T})=\\R^{2}$",
+         "sha": "5da078ddde4e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. Consider, $T:\\R^{2}\\to\\R^{2}$ given by",
+         "sha": "009aafd321a0",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "T\\mat{x\\\\y}=\\mat{x^2\\\\y}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Then, $\\Null(T)= \\Set{\\mat{0\\\\0}}$ which is a subspace. But $T$ is not linear.",
+         "sha": "390db351c312",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. From rank-nullity theorem,",
+         "sha": "85bda2e1cf00",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}\\Nullity(T) & \\leq \\Dim(\\text{ domain of }T) & =m \\quad \\text{ (in this case) }\\end{aligned}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "So, for any $n>m$ this is false. Consider for example",
+         "sha": "7060f7a7e849",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}& T:\\R^{1}\\to\\R^{2}\\;\\text{given by} & T(x)=\\mat{x\\\\0};\\; \\Nullity(T)=0\\end{aligned}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. This is false whenever $m>n$ (follows from rank-nullity theorem) Take for example: $T:\\R^{3}\\to\\R^{2}$ induced by the matrix $A=\\mat{1&0&0\\\\0&1&0}$; we have that $\\Rank(T)=\\Dim( \\Col A)=2$, and $\\Nullity(T) = \\Nullity(A)=1$.",
+         "sha": "7d0f2544f1f2",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Range & Nullspace of a Linear Transformation · 练习题 5（上游 book/modules/module11-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module11-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Give an example of a $3\\times4$ matrix $M$ with the specified rank, or explain why one cannot exist.",
+      "sha": "be218245aedc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Rank(M) = 0$",
+         "sha": "2f85221aff79",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Rank(M) = 1$",
+         "sha": "722a12825ae4",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Rank(M) = 3$",
+         "sha": "af8d29aee58d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Rank(M) = 4$",
+         "sha": "648eceb15055",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{0&0&0&0\\\\0&0&0&0\\\\0&0&0&0}$",
+         "sha": "e33578698fbd",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1&0&0&0\\\\0&0&0&0\\\\0&0&0&0}$",
+         "sha": "e8c817c0067c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1&0&0&0\\\\0&1&0&0\\\\0&0&1&0}$",
+         "sha": "8adf5d18d177",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A $3\\times4$ matrix with rank 4 cannot exist. Examples of justifications are: 1) The column space of a $3\\times 4$ matrix is a subspace of $\\R^{3}$ and so cannot be four dimensional; 2) A matrix with rank 4 has 4 pivots, but a $3\\times 4$ matrix can have at most 3 pivots, which is less than 4.",
+         "sha": "ce6e10757098",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Range & Nullspace of a Linear Transformation · 练习题 6（上游 book/modules/module11-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module11-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal{P}:\\R^{3}\\to\\R^{3}$ be the projection onto the $xy$-plane.",
+      "sha": "4b24da901b27",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find a matrix $M_{\\mathcal{P}}$ for the transformation.",
+         "sha": "676505a878ca",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the range of $\\mathcal{P}$.",
+         "sha": "f6a11665306a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the column space of $M_{\\mathcal{P}}$. Are there any similarities to your answer in the previous part?",
+         "sha": "49780eaecc76",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the null space of $\\mathcal{P}$ and $M_{\\mathcal{P}}$. Are there similarities between the null space of a linear transformation and its associated matrix?",
+         "sha": "76e961a8ecca",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1&0&0\\\\0&1&0\\\\0&0&0}$",
+         "sha": "eb7f4172f663",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The range of $\\mathcal{P}$ is the $xy$-plane.",
+         "sha": "918d41505177",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The column space of $M_{\\mathcal{P}}$ is $\\Span\\Set{\\mat{1\\\\0\\\\0},\\mat{0\\\\1\\\\0}}$, which is the $xy$-plane. The column space of a matrix is the same as the range of its induced transformation.",
+         "sha": "e7ba4b987369",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The null space of $\\mathcal{P}$ and $M_{\\mathcal{P}}$ is $\\Span \\Set{\\mat{0\\\\0\\\\1}}$, which is the $z$-axis. The null space of a matrix is the same as the null space of its induced transformation.",
+         "sha": "ddcc8d9f2a74",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Range & Nullspace of a Linear Transformation · 练习题 7（上游 book/modules/module11-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module11-exercises.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "线性变换的值域与零空间"
+}

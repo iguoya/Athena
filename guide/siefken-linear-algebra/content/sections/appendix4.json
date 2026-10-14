@@ -1,0 +1,1210 @@
+{
+ "id": "appendix4",
+ "title_en": "Computing $2\\times 2$ Determinants",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "Module 〔引用〕 discusses the theory of determinants and gives a general algorithm for computing determinants by using elementary matrices. But, since $2\\times 2$ and $3\\times 3$ matrices arise so often in day-to-day life, 〔注： The day-to-day life of a mathematics student, at least!〕 it is worth learning some special-purpose formulas for computing the determinants of $2\\times 2$ and $3\\times 3$ matrices.",
+    "sha": "1048da743c7c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It should be noted that these formulas are *special*. Though there do exist formulas for determinants of $n\\times n$ matrices, \\emphthey are exponentially more complex than the formulas for $2\\times 2$ and $3\\times 3$ matrices. As such, determinants of large matrices are usually computed using row reduction/elementary matrices and not formulas 〔注： General determinant formulas are primarily useful as theoretical tools for writing proofs.〕.",
+    "sha": "1e015a7c44ca",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Computing $2\\times 2$ Determinants",
+    "sha": "5ed5ac721775",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For a $2\\times 2$ matrix, we can calculate its determinant directly from its entries.",
+    "sha": "a8be7dc984ee",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $M=\\mat{a & b \\\\ c & d}$. Then,",
+      "sha": "b5a9cf2ee90d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(M)=ad-bc."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The $2\\times 2$ determinant formula can be deduced from Volume Theorem I. Let $M=\\mat{a&b\\\\c&d}$ and let $\\vec c_1=\\mat{a\\\\c}$ and $\\vec c_2=\\mat{b\\\\d}$ be the columns of $M$. We need to compute the area of the parallelogram $\\mathcal P$, with sides $\\vec c_1$ and $\\vec c_2$.",
+    "sha": "2a10c50bf9e6",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "5f0486bcc4f7"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can compute the area of $\\mathcal P$ by computing the area of a rectangle that contains $\\mathcal P$ and subtracting off any area that we “over counted”.",
+    "sha": "c197eef3704d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "08cde5a64b4c"
+   ],
+   "caption": null
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "020c84fc12a7"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Thus,",
+    "sha": "e38f4f305df3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Vol(\\mathcal P) = \\text{area of big rectangle} - \\text{area of little rectangles} - \\text{area of triangles}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Using the coordinates for $\\vec c_1$ and $\\vec c_2$, we get",
+    "sha": "ecf8775176de",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Vol(\\mathcal P) = \\underbrace{(a+b)(d+c)}_{\\text{area of big rectangle}} \\qquad -\n\t\\underbrace{2bc}_{\\text{area of little rectangles}} -\n\t\\underbrace{2\\tfrac{ac}{2} + 2\\tfrac{bd}{2}}_{\\text{area of triangles}} = ad-bc."
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "08502eebf4e6"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Equation 〔引用〕 is beautiful and simple, but its derivation should give you pause. Volume Theorem I refers to *oriented* volume and we didn't make any reference to orientation in our figures! Indeed, we played tricks with pictures. We drew $\\vec c_1$ and $\\vec c_2$ in a right-handed orientation in the first quadrant, even though the vectors $\\mat{a\\\\c}$ and $\\mat{b\\\\d}$ could be in *any* quadrant (and one or both could even be the zero vector)! To fully justify Equation 〔引用〕, we need to consider cases based on all the possible ways $\\vec c_1$ and $\\vec c_2$ can form a parallelogram. However, it turns out that every case gives the same answer: $\\det\\left(\\mat{a&b\\\\c&d}\\right)=ad-bc$.",
+    "sha": "43cd077af6d4",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Directly compute the determinant of $M=\\mat{1 & 6 \\\\ 2 & 7}$ using the $2\\times 2$ formula. Then, find the determinant of $M$ after decomposing it into the product of elementary matrices.",
+      "sha": "63c31ff799c1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Using the $2\\times 2$ formula, we get",
+      "sha": "fb19d224c130",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(M)=(1)(7)-(2)(6)=-5."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Alternatively, row reducing and keeping track of the elementary matrices for each step, we see",
+      "sha": "7260e4aaed15",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\underbrace{\\mat{1 & -6 \\\\ 0 & 1}}_{\\textstyle E_3}\n\t\t\\underbrace{\\mat{1 & 0 \\\\ 0 & -\\frac{1}{5}}}_{\\textstyle E_2}\n\t\t\\underbrace{\\mat{1 & 0 \\\\ -2 & 1}}_{\\textstyle E_1} M = \\mat{1&0\\\\0&1},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so",
+      "sha": "9af790b3a93d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "M = \\mat{1 & 0 \\\\ 2 & 1}\n\t\t    \\mat{1 & 0 \\\\ 0 & -5}\n\t\t    \\mat{1 & 6 \\\\ 0 & 1} = E_1^{-1} E_2^{-1} E_3^{-1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "$E_1^{-1}$ and $E_3^{-1}$ both have determinant $1$, and $E_2^{-1}$ has determinant $-5$. Thus,",
+      "sha": "883d40516e5a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(M)=\\det(E_1^{-1})\\det(E_2^{-1})\\det(E_3^{-1})=(1)(-5)(1)=-5,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which is exactly what we got using the formula.",
+      "sha": "99eaf006521a",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Computing $3\\times 3$ Determinants",
+    "sha": "bb9195ddb174",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The formula for a $3\\times 3$ matrix is more complicated than the $2\\times 2$ formula.",
+    "sha": "084b4639354e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $M=\\mat{a & b & c \\\\ d & e & f \\\\ g & h & i}$. Then",
+      "sha": "72040366e705",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(M)=aei+bfg+cdh-gec-hfa-idb."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Fortunately, there is a clever mnemonic for remembering this formula called *the Rule of Sarrus* or *the diagonal trick*.",
+    "sha": "9f52a82598c2",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "\\bfseries Rule of Sarrus",
+    "sha": "2f5780ed788a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $M=\\mat{a & b & c \\\\ d & e & f \\\\ g & h & i}$. To compute the determinant of $M$ using the Rule of Sarrus, apply the following four steps.",
+    "sha": "aea6ca8d77cb",
+    "zh": ""
+   }
+  },
+  {
+   "k": "list",
+   "ordered": true,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "[leftmargin=2.4cm]",
+       "sha": "008c492232b0",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Augment $M$ with copies of its *first two columns*.",
+       "sha": "af2aad3690e1",
+       "zh": ""
+      }
+     },
+     {
+      "k": "math",
+      "tex": "\\begin{bmatrix}\n\t\t\t\t[ccc|cc] a & b & c & a & b \\\\\n\t\t\t\td          & e & f & d & e \\\\\n\t\t\t\tg          & h & i & g & h\n\t\t\t\\end{bmatrix}"
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Multiply together and then *add* the entries along the three diagonals of the new matrix. These are called the *diagonal products*.",
+       "sha": "351eafd081f4",
+       "zh": ""
+      }
+     },
+     {
+      "k": "math",
+      "tex": "\\left[\\begin{array}{ccc|cc}\n\t\t\t\ta & b & c & a & b \\\\\n\t\t\t\td & e & f & d & e \\\\\n\t\t\t\tg & h & i & g & h\n\t\t\t\\end{array}\\right]"
+     },
+     {
+      "k": "math",
+      "tex": "\\text{sum of diagonal products}={ aei} + {\\color{NavyBlue} bfg} + { cdh}."
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Multiply together and then *subtract* the entries along the three anti-diagonals. These are called the *anti-diagonal products*.",
+       "sha": "103f2548cbb6",
+       "zh": ""
+      }
+     },
+     {
+      "k": "math",
+      "tex": "\\left[\\begin{array}{ccc|cc}\n\t\t\t\ta & b & c & a & b \\\\\n\t\t\t\td & e & f & d & e \\\\\n\t\t\t\tg & h & i & g & h\n\t\t\t\\end{array}\\right]"
+     },
+     {
+      "k": "math",
+      "tex": "\\text{difference of anti-diagonal products}=-{ gec}-{\\color{NavyBlue} hfa}-{ idb}"
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Add the diagonal products and subtract the anti-diagonal products to get the determinant.",
+       "sha": "96a1e07cf4e6",
+       "zh": ""
+      }
+     },
+     {
+      "k": "math",
+      "tex": "\\det(M)=aei+bfg+cdh-gec-hfa-idb."
+     }
+    ]
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use the diagonal trick to compute $\\det\\left(\\mat{1 & 4 & 0 \\\\ -2 & 3 & 1 \\\\ 0 & 2 & 1}\\right)$.",
+      "sha": "349d7400f557",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{ccc|cc}\n\t\t\t1  & 4 & 0 & 1  & 4 \\\\\n\t\t\t-2 & 3 & 1 & -2 & 3 \\\\\n\t\t\t0  & 2 & 1 & 0  & 2\n\t\t\\end{array}\\right]"
+    },
+    {
+     "k": "math",
+     "tex": "\\text{sum of diagonal products}={ (1)(3) (1)}+{\\color{NavyBlue} (4)(1) (0)}+{(0)(-2)(2)}=3+0+0."
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{ccc|cc}\n\t\t\t1  & 4 & 0 & 1  & 4 \\\\\n\t\t\t-2 & 3 & 1 & -2 & 3 \\\\\n\t\t\t0  & 2 & 1 & 0  & 2\n\t\t\\end{array}\\right]"
+    },
+    {
+     "k": "math",
+     "tex": "\\text{difference of anti-diagonal products}=-{(0) (3) (0)}-{\\color{NavyBlue}(2)(1) (1)}-{ (1) (-2)(4)}=-0-2-(-8)."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Thus,",
+      "sha": "e38f4f305df3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det\\left(\\mat{1 & 4 & 0 \\\\ -2 & 3 & 1 \\\\ 0 & 2 & 1}\\right)=3\\ +0\\ +0\\quad-0\\ -2\\ -(-8)=9."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It may be tempting to apply the Rule of Sarrus to $4\\times 4$ and larger matrices, but *don't do it!* There is a formula for $4\\times 4$ determinants, but *it's not given by the Rule of Sarrus*\\footnote Because your curiosity is never ending, here's the formula. For a matrix $4\\times 4$ matrix $A=[a_{ij}]$, we have $\\det(A)= a_{1 1} a_{2 2} a_{3 3} a_{4 4} - a_{1 1} a_{2 2} a_{3 4} a_{4 3} - a_{1 1} a_{2 3} a_{3 2} a_{4 4} + a_{1 1} a_{2 3} a_{3 4} a_{4 2} + a_{1 1} a_{2 4} a_{3 2} a_{4 3} - a_{1 1} a_{2 4} a_{3 3} a_{4 2} - a_{1 2} a_{2 1} a_{3 3} a_{4 4} + a_{1 2} a_{2 1} a_{3 4} a_{4 3} + a_{1 2} a_{2 3} a_{3 1} a_{4 4} - a_{1 2} a_{2 3} a_{3 4} a_{4 1} - a_{1 2} a_{2 4} a_{3 1} a_{4 3} + a_{1 2} a_{2 4} a_{3 3} a_{4 1} + a_{1 3} a_{2 1} a_{3 2} a_{4 4} - a_{1 3} a_{2 1} a_{3 4} a_{4 2} - a_{1 3} a_{2 2} a_{3 1} a_{4 4} + a_{1 3} a_{2 2} a_{3 4} a_{4 1} + a_{1 3} a_{2 4} a_{3 1} a_{4 2} - a_{1 3} a_{2 4} a_{3 2} a_{4 1} - a_{1 4} a_{2 1} a_{3 2} a_{4 3} + a_{1 4} a_{2 1} a_{3 3} a_{4 2} + a_{1 4} a_{2 2} a_{3 1} a_{4 3} - a_{1 4} a_{2 2} a_{3 3} a_{4 1} - a_{1 4} a_{2 3} a_{3 1} a_{4 2} + a_{1 4} a_{2 3} a_{3 2} a_{4 1}$. This formula involves $24$ products. The $5\\times 5$ formula involves $120$ products and the $6\\times 6$ formula involves $720$ products. It only gets worse from there.",
+    "sha": "50292a71178c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": ".",
+    "sha": "3a52ce780950",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Like the $2\\times 2$ formula for determinants, we can derive the $3\\times 3$ formula directly from the definition. However, it takes quite a bit more work\\footnote If you're interested in proving the $3\\times 3$ determinant formula, try using the elementary matrix approach rather than computing the volume of a parallelepiped directly..",
+    "sha": "16245761ced3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Determinant Formulas and Orientation",
+    "sha": "339a5f799b5f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Determinants and orientation are connected and our determinant formulas (if we accept them as true) give us an alternative way to determine the orientation of a basis.",
+    "sha": "051e03d61d30",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\mathcal B=\\Set{\\vec b_1,\\vec b_2}$ be an ordered basis for $\\R^2$, and let $M=[\\vec b_1|\\vec b_2]$ be the matrix whose columns are $\\vec b_1$ and $\\vec b_2$. Since $\\mathcal B$ is linearly independent, we know that $\\det(M)\\neq 0$. Further, applying the definition of the determinant, we know",
+    "sha": "e054c1790181",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\det(M)>0"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "means that $\\mathcal B$ is a right-handed basis and $\\det(M)<0$ means $\\mathcal B$ is a left-handed basis.",
+    "sha": "d40c1640563b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use a determinant to decide whether the ordered basis $\\Set{\\mat{1\\\\2},\\mat{-3\\\\2}}$ is left-handed or right-handed.",
+      "sha": "6dd18a161a11",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A = \\mat{1 & -3 \\\\ 2 & 2}$ be the matrix whose columns are the elements of the given ordered basis.",
+      "sha": "e5bb35fb1a70",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Using the formula for $2 \\times 2$ determinants gives us",
+      "sha": "cb05bc462e7d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(A) = (1)(2) - (2)(-3) = 8 > 0"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so we conclude $\\Set{\\mat{1\\\\2},\\mat{-3\\\\2}}$ is a right-handed basis.",
+      "sha": "1a715fcdfd34",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Recall the ordered basis $\\mathcal Q=\\Set{\\xhat, \\vec u_{\\theta}}$ where $\\vec u_\\theta = \\mat{\\cos\\theta\\\\\\sin\\theta}$ is the unit vector which forms an angle of $\\theta$ with the positive $x$-axis.",
+    "sha": "4dad893c4039",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "8d9920cc0215"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Visually, we can see that $\\mathcal Q$ should be right-handed when $\\theta\\in(0,\\pi)$, left handed when $\\theta\\in(\\pi,2\\pi)$ and $\\mathcal Q$ is not a basis when $\\theta=0$ or $\\theta =\\pi$.",
+    "sha": "959a9442e1be",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "But what does the determinant say?",
+    "sha": "03accf49f5e7",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Computing the determinant of the matrix $Q=[\\xhat|\\,\\vec u_\\theta]$ directly using the $2\\times 2$ determinant formula, we get",
+    "sha": "cf912fd714ed",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\det(Q) = \\det([\\xhat|\\,\\vec u_\\theta]) = \\det\\left(\\mat{1&\\cos\\theta\\\\0&\\sin\\theta}\\right) = \\sin\\theta."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Notice that $\\det(Q)=\\sin\\theta>0$ when $\\theta\\in(0,\\pi)$, $\\det(Q)=\\sin\\theta < 0$ when $\\theta\\in(\\pi,2\\pi)$ and $\\det(Q)=\\sin\\theta=0$ when $\\theta\\in\\Set{0,\\pi}$.",
+    "sha": "131d89dae3f1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The determinant supports our intuition.",
+    "sha": "2a57049db232",
+    "zh": ""
+   }
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each matrix given below, calculate its determinant using both row reduction/elementary matrices and the $2\\times 2$ determinant formula.",
+      "sha": "25d551cad5c8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1 & 0 \\\\ 2 & 4}$",
+         "sha": "0b8c592e80e0",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1 & 5 \\\\ 1 & 5}$",
+         "sha": "7f7957b0e19b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1 & 0 \\\\ 0 & 1}$",
+         "sha": "6664daefb96d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1 & 1 \\\\ 0 & 0}$",
+         "sha": "1e2f33bbbac5",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$4$",
+         "sha": "c7cab1a05e1e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$0$",
+         "sha": "bc1f9d9bf8a1",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$1$",
+         "sha": "dce34f4dfb24",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$0$",
+         "sha": "bc1f9d9bf8a1",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Computing $2\\times 2$ Determinants · 练习题 1（上游 book/modules/appendix4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each matrix given below, calculate its determinant using both row reduction/elementary matrices and the $3\\times 3$ determinant formula.",
+      "sha": "5fa068dfc5f9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1 & 0 & 0 \\\\ 1 & 0 & 2 \\\\ 1 & 6 & 5}$",
+         "sha": "5e68682e6f2e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1 & -4 & 1 \\\\ 2 & 6 & 5 \\\\ 2 & 2 & 3}$",
+         "sha": "51c6ad1e1da1",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{-1 & 0 & -8 \\\\ 1 & -3 & -8 \\\\ 1 & -2 & -1}$",
+         "sha": "3927460bf3d8",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{2 & 0 & 0 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 3}$",
+         "sha": "2852851634ca",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{0 & 0 & 0 \\\\ 0 & 0 & 0 \\\\ 0 & 0 & 0}$",
+         "sha": "124a20bdffd6",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$-12$",
+         "sha": "dcadf6b880a7",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$-16$",
+         "sha": "09372266f72f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$5$",
+         "sha": "79069377f913",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$12$",
+         "sha": "edf074831eb5",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$0$",
+         "sha": "bc1f9d9bf8a1",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Computing $2\\times 2$ Determinants · 练习题 2（上游 book/modules/appendix4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each ordered set given below, use a determinant to decide whether it is a right-handed basis, a left-handed basis, or not a basis.",
+      "sha": "02c17ec23c70",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{1 \\\\ -3},\\mat{1 \\\\ 2}}$",
+         "sha": "1c33db810d69",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{1 \\\\ -3},\\mat{-2 \\\\ 6}}$",
+         "sha": "cac612341bb8",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{1 \\\\ 0 \\\\ 3},\\mat{1 \\\\ 2 \\\\ 5},\\mat{1 \\\\ -1 \\\\ 1}}$",
+         "sha": "57802ef22e88",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{1 \\\\ 4 \\\\ 9},\\mat{1 \\\\ 2 \\\\ 3},\\mat{1 \\\\ 1 \\\\ 1}}$",
+         "sha": "1eb965b1928a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{4 \\\\ 2 \\\\ 4},\\mat{4 \\\\ 2 \\\\ 0},\\mat{2 \\\\ 1 \\\\ 6}}$",
+         "sha": "c069765ca28c",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Since $\\det\\left(\\mat{1 & 1 \\\\ -3 & 2}\\right)=5>0$, the ordered set $\\Set{\\mat{1 \\\\ -3},\\mat{1 \\\\ 2}}$ is a right-handed basis.",
+         "sha": "c9050b869340",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Since $\\det\\left(\\mat{1 & -2 \\\\ -3 & 6}\\right)=0$, the set $\\Set{\\mat{1 \\\\ -3},\\mat{-2 \\\\ 6}}$ is not linearly independent and so is not a basis.",
+         "sha": "79febc9cdfa2",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Since $\\det\\left(\\mat{1 & 1 & 1 \\\\ 0 & 2 & -1 \\\\ 3 & 5 & 1}\\right)=-2< 0$, the ordered set $\\Set{\\mat{1 \\\\ 0 \\\\ 3},\\mat{1 \\\\ 2 \\\\ 5},\\mat{1 \\\\ -1 \\\\ 1}}$ is a left-handed basis.",
+         "sha": "5aed567b259b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Since $\\det\\left(\\mat{1 & 1 & 1 \\\\ 4 & 2 & 1 \\\\ 9 & 3 & 1}\\right)=-2<0$, the ordered set $\\Set{\\mat{1 \\\\ 4 \\\\ 9},\\mat{1 \\\\ 2 \\\\ 3},\\mat{1 \\\\ 1 \\\\ 1}}$ is a left-handed basis.",
+         "sha": "ce5606020237",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Since $\\det\\left(\\mat{4 & 4 & 2 \\\\ 2 & 2 & 1 \\\\ 4 & 0 & 6}\\right)=0$, the set $\\Set{\\mat{4 \\\\ 2 \\\\ 4},\\mat{4 \\\\ 2 \\\\ 0},\\mat{2 \\\\ 1 \\\\ 6}}$ is not linearly independent and so is not a basis.",
+         "sha": "afb3d3dddba4",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Computing $2\\times 2$ Determinants · 练习题 3（上游 book/modules/appendix4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find all values of $a,b\\in \\R$ so that the ordered set $\\Set{\\mat{a^2 \\\\ ab},\\mat{ab \\\\ b}}$ is (a) a right-handed basis, (b) a left-handed basis, (c) not a basis.",
+      "sha": "870fff3d6972",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Before answering, note that $\\det\\left(\\mat{a^2 & ab \\\\ ab & b}\\right)=a^{2}b-a^{2}b^{2}=a^{2}( b -b^{2})$.",
+      "sha": "0dedfdfaf213",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $\\Set{\\mat{a^2 \\\\ ab},\\mat{ab \\\\ b}}$ is a right-handed basis, then $\\det\\left(\\mat{a^2 & ab \\\\ ab & b}\\right)=a^{2}( b-b^{2})>0$. This implies that $a^{2}$ and $b-b^{2}$ are both nonzero and have the same sign. Since $a^{2}\\ge 0$, we must have $a^{2}>0$ and $b-b^{2}>0$. The roots of $b-b^{2}$ are $b=0$ and $b=1$, so $b-b^{2}>0$ implies $0<b<1$. Therefore, $\\Set{\\mat{a^2 \\\\ ab},\\mat{ab \\\\ b}}$ is a right-handed basis when $a\\ne 0$ and $0<b<1$.",
+         "sha": "ae1077cade18",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $\\Set{\\mat{a^2 \\\\ ab},\\mat{ab \\\\ b}}$ is a left-handed basis, then $\\det\\left(\\mat{a^2 & ab \\\\ ab & b}\\right)=a^{2}( b-b^{2})<0$. This implies that $a^{2}$ and $b-b^{2}$ are both nonzero and have different signs. Since $a^{2}\\ge 0$, this implies that $a^{2}>0$ and $b-b^{2}<0$. Roots of $b-b^{2}$ are $b=0$ and $b=1$, so $b-b^{2}<0$ implies $b<0$ or $b>1$. Therefore, $\\Set{\\mat{a^2 \\\\ ab},\\mat{ab \\\\ b}}$ is a left-handed basis when $a\\ne 0$ and either $b<0$ or $b>1$.",
+         "sha": "f0f187033efa",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $\\Set{\\mat{a^2 \\\\ ab},\\mat{ab \\\\ b}}$ is not a basis, then $\\det\\left(\\mat{a^2 & ab \\\\ ab & b}\\right)=a^{2}( b-b^{2})=0$. This implies that $a^{2}=0$ or $b-b^{2}=0$. Therefore, $\\Set* {\\mat{a^2 \\\\ ab},\\mat{ab \\\\ b}}$ is not a basis if one of the following conditions holds: $a=0$, $b=1$, or $b=0$.",
+         "sha": "15be11dddf13",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Computing $2\\times 2$ Determinants · 练习题 4（上游 book/modules/appendix4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $M=\\mat{a & b \\\\ c & d}$. The *adjugate matrix* (sometimes called the *classical adjoint*) of $M$, notated $M^{\\text{adj}}$, is the matrix given by $M^{\\text{adj}}=\\mat{d & -b \\\\ -c & a}$. Prove that if $M$ is invertible, then $\\displaystyle M^{-1}=\\frac{M^{\\text{adj}}}{\\det(M)}$.",
+      "sha": "23316e0c8c8e",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Since",
+      "sha": "22a4ed66c623",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\frac{M^{\\text{adj}}}{\\det{M}}M=\\frac{1}{ad-bc}\\mat{da-bc & db-bd \\\\ ac-ca& ad-cb}"
+    },
+    {
+     "k": "math",
+     "tex": "=\\mat{1 & 0 \\\\ 0 & 1}=I_{2\\times 2}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and",
+      "sha": "cffa50a32cb1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "M\\frac{M^{\\text{adj}}}{\\det{M}}=\\frac{1}{ad-bc}\\mat{ad-bc & ba-ab \\\\ cd-dc& da-cb}"
+    },
+    {
+     "k": "math",
+     "tex": "=\\mat{1 & 0 \\\\ 0 & 1}=I_{2\\times 2},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "we conclude that",
+      "sha": "0d58a9bbcd63",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "M^{-1}=\\frac{M^{\\text{adj}}}{\\det(M)}."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Computing $2\\times 2$ Determinants · 练习题 5（上游 book/modules/appendix4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each statement below, determine whether it is true or false. Justify your answer.",
+      "sha": "e3b37b865c04",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A $2\\times 2$ matrix $M$ has determinant $1$ if and only if $M= I_{2\\times 2}$.",
+         "sha": "d3f857d7ff3b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A $3\\times 3$ matrix $M$ has determinant $1$ if and only if $\\VolChange (\\mathcal{T}_{M})$ is equal to 1, where $\\mathcal{T}_{M}$ is the transformation given by $\\mathcal{T}_{M}(\\vec x)=M\\vec x$.",
+         "sha": "a03228aeedf6",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "For vectors $\\vec a,\\vec b\\in \\R^{2}$, it is always the case that $\\det([\\vec a|\\vec b])=-\\det([\\vec b|\\vec a])$.",
+         "sha": "75eb62f97b4c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "For a $2\\times 2$ or $3\\times 3$ matrix $M$, multiplying a single entry of $M$ by $4$ will change $\\det(M)$ by a factor of $4$.",
+         "sha": "eccfcdac6a46",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "For a square matrix $A$, it is always the case that $\\det(A^{T}A)\\geq 0$.",
+         "sha": "d53cab7cdc81",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. A counterexample is $M=\\mat{2 & 0 \\\\ 0 & \\frac{1}{2}}$.",
+         "sha": "79a122a4998e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. A counterexample is $M=\\mat{-1 & 0 & 0 \\\\ 0 & -1 & 0 \\\\ 0 & 0 & -1}$. $M$ does not change volume, but it does reverse orientation.",
+         "sha": "e8d1a45777c5",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True. Note that $[\\vec a|\\vec b]$ is just $[\\vec b|\\vec a]$ with its columns swapped. The oriented volume of the parallelogram generated by $\\vec a$ and $\\vec b$ is equal to the negative of the oriented volume of the parallelogram generated by $(\\vec b,\\vec a)$. Using Volume Theorem I, we have $\\det([\\vec a|\\vec b])=-\\det([\\vec b|\\vec a])$.",
+         "sha": "cf26f0efeb60",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. A counterexample is $M=\\mat{1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1}$. We multiply the $(1,2)$-entry by $4$ to get another matrix $M'$. Note that $M'$ is still $\\mat{1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1 }$, and $\\det(M)=1=\\det(M')\\ne 4\\det(M)$.",
+         "sha": "4d428f9c59f5",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True. Note that $\\det(A^{T}A)=\\det(A^{T})\\det(A)=\\det(A)\\det(A)=\\det(A)^{2}\\ge 0$.",
+         "sha": "30845624656a",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Computing $2\\times 2$ Determinants · 练习题 6（上游 book/modules/appendix4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix4-exercises.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "二阶行列式的计算"
+}

@@ -1,0 +1,25 @@
+\begin{tikzpicture}
+		\begin{axis}[
+		    anchor=origin,
+		    disabledatascaling,
+		    xmin=-2,xmax=3,
+		    ymin=-1,ymax=2,
+			xtick={-2,...,3},
+			ytick={-2,...,3},
+		    x=1cm,y=1cm,
+		    grid=both,
+		    grid style={line width=.1pt, draw=gray!10},
+		    axis lines=middle,
+		    minor tick num=0,
+		    enlargelimits={abs=0.5},
+		    axis line style={latex-latex},
+		    ticklabel style={font=\tiny,fill=white},
+		    xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+		    ylabel style={at={(ticklabel* cs:1)},anchor=south west}
+		]
+			\fill [mypink, opacity=.3] (0,0) -- (1,0) -- (1,1) node[midway, right, opacity=1] {$U$} -- (0,1) -- cycle;
+			\draw [black!70!white, thick,dashed, ->, yshift=-.15cm] (0,0) -- (1,0) node[midway, below] {$\xhat$};
+			\draw [black!70!white, thick,dashed, ->, xshift=-.15cm] (0,0) -- (0,1) node[midway, left] {$\yhat$};
+		\end{axis}
+			\node[above right] at (0,2) {~The unit square $U$};
+	\end{tikzpicture}

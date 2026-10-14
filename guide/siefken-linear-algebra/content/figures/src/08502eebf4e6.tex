@@ -1,0 +1,28 @@
+\begin{tikzpicture}
+		\begin{axis}[
+			anchor=origin,
+			disabledatascaling,
+			xmin=0,xmax=4,
+			ymin=0,ymax=4,
+			xtick={1.5,2,3.5},
+			ytick={1,3,4},
+			xticklabels={$b$, $a$, $a+b$},
+			yticklabels={$c$, $d$, $c+d$},
+			x=1cm,y=1cm,
+			grid=both,
+			grid style={line width=.1pt, draw=gray!10},
+			axis lines=middle,
+			minor tick num=0,
+			enlargelimits={abs=0.5},
+			axis line style={latex-latex},
+			ticklabel style={font=\tiny,fill=white,text height=2pt},
+			xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+			ylabel style={at={(ticklabel* cs:1)},anchor=south west}
+		]
+			\draw [mypink] (0,0) rectangle (3.5,4);
+			\draw [mypink] (0,3) rectangle (1.5,4);
+			\draw [mypink] (2,0) rectangle (3.5,1);
+			\draw [mypink, fill=mypink, fill opacity=.2] (0,0) -- (1.5,3) -- (3.5,4) -- (0,4) -- cycle;
+			\draw [mypink, fill=mypink, fill opacity=.2] (0,0) -- (2,1) -- (3.5,4) -- (3.5,0) -- cycle;
+		\end{axis}
+	\end{tikzpicture}

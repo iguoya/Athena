@@ -1,0 +1,1325 @@
+{
+ "id": "module5",
+ "title_en": "Projections & Vector Components",
+ "blocks": [
+  {
+   "k": "outcome",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The definition of the projection of a vector onto a set and the definition of the vector component of one vector in the direction of another.",
+         "sha": "c9196aadbb54",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The relationship between projection, orthogonality, and vector components.",
+         "sha": "9d2f36a6530a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How to project a vector onto a line.",
+         "sha": "b69fc7105b26",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Consider the following situation: you're designing a 3d video game, but your users only have 2d screens. Or, you have a 900-dimensional dataset, but you want to visualize it on a continuum (i.e., as a line). Each of these is an example of finding the best approximation to particular points given restrictions. In general, this operation is called a *projection* 〔注： What we define as a *projection* is sometimes called the *orthogonal projection* to distinguish it from other types of projections.〕, and in the world of linear algebra, it has a very particular meaning.",
+    "sha": "6a13f5089619",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Projection",
+    "sha": "8aa49fe84036",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $X\\subseteq \\R^n$ be a set. The *projection* of the vector $\\vec v\\in\\R^n$ onto $X$, written $\\Proj_{X}\\vec v$, is the closest point in $X$ to $\\vec v$.",
+      "sha": "4a40b97df6bd",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\mathcal{P}_{xy}\\subseteq\\R^3$ be the $xy$-plane in $\\R^3$ and let $\\vec v=\\mat{1\\\\2\\\\3}$. Intuitively, $\\Proj_{\\mathcal{P}_{xy}}\\!\\!\\vec v$ is the “shadow” that $\\vec v$ would cast on ${\\mathcal{P}_{xy}}$ if the sun were directly overhead. Upon drawing a picture, we conclude $\\Proj_{\\mathcal{P}_{xy}}\\vec v=\\mat{1\\\\2\\\\0}.$",
+    "sha": "4a4d94eb1630",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "321d31edf4bb"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Continuing, let $\\ell_y\\subseteq \\R^3$ be the $y$-axis in $\\R^3$. It's a little bit harder to visualize what $\\Proj_{\\ell_y}\\vec v$ is, so let's appeal to some definitions.",
+    "sha": "9f873356cb39",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "By definition, every vector in $\\ell_y$ takes the form $\\vec u_t=\\mat{0\\\\t\\\\0}$ for some $t\\in \\R$. The distance between $\\vec u_t$ and $\\vec v$ is",
+    "sha": "f43a2171d30e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Norm{\\vec u_t-\\vec v}=\\norm*{\\mat{0\\\\t\\\\0}-\\mat{1\\\\2\\\\3}} = \\sqrt{1^2+(t-2)^2+3^2}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Since $(t-2)^2$ is always positive, the quantity $\\sqrt{1^2+(t-2)^2+3^2}$ is minimized when $(t-2)^2=0$; that is, when $t=2$. Thus, we see $\\vec u_2$ is the closest vector in $\\ell_y$ to $\\vec v$ and so,",
+    "sha": "136769e12c53",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Proj_{\\ell_y}\\vec v=\\vec u_2=\\mat{0\\\\2\\\\0}."
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\ell\\subseteq \\R^2$ be the line given in vector form by $\\vec x=t\\mat{1\\\\1}+\\mat{3\\\\-2}$, and let $\\vec v=\\mat{-1\\\\-1}$. Use the definition of projection to find $\\Proj_\\ell \\vec v$.",
+      "sha": "4cc697e02c57",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec u_t=t\\mat{1\\\\1}+\\mat{3\\\\-2}\\in\\ell$. By definition, the distance between $\\vec v$ and $\\vec u_t$ is given by",
+      "sha": "964b05376c3a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Norm{\\vec u_t-\\vec v}=\\norm*{\\left(t\\mat{1\\\\1}+\\mat{3\\\\-2}\\right)-\\mat{-1\\\\-1}} = \\norm*{\\mat{t+4\\\\t-1}}\n\t    =\\sqrt{2t^2+6t+17}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The quantity $2t^2+6t+17$ is minimized when $t=-\\frac{3}{2}$, and so the closest point in $\\ell$ to $\\vec v$ is $\\vec u_{-3/2}$. Thus,",
+      "sha": "1007b3c09248",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Proj_\\ell \\vec v=-\\tfrac{3}{2}\\mat{1\\\\1}+\\mat{3\\\\-2}=\\mat{3/2\\\\-7/2}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Every example of a projection so far shares a geometric property. In the case of lines and planes, the vector from the projection to the original point is a normal vector for the line or plane (provided it's non-zero).",
+    "sha": "b5edb628cc5a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "22957d9f079e"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Stated precisely, if $X$ is a line or plane and $\\vec v\\notin X$ is a vector, then $\\vec v-\\Proj_X\\vec v$ is a normal vector for $X$. Using this fact, we can find projections onto lines and planes without needing to compute any distances!",
+    "sha": "fa81b2c195fe",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\ell\\subseteq \\R^2$ be the line given in vector form by $\\vec x=t\\mat{1\\\\1}+\\mat{3\\\\-2}$, and let $\\vec v=\\mat{-1\\\\-1}$. Use the fact that $\\vec v-\\Proj_\\ell\\vec v$ is a normal vector to $\\ell$ to find $\\Proj_\\ell \\vec v$.",
+      "sha": "0c2038edfbb2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\vec v-\\Proj_\\ell\\vec v$ is a normal vector to $\\ell$, we know $\\vec v-\\Proj_\\ell\\vec v$ is orthogonal to $\\vec d=\\mat{1\\\\1}$. Let $\\mat{x\\\\y}=\\Proj_\\ell\\vec v$ for some unknown $x,y\\in\\R$. We now know",
+      "sha": "8134f8a110ec",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(\\vec v-\\Proj_\\ell\\vec v)\\cdot\\vec d=\\left(\\mat{-1\\\\-1}-\\mat{x\\\\y}\\right)\\cdot\\mat{1\\\\1}\n\t\t=\\mat{-1-x\\\\-1-y}\\cdot \\mat{1\\\\1}=-2-x-y=0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "That is,",
+      "sha": "f8e33e066d83",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "x+y=-2."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Also, since $\\Proj_\\ell\\vec v\\in\\ell$, we know",
+      "sha": "042c42bc59aa",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Proj_\\ell\\vec v = \\mat{x\\\\y}=t\\mat{1\\\\1}+\\mat{3\\\\-2}=\\mat{t+3\\\\t-2}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "From this, we have that $x-t=3$ and $y-t=-2$. Combined with Equation 〔引用〕, we have three equations and three unknowns which produce the following system of linear equations.",
+      "sha": "92764ccbf436",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}x+y &= -2 \\\\ x-t &= 3 \\\\ y-t &= -2\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Solving this system, we conclude that $x=3/2$ and $y=-7/2$ (we don't care about the value of $t$). Therefore $\\Proj_\\ell\\vec v = \\mat{3/2\\\\-7/2}$.",
+      "sha": "c57fb677512e",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "When projecting onto lines and planes, right angles appear in key places.",
+      "sha": "fe248093f3ba",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Projections Onto Other Sets",
+    "sha": "0c9fbce58835",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For projections onto lines and planes, we can use what we know about normal vectors to simplify our life. The same is true when projecting onto other sets, but we must always keep the definition in mind.",
+    "sha": "c037ab021e57",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal T\\subseteq \\R^2$ be the filled in triangle with vertices $\\mat{0\\\\0}$, $\\mat{1\\\\0}$, and $\\mat{0\\\\2}$, and let",
+      "sha": "b2ac13d4cfe8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec a=\\mat{1/4\\\\1/4}\\qquad \\vec b=\\mat{1\\\\1}\\qquad \\vec c=\\matc{3\\\\1/2}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Find $\\Proj_{\\mathcal T}\\vec a$, $\\Proj_{\\mathcal T}\\vec b$, and $\\Proj_{\\mathcal T}\\vec c$.",
+      "sha": "594274e9eac6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We'll start by drawing a picture.",
+      "sha": "1d9e70fdc33f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "ed3234a0770f"
+     ],
+     "caption": null
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "From the picture, we see that $\\vec a\\in \\mathcal T$ and so",
+      "sha": "221d27460009",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Proj_{\\mathcal T}\\vec a=\\vec a."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We also see that $\\vec b$ is closest to the hypotenuse of $\\mathcal T$, and so $\\Proj_{\\mathcal T}\\vec b$ is the same as the projection of $\\vec b$ onto the line $y=-2x+2$. Computing, we find",
+      "sha": "6c82530c53c2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Proj_{\\mathcal T}\\vec b=\\mat{3/5\\\\4/5}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Finally, drawing concentric circles centered at $\\vec c$, we see that the lower-right corner of $\\mathcal T$ is the closest point in $\\mathcal T$ to $\\vec c$.",
+      "sha": "7b7564481327",
+      "zh": ""
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "f2618c71e8ee"
+     ],
+     "caption": null
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "And so,",
+      "sha": "491afbeb4ec3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Proj_{\\mathcal T}\\vec c =\\mat{1\\\\0}."
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Subtleties of Projections",
+    "sha": "c49c6d36c007",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "You might be wondering, what is $\\Proj_X\\vec v$ if $\\vec v$ is equidistant from *two* closest points in $X$? Or, what if $X$ is an *open* set (for example, an open interval in $\\R^1$)? Then there might not be a closest point in $X$ to $\\vec v$. In both these cases, we say $\\Proj_X\\vec v$ is *undefined*.",
+    "sha": "5b6d95211df0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Formally, for a fixed set $X$, we consider $P(\\vec v)=\\Proj_X\\vec v$ as a function that inputs and outputs vectors. And, as a function, $P$ has a domain consisting of exactly the vectors $\\vec v$ for which $P(\\vec v)$ is defined. As it happens, if $X$ is a line or a plane in $\\R^n$, the domain of $P$ is all of $\\R^n$, and in this text, we will be sensible and only ask about projections that exist.",
+    "sha": "44b3ceec06e6",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Vector Components",
+    "sha": "6e704b83a47b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We've seen before that dot products can be used to measure how much one vector points in the direction of another. But, we can go further. Suppose $\\vec v\\neq \\vec 0$ and $\\vec u$ are vectors. We might want to *decompose* $\\vec u$ into the sum of two vectors, one which is in the direction of $\\vec v$ and the other which is orthogonal to $\\vec v$. The tool that does this is the *vector component*.",
+    "sha": "c931c69452f6",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Vector Components",
+    "sha": "6e704b83a47b",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec u$ and $\\vec v\\neq \\vec 0$ be vectors. The \\emphvector component of $\\vec u$ in the $\\vec v$ direction, written $\\Comp_{\\vec v}\\vec u$, is the vector in the direction of $\\vec v$ so that $\\vec u-\\Comp_{\\vec v}\\vec u$ is orthogonal to $\\vec v$.",
+      "sha": "ea9695b90578",
+      "zh": ""
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "6110849672cd"
+     ],
+     "caption": null
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "From the definition, it's obvious that",
+    "sha": "b750be95e23a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec u=\\Vcomp_{\\vec v}\\vec u + (\\vec u-\\Vcomp_{\\vec v}\\vec u)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "is a decomposition of $\\vec u$ into the sum of two vectors, one ($\\Vcomp_{\\vec v}\\vec u$) is in the direction of $\\vec v$, and the other ($\\vec u-\\Vcomp_{\\vec v}\\vec u$) is orthogonal to $\\vec v$.",
+    "sha": "74bf2f83c0fb",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the vector component of $\\vec a=\\mat{1\\\\2}$ in the direction of $\\vec b=\\mat{1\\\\1}$.",
+      "sha": "a18c22252a21",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\Vcomp_{\\vec b}\\vec a$ is a vector in the direction of $\\vec b$, we know",
+      "sha": "152e49249e2f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Vcomp_{\\vec b}\\vec a = k\\vec b"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for some $k\\in \\R$. Since $\\vec a-\\Vcomp_{\\vec b}\\vec a$ is orthogonal to $\\vec b$, we know",
+      "sha": "8d52bb880364",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(\\vec a-\\Vcomp_{\\vec b}\\vec a)\\cdot \\vec b=0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Combining these facts, we see",
+      "sha": "cccadc064dfa",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(\\vec a-\\Vcomp_{\\vec b}\\vec a)\\cdot \\vec b = \\bigg(\\underbrace{\\mat{1\\\\2}}_{\\vec a}-\\underbrace{\\mat{k\\\\k}}_{k\\vec b}\\bigg)\\cdot \n\t\t\\underbrace{\\mat{1\\\\1}}_{\\vec b} =(1-k)+(2-k)=3-2k=0,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so $k=3/2$. Therefore",
+      "sha": "1420fb9cfbff",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Vcomp_{\\vec b}\\vec a=k\\vec b=\\mat{3/2\\\\3/2}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Since we'll be computing vector components often, let's try to find a formula for $\\Vcomp_{\\vec v}\\vec u$.",
+    "sha": "8f1f7b55b611",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "By definition, $\\Vcomp_{\\vec v}\\vec u$ is a vector in the direction of $\\vec v$, so",
+    "sha": "7ea1f5358457",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Vcomp_{\\vec v}\\vec u = k\\vec v."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Further, from the definition $\\vec u-\\Vcomp_{\\vec v}\\vec u$ is orthogonal to $\\vec v$, and so",
+    "sha": "1b7eec690dc8",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec v\\cdot (\\vec u-\\Vcomp_{\\vec v}\\vec u) = \\vec v\\cdot (\\vec u-k\\vec v)=\\vec v\\cdot \\vec u-k\\vec v\\cdot \\vec v=0."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Because $\\vec v\\neq \\vec 0$, we know $\\vec v\\cdot \\vec v\\neq 0$. Therefore, we may rearrange and solve for $k$ to find",
+    "sha": "4f05dd9f3e4d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "k=\\frac{\\vec v\\cdot \\vec u}{\\vec v\\cdot \\vec v},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "which means",
+    "sha": "eee2fd622722",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Vcomp_{\\vec v}\\vec u = \\left(\\frac{\\vec v\\cdot \\vec u}{\\vec v\\cdot \\vec v}\\right)\\vec v."
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "The Relationship Between Vector Components and Projections",
+    "sha": "4c3f05289af7",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Vector components and projections onto lines are closely related. So closely related that many textbooks use the single word *projection* to talk about both vector components and projections 〔注： We will not.〕. Let's take a moment to explore this relationship.",
+    "sha": "18fe45ef7d14",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\vec v=\\mat{2\\\\4}$ and $\\vec u=\\mat{3\\\\1}$ and let $\\ell=\\Span\\Set{\\vec v}$. Drawing a picture of $\\ell$, $\\vec u$, and $\\Proj_\\ell\\vec u$, we see that $\\Proj_\\ell\\vec u$ satisfies all the properties of $\\Vcomp_{\\vec v}\\vec u$.",
+    "sha": "e038a6102df4",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "1c379ea1532e"
+   ],
+   "caption": null
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "5a311fe4585f"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Since $\\ell=\\Span\\Set{\\vec v}$ and $\\Proj_\\ell\\vec u\\in\\ell$, we know that $\\Proj_\\ell\\vec u$ is in the direction of $\\vec v$. Further, using geometric arguments, we know $\\vec u-\\Proj_\\ell\\vec u$ is a normal vector for $\\ell$ and is therefore orthogonal to its direction vector $\\vec v$! What's more, we didn't use anything in particular about $\\vec u$ and $\\vec v$ when making this argument (other than $\\vec v\\neq \\vec 0$). This means, we have established a general fact.",
+    "sha": "7997068d5ef3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For vectors $\\vec u$ and $\\vec v\\neq 0$, we have",
+      "sha": "bcf2ffeb6de0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Proj_{\\Span\\Set{\\vec v}}\\vec u=\\Vcomp_{\\vec v}\\vec u."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This is great news because vector components are easy to compute using dot products while projections are usually hard to compute.",
+    "sha": "94ac238a720a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the projection of $\\vec a=\\mat{3\\\\7}$ onto $L=\\Span\\Set{\\mat{1\\\\-4}}$.",
+      "sha": "6957e70f4d62",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec b = \\mat{1\\\\-4}$. Since $L=\\Span\\Set{\\vec b}$ and $\\vec b\\neq \\vec 0$, by the theorem above, we have",
+      "sha": "63e2ef71a258",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Proj_L \\vec a = \\Vcomp_{\\vec b} \\vec a = \\left(\\frac{\\vec b\\cdot \\vec a}{\\vec b\\cdot \\vec b}\\right)\\vec b \n\t    = \\tfrac{3-28}{1+16}\\mat{1\\\\-4}=\\mat{-25/17\\\\100/17}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It's worth noting, however, that vector components are equal to projections *only in the case when you're projecting onto a span*. In general, projections and vector components are unrelated.",
+    "sha": "92f229cbdd69",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec a=\\mat{3\\\\7}$, $\\vec b=\\mat{1\\\\-4}$, and let $D$ be the line given in vector form by $\\vec x=t\\vec b+\\vec a$. Show that $\\Proj_D\\vec a\\neq \\Vcomp_{\\vec b}\\vec a$.",
+      "sha": "3c654f40864e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By definition, $\\Proj_{D}\\vec a$ is the closest point in $D$ to $\\vec a$. Since $\\vec a\\in D$, we must have",
+      "sha": "d4d5a801c3c5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Proj_{D}\\vec a = \\vec a = \\mat{3\\\\7}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We already computed $\\Vcomp_{\\vec b}\\vec a=\\mat{-25/17\\\\100/17}$ in the previous example, and so we see",
+      "sha": "53ca76a93fc4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Vcomp_{\\vec b}\\vec a=\\mat{-25/17\\\\100/17}\\neq \\mat{3\\\\7}=\\Proj_{D}\\vec a."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "When projecting onto the span of a single vector, you can use vector components as a computational shortcut, but if the set isn't a span, you cannot.",
+      "sha": "e227ad74d918",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $T=\\Set{\\mat{0\\\\0}, \\mat{-1\\\\2}, \\mat{1\\\\-2}}$. Find $\\Proj_{T} \\mat{3 \\\\ 1}$.",
+      "sha": "e582ab4ac758",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The distances from $\\mat{ 3 \\\\ 1 }$ to $\\mat{0\\\\0}$, $\\mat{-1\\\\2}$, and $\\mat{1\\\\-2}$ are $\\sqrt{10}$, $\\sqrt{17}$, and $\\sqrt{13}$, respectively. So $\\Proj_{T} \\mat{3 \\\\ 1}= \\mat{ 0 \\\\ 0}$.",
+      "sha": "f4ff5663cbf4",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Projections & Vector Components · 练习题 1（上游 book/modules/module5-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module5-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $C=\\Set{ \\vec v \\in \\R^2\\given \\norm{ \\vec v} = 1}$ be the unit circle in $\\R^{2}$. Find $\\Proj_{C} \\mat{2 \\\\ 0}$. Justify your answer.",
+      "sha": "1722ffdd775f",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $\\vec v=\\mat{x\\\\y}\\in C$. We would like to minimize $\\left \\Vert \\mat{ x \\\\ y }- \\mat{ 2 \\\\ 0 }\\right \\Vert$, or equivalently $\\left \\Vert \\mat{ x \\\\ y }- \\mat{ 2 \\\\ 0 }\\right \\Vert^{2}$. This expression can be rewritten as",
+      "sha": "617a585cc196",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left \\Vert \\mat{ x \\\\ y }- \\mat{ 2 \\\\ 0 }\\right\n\t\t\t\t\\Vert^{2} = (x-2)^{2}+y^{2} = (x^{2}+y^{2})-4x+4"
+    },
+    {
+     "k": "math",
+     "tex": "= \\left\\Vert \\vec v \\right \\Vert^{2}-4x+4 = 5 - 4x."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $x \\leq 1$, the above expression is minimized when $x = 1$ (and thus $y = 0$). That is,",
+      "sha": "7edc56b88c63",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Proj_{C} \\mat{2 \\\\ 0}= \\mat{ 1 \\\\ 0 }."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Projections & Vector Components · 练习题 2（上游 book/modules/module5-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module5-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\ell=\\Span \\Set{ \\mat{2 \\\\ 1}}$, $L=\\Span \\Set{ \\mat{2 \\\\ 1}}+\\Set{\\mat{4\\\\0}}$, and let $S$ be the set of convex linear combinations of $\\mat{2 \\\\ 1}$ and $\\mat{4 \\\\ 2}$. For $\\vec v = \\mat{ 1 \\\\ 0}$, find",
+      "sha": "bbc0f068b6eb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Proj_{\\ell} \\vec v$.",
+         "sha": "c10d8dbe12e0",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Proj_{L} \\vec v$.",
+         "sha": "7fca827f7fb9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Proj_{S} \\vec v$.",
+         "sha": "899a01201232",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec u=\\mat{ 2 \\\\ 1 }$. Then $\\Proj_{\\ell} \\vec v=t\\vec u$ for some $t\\in \\R$ which minimizes",
+         "sha": "f4dd7737b095",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\left \\Vert \\vec v - t \\vec u\n\t\t\t\t\t\t\\right \\Vert^{2} = \\left \\Vert \\vec\n\t\t\t\t\t\tu \\right \\Vert^{2} t^{2} - (2\n\t\t\t\t\t\t\\vec u \\cdot \\vec v) t + \\left \\Vert\n\t\t\t\t\t\t\\vec v \\right \\Vert^{2}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "This quantity is minimized when $t = \\frac{\\vec u \\cdot \\vec v}{\\left \\Vert \\vec u \\right \\Vert^2}= \\frac{2}{5}$, so",
+         "sha": "b882f29fca84",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Proj_{\\ell} \\vec v = \\tfrac{2}{5}\\vec\n\t\t\t\t\t\tu=\\tfrac 15 \\mat{4\\\\2}."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec u=\\mat{ 2 \\\\ 1 }$. Then $\\Proj_{L} \\mat{ 1 \\\\ 0}=\\mat{4\\\\0}+t\\vec u$ for some $t\\in \\R$ which minimizes",
+         "sha": "85ab606eddda",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\left \\Vert \\mat{ 1 \\\\ 0}- \\mat{4\\\\0}-t\n\t\t\t\t\t\t\\vec u \\right \\Vert^{2} = (-3-2t)^{2}+(0-t)^{2}"
+       },
+       {
+        "k": "math",
+        "tex": "= 9+12t+5t^{2}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "The quantity $9+12t+5t^{2}=5(t+\\frac 65 )^{2}+\\frac 95$ is minimized when $t = -\\frac 65$, so",
+         "sha": "06284ce6589c",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Proj_{L} \\vec v = \\mat{4\\\\0}-\\tfrac\n\t\t\t\t\t\t65\\vec u=\\tfrac 15 \\mat{8\\\\-6}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The set $S$ is equal to $\\Set{t \\vec u: 1 \\leq t \\leq 2}$ (check this), and so $S\\subseteq \\ell$. We found $\\Proj_{\\ell}\\vec v=\\mat{4/5\\\\2/5}$ which is not in $S$. Therefore, $\\Proj_{S}\\vec v$ must be one of the endpoints of $S$. Checking both endpoints, we conclude $\\Proj_{S} \\vec v = \\mat{2 \\\\ 1}$.",
+         "sha": "82896f54f2f2",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Projections & Vector Components · 练习题 3（上游 book/modules/module5-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module5-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $T$ be the set of convex linear combinations of $\\Set{\\mat{1\\\\1}, \\mat{-1\\\\1},\\mat{-1\\\\-2}}$. Find $\\Proj_{T}(\\vec v)$, for",
+      "sha": "dca649e42f27",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec v = \\mat{3\\\\3}$",
+         "sha": "82a3e0a4229b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec v = \\mat{0\\\\0}$",
+         "sha": "2f7bf0c31485",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec v = \\mat{1\\\\-2}$",
+         "sha": "09fcbaeb8431",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec v = \\mat{0\\\\-4}$",
+         "sha": "0f9e383f6f4f",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Geometrically, $T$ is a filled in triangle with vertices $\\mat{1\\\\1}, \\mat{-1\\\\1}$ and $\\mat{-1\\\\-2}$. So for points outside the triangle, the closest point in $T$ will be on the nearest side of $T$, and so we can project onto $T$ by projecting onto line segments.",
+      "sha": "20dbad32a689",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Proj_{T} \\mat{3\\\\3}= \\mat{1\\\\1}$; since $\\mat{3\\\\3}$ is above $T$, the closest point will be on the line segment $y=1$, $-1\\leq x \\leq 1$.",
+         "sha": "4ef0ce00a0a3",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Proj_{T} \\mat{0\\\\0}= \\mat{0\\\\0}$, since $\\vec 0\\in T$.",
+         "sha": "f90ad18f5f47",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Proj_{T} \\mat{1\\\\-2}= \\frac{1}{13}\\mat{-5\\\\-14}$; let $\\ell$ be the line segment $\\vec x= \\mat{1\\\\1}+t\\mat{-2\\\\-3}, 0\\leq t \\leq 1$. Then $\\Proj_{T} \\mat{1\\\\-2}= \\Proj_{\\ell} \\mat{1\\\\-2}$, and then either by minimizing the length function, or drawing a perpendicular line to $\\ell$, we find the closest point is when $t=\\frac{9}{13}$.",
+         "sha": "2b8224213ec9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Proj_{T} \\mat{0\\\\-4}= \\mat{-1\\\\-2}$, as in $(c)$, but now the minimizer is at $t>1$, so the constraints $0\\leq t \\leq 1$ force us to take the closest point on the line segment.",
+         "sha": "29bde2be27df",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Projections & Vector Components · 练习题 4（上游 book/modules/module5-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module5-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Explain in your own words how to find $\\Proj_{\\ell}(\\vec v)$ when $\\ell=\\Span\\Set{\\vec d}$ for some $\\vec d \\neq \\vec 0$.",
+      "sha": "94833b264a80",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Projections & Vector Components · 练习题 5（上游 book/modules/module5-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module5-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec e_{1}=\\mat{1 \\\\ 0}$, $\\vec e_{2} =\\mat{0 \\\\ 1}$, and $\\vec u = \\mat{2 \\\\ 3}$.",
+      "sha": "7a494a585dfd",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Draw $\\vec e_{1}$, $\\vec e_{2}$, $\\vec u$, $\\Comp_{\\vec e_1}\\vec u$, and $\\Comp_{\\vec e_2}\\vec u$ on the same grid.",
+         "sha": "f77c34593881",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Write down two characterizing properties for $\\Comp_{\\vec e_2}\\vec u$.",
+         "sha": "7fa5151ad1d8",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Check that $\\vec u - \\Comp_{\\vec e_1}\\vec u$ satisfies the above properties.",
+         "sha": "32ad8079ee06",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Comp_{\\xhat}\\vec u+\\Comp_{\\yhat}\\vec u=\\vec u$. Does this always happen? Explain.",
+         "sha": "31f82b020b16",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Projections & Vector Components · 练习题 6（上游 book/modules/module5-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module5-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "In this problem, we will find the projection of a vector onto a plane in $\\R^{3}$. Let $\\vec u=\\mat{1\\\\2\\\\-2}$, $\\vec v = \\mat{0\\\\1\\\\1}$, $\\vec a = \\mat{6\\\\4\\\\-2}$, and let $\\mathcal P=\\Span\\Set{\\vec u,\\vec v}$.",
+      "sha": "bb8318bad10c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find $\\Comp_{\\vec u}(\\vec a)$ and $\\Comp_{\\vec v}(\\vec a)$.",
+         "sha": "8b1ef5a93379",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Show that $\\vec a-\\Comp_{\\vec u}(\\vec a)-\\Comp_{\\vec v}(\\vec a)$ is a normal vector for $\\mathcal P$.",
+         "sha": "5a43c18bb6b3",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Use 〔引用〕 to find $\\Proj_{\\mathcal P} (\\vec a)$.",
+         "sha": "04668c7b76f9",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Using the formula for vector components, we have",
+         "sha": "dc932bfdb316",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Comp_{\\vec u}(\\vec a) = \\frac{\\vec\n\t\t\t\t\t\ta \\cdot \\vec u}{\\vec u \\cdot\n\t\t\t\t\t\t\\vec u}\\vec u = \\frac{18}{9}\\vec\n\t\t\t\t\t\tu = \\mat{2\\\\4\\\\-4}"
+       },
+       {
+        "k": "math",
+        "tex": "\\Comp_{\\vec v}(\\vec a) = \\frac{\\vec\n\t\t\t\t\t\ta \\cdot \\vec v}{\\vec v \\cdot\n\t\t\t\t\t\t\\vec v}\\vec v = \\frac{2}{2}\\vec\n\t\t\t\t\t\tv = \\mat{0\\\\1\\\\1}."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec b = \\vec a-\\Comp_{\\vec u}(\\vec a)-\\Comp_{\\vec v}(\\vec a)$. Directly computing, we have $\\vec b = \\mat{ 4 \\\\-1 \\\\1 }$.",
+         "sha": "08538482379b",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "To show $\\vec b$ is orthogonal to $P$, we need to check that",
+         "sha": "0951fd176162",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vec b \\cdot \\vec u = 4-2-2 = 0"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "and",
+         "sha": "cffa50a32cb1",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vec b \\cdot \\vec v = 0-1+1 = 0."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Hence $\\vec b$ is a normal vector to $P$. (Note that this only worked because $\\vec u\\cdot \\vec v = 0$. Subtracting each vector component from $\\vec a$ will not produce a normal vector in general.)",
+         "sha": "99c5f4ef308b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Since $\\vec b$ is orthogonal to $P$ and $\\vec a - \\vec b$ is a linear combination of $\\vec u$ and $\\vec v$, the vector $\\vec a - \\vec b=\\mat{2\\\\5\\\\-3}$ is the closest point to $\\vec a$ on $P$.",
+         "sha": "cfcf0fb73352",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Projections & Vector Components · 练习题 7（上游 book/modules/module5-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module5-exercises.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "投影与向量分量"
+}

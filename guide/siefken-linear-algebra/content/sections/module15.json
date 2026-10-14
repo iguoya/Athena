@@ -1,0 +1,1172 @@
+{
+ "id": "module15",
+ "title_en": "Eigenvalues and Eigenvectors",
+ "blocks": [
+  {
+   "k": "outcome",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The definition of eigenvalues and eigenvectors.",
+         "sha": "46a44bb7199b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "That eigenvectors give a particularly nice basis in which to study a linear transformation.",
+         "sha": "a482c0743de5",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How the characteristic polynomial relates to eigenvalues.",
+         "sha": "7fa54a336a59",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "From here on out, we will only be considering linear transformations with the same domain and codomain (i.e., transformations $\\mathcal T:\\R^n\\to\\R^n$). Why? Because that will allow us to *compare* input and output vectors. By comparing inputs and outputs, we may describe a linear transformation as a stretch, twist, shear, rotation, projection, or some combination of all of these operations.",
+    "sha": "82c4a6ec6314",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "af4392c58f56"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It's the stretched vectors that we're most interested in now. If $\\mathcal T$ stretches the vector $\\vec v$, then $\\mathcal T$, in that direction, can be described by $\\vec v\\mapsto \\alpha\\vec v$, which is an easy-to-understand linear transformation. The “stretch” directions for a linear transformation have a special name—*eigen directions*—and the vectors that are stretched are called *eigenvectors*.",
+    "sha": "f26344f023f0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Eigenvector",
+    "sha": "fe951c61295b",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $X$ be a linear transformation or a matrix. An *eigenvector* for $X$ is a non-zero vector that doesn't change directions when $X$ is applied. That is, $\\vec v\\neq \\vec 0$ is an eigenvector for $X$ if",
+      "sha": "7af5f052c5f3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "X\\vec v=\\lambda \\vec v"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for some scalar $\\lambda$. We call $\\lambda$ the *eigenvalue* of $X$ corresponding to the eigenvector $\\vec v$.",
+      "sha": "b90ab637d7ad",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The word *eigen* is German for characteristic, representative, or intrinsic, and we will see that eigenvectors provide one of the best contexts in which to understand a linear transformation.",
+    "sha": "a92f2b79c1a1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal P:\\R^2\\to\\R^2$ be projection onto the line $\\ell$ given by $y=x$. Find the eigenvectors and eigenvalues of $\\mathcal P$.",
+      "sha": "bba9323464ec",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We are looking for vectors $\\vec v\\neq \\vec 0$ such that $\\mathcal P\\vec v=\\lambda \\vec v$ for some $\\lambda$. Since $\\mathcal P(\\ell)=\\ell$, we know for any $\\vec v\\in \\ell$",
+      "sha": "aaf07fe5514b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mathcal P(\\vec v)=1\\vec v=\\vec v."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, any non-zero multiple of $\\mat{1\\\\1}$ is an eigenvector for $\\mathcal P$ with corresponding eigenvalue $1$.",
+      "sha": "e31c8d3f879b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By considering the null space of $\\mathcal P$, we see, for example,",
+      "sha": "a812cbd76995",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mathcal P\\mat{1\\\\-1}=\\mat{0\\\\0}=0\\mat{1\\\\-1},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so $\\mat{1\\\\-1}$ and all its non-zero multiples are eigenvectors of $\\mathcal P$ with corresponding eigenvalue $0$.",
+      "sha": "db486ad6a553",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Finding Eigenvectors",
+    "sha": "390d17b933ba",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Sometimes you can find the eigenvectors/values of a linear transformation just by thinking about it. For example, for reflections, projections, and dilations, the eigen directions are geometrically clear. However, for an arbitrary matrix transformation, it may not be obvious.",
+    "sha": "917bad9cbfd4",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Our goal now will be to see if we can leverage linear algebra knowledge to find eigenvectors/values. So that we don't have to switch back and forth between thinking about linear transformations and thinking about matrices, let's just think about matrices for now.",
+    "sha": "21bfc4e2ad34",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $M$ be a square matrix. The vector $\\vec v\\neq \\vec 0$ is an eigenvector for $M$ if and only if there exists a scalar $\\lambda$ so that",
+    "sha": "264ddd75bb34",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "M\\vec v=\\lambda \\vec v."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Put another way, $\\vec v\\neq \\vec 0$ is an eigenvector for $M$ if and only if",
+    "sha": "e662ad1c46ed",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "M\\vec v-\\lambda \\vec v=(M-\\lambda I)\\vec v=\\vec 0."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The middle equation provides a key insight. The operation $\\vec v\\mapsto M\\vec v-\\lambda\\vec v$ can be achieved by multiplying $\\vec v$ by the single matrix $E_\\lambda=M-\\lambda I$.",
+    "sha": "b49a6d605e32",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Now we have that $\\vec v\\neq \\vec 0$ is an eigenvector for $M$ if and only if",
+    "sha": "8d5d32ce5f84",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "E_\\lambda \\vec v=(M-\\lambda I)\\vec v = M\\vec v-\\lambda \\vec v=\\vec 0,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "or, phrased another way, $\\vec v$ is a non-zero vector satisfying $\\vec v\\in \\Null(E_\\lambda)$.",
+    "sha": "80828dfbf434",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We've reduced the problem of finding eigenvectors/values of $M$ to finding the null space of $E_\\lambda$, a related matrix.",
+    "sha": "75d53cf3576b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Characteristic Polynomial",
+    "sha": "92607926a386",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $M$ be an $n\\times n$ matrix and define $E_\\lambda=M-\\lambda I$. Every eigenvector for $M$ must be in the null space of $E_\\lambda$ for some $\\lambda$. However, because eigenvectors must be non-zero, the only chance we have of finding an eigenvector is if $\\Null(E_\\lambda)\\neq \\Set{\\vec 0}$. In other words, we would like to know when $\\Null(E_\\lambda)$ is *non-trivial*.",
+    "sha": "893b42de335b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We're well equipped to answer this question. Because $E_\\lambda$ is an $n\\times n$ matrix, we know $E_\\lambda$ has a non-trivial null space if and only if $E_\\lambda$ is not invertible which is true if and only if $\\det(E_\\lambda)=0$. Every $\\lambda$ defines a different $E_\\lambda$ where eigenvectors could be hiding. By viewing $\\det(E_\\lambda)$ \\emphas a function of $\\lambda$, we can use our mathematical knowledge of single-variable functions to figure out when $\\det(E_\\lambda)=0$.",
+    "sha": "2baaec280c33",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The quantity $\\det(E_\\lambda)$, viewed as a function of $\\lambda$, has a special name—it's called the *characteristic polynomial* 〔注： This time the term is traditionally given the English name, rather than being called the *eigenpolynomial*.〕.",
+    "sha": "083482c739e9",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Characteristic Polynomial",
+    "sha": "92607926a386",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For a matrix $A$, the *characteristic polynomial* of $A$ is",
+      "sha": "bfe501ab3b41",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\chr(A)=\\det(A-\\lambda I)."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the characteristic polynomial of $A=\\mat{1&2\\\\3&4}$.",
+      "sha": "e300728861bb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By the definition of the characteristic polynomial of A, we have",
+      "sha": "dbabbdd2b8d7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}\\Char(A) &=\\det(A-\\lambda I)\\\\\n\t            &=\\det\\left(\\mat{1&2\\\\3&4}-\\mat{\\lambda&0\\\\0&\\lambda}\\right)=\\det\\left(\\mat{1-\\lambda&2\\\\3&4-\\lambda}\\right)\\\\\n\t            &=(1-\\lambda)(4-\\lambda) - 6=\\lambda^2 -5\\lambda-2.\\end{aligned}"
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For an $n\\times n$ matrix $A$, $\\Char(A)$ has some nice properties.",
+    "sha": "6d3aa888f2bc",
+    "zh": ""
+   }
+  },
+  {
+   "k": "list",
+   "ordered": false,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "$\\Char(A)$ is a polynomial\\footnote A priori, it's not obvious that $\\det(A-\\lambda I)$ should be a polynomial as opposed to some other type of function..",
+       "sha": "977b36784c28",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "$\\Char(A)$ has degree $n$.",
+       "sha": "60d04738bf32",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "The coefficient of the $\\lambda^n$ term in $\\Char(A)$ is $\\pm1$; $+1$ if $n$ is even and $-1$ if $n$ is odd.",
+       "sha": "bdb6ba07fdc4",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "$\\Char(A)$ evaluated at $\\lambda = 0$ is $\\det(A)$.",
+       "sha": "8cb51b03ed4b",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "The roots of $\\Char(A)$ are precisely the eigenvalues of $A$.",
+       "sha": "322b36d700e6",
+       "zh": ""
+      }
+     }
+    ]
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We will just accept these properties as facts, but each of them can be proved with the tools we've developed.",
+    "sha": "b5b228dca18f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Using the Characteristic Polynomial to find Eigenvalues",
+    "sha": "4f06db3bf03c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "With the characteristic polynomial in hand, finding eigenvectors/values becomes easier.",
+    "sha": "d4372cde2b0d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the eigenvectors/values of $A=\\mat{1&2\\\\3&2}$.",
+      "sha": "78da31eced48",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Like the previous example, we first compute $\\Char(A)$.",
+      "sha": "4d87cacd330a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}\\Char(A)&=\\det\\left(\\mat{1-\\lambda&2\\\\3&2-\\lambda}\\right)\\\\\n\t            &=(1-\\lambda)(2-\\lambda)-6=\\lambda^2-3\\lambda-4=(4-\\lambda)(-1-\\lambda)\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Next, we solve for when $\\chr(A)=0$ to find eigenvalues, which are $\\lambda_1=-1$ and $\\lambda_2=4$.",
+      "sha": "1b14c33d83b6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We know non-zero vectors in $\\Null(A-\\lambda_1I)$ are eigenvectors with eigenvalue $-1$. Computing,",
+      "sha": "cd49c281ade3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Null(A-\\lambda_1I) = \\Null\\left(\\mat{2&2\\\\3&3}\\right)=\n\t\\Span\\Set{\\mat{1\\\\-1}},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "And so the eigenvectors of $A$ corresponding to eigenvalue $\\lambda_1=-1$ are the non-zero multiples of $\\mat{1\\\\-1}$.",
+      "sha": "4aff795e0fb9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Similarly, for $\\lambda_2=4$, we compute",
+      "sha": "f829ba4f699c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Null(A-\\lambda_2I) = \\Null\\left(\\mat{-3&2\\\\3&-2}\\right)=\n\t\\Span\\Set{\\mat{2\\\\3}},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so the eigenvectors for $A$ with eigenvalue $4$ are the non-zero multiples of $\\mat{2\\\\3}$.",
+      "sha": "10a8eeec41df",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Using the characteristic polynomial, we can show that every eigenvalue for a matrix is a root of some polynomial (the characteristic polynomial). In general, finding roots of polynomials is a hard problem 〔注： In fact, numerically approximating eigenvalues turns out to be easier than finding roots of a polynomial, so many numerical root finding algorithms actually create a matrix with an appropriate characteristic polynomial and use numerical linear algebra to approximate its roots.〕, and it's not one we will focus on. However, it's handy to have the quadratic formula in your back pocket for factoring particularly stubborn polynomials.",
+    "sha": "803cbf2b7d9c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the eigenvectors/values of $A=\\mat{1&2\\\\3&4}$.",
+      "sha": "a2c844b7eb27",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "First, we find the roots of $\\Char(A)$ by setting it to $0$.",
+      "sha": "d214fa593ea2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}\\Char(A)&=\\det\\left(\\mat{1-\\lambda&2\\\\3&4-\\lambda}\\right)\\\\\n\t            &=(1-\\lambda)(4-\\lambda)-6=\\lambda^2-5\\lambda-2=0\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By the quadratic formula\\footnote Recall that the roots of $ax^2+bx+c$ are given by $\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}$., we find that",
+      "sha": "43e7c1a77ba5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\lambda_1=\\frac{5-\\sqrt{33}}{2}\\qquad\\lambda_2=\\frac{5+\\sqrt{33}}{2}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "are the roots of $\\Char(A)$.",
+      "sha": "d831f3578d00",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Following the procedure outlined above, we need to find $\\Null(A-\\lambda_1I)$ and $\\Null(A-\\lambda_2I)$.",
+      "sha": "fb24af5d3634",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We will start by row reducing $A-\\lambda_1I$.",
+      "sha": "64ed40ef1989",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}\\matc{1-\\frac{5-\\sqrt{33}}{2}&2\\\\3&4-\\frac{5-\\sqrt{33}}{2}} & \\to\n\t    \\matc{\\frac{-3+\\sqrt{33}}{2}&2\\\\3&\\frac{3+\\sqrt{33}}{2}} \\to \\mat{1&\\frac{4}{-3+\\sqrt{33}}\\\\1&\\frac{3+\\sqrt{33}}{6}}\\\\\n\t    & \\to \\matc{1&\\frac{4(3+\\sqrt{33})}{(-3+\\sqrt{33})(3+\\sqrt{33})}\\\\1&\\frac{3+\\sqrt{33}}{6}} \\to \\mat{1&\\frac{3+\\sqrt{33}}{6}\\\\1&\\frac{3+\\sqrt{33}}{6}}\\\\\n\t    & \\to \\matc{1&\\frac{3+\\sqrt{33}}{6}\\\\0&0}\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Thus, we conclude that the eigenvectors with eigenvalue $\\frac{5-\\sqrt{33}}{2}$ are the non-zero multiples of $\\matc{\\frac{3+\\sqrt{33}}{6}\\\\-1}$. Similarly, the eigenvectors with eigenvalue $\\frac{5+\\sqrt{33}}{2}$ are the non-zero multiples of $\\matc{\\frac{3-\\sqrt{33}}{6}\\\\-1}$.",
+      "sha": "8c79e51a9513",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Transformations without Eigenvectors",
+    "sha": "2105df9761b2",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Are there linear transformations without eigenvectors? Well, it depends on exactly what you mean. Let $\\mathcal R:\\R^2\\to\\R^2$ be rotation counter-clockwise by $90^\\circ$. Are there any non-zero vectors that don't change direction when $\\mathcal R$ is applied? Certainly not.",
+    "sha": "c72aae0ed85a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let's examine further. We know $M_R=\\mat{0&-1\\\\1&0}$ is a matrix for $\\mathcal R$, and",
+    "sha": "058b157fd470",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Char(M_R) = \\lambda^2+1."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The polynomial $\\lambda^2+1$ has no real roots, which means that $M_R$ (and $\\mathcal R$) have no real eigenvalues. However, $\\lambda^2+1$ does have *complex* roots of $\\pm i$. So far, we've always thought of scalars as real numbers, but if we allow complex numbers as scalars and view $\\mathcal R$ as a transformation from $\\mathbb C^2\\to\\mathbb C^2$, it would have eigenvalues and eigenvectors.",
+    "sha": "4cd76506f3a2",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Complex numbers play an invaluable role in advanced linear algebra and applications of linear algebra to physics. We will leave the following theorem as food for thought 〔注： The theorem is a direct corollary of the fundamental theorem of algebra.〕.",
+    "sha": "21f481f473e5",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If $A$ is a square matrix, then $A$ always has an eigenvalue provided complex eigenvalues are permitted.",
+      "sha": "c3d537084b34",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each linear transformation defined below, find its eigenvectors and eigenvalues. If it has no eigenvectors/values, explain why not.",
+      "sha": "5932b409d8cb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal S:\\R^{2}\\to\\R^{2}$, where $\\mathcal S$ stretches every vector by the factor of $3$.",
+         "sha": "c2a8725710bb",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal R:\\R^{2}\\to\\R^{2}$, where $\\mathcal R$ rotates every vector clockwise by $\\frac{\\pi}{4}$.",
+         "sha": "53b77d7e2252",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal P:\\R^{2}\\to\\R^{2}$, where $\\mathcal P$ projects every vector onto the line $\\ell$ given by $y=-x$.",
+         "sha": "b0db027c7968",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal F:\\R^{2}\\to\\R^{2}$, where $\\mathcal F$ reflects every vector over the line $\\ell$ given by $y=-x$.",
+         "sha": "e05d1bdf931e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$T:\\R^{3}\\to\\R^{3}$, where $T$ is a linear transformation induced by the matrix $\\mat{1&2&3\\\\3&4&5\\\\5&6&7}$.",
+         "sha": "86444473eec7",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$U:\\R^{3}\\to\\R^{2}$, where $U$ is a linear transformation induced by the matrix $\\mat{1&2&3\\\\3&4&5}$.",
+         "sha": "953e7a56fbc3",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Every non-zero vector in $\\R^{2}$ is an eigenvector with eigenvalue 3.",
+         "sha": "ef61d36792e1",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Char(R)$ has no real root, so $R$ has no real eigenvalue or eigenvectors.",
+         "sha": "d6926705c893",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "There are two eigenvalues. $0$ is an eigenvalue with eigenvector $\\mat{1 \\\\ 1}$, and $1$ is an eigenvalue with eigenvector $\\mat{1\\\\-1}$.",
+         "sha": "fce6ae2c6e6b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "There are two eigenvalues. $-1$ is an eigenvalue with eigenvector $\\mat{1\\\\1}$, and $1$ is an eigenvalue with eigenvector $\\mat{1 \\\\ -1}$.",
+         "sha": "c21b95c284b2",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Char(T) = - \\lambda ( \\lambda^{2} - 12 \\lambda - 12)$. Then, we have three eigevalues. $0$ is an eigenvalue with eigenvector $\\mat{1 \\\\ -2 \\\\ 1}$, $6 + 4 \\sqrt{3}$ is an eigenvalue with eigenvector $\\mat{2 \\\\ 2 + \\sqrt{3} \\\\ 2\\sqrt{3}}$, and $6 - 4\\sqrt{3}$ is an eigenvalue with eigenvector $\\mat{2 \\\\ 2 - \\sqrt{3} \\\\ 2-2\\sqrt{3}}$.",
+         "sha": "90351244926a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$U$ is induced by a $2 \\times 3$ matrix, and eigenvalues/eigenvectors are only defined for linear maps from $\\R^{n}$ to itself. So, $U$ has no eigenvalues or eigenvectors.",
+         "sha": "05c0be00c1af",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Eigenvalues and Eigenvectors · 练习题 1（上游 book/modules/module15-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module15-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A = \\mat{a&b\\\\c&d}$, where $a,b,c,d \\in \\R$.",
+      "sha": "1650588dc1dc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the characteristic polynomial of $A$.",
+         "sha": "3a7d370b9bea",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find conditions on $a,b,c,d$ so that $A$ has (i) two distinct real eigenvalues, (ii) exactly one real eigenvalue, (iii) no real eigenvalues.",
+         "sha": "db0fe7255106",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "By definition,",
+         "sha": "5c48b19627be",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}\\Char(A) = \\det (A - \\lambda I) &= \\det \\mat{a - \\lambda & b \\\\ c & d - \\lambda} \\\\\n\t\t\t\t\t\t&= \\lambda^{2} - (a + d)\\lambda + ad - bc.\\end{aligned}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "By the quadratic formula, the discriminant $\\Delta$ of $\\Char(A)$ is $\\Delta = (a + d)^{2} - 4(ad - bc) = (a - d)^{2} + 4 bc$. So, $A$ has two distinct real eigenvalues if $(a - d)^{2} + 4bc > 0$, one real eigenvalue if $(a - d)^{2} + 4bc = 0$, and no real eigenvalues if $(a - d)^{2} + 4bc < 0.$",
+         "sha": "fb351b4ca9bc",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Eigenvalues and Eigenvectors · 练习题 2（上游 book/modules/module15-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module15-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $B=\\mat{1&2\\\\0&4}$.",
+      "sha": "a71eada3411e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the eigenvalues of $B$.",
+         "sha": "206940366f63",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the eigenvalues of $B^{T}$.",
+         "sha": "a5b037f32c75",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A vector $\\vec v\\neq\\vec 0$ is called a *left-eigenvector* for $B$ if $\\vec vB=\\lambda \\vec v$ for some scalar $\\lambda$ (Here we consider $\\vec v$ a *row* vector). Find all left eigenvectors for $B$.",
+         "sha": "465fe9d5cb56",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Char(B) = \\det\\mat{1 -\\lambda & 2 \\\\ 0 & 4 - \\lambda}= (1 - \\lambda)(4 - \\lambda)$. So, $B$ has eigenvalues $1$ and $4$.",
+         "sha": "173da7061893",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Char(B) = \\Char(B^{T})$, so $B^{T}$ also has eigenvalues $1$ and $4$.",
+         "sha": "07ca8157bb0c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The equation $\\vec{v}^{T}B = \\lambda \\vec{v}^{T}$ holds if and only if $B^{T} \\vec{v}= \\lambda \\vec{v}$. Here, we interpret $\\vec{v}$ as a column vector and $\\vec{v}^{T}$ as a row vector.",
+         "sha": "8635ab0b0410",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "We observe that $B^{T}$ has eigenvector $\\mat{-3 \\\\ 2}$ with eigenvalue $1$ and an eigenvector $\\mat{0\\\\1}$ with eigenvalue $4$. Hence $B$ has left eigenvectors $\\mat{-3 & 2}$ with eigenvalue $1$ and left eigenvector $\\mat{0 & 1}$ with eigenvalue $4$. It follows that all non-zero scalar multiples of $\\mat{ -3 & 2 }$ and $\\mat{ 0 & 1 }$ are also left eigenvectors.",
+         "sha": "411cebd18e43",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Eigenvalues and Eigenvectors · 练习题 3（上游 book/modules/module15-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module15-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each statement below, determine whether it is true or false. Justify you answer.",
+      "sha": "bf5e46f6341f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Zero cannot be an eigenvalue of any matrix.",
+         "sha": "b67eca5bd1ca",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec 0$ cannot be an eigenvector of any matrix.",
+         "sha": "e596acc47956",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A $2\\times 2$ matrix always has a real eigenvalue.",
+         "sha": "815f2b3d8d18",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A $3\\times 3$ matrix always has a real eigenvalue.",
+         "sha": "8590b11af4ce",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A $3\\times 2$ matrix always has a real eigenvalue.",
+         "sha": "cedf4d541169",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The matrix $M = \\mat{3&3&3&3\\\\3&3&3&3\\\\3&3&3&3\\\\3&3&3&3}$ has exactly one eigenvalue.",
+         "sha": "91d1dfa5d388",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "An invertible square matrix can never have zero as an eigenvalue.",
+         "sha": "662f21ca0595",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A non-invertible square matrix *always* has zero as an eigenvalue.",
+         "sha": "b29047d9edc6",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. $0$ is an eigenvalue of $\\mat{0 & 0 \\\\ 0 & 0}$.",
+         "sha": "74f8a21411e9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True. An eigenvector is a nonzero vector by definition.",
+         "sha": "27ff66df8f13",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. $\\mat{0 & 1 \\\\ -1 & 0}$ has no real eigenvalue.",
+         "sha": "d0ecc01036a4",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True. Its characteristic polynomial has degree $3$ and hence has at least one real root.",
+         "sha": "47d7a21c516f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. Eigenvalues are not defined for a non-square matrix.",
+         "sha": "3b0b5aef23a3",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. $\\mat{3 & 3 & 3 & 3 \\\\ 3 & 3 & 3 & 3\\\\3 & 3 & 3 & 3\\\\3 & 3 & 3 & 3}$ has $0$ as an eigenvalue with eigenvector $\\mat{1 \\\\ -1 \\\\ 0 \\\\ 0}$. It also has eigenvalue $12$ with eigenvector $\\mat{1 \\\\ 1 \\\\ 1 \\\\ 1}$.",
+         "sha": "3615e430a206",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True. Any eigenvector with eigenvalue $0$ lies in the null space of the matrix, which implies that the null space has dimension at least one.",
+         "sha": "6a3f077dd5de",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True. Suppose $A$ was a non-invertible square matrix. Then, we must have $\\Nullity(A)>0$, and so $\\Null(A)$ contains at least one non-zero vector, $\\vec v$. By definition $A\\vec v=\\vec 0=0\\vec v$, and so $\\vec v$ is an eigenvector for $A$ with eigenvalue $0$.",
+         "sha": "5516d77ae296",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Eigenvalues and Eigenvectors · 练习题 4（上游 book/modules/module15-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module15-exercises.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "特征值与特征向量"
+}

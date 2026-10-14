@@ -1,0 +1,23 @@
+\begin{tikzpicture}
+			\begin{axis}[
+				anchor=origin,
+				name=plot1,
+				disabledatascaling,
+				xmin=-2,xmax=2,
+				ymin=-2,ymax=2,
+				xtick={-2,...,2},
+				ytick={-2,...,2},
+				x=1cm,y=1cm,
+				grid=both,
+				grid style={line width=.1pt, draw=black!10},
+				axis lines=middle,
+				minor tick num=0,
+				enlargelimits={abs=0.5},
+				axis line style={latex-latex},
+				ticklabel style={font=\tiny,fill=\currentbackgroundcolor},
+				xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+				ylabel style={at={(ticklabel* cs:1)},anchor=south west}
+			]
+			\end{axis}
+			\draw[thick, mypink] (-2.5,-1.25) -- (2.5,1.25);
+		\end{tikzpicture}

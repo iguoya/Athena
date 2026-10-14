@@ -1,0 +1,82 @@
+\begin{tikzpicture}[scale=2]
+		\begin{scope}[cm={1,0,0,1,(0,0)}, mypink, very thick]
+			\begin{scope}[mygreen]
+				\draw[ ->, yshift=-1pt] (0,0) -- (1,0) node [midway, below] {$\xhat$};
+				\draw[densely dotted, ->] (0,0) -- (0,1) node [midway, right] {$\yhat$};
+			\end{scope}
+			\begin{scope}[]
+				\draw[ ->] (0,0) -- (1,0) node [above right] {$\vec y_1$};
+				\draw[densely dotted, ->] (0,0) -- (.9,-.7) node [below right] {$\vec y_2$};
+			\end{scope}
+		\end{scope}
+		\begin{scope}[cm={1,0,0,1,(3,0)}, mypink, very thick]
+			\begin{scope}[thin, black!30!white, dashed]
+				\draw[->, bend left=50] (.9,-.7) 
+					to
+					coordinate[pos=.3] (I1) 
+					coordinate[pos=.6] (I2) 
+					coordinate[pos=.9] (I3) 
+					(-.7,-.3) to 
+					coordinate[pos=.4] (I4) 
+					coordinate[pos=.7] (I5) 
+					coordinate[pos=.9] (I6) 
+					coordinate[pos=.18] (Ib) 
+					(0,1)
+					;
+				\draw[->, densely dotted] (0,0) -- (I1);
+				\draw[->, densely dotted] (0,0) -- (I2);
+				\draw[->, densely dotted] (0,0) -- (I3);
+				\draw[->, densely dotted] (0,0) -- (I4);
+				\draw[->, densely dotted] (0,0) -- (I5);
+				\draw[->, densely dotted] (0,0) -- (I6);
+				\draw[densely dotted,very thick, black!50!white] (0,0) -- (Ib);
+				\draw[->, black!50!white] (-.7,0) -- (Ib);
+			\end{scope}
+			\begin{scope}[mygreen]
+				\draw[ ->, yshift=-1pt] (0,0) -- (1,0);
+				\draw[densely dotted, ->] (0,0) -- (0,1);
+			\end{scope}
+			\begin{scope}[]
+				\draw[ ->] (0,0) -- (1,0);
+				\draw[densely dotted, ->] (0,0) -- (.9,-.7) node [below right] {$\vec y_2$};
+			\end{scope}
+		\end{scope}
+		\begin{scope}[cm={1,0,0,1,(5,0)}, mypink, very thick]
+			\begin{scope}[thin, black!30!white, dashed]
+				\draw[->, bend right=45] (.9,-.7) 
+					to
+					coordinate[pos=.3] (I1) 
+					coordinate[pos=.6] (I2) 
+					coordinate[pos=.9] (I3) 
+					coordinate[pos=.78] (Ib2) 
+					(1.5,.3) to 
+					coordinate[pos=.4] (I4) 
+					coordinate[pos=.7] (I5) 
+					coordinate[pos=.9] (I6) 
+					coordinate[pos=.15] (I7) 
+					(0,1)
+					;
+				\draw[->, densely dotted] (0,0) -- (I1);
+				\draw[->, densely dotted] (0,0) -- (I2);
+				\draw[->, densely dotted] (0,0) -- (I3);
+				\draw[->, densely dotted] (0,0) -- (I4);
+				\draw[->, densely dotted] (0,0) -- (I5);
+				\draw[->, densely dotted] (0,0) -- (I6);
+				\draw[->, densely dotted] (0,0) -- (I7);
+				\draw[densely dotted,very thick, black!50!white] (0,0) -- (Ib2);
+				\draw[->, black!50!white] ($(Ib2) + (-.1,0)$) -- (Ib2);
+			\end{scope}
+			\begin{scope}[mygreen]
+				\draw[ ->, yshift=-1pt] (0,0) -- (1,0);
+				\draw[densely dotted, ->] (0,0) -- (0,1);
+			\end{scope}
+			\begin{scope}[]
+				\draw[ ->] (0,0) -- (1,0);
+				\draw[densely dotted, ->] (0,0) -- (.9,-.7) node [below right] {$\vec y_2$};
+			\end{scope}
+		\end{scope}
+		\node[above, mypink] at (0,1.2) {$\mathcal Y=\Set{\vec y_1,\vec y_2}$};
+		\node[above] at (3,1.2) {Continuous transform of $\mathcal Y$ to $\mathcal E$};
+		\draw (3,-1.5) node[right] (COMMENT) {Linearly dependent here} (COMMENT.west) edge[bend left=40, ->, in=90, out=55] ($(Ib)+(-.1,-.05)$);
+		\draw (COMMENT.east) edge[bend right, ->, in=-90, out=-40] ($(Ib2)+(.1,-.05)$);
+	\end{tikzpicture}

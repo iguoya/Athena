@@ -1,0 +1,2040 @@
+{
+ "id": "module14",
+ "title_en": "Determinants",
+ "blocks": [
+  {
+   "k": "outcome",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The definition of the determinant of a linear transformation and of a matrix.",
+         "sha": "600a406700ad",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How to interpret the determinant as a change-of-volume factor.",
+         "sha": "d037d22df4f9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How to relate the determinant of $S\\circ T$ to the determinant of $S$ and of $T$.",
+         "sha": "1bb22d2df3bf",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How to compute the determinants of elementary matrices and how to compute determinants of large matrices using row reduction.",
+         "sha": "8b1b50af4d10",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Linear transformations transform vectors, but they also change *sets*.",
+    "sha": "88fcb9211a9f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "b513fec8582f"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It turns out to be particularly useful to track by how much a linear transformation changes area/volume. This number (which is associated with a linear transformation with the same domain and codomain) is called the *determinant*\\footnote This number is *almost* the determinant. The only difference is that the determinant might have a $\\pm$ in front..",
+    "sha": "25b15da8088d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Volumes",
+    "sha": "39c0ee03f2b5",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In this module, most examples will be in $\\R^2$ because they're easier to draw. The definitions given will extend to $\\R^n$ for any $n$, however we need to establish some conventions to properly express these ideas in English. In English, we say that a two-dimensional figure has an *area* and a three-and-up dimensional figure has a *volume*. In this section, *we will use the term volume to also mean area* where appropriate.",
+    "sha": "12700d680982",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To measure how volume changes, we need to compare input volumes and output volumes. The easiest volume to compute is that of the \\emphunit $n$-cube, which has a special notation.",
+    "sha": "4e0768fe71a0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Unit $n$-cube",
+    "sha": "80da4df1b09a",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The \\emphunit $n$-cube is the $n$-dimensional cube with sides given by the standard basis vectors and lower-left corner located at the origin. That is",
+      "sha": "b59891f9d95f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "C_{n}=\\Set{\\vec x\\in\\R^n:\\vec x=\\sum_{i=1}^n\\alpha_i\\vec e_i\\text{\n\t\tfor some }\\alpha_1,\\ldots,\\alpha_n\\in[0,1]}=[0,1]^{n}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "$C_2$ should look familiar as the unit square in $\\R^2$ with lower-left corner at the origin.",
+    "sha": "afc2d452e650",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "449bb0150be1"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "$C_n$ always has volume $1$\\footnote The fact that the volume of $C_n$ is $1$ is actually by definition., and by analyzing the image of $C_n$ under a linear transformation, we can see by how much a given transformation changes volume.",
+    "sha": "0444bf066d29",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal T:\\R^2\\to\\R^2$ be defined by $\\mathcal T\\mat{x\\\\y}=\\matc{2x-y\\\\x+\\tfrac{1}{2}y}$. Find the volume of $\\mathcal T(C_2)$.",
+      "sha": "3a1d98796d42",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Recall that $C_2$ is the unit square in $\\R^2$ with sides given by $\\xhat = \\mat{1\\\\0}$ and $\\yhat = \\mat{0\\\\1}$. Applying the linear transformation $\\mathcal T$ to $\\xhat$ and $\\yhat$, we obtain",
+      "sha": "b6bdc2570eb7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mathcal T(\\xhat)=\\mat{2\\\\1} \\qquad\\text{and}\\qquad \\mathcal T(\\yhat)=\\mat{-1\\\\\\frac{1}{2}}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Plotting $\\mat{2\\\\1}$ and $\\mat{-1\\\\\\frac{1}{2}}$, we see $\\mathcal T(C_2)$ is a parallelogram with base $\\sqrt{5}$ and height $\\frac{2\\sqrt{5}}{5}$.",
+      "sha": "f298560c436b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "101a80d98df9"
+     ],
+     "caption": null
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, the volume of $\\mathcal T(C_2)$ is 2.",
+      "sha": "a036b35093dd",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\Vol(X)$ stand for the volume of the set $X$. Given a linear transformation $\\mathcal S:\\R^n\\to\\R^n$, we can define a number",
+    "sha": "96c2c568a44f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\VolChange(\\mathcal S)=\\frac{\\Vol(\\mathcal S(C_n))}{\\Vol(C_n)}=\\frac{\\Vol(\\mathcal S(C_n))}{1}=\\Vol(\\mathcal S(C_n))."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A priori, $\\VolChange(\\mathcal S)$ only describes how $\\mathcal S$ changes the volume of $C_n$. However, because $\\mathcal S$ is a linear transformation, $\\VolChange(\\mathcal S)$ actually describes how $\\mathcal S$ changes the volume of any figure.",
+    "sha": "357a984f58ed",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal T:\\R^n\\to\\R^n$ be a linear transformation and let $X\\subseteq \\R^n$ be a subset with volume $\\alpha$. Then the volume of $\\mathcal T(X)$ is $\\alpha\\!\\cdot\\!\\VolChange(\\mathcal T)$.",
+      "sha": "c8192ded69a0",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A full proof of the above theorem requires calculus and limits, but the linear algebra ideas are based on the following theorems.",
+    "sha": "e9f4a52505dc",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $\\mathcal T:\\R^n\\to\\R^n$ is a linear transformation, $X\\subseteq \\R^n$ is a subset, and the volume of $\\mathcal T(X)$ is $\\alpha$. Then for any $\\vec p\\in \\R^n$, the volume of $\\mathcal T(X+\\Set{\\vec p})$ is $\\alpha$.",
+      "sha": "3101e946853e",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Fix $\\mathcal T:\\R^n\\to\\R^n$, $X\\subseteq \\R^n$, and $\\vec p\\in \\R^n$. Combining linearity with the definition of set addition, we see",
+      "sha": "5b9488631eed",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mathcal T(X+\\Set{\\vec p}) = \\mathcal T(X)+\\mathcal T(\\Set{\\vec p}) = \\mathcal T(X)+\\Set{\\mathcal T(\\vec p)}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so $\\mathcal T(X+\\Set{\\vec p})$ is just a translation of $\\mathcal T(X)$. Since translations don't change volume, $\\mathcal T(X+\\Set{\\vec p})$ and $\\mathcal T(X)$ must have the same volume.",
+      "sha": "2c7e41a2a0a5",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Fix $k$ and let $B_n$ be $C_n$ scaled to have side lengths $\\frac{1}{k}$ and let $\\mathcal T:\\R^n\\to\\R^n$ be a linear transformation. Then",
+      "sha": "a9ca7d8c9d19",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\VolChange(\\mathcal T) = \\frac{\\Vol(\\mathcal T(B_n))}{\\Vol(\\mathcal B_n)}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Rather than giving a formal proof of the above theorem, let's make a motivating picture.",
+    "sha": "8da96342a1e9",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "77d0ce3aa55f"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The argument now goes: there are $k^n$ copies of $B_n$ in $C_n$ and $k^n$ copies of $\\mathcal T(B_n)$ in $T(C_n)$. Thus,",
+    "sha": "1c1233b938c5",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\VolChange(\\mathcal T)\n\t=\\frac{\\Vol(\\mathcal T(C_n))}{\\Vol(\\mathcal C_n)}=\\frac{k^n\\Vol(\\mathcal T(B_n))}{k^n\\Vol(\\mathcal B_n)}\n\t=\\frac{\\Vol(\\mathcal T(B_n))}{\\Vol(\\mathcal B_n)}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Now we can finally show that for a linear transformation $\\mathcal T:\\R^n\\to\\R^n$, the number “$\\VolChange(\\mathcal T)$” actually corresponds to how much $\\mathcal T$ changes the volume of any figure by.",
+    "sha": "8e5de4793e9e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The argument goes as follows: for a figure $X\\subseteq \\R^n$, we can fill it with shrunken and translated copies, $B_n$, of $C_n$. The same number of copies of $\\mathcal T(B_n)$ fit inside $\\mathcal T(X)$ as do $B_n$'s fit inside $X$. Therefore, the change in volume between $\\mathcal T(X)$ and $X$ must be the same as the change in volume between $\\mathcal T(B_n)$ and $B_n$, which is $\\VolChange(\\mathcal T)$.",
+    "sha": "731e56bc80af",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "5db96bda8fd6"
+   ],
+   "caption": null
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "The Determinant",
+    "sha": "7e78ff2d4975",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The determinant of a linear transformation $\\mathcal T:\\R^n\\to\\R^n$ is *almost* the same as $\\VolChange(\\mathcal T)$, but with one twist: *orientation*.",
+    "sha": "0a98d8fa3e30",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Determinant",
+    "sha": "41aa45abebc6",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The *determinant* of a linear transformation $\\mathcal T:\\R^{n}\\to \\R^{n}$, denoted $\\det(\\mathcal T)$ or $\\Abs{\\mathcal T}$, is the oriented volume of the image of the unit $n$-cube. The determinant of a square matrix is the determinant of its induced transformation.",
+      "sha": "f09b34a4535f",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We need to understand what the term *oriented volume* means. We've previously defined the orientation of a basis, and we can use the orientation of a basis to define whether a linear transformation is *orientation preserving* or *orientation reversing*.",
+    "sha": "5b0725bab616",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Orientation Preserving Linear Transformation",
+    "sha": "b091999f4734",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal T:\\R^n\\to\\R^n$ be a linear transformation. We say $\\mathcal T$ is *orientation preserving* if the ordered basis $\\Set{\\mathcal T(\\vec e_1),\\ldots, \\mathcal T(\\vec e_n)}$ is positively oriented and we say $\\mathcal T$ is *orientation reversing* if the ordered basis $\\Set{\\mathcal T(\\vec e_1),\\ldots, \\mathcal T(\\vec e_n)}$ is negatively oriented. If $\\Set{\\mathcal T(\\vec e_1),\\ldots, \\mathcal T(\\vec e_n)}$ is not a basis for $\\R^n$, then $\\mathcal T$ is neither orientation preserving nor orientation reversing.",
+      "sha": "501ef0e95068",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "6a611cc75cba"
+   ],
+   "caption": null
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "de562da7ee85"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In the figure above, $\\mathcal T$ is orientation preserving and $\\mathcal S$ is orientation reversing.",
+    "sha": "8754deb32fcf",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For an arbitrary linear transformation $\\mathcal Q:\\R^n\\to\\R^n$ and a set $X\\subseteq\\R^n$, we define the *oriented volume* of $\\mathcal Q(X)$ to be $+\\Vol\\mathcal Q(X)$ if $\\mathcal Q$ is orientation preserving and $-\\Vol\\mathcal Q(X)$ if $\\mathcal Q$ is orientation reversing.",
+    "sha": "595888562854",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal T:\\R^2\\to\\R^2$ be defined by $\\mathcal T\\mat{x\\\\y}=\\matc{2x+y\\\\-x+\\tfrac{1}{2}y}$. Find $\\det(\\mathcal T)$.",
+      "sha": "ea8d9932e1df",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is the same $\\mathcal T$ as from the previous example where we computed $\\Vol\\mathcal T(C_2)=2$. Since $\\mathcal T$ is orientation preserving, we conclude that $\\det(\\mathcal T)=2$.",
+      "sha": "a06c9a592e96",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal S:\\R^2\\to\\R^2$ be defined by $\\mathcal S\\mat{x\\\\y}=\\mat{-x+y\\\\x+y}$. Find $\\det(\\mathcal S)$.",
+      "sha": "c388a42a583a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By drawing a picture, we see that $\\mathcal S(C_2)$ is a square and $\\Vol\\mathcal S(C_2)=2$. However, $\\mathcal S(\\xhat) = \\mat{-1\\\\1}$ and $\\mathcal S(\\yhat) = \\mat{1\\\\1}$ form a negatively oriented basis, and so $\\mathcal S$ is orientation reversing. Therefore, $\\det(\\mathcal S) = - \\Vol\\mathcal S(C_2) = -2$.",
+      "sha": "60d2649c54d8",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal P:\\R^2\\to\\R^2$ be projection onto the line with equation $x+2y=0$. Find $\\det(\\mathcal P)$.",
+      "sha": "e95a896e56af",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Because $\\mathcal P$ projects everything to a line, we know $\\mathcal P(C_2)$ must be a line segment and therefore has volume zero. Thus $\\det(\\mathcal P)=0$.",
+      "sha": "ed7aed27effd",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Determinants of Composition",
+    "sha": "c8dc3bbe3f9a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Volume changes are naturally multiplicative. If a linear transformation $\\mathcal T$ changes volume by a factor of $\\alpha$ and $\\mathcal S$ changes volume by a factor of $\\beta$, then $\\mathcal S\\circ \\mathcal T$ changes volume by a factor of $\\beta\\alpha$. Thus, determinants must also be multiplicative 〔注： To fully argue this, we need to show that the composition of two orientation-reversing transformations is orientation preserving.〕.",
+    "sha": "01dbdaf9ede0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "58457fc8b882"
+   ],
+   "caption": null
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal T:\\R^n\\to\\R^n$ and $\\mathcal S:\\R^n\\to\\R^n$ be linear transformations. Then",
+      "sha": "f9faa20c852d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(\\mathcal S\\circ \\mathcal T)=\\det(\\mathcal S)\\det(\\mathcal T)."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This means that we can compute the determinant of a complicated transformation by breaking it up into simpler ones and computing the determinant of each piece.",
+    "sha": "8a0959336a82",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Determinants of Matrices",
+    "sha": "648f3bbc1a5b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The determinant of a matrix is defined as the determinant of its induced transformation. That means, the determinant is multiplicative with respect to matrix multiplication (because it's multiplicative with respect to function composition).",
+    "sha": "4b8fd04718d6",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ and $B$ be $n\\times n$ matrices. Then",
+      "sha": "54d761ac3281",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(AB)=\\det(A)\\det(B)."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We will derive an algorithm for finding the determinant of a matrix by considering the determinant of elementary matrices. But first, consider the following theorem.",
+    "sha": "534e52a458c8",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Volume Theorem I",
+    "sha": "1b88260562a5",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For a square matrix $M$, $\\det(M)$ is the oriented volume of the parallelepiped\\footnote A parallelepiped is the $n$-dimensional analog of a parallelogram. given by the column vectors.",
+      "sha": "23d0943c558d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $M$ be an $n\\times n$ matrix and let $\\mathcal T_M$ be its induced transformation. We know the sides of $\\mathcal T_{M}(C_n)$ are given by $\\Set{\\mathcal T_M(\\vec e_1),\\ldots,\\mathcal T_M(\\vec e_n)}$. And, by definition,",
+      "sha": "c7093232a100",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\mathcal T_M(\\vec e_i)]_{\\mathcal E} = M[\\vec e_i]_{\\mathcal E} = \\text{ $i$th column of $M$.}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore $\\mathcal T_{M}(C_n)$ is the parallelepiped whose sides are given by the columns of $M$.",
+      "sha": "5d87f5dc7468",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This means we can think about the determinant of a matrix by considering its columns. Now we are ready to consider the determinants of the elementary matrices!",
+    "sha": "75ad1415112f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There are three types of elementary matrices corresponding to the three elementary row operations. For each one, we need to understand how the induced transformation changes volume.",
+    "sha": "8ef3994cf223",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "\\bfseries Multiply a row by a non-zero constant $\\alpha$. Let $E_m$ be such an elementary matrix. Scaling one row of $I$ is equivalent to scaling one column of $I$, and so the columns of $E_m$ specify a parallelepiped that is scaled by $\\alpha$ in one direction.",
+    "sha": "087df2716bcc",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For example, if",
+    "sha": "4d42487498c3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "E_m=\\mat{1&0&0\\\\0&1&0\\\\0&0&\\alpha}\\qquad\\text{then}\\qquad \\Set{\\vec e_1,\\vec e_2,\\vec e_3}\\mapsto\\Set{\\vec e_1,\\vec e_2,\\alpha\\vec e_3}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Thus $\\det(E_m)=\\alpha$.",
+    "sha": "63da7f175245",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "\\bfseries Swap two rows. Let $E_s$ be such an elementary matrix. Swapping two rows of $I$ is equivalent to swapping two columns of $I$, so $E_s$ is $I$ with two columns swapped. This reverses the orientation of the basis given by the columns.",
+    "sha": "ec8a8cabaa5c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For example, if",
+    "sha": "4d42487498c3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "E_s=\\mat{0&1&0\\\\1&0&0\\\\0&0&1}\\qquad\\text{then}\\qquad \\Set{\\vec e_1,\\vec e_2,\\vec e_3}\\mapsto\\Set{\\vec e_2,\\vec e_1,\\vec e_3}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Thus $\\det(E_s)=-1$.",
+    "sha": "88f03277bf79",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "\\bfseries Add a multiple of one row to another. Let $E_a$ be such an elementary matrix. The columns of $E_a$ are the same as the columns of $I$ except that one column where $\\vec e_i$ is replaced with $\\vec e_i+\\alpha\\vec e_j$. This has the effect of *shearing* $C_n$ in the $\\vec e_j$ direction.",
+    "sha": "70d638bf573a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "acb3877b0913"
+   ],
+   "caption": null
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "c859498b4daf"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Since $C_n$ is sheared in a direction parallel to one of its other sides, its volume is not changed. Thus $\\det(E_a)=1$.",
+    "sha": "71fdd38d34ed",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The determinants of elementary matrices are all easy to compute and the determinant of the most-used type of elementary matrix is $1$.",
+      "sha": "ff6b606c8d92",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Now, by decomposing a matrix into the product of elementary matrices, we can use the multiplicative property of the determinant (and the formulas for the determinants of the different types of elementary matrices) to compute the determinant of an invertible matrix.",
+    "sha": "ee4cf43ed6b1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use elementary matrices to find the determinant of $A=\\mat{1&2\\\\3&4}$.",
+      "sha": "a0a2edc5e94e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We can row-reduce $A$ with the following steps.",
+      "sha": "d5309515ca9d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{1&2\\\\3&4}\\to \\mat{1&2\\\\0&-2}\\to \\mat{1&2\\\\0&1}\\to \\mat{1&0\\\\0&1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The elementary matrices corresponding to these steps are",
+      "sha": "7bc921bdad81",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "E_1=\\mat{1&0\\\\-3&1} \\qquad E_2=\\mat{1&0\\\\0&-\\frac{1}{2}}\\qquad\\text{and}\\qquad E_3=\\mat{1&-2\\\\0&1},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so $E_3 E_2 E_1 A = I$. Therefore",
+      "sha": "0ac033850f91",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=E_1^{-1}E_2^{-1}E_3^{-1}I=E_1^{-1}E_2^{-1}E_3^{-1}=\n\t    \\mat{1&0\\\\3&1}\\mat{1&0\\\\0&-2}\\mat{1&2\\\\0&1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Using the fact that the determinant is multiplicative, we get",
+      "sha": "2b7af3ed9ff7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}\\det(A)&=\\det\\left(\\mat{1&0\\\\3&1}\\mat{1&0\\\\0&-2}\\mat{1&2\\\\0&1}\\right)\\\\\n\t           &=\\det\\left(\\mat{1&0\\\\3&1}\\right)\\det\\left(\\mat{1&0\\\\0&-2}\\right)\\det\\left(\\mat{1&2\\\\0&1}\\right)\\\\\n\t\t   &=(1)(-2)(1) = -2.\\end{aligned}"
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Determinants and Invertibility",
+    "sha": "f32ab593d357",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can use elementary matrices to compute the determinant of any invertible matrix by decomposing it into the product of elementary matrices. But, what about non-invertible matrices?",
+    "sha": "8c9ddbbb4b44",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $M$ be an $n\\times n$ matrix that is *not* invertible. Then, we must have $\\Nullity(M)>0$ and $\\Dim(\\Col(M))=\\Rank(M)<n$. Geometrically, this means there is at least one line of vectors, $\\Null(M)$, that gets collapsed to $\\vec 0$, and the column space of $M$ must be “flattened” (i.e., it has lost a dimension). Therefore, the volume of the parallelepiped given by the columns of $M$ must be zero, and so $\\det(M)=0$.",
+    "sha": "ffd96ed239a8",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Based on this argument, we have the following theorem.",
+    "sha": "fd0159e5cd02",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n\\times n$ matrix. $A$ is invertible if and only if $\\det(A)\\neq 0$.",
+      "sha": "92c8857db29d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If $A$ is invertible, $A=E_1\\cdots E_k$, where $E_1,\\ldots,E_k$ are elementary matrices, and so",
+      "sha": "9c741a882485",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(A)=\\det(E_1\\cdots E_k) = \\det(E_1)\\cdots \\det(E_k)."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "All elementary matrices have non-zero determinants, and so $\\det(A)\\neq 0$.",
+      "sha": "2cef43413a97",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Conversely, if $A$ is not invertible, $\\Rank(A)<n$, which means the parallelepiped given by the columns of $A$ is “flattened” and has zero volume.",
+      "sha": "52f4acb84234",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We now have another way to tell if a matrix is invertible! But, for an invertible matrix $A$, how do $\\det(A)$ and $\\det(A^{-1})$ relate? Well, by definition",
+    "sha": "0622ca303329",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "AA^{-1}=I,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and so",
+    "sha": "9af790b3a93d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\det(AA^{-1})=\\det(A)\\det(A^{-1})=\n\t\\det(I)=1,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "which gives",
+    "sha": "2be1834c9927",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\det(A^{-1})=\\frac{1}{\\det(A)}."
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Determinants and Transposes",
+    "sha": "6ecc1f5bf25e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Somewhat mysteriously, we have the following theorem.",
+    "sha": "0e63cd02c044",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Volume Theorem II",
+    "sha": "7e8f6da50c98",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The determinant of a square matrix $A$ is equal to the oriented volume of the parallelepiped given by the rows of $A$.",
+      "sha": "71f4b8dc4618",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Volume Theorem II can be concisely stated as $\\det(A)=\\det(A^T)$, and joins other strange transpose-related facts (like $\\Rank(A)=\\Rank(A^T)$).",
+    "sha": "fa8efaa29b0a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can prove Volume Theorem II using elementary matrices.",
+    "sha": "1416448d741f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $A$ is not invertible. Then, neither is $A^T$ and so $\\det(A)=\\det(A^T)=0$.",
+      "sha": "eeabd8a92769",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $A$ is invertible and $A=E_1\\cdots E_k$ where $E_1,\\ldots, E_k$ are elementary matrices. We then have",
+      "sha": "2dacf83c21bf",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A^T = E_k^T\\cdots E_1^T,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which follows from the fact that the transpose reverses the order of matrix multiplication (i.e., $(XY)^T=Y^TX^T$). However, for each $E_i$, we may observe that $E_i^T$ is another elementary matrix of the same type and with the same determinant. Therefore,",
+      "sha": "923c4558caa5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}\\det(A^T) = \\det(E_k^T\\cdots E_1^T)&=\\det(E_k^T)\\cdots \\det(E_i^T)\\\\ \n\t\t&=\n\t\t\\det(E_k)\\cdots \\det(E_1)\\\\ &= \\det(E_1)\\cdots \\det(E_k) = \\det(E_1\\cdots E_k)=\\det(A).\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The key observations for this proof are that (i) $\\det(E_i^T)=\\det(E_i)$ and (ii) since the $\\det(E_i)$'s are just scalars, the order in which they are multiplied doesn't matter.",
+      "sha": "2827d37733dd",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal{T}:\\R^{2}\\to\\R^{2}$ be defined by $\\mathcal{T}\\mat{x\\\\y} =\\matc{3x-y\\\\x-\\tfrac{1}{4}y}$. Find the volume of $\\mathcal{T}(C_{2})$.",
+      "sha": "441c06b028f9",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The volume of $\\mathcal T(C_{2})$ is equal to the absolute value of the determinant of $\\mathcal T$. We have that",
+      "sha": "41d4a4312f2a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\mathcal T]_{\\mathcal E} =\n\t\t\t\t\\mat{\n\t\t\t\t\t3 & - 1  \\\\\n\t\t\t\t\t1 & -1/4\n\t\t\t\t},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "so $\\det \\mathcal T = -3/4 + 1 = 1/4$. Since this number is positive, it is also the desired volume.",
+      "sha": "af9d03612f03",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Determinants · 练习题 1（上游 book/modules/module14-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module14-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal{S}:\\R^{3}\\to\\R^{3}$ be defined by $\\mathcal{S}\\mat{x\\\\y\\\\z}=\\matc{2x+y+z\\\\x-\\tfrac{1}{2}y\\\\z}$. Find the volume of $\\mathcal{S}(C_{3})$.",
+      "sha": "10ee53d4cc6a",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We start by computing the determinant of $\\mathcal S$. The determinant of $\\mathcal S$ can be computed from $[\\mathcal S]_{\\mathcal E}$, which is given by",
+      "sha": "6f661c90fabe",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\mathcal S]_{\\mathcal E} =\n\t\t\t\t\\mat{\n\t\t\t\t\t2 & 1    & 1 \\\\\n\t\t\t\t\t1 & -1/2 & 0 \\\\\n\t\t\t\t\t0 & 0    & 1\n\t\t\t\t}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since determinant is preserved by row operations of the form “add a multiple of one row to another”, we can partially row reduce $[\\mathcal S]_{\\mathcal E}$ (using only that row operation) without changing the determinant. Thus, the determinant of $[\\mathcal S]_{\\mathcal E}$ is the same as the determinant of",
+      "sha": "86dbea3e4bb3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{\n\t\t\t\t\t2 & 1  & 1    \\\\\n\t\t\t\t\t0 & -1 & -1/2 \\\\\n\t\t\t\t\t0 & 0  & 1\n\t\t\t\t}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This matrix is triangular, so the determinant is just the product of the entries on the diagonal. Therefore, $\\det [\\mathcal S]_{\\mathcal E} = -2$. But volume is non-negative, so the volume of $\\mathcal S(C_3)$ is $2$.",
+      "sha": "521dbe466ac8",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Determinants · 练习题 2（上游 book/modules/module14-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module14-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal{T}:\\R^{2}\\to\\R^{2}$ be defined by $\\mathcal{T}\\mat{x\\\\y} =\\matc{x+2y\\\\-x-y}$.",
+      "sha": "bf6724109c50",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Draw $\\mathcal{E}$ and $\\mathcal{T}(\\mathcal{E})$ and then determine whether $\\mathcal{T}$ is orientation preserving or orientation reversing.",
+         "sha": "f0242b1d168c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find $\\det(\\mathcal{T})$.",
+         "sha": "0f82251a5a72",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Computing, we see $\\mathcal T(\\xhat) = \\mat{1\\\\-1}$ and $\\mathcal T(\\yhat)=\\mat{2\\\\-1}$. Drawing these two vectors, we see that $\\mathcal T(\\xhat),\\mathcal T(\\yhat)$ can be continuously transformed back into $\\xhat,\\yhat$ while staying linearly independent the whole time. Therefore $\\mathcal T$ is orientation preserving.",
+         "sha": "ecb02127d086",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\det \\mathcal T$ is equal to the determinant of the matrix",
+         "sha": "b5c96a6d6bdc",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "[\\mathcal T]_{\\mathcal E}=\\mat{\n\t\t\t\t\t\t\t1  & 2  \\\\\n\t\t\t\t\t\t\t-1 & -1\n\t\t\t\t\t\t},"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "which is $1$.",
+         "sha": "e68c6a097c77",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Determinants · 练习题 3（上游 book/modules/module14-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module14-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each linear transformation defined below, find its determinant.",
+      "sha": "30e7432050a9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{S}:\\R^{2}\\to\\R^{2}$, where $\\mathcal{S}$ shortens every vector by a factor of $\\tfrac{2}{3}$.",
+         "sha": "a2fbb87f4dc2",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{R}:\\R^{2}\\to\\R^{2}$, where $\\mathcal{R}$ is rotation counter-clockwise by $90^{\\circ}$.",
+         "sha": "85080aef5f48",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{F}:\\R^{2}\\to\\R^{2}$, where $\\mathcal{F}$ is reflection across the line $y=-x$.",
+         "sha": "237133a20bca",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{G}:\\R^{2}\\to\\R^{2}$, where $\\mathcal{G}(\\vec x)=\\mathcal{P}(\\vec x)+ \\mathcal{Q}(\\vec x)$ and where $\\mathcal{P}$ is projection onto the line $y=x$ and $\\mathcal{Q}$ is projection onto the line $y=-\\tfrac{1}{2}x$.",
+         "sha": "b1b727154f18",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{T}:\\R^{3}\\to\\R^{3}$, where $\\mathcal{T}\\mat{x\\\\y\\\\z}=\\matc{x-y+z\\\\z+x-\\tfrac{1}{3}y\\\\z}$.",
+         "sha": "ccddcd4d6489",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{J}:\\R^{3}\\to\\R^{3}$, where $\\mathcal{J}\\mat{x\\\\y\\\\z}=\\matc{0\\\\0\\\\x+y+z}$.",
+         "sha": "d327a483425e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{K}\\circ \\mathcal{H}:\\R^{2}\\to\\R^{2}$, where $\\mathcal{H}\\mat{x\\\\y}=\\matc{x+2y\\\\-x-y}$, and $\\mathcal{K}\\mat{x\\\\y}=\\matc{-x-2y\\\\x+y}$.",
+         "sha": "3797d9052211",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The matrix for $\\mathcal S$ in any basis is $\\mat{ 2/3 & 0 \\\\ 0 & 2/3 }$, so the determinant is $4/9$.",
+         "sha": "9e72e68e4650",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal R$ does not change volume or orientation so its determinant is $1$.",
+         "sha": "544a80311f8c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal F$ does not change volume but it reverses orientation so its determinant is $-1$.",
+         "sha": "cdcbb5616e1a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Though the determinants of $\\mathcal P$ and $\\mathcal Q$ are both $0$, the determinant of $\\mathcal G$ is not zero! We can compute the standard matrix for $\\mathcal G$ by noticing $\\mathcal G(\\xhat)=\\mat{13/10\\\\1/10}$ and $\\mathcal G(\\yhat)=\\mat{1/10\\\\7/10}$. Therefore",
+         "sha": "cb169527420d",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "[\\mathcal G]_{\\mathcal E} =\\mat{13/10&1/10\\\\1/10&7/10}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "and so $\\det\\mathcal G=9/10$.",
+         "sha": "028f9f16bf14",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The matrix $[\\mathcal T]_{\\mathcal E}$ is given by",
+         "sha": "a7d07276411b",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "[\\mathcal T]_{\\mathcal E} =\n\t\t\t\t\t\t\\mat{\n\t\t\t\t\t\t\t1 & -1   & 1 \\\\\n\t\t\t\t\t\t\t1 & -1/3 & 1 \\\\\n\t\t\t\t\t\t\t0 & 0    & 1\n\t\t\t\t\t\t}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Subtracting the first row from the second gives the matrix",
+         "sha": "54ab2ca9d8e6",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{\n\t\t\t\t\t\t\t1 & -1  & 1 \\\\\n\t\t\t\t\t\t\t0 & 2/3 & 0 \\\\\n\t\t\t\t\t\t\t0 & 0   & 1\n\t\t\t\t\t\t},"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "which has the same determinant as $[\\mathcal T]_{\\mathcal E}$, and since this matrix is upper triangular, its determinant is simply $2/3$.",
+         "sha": "4dcd899bb2b3",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The map $\\mathcal J$ maps every vector in $\\R^{3}$ into $\\Span\\Set{\\mat{ 0 \\\\ 0 \\\\ 1}}$, hence $\\mathcal J$ is not invertible. Therefore, $\\det \\mathcal J = 0$.",
+         "sha": "675a7039b8dd",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The determinant of the composition of the two maps is just the product of the determinants of the two maps. The matrices for $\\mathcal K$ and $\\mathcal H$ (with respect to $\\mathcal E$) are",
+         "sha": "c3319a48b614",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{\n\t\t\t\t\t\t\t1  & 2  \\\\\n\t\t\t\t\t\t\t-1 & -1\n\t\t\t\t\t\t}\\qquad\\text{and}\\qquad\n\t\t\t\t\t\t\\mat{\n\t\t\t\t\t\t\t-1 & -2 \\\\\n\t\t\t\t\t\t\t1  & 1\n\t\t\t\t\t\t}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "and each has determinant one, so the determinant of $\\mathcal K\\circ\\mathcal H$ is also $1$.",
+         "sha": "aae6999cfb15",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Determinants · 练习题 4（上游 book/modules/module14-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module14-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\mat{2&3\\\\1&5}$.",
+      "sha": "49b5ee64a76a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Use elementary matrices to find $\\det(A)$.",
+         "sha": "817e3cef3855",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Draw a picture of the parallelogram given by the rows of $A$.",
+         "sha": "6e34704cc577",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Draw a picture of the parallelogram given by the columns of $A$.",
+         "sha": "cb9d6ef96bac",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How do the areas of the parallelograms drawn in parts 〔引用〕 and 〔引用〕 relate?",
+         "sha": "efc97bf6f11e",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Put $E_{1} = \\mat{ 1 & 0 \\\\ -1/2 & 1 }$. Then",
+         "sha": "798f43d14b86",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "E_{1} A =\n\t\t\t\t\t\t\\mat{\n\t\t\t\t\t\t\t2 & 3   \\\\\n\t\t\t\t\t\t\t0 & 7/2\n\t\t\t\t\t\t}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Put $E_{2} = \\mat{ 1 & 0 \\\\ 0 & 2/7 }$. Then",
+         "sha": "699f2b502437",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "E_{2} E_{1} A =\n\t\t\t\t\t\t\\mat{\n\t\t\t\t\t\t\t2 & 3 \\\\\n\t\t\t\t\t\t\t0 & 1\n\t\t\t\t\t\t}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Put $E_{3} = \\mat{ 1 & -3 \\\\ 0 & 1 }$. Then",
+         "sha": "27616d30c2bc",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "E_{3} E_{2} E_{1} A =\n\t\t\t\t\t\t\\mat{\n\t\t\t\t\t\t\t2 & 0 \\\\\n\t\t\t\t\t\t\t0 & 1\n\t\t\t\t\t\t}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Finally, put $E_{4} = \\mat{ 1/2 & 0 \\\\ 0 & 1 }$. Then",
+         "sha": "bf8400111016",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "E_{4} E_{3} E_{2} E_{1} A =\n\t\t\t\t\t\t\\mat{\n\t\t\t\t\t\t\t1 & 0 \\\\\n\t\t\t\t\t\t\t0 & 1\n\t\t\t\t\t\t}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Therefore,",
+         "sha": "236a32def63c",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\det A = \\det E_{1}^{-1}\\det E_{2}^{-1}\\det E_{3}^{-1}\\det E_{4}\n\t\t\t\t\t\t^{-1}= 7."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "They have the same area.",
+         "sha": "0f515b216f93",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Determinants · 练习题 5（上游 book/modules/module14-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module14-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\mat{1&2&0\\\\0&2&1\\\\1&2&3}$.",
+      "sha": "56e67c724f1b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Use elementary matrices to find $\\det(A)$.",
+         "sha": "817e3cef3855",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find $\\det(A^{-1})$.",
+         "sha": "0ac5a40ff204",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find $\\det(A^{T})$, and compare your answer with 〔引用〕. Are they the same? Explain.",
+         "sha": "bf14a4536fef",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "By row reducing and keeping track of our steps, we see that",
+         "sha": "0adda9ec6eb6",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "E_5E_4E_3E_2E_1 A = I"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "where",
+         "sha": "46148cc3b4d2",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "E_{1} =\n\t\t\t\t\t\t\\mat{\n\t\t\t\t\t\t\t1  & 0 & 0 \\\\\n\t\t\t\t\t\t\t0  & 1 & 0 \\\\\n\t\t\t\t\t\t\t-1 & 0 & 1\n\t\t\t\t\t\t}\\qquad\n\t\t\t\t\t\tE_{2} =\n\t\t\t\t\t\t\\mat{\n\t\t\t\t\t\t\t1  & 0 & 0 \\\\\n\t\t\t\t\t\t\t0  & 1/2 & 0 \\\\\n\t\t\t\t\t\t\t0 & 0 & 1\n\t\t\t\t\t\t}"
+       },
+       {
+        "k": "math",
+        "tex": "E_{3} =\n\t\t\t\t\t\t\\mat{\n\t\t\t\t\t\t\t1  & 0 & 0 \\\\\n\t\t\t\t\t\t\t0  & 1 & 0 \\\\\n\t\t\t\t\t\t\t0 & 0 & 1/3\n\t\t\t\t\t\t}\\qquad\n\t\t\t\t\t\tE_{4} =\n\t\t\t\t\t\t\\mat{\n\t\t\t\t\t\t\t1  & -2 & 0 \\\\\n\t\t\t\t\t\t\t0  & 1 & 0 \\\\\n\t\t\t\t\t\t\t0 & 0 & 1\n\t\t\t\t\t\t}"
+       },
+       {
+        "k": "math",
+        "tex": "E_{5} =\n\t\t\t\t\t\t\\mat{\n\t\t\t\t\t\t\t1  & 0 & 0 \\\\\n\t\t\t\t\t\t\t0  & 1 & -1 \\\\\n\t\t\t\t\t\t\t0 & 0 & 1\n\t\t\t\t\t\t}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Therefore $A=E_1^{-1}E_2^{-1}E_3^{-1}E_4^{-1}E_5^{-1}$. By thinking about the relationship between elementary matrices and determinants, we see that $\\det E_1^{-1} =\\det E_4^{-1} =\\det E_5^{-1} = 1$ and that $\\det E_2^{-1} = 2$ and $\\det E_3^{-1} = 3$. Therefore $\\det A = 6$.",
+         "sha": "a7abd553434c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\det(A^{-1}) = 1/\\det(A) = 1/6$.",
+         "sha": "2d76189d3632",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "We have",
+         "sha": "a2214cd5b1a4",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "A^{T} =\n\t\t\t\t\t\t\\mat{\n\t\t\t\t\t\t\t1 & 0 & 1 \\\\\n\t\t\t\t\t\t\t2 & 2 & 2 \\\\\n\t\t\t\t\t\t\t0 & 1 & 3\n\t\t\t\t\t\t}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Note that",
+         "sha": "da7038b6159a",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "(E_{1} A)^{T} = A^{T} E_{1}^{T} =\n\t\t\t\t\t\t\\mat{\n\t\t\t\t\t\t\t1 & 0 & 0 \\\\\n\t\t\t\t\t\t\t2 & 2 & 0 \\\\\n\t\t\t\t\t\t\t0 & 1 & 3\n\t\t\t\t\t\t}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "This matrix is *lower* triangular, so the determinant is equal to the product of the diagonal entries, which is still $6$. Further $\\det(E_{1}^{T}) = 1$, and so $\\det(A^{T}) = 6$.",
+         "sha": "2965715e1d09",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Determinants · 练习题 6（上游 book/modules/module14-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module14-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n \\times n$ matrix that can be decomposed into the product of elementary matrices.",
+      "sha": "649da74a2faa",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "What is $\\Rank(A)$? Justify your answer.",
+         "sha": "81cecb639c28",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "What is $\\Null(A^{-1})$? Justify your answer.",
+         "sha": "b992873b37ca",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The rank of $A$ is equal to $n$, since each elementary matrix has non-zero determinant and since $A$ can be expressed as a product of elementary matrices, it also has non-zero determinant.",
+         "sha": "bcf137ac3d2b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The nullspace of $A^{-1}$ is trivial (i.e. equal to $\\Set{\\vec 0}$), since $A^{-1}$ is invertible.",
+         "sha": "8d92ae3f3331",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Determinants · 练习题 7（上游 book/modules/module14-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module14-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex8",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Anna and Ella are studying the relationship between determinant and volume. In particular, they are studying $\\mathcal{S}:\\mathbb{R}^{3}\\rightarrow \\mathbb{R}^{3}$ defined by $\\mathcal{S}\\mat{x \\\\ y \\\\ z}=\\mat{4x \\\\ 2z \\\\ 0}$, and $\\mathcal{T}:\\mathbb{R}^{3}\\rightarrow\\mathbb{R}^{2}$ defined by $\\mathcal{T}\\mat{x \\\\ y \\\\ z}=\\mat{2x \\\\ 8z}$.",
+      "sha": "70ff6f7d7c0d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For each conversation below, (a) evaluate Anna and Ella's arguments as *correct*, *mostly correct*, or *incorrect*; (b) point out where each argument makes correct/incorrect statements; (c) give a correct numerical value for the determinant or explain why it doesn't exist.",
+      "sha": "328c0888b0e1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "*Anna says:*",
+         "sha": "06c020e0136b",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Since the image of $C_{3}$ under $\\mathcal{S}$ is the parallelepiped generated by $\\mat{4 \\\\ 0 \\\\ 0},\\mat{0 \\\\ 0 \\\\ 0}, and \\mat{0 \\\\ 2 \\\\ 0}$, which is 2-dimensional parallelogram, the volume of $\\mathcal{S}(C_{3})$ is just the area of this parallelogram, which is 8. Thus, $\\det(\\mathcal{S})=8$.",
+         "sha": "b4ff64fc178a",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "*Ella says:*",
+         "sha": "26f28b7be5b6",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\det(\\mathcal{S})$ is undefined, because $\\mathcal{S}$ is not invertible.",
+         "sha": "422c3dc7eeb8",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "*Anna says:*",
+         "sha": "06c020e0136b",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Since the image of $C_{3}$ under $\\mathcal{T}$ is the parallelepiped generated by $\\mat{2 \\\\ 0}$, $\\mat{0 \\\\ 0}$, and $\\mat{0 \\\\ 8}$, which is a parallelogram in $\\mathbb{R}^{2}$, the signed volume of $\\mathcal{T}(C_{3})$ is just the signed area of this parallelogram, which is 16. Thus, $\\det(\\mathcal{T})=16$.",
+         "sha": "bd768dff6f55",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "*Ella says:*",
+         "sha": "26f28b7be5b6",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\det(\\mathcal{T})$ is undefined, because $\\det(\\mathcal{T})$ is only defined when the domain and codomain of $\\mathcal{T}$ are the same.",
+         "sha": "e9f210719057",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "*Anna's argument is incorrect.*",
+         "sha": "2f5324bb23ee",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "*Reason:* Since $\\mathcal{S}$ is a linear transformation on $\\R^{3}$, its determinant is given by the signed change of *3-dimensional volume*. Anna's argument is incorrect because she considered the 2-dimensional volume of $\\mathcal{S} (C_{3})$.",
+         "sha": "9aab781f26ec",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "*Ella's argument is incorrect.*",
+         "sha": "9c2e0dc6a0b8",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "*Reason:* The determinant is defined for all linear transformations from $\\R^{n}$ to $\\R^{n}$, no matter whether it is invertible or not.",
+         "sha": "c24ddb2f47fc",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Finally, $\\det(\\mathcal{S})=0$, because since $\\mathcal{S}(C_{3} )$ is a *2-dimensional* object in $\\R^{3}$, its *3-dimensional volume* is $0$. Therefore, $\\VolChange(\\mathcal{S})=0$, and we conclude that $\\det(\\mathcal{S})=0$.",
+         "sha": "3e97020d7deb",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "*Anna's argument is incorrect.*",
+         "sha": "2f5324bb23ee",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "*Reason:* The determinant function is only defined for linear transformations with same domain and codomain.",
+         "sha": "5a685b54e222",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "*Ella's argument is correct.*",
+         "sha": "cbf60c22ca9e",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Finally, $\\det(\\mathcal{T})$ is undefined, because the domain and codomain of $\\mathcal{T}$ are not the same.",
+         "sha": "98918c5d0308",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Determinants · 练习题 8（上游 book/modules/module14-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module14-exercises.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "行列式"
+}

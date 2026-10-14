@@ -1,0 +1,2233 @@
+{
+ "id": "module2",
+ "title_en": "Sets of Vectors, Lines & Planes",
+ "blocks": [
+  {
+   "k": "outcome",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How to draw a set of vectors making an appropriate choice of when to use line segments and when to use dots to represent vectors.",
+         "sha": "ee38c2f3a63d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The *vector form* of lines and planes, including how to determine the intersection of lines and planes in vector form.",
+         "sha": "fc463da8bfaf",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Restricted linear combinations and how to use them to represent common geometric objects (like line segments or polygons).",
+         "sha": "51acdc623126",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "With a handle on vectors, we can now use them to describe some common geometric objects: lines and planes.",
+    "sha": "5810b9350632",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Lines",
+    "sha": "c6fd3870c86e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Consider for a moment the line $\\ell$ through the points $P$ and $Q$. When $P,Q\\in\\R^2$, we can describe $\\ell$ with an equation of the form $y=mx+b$ (provided it isn't a vertical line), but if $P,Q\\in\\R^3$, it's much harder to describe $\\ell$ with an equation. We can solve this problem by using vectors.",
+    "sha": "9d844ae609c9",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\vec d=\\overrightarrow{PQ}$ and consider the set of points (or vectors) $\\vec x$ that can be expressed as",
+    "sha": "1159ef29d379",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec x=t\\vec d+P"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "for $t\\in \\R$. Geometrically, this is the set of all points we get by starting at $P$ and displacing by some multiple of $\\vec d$. This is a line!",
+    "sha": "8daf09bae095",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "331009ce2959"
+   ],
+   "caption": null
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "98bf3b63ccc7"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We simultaneously interpret this line as a set of points (the points that make up the line) and as a set of vectors rooted at the origin (the vectors pointing from the origin to the line). Note that sometimes we draw vectors as directed line segments. Other times, we draw each vector by marking only its ending point because drawing each vector as a line segment would make it hard to see what is going on.",
+    "sha": "fae054fcf13a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Which picture below do you think best represents $\\ell$?",
+    "sha": "5a30f11b1625",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "8567e802a616"
+   ],
+   "caption": null
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "9d0444e63139"
+   ],
+   "caption": null
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "When drawing a picture depicting several vectors, make an appropriate choice (arrows, dots, or a mix) so that the picture is clear.",
+      "sha": "167c6f1c7581",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The line $\\ell$ described above can be written in set-builder notation as:",
+    "sha": "8c97b3227908",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\ell=\\Set{\\vec x\\given \\vec x=t\\vec d+P\\text{ for some }t\\in \\R}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Notice that in set-builder notation, we write “for some $t\\in \\R$.” Make sure you understand why replacing “for some $t\\in\\R$” with “for all $t\\in \\R$” would be incorrect.",
+    "sha": "3b1a227abaa3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Writing lines with set-builder notation all the time can be overkill, so we will allow ourselves to describe lines in a shorthand called *vector form*\\footnote $y=mx+b$ form of a line is also shorthand. The line $\\ell$ described by the equation $y=mx+b$ is actually the set $\\Set{(x,y)\\in\\R^2\\given y=mx+b}$..",
+    "sha": "1f6e0bbfbe28",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Vector Form of a Line",
+    "sha": "df809b5ffde1",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\ell$ be a line and let $\\vec d$ and $\\vec p$ be vectors. If $\\ell=\\Set{\\vec x\\given \\vec x= t\\vec d+\\vec p\\text{ for some } t\\in\\R }$, we say the vector equation",
+      "sha": "f36dfe3d915e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec x=t\\vec d+\\vec p"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is $\\ell$ expressed in *vector form*. The vector $\\vec d$ is called a *direction vector* for $\\ell$.",
+      "sha": "d2835e2899f5",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can also use coordinates when writing a line in vector form. For example,",
+    "sha": "5e6c35ef3786",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mat{x\\\\y}=t\\mat{d_1\\\\d_2}+\\mat{p_1\\\\p_2}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "corresponds to the line passing through $\\mat{p_1\\\\p_2}$ with $\\mat{d_1\\\\d_2}$ as a direction vector.",
+    "sha": "06d9ffd73869",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The “$t$” that appears in a vector form is called the *parameter variable*, and for this reason, some textbooks use the term *parametric form* in place of “vector form”.",
+    "sha": "8dfee8fd4b42",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Writing a line in vector form requires only a point on the line and a direction for the line\\footnote Notice that a direction vector *for* a line $\\ell$ is different than a vector *in* a line $\\ell$., which makes converting from another form into vector form straightforward.",
+    "sha": "fe5fa1df7987",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find vector form of the line $\\ell\\subseteq\\R^2$ with equation $y=2x+3$.",
+      "sha": "3c7d1c578eb1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "First, we find two points on $\\ell$. By guess-and-check, we see $P=(0,3)$ and $Q=(1,5)$ are on $\\ell$. Thus, a direction vector for $\\ell$ is given by",
+      "sha": "2108d5d06d21",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec d = \\mat{1\\\\5}-\\mat{0\\\\3}=\\mat{1\\\\2}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We may now express $\\ell$ in vector form as",
+      "sha": "f8312430b886",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec x=t\\vec d+P"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "or, using coordinates, as",
+      "sha": "5554a7e0d5e2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{x\\\\y} = t\\mat{1\\\\2}+\\mat{0\\\\3}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It's important to note that when we write a line in vector form, it is a *specific shorthand* notation. If we augment the notation, we no longer have written a line in “vector form”.",
+    "sha": "50a4913746ad",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\ell$ be a line, let $\\vec d$ be a direction vector for $\\ell$, and let $\\vec p\\in \\ell$ be a point on $\\ell$. Writing",
+      "sha": "25acef0c0357",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec x=t\\vec d+\\vec p"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "or",
+      "sha": "1758356db217",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec x=t\\vec d+\\vec p\\quad\\text{ where }\\quad t\\in \\R"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "specifies $\\ell$ in vector form; both are shorthands for $\\Set{\\vec x\\given \\vec x=t\\vec d+\\vec p\\text{ for some }t\\in \\R}$. But,",
+      "sha": "5fe38f740b53",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec x=t\\vec d+\\vec p\\quad\\text{ for some }\\quad t\\in \\R"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and",
+      "sha": "cffa50a32cb1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec x=t\\vec d+\\vec p\\quad\\text{ for all }\\quad t\\in \\R"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "are logical statements about the vectors $\\vec x$, $\\vec d$, and $\\vec p$. These statements are either true or false; they do *not* specify $\\ell$ in vector form.",
+      "sha": "983ef96ac768",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Similarly, the statement",
+      "sha": "ea3d90258392",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\ell = t\\vec d+\\vec p"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is mathematically nonsensical and does not specify $\\ell$ in vector form. (On the left is a *set* and on the right is a *vector*!)",
+      "sha": "5b46118adfb2",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Vector form is a specific shorthand for a set. If “extra” words or symbols are added to the vector form, it stops being a shorthand.",
+      "sha": "02da6c772d3f",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "But, why is vector form useful? For starters, every line can be expressed in vector form (you cannot write a vertical line in $y=mx+b$ form, and in $\\R^3$, you would need two linear equations to represent a line). But, the most useful thing about expressing a line in vector form is that you can easily generate points on that line.",
+    "sha": "fa5a27bd193d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Suppose $\\ell$ can be represented in vector form as $\\vec x=t\\vec d+\\vec p$. Then, for every $t\\in \\R$, the vector $t\\vec d +\\vec p\\in\\ell$. Not only that, but as $t$ ranges over $\\R$, all points on $\\ell$ are “traced out”. Thus, we can find points on $\\ell$ without having to “solve” any equations.",
+    "sha": "7808971e79db",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The downside to using vector form is that it is not unique. There are multiple direction vectors and multiple points for every line. Thus, merely by looking at the vector equation for two lines, it can be hard to tell if they're equal.",
+    "sha": "4f031fd9fd2b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For example,",
+    "sha": "6db6725e9e7d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mat{x\\\\y} = t\\mat{1\\\\2}+\\mat{0\\\\3},\\qquad\n\t\\mat{x\\\\y} = t\\mat{2\\\\4}+\\mat{0\\\\3},\\quad\\text{and}\\quad\n\t\\mat{x\\\\y} = t\\mat{1\\\\2}+\\mat{1\\\\5}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "all represent the same line. In the second equation, the direction vector is parallel but scaled, and in the third equation, a different point on the line was chosen.",
+    "sha": "1568a3ca9ed1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Recall that in vector form, the variable $t$ is called the *parameter variable*. It is an instance of a *dummy variable*. In other words, $t$ is a placeholder—just because “$t$” appears in two different vector forms, doesn't mean it's the same quantity.",
+    "sha": "a620784d1f29",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To drive this point home, let's think about vector form in terms of the sets it specifies. Let $\\vec d_1,\\vec d_2\\neq\\vec 0$ and $\\vec p_1,\\vec p_2$ be vectors and define the lines",
+    "sha": "05c97ee83742",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\ell_1=\\Set{\\vec x\\given \\vec x=t\\vec d_1+\\vec p_1\\text{ for some }t\\in\\R}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and",
+    "sha": "cffa50a32cb1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\ell_2=\\Set{\\vec x\\given \\vec x=t\\vec d_2+\\vec p_2\\text{ for some }t\\in\\R}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "These lines have vector forms $\\vec x=t\\vec d_1+\\vec p_1$ and $\\vec x=t\\vec d_2+\\vec p_2$. However, declaring that $\\ell_1=\\ell_2$ if and only if $t\\vec d_1+\\vec p_1=t\\vec d_2+\\vec p_2$ does *not* make sense. Instead, as per the definition, $\\ell_1=\\ell_2$ if $\\ell_1\\subseteq\\ell_2$ and $\\ell_2\\subseteq\\ell_1$. If $\\vec x\\in\\ell_1$ then $\\vec x=t\\vec d_1+\\vec p_1$ for some $t\\in\\R$. If $\\vec x\\in\\ell_2$ then $\\vec x=t\\vec d_2+\\vec p_2$ for some *possibly different* $t\\in \\R$. This can get confusing really quickly. The easiest way to avoid confusion is to use different parameter variables when comparing different vector forms.",
+    "sha": "aaae95cebeed",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine if the lines $\\ell_1$ and $\\ell_2$, given in vector form as",
+      "sha": "f97375753a60",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec x=t\\mat{1\\\\1}+\\mat{2\\\\1}\\qquad\\text{and}\\qquad\n\t\t\\vec x=t\\mat{2\\\\2}+\\mat{4\\\\3},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "are the same line.",
+      "sha": "cbcf730bbcea",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To determine this, we need to figure out if $\\vec x\\in\\ell_1$ implies $\\vec x\\in \\ell_2$ and if $\\vec x\\in\\ell_2$ implies $\\vec x\\in\\ell_1$.",
+      "sha": "b00fe5e90f26",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If $\\vec x\\in\\ell_1$, then $\\vec x=t\\mat{1\\\\1}+\\mat{2\\\\1}$ for some $t\\in\\R$. If $\\vec x\\in\\ell_2$, then $\\vec x=s\\mat{2\\\\2}+\\mat{4\\\\3}$ for some $s\\in \\R$. Thus if",
+      "sha": "fea882a8bc40",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "t\\mat{1\\\\1}+\\mat{2\\\\1} = \\vec x = s\\mat{2\\\\2}+\\mat{4\\\\3}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "always has a solution, $\\ell_1=\\ell_2$. Moving everything to one side, we see",
+      "sha": "b374bb4ee6cf",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}\\vec 0 = \\mat{4\\\\3}-\\mat{2\\\\1} + s\\mat{2\\\\2}-t\\mat{1\\\\1}\n\t\t&=\\mat{2\\\\2}+s\\mat{2\\\\2}-t\\mat{1\\\\1}\\\\\n\t\t&=(s+1)\\mat{2\\\\2}-\\tfrac{t}{2}\\mat{2\\\\2}\\\\\n\t\t&= (s+1-\\tfrac{t}{2})\\mat{2\\\\2}.\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This equation has a solution whenever $s+1-t/2=0$ has a solution. Since for every $s$, the equation $s+1-t/2=0$ has a solution, and for every $t$, the equation $s+1-t/2=0$ has a solution, we know $\\ell_1=\\ell_2$.",
+      "sha": "4cf0f2e89230",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Vector Form in Higher Dimensions",
+    "sha": "1c8d046b34be",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The geometry of lines in space ($\\R^3$ and above) is a bit more complicated than that of lines in the plane. Lines in the plane either intersect or are parallel. In space, we have to be careful about what we mean by “parallel lines,” since lines with entirely different directions can still fail to intersect 〔注： Recall that in Euclidean geometry two lines are defined to be parallel if they coincide or never intersect.〕.",
+    "sha": "065b0c7979e8",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "0ca67080dba4"
+   ],
+   "caption": null
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the lines described by",
+      "sha": "6cf773c21b54",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}\\vec x &= t( 1, 3, -2 ) + ( 1, 2, 1 ) \\\\\n\\vec x &= t( -2, -6, 4) + ( 3, 1, 0 ).\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "They have parallel directions since $( -2, -6, 4 ) = -2( 1, 3,-2 )$. Hence, in this case, we say the lines are *parallel*. (How can we be sure the lines are not the same?)",
+      "sha": "46e4efe7a18e",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the lines described by",
+      "sha": "6cf773c21b54",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}\\vec x &= t(1, 3, -2 ) + ( 1, 2, 1 ) \\\\\n\t\\vec x &= t( 0, 2, 3) + ( 0, 3, 9 ).\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "They are not parallel because neither of the direction vectors is a multiple of the other. They may or may not intersect. (If they don't, we say the lines are *skew*.) How can we find out? Mirroring our earlier approach, we can set their equations equal and see if we can solve for a point of intersection *after ensuring we give their parametric variables different names*. We'll keep one parametric variable named $t$ and name the other one $s$. Thus, we want",
+      "sha": "c836f304cf80",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec x = t( 1, 3, -2 ) + ( 1, 2, 1 ) =\ns( 0, 2, 3) + ( 0, 3, 9 ),"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which after collecting terms yields",
+      "sha": "a547410c7d17",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "( t + 1, 3t + 2, -2t + 1 ) = ( 0, 2s + 3, 3s + 9)."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Reading coordinate by coordinate, we get three equations",
+      "sha": "b93dc4ac9d12",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}t + 1 &= 0 \\\\\n    3t +2 &= 2s + 3 \\\\\n    -2t + 1 &=  3s + 9\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "in two unknowns $s$ and $t$. This is an \\it overdetermined\\/ system, and it may or may not have a solution. The first two equations yield $t = -1$ and $s = -2$. Putting these values in the last equation yields $(-2)(-1) + 1 = 3(-2) + 9$, which is indeed true. Hence, the equations are consistent, and the lines intersect. To find the point of intersection, put $t = -1$ in the equation for the vector equation of the first line (or $s = -2$ in that for the second) to obtain $( 0, -1, 3 )$.",
+      "sha": "dd494e5b1ec8",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Planes",
+    "sha": "0b4df18a884b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Any two distinct points define a line. To define a plane, we need three points. But there's a caveat: the three points cannot be on the same line, otherwise they'd define a line and not a plane. Let $A,B,C\\in\\R^3$ be three points that are not collinear and let $\\mathcal P$ be the plane that passes through $A$, $B$, and $C$.",
+    "sha": "8d540f8acefe",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Just like lines, planes have direction vectors. For $\\mathcal P$, both $\\vec d_1=\\overrightarrow{AB}$ and $\\vec d_2=\\overrightarrow{AC}$ are direction vectors. Of course, $\\vec d_1$, $\\vec d_2$ and their multiples are not the only direction vectors for $\\mathcal P$. There are infinitely many more, including $\\vec d_1+\\vec d_2$, and $\\vec d_1-7\\vec d_2$, and so on. However, since a plane is a *two*-dimensional object, we only need two different direction vectors to describe it.",
+    "sha": "94b94aa7b98e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Like lines, planes have a vector form. Using the direction vectors $\\vec d_1=\\overrightarrow{AB}$ and $\\vec d_2=\\overrightarrow{AC}$, the plane $\\mathcal P$ can be written in vector form as",
+    "sha": "2b55a5a8179f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mat{x\\\\y\\\\z} = t\\vec d_1+s\\vec d_2+A."
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "0f789efb3bba"
+   ],
+   "caption": null
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Vector Form of a Plane",
+    "sha": "982a411816f5",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A plane $\\mathcal P$ is written in *vector form* if it is expressed as",
+      "sha": "aa657f808118",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec x=t\\vec d_{1} +s\\vec d_{2}+\\vec p"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for some vectors $\\vec d_{1}$ and $\\vec d_{2}$ and point $\\vec p$. That is, $\\mathcal P = \\{\\vec x: \\vec x= t\\vec d_{1}+s\\vec d_{2} +\\vec p\\text{ for some }t,s\\in\\R \\}$. The vectors $\\vec d_{1}$ and $\\vec d_{2}$ are called *direction vectors* for $\\mathcal P$.",
+      "sha": "55011e1ae94b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Describe the plane $\\mathcal P\\subseteq \\R^3$ with equation $z=2x+y+3$ in vector form.",
+      "sha": "2be871f442f0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To describe $\\mathcal P$ in vector form, we need a point on $\\mathcal P$ and two direction vectors for $\\mathcal P$. By guess-and-check, we see the points",
+      "sha": "cd0a7f9d7625",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\mat{0\\\\0\\\\3}\\qquad B=\\mat{1\\\\0\\\\5}\\qquad C=\\mat{0\\\\1\\\\4}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "are all in $\\mathcal P$. Thus",
+      "sha": "13a5fc1907b2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec d_1=B-A=\\mat{1\\\\0\\\\2}\\qquad \\text{and}\\qquad\n\t\t\\vec d_2=C-A=\\mat{0\\\\1\\\\1}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "are both direction vectors for $\\mathcal P$. Since these vectors are not parallel, we can express $\\mathcal P$ in vector form as",
+      "sha": "e969a2c0ee1b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec x=t\\vec d_1+s\\vec d_2+A=t\\mat{1\\\\0\\\\2}+s\\mat{0\\\\1\\\\1}+\\mat{0\\\\0\\\\3}."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the line of intersection between $\\mathcal P_1$ and $\\mathcal P_2$ where the planes are given in vector form by",
+      "sha": "7f5d1b08bf5f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\overbrace{\\vec x=t\\mat{1\\\\1\\\\0}+s\\mat{-1\\\\0\\\\1}+\\mat{1\\\\2\\\\3}}^{\\displaystyle\\mathcal P_1}\n\t\t\\qquad\\text{and}\\qquad\n\t\t\\overbrace{\\vec x=t\\mat{-1\\\\0\\\\2}+s\\mat{1\\\\2\\\\1}+\\mat{0\\\\0\\\\3}}^{\\displaystyle\\mathcal P_2}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Just like in the example for lines, we are looking for points $\\vec x$ that are in both planes. To keep from getting mixed up, we'll use $a$, $b$, $c$, and $d$ as parameter variables. Therefore, we are looking for solutions to",
+      "sha": "b3d1a64354e1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "a\\mat{1\\\\1\\\\0}+b\\mat{-1\\\\0\\\\1}+\\mat{1\\\\2\\\\3}=\\vec x=c\\mat{-1\\\\0\\\\2}+d\\mat{1\\\\2\\\\1}+\\mat{0\\\\0\\\\3}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Collecting terms, this is equivalent to the system of equations",
+      "sha": "f9423b88e926",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}a-b+c-d &= -1 \\\\ a-2d &= -2 \\\\ b-2c-d &= 0\\end{aligned}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This system is underdetermined (there are four variables and three equations). If $\\mathcal P_1$ and $\\mathcal P_2$ indeed intersect in a line, we know there must be an infinite number of solutions to this system. After row reducing 〔注： See Appendix 〔引用〕, System 〔引用〕 and 〔引用〕.〕, we see",
+      "sha": "1e4703e5f32a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{a\\\\b\\\\c\\\\d} = \\matc{r\\\\r/2-1\\\\-1\\\\r/2+1}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is a solution for every $r\\in\\R$. We can substitute these parameters into either of the original equations to get an equation for the line of intersection. Picking the second one, we see",
+      "sha": "e63aaa67d99f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec x=c\\mat{-1\\\\0\\\\2}+d\\mat{1\\\\2\\\\1}+\\mat{0\\\\0\\\\3}=-\\mat{-1\\\\0\\\\2}+(\\tfrac{r}{2}+1)\\mat{1\\\\2\\\\1}+\\mat{0\\\\0\\\\3}\n\t\t=\\tfrac{r}{2}\\mat{1\\\\2\\\\1}+\\mat{2\\\\2\\\\2}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is in both planes for every $r\\in \\R$. Therefore, we may express $\\mathcal P_1\\cap \\mathcal P_2$ in vector form as",
+      "sha": "36fd6d1fb4c2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec x=r\\matc{1/2\\\\1\\\\1/2}+\\mat{2\\\\2\\\\2}."
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Restricted Linear Combinations",
+    "sha": "501ec81ddf7e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Using vectors, we can describe more than just lines and planes—we can describe all sorts of geometric objects.",
+    "sha": "15ebb3ca9dee",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Recall that when we write $\\vec x=t\\vec d+\\vec p$ to describe the line $\\ell$, what we mean is",
+    "sha": "a7acb0a515cd",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\ell=\\Set{\\vec x\\given \\vec x=t\\vec d+\\vec p\\text{ for some }t\\in \\R}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The line $\\ell$ stretches off infinitely in both directions. But, what if we wanted to describe just a part of $\\ell$? We can do this by placing additional restrictions on $t$. For example, consider the ray $R$ and the line segment $S$:",
+    "sha": "7dfca0b6d5e4",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}R&=\\Set{\\vec x\\given \\vec x=t\\vec d+\\vec p\\text{ for some }t\\geq 0}\\\\\n\tS&=\\Set{\\vec x\\given \\vec x=t\\vec d+\\vec p\\text{ for some }t\\in [0,2]}\\end{aligned}"
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "597081c5bc21"
+   ],
+   "caption": null
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "a187108fa867"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can also make polygons by adding restrictions to the vector form of a plane. Let $\\vec a=\\mat{2\\\\1}$ and $\\vec b=\\mat{-1\\\\1}$ and consider the unit square $U$ and the parallelogram $P$ defined by",
+    "sha": "890b3c1888a2",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}U&=\\Set{\\vec x\\given \\vec x=t\\xhat+s\\yhat\\text{ for some }t,s\\in [0,1]}\\\\\n\tP&=\\Set{\\vec x\\given \\vec x=t\\vec a+s\\vec b\\text{ for some }t\\in [0,1]\\text{ and }s\\in[-1,1]}\\end{aligned}"
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "b0a0699faa3c"
+   ],
+   "caption": null
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "efb88caa7c94"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Each set so far is a set of linear combinations, and we have made different shapes by restricting the coefficients of those linear combinations. There are two ways of restricting linear combinations that arise often enough to get their own names.",
+    "sha": "c6482e798bfa",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Non-negative & Convex Linear Combinations",
+    "sha": "447bab114f7a",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec w=\\alpha_{1}\\vec v_{1}+\\alpha_{2}\\vec v_{2}+\\cdots+\\alpha_{n}\\vec v_{n}.$ The vector $\\vec w$ is called a *non-negative* linear combination of $\\vec v_{1},\\vec v_{2},\\ldots,\\vec v_{n}$ if",
+      "sha": "4b3235716365",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\alpha_{1},\\alpha_{2},\\ldots,\\alpha_{n}\\geq 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The vector $\\vec w$ is called a *convex* linear combination of $\\vec v_{1},\\vec v_{2},\\ldots,\\vec v_{n}$ if",
+      "sha": "902d002d4877",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\alpha_{1},\\alpha_{2},\\ldots,\\alpha_{n}\\geq 0\\qquad\\text{and}\\qquad\n\t\\alpha_{1}+\\alpha_{2}+\\cdots+\\alpha_{n}=1."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "You can think of non-negative linear combinations as vectors you can arrive at by only displacing “forward”. Convex linear combinations can be thought of as weighted averages of vectors (the average of $\\vec v_1,\\ldots, \\vec v_n$ would be the convex linear combination with coefficients $\\alpha_i=\\frac{1}{n}$). A convex linear combination of two vectors gives a point on the line segment connecting them.",
+    "sha": "1840463d511a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec a=\\mat{2\\\\1}$ and $\\vec b=\\mat{1\\\\-1}$ and define",
+      "sha": "d8e2ea830811",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}A&=\\Set{\\vec x\\given \\vec x\\text{ is a convex linear combination of }\\vec a\\text{ and }\\vec b}\\\\\n\t\t&=\\Set{\\vec x\\given \\vec x=\\alpha\\vec a+(1-\\alpha)\\vec b\\text{ for some }\\alpha\\in [0,1]}.\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Draw $A$.",
+      "sha": "23ccb4bc981a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We know $\\vec x=\\alpha\\vec a+(1-\\alpha)\\vec b\\in A$ whenever $\\alpha\\in[0,1]$. If we rearrange the equation $\\vec x=\\alpha\\vec a+(1-\\alpha)\\vec b$, we see",
+      "sha": "2cdc24bf4f0f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec x=\\alpha\\vec a-\\alpha\\vec b+\\vec b = \\alpha(\\vec a-\\vec b)+\\vec b,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which looks like the vector form of a line which passes through $\\vec b$ with direction $\\vec a-\\vec b$. However, we have the additional restriction $\\alpha\\in[0,1]$, so $A$ is only the part of that line which connects $\\vec a$ and $\\vec b$.",
+      "sha": "4dc54c98462a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "29190f767fed"
+     ],
+     "caption": null
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "bd7bad12e3f6"
+     ],
+     "caption": null
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $A$ is an infinite collection of vectors, it's better to draw vectors in $A$ as dots rather than lines from the origin.",
+      "sha": "127d4db42f93",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Express the following lines in vector form.",
+      "sha": "ae1ebe11dfb4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\ell_1\\subseteq\\R^2$ with equation $4x-3y=-10$.",
+         "sha": "a60959d462e1",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\ell_2\\subseteq\\R^2$ which passes through the points $A=(1,1)$ and $B=(2,7)$.",
+         "sha": "4fc7008d9f94",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\ell_3\\subseteq\\R^2$ which passes through $\\vec 0$ and is parallel to the line with equation $4x-3y=-10$.",
+         "sha": "1f2b8e0d52e9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\ell_4\\subseteq\\R^3$ which passes through the points $A=(-1,-1,0)$ and $B=(2,3,5)$.",
+         "sha": "6dff15876ef5",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\ell_5\\subseteq\\R^3$ which is contained in the $yz$-plane and where the coordinates of every point in $\\ell_5$ satisfy $x+2y-3z=5$.",
+         "sha": "864fb45ab4de",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\ell_1: \\vec{x}=t\\mat{3\\\\4}+\\mat{2\\\\6}$",
+         "sha": "a44ca2131865",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\ell_2: \\vec{x}=t\\mat{1\\\\6}+\\mat{1\\\\1}$",
+         "sha": "0ec78d1bcb71",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\ell_3: \\vec{x}=t\\mat{3\\\\4}$",
+         "sha": "698aff4873e9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\ell_4: \\vec{x}=t\\mat{3\\\\4\\\\5}+\\mat{2\\\\3\\\\5}$",
+         "sha": "7e95b02f7c00",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\ell_5: \\vec{x}=t\\mat{0\\\\3\\\\2}+\\mat{0\\\\1\\\\-1}$",
+         "sha": "20d22f023d65",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Sets of Vectors, Lines & Planes · 练习题 1（上游 book/modules/module2-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module2-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Express the following planes in vector form.",
+      "sha": "4e73ebe73308",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal P_1\\subseteq\\R^3$ with equation $4x-z=0$.",
+         "sha": "4f128421a5ab",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal P_2\\subseteq\\R^3$ which passes through the points $A=(-1,-1,0)$, $B=(2,3,5)$, and $C=(3,3,3)$.",
+         "sha": "1ea1c028a5e7",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal P_3\\subseteq\\R^3$ with equation $4x-3y+z=-10$.",
+         "sha": "7ac6a1a8a0b2",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal P_4\\subseteq\\R^3$ which is parallel to the $yz$-plane and passes through the point $X=(1,-1,1)$.",
+         "sha": "617cb7effb9d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\R^2$.",
+         "sha": "45d07a815230",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal P_5\\subseteq\\R^4$ which passes through $A=(1,-1,1,-1)$, and where the coordinates of every point in $\\mathcal P_5$ satisfy the equations $x+y+2z-w=3$ and $x+y+z+w=0$.",
+         "sha": "688ee970cea3",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{P}_1: \\vec{x}=t\\mat{1\\\\0\\\\4}+s\\mat{0\\\\1\\\\0}$",
+         "sha": "2b0057a8d6de",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{P}_2: \\vec{x}=t\\mat{3\\\\4\\\\5}+s\\mat{4\\\\4\\\\3}+\\mat{2\\\\3\\\\5}$",
+         "sha": "1ac7e339ba02",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{P}_3: \\vec{x}=t\\mat{1\\\\0\\\\-4}+s\\mat{0\\\\1\\\\3}+\\mat{0\\\\3\\\\-1}$",
+         "sha": "69b2302a7fd4",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{P}_4: \\vec{x}=t\\mat{0\\\\1\\\\0}+s\\mat{0\\\\0\\\\1}+\\mat{1\\\\-1\\\\1}$",
+         "sha": "a24da40dc3c1",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\R^2: \\vec{x}=t\\mat{1\\\\0}+s\\mat{0\\\\1}$",
+         "sha": "a5c04d60b821",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{P}_5: \\vec{x}=t\\mat{-1\\\\1\\\\0\\\\0}+s\\mat{-3\\\\0\\\\2\\\\1}+\\mat{1\\\\-1\\\\1\\\\-1}$",
+         "sha": "bf89783ed6b7",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Sets of Vectors, Lines & Planes · 练习题 2（上游 book/modules/module2-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module2-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\ell_1$, $\\ell_2$, and $\\ell_3$ be described in vector form by",
+      "sha": "1695a6bc2400",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\overbrace{\\vec x=t\\mat{1\\\\1}+\\mat{1\\\\3}}^{\\displaystyle \\ell_1}\n\t\t\t\\quad\n\t\t\t\\overbrace{\\vec x=t\\mat{1\\\\3}+\\mat{1\\\\1}}^{\\displaystyle \\ell_2}\n\t\t\t\\quad\n\t\t\t\\overbrace{\\vec x=t\\mat{2\\\\2}+\\mat{2\\\\4}}^{\\displaystyle \\ell_3}."
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine which pairs of the lines $\\ell_1$, $\\ell_2$, and $\\ell_3$ intersect, coincide, or are parallel.",
+         "sha": "e93ab2e7af6d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "What is $\\ell_1\\cap\\ell_2\\cap\\ell_3$?",
+         "sha": "e63887aa6ecf",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The lines $\\ell_1$ and $\\ell_3$ coincide. The line $\\ell_2$ intersects with both $\\ell_1$ and $\\ell_3$.",
+         "sha": "8ae1cff290a1",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\ell_1\\cap\\ell_2\\cap\\ell_3=\\Set{\\mat{2\\\\4}}$",
+         "sha": "500831d4a3e6",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Sets of Vectors, Lines & Planes · 练习题 3（上游 book/modules/module2-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module2-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal P_1\\subseteq\\R^3$ be the plane with equation $x+2y-z=3$. Let $\\mathcal P_2$ and $\\ell$ be described in vector form by",
+      "sha": "436444c4d4bd",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\overbrace{\\vec x=t\\mat{1\\\\1\\\\1}+s\\mat{0\\\\0\\\\2}+\\mat{1\\\\3\\\\1}}^{\\displaystyle \\mathcal P_2},\n\t\t\t\\qquad\n\t\t\t\\overbrace{\\vec x=t\\mat{1\\\\3\\\\1}+\\mat{1\\\\1\\\\0}}^{\\displaystyle \\ell}."
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find $\\mathcal P_1\\cap \\ell$.",
+         "sha": "369420b73009",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find $\\mathcal P_1\\cap \\mathcal P_2$.",
+         "sha": "8703d62f73af",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find $\\mathcal P_2\\cap \\ell$.",
+         "sha": "4b6fb48eb3af",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Give an example of a plane $\\mathcal P_3$ so that $\\mathcal P_3\\cap\\ell$ is empty.",
+         "sha": "6ab7391ff3dd",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Does there exist a plane $\\mathcal P_2'$ that is parallel to $\\mathcal P_2$, but which does not intersect $\\ell$? Why or why not?",
+         "sha": "7cbba486a40a",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{P}_1\\cap\\ell=\\Set{\\mat{1\\\\1\\\\0}}$",
+         "sha": "3222ccca4b7f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{P}_1\\cap\\mathcal{P}_2: \\vec{x}=t\\mat{1\\\\1\\\\3}+\\mat{-1/3\\\\5/3\\\\0}$",
+         "sha": "8295355c08e7",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{P}_2\\cap\\ell=\\Set{\\mat{2\\\\4\\\\1}}$",
+         "sha": "53b0252db5bb",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{P}_3: \\vec{x}=t\\mat{1\\\\3\\\\1}+s\\mat{1\\\\0\\\\0}$",
+         "sha": "25b9e8d2edd2",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Suppose $\\mathcal{P}_2'$ is a plane that is parallel to $\\mathcal{P}_2$. Notice that $\\mathcal{P}_2'$ can be expressed with the equation $x-y=c$ for some $c\\in\\R$.",
+         "sha": "3d878da6c008",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Finding such a plane $\\mathcal{P}_2'$ which does not intersect $\\ell$ is now equivalent to finding a number $c\\in\\R$ so that $(1+t)-(1+3t) \\neq c$ for all $t\\in\\R$. But, $t=-1/2c$ solves the equation $(1+t)-(1+3t)=c$, so any plane $\\mathcal{P}_2'$ that is parallel to $\\mathcal{P}_2$ must intersect $\\ell$.",
+         "sha": "71fa733ed631",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Sets of Vectors, Lines & Planes · 练习题 4（上游 book/modules/module2-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module2-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec a=\\mat{1\\\\1}$ and $\\vec b=\\mat{1\\\\-1}$. The goal of this question is to produce a drawing of the set of convex linear combinations of $\\vec a$ and $\\vec b$.",
+      "sha": "932b8c2bde6f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $A$ be the set of all non-negative linear combinations of $\\vec a$ and $\\vec b$. Draw $A$.",
+         "sha": "64c727cc5ea9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\ell$ be the set",
+         "sha": "a1941d632315",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Set{\\alpha \\vec a + \\beta \\vec b\\given \\alpha, \\beta \\in \\R\\text{ and } \\alpha+\\beta = 1}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Rewrite $\\ell$ in set-builder notation using only a single variable $t$. (Hint: Let $t$ be $\\alpha$.)",
+         "sha": "1c43c29fcb8f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Justify why $\\ell$ is a line, and write $\\ell$ in vector form.",
+         "sha": "5d313d48bfca",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Draw both $A$ and $\\ell$ on the same grid. On a separate grid, draw $A\\cap \\ell$.",
+         "sha": "10165bb23ddd",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Write the $A \\cap \\ell$ in set-builder notation. How does $A\\cap \\ell$ relate to convex linear combinations?",
+         "sha": "b1e20599bf6c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine the endpoints of $A \\cap \\ell$.",
+         "sha": "e6007c95f3c9",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "figure",
+        "env": "tikzpicture",
+        "figs": [
+         "d58785a8b9eb"
+        ],
+        "caption": null
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\ell$ is given by the set",
+         "sha": "c3bc1e3adc35",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Set{\\vec x\\in\\R^2\\given \\vec x=t \\vec a + (1-t) \\vec b\\text{ for some }t\\in\\R}."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The above set can be rewritten as",
+         "sha": "da5741658d39",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Set{\\vec x\\in\\R^2\\given \\vec x=t (\\vec a - \\vec b)+\\vec b\\text{ for some }t\\in\\R}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "This is exactly the line given in vector form by",
+         "sha": "9292062bc993",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vec x = t(\\vec a - \\vec b)+\\vec b."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Since $\\vec a-\\vec b=\\mat{0\\\\2}$, $\\ell$ is the vertical line containing $\\vec b$ (and $\\vec a$).",
+         "sha": "9e817bfd7a68",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "figure",
+        "env": "tikzpicture",
+        "figs": [
+         "447523d47c9a"
+        ],
+        "caption": null
+       },
+       {
+        "k": "figure",
+        "env": "tikzpicture",
+        "figs": [
+         "39fb5e4f5668"
+        ],
+        "caption": null
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$A \\cap \\ell$ is the set",
+         "sha": "2b5649d36a64",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Set{\\alpha \\vec a+\\beta \\vec b\\given \\alpha,\\beta \\geq 0\\text{ and }\n\t\t\t\t\t\\alpha+\\beta = 1}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "This is the set of convex linear combinations of $\\vec a$ and $\\vec b$.",
+         "sha": "3fc9d4fedc1e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The endpoints of $A\\cap\\ell$ are $\\vec{a}$ and $\\vec{b}$.",
+         "sha": "0ee9381a82f3",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Sets of Vectors, Lines & Planes · 练习题 5（上游 book/modules/module2-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module2-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec a=\\mat{2 \\\\0}$, $\\vec b=\\mat{0 \\\\ 2}$, and $\\vec c=\\mat{-1 \\\\ -1}$. The goal of this question is to produce a drawing of the set of convex linear combinations of $\\vec a$, $\\vec b$, and $\\vec c$. This requires an understanding of the previous question.",
+      "sha": "db809b268d83",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec d=\\mat{1 \\\\ 1}$. Write $\\vec d$ as a convex linear combination of $\\vec a$ and $\\vec b$.",
+         "sha": "487fc3de3d2e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec e=\\mat{0 \\\\ 0}$. Write $\\vec e$ as a convex linear combination of $\\vec c$ and $\\vec d$.",
+         "sha": "32c36d623ce6",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Substituting the answer to (〔引用〕) into the answer to part (〔引用〕), write $\\vec e$ as a convex linear combination of $\\vec a$, $\\vec b$, and $\\vec c$.",
+         "sha": "553f45162557",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Draw and label $\\vec a$, $\\vec b$, $\\vec c$, $\\vec d$, and $\\vec e$ on the same grid.",
+         "sha": "19fde91473df",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Draw the set of convex linear combinations of $\\vec a$, $\\vec b$, and $\\vec c$. Justify your answer.",
+         "sha": "7e2876d6d89b",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec{d} = \\tfrac{1}{2}\\vec{a} + \\tfrac{1}{2}\\vec{b}$",
+         "sha": "1376ac3407c5",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec{e} = \\tfrac{1}{2}\\vec{c} + \\tfrac{1}{2}\\vec{d}$",
+         "sha": "5bad3a7d61fe",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec{e}=\\tfrac{1}{2}\\vec{c}+\\tfrac{1}{2}(\\tfrac{1}{2}\\vec{a}+\\tfrac{1}{2}\\vec{b}) =\\tfrac{1}{2}\\vec{c}+\\tfrac{1}{4}\\vec{a}+\\tfrac{1}{4}\\vec{b}$",
+         "sha": "d4a8f9fa5ff9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "figure",
+        "env": "tikzpicture",
+        "figs": [
+         "111c5ea7e935"
+        ],
+        "caption": null
+       }
+      ],
+      [
+       {
+        "k": "figure",
+        "env": "tikzpicture",
+        "figs": [
+         "e3856863ff35"
+        ],
+        "caption": null
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "The set is the filled-in triangle with vertices given by $\\vec a$, $\\vec b$, and $\\vec c$. To see this, notice that the set of convex linear combinations of $\\vec a$, $\\vec b$, and $\\vec c$ is the set of convex linear combinations of $\\vec c$ and any convex linear combination of $\\vec a$ and $\\vec b$. Indeed, \\[",
+         "sha": "70e8a626d231",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}&\\alpha_{1} \\vec a+\\alpha_{2} \\vec b+ \\alpha_{3}\n\t\t\t\t\t\t\\vec c \\\\\n\t\t\t\t\t\t&\\qquad= (1-\\alpha_{3})\\left(\\tfrac{\\alpha_1}{1-\\alpha_3}\\vec\n\t\t\t\t\t\ta + \\tfrac{\\alpha_2}{1-\\alpha_3}\\vec b\\right)+\\alpha_{3}\n\t\t\t\t\t\t\\vec c,\\end{aligned}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "\\] and $\\alpha_{1} \\vec a+\\alpha_{2} \\vec b+ \\alpha_{3} \\vec c$ is a convex linear combination of $\\vec a$, $\\vec b$, and $\\vec c$ exactly when",
+         "sha": "1055077fc7c8",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\frac{\\alpha_1}{1-\\alpha_3}\\vec a + \\frac{\\alpha_2}{1-\\alpha_3}\\vec b"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "is a convex linear combination of $\\vec a$ and $\\vec b$ (verify this!). By the previous part, the set of convex linear combinations of $\\vec a$ and $\\vec b$ is the line segment between $\\vec a$ and $\\vec b$. Call this line segment $S$. Now we know the set of convex linear combinations of $\\vec a$, $\\vec b$, and $\\vec c$ is the union of every line segment from $\\vec c$ and a vector in $S$. This is the filled-in triangle with vertices given by $\\vec a$, $\\vec b$, and $\\vec c$.",
+         "sha": "5cb84978617f",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Sets of Vectors, Lines & Planes · 练习题 6（上游 book/modules/module2-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module2-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec x=\\mat{1 \\\\ 1}$, $\\vec y = \\mat{3 \\\\ -1}$ and $\\vec z=\\mat{-2 \\\\ -2}.$ Draw the following subsets of $\\R^2$.",
+      "sha": "1968af8b4ec2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "All non-negative linear combinations of $\\vec x$ and $\\vec y$.",
+         "sha": "4bab1922f3d6",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "All non-negative linear combinations of $\\vec x$ and $\\vec z$.",
+         "sha": "aa7f221f7d2d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "All convex linear combinations of $\\vec y$ and $\\vec z$.",
+         "sha": "6bcd6bd7042a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "All convex linear combinations of $\\vec x$ and $\\vec z$.",
+         "sha": "2a32ebc59327",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "All convex linear combinations of $\\vec x$, $\\vec y$ and $\\vec z$.",
+         "sha": "c97df831e412",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "figure",
+        "env": "tikzpicture",
+        "figs": [
+         "b4d77f0a567d"
+        ],
+        "caption": null
+       }
+      ],
+      [
+       {
+        "k": "figure",
+        "env": "tikzpicture",
+        "figs": [
+         "f15ab773a1f3"
+        ],
+        "caption": null
+       }
+      ],
+      [
+       {
+        "k": "figure",
+        "env": "tikzpicture",
+        "figs": [
+         "279ef7d144cd"
+        ],
+        "caption": null
+       }
+      ],
+      [
+       {
+        "k": "figure",
+        "env": "tikzpicture",
+        "figs": [
+         "d102ef2507db"
+        ],
+        "caption": null
+       }
+      ],
+      [
+       {
+        "k": "figure",
+        "env": "tikzpicture",
+        "figs": [
+         "b4b22c3e68c4"
+        ],
+        "caption": null
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Sets of Vectors, Lines & Planes · 练习题 7（上游 book/modules/module2-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module2-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex8",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Describe the sets in (〔引用〕) and (〔引用〕) in set-builder notation.",
+      "sha": "ba01075c1754",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "(〔引用〕)",
+      "sha": "2064923b85ab",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Set{\\vec v \\in \\R^{2}\\given \\vec v=t\\mat{-5\\\\-1}+\\mat{3\\\\-1}\\text{ for some }0\\leq t\\leq 1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "(〔引用〕)",
+      "sha": "2064923b85ab",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Set{\\vec w \\in \\R^{2}\\given \\vec w=t\\mat{-3\\\\-3}+\\mat{1\\\\1}\\text{ for some }0\\leq t\\leq 1}."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Sets of Vectors, Lines & Planes · 练习题 8（上游 book/modules/module2-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module2-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex9",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine if the points $P=(-2,0)$ and $Q=(0,-2)$ are convex linear combinations of the vectors $\\vec u =\\mat{1 \\\\4}$, $\\vec v =\\mat{-5 \\\\8}$, and $\\vec w =\\mat{-2 \\\\-6}$. First solve this question by drawing a picture. Then justify algebraically.",
+      "sha": "6276fb4967a0",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "1d4725eadb76"
+     ],
+     "caption": null
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Geometrically, the set of convex linear combinations of $\\vec u$, $\\vec v$, and $\\vec w$ is a filled-in triangle with vertices at $\\vec u, \\vec v$ and $\\vec w$. The point $P$ lies inside this triangle, while $Q$ does not.",
+      "sha": "9624951bb3f5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To argue algebraically, suppose $P=t_{1}\\vec u + t_{2}\\vec v + t_{3} \\vec w$ and $t_{1}+t_{2}+t_{3}=1$. From these assumptions, we can set up a system of equations which has a unique solution",
+      "sha": "11408c7c9a68",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "P=\\tfrac14 \\vec u + \\tfrac14 \\vec v + \\tfrac12 \\vec w,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so $P$ is a convex linear combination of $\\vec u$, $\\vec v$, and $\\vec w$. The same procedure with $Q$ gives a unique solution with coefficients $t_{1}=\\frac 59, t_{2}=-\\frac 19, t_{3}=\\frac 59$, and so $Q$ is not a convex linear combination of $\\vec u$, $\\vec v$, and $\\vec w$.",
+      "sha": "63fab474243a",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Sets of Vectors, Lines & Planes · 练习题 9（上游 book/modules/module2-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module2-exercises.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "向量集合、直线与平面"
+}

@@ -1,0 +1,1210 @@
+{
+ "id": "module8",
+ "title_en": "Coordinates & Change of Basis I",
+ "blocks": [
+  {
+   "k": "outcome",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Notation for representing a vector in multiple bases.",
+         "sha": "8a0d731476c2",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The distinction between a vector and its representation.",
+         "sha": "c9a14f7832f2",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How to compute multiple representations of a vector.",
+         "sha": "3249ab05dac8",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The definition of an *oriented* basis.",
+         "sha": "f0036940521f",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Recall that when we write $\\vec x=\\mat{2\\\\3}$, what we actually mean is $\\vec x=2\\xhat+3\\yhat$. The numbers $2$ and $3$ are called the coordinates of the vector $\\vec x$ with respect to the standard basis. However, in general, subspaces have many bases, and so it is possible to represent a single vector in *many different ways* as coordinates with respect to different bases.",
+    "sha": "82740159739d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\vec x=\\mat{2\\\\3}$, let $\\mathcal E=\\Set{\\xhat,\\yhat}$ be the standard basis for $\\R^2$, and let $\\mathcal B=\\Set{\\vec b_1,\\vec b_2}$, where $\\vec b_1=\\mat{2\\\\1}$ and $\\vec b_2=\\mat{0\\\\1}$, be another basis for $\\R^2$. The coordinates of $\\vec x$ with respect to $\\mathcal E$ are $(2,3)$, but the coordinates of $\\vec x$ with respect to $\\mathcal B$ are $(1,2)$.",
+    "sha": "1b392636a60c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "d8487e0f62d6"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The coordinates $(2,3)$ and $(1,2)$ represent $\\vec x$ equally well, and when solving problems, we should pick the coordinates that make our problem the easiest 〔注： For example, maybe in one choice of coordinates, we can avoid all fractions in our calculations—this could be good if you're programming a computer that rounds decimals.〕. However, now that we are representing vectors in multiple bases, we need a way to keep track of what coordinates correspond to which basis.",
+    "sha": "6baa96ddf720",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Representation in a Basis",
+    "sha": "350939b38dda",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal B=\\Set{\\vec b_1,\\ldots,\\vec b_n}$ be a basis for a subspace $V$ and let $\\vec v\\in V$. The \\emphrepresentation of $\\vec v$ in the $\\mathcal B$ basis, notated $[\\vec v]_{\\mathcal B}$, is the column matrix",
+      "sha": "13aac50e1299",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\vec v]_{\\mathcal B}= \\matc{\\alpha_1\\\\\\vdots\\\\\\alpha_n}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where $\\alpha_{1},\\ldots,\\alpha_{n}$ uniquely satisfy $\\vec v=\\alpha_{1}\\vec b_{1}+\\cdots+\\alpha_{n}\\vec b_{n}.$",
+      "sha": "c792386b9ce4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Conversely,",
+      "sha": "c2140536d371",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\matc{\\alpha_1\\\\\\vdots\\\\\\alpha_n}_{\\mathcal B}= \\alpha_{1}\\vec b_{1}+\\cdots\n\t\t+\\alpha_{n}\\vec b_{n}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is notation for the linear combination of $\\vec b_{1},\\ldots,\\vec b_{n}$ with coefficients $\\alpha_{1},\\ldots,\\alpha_{n}$.",
+      "sha": "dfc1bd823132",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal E=\\Set{\\xhat,\\yhat}$ be the standard basis for $\\R^2$ and let $\\mathcal C=\\Set{\\vec c_1,\\vec c_2}$ where $\\vec c_1=\\xhat+\\yhat$, and $\\vec c_2 =3\\yhat$ be another basis for $\\R^2$. Given that $\\vec v=2\\xhat-\\yhat$, find $[\\vec v]_{\\mathcal E}$ and $[\\vec v]_{\\mathcal C}$.",
+      "sha": "8fe8c821ba0b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\vec v=2\\xhat-\\yhat$, we know",
+      "sha": "44be6cf0c572",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\vec v]_{\\mathcal E}=\\mat{2\\\\-1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To find $[\\vec v]_{\\mathcal C}$, we need to write $\\vec v$ as a linear combination of $\\vec c_1$ and $\\vec c_2$.",
+      "sha": "1e01fb98ee0c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose",
+      "sha": "3c2db9ddb042",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec v = x\\vec c_1 + y\\vec c_2"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for some unknown scalars $x$ and $y$. On the one hand,",
+      "sha": "aeec417a114a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec v = 2\\xhat-\\yhat,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and on the other hand,",
+      "sha": "46f255b887a5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec v  = x\\vec c_1 + y\\vec c_2= x(\\xhat+\\yhat)+3y\\yhat=x\\xhat+(x+3y)\\yhat."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Combining these two equations, we have",
+      "sha": "ef5d0f8e3121",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "2\\xhat-\\yhat = x\\xhat+(x+3y)\\yhat,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so",
+      "sha": "9af790b3a93d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(x-2)\\xhat+(x+3y+1)\\yhat = \\vec 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\xhat$ and $\\yhat$ are linearly independent, the only way for the above equation to be satisfied is if $x-2=0$ *and* $x+3y+1=0$. Thus, we need to solve the system",
+      "sha": "56032b77dedb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left\\{\\begin{aligned}x &= 2 \\\\ x+3y &= -1\\end{aligned}\\right.."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "After solving, we see $\\vec v=2\\vec c_1 - \\vec c_2$, and so",
+      "sha": "3d4c9d7c5558",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\vec v]_{\\mathcal C}=\\mat{2\\\\-1}."
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Notation Conventions",
+    "sha": "d2546dec7f63",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We need to revisit some past notation. Up to this point, we have been writing $\\vec x=\\mat{2\\\\3}$ to mean $\\vec x=2\\xhat+3\\yhat$. However, given the representation-in-a-basis notation, we should be writing",
+    "sha": "3111bc3beeac",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec x=\\mat{2\\\\3}_{\\mathcal E},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "where $\\mathcal E$ is the standard basis for $\\R^2$\\footnote One might wonder if we've just made a circular definition. In Module 〔引用〕, $\\vec e_1\\in\\R^2$ was defined to be $\\mat{1\\\\0}$. But with our notation, this is the same as $\\vec e_1=\\mat{1\\\\0}_{\\mathcal E}$, which is itself true by definition! To get around this, we need to declare the existence of the standard basis some other way. The physics solution is to define $\\vec e_1$, $\\vec e_2$, etc. as physical vectors in space. The abstract mathematics solution is to declare that $\\vec e_1$, $\\vec e_2$, etc. exist and are linearly independent and say nothing more.. We should write $\\mat{2\\\\3}_{\\mathcal E}$ because the coordinates $(2,3)$ refer to *different* vectors for *different* bases. However, most of the time we are only thinking about the standard basis. So, the convention we will follow is:",
+    "sha": "215a0e756105",
+    "zh": ""
+   }
+  },
+  {
+   "k": "list",
+   "ordered": false,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "If a problem involves only one basis, we may write $\\mat{x\\\\y}$ to mean $\\mat{x\\\\y}_{\\mathcal E}$ where $\\mathcal E$ is the standard basis.",
+       "sha": "0a279ca44e04",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "If there are multiple bases in a problem, we will always write $\\mat{x\\\\y}_{\\mathcal X}$ to specify a vector in coordinates relative to a particular basis $\\mathcal X$.",
+       "sha": "b224d210be06",
+       "zh": ""
+      }
+     }
+    ]
+   ]
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If a problem only involves the standard basis, we may use the notation we always have. If a problem involves multiple bases, we must *always* use representation-in-a-basis notation.",
+      "sha": "2f1fddfce51c",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "\\HeadingTrue Vectors vs. Representations",
+    "sha": "06b8cc5f32ce",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "\\includegraphics[width=3in]images/MagrittePipe.jpg 〔注： Image taken from Wikipedia: https://en.wikipedia.org/wiki/File:MagrittePipe.jpg〕",
+    "sha": "b65cca69a407",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The Belgian surrealist Ren\\'e Magritte painted the work above, which is subtitled, “This is not a pipe”. Why? Because, of course, it is not a pipe. It is a painting of a pipe! In this work, Magritte points out a distinction that will soon become very important to us—the distinction between an object and a representation of that object.",
+    "sha": "252dc7b6c151",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\vec x=2\\xhat+3\\yhat\\in \\R^2$. The vector $\\vec x$ is a *real-life geometrical thing*, and to emphasize this, we will call $\\vec x$ a *true* vector. In contrast, when we write the column matrix $[\\vec x]_{\\mathcal E}=\\mat{2\\\\3}$, we are writing a *list of numbers*. The list of numbers $\\mat{2\\\\3}$ has no meaning until we give it a meaning by assigning it a basis. For example, by writing $\\mat{2\\\\3}_{\\mathcal E}$, we declare that the numbers $2$ and $3$ are the coefficients of $\\xhat$ and $\\yhat$. By writing $\\mat{2\\\\3}_{\\mathcal B}$ where $\\mathcal B=\\Set{\\vec b_1,\\vec b_2}$, we declare that the numbers $2$ and $3$ are the coefficients of $\\vec b_1$ and $\\vec b_2$. Since a list of numbers without a basis has no meaning, we must acknowledge",
+    "sha": "e32e6bf0e0a1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec x\\,\\,{\\color{mypink}\\neq}\\,\\,\\, [\\vec x]_{\\mathcal E}=\\mat{2\\\\3},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "since the left side of the equation is a *true vector* and the right side is a *list of numbers*. Similarly, we must acknowledge",
+    "sha": "afe96a971ddd",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "[\\vec x]_{\\mathcal E}\\,\\,{\\color{mypink}\\neq}\\,\\,\\, \\mat{2\\\\3}_{\\mathcal E}=\\vec x,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "since the left side is a *list of numbers* and the right side is a *true vector*.",
+    "sha": "dd2b186fb72b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To help keep the notation straight in your head, for a basis $\\mathcal X$, remember the rule",
+    "sha": "87437260929e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "[\\text{true vector}]_{\\mathcal X} = \\text{list of numbers}\\qquad\\text{and}\\qquad\n\t[\\text{list of numbers}]_{\\mathcal X} =\\text{true vector}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It's easy to get confused when answering questions that involve multiple bases; precision will make these problems much easier.",
+    "sha": "030b1dd1d842",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Orientation of a Basis",
+    "sha": "221c7dc2647d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "How can you tell the difference between a hand and a foot? They're similar in structure 〔注： We might say hands and feet are *topologically* equivalent.〕—a hand has five fingers and a foot has five toes—but they're different in shape—fingers are much longer than toes and the thumb sticks off the hand at a different angle than the big toe sticks off the foot.",
+    "sha": "f639d69f461f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "How about a harder question: how can you tell the difference between a left hand and a right hand? Any length or angle measurement you make on an (idealized) left hand or right hand will be identical. But, we know they're different because they differ in *orientation* 〔注： Other words for orientation include *chirality* and *handedness*.〕.",
+    "sha": "761543f584fc",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We'll build up to the definition of orientation in stages. Consider the ordered bases $\\mathcal E$, $\\mathcal A$, and $\\mathcal B$ shown below.",
+    "sha": "c1e967013935",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "e70969aae4d9"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The $\\mathcal A$ basis can be rotated to get the $\\mathcal E$ basis while maintaining the proper order of the basis vectors (i.e., $\\vec a_1\\mapsto\\xhat$ and $\\vec a_2\\mapsto\\yhat$), but it is impossible to rotate the $\\mathcal B$ basis to get the $\\mathcal E$ basis while maintaining the proper order. In this case, we say that $\\mathcal E$ and $\\mathcal A$ have the same orientation and $\\mathcal E$ and $\\mathcal B$ have opposite orientations. Even though the lengths and angles between all vectors in the $\\mathcal A$ basis and the $\\mathcal B$ basis are the same, we can distinguish the $\\mathcal A$ and $\\mathcal B$ bases because they have different *orientations*.",
+    "sha": "49b1c83a46a5",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Orientations of bases come in exactly two flavors: *right-handed* (or *positively oriented*) and *left-handed* (or *negatively oriented*). By convention, the standard basis is called right-handed.",
+    "sha": "3c17ed94975b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Orthonormal bases—bases consisting of unit vectors that are orthogonal to each other—are called right-handed if they can be rotated to align with the standard basis, otherwise they are called left-handed. In this way, the right-hand–left-hand analogy should be clear: two right hands or two left hands can be rotated to align with each other, but a left hand and a right can never be rotated to alignment.",
+    "sha": "79770ef3f126",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "However, not all bases are orthonormal! Consider the bases $\\mathcal E$, $\\mathcal A'$, $\\mathcal B'$.",
+    "sha": "0b0a7095fa6a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "fcd405f40dfb"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The bases $\\mathcal A'$ and $\\mathcal B'$ differ only slightly from $\\mathcal A$ and $\\mathcal B$. Neither can be *rotated* to obtain $\\mathcal E$, however we'd still like to say $\\mathcal A'$ is right-handed and $\\mathcal B'$ is left-handed. The following, fully general definition, allows us to do so.",
+    "sha": "4161540c9eff",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Orientation of a Basis",
+    "sha": "221c7dc2647d",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The ordered basis $\\mathcal B=\\{\\vec b_{1},\\ldots,\\vec b_{n}\\}$ is *right-handed* or *positively oriented* if it can be continuously transformed to the standard basis (with $\\vec b_{i}\\mapsto \\vec e_{i}$) while remaining linearly independent throughout the transformation. Otherwise, $\\mathcal B$ is called *left-handed* or *negatively oriented*.",
+      "sha": "9315dda07896",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The term *continuously transformed* can be given a precise definition\\footnote Because you crave precision, here it is: the basis $\\vec a_1,\\ldots, \\vec a_n$ can be *continuously transformed* to the basis $\\vec b_1,\\ldots,\\vec b_n$ if there exists a continuous function $\\Phi:[0,1]\\to\\Set{\\text{$n$-tuples of vectors}}$ such that $\\Phi(0)=(\\vec a_1,\\ldots,\\vec a_n)$ and $\\Phi(1)=(\\vec b_1,\\ldots,\\vec b_n)$. Here, continuity is defined in the multi-variable calculus sense., but it will be enough for us to imagine that a continuous transform between two bases is equivalent to a “movie” where one basis smoothly and without jumps transforms into the other.",
+    "sha": "e8cda948a571",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let's consider some examples. Let $\\mathcal X=\\Set{\\vec x_1,\\vec x_2}$ as depicted below. We could imagine $\\vec x_1,\\vec x_2$ continuously transforming to $\\xhat, \\yhat$ by $\\vec x_1$ staying in place and $\\vec x_2$ smoothly moving along the dotted line.",
+    "sha": "671b150f12d0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "3c2d50af69f0"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Because at every step along this motion, the set of $\\vec x_1$ and the transformed $\\vec x_2$ is linearly independent, $\\mathcal X$ is *positively* oriented.",
+    "sha": "b342b2141a5a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\mathcal Y=\\Set{\\vec y_1,\\vec y_2}$ as depicted below. We are in a similar situation, except this time, somewhere along $\\vec y_2$'s path, the set of $\\vec y_1$ and the transformed $\\vec y_2$ becomes linearly dependent.",
+    "sha": "0417057d6151",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "c68763a17557"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Maybe that was just bad luck and we might be able to transform along a different path and stay linearly independent. It turns out, we are doomed to fail, because $\\mathcal Y$ is *negatively* oriented.",
+    "sha": "bdb0d31a6d46",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Using the definition of the orientation of a basis to answer questions is difficult because to determine that a basis is negatively oriented, you need to make a determination about *every possible* way to continuously transform a basis to the standard basis. This is hard enough in $\\R^2$ and gets much harder in $\\R^3$. Fortunately, we will encounter computational tools that will allow us to numerically determine the orientation of a basis, but, for now, the idea is what's important.",
+    "sha": "98f6f016e00b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Reversing Orientation",
+    "sha": "71a2526fc391",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Reflections reverse orientation and can manifest in two ways 〔注： Think back to hands. The left and right hands *are* reflections of each other.〕. Consider the reflection of $\\mathcal E=\\Set{\\xhat, \\yhat}$ across the line $y=x$.",
+    "sha": "3d85509bc9c5",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "6aba23658185"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This reflection sends $\\Set{\\xhat,\\yhat}\\mapsto\\Set{\\yhat,\\xhat}$. Alternatively, reflection across the line $x=0$ sends $\\Set{\\xhat,\\yhat}\\mapsto\\Set{-\\xhat,\\yhat}$.",
+    "sha": "9b94cfd08e85",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "40b065d6ae03"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Both $\\Set{\\yhat,\\xhat}$ and $\\Set{-\\xhat,\\yhat}$, as ordered bases, are negatively oriented. This is indicative of a general theorem.",
+    "sha": "9772d8f2b272",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal B=\\Set{\\vec b_1,\\ldots,\\vec b_n}$ be an ordered basis. The ordered basis obtained from $\\mathcal B$ by replacing $\\vec b_i$ with $-\\vec b_i$ and the ordered basis obtained from $\\mathcal B$ by swapping the order of $\\vec b_i$ and $\\vec b_{j}$ (with $i\\neq j$) have the opposite orientation as $\\mathcal B$.",
+      "sha": "48e8715cc2d7",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec u=\\xhat+8\\yhat$, $\\vec v=-\\xhat+ 3\\yhat$, and $\\vec w=2\\xhat$.",
+         "sha": "41cb17d730ae",
+         "zh": ""
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Find $[\\vec u]_{\\mathcal E}$, $[\\vec v]_{\\mathcal E}$ and $[\\vec w]_{\\mathcal E}$, where $\\mathcal E$ is the standard basis for $\\R^{2}$.",
+            "sha": "d63297e3b315",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\mathcal A=\\Set{3\\xhat+2\\yhat,4\\xhat-\\yhat}$. Find $[\\vec u]_{\\mathcal A}$, $[\\vec v]_{\\mathcal A}$ and $[\\vec w]_{\\mathcal A}$.",
+            "sha": "51a63a7536ad",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\mathcal B=\\Set{11\\yhat,\\xhat+\\frac{5}{2}\\yhat}$. Find $[\\vec u]_{\\mathcal B}$, $[\\vec v]_{\\mathcal B}$ and $[\\vec w]_{\\mathcal B}$.",
+            "sha": "3cad8ea14f67",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec q=11\\yhat-4\\zhat$, $\\vec r=5\\xhat-12\\yhat+8\\zhat$, and $\\vec s=\\xhat-5\\yhat+2\\zhat$.",
+         "sha": "e31804915150",
+         "zh": ""
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Find $[\\vec q]_{\\mathcal E}$, $[\\vec r]_{\\mathcal E}$ and $[\\vec s]_{\\mathcal E}$ where $\\mathcal E$ is the standard basis for $\\R^{3}$.",
+            "sha": "841a00709afe",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\mathcal D=\\Set{\\xhat+2\\yhat,-3\\xhat+5\\yhat-4\\zhat,-8\\xhat+4\\yhat+11\\zhat}$. Find $[\\vec q]_{\\mathcal D}$, $[\\vec r]_{\\mathcal D}$ and $[\\vec s]_{\\mathcal D}$.",
+            "sha": "55797f414552",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\mathcal F=\\Set{\\xhat+4\\yhat+4\\zhat,-3\\xhat+20\\yhat,21\\yhat+16\\zhat}$. Find $[\\vec q]_{\\mathcal F}$, $[\\vec r]_{\\mathcal F}$ and $[\\vec s]_{\\mathcal F}$.",
+            "sha": "968a77ab9058",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$[\\vec{u}]_{\\mathcal{E}} = \\mat{1\\\\8}$, $[\\vec{v}]_{\\mathcal{E}} = \\mat{-1\\\\3}$, and $[\\vec{w}]_{\\mathcal{E}} = \\mat{2\\\\0}$.",
+            "sha": "d456577dd4aa",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$[\\vec{u}]_{\\mathcal{A}} = \\mat{3\\\\-2}$, $[\\vec{v}]_{\\mathcal{A}} = \\mat{1\\\\-1}$, and $[\\vec{w}]_{\\mathcal{A}} = \\mat{2/11\\\\4/11}$.",
+            "sha": "8c24ede7fbac",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$[\\vec{u}]_{\\mathcal{B}} = \\mat{1/2\\\\1}$, $[\\vec{v}]_{\\mathcal{B}} = \\mat{1/2\\\\-1}$, and $[\\vec{w}]_{\\mathcal{B}} = \\mat{-5/11\\\\2}$.",
+            "sha": "c4905aa1499f",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$[\\vec{q}]_{\\mathcal{E}} = \\mat{0\\\\11\\\\-4}$, $[\\vec{r}]_{\\mathcal{E}} = \\mat{5\\\\-12 \\\\8}$, and $[\\vec{s}]_{\\mathcal{E}} = \\mat{1\\\\-5\\\\2}$.",
+            "sha": "e14eee53dc52",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "We are given $\\mathcal{D} = \\Set{\\mat{1\\\\2\\\\0}_{\\mathcal{E}}, \\mat{-3\\\\5\\\\-4}_{\\mathcal{E}}, \\mat{-8\\\\4\\\\11}_{\\mathcal{E}}}$. To find $[\\vec{q}]_{\\mathcal{D}}$, we need to find scalars $x, y, z$ such that",
+            "sha": "caeef49f6ea3",
+            "zh": ""
+           }
+          },
+          {
+           "k": "math",
+           "tex": "x \\mat{1\\\\2\\\\0} + y \\mat{-3\\\\5\\\\-4} +z \n\t\t\t\t\t\t\t\t\\mat{-8\\\\4\\\\11} = \\mat{0\\\\11\\\\-4},"
+          },
+          {
+           "k": "p",
+           "t": {
+            "en": "which gives rise to a system of equations whose augmented matrix is",
+            "sha": "6a5cb0c5ff75",
+            "zh": ""
+           }
+          },
+          {
+           "k": "math",
+           "tex": "\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t\t\t\t1 & -3 & -8 & 0\\\\\n\t\t\t\t\t\t\t\t\t2 & 5 & 4 & 11\\\\\n\t\t\t\t\t\t\t\t\t0 & -4 & 11 & -4\\\\\n\t\t\t\t\t\t\t\t\\end{bmatrix}."
+          },
+          {
+           "k": "p",
+           "t": {
+            "en": "This can be row reduced to",
+            "sha": "9b781a241908",
+            "zh": ""
+           }
+          },
+          {
+           "k": "math",
+           "tex": "\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t\t\t\t1 & 0 & 0 & 3\\\\\n\t\t\t\t\t\t\t\t\t0 & 1 & 0 & 1\\\\\n\t\t\t\t\t\t\t\t\t0 & 0 & 1 & 0\\\\\n\t\t\t\t\t\t\t\t\\end{bmatrix}."
+          },
+          {
+           "k": "p",
+           "t": {
+            "en": "Therefore, $[\\vec{q}]_{\\mathcal{D}} = \\mat{3\\\\1\\\\0}$. Similarly we can find",
+            "sha": "102d6b97393e",
+            "zh": ""
+           }
+          },
+          {
+           "k": "math",
+           "tex": "[\\vec{r}]_{\\mathcal{D}} = \\mat{-1\\\\-2\\\\0},\\quad [\\vec{s}]_{\\mathcal{D}} = \\mat{-66/67\\\\-39/67\\\\-2/67}."
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "We are given $\\mathcal{F} = \\Set{ \\mat{1\\\\4\\\\4}_{\\mathcal{E}}, \\mat{-3\\\\20\\\\0}_{\\mathcal{E}}, \\mat{0\\\\21\\\\16}_{\\mathcal{E}}}$. Therefore, $[\\vec{q}]_{\\mathcal{F}} = \\mat{3 \\\\ 1 \\\\ -1}$, $[\\vec{r}]_{\\mathcal{F}} = \\mat{2 \\\\ -1 \\\\0}$, and $[\\vec{s}]_{\\mathcal{F}} = \\mat{-23/130\\\\-51/130\\\\11/65}$.",
+            "sha": "6f0a2ebbd163",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Coordinates & Change of Basis I · 练习题 1（上游 book/modules/module8-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module8-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $[\\vec a]_{\\mathcal E}=\\mat{5\\\\-12}$ where $\\mathcal E$ is the standard basis for $\\R^{2}$. Find a basis $\\mathcal M$ for $\\R^{2}$ such that $[\\vec a]_{\\mathcal M}=\\mat{1\\\\0}$.",
+         "sha": "9dcbeafd9c32",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $[\\vec b]_{\\mathcal E}=\\mat{2\\\\1\\\\0}$ where $\\mathcal E$ is the standard basis for $\\R^{3}$. Find a basis $\\mathcal N$ for $\\R^{3}$ such that $[\\vec b]_{\\mathcal N}=\\mat{0\\\\1\\\\2}$.",
+         "sha": "a272f2ecf07a",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\mathcal{M} = \\Set{ \\vec{u}, \\vec{v}}$. Then $[\\vec{a}]_{\\mathcal{M}} = \\mat{1\\\\0} \\Rightarrow \\vec{a} = 1 \\vec{u} + 0 \\vec{v} \\Rightarrow \\vec{a} = \\vec{u}$. So as long as we choose the first vector in $\\mathcal{M}$ as $\\vec{a}$, any linearly independent second vector will do. Thus take $\\mathcal{M} = \\Set{5\\xhat - 12 \\yhat, \\xhat }$",
+         "sha": "27080f0190c6",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The observation here is that the numbers that appear in the coordinates in both $[\\vec{b}]_{\\mathcal{E}}$ and $[\\vec{b}]_{\\mathcal{N}}$ are same but they are just shuffled. Thus we can take $\\mathcal{N}$ to be the corresponding permutation of $\\mathcal{E}$. Take $\\mathcal{N} = \\Set{ \\zhat, \\yhat, \\xhat}$",
+         "sha": "80715382a6fa",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Coordinates & Change of Basis I · 练习题 2（上游 book/modules/module8-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module8-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine the orientation of each of the following bases for $\\R^{2}$.",
+      "sha": "20afd16154dd",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{-5\\\\0},\\mat{0\\\\-2}}$",
+         "sha": "16236e43f28e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{2\\\\-6},\\mat{-4\\\\1}}$",
+         "sha": "1bbd641b8143",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{1\\\\2},\\mat{2\\\\1}}$",
+         "sha": "b3ecfdfec25f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{6\\\\-1},\\mat{2\\\\3}}$",
+         "sha": "2206140cac6d",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Positively oriented. (Rotate both vectors 180 degrees clockwise and scale)",
+         "sha": "0f086f415699",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Negatively oriented.",
+         "sha": "eecc3d38ce4d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Negatively oriented. ( $\\mat{1\\\\2}$ is to be transformed to $\\vec{e}_1$. If we rotate it clockwise at some stage it points at the same direction as $\\mat{2\\\\1}$, thus making it linearly dependent. If we try to rotate it counter clockwise, at some stage it also points at the same (negative) direction as $\\mat{2\\\\1}$, where it becomes linerly dependent. )",
+         "sha": "ca055686594e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Positively oriented.",
+         "sha": "dcc2e27fc0f8",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Coordinates & Change of Basis I · 练习题 3（上游 book/modules/module8-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module8-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine the orientation of the basis $\\mathcal V = \\Set{\\vec v_1, \\vec v_2, \\vec v_3}$ for $\\R^{3}$ where $\\vec v_{1} = \\mat{1\\\\0\\\\0}$, $\\vec v_{2} = \\mat{0\\\\1\\\\0}$, and $\\vec v_{3} = \\mat{0\\\\0\\\\-1}$.",
+         "sha": "9ca2e982acfd",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Consider the basis $\\mathcal V' = \\Set{\\vec v_1, 3\\vec v_2, \\vec v_3}$ for $\\R^{3}$. What is the orientation of this basis?",
+         "sha": "74b1bf2973cf",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Consider the basis $\\mathcal V'' = \\Set{-4\\vec v_1, \\vec v_2, \\vec v_3}$ for $\\R^{3}$. What is the orientation of this basis?",
+         "sha": "056cb3e99992",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Negatively oriented. ( only $\\vec{v}_3$ needs to be taken care of. To transform it to $\\vec{e}_3$, no matter what we do, at some stage we have to cross the $xy$-plane. At that stage it becomes linearly dependent.)",
+         "sha": "c77b9a7e53b6",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Negatively oriented. ( $3\\vec{v}_2$ can be scaled to $\\vec{v}_2$. Then we are back at situation (a).)",
+         "sha": "a51e2eb4660e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Positively oriented. (This is a little bit tricky. Note that $\\vec{v}_2$ is already $\\vec{e}_2$. So we can leave that alone and limit our operations to the $xz$-plane. In the $xz$-plane rotate $-4 \\vec{v}_1$ and $\\vec{v_3}$ counter clockwise 180 degrees. Then $-4 \\vec{v}_1$ transforms to $4 \\vec{e}_1$, which then can be scaled to $\\vec{e}_1$, and $\\vec{v}_3$ transforms to $\\vec{e}_3$.)",
+         "sha": "339154449922",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Coordinates & Change of Basis I · 练习题 4（上游 book/modules/module8-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module8-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Give two examples of positively oriented bases for $\\R^{2}$ and briefly explain how you know their orientation.",
+         "sha": "1c7696a142be",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Give two examples of negatively oriented bases for $\\R^{2}$ and briefly explain how you know their orientation.",
+         "sha": "52a38971e497",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How does negating one vector in a basis change the orientation?",
+         "sha": "86539b821043",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How does swapping the order of two different vectors in a basis change the orientation?",
+         "sha": "a0708a0dbb1c",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Coordinates & Change of Basis I · 练习题 5（上游 book/modules/module8-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module8-exercises.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "坐标与基变换 I"
+}

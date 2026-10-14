@@ -1,0 +1,25 @@
+\begin{tikzpicture}[baseline = (current bounding box.north)]
+					\begin{axis}[
+						anchor=origin,
+						disabledatascaling,
+						xmin=-2,xmax=3,
+						ymin=-2,ymax=1,
+						xtick={-2,...,3},
+						ytick={-2,...,3},
+						x=1cm,y=1cm,
+						grid=both,
+						grid style={line width=.1pt, draw=gray!10},
+						axis lines=middle,
+						minor tick num=0,
+						enlargelimits={abs=0.5},
+						axis line style={latex-latex},
+						ticklabel style={font=\tiny,fill=white},
+						xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+						ylabel style={at={(ticklabel* cs:1)},anchor=south west}
+					]
+						\fill [mygreen, opacity=.3] (1,1) -- (3,-1) -- (-2,-2) -- cycle;
+						\fill [black] (1,1) circle[radius=2pt] node [left, yshift=1pt] {$\vec x$};
+						\fill [black] (3,-1) circle[radius=2pt] node [below right] {$\vec y$};
+						\fill [black] (-2,-2) circle[radius=2pt] node [below right] {$\vec z$};
+					\end{axis}
+				\end{tikzpicture}

@@ -1,0 +1,2056 @@
+{
+ "id": "appendix3",
+ "title_en": "Matrix Notation",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "A *matrix* is a box (rectangular array) of numbers, usually surrounded by brackets 〔注： The word *matrix* comes from the Latin word for womb; you can think of a matrix as “holding numbers together”.〕. For example,",
+    "sha": "6b01b4157638",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mat{1&2&3\\\\4&5&6} \\qquad \\mat{x\\\\y\\\\z}\\qquad \\begin{pmatrix}7.5&-2\\\\-3&0\\end{pmatrix}\\qquad \\begin{matrix}1&2\\\\3&4\\\\5&6\\end{matrix}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "are matrices. In this book, we always write matrices with square brackets “$\\,[\\,\\cdots\\,]\\,$”. We have already used matrices in two ways: to keep track of the coefficients when solving a system of linear equations and to describe vectors (as a column of numbers). In both of these cases, matrices were a notational tool used to keep related numbers together. But, as we will soon see, matrices are also mathematical objects that you can do arithmetic with.",
+    "sha": "cef94993f59b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Matrix Notation",
+    "sha": "83ca283033fc",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A matrix can be described by its *shape* 〔注： Other terms for the *shape* of a matrix include the “*size* of a matrix” and the “*dimensions* of a matrix”. But, be careful not to confuse this usage of “dimension” with the term “dimension” in the context of subspaces.〕 (the number of rows and columns in the matrix) and its *entries* (the numbers inside the matrix). Traditionally, matrices are labeled with capital letters and their entries are labeled with lower-case letters.",
+    "sha": "44a1ccf612e2",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Consider the matrix $A$ with $m$ rows and $n$ columns:",
+    "sha": "25b54ff578d9",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A =\\ \\  {\\text{\\small\\color{mygreen}$m$ rows}}\\:\\begin{bmatrix}\n&\n\t\t& \\ldots[line-style={solid,<->,color=mypink},shorten=0pt]^{\\text{\\small\\color{mypink}$n$ columns}} \\\\\n\t\t& a_{11} & a_{12} & a_{13} & \\cdots & a_{1n} \\\\\n\t\t& a_{21} & a_{22} & a_{23} & \\cdots & a_{2n} \\\\\n\t\t\\vdots[line-style={solid,<->,mygreen}] & \\vdots & \\vdots & \\vdots &\\ddots & \\vdots \\\\\n\t\t& a_{m1} & a_{m2} & a_{m3} & \\cdots & a_{mn}\n\t\\end{bmatrix}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We call $A$ an “\\emph$m$ by $n$ matrix”, or in notation, an “$m\\times n$ matrix”\\footnote In this context, “$\\,\\times\\,$” is read as “by”. The entries of $A$ are indexed by their $(\\text{\\emph{row}},\\text{\\emph{column}})$ coordinates. So, the $(1,1)$ entry of $A$ is $a_{11}$, the $(2,1)$ entry of $A$ is $a_{21}$, etc.. When subscripting a matrix entry, it is tradition to omit a separator between the row and column index. That is, we write $a_{ij}$ instead of $a_{i,j}$ or $a_{(i,j)}$ 〔注： There's nothing wrong with including a separator. It's just not common practice.〕.",
+    "sha": "892a9fd6a63e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\mat{1&2&3\\\\4&5&6}$. Find the shape of $A$ as well as the $(1,3)$ entry of $A$.",
+      "sha": "bd4e7e0bb886",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "$A$ has two rows and three columns, so $A$ is a $2\\times 3$ matrix. The $(1,3)$ entry of $A$ is the number in the first row and third column of $A$, which is $3$.",
+      "sha": "6be3a30cc98b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Since a matrix is completely determined by its shape and entries, we can define a matrix via a formal. For example, define $B$ to be the $2\\times 3$ matrix whose $(i,j)$ entry, $b_{ij}$, satisfies the formula $b_{ij}=i+j$. In this case",
+    "sha": "c588a0e5f9ee",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "B=\\mat{b_{11}&b_{12}&b_{13}\\\\b_{21}&b_{22}&b_{23}}=\\mat{2&3&4\\\\3&4&5}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The shorthand $B=[b_{ij}]$ means that “$B$ is a matrix whose $(i,j)$ entry is $b_{ij}$”. Using this shorthand, we could alternatively say $B=[b_{ij}]$ is a $2\\times 3$ matrix satisfying $b_{ij}=i+j$.",
+    "sha": "172e10e34519",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $C=[c_{ij}]$ be a $3\\times 3$ matrix satisfying $c_{ij}=i-j$. Write down $C$.",
+      "sha": "17113fcb865f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "C=\\mat{c_{11}&c_{12}&c_{13}\\\\c_{21}&c_{22}&c_{23}\\\\c_{31}&c_{32}&c_{33}}=\\mat{0&-1&-2\\\\1&0&-1\\\\2&1&0}."
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Basic Terms",
+    "sha": "9065f61af34b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A matrix has three special parts: the diagonal, the upper triangle, and the lower triangle.",
+    "sha": "53f81065abc0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\underbrace{\n\t\t\t\\left[\\begin{array}{ccccc}\n\t\t\t\ta_{11} & a_{12} & a_{13} & a_{14} & a_{15} \\\\\n\t\t\t\ta_{21} & a_{22} & a_{23} & a_{24} & a_{25} \\\\\n\t\t\t\ta_{31} & a_{32} & a_{33} & a_{34} & a_{35} \\\\\n\t\t\t\ta_{41} & a_{42} & a_{43} & a_{44} & a_{45} \\\\\n\t\t\t\\end{array}\\right]\n\t\t}_{\\text{Diagonal}}\n\t\t\t\\qquad\n\t\t\\underbrace{\n\t\t\t\\left[\\begin{array}{ccccc}\n\t\t\t\ta_{11} & a_{12} & a_{13} & a_{14} & a_{15} \\\\\n\t\t\t\ta_{21} & a_{22} & a_{23} & a_{24} & a_{25} \\\\\n\t\t\t\ta_{31} & a_{32} & a_{33} & a_{34} & a_{35} \\\\\n\t\t\t\ta_{41} & a_{42} & a_{43} & a_{44} & a_{45} \\\\\n\t\t\t\\end{array}\\right]\n\t\t}_{\\text{Upper Triangle}}\n\t\t\t\\qquad\n\t\t\\underbrace{\n\t\t\t\\left[\\begin{array}{ccccc}\n\t\t\t\ta_{11} & a_{12} & a_{13} & a_{14} & a_{15} \\\\\n\t\t\t\ta_{21} & a_{22} & a_{23} & a_{24} & a_{25} \\\\\n\t\t\t\ta_{31} & a_{32} & a_{33} & a_{34} & a_{35} \\\\\n\t\t\t\ta_{41} & a_{42} & a_{43} & a_{44} & a_{45} \\\\\n\t\t\t\\end{array}\\right]\n\t\t}_{\\text{Lower Triangle}}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Formally, we define the diagonal and upper/lower triangle of a matrix in terms of the row and column coordinates.",
+    "sha": "22a2c1df631e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Diagonal",
+    "sha": "a5ecd286faa5",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The *diagonal* of an $m\\times n$ matrix $A=[a_{ij}]$ consists of the entries $a_{ij}$ satisfying $i=j$.",
+      "sha": "cb129da5798b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Upper & Lower Triangle",
+    "sha": "90174a107e67",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=[a_{ij}]$ be an $m\\times n$ matrix. The *upper triangle* of $A$ consists the entries $a_{ij}$ satisfying $j\\geq i$. The *lower triangle* of $A$ consists of the entries $a_{ij}$ satisfying $j\\leq i$.",
+      "sha": "b1451015628d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Special Matrices",
+    "sha": "7c79f7537d5f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There are several special matrices that come up often.",
+    "sha": "7b702cfe7e59",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Triangular Matrices",
+    "sha": "0b1468a04e09",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A matrix is called *upper triangular* if all non-zero entries lie in the upper triangle of the matrix and a matrix is called *lower triangular* if all non-zero entries lie in the lower triangle. A matrix is called *triangular* if it is either upper or lower triangular.",
+      "sha": "c5029a0dd04e",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Square Matrix",
+    "sha": "54dcf0449058",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A matrix is called *square* if it has the same number of rows as columns.",
+      "sha": "08acd27a5d48",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Diagonal Matrix",
+    "sha": "7d790dfd7d21",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A square matrix is called *diagonal* the only non-zero entries in the matrix appear on the diagonal.",
+      "sha": "0d565d74ef8d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Symmetric Matrix",
+    "sha": "0e420bad2fe4",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The square matrix $A=[a_{ij}]$ is called *symmetric* if its entries satisfy $a_{ij}=a_{ji}$.",
+      "sha": "76aa0a308479",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Alternatively, if the entries of $A$ satisfy $a_{ij}=-a_{ji}$, then $A$ is called *skew-symmetric* or *anti-symmetric*.",
+      "sha": "d546896ed540",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Zero Matrix",
+    "sha": "bdf0c50afe12",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A matrix is called a *zero matrix* if all its entries are zero.",
+      "sha": "e09464491534",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Identity Matrix",
+    "sha": "c8c548935fe1",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "An *identity matrix* is a square matrix with ones on the diagonal and zeros everywhere else. The $n\\times n$ identity matrix is denoted $I_{n\\times n}$, or just $I$ when its size is implied.",
+      "sha": "0eb66342256d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Identify the diagonal of $A=\\mat{-2&3\\\\5&6\\\\7&7}$.",
+      "sha": "6249fda70088",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The diagonal of $A$ consists of the entries in $A$ whose row coordinate is equal to the column coordinate. So, the diagonal of $A$ consists of $-2$ and $6$.",
+      "sha": "2934987d027f",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Apply a single row operation to $B=\\mat{-2&3\\\\0&6\\\\0&12}$ to make it an upper triangular matrix.",
+      "sha": "d8d9a2bbd558",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To make $B$ an upper triangular matrix, we need all entries below the diagonal to be zero. More specifically, we need to get rid of the $12$ in the lower-right corner of $B$. By applying the row operation $\\text{row}_3\\mapsto \\text{row}_3-2\\,\\text{row}_2$ to $B$, we get the upper triangular matrix",
+      "sha": "2b9e347b67b1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "B'=\\mat{-2&3\\\\0&6\\\\0&0}"
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If possible, produce a matrix that is both upper and lower triangular.",
+      "sha": "5a756d0a409b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For a matrix to be upper triangular, all entries below the diagonal must be zero. For a matrix to be lower triangular, all entries above the diagonal need to be zero. Therefore, if a matrix is both upper and lower triangular, the only non-zero entries of the matrix must be on the diagonal. It follows that",
+      "sha": "c601e7175110",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{1&0&0\\\\0&2&0\\\\0&0&3}\\qquad\\text{and}\\qquad \\mat{0&0&0\\\\0&0&0}\\qquad\\text{etc.}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "are valid examples.",
+      "sha": "e1e887c12c6d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Matrix Arithmetic",
+    "sha": "ccf815b6f30b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In Module 〔引用〕, we saw that vectors were an extension of numbers that allowed us to describe directions. Similarly, we can view matrices as a more general type of “number”. Matrices can do everything numbers can, everything vectors can, and more!",
+    "sha": "8a3de39cc792",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "\\subsubsection*Basic Operations",
+    "sha": "a1c85c04600d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The rules for addition and scalar multiplication of matrices are what you expect: to add two matrices, add the corresponding entries, and to scalar multiply a matrix, distribute the scalar to each entry.",
+    "sha": "7940a1644825",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For example,",
+    "sha": "6db6725e9e7d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "2\\mat{1&2&3\\\\4&5&6} = \\mat{2&4&6\\\\8&10&12}\\qquad\\text{and}\\qquad\n\t\\mat{1&2&3\\\\4&5&6}+\\mat{-1&2&0\\\\3&0&1} = \n\t\\mat{1-1&2+2&3+0\\\\4+3&5+0&6+1}\n\t=\\mat{0 & 4 & 3\\\\7&5&7}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "While any matrix can be scalar multiplied by any scalar, matrix addition only makes sense for *compatible* matrices. That is, you can only add together two matrices of the same shape.",
+    "sha": "e8158800cf65",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If two matrices are of the same shape, you can add them by adding entries “straight across”; you can multiply a matrix by a scalar by distributing the scalar to each entry of the matrix.",
+      "sha": "7c2f62f7d6a1",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\mat{1&2&3\\\\4&5&6}$, let $B=\\mat{1&1\\\\2&2}$, and let $C=\\mat{-1&0&-1\\\\2&1&2}$. Compute $2A+B$ and $A+3C$, if possible.",
+      "sha": "b9ab9bd1d566",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "First, note that $A$ is a $2\\times 3$ matrix and so it can only be added to another $2\\times 3$ matrix. Since $B$ is a $2\\times 2$ matrix, $2A+B$ is not defined. But, $C$ is a $2\\times 3$ matrix, so $A+3C$ is defined. Computing,",
+      "sha": "3f073a69454b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A+3C=\\mat{1&2&3\\\\4&5&6} + 3\\mat{-1&0&-1\\\\2&1&2} = \\mat{1&2&3\\\\4&5&6} + \\mat{-3&0&-3\\\\6&3&6}"
+    },
+    {
+     "k": "math",
+     "tex": "= \\mat{-2&2&0\\\\10&8&12}."
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Matrix-Vector Multiplication",
+    "sha": "8453d34e122c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Matrices and vectors interact via *matrix-vector* multiplication. There are two equivalent ways to think about matrix-vector multiplication: in terms of columns (the *column picture*) and in terms of rows (the *row picture*).",
+    "sha": "b71ee33b29f0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "\\subsubsection*Column Picture Let",
+    "sha": "99fc735b7371",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A=\n\t\\matc{\n\t\t\t\t{a_{11}} & {a_{12}} & {\\cdots} & {a_{1n}}\\\\\n\t\t\t\t{a_{21}} & {a_{22}} & {\\cdots} & {a_{2n}}\\\\\n\t\t\t\t{\\vdots} & {\\vdots} & {\\ddots} & {\\vdots}\\\\\n\t\t\t\t{a_{m1}} & {a_{m2}} & {\\cdots} & {a_{mn}}\n\t\t\t\t}=\n\t\t\t\\matc{\\big|&\\big|&&\\big|\\\\[3pt]\n\t\t\t\\vec c_1&\\vec c_2&\\cdots&\\vec c_n\\\\[2pt]\n\t\t\t\\big|&\\big|&&\\big|}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "be an $m\\times n$ matrix and let",
+    "sha": "c544401b5bf8",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec c_1=\\matc{a_{11}\\\\a_{21}\\\\\\vdots\\\\a_{m1}}\\qquad\n\t\\vec c_2=\\matc{a_{12}\\\\a_{22}\\\\\\vdots\\\\a_{m2}}\\qquad\\cdots\\qquad\n\t\\vec c_n=\\matc{a_{1n}\\\\a_{2n}\\\\\\vdots\\\\a_{mn}}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "be the vectors corresponding to the columns of $A$. Further, let $\\vec x=\\matc{x_1\\\\x_2\\\\\\vdots\\\\x_n}$ be a vector.",
+    "sha": "9c5b20254ad3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We define the matrix-vector product $A\\vec x$ to be the linear combination of $\\vec c_1$, $\\vec c_2$, …, $\\vec c_n$ with coefficients $x_1$, $x_2$, etc.. That is,",
+    "sha": "ae1c1d8e03bc",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A\\vec x =\n\t\t\t\\matc{\\big|&\\big|&&\\big|\\\\[3pt]\n\t\t\t\\vec c_1&\\vec c_2&\\cdots&\\vec c_n\\\\[2pt]\n\t\t\t\\big|&\\big|&&\\big|}\\matc{x_1\\\\x_2\\\\\\vdots\\\\x_n}\n\t=x_1\\vec c_1+x_2\\vec c_2+\\cdots+x_n\\vec c_n."
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $B=\\mat{1&2\\\\-2&3}$ and let $\\vec v=\\mat{4\\\\3}$. Compute $B\\vec v$ using the column picture.",
+      "sha": "4398376da85b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The column vectors of $B$ are $\\mat{1\\\\-2}$ and $\\mat{2\\\\3}$, so",
+      "sha": "ac1c973ff03c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "B\\vec v=\\mat{1&2\\\\-2&3}\\mat{4\\\\3} = 4\\mat{1\\\\-2} + 3\\mat{2\\\\3}=\\mat{10\\\\1}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The column picture of matrix-vector multiplication hints that matrix-vector multiplication can be used to encode sophisticated problems involving linear combinations (see Module 〔引用〕 for details).",
+    "sha": "b9c0538c903a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "\\subsubsection*Row Picture",
+    "sha": "bcd97312c693",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Alternatively, let",
+    "sha": "068b8ecb1308",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A=\n\t\\matc{\n\t\t\t\t{a_{11}} & {a_{12}} & {\\cdots} & {a_{1n}}\\\\\n\t\t\t\t{a_{21}} & {a_{22}} & {\\cdots} & {a_{2n}}\\\\\n\t\t\t\t{\\vdots} & {\\vdots} & {\\ddots} & {\\vdots}\\\\\n\t\t\t\t{a_{m1}} & {a_{m2}} & {\\cdots} & {a_{mn}}\n\t\t\t\t}=\n\t\t\t\\matc{\\hdash&\\hspace{-4pt}\\vec r_1&\\hspace{-6pt}\\hdash\\\\\n\t\t\t\t\\hdash&\\hspace{-4pt}\\vec r_2&\\hspace{-6pt}\\hdash\\\\\n\t\t\t\t&\\vdots&\\\\\n\t\t\t\t\\hdash&\\hspace{-4pt}\\vec r_m&\\hspace{-6pt}\\hdash}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "be an $m\\times n$ matrix and let",
+    "sha": "c544401b5bf8",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec r_1=\\matc{a_{11}\\\\a_{12}\\\\\\vdots\\\\a_{1n}}\\qquad\n\t\\vec r_2=\\matc{a_{21}\\\\a_{22}\\\\\\vdots\\\\a_{2n}}\\qquad\\cdots\\qquad\n\t\\vec r_m=\\matc{a_{m1}\\\\a_{m2}\\\\\\vdots\\\\a_{mn}}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "be vectors corresponding to the rows of $A$. Note that we are writing the \\emphrow vectors of $A$ in column vector form. Further, let $\\vec x=\\matc{x_1\\\\x_2\\\\\\vdots\\\\x_n}$ be a vector.",
+    "sha": "a17e9188a2cd",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We alternatively define the matrix-vector product $A\\vec x$ as the vector whose coordinates are the dot products of the rows of $A$ and the vector $\\vec x$. That is,",
+    "sha": "61a67b6c14e3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A\\vec x =\n\t\t\t\\matc{\\hdash&\\hspace{-4pt}\\vec r_1&\\hspace{-6pt}\\hdash\\\\\n\t\t\t\t\\hdash&\\hspace{-4pt}\\vec r_2&\\hspace{-6pt}\\hdash\\\\\n\t\t\t\t&\\vdots&\\\\\n\t\t\t\t\\hdash&\\hspace{-4pt}\\vec r_m&\\hspace{-6pt}\\hdash}\n\t\t\t\\vec x\n\t\t=\n\t\\matc{\\vec r_1\\cdot \\vec x\\\\\\vec r_2\\cdot\\vec x\\\\\\vdots\\\\\\vec r_m\\cdot \\vec x}."
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $B=\\mat{1&2\\\\-2&3}$ and let $\\vec v=\\mat{4\\\\3}$. Compute $B\\vec v$ using the row picture. Verify that the result matches with what you get from the column picture.",
+      "sha": "9ebbeaaf00a6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The row vectors of $B$ are $\\mat{1\\\\2}$ and $\\mat{-2\\\\3}$, so",
+      "sha": "00262546ba84",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "B\\vec v=\n\t\t\\left[\\begin{array}{rr}\n\t\t\t\t1&2\\\\-2&3\n\t\t\\end{array}\\right]\n\t\t\\mat{4\\\\3} = \\mat{\n\t\t\\left[\\begin{array}{r}\n\t\t\t\t1\\\\2\n\t\t\\end{array}\\right]\n\t\t\t\\cdot\\mat{4\\\\3}\\\\[8pt] \n\t\t\\left[\\begin{array}{r}\n\t\t\t\t-2\\\\3\n\t\t\\end{array}\\right]\n\t\t\t\\cdot\\mat{4\\\\3}}\n\t\t=\\mat{(1)(4)+(2)(3)\\\\(-2)(4)+(3)(3)}=\\mat{10\\\\1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is the same vector we got in the previous example using the column picture!",
+      "sha": "25f020e9a9df",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Since the row picture of matrix-vector multiplication involves dot products, which in turn relate to angles and geometry, the row picture hints that matrix-vector multiplication can be used to encode sophisticated problems involving the angles between multiple vectors (see Module 〔引用〕 for more).",
+    "sha": "d8d93fa209c0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "\\subsubsection*Compatibility",
+    "sha": "cea5ce22ceee",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Matrix-vector multiplication is only possible when the shape of the matrix is compatible with the size of the vector. That is the number of *columns* of the matrix must match the number of *coordinates* in the vector. (Try some examples using the row an column picture to make sure you agree.)",
+    "sha": "be9d7a4f2fc1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The result of a matrix-vector product is always a vector, but the number of coordinates in the output vector can change. For example, if $M$ is a $2\\times 3$ matrix, the product $M\\vec v$ is only defined if $\\vec v\\in \\R^3$. However, the resulting vector $\\vec w=M\\vec v$ is in $\\R^2$ (try an example and verify for yourself). This means matrix-vector multiplication can be used to move vectors between different spaces!",
+    "sha": "5d3b4b9e5f83",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $m\\times n$ matrix and $\\vec x$ be a vector. The matrix-vector product $A\\vec x$ is only defined if $\\vec x$ has $n$ coordinates. In that case, the result is a vector with $m$ coordinates.",
+      "sha": "76a0d70f47eb",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Matrix-Matrix Multiplication",
+    "sha": "85d78a066570",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In many circumstances, we can also multiply two matrices with each other. To do so, we repeatedly apply matrix-vector multiplication. Let $C$ and $A$ be matrices and let $\\vec a_1$, $\\vec a_2$, $\\ldots$, $\\vec a_k$ be the columns of $A$. Then,",
+    "sha": "7db1a82f8fdc",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "CA=C\n\t\t\t\\matc{\\big|&\\big|&&\\big|\\\\[3pt]\n\t\t\t\\vec a_1&\\vec a_2&\\cdots&\\vec a_k\\\\[2pt]\n\t\t\t\\big|&\\big|&&\\big|}\n\t=\n\t\t\t\\matc{\\big|&\\big|&&\\big|\\\\[3pt]\n\t\t\tC\\vec a_1&C\\vec a_2&\\cdots&C\\vec a_k\\\\[2pt]\n\t\t\t\\big|&\\big|&&\\big|}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Here, we “distributed” $C$ into the matrix $A$, creating a new matrix whose columns are $C\\vec a_1$, $C\\vec a_2$, …. Using the row picture to expand each $C\\vec a_i$, we arrive at an explicit formula. Let $\\vec r_1$, $\\vec r_2$, $\\ldots$, $\\vec r_m$ be the rows of $C$. Then,",
+    "sha": "4741fc984fed",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "CA = \n\t\t\t\\matc{\\hdash&\\hspace{-4pt}\\vec r_1&\\hspace{-6pt}\\hdash\\\\\n\t\t\t\t\\hdash&\\hspace{-4pt}\\vec r_2&\\hspace{-6pt}\\hdash\\\\\n\t\t\t\t&\\vdots&\\\\\n\t\t\t\t\\hdash&\\hspace{-4pt}\\vec r_m&\\hspace{-6pt}\\hdash}\n\t\t\t\\matc{\\big|&\\big|&&\\big|\\\\[3pt]\n\t\t\t\\vec a_1&\\vec a_2&\\cdots&\\vec a_k\\\\[2pt]\n\t\t\t\\big|&\\big|&&\\big|}\n\t\t\t=\\matc{\n\t\t\t\t\\vec r_1\\cdot \\vec a_1 &\\vec r_1\\cdot \\vec a_2&\\cdots&\\vec r_1\\cdot \\vec a_k\\\\\n\t\t\t\t\\vec r_2\\cdot \\vec a_1 &\\vec r_2\\cdot \\vec a_2&\\cdots&\\vec r_2\\cdot \\vec a_k\\\\\n\t\t\t\t\\vdots&\\vdots&\\ddots&\\vdots\\\\\n\t\t\t\t\\vec r_m\\cdot \\vec a_1 &\\vec r_m\\cdot \\vec a_2&\\cdots&\\vec r_m\\cdot \\vec a_k\\\\\n\t\t\t}."
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $X=\\mat{1&2&3\\\\0&-1&0}$ and $Y=\\mat{2&3\\\\1&1\\\\1&0}$. Compute $XY$ and $YX$.",
+      "sha": "5450e3994e93",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Computing $XY$ entry by entry, we get the $(1,1)$ entry is $\\mat{1\\\\2\\\\3}\\cdot\\mat{2\\\\1\\\\1}=7$, the $(2,1)$ entry is $\\mat{0\\\\-1\\\\0}\\cdot\\mat{2\\\\1\\\\1}=-1$, and so on. Computing all the entries we get",
+      "sha": "cbe4b5412623",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "XY=\\mat{1&2&3\\\\0&-1&0}\\mat{2&3\\\\1&1\\\\1&0}=\\mat{7&5\\\\-1&-1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Computing $YX$ entry by entry, we get the $(1,1)$ entry is $\\mat{2\\\\3}\\cdot\\mat{1\\\\0}=2$, the $(2,1)$ entry is $\\mat{1\\\\1}\\cdot\\mat{1\\\\0}=1$, and so on. Computing all the entries we get",
+      "sha": "2c19e2acadb2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "YX=\\mat{2&3\\\\1&1\\\\1&0}\\mat{1&2&3\\\\0&-1&0}=\\mat{2&1&6\\\\1&1&3\\\\1&2&3}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "From the previous example, we see that multiplying matrices in different orders can produce different results. Formally we say that matrix multiplication is not *commutative* (in contrast, scalars can be multiplied in any order). This non-commutativity holds even for square matrices\\footnote Of course, it is *possible* that $AB=BA$ for matrices $A$ and $B$. It just doesn't happen very often.. For example,",
+    "sha": "578284e41cf4",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mat{1&1\\\\2&2}\\quad =\\quad \\mat{1&0\\\\0&2}\\mat{1&1\\\\1&1}\\quad \\neq\\quad \\mat{1&1\\\\1&1}\\mat{1&0\\\\0&2} \\quad=\\quad \\mat{1&2\\\\1&2}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Further, for a matrix-matrix multiplication to be possible, the shapes of each matrix must be compatible. Using our knowledge of matrix-vector multiplication, we can deduce that if the matrix-matrix product $CA$ makes sense, then the number of *columns* of $C$ must match the number of *rows* of $A$.",
+    "sha": "12da8316c71e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Writing the shape of two matrices side-by-side allows for a quick compatibility check.",
+    "sha": "4cb5b2bd3efe",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\text{rows of $C$}\\times\\underbrace{\\color{mypink}\\text{columns of $C$}\\qquad\n\t\\text{rows of $A$}}_{\\text{must be equal for $CA$ to exist}}\\times \\text{columns of $A$}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A successful matrix-matrix multiplication will always result in a matrix with the number of rows of the first and the number of columns of the second.",
+    "sha": "5117ed123071",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\underbrace{\t{\\color{mygreen}\\text{rows of $C$}}\\times\\text{columns of $C$}\\qquad\n\t\\text{rows of $A$}\\times {\\color{mygreen}\\text{columns of $A$}}}_{\n\t\t\\text{successful product will be a ${\\color{mygreen}\\text{rows of $C$}}\\!\\times {\\color{mygreen}\\text{columns of $A$}}$ matrix}\n\t\t}"
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be a $2\\times 3$ matrix, let $B$ be a $3\\times 4$ matrix, and let $C$ be a $1\\times 3$ matrix. Determine the shape of the matrices resulting from all possible products of $A$, $B$, and $C$.",
+      "sha": "7e0e2b437266",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For the product of two matrices to exist, the number of columns of the first matrix must equal the number of rows in the second. Therefore, the only matrix products that are possible are $AB$ and $CB$.",
+      "sha": "8662db27dfcc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "$AB$ is the product of a $2\\times 3$ matrix with a $3\\times 4$ matrix, and so will be a $2\\times 4$ matrix.",
+      "sha": "9109b0b3c091",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "$CB$ is the product of a $1\\times 3$ matrix with a $3\\times 4$ matrix, and so will be a $1\\times 4$ matrix.",
+      "sha": "0a8f26f74e4f",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Matrix Algebra",
+    "sha": "d76dbf52f516",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $A$, $B$, and $C$ be $n\\times n$ matrices and let $\\alpha$ be a scalar. We can now write algebraic expressions like",
+    "sha": "cc13ca775995",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A(B+\\alpha C)."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Since the matrices are all $n\\times n$, such expressions are always defined and the results are again $n\\times n$ matrices. We can *almost* treat arithmetic with $n\\times n$ matrices like arithmetic with numbers, save the fact that changing the order of multiplication might change the result. Many familiar properties of arithmetic carry over to matrices. For example, matrix multiplication is both *associative* and *distributive*. That is,",
+    "sha": "c7f51fbcb3fe",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "(AB)C=A(BC)\\qquad\\text{and}\\qquad A(B+C) = AB+AC\\qquad\\text{and}\\qquad (A+B)C=AC+BC."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We're already familiar with the special matrices $I$, the identity matrix, and $\\mathbf 0$, the zero matrix. In terms of matrix algebra, these behave like the numbers $1$ and $0$. That is,",
+    "sha": "0babb9c38eb8",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "IA=AI=A\\qquad \\text{and}\\qquad \\mathbf 0 A = A\\mathbf 0=\\mathbf 0"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "for any compatible square matrix $A$.",
+    "sha": "fa34c4467d93",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To kick it up a level, when working with square matrices, we can define *polynomials* of matrices. Using familiar exponent notation, $A^2=AA$, we can formulate questions like \\beginquote Does the equation $A^2=-I$ have a $2\\times 2$ matrix solution? \\endquote Famously, the equation $x^2=-1$ has no real solutions, but $A^2=-I$ actually does have real $2\\times 2$ matrix solutions (see if you can find one)! In this text we will only scratch the surface of what can be done with matrix algebra, but it's powerful stuff 〔注： Galois theory and representation theory both heavily rely on matrix algebra.〕.",
+    "sha": "bb89213807bf",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Matrix algebra behaves a lot like regular algebra except that the order of multiplication matters and matrices must always have compatible sizes.",
+      "sha": "2fc823416c54",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "More Notation",
+    "sha": "d13523b6bd58",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Linear algebra has many different products: scalar multiplication, dot products, matrix-vector products, and matrix-matrix products, to name a few. To distinguish between these different products, we use different notations.",
+    "sha": "27b06aa08c8f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For matrix-vector and matrix-matrix products, we use *adjacency* to represent multiplication. That is, we write",
+    "sha": "97398bef518f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A\\vec v\\qquad\\text{and}\\qquad AB"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "to indicate a product. Specifically, we do *not* use the symbols “$\\,\\cdot\\,$” or “$\\,\\times\\,$” to represent matrix-vector or matrix-matrix products (these symbols are reserved for the dot product and cross product, respectively).",
+    "sha": "61109aaf689d",
+    "zh": ""
+   }
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each description below, if possible, create a matrix matching the description. Otherwise, explain why such a matrix doesn't exist.",
+      "sha": "81fd11903331",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A $2\\times 2$ diagonal matrix whose entries sum to $-1$.",
+         "sha": "1aa42297ca7b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A $2\\times 2$ symmetric matrix whose entries sum to $-1$.",
+         "sha": "59e03e5ab319",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A $4\\times 2$ symmetric matrix whose entries sum to $-1$.",
+         "sha": "236532b85f5c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A $3\\times 3$ skew-symmetric matrix whose entries sum to $-1$.",
+         "sha": "6039d77f0883",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A $1\\times 4$ matrix $A=[a_{ij}]$ whose entries satisfy $a_{ij}=\\sqrt{i+j}$.",
+         "sha": "69d78460fa7e",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Note: there are many matrices possible.",
+      "sha": "cc7c80fd650c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1&0\\\\0&-2}$",
+         "sha": "773bac70902a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1&1\\\\1&-4}$ or $\\mat{1&0\\\\0&-2}$",
+         "sha": "27ad17b656c4",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Impossible. A symmetric matrix must be square.",
+         "sha": "80af06991542",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Impossible. Let $A=[a_{ij}]$ be a skew symmetric matrix. By definition, $a_{ij}=-a_{ji}$. In particular, the diagonal entries satisfy $a_{kk}=-a_{kk}$ and so must be zero. For every other entry $a_{ij}$ with $i\\neq j$, there exists a corresponding entry $-a_{ji}$. Therefore the sum of all entries must be zero.",
+         "sha": "254fb2daa5bd",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{\\sqrt{2}&\\sqrt{3}&2&\\sqrt{5}}$",
+         "sha": "987fc9b397e9",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Matrix Notation · 练习题 1（上游 book/modules/appendix3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the following matrices $A=\\mat{1 & 0 & 0 \\\\ 1 & 0 & 2 \\\\ 1 & 6 & 5}$, $B=\\mat{2 & 1 & 1 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 3}$, $C=\\mat{1\\\\-1\\\\2}$, and $D=\\mat{0&-2&1}$. For each of the following, (i) determine if the operation is defined, and (ii) compute the result using both the column picture and row picture of multiplication (if applicable).",
+      "sha": "0117879c1630",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$AC$",
+         "sha": "a179ff2638e4",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$2A+B$",
+         "sha": "76ab5d11daa8",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$A-B$",
+         "sha": "d6d5a5848db0",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$CA$",
+         "sha": "e657259c0995",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$AB$",
+         "sha": "57ee5125358c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$BA$",
+         "sha": "d66492998689",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$DC$",
+         "sha": "27e525b776c4",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$CD$",
+         "sha": "0948661e822f",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\5\\\\5}$",
+         "sha": "819da4690e45",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{4&1&1\\\\2&2&4\\\\2&12&13}$",
+         "sha": "6f1d8344b3bf",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{-1&-1&-1\\\\1&-2&2\\\\1&6&2}$",
+         "sha": "d76558132cf6",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not defined",
+         "sha": "815f1f0049cf",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{2&1&1\\\\2&1&7\\\\2&13&16}$",
+         "sha": "33c46cc5828c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{4&6&7\\\\2&0&4\\\\3&18&15}$",
+         "sha": "d98a14e61698",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{4}$",
+         "sha": "525ef06e1756",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{0&-2&1\\\\0&2&-1\\\\0&-4&2}$",
+         "sha": "7f98778d3f24",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Matrix Notation · 练习题 2（上游 book/modules/appendix3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "In general, matrix multiplication is non-commutative. However, some types of matrices are special.",
+      "sha": "f8c7a93334c8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ and $B$ be $2\\times 2$ diagonal matrices and let $X$ and $Y$ be $n\\times n$ diagonal matrices.",
+      "sha": "da18ed810ba6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Show by direct computation that $AB=BA$.",
+         "sha": "0aa1dc3da2a7",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Show that both $XY$ and $YX$ also diagonal matrices.",
+         "sha": "2e7418dfc1f2",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Is it true that $XY=YX$ no matter $n$? Explain.",
+         "sha": "63596dc1d87c",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Matrix Notation · 练习题 3（上游 book/modules/appendix3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Classify the following statements as true or false.",
+      "sha": "ec23b67d3c5a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A matrix in reduced row echelon form is an upper triangular matrix.",
+         "sha": "2a736954a221",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A diagonal matrix is in reduced row echelon form.",
+         "sha": "d94883d71d39",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Every zero matrix is also square.",
+         "sha": "f881093cdd20",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A zero matrix is neither upper or lower triangular.",
+         "sha": "c56bdd41138e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A matrix that is both upper triangular and lower triangular must be diagonal.",
+         "sha": "e25a7a8eb781",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Using row operations every lower triangular matrix can be converted into an upper triangular matrix.",
+         "sha": "a967c0dad53f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The product of two lower triangular matrices is a lower triangular matrix (provided the product is defined).",
+         "sha": "9a5fb074c754",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True",
+         "sha": "88b33e4e12f7",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. Consider $\\mat{0&0\\\\0&1}$.",
+         "sha": "3bd01ac36dcd",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. Zero matrices can be of any size.",
+         "sha": "e289b0a21783",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. All zero matrices are both upper and lower triangular.",
+         "sha": "ac98c2a05204",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. Diagonal matrices must be square; upper/lower triangular matrices can be of any size.",
+         "sha": "7bef51939a65",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True",
+         "sha": "88b33e4e12f7",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True",
+         "sha": "88b33e4e12f7",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Matrix Notation · 练习题 4（上游 book/modules/appendix3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $R$ be a $1\\times n$ matrix and let $C$ be an $n\\times 1$ matrix.",
+      "sha": "88633877350c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Is the product $RC$ defined? If so, what is its shape?",
+         "sha": "f67f6c8dd2c9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Is the product $CR$ defined? If so, what is its shape?",
+         "sha": "905ad8e0bf59",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec r$ be the (only) row vector in $R$ and let $\\vec c$ be the (only) column vector in $C$. Are $\\vec r\\cdot \\vec c$ and $RC$ the same? Explain.",
+         "sha": "ae7adf372680",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec x,\\vec y\\in \\R^n$ and let $R_{\\vec x}$ be the $1\\times n$ matrix with $\\vec x$ as a row vector and let $C_{\\vec y}$ be the $n\\times 1$ matrix with $\\vec y$ as a column vector. The *inner product* of $\\vec x$ and $\\vec y$ is defined to be $R_{\\vec x}C_{\\vec y}$. The *outer product* of $\\vec x$ and $\\vec y$ is defined to be $C_{\\vec y}R_{\\vec x}$.",
+         "sha": "b9ed19aacf1e",
+         "zh": ""
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "How does the inner product of $\\vec x$ and $\\vec y$ relate to the dot product of $\\vec x$ and $\\vec y$?",
+            "sha": "87a66a91979a",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $Q$ be the outer product of $\\vec x$ and $\\vec y$. What does the reduced row echelon form of $Q$ look like?",
+            "sha": "aa26c043e254",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $Q$ be the outer product of $\\vec x$ and $\\vec y$. Show that the columns of $Q$ are always linearly dependent when $n\\geq 2$.",
+            "sha": "98bd92ac48ba",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes. $1\\times 1$",
+         "sha": "8e7ef4bf3a1a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes. $n\\times n$",
+         "sha": "2427ec130dbe",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "They are related but not the same. $\\vec r\\cdot \\vec c$ is a scalar and $RC$ is a $1\\times 1$ matrix.",
+         "sha": "659f67f287d3",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "The inner product of $\\vec x$ and $\\vec y$ is $[\\vec x\\cdot \\vec y]$. That is, it is the $1\\times 1$ matrix with entry $\\vec x\\cdot \\vec y$.",
+            "sha": "58f12ff8df01",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "The reduced row echelon form of $Q$ looks like a (possibly) non-zero row followed by rows of zeros.",
+            "sha": "e27388cfa259",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $y_1,\\ldots, y_n\\in \\R$ be the entries in $\\vec y$. Then the columns of $Q$ are $y_1\\vec x,\\ldots, y_n\\vec x$. These columns are all scalar multiples of the same vector, $\\vec x$, and so are linearly dependent.",
+            "sha": "1fe2aa39308c",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Matrix Notation · 练习题 5（上游 book/modules/appendix3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A $3\\times 3$ matrix is called a *Heisenberg matrix* if it takes the form $\\mat{1&a&c\\\\0&1&b\\\\0&0&1}$ for some $a,b,c\\in\\R$.",
+      "sha": "0a85dc1dbf46",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Show that if $A$ and $B$ are Heisenberg matrices, then so are $AB$ and $BA$.",
+         "sha": "48073eef6fc7",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $A$ and $B$ are Heisenberg matrices, is it always the case that $AB=BA$? Give a proof or a counter example.",
+         "sha": "dc134682d4da",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $X=\\mat{1&a&c\\\\0&1&b\\\\0&0&1}$ and let $Y=\\mat{1&-1&ab-c\\\\0&1&-b\\\\0&0&1}$. Show that $XY=I_{3\\times 3}$.",
+         "sha": "d4836f03cd70",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Multiplying",
+         "sha": "7c4b35628b2b",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{1&a&b\\\\0&1&c\\\\0&0&1}\\mat{1&x&y\\\\0&1&z\\\\0&0&1}\n\t\t\t\t\t\t=\\mat{1&a+x&c+ay+z\\\\0&1&b+y\\\\0&0&1}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "and so two Heisenberg matrices aways multiply together to form another Heisenberg matrix.",
+         "sha": "7e0fe0cd8af8",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "It may be that $AB\\neq BA$. For example",
+         "sha": "4af9d1c75fb3",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{1&2&0\\\\0&1&1\\\\0&0&1}\n\t\t\t\t\t\\mat{1&1&0\\\\0&1&2\\\\0&0&1}\n\t\t\t\t\t\\neq\n\t\t\t\t\t\\mat{1&1&0\\\\0&1&2\\\\0&0&1}\n\t\t\t\t\t\\mat{1&2&0\\\\0&1&1\\\\0&0&1}."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "By multiplying out, we see $XY=I$ (and $YX=I$).",
+         "sha": "a8aa9f8378cc",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Matrix Notation · 练习题 6（上游 book/modules/appendix3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $X$ be a matrix of the form $\\mat{a&-b\\\\b&a}$ for some $a,b\\in\\R$.",
+      "sha": "4a493a8af19c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Show that $X^2$ has the same form as $X$.",
+         "sha": "94a6b9591501",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Is there a solution to the matrix equation $X^2=I_{2\\times 2}$? If so, how many?",
+         "sha": "14b8ac37c5f8",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Is there a solution to the matrix equation $X^2=-I_{2\\times 2}$? If so, how many?",
+         "sha": "a71c60882983",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $Y$ be an arbitrary $2\\times 2$ matrix. How many solutions are there to the equation $Y^2=I_{2\\times 2}$?",
+         "sha": "220360279237",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Do you agree with the statement “every positive real number has exactly two square roots”? Do you agree with the statement “every diagonal matrix with positive entries on the diagonal has exactly two square roots”? Explain.",
+         "sha": "7aeaed532d8a",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Multiplying out, we see",
+         "sha": "3a199b6351e4",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{a&-b\\\\b&a}\\mat{x&-y\\\\y&x}=\\mat{ax-by&-(ay+bx)\\\\ay+bx&ax-by}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "has the required form.",
+         "sha": "fe47a02409b7",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Multiplying, we see",
+         "sha": "451d042dd9f8",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "X^2=\\mat{a&-b\\\\b&a}^2=\\mat{a^2-b^2&-2ab\\\\2ab&a^2-b^2}=\\mat{1&0\\\\0&1}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "implies that $a=0$ or $b=0$. If $a=0$, then $-b^2=1$, which is impossible. Therefore $b=0$. This means $a^2=1$ which has solutions $a=\\pm 1$. Therefore there are exactly two solutions to $X^2=I$.",
+         "sha": "1cb7d47faea5",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Multiplying, we see",
+         "sha": "451d042dd9f8",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "X^2=\\mat{a&-b\\\\b&a}^2=\\mat{a^2-b^2&-2ab\\\\2ab&a^2-b^2}=\\mat{-1&0\\\\0&-1}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "implies that $a=0$ or $b=0$. If $a=b$, then $a^2=-1$, which is impossible. Therefore $a=0$. This means $-b^2=-1$ which has solutions $b=\\pm 1$. Therefore there are exactly two solutions to $X^2=-I$.",
+         "sha": "1344d96e4607",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "There are infinitely many solutions to $Y^2=I$. For example $\\mat{0&t\\\\1/t&0}^2=I$ for any non-zero $t$.",
+         "sha": "37c956079cec",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes to the first, no to the second. Matrices are more general than numbers!",
+         "sha": "ba09e0bc4d13",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Matrix Notation · 练习题 7（上游 book/modules/appendix3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix3-exercises.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "矩阵记号"
+}

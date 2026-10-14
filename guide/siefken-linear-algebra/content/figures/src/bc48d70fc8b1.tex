@@ -1,0 +1,24 @@
+\begin{tikzpicture}[baseline = (current bounding box.north)]
+					\begin{axis}[
+						anchor=origin,
+						disabledatascaling,
+						xmin=-4,xmax=4,
+						ymin=-4,ymax=4,
+						xtick={-4,-2,0,2,4},
+						ytick={-4,-2,0,2,4},
+						x=0.5cm,y=0.5cm,
+						grid=both,
+						grid style={line width=.1pt, draw=gray!10},
+						axis lines=middle,
+						minor tick num=0,
+						enlargelimits={abs=1.0},
+						axis line style={latex-latex},
+						ticklabel style={font=\tiny,fill=white},
+						xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+						ylabel style={at={(ticklabel* cs:1)},anchor=south west}
+					]
+					\end{axis}
+					\foreach \n in {-1,...,1} {
+						\fill [mypink] (\n*2,\n) circle[radius=2pt];
+					}
+				\end{tikzpicture}

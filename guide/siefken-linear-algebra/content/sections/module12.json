@@ -1,0 +1,1888 @@
+{
+ "id": "module12",
+ "title_en": "Inverse Functions & Inverse Matrices",
+ "blocks": [
+  {
+   "k": "outcome",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The definition of an inverse function and an inverse matrix.",
+         "sha": "7deaeb58e76c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How to decompose a matrix into the product of elementary matrices and how to use elementary matrices to compute inverses.",
+         "sha": "16fe6ffddd79",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How the order of matrix multiplication matters.",
+         "sha": "fbe3015cb812",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How row-reduction and matrix inverses relate.",
+         "sha": "7409552ccb36",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We should think of transformations or functions as machines that perform some manipulation of their input and then give an output. This perspective allows us to divide functions into two natural categories: those that can be undone and those that cannot. The official term for a function that can be undone is an *invertible* function.",
+    "sha": "22abd60f7226",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Invertible Functions",
+    "sha": "5dbaef070ba2",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The simplest function is the *identity function*.",
+    "sha": "5be8ffedc6c9",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Identity Function",
+    "sha": "e9634ef12983",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $X$ be a set. The *identity function* with domain and codomain $X$, notated $\\Ident:X\\to X$, is the function satisfying",
+      "sha": "099f38078389",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Ident(x)=x"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for all $x\\in X$.",
+      "sha": "99ff93d72c58",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The identity function is the function that does nothing to its input 〔注： Technically, for every set there exists a unique identity function with that set as the domain/codomain, but we won't belabor this point.〕. When doing precise mathematics, we often prove a function or composition of functions does nothing to its input by showing it is *equal* to the identity function\\footnote This is similar to saying that we know $\\vec x=\\vec y$ if and only if $\\vec x-\\vec y=\\vec 0$..",
+    "sha": "d5e409cc94a6",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In plain terms, a function is invertible if it can be undone. More precisely a function is invertible if there exists an inverse function that when composed with the original function produces the identity function and vice versa.",
+    "sha": "39d3503666ae",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Inverse Function",
+    "sha": "712328f21123",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $f:X\\to Y$ be a function. We say $f$ is *invertible* if there exists a function $g:Y\\to X$ so that $f\\circ g=\\Ident$ and $g\\circ f=\\Ident$. In this case, we call $g$ an *inverse* of $f$ and write",
+      "sha": "0c2869810afb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "f^{-1}=g."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let's consider an example. You have some money in your pockets. Let $l:\\Set{\\text{nickels in left pocket}}\\to \\N$ be the function that adds up the value of all the nickels in your left pocket. Let $r:\\Set{\\text{nickels in either pocket}}\\to \\N$ be the function that adds up the value of all the nickels in both of your pockets. In this case, $l$ would be invertible—if you know that $l(\\text{\\# nickels})=25$, you must have had $5$ nickels in your left pocket. We can write down a formula for $l^{-1}$ as",
+    "sha": "5c5053b65df4",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "l^{-1}(n)=\\frac{n}{5}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "However, $r$ is not invertible. If $r(\\text{\\# nickels})=25$, you *might* have had $5$ nickels in your left pocket, but you might have $3$ nickels in your left pocket and $2$ in your right. We just don't know, so no inverse to $r$ can exist.",
+    "sha": "abbb61dfb3a8",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "What we've just learned is that for a function to be invertible, it must be *one-to-one*.",
+    "sha": "fc9a085da7de",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "One-to-one",
+    "sha": "261f46f06dea",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $f:X\\to Y$ be a function. We say $f$ is *one-to-one* (or *injective*) if distinct inputs to $f$ produce distinct outputs. That is $f(x)=f(y)$ implies $x=y$.",
+      "sha": "e59893d6d745",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Whenever a function $f$ is one-to-one, there exists a function $g$ so that $g\\circ f=\\Ident$. However, this is not enough to declare that $f$ is invertible\\footnote In this situation, we say that $f$ is *left*-invertible. because we also need $f\\circ g=\\Ident$. To ensure this, we need $f$ to be *onto*.",
+    "sha": "bd0c4a897114",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Onto",
+    "sha": "0d76772d8af2",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $f:X\\to Y$ be a function. We say $f$ is *onto* (or *surjective*) if every point in the codomain of $f$ gets mapped to. That is $\\Range(f)=Y$.",
+      "sha": "0bfc641007ae",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Every invertible function is both one-to-one and onto, and every one-to-one and onto function is invertible. And, as we will learn, this has implications for the rank and nullity of linear transformations.",
+    "sha": "189ef3817494",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Invertibility and Linear Transformations",
+    "sha": "4fbea04ec4a5",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let's now focus on linear transformations. We know that a linear transformation $\\mathcal T:\\R^n\\to\\R^m$ is invertible if and only if it is one-to-one and onto.",
+    "sha": "840e398e3eed",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If $\\mathcal T$ is one-to-one, that means that distinct inputs to $\\mathcal T$ yield distinct outputs. In other words, the solution to $\\mathcal T(\\vec x)=\\vec b$ is always unique. But, the set of all solutions to $\\mathcal T(\\vec x)=\\vec b$ can be expressed as",
+    "sha": "d01ef41fcf96",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Null(\\mathcal T)+\\Set{\\vec p}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Therefore, $\\mathcal T$ is one-to-one if and only if $\\Nullity(\\mathcal T)=0$. If $\\mathcal T$ is onto, then $\\Range(\\mathcal T)=\\R^m$ and so $\\Rank(\\mathcal T)=m$.",
+    "sha": "70ac1c1d0017",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Now, suppose $\\mathcal T$ is one-to-one and onto. By the rank-nullity theorem,",
+    "sha": "cd563a088927",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Rank(\\mathcal T)+\\Nullity(\\mathcal T) = 0+m=m=n=\\Dim(\\text{domain of $\\mathcal T$}),"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and so $\\mathcal T$ has the same domain and codomain (at least a domain and codomain of the same dimension).",
+    "sha": "023574b66059",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Using the rank-nullity theorem, we can start developing a list of properties that are equivalent to invertibility of a linear transformation.",
+    "sha": "5ad47ae72b20",
+    "zh": ""
+   }
+  },
+  {
+   "k": "list",
+   "ordered": false,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "$\\mathcal T:\\R^n\\to\\R^m$ is invertible if and only if $\\Nullity(\\mathcal T)=0$ and $\\Rank(\\mathcal T)=m$.",
+       "sha": "52dec867b495",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "$\\mathcal T:\\R^n\\to\\R^m$ is invertible if and only if $m=n$ and $\\Nullity(\\mathcal T)=0$.",
+       "sha": "df0860b9e63c",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "$\\mathcal T:\\R^n\\to\\R^m$ is invertible if and only if $m=n$ and $\\Rank(\\mathcal T)=m$.",
+       "sha": "1e7ff4e68df6",
+       "zh": ""
+      }
+     }
+    ]
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal P:\\R^2\\to\\R^2$ be projection onto the $x$-axis and let $\\mathcal R:\\R^2\\to\\R^2$ be rotation counter-clockwise by $15^\\circ$. Classify each of $\\mathcal P$ and $\\mathcal R$ as invertible or not.",
+      "sha": "c7d6e604757d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Notice that $\\mathcal P(\\yhat)=\\mathcal P(2\\yhat)=\\vec 0$, therefore $\\mathcal P$ is not one-to-one and so is not invertible.",
+      "sha": "a06416e013a8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal Q: \\R^2\\to\\R^2$ be rotation clockwise by $15^\\circ$. $\\mathcal R$ and $\\mathcal Q$ will undo each other. Phrased mathematically,",
+      "sha": "d64d3e9576b6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mathcal R\\circ \\mathcal Q=\\Ident\\qquad\\text{and}\\qquad \\mathcal Q\\circ \\mathcal R=\\Ident."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, $\\mathcal Q$ is an inverse of $\\mathcal R$, and so $\\mathcal R$ is invertible.",
+      "sha": "551bed841b6e",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "One important fact about linear transformations is that if a linear transformation is invertible, its inverse is also a linear transformation.",
+    "sha": "ea55e651a99e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal T$ be an invertible linear transformation. Then $\\mathcal T^{-1}$ is also a linear transformation.",
+      "sha": "dd339a1a4d4e",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal T$ be an invertible linear transformation and let $\\mathcal T^{-1}$ be its inverse. We need to show that (i) $\\mathcal T^{-1}$ distributes over addition and (ii) $\\mathcal T^{-1}$ distributes over scalar multiplication.",
+      "sha": "17132aa1d556",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "First observe that since $\\mathcal T\\circ \\mathcal T^{-1}=\\Ident$ and because $\\mathcal T$ is linear, we have",
+         "sha": "7ac4ceac92da",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vec a+\\vec b = \\mathcal T\\circ \\mathcal T^{-1}\\vec a+\\mathcal T\\circ \\mathcal T^{-1}\\vec b=\n\t\t\t\\mathcal T(\\mathcal T^{-1}\\vec a+ \\mathcal T^{-1}\\vec b)."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Since $\\mathcal T^{-1}\\circ \\mathcal T=\\Ident$, by using the fact that $\\vec a+\\vec b=\\mathcal T(\\mathcal T^{-1}\\vec a+ \\mathcal T^{-1}\\vec b)$ we know",
+         "sha": "8880c4bcf30c",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mathcal T^{-1}(\\vec a+\\vec b) = \n\t\t\t\\mathcal T^{-1}\\Big(\\mathcal T(\\mathcal T^{-1}\\vec a+ \\mathcal T^{-1}\\vec b)\\Big)=\n\t\t\t\\mathcal T^{-1}\\vec a+ \\mathcal T^{-1}\\vec b."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Similar to the proof of (i), we see",
+         "sha": "f2720075aae8",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mathcal T^{-1}(\\alpha\\vec a) = \\mathcal T^{-1}\\Big(\\alpha \\big(\\mathcal T\\circ \\mathcal T^{-1}\\vec a\\big)\\Big)\n\t\t\t=\\mathcal T^{-1}\\circ \\mathcal T(\\alpha \\mathcal T^{-1}\\vec a) = \\alpha\\mathcal T^{-1}\\vec a."
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Invertibility and Matrices",
+    "sha": "fe2a243b2d1d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In the world of matrices, the *identity matrix* takes the place of the identity function.",
+    "sha": "0ee7443dd054",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Identity Matrix",
+    "sha": "c8c548935fe1",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "An *identity matrix* is a square matrix with ones on the diagonal and zeros everywhere else. The $n\\times n$ identity matrix is denoted $I_{n\\times n}$, or just $I$ when its size is implied.",
+      "sha": "0eb66342256d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can now define what it means for a matrix to be invertible 〔注： This should look very similar to what it means for a function to be invertible.〕.",
+    "sha": "df1f9448dab2",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Matrix Inverse",
+    "sha": "ed67dccb0e17",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The *inverse* of a matrix $A$ is a matrix $B$ such that $AB=I$ and $BA=I$. In this case, $B$ is called the inverse of $A$ and is notated $A^{-1}$.",
+      "sha": "fa0d9fe198f1",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine whether the matrices $A=\\mat{2&5\\\\-3&-7}$ and $B=\\mat{-7&-5\\\\3&2}$ are inverses of each other.",
+      "sha": "d0e1edc1965c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}AB &=\\mat{2&5\\\\-3&-7}\\mat{-7&-5\\\\3&2} =\\mat{1&0\\\\0&1} = I\\\\\n\t    BA &=\\mat{-7&-5\\\\3&2}\\mat{2&5\\\\-3&-7} =\\mat{1&0\\\\0&1} = I .\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, $A$ and $B$ are inverses of each other.",
+      "sha": "cc2811332b5a",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine whether the matrices $A=\\mat{2&5&0\\\\-3&-7&0}$ and $B=\\mat{-7&-5\\\\3&2\\\\1&1}$ are inverses of each other.",
+      "sha": "752569da08ce",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "AB =\\mat{2&5&0\\\\-3&-7&0}\\mat{-7&-5\\\\3&2\\\\1&1}=\\mat{1&0\\\\0&1}=I"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "but",
+      "sha": "786e97b3ee9f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "BA =\\mat{-7&-5\\\\3&2\\\\1&1}\\mat{2&5&0\\\\-3&-7&0}=\\mat{1&0&0\\\\0&1&0\\\\-1&-2&0}\\neq I."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, $A$ and $B$ are not inverses of each other.",
+      "sha": "29947605d9b9",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Since every matrix induces a linear transformation, we can use the facts we know about invertible linear transformations to produce facts about invertible matrices. In particular:",
+    "sha": "c754d3bbe8fa",
+    "zh": ""
+   }
+  },
+  {
+   "k": "list",
+   "ordered": false,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "An $n\\times m$ matrix $A$ is invertible if and only if $\\Nullity(A)=0$ and $\\Rank(A)=n$.",
+       "sha": "11478972f794",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "An $n\\times n$ matrix $A$ is invertible if and only if $\\Nullity(A)=0$.",
+       "sha": "d1319227fe2f",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "An $n\\times n$ matrix $A$ is invertible if and only if $\\Rank(A)=n$.",
+       "sha": "78555923e38c",
+       "zh": ""
+      }
+     }
+    ]
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Matrix Algebra",
+    "sha": "d76dbf52f516",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The linear equation $ax=b$ has solution $x=\\frac{b}{a}$ whenever $a\\neq 0$. We arrive at this solution by dividing both sides of the equation by $a$. Does a similar process exist for solving the matrix equation $A\\vec x=\\vec b$? It sure does!",
+    "sha": "f753a9eee0d7",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Unfortunately, we cannot divide by a matrix, but to solve $A\\vec x=\\vec b$, we don't need to “divide” by a matrix, we just need to eliminate $A$ from the left side. This could be accomplished by using an inverse.",
+    "sha": "aab17028a5b6",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Suppose $A$ is invertible, then",
+    "sha": "ca0a320f9531",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A\\vec x=\\vec b\\qquad\\implies\\qquad A^{-1}A\\vec x=A^{-1}\\vec b\\qquad\\implies\\qquad \\vec x=A^{-1}\\vec b."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Thus, if we have the inverse of a matrix handy, we can use it to solve a system of equations.",
+    "sha": "59154574ae1a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use the fact that $\\mat{2&5\\\\-3&-7}^{-1}=\\mat{-7&-5\\\\3&2}$ to solve the system $\\begin{aligned}2x+5y &= 2 \\\\ -3x-7y &= 1\\end{aligned}$.",
+      "sha": "0346db95abe6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The system can be rewritten as",
+      "sha": "2a9e8d9a246e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{2&5\\\\-3&-7}\\mat{x\\\\y}=\\mat{2\\\\1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Multiplying both sides by $\\mat{2&5\\\\-3&-7}^{-1}$ gives",
+      "sha": "5bc82aa73904",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{x\\\\y}=\\mat{2&5\\\\-3&-7}^{-1}\\mat{2\\\\1}=\\mat{-7&-5\\\\3&2}\\mat{2\\\\1}=\\mat{-19\\\\8}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It's important to note that, unlike in the case with regular scalars, the order of matrix multiplication matters. So, whereas with scalars you could get away with something like",
+    "sha": "44f2b5efc691",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "ax=b \\qquad\\implies \\qquad \\tfrac{1}{a}ax=b\\tfrac{1}{a}\\qquad\\implies \\qquad x=\\tfrac{b}{a},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "with matrices $A\\vec x=\\vec b$ *does not imply* $A^{-1}A\\vec x=\\vec b A^{-1}$. In fact, if $\\vec b$ is a column vector, the expression $\\vec bA^{-1}$ is almost always undefined!",
+    "sha": "7c26939cd175",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Finding a Matrix Inverse",
+    "sha": "67d996502981",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Whereas before we only knew how to solve a matrix equation $A\\vec x=\\vec b$ using row reduction, we now know how to use $A^{-1}$ to solve the same system. In fact, $A^{-1}$ is the exact matrix so that $\\vec x=A^{-1}\\vec b$ is the solution to $A\\vec x=\\vec b$. Therefore, by picking different $\\vec b$'s and solving for $\\vec x$, we can find $A^{-1}$.",
+    "sha": "ca349056d2af",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\mat{2&5\\\\-3&-7}$. Find $A^{-1}$.",
+      "sha": "2ff1cb17fb35",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We know $A^{-1}=\\mat{a&b\\\\c&d}$ will be a $2\\times 2$ matrix, and we know $\\vec x=A^{-1}\\vec b$ will always be the unique solution to $A\\vec x=\\vec b$. Therefore, we can find $A^{-1}$ by finding $\\vec x,\\vec b$ pairs that satisfy $A\\vec x=\\vec b$.",
+      "sha": "2ece35b7b4bd",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Using row reduction, we see",
+      "sha": "9824d9061a37",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A\\vec x=\\mat{1\\\\0}\\quad\\text{has solution}\\quad \\vec x=\\mat{-7\\\\3}, \n\t\t\\qquad\\text{and}\n\t\t\\qquad\n\t\tA\\vec x=\\mat{0\\\\1}\\quad\\text{has solution}\\quad \\vec x=\\mat{-5\\\\2}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore",
+      "sha": "f6f36ec125f2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A^{-1}\\mat{1\\\\0}=\\mat{a\\\\c}=\\mat{-7\\\\3}\\qquad \\text{and}\\qquad\n\t\tA^{-1}\\mat{0\\\\1}=\\mat{b\\\\d}=\\mat{-5\\\\2},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so",
+      "sha": "9af790b3a93d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A^{-1}=\\mat{-7&-5\\\\3&2}."
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Elementary Matrices",
+    "sha": "3677be65ec96",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Finding the inverse of a matrix can be a lot of work. However if you already know how to undo what the matrix does, finding the inverse might not be so hard. For example, if $R_{30}$ is the matrix that rotates vectors in $\\R^2$ counter-clockwise by $30^\\circ$, its inverse must be $R_{-30}$, the matrix that rotates vectors in $\\R^2$ *clockwise* by $30^\\circ$.",
+    "sha": "f0f338358947",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Like before when we analyzed linear transformations by breaking them up into compositions of simpler linear transformations, another strategy for finding an inverse matrix is to break a matrix into simpler ones whose inverses we can just write down.",
+    "sha": "7f51a7c9e4c7",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Some of the simplest matrices around are the *elementary matrices*.",
+    "sha": "705f2204704b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Elementary Matrix",
+    "sha": "f1b201eb3321",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A matrix is called an *elementary matrix* if it is an identity matrix with a single elementary row operation applied.",
+      "sha": "74aa70888cdf",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Examples of elementary matrices include",
+    "sha": "6c3969e3e0aa",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mat{1&0&0\\\\0&1&0\\\\0&0&-5}\\qquad\n\t\\mat{1&0&7\\\\0&1&0\\\\0&0&1}\\qquad\n\t\\mat{0&1&0\\\\1&0&0\\\\0&0&1}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "These matrices are obtained from the row operations “multiply the last row by $-5$”, “add $7$ times the last row to the first”, and “swap the first two rows”.",
+    "sha": "c3fe7e9be4df",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Elementary matrices are useful because multiplying by an elementary matrix performs the corresponding elementary row operation! See for yourself:",
+    "sha": "434ed11d74e4",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}\\mat{1&0&0\\\\0&1&0\\\\0&0&-5}\n\t\\mat{a&b&c\\\\d&e&f\\\\g&h&i}\n\t&=\n\t\\mat{a&b&c\\\\d&e&f\\\\-5g&-5h&-5i}\n\\\\\n\t\\mat{1&0&7\\\\0&1&0\\\\0&0&1}\n\t\\mat{a&b&c\\\\d&e&f\\\\g&h&i}\n\t&=\n\t\\matc{a+7g&b+7h&c+7i\\\\d&e&f\\\\g&h&i}\n\\\\\n\t\\mat{0&1&0\\\\1&0&0\\\\0&0&1}\n\t\\mat{a&b&c\\\\d&e&f\\\\g&h&i}\n\t&=\n\t\\mat{d&e&f\\\\a&b&c\\\\g&h&i}\\end{aligned}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "As a refresher, the elementary row operations are:",
+    "sha": "47928c66871c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "list",
+   "ordered": false,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "multiply a row by a non-zero constant;",
+       "sha": "5081afb19d3a",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "add a multiple of one row to another; and",
+       "sha": "9bffa691aca3",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "swap two rows.",
+       "sha": "2f69845d0019",
+       "zh": ""
+      }
+     }
+    ]
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Each one of these operations can be undone, and so every elementary matrix is invertible. What's more, the inverse is another elementary matrix that is easy to write down.",
+    "sha": "c959dd73811d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the inverse of $E= \\mat{1&0&7\\\\0&1&0\\\\0&0&1}$.",
+      "sha": "9c3f48747ef3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $E$ corresponds to the row operation “add $7$ times the last row to the first”, $E^{-1}$ must correspond to the row operation “subtract $7$ times the last row from the first”. Therefore,",
+      "sha": "e2204fb73c17",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "E^{-1}=\\mat{1&0&-7\\\\0&1&0\\\\0&0&1}."
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Elementary Matrices and Inverses",
+    "sha": "ecdcec0e04cb",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For a matrix $M$ to be invertible, we know that $M$ must be square and $\\Nullity(M)=0$. That means, $M$ is invertible if and only if $\\Rref(M)=I$. In other words, $M$ is invertible if there is a sequence of elementary row operations that turn $M$ into $I$. Each one of these row operations can be represented by an elementary matrix, which gives us the following theorem.",
+    "sha": "d1cf9abe3176",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A matrix $M$ is invertible if and only if there are elementary matrices $E_1,\\ldots, E_k$ so that",
+      "sha": "10f9011c7bc1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "E_k\\cdots E_2E_1M=I."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Now, suppose $M$ is invertible and let $E_1,\\ldots,E_k$ be elementary matrices so that $E_k\\cdots E_2E_1M=I$. We now know",
+    "sha": "c71ef88a22db",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "E_k\\cdots E_2E_1M=\\underbrace{(E_k\\cdots E_2E_1)}_QM=QM=I."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If we can argue that $MQ=I$, then $Q$ will be the inverse of $M$!",
+    "sha": "3d641772b81c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If $A$ is a square matrix and $AB=I$ for some matrix $B$, then $BA=I$.",
+      "sha": "2aeaab7220a9",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $A$ is a square matrix and that $AB=I$. Since $AB=I$, $B$ must also be square. Since $\\Null(B)\\subseteq\\Null(AB)$, we know $\\Nullity(B)\\leq \\Nullity(AB)=\\Nullity(I)=0$, and so $B$ is invertible (since it's a square matrix whose nullity is $0$). Let $B^{-1}$ be the inverse of $B$. Observe now that",
+      "sha": "2107590ed456",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=AI=A(BB^{-1})=(AB)B^{-1}=IB^{-1}=B^{-1},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so $A=B^{-1}$. Finally, substituting $B^{-1}$ for $A$ shows",
+      "sha": "db0b89e55f2a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "BA=BB^{-1}=I."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In light of this theorem, we now have a new algorithm for finding the inverse of a matrix—find elementary matrices that turn the matrix into the identity matrix and multiply those elementary matrices together to find the inverse.",
+    "sha": "9c116d7372d9",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\mat{1&2&0\\\\0&4&0\\\\0&-1&1}$. Find $A^{-1}$ using elementary matrices.",
+      "sha": "9d8b2f6a4048",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We can row-reduce $A$ with the following steps:",
+      "sha": "76363de45842",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{1&2&0\\\\0&4&0\\\\0&-1&1}\\to \\mat{1&2&0\\\\0&1&0\\\\0&-1&1}\\to \\mat{1&0&0\\\\0&1&0\\\\0&-1&1}\\to \\mat{1&0&0\\\\0&1&0\\\\0&0&1}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The elementary matrices corresponding to these steps are",
+      "sha": "7bc921bdad81",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "E_1=\\mat{1&0&0\\\\0&\\frac{1}{4}&0\\\\0&0&1} \\qquad E_2=\\mat{1&-2&0\\\\0&1&0\\\\0&0&1}\\qquad E_3=\\mat{1&0&0\\\\0&1&0\\\\0&1&1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We now have",
+      "sha": "ed21e57020f0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "E_3 E_2 E_1 A = I,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so",
+      "sha": "9af790b3a93d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A^{-1}=E_3 E_2 E_1 = \\mat{1&0&0\\\\0&1&0\\\\0&1&1}\\mat{1&-2&0\\\\0&1&0\\\\0&0&1}\\mat{1&0&0\\\\0&\\frac{1}{4}&0\\\\0&0&1} = \\mat{1&-\\frac{1}{2}&0\\\\ 0&\\frac{1}{4}&0\\\\ 0&\\frac{1}{4}&1}."
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Decomposition into Elementary Matrices",
+    "sha": "c0cfbd7bbc2e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If $A$ is an invertible matrix, then the double-inverse of $A$ (i.e., $(A^{-1})^{-1}$) is $A$ itself 〔注： Formally we say that the operation of taking a matrix inverse is an *involution*.〕. This is easily proved. By definition, $(A^{-1})^{-1}$ is a matrix $B$ so that $BA^{-1}=I$ and $A^{-1}B=I$. But $B=A$ satisfies this condition!",
+    "sha": "d8f02da55bba",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Now, suppose $M$ is an invertible matrix. Then, there exists a sequence of elementary matrices $E_1,\\ldots, E_k$ so that $E_k\\cdots E_2E_1M=I$ and",
+    "sha": "f5aaf0fb4b03",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "M^{-1}=E_k\\cdots E_2E_1."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Therefore",
+    "sha": "f6f36ec125f2",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "M=(M^{-1})^{-1} = (E_k\\cdots E_2E_1)^{-1}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Thinking carefully about what $(E_k\\cdots E_2E_1)^{-1}$ should be, we see that",
+    "sha": "2e6904e31ffc",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "(E_1^{-1}E_2^{-1}\\cdots E_k^{-1})E_k\\cdots E_2E_1=I\\qquad\\text{and}\\qquad E_k\\cdots E_2E_1(E_1^{-1}E_2^{-1}\\cdots E_k^{-1})=I,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and so",
+    "sha": "9af790b3a93d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "M=(E_k\\cdots E_2E_1)^{-1}=E_1^{-1}E_2^{-1}\\cdots E_k^{-1}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "(Notice the order of matrix multiplication reversed!) Each $E_i^{-1}$ is also an elementary matrix, and so we have just shown that every invertible matrix can be written as the product of elementary matrices. This is actually a double-sided implication (if and only if).",
+    "sha": "b4ec3a4b10cb",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A matrix $M$ is invertible if and only if it can be written as the product of elementary matrices.",
+      "sha": "a6b3b7f3c1fc",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $M$ is invertible. Then, there exists a sequence of elementary matrices $E_1,\\ldots,E_k$ so that $E_k\\cdots E_1M=I$. It follows that",
+      "sha": "b419da2b6fa8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "M=E_1^{-1}E_2^{-1}\\cdots E_k^{-1}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is the product of elementary matrices. Conversely, since the product of invertible matrices is invertible and every elementary matrix is invertible, the product of elementary matrices must be invertible. Therefore, if $M$ is not invertible, it *cannot* be written as the product of elementary matrices.",
+      "sha": "1778e160b3a2",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine whether the following linear transformations are one-to-one, onto, or both. As well, determine whether or not they are invertible. Justify your answers.",
+      "sha": "a6079cdf38ef",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal S:\\R^{2}\\to\\R^{2}$, where $\\mathcal S$ is the linear transformation that doubles every vector.",
+         "sha": "43ad548690dd",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal R:\\R^{2}\\to\\R^{2}$, where $\\mathcal R$ the linear transformation that rotates every vector clockwise by $72^{\\circ}$.",
+         "sha": "64970bec81e4",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal P:\\R^{2}\\to\\R^{2}$, where $\\mathcal P$ the linear transformation that projects every vector onto the $y$-axis.",
+         "sha": "ef205fdfbd05",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal F:\\R^{2}\\to\\R^{2}$, where $\\mathcal F$ is the linear transformation that reflects every vector over the line $y=x$.",
+         "sha": "47a956bd2670",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal T:\\R^{3}\\to\\R^{3}$, where $\\mathcal T$ is the linear transformation induced by the matrix $M_{\\mathcal T} = \\mat{1&2&3\\\\4&5&6\\\\7&8&9}$.",
+         "sha": "4723398931c7",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal U:\\R^{3}\\to\\R^{2}$, where $\\mathcal U$ is the linear transformation induced by the matrix $M_{\\mathcal U} = \\mat{1&2&3\\\\3&4&5}$.",
+         "sha": "c32d1daf6b2c",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal S$ is both one-to-one and onto. No two distinct vectors can be doubled to become the same vector, thus the transformation is one-to-one. Every vector is double of the vector that is half of itself, thus the transformation is onto. $\\mathcal S$ is invertible, its inverse is the transformation that halves every vector.",
+         "sha": "1fef1cfb79bf",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal R$ is both one-to-one and onto. No two distinct vectors can be rotated by $72^{\\circ}$ clockwise to become the same vector, thus the transformation is one-to-one. Every vector is the $72^{\\circ}$ clockwise rotation of the vector that is the $72^{\\circ}$ counter-clockwise rotation of itself, thus the transformation is onto. $\\mathcal R$ is invertible, its inverse is the transformation that rotates every vector counter-clockwise by $72^{\\circ}$.",
+         "sha": "bc94b66416b1",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal P$ is neither one-to-one nor onto. Every vector on the x-axis is sent to the origin so there are distinct inputs that do not map to distinct outputs, thus the transformation is not one-to-one. Vectors that do not lie on the y-axis are not in the range of the transformation, thus the transformation is not onto. $\\mathcal P$ is not invertible.",
+         "sha": "fa3688c4a5fc",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal F$ is both one-to-one and onto. No two distinct vectors can be reflected to become the same vector, thus the transformation is one-to-one. Every vector is the reflection of the vector that is the reflection of itself, thus the transformation is onto. $\\mathcal F$ is invertible, its inverse is itself—the reflection about the line $y=x$.",
+         "sha": "eb4a2970d393",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal T$ is neither one-to-one nor onto. The RREF of $M_{\\mathcal T}$ is $\\mat{1&0&-1\\\\0&1&0\\\\0&0&0}$. $\\Rank(\\mathcal T)$ = $\\Rank(M_{\\mathcal T})$ = 2. by the rank-nullity theorem the nullity is 1. An entire line of vectors is getting mapped to $\\vec{0}$ so there are distinct inputs that do not map to distinct outputs, thus the transformation is not one-to-one. The range of $\\mathcal T$ = the column space of $M_{\\mathcal T}$ which is not all of $\\R^{3}$, Thus the transformation is not onto. $\\mathcal T$ is not invertible.",
+         "sha": "47ac44671d67",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal U$ is onto but is not one-to-one. Because $\\mathcal U$ maps from $\\R^{3}$ to $\\R^{2}$, the rank is at most 2, so by the Rank-Nullity Theorem, the nullity must be at least 1. More than one vector is getting mapped to $\\vec{0}$ so there are distinct inputs that do not map to distinct outputs, thus the transformation is not one-to-one. Since $\\Rref(M_{\\mathcal U})$ is $\\mat{1&0&-1\\\\0&1&2}$. $\\Rank(\\mathcal U)=\\Rank(M_{\\mathcal U})=2$, which is the dimension of the codomain, thus the transformation is onto. $\\mathcal U$ is not invertible.",
+         "sha": "ffb7d93a5401",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Inverse Functions & Inverse Matrices · 练习题 1（上游 book/modules/module12-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module12-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Invert the following matrices or explain why they are not invertible.",
+      "sha": "2d4abd8ed2f4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$M_{1} = \\mat{2&3\\\\1&-1}$",
+         "sha": "accc26ef20fb",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$M_{2} = \\mat{1&0\\\\1&0}$",
+         "sha": "fdf3cb193469",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$M_{3} = \\mat{0&2&1\\\\1&0&1\\\\-2&3&0}$",
+         "sha": "8898042e3f39",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$M_{4} = \\mat{2&0&1&8\\\\1&-5&2&2\\\\3&-1&0&7}$",
+         "sha": "9cb32a699e70",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$M_{5} = \\mat{0&-3&1&2\\\\1&0&-1&1\\\\2&-1&0&0\\\\0&0&1&3}$",
+         "sha": "46f393c9a88b",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "To find the inverse we row reduce $M_{1}$, applying each of the row operations to the identity matrix.",
+         "sha": "e2fc9bc5979e",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{cc|cc} 2&3&1&0\\\\ 1&-1&0&1\\\\ \\end{array}\\right]$",
+         "sha": "1e9098c5510b",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{cc|cc} 1&\\frac{3}{2}&\\frac{1}{2}&0\\\\ 1&-1&0&1\\\\ \\end{array}\\right]$",
+         "sha": "319b8b7e6daf",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{cc|cc} 1&\\frac{3}{2}&\\frac{1}{2}&0\\\\ 0&-\\frac{5}{2}&-\\frac{1}{2}&1\\\\ \\end{array}\\right]$",
+         "sha": "bbc1c369eca5",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{cc|cc} 1&\\frac{3}{2}&\\frac{1}{2}&0\\\\ 0&1&\\frac{1}{5}&-\\frac{2}{5}\\\\ \\end{array}\\right]$",
+         "sha": "7dd34847705e",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{cc|cc} 1&0&\\frac{1}{5}&\\frac{3}{5}\\\\ 0&1&\\frac{1}{5}&-\\frac{2}{5}\\\\ \\end{array}\\right]$",
+         "sha": "9f64c82bfc53",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "So $M_{1}^{-1}=\\mat{\\frac{1}{5}&\\frac{3}{5}\\\\ \\frac{1}{5}&-\\frac{2}{5}\\\\}$.",
+         "sha": "246531ea72a1",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$M_{2}$ does not row reduce to the identity matrix so it is not invertible.",
+         "sha": "7b1cec9a9c8e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$M_{3}^{-1}=\\mat{3&-3&-2\\\\2&-2&-1\\\\-3&4&2}$",
+         "sha": "f1e4e77d73e4",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$M_{4}$ is not invertible because it is not a square matrix.",
+         "sha": "2e459af95b13",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$M_{5}^{-1}=\\frac{1}{23}\\mat{-4&-1&12&3\\\\-8&-2&1&6\\\\-3&-18&9&8\\\\1&6&-3&5}$",
+         "sha": "34a36d5655ae",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Inverse Functions & Inverse Matrices · 练习题 2（上游 book/modules/module12-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module12-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Solve the following systems in two ways: (i) by using row reduction, and (ii) by using inverse matrices.",
+      "sha": "be319b574574",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\begin{aligned}2x+y &= 5 \\\\ 3x+7y &= 3\\end{aligned}$",
+         "sha": "0997b69b41c9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\begin{aligned}2x+2y+3z &= 4 \\\\ 2x+2y+z &= 0 \\\\ 4x+5y+6z &= 2\\end{aligned}$",
+         "sha": "0a17aaf42024",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Inverse Functions & Inverse Matrices · 练习题 3（上游 book/modules/module12-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module12-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\mat{1&3&5\\\\0&2&0\\\\-1&0&2}$.",
+      "sha": "8adb1eac4879",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Express $A^{-1}$ as the product of elementary matrices.",
+         "sha": "c860e9d36bff",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Express $A$ as the product of elementary matrices.",
+         "sha": "0e34f2cd097f",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Inverse Functions & Inverse Matrices · 练习题 4（上游 book/modules/module12-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module12-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each statement below, determine whether it is true or false. Justify your answer.",
+      "sha": "e3b37b865c04",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "For an arbitrary linear transformation $T:\\R^{m}\\to\\R^{n}$, if $n \\neq m$, then the linear transformation is not invertible.",
+         "sha": "5541ffd6dcb7",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The matrix $M = \\mat{1&0&0\\\\1&1&0}$ is an elementary matrix.",
+         "sha": "b1a2aed723eb",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Every elementary matrix is invertible.",
+         "sha": "797aedcdffb7",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The product of elementary matrices is sometimes an elementary matrix.",
+         "sha": "d59ee31c77a9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The product of elementary matrices is always an elementary matrix.",
+         "sha": "2b47331cdab7",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A matrix that induces an invertible linear transformation is necessarily invertible.",
+         "sha": "1ae74c430963",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A transformation that is one-to-one and onto is always invertible.",
+         "sha": "92d6449ebb7a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "For two matricies $A$ and $B$, if $AB=I$, then $A$ and $B$ are invertible.",
+         "sha": "4513a7d89cf1",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True. If $m<n$ then $T$ cannot be onto. If $m>n$ then $T$ cannot be one-to-one. In both cases, $T$ cannot be invertible. We may conclude that the dimension of the domain and codomain must be equal in order for a transformation to be invertible.",
+         "sha": "e8e3b75dbe43",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. Elementary matricies are one row operation away from the identity matrix. The identity matrix of any size is always square. There is no identity matrix such that performing one row operation on it yields $M$. We may conclude that elementary matricies are always square.",
+         "sha": "4b58e9daa782",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True. The inverse of an elementary matrix $E$ is another elementary matrix $E^{-1}$ which corresponds to the row operation that turns $E$ into the identity matrix. $E^{-1}$ is the “opposite\" row operation.",
+         "sha": "dd8393fa3892",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True. Let $E_{1}$ correspond to multiplying row 1 by 4. Let $E_{2}$ correspond to multiplying row 1 by 2. The product $E_{2}E_{1}$ corresponds to multiplying row 1 by 8, which is also a single row operation and thus has a corresponding elementary matrix.",
+         "sha": "bea5be1faedf",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. Let $E_{1}$ correspond to multiplying row 1 by 4. Let $E _{2}$ correspond to multiplying row 2 by 2. The product $E_{2}E_{1}$ corresponds to multiplying row 1 by 4 and row 2 by 2, which is not a single row operation and thus does not have a corresponding elementary matrix.",
+         "sha": "c2be1ec2aa14",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True.",
+         "sha": "9306de2f79be",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True.",
+         "sha": "9306de2f79be",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. Let $A = \\mat{1&0&0\\\\0&1&0}$. Let $B = \\mat{1&0\\\\0&1\\\\0&0}$. $AB = I$. $BA = \\mat{1&0&0\\\\0&1&0\\\\0&0&0}\\neq I$. $A$ and $B$ are not invertible. It is required that $AB = BA = I$ in order for matrices $A$ and $B$ to be invertible.",
+         "sha": "bd01aebef083",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Inverse Functions & Inverse Matrices · 练习题 5（上游 book/modules/module12-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module12-exercises.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "逆函数与逆矩阵"
+}

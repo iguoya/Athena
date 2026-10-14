@@ -1,0 +1,3021 @@
+{
+ "id": "module3",
+ "title_en": "Spans, Translated Spans, and Linear Independence/Dependence",
+ "blocks": [
+  {
+   "k": "outcome",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The definition of span and how to visualize spans.",
+         "sha": "8f613aa2543f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How to express lines/planes/volumes through the origin as spans.",
+         "sha": "a4e0c86f28c5",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How to express lines/planes/volumes *not* through the origin as *translated* spans using set addition.",
+         "sha": "b63cb7135794",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Geometric and algebraic definitions of linear independence and linear dependence.",
+         "sha": "696238ac124b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How to find linearly independent subsets.",
+         "sha": "0ac4118889dc",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\vec u=\\mat{1\\\\1}$ and $\\vec v=\\mat{1\\\\-2}$. Can the vector $\\vec w=\\mat{2\\\\5}$ be obtained as a linear combination of $\\vec u$ and $\\vec v$?",
+    "sha": "f9e86af28a42",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "By drawing a picture, the answer appears to be *yes*.",
+    "sha": "6dc18ca9c948",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "07f96f4601d1"
+   ],
+   "caption": null
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "100fc458c432"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Algebraically, we can use the definition of a *linear combination* to set up a system of equations. We know $\\vec w$ can be expressed as a linear combination of $\\vec u$ and $\\vec v$ if and only if the vector equation",
+    "sha": "a0ac3b25f9cc",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec w = \\mat{2\\\\5}=\\alpha\\mat{1\\\\1}+\\beta\\mat{1\\\\-2}=\\alpha \\vec u+\\beta \\vec v"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "has a solution. By inspection, we see $\\alpha=3$ and $\\beta=-1$ solve this equation.",
+    "sha": "071946c0c4d9",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "After initial success, we might ask the following: \\emphwhat are all the locations in $\\R^2$ that can be obtained as a linear combination of $\\vec u$ and $\\vec v$? Geometrically, it appears any location can be reached. To verify this algebraically, consider the vector equation",
+    "sha": "44e3df2427ec",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec x=\\mat{x\\\\y} = \\alpha\\mat{1\\\\1}+\\beta\\mat{1\\\\-2} = \\alpha\\vec u+\\beta\\vec v."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Here $\\vec x$ represents an arbitrary point in $\\R^2$. If equation 〔引用〕 always has a solution 〔注： The official terminology would be to say that the equations are always *consistent*.〕, any vector in $\\R^2$ can be obtained as a linear combination of $\\vec u$ and $\\vec v$.",
+    "sha": "bb80ca2eaff1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can solve this equation for $\\alpha$ and $\\beta$ by considering the equations arising from the first and second coordinates. Namely,",
+    "sha": "44e17267c27c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}x &= \\alpha + \\beta \\\\\n\ty &= \\alpha - 2\\beta\\end{aligned}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Subtracting the second equation from the first, we get $x-y=3\\beta$ and so $\\beta=(x-y)/3$. Plugging $\\beta$ into the first equation and solving, we get $\\alpha=(2x+y)/3$. Thus, equation 〔引用〕 *always* has the solution",
+    "sha": "9146bdb62da1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}\\alpha &= \\tfrac{1}{3}(2x+y)\\\\\n\t\\beta &= \\tfrac{1}{3}(x-y).\\end{aligned}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There is a formal term for the set of vectors that can be obtained as linear combinations of others: *span*.",
+    "sha": "e6ef4601c43e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Span",
+    "sha": "080e88efe900",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The *span* of a set of vectors $V$ is the set of all linear combinations of vectors in $V$. That is, \\begindmath* \\Span V = \\Set\\vec v \\given \\vec v= \\alpha_1\\vec v_1+\\alpha_2\\vec v_2 + \\cdots +\\alpha_n\\vec v_n \\allowbreak for some \\allowbreak \\vec v_1,\\vec v_2,…,\\vec v_n\\in V and scalars \\alpha_1,\\alpha_2,…,\\alpha_n. \\enddmath*",
+      "sha": "d44c4ec41e9e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Additionally, we define $\\Span\\Set{} = \\Set{\\vec 0}$.",
+      "sha": "c2d9b7bd781f",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We just showed above that $\\Span\\Set{\\mat{1\\\\1},\\mat{1\\\\-2}}=\\R^2$. Alternatively, we may use span as a verb and say the set $\\Set{\\mat{1\\\\1},\\mat{1\\\\-2}}$ *spans* $\\R^2$.",
+    "sha": "a86dbe70eccf",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec u=\\mat{-1\\\\2}$ and $\\vec v=\\mat{1\\\\-2}$. Find $\\Span\\Set{\\vec u,\\vec v}$.",
+      "sha": "ba310ec4d976",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By the definition of span,",
+      "sha": "845b2554f1e4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Span\\Set{\\vec u,\\vec v}=\n\t\t\\Set{\\vec x\\given \\vec x=\\alpha\\vec u+\\beta\\vec v\\text{ for some }\\alpha,\\beta\\in\\R}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We need to determine for which $x$ and $y$ the vector equation $\\mat{x\\\\y} = \\alpha\\mat{-1\\\\2}+\\beta\\mat{1\\\\-2}$ is consistent.",
+      "sha": "df9e808e1e44",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "From the first and second coordinates, we get the system",
+      "sha": "2e8ab83b56b0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}x &= -\\alpha + \\beta \\\\\n\t\ty &= 2\\alpha - 2\\beta.\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Adding 2 times the first equation to the second, we get $2x+y=0$ and so $y=-2x$. Therefore, if $\\mat{x\\\\y}$ makes the above system consistent, we must have",
+      "sha": "4f276e3a8c8e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{x\\\\y}=\\mat{t\\\\-2t}=t\\vec v"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for some $t$. Thus,",
+      "sha": "89b763840ea3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Span\\Set{\\vec u,\\vec v}=\n\t\t\\Set{\\vec x\\given \\vec x=t\\vec v\\text{ for some }t}=\\Span\\Set{\\vec v},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which is a line through the origin with direction $\\vec v$.",
+      "sha": "42992f193bef",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec a=\\mat{1\\\\2\\\\1}$, $\\vec b=\\mat{0\\\\1\\\\0}$, and $\\vec c=\\mat{1\\\\1\\\\2}$. Show that $\\R^3=\\Span\\Set{\\vec a,\\vec b,\\vec c}$.",
+      "sha": "b87f1c1cd719",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the equation",
+      "sha": "9ddd2a2a2aa9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec x=\\mat{x\\\\y\\\\z} = \\alpha_1\\mat{1\\\\2\\\\1}+\\alpha_2\\mat{0\\\\1\\\\0}+\\alpha_3\\mat{1\\\\1\\\\2}\n\t\t = \\alpha_1\\vec a+\\alpha_2\\vec b+\\alpha_3\\vec c"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is always consistent, then any vector in $\\R^3$ can be obtained as a linear combination of $\\vec a, \\vec b$, and $\\vec c$.",
+      "sha": "cf4a8ba829a8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Reading off the coordinates, we get the system",
+      "sha": "302f55869c05",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}x &= \\alpha_1 + \\alpha_3 \\\\\n\t\ty &= 2\\alpha_1 + \\alpha_2 + \\alpha_3 \\\\\n\t\tz &= \\alpha_1 + 2\\alpha_3.\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Solving this system, we see \\[",
+      "sha": "ee98aa913121",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}\\alpha_1&=2x-z\\\\\n\t\t\t\\alpha_2&=-3x+y+z\\\\\n\t\t\t\\alpha_3&=-x+z\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "\\] is always a solution (no matter the values of $x$, $y$, and $z$). Therefore, $\\Span\\Set{\\vec a,\\vec b,\\vec c}=\\R^3$.",
+      "sha": "3bcb553900d9",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Representing Lines & Planes as Spans",
+    "sha": "8417d98d1840",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If spans remind you of vector forms of lines and planes, your intuition is keen. Consider the line $\\ell$ given in vector form by",
+    "sha": "ea90b0a2cbaa",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec x=t\\vec d+\\vec 0."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The line $\\ell$ passes through the origin, and if we unravel its definition, we see",
+    "sha": "4b1bbf6e0d71",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\ell=\\Set{\\vec x\\given \\vec x=t\\vec d+\\vec 0\\text{ for some }t\\in \\R}\n\t=\\Set{\\vec x\\given \\vec x=t\\vec d\\text{ for some }t\\in \\R}=\\Span\\Set{\\vec d}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Similarly, if $\\mathcal P$ is a plane given in vector form by",
+    "sha": "48fec3f4addd",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec x=t\\vec d_1+s\\vec d_2+\\vec 0,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "then",
+    "sha": "6f8f8e9f7673",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mathcal P=\n\t\\Set{\\vec x\\given \\vec x=t\\vec d_1+s\\vec d_2\\text{ for some }t,s\\in \\R}=\\Span\\Set{\\vec d_1,\\vec d_2}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If the “$\\vec p$” in our vector form is $\\vec 0$, then that vector form actually defines a span. This means (if you accept that every line/plane through the origin has a vector form) that every line/plane through the origin can be written as a span. Conversely, if $X=\\Span\\Set{\\vec v_1,\\ldots,\\vec v_n}$ is a span, we know $\\vec 0=0\\vec v_1+\\cdots+0\\vec v_n\\in X$, and so every span passes through the origin.",
+    "sha": "5e29254633aa",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "As it turns out, spans exactly describe points, lines, planes, and volumes 〔注： We use the word *volume* to indicate the higher-dimensional analogue of a plane.〕 through the origin.",
+    "sha": "682aa7bc150a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The line $\\ell_1\\subseteq\\R^2$ is described by the equation $x+2y=0$ and the line $\\ell_2\\subseteq \\R^2$ is described by the equation $4x-2y=6$. If possible, describe $\\ell_1$ and $\\ell_2$ using spans.",
+      "sha": "60c3831dc5b7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We can express $\\ell_1$ in vector form by",
+      "sha": "e7c9ff4d111d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec x=t\\mat{2\\\\-1}+\\vec 0,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so",
+      "sha": "9af790b3a93d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\ell_1=\\Span\\Set{\\mat{2\\\\-1}}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "However, $\\ell_2$ does not pass through $\\vec 0$, and so $\\ell_2$ cannot be written as a span.",
+      "sha": "dec90be42077",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Lines and planes through the origin, and only lines and planes through the origin, can be expressed as spans.",
+      "sha": "ce1adc450a9e",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Set Addition",
+    "sha": "9de47b61bb3b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We're going to work around the fact that only objects which pass through the origin can be written as spans, but first let's take a detour and learn about *set addition*.",
+    "sha": "61ab3675e663",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Set Addition",
+    "sha": "9de47b61bb3b",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If $A$ and $B$ are sets of vectors, then the *set sum* of $A$ and $B$, denoted $A+B$, is",
+      "sha": "99dd9cdaea44",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A+B=\\Set{\\vec x \\given \\vec x=\\vec a+\\vec b\\text{ for some }\\vec\n\t\ta\\in A\\text{ and } \\vec b\\in B}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Set sums are very different than regular sums despite using the same symbol, “$+$”\\footnote For example, $A+\\Set{}=\\Set{}$, which might seem counterintuitive for an “addition” operation.. However, they are very useful. Let $C=\\Set{\\vec x\\in\\R^2\\given \\norm{\\vec x}=1}$ be the unit circle centered at the origin, and consider the sets",
+    "sha": "6491cfae0ca3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "X=C+\\Set{\\yhat}\\qquad Y=C+\\Set{3\\xhat,\\yhat}\\qquad Z=C+\\Set{\\vec 0, \\xhat,\\yhat}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Rewriting, we see $X=\\Set{\\vec x+\\yhat\\given \\norm{\\vec x}=1}$ is just $C$ translated by $\\yhat$. Similarly, $Y=\\Set{\\vec x+\\vec v\\given \\norm{\\vec x}=1\\text{ and }\\vec v=3\\xhat\\text{ or }\\vec v=\\yhat}=(C+\\Set{3\\xhat})\\cup (C+\\Set{\\yhat})$, and so $Y$ is the union of two translated copies of $C$\\footnote If you want to stretch your mind, consider what $C+C$ is as a set.. Finally, $Z$ is the union of three translated copies of $C$.",
+    "sha": "da0f99e0f28b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "9c0a5232be70"
+   ],
+   "caption": null
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "d41009d48342"
+   ],
+   "caption": null
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "265a2481cb6f"
+   ],
+   "caption": null
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Translated Spans",
+    "sha": "7795dc3c267a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Set addition allows us to easily create parallel lines and planes by translation. For example, consider the lines $\\ell_1$ and $\\ell_2$ given in vector form as $\\vec x=t\\vec d$ and $\\vec x=t\\vec d+\\vec p$, respectively, where $\\vec d=\\mat{2\\\\1}$ and $\\vec p=\\mat{-1\\\\1}$. These lines differ from each other by a translation. That is, every point in $\\ell_2$ can be obtained by adding $\\vec p$ to a corresponding point in $\\ell_1$. Using the idea of set addition, we can express this relationship by the equation",
+    "sha": "e518c1bc04ba",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\ell_2 = \\ell_1+\\Set{\\vec p}."
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "70d6a0a28b08"
+   ],
+   "caption": null
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "ada1a417b3fe"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Note: it would be incorrect to write “$\\ell_2=\\ell_1+\\vec p$”. Because $\\ell_1$ is a set and $\\vec p$ is not a set, “$\\ell_1+\\vec p$” does not make mathematical sense.",
+    "sha": "a4ff862bc1fb",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Recall $\\ell_2\\subseteq\\R^2$ is the line described by the equation $4x-2y=6$. Describe $\\ell_2$ as a translated span.",
+      "sha": "9ba33e7713d4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We can express $\\ell_2$ in vector form with the equation",
+      "sha": "8260a641d9b7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec x=t\\mat{1\\\\2}+\\mat{1\\\\-1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore,",
+      "sha": "236a32def63c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\ell_2=\\Span\\Set{\\mat{1\\\\2}}+\\Set{\\mat{1\\\\-1}}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can now see translated spans provide an alternative notation to vector form for specifying lines and planes. If $Q$ is described in vector form by",
+    "sha": "0ecaf8d626c7",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec x=t\\vec d_1+s\\vec d_2+\\vec p,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "then",
+    "sha": "6f8f8e9f7673",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "Q=\\Span\\Set{\\vec d_1,\\vec d_2}+\\Set{\\vec p}."
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "All lines and planes, whether through the origin or not, can be expressed as translated spans.",
+      "sha": "89b1d1a2dcb6",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Linear Independence & Linear Dependence",
+    "sha": "e1e3209c60ee",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let",
+    "sha": "ef5fe1edf379",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec u=\\mat{1\\\\0\\\\0}\\qquad\\vec v=\\mat{0\\\\1\\\\0}\\qquad \\vec w=\\mat{1\\\\1\\\\0}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Since $\\vec w=\\vec u+\\vec v$, we know that $\\vec w\\in\\Span\\Set{\\vec u,\\vec v}$. Geometrically, this is also clear because $\\Span\\Set{\\vec u,\\vec v}$ is the $xy$-plane in $\\R^3$ and $\\vec w$ lies on that plane.",
+    "sha": "5db45d76e2bd",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "What about $\\Span\\Set{\\vec u,\\vec v,\\vec w}$? Intuitively, since $\\vec w$ is already a linear combination of $\\vec u$ and $\\vec v$, we can't get anywhere *new* by taking linear combinations of $\\vec u$, $\\vec v$, *and* $\\vec w$ compared to linear combinations of just $\\vec u$ and $\\vec v$. So $\\Span\\Set{\\vec u,\\vec v}=\\Span\\Set{\\vec u,\\vec v,\\vec w}$.",
+    "sha": "82025b798f83",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Can we prove this from the definitions? Yes! Suppose $\\vec r\\in \\Span\\Set{\\vec u,\\vec v,\\vec w}$. By definition,",
+    "sha": "0795bd53e967",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec r=\\alpha\\vec u+\\beta\\vec v+\\gamma\\vec w"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "for some $\\alpha,\\beta,\\gamma\\in\\R$. Since $\\vec w=\\vec u+\\vec v$, we see",
+    "sha": "eb9dc01b5232",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec r=\\alpha\\vec u+\\beta\\vec v+\\gamma(\\vec u+\\vec v) \n\t= (\\alpha+\\gamma)\\vec u+(\\beta+\\gamma)\\vec v\\in\\Span\\Set{\\vec u,\\vec v}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Thus, $\\Span\\Set{\\vec u,\\vec v,\\vec w}\\subseteq \\Span\\Set{\\vec u,\\vec v}$. Conversely, if $\\vec s\\in\\Span\\Set{\\vec u,\\vec v}$, by definition,",
+    "sha": "b57396e6e825",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec s=a\\vec u+b\\vec v=a\\vec u+b\\vec v+0\\vec w"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "for some $a,b\\in \\R$, and so $\\vec s\\in\\Span\\Set{\\vec u,\\vec v,\\vec w}$. Thus $\\Span\\Set{\\vec u,\\vec v}\\subseteq\\Span\\Set{\\vec u,\\vec v,\\vec w}$. We conclude $\\Span\\Set{\\vec u,\\vec v}=\\Span\\Set{\\vec u,\\vec v,\\vec w}$.",
+    "sha": "a2bf234d566c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In this case, $\\vec w$ was a redundant vector—it wasn't needed for the span. When a set contains a redundant vector, we call the set *linearly dependent*.",
+    "sha": "9fe967f0329e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Linearly Dependent & Independent (Geometric)",
+    "sha": "f8ad044b720e",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We say the vectors $\\vec v_{1},\\vec v_{2},\\ldots,\\vec v_{n}$ are *linearly dependent* if for at least one $i$,",
+      "sha": "a43d4092ea39",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec v_{i}\\in\\Span\\Set{\\vec v_1,\\vec v_2,\\ldots,\\vec v_{i-1}, \\vec\n\t\tv_{i+1},\\ldots,\\vec v_n}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Otherwise, they are called *linearly independent*.",
+      "sha": "6311aa15e3cd",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We will also refer to sets of vectors (for example $\\Set{\\vec v_1,\\ldots,\\vec v_n}$) as being linearly independent or linearly dependent. For technical reasons, we didn't state the definition in terms of sets\\footnote The issue is, every element of a set is unique. Clearly, the vectors $\\vec v$ and $\\vec v$ are linearly dependent, but $\\Set{\\vec v,\\vec v}=\\Set{\\vec v}$, and so $\\Set{\\vec v,\\vec v}$ is technically a linearly independent set. This issue would be resolved by talking about *multisets* instead of sets, but it isn't worth the hassle..",
+    "sha": "36f404471270",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The geometric definition of linear dependence says that the vectors $\\vec v_1,\\ldots,\\vec v_n$ are linearly dependent if you can remove at least one vector without changing the span. In other words, $\\vec v_1,\\ldots,\\vec v_n$ are linearly dependent *if there is a redundant vector*.",
+    "sha": "dee452403817",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec a=\\mat{1\\\\2}$, $\\vec b=\\mat{2\\\\3}$, $\\vec c=\\mat{4\\\\6}$, and $\\vec d=\\mat{4\\\\5}$. Determine whether $\\Set{\\vec a,\\vec b,\\vec c,\\vec d}$ is linearly independent or linearly dependent.",
+      "sha": "9477e3de2867",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By inspection, we see $\\vec c=2\\vec b$. Therefore,",
+      "sha": "413d01cbffb0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Span\\Set{\\vec a,\\vec b,\\vec c,\\vec d}=\\Span\\Set{\\vec a,\\vec b,\\vec d},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so $\\Set{\\vec a,\\vec b,\\vec c,\\vec d}$ is linearly dependent.",
+      "sha": "39c7b75ede58",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The planes $\\mathcal P$ and $\\mathcal Q$ are given in vector form by",
+      "sha": "d234869b4143",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\overbrace{\\vec x=t\\mat{1\\\\2\\\\1}+s\\mat{2\\\\2\\\\1}}^{\\mathcal P}\n\t\t\\qquad\\text{and}\\qquad\n\t\t\\overbrace{\\vec x=t\\mat{3\\\\4\\\\2}+s\\mat{2\\\\2\\\\1}}^{\\mathcal Q}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine if $\\mathcal P$ and $\\mathcal Q$ are the same plane.",
+      "sha": "1f8f7cd66f96",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We could answer this question using techniques from Module 〔引用〕, but for variety, let's see if we can answer the question using spans and linear dependence.",
+      "sha": "d8f611a6e6ec",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec a_1=\\mat{1\\\\2\\\\1}$ and $\\vec a_2=\\mat{2\\\\2\\\\1}$ be direction vectors for $\\mathcal P$ and let $\\vec b_1=\\mat{3\\\\4\\\\2}$ and $\\vec b_2=\\mat{2\\\\2\\\\1}$ be direction vectors for $\\mathcal Q$ and notice $\\mathcal P=\\Span\\Set{\\vec a_1,\\vec a_2}$ and $\\mathcal Q=\\Span\\Set{\\vec b_1,\\vec b_2}$.",
+      "sha": "560f6a45d227",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By definition $\\mathcal P=\\mathcal Q$ if (i) every point in $\\mathcal P$ is a point in $\\mathcal Q$ and (ii) every point in $\\mathcal Q$ is a point in $\\mathcal P$.",
+      "sha": "ab4218e7a30c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Focusing on (i), let $\\vec p=t\\vec a_1+s\\vec a_2\\in \\mathcal P$ be an arbitrary point in $\\mathcal P$. We need to show $\\vec p\\in\\mathcal Q$. Since $\\Set{\\vec b_1,\\vec b_2}$ is linearly independent and $\\mathcal Q=\\Span\\Set{\\vec b_1,\\vec b_2}$, showing $\\vec p\\in\\mathcal Q$ is equivalent to showing $\\Set{\\vec p,\\vec b_1,\\vec b_2}$ is a linearly *dependent* set.",
+      "sha": "6c45287b5ebd",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To see this, start by observing",
+      "sha": "eb983ae0940c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Set{\\vec a_1,\\vec b_1,\\vec b_2}\\qquad\\text{and}\\qquad \\Set{\\vec a_2,\\vec b_1,\\vec b_2}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "are both linearly dependent sets: $\\vec a_1=\\vec b_1-\\vec b_2\\in\\Span\\Set{\\vec b_1,\\vec b_2}$ and $\\vec a_2=\\vec b_2\\in\\Span\\Set{\\vec b_1,\\vec b_2}$. Therefore, $\\vec a_1\\in\\mathcal Q$ and $\\vec a_2\\in\\mathcal Q$. Since both $\\vec a_1$ and $\\vec a_2$ are in $\\mathcal Q$ and $\\mathcal Q=\\Span\\Set{\\vec b_1, \\vec b_2}$ is itself a span, we know that every linear combination of $\\vec a_1$ and $\\vec a_2$ must be in $\\mathcal Q$. In particular, $\\vec p=t\\vec a_1+s\\vec a_2\\in\\mathcal Q$, which is what we wanted to show.",
+      "sha": "45f1e9b0b90b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We can show (ii) similarly by observing that $\\vec b_1\\in\\mathcal P$ and $\\vec b_2\\in \\mathcal P$ and so any point $\\vec q=t\\vec b_1+s\\vec b_2\\in\\mathcal Q$ must also be in $\\mathcal P$.",
+      "sha": "d4a5f351255c",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can also think of linear independence/dependence from an algebraic perspective. Suppose the vectors $\\vec u$, $\\vec v$, and $\\vec w$ satisfy",
+    "sha": "e1c31fc6332b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec w=\\vec u+\\vec v."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The set $\\Set{\\vec u,\\vec v,\\vec w}$ is linearly dependent since $\\vec w\\in\\Span\\Set{\\vec u,\\vec v}$, but equation 〔引用〕 can be rearranged to get",
+    "sha": "9c9509abe8af",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec 0=\\vec u+\\vec v-\\vec w."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Here we have expressed $\\vec 0$ as a linear combination of $\\vec u$, $\\vec v$, and $\\vec w$. By itself, this is nothing special. After all, we know $\\vec 0=0\\vec u+0\\vec v+0\\vec w$ is a linear combination of $\\vec u$, $\\vec v$, and $\\vec w$. However, the right side of equation 〔引用〕 has non-zero coefficients, which makes the linear combination *non-trivial*.",
+    "sha": "684d2be60c33",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Trivial Linear Combination",
+    "sha": "bc9e1b77c327",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The linear combination $\\alpha_1\\vec v_1+\\cdots+\\alpha_n\\vec v_n$ is called *trivial* if $\\alpha_1=\\cdots=\\alpha_n=0$. If at least one $\\alpha_i\\neq 0$, the linear combination is called *non-trivial*.",
+      "sha": "8538254e8cd2",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can always write $\\vec 0$ as a linear combination of vectors if we let all the coefficients be zero, but it turns out we can only write $\\vec 0$ as a *non-trivial* linear combination of vectors if those vectors are linearly dependent. This is the inspiration for another definition of linear independence/dependence.",
+    "sha": "1357525867b9",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Linearly Dependent & Independent (Algebraic)",
+    "sha": "2928bf938d0a",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The vectors $\\vec v_{1},\\vec v_{2},\\ldots,\\vec v_{n}$ are *linearly dependent* if there is a non-trivial linear combination of $\\vec v_{1},\\ldots,\\vec v_{n}$ that equals the zero vector. Otherwise they are linearly independent.",
+      "sha": "209b0b5f34a1",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The idea of a “redundant vector” coming from the geometric definition of linear dependence is easy to visualize, but it can be hard to prove things with—checking for linear independence with the geometric definition involves verifying for every vector that it is not in the span of the others. The algebraic definition on the other hand is less obvious, but the reasoning is easier. You only need to analyze solutions to one equation!",
+    "sha": "7e9a798892e0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec u=\\mat{1\\\\2}$, $\\vec v=\\mat{2\\\\3}$, and $\\vec w=\\mat{4\\\\5}$. Use the algebraic definition of linear independence to determine whether $\\Set{\\vec u,\\vec v,\\vec w}$ is linearly independent or dependent.",
+      "sha": "a256dcd27502",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We need to determine if there is a non-trivial solution to",
+      "sha": "91ab44c77d95",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "x\\vec u+y\\vec v+z\\vec w=\\vec 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This vector equation is equivalent to the system of equations",
+      "sha": "8ac1ffa1093e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}x+2y+4z &= 0 \\\\ 2x+3y+5z &= 0\\end{aligned}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Solving this system using row reduction, we see the complete solution set can be expressed as",
+      "sha": "8d17d12893f3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{x\\\\y\\\\z}=t\\mat{2\\\\-3\\\\1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In particular, $(x,y,z)=(2,-3,1)$ is a non-trivial solution to this system. Therefore $\\Set{\\vec u,\\vec v,\\vec w}$ is linearly dependent.",
+      "sha": "2cf4fa4edc19",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The geometric and algebraic definitions of linear independence are equivalent.",
+      "sha": "b21b9ece4347",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "To show the two definitions are equivalent, we need to show that geometric $\\implies$ algebraic and algebraic $\\implies$ geometric.",
+      "sha": "6e772c2fe8ca",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "(geometric $\\implies$ algebraic) Suppose $\\vec v_1,\\ldots,\\vec v_n$ are linearly dependent by the geometric definition. That means that for some $i$, we have",
+      "sha": "f526ed951c49",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec v_i \\in \\Span\\Set{\\vec v_1,\\ldots,\\vec v_{i-1},\\vec v_{i+1},\\ldots,\\vec v_n}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Fix such an $i$. Then, by the definition of span we know",
+      "sha": "cc8aa9f7d88b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "{\\color{mypink}\\vec v_i}=\\alpha_1\\vec v_1+\\cdots +\\alpha_{i-1}\\vec v_{i-1}+\\alpha_{i+1}\\vec v_{i+1}+\\cdots +\\alpha_n\\vec v_n,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so",
+      "sha": "9af790b3a93d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec 0=\\alpha_1\\vec v_1+\\cdots +\\alpha_{i-1}\\vec v_{i-1}\\ \\ \n\t\t{\\color{mypink}-\\ \\vec v_i}\\ \n\t\t+\\alpha_{i+1}\\vec v_{i+1}+\\cdots +\\alpha_n\\vec v_n."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This must be a non-trivial linear combination because the coefficient of $\\vec v_i$ is $-1\\neq 0$. Therefore, $\\vec v_1,\\ldots,\\vec v_n$ is linearly dependent by the algebraic definition.",
+      "sha": "c74348a9a9f4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "(algebraic $\\implies$ geometric) Suppose $\\vec v_1,\\ldots,\\vec v_n$ are linearly dependent by the algebraic definition. That means there exist $\\alpha_1,\\ldots,\\alpha_n$, not all zero, so that",
+      "sha": "79f98cfff5b9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec 0=\\alpha_1\\vec v_1+\\cdots +\\alpha_n\\vec v_n."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Fix $i$ so that $\\alpha_i\\neq 0$ (why do we know there is such an $i$?). Rearranging we get",
+      "sha": "a119e45289c4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "-\\alpha_i\\vec v_i=\\alpha_1\\vec v_1+\\cdots +\\alpha_{i-1}\\vec v_{i-1}+\\alpha_{i+1}\\vec v_{i+1}+\\cdots +\\alpha_n\\vec v_n,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and since $\\alpha_i\\neq 0$, we can multiply both sides by $\\frac{-1}{\\alpha_i}$ to get",
+      "sha": "10654beca6fb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec v_i=\\tfrac{-\\alpha_1}{\\alpha_i}\\vec v_1+\\cdots +\\tfrac{-\\alpha_{i-1}}{\\alpha_i}\\vec v_{i-1}\n\t+\\tfrac{-\\alpha_{i+1}}{\\alpha_i}\\vec v_{i+1}+\\cdots +\\tfrac{-\\alpha_n}{\\alpha_i}\\vec v_n."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This shows that",
+      "sha": "4544b90fccd9",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec v_i \\in \\Span\\Set{\\vec v_1,\\ldots,\\vec v_{i-1},\\vec v_{i+1},\\ldots,\\vec v_n},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so $\\vec v_1,\\ldots,\\vec v_n$ is linearly dependent by the geometric definition.",
+      "sha": "d635157600e5",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Linear Independence and Unique Solutions",
+    "sha": "5cb0049f5c25",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The algebraic definition of linear independence can teach us something about solutions to systems of equations.",
+    "sha": "0faf864470f3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Recall the linearly dependent vectors",
+    "sha": "b75f17bfc223",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec u=\\mat{1\\\\0\\\\0}\\qquad \\vec v=\\mat{0\\\\1\\\\0}\\qquad \\vec w=\\mat{1\\\\1\\\\0}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "which satisfy the non-trivial relationship $\\vec u+\\vec v-\\vec w=\\vec 0$. Since $\\vec u+\\vec v-\\vec w=\\vec 0$ is a non-trivial relationship giving $\\vec 0$, we can use it to generate others. For example,",
+    "sha": "68be133f5fdd",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}{2}\n\t17(\\vec u+\\vec v-\\vec w)\\ &=\\ 17\\vec u+17\\vec v-17\\vec w\\ &=\\ 17\\vec 0\\ &=\\ \\vec 0\\\\\n\t-3(\\vec u+\\vec v-\\vec w)\\ &=\\ -3\\vec u-3\\vec v+3\\vec w\\ &=\\ -3\\vec 0\\ &=\\ \\vec 0\\\\\n\t&\\hspace{5em}\\vdots&&\\end{aligned}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "are all different non-trivial linear combinations that give $\\vec 0$. In other words, if the equation $\\alpha\\vec u+\\beta \\vec v+\\gamma \\vec w=\\vec 0$ has a non-trivial solution, it has *infinitely many* non-trivial solutions. Conversely, if the equation $\\alpha\\vec u+\\beta \\vec v+\\gamma \\vec w=\\vec 0$ has infinitely many solutions, one of them has to be non-trivial!",
+    "sha": "b912b51e2b74",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Equations where one side is $\\vec 0$ show up often and are called *homogeneous* equations.",
+    "sha": "f0aed9059354",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Homogeneous System",
+    "sha": "6900b63d4207",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A system of linear equations or a vector equation in the variables $\\alpha_1$, …, $\\alpha_n$ is called *homogeneous* if it takes the form",
+      "sha": "ada5e991bd58",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\alpha_1\\vec v_1+\\alpha_2\\vec v_2+\\cdots +\\alpha_n\\vec v_n=\\vec 0,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where the right side of the equation is $\\vec 0$.",
+      "sha": "a7241d8144ad",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This insight links linear independence and homogeneous systems together, and is encapsulated in the following theorem.",
+    "sha": "f28ae9ca715e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The vectors $\\vec v_1$, …, $\\vec v_n$ are linearly independent if and only if the homogeneous equation",
+      "sha": "3848bc485ccb",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\alpha_1\\vec v_1+\\cdots +\\alpha_n\\vec v_n=\\vec 0"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "has a unique solution.",
+      "sha": "2fa6ad7e2f9e",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This theorem has a practical application: suppose you wanted to decide if the vectors $\\vec a$, $\\vec b$, and $\\vec c$ were linearly dependent. You could (i) find a non-trivial solution to $x\\vec a+y\\vec b+z\\vec c=\\vec 0$, or (ii) merely show that $x\\vec a+y\\vec b+z\\vec c=\\vec 0$ has more than one solution. Sometimes one is easier than the other.",
+    "sha": "a5c179101dc4",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Linear Independence and Vector Form",
+    "sha": "96ff62107657",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The equation",
+    "sha": "09704de1fbc6",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec x=t_1\\vec d_1+t_2\\vec d_2"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "represents a plane in vector form whenever $\\vec d_1$ and $\\vec d_2$ are non-zero, non-parallel vectors. In other words, $\\vec x=t_1\\vec d_1+t_2\\vec d_2$ represents a plane whenever $\\Set{\\vec d_1,\\vec d_2}$ is linearly independent.",
+    "sha": "78a79bbc19ef",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Does this reasoning work for lines too? The equation",
+    "sha": "25eb187663c6",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec x=t\\vec d"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "represents a line in vector form precisely when $\\vec d\\neq \\vec 0$. And $\\Set{\\vec d}$ is linearly independent exactly when $\\vec d\\neq 0$.",
+    "sha": "53acd3dd3fbc",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This reasoning generalizes to volumes. The equation",
+    "sha": "bbadb865c31d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec x=t_1\\vec d_1+t_2\\vec d_2+t_3\\vec d_3"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "represents a *volume* in vector form exactly when $\\Set{\\vec d_1,\\vec d_2,\\vec d_3}$ is linearly independent. To see this, suppose $\\Set{\\vec d_1,\\vec d_2,\\vec d_3}$ were linearly dependent. That means one or more vectors could be removed from $\\Set{\\vec d_1,\\vec d_2,\\vec d_3}$ without changing its span. Therefore, if $\\Set{\\vec d_1,\\vec d_2,\\vec d_3}$ is linearly dependent $\\vec x=t_1\\vec d_1+t_2\\vec d_2+t_3\\vec d_3$ at best represents a plane (though it could be a line or a point).",
+    "sha": "9aeb2570e3c3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We now have a way of testing the validity of a vector-form representation of a line/plane/volume. Just check whether the chosen direction vectors are linearly independent!",
+    "sha": "8bf41a8b425e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "When writing an object in vector form, the direction vectors must always be linearly independent.",
+      "sha": "33218b45b481",
+      "zh": ""
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\Set{\\mat{1\\\\2\\\\0},\\mat{0\\\\1\\\\0},\\mat{1\\\\1\\\\0}}$.",
+      "sha": "961b929f6e23",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Is $A$ linearly independent or dependent?",
+         "sha": "46757d82b5f6",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Describe the span of $A$.",
+         "sha": "a9b95d316c13",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Can $A$ be extended (i.e., can vectors be added to $A$) so that $A$ spans all of $\\R^3$?",
+         "sha": "a983e7e4361c",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$A$ is linearly dependent.",
+         "sha": "c1cdf81d1c90",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Span(A)$ is the plane $\\Set{\\mat{x \\\\y \\\\0} \\in\\R^3: x,y\\in\\R}$.",
+         "sha": "1bde8af18535",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes. If $A'=A\\cup\\Set{\\mat{0\\\\0\\\\1}}$, then $\\Span(A')=\\R^3$.",
+         "sha": "21e76fec513a",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Spans, Translated Spans, and Linear Independence/Dependence · 练习题 1（上游 book/modules/module3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each set below, determine whether it spans a point, line, plane, volume, or other.",
+      "sha": "a3bb671bc66c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{1\\\\1}}$",
+         "sha": "a3debc96c445",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{1\\\\3},\\mat{2\\\\6}}$",
+         "sha": "08dc3d9c867b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{2\\\\4},\\mat{4\\\\2}}$",
+         "sha": "48cabaec29f4",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{1\\\\2},\\mat{-1\\\\-2}}$",
+         "sha": "36abd09fe9e2",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{1\\\\2},\\mat{-1\\\\2}}$",
+         "sha": "eda55e3796d9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{}$",
+         "sha": "07039a8dc4ed",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{1\\\\2},\\mat{2\\\\3},\\mat{3\\\\4}}$",
+         "sha": "faaf62614c4a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{5\\\\4\\\\-3},\\mat{1\\\\1\\\\0},\\mat{2\\\\2\\\\2}}$",
+         "sha": "668322e7e3cd",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{1\\\\-2\\\\0},\\mat{4\\\\-5\\\\1}}$",
+         "sha": "3e0b6a0ca572",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{1\\\\-2\\\\0},\\mat{4\\\\-5\\\\1},\\mat{5\\\\-7\\\\1}}$",
+         "sha": "0daa010a2dfa",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Line",
+         "sha": "ea9676003762",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Line",
+         "sha": "ea9676003762",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Plane",
+         "sha": "a59e151e43c3",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Line",
+         "sha": "ea9676003762",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Plane",
+         "sha": "a59e151e43c3",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Point",
+         "sha": "f79a28423ed1",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Plane",
+         "sha": "a59e151e43c3",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Volume",
+         "sha": "3b18e8e33250",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Plane",
+         "sha": "a59e151e43c3",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Plane",
+         "sha": "a59e151e43c3",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Spans, Translated Spans, and Linear Independence/Dependence · 练习题 2（上游 book/modules/module3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "For each set in question 〔引用〕, determine whether it is linearly independent or dependent.",
+         "sha": "421da69571c0",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Is the set $\\Set{\\mat{1\\\\2\\\\3},\\mat{5\\\\6\\\\7}, \\mat{9\\\\10\\\\11}, \\mat{13\\\\14\\\\15}}$ linearly independent or dependent?",
+         "sha": "b5cbc15669ff",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Can you find a set of $n+1$ vectors in $\\R^{n}$ that is linearly independent? Explain.",
+         "sha": "4262d98f99b7",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Linearly Independent",
+            "sha": "6cca2f58500b",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Linearly Dependent",
+            "sha": "5749cf6b3b71",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Linearly Independent",
+            "sha": "6cca2f58500b",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Lineraly Dependent",
+            "sha": "a327883e148e",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Linearly Independent",
+            "sha": "6cca2f58500b",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Linearly Independent",
+            "sha": "6cca2f58500b",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Linearly Dependent",
+            "sha": "5749cf6b3b71",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Linearly Independent",
+            "sha": "6cca2f58500b",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Linearly Independent",
+            "sha": "6cca2f58500b",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Linearly Dependent",
+            "sha": "5749cf6b3b71",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Linearly Dependent",
+         "sha": "5749cf6b3b71",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "No. The solutions to the vector equation $\\alpha_{1}\\vec x_{1}+\\alpha_{2}\\vec x_{2}+\\ldots+\\alpha_{n+1}\\vec x_{n+1}=0$ for $\\alpha_{1},\\alpha_{2},\\ldots,\\alpha_{n+1} \\in \\R$ are the solutions to a system of $n$ equations in $n+1$ variables. This system is consistent since $\\alpha_{1}=\\alpha_{2}=\\ldots=\\alpha_{n+1}=0$ is a solution. The row reduced echelon form of the corresponding augmented matrix has at least one free variable column since there are more columns than rows. Hence there are infinitely many solutions, and in particular there exists a non-trivial solution to the above vector equation.",
+         "sha": "be099db11801",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Spans, Translated Spans, and Linear Independence/Dependence · 练习题 3（上游 book/modules/module3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If possible, express the following lines in $\\R^{2}$ as spans. Otherwise, justify why the line cannot be expressed as a span.",
+         "sha": "dd4b121bb1c6",
+         "zh": ""
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$x=0$",
+            "sha": "34ea5b6f6de5",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$2x+3y=0$",
+            "sha": "647976ade4ac",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$5x-4y=0$",
+            "sha": "b7e5943b78ac",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$-x-y=-1$",
+            "sha": "f3d4e6c0bb06",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$9x-15y=8$",
+            "sha": "82f1e5efce08",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "For each line in question 〔引用〕 that cannot be expressed as a span, express it as a translated span.",
+         "sha": "86c387586580",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Each equation below specifies a line or a plane in $\\R^3$. If possible, express the specified line or plane as a span. Otherwise, justify why it cannot be expressed as a span.",
+         "sha": "c22be2dbdb4e",
+         "zh": ""
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$2x-y+z=4$",
+            "sha": "2e0d97e8b061",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$x+6y-z=0$",
+            "sha": "132f5735ee14",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$x+3z=0$",
+            "sha": "6773e2895f07",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$y=1$",
+            "sha": "6c3b4834614e",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$x=0$ and $z=0$",
+            "sha": "0382b6f422ba",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$2x-y=2$ and $z=-1$",
+            "sha": "7298ac45dbfe",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "For lines or planes in question 〔引用〕 that cannot be expressed as spans, express as a translated span.",
+         "sha": "e5988af1c823",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\Span\\Set{\\mat{0\\\\-1}}$",
+            "sha": "ad01da5757ef",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\Span\\Set{\\mat{3\\\\-2}}$",
+            "sha": "86713919b3e2",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\Span\\Set{\\mat{4\\\\5}}$",
+            "sha": "d9cb45d3e8e8",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Not possible since $\\mat{0\\\\0}$ is not on the line.",
+            "sha": "a325a55dc178",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Not possible since $\\mat{0\\\\0}$ is not on the line.",
+            "sha": "a325a55dc178",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "〔引用〕: $\\Span\\Set{\\mat{1\\\\-1}} + \\Set{\\mat{1\\\\0}}$ 〔引用〕: $\\Span\\Set{\\mat{5\\\\3}} + \\Set{\\mat{8/9\\\\0}}$",
+         "sha": "8a1bf734ee58",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Not possible since $\\vec 0$ is not in the plane.",
+            "sha": "cfaad78453bc",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\Span\\Set{\\mat{6\\\\-1\\\\0}, \\mat{1\\\\0\\\\1}}$",
+            "sha": "71e749adff8c",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\Span\\Set{\\mat{3\\\\0\\\\-1}, \\mat{0\\\\1\\\\0}}$",
+            "sha": "f17535928f48",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Impossible since $\\vec 0$ is not in the plane.",
+            "sha": "c83db3cd1755",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\Span\\Set{\\mat{0\\\\1\\\\0}}$",
+            "sha": "809b677c3b86",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Not possible since $\\vec 0$ is not in the plane.",
+            "sha": "cfaad78453bc",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "〔引用〕: $\\Span\\Set{\\mat{1\\\\2\\\\0}, \\mat{0\\\\1\\\\1}} + \\Set{\\mat{2\\\\0\\\\0}}$ 〔引用〕: $\\Span\\Set{\\mat{1\\\\0\\\\0}, \\mat{0\\\\0\\\\1}} + \\Set{\\mat{0\\\\1\\\\0}}$ 〔引用〕: $\\Span\\Set{\\mat{1\\\\2\\\\0}} + \\Set{\\mat{1\\\\0\\\\-1}}$",
+         "sha": "e56f0da6d749",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Spans, Translated Spans, and Linear Independence/Dependence · 练习题 4（上游 book/modules/module3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine if the following planes, expressed in vector form, are the same plane.",
+      "sha": "97b3eb7fc03e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec x = t\\mat{1\\\\2}+ s\\mat{2\\\\7}$ and $\\vec x = t\\mat{3\\\\5}+ s\\mat{8\\\\4}$.",
+         "sha": "b01b90e7a40d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec x = t\\mat{2\\\\2\\\\3}+ s\\mat{1\\\\0\\\\5}$ and $\\vec x = t\\mat{1\\\\0\\\\5}+ s\\mat{4\\\\2\\\\13}$.",
+         "sha": "283ae88d228b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec x = t\\mat{1\\\\2\\\\1}+ s\\mat{2\\\\2\\\\1}$ and $\\vec x = t\\mat{0\\\\1\\\\0}+ s\\mat{1\\\\2\\\\1}$.",
+         "sha": "3ac04d9f0fcc",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Same plane ($\\R^2$).",
+         "sha": "8021afeab314",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Same plane ($2\\mat{1\\\\0\\\\5} + \\mat{2\\\\2\\\\3} = \\mat{4\\\\2\\\\13}$).",
+         "sha": "7261c863de87",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Different plane ($\\mat{2\\\\2\\\\1}$ is not in the second plane).",
+         "sha": "e07623d975cf",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Spans, Translated Spans, and Linear Independence/Dependence · 练习题 5（上游 book/modules/module3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Show that the set $\\Set{\\mat{2\\\\0\\\\7},\\mat{1\\\\1\\\\1},\\mat{6\\\\4\\\\11}}$ is linearly dependent in two ways. First, using the geometric definition of linear dependence and then using the algebraic definition.",
+      "sha": "dd43cc649d22",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The set is linearly dependent since: $\\mat{6\\\\4\\\\11}= \\mat{2\\\\0\\\\7}+ 4\\mat{1\\\\1\\\\1}$ (geometric) or $\\mat{2\\\\0\\\\7}+ 4\\mat{1\\\\1\\\\1}+ (-1)\\mat{6\\\\4\\\\11}=\\vec 0$ (algebraic).",
+      "sha": "14bb28ad956e",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Spans, Translated Spans, and Linear Independence/Dependence · 练习题 6（上游 book/modules/module3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Choose vectors $\\vec p$, $\\vec d_{1}$, $\\vec d_{2}$, $\\vec d_{3}$ in $\\R^{4}$ such that the vector equation $\\vec x = t_{1}\\vec d_{1} + t_{2}\\vec d_{2} + t_{3}\\vec d_{3}+\\vec p$ specifies:",
+      "sha": "6c8cf758d8e7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A hyperplane passing through the origin.",
+         "sha": "0a33198d304e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A plane not passing through the origin.",
+         "sha": "2324d18cc2a3",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A line passing through the origin.",
+         "sha": "32311723005f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The point $(2,2,2,3)$.",
+         "sha": "e704d472f708",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec{d}_{1}= \\mat{1\\\\0\\\\0\\\\0}$, $\\vec{d}_{2}= \\mat{0\\\\1\\\\0\\\\0}$, $\\vec{d}_{3}=\\mat{0\\\\0\\\\1\\\\0}$, $\\vec{p}= \\mat{0\\\\0\\\\0\\\\0}$",
+         "sha": "bd74967d8f85",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec{d}_{1}= \\mat{1\\\\0\\\\0\\\\0}$, and $\\vec{d}_{2}= \\mat{0\\\\1\\\\0\\\\0}$, $\\vec{d}_{3}=\\mat{1\\\\1\\\\0\\\\0}$, $\\vec{p}= \\mat{0\\\\0\\\\1\\\\0}$",
+         "sha": "59b09c2b0ba6",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec{d}_{1}= \\mat{1\\\\0\\\\0\\\\0}$, $\\vec{d}_{2}= \\mat{2\\\\0\\\\0\\\\0}$, $\\vec{d}_{3}= \\mat{-1\\\\0\\\\0\\\\0}$, $\\vec{p}= \\mat{0\\\\0\\\\0\\\\0}$",
+         "sha": "16825ea8d451",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec {d}_{1} = \\vec {d}_{2} = \\vec {d}_{3} = \\vec {0}$, $\\vec {p} = \\mat{2\\\\2\\\\2\\\\3}$",
+         "sha": "12656b251f1a",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Spans, Translated Spans, and Linear Independence/Dependence · 练习题 7（上游 book/modules/module3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex8",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Classify the sets $A=\\Set{}$ and $B=\\Set{\\vec 0}$ as linearly independent or dependent.",
+      "sha": "b95ebe6d7d39",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The set $A$ is linearly independent. Since $A$ contains no vectors, there is no way to write $\\vec 0$ as a non-trivial linear combination of vectors in $A$. However, $B$ is linearly dependent, since $\\vec 0=7\\vec 0$ is a non-trivial linear combination of vectors in $B$ that gives the zero vector.",
+      "sha": "221142435a6a",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Spans, Translated Spans, and Linear Independence/Dependence · 练习题 8（上游 book/modules/module3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex9",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $S=\\Set{\\mat{1\\\\3},\\mat{0\\\\-1}}$ and let $T=\\Set{\\mat{-1\\\\-1},\\mat{0\\\\2},\\mat{0\\\\0}}$. Draw the sets $S$, $T$, and $T+S$.",
+      "sha": "9558764db752",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "ea95e54c7e98"
+     ],
+     "caption": null
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "551107dfedc0"
+     ],
+     "caption": null
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "acbae724d6c2"
+     ],
+     "caption": null
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Spans, Translated Spans, and Linear Independence/Dependence · 练习题 9（上游 book/modules/module3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex10",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $S=\\Set{\\mat{1\\\\1},\\mat{0\\\\-1}, \\mat{0\\\\0}}$.",
+      "sha": "45e67ee31c50",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Draw $S$, $S+S$, and $(S+S)+S$.",
+         "sha": "a67c216a6158",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Is $(S+S)+S=S+(S+S)$? Does the expression $S+S+S$ make sense?",
+         "sha": "8f7a54f70d0a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Draw $S+S+S+S+\\cdots$.",
+         "sha": "a76a8c76c48a",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The set $S$:",
+         "sha": "79ecb9d5c906",
+         "zh": ""
+        }
+       },
+       {
+        "k": "figure",
+        "env": "tikzpicture",
+        "figs": [
+         "887173452575"
+        ],
+        "caption": null
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "The set $S+S$:",
+         "sha": "09815d83c561",
+         "zh": ""
+        }
+       },
+       {
+        "k": "figure",
+        "env": "tikzpicture",
+        "figs": [
+         "31089bd1186c"
+        ],
+        "caption": null
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "The set $(S+S)+S$:",
+         "sha": "591e3cca0de1",
+         "zh": ""
+        }
+       },
+       {
+        "k": "figure",
+        "env": "tikzpicture",
+        "figs": [
+         "5f4ccece08a2"
+        ],
+        "caption": null
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The set $(S+S)+S$ and $S+(S+S)$ are equal since vector addition is associative. This means that $S+S+S$ is well-defined and we can drop the parentheses, so the expression $S+S+S$ makes sense.",
+         "sha": "5dfbfdc07e6b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "figure",
+        "env": "tikzpicture",
+        "figs": [
+         "5d197d14c7dd"
+        ],
+        "caption": null
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Notice that we obtain the orange points when we add an additional $S$ to the set sum. Since we are considering the infinite sum $S+S+S+S+\\cdots$, the process continues infinitely.",
+         "sha": "8a6cd940af01",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Spans, Translated Spans, and Linear Independence/Dependence · 练习题 10（上游 book/modules/module3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex11",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $D\\subseteq\\R^2$ be the unit disk centered at the origin and let $L\\subseteq \\R^2$ be the line segment from $(0,0)$ to $(0,2)$.",
+      "sha": "181afd2a1a2a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How many points are in $D$, $L$, and $D+L$?",
+         "sha": "9cedd7d6023e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Draw $D+L$.",
+         "sha": "0c725a66d539",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the area of $D+L$.",
+         "sha": "92ee2f903bed",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Suppose $S\\subseteq\\R^2$ makes a smiley face when drawn and the “thickness” of each line composing this smiley face is $0.01$ units. Can you find a set $A$ so that the set $S+A$ represents a smiley face where the lines have a thickness of $0.05$? If so, give an example of such an $A$. Otherwise, explain why it is impossible.",
+         "sha": "e0e03a17eacb",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "There are infinitely many points in each of D, L, and $D+L$.",
+         "sha": "a73ef6bf8270",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "figure",
+        "env": "tikzpicture",
+        "figs": [
+         "3ad3756c5c2d"
+        ],
+        "caption": null
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$D+L$ can be decomposed into $2$ unit radius half-circles and a square with side length $2$. The area of $D+L$ is then $\\pi+4$.",
+         "sha": "2249d727a217",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "We can take A to be a circle of radius $0.02$ units.",
+         "sha": "b8c0b376fea3",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Spans, Translated Spans, and Linear Independence/Dependence · 练习题 11（上游 book/modules/module3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex12",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec v_{1}, \\vec v_{2}, \\vec v_{3}$ be vectors. For each of the following statements, justify whether the statement is true or false.",
+      "sha": "e1860f5d99fc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $\\vec v_{1}$ can be written as a linear combination of $\\vec v_{2}$ and $\\vec v_{3}$, then $\\Set{\\vec v_1,\\vec v_2,\\vec v_3}$ is linearly dependent.",
+         "sha": "2f3f374a1199",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $\\Set{\\vec v_1,\\vec v_2,\\vec v_3}$ is linearly dependent, then $\\vec v_{1}$ can be written as a linear combination of $\\vec v_{2}$ and $\\vec v_{3}$.",
+         "sha": "f2fe201816bf",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $\\vec v_{1}=k\\vec v_{2}$ for some real number $k$, then $\\Set{\\vec v_1,\\vec v_2}$ is linearly dependent.",
+         "sha": "1ec6077538b8",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $\\vec v_{1}$ is not a scalar multiple of $\\vec v_{2}$, then $\\Set{\\vec v_1,\\vec v_2,\\vec v_3}$ is linearly independent.",
+         "sha": "d8e71cab12be",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "All spans contain $\\vec 0$.",
+         "sha": "6a4bdaba639e",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True. This follows from the geometric definition of linear dependence.",
+         "sha": "9f58a0ab42cc",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. $\\Set{\\mat{1\\\\0},\\mat{0\\\\0},\\mat{0\\\\1}}$ is linearly dependent, but $\\mat{1\\\\0}$ is not a linear combination of $\\mat{0\\\\0}$ and $\\mat{0\\\\1}$.",
+         "sha": "27c198ac2812",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True. $\\vec{v}_{1}$ is a linear combination of $\\vec{v}_{2}$ and so $\\Set{\\vec {v}_{1},\\vec{v}_{2}}$ is linearly dependent by the definition of linear dependence.",
+         "sha": "0f25b2621de2",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. $\\Set{\\mat{1\\\\0},\\mat{0\\\\0},\\mat{0\\\\1}}$ is linearly dependent, but $\\mat{1\\\\0}$ is not a scalar multiple of $\\mat{0\\\\1}$.",
+         "sha": "f9dc09c6b19e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True. The linear combination of any finite set with all coefficients zero is $\\vec {0}$.",
+         "sha": "53ebec9b36fa",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Spans, Translated Spans, and Linear Independence/Dependence · 练习题 12（上游 book/modules/module3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module3-exercises.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "张成、平移张成与线性相关/无关"
+}

@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+	\node (A) at (0,0) {$\vec x\in \R^n$};
+	\node (B) at (-2,-2) {$[\vec x]_{\mathcal A}$};
+	\node (C) at (2,-2) {$[\vec x]_{\mathcal B}$};
+	\draw[<->] 
+		(A) edge  node[midway, above left] {Represent in $\mathcal{A}$ basis}(B)
+		(A) edge  node[midway, above right] {Represent in $\mathcal{B}$ basis} (C);
+	\draw[->, dashed, transform canvas={yshift=-.25em}, mygreen] 
+		(B) edge  node[midway, below] {$\BasisChange{\mathcal A}{\mathcal B}$} (C);
+	\draw[<-, dashed, transform canvas={yshift=.25em}, mypink] 
+		(B) edge  node[midway, above] {$\BasisChange{\mathcal B}{\mathcal A}$} (C);
+\end{tikzpicture}

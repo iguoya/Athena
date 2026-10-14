@@ -1,0 +1,29 @@
+\begin{tikzpicture}[baseline = (current bounding box.north)]
+					\begin{axis}[
+						anchor=origin,
+						name=plot1,
+						disabledatascaling,
+						xmin=-1,xmax=2,
+						ymin=-1,ymax=2,
+						xtick={-4,...,4},
+						ytick={-2,...,4},
+						x=1cm,y=1cm,
+						grid=both,
+						grid style={line width=.1pt, draw=black!10},
+						axis lines=middle,
+						minor tick num=0,
+						enlargelimits={abs=0.5},
+						axis line style={latex-latex},
+						ticklabel style={font=\tiny,fill=\currentbackgroundcolor},
+						xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+						ylabel style={at={(ticklabel* cs:1)},anchor=south west}
+					]
+						\coordinate (A) at (2,0);
+						\coordinate (B) at (0,2);
+						\coordinate (C) at (-1,-1);
+						\fill[mygreen, opacity=.3] (A) -- (B) -- (C) -- cycle;
+						\fill [black] (A) circle[radius=2pt] node [above, yshift=1pt] {$\vec a$};
+						\fill [black] (B) circle[radius=2pt] node [above right] {$\vec b$};
+						\fill [black] (C) circle[radius=2pt] node [above left, xshift=1pt] {$\vec c$};
+					\end{axis}
+				\end{tikzpicture}

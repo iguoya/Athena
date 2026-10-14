@@ -1,0 +1,58 @@
+\begin{tikzpicture}
+		\begin{axis}[
+		    anchor=origin,
+		    name=plot1,
+		    disabledatascaling,
+		    xmin=-1,xmax=2,
+		    ymin=0,ymax=1,
+			xtick={-2,...,4},
+			ytick={-2,...,4},
+		    x=1.5cm,y=1.5cm,
+		    grid=both,
+		    grid style={line width=.1pt, draw=gray!10},
+		    axis lines=middle,
+		    minor tick num=0,
+		    enlargelimits={abs=0.5},
+		    axis line style={latex-latex},
+		    ticklabel style={font=\tiny,fill=\currentbackgroundcolor},
+		    xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+		    ylabel style={at={(ticklabel* cs:1)},anchor=south west}
+		]
+		\begin{scope}[cm={1,0,0,1,(0,0)}, mypink]
+			\node[transform shape, black] at (.5,.5) {$C_2$};
+			\fill[opacity=.3] (0,0) rectangle (1,1);
+			\draw[very thick, ->] (0,0) -- (1,0);
+			\draw[very thick, densely dotted, ->] (0,0) -- (0,1);
+		\end{scope}
+			\coordinate (A) at (1.25,1.25);
+		\end{axis}
+		\begin{axis}[
+			name=plot2,
+			at={($(plot1.east) + (1cm, 0)$)},
+			anchor=west,
+		    disabledatascaling,
+		    xmin=-1,xmax=2,
+		    ymin=0,ymax=1,
+			xtick={-2,...,4},
+			ytick={-2,...,4},
+		    x=1.5cm,y=1.5cm,
+		    grid=both,
+		    grid style={line width=.1pt, draw=gray!10},
+		    axis lines=middle,
+		    minor tick num=0,
+		    enlargelimits={abs=0.5},
+		    axis line style={latex-latex},
+		    ticklabel style={font=\tiny,fill=\currentbackgroundcolor},
+		    xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+		    ylabel style={at={(ticklabel* cs:1)},anchor=south west}
+		]
+		\begin{scope}[cm={2,1,-1,.5,(0,0)}, mygreen]
+			\node[black] at (.5,.5) {$\mathcal T(C_2)$};
+			\fill[opacity=.3] (0,0) rectangle (1,1);
+			\draw[very thick, ->] (0,0) -- (1,0);
+			\draw[very thick, densely dotted, ->] (0,0) -- (0,1);
+		\end{scope}
+			\coordinate (B) at (-.25,1.25);
+		\end{axis}
+		\draw[thick] (A) edge[bend left, ->] node[midway,above] {$\mathcal T$} (B) ;
+	\end{tikzpicture}

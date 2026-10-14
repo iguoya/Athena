@@ -1,0 +1,61 @@
+\begin{tikzpicture}
+		\begin{axis}[
+		    anchor=origin,
+		    name=plot1,
+		    disabledatascaling,
+		    xmin=-1,xmax=2,
+		    ymin=0,ymax=1,
+			xtick={-2,...,4},
+			ytick={-2,...,4},
+			xticklabels={,,},
+			yticklabels={,,},
+		    x=1.5cm,y=1.5cm,
+		    grid=both,
+		    grid style={line width=.1pt, draw=gray!10},
+		    axis lines=middle,
+		    minor tick num=0,
+		    enlargelimits={abs=0.5},
+		    axis line style={latex-latex},
+		    ticklabel style={font=\tiny,fill=white},
+		    xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+		    ylabel style={at={(ticklabel* cs:1)},anchor=south west}
+		]
+		\begin{scope}[cm={1,0,0,1,(0,0)}, mypink]
+			\fill[opacity=.3] (0,0) rectangle (1,1);
+			\draw[very thick, ->] (0,0) -- (1,0) node[midway, below] {$\xhat$};
+			\draw[very thick, densely dotted, ->] (0,0) -- (0,1) node[midway, left] {$\yhat$};
+		\end{scope}
+			\coordinate (A) at (1.25,1.25);
+		\end{axis}
+		\begin{axis}[
+			name=plot2,
+			at={($(plot1.east) + (1cm, 0)$)},
+			anchor=west,
+		    disabledatascaling,
+		    xmin=-1,xmax=2,
+		    ymin=0,ymax=1,
+			xtick={-2,...,4},
+			ytick={-2,...,4},
+			xticklabels={,,},
+			yticklabels={,,},
+		    x=1.5cm,y=1.5cm,
+		    grid=both,
+		    grid style={line width=.1pt, draw=gray!10},
+		    axis lines=middle,
+		    minor tick num=0,
+		    enlargelimits={abs=0.5},
+		    axis line style={latex-latex},
+		    ticklabel style={font=\tiny,fill=white},
+		    xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+		    ylabel style={at={(ticklabel* cs:1)},anchor=south west}
+		]
+		\begin{scope}[cm={-1,.5,2,1,(0,0)}, Blue]
+			\fill[opacity=.3] (0,0) rectangle (1,1);
+			\draw[very thick, ->] (0,0) -- (1,0) node[midway, below left, yshift=4pt] {$\mathcal S(\xhat)$};;
+			\draw[very thick, densely dotted, ->] (0,0) -- (0,1) node[midway, below right] {$\mathcal S(\yhat)$};
+		\end{scope}
+			\coordinate (B) at (-.25,1.25);
+		\end{axis}
+		\draw[thick] (A) edge[bend left, ->] node[midway,above] {$\mathcal S$} (B) ;
+		\node at ($(plot2.north)+(0,.5cm)$) {Orientation Reversing};
+	\end{tikzpicture}

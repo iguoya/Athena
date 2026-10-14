@@ -1,0 +1,779 @@
+{
+ "id": "module10",
+ "title_en": "The Composition of Linear Transformations",
+ "blocks": [
+  {
+   "k": "outcome",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How to break a complicated transformation into the composition of simpler ones.",
+         "sha": "14d9b60e9d5d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How the composition of linear transformations relates to matrix multiplication.",
+         "sha": "488882df1c52",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In life, we encounter situations where we do one thing after another. For example, you put on your socks and then your shoes. We might call this whole operation (of first putting on your socks and then your shoes) “getting dressed”, and it is an example of *function composition*.",
+    "sha": "efa676985182",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Composition of Functions",
+    "sha": "79dde1a89123",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $f:A\\to B$ and $g:B\\to C$. The *composition* of $g$ and $f$, notated $g\\circ f$, is the function $h:A\\to C$ defined by",
+      "sha": "36df61593ff0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "h(x)=g\\circ f(x) = g\\Big(f(x)\\Big)."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can formalize the shoes-socks example with mathematical notation.",
+    "sha": "4b332728b6df",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\text{getting dressed} = (\\text{putting on shoes})\\circ (\\text{putting on socks})"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Or, if $X$ represented putting on socks, $S$ represented putting on shoes, and $D$ represented getting dressed, $D=S\\circ X$.",
+    "sha": "972093f21353",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This real-life example has utility when talking to children. Getting dressed is a complicated operation, but by breaking it up into simpler operations, even a young child can understand the process. In this vein, we can understand complicated linear transformations by breaking them up into the composition of simpler ones.",
+    "sha": "3b8accafe076",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For example, define",
+    "sha": "6a4e05639b30",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mathcal T:\\R^2\\to\\R^2\\qquad\\text{by}\\qquad \\mathcal T(\\vec x)=\\matc{\\sqrt{2}&-\\sqrt{2}\\\\{\\sqrt{2}}/{2} & {\\sqrt{2}}/{2}}\\vec x."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It's hard to understand what $\\mathcal T$ does just by looking at inputs and outputs. However, if we were keen enough to notice that",
+    "sha": "a895ad96762c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mathcal T=\\mathcal S\\circ \\mathcal R"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "where $\\mathcal R$ was rotation counter-clockwise by $45^\\circ$ and $\\mathcal S$ was a stretch in the $\\xhat$ direction by a factor of $2$, suddenly $\\mathcal T$ wouldn't be such a mystery.",
+    "sha": "d118694d0cc0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "How does one figure out the “simple transformations” that when composed give the full transformation? In truth, there are many, many methods and there are whole books written about how to find these decompositions efficiently. We will encounter two algorithms for this 〔注： Phrased in terms of matrices instead of linear transformations, the decompositions we will study are called: (i) decomposition into *elementary* matrices, and (ii) *diagonalization*.〕, but for now our methods will be ad hoc.",
+    "sha": "a077a7dac5a1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal U:\\R^2\\to\\R^2$ be the transformation given by $M=\\matc{\\sqrt{2}/2&-\\sqrt{2}/2\\\\0&0}$, let $\\mathcal R:\\R^2\\to\\R^2$ be rotation counter clockwise by $45^\\circ$, and let $\\mathcal P:\\R^2\\to\\R^2$ be projection onto the $x$-axis. Write $\\mathcal U$ as the composition (in some order) of $\\mathcal R$ and $\\mathcal P$.",
+      "sha": "235c59ed7e83",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We will use $\\xhat$ and $\\yhat$ to determine whether $\\mathcal U$ is $\\mathcal R\\circ\\mathcal P$ or $\\mathcal P\\circ \\mathcal R$.",
+      "sha": "633396072d18",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Computing,",
+      "sha": "93e1b46c5023",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mathcal U(\\xhat)=\\matc{\\frac{\\sqrt{2}}{2}\\\\0}\\\\\\qquad\\text{and}\\qquad \\mathcal U(\\yhat)=\\mat{-\\frac{\\sqrt{2}}{2}\\\\0}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For $\\mathcal R\\circ \\mathcal P$:",
+      "sha": "065915696db3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}\\mathcal R\\circ \\mathcal P(\\xhat)=\\mathcal R(\\mathcal P(\\xhat))&=\\mathcal R\\mat{1\\\\0}=\\mat{\\frac{\\sqrt{2}}{2}\\\\\\frac{\\sqrt{2}}{2}}\\\\\n\t    \\mathcal R\\circ \\mathcal P(\\yhat)=\\mathcal R(\\mathcal P(\\yhat))&=\\mathcal R\\mat{0\\\\0}=\\mat{0\\\\0}.\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For $\\mathcal P\\circ \\mathcal R$:",
+      "sha": "5e894fb81a24",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}\\mathcal P\\circ \\mathcal R(\\xhat)=\\mathcal P(\\mathcal R(\\xhat))&=\\mathcal P\\mat{\\frac{\\sqrt{2}}{2}\\\\\\frac{\\sqrt{2}}{2}}=\\matc{\\frac{\\sqrt{2}}{2}\\\\0}\\\\\n\t    \\mathcal P\\circ \\mathcal R(\\yhat)=\\mathcal P(\\mathcal R(\\yhat))&=\\mathcal P\\mat{-\\frac{\\sqrt{2}}{2}\\\\\\frac{\\sqrt{2}}{2}}=\\mat{-\\frac{\\sqrt{2}}{2}\\\\0}.\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\mathcal P\\circ \\mathcal R$ agrees with $\\mathcal U$ on the standard basis (i.e., $\\mathcal P\\circ\\mathcal R$ and $\\mathcal U$ output the same vectors when $\\xhat$ and $\\yhat$ are input), they must agree for all vectors. Therefore $\\mathcal U=\\mathcal P\\circ \\mathcal R$.",
+      "sha": "02023a21299b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Compositions and Matrix Products",
+    "sha": "1d828d095b92",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\mathcal A:\\R^2\\to\\R^2$ and $\\mathcal B:\\R^2\\to\\R^2$ be matrix transformations with matrices",
+    "sha": "943a583eab53",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "M_A=\\mat{1&2\\\\0&2}\\qquad\\text{and}\\qquad M_B=\\mat{-1&-1\\\\-2&0}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "(Make sure you understand why $\\mathcal A\\neq M_A$ before continuing!)",
+    "sha": "ad95ef7d970b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Define $\\mathcal T=\\mathcal A\\circ \\mathcal B$. Since $\\mathcal T:\\R^2\\to\\R^2$ is a linear transformation, we know $\\mathcal T$ has a matrix $M_T$ which is $2\\times 2$. We can find $M_T$ by the usual methods. First, compute some input-output pairs for $\\mathcal T$.",
+    "sha": "adeb0e7162b9",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mathcal T\\mat{1\\\\0} = \\mathcal A\\left( \\mathcal B\\mat{1\\\\0}\\right) = \\mathcal A\\mat{-1\\\\-2}=\\mat{-5\\\\-4}\n\t\\qquad\\text{and}\\qquad\n\t\\mathcal T\\mat{0\\\\1} = \\mathcal A\\left( \\mathcal B\\mat{0\\\\1}\\right) = \\mathcal A\\mat{-1\\\\0}=\\mat{-1\\\\0}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Letting $M_T=\\mat{a&b\\\\c&d}$, we use the input-output pairs to see",
+    "sha": "4b3b1bc2302c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mat{a\\\\c}=M_T\\mat{1\\\\0}=\\mat{-5\\\\-4}\\qquad \\text{and}\\qquad \\mat{b\\\\d}=M_T\\mat{0\\\\1}=\\mat{-1\\\\0},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and so",
+    "sha": "9af790b3a93d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "M_T=\\mat{-5&-1\\\\-4&0}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We found $M_T$, the matrix for $\\mathcal T$, using traditional techniques, but could we have used $M_A$ and $M_B$ to somehow find $M_T$? As it turns out, yes, we could have!",
+    "sha": "f095595af49e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "By definition,",
+    "sha": "5c48b19627be",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mathcal A\\vec x=M_A\\vec x\\qquad\\text{and}\\qquad \\mathcal B\\vec x=M_B\\vec x,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "since $\\mathcal A$ and $\\mathcal B$ are matrix transformations. Therefore,",
+    "sha": "1e23a95c1dcd",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mathcal A(\\mathcal B\\vec x) = M_A(M_B\\vec x)."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "But, matrix multiplication is *associative* 〔注： If an operation is associative, it means that where you put the parenthesis doesn't matter.〕, and so",
+    "sha": "538573f39392",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "M_A(M_B\\vec x)=(M_AM_B)\\vec x."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Thus $M_AM_B$ must be a matrix for $\\mathcal A\\circ \\mathcal B=\\mathcal T$. Indeed, computing the matrix product, we see",
+    "sha": "b8c406e8ce72",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "M_AM_B=\\mat{1&2\\\\0&2}\\mat{-1&-1\\\\-2&0}=\\mat{-5&-1\\\\-4&0}=M_T."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The fact that matrix multiplication corresponds to function composition is no coincidence. It is the very reason matrix multiplication is defined the way it is. This is reiterated in the following theorem.",
+    "sha": "f59608dbc8ab",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If $\\mathcal P:\\R^a\\to\\R^b$ and $\\mathcal Q:\\R^c\\to \\R^a$ are matrix transformations with matrices $M_P$ and $M_Q$, then $\\mathcal P\\circ \\mathcal Q$ is a matrix transformation whose matrix is given by the matrix product $M_PM_Q$.",
+      "sha": "0d95a3b1e94d",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It should now be clear why the order of matrix multiplication matters. The order of function composition matters (you must put on your socks before your shoes!), and since matrix multiplication corresponds to function composition, the order of matrix multiplication must matter.",
+    "sha": "10e163461286",
+    "zh": ""
+   }
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\mathcal U:\\R^{2}\\to\\R^{2}$ be the matrix transformation given by $\\mat{0&0\\\\-\\sqrt{2}/2 & -\\sqrt{2}/2}$. Further, let $\\mathcal P:\\R^{2}\\to\\R^{2}$ be the projection onto the $y$-axis, and let $\\mathcal R:\\R^{2}\\to\\R^{2}$ be the rotation clockwise by $135^{\\circ}$.",
+         "sha": "08a56e1ac8e6",
+         "zh": ""
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Find a matrix for $\\mathcal R \\circ \\mathcal P$.",
+            "sha": "e6f93c8c83cf",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Find a matrix for $\\mathcal P \\circ \\mathcal R$.",
+            "sha": "9739ccb3d4d3",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Write $\\mathcal U$ as the composition (in some order) of $\\mathcal R$ and $\\mathcal P$.",
+            "sha": "2002bd2ecebd",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\mathcal V:\\R^{2}\\to\\R^{2}$ be the matrix transformation given by $\\mat{0&2\\\\2&0}$. Further, let $\\mathcal S:\\R^{2}\\to\\R^{2}$ be the transformation that doubles every vector, and let $\\mathcal F:\\R^{2}\\to\\R^{2}$ be the transformation reflecting over the line $y=x$.",
+         "sha": "0446d78d73af",
+         "zh": ""
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Find a matrix for $\\mathcal F \\circ \\mathcal S$.",
+            "sha": "5467a2a6f707",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Find a matrix for $\\mathcal S \\circ \\mathcal F$.",
+            "sha": "52abe38492b5",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Write $\\mathcal V$ as the composition (in some order) of $\\mathcal F$ and $\\mathcal S$.",
+            "sha": "3e09dbe7c5ba",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}(\\mathcal R \\circ \\mathcal P)\\left(\\mat{1\\\\0}\\right)=\\mat{0\\\\0},\\quad\n\t\t\t\t\t\t(\\mathcal R \\circ \\mathcal P)\\left(\\mat{0\\\\1}\\right)=\\mat{\\tfrac{1}{\\sqrt{2}}\\\\-\\tfrac{1}{\\sqrt{2}}}\\\\\n\t\t\t\t\t\t(\\mathcal P \\circ \\mathcal R)\\left(\\mat{1\\\\0}\\right)=\\mat{0\\\\-\\tfrac{1}{\\sqrt{2}}},\\quad\n\t\t\t\t\t\t(\\mathcal P \\circ \\mathcal R)\\left(\\mat{0\\\\1}\\right)=\\mat{0\\\\-\\tfrac{1}{\\sqrt{2}}}\\end{aligned}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "We can use the effect of the transformation on the standard basis to compute the matrix.",
+         "sha": "b69bf1ca0eab",
+         "zh": ""
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "math",
+           "tex": "\\begin{aligned}M_{R\\circ P}= \\mat{\\mathcal R(\\mathcal\n\t\t\t\t\t\t\t\tP(\\xhat))& \\mathcal R( \\mathcal P(\\yhat))}=\n\t\t\t\t\t\t\t\\mat{0&\\tfrac{1}{\\sqrt{2}}\\\\0&-\\tfrac{1}{\\sqrt{2}}}\\end{aligned}"
+          }
+         ],
+         [
+          {
+           "k": "math",
+           "tex": "\\begin{aligned}M_{P\\circ R}= \\mat{\\mathcal P(\n\t\t\t\t\t\t\t\t\\mathcal R(\\xhat))& \\mathcal P(\\mathcal\n\t\t\t\t\t\t\t\tR(\\yhat))}= \\mat{0&0\\\\-\\tfrac{1}{\\sqrt{2}}&-\\tfrac{1}{\\sqrt{2}}}\\end{aligned}"
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Since $M_{\\mathcal U}=M_{\\mathcal P \\circ \\mathcal R}$ and $\\tfrac{1}{\\sqrt{2}}=\\tfrac{\\sqrt{2}}{2}$, we can assert that $\\mathcal U=\\mathcal P \\circ \\mathcal R$.",
+            "sha": "ac06a6ccbe44",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}(\\mathcal F \\circ \\mathcal S)\\left(\\mat{1\\\\0}\\right) = \\mat{0\\\\2},\\quad\n\t\t\t\t\t\t(\\mathcal F \\circ \\mathcal S)\\left(\\mat{0\\\\1}\\right) = \\mat{2\\\\0}\\\\\n\t\t\t\t\t\t(\\mathcal S \\circ \\mathcal F)\\left(\\mat{1\\\\0}\\right) = \\mat{0\\\\2},\\quad\n\t\t\t\t\t\t(\\mathcal S \\circ \\mathcal F)\\left(\\mat{0\\\\1}\\right) = \\mat{2\\\\0}\\end{aligned}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "We can use the effect of the transformation on the standard basis to compute the matrix.",
+         "sha": "b69bf1ca0eab",
+         "zh": ""
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$M_{\\mathcal F \\circ \\mathcal S}=\\mat{\\mathcal F( \\mathcal S(\\xhat))& \\mathcal F(\\mathcal S(\\yhat))}=\\mat{0&2\\\\2&0}$",
+            "sha": "c54d906f3abd",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$M_{\\mathcal S \\circ \\mathcal F}=\\mat{\\mathcal S( \\mathcal F(\\xhat))& \\mathcal S(\\mathcal F(\\yhat))}=\\mat{0&2\\\\2&0}$",
+            "sha": "ad24c001b54d",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\mathcal S\\circ \\mathcal F= \\mathcal V = \\mathcal F \\circ \\mathcal S$.",
+            "sha": "fac0f685a7d4",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "The Composition of Linear Transformations · 练习题 1（上游 book/modules/module10-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module10-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal A: \\R^{2}\\to \\R^{2}$ and $\\mathcal B: \\R^{2}\\to \\R^{2}$ be matrix transformations with matrices",
+      "sha": "b8bae2ee9c3e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "M_{\\mathcal A}= \\mat{2&2\\\\1&3}\\quad \\text{and}\\quad M_{\\mathcal B}=\n\t\t\t\\mat{3&2\\\\0&4}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and let $M_{\\mathcal T}$ be the matrix for $\\mathcal T=\\mathcal A\\circ\\mathcal B$.",
+      "sha": "010ae9e8a79c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find $M_{\\mathcal T}$ by computing input-output pairs for $\\mathcal T$.",
+         "sha": "856d5318790f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find $M_{\\mathcal T}$ by using matrix multiplication applied to $M_{\\mathcal A}$ and $M_{\\mathcal B}$.",
+         "sha": "f40fd927d5c0",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}M_{\\mathcal{T}}\\mat{1\\\\0}&=M_{\\mathcal A}M_{\\mathcal{B}}\\mat{1\\\\0}=M_{\\mathcal A}\\mat{3&2\\\\0&4}\\mat{1\\\\0}\\\\\n\t\t\t\t\t&=\\mat{2&2\\\\1&3}\\mat{3\\\\0}=\\mat{6\\\\3}\\\\\n\t\t\t\t\tM_{\\mathcal{T}}\\mat{0\\\\1}&=M_{\\mathcal A}M_{\\mathcal B}\\mat{0\\\\1}=M_{\\mathcal A}\\mat{3&2\\\\0&4}\\mat{0\\\\1}\\\\\n\t\t\t\t\t&=\\mat{2&2\\\\1&3}\\mat{2\\\\4}=\\mat{12\\\\14}\\end{aligned}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Therefore, $M_{\\mathcal T}=\\mat{6&12\\\\3&14}$.",
+         "sha": "35bbdb69106a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$M_{\\mathcal T}= M_{\\mathcal A}M_{\\mathcal B}= \\mat{2&2\\\\1&3}\\mat{3&2\\\\0&4}= \\mat{6&12\\\\3&14}$",
+         "sha": "3c682cb66727",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "The Composition of Linear Transformations · 练习题 2（上游 book/modules/module10-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module10-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal A: \\R^{3}\\to \\R^{2}$ and $\\mathcal B: \\R^{2}\\to \\R^{1}$ be matrix transformations with matrices",
+      "sha": "6abf965220ad",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "M_{\\mathcal A}= \\mat{2&1&0\\\\2&3&0}\\quad and \\quad M_{\\mathcal B}=\n\t\t\t\\mat{3&2}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and let $M_{\\mathcal T}$ be the matrix for $\\mathcal T=\\mathcal B\\circ \\mathcal A$.",
+      "sha": "46a02b1a41ad",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find $M_{\\mathcal T}$ by computing input-output pairs for $\\mathcal T$.",
+         "sha": "856d5318790f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find $M_{\\mathcal T}$ by using matrix multiplication applied to $M_{\\mathcal A}$ and $M_{\\mathcal B}$.",
+         "sha": "f40fd927d5c0",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal T = \\mathcal B \\circ \\mathcal A$, thus $\\mathcal T: \\R^{3}\\to \\R$.",
+         "sha": "5ee9670194b7",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal T \\mat{1\\\\0\\\\0}= (\\mathcal B \\circ \\mathcal A) \\mat{1\\\\0\\\\0}= \\mathcal B \\mat{2\\\\2}= 10$",
+         "sha": "8e0352b6766b",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal T \\mat{0\\\\1\\\\0}= (\\mathcal B \\circ \\mathcal A) \\mat{0\\\\1\\\\0}= \\mathcal B \\mat{1\\\\3}= 9$",
+         "sha": "5a8b5d099501",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal T \\mat{0\\\\0\\\\1}= (\\mathcal B \\circ \\mathcal A) \\mat{0\\\\0\\\\1}= \\mathcal B \\mat{0\\\\0}= 0$.",
+         "sha": "909ad9f3c52a",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Therefore $M_{\\mathcal T}= \\mat{10&9&0}$",
+         "sha": "ada5e3c203b6",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$M_{\\mathcal T}= M_{\\mathcal B}M_{\\mathcal A}= \\mat{3&2}\\mat{2&1&0\\\\2&3&0}= \\mat{10&9&0}$",
+         "sha": "1e3bdafa6afc",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "The Composition of Linear Transformations · 练习题 3（上游 book/modules/module10-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module10-exercises.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "线性变换的复合"
+}

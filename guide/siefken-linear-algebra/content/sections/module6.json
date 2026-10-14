@@ -1,0 +1,2162 @@
+{
+ "id": "module6",
+ "title_en": "Subspaces & Bases",
+ "blocks": [
+  {
+   "k": "outcome",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Formal and intuitive definitions of subspaces.",
+         "sha": "c9a1277e1058",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The relationship between subspaces and spans.",
+         "sha": "99e34919453a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How to prove whether or not a set is a subspace.",
+         "sha": "d3d51ce42f12",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How to find a basis for and the dimension of a subspace.",
+         "sha": "6cb301f2b569",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Lines or planes through the origin can be written as spans of their direction vectors. However, a line or plane that doesn't pass through the origin cannot be written as a span—it must be expressed as a *translated* span.",
+    "sha": "6f6aedde4288",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "7c1f07e8bfe3"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There's something special about sets that can be expressed as (untranslated) spans. In particular, since a linear combination of linear combinations is still a linear combination, a span is *closed* with respect to linear combinations. That is, by taking linear combinations of vectors in a span, you cannot escape the span. In general, sets that have this property are called *subspaces*.",
+    "sha": "c2777b36b59b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Subspace",
+    "sha": "c5efc8ca5782",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A non-empty subset $V\\subseteq \\R^{n}$ is called a *subspace* if for all $\\vec u,\\vec v\\in V$ and all scalars $k$ we have",
+      "sha": "c551d02d260a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec u+\\vec v\\in V$; and",
+         "sha": "079d11a953cd",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$k\\vec u\\in V$.",
+         "sha": "ec95d06313df",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In the definition of a subspace, property (i) is called being *closed with respect to vector addition* and property (ii) is called being *closed with respect to scalar multiplication*.",
+    "sha": "64c22562368f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Subspaces generalize the idea of *flat spaces through the origin*. They include lines, planes, volumes and more.",
+    "sha": "19b5bda2456a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal V\\subseteq \\R^2$ be the complete solution to $x+2y=0$. Show that $\\mathcal V$ is a subspace.",
+      "sha": "f0c96e0f5c8f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec u = \\mat{u_1\\\\u_2}$ and $\\vec v = \\mat{v_1\\\\v_2}$ be in $\\mathcal V$, and let $k$ be a scalar.",
+      "sha": "dd5d1d1c4587",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By definition, we have \\[",
+      "sha": "d54a6f61a8da",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}u_1+2u_2&=0 \\\\\n\t\tv_1+2v_2&=0\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": ". \\]",
+      "sha": "7fbd38ea500c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We will show that $\\mathcal V$ is nonempty and that (i) $\\vec u + \\vec v \\in \\mathcal V$; and (ii) $k\\vec u \\in \\mathcal V$.",
+      "sha": "941838f39dd0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "First we will show (i). Observe that",
+      "sha": "9a660114fc1f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec u + \\vec v = \\mat{u_1+v_1\\\\u_2+v_2}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and the coordinates of $\\vec u+\\vec v$ satisfy",
+      "sha": "5f33981ee475",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(u_1+v_1)+2(u_2+v_2)=\n\t\t(u_1+2u_2)+(v_1+2v_2)=\n\t\t0+0=0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since the coordinates of $\\vec u + \\vec v$ satisfy the equation $x+2y=0$, we have shown that $\\vec u + \\vec v \\in \\mathcal V$.",
+      "sha": "4db19c93d910",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Next we will show (ii). Observe that",
+      "sha": "41305507af11",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "k\\vec u = \\mat{ku_1\\\\ku_2}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and the coordinates of $k\\vec u$ satisfy",
+      "sha": "1e2b22a689fa",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(ku_1)+2(ku_2) = \n\t\tk(u_1+2u_2)=\n\t\tk0=0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "And so, we have shown that $k\\vec u \\in \\mathcal V$.",
+      "sha": "26abb5b872d7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Finally, since $\\vec 0 = \\mat{0\\\\0}$ satisfies $x+2y=0$, we conclude that $\\vec 0\\in\\mathcal V$ and so $\\mathcal V$ is non-empty.",
+      "sha": "d457fe8df8d2",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Thus, by the definition, we have shown that $\\mathcal V$ is a subspace.",
+      "sha": "9c0d800e8982",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal W\\subseteq \\R^2$ be the line expressed in vector form as",
+      "sha": "60bb9e7dce17",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec x=t\\mat{1\\\\2}+\\mat{1\\\\1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine whether $\\mathcal W$ is a subspace.",
+      "sha": "e0577b6ea829",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\mathcal W$ is *not* a subspace. To see this, notice that $\\vec v=\\mat{1\\\\1}\\in \\mathcal W$, but $0\\vec v=\\vec 0\\notin\\mathcal W$. Therefore, $\\mathcal W$ is not closed under scalar multiplication and so it cannot be a subspace.",
+      "sha": "ced0983f59fd",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "As mentioned earlier, subspaces and spans are deeply connected. This connection is given by the following theorem.",
+    "sha": "705a4abace39",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Subspace-Span",
+    "sha": "d86c63258f5b",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Every subspace is a span and every span is a subspace. More precisely, $\\mathcal V\\subseteq \\R^n$ is a subspace if and only if $\\mathcal V= \\Span\\mathcal X$ for some set $\\mathcal X$.",
+      "sha": "d4b69175aefd",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We will start by showing every span is a subspace. Fix $\\mathcal X\\subseteq\\R^n$ and let $\\mathcal V=\\Span\\mathcal X$. First note that if $\\mathcal X\\neq \\Set{}$, then $\\mathcal V$ is non-empty because $\\mathcal X\\subseteq\\mathcal V$ and if $\\mathcal X=\\Set{}$, then $\\mathcal V=\\Set{\\vec 0}$, and so is still non-empty.",
+      "sha": "f6b00e6f7462",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Fix $\\vec v,\\vec u\\in\\mathcal V$. By definition there are $\\vec x_1,\\vec x_2,\\ldots,\\vec y_1,\\vec y_2,\\ldots\\in\\mathcal X$ and scalars $\\alpha_1,\\alpha_2,\\ldots,\\beta_1,\\beta_2,\\ldots$ so that",
+      "sha": "4a8c291df152",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec v=\\sum \\alpha_i\\vec x_i\\qquad \\vec u=\\sum\\beta_i\\vec y_i."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To verify property (i), observe that",
+      "sha": "5b54d80d7f77",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec u+\\vec v=\\sum\\alpha_i\\vec x_i + \\sum\\beta_i\\vec y_i"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is also a linear combination of vectors in $\\mathcal X$ (because all $\\vec x_i$ and $\\vec y_i$ are in $\\mathcal X$), and so $\\vec u+\\vec v\\in \\Span\\mathcal X=\\mathcal V$.",
+      "sha": "ae042dec2057",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To verify property (ii), observe that for any scalar $\\alpha$,",
+      "sha": "c32e4abfd0cc",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\alpha\\vec v=\\alpha\\sum \\alpha_i\\vec x_i = \\sum (\\alpha\\alpha_i)\\vec x_i\\in\n\t\t\\Span\\mathcal X=\\mathcal V."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\mathcal V$ is non-empty and satisfies both properties (i) and (ii), it is a subspace.",
+      "sha": "4aca3dd0b428",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Now we will prove that every subspace is a span. Let $\\mathcal V$ be a subspace and consider $\\mathcal V'=\\Span\\mathcal V$. Since taking a span may only enlarge a set, we know $\\mathcal V\\subseteq \\mathcal V'$. If we establish that $\\mathcal V'\\subseteq\\mathcal V$, then $\\mathcal V=\\mathcal V'=\\Span\\mathcal V$, which would complete the proof.",
+      "sha": "ae1d739f696f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Fix $\\vec x\\in\\mathcal V'$. By definition, there are $\\vec v_1,\\vec v_2,\\ldots,\\vec v_n\\in\\mathcal V$ and scalars $\\alpha_1,\\alpha_2,\\ldots,\\alpha_n$ so that",
+      "sha": "a490131f1452",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec x=\\sum \\alpha_i\\vec v_i."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Observe that $\\alpha_i\\vec v_i\\in\\mathcal V$ for all $i$, since $\\mathcal V$ is closed under scalar multiplication. It follows that $\\alpha_1\\vec v_1+\\alpha_2\\vec v_2\\in\\mathcal V$, because $\\mathcal V$ is closed under sums. Continuing, $(\\alpha_1\\vec v_1+\\alpha_2\\vec v_2)+\\alpha_3\\vec v_3\\in\\mathcal V$ because $\\mathcal V$ is closed under sums. Applying the principle of finite induction, we see",
+      "sha": "9d4d6f20d5d0",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec x=\\sum \\alpha_i\\vec v_i\n\t\t=\\Big(\\big((\\alpha_1\\vec v_1+\\alpha_2\\vec v_2)\n\t\t+\\alpha_3\\vec v_3\\big)+\\cdots+\\alpha_{n-1}\\vec v_{n-1} \\Big)\n\t\t+\\alpha_n\\vec v_n\\in\\mathcal V."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Thus $\\mathcal V'\\subseteq\\mathcal V$, which completes the proof.",
+      "sha": "5ca2fa315eb4",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The previous theorem is saying that spans and subspaces are two ways of talking about the same thing. Spans provide a *constructive* definition of lines/planes/volumes/etc. through the origin. That is, when you describe a line/plane/etc. through the origin as a span, you're saying “this is a line/plane/etc. through the origin because every point in it is a linear combination of *these specific vectors*”. In contrast, subspaces provide a *categorical* definition of lines/planes/etc. through the origin. When you describe a line/plane/etc. through the origin as a subspace, you're saying “this is a line/plane/etc. through the origin because these *properties* are satisfied” 〔注： Categorical definitions are useful when working with objects where it's hard to pin down exactly what the elements inside are.〕.",
+    "sha": "9fdc79f25024",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Spans and subspaces are two different ways of talking about the same objects: points/lines/planes/etc. through the origin.",
+      "sha": "395e6a689380",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Special Subspaces",
+    "sha": "b25db4e7f661",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When thinking about $\\R^n$, there are two special subspaces that are always available. The first is $\\R^n$ itself. $\\R^n$ is obviously non-empty, and linear combinations of vectors in $\\R^n$ remain in $\\R^n$. The second is the *trivial subspace*, $\\Set{\\vec 0}$.",
+    "sha": "fed18cdd2067",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Trivial Subspace",
+    "sha": "40350116f3cd",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The subset $\\Set{\\vec 0}\\subseteq\\R^n$ is called the *trivial subspace*.",
+      "sha": "5533a222dd81",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The trivial subspace is a subspace.",
+      "sha": "0bf0a3a61f8b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "First note that $\\Set{\\vec 0}$ is non-empty since $\\vec 0\\in\\Set{\\vec 0}$. Now, since $\\vec 0$ is the only vector in $\\Set{\\vec 0}$, properties (i) and (ii) follow quickly:",
+      "sha": "aa1b45e21c74",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec 0+\\vec 0=\\vec 0\\in \\Set{\\vec 0}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and",
+      "sha": "cffa50a32cb1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\alpha\\vec 0=\\vec 0\\in\\Set{\\vec 0}."
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Bases",
+    "sha": "4994cc23d405",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\vec d=\\mat{2\\\\1}$ and consider $\\ell=\\Span\\Set{\\vec d}$.",
+    "sha": "3e7da9b379dd",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "10027e63d157"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We know that $\\ell$ is a subspace, and we defined $\\ell$ as the span of $\\Set{\\vec d}$, but we didn't have to define $\\ell$ that way. We could have, for instance, defined $\\ell=\\Span\\Set{\\vec d,-2\\vec d,\\tfrac{1}{2}\\vec d}$. However, $\\Span\\Set{\\vec d}$ is a simpler way to describe $\\ell$ than $\\Span\\Set{\\vec d,-2\\vec d,\\tfrac{1}{2}\\vec d}$. This property is general: the simplest descriptions of a line involve the span of only one vector.",
+    "sha": "580ced5af33a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Analogously, let $\\mathcal P=\\Span\\Set{\\vec d_1,\\vec d_2}$ be the plane through the origin with direction vectors $\\vec d_1$ and $\\vec d_2$. There are many ways to write $\\mathcal P$ as a span, but the simplest ones involve exactly two vectors. The idea of a *basis* comes from trying to find the simplest description of a subspace.",
+    "sha": "f85485a8ef76",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Basis",
+    "sha": "83d956f4d1d3",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A *basis* for a subspace $\\mathcal V$ is a linearly independent set of vectors, $\\mathcal B$, so that $\\Span\\mathcal B=\\mathcal V$.",
+      "sha": "181f4825c86c",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In short, a basis for a subspace is a linearly independent set that spans that subspace.",
+    "sha": "43c006fc374c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\ell=\\Span\\Set{\\mat{1\\\\2},\\mat{-2\\\\-4}, \\mat{1/2\\\\1}}$. Find two different bases for $\\ell$.",
+      "sha": "a2d9611e1753",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We are looking for a set of linearly independent vectors that spans $\\ell$. Notice that $\\mat{1\\\\2} = -\\tfrac{1}{2}\\mat{-2\\\\-4} = 2\\matc{1/2\\\\1}$. Therefore,",
+      "sha": "020c78ad4c19",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Span\\Set{\\mat{1\\\\2}} =\n\t\t\\Span\\Set{\\mat{-2\\\\-4}} =\n\t\t\\Span\\Set{\\mat{1/2\\\\1}} =\n\t\t\\Span\\Set{\\mat{1\\\\2},\\mat{-2\\\\-4}, \\mat{1/2\\\\1}} =\n\t\t\\ell."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Because $\\Set{\\mat{1\\\\2}}$ is linearly independent and spans $\\ell$, we have that $\\Set{\\mat{1\\\\2}}$ is a basis for $\\ell$. Similarly, $\\Set{\\matc{1/2\\\\1}}$ is another basis for $\\ell$.",
+      "sha": "92a11aeb1292",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Unpacking the definition of basis a bit more, we can see that a basis for a subspace is a set of vectors that is *just the right size* to describe everything in the subspace. It's not too big—because it is linearly independent, there are no redundancies. It's not too small—because we require it to span the subspace 〔注： If you're into British fairy tales, you might call a basis a *Goldilocks set*. 〕.",
+    "sha": "c69874ca71e4",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There are several facts everyone should know about bases:",
+    "sha": "f74901710ec4",
+    "zh": ""
+   }
+  },
+  {
+   "k": "list",
+   "ordered": true,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Bases are not unique. Every subspace (except the trivial subspace) has multiple bases.",
+       "sha": "be05d7541747",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Given a basis for a subspace, every vector in the subspace can be written as a *unique* linear combination of vectors in that basis.",
+       "sha": "c7ddc54ef773",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Any two bases for the same subspace have the same number of elements.",
+       "sha": "197315d64efc",
+       "zh": ""
+      }
+     }
+    ]
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "You can prove the first fact by observing that if $\\mathcal B=\\Set{\\vec b_1,\\vec b_2,\\ldots}$ is a basis with at least one element 〔注： The empty set is a basis for the trivial subspace.〕, then $\\Set{2\\vec b_1,2\\vec b_2,\\ldots}$ is a different basis. The second fact is a consequence of all bases being linearly independent. The third fact is less obvious and takes some legwork to prove, so we will accept it as is.",
+    "sha": "a49d4e237cd0",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Dimension",
+    "sha": "45e147abd920",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\mathcal V$ be a subspace. Though there are many bases for $\\mathcal V$, they all have the same number of vectors in them. And, this number says something fundamental about $\\mathcal V$: it tells us the maximum number of linearly independent vectors that can simultaneously exist in $\\mathcal V$. We call this number the *dimension* of $\\mathcal V$.",
+    "sha": "d01c2d9d9691",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Dimension",
+    "sha": "45e147abd920",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The *dimension* of a subspace $V$ is the number of elements in a basis for $V$.",
+      "sha": "6e44d595eb9b",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This definition agrees with our intuition about lines and planes: the dimension of a line through $\\vec 0$ is $1$, and the dimension of a plane through $\\vec 0$ is $2$. It even tells us the dimension of the single point $\\Set{\\vec 0}$ is $0$ 〔注： The dimension of a line, plane, or point not through the origin is defined to be the dimension of the subspace obtained when it is translated to the origin.〕.",
+    "sha": "0252fd658359",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the dimension of $\\R^2$.",
+      "sha": "00ed85193a83",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\Set{\\xhat, \\yhat}$ is a basis for $\\R^2$, we know $\\R^2$ is two dimensional.",
+      "sha": "36cbf96cb764",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\ell=\\Span\\Set{\\mat{1\\\\2},\\mat{-2\\\\-4}, \\mat{1/2\\\\1}}$. Find the dimension of the subspace $\\ell$.",
+      "sha": "59a764ab3080",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is the same subspace from the earlier example where we found $\\Set{\\mat{1\\\\2}}$ and $\\Set{\\matc{1/2\\\\1}}$ were bases for $\\ell$. Both these bases contain one element, and so $\\ell$ is a one dimensional subspace.",
+      "sha": "bba00eebb960",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\Set{(x_1,x_2,x_3,x_4)\\given x_1+2x_2-x_3=0\\text{ and }x_1+6x_4=0}$. Find a basis for and the dimension of $A$.",
+      "sha": "1c3fe56a74b7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "$A$ is the complete solution to the system",
+      "sha": "cb273e3b6e6a",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}x_1+2x_2-x_3 &= 0 \\\\ x_1+6x_4 &= 0\\end{aligned},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which can be expressed in vector form as",
+      "sha": "1aee9b7eff27",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{x_1\\\\x_2\\\\x_3\\\\x_4} = t\\matc{0\\\\1/2\\\\1\\\\0}+s\\mat{-6\\\\3\\\\0\\\\1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore $A=\\Span\\Set{\\matc{0\\\\1/2\\\\1\\\\0}, \\mat{-6\\\\3\\\\0\\\\1}}$. Since $\\Set{\\matc{0\\\\1/2\\\\1\\\\0}, \\mat{-6\\\\3\\\\0\\\\1}}$ is a linearly independent spanning set with two elements, $A$ is two dimensional.",
+      "sha": "7c96b21f2463",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Like $\\R^2$ and $\\R^3$, whenever we discuss $\\R^n$, we always have a standard basis that comes along for the ride.",
+    "sha": "221dfc7ca26c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Standard Basis",
+    "sha": "7a8cca0b07c4",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The *standard basis* for $\\R^n$ is the set $\\Set{\\vec e_1,\\ldots,\\vec e_n}$ where",
+      "sha": "e6786b3c89aa",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec e_1=\\matc{1\\\\0\\\\0\\\\\\vdots}\\qquad\n\t\t\\vec e_2=\\matc{0\\\\1\\\\0\\\\\\vdots}\\qquad\n\t\t\\vec e_3=\\matc{0\\\\0\\\\1\\\\\\vdots}\\qquad\\cdots."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "That is $\\vec e_i$ is the vector with a $1$ in its $i$th coordinate and zeros elsewhere.",
+      "sha": "751355dc7e2e",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Note: the notation $\\vec e_i$ is context specific. If we say $\\vec e_i\\in\\R^2$, then $\\vec e_i$ must have exactly two coordinates. If we say $\\vec e_i\\in\\R^{45}$, then $\\vec e_i$ must have $45$ coordinates.",
+    "sha": "ceb36cf3f1cf",
+    "zh": ""
+   }
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each of the following sets, prove whether or not they are a subspace.",
+      "sha": "a9e15a159e1c",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal T \\subseteq \\R^2$, where $\\mathcal T$ is the complete solution to $3x-y=0$.",
+         "sha": "67d742f1d3c8",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal U \\subseteq \\R^2$, where $\\mathcal U$ is the complete solution to $\\frac{1}{2}x-6y=0$.",
+         "sha": "fca42d601d9c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal V \\subseteq \\R^2$, where $\\mathcal V$ is the complete solution to $x-5y-1=0$.",
+         "sha": "457042414c74",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal X \\subseteq \\R^3$, where $\\mathcal X$ is the complete solution to $5x-\\pi y + (\\ln 2)z=0$.",
+         "sha": "f02f9388bbed",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal Q \\subseteq \\R^n$, where $\\mathcal Q$ is the complete solution to $a_1x_1+a_2x_2+...+a_{n-1}x_{n-1}+a_nx_n=0$ where $a_1,...,a_n \\in \\R$.",
+         "sha": "c965648ba3ab",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal T$ is a subspace: it is non-empty since $\\mat{0\\\\0}\\in\\mathcal T$.",
+         "sha": "af0a1c187766",
+         "zh": ""
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\mat{x_1\\\\y_1},\\mat{x_2\\\\y_2}\\in \\mathcal T$. Then $3x_1-y_1=0=3x_2-y_2$. Hence $3(x_1+x_2)-(y_1+y_2)=(3x_1-y_1)+(3x_2-y_1)=0+0=0$ and $\\mat{x_1\\\\y_1}+\\mat{x_2\\\\y_2}\\in\\mathcal T$.",
+            "sha": "25e32ac8a248",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\mat{x\\\\y}\\in\\mathcal T$. Then $3x-y=0$. Hence for all $\\alpha\\in\\R$, $3\\alpha x-\\alpha y=\\alpha(3x-y)=\\alpha\\cdot 0=0$ and $\\alpha\\mat{x\\\\y}\\in\\mathcal T$.",
+            "sha": "778646f9198e",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal U$ is a subspace: it is non-empty since $\\mat{0\\\\0}\\in\\mathcal U$.",
+         "sha": "bf2ed4345853",
+         "zh": ""
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\mat{x_1\\\\y_1},\\mat{x_2\\\\y_2}\\in \\mathcal U$. Then $\\frac{1}{2}x_1-6y_1=0=\\frac{1}{2}x_2-6y_2$. Hence $\\frac{1}{2}(x_1+x_2)-6(y_1+y_2)=(\\frac{1}{2}x_1-6y_1)+(\\frac{1}{2}x_2-6y_2)=0+0=0$ and $\\mat{x_1\\\\y_1}+\\mat{x_2\\\\y_2}\\in\\mathcal U$.",
+            "sha": "efdca861075c",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\mat{x\\\\y}\\in\\mathcal U$. Then $\\frac{1}{2}x-6y=0$. Hence for all $\\alpha\\in\\R$, $\\frac{1}{2}\\alpha x-6\\alpha y=\\alpha(\\frac{1}{2}x-6y)=\\alpha\\cdot 0=0$ and $\\alpha\\mat{x\\\\y}\\in\\mathcal U$.",
+            "sha": "5430309f8229",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal V$ is not a subspace, since for example $\\mat{6\\\\1}\\in\\mathcal V$, but $0\\cdot\\mat{6\\\\1}=\\vec 0\\not\\in\\mathcal V$.",
+         "sha": "4a0d95d3c859",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal X$ is a subspace: it is non-empty since $\\mat{0\\\\0\\\\0}\\in\\mathcal X$.",
+         "sha": "2753da03e3ab",
+         "zh": ""
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\mat{x_1\\\\y_1\\\\z_1},\\mat{x_2\\\\y_2\\\\z_2}\\in \\mathcal X$. Then $5x_1-\\pi y_1+(\\ln 2)z_1=0=5x_2-\\pi y_2+(\\ln 2)z_2$. Hence $5(x_1+x_2)-\\pi(y_1+y_2)+(\\ln 2)(z_1+z_2)=(5x_1-\\pi y_1+(\\ln 2)z_1)+(5x_2-\\pi y_2+(\\ln 2)z_2)=0+0=0$ and $\\mat{x_1\\\\y_1\\\\z_1}+\\mat{x_2\\\\y_2\\\\z_2}\\in\\mathcal X$.",
+            "sha": "94dfd3e130d7",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\mat{x\\\\y\\\\z}\\in\\mathcal X$. Then $5x-\\pi y+(\\ln 2)z=0$. Hence for all $\\alpha\\in\\R$, $5\\alpha x-\\pi\\alpha y+(\\ln 2)\\alpha z=\\alpha(5x-\\pi y+(\\ln 2)z)=\\alpha\\cdot 0=0$ and $\\alpha\\mat{x\\\\y\\\\z}\\in\\mathcal X$.",
+            "sha": "d04b053bdcec",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal Q$ is a subspace: it is non-empty since $\\vec 0\\in\\mathcal Q$.",
+         "sha": "7fc4b5f0922d",
+         "zh": ""
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\mat{x_1\\\\\\vdots\\\\x_n},\\mat{x'_1\\\\\\vdots\\\\x'_n}\\in \\mathcal Q$. Then $a_1x_1+\\ldots+a_nx_n=0=a_1x'_1+\\ldots+a_nx'_n$. Hence $a_1(x_1+x'_1)+\\ldots+a_n(x_n+x'_n)=(a_1x_1+\\ldots+a_nx_n)+(a_1x'_1+\\ldots+a_nx'_n)=0+0=0$ and $\\mat{x_1\\\\\\vdots\\\\x_n}+\\mat{x'_1\\\\\\vdots\\\\x'_n}\\in\\mathcal Q$.",
+            "sha": "e5c8b876f41b",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\mat{x_1\\\\\\vdots\\\\x_n}\\in\\mathcal Q$. Then $a_1 x_1+\\ldots+a_nx_n=0$. Hence for any scalar $\\alpha\\in\\R$, $a_1\\alpha x_1+\\ldots+a_n\\alpha x_n=\\alpha(a_1x_1+\\ldots+a_nx_n)=\\alpha\\cdot 0=0$ and $\\alpha\\mat{x_1\\\\\\vdots\\\\x_n}\\in\\mathcal Q$.",
+            "sha": "b600d1a19aff",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Subspaces & Bases · 练习题 1（上游 book/modules/module6-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module6-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each of the following sets, prove whether or not it is a subspace.",
+      "sha": "d3e0c7ae36ee",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal A \\subseteq \\R^2$, where $\\mathcal A$ is specified in vector form by $\\vec x = t\\mat{5\\\\-7}+\\mat{1\\\\2}$.",
+         "sha": "7bb541035679",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal B \\subseteq \\R^2$, where $\\mathcal B$ is specified in vector form by $\\vec x = t\\mat{-3\\\\4}$.",
+         "sha": "250f48c20821",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal C \\subseteq \\R^3$, where $\\mathcal C$ is specified in vector form by $\\vec x = t\\mat{1\\\\0\\\\5}$.",
+         "sha": "6a4751c37b48",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal D \\subseteq \\R^3$, where $\\mathcal D$ is specified in vector form by $\\vec x = t\\mat{2\\\\3\\\\4}+s\\mat{10\\\\20\\\\131}+\\mat{0\\\\0\\\\6}$.",
+         "sha": "4dbef2ecbe7f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal E \\subseteq \\R^3$, where $\\mathcal E$ is specified in vector form by $\\vec x = t\\mat{5\\\\7\\\\1}+s\\mat{2\\\\-2\\\\1}$.",
+         "sha": "bc494d280e77",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal A$ is not a subspace, since for example $\\mat{1\\\\2}\\in\\mathcal A$, but $0\\cdot\\mat{1\\\\2}=\\vec 0\\not\\in\\mathcal A$.",
+         "sha": "ac7ddee24e3d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal B$ is a subspace: it is non-empty since $\\mat{-3\\\\4}\\in\\mathcal B$.",
+         "sha": "a5e3cf28021d",
+         "zh": ""
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\vec u,\\vec v\\in \\mathcal B$. Then $\\vec u=t_1\\mat{-3\\\\4}$ and $\\vec v=t_2\\mat{-3\\\\4}$ for some $t_1,t_2\\in\\R$. But then $\\vec u+\\vec v=(t_1+t_2)\\mat{-3\\\\4}\\in \\mathcal B$.",
+            "sha": "cf0e550ae125",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\vec u=t\\mat{-3\\\\4}\\in\\mathcal B$. For any scalar $\\alpha\\in\\R$, we have $\\alpha\\vec u=(\\alpha t)\\mat{-3\\\\4}\\in\\mathcal B$.",
+            "sha": "b990a9901cac",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal C$ is a subspace: it is non-empty since $\\mat{1\\\\0\\\\5}\\in\\mathcal C$.",
+         "sha": "16a115e2d4f6",
+         "zh": ""
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\vec u,\\vec v\\in \\mathcal C$. Then $\\vec u=t_1\\mat{1\\\\0\\\\5}$ and $\\vec v=t_2\\mat{1\\\\0\\\\5}$ for some $t_1,t_2\\in\\R$. But then $\\vec u+\\vec v=(t_1+t_2)\\mat{1\\\\0\\\\5}\\in \\mathcal C$.",
+            "sha": "e2fcd030bd63",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\vec u=t\\mat{1\\\\0\\\\5}\\in\\mathcal C$. For any scalar $\\alpha\\in\\R$, we have $\\alpha\\vec u=(\\alpha t)\\mat{1\\\\0\\\\5}\\in\\mathcal C$.",
+            "sha": "658ce0b04d87",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal D$ is not a subspace, since for example $\\mat{0\\\\0\\\\6}\\in\\mathcal D$, but $0\\cdot\\mat{0\\\\0\\\\6}=\\vec 0\\not\\in\\mathcal D$. ($\\mat{0\\\\0\\\\-6}$ cannot be written as a linear combination of $\\mat{2\\\\3\\\\4}$ and $\\mat{10\\\\20\\\\131}$.)",
+         "sha": "74e19c1d4fa8",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal E$ is a subspace: it is non-empty since $\\mat{0\\\\0\\\\0}\\in\\mathcal E$.",
+         "sha": "fe4f21dd5271",
+         "zh": ""
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\vec u,\\vec v\\in \\mathcal E$. Then $\\vec u=t_1\\mat{5\\\\7\\\\1}+s_1\\mat{2\\\\-2\\\\1}$ and $\\vec v=t_2\\mat{5\\\\7\\\\1}+s_2\\mat{2\\\\-2\\\\1}$ for some $t_1,t_2,s_1,s_2\\in\\R$. But then $\\vec u+\\vec v=(t_1+t_2)\\mat{5\\\\7\\\\1}+(s_1+s_2)\\mat{2\\\\-2\\\\1}\\in \\mathcal E$.",
+            "sha": "612cfb61179a",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\vec u=t\\mat{5\\\\7\\\\1}+s\\mat{2\\\\-2\\\\1}\\in\\mathcal E$. For any scalar $\\alpha\\in\\R$, we have $\\alpha\\vec u=(\\alpha t)\\mat{5\\\\7\\\\1}+(\\alpha s)\\mat{2\\\\-2\\\\1}\\in\\mathcal E$.",
+            "sha": "181fc128359a",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Subspaces & Bases · 练习题 2（上游 book/modules/module6-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module6-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use the definition of subspace to prove each span below is a subspace.",
+      "sha": "9cb4ed7b5786",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Span\\Set{\\mat{0\\\\1}, \\mat{1\\\\2}}$",
+         "sha": "e3c2cc44b578",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Span\\Set{\\mat{1\\\\1\\\\1}, \\mat{1\\\\0\\\\0}, \\mat{2\\\\0\\\\0}}$",
+         "sha": "40f41f77b2ec",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\mathcal A$ be $\\Span\\Set{\\mat{0\\\\1},\\mat{1\\\\2}}$. $\\mathcal A$ is a subspace: it is non-empty since $\\vec 0\\in\\mathcal A$.",
+         "sha": "bbfcdafcb2e1",
+         "zh": ""
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\vec u,\\vec v\\in \\mathcal A$. Then $\\vec u=t_1\\mat{0\\\\1}+s_1\\mat{1\\\\2}$ and $\\vec v=t_2\\mat{0\\\\1}+s_2\\mat{1\\\\2}$ for some $t_1,t_2,s_1,s_2\\in\\R$. But then $\\vec u+\\vec v=(t_1+t_2)\\mat{0\\\\1}+(s_1+s_2)\\mat{1\\\\2}\\in \\mathcal A$.",
+            "sha": "2ba46f239bf0",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\vec u=t\\mat{0\\\\1}+s\\mat{1\\\\2}\\in\\mathcal A$. For any scalar $\\alpha\\in\\R$, we have $\\alpha\\vec u=(\\alpha t)\\mat{0\\\\1}+(\\alpha s)\\mat{1\\\\2}\\in\\mathcal A$.",
+            "sha": "a1854f7d7dfa",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\mathcal B$ be $\\Span\\Set{\\mat{1\\\\1\\\\1},\\mat{1\\\\0\\\\0},\\mat{2\\\\0\\\\0}}$. Observe that since $\\mat{2\\\\0\\\\0}=2\\mat{1\\\\0\\\\0}$, this is the same thing as saying $\\mathcal B=\\Span\\Set{\\mat{1\\\\1\\\\1},\\mat{1\\\\0\\\\0}}$.",
+         "sha": "574f7128cd57",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal B$ is a subspace: it is non-empty since $\\vec 0\\in\\mathcal B$.",
+         "sha": "68098031a14e",
+         "zh": ""
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\vec u,\\vec v\\in \\mathcal B$. Then $\\vec u=t_1\\mat{1\\\\1\\\\1}+s_1\\mat{1\\\\0\\\\0}$ and $\\vec v=t_2\\mat{1\\\\1\\\\1}+s_2\\mat{1\\\\0\\\\0}$ for some $t_1,t_2,s_1,s_2\\in\\R$. But then $\\vec u+\\vec v=(t_1+t_2)\\mat{1\\\\1\\\\1}+(s_1+s_2)\\mat{1\\\\0\\\\0}\\in \\mathcal B$.",
+            "sha": "3ebfa506bd09",
+            "zh": ""
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\vec u=t\\mat{1\\\\1\\\\1}+s\\mat{1\\\\0\\\\0}\\in\\mathcal B$. For any scalar $\\alpha\\in\\R$, we have $\\alpha\\vec u=(\\alpha t)\\mat{1\\\\1\\\\1}+(\\alpha s)\\mat{1\\\\0\\\\0}\\in\\mathcal B$.",
+            "sha": "23d829598b68",
+            "zh": ""
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Subspaces & Bases · 练习题 3（上游 book/modules/module6-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module6-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A non-empty subset $\\mathcal V \\subseteq \\R^n$ is called a subspace if for all $\\vec u, \\vec v \\in \\mathcal V$ and all scalars $k$ we have (i) $\\vec u + \\vec v \\in \\mathcal V$ and (ii) $k\\vec u \\in \\mathcal V$. For each set below, list which of property (i), property (ii), or non-emptiness fails. Justify your answer.",
+      "sha": "e8b3e359fc22",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{(x,y,z)\\given x+y+z=4}$",
+         "sha": "b51d2cd8fae8",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{}$",
+         "sha": "07039a8dc4ed",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{(x,y)\\given x=y^2}$",
+         "sha": "529bbc159d6a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{(x_1,x_2)\\given x_1 \\geq 0}$",
+         "sha": "d483d4c31eff",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{(x,y)\\given x^2+y^2=0}$",
+         "sha": "4a93470722c7",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Property (i) fails, since $\\mat{4\\\\0\\\\0}$ is in the set, but $\\mat{4\\\\0\\\\0}+\\mat{4\\\\0\\\\0}=\\mat{8\\\\0\\\\0}$ is not.",
+         "sha": "32200897a24b",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Property (ii) fails, since $\\mat{4\\\\0\\\\0}$ is in the set, but $0\\cdot \\mat{4\\\\0\\\\0}=\\vec 0$ is not.",
+         "sha": "e9f88bebd8f3",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Non-emptiness fails, since it is the empty set.",
+         "sha": "caf8df442e7a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Property (i) fails, since $\\mat{1\\\\1}$ is in the set ($1=1^2$), but $\\mat{1\\\\1}+\\mat{1\\\\1}=\\mat{2\\\\2}$ is not ($2\\neq2^2$).",
+         "sha": "1dea1e122b7c",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Property (ii) fails, since $\\mat{1\\\\1}$ is in the set, but $2\\mat{1\\\\1}=\\mat{2\\\\2}$ is not.",
+         "sha": "16769c46be8c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Property (ii) fails, since $\\mat{1\\\\0}$ is in the set, but $-\\mat{1\\\\0}=\\mat{-1\\\\0}$ is not.",
+         "sha": "81e1750559c5",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "None of the properties fail. The set is $\\Set{\\vec 0}$, the trivial subspace.",
+         "sha": "314dfbb9d745",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Subspaces & Bases · 练习题 4（上游 book/modules/module6-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module6-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each subset below, determine whether or not it is a subspace. If it is a subspace, find (i) its dimension and (ii) a basis for it.",
+      "sha": "682d3bfa0a58",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Span\\Set{\\mat{2\\\\3}, \\mat{-4\\\\-6}, \\matc{1\\\\3/2}}$",
+         "sha": "97596ba86e85",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Span\\Set{\\mat{1\\\\0\\\\-2}, \\mat{0\\\\2\\\\5}, \\mat{1\\\\2\\\\3}}$",
+         "sha": "609b7f3cc32d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The plane given in vector form by",
+         "sha": "bcf955fc9646",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vec x = t\\mat{6\\\\1\\\\1}+s\\mat{6\\\\0\\\\6}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The line given in vector form by",
+         "sha": "ab4eafd22524",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vec x = t\\mat{2\\\\2\\\\3}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The complete solution to",
+         "sha": "a6da0a6c0b50",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{1\\\\-2\\\\3} \\cdot \\left(\\mat{x\\\\y\\\\z}-\\mat{2\\\\2\\\\\\frac{2}{3}}\\right)=0"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The complete solution to",
+         "sha": "a6da0a6c0b50",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{1\\\\3\\\\3\\\\7} \\cdot \\left(\\mat{x\\\\y\\\\z\\\\w}-\\mat{0\\\\0\\\\0\\\\0}\\right)=0"
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes, it is a subspace. Its dimension is $1$ and a basis for it is $\\Set{\\mat{2\\\\3}}$.",
+         "sha": "b74ad18e0f22",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes, it is a subspace. Its dimension is $2$ and a basis for it is $\\Set{\\mat{1\\\\0\\\\-2},\\mat{0\\\\2\\\\5}}$.",
+         "sha": "227641e785be",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes, it is a subspace. Its dimension is $2$ and a basis for it is $\\Set{\\mat{6\\\\1\\\\1},\\mat{6\\\\0\\\\6}}$.",
+         "sha": "9cf140b4fec1",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes, it is a subspace. Its dimension is $1$ and a basis for it is $\\Set{\\mat{2\\\\2\\\\3}}$.",
+         "sha": "4bdf7c7f6583",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes, it is a subspace. Its dimension is $2$ and a basis for it is $\\Set{\\mat{6\\\\6\\\\2},\\mat{2\\\\1\\\\0}}$.",
+         "sha": "6ab703601388",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes, it is a subspace. Its dimension is $3$ and a basis for it is $\\Set{\\mat{3\\\\-1\\\\0\\\\0},\\mat{3\\\\0\\\\-1\\\\0},\\mat{7\\\\0\\\\0\\\\-1}}$.",
+         "sha": "c83a8ddeb975",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Subspaces & Bases · 练习题 5（上游 book/modules/module6-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module6-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following are bases for $\\R^3$?",
+      "sha": "1b5b96cf9ca6",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{2\\\\6\\\\1}, \\mat{4\\\\2\\\\1}, \\mat{6\\\\8\\\\2}}$",
+         "sha": "18a4edc69edc",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{1\\\\0\\\\1}, \\mat{1\\\\0\\\\0}, \\mat{0\\\\-1\\\\0}, \\mat{-2\\\\1\\\\1}}$",
+         "sha": "6816d30d25ce",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{2\\\\3\\\\5}, \\mat{5\\\\-4\\\\2}}$",
+         "sha": "1d8f502864fa",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{2\\\\5\\\\-6}, \\mat{4\\\\11\\\\-12}, \\mat{0\\\\0\\\\-3}}$",
+         "sha": "0b83ef07baf5",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not a basis, as it is not linearly independent: the third vector is equal to the sum of the other two.",
+         "sha": "458e2d04121a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not a basis, since four vectors in $\\R^3$ cannot be linearly independent.",
+         "sha": "f4ecc90be465",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not a basis, as two vectors cannot span all of $\\R^3$. You need at least three vectors.",
+         "sha": "187c8917ab03",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "It is a basis.",
+         "sha": "70c2f24b23fc",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Subspaces & Bases · 练习题 6（上游 book/modules/module6-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module6-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each statement, determine if it is true or false. Justify your answer by referring to a definition or a theorem.",
+      "sha": "61721a6c85ea",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "All spans are subspaces.",
+         "sha": "a2c025083fa5",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "All subspaces can be expressed as spans.",
+         "sha": "75656d99caf5",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "All translated spans are subspaces.",
+         "sha": "efd5ac74bc94",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The empty set is a subspace.",
+         "sha": "fdb28d8f2560",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The set $\\Set{\\mat{1\\\\2}, \\mat{2\\\\3}}$ is a subspace.",
+         "sha": "4c82a101eeba",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True by the Subspace-Span Theorem.",
+         "sha": "a3f20a92327b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True by the Subspace-Span Theorem.",
+         "sha": "a3f20a92327b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. Translated spans cannot all be expressed as spans (since they do not need to contain $\\vec 0$, but spans do), but the Subspace-Span Theorem says that all subspaces can be expressed as spans.",
+         "sha": "6d90c62d6f88",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. By the definition of a subspace, they cannot be the empty set.",
+         "sha": "ca1571a8c36c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. By the definition of a subspace, since $\\mat{1\\\\2}$ and $\\mat{2\\\\3}$ are in the set, $\\mat{1\\\\2}+\\mat{2\\\\3}=\\mat{3\\\\5}$ should also be in the set. But it isn't.",
+         "sha": "0dc9590ad269",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Subspaces & Bases · 练习题 7（上游 book/modules/module6-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module6-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex8",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Give two examples of subspaces of $\\R^4$ that are (i) 1 dimensional, (ii) 3 dimensional. Can you give an example of a subspace that is 0 dimensional?",
+      "sha": "047b0d384372",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "[label=(\\roman*)]",
+         "sha": "9abe58dd4f9f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Span\\Set{\\mat{1\\\\2\\\\3\\\\4}}$ and the line with vector form $\\vec x=t\\mat{2\\\\2\\\\3\\\\0}$.",
+         "sha": "66010e7ffa7b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Span\\Set{\\mat{1\\\\0\\\\0\\\\0},\\mat{0\\\\1\\\\0\\\\0},\\mat{0\\\\0\\\\1\\\\0}}$ and the volume with equation $x_1+x_2+x_3+x_4=0$.",
+         "sha": "e89b2d0151f0",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The set $\\Set{\\vec 0}$ is the only 0-dimensional subspace.",
+      "sha": "616f4e9da0cc",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Subspaces & Bases · 练习题 8（上游 book/modules/module6-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module6-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex9",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal G\\subseteq \\R^n$ be a subspace. Give upper and lower bounds for the dimension of $\\mathcal G$.",
+      "sha": "01da2ab60ec7",
+      "zh": ""
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "As we've seen in problem 〔引用〕, the dimension of $\\mathcal G$ can be as small as $0$. This is our lower bound.",
+      "sha": "c32f08ff8f01",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "As for the upper bound, we know that $n+1$ vectors in $\\R^n$ cannot be linearly independent. So a basis for $\\mathcal G$ can have at most $n$ vectors. Hence $n$ is an upper bound for the dimension of $\\mathcal G$.",
+      "sha": "40f830688cee",
+      "zh": ""
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Subspaces & Bases · 练习题 9（上游 book/modules/module6-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module6-exercises.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "子空间与基"
+}

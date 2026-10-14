@@ -1,0 +1,2541 @@
+{
+ "id": "appendix2",
+ "title_en": "Reduced Row Echelon Form",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "Consider the system",
+    "sha": "9119744020a1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}x-2y &= 0 \\\\ 2x-4y &= 0\\end{aligned}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Notice that every solution to the first equation is also a solution to the second equation. Applying row reduction, we get the system",
+    "sha": "0393cde45e79",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}x-2y &= 0 \\\\ 0x+0y &= 0\\end{aligned},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "but that second equation, $0x+0y=0$, is funny. It is always true, no matter the choice of $x$ and $y$. It adds no new information! In retrospect, it might be obvious that both equations from System 〔引用〕 contain the same information making one equation redundant.",
+    "sha": "ba193ad9a136",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "System 〔引用〕 is an example of an *underdetermined* system of equations, meaning there is not enough information to uniquely determine the value of each variable. Its solution set is a line, which we can find by graphing.",
+    "sha": "78649d5efa83",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "66f7c578fe47"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "From this picture, we could describe the complete solution to System 〔引用〕 in *vector form* by",
+    "sha": "5cc079e7ad74",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec x = t\\mat{2\\\\1}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "But, what about a more complicated system? The system",
+    "sha": "c438bcc3cf72",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}x+y+z &= 1 \\\\ y-z &= 2\\end{aligned}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "is also underdetermined. It has a complete solution described by",
+    "sha": "20da91be1a4b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mat{x\\\\y\\\\z} =t\\mat{-2\\\\1\\\\1} + \\mat{-1\\\\2\\\\0},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "but this is much harder to find by graphing. Fortunately, we won't have to graph. Row reduction, combined with the notion of *free variables*, will provide a solution.",
+    "sha": "9e3125abaafe",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Reduced Row Echelon Form",
+    "sha": "46d7710ffa19",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Before we tackle complete solutions for underdetermined systems, we need to talk about *reduced row echelon form* 〔注： Reduced row echelon form is alternatively called *row reduced echelon form*; whether you say “reduced row” or “row reduced” makes no difference to the math! 〕, which is abbreviated *rref*. The reduced row echelon form of a matrix is the simplest (in terms of reading off solutions) form a matrix can be turned into via elementary row operations.",
+    "sha": "7a86327291de",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "\\begindefinition[Reduced Row Echelon Form (RREF)] A matrix $X$ is in *reduced row echelon form* if the following conditions hold:",
+    "sha": "713188377187",
+    "zh": ""
+   }
+  },
+  {
+   "k": "list",
+   "ordered": false,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "The first non-zero entry in every row is a $1$; these entries are called *pivots* or *leading ones*.",
+       "sha": "9b18a02a1235",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Above and below each leading one are zeros.",
+       "sha": "88c4a4dc4526",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "The leading ones form an echelon (staircase) pattern. That is, if row $i$ has a leading one, every leading one appearing in row $j>i$ also appears to the \\it right of the leading one in row $i$.",
+       "sha": "f7f1bdcd3b77",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "All rows of zeros occur at the bottom of $X$.",
+       "sha": "7a398b53d60d",
+       "zh": ""
+      }
+     }
+    ]
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Columns of a reduced row echelon form matrix that contain pivots are called *pivot columns* 〔注： If a matrix is augmented, we usually do not refer to the augmented column as a pivot column, even if it contains a pivot. 〕. \\enddefinition",
+    "sha": "6efb5a0ef20b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the follow matrices are in reduced row echelon form? For those that are, identify which columns are pivot columns. For those that are not, what condition(s) fail?",
+      "sha": "beb1910acf7b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\n\t\t\t\\begin{bmatrix}[cccc]\n\t\t\t1 & 0 & 0 & 2\\\\\n\t\t\t0 & 0 & 0 & 0\\\\\n\t\t\t0 & 0 & 1 & 7\n\t\t\t\\end{bmatrix}\\qquad\n\t\t\tB=\n\t\t\t\\begin{bmatrix}[cccc]\n\t\t\t1 & 0 & 0 & 8\\\\\n\t\t\t0 & 1 & 3 & 7\\\\\n\t\t\t0 & 2 & 1 & 4\\\\\n\t\t\t\\end{bmatrix}\\qquad\n\t\t\tC=\n\t\t\t\\begin{bmatrix}[cccc]\n\t\t\t1 & 0 & 0 & 2\\\\\n\t\t\t0 & 1 & 0 & 1\\\\\n\t\t\t0 & 0 & 1 & 8\n\t\t\t\\end{bmatrix}\\qquad\n\t\t\tD=\n\t\t\t\\begin{bmatrix}[cccc]\n\t\t\t0 & 1 & 3 & 6\\\\\n\t\t\t1 & 0 & 0 & 9\\\\\n\t\t\t0 & 0 & 1 & 4\\\\\n\t\t\t\\end{bmatrix}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "$A$ is not in reduced row echelon form because the second row of $A$ is a row of zeros but does not occur at the bottom.",
+      "sha": "10c82b1f3b16",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\n\t\t\t\\begin{bmatrix}[cccc]\n\t\t\t1 & 0 & 0 & 2\\\\\n\t\t\t{\\color{mypink} 0} & {\\color{mypink} 0} & {\\color{mypink} 0} & {\\color{mypink} 0}\\\\\n\t\t\t0 & 0 & 1 & 7\n\t\t\t\\end{bmatrix}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "$B$ is not in reduced row echelon form for two reasons: (i) the first non-zero entry in the third row is not a $1$, and (ii) the entry below the leading one in the second row is not zero.",
+      "sha": "eeef62ba2dbf",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "B=\n\t\t\t\\begin{bmatrix}[cccc]\n\t\t\t1 & 0 & 0 & 8\\\\\n\t\t\t0 & 1 & 3 & 7\\\\\n\t\t\t0 & {\\color{mypink} 2} & 1 & 4\\\\\n\t\t\t\\end{bmatrix}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "$C$ is in reduced row echelon form and the first, second, third columns are the pivot columns of $C$.",
+      "sha": "5ac39a259bc3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "C=\n\t\t\t\\begin{bmatrix}[cccc]\n\t\t\t{\\color{mygreen} 1} & 0 & 0 & 2\\\\\n\t\t\t0 & {\\color{mygreen} 1} & 0 & 1\\\\\n\t\t\t0 & 0 & {\\color{mygreen} 1} & 8\n\t\t\t\\end{bmatrix}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "$D$ is not in reduced row echelon form for two reasons: (i) the entries above the leading one in the third row are not all zeros, and (ii) the leading one in the second row appears to the left of the leading one in the first row.",
+      "sha": "c465cced4d36",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "D=\n\t\t\t\\begin{bmatrix}[cccc]\n\t\t\t0 & {\\color{mypink} 1} & {\\color{mypink} 3} & 6\\\\\n\t\t\t{\\color{mypink} 1} & 0 & 0 & 9\\\\\n\t\t\t0 & 0 & 1 & 4\\\\\n\t\t\t\\end{bmatrix}"
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We've encountered the reduced row echelon form of a matrix already in the examples of Appendix 〔引用〕. Recall the system",
+    "sha": "41c4fef2486e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}t+2s-2r &= -15 \\\\ 2t+s-5r &= -21 \\\\ t-4s+r &= 18\\end{aligned}\\qquad\\text{with augmented matrix}\\qquad\n\t\tX=\\begin{bmatrix}[rrr|r]\n\t\t\t1&2&-2 & -15\\\\\n\t\t\t2&1&-5&-21\\\\\n\t\t\t1&-4&1&18\n\t\t\\end{bmatrix}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The matrix $X$ could be row reduced to",
+    "sha": "d1210903468f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "X'=\\begin{bmatrix}[rrr|r]\n\t\t\t1&2&-2 & -15\\\\\n\t\t\t0&-3&-1&9\\\\\n\t\t\t0&0&5&15\n\t\t\\end{bmatrix},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "which was suitable for solving the system. However, $X'$ is not in reduced row echelon form (the leading non-zero entries must all be ones). We can further row reduce $X'$ to",
+    "sha": "c67970e87a5b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "X''=\\begin{bmatrix}[rrr|r]\n\t\t\t1&0&0 & -1\\\\\n\t\t\t0&1&0&-4\\\\\n\t\t\t0&0&1&3\n\t\t\\end{bmatrix}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "$X''$ is the *reduced row echelon form* of $X$, and reading off the solution to the original system from $X''$ is as simple as can be!",
+    "sha": "5097e52742eb",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Every matrix, $M$, has a unique reduced row echelon form, written $\\Rref(M)$, which can be obtained from $M$ by applying elementary row operations. There are many ways to compute the reduced row echelon form of a matrix, but the following algorithm always works.",
+    "sha": "9b1ff564bff2",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "\\begindefinition[Row Reduction Algorithm] Let $M$ be a matrix.",
+    "sha": "2fe52061d14d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "list",
+   "ordered": true,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "If $M$ takes the form $M=[\\vec 0|M']$ (that is, its first column is all zeros), apply the algorithm to $M'$.",
+       "sha": "0098e8cf37ad",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "If not, perform a row-swap (if needed) so the upper-left entry of $M$ is non-zero.",
+       "sha": "d0cb1085f6e9",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Let $\\alpha$ be the upper-left entry of $M$. Perform the row operation $\\text{row}_1\\mapsto \\tfrac{1}{\\alpha}\\text{row}_1$. The upper-left entry of $M$ is now $1$ and is called a *pivot*.",
+       "sha": "b18311ee380c",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Use row operations of the form $\\text{row}_i\\mapsto \\text{row}_i+\\beta\\,\\text{row}_1$ to zero every entry below the pivot.",
+       "sha": "becac89c6dcd",
+       "zh": ""
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Now, $M$ has the form",
+       "sha": "a9cafa79a3ab",
+       "zh": ""
+      }
+     },
+     {
+      "k": "math",
+      "tex": "M=\\begin{bmatrix}[c|c]\n\t\t\t\t\t1 & ??\\\\\n\t\t\t\t\t\\hline\n\t\t\t\t\t\\bigmathstrut \\vec 0 & M'\n\t\t\t\t\\end{bmatrix},"
+     },
+     {
+      "k": "p",
+      "t": {
+       "en": "where $M'$ is a \\it submatrix of $M$. Apply the algorithm to $M'$.",
+       "sha": "79fa2fcdcde6",
+       "zh": ""
+      }
+     }
+    ]
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The resulting matrix is in *pre-reduced row echelon form*. To put the matrix in *reduced row echelon form*, additionally apply step 6.",
+    "sha": "558c86858530",
+    "zh": ""
+   }
+  },
+  {
+   "k": "list",
+   "ordered": true,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Use the row operations of the form $\\text{row}_i\\mapsto \\text{row}_i+\\beta\\,\\text{row}_j$ to zero above each pivot.",
+       "sha": "949d42481a83",
+       "zh": ""
+      }
+     }
+    ]
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "\\enddefinition",
+    "sha": "27e0168125a8",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Though there might be more efficient ways, and you might encounter ugly fractions, the row reduction algorithm will *always* convert a matrix to its reduced row echelon form.",
+    "sha": "a1371fa1f4fd",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Apply the row-reduction algorithm to the matrix",
+      "sha": "a1011c35269b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "M=\\mat{0&0&0&-2&-2\\\\0&1&2&3&2\\\\0&2&4&5&3}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "First notice that $M$ starts with a column of zeros, so we will focus on the right side of $M$. We will draw a line to separate it.",
+      "sha": "ae240173cb97",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "M=\\begin{bmatrix}[r|rrrr]\n\t\t\t0&0&0&-2&-2\\\\0&1&2&3&2\\\\0&2&4&5&3\n\t\t\\end{bmatrix}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Next, we perform a row swap to bring a non-zero entry to the upper left.",
+      "sha": "f66bcf8b6b47",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{bmatrix}[r|rrrr]\n\t\t\t0&0&0&-2&-2\\\\0&1&2&3&2\\\\0&2&4&5&3\n\t\t\\end{bmatrix}\n\t\t\\xrightarrow{\\text{row}_1\\leftrightarrow\\text{row}_2}\n\t\t\\begin{bmatrix}[r|rrrr]\n\t\t\t0&1&2&3&2\\\\0&0&0&-2&-2\\\\0&2&4&5&3\n\t\t\\end{bmatrix}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The upper-left entry is already a $1$, so we can use it to zero all entries below.",
+      "sha": "6ba0559b11b8",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{bmatrix}[r|rrrr]\n\t\t\t0&1&2&3&2\\\\0&0&0&-2&-2\\\\0&2&4&5&3\n\t\t\\end{bmatrix}\n\t\t\\xrightarrow{\\text{row}_3\\mapsto\\text{row}_3-2\\text{row}_1}\n\t\t\\begin{bmatrix}[r|rrrr]\n\t\t\t0&1&2&3&2\\\\0&0&0&-2&-2\\\\0&0&0&-1&-1\n\t\t\\end{bmatrix}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Now we work on the submatrix.",
+      "sha": "5f4327bc991d",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{bmatrix}[rr|rrr]\n\t\t\t0&1&2&3&2\\\\\n\t\t\t\\hline\n\t\t\t\\bigmathstrut 0&0&0&-2&-2\\\\0&0&0&-1&-1\n\t\t\\end{bmatrix}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Again, the submatrix has a first column of zeros, so we pass to a sub-submatrix.",
+      "sha": "8de1767a3eb7",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{bmatrix}[rrr|rr]\n\t\t\t0&1&2&3&2\\\\\n\t\t\t\\hline\n\t\t\t\\bigmathstrut 0&0&0&-2&-2\\\\0&0&0&-1&-1\n\t\t\\end{bmatrix}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Now we turn the upper left entry into a $1$ and use that pivot to zero all entries below.",
+      "sha": "4df51b787944",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{bmatrix}[rrr|rr]\n\t\t\t0&1&2&3&2\\\\\n\t\t\t\\hline\n\t\t\t\\bigmathstrut 0&0&0&-2&-2\\\\0&0&0&-1&-1\n\t\t\\end{bmatrix}\n\t\t\\xrightarrow{\\text{row}_2\\mapsto\\tfrac{-1}{2}\\text{row}_2}\n\t\t\\begin{bmatrix}[rrr|rr]\n\t\t\t0&1&2&3&2\\\\\n\t\t\t\\hline\n\t\t\t\\bigmathstrut 0&0&0&1&1\\\\0&0&0&-1&-1\n\t\t\\end{bmatrix}\n\t\t\\xrightarrow{\\text{row}_3\\mapsto\\text{row}_3+\\text{row}_2}\n\t\t\\begin{bmatrix}[rrr|rr]\n\t\t\t0&1&2&3&2\\\\\n\t\t\t\\hline\n\t\t\t\\bigmathstrut 0&0&0&1&1\\\\0&0&0&0&0\n\t\t\\end{bmatrix}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix is now in pre-reduced row echelon form. To put it in reduced row echelon form, we zero above each pivot.",
+      "sha": "ec72a2758ea5",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{\n\t\t\t\t0&1&2&3&2\\\\\n\t\t\t\t0&0&0&1&1\\\\0&0&0&0&0\n\t\t\t}\n\t\t\t\\xrightarrow{\\text{row}_1\\mapsto\\text{row}_1-3\\text{row}_2}\n\t\t\t\\mat{\n\t\t\t\t0&1&2&0&-1\\\\\n\t\t\t\t0&0&0&1&1\\\\0&0&0&0&0\n\t\t\t}"
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "All matrices, whether augmented or not, have a reduced row echelon form. Correctly applying the row reduction algorithm takes practice, but being able to row reduce a matrix is the analogue of “knowing your multiplication tables” for linear algebra.",
+    "sha": "e3508c8cafa1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Free Variables & Complete Solutions",
+    "sha": "143a2feac97e",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "By now we are very familiar with the system",
+    "sha": "0846c87f2b25",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}x+2y-2z &= -15 \\\\ 2x+y-5z &= -21 \\\\ x-4y+z &= 18\\end{aligned},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "which has a unique solution $(x,y,z)=(-1,-4,3)$. We can compute this by row reducing the associated augmented matrix:",
+    "sha": "52d76ca33b07",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Rref\\left(\\begin{bmatrix}[rrr|r]\n\t\t\t\t1&2&-2 & -15\\\\\n\t\t\t\t2&1&-5&-21\\\\\n\t\t\t\t1&-4&1&18\n\t\t\\end{bmatrix}\\right)\n\t\t\t\\qquad=\\qquad\n\t\t\t\\begin{bmatrix}[rrr|r]\n\t\t\t\t1&0&0 & -1\\\\\n\t\t\t\t0&1&0&-4\\\\\n\t\t\t\t0&0&1&3\n\t\t\t\\end{bmatrix},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "which corresponds to the system",
+    "sha": "59bfbf8e320a",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}x\\quad  &= -1 \\\\ y\\quad  &= -4 \\\\ z &= 3\\end{aligned},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "from which the solution is immediate. But what happens when there isn't a unique solution?",
+    "sha": "cde61f7f3d12",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Consider the system",
+    "sha": "9119744020a1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}x+3y &= 2 \\\\ 2x+6y &= 4\\end{aligned}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When using an augmented matrix to solve this system, we run into an issue.",
+    "sha": "6f97909aaf16",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{bmatrix}[rr|r]\n\t\t\t\t1&3 & 2\\\\\n\t\t\t\t2&6&4\\\\\n\t\t\t\\end{bmatrix}\n\t\t\t\\qquad\\Rrefto\\qquad\n\t\t\t\\begin{bmatrix}[rr|r]\n\t\t\t\t1&3&2\\\\\n\t\t\t\t0&0&0\\\\\n\t\t\t\\end{bmatrix}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "From the reduced row echelon form, we're left with the equation $x+3y=2$, which isn't exactly a *solution*. Effectively, the original system had only one equation's worth of information, so we cannot solve for both $x$ and $y$ based on the original system. To get ourselves out of this pickle, we will use a notational trick: introduce the arbitrary equation $y=t$\\footnote This equation is called *arbitrary* because it introduces no new information about the original variables. The restrictions on $x$ and $y$ aren't changed by introducing the fact $y=t$.. Now, because we've already done row-reduction, we see",
+    "sha": "45dd1aa27140",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}x+3y &= 2 \\\\ 2x+6y &= 4 \\\\ y &= t\\end{aligned}\\qquad\\Rrefto\\qquad\n\t\t\\begin{aligned}x+3y &= 2 \\\\ y &= t\\end{aligned}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Here we've omitted the equation $0=0$ since it adds no information. Now, we can solve for $x$ and $y$ in terms of $t$.",
+    "sha": "9fdb1a65460d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec x=\\mat{x\\\\y} = \\matc{2-3t\\\\t}=t\\mat{-3\\\\1}+\\mat{2\\\\0}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Notice that $t$ here stands for an arbitrary real number. Any choice of $t$ produces a valid solution to the original system (go ahead, pick some values for $t$ and see what happens). We call $t$ a *parameter* and $y$ a *free variable*\\footnote We call $y$ *free* because we may pick it to be anything we want and still produce a solution to the system.. Notice further that",
+    "sha": "7d03d67a0380",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec x=t\\mat{-3\\\\1}+\\mat{2\\\\0}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "is vector form of the line $x+3y=2$.",
+    "sha": "6f824984510f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Though you can usually make many choices about which variables are free variables, one choice always works: *pick all variables corresponding to non-pivot columns to be free variables*. For this reason, we refer to non-pivot non-augmented columns of a row-reduced matrix as *free variable columns*.",
+    "sha": "a7fe43470d9c",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use row reduction to find the complete solution to $\\begin{aligned}x+y+z &= 1 \\\\ y-z &= 2\\end{aligned}$",
+      "sha": "4d43112dace3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The corresponding augmented matrix for the system is",
+      "sha": "807d42fde44e",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\begin{bmatrix}[ccc|c]\n\t\t\t1 & 1 & 1 & 1\\\\\n\t\t\t0 & 1 & -1 & 2\n\t\t\t\\end{bmatrix}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "$A$ is already in pre-reduced row echelon form, so we only need to zero above each pivot.",
+      "sha": "02cf74302264",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{bmatrix}[ccc|c]\n\t\t\t1 & 1 & 1 & 1\\\\\n\t\t\t0 & 1 & -1 & 2\n\t\t\t\\end{bmatrix}\n\t\t\t\\xrightarrow{\\text{row}_1\\mapsto\\text{row}_1-\\text{row}_2}\n\t\t\t\\begin{bmatrix}[ccc|c]\n\t\t\t1 & 0 & 2 & -1\\\\\n\t\t\t0 & 1 & -1 & 2\n\t\t\t\\end{bmatrix}\n\t\t\t=\\Rref(A)."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The third column of $\\Rref(A)$ is a free variable column, so we introduce the arbitrary equation $z=t$ and solve the system in terms of $t$:",
+      "sha": "741313e00638",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}x+2z &= -1 \\\\ y-z &= 2 \\\\ z &= t\\end{aligned}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Written in vector form, the complete solution is",
+      "sha": "e00796d0bca3",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{x\\\\y\\\\z} = \\matc{-1-2t\\\\2+t\\\\t} = t\\mat{-2\\\\1\\\\1}+\\mat{-1\\\\2\\\\0},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and written as a set, the solution set is",
+      "sha": "46bfa60563e1",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Set{\\vec x\\in\\R^3 \\given \\vec x= t\\mat{-2\\\\1\\\\1}+\\mat{-1\\\\2\\\\0}\\text{ for some } t\\in\\R}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Consider the (somewhat strange) system of one equation",
+    "sha": "a4b887460129",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}0x+0y+z &= 1\\end{aligned}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The solution set for this system is the $xy$-plane in $\\R^3$ shifted up by one unit. We can use row reduction and free variables to see this.",
+    "sha": "53123a797e7b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The system corresponds to the augmented matrix",
+    "sha": "b1f893da7348",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{bmatrix}[ccc|c]\n\t\t\t0&0&1&1\n\t\t\\end{bmatrix}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "which is already in reduced row echelon form. It's third column is the only pivot column, making columns $1$ and $2$ free variable columns (remember, we don't count augmented columns as free variable columns). Thus, we introduce two arbitrary equations, $x=t$ and $y=s$, and solve the new system",
+    "sha": "8e3e331a4d1f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}0x+0y+z &= 1 \\\\ x &= t \\\\ y &= s\\end{aligned}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "for $(x,y,z)$, which gives",
+    "sha": "fbab387cc40d",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mat{x\\\\y\\\\z}= \\mat{t\\\\s\\\\1} = t\\mat{1\\\\0\\\\0}+s\\mat{0\\\\1\\\\0}+\\mat{0\\\\0\\\\1}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Using row reduction and free variables, we can find complete solutions to very complicated systems. The process is straight-forward enough that even a computer can do it! 〔注： Computers usually don't follow the algorithm outlined here because they have to deal with *rounding error*. But, there is a modification of the row reduction algorithm called row reduction with *partial pivoting* which solves some issues with rounding error. 〕",
+    "sha": "b7d4e249fe69",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the system of equations in the variables $x$, $y$, $z$, and $w$:",
+      "sha": "d6187ecade8b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}-2w &= -2 \\\\ y+2z+3w &= 2 \\\\ 2y+4z+5w &= 3\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the solution set for this system.",
+      "sha": "5bc52602d8b4",
+      "zh": ""
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The augmented matrix corresponding to this system is",
+      "sha": "0df4aecd4a67",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "M=\\begin{bmatrix}[cccc|c]0&0&0&-2&-2\\\\0&1&2&3&2\\\\0&2&4&5&3\\end{bmatrix},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which we've row reduced in a previous example:",
+      "sha": "b8b910394d04",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Rref(M) = \n\t\t\t\\begin{bmatrix}[cccc|c]\n\t\t\t\t0&1&2&0&-1\\\\\n\t\t\t\t0&0&0&1&1\\\\\n\t\t\t\t0&0&0&0&0\n\t\t\t\\end{bmatrix}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Here, columns $1$ and $3$ are free variable columns, so we introduce the equations $x=t$ and $z=s$. Now, solving the system",
+      "sha": "aae97eefb881",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}y+2z &= -1 \\\\ w &= 1 \\\\ x &= t \\\\ z &= s\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for $(x,y,z,w)$, gives",
+      "sha": "f013cece5981",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{x\\\\y\\\\z\\\\w} = \\matc{t\\\\-1-2s\\\\s\\\\1} = t\\mat{1\\\\0\\\\0\\\\0}+s\\mat{0\\\\-2\\\\1\\\\0}+\\mat{0\\\\-1\\\\0\\\\1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Thus, the solution set to the system is",
+      "sha": "5be5afd69582",
+      "zh": ""
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Set{\\vec x\\in\\R^4\\given \\vec x = t\\mat{1\\\\0\\\\0\\\\0}+s\\mat{0\\\\-2\\\\1\\\\0}+\\mat{0\\\\-1\\\\0\\\\1} \\text{ for some }t,s\\in\\R}."
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Free Variables & Inconsistent Systems",
+    "sha": "e223fc5cdaab",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If you need a free variable/parameter to describe the complete solution to a system of linear equations, the system necessarily has an infinite number of solutions—one coming from every choice of value for your free variable/parameter. However, one still needs to be careful when deciding *from an augmented matrix* whether a system of linear equations has an infinite number of solutions.",
+    "sha": "8c210bffc531",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Consider the augmented matrices $A$ and $B$, which are given in reduced row echelon form.",
+    "sha": "392303efe7eb",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A=\\begin{bmatrix}[cc|c]\n\t\t\t1&2&-1\\\\0&0&0\n\t\t\\end{bmatrix}\n\t\t\\qquad\n\t\tB=\\begin{bmatrix}[cc|c]\n\t\t\t1&2&0\\\\0&0&1\n\t\t\\end{bmatrix}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Both matrices lack a pivot in their second column. However, $A$ corresponds to a system with an infinite solution set, while $B$ corresponds to an inconsistent system with an empty solution set. We can debate whether it is appropriate to say that $B$ has a free variable column 〔注： On the one hand, the second column fits the description. On the other hand, you cannot make any choices when picking a solution, since there are no solutions.〕, but one thing is clear: when evaluating the number of solutions to a system, you must pay attention to whether or not the system is consistent.",
+    "sha": "f7d07e0b4b00",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Putting everything together, we can fully classify the number of solutions to a system of linear equations based on pivots/free variables.",
+    "sha": "66615ada23ac",
+    "zh": ""
+   }
+  },
+  {
+   "k": "table",
+   "spec": "ccc",
+   "rows": [
+    [
+     {
+      "en": "Consistent",
+      "sha": "8e5ae4393087",
+      "zh": ""
+     },
+     {
+      "en": "Pivots",
+      "sha": "a2be186803ce",
+      "zh": ""
+     },
+     {
+      "en": "Number of Solutions",
+      "sha": "ed30bd2f661c",
+      "zh": ""
+     }
+    ],
+    [
+     {
+      "en": "False",
+      "sha": "97cdbdc7feff",
+      "zh": ""
+     },
+     {
+      "en": "At least one column doesn't have a pivot",
+      "sha": "d0f08401f4ac",
+      "zh": ""
+     },
+     "0"
+    ],
+    [
+     {
+      "en": "True",
+      "sha": "88b33e4e12f7",
+      "zh": ""
+     },
+     {
+      "en": "Every column has a pivot",
+      "sha": "a365a198316c",
+      "zh": ""
+     },
+     "1"
+    ],
+    [
+     {
+      "en": "True",
+      "sha": "88b33e4e12f7",
+      "zh": ""
+     },
+     {
+      "en": "At least one column doesn't have a pivot",
+      "sha": "d0f08401f4ac",
+      "zh": ""
+     },
+     {
+      "en": "Infinitely many",
+      "sha": "86d2c8979082",
+      "zh": ""
+     }
+    ]
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This information is so important, we will also codify it in a theorem.",
+    "sha": "ab8cd47bb6c3",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A system of linear equations has either $0$ solutions, $1$ solution, or infinitely many solutions.",
+      "sha": "65acea8a5c68",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "The Geometry of Systems of Equations",
+    "sha": "d9f63107a8f7",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Consider the system of equations",
+    "sha": "0d9d2b83bf86",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}x-2y &= 0@\\qquad\\text{row}_1 \\\\ x+y &= 3@\\qquad\\text{row}_2\\end{aligned}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The only values of $x$ and $y$ that satisfy both equations is $(x,y)=(2,1)$. However, each row, viewed in isolation, specifies a line in $\\R^2$. Call the line coming from the first row $\\ell_1$ and the line coming from the second row $\\ell_2$.",
+    "sha": "8e1e0c178d8f",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "a6fbacf297f2"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "These two lines intersect exactly at the point $\\mat{2\\\\1}$. And, of course they should. By definition, a solution to a system of equations satisfies *all* equations. In other words, a solution to System 〔引用〕 is a point that lies in both $\\ell_1$ and $\\ell_2$. In other words, solutions lie in $\\ell_1\\cap \\ell_2$.",
+    "sha": "625f91064b76",
+    "zh": ""
+   }
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": ""
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Geometrically, a solution to a system of equations is the intersection of objects specified by the individual equations.",
+      "sha": "91d9d042e7d1",
+      "zh": ""
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This perspective sheds some light on inconsistent systems. The system",
+    "sha": "31444b400e46",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}x-2y &= 0@\\qquad\\text{row}_1 \\\\ 2x-4y &= 2@\\qquad\\text{row}_2\\end{aligned}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "is inconsistent. And, when we graph the lines specified by the rows, we see that they are parallel and never intersect. Thus, the solution set is empty.",
+    "sha": "6d949e8016ff",
+    "zh": ""
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Planes & Hyperplanes",
+    "sha": "9ae5dedd7670",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Consider the solution set to a single linear equation viewed in isolation. For example, in the three-variable case, we might consider",
+    "sha": "ec15e76ab891",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "x+2y-z=3."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The solution set to this equation is a *plane*. Why? For starters, writing down the complete solution involves picking two free variables. Suppose we pick $y=t$ and $z=s$. Then, before we even do a calculation, we know the complete solution will be described in vector form by",
+    "sha": "62de2528e3ac",
+    "zh": ""
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec x=t\\vec d_1+s\\vec d_2+\\vec p,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "where $\\vec d_1$, $\\vec d_2$, and $\\vec p$ come from doing the usual computations. But, that is vector form of a plane!",
+    "sha": "d583e92ee2a5",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In general, a single equation in $n$ variables requires $n-1$ free variables to describe its complete solution. The only exception is the trivial equation, $0x_1+\\cdots +0x_n=0$, which requires $n$ free variables. For the sake of brevity, from now on we will assume that \\empha linear equation in $n$ variables means \\empha non-trivial linear equation in $n$ variables.",
+    "sha": "cb3c484e83ae",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Applying this knowledge, we can construct a table for systems consisting of a single linear equation.",
+    "sha": "945335fd12e2",
+    "zh": ""
+   }
+  },
+  {
+   "k": "table",
+   "spec": "ccc",
+   "rows": [
+    [
+     {
+      "en": "Number of Variables",
+      "sha": "083e69bafe9d",
+      "zh": ""
+     },
+     {
+      "en": "Number of Free Variables",
+      "sha": "0370609b8751",
+      "zh": ""
+     },
+     {
+      "en": "Complete Solution",
+      "sha": "2a942848785b",
+      "zh": ""
+     }
+    ],
+    [
+     "[-9pt] 2",
+     "1",
+     {
+      "en": "Line in $\\R^2$",
+      "sha": "0c54c35afe99",
+      "zh": ""
+     }
+    ],
+    [
+     "3",
+     "2",
+     {
+      "en": "Plane in $\\R^3$",
+      "sha": "ec73b5924474",
+      "zh": ""
+     }
+    ],
+    [
+     "4",
+     "3",
+     {
+      "en": "Volume in $\\R^4$",
+      "sha": "9bc5ea182b28",
+      "zh": ""
+     }
+    ]
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Notice that the dimension of the solution set (a line being one dimensional, a plane being two dimensional, and a volume being three dimensional) is always one less than the dimension of the ambient space ($\\R^2$, $\\R^3$, $\\R^4$) 〔注： Another way to describe these sets would be to say that they have *co-dimension* 1.〕. Such sets are called *hyperplanes* because they are flat and plane-like. However, unlike a plane, the dimension of a *hyperplane* need not be two.",
+    "sha": "7646e0adb65b",
+    "zh": ""
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "With our newfound geometric intuition, we can understand solutions to systems of linear equations in a different way. The solution set to a system of linear equations of two variables must be the result of intersecting lines. Therefore, the only options are: a point, a line, or the empty set. The solution to a system of linear equations of three variables is similarly restricted. It can only be: a point, a line, a plane, or the empty set.",
+    "sha": "da059def8eb1",
+    "zh": ""
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "0d9b763286cd"
+   ],
+   "caption": null
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "6262371412c5"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In higher dimensions, the story is the same: solution sets are formed by intersecting hyperplanes and we can use algebra to precisely describe these sets of intersection.",
+    "sha": "a4ad71b6960f",
+    "zh": ""
+   }
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the complete solution to the following systems.",
+      "sha": "0585392ae29f",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\begin{aligned}4x+6y+3z-10w &= 6 \\\\ 5x+2y+z-7w &= 2 \\\\ -6x+2y+z+4w &= 2\\end{aligned}$",
+         "sha": "8b399b540f76",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\begin{aligned}2x+2y+z &= -1 \\\\ y-4z+2w &= 3 \\\\ x-y-3z-4w &= 5\\end{aligned}$",
+         "sha": "16ebe13c7a95",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\begin{aligned}x+y-2z &= -5 \\\\ -4x+y+5z &= 3\\end{aligned}$",
+         "sha": "78cd08d8bdc9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\begin{aligned}3x-2y &= -4 \\\\ x+y+3z &= 3 \\\\ -4x+y-3z &= 1\\end{aligned}$",
+         "sha": "c76ceb07560e",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\begin{aligned}x-y+2z &= -1 \\\\ 2x+y+4z &= 1 \\\\ 3x-4y+3z &= -2\\end{aligned}$",
+         "sha": "540d889b04f8",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\begin{aligned}2x+z &= 8 \\\\ x+y+z &= 4 \\\\ x+3y+2z &= 4 \\\\ 3x+2y+4z &= 9\\end{aligned}$",
+         "sha": "23012a3a6bb9",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let",
+         "sha": "ef5fe1edf379",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "X=\n\t\t\t\t\t\\begin{bmatrix}[cccc|c]\n\t\t\t\t\t\t4 & 6 & 3 & -10 & 6\\\\\n\t\t\t\t\t\t5 & 2 & 1 & -7 & 2\\\\\n\t\t\t\t\t\t-6 & 2 & 1 & 4 & 2\n\t\t\t\t\t\\end{bmatrix}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "be the augmented matrix corresponding to the system.",
+         "sha": "5a12fd1dcf8f",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "By row reduction,",
+         "sha": "fb38c87da090",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Rref(X)=\n\t\t\t\t\t\\begin{bmatrix}[cccc|c]\n\t\t\t\t\t\t1 & 0 & 0 & -1 & 0\\\\\n\t\t\t\t\t\t0 & 1 & 1/2 & -1 & 1\\\\\n\t\t\t\t\t\t0 & 0 & 0 & 0 & 0\n\t\t\t\t\t\\end{bmatrix}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "The third and fourth column of $\\Rref(X)$ are free variable columns, so we introduce the arbitrary equations $z=t$ and $w=s$ and solve the following system in terms of $t$ and $s$:",
+         "sha": "deb8a4ea986f",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}x-w &= 0 \\\\ y+(1/2)z-w &= 1 \\\\ z &= t \\\\ w &= s\\end{aligned}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Written in vector form, the complete solution is",
+         "sha": "e00796d0bca3",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{x\\\\y\\\\z\\\\w} = \\matc{s\\\\1-(1/2)t+s\\\\t\\\\s}\n\t\t\t\t\t=t\\mat{0\\\\-1/2\\\\1\\\\0}+s\\mat{1\\\\1\\\\0\\\\1}+\\mat{0\\\\1\\\\0\\\\0}."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let",
+         "sha": "ef5fe1edf379",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "X=\n\t\t\t\t\t\\begin{bmatrix}[cccc|c]\n\t\t\t\t\t\t2 & 2 & 1 & 0 & -1\\\\\n\t\t\t\t\t\t0 & 1 & -4 & 2 & 3\\\\\n\t\t\t\t\t\t1 & -1 & -3 & -4 & 5\n\t\t\t\t\t\\end{bmatrix}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "be the augmented matrix corresponding to the system.",
+         "sha": "5a12fd1dcf8f",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "By row reduction,",
+         "sha": "fb38c87da090",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Rref(X)=\n\t\t\t\t\t\\begin{bmatrix}[cccc|c]\n\t\t\t\t\t\t1 & 0 & 0 & -2 & 1\\\\\n\t\t\t\t\t\t0 & 1 & 0 & 2 & -1\\\\\n\t\t\t\t\t\t0 & 0 & 1 & 0 & -1\n\t\t\t\t\t\\end{bmatrix}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "The fourth column of $\\Rref(X)$ is a free variable column, so we introduce the arbitrary equation $w=t$ and solve the following system in terms of $t$:",
+         "sha": "5c3040dc0c4a",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}x-2w &= 1 \\\\ y+2w &= -1 \\\\ z &= -1 \\\\ w &= t\\end{aligned}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Written in vector form, the complete solution is",
+         "sha": "e00796d0bca3",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{x\\\\y\\\\z\\\\w} = \\matc{1+2t\\\\-1-2t\\\\-1\\\\t} = t\\mat{2\\\\-2\\\\0\\\\1}+\\mat{1\\\\-1\\\\-1\\\\0}."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let",
+         "sha": "ef5fe1edf379",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "X=\n\t\t\t\t\t\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t1 & 1 & -2 & -5\\\\\n\t\t\t\t\t\t-4 & 1 & 5 & 3\n\t\t\t\t\t\\end{bmatrix}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "be the augmented matrix corresponding to the system.",
+         "sha": "5a12fd1dcf8f",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "By row reduction,",
+         "sha": "fb38c87da090",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Rref(X)=\n\t\t\t\t\t\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t1 & 0 & -7/5 & -8/5\\\\\n\t\t\t\t\t\t0 & 1 & -3/5 & -17/5\n\t\t\t\t\t\\end{bmatrix}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "The third column of $\\Rref(X)$ is a free variable column, so we introduce the arbitrary equation $z=t$ and solve the following system in terms of $t$:",
+         "sha": "42bacd2b53e4",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}x-7/5z &= -8/5 \\\\ y-3/5z &= -17/5 \\\\ z &= t\\end{aligned}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Written in vector form, the complete solution is",
+         "sha": "e00796d0bca3",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{x\\\\y\\\\z} = \\matc{-8/5+7/5t\\\\-17/5+3/5t\\\\t} = t\\mat{7/5\\\\3/5\\\\1}+\\mat{-8/5\\\\-17/5\\\\0}."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let",
+         "sha": "ef5fe1edf379",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "X=\n\t\t\t\t\t\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t3 & -2 & 0 & -4\\\\\n\t\t\t\t\t\t1 & 1 & 3 & 3\\\\\n\t\t\t\t\t\t-4 & 1 & -3 & 1\n\t\t\t\t\t\\end{bmatrix}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "be the augmented matrix corresponding to the system.",
+         "sha": "5a12fd1dcf8f",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "By row reduction,",
+         "sha": "fb38c87da090",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Rref(X)=\n\t\t\t\t\t\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t1 & 0 & 6/5 & 2/5\\\\\n\t\t\t\t\t\t0 & 1 & 9/5 & 13/5\\\\\n\t\t\t\t\t\t0 & 0 & 0 & 0\n\t\t\t\t\t\\end{bmatrix}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "The third column of $\\Rref(X)$ is a free variable column, so we introduce the arbitrary equation $z=t$ and solve the following system in terms of $t$:",
+         "sha": "42bacd2b53e4",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}x+6/5z &= 2/5 \\\\ y+9/5z &= 13/5 \\\\ z &= t\\end{aligned}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Written in vector form, the complete solution is",
+         "sha": "e00796d0bca3",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{x\\\\y\\\\z} = \\matc{2/5-6/5t\\\\13/5-9/5t\\\\t} = t\\mat{-6/5\\\\-9/5\\\\1}+\\mat{2/5\\\\13/5\\\\0}."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let",
+         "sha": "ef5fe1edf379",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "X=\n\t\t\t\t\t\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t1 & -1 & 2 & -1\\\\\n\t\t\t\t\t\t2 & 1 & 4 & 1\\\\\n\t\t\t\t\t\t3 & -4 & 3 & -2\n\t\t\t\t\t\\end{bmatrix}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "be the augmented matrix corresponding to the system.",
+         "sha": "5a12fd1dcf8f",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "By row reduction,",
+         "sha": "fb38c87da090",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Rref(X)=\n\t\t\t\t\t\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t1 & 0 & 0 & 4/3\\\\\n\t\t\t\t\t\t0 & 1 & 0 & 1\\\\\n\t\t\t\t\t\t0 & 0 & 1 & -2/3\n\t\t\t\t\t\\end{bmatrix}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Written in vector form, the complete solution is",
+         "sha": "e00796d0bca3",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{x\\\\y\\\\z} = \\mat{4/3\\\\1\\\\-2/3}."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let",
+         "sha": "ef5fe1edf379",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "X=\n\t\t\t\t\t\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t2 & 0 & 1 & 8\\\\\n\t\t\t\t\t\t1 & 1 & 1 & 4\\\\\n\t\t\t\t\t\t1 & 3 & 2 & 4\\\\\n\t\t\t\t\t\t3 & 2 & 4 & 9\n\t\t\t\t\t\\end{bmatrix}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "be the augmented matrix corresponding to the system.",
+         "sha": "5a12fd1dcf8f",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "By row reduction,",
+         "sha": "fb38c87da090",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Rref(X)=\n\t\t\t\t\t\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t1 & 0 & 0 & 5\\\\\n\t\t\t\t\t\t0 & 1 & 0 & 1\\\\\n\t\t\t\t\t\t0 & 0 & 1 & -2\\\\\n\t\t\t\t\t\t0 & 0 & 0 & 0\n\t\t\t\t\t\\end{bmatrix}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Written in vector form, the complete solution is",
+         "sha": "e00796d0bca3",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{x\\\\y\\\\z} = \\mat{5\\\\1\\\\-2}."
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Reduced Row Echelon Form · 练习题 1（上游 book/modules/appendix2-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix2-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each system of linear equations given below: (i) write down its augmented matrix, (ii) use row reduction algorithm to determine if it is consistent or not, (iii) for each consistent system, give the complete solution.",
+      "sha": "1da7714af0fd",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\begin{aligned}-10x_1-4x_2+4x_3 &= 28 \\\\ 3x_1+x_2-x_3 &= -8 \\\\ x_1+x_2-\\frac{1}{2}x_3 &= -3\\end{aligned}$",
+         "sha": "ed882d11cf0f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\begin{aligned}3x_1-2x_2+4x_3 &= 54 \\\\ 5x_1-3x_2+6x_3 &= 88 \\\\ x_1 &= -3\\end{aligned}$",
+         "sha": "11181a423d3a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\begin{aligned}x+2y &= 5\\end{aligned}$",
+         "sha": "c469145fb627",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\begin{aligned}4x &= 6 \\\\ 2x &= 3\\end{aligned}$",
+         "sha": "733fbbc343f8",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\begin{aligned}x_1+2x_2+4x_3-3x_4 &= 0 \\\\ 3x_1+5x_2+6x_3-4x_4 &= 1 \\\\ 4x_1+5x_2-2x_3+3x_4 &= 3\\end{aligned}$",
+         "sha": "127c56d7986c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\begin{aligned}x_1-x_2+5x_3+x_4 &= 1 \\\\ x_1+x_2-2x_3+3x_4 &= 3 \\\\ 3x_1-x_2+8x_3+x_4 &= 5 \\\\ x_1+3x_2-9x_3+7x_4 &= 5\\end{aligned}$",
+         "sha": "877e4bc4803b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\begin{aligned}0x+0y+0z &= 0\\end{aligned}$",
+         "sha": "c60a4062e859",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "math",
+        "tex": "\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t-10 & -4 & 4 & 28\\\\\n\t\t\t\t\t\t3 & 1 & -1 & -8\\\\\n\t\t\t\t\t\t1 & 1 & -1/2 & -3\n\t\t\t\t\t\\end{bmatrix}"
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}&\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t-10 & -4 & 4 & 28\\\\\n\t\t\t\t\t\t3 & 1 & -1 & -8\\\\\n\t\t\t\t\t\t1 & 1 & -1/2 & -3\n\t\t\t\t\t\\end{bmatrix}\\\\\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t&\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t1 & 1 & -1/2 & -3\\\\\n\t\t\t\t\t\t3 & 1 & -1 & -8\\\\\n\t\t\t\t\t\t-10 & -4 & 4 & 28\n\t\t\t\t\t\\end{bmatrix}\\\\\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t&\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t1 & 1 & -1/2 & -3\\\\\n\t\t\t\t\t\t0 & -2 & 1/2 & 1\\\\\n\t\t\t\t\t\t0 & 6 & -1 & -2\n\t\t\t\t\t\\end{bmatrix}\\\\\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t&\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t1 & 1 & -1/2 & -3\\\\\n\t\t\t\t\t\t0 & 1 & -1/4 & -1/2\\\\\n\t\t\t\t\t\t0 & 6 & -1 & -2\n\t\t\t\t\t\\end{bmatrix}\\\\\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t&\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t1 & 1 & -1/2 & -3\\\\\n\t\t\t\t\t\t0 & 1 & -1/4 & -1/2\\\\\n\t\t\t\t\t\t0 & 0 & 1/2 & 1\n\t\t\t\t\t\\end{bmatrix}\\\\\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t&\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t1 & 1 & -1/2 & -3\\\\\n\t\t\t\t\t\t0 & 1 & -1/4 & -1/2\\\\\n\t\t\t\t\t\t0 & 0 & 1 & 2\n\t\t\t\t\t\\end{bmatrix}\\\\\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t&\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t1 & 0 & 0 & -2\\\\\n\t\t\t\t\t\t0 & 1 & 0 & 0\\\\\n\t\t\t\t\t\t0 & 0 & 1 & 2\n\t\t\t\t\t\\end{bmatrix}\\end{aligned}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "This system of linear equations is consistent. Its complete solution is",
+         "sha": "2442edb499e2",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{x_1\\\\x_2\\\\x_3}=\\mat{-2\\\\0\\\\2}."
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t3 & -2 & 4 & 54\\\\\n\t\t\t\t\t\t5 & -3 & 6 & 88\\\\\n\t\t\t\t\t\t1 & 0 & 0 & -3\n\t\t\t\t\t\\end{bmatrix}"
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}&\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t3 & -2 & 4 & 54\\\\\n\t\t\t\t\t\t5 & -3 & 6 & 88\\\\\n\t\t\t\t\t\t1 & 0 & 0 & -3\n\t\t\t\t\t\\end{bmatrix}\\\\\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t&\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t1 & 0 & 0 & -3\\\\\n\t\t\t\t\t\t5 & -3 & 6 & 88\\\\\n\t\t\t\t\t\t3 & -2 & 4 & 54\n\t\t\t\t\t\\end{bmatrix}\\\\\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t&\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t1 & 0 & 0 & -3\\\\\n\t\t\t\t\t\t0 & -3 & 6 & 103\\\\\n\t\t\t\t\t\t0 & -2 & 4 & 63\n\t\t\t\t\t\\end{bmatrix}\\\\\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t&\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t1 & 0 & 0 & -3\\\\\n\t\t\t\t\t\t0 & 1 & -2 & -103/3\\\\\n\t\t\t\t\t\t0 & -2 & 4 & 63\n\t\t\t\t\t\\end{bmatrix}\\\\\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t&\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t1 & 0 & 0 & -3\\\\\n\t\t\t\t\t\t0 & 1 & -2 & -103/3\\\\\n\t\t\t\t\t\t0 & 0 & 0 & -17/3\n\t\t\t\t\t\\end{bmatrix}\\end{aligned}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "This system of linear equations is inconsistent.",
+         "sha": "b1705aa5b3c1",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "\\begin{bmatrix}[cc|c]\n\t\t\t\t\t\t1 & 2 & 5\n\t\t\t\t\t\\end{bmatrix}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The augmented matrix of this system of linear equations is already in reduced row echelon form.",
+         "sha": "51e1b16572bd",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "This system of linear equations is consistent. Its complete solution is",
+         "sha": "2442edb499e2",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{x\\\\y}=t\\mat{-2\\\\1}+\\mat{5\\\\0}."
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "\\begin{bmatrix}[c|c]\n\t\t\t\t\t\t4 & 6\\\\\n\t\t\t\t\t\t2 & 3\n\t\t\t\t\t\\end{bmatrix}"
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "\\begin{bmatrix}[c|c]\n\t\t\t\t\t4 & 6\\\\\n\t\t\t\t\t2 & 3\n\t\t\t\t\t\\end{bmatrix}\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t\\begin{bmatrix}[c|c]\n\t\t\t\t\t1 & 3/2\\\\\n\t\t\t\t\t2 & 3\n\t\t\t\t\t\\end{bmatrix}\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t\\begin{bmatrix}[c|c]\n\t\t\t\t\t1 & 3/2\\\\\n\t\t\t\t\t0 & 0\n\t\t\t\t\t\\end{bmatrix}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "This system of linear equations is consistent. Its complete solution is $x=3/2$.",
+         "sha": "e5538ddaf7ba",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "\\begin{bmatrix}[cccc|c]\n\t\t\t\t\t\t1 & 2 & 4 & -3 & 0\\\\\n\t\t\t\t\t\t3 & 5 & 6 & -4 & 1\\\\\n\t\t\t\t\t\t4 & 5 & -2 & 3 & 3\n\t\t\t\t\t\\end{bmatrix}"
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}&\\begin{bmatrix}[cccc|c]\n\t\t\t\t\t\t1 & 2 & 4 & -3 & 0\\\\\n\t\t\t\t\t\t3 & 5 & 6 & -4 & 1\\\\\n\t\t\t\t\t\t4 & 5 & -2 & 3 & 3\n\t\t\t\t\t\\end{bmatrix}\\\\\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t&\\begin{bmatrix}[cccc|c]\n\t\t\t\t\t\t1 & 2 & 4 & -3 & 0\\\\\n\t\t\t\t\t\t0 & -1 & -6 & 5 & 1\\\\\n\t\t\t\t\t\t0 & -3 & -18 & 15 & 3\n\t\t\t\t\t\\end{bmatrix}\\\\\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t&\\begin{bmatrix}[cccc|c]\n\t\t\t\t\t\t1 & 2 & 4 & -3 & 0\\\\\n\t\t\t\t\t\t0 & 1 & 6 & -5 & -1\\\\\n\t\t\t\t\t\t0 & -3 & -18 & 15 & 3\n\t\t\t\t\t\\end{bmatrix}\\\\\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t&\\begin{bmatrix}[cccc|c]\n\t\t\t\t\t\t1 & 2 & 4 & -3 & 0\\\\\n\t\t\t\t\t\t0 & 1 & 6 & -5 & -1\\\\\n\t\t\t\t\t\t0 & 0 & 0 & 0 & 0\n\t\t\t\t\t\\end{bmatrix}\\\\\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t&\\begin{bmatrix}[cccc|c]\n\t\t\t\t\t\t1 & 0 & -8 & 7 & 2\\\\\n\t\t\t\t\t\t0 & 1 & 6 & -5 & -1\\\\\n\t\t\t\t\t\t0 & 0 & 0 & 0 & 0\n\t\t\t\t\t\\end{bmatrix}\\end{aligned}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "This system of linear equations is consistent. Its complete solution is",
+         "sha": "2442edb499e2",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{x_1\\\\x_2\\\\x_3\\\\x_4}=t\\mat{8\\\\-6\\\\1\\\\0}+s\\mat{-7\\\\5\\\\0\\\\1}+\\mat{2\\\\-1\\\\0\\\\0}."
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "\\begin{bmatrix}[cccc|c]\n\t\t\t\t\t\t1 & -1 & 5 & 1 & 1\\\\\n\t\t\t\t\t\t1 & 1 & -2 & 3 & 3\\\\\n\t\t\t\t\t\t3 & -1 & 8 & 1 & 5\\\\\n\t\t\t\t\t\t1 & 3 & -9 & 7 & 5\n\t\t\t\t\t\\end{bmatrix}"
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}&\\begin{bmatrix}[cccc|c]\n\t\t\t\t\t\t1 & -1 & 5 & 1 & 1\\\\\n\t\t\t\t\t\t1 & 1 & -2 & 3 & 3\\\\\n\t\t\t\t\t\t3 & -1 & 8 & 1 & 5\\\\\n\t\t\t\t\t\t1 & 3 & -9 & 7 & 5\n\t\t\t\t\t\\end{bmatrix}\\\\\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t&\\begin{bmatrix}[cccc|c]\n\t\t\t\t\t\t1 & -1 & 5 & 1 & 1\\\\\n\t\t\t\t\t\t0 &  & -2 & 3 & 3\\\\\n\t\t\t\t\t\t3 & -1 & 8 & 1 & 5\\\\\n\t\t\t\t\t\t1 & 3 & -9 & 7 & 5\n\t\t\t\t\t\\end{bmatrix}\\\\\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t&\\begin{bmatrix}[cccc|c]\n\t\t\t\t\t\t1 & -1 & 5 & 1 & 1\\\\\n\t\t\t\t\t\t0 & 2 & -7 & 2 & 2\\\\\n\t\t\t\t\t\t0 & 2 & -7 & -2 & 2\\\\\n\t\t\t\t\t\t0 & 4 & -14 & 6 & 4\n\t\t\t\t\t\\end{bmatrix}\\\\\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t&\\begin{bmatrix}[cccc|c]\n\t\t\t\t\t\t1 & -1 & 5 & 1 & 1\\\\\n\t\t\t\t\t\t0 & 1 & -7/2 & 1 & 1\\\\\n\t\t\t\t\t\t0 & 2 & -7 & -2 & 2\\\\\n\t\t\t\t\t\t0 & 4 & -14 & 6 & 4\n\t\t\t\t\t\\end{bmatrix}\\\\\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t&\\begin{bmatrix}[cccc|c]\n\t\t\t\t\t\t1 & -1 & 5 & 1 & 1\\\\\n\t\t\t\t\t\t0 & 1 & -7/2 & 1 & 1\\\\\n\t\t\t\t\t\t0 & 0 & 0 & -4 & 0\\\\\n\t\t\t\t\t\t0 & 0 & 0 & 2 & 0\n\t\t\t\t\t\\end{bmatrix}\\\\\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t&\\begin{bmatrix}[cccc|c]\n\t\t\t\t\t\t1 & -1 & 5 & 1 & 1\\\\\n\t\t\t\t\t\t0 & 1 & -7/2 & 1 & 1\\\\\n\t\t\t\t\t\t0 & 0 & 0 & 1 & 0\\\\\n\t\t\t\t\t\t0 & 0 & 0 & 2 & 0\n\t\t\t\t\t\\end{bmatrix}\\\\\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t&\\begin{bmatrix}[cccc|c]\n\t\t\t\t\t\t1 & -1 & 5 & 1 & 1\\\\\n\t\t\t\t\t\t0 & 1 & -7/2 & 1 & 1\\\\\n\t\t\t\t\t\t0 & 0 & 0 & 1 & 0\\\\\n\t\t\t\t\t\t0 & 0 & 0 & 0 & 0\n\t\t\t\t\t\\end{bmatrix}\\\\\n\t\t\t\t\t\\rightarrow\n\t\t\t\t\t&\\begin{bmatrix}[cccc|c]\n\t\t\t\t\t\t1 & 0 & 3/2 & 0 & 2\\\\\n\t\t\t\t\t\t0 & 1 & -7/2 & 0 & 1\\\\\n\t\t\t\t\t\t0 & 0 & 0 & 1 & 0\\\\\n\t\t\t\t\t\t0 & 0 & 0 & 0 & 0\n\t\t\t\t\t\\end{bmatrix}\\end{aligned}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "This system of linear equations is consistent. Its complete solution is",
+         "sha": "2442edb499e2",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{x_1\\\\x_2\\\\x_3\\\\x_4}=t\\mat{-3/2\\\\7/2\\\\1\\\\0}+\\mat{2\\\\1\\\\0\\\\0}."
+       }
+      ],
+      [
+       {
+        "k": "math",
+        "tex": "\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t0 & 0 & 0 & 0\n\t\t\t\t\t\\end{bmatrix}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The augmented matrix of this system of linear equations is already in reduced row echelon form.",
+         "sha": "51e1b16572bd",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "This system of linear equations is consistent. Its complete solution is",
+         "sha": "2442edb499e2",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{x\\\\y\\\\z}=t\\mat{1\\\\0\\\\0}+s\\mat{0\\\\1\\\\0}+r\\mat{0\\\\0\\\\1}."
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Reduced Row Echelon Form · 练习题 2（上游 book/modules/appendix2-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix2-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec v_{1}=\\mat{1\\\\1\\\\-2\\\\4}$, $\\vec v_{2}=\\mat{1\\\\4\\\\0\\\\2}$ and $\\vec v_{3}=\\mat{-2\\\\-2\\\\4\\\\-8}$.",
+         "sha": "30c1fea7800b",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Set up and solve a system of linear equations whose solution will determine if the vectors $\\vec v_{1}$, $\\vec v_{2}$ and $\\vec v_{3}$ are linearly independent.",
+         "sha": "1c11f4da892a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec v_{1}=\\mat{1\\\\2\\\\3}$, $\\vec v_{2}=\\mat{-2\\\\1\\\\0}$ and $\\vec v_{3}=\\mat{2\\\\7\\\\1}$.",
+         "sha": "6bd0e502dbea",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Set up and solve a system of linear equations whose solution will determine if the vectors $\\vec v_{1}$, $\\vec v_{2}$ and $\\vec v_{3}$ span $\\R^{3}$.",
+         "sha": "d22e8d57d7cf",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\ell_1$ and $\\ell_2$ be described in vector form by",
+         "sha": "b68a9055cc43",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\overbrace{\\vec x=t\\mat{1\\\\3}+\\mat{1\\\\1}}^{\\displaystyle \\ell_1}\n\t\t\t\t\\quad\n\t\t\t\t\\overbrace{\\vec x=t\\mat{2\\\\1}+\\mat{3\\\\4}}^{\\displaystyle \\ell_2}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Set up and solve a system of linear equations whose solution will determine if the lines $\\ell_{1}$ and $\\ell_{2}$ intersect.",
+         "sha": "d0b3619ecaed",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\mathcal{P}_{1}$ and $\\mathcal{P}_{2}$ be described in vector form by \\[",
+         "sha": "30b675c7643c",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}&\\mathcal{P}_1:\\quad \\vec x=t\\mat{1\\\\-1\\\\0}+s\\mat{-1\\\\-1\\\\2},\\\\\n\t\t\t\t\t&\\mathcal{P}_2:\\quad \\vec x=t\\mat{1\\\\-1\\\\1}+s\\mat{-1\\\\3\\\\-2}+\\mat{0\\\\1\\\\-1}.\\end{aligned}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "\\] Set up and solve a system of linear equations whose solution will determine if the planes $\\mathcal{P}_{1}$ and $\\mathcal{P}_{2}$ intersect.",
+         "sha": "63240b7abf45",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The vectors $\\vec v_{1}$, $\\vec v_{2}$ and $\\vec v_{3}$ are linearly independent if",
+         "sha": "25f46ed0ad07",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "x\\vec v_1+y\\vec v_2+z\\vec v_3=\\vec 0"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "only has the trivial solution.",
+         "sha": "e83556348386",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "This vector equation is equivalent to the system of linear equations",
+         "sha": "054c87381f58",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}x+y-2z &= 0 \\\\ x+4y-2z &= 0 \\\\ -2x+4z &= 0 \\\\ 4x+2y-8z &= 0\\end{aligned}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "The complete solution to this system is",
+         "sha": "bfb6c19743ab",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{x\\\\y\\\\z}=t\\mat{2\\\\0\\\\1}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "In particular, $(x, y, z)=(2, 0, 1)$ is a non-trivial solution to this system, so the vectors $\\vec v_{1}$, $\\vec v_{2}$ and $\\vec v_{3}$ are linearly dependent.",
+         "sha": "7fdf586c56c9",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "By definition, the vectors $\\vec v_{1}$, $\\vec v_{2}$, and $\\vec v_{3}$ span $\\R^3$ if every vector can be written as a linear combination of $\\vec v_1$, $\\vec v_2$, and $\\vec v_3$. In other words, the equation",
+         "sha": "66da72def19f",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "x\\vec v_1+y\\vec v_2+z\\vec v_3=\\mat{a\\\\b\\\\c}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "is consistent for all choices of $a$, $b$, and $c$. This vector equation is equivalent to the system of linear equations",
+         "sha": "a7351e43e2e2",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}x-2y+2z &= a \\\\ 2x+y+7z &= b \\\\ 3x+z &= c\\end{aligned}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Row reducing, we notice that every column is a pivot column and so the system is always consistent. Therefore, $\\Span\\Set{\\vec v_1,\\vec v_2,\\vec v_3}=\\R^3$.",
+         "sha": "9cb431d29afc",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The lines $\\ell_{1}$ and $\\ell_{2}$ intersect when their $x$ and $y$-coordinates. We first set the parameter variable of $\\ell_1$ to $t$ and the parameter variable of $\\ell_2$ to $s$. Then, equating the coordinates gives the system of linear equations",
+         "sha": "d39f481c9e74",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}t-2s &= 2 \\\\ 3t-s &= 3\\end{aligned}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "The solution to this system is",
+         "sha": "63a8230fb726",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{t\\\\s}=\\mat{4/5\\\\-3/5}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Since $\\vec x=\\mat{9/5\\\\17/5}$ when $t=4/5$ (or $s=-3/5$), the intersection of $\\ell_{1}$ and $\\ell_{2}$ is the point $\\mat{9/5\\\\17/5}$.",
+         "sha": "71d766241dff",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The planes $\\mathcal{P}_{1}$ and $\\mathcal{P}_{2}$ intersect when their coordinates are equal. Relabeling the parameter variables for $\\mathcal P_2$ as $q$ and $r$ and equating both vector forms, we get the following system of linear equations:",
+         "sha": "1ebd0024bef2",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}t-s-q+r &= 0 \\\\ -t-s+q-3r &= 1 \\\\ 2s-q+2r &= -1\\end{aligned}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "The complete solution to this system is",
+         "sha": "bfb6c19743ab",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{t\\\\s\\\\q\\\\r}=u\\mat{-2\\\\-1\\\\0\\\\1}+\\mat{-1/2\\\\-1/2\\\\0\\\\0}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Thus there are an infinite number of points in $\\mathcal P_1\\cap \\mathcal P_2$.",
+         "sha": "d95e7ad3c2f6",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "To find these points, we substitute $q=0$ and $r=u$ into the vector form of $\\mathcal{P}_{2}$. This shows us that $\\mathcal P_1\\cap \\mathcal P_2$ can be expressed in vector form by",
+         "sha": "fd25dda378a7",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{x\\\\y\\\\z}=u\\mat{-1\\\\3\\\\-2}+\\mat{0\\\\1\\\\-1}."
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Reduced Row Echelon Form · 练习题 3（上游 book/modules/appendix2-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix2-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Presented below some students' arguments for question 〔引用〕. Evaluate whether their reasoning is totally correct, mostly correct, or incorrect. If their reasoning is not totally correct, point out what mistake(s) they made and how they might be fixed.",
+      "sha": "b4e879a51b6b",
+      "zh": ""
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Consider the vector equation",
+         "sha": "96c9a86cbc6b",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "x\\vec v_1+y\\vec v_2+z\\vec v_3=\\vec 0"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "where $x, y, z\\in\\R$.",
+         "sha": "86359e837f52",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Since $(x, y, z)=(0, 0, 0)$ is a solution to the equation, the equation has the trivial solution. Therefore, the vectors $\\vec v_{1}$, $\\vec v_{2}$ and $\\vec v_{3}$ are linearly independent.",
+         "sha": "4e167c29221c",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Consider the vector equation",
+         "sha": "96c9a86cbc6b",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "x\\vec v_1+y\\vec v_2+z\\vec v_3=\\vec 0"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "where $x, y, z\\in\\R$.",
+         "sha": "86359e837f52",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Notice that $(x, y, z)=(-2, 0, -1)$ is a solution to the equation. Since $y=0$ in this solution, it is a trivial solution and therefore the vectors $\\vec v_{1}$, $\\vec v_{2}$ and $\\vec v_{3}$ are linearly independent.",
+         "sha": "764687c7060d",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The lines $\\ell_{1}$ and $\\ell_{2}$ intersect when their $x$ and $y$-coordinates are equal. Equating $x$ and $y$-coordinates gives",
+         "sha": "df0adb051d47",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}t+1 &= 2t+3 \\\\ 3t+1 &= t+4\\end{aligned}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "This system is equivalent to",
+         "sha": "8112a96dacea",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}t &= -2 \\\\ 2t &= 3\\end{aligned}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Since this system is inconsistent, the lines $\\ell_{1}$ and $\\ell_{2}$ do not intersect.",
+         "sha": "ac96be5aa80a",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The lines $\\ell_{1}$ and $\\ell_{2}$ intersect when their $x$ and $y$-coordinates are equal. Equating $x$ and $y$-coordinates gives",
+         "sha": "df0adb051d47",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}t+1 &= 2s+3 \\\\ 3t+1 &= s+4\\end{aligned}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "This system is equivalent to",
+         "sha": "8112a96dacea",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}t-2s &= 2 \\\\ 3t-s &= 3\\end{aligned},"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "and the solution is",
+         "sha": "ba2110844272",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{t\\\\s}=\\mat{4/5\\\\-3/5}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Therefore the lines $\\ell_1$ and $\\ell_2$ intersect at $\\mat{4/5\\\\3/5}$.",
+         "sha": "055fd0c9363b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Notice that",
+         "sha": "6f333808bd82",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vec x=\\mat{1/2\\\\-1/2\\\\0}=1/2\\mat{1\\\\-1\\\\0}+0\\mat{-1\\\\-1\\\\2}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "and",
+         "sha": "cffa50a32cb1",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vec x=\\mat{1/2\\\\-1/2\\\\0}=0\\mat{1\\\\-1\\\\1}-1/2\\mat{-1\\\\3\\\\-2}+\\mat{0\\\\1\\\\-1}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "So, $\\vec x=\\mat{1/2\\\\-1/2\\\\0}$ is a point on $\\mathcal{P}_{1}$ and $\\mathcal{P}_{2}$. Therefore the planes $\\mathcal{P}_{1}$ and $\\mathcal{P}_{2}$ intersect.",
+         "sha": "086aa34f990f",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Notice that $\\vec x=\\mat{1\\\\0\\\\0}$ is a point in $\\mathcal{P}_{2}$, but this point is not in $\\mathcal P_1$. Therefore the planes do not intersect.",
+         "sha": "900643d6290b",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The reasoning is incorrect. The solution $(x, y, z)=(0, 0, 0)$ is the trivial solution to the vector equation, and it is always a solution to the homogeneous equation",
+         "sha": "53f298755a97",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\alpha_1\\vec v_1+\\cdots+\\alpha_k\\vec v_k=\\vec 0"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "no matter what $\\vec v_{1}, \\dots, \\vec v_{k}$ are.",
+         "sha": "8f1b9162382f",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "To determine if a set of vectors is linearly independent, we need to find out whether the trivial solution is the *only* solution to the vector equation. That is, there does not exist any non-trivial solution to the vector equation.",
+         "sha": "fcd77dd78d8b",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The reasoning is incorrect. A trivial solution is the solution where *all* the variables equal zero, so the solution $(x, y, z)=(-2, 0, -1)$ is not a trivial solution.",
+         "sha": "93631d16c353",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The reasoning is incorrect. When equating coordinates of two different vector forms, the parameter variables needs to be set to different letters.",
+         "sha": "2b9b0dde6a0d",
+         "zh": ""
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "A valid system of linear equations is",
+         "sha": "bb19b20f6b5e",
+         "zh": ""
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{aligned}t-2s &= 2 \\\\ 3t-s &= 3\\end{aligned}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Here we have set the parameter $t$ in the vector form of $\\ell_{2}$ to $s$.",
+         "sha": "8ac0e8a755a4",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The reasoning is incorrect. The solution $\\mat{4/5\\\\-3/5}$ to the system of linear equations gives the value of $t$ and $s$ at the intersection. To find the intersection of $\\ell_{1}$ and $\\ell_{2}$, the value $t=4/5$ or $s=-3/5$ needs to be plugged into the vector form of $\\ell_{1}$ or $\\ell_{2}$.",
+         "sha": "b69e84f189a0",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The reasoning is correct. Since $\\vec x=\\mat{1/2\\\\-1/2\\\\0}$ is a point on both $\\mathcal{P}_{1}$ and $\\mathcal{P}_{2}$, it is in the intersection of $\\mathcal{P}_{1}$ and $\\mathcal{P}_{2}$, so the planes $\\mathcal{P}_{1}$ and $\\mathcal{P}_{2}$ intersect. However, we can not determine if the intersection is a line or a plane based on only one point, so we need to set up and solve an appropriate system of linear equations.",
+         "sha": "5503c92b70f4",
+         "zh": ""
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The reasoning is incorrect. Finding one point that is in $\\mathcal{P}_{2}$ but not in $\\mathcal{P}_{1}$ shows that $\\mathcal P_1$ does not intersect $\\mathcal P_2$ *at that point*, but does not rule out the possibility that $\\mathcal P_1$ intersects $\\mathcal P_2$ at a *different* point.",
+         "sha": "79513142d067",
+         "zh": ""
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Reduced Row Echelon Form · 练习题 4（上游 book/modules/appendix2-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix2-exercises.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "简化行阶梯形"
+}
