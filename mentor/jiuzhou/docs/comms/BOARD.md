@@ -1,6 +1,6 @@
 # 九州协作看板
 
-> 由 `scripts/comms.py board` 生成于 2026-10-14 11:25，**不要手改**。任务详情见各任务文件，通讯规则见 [README.md](README.md)。
+> 由 `scripts/comms.py board` 生成于 2026-10-14 11:38，**不要手改**。任务详情见各任务文件，通讯规则见 [README.md](README.md)。
 
 ## 未读消息
 
@@ -12,7 +12,7 @@
 
 ## 概览
 
-todo 11 · doing 5 · review 0 · blocked 2 · done 24
+todo 12 · doing 5 · review 0 · blocked 2 · done 24
 
 ## claude-code
 
@@ -33,6 +33,7 @@ todo 11 · doing 5 · review 0 · blocked 2 · done 24
 | [T-014](tasks/T-014-键盘操作.md) | P2 | todo | 键盘操作 |  | 2026-10-13 22:43 |
 | [T-015](tasks/T-015-数据缺口清单（给-ZCode-的需求）.md) | P2 | todo | 数据缺口清单（给 ZCode 的需求） |  | 2026-10-13 22:43 |
 | [T-025](tasks/T-025-流动与生长动画.md) | P2 | todo | 流动与生长动画 | T-018 | 2026-10-14 11:15 |
+| [T-031](tasks/T-031-首屏体验：冷启动首绘时间与加载状态.md) | P2 | todo | 首屏体验：冷启动首绘时间与加载状态 |  | 2026-10-14 11:38 |
 | [T-001](tasks/T-001-海陆底图（Natural-Earth）.md) | P0 | done | 海陆底图（Natural Earth） |  | 2026-10-13 22:51 |
 | [T-002](tasks/T-002-快照优先，旧矩形降级并打示意水印.md) | P0 | done | 快照优先，旧矩形降级并打示意水印 |  | 2026-10-14 08:32 |
 | [T-003](tasks/T-003-地点标签防重叠（symbol-图层）.md) | P0 | done | 地点标签防重叠（symbol 图层） |  | 2026-10-14 08:32 |
