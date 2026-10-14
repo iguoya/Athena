@@ -11,7 +11,7 @@
 | 成果 | 内容 | 获取 | 备注 |
 |---|---|---|---|
 | CHGIS / Hartwell | 历史政区面、名称、起止年 | 已入库 `packages/maps/geo/academic/`（19 切片，2239 面） | 镜像数据没带 `SYS_ID`，局限见 SOURCES.md |
-| CBDB（中国历代人物传记资料库） | 约 65.8 万人，籍贯/任官地/亲属/事件；7–19 世纪为主 | GitHub `cbdb-project/cbdb_sqlite`（`latest.7z`），另有 Hugging Face 镜像；CC BY-NC-SA | **未下载**，体积与 `addresses` 表字段（坐标）待核（见下「需要你拍板」） |
+| CBDB（中国历代人物传记资料库） | 66.3 万人；地址表 30,160 条，其中 51% 有坐标、36% 带 CHGIS 点 ID；明清厚、先秦两汉薄 | `cbdb-project/cbdb_sqlite` 的 `latest.json` → Hugging Face 压缩包（139 MB，解压 559 MB，已核对 SHA-256）；CC BY-NC-SA | **已下载到 `.cache/cbdb/`（不入库）**，可行性见 `poc/cbdb-feasibility.md` |
 | MARKUS（古籍半自动标注） | 用 CBDB 与 CHGIS 的名称表给文本标人名、地名、官名、时间，地名可带 gazetteer ID，导出后可上地图 | 在线平台 | 我们要做的是它的最小版：词典匹配，可审计 |
 | 维基文库 | 二十四史等古籍全文，MediaWiki API 可取纯文本（已实测 `宋史/卷025` 可取） | 开放 | 繁体；`ctext.org` API 需订阅/key，不作主源 |
 | Linked Places / World-Historical Gazetteer | 地点记录=多名称（带时间）+类型+几何+关系 | 开放格式 | 我们的 `places.names[]` 已同构 |
@@ -41,6 +41,7 @@
 | P2 | 锚点界面（原文旁地名、点击飞行）；CBDB 人物挂接 | cursor + zcode | P1 数据 |
 | P3 | 人才地理密度、谭图叠加 | 视情况 | — |
 
-## 需要使用者拍板（涉及下载，我不擅自执行）
-1. `pip install opencc-python-reimplemented`（纯 Python 简繁转换，约几百 KB）：没有它，我们写的简体 `loc` 对不上维基文库的繁体原文。
-2. 下载 CBDB SQLite（`cbdb-project/cbdb_sqlite` 的 `latest.7z`，体积未核，预计数百 MB 量级）：先只读 `addresses`/`biog_main` 做可行性核对，**不入库**，入库只放聚合后的小表。
+## 状态（2026-10-14 更新）
+- 使用者已批准：`opencc-python-reimplemented` 已安装；CBDB SQLite 已下载并核对（见 `poc/cbdb-feasibility.md`）。
+- 简繁转换已解除 T-112 的阻塞：之前定位失败的原因是简繁不通，现在可以按繁体原文定位到整句。
+- 结论：链路可行，下一步是把 CBDB 的 `ADDR_CODES`（15.5k 条带坐标）并成统一地名词典，再人工校对锚点。

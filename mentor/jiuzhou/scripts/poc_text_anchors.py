@@ -19,6 +19,12 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
+try:
+    from opencc import OpenCC  # pip install opencc-python-reimplemented
+    _S2T = OpenCC('s2t').convert
+except ImportError:  # 没装就退回原样（定位会失败，见 poc 说明）
+    _S2T = lambda t: t  # noqa: E731
+
 ROOT = Path(__file__).resolve().parent.parent
 ATLAS = ROOT / "content" / "atlas.json"
 ACAD = ROOT.parent.parent / "packages" / "maps" / "geo" / "academic"
@@ -73,6 +79,11 @@ def build_gazetteer():
             gaz.setdefault(nm, []).append({"lon": lon, "lat": lat, "from": pr.get("fromYear", -9999),
                                            "to": pr.get("toYear", 9999), "src": pr.get("source", "academic"),
                                            "id": pr.get("sliceId")})
+    # 维基文库是繁体：每个名字再登记一份繁体写法（指向同一批候选）
+    for nm in list(gaz):
+        t = _S2T(nm)
+        if t != nm:
+            gaz.setdefault(t, []).extend(gaz[nm])
     return gaz
 
 
@@ -108,12 +119,21 @@ def main() -> int:
             except Exception as ex:  # noqa: BLE001
                 print("取文失败", title, ex)
                 continue
-            quote = re.sub(r"[「」『』，。、；：\s]", "", src.get("loc", ""))
-            # 用引语里最长的一段无标点片段定位
-            frag = max(re.split(r"[」」,，。；]", src.get("loc", "")), key=len)
-            frag = re.sub(r"[「『]", "", frag)[:14]
-            pos = full.find(frag) if frag else -1
-            seg = full[max(0, pos - 150):pos + 250] if pos >= 0 else full[:400]
+            loc = _S2T(src.get("loc", ""))
+            # 引语在「卷…：」之后；按标点切成片段，从长到短找第一个能在原文里定位的
+            body = loc.split("：", 1)[-1]
+            frags = sorted((f for f in re.split(r"[，。；、「」『』]", body) if len(f) >= 4), key=len, reverse=True)
+            pos = -1
+            for f in frags:
+                pos = full.find(f[:12])
+                if pos >= 0:
+                    break
+            if pos >= 0:  # 只取引语所在的那一整句（句号到句号），不取前后文，减少无关地名
+                a = full.rfind("。", 0, pos) + 1
+                b = full.find("。", pos)
+                seg = full[a:(b + 1) if b >= 0 else pos + 80]
+            else:
+                seg = ""
             anchors = match(seg, gaz, e["year"])
             report.append({"event": e["id"], "year": e["year"], "work": src.get("work"), "located": pos >= 0,
                            "passage": seg.replace("\n", " "), "anchors": anchors})
