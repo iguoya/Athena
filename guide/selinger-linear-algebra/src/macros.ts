@@ -17,7 +17,7 @@ export const MACROS: Record<string, string> = {
   "\\set": "\\left\\{#1\\right\\}", "\\paren": "\\left(#1\\right)", "\\coll": "\\|",
   "\\th": "^{\\,\\mathrm{th}}", "\\st": "^{\\,\\mathrm{st}}", "\\nd": "^{\\,\\mathrm{nd}}", "\\rd": "^{\\,\\mathrm{rd}}",
   "\\ijth": "i\\!j^{\\,\\mathrm{th}}",
-  "\\rowop": "\;\\leftarrow\;", "\\rowswap": "\;\\leftrightarrow\;",
+  "\\rowop": "\\;\\leftarrow\\;", "\\rowswap": "\\;\\leftrightarrow\\;",
   "\\coord": "\\left[#1\\right]", "\\bigbracket": "\\left[#1\\right]",
   "\\minor": "M_{#2}", "\\cofactor": "C_{#2}",
   "\\roweq": "\\simeq", "\\similar": "\\sim", "\\iso": "\\cong", "\\Hw": "W", "\\Hd": "D", "\\adjoint": "*",

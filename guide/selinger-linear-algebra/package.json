@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/check-math.mjs && tsc && vite build",
+    "build": "node scripts/check-math.mjs && node scripts/test-answer.mjs && tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
     "tauri:dev": "tauri dev",

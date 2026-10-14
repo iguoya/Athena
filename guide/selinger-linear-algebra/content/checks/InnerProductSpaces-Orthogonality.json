@@ -1,0 +1,101 @@
+{
+  "ex1": {
+    "kind": "choice",
+    "ask": "在内积 $\\langle\\mathbf u,\\mathbf v\\rangle=\\mathbf u^TA\\mathbf v$ 下，哪几对向量互相正交？",
+    "options": [
+      {
+        "text": "$\\mathbf u_1\\perp\\mathbf u_3$，$\\mathbf u_2\\perp\\mathbf u_4$",
+        "why": "这是按普通点积 $\\mathbf u^T\\mathbf v$ 得到的结果；本题的内积带有矩阵 $A$，正交要用 $\\mathbf u^TA\\mathbf v=0$ 判断。"
+      },
+      {
+        "text": "$\\mathbf u_1\\perp\\mathbf u_2$，$\\mathbf u_1\\perp\\mathbf u_4$",
+        "why": "漏掉了一对：$\\mathbf u_2^TA\\mathbf u_3=0$，所以 $\\mathbf u_2\\perp\\mathbf u_3$ 也成立。"
+      },
+      {
+        "text": "$\\mathbf u_1\\perp\\mathbf u_2$，$\\mathbf u_1\\perp\\mathbf u_4$，$\\mathbf u_2\\perp\\mathbf u_3$",
+        "ok": true,
+        "why": "逐对算 $\\mathbf u_i^TA\\mathbf u_j$：只有 $(1,2),(1,4),(2,3)$ 三对为 0，其余分别是 $-5,32,54$。"
+      },
+      {
+        "text": "$\\mathbf u_1\\perp\\mathbf u_2$，$\\mathbf u_1\\perp\\mathbf u_4$，$\\mathbf u_2\\perp\\mathbf u_3$，$\\mathbf u_3\\perp\\mathbf u_4$",
+        "why": "$\\langle\\mathbf u_3,\\mathbf u_4\\rangle=54\\neq0$，$\\mathbf u_3,\\mathbf u_4$ 不正交。"
+      }
+    ]
+  },
+  "ex2": {
+    "kind": "choice",
+    "ask": "在 $C[-1,1]$（$\\langle f,g\\rangle=\\int_{-1}^1 fg\\,dx$）中，哪几对函数互相正交？",
+    "options": [
+      {
+        "text": "$f_1\\perp f_3$，$f_2\\perp f_4$",
+        "why": "$\\langle f_1,f_3\\rangle=\\int(x^4-x^2)=-\\tfrac4{15}\\neq0$，$\\langle f_2,f_4\\rangle=\\int(x^2-x^6)=\\tfrac8{21}\\neq0$：同为奇（或同为偶）的两个函数乘积是偶函数，积分一般不为 0，关键看乘积是不是奇函数。"
+      },
+      {
+        "text": "$f_1\\perp f_2$，$f_1\\perp f_4$，$f_2\\perp f_3$",
+        "why": "漏掉 $f_3\\perp f_4$：$f_3f_4=(x^3-x)(1-x^4)$ 是奇函数，在 $[-1,1]$ 上积分为 0。"
+      },
+      {
+        "text": "$f_1\\perp f_2$，$f_1\\perp f_4$，$f_2\\perp f_3$，$f_3\\perp f_4$",
+        "ok": true,
+        "why": "$f_1,f_3$ 为奇函数，$f_2,f_4$ 为偶函数；奇×偶是奇函数，积分为 0，所以这四对正交；奇×奇、偶×偶的两对积分不为 0。"
+      },
+      {
+        "text": "$f_1\\perp f_2$，$f_1\\perp f_3$，$f_1\\perp f_4$，$f_2\\perp f_3$，$f_3\\perp f_4$",
+        "why": "$f_1f_3=x^4-x^2$ 是偶函数，积分为 $-\\tfrac4{15}\\neq0$，$f_1,f_3$ 不正交。"
+      }
+    ]
+  },
+  "ex3": {
+    "kind": "numbers",
+    "ask": "在 $\\mathcal P_3$（内积 $\\int_{-1}^1fg\\,dx$）中：(a) $\\{x^2,x\\}$ 的正交补里，写出满足 $c=3,\\ d=0$ 的多项式 $ax^3+bx^2+cx+d$，依次写 $a,b,c,d$；(b) 再写出 $\\{x+1\\}$ 的正交补的维数。共 5 个数。",
+    "answer": [
+      -5.0,
+      0.0,
+      3.0,
+      0.0,
+      3.0
+    ],
+    "hint": "(a) 令 $p$ 与 $x^2$、$x$ 的内积都为 0，得到关于 $a,b,c,d$ 的两个线性方程，奇函数积分为 0 可以省事；(b) 一个非零向量的正交补由一条线性方程定义，用总维数减去方程个数。"
+  },
+  "ex4": {
+    "kind": "choice",
+    "ask": "判断 (a)–(d) 四组基各是什么类型（标准正交 / 仅正交 / 都不是）。",
+    "options": [
+      {
+        "text": "(a) 标准正交；(b) 仅正交；(c) 仅正交；(d) 标准正交",
+        "why": "(b) 中 $(1,0,1)\\cdot(0,1,1)=1\\neq0$，并不两两正交，所以 (b) 两者都不是。"
+      },
+      {
+        "text": "(a) 标准正交；(b) 都不是；(c) 标准正交；(d) 标准正交",
+        "why": "(c) 中向量两两正交，但 $(1,0,2)$ 长度为 $\\sqrt5\\neq1$，只是正交基，不是标准正交基。"
+      },
+      {
+        "text": "(a) 标准正交；(b) 都不是；(c) 仅正交；(d) 标准正交",
+        "ok": true,
+        "why": "(a)(d) 两两正交且长度为 1；(b) 前两个向量点积为 1；(c) 两两正交但长度为 $\\sqrt5,1,\\sqrt5$。"
+      },
+      {
+        "text": "(a) 标准正交；(b) 都不是；(c) 仅正交；(d) 仅正交",
+        "why": "(d) 中 $(\\tfrac35,\\tfrac45,0)$ 长度为 $\\sqrt{\\tfrac9{25}+\\tfrac{16}{25}}=1$，三个向量长度都是 1，是标准正交基。"
+      }
+    ]
+  },
+  "ex5": {
+    "kind": "numbers",
+    "ask": "依次写出 $\\mathbf v$ 关于 $B$ 的三个坐标。",
+    "answer": [
+      0.25,
+      0.6666666666666666,
+      -0.8
+    ],
+    "hint": "正交基下的坐标是 $\\dfrac{\\langle\\mathbf v,\\mathbf u_i\\rangle}{\\langle\\mathbf u_i,\\mathbf u_i\\rangle}$，分母是范数的平方。"
+  },
+  "ex6": {
+    "kind": "numbers",
+    "ask": "写出 $\\mathbf v$ 关于 $B$ 的第一个坐标。",
+    "answer": [
+      0.5
+    ],
+    "hint": "只需要 $\\mathbf u_1$ 就够了：正交基下的坐标公式只涉及这一个基向量。"
+  }
+}

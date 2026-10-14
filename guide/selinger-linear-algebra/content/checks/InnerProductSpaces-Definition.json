@@ -1,0 +1,58 @@
+{
+  "ex1": {
+    "kind": "choice",
+    "ask": "哪些矩阵 $A$ 使 $\\langle\\mathbf u,\\mathbf v\\rangle=\\mathbf u^TA\\mathbf v$ 成为 $\\mathbb R^2$ 上的内积？",
+    "options": [
+      {
+        "text": "(a)、(b)、(e)",
+        "why": "(e) 对称，但取 $\\mathbf u=(1,-1)^T$ 得 $\\langle\\mathbf u,\\mathbf u\\rangle=0$ 而 $\\mathbf u\\neq\\mathbf 0$，只是半正定，违反正定性。"
+      },
+      {
+        "text": "(a)、(b)、(c)",
+        "why": "(c) 不对称：$\\langle e_1,e_2\\rangle=1$ 而 $\\langle e_2,e_1\\rangle=0$，违反对称性。注意 $\\langle\\mathbf u,\\mathbf u\\rangle$ 恒正并不够，还要 $A=A^T$。"
+      },
+      {
+        "text": "(a)、(b)",
+        "ok": true,
+        "why": "(a)(b) 对称且 $\\mathbf u^TA\\mathbf u>0$（$\\mathbf u\\ne\\mathbf 0$）；(c) 不对称，(d) 有 $\\langle e_2,e_2\\rangle=-1<0$，(e) 有 $\\langle(1,-1),(1,-1)\\rangle=0$。"
+      },
+      {
+        "text": "(a)、(b)、(d)",
+        "why": "(d) 对称，但 $\\langle e_2,e_2\\rangle=-1<0$，不满足正定性。"
+      },
+      {
+        "text": "(a)、(b)、(c)、(e)",
+        "why": "同时犯了上面两个错：(c) 不对称，(e) 只是半正定。"
+      }
+    ]
+  },
+  "ex2": {
+    "kind": "numbers",
+    "ask": "在 $C[0,1]$ 中依次写出 (a) $\\langle1,x\\rangle$、(b) $\\langle x,x^2\\rangle$、(c) $\\langle1+x,2+x^2\\rangle$ 三个数。",
+    "answer": [
+      0.5,
+      0.25,
+      3.5833333333333335
+    ],
+    "hint": "内积是 $\\int_0^1 f(x)g(x)\\,dx$；先把乘积展开成多项式再逐项积分。"
+  },
+  "ex3": {
+    "kind": "numbers",
+    "ask": "在 $C[0,1]$ 中依次写出 (a) $\\|1\\|$、(b) $\\|x\\|$、(c) $\\|x^2+1\\|$ 三个数（根号写成 sqrt(…) 即可）。",
+    "answer": [
+      1.0,
+      0.5773502691896257,
+      1.3662601021279464
+    ],
+    "hint": "范数是 $\\sqrt{\\langle f,f\\rangle}$，别忘了最后开方。"
+  },
+  "ex5": {
+    "kind": "numbers",
+    "ask": "在 $C[-1,1]$ 中，依次写出 (a) $x$ 与 $x^2$、(b) $x$ 与 $x^3$ 夹角的余弦值 $\\cos\\theta$。",
+    "answer": [
+      0.0,
+      0.916515138991168
+    ],
+    "hint": "$\\cos\\theta=\\dfrac{\\langle f,g\\rangle}{\\|f\\|\\|g\\|}$，积分区间是 $[-1,1]$；奇函数在对称区间上的积分为 0。"
+  }
+}

@@ -140,6 +140,8 @@ def check_checks(sections: dict) -> None:
         sec = sections.get(p.stem)
         if data is None:
             continue
+        if sections and p.stem not in sections and len(sections) < 5:
+            continue  # lint_checks.py 只传了几节时，不检查别的文件
         if sec is None:
             fail(f"checks/{p.name}: 没有对应的节")
             continue
@@ -152,6 +154,8 @@ def check_checks(sections: dict) -> None:
             if c.get("kind") == "numbers":
                 if not c.get("answer") or not all(isinstance(x, (int, float)) for x in c["answer"]):
                     fail(f"checks/{p.name}:{eid}: numbers 的 answer 必须是非空数字数组")
+                if not str(c.get("ask", "")).strip():
+                    fail(f"checks/{p.name}:{eid}: numbers 需要 ask（告诉学习者答案写成什么形式，如「按行依次写出 A⁻¹ 的 9 个元素」）")
             elif c.get("kind") == "choice":
                 opts = c.get("options", [])
                 if len(opts) < 2 or sum(1 for o in opts if o.get("ok")) != 1 or any(not o.get("why") for o in opts):
