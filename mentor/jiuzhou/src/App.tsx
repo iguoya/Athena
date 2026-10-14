@@ -16,7 +16,8 @@ import lakesJson from "../../../packages/maps/geo/lakes.json";
 import reliefUrl from "../../../packages/maps/geo/relief-east-asia.webp";
 import reliefMeta from "../../../packages/maps/geo/relief-east-asia.json";
 import atlasJson from "@content/atlas.json";
-import territoriesJson from "@content/territories.json";
+/** T-017：陆地面裁剪后的疆域（源数据仍在 content/territories.json，归 zcode） */
+import territoriesJson from "../../../packages/maps/geo/territories-clipped.json";
 import hydroJson from "@content/hydro.json";
 import corridorsJson from "@content/corridors.json";
 import featuresJson from "@content/features.json";

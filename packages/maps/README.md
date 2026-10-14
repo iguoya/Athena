@@ -21,6 +21,15 @@ python packages/maps/scripts/fetch_academic.py
 
 中间物在 `.cache/maps/chgis/`（可删）。官方 Dataverse 若被 WAF 拦住，脚本会改走已记录的公开镜像并在 SOURCES 写明。
 
+### 疆域贴海岸（T-017）
+
+```sh
+python packages/maps/scripts/clip_territories.py
+```
+
+用 `geo/land.json` 裁剪 `mentor/jiuzhou/content/territories.json`，写出
+`geo/territories-clipped.json`（不回写 content）。九州前端读裁剪结果。
+
 ### Natural Earth 河网再加密（可选）
 
 ```sh
