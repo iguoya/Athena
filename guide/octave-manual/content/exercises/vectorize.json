@@ -1,0 +1,132 @@
+[
+  {
+    "id": "ex1",
+    "stem": "手册说：用数组做下标，代替对下标变量的循环。先预测，再运行：\n\n```octave\nb = [1 4 9 16 25 36];\nn = numel (b);\nfor i = 1:n-1\n  a1(i) = b(i+1) - b(i);\nendfor\na2 = b(2:n) - b(1:n-1);\nisequal (a1, a2)\n```\n\n向量化的写法 `a2` 与循环的写法 `a1` 结果相同。请写出两个数：`a2` 的元素个数，以及 `a2` 所有元素之和。",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写出两个数：元素个数、元素之和。",
+      "answer": [
+        5,
+        35
+      ],
+      "hint": "`b(2:n)` 与 `b(1:n-1)` 各有几个元素？相邻差相加时，中间项会怎样？"
+    },
+    "verify": "b = [1 4 9 16 25 36]; n = numel (b); a2 = b(2:n) - b(1:n-1); result = [numel(a2) sum(a2)];",
+    "sol": "`b(2:n)` 取第 2 到第 6 个元素，`b(1:n-1)` 取第 1 到第 5 个元素，两段长度都是 5，逐元素相减得到 5 个差。\n\n求和时中间项两两抵消，剩下 $b_6-b_1=36-1=35$（与微积分里的裂项求和是同一个结构）。\n\n```octave\n>> isequal (a1, a2)\nans = 1\n>> a2\na2 =\n\n    3    5    7    9   11\n\n>> [numel(a2) sum(a2)]\nans =\n\n    5   35\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "vectorize · Basic Vectorization",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex2",
+    "stem": "广播让形状不同的数组逐元素运算。先预测结果矩阵的大小，再运行：\n\n```octave\nc = (1:3)' + (10:10:40)\n```\n\n`(1:3)'` 是 $3\\times 1$ 的列向量，`(10:10:40)` 是 $1\\times 4$ 的行向量。请写出 `c` 的行数、列数，以及 `c(3,2)` 的值。",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写出三个数：行数、列数、c(3,2)。",
+      "answer": [
+        3,
+        4,
+        23
+      ],
+      "hint": "回到「Broadcasting」一节的两条规则：对每一维，两个长度相等，或者其中一个是 1。第 $i$ 行第 $j$ 列等于列向量第 $i$ 项加行向量第 $j$ 项。"
+    },
+    "verify": "c = (1:3)' + (10:10:40); result = [size(c) c(3,2)];",
+    "sol": "第 1 维的长度是 3 与 1，第 2 维是 1 与 4，每一维都有一方为 1，所以可以广播，结果是 $3\\times 4$。`c(i,j)` 等于 `i + 10*j`，于是 `c(3,2) = 3 + 20 = 23`。\n\n```octave\n>> c = (1:3)' + (10:10:40)\nc =\n\n   11   21   31   41\n   12   22   32   42\n   13   23   33   43\n\n>> size (c)\nans =\n\n   3   4\n\n>> c(3,2)\nans = 23\n```\n\n手册里 `y - y'` 求一个向量的所有两两差，用的也是这个机制。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "vectorize · Broadcasting",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex3",
+    "stem": "`bsxfun` 把一个二元函数句柄「广播」到两个数组上。先预测，再运行：\n\n```octave\nr = bsxfun (@power, [1 2 3], [1; 2])\n```\n\n`r` 是一个 $2\\times 3$ 矩阵。把它按列展开成一行数（Octave 的 `r(:)'`），依次写出这 6 个数。",
+    "check": {
+      "kind": "numbers",
+      "ask": "按列展开，依次写出 6 个数。",
+      "answer": [
+        1,
+        1,
+        2,
+        4,
+        3,
+        9
+      ],
+      "hint": "`r(i,j)` 是行向量第 $j$ 项的 列向量第 $i$ 项 次方。先写出两行，再逐列读。"
+    },
+    "verify": "r = bsxfun (@power, [1 2 3], [1; 2]); result = r(:);",
+    "sol": "第 1 行是底数 `[1 2 3]` 的 1 次方，第 2 行是 2 次方：$[1\\ 2\\ 3]$ 和 $[1\\ 4\\ 9]$。按列展开就是 `1 1 2 4 3 9`。\n\n```octave\n>> r = bsxfun (@power, [1 2 3], [1; 2])\nr =\n\n   1   2   3\n   1   4   9\n\n>> r(:)'\nans =\n\n   1   1   2   4   3   9\n\n>> [1 2 3] .^ [1; 2]\nans =\n\n   1   2   3\n   1   4   9\n```\n\n`.^` 本身就会广播，结果和 `bsxfun` 相同。`bsxfun` 的价值在于函数自己不广播的场合。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "vectorize · bsxfun",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex4",
+    "stem": "`arrayfun` 对数组的每个元素调用一次函数。先运行下面两行，观察第一行的报错：\n\n```octave\nx = [1 2 3 4];\ny = arrayfun (@(t) t*[1 1], x)\n```\n\n再加上 `'UniformOutput'` 选项：\n\n```octave\ny = arrayfun (@(t) t*[1 1], x, 'UniformOutput', false);\n```\n\n请写出两个数：`y` 的元素个数 `numel (y)`，以及 `y{3}` 各项之和。",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写出两个数。",
+      "answer": [
+        4,
+        6
+      ],
+      "hint": "没有 `'UniformOutput', false` 时，每次调用必须返回标量。加上之后，返回值装进什么类型的容器？第 3 次调用的实参是多少？"
+    },
+    "verify": "x = [1 2 3 4]; y = arrayfun (@(t) t*[1 1], x, 'UniformOutput', false); result = [numel(y) sum(y{3})];",
+    "sol": "每次调用返回的是长度为 2 的向量，不是标量，所以默认设置（`UniformOutput` 为真）报错。设为假后，结果装进元胞数组：对 4 个输入元素调用 4 次，`y` 是 $1\\times 4$ 的元胞。`y{3}` 是 `3*[1 1] = [3 3]`，和为 6。\n\n```octave\n>> y = arrayfun (@(t) t*[1 1], x)\nerror: arrayfun: all values must be scalars when UniformOutput = true\n>> y = arrayfun (@(t) t*[1 1], x, 'UniformOutput', false);\n>> class (y)\nans = cell\n>> size (y)\nans =\n\n   1   4\n\n>> y{3}\nans =\n\n   3   3\n\n>> [numel(y) sum(y{3})]\nans =\n\n   4   6\n```\n\n报错信息以 `arrayfun: all values must be scalars` 开头（你本机版本的后半句可能多出提示）。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "vectorize · arrayfun",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex5",
+    "stem": "向量化里最常见的失误是漏写点。先预测，再运行：\n\n```octave\nv = [1 2 3];\nw = v * v\n```\n\n想要的是逐元素平方 `[1 4 9]`。关于 `v * v`，下面哪个说法正确？",
+    "check": {
+      "kind": "choice",
+      "options": [
+        {
+          "text": "得到 `[1 4 9]`，`*` 对向量就是逐元素相乘。",
+          "ok": false,
+          "why": "`*` 是矩阵乘法；逐元素相乘要写 `.*`。"
+        },
+        {
+          "text": "得到标量 14，因为 `*` 把两个向量做了内积。",
+          "ok": false,
+          "why": "内积需要 $1\\times 3$ 乘 $3\\times 1$，即 `v * v'`；`v * v` 的两个操作数都是 $1\\times 3$，维数不匹配。"
+        },
+        {
+          "text": "报 nonconformant arguments 错误，因为 $1\\times 3$ 与 $1\\times 3$ 不能做矩阵乘法；应改写 `v .* v`。",
+          "ok": true,
+          "why": "矩阵乘法要求左边的列数等于右边的行数，3 不等于 1；`v .* v` 得到 `[1 4 9]`。"
+        },
+        {
+          "text": "广播会把 `v` 补成 $3\\times 3$ 再相乘，得到 $3\\times 3$ 矩阵。",
+          "ok": false,
+          "why": "广播只用于逐元素运算（`+`、`.*` 等），矩阵乘法 `*` 不广播。"
+        }
+      ]
+    },
+    "sol": "`*` 是矩阵乘法，$1\\times 3$ 乘 $1\\times 3$ 维数不匹配，所以报错；平方要写 `v .* v` 或 `v .^ 2`。\n\n```octave\n>> w = v * v\nerror: operator *: nonconformant arguments (op1 is 1x3, op2 is 1x3)\n>> w = v .* v\nw =\n\n   1   4   9\n\n>> v * v'\nans = 14\n>> sum (v .* v)\nans = 14\n```\n\n对方阵 `M = [1 2; 3 4]` 而言，`M*M` 不报错但结果是 `[7 10; 15 22]`，`M.*M` 才是 `[1 4; 9 16]`。这种错误没有报错提示，更难发现。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "vectorize · 逐元素运算符",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  }
+]

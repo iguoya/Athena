@@ -1,0 +1,169 @@
+[
+  {
+    "id": "ex1",
+    "stem": "先预测，再在 Octave 里运行：\n\n```octave\nr = 2:5:23\n```\n\n区间 `a:s:b` 的上界不一定取得到。写出 `r` 的最后一个元素与元素个数。",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写两个数：最后一个元素、元素个数。",
+      "answer": [
+        22.0,
+        5.0
+      ],
+      "hint": "区间从 `a` 出发，每次加 `s`，取到不超过 `b` 的最后一项为止；先数一数 23 之前能走几步。"
+    },
+    "verify": "r = 2:5:23; result = [r(end), numel(r)];",
+    "sol": "元素是 $2, 7, 12, 17, 22$，下一项 $27$ 已超过 $23$，所以 $23$ 本身不在区间里：最后一个元素是 $22$，共 $5$ 个。\n\n```octave\n>> r\nr =\n\n    2    7   12   17   22\n>> numel (r)\nans = 5\n>> r(end)\nans = 22\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "numbers · Ranges",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex2",
+    "stem": "方括号里空格会参与分词。先预测，再运行：\n\n```octave\np = [1 -1]\nq = [1 - 1]\nnumel (p)\nnumel (q)\n```\n\n`numel (p)` 与 `numel (q)` 各是多少？",
+    "check": {
+      "kind": "choice",
+      "ask": "选出正确的一项。",
+      "options": [
+        {
+          "text": "`numel (p)` 是 1，`numel (q)` 是 2",
+          "ok": false,
+          "why": "把两个式子的分词弄反了：`[1 -1]` 里 `-` 紧贴 `1`、前面有空格，被当作一元负号，所以是两个元素。"
+        },
+        {
+          "text": "`numel (p)` 与 `numel (q)` 都是 2",
+          "ok": false,
+          "why": "`[1 - 1]` 里 `-` 两侧都有空格，被当作二元减号，结果是标量 `0`，只有一个元素。"
+        },
+        {
+          "text": "`numel (p)` 是 2，`numel (q)` 是 1",
+          "ok": true,
+          "why": "`[1 -1]` 是行向量 `[1, -1]`（一元负号），`[1 - 1]` 是标量 `0`（二元减号）。"
+        },
+        {
+          "text": "`q` 报语法错误，因为方括号里不能做减法",
+          "ok": false,
+          "why": "方括号里完全可以写表达式，`[1 - 1]` 合法，值为 `0`。"
+        }
+      ]
+    },
+    "sol": "`p = [1 -1]` 中 `-` 前有空格、后无空格，Octave 把它当一元负号，空格作元素分隔，得到两个元素；`q = [1 - 1]` 中 `-` 两侧都有空格，作二元减号，得到标量。手册建议用逗号与分号分隔元素以避免歧义。\n\n```octave\n>> p\np =\n\n   1  -1\n>> q\nq = 0\n>> numel (p)\nans = 2\n>> numel (q)\nans = 1\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "numbers · Matrices",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex3",
+    "stem": "比较的结果是逻辑数组，参与算术时 `true` 当 1、`false` 当 0。先预测，再运行：\n\n```octave\nx = [3 1 4 1 5 9 2 6];\nm = (x > 2)\nm .* x\nsum (m .* x)\n```\n\n最后一行输出是多少？",
+    "check": {
+      "kind": "numbers",
+      "ask": "写出一个数。",
+      "answer": [
+        27.0
+      ],
+      "hint": "`x > 2` 给出 0/1 数组；逐元素乘 `x` 会把不满足条件的元素清零。"
+    },
+    "verify": "x = [3 1 4 1 5 9 2 6]; m = (x > 2); result = sum (m .* x);",
+    "sol": "`m` 在大于 2 的位置为 1：$3,4,5,9,6$ 被保留，其余变成 0，求和得 $3+4+5+9+6=27$。\n\n```octave\n>> m = (x > 2)\nm =\n\n  1  0  1  0  1  1  0  1\n>> m .* x\n>> sum (m .* x)\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "numbers · Logical Values",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex4",
+    "stem": "先预测，再运行：\n\n```octave\na = (2 > 1);\nb = a + a\nclass (a)\nclass (b)\n```\n\n`b` 的值与类型是什么？",
+    "check": {
+      "kind": "choice",
+      "ask": "选出正确的一项。",
+      "options": [
+        {
+          "text": "`b` 是 `logical`，值为 `1`（`true` 加 `true` 仍是 `true`）",
+          "ok": false,
+          "why": "算术运算会把逻辑值先转成双精度数，不会在逻辑类型里“饱和”。"
+        },
+        {
+          "text": "`b` 是 `logical`，值为 `2`",
+          "ok": false,
+          "why": "`logical` 类型只能是 0 或 1，装不下 2。"
+        },
+        {
+          "text": "报错，逻辑值不能参加算术运算",
+          "ok": false,
+          "why": "手册明确说逻辑值可用于数值计算，`true` 当 1、`false` 当 0。"
+        },
+        {
+          "text": "`b` 是 `double`，值为 `2`",
+          "ok": true,
+          "why": "`a` 的类型是 `logical`，但 `a + a` 先把两边转成 `double` 再相加，结果是 `double` 的 2。"
+        }
+      ]
+    },
+    "sol": "`class (a)` 是 `logical`（比较的结果是逻辑值），而 `a + a` 的结果是双精度的 `2`。\n\n```octave\n>> b = a + a\nb = 2\n>> class (a)\nans = logical\n>> class (b)\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "numbers · Logical Values",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex5",
+    "stem": "判断函数返回 `true` 或 `false`。先预测，再运行：\n\n```octave\nM = [1 0 0; 2 3 0; 4 5 6];\n[issquare(M), isdiag(M), istril(M), istriu(M), issymmetric(M), isvector(M)]\n```\n\n逻辑值与数拼在一起时用 1 表示真、0 表示假。",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写六个数（1 或 0），顺序同方括号里的六个函数。",
+      "answer": [
+        1.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "hint": "`M` 的非零元素只在主对角线和它下方；对称矩阵要求 $M=M^{\\mathsf T}$。"
+    },
+    "verify": "M = [1 0 0; 2 3 0; 4 5 6]; result = double ([issquare(M), isdiag(M), istril(M), istriu(M), issymmetric(M), isvector(M)]);",
+    "sol": "$M$ 是 $3\\times 3$ 方阵，非零元素都在主对角线及其下方，所以是下三角（`istril` 为真）；上三角位置有 0 但下方有非零，故 `istriu` 为假；有非对角非零元素，故 `isdiag` 为假；$M\\ne M^{\\mathsf T}$，故 `issymmetric` 为假；它是 $3\\times 3$，不是向量。\n\n```octave\n>> issquare (M)\nans = 1\n>> isdiag (M)\nans = 0\n>> istril (M)\nans = 1\n>> istriu (M)\nans = 0\n>> issymmetric (M)\nans = 0\n>> isvector (M)\nans = 0\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "numbers · Predicates for Numeric Objects",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex6",
+    "stem": "`double (x)` 把 `x` 转成双精度。整数类型的运算会饱和，先转成 `double` 就不会。先预测，再运行：\n\n```octave\nx = int8 (100);\na = double (x) * 2\nb = x * 2\nclass (a)\nclass (b)\n```\n\n把 `a` 与 `b` 的值分别当作数来读。",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写两个数：`a` 的值、`b` 的值。",
+      "answer": [
+        200.0,
+        127.0
+      ],
+      "hint": "`int8` 能表示的范围是 $-128$ 到 $127$；超出时取最近的端点。"
+    },
+    "verify": "x = int8 (100); a = double (x) * 2; b = x * 2; result = [a, double(b)];",
+    "sol": "`double (x) * 2` 在双精度里算，得到 $200$；`x * 2` 仍是 `int8`，$200$ 超过上限，取饱和值 $127$。\n\n```octave\n>> a = double (x) * 2\na = 200\n>> b = x * 2\nb = 127\n>> class (a)\n>> class (b)\n```\n\n注意：把 `a` 和 `b` 写进同一个方括号 `[a, b]` 会让结果整体变成 `int8`，得到 `127  127`；本题因此要求分开读。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "numbers · double",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  }
+]

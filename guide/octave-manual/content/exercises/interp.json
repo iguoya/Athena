@@ -1,0 +1,108 @@
+[
+  {
+    "id": "ex1",
+    "stem": "数据 $y=x^3$ 在 $x=0,1,2,3,4$ 处采样。先预测三种方法在 $x_i=2.5$ 处的值，再运行：\n\n```octave\nx = 0:4;\ny = x.^3;\n[interp1(x, y, 2.5), interp1(x, y, 2.5, \"spline\"), interp1(x, y, 2.5, \"nearest\")]\n```\n\n三个数分别是多少（线性、spline、nearest）？",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写出线性、`\"spline\"`、`\"nearest\"` 的结果。",
+      "answer": [
+        17.5,
+        15.625,
+        27.0
+      ],
+      "hint": "线性是两端点 $y$ 值的平均；`\"spline\"` 在 5 个点上用的是 not-a-knot 三次样条，数据本身是三次多项式，想想会发生什么；`\"nearest\"` 在正中间（平局）时取哪一侧，要实际运行才知道。"
+    },
+    "verify": "x = 0:4; y = x.^3; result = [interp1(x, y, 2.5), interp1(x, y, 2.5, \"spline\"), interp1(x, y, 2.5, \"nearest\")];",
+    "sol": "线性：$(8+27)/2=17.5$。`\"spline\"`：数据来自三次多项式，not-a-knot 样条恰好能重现它，结果是 $2.5^3=15.625$。`\"nearest\"`：2.5 到 2 和 3 一样近，Octave 取较大的一侧（$x=3$），得 $27$。同一个点，三种方法差别很大，线性插值对凸函数总是偏高。\n\n```octave\n>> interp1 (x, y, 2.5)\nans = 17.500\n>> interp1 (x, y, 2.5, \"spline\")\nans = 15.625\n>> interp1 (x, y, 2.5, \"nearest\")\nans = 27\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "interp · interp1",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex2",
+    "stem": "数据 $y=x^2$ 在 $x=0,1,2,3$ 处采样。先预测，再运行：\n\n```octave\nx = [0 1 2 3];\ny = [0 1 4 9];\nyi = interp1 (x, y, [-1 1.5 4])\n```\n\n`xi` 中的 -1 和 4 落在数据范围之外。`yi` 是什么？",
+    "check": {
+      "kind": "choice",
+      "options": [
+        {
+          "text": "`0  2.5000  9`：范围之外取最近端点的值",
+          "ok": false,
+          "why": "这是 `\"nearest\"` 加 `\"extrap\"` 才会有的行为（本例 1.5 处还会变成 4）。默认的 `interp1` 不会自动填端点值。"
+        },
+        {
+          "text": "报错：`xi` 超出了 `x` 的范围",
+          "ok": false,
+          "why": "`interp1` 不报错，范围之外的点按 *extrap* 参数处理，没写时用 `NA` 填。"
+        },
+        {
+          "text": "`-1  2.5000  14`：沿最近一段直线外推",
+          "ok": false,
+          "why": "只有显式传 `\"extrap\"`（如 `interp1 (x, y, xi, \"linear\", \"extrap\")`）才会得到这个结果。默认不外推。"
+        },
+        {
+          "text": "`NA  2.5000  NA`：范围之外填 `NA`",
+          "ok": true,
+          "why": "*extrap* 缺省是 `NA`（一种特殊的 NaN，`isnan` 为真）。范围内的 1.5 按线性插值得 $(1+4)/2=2.5$。"
+        }
+      ]
+    },
+    "sol": "手册写明 *extrap* 缺省为 `NA`。想要外推值，传 `\"extrap\"`；想用固定数填充，传一个数。\n\n```octave\n>> yi = interp1 (x, y, [-1 1.5 4])\nyi =\n\n       NA   2.5000       NA\n\n>> interp1 (x, y, [-1 1.5 4], \"linear\", \"extrap\")\nans =\n\n   -1.0000    2.5000   14.0000\n\n>> interp1 (x, y, [-1 1.5 4], \"nearest\", \"extrap\")\nans =\n\n   0   4   9\n```\n\n`NA` 会在后续运算里像 NaN 一样传播，用 `isnan` 检测。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "interp · interp1 · extrap",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex3",
+    "stem": "仍用 $x=[0\\ 1\\ 2\\ 3]$、$y=[0\\ 1\\ 4\\ 9]$，求 $x_i=4$ 处的值。先预测，再运行：\n\n```octave\nx = [0 1 2 3];\ny = [0 1 4 9];\na = interp1 (x, y, 4, \"linear\", \"extrap\")\nb = spline (x, y, 4)\nc = interp1 (x, y, 4, \"spline\")\nisnan (c)\n```\n\n依次写出 `a`、`b` 和 `isnan (c)`（真为 1，假为 0）。",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写出 `a`、`b` 和 `isnan (c)` 的值（共 3 个数）。",
+      "answer": [
+        14.0,
+        16.0,
+        1.0
+      ],
+      "hint": "`a` 用最后一段直线外推；`spline` 函数本身会沿三次多项式继续，而 `interp1` 的 `\"spline\"` 方法在没写 `\"extrap\"` 时按 *extrap* 缺省处理。"
+    },
+    "verify": "x = [0 1 2 3]; y = [0 1 4 9]; result = [interp1(x, y, 4, \"linear\", \"extrap\"), spline(x, y, 4), isnan(interp1(x, y, 4, \"spline\"))];",
+    "sol": "`a`：最后一段从 (2, 4) 到 (3, 9)，斜率 5，外推到 4 得 $9+5=14$。`b`：4 个点的 not-a-knot 样条就是过它们的唯一三次多项式，即 $x^2$，所以 $4^2=16$，`spline` 函数直接给出外推值。`c`：`interp1` 的 `\"spline\"` 方法在没有 `\"extrap\"` 时仍遵守缺省，范围外填 `NA`，所以 `isnan (c)` 是 1。\n\n```octave\n>> a = interp1 (x, y, 4, \"linear\", \"extrap\")\na = 14\n>> b = spline (x, y, 4)\nb = 16\n>> c = interp1 (x, y, 4, \"spline\")\nc =  NA\n>> isnan (c)\nans = 1\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "interp · interp1 / spline",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex4",
+    "stem": "`interp1 (y, xi)` 省略 `x` 时，`x` 取 `1:length (y)`。先预测，再运行：\n\n```octave\ny = [10 20 40 80];\nyi = interp1 (y, [1.5 3.2 4])\n```\n\n`yi` 的三个元素依次是多少？",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写出 `yi` 的三个元素。",
+      "answer": [
+        15.0,
+        48.0,
+        80.0
+      ],
+      "hint": "省略 `x` 时，`y(1)` 对应 $x=1$，`y(2)` 对应 $x=2$，依此类推；再对相邻两点做线性插值。"
+    },
+    "verify": "y = [10 20 40 80]; result = interp1 (y, [1.5 3.2 4]);",
+    "sol": "1.5 在 $y_1=10$ 与 $y_2=20$ 的中点：15。3.2 在 $y_3=40$ 与 $y_4=80$ 之间，离 $y_3$ 0.2 段：$40+0.2\\times40=48$。4 恰好是最后一个采样点，结果是 $y_4=80$。\n\n```octave\n>> yi = interp1 (y, [1.5 3.2 4])\nyi =\n\n   15   48   80\n\n>> interp1 (y, 5)\nans =  NA\n```\n\n`interp1 (1:4, y, [1.5 3.2 4])` 与它等价；超出 1 到 4 的 5 仍然得 `NA`。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "interp · interp1",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  }
+]
