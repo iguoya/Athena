@@ -8,7 +8,7 @@
    "t": {
     "en": "One-dimensional Interpolation",
     "sha": "dc3ac91f24ed",
-    "zh": ""
+    "zh": "一维插值"
    }
   },
   {
@@ -16,7 +16,7 @@
    "t": {
     "en": "Octave supports several methods for one-dimensional interpolation, most of which are described in this section. Polynomial Interpolation and Interpolation on Scattered Data describe additional methods.",
     "sha": "6a1cc5c594e8",
-    "zh": ""
+    "zh": "Octave 支持多种一维插值方法，大部分在本节中介绍。“多项式插值”和“散乱数据插值”两节介绍了另外一些方法。"
    }
   },
   {
@@ -37,7 +37,7 @@
      "t": {
       "en": "One-dimensional interpolation.",
       "sha": "8ed1c8b84160",
-      "zh": ""
+      "zh": "一维插值。"
      }
     },
     {
@@ -45,7 +45,7 @@
      "t": {
       "en": "Interpolate input data to determine the value of *yi* at the points *xi*. If not specified, *x* is taken to be the indices of *y* (`1:length (y)`). If *y* is a matrix or an N-dimensional array, the interpolation is performed on each column of *y*.",
       "sha": "dc65b5b10202",
-      "zh": ""
+      "zh": "对输入数据做插值，求出函数在点*xi*处的值*yi*。若未指定，*x*取为*y*的下标（`1:length (y)`）。若*y*是矩阵或 N 维数组，则对*y*的每一列分别做插值。"
      }
     },
     {
@@ -53,7 +53,7 @@
      "t": {
       "en": "The interpolation *method* is one of:",
       "sha": "17088d4a06dc",
-      "zh": ""
+      "zh": "插值方法*method*可以是下列之一："
      }
     },
     {
@@ -63,7 +63,7 @@
        "term": {
         "en": "`\"nearest\"`",
         "sha": "cfae8e33e302",
-        "zh": ""
+        "zh": "`\"nearest\"`"
        },
        "blocks": [
         {
@@ -71,7 +71,7 @@
          "t": {
           "en": "Return the nearest neighbor.",
           "sha": "09401f2fbdee",
-          "zh": ""
+          "zh": "返回最近邻点的值。"
          }
         }
        ]
@@ -80,7 +80,7 @@
        "term": {
         "en": "`\"previous\"`",
         "sha": "15493482f6a6",
-        "zh": ""
+        "zh": "`\"previous\"`"
        },
        "blocks": [
         {
@@ -88,7 +88,7 @@
          "t": {
           "en": "Return the previous neighbor.",
           "sha": "d576e54653fc",
-          "zh": ""
+          "zh": "返回前一个邻点的值。"
          }
         }
        ]
@@ -97,7 +97,7 @@
        "term": {
         "en": "`\"next\"`",
         "sha": "8708b1f6f675",
-        "zh": ""
+        "zh": "`\"next\"`"
        },
        "blocks": [
         {
@@ -105,7 +105,7 @@
          "t": {
           "en": "Return the next neighbor.",
           "sha": "76b2a7051932",
-          "zh": ""
+          "zh": "返回后一个邻点的值。"
          }
         }
        ]
@@ -114,7 +114,7 @@
        "term": {
         "en": "`\"linear\"` (default)",
         "sha": "ac56ca032e77",
-        "zh": ""
+        "zh": "`\"linear\"`（默认）"
        },
        "blocks": [
         {
@@ -122,7 +122,7 @@
          "t": {
           "en": "Linear interpolation from nearest neighbors.",
           "sha": "36c5d1785acc",
-          "zh": ""
+          "zh": "由最近的邻点做线性插值。"
          }
         }
        ]
@@ -131,7 +131,7 @@
        "term": {
         "en": "`\"pchip\"`",
         "sha": "b18ca4274232",
-        "zh": ""
+        "zh": "`\"pchip\"`"
        },
        "blocks": [
         {
@@ -139,7 +139,7 @@
          "t": {
           "en": "Piecewise cubic Hermite interpolating polynomial—shape-preserving interpolation with smooth first derivative.",
           "sha": "c714d8013acc",
-          "zh": ""
+          "zh": "分段三次 Hermite 插值多项式——保持形状的插值，一阶导数光滑。"
          }
         }
        ]
@@ -148,7 +148,7 @@
        "term": {
         "en": "`\"cubic\"`",
         "sha": "fd2f7900f841",
-        "zh": ""
+        "zh": "`\"cubic\"`"
        },
        "blocks": [
         {
@@ -156,7 +156,7 @@
          "t": {
           "en": "Cubic interpolation (same as `\"pchip\"`).",
           "sha": "e88554bfa562",
-          "zh": ""
+          "zh": "三次插值（与 `\"pchip\"` 相同）。"
          }
         }
        ]
@@ -165,7 +165,7 @@
        "term": {
         "en": "`\"spline\"`",
         "sha": "2b11d43db5c9",
-        "zh": ""
+        "zh": "`\"spline\"`"
        },
        "blocks": [
         {
@@ -173,7 +173,7 @@
          "t": {
           "en": "Cubic spline interpolation—smooth first and second derivatives throughout the curve.",
           "sha": "bc3787780bd8",
-          "zh": ""
+          "zh": "三次样条插值——整条曲线的一阶、二阶导数都光滑。"
          }
         }
        ]
@@ -185,7 +185,7 @@
      "t": {
       "en": "Adding '*' to the start of any method above forces `interp1` to assume that *x* is uniformly spaced, and only `x(1)` and `x(2)` are referenced. This is usually faster, and is never slower. The default method is `\"linear\"`.",
       "sha": "5dfcb9cbdb1f",
-      "zh": ""
+      "zh": "在上述任一方法名的开头加上 '*'，会强制 `interp1` 假定*x*是等间距的，只引用 `x(1)` 和 `x(2)`。这通常更快，而且绝不会更慢。默认方法是 `\"linear\"`。"
      }
     },
     {
@@ -193,7 +193,7 @@
      "t": {
       "en": "If *extrap* is the string `\"extrap\"`, then extrapolate values beyond the endpoints using the current *method*. If *extrap* is a number, then replace values beyond the endpoints with that number. When unspecified, *extrap* defaults to `NA`.",
       "sha": "44c379a6057f",
-      "zh": ""
+      "zh": "若*extrap*是字符串 `\"extrap\"`，则用当前的*method*对端点之外的值做外推。若*extrap*是一个数，则把端点之外的值替换为该数。未指定时，*extrap*默认为 `NA`。"
      }
     },
     {
@@ -201,7 +201,7 @@
      "t": {
       "en": "If the string argument `\"pp\"` is specified, then *xi* should not be supplied and `interp1` returns a piecewise polynomial object. This object can later be used with `ppval` to evaluate the interpolation. There is an equivalence, such that `ppval (interp1 (x, y, method, \"pp\"), xi) == interp1 (x, y, xi, method, \"extrap\")`.",
       "sha": "a9d93b74cbb6",
-      "zh": ""
+      "zh": "若指定字符串参数 `\"pp\"`，则不应提供*xi*，此时 `interp1` 返回一个分段多项式对象。这个对象以后可以配合 `ppval` 来计算插值。二者存在如下等价关系：`ppval (interp1 (x, y, method, \"pp\"), xi) == interp1 (x, y, xi, method, \"extrap\")`。"
      }
     },
     {
@@ -209,7 +209,7 @@
      "t": {
       "en": "Duplicate points in *x* specify a discontinuous interpolant. There may be at most 2 consecutive points with the same value. If *x* is increasing, the default discontinuous interpolant is right-continuous. If *x* is decreasing, the default discontinuous interpolant is left-continuous. The continuity condition of the interpolant may be specified by using the options `\"left\"` or `\"right\"` to select a left-continuous or right-continuous interpolant, respectively. Discontinuous interpolation is only allowed for `\"nearest\"` and `\"linear\"` methods; in all other cases, the *x*-values must be unique.",
       "sha": "a58fe0cdab47",
-      "zh": ""
+      "zh": "*x*中的重复点表示一个不连续的插值函数。连续相同的点最多只能有 2 个。若*x*递增，则默认的不连续插值函数是右连续的；若*x*递减，则默认的不连续插值函数是左连续的。可以用选项 `\"left\"` 或 `\"right\"` 分别选择左连续或右连续的插值函数，以指定插值函数的连续性条件。不连续插值只允许用于 `\"nearest\"` 和 `\"linear\"` 方法；在其他所有情形下，*x*的值必须互不相同。"
      }
     },
     {
@@ -217,7 +217,7 @@
      "t": {
       "en": "An example of the use of `interp1` is",
       "sha": "4aa97682cff8",
-      "zh": ""
+      "zh": "`interp1` 的一个使用例子是"
      }
     },
     {
@@ -229,7 +229,7 @@
      "t": {
       "en": "See also: `pchip`, `spline`, `interpft`, `interp2`, `interp3`, `interpn`.",
       "sha": "624a199b7375",
-      "zh": ""
+      "zh": "另见：`pchip`、`spline`、`interpft`、`interp2`、`interp3`、`interpn`。"
      }
     }
    ]
@@ -239,7 +239,7 @@
    "t": {
     "en": "There are some important differences between the various interpolation methods. The `\"spline\"` method enforces that both the first and second derivatives of the interpolated values have a continuous derivative, whereas the other methods do not. This means that the results of the `\"spline\"` method are generally smoother. If the function to be interpolated is in fact smooth, then `\"spline\"` will give excellent results. However, if the function to be evaluated is in some manner discontinuous, then `\"pchip\"` interpolation might give better results.",
     "sha": "e4abca9e3ae2",
-    "zh": ""
+    "zh": "各种插值方法之间有一些重要的差别。`\"spline\"` 方法强制要求插值结果的一阶导数和二阶导数都具有连续的导数，而其他方法没有这个要求。这意味着 `\"spline\"` 方法的结果通常更光滑。如果待插值的函数本身是光滑的，那么 `\"spline\"` 会给出极好的结果。但是，如果待求值的函数在某种程度上是不连续的，那么 `\"pchip\"` 插值可能给出更好的结果。"
    }
   },
   {
@@ -247,7 +247,7 @@
    "t": {
     "en": "This can be demonstrated by the code",
     "sha": "fdab6097b81d",
-    "zh": ""
+    "zh": "这一点可以用下面的代码来演示"
    }
   },
   {
@@ -259,7 +259,7 @@
    "t": {
     "en": "The result of which can be seen in fig:interpderiv1 and fig:interpderiv2.",
     "sha": "9640313d9076",
-    "zh": ""
+    "zh": "其结果可以在 fig:interpderiv1 和 fig:interpderiv2 中看到。"
    }
   },
   {
@@ -267,7 +267,7 @@
    "t": {
     "en": "Fourier interpolation, is a resampling technique where a signal is converted to the frequency domain, padded with zeros and then reconverted to the time domain.",
     "sha": "6678225f59e5",
-    "zh": ""
+    "zh": "傅里叶插值是一种重采样技术：先把信号转换到频域，补零，再转换回时域。"
    }
   },
   {
@@ -275,7 +275,7 @@
    "t": {
     "en": "There are two significant limitations on Fourier interpolation. First, the function signal is assumed to be periodic, and so non-periodic signals will be poorly represented at the edges. Second, both the signal and its interpolation are required to be sampled at equispaced points. An example of the use of `interpft` is",
     "sha": "6237c5337cad",
-    "zh": ""
+    "zh": "傅里叶插值有两个重要的局限。第一，函数信号被假定为周期的，因此非周期信号在边缘处的表示效果会很差。第二，信号及其插值都要求在等间距的点上采样。`interpft` 的一个使用例子是"
    }
   },
   {
@@ -287,7 +287,7 @@
    "t": {
     "en": "which demonstrates the poor behavior of Fourier interpolation for non-periodic functions, as can be seen in fig:interpft.",
     "sha": "480cca2b4643",
-    "zh": ""
+    "zh": "它演示了傅里叶插值对非周期函数表现很差，如 fig:interpft 所示。"
    }
   },
   {
@@ -295,7 +295,7 @@
    "t": {
     "en": "In addition, the support functions `spline` and `lookup` that underlie the `interp1` function can be called directly.",
     "sha": "b14dca0eba8a",
-    "zh": ""
+    "zh": "此外，作为 `interp1` 函数底层支撑的 `spline` 和 `lookup` 函数，也可以直接调用。"
    }
   },
   {
@@ -311,7 +311,7 @@
      "t": {
       "en": "Return the cubic spline interpolant of points *x* and *y*.",
       "sha": "cef3f95b4a9f",
-      "zh": ""
+      "zh": "返回点*x*和*y*的三次样条插值函数。"
      }
     },
     {
@@ -319,7 +319,7 @@
      "t": {
       "en": "When called with two arguments, return the piecewise polynomial *pp* that may be used with `ppval` to evaluate the polynomial at specific points.",
       "sha": "1a7ec45c358a",
-      "zh": ""
+      "zh": "带两个参数调用时，返回分段多项式*pp*，它可以配合 `ppval` 在指定点上计算多项式的值。"
      }
     },
     {
@@ -327,7 +327,7 @@
      "t": {
       "en": "When called with a third input argument, `spline` evaluates the spline at the points *xi*. The third calling form `spline (x, y, xi)` is equivalent to `ppval (spline (x, y), xi)`.",
       "sha": "5fca112bb2f0",
-      "zh": ""
+      "zh": "带第三个输入参数调用时，`spline` 在点*xi*处计算样条的值。第三种调用形式 `spline (x, y, xi)` 等价于 `ppval (spline (x, y), xi)`。"
      }
     },
     {
@@ -335,7 +335,7 @@
      "t": {
       "en": "The variable *x* must be a vector of length *n*.",
       "sha": "1ee0051c7fd8",
-      "zh": ""
+      "zh": "变量*x*必须是长度为*n*的向量。"
      }
     },
     {
@@ -343,7 +343,7 @@
      "t": {
       "en": "*y* can be either a vector or array. If *y* is a vector it must have a length of either *n* or `n + 2`. If the length of *y* is *n*, then the `\"not-a-knot\"` end condition is used. If the length of *y* is `n + 2`, then the first and last values of the vector *y* are the values of the first derivative of the cubic spline at the endpoints.",
       "sha": "29337704cbc2",
-      "zh": ""
+      "zh": "*y*可以是向量或数组。若*y*是向量，其长度必须是*n*或 `n + 2`。若*y*的长度为*n*，则使用 `\"not-a-knot\"` 端点条件。若*y*的长度为 `n + 2`，则向量*y*的第一个和最后一个值，是三次样条在两个端点处的一阶导数值。"
      }
     },
     {
@@ -351,7 +351,7 @@
      "t": {
       "en": "If *y* is an array, then the size of *y* must have the form",
       "sha": "d4a28ccd2802",
-      "zh": ""
+      "zh": "若*y*是数组，则*y*的大小必须具有如下形式"
      }
     },
     {
@@ -363,7 +363,7 @@
      "t": {
       "en": "or",
       "sha": "1758356db217",
-      "zh": ""
+      "zh": "或"
      }
     },
     {
@@ -375,7 +375,7 @@
      "t": {
       "en": "The array is reshaped internally to a matrix where the leading dimension is given by",
       "sha": "e9577b6a546e",
-      "zh": ""
+      "zh": "该数组在内部被重塑为一个矩阵，其首个维度为"
      }
     },
     {
@@ -387,7 +387,7 @@
      "t": {
       "en": "and each row of this matrix is then treated separately. Note that this is exactly the opposite of `interp1` but is done for MATLAB compatibility.",
       "sha": "139787dbf32d",
-      "zh": ""
+      "zh": "然后该矩阵的每一行被分别处理。注意，这与 `interp1` 恰好相反，这样做是为了与 MATLAB 兼容。"
      }
     },
     {
@@ -395,7 +395,7 @@
      "t": {
       "en": "See also: `pchip`, `ppval`, `mkpp`, `unmkpp`.",
       "sha": "094545765d7f",
-      "zh": ""
+      "zh": "另见：`pchip`、`ppval`、`mkpp`、`unmkpp`。"
      }
     }
    ]
@@ -406,7 +406,7 @@
    "t": {
     "en": "Multi-dimensional Interpolation",
     "sha": "5348b693bb31",
-    "zh": ""
+    "zh": "多维插值"
    }
   },
   {
@@ -414,7 +414,7 @@
    "t": {
     "en": "There are three multi-dimensional interpolation functions in Octave, with similar capabilities. Methods using Delaunay tessellation are described in Interpolation on Scattered Data.",
     "sha": "27fe031e5d0d",
-    "zh": ""
+    "zh": "Octave 中有三个多维插值函数，功能相近。使用 Delaunay 剖分的方法在“散乱数据插值”一节中介绍。"
    }
   },
   {
@@ -434,7 +434,7 @@
      "t": {
       "en": "Two-dimensional interpolation.",
       "sha": "d2b642896980",
-      "zh": ""
+      "zh": "二维插值。"
      }
     },
     {
@@ -442,7 +442,7 @@
      "t": {
       "en": "Interpolate reference data *x*, *y*, *z* to determine *zi* at the coordinates *xi*, *yi*. The reference data *x*, *y* can be matrices, as returned by `meshgrid`, in which case the sizes of *x*, *y*, and *z* must be equal. If *x*, *y* are vectors describing a grid then `length (x) == columns (z)` and `length (y) == rows (z)`. In either case the input data must be strictly monotonic.",
       "sha": "9a86073c801c",
-      "zh": ""
+      "zh": "对参考数据*x*、*y*、*z*做插值，求出坐标（*xi*，*yi*）处的*zi*。参考数据*x*、*y*可以是 `meshgrid` 返回的那种矩阵，此时*x*、*y*、*z*的大小必须相等。若*x*、*y*是描述网格的向量，则 `length (x) == columns (z)` 且 `length (y) == rows (z)`。无论哪种情形，输入数据都必须严格单调。"
      }
     },
     {
@@ -450,7 +450,7 @@
      "t": {
       "en": "If called without *x*, *y*, and just a single reference data matrix *z*, the 2-D region `x = 1:columns (z), y = 1:rows (z)` is assumed. This saves memory if the grid is regular and the distance between points is not important.",
       "sha": "f05440c8ce8b",
-      "zh": ""
+      "zh": "若调用时没有*x*、*y*，只有一个参考数据矩阵*z*，则假定二维区域为 `x = 1:columns (z), y = 1:rows (z)`。当网格是规则的、而点与点之间的距离并不重要时，这样做可以节省内存。"
      }
     },
     {
@@ -458,7 +458,7 @@
      "t": {
       "en": "If called with a single reference data matrix *z* and a refinement value *n*, then perform interpolation over a grid where each original interval has been recursively subdivided *n* times. This results in `2^n-1` additional points for every interval in the original grid. If *n* is omitted a value of 1 is used. As an example, the interval [0,1] with `n==2` results in a refined interval with points at [0, 1/4, 1/2, 3/4, 1].",
       "sha": "db7ee2575313",
-      "zh": ""
+      "zh": "若调用时只有一个参考数据矩阵*z*和一个加密值*n*，则在这样的网格上做插值：原网格的每个区间被递归地细分*n*次。这样，原网格的每个区间会多出 `2^n-1` 个点。若省略*n*，则取值 1。例如，区间 [0,1] 在 `n==2` 时，得到的加密区间的点为 [0, 1/4, 1/2, 3/4, 1]。"
      }
     },
     {
@@ -466,7 +466,7 @@
      "t": {
       "en": "The interpolation *method* is one of:",
       "sha": "17088d4a06dc",
-      "zh": ""
+      "zh": "插值方法*method*可以是下列之一："
      }
     },
     {
@@ -476,7 +476,7 @@
        "term": {
         "en": "`\"nearest\"`",
         "sha": "cfae8e33e302",
-        "zh": ""
+        "zh": "`\"nearest\"`"
        },
        "blocks": [
         {
@@ -484,7 +484,7 @@
          "t": {
           "en": "Return the nearest neighbor.",
           "sha": "09401f2fbdee",
-          "zh": ""
+          "zh": "返回最近邻点的值。"
          }
         }
        ]
@@ -493,7 +493,7 @@
        "term": {
         "en": "`\"linear\"` (default)",
         "sha": "ac56ca032e77",
-        "zh": ""
+        "zh": "`\"linear\"`（默认）"
        },
        "blocks": [
         {
@@ -501,7 +501,7 @@
          "t": {
           "en": "Linear interpolation from nearest neighbors.",
           "sha": "36c5d1785acc",
-          "zh": ""
+          "zh": "由最近的邻点做线性插值。"
          }
         }
        ]
@@ -510,7 +510,7 @@
        "term": {
         "en": "`\"pchip\"`",
         "sha": "b18ca4274232",
-        "zh": ""
+        "zh": "`\"pchip\"`"
        },
        "blocks": [
         {
@@ -518,7 +518,7 @@
          "t": {
           "en": "Piecewise cubic Hermite interpolating polynomial—shape-preserving interpolation with smooth first derivative.",
           "sha": "c714d8013acc",
-          "zh": ""
+          "zh": "分段三次 Hermite 插值多项式——保持形状的插值，一阶导数光滑。"
          }
         }
        ]
@@ -527,7 +527,7 @@
        "term": {
         "en": "`\"cubic\"`",
         "sha": "fd2f7900f841",
-        "zh": ""
+        "zh": "`\"cubic\"`"
        },
        "blocks": [
         {
@@ -535,7 +535,7 @@
          "t": {
           "en": "Cubic interpolation using a convolution kernel function—third order method with smooth first derivative.",
           "sha": "f05b7432d333",
-          "zh": ""
+          "zh": "使用卷积核函数的三次插值——三阶方法，一阶导数光滑。"
          }
         }
        ]
@@ -544,7 +544,7 @@
        "term": {
         "en": "`\"spline\"`",
         "sha": "2b11d43db5c9",
-        "zh": ""
+        "zh": "`\"spline\"`"
        },
        "blocks": [
         {
@@ -552,7 +552,7 @@
          "t": {
           "en": "Cubic spline interpolation—smooth first and second derivatives throughout the curve.",
           "sha": "bc3787780bd8",
-          "zh": ""
+          "zh": "三次样条插值——整条曲线的一阶、二阶导数都光滑。"
          }
         }
        ]
@@ -564,7 +564,7 @@
      "t": {
       "en": "*extrap* is a scalar number. It replaces values beyond the endpoints with *extrap*. Note that if *extrap* is used, *method* must be specified as well. If *extrap* is omitted and the *method* is `\"spline\"`, then the extrapolated values of the `\"spline\"` are used. Otherwise the default *extrap* value for any other *method* is `\"NA\"`. See also: `interp1`, `interp3`, `interpn`, `meshgrid`.",
       "sha": "90de1c692e27",
-      "zh": ""
+      "zh": "*extrap*是一个标量。它把端点之外的值替换为*extrap*。注意，若使用了*extrap*，则也必须指定*method*。若省略*extrap*且*method*为 `\"spline\"`，则使用 `\"spline\"` 的外推值。否则，对其他任何*method*，*extrap*的默认值为 `\"NA\"`。另见：`interp1`、`interp3`、`interpn`、`meshgrid`。"
      }
     }
    ]
@@ -574,7 +574,7 @@
    "t": {
     "en": "A significant difference between `interpn` and the other two multi-dimensional interpolation functions is the fashion in which the dimensions are treated. For `interp2` and `interp3`, the y-axis is considered to be the columns of the matrix, whereas the x-axis corresponds to the rows of the array. As Octave indexes arrays in column major order, the first dimension of any array is the columns, and so `interpn` effectively reverses the 'x' and 'y' dimensions. Consider the example,",
     "sha": "4688475e10cc",
-    "zh": ""
+    "zh": "`interpn` 与另外两个多维插值函数的一个重要区别，在于处理各维度的方式。对 `interp2` 和 `interp3` 来说，y 轴对应矩阵的列，而 x 轴对应数组的行。由于 Octave 按列优先的顺序对数组做索引，任何数组的第一个维度都是列，所以 `interpn` 实际上把 'x' 和 'y' 两个维度颠倒了。看下面的例子，"
    }
   },
   {
@@ -586,7 +586,7 @@
    "t": {
     "en": "where `vi` and `vi2` are identical. The reversal of the dimensions is treated in the `meshgrid` and `ndgrid` functions respectively. The result of this code can be seen in fig:interpn.",
     "sha": "6df56c0de581",
-    "zh": ""
+    "zh": "其中 `vi` 和 `vi2` 是相同的。维度的颠倒分别由 `meshgrid` 和 `ndgrid` 函数处理。这段代码的结果见 fig:interpn。"
    }
   }
  ],

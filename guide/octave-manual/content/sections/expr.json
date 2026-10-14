@@ -7,7 +7,7 @@
    "t": {
     "en": "Expressions are the basic building block of statements in Octave. An expression evaluates to a value, which you can print, test, store in a variable, pass to a function, or assign a new value to a variable with an assignment operator.",
     "sha": "61ee8032ad6e",
-    "zh": ""
+    "zh": "表达式是 Octave 中语句的基本组成部分。表达式会求出一个值，你可以打印它、对它做判断、把它存进变量、把它传给函数，或者用赋值运算符把它赋给变量作为新值。"
    }
   },
   {
@@ -15,7 +15,7 @@
    "t": {
     "en": "An expression can serve as a statement on its own. Most other kinds of statements contain one or more expressions which specify data to be operated on. As in other languages, expressions in Octave include variables, array references, constants, and function calls, as well as combinations of these with various operators.",
     "sha": "8a647a9b2cb7",
-    "zh": ""
+    "zh": "表达式本身可以作为一条语句。其他大多数种类的语句都包含一个或多个表达式，用来指明要处理的数据。和其他语言一样，Octave 中的表达式包括变量、数组引用、常量和函数调用，以及用各种运算符把它们组合起来的形式。"
    }
   },
   {
@@ -24,7 +24,7 @@
    "t": {
     "en": "Index Expressions",
     "sha": "71c97279cf83",
-    "zh": ""
+    "zh": "索引表达式"
    }
   },
   {
@@ -32,7 +32,7 @@
    "t": {
     "en": "An *index expression* allows you to reference or extract selected elements of a vector, a matrix (2-D), or a higher-dimensional array.",
     "sha": "2167d6e37c55",
-    "zh": ""
+    "zh": "**索引表达式**（index expression）可以让你引用或取出向量、矩阵（二维）或更高维数组中选定的元素。"
    }
   },
   {
@@ -40,7 +40,7 @@
    "t": {
     "en": "Indices may be scalars, vectors, ranges, or the special operator `:`, which selects entire rows, columns, or higher-dimensional slices.",
     "sha": "806f214c14c7",
-    "zh": ""
+    "zh": "索引可以是标量、向量、区间，也可以是特殊运算符 `:`，它会选取整行、整列或更高维的整个切片。"
    }
   },
   {
@@ -48,7 +48,7 @@
    "t": {
     "en": "An index expression consists of a set of parentheses enclosing $M$ expressions separated by commas. Each individual index value, or component, is used for the respective dimension of the object that it is applied to. In other words, the first index component is used for the first dimension (rows) of the object, the second index component is used for the second dimension (columns) of the object, and so on. The number of index components $M$ defines the dimensionality of the index expression. An index with two components would be referred to as a 2-D index because it has two dimensions.",
     "sha": "a44ba6834a55",
-    "zh": ""
+    "zh": "索引表达式由一对括号构成，括号里是用逗号隔开的 $M$ 个表达式。每个索引值（即分量）用于它所作用的对象的相应维度。换句话说，第一个索引分量用于对象的第一维（行），第二个索引分量用于对象的第二维（列），依此类推。索引分量的个数 $M$ 决定了索引表达式的维数。有两个分量的索引称为二维索引，因为它有两个维度。"
    }
   },
   {
@@ -56,7 +56,7 @@
    "t": {
     "en": "In the simplest case, 1) all components are scalars, and 2) the dimensionality of the index expression $M$ is equal to the dimensionality of the object it is applied to. For example:",
     "sha": "061acca0a5bc",
-    "zh": ""
+    "zh": "最简单的情形是：1）所有分量都是标量，并且 2）索引表达式的维数 $M$ 等于它所作用的对象的维数。例如："
    }
   },
   {
@@ -68,7 +68,7 @@
    "t": {
     "en": "The size of the returned object in a specific dimension is equal to the number of elements in the corresponding component of the index expression. When all components are scalars, the result is a single output value. However, if any component is a vector or range then the returned values are the Cartesian product of the indices in the respective dimensions. For example:",
     "sha": "32a5e842aefa",
-    "zh": ""
+    "zh": "返回的对象在某一维上的大小，等于索引表达式相应分量里的元素个数。当所有分量都是标量时，结果是单个输出值。但如果有分量是向量或区间，那么返回的值就是各个维度上索引的笛卡尔积。例如："
    }
   },
   {
@@ -80,7 +80,7 @@
    "t": {
     "en": "The total number of returned values is the product of the number of elements returned for each index component. In the example above, the total is 2*1*1 = 2 elements.",
     "sha": "1a1e2954fb0e",
-    "zh": ""
+    "zh": "返回值的总个数，是各个索引分量所返回的元素个数的乘积。在上面的例子中，总数是 2*1*1 = 2 个元素。"
    }
   },
   {
@@ -88,7 +88,7 @@
    "t": {
     "en": "Notice that the size of the returned object in a given dimension is equal to the number of elements in the index expression for that dimension. In the code above, the first index component (`[1, 2]`) was specified as a row vector, but its shape is unimportant. The important fact is that the component specified two values, and hence the result must have a size of two in the first dimension; and because the first dimension corresponds to rows, the overall result is a column vector.",
     "sha": "8562dbe1377d",
-    "zh": ""
+    "zh": "注意，返回的对象在某一维上的大小，等于该维索引表达式中的元素个数。在上面的代码里，第一个索引分量（`[1, 2]`）被写成行向量，但它的形状并不重要，重要的是这个分量指定了两个值，因此结果在第一维上的大小必须是 2；又因为第一维对应行，所以整个结果是一个列向量。"
    }
   },
   {
@@ -100,7 +100,7 @@
    "t": {
     "en": "The first line demonstrates again that the size of the output in a given dimension is equal to the number of elements in the respective indexing component. In this case, the output has three elements in the second dimension (which corresponds to columns), so the result is a row vector. The example also shows how repeating entries in the index expression can be used to replicate elements in the output. The last example further proves that the shape of the indexing component is irrelevant, it is only the number of elements (2x2 = 4) which is important.",
     "sha": "4a56628ffe67",
-    "zh": ""
+    "zh": "第一行再次说明，输出在某一维上的大小等于相应索引分量中的元素个数。这里输出在第二维（对应列）上有三个元素，所以结果是一个行向量。这个例子还说明，在索引表达式中重复写某些项，可以在输出中复制相应的元素。最后一个例子进一步证明，索引分量的形状无关紧要，重要的只是元素的个数（2x2 = 4）。"
    }
   },
   {
@@ -108,7 +108,7 @@
    "t": {
     "en": "The above rules apply whenever the dimensionality of the index expression is greater than one ($M > 1$). However, for one-dimensional index expressions special rules apply and the shape of the output **is** determined by the shape of the indexing component. For example:",
     "sha": "b6066b43ae2b",
-    "zh": ""
+    "zh": "只要索引表达式的维数大于一（$M > 1$），上述规则就适用。但对于一维索引表达式，则适用特殊规则，输出的形状**由**索引分量的形状决定。例如："
    }
   },
   {
@@ -120,7 +120,7 @@
    "t": {
     "en": "The shape rules for *A*(*P*) are:",
     "sha": "2e47ca73e42a",
-    "zh": ""
+    "zh": "*A*(*P*) 的形状规则如下："
    }
   },
   {
@@ -133,7 +133,7 @@
       "t": {
        "en": "When at least one of *A* or *P* has two or more dimensions, then *A*(*P*) takes the shape of *P*. This happens when at least one of the variables is a 2-D matrix or an N-D array.",
        "sha": "2405d8b8140f",
-       "zh": ""
+       "zh": "当 *A* 与 *P* 中至少有一个具有两维或更多维时，*A*(*P*) 取 *P* 的形状。当其中至少一个变量是二维矩阵或 N 维数组时，就属于这种情形。"
       }
      }
     ],
@@ -143,7 +143,7 @@
       "t": {
        "en": "When both *A* and *P* are 1-D vectors, then *A*(*P*) takes the shape of *A* itself. In particular, when *A* is a row vector, then *A*(*P*) is also a row vector irrespective of *P*'s shape. The case when *A* is a column vector is analogous.",
        "sha": "2f8acf78538c",
-       "zh": ""
+       "zh": "当 *A* 与 *P* 都是一维向量时，*A*(*P*) 取 *A* 自身的形状。特别地，当 *A* 是行向量时，无论 *P* 的形状如何，*A*(*P*) 也是行向量。*A* 是列向量的情形与此类似。"
       }
      }
     ]
@@ -154,7 +154,7 @@
    "t": {
     "en": "Note that it is permissible to use a 1-D index with a multi-dimensional object (also called linear indexing). In this case, the elements of the multi-dimensional array are taken in column-first order like Fortran. That is, the columns of the array are imagined to be stacked on top of each other to form a column vector and then the single linear index is applied to this vector.",
     "sha": "94e320a8e494",
-    "zh": ""
+    "zh": "注意，允许对多维对象使用一维索引（也叫线性索引）。这时，多维数组的元素按列优先的顺序取用，和 Fortran 一样。也就是说，把数组的各列想象成一列接一列地叠起来，构成一个列向量，然后把这个单一的线性索引作用在这个向量上。"
    }
   },
   {
@@ -166,7 +166,7 @@
    "t": {
     "en": "A colon (`:`) may be used as an index component to select all of the elements in a specified dimension. Given the matrix,",
     "sha": "5f7b17a42707",
-    "zh": ""
+    "zh": "冒号（`:`）可以用作索引分量，选取指定维度上的所有元素。给定矩阵"
    }
   },
   {
@@ -178,7 +178,7 @@
    "t": {
     "en": "all of the following expressions are equivalent and select the first row of the matrix.",
     "sha": "c038b3b7c6e8",
-    "zh": ""
+    "zh": "下面所有的表达式都是等价的，都选取矩阵的第一行。"
    }
   },
   {
@@ -190,7 +190,7 @@
    "t": {
     "en": "When a colon is used in the special case of 1-D indexing the result is always a column vector. Creating column vectors with a colon index is a very frequently encountered code idiom and is faster and generally clearer than calling `reshape` for this case.",
     "sha": "4d0372b18581",
-    "zh": ""
+    "zh": "在一维索引的特殊情形下使用冒号时，结果总是列向量。用冒号索引来创建列向量是非常常见的代码惯用法，在这种情形下它比调用 `reshape` 更快，通常也更清晰。"
    }
   },
   {
@@ -202,7 +202,7 @@
    "t": {
     "en": "In index expressions the keyword `end` automatically refers to the last entry for a particular dimension. This magic index can also be used in ranges and typically eliminates the needs to call `size` or `length` to gather array bounds before indexing. For example:",
     "sha": "e3476b97d702",
-    "zh": ""
+    "zh": "在索引表达式中，关键字 `end` 自动指向某个维度上的最后一项。这个神奇的索引也可以用在区间里，通常可以免去在索引之前先调用 `size` 或 `length` 来获取数组边界的需要。例如："
    }
   },
   {
@@ -215,7 +215,7 @@
    "t": {
     "en": "Advanced Indexing",
     "sha": "e4a9df64655f",
-    "zh": ""
+    "zh": "高级索引"
    }
   },
   {
@@ -223,7 +223,7 @@
    "t": {
     "en": "When it is necessary to extract subsets of entries out of an array whose indices cannot be written as a Cartesian product of components, linear indexing together with the function `sub2ind` can be used. For example:",
     "sha": "27b643ac11b9",
-    "zh": ""
+    "zh": "如果需要从数组中取出一个元素子集，而这些元素的下标无法写成各分量的笛卡尔积，可以把线性索引与函数 `sub2ind` 结合使用。例如："
    }
   },
   {
@@ -235,7 +235,7 @@
    "t": {
     "en": "An array with `nd` dimensions can be indexed by an index expression which has from 1 to `nd` components. For the ordinary and most common case, the number of components `M` matches the number of dimensions `nd`. In this case the ordinary indexing rules apply and each component corresponds to the respective dimension of the array.",
     "sha": "3351b994257e",
-    "zh": ""
+    "zh": "具有 `nd` 个维度的数组，可以用有 1 到 `nd` 个分量的索引表达式来索引。对于普通也最常见的情形，分量个数 `M` 与维数 `nd` 相等。这时适用普通的索引规则，每个分量对应数组的相应维度。"
    }
   },
   {
@@ -243,7 +243,7 @@
    "t": {
     "en": "However, if the number of indexing components exceeds the number of dimensions (`M > nd`) then the excess components must all be singletons (`1`). Moreover, if `M < nd`, the behavior is equivalent to reshaping the input object so as to merge the trailing `nd - M` dimensions into the last index dimension `M`. Thus, the result will have the dimensionality of the index expression, and not the original object. This is the case whenever dimensionality of the index is greater than one (`M > 1`), so that the special rules for linear indexing are not applied. This is easiest to understand with an example:",
     "sha": "78ee3de567e6",
-    "zh": ""
+    "zh": "但是，如果索引分量的个数超过维数（`M > nd`），那么多出来的分量必须全是单元素（`1`）。此外，如果 `M < nd`，其行为相当于先把输入对象重塑，把末尾的 `nd - M` 个维度合并到最后一个索引维度 `M` 中。因此，结果具有索引表达式的维数，而不是原对象的维数。只要索引的维数大于一（`M > 1`），就是这种情形，因此线性索引的特殊规则不会适用。用一个例子最容易理解："
    }
   },
   {
@@ -255,7 +255,7 @@
    "t": {
     "en": "Note here the elegant use of the double colon to replace the call to the `reshape` function.",
     "sha": "b1b6f04498d5",
-    "zh": ""
+    "zh": "注意这里巧妙地使用了双冒号，代替了对 `reshape` 函数的调用。"
    }
   },
   {
@@ -263,7 +263,7 @@
    "t": {
     "en": "Another advanced use of linear indexing is to create arrays filled with a single value. This can be done by using an index of ones on a scalar value. The result is an object with the dimensions of the index expression and every element equal to the original scalar. For example, the following statements",
     "sha": "86c8d4349d09",
-    "zh": ""
+    "zh": "线性索引的另一种高级用法，是创建全部填充同一个值的数组。做法是对一个标量值使用由 1 组成的索引。结果是一个对象，它的各维大小由索引表达式决定，每个元素都等于原来的那个标量。例如，下面的语句"
    }
   },
   {
@@ -275,7 +275,7 @@
    "t": {
     "en": "produce a row vector whose four elements are all equal to 13.",
     "sha": "b5b9846eff04",
-    "zh": ""
+    "zh": "产生一个行向量，它的四个元素都等于 13。"
    }
   },
   {
@@ -283,7 +283,7 @@
    "t": {
     "en": "Similarly, by indexing a scalar with two vectors of ones it is possible to create a matrix. The following statements",
     "sha": "6b67d3081cce",
-    "zh": ""
+    "zh": "类似地，用两个由 1 组成的向量去索引一个标量，就可以创建矩阵。下面的语句"
    }
   },
   {
@@ -295,7 +295,7 @@
    "t": {
     "en": "create a 2x3 matrix with all elements equal to 13. This could also have been written as",
     "sha": "7f61477ed300",
-    "zh": ""
+    "zh": "创建一个 2x3 矩阵，所有元素都等于 13。这也可以写成"
    }
   },
   {
@@ -307,7 +307,7 @@
    "t": {
     "en": "It is more efficient to use indexing rather than the code construction `scalar * ones (M, N, …)` because it avoids the unnecessary multiplication operation. Moreover, multiplication may not be defined for the object to be replicated whereas indexing an array is always defined. The following code shows how to create a 2x3 cell array from a base unit which is not itself a scalar.",
     "sha": "562ba4dc1c05",
-    "zh": ""
+    "zh": "使用索引比使用 `scalar * ones (M, N, …)` 这种写法更高效，因为它避免了不必要的乘法运算。此外，要复制的对象可能没有定义乘法，而对数组做索引总是有定义的。下面的代码展示了如何由一个本身不是标量的基本单元创建 2x3 的元胞数组。"
    }
   },
   {
@@ -319,7 +319,7 @@
    "t": {
     "en": "It should be noted that `ones (1, n)` (a row vector of ones) results in a range object (with zero increment). A range is stored internally as a starting value, increment, end value, and total number of values; hence, it is more efficient for storage than a vector or matrix of ones whenever the number of elements is greater than 4. In particular, when `r` is a row vector, the expressions",
     "sha": "7ddb31e44a17",
-    "zh": ""
+    "zh": "应当注意，`ones (1, n)`（全 1 的行向量）得到的是一个区间对象（增量为零）。区间在内部存储为起始值、增量、终止值和值的总个数，因此当元素个数大于 4 时，它比全 1 的向量或矩阵更节省存储。特别地，当 `r` 是行向量时，表达式"
    }
   },
   {
@@ -335,7 +335,7 @@
    "t": {
     "en": "will produce identical results, but the first one will be significantly faster, at least for `r` and `n` large enough. In the first case the index is held in compressed form as a range which allows Octave to choose a more efficient algorithm to handle the expression.",
     "sha": "0b8b2e676123",
-    "zh": ""
+    "zh": "会产生相同的结果，但第一个要快得多，至少在 `r` 和 `n` 足够大时是这样。在第一种情形下，索引以压缩形式作为区间保存，这使 Octave 可以选择更高效的算法来处理该表达式。"
    }
   },
   {
@@ -343,7 +343,7 @@
    "t": {
     "en": "A general recommendation for users unfamiliar with these techniques is to use the function `repmat` for replicating smaller arrays into bigger ones, which uses such tricks.",
     "sha": "d94b13ab631b",
-    "zh": ""
+    "zh": "对不熟悉这些技巧的用户，一般的建议是：用函数 `repmat` 把较小的数组复制成较大的数组，它正是利用了这些技巧。"
    }
   },
   {
@@ -351,7 +351,7 @@
    "t": {
     "en": "A second use of indexing is to speed up code. Indexing is a fast operation and judicious use of it can reduce the requirement for looping over individual array elements, which is a slow operation.",
     "sha": "06e1a90b4660",
-    "zh": ""
+    "zh": "索引的第二个用途是加快代码的运行。索引是一种很快的操作，审慎地使用它，可以减少对单个数组元素逐个循环的需要，而这种循环是很慢的。"
    }
   },
   {
@@ -359,7 +359,7 @@
    "t": {
     "en": "Consider the following example which creates a 10-element row vector $a$ containing the values $a_i = \\sqrt{i}$.",
     "sha": "7818f9c4ea3e",
-    "zh": ""
+    "zh": "考虑下面的例子，它创建一个含有 10 个元素的行向量 $a$，其元素值为 $a_i = \\sqrt{i}$。"
    }
   },
   {
@@ -371,7 +371,7 @@
    "t": {
     "en": "It is quite inefficient to create a vector using a loop like this. In this case, it would have been much more efficient to use the expression",
     "sha": "3f1682d8f399",
-    "zh": ""
+    "zh": "像这样用循环来创建向量效率很低。在这种情形下，使用表达式"
    }
   },
   {
@@ -383,7 +383,7 @@
    "t": {
     "en": "which avoids the loop entirely.",
     "sha": "d27231b8fb29",
-    "zh": ""
+    "zh": "会高效得多，它完全避免了循环。"
    }
   },
   {
@@ -391,7 +391,7 @@
    "t": {
     "en": "In cases where a loop cannot be avoided, or a number of values must be combined to form a larger matrix, it is generally faster to set the size of the matrix first (pre-allocate storage), and then insert elements using indexing commands. For example, given a matrix `a`,",
     "sha": "9f71bd06fafc",
-    "zh": ""
+    "zh": "在无法避免循环，或者必须把若干个值合并成一个更大的矩阵的情形下，通常更快的做法是先设定矩阵的大小（预先分配存储），再用索引命令插入元素。例如，给定矩阵 `a`，"
    }
   },
   {
@@ -403,7 +403,7 @@
    "t": {
     "en": "is considerably faster than",
     "sha": "042038d9d193",
-    "zh": ""
+    "zh": "比下面这种写法快得多"
    }
   },
   {
@@ -415,7 +415,7 @@
    "t": {
     "en": "because Octave does not have to repeatedly resize the intermediate result.",
     "sha": "145cb1c748ff",
-    "zh": ""
+    "zh": "因为 Octave 不必反复调整中间结果的大小。"
    }
   },
   {
@@ -431,7 +431,7 @@
      "t": {
       "en": "Convert subscripts to linear indices.",
       "sha": "ffcf78531ddc",
-      "zh": ""
+      "zh": "把下标转换为线性索引。"
      }
     },
     {
@@ -439,7 +439,7 @@
      "t": {
       "en": "The input *dims* is a dimension vector where each element is the size of the array in the respective dimension (`size`). The remaining inputs are scalars or vectors of subscripts to be converted.",
       "sha": "ab1f8382122f",
-      "zh": ""
+      "zh": "输入 *dims* 是维数向量，其中每个元素是数组在相应维度上的大小（见 `size`）。其余输入是要转换的下标，可以是标量或向量。"
      }
     },
     {
@@ -447,7 +447,7 @@
      "t": {
       "en": "The output vector *ind* contains the converted linear indices.",
       "sha": "0e76a03c4c56",
-      "zh": ""
+      "zh": "输出向量 *ind* 包含转换后的线性索引。"
      }
     },
     {
@@ -455,7 +455,7 @@
      "t": {
       "en": "Background: Array elements can be specified either by a linear index which starts at 1 and runs through the number of elements in the array, or they may be specified with subscripts for the row, column, page, etc. The functions `ind2sub` and `sub2ind` interconvert between the two forms.",
       "sha": "9e2406aed867",
-      "zh": ""
+      "zh": "背景：数组元素既可以用线性索引指定（从 1 开始，直到数组的元素总数），也可以用行、列、页等下标指定。函数 `ind2sub` 和 `sub2ind` 在这两种形式之间相互转换。"
      }
     },
     {
@@ -463,7 +463,7 @@
      "t": {
       "en": "The linear index traverses dimension 1 (rows), then dimension 2 (columns), then dimension 3 (pages), etc. until it has numbered all of the elements. Consider the following 3-by-3 matrices:",
       "sha": "9dde169f5c2f",
-      "zh": ""
+      "zh": "线性索引先遍历第 1 维（行），再遍历第 2 维（列），然后是第 3 维（页），依此类推，直到给所有元素编完号。考虑下面两个 3 行 3 列的矩阵："
      }
     },
     {
@@ -475,7 +475,7 @@
      "t": {
       "en": "The left matrix contains the subscript tuples for each matrix element. The right matrix shows the linear indices for the same matrix.",
       "sha": "2a7ce296ced7",
-      "zh": ""
+      "zh": "左边的矩阵给出每个矩阵元素的下标元组，右边的矩阵给出同一个矩阵的线性索引。"
      }
     },
     {
@@ -483,7 +483,7 @@
      "t": {
       "en": "The following example shows how to convert the two-dimensional indices `(2,1)` and `(2,3)` of a 3-by-3 matrix to linear indices with a single call to `sub2ind`.",
       "sha": "5ab7eb4c9e62",
-      "zh": ""
+      "zh": "下面的例子展示如何只调用一次 `sub2ind`，就把 3 行 3 列矩阵的二维索引 `(2,1)` 和 `(2,3)` 转换为线性索引。"
      }
     },
     {
@@ -495,7 +495,7 @@
      "t": {
       "en": "See also: `ind2sub`, `size`.",
       "sha": "a3853fc8f8a7",
-      "zh": ""
+      "zh": "另见：`ind2sub`、`size`。"
      }
     }
    ]
@@ -512,7 +512,7 @@
      "t": {
       "en": "Convert linear indices to subscripts.",
       "sha": "e4ca2aa76109",
-      "zh": ""
+      "zh": "把线性索引转换为下标。"
      }
     },
     {
@@ -520,7 +520,7 @@
      "t": {
       "en": "The input *dims* is a dimension vector where each element is the size of the array in the respective dimension (`size`). The second input *ind* contains linear indices to be converted.",
       "sha": "87f556c6e7ee",
-      "zh": ""
+      "zh": "输入 *dims* 是维数向量，其中每个元素是数组在相应维度上的大小（见 `size`）。第二个输入 *ind* 包含要转换的线性索引。"
      }
     },
     {
@@ -528,7 +528,7 @@
      "t": {
       "en": "The outputs *s1*, …, *sN* contain the converted subscripts.",
       "sha": "05f649c4d50f",
-      "zh": ""
+      "zh": "输出 *s1*、…、*sN* 包含转换后的下标。"
      }
     },
     {
@@ -536,7 +536,7 @@
      "t": {
       "en": "Background: Array elements can be specified either by a linear index which starts at 1 and runs through the number of elements in the array, or they may be specified with subscripts for the row, column, page, etc. The functions `ind2sub` and `sub2ind` interconvert between the two forms.",
       "sha": "9e2406aed867",
-      "zh": ""
+      "zh": "背景：数组元素既可以用线性索引指定（从 1 开始，直到数组的元素总数），也可以用行、列、页等下标指定。函数 `ind2sub` 和 `sub2ind` 在这两种形式之间相互转换。"
      }
     },
     {
@@ -544,7 +544,7 @@
      "t": {
       "en": "The linear index traverses dimension 1 (rows), then dimension 2 (columns), then dimension 3 (pages), etc. until it has numbered all of the elements. Consider the following 3-by-3 matrices:",
       "sha": "9dde169f5c2f",
-      "zh": ""
+      "zh": "线性索引先遍历第 1 维（行），再遍历第 2 维（列），然后是第 3 维（页），依此类推，直到给所有元素编完号。考虑下面两个 3 行 3 列的矩阵："
      }
     },
     {
@@ -556,7 +556,7 @@
      "t": {
       "en": "The left matrix contains the linear indices for each matrix element. The right matrix shows the subscript tuples for the same matrix.",
       "sha": "d6592614b9e3",
-      "zh": ""
+      "zh": "左边的矩阵给出每个矩阵元素的线性索引，右边的矩阵给出同一个矩阵的下标元组。"
      }
     },
     {
@@ -564,7 +564,7 @@
      "t": {
       "en": "The following example shows how to convert the linear indices `2` and `8` to appropriate subscripts of a 3-by-3 matrix.",
       "sha": "f826b8b689d3",
-      "zh": ""
+      "zh": "下面的例子展示如何把线性索引 `2` 和 `8` 转换为 3 行 3 列矩阵的相应下标。"
      }
     },
     {
@@ -576,7 +576,7 @@
      "t": {
       "en": "If the number of output subscripts exceeds the number of dimensions, the exceeded dimensions are set to `1`. On the other hand, if fewer subscripts than dimensions are provided, the exceeding dimensions are merged into the final requested dimension. For clarity, consider the following examples:",
       "sha": "a492297671d5",
-      "zh": ""
+      "zh": "如果输出下标的个数超过维数，多出的维度取 `1`。另一方面，如果给出的下标个数少于维数，多出的维度会合并到最后一个被请求的维度中。为了说得更清楚，请看下面的例子："
      }
     },
     {
@@ -588,7 +588,7 @@
      "t": {
       "en": "See also: `sub2ind`, `size`.",
       "sha": "05a9f8739968",
-      "zh": ""
+      "zh": "另见：`sub2ind`、`size`。"
      }
     }
    ]
@@ -599,7 +599,7 @@
    "t": {
     "en": "Arithmetic Operators",
     "sha": "6104f39ed22a",
-    "zh": ""
+    "zh": "算术运算符"
    }
   },
   {
@@ -607,7 +607,7 @@
    "t": {
     "en": "The following arithmetic operators are available, and work on scalars and matrices. The element-by-element operators and functions broadcast (see Broadcasting).",
     "sha": "889ccd5a4938",
-    "zh": ""
+    "zh": "下面这些算术运算符可以使用，对标量和矩阵都适用。逐元素的运算符和函数会进行广播（见 Broadcasting）。"
    }
   },
   {
@@ -617,7 +617,7 @@
      "term": {
       "en": "*x* + *y*",
       "sha": "5dafe2e26d99",
-      "zh": ""
+      "zh": "*x* + *y*"
      },
      "blocks": [
       {
@@ -625,7 +625,7 @@
        "t": {
         "en": "Addition (always works element by element). If both operands are matrices, the number of rows and columns must both agree, or they must be broadcastable to the same shape.",
         "sha": "1dde0d144f03",
-        "zh": ""
+        "zh": "加法（总是逐元素进行）。如果两个操作数都是矩阵，则行数和列数必须都一致，或者它们必须可以广播成相同的形状。"
        }
       }
      ]
@@ -634,7 +634,7 @@
      "term": {
       "en": "*x* - *y*",
       "sha": "930098fe7dd9",
-      "zh": ""
+      "zh": "*x* - *y*"
      },
      "blocks": [
       {
@@ -642,7 +642,7 @@
        "t": {
         "en": "Subtraction (always works element by element). If both operands are matrices, the number of rows and columns of both must agree, or they must be broadcastable to the same shape.",
         "sha": "c45c9e7d9d27",
-        "zh": ""
+        "zh": "减法（总是逐元素进行）。如果两个操作数都是矩阵，则两者的行数和列数必须一致，或者它们必须可以广播成相同的形状。"
        }
       }
      ]
@@ -651,7 +651,7 @@
      "term": {
       "en": "*x* * *y*",
       "sha": "269be300137e",
-      "zh": ""
+      "zh": "*x* * *y*"
      },
      "blocks": [
       {
@@ -659,7 +659,7 @@
        "t": {
         "en": "Matrix multiplication. The number of columns of *x* must agree with the number of rows of *y*.",
         "sha": "820515b31ece",
-        "zh": ""
+        "zh": "矩阵乘法。*x* 的列数必须与 *y* 的行数一致。"
        }
       }
      ]
@@ -668,7 +668,7 @@
      "term": {
       "en": "*x* .* *y*",
       "sha": "2034c458b358",
-      "zh": ""
+      "zh": "*x* .* *y*"
      },
      "blocks": [
       {
@@ -676,7 +676,7 @@
        "t": {
         "en": "Element-by-element multiplication. If both operands are matrices, the number of rows and columns must both agree, or they must be broadcastable to the same shape.",
         "sha": "06feafc41a55",
-        "zh": ""
+        "zh": "逐元素乘法。如果两个操作数都是矩阵，则行数和列数必须都一致，或者它们必须可以广播成相同的形状。"
        }
       }
      ]
@@ -685,7 +685,7 @@
      "term": {
       "en": "*x* / *y*",
       "sha": "d369646d6662",
-      "zh": ""
+      "zh": "*x* / *y*"
      },
      "blocks": [
       {
@@ -693,7 +693,7 @@
        "t": {
         "en": "Right division. This is conceptually equivalent to the expression",
         "sha": "35a5cdbd4876",
-        "zh": ""
+        "zh": "右除。它在概念上等价于表达式"
        }
       },
       {
@@ -705,7 +705,7 @@
        "t": {
         "en": "but it is computed without forming the inverse of *y'*.",
         "sha": "a4a3f22ce035",
-        "zh": ""
+        "zh": "但计算时并不形成 *y'* 的逆。"
        }
       },
       {
@@ -713,7 +713,7 @@
        "t": {
         "en": "If the system is not square, or if the coefficient matrix is singular, a minimum norm solution is computed.",
         "sha": "11c8c537e9a4",
-        "zh": ""
+        "zh": "如果方程组不是方阵，或者系数矩阵是奇异的，则计算最小范数解。"
        }
       }
      ]
@@ -722,7 +722,7 @@
      "term": {
       "en": "*x* ./ *y*",
       "sha": "c4a27710ed37",
-      "zh": ""
+      "zh": "*x* ./ *y*"
      },
      "blocks": [
       {
@@ -730,7 +730,7 @@
        "t": {
         "en": "Element-by-element right division.",
         "sha": "ee128fb55b76",
-        "zh": ""
+        "zh": "逐元素右除。"
        }
       }
      ]
@@ -739,7 +739,7 @@
      "term": {
       "en": "*x* \\ *y*",
       "sha": "c8cf4cf64dfb",
-      "zh": ""
+      "zh": "*x* \\ *y*"
      },
      "blocks": [
       {
@@ -747,7 +747,7 @@
        "t": {
         "en": "Left division. This is conceptually equivalent to the expression",
         "sha": "6278d6c93e2e",
-        "zh": ""
+        "zh": "左除。它在概念上等价于表达式"
        }
       },
       {
@@ -759,7 +759,7 @@
        "t": {
         "en": "but it is computed without forming the inverse of *x*.",
         "sha": "1ea4ed82a272",
-        "zh": ""
+        "zh": "但计算时并不形成 *x* 的逆。"
        }
       },
       {
@@ -767,7 +767,7 @@
        "t": {
         "en": "If the system is not square, or if the coefficient matrix is singular, a minimum norm solution is computed.",
         "sha": "11c8c537e9a4",
-        "zh": ""
+        "zh": "如果方程组不是方阵，或者系数矩阵是奇异的，则计算最小范数解。"
        }
       }
      ]
@@ -776,7 +776,7 @@
      "term": {
       "en": "*x* .\\ *y*",
       "sha": "6b83e0d941a9",
-      "zh": ""
+      "zh": "*x* .\\ *y*"
      },
      "blocks": [
       {
@@ -784,7 +784,7 @@
        "t": {
         "en": "Element-by-element left division. Each element of *y* is divided by each corresponding element of *x*.",
         "sha": "bd984c9c9690",
-        "zh": ""
+        "zh": "逐元素左除。*y* 的每个元素除以 *x* 的对应元素。"
        }
       }
      ]
@@ -793,7 +793,7 @@
      "term": {
       "en": "*x* ^ *y*",
       "sha": "4651b26640f4",
-      "zh": ""
+      "zh": "*x* ^ *y*"
      },
      "blocks": [
       {
@@ -801,7 +801,7 @@
        "t": {
         "en": "Power operator. If *x* and *y* are both scalars, this operator returns *x* raised to the power *y*. If *x* is a scalar and *y* is a square matrix, the result is computed using an eigenvalue expansion. If *x* is a square matrix, the result is computed by repeated multiplication if *y* is an integer, and by an eigenvalue expansion if *y* is not an integer. An error results if both *x* and *y* are matrices.",
         "sha": "40932c9a7f3d",
-        "zh": ""
+        "zh": "幂运算符。如果 *x* 和 *y* 都是标量，这个运算符返回 *x* 的 *y* 次幂。如果 *x* 是标量而 *y* 是方阵，则用特征值展开计算结果。如果 *x* 是方阵，当 *y* 是整数时用重复相乘计算结果，当 *y* 不是整数时用特征值展开计算结果。如果 *x* 和 *y* 都是矩阵，则报错。"
        }
       },
       {
@@ -809,7 +809,7 @@
        "t": {
         "en": "The implementation of this operator needs to be improved.",
         "sha": "9d712f9a74d7",
-        "zh": ""
+        "zh": "这个运算符的实现还需要改进。"
        }
       }
      ]
@@ -818,7 +818,7 @@
      "term": {
       "en": "*x* .^ *y*",
       "sha": "286a18e0eb80",
-      "zh": ""
+      "zh": "*x* .^ *y*"
      },
      "blocks": [
       {
@@ -826,7 +826,7 @@
        "t": {
         "en": "Element-by-element power operator. If both operands are matrices, the number of rows and columns must both agree, or they must be broadcastable to the same shape. If several complex results are possible, the one with smallest non-negative argument (angle) is taken. This rule may return a complex root even when a real root is also possible. Use `realpow`, `realsqrt`, `cbrt`, or `nthroot` if a real result is preferred.",
         "sha": "cd21d875109f",
-        "zh": ""
+        "zh": "逐元素幂运算符。如果两个操作数都是矩阵，则行数和列数必须都一致，或者它们必须可以广播成相同的形状。如果可能有多个复数结果，则取辐角（角度）为非负且最小的那个。即使实数根也存在，这条规则仍可能返回复数根。如果希望得到实数结果，请使用 `realpow`、`realsqrt`、`cbrt` 或 `nthroot`。"
        }
       }
      ]
@@ -835,7 +835,7 @@
      "term": {
       "en": "-*x*",
       "sha": "d11ee3a2a59e",
-      "zh": ""
+      "zh": "-*x*"
      },
      "blocks": [
       {
@@ -843,7 +843,7 @@
        "t": {
         "en": "Negation.",
         "sha": "e94de1f5e234",
-        "zh": ""
+        "zh": "取负。"
        }
       }
      ]
@@ -852,7 +852,7 @@
      "term": {
       "en": "+*x*",
       "sha": "c9dfafcc8d25",
-      "zh": ""
+      "zh": "+*x*"
      },
      "blocks": [
       {
@@ -860,7 +860,7 @@
        "t": {
         "en": "Unary plus. This operator has no effect on the operand.",
         "sha": "7764c45e364f",
-        "zh": ""
+        "zh": "一元加号。这个运算符对操作数没有任何作用。"
        }
       }
      ]
@@ -869,7 +869,7 @@
      "term": {
       "en": "*x*'",
       "sha": "2cc3c00c2417",
-      "zh": ""
+      "zh": "*x*'"
      },
      "blocks": [
       {
@@ -877,7 +877,7 @@
        "t": {
         "en": "Complex conjugate transpose. For real arguments, this operator is the same as the transpose operator. For complex arguments, this operator is equivalent to the expression",
         "sha": "83ed34c575fb",
-        "zh": ""
+        "zh": "共轭转置。对实数参数，这个运算符与转置运算符相同。对复数参数，这个运算符等价于表达式"
        }
       },
       {
@@ -890,7 +890,7 @@
      "term": {
       "en": "*x*.'",
       "sha": "4ea0089a114f",
-      "zh": ""
+      "zh": "*x*.'"
      },
      "blocks": [
       {
@@ -898,7 +898,7 @@
        "t": {
         "en": "Transpose.",
         "sha": "5aac140fd36d",
-        "zh": ""
+        "zh": "转置。"
        }
       }
      ]
@@ -910,7 +910,7 @@
    "t": {
     "en": "Note that because Octave's element-by-element operators begin with a `.`, there is a possible ambiguity for statements like",
     "sha": "1a7688769bb2",
-    "zh": ""
+    "zh": "注意，因为 Octave 的逐元素运算符以 `.` 开头，所以像下面这样的语句可能产生歧义"
    }
   },
   {
@@ -922,7 +922,7 @@
    "t": {
     "en": "because the period could be interpreted either as part of the constant or as part of the operator. To resolve this conflict, Octave treats the expression as if you had typed",
     "sha": "3b90cbea79a8",
-    "zh": ""
+    "zh": "因为这个句点既可以被解释为常量的一部分，也可以被解释为运算符的一部分。为了消除这个冲突，Octave 把这个表达式当作你输入的是"
    }
   },
   {
@@ -934,7 +934,7 @@
    "t": {
     "en": "and not",
     "sha": "2f3522d8409f",
-    "zh": ""
+    "zh": "而不是"
    }
   },
   {
@@ -946,7 +946,7 @@
    "t": {
     "en": "Although this is inconsistent with the normal behavior of Octave's lexer, which usually prefers to break the input into tokens by preferring the longest possible match at any given point, it is more useful in this case.",
     "sha": "eaed2852742b",
-    "zh": ""
+    "zh": "虽然这与 Octave 词法分析器的通常行为不一致（词法分析器通常倾向于在任意位置都取最长的可能匹配来把输入切分成记号），但在这种情形下这样处理更有用。"
    }
   },
   {
@@ -954,7 +954,7 @@
    "t": {
     "en": "Note also that some combinations of binary operators and whitespace can create apparent ambiguities with the Command Syntax form of calling functions. See Command Syntax and Function Syntax for a description of how Octave treats that syntax.",
     "sha": "1582ab9a67bb",
-    "zh": ""
+    "zh": "还要注意，二元运算符与空白的某些组合，会与函数调用的命令语法形式产生表面上的歧义。关于 Octave 如何处理这种语法，参见 Command Syntax and Function Syntax。"
    }
   },
   {
@@ -969,7 +969,7 @@
      "t": {
       "en": "Return the complex conjugate transpose of *A*.",
       "sha": "a34ca8b48cfa",
-      "zh": ""
+      "zh": "返回 *A* 的共轭转置。"
      }
     },
     {
@@ -977,7 +977,7 @@
      "t": {
       "en": "This function and `A'` are equivalent. See also: `transpose`.",
       "sha": "835d4a24d3fc",
-      "zh": ""
+      "zh": "这个函数与 `A'` 等价。另见：`transpose`。"
      }
     }
    ]
@@ -994,7 +994,7 @@
      "t": {
       "en": "Return the matrix left division of *A* and *B*.",
       "sha": "1579ced8bdf7",
-      "zh": ""
+      "zh": "返回 *A* 与 *B* 的矩阵左除。"
      }
     },
     {
@@ -1002,7 +1002,7 @@
      "t": {
       "en": "This function and `A B` are equivalent.",
       "sha": "c331f63b5325",
-      "zh": ""
+      "zh": "这个函数与 `A B` 等价。"
      }
     },
     {
@@ -1010,7 +1010,7 @@
      "t": {
       "en": "If the system is not square, or if the coefficient matrix is singular, a minimum norm solution is computed. See also: `mrdivide`, `ldivide`, `rdivide`, `linsolve`.",
       "sha": "35fa7d755f9e",
-      "zh": ""
+      "zh": "如果方程组不是方阵，或者系数矩阵是奇异的，则计算最小范数解。另见：`mrdivide`、`ldivide`、`rdivide`、`linsolve`。"
      }
     }
    ]
@@ -1027,7 +1027,7 @@
      "t": {
       "en": "Return the matrix power operation of *A* raised to the *B* power.",
       "sha": "fdb113b62a08",
-      "zh": ""
+      "zh": "返回 *A* 的 *B* 次幂的矩阵幂运算结果。"
      }
     },
     {
@@ -1035,7 +1035,7 @@
      "t": {
       "en": "This function and `A ^ B` are equivalent. See also: `power`, `mtimes`, `plus`, `minus`.",
       "sha": "9f247cb3f019",
-      "zh": ""
+      "zh": "这个函数与 `A ^ B` 等价。另见：`power`、`mtimes`、`plus`、`minus`。"
      }
     }
    ]
@@ -1052,7 +1052,7 @@
      "t": {
       "en": "Return the matrix right division of *A* and *B*.",
       "sha": "b49bfb053704",
-      "zh": ""
+      "zh": "返回 *A* 与 *B* 的矩阵右除。"
      }
     },
     {
@@ -1060,7 +1060,7 @@
      "t": {
       "en": "This function and `A / B` are equivalent.",
       "sha": "65fb0793646e",
-      "zh": ""
+      "zh": "这个函数与 `A / B` 等价。"
      }
     },
     {
@@ -1068,7 +1068,7 @@
      "t": {
       "en": "If the system is not square, or if the coefficient matrix is singular, a minimum norm solution is computed. See also: `mldivide`, `rdivide`, `plus`, `minus`.",
       "sha": "4f655e652513",
-      "zh": ""
+      "zh": "如果方程组不是方阵，或者系数矩阵是奇异的，则计算最小范数解。另见：`mldivide`、`rdivide`、`plus`、`minus`。"
      }
     }
    ]
@@ -1086,7 +1086,7 @@
      "t": {
       "en": "Return the matrix multiplication product of inputs.",
       "sha": "dabe4eec23e3",
-      "zh": ""
+      "zh": "返回各输入的矩阵乘积。"
      }
     },
     {
@@ -1094,7 +1094,7 @@
      "t": {
       "en": "This function and `A * B` are equivalent. If more arguments are given, the multiplication is applied cumulatively from left to right:",
       "sha": "0d9377429af4",
-      "zh": ""
+      "zh": "这个函数与 `A * B` 等价。如果给出了更多参数，则从左到右依次累乘："
      }
     },
     {
@@ -1106,7 +1106,7 @@
      "t": {
       "en": "See also: `times`, `plus`, `minus`, `rdivide`, `mrdivide`, `mldivide`, `mpower`.",
       "sha": "132a38eef144",
-      "zh": ""
+      "zh": "另见：`times`、`plus`、`minus`、`rdivide`、`mrdivide`、`mldivide`、`mpower`。"
      }
     }
    ]
@@ -1123,7 +1123,7 @@
      "t": {
       "en": "Return the element-by-element operation of *A* raised to the *B* power.",
       "sha": "89c0d28b7261",
-      "zh": ""
+      "zh": "返回 *A* 的 *B* 次幂的逐元素运算结果。"
      }
     },
     {
@@ -1131,7 +1131,7 @@
      "t": {
       "en": "This function and `A .^ B` are equivalent.",
       "sha": "1001588c20ac",
-      "zh": ""
+      "zh": "这个函数与 `A .^ B` 等价。"
      }
     },
     {
@@ -1139,7 +1139,7 @@
      "t": {
       "en": "If several complex results are possible, returns the one with smallest non-negative argument (angle). Use `realpow`, `realsqrt`, `cbrt`, or `nthroot` if a real result is preferred.",
       "sha": "c0e07a6369ec",
-      "zh": ""
+      "zh": "如果可能有多个复数结果，则返回辐角（角度）为非负且最小的那个。如果希望得到实数结果，请使用 `realpow`、`realsqrt`、`cbrt` 或 `nthroot`。"
      }
     },
     {
@@ -1147,7 +1147,7 @@
      "t": {
       "en": "See also: `mpower`, `realpow`, `realsqrt`, `cbrt`, `nthroot`.",
       "sha": "110514df855b",
-      "zh": ""
+      "zh": "另见：`mpower`、`realpow`、`realsqrt`、`cbrt`、`nthroot`。"
      }
     }
    ]
@@ -1164,7 +1164,7 @@
      "t": {
       "en": "Return the element-by-element right division of *A* and *B*.",
       "sha": "a2130aea959b",
-      "zh": ""
+      "zh": "返回 *A* 与 *B* 的逐元素右除。"
      }
     },
     {
@@ -1172,7 +1172,7 @@
      "t": {
       "en": "This function and `A ./ B` are equivalent. See also: `ldivide`, `mrdivide`, `times`, `plus`.",
       "sha": "5bb8c1e28b54",
-      "zh": ""
+      "zh": "这个函数与 `A ./ B` 等价。另见：`ldivide`、`mrdivide`、`times`、`plus`。"
      }
     }
    ]
@@ -1190,7 +1190,7 @@
      "t": {
       "en": "Return the element-by-element multiplication product of inputs.",
       "sha": "0fa2a032cd0b",
-      "zh": ""
+      "zh": "返回各输入的逐元素乘积。"
      }
     },
     {
@@ -1198,7 +1198,7 @@
      "t": {
       "en": "This function and `A .* B` are equivalent. If more arguments are given, the multiplication is applied cumulatively from left to right:",
       "sha": "812e1ccb9697",
-      "zh": ""
+      "zh": "这个函数与 `A .* B` 等价。如果给出了更多参数，则从左到右依次累乘："
      }
     },
     {
@@ -1210,7 +1210,7 @@
      "t": {
       "en": "See also: `mtimes`, `rdivide`.",
       "sha": "37e0b73a8a75",
-      "zh": ""
+      "zh": "另见：`mtimes`、`rdivide`。"
      }
     }
    ]
@@ -1227,7 +1227,7 @@
      "t": {
       "en": "Return the transpose of *A*.",
       "sha": "4f60234e60ba",
-      "zh": ""
+      "zh": "返回 *A* 的转置。"
      }
     },
     {
@@ -1235,7 +1235,7 @@
      "t": {
       "en": "This function and `A.'` are equivalent. See also: `ctranspose`.",
       "sha": "b6f5c1ffd26e",
-      "zh": ""
+      "zh": "这个函数与 `A.'` 等价。另见：`ctranspose`。"
      }
     }
    ]
@@ -1246,7 +1246,7 @@
    "t": {
     "en": "Comparison Operators",
     "sha": "25acda77b0bc",
-    "zh": ""
+    "zh": "比较运算符"
    }
   },
   {
@@ -1254,7 +1254,7 @@
    "t": {
     "en": "*Comparison operators* compare numeric values for relationships such as equality. They are written using *relational operators*.",
     "sha": "2fffccb6c04e",
-    "zh": ""
+    "zh": "**比较运算符**（comparison operator）比较数值之间的相等、大小等关系。它们用**关系运算符**（relational operator）来书写。"
    }
   },
   {
@@ -1262,7 +1262,7 @@
    "t": {
     "en": "All of Octave's comparison operators return a value of 1 if the comparison is true, or 0 if it is false. For matrix values, they all work on an element-by-element basis. Broadcasting rules apply. See Broadcasting. For example:",
     "sha": "06359de88cec",
-    "zh": ""
+    "zh": "Octave 的所有比较运算符，在比较成立时返回 1，不成立时返回 0。对矩阵值，它们都逐元素进行，并遵循广播规则，参见 Broadcasting。例如："
    }
   },
   {
@@ -1274,7 +1274,7 @@
    "t": {
     "en": "According to broadcasting rules, if one operand is a scalar and the other is a matrix, the scalar is compared to each element of the matrix in turn, and the result is the same size as the matrix.",
     "sha": "96cb4fd1198a",
-    "zh": ""
+    "zh": "根据广播规则，如果一个操作数是标量而另一个是矩阵，则标量会依次与矩阵的每个元素比较，结果与该矩阵大小相同。"
    }
   },
   {
@@ -1284,7 +1284,7 @@
      "term": {
       "en": "`x < y`",
       "sha": "56abe6128209",
-      "zh": ""
+      "zh": "`x < y`"
      },
      "blocks": [
       {
@@ -1292,7 +1292,7 @@
        "t": {
         "en": "True if *x* is less than *y*.",
         "sha": "d2b87d4181f8",
-        "zh": ""
+        "zh": "当 *x* 小于 *y* 时为真。"
        }
       }
      ]
@@ -1301,7 +1301,7 @@
      "term": {
       "en": "`x <= y`",
       "sha": "249f0a0ae9a3",
-      "zh": ""
+      "zh": "`x <= y`"
      },
      "blocks": [
       {
@@ -1309,7 +1309,7 @@
        "t": {
         "en": "True if *x* is less than or equal to *y*.",
         "sha": "90b65c41c71d",
-        "zh": ""
+        "zh": "当 *x* 小于或等于 *y* 时为真。"
        }
       }
      ]
@@ -1318,7 +1318,7 @@
      "term": {
       "en": "`x == y`",
       "sha": "05292bf507da",
-      "zh": ""
+      "zh": "`x == y`"
      },
      "blocks": [
       {
@@ -1326,7 +1326,7 @@
        "t": {
         "en": "True if *x* is equal to *y*.",
         "sha": "a12fea0281d7",
-        "zh": ""
+        "zh": "当 *x* 等于 *y* 时为真。"
        }
       }
      ]
@@ -1335,7 +1335,7 @@
      "term": {
       "en": "`x >= y`",
       "sha": "ffe224faf5ba",
-      "zh": ""
+      "zh": "`x >= y`"
      },
      "blocks": [
       {
@@ -1343,7 +1343,7 @@
        "t": {
         "en": "True if *x* is greater than or equal to *y*.",
         "sha": "2f223ddbe4fb",
-        "zh": ""
+        "zh": "当 *x* 大于或等于 *y* 时为真。"
        }
       }
      ]

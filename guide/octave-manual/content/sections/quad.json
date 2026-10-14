@@ -7,7 +7,7 @@
    "t": {
     "en": "Octave comes with several built-in functions for computing the integral of a function numerically (termed quadrature). These functions all solve 1-dimensional integration problems.",
     "sha": "bc213aaef9c2",
-    "zh": ""
+    "zh": "Octave 自带若干内建函数，用来数值地计算函数的积分（称为求积，quadrature）。这些函数解决的都是一维积分问题。"
    }
   },
   {
@@ -16,7 +16,7 @@
    "t": {
     "en": "Functions of One Variable",
     "sha": "c10b79d3765a",
-    "zh": ""
+    "zh": "单变量函数"
    }
   },
   {
@@ -24,7 +24,7 @@
    "t": {
     "en": "Octave supports five different adaptive quadrature algorithms for computing the integral",
     "sha": "b961cc1496e1",
-    "zh": ""
+    "zh": "Octave 支持五种不同的自适应求积算法，用来计算积分"
    }
   },
   {
@@ -36,7 +36,7 @@
    "t": {
     "en": "of a function $f$ over the interval from $a$ to $b$. These are",
     "sha": "cb25ea0efa56",
-    "zh": ""
+    "zh": "即函数 $f$ 在区间 $a$ 到 $b$ 上的积分。它们是"
    }
   },
   {
@@ -46,7 +46,7 @@
      "term": {
       "en": "`quad`",
       "sha": "e1797301a0c7",
-      "zh": ""
+      "zh": "`quad`"
      },
      "blocks": [
       {
@@ -54,7 +54,7 @@
        "t": {
         "en": "Numerical integration based on Gaussian quadrature.",
         "sha": "3b7bae0d49e6",
-        "zh": ""
+        "zh": "基于 Gauss 求积的数值积分。"
        }
       }
      ]
@@ -63,7 +63,7 @@
      "term": {
       "en": "`quadv`",
       "sha": "2f6609eb2115",
-      "zh": ""
+      "zh": "`quadv`"
      },
      "blocks": [
       {
@@ -71,7 +71,7 @@
        "t": {
         "en": "Numerical integration using an adaptive vectorized Simpson's rule.",
         "sha": "32620545ee8a",
-        "zh": ""
+        "zh": "使用自适应向量化 Simpson 公式的数值积分。"
        }
       }
      ]
@@ -80,7 +80,7 @@
      "term": {
       "en": "`quadl`",
       "sha": "fc5cade7dedc",
-      "zh": ""
+      "zh": "`quadl`"
      },
      "blocks": [
       {
@@ -88,7 +88,7 @@
        "t": {
         "en": "Numerical integration using an adaptive Lobatto rule.",
         "sha": "c36d43591de9",
-        "zh": ""
+        "zh": "使用自适应 Lobatto 公式的数值积分。"
        }
       }
      ]
@@ -97,7 +97,7 @@
      "term": {
       "en": "`quadgk`",
       "sha": "d16bc02f8225",
-      "zh": ""
+      "zh": "`quadgk`"
      },
      "blocks": [
       {
@@ -105,7 +105,7 @@
        "t": {
         "en": "Numerical integration using an adaptive Gauss-Konrod rule.",
         "sha": "355d4128a9ef",
-        "zh": ""
+        "zh": "使用自适应 Gauss-Konrod 公式的数值积分。"
        }
       }
      ]
@@ -114,7 +114,7 @@
      "term": {
       "en": "`quadcc`",
       "sha": "68c2f072f085",
-      "zh": ""
+      "zh": "`quadcc`"
      },
      "blocks": [
       {
@@ -122,7 +122,7 @@
        "t": {
         "en": "Numerical integration using adaptive Clenshaw-Curtis rules.",
         "sha": "be3286a435d4",
-        "zh": ""
+        "zh": "使用自适应 Clenshaw-Curtis 公式的数值积分。"
        }
       },
       {
@@ -130,7 +130,7 @@
        "t": {
         "en": "In addition, the following functions are also provided:",
         "sha": "45c11b9edc04",
-        "zh": ""
+        "zh": "此外，还提供以下函数："
        }
       }
      ]
@@ -139,7 +139,7 @@
      "term": {
       "en": "`integral`",
       "sha": "d27a8e4eaec6",
-      "zh": ""
+      "zh": "`integral`"
      },
      "blocks": [
       {
@@ -147,7 +147,7 @@
        "t": {
         "en": "A compatibility wrapper function that will choose between `quadv` and `quadgk` depending on the integrand and options chosen.",
         "sha": "cce214602154",
-        "zh": ""
+        "zh": "一个兼容性包装函数，根据被积函数和所选的选项，在 `quadv` 与 `quadgk` 之间选择。"
        }
       }
      ]
@@ -156,7 +156,7 @@
      "term": {
       "en": "`trapz, cumtrapz`",
       "sha": "df52f9a67d2c",
-      "zh": ""
+      "zh": "`trapz, cumtrapz`"
      },
      "blocks": [
       {
@@ -164,7 +164,7 @@
        "t": {
         "en": "Numerical integration of data using the trapezoidal method.",
         "sha": "2e24000809e4",
-        "zh": ""
+        "zh": "用梯形法对数据做数值积分。"
        }
       }
      ]
@@ -176,7 +176,7 @@
    "t": {
     "en": "The best quadrature algorithm to use depends on the integrand. If you have empirical data, rather than a function, the choice is `trapz` or `cumtrapz`. If you are uncertain about the characteristics of the integrand, `quadcc` will be the most robust as it can handle discontinuities, singularities, oscillatory functions, and infinite intervals. When the integrand is smooth `quadgk` may be the fastest of the algorithms.",
     "sha": "f31549baaf27",
-    "zh": ""
+    "zh": "选用哪种求积算法最好，取决于被积函数。如果手里是实测数据而不是函数，就选 `trapz` 或 `cumtrapz`。如果不清楚被积函数的特点，`quadcc` 最稳健，因为它能处理间断点、奇点、振荡函数和无穷区间。被积函数光滑时，`quadgk` 可能是几种算法中最快的。"
    }
   },
   {
@@ -188,12 +188,12 @@
      {
       "en": "Function",
       "sha": "f1e410ad1472",
-      "zh": ""
+      "zh": "函数"
      },
      {
       "en": "Characteristics",
       "sha": "2fa17410341c",
-      "zh": ""
+      "zh": "特点"
      }
     ],
     [
@@ -201,12 +201,12 @@
      {
       "en": "quad",
       "sha": "f77f1468fdd0",
-      "zh": ""
+      "zh": "quad"
      },
      {
       "en": "Low accuracy with nonsmooth integrands",
       "sha": "51bd1ef84a4f",
-      "zh": ""
+      "zh": "被积函数不光滑时精度低"
      }
     ],
     [
@@ -214,12 +214,12 @@
      {
       "en": "quadv",
       "sha": "85343e9eb6e9",
-      "zh": ""
+      "zh": "quadv"
      },
      {
       "en": "Medium accuracy with smooth integrands",
       "sha": "b93a8c7df926",
-      "zh": ""
+      "zh": "被积函数光滑时精度中等"
      }
     ],
     [
@@ -227,12 +227,12 @@
      {
       "en": "quadl",
       "sha": "03f049e4ae40",
-      "zh": ""
+      "zh": "quadl"
      },
      {
       "en": "Medium accuracy with smooth integrands. Slower than quadgk.",
       "sha": "6c8497d782d1",
-      "zh": ""
+      "zh": "被积函数光滑时精度中等。比 quadgk 慢。"
      }
     ],
     [
@@ -240,12 +240,12 @@
      {
       "en": "quadgk",
       "sha": "e68ac6a28af0",
-      "zh": ""
+      "zh": "quadgk"
      },
      {
       "en": "Medium accuracy (1e-6 -- 1e-9) with smooth integrands.",
       "sha": "62d10acbcf4c",
-      "zh": ""
+      "zh": "被积函数光滑时精度中等（1e-6 -- 1e-9）。"
      }
     ],
     [
@@ -254,7 +254,7 @@
      {
       "en": "Handles oscillatory functions and infinite bounds",
       "sha": "d48c14b11175",
-      "zh": ""
+      "zh": "能处理振荡函数和无穷积分限"
      }
     ],
     [
@@ -262,12 +262,12 @@
      {
       "en": "quadcc",
       "sha": "0cc88ebdbbfd",
-      "zh": ""
+      "zh": "quadcc"
      },
      {
       "en": "Low to High accuracy with nonsmooth/smooth integrands",
       "sha": "c3c3ad58b0ac",
-      "zh": ""
+      "zh": "被积函数不光滑或光滑时，精度从低到高"
      }
     ],
     [
@@ -276,7 +276,7 @@
      {
       "en": "Handles oscillatory functions, singularities, and infinite bounds",
       "sha": "ab84502bf330",
-      "zh": ""
+      "zh": "能处理振荡函数、奇点和无穷积分限"
      }
     ]
    ]
@@ -286,7 +286,7 @@
    "t": {
     "en": "Here is an example of using `quad` to integrate the function $$ f(x) = x \\sin (1/x) \\sqrt {|1 - x|} $$ from $x = 0$ to $x = 3$.",
     "sha": "cdad9a7d623d",
-    "zh": ""
+    "zh": "下面的例子用 `quad` 对函数 $$ f(x) = x \\sin (1/x) \\sqrt {|1 - x|} $$ 从 $x = 0$ 到 $x = 3$ 求积分。"
    }
   },
   {
@@ -294,7 +294,7 @@
    "t": {
     "en": "This is a fairly difficult integration (plot the function over the range of integration to see why).",
     "sha": "fdfc38c23b9b",
-    "zh": ""
+    "zh": "这是一个相当困难的积分（在积分区间上画出这个函数，就能明白原因）。"
    }
   },
   {
@@ -302,7 +302,7 @@
    "t": {
     "en": "The first step is to define the function:",
     "sha": "5e201d1fe26a",
-    "zh": ""
+    "zh": "第一步是定义函数："
    }
   },
   {
@@ -314,7 +314,7 @@
    "t": {
     "en": "Note the use of the ‘dot’ forms of the operators. This is not necessary for the `quad` integrator, but is required by the other integrators. In any case, it makes it much easier to generate a set of points for plotting because it is possible to call the function with a vector argument to produce a vector result.",
     "sha": "901866baf9f5",
-    "zh": ""
+    "zh": "注意这里用的是运算符的“点”形式。对 `quad` 积分器来说这不是必须的，但其他积分器要求这样写。无论如何，这样写让生成一组用于绘图的点容易得多，因为可以用向量作参数调用该函数，得到向量形式的结果。"
    }
   },
   {
@@ -322,7 +322,7 @@
    "t": {
     "en": "The second step is to call quad with the limits of integration:",
     "sha": "5b9175078bb6",
-    "zh": ""
+    "zh": "第二步是以积分限调用 quad："
    }
   },
   {
@@ -334,7 +334,7 @@
    "t": {
     "en": "Although `quad` returns a nonzero value for *ier*, the result is reasonably accurate (to see why, examine what happens to the result if you move the lower bound to 0.1, then 0.01, then 0.001, etc.).",
     "sha": "ae301ac391eb",
-    "zh": ""
+    "zh": "虽然 `quad` 返回的 *ier* 不为零，但结果仍相当准确（想知道原因，可以观察把积分下限依次改为 0.1、0.01、0.001 等等时，结果会怎样变化）。"
    }
   },
   {
@@ -342,7 +342,7 @@
    "t": {
     "en": "The function `\"f\"` can be the string name of a function or a function handle. These options make it quite easy to do integration without having to fully define a function in an m-file. For example:",
     "sha": "623c47ce95b7",
-    "zh": ""
+    "zh": "函数 `\"f\"` 可以是函数名字符串，也可以是函数句柄。有了这些选项，不必在 m 文件中完整定义函数，就能很方便地做积分。例如："
    }
   },
   {
@@ -364,7 +364,7 @@
      "t": {
       "en": "Numerically evaluate the integral of *f* from *a* to *b* using Fortran routines from QUADPACK.",
       "sha": "17aeffa48ea1",
-      "zh": ""
+      "zh": "使用 QUADPACK 中的 Fortran 例程，数值地计算 *f* 从 *a* 到 *b* 的积分。"
      }
     },
     {
@@ -372,7 +372,7 @@
      "t": {
       "en": "*f* is a function handle, inline function, or a string containing the name of the function to evaluate. The function must have the form `y = f (x)` where *y* and *x* are scalars.",
       "sha": "32c2415a5baa",
-      "zh": ""
+      "zh": "*f* 是函数句柄、内联函数，或者包含待计算函数名称的字符串。该函数必须具有 `y = f (x)` 的形式，其中 *y* 和 *x* 是标量。"
      }
     },
     {
@@ -380,7 +380,7 @@
      "t": {
       "en": "*a* and *b* are the lower and upper limits of integration. Either or both may be infinite.",
       "sha": "fc654904e212",
-      "zh": ""
+      "zh": "*a* 和 *b* 分别是积分下限和上限，两者之一或两者都可以是无穷。"
      }
     },
     {
@@ -388,7 +388,7 @@
      "t": {
       "en": "The optional argument *tol* is a vector that specifies the desired accuracy of the result. The first element of the vector is the desired absolute tolerance, and the second element is the desired relative tolerance. To choose a relative test only, set the absolute tolerance to zero. To choose an absolute test only, set the relative tolerance to zero. Both tolerances default to `sqrt (eps)` or approximately 1.5e-8.",
       "sha": "970d47a42a0c",
-      "zh": ""
+      "zh": "可选参数 *tol* 是一个向量，指定结果所要求的精度。向量的第一个元素是要求的绝对容差，第二个元素是要求的相对容差。只想按相对误差判断，就把绝对容差设为零；只想按绝对误差判断，就把相对容差设为零。两个容差默认都是 `sqrt (eps)`，约为 1.5e-8。"
      }
     },
     {
@@ -396,7 +396,7 @@
      "t": {
       "en": "The optional argument *sing* is a vector of values at which the integrand is known to be singular.",
       "sha": "e3b48c8a6c3c",
-      "zh": ""
+      "zh": "可选参数 *sing* 是一个向量，其中的值是已知被积函数在该处有奇点的位置。"
      }
     },
     {
@@ -404,7 +404,7 @@
      "t": {
       "en": "The result of the integration is returned in *q*.",
       "sha": "0ebf6d0f65a2",
-      "zh": ""
+      "zh": "积分结果通过 *q* 返回。"
      }
     },
     {
@@ -412,7 +412,7 @@
      "t": {
       "en": "*ier* contains an integer error code (0 indicates a successful integration).",
       "sha": "9c5d60ff38d1",
-      "zh": ""
+      "zh": "*ier* 是一个整数错误码（0 表示积分成功）。"
      }
     },
     {
@@ -420,7 +420,7 @@
      "t": {
       "en": "*nfev* indicates the number of function evaluations that were made.",
       "sha": "a646a2567378",
-      "zh": ""
+      "zh": "*nfev* 表示函数被调用计算的次数。"
      }
     },
     {
@@ -428,7 +428,7 @@
      "t": {
       "en": "*err* contains an estimate of the error in the solution.",
       "sha": "0a4768c73acc",
-      "zh": ""
+      "zh": "*err* 是对解的误差的估计。"
      }
     },
     {
@@ -436,7 +436,7 @@
      "t": {
       "en": "The function `quad_options` can set other optional parameters for `quad`.",
       "sha": "53753e79941f",
-      "zh": ""
+      "zh": "函数 `quad_options` 可以为 `quad` 设置其他可选参数。"
      }
     },
     {
@@ -444,7 +444,7 @@
      "t": {
       "en": "Note: because `quad` is written in Fortran it cannot be called recursively. This prevents its use in integrating over more than one variable by routines `dblquad` and `triplequad`. See also: `quad_options`, `quadv`, `quadl`, `quadgk`, `quadcc`, `trapz`, `dblquad`, `triplequad`.",
       "sha": "1b2b97a5d038",
-      "zh": ""
+      "zh": "注意：由于 `quad` 是用 Fortran 写的，它不能被递归调用。因此 `dblquad` 和 `triplequad` 这两个例程不能用它来对多个变量积分。另见：`quad_options`、`quadv`、`quadl`、`quadgk`、`quadcc`、`trapz`、`dblquad`、`triplequad`。"
      }
     }
    ]
@@ -465,7 +465,7 @@
      "t": {
       "en": "Numerically evaluate the integral of *f* from *a* to *b* using an adaptive Simpson's rule.",
       "sha": "877a44ac89f4",
-      "zh": ""
+      "zh": "使用自适应 Simpson 公式，数值地计算 *f* 从 *a* 到 *b* 的积分。"
      }
     },
     {
@@ -473,7 +473,7 @@
      "t": {
       "en": "*f* is a function handle, inline function, or string containing the name of the function to evaluate. `quadv` is a vectorized version of `quad` and the function defined by *f* must accept a scalar or vector as input and return a scalar, vector, or array as output.",
       "sha": "e384a134bc51",
-      "zh": ""
+      "zh": "*f* 是函数句柄、内联函数，或者包含待计算函数名称的字符串。`quadv` 是 `quad` 的向量化版本，由 *f* 定义的函数必须接受标量或向量作为输入，并返回标量、向量或数组作为输出。"
      }
     },
     {
@@ -481,7 +481,7 @@
      "t": {
       "en": "*a* and *b* are the lower and upper limits of integration. Both limits must be finite.",
       "sha": "c3416cd9ff3a",
-      "zh": ""
+      "zh": "*a* 和 *b* 分别是积分下限和上限，两者都必须是有限值。"
      }
     },
     {
@@ -489,7 +489,7 @@
      "t": {
       "en": "The optional argument *tol* defines the absolute tolerance used to stop the adaptation procedure. The default value is 1e-6.",
       "sha": "a6b0b6c7bb68",
-      "zh": ""
+      "zh": "可选参数 *tol* 定义终止自适应过程所用的绝对容差，默认值为 1e-6。"
      }
     },
     {
@@ -497,7 +497,7 @@
      "t": {
       "en": "The algorithm used by `quadv` involves recursively subdividing the integration interval and applying Simpson's rule on each subinterval. If *trace* is true then after computing each of these partial integrals display: (1) the total number of function evaluations, (2) the left end of the subinterval, (3) the length of the subinterval, (4) the approximation of the integral over the subinterval.",
       "sha": "ec8559705591",
-      "zh": ""
+      "zh": "`quadv` 使用的算法是递归地细分积分区间，并在每个子区间上应用 Simpson 公式。如果 *trace* 为真，则在算出每个这样的部分积分之后显示：（1）函数被调用计算的总次数，（2）子区间的左端点，（3）子区间的长度，（4）该子区间上积分的近似值。"
      }
     },
     {
@@ -505,7 +505,7 @@
      "t": {
       "en": "Additional arguments *p1*, etc., are passed directly to the function *f*. To use default values for *tol* and *trace*, one may pass empty matrices ([]).",
       "sha": "8acb93ee08e9",
-      "zh": ""
+      "zh": "附加参数 *p1* 等会被直接传给函数 *f*。如果想对 *tol* 和 *trace* 使用默认值，可以传入空矩阵（[]）。"
      }
     },
     {
@@ -513,7 +513,7 @@
      "t": {
       "en": "The result of the integration is returned in *q*.",
       "sha": "0ebf6d0f65a2",
-      "zh": ""
+      "zh": "积分结果通过 *q* 返回。"
      }
     },
     {
@@ -521,7 +521,7 @@
      "t": {
       "en": "The optional output *nfev* indicates the total number of function evaluations performed.",
       "sha": "73e8fa2a1f91",
-      "zh": ""
+      "zh": "可选输出 *nfev* 表示函数被调用计算的总次数。"
      }
     },
     {
@@ -529,7 +529,7 @@
      "t": {
       "en": "Note: `quadv` is written in Octave's scripting language and can be used recursively in `dblquad` and `triplequad`, unlike the `quad` function. See also: `quad`, `quadl`, `quadgk`, `quadcc`, `trapz`, `dblquad`, `triplequad`, `integral`, `integral2`, `integral3`.",
       "sha": "5f73b040cd89",
-      "zh": ""
+      "zh": "注意：`quadv` 是用 Octave 的脚本语言写的，与 `quad` 函数不同，它可以在 `dblquad` 和 `triplequad` 中被递归使用。另见：`quad`、`quadl`、`quadgk`、`quadcc`、`trapz`、`dblquad`、`triplequad`、`integral`、`integral2`、`integral3`。"
      }
     }
    ]
@@ -550,7 +550,7 @@
      "t": {
       "en": "Numerically evaluate the integral of *f* from *a* to *b* using an adaptive Lobatto rule.",
       "sha": "72442d0aa4ec",
-      "zh": ""
+      "zh": "使用自适应 Lobatto 公式，数值地计算 *f* 从 *a* 到 *b* 的积分。"
      }
     },
     {
@@ -558,7 +558,7 @@
      "t": {
       "en": "*f* is a function handle, inline function, or string containing the name of the function to evaluate. The function *f* must be vectorized and return a vector of output values when given a vector of input values.",
       "sha": "418f19dd8eea",
-      "zh": ""
+      "zh": "*f* 是函数句柄、内联函数，或者包含待计算函数名称的字符串。函数 *f* 必须是向量化的：给它一个输入值向量时，返回一个输出值向量。"
      }
     },
     {
@@ -566,7 +566,7 @@
      "t": {
       "en": "*a* and *b* are the lower and upper limits of integration. Both limits must be finite.",
       "sha": "c3416cd9ff3a",
-      "zh": ""
+      "zh": "*a* 和 *b* 分别是积分下限和上限，两者都必须是有限值。"
      }
     },
     {
@@ -574,7 +574,7 @@
      "t": {
       "en": "The optional argument *tol* defines the absolute tolerance with which to perform the integration. The default value is 1e-6.",
       "sha": "f2c28f511094",
-      "zh": ""
+      "zh": "可选参数 *tol* 定义积分所要达到的绝对容差，默认值为 1e-6。"
      }
     },
     {
@@ -582,7 +582,7 @@
      "t": {
       "en": "The algorithm used by `quadl` involves recursively subdividing the integration interval. If *trace* is defined then for each subinterval display: (1) the total number of function evaluations, (2) the left end of the subinterval, (3) the length of the subinterval, (4) the approximation of the integral over the subinterval.",
       "sha": "3123695814e9",
-      "zh": ""
+      "zh": "`quadl` 使用的算法是递归地细分积分区间。如果定义了 *trace*，则对每个子区间显示：（1）函数被调用计算的总次数，（2）子区间的左端点，（3）子区间的长度，（4）该子区间上积分的近似值。"
      }
     },
     {
@@ -590,7 +590,7 @@
      "t": {
       "en": "Additional arguments *p1*, etc., are passed directly to the function *f*. To use default values for *tol* and *trace*, one may pass empty matrices ([]).",
       "sha": "8acb93ee08e9",
-      "zh": ""
+      "zh": "附加参数 *p1* 等会被直接传给函数 *f*。如果想对 *tol* 和 *trace* 使用默认值，可以传入空矩阵（[]）。"
      }
     },
     {
@@ -598,7 +598,7 @@
      "t": {
       "en": "The result of the integration is returned in *q*.",
       "sha": "0ebf6d0f65a2",
-      "zh": ""
+      "zh": "积分结果通过 *q* 返回。"
      }
     },
     {
@@ -606,7 +606,7 @@
      "t": {
       "en": "The optional output *nfev* indicates the total number of function evaluations performed.",
       "sha": "73e8fa2a1f91",
-      "zh": ""
+      "zh": "可选输出 *nfev* 表示函数被调用计算的总次数。"
      }
     },
     {
@@ -614,7 +614,7 @@
      "t": {
       "en": "Reference: W. Gander and W. Gautschi, *Adaptive Quadrature - Revisited*, BIT Vol. 40, No. 1, March 2000, pp. 84--101. https://www.inf.ethz.ch/personal/gander/ See also: `quad`, `quadv`, `quadgk`, `quadcc`, `trapz`, `dblquad`, `triplequad`, `integral`, `integral2`, `integral3`.",
       "sha": "310640b9f146",
-      "zh": ""
+      "zh": "参考文献：W. Gander and W. Gautschi, *Adaptive Quadrature - Revisited*, BIT Vol. 40, No. 1, March 2000, pp. 84--101. https://www.inf.ethz.ch/personal/gander/ 另见：`quad`、`quadv`、`quadgk`、`quadcc`、`trapz`、`dblquad`、`triplequad`、`integral`、`integral2`、`integral3`。"
      }
     }
    ]
@@ -635,7 +635,7 @@
      "t": {
       "en": "Numerically evaluate the integral of *f* from *a* to *b* using adaptive Gauss-Kronrod quadrature.",
       "sha": "988cefe68e08",
-      "zh": ""
+      "zh": "使用自适应 Gauss-Kronrod 求积，数值地计算 *f* 从 *a* 到 *b* 的积分。"
      }
     },
     {
@@ -643,7 +643,7 @@
      "t": {
       "en": "*f* is a function handle, inline function, or string containing the name of the function to evaluate. The function *f* must be vectorized and return a vector of output values when given a vector of input values (See property `\"ArrayValued\"` for an exception to this rule).",
       "sha": "c137786bf893",
-      "zh": ""
+      "zh": "*f* 是函数句柄、内联函数，或者包含待计算函数名称的字符串。函数 *f* 必须是向量化的：给它一个输入值向量时，返回一个输出值向量（这条规则的例外见属性 `\"ArrayValued\"`）。"
      }
     },
     {
@@ -651,7 +651,7 @@
      "t": {
       "en": "*a* and *b* are the lower and upper limits of integration. Either or both limits may be infinite or contain weak end singularities. Variable transformation will be used to treat any infinite intervals and weaken the singularities. For example:",
       "sha": "8bc2cbd2d56f",
-      "zh": ""
+      "zh": "*a* 和 *b* 分别是积分下限和上限，两者之一或两者都可以是无穷，也可以含有弱端点奇点。无穷区间和奇点的处理方法是做变量替换，把无穷区间变为有限区间、削弱奇性。例如："
      }
     },
     {
@@ -663,7 +663,7 @@
      "t": {
       "en": "Note that the formulation of the integrand uses the element-by-element operator `./` and all user functions to `quadgk` should do the same.",
       "sha": "9f8e97be3517",
-      "zh": ""
+      "zh": "注意，被积函数的写法用了逐元素运算符 `./`，传给 `quadgk` 的所有用户函数都应当这样写。"
      }
     },
     {
@@ -671,7 +671,7 @@
      "t": {
       "en": "The optional argument *abstol* defines the absolute tolerance used to stop the integration procedure. The default value is 1e-10 (1e-5 for single).",
       "sha": "ab27f211d3e5",
-      "zh": ""
+      "zh": "可选参数 *abstol* 定义终止积分过程所用的绝对容差，默认值为 1e-10（single 类型为 1e-5）。"
      }
     },
     {
@@ -679,7 +679,7 @@
      "t": {
       "en": "The algorithm used by `quadgk` involves subdividing the integration interval and evaluating each subinterval. If *trace* is true then after computing each of these partial integrals display: (1) the number of subintervals at this step, (2) the current estimate of the error *err*, (3) the current estimate for the integral *q*.",
       "sha": "bb9e4a3474d4",
-      "zh": ""
+      "zh": "`quadgk` 使用的算法是细分积分区间，并对每个子区间求值。如果 *trace* 为真，则在算出每个这样的部分积分之后显示：（1）这一步的子区间个数，（2）当前对误差 *err* 的估计，（3）当前对积分 *q* 的估计。"
      }
     },
     {
@@ -687,7 +687,7 @@
      "t": {
       "en": "The behavior of the algorithm can be configured by passing arguments to `quadgk` as pairs `\"prop\", val`. Valid properties are",
       "sha": "507be4fad046",
-      "zh": ""
+      "zh": "可以把参数以 `\"prop\", val` 成对的形式传给 `quadgk`，来配置算法的行为。有效的属性有"
      }
     },
     {
@@ -697,7 +697,7 @@
        "term": {
         "en": "`AbsTol`",
         "sha": "a8b2ebf2af1b",
-        "zh": ""
+        "zh": "`AbsTol`"
        },
        "blocks": [
         {
@@ -705,7 +705,7 @@
          "t": {
           "en": "Define the absolute error tolerance for the quadrature. The default absolute tolerance is 1e-10 (1e-5 for single).",
           "sha": "1c10d80e4148",
-          "zh": ""
+          "zh": "定义求积的绝对误差容差。默认的绝对容差为 1e-10（single 类型为 1e-5）。"
          }
         }
        ]
@@ -714,7 +714,7 @@
        "term": {
         "en": "`RelTol`",
         "sha": "18ace5bfe352",
-        "zh": ""
+        "zh": "`RelTol`"
        },
        "blocks": [
         {
@@ -722,7 +722,7 @@
          "t": {
           "en": "Define the relative error tolerance for the quadrature. The default relative tolerance is 1e-6 (1e-4 for single).",
           "sha": "15ceb98f3c26",
-          "zh": ""
+          "zh": "定义求积的相对误差容差。默认的相对容差为 1e-6（single 类型为 1e-4）。"
          }
         }
        ]
@@ -731,7 +731,7 @@
        "term": {
         "en": "`ArrayValued`",
         "sha": "3a8b73d11389",
-        "zh": ""
+        "zh": "`ArrayValued`"
        },
        "blocks": [
         {
@@ -739,7 +739,7 @@
          "t": {
           "en": "When set to true, the function *f* produces an array output for a scalar input. The default is false which requires that *f* produce an output that is the same size as the input. For example,",
           "sha": "03817c83581c",
-          "zh": ""
+          "zh": "设为真时，函数 *f* 对标量输入产生数组输出。默认为假，此时要求 *f* 产生的输出与输入的大小相同。例如，"
          }
         },
         {
@@ -751,7 +751,7 @@
          "t": {
           "en": "will integrate `[x.^1, x.^2, x.^3, x.^4, x.^5]` in one function call rather than having to repeatedly define a single anonymous function and use a normal invocation of `quadgk`.",
           "sha": "3153f6ffb135",
-          "zh": ""
+          "zh": "会在一次函数调用中对 `[x.^1, x.^2, x.^3, x.^4, x.^5]` 积分，而不必反复定义单个匿名函数并按通常方式调用 `quadgk`。"
          }
         }
        ]
@@ -760,7 +760,7 @@
        "term": {
         "en": "`WayPoints`",
         "sha": "a8f6545fb4a1",
-        "zh": ""
+        "zh": "`WayPoints`"
        },
        "blocks": [
         {
@@ -768,7 +768,7 @@
          "t": {
           "en": "Specify points which will become endpoints for subintervals in the algorithm which can result in significantly improved estimation of the error in the integral, faster computation, or both. It can be useful to specify more subintervals around a region where the integrand is rapidly changing or to flag locations where there is a discontinuity in the first derivative of the function. For example, the signum function has a discontinuity at `x == 0` and by specifying a waypoint",
           "sha": "656f5947d353",
-          "zh": ""
+          "zh": "指定一些点，让它们成为算法中各子区间的端点，这样可以显著改善对积分误差的估计、加快计算，或者两者兼得。在被积函数变化剧烈的区域附近多设一些子区间，或者标出函数一阶导数不连续的位置，都会有帮助。例如，符号函数在 `x == 0` 处不连续，指定一个路径点"
          }
         },
         {
@@ -780,7 +780,7 @@
          "t": {
           "en": "the error bound is reduced from 4e-7 to 1e-13.",
           "sha": "9e20811936bd",
-          "zh": ""
+          "zh": "就能把误差界从 4e-7 降到 1e-13。"
          }
         },
         {
@@ -788,7 +788,7 @@
          "t": {
           "en": "If the function has **singularities** within the region of integration those should not be addressed with waypoints. Instead, the overall integral should be decomposed into a sum of several smaller integrals such that the singularity occurs as one of the bounds of integration in the call to `quadgk`.",
           "sha": "c68dc87a1a50",
-          "zh": ""
+          "zh": "如果函数在积分区域内有**奇点**，不应当用路径点来处理它们。正确的做法是把整个积分分解成几个较小积分之和，使奇点在每次调用 `quadgk` 时都落在积分限上。"
          }
         },
         {
@@ -796,7 +796,7 @@
          "t": {
           "en": "If any of the waypoints are complex then contour integration is performed as documented below.",
           "sha": "7bdd8b2ab6d5",
-          "zh": ""
+          "zh": "如果任何一个路径点是复数，就按下面所述执行围道积分。"
          }
         }
        ]
@@ -805,7 +805,7 @@
        "term": {
         "en": "`MaxIntervalCount`",
         "sha": "1f60dcd69293",
-        "zh": ""
+        "zh": "`MaxIntervalCount`"
        },
        "blocks": [
         {
@@ -813,7 +813,7 @@
          "t": {
           "en": "`quadgk` initially subdivides the interval on which to perform the quadrature into 10 intervals or, if WayPoints are given, at each waypoint. Subintervals that have an unacceptable error are subdivided and re-evaluated. If the number of subintervals exceeds 650 subintervals at any point then a poor convergence is signaled and the current estimate of the integral is returned. The property `\"MaxIntervalCount\"` can be used to alter the number of subintervals that can exist before exiting.",
           "sha": "65667a38a34d",
-          "zh": ""
+          "zh": "`quadgk` 起初把求积所在的区间分成 10 个子区间；如果给了路径点，则在每个路径点处分开。误差不可接受的子区间会被进一步细分并重新求值。如果子区间个数在任何时候超过 650，就表示收敛得很差，此时返回当前对积分的估计。属性 `\"MaxIntervalCount\"` 可以用来改变退出之前允许存在的子区间个数。"
          }
         }
        ]
@@ -822,7 +822,7 @@
        "term": {
         "en": "`Trace`",
         "sha": "850c3c182337",
-        "zh": ""
+        "zh": "`Trace`"
        },
        "blocks": [
         {
@@ -830,7 +830,7 @@
          "t": {
           "en": "If logically true `quadgk` prints information on the convergence of the quadrature at each iteration.",
           "sha": "2076b20df7cc",
-          "zh": ""
+          "zh": "若逻辑值为真，`quadgk` 会在每次迭代时打印求积收敛情况的信息。"
          }
         }
        ]
@@ -842,7 +842,7 @@
      "t": {
       "en": "If any of *a*, *b*, or *waypoints* is complex then the quadrature is treated as a contour integral along a piecewise linear path defined by `[a, waypoints(1), waypoints(2), …, b]`. In this case the integral is assumed to have no edge singularities. For example,",
       "sha": "c92079e6df31",
-      "zh": ""
+      "zh": "如果 *a*、*b* 或 *waypoints* 中有任何一个是复数，则把这次求积当作沿分段线性路径 `[a, waypoints(1), waypoints(2), …, b]` 的围道积分处理。这种情况下，假定积分没有端点奇点。例如，"
      }
     },
     {
@@ -854,7 +854,7 @@
      "t": {
       "en": "integrates `log (z)` along the square defined by `[1+1i, -1+1i, -1-1i, +1-1i]`.",
       "sha": "48fb9033b877",
-      "zh": ""
+      "zh": "是沿由 `[1+1i, -1+1i, -1-1i, +1-1i]` 定义的正方形对 `log (z)` 做积分。"
      }
     },
     {
@@ -862,7 +862,7 @@
      "t": {
       "en": "The result of the integration is returned in *q*.",
       "sha": "0ebf6d0f65a2",
-      "zh": ""
+      "zh": "积分结果通过 *q* 返回。"
      }
     },
     {
@@ -870,7 +870,7 @@
      "t": {
       "en": "*err* is an approximate bound on the error in the integral `abs (q - I)`, where *I* is the exact value of the integral. If the adaptive integration did not converge, the value of *err* will be larger than the requested tolerance. If only a single output is requested then a warning will be emitted when the requested tolerance is not met. If the second output *err* is requested then no warning is issued and it is the responsibility of the programmer to inspect and determine whether the results are satisfactory.",
       "sha": "a1bebc6efa93",
-      "zh": ""
+      "zh": "*err* 是积分误差 `abs (q - I)` 的近似上界，其中 *I* 是积分的精确值。如果自适应积分没有收敛，*err* 的值会大于所要求的容差。只要求一个输出时，在未达到要求的容差时会发出警告。如果要求了第二个输出 *err*，就不会发出警告，由程序员自己检查并判断结果是否令人满意。"
      }
     },
     {
@@ -878,7 +878,7 @@
      "t": {
       "en": "Reference: L.F. Shampine, *\"Vectorized adaptive quadrature in MATLAB\"*, Journal of Computational and Applied Mathematics, pp. 131--140, Vol 211, Issue 2, Feb 2008.",
       "sha": "716b2bec5929",
-      "zh": ""
+      "zh": "参考文献：L.F. Shampine, *\"Vectorized adaptive quadrature in MATLAB\"*, Journal of Computational and Applied Mathematics, pp. 131--140, Vol 211, Issue 2, Feb 2008."
      }
     },
     {
@@ -886,7 +886,7 @@
      "t": {
       "en": "See also: `quad`, `quadv`, `quadl`, `quadcc`, `trapz`, `dblquad`, `triplequad`, `integral`, `integral2`, `integral3`.",
       "sha": "ed3e801aa515",
-      "zh": ""
+      "zh": "另见：`quad`、`quadv`、`quadl`、`quadcc`、`trapz`、`dblquad`、`triplequad`、`integral`、`integral2`、`integral3`。"
      }
     }
    ]
@@ -906,7 +906,7 @@
      "t": {
       "en": "Numerically evaluate the integral of *f* from *a* to *b* using doubly-adaptive Clenshaw-Curtis quadrature.",
       "sha": "917a6b272ac1",
-      "zh": ""
+      "zh": "使用双重自适应的 Clenshaw-Curtis 求积，数值地计算 *f* 从 *a* 到 *b* 的积分。"
      }
     },
     {
@@ -914,7 +914,7 @@
      "t": {
       "en": "*f* is a function handle, inline function, or string containing the name of the function to evaluate. The function *f* must be vectorized and must return a vector of output values if given a vector of input values. For example,",
       "sha": "7810331ea9db",
-      "zh": ""
+      "zh": "*f* 是函数句柄、内联函数，或者包含待计算函数名称的字符串。函数 *f* 必须是向量化的：给它一个输入值向量时，必须返回一个输出值向量。例如，"
      }
     },
     {
@@ -926,7 +926,7 @@
      "t": {
       "en": "which uses the element-by-element “dot” form for all operators.",
       "sha": "05b851c3c502",
-      "zh": ""
+      "zh": "其中所有运算符都使用逐元素的“点”形式。"
      }
     },
     {
@@ -934,7 +934,7 @@
      "t": {
       "en": "*a* and *b* are the lower and upper limits of integration. Either or both limits may be infinite. `quadcc` handles an infinite limit by substituting the variable of integration with `x = tan (pi/2*u)`.",
       "sha": "09271a3c082a",
-      "zh": ""
+      "zh": "*a* 和 *b* 分别是积分下限和上限，两者之一或两者都可以是无穷。`quadcc` 处理无穷积分限的办法是做变量替换 `x = tan (pi/2*u)`。"
      }
     },
     {
@@ -942,7 +942,7 @@
      "t": {
       "en": "The optional argument *tol* is a 1- or 2-element vector that specifies the desired accuracy of the result. The first element of the vector is the desired absolute tolerance, and the second element is the desired relative tolerance. To choose a relative test only, set the absolute tolerance to zero. To choose an absolute test only, set the relative tolerance to zero. The default absolute tolerance is 1e-10 (1e-5 for single), and the default relative tolerance is 1e-6 (1e-4 for single).",
       "sha": "f83cecbdffc9",
-      "zh": ""
+      "zh": "可选参数 *tol* 是一个 1 个或 2 个元素的向量，指定结果所要求的精度。向量的第一个元素是要求的绝对容差，第二个元素是要求的相对容差。只想按相对误差判断，就把绝对容差设为零；只想按绝对误差判断，就把相对容差设为零。默认的绝对容差为 1e-10（single 类型为 1e-5），默认的相对容差为 1e-6（single 类型为 1e-4）。"
      }
     },
     {
@@ -950,7 +950,7 @@
      "t": {
       "en": "The optional argument *sing* contains a list of points where the integrand has known singularities, or discontinuities in any of its derivatives, inside the integration interval. For the example above, which has a discontinuity at x=1, the call to `quadcc` would be as follows",
       "sha": "3e36f6b7229d",
-      "zh": ""
+      "zh": "可选参数 *sing* 包含一个点的列表，被积函数在积分区间内的这些点处有已知的奇点，或者其某阶导数不连续。对于上面的例子，它在 x=1 处不连续，调用 `quadcc` 的方式如下"
      }
     },
     {
@@ -962,7 +962,7 @@
      "t": {
       "en": "The result of the integration is returned in *q*.",
       "sha": "0ebf6d0f65a2",
-      "zh": ""
+      "zh": "积分结果通过 *q* 返回。"
      }
     },
     {
@@ -970,7 +970,7 @@
      "t": {
       "en": "*err* is an estimate of the absolute integration error.",
       "sha": "98a5bad39393",
-      "zh": ""
+      "zh": "*err* 是对绝对积分误差的估计。"
      }
     },
     {
@@ -978,7 +978,7 @@
      "t": {
       "en": "*nr_points* is the number of points at which the integrand was evaluated.",
       "sha": "2caeb9a2539b",
-      "zh": ""
+      "zh": "*nr_points* 是被积函数被求值的点的个数。"
      }
     },
     {
@@ -986,7 +986,7 @@
      "t": {
       "en": "If the adaptive integration did not converge, the value of *err* will be larger than the requested tolerance. If only a single output is requested then a warning will be emitted when the requested tolerance is not met. If the second output *err* is requested then no warning is issued and it is the responsibility of the programmer to inspect and determine whether the results are satisfactory.",
       "sha": "0ba4da115782",
-      "zh": ""
+      "zh": "如果自适应积分没有收敛，*err* 的值会大于所要求的容差。只要求一个输出时，在未达到要求的容差时会发出警告。如果要求了第二个输出 *err*，就不会发出警告，由程序员自己检查并判断结果是否令人满意。"
      }
     },
     {
@@ -994,7 +994,7 @@
      "t": {
       "en": "`quadcc` is capable of dealing with non-numeric values of the integrand such as `NaN` or `Inf`. If the integral diverges, and `quadcc` detects this, then a warning is issued and `Inf` or `-Inf` is returned.",
       "sha": "f2be1461395d",
-      "zh": ""
+      "zh": "`quadcc` 能够处理被积函数取非数值的情形，例如 `NaN` 或 `Inf`。如果积分发散，并且 `quadcc` 检测到了这一点，则会发出警告，并返回 `Inf` 或 `-Inf`。"
      }
     },
     {
@@ -1002,7 +1002,7 @@
      "t": {
       "en": "Note: `quadcc` is a general purpose quadrature algorithm and, as such, may be less efficient for a smooth or otherwise well-behaved integrand than other methods such as `quadgk`.",
       "sha": "10938df2540f",
-      "zh": ""
+      "zh": "注意：`quadcc` 是通用的求积算法，因此对于光滑或其他性质良好的被积函数，它的效率可能不如 `quadgk` 等其他方法。"
      }
     },
     {
@@ -1010,7 +1010,7 @@
      "t": {
       "en": "The algorithm uses Clenshaw-Curtis quadrature rules of increasing degree in each interval and bisects the interval if either the function does not appear to be smooth or a rule of maximum degree has been reached. The error estimate is computed from the L2-norm of the difference between two successive interpolations of the integrand over the nodes of the respective quadrature rules.",
       "sha": "c1944e095f0d",
-      "zh": ""
+      "zh": "该算法在每个区间上使用次数递增的 Clenshaw-Curtis 求积公式；如果函数看起来不光滑，或者已经用到了最高次数的公式，就把区间二等分。误差估计由被积函数在相继两个求积公式的节点上的两次插值之差的 L2 范数算出。"
      }
     },
     {
@@ -1018,7 +1018,7 @@
      "t": {
       "en": "Reference: P. Gonnet, *Increasing the Reliability of Adaptive Quadrature Using Explicit Interpolants*, ACM Transactions on Mathematical Software, Vol. 37, Issue 3, Article No. 3, 2010. See also: `quad`, `quadv`, `quadl`, `quadgk`, `trapz`, `dblquad`, `triplequad`.",
       "sha": "361ba0b8172d",
-      "zh": ""
+      "zh": "参考文献：P. Gonnet, *Increasing the Reliability of Adaptive Quadrature Using Explicit Interpolants*, ACM Transactions on Mathematical Software, Vol. 37, Issue 3, Article No. 3, 2010. 另见：`quad`、`quadv`、`quadl`、`quadgk`、`trapz`、`dblquad`、`triplequad`。"
      }
     }
    ]
@@ -1037,7 +1037,7 @@
      "t": {
       "en": "Numerically evaluate the integral of *f* from *a* to *b* using adaptive quadrature.",
       "sha": "ad7f5085529b",
-      "zh": ""
+      "zh": "使用自适应求积，数值地计算 *f* 从 *a* 到 *b* 的积分。"
      }
     },
     {
@@ -1045,7 +1045,7 @@
      "t": {
       "en": "`integral` is a wrapper for `quadcc` (general real-valued, scalar integrands and limits), and `quadgk` (integrals with specified integration paths and array-valued integrands) that is intended to provide MATLAB compatibility. More control of the numerical integration may be achievable by calling the various quadrature functions directly.",
       "sha": "e0506f491fc8",
-      "zh": ""
+      "zh": "`integral` 是对 `quadcc`（一般的实值标量被积函数与积分限）和 `quadgk`（指定积分路径的积分与数组值被积函数）的包装，目的是兼容 MATLAB。直接调用各个求积函数，可能对数值积分有更多的控制。"
      }
     },
     {
@@ -1053,7 +1053,7 @@
      "t": {
       "en": "*f* is a function handle, inline function, or string containing the name of the function to evaluate. The function *f* must be vectorized and return a vector of output values when given a vector of input values.",
       "sha": "418f19dd8eea",
-      "zh": ""
+      "zh": "*f* 是函数句柄、内联函数，或者包含待计算函数名称的字符串。函数 *f* 必须是向量化的：给它一个输入值向量时，返回一个输出值向量。"
      }
     },
     {
@@ -1061,7 +1061,7 @@
      "t": {
       "en": "*a* and *b* are the lower and upper limits of integration. Either or both limits may be infinite or contain weak end singularities. If either or both limits are complex, `integral` will perform a straight line path integral. Alternatively, a complex domain path can be specified using the `\"Waypoints\"` option (see below).",
       "sha": "7c35dd61000a",
-      "zh": ""
+      "zh": "*a* 和 *b* 分别是积分下限和上限，两者之一或两者都可以是无穷，也可以含有弱端点奇点。如果其中一个或两个积分限是复数，`integral` 会沿直线路径做路径积分。也可以用 `\"Waypoints\"` 选项（见下文）指定复平面上的路径。"
      }
     },
     {
@@ -1069,7 +1069,7 @@
      "t": {
       "en": "Additional optional parameters can be specified using `\"property\", value` pairs. Valid properties are:",
       "sha": "fd9a801fb211",
-      "zh": ""
+      "zh": "可以用 `\"property\", value` 成对的形式指定额外的可选参数。有效的属性有："
      }
     },
     {
@@ -1079,7 +1079,7 @@
        "term": {
         "en": "`Waypoints`",
         "sha": "e4e0ad146a38",
-        "zh": ""
+        "zh": "`Waypoints`"
        },
        "blocks": [
         {
@@ -1087,7 +1087,7 @@
          "t": {
           "en": "Specifies points to be used in defining subintervals of the quadrature algorithm, or if *a*, *b*, or *waypoints* are complex then the quadrature is calculated as a contour integral along a piecewise continuous path. For more detail, `quadgk`.",
           "sha": "d24ce815295d",
-          "zh": ""
+          "zh": "指定用来划分求积算法中各子区间的点；如果 *a*、*b* 或 *waypoints* 是复数，则把求积按沿分段连续路径的围道积分来计算。详情见 `quadgk`。"
          }
         }
        ]
@@ -1096,7 +1096,7 @@
        "term": {
         "en": "`ArrayValued`",
         "sha": "3a8b73d11389",
-        "zh": ""
+        "zh": "`ArrayValued`"
        },
        "blocks": [
         {
@@ -1104,7 +1104,7 @@
          "t": {
           "en": "`integral` expects *f* to return a scalar value unless *arrayvalued* is specified as true. This option will cause `integral` to perform the integration over the entire array and return *q* with the same dimensions as returned by *f*. For more detail `quadgk`.",
           "sha": "336912b7554d",
-          "zh": ""
+          "zh": "`integral` 期望 *f* 返回标量值，除非把 *arrayvalued* 指定为真。指定后，`integral` 会对整个数组做积分，返回的 *q* 与 *f* 返回值的维数相同。详情见 `quadgk`。"
          }
         }
        ]
@@ -1113,7 +1113,7 @@
        "term": {
         "en": "`AbsTol`",
         "sha": "a8b2ebf2af1b",
-        "zh": ""
+        "zh": "`AbsTol`"
        },
        "blocks": [
         {
@@ -1121,7 +1121,7 @@
          "t": {
           "en": "Define the absolute error tolerance for the quadrature. The default absolute tolerance is 1e-10 (1e-5 for single).",
           "sha": "1c10d80e4148",
-          "zh": ""
+          "zh": "定义求积的绝对误差容差。默认的绝对容差为 1e-10（single 类型为 1e-5）。"
          }
         }
        ]
@@ -1130,7 +1130,7 @@
        "term": {
         "en": "`RelTol`",
         "sha": "18ace5bfe352",
-        "zh": ""
+        "zh": "`RelTol`"
        },
        "blocks": [
         {
@@ -1138,7 +1138,7 @@
          "t": {
           "en": "Define the relative error tolerance for the quadrature. The default relative tolerance is 1e-6 (1e-4 for single).",
           "sha": "15ceb98f3c26",
-          "zh": ""
+          "zh": "定义求积的相对误差容差。默认的相对容差为 1e-6（single 类型为 1e-4）。"
          }
         }
        ]
@@ -1150,7 +1150,7 @@
      "t": {
       "en": "The optional output *err* contains the absolute error estimate used by the called integrator.",
       "sha": "01a7b51f44af",
-      "zh": ""
+      "zh": "可选输出 *err* 包含被调用的积分器所使用的绝对误差估计。"
      }
     },
     {
@@ -1158,7 +1158,7 @@
      "t": {
       "en": "Adaptive quadrature is used to minimize the estimate of error until the following is satisfied:",
       "sha": "8277c41fb8ab",
-      "zh": ""
+      "zh": "自适应求积会不断减小误差估计，直到满足下面的条件："
      }
     },
     {
@@ -1170,7 +1170,7 @@
      "t": {
       "en": "Known MATLAB incompatibilities:",
       "sha": "d537d285e58b",
-      "zh": ""
+      "zh": "已知与 MATLAB 不兼容的地方："
      }
     },
     {
@@ -1183,7 +1183,7 @@
         "t": {
          "en": "If tolerances are left unspecified, and any integration limits or waypoints are of type `single`, then Octave's integral functions automatically reduce the default absolute and relative error tolerances as specified above. If tighter tolerances are desired they must be specified. MATLAB leaves the tighter tolerances appropriate for `double` inputs in place regardless of the class of the integration limits.",
          "sha": "ee03258df758",
-         "zh": ""
+         "zh": "如果没有指定容差，并且任何积分限或路径点的类型是 `single`，则 Octave 的积分函数会按上文所述自动降低默认的绝对容差和相对容差。如果想要更严的容差，必须明确指定。MATLAB 则不管积分限是什么类型，都保留适用于 `double` 输入的较严容差。"
         }
        }
       ]
@@ -1194,7 +1194,7 @@
      "t": {
       "en": "See also: `integral2`, `integral3`, `quad`, `quadgk`, `quadv`, `quadl`, `quadcc`, `trapz`, `dblquad`, `triplequad`.",
       "sha": "2a44dbf96ea4",
-      "zh": ""
+      "zh": "另见：`integral2`、`integral3`、`quad`、`quadgk`、`quadv`、`quadl`、`quadcc`、`trapz`、`dblquad`、`triplequad`。"
      }
     }
    ]
@@ -1204,7 +1204,7 @@
    "t": {
     "en": "Sometimes one does not have the function, but only the raw (x, y) points from which to perform an integration. This can occur when collecting data in an experiment. The `trapz` function can integrate these values as shown in the following example where \"data\" has been collected on the cosine function over the range [0, pi/2).",
     "sha": "898576d66602",
-    "zh": ""
+    "zh": "有时手里没有函数，只有原始的 (x, y) 点，要由这些点来做积分。做实验采集数据时就会出现这种情况。`trapz` 函数可以对这些值做积分，如下面的例子所示，其中的“数据”是在区间 [0, pi/2) 上对余弦函数采集得到的。"
    }
   },
   {
@@ -1216,7 +1216,7 @@
    "t": {
     "en": "The answer is reasonably close to the exact value of 1. Ordinary quadrature is sensitive to the characteristics of the integrand. Empirical integration depends not just on the integrand, but also on the particular points chosen to represent the function. Repeating the example above with the sine function over the range [0, pi/2) produces far inferior results.",
     "sha": "361b36c20d35",
-    "zh": ""
+    "zh": "所得答案与精确值 1 相当接近。普通的求积对被积函数的特性很敏感。基于实测数据的积分不仅取决于被积函数，还取决于选来表示该函数的具体点。对正弦函数在区间 [0, pi/2) 上重复上面的例子，得到的结果要差得多。"
    }
   },
   {
@@ -1228,7 +1228,7 @@
    "t": {
     "en": "However, a slightly different choice of data points can change the result significantly. The same integration, with the same number of points, but spaced differently produces a more accurate answer.",
     "sha": "d0fa4a235177",
-    "zh": ""
+    "zh": "不过，数据点的选取稍有不同，结果就可能大不一样。同样的积分、同样的点数，但点的间距不同，会得到更准确的答案。"
    }
   },
   {
@@ -1240,7 +1240,7 @@
    "t": {
     "en": "In general there may be no way of knowing the best distribution of points ahead of time. Or the points may come from an experiment where there is no freedom to select the best distribution. In any case, one must remain aware of this issue when using `trapz`.",
     "sha": "f6e20bde3327",
-    "zh": ""
+    "zh": "一般来说，也许没有办法事先知道点的最佳分布。又或者这些点来自实验，没有自由去选最佳分布。无论如何，使用 `trapz` 时必须留意这个问题。"
    }
   },
   {
@@ -1257,7 +1257,7 @@
      "t": {
       "en": "Numerically evaluate the integral of points *y* using the trapezoidal method.",
       "sha": "5b50a2c3ee6a",
-      "zh": ""
+      "zh": "用梯形法对点 *y* 数值地计算积分。"
      }
     },
     {
@@ -1265,7 +1265,7 @@
      "t": {
       "en": "`trapz (y)` computes the integral of *y* along the first non-singleton dimension. When the argument *x* is omitted an equally spaced *x* vector with unit spacing (1) is assumed. `trapz (x, y)` evaluates the integral with respect to the spacing in *x* and the values in *y*. This is useful if the points in *y* have been sampled unevenly.",
       "sha": "ea8ae64dbe05",
-      "zh": ""
+      "zh": "`trapz (y)` 沿第一个非单一维计算 *y* 的积分。省略参数 *x* 时，假定 *x* 是间距为单位 1 的等距向量。`trapz (x, y)` 则按 *x* 的间距和 *y* 的值计算积分。如果 *y* 中的点是不等距采样的，这样做就很有用。"
      }
     },
     {
@@ -1273,7 +1273,7 @@
      "t": {
       "en": "If the optional *dim* argument is given, operate along this dimension.",
       "sha": "1d3583a1451d",
-      "zh": ""
+      "zh": "如果给出可选参数 *dim*，则沿该维度运算。"
      }
     },
     {
@@ -1281,7 +1281,7 @@
      "t": {
       "en": "Application Note: If *x* is not specified then unit spacing will be used. To scale the integral to the correct value you must multiply by the actual spacing value (deltaX). As an example, the integral of $x^3$ over the range [0, 1] is $x^4/4$ or 0.25. The following code uses `trapz` to calculate the integral in three different ways.",
       "sha": "92f926d4b81f",
-      "zh": ""
+      "zh": "应用注记：如果没有指定 *x*，就使用单位间距。要把积分换算成正确的值，必须乘以实际的间距值（deltaX）。例如，$x^3$ 在区间 [0, 1] 上的积分是 $x^4/4$，即 0.25。下面的代码用三种不同的方式，通过 `trapz` 计算这个积分。"
      }
     },
     {
@@ -1293,7 +1293,7 @@
      "t": {
       "en": "See also: `cumtrapz`.",
       "sha": "f89710ce49dc",
-      "zh": ""
+      "zh": "另见：`cumtrapz`。"
      }
     }
    ]
@@ -1312,7 +1312,7 @@
      "t": {
       "en": "Cumulative numerical integration of points *y* using the trapezoidal method.",
       "sha": "4daf26ad6fa0",
-      "zh": ""
+      "zh": "用梯形法对点 *y* 做累积数值积分。"
      }
     },
     {
@@ -1320,7 +1320,7 @@
      "t": {
       "en": "`cumtrapz (y)` computes the cumulative integral of *y* along the first non-singleton dimension. Where `trapz` reports only the overall integral sum, `cumtrapz` reports the current partial sum value at each point of *y*.",
       "sha": "253a49b1b9c1",
-      "zh": ""
+      "zh": "`cumtrapz (y)` 沿第一个非单一维计算 *y* 的累积积分。`trapz` 只给出总的积分和，而 `cumtrapz` 给出 *y* 的每个点处当前的部分和。"
      }
     },
     {
@@ -1328,7 +1328,7 @@
      "t": {
       "en": "When the argument *x* is omitted an equally spaced *x* vector with unit spacing (1) is assumed. `cumtrapz (x, y)` evaluates the integral with respect to the spacing in *x* and the values in *y*. This is useful if the points in *y* have been sampled unevenly.",
       "sha": "aabebc5d97a4",
-      "zh": ""
+      "zh": "省略参数 *x* 时，假定 *x* 是间距为单位 1 的等距向量。`cumtrapz (x, y)` 则按 *x* 的间距和 *y* 的值计算积分。如果 *y* 中的点是不等距采样的，这样做就很有用。"
      }
     },
     {
@@ -1336,7 +1336,7 @@
      "t": {
       "en": "If the optional *dim* argument is given, operate along this dimension.",
       "sha": "1d3583a1451d",
-      "zh": ""
+      "zh": "如果给出可选参数 *dim*，则沿该维度运算。"
      }
     },
     {
@@ -1344,7 +1344,7 @@
      "t": {
       "en": "Application Note: If *x* is not specified then unit spacing will be used. To scale the integral to the correct value you must multiply by the actual spacing value (deltaX). See also: `trapz`, `cumsum`.",
       "sha": "4c7eeb3d9d5b",
-      "zh": ""
+      "zh": "应用注记：如果没有指定 *x*，就使用单位间距。要把积分换算成正确的值，必须乘以实际的间距值（deltaX）。另见：`trapz`、`cumsum`。"
      }
     }
    ]
@@ -1355,7 +1355,7 @@
    "t": {
     "en": "Functions of Multiple Variables",
     "sha": "7630c503450c",
-    "zh": ""
+    "zh": "多变量函数"
    }
   },
   {
@@ -1363,7 +1363,7 @@
    "t": {
     "en": "Octave includes several functions for computing the integral of functions of multiple variables. This procedure can generally be performed by creating a function that integrates $f$ with respect to $x$, and then integrates that function with respect to $y$. This procedure can be performed manually using the following example which integrates the function:",
     "sha": "c250fab4fff0",
-    "zh": ""
+    "zh": "Octave 包含好几个函数，用来计算多变量函数的积分。这个过程一般可以这样完成：先构造一个函数，对 $f$ 关于 $x$ 积分，再对得到的函数关于 $y$ 积分。可以参照下面的例子手动完成这一过程，这个例子要积分的函数是："
    }
   },
   {
@@ -1375,7 +1375,7 @@
    "t": {
     "en": "for $x$ and $y$ between 0 and 1.",
     "sha": "1904ec4ef406",
-    "zh": ""
+    "zh": "其中 $x$ 和 $y$ 都在 0 到 1 之间。"
    }
   },
   {
@@ -1383,7 +1383,7 @@
    "t": {
     "en": "Using `quadgk` in the example below, a double integration can be performed. (Note that any of the 1-D quadrature functions can be used in this fashion except for `quad` since it is written in Fortran and cannot be called recursively.)",
     "sha": "89ce6ea386db",
-    "zh": ""
+    "zh": "下面的例子用 `quadgk` 做二重积分。（注意，除了 `quad` 以外，任何一维求积函数都可以这样使用，因为它是用 Fortran 写的，不能被递归调用。）"
    }
   },
   {
@@ -1395,7 +1395,7 @@
    "t": {
     "en": "The algorithm above is implemented in the function `dblquad` for integrals over two variables. The 3-D equivalent of this process is implemented in `triplequad` for integrals over three variables. As an example, the result above can be replicated with a call to `dblquad` as shown below.",
     "sha": "cd98ec86c3e3",
-    "zh": ""
+    "zh": "上面的算法在函数 `dblquad` 中实现，用于两个变量的积分。这一过程的三维版本在 `triplequad` 中实现，用于三个变量的积分。例如，上面的结果可以通过调用 `dblquad` 复现，如下所示。"
    }
   },
   {
@@ -1417,7 +1417,7 @@
      "t": {
       "en": "Numerically evaluate the double integral of *f*.",
       "sha": "350f602cb554",
-      "zh": ""
+      "zh": "数值地计算 *f* 的二重积分。"
      }
     },
     {
@@ -1425,7 +1425,7 @@
      "t": {
       "en": "*f* is a function handle, inline function, or string containing the name of the function to evaluate. The function *f* must have the form $z = f(x,y)$ where *x* is a vector and *y* is a scalar. It should return a vector of the same length and orientation as *x*.",
       "sha": "7620d5feaf08",
-      "zh": ""
+      "zh": "*f* 是函数句柄、内联函数，或者包含待计算函数名称的字符串。函数 *f* 必须具有 $z = f(x,y)$ 的形式，其中 *x* 是向量，*y* 是标量。它应当返回一个与 *x* 长度相同、方向相同的向量。"
      }
     },
     {
@@ -1433,7 +1433,7 @@
      "t": {
       "en": "*xa*, *ya* and *xb*, *yb* are the lower and upper limits of integration for x and y respectively. The underlying integrator determines whether infinite bounds are accepted.",
       "sha": "b501e45a46d6",
-      "zh": ""
+      "zh": "*xa*、*ya* 和 *xb*、*yb* 分别是 x 和 y 的积分下限和上限。是否接受无穷积分限，取决于底层的积分器。"
      }
     },
     {
@@ -1441,7 +1441,7 @@
      "t": {
       "en": "The optional argument *tol* defines the absolute tolerance used to integrate each sub-integral. The default value is 1e-6.",
       "sha": "2f78ef47493b",
-      "zh": ""
+      "zh": "可选参数 *tol* 定义对每个子积分做积分时所用的绝对容差，默认值为 1e-6。"
      }
     },
     {
@@ -1449,7 +1449,7 @@
      "t": {
       "en": "The optional argument *quadf* specifies which underlying integrator function to use. Any choice but `quad` is available and the default is `quadcc`.",
       "sha": "0fd04334b1e3",
-      "zh": ""
+      "zh": "可选参数 *quadf* 指定使用哪个底层积分函数。除 `quad` 之外都可以选，默认是 `quadcc`。"
      }
     },
     {
@@ -1457,7 +1457,7 @@
      "t": {
       "en": "Additional arguments, are passed directly to *f*. To use the default value for *tol* or *quadf* one may pass `':'` or an empty matrix ([]). See also: `integral2`, `integral3`, `triplequad`, `quad`, `quadv`, `quadl`, `quadgk`, `quadcc`, `trapz`.",
       "sha": "26e42b5df4e5",
-      "zh": ""
+      "zh": "附加参数会被直接传给 *f*。如果想对 *tol* 或 *quadf* 使用默认值，可以传入 `':'` 或空矩阵（[]）。另见：`integral2`、`integral3`、`triplequad`、`quad`、`quadv`、`quadl`、`quadgk`、`quadcc`、`trapz`。"
      }
     }
    ]
@@ -1467,7 +1467,7 @@
    "t": {
     "en": "The recursive algorithm for quadrature presented above is referred to as `\"iterated\"`. A separate 2-D integration method is implemented in the function `quad2d`. This function performs a `\"tiled\"` integration by subdividing the integration domain into rectangular regions and performing separate integrations over those domains. The domains are further subdivided in areas requiring refinement to reach the desired numerical accuracy. For certain functions this method can be faster than the 2-D iteration used in the other functions above.",
     "sha": "15b71732b44c",
-    "zh": ""
+    "zh": "上面介绍的递归求积算法称为 `\"iterated\"`（迭代式）。函数 `quad2d` 实现了另一种单独的二维积分方法。该函数做的是 `\"tiled\"`（分块式）积分：把积分区域细分成若干矩形区域，在各个区域上分别积分；在需要加密才能达到所需数值精度的地方，区域还会进一步细分。对某些函数，这种方法可能比上面其他函数所用的二维迭代更快。"
    }
   },
   {
@@ -1475,7 +1475,7 @@
    "t": {
     "en": "Finally, the functions `integral2` and `integral3` are provided as general 2-D and 3-D integration functions. They will auto-select between iterated and tiled integration methods and, unlike `dblquad` and `triplequad`, will work with non-rectangular integration domains.",
     "sha": "016b01ccf058",
-    "zh": ""
+    "zh": "最后，函数 `integral2` 和 `integral3` 是通用的二维和三维积分函数。它们会在迭代式与分块式积分方法之间自动选择，并且与 `dblquad` 和 `triplequad` 不同，它们能用于非矩形的积分区域。"
    }
   },
   {
@@ -1492,7 +1492,7 @@
      "t": {
       "en": "Numerically evaluate the two-dimensional integral of *f* using adaptive quadrature over the two-dimensional domain defined by *xa*, *xb*, *ya*, *yb* (scalars may be finite or infinite). Additionally, *ya* and *yb* may be scalar functions of *x*, allowing for integration over non-rectangular domains.",
       "sha": "ee3683d14f40",
-      "zh": ""
+      "zh": "使用自适应求积，数值地计算 *f* 的二重积分，积分区域由 *xa*、*xb*、*ya*、*yb* 确定（标量可以是有限值或无穷）。此外，*ya* 和 *yb* 可以是 *x* 的标量函数，从而可以对非矩形区域积分。"
      }
     },
     {
@@ -1500,7 +1500,7 @@
      "t": {
       "en": "*f* is a function handle, inline function, or string containing the name of the function to evaluate. The function *f* must be of the form $z = f(x,y)$ where *x* is a vector and *y* is a scalar. It should return a vector of the same length and orientation as *x*.",
       "sha": "4c8cc6f889ce",
-      "zh": ""
+      "zh": "*f* 是函数句柄、内联函数，或者包含待计算函数名称的字符串。函数 *f* 必须具有 $z = f(x,y)$ 的形式，其中 *x* 是向量，*y* 是标量。它应当返回一个与 *x* 长度相同、方向相同的向量。"
      }
     },
     {
@@ -1508,7 +1508,7 @@
      "t": {
       "en": "Additional optional parameters can be specified using `\"property\", value` pairs. Valid properties are:",
       "sha": "fd9a801fb211",
-      "zh": ""
+      "zh": "可以用 `\"property\", value` 成对的形式指定额外的可选参数。有效的属性有："
      }
     },
     {
@@ -1518,7 +1518,7 @@
        "term": {
         "en": "`AbsTol`",
         "sha": "a8b2ebf2af1b",
-        "zh": ""
+        "zh": "`AbsTol`"
        },
        "blocks": [
         {
@@ -1526,7 +1526,7 @@
          "t": {
           "en": "Define the absolute error tolerance for the quadrature. The default value is 1e-10 (1e-5 for single).",
           "sha": "0a5d1f6ce7b3",
-          "zh": ""
+          "zh": "定义求积的绝对误差容差。默认值为 1e-10（single 类型为 1e-5）。"
          }
         }
        ]
@@ -1535,7 +1535,7 @@
        "term": {
         "en": "`RelTol`",
         "sha": "18ace5bfe352",
-        "zh": ""
+        "zh": "`RelTol`"
        },
        "blocks": [
         {
@@ -1543,7 +1543,7 @@
          "t": {
           "en": "Define the relative error tolerance for the quadrature. The default value is 1e-6 (1e-4 for single).",
           "sha": "09d5b3a21324",
-          "zh": ""
+          "zh": "定义求积的相对误差容差。默认值为 1e-6（single 类型为 1e-4）。"
          }
         }
        ]
@@ -1552,7 +1552,7 @@
        "term": {
         "en": "`Method`",
         "sha": "63affcbc406f",
-        "zh": ""
+        "zh": "`Method`"
        },
        "blocks": [
         {
@@ -1560,7 +1560,7 @@
          "t": {
           "en": "Specify the two-dimensional integration method to be used, with valid options being `\"auto\"` (default), `\"tiled\"`, or `\"iterated\"`. When using `\"auto\"`, Octave will choose the `\"tiled\"` method unless any of the integration limits are infinite.",
           "sha": "76f13478e261",
-          "zh": ""
+          "zh": "指定使用的二维积分方法，有效的选项为 `\"auto\"`（默认）、`\"tiled\"` 或 `\"iterated\"`。使用 `\"auto\"` 时，除非有积分限是无穷，否则 Octave 会选择 `\"tiled\"` 方法。"
          }
         }
        ]
@@ -1569,7 +1569,7 @@
        "term": {
         "en": "`Vectorized`",
         "sha": "900c2043c619",
-        "zh": ""
+        "zh": "`Vectorized`"
        },
        "blocks": [
         {
@@ -1577,7 +1577,7 @@
          "t": {
           "en": "Enable or disable vectorized integration. A value of `false` forces Octave to use only scalar inputs when calling the integrand, which enables integrands $f(x,y)$ that have not been vectorized and only accept *x* and *y* as scalars to be used. The default value is `true`.",
           "sha": "e71b7f3f48a5",
-          "zh": ""
+          "zh": "启用或禁用向量化积分。取值 `false` 会强制 Octave 在调用被积函数时只使用标量输入，这样就可以使用没有向量化、只接受标量 *x* 和 *y* 的被积函数 $f(x,y)$。默认值为 `true`。"
          }
         }
        ]
@@ -1589,7 +1589,7 @@
      "t": {
       "en": "Adaptive quadrature is used to minimize the estimate of error until the following is satisfied:",
       "sha": "8277c41fb8ab",
-      "zh": ""
+      "zh": "自适应求积会不断减小误差估计，直到满足下面的条件："
      }
     },
     {
@@ -1601,7 +1601,7 @@
      "t": {
       "en": "*err* is an approximate bound on the error in the integral `abs (q - I)`, where *I* is the exact value of the integral.",
       "sha": "5ffa447cb464",
-      "zh": ""
+      "zh": "*err* 是积分误差 `abs (q - I)` 的近似上界，其中 *I* 是积分的精确值。"
      }
     },
     {
@@ -1609,7 +1609,7 @@
      "t": {
       "en": "Example 1 : integrate a rectangular region in x-y plane",
       "sha": "9fa880544bca",
-      "zh": ""
+      "zh": "例 1：对 x-y 平面上的矩形区域积分"
      }
     },
     {
@@ -1621,7 +1621,7 @@
      "t": {
       "en": "The result is a volume, which for this constant-value integrand, is just `Length * Width * Height`.",
       "sha": "6bc4f4a2bd6e",
-      "zh": ""
+      "zh": "结果是一个体积；对于这个取常数值的被积函数，它就是 `Length * Width * Height`。"
      }
     },
     {
@@ -1629,7 +1629,7 @@
      "t": {
       "en": "Example 2 : integrate a triangular region in x-y plane",
       "sha": "30560da7085e",
-      "zh": ""
+      "zh": "例 2：对 x-y 平面上的三角形区域积分"
      }
     },
     {
@@ -1641,7 +1641,7 @@
      "t": {
       "en": "The result is a volume, which for this constant-value integrand, is the Triangle Area x Height or `1/2 * Base * Width * Height`.",
       "sha": "65cd1a4ab9c1",
-      "zh": ""
+      "zh": "结果是一个体积；对于这个取常数值的被积函数，它就是三角形面积乘以高，即 `1/2 * Base * Width * Height`。"
      }
     },
     {
@@ -1649,7 +1649,7 @@
      "t": {
       "en": "Programming Notes: If there are singularities within the integration region it is best to split the integral and place the singularities on the boundary.",
       "sha": "9cc9f43744a0",
-      "zh": ""
+      "zh": "编程注记：如果积分区域内有奇点，最好把积分拆开，让奇点落在边界上。"
      }
     },
     {
@@ -1657,7 +1657,7 @@
      "t": {
       "en": "Known MATLAB incompatibility: If tolerances are left unspecified, and any integration limits are of type `single`, then Octave's integral functions automatically reduce the default absolute and relative error tolerances as specified above. If tighter tolerances are desired they must be specified. MATLAB leaves the tighter tolerances appropriate for `double` inputs in place regardless of the class of the integration limits.",
       "sha": "f66a4ad5402c",
-      "zh": ""
+      "zh": "已知与 MATLAB 不兼容的地方：如果没有指定容差，并且任何积分限的类型是 `single`，则 Octave 的积分函数会按上文所述自动降低默认的绝对容差和相对容差。如果想要更严的容差，必须明确指定。MATLAB 则不管积分限是什么类型，都保留适用于 `double` 输入的较严容差。"
      }
     },
     {
@@ -1665,7 +1665,7 @@
      "t": {
       "en": "Reference: L.F. Shampine, *MATLAB program for quadrature in 2D*, Applied Mathematics and Computation, pp. 266--274, Vol 1, 2008.",
       "sha": "5a165cc78e82",
-      "zh": ""
+      "zh": "参考文献：L.F. Shampine, *MATLAB program for quadrature in 2D*, Applied Mathematics and Computation, pp. 266--274, Vol 1, 2008."
      }
     },
     {
@@ -1673,7 +1673,7 @@
      "t": {
       "en": "See also: `quad2d`, `dblquad`, `integral`, `quad`, `quadgk`, `quadv`, `quadl`, `quadcc`, `trapz`, `integral3`, `triplequad`.",
       "sha": "681f8935cb7c",
-      "zh": ""
+      "zh": "另见：`quad2d`、`dblquad`、`integral`、`quad`、`quadgk`、`quadv`、`quadl`、`quadcc`、`trapz`、`integral3`、`triplequad`。"
      }
     }
    ]
@@ -1691,7 +1691,7 @@
      "t": {
       "en": "Numerically evaluate the three-dimensional integral of *f* using adaptive quadrature over the three-dimensional domain defined by *xa*, *xb*, *ya*, *yb*, *za*, *zb* (scalars may be finite or infinite). Additionally, *ya* and *yb* may be scalar functions of *x* and *za*, and *zb* maybe be scalar functions of *x* and *y*, allowing for integration over non-rectangular domains.",
       "sha": "808b29428dc9",
-      "zh": ""
+      "zh": "使用自适应求积，数值地计算 *f* 的三重积分，积分区域由 *xa*、*xb*、*ya*、*yb*、*za*、*zb* 确定（标量可以是有限值或无穷）。此外，*ya* 和 *yb* 可以是 *x* 的标量函数，*za* 和 *zb* 可以是 *x* 和 *y* 的标量函数，从而可以对非矩形区域积分。"
      }
     },
     {
@@ -1699,7 +1699,7 @@
      "t": {
       "en": "*f* is a function handle, inline function, or string containing the name of the function to evaluate. The function *f* must be of the form $z = f(x,y)$ where *x* is a vector and *y* is a scalar. It should return a vector of the same length and orientation as *x*.",
       "sha": "4c8cc6f889ce",
-      "zh": ""
+      "zh": "*f* 是函数句柄、内联函数，或者包含待计算函数名称的字符串。函数 *f* 必须具有 $z = f(x,y)$ 的形式，其中 *x* 是向量，*y* 是标量。它应当返回一个与 *x* 长度相同、方向相同的向量。"
      }
     },
     {
@@ -1707,7 +1707,7 @@
      "t": {
       "en": "Additional optional parameters can be specified using `\"property\", value` pairs. Valid properties are:",
       "sha": "fd9a801fb211",
-      "zh": ""
+      "zh": "可以用 `\"property\", value` 成对的形式指定额外的可选参数。有效的属性有："
      }
     },
     {
@@ -1717,7 +1717,7 @@
        "term": {
         "en": "`AbsTol`",
         "sha": "a8b2ebf2af1b",
-        "zh": ""
+        "zh": "`AbsTol`"
        },
        "blocks": [
         {
@@ -1725,7 +1725,7 @@
          "t": {
           "en": "Define the absolute error tolerance for the quadrature. The default value is 1e-10 (1e-5 for single).",
           "sha": "0a5d1f6ce7b3",
-          "zh": ""
+          "zh": "定义求积的绝对误差容差。默认值为 1e-10（single 类型为 1e-5）。"
          }
         }
        ]
@@ -1734,7 +1734,7 @@
        "term": {
         "en": "`RelTol`",
         "sha": "18ace5bfe352",
-        "zh": ""
+        "zh": "`RelTol`"
        },
        "blocks": [
         {
@@ -1742,7 +1742,7 @@
          "t": {
           "en": "Define the relative error tolerance for the quadrature. The default value is 1e-6 (1e-4 for single).",
           "sha": "09d5b3a21324",
-          "zh": ""
+          "zh": "定义求积的相对误差容差。默认值为 1e-6（single 类型为 1e-4）。"
          }
         }
        ]
@@ -1751,7 +1751,7 @@
        "term": {
         "en": "`Method`",
         "sha": "63affcbc406f",
-        "zh": ""
+        "zh": "`Method`"
        },
        "blocks": [
         {
@@ -1759,7 +1759,7 @@
          "t": {
           "en": "Specify the two-dimensional integration method to be used, with valid options being `\"auto\"` (default), `\"tiled\"`, or `\"iterated\"`. When using `\"auto\"`, Octave will choose the `\"tiled\"` method unless any of the integration limits are infinite.",
           "sha": "76f13478e261",
-          "zh": ""
+          "zh": "指定使用的二维积分方法，有效的选项为 `\"auto\"`（默认）、`\"tiled\"` 或 `\"iterated\"`。使用 `\"auto\"` 时，除非有积分限是无穷，否则 Octave 会选择 `\"tiled\"` 方法。"
          }
         }
        ]
@@ -1768,7 +1768,7 @@
        "term": {
         "en": "`Vectorized`",
         "sha": "900c2043c619",
-        "zh": ""
+        "zh": "`Vectorized`"
        },
        "blocks": [
         {
@@ -1776,7 +1776,7 @@
          "t": {
           "en": "Enable or disable vectorized integration. A value of `false` forces Octave to use only scalar inputs when calling the integrand, which enables integrands $f(x,y)$ that have not been vectorized and only accept *x* and *y* as scalars to be used. The default value is `true`.",
           "sha": "e71b7f3f48a5",
-          "zh": ""
+          "zh": "启用或禁用向量化积分。取值 `false` 会强制 Octave 在调用被积函数时只使用标量输入，这样就可以使用没有向量化、只接受标量 *x* 和 *y* 的被积函数 $f(x,y)$。默认值为 `true`。"
          }
         }
        ]
@@ -1788,7 +1788,7 @@
      "t": {
       "en": "Adaptive quadrature is used to minimize the estimate of error until the following is satisfied:",
       "sha": "8277c41fb8ab",
-      "zh": ""
+      "zh": "自适应求积会不断减小误差估计，直到满足下面的条件："
      }
     },
     {
@@ -1800,7 +1800,7 @@
      "t": {
       "en": "*err* is an approximate bound on the error in the integral `abs (q - I)`, where *I* is the exact value of the integral.",
       "sha": "5ffa447cb464",
-      "zh": ""
+      "zh": "*err* 是积分误差 `abs (q - I)` 的近似上界，其中 *I* 是积分的精确值。"
      }
     },
     {
@@ -1808,7 +1808,7 @@
      "t": {
       "en": "Example 1 : integrate over a rectangular volume",
       "sha": "78f60d2f8a0b",
-      "zh": ""
+      "zh": "例 1：对矩形体积积分"
      }
     },
     {
@@ -1820,7 +1820,7 @@
      "t": {
       "en": "For this constant-value integrand, the result is a volume which is just `Length * Width * Height`.",
       "sha": "c52a486b0692",
-      "zh": ""
+      "zh": "对于这个取常数值的被积函数，结果是一个体积，就是 `Length * Width * Height`。"
      }
     },
     {
@@ -1828,7 +1828,7 @@
      "t": {
       "en": "Example 2 : integrate over a spherical volume",
       "sha": "b2c75ce654c4",
-      "zh": ""
+      "zh": "例 2：对球形体积积分"
      }
     },
     {
@@ -1840,7 +1840,7 @@
      "t": {
       "en": "For this constant-value integrand, the result is a volume which is 1/8th of a unit sphere or `1/8 * 4/3 * pi`.",
       "sha": "e01af58e894e",
-      "zh": ""
+      "zh": "对于这个取常数值的被积函数，结果是一个体积，即单位球的 1/8，也就是 `1/8 * 4/3 * pi`。"
      }
     },
     {
@@ -1848,7 +1848,7 @@
      "t": {
       "en": "Programming Notes: If there are singularities within the integration region it is best to split the integral and place the singularities on the boundary.",
       "sha": "9cc9f43744a0",
-      "zh": ""
+      "zh": "编程注记：如果积分区域内有奇点，最好把积分拆开，让奇点落在边界上。"
      }
     },
     {
@@ -1856,7 +1856,7 @@
      "t": {
       "en": "Known MATLAB incompatibility: If tolerances are left unspecified, and any integration limits are of type `single`, then Octave's integral functions automatically reduce the default absolute and relative error tolerances as specified above. If tighter tolerances are desired they must be specified. MATLAB leaves the tighter tolerances appropriate for `double` inputs in place regardless of the class of the integration limits.",
       "sha": "f66a4ad5402c",
-      "zh": ""
+      "zh": "已知与 MATLAB 不兼容的地方：如果没有指定容差，并且任何积分限的类型是 `single`，则 Octave 的积分函数会按上文所述自动降低默认的绝对容差和相对容差。如果想要更严的容差，必须明确指定。MATLAB 则不管积分限是什么类型，都保留适用于 `double` 输入的较严容差。"
      }
     },
     {
@@ -1864,7 +1864,7 @@
      "t": {
       "en": "Reference: L.F. Shampine, *MATLAB program for quadrature in 2D*, Applied Mathematics and Computation, pp. 266--274, Vol 1, 2008.",
       "sha": "5a165cc78e82",
-      "zh": ""
+      "zh": "参考文献：L.F. Shampine, *MATLAB program for quadrature in 2D*, Applied Mathematics and Computation, pp. 266--274, Vol 1, 2008."
      }
     },
     {
@@ -1872,7 +1872,7 @@
      "t": {
       "en": "See also: `triplequad`, `integral`, `quad`, `quadgk`, `quadv`, `quadl`, `quadcc`, `trapz`, `integral2`, `quad2d`, `dblquad`.",
       "sha": "50e9ae45862d",
-      "zh": ""
+      "zh": "另见：`triplequad`、`integral`、`quad`、`quadgk`、`quadv`、`quadl`、`quadcc`、`trapz`、`integral2`、`quad2d`、`dblquad`。"
      }
     }
    ]
@@ -1882,7 +1882,7 @@
    "t": {
     "en": "The above integrations can be fairly slow, and that problem increases exponentially with the dimensionality of the integral. Another possible solution for 2-D integration is to use Orthogonal Collocation as described in the previous section (see Orthogonal Collocation). The integral of a function $f(x,y)$ for $x$ and $y$ between 0 and 1 can be approximated using $n$ points by",
     "sha": "756cba14a00f",
-    "zh": ""
+    "zh": "上面的积分可能相当慢，而且积分的维数每增加一维，慢的程度就成指数增长。对二维积分，另一种可能的办法是使用上一节介绍的正交配置法（Orthogonal Collocation，见“正交配置”）。函数 $f(x,y)$ 在 $x$、$y$ 都介于 0 和 1 时的积分，可以用 $n$ 个点近似为"
    }
   },
   {
@@ -1894,7 +1894,7 @@
    "t": {
     "en": "where $q$ and $r$ is as returned by `colloc (n)`. The generalization to more than two variables is straight forward. The following code computes the studied integral using $n=8$ points.",
     "sha": "3d8c2f4e7075",
-    "zh": ""
+    "zh": "其中 $q$ 和 $r$ 是 `colloc (n)` 返回的值。推广到多于两个变量的情形是直接的。下面的代码用 $n=8$ 个点计算前面研究过的那个积分。"
    }
   },
   {
@@ -1906,7 +1906,7 @@
    "t": {
     "en": "It should be noted that the number of points determines the quality of the approximation. If the integration needs to be performed between $a$ and $b$, instead of 0 and 1, then a change of variables is needed.",
     "sha": "7b8c62f00b01",
-    "zh": ""
+    "zh": "需要指出，点的个数决定近似的质量。如果积分需要在 $a$ 与 $b$ 之间而不是 0 与 1 之间进行，就需要做变量替换。"
    }
   }
  ],

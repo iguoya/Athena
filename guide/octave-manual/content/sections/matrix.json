@@ -1110,7 +1110,7 @@
      "t": {
       "en": "Return a diagonal matrix with vector *v* on diagonal *k*.",
       "sha": "ec3328531b06",
-      "zh": ""
+      "zh": "返回一个对角矩阵，其第 *k* 条对角线上放置向量 *v*。"
      }
     },
     {
@@ -1118,7 +1118,7 @@
      "t": {
       "en": "The second argument is optional. If it is positive, the vector is placed on the *k*-th superdiagonal. If it is negative, it is placed on the *-k*-th subdiagonal. The default value of *k* is 0, and the vector is placed on the main diagonal. For example:",
       "sha": "83079f29898d",
-      "zh": ""
+      "zh": "第二个参数是可选的。若为正，向量放在第 *k* 条超对角线上；若为负，则放在第 *-k* 条次对角线上。*k* 的默认值为 0，此时向量放在主对角线上。例如："
      }
     },
     {
@@ -1130,7 +1130,7 @@
      "t": {
       "en": "The 3-input form returns a diagonal matrix with vector *v* on the main diagonal and the resulting matrix being of size *m* rows x *n* columns.",
       "sha": "d7115465e7f2",
-      "zh": ""
+      "zh": "三个输入的形式返回一个对角矩阵，向量 *v* 放在主对角线上，结果矩阵的大小为 *m* 行 x *n* 列。"
      }
     },
     {
@@ -1138,7 +1138,7 @@
      "t": {
       "en": "Given a matrix argument, instead of a vector, `diag` extracts the *k*-th diagonal of the matrix.",
       "sha": "8af098826e65",
-      "zh": ""
+      "zh": "如果参数是矩阵而不是向量，`diag` 则提取该矩阵的第 *k* 条对角线。"
      }
     }
    ]
@@ -1155,7 +1155,7 @@
      "t": {
       "en": "Build a block diagonal matrix from *A*, *B*, *C*, …",
       "sha": "4c1dc06a18df",
-      "zh": ""
+      "zh": "由 *A*、*B*、*C*、… 构造分块对角矩阵。"
      }
     },
     {
@@ -1163,7 +1163,7 @@
      "t": {
       "en": "All arguments must be numeric and either two-dimensional matrices or scalars. If any argument is of type sparse, the output will also be sparse. See also: `diag`, `horzcat`, `vertcat`, `sparse`.",
       "sha": "f9eb243560d1",
-      "zh": ""
+      "zh": "所有参数都必须是数值型的二维矩阵或标量。只要有一个参数是稀疏类型，输出也是稀疏的。另见：`diag`、`horzcat`、`vertcat`、`sparse`。"
      }
     }
    ]
@@ -1174,7 +1174,7 @@
    "t": {
     "en": "Special Utility Matrices",
     "sha": "dd45a654c543",
-    "zh": ""
+    "zh": "特殊的实用矩阵"
    }
   },
   {
@@ -1192,7 +1192,7 @@
      "t": {
       "en": "Return an identity matrix.",
       "sha": "f4ffcd64e639",
-      "zh": ""
+      "zh": "返回单位矩阵。"
      }
     },
     {
@@ -1200,7 +1200,7 @@
      "t": {
       "en": "If invoked with a single scalar argument *n*, return a square",
       "sha": "2490854dc61e",
-      "zh": ""
+      "zh": "如果只用一个标量参数 *n* 调用，则返回一个方阵"
      }
     },
     {
@@ -1208,7 +1208,7 @@
      "t": {
       "en": "If supplied two scalar arguments (*m*, *n*), `eye` takes them to be the number of rows and columns. If given a vector with two elements, `eye` uses the values of the elements as the number of rows and columns, respectively. For example:",
       "sha": "86ce9ce84248",
-      "zh": ""
+      "zh": "如果给出两个标量参数（*m*、*n*），`eye` 把它们当作行数和列数。如果给出一个含两个元素的向量，`eye` 把这两个元素的值依次当作行数和列数。例如："
      }
     },
     {
@@ -1220,7 +1220,7 @@
      "t": {
       "en": "The following expressions all produce the same result:",
       "sha": "c8aa01c13510",
-      "zh": ""
+      "zh": "下面几个表达式的结果都相同："
      }
     },
     {
@@ -1232,7 +1232,7 @@
      "t": {
       "en": "The optional argument *class*, allows `eye` to return an array of the specified type, like",
       "sha": "d9d35bc06589",
-      "zh": ""
+      "zh": "可选参数 *class* 使 `eye` 返回指定类型的数组，例如"
      }
     },
     {
@@ -1244,7 +1244,7 @@
      "t": {
       "en": "Calling `eye` with no arguments is equivalent to calling it with an argument of 1. Any negative dimensions are treated as zero. These odd definitions are for compatibility with MATLAB. See also: `speye`, `ones`, `zeros`.",
       "sha": "a7faafdedae2",
-      "zh": ""
+      "zh": "不带参数调用 `eye` 等价于以参数 1 调用。任何负的维度都按零处理。这些古怪的规定是为了与 MATLAB 兼容。另见：`speye`、`ones`、`zeros`。"
      }
     }
    ]
@@ -1266,7 +1266,7 @@
      "t": {
       "en": "Return a matrix or N-dimensional array whose elements are all 1.",
       "sha": "3c31e9b40d54",
-      "zh": ""
+      "zh": "返回元素全为 1 的矩阵或 N 维数组。"
      }
     },
     {
@@ -1274,7 +1274,7 @@
      "t": {
       "en": "If invoked with a single scalar integer argument *n*, return a square",
       "sha": "31e20588af6c",
-      "zh": ""
+      "zh": "如果只用一个标量整数参数 *n* 调用，则返回一个方阵"
      }
     },
     {
@@ -1282,7 +1282,7 @@
      "t": {
       "en": "If invoked with two or more scalar integer arguments, or a vector of integer values, return an array with the given dimensions.",
       "sha": "f6105974f7b7",
-      "zh": ""
+      "zh": "如果用两个或更多个标量整数参数、或一个整数向量调用，则返回具有给定维度的数组。"
      }
     },
     {
@@ -1290,7 +1290,7 @@
      "t": {
       "en": "To create a constant matrix whose values are all the same use an expression such as",
       "sha": "e5cdbeac1c69",
-      "zh": ""
+      "zh": "要创建元素全部取同一个值的常数矩阵，可以使用如下表达式"
      }
     },
     {
@@ -1302,7 +1302,7 @@
      "t": {
       "en": "If a variable *var* is specified after `\"like\"`, the output *val* will have the same data type, complexity, and sparsity as *var*.",
       "sha": "7e1238148006",
-      "zh": ""
+      "zh": "如果在 `\"like\"` 之后指定了变量 *var*，则输出 *val* 与 *var* 具有相同的数据类型、复数性和稀疏性。"
      }
     },
     {
@@ -1310,7 +1310,7 @@
      "t": {
       "en": "The optional argument *class* specifies the class of the return array and defaults to double. For example:",
       "sha": "999ce66535cd",
-      "zh": ""
+      "zh": "可选参数 *class* 指定返回数组的类型，默认为 double。例如："
      }
     },
     {
@@ -1322,7 +1322,7 @@
      "t": {
       "en": "See also: `zeros`.",
       "sha": "7bbbb8889b5a",
-      "zh": ""
+      "zh": "另见：`zeros`。"
      }
     }
    ]
@@ -1344,7 +1344,7 @@
      "t": {
       "en": "Return a matrix or N-dimensional array whose elements are all 0.",
       "sha": "dbd843d2b12a",
-      "zh": ""
+      "zh": "返回元素全为 0 的矩阵或 N 维数组。"
      }
     },
     {
@@ -1352,7 +1352,7 @@
      "t": {
       "en": "If invoked with a single scalar integer argument, return a square",
       "sha": "4b532c927903",
-      "zh": ""
+      "zh": "如果只用一个标量整数参数调用，则返回一个方阵"
      }
     },
     {
@@ -1360,7 +1360,7 @@
      "t": {
       "en": "If invoked with two or more scalar integer arguments, or a vector of integer values, return an array with the given dimensions.",
       "sha": "f6105974f7b7",
-      "zh": ""
+      "zh": "如果用两个或更多个标量整数参数、或一个整数向量调用，则返回具有给定维度的数组。"
      }
     },
     {
@@ -1368,7 +1368,7 @@
      "t": {
       "en": "If a variable *var* is specified after `\"like\"`, the output *val* will have the same data type, complexity, and sparsity as *var*.",
       "sha": "7e1238148006",
-      "zh": ""
+      "zh": "如果在 `\"like\"` 之后指定了变量 *var*，则输出 *val* 与 *var* 具有相同的数据类型、复数性和稀疏性。"
      }
     },
     {
@@ -1376,7 +1376,7 @@
      "t": {
       "en": "The optional argument *class* specifies the class of the return array and defaults to double. For example:",
       "sha": "999ce66535cd",
-      "zh": ""
+      "zh": "可选参数 *class* 指定返回数组的类型，默认为 double。例如："
      }
     },
     {
@@ -1388,7 +1388,7 @@
      "t": {
       "en": "See also: `ones`.",
       "sha": "1c3849fea008",
-      "zh": ""
+      "zh": "另见：`ones`。"
      }
     }
    ]
@@ -1409,7 +1409,7 @@
      "t": {
       "en": "Repeat matrix or N-D array.",
       "sha": "210bf5eec381",
-      "zh": ""
+      "zh": "重复排列矩阵或 N 维数组。"
      }
     },
     {
@@ -1417,7 +1417,7 @@
      "t": {
       "en": "Form a block matrix of size *m* by *n*, with a copy of matrix *A* as each element.",
       "sha": "b59f592adee8",
-      "zh": ""
+      "zh": "构造一个 *m* 行 *n* 列的分块矩阵，其每个元素（每一块）都是矩阵 *A* 的一份副本。"
      }
     },
     {
@@ -1425,7 +1425,7 @@
      "t": {
       "en": "If *n* is not specified, form an *m* by *m* block matrix. For copying along more than two dimensions, specify the number of times to copy across each dimension *m*, *n*, *p*, …, in a vector in the second argument.",
       "sha": "bc941d5a7d75",
-      "zh": ""
+      "zh": "如果没有指定 *n*，则构造 *m* 行 *m* 列的分块矩阵。若要沿多于两个维度复制，请在第二个参数中用向量给出沿每个维度 *m*、*n*、*p*、… 的复制次数。"
      }
     },
     {
@@ -1433,7 +1433,7 @@
      "t": {
       "en": "See also: `bsxfun`, `kron`, `repelems`.",
       "sha": "2ecc830fdd93",
-      "zh": ""
+      "zh": "另见：`bsxfun`、`kron`、`repelems`。"
      }
     }
    ]
@@ -1443,7 +1443,7 @@
    "t": {
     "en": "The functions `linspace` and `logspace` make it very easy to create vectors with evenly or logarithmically spaced elements. See Ranges.",
     "sha": "692729fd614f",
-    "zh": ""
+    "zh": "函数 `linspace` 和 `logspace` 可以很方便地创建元素等间距或按对数等间距分布的向量。参见 Ranges。"
    }
   },
   {
@@ -1459,7 +1459,7 @@
      "t": {
       "en": "Return a row vector with *n* linearly spaced elements between *start* and *end*.",
       "sha": "bf3ecb4391a4",
-      "zh": ""
+      "zh": "返回一个行向量，含 *n* 个在 *start* 与 *end* 之间线性等间距分布的元素。"
      }
     },
     {
@@ -1467,7 +1467,7 @@
      "t": {
       "en": "If the number of elements *n* is greater than one, then the endpoints *start* and *end* are always included in the range. If *start* is greater than *end*, the elements are stored in decreasing order. If the number of points *n* is not specified, a value of 100 is used.",
       "sha": "3a29148fd4c1",
-      "zh": ""
+      "zh": "如果元素个数 *n* 大于 1，则端点 *start* 和 *end* 总是包含在内。如果 *start* 大于 *end*，元素按递减顺序存放。如果没有指定点数 *n*，则取 100。"
      }
     },
     {
@@ -1475,7 +1475,7 @@
      "t": {
       "en": "The `linspace` function returns a row vector when both *start* and *end* are scalars. If one, or both, inputs are vectors, then `linspace` transforms them to column vectors and returns a matrix where each row is an independent sequence between `start(row_n), end(row_n)`.",
       "sha": "90b2f166923b",
-      "zh": ""
+      "zh": "当 *start* 和 *end* 都是标量时，`linspace` 返回行向量。如果其中一个或两个输入是向量，`linspace` 会先把它们变成列向量，然后返回一个矩阵，其中每一行都是一条独立的序列，范围介于 `start(row_n), end(row_n)` 之间。"
      }
     },
     {
@@ -1483,7 +1483,7 @@
      "t": {
       "en": "Programming Notes: For compatibility with MATLAB, return the second argument (*end*) when a single value (*n* = 1) is requested. If *n* is not an integer then `floor (n)` is used to round the number of elements. If *n* is zero or negative then an empty 1x0 matrix is returned. See also: `colon`, `logspace`.",
       "sha": "3ec806e846c3",
-      "zh": ""
+      "zh": "编程注记：为了与 MATLAB 兼容，当只要求一个值（*n* = 1）时，返回第二个参数（*end*）。如果 *n* 不是整数，则用 `floor (n)` 取整来确定元素个数。如果 *n* 为零或负数，则返回 1x0 的空矩阵。另见：`colon`、`logspace`。"
      }
     }
    ]
@@ -1503,7 +1503,7 @@
      "t": {
       "en": "Return a row vector with *n* elements logarithmically spaced from $10^{a}$ to $10^{b}$.",
       "sha": "8eacc6fce32b",
-      "zh": ""
+      "zh": "返回一个行向量，含 *n* 个元素，从 $10^{a}$ 到 $10^{b}$ 按对数等间距分布。"
      }
     },
     {
@@ -1511,7 +1511,7 @@
      "t": {
       "en": "If the number of elements *n* is unspecified it defaults to 50.",
       "sha": "c28d9830ddb1",
-      "zh": ""
+      "zh": "如果没有指定元素个数 *n*，默认为 50。"
      }
     },
     {
@@ -1519,7 +1519,7 @@
      "t": {
       "en": "If *b* is equal to $\\pi$, the points are between $10^{a}$ and $\\pi$, *not* $10^{a}$ and $10^{\\pi}$, which is useful in digital signal processing.",
       "sha": "df3c09770841",
-      "zh": ""
+      "zh": "如果 *b* 等于 $\\pi$，则各点位于 $10^{a}$ 与 $\\pi$ 之间，*而不是*位于 $10^{a}$ 与 $10^{\\pi}$ 之间，这在数字信号处理中很有用。"
      }
     },
     {
@@ -1527,7 +1527,7 @@
      "t": {
       "en": "Programming Notes: For compatibility with MATLAB, return the right-hand side of the range ($10^{b}$) when a single value (*n* = 1) is requested. If *n* is not an integer then `floor (n)` is used to round the number of elements. If *n* is zero or negative then an empty 1x0 matrix is returned. See also: `linspace`.",
       "sha": "201c227c182a",
-      "zh": ""
+      "zh": "编程注记：为了与 MATLAB 兼容，当只要求一个值（*n* = 1）时，返回区间的右端点（$10^{b}$）。如果 *n* 不是整数，则用 `floor (n)` 取整来确定元素个数。如果 *n* 为零或负数，则返回 1x0 的空矩阵。另见：`linspace`。"
      }
     }
    ]
@@ -1554,7 +1554,7 @@
      "t": {
       "en": "Return a matrix with random elements uniformly distributed on the interval (0, 1).",
       "sha": "573de10e9400",
-      "zh": ""
+      "zh": "返回一个矩阵，其元素是在区间 (0, 1) 上均匀分布的随机数。"
      }
     },
     {
@@ -1562,7 +1562,7 @@
      "t": {
       "en": "The arguments are handled the same as the arguments for `eye`.",
       "sha": "5ebb022ffcab",
-      "zh": ""
+      "zh": "参数的处理方式与 `eye` 的参数相同。"
      }
     },
     {
@@ -1570,7 +1570,7 @@
      "t": {
       "en": "You can query the state of the random number generator using the form",
       "sha": "72c7ec5af6d9",
-      "zh": ""
+      "zh": "你可以用如下形式查询随机数生成器的状态"
      }
     },
     {
@@ -1582,7 +1582,7 @@
      "t": {
       "en": "This returns a column vector *v* of length 625. Later, you can restore the random number generator to the state *v* using the form",
       "sha": "c5d6992f67d3",
-      "zh": ""
+      "zh": "这会返回一个长度为 625 的列向量 *v*。之后，你可以用如下形式把随机数生成器恢复到状态 *v*"
      }
     },
     {
@@ -1594,7 +1594,7 @@
      "t": {
       "en": "You may also initialize the state vector from an arbitrary vector of length 625 for *v*. This new state will be a hash based on the value of *v*, not *v* itself.",
       "sha": "8fdd8eebd2f4",
-      "zh": ""
+      "zh": "你也可以用任意一个长度为 625 的向量作为 *v* 来初始化状态向量。这个新状态是基于 *v* 的值计算出的散列值，而不是 *v* 本身。"
      }
     },
     {
@@ -1602,7 +1602,7 @@
      "t": {
       "en": "By default, the generator is initialized by contributing entropy from the wall clock time, the CPU time, the current fraction of a second, the process ID and—if available—up to 1024 bits from the C++ random numbers source `random_device`, which might be non-deterministic (implementation specific). Note that this differs from MATLAB, which always initializes the state to the same state at startup. To obtain behavior comparable to MATLAB, initialize with a deterministic state vector in Octave's startup files (see Startup Files).",
       "sha": "ca04db2d8219",
-      "zh": ""
+      "zh": "默认情况下，生成器的初始化会混入多种熵：挂钟时间、CPU 时间、当前时刻的秒的小数部分、进程 ID，以及（如果可用）来自 C++ 随机数源 `random_device` 的至多 1024 位——后者可能是非确定性的（取决于具体实现）。注意，这与 MATLAB 不同，MATLAB 每次启动时总是把状态初始化为同一个状态。若想得到与 MATLAB 类似的行为，请在 Octave 的启动文件中用确定的状态向量初始化（参见 Startup Files）。"
      }
     },
     {
@@ -1610,7 +1610,7 @@
      "t": {
       "en": "To compute the pseudo-random sequence, `rand` uses the Mersenne Twister with a period of $2^{19937}-1$ (See M. Matsumoto and T. Nishimura, *Mersenne Twister: A 623-dimensionally equidistributed uniform pseudorandom number generator*, pp. 3--30, January 1998, http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html). Do **not** use for cryptography without securely hashing several returned values together, otherwise the generator state can be learned after reading 624 consecutive values.",
       "sha": "38986fa33ebd",
-      "zh": ""
+      "zh": "`rand` 用周期为 $2^{19937}-1$ 的 Mersenne Twister 来计算伪随机序列（参见 M. Matsumoto 和 T. Nishimura 的 *Mersenne Twister: A 623-dimensionally equidistributed uniform pseudorandom number generator*，第 3--30 页，1998 年 1 月，http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html）。**不要**把它用于密码学，除非先把若干个返回值一起做安全散列，否则读取 624 个连续值之后，就能推知生成器的状态。"
      }
     },
     {
@@ -1618,7 +1618,7 @@
      "t": {
       "en": "Older versions of Octave used a different random number generator. The new generator is used by default as it is significantly faster than the old generator, and produces random numbers with a significantly longer cycle time. However, in some circumstances it might be desirable to obtain the same random sequences as produced by the old generators. To do this the keyword `\"seed\"` is used to specify that the old generators should be used, as in",
       "sha": "8141917ca489",
-      "zh": ""
+      "zh": "旧版本的 Octave 使用另一种随机数生成器。新生成器默认启用，因为它比旧生成器快得多，产生的随机数周期也长得多。不过，在某些情况下，你可能希望得到与旧生成器相同的随机序列。为此，用关键字 `\"seed\"` 指定使用旧生成器，如"
      }
     },
     {
@@ -1630,7 +1630,7 @@
      "t": {
       "en": "which sets the seed of the generator to *val*. The seed of the generator can be queried with",
       "sha": "cd06064ad219",
-      "zh": ""
+      "zh": "它把生成器的种子设为 *val*。可以用下面的形式查询生成器的种子"
      }
     },
     {
@@ -1642,7 +1642,7 @@
      "t": {
       "en": "However, it should be noted that querying the seed will not cause `rand` to use the old generators, only setting the seed will. To cause `rand` to once again use the new generators, the keyword `\"state\"` should be used to reset the state of the `rand`.",
       "sha": "413fa163b596",
-      "zh": ""
+      "zh": "不过要注意，查询种子并不会让 `rand` 改用旧生成器，只有设置种子才会。若要让 `rand` 重新使用新生成器，应当用关键字 `\"state\"` 来重置 `rand` 的状态。"
      }
     },
     {
@@ -1650,7 +1650,7 @@
      "t": {
       "en": "The state or seed of the generator can be reset to a new random value using the `\"reset\"` keyword.",
       "sha": "817bb6e40df1",
-      "zh": ""
+      "zh": "可以用关键字 `\"reset\"` 把生成器的状态或种子重置为一个新的随机值。"
      }
     },
     {
@@ -1658,7 +1658,7 @@
      "t": {
       "en": "The class of the value returned can be controlled by a trailing `\"double\"` or `\"single\"` argument. These are the only valid classes. See also: `randn`, `rande`, `randg`, `randp`.",
       "sha": "80d2db31b99f",
-      "zh": ""
+      "zh": "返回值的类型可以由末尾的 `\"double\"` 或 `\"single\"` 参数控制，只有这两种类型有效。另见：`randn`、`rande`、`randg`、`randp`。"
      }
     }
    ]
@@ -1679,7 +1679,7 @@
      "t": {
       "en": "Return random integers in the range 1:*imax*.",
       "sha": "cf8e1a388ab6",
-      "zh": ""
+      "zh": "返回区间 1:*imax* 内的随机整数。"
      }
     },
     {
@@ -1687,7 +1687,7 @@
      "t": {
       "en": "Additional arguments determine the shape of the return matrix. When no arguments are specified a single random integer is returned. If one argument *n* is specified then a square matrix (*n* x *n*) is returned. Two or more arguments will return a multi-dimensional matrix (*m* x *n* x …).",
       "sha": "7c57f6db72a4",
-      "zh": ""
+      "zh": "其余参数决定返回矩阵的形状。不给参数时，返回单个随机整数。如果给出一个参数 *n*，则返回方阵（*n* x *n*）。给出两个或更多参数时，返回多维矩阵（*m* x *n* x …）。"
      }
     },
     {
@@ -1695,7 +1695,7 @@
      "t": {
       "en": "The integer range may optionally be described by a two-element matrix with a lower and upper bound in which case the returned integers will be on the interval [*imin*, *imax*].",
       "sha": "0c72109d7358",
-      "zh": ""
+      "zh": "整数范围也可以用一个含上下界的两元素矩阵来描述，此时返回的整数落在区间 [*imin*, *imax*] 内。"
      }
     },
     {
@@ -1703,7 +1703,7 @@
      "t": {
       "en": "The optional argument *class* will return a matrix of the requested type. The default is `\"double\"`.",
       "sha": "8c164c023ca1",
-      "zh": ""
+      "zh": "可选参数 *class* 使函数返回指定类型的矩阵，默认为 `\"double\"`。"
      }
     },
     {
@@ -1711,7 +1711,7 @@
      "t": {
       "en": "The following example returns 150 integers in the range 1--10.",
       "sha": "92511d631ac4",
-      "zh": ""
+      "zh": "下面的例子返回 150 个范围在 1--10 之间的整数。"
      }
     },
     {
@@ -1723,7 +1723,7 @@
      "t": {
       "en": "Implementation Note: `randi` relies internally on `rand` which uses class `\"double\"` to represent numbers. This limits the maximum integer (*imax*) and range (*imax* - *imin*) to the value returned by the `flintmax` function. For IEEE floating point numbers this value is $2^{53} - 1$.",
       "sha": "ff1e23c8139a",
-      "zh": ""
+      "zh": "实现说明：`randi` 内部依赖 `rand`，而它用类型 `\"double\"` 表示数值。这就把最大整数（*imax*）和范围（*imax* - *imin*）限制在 `flintmax` 函数返回的值以内。对于 IEEE 浮点数，这个值是 $2^{53} - 1$。"
      }
     },
     {
@@ -1731,7 +1731,7 @@
      "t": {
       "en": "See also: `rand`, `randn`.",
       "sha": "a25ae56ed30b",
-      "zh": ""
+      "zh": "另见：`rand`、`randn`。"
      }
     }
    ]
@@ -1758,7 +1758,7 @@
      "t": {
       "en": "Return a matrix with normally distributed random elements having zero mean and variance one.",
       "sha": "d49b46793f35",
-      "zh": ""
+      "zh": "返回一个矩阵，其元素是均值为零、方差为一的正态分布随机数。"
      }
     },
     {
@@ -1766,7 +1766,7 @@
      "t": {
       "en": "The arguments are handled the same as the arguments for `rand`.",
       "sha": "9465a2c9b971",
-      "zh": ""
+      "zh": "参数的处理方式与 `rand` 的参数相同。"
      }
     },
     {
@@ -1774,7 +1774,7 @@
      "t": {
       "en": "By default, `randn` uses the Marsaglia and Tsang “Ziggurat technique” to transform from a uniform to a normal distribution.",
       "sha": "54558043da02",
-      "zh": ""
+      "zh": "默认情况下，`randn` 使用 Marsaglia 和 Tsang 的“Ziggurat 方法”，把均匀分布变换为正态分布。"
      }
     },
     {
@@ -1782,7 +1782,7 @@
      "t": {
       "en": "The class of the value returned can be controlled by a trailing `\"double\"` or `\"single\"` argument. These are the only valid classes.",
       "sha": "1d998a096445",
-      "zh": ""
+      "zh": "返回值的类型可以由末尾的 `\"double\"` 或 `\"single\"` 参数控制，只有这两种类型有效。"
      }
     },
     {
@@ -1790,7 +1790,7 @@
      "t": {
       "en": "Reference: G. Marsaglia and W.W. Tsang, *Ziggurat Method for Generating Random Variables*, J. Statistical Software, vol 5, 2000, https://www.jstatsoft.org/v05/i08/",
       "sha": "c664ce7b5dcf",
-      "zh": ""
+      "zh": "参考文献：G. Marsaglia 和 W.W. Tsang，*Ziggurat Method for Generating Random Variables*，J. Statistical Software，第 5 卷，2000 年，https://www.jstatsoft.org/v05/i08/"
      }
     },
     {
@@ -1798,7 +1798,7 @@
      "t": {
       "en": "See also: `rand`, `rande`, `randg`, `randp`.",
       "sha": "8f53fc436aee",
-      "zh": ""
+      "zh": "另见：`rand`、`rande`、`randg`、`randp`。"
      }
     }
    ]
@@ -1808,7 +1808,7 @@
    "t": {
     "en": "The generators operate in the new or old style together, it is not possible to mix the two. Initializing any generator with `\"state\"` or `\"seed\"` causes the others to switch to the same style for future calls.",
     "sha": "193ceed8212f",
-    "zh": ""
+    "zh": "这些生成器要么都按新方式工作，要么都按旧方式工作，二者不能混用。用 `\"state\"` 或 `\"seed\"` 初始化任何一个生成器，都会使其余生成器在以后的调用中切换到同一种方式。"
    }
   },
   {
@@ -1816,7 +1816,7 @@
    "t": {
     "en": "The state of each generator is independent and calls to different generators can be interleaved without affecting the final result. For example,",
     "sha": "ebda8f6d91f4",
-    "zh": ""
+    "zh": "每个生成器的状态是相互独立的，对不同生成器的调用可以交错进行，而不影响最终结果。例如，"
    }
   },
   {
@@ -1828,7 +1828,7 @@
    "t": {
     "en": "and",
     "sha": "cffa50a32cb1",
-    "zh": ""
+    "zh": "与"
    }
   },
   {
@@ -1840,7 +1840,7 @@
    "t": {
     "en": "produce equivalent results. When the generators are initialized in the old style with `\"seed\"` only `rand` and `randn` are independent, because the old `rande`, `randg` and `randp` generators make calls to `rand` and `randn`.",
     "sha": "66de1d090dc3",
-    "zh": ""
+    "zh": "产生等价的结果。当生成器用 `\"seed\"` 以旧方式初始化时，只有 `rand` 和 `randn` 是相互独立的，因为旧的 `rande`、`randg` 和 `randp` 生成器会调用 `rand` 和 `randn`。"
    }
   },
   {
@@ -1848,7 +1848,7 @@
    "t": {
     "en": "The generators are initialized with random states at start-up, so that the sequences of random numbers are not the same each time you run Octave. (The old versions of `rand` and `randn` obtain their initial seeds from the system clock.) If you really do need to reproduce a sequence of numbers exactly, you can set the state or seed to a specific value.",
     "sha": "1fc027a481ac",
-    "zh": ""
+    "zh": "这些生成器在启动时用随机的状态初始化，因此每次运行 Octave 得到的随机数序列并不相同。（旧版本的 `rand` 和 `randn` 从系统时钟获取初始种子。）如果你确实需要精确重现某个数列，可以把状态或种子设为特定的值。"
    }
   },
   {
@@ -1856,7 +1856,7 @@
    "t": {
     "en": "If invoked without arguments, `rand` and `randn` return a single element of a random sequence.",
     "sha": "c37c71769f76",
-    "zh": ""
+    "zh": "如果不带参数调用，`rand` 和 `randn` 返回随机序列中的单个元素。"
    }
   },
   {
@@ -1864,7 +1864,7 @@
    "t": {
     "en": "The original `rand` and `randn` functions use Fortran code from RANLIB, a library of Fortran routines for random number generation, compiled by Barry W. Brown and James Lovato of the Department of Biomathematics at The University of Texas, M.D. Anderson Cancer Center, Houston, TX 77030.",
     "sha": "5f64be56cf4e",
-    "zh": ""
+    "zh": "最初的 `rand` 和 `randn` 函数使用 RANLIB 的 Fortran 代码。RANLIB 是一个随机数生成的 Fortran 例程库，由美国得克萨斯州休斯敦市（TX 77030）得克萨斯大学 M.D. Anderson 癌症中心生物数学系的 Barry W. Brown 和 James Lovato 编制。"
    }
   },
   {
@@ -1873,7 +1873,7 @@
    "t": {
     "en": "Famous Matrices",
     "sha": "877e85d41fd1",
-    "zh": ""
+    "zh": "著名矩阵"
    }
   },
   {
@@ -1881,7 +1881,7 @@
    "t": {
     "en": "The following functions return famous matrix forms.",
     "sha": "7c29274e68a8",
-    "zh": ""
+    "zh": "下列函数返回一些著名的矩阵。"
    }
   },
   {
@@ -1896,7 +1896,7 @@
      "t": {
       "en": "Return the Hilbert matrix of order *n*.",
       "sha": "78603346dd59",
-      "zh": ""
+      "zh": "返回 *n* 阶 Hilbert 矩阵。"
      }
     },
     {
@@ -1904,7 +1904,7 @@
      "t": {
       "en": "The $i,j$ element of a Hilbert matrix is defined as",
       "sha": "ecd63f7d52b9",
-      "zh": ""
+      "zh": "Hilbert 矩阵的第 $i,j$ 个元素定义为"
      }
     },
     {
@@ -1916,7 +1916,7 @@
      "t": {
       "en": "Hilbert matrices are close to being singular which make them difficult to invert with numerical routines. Comparing the condition number of a random matrix 5x5 matrix with that of a Hilbert matrix of order 5 reveals just how difficult the problem is.",
       "sha": "dfa71a276ca8",
-      "zh": ""
+      "zh": "Hilbert 矩阵接近奇异，用数值方法对它求逆很困难。把一个 5x5 随机矩阵的条件数与 5 阶 Hilbert 矩阵的条件数比较一下，就能看出这个问题有多困难。"
      }
     },
     {
@@ -1928,7 +1928,7 @@
      "t": {
       "en": "See also: `invhilb`.",
       "sha": "3ed5150a0c97",
-      "zh": ""
+      "zh": "另见：`invhilb`。"
      }
     }
    ]
@@ -1945,7 +1945,7 @@
      "t": {
       "en": "Create an *n*-by-*n* magic square.",
       "sha": "68c2af680d08",
-      "zh": ""
+      "zh": "创建一个 *n* 阶幻方（*n* 行 *n* 列）。"
      }
     },
     {
@@ -1953,7 +1953,7 @@
      "t": {
       "en": "A magic square is an arrangement of the integers `1:n^2` such that the row sums, column sums, and diagonal sums are all equal to the same value.",
       "sha": "e6968ef05676",
-      "zh": ""
+      "zh": "幻方是整数 `1:n^2` 的一种排列，使得每一行的和、每一列的和以及两条对角线的和全都相等。"
      }
     },
     {
@@ -1961,7 +1961,7 @@
      "t": {
       "en": "Note: *n* must be a scalar greater than or equal to 3. If you supply *n* less than 3, magic returns either a nonmagic square, or else the degenerate magic squares 1 and [].",
       "sha": "bbe6e7410124",
-      "zh": ""
+      "zh": "注意：*n* 必须是不小于 3 的标量。如果 *n* 小于 3，magic 返回的要么不是幻方，要么是退化的幻方 1 和 []。"
      }
     }
    ]
@@ -1979,7 +1979,7 @@
      "t": {
       "en": "Return the Pascal matrix of order *n* if `t = 0`.",
       "sha": "80aa377d1ae2",
-      "zh": ""
+      "zh": "当 `t = 0` 时，返回 *n* 阶 Pascal 矩阵。"
      }
     },
     {
@@ -1987,7 +1987,7 @@
      "t": {
       "en": "The default value of *t* is 0.",
       "sha": "9c89570aa881",
-      "zh": ""
+      "zh": "*t* 的默认值为 0。"
      }
     },
     {
@@ -1995,7 +1995,7 @@
      "t": {
       "en": "When `t = 1`, return the pseudo-lower triangular Cholesky factor of the Pascal matrix (The sign of some columns may be negative). This matrix is its own inverse, that is `pascal (n, 1) ^ 2 == eye (n)`.",
       "sha": "8e7d6981ad01",
-      "zh": ""
+      "zh": "当 `t = 1` 时，返回 Pascal 矩阵的伪下三角 Cholesky 因子（某些列的符号可能为负）。这个矩阵的逆就是它自己，即 `pascal (n, 1) ^ 2 == eye (n)`。"
      }
     },
     {
@@ -2003,7 +2003,7 @@
      "t": {
       "en": "If `t = -1`, return the true Cholesky factor with strictly positive values on the diagonal.",
       "sha": "d4c44889bb0a",
-      "zh": ""
+      "zh": "如果 `t = -1`，返回真正的 Cholesky 因子，其对角线元素严格为正。"
      }
     },
     {
@@ -2011,7 +2011,7 @@
      "t": {
       "en": "If `t = 2`, return a transposed and permuted version of `pascal (n, 1)`, which is the cube root of the identity matrix. That is, `pascal (n, 2) ^ 3 == eye (n)`.",
       "sha": "fada22f6c09e",
-      "zh": ""
+      "zh": "如果 `t = 2`，返回 `pascal (n, 1)` 的转置并置换后的版本，它是单位矩阵的立方根。也就是 `pascal (n, 2) ^ 3 == eye (n)`。"
      }
     },
     {
@@ -2019,7 +2019,7 @@
      "t": {
       "en": "See also: `chol`.",
       "sha": "fba35a1c8f14",
-      "zh": ""
+      "zh": "另见：`chol`。"
      }
     }
    ]
@@ -2037,7 +2037,7 @@
      "t": {
       "en": "Return the Toeplitz matrix constructed from the first column *c*, and optionally the first row *r*.",
       "sha": "c1923907985e",
-      "zh": ""
+      "zh": "返回由第一列 *c*（以及可选的第一行 *r*）构造的 Toeplitz 矩阵。"
      }
     },
     {
@@ -2045,7 +2045,7 @@
      "t": {
       "en": "If the second argument is omitted, the first row is taken to be the same as the first column. If the first element of *r* is not the same as the first element of *c*, the first element of *c* is used.",
       "sha": "1328ac81c073",
-      "zh": ""
+      "zh": "如果省略第二个参数，则第一行取得与第一列相同。如果 *r* 的第一个元素与 *c* 的第一个元素不同，则使用 *c* 的第一个元素。"
      }
     },
     {
@@ -2053,7 +2053,7 @@
      "t": {
       "en": "A Toeplitz, or diagonal-constant, matrix has the same value along each diagonal. Although it need not be square, it often is. An MxN Toeplitz matrix has the form:",
       "sha": "8486283c5b56",
-      "zh": ""
+      "zh": "Toeplitz 矩阵（也叫对角常数矩阵）沿每条对角线的元素值都相同。它不一定是方阵，但常常是方阵。一个 MxN 的 Toeplitz 矩阵形如："
      }
     },
     {
@@ -2065,7 +2065,7 @@
      "t": {
       "en": "See also: `hankel`.",
       "sha": "dd0adfac8bfa",
-      "zh": ""
+      "zh": "另见：`hankel`。"
      }
     }
    ]
@@ -2083,7 +2083,7 @@
      "t": {
       "en": "Return the Vandermonde matrix whose next to last column is *c*.",
       "sha": "01a4fa74d458",
-      "zh": ""
+      "zh": "返回 Vandermonde 矩阵，其倒数第二列是 *c*。"
      }
     },
     {
@@ -2091,7 +2091,7 @@
      "t": {
       "en": "If *n* is specified, it determines the number of columns; otherwise, *n* is taken to be equal to the length of *c*.",
       "sha": "90aaca442f98",
-      "zh": ""
+      "zh": "如果指定了 *n*，它决定矩阵的列数；否则，*n* 取为 *c* 的长度。"
      }
     },
     {
@@ -2099,7 +2099,7 @@
      "t": {
       "en": "A Vandermonde matrix has the form:",
       "sha": "03b0606a67ef",
-      "zh": ""
+      "zh": "Vandermonde 矩阵形如："
      }
     },
     {
@@ -2111,7 +2111,7 @@
      "t": {
       "en": "See also: `polyfit`.",
       "sha": "2eeec0e34d4c",
-      "zh": ""
+      "zh": "另见：`polyfit`。"
      }
     }
    ]
