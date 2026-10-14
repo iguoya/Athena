@@ -128,7 +128,9 @@ impl Store {
             let (kp_id, total, correct, last_at) = row?;
             let streak = {
                 let mut stmt = conn.prepare(
-                    "SELECT correct FROM attempts WHERE kp_id = ?1 ORDER BY id DESC LIMIT 100",
+                    // 按作答时间排，同一秒再按行号：同步拉回的旧记录入库晚、id 更大（ADR 0155）。
+                    "SELECT correct FROM attempts WHERE kp_id = ?1
+                     ORDER BY answered_at DESC, id DESC LIMIT 100",
                 )?;
                 let mut streak = 0i64;
                 let mut rows = stmt.query([kp_id.as_str()])?;
