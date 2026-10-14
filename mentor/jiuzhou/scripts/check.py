@@ -15,7 +15,8 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 ATLAS = PROJECT_ROOT / "content" / "atlas.json"
 TERRITORIES = PROJECT_ROOT / "content" / "territories.json"
-EXPECTED_ERAS = 7
+# ADR 0002：第八段 contemporary（1949 至 asOf）；modern 的 id 与范围不动
+EXPECTED_ERAS = 8
 # ADR 0001：质量优先，禁止灌水凑字；摘要可短，一句话 lede ≤40
 MIN_PROSE = 60
 MAX_LEDE = 40
