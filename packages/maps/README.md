@@ -30,17 +30,18 @@ python packages/maps/scripts/clip_territories.py
 用 `geo/land.json` 裁剪 `mentor/jiuzhou/content/territories.json`，写出
 `geo/territories-clipped.json`（不回写 content）。九州前端读裁剪结果。
 
-### Natural Earth 河网再加密（可选）
+### 黄河与长江主干（Natural Earth 10m，已入库）
+
+`geo/hydro.json` 里的 `huanghe`、`changjiang` 由 NE 河流中心线重建（最短路径取主干、
+简化到约 1 km），与已知地点偏差 ≤10 km。其余河仍是手绘示意线。
 
 ```sh
 # 1. 下载 CC0 包到 .cache/maps/natural-earth/
 #    https://naciscdn.org/naturalearth/10m/physical/ne_10m_rivers_lake_centerlines.zip
-# 2. pip install pyshp
-python packages/maps/scripts/densify_hydro.py
+# 2. pip install pyshp shapely
+python packages/maps/scripts/densify_hydro.py            # 只写 geo/hydro.json
+python packages/maps/scripts/densify_hydro.py --jiuzhou  # 另改写九州的 hydro.json / features.json
 ```
-
-写出 `.cache/maps/hydro-dense.json`（裁切中国框、匹配九条主干）。体积大，**不入库**；
-默认包仍用仓库内示意 `geo/hydro.json`。
 
 ## 晕渲（hillshade）
 
