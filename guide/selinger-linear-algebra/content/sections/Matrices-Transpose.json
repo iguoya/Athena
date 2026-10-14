@@ -1,0 +1,821 @@
+{
+ "id": "Matrices-Transpose",
+ "title_en": "The transpose",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Calculate the transpose of a matrix.",
+         "sha": "18b613110e2a",
+         "zh": "求矩阵的转置。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether a matrix is symmetric, antisymmetric, or neither.",
+         "sha": "802e6dce0b3f",
+         "zh": "判断一个矩阵是对称的、反对称的，还是两者都不是。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Manipulate algebraic expressions involving the transpose of matrices.",
+         "sha": "ba8c01edc535",
+         "zh": "处理含有矩阵转置的代数式。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Another important operation on matrices is that of taking the **transpose**. The transpose of a matrix is obtained by turning the rows into columns and vice versa.",
+    "sha": "69280042cab3",
+    "zh": "矩阵的另一个重要运算是取**转置**。矩阵的转置是把行变成列、把列变成行得到的。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "The transpose of a matrix",
+    "sha": "c356295cf4c6",
+    "zh": "矩阵的转置"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $m\\times n$-matrix. Then the **transpose** of $A$, denoted $A^T$, is the $n\\times m$-matrix whose $(i,j)$-entry is the $(j,i)$-entry of $A$.",
+      "sha": "4e63f7d724a1",
+      "zh": "设 $A$ 是 $m\\times n$ 矩阵。那么 $A$ 的**转置**记作 $A^T$，是这样的 $n\\times m$ 矩阵：它的 $(i,j)$ 元素是 $A$ 的 $(j,i)$ 元素。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{ccc}\n      a_{11} & \\cdots & a_{1n} \\\\\n      a_{21} & \\cdots & a_{2n} \\\\\n      \\vdots & \\ddots & \\vdots \\\\\n      a_{m1} & \\cdots & a_{mn} \\\\\n    \\end{array}\\right],\n    \\quad\n    A^T = \\left[\\begin{array}{cccc}\n      a_{11} & a_{21} & \\cdots & a_{m1} \\\\\n      \\vdots & \\vdots & \\ddots & \\vdots \\\\\n      a_{1n} & a_{2n} & \\cdots & a_{mn} \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "The transpose of a matrix",
+    "sha": "c356295cf4c6",
+    "zh": "矩阵的转置"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the transpose of the following matrix:",
+      "sha": "ccc8815ca9a7",
+      "zh": "求下面矩阵的转置："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rrr}\n      1 & 2 & 6 \\\\\n      3 & 5 & 4\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The transpose is",
+      "sha": "5c6690b15fd8",
+      "zh": "转置为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A^T =\n    \\left[\\begin{array}{rr}\n      1 & 3 \\\\\n      2 & 5 \\\\\n      6 & 4\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Notice that $A$ is a $2\\times 3$-matrix, while $A^T$ is a $3\\times 2$-matrix.",
+      "sha": "d5c118fee54f",
+      "zh": "注意 $A$ 是 $2\\times 3$ 矩阵，而 $A^T$ 是 $3\\times 2$ 矩阵。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We have already used a special case of the transpose since Chapter 〔引用〕, when we wrote $\\left[\\begin{array}{rrr}1&2&3\\end{array}\\right]^T$ as a space-saving notation for the column vector",
+    "sha": "c1b421b5cb32",
+    "zh": "从第〔引用〕章起，我们其实已经用过转置的一种特殊情形：当时把 $\\left[\\begin{array}{rrr}1&2&3\\end{array}\\right]^T$ 当作列向量的省地方的写法，即"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\left[\\begin{array}{c}\n    1 \\\\\n    2 \\\\\n    3 \\\\\n  \\end{array}\\right]."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The transpose of a matrix satisfies the following properties:",
+    "sha": "e29831d2d0ec",
+    "zh": "矩阵的转置满足下列性质："
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Properties of the transpose",
+    "sha": "1bec05ee5e2a",
+    "zh": "转置的性质"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ and $B$ be matrices of appropriate sizes, and $r$ a scalar. Then the following hold.",
+      "sha": "e9fd512f537f",
+      "zh": "设 $A$ 和 $B$ 是大小合适的矩阵，$r$ 是标量。那么下列各式成立。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(A^T)^T = A$.",
+         "sha": "dac3f6aa2d0a",
+         "zh": "$(A^T)^T = A$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(A+B)^T=A^T+B^T$.",
+         "sha": "411392e5cd85",
+         "zh": "$(A+B)^T=A^T+B^T$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(rA)^T=rA^T$.",
+         "sha": "6ef0f489f6ec",
+         "zh": "$(rA)^T=rA^T$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(AB)^T=B^TA^T$.",
+         "sha": "7fddfe66cfc9",
+         "zh": "$(AB)^T=B^TA^T$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$0^T = 0$.",
+         "sha": "cbab1a1effa0",
+         "zh": "$0^T = 0$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$I^T = I$.",
+         "sha": "30d807c1a3bb",
+         "zh": "$I^T = I$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(A^{-1})^T = (A^T)^{-1}$, if $A$ is invertible.",
+         "sha": "7718a364ae64",
+         "zh": "如果 $A$ 可逆，则 $(A^{-1})^T = (A^T)^{-1}$。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Recall that a column vector is the same thing as a $n\\times 1$-matrix. Using the transpose, we can make precise the connection between the dot product and the matrix product. Namely, let",
+    "sha": "ae9596e52e59",
+    "zh": "回顾：列向量就是 $n\\times 1$ 矩阵。借助转置，可以把点积与矩阵乘积之间的联系说精确。具体地，设"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vect{v}=\\left[\\begin{array}{c}v_1\\\\\\vdots\\\\v_n\\end{array}\\right]\n  \\quad\\text{and}\\quad\n  \\vect{w}=\\left[\\begin{array}{c}w_1\\\\\\vdots\\\\w_n\\end{array}\\right]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "by column vectors. Then",
+    "sha": "dc784da5fd4d",
+    "zh": "为列向量。那么"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vect{v}\\dotprod\\vect{w}\n  ~=~\n  v_1w_1 + \\ldots + v_nw_n\n  ~=~\n  \\left[\\begin{array}{ccc} v_1 & \\cdots & v_n \\end{array}\\right]\n  \\left[\\begin{array}{c} w_1 \\\\ \\vdots \\\\ w_n \\end{array}\\right]\n  ~=~\n  \\vect{v}^T\\vect{w}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In other words, the dot product of column vectors $\\vect{v}$ and $\\vect{w}$ is the same thing as the matrix product $\\vect{v}^T\\vect{w}$.",
+    "sha": "bc6a297536c0",
+    "zh": "换句话说，列向量 $\\vect{v}$ 与 $\\vect{w}$ 的点积，就是矩阵乘积 $\\vect{v}^T\\vect{w}$。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can also use the notion of transpose to define what it means for a matrix to be **symmetric** and **antisymmetric**.",
+    "sha": "c0ee290169af",
+    "zh": "我们还可以用转置来定义矩阵**对称**与**反对称**的含义。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Symmetric and antisymmetric matrices",
+    "sha": "161b8fbb4b1b",
+    "zh": "对称矩阵与反对称矩阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "An $n\\times n$-matrix $A$ is said to be **symmetric** if $A^T=A$. It is said to be **antisymmetric** (sometimes also called **skew symmetric** ) if $A^T=-A$.",
+      "sha": "1a80c87b2197",
+      "zh": "如果 $A^T=A$，就称 $n\\times n$ 矩阵 $A$ 是**对称**的。如果 $A^T=-A$，就称它是**反对称**的（有时也叫**斜对称**）。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Symmetric and antisymmetric matrices",
+    "sha": "161b8fbb4b1b",
+    "zh": "对称矩阵与反对称矩阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let",
+      "sha": "ef5fe1edf379",
+      "zh": "设"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{rrr}\n      2 & 1 & 3 \\\\\n      1 & 5 & -3 \\\\\n      3 & -3 & 7\n    \\end{array}\\right],\n    \\quad\n    B=\\left[\\begin{array}{rrr}\n      0 & 1 & 3 \\\\\n      -1 & 0 & 2 \\\\\n      -3 & -2 & 0\n    \\end{array}\\right],\n    \\quad\\text{and}\\quad\n    C=\\left[\\begin{array}{rrr}\n      0 & 1 &  3 \\\\\n      1 & 5 & -3 \\\\\n      1 & 3 &  0\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Then $A$ is symmetric because $A^T=A$, $B$ is antisymmetric because $B^T=-B$, and $C$ is neither symmetric nor antisymmetric because $C^T$ is equal to neither $C$ nor $-C$.",
+      "sha": "a34aed56c602",
+      "zh": "那么 $A$ 是对称的，因为 $A^T=A$；$B$ 是反对称的，因为 $B^T=-B$；$C$ 既不对称也不反对称，因为 $C^T$ 既不等于 $C$ 也不等于 $-C$。"
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $X=\\left[\\begin{array}{rrr} -1 & -1 & 1 \\end{array}\\right]$ and $Y=\\left[\\begin{array}{rrr} 0 & 1 & 2 \\end{array}\\right]$. Find $X^TY$ and $XY^T$ if possible.",
+      "sha": "026057ebb010",
+      "zh": "设 $X=\\left[\\begin{array}{rrr} -1 & -1 & 1 \\end{array}\\right]$，$Y=\\left[\\begin{array}{rrr} 0 & 1 & 2 \\end{array}\\right]$。如果可能，求 $X^TY$ 与 $XY^T$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$X^TY = \\left[\\begin{array}{rrr} 0 & -1 & -2 \\\\ 0 & -1 & -2 \\\\ 0 & 1 & 2 \\end{array}\\right]$, $XY^T = 1$.",
+      "sha": "ab4072fb09ad",
+      "zh": "$X^TY = \\left[\\begin{array}{rrr} 0 & -1 & -2 \\\\ 0 & -1 & -2 \\\\ 0 & 1 & 2 \\end{array}\\right]$，$XY^T = 1$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The transpose · 习题 1（上游 exercises/Matrices-Transpose.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Transpose.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the matrices",
+      "sha": "4321c47911b9",
+      "zh": "考虑矩阵"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A =\\left[\\begin{array}{rr}\n      1 & 2 \\\\\n      3 & 2 \\\\\n      1 & -1\n    \\end{array}\\right],\n    \\quad\n    B=\\left[\\begin{array}{rrr}\n      2 & -5 & 2 \\\\\n      -3 & 2 & 1\n    \\end{array}\\right],\n    \\quad\n    C =\\left[\\begin{array}{rr}\n      1 & 2 \\\\\n      5 & 0\n    \\end{array}\\right],\n    \\quad\n    D=\\left[\\begin{array}{rr}\n      -1 & 1 \\\\\n      4 & -3\n    \\end{array}\\right],\n    \\quad\n    E=\\left[\\begin{array}{r}\n      1 \\\\\n      3\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the following if possible. If it is not possible explain why.",
+      "sha": "d6469ba930c3",
+      "zh": "如果可能，求下列各式；如果不可能，说明理由。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$-3A{^T}$.",
+         "sha": "1fa06e2063f9",
+         "zh": "$-3A{^T}$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$3B - A^T$.",
+         "sha": "6130d28d2af8",
+         "zh": "$3B - A^T$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$E^TB$.",
+         "sha": "1cd4bfec1d1c",
+         "zh": "$E^TB$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$EE^T$.",
+         "sha": "8b6bbbe5509b",
+         "zh": "$EE^T$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$B^TB$.",
+         "sha": "bd27b3e32f71",
+         "zh": "$B^TB$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$CA^T$.",
+         "sha": "1bac289005fa",
+         "zh": "$CA^T$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$D^TBE$.",
+         "sha": "5211281690a0",
+         "zh": "$D^TBE$。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rrr} -3 & -9 & -3 \\\\ -6 & -6 & 3 \\end{array}\\right]$.",
+         "sha": "a2d45e0521e1",
+         "zh": "$\\left[\\begin{array}{rrr} -3 & -9 & -3 \\\\ -6 & -6 & 3 \\end{array}\\right]$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rrr} 5 & -18 & 5 \\\\ -11 & 4 & 4 \\end{array}\\right]$.",
+         "sha": "03e4763ef988",
+         "zh": "$\\left[\\begin{array}{rrr} 5 & -18 & 5 \\\\ -11 & 4 & 4 \\end{array}\\right]$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rrr} -7 & 1 & 5 \\end{array}\\right]$.",
+         "sha": "329eb2c5d781",
+         "zh": "$\\left[\\begin{array}{rrr} -7 & 1 & 5 \\end{array}\\right]$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rr} 1 & 3 \\\\ 3 & 9 \\end{array}\\right]$.",
+         "sha": "b2fe5f6716a5",
+         "zh": "$\\left[\\begin{array}{rr} 1 & 3 \\\\ 3 & 9 \\end{array}\\right]$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rrr} 13 & -16 & 1 \\\\ -16 & 29 & -8 \\\\ 1 & -8 & 5 \\end{array}\\right]$.",
+         "sha": "27cbc40f0ad9",
+         "zh": "$\\left[\\begin{array}{rrr} 13 & -16 & 1 \\\\ -16 & 29 & -8 \\\\ 1 & -8 & 5 \\end{array}\\right]$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rrr} 5 & 7 & -1 \\\\ 5 & 15 & 5 \\end{array}\\right]$.",
+         "sha": "dc1590d07d33",
+         "zh": "$\\left[\\begin{array}{rrr} 5 & 7 & -1 \\\\ 5 & 15 & 5 \\end{array}\\right]$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not possible because $B$ is a $2\\times 3$-matrix and $E$ is a $2\\times 1$-matrix, cannot multiply $BE$.",
+         "sha": "f87909c4b9b5",
+         "zh": "不可能，因为 $B$ 是 $2\\times 3$ 矩阵，$E$ 是 $2\\times 1$ 矩阵，不能做乘积 $BE$。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The transpose · 习题 2（上游 exercises/Matrices-Transpose.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Transpose.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following matrices are symmetric, antisymmetric, both, or neither?",
+      "sha": "cb6bcd5f5ca6",
+      "zh": "下列矩阵中，哪些是对称的、反对称的、两者都是、或两者都不是？"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rr}\n      0 & 1 \\\\\n      -1 & 0 \\\\\n    \\end{array}\\right],\n    \\quad\n    B = \\left[\\begin{array}{rr}\n      2 & 1 \\\\\n      1 & 3 \\\\\n    \\end{array}\\right],\n    \\quad\n    C = \\left[\\begin{array}{rr}\n      1 & 2 \\\\\n      -2 & 0 \\\\\n    \\end{array}\\right],\n    \\quad\n    D = \\left[\\begin{array}{rr}\n      0 & 0 \\\\\n      0 & 0 \\\\\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$A$ is antisymmetric, $B$ is symmetric, $C$ is neither, and $D$ is both.",
+      "sha": "11a0857ead9f",
+      "zh": "$A$ 是反对称的，$B$ 是对称的，$C$ 两者都不是，$D$ 两者都是。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The transpose · 习题 3（上游 exercises/Matrices-Transpose.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Transpose.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $A$ is a matrix that is both symmetric and antisymmetric. Show that $A=0$.",
+      "sha": "ce0ecf4f9011",
+      "zh": "设 $A$ 是一个既对称又反对称的矩阵。证明 $A=0$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have $A=A^T=-A$. Therefore, each entry $a_{ij}$ of $A$ is equal to its own negation. This implies that $a_{ij}=0$, and therefore $A$ is the zero matrix.",
+      "sha": "b664984329d9",
+      "zh": "我们有 $A=A^T=-A$。因此 $A$ 的每个元素 $a_{ij}$ 都等于它自己的相反数。这推出 $a_{ij}=0$，所以 $A$ 是零矩阵。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The transpose · 习题 4（上游 exercises/Matrices-Transpose.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Transpose.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n\\times n$-matrix. Show $A$ equals the sum of a symmetric and an antisymmetric matrix. **Hint:** Show that $\\frac{1}{2}(A^T+A)$ is symmetric and then consider using this as one of the matrices.",
+      "sha": "53c10a651614",
+      "zh": "设 $A$ 是 $n\\times n$ 矩阵。证明 $A$ 等于一个对称矩阵与一个反对称矩阵之和。**提示：**先证明 $\\frac{1}{2}(A^T+A)$ 是对称的，然后考虑把它用作其中一个矩阵。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$A=\\frac{1}{2}(A+A^T)+\\frac{1}{2}(A-A^T)$.",
+      "sha": "8ba95dc929ef",
+      "zh": "$A=\\frac{1}{2}(A+A^T)+\\frac{1}{2}(A-A^T)$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The transpose · 习题 5（上游 exercises/Matrices-Transpose.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Transpose.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Show that the main diagonal of every antisymmetric matrix consists of only zeros. Recall that the main diagonal consists of every entry of the matrix which is of the form $a_{ii}$.",
+      "sha": "82a5f79c7c95",
+      "zh": "证明：每个反对称矩阵的主对角线上全是零。回顾：主对角线由矩阵中所有形如 $a_{ii}$ 的元素组成。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If $A$ is antisymmetric then $A=-A^T$. It follows that $a_{ii}=-a_{ii}$ and so each $a_{ii}=0$.",
+      "sha": "d961c966d07d",
+      "zh": "如果 $A$ 是反对称的，则 $A=-A^T$。由此 $a_{ii}=-a_{ii}$，所以每个 $a_{ii}=0$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The transpose · 习题 6（上游 exercises/Matrices-Transpose.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Transpose.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Show that for $m \\times n$-matrices $A,B$ and scalars $r, s$, the following holds:",
+      "sha": "74b5af53b4ce",
+      "zh": "证明：对 $m \\times n$ 矩阵 $A,B$ 和标量 $r, s$，下式成立："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(rA + sB)^T = rA^T + sB^T."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "This follows from properties 〔引用〕 and 〔引用〕 of Proposition “Properties of the transpose”.",
+      "sha": "978383c7ad8d",
+      "zh": "这由命题“转置的性质”的性质〔引用〕和〔引用〕得出。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The transpose · 习题 7（上游 exercises/Matrices-Transpose.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Transpose.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex8",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be a real $m\\times n$-matrix and let $\\vect{u}\\in \\R^n$ and $\\vect{v}\\in \\R^m$. Show $(A\\vect{u})\\dotprod \\vect{v}=\\vect{u}\\dotprod (A^T\\vect{v})$.",
+      "sha": "c512320bb20d",
+      "zh": "设 $A$ 是实 $m\\times n$ 矩阵，$\\vect{u}\\in \\R^n$，$\\vect{v}\\in \\R^m$。证明 $(A\\vect{u})\\dotprod \\vect{v}=\\vect{u}\\dotprod (A^T\\vect{v})$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$(A\\vect{u})\\dotprod \\vect{v} = (A\\vect{u})^T\\vect{v} = (\\vect{u}^TA^T)\\vect{v} = \\vect{u}^T(A^T\\vect{v}) = \\vect{u}\\dotprod (A^T\\vect{v})$.",
+      "sha": "b9aec16f20bc",
+      "zh": "$(A\\vect{u})\\dotprod \\vect{v} = (A\\vect{u})^T\\vect{v} = (\\vect{u}^TA^T)\\vect{v} = \\vect{u}^T(A^T\\vect{v}) = \\vect{u}\\dotprod (A^T\\vect{v})$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The transpose · 习题 8（上游 exercises/Matrices-Transpose.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Transpose.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex9",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Show that if $A$ is an invertible $n\\times n$-matrix, then so is $A^T$ and $(A^T)^{-1}=(A^{-1})^T$.",
+      "sha": "2b3e45925dce",
+      "zh": "证明：如果 $A$ 是可逆的 $n\\times n$ 矩阵，那么 $A^T$ 也可逆，并且 $(A^T)^{-1}=(A^{-1})^T$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We need to show that $(A^{-1})^T$ is the inverse of $A^T$. From properties of the transpose,",
+      "sha": "dd9f915a18ce",
+      "zh": "我们需要证明 $(A^{-1})^T$ 是 $A^T$ 的逆。由转置的性质，"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}A^T(A^{-1})^T &=& (A^{-1}A)^T=I^T=I, \\\\\n      (A^{-1})^TA^T &=& (AA^{-1})^T=I^T=I.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Hence $A^T$ is invertible and $(A^T)^{-1}=(A^{-1})^T$.",
+      "sha": "abc6528af8de",
+      "zh": "因此 $A^T$ 可逆，并且 $(A^T)^{-1}=(A^{-1})^T$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The transpose · 习题 9（上游 exercises/Matrices-Transpose.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Transpose.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex10",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $A$ is invertible and symmetric. Show that $A^{-1}$ is symmetric.",
+      "sha": "59324929018b",
+      "zh": "设 $A$ 可逆且对称。证明 $A^{-1}$ 是对称的。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have $(A^{-1})^T = (A^T)^{-1} = A^{-1}$, and therefore $A^{-1}$ is equal to its own transpose, hence symmetric.",
+      "sha": "5efce38305e7",
+      "zh": "我们有 $(A^{-1})^T = (A^T)^{-1} = A^{-1}$，所以 $A^{-1}$ 等于它自己的转置，因此是对称的。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "The transpose · 习题 10（上游 exercises/Matrices-Transpose.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Transpose.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "转置"
+}

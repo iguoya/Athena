@@ -44,7 +44,9 @@ electronics/<id>/ 电子信息圈：firmware microcontroller rtos（嵌入式系
 postgraduate/<id>/ 考研应用（ADR 0149）：cs408（408 考试主应用）及本体挂它的 data-structures algorithms
                 organization os network（ADR 0116、0118、0119），加考研公共课 mathematics ascent；
                 os、network 兼作软设承接章
-guide/<id>/     手册类教程：跟随一本外部手册/官方教程精读，首批 gtkmm（ADR 0143）
+guide/<id>/     手册类教程：跟随一本外部手册/官方教程精读，gtkmm（ADR 0143）、selinger-linear-algebra
+                、siefken-linear-algebra（「数学」圈，两本线代教材精读，ADR 0162）、octave-manual、
+                sympy-tutorial（「数学」圈，数学工具教程精读，ADR 0163）
 mentor/<id>/    导师类（图谱/参考类）：polaris（路线图与指南针）、competitions（「大赛」圈的赛历，
                 ADR 0114）、jiuzhou（「兴趣」圈的九州历史地理图鉴，ADR 0156）；给方向和查阅
                 依据，不教课、不建进度库（ADR 0144）
@@ -133,7 +135,7 @@ archive/        历史归档，不参与构建
 - **内容驱动 UI**：有限的块类型承载全部讲解，不按章手写整页（ADR 0058）。
 - **出处按应用性质分档**（ADR 0043、0089）：考试/考证考级类（判据：对应真实外部考试，
   当前 driver、software、ascent、mathematics、cs408）判分内容必须有出处且检查阻断；技术
-  学习类（当前 cpp、machine、data-structures、algorithms、gtkmm、design-patterns）出处是默认习惯、不做门禁，自造配额解除；不判分
+  学习类（当前 cpp、machine、data-structures、algorithms、gtkmm、selinger-linear-algebra、siefken-linear-algebra、octave-manual、sympy-tutorial、design-patterns）出处是默认习惯、不做门禁，自造配额解除；不判分
   类（图谱/参考、素材坑、practice）不适用。底线全档一致：不凭印象伪造出处，AI 现场出题
   不算数。
 - **实验与练习给骨架，不给白板**：不改一行也能编译运行（ADR 0059）。
@@ -194,6 +196,7 @@ python3 scripts/check.py --sources-only   # 只跑跨应用检查（skill 两处
 ## 必读文档
 
 - `docs/decisions/`：跨应用 ADR；影响仓库结构或多个应用的新决策先新增 ADR 再动代码。
+- [docs/HANDOFF.md](docs/HANDOFF.md)：云会话做不到、需要人工或本地代理协助的事（ADR 0164）；接手前先读。
 - [docs/REPOSITORY.md](docs/REPOSITORY.md)、[docs/ENGINEERING.md](docs/ENGINEERING.md)、
   [docs/TEACHING.md](docs/TEACHING.md)：本文件各节的完整阐述与取舍。
 - 各应用自己的 `AGENTS.md` 与 `docs/`。

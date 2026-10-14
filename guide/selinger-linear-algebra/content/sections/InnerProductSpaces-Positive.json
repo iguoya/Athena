@@ -1,0 +1,884 @@
+{
+ "id": "InnerProductSpaces-Positive",
+ "title_en": "Positive semidefinite and positive definite matrices",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether a matrix is positive semidefinite and/or positive definite, either directly or by looking at the eigenvalues.",
+         "sha": "8217036a2d4e",
+         "zh": "判断一个矩阵是否半正定（positive semidefinite）和／或正定（positive definite），既可以直接判断，也可以通过特征值来判断。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether a matrix is positive semidefinite and/or positive definite using Descartes' rule of signs.",
+         "sha": "9c2e24e37e8e",
+         "zh": "用笛卡尔符号法则（Descartes' rule of signs）判断一个矩阵是否半正定和／或正定。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether a matrix defines an inner product.",
+         "sha": "9fcd7033a3f7",
+         "zh": "判断一个矩阵是否定义了一个内积。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In Example “$\\R^2$ with a non-standard inner product”, we saw that it is sometimes possible to define an inner product on $\\R^n$ from an $n\\times n$-matrix $A$ by the formula",
+    "sha": "4b42f0a4b2e0",
+    "zh": "在例“$\\R^2$ 上的非标准内积”中我们看到，有时可以通过一个 $n\\times n$ 矩阵 $A$，用下面的公式在 $\\R^n$ 上定义一个内积："
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\iprod{\\vect{u},\\vect{v}} = \\vect{u}^T A \\vect{v}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We will now explore in more detail under what conditions this formula defines an inner product.",
+    "sha": "3dc2b22066e0",
+    "zh": "现在我们来更细致地研究：在什么条件下，这个公式确实定义了一个内积。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Positive semidefinite and positive definite matrices",
+    "sha": "7251451602b5",
+    "zh": "半正定矩阵与正定矩阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n\\times n$-matrix over the real numbers.",
+      "sha": "4c66fdc5215e",
+      "zh": "设 $A$ 是一个实数上的 $n\\times n$ 矩阵。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$A$ is called **symmetric** if $A=A^T$.",
+         "sha": "44cbfa4cec06",
+         "zh": "如果 $A=A^T$，则称 $A$ 为**对称**矩阵。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$A$ is called **positive semidefinite** if it is symmetric and for all $\\vect{v}\\in\\R^n$, we have $\\vect{v}^TA\\vect{v}\\geq 0$.",
+         "sha": "eece9747bf55",
+         "zh": "称 $A$ 为**半正定**矩阵，如果它是对称的，并且对所有 $\\vect{v}\\in\\R^n$ 都有 $\\vect{v}^TA\\vect{v}\\geq 0$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$A$ is called **positive definite** if it is positive semidefinite and $\\vect{v}^TA\\vect{v}=0$ if and only if $\\vect{v}=\\vect{0}$.",
+         "sha": "973ac4e6a2d0",
+         "zh": "称 $A$ 为**正定**矩阵，如果它是半正定的，并且 $\\vect{v}^TA\\vect{v}=0$ 当且仅当 $\\vect{v}=\\vect{0}$。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Equivalently, the positive definite property can also be stated as follows: $A$ is positive definite if it is symmetric and for all $\\vect{v}\\in\\R^n$ with $\\vect{v}\\neq\\vect{0}$, we have $\\vect{v}^TA\\vect{v}>0$.",
+    "sha": "97ea19d6e652",
+    "zh": "等价地，正定性也可以这样表述：$A$ 是正定的，如果它是对称的，并且对所有满足 $\\vect{v}\\neq\\vect{0}$ 的 $\\vect{v}\\in\\R^n$ 都有 $\\vect{v}^TA\\vect{v}>0$。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Positive semidefinite and positive definite matrices",
+    "sha": "7251451602b5",
+    "zh": "半正定矩阵与正定矩阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following matrices are positive semidefinite? Which ones are positive definite?",
+      "sha": "4dffc2dbbb26",
+      "zh": "下面的矩阵中，哪些是半正定的？哪些是正定的？"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{cc} 2 & -1 \\\\ -1 & 1 \\end{array}\\right],\\quad\n    B = \\left[\\begin{array}{cc} 1 & 2 \\\\ 2 & 1 \\end{array}\\right],\\quad\n    C = \\left[\\begin{array}{cc} 1 & -1 \\\\ -1 & 1 \\end{array}\\right],\\quad\n    D = \\left[\\begin{array}{cc} 2 & 0 \\\\ 2 & 1 \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix $A$ is positive definite. To see why, consider any vector $\\vect{v}=\\left[\\begin{array}{c} x \\\\ y \\end{array}\\right]$. Then",
+      "sha": "4a49ef86a8b1",
+      "zh": "矩阵 $A$ 是正定的。为了说明原因，任取一个向量 $\\vect{v}=\\left[\\begin{array}{c} x \\\\ y \\end{array}\\right]$。则"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}^TA\\vect{v}\n    ~=~\n    \\left[\\begin{array}{cc} x & y \\end{array}\\right]\n    \\left[\\begin{array}{cc} 2 & -1 \\\\ -1 & 1 \\end{array}\\right]\n    \\left[\\begin{array}{c} x \\\\ y \\end{array}\\right]\n    ~=~ 2x^2 - 2xy + y^2\n    ~=~ x^2 + (x-y)^2\n    ~\\geq~ 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This inequality implies that $A$ is positive semidefinite. Moreover, $\\vect{v}^TA\\vect{v}=0$ if and only if $x=0$ and $x-y=0$, which implies $x=y=0$. So $\\vect{v}=\\vect{0}$ is the only solution of $\\vect{v}^TA\\vect{v}=0$, and $A$ is positive definite.",
+      "sha": "a86ef63466e2",
+      "zh": "这个不等式说明 $A$ 是半正定的。而且，$\\vect{v}^TA\\vect{v}=0$ 当且仅当 $x=0$ 且 $x-y=0$，这推出 $x=y=0$。所以 $\\vect{v}=\\vect{0}$ 是 $\\vect{v}^TA\\vect{v}=0$ 的唯一解，因此 $A$ 是正定的。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix $B$ is not positive semidefinite (and therefore not positive definite either). For example, consider $\\vect{v}=\\left[\\begin{array}{c} 1 \\\\ -1 \\end{array}\\right]$. Then",
+      "sha": "ff7256be0b13",
+      "zh": "矩阵 $B$ 不是半正定的（因此也不是正定的）。例如，取 $\\vect{v}=\\left[\\begin{array}{c} 1 \\\\ -1 \\end{array}\\right]$。则"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}^TB\\vect{v}\n    ~=~\n    \\left[\\begin{array}{cc} 1 & -1 \\end{array}\\right]\n    \\left[\\begin{array}{cc} 1 & 2 \\\\ 2 & 1 \\end{array}\\right]\n    \\left[\\begin{array}{c} 1 \\\\ -1 \\end{array}\\right]\n    ~=~ 1-2-2+1\n    ~=~ -2\n    ~<~ 0,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "showing that $B$ is not positive semidefinite.",
+      "sha": "866031922bb9",
+      "zh": "这说明 $B$ 不是半正定的。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix $C$ is positive semidefinite, but not positive definite. To see why, consider $\\vect{v}=\\left[\\begin{array}{c} x \\\\ y \\end{array}\\right]$. Then",
+      "sha": "e58dae89ea9d",
+      "zh": "矩阵 $C$ 是半正定的，但不是正定的。为了说明原因，取 $\\vect{v}=\\left[\\begin{array}{c} x \\\\ y \\end{array}\\right]$。则"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}^TC\\vect{v}\n    ~=~\n    \\left[\\begin{array}{cc} x & y \\end{array}\\right]\n    \\left[\\begin{array}{cc} 1 & -1 \\\\ -1 & 1 \\end{array}\\right]\n    \\left[\\begin{array}{c} x \\\\ y \\end{array}\\right]\n    ~=~ x^2 - 2xy + y^2\n    ~=~ (x-y)^2\n    ~\\geq~ 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, $C$ is positive semidefinite. However, it is not positive definite because, for example, for $\\vect{v}=\\left[\\begin{array}{c} 1 \\\\ 1 \\end{array}\\right]$, we have $\\vect{v}\\neq\\vect{0}$ but $\\vect{v}^TC\\vect{v}=0$.",
+      "sha": "12c83dc2264e",
+      "zh": "所以 $C$ 是半正定的。但它不是正定的，因为例如取 $\\vect{v}=\\left[\\begin{array}{c} 1 \\\\ 1 \\end{array}\\right]$，有 $\\vect{v}\\neq\\vect{0}$，但 $\\vect{v}^TC\\vect{v}=0$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix $D$ is not symmetric, and therefore neither positive semidefinite nor positive definite.",
+      "sha": "67e4be396e08",
+      "zh": "矩阵 $D$ 不是对称的，因此既不是半正定的，也不是正定的。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The interest of positive definite matrices lies in the following proposition.",
+    "sha": "40ac497c3572",
+    "zh": "正定矩阵之所以重要，在于下面的命题。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Positive definite matrices and inner products on $\\R^n$",
+    "sha": "5de067c1d0d0",
+    "zh": "正定矩阵与 $\\R^n$ 上的内积"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n\\times n$-matrix over the real numbers. Then the formula",
+      "sha": "c1b1d9cc8e48",
+      "zh": "设 $A$ 是一个实数上的 $n\\times n$ 矩阵。则公式"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{u},\\vect{v}} = \\vect{u}^T A \\vect{v}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "defines an inner product on $\\R^n$ if and only if $A$ is positive definite. Moreover, every inner product on $\\R^n$ arises from some positive definite matrix $A$ in this way.",
+      "sha": "7be83fbe1ff0",
+      "zh": "在 $\\R^n$ 上定义一个内积，当且仅当 $A$ 是正定的。而且，$\\R^n$ 上的每个内积都可以这样由某个正定矩阵 $A$ 得到。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Define $\\iprod{\\vect{u},\\vect{v}} = \\vect{u}^T A \\vect{v}$. We will check each of the three properties of an inner product from Definition “Real inner product space”. Linearity holds for all matrices $A$, because",
+      "sha": "0ca83df78368",
+      "zh": "定义 $\\iprod{\\vect{u},\\vect{v}} = \\vect{u}^T A \\vect{v}$。我们按定义“实内积空间”中内积的三条性质逐一检验。线性性对所有矩阵 $A$ 都成立，因为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{u},k\\vect{v}}\n    ~=~ \\vect{u}^T A (k\\vect{v})\n    ~=~ k(\\vect{u}^T A \\vect{v})\n    ~=~ k\\iprod{\\vect{u},\\vect{v}}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and",
+      "sha": "cffa50a32cb1",
+      "zh": "并且"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{u},\\vect{v}+\\vect{v}'}\n    ~=~ \\vect{u}^T A (\\vect{v}+\\vect{v}')\n    ~=~ \\vect{u}^T A \\vect{v} + \\vect{u}^T A \\vect{v}'\n    ~=~ \\iprod{\\vect{u},\\vect{v}} + \\iprod{\\vect{u},\\vect{v}'}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For symmetry, first observe that for all $\\vect{u},\\vect{v}$,",
+      "sha": "1a03fb1bb2c4",
+      "zh": "对于对称性，先注意到对所有 $\\vect{u},\\vect{v}$，"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\iprod{\\vect{v},\\vect{u}}\n    ~=~ \\vect{v}^T A \\vect{u}\n    ~=~ (\\vect{v}^T A \\vect{u})^T\n    ~=~ \\vect{u}^T A^T \\vect{v}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore $\\iprod{\\vect{u},\\vect{v}}=\\iprod{\\vect{v},\\vect{u}}$ if and only if $\\vect{u}^T A \\vect{v} = \\vect{u}^T A^T \\vect{v}$. This holds for all $\\vect{u},\\vect{v}$ if and only if $A=A^T$. Therefore, symmetry holds if and only if $A$ is symmetric. Finally, the positive definite property of the inner product holds, by definition, if and only if $A$ is positive definite.",
+      "sha": "0e12d2b76319",
+      "zh": "所以 $\\iprod{\\vect{u},\\vect{v}}=\\iprod{\\vect{v},\\vect{u}}$ 当且仅当 $\\vect{u}^T A \\vect{v} = \\vect{u}^T A^T \\vect{v}$。这对所有 $\\vect{u},\\vect{v}$ 都成立，当且仅当 $A=A^T$。因此，对称性成立当且仅当 $A$ 是对称的。最后，内积的正定性成立，按定义就是当且仅当 $A$ 是正定的。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To prove the second part, consider any inner product $\\iprod{\\vect{u},\\vect{v}}$ on $\\R^n$. Let $\\vect{e}_1,\\ldots,\\vect{e}_n$ be the standard basis vectors, and define $a_{ij} = \\iprod{\\vect{e}_i,\\vect{e}_j}$. Then $A=\\mat{a_{ij}}$ is a matrix. We claim that $\\iprod{\\vect{u},\\vect{v}}=\\vect{u}^TA\\vect{v}$ for all $\\vect{u},\\vect{v}$. Indeed, let $\\vect{u}=u_1\\vect{e}_1+\\ldots+u_n\\vect{e}_n$ and $\\vect{v}=v_1\\vect{e}_1+\\ldots+v_n\\vect{e}_n$. Then",
+      "sha": "3ebdc47574ab",
+      "zh": "下面证明第二部分。任取 $\\R^n$ 上的一个内积 $\\iprod{\\vect{u},\\vect{v}}$。设 $\\vect{e}_1,\\ldots,\\vect{e}_n$ 是标准基向量，并定义 $a_{ij} = \\iprod{\\vect{e}_i,\\vect{e}_j}$。则 $A=\\mat{a_{ij}}$ 是一个矩阵。我们断言，对所有 $\\vect{u},\\vect{v}$ 都有 $\\iprod{\\vect{u},\\vect{v}}=\\vect{u}^TA\\vect{v}$。确实，设 $\\vect{u}=u_1\\vect{e}_1+\\ldots+u_n\\vect{e}_n$，$\\vect{v}=v_1\\vect{e}_1+\\ldots+v_n\\vect{e}_n$。则"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\iprod{\\vect{u},\\vect{v}}\n    &=& \\iprod{u_1\\vect{e}_1+\\ldots+u_n\\vect{e}_n,~ v_1\\vect{e}_1+\\ldots+v_n\\vect{e}_n} \\\\\n    &=& u_1v_1\\iprod{\\vect{e}_1, \\vect{e}_1}\n    +   u_1v_2\\iprod{\\vect{e}_1, \\vect{e}_2}\n    + \\ldots\n    +   u_nv_n\\iprod{\\vect{e}_n, \\vect{e}_n} \\\\\n    &=& u_1v_1a_{11}\n    +   u_1v_2a_{12}\n    + \\ldots\n    +   u_nv_na_{nn} \\\\\n    &=& \\vect{u}^TA\\vect{v}.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By the first part, $A$ is positive definite.",
+      "sha": "9088683a1f7e",
+      "zh": "由第一部分，$A$ 是正定的。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Given a symmetric matrix $A$, it is not always an easy task to determine whether $A$ is positive definite (or semidefinite) by using the definition directly. This would require checking the condition $\\vect{v}^TA\\vect{v}\\geq 0$ for *all* vectors $\\vect{v}$, of which there are infinitely many. The following proposition gives us a more practical method for determining whether a matrix is positive (semi)definite.",
+    "sha": "aef481ba415c",
+    "zh": "给定一个对称矩阵 $A$，直接用定义来判断 $A$ 是否正定（或半正定），往往并不轻松。这需要检验条件 $\\vect{v}^TA\\vect{v}\\geq 0$ 对*所有*向量 $\\vect{v}$ 是否成立，而这样的向量有无穷多个。下面的命题给出了一个更实用的判断方法。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Characterization of positive (semi)definite matrices using eigenvalues",
+    "sha": "d48803f30605",
+    "zh": "用特征值刻画（半）正定矩阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be a symmetric $n\\times n$-matrix, and let $\\eigenvar_1,\\ldots,\\eigenvar_n$ be its eigenvalues. Then $A$ is positive semidefinite if and only if $\\eigenvar_1,\\ldots,\\eigenvar_n\\geq 0$. Moreover, $A$ is positive definite if and only if $\\eigenvar_1,\\ldots,\\eigenvar_n>0$.",
+      "sha": "8dbf6d8caa8f",
+      "zh": "设 $A$ 是一个对称的 $n\\times n$ 矩阵，$\\eigenvar_1,\\ldots,\\eigenvar_n$ 是它的特征值。则 $A$ 是半正定的，当且仅当 $\\eigenvar_1,\\ldots,\\eigenvar_n\\geq 0$。而且，$A$ 是正定的，当且仅当 $\\eigenvar_1,\\ldots,\\eigenvar_n>0$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "By Theorem “Diagonalization of real symmetric matrices”, we know that $A$ is orthogonally diagonalizable, i.e., $D=P^TAP$, where $P$ is an orthogonal matrix and",
+      "sha": "3478ffe856e8",
+      "zh": "由定理“实对称矩阵的对角化”，我们知道 $A$ 可以正交对角化，即 $D=P^TAP$，其中 $P$ 是正交矩阵，并且"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "D = \\left[\\begin{array}{ccc}\n      \\eigenvar_1 & \\cdots & 0 \\\\\n      \\vdots & \\ddots & \\vdots \\\\\n      0 & \\cdots & \\eigenvar_n\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{v}=\\mat{x_1,\\ldots,x_n}^T$ be any vector, and let $\\vect{w}=P\\vect{v}$. Then $\\vect{w}^TA\\vect{w} = \\vect{v}^TP^TAP\\vect{v} = \\vect{v}^TD\\vect{v}$, so that $A$ is positive (semi)definite if and only if $D$ is positive (semi)definite. Also, we have $\\vect{v}^TD\\vect{v} = \\eigenvar_1x_1^2 + \\ldots + \\eigenvar_nx_n^2$. Therefore $\\vect{v}^TD\\vect{v}\\geq 0$ for all $\\vect{v}$ if and only if $\\eigenvar_1,\\ldots,\\eigenvar_n\\geq 0$. Moreover, $\\vect{v}^TD\\vect{v}>0$ for all $\\vect{v}\\neq \\vect{0}$ if and only if $\\eigenvar_1,\\ldots,\\eigenvar_n>0$, as claimed.",
+      "sha": "d766c7aab3c2",
+      "zh": "设 $\\vect{v}=\\mat{x_1,\\ldots,x_n}^T$ 是任意一个向量，并令 $\\vect{w}=P\\vect{v}$。则 $\\vect{w}^TA\\vect{w} = \\vect{v}^TP^TAP\\vect{v} = \\vect{v}^TD\\vect{v}$，所以 $A$ 是（半）正定的，当且仅当 $D$ 是（半）正定的。另外，$\\vect{v}^TD\\vect{v} = \\eigenvar_1x_1^2 + \\ldots + \\eigenvar_nx_n^2$。因此，$\\vect{v}^TD\\vect{v}\\geq 0$ 对所有 $\\vect{v}$ 成立，当且仅当 $\\eigenvar_1,\\ldots,\\eigenvar_n\\geq 0$。而且，$\\vect{v}^TD\\vect{v}>0$ 对所有 $\\vect{v}\\neq \\vect{0}$ 成立，当且仅当 $\\eigenvar_1,\\ldots,\\eigenvar_n>0$，这就是所要证明的。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Using eigenvalues to check whether a matrix is positive definite",
+    "sha": "6783a36b8754",
+    "zh": "用特征值判断矩阵是否正定"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use eigenvalues to determine whether the matrix",
+      "sha": "b8ed346c2b73",
+      "zh": "用特征值判断矩阵"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{ccc}\n      5 & 0 & 2 \\\\\n      0 & 5 & 1 \\\\\n      2 & 1 & 1 \\\\\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is positive definite, positive semidefinite, or neither.",
+      "sha": "f861207e3646",
+      "zh": "是正定的、半正定的，还是两者都不是。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The characteristic polynomial is",
+      "sha": "d7f6efee0d4a",
+      "zh": "特征多项式为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\det(A-\\eigenvar I)\n    ~=~ \\left|\\begin{array}{ccc}\n      5-\\eigenvar & 0 & 2 \\\\\n      0 & 5-\\eigenvar & 1 \\\\\n      2 & 1 & 1-\\eigenvar \\\\\n    \\end{array}\\right|\n    ~=~ -\\eigenvar^3 + 11\\eigenvar^2 - 30\\eigenvar\n    ~=~ -\\eigenvar(\\eigenvar-5)(\\eigenvar-6)."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The eigenvalues are $\\eigenvar_1=0$, $\\eigenvar_2=5$, and $\\eigenvar_3=6$. Therefore, the matrix $A$ is positive semidefinite, but not positive definite.",
+      "sha": "87adccc8e75b",
+      "zh": "特征值为 $\\eigenvar_1=0$，$\\eigenvar_2=5$，$\\eigenvar_3=6$。因此，矩阵 $A$ 是半正定的，但不是正定的。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "While Proposition “Using eigenvalues to check whether a matrix is positive definite” gives us a method to determine whether a matrix $A$ is positive definite (or semidefinite), it still requires finding all of the eigenvalues of $A$, i.e., to factor the characteristic polynomial. This can be a difficult calculation, especially if the degree of the polynomial is large or if the roots are not integers. Fortunately, there is a better way to determine whether a matrix is positive definite (or semidefinite) by directly looking at the characteristic polynomial, without having to calculate its roots. The method was found by Ren\\'e Descartes in 1637 and is called *Descartes' rule of signs*. The general form of Descartes' rule of signs is actually more complicated than what we consider here. We state a version that has been specialized to characteristic polynomials of symmetric matrices.",
+    "sha": "051e9d7f87e7",
+    "zh": "命题“用特征值判断矩阵是否正定”给出了判断矩阵 $A$ 是否正定（或半正定）的方法，但它仍然需要求出 $A$ 的全部特征值，也就是要对特征多项式做因式分解。这个计算可能很困难，特别是当多项式次数较高，或者根不是整数时。幸运的是，还有更好的办法：不必求出根，直接观察特征多项式，就能判断矩阵是否正定（或半正定）。这个方法由勒内·笛卡尔（Ren\\'e Descartes）于 1637 年发现，称为*笛卡尔符号法则*（Descartes' rule of signs）。笛卡尔符号法则的一般形式其实比我们这里考虑的要复杂。我们给出的是专门针对对称矩阵的特征多项式的特殊版本。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $a_0,\\ldots,a_n$ be a sequence of real numbers. We say that $a_0,\\ldots,a_n$ have **strongly alternating signs** if $a_0>0$, $a_1<0$, $a_2>0$, and so on (i.e., $a_i>0$ when $i$ is even, and $a_i<0$ when $i$ is odd). We say that $a_0,\\ldots,a_n$ have **weakly alternating signs** if $a_0\\geq 0$, $a_1\\leq 0$, $a_2\\geq 0$, and so on (i.e., $a_i\\geq 0$ when $i$ is even, and $a_i\\leq 0$ when $i$ is odd).",
+    "sha": "e02b64edbf2a",
+    "zh": "设 $a_0,\\ldots,a_n$ 是一列实数。如果 $a_0>0$，$a_1<0$，$a_2>0$，依此类推（即当 $i$ 为偶数时 $a_i>0$，当 $i$ 为奇数时 $a_i<0$），我们就说 $a_0,\\ldots,a_n$ **强交替变号**（strongly alternating signs）。如果 $a_0\\geq 0$，$a_1\\leq 0$，$a_2\\geq 0$，依此类推（即当 $i$ 为偶数时 $a_i\\geq 0$，当 $i$ 为奇数时 $a_i\\leq 0$），我们就说 $a_0,\\ldots,a_n$ **弱交替变号**（weakly alternating signs）。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Descartes' rule of signs for positive (semi)definite matrices",
+    "sha": "d7edadd11f4b",
+    "zh": "判断（半）正定矩阵的笛卡尔符号法则"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be a symmetric $n\\times n$-matrix, and let",
+      "sha": "650178a9a5aa",
+      "zh": "设 $A$ 是一个对称的 $n\\times n$ 矩阵，并设"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "p(\\eigenvar) = a_n\\eigenvar^n + a_{n-1}\\eigenvar^{n-1} + \\ldots + a_1\\eigenvar + a_0"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "be its characteristic polynomial. Then:",
+      "sha": "56e09f6ef483",
+      "zh": "是它的特征多项式。则："
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$A$ is positive definite if and only if $a_0,\\ldots,a_n$ have strongly alternating signs.",
+         "sha": "941a0e4484e1",
+         "zh": "$A$ 是正定的，当且仅当 $a_0,\\ldots,a_n$ 强交替变号。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$A$ is positive semidefinite if and only if $a_0,\\ldots,a_n$ have weakly alternating signs.",
+         "sha": "a874401ac405",
+         "zh": "$A$ 是半正定的，当且仅当 $a_0,\\ldots,a_n$ 弱交替变号。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We first prove a general fact about polynomials. Suppose $d_1,\\ldots,d_n$ are real numbers and",
+      "sha": "25287e3144cc",
+      "zh": "我们先证明一个关于多项式的一般事实。设 $d_1,\\ldots,d_n$ 是实数，并且"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(x+d_1)(x+d_2)\\cdots(x+d_n) = b_nx^n + b_{n-1}x^{n-1} + \\ldots +\n    b_1x + b_0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Then $d_1,\\ldots,d_n > 0$ if and only if $b_0,\\ldots,b_n > 0$. Moreover, $d_1,\\ldots,d_n \\geq 0$ if and only if $b_0,\\ldots,b_n \\geq 0$.",
+      "sha": "a51d31ec927d",
+      "zh": "则 $d_1,\\ldots,d_n > 0$ 当且仅当 $b_0,\\ldots,b_n > 0$。而且，$d_1,\\ldots,d_n \\geq 0$ 当且仅当 $b_0,\\ldots,b_n \\geq 0$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Proof: To prove the first claim, assume $d_1,\\ldots,d_n > 0$. It is easy to see that by multiplying out $(x+d_1)(x+d_2)\\cdots(x+d_n)$, we can only obtain positive coefficients, so $b_0,\\ldots,b_n > 0$. Conversely, assume $b_0,\\ldots,b_n > 0$. Then for every $x\\geq 0$, we clearly have $b_nx^n + b_{n-1}x^{n-1} + \\ldots + b_1x + b_0 > 0$, and therefore no such $x\\geq 0$ can be a root of this polynomial. In other words, all of the roots must be negative. Since the roots are $-d_1,\\ldots,-d_n$, it follows that $d_1,\\ldots,d_n>0$. The proof of the second claim (using “$\\geq$” instead of “$>$”) is similar.",
+      "sha": "e1ee8c3425b9",
+      "zh": "证明：先证第一个断言。假设 $d_1,\\ldots,d_n > 0$。把 $(x+d_1)(x+d_2)\\cdots(x+d_n)$ 展开后，只能得到正的系数，所以 $b_0,\\ldots,b_n > 0$。反过来，假设 $b_0,\\ldots,b_n > 0$。则对每个 $x\\geq 0$，自然有 $b_nx^n + b_{n-1}x^{n-1} + \\ldots + b_1x + b_0 > 0$，因此任何 $x\\geq 0$ 都不可能是这个多项式的根。换句话说，所有的根都是负数。因为根是 $-d_1,\\ldots,-d_n$，所以 $d_1,\\ldots,d_n>0$。第二个断言（把“$>$”换成“$\\geq$”）的证明与此类似。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We are now ready to prove Proposition “Descartes' rule of signs for positive (semi)definite matrices”. By Theorem “Diagonalization of real symmetric matrices”, we know that $A$ is diagonalizable, i.e., $A=PDP^{-1}$ for some real diagonal matrix $D$. Note that $A$ and $D$ have the same characteristic polynomial. If $d_1,\\ldots,d_n$ are the diagonal entries of $D$, the characteristic polynomial can therefore be written in two different ways:",
+      "sha": "3aad850599ff",
+      "zh": "现在可以证明命题“判断（半）正定矩阵的笛卡尔符号法则”了。由定理“实对称矩阵的对角化”，我们知道 $A$ 可以对角化，即对某个实对角矩阵 $D$ 有 $A=PDP^{-1}$。注意 $A$ 与 $D$ 有相同的特征多项式。设 $d_1,\\ldots,d_n$ 是 $D$ 的对角元素，则特征多项式可以用两种方式写出："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "p(\\eigenvar)\n    = (d_1-\\eigenvar)(d_2-\\eigenvar)\\cdots(d_n-\\eigenvar)\n    = a_0 + a_1\\eigenvar + a_2\\eigenvar^2 + a_3\\eigenvar^3 + \\ldots + a_n\\eigenvar^n."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Now let $\\eigenvar=-x$ and consider",
+      "sha": "a10770e9b710",
+      "zh": "现在令 $\\eigenvar=-x$，考虑"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "p(-x) = (d_1+x)(d_2+x)\\cdots(d_n+x)\n    = a_0 - a_1 x + a_2 x^2 - a_3x^3 + \\ldots \\pm a_n x^n."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We have: $A$ is positive definite if and only if $d_1,\\ldots,d_n>0$, if and only if $a_0,-a_1,a_2,-a_3,\\ldots > 0$, if and only if $a_0,\\ldots,a_n$ are strongly alternating. Moreover, $A$ is positive semidefinite if and only if $d_1,\\ldots,d_n\\geq 0$, if and only if $a_0,-a_1,a_2,-a_3,\\ldots \\geq 0$, if and only if $a_0,\\ldots,a_n$ are weakly alternating.",
+      "sha": "1b2d00289c28",
+      "zh": "我们有：$A$ 是正定的，当且仅当 $d_1,\\ldots,d_n>0$，当且仅当 $a_0,-a_1,a_2,-a_3,\\ldots > 0$，当且仅当 $a_0,\\ldots,a_n$ 强交替变号。而且，$A$ 是半正定的，当且仅当 $d_1,\\ldots,d_n\\geq 0$，当且仅当 $a_0,-a_1,a_2,-a_3,\\ldots \\geq 0$，当且仅当 $a_0,\\ldots,a_n$ 弱交替变号。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Using Descartes' rule of signs to check if a matrix is positive definite",
+    "sha": "f652e80d96c3",
+    "zh": "用笛卡尔符号法则判断矩阵是否正定"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use Descartes' rule of signs to check whether the matrix",
+      "sha": "025f694ec107",
+      "zh": "用笛卡尔符号法则判断矩阵"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{ccc}\n      5 & 0 & 2 \\\\\n      0 & 5 & 1 \\\\\n      2 & 1 & 1 \\\\\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is positive definite, positive semidefinite, or neither.",
+      "sha": "f861207e3646",
+      "zh": "是正定的、半正定的，还是两者都不是。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We already found the characteristic polynomial in Example “Using eigenvalues to check whether a matrix is positive definite”: it is $-\\eigenvar^3 + 11\\eigenvar^2 - 30\\eigenvar$. The coefficients are $a_0=0$, $a_1=-30$, $a_2=11$, and $a_3=-1$. Note that we have included all of the coefficients, even ones that are zero. Since the signs are weakly alternating, but not strongly alternating, the matrix is positive semidefinite, but not positive definite.",
+      "sha": "baeea72d0192",
+      "zh": "我们已经在例“用特征值判断矩阵是否正定”中求出了特征多项式：它是 $-\\eigenvar^3 + 11\\eigenvar^2 - 30\\eigenvar$。系数为 $a_0=0$，$a_1=-30$，$a_2=11$，$a_3=-1$。注意，我们把所有系数都列了出来，包括为零的系数。因为这些系数弱交替变号，但不是强交替变号，所以该矩阵是半正定的，但不是正定的。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Using Descartes' rule of signs to check if a matrix is positive definite",
+    "sha": "f652e80d96c3",
+    "zh": "用笛卡尔符号法则判断矩阵是否正定"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use Descartes' rule of signs to determine which of the following matrices are positive definite and/or positive semidefinite.",
+      "sha": "867ed84d488a",
+      "zh": "用笛卡尔符号法则判断下列矩阵中，哪些是正定的和／或半正定的。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{ccc}\n      2 & 1 & 2 \\\\\n      1 & 1 & 0 \\\\\n      2 & 0 & 2 \\\\\n    \\end{array}\\right],\n    \\quad\n    B = \\left[\\begin{array}{ccc}\n      2  &  1 & -2 \\\\\n      1  &  1 & -1 \\\\\n      -2 & -1 &  2 \\\\\n    \\end{array}\\right],\n    \\quad\n    C = \\left[\\begin{array}{ccc}\n      2  & -1 & 2 \\\\\n      -1 &  2 & 0 \\\\\n      2  &  0 & 3 \\\\\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The characteristic polynomials are:",
+      "sha": "18255c213d7f",
+      "zh": "特征多项式为："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{lcl}\n      \\det(A-\\eigenvar I) &=& -\\eigenvar^3 + 5\\eigenvar^2 - 3\\eigenvar - 2, \\\\\n      \\det(B-\\eigenvar I) &=& -\\eigenvar^3 + 5\\eigenvar^2 - 2\\eigenvar + 0, \\\\\n      \\det(C-\\eigenvar I) &=& -\\eigenvar^3 + 7\\eigenvar^2 - 11\\eigenvar + 1. \\\\\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For $A$, the coefficients are not weakly alternating, so $A$ is not positive semidefinite. For $B$, the coefficients are weakly, but not strongly alternating (note that $a_0=0$), and therefore $B$ is positive semidefinite, but not positive definite. For $C$, the coefficients are strongly alternating, so $C$ is positive definite.",
+      "sha": "6c75c27e4430",
+      "zh": "对 $A$ 而言，系数不是弱交替变号的，所以 $A$ 不是半正定的。对 $B$ 而言，系数弱交替变号，但不是强交替变号（注意 $a_0=0$），所以 $B$ 是半正定的，但不是正定的。对 $C$ 而言，系数强交替变号，所以 $C$ 是正定的。"
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine by direct calculation (i.e., without calculating the characteristic polynomial or the eigenvalues) which of the following matrices are positive definite, positive semidefinite, or neither.",
+      "sha": "0d865932559f",
+      "zh": "通过直接计算（即不求特征多项式，也不求特征值），判断下列矩阵中，哪些是正定的、半正定的，哪些两者都不是。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rr}\n      1 & 1 \\\\\n      1 & 1 \\\\\n    \\end{array}\\right],\\quad\n    B = \\left[\\begin{array}{rr}\n      1  & -2 \\\\\n      -2 &  5 \\\\\n    \\end{array}\\right],\\quad\n    C = \\left[\\begin{array}{rr}\n      2 & 3 \\\\\n      1 & 3 \\\\\n    \\end{array}\\right],\\quad\n    D = \\left[\\begin{array}{rrr}\n      2 & 1 & 1 \\\\\n      1 & 1 & 0 \\\\\n      1 & 0 & 1 \\\\\n    \\end{array}\\right],\\quad\n    E = \\left[\\begin{array}{rrr}\n      1 & 0 &  0 \\\\\n      0 & 2 &  0 \\\\\n      0 & 0 & -1 \\\\\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) Positive semidefinite. (b) Positive definite. (c) Not symmetric (therefore neither). (d) Positive semidefinite. (e) Neither.",
+      "sha": "a3deae251278",
+      "zh": "(a) 半正定。(b) 正定。(c) 不对称（因此两者都不是）。(d) 半正定。(e) 两者都不是。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Positive semidefinite and positive definite matrices · 习题 1（上游 exercises/InnerProductSpaces-Positive.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Positive.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Calculate the eigenvalues of each symmetric matrix, then determine for each matrix whether it is positive definite, positive semidefinite, or neither.",
+      "sha": "be1d2a1268ea",
+      "zh": "求出每个对称矩阵的特征值，然后判断每个矩阵是正定的、半正定的，还是两者都不是。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rr}\n      2 & 2 \\\\\n      2 & 5 \\\\\n    \\end{array}\\right],\\quad\n    B = \\left[\\begin{array}{rr}\n      4  & -6 \\\\\n      -6 &  9 \\\\\n    \\end{array}\\right],\\quad\n    C = \\left[\\begin{array}{rrr}\n      2 &  1 &  0 \\\\\n      1 &  1 & -1 \\\\\n      0 & -1 &  2 \\\\\n    \\end{array}\\right],\\quad\n    D = \\left[\\begin{array}{rrr}\n      3 & -4 &  2 \\\\\n     -4 &  4 &  0 \\\\\n      2 &  0 &  4 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is positive definite, positive semidefinite, or neither.",
+      "sha": "f861207e3646",
+      "zh": "是正定的、半正定的，还是两者都不是。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) Eigenvalues: $\\set{1,6}$. Positive definite. (b) Eigenvalues: $\\set{0,13}$. Positive semidefinite. (c) Eigenvalues: $\\set{0,2,3}$. Positive semidefinite. (d) Eigenvalues: $\\set{-1,4,8}$. Neither.",
+      "sha": "812a17b53c22",
+      "zh": "(a) 特征值：$\\set{1,6}$。正定。(b) 特征值：$\\set{0,13}$。半正定。(c) 特征值：$\\set{0,2,3}$。半正定。(d) 特征值：$\\set{-1,4,8}$。两者都不是。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Positive semidefinite and positive definite matrices · 习题 2（上游 exercises/InnerProductSpaces-Positive.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Positive.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following formulas define an inner product on $\\R^3$? Here, $\\vect{u}=\\mat{u_1,u_2,u_3}^T$ and $\\vect{v}=\\mat{v_1,v_2,v_3}^T$.",
+      "sha": "dea2c9082d98",
+      "zh": "下列公式中，哪些在 $\\R^3$ 上定义了一个内积？这里 $\\vect{u}=\\mat{u_1,u_2,u_3}^T$，$\\vect{v}=\\mat{v_1,v_2,v_3}^T$。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\iprod{\\vect{u},\\vect{v}} = u_1v_1 + 2u_1v_2 + 2u_2v_1 + 3u_2v_2 + 3u_3v_3$.",
+         "sha": "a011bda3443c",
+         "zh": "$\\iprod{\\vect{u},\\vect{v}} = u_1v_1 + 2u_1v_2 + 2u_2v_1 + 3u_2v_2 + 3u_3v_3$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\iprod{\\vect{u},\\vect{v}} = u_1v_1 - u_1v_2 - u_2v_1 + 2u_2v_2 + u_3v_3$.",
+         "sha": "547761c3ce8a",
+         "zh": "$\\iprod{\\vect{u},\\vect{v}} = u_1v_1 - u_1v_2 - u_2v_1 + 2u_2v_2 + u_3v_3$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\iprod{\\vect{u},\\vect{v}} = u_1v_1 - u_1v_2 - u_2v_1 + u_2v_2 + 4u_3v_3$.",
+         "sha": "1386beec568e",
+         "zh": "$\\iprod{\\vect{u},\\vect{v}} = u_1v_1 - u_1v_2 - u_2v_1 + u_2v_2 + 4u_3v_3$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\iprod{\\vect{u},\\vect{v}} = u_1v_1 - u_1v_2 - u_2v_1 + 3u_2v_2 - u_2v_3 - u_3v_2 + u_3v_3$.",
+         "sha": "d93f02b7441f",
+         "zh": "$\\iprod{\\vect{u},\\vect{v}} = u_1v_1 - u_1v_2 - u_2v_1 + 3u_2v_2 - u_2v_3 - u_3v_2 + u_3v_3$。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "(a) No (neither positive definite nor semidefinite). (b) Yes. (c) No (positive semidefinite but not definite). (d) Yes.",
+      "sha": "8660e762bb0b",
+      "zh": "(a) 否（既不是正定的，也不是半正定的）。(b) 是。(c) 否（半正定但不正定）。(d) 是。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Positive semidefinite and positive definite matrices · 习题 3（上游 exercises/InnerProductSpaces-Positive.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Positive.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use Descartes' rule of signs to determine which of the following matrices are positive definite and/or positive semidefinite.",
+      "sha": "867ed84d488a",
+      "zh": "用笛卡尔符号法则判断下列矩阵中，哪些是正定的和／或半正定的。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{cc}\n      2 & 2 \\\\\n      2 & 1 \\\\\n    \\end{array}\\right],\n    \\quad\n    B = \\left[\\begin{array}{ccc}\n      2  & -1 & 0 \\\\\n      -1 &  1 & 0 \\\\\n      0  &  0 & 1 \\\\\n    \\end{array}\\right],\n    \\quad\n    C = \\left[\\begin{array}{cccc}\n      2  & 1 & -1 &  1 \\\\\n      1  & 1 &  0 &  0 \\\\\n      -1 & 0 &  2 & -1 \\\\\n      1  & 0 & -1 &  1 \\\\\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The characteristic polynomials are:",
+      "sha": "18255c213d7f",
+      "zh": "特征多项式为："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{lcl}\n        \\det(A-\\eigenvar I) &=& \\eigenvar^2 - 3\\eigenvar - 2, \\\\\n        \\det(B-\\eigenvar I) &=& -\\eigenvar^3 + 4\\eigenvar^2 - 4\\eigenvar + 1, \\\\\n        \\det(C-\\eigenvar I) &=& \\eigenvar^4 - 6\\eigenvar^3 + 9\\eigenvar^2 - 3\\eigenvar + 0.\n      \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For $A$, the coefficients are not weakly alternating, so $A$ is not positive semidefinite. For $B$, the coefficients are strongly alternating, so $B$ is positive definite. For $C$, the coefficients are weakly, but not strongly alternating, so $C$ is positive semidefinite, but not positive definite.",
+      "sha": "272627bfbf22",
+      "zh": "对 $A$ 而言，系数不是弱交替变号的，所以 $A$ 不是半正定的。对 $B$ 而言，系数强交替变号，所以 $B$ 是正定的。对 $C$ 而言，系数弱交替变号，但不是强交替变号，所以 $C$ 是半正定的，但不是正定的。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Positive semidefinite and positive definite matrices · 习题 4（上游 exercises/InnerProductSpaces-Positive.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/InnerProductSpaces-Positive.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "半正定与正定矩阵"
+}

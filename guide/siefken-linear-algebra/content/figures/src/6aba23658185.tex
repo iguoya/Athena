@@ -1,0 +1,18 @@
+\begin{tikzpicture}[scale=2]
+		\begin{scope}[cm={1,0,0,1,(0,0)}, mygreen, very thick]
+			\draw[dashed, thin, black] (-.5,-.5) -- (1,1);
+			\begin{scope}
+				\draw[ ->] (0,0) -- (1,0) node [midway, below] {$\xhat$};
+				\draw[densely dotted, ->] (0,0) -- (0,1) node [midway, right] {$\yhat$};
+			\end{scope}
+		\end{scope}
+		\begin{scope}[cm={1,0,0,1,(3.5,0)}, mypink, very thick]
+			\begin{scope}[]
+				\draw[ ->] (0,0) -- (0,1) node [above] {Reflected $\xhat$};
+				\draw[densely dotted, ->] (0,0) -- (1,0) node [right] {Reflected $\yhat$};
+			\end{scope}
+		\end{scope}
+		\draw[thick,] (1.5,.5) edge[bend left, ->] node[midway, above] {Reflection} (3,.5);
+		\node at (.5,1.5) {Positively Oriented};
+		\node at (4,1.5) {Negatively Oriented};
+	\end{tikzpicture}

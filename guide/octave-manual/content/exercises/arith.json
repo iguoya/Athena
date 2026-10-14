@@ -1,0 +1,191 @@
+[
+  {
+    "id": "ex1",
+    "stem": "先预测，再运行：\n\n```octave\nA = [1 2 3; 4 5 6];\nsum (A)\n```\n\n`sum (A)` 的结果是什么？",
+    "check": {
+      "kind": "choice",
+      "options": [
+        {
+          "text": "`6 15`",
+          "ok": false,
+          "why": "这是每行的和，即 `sum (A, 2)` 的结果（行向量形式）。`sum` 默认不沿行求和。"
+        },
+        {
+          "text": "`21`",
+          "ok": false,
+          "why": "这是所有元素之和，需要 `sum (A(:))` 或 `sum (sum (A))`。`sum` 对矩阵不会自动压成一个数。"
+        },
+        {
+          "text": "`5 7 9`",
+          "ok": true,
+          "why": "默认沿第一个长度不为 1 的维度，即第 1 维（向下）求和，每列得一个值。"
+        },
+        {
+          "text": "`1 2 3`",
+          "ok": false,
+          "why": "这是 A 的第一行；`sum` 做的是求和，不是取第一行。"
+        }
+      ],
+      "hint": "回头看 `sum`：省略 `dim` 时默认取哪个维度？对 2×3 矩阵，结果该有几个数？"
+    },
+    "sol": "省略 `dim` 时，`sum` 沿第一个长度不为 1 的维度求和：矩阵逐列求和，得到行向量。`cumsum`、`prod`、`max`、`min`、`all`、`any` 沿用同一约定。\n\n```octave\n>> A = [1 2 3; 4 5 6];\n>> sum (A)\nans =\n\n   5   7   9\n>> sum (A, 2)\nans =\n\n    6\n   15\n>> sum (A(:))\nans = 21\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "arith · sum",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex2",
+    "stem": "`max` 要两个输出时，同时给出最大值与它的位置。先预测，再运行：\n\n```octave\nN = [4 8 1; 7 2 9];\n[m, im] = max (N)\n[mx, k] = max ([3 9 2 9])\n```\n\n`m`、`im` 各有几个元素？最大值 9 出现两次的向量，`k` 报告哪一个位置？",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写七个数：`m` 的三个数，`im` 的三个数，再写 `k`。",
+      "answer": [
+        7,
+        8,
+        9,
+        2,
+        1,
+        2,
+        2
+      ],
+      "hint": "回头看 `max`：对矩阵逐列求最大值；有两个输出时，第二个输出是最大值第一次出现的下标。"
+    },
+    "verify": "N = [4 8 1; 7 2 9]; [m, im] = max (N); [mx, k] = max ([3 9 2 9]); result = [m, im, k];",
+    "sol": "逐列看：第 1 列 (4, 7) 的最大值 7 在第 2 行，第 2 列 (8, 2) 的 8 在第 1 行，第 3 列 (1, 9) 的 9 在第 2 行。`im` 是行下标 `2 1 2`。向量 `[3 9 2 9]` 的最大值 9 在位置 2 与 4 都出现，`max` 报告第一次出现的位置 2。\n\n```octave\n>> N = [4 8 1; 7 2 9];\n>> [m, im] = max (N)\nm =\n\n   7   8   9\n\nim =\n\n   2   1   2\n>> [mx, k] = max ([3 9 2 9])\nmx = 9\nk = 2\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "arith · max",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex3",
+    "stem": "先预测，再运行：\n\n```octave\nmod (-7, 3)\nrem (-7, 3)\n```\n\n两个调用依次返回什么？",
+    "check": {
+      "kind": "choice",
+      "options": [
+        {
+          "text": "`-1` 和 `2`",
+          "ok": false,
+          "why": "把两个函数弄反了：`mod` 的结果与除数同号，`rem` 的结果与被除数同号。"
+        },
+        {
+          "text": "`2` 和 `2`",
+          "ok": false,
+          "why": "`rem (-7, 3)` 用 `fix` 向零取整：$-7 - 3\\cdot(-2) = -1$，结果与被除数 -7 同号，不是 2。"
+        },
+        {
+          "text": "`-1` 和 `-1`",
+          "ok": false,
+          "why": "`mod (-7, 3)` 用 `floor` 向下取整：$-7 - 3\\cdot(-3) = 2$，结果与除数 3 同号，不是 -1。"
+        },
+        {
+          "text": "`2` 和 `-1`",
+          "ok": true,
+          "why": "`mod` 按 $x-y\\lfloor x/y\\rfloor$ 计算，余数与除数同号，得 2；`rem` 按 $x-y\\,\\mathrm{fix}(x/y)$ 计算，余数与被除数同号，得 -1。"
+        }
+      ],
+      "hint": "回头看 `mod` 与 `rem`：两者的概念公式分别用了 `floor` 还是 `fix`？结果的符号跟随谁？"
+    },
+    "sol": "只有当 $x$ 与 $y$ 异号时，两者的结果才不同：$-7/3\\approx-2.33$，`floor` 得 -3，`fix` 得 -2。周期性的问题（星期几、下标回绕）用 `mod`。\n\n```octave\n>> mod (-7, 3)\nans = 2\n>> rem (-7, 3)\nans = -1\n>> mod (7, -3)\nans = -2\n>> rem (7, -3)\nans = 1\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "arith · mod, rem",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex4",
+    "stem": "先预测，再运行：\n\n```octave\nround ([2.5 -2.5])\n```\n\n结果是什么？",
+    "check": {
+      "kind": "choice",
+      "options": [
+        {
+          "text": "`2 -2`",
+          "ok": false,
+          "why": "这是「四舍六入五成双」（银行家舍入，Python 3 的 `round` 采用）。Octave 的 `round` 在恰好一半时取离零更远的整数。"
+        },
+        {
+          "text": "`3 -2`",
+          "ok": false,
+          "why": "这相当于 $\\lfloor x+0.5\\rfloor$（半数向 $+\\infty$ 进位）。Octave 对负数是远离零，-2.5 得 -3。"
+        },
+        {
+          "text": "`3 -3`",
+          "ok": true,
+          "why": "恰有两个最近整数时，`round` 返回离零更远的那个：2.5 到 3，-2.5 到 -3。"
+        },
+        {
+          "text": "`2 -3`",
+          "ok": false,
+          "why": "2.5 与 -2.5 关于零对称，`round` 的结果也关于零对称；不会一个向零、一个远离零。"
+        }
+      ],
+      "hint": "回头看 `round`：若有两个整数同样接近，返回哪一个？"
+    },
+    "sol": "`round` 在恰好一半时远离零。与之对照：`floor` 向 $-\\infty$，`ceil` 向 $+\\infty$，`fix` 向零。\n\n```octave\n>> x = [2.5 -2.5];\n>> round (x)\nans =\n\n   3  -3\n>> floor (x)\nans =\n\n   2  -3\n>> ceil (x)\nans =\n\n   3  -2\n>> fix (x)\nans =\n\n   2  -2\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "arith · round, floor, fix",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex5",
+    "stem": "复数的模与辐角。先预测，再运行：\n\n```octave\nz = -1 + 1i;\nabs (z)\narg (z)\nimag (conj (z))\natan (imag (z) / real (z))\n```\n\n`z` 在复平面的第二象限。`arg (z)` 与最后一行的 `atan` 结果一样吗？",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写三个数：`abs (z)`、`arg (z)`、`imag (conj (z))`（弧度，小数形式）。",
+      "answer": [
+        1.4142135623730951,
+        2.356194490192345,
+        -1
+      ],
+      "hint": "回头看 `arg` 与 `atan2`：`arg` 按 `atan2 (y, x)` 计算，会利用 x、y 的符号定象限；`atan (y/x)` 只给出 $(-\\pi/2,\\pi/2)$ 内的角。"
+    },
+    "verify": "z = -1 + 1i; result = [abs(z), arg(z), imag(conj(z))];",
+    "sol": "$|z|=\\sqrt{(-1)^2+1^2}=\\sqrt2$。`arg (z)` 是 $\\operatorname{atan2}(1,-1)=3\\pi/4\\approx2.3562$，在第二象限；`atan (1/-1)` 只看比值 $-1$，给出 $-\\pi/4$，差了 $\\pi$。共轭把虚部取反，得 $-1$。\n\n```octave\n>> z = -1 + 1i;\n>> abs (z)\nans = 1.4142\n>> arg (z)\nans = 2.3562\n>> imag (conj (z))\nans = -1\n>> atan (imag (z) / real (z))\nans = -0.7854\n>> atan2 (1, -1)\nans = 2.3562\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "arith · abs, arg, conj, atan2",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex6",
+    "stem": "叉积给出同时垂直于两个向量的方向。先预测，再运行：\n\n```octave\na = [1 2 3];\nb = [4 5 6];\nn = cross (a, b)\ndot (n, a)\ndot (a, b)\n```\n\n`n` 与 `a` 的内积是多少？",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写五个数：`n` 的三个分量，`dot (n, a)`，`dot (a, b)`。",
+      "answer": [
+        -3,
+        6,
+        -3,
+        0,
+        32
+      ],
+      "hint": "回头看 `cross` 与 `dot`：叉积分量由 $2\\times2$ 子行列式给出；内积是对应分量相乘再相加。"
+    },
+    "verify": "a = [1 2 3]; b = [4 5 6]; n = cross (a, b); result = [n, dot(n, a), dot(a, b)];",
+    "sol": "$a\\times b=(2\\cdot6-3\\cdot5,\\;3\\cdot4-1\\cdot6,\\;1\\cdot5-2\\cdot4)=(-3,6,-3)$。它与 $a$ 的内积 $-3+12-9=0$，说明垂直；$a\\cdot b=4+10+18=32$。\n\n```octave\n>> a = [1 2 3];\n>> b = [4 5 6];\n>> n = cross (a, b)\nn =\n\n  -3   6  -3\n>> dot (n, a)\nans = 0\n>> dot (a, b)\nans = 32\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "arith · cross, dot",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  }
+]

@@ -1,0 +1,123 @@
+[
+  {
+    "id": "ex1",
+    "stem": "先预测，再在 SymPy 里运行：\n\n```python\nfrom sympy import *\nx, y = symbols('x y')\n(x + y).subs([(x, y), (y, 2)])\n```\n\n`subs` 收到的是一个 `(old, new)` 对的列表。结果是多少？",
+    "check": {
+      "kind": "numbers",
+      "ask": "写出一个数。",
+      "answer": [
+        4.0
+      ],
+      "hint": "回到「代入」一节关于多个代入的说明：列表里的两对是同时生效，还是按顺序一对一对做？先只做第一对，看表达式变成什么，再做第二对。"
+    },
+    "verify": "result = (x + y).subs([(x, y), (y, 2)])",
+    "sol": "列表里的代入按顺序执行：第一对把 $x$ 换成 $y$，$x+y$ 变成 $2y$；第二对再把 $y$ 换成 2，得到 4。若误以为两对同时生效，会得到 $y+2$，而不是一个数。\n\n```\n>>> (x + y).subs(x, y)\n2*y\n>>> (x + y).subs([(x, y), (y, 2)])\n4\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "basic_operations · 代入（多个代入）",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex2",
+    "stem": "先预测，再在 SymPy 里运行：\n\n```python\nfrom sympy import *\nx = symbols('x')\nexpr = x**2 + 3*x\nexpr.subs(x, 2)\nv = expr.subs(x, 1)\nprint(expr)\n```\n\n最后一行 `print(expr)` 打印出什么？",
+    "check": {
+      "kind": "choice",
+      "options": [
+        {
+          "text": "`x**2 + 3*x`",
+          "ok": true,
+          "why": "对。SymPy 表达式不可变，`subs` 返回新表达式，`expr` 本身没有变；`expr.subs(x, 2)` 的结果也没有被保存。"
+        },
+        {
+          "text": "`10`",
+          "ok": false,
+          "why": "10 是 $x=2$ 时的值，且只是 `expr.subs(x, 2)` 返回的新对象，没有赋给 `expr`。"
+        },
+        {
+          "text": "`4`",
+          "ok": false,
+          "why": "4 是 `v` 的值（$x=1$ 时 $1+3=4$）。`v` 是新对象，`expr` 不受影响。"
+        },
+        {
+          "text": "`2**2 + 3*2`",
+          "ok": false,
+          "why": "这是把 `subs` 当成就地修改，并且连算术也没有做；两处都不对。"
+        }
+      ]
+    },
+    "sol": "`subs` 返回新表达式，不修改 `expr`，所以打印的仍是原式。\n\n```\n>>> expr = x**2 + 3*x\n>>> expr.subs(x, 2)\n10\n>>> v = expr.subs(x, 1)\n>>> v\n4\n>>> print(expr)\nx**2 + 3*x\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "basic_operations · 代入（subs 返回新表达式）",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex3",
+    "stem": "先预测，再在 SymPy 里运行：\n\n```python\nfrom sympy import *\nexpr = sympify(\"x^2 + 1/3\")\nexpr.subs(Symbol('x'), 3)\n```\n\n字符串里写的是 `^`，不是 `**`。结果是多少？（写成小数）",
+    "check": {
+      "kind": "numbers",
+      "ask": "写出一个数。",
+      "answer": [
+        9.333333333333334
+      ],
+      "hint": "回到「把字符串转换成 SymPy 表达式」一节：`sympify` 怎么读 `^`？Python 里 `3^2` 是按位异或，但 `sympify` 默认会改读成乘方。先看 `expr` 本身打印成什么，再代入。`1/3` 要按有理数 $1/3$ 算。"
+    },
+    "verify": "result = sympify(\"x^2 + 1/3\").subs(Symbol('x'), 3)",
+    "sol": "`sympify` 默认把 `^` 当作乘方（`convert_xor=True`），所以 `expr` 是 $x^2+\\tfrac13$，代入 $x=3$ 得 $9+\\tfrac13=\\tfrac{28}{3}\\approx 9.3333$。`1/3` 被读成精确的有理数，而不是浮点数。\n\n```\n>>> expr = sympify(\"x^2 + 1/3\")\n>>> expr\nx**2 + 1/3\n>>> expr.subs(Symbol('x'), 3)\n28/3\n>>> float(expr.subs(Symbol('x'), 3))\n9.333333333333334\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "basic_operations · 把字符串转换成 SymPy 表达式",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex4",
+    "stem": "极限 $\\lim_{n\\to\\infty}\\left(1+\\frac1n\\right)^n=e$。取 $n=10^6$，在 SymPy 里数值求值：\n\n```python\nfrom sympy import *\nx = symbols('x')\nexpr = (1 + 1/x)**x\nexpr.evalf(subs={x: 10**6})\n```\n\n先预测它与 $e\\approx 2.718281828$ 差在第几位小数，再运行。写出这个值（取前 6 位小数即可，容差 $10^{-6}$）。",
+    "check": {
+      "kind": "numbers",
+      "ask": "写出一个数。",
+      "answer": [
+        2.7182804693193767
+      ],
+      "hint": "回到 `evalf` 一节：要在某点求值，把 `subs={符号: 点}` 传给 `evalf`。`10**6` 是 Python 整数，SymPy 会按精确值代入。"
+    },
+    "verify": "result = ((1 + 1/x)**x).evalf(subs={x: 10**6})",
+    "sol": "$n=10^6$ 时 $(1+1/n)^n\\approx 2.7182805$，比 $e$ 小约 $1.36\\times10^{-6}$，只对到小数点后第 5 位。这与 $(1+1/n)^n$ 从下方逼近 $e$、误差约为 $e/(2n)$ 一致。用 `subs=` 标志，SymPy 直接数值求值，不先构造巨大的精确有理数（先 `subs` 再 `evalf` 会先算 $(1000001/1000000)^{1000000}$，非常慢）。\n\n```\n>>> expr = (1 + 1/x)**x\n>>> expr.evalf(subs={x: 10**6})\n2.71828046931938\n>>> E.evalf() - expr.evalf(subs={x: 10**6})\n1.35913966836654e-6\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "basic_operations · evalf（subs 标志）",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex5",
+    "stem": "`lambdify` 的第一个参数决定调用时参数的顺序。先预测，再运行：\n\n```python\nfrom sympy import *\nx, y = symbols('x y')\nf = lambdify((y, x), x**2 - y, \"math\")\nf(1, 3)\n```\n\n结果是多少？",
+    "check": {
+      "kind": "numbers",
+      "ask": "写出一个数。",
+      "answer": [
+        8.0
+      ],
+      "hint": "回到 `lambdify` 一节：它像 `lambda` 一样，第一个参数列出的符号依次对应调用时的位置参数。这里 `(y, x)` 的第一个位置给了哪个符号？"
+    },
+    "verify": "result = lambdify((y, x), x**2 - y, \"math\")(1, 3)",
+    "sol": "参数元组是 `(y, x)`，所以 `f(1, 3)` 里 $y=1$、$x=3$，结果为 $3^2-1=8$。若按字母顺序当成 $x=1,y=3$，会得到 $-2$，那是常见的误读。\n\n```\n>>> f = lambdify((y, x), x**2 - y, \"math\")\n>>> f(1, 3)\n8\n>>> f(3, 1)\n-2\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "basic_operations · lambdify",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  }
+]

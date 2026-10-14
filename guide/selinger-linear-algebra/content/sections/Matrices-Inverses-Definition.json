@@ -1,0 +1,234 @@
+{
+ "id": "Matrices-Inverses-Definition",
+ "title_en": "Definition and uniqueness",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "We now define a matrix operation which in some ways plays the role of division. We cannot divide by a matrix, but we can multiply by the inverse of a matrix, which is almost as good.",
+    "sha": "9d77eb1d0b00",
+    "zh": "下面定义一种矩阵运算，它在某种意义上起着除法的作用。我们不能“除以”一个矩阵，但可以乘以它的逆，这几乎一样好用。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "The inverse of a matrix",
+    "sha": "fafc1d51394a",
+    "zh": "矩阵的逆"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ and $B$ be $n\\times n$-matrices. We say that $B$ is an **inverse** of $A$ if",
+      "sha": "465f87e4c021",
+      "zh": "设 $A$ 和 $B$ 是 $n\\times n$ 矩阵。如果满足下式，则称 $B$ 是 $A$ 的**逆**（inverse）："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "BA=I\\quad\\text{and}\\quad\n    AB=I."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If this is the case, we also write $B=A^{-1}$. When a matrix has an inverse, it is called **invertible**.",
+      "sha": "a3c3a92ea164",
+      "zh": "满足上式时，我们也记 $B=A^{-1}$。有逆的矩阵称为**可逆**（invertible）矩阵。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Verifying the inverse of a matrix",
+    "sha": "4d551b130615",
+    "zh": "验证矩阵的逆"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\left[\\begin{array}{rr} 1 & 1 \\\\ 1 & 2 \\end{array}\\right]$. Check that $B=\\left[\\begin{array}{rr} 2 & -1 \\\\ -1 & 1 \\end{array}\\right]$ is an inverse of $A$.",
+      "sha": "ec9a25f950a0",
+      "zh": "设 $A=\\left[\\begin{array}{rr} 1 & 1 \\\\ 1 & 2 \\end{array}\\right]$。验证 $B=\\left[\\begin{array}{rr} 2 & -1 \\\\ -1 & 1 \\end{array}\\right]$ 是 $A$ 的逆。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "To check this, multiply",
+      "sha": "e5c909aad697",
+      "zh": "为了验证，计算乘积"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "AB = \\left[\\begin{array}{rr}\n      1 & 1 \\\\\n      1 & 2\n    \\end{array}\\right] \\left[\\begin{array}{rr}\n      2 & -1 \\\\\n      -1 & 1\n    \\end{array}\\right] =\\allowbreak \\left[\\begin{array}{rr}\n      1 & 0 \\\\\n      0 & 1\n    \\end{array}\\right] = I"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and",
+      "sha": "cffa50a32cb1",
+      "zh": "以及"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "BA = \\left[\\begin{array}{rr}\n      2 & -1 \\\\\n      -1 & 1\n    \\end{array}\\right] \\left[\\begin{array}{rr}\n      1 & 1 \\\\\n      1 & 2\n    \\end{array}\\right] =\\allowbreak \\left[\\begin{array}{rr}\n      1 & 0 \\\\\n      0 & 1\n    \\end{array}\\right] = I."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This shows that $B$ is indeed an inverse of $A$.",
+      "sha": "9fc35e0c0497",
+      "zh": "这说明 $B$ 确实是 $A$ 的逆。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Unlike multiplication of scalars, it can happen that $A\\neq 0$ but $A$ does not have an inverse. This is illustrated in the following example.",
+    "sha": "6acfb5dcbedd",
+    "zh": "与数的乘法不同，可能出现 $A\\neq 0$ 但 $A$ 没有逆的情形。下面的例子说明了这一点。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "A non-zero matrix with no inverse",
+    "sha": "f9020dd033ed",
+    "zh": "没有逆的非零矩阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\left[\\begin{array}{rr} 1 & 1 \\\\ 1 & 1 \\end{array}\\right]$. Show that $A$ is not invertible.",
+      "sha": "19277a54a35e",
+      "zh": "设 $A=\\left[\\begin{array}{rr} 1 & 1 \\\\ 1 & 1 \\end{array}\\right]$。证明 $A$ 不可逆。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "One might think $A$ has an inverse because it does not equal zero. However, note that",
+      "sha": "84de24f19edf",
+      "zh": "也许有人会认为，$A$ 不等于零，所以它有逆。但是请注意"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr}\n      1 & 1 \\\\\n      1 & 1\n    \\end{array}\\right] \\left[\\begin{array}{r}\n      -1 \\\\\n      1\n    \\end{array}\\right] =\\left[\\begin{array}{r}\n      0 \\\\\n      0\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If an inverse $A^{-1}$ existed, we would have the following:",
+      "sha": "8fb0ad623616",
+      "zh": "如果逆 $A^{-1}$ 存在，我们就会得到下面的结果："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\left[\\begin{array}{r}\n      -1 \\\\\n      1\n    \\end{array}\\right]\n    &=&\n        I\\left[\\begin{array}{r}\n          -1 \\\\\n          1\n        \\end{array}\\right] \\\\\n    &=&\n        (A^{-1}A) \\left[\\begin{array}{r}\n          -1 \\\\\n          1\n        \\end{array}\\right] \\\\\n    &=&\n        A^{-1}\\paren{A\\left[\\begin{array}{r}\n            -1 \\\\\n            1\n          \\end{array}\\right]} \\\\\n    &=&\n        A^{-1}\\paren{\\left[\\begin{array}{r}\n            0 \\\\\n            0\n          \\end{array}\\right]} \\\\\n    &=&\n        \\left[\\begin{array}{r}\n          0 \\\\\n          0\n        \\end{array}\\right].\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This says that",
+      "sha": "16daf8405b64",
+      "zh": "这说明"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{r}\n      -1 \\\\\n      1\n    \\end{array}\\right]\n    =\n    \\left[\\begin{array}{r}\n      0 \\\\\n      0\n    \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "which is impossible! Therefore, $A$ does not have an inverse.",
+      "sha": "3f273432d626",
+      "zh": "这是不可能的！所以 $A$ 没有逆。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Can a matrix have more than one inverse? It turns out that this is not the case: the following theorem shows that if $A$ has an inverse, then the inverse is unique. We can therefore speak of “the” inverse, rather than just “an” inverse, of $A$.",
+    "sha": "0e103154f31f",
+    "zh": "一个矩阵能不能有不止一个逆？结果是不能：下面的定理说明，如果 $A$ 有逆，那么它的逆是唯一的。因此我们可以说 $A$ 的“那个”逆，而不只是“一个”逆。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Uniqueness of inverse",
+    "sha": "d9e882651134",
+    "zh": "逆的唯一性"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $A$ is an $n\\times n$-matrix such that both $B$ and $C$ are inverses of $A$. Then $B=C$.",
+      "sha": "f097d36e1aa2",
+      "zh": "设 $A$ 是 $n\\times n$ 矩阵，且 $B$ 和 $C$ 都是 $A$ 的逆。则 $B=C$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "By assumption, both $B$ and $C$ are inverses of $A$, so we have $AB=I$, $BA=I$, $AC=I$, and $CA=I$. Using the associative and unit properties of matrix multiplication, we have:",
+      "sha": "3c1f69cacddd",
+      "zh": "由假设，$B$ 和 $C$ 都是 $A$ 的逆，所以 $AB=I$，$BA=I$，$AC=I$，$CA=I$。利用矩阵乘法的结合律和单位元性质，我们有："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "B = BI = B(AC) = (BA)C = IC = C."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, $B=C$, as desired.",
+      "sha": "e67facb0727f",
+      "zh": "所以 $B=C$，这正是要证的。"
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [],
+ "title_zh": "定义与唯一性"
+}

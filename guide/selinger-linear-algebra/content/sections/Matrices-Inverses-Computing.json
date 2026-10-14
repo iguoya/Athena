@@ -1,0 +1,342 @@
+{
+ "id": "Matrices-Inverses-Computing",
+ "title_en": "Computing inverses",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "In Example “Verifying the inverse of a matrix”, we verified that a matrix $A$ had an inverse. But we did not actually compute the inverse: the inverse $B$ was already given, and we merely checked that $AB=I$ and $BA=I$. We now explore a method for finding the inverse when it is not already known what it is.",
+    "sha": "c4ac37922d15",
+    "zh": "在例“验证矩阵的逆”中，我们验证了矩阵 $A$ 有逆。但那时并没有真正去计算这个逆：逆 $B$ 是事先给定的，我们只是验证了 $AB=I$ 和 $BA=I$。现在来探讨：在事先不知道逆是什么的情况下，怎样把它求出来。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Finding the inverse of a matrix",
+    "sha": "1445be7f5700",
+    "zh": "求矩阵的逆"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the inverse of the matrix",
+      "sha": "bd30cfadd3c1",
+      "zh": "求矩阵"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\\left[\\begin{array}{rr}\n      1 & -2 \\\\\n      2 & -3\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "To find $A^{-1}$, we need to find a matrix $\\left[\\begin{array}{rr} x & z \\\\ y & w \\end{array}\\right]$ such that",
+      "sha": "a875d332be4c",
+      "zh": "的逆。要求 $A^{-1}$，需要找到矩阵 $\\left[\\begin{array}{rr} x & z \\\\ y & w \\end{array}\\right]$，使得"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr}\n      1 & -2 \\\\\n      2 & -3\n    \\end{array}\\right] \\left[\\begin{array}{rr}\n      x & z \\\\\n      y & w\n    \\end{array}\\right] =\\left[\\begin{array}{rr}\n      1 & 0 \\\\\n      0 & 1\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We can multiply these two matrices, and see that in order for this equation to be true, we must solve the systems of equations",
+      "sha": "36ebd2549c4b",
+      "zh": "把这两个矩阵相乘，可以看出，要使这个等式成立，就必须解下面的两个方程组"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{c}\n      x  - 2y = 1, \\\\\n      2x - 3y = 0,\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and",
+      "sha": "cffa50a32cb1",
+      "zh": "以及"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{c}\n      z  - 2w = 0, \\\\\n      2z - 3w = 1.\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Writing the augmented matrix for these two systems gives",
+      "sha": "3f234bc0f6d4",
+      "zh": "把这两个方程组的增广矩阵写出来，得到"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr|r}\n      1 & -2 & 1 \\\\\n      2 & -3 & 0\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for the first system and",
+      "sha": "9b747f9615a9",
+      "zh": "这是第一个方程组的，而"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr|r}\n      1 & -2 & 0 \\\\\n      2 & -3 & 1\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for the second one. Note that both systems have $A$ as their coefficient matrix. Since both systems have the same coefficient matrix, they both require exactly the same row operations, and we can use the method of Example “Multiple systems sharing the same left-hand side” to solve both systems at the same time. To do so, we create a single augmented matrix containing both of the right-hand sides:",
+      "sha": "43ecfb7f3c73",
+      "zh": "是第二个方程组的。注意两个方程组的系数矩阵都是 $A$。系数矩阵相同，所以它们需要做的行变换完全一样，我们可以用例“左边相同的多个方程组”的方法同时解这两个方程组。为此，把两个右端放在一起，写成一个增广矩阵："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr|rr}\n      1 & -2 & 1 & 0 \\\\\n      2 & -3 & 0 & 1\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Then we perform row operations until the coefficient matrix is in reduced echelon form:",
+      "sha": "c8742fa4f2d1",
+      "zh": "然后做行变换，直到系数矩阵化成简化行阶梯形："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr|rr}\n      1 & -2 & 1 & 0 \\\\\n      2 & -3 & 0 & 1\n    \\end{array}\\right]\n    \\stackrel{R_2\\rowop R_2-2R_1}{\\roweq}\n    \\left[\\begin{array}{rr|rr}\n      1 & -2 &  1 & 0 \\\\\n      0 &  1 & -2 & 1\n    \\end{array}\\right]\n    \\stackrel{R_1\\rowop R_1+2R_2}{\\roweq}\n    \\left[\\begin{array}{rr|rr}\n      1 & 0 & -3 & 2 \\\\\n      0 & 1 & -2 & 1\n    \\end{array}\\right]. \\tag{1}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This corresponds to the following reduced echelon form s for the two original systems of equations:",
+      "sha": "78a943126d17",
+      "zh": "这对应于原来两个方程组的如下简化行阶梯形："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr|r}\n      1 & 0 & -3 \\\\\n      0 & 1 & -2\n    \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    \\left[\\begin{array}{rr|rr}\n      1 & 0 & 2 \\\\\n      0 & 1 & 1\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The solution of the first system is $x=-3$ and $y=-2$. The solution for the second system is $z=2$ and $w=1$. If we take the values found for $x$, $y$, $z$, and $w$ and put them into our inverse matrix, we see that the inverse is",
+      "sha": "6591fccabfbe",
+      "zh": "第一个方程组的解是 $x=-3$，$y=-2$；第二个方程组的解是 $z=2$，$w=1$。把求得的 $x$、$y$、$z$、$w$ 的值代入我们要求的逆矩阵，就得到逆矩阵是"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A^{-1} =\n    \\left[\\begin{array}{rr}\n      x & z \\\\\n      y & w\n    \\end{array}\\right]\n    =\n    \\left[\\begin{array}{rr}\n      -3 & 2 \\\\\n      -2 & 1\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Notice that this is exactly the right-hand side in the last augmented matrix of (1). In other words, all we really had to do to find the inverse were the row operations in (1). The inverse can be read off directly from the result.",
+      "sha": "a4fdf71280ef",
+      "zh": "请注意，这正是 (1) 中最后一个增广矩阵的右半部分。也就是说，求逆真正需要做的只是 (1) 中的那些行变换，逆矩阵可以直接从结果中读出来。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The example suggests a general method for finding the inverse of a matrix, which we summarize in the following algorithm.",
+    "sha": "ccae8216d64a",
+    "zh": "这个例子提示了一种求矩阵的逆的一般方法，我们把它总结成下面的算法。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "algorithm",
+   "title": {
+    "en": "Finding the inverse of a matrix",
+    "sha": "1445be7f5700",
+    "zh": "求矩阵的逆"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $A$ is an $n\\times n$-matrix. To find $A^{-1}$ if it exists, form the augmented $n\\times 2n$-matrix",
+      "sha": "4977c5c0b7c4",
+      "zh": "设 $A$ 是 $n\\times n$ 矩阵。要求 $A^{-1}$（如果它存在），先构造 $n\\times 2n$ 增广矩阵"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{A\\mid I}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If possible, do row operations until you obtain an $n\\times 2n$-matrix of the form",
+      "sha": "029cae20c3e5",
+      "zh": "如果可能，做行变换，直到得到如下形式的 $n\\times 2n$ 矩阵"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{I\\mid B}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If this can be done, then $A$ is invertible and $A^{-1}=B$. If it is not possible (i.e., if the reduced echelon form of $A$ has less than $n$ pivot entries), then $A$ is not invertible.",
+      "sha": "680b0b3a227c",
+      "zh": "如果能做到，那么 $A$ 可逆，且 $A^{-1}=B$。如果做不到（即 $A$ 的简化行阶梯形中的主元少于 $n$ 个），那么 $A$ 不可逆。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This algorithm shows how to find the inverse if it exists. It also tells us if $A$ does not have an inverse.",
+    "sha": "be9b6399dda5",
+    "zh": "这个算法说明了：逆存在时怎样求出它；同时它也能告诉我们 $A$ 什么时候没有逆。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Finding the inverse of a matrix",
+    "sha": "1445be7f5700",
+    "zh": "求矩阵的逆"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\left[\\begin{array}{rrr} 1 & 2 & 2 \\\\ 1 & 0 & 2 \\\\ 3 & 1 & -1 \\end{array}\\right]$. Find $A^{-1}$ if it exists.",
+      "sha": "07a128ef1647",
+      "zh": "设 $A=\\left[\\begin{array}{rrr} 1 & 2 & 2 \\\\ 1 & 0 & 2 \\\\ 3 & 1 & -1 \\end{array}\\right]$。如果 $A^{-1}$ 存在，求出它。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We set up the augmented matrix and reduce it to reduced echelon form.",
+      "sha": "48d15237b91c",
+      "zh": "我们写出增广矩阵，并把它化成简化行阶梯形。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\mat{A\\mid I} &=&\n    \\left[\\begin{array}{rrr|rrr}\n      1 & 2 &  2 & 1 & 0 & 0 \\\\\n      1 & 0 &  2 & 0 & 1 & 0 \\\\\n      3 & 1 & -1 & 0 & 0 & 1\n    \\end{array}\\right]\\\\[1ex]\n    &\\stackrel{R_2\\rowop R_2-R_1}{\\stackrel{R_3\\rowop R_3-3R_1}{\\roweq}}&\n    \\left[\\begin{array}{rrr|rrr}\n      1 &  2 &  2 &  1 & 0 & 0 \\\\\n      0 & -2 &  0 & -1 & 1 & 0 \\\\\n      0 & -5 & -7 & -3 & 0 & 1\n    \\end{array}\\right]\\\\[1ex]\n    &\\stackrel{R_1\\rowop 7R_1}{\\stackrel{R_3\\rowop -2R_3}{\\roweq}}&\n    \\left[\\begin{array}{rrr|rrr}\n      7 & 14 & 14 &  7 & 0 &  0 \\\\\n      0 & -2 &  0 & -1 & 1 &  0 \\\\\n      0 & 10 & 14 &  6 & 0 & -2\n    \\end{array}\\right]\\\\[1ex]\n    &\\stackrel{R_1\\rowop R_1+7R_2}{\\stackrel{R_3\\rowop R_3+5R_2}{\\roweq}}&\n    \\left[\\begin{array}{rrr|rrr}\n      7 &  0 & 14 &  0 & 7 &  0 \\\\\n      0 & -2 &  0 & -1 & 1 &  0 \\\\\n      0 &  0 & 14 &  1 & 5 & -2\n    \\end{array}\\right]\\\\[1ex]\n    &\\stackrel{R_1\\rowop R_1-R_3}{\\roweq}&\n    \\left[\\begin{array}{rrr|rrr}\n      7 &  0 &  0 & -1 & 2 &  2 \\\\\n      0 & -2 &  0 & -1 & 1 &  0 \\\\\n      0 &  0 & 14 &  1 & 5 & -2\n    \\end{array}\\right]\\\\[-1ex]\n    &\\stackrel{R_1\\rowop \\frac{1}{7}R_1}{\\stackrel{R_2\\rowop -\\frac{1}{2}R_2}{\\stackrel{R_3\\rowop \\frac{1}{14}R_3}{\\roweq}}}&\n    \\def\\arraystretch{1.5}\n    \\left[\\begin{array}{rrr|rrr}\n      1 & 0 & 0 & -\\frac{1}{7} & \\frac{2}{7} & \\frac{2}{7} \\\\\n      0 & 1 & 0 & \\frac{1}{2} & -\\frac{1}{2} & 0           \\\\\n      0 & 0 & 1 & \\frac{1}{14} & \\frac{5}{14} & -\\frac{1}{7}\n    \\end{array}\\right].\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Notice that the last augmented matrix is of the form $\\mat{I\\mid B}$, where the left-hand side is the $3 \\times 3$ identity matrix. Therefore, the inverse is the $3 \\times 3$-matrix on the right-hand side, given by",
+      "sha": "b802767654d8",
+      "zh": "注意最后一个增广矩阵的形式是 $\\mat{I\\mid B}$，左半部分是 $3 \\times 3$ 单位矩阵。因此逆矩阵就是右半部分的 $3 \\times 3$ 矩阵，即"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A^{-1} ~=~\n    \\def\\arraystretch{1.5}\n    \\left[\\begin{array}{rrr}\n      -\\frac{1}{7} & \\frac{2}{7} & \\frac{2}{7} \\\\\n      \\frac{1}{2} & -\\frac{1}{2} & 0 \\\\\n      \\frac{1}{14} & \\frac{5}{14} & -\\frac{1}{7}\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When looking for the inverse of a matrix, it can happen that the left-hand side cannot be row reduced to the identity matrix. The following is an example of this situation.",
+    "sha": "c4d602a71f63",
+    "zh": "在求矩阵的逆时，可能出现左半部分无法通过行变换化成单位矩阵的情形。下面的例子就是这样。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "A non-invertible matrix",
+    "sha": "2c943af9e333",
+    "zh": "不可逆的矩阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\left[\\begin{array}{rrr} 1 & -2 & 2 \\\\ 1 & 0 & 2 \\\\ 2 & -2 & 4 \\end{array}\\right]$. Find $A^{-1}$ if it exists.",
+      "sha": "94ec2d616995",
+      "zh": "设 $A=\\left[\\begin{array}{rrr} 1 & -2 & 2 \\\\ 1 & 0 & 2 \\\\ 2 & -2 & 4 \\end{array}\\right]$。如果 $A^{-1}$ 存在，求出它。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We write the augmented matrix",
+      "sha": "bd289b53b547",
+      "zh": "我们写出增广矩阵"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{A\\mid I}\n    ~=~\n    \\left[\\begin{array}{rrr|rrr}\n      1 & -2 & 2 & 1 & 0 & 0 \\\\\n      1 &  0 & 2 & 0 & 1 & 0 \\\\\n      2 & -2 & 4 & 0 & 0 & 1\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and proceed to do row operations attempting to obtain $\\mat{I\\mid A^{-1}}$. After a few row operations, we have",
+      "sha": "5aca2afed01c",
+      "zh": "并做行变换，试图得到 $\\mat{I\\mid A^{-1}}$。做几步行变换之后，得到"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr|rrr}\n      \\boxed{1} & -2 & 2 & 1 & 0 & 0 \\\\\n      0 & \\boxed{2} & 0 & -1 & 1 & 0 \\\\\n      0 & 0 & 0 & -1 & -1 & 1\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "At this point, we see that the coefficient matrix has rank $2$, i.e., there are only two pivot entries. This means there is no way to obtain $I$ on the left-hand side of this augmented matrix. Hence, there is no way to complete the algorithm, and the inverse of $A$ does not exist.",
+      "sha": "a3a89be22a25",
+      "zh": "此时可以看到，系数矩阵的秩为 $2$，也就是说只有两个主元。这意味着无法在这个增广矩阵的左半部分得到 $I$。因此算法无法完成，$A$ 的逆不存在。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If the algorithm provides an inverse, it is always possible to double-check that your answer is correct. To do so, use the method demonstrated in Example “Verifying the inverse of a matrix”. Check that the products $AA^{-1}$ and $A^{-1}A$ both equal the identity matrix. Through this method, you can always ensure that you have calculated $A^{-1}$ properly.",
+    "sha": "c3a8afbed509",
+    "zh": "如果算法给出了逆，你总是可以再检查一遍答案是否正确。方法就是例“验证矩阵的逆”中演示的那样：验证乘积 $AA^{-1}$ 与 $A^{-1}A$ 都等于单位矩阵。用这个办法，你总能确认自己算出的 $A^{-1}$ 没有错。"
+   }
+  }
+ ],
+ "exercises": [],
+ "title_zh": "求逆矩阵"
+}

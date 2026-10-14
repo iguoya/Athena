@@ -1,0 +1,8 @@
+\begin{tikzpicture}
+		\coordinate (A) at (1,1);
+		\coordinate (B) at (-.5,2);
+		\coordinate (C) at (3,3);
+		\draw[->,thick,myred!60!white] (A) -- (B) node [midway,below left] {$\vec u$};
+		\draw[->,thick,mypink] (B) -- (C) node [midway,above left] {$\vec v$};
+		\draw[->,thick,green!50!black, dashed, xshift=2pt, yshift=-1pt] (1,1) -- (3,3) node [midway,below right] {$\vec w=\vec u+\vec v$};
+	\end{tikzpicture}

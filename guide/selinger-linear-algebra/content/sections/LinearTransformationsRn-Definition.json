@@ -1,0 +1,501 @@
+{
+ "id": "LinearTransformationsRn-Definition",
+ "title_en": "Linear transformations",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether a vector function $T:\\R^n\\to\\R^m$ is a linear transformation.",
+         "sha": "106a61ff6332",
+         "zh": "判断向量函数 $T:\\R^n\\to\\R^m$ 是否为线性变换。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In calculus, a **function** (or **map** ) $f:\\R\\to\\R$ is a rule that maps a real number $x\\in\\R$ to a real number $f(x)\\in\\R$. In linear algebra, we can generalize this concept to vectors. A **vector function** $T:\\R^n\\to\\R^m$ is a rule that inputs an $n$-dimensional vector $\\vect{v}\\in\\R^n$ and outputs an $m$-dimensional vector $T(\\vect{v})\\in\\R^m$. The following are some examples of vector functions:",
+    "sha": "252b13599db1",
+    "zh": "在微积分里，**函数**（或称**映射**）$f:\\R\\to\\R$ 是一条规则，它把实数 $x\\in\\R$ 对应到实数 $f(x)\\in\\R$。在线性代数中，我们可以把这个概念推广到向量上。**向量函数** $T:\\R^n\\to\\R^m$ 是这样一条规则：输入一个 $n$ 维向量 $\\vect{v}\\in\\R^n$，输出一个 $m$ 维向量 $T(\\vect{v})\\in\\R^m$。下面是向量函数的几个例子："
+   }
+  },
+  {
+   "k": "math",
+   "tex": "T_1\\paren{\\left[\\begin{array}{c} x \\\\ y \\end{array}\\right]}\n  = \\left[\\begin{array}{c} x^2 \\\\ x+y \\\\ y^2 \\end{array}\\right],\\quad\n  T_2\\paren{\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right]}\n  = \\left[\\begin{array}{c} x+y \\\\ x+y+z \\\\ 0 \\end{array}\\right],\\quad\n  T_3\\paren{\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right]}\n  = \\left[\\begin{array}{c} e^{x+z} \\\\ \\sqrt{y} \\end{array}\\right]. \\tag{1}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Of these, the first is a function $T_1:\\R^2\\to\\R^3$, the second is a function $T_2:\\R^3\\to\\R^3$, and the third is a function $T_3:\\R^3\\to\\R^2$. We can evaluate a vector function by applying it to a vector, for example,",
+    "sha": "3d5c2bb66ad6",
+    "zh": "其中，第一个是函数 $T_1:\\R^2\\to\\R^3$，第二个是函数 $T_2:\\R^3\\to\\R^3$，第三个是函数 $T_3:\\R^3\\to\\R^2$。把向量函数作用在某个向量上，就能算出它的值，例如"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "T_1\\paren{\\left[\\begin{array}{c} 1 \\\\ 2 \\end{array}\\right]}\n  = \\left[\\begin{array}{c} 1^2 \\\\ 1+2 \\\\ 2^2 \\end{array}\\right]\n  = \\left[\\begin{array}{c} 1 \\\\ 3 \\\\ 4 \\end{array}\\right],\\quad\n  T_1\\paren{\\left[\\begin{array}{c} 0 \\\\ 1 \\end{array}\\right]}\n  = \\left[\\begin{array}{c} 0^2 \\\\ 1+1 \\\\ 1^2 \\end{array}\\right]\n  = \\left[\\begin{array}{c} 0 \\\\ 1 \\\\ 1 \\end{array}\\right],"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and so on. The study of arbitrary vector functions and their derivatives and integrals is the subject of *multivariable calculus*. In linear algebra, we will only be concerned with **linear vector functions**, which are also called **linear transformations** or **linear maps**. They are defined as follows.",
+    "sha": "5a39918d848b",
+    "zh": "等等。研究任意的向量函数及其导数和积分，是*多元微积分*的内容。在线性代数里，我们只关心**线性向量函数**，它们也叫作**线性变换**或**线性映射**。定义如下。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Linear transformation",
+    "sha": "d1881fd1930d",
+    "zh": "线性变换"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A vector function $T:\\R^n\\to \\R^m$ is called a **linear transformation**, or simply **linear**, if it satisfies the following two conditions:",
+      "sha": "b5ed1816d013",
+      "zh": "如果向量函数 $T:\\R^n\\to \\R^m$ 满足下面两个条件，就称它是**线性变换**，或简称为**线性的**："
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$T$ preserves addition, i.e., for all\\/ $\\vect{v},\\vect{w}\\in\\R^n$, we have $T(\\vect{v}+\\vect{w}) = T(\\vect{v}) + T(\\vect{w})$;",
+         "sha": "1ab92eecd1d1",
+         "zh": "$T$ 保持加法，即对所有 $\\vect{v},\\vect{w}\\in\\R^n$，都有 $T(\\vect{v}+\\vect{w}) = T(\\vect{v}) + T(\\vect{w})$；"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$T$ preserves scalar multiplication, i.e, for all\\/ $\\vect{v}\\in\\R^n$ and scalars $k$, we have $T(k\\vect{v}) = kT(\\vect{v})$.",
+         "sha": "e3783fb43888",
+         "zh": "$T$ 保持数乘，即对所有 $\\vect{v}\\in\\R^n$ 和标量 $k$，都有 $T(k\\vect{v}) = kT(\\vect{v})$。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Linear and non-linear transformations",
+    "sha": "9c6a96f59b7f",
+    "zh": "线性变换与非线性变换"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the vector functions in (1) are linear transformations?",
+      "sha": "402ca93811ce",
+      "zh": "(1) 中的向量函数，哪些是线性变换？"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The function $T_1$ is not a linear transformation. For example, let $\\vect{v}=\\left[\\begin{array}{r} 1 \\\\ 0 \\end{array}\\right]$. Then",
+         "sha": "bef7e3c1f16d",
+         "zh": "函数 $T_1$ 不是线性变换。例如，取 $\\vect{v}=\\left[\\begin{array}{r} 1 \\\\ 0 \\end{array}\\right]$，则"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "T_1(\\vect{v})\n      ~=~ T_1\\paren{\\left[\\begin{array}{c} 1 \\\\ 0 \\end{array}\\right]}\n      ~=~ \\left[\\begin{array}{c} 1 \\\\ 1 \\\\ 0 \\end{array}\\right]\n      \\quad\\text{and}\\quad\n      T_1(2\\vect{v})\n      ~=~ T_1\\paren{\\left[\\begin{array}{c} 2 \\\\ 0 \\end{array}\\right]}\n      ~=~ \\left[\\begin{array}{c} 4 \\\\ 2 \\\\ 0 \\end{array}\\right]\n      ~\\neq~ 2\\left[\\begin{array}{c} 1 \\\\ 1 \\\\ 0 \\end{array}\\right]."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Since $T_1(2\\vect{v}) \\neq 2T_1(\\vect{v})$, the vector function $T_1$ does not preserve scalar multiplication, and therefore it is not a linear transformation.",
+         "sha": "a1672044c325",
+         "zh": "因为 $T_1(2\\vect{v}) \\neq 2T_1(\\vect{v})$，所以向量函数 $T_1$ 不保持数乘，因此它不是线性变换。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The function $T_2$ is a linear transformation. For example, to prove that $T_2$ preserves addition, consider two arbitrary vectors",
+         "sha": "e6f9f44ea6f1",
+         "zh": "函数 $T_2$ 是线性变换。例如，要证明 $T_2$ 保持加法，考虑两个任意的向量"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vect{v} =\n      \\left[\\begin{array}{c}\n        x_1 \\\\\n        y_1 \\\\\n        z_1 \\\\\n      \\end{array}\\right]\n      \\quad\\text{and}\\quad\n      \\vect{w} =\n      \\left[\\begin{array}{c}\n        x_2 \\\\\n        y_2 \\\\\n        z_2 \\\\\n      \\end{array}\\right]."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "We have",
+         "sha": "a2214cd5b1a4",
+         "zh": "我们有"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "T_2(\\vect{v}+\\vect{w})\n      ~=~ T_2\\paren{\n        \\left[\\begin{array}{c}\n          x_1+x_2 \\\\\n          y_1+y_2 \\\\\n          z_1+z_2 \\\\\n        \\end{array}\\right]}\n      ~=~ \\left[\\begin{array}{c}\n        (x_1+x_2)+(y_1+y_2) \\\\\n        (x_1+x_2)+(y_1+y_2)+(z_1+z_2) \\\\\n        0\n      \\end{array}\\right]"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "and",
+         "sha": "cffa50a32cb1",
+         "zh": "以及"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "T_2(\\vect{v})+T_2(\\vect{w})\n      ~=~\n      \\left[\\begin{array}{c}\n        x_1+y_1 \\\\\n        x_1+y_1+z_1 \\\\\n        0 \\\\\n      \\end{array}\\right]\n      + \\left[\\begin{array}{c}\n        x_2+y_2 \\\\\n        x_2+y_2+z_2 \\\\\n        0 \\\\\n      \\end{array}\\right]\n      ~=~ \\left[\\begin{array}{c}\n        (x_1+y_1)+(x_2+y_2) \\\\\n        (x_1+y_1+z_1)+(x_2+y_2+z_2) \\\\\n        0 \\\\\n      \\end{array}\\right]."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Since the two sides are evidently equal, $T_2$ preserves addition. The fact that it preserves scalar multiplication can be shown by a similar calculation.",
+         "sha": "d09211e14bfc",
+         "zh": "两边相等，所以 $T_2$ 保持加法。至于它保持数乘，用类似的计算同样可以证明。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The function $T_3$ is not a linear transformation. For example, consider $\\vect{v}=\\left[\\begin{array}{c}0\\\\1\\\\0\\end{array}\\right]$ and $\\vect{w}=\\left[\\begin{array}{c}1\\\\1\\\\0\\end{array}\\right]$. Then",
+         "sha": "319125679c69",
+         "zh": "函数 $T_3$ 不是线性变换。例如，考虑 $\\vect{v}=\\left[\\begin{array}{c}0\\\\1\\\\0\\end{array}\\right]$ 和 $\\vect{w}=\\left[\\begin{array}{c}1\\\\1\\\\0\\end{array}\\right]$，则"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "T_3(\\vect{v}+\\vect{w})\n      ~=~ T_3\\paren{\\left[\\begin{array}{c} 1 \\\\ 2 \\\\ 0\\end{array}\\right]}\n      ~=~ \\left[\\begin{array}{c} e \\\\ \\sqrt{2} \\end{array}\\right],"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "and",
+         "sha": "cffa50a32cb1",
+         "zh": "以及"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "T_3(\\vect{v})+T_3(\\vect{w})\n      ~=~ \\left[\\begin{array}{c} 1 \\\\ 1 \\end{array}\\right]\n      + \\left[\\begin{array}{c} e \\\\ 1 \\end{array}\\right]\n      ~=~ \\left[\\begin{array}{c} e+1 \\\\ 2 \\end{array}\\right]."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Since $T_3(\\vect{v}+\\vect{w})\\neq T_3(\\vect{v})+T_3(\\vect{w})$, the vector function $T_3$ does not preserve addition, and therefore it is not linear.",
+         "sha": "7b82892542e9",
+         "zh": "因为 $T_3(\\vect{v}+\\vect{w})\\neq T_3(\\vect{v})+T_3(\\vect{w})$，所以向量函数 $T_3$ 不保持加法，因此它不是线性的。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "An easy fact about linear transformation is that they preserve the origin, i.e., they satisfy $T(\\vect{0}) = \\vect{0}$. This can be seen, for example, by considering $T(\\vect{0}) = T(\\vect{0}+\\vect{0}) = T(\\vect{0}) + T(\\vect{0})$ and then subtracting $T(\\vect{0})$ from both sides of the equation. This gives an easier way to see that $T_3$ in the above example is not a linear transformation, since $T_3(\\vect{0}) \\neq \\vect{0}$. On the other hand, of course not every function that preserves the origin is linear. For example, $T_1$ is not linear although it satisfies $T_1(\\vect{0})=\\vect{0}$.",
+    "sha": "ce7727cc4272",
+    "zh": "线性变换有一个简单的性质：它保持原点不动，即满足 $T(\\vect{0}) = \\vect{0}$。例如，考虑 $T(\\vect{0}) = T(\\vect{0}+\\vect{0}) = T(\\vect{0}) + T(\\vect{0})$，再在等式两边同时减去 $T(\\vect{0})$，就能看出这一点。这给出了判断上例中 $T_3$ 不是线性变换的一个更简便的办法，因为 $T_3(\\vect{0}) \\neq \\vect{0}$。另一方面，当然并不是每个保持原点不动的函数都是线性的。例如，$T_1$ 虽然满足 $T_1(\\vect{0})=\\vect{0}$，却不是线性的。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The following characterization of linearity is often useful, as it permits us to check just one property instead of two.",
+    "sha": "ee3f7781f1b2",
+    "zh": "下面这个线性性的刻画常常很有用，因为它让我们只需检验一个条件，而不是两个。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Alternative characterization of linear transformations",
+    "sha": "a0c94e3d773e",
+    "zh": "线性变换的另一种刻画"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A vector function $T:\\R^n\\to \\R^m$ is linear if and only if it satisfies the following condition, for all $\\vect{v},\\vect{w}\\in\\R^n$ and scalars $a,b$:",
+      "sha": "43e4e3036f81",
+      "zh": "向量函数 $T:\\R^n\\to \\R^m$ 是线性的，当且仅当对所有 $\\vect{v},\\vect{w}\\in\\R^n$ 和标量 $a,b$，它满足下面的条件："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "T(a\\vect{v}+b\\vect{w}) = aT(\\vect{v}) + bT(\\vect{w})."
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "First, assume that $T$ is linear. Then from preservation of addition and scalar multiplication, we have $T(a\\vect{v}+b\\vect{w}) = T(a\\vect{v})+T(b\\vect{w}) = aT(\\vect{v}) + bT(\\vect{w})$. Conversely, assume that $T$ satisfies $T(a\\vect{v}+b\\vect{w}) = aT(\\vect{v}) + bT(\\vect{w})$ for all vectors $\\vect{v},\\vect{w}$ and scalars $a,b$. Then we get preservation of addition by setting $a=b=1$, and preservation of scalar multiplication by setting $b=0$.",
+      "sha": "fe5213fee297",
+      "zh": "首先，假设 $T$ 是线性的。那么由保持加法和保持数乘，有 $T(a\\vect{v}+b\\vect{w}) = T(a\\vect{v})+T(b\\vect{w}) = aT(\\vect{v}) + bT(\\vect{w})$。反过来，假设对所有向量 $\\vect{v},\\vect{w}$ 和标量 $a,b$，$T$ 都满足 $T(a\\vect{v}+b\\vect{w}) = aT(\\vect{v}) + bT(\\vect{w})$。取 $a=b=1$，就得到保持加法；取 $b=0$，就得到保持数乘。"
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following vector functions are linear transformations?",
+      "sha": "7b8634acba84",
+      "zh": "下面的向量函数中，哪些是线性变换？"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "T_1\\paren{\\left[\\begin{array}{c} x \\\\ y \\end{array}\\right]}\n    = \\left[\\begin{array}{c} 2x+y \\\\ x-2y \\\\ -x-y \\end{array}\\right],\\quad\n    T_2\\paren{\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right]}\n    = \\left[\\begin{array}{c} x+y^2 \\\\ (x+y)z \\\\ 0 \\end{array}\\right],\\quad\n    T_3\\paren{\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right]}\n    = \\left[\\begin{array}{c} 0 \\\\ 0 \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$T_1$ and $T_3$ are linear, and $T_2$ is not. The transformation $T_3$ is called the **zero transformation**.",
+      "sha": "2bd3660da6ca",
+      "zh": "$T_1$ 和 $T_3$ 是线性的，$T_2$ 不是。变换 $T_3$ 称为**零变换**。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear transformations · 习题 1（上游 exercises/LinearTransformationsRn-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/LinearTransformationsRn-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the following functions $T:\\R^3\\rightarrow \\R^2$. Explain why each of these functions $T$ is not linear.",
+      "sha": "324f58a417ff",
+      "zh": "考虑下列函数 $T:\\R^3\\rightarrow \\R^2$。说明为什么其中每个函数 $T$ 都不是线性的。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$T\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] =\\left[\\begin{array}{c} x+2y+3z+1 \\\\ 2y-3x+z \\end{array}\\right]$",
+         "sha": "69bbcaa4b7b5",
+         "zh": "$T\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] =\\left[\\begin{array}{c} x+2y+3z+1 \\\\ 2y-3x+z \\end{array}\\right]$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$T\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] =\\left[\\begin{array}{c} x+2y^2+3z \\\\ 2y+3x+z \\end{array}\\right]$",
+         "sha": "60249005e712",
+         "zh": "$T\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] =\\left[\\begin{array}{c} x+2y^2+3z \\\\ 2y+3x+z \\end{array}\\right]$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$T\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] =\\left[\\begin{array}{c} \\sin x+2y+3z \\\\ 2y+3x+z \\end{array}\\right]$",
+         "sha": "e4129f9b6ab2",
+         "zh": "$T\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] =\\left[\\begin{array}{c} \\sin x+2y+3z \\\\ 2y+3x+z \\end{array}\\right]$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$T\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] =\\left[\\begin{array}{c} x+2y+3z \\\\ 2y+3x-\\ln z \\end{array}\\right]$",
+         "sha": "0a65350cfd2b",
+         "zh": "$T\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] =\\left[\\begin{array}{c} x+2y+3z \\\\ 2y+3x-\\ln z \\end{array}\\right]$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear transformations · 习题 2（上游 exercises/LinearTransformationsRn-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/LinearTransformationsRn-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $m\\times n$-matrix. Show the vector function $T:\\R^n\\to \\R^m$ defined by $T(\\vect{v})=A\\vect{v}$ is a linear transformation.",
+      "sha": "93fab649cb27",
+      "zh": "设 $A$ 是 $m\\times n$ 矩阵。证明：由 $T(\\vect{v})=A\\vect{v}$ 定义的向量函数 $T:\\R^n\\to \\R^m$ 是线性变换。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have $T(a\\vect{v}+b\\vect{w}) = A(a\\vect{v}+b\\vect{w}) = a(A\\vect{v}) + b(A\\vect{w}) = aT(\\vect{v}) + bT(\\vect{w})$ by properties of matrix multiplication. Therefore, $T$ is linear by Proposition “Alternative characterization of linear transformations”.",
+      "sha": "ab9c881eebd8",
+      "zh": "由矩阵乘法的性质，$T(a\\vect{v}+b\\vect{w}) = A(a\\vect{v}+b\\vect{w}) = a(A\\vect{v}) + b(A\\vect{w}) = aT(\\vect{v}) + bT(\\vect{w})$。因此，由命题“线性变换的另一种刻画”，$T$ 是线性的。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear transformations · 习题 3（上游 exercises/LinearTransformationsRn-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/LinearTransformationsRn-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u}\\in\\R^n$ be a fixed vector. Show that the function $T$ defined by $T(\\vect{v}) = \\vect{v}-\\proj_{\\vect{u}}(\\vect{v})$ is a linear transformation.",
+      "sha": "dce061e78331",
+      "zh": "设 $\\vect{u}\\in\\R^n$ 是一个固定的向量。证明：由 $T(\\vect{v}) = \\vect{v}-\\proj_{\\vect{u}}(\\vect{v})$ 定义的函数 $T$ 是线性变换。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have",
+      "sha": "a2214cd5b1a4",
+      "zh": "我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}T(a\\vect{v}+b\\vect{w})\n      &=& a\\vect{v}+b\\vect{w}\n          - \\frac{\\vect{u}\\dotprod(a\\vect{v}+b\\vect{w})}{\\norm{\\vect{u}}^2}\\vect{u} \\\\\n      &=& a\\vect{v}\n          - a\\frac{\\vect{u}\\dotprod\\vect{v}}{\\norm{\\vect{u}}^2}\\vect{u}\n          + b\\vect{w}\n          - b\\frac{\\vect{u}\\dotprod\\vect{w}}{\\norm{\\vect{u}}^2}\\vect{u} \\\\\n      &=& aT(\\vect{v}) + bT(\\vect{w}).\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, $T$ is linear.",
+      "sha": "5acc14a82055",
+      "zh": "因此 $T$ 是线性的。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear transformations · 习题 4（上游 exercises/LinearTransformationsRn-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/LinearTransformationsRn-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u}\\in\\R^n$ be a fixed non-zero vector. The function $T$ defined by $T(\\vect{v})=\\vect{u}+\\vect{v}$ has the effect of translating all vectors by adding $\\vect{u}$. Show this is not a linear transformation.",
+      "sha": "9039c041e34f",
+      "zh": "设 $\\vect{u}\\in\\R^n$ 是一个固定的非零向量。由 $T(\\vect{v})=\\vect{u}+\\vect{v}$ 定义的函数 $T$ 的作用，是把所有向量都加上 $\\vect{u}$，即做平移。证明它不是线性变换。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If $T$ were a linear transformation, it should satisfy $T(\\vect{0}) = \\vect{0}$, but it does not. Also $T(\\vect{v}+\\vect{w}) \\neq T\\vect{v}+T\\vect{w}$.",
+      "sha": "9b4306e9401a",
+      "zh": "如果 $T$ 是线性变换，它应当满足 $T(\\vect{0}) = \\vect{0}$，但它并不满足。另外，$T(\\vect{v}+\\vect{w}) \\neq T\\vect{v}+T\\vect{w}$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear transformations · 习题 5（上游 exercises/LinearTransformationsRn-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/LinearTransformationsRn-Definition.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "线性变换"
+}

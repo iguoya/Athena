@@ -1,0 +1,689 @@
+{
+ "id": "SystemsofEquations-GaussJordanElimination",
+ "title_en": "Gauss-Jordan elimination",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the reduced echelon form of a matrix.",
+         "sha": "cd40411d1102",
+         "zh": "求矩阵的简化行阶梯形。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Solve a system of linear equations using Gauss-Jordan elimination.",
+         "sha": "3ee25c4d683e",
+         "zh": "用高斯—若尔当消元法（Gauss-Jordan elimination）解线性方程组。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In the previous section, we saw how to solve a system of equations by using Gaussian elimination and back substitution. The back substitution step can be quite confusing and error prone, especially when there are parameters. For example, in Example “Solving a system of equations: a two-parameter set of solutions”, we had to substitute $y=s$, $z=2-t$, and $w=t$ into the equation $x=3-2y+2z-2w$, which required another simplification step.",
+    "sha": "7ebb88bbe238",
+    "zh": "上一节我们学了用高斯消元法加回代来解方程组。回代这一步相当容易让人糊涂、出错，尤其是带参数的时候。例如在例“解方程组：含两个参数的解集”中，我们必须把 $y=s$、$z=2-t$、$w=t$ 代入方程 $x=3-2y+2z-2w$，之后还要再化简一次。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In this section, you will learn an alternative procedure called *Gauss-Jordan elimination* which eliminates the need for back substitution, at the expense of doing a few additional row operations. The key to this technique is a special kind of echelon form called a *reduced echelon form *.",
+    "sha": "e7c2192f41b2",
+    "zh": "这一节要学另一种方法，叫做*高斯—若尔当消元法*。它不再需要回代，代价是多做几次行变换。这个方法的关键是一种特殊的行阶梯形，叫做*简化行阶梯形*（reduced echelon form）。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Reduced echelon form",
+    "sha": "0f33ce7daeee",
+    "zh": "简化行阶梯形"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "An augmented matrix is in **reduced echelon form ** if",
+      "sha": "a02a83b7c2d1",
+      "zh": "增广矩阵称为**简化行阶梯形**，当且仅当它满足："
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "It is in echelon form.",
+         "sha": "1c2a6df52245",
+         "zh": "它是行阶梯形。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Each leading entry is equal to $1$.",
+         "sha": "f8f6976c3bd1",
+         "zh": "每个首元都等于 $1$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "All entries above a leading entry are zero.",
+         "sha": "ff6e3e7f3b18",
+         "zh": "首元上方的所有元素都是零。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Reduced echelon form",
+    "sha": "0f33ce7daeee",
+    "zh": "简化行阶梯形"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The following augmented matrices are in reduced echelon form. The leading entries have been circled for emphasis. Note how all of the leading entries are equal to $1$, and they have zeros above them.",
+      "sha": "8c3b7355e5bd",
+      "zh": "下面这些增广矩阵都是简化行阶梯形，其中的首元已用圆圈标出以便突出。注意所有首元都等于 $1$，并且它们上方全是零。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrrr|r}\n      \\boxed{1} & 2 & 0 & 5 & 0 & 3 \\\\\n      0 & 0 & \\boxed{1} & 2 & 0 & 0 \\\\\n      0 & 0 & 0 & 0 & \\boxed{1} & 1 \\\\\n      0 & 0 & 0 & 0 & 0 & 0\n    \\end{array}\\right],\\quad\\left[\\begin{array}{rrr|r}\n      \\boxed{1} & 0 & 0 & 0 \\\\\n      0 & \\boxed{1} & 0 & 0 \\\\\n      0 & 0 & \\boxed{1} & 0 \\\\\n      0 & 0 & 0 & \\boxed{1} \\\\\n      0 & 0 & 0 & 0\n    \\end{array}\\right], \\left[\\begin{array}{rrr|r}\n      \\boxed{1} & 0 & 0 & 4 \\\\\n      0 & \\boxed{1} & 0 & 3 \\\\\n      0 & 0 & \\boxed{1} & 2\n    \\end{array}\\right]"
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can carry every augmented matrix to reduced echelon form by doing elementary row operations.",
+    "sha": "72e975347360",
+    "zh": "通过初等行变换，我们可以把任何一个增广矩阵化成简化行阶梯形。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "algorithm",
+   "title": {
+    "en": "Gauss-Jordan elimination",
+    "sha": "de7df947f990",
+    "zh": "高斯—若尔当消元法"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "This algorithm provides a method for using row operations to take a matrix to its reduced echelon form.",
+      "sha": "cbe9e6d49153",
+      "zh": "这个算法用行变换把矩阵化成它的简化行阶梯形。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "First, use Gaussian elimination (Algorithm “Gaussian elimination”) to reduce the matrix to echelon form.",
+         "sha": "abfa8c694075",
+         "zh": "首先，用高斯消元法（算法“高斯消元法”）把矩阵化成行阶梯形。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Moving from right to left, consider each pivot entry. Without changing the row containing the pivot entry, or any rows below it, use row operations to create zeros in the column above the pivot entry. Finally, divide the row by its pivot entry, to make the pivot entry equal to $1$.",
+         "sha": "437560f9fbcc",
+         "zh": "从右往左，逐个考虑每个主元。在不改变主元所在行及其下方各行的前提下，用行变换把主元上方的那一列元素都化为零。最后，用主元去除这一行，使主元等于 $1$。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Gauss-Jordan elimination",
+    "sha": "de7df947f990",
+    "zh": "高斯—若尔当消元法"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Solve the system of equations from Example “Solving a system of equations: one solution” using Gauss-Jordan elimination.",
+      "sha": "489427d1b647",
+      "zh": "用高斯—若尔当消元法解例“解方程组：唯一解”中的方程组。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\n      x+4y+3z &=& 11 \\\\\n      2x+10y+7z &=& 27 \\\\\n      x+y+2z &=& 5.\n    \\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "In Example “Solving a system of equations: one solution”, we had already reduced the system to echelon form:",
+      "sha": "087c039442ff",
+      "zh": "在例“解方程组：唯一解”中，我们已经把方程组化成了行阶梯形："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr|r}\n      \\boxed{1} & 4 & 3 & 11 \\\\\n      0 & \\boxed{2} & 1 & 5 \\\\\n      0 & 0 & \\boxed{1} & 3\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We reduce it to reduced echelon form by performing the following row operations:",
+      "sha": "10dde1e1dfc5",
+      "zh": "再做下面的行变换，把它化成简化行阶梯形："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr|r}\n      \\boxed{1} & 4 & 3 & 11 \\\\\n      0 & \\boxed{2} & 1 & 5 \\\\\n      0 & 0 & \\boxed{1} & 3\n    \\end{array}\\right]\n    \\!\\!\\!\\stackrel{R_2\\rowop R_2-R_3}{\\stackrel{R_1\\rowop R_1-3R_3}{\\roweq}}\\!\\!\n    \\left[\\begin{array}{rrr|r}\n      \\boxed{1} & 4 & 0 & 2 \\\\\n      0 & \\boxed{2} & 0 & 2 \\\\\n      0 & 0 & \\boxed{1} & 3\n    \\end{array}\\right]\n    \\!\\!\\stackrel{R_1\\rowop R_1-2R_2}{\\roweq}\\!\\!\n    \\left[\\begin{array}{rrr|r}\n      \\boxed{1} & 0 & 0 & -2 \\\\\n      0 & \\boxed{2} & 0 & 2 \\\\\n      0 & 0 & \\boxed{1} & 3\n    \\end{array}\\right]\n    \\!\\!\\stackrel{R_2\\rowop \\frac{1}{2}R_2}{\\roweq}\\!\\!\n    \\left[\\begin{array}{rrr|r}\n      \\boxed{1} & 0 & 0 & -2 \\\\\n      0 & \\boxed{1} & 0 & 1 \\\\\n      0 & 0 & \\boxed{1} & 3\n    \\end{array}\\right]\\!\\!."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The resulting matrix is in reduced echelon form. Note that the final system of equations is especially easy to solve, because the three equations are $x=-2$, $y=1$, and $z=3$. No back substitution is needed.",
+      "sha": "bdcd378e7af0",
+      "zh": "得到的矩阵是简化行阶梯形。注意最后这个方程组特别容易解，因为三个方程就是 $x=-2$、$y=1$ 和 $z=3$，不需要回代。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Gauss-Jordan elimination",
+    "sha": "de7df947f990",
+    "zh": "高斯—若尔当消元法"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Solve the system of equations from Example “Solving a system of equations: a two-parameter set of solutions” using Gauss-Jordan elimination.",
+      "sha": "9034c48a249b",
+      "zh": "用高斯—若尔当消元法解例“解方程组：含两个参数的解集”中的方程组。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\n      x + 2y - 2z + 2w &=& 3 \\\\\n      x + 2y - z  + 3w &=& 5 \\\\\n      x + 2y - 3z + 1w &=& 1.\n    \\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "In Example “Solving a system of equations: a two-parameter set of solutions”, we had obtained the following echelon form:",
+      "sha": "d88d71a34fb3",
+      "zh": "在例“解方程组：含两个参数的解集”中，我们得到了下面的行阶梯形："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrr|r}\n      \\boxed{1} & 2 & -2 & 2 & 3 \\\\\n      0 & 0 & \\boxed{1} & 1 & 2 \\\\\n      0 & 0 & 0 & 0 & 0\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We reduce this to reduced echelon form by performing the following additional step:",
+      "sha": "ed2f8b5c7bb9",
+      "zh": "再做下面这一步，就把它化成了简化行阶梯形："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrr|r}\n      \\boxed{1} & 2 & -2 & 2 & 3 \\\\\n      0 & 0 & \\boxed{1} & 1 & 2 \\\\\n      0 & 0 & 0 & 0 & 0\n    \\end{array}\\right]\n    \\stackrel{R1\\rowop R1+2R2}{\\roweq}\n    \\left[\\begin{array}{rrrr|r}\n      \\boxed{1} & 2 & 0 & 4 & 7 \\\\\n      0 & 0 & \\boxed{1} & 1 & 2 \\\\\n      0 & 0 & 0 & 0 & 0\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The first equation states that $x=7-2y-4w$, and the second equation states that $z=2-w$. Using the free variables $y$ and $w$ as parameters, we obtain the following general solution:",
+      "sha": "81be56ab760e",
+      "zh": "第一个方程说 $x=7-2y-4w$，第二个方程说 $z=2-w$。把自由变量 $y$ 和 $w$ 当作参数，就得到下面的通解："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\n      x &=& 7-2y-4w \\\\\n      y &=& y \\\\\n      z &=& 2-w \\\\\n      w &=& w.\n    \\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Note that we did not really have to do back substitution; all we had to do is to shift parts of the equations to the right-hand side. If the solution looks strange, because it has equations like “$y=y$” in it, keep in mind that this means that $y$ and $w$ are arbitrary numbers, i.e., parameters. We can replace $y$ and $w$ by parameters $s$ and $t$ on the right-hand side, as before:",
+      "sha": "78751a2aa8b2",
+      "zh": "注意，我们其实并没有做回代，只是把方程的一部分移到了右边。如果这个解看起来有点怪，因为里面出现了“$y=y$”这样的等式，请记住它的意思是 $y$ 和 $w$ 是任意的数，也就是参数。我们可以像之前那样，在右边把 $y$ 和 $w$ 换成参数 $s$ 和 $t$："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\n      x &=& 7-2s-4t \\\\\n      y &=& s \\\\\n      z &=& 2-t \\\\\n      w &=& t.\n    \\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "discussion",
+   "title": {
+    "en": "Which procedure is better?",
+    "sha": "5e4d8c51661b",
+    "zh": "哪种方法更好？"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which one is the better procedure to use, Gaussian elimination with back substitution, or Gauss-Jordan elimination? The answer is: it depends. In certain applications, it is not necessary to completely solve a system of equations. Sometimes it is sufficient just to figure out whether the system is consistent or inconsistent, or whether the solution is unique or not. In those situations, you already get the required information from the echelon form and there is no need to do the additional steps to reduce the system to reduced echelon form. Also, in some situations, Gauss-Jordan elimination can introduce fractions into your augmented matrix, making the matrix more complicated to work with. In such cases, it may sometimes be easier to do back substitution. But in most cases, Gauss-Jordan elimination is simpler to do than back substitution, and therefore I recommend using the Gauss-Jordan method most of the time.",
+      "sha": "bfbbde1ffb02",
+      "zh": "高斯消元法加回代，与高斯—若尔当消元法，哪一个更好用？答案是：看情况。在某些应用中，并不需要把方程组完全解出来。有时只需要弄清楚方程组是相容还是不相容，或者解是否唯一。在这些情形下，行阶梯形已经提供了所需的信息，没有必要再多做几步把它化成简化行阶梯形。另外，有时高斯—若尔当消元法会在增广矩阵里引入分数，使矩阵变得更难处理，这时做回代可能反而更容易。但在大多数情况下，高斯—若尔当消元法比回代更简单，所以我建议大多数时候都使用高斯—若尔当方法。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "One situation where Gauss-Jordan elimination excels is when you have to solve many systems of equations that all have the same coefficient matrix.",
+    "sha": "25225ccd41fa",
+    "zh": "有一种情形，高斯—若尔当消元法特别有优势：需要解许多个系数矩阵相同的方程组。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Multiple systems sharing the same left-hand side",
+    "sha": "e3b0cdf0ecd2",
+    "zh": "左边相同的多个方程组"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Solve the following two systems of equations.",
+      "sha": "8e97f1b5d6c1",
+      "zh": "解下面两个方程组。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\n      x       +  z &=& 1 \\\\\n      2x +  y + 3z &=& 2 \\\\\n      3x + 2y + 5z &=& 4 \\\\\n    \\end{array}\n    \\quad\\quad\n    \\begin{array}{rcl}\n      x       +  z &=& 2 \\\\\n      2x +  y + 3z &=& 5 \\\\\n      3x + 2y + 5z &=& 8 \\\\\n    \\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We could certainly solve each system of equations separately. But since the left-hand sides are the same, we will perform exactly the same row operations on both systems. We can save some work by solving both systems together. Instead of a usual augmented matrix with only one constant vector, we create an augmented matrix containing both constant vectors at the same time.",
+      "sha": "7a68a19d235a",
+      "zh": "我们当然可以把每个方程组分别解出来。但由于两个方程组的左边相同，我们要对它们做的行变换完全一样。把两个方程组放在一起解，可以省下一些工作。我们不用只含一个常数向量的通常的增广矩阵，而是造一个同时含有两个常数向量的增广矩阵。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr|rr}\n      1 & 0 & 1 & 1 & 2 \\\\\n      2 & 1 & 3 & 2 & 5 \\\\\n      3 & 2 & 5 & 4 & 8 \\\\\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Then we row-reduce the coefficient matrix to reduced echelon form as usual. (We do not need to bother reducing the right-hand side to reduced echelon form ).",
+      "sha": "6f6f1d1f921a",
+      "zh": "然后像往常一样，把系数矩阵行化简成简化行阶梯形。（右边不需要再化成简化行阶梯形。）"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr|rr}\n      1 & 0 & 1 & 1 & 2 \\\\\n      2 & 1 & 3 & 2 & 5 \\\\\n      3 & 2 & 5 & 4 & 8 \\\\\n    \\end{array}\\right]\n    \\stackrel{R_2\\rowop R_2-2R_1}{\n      \\stackrel{R_3\\rowop R_3-3R_1}{\\roweq}}\n    \\left[\\begin{array}{rrr|rr}\n      1 & 0 & 1 & 1 & 2 \\\\\n      0 & 1 & 1 & 0 & 1 \\\\\n      0 & 2 & 2 & 1 & 2 \\\\\n    \\end{array}\\right]\n    \\stackrel{R_3\\rowop R_3-2R_2}{\\roweq}\n    \\left[\\begin{array}{rrr|rr}\n      1 & 0 & 1 & 1 & 2 \\\\\n      0 & 1 & 1 & 0 & 1 \\\\\n      0 & 0 & 0 & 1 & 0 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We see that the first system is inconsistent, because it contains a row of the form $\\mat{0~0~0~|~1}$. The second system is consistent, and we get the general solution $z=t$, $y=1-t$, $x=2-t$.",
+      "sha": "0682b000dafd",
+      "zh": "我们看到，第一个方程组不相容，因为其中有一行形如 $\\mat{0~0~0~|~1}$。第二个方程组相容，通解为 $z=t$、$y=1-t$、$x=2-t$。"
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine which matrices are in reduced echelon form.",
+      "sha": "e3741aa9bee6",
+      "zh": "判断下列哪些矩阵是简化行阶梯形。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rrr} 1 & 2 & 0 \\\\ 0 & 1 & 7 \\end{array}\\right]$",
+         "sha": "782806a57bfb",
+         "zh": "$\\left[\\begin{array}{rrr} 1 & 2 & 0 \\\\ 0 & 1 & 7 \\end{array}\\right]$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rrrr} 1 & 0 & 0 & 0 \\\\ 0 & 0 & 1 & 2 \\\\ 0 & 0 & 0 & 0 \\end{array}\\right]$",
+         "sha": "af1f71616687",
+         "zh": "$\\left[\\begin{array}{rrrr} 1 & 0 & 0 & 0 \\\\ 0 & 0 & 1 & 2 \\\\ 0 & 0 & 0 & 0 \\end{array}\\right]$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rrrrrr} 1 & 1 & 0 & 0 & 0 & 5 \\\\ 0 & 0 & 1 & 2 & 0 & 4 \\\\ 0 & 0 & 0 & 0 & 1 & 3 \\end{array}\\right]$",
+         "sha": "93bf9bf83c26",
+         "zh": "$\\left[\\begin{array}{rrrrrr} 1 & 1 & 0 & 0 & 0 & 5 \\\\ 0 & 0 & 1 & 2 & 0 & 4 \\\\ 0 & 0 & 0 & 0 & 1 & 3 \\end{array}\\right]$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "This one is not.",
+         "sha": "89ad0c8faf8c",
+         "zh": "这个不是。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "This one is.",
+         "sha": "c102d5bd3e1d",
+         "zh": "这个是。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "This one is.",
+         "sha": "c102d5bd3e1d",
+         "zh": "这个是。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Gauss-Jordan elimination · 习题 1（上游 exercises/SystemsofEquations-GaussJordanElimination.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-GaussJordanElimination.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Reduce each of the matrices from Exercise 〔引用〕 to reduced echelon form.",
+      "sha": "790499f02a8f",
+      "zh": "把习题〔引用〕中的每个矩阵都化成简化行阶梯形。"
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Gauss-Jordan elimination · 习题 2（上游 exercises/SystemsofEquations-GaussJordanElimination.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-GaussJordanElimination.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use Gauss-Jordan elimination to solve the system of equations $-8x+2y+5z=18,-8x+3y+5z=13$, and $-4x+y+5z=19$.",
+      "sha": "8b6e9033818e",
+      "zh": "用高斯—若尔当消元法解方程组 $-8x+2y+5z=18,-8x+3y+5z=13$ 和 $-4x+y+5z=19$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Solution is: $\\mat{x=-1,y=-5,z=4}$",
+      "sha": "9f8a0104402b",
+      "zh": "解为：$\\mat{x=-1,y=-5,z=4}$"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Gauss-Jordan elimination · 习题 3（上游 exercises/SystemsofEquations-GaussJordanElimination.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-GaussJordanElimination.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use Gauss-Jordan elimination to solve the system of equations $3x-y-2z=3$, $y-4z=0$, and $-2x+y=-2$.",
+      "sha": "48c27c7b62b5",
+      "zh": "用高斯—若尔当消元法解方程组 $3x-y-2z=3$、$y-4z=0$ 和 $-2x+y=-2$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Solution is: $\\mat{x=2t+1,y=4t,z=t}$",
+      "sha": "393e961f5f37",
+      "zh": "解为：$\\mat{x=2t+1,y=4t,z=t}$"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Gauss-Jordan elimination · 习题 4（上游 exercises/SystemsofEquations-GaussJordanElimination.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-GaussJordanElimination.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use Gauss-Jordan elimination to solve the system of equations $-9x+15y=66,-11x+18y=79$, $-x+y=4$, and $z=3$.",
+      "sha": "31819cda3a20",
+      "zh": "用高斯—若尔当消元法解方程组 $-9x+15y=66,-11x+18y=79$、$-x+y=4$ 和 $z=3$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Solution is: $\\mat{x=1,y=5,z=3}$",
+      "sha": "c04a33365354",
+      "zh": "解为：$\\mat{x=1,y=5,z=3}$"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Gauss-Jordan elimination · 习题 5（上游 exercises/SystemsofEquations-GaussJordanElimination.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-GaussJordanElimination.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use Gauss-Jordan elimination to solve the system of equations $-19x+8y=-108$, $-71x+30y=-404$, $-2x+y=-12$, $4x+z=14$.",
+      "sha": "9b8f8e210c24",
+      "zh": "用高斯—若尔当消元法解方程组 $-19x+8y=-108$、$-71x+30y=-404$、$-2x+y=-12$、$4x+z=14$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Solution is: $\\mat{x=4,y=-4,z=-2}$",
+      "sha": "c48186cf2c6f",
+      "zh": "解为：$\\mat{x=4,y=-4,z=-2}$"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Gauss-Jordan elimination · 习题 6（上游 exercises/SystemsofEquations-GaussJordanElimination.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-GaussJordanElimination.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Solve the following two systems of equations simultaneously, by using a single augmented matrix with two constant vectors.",
+      "sha": "fdd1bd8a8e10",
+      "zh": "用一个含有两个常数向量的增广矩阵，同时解下面两个方程组。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\n      x  + 2y -  z &=& 0 \\\\\n      2x + 3y +  z &=& 3 \\\\\n      x  -  y + 2z &=& 3 \\\\\n    \\end{array}\n    \\quad\\quad\n    \\begin{array}{rcl}\n      x  + 2y -  z &=& 1 \\\\\n      2x + 3y +  z &=& 7 \\\\\n      x  -  y + 2z &=& 4 \\\\\n    \\end{array}"
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The rank of the coefficient matrix is $3$, so both systems have a unique solution. The solution of the first system is $(x,y,z)=(1,0,1)$, and the solution of the second system is $(x,y,z)=(1,1,2)$.",
+      "sha": "2a1eaf4a78cd",
+      "zh": "系数矩阵的秩为 $3$，所以两个方程组都有唯一解。第一个方程组的解是 $(x,y,z)=(1,0,1)$，第二个方程组的解是 $(x,y,z)=(1,1,2)$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Gauss-Jordan elimination · 习题 7（上游 exercises/SystemsofEquations-GaussJordanElimination.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-GaussJordanElimination.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "高斯—若尔当消元法"
+}

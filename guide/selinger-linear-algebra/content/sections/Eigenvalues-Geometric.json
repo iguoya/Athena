@@ -1,0 +1,446 @@
+{
+ "id": "Eigenvalues-Geometric",
+ "title_en": "Geometric interpretation of eigenvectors",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Visualize the effect of a linear transformation by considering its eigenvectors and eigenvalues.",
+         "sha": "01d3d7f2521c",
+         "zh": "通过考察特征向量和特征值，把线性变换的效果直观地呈现出来。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Consider the matrix",
+    "sha": "c5c7ab8caadb",
+    "zh": "考虑矩阵"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A = \\left[\\begin{array}{rr}\n    2 & 1 \\\\\n    1 & 2 \\\\\n  \\end{array}\\right]."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In Chapter “Linear and non-linear transformations”, we saw that this matrix corresponds to a linear transformation $T: \\R^2\\to\\R^2$ defined by $T(\\vect{x}) = A\\vect{x}$. We also saw how to visualize this linear transformation as a before-and-after picture. For this, we considered the images of the first and second standard basis vectors:",
+    "sha": "df2e3410f855",
+    "zh": "在“线性变换与非线性变换”一章中，我们看到这个矩阵对应一个线性变换 $T: \\R^2\\to\\R^2$，定义为 $T(\\vect{x}) = A\\vect{x}$。我们还看到了怎样把这个线性变换画成“变换前—变换后”的图。为此，我们考察了第一个和第二个标准基向量的像："
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}T(\\vect{e}_1) &= A\\vect{e}_1 = \\left[\\begin{array}{r} 2 \\\\ 1 \\end{array}\\right], \\\\\n  T(\\vect{e}_2) &= A\\vect{e}_2 = \\left[\\begin{array}{r} 1 \\\\ 2 \\end{array}\\right].\\end{aligned}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Here is the before-and-after picture for this transformation:",
+    "sha": "5c3294e02ba4",
+    "zh": "下面是这个变换的“变换前—变换后”图："
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "aff33b5f4e68"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Although we can see from this picture that the letter “F” is being distorted somehow, it is perhaps not very obvious what exactly this linear transformation does.",
+    "sha": "e9a3b4825597",
+    "zh": "从这张图可以看出字母“F”被扭曲了，但这个线性变换究竟做了什么，也许还不太清楚。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can get a much better idea by computing the eigenvectors and eigenvalues of $A$. A short calculation shows that the basic eigenvectors are",
+    "sha": "07b30c8bc3b9",
+    "zh": "计算 $A$ 的特征向量和特征值，可以让我们看得清楚得多。简单计算可知，基础特征向量为"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vect{v}_1 = \\left[\\begin{array}{r} 1 \\\\ 1 \\end{array}\\right]\n  \\quad\\text{and}\\quad\n  \\vect{v}_2 = \\left[\\begin{array}{r} -1 \\\\ 1 \\end{array}\\right],"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "with corresponding eigenvalues $\\eigenvar_1=3$ and $\\eigenvar_2=1$. Consider the effect of the linear transformation $T$ on the eigenvectors:",
+    "sha": "dff4a3a4d848",
+    "zh": "对应的特征值为 $\\eigenvar_1=3$ 和 $\\eigenvar_2=1$。来看线性变换 $T$ 对这两个特征向量的作用："
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}T(\\vect{v}_1) &= \\left[\\begin{array}{rr}\n    2 & 1 \\\\\n    1 & 2 \\\\\n  \\end{array}\\right] \\left[\\begin{array}{r} 1 \\\\ 1 \\end{array}\\right]\n  = \\left[\\begin{array}{r} 3 \\\\ 3 \\end{array}\\right]\n  = 3\\vect{v}_1, \\\\\n  T(\\vect{v}_2) &= \\left[\\begin{array}{rr}\n    2 & 1 \\\\\n    1 & 2 \\\\\n  \\end{array}\\right] \\left[\\begin{array}{r} -1 \\\\ 1 \\end{array}\\right]\n  = \\left[\\begin{array}{r} -1 \\\\ 1 \\end{array}\\right]\n  = \\vect{v}_2.\\end{aligned}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "So each eigenvector is mapped to a scalar multiple of itself. This gives us a hint for how to draw a more useful before-and-after picture. Rather than tracking the movement of the standard basis vectors $\\vect{e}_1$ and $\\vec{e}_2$, let us track the movement of the eigenvectors $\\vect{v}_1$ and $\\vect{v}_2$ instead:",
+    "sha": "398bd7f73a2a",
+    "zh": "可见每个特征向量都被映成它自己的标量倍。这提示了一种画出更有用的“变换前—变换后”图的办法：不再追踪标准基向量 $\\vect{e}_1$ 和 $\\vec{e}_2$ 的移动，而是改为追踪特征向量 $\\vect{v}_1$ 和 $\\vect{v}_2$ 的移动："
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "88446076348b"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Thus, the linear transformation described by the matrix $A$ is revealed to be just a scaling by a factor of $3$ along the direction of",
+    "sha": "a8b3669523b0",
+    "zh": "这样一来，矩阵 $A$ 所描述的线性变换就清楚了：它不过是沿着下面这个方向伸缩 $3$ 倍"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vect{v}_1 = \\left[\\begin{array}{r} 1 \\\\ 1 \\end{array}\\right]."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In summary, the geometric meaning of an eigenvector is that it is mapped to a multiple of itself. Thus, when viewed from the point of view of its action on the eigenvectors, a linear transformation behaves like a scaling of each eigenvector. We can say that each eigenvector describes a direction of scaling, and each corresponding eigenvalue giving the corresponding (positive or negative) scaling factor.",
+    "sha": "4acf5b4bd35b",
+    "zh": "总之，特征向量的几何意义是：它被映成自己的倍数。因此，从线性变换对特征向量的作用来看，线性变换的表现就像是对每个特征向量做伸缩。可以说，每个特征向量刻画一个伸缩的方向，而与之对应的特征值给出相应的（正的或负的）伸缩因子。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Visualize a linear transformation",
+    "sha": "1b8a55638a55",
+    "zh": "把线性变换直观地呈现出来"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Visualize the linear transformation $T:\\R^2\\to\\R^2$ that is described by the matrix",
+      "sha": "53c91e94b1e4",
+      "zh": "把下面的矩阵所描述的线性变换 $T:\\R^2\\to\\R^2$ 直观地呈现出来："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rr}\n      0 & 1 \\\\\n      1 & 0 \\\\\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "by considering the eigenvectors and eigenvalues.",
+      "sha": "9f1f8d323277",
+      "zh": "要求通过考察特征向量和特征值来做。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The characteristic polynomial is $\\eigenvar^2-1$, and so the eigenvalues are $\\eigenvar_1=1$ and $\\eigenvar_2=-1$. By solving each equation $(A-\\eigenvar I)\\vect{v}=\\vect{0}$, we find that the corresponding basic eigenvectors are",
+      "sha": "1eecc9ca21c1",
+      "zh": "特征多项式是 $\\eigenvar^2-1$，所以特征值为 $\\eigenvar_1=1$ 和 $\\eigenvar_2=-1$。分别解方程 $(A-\\eigenvar I)\\vect{v}=\\vect{0}$，求得对应的基础特征向量为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}_1 = \\left[\\begin{array}{r} 1 \\\\ 1 \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    \\vect{v}_2 = \\left[\\begin{array}{r} -1 \\\\ 1 \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "(check this!). We get the following before-and-after picture:",
+      "sha": "4b442b9bde99",
+      "zh": "（请自己验算一下！）。得到下面的“变换前—变换后”图："
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "0e18c7d3317c"
+     ],
+     "caption": null
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We see that this linear transformation is a reflection about the vector $\\vect{v}_1$.",
+      "sha": "ef37ff4ee481",
+      "zh": "可以看出，这个线性变换是关于向量 $\\vect{v}_1$ 的反射。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Visualize a linear transformation",
+    "sha": "1b8a55638a55",
+    "zh": "把线性变换直观地呈现出来"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Visualize the linear transformation $T:\\R^2\\to\\R^2$ that is described by the matrix",
+      "sha": "53c91e94b1e4",
+      "zh": "把下面的矩阵所描述的线性变换 $T:\\R^2\\to\\R^2$ 直观地呈现出来："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rr}\n      -2 & 3 \\\\\n      0 &  1 \\\\\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "by considering the eigenvectors and eigenvalues.",
+      "sha": "9f1f8d323277",
+      "zh": "要求通过考察特征向量和特征值来做。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The characteristic polynomial is $(-2-\\eigenvar)(1-\\eigenvar)$, and therefore, the eigenvalues are $\\eigenvar_1=-2$ and $\\eigenvar_2=1$. We find that the corresponding basic eigenvectors are",
+      "sha": "10b0fa7ad270",
+      "zh": "特征多项式是 $(-2-\\eigenvar)(1-\\eigenvar)$，所以特征值为 $\\eigenvar_1=-2$ 和 $\\eigenvar_2=1$。求得对应的基础特征向量分别为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}_1 = \\left[\\begin{array}{r} 1 \\\\ 0 \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    \\vect{v}_2 = \\left[\\begin{array}{r} 1 \\\\ 1 \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "respectively. We get the following before-and-after picture:",
+      "sha": "49cce002eb73",
+      "zh": "得到下面的“变换前—变换后”图："
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "1cd1782a5cc9"
+     ],
+     "caption": null
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This particular linear transformation keeps the vector $\\vect{v}_2$ fixed, while scaling by a factor of $-2$ in the direction of $\\vect{v}_1$. It could be described as a kind of slanted reflection with scaling.",
+      "sha": "a84155dd3e92",
+      "zh": "这个线性变换保持向量 $\\vect{v}_2$ 不动，同时沿 $\\vect{v}_1$ 的方向伸缩 $-2$ 倍。它可以描述为一种带伸缩的斜向反射。"
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each of the following matrices, find the eigenvectors and eigenvalues. Use this to visualize the linear transformation $T:\\R^2\\to\\R^2$ that is described by the matrix.",
+      "sha": "eb1f23acb398",
+      "zh": "对下面每个矩阵，求出特征向量和特征值，并据此把该矩阵所描述的线性变换 $T:\\R^2\\to\\R^2$ 直观地呈现出来。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rr}\n      1 & 2 \\\\\n      2 & 1 \\\\\n    \\end{array}\\right],\n    \\quad\n    B = \\left[\\begin{array}{rr}\n      1 & 0 \\\\\n      2 & -1 \\\\\n    \\end{array}\\right],\n    \\quad\n    C = \\left[\\begin{array}{rr}\n      1 & 1 \\\\\n      0 & 2 \\\\\n    \\end{array}\\right],\n    \\quad\n    D = \\left[\\begin{array}{rr}\n      1 & 1 \\\\\n      1 & 1 \\\\\n    \\end{array}\\right],\n    \\quad\n    E = \\left[\\begin{array}{rr}\n      1 & 0 \\\\\n      -1 & 2 \\\\\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Geometric interpretation of eigenvectors · 习题 1（上游 exercises/Eigenvalues-Geometric.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Geometric.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If $A$ is the matrix of a linear transformation that rotates all vectors in $\\R^2$ by $60^{\\circ}$, explain why $A$ cannot have any real eigenvalues. Is there an angle such that rotation by this angle would have a real eigenvalue? What eigenvalues would be obtainable in this way?",
+      "sha": "3f908dd1ccca",
+      "zh": "设 $A$ 是把 $\\R^2$ 中所有向量旋转 $60^{\\circ}$ 的线性变换的矩阵，说明为什么 $A$ 不可能有任何实特征值。有没有这样的角度，使得按这个角度旋转会有实特征值？这样能得到哪些特征值？"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A rotation by $60^{\\circ}$ cannot map any non-zero vector to a scalar multiple of itself. The only rotations of $\\R^2$ that have real eigenvalues are rotations by $180^{\\circ}$ and $0^{\\circ}$. The former has eigenvalue $-1$, and the latter has eigenvalue $1$ (with all vectors being eigenvectors).",
+      "sha": "4b9857c0cada",
+      "zh": "旋转 $60^{\\circ}$ 不会把任何非零向量映成它自己的标量倍。$\\R^2$ 的旋转中，只有旋转 $180^{\\circ}$ 和 $0^{\\circ}$ 有实特征值。前者的特征值是 $-1$，后者的特征值是 $1$（此时所有向量都是特征向量）。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Geometric interpretation of eigenvectors · 习题 2（上游 exercises/Eigenvalues-Geometric.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Geometric.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $T$ be the linear transformation that reflects vectors about the $x$-axis. Find a matrix for $T$ and then find its eigenvalues and eigenvectors.",
+      "sha": "1eeac60a8e92",
+      "zh": "设 $T$ 是把向量关于 $x$ 轴反射的线性变换。求 $T$ 的矩阵，然后求它的特征值和特征向量。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix of $T$ is $\\left[\\begin{array}{rr} 1 & 0 \\\\ 0 & -1 \\end{array}\\right]$. The eigenvectors and eigenvalues are:",
+      "sha": "0de50c86030b",
+      "zh": "$T$ 的矩阵是 $\\left[\\begin{array}{rr} 1 & 0 \\\\ 0 & -1 \\end{array}\\right]$。特征向量和特征值为："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\set{\\left[\\begin{array}{c}\n          0 \\\\\n          1\n        \\end{array}\\right]} ~\\text{for eigenvalue}~ {-1},\n      \\quad\\set{\\left[\\begin{array}{c}\n          1 \\\\\n          0\n        \\end{array}\\right]} ~\\text{for eigenvalue}~ {1}."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Geometric interpretation of eigenvectors · 习题 3（上游 exercises/Eigenvalues-Geometric.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Geometric.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $T$ be the linear transformation that reflects vectors about the line $x=y$. Find a matrix of $T$ and then find eigenvalues and eigenvectors.",
+      "sha": "3f226db52544",
+      "zh": "设 $T$ 是把向量关于直线 $x=y$ 反射的线性变换。求 $T$ 的矩阵，然后求特征值和特征向量。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix of $T$ is $\\left[\\begin{array}{rr} 0 & 1 \\\\ 1 & 0 \\end{array}\\right]$. The eigenvectors and eigenvalues are:",
+      "sha": "d6f36d4a75fc",
+      "zh": "$T$ 的矩阵是 $\\left[\\begin{array}{rr} 0 & 1 \\\\ 1 & 0 \\end{array}\\right]$。特征向量和特征值为："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\set{\\left[\\begin{array}{c}\n          1 \\\\\n          1\n        \\end{array}\\right]} ~\\text{for eigenvalue}~ {-1},\n      \\quad\\set{\\left[\\begin{array}{c}\n          -1 \\\\\n          1\n        \\end{array}\\right]} ~\\text{for eigenvalue}~ {1}."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Geometric interpretation of eigenvectors · 习题 4（上游 exercises/Eigenvalues-Geometric.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Geometric.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $T$ be the linear transformation that reflects all vectors in $\\R^3$ about the $xy$-plane. Find a matrix for $T$ and then obtain its eigenvalues and eigenvectors.",
+      "sha": "7580f3142e69",
+      "zh": "设 $T$ 是把 $\\R^3$ 中所有向量关于 $xy$ 平面反射的线性变换。求 $T$ 的矩阵，然后求它的特征值和特征向量。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The matrix of $T$ is $\\left[\\begin{array}{rrr} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & -1 \\end{array}\\right]$ The eigenvectors and eigenvalues are:",
+      "sha": "5240733dd858",
+      "zh": "$T$ 的矩阵是 $\\left[\\begin{array}{rrr} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & -1 \\end{array}\\right]$。特征向量和特征值为："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\set{\\left[\\begin{array}{c}\n          0 \\\\\n          0 \\\\\n          1\n        \\end{array}\\right]} ~\\text{for eigenvalue $-1$},\n      \\quad\\set{\\left[\\begin{array}{c}\n          1 \\\\\n          0 \\\\\n          0\n        \\end{array}\\right],\n        \\left[\\begin{array}{c}\n          0 \\\\\n          1 \\\\\n          0\n        \\end{array}\\right]} ~\\text{for eigenvalue $1$}."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Geometric interpretation of eigenvectors · 习题 5（上游 exercises/Eigenvalues-Geometric.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Eigenvalues-Geometric.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "特征向量的几何意义"
+}

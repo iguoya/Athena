@@ -1,0 +1,2255 @@
+{
+ "id": "module1",
+ "title_en": "Sets, Vectors & Notation",
+ "blocks": [
+  {
+   "k": "outcome",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The basics of sets and set-builder notation.",
+         "sha": "873c93cd249e",
+         "zh": "集合与集合构造记号的基础知识。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The definition of vectors and how they relate to points.",
+         "sha": "1a8d522f067c",
+         "zh": "向量的定义，以及向量与点的关系。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Column vector notation and how to represent vectors in drawings.",
+         "sha": "3f3db6010af7",
+         "zh": "列向量记号，以及如何在图中表示向量。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How to compute linear combinations of vectors and use systems of linear equations to answer questions about linear combinations of vectors.",
+         "sha": "64d6bfc0a2ea",
+         "zh": "如何计算向量的线性组合，以及如何用线性方程组回答有关向量线性组合的问题。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Sets",
+    "sha": "2ab262f44dfc",
+    "zh": "集合"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Modern mathematics makes heavy use of *sets*. A set is an unordered collection of distinct objects. We won't try and pin it down more than this—our intuition about collections of objects will suffice 〔注： When you pursue more rigorous math, you rely on definitions to get yourself out of philosophical jams. For instance, with our definition of set, consider “the set of all sets that don't contain themselves”. Such a set cannot exist! This is called *Russel's Paradox*, and shows that if we start talking about sets of sets, we may need more than intuition.〕. We write a set with curly-braces $\\{$ and $\\}$ and list the objects inside. For instance",
+    "sha": "bdeadef4b936",
+    "zh": "现代数学大量使用*集合*。集合是由互不相同的对象组成的无序整体。我们不打算把它说得比这更严格——凭我们对“一堆对象”的直觉就够用了〔注： 当你学习更严格的数学时，需要靠定义来走出哲学上的困境。例如，按我们对集合的这个说法，考虑“所有不包含自身的集合所组成的集合”。这样的集合是不可能存在的！这被称为*罗素悖论*，它说明一旦开始谈论“集合的集合”，仅凭直觉可能就不够了。〕。我们用花括号 $\\{$ 和 $\\}$ 把集合括起来，并把里面的对象一一列出。例如"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Set{1,2,3}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This would be read aloud as “the set containing the elements $1$, $2$, and $3$”. Things in a set are called *elements*, and the symbol $\\in$ is used to specify that something is an element of a set. In contrast, $\\notin$ is used to specify something is not an element of a set. For example,",
+    "sha": "92e3f53434e5",
+    "zh": "这读作“包含元素 $1$、$2$ 和 $3$ 的集合”。集合里的东西叫作*元素*，符号 $\\in$ 用来表示某个东西是集合的元素；相反，$\\notin$ 表示某个东西不是集合的元素。例如，"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "3\\in\\Set{1,2,3}\\qquad 4\\notin\\Set{1,2,3}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Sets can contain mixtures of objects, including other sets. For example,",
+    "sha": "e49f0d168ab1",
+    "zh": "集合里可以混放各种对象，包括别的集合。例如，"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Set{1,2,a,\\Set{-70,\\infty}, x}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "is a perfectly valid set.",
+    "sha": "83d566215294",
+    "zh": "就是一个完全合法的集合。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It is tradition to use capital letters to name sets. So we might say $A=\\{6,7,12\\}$ or $X=\\{7\\}$. However there are some special sets which already have names/symbols associated with them. The *empty set* is the set containing no elements and is written $\\emptyset$ or $\\Set{}$. Note that $\\Set{\\emptyset}$ is *not* the empty set—it is the set containing the empty set! It is also traditional to call elements of a set *points* regardless of whether you consider them “point-like”.",
+    "sha": "9266754eda6f",
+    "zh": "习惯上用大写字母给集合命名，所以我们可以说 $A=\\{6,7,12\\}$ 或 $X=\\{7\\}$。不过，有一些特殊的集合已经有了约定的名字或符号。*空集*是不含任何元素的集合，记作 $\\emptyset$ 或 $\\Set{}$。注意，$\\Set{\\emptyset}$ *不是*空集——它是以空集为元素的集合！习惯上，不论你觉得集合的元素是否“像一个点”，都把它的元素称为*点*。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Operations on Sets",
+    "sha": "c7696bac8f18",
+    "zh": "集合的运算"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If the set $A$ contains all the elements that the set $B$ does, we call $B$ a *subset* of $A$. Conversely, we call $A$ a *superset* of $B$.",
+    "sha": "d7c2802a8c94",
+    "zh": "如果集合 $A$ 包含了集合 $B$ 的所有元素，我们就称 $B$ 是 $A$ 的*子集*；反过来，称 $A$ 是 $B$ 的*超集*（上位集）。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Subset & Superset",
+    "sha": "a38d6e685005",
+    "zh": "子集与超集"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The set $B$ is a *subset* of the set $A$, written $B\\subseteq A$, if for all $b\\in B$ we also have $b\\in A$. In this case, $A$ is called a *superset* of $B$. 〔注： Some mathematicians use the symbol $\\subset$ instead of $\\subseteq$.〕",
+      "sha": "389ed8574276",
+      "zh": "如果对所有 $b\\in B$ 都有 $b\\in A$，就称集合 $B$ 是集合 $A$ 的*子集*，记作 $B\\subseteq A$。此时称 $A$ 是 $B$ 的*超集*（上位集）。〔注：有些数学家用符号 $\\subset$ 代替 $\\subseteq$。〕"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Some simple examples are $\\Set{1,2,3}\\subseteq \\Set{1,2,3,4}$ and $\\Set{1,2,3}\\subseteq\\Set{1,2,3}$. There's something funny about that last example, though. Those two sets are not only subsets/supersets of each other, they're *equal*. As surprising as it seems, we actually need to define what it means for two sets to be equal.",
+    "sha": "3c3db53a0bdb",
+    "zh": "一些简单的例子有 $\\Set{1,2,3}\\subseteq \\Set{1,2,3,4}$ 和 $\\Set{1,2,3}\\subseteq\\Set{1,2,3}$。不过最后一个例子有点奇怪：这两个集合不仅互为子集、超集，而且是*相等*的。看上去有些出人意料，但我们确实需要定义“两个集合相等”是什么意思。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Set Equality",
+    "sha": "0e8d5aad2e24",
+    "zh": "集合相等"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The sets $A$ and $B$ are *equal*, written $A=B$, if $A\\subseteq B$ and $B\\subseteq A$.",
+      "sha": "bc8c443de256",
+      "zh": "如果 $A\\subseteq B$ 且 $B\\subseteq A$，就称集合 $A$ 与 $B$ *相等*，记作 $A=B$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Having a definition of equality to lean on will help us when we need to prove things about sets.",
+    "sha": "5e6367845f4c",
+    "zh": "有了相等的定义可以依靠，我们在需要证明有关集合的命题时就方便多了。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be the set of numbers that can be expressed as $2n$ for some whole number $n$, and let $B$ be the set of numbers that can be expressed as $m+1$ where $m$ is an odd whole number. We will show $A=B$.",
+      "sha": "97c2f52b7d30",
+      "zh": "设 $A$ 是所有能表示成 $2n$（$n$ 为某个整数）的数组成的集合，设 $B$ 是所有能表示成 $m+1$（$m$ 为奇整数）的数组成的集合。我们来证明 $A=B$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "First, let us show $A\\subseteq B$. If $x\\in A$, then $x=2n$ for some whole number $n$. Therefore",
+      "sha": "c4100c2a9ab6",
+      "zh": "首先证明 $A\\subseteq B$。如果 $x\\in A$，那么对某个整数 $n$ 有 $x=2n$。因此"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "x=2n=2(n-1)+1+1=m+1"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where $m=2(n-1)+1$ is, by definition, an odd number. Thus $x\\in B$, which proves $A\\subseteq B$.",
+      "sha": "09e8a2f22f76",
+      "zh": "其中 $m=2(n-1)+1$ 按定义是一个奇数。于是 $x\\in B$，这就证明了 $A\\subseteq B$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Now we will show $B\\subseteq A$. Let $x\\in B$. By definition, $x=m+1$ for some odd $m$. By the definition of oddness, $m=2k+1$ for some whole number $k$. Thus",
+      "sha": "06968dd7af93",
+      "zh": "再来证明 $B\\subseteq A$。设 $x\\in B$。按定义，对某个奇数 $m$ 有 $x=m+1$。按奇数的定义，对某个整数 $k$ 有 $m=2k+1$。因此"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}x=m+1&=(2k+1)+1=2k+2\\\\\n\t\t&=2(k+1)=2n,\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where $n=k+1$, and so $x\\in A$. Since $A\\subseteq B$ and $B\\subseteq A$, by definition $A=B$.",
+      "sha": "efc9621bd5fc",
+      "zh": "其中 $n=k+1$，所以 $x\\in A$。由于 $A\\subseteq B$ 且 $B\\subseteq A$，按定义就有 $A=B$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Set-builder Notation",
+    "sha": "168686723dad",
+    "zh": "集合构造记号"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Specifying sets by listing all their elements can be a hassle, and if there are an infinite number of elements, it's impossible! Fortunately, *set-builder notation* solves these problems. If $X$ is a set, we can define a subset",
+    "sha": "4e043913c419",
+    "zh": "通过逐个列出元素来给出集合很麻烦，而如果元素有无穷多个，这根本做不到！好在*集合构造记号*解决了这些问题。如果 $X$ 是一个集合，我们可以定义一个子集"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "Y= \\Set{a\\in X\\given\\text{some rule involving }a},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "which is read “$Y$ is the set of $a$ in $X$ *such that* some rule involving $a$ is true.” If $X$ is intuitive, we may omit it and simply write $Y=\\Set{a\\given\\text{some rule involving }a}$ 〔注： If you want to get technical, to make this notation unambiguous, you define a *universe of discourse*. That is, a set $\\mathcal U$ containing every object you might want to talk about. Then $\\Set{a\\given\\text{some rule involving }a}$ is short for $\\Set{a\\in\\mathcal U\\given\\text{some rule involving }a}$.〕. You may equivalently use “$|$” instead of “$:$”, writing $Y=\\{a\\,|\\,\\text{some rule involving }a\\}$.",
+    "sha": "10f941d89110",
+    "zh": "读作“$Y$ 是 $X$ 中满足某个与 $a$ 有关的规则的那些元素 $a$ 组成的集合”（*such that*，即“使得”）。如果 $X$ 一目了然，也可以省略它，直接写 $Y=\\Set{a\\given\\text{some rule involving }a}$〔注：如果要讲究严格，为了让这种记号没有歧义，需要先定义一个*论域*，也就是包含你可能谈到的所有对象的集合 $\\mathcal U$。这样 $\\Set{a\\given\\text{some rule involving }a}$ 就是 $\\Set{a\\in\\mathcal U\\given\\text{some rule involving }a}$ 的简写。〕。你也可以等价地用“$|$”代替“$:$”，写成 $Y=\\{a\\,|\\,\\text{some rule involving }a\\}$。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There are also some common operations we can do with two sets.",
+    "sha": "a913a827ad5d",
+    "zh": "对两个集合，还有一些常用的运算。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Unions & Intersections",
+    "sha": "cccd892cede4",
+    "zh": "并集与交集"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $X$ and $Y$ be sets. The *union* of $X$ and $Y$ and the *intersection* of $X$ and $Y$ are defined as follows.",
+      "sha": "f3cd0aa8b058",
+      "zh": "设 $X$ 和 $Y$ 是集合。$X$ 与 $Y$ 的*并集*以及 $X$ 与 $Y$ 的*交集*定义如下。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$X\\cup Y = \\Set{ a \\given a\\in X\\text{ or }a\\in Y}$.",
+         "sha": "4cc4d7d09ddd",
+         "zh": "$X\\cup Y = \\Set{ a \\given a\\in X\\text{ or }a\\in Y}$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$X\\cap Y = \\Set{ a \\given a\\in X\\text{ and }a\\in Y}$.",
+         "sha": "b42ce35fbf19",
+         "zh": "$X\\cap Y = \\Set{ a \\given a\\in X\\text{ and }a\\in Y}$。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For example, if $A=\\Set{1,2,3}$ and $B=\\Set{-1,0,1,2}$, then $A\\cap B=\\Set{1,2}$ and $A\\cup B= \\Set{-1,0,1,2,3}$. Set unions and intersections are *associative*, which means it doesn't matter how you apply parentheses to an expression involving just unions or just intersections. For example $(A\\cup B)\\cup C=A\\cup(B\\cup C)$, which means we can give an unambiguous meaning to an expression like $A\\cup B\\cup C$ (just put the parentheses wherever you like). But watch out, $(A\\cup B)\\cap C$ means something different than $A\\cup(B\\cap C)$!",
+    "sha": "0d50e6199796",
+    "zh": "例如，若 $A=\\Set{1,2,3}$，$B=\\Set{-1,0,1,2}$，则 $A\\cap B=\\Set{1,2}$，$A\\cup B= \\Set{-1,0,1,2,3}$。集合的并和交满足*结合律*，意思是：对只含并运算（或只含交运算）的表达式，怎么加括号都无所谓。例如 $(A\\cup B)\\cup C=A\\cup(B\\cup C)$，所以像 $A\\cup B\\cup C$ 这样的表达式有确定的含义（括号爱加在哪里都行）。但要小心，$(A\\cup B)\\cap C$ 与 $A\\cup(B\\cap C)$ 的含义是不同的！"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Some common sets have special notation:",
+    "sha": "9af7fbfeaf45",
+    "zh": "一些常见的集合有专门的记号："
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}\\emptyset &= \\Set{}\\text{, the empty set}\\\\\n\t\\N &= \\Set{0,1,2,3,\\ldots}=\\Set{\\text{natural numbers}}\\\\\n\t\\Z &= \\Set{\\ldots, -3,-2,-1,0,1,2,3,\\ldots}=\\Set{\\text{integers}}\\\\\n\t\\Q &= \\Set{\\text{rational numbers}}\\\\\n\t\\R &= \\Set{\\text{real numbers}}\\\\\n\t\\R^n &= \\Set{\\text{vectors in $n$-dimensional Euclidean space}}\\\\\\end{aligned}"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Vectors & Scalars",
+    "sha": "601a62c5da34",
+    "zh": "向量与标量"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A *scalar* number (also referred to as a *scalar* or just an ordinary *number*) models a relationship between quantities. For example, a recipe might call for *six* times as much flour as sugar. In contrast, a *vector* models a relationship between points. For example, the store might be *2km East and 4km North* from your house. In this way, a vector may be thought of as a *displacement* with a *direction* and a *magnitude* 〔注： Though in this book we will treat vectors as geometric objects relating to Euclidean space, they are much more general. For instance, someone's internet browsing habits could be described by a vector—the topics they find most interesting might be the “direction” and the amount of time they browse might be the “magnitude.” 〕.",
+    "sha": "26c8a051c505",
+    "zh": "*标量*（也叫*数*，或者就叫普通的*数*）刻画的是量与量之间的关系。例如，某个菜谱可能要求面粉的量是糖的*六*倍。相比之下，*向量*刻画的是点与点之间的关系。例如，商店可能在你家*以东 2 公里、以北 4 公里*的地方。从这个角度看，向量可以看作一个有*方向*和*大小*的*位移*〔注： 虽然本书把向量当作与欧氏空间有关的几何对象来处理，但向量的含义要广泛得多。例如，一个人的上网习惯就可以用一个向量来描述——他最感兴趣的话题可以是“方向”，而上网时间的长短可以是“大小”。〕。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Given points $P=(1,1)$ and $Q=(3,2)$, we specify the *displacement* from $P$ to $Q$ as a vector $\\overrightarrow{PQ}$ whose magnitude is $\\sqrt{5}$ (as given by the Pythagorean theorem) and whose direction is specified by a directed line segment from $P$ to $Q$.",
+    "sha": "d2a415b12e7e",
+    "zh": "给定点 $P=(1,1)$ 和 $Q=(3,2)$，我们把从 $P$ 到 $Q$ 的*位移*记作向量 $\\overrightarrow{PQ}$：它的大小是 $\\sqrt{5}$（由勾股定理得到），它的方向由从 $P$ 指向 $Q$ 的有向线段给出。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "2e61d6d06421"
+   ],
+   "caption": null
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Vector Notation",
+    "sha": "0f5c4b985348",
+    "zh": "向量记号"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There are many ways to represent vector quantities in writing. If we have two points, $P$ and $Q$, we write $\\overrightarrow{PQ}$ to represent the vector from $P$ to $Q$. Absent points, a bold-faced letter (like a) or an arrow over a letter (like $\\vec a$) are the most common vector notations. In this text, we will use $\\vec a$ to represent a vector. The notation $\\norm{\\vec a}$ represents the magnitude of the vector $\\vec a$, which is sometimes called the *norm* or *length* of $\\vec a$.",
+    "sha": "2efbe2c5cda2",
+    "zh": "书面表示向量有很多种方式。如果有两个点 $P$ 和 $Q$，我们用 $\\overrightarrow{PQ}$ 表示从 $P$ 到 $Q$ 的向量。不涉及具体的点时，最常见的向量记号是粗体字母（如 a）或字母上方加箭头（如 $\\vec a$）。本书用 $\\vec a$ 表示向量。记号 $\\norm{\\vec a}$ 表示向量 $\\vec a$ 的大小，有时也称为 $\\vec a$ 的*范数*或*长度*。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Graphically, we may represent vectors as directed line segments (a line segment with an arrow at one end), however we must take care to distinguish between the picture we draw and the “true” vector. For example, directed line segments always *start* somewhere, but a vector models a displacement and has no sense of “origin”.",
+    "sha": "c807412a60cd",
+    "zh": "在图形上，我们可以把向量表示成有向线段（一端带箭头的线段），但必须注意区分我们画出的图和“真正的”向量。例如，有向线段总是从某处*出发*，而向量刻画的是位移，并没有“起点”的概念。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Consider the following: for the points $A=(1,1)$, $B=(3,2)$, $X=(1,0)$, and $Y=(3,1)$, define the vectors $\\vec a = \\overrightarrow{AB}$ and $\\vec x=\\overrightarrow{XY}$.",
+    "sha": "aea1ee3b27c8",
+    "zh": "请看下面的情形：对点 $A=(1,1)$、$B=(3,2)$、$X=(1,0)$、$Y=(3,1)$，定义向量 $\\vec a = \\overrightarrow{AB}$ 和 $\\vec x=\\overrightarrow{XY}$。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "7fee8ab25cf6"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Are these the same or different vectors? As directed line segments, they are different because they are at different locations in space. However, both $\\vec a$ and $\\vec x$ have the same magnitude and direction. Thus, $\\vec a=\\vec x$ despite the fact that $A\\neq X$ 〔注： Some theories use *rooted vectors* instead of vectors as the fundamental object of study. A rooted vector represents a magnitude, direction, *and* a starting point. And, as rooted vectors, $\\vec a\\neq \\vec x$ (from the example above). But for us, vectors will always be unrooted, even though our graphical representations of vectors might appear rooted. 〕.",
+    "sha": "a7814d2a12b5",
+    "zh": "这两个向量是相同还是不同？作为有向线段，它们位置不同，所以是不同的。但是 $\\vec a$ 和 $\\vec x$ 的大小和方向都相同，因此 $\\vec a=\\vec x$，尽管 $A\\neq X$〔注：有些理论以*有根向量*而不是向量作为基本研究对象。有根向量表示大小、方向，*以及*起点。作为有根向量，（就上面的例子而言）$\\vec a\\neq \\vec x$。但对我们来说，向量永远是无根的，尽管我们画出的向量图形看上去可能带有起点。〕。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": "要点"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A vector is not the same as a line segment and a vector by itself has no “origin”.",
+      "sha": "9f98bde3776e",
+      "zh": "向量与线段不是一回事，向量本身没有“起点”。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Vectors and Points",
+    "sha": "ddba8fc94f63",
+    "zh": "向量与点"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The distinction between vectors and points is sometimes nebulous because the two are so closely related. A *point* in Euclidean space specifies an absolute position whereas a vector specifies a displacement (i.e., a magnitude and direction). However, given a point $P$, one associates $P$ with the vector $\\vec p=\\overrightarrow{OP}$, where $O$ is the origin. Similarly, we associate the vector $\\vec v$ with the point $V$ so that $\\overrightarrow{OV}=\\vec v$. Thus, we have a way to unambiguously go back and forth between vectors and points 〔注： Mathematically, we say there is an *isomorphism* between vectors and points (once an origin is fixed, of course!).〕. As such, *we will treat vectors and points interchangeably*.",
+    "sha": "8a45c2afa179",
+    "zh": "向量与点之间的区别有时比较模糊，因为二者的关系非常紧密。欧氏空间中的一个*点*确定的是绝对位置，而向量确定的是位移（即大小和方向）。不过，给定点 $P$，可以把 $P$ 与向量 $\\vec p=\\overrightarrow{OP}$ 对应起来，其中 $O$ 是原点。类似地，我们把向量 $\\vec v$ 与点 $V$ 对应起来，使得 $\\overrightarrow{OV}=\\vec v$。这样，我们就有了一种在向量与点之间来回转换而不产生歧义的办法〔注： 用数学的话说，（当然要先固定一个原点！）向量与点之间存在一个*同构*。〕。因此，*我们把向量和点当作可以互换的*。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": "要点"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Vectors and points can and will be treated interchangeably.",
+      "sha": "b354c0822a6f",
+      "zh": "向量和点可以、而且将会被当作可以互换的。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Vector Arithmetic",
+    "sha": "d6c83580c851",
+    "zh": "向量的运算"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Vectors provide a natural way to give directions. For example, suppose $\\xhat$ points one kilometer eastwards and $\\yhat$ points one kilometer northwards. Now, if you were standing at the origin and wanted to move to a location 3 kilometers east and 2 kilometers north, you might say: “Walk 3 times the length of $\\xhat$ in the $\\xhat$ direction and 2 times the length of $\\yhat$ in the $\\yhat$ direction.” Mathematically, we express this as",
+    "sha": "f1598bf83588",
+    "zh": "向量为指路提供了一种自然的方式。例如，设 $\\xhat$ 指向正东、长 1 公里，$\\yhat$ 指向正北、长 1 公里。现在，如果你站在原点，想走到东 3 公里、北 2 公里的位置，你也许会说：“沿 $\\xhat$ 方向走 3 倍 $\\xhat$ 的长度，再沿 $\\yhat$ 方向走 2 倍 $\\yhat$ 的长度。”用数学的话来写就是"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "3\\xhat+2\\yhat."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Of course, we've incidentally described a new vector. Let $P$ be the point at 3-east and 2-north. Then",
+    "sha": "0178f117da2b",
+    "zh": "当然，我们顺带描述了一个新的向量。设 $P$ 是东 3、北 2 处的点。那么"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\overrightarrow{OP}=3\\xhat+2\\yhat."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If the vector $\\vec r$ points north but has a length of 10 kilometers, we have a similar formula:",
+    "sha": "1be45d18f38a",
+    "zh": "如果向量 $\\vec r$ 指向正北，长度为 10 公里，我们有类似的公式："
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\overrightarrow{OP}=3\\xhat+\\tfrac{1}{5}\\vec r,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and we have the relationship $\\vec r=10\\yhat$. Our notation here is very suggestive. Indeed, if we could make sense of “$\\alpha\\vec v$” (scalar multiplication) and “$\\vec v+\\vec w$” (vector addition) for any scalar $\\alpha$ and any vectors $\\vec v$ and $\\vec w$, we could do algebra with vectors.",
+    "sha": "7905c037cc7b",
+    "zh": "并且有关系 $\\vec r=10\\yhat$。这里的记号很有启发性。确实，如果我们能对任意标量 $\\alpha$ 和任意向量 $\\vec v$、$\\vec w$ 说清“$\\alpha\\vec v$”（标量乘法）和“$\\vec v+\\vec w$”（向量加法）的含义，就可以对向量做代数运算了。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We will define scalar multiplication intuitively: For a vector $\\vec v$ and a scalar $\\alpha>0$, the vector $\\vec w=\\alpha\\vec v$ is the vector pointing in the same direction as $\\vec v$ but with length scaled by $\\alpha$. That is, $\\norm{\\vec w}=\\alpha\\norm{\\vec v}$. Similarly, $-\\vec v$ is the vector of the same length as $\\vec v$ but pointing in the exact opposite direction.",
+    "sha": "259416da6852",
+    "zh": "我们凭直观来定义标量乘法：对向量 $\\vec v$ 和标量 $\\alpha>0$，向量 $\\vec w=\\alpha\\vec v$ 是与 $\\vec v$ 方向相同、长度放大 $\\alpha$ 倍的向量，即 $\\norm{\\vec w}=\\alpha\\norm{\\vec v}$。类似地，$-\\vec v$ 是与 $\\vec v$ 长度相同、方向恰好相反的向量。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "dbc8b196f24d"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For two vectors $\\vec u$ and $\\vec v$, the sum $\\vec w=\\vec u+\\vec v$ represents the displacement vector created by first displacing along $\\vec u$ and then displacing along $\\vec v$.",
+    "sha": "739e4f4a5627",
+    "zh": "对两个向量 $\\vec u$ 和 $\\vec v$，和 $\\vec w=\\vec u+\\vec v$ 表示这样的位移向量：先沿 $\\vec u$ 位移，再沿 $\\vec v$ 位移。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "f48043e89357"
+   ],
+   "caption": null
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": "要点"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "You add vectors tip to tail and you scale vectors by changing their length.",
+      "sha": "91c59ac03c58",
+      "zh": "向量相加是首尾相接，向量的数乘是改变它的长度。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Now, there is one snag. What should $\\vec v+(-\\vec v)$ be? Well, first we displace along $\\vec v$ and then we displace in the exact opposite direction by the same amount. So, we have gone nowhere. This corresponds to a displacement with zero magnitude. But, what direction did we displace? Here we make a philosophical stand.",
+    "sha": "df9cdd5a2999",
+    "zh": "不过，这里有一个麻烦。$\\vec v+(-\\vec v)$ 应该是什么？先沿 $\\vec v$ 位移，再沿恰好相反的方向位移同样的量，结果哪里也没去。这对应于大小为零的位移。可是，这个位移是朝哪个方向的呢？在这里我们要表个态。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Zero Vector",
+    "sha": "ed76500397cb",
+    "zh": "零向量"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The *zero vector*, notated as $\\vec 0$, is the vector with no magnitude.",
+      "sha": "dabddbc1343c",
+      "zh": "*零向量*记作 $\\vec 0$，是大小为零的向量。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We will be pragmatic about the direction of the zero vector and say, *the zero vector does not have a well-defined direction* 〔注： In the mathematically precise definition of vector, the idea of “magnitude” and “direction” are dropped. Instead, a set of vectors is defined to be a set over which you can reasonably define addition and scalar multiplication. 〕. That means sometimes we consider the zero vector to point in every direction and sometimes we consider it to point in no directions. It depends on our mood—but we must never talk about *the* direction of the zero vector, since it's not defined.",
+    "sha": "aab5081a6708",
+    "zh": "对零向量的方向，我们采取务实的态度，规定：*零向量没有明确的方向*〔注： 在向量的严格数学定义中，“大小”和“方向”这两个概念都被去掉了。取而代之的是：向量的集合被定义为一个可以合理地定义加法和标量乘法的集合。〕。这就是说，我们有时认为零向量指向每一个方向，有时认为它不指向任何方向。这取决于我们的心情——但绝不能谈论零向量的*那个*方向，因为它没有定义。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Formalizing, for vectors $\\vec u$, $\\vec v$, $\\vec w$, and scalars $\\alpha$ and $\\beta$, the following laws are always satisfied:",
+    "sha": "4905eb541f4a",
+    "zh": "把这些写成正式的规则：对向量 $\\vec u$、$\\vec v$、$\\vec w$ 和标量 $\\alpha$、$\\beta$，下列定律总是成立："
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}(\\vec u+\\vec v)+\\vec w&=\\vec u+(\\vec v+\\vec w)\\quad\\text{(Associativity)}\\\\\n\t\\vec u+\\vec v&=\\vec v+\\vec u\\quad\\text{(Commutativity)}\\\\\n\t\\alpha(\\vec u+\\vec v)&=\\alpha\\vec u+\\alpha \\vec v\\quad\\text{(Distributivity)}\\end{aligned}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and",
+    "sha": "cffa50a32cb1",
+    "zh": "以及"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\begin{aligned}(\\alpha\\beta)\\vec v&=\\alpha(\\beta \\vec v)\\quad\\text{(Associativity II)}\\\\\n\t(\\alpha+\\beta)\\vec v&=\\alpha\\vec v+\\beta \\vec v\\quad\\text{(Distributivity II)}\\end{aligned}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Indeed, if we intuitively think about vectors in flat (Euclidean) space, all of these properties are satisfied 〔注： If we deviate from flat space, some of these rules are no longer respected. Consider moving 100 kilometers north then 100 kilometers east on a sphere. Is this the same as moving 100 kilometers east and then 100 kilometers north? 〕. From now on, these properties of vector operations will be considered the *laws (or axioms) of vector arithmetic*.",
+    "sha": "f8bbb486dede",
+    "zh": "确实，如果凭直观在平直（欧几里得）空间里考虑向量，这些性质全都成立〔注： 如果离开平直空间，其中有些规则就不再成立。比如在球面上先向北走 100 公里、再向东走 100 公里。这和先向东走 100 公里、再向北走 100 公里是一回事吗？〕。从现在起，向量运算的这些性质将被视为*向量运算的定律（或公理）*。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We group scalar multiplication and vector addition under one name: *linear combinations*.",
+    "sha": "635e720ed333",
+    "zh": "我们把标量乘法和向量加法合起来称为*线性组合*。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Linear Combination",
+    "sha": "7c3e3e6f12a4",
+    "zh": "线性组合"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A *linear combination* of the vectors $\\vec v_{1},\\vec v_{2},\\ldots,\\vec v_{n}$ is a vector",
+      "sha": "c0f4566a8b40",
+      "zh": "向量 $\\vec v_{1},\\vec v_{2},\\ldots,\\vec v_{n}$ 的*线性组合*是如下的向量"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec w = \\alpha_{1}\\vec v_{1}+\\alpha_{2}\\vec v_{2}+\\cdots+\\alpha_{n}\\vec\n\t\tv_{n}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The scalars $\\alpha_{1},\\alpha_{2},\\ldots,\\alpha_{n}$ are called the *coefficients* of the linear combination.",
+      "sha": "4810cccc03ba",
+      "zh": "标量 $\\alpha_{1},\\alpha_{2},\\ldots,\\alpha_{n}$ 称为这个线性组合的*系数*。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Coordinates and the Standard Basis",
+    "sha": "38dd3f3d10ee",
+    "zh": "坐标与标准基"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Consider the standard, flat, Euclidean plane (which is notated by $\\R^2$). A coordinate system for $\\R^2$ is a way to assign a unique pair of numbers to every point in $\\R^2$. Though there are infinitely many coordinate systems we could choose for the plane, there is one standard one: the $xy$-coordinate system depicted below (which you're already familiar with).",
+    "sha": "2bcebc675531",
+    "zh": "考虑标准的、平直的欧几里得平面（记作 $\\R^2$）。$\\R^2$ 的一个坐标系，就是给 $\\R^2$ 中每个点指定唯一一对数的方式。虽然我们可以为平面选取无穷多种坐标系，但有一种是标准的：就是下图所示的 $xy$ 坐标系（你早已熟悉）。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "621cb81d9f26"
+   ],
+   "caption": null
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "1406af10c000"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In conjunction with the standard coordinate system, there are also *standard basis vectors*. The vector $\\xhat$ always points one unit in the direction of the positive $x$-axis and $\\yhat$ always points one unit in the direction of the positive $y$-axis.",
+    "sha": "0636ff584968",
+    "zh": "与标准坐标系相配的，还有*标准基向量*。向量 $\\xhat$ 总是指向 $x$ 轴正方向、长 1 个单位，向量 $\\yhat$ 总是指向 $y$ 轴正方向、长 1 个单位。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Using the standard basis, we can represent every point (or vector) in the plane as a linear combination. If the point $P$ has $xy$-coordinates $(\\alpha,\\beta)$, then $\\overrightarrow{OP}=\\alpha\\xhat+\\beta\\yhat$. Not only that, but this is the *only* way to represent the vector $\\overrightarrow{OP}$ as a linear combination of $\\xhat$ and $\\yhat$.",
+    "sha": "8a72e4c9b611",
+    "zh": "利用标准基，平面上的每个点（或向量）都可以表示成线性组合。如果点 $P$ 的 $xy$ 坐标是 $(\\alpha,\\beta)$，那么 $\\overrightarrow{OP}=\\alpha\\xhat+\\beta\\yhat$。不仅如此，这还是把向量 $\\overrightarrow{OP}$ 表示成 $\\xhat$ 与 $\\yhat$ 的线性组合的*唯一*方式。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": "要点"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Every vector in $\\R^2$ can be written uniquely as a linear combination of the standard basis vectors.",
+      "sha": "c7ce598e4fa9",
+      "zh": "$\\R^2$ 中的每个向量都可以唯一地写成标准基向量的线性组合。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For a vector $\\vec w=\\alpha\\xhat+\\beta\\yhat$, we call the pair $(\\alpha,\\beta)$ the *standard coordinates* of the vector $\\vec w$. There are many equivalent notations used to represent a vector in coordinates.",
+    "sha": "b4fcb1f8a2e2",
+    "zh": "对向量 $\\vec w=\\alpha\\xhat+\\beta\\yhat$，我们把数对 $(\\alpha,\\beta)$ 称为向量 $\\vec w$ 的*标准坐标*。用坐标表示向量有许多等价的记号。"
+   }
+  },
+  {
+   "k": "table",
+   "spec": "cc",
+   "rows": [
+    [
+     "$(\\alpha,\\beta)$",
+     {
+      "en": "parentheses",
+      "sha": "3d4beb21e22c",
+      "zh": "圆括号"
+     }
+    ],
+    [
+     "$\\langle \\alpha,\\beta\\rangle$",
+     {
+      "en": "angle brackets",
+      "sha": "3287ff51efa2",
+      "zh": "尖括号"
+     }
+    ],
+    [
+     {
+      "en": "$\\mat\\alpha",
+      "sha": "94db880dd7ac",
+      "zh": "$\\mat\\alpha"
+     },
+     {
+      "en": "\\beta$",
+      "sha": "1d2490776b47",
+      "zh": "\\beta$"
+     },
+     {
+      "en": "square brackets in a row (a row matrix/row vector)",
+      "sha": "b29ddab3cda4",
+      "zh": "排成一行的方括号（行矩阵 / 行向量）"
+     }
+    ],
+    [
+     {
+      "en": "$\\mat\\alpha",
+      "sha": "94db880dd7ac",
+      "zh": "$\\mat\\alpha"
+     }
+    ],
+    [
+     {
+      "en": "\\beta$",
+      "sha": "1d2490776b47",
+      "zh": "\\beta$"
+     },
+     {
+      "en": "square brackets in a column (a column matrix/column vector)",
+      "sha": "4d87d3fe878a",
+      "zh": "排成一列的方括号（列矩阵 / 列向量）"
+     }
+    ]
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Coordinates and vectors go hand in hand, and we will often write",
+    "sha": "865503625db1",
+    "zh": "坐标与向量密不可分，我们常常把"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec v=\\mat{\\alpha\\\\\\beta}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "as a shorthand for “$\\vec v=\\alpha\\xhat+\\beta\\yhat$”.",
+    "sha": "3502928f502f",
+    "zh": "作为“$\\vec v=\\alpha\\xhat+\\beta\\yhat$”的简写。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Solving Problems with Coordinates",
+    "sha": "5ce77831647a",
+    "zh": "用坐标解决问题"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Coordinates allow for vector arithmetic to be carried out in a mechanical way. Suppose $\\vec u=\\mat{a\\\\b}$ and $\\vec v=\\mat{x\\\\y}$. Then,",
+    "sha": "d43e754e5d2f",
+    "zh": "坐标使得向量运算可以机械地进行。设 $\\vec u=\\mat{a\\\\b}$，$\\vec v=\\mat{x\\\\y}$。那么，"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec u=\\vec v\\qquad\\iff\\qquad \\mat{a\\\\b}=\\mat{x\\\\y}\\qquad\\iff\\qquad a=x\\text{ and }b=y."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Further,",
+    "sha": "e53fde77e644",
+    "zh": "此外，"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec u+\\vec v=\\mat{a\\\\b}+\\mat{x\\\\y}=\\mat{a+x\\\\b+y}\\qquad\\text{and}\\qquad t\\vec u=t\\mat{a\\\\b}=\\mat{ta\\\\tb}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "for any scalar $t$.",
+    "sha": "61548a6b2e48",
+    "zh": "对任意标量 $t$ 成立。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Using these rules, otherwise complicated questions about vectors can be reduced to simple algebra questions 〔注： So simple, that computers are able to answer billions of such questions a second as you play your favorite video game!〕.",
+    "sha": "91c4cc4519fa",
+    "zh": "借助这些规则，原本复杂的向量问题可以化为简单的代数问题〔注： 简单到你玩最喜欢的电子游戏时，计算机每秒钟能回答数十亿个这样的问题！〕。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec x=\\xhat-\\yhat$, $\\vec y=3\\xhat-\\yhat$, and $\\vec r=2\\xhat+2\\yhat$. Is $\\vec r$ a linear combination of $\\vec x$ and $\\vec y$?",
+      "sha": "87dca7c7b55f",
+      "zh": "设 $\\vec x=\\xhat-\\yhat$，$\\vec y=3\\xhat-\\yhat$，$\\vec r=2\\xhat+2\\yhat$。$\\vec r$ 是 $\\vec x$ 与 $\\vec y$ 的线性组合吗？"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "By definition, $\\vec r$ is a linear combination of $\\vec x$ and $\\vec y$ if there exist scalars $a$ and $b$ such that",
+      "sha": "437fd043dd41",
+      "zh": "按定义，$\\vec r$ 是 $\\vec x$ 与 $\\vec y$ 的线性组合，当且仅当存在标量 $a$ 和 $b$，使得"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec r= a\\vec x+b\\vec y."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Rewriting everything in coordinates, we see this is equivalent to the equation",
+      "sha": "12b2bd47094f",
+      "zh": "把一切都改写成坐标的形式，可以看出这等价于方程"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{2\\\\2}=a\\mat{1\\\\-1}+b\\mat{3\\\\-1} = \\mat{a+3b\\\\-a-b}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, we need to determine if the system of equations",
+      "sha": "328e1df50715",
+      "zh": "因此，我们需要判断方程组"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left\\{\\begin{aligned}a+3b &= 2 \\\\ -a-b &= 2\\end{aligned}\\right."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "has a solution. After solving, we find $a=-4$ and $b=2$ is the only solution. Thus, $\\vec r$ is a linear combination of $\\vec x$ and $\\vec y$. More specifically,",
+      "sha": "9c4b6f3cfb62",
+      "zh": "是否有解。解出来之后，我们发现 $a=-4$、$b=2$ 是唯一的解。所以，$\\vec r$ 是 $\\vec x$ 与 $\\vec y$ 的线性组合。更具体地说，"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec r = -4\\vec x+2\\vec y."
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Higher Dimensions",
+    "sha": "b8161a3a1429",
+    "zh": "高维空间"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We coordinatize three dimensional space (notated by $\\R^3$) by constructing $x$, $y$, and $z$ axes. Again, $\\R^3$ has standard basis vectors $\\xhat$, $\\yhat$, and $\\zhat$ which each point one unit along the $x$, $y$, and $z$ axes, respectively.",
+    "sha": "5f5619f6701b",
+    "zh": "我们通过建立 $x$、$y$、$z$ 三条坐标轴，给三维空间（记作 $\\R^3$）建立坐标。同样，$\\R^3$ 也有标准基向量 $\\xhat$、$\\yhat$ 和 $\\zhat$，它们分别沿 $x$、$y$、$z$ 轴指向正方向、长 1 个单位。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Since we live in three dimensional space, its study has a long history, and many notations for the standard basis of three dimensional space are in use. This text will use $\\xhat$, $\\yhat$, $\\zhat$, but other common notations include:",
+    "sha": "b5f29662e2c1",
+    "zh": "由于我们生活在三维空间里，对它的研究历史悠久，三维空间的标准基也就有许多种记号在使用。本书采用 $\\xhat$、$\\yhat$、$\\zhat$，其他常见的记号有："
+   }
+  },
+  {
+   "k": "table",
+   "spec": "ccc",
+   "rows": [
+    [
+     "$\\hat{\\mathbf{x}}$",
+     "$\\hat{\\mathbf{y}}$",
+     "$\\hat{\\mathbf{z}}$"
+    ],
+    [
+     "$\\hat{\\imath}$",
+     "$\\hat{\\jmath}$",
+     "$\\hat{k}$"
+    ],
+    [
+     "$\\mathbf{i}$",
+     "$\\mathbf j$",
+     "$\\mathbf k$"
+    ],
+    [
+     "$\\vec e_1$",
+     "$\\vec e_2$",
+     "$\\vec e_3$"
+    ]
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Beyond three dimensions, drawing pictures becomes hard, but we can still use vectors. We use $\\R^n$ to notate $n$-dimensional Euclidean space. The standard basis for $\\R^n$ is $\\sbasis{1}$, $\\sbasis{2}$, …, $\\sbasis{n}$. Again, every vector in $\\R^n$ can be written uniquely as a linear combination of the standard basis, and a coordinate representation of a vector in $\\R^n$ is a list of $n$ scalars.",
+    "sha": "1ffd24c3eb74",
+    "zh": "超过三维之后，画图变得困难，但我们仍然可以使用向量。我们用 $\\R^n$ 表示 $n$ 维欧几里得空间。$\\R^n$ 的标准基是 $\\sbasis{1}$、$\\sbasis{2}$、…、$\\sbasis{n}$。同样，$\\R^n$ 中的每个向量都可以唯一地写成标准基的线性组合，而 $\\R^n$ 中向量的坐标表示就是一列 $n$ 个标量。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec x,\\vec y\\in\\R^3$ be given by $\\vec x=2\\xhat-\\zhat$ and $\\vec y=6\\yhat+3\\zhat$. Compute $\\vec z=\\vec x+2\\vec y$.",
+      "sha": "17fd4162f00a",
+      "zh": "设 $\\vec x,\\vec y\\in\\R^3$ 由 $\\vec x=2\\xhat-\\zhat$ 和 $\\vec y=6\\yhat+3\\zhat$ 给出。计算 $\\vec z=\\vec x+2\\vec y$。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec z=\\vec x+2\\vec y=\\quad\\mat{2\\\\0\\\\-1}+2\\mat{0\\\\6\\\\3}\\quad\n\t\t=\\quad\\mat{2\\\\0\\\\-1}+\\mat{0\\\\12\\\\6}\\quad=\\quad\\mat{2\\\\12\\\\5}\\quad=2\\xhat+12\\yhat+5\\zhat"
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Write the following vectors as column vectors.",
+         "sha": "20dd405d0a5d",
+         "zh": "把下列向量写成列向量。"
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$4\\xhat -3\\zhat +2\\yhat -2\\xhat\\in\\R^3$.",
+            "sha": "cdb076447ab5",
+            "zh": "$4\\xhat -3\\zhat +2\\yhat -2\\xhat\\in\\R^3$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\yhat +\\xhat -5\\yhat \\in\\R^2$.",
+            "sha": "f5624f30d41c",
+            "zh": "$\\yhat +\\xhat -5\\yhat \\in\\R^2$。"
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Write the following vectors as linear combinations of $\\xhat$, $\\yhat$, and $\\zhat$.",
+         "sha": "8127c4c40fb1",
+         "zh": "把下列向量写成 $\\xhat$、$\\yhat$ 和 $\\zhat$ 的线性组合。"
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\mat{1\\\\-2\\\\3}$.",
+            "sha": "3087b1f6a398",
+            "zh": "$\\mat{1\\\\-2\\\\3}$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\mat{-2\\\\5\\\\4} + \\mat{1\\\\-2\\\\ -5} + \\mat{1\\\\0\\\\1}$.",
+            "sha": "a28785a1cc63",
+            "zh": "$\\mat{-2\\\\5\\\\4} + \\mat{1\\\\-2\\\\ -5} + \\mat{1\\\\0\\\\1}$。"
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\mat{2\\\\2\\\\-3}$",
+            "sha": "62fe98481f90",
+            "zh": "$\\mat{2\\\\2\\\\-3}$"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\mat{1\\\\-4}$",
+            "sha": "fd2c590dea5a",
+            "zh": "$\\mat{1\\\\-4}$"
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\xhat - 2\\yhat + 3\\zhat$",
+            "sha": "6ae9e41c677e",
+            "zh": "$\\xhat - 2\\yhat + 3\\zhat$"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$3\\yhat$",
+            "sha": "bb534b33b171",
+            "zh": "$3\\yhat$"
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Sets, Vectors & Notation · 练习题 1（上游 book/modules/module1-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module1-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute",
+      "sha": "68f4127b674a",
+      "zh": "计算"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "3\\mat{2\\\\-1\\\\1\\\\1\\\\0}+\n\t\t\t(-2)\\mat{1\\\\2\\\\-7\\\\3\\\\0}+\n\t\t\t\\mat{-3\\\\3\\\\9\\\\2\\\\2}"
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\mat{1\\\\-4\\\\26\\\\-1\\\\2}$",
+      "sha": "0c93c29f655a",
+      "zh": "$\\mat{1\\\\-4\\\\26\\\\-1\\\\2}$"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Sets, Vectors & Notation · 练习题 2（上游 book/modules/module1-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module1-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "[\\hefferon[2.21,2.22]] Decide if the vector is in the set. If it is, what value of the parameters produce that vector?",
+      "sha": "63fac7c6deba",
+      "zh": "[\\hefferon[2.21,2.22]] 判断该向量是否属于这个集合。如果属于，参数取什么值能得到这个向量？"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{5\\\\-5}$ and the set",
+         "sha": "184f600b933a",
+         "zh": "$\\mat{5\\\\-5}$ 与集合"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Set{\\vec{v}\\in\\R^2 \\given \\vec{v}=k\\mat{1\\\\-1} \\text{ for some } k\\in\\R}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{-1\\\\2\\\\1}$ and the set",
+         "sha": "a7b098f6363f",
+         "zh": "$\\mat{-1\\\\2\\\\1}$ 与集合"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Set{\\vec{v}\\in\\R^3 \\given\n\t\t\t\t\\vec{v}=i\\mat{-2\\\\1\\\\0}+j\\mat{3\\\\0\\\\1} \\text{ for some } i,j\\in\\R}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{3\\\\-1}$ and the set",
+         "sha": "99f0a3eb4e9d",
+         "zh": "$\\mat{3\\\\-1}$ 与集合"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Set{\\vec{v}\\in\\R^2 \\given \\vec{v}=k\\mat{-6\\\\2} \\text{ for some } k\\in\\R}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{5\\\\4}$ and the set",
+         "sha": "7adf1d0d8cc9",
+         "zh": "$\\mat{5\\\\4}$ 与集合"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Set{\\vec{v}\\in\\R^2 \\given \\vec{v}=j\\mat{5\\\\-4} \\text{ for some } j\\in\\R}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{2\\\\1\\\\-1}$ and the set",
+         "sha": "739980431cb4",
+         "zh": "$\\mat{2\\\\1\\\\-1}$ 与集合"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Set{\\vec{v}\\in\\R^3 \\given \\vec{v}=r\\mat{1\\\\-1\\\\3}+\\mat{0\\\\3\\\\-7} \\text{ for some } r\\in\\R}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\0\\\\1}$ and the set",
+         "sha": "78ddde810cff",
+         "zh": "$\\mat{1\\\\0\\\\1}$ 与集合"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\Set{\\vec{v}\\in\\R^3 \\given \\vec{v}=j\\mat{2\\\\0\\\\1}+k\\mat{-3\\\\-1\\\\1} \\text{ for some } j,k\\in\\R}"
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes, take $k=5$.",
+         "sha": "3eecc2f0e688",
+         "zh": "属于，取 $k=5$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes, take $i=2,j=1$.",
+         "sha": "59a9155dfcd3",
+         "zh": "属于，取 $i=2,j=1$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes, take $k=-\\frac{1}{2}$.",
+         "sha": "c1db16c4a9b2",
+         "zh": "属于，取 $k=-\\frac{1}{2}$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "No.",
+         "sha": "b8b9f1367ad6",
+         "zh": "不属于。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes, take $r=2$.",
+         "sha": "218a25846dcf",
+         "zh": "属于，取 $r=2$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "No.",
+         "sha": "b8b9f1367ad6",
+         "zh": "不属于。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Sets, Vectors & Notation · 练习题 3（上游 book/modules/module1-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module1-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Draw the following subsets of $\\R^2$ and then determine which are equal or subsets of each other.",
+      "sha": "44bd2ce2ac1b",
+      "zh": "画出下列 $\\R^2$ 的子集，然后判断哪些集合相等，或者互为子集。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$A=\\Set{\\vec v\\in\\R^2\\given \\vec v=n\\mat{2\\\\1}\\text{ for some integer }n\\in\\Z}$",
+         "sha": "abc7fbaa2346",
+         "zh": "$A=\\Set{\\vec v\\in\\R^2\\given \\vec v=n\\mat{2\\\\1}\\text{ for some integer }n\\in\\Z}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$B=\\Set{\\vec v\\in\\R^2\\given \\vec v=t\\mat{4\\\\2}\\text{ for some }t\\in\\R}$",
+         "sha": "7bf4f9433641",
+         "zh": "$B=\\Set{\\vec v\\in\\R^2\\given \\vec v=t\\mat{4\\\\2}\\text{ for some }t\\in\\R}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$C=\\Set{\\vec v\\in\\R^2\\given \\vec v=n\\mat{4\\\\2}\\text{ for some integer }n\\in\\Z}$",
+         "sha": "800c3c783790",
+         "zh": "$C=\\Set{\\vec v\\in\\R^2\\given \\vec v=n\\mat{4\\\\2}\\text{ for some integer }n\\in\\Z}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$D=\\Set{\\vec v\\in\\R^2\\given \\vec v=t\\mat{2\\\\1}\\text{ for some }t\\in\\R}$",
+         "sha": "9737dffbb20e",
+         "zh": "$D=\\Set{\\vec v\\in\\R^2\\given \\vec v=t\\mat{2\\\\1}\\text{ for some }t\\in\\R}$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "figure",
+        "env": "tikzpicture",
+        "figs": [
+         "a545dd1f9d6e"
+        ],
+        "caption": null
+       }
+      ],
+      [
+       {
+        "k": "figure",
+        "env": "tikzpicture",
+        "figs": [
+         "be7242c25b7a"
+        ],
+        "caption": null
+       }
+      ],
+      [
+       {
+        "k": "figure",
+        "env": "tikzpicture",
+        "figs": [
+         "bc48d70fc8b1"
+        ],
+        "caption": null
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The set $D$ and $B$ are equal.",
+         "sha": "aa18b2d4095a",
+         "zh": "集合 $D$ 与 $B$ 相等。"
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We have $C\\subseteq A$, $C\\subseteq B$, $C\\subseteq D$, $A\\subseteq B$, $A\\subseteq D$, and $B=D$.",
+      "sha": "7a53b39b4f71",
+      "zh": "有 $C\\subseteq A$，$C\\subseteq B$，$C\\subseteq D$，$A\\subseteq B$，$A\\subseteq D$，以及 $B=D$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Sets, Vectors & Notation · 练习题 4（上游 book/modules/module1-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module1-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec a=\\mat{1\\\\2}$, $\\vec b=\\mat{2\\\\4}$, $\\vec c=\\xhat+3\\yhat$, and $\\vec d=\\vec a+\\vec c$.",
+      "sha": "a9fedfcc0c78",
+      "zh": "设 $\\vec a=\\mat{1\\\\2}$，$\\vec b=\\mat{2\\\\4}$，$\\vec c=\\xhat+3\\yhat$，$\\vec d=\\vec a+\\vec c$。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Is $\\xhat$ a linear combination of $\\vec a$ and $\\vec b$?",
+         "sha": "42ae8eead9ed",
+         "zh": "$\\xhat$ 是 $\\vec a$ 与 $\\vec b$ 的线性组合吗？"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Is $\\vec d$ a linear combination of $\\vec a$ and $\\vec b$?",
+         "sha": "9111cff76c5e",
+         "zh": "$\\vec d$ 是 $\\vec a$ 与 $\\vec b$ 的线性组合吗？"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Is $\\vec p=\\mat{1\\\\1}$ a linear combination of $\\vec a$ and $\\vec c$?",
+         "sha": "7e955664f3da",
+         "zh": "$\\vec p=\\mat{1\\\\1}$ 是 $\\vec a$ 与 $\\vec c$ 的线性组合吗？"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Is $\\vec q=\\mat{-3\\\\3}$ a linear combination of $\\vec a$, $\\vec b$, $\\vec c$, and $\\vec d$?",
+         "sha": "2217384bcced",
+         "zh": "$\\vec q=\\mat{-3\\\\3}$ 是 $\\vec a$、$\\vec b$、$\\vec c$ 与 $\\vec d$ 的线性组合吗？"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "No.",
+         "sha": "b8b9f1367ad6",
+         "zh": "不属于。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "No.",
+         "sha": "b8b9f1367ad6",
+         "zh": "不属于。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes.",
+         "sha": "c53c562dab4b",
+         "zh": "是的。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes.",
+         "sha": "c53c562dab4b",
+         "zh": "是的。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Sets, Vectors & Notation · 练习题 5（上游 book/modules/module1-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module1-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Use set-builder notation to describe the following sets.",
+      "sha": "4aea8b345666",
+      "zh": "用集合构造记号描述下列集合。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The set of vectors in $\\R^{2}$ whose coordinates are rational numbers.",
+         "sha": "ad8329619e49",
+         "zh": "$\\R^{2}$ 中坐标都是有理数的向量组成的集合。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The set of vectors in $\\R^{2}$ whose coordinates are irrational numbers.",
+         "sha": "1aaf2befe207",
+         "zh": "$\\R^{2}$ 中坐标都是无理数的向量组成的集合。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $P(\\vec x) = -\\vec x$. The set $\\Set{P(\\vec e_{1}), P(\\vec e_{2})}$.",
+         "sha": "efd88f8792bf",
+         "zh": "设 $P(\\vec x) = -\\vec x$。集合 $\\Set{P(\\vec e_{1}), P(\\vec e_{2})}$。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\vec{v}\\in\\R^2 \\given \\vec{v}=\\mat{\\alpha\\\\\\beta} \\text{ for some } \\alpha,\\beta\\in\\Q}$",
+         "sha": "32af250c1839",
+         "zh": "$\\Set{\\vec{v}\\in\\R^2 \\given \\vec{v}=\\mat{\\alpha\\\\\\beta} \\text{ for some } \\alpha,\\beta\\in\\Q}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\vec{v}\\in\\R^2 \\given \\vec{v}=\\mat{\\alpha\\\\\\beta} \\text{ for some } \\alpha,\\beta\\in\\R\\setminus\\Q}$",
+         "sha": "c472ad6a9fda",
+         "zh": "$\\Set{\\vec{v}\\in\\R^2 \\given \\vec{v}=\\mat{\\alpha\\\\\\beta} \\text{ for some } \\alpha,\\beta\\in\\R\\setminus\\Q}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\vec{v}\\in\\R^2 \\given \\vec{v}=-\\vec{e}_1 \\text{ or } \\vec{v}=-\\vec{e}_2}$",
+         "sha": "ba0c93c7407c",
+         "zh": "$\\Set{\\vec{v}\\in\\R^2 \\given \\vec{v}=-\\vec{e}_1 \\text{ or } \\vec{v}=-\\vec{e}_2}$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Sets, Vectors & Notation · 练习题 6（上游 book/modules/module1-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module1-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following statements are true about the set listed below? Justify your answers.",
+      "sha": "d132b39a1b38",
+      "zh": "关于下面列出的集合，下列哪些陈述是正确的？请说明理由。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{Y}$, the $y$-axis in $\\R^{3}$.",
+         "sha": "50da0305dc4d",
+         "zh": "$\\mathcal{Y}$，即 $\\R^{3}$ 中的 $y$ 轴。"
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\mathcal{Y}$ is a finite set.",
+            "sha": "c0e254249155",
+            "zh": "$\\mathcal{Y}$ 是有限集。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let",
+            "sha": "ef5fe1edf379",
+            "zh": "设"
+           }
+          },
+          {
+           "k": "math",
+           "tex": "\\mathcal{A} = \\Set{\\vec a \\in \\R^3 \\given \\vec a = \\beta \\vec v\n\t\t\t\t\t\t\t\t\t\t  \\text{ for some } \\vec v \\in \\mathcal{Y}, \\beta \\in \\R},"
+          },
+          {
+           "k": "p",
+           "t": {
+            "en": "then $\\mathcal{A} \\subseteq \\mathcal{Y}$.",
+            "sha": "bf73ad3039a7",
+            "zh": "则 $\\mathcal{A} \\subseteq \\mathcal{Y}$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "For all vectors $\\vec v \\in \\mathcal{Y}$, we have $\\vec v \\neq \\vec 0$.",
+            "sha": "58c9e0665bf7",
+            "zh": "对所有向量 $\\vec v \\in \\mathcal{Y}$，都有 $\\vec v \\neq \\vec 0$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "For some vectors $\\vec v \\in \\mathcal{Y}$, we have $\\vec v \\neq \\vec 0$.",
+            "sha": "7b8b4f821090",
+            "zh": "对某些向量 $\\vec v \\in \\mathcal{Y}$，有 $\\vec v \\neq \\vec 0$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "For all vectors $\\vec v \\in \\mathcal{Y}$, there exists a vector $\\vec x \\in \\mathcal{Y}$ such that $\\vec x + \\vec v = \\vec e_{2}$.",
+            "sha": "670133810fef",
+            "zh": "对所有向量 $\\vec v \\in \\mathcal{Y}$，都存在向量 $\\vec x \\in \\mathcal{Y}$，使得 $\\vec x + \\vec v = \\vec e_{2}$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "There exists a vector $\\vec x \\in \\mathcal{Y}$ such that for all vectors $\\vec v \\in \\mathcal{Y}$, we have $\\vec x + \\vec v = \\vec e_{2}$.",
+            "sha": "c0dfd6867664",
+            "zh": "存在向量 $\\vec x \\in \\mathcal{Y}$，使得对所有向量 $\\vec v \\in \\mathcal{Y}$，都有 $\\vec x + \\vec v = \\vec e_{2}$。"
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{S}$, the set of vectors in $\\R^{3}$ whose coordinates are $\\pm3$.",
+         "sha": "a8c6c866d0e3",
+         "zh": "$\\mathcal{S}$，即 $\\R^{3}$ 中坐标都是 $\\pm3$ 的向量组成的集合。"
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\mathcal{S}$ is a finite set.",
+            "sha": "215d24e9d46d",
+            "zh": "$\\mathcal{S}$ 是有限集。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let",
+            "sha": "ef5fe1edf379",
+            "zh": "设"
+           }
+          },
+          {
+           "k": "math",
+           "tex": "\\mathcal{A} = \\Set{\\vec a \\in \\R^3 \\given \\vec a = \\beta \\vec v\n\t\t\t\t\t\t\t\t\t  \\text{ for some } \\vec v \\in \\mathcal{S}, \\beta \\in \\R },"
+          },
+          {
+           "k": "p",
+           "t": {
+            "en": "then $\\mathcal{A} \\subseteq \\mathcal{S}$.",
+            "sha": "79502ac2a889",
+            "zh": "则 $\\mathcal{A} \\subseteq \\mathcal{S}$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "For all vectors $\\vec v \\in \\mathcal{S}$, we have $\\vec v \\neq \\vec 0$.",
+            "sha": "db2061d70bdf",
+            "zh": "对所有向量 $\\vec v \\in \\mathcal{S}$，都有 $\\vec v \\neq \\vec 0$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "For some vectors $\\vec v \\in \\mathcal{S}$, we have $\\vec v \\neq \\vec 0$.",
+            "sha": "a0a8e5fbbd9e",
+            "zh": "对某些向量 $\\vec v \\in \\mathcal{S}$，有 $\\vec v \\neq \\vec 0$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "For all vectors $\\vec v \\in \\mathcal{S}$, there exists a vector $\\vec x \\in \\mathcal{S}$ such that $\\vec x + \\vec v = \\vec 0$.",
+            "sha": "b616ba5656f3",
+            "zh": "对所有向量 $\\vec v \\in \\mathcal{S}$，都存在向量 $\\vec x \\in \\mathcal{S}$，使得 $\\vec x + \\vec v = \\vec 0$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "There exists a vector $\\vec x \\in \\mathcal{S}$ such that for all vectors $\\vec v \\in \\mathcal{S}$, we have $\\vec x + \\vec v = \\vec 0$.",
+            "sha": "bc7b65962a84",
+            "zh": "存在向量 $\\vec x \\in \\mathcal{S}$，使得对所有向量 $\\vec v \\in \\mathcal{S}$，都有 $\\vec x + \\vec v = \\vec 0$。"
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "False.",
+            "sha": "1371fc30a5c6",
+            "zh": "错误。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "True.",
+            "sha": "9306de2f79be",
+            "zh": "正确。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "False.",
+            "sha": "1371fc30a5c6",
+            "zh": "错误。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "True.",
+            "sha": "9306de2f79be",
+            "zh": "正确。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "True.",
+            "sha": "9306de2f79be",
+            "zh": "正确。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "False.",
+            "sha": "1371fc30a5c6",
+            "zh": "错误。"
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "True.",
+            "sha": "9306de2f79be",
+            "zh": "正确。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "False.",
+            "sha": "1371fc30a5c6",
+            "zh": "错误。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "True.",
+            "sha": "9306de2f79be",
+            "zh": "正确。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "True.",
+            "sha": "9306de2f79be",
+            "zh": "正确。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "True.",
+            "sha": "9306de2f79be",
+            "zh": "正确。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "False.",
+            "sha": "1371fc30a5c6",
+            "zh": "错误。"
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Sets, Vectors & Notation · 练习题 7（上游 book/modules/module1-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module1-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex8",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each of the following statements, determine whether it is correct or not. If it is, prove it. Otherwise, give a counterexample.",
+      "sha": "e747f9c6302f",
+      "zh": "对下列每个陈述，判断它是否正确。如果正确，请证明；否则，请给出反例。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $A \\subseteq B$, then $A \\cap B = A$.",
+         "sha": "62aed51ed978",
+         "zh": "若 $A \\subseteq B$，则 $A \\cap B = A$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $B \\subseteq A$, then $A \\cap B = A$.",
+         "sha": "e60e1cb3013a",
+         "zh": "若 $B \\subseteq A$，则 $A \\cap B = A$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $A \\subseteq B$, then $A \\cap B \\neq B$.",
+         "sha": "bbc238de95a2",
+         "zh": "若 $A \\subseteq B$，则 $A \\cap B \\neq B$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $B \\subseteq A$, then $A \\cap B \\neq B$.",
+         "sha": "bb6df858de49",
+         "zh": "若 $B \\subseteq A$，则 $A \\cap B \\neq B$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $C \\subseteq A \\cap B$, then $C \\subseteq A$.",
+         "sha": "ef03cbd66f05",
+         "zh": "若 $C \\subseteq A \\cap B$，则 $C \\subseteq A$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $C \\subseteq A \\cup B$, then $C \\subseteq A$.",
+         "sha": "81b6e04d62b5",
+         "zh": "若 $C \\subseteq A \\cup B$，则 $C \\subseteq A$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $C \\subseteq A \\cup B$ and $C \\subseteq B$, then $A \\cap B \\subseteq C$.",
+         "sha": "f96f12ec5b35",
+         "zh": "若 $C \\subseteq A \\cup B$ 且 $C \\subseteq B$，则 $A \\cap B \\subseteq C$。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Correct.",
+         "sha": "1919e7be217e",
+         "zh": "正确。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Incorrect.",
+         "sha": "1829621c8dc8",
+         "zh": "不正确。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Incorrect.",
+         "sha": "1829621c8dc8",
+         "zh": "不正确。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Incorrect.",
+         "sha": "1829621c8dc8",
+         "zh": "不正确。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Correct.",
+         "sha": "1919e7be217e",
+         "zh": "正确。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Incorrect.",
+         "sha": "1829621c8dc8",
+         "zh": "不正确。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Incorrect.",
+         "sha": "1829621c8dc8",
+         "zh": "不正确。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Sets, Vectors & Notation · 练习题 8（上游 book/modules/module1-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module1-exercises.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "集合、向量与记号"
+}

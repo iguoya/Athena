@@ -1,0 +1,945 @@
+{
+ "id": "SpanIndependenceBasis-Subspaces",
+ "title_en": "Subspaces of $\\R^n$",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether a subset of $\\R^n$ is a subspace.",
+         "sha": "f338dc3a9c39",
+         "zh": "判断 $\\R^n$ 的一个子集是否为子空间。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Recognize that spans are subspaces of $\\R^n$.",
+         "sha": "c103433351c0",
+         "zh": "认识到张成是 $\\R^n$ 的子空间。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Recognize that solution sets of homogeneous systems of equations are subspaces of $\\R^n$.",
+         "sha": "334d56cf3a04",
+         "zh": "认识到齐次方程组的解集是 $\\R^n$ 的子空间。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "As we saw earlier, the span of 0 vectors in $\\R^n$ is a point, namely the set $\\set{\\vect{0}}$. The span of one non-zero vector is a line through the origin, and the span of two linearly independent vectors is a plane through the origin.",
+    "sha": "f049416d030f",
+    "zh": "如前所见，$\\R^n$ 中 0 个向量的张成是一个点，即集合 $\\set{\\vect{0}}$；一个非零向量的张成是过原点的一条直线；两个线性无关向量的张成是过原点的一个平面。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "ea6b8b85795a"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We also call these sets, respectively, a \\em $0$-dimensional subspace, a \\em $1$-dimensional subspace, and a \\em $2$-dimensional subspace of\\/ $\\R^n$. The purpose of this section is to generalize this concept of subspace to arbitrary dimensions.",
+    "sha": "0ef4b7e92cc4",
+    "zh": "我们也把这几种集合分别称为 $\\R^n$ 的 $0$ 维子空间、$1$ 维子空间和 $2$ 维子空间。本节的目的，是把子空间这一概念推广到任意维数。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Subspace",
+    "sha": "c5efc8ca5782",
+    "zh": "子空间"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A subset $V$ of\\/ $\\R^n$ is called a **subspace** of\\/ $\\R^n$ if",
+      "sha": "a5517a3e8ec2",
+      "zh": "$\\R^n$ 的子集 $V$ 称为 $\\R^n$ 的**子空间**，如果满足"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V$ contains the zero vector of\\/ $\\R^n$, i.e., $\\vect{0}\\in V$;",
+         "sha": "eabdb0d36f36",
+         "zh": "$V$ 含有 $\\R^n$ 的零向量，即 $\\vect{0}\\in V$；"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V$ is closed under addition, i.e., for all\\/ $\\vect{u},\\vect{w}\\in V$, we have $\\vect{u}+\\vect{w}\\in V$;",
+         "sha": "c752464f8610",
+         "zh": "$V$ 对加法封闭，即对所有 $\\vect{u},\\vect{w}\\in V$，都有 $\\vect{u}+\\vect{w}\\in V$；"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V$ is closed under scalar multiplication, i.e., for all\\/ $\\vect{u}\\in V$ and scalars $k$, we have\\/ $k\\,\\vect{u}\\in V$.",
+         "sha": "acff4f29a557",
+         "zh": "$V$ 对标量乘法封闭，即对所有 $\\vect{u}\\in V$ 和所有标量 $k$，都有 $k\\,\\vect{u}\\in V$。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Notice that the subset $V = \\set{\\vect{0}}$ is a subspace of\\/ $\\R^n$ (called the **zero subspace** ). Every line or plane through the origin is a subspace. Moreover, the entire space $\\R^n$ is a subspace of itself. A subspace that is not the entire space $\\R^n$ is referred to as a **proper subspace** of\\/ $\\R^n$.",
+    "sha": "5a4d366d493b",
+    "zh": "注意，子集 $V = \\set{\\vect{0}}$ 是 $\\R^n$ 的子空间（称为**零子空间**）。过原点的每条直线和每个平面都是子空间。此外，整个空间 $\\R^n$ 也是它自身的子空间。不等于整个空间 $\\R^n$ 的子空间，称为 $\\R^n$ 的**真子空间**。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Spans are subspaces",
+    "sha": "07b878a3d727",
+    "zh": "张成是子空间"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u}_1,\\ldots,\\vect{u}_k$ be vectors in $\\R^n$. Then $\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ is a subspace of $\\R^n$.",
+      "sha": "f7e8f262a29f",
+      "zh": "设 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 是 $\\R^n$ 中的向量。则 $\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ 是 $\\R^n$ 的子空间。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $S=\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$. To verify that $S$ is a subspace of\\/ $\\R^n$, we must check that the three conditions of Definition “Subspace” hold.",
+      "sha": "e9dd9e69dd8f",
+      "zh": "设 $S=\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$。要验证 $S$ 是 $\\R^n$ 的子空间，必须检查定义“子空间”中的三个条件都成立。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "We have $\\vect{0}\\in S$ because $\\vect{0}=0\\vect{u}_1+\\ldots+0\\vect{u}_k$.",
+         "sha": "1a1332f92564",
+         "zh": "$\\vect{0}\\in S$，因为 $\\vect{0}=0\\vect{u}_1+\\ldots+0\\vect{u}_k$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Suppose $\\vect{u},\\vect{w}\\in S$. By definition of span, there exist scalars $a_1,\\ldots,a_k$ and $b_1,\\ldots,b_k$ such that $\\vect{u}=a_1\\,\\vect{u}_1+\\ldots+a_k\\,\\vect{u}_k$ and $\\vect{w}=b_1\\,\\vect{u}_1+\\ldots+b_k\\,\\vect{u}_k$. Therefore,",
+         "sha": "fc3b9fa0ea5a",
+         "zh": "设 $\\vect{u},\\vect{w}\\in S$。由张成的定义，存在标量 $a_1,\\ldots,a_k$ 和 $b_1,\\ldots,b_k$，使得 $\\vect{u}=a_1\\,\\vect{u}_1+\\ldots+a_k\\,\\vect{u}_k$，$\\vect{w}=b_1\\,\\vect{u}_1+\\ldots+b_k\\,\\vect{u}_k$。因此，"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\vect{u}+\\vect{w} = (a_1+b_1)\\vect{u}_1+\\ldots+(a_k+b_k)\\vect{u}_k."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "It follows that $\\vect{u}+\\vect{w}\\in S=\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$, so that $S$ is closed under addition.",
+         "sha": "35f1376e2c08",
+         "zh": "由此可知 $\\vect{u}+\\vect{w}\\in S=\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$，所以 $S$ 对加法封闭。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Suppose $\\vect{u}\\in S$ and $t$ is a scalar. Then by definition of span, there exists scalars $a_1,\\ldots,a_k$ such that $\\vect{u}=a_1\\,\\vect{u}_1+\\ldots+a_k\\,\\vect{u}_k$. Then",
+         "sha": "5870d45fd36c",
+         "zh": "设 $\\vect{u}\\in S$，$t$ 是标量。由张成的定义，存在标量 $a_1,\\ldots,a_k$，使得 $\\vect{u}=a_1\\,\\vect{u}_1+\\ldots+a_k\\,\\vect{u}_k$。于是"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "t\\,\\vect{u}=(ta_1)\\vect{u}_1+\\ldots+(ta_k)\\vect{u}_k,"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "and thus $t\\,\\vect{u}\\in S$. It follows that $S$ is closed under scalar multiplication.",
+         "sha": "3548b53096ef",
+         "zh": "所以 $t\\,\\vect{u}\\in S$。由此可知 $S$ 对标量乘法封闭。"
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $S=\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ satisfies all three conditions, it follows that it is a subspace of\\/ $\\R^n$.",
+      "sha": "0e8a6859443d",
+      "zh": "$S=\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ 满足全部三个条件，因此它是 $\\R^n$ 的子空间。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "A line in $\\R^3$",
+    "sha": "1ace068839e8",
+    "zh": "$\\R^3$ 中的一条直线"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "In $\\R^3$, let $L$ be the line through the origin that is parallel to the vector",
+      "sha": "ca973c39cbdc",
+      "zh": "在 $\\R^3$ 中，设 $L$ 是过原点且平行于向量"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "{\\vect{d}}= \\left[\\begin{array}{r} -5 \\\\ 1 \\\\ -4 \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Show that $L$ is a subspace of\\/ $\\R^3$.",
+      "sha": "5be64e9aaf74",
+      "zh": "的直线。证明 $L$ 是 $\\R^3$ 的子空间。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The line $L$ is simply the span of the vector $\\vect{d}$, i.e., $L=\\sspan\\set{\\vect{d}}$. Therefore, it is a subspace by Proposition “Spans are subspaces”.",
+      "sha": "b65a03242793",
+      "zh": "直线 $L$ 就是向量 $\\vect{d}$ 的张成，即 $L=\\sspan\\set{\\vect{d}}$。因此，由命题“张成是子空间”，它是子空间。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Solution space of a homogeneous system of equations",
+    "sha": "9b9747cffc93",
+    "zh": "齐次方程组的解空间"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider a homogeneous system of equations $A\\vect{x} = \\vect{0}$, where $A$ is an $m\\times n$-matrix. Then the set of solutions,",
+      "sha": "cfb3424d9bb7",
+      "zh": "考虑齐次方程组 $A\\vect{x} = \\vect{0}$，其中 $A$ 是 $m\\times n$ 矩阵。则解的集合"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "V=\\set{\\vect{x}\\in\\R^n \\mid A\\vect{x} = \\vect{0}},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is a subspace of\\/ $\\R^n$. It is called the **solution space** of the system.",
+      "sha": "effa5c541acc",
+      "zh": "是 $\\R^n$ 的子空间，称为该方程组的**解空间**。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "To show that $V$ is a subspace of\\/ $\\R^n$, we check the three conditions of Definition “Subspace”.",
+      "sha": "158712756e26",
+      "zh": "要证明 $V$ 是 $\\R^n$ 的子空间，我们检查定义“子空间”中的三个条件。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "We have $\\vect{0}\\in V$ because $A\\vect{0}=\\vect{0}$.",
+         "sha": "f73b80734911",
+         "zh": "$\\vect{0}\\in V$，因为 $A\\vect{0}=\\vect{0}$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "To show that $V$ is closed under addition, suppose $\\vect{u},\\vect{w}\\in V$. Then by definition of $V$, $A\\vect{u}=\\vect{0}$ and $A\\vect{w}=\\vect{0}$. Therefore,",
+         "sha": "d7cfbbf83ab7",
+         "zh": "要证明 $V$ 对加法封闭，设 $\\vect{u},\\vect{w}\\in V$。则由 $V$ 的定义，$A\\vect{u}=\\vect{0}$ 且 $A\\vect{w}=\\vect{0}$。因此，"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "A(\\vect{u}+\\vect{w}) = A\\vect{u} + A\\vect{w} = \\vect{0}+\\vect{0}\n      = \\vect{0}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "It follows that $\\vect{u}+\\vect{w}\\in V$.",
+         "sha": "fd7252ee099f",
+         "zh": "由此可知 $\\vect{u}+\\vect{w}\\in V$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "To show that $V$ is closed under scalar multiplication, suppose $\\vect{u}\\in V$ and $t$ is a scalar. Then by definition of $V$, we have $A\\vect{u}=\\vect{0}$. It follows that",
+         "sha": "26cf66a3b423",
+         "zh": "要证明 $V$ 对标量乘法封闭，设 $\\vect{u}\\in V$，$t$ 是标量。则由 $V$ 的定义，$A\\vect{u}=\\vect{0}$。由此可知"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "A(t\\,\\vect{u}) = t(A\\vect{u}) = t\\,\\vect{0} = \\vect{0}."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Therefore, $t\\,\\vect{u}\\in V$.",
+         "sha": "15103ed7a70d",
+         "zh": "因此 $t\\,\\vect{u}\\in V$。"
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since the solution space $V=\\set{\\vect{x}\\in\\R^n \\mid A\\vect{x} = \\vect{0}}$ satisfies all three conditions, it is a subspace of\\/ $\\R^n$.",
+      "sha": "526cceb73994",
+      "zh": "解空间 $V=\\set{\\vect{x}\\in\\R^n \\mid A\\vect{x} = \\vect{0}}$ 满足全部三个条件，所以它是 $\\R^n$ 的子空间。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "A plane in $\\R^3$",
+    "sha": "5a14e89a14a6",
+    "zh": "$\\R^3$ 中的一个平面"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Show that the plane $2x+3y-z=0$ is a subspace of\\/ $\\R^3$.",
+      "sha": "e03238d93a88",
+      "zh": "证明平面 $2x+3y-z=0$ 是 $\\R^3$ 的子空间。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $2x+3y-z=0$ is a homogeneous equation, its solution space",
+      "sha": "b6e7a4af57a4",
+      "zh": "因为 $2x+3y-z=0$ 是一个齐次方程，它的解空间"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\set{\\left.\\left[\\begin{array}{c}x\\\\y\\\\z\\end{array}\\right]~\\right\\vert~ 2x+3y-z=0}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is a subspace of\\/ $\\R^3$ by Proposition “Solution space of a homogeneous system of equations”.",
+      "sha": "4ded7f044f24",
+      "zh": "由命题“齐次方程组的解空间”，是 $\\R^3$ 的子空间。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Non-examples",
+    "sha": "3e0cc3e8dd92",
+    "zh": "反例"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following are subspaces of\\/ $\\R^3$?",
+      "sha": "106da99afd0f",
+      "zh": "下列集合中，哪些是 $\\R^3$ 的子空间？"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "The line",
+            "sha": "aadca0f8a80a",
+            "zh": "直线"
+           }
+          },
+          {
+           "k": "math",
+           "tex": "\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right]\n        = \\left[\\begin{array}{c} 1 \\\\ 2 \\\\ 3 \\end{array}\\right]\n        + t\\left[\\begin{array}{c} 1 \\\\ 0 \\\\ 1 \\end{array}\\right]."
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "The plane $2x+3y-z=5$.",
+            "sha": "3c1b5959e7ca",
+            "zh": "平面 $2x+3y-z=5$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "The set of vectors",
+            "sha": "017d77b3526f",
+            "zh": "向量的集合"
+           }
+          },
+          {
+           "k": "math",
+           "tex": "W=\\set{\\left.\\left[\\begin{array}{c}x\\\\y\\\\z\\end{array}\\right]\n            ~\\right\\vert~ x,y,z\\geq 0}."
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "None of them are subspaces. Neither the line (a) nor the plane (b) contains the origin $\\vect{0}$, so they fail to satisfy the first condition of subspaces. The set of vectors in (c) contains $\\vect{0}$. It is also closed under addition. However, it fails to be closed under scalar multiplication. For example, let $\\vect{u}=\\mat{1,1,1}^T$. Then $\\vect{u}\\in W$, but $(-1)\\vect{u}\\not\\in W$.",
+      "sha": "a3a27ab2681f",
+      "zh": "它们都不是子空间。直线 (a) 和平面 (b) 都不含原点 $\\vect{0}$，所以不满足子空间的第一个条件。(c) 中的向量集合含有 $\\vect{0}$，也对加法封闭，但它对标量乘法不封闭。例如，取 $\\vect{u}=\\mat{1,1,1}^T$，则 $\\vect{u}\\in W$，但 $(-1)\\vect{u}\\not\\in W$。"
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Which of the following sets are subspaces of $\\R^3$? Explain.",
+      "sha": "db28abccd37e",
+      "zh": "下列集合中，哪些是 $\\R^3$ 的子空间？说明理由。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V_1=\\set{\\left.\\vect{u}=\\left[\\begin{array}{c} u_1 \\\\ u_2 \\\\ u_3 \\end{array}\\right]~\\right\\vert~ \\abs{u_1} \\leq 4}$.",
+         "sha": "3340573dbadc",
+         "zh": "$V_1=\\set{\\left.\\vect{u}=\\left[\\begin{array}{c} u_1 \\\\ u_2 \\\\ u_3 \\end{array}\\right]~\\right\\vert~ \\abs{u_1} \\leq 4}$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V_2=\\set{\\left.\\vect{u}=\\left[\\begin{array}{c} u_1 \\\\ u_2 \\\\ u_3 \\end{array}\\right]~\\right\\vert~\\text{$u_i\\geq 0$ for each $i=1,2,3$}}$.",
+         "sha": "ff29b8b77618",
+         "zh": "$V_2=\\set{\\left.\\vect{u}=\\left[\\begin{array}{c} u_1 \\\\ u_2 \\\\ u_3 \\end{array}\\right]~\\right\\vert~\\text{$u_i\\geq 0$ for each $i=1,2,3$}}$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V_3=\\set{\\left.\\vect{u}=\\left[\\begin{array}{c} u_1 \\\\ u_2 \\\\ u_3 \\end{array}\\right]~\\right\\vert~ u_3+u_1=2u_2}$.",
+         "sha": "ea16a00b20d0",
+         "zh": "$V_3=\\set{\\left.\\vect{u}=\\left[\\begin{array}{c} u_1 \\\\ u_2 \\\\ u_3 \\end{array}\\right]~\\right\\vert~ u_3+u_1=2u_2}$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V_4=\\set{\\left.\\vect{u}=\\left[\\begin{array}{c} u_1 \\\\ u_2 \\\\ u_3 \\end{array}\\right]~\\right\\vert~ u_3\\geq u_1}$.",
+         "sha": "8f17f5f2c0b7",
+         "zh": "$V_4=\\set{\\left.\\vect{u}=\\left[\\begin{array}{c} u_1 \\\\ u_2 \\\\ u_3 \\end{array}\\right]~\\right\\vert~ u_3\\geq u_1}$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V_5=\\set{\\left.\\vect{u}=\\left[\\begin{array}{c} u_1 \\\\ u_2 \\\\ u_3 \\end{array}\\right]~\\right\\vert~ u_3=u_1=0}$.",
+         "sha": "095206564ea7",
+         "zh": "$V_5=\\set{\\left.\\vect{u}=\\left[\\begin{array}{c} u_1 \\\\ u_2 \\\\ u_3 \\end{array}\\right]~\\right\\vert~ u_3=u_1=0}$。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "No. We have $\\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 0 \\end{array}\\right] \\in V_1$ but $10\\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 0 \\end{array}\\right] \\notin V_1$.",
+         "sha": "b4c523b269b1",
+         "zh": "不是。$\\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 0 \\end{array}\\right] \\in V_1$，但 $10\\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 0 \\end{array}\\right] \\notin V_1$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "This is not a subspace. The vector $\\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 1 \\end{array}\\right]$ is in $V_2$. However, $(-1) \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 1 \\end{array}\\right]$ is not.",
+         "sha": "78b35d0bff78",
+         "zh": "这不是子空间。向量 $\\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 1 \\end{array}\\right]$ 在 $V_2$ 中，但 $(-1) \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 1 \\end{array}\\right]$ 不在。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "This is a subspace. It contains the zero vector and is closed with respect to vector addition and scalar multiplication.",
+         "sha": "d4ab7f084ec5",
+         "zh": "这是子空间。它含有零向量，并且对向量加法和标量乘法都封闭。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "This is not a subspace. The vector $\\left[\\begin{array}{r} 0 \\\\ 0 \\\\ 1 \\end{array}\\right]$ is in $V_4$. However $(-1) \\left[\\begin{array}{r} 0 \\\\ 0 \\\\ 1 \\end{array}\\right] = \\left[\\begin{array}{r} 0 \\\\ 0 \\\\ -1 \\end{array}\\right]$ is not.",
+         "sha": "5aa35863c72c",
+         "zh": "这不是子空间。向量 $\\left[\\begin{array}{r} 0 \\\\ 0 \\\\ 1 \\end{array}\\right]$ 在 $V_4$ 中，但 $(-1) \\left[\\begin{array}{r} 0 \\\\ 0 \\\\ 1 \\end{array}\\right] = \\left[\\begin{array}{r} 0 \\\\ 0 \\\\ -1 \\end{array}\\right]$ 不在。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "This is a subspace. It contains the zero vector and is closed with respect to vector addition and scalar multiplication.",
+         "sha": "d4ab7f084ec5",
+         "zh": "这是子空间。它含有零向量，并且对向量加法和标量乘法都封闭。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Subspaces of $\\R^n$ · 习题 1（上游 exercises/SpanIndependenceBasis-Subspaces.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Subspaces.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{w}\\in \\R^4$ be a given fixed vector. Let",
+      "sha": "a6848e166d6f",
+      "zh": "设 $\\vect{w}\\in \\R^4$ 是给定的一个固定向量。令"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "M=\\set{\\left.\\vect{u}\n        =\\left[\\begin{array}{c}\n          u_1 \\\\ u_2 \\\\ u_3 \\\\ u_4\n        \\end{array}\\right] \\in \\R^4~\\right\\vert~ \\vect{w}\\dotprod \\vect{u}\n      =0}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Is $M$ a subspace of $\\R^4$? Explain.",
+      "sha": "64187a00f9a7",
+      "zh": "$M$ 是 $\\R^4$ 的子空间吗？说明理由。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Yes, this is a subspace because it contains the zero vector and is closed with respect to vector addition and scalar multiplication. For example, if $\\vect{u},\\vect{v}\\in M$, then $\\vect{w}\\dotprod\\vect{u}=0$ and $\\vect{w}\\dotprod\\vect{v}=0$, therefore $\\vect{w}\\dotprod(\\vect{u}+\\vect{v})=0$, therefore $\\vect{u}+\\vect{v}\\in M$.",
+      "sha": "e4e60ce41cf5",
+      "zh": "是。这是子空间，因为它含有零向量，并且对向量加法和标量乘法都封闭。例如，若 $\\vect{u},\\vect{v}\\in M$，则 $\\vect{w}\\dotprod\\vect{u}=0$ 且 $\\vect{w}\\dotprod\\vect{v}=0$，因此 $\\vect{w}\\dotprod(\\vect{u}+\\vect{v})=0$，所以 $\\vect{u}+\\vect{v}\\in M$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Subspaces of $\\R^n$ · 习题 2（上游 exercises/SpanIndependenceBasis-Subspaces.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Subspaces.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{w},\\vect{v}$ be given vectors in $\\R^4$ and define",
+      "sha": "c110f21433f6",
+      "zh": "设 $\\vect{w},\\vect{v}$ 是 $\\R^4$ 中给定的向量，并定义"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "M=\\set{\\left.\\vect{u}=\\left[\\begin{array}{c}\n        u_1 \\\\ u_2 \\\\ u_3 \\\\ u_4\n      \\end{array}\\right] \\in \\R^4\n      ~\\right\\vert~\n    \\text{$\\vect{w}\\dotprod \\vect{u}=0$ and $\\vect{v}\\dotprod \\vect{u}=0$}}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Is $M$ a subspace of $\\R^4$? Explain.",
+      "sha": "64187a00f9a7",
+      "zh": "$M$ 是 $\\R^4$ 的子空间吗？说明理由。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Yes, this is a subspace.",
+      "sha": "b96146e135c5",
+      "zh": "是，这是子空间。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Subspaces of $\\R^n$ · 习题 3（上游 exercises/SpanIndependenceBasis-Subspaces.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Subspaces.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "In this exercise, we use scalars from the field $\\Z_2$ of integers modulo $2$ instead of real numbers (see Section 〔引用〕, “Fields”). Which of the following sets are subspaces of $(\\Z_2)^3$?",
+      "sha": "66ab75e4f1a6",
+      "zh": "在这道习题中，我们用模 $2$ 的整数域 $\\Z_2$ 中的标量代替实数（见〔引用〕节，“域”）。下列集合中，哪些是 $(\\Z_2)^3$ 的子空间？"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V_1 = \\set{ \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 0 \\end{array}\\right], \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 1 \\end{array}\\right], \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 1 \\end{array}\\right], \\left[\\begin{array}{r} 0 \\\\ 0 \\\\ 0 \\end{array}\\right] }$.",
+         "sha": "3816a6f2c4ec",
+         "zh": "$V_1 = \\set{ \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 0 \\end{array}\\right], \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 1 \\end{array}\\right], \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 1 \\end{array}\\right], \\left[\\begin{array}{r} 0 \\\\ 0 \\\\ 0 \\end{array}\\right] }$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V_2 = \\set{ \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 1 \\end{array}\\right], \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 0 \\end{array}\\right], \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 0 \\end{array}\\right], \\left[\\begin{array}{r} 0 \\\\ 0 \\\\ 0 \\end{array}\\right] }$.",
+         "sha": "c936c0850bfa",
+         "zh": "$V_2 = \\set{ \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 1 \\end{array}\\right], \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 0 \\end{array}\\right], \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 0 \\end{array}\\right], \\left[\\begin{array}{r} 0 \\\\ 0 \\\\ 0 \\end{array}\\right] }$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V_3 = \\set{ \\left[\\begin{array}{r} 0 \\\\ 0 \\\\ 0 \\end{array}\\right] }$.",
+         "sha": "2bb590a95167",
+         "zh": "$V_3 = \\set{ \\left[\\begin{array}{r} 0 \\\\ 0 \\\\ 0 \\end{array}\\right] }$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V_3 = \\set{ \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 1 \\end{array}\\right], \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 0 \\end{array}\\right], \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 0 \\end{array}\\right], \\left[\\begin{array}{r} 0 \\\\ 0 \\\\ 1 \\end{array}\\right] }$.",
+         "sha": "a9f859b4bdf1",
+         "zh": "$V_3 = \\set{ \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 1 \\end{array}\\right], \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 0 \\end{array}\\right], \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ 0 \\end{array}\\right], \\left[\\begin{array}{r} 0 \\\\ 0 \\\\ 1 \\end{array}\\right] }$。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V_1$ is a subspace.",
+         "sha": "ae81f995511b",
+         "zh": "$V_1$ 是子空间。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V_2$ is not a subspace: not closed under addition. For example,",
+         "sha": "f97ffcd7cbb5",
+         "zh": "$V_2$ 不是子空间：对加法不封闭。例如，"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 1 \\end{array}\\right] \\in V_2,\\quad\n        \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 0 \\end{array}\\right] \\in V_2,\\quad\n        \\text{but}\\quad\n        \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 1 \\end{array}\\right]\n        + \\left[\\begin{array}{r} 1 \\\\ 1 \\\\ 0 \\end{array}\\right]\n        = \\left[\\begin{array}{r} 0 \\\\ 0 \\\\ 1 \\end{array}\\right] \\not\\in V_2."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V_3$ is a subspace.",
+         "sha": "124b9668391a",
+         "zh": "$V_3$ 是子空间。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$V_4$ is not a subspace. For example, it does not contain the zero vector.",
+         "sha": "bc1c8636760e",
+         "zh": "$V_4$ 不是子空间。例如，它不含零向量。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Subspaces of $\\R^n$ · 习题 4（上游 exercises/SpanIndependenceBasis-Subspaces.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Subspaces.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $V, W$ are subspaces of $\\R^n$. Let $V\\cap W$ be the set of all vectors that are in both $V$ and $W$. Show that $V\\cap W$ is also a subspace.",
+      "sha": "0b3138ae307c",
+      "zh": "设 $V, W$ 是 $\\R^n$ 的子空间。令 $V\\cap W$ 为同时属于 $V$ 与 $W$ 的所有向量组成的集合。证明 $V\\cap W$ 也是子空间。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Because $\\vect{0}\\in V$ and $\\vect{0}\\in W$, we have $\\vect{0}\\in V\\cap W$. To show that $V\\cap W$ is closed under addition, assume $\\vect{u},\\vect{v}\\in V\\cap W$. Then $\\vect{u},\\vect{v}\\in V$, and since $V$ is a subspace we have $\\vect{u}+\\vect{v}\\in V$. Similarly $\\vect{u},\\vect{v}\\in W$, and since $W$ is a subspace we have $\\vect{u}+\\vect{v}\\in W$. It follows that $\\vect{u}+\\vect{v}$ is in both $V$ and $W$, and therefore in $V\\cap W$. To show that $V\\cap W$ is closed under scalar multiplication, assume $\\vect{u}\\in V\\cap W$ and $k\\in\\R$. Then $\\vect{u}\\in V$, and therefore $k\\vect{u}\\in V$. Similarly $k\\vect{u}\\in W$, and therefore also $k\\vect{u}\\in V\\cap W$.",
+      "sha": "6288954de3d2",
+      "zh": "因为 $\\vect{0}\\in V$ 且 $\\vect{0}\\in W$，所以 $\\vect{0}\\in V\\cap W$。要证明 $V\\cap W$ 对加法封闭，设 $\\vect{u},\\vect{v}\\in V\\cap W$。则 $\\vect{u},\\vect{v}\\in V$，而 $V$ 是子空间，所以 $\\vect{u}+\\vect{v}\\in V$。同理 $\\vect{u},\\vect{v}\\in W$，而 $W$ 是子空间，所以 $\\vect{u}+\\vect{v}\\in W$。由此可知 $\\vect{u}+\\vect{v}$ 同时属于 $V$ 和 $W$，因此属于 $V\\cap W$。要证明 $V\\cap W$ 对标量乘法封闭，设 $\\vect{u}\\in V\\cap W$，$k\\in\\R$。则 $\\vect{u}\\in V$，所以 $k\\vect{u}\\in V$。同理 $k\\vect{u}\\in W$，因此 $k\\vect{u}\\in V\\cap W$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Subspaces of $\\R^n$ · 习题 5（上游 exercises/SpanIndependenceBasis-Subspaces.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Subspaces.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $V$ be a subset of $\\R^n$. Show that $V$ is a subspace if and only if it is non-empty and the following condition holds: for all $\\vect{u},\\vect{v}\\in V$ and all scalars $a,b\\in\\R$,",
+      "sha": "1cce00e06967",
+      "zh": "设 $V$ 是 $\\R^n$ 的子集。证明：$V$ 是子空间，当且仅当它非空且满足下面的条件：对所有 $\\vect{u},\\vect{v}\\in V$ 和所有标量 $a,b\\in\\R$，"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "a\\vect{u} + b\\vect{v} \\in V."
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Subspaces of $\\R^n$ · 习题 6（上游 exercises/SpanIndependenceBasis-Subspaces.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Subspaces.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vect{u}_1,\\ldots,\\vect{u}_k$ be vectors in $\\R^n$, and let $S=\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$. Show that $S$ is the *smallest* subspace of $\\R^n$ that contains $\\vect{u}_1,\\ldots,\\vect{u}_k$. Specifically, this means you have to show: if $V$ is any other subspace of $\\R^n$ such that $\\vect{u}_1,\\ldots,\\vect{u}_k\\in V$, then $S\\subseteq V$.",
+      "sha": "48c33402f076",
+      "zh": "设 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 是 $\\R^n$ 中的向量，并设 $S=\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$。证明 $S$ 是 $\\R^n$ 中包含 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 的*最小*子空间。具体地说，你需要证明：如果 $V$ 是 $\\R^n$ 的任意另一个子空间，且 $\\vect{u}_1,\\ldots,\\vect{u}_k\\in V$，那么 $S\\subseteq V$。"
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Subspaces of $\\R^n$ · 习题 7（上游 exercises/SpanIndependenceBasis-Subspaces.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SpanIndependenceBasis-Subspaces.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "Rⁿ 的子空间"
+}

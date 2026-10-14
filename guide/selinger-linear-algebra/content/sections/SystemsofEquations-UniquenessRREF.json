@@ -1,0 +1,466 @@
+{
+ "id": "SystemsofEquations-UniquenessRREF",
+ "title_en": "Uniqueness of the reduced echelon form",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether two systems of equations are row equivalent, by comparing their reduced echelon form.",
+         "sha": "a8c23b13ddfe",
+         "zh": "通过比较简化行阶梯形，判断两个方程组是否行等价。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "For two homogeneous systems of equations that are not row equivalent, find a solution to one system that is not a solution to the other.",
+         "sha": "76ac03b19349",
+         "zh": "对于两个不行等价的齐次方程组，找出其中一个方程组的一个解，使它不是另一个方程组的解。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We have seen in earlier sections that every matrix can be brought into reduced echelon form by a sequence of elementary row operations. Here we will prove that the resulting matrix is unique; in other words, the resulting matrix in reduced echelon form does not depend upon the particular sequence of elementary row operations or the order in which they were performed.",
+    "sha": "9d3d6f5f246c",
+    "zh": "在前面的几节里我们已经看到，每个矩阵都可以经过一系列初等行变换化成简化行阶梯形。这一节我们要证明：由此得到的矩阵是唯一的；也就是说，得到的简化行阶梯形不依赖于所用的具体初等行变换序列，也不依赖于这些变换的先后顺序。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $A$ be the augmented matrix of a homogeneous system of linear equations in the variables $x_1, x_2,\\ldots, x_n$ which is also in reduced echelon form. Recall that the matrix $A$ divides the set of variables in two different types: $x_i$ is a *pivot variable* when column $i$ is a pivot column, and a *free variable* otherwise.",
+    "sha": "f840bbced63d",
+    "zh": "设 $A$ 是未知数为 $x_1, x_2,\\ldots, x_n$ 的某个齐次线性方程组的增广矩阵，并且已经是简化行阶梯形。回忆一下，矩阵 $A$ 把这些变量分成两类：$x_i$ 在第 $i$ 列是主元列时称为*主元变量*（pivot variable），否则称为自由变量（free variable）。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Pivot and free variables",
+    "sha": "be2ac8b8ac47",
+    "zh": "主元变量与自由变量"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the pivot and free variables in the following system, and find the general solution.",
+      "sha": "ff99777e6249",
+      "zh": "找出下面方程组中的主元变量和自由变量，并求通解。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{c}\n      x+2y-z+w=0 \\\\\n      x+y-z+w=0 \\\\\n      x+3y-z+w=0\n    \\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The reduced echelon form of the augmented matrix is",
+      "sha": "49a7d3eadb53",
+      "zh": "增广矩阵的简化行阶梯形为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrr|r}\n      \\boxed{1} & 0 & -1 & 1 & 0 \\\\\n      0 & \\boxed{1} & 0 & 0 & 0 \\\\\n      0 & 0 & 0 & 0 & 0\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "From this, we see that columns $1$ and $2$ are pivot columns. Therefore, $x$ and $y$ are pivot variables and $z$ and $w$ are free variables. We can write the solution to this system as",
+      "sha": "faa3f761d141",
+      "zh": "由此可见，第 $1$ 列和第 $2$ 列是主元列。因此 $x$ 和 $y$ 是主元变量，$z$ 和 $w$ 是自由变量。这个方程组的解可以写成"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\n      x &=& s-t \\\\\n      y &=& 0 \\\\\n      z &=& s \\\\\n      w &=& t.\n    \\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In general, all solutions can be written in terms of the free variables. In such a description, the free variables are written as parameters, while the pivot variables are written as functions of these parameters. Indeed, a pivot variable $x_i$ is a function of *only* those free variables $x_j$ with $j>i$. This leads to the following observation.",
+    "sha": "be09df288f4d",
+    "zh": "一般地，所有的解都可以用自由变量表示。在这样的表示中，自由变量写成参数，而主元变量写成这些参数的函数。事实上，主元变量 $x_i$ 只是那些满足 $j>i$ 的自由变量 $x_j$ 的函数（*只*依赖于它们）。由此得到下面的结论。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Pivot and free variables",
+    "sha": "be2ac8b8ac47",
+    "zh": "主元变量与自由变量"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If $x_i$ is a pivot variable of a homogeneous system of linear equations, then any solution of the system with $x_j=0$ for all those free variables $x_j$ with $j>i$ must also have $x_i=0$.",
+      "sha": "7980b35efdb2",
+      "zh": "如果 $x_i$ 是齐次线性方程组的一个主元变量，那么方程组的任何一个解，只要对所有满足 $j>i$ 的自由变量 $x_j$ 都有 $x_j=0$，就必有 $x_i=0$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Using this proposition, we prove a lemma which will be used in the proof of the main result of this section.",
+    "sha": "e1eb5b85ad6d",
+    "zh": "利用这个命题，我们来证明一个引理，它将用在本节主要结果的证明中。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "lemma",
+   "title": {
+    "en": "Solutions and the reduced echelon form of a matrix",
+    "sha": "8bccd3d027a7",
+    "zh": "方程组的解与矩阵的简化行阶梯形"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ and $B$ be two augmented matrices for two homogeneous systems of $m$ equations in $n$ variables, such that $A$ and $B$ are each in reduced echelon form. If $A$ and $B$ are different, then the two systems do not have exactly the same solutions.",
+      "sha": "a2097872014b",
+      "zh": "设 $A$ 和 $B$ 是两个齐次方程组的增广矩阵，这两个方程组都含有 $m$ 个方程、$n$ 个未知数，并且 $A$ 与 $B$ 都是简化行阶梯形。如果 $A$ 与 $B$ 不同，那么这两个方程组的解集不完全相同。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "With respect to the linear systems associated with the matrices $A$ and $B$, there are two cases to consider:",
+      "sha": "496d32d4ce27",
+      "zh": "对于矩阵 $A$ 和 $B$ 所对应的线性方程组，需要分两种情形来考虑："
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Case $1$: the two systems have the same pivot variables",
+         "sha": "564d00a19bb5",
+         "zh": "情形 $1$：两个方程组的主元变量相同"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Case $2$: the two systems do not have the same pivot variables",
+         "sha": "757ab987649a",
+         "zh": "情形 $2$：两个方程组的主元变量不同"
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In case $1$, the two matrices will have exactly the same pivot positions. However, since $A$ and $B$ are not identical, there is some row of $A$ which is different from the corresponding row of $B$ and yet the rows each have a pivot in the same column position. Let $i$ be the index of this column position. Since the matrices are in reduced echelon form, the two rows must differ at some entry in a column $j>i$. Let these entries be $a$ in $A$ and $b$ in $B$, where $a \\neq b$. Since $A$ is in reduced echelon form, if $x_j$ were a pivot variable for its linear system, we would have $a=0$. Similarly, if $x_j$ were a pivot variable for the linear system of the matrix $B$, we would have $b=0$. Since $a$ and $b$ are unequal, they cannot both be equal to $0$, and hence $x_j$ cannot be a pivot variable for both linear systems. However, since the systems have the same pivot variables, $x_j$ must then be a free variable for each system. We now look at the solutions of the systems in which $x_j$ is set equal to $1$ and all other free variables are set equal to $0$. For this choice of parameters, the solution of the system for matrix $A$ has $x_i=-a$, while the solution of the system for matrix $B$ has $x_i=-b$, so that the two systems have different solutions.",
+      "sha": "11286e0ceaae",
+      "zh": "在情形 $1$ 中，两个矩阵的主元位置完全相同。但是 $A$ 与 $B$ 并不一样，所以 $A$ 中有某一行与 $B$ 中对应的那一行不同，而这两行的主元却在同一列。设这一列的编号为 $i$。由于矩阵是简化行阶梯形，这两行必定在第 $j>i$ 列的某个元素上不同。设这两个元素在 $A$ 中为 $a$，在 $B$ 中为 $b$，其中 $a \\neq b$。因为 $A$ 是简化行阶梯形，如果 $x_j$ 是它所对应的线性方程组的主元变量，就会有 $a=0$。同样，如果 $x_j$ 是矩阵 $B$ 所对应的线性方程组的主元变量，就会有 $b=0$。由于 $a$ 与 $b$ 不相等，它们不可能都等于 $0$，因此 $x_j$ 不可能同时是两个线性方程组的主元变量。然而这两个方程组的主元变量是相同的，所以 $x_j$ 在两个方程组中都必须是自由变量。现在来看这样的解：令 $x_j$ 等于 $1$，其余所有自由变量都等于 $0$。对于这一组参数的取值，矩阵 $A$ 对应的方程组的解中 $x_i=-a$，而矩阵 $B$ 对应的方程组的解中 $x_i=-b$，所以这两个方程组的解不同。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "In case $2$, there is a variable $x_i$ which is a pivot variable for one matrix, let's say $A$, and a free variable for the other matrix $B$. The system for matrix $B$ has a solution in which $x_i=1$ and $x_j=0$ for all other free variables $x_j$. However, by Proposition “Pivot and free variables” this cannot be a solution of the system for the matrix $A$. This completes the proof of case $2$.",
+      "sha": "79227ba051bf",
+      "zh": "在情形 $2$ 中，有某个变量 $x_i$，它在一个矩阵（不妨设是 $A$）中是主元变量，而在另一个矩阵 $B$ 中是自由变量。矩阵 $B$ 对应的方程组有这样一个解：$x_i=1$，且对其他所有自由变量 $x_j$ 都有 $x_j=0$。然而，由命题“主元变量与自由变量”，这不可能是矩阵 $A$ 对应的方程组的解。这就完成了情形 $2$ 的证明。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Now, we say that the matrix $B$ is **row equivalent** to the matrix $A$ if $B$ can be obtained from $A$ by performing a sequence of elementary row operations. By Theorem “Elementary operations and solutions”, we know that row equivalent systems have exactly the same solutions. Now, we can use Lemma “Solutions and the reduced echelon form of a matrix” to prove the main result of this section, which is that each matrix $A$ has a unique reduced echelon form.",
+    "sha": "9ad59bb62138",
+    "zh": "现在，如果矩阵 $B$ 可以由矩阵 $A$ 经过一系列初等行变换得到，我们就说矩阵 $B$ 与矩阵 $A$ **行等价**（**row equivalent**）。由定理“初等运算与解”，我们知道行等价的方程组有完全相同的解。现在可以利用引理“方程组的解与矩阵的简化行阶梯形”来证明本节的主要结果：每个矩阵 $A$ 都有唯一的简化行阶梯形。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Uniqueness of the reduced echelon form",
+    "sha": "d8a88d04b167",
+    "zh": "简化行阶梯形的唯一性"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Every matrix $A$ is row equivalent to a unique matrix in reduced echelon form.",
+      "sha": "34b504f7db5f",
+      "zh": "每个矩阵 $A$ 都与唯一的一个简化行阶梯形矩阵行等价。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "By Gauss-Jordan elimination, we already know that every matrix is row equivalent to some reduced echelon form. What we must show is that the resulting reduced echelon form is unique, i.e., does not depend on the order in which row operations are performed.",
+      "sha": "32d136b3a98d",
+      "zh": "由高斯—若尔当消元法，我们已经知道每个矩阵都与某个简化行阶梯形行等价。需要证明的是，这样得到的简化行阶梯形是唯一的，也就是说，它不依赖于做行变换的先后顺序。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Therefore, let $A$ be an $m \\times n$-matrix and let $B$ and $C$ be matrices in reduced echelon form, each row equivalent to $A$. We have to show that $B=C$.",
+      "sha": "a97eb749b6d7",
+      "zh": "因此，设 $A$ 是 $m \\times n$ 矩阵，$B$ 和 $C$ 是简化行阶梯形矩阵，且都与 $A$ 行等价。我们要证明 $B=C$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A^{+}$ be the matrix $A$ augmented with a new rightmost column consisting entirely of zeros. Similarly, augment matrices $B$ and $C$ each with a rightmost column of zeros to obtain $B^{+}$ and $C^{+}$. Note that $B^{+}$ and $C^{+}$ are augmented matrices in reduced echelon form, and that both $B^{+}$ and $C^{+}$ are row equivalent to $A^{+}$, because the addition of a column of zeros does not change the effect of any row operations.",
+      "sha": "00d1d0e895e1",
+      "zh": "设 $A^{+}$ 是在矩阵 $A$ 的最右边添上一个全为零的新列得到的矩阵。同样地，在矩阵 $B$ 和 $C$ 的最右边各添上一列零，得到 $B^{+}$ 和 $C^{+}$。注意 $B^{+}$ 与 $C^{+}$ 是简化行阶梯形的增广矩阵，并且 $B^{+}$ 与 $C^{+}$ 都与 $A^{+}$ 行等价，因为添上一列零不会改变任何行变换的效果。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Now, $A^{+}$, $B^{+}$, and $C^{+}$ can all be considered as augmented matrices of homogeneous linear systems in the variables $x_1, x_2,\\ldots, x_n$. Because all three systems are row equivalent, they have exactly the same solutions. By Lemma “Solutions and the reduced echelon form of a matrix”, we conclude that $B^{+}=C^{+}$. Omitting the final column of zeros, we must also have $B=C$.",
+      "sha": "d417210a3220",
+      "zh": "现在，$A^{+}$、$B^{+}$ 和 $C^{+}$ 都可以看作未知数为 $x_1, x_2,\\ldots, x_n$ 的齐次线性方程组的增广矩阵。由于这三个方程组彼此行等价，它们有完全相同的解。由引理“方程组的解与矩阵的简化行阶梯形”，我们得出 $B^{+}=C^{+}$。去掉最后一列零，必然也有 $B=C$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Row equivalent systems",
+    "sha": "6d8efdecb184",
+    "zh": "行等价的方程组"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine whether the following two systems of equations are row equivalent.",
+      "sha": "1aea5543a6e6",
+      "zh": "判断下面两个方程组是否行等价。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\n      2x + 3y + z &=& 12 \\\\\n      x - 2y + 4z &=& -1 \\\\\n      x + 2z &=& 3,\n    \\end{array}\n    \\quad\\quad\n    \\begin{array}{rcl}\n      x + 2y &=& 7 \\\\\n      3x - y + 7z &=& 7 \\\\\n      y - z &=& 2.\n    \\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The augmented matrices for the two systems are:",
+      "sha": "decd600785dd",
+      "zh": "这两个方程组的增广矩阵为："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr|r}\n      2 & 3 & 1 & 12 \\\\\n      1 & -2 & 4 & -1 \\\\\n      1 & 0 & 2 & 3\n    \\end{array}\\right],\n    \\quad\\quad\n    \\left[\\begin{array}{rrr|r}\n      1 & 2 & 0 & 7 \\\\\n      3 & -1 & 7 & 7 \\\\\n      0 & 1 & -1 & 2\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The reduced echelon form s of the two augmented matrices are:",
+      "sha": "b083302e825f",
+      "zh": "这两个增广矩阵的简化行阶梯形为："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr|r}\n      1 & 0 & 2 & 3 \\\\\n      0 & 1 & -1 & 2 \\\\\n      0 & 0 & 0 & 0\n    \\end{array}\\right],\n    \\quad\\quad\n    \\left[\\begin{array}{rrr|r}\n      1 & 0 & 2 & 3 \\\\\n      0 & 1 & -1 & 2 \\\\\n      0 & 0 & 0 & 0\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since both systems have the same reduced echelon form, they are row equivalent.",
+      "sha": "f6bc9c09c348",
+      "zh": "由于两个方程组的简化行阶梯形相同，所以它们行等价。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Non-row equivalent systems",
+    "sha": "6ae76246e1c4",
+    "zh": "不行等价的方程组"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine whether the following two systems of equations are row equivalent. If they are not row equivalent, find a solution to one system that is not a solution to the other.",
+      "sha": "4c69ee82062e",
+      "zh": "判断下面两个方程组是否行等价。如果它们不行等价，请找出其中一个方程组的一个解，使它不是另一个方程组的解。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\n      x - 2y - 5z &=& 0 \\\\\n      x + z &=& 0 \\\\\n      x + y + 4z &=& 0,\n    \\end{array}\n    \\quad\\quad\n    \\begin{array}{rcl}\n      2x + 2y + z &=& 0 \\\\\n      x + y + 3z &=& 0 \\\\\n      -x - y + 2z &=& 0.\n    \\end{array}"
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The augmented matrices for the two systems are:",
+      "sha": "decd600785dd",
+      "zh": "这两个方程组的增广矩阵为："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr|r}\n      1 & -2 & -5 & 0 \\\\\n      1 & 0 & 1 & 0 \\\\\n      1 & 1 & 4 & 0\n    \\end{array}\\right],\n    \\quad\\quad\n    \\left[\\begin{array}{rrr|r}\n      2 & 2 & 1 & 0 \\\\\n      1 & 1 & 3 & 0 \\\\\n      -1 & -1 & 2 & 0\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The reduced echelon form s of the two augmented matrices are:",
+      "sha": "b083302e825f",
+      "zh": "这两个增广矩阵的简化行阶梯形为："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr|r}\n      1 & 0 & 1 & 0 \\\\\n      0 & 1 & 3 & 0 \\\\\n      0 & 0 & 0 & 0\n    \\end{array}\\right],\n    \\quad\\quad\n    \\left[\\begin{array}{rrr|r}\n      1 & 1 & 0 & 0 \\\\\n      0 & 0 & 1 & 0 \\\\\n      0 & 0 & 0 & 0\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since the two systems have different reduced echelon form s, they are not row equivalent. Following the proof of Lemma “Solutions and the reduced echelon form of a matrix”, we see that $z$ is a free variable for the first system, but a pivot variable for the second system. Therefore, there exists a solution of the first system with $z=1$, namely $(x,y,z) = (-1,-3,1)$. But there exists no solution for the second system with $z=1$, and in particular, $(x,y,z) = (-1,-3,1)$ is not a solution of the second system.",
+      "sha": "e70eb7d0ff12",
+      "zh": "由于这两个方程组的简化行阶梯形不同，所以它们不行等价。按照引理“方程组的解与矩阵的简化行阶梯形”的证明来看，$z$ 在第一个方程组中是自由变量，而在第二个方程组中是主元变量。因此第一个方程组有一个 $z=1$ 的解，即 $(x,y,z) = (-1,-3,1)$。但第二个方程组不存在 $z=1$ 的解，特别地，$(x,y,z) = (-1,-3,1)$ 不是第二个方程组的解。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We finish this section by pointing out an important consequence of Theorem “Uniqueness of the reduced echelon form ”, namely that the rank of a matrix is well-defined. Recall that in Definition “Rank of a matrix”, we defined the rank of a matrix $A$ to be the number of pivot entries of “any” echelon form of $A$. It was not clear, however, why different echelon form s of $A$ could not have different numbers of pivot entries. Now we can answer this question. By the Gauss-Jordan algorithm, we know that every echelon form can be converted to a reduced echelon form without changing the number or position of the pivots. Since the reduced echelon form is unique, it follows that all echelon form s of $A$ have the same number of pivot entries (and in fact the same pivot columns). Therefore, the rank of $A$ is a well-defined quantity.",
+    "sha": "467afd27bfa5",
+    "zh": "本节最后，我们指出定理“简化行阶梯形的唯一性”的一个重要推论，即矩阵的秩是有明确定义的。回忆在定义“矩阵的秩”中，我们把矩阵 $A$ 的秩定义为 $A$ 的“任意一个”行阶梯形的主元个数。但当时并不清楚，为什么 $A$ 的不同行阶梯形不可能有不同的主元个数。现在可以回答这个问题了。由高斯—若尔当算法，我们知道每个行阶梯形都可以化成简化行阶梯形，而主元的个数和位置都不改变。由于简化行阶梯形是唯一的，所以 $A$ 的所有行阶梯形都有相同的主元个数（实际上主元列也都相同）。因此，$A$ 的秩是一个有明确定义的量。"
+   }
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The following are augmented matrices for four systems of equations. Determine which of them, if any, are row equivalent.",
+      "sha": "b4a1e0535975",
+      "zh": "下面是四个方程组的增广矩阵。判断其中哪些（如果有的话）是行等价的。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrr|r}\n       1 & 3 &  5 &  1 & 12 \\\\\n      -1 & 1 & -1 &  2 &  5 \\\\\n       2 & 0 &  4 & -2 &  0\n    \\end{array}\\right]\n    \\quad\n    \\left[\\begin{array}{rrrr|r}\n      1 & 2 & 4 & -1 &  8 \\\\\n      2 & 4 & 3 &  1 & 15 \\\\\n      3 & 6 & 1 & -1 &  8\n    \\end{array}\\right]\n    \\quad\n    \\left[\\begin{array}{rrrr|r}\n      3 & 6 & -3 & 1 & 6 \\\\\n      2 & 4 & 2 & 1 & 13 \\\\\n      0 & 0 & 1 & 0 & 2\n    \\end{array}\\right]\n    \\quad\n    \\left[\\begin{array}{rrrr|r}\n      1 & 2 & 4 & 1 & 10 \\\\\n      0 & 1 & 1 & 1 & 5 \\\\\n      2 & 1 & 5 & 0 & 8\n    \\end{array}\\right]"
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Uniqueness of the reduced echelon form · 习题 1（上游 exercises/SystemsofEquations-UniquenessRREF.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-UniquenessRREF.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find a tuple $(x,y,z)$ that is a solution to one system of equations but not the other.",
+      "sha": "07951da562c7",
+      "zh": "找出一个数组 $(x,y,z)$，使它是其中一个方程组的解，但不是另一个方程组的解。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrrr|r}\n      1 & 0 & 1 & 5 & 0 \\\\\n      2 & 1 & 4 & 3 & 0 \\\\\n      3 & 1 & 5 & 9 & 0 \\\\\n    \\end{array}\\right]\n    \\quad\n    \\left[\\begin{array}{rrrr|r}\n      1 & 0 & 3 & 6 & 0 \\\\\n      2 & 1 & 8 & 2 & 0 \\\\\n      2 & 0 & 6 & 13 & 0 \\\\\n    \\end{array}\\right]"
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Uniqueness of the reduced echelon form · 习题 2（上游 exercises/SystemsofEquations-UniquenessRREF.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/SystemsofEquations-UniquenessRREF.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "简化行阶梯形的唯一性"
+}

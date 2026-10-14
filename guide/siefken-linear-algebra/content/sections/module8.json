@@ -1,0 +1,1210 @@
+{
+ "id": "module8",
+ "title_en": "Coordinates & Change of Basis I",
+ "blocks": [
+  {
+   "k": "outcome",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Notation for representing a vector in multiple bases.",
+         "sha": "8a0d731476c2",
+         "zh": "在多个基下表示同一个向量的记号。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The distinction between a vector and its representation.",
+         "sha": "c9a14f7832f2",
+         "zh": "向量与它的表示之间的区别。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How to compute multiple representations of a vector.",
+         "sha": "3249ab05dac8",
+         "zh": "如何计算一个向量的多种表示。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The definition of an *oriented* basis.",
+         "sha": "f0036940521f",
+         "zh": "*定向*基的定义。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Recall that when we write $\\vec x=\\mat{2\\\\3}$, what we actually mean is $\\vec x=2\\xhat+3\\yhat$. The numbers $2$ and $3$ are called the coordinates of the vector $\\vec x$ with respect to the standard basis. However, in general, subspaces have many bases, and so it is possible to represent a single vector in *many different ways* as coordinates with respect to different bases.",
+    "sha": "82740159739d",
+    "zh": "回想一下，当我们写 $\\vec x=\\mat{2\\\\3}$ 时，真正的意思是 $\\vec x=2\\xhat+3\\yhat$。数 $2$ 和 $3$ 称为向量 $\\vec x$ 关于标准基的坐标。不过，子空间一般有很多个基，所以同一个向量可以关于不同的基，用*许多种不同的方式*表示成坐标。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\vec x=\\mat{2\\\\3}$, let $\\mathcal E=\\Set{\\xhat,\\yhat}$ be the standard basis for $\\R^2$, and let $\\mathcal B=\\Set{\\vec b_1,\\vec b_2}$, where $\\vec b_1=\\mat{2\\\\1}$ and $\\vec b_2=\\mat{0\\\\1}$, be another basis for $\\R^2$. The coordinates of $\\vec x$ with respect to $\\mathcal E$ are $(2,3)$, but the coordinates of $\\vec x$ with respect to $\\mathcal B$ are $(1,2)$.",
+    "sha": "1b392636a60c",
+    "zh": "设 $\\vec x=\\mat{2\\\\3}$，设 $\\mathcal E=\\Set{\\xhat,\\yhat}$ 是 $\\R^2$ 的标准基，再设 $\\mathcal B=\\Set{\\vec b_1,\\vec b_2}$（其中 $\\vec b_1=\\mat{2\\\\1}$，$\\vec b_2=\\mat{0\\\\1}$）是 $\\R^2$ 的另一个基。$\\vec x$ 关于 $\\mathcal E$ 的坐标是 $(2,3)$，而 $\\vec x$ 关于 $\\mathcal B$ 的坐标是 $(1,2)$。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "d8487e0f62d6"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The coordinates $(2,3)$ and $(1,2)$ represent $\\vec x$ equally well, and when solving problems, we should pick the coordinates that make our problem the easiest 〔注： For example, maybe in one choice of coordinates, we can avoid all fractions in our calculations—this could be good if you're programming a computer that rounds decimals.〕. However, now that we are representing vectors in multiple bases, we need a way to keep track of what coordinates correspond to which basis.",
+    "sha": "6baa96ddf720",
+    "zh": "坐标 $(2,3)$ 和 $(1,2)$ 表示 $\\vec x$ 的效果一样好，解题时，我们应当选择让问题最容易解决的坐标〔注：例如，也许在某一种坐标下，我们的计算可以完全避开分数——如果你是在给会对小数做舍入的计算机编程，这会很有好处。〕。不过，既然现在要在多个基下表示向量，我们就需要一种办法，记清楚哪组坐标对应哪个基。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Representation in a Basis",
+    "sha": "350939b38dda",
+    "zh": "在基下的表示"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal B=\\Set{\\vec b_1,\\ldots,\\vec b_n}$ be a basis for a subspace $V$ and let $\\vec v\\in V$. The *representation of $\\vec v$ in the $\\mathcal B$ basis*, notated $[\\vec v]_{\\mathcal B}$, is the column matrix",
+      "sha": "ba509ee18206",
+      "zh": "设 $\\mathcal B=\\Set{\\vec b_1,\\ldots,\\vec b_n}$ 是子空间 $V$ 的一个基，$\\vec v\\in V$。$\\vec v$ 在基 $\\mathcal B$ 下的*表示*（representation），记作 $[\\vec v]_{\\mathcal B}$，是列矩阵"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\vec v]_{\\mathcal B}= \\matc{\\alpha_1\\\\\\vdots\\\\\\alpha_n}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where $\\alpha_{1},\\ldots,\\alpha_{n}$ uniquely satisfy $\\vec v=\\alpha_{1}\\vec b_{1}+\\cdots+\\alpha_{n}\\vec b_{n}.$",
+      "sha": "c792386b9ce4",
+      "zh": "其中 $\\alpha_{1},\\ldots,\\alpha_{n}$ 是唯一满足 $\\vec v=\\alpha_{1}\\vec b_{1}+\\cdots+\\alpha_{n}\\vec b_{n}.$ 的一组数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Conversely,",
+      "sha": "c2140536d371",
+      "zh": "反过来，"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\matc{\\alpha_1\\\\\\vdots\\\\\\alpha_n}_{\\mathcal B}= \\alpha_{1}\\vec b_{1}+\\cdots\n\t\t+\\alpha_{n}\\vec b_{n}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is notation for the linear combination of $\\vec b_{1},\\ldots,\\vec b_{n}$ with coefficients $\\alpha_{1},\\ldots,\\alpha_{n}$.",
+      "sha": "dfc1bd823132",
+      "zh": "是 $\\vec b_{1},\\ldots,\\vec b_{n}$ 以 $\\alpha_{1},\\ldots,\\alpha_{n}$ 为系数的线性组合的记号。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal E=\\Set{\\xhat,\\yhat}$ be the standard basis for $\\R^2$ and let $\\mathcal C=\\Set{\\vec c_1,\\vec c_2}$ where $\\vec c_1=\\xhat+\\yhat$, and $\\vec c_2 =3\\yhat$ be another basis for $\\R^2$. Given that $\\vec v=2\\xhat-\\yhat$, find $[\\vec v]_{\\mathcal E}$ and $[\\vec v]_{\\mathcal C}$.",
+      "sha": "8fe8c821ba0b",
+      "zh": "设 $\\mathcal E=\\Set{\\xhat,\\yhat}$ 是 $\\R^2$ 的标准基，设 $\\mathcal C=\\Set{\\vec c_1,\\vec c_2}$（其中 $\\vec c_1=\\xhat+\\yhat$，$\\vec c_2 =3\\yhat$）是 $\\R^2$ 的另一个基。已知 $\\vec v=2\\xhat-\\yhat$，求 $[\\vec v]_{\\mathcal E}$ 和 $[\\vec v]_{\\mathcal C}$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\vec v=2\\xhat-\\yhat$, we know",
+      "sha": "44be6cf0c572",
+      "zh": "因为 $\\vec v=2\\xhat-\\yhat$，所以"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\vec v]_{\\mathcal E}=\\mat{2\\\\-1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To find $[\\vec v]_{\\mathcal C}$, we need to write $\\vec v$ as a linear combination of $\\vec c_1$ and $\\vec c_2$.",
+      "sha": "1e01fb98ee0c",
+      "zh": "要求 $[\\vec v]_{\\mathcal C}$，需要把 $\\vec v$ 写成 $\\vec c_1$ 和 $\\vec c_2$ 的线性组合。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose",
+      "sha": "3c2db9ddb042",
+      "zh": "假设"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec v = x\\vec c_1 + y\\vec c_2"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for some unknown scalars $x$ and $y$. On the one hand,",
+      "sha": "aeec417a114a",
+      "zh": "其中 $x$ 和 $y$ 是未知的数。一方面，"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec v = 2\\xhat-\\yhat,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and on the other hand,",
+      "sha": "46f255b887a5",
+      "zh": "另一方面，"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec v  = x\\vec c_1 + y\\vec c_2= x(\\xhat+\\yhat)+3y\\yhat=x\\xhat+(x+3y)\\yhat."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Combining these two equations, we have",
+      "sha": "ef5d0f8e3121",
+      "zh": "把这两个等式合起来，得到"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "2\\xhat-\\yhat = x\\xhat+(x+3y)\\yhat,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so",
+      "sha": "9af790b3a93d",
+      "zh": "于是"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(x-2)\\xhat+(x+3y+1)\\yhat = \\vec 0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\xhat$ and $\\yhat$ are linearly independent, the only way for the above equation to be satisfied is if $x-2=0$ *and* $x+3y+1=0$. Thus, we need to solve the system",
+      "sha": "56032b77dedb",
+      "zh": "因为 $\\xhat$ 和 $\\yhat$ 线性无关，所以上面的等式成立的唯一办法是 $x-2=0$ *并且* $x+3y+1=0$。因此，我们需要解方程组"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left\\{\\begin{aligned}x &= 2 \\\\ x+3y &= -1\\end{aligned}\\right.."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "After solving, we see $\\vec v=2\\vec c_1 - \\vec c_2$, and so",
+      "sha": "3d4c9d7c5558",
+      "zh": "解出来之后得到 $\\vec v=2\\vec c_1 - \\vec c_2$，所以"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "[\\vec v]_{\\mathcal C}=\\mat{2\\\\-1}."
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Notation Conventions",
+    "sha": "d2546dec7f63",
+    "zh": "记号约定"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We need to revisit some past notation. Up to this point, we have been writing $\\vec x=\\mat{2\\\\3}$ to mean $\\vec x=2\\xhat+3\\yhat$. However, given the representation-in-a-basis notation, we should be writing",
+    "sha": "3111bc3beeac",
+    "zh": "我们需要回头修正一下以前的记号。到目前为止，我们一直用 $\\vec x=\\mat{2\\\\3}$ 来表示 $\\vec x=2\\xhat+3\\yhat$。不过，有了“在基下的表示”这个记号，我们本来应该写成"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec x=\\mat{2\\\\3}_{\\mathcal E},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "where $\\mathcal E$ is the standard basis for $\\R^2$ 〔注： One might wonder if we've just made a circular definition. In Module 〔引用〕, $\\vec e_1\\in\\R^2$ was defined to be $\\mat{1\\\\0}$. But with our notation, this is the same as $\\vec e_1=\\mat{1\\\\0}_{\\mathcal E}$, which is itself true by definition! To get around this, we need to declare the existence of the standard basis some other way. The physics solution is to define $\\vec e_1$, $\\vec e_2$, etc. as physical vectors in space. The abstract mathematics solution is to declare that $\\vec e_1$, $\\vec e_2$, etc. exist and are linearly independent and say nothing more. 〕. We should write $\\mat{2\\\\3}_{\\mathcal E}$ because the coordinates $(2,3)$ refer to *different* vectors for *different* bases. However, most of the time we are only thinking about the standard basis. So, the convention we will follow is:",
+    "sha": "1ccbeeb31bf7",
+    "zh": "其中 $\\mathcal E$ 是 $\\R^2$ 的标准基〔注：有人可能会问，我们是不是做了一个循环定义。在模块〔引用〕中，$\\vec e_1\\in\\R^2$ 被定义为 $\\mat{1\\\\0}$。可是按照我们现在的记号，这等同于 $\\vec e_1=\\mat{1\\\\0}_{\\mathcal E}$，而这本身就是由定义得来的！要绕开这个问题，我们需要用别的方式来宣布标准基的存在。物理学的办法，是把 $\\vec e_1$、$\\vec e_2$ 等定义为空间中真实的物理向量。抽象数学的办法，是直接宣布 $\\vec e_1$、$\\vec e_2$ 等存在且线性无关，除此之外什么也不说。〕。我们之所以要写 $\\mat{2\\\\3}_{\\mathcal E}$，是因为坐标 $(2,3)$ 在*不同*的基下指的是*不同*的向量。不过，大多数时候我们只考虑标准基。所以，我们遵循的约定是："
+   }
+  },
+  {
+   "k": "list",
+   "ordered": false,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "If a problem involves only one basis, we may write $\\mat{x\\\\y}$ to mean $\\mat{x\\\\y}_{\\mathcal E}$ where $\\mathcal E$ is the standard basis.",
+       "sha": "0a279ca44e04",
+       "zh": "如果一个问题只涉及一个基，我们可以用 $\\mat{x\\\\y}$ 表示 $\\mat{x\\\\y}_{\\mathcal E}$，其中 $\\mathcal E$ 是标准基。"
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "If there are multiple bases in a problem, we will always write $\\mat{x\\\\y}_{\\mathcal X}$ to specify a vector in coordinates relative to a particular basis $\\mathcal X$.",
+       "sha": "b224d210be06",
+       "zh": "如果一个问题里有多个基，我们总是写成 $\\mat{x\\\\y}_{\\mathcal X}$，来说明这是相对于某个特定基 $\\mathcal X$ 的坐标所表示的向量。"
+      }
+     }
+    ]
+   ]
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": "要点"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If a problem only involves the standard basis, we may use the notation we always have. If a problem involves multiple bases, we must *always* use representation-in-a-basis notation.",
+      "sha": "2f1fddfce51c",
+      "zh": "如果一个问题只涉及标准基，我们可以沿用一直以来的记号。如果一个问题涉及多个基，就必须*始终*使用“在基下的表示”这个记号。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "\\HeadingTrue Vectors vs. Representations",
+    "sha": "06b8cc5f32ce",
+    "zh": "\\HeadingTrue 向量与表示"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Image taken from Wikipedia: https://en.wikipedia.org/wiki/File:MagrittePipe.jpg",
+    "sha": "5e26c843b885",
+    "zh": "图片取自维基百科：https://en.wikipedia.org/wiki/File:MagrittePipe.jpg"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The Belgian surrealist Ren\\'e Magritte painted the work above, which is subtitled, “This is not a pipe”. Why? Because, of course, it is not a pipe. It is a painting of a pipe! In this work, Magritte points out a distinction that will soon become very important to us—the distinction between an object and a representation of that object.",
+    "sha": "252dc7b6c151",
+    "zh": "比利时超现实主义画家 Ren\\'e Magritte 画了上面这幅作品，副标题是“这不是一只烟斗”。为什么？因为它当然不是烟斗，它是一幅烟斗的画！在这幅作品里，Magritte 指出了一个很快就会变得非常重要的区别——一个对象与这个对象的一种表示之间的区别。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\vec x=2\\xhat+3\\yhat\\in \\R^2$. The vector $\\vec x$ is a *real-life geometrical thing*, and to emphasize this, we will call $\\vec x$ a *true* vector. In contrast, when we write the column matrix $[\\vec x]_{\\mathcal E}=\\mat{2\\\\3}$, we are writing a *list of numbers*. The list of numbers $\\mat{2\\\\3}$ has no meaning until we give it a meaning by assigning it a basis. For example, by writing $\\mat{2\\\\3}_{\\mathcal E}$, we declare that the numbers $2$ and $3$ are the coefficients of $\\xhat$ and $\\yhat$. By writing $\\mat{2\\\\3}_{\\mathcal B}$ where $\\mathcal B=\\Set{\\vec b_1,\\vec b_2}$, we declare that the numbers $2$ and $3$ are the coefficients of $\\vec b_1$ and $\\vec b_2$. Since a list of numbers without a basis has no meaning, we must acknowledge",
+    "sha": "e32e6bf0e0a1",
+    "zh": "设 $\\vec x=2\\xhat+3\\yhat\\in \\R^2$。向量 $\\vec x$ 是一个*现实中的几何对象*，为了强调这一点，我们称 $\\vec x$ 为*真*向量。相比之下，当我们写出列矩阵 $[\\vec x]_{\\mathcal E}=\\mat{2\\\\3}$ 时，写下的是*一列数*。这列数 $\\mat{2\\\\3}$ 本身没有意义，要给它指定一个基，它才有意义。例如，写成 $\\mat{2\\\\3}_{\\mathcal E}$，就是宣布数 $2$ 和 $3$ 分别是 $\\xhat$ 和 $\\yhat$ 的系数；写成 $\\mat{2\\\\3}_{\\mathcal B}$（其中 $\\mathcal B=\\Set{\\vec b_1,\\vec b_2}$），就是宣布数 $2$ 和 $3$ 分别是 $\\vec b_1$ 和 $\\vec b_2$ 的系数。既然没有基的一列数没有意义，我们就必须承认"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec x\\,\\,{\\color{mypink}\\neq}\\,\\,\\, [\\vec x]_{\\mathcal E}=\\mat{2\\\\3},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "since the left side of the equation is a *true vector* and the right side is a *list of numbers*. Similarly, we must acknowledge",
+    "sha": "afe96a971ddd",
+    "zh": "因为等式左边是*真向量*，右边是*一列数*。同样地，我们必须承认"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "[\\vec x]_{\\mathcal E}\\,\\,{\\color{mypink}\\neq}\\,\\,\\, \\mat{2\\\\3}_{\\mathcal E}=\\vec x,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "since the left side is a *list of numbers* and the right side is a *true vector*.",
+    "sha": "dd2b186fb72b",
+    "zh": "因为左边是*一列数*，右边是*真向量*。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To help keep the notation straight in your head, for a basis $\\mathcal X$, remember the rule",
+    "sha": "87437260929e",
+    "zh": "为了帮助你在脑子里理清这些记号，对于基 $\\mathcal X$，请记住这条规则："
+   }
+  },
+  {
+   "k": "math",
+   "tex": "[\\text{true vector}]_{\\mathcal X} = \\text{list of numbers}\\qquad\\text{and}\\qquad\n\t[\\text{list of numbers}]_{\\mathcal X} =\\text{true vector}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It's easy to get confused when answering questions that involve multiple bases; precision will make these problems much easier.",
+    "sha": "030b1dd1d842",
+    "zh": "回答涉及多个基的问题时，很容易搞混；写得精确，会让这类问题容易得多。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Orientation of a Basis",
+    "sha": "221c7dc2647d",
+    "zh": "基的定向"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "How can you tell the difference between a hand and a foot? They're similar in structure 〔注： We might say hands and feet are *topologically* equivalent.〕—a hand has five fingers and a foot has five toes—but they're different in shape—fingers are much longer than toes and the thumb sticks off the hand at a different angle than the big toe sticks off the foot.",
+    "sha": "f639d69f461f",
+    "zh": "怎样区分手和脚？它们在结构上很相似〔注：我们可以说手和脚在*拓扑*上是等价的。〕——手有五根手指，脚有五个脚趾——但形状不同：手指比脚趾长得多，拇指从手上伸出的角度，也和大脚趾从脚上伸出的角度不一样。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "How about a harder question: how can you tell the difference between a left hand and a right hand? Any length or angle measurement you make on an (idealized) left hand or right hand will be identical. But, we know they're different because they differ in *orientation* 〔注： Other words for orientation include *chirality* and *handedness*.〕.",
+    "sha": "761543f584fc",
+    "zh": "再问一个更难的问题：怎样区分左手和右手？对一只（理想化的）左手或右手做任何长度或角度的测量，结果都是一样的。但我们知道它们不同，因为它们的*定向*不同〔注：定向的其他叫法还有*手性*（chirality）和*手征*（handedness）。〕。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We'll build up to the definition of orientation in stages. Consider the ordered bases $\\mathcal E$, $\\mathcal A$, and $\\mathcal B$ shown below.",
+    "sha": "c1e967013935",
+    "zh": "我们分几步来建立定向的定义。考虑下图所示的有序基 $\\mathcal E$、$\\mathcal A$ 和 $\\mathcal B$。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "e70969aae4d9"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The $\\mathcal A$ basis can be rotated to get the $\\mathcal E$ basis while maintaining the proper order of the basis vectors (i.e., $\\vec a_1\\mapsto\\xhat$ and $\\vec a_2\\mapsto\\yhat$), but it is impossible to rotate the $\\mathcal B$ basis to get the $\\mathcal E$ basis while maintaining the proper order. In this case, we say that $\\mathcal E$ and $\\mathcal A$ have the same orientation and $\\mathcal E$ and $\\mathcal B$ have opposite orientations. Even though the lengths and angles between all vectors in the $\\mathcal A$ basis and the $\\mathcal B$ basis are the same, we can distinguish the $\\mathcal A$ and $\\mathcal B$ bases because they have different *orientations*.",
+    "sha": "49b1c83a46a5",
+    "zh": "基 $\\mathcal A$ 可以通过旋转得到基 $\\mathcal E$，并且基向量的顺序保持正确（即 $\\vec a_1\\mapsto\\xhat$，$\\vec a_2\\mapsto\\yhat$），但基 $\\mathcal B$ 不可能通过旋转得到基 $\\mathcal E$ 并同时保持顺序正确。这时，我们说 $\\mathcal E$ 与 $\\mathcal A$ 定向相同，而 $\\mathcal E$ 与 $\\mathcal B$ 定向相反。尽管基 $\\mathcal A$ 和基 $\\mathcal B$ 中各向量的长度和彼此之间的夹角都一样，我们仍然能区分 $\\mathcal A$ 和 $\\mathcal B$，因为它们的*定向*不同。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Orientations of bases come in exactly two flavors: *right-handed* (or *positively oriented*) and *left-handed* (or *negatively oriented*). By convention, the standard basis is called right-handed.",
+    "sha": "3c17ed94975b",
+    "zh": "基的定向恰好有两种：*右手的*（或称*正定向的*）和*左手的*（或称*负定向的*）。按约定，标准基称为右手的。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Orthonormal bases—bases consisting of unit vectors that are orthogonal to each other—are called right-handed if they can be rotated to align with the standard basis, otherwise they are called left-handed. In this way, the right-hand–left-hand analogy should be clear: two right hands or two left hands can be rotated to align with each other, but a left hand and a right can never be rotated to alignment.",
+    "sha": "79770ef3f126",
+    "zh": "标准正交基——由彼此正交的单位向量构成的基——如果能通过旋转与标准基重合，就称为右手的，否则称为左手的。这样，右手与左手的类比就清楚了：两只右手或两只左手可以通过旋转彼此重合，而一只左手和一只右手永远无法通过旋转重合。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "However, not all bases are orthonormal! Consider the bases $\\mathcal E$, $\\mathcal A'$, $\\mathcal B'$.",
+    "sha": "0b0a7095fa6a",
+    "zh": "不过，并不是所有的基都是标准正交的！考虑基 $\\mathcal E$、$\\mathcal A'$、$\\mathcal B'$。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "fcd405f40dfb"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The bases $\\mathcal A'$ and $\\mathcal B'$ differ only slightly from $\\mathcal A$ and $\\mathcal B$. Neither can be *rotated* to obtain $\\mathcal E$, however we'd still like to say $\\mathcal A'$ is right-handed and $\\mathcal B'$ is left-handed. The following, fully general definition, allows us to do so.",
+    "sha": "4161540c9eff",
+    "zh": "基 $\\mathcal A'$ 和 $\\mathcal B'$ 与 $\\mathcal A$ 和 $\\mathcal B$ 只有细微差别。它们都不能通过*旋转*得到 $\\mathcal E$，但我们仍然想说 $\\mathcal A'$ 是右手的，$\\mathcal B'$ 是左手的。下面这个完全一般的定义让我们可以做到这一点。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Orientation of a Basis",
+    "sha": "221c7dc2647d",
+    "zh": "基的定向"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The ordered basis $\\mathcal B=\\{\\vec b_{1},\\ldots,\\vec b_{n}\\}$ is *right-handed* or *positively oriented* if it can be continuously transformed to the standard basis (with $\\vec b_{i}\\mapsto \\vec e_{i}$) while remaining linearly independent throughout the transformation. Otherwise, $\\mathcal B$ is called *left-handed* or *negatively oriented*.",
+      "sha": "9315dda07896",
+      "zh": "如果有序基 $\\mathcal B=\\{\\vec b_{1},\\ldots,\\vec b_{n}\\}$ 可以连续地变换成标准基（使 $\\vec b_{i}\\mapsto \\vec e_{i}$），并且在整个变换过程中始终保持线性无关，就称它是*右手的*或*正定向的*。否则，称 $\\mathcal B$ 是*左手的*或*负定向的*。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The term *continuously transformed* can be given a precise definition 〔注： Because you crave precision, here it is: the basis $\\vec a_1,\\ldots, \\vec a_n$ can be *continuously transformed* to the basis $\\vec b_1,\\ldots,\\vec b_n$ if there exists a continuous function $\\Phi:[0,1]\\to\\Set{\\text{$n$-tuples of vectors}}$ such that $\\Phi(0)=(\\vec a_1,\\ldots,\\vec a_n)$ and $\\Phi(1)=(\\vec b_1,\\ldots,\\vec b_n)$. Here, continuity is defined in the multi-variable calculus sense. 〕, but it will be enough for us to imagine that a continuous transform between two bases is equivalent to a “movie” where one basis smoothly and without jumps transforms into the other.",
+    "sha": "b574d3b42b04",
+    "zh": "“连续地变换”这个说法可以给出精确的定义〔注：既然你渴望精确，定义在这里：如果存在一个连续函数 $\\Phi:[0,1]\\to\\Set{\\text{$n$-tuples of vectors}}$，使得 $\\Phi(0)=(\\vec a_1,\\ldots,\\vec a_n)$ 且 $\\Phi(1)=(\\vec b_1,\\ldots,\\vec b_n)$，就说基 $\\vec a_1,\\ldots, \\vec a_n$ 可以*连续地变换*成基 $\\vec b_1,\\ldots,\\vec b_n$。这里的连续是多元微积分意义下的连续。〕，但对我们来说，把两个基之间的连续变换想象成一部“电影”就够了：一个基平滑地、没有跳跃地变成另一个基。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let's consider some examples. Let $\\mathcal X=\\Set{\\vec x_1,\\vec x_2}$ as depicted below. We could imagine $\\vec x_1,\\vec x_2$ continuously transforming to $\\xhat, \\yhat$ by $\\vec x_1$ staying in place and $\\vec x_2$ smoothly moving along the dotted line.",
+    "sha": "671b150f12d0",
+    "zh": "来看几个例子。设 $\\mathcal X=\\Set{\\vec x_1,\\vec x_2}$ 如下图所示。我们可以想象 $\\vec x_1,\\vec x_2$ 连续地变换成 $\\xhat, \\yhat$：$\\vec x_1$ 留在原处，$\\vec x_2$ 沿着虚线平滑地移动。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "3c2d50af69f0"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Because at every step along this motion, the set of $\\vec x_1$ and the transformed $\\vec x_2$ is linearly independent, $\\mathcal X$ is *positively* oriented.",
+    "sha": "b342b2141a5a",
+    "zh": "因为在这个运动的每一步，$\\vec x_1$ 与变换中的 $\\vec x_2$ 所组成的集合都是线性无关的，所以 $\\mathcal X$ 是*正*定向的。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\mathcal Y=\\Set{\\vec y_1,\\vec y_2}$ as depicted below. We are in a similar situation, except this time, somewhere along $\\vec y_2$'s path, the set of $\\vec y_1$ and the transformed $\\vec y_2$ becomes linearly dependent.",
+    "sha": "0417057d6151",
+    "zh": "设 $\\mathcal Y=\\Set{\\vec y_1,\\vec y_2}$ 如下图所示。情形与上面类似，只是这一次，在 $\\vec y_2$ 的路径上的某处，$\\vec y_1$ 与变换中的 $\\vec y_2$ 所组成的集合变成了线性相关。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "c68763a17557"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Maybe that was just bad luck and we might be able to transform along a different path and stay linearly independent. It turns out, we are doomed to fail, because $\\mathcal Y$ is *negatively* oriented.",
+    "sha": "bdb0d31a6d46",
+    "zh": "也许这只是运气不好，换一条路径变换，说不定还能一直保持线性无关。事实上，我们注定失败，因为 $\\mathcal Y$ 是*负*定向的。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Using the definition of the orientation of a basis to answer questions is difficult because to determine that a basis is negatively oriented, you need to make a determination about *every possible* way to continuously transform a basis to the standard basis. This is hard enough in $\\R^2$ and gets much harder in $\\R^3$. Fortunately, we will encounter computational tools that will allow us to numerically determine the orientation of a basis, but, for now, the idea is what's important.",
+    "sha": "98f6f016e00b",
+    "zh": "直接用基的定向的定义来回答问题是困难的，因为要断定一个基是负定向的，你需要对把这个基连续变换成标准基的*每一种可能的方式*都作出判断。这在 $\\R^2$ 中已经够难了，在 $\\R^3$ 中会难得多。幸运的是，我们之后会遇到一些计算工具，可以用数值的方式确定一个基的定向，不过眼下，重要的是这个想法。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Reversing Orientation",
+    "sha": "71a2526fc391",
+    "zh": "反转定向"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Reflections reverse orientation and can manifest in two ways 〔注： Think back to hands. The left and right hands *are* reflections of each other.〕. Consider the reflection of $\\mathcal E=\\Set{\\xhat, \\yhat}$ across the line $y=x$.",
+    "sha": "3d85509bc9c5",
+    "zh": "反射会反转定向，并且有两种表现方式〔注：回想一下手。左手和右手*正是*彼此的反射。〕。考虑 $\\mathcal E=\\Set{\\xhat, \\yhat}$ 关于直线 $y=x$ 的反射。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "6aba23658185"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This reflection sends $\\Set{\\xhat,\\yhat}\\mapsto\\Set{\\yhat,\\xhat}$. Alternatively, reflection across the line $x=0$ sends $\\Set{\\xhat,\\yhat}\\mapsto\\Set{-\\xhat,\\yhat}$.",
+    "sha": "9b94cfd08e85",
+    "zh": "这个反射的效果是 $\\Set{\\xhat,\\yhat}\\mapsto\\Set{\\yhat,\\xhat}$。另外，关于直线 $x=0$ 的反射的效果是 $\\Set{\\xhat,\\yhat}\\mapsto\\Set{-\\xhat,\\yhat}$。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "40b065d6ae03"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Both $\\Set{\\yhat,\\xhat}$ and $\\Set{-\\xhat,\\yhat}$, as ordered bases, are negatively oriented. This is indicative of a general theorem.",
+    "sha": "9772d8f2b272",
+    "zh": "作为有序基，$\\Set{\\yhat,\\xhat}$ 和 $\\Set{-\\xhat,\\yhat}$ 都是负定向的。这反映了一条一般的定理。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal B=\\Set{\\vec b_1,\\ldots,\\vec b_n}$ be an ordered basis. The ordered basis obtained from $\\mathcal B$ by replacing $\\vec b_i$ with $-\\vec b_i$ and the ordered basis obtained from $\\mathcal B$ by swapping the order of $\\vec b_i$ and $\\vec b_{j}$ (with $i\\neq j$) have the opposite orientation as $\\mathcal B$.",
+      "sha": "48e8715cc2d7",
+      "zh": "设 $\\mathcal B=\\Set{\\vec b_1,\\ldots,\\vec b_n}$ 是一个有序基。把 $\\mathcal B$ 中的 $\\vec b_i$ 换成 $-\\vec b_i$ 得到的有序基，以及把 $\\mathcal B$ 中 $\\vec b_i$ 与 $\\vec b_{j}$（$i\\neq j$）的顺序对换得到的有序基，它们的定向都与 $\\mathcal B$ 相反。"
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec u=\\xhat+8\\yhat$, $\\vec v=-\\xhat+ 3\\yhat$, and $\\vec w=2\\xhat$.",
+         "sha": "41cb17d730ae",
+         "zh": "设 $\\vec u=\\xhat+8\\yhat$，$\\vec v=-\\xhat+ 3\\yhat$，$\\vec w=2\\xhat$。"
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Find $[\\vec u]_{\\mathcal E}$, $[\\vec v]_{\\mathcal E}$ and $[\\vec w]_{\\mathcal E}$, where $\\mathcal E$ is the standard basis for $\\R^{2}$.",
+            "sha": "d63297e3b315",
+            "zh": "求 $[\\vec u]_{\\mathcal E}$、$[\\vec v]_{\\mathcal E}$ 和 $[\\vec w]_{\\mathcal E}$，其中 $\\mathcal E$ 是 $\\R^{2}$ 的标准基。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\mathcal A=\\Set{3\\xhat+2\\yhat,4\\xhat-\\yhat}$. Find $[\\vec u]_{\\mathcal A}$, $[\\vec v]_{\\mathcal A}$ and $[\\vec w]_{\\mathcal A}$.",
+            "sha": "51a63a7536ad",
+            "zh": "设 $\\mathcal A=\\Set{3\\xhat+2\\yhat,4\\xhat-\\yhat}$。求 $[\\vec u]_{\\mathcal A}$、$[\\vec v]_{\\mathcal A}$ 和 $[\\vec w]_{\\mathcal A}$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\mathcal B=\\Set{11\\yhat,\\xhat+\\frac{5}{2}\\yhat}$. Find $[\\vec u]_{\\mathcal B}$, $[\\vec v]_{\\mathcal B}$ and $[\\vec w]_{\\mathcal B}$.",
+            "sha": "3cad8ea14f67",
+            "zh": "设 $\\mathcal B=\\Set{11\\yhat,\\xhat+\\frac{5}{2}\\yhat}$。求 $[\\vec u]_{\\mathcal B}$、$[\\vec v]_{\\mathcal B}$ 和 $[\\vec w]_{\\mathcal B}$。"
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec q=11\\yhat-4\\zhat$, $\\vec r=5\\xhat-12\\yhat+8\\zhat$, and $\\vec s=\\xhat-5\\yhat+2\\zhat$.",
+         "sha": "e31804915150",
+         "zh": "设 $\\vec q=11\\yhat-4\\zhat$，$\\vec r=5\\xhat-12\\yhat+8\\zhat$，$\\vec s=\\xhat-5\\yhat+2\\zhat$。"
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Find $[\\vec q]_{\\mathcal E}$, $[\\vec r]_{\\mathcal E}$ and $[\\vec s]_{\\mathcal E}$ where $\\mathcal E$ is the standard basis for $\\R^{3}$.",
+            "sha": "841a00709afe",
+            "zh": "求 $[\\vec q]_{\\mathcal E}$、$[\\vec r]_{\\mathcal E}$ 和 $[\\vec s]_{\\mathcal E}$，其中 $\\mathcal E$ 是 $\\R^{3}$ 的标准基。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\mathcal D=\\Set{\\xhat+2\\yhat,-3\\xhat+5\\yhat-4\\zhat,-8\\xhat+4\\yhat+11\\zhat}$. Find $[\\vec q]_{\\mathcal D}$, $[\\vec r]_{\\mathcal D}$ and $[\\vec s]_{\\mathcal D}$.",
+            "sha": "55797f414552",
+            "zh": "设 $\\mathcal D=\\Set{\\xhat+2\\yhat,-3\\xhat+5\\yhat-4\\zhat,-8\\xhat+4\\yhat+11\\zhat}$。求 $[\\vec q]_{\\mathcal D}$、$[\\vec r]_{\\mathcal D}$ 和 $[\\vec s]_{\\mathcal D}$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $\\mathcal F=\\Set{\\xhat+4\\yhat+4\\zhat,-3\\xhat+20\\yhat,21\\yhat+16\\zhat}$. Find $[\\vec q]_{\\mathcal F}$, $[\\vec r]_{\\mathcal F}$ and $[\\vec s]_{\\mathcal F}$.",
+            "sha": "968a77ab9058",
+            "zh": "设 $\\mathcal F=\\Set{\\xhat+4\\yhat+4\\zhat,-3\\xhat+20\\yhat,21\\yhat+16\\zhat}$。求 $[\\vec q]_{\\mathcal F}$、$[\\vec r]_{\\mathcal F}$ 和 $[\\vec s]_{\\mathcal F}$。"
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$[\\vec{u}]_{\\mathcal{E}} = \\mat{1\\\\8}$, $[\\vec{v}]_{\\mathcal{E}} = \\mat{-1\\\\3}$, and $[\\vec{w}]_{\\mathcal{E}} = \\mat{2\\\\0}$.",
+            "sha": "d456577dd4aa",
+            "zh": "$[\\vec{u}]_{\\mathcal{E}} = \\mat{1\\\\8}$，$[\\vec{v}]_{\\mathcal{E}} = \\mat{-1\\\\3}$，$[\\vec{w}]_{\\mathcal{E}} = \\mat{2\\\\0}$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$[\\vec{u}]_{\\mathcal{A}} = \\mat{3\\\\-2}$, $[\\vec{v}]_{\\mathcal{A}} = \\mat{1\\\\-1}$, and $[\\vec{w}]_{\\mathcal{A}} = \\mat{2/11\\\\4/11}$.",
+            "sha": "8c24ede7fbac",
+            "zh": "$[\\vec{u}]_{\\mathcal{A}} = \\mat{3\\\\-2}$，$[\\vec{v}]_{\\mathcal{A}} = \\mat{1\\\\-1}$，$[\\vec{w}]_{\\mathcal{A}} = \\mat{2/11\\\\4/11}$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$[\\vec{u}]_{\\mathcal{B}} = \\mat{1/2\\\\1}$, $[\\vec{v}]_{\\mathcal{B}} = \\mat{1/2\\\\-1}$, and $[\\vec{w}]_{\\mathcal{B}} = \\mat{-5/11\\\\2}$.",
+            "sha": "c4905aa1499f",
+            "zh": "$[\\vec{u}]_{\\mathcal{B}} = \\mat{1/2\\\\1}$，$[\\vec{v}]_{\\mathcal{B}} = \\mat{1/2\\\\-1}$，$[\\vec{w}]_{\\mathcal{B}} = \\mat{-5/11\\\\2}$。"
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$[\\vec{q}]_{\\mathcal{E}} = \\mat{0\\\\11\\\\-4}$, $[\\vec{r}]_{\\mathcal{E}} = \\mat{5\\\\-12 \\\\8}$, and $[\\vec{s}]_{\\mathcal{E}} = \\mat{1\\\\-5\\\\2}$.",
+            "sha": "e14eee53dc52",
+            "zh": "$[\\vec{q}]_{\\mathcal{E}} = \\mat{0\\\\11\\\\-4}$，$[\\vec{r}]_{\\mathcal{E}} = \\mat{5\\\\-12 \\\\8}$，$[\\vec{s}]_{\\mathcal{E}} = \\mat{1\\\\-5\\\\2}$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "We are given $\\mathcal{D} = \\Set{\\mat{1\\\\2\\\\0}_{\\mathcal{E}}, \\mat{-3\\\\5\\\\-4}_{\\mathcal{E}}, \\mat{-8\\\\4\\\\11}_{\\mathcal{E}}}$. To find $[\\vec{q}]_{\\mathcal{D}}$, we need to find scalars $x, y, z$ such that",
+            "sha": "caeef49f6ea3",
+            "zh": "已知 $\\mathcal{D} = \\Set{\\mat{1\\\\2\\\\0}_{\\mathcal{E}}, \\mat{-3\\\\5\\\\-4}_{\\mathcal{E}}, \\mat{-8\\\\4\\\\11}_{\\mathcal{E}}}$。要求 $[\\vec{q}]_{\\mathcal{D}}$，需要找数 $x, y, z$ 使得"
+           }
+          },
+          {
+           "k": "math",
+           "tex": "x \\mat{1\\\\2\\\\0} + y \\mat{-3\\\\5\\\\-4} +z \n\t\t\t\t\t\t\t\t\\mat{-8\\\\4\\\\11} = \\mat{0\\\\11\\\\-4},"
+          },
+          {
+           "k": "p",
+           "t": {
+            "en": "which gives rise to a system of equations whose augmented matrix is",
+            "sha": "6a5cb0c5ff75",
+            "zh": "这给出一个方程组，它的增广矩阵是"
+           }
+          },
+          {
+           "k": "math",
+           "tex": "\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t\t\t\t1 & -3 & -8 & 0\\\\\n\t\t\t\t\t\t\t\t\t2 & 5 & 4 & 11\\\\\n\t\t\t\t\t\t\t\t\t0 & -4 & 11 & -4\\\\\n\t\t\t\t\t\t\t\t\\end{bmatrix}."
+          },
+          {
+           "k": "p",
+           "t": {
+            "en": "This can be row reduced to",
+            "sha": "9b781a241908",
+            "zh": "它可以行化简为"
+           }
+          },
+          {
+           "k": "math",
+           "tex": "\\begin{bmatrix}[ccc|c]\n\t\t\t\t\t\t\t\t\t1 & 0 & 0 & 3\\\\\n\t\t\t\t\t\t\t\t\t0 & 1 & 0 & 1\\\\\n\t\t\t\t\t\t\t\t\t0 & 0 & 1 & 0\\\\\n\t\t\t\t\t\t\t\t\\end{bmatrix}."
+          },
+          {
+           "k": "p",
+           "t": {
+            "en": "Therefore, $[\\vec{q}]_{\\mathcal{D}} = \\mat{3\\\\1\\\\0}$. Similarly we can find",
+            "sha": "102d6b97393e",
+            "zh": "因此 $[\\vec{q}]_{\\mathcal{D}} = \\mat{3\\\\1\\\\0}$。类似地可以求得"
+           }
+          },
+          {
+           "k": "math",
+           "tex": "[\\vec{r}]_{\\mathcal{D}} = \\mat{-1\\\\-2\\\\0},\\quad [\\vec{s}]_{\\mathcal{D}} = \\mat{-66/67\\\\-39/67\\\\-2/67}."
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "We are given $\\mathcal{F} = \\Set{ \\mat{1\\\\4\\\\4}_{\\mathcal{E}}, \\mat{-3\\\\20\\\\0}_{\\mathcal{E}}, \\mat{0\\\\21\\\\16}_{\\mathcal{E}}}$. Therefore, $[\\vec{q}]_{\\mathcal{F}} = \\mat{3 \\\\ 1 \\\\ -1}$, $[\\vec{r}]_{\\mathcal{F}} = \\mat{2 \\\\ -1 \\\\0}$, and $[\\vec{s}]_{\\mathcal{F}} = \\mat{-23/130\\\\-51/130\\\\11/65}$.",
+            "sha": "6f0a2ebbd163",
+            "zh": "已知 $\\mathcal{F} = \\Set{ \\mat{1\\\\4\\\\4}_{\\mathcal{E}}, \\mat{-3\\\\20\\\\0}_{\\mathcal{E}}, \\mat{0\\\\21\\\\16}_{\\mathcal{E}}}$。因此 $[\\vec{q}]_{\\mathcal{F}} = \\mat{3 \\\\ 1 \\\\ -1}$，$[\\vec{r}]_{\\mathcal{F}} = \\mat{2 \\\\ -1 \\\\0}$，$[\\vec{s}]_{\\mathcal{F}} = \\mat{-23/130\\\\-51/130\\\\11/65}$。"
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Coordinates & Change of Basis I · 练习题 1（上游 book/modules/module8-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module8-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $[\\vec a]_{\\mathcal E}=\\mat{5\\\\-12}$ where $\\mathcal E$ is the standard basis for $\\R^{2}$. Find a basis $\\mathcal M$ for $\\R^{2}$ such that $[\\vec a]_{\\mathcal M}=\\mat{1\\\\0}$.",
+         "sha": "9dcbeafd9c32",
+         "zh": "设 $[\\vec a]_{\\mathcal E}=\\mat{5\\\\-12}$，其中 $\\mathcal E$ 是 $\\R^{2}$ 的标准基。求 $\\R^{2}$ 的一个基 $\\mathcal M$，使得 $[\\vec a]_{\\mathcal M}=\\mat{1\\\\0}$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $[\\vec b]_{\\mathcal E}=\\mat{2\\\\1\\\\0}$ where $\\mathcal E$ is the standard basis for $\\R^{3}$. Find a basis $\\mathcal N$ for $\\R^{3}$ such that $[\\vec b]_{\\mathcal N}=\\mat{0\\\\1\\\\2}$.",
+         "sha": "a272f2ecf07a",
+         "zh": "设 $[\\vec b]_{\\mathcal E}=\\mat{2\\\\1\\\\0}$，其中 $\\mathcal E$ 是 $\\R^{3}$ 的标准基。求 $\\R^{3}$ 的一个基 $\\mathcal N$，使得 $[\\vec b]_{\\mathcal N}=\\mat{0\\\\1\\\\2}$。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\mathcal{M} = \\Set{ \\vec{u}, \\vec{v}}$. Then $[\\vec{a}]_{\\mathcal{M}} = \\mat{1\\\\0} \\Rightarrow \\vec{a} = 1 \\vec{u} + 0 \\vec{v} \\Rightarrow \\vec{a} = \\vec{u}$. So as long as we choose the first vector in $\\mathcal{M}$ as $\\vec{a}$, any linearly independent second vector will do. Thus take $\\mathcal{M} = \\Set{5\\xhat - 12 \\yhat, \\xhat }$",
+         "sha": "27080f0190c6",
+         "zh": "设 $\\mathcal{M} = \\Set{ \\vec{u}, \\vec{v}}$。那么 $[\\vec{a}]_{\\mathcal{M}} = \\mat{1\\\\0} \\Rightarrow \\vec{a} = 1 \\vec{u} + 0 \\vec{v} \\Rightarrow \\vec{a} = \\vec{u}$。所以只要取 $\\mathcal{M}$ 中的第一个向量为 $\\vec{a}$，第二个向量取任何与之线性无关的向量即可。因此取 $\\mathcal{M} = \\Set{5\\xhat - 12 \\yhat, \\xhat }$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The observation here is that the numbers that appear in the coordinates in both $[\\vec{b}]_{\\mathcal{E}}$ and $[\\vec{b}]_{\\mathcal{N}}$ are same but they are just shuffled. Thus we can take $\\mathcal{N}$ to be the corresponding permutation of $\\mathcal{E}$. Take $\\mathcal{N} = \\Set{ \\zhat, \\yhat, \\xhat}$",
+         "sha": "80715382a6fa",
+         "zh": "这里的观察是：$[\\vec{b}]_{\\mathcal{E}}$ 和 $[\\vec{b}]_{\\mathcal{N}}$ 的坐标里出现的数是一样的，只是顺序被打乱了。因此我们可以取 $\\mathcal{N}$ 为 $\\mathcal{E}$ 的相应排列。取 $\\mathcal{N} = \\Set{ \\zhat, \\yhat, \\xhat}$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Coordinates & Change of Basis I · 练习题 2（上游 book/modules/module8-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module8-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Determine the orientation of each of the following bases for $\\R^{2}$.",
+      "sha": "20afd16154dd",
+      "zh": "判断下列 $\\R^{2}$ 的每个基的定向。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{-5\\\\0},\\mat{0\\\\-2}}$",
+         "sha": "16236e43f28e",
+         "zh": "$\\Set{\\mat{-5\\\\0},\\mat{0\\\\-2}}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{2\\\\-6},\\mat{-4\\\\1}}$",
+         "sha": "1bbd641b8143",
+         "zh": "$\\Set{\\mat{2\\\\-6},\\mat{-4\\\\1}}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{1\\\\2},\\mat{2\\\\1}}$",
+         "sha": "b3ecfdfec25f",
+         "zh": "$\\Set{\\mat{1\\\\2},\\mat{2\\\\1}}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\Set{\\mat{6\\\\-1},\\mat{2\\\\3}}$",
+         "sha": "2206140cac6d",
+         "zh": "$\\Set{\\mat{6\\\\-1},\\mat{2\\\\3}}$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Positively oriented. (Rotate both vectors 180 degrees clockwise and scale)",
+         "sha": "0f086f415699",
+         "zh": "正定向。（把两个向量都顺时针旋转 180 度，再做伸缩）"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Negatively oriented.",
+         "sha": "eecc3d38ce4d",
+         "zh": "负定向。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Negatively oriented. ( $\\mat{1\\\\2}$ is to be transformed to $\\vec{e}_1$. If we rotate it clockwise at some stage it points at the same direction as $\\mat{2\\\\1}$, thus making it linearly dependent. If we try to rotate it counter clockwise, at some stage it also points at the same (negative) direction as $\\mat{2\\\\1}$, where it becomes linerly dependent. )",
+         "sha": "ca055686594e",
+         "zh": "负定向。（要把 $\\mat{1\\\\2}$ 变换成 $\\vec{e}_1$。如果顺时针旋转它，在某一时刻它会与 $\\mat{2\\\\1}$ 指向同一方向，从而使两个向量线性相关。如果逆时针旋转它，在某一时刻它也会与 $\\mat{2\\\\1}$ 指向同一条直线的相反方向，同样变得线性相关。）"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Positively oriented.",
+         "sha": "dcc2e27fc0f8",
+         "zh": "正定向。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Coordinates & Change of Basis I · 练习题 3（上游 book/modules/module8-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module8-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine the orientation of the basis $\\mathcal V = \\Set{\\vec v_1, \\vec v_2, \\vec v_3}$ for $\\R^{3}$ where $\\vec v_{1} = \\mat{1\\\\0\\\\0}$, $\\vec v_{2} = \\mat{0\\\\1\\\\0}$, and $\\vec v_{3} = \\mat{0\\\\0\\\\-1}$.",
+         "sha": "9ca2e982acfd",
+         "zh": "判断 $\\R^{3}$ 的基 $\\mathcal V = \\Set{\\vec v_1, \\vec v_2, \\vec v_3}$ 的定向，其中 $\\vec v_{1} = \\mat{1\\\\0\\\\0}$，$\\vec v_{2} = \\mat{0\\\\1\\\\0}$，$\\vec v_{3} = \\mat{0\\\\0\\\\-1}$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Consider the basis $\\mathcal V' = \\Set{\\vec v_1, 3\\vec v_2, \\vec v_3}$ for $\\R^{3}$. What is the orientation of this basis?",
+         "sha": "74b1bf2973cf",
+         "zh": "考虑 $\\R^{3}$ 的基 $\\mathcal V' = \\Set{\\vec v_1, 3\\vec v_2, \\vec v_3}$。这个基的定向是什么？"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Consider the basis $\\mathcal V'' = \\Set{-4\\vec v_1, \\vec v_2, \\vec v_3}$ for $\\R^{3}$. What is the orientation of this basis?",
+         "sha": "056cb3e99992",
+         "zh": "考虑 $\\R^{3}$ 的基 $\\mathcal V'' = \\Set{-4\\vec v_1, \\vec v_2, \\vec v_3}$。这个基的定向是什么？"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Negatively oriented. ( only $\\vec{v}_3$ needs to be taken care of. To transform it to $\\vec{e}_3$, no matter what we do, at some stage we have to cross the $xy$-plane. At that stage it becomes linearly dependent.)",
+         "sha": "c77b9a7e53b6",
+         "zh": "负定向。（只需要处理 $\\vec{v}_3$。要把它变换成 $\\vec{e}_3$，无论怎么做，在某一时刻它都必须穿过 $xy$ 平面，此时它就变成线性相关了。）"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Negatively oriented. ( $3\\vec{v}_2$ can be scaled to $\\vec{v}_2$. Then we are back at situation (a).)",
+         "sha": "a51e2eb4660e",
+         "zh": "负定向。（$3\\vec{v}_2$ 可以通过伸缩变成 $\\vec{v}_2$，这样我们就回到了情形 (a)。）"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Positively oriented. (This is a little bit tricky. Note that $\\vec{v}_2$ is already $\\vec{e}_2$. So we can leave that alone and limit our operations to the $xz$-plane. In the $xz$-plane rotate $-4 \\vec{v}_1$ and $\\vec{v_3}$ counter clockwise 180 degrees. Then $-4 \\vec{v}_1$ transforms to $4 \\vec{e}_1$, which then can be scaled to $\\vec{e}_1$, and $\\vec{v}_3$ transforms to $\\vec{e}_3$.)",
+         "sha": "339154449922",
+         "zh": "正定向。（这个有点绕。注意 $\\vec{v}_2$ 本来就是 $\\vec{e}_2$，所以可以不动它，只在 $xz$ 平面内操作。在 $xz$ 平面内，把 $-4 \\vec{v}_1$ 和 $\\vec{v_3}$ 逆时针旋转 180 度。这样 $-4 \\vec{v}_1$ 变成 $4 \\vec{e}_1$，再经伸缩就可以变成 $\\vec{e}_1$，而 $\\vec{v}_3$ 变成 $\\vec{e}_3$。）"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Coordinates & Change of Basis I · 练习题 4（上游 book/modules/module8-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module8-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Give two examples of positively oriented bases for $\\R^{2}$ and briefly explain how you know their orientation.",
+         "sha": "1c7696a142be",
+         "zh": "给出 $\\R^{2}$ 的两个正定向基的例子，并简要说明你是怎么知道它们的定向的。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Give two examples of negatively oriented bases for $\\R^{2}$ and briefly explain how you know their orientation.",
+         "sha": "52a38971e497",
+         "zh": "给出 $\\R^{2}$ 的两个负定向基的例子，并简要说明你是怎么知道它们的定向的。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How does negating one vector in a basis change the orientation?",
+         "sha": "86539b821043",
+         "zh": "把基中的一个向量取负，定向会怎样变化？"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How does swapping the order of two different vectors in a basis change the orientation?",
+         "sha": "a0708a0dbb1c",
+         "zh": "把基中两个不同向量的顺序对换，定向会怎样变化？"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Coordinates & Change of Basis I · 练习题 5（上游 book/modules/module8-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module8-exercises.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "坐标与基变换 I"
+}

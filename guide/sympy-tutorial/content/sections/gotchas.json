@@ -1,0 +1,406 @@
+{
+ "id": "gotchas",
+ "title_en": "Gotchas",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "To begin, we should make something about SymPy clear. SymPy is nothing more than a Python library, like `NumPy`, `Django`, or even modules in the Python standard library `sys` or `re`. What this means is that SymPy does not add anything to the Python language. Limitations that are inherent in the Python language are also inherent in SymPy. It also means that SymPy tries to use Python idioms whenever possible, making programming with SymPy easy for those already familiar with programming with Python. As a simple example, SymPy uses Python syntax to build expressions. Implicit multiplication (like `3x` or `3 x`) is not allowed in Python, and thus not allowed in SymPy. To multiply `3` and `x`, you must type `3*x` with the `*`.",
+    "sha": "ecec0207be19",
+    "zh": "开始之前，有件关于 SymPy 的事需要说清楚：SymPy 不过是一个 Python 库，和 `NumPy`、`Django` 一样，甚至和 Python 标准库里的 `sys`、`re` 模块一样。这意味着 SymPy 没有给 Python 语言增加任何东西。Python 语言本身固有的限制，SymPy 也同样有。这还意味着 SymPy 会尽可能使用 Python 的惯用写法，让已经熟悉 Python 编程的人用 SymPy 编程时很轻松。举个简单的例子：SymPy 用 Python 的语法来构造表达式。隐式乘法（比如 `3x` 或 `3 x`）在 Python 里是不允许的，所以在 SymPy 里也不允许。要把 `3` 和 `x` 相乘，必须带上 `*`，写成 `3*x`。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Symbols",
+    "sha": "22ad664e9eb9",
+    "zh": "符号"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "One consequence of this fact is that SymPy can be used in any environment where Python is available. We just import it, like we would any other library:",
+    "sha": "41cb259f797e",
+    "zh": "由此带来的一个结果是：只要有 Python 的环境，就能使用 SymPy。我们像导入其他库一样导入它就行："
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> from sympy import *"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This imports all the functions and classes from SymPy into our interactive Python session. Now, suppose we start to do a computation.",
+    "sha": "d9b281efbf6d",
+    "zh": "这会把 SymPy 里所有的函数和类导入到我们的交互式 Python 会话中。现在，假设我们开始做一个计算。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> x + 1\nTraceback (most recent call last):\n...\nNameError: name 'x' is not defined"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Oops! What happened here? We tried to use the variable `x`, but it tells us that `x` is not defined. In Python, variables have no meaning until they are defined. SymPy is no different. Unlike many symbolic manipulation systems you may have used, in SymPy, variables are not defined automatically. To define variables, we must use `symbols`.",
+    "sha": "32db49bcfc01",
+    "zh": "哎呀！这是怎么回事？我们想用变量 `x`，它却告诉我们 `x` 没有定义。在 Python 里，变量在定义之前是没有意义的，SymPy 也不例外。和你可能用过的许多符号运算系统不同，SymPy 里的变量不会自动定义。要定义变量，必须使用 `symbols`。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> x = symbols('x')\n>>> x + 1\nx + 1"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "`symbols` takes a string of variable names separated by spaces or commas, and creates Symbols out of them. We can then assign these to variable names. Later, we will investigate some convenient ways we can work around this issue. For now, let us just define the most common variable names, `x`, `y`, and `z`, for use through the rest of this section",
+    "sha": "2a9bac6361f2",
+    "zh": "`symbols` 接受一个由变量名组成的字符串，变量名之间用空格或逗号分隔，并据此创建 Symbol。然后我们可以把它们赋给 Python 变量名。之后，我们会研究一些绕开这个麻烦的便捷办法。现在，我们先把最常用的变量名 `x`、`y`、`z` 定义出来，供本节后面使用"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> x, y, z = symbols('x y z')"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "As a final note, we note that the name of a Symbol and the name of the variable it is assigned to need not have anything to do with one another.",
+    "sha": "81feaa2633bd",
+    "zh": "最后要说明一点：Symbol 的名字和被赋值的 Python 变量的名字，不必有任何关系。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> a, b = symbols('b a')\n>>> a\nb\n>>> b\na"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Here we have done the very confusing thing of assigning a Symbol with the name `a` to the variable `b`, and a Symbol of the name `b` to the variable `a`. Now the Python variable named `a` points to the SymPy Symbol named `b`, and vice versa. How confusing. We could have also done something like",
+    "sha": "420f839c8c6c",
+    "zh": "这里我们做了一件非常容易让人糊涂的事：把名为 `a` 的 Symbol 赋给了变量 `b`，又把名为 `b` 的 Symbol 赋给了变量 `a`。现在，名叫 `a` 的 Python 变量指向的是名为 `b` 的 SymPy Symbol，反过来也一样。真够绕的。我们也可以这样做"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> crazy = symbols('unrelated')\n>>> crazy + 1\nunrelated + 1"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This also shows that Symbols can have names longer than one character if we want.",
+    "sha": "239cb0154dcb",
+    "zh": "这也说明了，只要我们愿意，Symbol 的名字可以不止一个字符。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Usually, the best practice is to assign Symbols to Python variables of the same name, although there are exceptions: Symbol names can contain characters that are not allowed in Python variable names, or may just want to avoid typing long names by assigning Symbols with long names to single letter Python variables.",
+    "sha": "3d773c7e45be",
+    "zh": "通常的最佳做法是，把 Symbol 赋给同名的 Python 变量。当然也有例外：Symbol 的名字里可以含有 Python 变量名不允许的字符；或者你只是想少敲几个字，把名字很长的 Symbol 赋给单个字母的 Python 变量。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To avoid confusion, throughout this tutorial, Symbol names and Python variable names will always coincide. Furthermore, the word \"Symbol\" will refer to a SymPy Symbol and the word \"variable\" will refer to a Python variable.",
+    "sha": "5ab9e24410ec",
+    "zh": "为了避免混淆，本教程中 Symbol 的名字和 Python 变量的名字始终保持一致。另外，「Symbol」一词指 SymPy 的 Symbol，「变量」一词指 Python 变量。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Finally, let us be sure we understand the difference between SymPy Symbols and Python variables. Consider the following:",
+    "sha": "618889ab1302",
+    "zh": "最后，我们来确认一下，真正弄懂了 SymPy 的 Symbol 和 Python 变量的区别。看下面的代码："
+   }
+  },
+  {
+   "k": "code",
+   "text": "x = symbols('x')\nexpr = x + 1\nx = 2\nprint(expr)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "What do you think the output of this code will be? If you thought `3`, you're wrong. Let's see what really happens",
+    "sha": "37a2930cca7a",
+    "zh": "你认为这段代码的输出会是什么？如果你以为是 `3`，那就错了。我们来看看到底发生了什么"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> x = symbols('x')\n>>> expr = x + 1\n>>> x = 2\n>>> print(expr)\nx + 1"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Changing `x` to `2` had no effect on `expr`. This is because `x = 2` changes the Python variable `x` to `2`, but has no effect on the SymPy Symbol `x`, which was what we used in creating `expr`. When we created `expr`, the Python variable `x` was a Symbol. After we created, it, we changed the Python variable `x` to 2. But `expr` remains the same. This behavior is not unique to SymPy. All Python programs work this way: if a variable is changed, expressions that were already created with that variable do not change automatically. For example",
+    "sha": "8ca26346ecef",
+    "zh": "把 `x` 改成 `2` 对 `expr` 没有任何影响。这是因为 `x = 2` 改变的是 Python 变量 `x`，让它变成 `2`，但对 SymPy 的 Symbol `x` 没有影响，而我们创建 `expr` 时用的正是那个 Symbol。创建 `expr` 时，Python 变量 `x` 是一个 Symbol；创建之后，我们把 Python 变量 `x` 改成了 2，但 `expr` 依然没变。这种行为并非 SymPy 独有，所有 Python 程序都是这样：如果一个变量被修改，之前用这个变量创建好的表达式不会自动跟着变。例如"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> x = 'abc'\n>>> expr = x + 'def'\n>>> expr\n'abcdef'\n>>> x = 'ABC'\n>>> expr\n'abcdef'"
+  },
+  {
+   "k": "box",
+   "env": "note",
+   "title": {
+    "en": "Quick Tip",
+    "sha": "4de3b8e1c5e6",
+    "zh": "小提示"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "To change the value of a Symbol in an expression, use `subs`",
+      "sha": "eac387a8a78e",
+      "zh": "要改变表达式中某个 Symbol 的值，请用 `subs`"
+     }
+    },
+    {
+     "k": "code",
+     "text": ">>> x = symbols('x')\n>>> expr = x + 1\n>>> expr.subs(x, 2)\n3"
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In this example, if we want to know what `expr` is with the new value of `x`, we need to reevaluate the code that created `expr`, namely, `expr = x + 1`. This can be complicated if several lines created `expr`. One advantage of using a symbolic computation system like SymPy is that we can build a symbolic representation for `expr`, and then substitute `x` with values. The correct way to do this in SymPy is to use `subs`, which will be discussed in more detail later.",
+    "sha": "53b1a01d3d77",
+    "zh": "在这个例子中，如果想知道 `x` 取新值后的 `expr` 是什么，我们得把创建 `expr` 的代码重新求值一遍，也就是 `expr = x + 1`。如果 `expr` 是由好几行代码创建出来的，这就会很麻烦。用 SymPy 这样的符号计算系统有一个好处：我们可以先为 `expr` 建立一个符号表示，然后再把 `x` 代入具体的值。在 SymPy 里，正确的做法是使用 `subs`，后面会更详细地讨论它。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> x = symbols('x')\n>>> expr = x + 1\n>>> expr.subs(x, 2)\n3"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Equals signs",
+    "sha": "2ef755aa2813",
+    "zh": "等号"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Another very important consequence of the fact that SymPy does not extend Python syntax is that `=` does not represent equality in SymPy. Rather it is Python variable assignment. This is hard-coded into the Python language, and SymPy makes no attempts to change that.",
+    "sha": "375bb66b7005",
+    "zh": "SymPy 没有扩展 Python 语法，由此带来的另一个非常重要的结果是：在 SymPy 里，`=` 并不表示相等，而是 Python 的变量赋值。这是写死在 Python 语言里的，SymPy 也不打算去改变它。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "You may think, however, that `==`, which is used for equality testing in Python, is used for SymPy as equality. This is not quite correct either. Let us see what happens when we use `==`.",
+    "sha": "f6d03b3536dd",
+    "zh": "不过你可能会想，Python 里用来测试相等的 `==`，在 SymPy 里应该就表示相等了吧。这也不太对。我们来看看用 `==` 会发生什么。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> x + 1 == 4\nFalse"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Instead of treating `x + 1 == 4` symbolically, we just got `False`. In SymPy, `==` represents exact structural equality testing. This means that `a == b` means that we are *asking* if $a = b$. We always get a `bool` as the result of `==`. There is a separate object, called `Eq`, which can be used to create symbolic equalities",
+    "sha": "b3ef0643212a",
+    "zh": "`x + 1 == 4` 没有被当作符号式的方程来处理，我们只得到了 `False`。在 SymPy 里，`==` 表示的是精确的结构相等测试。也就是说，`a == b` 的意思是我们在*询问* $a = b$ 是否成立。`==` 的结果永远是一个 `bool`。要创建符号式的等式，需要用另一个叫 `Eq` 的对象"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> Eq(x + 1, 4)\nEq(x + 1, 4)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There is one additional caveat about `==` as well. Suppose we want to know if $(x + 1)^2 = x^2 + 2x + 1$. We might try something like this:",
+    "sha": "99afe70f8312",
+    "zh": "关于 `==` 还有一个需要提醒的地方。假设我们想知道 $(x + 1)^2 = x^2 + 2x + 1$ 是否成立，可能会这样试："
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> (x + 1)**2 == x**2 + 2*x + 1\nFalse"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We got `False` again. However, $(x + 1)^2$ *does* equal $x^2 + 2x + 1$. What is going on here? Did we find a bug in SymPy, or is it just not powerful enough to recognize this basic algebraic fact?",
+    "sha": "18dd9d4513a8",
+    "zh": "又得到了 `False`。可是 $(x + 1)^2$ *确实*等于 $x^2 + 2x + 1$ 啊。这是怎么回事？是我们发现了 SymPy 的 bug，还是它的能力不够，连这么基本的代数事实都认不出来？"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Recall from above that `==` represents *exact* structural equality testing. \"Exact\" here means that two expressions will compare equal with `==` only if they are exactly equal structurally. Here, $(x + 1)^2$ and $x^2 + 2x + 1$ are not the same structurally. One is the power of an addition of two terms, and the other is the addition of three terms.",
+    "sha": "29b3b9c0b2d8",
+    "zh": "回忆一下前面说过的：`==` 表示的是*精确*的结构相等测试。这里的「精确」是指，只有两个表达式在结构上完全相同，用 `==` 比较时才相等。这里，$(x + 1)^2$ 和 $x^2 + 2x + 1$ 在结构上并不相同：前者是两项之和的幂，后者是三项之和。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "It turns out that when using SymPy as a library, having `==` test for exact structural equality is far more useful than having it represent symbolic equality, or having it test for mathematical equality. However, as a new user, you will probably care more about the latter two. We have already seen an alternative to representing equalities symbolically, `Eq`. To test if two things are equal, it is best to recall the basic fact that if $a = b$, then $a - b = 0$. Thus, the best way to check if $a = b$ is to take $a - b$ and simplify it, and see if it goes to 0. We will learn later that the function to do this is called `simplify`. This method is not infallible---in fact, it can be theoretically proven（https://en.wikipedia.org/wiki/Richardson%27s_theorem） that it is impossible to determine if two symbolic expressions are identically equal in general---but for most common expressions, it works quite well.",
+    "sha": "b8a688cf599c",
+    "zh": "事实证明，把 SymPy 当作库来用的时候，让 `==` 测试精确的结构相等，要比让它表示符号式的相等，或者测试数学上的相等有用得多。不过，作为新用户，你多半更关心后两者。符号式地表示相等，我们前面已经见过一种办法：`Eq`。要检验两样东西是否相等，最好记住这个基本事实：如果 $a = b$，那么 $a - b = 0$。因此，检验 $a = b$ 的最佳办法，就是把 $a - b$ 算出来并化简，看它是否变成 0。我们之后会学到，完成这件事的函数叫 `simplify`。这个办法并非万无一失——事实上，可以从理论上证明（https://en.wikipedia.org/wiki/Richardson%27s_theorem），一般情况下不可能判定两个符号表达式是否恒等——但对于绝大多数常见的表达式，它效果相当不错。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> a = (x + 1)**2\n>>> b = x**2 + 2*x + 1\n>>> simplify(a - b)\n0\n>>> c = x**2 - 2*x + 1\n>>> simplify(a - c)\n4*x"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There is also a method called `equals` that tests if two expressions are equal by evaluating them numerically at random points.",
+    "sha": "f9a709bd93a6",
+    "zh": "还有一个叫 `equals` 的方法，它通过在随机点上对两个表达式做数值求值，来检验它们是否相等。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> a = cos(x)**2 - sin(x)**2\n>>> b = cos(2*x)\n>>> a.equals(b)\nTrue"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Two Final Notes: `^` and `/`",
+    "sha": "318335366b85",
+    "zh": "最后两点说明：`^` 和 `/`"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "You may have noticed that we have been using `**` for exponentiation instead of the standard `^`. That's because SymPy follows Python's conventions. In Python, `^` represents logical exclusive or. SymPy follows this convention:",
+    "sha": "b69e0ceb6b97",
+    "zh": "你可能已经注意到，我们一直用 `**` 表示乘方，而不是通常的 `^`。这是因为 SymPy 遵循 Python 的约定。在 Python 里，`^` 表示逻辑异或，SymPy 也遵循这个约定："
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> True ^ False\nTrue\n>>> True ^ True\nFalse\n>>> Xor(x, y)\nx ^ y"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Finally, a small technical discussion on how SymPy works is in order. When you type something like `x + 1`, the SymPy Symbol `x` is added to the Python int `1`. Python's operator rules then allow SymPy to tell Python that SymPy objects know how to be added to Python ints, and so `1` is automatically converted to the SymPy Integer object.",
+    "sha": "515a8997bd74",
+    "zh": "最后，有必要简单地从技术上讲一讲 SymPy 是怎么工作的。当你输入 `x + 1` 这样的式子时，SymPy 的 Symbol `x` 会与 Python 的 int `1` 相加。按照 Python 的运算符规则，SymPy 可以告诉 Python：SymPy 对象知道怎样与 Python 的 int 相加，于是 `1` 就被自动转换成了 SymPy 的 Integer 对象。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This sort of operator magic happens automatically behind the scenes, and you rarely need to even know that it is happening. However, there is one exception. Whenever you combine a SymPy object and a SymPy object, or a SymPy object and a Python object, you get a SymPy object, but whenever you combine two Python objects, SymPy never comes into play, and so you get a Python object.",
+    "sha": "ae88c1270e84",
+    "zh": "这类运算符的“魔法”在幕后自动发生，你几乎不需要知道它在发生。不过有一个例外：只要运算的双方是 SymPy 对象与 SymPy 对象，或者 SymPy 对象与 Python 对象，得到的就是 SymPy 对象；但如果是两个 Python 对象相运算，SymPy 根本不会介入，所以得到的是 Python 对象。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> type(Integer(1) + 1)\n<class 'sympy.core.numbers.Integer'>\n>>> type(1 + 1)\n<... 'int'>"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This is usually not a big deal. Python ints work much the same as SymPy Integers, but there is one important exception: division. In SymPy, the division of two Integers gives a Rational (which is similar to Python's Fraction（https://docs.python.org/3/library/fractions.html）):",
+    "sha": "f0afc3a2fe00",
+    "zh": "这通常没什么大不了。Python 的 int 和 SymPy 的 Integer 用起来大致相同，但有一个重要的例外：除法。在 SymPy 里，两个 Integer 相除得到的是 Rational（类似于 Python 的 Fraction（https://docs.python.org/3/library/fractions.html））："
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> Integer(1)/Integer(3)\n1/3\n>>> type(Integer(1)/Integer(3))\n<class 'sympy.core.numbers.Rational'>"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "But in Python 3 `/` represents floating point division:",
+    "sha": "639fc44fda13",
+    "zh": "但在 Python 3 里，`/` 表示浮点数除法："
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> 1/2\n0.5"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To avoid this, we can construct the rational object explicitly",
+    "sha": "f06fa55b0d44",
+    "zh": "为了避免这种情况，我们可以显式地构造有理数对象"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> Rational(1, 2)\n1/2"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This problem also comes up whenever we have a larger symbolic expression with `int/int` in it. For example:",
+    "sha": "0335033a2b21",
+    "zh": "每当一个较大的符号表达式里含有 `int/int` 时，也会出现这个问题。例如："
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> x + 1/2\nx + 0.5"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This happens because Python first evaluates `1/2` into `0.5`, and then that is cast into a SymPy type when it is added to `x`. Again, we can get around this by explicitly creating a Rational:",
+    "sha": "bfd7d3089089",
+    "zh": "这是因为 Python 先把 `1/2` 算成了 `0.5`，然后它与 `x` 相加时才被转换成 SymPy 的类型。同样，我们可以通过显式地创建 Rational 来绕过这个问题："
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> x + Rational(1, 2)\nx + 1/2"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There are several tips on avoiding this situation in the gotchas document.",
+    "sha": "3331135e357b",
+    "zh": "在 gotchas 文档里，有好几条避免这种情况的小窍门。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Further Reading",
+    "sha": "bafd4b542827",
+    "zh": "延伸阅读"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For more discussion on the topics covered in this section, see gotchas.",
+    "sha": "7791ebe657a2",
+    "zh": "关于本节涉及的话题，更多的讨论请参见 gotchas。"
+   }
+  }
+ ],
+ "title_zh": "几个容易踩的坑"
+}

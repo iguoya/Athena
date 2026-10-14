@@ -1,0 +1,230 @@
+[
+  {
+    "id": "ex1",
+    "stem": "想把 $x^2+2x+1$ 变成 $(x+1)^2$。先预测下面五个调用各返回什么，再运行：\n\n```python\nfrom sympy import *\nx = symbols('x')\np = x**2 + 2*x + 1\nprint(simplify(p))\nprint(expand(p))\nprint(collect(p, x))\nprint(cancel(p))\nprint(factor(p))\n```\n\n哪一个调用会得到 `(x + 1)**2`？",
+    "check": {
+      "kind": "choice",
+      "ask": "选一个。",
+      "options": [
+        {
+          "text": "`simplify(p)`",
+          "why": "不对。教程专门举了这个例子：`simplify` 靠启发式在多种形式里挑「最简」，而「最简」没有统一定义，这里它原样返回 `x**2 + 2*x + 1`。"
+        },
+        {
+          "text": "`expand(p)`",
+          "why": "不对。`expand` 的方向是把乘积展开成单项式之和，与 `factor` 相反；`p` 本来就是展开形式，原样返回。"
+        },
+        {
+          "text": "`collect(p, x)`",
+          "why": "不对。`collect` 只是按 `x` 的幂次合并同类项并提取系数，不做因式分解；`p` 已经是各幂次系数为常数的形式，结果不变。"
+        },
+        {
+          "text": "`cancel(p)`",
+          "why": "不对。`cancel` 处理的是有理函数，把分子分母约成无公因子的标准形；`p` 的分母是 1，没有可约的东西，返回展开的多项式。"
+        },
+        {
+          "text": "`factor(p)`",
+          "ok": true,
+          "why": "对。`factor` 在有理数域上把多项式分解成不可约因式，得到 `(x + 1)**2`。"
+        }
+      ],
+      "hint": "回到教程 `simplify` 一节末尾的例子，再看 `factor` 一节：哪个函数的作用是 `expand` 的反方向？"
+    },
+    "sol": "教程里 `simplify` 一节自己就用这个多项式说明它的局限：没有统一的「最简」，`simplify` 不保证给出因式分解形式；`factor` 才对有理系数多项式保证分解成不可约因式。\n\n```python\n>>> simplify(p)\nx**2 + 2*x + 1\n>>> expand(p)\nx**2 + 2*x + 1\n>>> collect(p, x)\nx**2 + 2*x + 1\n>>> cancel(p)\nx**2 + 2*x + 1\n>>> factor(p)\n(x + 1)**2\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "simplification · simplify / factor",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex2",
+    "stem": "$p = x^5 - x^4 - x + 1$。先预测它在有理数域上的不可约分解，再运行：\n\n```python\nfrom sympy import *\nx = symbols('x')\np = x**5 - x**4 - x + 1\nfactor_list(p)\n```\n\n`factor_list` 返回 `(常数, [(因式, 重数), ...])`。",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写三个数：不同的不可约因式有几个；最大的重数；次数最高的不可约因式的次数。",
+      "answer": [
+        3,
+        2,
+        2
+      ],
+      "hint": "先把前两项与后两项分别提公因式，找出 $(x-1)$ 与 $x^4-1$ 的关系；$x^4-1$ 在有理数域上还能拆到哪一步？"
+    },
+    "verify": "p = x**5 - x**4 - x + 1\nfl = factor_list(p)[1]\nresult = [len(fl), max(m for f, m in fl), max(degree(f, x) for f, m in fl)]",
+    "sol": "$p = x^4(x-1) - (x-1) = (x-1)(x^4-1) = (x-1)^2(x+1)(x^2+1)$。$x^2+1$ 在有理数域上不可约（在复数域才能继续拆），所以不同的不可约因式是 $x+1$、$x-1$、$x^2+1$ 三个，$x-1$ 的重数为 2，最高次因式是 $x^2+1$，次数 2。\n\n```python\n>>> factor_list(p)\n(1, [(x + 1, 1), (x - 1, 2), (x**2 + 1, 1)])\n>>> factor(p)\n(x - 1)**2*(x + 1)*(x**2 + 1)\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "simplification · factor",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex3",
+    "stem": "先预测 `collect` 把下面的表达式按 `x` 的幂次整理成什么样，再运行：\n\n```python\nfrom sympy import *\nx, y, z = symbols('x y z')\ne = x**3*y - 2*x**3 + x**2*z + 4*x**2 - x*y*z + 5\nc = collect(e, x)\nprint(c)\n```\n\n再用 `c.coeff(x, n)` 取各次幂的系数。",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写四个数：$x^3$ 的系数在 $y=10$ 时的值；$x^2$ 的系数在 $z=3$ 时的值；$x$ 的系数在 $y=2, z=3$ 时的值；不含 $x$ 的项（`c.coeff(x, 0)`）。",
+      "answer": [
+        8,
+        7,
+        -6,
+        5
+      ],
+      "hint": "回看 `collect` 一节：`coeff(x, n)` 给出 `x**n` 的系数，系数里仍可含别的符号；先写出每个系数的符号形式，再代值。"
+    },
+    "verify": "e = x**3*y - 2*x**3 + x**2*z + 4*x**2 - x*y*z + 5\nc = collect(e, x)\nresult = [c.coeff(x, 3).subs(y, 10), c.coeff(x, 2).subs(z, 3), c.coeff(x, 1).subs({y: 2, z: 3}), c.coeff(x, 0)]",
+    "sol": "按 $x$ 的幂次合并：$x^3$ 的系数是 $y-2$，$x^2$ 的系数是 $z+4$，$x$ 的系数是 $-yz$，常数项是 5。代值得 $8,\\ 7,\\ -6,\\ 5$。\n\n```python\n>>> c\nx**3*(y - 2) + x**2*(z + 4) - x*y*z + 5\n>>> c.coeff(x, 3)\ny - 2\n>>> c.coeff(x, 2)\nz + 4\n>>> c.coeff(x, 1)\n-y*z\n>>> c.coeff(x, 0)\n5\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "simplification · collect",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex4",
+    "stem": "先预测 `cancel` 对下面这个有理函数做了什么，再运行：\n\n```python\nfrom sympy import *\nx = symbols('x')\nf = (x**3 - 1)/(x**2 - 1)\nr = cancel(f)\nn, d = fraction(r)   # 分子、分母\nprint(r)\n```\n\n注意 `f` 在 $x=1$ 处分子分母同时为 0。",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写三个数：`n.subs(x, 2)`、`d.subs(x, 2)`、`r.subs(x, 1)`。",
+      "answer": [
+        7,
+        3,
+        1.5
+      ],
+      "hint": "$x^3-1$ 与 $x^2-1$ 有公因式 $x-1$：先各自分解，约掉后再代值。"
+    },
+    "verify": "r = cancel((x**3 - 1)/(x**2 - 1))\nn, d = fraction(r)\nresult = [n.subs(x, 2), d.subs(x, 2), r.subs(x, 1)]",
+    "sol": "$x^3-1=(x-1)(x^2+x+1)$，$x^2-1=(x-1)(x+1)$，约去 $x-1$ 后是 $\\dfrac{x^2+x+1}{x+1}$。$x=2$ 时分子 7、分母 3；$x=1$ 时 $\\dfrac{3}{2}$。原式在 $x=1$ 处是 $0/0$，`cancel` 后的形式给出的是该点的极限值。\n\n```python\n>>> r\n(x**2 + x + 1)/(x + 1)\n>>> n.subs(x, 2)\n7\n>>> d.subs(x, 2)\n3\n>>> r.subs(x, 1)\n3/2\n>>> f.subs(x, 1)\nnan\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "simplification · cancel",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex5",
+    "stem": "教程里 `trigsimp` 把下面的表达式化成 `cos(4*x)/2 + 1/2`。先自己算一遍（提示：$\\sin^4 x - 2\\sin^2 x\\cos^2 x + \\cos^4 x = (\\cos^2 x - \\sin^2 x)^2$），再运行：\n\n```python\nfrom sympy import *\nx = symbols('x')\ne = sin(x)**4 - 2*cos(x)**2*sin(x)**2 + cos(x)**4\ns = trigsimp(e)\nprint(s)\nprint(s.subs(x, pi/12))\nprint(s.subs(x, pi/4))\n```",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写两个数：化简结果在 $x=\\pi/12$ 与 $x=\\pi/4$ 处的值。",
+      "answer": [
+        0.75,
+        0
+      ],
+      "hint": "$(\\cos^2 x - \\sin^2 x)^2 = \\cos^2 2x$，再用倍角公式化成 $\\cos 4x$ 的形式；把 $x$ 代进去求值。"
+    },
+    "verify": "e = sin(x)**4 - 2*cos(x)**2*sin(x)**2 + cos(x)**4\ns = trigsimp(e)\nresult = [s.subs(x, pi/12), s.subs(x, pi/4)]",
+    "sol": "$e=(\\cos^2x-\\sin^2x)^2=\\cos^2 2x=\\dfrac{1+\\cos 4x}{2}$。$x=\\pi/12$ 时 $\\cos(\\pi/3)=\\tfrac12$，值 $\\tfrac34$；$x=\\pi/4$ 时 $\\cos\\pi=-1$，值 0。\n\n```python\n>>> s\ncos(4*x)/2 + 1/2\n>>> s.subs(x, pi/12)\n3/4\n>>> s.subs(x, pi/4)\n0\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "simplification · trigsimp",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex6",
+    "stem": "先预测，再运行：\n\n```python\nfrom sympy import *\nz = symbols('z')                 # 默认：复数\nr = symbols('r', real=True)\np = symbols('p', positive=True)\nprint(simplify(sqrt(z**2)), simplify(sqrt(r**2)), simplify(sqrt(p**2)))\n```\n\n三个结果依次是什么？（按 `z`、`r`、`p` 的顺序，用逗号隔开）",
+    "check": {
+      "kind": "choice",
+      "ask": "选一个。",
+      "options": [
+        {
+          "text": "`z`, `r`, `p`",
+          "why": "不对。$\\sqrt{x^2}=x$ 只在 $x\\ge 0$ 时成立，教程说「默认不做不一定成立的化简」；只有 `p` 因为是正数才化成自身。"
+        },
+        {
+          "text": "`Abs(z)`, `Abs(r)`, `p`",
+          "why": "不对。`Abs(z)` 只对实数成立。复数 $z=i$ 时 $\\sqrt{z^2}=\\sqrt{-1}=i$，而 $|i|=1$，两者不等，SymPy 因此不对复数符号化简。"
+        },
+        {
+          "text": "`sqrt(z**2)`, `Abs(r)`, `p`",
+          "ok": true,
+          "why": "对。复数符号不满足任何假设，原样保留；实数 `r` 得到 `Abs(r)`（$\\sqrt{r^2}=|r|$）；正数 `p` 得到 `p`。"
+        },
+        {
+          "text": "`sqrt(z**2)`, `r`, `p`",
+          "why": "不对。`r` 只是实数，可能为负，例如 $r=-2$ 时 $\\sqrt{r^2}=2\\ne r$；实数下正确的结果是 `Abs(r)`。"
+        }
+      ],
+      "hint": "回看「Powers」一节的恒等式 3 和后面的表：$(x^a)^b = x^{ab}$ 在 $b$ 是整数时才成立，所以 $\\sqrt{x^2}\\ne x$；再想想符号假设怎样补上缺的条件。"
+    },
+    "sol": "恒等式 3 在 $b=\\tfrac12$ 时不是对所有复数成立，所以 `z` 不化简；`r` 为实数时 $\\sqrt{r^2}=|r|$；`p` 为正数时 $\\sqrt{p^2}=p$。\n\n```\n>>> print(simplify(sqrt(z**2)), simplify(sqrt(r**2)), simplify(sqrt(p**2)))\nsqrt(z**2) Abs(r) p\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "simplification · Powers",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex7",
+    "stem": "教程的「恒等式条件」表给出了恒等式 2、3 的反例。先在纸上算出四个值，再运行核对：\n\n```python\nfrom sympy import *\na = Rational(1, 2)\nprint(sqrt(-1)*sqrt(-1))      # x**a * y**a，x = y = -1\nprint(sqrt((-1)*(-1)))       # (x*y)**a\nprint(((-1)**2)**a)          # (x**2)**a，这里 x = -1\nprint((-1)**(2*a))           # x**(2*a)\n```\n\n四行输出各是多少？",
+    "check": {
+      "kind": "numbers",
+      "ask": "按四行的顺序写四个数。",
+      "answer": [
+        -1,
+        1,
+        1,
+        -1
+      ],
+      "hint": "$\\sqrt{-1}=i$，$i\\cdot i=-1$；$(-1)^2=1$ 再开方是 $\\sqrt1$；最后一行先算指数 $2\\cdot\\tfrac12$。"
+    },
+    "verify": "a = Rational(1, 2)\nresult = [sqrt(-1)*sqrt(-1), sqrt((-1)*(-1)), ((-1)**2)**a, (-1)**(2*a)]",
+    "sol": "前两行：$x^ay^a=i\\cdot i=-1$，而 $(xy)^a=\\sqrt1=1$，恒等式 2 在 $x,y<0$ 时不成立。后两行：$((-1)^2)^{1/2}=\\sqrt1=1$，而 $(-1)^{2\\cdot 1/2}=(-1)^1=-1$，恒等式 3 在 $b=\\tfrac12$ 不是整数时不成立。\n\n```python\n>>> sqrt(-1)*sqrt(-1)\n-1\n>>> sqrt((-1)*(-1))\n1\n>>> ((-1)**2)**a\n1\n>>> (-1)**(2*a)\n-1\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "simplification · Powers（恒等式条件表）",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex8",
+    "stem": "想让 `expand_log(log(a*b))` 展开成 `log(a) + log(b)`。声明 `a`、`b` 时下面哪种写法足够？\n\n```python\nfrom sympy import *\na, b = symbols('a b')   # 这里换成各个选项的写法\nprint(expand_log(log(a*b)))\n```\n\n先预测，再逐个换上选项运行。",
+    "check": {
+      "kind": "choice",
+      "ask": "选一个。",
+      "options": [
+        {
+          "text": "`symbols('a b')`（不加假设）",
+          "why": "不对。默认是复数，复对数有分支切割，$\\log(ab)=\\log a+\\log b$ 对任意复数不成立，输出仍是 `log(a*b)`。"
+        },
+        {
+          "text": "`symbols('a b', real=True)`",
+          "why": "不对。实数可以是负数：$a=b=-1$ 时 $\\log(ab)=\\log 1=0$，而 $\\log(-1)+\\log(-1)=2\\pi i$。教程给的充分条件是 $a,b$ 为正，输出仍是 `log(a*b)`。"
+        },
+        {
+          "text": "`symbols('a b', positive=True)`",
+          "ok": true,
+          "why": "对。$a,b>0$ 是教程给出的充分条件，输出 `log(a) + log(b)`。"
+        },
+        {
+          "text": "`symbols('a b', integer=True)`",
+          "why": "不对。整数同样可以为负或为 0，不满足正数条件；输出仍是 `log(a*b)`。"
+        }
+      ],
+      "hint": "回看「Exponentials and logarithms」一节：恒等式 $\\log(xy)=\\log x+\\log y$ 的充分条件是什么？负数代进去会怎样？"
+    },
+    "sol": "`expand_log` 只在恒等式确实成立时才展开，所以要用符号假设把条件告诉 SymPy。实际运行：\n\n```python\n>>> a, b = symbols('a b')\n>>> expand_log(log(a*b))\nlog(a*b)\n>>> a, b = symbols('a b', real=True)\n>>> expand_log(log(a*b))\nlog(a*b)\n>>> a, b = symbols('a b', positive=True)\n>>> expand_log(log(a*b))\nlog(a) + log(b)\n>>> a, b = symbols('a b', integer=True)\n>>> expand_log(log(a*b))\nlog(a*b)\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "simplification · Exponentials and logarithms",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  }
+]

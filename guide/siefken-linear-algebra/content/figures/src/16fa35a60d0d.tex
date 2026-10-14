@@ -1,0 +1,54 @@
+\begin{tikzpicture}
+		\begin{axis}[
+		    anchor=origin,
+		    name=plot1,
+		    disabledatascaling,
+		    xmin=-2,xmax=2,
+		    ymin=-1,ymax=1,
+			xtick={-4,...,4},
+			ytick={-2,...,4},
+		    x=1cm,y=1cm,
+		    grid=both,
+		    grid style={line width=.1pt, draw=gray!10},
+		    axis lines=middle,
+		    minor tick num=0,
+		    enlargelimits={abs=0.5},
+		    axis line style={latex-latex},
+		    ticklabel style={font=\tiny,fill=white},
+		    xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+		    ylabel style={at={(ticklabel* cs:1)},anchor=south west}
+		]
+			\begin{scope}[cm={1,0,0,1,(0,0)}, myorange, very thick, ->]
+				\draw (0,0) circle[radius=1];
+			\end{scope}
+			\node at (.45,.35) {$\mathcal C$};
+			\coordinate (A) at (1.25,1.5);
+		\end{axis}
+		\begin{axis}[
+			name=plot2,
+			at={($(plot1.east) + (1cm, 0)$)},
+			anchor=west,
+		    disabledatascaling,
+		    xmin=-2,xmax=2,
+		    ymin=-1,ymax=1,
+			xtick={-4,...,4},
+			ytick={-2,...,4},
+		    x=1cm,y=1cm,
+		    grid=both,
+		    grid style={line width=.1pt, draw=gray!10},
+		    axis lines=middle,
+		    minor tick num=0,
+		    enlargelimits={abs=0.5},
+		    axis line style={latex-latex},
+		    ticklabel style={font=\tiny,fill=white},
+		    xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+		    ylabel style={at={(ticklabel* cs:1)},anchor=south west}
+		]
+			\begin{scope}[cm={2,0,0,1,(0,0)}, mypink, very thick, ->]
+				\draw (0,0) circle[radius=1];
+			\end{scope}
+			\node at (.5,.35) {$S(\mathcal C)$};
+			\coordinate (B) at (-1.25,1.5);
+		\end{axis}
+		\draw[thick] (A) edge[bend left, ->] node[midway,above] {$S$} (B) ;
+	\end{tikzpicture}

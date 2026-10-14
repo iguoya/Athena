@@ -1,0 +1,56 @@
+\begin{tikzpicture}
+		\begin{axis}[
+		    anchor=origin,
+		    name=plot1,
+		    disabledatascaling,
+		    xmin=-0,xmax=1,
+		    ymin=-0,ymax=1,
+			xtick={-4,...,4},
+			ytick={-2,...,4},
+		    x=1.5cm,y=1.5cm,
+		    grid=both,
+		    grid style={line width=.1pt, draw=gray!10},
+		    axis lines=middle,
+		    minor tick num=0,
+		    enlargelimits={abs=0.5},
+		    axis line style={latex-latex},
+		    ticklabel style={font=\tiny,fill=white},
+		    xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+		    ylabel style={at={(ticklabel* cs:1)},anchor=south west}
+		]
+			\begin{scope}[cm={1,0,0,1,(0,0)}, mypink, ->]
+				\fill[opacity=.3] (0,0) rectangle (1,1);
+				\draw (0,0) rectangle (1,1);
+			\end{scope}
+			\node at (.5,.5) {$X$};
+			\coordinate (A) at (.75,1.25);
+		\end{axis}
+		\begin{axis}[
+			name=plot2,
+			at={($(plot1.east) + (1cm, 0)$)},
+			anchor=west,
+		    disabledatascaling,
+		    xmin=-0,xmax=1,
+		    ymin=-0,ymax=1,
+			xtick={-4,...,4},
+			ytick={-2,...,4},
+		    x=1.5cm,y=1.5cm,
+		    grid=both,
+		    grid style={line width=.1pt, draw=gray!10},
+		    axis lines=middle,
+		    minor tick num=0,
+		    enlargelimits={abs=0.5},
+		    axis line style={latex-latex},
+		    ticklabel style={font=\tiny,fill=white},
+		    xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+		    ylabel style={at={(ticklabel* cs:1)},anchor=south west}
+		]
+			\begin{scope}[rotate=30, BlueGreen,  ->]
+				\fill[opacity=.3] (0,0) rectangle (1,1);
+				\draw (0,0) rectangle (1,1);
+			\end{scope}
+			\node[right] at (0,.6) {$\mathcal R(X)$};
+			\coordinate (B) at (-.25,1.25);
+		\end{axis}
+		\draw[thick] (A) edge[bend left, ->] node[midway,above] {$\mathcal R$} (B) ;
+	\end{tikzpicture}

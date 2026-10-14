@@ -1,0 +1,2030 @@
+{
+ "id": "module4",
+ "title_en": "Dot Products & Normal Forms",
+ "blocks": [
+  {
+   "k": "outcome",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Geometric and algebraic definitions of the dot product.",
+         "sha": "bc8bc73fc98b",
+         "zh": "点积的几何定义与代数定义。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How dot products relate to the length of a vector and the angle between two vectors.",
+         "sha": "647867eab4e0",
+         "zh": "点积如何与向量的长度、两个向量之间的夹角联系起来。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The *normal form* of lines, planes, and hyperplanes.",
+         "sha": "381d24a2fedd",
+         "zh": "直线、平面与超平面的*法式*。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\vec a$ and $\\vec b$ be vectors rooted at the same point and let $\\theta$ denote the *smaller* of the two angles between them (so $0\\leq \\theta \\leq \\pi$). The *dot product* of $\\vec a$ and $\\vec b$ is defined to be",
+    "sha": "d3051183f0f2",
+    "zh": "设 $\\vec a$ 与 $\\vec b$ 是起点相同的两个向量，设 $\\theta$ 表示它们之间两个夹角中*较小*的那个（于是 $0\\leq \\theta \\leq \\pi$）。$\\vec a$ 与 $\\vec b$ 的*点积*定义为"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec a\\cdot \\vec b=\\norm{\\vec a}\\norm{\\vec b}\\cos \\theta."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We will call this the *geometric definition of the dot product*.",
+    "sha": "dd6c68a5be2a",
+    "zh": "我们称之为*点积的几何定义*。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "0134d1eacb22"
+   ],
+   "caption": null
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "de487422b0b7"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The dot product is also sometimes called the *scalar product* because the result is a scalar.",
+    "sha": "4bd29b364989",
+    "zh": "点积有时也叫*数量积*，因为它的结果是一个标量。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Algebraically, we can define the dot product in terms of coordinates:",
+    "sha": "0db2dd231a4b",
+    "zh": "从代数上看，我们也可以用坐标来定义点积："
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\matc{a_1\\\\a_2\\\\\\vdots\\\\a_n}\\cdot \\matc{b_1\\\\b_2\\\\\\vdots\\\\b_n}\n\t=a_1b_1+a_2b_2+\\cdots+a_nb_n."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We will call this the *algebraic definition of the dot product*.",
+    "sha": "3ce2e82f7b55",
+    "zh": "我们称之为*点积的代数定义*。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "By switching between algebraic and geometric definitions, we can use the dot product to find quantities that are otherwise difficult to find.",
+    "sha": "18d8d248b642",
+    "zh": "在代数定义与几何定义之间来回切换，我们就能用点积求出一些本来很难求的量。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the angle between the vectors $\\vec v=(1,2,3)$ and $\\vec w=(1,1,-2)$.",
+      "sha": "3f931b56de89",
+      "zh": "求向量 $\\vec v=(1,2,3)$ 与 $\\vec w=(1,1,-2)$ 之间的夹角。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "From the algebraic definition of the dot product, we know",
+      "sha": "645775cf9f04",
+      "zh": "由点积的代数定义，我们知道"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec v\\cdot \\vec w = 1(1)+2(1)+3(-2) = -3."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "From the geometric definition, we know",
+      "sha": "ef013757e0e6",
+      "zh": "由几何定义，我们知道"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec v\\cdot \\vec w=\\norm{\\vec v}\\norm{\\vec w}\\cos\\theta\n\t\t=\\sqrt{14}\\sqrt{6}\\cos\\theta=2\\sqrt{21}\\cos\\theta."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Equating the two definitions of $\\vec v\\cdot \\vec w$, we see",
+      "sha": "6986c1a3899d",
+      "zh": "令 $\\vec v\\cdot \\vec w$ 的两种定义相等，得到"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\cos\\theta = \\frac{-3}{2\\sqrt{21}}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so $\\theta=\\arccos\\Big(\\tfrac{-3}{2\\sqrt{21}}\\Big)$.",
+      "sha": "e395140c36a2",
+      "zh": "所以 $\\theta=\\arccos\\Big(\\tfrac{-3}{2\\sqrt{21}}\\Big)$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The dot product has several interesting properties. Since the angle between $\\vec a$ and itself is $0$, the geometric definition of the dot product tells us",
+    "sha": "b29aabfc322f",
+    "zh": "点积有好几条值得一看的性质。因为 $\\vec a$ 与它自身的夹角是 $0$，由点积的几何定义可得"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec a\\cdot \\vec a=\\Norm{\\vec a}\\Norm{\\vec a}\\cos 0 = \\Norm{\\vec a}^2."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In other words,",
+    "sha": "e583468a1518",
+    "zh": "换句话说，"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\Norm{\\vec a}=\\sqrt{\\vec a\\cdot \\vec a},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and so dot products can be used to compute the length of vectors 〔注： Oftentimes in non-geometric settings, the dot product between two vectors is defined first and then the length of $\\vec a$ is actually *defined* to be $\\sqrt{\\vec a\\cdot \\vec a}$.〕.",
+    "sha": "68c744d0558e",
+    "zh": "所以点积可以用来计算向量的长度〔注：在不涉及几何的场合，常常先定义两个向量的点积，再把 $\\vec a$ 的长度*定义*为 $\\sqrt{\\vec a\\cdot \\vec a}$。〕。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "From the algebraic definition of the dot product, we can deduce several distributive laws. Namely, for any vectors $\\vec a$, $\\vec b$, and $\\vec c$ and any scalar $k$ we have",
+    "sha": "379b7ff65986",
+    "zh": "由点积的代数定义，我们可以推出几条分配律。也就是说，对任意向量 $\\vec a$、$\\vec b$、$\\vec c$ 和任意标量 $k$，都有"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "(\\vec a+\\vec b)\\cdot\\vec c = \\vec a\\cdot \\vec c+\\vec b\\cdot \\vec c\\qquad\n\t\\vec a\\cdot(\\vec b+\\vec c)=\\vec a\\cdot \\vec b+\\vec a\\cdot \\vec c"
+  },
+  {
+   "k": "math",
+   "tex": "(k\\vec a)\\cdot \\vec b = k(\\vec a\\cdot \\vec b)=\\vec a\\cdot (k\\vec b)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and",
+    "sha": "cffa50a32cb1",
+    "zh": "以及"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec a\\cdot \\vec b=\\vec b\\cdot \\vec a."
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Orthogonality",
+    "sha": "42a095b4f15b",
+    "zh": "正交"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Recall that for vectors $\\vec a$ and $\\vec b$, the relationship $\\vec a\\cdot \\vec b=0$ can hold for two reasons: (i) either $\\vec a=\\vec 0$, $\\vec b=\\vec 0$, or both or (ii) $\\vec a$ and $\\vec b$ meet at $90^{\\circ}$. Thus, the dot product can be used to tell if two vectors are perpendicular. There is some strangeness with the zero vector here, but it turns out this strangeness simplifies our lives mathematically.",
+    "sha": "628923ee33e9",
+    "zh": "回忆一下，对向量 $\\vec a$ 与 $\\vec b$，等式 $\\vec a\\cdot \\vec b=0$ 成立有两种原因：(i) $\\vec a=\\vec 0$、$\\vec b=\\vec 0$，或者二者都是零向量；(ii) $\\vec a$ 与 $\\vec b$ 成 $90^{\\circ}$ 角。因此，点积可以用来判断两个向量是否垂直。这里零向量有点特殊，但事实证明，这种特殊性在数学上反而让事情变得更简单。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Orthogonal",
+    "sha": "3e7b316f6808",
+    "zh": "正交"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Two vectors $\\vec u$ and $\\vec v$ are *orthogonal* to each other if $\\vec u\\cdot \\vec v=0$. The word orthogonal is synonymous with the word perpendicular.",
+      "sha": "8705a8611950",
+      "zh": "如果 $\\vec u\\cdot \\vec v=0$，就说两个向量 $\\vec u$ 与 $\\vec v$ 彼此*正交*。正交（orthogonal）一词与垂直同义。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The definition of orthogonal encapsulates both the idea of two vectors forming a right angle and the idea of one of them being $\\vec 0$.",
+    "sha": "64e9706c9592",
+    "zh": "正交的定义既包含了两个向量成直角这一想法，也包含了其中一个是 $\\vec 0$ 的情形。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Before we continue, let's pin down exactly what we mean by the *direction* of a vector. There are many ways we could define this term, but we'll go with the following.",
+    "sha": "7aa52956e92c",
+    "zh": "在继续之前，先把向量的*方向*到底指什么确定下来。这个词有很多种定义方式，我们采用下面这一种。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Direction",
+    "sha": "fd8e45bac7d3",
+    "zh": "方向"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The vector $\\vec u$ points in the *direction* of the vector $\\vec v$ if $\\vec u=k\\vec v$ for some scalar $k$. The vector $\\vec u$ points in the *positive direction* of $\\vec v$ if $\\vec u=k\\vec v$ for some positive scalar $k$.",
+      "sha": "1d43e42faacb",
+      "zh": "如果对某个标量 $k$ 有 $\\vec u=k\\vec v$，就说向量 $\\vec u$ 指向向量 $\\vec v$ 的*方向*。如果对某个正的标量 $k$ 有 $\\vec u=k\\vec v$，就说向量 $\\vec u$ 指向 $\\vec v$ 的*正方向*。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The vector $2\\xhat$ points in the direction of $\\xhat$ since $\\frac{1}{2}(2\\xhat)=\\xhat$. Since $\\frac{1}{2}>0$, $2\\xhat$ also points in the positive direction of $\\xhat$. In contrast, $-\\xhat$ points in the direction $\\xhat$ but not the positive direction of $\\xhat$.",
+    "sha": "2c734329bb5f",
+    "zh": "向量 $2\\xhat$ 指向 $\\xhat$ 的方向，因为 $\\frac{1}{2}(2\\xhat)=\\xhat$。又因为 $\\frac{1}{2}>0$，所以 $2\\xhat$ 也指向 $\\xhat$ 的正方向。相反，$-\\xhat$ 指向 $\\xhat$ 的方向，但不是 $\\xhat$ 的正方向。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When it comes to the relationship between two vectors, there are two extremes: they point in the same direction, or they are orthogonal. The dot product can be used to tell you which of these cases you're in, and more than that, it can tell you to what extent one vector points in the direction of another (even if they don't point in the same direction).",
+    "sha": "d2850f504767",
+    "zh": "谈到两个向量之间的关系，有两种极端情形：它们指向同一方向，或者彼此正交。点积可以告诉你你处在哪一种情形；不止如此，它还能告诉你一个向量在多大程度上指向另一个向量的方向（即使它们的方向并不相同）。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec a=\\mat{1\\\\2}$, $\\vec b=\\mat{3\\\\3}$, $\\vec c=\\mat{2\\\\1}$, and $\\vec v=\\mat{3\\\\4}$. Which vector out of $\\vec a$, $\\vec b$, and $\\vec c$ has a direction closest to the direction of $\\vec v$?",
+      "sha": "5fef8f27d66b",
+      "zh": "设 $\\vec a=\\mat{1\\\\2}$，$\\vec b=\\mat{3\\\\3}$，$\\vec c=\\mat{2\\\\1}$，$\\vec v=\\mat{3\\\\4}$。在 $\\vec a$、$\\vec b$、$\\vec c$ 中，哪一个向量的方向最接近 $\\vec v$ 的方向？"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We would like to know when $\\theta$, the angle between a pair of the given vectors, is smallest. This is equivalent to finding when $\\cos\\theta$ is closest to 1 (since $\\cos0=1$). By equating the geometric and algebraic definitions of the dot product, we know",
+      "sha": "337ea01a86f8",
+      "zh": "我们想知道，给定的各对向量之间的夹角 $\\theta$ 何时最小。这等价于问 $\\cos\\theta$ 何时最接近 1（因为 $\\cos0=1$）。令点积的几何定义与代数定义相等，我们知道"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\cos\\theta = \\frac{\\vec p\\cdot\\vec q}{\\norm{\\vec p}\\norm{\\vec q}}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\alpha$, $\\beta$, and $\\gamma$ be the angles between the vector $\\vec v$ and the vectors $\\vec a$, $\\vec b$, $\\vec c$, respectively. Computing, we find",
+      "sha": "85886a38d1e9",
+      "zh": "设 $\\alpha$、$\\beta$、$\\gamma$ 分别是向量 $\\vec v$ 与向量 $\\vec a$、$\\vec b$、$\\vec c$ 之间的夹角。计算得"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}\\cos \\alpha &= \\frac{3+8}{5\\sqrt{5}}=\\frac{11\\sqrt{5}}{25} \\approx 0.9838699101 \\\\\n\t\t\\cos \\beta &= \\frac{9+12}{5\\sqrt{18}} =\\frac{7\\sqrt{2}}{10} \\approx 0.989949437\\\\\n\t    \\cos \\gamma &= \\frac{6+4}{5\\sqrt{5}}=\\frac{2\\sqrt{5}}{5} \\approx 0.894427191.\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since $\\cos \\beta$ is the closest to $1$, we know $\\vec b$ has a direction closest to that of $\\vec v$.",
+      "sha": "aa32f0d3cfe3",
+      "zh": "因为 $\\cos \\beta$ 最接近 $1$，所以 $\\vec b$ 的方向最接近 $\\vec v$ 的方向。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Normal Form of Lines and Planes",
+    "sha": "43122da726cb",
+    "zh": "直线与平面的法式"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\vec n=\\mat{1\\\\2}$. If a vector $\\vec v=\\mat{v_1\\\\v_2}$ is orthogonal to $\\vec n$, then",
+    "sha": "7e1d46bcfc19",
+    "zh": "设 $\\vec n=\\mat{1\\\\2}$。如果向量 $\\vec v=\\mat{v_1\\\\v_2}$ 与 $\\vec n$ 正交，那么"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec n\\cdot\\vec v=v_1+2v_2=0,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and so $v_1=-2v_2$. In other words, $\\vec v$ is orthogonal to $\\vec n$ exactly when $\\vec v\\in\\Span\\Set{\\mat{-2\\\\1}}$. What have we learned? The set of all vectors orthogonal to $\\vec n$ forms a line $\\ell=\\Span\\Set{\\mat{-2\\\\1}}$. In this case, we call $\\vec n$ a *normal vector* for $\\ell$.",
+    "sha": "954ce7bbd553",
+    "zh": "于是 $v_1=-2v_2$。换句话说，当且仅当 $\\vec v\\in\\Span\\Set{\\mat{-2\\\\1}}$ 时，$\\vec v$ 与 $\\vec n$ 正交。我们学到了什么？与 $\\vec n$ 正交的所有向量构成一条直线 $\\ell=\\Span\\Set{\\mat{-2\\\\1}}$。这时，我们称 $\\vec n$ 是 $\\ell$ 的一个*法向量*。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "ae00e0fe901f"
+   ],
+   "caption": null
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Normal Vector",
+    "sha": "420321b55894",
+    "zh": "法向量"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A *normal vector* to a line (or plane or hyperplane) is a non-zero vector that is orthogonal to all direction vectors for the line (or plane or hyperplane).",
+      "sha": "ebdcf7f710c2",
+      "zh": "直线（或平面、超平面）的*法向量*，是与这条直线（或平面、超平面）的所有方向向量都正交的非零向量。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In $\\R^2$, normal vectors provide yet another way to describe lines, including lines which don't pass through the origin.",
+    "sha": "f22fb43656fe",
+    "zh": "在 $\\R^2$ 中，法向量为描述直线提供了又一种方式，连不过原点的直线也能描述。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\vec n=\\mat{1\\\\2}$ as before, and fix $\\vec p=\\mat{1\\\\1}$. If we draw the set of all vectors orthogonal to $\\vec n$ but *root all the vectors at $\\vec p$*, again we get a line, but this time the line passes through $\\vec p$.",
+    "sha": "aa8457ee1005",
+    "zh": "仍取 $\\vec n=\\mat{1\\\\2}$，再固定 $\\vec p=\\mat{1\\\\1}$。如果我们画出所有与 $\\vec n$ 正交的向量，但把这些向量的起点都放在 $\\vec p$ 处，得到的仍然是一条直线，不过这次这条直线经过 $\\vec p$。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "25be66eb3589"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In fact, the line we get is $\\ell_2=\\Span\\Set{\\mat{-2\\\\1}}+\\Set{\\mat{1\\\\1}}=\\ell+\\Set{\\vec p}$, which is just $\\ell$ (the parallel line through the origin) translated by $\\vec p$.",
+    "sha": "bae29c45f0ea",
+    "zh": "事实上，我们得到的直线是 $\\ell_2=\\Span\\Set{\\mat{-2\\\\1}}+\\Set{\\mat{1\\\\1}}=\\ell+\\Set{\\vec p}$，它就是 $\\ell$（过原点的那条平行直线）平移 $\\vec p$ 之后的结果。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let's relate this to dot products and normal vectors. By definition, for every $\\vec v\\in \\ell$, we have $\\vec n\\cdot \\vec v=0$. Since $\\ell_2$ is a translate of $\\ell$ by $\\vec p$, we deduce the relationship that for every $\\vec v\\in \\ell_2$,",
+    "sha": "ed0b1f5c3f19",
+    "zh": "我们把它和点积、法向量联系起来。按定义，对每个 $\\vec v\\in \\ell$，都有 $\\vec n\\cdot \\vec v=0$。因为 $\\ell_2$ 是 $\\ell$ 平移 $\\vec p$ 得到的，所以我们推出：对每个 $\\vec v\\in \\ell_2$，"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec n\\cdot(\\vec v-\\vec p) = 0."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When a line is expressed as above, we say it is expressed in *normal form*.",
+    "sha": "d7263768daac",
+    "zh": "当一条直线写成上面这种形式时，我们说它写成了*法式*。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Normal Form of a Line",
+    "sha": "5ba94f29746b",
+    "zh": "直线的法式"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A line $\\ell\\subseteq \\R^2$ is expressed in *normal form* if there exist vectors $\\vec n\\neq \\vec 0$ and $\\vec p$ so that $\\ell$ is the solution set to the equation",
+      "sha": "35eb50d0fba2",
+      "zh": "直线 $\\ell\\subseteq \\R^2$ 如果满足：存在向量 $\\vec n\\neq \\vec 0$ 和 $\\vec p$，使得 $\\ell$ 恰是下面这个方程的解集，就说它写成了*法式*"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec n\\cdot (\\vec x-\\vec p)=0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The equation $\\vec n\\cdot (\\vec x-\\vec p)=0$ is called the *normal form of $\\ell$*.",
+      "sha": "d7d678d41e07",
+      "zh": "方程 $\\vec n\\cdot (\\vec x-\\vec p)=0$ 叫作 $\\ell$ 的*法式方程*。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Though the definition doesn't explicitly state it, if a line $\\ell\\in \\R^2$ is expressed in normal form as $\\vec n\\cdot (\\vec x-\\vec p)=0$, then $\\vec n$ *is necessarily a normal vector for $\\ell$*. (Think about what the solution set to $\\vec n\\cdot (\\vec x-\\vec p)=0$ would be if $\\vec n$ happened to be $\\vec 0$!)",
+    "sha": "7b3adc1c45d9",
+    "zh": "虽然定义里没有明说，但如果直线 $\\ell\\in \\R^2$ 写成法式 $\\vec n\\cdot (\\vec x-\\vec p)=0$，那么 $\\vec n$ 一定是 $\\ell$ 的法向量。（想一想：如果 $\\vec n$ 恰好是 $\\vec 0$，方程 $\\vec n\\cdot (\\vec x-\\vec p)=0$ 的解集会是什么？）"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "What about in $\\R^3$? Fix a non-zero vector $\\vec n\\in\\R^3$ and let $\\mathcal Q\\subseteq\\R^3$ be the set of vectors orthogonal to $\\vec n$. $\\mathcal Q$ is a plane through the origin, and again, we call $\\vec n$ a *normal vector* of the plane $\\mathcal Q$.",
+    "sha": "c013a7b9d1d7",
+    "zh": "那么在 $\\R^3$ 中呢？固定一个非零向量 $\\vec n\\in\\R^3$，设 $\\mathcal Q\\subseteq\\R^3$ 是与 $\\vec n$ 正交的所有向量的集合。$\\mathcal Q$ 是一个过原点的平面，同样，我们称 $\\vec n$ 是平面 $\\mathcal Q$ 的*法向量*。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "2d25e924258d"
+   ],
+   "caption": null
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In a similar way to the line, $\\mathcal Q$ is the set of solutions to $\\vec n\\cdot \\vec x=0$. And, for any $\\vec p\\in\\R^3$, the translated plane $\\mathcal Q+\\Set{\\vec p}$ is the solution set to",
+    "sha": "029e5d231d14",
+    "zh": "与直线的情形类似，$\\mathcal Q$ 是 $\\vec n\\cdot \\vec x=0$ 的解集。而且，对任意 $\\vec p\\in\\R^3$，平移后的平面 $\\mathcal Q+\\Set{\\vec p}$ 是方程"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec n\\cdot (\\vec x-\\vec p)=0."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Thus, we see planes in $\\R^3$ have a normal form just like lines in $\\R^2$ do.",
+    "sha": "1f4825cbd2fa",
+    "zh": "的解集。由此可见，$\\R^3$ 中的平面和 $\\R^2$ 中的直线一样，也有法式。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find vector form and normal form of the plane $\\mathcal P$ passing through the points $A=(1,0,0)$, $B=(0,1,0)$ and $C=(0,0,1)$.",
+      "sha": "fa1d20441a5f",
+      "zh": "求过点 $A=(1,0,0)$、$B=(0,1,0)$ 和 $C=(0,0,1)$ 的平面 $\\mathcal P$ 的向量式与法式。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To find vector form of $\\mathcal P$, we need a point on the plane and two direction vectors. We have three points on the plane, so we can obtain two direction vectors by subtracting these points in different ways. Let",
+      "sha": "ecff3ade7f43",
+      "zh": "要求 $\\mathcal P$ 的向量式，我们需要平面上的一个点和两个方向向量。平面上有三个点，用不同的方式把这些点相减，就能得到两个方向向量。设"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec d_1=\\overrightarrow{AB} = \\mat{-1\\\\1\\\\0}\\qquad\\vec d_2=\\overrightarrow{AC}=\n\t\t\\mat{-1\\\\0\\\\1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Using the point $A$, we may now express $\\mathcal P$ in vector form by",
+      "sha": "e1b3c7aeded5",
+      "zh": "取点 $A$，现在就可以把 $\\mathcal P$ 写成向量式："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{x\\\\y\\\\z} = t\\mat{-1\\\\1\\\\0}+s\\mat{-1\\\\0\\\\1}+\\mat{1\\\\0\\\\0}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To write $\\mathcal P$ in normal form, we need to find a normal vector for $\\mathcal P$. By inspection, we see that $\\vec n=(1,1,1)$ is a normal vector to $\\mathcal P$. (If we weren't so insightful, we could also solve the system $\\vec n\\cdot \\vec d_1=0$ and $\\vec n\\cdot\\vec d_2=0$ to find a normal vector.) Now, we may express $\\mathcal P$ in normal form as",
+      "sha": "e32df6f7a2a3",
+      "zh": "要把 $\\mathcal P$ 写成法式，需要找到 $\\mathcal P$ 的一个法向量。凭观察就能看出 $\\vec n=(1,1,1)$ 是 $\\mathcal P$ 的一个法向量。（如果没有这么敏锐，也可以解方程组 $\\vec n\\cdot \\vec d_1=0$ 与 $\\vec n\\cdot\\vec d_2=0$ 来求法向量。）现在，我们可以把 $\\mathcal P$ 写成法式："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{1\\\\1\\\\1}\\cdot\\left(\\mat{x\\\\y\\\\z}-\\mat{1\\\\0\\\\0}\\right)=0."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In $\\R^2$, only lines have a normal form, and in $\\R^3$ only planes have a normal form. In general, we call objects in $\\R^n$ which have a normal form *hyperplanes*.",
+    "sha": "0c6bf50a7a30",
+    "zh": "在 $\\R^2$ 中，只有直线有法式；在 $\\R^3$ 中，只有平面有法式。一般地，我们把 $\\R^n$ 中具有法式的对象叫作*超平面*。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Hyperplane",
+    "sha": "50ac305642ca",
+    "zh": "超平面"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The set $X\\subseteq \\R^n$ is called a *hyperplane* if there exists $\\vec n\\neq \\vec 0$ and $\\vec p$ so that $X$ is the set of solutions to the equation",
+      "sha": "4258575f816d",
+      "zh": "集合 $X\\subseteq \\R^n$ 如果满足：存在 $\\vec n\\neq \\vec 0$ 和 $\\vec p$，使得 $X$ 恰是下面这个方程的解集，就叫作*超平面*"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec n\\cdot (\\vec x-\\vec p)=0."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Hyperplanes always have dimension one less than the space they're contained in. So, hyperplanes in $\\R^2$ are (one-dimensional) lines, hyperplanes in $\\R^3$ are regular (two-dimensional) planes, and hyperplanes in $\\R^4$ are (three-dimensional) volumes.",
+    "sha": "748a22266532",
+    "zh": "超平面的维数总是比它所在空间的维数小一。所以，$\\R^2$ 中的超平面是（一维的）直线，$\\R^3$ 中的超平面是通常的（二维）平面，$\\R^4$ 中的超平面则是（三维的）体。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Hyperplanes and Linear Equations",
+    "sha": "42af953092f3",
+    "zh": "超平面与线性方程"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Suppose $\\vec n,\\vec p\\in \\R^3$ and $\\vec n\\neq \\vec 0$. Then, solutions to",
+    "sha": "2e2ece27c428",
+    "zh": "设 $\\vec n,\\vec p\\in \\R^3$ 且 $\\vec n\\neq \\vec 0$。那么"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec n\\cdot(\\vec x-\\vec p)=0"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "define a plane $\\mathcal P$. But, $\\vec n\\cdot (\\vec x-\\vec p)=0$ if and only if",
+    "sha": "aff2cc284e55",
+    "zh": "的解确定一个平面 $\\mathcal P$。而 $\\vec n\\cdot (\\vec x-\\vec p)=0$ 当且仅当"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec n\\cdot\\vec x = \\vec n\\cdot \\vec p = \\alpha."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Since $\\vec n$ and $\\vec p$ are fixed, $\\alpha$ is a constant. Expanding using coordinates, we see",
+    "sha": "f8a11fb2b2ce",
+    "zh": "因为 $\\vec n$ 与 $\\vec p$ 是固定的，所以 $\\alpha$ 是常数。用坐标展开，得"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec n\\cdot(\\vec x-\\vec p)=\\vec n\\cdot\\vec x-\\alpha=\n\t\tn_xx+n_yy+n_zz-\\alpha=0"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and so $\\mathcal P$ is the set of solutions to",
+    "sha": "64b0cb18dc14",
+    "zh": "所以 $\\mathcal P$ 是方程"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "n_xx+n_yy+n_zz=\\alpha."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Equation 〔引用〕 is sometimes called *scalar form* of a plane. For us, it will not be important to distinguish between scalar and normal form, but what is important is that we can use the row reduction algorithm to write the complete solution to 〔引用〕, and this complete solution will necessarily be written in vector form.",
+    "sha": "1b680fbbb29e",
+    "zh": "方程〔引用〕有时叫作平面的*标量式*。对我们来说，区分标量式与法式并不重要，重要的是：我们可以用行化简算法写出〔引用〕的完整解，而这个完整解必然是以向量式写出的。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal Q\\subseteq \\R^3$ be the plane passing through $\\vec p$ and with normal vector $\\vec n$ where",
+      "sha": "ed2358151080",
+      "zh": "设 $\\mathcal Q\\subseteq \\R^3$ 是过 $\\vec p$、法向量为 $\\vec n$ 的平面，其中"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec p=\\mat{1\\\\1\\\\0}\\qquad\\text{and}\\qquad\\vec n=\\mat{1\\\\1\\\\1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Write $\\mathcal Q$ in vector form.",
+      "sha": "f7825c1b2e23",
+      "zh": "把 $\\mathcal Q$ 写成向量式。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We know $\\mathcal Q$ is the set of solutions to $\\vec n\\cdot (\\vec x-\\vec p)=0$. In scalar form, this equation becomes",
+      "sha": "5efabb83264e",
+      "zh": "我们知道 $\\mathcal Q$ 是 $\\vec n\\cdot (\\vec x-\\vec p)=0$ 的解集。写成标量式，这个方程变为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec n\\cdot (\\vec x-\\vec p)=\\vec n\\cdot \\vec x-\\vec n\\cdot \\vec p = x+y+z-2=0."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Rearranging, we see $\\mathcal Q$ is the set of all solutions to",
+      "sha": "5fa180d5e76b",
+      "zh": "整理一下，$\\mathcal Q$ 就是方程"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "x+y+z=2."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Using the row reduction algorithm to write the complete solution 〔注： In some sense, this is overkill because the equation corresponds to the augmented matrix $\\mat{1&1&1&\\!\\!\\!\\!|\\!\\!\\!\\!&2}$, which is already row reduced.〕, we get",
+      "sha": "62b9e52120f6",
+      "zh": "的所有解的集合。用行化简算法写出完整解〔注：从某种意义上说这是小题大做，因为这个方程对应的增广矩阵是 $\\mat{1&1&1&\\!\\!\\!\\!|\\!\\!\\!\\!&2}$，它已经是行化简之后的形式了。〕，我们得到"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{x\\\\y\\\\z}=t\\mat{-1\\\\1\\\\0}+s\\mat{-1\\\\0\\\\1}+\\mat{2\\\\0\\\\0}."
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the following dot products.",
+      "sha": "aed0a225ef75",
+      "zh": "计算下列点积。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{9\\\\4} \\cdot \\mat{10\\\\-3}$",
+         "sha": "3d9dd4ca42e5",
+         "zh": "$\\mat{9\\\\4} \\cdot \\mat{10\\\\-3}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\36\\\\2} \\cdot \\mat{0\\\\0\\\\1}$",
+         "sha": "2532a8a5a3b2",
+         "zh": "$\\mat{1\\\\36\\\\2} \\cdot \\mat{0\\\\0\\\\1}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{7\\\\6\\\\-3} \\cdot \\left(\\mat{5\\\\11\\\\-1} + \\mat{-2\\\\-6\\\\-1}\\right)$",
+         "sha": "c06a7185af5b",
+         "zh": "$\\mat{7\\\\6\\\\-3} \\cdot \\left(\\mat{5\\\\11\\\\-1} + \\mat{-2\\\\-6\\\\-1}\\right)$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\3\\\\0\\\\-5\\\\5} \\cdot \\mat{1\\\\2\\\\2\\\\1\\\\2}$",
+         "sha": "493a1176bae6",
+         "zh": "$\\mat{1\\\\3\\\\0\\\\-5\\\\5} \\cdot \\mat{1\\\\2\\\\2\\\\1\\\\2}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left(\\frac{1}{2}\\mat{2\\\\5\\\\4}\\right) \\cdot \\mat{1\\\\0\\\\-1}$",
+         "sha": "e15280aea35c",
+         "zh": "$\\left(\\frac{1}{2}\\mat{2\\\\5\\\\4}\\right) \\cdot \\mat{1\\\\0\\\\-1}$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$78$",
+         "sha": "76d15d808807",
+         "zh": "$78$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$2$",
+         "sha": "41c544263a26",
+         "zh": "$2$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$57$",
+         "sha": "4b14ef560aca",
+         "zh": "$57$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$12$",
+         "sha": "edf074831eb5",
+         "zh": "$12$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$-1$",
+         "sha": "bae5aba07d37",
+         "zh": "$-1$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 1（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the length of the following vectors.",
+      "sha": "0abc7a276f3d",
+      "zh": "计算下列向量的长度。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{2\\\\0}$",
+         "sha": "b22908e466dd",
+         "zh": "$\\mat{2\\\\0}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\2\\\\3}$",
+         "sha": "86398dc5ab4f",
+         "zh": "$\\mat{1\\\\2\\\\3}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$4\\mat{5\\\\-6\\\\15\\\\2}$",
+         "sha": "54d8f9ccf956",
+         "zh": "$4\\mat{5\\\\-6\\\\15\\\\2}$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$2$",
+         "sha": "41c544263a26",
+         "zh": "$2$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\sqrt{14}$",
+         "sha": "85b4f6a1c096",
+         "zh": "$\\sqrt{14}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$4\\sqrt{290}$",
+         "sha": "d854bff387cc",
+         "zh": "$4\\sqrt{290}$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 2（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each pair of vectors listed below, determine if the angle between the vectors is greater than, less than, or equal to $90^\\circ$.",
+      "sha": "0e7a752b4584",
+      "zh": "对下面列出的每一对向量，判断它们之间的夹角是大于、小于还是等于 $90^\\circ$。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\0}$ and $\\mat{-3\\\\4}$",
+         "sha": "dc01b56ca625",
+         "zh": "$\\mat{1\\\\0}$ 与 $\\mat{-3\\\\4}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\0\\\\1}$ and $\\mat{-5\\\\4\\\\-3}$",
+         "sha": "cf01a7447a28",
+         "zh": "$\\mat{1\\\\0\\\\1}$ 与 $\\mat{-5\\\\4\\\\-3}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\2\\\\3}$ and $\\mat{-1\\\\-1\\\\2}$",
+         "sha": "8beb2bf1c2a9",
+         "zh": "$\\mat{1\\\\2\\\\3}$ 与 $\\mat{-1\\\\-1\\\\2}$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Greater than $90^\\circ$",
+         "sha": "9b6eab68841c",
+         "zh": "大于 $90^\\circ$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Greater than $90^\\circ$",
+         "sha": "9b6eab68841c",
+         "zh": "大于 $90^\\circ$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Less than $90^\\circ$",
+         "sha": "f5418b1000d6",
+         "zh": "小于 $90^\\circ$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 3（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each vector, find two *unit* vectors orthogonal to it.",
+      "sha": "a4bbb262f61b",
+      "zh": "对每个向量，求与它正交的两个*单位*向量。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{0\\\\1}$",
+         "sha": "05442c10ea0a",
+         "zh": "$\\mat{0\\\\1}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\2}$",
+         "sha": "60a01aeaa29b",
+         "zh": "$\\mat{1\\\\2}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\3\\\\5}$",
+         "sha": "f771b0eb5cda",
+         "zh": "$\\mat{1\\\\3\\\\5}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{-13\\\\-4\\\\5}$",
+         "sha": "f44dbd94129d",
+         "zh": "$\\mat{-13\\\\-4\\\\5}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{0\\\\1\\\\1\\\\\\frac{1}{2}}$",
+         "sha": "ade79dce2458",
+         "zh": "$\\mat{0\\\\1\\\\1\\\\\\frac{1}{2}}$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\0}$ and $\\mat{-1\\\\0}$",
+         "sha": "53d79cf2a51f",
+         "zh": "$\\mat{1\\\\0}$ 与 $\\mat{-1\\\\0}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\dfrac{1}{\\sqrt{5}}\\mat{2\\\\-1}$ and $\\dfrac{1}{\\sqrt{5}}\\mat{-2\\\\1}$",
+         "sha": "3209cb8715c4",
+         "zh": "$\\dfrac{1}{\\sqrt{5}}\\mat{2\\\\-1}$ 与 $\\dfrac{1}{\\sqrt{5}}\\mat{-2\\\\1}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\dfrac{1}{\\sqrt{10}}\\mat{3\\\\-1\\\\0}$ and $\\dfrac{1}{\\sqrt{26}}\\mat{5\\\\0\\\\-1}$",
+         "sha": "47d1e3a875a7",
+         "zh": "$\\dfrac{1}{\\sqrt{10}}\\mat{3\\\\-1\\\\0}$ 与 $\\dfrac{1}{\\sqrt{26}}\\mat{5\\\\0\\\\-1}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\dfrac{1}{\\sqrt{6}}\\mat{1\\\\-2\\\\1}$ and $\\dfrac{1}{\\sqrt{41}}\\mat{0\\\\5\\\\4}$",
+         "sha": "735a9b2b520b",
+         "zh": "$\\dfrac{1}{\\sqrt{6}}\\mat{1\\\\-2\\\\1}$ 与 $\\dfrac{1}{\\sqrt{41}}\\mat{0\\\\5\\\\4}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\0\\\\0\\\\0}$ and $\\dfrac{1}{\\sqrt{2}}\\mat{0\\\\1\\\\-1\\\\0}$",
+         "sha": "7d4ac395929f",
+         "zh": "$\\mat{1\\\\0\\\\0\\\\0}$ 与 $\\dfrac{1}{\\sqrt{2}}\\mat{0\\\\1\\\\-1\\\\0}$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 4（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the distance between the following pairs of vectors.",
+      "sha": "29c63c16f9d2",
+      "zh": "计算下列各对向量之间的距离。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{-1\\\\1}$ and $\\mat{-1\\\\-4}$",
+         "sha": "d605f8043297",
+         "zh": "$\\mat{-1\\\\1}$ 与 $\\mat{-1\\\\-4}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{2\\\\-6\\\\5}$ and $\\mat{-4\\\\7\\\\-3}$",
+         "sha": "05101841bbfb",
+         "zh": "$\\mat{2\\\\-6\\\\5}$ 与 $\\mat{-4\\\\7\\\\-3}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\1\\\\1}$ and $\\mat{-1\\\\-1\\\\-1}$",
+         "sha": "4a15f4823a07",
+         "zh": "$\\mat{1\\\\1\\\\1}$ 与 $\\mat{-1\\\\-1\\\\-1}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{0\\\\0\\\\0\\\\0\\\\0}$ and $\\mat{1\\\\1\\\\1\\\\1\\\\1}$",
+         "sha": "374e96730f5b",
+         "zh": "$\\mat{0\\\\0\\\\0\\\\0\\\\0}$ 与 $\\mat{1\\\\1\\\\1\\\\1\\\\1}$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$5$",
+         "sha": "79069377f913",
+         "zh": "$5$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\sqrt{269}$",
+         "sha": "101f865f3eb2",
+         "zh": "$\\sqrt{269}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$2\\sqrt{3}$",
+         "sha": "e455d80f4657",
+         "zh": "$2\\sqrt{3}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\sqrt{5}$",
+         "sha": "82e93b4bff53",
+         "zh": "$\\sqrt{5}$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 5（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Which vector out of $\\mat{1\\\\0}$, $\\mat{0\\\\1}$, and $\\mat{4\\\\1}$ has a direction closest to that of $\\mat{3\\\\5}$?",
+         "sha": "8a20d156b452",
+         "zh": "在 $\\mat{1\\\\0}$、$\\mat{0\\\\1}$ 和 $\\mat{4\\\\1}$ 中，哪一个向量的方向最接近 $\\mat{3\\\\5}$ 的方向？"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Which vector out of $\\mat{2\\\\3\\\\4}$, $\\mat{1\\\\-1\\\\-1}$, and $\\mat{-3\\\\0\\\\1}$ has a direction closest to that of $\\mat{1\\\\0\\\\1}$?",
+         "sha": "2603fb2164ae",
+         "zh": "在 $\\mat{2\\\\3\\\\4}$、$\\mat{1\\\\-1\\\\-1}$ 和 $\\mat{-3\\\\0\\\\1}$ 中，哪一个向量的方向最接近 $\\mat{1\\\\0\\\\1}$ 的方向？"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{0\\\\1}$",
+         "sha": "05442c10ea0a",
+         "zh": "$\\mat{0\\\\1}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{2\\\\3\\\\4}$",
+         "sha": "e7b73e1d34ed",
+         "zh": "$\\mat{2\\\\3\\\\4}$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 6（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each plane specified, express the plane in both vector form and normal form.",
+      "sha": "98ec1f2e13cc",
+      "zh": "对下面给出的每个平面，分别写出它的向量式和法式。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The plane $\\mathcal P\\subseteq\\R^3$ passing through the points $A=(2,0,0)$, $B=(0,3,0)$ and $C=(0,0,-1)$.",
+         "sha": "551ae50721cd",
+         "zh": "过点 $A=(2,0,0)$、$B=(0,3,0)$ 和 $C=(0,0,-1)$ 的平面 $\\mathcal P\\subseteq\\R^3$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The plane $\\mathcal Q\\subseteq\\R^3$ passing through the points $D=(1,1,1)$, $E=(1,-2,1)$ and $F=(0,12,0)$.",
+         "sha": "b8f0c41af4b6",
+         "zh": "过点 $D=(1,1,1)$、$E=(1,-2,1)$ 和 $F=(0,12,0)$ 的平面 $\\mathcal Q\\subseteq\\R^3$。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec x=t\\mat{2\\\\0\\\\1}+s\\mat{0\\\\3\\\\1}+\\mat{2\\\\0\\\\0}$ and $\\mat{3\\\\2\\\\-6}\\cdot\\left(\\vec x-\\mat{2\\\\0\\\\0}\\right)=0$",
+         "sha": "3078b8cf2d6f",
+         "zh": "$\\vec x=t\\mat{2\\\\0\\\\1}+s\\mat{0\\\\3\\\\1}+\\mat{2\\\\0\\\\0}$ 与 $\\mat{3\\\\2\\\\-6}\\cdot\\left(\\vec x-\\mat{2\\\\0\\\\0}\\right)=0$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec x=t\\mat{1\\\\1\\\\1}+s\\mat{0\\\\1\\\\0}$; $\\mat{1\\\\0\\\\-1}\\cdot\\vec x=0$",
+         "sha": "27e8acd7d118",
+         "zh": "$\\vec x=t\\mat{1\\\\1\\\\1}+s\\mat{0\\\\1\\\\0}$；$\\mat{1\\\\0\\\\-1}\\cdot\\vec x=0$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 7（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex8",
+   "stem": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\mathcal A\\subseteq \\R^3$ be the plane passing through $\\mat{0\\\\1\\\\1}$ and with normal vector $\\mat{-1\\\\-1\\\\-1}$. Write $\\mathcal A$ in vector form.",
+         "sha": "dfa9f60f5d29",
+         "zh": "设 $\\mathcal A\\subseteq \\R^3$ 是过 $\\mat{0\\\\1\\\\1}$、法向量为 $\\mat{-1\\\\-1\\\\-1}$ 的平面。把 $\\mathcal A$ 写成向量式。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\mathcal B\\subseteq \\R^3$ be the plane passing through $\\mat{1\\\\2\\\\3}$ and with normal vector $\\mat{1\\\\-1\\\\0}$. Write $\\mathcal B$ in vector form.",
+         "sha": "fa24b09b9d34",
+         "zh": "设 $\\mathcal B\\subseteq \\R^3$ 是过 $\\mat{1\\\\2\\\\3}$、法向量为 $\\mat{1\\\\-1\\\\0}$ 的平面。把 $\\mathcal B$ 写成向量式。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec x = t\\mat{-1\\\\1\\\\0}+s\\mat{0\\\\1\\\\-1} + \\mat{0\\\\1\\\\1}$",
+         "sha": "766b63e7459a",
+         "zh": "$\\vec x = t\\mat{-1\\\\1\\\\0}+s\\mat{0\\\\1\\\\-1} + \\mat{0\\\\1\\\\1}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\vec x = t\\mat{1\\\\1\\\\0}+s\\mat{0\\\\0\\\\1}+\\mat{1\\\\2\\\\3}$",
+         "sha": "53dd5f9c5c57",
+         "zh": "$\\vec x = t\\mat{1\\\\1\\\\0}+s\\mat{0\\\\0\\\\1}+\\mat{1\\\\2\\\\3}$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 8（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex9",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "In this problem we will prove some algebraic properties of the dot product.",
+      "sha": "3cc0f6d204fa",
+      "zh": "在这道题里，我们来证明点积的一些代数性质。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Show by direct computation",
+         "sha": "8b0c69fc5a86",
+         "zh": "通过直接计算说明"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\left(\\mat{1\\\\2} + \\mat{3\\\\4}\\right) \\cdot \\mat{5\\\\6} =\n\t\t\t\\mat{1\\\\2} \\cdot \\mat{5\\\\6} + \\mat{3\\\\4} \\cdot \\mat{5\\\\6}"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "For $\\vec x,\\vec y,\\vec z\\in \\R^2$, justify whether or not it always holds that",
+         "sha": "fc36c6d5374d",
+         "zh": "对 $\\vec x,\\vec y,\\vec z\\in \\R^2$，论证下面的等式是否总是成立"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "(\\vec x + \\vec y) \\cdot \\vec z = \\vec x \\cdot \\vec z + \\vec y \\cdot \\vec z."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Does the same conclusion hold true when $\\vec x,\\vec y,\\vec z\\in \\R^n$?",
+         "sha": "390eb98b180f",
+         "zh": "当 $\\vec x,\\vec y,\\vec z\\in \\R^n$ 时，同样的结论还成立吗？"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Show by direct computation",
+         "sha": "8b0c69fc5a86",
+         "zh": "通过直接计算说明"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\left(6\\mat{2\\\\3}\\right) \\cdot \\mat{4\\\\5} =\n\t\t\t6\\left(\\mat{2\\\\3} \\cdot \\mat{4\\\\5}\\right)"
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "For $\\vec x,\\vec y\\in \\R^2$ and $k \\in \\R$, Justify whether or not it always holds that",
+         "sha": "ee5dfd390bad",
+         "zh": "对 $\\vec x,\\vec y\\in \\R^2$ 与 $k \\in \\R$，论证下面的等式是否总是成立"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "(k\\vec x) \\cdot \\vec y = k(\\vec x \\cdot \\vec y)."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Does the same conclusion hold true when $\\vec x,\\vec y\\in \\R^n$?",
+         "sha": "18837cacb1bc",
+         "zh": "当 $\\vec x,\\vec y\\in \\R^n$ 时，同样的结论还成立吗？"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The dot product is called *distributive*. Is this a good word to describe the dot product? Why?",
+         "sha": "fa3d64096581",
+         "zh": "点积的这条性质叫作*分配律*。用「分配」这个词来描述点积合适吗？为什么？"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "We get the value $56$ on both sides.",
+         "sha": "00cc97209541",
+         "zh": "两边的值都是 $56$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Writing the vectors in terms of the coefficients, we get",
+         "sha": "99f302a197dd",
+         "zh": "把向量用各分量写出来，得到"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "(x_1+y_1)z_1+(x_2+y_2)z_2=x_1z_1+y_1z_1+x_2z_2+y_2z_2"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "which is always true.",
+         "sha": "763f79bef4fb",
+         "zh": "这总是成立的。"
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "In the general case, the left side will be the sum of $(x_i+y_i)z_i$ and the right side will be the sum of $x_iz_i+y_iz_i$. Since these two terms are always equal, the two sums are equal. So yes, the same conclusion hold true in all dimensions.",
+         "sha": "d1320cc797c0",
+         "zh": "在一般情形下，左边是各项 $(x_i+y_i)z_i$ 之和，右边是各项 $x_iz_i+y_iz_i$ 之和。因为这两项总是相等，所以两个和相等。因此，同样的结论在所有维数下都成立。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "We get the value $138$ on both sides.",
+         "sha": "9a95a9762284",
+         "zh": "两边的值都是 $138$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Writing it in terms of the coefficients, we get",
+         "sha": "b9c7fcdee30d",
+         "zh": "用各分量写出来，得到"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "(kx_1)y_1+(kx_2)y_2=k(x_1y_1+x_2y_2)"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "which is always true.",
+         "sha": "763f79bef4fb",
+         "zh": "这总是成立的。"
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "In the general case, the left side will be the sum of $kx_iy_i$ and the right side will be the product of $k$ and the sum of $x_iy_i$. Distributing the product of $k$ onto the sum, we get that these two results are equal. So yes, the same conclusion hold true in all dimensions.",
+         "sha": "a1d39b306c7f",
+         "zh": "在一般情形下，左边是各项 $kx_iy_i$ 之和，右边是 $k$ 与各项 $x_iy_i$ 之和的乘积。把 $k$ 分配到和式中去，就得到这两个结果相等。因此，同样的结论在所有维数下都成立。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The dot product distributes onto sums, just like the typical multiplication of real numbers.",
+         "sha": "450093d47aa6",
+         "zh": "点积对和式有分配性，就像普通的实数乘法一样。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 9（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex10",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec u, \\vec v \\in \\R^{n}$. In this problem, we will prove $\\Abs{\\vec u \\cdot \\vec v}\\leq \\Norm{\\vec u}\\Norm{\\vec v}$. This is called the *Cauchy-Schwarz inequality*.",
+      "sha": "bac4fa13a7b1",
+      "zh": "设 $\\vec u, \\vec v \\in \\R^{n}$。在这道题里，我们来证明 $\\Abs{\\vec u \\cdot \\vec v}\\leq \\Norm{\\vec u}\\Norm{\\vec v}$。这叫作*柯西—施瓦茨不等式*。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Assuming the geometric definition $\\vec u \\cdot \\vec v = \\Norm{\\vec u}\\Norm{\\vec v}\\cos \\theta$ where $\\theta$ is the angle between $\\vec u$ and $\\vec v$, prove the *Cauchy-Schwarz inequality*.",
+         "sha": "ca4a0b3d1394",
+         "zh": "假设已知几何定义 $\\vec u \\cdot \\vec v = \\Norm{\\vec u}\\Norm{\\vec v}\\cos \\theta$，其中 $\\theta$ 是 $\\vec u$ 与 $\\vec v$ 之间的夹角，证明*柯西—施瓦茨不等式*。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The *Cauchy-Schwartz inequality* can also be proved using *only* the algebraic definition of the dot product. Keep in mind the following facts which come from the algebraic definition: Let $\\vec x, \\vec y, \\vec z \\in \\R^{n}, k \\in \\R$. (i) $\\Norm{\\vec x}= \\sqrt {\\vec x \\cdot \\vec x}$; (ii) $(\\vec x + \\vec y) \\cdot \\vec z = \\vec x \\cdot \\vec z + \\vec y \\cdot \\vec z$; (iii) $(k\\vec x) \\cdot \\vec y = k(\\vec x \\cdot \\vec y)$; (iv) $\\vec x \\cdot \\vec y = \\vec y \\cdot \\vec x$.",
+         "sha": "61e9db03824d",
+         "zh": "*柯西—施瓦茨不等式*也可以*只*用点积的代数定义来证明。请记住下面几条由代数定义得到的事实：设 $\\vec x, \\vec y, \\vec z \\in \\R^{n}, k \\in \\R$。(i) $\\Norm{\\vec x}= \\sqrt {\\vec x \\cdot \\vec x}$；(ii) $(\\vec x + \\vec y) \\cdot \\vec z = \\vec x \\cdot \\vec z + \\vec y \\cdot \\vec z$；(iii) $(k\\vec x) \\cdot \\vec y = k(\\vec x \\cdot \\vec y)$；(iv) $\\vec x \\cdot \\vec y = \\vec y \\cdot \\vec x$。"
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Explain why the result is immediate if one (or both) of $\\vec u, \\vec v$ is the zero vector.",
+            "sha": "24379ef1025d",
+            "zh": "解释为什么当 $\\vec u, \\vec v$ 中有一个（或两个）是零向量时，结论是立即成立的。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Assume $\\vec u, \\vec v$ are non-zero vectors. Consider the function $f: \\R \\to \\R$ where $f(t) = \\Norm{t\\vec u - \\vec v}^{2}$. Convince yourself that $f(t) \\geq 0$ for all $t \\in \\R$.",
+            "sha": "10886a871f52",
+            "zh": "假设 $\\vec u, \\vec v$ 都是非零向量。考虑函数 $f: \\R \\to \\R$，其中 $f(t) = \\Norm{t\\vec u - \\vec v}^{2}$。请你自己弄明白：对所有 $t \\in \\R$ 都有 $f(t) \\geq 0$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Simplify $f(t)$ into a quadratic formula so that $f(t) = at^{2}- bt + c$ by determining its coefficients $a, b, c$ in terms of $\\vec u, \\vec v$.",
+            "sha": "aaf5c58bd493",
+            "zh": "把 $f(t)$ 化简成二次式 $f(t) = at^{2}- bt + c$，即用 $\\vec u, \\vec v$ 表示出系数 $a, b, c$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Prove $\\Abs{\\vec u \\cdot \\vec v}\\leq \\Norm{\\vec u}\\Norm{\\vec v}$, the *Cauchy-Schwarz inequality*. Hint: Consider $f(\\frac{b}{2a})$.",
+            "sha": "0e3d5254bdc7",
+            "zh": "证明 $\\Abs{\\vec u \\cdot \\vec v}\\leq \\Norm{\\vec u}\\Norm{\\vec v}$，即*柯西—施瓦茨不等式*。提示：考虑 $f(\\frac{b}{2a})$。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Prove $\\Abs{\\vec u \\cdot \\vec v}= \\Norm{\\vec u}\\Norm{\\vec v}$ if the vectors $\\vec u, \\vec v$ are scalar multiples of each other.",
+            "sha": "7cd0464d1dd9",
+            "zh": "证明：如果向量 $\\vec u, \\vec v$ 互为标量倍数，那么 $\\Abs{\\vec u \\cdot \\vec v}= \\Norm{\\vec u}\\Norm{\\vec v}$。"
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 10（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex11",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\vec u, \\vec v \\in \\R^{n}$. In this problem, we will prove $\\Norm{\\vec u + \\vec v}\\leq \\Norm{\\vec u}+ \\Norm{\\vec v}$. This is called the *Triangle Inequality*.",
+      "sha": "afa391f9e6be",
+      "zh": "设 $\\vec u, \\vec v \\in \\R^{n}$。在这道题里，我们来证明 $\\Norm{\\vec u + \\vec v}\\leq \\Norm{\\vec u}+ \\Norm{\\vec v}$。这叫作*三角不等式*。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Pick your favorite vectors $\\vec u, \\vec v$ and draw a picture of $\\vec u, \\vec v$, and $\\vec u + \\vec v$. Root your vectors so that they form the edges of a triangle. Can you explain why the *Triangle Inequality* is true?",
+         "sha": "6fb3a4a79cc2",
+         "zh": "挑选你最喜欢的向量 $\\vec u, \\vec v$，画出 $\\vec u, \\vec v$ 和 $\\vec u + \\vec v$ 的图。让这些向量首尾相接，构成一个三角形的三条边。你能解释*三角不等式*为什么成立吗？"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Express $\\Norm{\\vec u + \\vec v}$ in terms of dot products and square roots.",
+         "sha": "571bbb54f0bb",
+         "zh": "用点积和平方根表示 $\\Norm{\\vec u + \\vec v}$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Prove the *Triangle Inequality*.",
+         "sha": "080855205ba9",
+         "zh": "证明*三角不等式*。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 11（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex12",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\mathcal{A}= \\{\\vec v_{1},\\dots, \\vec v_{k}\\} \\subset \\R^{n}$. $A$ is a set of mutually orthogonal vectors if for all $i \\neq j$, we have $\\vec v_{i}\\cdot \\vec v_{j}= 0$.",
+      "sha": "cf05854ca0e1",
+      "zh": "设 $\\mathcal{A}= \\{\\vec v_{1},\\dots, \\vec v_{k}\\} \\subset \\R^{n}$。如果对所有 $i \\neq j$ 都有 $\\vec v_{i}\\cdot \\vec v_{j}= 0$，就说 $A$ 是一个两两正交的向量集合。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Suppose $\\mathcal{A}$ is a set of mutually orthogonal vectors. Is $\\mathcal{A}$ a linearly independent set? Why or Why not?",
+         "sha": "9660db4787b2",
+         "zh": "设 $\\mathcal{A}$ 是一个两两正交的向量集合。$\\mathcal{A}$ 是线性无关的集合吗？为什么？"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Suppose $\\mathcal{A}$ is a set of mutually orthogonal and non-zero vectors. Is $\\mathcal{A}$ a linearly independent set? Why or Why not?",
+         "sha": "d5141bddba0f",
+         "zh": "设 $\\mathcal{A}$ 是一个由两两正交的非零向量组成的集合。$\\mathcal{A}$ 是线性无关的集合吗？为什么？"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mathcal{A}$ is linearly dependent if $\\vec{0}\\in\\mathcal{A}$, and is linearly independent otherwise.",
+         "sha": "9ce128be117c",
+         "zh": "如果 $\\vec{0}\\in\\mathcal{A}$，则 $\\mathcal{A}$ 线性相关；否则线性无关。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Suppose",
+         "sha": "3c2db9ddb042",
+         "zh": "设"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\alpha_1\\vec{v}_1+\\cdots+\\alpha_n\\vec{v}_n=\\vec{0}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "for some $\\alpha_{1}, \\dots, \\alpha_{n}\\in\\R$.",
+         "sha": "e12f7b7d01b4",
+         "zh": "其中 $\\alpha_{1}, \\dots, \\alpha_{n}\\in\\R$ 为某些数。"
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "For any $i=1, \\dots, n$, take the dot product of $\\vec{v}_i$ with both sides of this equation, we have $\\alpha_i\\Norm{\\vec{v_i}}^2=0$. Since $\\vec{v}_i$ is a non-zero vector, this implies that $\\alpha_i=0$.",
+         "sha": "98a0f244befc",
+         "zh": "对任意 $i=1, \\dots, n$，用 $\\vec{v}_i$ 与这个等式的两边分别做点积，得到 $\\alpha_i\\Norm{\\vec{v_i}}^2=0$。因为 $\\vec{v}_i$ 是非零向量，所以 $\\alpha_i=0$。"
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Then, $\\alpha_1=\\cdots=\\alpha_n=0$ and therefore $\\mathcal{A}$ is linearly independent.",
+         "sha": "7cfe7a43d84f",
+         "zh": "于是 $\\alpha_1=\\cdots=\\alpha_n=0$，因此 $\\mathcal{A}$ 线性无关。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Dot Products & Normal Forms · 练习题 12（上游 book/modules/module4-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module4-exercises.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "点积与法式"
+}

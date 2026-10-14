@@ -1,0 +1,665 @@
+{
+ "id": "matrices",
+ "title_en": "Matrices",
+ "blocks": [
+  {
+   "k": "code",
+   "text": ">>> from sympy import *\n>>> init_printing(use_unicode=True)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To make a matrix in SymPy, use the `Matrix` object. A matrix is constructed by providing a list of row vectors that make up the matrix. For example, to construct the matrix",
+    "sha": "e2aa529d512f",
+    "zh": "要在 SymPy 里创建矩阵，用 `Matrix` 对象。矩阵由一个行向量列表构成，列表里的每个元素就是矩阵的一行。例如，要构造矩阵"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\left[\\begin{array}{cc}1 & -1\\\\3 & 4\\\\0 & 2\\end{array}\\right]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "use",
+    "sha": "04489a12bbaa",
+    "zh": "就用"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> Matrix([[1, -1], [3, 4], [0, 2]])\n⎡1  -1⎤\n⎢     ⎥\n⎢3  4 ⎥\n⎢     ⎥\n⎣0  2 ⎦"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To make it easy to make column vectors, a list of elements is considered to be a column vector.",
+    "sha": "671216831cc2",
+    "zh": "为了方便创建列向量，由元素组成的单个列表会被当作列向量。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> Matrix([1, 2, 3])\n⎡1⎤\n⎢ ⎥\n⎢2⎥\n⎢ ⎥\n⎣3⎦"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Matrices are manipulated just like any other object in SymPy or Python.",
+    "sha": "33d0145e4a03",
+    "zh": "矩阵和 SymPy 或 Python 里的其他对象一样，可以随意操作。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> M = Matrix([[1, 2, 3], [3, 2, 1]])\n>>> N = Matrix([0, 1, 1])\n>>> M*N\n⎡5⎤\n⎢ ⎥\n⎣3⎦"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "One important thing to note about SymPy matrices is that, unlike every other object in SymPy, they are mutable. This means that they can be modified in place, as we will see below. The downside to this is that `Matrix` cannot be used in places that require immutability, such as inside other SymPy expressions or as keys to dictionaries. If you need an immutable version of `Matrix`, use `ImmutableMatrix`.",
+    "sha": "b55531a104a5",
+    "zh": "关于 SymPy 矩阵，有一点很重要：与 SymPy 里其他所有对象不同，矩阵是可变的。也就是说，它们可以被原地修改，下面我们会看到。代价是，凡是要求不可变对象的地方都不能使用 `Matrix`，比如放进其他 SymPy 表达式里，或者用作字典的键。如果你需要不可变版本的 `Matrix`，请用 `ImmutableMatrix`。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Basic Operations",
+    "sha": "9a85f6e8c6de",
+    "zh": "基本操作"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Here are some basic operations on `Matrix`.",
+    "sha": "48ecdec56c4c",
+    "zh": "下面是 `Matrix` 的一些基本操作。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Shape",
+    "sha": "ea5c1a20b7cf",
+    "zh": "形状"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To get the shape of a matrix, use `shape` function.",
+    "sha": "e8ed2dae3f5d",
+    "zh": "要获得矩阵的形状，用 `shape` 函数。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> from sympy import shape\n>>> M = Matrix([[1, 2, 3], [-2, 0, 4]])\n>>> M\n⎡1   2  3⎤\n⎢        ⎥\n⎣-2  0  4⎦\n>>> shape(M)\n(2, 3)"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Accessing Rows and Columns",
+    "sha": "edbb6c2ba13e",
+    "zh": "访问行与列"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To get an individual row or column of a matrix, use `row` or `col`. For example, `M.row(0)` will get the first row. `M.col(-1)` will get the last column.",
+    "sha": "69fa7bdedb4d",
+    "zh": "要取出矩阵的某一行或某一列，用 `row` 或 `col`。例如，`M.row(0)` 取第一行，`M.col(-1)` 取最后一列。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> M.row(0)\n[1  2  3]\n>>> M.col(-1)\n⎡3⎤\n⎢ ⎥\n⎣4⎦"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Deleting and Inserting Rows and Columns",
+    "sha": "9a0e81794feb",
+    "zh": "删除与插入行和列"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To delete a row or column, use `row_del` or `col_del`. These operations will modify the Matrix **in place**.",
+    "sha": "76ffca071114",
+    "zh": "要删除一行或一列，用 `row_del` 或 `col_del`。这些操作会**原地**修改矩阵。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> M.col_del(0)\n>>> M\n⎡2  3⎤\n⎢    ⎥\n⎣0  4⎦\n>>> M.row_del(1)\n>>> M\n[2  3]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To insert rows or columns, use `row_insert` or `col_insert`. These operations **do not** operate in place.",
+    "sha": "9e618a90b869",
+    "zh": "要插入行或列，用 `row_insert` 或 `col_insert`。这些操作**不会**原地修改。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> M\n[2  3]\n>>> M = M.row_insert(1, Matrix([[0, 4]]))\n>>> M\n⎡2  3⎤\n⎢    ⎥\n⎣0  4⎦\n>>> M = M.col_insert(0, Matrix([1, -2]))\n>>> M\n⎡1   2  3⎤\n⎢        ⎥\n⎣-2  0  4⎦"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Unless explicitly stated, the methods mentioned below do not operate in place. In general, a method that does not operate in place will return a new `Matrix` and a method that does operate in place will return `None`.",
+    "sha": "08d0a9136fcf",
+    "zh": "除非特别说明，下面提到的方法都不会原地修改。一般来说，不原地修改的方法会返回一个新的 `Matrix`，原地修改的方法则返回 `None`。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Basic Methods",
+    "sha": "574f28a41111",
+    "zh": "基本方法"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "As noted above, simple operations like addition, multiplication and power are done just by using `+`, `*`, and `**`. To find the inverse of a matrix, just raise it to the `-1` power.",
+    "sha": "58794a9a5ecb",
+    "zh": "如前所述，加法、乘法和乘幂这类简单运算，直接用 `+`、`*` 和 `**` 就行。要求矩阵的逆，只需把它求 `-1` 次幂。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> M = Matrix([[1, 3], [-2, 3]])\n>>> N = Matrix([[0, 3], [0, 7]])\n>>> M + N\n⎡1   6 ⎤\n⎢      ⎥\n⎣-2  10⎦\n>>> M*N\n⎡0  24⎤\n⎢     ⎥\n⎣0  15⎦\n>>> 3*M\n⎡3   9⎤\n⎢     ⎥\n⎣-6  9⎦\n>>> M**2\n⎡-5  12⎤\n⎢      ⎥\n⎣-8  3 ⎦\n>>> M**-1\n⎡1/3  -1/3⎤\n⎢         ⎥\n⎣2/9  1/9 ⎦\n>>> N**-1\nTraceback (most recent call last):\n...\nNonInvertibleMatrixError: Matrix det == 0; not invertible."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To take the transpose of a Matrix, use `T`.",
+    "sha": "bbcbaf2c7068",
+    "zh": "要取矩阵的转置，用 `T`。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> M = Matrix([[1, 2, 3], [4, 5, 6]])\n>>> M\n⎡1  2  3⎤\n⎢       ⎥\n⎣4  5  6⎦\n>>> M.T\n⎡1  4⎤\n⎢    ⎥\n⎢2  5⎥\n⎢    ⎥\n⎣3  6⎦"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Matrix Constructors",
+    "sha": "b5de68a55074",
+    "zh": "矩阵构造函数"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Several constructors exist for creating common matrices. To create an identity matrix, use `eye`. `eye(n)` will create an $n\\times n$ identity matrix.",
+    "sha": "0f791367f33e",
+    "zh": "有几个构造函数可以创建常见的矩阵。要创建单位矩阵，用 `eye`。`eye(n)` 会创建一个 $n\\times n$ 的单位矩阵。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> eye(3)\n⎡1  0  0⎤\n⎢       ⎥\n⎢0  1  0⎥\n⎢       ⎥\n⎣0  0  1⎦\n>>> eye(4)\n⎡1  0  0  0⎤\n⎢          ⎥\n⎢0  1  0  0⎥\n⎢          ⎥\n⎢0  0  1  0⎥\n⎢          ⎥\n⎣0  0  0  1⎦"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To create a matrix of all zeros, use `zeros`. `zeros(n, m)` creates an $n\\times m$ matrix of $0$s.",
+    "sha": "0842c51ca879",
+    "zh": "要创建全零矩阵，用 `zeros`。`zeros(n, m)` 创建一个元素全为 $0$ 的 $n\\times m$ 矩阵。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> zeros(2, 3)\n⎡0  0  0⎤\n⎢       ⎥\n⎣0  0  0⎦"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Similarly, `ones` creates a matrix of ones.",
+    "sha": "1dab8581be0c",
+    "zh": "类似地，`ones` 创建元素全为 1 的矩阵。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> ones(3, 2)\n⎡1  1⎤\n⎢    ⎥\n⎢1  1⎥\n⎢    ⎥\n⎣1  1⎦"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To create diagonal matrices, use `diag`. The arguments to `diag` can be either numbers or matrices. A number is interpreted as a $1\\times 1$ matrix. The matrices are stacked diagonally. The remaining elements are filled with $0$s.",
+    "sha": "af6a957e341d",
+    "zh": "要创建对角矩阵，用 `diag`。`diag` 的参数可以是数，也可以是矩阵。一个数会被看作 $1\\times 1$ 的矩阵。这些矩阵沿对角线依次堆叠，其余位置全部填 $0$。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> diag(1, 2, 3)\n⎡1  0  0⎤\n⎢       ⎥\n⎢0  2  0⎥\n⎢       ⎥\n⎣0  0  3⎦\n>>> diag(-1, ones(2, 2), Matrix([5, 7, 5]))\n⎡-1  0  0  0⎤\n⎢           ⎥\n⎢0   1  1  0⎥\n⎢           ⎥\n⎢0   1  1  0⎥\n⎢           ⎥\n⎢0   0  0  5⎥\n⎢           ⎥\n⎢0   0  0  7⎥\n⎢           ⎥\n⎣0   0  0  5⎦"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Advanced Methods",
+    "sha": "c5c6cabc1405",
+    "zh": "进阶方法"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Determinant",
+    "sha": "41aa45abebc6",
+    "zh": "行列式"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To compute the determinant of a matrix, use `det`.",
+    "sha": "eb9417f244e7",
+    "zh": "要计算矩阵的行列式，用 `det`。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> M = Matrix([[1, 0, 1], [2, -1, 3], [4, 3, 2]])\n>>> M\n⎡1  0   1⎤\n⎢        ⎥\n⎢2  -1  3⎥\n⎢        ⎥\n⎣4  3   2⎦\n>>> M.det()\n-1"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "RREF",
+    "sha": "3fcf04e44151",
+    "zh": "行最简形"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To put a matrix into reduced row echelon form, use `rref`. `rref` returns a tuple of two elements. The first is the reduced row echelon form, and the second is a tuple of indices of the pivot columns.",
+    "sha": "4e8d87d11a70",
+    "zh": "要把矩阵化为行最简形（reduced row echelon form，rref），用 `rref`。`rref` 返回一个含两个元素的元组：第一个是行最简形，第二个是由主元列下标组成的元组。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> M = Matrix([[1, 0, 1, 3], [2, 3, 4, 7], [-1, -3, -3, -4]])\n>>> M\n⎡1   0   1   3 ⎤\n⎢              ⎥\n⎢2   3   4   7 ⎥\n⎢              ⎥\n⎣-1  -3  -3  -4⎦\n>>> M.rref()\n⎛⎡1  0   1    3 ⎤        ⎞\n⎜⎢              ⎥        ⎟\n⎜⎢0  1  2/3  1/3⎥, (0, 1)⎟\n⎜⎢              ⎥        ⎟\n⎝⎣0  0   0    0 ⎦        ⎠"
+  },
+  {
+   "k": "box",
+   "env": "note",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The first element of the tuple returned by `rref` is of type `Matrix`. The second is of type `tuple`.",
+      "sha": "8f86584f2e54",
+      "zh": "`rref` 返回的元组里，第一个元素的类型是 `Matrix`，第二个的类型是 `tuple`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Nullspace",
+    "sha": "deed0fe948d0",
+    "zh": "零空间"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To find the nullspace of a matrix, use `nullspace`. `nullspace` returns a `list` of column vectors that span the nullspace of the matrix.",
+    "sha": "a523ce1cfba1",
+    "zh": "要求矩阵的零空间（nullspace），用 `nullspace`。`nullspace` 返回一个由列向量组成的 `list`，这些列向量张成该矩阵的零空间。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> M = Matrix([[1, 2, 3, 0, 0], [4, 10, 0, 0, 1]])\n>>> M\n⎡1  2   3  0  0⎤\n⎢              ⎥\n⎣4  10  0  0  1⎦\n>>> M.nullspace()\n⎡⎡-15⎤  ⎡0⎤  ⎡ 1  ⎤⎤\n⎢⎢   ⎥  ⎢ ⎥  ⎢    ⎥⎥\n⎢⎢ 6 ⎥  ⎢0⎥  ⎢-1/2⎥⎥\n⎢⎢   ⎥  ⎢ ⎥  ⎢    ⎥⎥\n⎢⎢ 1 ⎥, ⎢0⎥, ⎢ 0  ⎥⎥\n⎢⎢   ⎥  ⎢ ⎥  ⎢    ⎥⎥\n⎢⎢ 0 ⎥  ⎢1⎥  ⎢ 0  ⎥⎥\n⎢⎢   ⎥  ⎢ ⎥  ⎢    ⎥⎥\n⎣⎣ 0 ⎦  ⎣0⎦  ⎣ 1  ⎦⎦"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Columnspace",
+    "sha": "42a60435b6bd",
+    "zh": "列空间"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To find the columnspace of a matrix, use `columnspace`. `columnspace` returns a `list` of column vectors that span the columnspace of the matrix.",
+    "sha": "8e48a48cd8b1",
+    "zh": "要求矩阵的列空间（column space），用 `columnspace`。`columnspace` 返回一个由列向量组成的 `list`，这些列向量张成该矩阵的列空间。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> M = Matrix([[1, 1, 2], [2 ,1 , 3], [3 , 1, 4]])\n>>> M\n⎡1  1  2⎤\n⎢       ⎥\n⎢2  1  3⎥\n⎢       ⎥\n⎣3  1  4⎦\n>>> M.columnspace()\n⎡⎡1⎤  ⎡1⎤⎤\n⎢⎢ ⎥  ⎢ ⎥⎥\n⎢⎢2⎥, ⎢1⎥⎥\n⎢⎢ ⎥  ⎢ ⎥⎥\n⎣⎣3⎦  ⎣1⎦⎦"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Eigenvalues, Eigenvectors, and Diagonalization",
+    "sha": "0b8098a92588",
+    "zh": "特征值、特征向量与对角化"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To find the eigenvalues of a matrix, use `eigenvals`. `eigenvals` returns a dictionary of `eigenvalue: algebraic_multiplicity` pairs (similar to the output of roots).",
+    "sha": "6a42060ec72c",
+    "zh": "要求矩阵的特征值（eigenvalue），用 `eigenvals`。`eigenvals` 返回一个字典，由 `eigenvalue: algebraic_multiplicity`（特征值：代数重数）这样的键值对组成（和 roots 的输出类似）。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> M = Matrix([[3, -2,  4, -2], [5,  3, -3, -2], [5, -2,  2, -2], [5, -2, -3,  3]])\n>>> M\n⎡3  -2  4   -2⎤\n⎢             ⎥\n⎢5  3   -3  -2⎥\n⎢             ⎥\n⎢5  -2  2   -2⎥\n⎢             ⎥\n⎣5  -2  -3  3 ⎦\n>>> M.eigenvals()\n{-2: 1, 3: 1, 5: 2}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This means that `M` has eigenvalues -2, 3, and 5, and that the eigenvalues -2 and 3 have algebraic multiplicity 1 and that the eigenvalue 5 has algebraic multiplicity 2.",
+    "sha": "c59dacbc2d45",
+    "zh": "这表示 `M` 的特征值是 -2、3 和 5，其中特征值 -2 和 3 的代数重数为 1，特征值 5 的代数重数为 2。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To find the eigenvectors of a matrix, use `eigenvects`. `eigenvects` returns a list of tuples of the form `(eigenvalue, algebraic_multiplicity, [eigenvectors])`.",
+    "sha": "502b95b22700",
+    "zh": "要求矩阵的特征向量（eigenvector），用 `eigenvects`。`eigenvects` 返回一个元组列表，每个元组的形式是 `(eigenvalue, algebraic_multiplicity, [eigenvectors])`，即（特征值，代数重数，[特征向量]）。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> M.eigenvects()\n⎡⎛       ⎡⎡0⎤⎤⎞  ⎛      ⎡⎡1⎤⎤⎞  ⎛      ⎡⎡1⎤  ⎡0 ⎤⎤⎞⎤\n⎢⎜       ⎢⎢ ⎥⎥⎟  ⎜      ⎢⎢ ⎥⎥⎟  ⎜      ⎢⎢ ⎥  ⎢  ⎥⎥⎟⎥\n⎢⎜       ⎢⎢1⎥⎥⎟  ⎜      ⎢⎢1⎥⎥⎟  ⎜      ⎢⎢1⎥  ⎢-1⎥⎥⎟⎥\n⎢⎜-2, 1, ⎢⎢ ⎥⎥⎟, ⎜3, 1, ⎢⎢ ⎥⎥⎟, ⎜5, 2, ⎢⎢ ⎥, ⎢  ⎥⎥⎟⎥\n⎢⎜       ⎢⎢1⎥⎥⎟  ⎜      ⎢⎢1⎥⎥⎟  ⎜      ⎢⎢1⎥  ⎢0 ⎥⎥⎟⎥\n⎢⎜       ⎢⎢ ⎥⎥⎟  ⎜      ⎢⎢ ⎥⎥⎟  ⎜      ⎢⎢ ⎥  ⎢  ⎥⎥⎟⎥\n⎣⎝       ⎣⎣1⎦⎦⎠  ⎝      ⎣⎣1⎦⎦⎠  ⎝      ⎣⎣0⎦  ⎣1 ⎦⎦⎠⎦"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This shows us that, for example, the eigenvalue 5 also has geometric multiplicity 2, because it has two eigenvectors. Because the algebraic and geometric multiplicities are the same for all the eigenvalues, `M` is diagonalizable.",
+    "sha": "df046a2d499b",
+    "zh": "这告诉我们，比如特征值 5 的几何重数也是 2，因为它有两个特征向量。由于所有特征值的代数重数和几何重数都相等，所以 `M` 可以对角化。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To diagonalize a matrix, use `diagonalize`. `diagonalize` returns a tuple $(P, D)$, where $D$ is diagonal and $M = PDP^{-1}$.",
+    "sha": "bd1941d8d390",
+    "zh": "要对角化（diagonalize）一个矩阵，用 `diagonalize`。`diagonalize` 返回一个元组 $(P, D)$，其中 $D$ 是对角矩阵，且 $M = PDP^{-1}$。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> P, D = M.diagonalize()\n>>> P\n⎡0  1  1  0 ⎤\n⎢           ⎥\n⎢1  1  1  -1⎥\n⎢           ⎥\n⎢1  1  1  0 ⎥\n⎢           ⎥\n⎣1  1  0  1 ⎦\n>>> D\n⎡-2  0  0  0⎤\n⎢           ⎥\n⎢0   3  0  0⎥\n⎢           ⎥\n⎢0   0  5  0⎥\n⎢           ⎥\n⎣0   0  0  5⎦\n>>> P*D*P**-1\n⎡3  -2  4   -2⎤\n⎢             ⎥\n⎢5  3   -3  -2⎥\n⎢             ⎥\n⎢5  -2  2   -2⎥\n⎢             ⎥\n⎣5  -2  -3  3 ⎦\n>>> P*D*P**-1 == M\nTrue"
+  },
+  {
+   "k": "box",
+   "env": "note",
+   "title": {
+    "en": "Quick Tip",
+    "sha": "4de3b8e1c5e6",
+    "zh": "小提示"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "`lambda` is a reserved keyword in Python, so to create a Symbol called $\\lambda$, while using the same names for SymPy Symbols and Python variables, use `lamda` (without the `b`). It will still pretty print as $\\lambda$.",
+      "sha": "833d2ea1eb29",
+      "zh": "`lambda` 是 Python 的保留关键字。如果想创建一个名为 $\\lambda$ 的 Symbol，同时又让 SymPy 符号和 Python 变量同名，请用 `lamda`（不带 `b`）。它打印出来依然是 $\\lambda$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Note that since `eigenvects` also includes the eigenvalues, you should use it instead of `eigenvals` if you also want the eigenvectors. However, as computing the eigenvectors may often be costly, `eigenvals` should be preferred if you only wish to find the eigenvalues.",
+    "sha": "1cb3f7ac8cef",
+    "zh": "注意，`eigenvects` 的结果里也包含特征值，所以如果你还想要特征向量，就用它，不必再用 `eigenvals`。不过，计算特征向量往往开销很大，所以如果只想求特征值，还是优先用 `eigenvals`。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If all you want is the characteristic polynomial, use `charpoly`. This is more efficient than `eigenvals`, because sometimes symbolic roots can be expensive to calculate.",
+    "sha": "067e5f9efc55",
+    "zh": "如果你只想要特征多项式，用 `charpoly`。它比 `eigenvals` 更高效，因为有时候符号形式的根算起来代价很高。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> lamda = symbols('lamda')\n>>> p = M.charpoly(lamda)\n>>> factor(p.as_expr())\n       2\n(λ - 5) ⋅(λ - 3)⋅(λ + 2)"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Possible Issues",
+    "sha": "965e6a1eebed",
+    "zh": "可能遇到的问题"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Zero Testing",
+    "sha": "db7ecc546c8f",
+    "zh": "零判定"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If your matrix operations are failing or returning wrong answers, the common reasons would likely be from zero testing. If there is an expression not properly zero-tested, it can possibly bring issues in finding pivots for gaussian elimination, or deciding whether the matrix is inversible, or any high level functions which relies on the prior procedures.",
+    "sha": "b411b4dcfb12",
+    "zh": "如果你的矩阵运算失败了，或者返回了错误的答案，常见的原因很可能出在零判定（zero testing）上。如果某个表达式没有被正确地判定是否为零，就可能影响高斯消元时寻找主元，也可能影响判断矩阵是否可逆，以及所有依赖这些步骤的高层函数。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Currently, the SymPy's default method of zero testing `_iszero` is only guaranteed to be accurate in some limited domain of numerics and symbols, and any complicated expressions beyond its decidability are treated as `None`, which behaves similarly to logical `False`.",
+    "sha": "6f676a64521f",
+    "zh": "目前，SymPy 默认的零判定方法 `_iszero` 只在数值和符号的某些有限范围内保证准确，凡是超出它判定能力的复杂表达式，都会被当作 `None`，其行为类似于逻辑上的 `False`。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The list of methods using zero testing procedures are as follows:",
+    "sha": "c0aea3186033",
+    "zh": "使用零判定过程的方法有以下这些："
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "`echelon_form` , `is_echelon` , `rank` , `rref` , `nullspace` , `eigenvects` , `inverse_ADJ` , `inverse_GE` , `inverse_LU` , `LUdecomposition` , `LUdecomposition_Simple` , `LUsolve`",
+    "sha": "a956ed8cbfce",
+    "zh": "`echelon_form` , `is_echelon` , `rank` , `rref` , `nullspace` , `eigenvects` , `inverse_ADJ` , `inverse_GE` , `inverse_LU` , `LUdecomposition` , `LUdecomposition_Simple` , `LUsolve`"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "They have property `iszerofunc` opened up for user to specify zero testing method, which can accept any function with single input and boolean output, while being defaulted with `_iszero`.",
+    "sha": "5d8aaf7bdf22",
+    "zh": "这些方法都开放了 `iszerofunc` 属性，供用户指定零判定方法。它可以接受任何单输入、布尔输出的函数，默认值是 `_iszero`。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Here is an example of solving an issue caused by undertested zero. While the output for this particular matrix has since been improved, the technique below is still of interest. [1] [2] [3]",
+    "sha": "196b76d64e12",
+    "zh": "下面这个例子解决的是由测试不足的零判定引起的问题。虽然这个特定矩阵的输出后来已经改进了，但下面的技巧仍然值得一看。[1] [2] [3]"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> from sympy import *\n>>> q = Symbol(\"q\", positive = True)\n>>> m = Matrix([\n... [-2*cosh(q/3),      exp(-q),            1],\n... [      exp(q), -2*cosh(q/3),            1],\n... [           1,            1, -2*cosh(q/3)]])\n>>> m.nullspace() # doctest: +SKIP\n[]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "You can trace down which expression is being underevaluated, by injecting a custom zero test with warnings enabled.",
+    "sha": "9081bfd8c126",
+    "zh": "你可以通过注入一个开启了警告的自定义零判定，来追查究竟是哪个表达式没有被充分求值。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> import warnings\n>>>\n>>> def my_iszero(x):\n...     result = x.is_zero\n...\n...     # Warnings if evaluated into None\n...     if result is None:\n...         warnings.warn(\"Zero testing of {} evaluated into None\".format(x))\n...     return result\n...\n>>> m.nullspace(iszerofunc=my_iszero) # doctest: +SKIP\n__main__:9: UserWarning: Zero testing of 4*cosh(q/3)**2 - 1 evaluated into None\n__main__:9: UserWarning: Zero testing of (-exp(q) - 2*cosh(q/3))*(-2*cosh(q/3) - exp(-q)) - (4*cosh(q/3)**2 - 1)**2 evaluated into None\n__main__:9: UserWarning: Zero testing of 2*exp(q)*cosh(q/3) - 16*cosh(q/3)**4 + 12*cosh(q/3)**2 + 2*exp(-q)*cosh(q/3) evaluated into None\n__main__:9: UserWarning: Zero testing of -(4*cosh(q/3)**2 - 1)*exp(-q) - 2*cosh(q/3) - exp(-q) evaluated into None\n[]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In this case, `(-exp(q) - 2*cosh(q/3))*(-2*cosh(q/3) - exp(-q)) - (4*cosh(q/3)**2 - 1)**2` should yield zero, but the zero testing had failed to catch. possibly meaning that a stronger zero test should be introduced. For this specific example, rewriting to exponentials and applying simplify would make zero test stronger for hyperbolics, while being harmless to other polynomials or transcendental functions.",
+    "sha": "cc5930511468",
+    "zh": "这个例子里，`(-exp(q) - 2*cosh(q/3))*(-2*cosh(q/3) - exp(-q)) - (4*cosh(q/3)**2 - 1)**2` 本应得到零，但零判定没有识别出来，这可能意味着需要引入更强的零判定。对这个具体的例子，把表达式改写成指数形式再用 simplify 化简，就能让双曲函数的零判定更强，同时对其他多项式或超越函数也没有副作用。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> def my_iszero(x):\n...     result = x.rewrite(exp).simplify().is_zero\n...\n...     # Warnings if evaluated into None\n...     if result is None:\n...         warnings.warn(\"Zero testing of {} evaluated into None\".format(x))\n...     return result\n...\n>>> m.nullspace(iszerofunc=my_iszero) # doctest: +SKIP\n__main__:9: UserWarning: Zero testing of -2*cosh(q/3) - exp(-q) evaluated into None\n⎡⎡  ⎛   q         ⎛q⎞⎞  -q         2⎛q⎞    ⎤⎤\n⎢⎢- ⎜- ℯ  - 2⋅cosh⎜─⎟⎟⋅ℯ   + 4⋅cosh ⎜─⎟ - 1⎥⎥\n⎢⎢  ⎝             ⎝3⎠⎠              ⎝3⎠    ⎥⎥\n⎢⎢─────────────────────────────────────────⎥⎥\n⎢⎢          ⎛      2⎛q⎞    ⎞     ⎛q⎞       ⎥⎥\n⎢⎢        2⋅⎜4⋅cosh ⎜─⎟ - 1⎟⋅cosh⎜─⎟       ⎥⎥\n⎢⎢          ⎝       ⎝3⎠    ⎠     ⎝3⎠       ⎥⎥\n⎢⎢                                         ⎥⎥\n⎢⎢           ⎛   q         ⎛q⎞⎞            ⎥⎥\n⎢⎢          -⎜- ℯ  - 2⋅cosh⎜─⎟⎟            ⎥⎥\n⎢⎢           ⎝             ⎝3⎠⎠            ⎥⎥\n⎢⎢          ────────────────────           ⎥⎥\n⎢⎢                   2⎛q⎞                  ⎥⎥\n⎢⎢             4⋅cosh ⎜─⎟ - 1              ⎥⎥\n⎢⎢                    ⎝3⎠                  ⎥⎥\n⎢⎢                                         ⎥⎥\n⎣⎣                    1                    ⎦⎦"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "You can clearly see `nullspace` returning proper result, after injecting an alternative zero test.",
+    "sha": "fc6793f27946",
+    "zh": "注入另一个零判定之后，你可以清楚地看到 `nullspace` 返回了正确的结果。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Note that this approach is only valid for some limited cases of matrices containing only numerics, hyperbolics, and exponentials. For other matrices, you should use different method opted for their domains.",
+    "sha": "d1e7bdf1eb4b",
+    "zh": "注意，这种做法只适用于少数情形，即矩阵里只含数值、双曲函数和指数函数。对于其他矩阵，你应该根据它们所在的范围选用别的方法。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Possible suggestions would be either taking advantage of rewriting and simplifying, with tradeoff of speed [4] , or using random numeric testing, with tradeoff of accuracy [5] .",
+    "sha": "436f0b7c3723",
+    "zh": "可行的办法有：要么利用改写与化简，以速度为代价 [4]；要么使用随机数值检验，以精度为代价 [5]。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If you wonder why there is no generic algorithm for zero testing that can work with any symbolic entities, it's because of the constant problem stating that zero testing is undecidable [6] , and not only the SymPy, but also other computer algebra systems [7] [8] would face the same fundamental issue.",
+    "sha": "d631cedd7062",
+    "zh": "如果你想知道为什么没有一个对任意符号对象都适用的通用零判定算法，那是因为「常数问题」指出零判定是不可判定的 [6]，不只是 SymPy，其他计算机代数系统 [7] [8] 也会面临同样的根本性困难。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "However, discovery of any zero test failings can provide some good examples to improve SymPy, so if you have encountered one, you can report the issue to SymPy issue tracker [9] to get detailed help from the community.",
+    "sha": "58127c1b5393",
+    "zh": "不过，发现零判定失败的例子能为改进 SymPy 提供很好的素材，所以如果你遇到了，可以到 SymPy 的问题跟踪器 [9] 报告，向社区寻求详细的帮助。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Footnotes",
+    "sha": "ec0c3b76630f",
+    "zh": "脚注"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "[1] Inspired by https://gitter.im/sympy/sympy?at=5b7c3e8ee5b40332abdb206c",
+    "sha": "de11e98b43c6",
+    "zh": "[1] 灵感来自 https://gitter.im/sympy/sympy?at=5b7c3e8ee5b40332abdb206c"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "[2] Discovered from https://github.com/sympy/sympy/issues/15141",
+    "sha": "eef2e2386715",
+    "zh": "[2] 发现于 https://github.com/sympy/sympy/issues/15141"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "[3] Improved by https://github.com/sympy/sympy/pull/19548",
+    "sha": "d330d4504adf",
+    "zh": "[3] 改进于 https://github.com/sympy/sympy/pull/19548"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "[4] Suggested from https://github.com/sympy/sympy/issues/10120",
+    "sha": "c4ed9f1d3b06",
+    "zh": "[4] 建议来自 https://github.com/sympy/sympy/issues/10120"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "[5] Suggested from https://github.com/sympy/sympy/issues/10279",
+    "sha": "dcf910be9ec0",
+    "zh": "[5] 建议来自 https://github.com/sympy/sympy/issues/10279"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "[6] https://en.wikipedia.org/wiki/Constant_problem",
+    "sha": "e0549a605bf9",
+    "zh": "[6] https://en.wikipedia.org/wiki/Constant_problem"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "[7] How mathematica tests zero https://reference.wolfram.com/language/ref/PossibleZeroQ.html",
+    "sha": "cbe210a3f4ca",
+    "zh": "[7] Mathematica 如何测试零：https://reference.wolfram.com/language/ref/PossibleZeroQ.html"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "[8] How matlab tests zero https://web.archive.org/web/20200307091449/https://www.mathworks.com/help/symbolic/mupad_ref/iszero.html",
+    "sha": "a097d1c86251",
+    "zh": "[8] MATLAB 如何测试零：https://web.archive.org/web/20200307091449/https://www.mathworks.com/help/symbolic/mupad_ref/iszero.html"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "[9] https://github.com/sympy/sympy/issues",
+    "sha": "64470442a668",
+    "zh": "[9] https://github.com/sympy/sympy/issues"
+   }
+  }
+ ],
+ "title_zh": "矩阵"
+}

@@ -1,0 +1,2080 @@
+{
+ "id": "appendix3",
+ "title_en": "Matrix Notation",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "A *matrix* is a box (rectangular array) of numbers, usually surrounded by brackets 〔注： The word *matrix* comes from the Latin word for womb; you can think of a matrix as “holding numbers together”.〕. For example,",
+    "sha": "6b01b4157638",
+    "zh": "*矩阵*（matrix）是一个由数组成的方框（矩形阵列），通常用方括号括起来〔注：matrix 一词来自拉丁语中的“子宫”；你可以把矩阵想成是把一些数“装在一起”。〕。例如，"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mat{1&2&3\\\\4&5&6} \\qquad \\mat{x\\\\y\\\\z}\\qquad \\begin{pmatrix}7.5&-2\\\\-3&0\\end{pmatrix}\\qquad \\begin{matrix}1&2\\\\3&4\\\\5&6\\end{matrix}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "are matrices. In this book, we always write matrices with square brackets “$\\,[\\,\\cdots\\,]\\,$”. We have already used matrices in two ways: to keep track of the coefficients when solving a system of linear equations and to describe vectors (as a column of numbers). In both of these cases, matrices were a notational tool used to keep related numbers together. But, as we will soon see, matrices are also mathematical objects that you can do arithmetic with.",
+    "sha": "cef94993f59b",
+    "zh": "都是矩阵。本书中，我们总是用方括号“$\\,[\\,\\cdots\\,]\\,$”来写矩阵。我们已经在两种场合用过矩阵：解线性方程组时用来记录各项系数，以及用（一列数的形式）描述向量。在这两种情形里，矩阵都只是一种记号工具，用来把相关的数放在一起。但是，我们很快就会看到，矩阵本身也是可以做运算的数学对象。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Matrix Notation",
+    "sha": "83ca283033fc",
+    "zh": "矩阵的记号"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A matrix can be described by its *shape* 〔注： Other terms for the *shape* of a matrix include the “*size* of a matrix” and the “*dimensions* of a matrix”. But, be careful not to confuse this usage of “dimension” with the term “dimension” in the context of subspaces.〕 (the number of rows and columns in the matrix) and its *entries* (the numbers inside the matrix). Traditionally, matrices are labeled with capital letters and their entries are labeled with lower-case letters.",
+    "sha": "44a1ccf612e2",
+    "zh": "矩阵可以用它的*形状*〔注：矩阵的形状也可以叫作“矩阵的*大小*”或“矩阵的*维度*”。但要小心，别把这里的“维度”与讨论子空间时的“维数”混为一谈。〕（矩阵的行数和列数）和它的*元素*（矩阵里面的那些数）来描述。按惯例，矩阵用大写字母标记，它的元素用小写字母标记。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Consider the matrix $A$ with $m$ rows and $n$ columns:",
+    "sha": "25b54ff578d9",
+    "zh": "考虑有 $m$ 行、$n$ 列的矩阵 $A$："
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A =\\ \\  {\\text{\\small\\color{mygreen}$m$ rows}}\\:\\begin{bmatrix}\n&\n\t\t& \\ldots[line-style={solid,<->,color=mypink},shorten=0pt]^{\\text{\\small\\color{mypink}$n$ columns}} \\\\\n\t\t& a_{11} & a_{12} & a_{13} & \\cdots & a_{1n} \\\\\n\t\t& a_{21} & a_{22} & a_{23} & \\cdots & a_{2n} \\\\\n\t\t\\vdots[line-style={solid,<->,mygreen}] & \\vdots & \\vdots & \\vdots &\\ddots & \\vdots \\\\\n\t\t& a_{m1} & a_{m2} & a_{m3} & \\cdots & a_{mn}\n\t\\end{bmatrix}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We call $A$ an “*$m$ by $n$* matrix”, or in notation, an “$m\\times n$ matrix” 〔注： In this context, “$\\,\\times\\,$” is read as “by”〕. The entries of $A$ are indexed by their $(\\text{\\emph{row}},\\text{\\emph{column}})$ coordinates. So, the $(1,1)$ entry of $A$ is $a_{11}$, the $(2,1)$ entry of $A$ is $a_{21}$, etc.. When subscripting a matrix entry, it is tradition to omit a separator between the row and column index. That is, we write $a_{ij}$ instead of $a_{i,j}$ or $a_{(i,j)}$ 〔注： There's nothing wrong with including a separator. It's just not common practice.〕.",
+    "sha": "8c44bc402a4d",
+    "zh": "我们称 $A$ 为“*$m$ 乘 $n$* 矩阵”，记作“$m\\times n$ 矩阵”〔注：这里“$\\,\\times\\,$”读作“乘”（by）。〕。$A$ 的元素按 $(\\text{\\emph{row}},\\text{\\emph{column}})$（即（行，列））坐标编号，所以 $(1,1)$ 位置上 $A$ 的元素是 $a_{11}$，$(2,1)$ 位置上 $A$ 的元素是 $a_{21}$，等等。给矩阵元素加下标时，习惯上行指标与列指标之间不加分隔符。也就是说，我们写 $a_{ij}$，而不写 $a_{i,j}$ 或 $a_{(i,j)}$〔注：加分隔符并没有错，只是不常见。〕。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\mat{1&2&3\\\\4&5&6}$. Find the shape of $A$ as well as the $(1,3)$ entry of $A$.",
+      "sha": "bd4e7e0bb886",
+      "zh": "设 $A=\\mat{1&2&3\\\\4&5&6}$。求 $A$ 的形状，以及 $A$ 的 $(1,3)$ 元素。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "$A$ has two rows and three columns, so $A$ is a $2\\times 3$ matrix. The $(1,3)$ entry of $A$ is the number in the first row and third column of $A$, which is $3$.",
+      "sha": "6be3a30cc98b",
+      "zh": "$A$ 有两行三列，所以 $A$ 是 $2\\times 3$ 矩阵。$A$ 的 $(1,3)$ 元素是 $A$ 中第一行第三列的那个数，即 $3$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Since a matrix is completely determined by its shape and entries, we can define a matrix via a formal. For example, define $B$ to be the $2\\times 3$ matrix whose $(i,j)$ entry, $b_{ij}$, satisfies the formula $b_{ij}=i+j$. In this case",
+    "sha": "c588a0e5f9ee",
+    "zh": "矩阵完全由它的形状和元素决定，所以我们可以用公式来定义矩阵。例如，定义 $B$ 为这样的 $2\\times 3$ 矩阵：它的 $(i,j)$ 元素 $b_{ij}$ 满足公式 $b_{ij}=i+j$。此时"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "B=\\mat{b_{11}&b_{12}&b_{13}\\\\b_{21}&b_{22}&b_{23}}=\\mat{2&3&4\\\\3&4&5}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The shorthand $B=[b_{ij}]$ means that “$B$ is a matrix whose $(i,j)$ entry is $b_{ij}$”. Using this shorthand, we could alternatively say $B=[b_{ij}]$ is a $2\\times 3$ matrix satisfying $b_{ij}=i+j$.",
+    "sha": "172e10e34519",
+    "zh": "简写 $B=[b_{ij}]$ 的意思是“$B$ 是一个 $(i,j)$ 元素为 $b_{ij}$ 的矩阵”。用这种简写，我们也可以说：$B=[b_{ij}]$ 是满足 $b_{ij}=i+j$ 的 $2\\times 3$ 矩阵。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $C=[c_{ij}]$ be a $3\\times 3$ matrix satisfying $c_{ij}=i-j$. Write down $C$.",
+      "sha": "17113fcb865f",
+      "zh": "设 $C=[c_{ij}]$ 是满足 $c_{ij}=i-j$ 的 $3\\times 3$ 矩阵。写出 $C$。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "C=\\mat{c_{11}&c_{12}&c_{13}\\\\c_{21}&c_{22}&c_{23}\\\\c_{31}&c_{32}&c_{33}}=\\mat{0&-1&-2\\\\1&0&-1\\\\2&1&0}."
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Basic Terms",
+    "sha": "9065f61af34b",
+    "zh": "基本术语"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A matrix has three special parts: the diagonal, the upper triangle, and the lower triangle.",
+    "sha": "53f81065abc0",
+    "zh": "矩阵有三个特殊的部分：对角线、上三角部分和下三角部分。"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\underbrace{\n\t\t\t\\left[\\begin{array}{ccccc}\n\t\t\t\ta_{11} & a_{12} & a_{13} & a_{14} & a_{15} \\\\\n\t\t\t\ta_{21} & a_{22} & a_{23} & a_{24} & a_{25} \\\\\n\t\t\t\ta_{31} & a_{32} & a_{33} & a_{34} & a_{35} \\\\\n\t\t\t\ta_{41} & a_{42} & a_{43} & a_{44} & a_{45} \\\\\n\t\t\t\\end{array}\\right]\n\t\t}_{\\text{Diagonal}}\n\t\t\t\\qquad\n\t\t\\underbrace{\n\t\t\t\\left[\\begin{array}{ccccc}\n\t\t\t\ta_{11} & a_{12} & a_{13} & a_{14} & a_{15} \\\\\n\t\t\t\ta_{21} & a_{22} & a_{23} & a_{24} & a_{25} \\\\\n\t\t\t\ta_{31} & a_{32} & a_{33} & a_{34} & a_{35} \\\\\n\t\t\t\ta_{41} & a_{42} & a_{43} & a_{44} & a_{45} \\\\\n\t\t\t\\end{array}\\right]\n\t\t}_{\\text{Upper Triangle}}\n\t\t\t\\qquad\n\t\t\\underbrace{\n\t\t\t\\left[\\begin{array}{ccccc}\n\t\t\t\ta_{11} & a_{12} & a_{13} & a_{14} & a_{15} \\\\\n\t\t\t\ta_{21} & a_{22} & a_{23} & a_{24} & a_{25} \\\\\n\t\t\t\ta_{31} & a_{32} & a_{33} & a_{34} & a_{35} \\\\\n\t\t\t\ta_{41} & a_{42} & a_{43} & a_{44} & a_{45} \\\\\n\t\t\t\\end{array}\\right]\n\t\t}_{\\text{Lower Triangle}}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Formally, we define the diagonal and upper/lower triangle of a matrix in terms of the row and column coordinates.",
+    "sha": "22a2c1df631e",
+    "zh": "我们用行、列坐标来给出矩阵的对角线以及上、下三角部分的正式定义。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Diagonal",
+    "sha": "a5ecd286faa5",
+    "zh": "对角线"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The *diagonal* of an $m\\times n$ matrix $A=[a_{ij}]$ consists of the entries $a_{ij}$ satisfying $i=j$.",
+      "sha": "cb129da5798b",
+      "zh": "$m\\times n$ 矩阵 $A=[a_{ij}]$ 的*对角线*由满足 $i=j$ 的元素 $a_{ij}$ 构成。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Upper & Lower Triangle",
+    "sha": "90174a107e67",
+    "zh": "上三角与下三角"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=[a_{ij}]$ be an $m\\times n$ matrix. The *upper triangle* of $A$ consists the entries $a_{ij}$ satisfying $j\\geq i$. The *lower triangle* of $A$ consists of the entries $a_{ij}$ satisfying $j\\leq i$.",
+      "sha": "b1451015628d",
+      "zh": "设 $A=[a_{ij}]$ 是 $m\\times n$ 矩阵。$A$ 的*上三角部分*由满足 $j\\geq i$ 的元素 $a_{ij}$ 构成；$A$ 的*下三角部分*由满足 $j\\leq i$ 的元素 $a_{ij}$ 构成。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Special Matrices",
+    "sha": "7c79f7537d5f",
+    "zh": "特殊矩阵"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There are several special matrices that come up often.",
+    "sha": "7b702cfe7e59",
+    "zh": "有几类特殊的矩阵经常出现。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Triangular Matrices",
+    "sha": "0b1468a04e09",
+    "zh": "三角矩阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A matrix is called *upper triangular* if all non-zero entries lie in the upper triangle of the matrix and a matrix is called *lower triangular* if all non-zero entries lie in the lower triangle. A matrix is called *triangular* if it is either upper or lower triangular.",
+      "sha": "c5029a0dd04e",
+      "zh": "如果一个矩阵的所有非零元素都在它的上三角部分，就称它为*上三角矩阵*；如果所有非零元素都在下三角部分，就称它为*下三角矩阵*。如果一个矩阵是上三角矩阵或下三角矩阵，就称它为*三角矩阵*。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Square Matrix",
+    "sha": "54dcf0449058",
+    "zh": "方阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A matrix is called *square* if it has the same number of rows as columns.",
+      "sha": "08acd27a5d48",
+      "zh": "如果一个矩阵的行数与列数相同，就称它为*方阵*。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Diagonal Matrix",
+    "sha": "7d790dfd7d21",
+    "zh": "对角矩阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A square matrix is called *diagonal* the only non-zero entries in the matrix appear on the diagonal.",
+      "sha": "0d565d74ef8d",
+      "zh": "如果一个方阵中唯一的非零元素都出现在对角线上，就称它为*对角矩阵*。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Symmetric Matrix",
+    "sha": "0e420bad2fe4",
+    "zh": "对称矩阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The square matrix $A=[a_{ij}]$ is called *symmetric* if its entries satisfy $a_{ij}=a_{ji}$.",
+      "sha": "76aa0a308479",
+      "zh": "如果方阵 $A=[a_{ij}]$ 的元素满足 $a_{ij}=a_{ji}$，就称它为*对称矩阵*。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Alternatively, if the entries of $A$ satisfy $a_{ij}=-a_{ji}$, then $A$ is called *skew-symmetric* or *anti-symmetric*.",
+      "sha": "d546896ed540",
+      "zh": "另一方面，如果 $A$ 的元素满足 $a_{ij}=-a_{ji}$，就称 $A$ 为*反对称矩阵*。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Zero Matrix",
+    "sha": "bdf0c50afe12",
+    "zh": "零矩阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A matrix is called a *zero matrix* if all its entries are zero.",
+      "sha": "e09464491534",
+      "zh": "如果一个矩阵的所有元素都是零，就称它为*零矩阵*。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Identity Matrix",
+    "sha": "c8c548935fe1",
+    "zh": "单位矩阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "An *identity matrix* is a square matrix with ones on the diagonal and zeros everywhere else. The $n\\times n$ identity matrix is denoted $I_{n\\times n}$, or just $I$ when its size is implied.",
+      "sha": "0eb66342256d",
+      "zh": "*单位矩阵*是对角线上全是 1、其余位置全是 0 的方阵。$n\\times n$ 单位矩阵记作 $I_{n\\times n}$；在大小不言自明时，就简记作 $I$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Identify the diagonal of $A=\\mat{-2&3\\\\5&6\\\\7&7}$.",
+      "sha": "6249fda70088",
+      "zh": "指出 $A=\\mat{-2&3\\\\5&6\\\\7&7}$ 的对角线。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The diagonal of $A$ consists of the entries in $A$ whose row coordinate is equal to the column coordinate. So, the diagonal of $A$ consists of $-2$ and $6$.",
+      "sha": "2934987d027f",
+      "zh": "$A$ 的对角线由 $A$ 中行号等于列号的那些元素构成。所以，$A$ 的对角线由 $-2$ 和 $6$ 构成。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Apply a single row operation to $B=\\mat{-2&3\\\\0&6\\\\0&12}$ to make it an upper triangular matrix.",
+      "sha": "d8d9a2bbd558",
+      "zh": "对 $B=\\mat{-2&3\\\\0&6\\\\0&12}$ 施行一次行变换，把它变成上三角矩阵。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To make $B$ an upper triangular matrix, we need all entries below the diagonal to be zero. More specifically, we need to get rid of the $12$ in the lower-right corner of $B$. By applying the row operation $\\text{row}_3\\mapsto \\text{row}_3-2\\,\\text{row}_2$ to $B$, we get the upper triangular matrix",
+      "sha": "2b9e347b67b1",
+      "zh": "要把 $B$ 变成上三角矩阵，需要让对角线以下的元素全为零。具体地说，我们要消去 $B$ 右下角的 $12$。对 $B$ 施行行变换 $\\text{row}_3\\mapsto \\text{row}_3-2\\,\\text{row}_2$，就得到上三角矩阵"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "B'=\\mat{-2&3\\\\0&6\\\\0&0}"
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If possible, produce a matrix that is both upper and lower triangular.",
+      "sha": "5a756d0a409b",
+      "zh": "如果可能，构造一个既是上三角又是下三角的矩阵。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For a matrix to be upper triangular, all entries below the diagonal must be zero. For a matrix to be lower triangular, all entries above the diagonal need to be zero. Therefore, if a matrix is both upper and lower triangular, the only non-zero entries of the matrix must be on the diagonal. It follows that",
+      "sha": "c601e7175110",
+      "zh": "矩阵是上三角矩阵，意味着对角线以下的元素全为零；矩阵是下三角矩阵，意味着对角线以上的元素全为零。因此，如果一个矩阵既是上三角矩阵又是下三角矩阵，它唯一可能的非零元素就都在对角线上。由此可知"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\mat{1&0&0\\\\0&2&0\\\\0&0&3}\\qquad\\text{and}\\qquad \\mat{0&0&0\\\\0&0&0}\\qquad\\text{etc.}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "are valid examples.",
+      "sha": "e1e887c12c6d",
+      "zh": "都是符合要求的例子。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Matrix Arithmetic",
+    "sha": "ccf815b6f30b",
+    "zh": "矩阵的运算"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In Module 〔引用〕, we saw that vectors were an extension of numbers that allowed us to describe directions. Similarly, we can view matrices as a more general type of “number”. Matrices can do everything numbers can, everything vectors can, and more!",
+    "sha": "8a3de39cc792",
+    "zh": "在模块〔引用〕中，我们看到向量是数的一种推广，它能让我们描述方向。类似地，我们可以把矩阵看成一种更一般的“数”。数能做的事，矩阵都能做；向量能做的事，矩阵也都能做；而且还能做更多！"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Basic Operations",
+    "sha": "9a85f6e8c6de",
+    "zh": "基本运算"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The rules for addition and scalar multiplication of matrices are what you expect: to add two matrices, add the corresponding entries, and to scalar multiply a matrix, distribute the scalar to each entry.",
+    "sha": "7940a1644825",
+    "zh": "矩阵加法与数乘的规则正如你所预期的那样：两个矩阵相加，就把对应的元素相加；用一个标量去乘一个矩阵，就把这个标量分配到每个元素上。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For example,",
+    "sha": "6db6725e9e7d",
+    "zh": "例如，"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "2\\mat{1&2&3\\\\4&5&6} = \\mat{2&4&6\\\\8&10&12}\\qquad\\text{and}\\qquad\n\t\\mat{1&2&3\\\\4&5&6}+\\mat{-1&2&0\\\\3&0&1} = \n\t\\mat{1-1&2+2&3+0\\\\4+3&5+0&6+1}\n\t=\\mat{0 & 4 & 3\\\\7&5&7}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "While any matrix can be scalar multiplied by any scalar, matrix addition only makes sense for *compatible* matrices. That is, you can only add together two matrices of the same shape.",
+    "sha": "e8158800cf65",
+    "zh": "任何矩阵都可以乘以任何标量，但矩阵加法只对*相容*的矩阵才有意义。也就是说，只有形状相同的两个矩阵才能相加。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": "要点"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "If two matrices are of the same shape, you can add them by adding entries “straight across”; you can multiply a matrix by a scalar by distributing the scalar to each entry of the matrix.",
+      "sha": "7c2f62f7d6a1",
+      "zh": "如果两个矩阵形状相同，你可以把对应位置“直接”相加来做矩阵加法；用一个标量去乘矩阵，就是把这个标量分配到矩阵的每个元素上。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\mat{1&2&3\\\\4&5&6}$, let $B=\\mat{1&1\\\\2&2}$, and let $C=\\mat{-1&0&-1\\\\2&1&2}$. Compute $2A+B$ and $A+3C$, if possible.",
+      "sha": "b9ab9bd1d566",
+      "zh": "设 $A=\\mat{1&2&3\\\\4&5&6}$，$B=\\mat{1&1\\\\2&2}$，$C=\\mat{-1&0&-1\\\\2&1&2}$。如果可能，计算 $2A+B$ 与 $A+3C$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "First, note that $A$ is a $2\\times 3$ matrix and so it can only be added to another $2\\times 3$ matrix. Since $B$ is a $2\\times 2$ matrix, $2A+B$ is not defined. But, $C$ is a $2\\times 3$ matrix, so $A+3C$ is defined. Computing,",
+      "sha": "3f073a69454b",
+      "zh": "首先注意，$A$ 是 $2\\times 3$ 矩阵，所以它只能与另一个 $2\\times 3$ 矩阵相加。因为 $B$ 是 $2\\times 2$ 矩阵，所以 $2A+B$ 没有定义。但 $C$ 是 $2\\times 3$ 矩阵，所以 $A+3C$ 有定义。计算得"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A+3C=\\mat{1&2&3\\\\4&5&6} + 3\\mat{-1&0&-1\\\\2&1&2} = \\mat{1&2&3\\\\4&5&6} + \\mat{-3&0&-3\\\\6&3&6}"
+    },
+    {
+     "k": "math",
+     "tex": "= \\mat{-2&2&0\\\\10&8&12}."
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Matrix-Vector Multiplication",
+    "sha": "8453d34e122c",
+    "zh": "矩阵与向量的乘法"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Matrices and vectors interact via *matrix-vector* multiplication. There are two equivalent ways to think about matrix-vector multiplication: in terms of columns (the *column picture*) and in terms of rows (the *row picture*).",
+    "sha": "b71ee33b29f0",
+    "zh": "矩阵与向量通过*矩阵—向量乘法*发生联系。理解矩阵—向量乘法有两种等价的方式：按列来看（*列视角*），以及按行来看（*行视角*）。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Column Picture",
+    "sha": "d7be5706d088",
+    "zh": "列的观点"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let",
+    "sha": "ef5fe1edf379",
+    "zh": "设"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A=\n\t\\matc{\n\t\t\t\t{a_{11}} & {a_{12}} & {\\cdots} & {a_{1n}}\\\\\n\t\t\t\t{a_{21}} & {a_{22}} & {\\cdots} & {a_{2n}}\\\\\n\t\t\t\t{\\vdots} & {\\vdots} & {\\ddots} & {\\vdots}\\\\\n\t\t\t\t{a_{m1}} & {a_{m2}} & {\\cdots} & {a_{mn}}\n\t\t\t\t}=\n\t\t\t\\matc{\\big|&\\big|&&\\big|\\\\[3pt]\n\t\t\t\\vec c_1&\\vec c_2&\\cdots&\\vec c_n\\\\[2pt]\n\t\t\t\\big|&\\big|&&\\big|}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "be an $m\\times n$ matrix and let",
+    "sha": "c544401b5bf8",
+    "zh": "为 $m\\times n$ 矩阵，并设"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec c_1=\\matc{a_{11}\\\\a_{21}\\\\\\vdots\\\\a_{m1}}\\qquad\n\t\\vec c_2=\\matc{a_{12}\\\\a_{22}\\\\\\vdots\\\\a_{m2}}\\qquad\\cdots\\qquad\n\t\\vec c_n=\\matc{a_{1n}\\\\a_{2n}\\\\\\vdots\\\\a_{mn}}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "be the vectors corresponding to the columns of $A$. Further, let $\\vec x=\\matc{x_1\\\\x_2\\\\\\vdots\\\\x_n}$ be a vector.",
+    "sha": "9c5b20254ad3",
+    "zh": "为 $A$ 的各列对应的向量。再设 $\\vec x=\\matc{x_1\\\\x_2\\\\\\vdots\\\\x_n}$ 为一个向量。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We define the matrix-vector product $A\\vec x$ to be the linear combination of $\\vec c_1$, $\\vec c_2$, …, $\\vec c_n$ with coefficients $x_1$, $x_2$, etc.. That is,",
+    "sha": "ae1c1d8e03bc",
+    "zh": "我们把矩阵—向量乘积 $A\\vec x$ 定义为 $\\vec c_1$，$\\vec c_2$，……，$\\vec c_n$ 的线性组合，系数依次是 $x_1$，$x_2$，等等。也就是说，"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A\\vec x =\n\t\t\t\\matc{\\big|&\\big|&&\\big|\\\\[3pt]\n\t\t\t\\vec c_1&\\vec c_2&\\cdots&\\vec c_n\\\\[2pt]\n\t\t\t\\big|&\\big|&&\\big|}\\matc{x_1\\\\x_2\\\\\\vdots\\\\x_n}\n\t=x_1\\vec c_1+x_2\\vec c_2+\\cdots+x_n\\vec c_n."
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $B=\\mat{1&2\\\\-2&3}$ and let $\\vec v=\\mat{4\\\\3}$. Compute $B\\vec v$ using the column picture.",
+      "sha": "4398376da85b",
+      "zh": "设 $B=\\mat{1&2\\\\-2&3}$，$\\vec v=\\mat{4\\\\3}$。用列视角计算 $B\\vec v$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The column vectors of $B$ are $\\mat{1\\\\-2}$ and $\\mat{2\\\\3}$, so",
+      "sha": "ac1c973ff03c",
+      "zh": "$B$ 的列向量是 $\\mat{1\\\\-2}$ 和 $\\mat{2\\\\3}$，所以"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "B\\vec v=\\mat{1&2\\\\-2&3}\\mat{4\\\\3} = 4\\mat{1\\\\-2} + 3\\mat{2\\\\3}=\\mat{10\\\\1}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The column picture of matrix-vector multiplication hints that matrix-vector multiplication can be used to encode sophisticated problems involving linear combinations (see Module 〔引用〕 for details).",
+    "sha": "b9c0538c903a",
+    "zh": "矩阵—向量乘法的列视角暗示：矩阵—向量乘法可以用来编码涉及线性组合的复杂问题（详见模块〔引用〕）。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Row Picture",
+    "sha": "461a37411767",
+    "zh": "行的观点"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Alternatively, let",
+    "sha": "068b8ecb1308",
+    "zh": "换一种方式，设"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A=\n\t\\matc{\n\t\t\t\t{a_{11}} & {a_{12}} & {\\cdots} & {a_{1n}}\\\\\n\t\t\t\t{a_{21}} & {a_{22}} & {\\cdots} & {a_{2n}}\\\\\n\t\t\t\t{\\vdots} & {\\vdots} & {\\ddots} & {\\vdots}\\\\\n\t\t\t\t{a_{m1}} & {a_{m2}} & {\\cdots} & {a_{mn}}\n\t\t\t\t}=\n\t\t\t\\matc{\\hdash&\\hspace{-4pt}\\vec r_1&\\hspace{-6pt}\\hdash\\\\\n\t\t\t\t\\hdash&\\hspace{-4pt}\\vec r_2&\\hspace{-6pt}\\hdash\\\\\n\t\t\t\t&\\vdots&\\\\\n\t\t\t\t\\hdash&\\hspace{-4pt}\\vec r_m&\\hspace{-6pt}\\hdash}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "be an $m\\times n$ matrix and let",
+    "sha": "c544401b5bf8",
+    "zh": "为 $m\\times n$ 矩阵，并设"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vec r_1=\\matc{a_{11}\\\\a_{12}\\\\\\vdots\\\\a_{1n}}\\qquad\n\t\\vec r_2=\\matc{a_{21}\\\\a_{22}\\\\\\vdots\\\\a_{2n}}\\qquad\\cdots\\qquad\n\t\\vec r_m=\\matc{a_{m1}\\\\a_{m2}\\\\\\vdots\\\\a_{mn}}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "be vectors corresponding to the rows of $A$. Note that we are writing the *row vectors of $A$ in column vector form*. Further, let $\\vec x=\\matc{x_1\\\\x_2\\\\\\vdots\\\\x_n}$ be a vector.",
+    "sha": "7cad4f9d268c",
+    "zh": "为对应于 $A$ 的各行的向量。注意，我们是把 *$A$ 的行向量写成了列向量的形式*。此外，设 $\\vec x=\\matc{x_1\\\\x_2\\\\\\vdots\\\\x_n}$ 是一个向量。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We alternatively define the matrix-vector product $A\\vec x$ as the vector whose coordinates are the dot products of the rows of $A$ and the vector $\\vec x$. That is,",
+    "sha": "61a67b6c14e3",
+    "zh": "我们也可以把矩阵—向量乘积 $A\\vec x$ 定义为这样的向量：它的各个坐标是 $A$ 的各行与向量 $\\vec x$ 的点积。也就是说，"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A\\vec x =\n\t\t\t\\matc{\\hdash&\\hspace{-4pt}\\vec r_1&\\hspace{-6pt}\\hdash\\\\\n\t\t\t\t\\hdash&\\hspace{-4pt}\\vec r_2&\\hspace{-6pt}\\hdash\\\\\n\t\t\t\t&\\vdots&\\\\\n\t\t\t\t\\hdash&\\hspace{-4pt}\\vec r_m&\\hspace{-6pt}\\hdash}\n\t\t\t\\vec x\n\t\t=\n\t\\matc{\\vec r_1\\cdot \\vec x\\\\\\vec r_2\\cdot\\vec x\\\\\\vdots\\\\\\vec r_m\\cdot \\vec x}."
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $B=\\mat{1&2\\\\-2&3}$ and let $\\vec v=\\mat{4\\\\3}$. Compute $B\\vec v$ using the row picture. Verify that the result matches with what you get from the column picture.",
+      "sha": "9ebbeaaf00a6",
+      "zh": "设 $B=\\mat{1&2\\\\-2&3}$，$\\vec v=\\mat{4\\\\3}$。用行视角计算 $B\\vec v$，并验证结果与列视角得到的一致。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The row vectors of $B$ are $\\mat{1\\\\2}$ and $\\mat{-2\\\\3}$, so",
+      "sha": "00262546ba84",
+      "zh": "$B$ 的行向量是 $\\mat{1\\\\2}$ 和 $\\mat{-2\\\\3}$，所以"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "B\\vec v=\n\t\t\\left[\\begin{array}{rr}\n\t\t\t\t1&2\\\\-2&3\n\t\t\\end{array}\\right]\n\t\t\\mat{4\\\\3} = \\mat{\n\t\t\\left[\\begin{array}{r}\n\t\t\t\t1\\\\2\n\t\t\\end{array}\\right]\n\t\t\t\\cdot\\mat{4\\\\3}\\\\[8pt] \n\t\t\\left[\\begin{array}{r}\n\t\t\t\t-2\\\\3\n\t\t\\end{array}\\right]\n\t\t\t\\cdot\\mat{4\\\\3}}\n\t\t=\\mat{(1)(4)+(2)(3)\\\\(-2)(4)+(3)(3)}=\\mat{10\\\\1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is the same vector we got in the previous example using the column picture!",
+      "sha": "25f020e9a9df",
+      "zh": "这与上一个例子里用列视角得到的向量相同！"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Since the row picture of matrix-vector multiplication involves dot products, which in turn relate to angles and geometry, the row picture hints that matrix-vector multiplication can be used to encode sophisticated problems involving the angles between multiple vectors (see Module 〔引用〕 for more).",
+    "sha": "d8d93fa209c0",
+    "zh": "行视角的矩阵—向量乘法涉及点积，而点积又与角度和几何相联系，所以行视角暗示：矩阵—向量乘法可以用来编码涉及多个向量之间夹角的复杂问题（更多内容见模块〔引用〕）。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Compatibility",
+    "sha": "5d60c7dd62fd",
+    "zh": "可乘条件"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Matrix-vector multiplication is only possible when the shape of the matrix is compatible with the size of the vector. That is the number of *columns* of the matrix must match the number of *coordinates* in the vector. (Try some examples using the row an column picture to make sure you agree.)",
+    "sha": "be9d7a4f2fc1",
+    "zh": "只有当矩阵的形状与向量的大小相容时，矩阵—向量乘法才能进行。也就是说，矩阵的*列*数必须等于向量的*坐标*个数。（用行视角和列视角各试几个例子，确认你同意这一点。）"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The result of a matrix-vector product is always a vector, but the number of coordinates in the output vector can change. For example, if $M$ is a $2\\times 3$ matrix, the product $M\\vec v$ is only defined if $\\vec v\\in \\R^3$. However, the resulting vector $\\vec w=M\\vec v$ is in $\\R^2$ (try an example and verify for yourself). This means matrix-vector multiplication can be used to move vectors between different spaces!",
+    "sha": "5d3b4b9e5f83",
+    "zh": "矩阵—向量乘积的结果总是一个向量，但输出向量的坐标个数可以改变。例如，如果 $M$ 是 $2\\times 3$ 矩阵，那么只有当 $\\vec v\\in \\R^3$ 时乘积 $M\\vec v$ 才有定义；然而，得到的向量 $\\vec w=M\\vec v$ 属于 $\\R^2$（自己试一个例子验证一下）。这说明，矩阵—向量乘法可以用来把向量从一个空间搬到另一个空间！"
+   }
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": "要点"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $m\\times n$ matrix and $\\vec x$ be a vector. The matrix-vector product $A\\vec x$ is only defined if $\\vec x$ has $n$ coordinates. In that case, the result is a vector with $m$ coordinates.",
+      "sha": "76a0d70f47eb",
+      "zh": "设 $A$ 是 $m\\times n$ 矩阵，$\\vec x$ 是一个向量。只有当 $\\vec x$ 有 $n$ 个坐标时，矩阵—向量乘积 $A\\vec x$ 才有定义；此时，结果是一个有 $m$ 个坐标的向量。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Matrix-Matrix Multiplication",
+    "sha": "85d78a066570",
+    "zh": "矩阵与矩阵的乘法"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In many circumstances, we can also multiply two matrices with each other. To do so, we repeatedly apply matrix-vector multiplication. Let $C$ and $A$ be matrices and let $\\vec a_1$, $\\vec a_2$, $\\ldots$, $\\vec a_k$ be the columns of $A$. Then,",
+    "sha": "7db1a82f8fdc",
+    "zh": "在很多情况下，我们也可以把两个矩阵相乘。做法是反复使用矩阵—向量乘法。设 $C$ 和 $A$ 是矩阵，$\\vec a_1$，$\\vec a_2$，$\\ldots$，$\\vec a_k$ 是 $A$ 的各列。那么，"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "CA=C\n\t\t\t\\matc{\\big|&\\big|&&\\big|\\\\[3pt]\n\t\t\t\\vec a_1&\\vec a_2&\\cdots&\\vec a_k\\\\[2pt]\n\t\t\t\\big|&\\big|&&\\big|}\n\t=\n\t\t\t\\matc{\\big|&\\big|&&\\big|\\\\[3pt]\n\t\t\tC\\vec a_1&C\\vec a_2&\\cdots&C\\vec a_k\\\\[2pt]\n\t\t\t\\big|&\\big|&&\\big|}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Here, we “distributed” $C$ into the matrix $A$, creating a new matrix whose columns are $C\\vec a_1$, $C\\vec a_2$, …. Using the row picture to expand each $C\\vec a_i$, we arrive at an explicit formula. Let $\\vec r_1$, $\\vec r_2$, $\\ldots$, $\\vec r_m$ be the rows of $C$. Then,",
+    "sha": "4741fc984fed",
+    "zh": "这里，我们把 $C$“分配”进了矩阵 $A$，得到一个新矩阵，它的各列是 $C\\vec a_1$，$C\\vec a_2$，……。再用行视角展开每个 $C\\vec a_i$，就得到一个明确的公式。设 $\\vec r_1$，$\\vec r_2$，$\\ldots$，$\\vec r_m$ 是 $C$ 的各行。那么，"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "CA = \n\t\t\t\\matc{\\hdash&\\hspace{-4pt}\\vec r_1&\\hspace{-6pt}\\hdash\\\\\n\t\t\t\t\\hdash&\\hspace{-4pt}\\vec r_2&\\hspace{-6pt}\\hdash\\\\\n\t\t\t\t&\\vdots&\\\\\n\t\t\t\t\\hdash&\\hspace{-4pt}\\vec r_m&\\hspace{-6pt}\\hdash}\n\t\t\t\\matc{\\big|&\\big|&&\\big|\\\\[3pt]\n\t\t\t\\vec a_1&\\vec a_2&\\cdots&\\vec a_k\\\\[2pt]\n\t\t\t\\big|&\\big|&&\\big|}\n\t\t\t=\\matc{\n\t\t\t\t\\vec r_1\\cdot \\vec a_1 &\\vec r_1\\cdot \\vec a_2&\\cdots&\\vec r_1\\cdot \\vec a_k\\\\\n\t\t\t\t\\vec r_2\\cdot \\vec a_1 &\\vec r_2\\cdot \\vec a_2&\\cdots&\\vec r_2\\cdot \\vec a_k\\\\\n\t\t\t\t\\vdots&\\vdots&\\ddots&\\vdots\\\\\n\t\t\t\t\\vec r_m\\cdot \\vec a_1 &\\vec r_m\\cdot \\vec a_2&\\cdots&\\vec r_m\\cdot \\vec a_k\\\\\n\t\t\t}."
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $X=\\mat{1&2&3\\\\0&-1&0}$ and $Y=\\mat{2&3\\\\1&1\\\\1&0}$. Compute $XY$ and $YX$.",
+      "sha": "5450e3994e93",
+      "zh": "设 $X=\\mat{1&2&3\\\\0&-1&0}$，$Y=\\mat{2&3\\\\1&1\\\\1&0}$。计算 $XY$ 与 $YX$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Computing $XY$ entry by entry, we get the $(1,1)$ entry is $\\mat{1\\\\2\\\\3}\\cdot\\mat{2\\\\1\\\\1}=7$, the $(2,1)$ entry is $\\mat{0\\\\-1\\\\0}\\cdot\\mat{2\\\\1\\\\1}=-1$, and so on. Computing all the entries we get",
+      "sha": "cbe4b5412623",
+      "zh": "逐个元素地计算 $XY$：$(1,1)$ 元素是 $\\mat{1\\\\2\\\\3}\\cdot\\mat{2\\\\1\\\\1}=7$，$(2,1)$ 元素是 $\\mat{0\\\\-1\\\\0}\\cdot\\mat{2\\\\1\\\\1}=-1$，依此类推。算出所有元素，得到"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "XY=\\mat{1&2&3\\\\0&-1&0}\\mat{2&3\\\\1&1\\\\1&0}=\\mat{7&5\\\\-1&-1}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Computing $YX$ entry by entry, we get the $(1,1)$ entry is $\\mat{2\\\\3}\\cdot\\mat{1\\\\0}=2$, the $(2,1)$ entry is $\\mat{1\\\\1}\\cdot\\mat{1\\\\0}=1$, and so on. Computing all the entries we get",
+      "sha": "2c19e2acadb2",
+      "zh": "逐个元素地计算 $YX$：$(1,1)$ 元素是 $\\mat{2\\\\3}\\cdot\\mat{1\\\\0}=2$，$(2,1)$ 元素是 $\\mat{1\\\\1}\\cdot\\mat{1\\\\0}=1$，依此类推。算出所有元素，得到"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "YX=\\mat{2&3\\\\1&1\\\\1&0}\\mat{1&2&3\\\\0&-1&0}=\\mat{2&1&6\\\\1&1&3\\\\1&2&3}."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "From the previous example, we see that multiplying matrices in different orders can produce different results. Formally we say that matrix multiplication is not *commutative* (in contrast, scalars can be multiplied in any order). This non-commutativity holds even for square matrices 〔注： Of course, it is *possible* that $AB=BA$ for matrices $A$ and $B$. It just doesn't happen very often.〕. For example,",
+    "sha": "8d8bd77843dd",
+    "zh": "从前面的例子可以看到，按不同的顺序相乘，矩阵乘积可能不同。正式的说法是：矩阵乘法不满足*交换律*（相比之下，数相乘可以按任意顺序）。即使对方阵，这种不可交换性也成立〔注：当然，对某些矩阵 $A$ 和 $B$，*有可能*出现 $AB=BA$，只是不常发生。〕。例如，"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mat{1&1\\\\2&2}\\quad =\\quad \\mat{1&0\\\\0&2}\\mat{1&1\\\\1&1}\\quad \\neq\\quad \\mat{1&1\\\\1&1}\\mat{1&0\\\\0&2} \\quad=\\quad \\mat{1&2\\\\1&2}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Further, for a matrix-matrix multiplication to be possible, the shapes of each matrix must be compatible. Using our knowledge of matrix-vector multiplication, we can deduce that if the matrix-matrix product $CA$ makes sense, then the number of *columns* of $C$ must match the number of *rows* of $A$.",
+    "sha": "12da8316c71e",
+    "zh": "此外，要使矩阵与矩阵的乘法可以进行，两个矩阵的形状必须相容。利用我们对矩阵—向量乘法的了解，可以推出：如果矩阵乘积 $CA$ 有意义，那么 $C$ 的*列*数必须等于 $A$ 的*行*数。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Writing the shape of two matrices side-by-side allows for a quick compatibility check.",
+    "sha": "4cb5b2bd3efe",
+    "zh": "把两个矩阵的形状并排写出来，就能快速检查它们是否相容。"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\text{rows of $C$}\\times\\underbrace{\\color{mypink}\\text{columns of $C$}\\qquad\n\t\\text{rows of $A$}}_{\\text{must be equal for $CA$ to exist}}\\times \\text{columns of $A$}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A successful matrix-matrix multiplication will always result in a matrix with the number of rows of the first and the number of columns of the second.",
+    "sha": "5117ed123071",
+    "zh": "只要矩阵乘法能够进行，结果矩阵的行数就是第一个矩阵的行数，列数就是第二个矩阵的列数。"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\underbrace{\t{\\color{mygreen}\\text{rows of $C$}}\\times\\text{columns of $C$}\\qquad\n\t\\text{rows of $A$}\\times {\\color{mygreen}\\text{columns of $A$}}}_{\n\t\t\\text{successful product will be a ${\\color{mygreen}\\text{rows of $C$}}\\!\\times {\\color{mygreen}\\text{columns of $A$}}$ matrix}\n\t\t}"
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be a $2\\times 3$ matrix, let $B$ be a $3\\times 4$ matrix, and let $C$ be a $1\\times 3$ matrix. Determine the shape of the matrices resulting from all possible products of $A$, $B$, and $C$.",
+      "sha": "7e0e2b437266",
+      "zh": "设 $A$ 是 $2\\times 3$ 矩阵，$B$ 是 $3\\times 4$ 矩阵，$C$ 是 $1\\times 3$ 矩阵。确定 $A$、$B$、$C$ 之间所有可能的乘积所得矩阵的形状。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For the product of two matrices to exist, the number of columns of the first matrix must equal the number of rows in the second. Therefore, the only matrix products that are possible are $AB$ and $CB$.",
+      "sha": "8662db27dfcc",
+      "zh": "两个矩阵的乘积要存在，第一个矩阵的列数必须等于第二个矩阵的行数。因此，唯一可能的矩阵乘积是 $AB$ 和 $CB$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "$AB$ is the product of a $2\\times 3$ matrix with a $3\\times 4$ matrix, and so will be a $2\\times 4$ matrix.",
+      "sha": "9109b0b3c091",
+      "zh": "$AB$ 是 $2\\times 3$ 矩阵与 $3\\times 4$ 矩阵的乘积，所以是 $2\\times 4$ 矩阵。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "$CB$ is the product of a $1\\times 3$ matrix with a $3\\times 4$ matrix, and so will be a $1\\times 4$ matrix.",
+      "sha": "0a8f26f74e4f",
+      "zh": "$CB$ 是 $1\\times 3$ 矩阵与 $3\\times 4$ 矩阵的乘积，所以是 $1\\times 4$ 矩阵。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Matrix Algebra",
+    "sha": "d76dbf52f516",
+    "zh": "矩阵代数"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $A$, $B$, and $C$ be $n\\times n$ matrices and let $\\alpha$ be a scalar. We can now write algebraic expressions like",
+    "sha": "cc13ca775995",
+    "zh": "设 $A$、$B$、$C$ 是 $n\\times n$ 矩阵，$\\alpha$ 是标量。现在我们可以写出这样的代数式"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A(B+\\alpha C)."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Since the matrices are all $n\\times n$, such expressions are always defined and the results are again $n\\times n$ matrices. We can *almost* treat arithmetic with $n\\times n$ matrices like arithmetic with numbers, save the fact that changing the order of multiplication might change the result. Many familiar properties of arithmetic carry over to matrices. For example, matrix multiplication is both *associative* and *distributive*. That is,",
+    "sha": "c7f51fbcb3fe",
+    "zh": "因为这些矩阵都是 $n\\times n$ 的，这样的式子总是有定义，而且结果仍是 $n\\times n$ 矩阵。我们*几乎*可以把 $n\\times n$ 矩阵的运算当作数的运算来对待，唯一的区别是：改变相乘的顺序可能改变结果。许多熟悉的运算性质都能照搬到矩阵上。例如，矩阵乘法既满足*结合律*，也满足*分配律*。也就是说，"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "(AB)C=A(BC)\\qquad\\text{and}\\qquad A(B+C) = AB+AC\\qquad\\text{and}\\qquad (A+B)C=AC+BC."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We're already familiar with the special matrices $I$, the identity matrix, and $\\mathbf 0$, the zero matrix. In terms of matrix algebra, these behave like the numbers $1$ and $0$. That is,",
+    "sha": "0babb9c38eb8",
+    "zh": "我们已经熟悉特殊矩阵 $I$（单位矩阵）和 $\\mathbf 0$（零矩阵）。在矩阵代数里，它们的作用就像数 $1$ 和 $0$。也就是说，"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "IA=AI=A\\qquad \\text{and}\\qquad \\mathbf 0 A = A\\mathbf 0=\\mathbf 0"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "for any compatible square matrix $A$.",
+    "sha": "fa34c4467d93",
+    "zh": "对任何相容的方阵 $A$ 都成立。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To kick it up a level, when working with square matrices, we can define *polynomials* of matrices. Using familiar exponent notation, $A^2=AA$, we can formulate questions like",
+    "sha": "7be36c736b9d",
+    "zh": "再进一步，处理方阵时，我们可以定义矩阵的*多项式*。用熟悉的指数记号 $A^2=AA$，就能提出这样的问题："
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Does the equation $A^2=-I$ have a $2\\times 2$ matrix solution?",
+    "sha": "fe70d303efba",
+    "zh": "方程 $A^2=-I$ 有 $2\\times 2$ 矩阵解吗？"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Famously, the equation $x^2=-1$ has no real solutions, but $A^2=-I$ actually does have real $2\\times 2$ matrix solutions (see if you can find one)! In this text we will only scratch the surface of what can be done with matrix algebra, but it's powerful stuff 〔注： Galois theory and representation theory both heavily rely on matrix algebra.〕.",
+    "sha": "4b326e015474",
+    "zh": "大家熟悉的是，方程 $x^2=-1$ 没有实数解，但 $A^2=-I$ 其实有 $2\\times 2$ 的实矩阵解（看看你能不能找到一个）！在本书中，我们只触及矩阵代数的皮毛，但它的威力很大〔注：伽罗瓦理论和表示论都严重依赖矩阵代数。〕。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Matrix algebra behaves a lot like regular algebra except that the order of multiplication matters and matrices must always have compatible sizes.",
+      "sha": "2fc823416c54",
+      "zh": "矩阵代数的行为与普通代数很相似，区别在于：相乘的顺序有影响，而且矩阵的大小必须总是相容的。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "More Notation",
+    "sha": "d13523b6bd58",
+    "zh": "更多记号"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Linear algebra has many different products: scalar multiplication, dot products, matrix-vector products, and matrix-matrix products, to name a few. To distinguish between these different products, we use different notations.",
+    "sha": "27b06aa08c8f",
+    "zh": "线性代数里有许多不同的乘积：标量乘法、点积、矩阵—向量乘积、矩阵—矩阵乘积，等等。为了区分这些不同的乘积，我们使用不同的记号。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For matrix-vector and matrix-matrix products, we use *adjacency* to represent multiplication. That is, we write",
+    "sha": "97398bef518f",
+    "zh": "矩阵—向量乘积与矩阵—矩阵乘积用*并排*来表示乘法。也就是说，我们写"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A\\vec v\\qquad\\text{and}\\qquad AB"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "to indicate a product. Specifically, we do *not* use the symbols “$\\,\\cdot\\,$” or “$\\,\\times\\,$” to represent matrix-vector or matrix-matrix products (these symbols are reserved for the dot product and cross product, respectively).",
+    "sha": "61109aaf689d",
+    "zh": "来表示乘积。特别地，我们*不*用符号“$\\,\\cdot\\,$”或“$\\,\\times\\,$”来表示矩阵—向量乘积或矩阵—矩阵乘积（这两个符号分别留给点积和叉积）。"
+   }
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each description below, if possible, create a matrix matching the description. Otherwise, explain why such a matrix doesn't exist.",
+      "sha": "81fd11903331",
+      "zh": "对下面的每个描述，如果可能，构造一个符合描述的矩阵；否则，解释为什么这样的矩阵不存在。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A $2\\times 2$ diagonal matrix whose entries sum to $-1$.",
+         "sha": "1aa42297ca7b",
+         "zh": "一个元素之和为 $-1$ 的 $2\\times 2$ 对角矩阵。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A $2\\times 2$ symmetric matrix whose entries sum to $-1$.",
+         "sha": "59e03e5ab319",
+         "zh": "一个元素之和为 $-1$ 的 $2\\times 2$ 对称矩阵。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A $4\\times 2$ symmetric matrix whose entries sum to $-1$.",
+         "sha": "236532b85f5c",
+         "zh": "一个元素之和为 $-1$ 的 $4\\times 2$ 对称矩阵。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A $3\\times 3$ skew-symmetric matrix whose entries sum to $-1$.",
+         "sha": "6039d77f0883",
+         "zh": "一个元素之和为 $-1$ 的 $3\\times 3$ 反对称矩阵。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A $1\\times 4$ matrix $A=[a_{ij}]$ whose entries satisfy $a_{ij}=\\sqrt{i+j}$.",
+         "sha": "69d78460fa7e",
+         "zh": "一个 $1\\times 4$ 矩阵 $A=[a_{ij}]$，其元素满足 $a_{ij}=\\sqrt{i+j}$。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Note: there are many matrices possible.",
+      "sha": "cc7c80fd650c",
+      "zh": "注：满足要求的矩阵有很多个。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1&0\\\\0&-2}$",
+         "sha": "773bac70902a",
+         "zh": "$\\mat{1&0\\\\0&-2}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1&1\\\\1&-4}$ or $\\mat{1&0\\\\0&-2}$",
+         "sha": "27ad17b656c4",
+         "zh": "$\\mat{1&1\\\\1&-4}$ 或 $\\mat{1&0\\\\0&-2}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Impossible. A symmetric matrix must be square.",
+         "sha": "80af06991542",
+         "zh": "不可能。对称矩阵必须是方阵。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Impossible. Let $A=[a_{ij}]$ be a skew symmetric matrix. By definition, $a_{ij}=-a_{ji}$. In particular, the diagonal entries satisfy $a_{kk}=-a_{kk}$ and so must be zero. For every other entry $a_{ij}$ with $i\\neq j$, there exists a corresponding entry $-a_{ji}$. Therefore the sum of all entries must be zero.",
+         "sha": "254fb2daa5bd",
+         "zh": "不可能。设 $A=[a_{ij}]$ 是反对称矩阵。根据定义，$a_{ij}=-a_{ji}$。特别地，对角线元素满足 $a_{kk}=-a_{kk}$，因此必为零。对于其余每个满足 $i\\neq j$ 的元素 $a_{ij}$，都有一个与之对应的元素 $-a_{ji}$。因此所有元素之和必为零。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{\\sqrt{2}&\\sqrt{3}&2&\\sqrt{5}}$",
+         "sha": "987fc9b397e9",
+         "zh": "$\\mat{\\sqrt{2}&\\sqrt{3}&2&\\sqrt{5}}$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Matrix Notation · 练习题 1（上游 book/modules/appendix3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the following matrices $A=\\mat{1 & 0 & 0 \\\\ 1 & 0 & 2 \\\\ 1 & 6 & 5}$, $B=\\mat{2 & 1 & 1 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 3}$, $C=\\mat{1\\\\-1\\\\2}$, and $D=\\mat{0&-2&1}$. For each of the following, (i) determine if the operation is defined, and (ii) compute the result using both the column picture and row picture of multiplication (if applicable).",
+      "sha": "0117879c1630",
+      "zh": "考虑下列矩阵：$A=\\mat{1 & 0 & 0 \\\\ 1 & 0 & 2 \\\\ 1 & 6 & 5}$，$B=\\mat{2 & 1 & 1 \\\\ 0 & 2 & 0 \\\\ 0 & 0 & 3}$，$C=\\mat{1\\\\-1\\\\2}$，$D=\\mat{0&-2&1}$。对下面每一项：(i) 判断该运算是否有定义；(ii) 如果有定义，分别用乘法的列视角和行视角计算结果。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$AC$",
+         "sha": "a179ff2638e4",
+         "zh": "$AC$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$2A+B$",
+         "sha": "76ab5d11daa8",
+         "zh": "$2A+B$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$A-B$",
+         "sha": "d6d5a5848db0",
+         "zh": "$A-B$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$CA$",
+         "sha": "e657259c0995",
+         "zh": "$CA$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$AB$",
+         "sha": "57ee5125358c",
+         "zh": "$AB$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$BA$",
+         "sha": "d66492998689",
+         "zh": "$BA$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$DC$",
+         "sha": "27e525b776c4",
+         "zh": "$DC$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$CD$",
+         "sha": "0948661e822f",
+         "zh": "$CD$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1\\\\5\\\\5}$",
+         "sha": "819da4690e45",
+         "zh": "$\\mat{1\\\\5\\\\5}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{4&1&1\\\\2&2&4\\\\2&12&13}$",
+         "sha": "6f1d8344b3bf",
+         "zh": "$\\mat{4&1&1\\\\2&2&4\\\\2&12&13}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{-1&-1&-1\\\\1&-2&2\\\\1&6&2}$",
+         "sha": "d76558132cf6",
+         "zh": "$\\mat{-1&-1&-1\\\\1&-2&2\\\\1&6&2}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not defined",
+         "sha": "815f1f0049cf",
+         "zh": "无定义"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{2&1&1\\\\2&1&7\\\\2&13&16}$",
+         "sha": "33c46cc5828c",
+         "zh": "$\\mat{2&1&1\\\\2&1&7\\\\2&13&16}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{4&6&7\\\\2&0&4\\\\3&18&15}$",
+         "sha": "d98a14e61698",
+         "zh": "$\\mat{4&6&7\\\\2&0&4\\\\3&18&15}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{4}$",
+         "sha": "525ef06e1756",
+         "zh": "$\\mat{4}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{0&-2&1\\\\0&2&-1\\\\0&-4&2}$",
+         "sha": "7f98778d3f24",
+         "zh": "$\\mat{0&-2&1\\\\0&2&-1\\\\0&-4&2}$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Matrix Notation · 练习题 2（上游 book/modules/appendix3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "In general, matrix multiplication is non-commutative. However, some types of matrices are special.",
+      "sha": "f8c7a93334c8",
+      "zh": "一般来说，矩阵乘法不满足交换律。不过，某些类型的矩阵比较特殊。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ and $B$ be $2\\times 2$ diagonal matrices and let $X$ and $Y$ be $n\\times n$ diagonal matrices.",
+      "sha": "da18ed810ba6",
+      "zh": "设 $A$ 和 $B$ 是 $2\\times 2$ 对角矩阵，$X$ 和 $Y$ 是 $n\\times n$ 对角矩阵。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Show by direct computation that $AB=BA$.",
+         "sha": "0aa1dc3da2a7",
+         "zh": "通过直接计算证明 $AB=BA$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Show that both $XY$ and $YX$ also diagonal matrices.",
+         "sha": "2e7418dfc1f2",
+         "zh": "证明 $XY$ 和 $YX$ 也都是对角矩阵。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Is it true that $XY=YX$ no matter $n$? Explain.",
+         "sha": "63596dc1d87c",
+         "zh": "不论 $n$ 取何值，$XY=YX$ 是否都成立？请解释。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Matrix Notation · 练习题 3（上游 book/modules/appendix3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Classify the following statements as true or false.",
+      "sha": "ec23b67d3c5a",
+      "zh": "判断下列命题的真假。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A matrix in reduced row echelon form is an upper triangular matrix.",
+         "sha": "2a736954a221",
+         "zh": "简化行阶梯形的矩阵是上三角矩阵。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A diagonal matrix is in reduced row echelon form.",
+         "sha": "d94883d71d39",
+         "zh": "对角矩阵是简化行阶梯形。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Every zero matrix is also square.",
+         "sha": "f881093cdd20",
+         "zh": "每个零矩阵也都是方阵。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A zero matrix is neither upper or lower triangular.",
+         "sha": "c56bdd41138e",
+         "zh": "零矩阵既不是上三角矩阵，也不是下三角矩阵。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "A matrix that is both upper triangular and lower triangular must be diagonal.",
+         "sha": "e25a7a8eb781",
+         "zh": "既是上三角又是下三角的矩阵必是对角矩阵。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Using row operations every lower triangular matrix can be converted into an upper triangular matrix.",
+         "sha": "a967c0dad53f",
+         "zh": "利用行变换，每个下三角矩阵都可以化成上三角矩阵。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The product of two lower triangular matrices is a lower triangular matrix (provided the product is defined).",
+         "sha": "9a5fb074c754",
+         "zh": "两个下三角矩阵的乘积是下三角矩阵（只要乘积有定义）。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True",
+         "sha": "88b33e4e12f7",
+         "zh": "真"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. Consider $\\mat{0&0\\\\0&1}$.",
+         "sha": "3bd01ac36dcd",
+         "zh": "假。考虑 $\\mat{0&0\\\\0&1}$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. Zero matrices can be of any size.",
+         "sha": "e289b0a21783",
+         "zh": "假。零矩阵可以是任意大小。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. All zero matrices are both upper and lower triangular.",
+         "sha": "ac98c2a05204",
+         "zh": "假。所有零矩阵既是上三角矩阵，也是下三角矩阵。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "False. Diagonal matrices must be square; upper/lower triangular matrices can be of any size.",
+         "sha": "7bef51939a65",
+         "zh": "假。对角矩阵必须是方阵；上（下）三角矩阵可以是任意大小。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True",
+         "sha": "88b33e4e12f7",
+         "zh": "真"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "True",
+         "sha": "88b33e4e12f7",
+         "zh": "真"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Matrix Notation · 练习题 4（上游 book/modules/appendix3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $R$ be a $1\\times n$ matrix and let $C$ be an $n\\times 1$ matrix.",
+      "sha": "88633877350c",
+      "zh": "设 $R$ 是 $1\\times n$ 矩阵，$C$ 是 $n\\times 1$ 矩阵。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Is the product $RC$ defined? If so, what is its shape?",
+         "sha": "f67f6c8dd2c9",
+         "zh": "乘积 $RC$ 有定义吗？如果有，它的形状是什么？"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Is the product $CR$ defined? If so, what is its shape?",
+         "sha": "905ad8e0bf59",
+         "zh": "乘积 $CR$ 有定义吗？如果有，它的形状是什么？"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec r$ be the (only) row vector in $R$ and let $\\vec c$ be the (only) column vector in $C$. Are $\\vec r\\cdot \\vec c$ and $RC$ the same? Explain.",
+         "sha": "ae7adf372680",
+         "zh": "设 $\\vec r$ 是 $R$ 中（唯一的）行向量，$\\vec c$ 是 $C$ 中（唯一的）列向量。$\\vec r\\cdot \\vec c$ 与 $RC$ 是同一个东西吗？请解释。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec x,\\vec y\\in \\R^n$ and let $R_{\\vec x}$ be the $1\\times n$ matrix with $\\vec x$ as a row vector and let $C_{\\vec y}$ be the $n\\times 1$ matrix with $\\vec y$ as a column vector. The *inner product* of $\\vec x$ and $\\vec y$ is defined to be $R_{\\vec x}C_{\\vec y}$. The *outer product* of $\\vec x$ and $\\vec y$ is defined to be $C_{\\vec y}R_{\\vec x}$.",
+         "sha": "b9ed19aacf1e",
+         "zh": "设 $\\vec x,\\vec y\\in \\R^n$，设 $R_{\\vec x}$ 是以 $\\vec x$ 为行向量的 $1\\times n$ 矩阵，$C_{\\vec y}$ 是以 $\\vec y$ 为列向量的 $n\\times 1$ 矩阵。$\\vec x$ 与 $\\vec y$ 的*内积*定义为 $R_{\\vec x}C_{\\vec y}$，$\\vec x$ 与 $\\vec y$ 的*外积*定义为 $C_{\\vec y}R_{\\vec x}$。"
+        }
+       },
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "How does the inner product of $\\vec x$ and $\\vec y$ relate to the dot product of $\\vec x$ and $\\vec y$?",
+            "sha": "87a66a91979a",
+            "zh": "$\\vec x$ 与 $\\vec y$ 的内积和 $\\vec x$ 与 $\\vec y$ 的点积是什么关系？"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $Q$ be the outer product of $\\vec x$ and $\\vec y$. What does the reduced row echelon form of $Q$ look like?",
+            "sha": "aa26c043e254",
+            "zh": "设 $Q$ 是 $\\vec x$ 与 $\\vec y$ 的外积。$Q$ 的简化行阶梯形是什么样子？"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $Q$ be the outer product of $\\vec x$ and $\\vec y$. Show that the columns of $Q$ are always linearly dependent when $n\\geq 2$.",
+            "sha": "98bd92ac48ba",
+            "zh": "设 $Q$ 是 $\\vec x$ 与 $\\vec y$ 的外积。证明：当 $n\\geq 2$ 时，$Q$ 的各列总是线性相关的。"
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes. $1\\times 1$",
+         "sha": "8e7ef4bf3a1a",
+         "zh": "有定义。$1\\times 1$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes. $n\\times n$",
+         "sha": "2427ec130dbe",
+         "zh": "有定义。$n\\times n$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "They are related but not the same. $\\vec r\\cdot \\vec c$ is a scalar and $RC$ is a $1\\times 1$ matrix.",
+         "sha": "659f67f287d3",
+         "zh": "两者有联系，但不是同一个东西。$\\vec r\\cdot \\vec c$ 是一个标量，而 $RC$ 是一个 $1\\times 1$ 矩阵。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "The inner product of $\\vec x$ and $\\vec y$ is $[\\vec x\\cdot \\vec y]$. That is, it is the $1\\times 1$ matrix with entry $\\vec x\\cdot \\vec y$.",
+            "sha": "58f12ff8df01",
+            "zh": "$\\vec x$ 与 $\\vec y$ 的内积是 $[\\vec x\\cdot \\vec y]$。也就是说，它是元素为 $\\vec x\\cdot \\vec y$ 的 $1\\times 1$ 矩阵。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "The reduced row echelon form of $Q$ looks like a (possibly) non-zero row followed by rows of zeros.",
+            "sha": "e27388cfa259",
+            "zh": "$Q$ 的简化行阶梯形是一个（可能非零的）行，后面跟着若干全为零的行。"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "Let $y_1,\\ldots, y_n\\in \\R$ be the entries in $\\vec y$. Then the columns of $Q$ are $y_1\\vec x,\\ldots, y_n\\vec x$. These columns are all scalar multiples of the same vector, $\\vec x$, and so are linearly dependent.",
+            "sha": "1fe2aa39308c",
+            "zh": "设 $y_1,\\ldots, y_n\\in \\R$ 是 $\\vec y$ 的各个元素。那么 $Q$ 的各列是 $y_1\\vec x,\\ldots, y_n\\vec x$。这些列都是同一个向量 $\\vec x$ 的标量倍，所以线性相关。"
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Matrix Notation · 练习题 5（上游 book/modules/appendix3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A $3\\times 3$ matrix is called a *Heisenberg matrix* if it takes the form $\\mat{1&a&c\\\\0&1&b\\\\0&0&1}$ for some $a,b,c\\in\\R$.",
+      "sha": "0a85dc1dbf46",
+      "zh": "如果一个 $3\\times 3$ 矩阵对某些 $a,b,c\\in\\R$ 具有形式 $\\mat{1&a&c\\\\0&1&b\\\\0&0&1}$，就称它为*海森堡矩阵*（Heisenberg matrix）。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Show that if $A$ and $B$ are Heisenberg matrices, then so are $AB$ and $BA$.",
+         "sha": "48073eef6fc7",
+         "zh": "证明：如果 $A$ 和 $B$ 是海森堡矩阵，那么 $AB$ 和 $BA$ 也是海森堡矩阵。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $A$ and $B$ are Heisenberg matrices, is it always the case that $AB=BA$? Give a proof or a counter example.",
+         "sha": "dc134682d4da",
+         "zh": "如果 $A$ 和 $B$ 是海森堡矩阵，是否总有 $AB=BA$？请给出证明或反例。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $X=\\mat{1&a&c\\\\0&1&b\\\\0&0&1}$ and let $Y=\\mat{1&-1&ab-c\\\\0&1&-b\\\\0&0&1}$. Show that $XY=I_{3\\times 3}$.",
+         "sha": "d4836f03cd70",
+         "zh": "设 $X=\\mat{1&a&c\\\\0&1&b\\\\0&0&1}$，$Y=\\mat{1&-1&ab-c\\\\0&1&-b\\\\0&0&1}$。证明 $XY=I_{3\\times 3}$。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Multiplying",
+         "sha": "7c4b35628b2b",
+         "zh": "相乘得"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{1&a&b\\\\0&1&c\\\\0&0&1}\\mat{1&x&y\\\\0&1&z\\\\0&0&1}\n\t\t\t\t\t\t=\\mat{1&a+x&c+ay+z\\\\0&1&b+y\\\\0&0&1}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "and so two Heisenberg matrices aways multiply together to form another Heisenberg matrix.",
+         "sha": "7e0fe0cd8af8",
+         "zh": "所以两个海森堡矩阵相乘，总是得到另一个海森堡矩阵。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "It may be that $AB\\neq BA$. For example",
+         "sha": "4af9d1c75fb3",
+         "zh": "有可能 $AB\\neq BA$。例如"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{1&2&0\\\\0&1&1\\\\0&0&1}\n\t\t\t\t\t\\mat{1&1&0\\\\0&1&2\\\\0&0&1}\n\t\t\t\t\t\\neq\n\t\t\t\t\t\\mat{1&1&0\\\\0&1&2\\\\0&0&1}\n\t\t\t\t\t\\mat{1&2&0\\\\0&1&1\\\\0&0&1}."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "By multiplying out, we see $XY=I$ (and $YX=I$).",
+         "sha": "a8aa9f8378cc",
+         "zh": "把乘积乘开，可得 $XY=I$（并且 $YX=I$）。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Matrix Notation · 练习题 6（上游 book/modules/appendix3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix3-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $X$ be a matrix of the form $\\mat{a&-b\\\\b&a}$ for some $a,b\\in\\R$.",
+      "sha": "4a493a8af19c",
+      "zh": "设 $X$ 是形如 $\\mat{a&-b\\\\b&a}$ 的矩阵，其中 $a,b\\in\\R$。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Show that $X^2$ has the same form as $X$.",
+         "sha": "94a6b9591501",
+         "zh": "证明 $X^2$ 与 $X$ 具有相同的形式。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Is there a solution to the matrix equation $X^2=I_{2\\times 2}$? If so, how many?",
+         "sha": "14b8ac37c5f8",
+         "zh": "矩阵方程 $X^2=I_{2\\times 2}$ 有解吗？如果有，有几个？"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Is there a solution to the matrix equation $X^2=-I_{2\\times 2}$? If so, how many?",
+         "sha": "a71c60882983",
+         "zh": "矩阵方程 $X^2=-I_{2\\times 2}$ 有解吗？如果有，有几个？"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $Y$ be an arbitrary $2\\times 2$ matrix. How many solutions are there to the equation $Y^2=I_{2\\times 2}$?",
+         "sha": "220360279237",
+         "zh": "设 $Y$ 是任意的 $2\\times 2$ 矩阵。方程 $Y^2=I_{2\\times 2}$ 有多少个解？"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Do you agree with the statement “every positive real number has exactly two square roots”? Do you agree with the statement “every diagonal matrix with positive entries on the diagonal has exactly two square roots”? Explain.",
+         "sha": "7aeaed532d8a",
+         "zh": "你同意“每个正实数都恰有两个平方根”这个说法吗？你同意“对角线元素全为正数的每个对角矩阵都恰有两个平方根”这个说法吗？请解释。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Multiplying out, we see",
+         "sha": "3a199b6351e4",
+         "zh": "乘开可得"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\mat{a&-b\\\\b&a}\\mat{x&-y\\\\y&x}=\\mat{ax-by&-(ay+bx)\\\\ay+bx&ax-by}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "has the required form.",
+         "sha": "fe47a02409b7",
+         "zh": "具有所要求的形式。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Multiplying, we see",
+         "sha": "451d042dd9f8",
+         "zh": "相乘可得"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "X^2=\\mat{a&-b\\\\b&a}^2=\\mat{a^2-b^2&-2ab\\\\2ab&a^2-b^2}=\\mat{1&0\\\\0&1}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "implies that $a=0$ or $b=0$. If $a=0$, then $-b^2=1$, which is impossible. Therefore $b=0$. This means $a^2=1$ which has solutions $a=\\pm 1$. Therefore there are exactly two solutions to $X^2=I$.",
+         "sha": "1cb7d47faea5",
+         "zh": "推出 $a=0$ 或 $b=0$。如果 $a=0$，则 $-b^2=1$，这是不可能的。因此 $b=0$。这意味着 $a^2=1$，解为 $a=\\pm 1$。所以 $X^2=I$ 恰有两个解。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Multiplying, we see",
+         "sha": "451d042dd9f8",
+         "zh": "相乘可得"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "X^2=\\mat{a&-b\\\\b&a}^2=\\mat{a^2-b^2&-2ab\\\\2ab&a^2-b^2}=\\mat{-1&0\\\\0&-1}"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "implies that $a=0$ or $b=0$. If $a=b$, then $a^2=-1$, which is impossible. Therefore $a=0$. This means $-b^2=-1$ which has solutions $b=\\pm 1$. Therefore there are exactly two solutions to $X^2=-I$.",
+         "sha": "1344d96e4607",
+         "zh": "推出 $a=0$ 或 $b=0$。如果 $a=b$，则 $a^2=-1$，这是不可能的。因此 $a=0$。这意味着 $-b^2=-1$，解为 $b=\\pm 1$。所以 $X^2=-I$ 恰有两个解。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "There are infinitely many solutions to $Y^2=I$. For example $\\mat{0&t\\\\1/t&0}^2=I$ for any non-zero $t$.",
+         "sha": "37c956079cec",
+         "zh": "$Y^2=I$ 有无穷多个解。例如，对任何非零的 $t$，都有 $\\mat{0&t\\\\1/t&0}^2=I$。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Yes to the first, no to the second. Matrices are more general than numbers!",
+         "sha": "ba09e0bc4d13",
+         "zh": "第一个同意，第二个不同意。矩阵比数更一般！"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Matrix Notation · 练习题 7（上游 book/modules/appendix3-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/appendix3-exercises.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "矩阵记号"
+}

@@ -1,0 +1,15 @@
+\begin{tikzpicture}
+			\begin{axis}[
+				view={10}{20},
+				z buffer=sort,
+				hide axis,
+			]
+			\addplot3 [surf,domain=-5:0,y domain=-10:10,samples=2, opacity=.6, mygreen] ({x}, {y}, {x/2});
+			\addplot3 [surf,domain=-5:0,y domain=-10:10,samples=2, opacity=.6, myorange] ({x}, {y}, {0});
+			\addplot3 [surf,domain=-5:0,y domain=-10:10,samples=2, opacity=.6, WildStrawberry] ({x}, {y}, {-x/2});
+			\addplot3 [surf,domain=0:5,y domain=-10:10,samples=2, opacity=.6, WildStrawberry] ({x}, {y}, {-x/2});
+			\addplot3 [surf,domain=0:5,y domain=-10:10,samples=2, opacity=.6, myorange] ({x}, {y}, {0});
+			\addplot3 [surf,domain=0:5,y domain=-10:10,samples=2, opacity=.6, mygreen] ({x}, {y}, {x/2});
+			\end{axis}
+			\node [black] at (5.5,7.5,5) {Intersecting in a line};
+		\end{tikzpicture}

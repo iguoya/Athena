@@ -1,0 +1,153 @@
+[
+  {
+    "id": "ex1",
+    "stem": "`meshgrid` 是画曲面前准备数据的第一步。先预测，再运行：\n\n```octave\nx = 0:2:6;\ny = 10:10:30;\n[xx, yy] = meshgrid (x, y)\n```\n\n请写出四个数：`size (xx)` 的两个值，以及 `xx(3,2)` 和 `yy(3,2)`。",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写出四个数。",
+      "answer": [
+        3,
+        4,
+        2,
+        30
+      ],
+      "hint": "回到 `meshgrid` 的说明：`xx` 的每一行是 `x` 的拷贝，`yy` 的每一列是 `y` 的拷贝。行数对应哪个向量的长度？"
+    },
+    "verify": "x = 0:2:6; y = 10:10:30; [xx, yy] = meshgrid (x, y); result = [size(xx) xx(3,2) yy(3,2)];",
+    "sol": "`x` 有 4 个点，`y` 有 3 个点。`xx` 的行数是 `numel (y)`，列数是 `numel (x)`，所以是 $3\\times 4$；第 $i$ 行第 $j$ 列的格点是 $(x_j, y_i)$。`xx(3,2) = x(2) = 2`，`yy(3,2) = y(3) = 30`。\n\n```octave\n>> [xx, yy] = meshgrid (x, y)\nxx =\n\n   0   2   4   6\n   0   2   4   6\n   0   2   4   6\n\nyy =\n\n   10   10   10   10\n   20   20   20   20\n   30   30   30   30\n\n>> size (xx)\nans =\n\n   3   4\n\n>> xx(3,2)\nans = 2\n>> yy(3,2)\nans = 30\n```\n\n把 `mesh (x, y, zz)` 画出来，是一张 4 列 3 行格点的网状曲面；`xx` 和 `yy` 本身可以想象成「每个格点的横坐标表」与「纵坐标表」。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "plot · meshgrid",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex2",
+    "stem": "手册的 `mesh` 例子用 `linspace (-8, 8, 41)` 取样。先预测，再运行：\n\n```octave\ntx = linspace (-8, 8, 41);\ntx(2) - tx(1)\nnumel (-8:0.5:8)\n```\n\n请写出两个数：`linspace` 取样的相邻点间距，以及冒号表达式 `-8:0.5:8` 的点数。",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写出两个数。",
+      "answer": [
+        0.4,
+        33
+      ],
+      "hint": "`linspace (a, b, n)` 的第三个参数是点数，不是区间数；$n$ 个点之间有 $n-1$ 个间隔。冒号表达式的点数是 $(b-a)/\\text{步长}+1$。"
+    },
+    "verify": "tx = linspace (-8, 8, 41); result = [tx(2)-tx(1) numel(-8:0.5:8)];",
+    "sol": "41 个点之间有 40 个间隔，间距是 $16/40=0.4$。`-8:0.5:8` 的点数是 $16/0.5+1=33$。\n\n```octave\n>> tx = linspace (-8, 8, 41);\n>> tx(2) - tx(1)\nans = 0.4000\n>> numel (-8:0.5:8)\nans = 33\n```\n\n用 `plot (tx, sin (tx))` 画出来是一条平滑的正弦曲线，点越多折线越像曲线；只有 5 个点时，能看出明显的折角。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "plot · 三维图 · linspace 取样",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex3",
+    "stem": "用向量化表达式在网格上算二元函数 $z=x-y^2$，不用写循环。先预测，再运行：\n\n```octave\nx = linspace (-2, 2, 5);\ny = linspace (-1, 1, 3);\n[X, Y] = meshgrid (x, y);\nF = X - Y.^2\n[m, k] = max (F(:))\n[r, c] = ind2sub (size (F), k)\n```\n\n请写出三个数：`F` 的最大值，以及它出现的行号 `r`、列号 `c`。",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写出三个数。",
+      "answer": [
+        2,
+        2,
+        5
+      ],
+      "hint": "最大值在 $x$ 最大、$y^2$ 最小处取到。行号对应 `y`，列号对应 `x`。"
+    },
+    "verify": "x = linspace (-2, 2, 5); y = linspace (-1, 1, 3); [X, Y] = meshgrid (x, y); F = X - Y.^2; [m, k] = max (F(:)); [r, c] = ind2sub (size (F), k); result = [m r c];",
+    "sol": "$z=x-y^2$ 在 $x=2$、$y=0$ 取最大值 $2$。`y = 0` 是 `y` 的第 2 个元素，`x = 2` 是 `x` 的第 5 个元素，所以行号 2、列号 5。\n\n```octave\n>> F = X - Y.^2\nF =\n\n  -3  -2  -1   0   1\n  -2  -1   0   1   2\n  -3  -2  -1   0   1\n\n>> [m, k] = max (F(:))\nm = 2\nk = 14\n>> [r, c] = ind2sub (size (F), k)\nr = 2\nc = 5\n```\n\n`mesh (x, y, F)` 画出的是一张沿 $x$ 方向上升、沿 $y$ 方向向两侧下弯的曲面；`contour (x, y, F)` 的等高线是向右开口的抛物线。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "plot · meshgrid、mesh、contour",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex4",
+    "stem": "手册的「sombrero」例子里有一行 `r = sqrt (xx.^2 + yy.^2) + eps;`。先预测，再运行：\n\n```octave\ntx = ty = linspace (-8, 8, 41);\n[X, Y] = meshgrid (tx, ty);\nR = sqrt (X.^2 + Y.^2) + eps;\nZ = sin (R) ./ R;\nZ(21,21)\nZ(21,22)\nZ(1,1)\n```\n\n请写出 `Z(21,22)` 与 `Z(1,1)` 的值（保留至少 4 位小数）。",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写出两个数。",
+      "answer": [
+        0.9735458557716262,
+        -0.083953080486421
+      ],
+      "hint": "`tx(21)` 是 0，`tx(22)` 是多少？$\\sin r/r$ 在 $r=0.4$ 和 $r=8\\sqrt 2$ 处的值，各用计算器验证一遍。"
+    },
+    "verify": "tx = ty = linspace (-8, 8, 41); [X, Y] = meshgrid (tx, ty); R = sqrt (X.^2 + Y.^2) + eps; Z = sin (R) ./ R; result = [Z(21,22) Z(1,1)];",
+    "sol": "`tx(21) = 0`，`tx(22) = 0.4`。`Z(21,22)` 对应点 $(0.4, 0)$，$r=0.4$，$\\sin 0.4/0.4\\approx 0.9735$。`Z(1,1)` 对应角点 $(-8,-8)$，$r=8\\sqrt2\\approx 11.31$，$\\sin r/r\\approx -0.0840$。\n\n中心 $r=0$ 时 $\\sin r/r$ 是 $0/0$；加上 `eps` 后，`Z(21,21)` 恰好是 1，避免了 `NaN`。\n\n```octave\n>> Z(21,21)\nans = 1\n>> Z(21,22)\nans = 0.9735\n>> Z(1,1)\nans = -0.083953\n```\n\n`mesh (tx, ty, Z)` 画出的是中心高高隆起、向外一圈圈起伏、幅度逐渐减小的「墨西哥草帽」曲面；`contour` 则是一圈圈同心圆。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "plot · mesh · sombrero 例子",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex5",
+    "stem": "拟合曲线可以和数据点画在同一张图里。先预测，再运行：\n\n```octave\nx = [0 1 2 3];\ny = [1 3 4 8];\np = polyfit (x, y, 1)\npolyval (p, 4)\n```\n\n`p` 是一次拟合 $y\\approx p_1 x+p_2$ 的系数。请写出 `p` 的两个系数，以及拟合直线在 $x=4$ 处的值。",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写出三个数。",
+      "answer": [
+        2.2,
+        0.7,
+        9.5
+      ],
+      "hint": "最小二乘拟合直线通过点 $(\\bar x,\\bar y)$。先算均值再求斜率，或用法方程。"
+    },
+    "verify": "x = [0 1 2 3]; y = [1 3 4 8]; p = polyfit (x, y, 1); result = [p polyval(p, 4)];",
+    "sol": "$\\bar x=1.5$，$\\bar y=4$，斜率 $p_1=\\sum(x-\\bar x)(y-\\bar y)/\\sum(x-\\bar x)^2=11/5=2.2$，截距 $p_2=4-2.2\\times1.5=0.7$。在 $x=4$ 处 $2.2\\times4+0.7=9.5$。\n\n```octave\n>> p = polyfit (x, y, 1)\np =\n\n   2.2000   0.7000\n\n>> polyval (p, 4)\nans = 9.5000\n```\n\n接着运行 `plot (x, y, 'o', 0:0.1:4, polyval (p, 0:0.1:4), '-')` 应看到：4 个圆圈散点，以及一条从左下向右上、斜率略大于 2 的直线穿过它们，点分布在线的两侧。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "plot · plot 与 polyfit",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex6",
+    "stem": "`mesh (x, y, z)` 和 `contour (x, y, z)` 要求 `z` 的形状与 `x`、`y` 配套。设：\n\n```octave\nx = linspace (-2, 2, 5);   % 5 个点\ny = linspace (-1, 1, 3);   % 3 个点\n[X, Y] = meshgrid (x, y);\nsize (X)\n```\n\n要在这个网格上用 `Z = f (X, Y)` 得到可以传给 `mesh (x, y, Z)` 的 `Z`，`Z` 的大小应该是哪一个？",
+    "check": {
+      "kind": "choice",
+      "options": [
+        {
+          "text": "$5\\times 3$：行数对应 `x`，列数对应 `y`。",
+          "ok": false,
+          "why": "这是最常见的方向错误。`meshgrid` 的输出是 $3\\times 5$，`Z(i,j)` 对应点 $(x_j, y_i)$。"
+        },
+        {
+          "text": "$1\\times 15$：把所有格点排成一行。",
+          "ok": false,
+          "why": "`Z` 要保留二维的行列结构，每个格点各占一个位置，而不是排成一行。"
+        },
+        {
+          "text": "$3\\times 5$：行数是 `numel (y)`，列数是 `numel (x)`。",
+          "ok": true,
+          "why": "`size (X)` 的输出为 `3 5`；`Z = f (X, Y)` 逐元素作用，形状与 `X`、`Y` 相同。"
+        },
+        {
+          "text": "$3\\times 3$：只要 `x` 与 `y` 取同样多的点。",
+          "ok": false,
+          "why": "`x` 与 `y` 的点数可以不同，`Z` 必须是 $\\text{numel}(y)\\times\\text{numel}(x)$。"
+        }
+      ]
+    },
+    "sol": "`meshgrid (x, y)` 返回的矩阵行方向变化的是 $y$、列方向变化的是 $x$，所以大小为 `numel (y)` 乘 `numel (x)`，这里是 $3\\times 5$。用向量化表达式（`.*`、`.^`）算出的 `Z` 自动沿用这个形状。\n\n```octave\n>> size (X)\nans =\n\n   3   5\n\n>> Z = X - Y.^2;\n>> size (Z)\nans =\n\n   3   5\n```\n\n`mesh (x, y, Z)` 画出 3 条（对应 `y`）沿 `x` 方向的折线与 5 条沿 `y` 方向的折线交织成的网。",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "plot · mesh、contour 输入形状",
+        "note": "自编，答案由 Octave 8.4 复算"
+      }
+    ]
+  }
+]

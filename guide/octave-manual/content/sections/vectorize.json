@@ -1,0 +1,1147 @@
+{
+ "id": "vectorize",
+ "title_en": "Vectorization and Faster Code Execution",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "Vectorization is a programming technique that uses vector operations instead of element-by-element loop-based operations. Besides frequently producing more succinct Octave code, vectorization also allows for better optimization in the subsequent implementation. The optimizations may occur either in Octave's own Fortran, C, or C++ internal implementation, or even at a lower level depending on the compiler and external numerical libraries used to build Octave. The ultimate goal is to make use of your hardware's vector instructions if possible or to perform other optimizations in software.",
+    "sha": "88df74633e97",
+    "zh": "向量化（vectorization）是一种编程技巧：用向量运算代替逐个元素的循环运算。向量化除了常常让 Octave 代码更简洁，还能让后续的底层实现获得更好的优化。这些优化可能发生在 Octave 自身的 Fortran、C 或 C++ 内部实现中，甚至更底层，取决于编译器和构建 Octave 时所用的外部数值库。最终目标是尽可能利用你硬件的向量指令，或在软件层面做其他优化。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Vectorization is not a concept unique to Octave, but it is particularly important because Octave is a matrix-oriented language. Vectorized Octave code will see a dramatic speed up (10X--100X) in most cases.",
+    "sha": "f62db53bd559",
+    "zh": "向量化并非 Octave 独有的概念，但它在 Octave 里格外重要，因为 Octave 是一门面向矩阵的语言。在大多数情况下，向量化的 Octave 代码会有显著的加速（10 到 100 倍）。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This chapter discusses vectorization and other techniques for writing faster code.",
+    "sha": "06310114a27e",
+    "zh": "本章讨论向量化以及其他编写更快代码的技巧。"
+   }
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Basic Vectorization",
+    "sha": "f8ff45cb2792",
+    "zh": "基本的向量化"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To a very good first approximation, the goal in vectorization is to write code that avoids loops and uses whole-array operations. As a trivial example, consider",
+    "sha": "5b8631c25f1c",
+    "zh": "作为很好的一阶近似，向量化的目标就是写出避免循环、使用整个数组运算的代码。来看一个最简单的例子："
+   }
+  },
+  {
+   "k": "code",
+   "text": "for i = 1:n\n  for j = 1:m\n    c(i,j) = a(i,j) + b(i,j);\n  endfor\nendfor"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "compared to the much simpler",
+    "sha": "9fdeb003b862",
+    "zh": "与下面简单得多的写法相比："
+   }
+  },
+  {
+   "k": "code",
+   "text": "c = a + b;"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This isn't merely easier to write; it is also internally much easier to optimize. Octave delegates this operation to an underlying implementation which, among other optimizations, may use special vector hardware instructions or could conceivably even perform the additions in parallel. In general, if the code is vectorized, the underlying implementation has more freedom about the assumptions it can make in order to achieve faster execution.",
+    "sha": "9e214fddf628",
+    "zh": "后一种写法不仅更容易写，内部也更容易优化。Octave 把这个运算交给底层实现去做，底层实现除了其他优化之外，可能会使用特殊的向量硬件指令，甚至可以设想以并行方式做加法。一般来说，代码越是向量化的，底层实现在做假设时就越自由，从而能更快地执行。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This is especially important for loops with \"cheap\" bodies. Often it suffices to vectorize just the innermost loop to get acceptable performance. A general rule of thumb is that the \"order\" of the vectorized body should be greater or equal to the \"order\" of the enclosing loop.",
+    "sha": "7760e11dfd39",
+    "zh": "这对循环体“很轻”的循环尤为重要。通常只需把最内层循环向量化，就能得到可以接受的性能。一条一般的经验法则是：向量化后的循环体的“阶”应当大于或等于外层循环的“阶”。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "As a less trivial example, instead of",
+    "sha": "3b32bbe19e2d",
+    "zh": "再看一个不那么平凡的例子，与其写"
+   }
+  },
+  {
+   "k": "code",
+   "text": "for i = 1:n-1\n  a(i) = b(i+1) - b(i);\nendfor"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "write",
+    "sha": "e1d0c6c1c29e",
+    "zh": "不如写"
+   }
+  },
+  {
+   "k": "code",
+   "text": "a = b(2:n) - b(1:n-1);"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This shows an important general concept about using arrays for indexing instead of looping over an index variable. See Index Expressions. Also use boolean indexing generously. If a condition needs to be tested, this condition can also be written as a boolean index. For instance, instead of",
+    "sha": "d4886680c4eb",
+    "zh": "这体现了一个重要的一般性概念：用数组做下标，而不是对下标变量做循环。参见索引表达式（Index Expressions）。同时要大量使用布尔索引。如果需要检验某个条件，这个条件也可以写成布尔索引。例如，与其写"
+   }
+  },
+  {
+   "k": "code",
+   "text": "for i = 1:n\n  if (a(i) > 5)\n    a(i) -= 20\n  endif\nendfor"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "write",
+    "sha": "e1d0c6c1c29e",
+    "zh": "不如写"
+   }
+  },
+  {
+   "k": "code",
+   "text": "a(a>5) -= 20;"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "which exploits the fact that `a > 5` produces a boolean index.",
+    "sha": "f0b2cfc0d814",
+    "zh": "不如利用 `a > 5` 会产生一个布尔索引这一事实。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Use elementwise vector operators whenever possible to avoid looping (operators like `.*` and `.^`). See Arithmetic Ops.",
+    "sha": "5fd43f611b29",
+    "zh": "尽可能使用逐元素的向量运算符（如 `.*` 和 `.^` 这样的运算符）来避免循环。参见算术运算符（Arithmetic Ops）。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Also exploit broadcasting in these elementwise operators both to avoid looping and unnecessary intermediate memory allocations. See Broadcasting.",
+    "sha": "50099606a855",
+    "zh": "还要在这些逐元素运算符中利用广播，既避免循环，又避免不必要的中间内存分配。参见广播（Broadcasting）。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Use built-in and library functions if possible. Built-in and compiled functions are very fast. Even with an m-file library function, chances are good that it is already optimized, or will be optimized more in a future release.",
+    "sha": "67b713d028d9",
+    "zh": "尽可能使用内置函数和库函数。内置函数和已编译的函数非常快。即使是 m 文件形式的库函数，它也很可能已经优化过，或者在未来的版本中会进一步优化。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For instance, even better than",
+    "sha": "ccd302837d94",
+    "zh": "例如，比下面这种写法更好的是"
+   }
+  },
+  {
+   "k": "code",
+   "text": "a = b(2:n) - b(1:n-1);"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "is",
+    "sha": "b47f363e2b43",
+    "zh": "是"
+   }
+  },
+  {
+   "k": "code",
+   "text": "a = diff (b);"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Most Octave functions are written with vector and array arguments in mind. If you find yourself writing a loop with a very simple operation, chances are that such a function already exists. The following functions occur frequently in vectorized code:",
+    "sha": "dd6707e5647b",
+    "zh": "大多数 Octave 函数在编写时就考虑了向量和数组参数。如果你发现自己在写一个操作非常简单的循环，很可能已经有现成的函数可用。下列函数在向量化代码中经常出现："
+   }
+  },
+  {
+   "k": "list",
+   "ordered": false,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Index manipulation",
+       "sha": "63ac1b4d37f8",
+       "zh": "下标操作"
+      }
+     },
+     {
+      "k": "list",
+      "ordered": false,
+      "items": [
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "find",
+          "sha": "ded8dae5786f",
+          "zh": "find"
+         }
+        }
+       ],
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "sub2ind",
+          "sha": "0dc0dac1381b",
+          "zh": "sub2ind"
+         }
+        }
+       ],
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "ind2sub",
+          "sha": "1a4edddaccdb",
+          "zh": "ind2sub"
+         }
+        }
+       ],
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "sort",
+          "sha": "98c4b8f6e2d7",
+          "zh": "sort"
+         }
+        }
+       ],
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "unique",
+          "sha": "58037c0078d5",
+          "zh": "unique"
+         }
+        }
+       ],
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "lookup",
+          "sha": "11d843b5c520",
+          "zh": "lookup"
+         }
+        }
+       ],
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "ifelse / merge",
+          "sha": "c4874b0320d5",
+          "zh": "ifelse / merge"
+         }
+        }
+       ]
+      ]
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Repetition",
+       "sha": "711ba373a79d",
+       "zh": "重复"
+      }
+     },
+     {
+      "k": "list",
+      "ordered": false,
+      "items": [
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "repmat",
+          "sha": "ff2c4936cf2c",
+          "zh": "repmat"
+         }
+        }
+       ],
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "repelems",
+          "sha": "4e3072dc7132",
+          "zh": "repelems"
+         }
+        }
+       ]
+      ]
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Vectorized arithmetic",
+       "sha": "cfc0de63a87d",
+       "zh": "向量化的算术运算"
+      }
+     },
+     {
+      "k": "list",
+      "ordered": false,
+      "items": [
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "sum",
+          "sha": "e9dff3557ded",
+          "zh": "sum"
+         }
+        }
+       ],
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "prod",
+          "sha": "f6c433acac2a",
+          "zh": "prod"
+         }
+        }
+       ],
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "cumsum",
+          "sha": "efd2992a3006",
+          "zh": "cumsum"
+         }
+        }
+       ],
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "cumprod",
+          "sha": "96909e59b8df",
+          "zh": "cumprod"
+         }
+        }
+       ],
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "sumsq",
+          "sha": "ab820d46027b",
+          "zh": "sumsq"
+         }
+        }
+       ],
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "diff",
+          "sha": "75a0ee1ba911",
+          "zh": "diff"
+         }
+        }
+       ],
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "dot",
+          "sha": "348a3c4a81ea",
+          "zh": "dot"
+         }
+        }
+       ],
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "cummax",
+          "sha": "f928c6281d6b",
+          "zh": "cummax"
+         }
+        }
+       ],
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "cummin",
+          "sha": "a30a06a7f0ff",
+          "zh": "cummin"
+         }
+        }
+       ]
+      ]
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Shape of higher dimensional arrays",
+       "sha": "b593e4636c61",
+       "zh": "高维数组的形状"
+      }
+     },
+     {
+      "k": "list",
+      "ordered": false,
+      "items": [
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "reshape",
+          "sha": "f2e7e0502243",
+          "zh": "reshape"
+         }
+        }
+       ],
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "resize",
+          "sha": "73db013b32e4",
+          "zh": "resize"
+         }
+        }
+       ],
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "permute",
+          "sha": "f4faea3136b2",
+          "zh": "permute"
+         }
+        }
+       ],
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "squeeze",
+          "sha": "a1259b421aa7",
+          "zh": "squeeze"
+         }
+        }
+       ],
+       [
+        {
+         "k": "p",
+         "t": {
+          "en": "deal",
+          "sha": "60f59e2b541c",
+          "zh": "deal"
+         }
+        }
+       ]
+      ]
+     }
+    ]
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Broadcasting",
+    "sha": "ba4592293667",
+    "zh": "广播"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Broadcasting refers to how Octave binary operators and functions behave when their matrix or array operands or arguments differ in size. Since version 3.6.0, Octave now automatically broadcasts vectors, matrices, and arrays when using elementwise binary operators and functions. Broadly speaking, smaller arrays are “broadcast” across the larger one, until they have a compatible shape. The rule is that corresponding array dimensions must either",
+    "sha": "f2fafb00f0c9",
+    "zh": "广播（broadcasting）指的是：当 Octave 的二元运算符和函数的矩阵或数组操作数（参数）大小不同时，它们的行为方式。从 3.6.0 版起，Octave 在使用逐元素二元运算符和函数时，会自动对向量、矩阵和数组做广播。大体上说，较小的数组会被“广播”到较大的数组上，直到两者形状相容。规则是：对应的数组维度必须"
+   }
+  },
+  {
+   "k": "list",
+   "ordered": true,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "be equal, or",
+       "sha": "916f39f1af52",
+       "zh": "相等，或者"
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "one of them must be 1.",
+       "sha": "18908de7182c",
+       "zh": "其中一个必须为 1。"
+      }
+     }
+    ]
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In case all dimensions are equal, no broadcasting occurs and ordinary element-by-element arithmetic takes place. For arrays of higher dimensions, if the number of dimensions isn't the same, then missing trailing dimensions are treated as 1. When one of the dimensions is 1, the array with that singleton dimension gets copied along that dimension until it matches the dimension of the other array. For example, consider",
+    "sha": "a9cdafca6e24",
+    "zh": "如果所有维度都相等，就不发生广播，而是进行普通的逐元素算术运算。对于更高维的数组，如果维数不同，则缺少的末尾维度按 1 处理。当某个维度为 1 时，具有这个单一维度（singleton dimension）的数组会沿该维度被复制，直到与另一个数组的维度一致。例如，考虑"
+   }
+  },
+  {
+   "k": "code",
+   "text": "x = [1 2 3;\n     4 5 6;\n     7 8 9];\n\ny = [10 20 30];\n\nx + y"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Without broadcasting, `x + y` would be an error because the dimensions do not agree. However, with broadcasting it is as if the following operation were performed:",
+    "sha": "667f6ec74be1",
+    "zh": "如果没有广播，`x + y` 会出错，因为维度不一致。然而有了广播，就好像执行了下面的运算："
+   }
+  },
+  {
+   "k": "code",
+   "text": "x = [1 2 3\n     4 5 6\n     7 8 9];\n\ny = [10 20 30\n     10 20 30\n     10 20 30];\n\nx + y\n⇒    11   22   33\n      14   25   36\n      17   28   39"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "That is, the smaller array of size `[1 3]` gets copied along the singleton dimension (the number of rows) until it is `[3 3]`. No actual copying takes place, however. The internal implementation reuses elements along the necessary dimension in order to achieve the desired effect without copying in memory.",
+    "sha": "28533bf3d05a",
+    "zh": "也就是说，大小为 `[1 3]` 的较小数组沿单一维度（行数）被复制，直到变成 `[3 3]`。不过，实际上并没有发生复制。内部实现沿所需的维度重复使用已有的元素，以达到想要的效果，而不在内存中复制。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Both arrays can be broadcast across each other, for example, all pairwise differences of the elements of a vector with itself:",
+    "sha": "e6a834189182",
+    "zh": "两个数组可以互相广播，例如，求一个向量中各元素与它自身所有元素两两之间的差："
+   }
+  },
+  {
+   "k": "code",
+   "text": "y - y'\n⇒    0   10   20\n    -10    0   10\n    -20  -10    0"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Here the vectors of size `[1 3]` and `[3 1]` both get broadcast into matrices of size `[3 3]` before ordinary matrix subtraction takes place.",
+    "sha": "eacb6cf9634a",
+    "zh": "这里大小为 `[1 3]` 和 `[3 1]` 的两个向量都被广播成大小为 `[3 3]` 的矩阵，然后才进行普通的矩阵减法。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A special case of broadcasting that may be familiar is when all dimensions of the array being broadcast are 1, i.e., the array is a scalar. Thus for example, operations like `x - 42` and `max (x, 2)` are basic examples of broadcasting.",
+    "sha": "3333b4074310",
+    "zh": "广播有一种你可能已经熟悉的特殊情形：被广播数组的所有维度都是 1，即该数组是标量。因此，像 `x - 42` 和 `max (x, 2)` 这样的运算，就是广播最基本的例子。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For a higher-dimensional example, suppose `img` is an RGB image of size `[m n 3]` and we wish to multiply each color by a different scalar. The following code accomplishes this with broadcasting,",
+    "sha": "5f7f4f593057",
+    "zh": "再看一个高维的例子。假设 `img` 是一幅大小为 `[m n 3]` 的 RGB 图像，我们想把每种颜色分别乘以不同的标量。下面的代码借助广播做到了这一点，"
+   }
+  },
+  {
+   "k": "code",
+   "text": "img .*= permute ([0.8, 0.9, 1.2], [1, 3, 2]);"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Note the usage of permute to match the dimensions of the `[0.8, 0.9, 1.2]` vector with `img`.",
+    "sha": "054cfed24aa7",
+    "zh": "注意这里用了 permute，使向量 `[0.8, 0.9, 1.2]` 的维度与 `img` 匹配。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For functions that are not written with broadcasting semantics, `bsxfun` can be useful for coercing them to broadcast.",
+    "sha": "e0a28089e40a",
+    "zh": "对于没有按广播语义编写的函数，`bsxfun` 可以用来让它们按广播方式工作。"
+   }
+  },
+  {
+   "k": "def",
+   "name": "bsxfun",
+   "sigs": [
+    "C = bsxfun (f, A, B)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Apply a binary function *f* element-by-element to two array arguments *A* and *B*, expanding singleton dimensions in either input argument as necessary.",
+      "sha": "688d59a35a5e",
+      "zh": "对两个数组参数 *A* 和 *B* 逐元素地应用二元函数 *f*，必要时在任一输入参数中扩展单一维度。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*f* is a function handle, inline function, or string containing the name of the function to evaluate. The function *f* must be capable of accepting two column-vector arguments of equal length, or one column vector argument and a scalar.",
+      "sha": "886044692fcc",
+      "zh": "*f* 是函数句柄、内联函数，或包含待求值函数名的字符串。函数 *f* 必须能够接受两个等长的列向量参数，或者一个列向量参数加一个标量。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The dimensions of *A* and *B* must be equal or singleton. The singleton dimensions of the arrays will be expanded to the same dimensionality as the other array. See also: `arrayfun`, `cellfun`.",
+      "sha": "90cc257e5d07",
+      "zh": "*A* 和 *B* 的维度必须相等或为单一维度。数组的单一维度会被扩展到与另一个数组相同的维数。另见：`arrayfun`、`cellfun`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Broadcasting is only applied if either of the two broadcasting conditions hold. As usual, however, broadcasting does not apply when two dimensions differ and neither is 1:",
+    "sha": "2daf09a1afcb",
+    "zh": "只有满足两个广播条件之一时才会应用广播。和往常一样，当两个维度不同且都不为 1 时，不会广播："
+   }
+  },
+  {
+   "k": "code",
+   "text": "x = [1 2 3\n     4 5 6];\ny = [10 20\n     30 40];\nx + y"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This will produce an error about nonconformant arguments.",
+    "sha": "a2f1b2df09a1",
+    "zh": "这会产生一个关于参数不相容（nonconformant arguments）的错误。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Besides common arithmetic operations, several functions of two arguments also broadcast. The full list of functions and operators that broadcast is",
+    "sha": "92c4bb4aa696",
+    "zh": "除了常见的算术运算，一些两个参数的函数也会广播。会广播的函数和运算符的完整列表是"
+   }
+  },
+  {
+   "k": "code",
+   "text": "      plus      +\n      minus     -\n      times     .*\n      rdivide   ./\n      ldivide   .\\\n      power     .^\n      lt        <\n      le        <=\n      eq        ==\n      gt        >\n      ge        >=\n      ne        !=  ~=\n      and       &\n      or        |\n      atan2\n      hypot\n      max\n      min\n      mod\n      rem\n      xor\n\n      +=  -=  .*=  ./=  .\\=  .^=  &=  |="
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Here is a real example of the power of broadcasting. The Floyd-Warshall algorithm is used to calculate the shortest path lengths between every pair of vertices in a graph. A naive implementation for a graph adjacency matrix of order *n* might look like this:",
+    "sha": "8e651cc5a4e7",
+    "zh": "下面是一个展示广播威力的真实例子：Floyd-Warshall 算法用来计算图中每一对顶点之间的最短路径长度。对于 *n* 阶图的邻接矩阵，一种朴素的实现可能是这样的："
+   }
+  },
+  {
+   "k": "code",
+   "text": "for k = 1:n\n  for i = 1:n\n    for j = 1:n\n      dist(i,j) = min (dist(i,j), dist(i,k) + dist(k,j));\n    endfor\n  endfor\nendfor"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Upon vectorizing the innermost loop, it might look like this:",
+    "sha": "3c5c08dd9a7f",
+    "zh": "把最内层循环向量化之后，它可能是这样的："
+   }
+  },
+  {
+   "k": "code",
+   "text": "for k = 1:n\n  for i = 1:n\n    dist(i,:) = min (dist(i,:), dist(i,k) + dist(k,:));\n  endfor\nendfor"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Using broadcasting in both directions, it looks like this:",
+    "sha": "1b1440a8e43f",
+    "zh": "在两个方向上都使用广播，它是这样的："
+   }
+  },
+  {
+   "k": "code",
+   "text": "for k = 1:n\n  dist = min (dist, dist(:,k) + dist(k,:));\nendfor"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The relative time performance of the three techniques for a given graph with 100 vertices is 7.3 seconds for the naive code, 87 milliseconds for the singly vectorized code, and 1.3 milliseconds for the fully broadcast code. For a graph with 1000 vertices, vectorization takes 11.7 seconds while broadcasting takes only 1.15 seconds. Therefore in general it is worth writing code with broadcasting semantics for performance.",
+    "sha": "152f403fab95",
+    "zh": "对一个有 100 个顶点的图，这三种技术的相对耗时是：朴素代码 7.3 秒，单层向量化的代码 87 毫秒，完全广播的代码 1.3 毫秒。对一个有 1000 个顶点的图，向量化需要 11.7 秒，而广播只需 1.15 秒。因此一般来说，为了性能，值得按广播语义来写代码。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "However, beware of resorting to broadcasting if a simpler operation will suffice. For matrices *a* and *b*, consider the following:",
+    "sha": "d0359021786b",
+    "zh": "不过，如果更简单的运算就够用，就要小心别滥用广播。对于矩阵 *a* 和 *b*，考虑下面的写法："
+   }
+  },
+  {
+   "k": "code",
+   "text": "c = sum (permute (a, [1, 3, 2]) .* permute (b, [3, 2, 1]), 3);"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This operation broadcasts the two matrices with permuted dimensions across each other during elementwise multiplication in order to obtain a larger 3-D array, and this array is then summed along the third dimension. A moment of thought will prove that this operation is simply the much faster ordinary matrix multiplication, `c = a*b;`.",
+    "sha": "0514e3e2207e",
+    "zh": "这个运算在逐元素相乘时，把两个维度经过置换的矩阵互相广播，得到一个更大的三维数组，再沿第三维求和。稍加思考就会发现，这个运算其实就是快得多的普通矩阵乘法 `c = a*b;`。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A note on terminology: “broadcasting” is the term popularized by the Numpy numerical environment in the Python programming language. In other programming languages and environments, broadcasting may also be known as *binary singleton expansion* (BSX, in MATLAB, and the origin of the name of the `bsxfun` function), *recycling* (R programming language), *single-instruction multiple data* (SIMD), or *replication*.",
+    "sha": "0cb89f625eca",
+    "zh": "关于术语的说明：“广播”（broadcasting）是 Python 编程语言的 Numpy 数值环境推广开来的叫法。在其他编程语言和环境中，广播也可能被称为*二元单一维度扩展*（binary singleton expansion，简称 BSX，见于 MATLAB，`bsxfun` 函数的名字即源于此）、*循环复用*（recycling，R 语言）、*单指令多数据*（single-instruction multiple data，SIMD）或*复制*（replication）。"
+   }
+  },
+  {
+   "k": "heading",
+   "level": 3,
+   "t": {
+    "en": "Broadcasting and Legacy Code",
+    "sha": "925edb97a8e4",
+    "zh": "广播与遗留代码"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The new broadcasting semantics almost never affect code that worked in previous versions of Octave. Consequently, all code inherited from MATLAB that worked in previous versions of Octave should still work without change in Octave. The only exception is code such as",
+    "sha": "ca5c878d18b1",
+    "zh": "新的广播语义几乎不会影响在旧版本 Octave 中能正常运行的代码。因此，所有从 MATLAB 继承来的、在旧版本 Octave 中能运行的代码，在 Octave 中应当仍然无需修改即可运行。唯一的例外是类似这样的代码"
+   }
+  },
+  {
+   "k": "code",
+   "text": "try\n  c = a.*b;\ncatch\n  c = a.*a;\nend_try_catch"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "that may have relied on matrices of different size producing an error. Because such operation is now valid Octave syntax, this will no longer produce an error. Instead, the following code should be used:",
+    "sha": "774b90ad94f3",
+    "zh": "它可能依赖于“大小不同的矩阵会产生错误”这一行为。由于这样的运算现在是合法的 Octave 语法，它将不再产生错误。应改用下面的代码："
+   }
+  },
+  {
+   "k": "code",
+   "text": "if (isequal (size (a), size (b)))\n  c = a .* b;\nelse\n  c = a .* a;\nendif"
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Function Application",
+    "sha": "5f7a4212127d",
+    "zh": "函数的应用"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "As a general rule, functions should already be written with matrix arguments in mind and should consider whole matrix operations in a vectorized manner. Sometimes, writing functions in this way appears difficult or impossible for various reasons. For those situations, Octave provides facilities for applying a function to each element of an array, cell, or struct.",
+    "sha": "fc3435493aef",
+    "zh": "一般来说，函数在编写时就应当考虑矩阵参数，并以向量化的方式处理整个矩阵的运算。有时，出于各种原因，以这种方式编写函数显得困难甚至不可能。对于这些情形，Octave 提供了把函数应用到数组、元胞数组（cell）或结构体（struct）的每个元素上的功能。"
+   }
+  },
+  {
+   "k": "def",
+   "name": "arrayfun",
+   "sigs": [
+    "B = arrayfun (fcn, A)",
+    "B = arrayfun (fcn, A1, A2, …)",
+    "[B1, B2, …] = arrayfun (fcn, A, …)",
+    "B = arrayfun (…, \"UniformOutput\", val)",
+    "B = arrayfun (…, \"ErrorHandler\", errfcn)"
+   ],
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Execute a function on each element of an array.",
+      "sha": "61e49e3828e7",
+      "zh": "对数组的每个元素执行一个函数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is useful for functions that do not accept array arguments. If the function does accept array arguments it is *better* to call the function directly.",
+      "sha": "498afa063fb4",
+      "zh": "这对不接受数组参数的函数很有用。如果函数本身接受数组参数，则*最好*直接调用该函数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The first input argument *fcn* can be a string, a function handle, an inline function, or an anonymous function. The input argument *A* can be a logical array, a numeric array, a string array, a structure array, or a cell array. `arrayfun` passes all elements of *A* individually to the function *fcn* and collects the results. The equivalent pseudo-code is",
+      "sha": "8edce97877fe",
+      "zh": "第一个输入参数 *fcn* 可以是字符串、函数句柄、内联函数或匿名函数。输入参数 *A* 可以是逻辑数组、数值数组、字符串数组、结构体数组或元胞数组。`arrayfun` 把 *A* 的所有元素逐个传给函数 *fcn*，并收集结果。等价的伪代码是"
+     }
+    },
+    {
+     "k": "code",
+     "text": "cls = class (fcn (A(1));\nB = zeros (size (A), cls);\nfor i = 1:numel (A)\n  B(i) = fcn (A(i))\nendfor"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The named function can also take more than two input arguments, with the input arguments given as third input argument *A2*, fourth input argument *A2*, … If given more than one array input argument then all input arguments must have the same sizes. For example:",
+      "sha": "2337b4c757a2",
+      "zh": "指定的函数也可以接受两个以上的输入参数，这些输入参数依次作为第三个输入参数 *A2*、第四个输入参数 *A2*……如果给出了多个数组输入参数，则所有输入参数的大小必须相同。例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "arrayfun (@atan2, [1, 0], [0, 1])\n     ⇒ [ 1.57080   0.00000 ]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the parameter *val* after a further string input argument `\"UniformOutput\"` is set `true` (the default), then the named function *fcn* must return a single element which then will be concatenated into the return value and is of type matrix. Otherwise, if that parameter is set to `false`, then the outputs are concatenated in a cell array. For example:",
+      "sha": "d3b0693e44f2",
+      "zh": "如果在后面再加一个字符串输入参数 `\"UniformOutput\"`，其后的参数 *val* 设为 `true`（默认值），则指定的函数 *fcn* 必须返回单个元素，这些元素会被拼接成返回值，类型是矩阵。否则，如果该参数设为 `false`，则输出会被拼接在一个元胞数组中。例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "arrayfun (@(x,y) x:y, \"abc\", \"def\", \"UniformOutput\", false)\n⇒\n   {\n     [1,1] = abcd\n     [1,2] = bcde\n     [1,3] = cdef\n   }"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If more than one output arguments are given then the named function must return the number of return values that also are expected, for example:",
+      "sha": "03f7734bb353",
+      "zh": "如果给出了多个输出参数，则指定的函数必须返回同样数量的返回值，例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "[A, B, C] = arrayfun (@find, [10; 0], \"UniformOutput\", false)\n⇒\nA =\n{\n   [1,1] =  1\n   [2,1] = [](0x0)\n}\nB =\n{\n   [1,1] =  1\n   [2,1] = [](0x0)\n}\nC =\n{\n   [1,1] =  10\n   [2,1] = [](0x0)\n}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If the parameter *errfcn* after a further string input argument `\"ErrorHandler\"` is another string, a function handle, an inline function, or an anonymous function, then *errfcn* defines a function to call in the case that *fcn* generates an error. The definition of the function must be of the form",
+      "sha": "e59f6bcb7b8c",
+      "zh": "如果在后面再加一个字符串输入参数 `\"ErrorHandler\"`，其后的参数 *errfcn* 是另一个字符串、函数句柄、内联函数或匿名函数，则 *errfcn* 定义了一个函数，在 *fcn* 产生错误时调用。该函数的定义必须具有如下形式"
+     }
+    },
+    {
+     "k": "code",
+     "text": "function […] = errfcn (s, …)"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where there is an additional input argument to *errfcn* relative to *fcn*, given by *s*. This is a structure with the elements `\"identifier\"`, `\"message\"`, and `\"index\"` giving, respectively, the error identifier, the error message, and the index of the array elements that caused the error. The size of the output argument of *errfcn* must have the same size as the output argument of *fcn*, otherwise a real error is thrown. For example:",
+      "sha": "d48bf4ac7735",
+      "zh": "其中，相对于 *fcn*，*errfcn* 多了一个输入参数 *s*。它是一个结构体，包含元素 `\"identifier\"`、`\"message\"` 和 `\"index\"`，分别给出错误标识符、错误信息，以及引发错误的数组元素的下标。*errfcn* 的输出参数的大小必须与 *fcn* 的输出参数相同，否则会抛出真正的错误。例如："
+     }
+    },
+    {
+     "k": "code",
+     "text": "function y = ferr (s, x), y = \"MyString\"; endfunction\narrayfun (@str2num, [1234],\n          \"UniformOutput\", false, \"ErrorHandler\", @ferr)\n⇒\n   {\n     [1,1] = MyString\n   }"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "See also: `spfun`, `cellfun`, `structfun`.",
+      "sha": "25b1a136340c",
+      "zh": "另见：`spfun`、`cellfun`、`structfun`。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Consistent with earlier advice, seek to use Octave built-in functions whenever possible for the best performance. This advice applies especially to the four functions above. For example, when adding two arrays together element-by-element one could use a handle to the built-in addition function `@plus` or define an anonymous function `@(x,y) x + y`. But, the anonymous function is 60% slower than the first method. See Operator Overloading, for a list of basic functions which might be used in place of anonymous ones.",
+    "sha": "7c70647d4014",
+    "zh": "与前面的建议一致，为获得最佳性能，应尽可能使用 Octave 的内置函数。这一建议对上面四个函数尤其适用。例如，对两个数组逐元素相加时，可以使用内置加法函数的句柄 `@plus`，也可以定义匿名函数 `@(x,y) x + y`。但匿名函数比第一种方法慢 60%。可以用来代替匿名函数的基本函数列表，参见运算符重载（Operator Overloading）。"
+   }
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Miscellaneous Techniques",
+    "sha": "d481b51bec2b",
+    "zh": "其他技巧"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Here are some other ways of improving the execution speed of Octave programs.",
+    "sha": "3d4579d7fc48",
+    "zh": "下面是提高 Octave 程序执行速度的其他一些方法。"
+   }
+  },
+  {
+   "k": "list",
+   "ordered": false,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Avoid computing costly intermediate results multiple times. Octave currently does not eliminate common subexpressions. Also, certain internal computation results are cached for variables. For instance, if a matrix variable is used multiple times as an index, checking the indices (and internal conversion to integers) is only done once.",
+       "sha": "ff8112ba81d3",
+       "zh": "避免多次计算代价高昂的中间结果。Octave 目前不会消除公共子表达式。另外，变量的某些内部计算结果会被缓存。例如，如果一个矩阵变量被多次用作下标，检查下标（以及内部转换为整数）只做一次。"
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Be aware of lazy copies (copy-on-write). When a copy of an object is created, the data is not immediately copied, but rather shared. The actual copying is postponed until the copied data needs to be modified. For example:",
+       "sha": "7fbdf661d49a",
+       "zh": "注意惰性复制（lazy copy，即写时复制，copy-on-write）。创建对象的副本时，数据并不会立即被复制，而是共享。真正的复制推迟到被复制的数据需要修改时才进行。例如："
+      }
+     },
+     {
+      "k": "code",
+      "text": "a = zeros (1000); # create a 1000x1000 matrix\nb = a; # no copying done here\nb(1) = 1; # copying done here"
+     },
+     {
+      "k": "p",
+      "t": {
+       "en": "Lazy copying applies to whole Octave objects such as matrices, cells, struct, and also individual cell or struct elements (not array elements).",
+       "sha": "ba3ec3351712",
+       "zh": "惰性复制适用于整个 Octave 对象，如矩阵、元胞数组、结构体，也适用于单个元胞或结构体元素（但不适用于数组元素）。"
+      }
+     },
+     {
+      "k": "p",
+      "t": {
+       "en": "Additionally, index expressions also use lazy copying when Octave can determine that the indexed portion is contiguous in memory. For example:",
+       "sha": "8d78940b21ee",
+       "zh": "此外，当 Octave 能确定被索引的部分在内存中连续时，索引表达式也使用惰性复制。例如："
+      }
+     },
+     {
+      "k": "code",
+      "text": "a = zeros (1000); # create a 1000x1000 matrix\nb = a(:,10:100);  # no copying done here\nb = a(10:100,:);  # copying done here"
+     },
+     {
+      "k": "p",
+      "t": {
+       "en": "This applies to arrays (matrices), cell arrays, and structs indexed using `()`. Index expressions generating comma-separated lists can also benefit from shallow copying in some cases. In particular, when *a* is a struct array, expressions like `{a.x}, {a(:,2).x}` will use lazy copying, so that data can be shared between a struct array and a cell array.",
+       "sha": "3b5dc91b63aa",
+       "zh": "这适用于用 `()` 索引的数组（矩阵）、元胞数组和结构体。产生逗号分隔列表的索引表达式在某些情况下也能受益于浅复制。特别是，当 *a* 是结构体数组时，像 `{a.x}, {a(:,2).x}` 这样的表达式会使用惰性复制，因此数据可以在结构体数组和元胞数组之间共享。"
+      }
+     },
+     {
+      "k": "p",
+      "t": {
+       "en": "Most indexing expressions do not live longer than their parent objects. In rare cases, however, a lazily copied slice outlasts its parent, in which case it becomes orphaned, still occupying unnecessarily more memory than needed. To provide a remedy working in most real cases, Octave checks for orphaned lazy slices at certain situations, when a value is stored into a \"permanent\" location, such as a named variable or cell or struct element, and possibly economizes them. For example:",
+       "sha": "96fdd53d40f7",
+       "zh": "大多数索引表达式的存活时间不会超过其父对象。但在少数情况下，惰性复制出来的切片会比它的父对象存活更久，此时它就成了孤儿，仍然占用着不必要的多余内存。为了在大多数实际情况下提供补救，Octave 会在某些时刻检查孤立的惰性切片：当一个值被存入“永久”位置（如具名变量或元胞、结构体元素）时，并可能对它们进行节省处理。例如："
+      }
+     },
+     {
+      "k": "code",
+      "text": "a = zeros (1000); # create a 1000x1000 matrix\nb = a(:,10:100);  # lazy slice\na = []; # the original \"a\" array is still allocated\nc{1} = b; # b is reallocated at this point"
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Avoid deep recursion. Function calls to m-file functions carry a relatively significant overhead, so rewriting a recursion as a loop often helps. Also, note that the maximum level of recursion is limited.",
+       "sha": "472cff45d0b0",
+       "zh": "避免深层递归。调用 m 文件函数有相当可观的开销，所以把递归改写成循环往往有帮助。另外要注意，递归的最大层数是有限制的。"
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Avoid resizing matrices unnecessarily. When building a single result matrix from a series of calculations, set the size of the result matrix first, then insert values into it. Write",
+       "sha": "0556ca1d7092",
+       "zh": "避免不必要地改变矩阵的大小。当用一系列计算构建单个结果矩阵时，应先设定好结果矩阵的大小，再往里面填值。写"
+      }
+     },
+     {
+      "k": "code",
+      "text": "result = zeros (big_n, big_m)\nfor i = over:and_over\n  ridx = …\n  cidx = …\n  result(ridx, cidx) = new_value ();\nendfor"
+     },
+     {
+      "k": "p",
+      "t": {
+       "en": "instead of",
+       "sha": "cb82821f5443",
+       "zh": "而不要写"
+      }
+     },
+     {
+      "k": "code",
+      "text": "result = [];\nfor i = ever:and_ever\n  result = [ result, new_value() ];\nendfor"
+     },
+     {
+      "k": "p",
+      "t": {
+       "en": "Sometimes the number of items can not be computed in advance, and stack-like operations are needed. When elements are being repeatedly inserted or removed from the end of an array, Octave detects it as stack usage and attempts to use a smarter memory management strategy by pre-allocating the array in bigger chunks. This strategy is also applied to cell and struct arrays.",
+       "sha": "f043516b55f3",
+       "zh": "有时项数无法事先算出，需要类似栈的操作。当元素被反复插入到数组末尾或从末尾移除时，Octave 会把这种情形识别为栈的用法，并尝试采用更聪明的内存管理策略：以较大的块为数组预先分配内存。这一策略同样适用于元胞数组和结构体数组。"
+      }
+     },
+     {
+      "k": "code",
+      "text": "a = [];\nwhile (condition)\n  …\n  a(end+1) = value; # \"push\" operation\n  …\n  a(end) = []; # \"pop\" operation\n  …\nendwhile"
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Avoid calling `eval` or `feval` excessively. Parsing input or looking up the name of a function in the symbol table are relatively expensive operations.",
+       "sha": "dd58c4c8c187",
+       "zh": "避免过多地调用 `eval` 或 `feval`。解析输入，或在符号表里查找函数名，都是相对昂贵的操作。"
+      }
+     },
+     {
+      "k": "p",
+      "t": {
+       "en": "If you are using `eval` merely as an exception handling mechanism, and not because you need to execute some arbitrary text, use the `try` statement instead. See The try Statement.",
+       "sha": "f2139defa7fe",
+       "zh": "如果你使用 `eval` 只是把它当作一种异常处理机制，而不是因为需要执行任意文本，那么请改用 `try` 语句。参见 try 语句（The try Statement）。"
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Use `ignore_function_time_stamp` when appropriate. If you are calling lots of functions, and none of them will need to change during your run, set the variable `ignore_function_time_stamp` to `\"all\"`. This will stop Octave from checking the time stamp of a function file to see if it has been updated while the program is being run.",
+       "sha": "ee6401cfd0b6",
+       "zh": "适当使用 `ignore_function_time_stamp`。如果你要调用大量函数，而且在运行期间它们都不会改变，就把变量 `ignore_function_time_stamp` 设为 `\"all\"`。这样 Octave 就不会再检查函数文件的时间戳，来判断程序运行期间它是否已被更新。"
+      }
+     }
+    ]
+   ]
+  },
+  {
+   "k": "heading",
+   "level": 2,
+   "t": {
+    "en": "Examples",
+    "sha": "eb01bf04c9a0",
+    "zh": "例"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The following are examples of vectorization questions asked by actual users of Octave and their solutions.",
+    "sha": "2d473726769f",
+    "zh": "下面是 Octave 的实际用户提出的向量化问题及其解答。"
+   }
+  },
+  {
+   "k": "list",
+   "ordered": false,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "For a vector `A`, the following loop",
+       "sha": "d612af1e7a2c",
+       "zh": "对于向量 `A`，下面的循环"
+      }
+     },
+     {
+      "k": "code",
+      "text": "n = length (A) - 1;\nB = zeros (n, 2);\nfor i = 1:n\n  ## this will be two columns, the first is the difference and\n  ## the second the mean of the two elements used for the diff.\n  B(i,:) = [A(i+1)-A(i), (A(i+1) + A(i))/2];\nendfor"
+     },
+     {
+      "k": "p",
+      "t": {
+       "en": "can be turned into the following one-liner:",
+       "sha": "f134740066cd",
+       "zh": "可以改写成下面这一行代码："
+      }
+     },
+     {
+      "k": "code",
+      "text": "B = [diff(A)(:), 0.5*(A(1:end-1)+A(2:end))(:)]"
+     },
+     {
+      "k": "p",
+      "t": {
+       "en": "Note the usage of colon indexing to flatten an intermediate result into a column vector. This is a common vectorization trick.",
+       "sha": "2a66bf129d08",
+       "zh": "注意这里用冒号索引把中间结果展平成列向量，这是一个常用的向量化技巧。"
+      }
+     }
+    ]
+   ]
+  }
+ ],
+ "title_zh": "向量化与广播"
+}

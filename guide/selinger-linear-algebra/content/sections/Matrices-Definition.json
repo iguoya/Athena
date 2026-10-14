@@ -1,0 +1,356 @@
+{
+ "id": "Matrices-Definition",
+ "title_en": "Definition and equality",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Identify the dimension and entries of a matrix.",
+         "sha": "8e95fa28e34a",
+         "zh": "能说出矩阵的维数，并指出矩阵的各个元素。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Check equality of matrices.",
+         "sha": "be000da6b967",
+         "zh": "能判断两个矩阵是否相等。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We have solved systems of equations by writing them in terms of an augmented matrix and then doing row operations. It turns out that matrices are important not only for systems of equations but also for many other purposes.",
+    "sha": "c4f36a22b4b5",
+    "zh": "我们已经把线性方程组写成增广矩阵，再对它做行变换来求解。其实矩阵不仅对方程组很重要，还有许多别的用处。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Matrix",
+    "sha": "58947ebc8ff4",
+    "zh": "矩阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A **matrix** is a rectangular array of numbers",
+      "sha": "9ff2b060661d",
+      "zh": "**矩阵**是一个由数排成的矩形阵列"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{cccc}\n      a_{11} & a_{12} & \\cdots & a_{1n} \\\\\n      a_{21} & a_{22} & \\cdots & a_{2n} \\\\\n      \\vdots & \\vdots & \\ddots & \\vdots \\\\\n      a_{m1} & a_{m2} & \\cdots & a_{mn} \\\\\n    \\end{array}\\right],"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "where the $a_{ij}$ are scalars, called the **entries** or **components** of $A$. The **size** or **dimension** of a matrix is defined as $m\\times n$, where $m$ is the number of rows and $n$ is the number of columns.",
+      "sha": "f7b75e052c9e",
+      "zh": "其中 $a_{ij}$ 是标量，称为 $A$ 的**元素**（或**分量**）。矩阵的**大小**（或**维数**）定义为 $m\\times n$，其中 $m$ 是行数，$n$ 是列数。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For example, here is a $3\\times 4$-matrix (pronounced “three-by-four matrix”):",
+    "sha": "bb8af35b7c97",
+    "zh": "例如，下面是一个 $3\\times 4$ 矩阵（读作“三乘四矩阵”）："
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\left[\\begin{array}{rrrr}\n    1 & 2 & 3 & 4 \\\\\n    5 & 2 & 8 & 7 \\\\\n    6 & -9 & 1 & 2\n  \\end{array}\\right]."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This is a $3\\times 4$-matrix because there are three rows and four columns. When specifying the size of a matrix, we always list the number of rows before the number of columns.",
+    "sha": "5779bd55ecf9",
+    "zh": "它是 $3\\times 4$ 矩阵，因为有三行四列。说明矩阵的大小时，我们总是先说行数，再说列数。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Entries of the matrix are identified according to their position. The \\textbf$(i,j)$-entry of a matrix is the entry in the $i\\th$ row and $j\\th$ column, and is often denoted $a_{ij}$. For example, in the above matrix, the $(2,3)$-entry is the entry in the second row and the third column, and is equal to $8$. We sometimes use $A=\\mat{a_{ij}}$ as a short-hand notation for the entire $m\\times n$-matrix whose $(i,j)$-entry is equal to $a_{ij}$ for all $i=1,\\ldots m$ and $j=1,\\ldots,n$.",
+    "sha": "9f7c00a682ec",
+    "zh": "矩阵的元素按它所在的位置来区分。矩阵的 **$(i,j)$ 元素**是位于第 $i\\th$ 行、第 $j\\th$ 列的元素，通常记作 $a_{ij}$。例如，在上面的矩阵中，$(2,3)$ 元素是第二行第三列的元素，它等于 $8$。我们有时用 $A=\\mat{a_{ij}}$ 作为整个 $m\\times n$ 矩阵的简写，它表示对所有的 $i=1,\\ldots m$ 和 $j=1,\\ldots,n$，$(i,j)$ 元素都等于 $a_{ij}$"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There are various operations which are done on matrices of appropriate sizes. Matrices can be added and subtracted, multiplied by a scalar, and multiplied by other matrices. We will never divide a matrix by another matrix, but we will see later how matrix inverses play a similar role.",
+    "sha": "0615dfd91a9b",
+    "zh": "对大小合适的矩阵可以做各种运算：矩阵可以相加、相减，可以乘以标量，也可以与别的矩阵相乘。我们永远不会用一个矩阵去除另一个矩阵，不过后面会看到，矩阵的逆起着类似的作用。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Equality of matrices",
+    "sha": "a485b3e10750",
+    "zh": "矩阵相等"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Two matrices are **equal** if they have the same size and the same corresponding entries. More precisely, if $A=\\mat{a_{ij}}$ and $B=\\mat{b_{ij}}$ are two $m\\times n$-matrices, then $A=B$ means that $a_{ij}=b_{ij}$ for all $i=1,\\ldots m$ and $j=1,\\ldots,n$.",
+      "sha": "a1ec09876799",
+      "zh": "如果两个矩阵大小相同，并且对应的元素也都相同，那么这两个矩阵**相等**。更确切地说，设 $A=\\mat{a_{ij}}$ 与 $B=\\mat{b_{ij}}$ 是两个 $m\\times n$ 矩阵，则 $A=B$ 的意思是：对所有的 $i=1,\\ldots m$ 和 $j=1,\\ldots,n$，都有 $a_{ij}=b_{ij}$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For example,",
+    "sha": "6db6725e9e7d",
+    "zh": "例如，"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\left[\\begin{array}{rr}\n    0 & 0 \\\\\n    0 & 0 \\\\\n    0 & 0\n  \\end{array}\\right] \\neq \\left[\\begin{array}{rr}\n    0 & 0 \\\\\n    0 & 0\n  \\end{array}\\right]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "because they are different sizes. Also,",
+    "sha": "8a10a7950bcb",
+    "zh": "因为大小不同。再如，"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\left[\\begin{array}{rr}\n    0 & 1 \\\\\n    3 & 2\n  \\end{array}\\right] \\neq \\left[\\begin{array}{rr}\n    1 & 0 \\\\\n    2 & 3\n  \\end{array}\\right]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "because, although they are the same size, their corresponding entries are not identical.",
+    "sha": "be09ead85c72",
+    "zh": "因为虽然大小相同，但对应的元素并不都相同。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There are special names for matrices of certain dimensions: some matrices are called square matrices, columns vectors, or row vectors.",
+    "sha": "2eaa3a061623",
+    "zh": "某些维数的矩阵有专门的名称：方阵、列向量、行向量。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Square matrix",
+    "sha": "2e0eeaeaf6f5",
+    "zh": "方阵"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A matrix of size $n\\times n$ is called a **square matrix**. In other words, $A$ is a square matrix if it has the same number of rows and columns.",
+      "sha": "58389bfa356d",
+      "zh": "大小为 $n\\times n$ 的矩阵称为**方阵**。换句话说，如果 $A$ 的行数与列数相同，那么它就是方阵。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Column vectors and row vectors",
+    "sha": "d80442e73a79",
+    "zh": "列向量与行向量"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A matrix of size $n\\times 1$ is called a **column vector**. A matrix of size $1\\times n$ is called a **row vector**. Here is an example of a column vector $X$ and a row vector $Y$:",
+      "sha": "4f90a208fa7f",
+      "zh": "大小为 $n\\times 1$ 的矩阵称为**列向量**，大小为 $1\\times n$ 的矩阵称为**行向量**。下面是一个列向量 $X$ 和一个行向量 $Y$ 的例子："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "X=\\left[\\begin{array}{c}\n      x_1 \\\\\n      \\vdots \\\\\n      x_n\n    \\end{array}\\right],\n    \\quad\n    Y = \\left[\\begin{array}{ccc}\n      y_1 & \\cdots & y_n\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We have already encountered column vectors in Chapter 〔引用〕. When we use the term **vector** without further qualification, we always mean a column vector. Also recall from Definition “Column vectors and $\\R^n$” that the set of $n$-dimensional column vectors is called $\\R^n$.",
+    "sha": "bd753c191317",
+    "zh": "我们在第〔引用〕章已经见过列向量。不加说明地使用**向量**这个词时，我们指的总是列向量。还要回想定义“列向量与 $\\R^n$”：$n$ 维列向量的全体记作 $\\R^n$。"
+   }
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Can a column vector ever be equal to a row vector?",
+      "sha": "b8169e1c0c94",
+      "zh": "列向量会不会等于一个行向量？"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Yes, a $1\\times 1$-matrix is both a row vector and a column vector. However, a column vector of dimension $2$ or greater can never be equal to a row vector, because one is an $n\\times 1$-matrix and the other is a $1\\times n$-matrix.",
+      "sha": "87511cb310f9",
+      "zh": "会：$1\\times 1$ 矩阵既是行向量，也是列向量。但是，维数为 $2$ 或更大的列向量永远不会等于行向量，因为一个是 $n\\times 1$ 矩阵，另一个是 $1\\times n$ 矩阵。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Definition and equality · 习题 1（上游 exercises/Matrices-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find scalars $x,y,z$ such that the following two matrices are equal.",
+      "sha": "55430a3a64c6",
+      "zh": "求标量 $x,y,z$，使下面两个矩阵相等。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr}\n      x & -1 \\\\\n      2 & 4\n    \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    \\left[\\begin{array}{rr}\n      2 & y \\\\\n      z & 4\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$x=2$, $y=-1$, $z=2$.",
+      "sha": "e34dfa7bbde3",
+      "zh": "$x=2$，$y=-1$，$z=2$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Definition and equality · 习题 2（上游 exercises/Matrices-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "What are the dimensions of the following matrices?",
+      "sha": "ad5f3397ec46",
+      "zh": "下面这些矩阵的维数各是多少？"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rrr}\n      1 & -2 & 0 \\\\\n      4 & 3 & 2\n    \\end{array}\\right],\n    \\quad\n    B = \\left[\\begin{array}{rrr}\n      3 & 4 & 1 \\\\\n      1 & 3 & 1 \\\\\n      6 & 2 & 2\n    \\end{array}\\right],\n    \\quad\n    C = \\left[\\begin{array}{rrr}\n      1 & 0 \\\\\n      4 & 0 \\\\\n      2 & 0 \\\\\n      0 & 0\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$2\\times 3$, $3\\times 3$, $4\\times 2$.",
+      "sha": "87b3105c7560",
+      "zh": "$2\\times 3$，$3\\times 3$，$4\\times 2$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Definition and equality · 习题 3（上游 exercises/Matrices-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Definition.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "What is the $(2,3)$-entry of the matrix $\\left[\\begin{array}{rrr} 1 & 2 & 1 \\\\ -4 & 4 & 7 \\\\ 6 & -5 & 3 \\end{array}\\right]$?",
+      "sha": "f64def14233d",
+      "zh": "矩阵 $\\left[\\begin{array}{rrr} 1 & 2 & 1 \\\\ -4 & 4 & 7 \\\\ 6 & -5 & 3 \\end{array}\\right]$ 的 $(2,3)$ 元素是什么？"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$7$.",
+      "sha": "c390b600fb5f",
+      "zh": "$7$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Definition and equality · 习题 4（上游 exercises/Matrices-Definition.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Definition.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "定义与相等"
+}

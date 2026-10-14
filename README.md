@@ -28,6 +28,10 @@
 | [`computer-fundamentals/database`](computer-fundamentals/database) | 数据库 SQL 实验室（计算机基础圈，ADR 0103、0126、0148） | Tauri 2 + React |
 | [`programming/linux`](programming/linux) | Linux 程序设计（程序设计圈，ADR 0109、0111） | Tauri 2 + Vite |
 | [`guide/gtkmm`](guide/gtkmm) | gtkmm 官方教程精读（手册类，ADR 0143） | Tauri 2 + React |
+| [`guide/selinger-linear-algebra`](guide/selinger-linear-algebra) | Selinger《Linear Algebra》按考研数学二线代考纲裁剪的精读（手册类，「数学」圈，ADR 0162） | Tauri 2 + React + KaTeX |
+| [`guide/siefken-linear-algebra`](guide/siefken-linear-algebra) | Siefken《MAT223 Workbook: Linear Algebra》精读（手册类，「数学」圈，ADR 0162） | Tauri 2 + React + KaTeX |
+| [`guide/octave-manual`](guide/octave-manual) | GNU Octave 官方手册按线代与高数需要裁剪的精读（工具类手册，「数学」圈，ADR 0163） | Tauri 2 + React + KaTeX |
+| [`guide/sympy-tutorial`](guide/sympy-tutorial) | SymPy 官方入门教程精读：用符号计算做微积分与矩阵运算（工具类手册，「数学」圈，ADR 0163） | Tauri 2 + React + KaTeX |
 | [`mentor/polaris`](mentor/polaris) | 北极星（技术体系图谱，ADR 0144） | Tauri 2 + React |
 | [`postgraduate/organization`](postgraduate/organization) | 计算机组成原理（408，ADR 0115） | Tauri 2 + Vite |
 | [`postgraduate/os`](postgraduate/os) | 操作系统实验（408，ADR 0103、0104） | Tauri 2 + React |

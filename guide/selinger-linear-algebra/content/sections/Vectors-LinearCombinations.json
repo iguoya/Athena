@@ -1,0 +1,482 @@
+{
+ "id": "Vectors-LinearCombinations",
+ "title_en": "Linear combinations",
+ "blocks": [
+  {
+   "k": "outcome",
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Compute linear combinations of vectors algebraically and geometrically.",
+         "sha": "03ee6d2ece17",
+         "zh": "用代数方法和几何方法计算向量的线性组合。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Determine whether a vector is a linear combination of given vectors.",
+         "sha": "cfdfa724bde2",
+         "zh": "判断一个向量是否是给定向量的线性组合。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Find the coefficients of one vector as a linear combination of other vectors.",
+         "sha": "7e1cb4633c5a",
+         "zh": "求出把一个向量表示成其他向量的线性组合时的系数。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Now that we have studied both vector addition and scalar multiplication, we can combine the two operations. You may remember that when we talked about the solutions to homogeneous systems of equations in Section 〔引用〕, we briefly mentioned that the general solution of a homogeneous system is a linear combination of its basic solutions. We now return to the concept of a linear combination.",
+    "sha": "5f855d443841",
+    "zh": "现在我们已经学过向量加法和标量乘法，可以把这两种运算结合起来了。你也许还记得，在第〔引用〕节讨论齐次方程组的解时，我们简单提到过：齐次方程组的通解是它的基础解的线性组合。现在我们回到线性组合这个概念上来。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Linear combination",
+    "sha": "7bda98e769ff",
+    "zh": "线性组合"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A vector $\\vect{v}$ is said to be a **linear combination** of the vectors $\\vect{u}_1,\\ldots, \\vect{u}_n$ if there exist scalars $a_1,\\ldots,a_n$ such that",
+      "sha": "e496ae1f8a10",
+      "zh": "如果存在标量 $a_1,\\ldots,a_n$，使得下式成立，就称向量 $\\vect{v}$ 是向量 $\\vect{u}_1,\\ldots, \\vect{u}_n$ 的**线性组合**："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v} = a_1 \\vect{u}_1 + \\ldots + a_n \\vect{u}_n."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The numbers $a_1,\\ldots,a_n$ are called the **coefficients** of the linear combination.",
+      "sha": "d0e6607a0342",
+      "zh": "数 $a_1,\\ldots,a_n$ 称为这个线性组合的**系数**。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Linear combination",
+    "sha": "7bda98e769ff",
+    "zh": "线性组合"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "We have",
+      "sha": "a2214cd5b1a4",
+      "zh": "我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "3\n    \\left[\\begin{array}{r}\n      -4 \\\\\n      1 \\\\\n      0\n    \\end{array}\\right]\n    +\n    2\n    \\left[\\begin{array}{r}\n      -3 \\\\\n      0 \\\\\n      1\n    \\end{array}\\right]\n    =\n    \\left[\\begin{array}{r}\n      -18 \\\\\n      3 \\\\\n      2\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Thus we can say that",
+      "sha": "f1f67650024c",
+      "zh": "因此可以说"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}= \\left[\\begin{array}{r}\n      -18 \\\\\n      3 \\\\\n      2\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is a linear combination of the vectors",
+      "sha": "b8616ebf66eb",
+      "zh": "是下列向量的线性组合"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r}\n      -4 \\\\\n      1 \\\\\n      0\n    \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    \\vect{u}_2 =\n    \\left[\\begin{array}{r}\n      -3 \\\\\n      0 \\\\\n      1\n    \\end{array}\\right]."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "For the specific case of $\\R^3$, there are three special vectors which we often use. They are given by",
+    "sha": "89b671b581c7",
+    "zh": "对于 $\\R^3$ 的情形，有三个我们常用的特殊向量，它们是"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vect{i} =\n  \\left[\\begin{array}{c}\n    1 \\\\ 0 \\\\ 0\n  \\end{array}\\right],\n  \\quad\n  \\vect{j} =\n  \\left[\\begin{array}{c}\n    0 \\\\ 1 \\\\ 0\n  \\end{array}\\right],\n  \\quad\\text{and}\\quad\n  \\vect{k} =\n  \\left[\\begin{array}{c}\n    0 \\\\ 0 \\\\ 1\n  \\end{array}\\right]."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can write any vector $\\vect{u} = \\mat{a_1,a_2,a_3}^T$ as a linear combination of these vectors, namely",
+    "sha": "11b59a9fdc69",
+    "zh": "任何向量 $\\vect{u} = \\mat{a_1,a_2,a_3}^T$ 都可以写成这些向量的线性组合，即"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\vect{u} = a_1 \\vect{i} + a_2 \\vect{j} + a_3 \\vect{k}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We will use this notation from time to time.",
+    "sha": "2f28361a284b",
+    "zh": "我们以后会不时用到这种记法。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Determining if linear combination",
+    "sha": "58bf36627f53",
+    "zh": "判断是否为线性组合"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Can $\\vect{v}=\\mat{1, 3, 5}^T$ be written as a linear combination of $\\vect{u}_1=\\mat{2, 2, 6}^T$, $\\vect{u}_2=\\mat{1, 6, 8}^T$, and $\\vect{u}_3=\\mat{3, 8, 18}^T$? If yes, find the coefficients.",
+      "sha": "eacf37df7600",
+      "zh": "$\\vect{v}=\\mat{1, 3, 5}^T$ 能否写成 $\\vect{u}_1=\\mat{2, 2, 6}^T$、$\\vect{u}_2=\\mat{1, 6, 8}^T$ 和 $\\vect{u}_3=\\mat{3, 8, 18}^T$ 的线性组合？如果能，求出系数。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "This question can be rephrased as: can we find scalars $x,y,z$ such that",
+      "sha": "1838fc7b0c54",
+      "zh": "这个问题可以换一种说法：能否找到标量 $x,y,z$，使得"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "x\\vect{u}_1+y\\vect{u}_2+z\\vect{u}_3=\\vect{v}?"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Multiplying out produces the system of linear equations",
+      "sha": "84e9d37773ca",
+      "zh": "展开后得到线性方程组"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}2x+y+3z&=1 \\\\\n    2x+6y+8z&=3 \\\\\n    6x+8y+18z&=5.\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Now we row reduce the corresponding augmented matrix to solve.",
+      "sha": "a461708e41f0",
+      "zh": "现在对相应的增广矩阵作行变换化简来求解。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}&\\left[\\begin{array}{rrr|r} 2 & 1 & 3 & 1 \\\\ 2 & 6 & 8 & 3 \\\\ 6 & 8 & 18 & 5 \\end{array}\\right]\n                                                                            \\stackrel{R_1\\rowop R_1-R_2}{\\stackrel{R_3\\rowop R_3-3R_1}{\\roweq}}\n                                                                            \\left[\\begin{array}{rrr|r} 0 & -5 & -5 & -2 \\\\ 2 & 6 & 8 & 3 \\\\ 0 & 5 & 9 & 2 \\end{array}\\right]\n                                                                                                                                                     \\stackrel{R_1\\rowop R_1+R_3}{\\roweq}\n                                                                                                                                                     \\left[\\begin{array}{rrr|r} 0 & 0 & 4 & 0 \\\\ 2 & 6 & 8 & 3 \\\\ 0 & 5 & 9 & 2 \\end{array}\\right]\n                                                                                                                                                                                                                           \\stackrel{R_2\\rowswap R_1}{\\roweq} \\\\\n    &\\left[\\begin{array}{rrr|r} 2 & 6 & 8 & 3 \\\\ 0 & 0 & 4 & 0 \\\\ 0 & 5 & 9 & 2 \\end{array}\\right]\n                                                                           \\stackrel{\\frac{1}{2}R_1}{\\stackrel{R_2\\rowswap R_3}{\\roweq}}\n                                                                           \\left[\\begin{array}{rrr|r} 1 & 3 & 4 & \\frac{3}{2} \\\\ 0 & 5 & 9 & 2 \\\\ 0 & 0 & 4 & 0\\end{array}\\right]\n                                                                                                                                                           \\stackrel{\\frac{1}{4}R_3}{\\roweq}\n                                                                                                                                                           \\left[\\begin{array}{rrr|r} 1 & 3 & 4 & \\frac{3}{2} \\\\ 0 & 5 & 9 & 2 \\\\ 0 & 0 & 1 & 0 \\end{array}\\right]\n                                                                                                                                                                                                                                           \\stackrel{R_1\\rowop R_1-4R_3}{\\stackrel{R_2\\rowop R_2-9R_3}{\\roweq}} \\\\\n    &\\left[\\begin{array}{rrr|r} 1 & 3 & 0 & \\frac{3}{2} \\\\ 0 & 5 & 0 & 2 \\\\ 0 & 0 & 1 & 0 \\end{array}\\right]\n                                                                                     \\stackrel{\\frac{1}{5}R_2}{\\roweq}\n                                                                                     \\left[\\begin{array}{rrr|r} 1 & 3 & 0 & \\frac{3}{2} \\\\ 0 & 1 & 0 & \\frac{2}{5} \\\\ 0 & 0 & 1 & 0 \\end{array}\\right]\n                                                                                                                                                                               \\stackrel{R_1\\rowop R_1-3R_2}{\\roweq}\n                                                                                                                                                                               \\left[\\begin{array}{rrr|r} 1 & 0 & 0 & \\frac{3}{10} \\\\ 0 & 1 & 0 & \\frac{2}{5} \\\\ 0 & 0 & 1 & 0 \\end{array}\\right].\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We are in the case where we have a unique solution:",
+      "sha": "724c55bd9893",
+      "zh": "这属于有唯一解的情形："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{aligned}x&=\\frac{3}{10} \\\\\n    y&=\\frac{2}{5} \\\\\n    z&=0.\\end{aligned}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This means that $\\vect{v}$ is a linear combination of $\\vect{u}_1$, $\\vect{u}_2$, and $\\vect{u}_3$:",
+      "sha": "4da11d5ba979",
+      "zh": "这说明 $\\vect{v}$ 是 $\\vect{u}_1$、$\\vect{u}_2$ 和 $\\vect{u}_3$ 的线性组合："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}=\\frac{3}{10}\\vect{u}_1+\\frac{2}{5}\\vect{u}_2+0\\vect{u}_3."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The coefficients are $\\frac{3}{10}$, $\\frac{2}{5}$, and $0$. In fact, $\\vect{v}$ is also a linear combination of just $\\vect{u}_1$ and $\\vect{u}_2$.",
+      "sha": "877964ef69fc",
+      "zh": "系数是 $\\frac{3}{10}$、$\\frac{2}{5}$ 和 $0$。事实上，$\\vect{v}$ 也是仅由 $\\vect{u}_1$ 和 $\\vect{u}_2$ 构成的线性组合。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In the following example, we examine the geometric meaning of linear combinations.",
+    "sha": "d25c7353b26a",
+    "zh": "在下面的例中，我们来考察线性组合的几何意义。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "Graphing a linear combination of vectors",
+    "sha": "a2612b013421",
+    "zh": "作向量线性组合的图"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the following picture of the vectors $\\vect{u}$ and $\\vect{v}$",
+      "sha": "504f7e3660e9",
+      "zh": "考虑下图中的向量 $\\vect{u}$ 和 $\\vect{v}$"
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "7bf65b745c0b"
+     ],
+     "caption": null
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Sketch a picture of $\\vect{u}+2\\vect{v}$ and $\\vect{u}-\\frac{1}{2}\\vect{v}$.",
+      "sha": "f0d321afe1c8",
+      "zh": "画出 $\\vect{u}+2\\vect{v}$ 和 $\\vect{u}-\\frac{1}{2}\\vect{v}$ 的示意图。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Both vectors are shown below.",
+      "sha": "a01842f301ff",
+      "zh": "这两个向量如下图所示。"
+     }
+    },
+    {
+     "k": "figure",
+     "env": "tikzpicture",
+     "figs": [
+      "c32797636ada"
+     ],
+     "caption": null
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Given any two non-parallel vectors $\\vect{u}$ and $\\vect{v}$ in $\\R^2$, we can create a grid of their linear combinations. The integer ones are pictured below. From this we can see that all vectors in $\\R^2$ can be written as a linear combination of $\\vect{u}$ and $\\vect{v}$.",
+    "sha": "d44bb794173d",
+    "zh": "给定 $\\R^2$ 中任意两个不平行的向量 $\\vect{u}$ 和 $\\vect{v}$，我们可以作出它们的线性组合所构成的网格，下图画出的是系数为整数的那些线性组合。由此可以看出，$\\R^2$ 中的所有向量都可以写成 $\\vect{u}$ 和 $\\vect{v}$ 的线性组合。"
+   }
+  },
+  {
+   "k": "figure",
+   "env": "tikzpicture",
+   "figs": [
+    "93f3dae4981a"
+   ],
+   "caption": null
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find $-7\\left[\\begin{array}{r} 6 \\\\ 0 \\\\ 4 \\\\ -1 \\end{array}\\right] + 6\\left[\\begin{array}{r} -13 \\\\ -1 \\\\ 1 \\\\ 6 \\end{array}\\right]$.",
+      "sha": "7de1942cd9d3",
+      "zh": "求 $-7\\left[\\begin{array}{r} 6 \\\\ 0 \\\\ 4 \\\\ -1 \\end{array}\\right] + 6\\left[\\begin{array}{r} -13 \\\\ -1 \\\\ 1 \\\\ 6 \\end{array}\\right]$。"
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear combinations · 习题 1（上游 exercises/Vectors-LinearCombinations.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-LinearCombinations.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Decide whether",
+      "sha": "47d6700bd175",
+      "zh": "判断"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}= \\left[\\begin{array}{r}\n      4 \\\\\n      4 \\\\\n      -3\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is a linear combination of the vectors",
+      "sha": "b8616ebf66eb",
+      "zh": "是下列向量的线性组合"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r}\n      3 \\\\\n      1 \\\\\n      -1\n    \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    \\vect{u}_2 =\n    \\left[\\begin{array}{r}\n      2 \\\\\n      -2 \\\\\n      1\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If yes, find the coefficients.",
+      "sha": "b1a4618f95ed",
+      "zh": "如果是，求出系数。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{r}\n        4 \\\\\n        4 \\\\\n        -3\n      \\end{array}\\right]\n      =\n      2\n      \\left[\\begin{array}{r}\n        3 \\\\\n        1 \\\\\n        -1\n      \\end{array}\\right]\n      -\n      \\left[\\begin{array}{r}\n        2 \\\\\n        -2 \\\\\n        1\n      \\end{array}\\right]."
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear combinations · 习题 2（上游 exercises/Vectors-LinearCombinations.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-LinearCombinations.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Decide whether",
+      "sha": "47d6700bd175",
+      "zh": "判断"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{v}= \\left[\\begin{array}{r}\n      4 \\\\\n      4 \\\\\n      4\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is a linear combination of the vectors",
+      "sha": "b8616ebf66eb",
+      "zh": "是下列向量的线性组合"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vect{u}_1 = \\left[\\begin{array}{r}\n      3 \\\\\n      1 \\\\\n      -1\n    \\end{array}\\right],\n    \\quad\n    \\vect{u}_2 =\n    \\left[\\begin{array}{r}\n      8 \\\\\n      0 \\\\\n      -1\n    \\end{array}\\right]\n    \\quad\\text{and}\\quad\n    \\vect{u}_3 =\n    \\left[\\begin{array}{r}\n      2 \\\\\n      -2 \\\\\n      1\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "If yes, find the coefficients.",
+      "sha": "b1a4618f95ed",
+      "zh": "如果是，求出系数。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The system",
+      "sha": "6ddda8c45a3c",
+      "zh": "方程组"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{r}\n        4 \\\\\n        4 \\\\\n        4\n      \\end{array}\\right]\n      =\n      a_1\n      \\left[\\begin{array}{r}\n        3 \\\\\n        1 \\\\\n        -1\n      \\end{array}\\right]\n      + a_2 \\left[\\begin{array}{r}\n        8 \\\\\n        0 \\\\\n        -1\n      \\end{array}\\right]\n      + a_3\n      \\left[\\begin{array}{r}\n        2 \\\\\n        -2 \\\\\n        1\n      \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "has no solution.",
+      "sha": "9113246045a7",
+      "zh": "无解。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Linear combinations · 习题 3（上游 exercises/Vectors-LinearCombinations.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Vectors-LinearCombinations.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "线性组合"
+}

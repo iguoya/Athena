@@ -1,0 +1,1265 @@
+{
+ "id": "Matrices-Multiplication-Properties",
+ "title_en": "Properties of matrix multiplication",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "We have already seen that matrix multiplication is not in general commutative, i.e., $AB$ and $BA$ may be different, even if they are both defined. Sometimes it can happen that $AB=BA$ for specific matrices $A$ and $B$. In this case, we say that $A$ and $B$ **commute**.",
+    "sha": "343cb9be97d7",
+    "zh": "我们已经看到，矩阵乘法一般不满足交换律，也就是说，即使 $AB$ 与 $BA$ 都有定义，它们也可能不同。不过，对某些特定的矩阵 $A$ 和 $B$，有可能 $AB=BA$。这时我们说 $A$ 与 $B$ **可交换**（commute）。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The following are some properties of matrix multiplication. Notice that these properties hold only when the size of matrices are such that the products are defined.",
+    "sha": "d2e07cf38221",
+    "zh": "下面是矩阵乘法的一些性质。注意，这些性质只在矩阵的大小使相应乘积有定义时才成立。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "proposition",
+   "title": {
+    "en": "Properties of matrix multiplication",
+    "sha": "55c15ccc6f71",
+    "zh": "矩阵乘法的性质"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The following properties hold for matrices $A,B,C$ of appropriate dimensions and for scalars $r$.",
+      "sha": "5a01d98550b8",
+      "zh": "对大小合适的矩阵 $A,B,C$ 和标量 $r$，下列性质成立。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The associative law of multiplication",
+         "sha": "946d9c080de2",
+         "zh": "乘法结合律"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "(AB)C ~=~ A(BC)."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The existence of multiplicative units",
+         "sha": "96dcc7f761d4",
+         "zh": "乘法单位元的存在性"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "I_mA ~=~ A ~=~ AI_n,"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "where $A$ is an $m\\times n$-matrix.",
+         "sha": "321a03c14c6b",
+         "zh": "其中 $A$ 是 $m\\times n$ 矩阵。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Compatibility with scalar multiplication",
+         "sha": "5de3533520ef",
+         "zh": "与数乘的相容性"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "(rA)B ~=~ r(AB) ~=~ A(rB)."
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The distributive laws of multiplication over addition",
+         "sha": "c185a4a605d1",
+         "zh": "乘法对加法的分配律"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "\\begin{array}{rcl}A(B+C) &=& AB + AC, \\\\\n      (B+C)A &=& BA + CA.\\end{array}"
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "First, we will prove the associative law. In the proof, it will be useful to use *summation notation*. We write",
+      "sha": "29be1b9e88da",
+      "zh": "先来证明结合律。证明中要用到*求和记号*（summation notation）。我们写"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\sum_{i=1}^n x_i ~=~ x_1 + x_2 + \\ldots + x_n"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for the sum of the $n$ numbers $x_1,\\ldots,x_n$. Assume $A$ is an $m\\times n$-matrix, $B$ is an $n\\times p$-matrix, and $C$ is a $p\\times q$-matrix. Then both $(AB)C$ and $A(BC)$ are $m\\times q$-matrices. We must show that they have the same entries. The $(i,\\ell)$-entry of the matrix $(AB)C$ is",
+      "sha": "6b418cf42c84",
+      "zh": "表示 $n$ 个数 $x_1,\\ldots,x_n$ 的和。设 $A$ 是 $m\\times n$ 矩阵，$B$ 是 $n\\times p$ 矩阵，$C$ 是 $p\\times q$ 矩阵。那么 $(AB)C$ 与 $A(BC)$ 都是 $m\\times q$ 矩阵。我们要证明它们的元素相同。矩阵 $(AB)C$ 的 $(i,\\ell)$ 元素是"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "((AB)C)_{i\\ell} = \\sum_{k=1}^p (AB)_{ik}c_{k\\ell}\n    = \\sum_{k=1}^p (\\sum_{j=1}^n a_{ij}b_{jk})c_{k\\ell}\n    = \\sum_{k=1}^p\\sum_{j=1}^n a_{ij}b_{jk}c_{k\\ell}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "On the other hand, the $(i,\\ell)$-entry of the matrix $A(BC)$ is",
+      "sha": "9761a56076d2",
+      "zh": "另一方面，矩阵 $A(BC)$ 的 $(i,\\ell)$ 元素是"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(A(BC))_{i\\ell} = \\sum_{j=1}^n a_{ij}(BC)_{j\\ell}\n    = \\sum_{j=1}^n a_{ij} (\\sum_{k=1}^p b_{jk} c_{k\\ell})\n    = \\sum_{j=1}^n\\sum_{k=1}^p a_{ij} b_{jk} c_{k\\ell}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Both sums are equal, since they are both summing over all the terms where $j=1,\\ldots,n$ and $k=1,\\ldots,p$. Therefore, $(AB)C=A(BC)$. The fact that identity matrices act as multiplicative units was already mentioned in Proposition “Multiplying by the identity matrix”. We leave compatibility with scalar multiplication as an exercise. To prove the first distributive law, assume $A$ is an $m\\times n$-matrix, and $B$ and $C$ are $n\\times p$-matrices. Then both $A(B+C)$ and $AB+AC$ are $m\\times p$-matrices. We have",
+      "sha": "62c0e2c9b99f",
+      "zh": "这两个和相等，因为它们都是对所有满足 $j=1,\\ldots,n$、$k=1,\\ldots,p$ 的项求和。因此 $(AB)C=A(BC)$。单位矩阵起乘法单位元的作用，这一点在命题“乘以单位矩阵”中已经提到过。与数乘的相容性留作习题。要证第一个分配律，设 $A$ 是 $m\\times n$ 矩阵，$B$ 和 $C$ 是 $n\\times p$ 矩阵。那么 $A(B+C)$ 与 $AB+AC$ 都是 $m\\times p$ 矩阵。我们有"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(A(B+C))_{ik} = \\sum_{j=1}^n a_{ij}(B+C)_{jk}\n    = \\sum_{j=1}^n a_{ij}(b_{jk}+c_{jk})\n    = \\sum_{j=1}^n a_{ij}b_{jk} + \\sum_{j=1}^n a_{ij}c_{jk}\n    = (AB+AC)_{ik}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Thus $A(B+C) =AB+AC$ as claimed. The proof of the other distributive law is similar.",
+      "sha": "406e9dda8fe4",
+      "zh": "所以如所要证，$A(B+C) =AB+AC$。另一个分配律的证明类似。"
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\left[\\begin{array}{rrr} 1 & 2 & 0 \\\\ -1 & 1 & 1\\end{array}\\right]$. Multiply $A$ by each of the following vectors.",
+      "sha": "faed7857c927",
+      "zh": "设 $A=\\left[\\begin{array}{rrr} 1 & 2 & 0 \\\\ -1 & 1 & 1\\end{array}\\right]$。用 $A$ 分别乘下列每个向量。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "(a)~ \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 0 \\end{array}\\right],\\quad\n    (b)~ \\left[\\begin{array}{r} 0 \\\\ 1 \\\\ -1 \\end{array}\\right],\\quad\n    (c)~ \\left[\\begin{array}{r} 2 \\\\ 1 \\\\ 0 \\end{array}\\right],\\quad\n    (d)~ \\left[\\begin{array}{r} 0 \\\\ 0 \\\\ 0 \\end{array}\\right],\\quad\n    (e)~ \\left[\\begin{array}{r} 1 \\\\ 0 \\\\ 3 \\end{array}\\right].\\quad"
+    }
+   ],
+   "sol": [
+    {
+     "k": "math",
+     "tex": "(a)~ \\left[\\begin{array}{r} 1 \\\\ -1 \\end{array}\\right],\\quad\n    (b)~ \\left[\\begin{array}{r} 2 \\\\ 0 \\end{array}\\right],\\quad\n    (c)~ \\left[\\begin{array}{r} 4 \\\\ -1 \\end{array}\\right],\\quad\n    (d)~ \\left[\\begin{array}{r} 0 \\\\ 0 \\end{array}\\right],\\quad\n    (e)~ \\left[\\begin{array}{r} 1 \\\\ 2 \\end{array}\\right].\\quad"
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of matrix multiplication · 习题 1（上游 exercises/Matrices-Multiplication-MatrixTimesVector.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Multiplication-MatrixTimesVector.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Write the following system of equations in vector form and matrix form.",
+      "sha": "dcb421124892",
+      "zh": "把下面的方程组写成向量形式和矩阵形式。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\n      2x + 3y + z &=& 4, \\\\\n      x       - 2z &=& 3, \\\\\n           2y + z &=& 1. \\\\\n    \\end{array}"
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of matrix multiplication · 习题 2（上游 exercises/Matrices-Multiplication-MatrixTimesVector.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Multiplication-MatrixTimesVector.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute the following by columns and by rows. Convince yourself that both method give the same result.",
+      "sha": "792a3fe5dd2f",
+      "zh": "分别按列和按行计算下面的乘积，并确认两种方法得到同样的结果。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{cccc}\n      a_{11} & a_{12} & a_{13} \\\\\n      a_{21} & a_{22} & a_{23} \\\\\n      a_{31} & a_{32} & a_{33} \\\\\n    \\end{array}\\right]\n    \\left[\\begin{array}{c}\n      x_1 \\\\\n      x_2 \\\\\n      x_3\n    \\end{array}\\right]."
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "By columns:",
+      "sha": "445b0c59907d",
+      "zh": "按列："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "x_1\\left[\\begin{array}{c}\n        a_{11} \\\\\n        a_{21} \\\\\n        a_{31} \\\\\n      \\end{array}\\right]\n      + x_2\\left[\\begin{array}{c}\n        a_{12} \\\\\n        a_{22} \\\\\n        a_{32} \\\\\n      \\end{array}\\right]\n      + x_3\\left[\\begin{array}{c}\n        a_{13} \\\\\n        a_{23} \\\\\n        a_{33} \\\\\n      \\end{array}\\right]\n      ~=~\n      \\left[\\begin{array}{c}\n        a_{11}x_1+a_{12}x_2+a_{13}x_3 \\\\\n        a_{21}x_1+a_{22}x_2+a_{23}x_3 \\\\\n        a_{31}x_1+a_{32}x_2+a_{33}x_3 \\\\\n      \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "This is exactly the same as the “by rows” formula.",
+      "sha": "0d10019c7b61",
+      "zh": "这与“按行”的公式完全一致。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of matrix multiplication · 习题 3（上游 exercises/Matrices-Multiplication-MatrixTimesVector.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Multiplication-MatrixTimesVector.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Write the vector",
+      "sha": "918ae598cafe",
+      "zh": "把向量"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{c}\n      x_1-x_2+2x_3 \\\\\n      2x_3+x_1 \\\\\n      3x_3 \\\\\n      3x_4+3x_2+x_1\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "in the form $A\\left[\\begin{array}{c} x_1 \\\\ x_2 \\\\ x_3 \\\\ x_4 \\end{array}\\right]$ where $A$ is an appropriate matrix.",
+      "sha": "0bc02d6c29a8",
+      "zh": "写成 $A\\left[\\begin{array}{c} x_1 \\\\ x_2 \\\\ x_3 \\\\ x_4 \\end{array}\\right]$ 的形式，其中 $A$ 是某个合适的矩阵。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$A=\\left[\\begin{array}{rrrr} 1 & -1 & 2 & 0 \\\\ 1 & 0 & 2 & 0 \\\\ 0 & 0 & 3 & 0 \\\\ 1 & 3 & 0 & 3 \\end{array}\\right]$",
+      "sha": "2526d5590bab",
+      "zh": "$A=\\left[\\begin{array}{rrrr} 1 & -1 & 2 & 0 \\\\ 1 & 0 & 2 & 0 \\\\ 0 & 0 & 3 & 0 \\\\ 1 & 3 & 0 & 3 \\end{array}\\right]$"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of matrix multiplication · 习题 4（上游 exercises/Matrices-Multiplication-MatrixTimesVector.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Multiplication-MatrixTimesVector.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Write the vector",
+      "sha": "918ae598cafe",
+      "zh": "把向量"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{c}\n      x_1+3x_2+2x_3 \\\\\n      2x_3+x_1 \\\\\n      6x_3 \\\\\n      x_4+3x_2+x_1\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "in the form $A\\left[\\begin{array}{c} x_1 \\\\ x_2 \\\\ x_3 \\\\ x_4 \\end{array}\\right]$ where $A$ is an appropriate matrix.",
+      "sha": "0bc02d6c29a8",
+      "zh": "写成 $A\\left[\\begin{array}{c} x_1 \\\\ x_2 \\\\ x_3 \\\\ x_4 \\end{array}\\right]$ 的形式，其中 $A$ 是某个合适的矩阵。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$A=\\left[\\begin{array}{rrrr} 1 & 3 & 2 & 0 \\\\ 1 & 0 & 2 & 0 \\\\ 0 & 0 & 6 & 0 \\\\ 1 & 3 & 0 & 1 \\end{array}\\right]$",
+      "sha": "0565521e1f47",
+      "zh": "$A=\\left[\\begin{array}{rrrr} 1 & 3 & 2 & 0 \\\\ 1 & 0 & 2 & 0 \\\\ 0 & 0 & 6 & 0 \\\\ 1 & 3 & 0 & 1 \\end{array}\\right]$"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of matrix multiplication · 习题 5（上游 exercises/Matrices-Multiplication-MatrixTimesVector.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Multiplication-MatrixTimesVector.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex6",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the matrices",
+      "sha": "4321c47911b9",
+      "zh": "考虑下列矩阵"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A =\\left[\\begin{array}{rrr}\n      1 & 2 & 3 \\\\\n      2 & 1 & 7\n    \\end{array}\\right],\\quad\n    B=\\left[\\begin{array}{rrr}\n      3 & -1 & 2 \\\\\n      -3 & 2 & 1\n    \\end{array}\\right],\\quad\n    C =\\left[\\begin{array}{rr}\n      1 & 2 \\\\\n      3 & 1\n    \\end{array}\\right],\\quad\n    D=\\left[\\begin{array}{rr}\n      -1 & 2 \\\\\n      2 & -3\n    \\end{array}\\right],\\quad\n    E=\\left[\\begin{array}{r}\n      2 \\\\\n      3\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the following if possible. If it is not possible explain why.",
+      "sha": "d6469ba930c3",
+      "zh": "如果可能，求出下列各式；如果不可能，说明原因。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$-3A$",
+         "sha": "79754f3ceef1",
+         "zh": "$-3A$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$3B-A$",
+         "sha": "5c823d912ccb",
+         "zh": "$3B-A$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$AC$",
+         "sha": "a179ff2638e4",
+         "zh": "$AC$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$CB$",
+         "sha": "3e3a4ec0df57",
+         "zh": "$CB$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$AE$",
+         "sha": "9a65c05bd85d",
+         "zh": "$AE$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$EA$",
+         "sha": "2d9456e03618",
+         "zh": "$EA$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rrr} -3 & -6 & -9 \\\\ -6 & -3 & -21 \\end{array}\\right]$.",
+         "sha": "7c8b9caabe5b",
+         "zh": "$\\left[\\begin{array}{rrr} -3 & -6 & -9 \\\\ -6 & -3 & -21 \\end{array}\\right]$."
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rrr} 8 & -5 & 3 \\\\ -11 & 5 & -4 \\end{array}\\right]$.",
+         "sha": "4b40378dcaca",
+         "zh": "$\\left[\\begin{array}{rrr} 8 & -5 & 3 \\\\ -11 & 5 & -4 \\end{array}\\right]$."
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not possible.",
+         "sha": "a60556bafb6b",
+         "zh": "不可能。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rrr} -3 & 3 & 4 \\\\ 6 & -1 & 7 \\end{array}\\right]$.",
+         "sha": "de27500ca19b",
+         "zh": "$\\left[\\begin{array}{rrr} -3 & 3 & 4 \\\\ 6 & -1 & 7 \\end{array}\\right]$."
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not possible.",
+         "sha": "a60556bafb6b",
+         "zh": "不可能。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not possible.",
+         "sha": "a60556bafb6b",
+         "zh": "不可能。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of matrix multiplication · 习题 1（上游 exercises/Matrices-Multiplication-Multiplication.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Multiplication-Multiplication.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex7",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Consider the matrices",
+      "sha": "4321c47911b9",
+      "zh": "考虑下列矩阵"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A =\\left[\\begin{array}{rr}\n      1 & 2 \\\\\n      3 & 2 \\\\\n      1 & -1\n    \\end{array}\\right],\\quad\n    B=\\left[\\begin{array}{rrr}\n      2 & -5 & 2 \\\\\n      -3 & 2 & 1\n    \\end{array}\\right],\\quad\n    C =\\left[\\begin{array}{rr}\n      1 & 2 \\\\\n      5 & 0\n    \\end{array}\\right],\\quad\n    D=\\left[\\begin{array}{rr}\n      -1 & 1 \\\\\n      4 & -3\n    \\end{array}\\right],\\quad\n    E=\\left[\\begin{array}{r}\n      1 \\\\\n      3\n    \\end{array}\\right]"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the following if possible. If it is not possible explain why.",
+      "sha": "d6469ba930c3",
+      "zh": "如果可能，求出下列各式；如果不可能，说明原因。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$-3A$",
+         "sha": "79754f3ceef1",
+         "zh": "$-3A$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$3B-A$",
+         "sha": "5c823d912ccb",
+         "zh": "$3B-A$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$AC$",
+         "sha": "a179ff2638e4",
+         "zh": "$AC$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$CA$",
+         "sha": "e657259c0995",
+         "zh": "$CA$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$AE$",
+         "sha": "9a65c05bd85d",
+         "zh": "$AE$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$EA$",
+         "sha": "2d9456e03618",
+         "zh": "$EA$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$BE$",
+         "sha": "a7baf95ecafc",
+         "zh": "$BE$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$DE$",
+         "sha": "6d5c9afa92ae",
+         "zh": "$DE$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rr} -3 & -6 \\\\ -9 & -6 \\\\ -3 & 3 \\end{array}\\right]$.",
+         "sha": "0a24c97d242f",
+         "zh": "$\\left[\\begin{array}{rr} -3 & -6 \\\\ -9 & -6 \\\\ -3 & 3 \\end{array}\\right]$."
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not possible.",
+         "sha": "a60556bafb6b",
+         "zh": "不可能。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{rr} 11 & 2 \\\\ 13 & 6 \\\\ -4 & 2 \\end{array}\\right]$.",
+         "sha": "01b9db07cc8d",
+         "zh": "$\\left[\\begin{array}{rr} 11 & 2 \\\\ 13 & 6 \\\\ -4 & 2 \\end{array}\\right]$."
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not possible.",
+         "sha": "a60556bafb6b",
+         "zh": "不可能。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{r} 7 \\\\ 9 \\\\ -2 \\end{array}\\right]$.",
+         "sha": "00efca163206",
+         "zh": "$\\left[\\begin{array}{r} 7 \\\\ 9 \\\\ -2 \\end{array}\\right]$."
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not possible.",
+         "sha": "a60556bafb6b",
+         "zh": "不可能。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not possible.",
+         "sha": "a60556bafb6b",
+         "zh": "不可能。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\left[\\begin{array}{r} 2 \\\\ -5 \\end{array}\\right]$.",
+         "sha": "064b421c696c",
+         "zh": "$\\left[\\begin{array}{r} 2 \\\\ -5 \\end{array}\\right]$."
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of matrix multiplication · 习题 2（上游 exercises/Matrices-Multiplication-Multiplication.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Multiplication-Multiplication.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex8",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\left[\\begin{array}{rr} -1 & -1 \\\\ 3 & 3 \\end{array}\\right]$. Find all $2\\times 2$-matrices $B$ such that $AB=0$.",
+      "sha": "1841207c6d4f",
+      "zh": "设 $A=\\left[\\begin{array}{rr} -1 & -1 \\\\ 3 & 3 \\end{array}\\right]$。求所有满足 $AB=0$ 的 $2\\times 2$ 矩阵 $B$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\left[\\begin{array}{rr} -1 & -1 \\\\ 3 & 3 \\end{array}\\right] \\left[\\begin{array}{cc} x & y \\\\ z & w \\end{array}\\right] = \\left[\\begin{array}{cc} -x-z & -w-y \\\\ 3x+3z & 3w+3y \\end{array}\\right] = \\left[\\begin{array}{cc} 0 & 0 \\\\ 0 & 0 \\end{array}\\right]$. Solution is: $w=-y$, $x=-z$. So the matrices are of the form $\\left[\\begin{array}{rr} x & y \\\\ -x & -y \\end{array}\\right]$.",
+      "sha": "01af4c0f1675",
+      "zh": "$\\left[\\begin{array}{rr} -1 & -1 \\\\ 3 & 3 \\end{array}\\right] \\left[\\begin{array}{cc} x & y \\\\ z & w \\end{array}\\right] = \\left[\\begin{array}{cc} -x-z & -w-y \\\\ 3x+3z & 3w+3y \\end{array}\\right] = \\left[\\begin{array}{cc} 0 & 0 \\\\ 0 & 0 \\end{array}\\right]$。解为：$w=-y$，$x=-z$。所以这样的矩阵形如 $\\left[\\begin{array}{rr} x & y \\\\ -x & -y \\end{array}\\right]$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of matrix multiplication · 习题 3（上游 exercises/Matrices-Multiplication-Multiplication.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Multiplication-Multiplication.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex9",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\left[\\begin{array}{rr} 1 & 2 \\\\ 3 & 4 \\end{array}\\right]$ and $B=\\left[\\begin{array}{rr} 1 & 2 \\\\ 3 & k \\end{array}\\right]$. Is it possible to find $k$ such that $AB=BA$? If so, what should $k$ equal?",
+      "sha": "3c629582c3c1",
+      "zh": "设 $A=\\left[\\begin{array}{rr} 1 & 2 \\\\ 3 & 4 \\end{array}\\right]$，$B=\\left[\\begin{array}{rr} 1 & 2 \\\\ 3 & k \\end{array}\\right]$。能否找到 $k$ 使 $AB=BA$？如果能，$k$ 应等于多少？"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\left[\\begin{array}{cc}\n        1 & 2 \\\\\n        3 & 4\n      \\end{array}\\right] \\left[\\begin{array}{cc}\n        1 & 2 \\\\\n        3 & k\n      \\end{array}\\right] &=& \\left[\\begin{array}{cc}\n        7 & 2k+2 \\\\\n        15 & 4k+6\n      \\end{array}\\right], \\\\\n      \\left[\\begin{array}{cc}\n        1 & 2 \\\\\n        3 & k\n      \\end{array}\\right] \\left[\\begin{array}{cc}\n        1 & 2 \\\\\n        3 & 4\n      \\end{array}\\right] &=& \\left[\\begin{array}{cc}\n        7 & 10 \\\\\n        3k+3 & 4k+6\n      \\end{array}\\right].\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Thus you must have $3k+3=15$ and $2k+2=10$. Solution is: $k=4$.",
+      "sha": "9b04be721bee",
+      "zh": "因此必须有 $3k+3=15$ 且 $2k+2=10$。解为：$k=4$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of matrix multiplication · 习题 4（上游 exercises/Matrices-Multiplication-Multiplication.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Multiplication-Multiplication.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex10",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\left[\\begin{array}{rr} 1 & 2 \\\\ 3 & 4 \\end{array}\\right]$ and $B=\\left[\\begin{array}{rr} 1 & 2 \\\\ 1 & k \\end{array}\\right]$. Is it possible to choose $k$ such that $AB=BA$? If so, what should $k$ equal?",
+      "sha": "4829bda83799",
+      "zh": "设 $A=\\left[\\begin{array}{rr} 1 & 2 \\\\ 3 & 4 \\end{array}\\right]$，$B=\\left[\\begin{array}{rr} 1 & 2 \\\\ 1 & k \\end{array}\\right]$。能否选取 $k$ 使 $AB=BA$？如果能，$k$ 应等于多少？"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\left[\\begin{array}{cc}\n        1 & 2 \\\\\n        3 & 4\n      \\end{array}\\right] \\left[\\begin{array}{cc}\n        1 & 2 \\\\\n        1 & k\n      \\end{array}\\right] &=& \\left[\\begin{array}{cc}\n        3 & 2k+2 \\\\\n        7 & 4k+6\n      \\end{array}\\right], \\\\\n      \\left[\\begin{array}{cc}\n        1 & 2 \\\\\n        1 & k\n      \\end{array}\\right] \\left[\\begin{array}{cc}\n        1 & 2 \\\\\n        3 & 4\n      \\end{array}\\right] &=& \\left[\\begin{array}{cc}\n        7 & 10 \\\\\n        3k+1 & 4k+2\n      \\end{array}\\right].\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "However, $7\\neq 3$ and so there is no possible choice of $k$ which will make these matrices commute.",
+      "sha": "d80cb019690c",
+      "zh": "但是 $7\\neq 3$，所以无论 $k$ 取什么值，这两个矩阵都不可能可交换。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of matrix multiplication · 习题 5（上游 exercises/Matrices-Multiplication-Multiplication.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Multiplication-Multiplication.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex11",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each pair of matrices, find the $(1,2)$-entry and $(2,3)$-entry of the product $AB$.",
+      "sha": "58a1c425387e",
+      "zh": "对下面每一对矩阵，求乘积 $AB$ 的 $(1,2)$ 元素和 $(2,3)$ 元素。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$A = \\left[\\begin{array}{rrr} 1 & 2 & -1 \\\\ 3 & 4 & 0 \\\\ 2 & 5 & 1 \\end{array}\\right]$, $B = \\left[\\begin{array}{rrr} 4 & 6 & -2 \\\\ 7 & 2 & 1 \\\\ -1 & 0 & 0 \\end{array}\\right]$",
+         "sha": "d73bb4a5cc8d",
+         "zh": "$A = \\left[\\begin{array}{rrr} 1 & 2 & -1 \\\\ 3 & 4 & 0 \\\\ 2 & 5 & 1 \\end{array}\\right]$，$B = \\left[\\begin{array}{rrr} 4 & 6 & -2 \\\\ 7 & 2 & 1 \\\\ -1 & 0 & 0 \\end{array}\\right]$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$A = \\left[\\begin{array}{rrr} 1 & 3 & 1 \\\\ 0 & 2 & 4 \\\\ 1 & 0 & 5 \\end{array}\\right]$, $B = \\left[\\begin{array}{rrr} 2 & 3 & 0 \\\\ -4 & 16 & 1 \\\\ 0 & 2 & 2 \\end{array}\\right]$",
+         "sha": "3e7d7fca4e98",
+         "zh": "$A = \\left[\\begin{array}{rrr} 1 & 3 & 1 \\\\ 0 & 2 & 4 \\\\ 1 & 0 & 5 \\end{array}\\right]$，$B = \\left[\\begin{array}{rrr} 2 & 3 & 0 \\\\ -4 & 16 & 1 \\\\ 0 & 2 & 2 \\end{array}\\right]$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of matrix multiplication · 习题 6（上游 exercises/Matrices-Multiplication-Multiplication.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Multiplication-Multiplication.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex12",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Compute $A^4$, where",
+      "sha": "18b55ec66224",
+      "zh": "计算 $A^4$，其中"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rr}\n      1 & -3 \\\\\n      2 & -5 \\\\\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Hint: you can save some work by calculating $A^2$ times $A^2$.",
+      "sha": "df2a392d4d8b",
+      "zh": "提示：计算 $A^2$ 乘 $A^2$，可以省些功夫。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\left[\\begin{array}{rr} -71 & 168 \\\\ -112 & 265 \\\\ \\end{array}\\right]$.",
+      "sha": "c419980ff350",
+      "zh": "$\\left[\\begin{array}{rr} -71 & 168 \\\\ -112 & 265 \\\\ \\end{array}\\right]$."
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of matrix multiplication · 习题 7（上游 exercises/Matrices-Multiplication-Multiplication.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Multiplication-Multiplication.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex13",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find $2\\times 2$-matrices $A$, $B$, and $C$ such that $A\\neq 0$, $C\\neq B$, but $AC=AB$.",
+      "sha": "322d3bc2af95",
+      "zh": "求 $2\\times 2$ 矩阵 $A$、$B$、$C$，使得 $A\\neq 0$，$C\\neq B$，但 $AC=AB$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$A = \\left[\\begin{array}{rr} 1 & -1 \\\\ -1 & 1 \\end{array}\\right]$, $B = \\left[\\begin{array}{cc} 1 & 1 \\\\ 1 & 1 \\end{array}\\right]$, $C = \\left[\\begin{array}{cc} 2 & 2 \\\\ 2 & 2 \\end{array}\\right]$.",
+      "sha": "a5d867730691",
+      "zh": "$A = \\left[\\begin{array}{rr} 1 & -1 \\\\ -1 & 1 \\end{array}\\right]$，$B = \\left[\\begin{array}{cc} 1 & 1 \\\\ 1 & 1 \\end{array}\\right]$，$C = \\left[\\begin{array}{cc} 2 & 2 \\\\ 2 & 2 \\end{array}\\right]$."
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of matrix multiplication · 习题 8（上游 exercises/Matrices-Multiplication-Multiplication.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Multiplication-Multiplication.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex14",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find $2\\times 2$-matrices $A$ and $B$ such that $A \\neq 0$ and $B \\neq 0$ but $AB = 0$.",
+      "sha": "4e155d58186c",
+      "zh": "求 $2\\times 2$ 矩阵 $A$ 和 $B$，使得 $A \\neq 0$，$B \\neq 0$，但 $AB = 0$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$A = \\left[\\begin{array}{rr} 1 & -1 \\\\ -1 & 1 \\end{array}\\right]$, $B = \\left[\\begin{array}{cc} 1 & 1 \\\\ 1 & 1 \\end{array}\\right]$.",
+      "sha": "4b5786b59265",
+      "zh": "$A = \\left[\\begin{array}{rr} 1 & -1 \\\\ -1 & 1 \\end{array}\\right]$，$B = \\left[\\begin{array}{cc} 1 & 1 \\\\ 1 & 1 \\end{array}\\right]$."
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of matrix multiplication · 习题 9（上游 exercises/Matrices-Multiplication-Multiplication.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Multiplication-Multiplication.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex15",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Find $3 \\times 3$-matrices $A$ and $B$ such that $AB \\neq BA$.",
+      "sha": "cc1dcb38872c",
+      "zh": "求 $3 \\times 3$ 矩阵 $A$ 和 $B$，使得 $AB \\neq BA$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$A = \\left[\\begin{array}{rrr} 0 & 1 & 0 \\\\ 1 & 0 & 0 \\\\ 0 & 0 & 0 \\\\ \\end{array}\\right]$, $B = \\left[\\begin{array}{rrr} 1 & 2 & 0 \\\\ 3 & 4 & 0 \\\\ 0 & 0 & 0 \\\\ \\end{array}\\right]$. Then $AB= \\left[\\begin{array}{rrr} 3 & 4 & 0 \\\\ 1 & 2 & 0 \\\\ 0 & 0 & 0 \\\\ \\end{array}\\right]$ and $BA = \\left[\\begin{array}{rrr} 2 & 1 & 0 \\\\ 4 & 3 & 0 \\\\ 0 & 0 & 0 \\\\ \\end{array}\\right]$.",
+      "sha": "d9c2a285137d",
+      "zh": "$A = \\left[\\begin{array}{rrr} 0 & 1 & 0 \\\\ 1 & 0 & 0 \\\\ 0 & 0 & 0 \\\\ \\end{array}\\right]$，$B = \\left[\\begin{array}{rrr} 1 & 2 & 0 \\\\ 3 & 4 & 0 \\\\ 0 & 0 & 0 \\\\ \\end{array}\\right]$。则 $AB= \\left[\\begin{array}{rrr} 3 & 4 & 0 \\\\ 1 & 2 & 0 \\\\ 0 & 0 & 0 \\\\ \\end{array}\\right]$，而 $BA = \\left[\\begin{array}{rrr} 2 & 1 & 0 \\\\ 4 & 3 & 0 \\\\ 0 & 0 & 0 \\\\ \\end{array}\\right]$。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of matrix multiplication · 习题 10（上游 exercises/Matrices-Multiplication-Multiplication.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Multiplication-Multiplication.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex16",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Give an example of a matrix $A$ such that $A^2=I$ and yet $A\\neq I$ and $A\\neq -I$.",
+      "sha": "21132cf90088",
+      "zh": "给出一个矩阵 $A$ 的例子，使 $A^2=I$，但 $A\\neq I$ 且 $A\\neq -I$。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$A = \\left[\\begin{array}{rr} 1 & 0 \\\\ 0 & -1 \\\\ \\end{array}\\right]$",
+      "sha": "cda090638aef",
+      "zh": "$A = \\left[\\begin{array}{rr} 1 & 0 \\\\ 0 & -1 \\\\ \\end{array}\\right]$"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of matrix multiplication · 习题 11（上游 exercises/Matrices-Multiplication-Multiplication.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Multiplication-Multiplication.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex17",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A matrix $A$ is called **idempotent** if $A^2=A$. Let",
+      "sha": "4dcf92bfb397",
+      "zh": "若 $A^2=A$，则称矩阵 $A$ 为**幂等矩阵**（idempotent）。设"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A=\n    \\left[\\begin{array}{rrr}\n      2 & 0 & 2 \\\\\n      1 & 1 & 2 \\\\\n      -1 & 0 & -1\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Show that $A$ is idempotent.",
+      "sha": "be0e1c7ccd4e",
+      "zh": "证明 $A$ 是幂等矩阵。"
+     }
+    }
+   ],
+   "sol": [],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of matrix multiplication · 习题 12（上游 exercises/Matrices-Multiplication-Multiplication.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Multiplication-Multiplication.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex18",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Suppose $A$ and $B$ are square matrices of the same size. Which of the following are necessarily true?",
+      "sha": "5b879ceca0ad",
+      "zh": "设 $A$ 和 $B$ 是同样大小的方阵。下列各式中哪些一定成立？"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(A+B)^2=A^2+2AB+B^2$.",
+         "sha": "88f9ce3e2fda",
+         "zh": "$(A+B)^2=A^2+2AB+B^2$."
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(A-B)^2=A^2-2AB+B^2$.",
+         "sha": "d2c075ad6aa8",
+         "zh": "$(A-B)^2=A^2-2AB+B^2$."
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(AB)^2=A^2B^2$.",
+         "sha": "909c7dd7cd2d",
+         "zh": "$(AB)^2=A^2B^2$."
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(A+B)^2=A^2+AB+BA+B^2$.",
+         "sha": "8ea036e4f866",
+         "zh": "$(A+B)^2=A^2+AB+BA+B^2$."
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$A^2B^2=A(AB) B$.",
+         "sha": "170ee9f09f8b",
+         "zh": "$A^2B^2=A(AB) B$."
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(A+B)^3=A^3+3A^2B+3AB^2+B^3$.",
+         "sha": "8c65503cedd2",
+         "zh": "$(A+B)^3=A^3+3A^2B+3AB^2+B^3$."
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$(A+B) (A-B) =A^2-B^2$.",
+         "sha": "22bcd46033c0",
+         "zh": "$(A+B) (A-B) =A^2-B^2$."
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not necessarily true.",
+         "sha": "bee6a4dc54f7",
+         "zh": "不一定成立。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not necessarily true.",
+         "sha": "bee6a4dc54f7",
+         "zh": "不一定成立。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not necessarily true.",
+         "sha": "bee6a4dc54f7",
+         "zh": "不一定成立。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Necessarily true.",
+         "sha": "d59e529aa93d",
+         "zh": "一定成立。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Necessarily true.",
+         "sha": "d59e529aa93d",
+         "zh": "一定成立。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not necessarily true.",
+         "sha": "bee6a4dc54f7",
+         "zh": "不一定成立。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not necessarily true.",
+         "sha": "bee6a4dc54f7",
+         "zh": "不一定成立。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Selinger《Linear Algebra: A First Course》（CC BY 4.0 开源教材）",
+     "locator": "Properties of matrix multiplication · 习题 1（上游 exercises/Matrices-Multiplication-Properties.tex）",
+     "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/exercises/Matrices-Multiplication-Properties.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "矩阵乘法的性质"
+}

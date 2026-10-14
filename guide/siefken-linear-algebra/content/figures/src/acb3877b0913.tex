@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+		\coordinate (A) at (2,0);
+		\coordinate (B) at (0,2);
+		\coordinate (O) at (0,0);
+		\draw[fill,gray!30!white] (O) -- +(B) -- +($(A)+(B)$) -- +(A) -- (O);
+		\draw[->,thick,myred!60!white] (0,0) -- +(A) node [midway,below] {$\vec e_j$};
+		\draw[->,thick,mypink] (0,0) -- +(B) node [midway,above left] {$\vec e_i$};
+		\draw[black,dashed,<->] ($.1*(A)$) -- ($.1*(A)+(0,2)$) node [midway,right] {$\text{height}=1$};
+	\end{tikzpicture}

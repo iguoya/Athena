@@ -1,0 +1,38 @@
+\begin{tikzpicture}
+		\def\dotMarkRightAngle[size=#1](#2,#3,#4){
+		 \draw ($(#3)!#1!(#2)$) -- 
+		       ($($(#3)!#1!(#2)$)!#1!90:(#2)$) --
+		       ($(#3)!#1!(#4)$);
+		 \path (#3) -- ($($(#3)!#1!(#2)$)!#1!90:(#2)$);
+		}
+		\begin{axis}[
+		    anchor=origin,
+		    name=plot1,
+		    disabledatascaling,
+		    xmin=-1,xmax=4,
+		    ymin=-1,ymax=6,
+			xtick={-4,...,8},
+			ytick={-2,...,8},
+		    x=1cm,y=1cm,
+		    grid=both,
+		    grid style={line width=.1pt, draw=gray!10},
+		    axis lines=middle,
+		    minor tick num=0,
+		    enlargelimits={abs=0.5},
+		    axis line style={latex-latex},
+		    ticklabel style={font=\tiny,fill=white},
+		    xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+		    ylabel style={at={(ticklabel* cs:1)},anchor=south west}
+		]
+			\coordinate (A) at (2,4);
+			\coordinate (O) at (0,0);
+			\coordinate (P) at (1,2);
+			\coordinate (B) at (3,1);
+			\dotMarkRightAngle[size=6pt](O,P,B);
+			\draw[black!50,  dashed] (P) -- (B);
+			\draw[myorange, thick] ($-2*(A)$) -- ($2*(A)$);
+			\fill[mygreen]  (B) circle[radius=2pt] node[above right] {$\vec u$};
+			\fill[mypink]  (P) circle[radius=2pt] node[above left, yshift=4pt, xshift=4pt] {$\Proj_\ell\vec u$};
+		\end{axis}
+		\node[myorange, above left] at (2.5,4.75) {$\ell=\Span\Set{\vec v}$};
+	\end{tikzpicture}

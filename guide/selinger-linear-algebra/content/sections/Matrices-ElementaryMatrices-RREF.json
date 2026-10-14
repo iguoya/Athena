@@ -1,0 +1,260 @@
+{
+ "id": "Matrices-ElementaryMatrices-RREF",
+ "title_en": "Elementary matrices and reduced echelon form s",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "Suppose an $m\\times n$-matrix $A$ is row reduced to its reduced echelon form. By tracking each row operation completed, this row reduction can be performed through multiplication by elementary matrices. The following theorem uses this fact.",
+    "sha": "5c13883ee065",
+    "zh": "设 $m\\times n$ 矩阵 $A$ 被行化简为它的简化行阶梯形。只要记录下每一步所做的行变换，这个行化简过程就可以通过乘以初等矩阵来完成。下面的定理用的就是这一点。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "The form $R=UA$",
+    "sha": "9237c14642a3",
+    "zh": "$R=UA$ 的形式"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be any $m\\times n$-matrix and let $R$ be its reduced echelon form. Then there exists an invertible $m\\times m$-matrix $U$ such that",
+      "sha": "96310410fcc7",
+      "zh": "设 $A$ 是任意一个 $m\\times n$ 矩阵，$R$ 是它的简化行阶梯形。那么存在一个可逆的 $m\\times m$ 矩阵 $U$，使得"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "R=UA."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Specifically, $U$ can be computed as the product (from right to left) of the elementary matrices of all row operations used to convert $A$ to reduced echelon form.",
+      "sha": "ec5d01c808a0",
+      "zh": "具体地，$U$ 可以这样算出：把$A$ 化为简化行阶梯形所用的全部行变换对应的初等矩阵相乘（从右到左）。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "The form $R=UA$",
+    "sha": "9237c14642a3",
+    "zh": "$R=UA$ 的形式"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let",
+      "sha": "ef5fe1edf379",
+      "zh": "设"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = \\left[\\begin{array}{rr}\n      0 & 1 \\\\\n      1 & 0 \\\\\n      2 & 0\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Find the reduced echelon form of $A$ and write it in the form $R=UA$, where $U$ is invertible.",
+      "sha": "fff29ffc8158",
+      "zh": "求 $A$ 的简化行阶梯形，并把它写成 $R=UA$ 的形式，其中 $U$ 可逆。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "To find the reduced echelon form $R$, we row reduce $A$. For each step, we will record the appropriate elementary matrix. First, switch rows $1$ and $2$.",
+      "sha": "8443fe63e5e6",
+      "zh": "为了求简化行阶梯形 $R$，我们对 $A$ 做行化简。每一步都记下相应的初等矩阵。首先，交换第 $1$ 行与第 $2$ 行。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr}\n      0 & 1 \\\\\n      1 & 0 \\\\\n      2 & 0\n    \\end{array}\\right]\n    \\quad\\stackrel{R_1\\rowswap R_2}{\\roweq}\\quad\n    \\left[\\begin{array}{rr}\n      1 & 0 \\\\\n      0 & 1 \\\\\n      2 & 0\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The corresponding elementary matrix is $E_1 = \\left[\\begin{array}{rrr} 0 & 1 & 0 \\\\ 1 & 0 & 0 \\\\ 0 & 0 & 1 \\end{array}\\right]$, i.e.,",
+      "sha": "fd36c2eddd2d",
+      "zh": "对应的初等矩阵是 $E_1 = \\left[\\begin{array}{rrr} 0 & 1 & 0 \\\\ 1 & 0 & 0 \\\\ 0 & 0 & 1 \\end{array}\\right]$，即"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n      0 & 1 & 0 \\\\\n      1 & 0 & 0 \\\\\n      0 & 0 & 1\n    \\end{array}\\right]\n    \\left[\\begin{array}{rr}\n      0 & 1 \\\\\n      1 & 0 \\\\\n      2 & 0\n    \\end{array}\\right]\n    ~=~\\left[\\begin{array}{rr}\n      1 & 0 \\\\\n      0 & 1 \\\\\n      2 & 0\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Next, subtract $2$ times the first row from the third row.",
+      "sha": "db8b87ddaca2",
+      "zh": "接下来，从第三行减去第一行的 $2$ 倍。"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr}\n      1 & 0 \\\\\n      0 & 1 \\\\\n      2 & 0\n    \\end{array}\\right]\n    \\quad\\stackrel{R_3\\rowop R_3-2R_1}{\\roweq}\\quad\n    \\left[\\begin{array}{rr}\n      1 & 0 \\\\\n      0 & 1 \\\\\n      0 & 0\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The corresponding elementary matrix is $E_2 = \\left[\\begin{array}{rrr} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ -2 & 0 & 1 \\end{array}\\right]$, i.e.,",
+      "sha": "18108186519f",
+      "zh": "对应的初等矩阵是 $E_2 = \\left[\\begin{array}{rrr} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ -2 & 0 & 1 \\end{array}\\right]$，即"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rrr}\n    1  & 0 & 0 \\\\\n    0  & 1 & 0 \\\\\n    -2 & 0 & 1\n    \\end{array}\\right]\n    \\left[\\begin{array}{rr}\n      1 & 0 \\\\\n      0 & 1 \\\\\n      2 & 0\n    \\end{array}\\right]\n    ~=~\\left[\\begin{array}{rr}\n      1 & 0 \\\\\n      0 & 1 \\\\\n      0 & 0\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Notice that the resulting matrix is $R$, the required reduced echelon form of $A$. We can then write",
+      "sha": "e8682c6df8d8",
+      "zh": "注意，得到的矩阵就是 $R$，即 $A$ 所要求的简化行阶梯形。于是可以写成"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}R &=& E_2E_1A \\\\\n      &=& U A.\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "It remains to compute $U$:",
+      "sha": "6e3bd7b1e9d2",
+      "zh": "还需要算出 $U$："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "U ~=~ E_2E_1 ~=~\n    \\left[\\begin{array}{rrr}\n      1 & 0 & 0 \\\\\n      0 & 1 & 0 \\\\\n      -2 & 0 & 1\n    \\end{array}\\right]\n    \\left[\\begin{array}{rrr}\n      0 & 1 & 0 \\\\\n      1 & 0 & 0 \\\\\n      0 & 0 & 1\n    \\end{array}\\right] \\\\\n    ~=~ \\left[\\begin{array}{rrr}\n      0 & 1 & 0 \\\\\n      1 & 0 & 0 \\\\\n      0 & -2  & 1\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We can verify that $R = UA$ holds for this matrix $U$:",
+      "sha": "260e47d02137",
+      "zh": "我们可以验证，对这个矩阵 $U$，$R = UA$ 确实成立："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "UA ~=~ \\left[\\begin{array}{rrr}\n      0 & 1 & 0 \\\\\n      1 & 0 & 0 \\\\\n      0 & -2  & 1\n    \\end{array}\\right]\n    \\left[\\begin{array}{rr}\n      0 & 1 \\\\\n      1 & 0 \\\\\n      2 & 0\n    \\end{array}\\right] \\\\\n    ~=~ \\left[\\begin{array}{rr}\n      1 & 0 \\\\\n      0 & 1 \\\\\n      0 & 0\n    \\end{array}\\right] \\\\\n    ~=~ R."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "While the process used in the above example is reliable and simple when only a few row operations are used, it becomes cumbersome in a case where many row operations are needed to carry $A$ to $R$. The following theorem provides an alternate way to find the matrix $U$.",
+    "sha": "b82beca95e65",
+    "zh": "上面例子里用的方法可靠，在只用到几步行变换时也很简单；但如果把 $A$ 化到 $R$ 需要很多步行变换，就变得很繁琐。下面的定理给出了另一种求矩阵 $U$ 的办法。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Finding the matrix $U$",
+    "sha": "4acd5b1e8d5a",
+    "zh": "求矩阵 $U$"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $m\\times n$-matrix and let $R$ be its reduced echelon form. Then $R = UA$, where $U$ is an invertible $m \\times m$-matrix found by forming the augmented matrix $\\mat{A\\mid I}$ and row reducing to $\\mat{R\\mid U}$.",
+      "sha": "7ccafcc679b2",
+      "zh": "设 $A$ 是 $m\\times n$ 矩阵，$R$ 是它的简化行阶梯形。那么 $R = UA$，其中 $U$ 是可逆的 $m \\times m$ 矩阵，它可以这样求得：写出增广矩阵 $\\mat{A\\mid I}$，并行化简为 $\\mat{R\\mid U}$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let's revisit the above example using the process outlined in Theorem “Finding the matrix $U$”.",
+    "sha": "166c4b0e58c7",
+    "zh": "我们用定理“求矩阵 $U$”所给的步骤，把上面的例子再做一遍。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": {
+    "en": "The form $R=UA$, revisited",
+    "sha": "ca0c2e14cc10",
+    "zh": "再看 $R=UA$ 的形式"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A = \\left[\\begin{array}{rr} 0 & 1 \\\\ 1 & 0 \\\\ 2 & 0 \\end{array}\\right]$. Use the process of Theorem “Finding the matrix $U$” to find $U$ such that $R=UA$.",
+      "sha": "81aeaae3ea55",
+      "zh": "设 $A = \\left[\\begin{array}{rr} 0 & 1 \\\\ 1 & 0 \\\\ 2 & 0 \\end{array}\\right]$。用定理“求矩阵 $U$”的步骤，求 $U$ 使得 $R=UA$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "solution",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "First, we set up the augmented matrix $\\mat{A\\mid I}$:",
+      "sha": "d452ddee5346",
+      "zh": "首先，写出增广矩阵 $\\mat{A\\mid I}$："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\left[\\begin{array}{rr|rrr}\n      0 & 1 & 1 & 0 & 0 \\\\\n      1 & 0 & 0 & 1 & 0 \\\\\n      2 & 0 & 0 & 0 & 1\n    \\end{array}\\right]."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Now, we row reduce until the left-hand side is in reduced echelon form:",
+      "sha": "8a9bad717434",
+      "zh": "现在做行化简，直到左边化为简化行阶梯形："
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\begin{array}{rcl}\\left[\\begin{array}{rr|rrr}\n      0 & 1 & 1 & 0 & 0 \\\\\n      1 & 0 & 0 & 1 & 0 \\\\\n      2 & 0 & 0 & 0 & 1\n    \\end{array}\\right]\n        &\\stackrel{R_1\\rowswap R_2}{\\roweq}\n            &\n              \\left[\\begin{array}{rr|rrr}\n                1 & 0 & 0 & 1 & 0 \\\\\n                0 & 1 & 1 & 0 & 0 \\\\\n                2 & 0 & 0 & 0 & 1\n              \\end{array}\\right] \\\\\n        &\\stackrel{R_3\\rowop R_3-2R_1}{\\roweq}\n            &\n              \\left[\\begin{array}{rr|rrr}\n                1 & 0 & 0 & 1 & 0 \\\\\n                0 & 1 & 1 & 0 & 0 \\\\\n                0 & 0 & 0 & -2 & 1\n              \\end{array}\\right].\\end{array}"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The left-hand side of this augmented matrix is $R$, and the right-hand side is $U$. Comparing this to the matrices $R$ and $U$ we found in Example “The form $R=UA$”, we see that the same matrices are obtained regardless of which process is used.",
+      "sha": "4d858f184be8",
+      "zh": "这个增广矩阵的左边是 $R$，右边是 $U$。把它们与例“$R=UA$ 的形式”中求得的矩阵 $R$ 和 $U$ 相比较，可以看到，无论用哪种方法，得到的矩阵都是相同的。"
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [],
+ "title_zh": "初等矩阵与简化行阶梯形"
+}

@@ -1,0 +1,130 @@
+[
+ {
+  "id": "ex1",
+  "stem": "高斯积分 $\\int_{-\\infty}^{\\infty} e^{-x^2}\\,dx$ 在概率论里反复出现。先预测它的值，再运行：\n\n```octave\nf = @(x) exp (-x.^2);\nI1 = quadgk (f, -Inf, Inf)\nI2 = quadgk (f, 0, Inf)\n```\n\n`I1` 与 `I2` 各是多少？",
+  "check": {
+   "kind": "numbers",
+   "ask": "依次写出 I1、I2 两个数（保留到小数点后至少 6 位）。",
+   "answer": [
+    1.7724538509055159,
+    0.886226925452758
+   ],
+   "hint": "无穷区间直接把 `Inf` 写进上下限。$e^{-x^2}$ 是偶函数，想想半区间和全区间的积分是什么关系。"
+  },
+  "verify": "f = @(x) exp (-x.^2); result = [quadgk(f, -Inf, Inf), quadgk(f, 0, Inf)];",
+  "sol": "被积函数是偶函数，所以 $I_1 = 2 I_2$。这个积分的精确值是 $\\sqrt{\\pi} \\approx 1.77245$，故 $I_2 = \\sqrt{\\pi}/2 \\approx 0.88623$。`quadgk` 对含 `Inf` 的区间会自动做变量代换，不需要自己截断区间。\n\n```octave\n>> f = @(x) exp (-x.^2);\n>> I1 = quadgk (f, -Inf, Inf)\nI1 = 1.7725\n>> I2 = quadgk (f, 0, Inf)\nI2 = 0.8862\n>> sqrt (pi)\nans = 1.7725\n```",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "quad · quadgk",
+    "note": "自编，答案由 Octave 8.4 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex2",
+  "stem": "手册说：被积函数要写成「点点相乘」的形式，因为 `quadgk`、`integral` 等一次会把一整个向量传给它。运行：\n\n```octave\nf = @(x) x*sin (x);\nquadgk (f, 0, pi)\n```\n\n（$\\int_0^{\\pi} x \\sin x \\, dx = \\pi$。）这条命令会怎样？",
+  "check": {
+   "kind": "choice",
+   "options": [
+    {
+     "text": "返回 3.1416，Octave 会自动把 `*` 当作逐元素乘法处理",
+     "ok": false,
+     "why": "Octave 不会替你改运算符。`*` 对两个同形的列向量是矩阵乘法，维数不匹配，直接报错。"
+    },
+    {
+     "text": "能运行，只是 `*` 变成了矩阵乘法，结果偏离 $\\pi$",
+     "ok": false,
+     "why": "两个 150×1 的列向量根本不能做矩阵乘法，不会算出一个偏离的结果，而是在第一次求值时就报错。"
+    },
+    {
+     "text": "报错：`operator *: nonconformant arguments`，因为 `x` 与 `sin (x)` 是同形的列向量",
+     "ok": true,
+     "why": "`quadgk` 把一批节点作为列向量一次传入，`x*sin (x)` 是 150×1 乘 150×1，不满足矩阵乘法的维数要求。改成 `x.*sin (x)` 即可。"
+    },
+    {
+     "text": "报错：`quadgk` 只接受函数名字符串，不接受匿名函数句柄",
+     "ok": false,
+     "why": "手册明确说函数可以是名字字符串也可以是函数句柄，匿名函数句柄是最常见的用法。"
+    }
+   ]
+  },
+  "sol": "`quadgk` 一次传给 `f` 的是一批节点（列向量），所以 `x*sin (x)` 是矩阵乘法的写法，维数不合。运行结果：\n\n```octave\n>> f = @(x) x*sin (x);\n>> quadgk (f, 0, pi)\nerror: operator *: nonconformant arguments (op1 is 150x1, op2 is 150x1)\n```\n\n改成 `g = @(x) x.*sin (x);` 后 `quadgk (g, 0, pi)` 得 `ans = 3.1416`。\n\n有两点值得对照。一是 `quad` 每次只传标量，所以手册说「点点形式对 `quad` 不是必需的」：`quad (f, 0, pi)` 同样得 `3.1416`。二是 `integral2` 传入的是同形的矩阵，`*` 不一定报错而会静默算出另一个数：`integral2 (@(x, y) x*y.^2, 0, 1, 0, 2)` 得 `26.445`，而正确值是 $4/3$。养成默认写 `.*`、`./`、`.^` 的习惯最稳妥。",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "quad · quadgk、quad",
+    "note": "自编，答案由 Octave 8.4 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex3",
+  "stem": "用离散点近似积分，精度取决于点怎么取。手册里 $\\int_0^{\\pi/2} \\sin x\\,dx = 1$ 的两种取点方式，先预测哪一种更准，再运行：\n\n```octave\nx1 = 0:0.1:pi/2;\nx2 = linspace (0, pi/2, 16);\ne1 = abs (trapz (x1, sin (x1)) - 1)\ne2 = abs (trapz (x2, sin (x2)) - 1)\n```\n\n两个误差是否都小于 $0.01$？",
+  "check": {
+   "kind": "numbers",
+   "ask": "依次写出两个 1 或 0：`e1 < 0.01` 与 `e2 < 0.01`（小于写 1，否则写 0）。",
+   "answer": [
+    0,
+    1
+   ],
+   "hint": "回头看手册 `trapz` 的两个例子：`0:0.1:pi/2` 的最后一个点落在哪里？它覆盖到积分区间的右端点了吗？"
+  },
+  "verify": "x1 = 0:0.1:pi/2; x2 = linspace (0, pi/2, 16); result = [abs(trapz(x1, sin(x1)) - 1) < 0.01, abs(trapz(x2, sin(x2)) - 1) < 0.01];",
+  "sol": "`0:0.1:pi/2` 的最后一个点是 `1.5`，而不是 $\\pi/2 \\approx 1.5708$，最后一小段 $[1.5, \\pi/2]$ 根本没被积分，少算了约 $0.07$。`linspace (0, pi/2, 16)` 含右端点，只剩梯形公式本身的截断误差，约 $9\\times 10^{-4}$。两个数组都是 16 个点，点数相同，决定精度的是**端点覆盖**。\n\n```octave\n>> e1 = abs (trapz (x1, sin (x1)) - 1)\ne1 = 0.071512\n>> e2 = abs (trapz (x2, sin (x2)) - 1)\ne2 = 9.1402e-04\n>> x1(end)\nans = 1.5000\n```\n\n所以 `e1 < 0.01` 为 0，`e2 < 0.01` 为 1。",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "quad · trapz",
+    "note": "自编，答案由 Octave 8.4 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex4",
+  "stem": "`cumtrapz` 返回的是「从起点到每个节点」的累积积分，相当于近似的原函数。先**手算**，再运行：\n\n```octave\nx = 0:0.5:2;\ny = x.^2;\nF = cumtrapz (x, y)\n```\n\n每一段的梯形面积是 $\\tfrac{1}{2}(y_i + y_{i+1})\\,\\Delta x$。`F` 的五个元素分别是多少？它们与精确原函数 $x^3/3$ 的差别有多大？",
+  "check": {
+   "kind": "numbers",
+   "ask": "按顺序写出 `F` 的 5 个元素。",
+   "answer": [
+    0,
+    0.0625,
+    0.375,
+    1.1875,
+    2.75
+   ],
+   "hint": "`F(1)` 恒为 0，其余每个元素是前一个元素加上一段梯形面积。$y = x^2$ 在 $x=0,0.5,1,1.5,2$ 处的值是 $0, 0.25, 1, 2.25, 4$。"
+  },
+  "verify": "x = 0:0.5:2; y = x.^2; result = cumtrapz (x, y);",
+  "sol": "逐段累加：$0.5\\cdot\\tfrac{0+0.25}{2}=0.0625$，再加 $0.5\\cdot\\tfrac{0.25+1}{2}=0.3125$ 得 $0.375$，再加 $0.8125$ 得 $1.1875$，再加 $1.5625$ 得 $2.75$。精确值 $x^3/3$ 在这些点分别是 $0,\\,0.0417,\\,0.3333,\\,1.125,\\,2.6667$；$x^2$ 是下凸函数，梯形在曲线上方，所以每个累积值都偏大。`F(end)` 等于 `trapz (x, y)`。\n\n```octave\n>> F = cumtrapz (x, y)\nF =\n\n        0   0.0625   0.3750   1.1875   2.7500\n\n>> x.^3/3\nans =\n\n        0   0.0417   0.3333   1.1250   2.6667\n\n>> trapz (x, y)\nans = 2.7500\n```",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "quad · cumtrapz",
+    "note": "自编，答案由 Octave 8.4 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex5",
+  "stem": "二重积分有两件事容易写错：积分限的顺序，和非矩形区域。先预测，再运行：\n\n```octave\nI = integral2 (@(x, y) x + y, 0, 1, 0, @(x) x)\nK = dblquad (@(x, y) x.*y.^2, 0, 2, 0, 1)\n```\n\n`I` 的积分区域是三角形 $0\\le y\\le x\\le 1$；`K` 的积分限依 `dblquad` 的签名顺序给出（先查手册里 `dblquad` 的参数说明）。`I` 与 `K` 各是多少？",
+  "check": {
+   "kind": "numbers",
+   "ask": "依次写出 I、K 两个数（保留到小数点后至少 6 位）。",
+   "answer": [
+    0.5,
+    0.6666666666666666
+   ],
+   "hint": "`dblquad` 的签名是 `dblquad (f, xa, xb, ya, yb)`，先给 $x$ 的上下限再给 $y$ 的。`integral2` 的第 4、5 个参数 $y$ 的上限可以是 $x$ 的函数句柄。"
+  },
+  "verify": "I = integral2 (@(x, y) x + y, 0, 1, 0, @(x) x); K = dblquad (@(x, y) x.*y.^2, 0, 2, 0, 1); result = [I, K];",
+  "sol": "`I`：$\\int_0^1\\!\\int_0^x (x+y)\\,dy\\,dx = \\int_0^1 \\tfrac{3}{2}x^2\\,dx = \\tfrac12$。`K`：$x$ 从 0 到 2、$y$ 从 0 到 1，$\\int_0^2 x\\,dx \\cdot \\int_0^1 y^2\\,dy = 2\\cdot\\tfrac13 = \\tfrac23$。如果把顺序当成 `(f, 0, 1, 0, 2)`，得到的是 $\\tfrac12\\cdot\\tfrac83 = \\tfrac43$，另一个数。\n\n```octave\n>> I = integral2 (@(x, y) x + y, 0, 1, 0, @(x) x)\nI = 0.5000\n>> K = dblquad (@(x, y) x.*y.^2, 0, 2, 0, 1)\nK = 0.6667\n>> L = dblquad (@(x, y) x.*y.^2, 0, 1, 0, 2)\nL = 1.3333\n```\n\n同一个被积函数在方形区域 $[0,1]^2$ 上用 `integral2 (@(x, y) x + y, 0, 1, 0, 1)` 得 1，是三角形区域结果的两倍；`dblquad` 只能处理矩形区域，三角形区域要用 `integral2`。",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "quad · dblquad、integral2",
+    "note": "自编，答案由 Octave 8.4 复算"
+   }
+  ]
+ }
+]

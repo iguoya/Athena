@@ -1,0 +1,1378 @@
+{
+ "id": "module16",
+ "title_en": "Diagonalization",
+ "blocks": [
+  {
+   "k": "outcome",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "How to diagonalize a matrix.",
+         "sha": "e2e387cb28d3",
+         "zh": "如何对角化一个矩阵。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "When a matrix can and cannot be diagonalized.",
+         "sha": "6cca78ea5e4f",
+         "zh": "矩阵什么时候可以对角化，什么时候不可以。"
+        }
+       }
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Suppose $\\mathcal T$ is a linear transformation and $\\vec v_1$ and $\\vec v_2$ are eigenvectors with eigenvalues $\\lambda_1$ and $\\lambda_2$. With this setup, for any $\\vec a\\in\\Span\\Set{\\vec v_1,\\vec v_2}$, we can compute $\\mathcal T(\\vec a)$ with minimal effort.",
+    "sha": "bab1e216394c",
+    "zh": "设 $\\mathcal T$ 是线性变换，$\\vec v_1$ 和 $\\vec v_2$ 是特征向量，特征值分别为 $\\lambda_1$ 和 $\\lambda_2$。在这个设定下，对任意 $\\vec a\\in\\Span\\Set{\\vec v_1,\\vec v_2}$，我们都可以毫不费力地算出 $\\mathcal T(\\vec a)$。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let's get specific. Define $\\mathcal T:\\R^2\\to\\R^2$ to be the linear transformation with matrix $M=\\mat{1&2\\\\3&2}$. Let $\\vec v_1=\\mat{-1\\\\1}$ and $\\vec v_2=\\mat{2\\\\3}$, and notice that $\\vec v_1$ is an eigenvector for $\\mathcal T$ with eigenvalue $-1$ and that $\\vec v_2$ is an eigenvector for $\\mathcal T$ with eigenvalue $4$. Let $\\vec a=\\vec v_1+\\vec v_2$.",
+    "sha": "9769c2990d67",
+    "zh": "来看具体的例子。设 $\\mathcal T:\\R^2\\to\\R^2$ 是矩阵为 $M=\\mat{1&2\\\\3&2}$ 的线性变换。令 $\\vec v_1=\\mat{-1\\\\1}$，$\\vec v_2=\\mat{2\\\\3}$，注意 $\\vec v_1$ 是 $\\mathcal T$ 的特征向量，特征值为 $-1$，而 $\\vec v_2$ 是 $\\mathcal T$ 的特征向量，特征值为 $4$。再令 $\\vec a=\\vec v_1+\\vec v_2$。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Now,",
+    "sha": "99261818f654",
+    "zh": "于是，"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mathcal T(\\vec a)=\\mathcal T(\\vec v_1+\\vec v_2)=\\mathcal T(\\vec v_1)+\\mathcal T(\\vec v_2)=-\\vec v_1+4\\vec v_2."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We didn't need to refer to the entries of $M$ to compute $\\mathcal T(\\vec a)$.",
+    "sha": "6a35a8ef30b9",
+    "zh": "计算 $\\mathcal T(\\vec a)$ 时，我们完全不需要用到 $M$ 的元素。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Exploring further, let $\\mathcal V=\\Set{\\vec v_1,\\vec v_2}$ and notice that $\\mathcal V$ is a basis for $\\R^2$. By definition $[\\vec a]_{\\mathcal V}=\\mat{1\\\\1}$, and so we just computed",
+    "sha": "2c1640e73b87",
+    "zh": "再深入一步。令 $\\mathcal V=\\Set{\\vec v_1,\\vec v_2}$，注意 $\\mathcal V$ 是 $\\R^2$ 的一组基。按定义，$[\\vec a]_{\\mathcal V}=\\mat{1\\\\1}$，所以我们刚才算的就是"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mathcal T\\mat{1\\\\1}_{\\mathcal V} = \\mat{-1\\\\4}_{\\mathcal V}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When represented in the $\\mathcal V$ basis, computing $\\mathcal T$ is easy. In general,",
+    "sha": "9fe5d9a389fe",
+    "zh": "当向量用 $\\mathcal V$ 这组基表示时，计算 $\\mathcal T$ 就变得很容易。一般地，"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mathcal T(\\alpha\\vec v_1+\\beta\\vec v_2)=\\alpha\\mathcal T(\\vec v_1)+\\beta\\mathcal T(\\vec v_2)=-\\alpha\\vec v_1+4\\beta\\vec v_2,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and so",
+    "sha": "9af790b3a93d",
+    "zh": "因此"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mathcal T\\mat{\\alpha\\\\\\beta}_{\\mathcal V} = \\mat{-\\alpha\\\\4\\beta}_{\\mathcal V}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In other words, $\\mathcal T$, when acting on vectors written in the $\\mathcal V$ basis, just multiplies each coordinate by an eigenvalue. This is enough information to determine the matrix for $\\mathcal T$ in the $\\mathcal V$ basis:",
+    "sha": "64e19ad0f1ca",
+    "zh": "换句话说，$\\mathcal T$ 作用于用 $\\mathcal V$ 基表示的向量时，只是把每个坐标乘以一个特征值。这些信息已经足以确定 $\\mathcal T$ 在 $\\mathcal V$ 基下的矩阵："
+   }
+  },
+  {
+   "k": "math",
+   "tex": "[\\mathcal T]_{\\mathcal V}=\\mat{-1&0\\\\0&4}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The matrix representations $[\\mathcal T]_{\\mathcal E}=\\mat{1&2\\\\3&2}$ and $[\\mathcal T]_{\\mathcal V}=\\mat{-1&0\\\\0&4}$ are equally valid, but writing $\\mathcal T$ in the $\\mathcal V$ basis gives a very simple matrix!",
+    "sha": "c265b0d53e71",
+    "zh": "矩阵表示 $[\\mathcal T]_{\\mathcal E}=\\mat{1&2\\\\3&2}$ 与 $[\\mathcal T]_{\\mathcal V}=\\mat{-1&0\\\\0&4}$ 同样有效，但在 $\\mathcal V$ 基下写出的 $\\mathcal T$ 是一个非常简单的矩阵！"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Diagonalization",
+    "sha": "215ac52a24fb",
+    "zh": "对角化"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Recall that two matrices are similar if they represent the same transformation but in possibly different bases. The process of *diagonalizing* a matrix $A$ is that of finding a diagonal matrix that is similar to $A$, and you can bet that this process is closely related to eigenvectors/values.",
+    "sha": "d6c2121dd0af",
+    "zh": "回忆一下，两个矩阵相似，是指它们表示的是同一个变换，只是所用的基可能不同。*对角化*矩阵 $A$ 的过程，就是找一个与 $A$ 相似的对角矩阵，你大概已经猜到，这个过程与特征向量、特征值密切相关。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let $\\mathcal T:\\R^n\\to\\R^n$ be a linear transformation and suppose that $\\mathcal B=\\Set{\\vec b_1,\\ldots,\\vec b_n}$ is a basis so that",
+    "sha": "1b30286e0c4d",
+    "zh": "设 $\\mathcal T:\\R^n\\to\\R^n$ 是线性变换，并设 $\\mathcal B=\\Set{\\vec b_1,\\ldots,\\vec b_n}$ 是一组基，使得"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "[\\mathcal T]_{\\mathcal B} = \\matc{\\alpha_1&0&\\cdots &0\\\\0&\\alpha_2&\\cdots &0\\\\\\vdots&\\vdots&\\ddots&\\vdots\\\\0&0&\\cdots&\\alpha_n}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "is a diagonal matrix. This means that $\\vec b_1,\\ldots,\\vec b_n$ are eigenvectors for $\\mathcal T$! The proof goes as follows:",
+    "sha": "bcde91f2ff04",
+    "zh": "是对角矩阵。这意味着 $\\vec b_1,\\ldots,\\vec b_n$ 都是 $\\mathcal T$ 的特征向量！证明如下："
+   }
+  },
+  {
+   "k": "math",
+   "tex": "[\\mathcal T]_{\\mathcal B}[\\vec b_1]_{\\mathcal B} = \n\t\\matc{\\alpha_1&0&\\cdots &0\\\\0&\\alpha_2&\\cdots &0\\\\\\vdots&\\vdots&\\ddots&\\vdots\\\\0&0&\\cdots&\\alpha_n}\n\t\\matc{1\\\\0\\\\\\vdots\\\\0} = \\matc{\\alpha_1\\\\0\\\\\\vdots\\\\0}=\\alpha_1[\\vec b_1]_{\\mathcal B}=[\\alpha_1\\vec b_1]_{\\mathcal B},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and in general",
+    "sha": "1c7684de4065",
+    "zh": "一般地"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "[\\mathcal T]_{\\mathcal B}[\\vec b_i]_{\\mathcal B} = \\alpha_i[\\vec b_i]_{\\mathcal B}=[\\alpha_i\\vec b_i]_{\\mathcal B}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Therefore, for $i=1,\\ldots,n$, we have",
+    "sha": "d3fcb77272cf",
+    "zh": "因此，对 $i=1,\\ldots,n$，有"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mathcal T\\vec b_i=\\alpha_i\\vec b_i."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Since $\\mathcal B$ is a basis, $\\vec b_i\\neq \\vec 0$ for any $i$, and so each $\\vec b_i$ is an eigenvector for $\\mathcal T$ with corresponding eigenvalue $\\alpha_i$.",
+    "sha": "5c31e3d2b6ec",
+    "zh": "因为 $\\mathcal B$ 是基，所以对任意 $i$ 都有 $\\vec b_i\\neq \\vec 0$，于是每个 $\\vec b_i$ 都是 $\\mathcal T$ 的特征向量，对应的特征值为 $\\alpha_i$。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We've just shown that if a linear transformation $\\mathcal T:\\R^n\\to\\R^n$ can be represented by a diagonal matrix, then there must be a basis for $\\R^n$ consisting of eigenvectors for $\\mathcal T$. The converse is also true.",
+    "sha": "79ecfd33bb93",
+    "zh": "我们刚刚证明了：如果线性变换 $\\mathcal T:\\R^n\\to\\R^n$ 可以用对角矩阵表示，那么 $\\R^n$ 中必有一组由 $\\mathcal T$ 的特征向量构成的基。反过来也成立。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Suppose again that $\\mathcal T:\\R^n\\to\\R^n$ is a linear transformation and that $\\mathcal B=\\Set{\\vec b_1,\\ldots,\\vec b_n}$ is a basis of eigenvectors for $\\mathcal T$ with corresponding eigenvalues $\\alpha_1,\\ldots,\\alpha_n$. By definition,",
+    "sha": "5c61ec28ab9a",
+    "zh": "仍设 $\\mathcal T:\\R^n\\to\\R^n$ 是线性变换，$\\mathcal B=\\Set{\\vec b_1,\\ldots,\\vec b_n}$ 是由 $\\mathcal T$ 的特征向量构成的基，对应的特征值为 $\\alpha_1,\\ldots,\\alpha_n$。按定义，"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mathcal T(\\vec b_i)=\\alpha_i\\vec b_i,"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "and so",
+    "sha": "9af790b3a93d",
+    "zh": "因此"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "\\mathcal T\\matc{k_1\\\\k_2\\\\\\vdots\\\\k_n}_{\\mathcal B} = \\matc{\\alpha_1k_1\\\\\\alpha_2k_2\\\\\\vdots\\\\\\alpha_nk_n}_{\\mathcal B}\n\t\\qquad\\text{which is equivalent to}\\qquad\n\t[\\mathcal T]_{\\mathcal B}\\matc{k_1\\\\k_2\\\\\\vdots\\\\k_n} = \\matc{\\alpha_1k_1\\\\\\alpha_2k_2\\\\\\vdots\\\\\\alpha_nk_n}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The only matrix that does this is",
+    "sha": "49d69eee5bf2",
+    "zh": "满足这一点的矩阵只有"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "[\\mathcal T]_{\\mathcal B} = \\matc{\\alpha_1&0&\\cdots &0\\\\0&\\alpha_2&\\cdots &0\\\\\\vdots&\\vdots&\\ddots&\\vdots\\\\0&0&\\cdots&\\alpha_n},"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "which is a diagonal matrix.",
+    "sha": "cffff5f80b23",
+    "zh": "它是一个对角矩阵。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "What we've shown is summarized by the following theorem.",
+    "sha": "091f79ed6998",
+    "zh": "我们所证明的结论可以总结为下面的定理。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A linear transformation $\\mathcal T:\\R^n\\to\\R^n$ can be represented by a diagonal matrix if and only if there exists a basis for $\\R^n$ consisting of eigenvectors for $\\mathcal T$. If $\\mathcal B$ is such a basis, then $[\\mathcal T]_{\\mathcal B}$ is a diagonal matrix.",
+      "sha": "25f2ecade837",
+      "zh": "线性变换 $\\mathcal T:\\R^n\\to\\R^n$ 可以用对角矩阵表示，当且仅当 $\\R^n$ 中存在一组由 $\\mathcal T$ 的特征向量构成的基。如果 $\\mathcal B$ 是这样的一组基，那么 $[\\mathcal T]_{\\mathcal B}$ 是对角矩阵。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Now that we have a handle on representing a linear transformation by a diagonal matrix, let's tackle the problem of diagonalizing a matrix itself.",
+    "sha": "c2475c93a86b",
+    "zh": "现在我们已经掌握了如何用对角矩阵表示线性变换，接下来处理对角化矩阵本身的问题。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Diagonalizable",
+    "sha": "1fdd8528e967",
+    "zh": "可对角化"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A matrix is *diagonalizable* if it is similar to a diagonal matrix.",
+      "sha": "b29b7cb60ca9",
+      "zh": "如果一个矩阵与某个对角矩阵相似，就称它是*可对角化的*（diagonalizable）。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Suppose $A$ is an $n\\times n$ matrix. $A$ induces some transformation $\\mathcal T_A:\\R^n\\to\\R^n$. By definition, this means $A=[\\mathcal T_A]_{\\mathcal E}$. The matrix $B$ is similar to $A$ if there is some basis $\\mathcal V$ so that $B=[\\mathcal T_A]_{\\mathcal V}$. Using change-of-basis matrices, we see",
+    "sha": "9af9b3665b25",
+    "zh": "设 $A$ 是 $n\\times n$ 矩阵。$A$ 诱导出某个变换 $\\mathcal T_A:\\R^n\\to\\R^n$。按定义，这意味着 $A=[\\mathcal T_A]_{\\mathcal E}$。若存在某组基 $\\mathcal V$ 使得 $B=[\\mathcal T_A]_{\\mathcal V}$，则矩阵 $B$ 与 $A$ 相似。利用基变换矩阵，可以看到"
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A=\\BasisChange{\\mathcal V}{\\mathcal E}[\\mathcal T_A]_{\\mathcal V}\\BasisChange{\\mathcal E}{\\mathcal V}\n\t=\\BasisChange{\\mathcal V}{\\mathcal E}B\\BasisChange{\\mathcal E}{\\mathcal V}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In other words, $A$ and $B$ are similar if there is some invertible change-of-basis matrix $P$ so",
+    "sha": "e3f737bf0163",
+    "zh": "换句话说，若存在某个可逆的基变换矩阵 $P$ 使得下式成立，则 $A$ 与 $B$ 相似："
+   }
+  },
+  {
+   "k": "math",
+   "tex": "A=PBP^{-1}."
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Based on our earlier discussion, $B$ will be a diagonal matrix if and only if $P$ is the change-of-basis matrix for a basis of eigenvectors. In this case, we know $B$ will be the diagonal matrix with eigenvalues along the diagonal (in the proper order).",
+    "sha": "19c023be645e",
+    "zh": "根据前面的讨论，$B$ 是对角矩阵，当且仅当 $P$ 是某组特征向量基对应的基变换矩阵。这时，$B$ 就是以特征值为对角线元素（顺序要对应）的对角矩阵。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A=\\mat{1&2&5\\\\-11&14&5\\\\-3&2&9}$ be a matrix and notice that $\\vec v_1=\\mat{5\\\\5\\\\1}$, $\\vec v_2=\\mat{1\\\\1\\\\1}$, and $\\vec v_3=\\mat{1\\\\3\\\\1}$ are eigenvectors for $A$. Diagonalize $A$.",
+      "sha": "680d04155b28",
+      "zh": "设矩阵 $A=\\mat{1&2&5\\\\-11&14&5\\\\-3&2&9}$，并注意到 $\\vec v_1=\\mat{5\\\\5\\\\1}$、$\\vec v_2=\\mat{1\\\\1\\\\1}$、$\\vec v_3=\\mat{1\\\\3\\\\1}$ 都是 $A$ 的特征向量。对角化 $A$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "First, we find the eigenvalues that correspond to the eigenvectors $\\vec v_1, \\vec v_2$, and $\\vec v_3$. Computing,",
+      "sha": "bce20cf45330",
+      "zh": "首先，求出与特征向量 $\\vec v_1, \\vec v_2$ 和 $\\vec v_3$ 对应的特征值。计算得"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A\\vec v_1=\\matc{20\\\\20\\\\4}=4\\vec v_1,\\qquad A\\vec v_2=\\mat{8\\\\8\\\\8}=8\\vec v_2,\\qquad\\text{and}\\qquad\n\tA\\vec v_3=\\mat{12\\\\36\\\\12}=12\\vec v_3,"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and so the eigenvalue corresponding to $\\vec v_1$ is $4$, to $\\vec v_2$ is $8$, and to $\\vec v_3$ is $12$.",
+      "sha": "28208c212e8a",
+      "zh": "所以，与 $\\vec v_1$ 对应的特征值是 $4$，与 $\\vec v_2$ 对应的是 $8$，与 $\\vec v_3$ 对应的是 $12$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The change-of-basis matrix which converts from the $\\Set{\\vec v_1,\\vec v_2,\\vec v_3}$ to the standard basis is",
+      "sha": "42c1f009f44b",
+      "zh": "从 $\\Set{\\vec v_1,\\vec v_2,\\vec v_3}$ 到标准基的基变换矩阵是"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "P = \\mat{5&1&1\\\\5&1&3\\\\1&1&1},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and",
+      "sha": "cffa50a32cb1",
+      "zh": "并且"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "P^{-1} = \\mat{\\frac{1}{4}&0&-\\frac{1}{4}\\\\\\frac{1}{4}&-\\frac{1}{2}&\\frac{5}{4}\\\\-\\frac{1}{2}&\\frac{1}{2}&0}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Define $D$ to be the $3\\times 3$ matrix with the eigenvalues of $A$ along the diagonal (in the order, $4,8,12$). That is, the matrix $A$ written in the basis of eigenvectors is",
+      "sha": "bab73464efbe",
+      "zh": "令 $D$ 为以 $A$ 的特征值为对角线元素（顺序为 $4,8,12$）的 $3\\times 3$ 矩阵。也就是说，$A$ 在特征向量基下的矩阵为"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "D = \\mat{4&0&0\\\\0&8&0\\\\0&0&12}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We now know",
+      "sha": "4ca62748481a",
+      "zh": "现在我们得到"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A = PDP^{-1}= \\mat{5&1&1\\\\5&1&3\\\\1&1&1}\\mat{4&0&0\\\\0&8&0\\\\0&0&12}\n\t\t\\mat{\\frac{1}{4}&0&-\\frac{1}{4}\\\\\\frac{1}{4}&-\\frac{1}{2}&\\frac{5}{4}\\\\-\\frac{1}{2}&\\frac{1}{2}&0},"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and that $D$ is the diagonalized form of $A$.",
+      "sha": "172fe66bf1e0",
+      "zh": "并且 $D$ 就是 $A$ 的对角化形式。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Non-diagonalizable Matrices",
+    "sha": "5514ad741420",
+    "zh": "不可对角化的矩阵"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Is every matrix diagonalizable? Unfortunately the world is not that sweet. But, we have a tool to tell if a matrix is diagonalizable—checking to see if there is a basis of eigenvectors.",
+    "sha": "9155054cf47f",
+    "zh": "是不是每个矩阵都可以对角化呢？可惜世界没有那么美好。不过，我们有一个判断矩阵能否对角化的工具——看是否存在由特征向量构成的基。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Is the matrix $R=\\mat{0&-1\\\\1&0}$ diagonalizable?",
+      "sha": "b8542317af5e",
+      "zh": "矩阵 $R=\\mat{0&-1\\\\1&0}$ 可以对角化吗？"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Computing, $\\Char(R)=\\lambda^2+1$ has no real roots. Therefore, $R$ has no real eigenvalues. Consequently, $R$ has no real eigenvectors, and so $R$ is not diagonalizable 〔注： If we allow complex eigenvalues, then $R$ *is* diagonalizable and is similar to the matrix $\\mat{i&0\\\\0&-i}$. So, to be more precise, we might say $R$ is not *real* diagonalizable.〕.",
+      "sha": "b4adf2a5160f",
+      "zh": "计算得 $\\Char(R)=\\lambda^2+1$，它没有实根。因此 $R$ 没有实特征值。于是 $R$ 没有实特征向量，所以 $R$ 不可对角化〔注： 如果允许复特征值，那么 $R$ *是*可对角化的，它与矩阵 $\\mat{i&0\\\\0&-i}$ 相似。所以更准确地说，应当是 $R$ 不能在实数范围内对角化。〕。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Is the matrix $D=\\mat{5&0\\\\0&5}$ diagonalizable?",
+      "sha": "337161ab5aa9",
+      "zh": "矩阵 $D=\\mat{5&0\\\\0&5}$ 可以对角化吗？"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "For every vector $\\vec v\\in \\R^2$, we have $D\\vec v=5\\vec v$, and so every non-zero vector in $\\R^2$ is an eigenvector for $D$. Thus, $\\mathcal E=\\Set{\\xhat, \\yhat}$ is a basis of eigenvectors for $\\R^2$, and so $D$ is diagonalizable 〔注： Of course, every square matrix is similar to itself and $D$ is already diagonal, so of course it's diagonalizable.〕.",
+      "sha": "6c8cd9d29100",
+      "zh": "对每个向量 $\\vec v\\in \\R^2$，都有 $D\\vec v=5\\vec v$，所以 $\\R^2$ 中每个非零向量都是 $D$ 的特征向量。因此 $\\mathcal E=\\Set{\\xhat, \\yhat}$ 是 $\\R^2$ 的一组由特征向量构成的基，于是 $D$ 可以对角化〔注： 当然，每个方阵都与自身相似，而 $D$ 本来就是对角矩阵，所以它自然可以对角化。〕。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Is the matrix $J=\\mat{5&1\\\\0&5}$ diagonalizable?",
+      "sha": "4360176df189",
+      "zh": "矩阵 $J=\\mat{5&1\\\\0&5}$ 可以对角化吗？"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Computing, $\\Char(J)=(5-\\lambda)^2$ which has a double root at 5. Therefore, 5 is the only eigenvalue of $J$. The eigenvectors of $J$ all lie in",
+      "sha": "a555e79e6caa",
+      "zh": "计算得 $\\Char(J)=(5-\\lambda)^2$，它在 5 处有二重根。因此 5 是 $J$ 唯一的特征值。$J$ 的特征向量都落在"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Null(J-5I)=\\Span\\Set{\\mat{1\\\\0}}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Since this is a one dimensional space, there is no basis for $\\R^2$ consisting of eigenvectors for $J$. Therefore, $J$ is not diagonalizable.",
+      "sha": "97500bccfdde",
+      "zh": "由于这是一个一维空间，$\\R^2$ 中不存在由 $J$ 的特征向量构成的基。因此 $J$ 不可对角化。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Is the matrix $K=\\mat{5&1\\\\0&2}$ diagonalizable?",
+      "sha": "70c63a082f01",
+      "zh": "矩阵 $K=\\mat{5&1\\\\0&2}$ 可以对角化吗？"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Computing, $\\Char(K)=(5-\\lambda)(2-\\lambda)$ which has roots at 5 and 2. Therefore, 5 and 2 are the eigenvalues of $K$. The eigenvectors of $K$ lie in one of",
+      "sha": "605a5650c796",
+      "zh": "计算得 $\\Char(K)=(5-\\lambda)(2-\\lambda)$，它的根为 5 和 2。因此 5 和 2 是 $K$ 的特征值。$K$ 的特征向量落在下面两个空间之一中"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\Null(K-5I) = \\Span\\Set{\\mat{1\\\\0}}\\qquad\\text{or}\\qquad\\Null(K-2I) = \\Span\\Set{\\mat{-1\\\\3}}."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Picking one eigenvector from each null space, we have that $\\Set{\\mat{1\\\\0},\\mat{-1\\\\3}}$ is a basis for $\\R^2$ consisting of eigenvectors of $K$. Thus, $K$ is diagonalizable.",
+      "sha": "57ff91d84fc5",
+      "zh": "从每个零空间中各取一个特征向量，得到 $\\Set{\\mat{1\\\\0},\\mat{-1\\\\3}}$ 是 $\\R^2$ 的一组由 $K$ 的特征向量构成的基。因此 $K$ 可以对角化。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "emphbox",
+   "title": {
+    "en": "Takeaway",
+    "sha": "e59a7ab66086",
+    "zh": "要点"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Not all matrices are diagonalizable, but you can check if an $n\\times n$ matrix is diagonalizable by determining whether there is a basis of eigenvectors for $\\R^n$.",
+      "sha": "2514defd84f1",
+      "zh": "并非所有矩阵都可以对角化，但你可以通过判断 $\\R^n$ 中是否存在由特征向量构成的基，来检验一个 $n\\times n$ 矩阵是否可对角化。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Geometric and Algebraic Multiplicities",
+    "sha": "bf89252ea487",
+    "zh": "几何重数与代数重数"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When analyzing linear transformations or matrices, we're often interested in studying the subspaces where vectors are stretched by only one eigenvalue. These are called the *eigenspaces*.",
+    "sha": "1ed00d8090c6",
+    "zh": "分析线性变换或矩阵时，我们常常想研究这样的子空间：其中的向量只被某一个特征值所拉伸。这样的子空间叫做*特征空间*。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Eigenspace",
+    "sha": "dc656e083c6c",
+    "zh": "特征空间"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n\\times n$ matrix with eigenvalues $\\lambda_{1},\\ldots,\\lambda_{m}$. The *eigenspace* of $A$ corresponding to the eigenvalue $\\lambda_{i}$ is the null space of $A-\\lambda_{i} I$. That is, it is the space spanned by all eigenvectors that have the eigenvalue $\\lambda_{i}$.",
+      "sha": "2953c8258dff",
+      "zh": "设 $A$ 是 $n\\times n$ 矩阵，特征值为 $\\lambda_{1},\\ldots,\\lambda_{m}$。$A$ 的对应于特征值 $\\lambda_{i}$ 的*特征空间*（eigenspace）是 $A-\\lambda_{i} I$ 的零空间。也就是说，它是由所有特征值为 $\\lambda_{i}$ 的特征向量张成的空间。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The *geometric multiplicity* of an eigenvalue $\\lambda_{i}$ is the dimension of the corresponding eigenspace. The *algebraic multiplicity* of $\\lambda_{i}$ is the number of times $\\lambda_{i}$ occurs as a root of the characteristic polynomial of $A$ (i.e., the number of times $x-\\lambda_{i}$ occurs as a factor).",
+      "sha": "386760c2a9f4",
+      "zh": "特征值 $\\lambda_{i}$ 的*几何重数*是对应特征空间的维数。$\\lambda_{i}$ 的*代数重数*是 $\\lambda_{i}$ 作为 $A$ 的特征多项式的根出现的次数（也就是 $x-\\lambda_{i}$ 作为因式出现的次数）。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Now is the time when linear algebra and regular algebra (the solving of non-linear equations) combine. We know, every root of the characteristic polynomial of a matrix gives an eigenvalue for that matrix. Since the degree of the characteristic polynomial of an $n\\times n$ matrix is always $n$, the fundamental theorem of algebra tells us exactly how many roots to expect.",
+    "sha": "4cb0b0579008",
+    "zh": "现在，线性代数和普通代数（解非线性方程）要汇合了。我们知道，矩阵的特征多项式的每个根都给出该矩阵的一个特征值。又因为 $n\\times n$ 矩阵的特征多项式的次数总是 $n$，所以代数基本定理恰好告诉了我们应该预期有多少个根。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Recall that the *multiplicity* of a root of a polynomial is the power of that root in the factored polynomial. So, for example $p(x)=(4-x)^3(5-x)$ has a root of $4$ with multiplicity $3$ and a root of $5$ with multiplicity $1$.",
+    "sha": "8da83a61fa56",
+    "zh": "回忆一下，多项式的根的*重数*，是该根在多项式分解式中的幂次。例如，$p(x)=(4-x)^3(5-x)$ 有根 $4$，重数为 $3$，有根 $5$，重数为 $1$。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $R=\\mat{0&-1\\\\1&0}$ and find the geometric and algebraic multiplicity of each eigenvalue of $R$.",
+      "sha": "ac11a15ea78a",
+      "zh": "设 $R=\\mat{0&-1\\\\1&0}$，求 $R$ 的每个特征值的几何重数和代数重数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Computing, $\\Char(R)=\\lambda^2+1$ which has no real roots. Therefore, $R$ has no real eigenvalues. 〔注： If we allow complex eigenvalues, then the eigenvalues $i$ and $-i$ both have geometric and algebraic multiplicity of 1.〕",
+      "sha": "43ec93a61e84",
+      "zh": "计算得 $\\Char(R)=\\lambda^2+1$，它没有实根。因此 $R$ 没有实特征值。〔注： 如果允许复特征值，那么特征值 $i$ 和 $-i$ 的几何重数与代数重数都是 1。〕"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $D=\\mat{5&0\\\\0&5}$ and find the geometric and algebraic multiplicity of each eigenvalue of $D$.",
+      "sha": "58e21b4475dd",
+      "zh": "设 $D=\\mat{5&0\\\\0&5}$，求 $D$ 的每个特征值的几何重数和代数重数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Computing, $\\Char(D)=(5-\\lambda)^2$, so $5$ is an eigenvalue of $D$ with algebraic multiplicity $2$. The eigenspace of $D$ corresponding to 5 is $\\R^2$. Thus, the geometric multiplicity of $5$ is $2$.",
+      "sha": "fcedd9f23db8",
+      "zh": "计算得 $\\Char(D)=(5-\\lambda)^2$，所以 $5$ 是 $D$ 的特征值，代数重数为 $2$。$D$ 的对应于 5 的特征空间是 $\\R^2$。因此 $5$ 的几何重数为 $2$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $J=\\mat{5&1\\\\0&5}$ and find the geometric and algebraic multiplicity of each eigenvalue of $J$.",
+      "sha": "a972f203ee0f",
+      "zh": "设 $J=\\mat{5&1\\\\0&5}$，求 $J$ 的每个特征值的几何重数和代数重数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Computing, $\\Char(J)=(5-\\lambda)^2$, so $5$ is an eigenvalue of $J$ with algebraic multiplicity $2$. The eigenspace of $J$ corresponding to $5$ is $\\Span\\Set{\\mat{1\\\\0}}$. Thus, the geometric multiplicity of $5$ is $1$.",
+      "sha": "5137cfa4d7c5",
+      "zh": "计算得 $\\Char(J)=(5-\\lambda)^2$，所以 $5$ 是 $J$ 的特征值，代数重数为 $2$。$J$ 的对应于 $5$ 的特征空间是 $\\Span\\Set{\\mat{1\\\\0}}$。因此 $5$ 的几何重数为 $1$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "example",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $K=\\mat{5&1\\\\0&2}$ and find the geometric and algebraic multiplicity of each eigenvalue of $K$.",
+      "sha": "2cd933c06acb",
+      "zh": "设 $K=\\mat{5&1\\\\0&2}$，求 $K$ 的每个特征值的几何重数和代数重数。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Computing, $\\Char(K)=(5-\\lambda)(2-\\lambda)$, so $5$ and $2$ are eigenvalues of $K$, both with algebraic multiplicity $1$. The eigenspace of $K$ corresponding to $5$ is $\\Span\\Set{\\mat{1\\\\0}}$ and the eigenspace corresponding to $2$ is $\\Span\\Set{\\mat{-1\\\\3}}$. Thus, both $5$ and $2$ have a geometric multiplicity of $1$.",
+      "sha": "c38c83ff0fce",
+      "zh": "计算得 $\\Char(K)=(5-\\lambda)(2-\\lambda)$，所以 $5$ 和 $2$ 是 $K$ 的特征值，代数重数都是 $1$。$K$ 的对应于 $5$ 的特征空间是 $\\Span\\Set{\\mat{1\\\\0}}$，对应于 $2$ 的特征空间是 $\\Span\\Set{\\mat{-1\\\\3}}$。因此 $5$ 和 $2$ 的几何重数都是 $1$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Consider the following two theorems.",
+    "sha": "66e5279b384f",
+    "zh": "考虑下面两个定理。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": {
+    "en": "Fundamental Theorem of Algebra",
+    "sha": "3ed2017bb69c",
+    "zh": "代数基本定理"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $p$ be a polynomial of degree $n$. Then, if complex roots are allowed, the sum of the multiplicities of the roots of $p$ is $n$.",
+      "sha": "4f87d8fd6bdf",
+      "zh": "设 $p$ 是 $n$ 次多项式。那么，如果允许复根，$p$ 的各个根的重数之和为 $n$。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $\\lambda$ be an eigenvalue of the matrix $A$. Then",
+      "sha": "cf470d7905c1",
+      "zh": "设 $\\lambda$ 是矩阵 $A$ 的特征值。则"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\text{geometric mult}(\\lambda)\\leq \\text{algebraic mult}(\\lambda)."
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "We can now deduce the following.",
+    "sha": "fcf17deeb990",
+    "zh": "现在我们可以推出下面的结论。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "theorem",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "An $n\\times n$ matrix $A$ is diagonalizable if and only if the sum of its geometric multiplicities is equal to $n$. Further, provided complex eigenvalues are permitted, $A$ is diagonalizable if and only if its geometric multiplicities are equal to its corresponding algebraic multiplicities.",
+      "sha": "c0a287fd53ba",
+      "zh": "$n\\times n$ 矩阵 $A$ 可对角化，当且仅当它的各个几何重数之和等于 $n$。此外，只要允许复特征值，$A$ 可对角化，当且仅当它的每个几何重数都等于对应的代数重数。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "proof",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $A$ be an $n\\times n$ matrix with eigenvalues $\\lambda_1,\\ldots,\\lambda_k$. Let $E_1,\\ldots,E_k$ be bases for the eigenspaces corresponding to $\\lambda_1,\\ldots,\\lambda_k$. We will start by showing $E=E_1\\cup\\cdots\\cup E_k$ is a linearly independent set using the following two lemmas.",
+      "sha": "eb2af36e21e8",
+      "zh": "设 $A$ 是 $n\\times n$ 矩阵，特征值为 $\\lambda_1,\\ldots,\\lambda_k$。设 $E_1,\\ldots,E_k$ 分别是对应于 $\\lambda_1,\\ldots,\\lambda_k$ 的特征空间的基。我们先借助下面两个引理，证明 $E=E_1\\cup\\cdots\\cup E_k$ 是线性无关的集合。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*\\colormyorangeNo New Eigenvalue Lemma.* Suppose that $\\vec v_1,\\ldots,\\vec v_k$ are linearly independent eigenvectors of a matrix $A$, and let $\\lambda_1,\\ldots,\\lambda_k$ be the corresponding eigenvalues. Then, any eigenvector for $A$ contained in $\\Span\\Set{\\vec v_1,\\ldots,\\vec v_k}$ must have one of $\\lambda_1,\\ldots,\\lambda_k$ as its eigenvalue.",
+      "sha": "b5de728722e7",
+      "zh": "*无新特征值引理。* 设 $\\vec v_1,\\ldots,\\vec v_k$ 是矩阵 $A$ 的线性无关的特征向量，$\\lambda_1,\\ldots,\\lambda_k$ 是对应的特征值。那么，$A$ 的任何落在 $\\Span\\Set{\\vec v_1,\\ldots,\\vec v_k}$ 中的特征向量，其特征值必定是 $\\lambda_1,\\ldots,\\lambda_k$ 之一。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The proof goes as follows. Suppose $\\vec v=\\sum_{i\\leq k}\\alpha_i\\vec v_i$ is an eigenvector for $A$ with eigenvalue $\\lambda$. We now compute $A\\vec v$ in two different ways: once by using the fact that $\\vec v$ is an eigenvector, and again by using the fact that $\\vec v$ is a linear combination of other eigenvectors. Observe",
+      "sha": "d0cc5c2c2b41",
+      "zh": "证明如下。设 $\\vec v=\\sum_{i\\leq k}\\alpha_i\\vec v_i$ 是 $A$ 的特征向量，特征值为 $\\lambda$。我们用两种方式计算 $A\\vec v$：一种利用 $\\vec v$ 是特征向量这一事实，另一种利用 $\\vec v$ 是其他特征向量的线性组合这一事实。可以看到"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A\\vec v=\\lambda \\vec v=\\lambda\\left(\\sum_{i\\leq k}\\alpha_i\\vec v_i\\right)\n\t\t=\\sum_{i\\leq k}\\alpha_i\\lambda\\vec v_i"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "and",
+      "sha": "cffa50a32cb1",
+      "zh": "并且"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "A\\vec v=A\\left(\\sum_{i\\leq k}\\alpha_i\\vec v_i\\right)\n\t\t=\\sum_{i\\leq k}\\alpha_i A\\vec v_i\n\t\t=\\sum_{i\\leq k}\\alpha_i\\lambda_i\\vec v_i."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "We now have",
+      "sha": "ed21e57020f0",
+      "zh": "于是我们得到"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "\\vec 0=A\\vec v-A\\vec v = \n\t\t\\sum_{i\\leq k}\\alpha_i\\lambda\\vec v_i\n\t\t-\\sum_{i\\leq k}\\alpha_i\\lambda_i\\vec v_i\n\t\t=\\sum_{i\\leq k}\\alpha_i(\\lambda-\\lambda_i)\\vec v_i."
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Because $\\vec v_1,\\ldots,\\vec v_k$ are linearly independent, we know $\\alpha_i(\\lambda-\\lambda_i)=0$ for all $i\\leq k$. Further, because $\\vec v$ is non-zero (it's an eigenvector), we know at least one $\\alpha_i$ is non-zero. Therefore $\\lambda-\\lambda_i=0$ for at least one $i$. In other words, $\\lambda=\\lambda_i$ for at least one $i$, which is what we set out to show 〔注： You may notice that we've proved something stronger than we needed: if an eigenvector is a linear combination of linearly independent eigenvectors, the only non-zero coefficients of that linear combination must belong to eigenvectors with the same eigenvalue.〕.",
+      "sha": "116daeeaf056",
+      "zh": "因为 $\\vec v_1,\\ldots,\\vec v_k$ 线性无关，所以对所有 $i\\leq k$ 都有 $\\alpha_i(\\lambda-\\lambda_i)=0$。另外，因为 $\\vec v$ 非零（它是特征向量），所以至少有一个 $\\alpha_i$ 不为零。因此至少对一个 $i$ 有 $\\lambda-\\lambda_i=0$。也就是说，至少对一个 $i$ 有 $\\lambda=\\lambda_i$，这正是我们要证明的〔注： 你也许注意到，我们证明的比需要的更强：如果一个特征向量是若干线性无关的特征向量的线性组合，那么这个线性组合中不为零的系数只能属于特征值相同的那些特征向量。〕。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "*\\colormyorangeBasis Extension Lemma.* Let $P=\\Set{\\vec p_1,\\ldots,\\vec p_a}$ and $Q=\\Set{\\vec q_1,\\ldots,\\vec q_b}$ be linearly independent sets, and suppose $P\\cup\\Set{\\vec q}$ is linearly independent for all non-zero $\\vec q\\in\\Span Q$. Then $P\\cup Q$ is linearly independent.",
+      "sha": "9bd9f6a2d4b6",
+      "zh": "*基扩充引理。* 设 $P=\\Set{\\vec p_1,\\ldots,\\vec p_a}$ 和 $Q=\\Set{\\vec q_1,\\ldots,\\vec q_b}$ 是线性无关的集合，并设对所有非零的 $\\vec q\\in\\Span Q$，$P\\cup\\Set{\\vec q}$ 都线性无关。那么 $P\\cup Q$ 线性无关。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To show this, suppose $\\vec 0=\\alpha_1\\vec p_1+\\cdots+\\alpha_a\\vec p_a+\\beta_1\\vec q_1+\\cdots+\\beta_b\\vec q_b$ is a linear combination of vectors in $P\\cup Q$. Let $\\vec q=\\beta_1\\vec q_1+\\cdots+\\beta_b\\vec q_b$. First, note that $\\vec q$ must be the zero vector. If not, $\\vec 0=\\alpha_1\\vec p_1+\\cdots+\\alpha_a\\vec p_a+\\vec q$ is a non-trivial linear combination of vectors in $P\\cup\\Set{\\vec q}$, which contradicts the assumption that $P\\cup\\Set{\\vec q}$ is linearly independent. Since we've established $\\vec 0=\\vec q=\\beta_1\\vec q_1+\\cdots+\\beta_b\\vec q_b$, we conclude $\\beta_1=\\cdots=\\beta_b=0$ because $Q$ is linearly independent. It follows that since $\\vec 0=\\alpha_1\\vec p_1+\\cdots+\\alpha_a\\vec p_a+\\vec q =\\alpha_1\\vec p_1+\\cdots+\\alpha_a\\vec p_a+\\vec 0$, we must have that $\\alpha_1=\\cdots=\\alpha_a=0$ because $P$ is linearly independent. This shows that the only way to express $\\vec 0$ as a linear combination of vectors in $P\\cup Q$ is as the trivial linear combination, and so $P\\cup Q$ is linearly independent.",
+      "sha": "6ff8c7bbf247",
+      "zh": "为证明这一点，设 $\\vec 0=\\alpha_1\\vec p_1+\\cdots+\\alpha_a\\vec p_a+\\beta_1\\vec q_1+\\cdots+\\beta_b\\vec q_b$ 是 $P\\cup Q$ 中向量的一个线性组合。令 $\\vec q=\\beta_1\\vec q_1+\\cdots+\\beta_b\\vec q_b$。首先注意，$\\vec q$ 必须是零向量。否则，$\\vec 0=\\alpha_1\\vec p_1+\\cdots+\\alpha_a\\vec p_a+\\vec q$ 就是 $P\\cup\\Set{\\vec q}$ 中向量的一个非平凡线性组合，这与 $P\\cup\\Set{\\vec q}$ 线性无关的假设矛盾。既然已经确定 $\\vec 0=\\vec q=\\beta_1\\vec q_1+\\cdots+\\beta_b\\vec q_b$，由于 $Q$ 线性无关，可得 $\\beta_1=\\cdots=\\beta_b=0$。于是，因为 $\\vec 0=\\alpha_1\\vec p_1+\\cdots+\\alpha_a\\vec p_a+\\vec q =\\alpha_1\\vec p_1+\\cdots+\\alpha_a\\vec p_a+\\vec 0$，又由于 $P$ 线性无关，必有 $\\alpha_1=\\cdots=\\alpha_a=0$。这说明，把 $\\vec 0$ 表示成 $P\\cup Q$ 中向量的线性组合，只有平凡的线性组合这一种方式，所以 $P\\cup Q$ 线性无关。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Now we can put our lemmas to good use. We will use induction to show that $E=E_1\\cup\\cdots\\cup E_k$ is linearly independent. By assumption $E_1$ is linearly independent. Now, suppose $U=E_1\\cup\\cdots\\cup E_j$ is linearly independent. By construction, every non-zero vector $\\vec v\\in\\Span E_{j+1}$ is an eigenvector for $A$ with eigenvalue $\\lambda_{j+1}$. Therefore, since $\\lambda_{j+1}\\neq \\lambda_i$ for $1\\leq i\\leq j$, we may apply the *No New Eigenvalue Lemma* to see that $\\vec v\\notin\\Span U$. It follows that $U\\cup\\Set{\\vec v}$ is linearly independent. Since $E_{j+1}$ is itself linearly independent, we may now apply the *Basis Extension Lemma* to deduce that $U\\cup E_{j+1}$ is linearly independent. This shows that $E=E_1\\cup\\cdots\\cup E_k$ is linearly independent.",
+      "sha": "8df1eaa7e882",
+      "zh": "现在可以好好利用这两个引理了。我们用归纳法证明 $E=E_1\\cup\\cdots\\cup E_k$ 线性无关。由假设，$E_1$ 线性无关。现在设 $U=E_1\\cup\\cdots\\cup E_j$ 线性无关。按构造，每个非零向量 $\\vec v\\in\\Span E_{j+1}$ 都是 $A$ 的特征向量，特征值为 $\\lambda_{j+1}$。因此，由于对 $1\\leq i\\leq j$ 有 $\\lambda_{j+1}\\neq \\lambda_i$，我们可以应用*无新特征值引理*，得出 $\\vec v\\notin\\Span U$。由此，$U\\cup\\Set{\\vec v}$ 线性无关。又因为 $E_{j+1}$ 本身线性无关，我们现在可以应用*基扩充引理*，推出 $U\\cup E_{j+1}$ 线性无关。这就证明了 $E=E_1\\cup\\cdots\\cup E_k$ 线性无关。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "To conclude notice that by construction, $\\text{geometric mult}(\\lambda_i)=\\abs{E_i}$. Since $E=E_1\\cup\\cdots\\cup E_k$ is linearly independent, the $E_i$'s must be disjoint and so $\\sum\\text{geometric mult}(\\lambda_i)=\\sum \\abs{E_i}=\\abs{E}$. If $\\sum\\text{geometric mult}(\\lambda_i)=n$, then $E\\subseteq\\R^n$ is a linearly independent set of $n$ vectors and so is a basis for $\\R^n$. Finally, because we have a basis for $\\R^n$ consisting of eigenvectors for $A$, we know $A$ is diagonalizable.",
+      "sha": "0c4d9435509a",
+      "zh": "最后注意，按构造有 $\\text{geometric mult}(\\lambda_i)=\\abs{E_i}$。因为 $E=E_1\\cup\\cdots\\cup E_k$ 线性无关，所以各个 $E_i$ 必定互不相交，于是 $\\sum\\text{geometric mult}(\\lambda_i)=\\sum \\abs{E_i}=\\abs{E}$。如果 $\\sum\\text{geometric mult}(\\lambda_i)=n$，那么 $E\\subseteq\\R^n$ 就是由 $n$ 个向量构成的线性无关集合，因此是 $\\R^n$ 的一组基。最终，既然我们有了由 $A$ 的特征向量构成的 $\\R^n$ 的基，就知道 $A$ 可对角化。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Conversely, if there is a basis $E$ for $\\R^n$ consisting of eigenvectors, we must have a linearly independent set of $n$ eigenvectors. Grouping these eigenvectors by eigenvalue, an application of the *No New Eigenvalue Lemma* shows that each group must actually be a basis for its eigenspace. Thus, the sum of the geometric multiplicities must be $n$.",
+      "sha": "21b456fe6f17",
+      "zh": "反过来，如果 $\\R^n$ 有一组由特征向量构成的基 $E$，那么就有 $n$ 个线性无关的特征向量。把这些特征向量按特征值分组，应用*无新特征值引理*可知，每一组其实都是对应特征空间的一组基。因此，几何重数之和必为 $n$。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Finally, if complex eigenvalues are allowed, the algebraic multiplicities sum to $n$. Since the algebraic multiplicities bound the geometric multiplicities, the only way for the geometric multiplicities to sum to $n$ is if corresponding geometric and algebraic multiplicities are equal.",
+      "sha": "d5e3cac7418e",
+      "zh": "最后，如果允许复特征值，代数重数之和为 $n$。因为代数重数是几何重数的上界，所以几何重数之和要等于 $n$，唯一的可能就是对应的几何重数与代数重数相等。"
+     }
+    }
+   ]
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex1",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each of the matrices below, find the geometric and algebraic multiplicity of each eigenvalue.",
+      "sha": "cf8262f4e9b4",
+      "zh": "对下面每个矩阵，求每个特征值的几何重数和代数重数。"
+     }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$A=\\mat{2&0\\\\-2&1}$",
+         "sha": "d4bad6001b51",
+         "zh": "$A=\\mat{2&0\\\\-2&1}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$B=\\mat{3&0\\\\0&3}$",
+         "sha": "820733bb7528",
+         "zh": "$B=\\mat{3&0\\\\0&3}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$C=\\mat{3&0\\\\3&0}$",
+         "sha": "f96db1ab9aa8",
+         "zh": "$C=\\mat{3&0\\\\3&0}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$D=\\mat{0&3/2&4\\\\0&1&0\\\\-1&1&4}$",
+         "sha": "a8d78c3890d5",
+         "zh": "$D=\\mat{0&3/2&4\\\\0&1&0\\\\-1&1&4}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$E=\\mat{2&1/2&0\\\\0&1&0\\\\0&1/2&2}$",
+         "sha": "71cb8d378459",
+         "zh": "$E=\\mat{2&1/2&0\\\\0&1&0\\\\0&1/2&2}$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\lambda=1$, Algebraic: 1, Geometric: 1",
+            "sha": "6d4641d196eb",
+            "zh": "$\\lambda=1$，代数重数：1，几何重数：1"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\lambda=2$, Algebraic: 1, Geometric: 1",
+            "sha": "230b5453a31e",
+            "zh": "$\\lambda=2$，代数重数：1，几何重数：1"
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\lambda=3$, Algebraic: 2, Geometric: 2",
+            "sha": "f9890cecf134",
+            "zh": "$\\lambda=3$，代数重数：2，几何重数：2"
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\lambda=0$, Algebraic: 1, Geometric: 1",
+            "sha": "80fa3e686293",
+            "zh": "$\\lambda=0$，代数重数：1，几何重数：1"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\lambda=3$, Algebraic: 1, Geometric: 1",
+            "sha": "a81ebffb44f8",
+            "zh": "$\\lambda=3$，代数重数：1，几何重数：1"
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\lambda=1$, Algebraic: 1, Geometric: 1",
+            "sha": "6d4641d196eb",
+            "zh": "$\\lambda=1$，代数重数：1，几何重数：1"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\lambda=2$, Algebraic: 2, Geometric: 1",
+            "sha": "55d0fb91d24c",
+            "zh": "$\\lambda=2$，代数重数：2，几何重数：1"
+           }
+          }
+         ]
+        ]
+       }
+      ],
+      [
+       {
+        "k": "list",
+        "ordered": true,
+        "items": [
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\lambda=2$, Algebraic: 2, Geometric: 2",
+            "sha": "ca25d857a0d0",
+            "zh": "$\\lambda=2$，代数重数：2，几何重数：2"
+           }
+          }
+         ],
+         [
+          {
+           "k": "p",
+           "t": {
+            "en": "$\\lambda=1$, Algebraic: 1, Geometric: 1",
+            "sha": "6d4641d196eb",
+            "zh": "$\\lambda=1$，代数重数：1，几何重数：1"
+           }
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Diagonalization · 练习题 1（上游 book/modules/module16-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module16-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex2",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For each matrix from question 〔引用〕, diagonalize the matrix if possible. Otherwise explain why the matrix cannot be diagonalized.",
+      "sha": "0df3105554dc",
+      "zh": "对题〔引用〕中的每个矩阵，如果可以对角化，就把它对角化；否则说明它为什么不能对角化。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{2&0\\\\0&1}$",
+         "sha": "49c8879dd762",
+         "zh": "$\\mat{2&0\\\\0&1}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{3&0\\\\0&3}$",
+         "sha": "659aebf10969",
+         "zh": "$\\mat{3&0\\\\0&3}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{3&0\\\\0&0}$",
+         "sha": "9f5beb53646c",
+         "zh": "$\\mat{3&0\\\\0&0}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Not diagonalizable.",
+         "sha": "247f30ccab8f",
+         "zh": "不可对角化。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{2&0&0\\\\0&2&0\\\\0&0&1}$",
+         "sha": "8afd48ff6e16",
+         "zh": "$\\mat{2&0&0\\\\0&2&0\\\\0&0&1}$"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Diagonalization · 练习题 2（上游 book/modules/module16-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module16-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex3",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Give an example of a $4\\times 4$ matrix with $2$ and $7$ as its only eigenvalues.",
+      "sha": "8e57f9f26cd4",
+      "zh": "给出一个 $4\\times 4$ 矩阵的例子，使 $2$ 和 $7$ 是它仅有的特征值。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "$\\mat{2&0&0&0\\\\0&2&0&0\\\\0&0&7&0\\\\0&0&0&7}$",
+      "sha": "6dd8e709f3d3",
+      "zh": "$\\mat{2&0&0&0\\\\0&2&0&0\\\\0&0&7&0\\\\0&0&0&7}$"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Diagonalization · 练习题 3（上游 book/modules/module16-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module16-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex4",
+   "stem": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Can the geometric multiplicity of an eigenvalue ever be $0$? Explain.",
+      "sha": "846120628f1f",
+      "zh": "特征值的几何重数可以是 $0$ 吗？请说明理由。"
+     }
+    }
+   ],
+   "sol": [
+    {
+     "k": "p",
+     "t": {
+      "en": "No. If $\\lambda$ is an eigenvalue of a matrix $A$, then $det(A - \\lambda I)=0$ and therefore $A - \\lambda I$ is not invertible. Specifically, $\\Nullity(A - \\lambda I) \\geq 1$ and hence there exists at least one eigenvector for the eigenvalue $\\lambda$. Therefore the geometric multiplicity of $\\lambda$ is at least one.",
+      "sha": "1a78be14a126",
+      "zh": "不可以。如果 $\\lambda$ 是矩阵 $A$ 的特征值，那么 $det(A - \\lambda I)=0$，因此 $A - \\lambda I$ 不可逆。具体地，$\\Nullity(A - \\lambda I) \\geq 1$，所以特征值 $\\lambda$ 至少对应一个特征向量。因此 $\\lambda$ 的几何重数至少为 1。"
+     }
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Diagonalization · 练习题 4（上游 book/modules/module16-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module16-exercises.tex"
+    }
+   ]
+  },
+  {
+   "id": "ex5",
+   "stem": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Show that if $\\vec v_{1}$ and $\\vec v_{2}$ are eigenvectors for a matrix $M$ corresponding to different eigenvalues, then $\\vec v_{1}$ and $\\vec v_{2}$ are linearly independent.",
+         "sha": "a1d5278f75ad",
+         "zh": "证明：如果 $\\vec v_{1}$ 和 $\\vec v_{2}$ 是矩阵 $M$ 的、对应于不同特征值的特征向量，那么 $\\vec v_{1}$ 和 $\\vec v_{2}$ 线性无关。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If possible, give an example of a non-diagonalizable $3\\times 3$ matrix where $1$ and $-1$ are the only eigenvalues.",
+         "sha": "42bd44032dd4",
+         "zh": "如果可能，给出一个不可对角化的 $3\\times 3$ 矩阵的例子，使 $1$ 和 $-1$ 是它仅有的特征值。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If possible, give an example of a non-diagonalizable $2\\times 2$ matrix where $1$ and $-1$ are the only eigenvalues.",
+         "sha": "839fe4f6bfb0",
+         "zh": "如果可能，给出一个不可对角化的 $2\\times 2$ 矩阵的例子，使 $1$ 和 $-1$ 是它仅有的特征值。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "sol": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\vec v_{1}$ and $\\vec v_{2}$ be eigenvectors for a matrix $M$ corresponding to distinct eigenvalues $\\lambda_{1}$ and $\\lambda_{2}$ respectively. Let $a,b \\in \\R$ be such that $a \\vec v_{1}+ b\\vec v_{2}= \\vec 0$. Multiplying both sides by $M - \\lambda_{1} I$, we get",
+         "sha": "43598d3f5760",
+         "zh": "设 $\\vec v_{1}$ 和 $\\vec v_{2}$ 是矩阵 $M$ 的特征向量，分别对应于不同的特征值 $\\lambda_{1}$ 和 $\\lambda_{2}$。设 $a,b \\in \\R$ 满足 $a \\vec v_{1}+ b\\vec v_{2}= \\vec 0$。在两边同乘 $M - \\lambda_{1} I$，得到"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "b(\\lambda_{2}- \\lambda_{1}) \\vec v_{2}= \\vec 0."
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "Since $\\vec v_{2}$ is an eigenvector, it is nonzero. Hence, either $b=0$ or $\\lambda_{2}- \\lambda_{1} = 0$. Since $\\lambda_1\\neq\\lambda_2$ we know $\\lambda_{2}- \\lambda_{1} \\neq 0$ and so $b=0$.",
+         "sha": "2e886a3842ac",
+         "zh": "因为 $\\vec v_{2}$ 是特征向量，所以它非零。因此 $b=0$ 或 $\\lambda_{2}- \\lambda_{1} = 0$。又因为 $\\lambda_1\\neq\\lambda_2$，所以 $\\lambda_{2}- \\lambda_{1} \\neq 0$，于是 $b=0$。"
+        }
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "We have deduced that $a \\vec v_{1}= \\vec 0$. However, since $\\vec v_{1}$ is nonzero (because it is an eigenvector), we must have that $a = 0$. This means that $\\vec v_{1}$ and $\\vec v_{2}$ are linearly independent.",
+         "sha": "73cd662fdd55",
+         "zh": "我们推出了 $a \\vec v_{1}= \\vec 0$。然而 $\\vec v_{1}$ 非零（因为它是特征向量），所以必有 $a = 0$。这说明 $\\vec v_{1}$ 和 $\\vec v_{2}$ 线性无关。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "$\\mat{1&1&0\\\\0&1&0\\\\0&0&-1}$",
+         "sha": "76c12d7ede70",
+         "zh": "$\\mat{1&1&0\\\\0&1&0\\\\0&0&-1}$"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "This is impossible. Suppose that for some matrix $M$, $\\vec v_{1}$ is an eigenvector corresponding to $1$ and $\\vec v_{2}$ is an eigenvector corresponding to $-1.$ By 〔引用〕, $\\vec v_{1}$ and $\\vec v_{2}$ are linearly independent and thus form a basis for $\\R^{2}$. Since, $\\R^{2}$ has a basis consisting of eignvectors of $M$, we know $M$ is diagonalizable.",
+         "sha": "f432f5805153",
+         "zh": "这是不可能的。设对某个矩阵 $M$，$\\vec v_{1}$ 是对应于 $1$ 的特征向量，$\\vec v_{2}$ 是对应于 $-1.$ 的特征向量。由〔引用〕，$\\vec v_{1}$ 和 $\\vec v_{2}$ 线性无关，因而构成 $\\R^{2}$ 的一组基。既然 $\\R^{2}$ 有一组由 $M$ 的特征向量构成的基，我们就知道 $M$ 可对角化。"
+        }
+       }
+      ]
+     ]
+    }
+   ],
+   "source_refs": [
+    {
+     "relation": "verbatim",
+     "site": "Siefken《MAT223 Workbook: Linear Algebra》（CC BY-SA 4.0 开源教材）",
+     "locator": "Diagonalization · 练习题 5（上游 book/modules/module16-exercises.tex）",
+     "url": "https://github.com/siefkenj/IBLLinearAlgebra/blob/master/book/modules/module16-exercises.tex"
+    }
+   ]
+  }
+ ],
+ "title_zh": "对角化"
+}

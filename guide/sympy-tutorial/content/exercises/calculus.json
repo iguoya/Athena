@@ -1,0 +1,190 @@
+[
+ {
+  "id": "ex1",
+  "stem": "某种群的数量（单位：只）按逻辑斯谛曲线增长：$P(t)=\\dfrac{1000}{1+9e^{-t}}$，$t$ 以月计。增长率是 $P'(t)$。先预测：增长最快的时刻大约在种群数量达到容量一半（500 只）的时候。再运行：\n\n```python\nfrom sympy import *\nt = symbols('t')\nP = 1000/(1 + 9*exp(-t))\nr = diff(P, t)\nr.subs(t, log(9))\n```\n\n$t=\\ln 9$ 时种群恰好是 500 只，此刻的增长率是多少（只/月）？",
+  "check": {
+   "kind": "numbers",
+   "ask": "写出一个数。",
+   "answer": [
+    250.0
+   ],
+   "hint": "回到「导数」一节：`diff(P, t)` 得到的是 $P'(t)$，再用 `subs` 代入 $t=\\ln 9$；`log(9)` 在 SymPy 里就是 $\\ln 9$。"
+  },
+  "verify": "P = 1000/(1 + 9*exp(-t))\nresult = diff(P, t).subs(t, log(9))",
+  "sol": "$P'(t)=\\dfrac{9000e^{-t}}{(1+9e^{-t})^2}$。代入 $t=\\ln 9$ 时 $e^{-t}=1/9$，分母 $(1+1)^2=4$，分子 $9000/9=1000$，得 250。一般地，容量 $K$ 的逻辑斯谛曲线在 $P=K/2$ 处增长最快，最大增长率是 $K/4\\cdot r$（这里 $r=1$），所以是 $1000/4=250$。\n\n```python\n>>> diff(P, t)\n9000*exp(-t)/(1 + 9*exp(-t))**2\n>>> diff(P, t).subs(t, log(9))\n250\n>>> P.subs(t, log(9))\n500\n```",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "calculus · 导数",
+    "note": "自编，答案由 SymPy 1.14 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex2",
+  "stem": "混合偏导数的求导次序与 `diff` 的参数顺序无关（函数足够光滑时）。设 $f(x,y)=x^3y^2+\\sin(xy)$。先预测 $\\dfrac{\\partial^3 f}{\\partial x^2\\partial y}$ 在点 $(1,2)$ 的值大致在哪个量级，再运行：\n\n```python\nfrom sympy import *\nx, y = symbols('x y')\nf = x**3*y**2 + sin(x*y)\nd = diff(f, x, 2, y)\nd.subs({x: 1, y: 2})\n```\n\n求这个值的数值（用 `N(...)` 或 `.evalf()` 化成小数）。",
+  "check": {
+   "kind": "numbers",
+   "ask": "写出一个数，保留至少 6 位小数。",
+   "answer": [
+    22.027397638885844
+   ],
+   "hint": "`diff(f, x, 2, y)` 先对 $x$ 求两次、再对 $y$ 求一次；`subs` 接受字典同时代入两个变量；结果含 `sin(2)`、`cos(2)`，用 `N()` 化成小数。"
+  },
+  "verify": "f = x**3*y**2 + sin(x*y)\nresult = float(diff(f, x, 2, y).subs({x: 1, y: 2}))",
+  "sol": "$f_{xx}=6xy^2-y^2\\sin(xy)$，再对 $y$ 求导得 $f_{xxy}=12xy-2y\\sin(xy)-xy^2\\cos(xy)$。代入 $(1,2)$：$24-4\\sin 2-4\\cos 2\\approx 22.0274$。\n\n```python\n>>> d = diff(f, x, 2, y)\n>>> d.subs({x: 1, y: 2})\n-4*sin(2) - 4*cos(2) + 24\n>>> N(d.subs({x: 1, y: 2}))\n22.0273976388858\n>>> diff(f, x, x, y)\ny*(-x*y*cos(x*y) + 12*x - 2*sin(x*y))\n```",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "calculus · 导数",
+    "note": "自编，答案由 SymPy 1.14 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex3",
+  "stem": "曲线 $y=x^2$ 与直线 $y=2-x$ 围成一块有限区域。先画个草图，估计面积的大致量级（两个交点之间宽度为 3，区域最高处约 2 的高度）。再运行，让 SymPy 先找交点、再积分：\n\n```python\nfrom sympy import *\nx = symbols('x')\npts = solve(x**2 - (2 - x), x)\nprint(pts)\nintegrate((2 - x) - x**2, (x, pts[0], pts[1]))\n```\n\n这块区域的面积是多少？",
+  "check": {
+   "kind": "numbers",
+   "ask": "写出一个数。",
+   "answer": [
+    4.5
+   ],
+   "hint": "回到「积分」一节：定积分的写法是 `integrate(表达式, (变量, 下限, 上限))`。上方的曲线减下方的曲线才是被积函数；交点由 `solve` 给出（注意列表是升序的）。"
+  },
+  "verify": "pts = solve(x**2 - (2 - x), x)\nresult = integrate((2 - x) - x**2, (x, pts[0], pts[1]))",
+  "sol": "交点 $x=-2,1$；在 $[-2,1]$ 上直线在抛物线上方，面积 $\\int_{-2}^{1}(2-x-x^2)\\,dx=\\left[2x-\\tfrac{x^2}{2}-\\tfrac{x^3}{3}\\right]_{-2}^{1}=\\tfrac{9}{2}$。\n\n```python\n>>> pts = solve(x**2 - (2 - x), x)\n>>> print(pts)\n[-2, 1]\n>>> integrate((2 - x) - x**2, (x, pts[0], pts[1]))\n9/2\n```",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "calculus · 积分",
+    "note": "自编，答案由 SymPy 1.14 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex4",
+  "stem": "概率论和统计里反复出现反常积分 $\\int_0^{\\infty}e^{-x^2}\\,dx$（正态分布密度的一半面积）。原函数 $e^{-x^2}$ 不是初等函数，手算要靠二重积分的技巧。先预测：结果是一个含 $\\pi$ 的式子，大约是 0.5、0.89 还是 1.5？再运行：\n\n```python\nfrom sympy import *\nx = symbols('x')\nr = integrate(exp(-x**2), (x, 0, oo))\nprint(r)\nN(r)\n```\n\n把积分值写成小数。",
+  "check": {
+   "kind": "numbers",
+   "ask": "写出一个数，保留至少 6 位小数。",
+   "answer": [
+    0.886226925452758
+   ],
+   "hint": "回到「积分」一节：`oo`（两个小写字母 o）表示 $\\infty$，放进上下限元组就是反常积分；符号结果含 `sqrt(pi)`，用 `N()` 或 `.evalf()` 化成小数。"
+  },
+  "verify": "result = float(integrate(exp(-x**2), (x, 0, oo)))",
+  "sol": "已知 $\\int_{-\\infty}^{\\infty}e^{-x^2}dx=\\sqrt{\\pi}$（教程里二重积分例子的平方根），被积函数是偶函数，所以 $\\int_0^\\infty e^{-x^2}dx=\\sqrt{\\pi}/2\\approx 0.886227$。\n\n```python\n>>> r = integrate(exp(-x**2), (x, 0, oo))\n>>> print(r)\nsqrt(pi)/2\n>>> N(r)\n0.886226925452758\n```",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "calculus · 积分",
+    "note": "自编，答案由 SymPy 1.14 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex5",
+  "stem": "函数 $g(x)=\\dfrac{1}{1+e^{1/x}}$ 在 $x=0$ 处没有定义，而且左右两侧的行为不同：$x\\to0^+$ 时 $1/x\\to+\\infty$，$x\\to0^-$ 时 $1/x\\to-\\infty$。先预测左极限、右极限各是多少，再运行：\n\n```python\nfrom sympy import *\nx = symbols('x')\ng = 1/(1 + exp(1/x))\nprint(limit(g, x, 0, '-'))\nprint(limit(g, x, 0, '+'))\nprint(limit(g, x, 0))\n```\n\n依次写出三个数：左极限、右极限、不写方向的 `limit(g, x, 0)` 的结果。",
+  "check": {
+   "kind": "numbers",
+   "ask": "按顺序写出三个数：左极限、右极限、`limit(g, x, 0)`。",
+   "answer": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "hint": "回到「极限」一节：第四个参数 `'-'` 表示从左侧趋近，`'+'` 表示从右侧。省略方向时 SymPy 默认取哪一侧，先看第三行的输出再对照另外两行。"
+  },
+  "verify": "g = 1/(1 + exp(1/x))\nresult = [limit(g, x, 0, '-'), limit(g, x, 0, '+'), limit(g, x, 0)]",
+  "sol": "$x\\to0^-$：$1/x\\to-\\infty$，$e^{1/x}\\to0$，$g\\to1$。$x\\to0^+$：$e^{1/x}\\to+\\infty$，$g\\to0$。左右极限不相等，数学上 $\\lim_{x\\to0}g(x)$ 不存在（跳跃间断点）；但 SymPy 的 `limit` 不写方向时默认是右极限（`dir='+'`），所以第三行给出 0，不会提示极限不存在。判断双侧极限是否存在，要自己分别算左右极限。\n\n```python\n>>> limit(g, x, 0, '-')\n1\n>>> limit(g, x, 0, '+')\n0\n>>> limit(g, x, 0)\n0\n```",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "calculus · 极限",
+    "note": "自编，答案由 SymPy 1.14 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex6",
+  "stem": "展开 $e^{\\sin x}$ 到 $x^4$，看哪些项的系数是 0。先预测：教程里 `series(x, 0, 4)` 的结果是 `1 + x + x**2/2 + O(x**4)`，$x^3$ 项没有出现。那么 $x^3$ 与 $x^4$ 的系数分别是多少？再运行：\n\n```python\nfrom sympy import *\nx = symbols('x')\ns = exp(sin(x)).series(x, 0, 5)\nprint(s)\np = s.removeO()\nprint(p.coeff(x, 3), p.coeff(x, 4))\n```\n\n依次写出 $x^3$、$x^4$ 的系数（小数）。",
+  "check": {
+   "kind": "numbers",
+   "ask": "按顺序写出两个数：$x^3$ 的系数、$x^4$ 的系数。",
+   "answer": [
+    0.0,
+    -0.125
+   ],
+   "hint": "回到「级数展开」一节：`series(x, 0, n)` 展开到 $x^{n-1}$，末尾的 `O(x**n)` 是被省略的高阶项；`removeO()` 去掉它之后，`coeff(x, k)` 取 $x^k$ 的系数。"
+  },
+  "verify": "p = exp(sin(x)).series(x, 0, 5).removeO()\nresult = [p.coeff(x, 3), p.coeff(x, 4)]",
+  "sol": "手算：令 $u=\\sin x=x-\\tfrac{x^3}{6}+\\cdots$，$e^u=1+u+\\tfrac{u^2}{2}+\\tfrac{u^3}{6}+\\tfrac{u^4}{24}+\\cdots$。$x^3$ 项：$u$ 给出 $-\\tfrac16$，$\\tfrac{u^3}{6}$ 给出 $\\tfrac16$（$u^2=x^2-\\tfrac{x^4}{3}+\\cdots$ 没有 $x^3$ 项），两者抵消，系数为 0。$x^4$ 项：$\\tfrac{u^2}{2}$ 给出 $-\\tfrac16$，$\\tfrac{u^4}{24}$ 给出 $\\tfrac1{24}$，合计 $-\\tfrac18$。注意 `series(x, 0, 5)` 的 `O(x**5)` 表示 $x^4$ 项是写全了的最高项。\n\n```python\n>>> s = exp(sin(x)).series(x, 0, 5)\n>>> print(s)\n1 + x + x**2/2 - x**4/8 + O(x**5)\n>>> p = s.removeO()\n>>> print(p.coeff(x, 3), p.coeff(x, 4))\n0 -1/8\n```",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "calculus · 级数展开",
+    "note": "自编，答案由 SymPy 1.14 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex7",
+  "stem": "考研高数常考：由 $f'(x)=0$ 找驻点，再判断驻点是不是极值点。设 $f(x)=x^5-5x^3$。先预测它有几个驻点、其中几个是极值点，再运行：\n\n```python\nfrom sympy import *\nx = symbols('x')\nf = x**5 - 5*x**3\ncrit = solve(diff(f, x), x)\nprint(crit)\nprint([diff(f, x, 2).subs(x, c) for c in crit])\nprint([f.subs(x, v) for v in [-2, -1, 0, 1, 2]])\n```\n\n第二行是各驻点处的二阶导数；第三行是 $f$ 在几个点的取值，可以看出曲线在 $x=0$ 附近的走向。写出：驻点的个数、极值点的个数。",
+  "check": {
+   "kind": "numbers",
+   "ask": "按顺序写出两个整数：驻点个数、极值点个数。",
+   "answer": [
+    3.0,
+    2.0
+   ],
+   "hint": "回到「导数」一节求 $f'$ 与 $f''$；`solve` 返回的列表长度就是驻点个数。二阶导数为 0 时二阶判别法失效，要看一阶导数在该点两侧是否变号，或直接看 $f$ 的取值：$f(-1)=4$、$f(0)=0$、$f(1)=-4$。"
+  },
+  "verify": "f = x**5 - 5*x**3\ncrit = solve(diff(f, x), x)\nresult = [len(crit), len([c for c in crit if diff(f, x, 2).subs(x, c) != 0])]",
+  "sol": "$f'(x)=5x^4-15x^2=5x^2(x^2-3)$，驻点 $x=0,\\pm\\sqrt3$。$f''(x)=20x^3-30x$：在 $\\pm\\sqrt3$ 处为 $\\pm30\\sqrt3\\neq0$，$-\\sqrt3$ 是极大点、$\\sqrt3$ 是极小点。在 $x=0$ 处 $f''=0$，二阶判别法不能下结论；$x=0$ 是 $f'$ 的二重根，$f'$ 在 0 两侧都是负的（$f'(\\pm1)=-10$），不变号，所以 $f$ 在 0 附近单调递减，0 是驻点但不是极值点。驻点 3 个，极值点 2 个。\n\n```python\n>>> crit = solve(diff(f, x), x)\n>>> print(crit)\n[0, -sqrt(3), sqrt(3)]\n>>> [diff(f, x, 2).subs(x, c) for c in crit]\n[0, -30*sqrt(3), 30*sqrt(3)]\n>>> [f.subs(x, v) for v in [-2, -1, 0, 1, 2]]\n[8, 4, 0, -4, -8]\n```",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "calculus · 导数",
+    "note": "自编，答案由 SymPy 1.14 复算"
+   }
+  ]
+ },
+ {
+  "id": "ex8",
+  "stem": "`Integral` 创建的是未求值的积分对象，`doit` 才求值。设：\n\n```python\nfrom sympy import *\nx = symbols('x')\nI = Integral(x**2, (x, 0, 3))\n```\n\n先预测，再逐个运行下面的表达式，选出结果为 `True` 的那一个。",
+  "check": {
+   "kind": "choice",
+   "options": [
+    {
+     "text": "`I == 9`",
+     "ok": false,
+     "why": "`I` 只是「$x^2$ 在 $[0,3]$ 上的积分」这个符号对象，还没求值，它与整数 9 不相等，结果是 `False`。"
+    },
+    {
+     "text": "`I.doit() == 9`",
+     "ok": true,
+     "why": "`doit()` 会把积分算出来得到整数 9，所以比较为 `True`。"
+    },
+    {
+     "text": "`I + 1 == 10`",
+     "ok": false,
+     "why": "`I + 1` 保留为 `Integral(x**2, (x, 0, 3)) + 1`，不会自动求值，因此不等于 10；要先 `doit()` 再加。"
+    },
+    {
+     "text": "`I.subs(x, 2) == 4`",
+     "ok": false,
+     "why": "`x` 是积分变量（约束变量），`subs` 不改它，`I.subs(x, 2)` 仍是原来的积分对象，并不等于 4。"
+    }
+   ]
+  },
+  "sol": "只有 `I.doit() == 9` 为 `True`。`Integral` 与 `Derivative`、`Limit` 一样是「只表示、不计算」的对象，对应数学里 $\\int_0^3x^2dx=9$ 这个式子本身；`doit()` 或直接 `integrate(...)` 才得到数值。\n\n```python\n>>> I == 9\nFalse\n>>> I.doit() == 9\nTrue\n>>> I + 1\n1 + Integral(x**2, (x, 0, 3))\n>>> (I + 1).doit()\n10\n>>> I.subs(x, 2)\nIntegral(x**2, (x, 0, 3))\n```",
+  "source_refs": [
+   {
+    "relation": "authored",
+    "locator": "calculus · 积分",
+    "note": "自编，答案由 SymPy 1.14 复算"
+   }
+  ]
+ }
+]

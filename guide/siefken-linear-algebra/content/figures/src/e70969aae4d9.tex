@@ -1,0 +1,24 @@
+\begin{tikzpicture}[scale=2]
+		\begin{scope}[cm={1,0,0,1,(0,0)}, mypink, thick]
+			\begin{scope}[black!30!white]
+				\draw[ ->] (0,0) -- (1,0) node [midway, below] {$\xhat$};
+				\draw[densely dotted, ->] (0,0) -- (0,1) node [midway, left] {$\yhat$};
+			\end{scope}
+			\begin{scope}[rotate=60]
+				\draw[ ->] (0,0) -- (1,0) node [above right] {$\vec a_1$};
+				\draw[densely dotted, ->] (0,0) -- (0,1) node [above left] {$\vec a_2$};
+			\end{scope}
+		\end{scope}
+		\begin{scope}[cm={1,0,0,1,(3,0)}, myorange, thick]
+			\begin{scope}[black!30!white]
+				\draw[ ->] (0,0) -- (1,0) node [midway, below] {$\xhat$};
+				\draw[densely dotted, ->] (0,0) -- (0,1) node [midway, left] {$\yhat$};
+			\end{scope}
+			\begin{scope}[rotate=-60,cm={-1,0,0,1,(0,0)}]
+				\draw[ ->] (0,0) -- (1,0) node [above left] {$\vec b_1$};
+				\draw[densely dotted, ->] (0,0) -- (0,1) node [above right] {$\vec b_2$};
+			\end{scope}
+		\end{scope}
+		\node[above, mypink] at (0,1.2) {$\mathcal A=\Set{\vec a_1,\vec a_2}$};
+		\node[above, myorange] at (3,1.2) {$\mathcal B=\Set{\vec b_1,\vec b_2}$};
+	\end{tikzpicture}

@@ -1,0 +1,17 @@
+\begin{tikzpicture}[scale=1.5]
+        \begin{scope}[color=black]
+          \draw[->] (-1.5,0) -- (1.5,0) node[right] {$x$};
+          \draw[->] (0,-1.5) -- (0,1.5) node[below right] {$y$};
+          \draw (-1,0) -- +(0,-.1) node[below] {$-1$};
+          \draw (1,0) -- +(0,-.1) node[below] {$1$};
+          \draw (0,-1) -- +(-.1,0) node[left] {$-1$};
+          \draw (0,1) -- +(-.1,0) node[left] {$1$};
+        \end{scope}
+        \begin{scope}[color=blue,cm={(1,0,0,1,(0,0))}]
+          \draw[thick,red] (0,0) circle [x radius={1}, y radius={sqrt(2)}];
+          \draw[red] (1,0) +(0.15,0.2) node {$1$};
+          \draw[red] (0,{sqrt(2)}) +(-0.4,0.15) node {$\sqrt{2}$};
+          \draw[thick,blue,->] (0,0) -- node[below] {$\vect{u}_1$} (1,0);
+          \draw[thick,blue,->] (0,0) -- node[left] {$\vect{u}_2$} (0,1);
+        \end{scope}
+      \end{tikzpicture}
