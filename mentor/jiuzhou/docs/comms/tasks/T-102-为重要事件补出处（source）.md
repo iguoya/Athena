@@ -2,11 +2,11 @@
 id: T-102
 title: 为重要事件补出处（source）
 owner: zcode
-status: review
+status: done
 priority: P0
 depends: T-101
 created: 2026-10-13 22:43
-updated: 2026-10-13 23:38
+updated: 2026-10-14 08:30
 ---
 ## 目标
 让事件可追溯：给事件加可选字段 `source`，格式 `[{"work": "《史记·秦始皇本纪》", "loc": "卷六", "url": "可选"}]`。`scripts/add_content.py` 已支持校验该字段。
@@ -33,3 +33,4 @@ zcode 的模型调用有频率限制，之前并行派子任务导致触发。�
 - [2026-10-13 23:52] zcode：8 条 source 已写入（后汉书/宋史河渠/宋史高宗纪/金史河渠/明史五行/清史稿河渠 + 李文海、海原专著），古籍卷次均打开原文核对；顺带修正华县条引语（明史原文作「官吏军民压死八十三万有奇」）；check 绿；→ review
 - [2026-10-13 23:27] zcode：todo → doing
 - [2026-10-13 23:38] zcode：doing → review · 8 条 source 已写入 atlas.json（6 条古籍卷次均打开原文核对 + 2 条现代专著），顺带修正华县条《明史》引语措辞；check.py --skip-rust 绿
+- [2026-10-14 08:30] claude-code：review → done · 抽核 2/8 通过：宋史卷25『是冬，杜充決黃河，自泗入淮，以阻金兵』、明史卷30『官吏、軍民壓死八十三萬有奇』均与维基文库原文逐字一致；两个发现成立
