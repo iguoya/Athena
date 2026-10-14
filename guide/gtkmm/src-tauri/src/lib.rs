@@ -254,10 +254,25 @@ fn get_vocab(state: State<AppState>) -> Result<Value, String> {
     read_content(&state.content_root, "vocab.json")
 }
 
+/// 章/节 id 只会是官方 DocBook 的 xml:id（字母、数字、点、横线）。前端传来的 id 直接拼进
+/// content/ 下的路径，所以先卡死字符集：`..`、路径分隔符、盘符和绝对路径都进不来
+/// （`get_figure` 对图片引用做的是同一件事）。
+fn is_safe_id(id: &str) -> bool {
+    !id.is_empty()
+        && id.len() <= 128
+        && !id.contains("..")
+        && id
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || c == '.' || c == '-' || c == '_')
+}
+
 /// 官方节页的段落快照（content/chapters/<章>/<节>.json，原文+逐段中文，
 /// 由 scripts/sync_upstream.py 生成——应用 ADR 0002 的段落级追踪）。
 #[tauri::command]
 fn get_page_content(state: State<AppState>, chapter_id: String, page_id: String) -> Result<String, String> {
+    if !is_safe_id(&chapter_id) || !is_safe_id(&page_id) {
+        return Err(format!("非法章节引用：{chapter_id}/{page_id}"));
+    }
     let path = state
         .content_root
         .join("chapters")
@@ -271,6 +286,9 @@ fn get_page_content(state: State<AppState>, chapter_id: String, page_id: String)
 /// 返回 null（对齐是渐进的，前端按节兜底词数聚合）。
 #[tauri::command]
 fn get_po_units(state: State<AppState>, chapter_id: String) -> Result<Value, String> {
+    if !is_safe_id(&chapter_id) {
+        return Err(format!("非法章节引用：{chapter_id}"));
+    }
     let path = state
         .content_root
         .join("po-units")
@@ -1022,6 +1040,17 @@ pub fn run() {
 mod tests {
     use super::*;
     use serde_json::Value;
+
+    #[test]
+    fn content_ids_reject_path_tricks() {
+        for ok in ["chapter-basics", "sec-gtkmm", "changes-gtkmm4", "a.b_c-1"] {
+            assert!(is_safe_id(ok), "{ok} 应当合法");
+        }
+        for bad in ["", "..", "../x", "a/b", "a\\b", "/etc/passwd", "C:x", "a..b", "x y"] {
+            assert!(!is_safe_id(bad), "{bad} 应当被拒绝");
+        }
+        assert!(!is_safe_id(&"a".repeat(129)), "过长的 id 应当被拒绝");
+    }
 
     /// 在临时根里摆一个假镜像目录 + 实体，生成副本并验证内容。
     /// 只测生成逻辑本身；MSYS2 探测结果因机器而异，配置只断言「合法 JSON +
