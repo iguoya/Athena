@@ -18,6 +18,8 @@
   python scripts/comms.py presence [NAME]                 # 判断对方是否在线（online / quiet / unreachable）
   python scripts/comms.py reply FILE --from NAME --body 正文   # 回复一条消息（自动串成一个线程）
   python scripts/comms.py thread FILE|ID                  # 按时间顺序看一个线程
+  python scripts/comms.py say --from NAME --to NAME2|all 一句话   # 即时消息（短、不进任务系统）
+  python scripts/comms.py chat NAME [--tail N]            # 看发给我的即时消息（未读，并标记已读）
   python scripts/comms.py notify NAME                     # 给 hook 用：有未读时只打印 1~3 行摘要，没有则静默
   python scripts/comms.py watch NAME [--timeout 3300]      # 阻塞等待新消息，来了就打印并退出（后台运行即可被唤醒）
   python scripts/comms.py ping NAME|all                   # 发一条「联络」消息，之后用 presence 看有没有回应
@@ -38,6 +40,7 @@ COMMS = ROOT / "docs" / "comms"
 TASKS = COMMS / "tasks"
 MSGS = COMMS / "msgs"
 READ = COMMS / "read"
+CHAT = COMMS / "chat"
 
 AGENTS = ("claude-code", "cursor", "zcode")
 STATUSES = ("todo", "doing", "review", "blocked", "done")
@@ -219,11 +222,17 @@ def cmd_notify(a):
     """给 hook 用的轻量提示：没有未读就什么都不打印（不打扰），有则最多 3 行摘要。"""
     check_agent(a.name)
     msgs = messages_for(a.name)
-    if not msgs:
+    chats = chat_unread(a.name)
+    if not msgs and not chats:
         return 0
-    print(f"[九州通讯] {a.name} 有 {len(msgs)} 条未读，运行 python mentor/jiuzhou/scripts/comms.py inbox {a.name} 查看：")
-    for p, m, _ in msgs[-3:]:
-        print(f"  - {m.get('from')} · {m.get('subject')}")
+    if chats:
+        print(f"[九州即时消息] {len(chats)} 条未读（运行 python mentor/jiuzhou/scripts/comms.py chat {a.name} 查看并标记已读）：")
+        for ts, frm, _to, text in chats[-3:]:
+            print(f"  - [{ts[11:16]}] {frm}: {text[:80]}")
+    if msgs:
+        print(f"[九州通讯] {a.name} 有 {len(msgs)} 条未读消息，运行 python mentor/jiuzhou/scripts/comms.py inbox {a.name} 查看：")
+        for p, m, _ in msgs[-3:]:
+            print(f"  - {m.get('from')} · {m.get('subject')}")
     return 0
 
 
@@ -231,8 +240,14 @@ def cmd_watch(a):
     """阻塞等待 NAME 的新未读消息；来了就打印并退出 0，超时退出 3。在后台运行，来消息时进程结束即可被唤醒。"""
     check_agent(a.name)
     known = {p.name for p, _, _ in messages_for(a.name)}
+    known_chat = {t[:3] for t in chat_unread(a.name)}
     deadline = time.time() + a.timeout
     while time.time() < deadline:
+        fresh_chat = [t for t in chat_unread(a.name) if t[:3] not in known_chat]
+        if fresh_chat:
+            for ts, frm, _to, text in fresh_chat:
+                print(f"[{ts[5:16]}] {frm} → {a.name}: {text}")
+            return 0
         fresh = [(p, m, b) for p, m, b in messages_for(a.name) if p.name not in known]
         if fresh:
             for p, m, b in fresh:
@@ -243,6 +258,73 @@ def cmd_watch(a):
         time.sleep(a.interval)
     print(f"{a.name}：{a.timeout} 秒内没有新消息")
     return 3
+
+
+# ------------------------------------------------------------------ 即时消息（chat）
+# 与任务/消息机制并存：任务与正式消息照旧；chat 是「一句话」级别的即时通讯。
+# 每个人只写自己的 chat/<名字>.log（只追加），读的时候合并按时间排序——和消息机制一样，永远不改别人的文件。
+# 每行：时间|收件人|正文（正文里的换行压成「 / 」）。已读位置记在 read/<名字>.chat（一个时间戳）。
+def _chat_path(name: str) -> Path:
+    return CHAT / f"{name}.log"
+
+
+def chat_lines():
+    out = []
+    for n in AGENTS:
+        f = _chat_path(n)
+        if not f.exists():
+            continue
+        for raw in f.read_text(encoding="utf-8").splitlines():
+            parts = raw.split("|", 2)
+            if len(parts) == 3:
+                out.append((parts[0], n, parts[1], parts[2]))
+    return sorted(out)
+
+
+def chat_pointer(name: str) -> str:
+    f = READ / f"{name}.chat"
+    return f.read_text(encoding="utf-8").strip() if f.exists() else ""
+
+
+def chat_unread(name: str):
+    ptr = chat_pointer(name)
+    return [t for t in chat_lines() if t[1] != name and t[2] in (name, "all") and t[0] > ptr]
+
+
+def mark_chat_read(name: str) -> None:
+    lines = chat_lines()
+    if lines:
+        READ.mkdir(parents=True, exist_ok=True)
+        (READ / f"{name}.chat").write_text(lines[-1][0], encoding="utf-8")
+
+
+def cmd_say(a):
+    me = getattr(a, "from")
+    check_agent(me)
+    if a.to != "all":
+        check_agent(a.to)
+    text = " / ".join(x.strip() for x in a.text.splitlines() if x.strip())
+    if not text:
+        raise SystemExit("内容为空")
+    CHAT.mkdir(parents=True, exist_ok=True)
+    ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with _chat_path(me).open("a", encoding="utf-8", newline="") as f:
+        f.write(f"{ts}|{a.to}|{text}" + chr(10))
+    print(f"[{ts}] {me} → {a.to}: {text}")
+
+
+def cmd_chat(a):
+    check_agent(a.name)
+    if a.tail:
+        lines = [t for t in chat_lines() if t[1] == a.name or t[2] in (a.name, "all")][-a.tail:]
+        print(f"=== 最近 {len(lines)} 条即时消息（与 {a.name} 有关）===")
+    else:
+        lines = chat_unread(a.name)
+        print(f"=== {a.name} 的即时消息（未读 {len(lines)} 条）===")
+    for ts, frm, to, text in lines:
+        print(f"[{ts[5:16]}] {frm} → {to}: {text}")
+    if not a.tail:
+        mark_chat_read(a.name)
 
 
 def cmd_ack(a):
@@ -372,6 +454,9 @@ def signs(name: str) -> list[tuple[datetime, str]]:
         m = MSG_TS.match(p.name)
         if m and m.group(2) == name:
             out.append((datetime.strptime(m.group(1), "%Y%m%d-%H%M%S"), "发消息"))
+    for ts, frm, _to, _t in chat_lines():
+        if frm == name:
+            out.append((datetime.strptime(ts, "%Y-%m-%d %H:%M:%S"), "即时消息"))
     rf = READ / f"{name}.txt"
     if rf.exists():
         out.append((datetime.fromtimestamp(rf.stat().st_mtime), "读消息"))
@@ -519,6 +604,9 @@ def main() -> int:
     s = sub.add_parser("reply"); s.add_argument("file"); s.add_argument("--from", dest="from", required=True)
     s.add_argument("--body"); s.add_argument("--body-file"); s.set_defaults(fn=cmd_reply)
     s = sub.add_parser("thread"); s.add_argument("key"); s.set_defaults(fn=cmd_thread)
+    s = sub.add_parser("say"); s.add_argument("--from", dest="from", required=True); s.add_argument("--to", required=True)
+    s.add_argument("text"); s.set_defaults(fn=cmd_say)
+    s = sub.add_parser("chat"); s.add_argument("name"); s.add_argument("--tail", type=int, default=0); s.set_defaults(fn=cmd_chat)
     s = sub.add_parser("notify"); s.add_argument("name"); s.set_defaults(fn=cmd_notify)
     s = sub.add_parser("watch"); s.add_argument("name"); s.add_argument("--timeout", type=int, default=3300)
     s.add_argument("--interval", type=int, default=3); s.set_defaults(fn=cmd_watch)

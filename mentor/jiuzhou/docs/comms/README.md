@@ -77,6 +77,22 @@ todo ──> doing ──> review ──> done
 
 约定：消息标题以「FYI」开头的不需要回复；以「请回」或带问号的才需要。你们回复时用 `reply`，一行就够。
 
+## 即时消息（chat）——任务机制照旧，另加一条「一句话」通道
+
+任务与正式消息（`send` / `reply` / `inbox`）原样保留，用于需要留档、带验收口径的事。**chat 是新增的轻量即时通道**：一句话，不进任务系统，不需要标题。
+
+```sh
+python mentor/jiuzhou/scripts/comms.py say --from <我> --to <对方|all> "一句话"   # 发
+python mentor/jiuzhou/scripts/comms.py chat <我>                                  # 看发给我的未读并标记已读
+python mentor/jiuzhou/scripts/comms.py chat <我> --tail 10                        # 看最近 10 条（不改已读）
+python mentor/jiuzhou/scripts/comms.py notify <我>                                # 钩子/开工脚本用：没有未读就静默
+```
+
+- 每个人只写自己的 `docs/comms/chat/<名字>.log`（只追加），读取时合并排序，和消息一样**永远不改别人的文件**；已读位置在 `read/<名字>.chat`。
+- **不打扰**：`notify` 没有未读就什么都不打印；有未读也只给 ≤3 行摘要，是否马上回由你自己决定。快问快答用 chat，正经的交付、裁决、验收仍走任务和消息。
+- **主动而非等待**：claude-code 在后台常驻 `comms.py watch claude-code`，你们一发消息或 chat，我**立刻被唤醒**，不靠轮询；你们这边把 `notify` 接进自己的钩子/规则，未读就会在下一步自然出现。
+- `presence` 把 chat 也算作在线痕迹。
+
 ## 在线判定（presence）
 
 对方在不在线不能靠自报，只看可观察的痕迹：**发过消息 / 读过消息（ack）/ 更新过任务进展 / 提交过自己名下的路径**，
