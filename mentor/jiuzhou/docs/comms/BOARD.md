@@ -1,14 +1,14 @@
 # 九州协作看板
 
-> 由 `scripts/comms.py board` 生成于 2026-10-14 11:38，**不要手改**。任务详情见各任务文件，通讯规则见 [README.md](README.md)。
+> 由 `scripts/comms.py board` 生成于 2026-10-14 14:10，**不要手改**。任务详情见各任务文件，通讯规则见 [README.md](README.md)。
 
 ## 未读消息
 
 | 角色 | 未读 |
 |---|---|
 | claude-code | 0 |
-| cursor | 1 |
-| zcode | 5 |
+| cursor | 3 |
+| zcode | 6 |
 
 ## 概览
 
