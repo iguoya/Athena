@@ -223,6 +223,21 @@ class ValidationTests(ProgressApiCase):
         self.assert_invalid(r, "since")
 
 
+class SchemaTests(ProgressApiCase):
+    def test_旧表也会补上序号索引(self):
+        from sqlalchemy import inspect, text
+
+        from nas_admin.progress_api import store
+
+        self.push([row()])  # 触发建表
+        with self.engine.begin() as conn:
+            conn.execute(text("DROP INDEX athena_progress_rows_seq"))  # 模拟索引上线前已部署的旧表
+        store._ready_for.discard(self.engine)
+        store.ensure_table(self.engine)
+        names = {i["name"] for i in inspect(self.engine).get_indexes("athena_progress_rows")}
+        self.assertIn("athena_progress_rows_seq", names)
+
+
 class AccessTests(ProgressApiCase):
     def test_不需要令牌(self):
         self.assertEqual(self.push([row()]).status_code, 200)

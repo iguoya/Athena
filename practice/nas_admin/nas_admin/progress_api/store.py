@@ -60,6 +60,8 @@ rows = Table(
     Column("seq", BigInteger, nullable=False),
     Column("received_at", Text, nullable=False),
     Index("athena_progress_rows_pull", "learner", "app", "seq"),
+    # 每次推送都要取全表的最大序号分配新号；没有单独的 seq 索引它就是全表扫描，行数涨上去会越推越慢。
+    Index("athena_progress_rows_seq", "seq"),
 )
 
 _ready_lock = threading.Lock()
@@ -84,6 +86,9 @@ def ensure_table(engine: Engine) -> None:
     with _ready_lock:
         if engine not in _ready_for:
             rows.create(bind=engine, checkfirst=True)
+            # create(checkfirst) 见表已存在就整个跳过，已部署的旧表要单独补上后加的索引。
+            for index in rows.indexes:
+                index.create(bind=engine, checkfirst=True)
             _ready_for.add(engine)
 
 
