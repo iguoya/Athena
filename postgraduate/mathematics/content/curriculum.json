@@ -384,7 +384,7 @@
           },
           "drills": {
             "title": "随堂练习",
-            "intro": "三道题，全都只看图和矩阵的对应关系。**别急着算**，这一节还没到算的时候。",
+            "intro": "五道题：从箭头读出矩阵、由两根箭头预测任意点、哪些搬动写不成矩阵。**别急着算**，这一节还没到算的时候。",
             "items": [
               {
                 "id": "t1",
@@ -476,6 +476,70 @@
                   {
                     "text": "第一列所指的那个点",
                     "misread": "那是蓝箭头的去向，也就是 (1,0) 这个点搬到了哪。原点是 (0,0)，不是 (1,0)。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "t4",
+                "kind": "choice",
+                "stem": "矩阵 `[[2,1],[0,3]]` 把 (1,0) 搬到 (2,0)、把 (0,1) 搬到 (1,3)。点 (2,1) = 2×(1,0) + 1×(0,1) 会被搬到哪里？",
+                "varies": "从「读出箭头」转到「由两根箭头预测任意点的去向」。",
+                "hint": "2 份蓝箭头加 1 份橙箭头，分别加横坐标和纵坐标。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Linear transformations · 定理 Linear transformations are matrix transformations",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/LinearTransformationsRn-Matrix.tex",
+                    "note": "取教材「由两根基本箭头的去向决定整个变换」这一结论，代入一个具体的矩阵与点；两种读法的结果已验算"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "(5, 3)",
+                    "ok": true,
+                    "why": "搬动保持「几份加几份」：2 份 (2,0) 加 1 份 (1,3)，得 (4+1, 0+3) = (5, 3)。两根箭头一定，其余点的去向就只能跟着走。"
+                  },
+                  {
+                    "text": "(4, 3)",
+                    "misread": "漏了第二根箭头 (1,3) 的横向分量：1 份 (1,3) 要把 1 也加到横坐标上，4 + 1 = 5。"
+                  },
+                  {
+                    "text": "(4, 5)",
+                    "misread": "这是把矩阵按行当成箭头去读的结果。箭头是矩阵的列，不是行。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "t5",
+                "kind": "choice",
+                "stem": "有人说：「把平面上每个点向右平移 1 格」也是一次矩阵搬动，能写成 2×2 矩阵。对吗？",
+                "varies": "从「会读」转到「哪些搬动根本写不成矩阵」。",
+                "hint": "矩阵搬动下，原点会去哪里？平移呢？",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Linear transformations · 性质 T 保持零向量：T(0) = 0（另见 Definition 一节的说明）",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/LinearTransformationsRn-Properties.tex",
+                    "note": "取教材「线性变换必保持原点不动」这一条，用来判断平移不是矩阵搬动；切变保持原点已验算"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "不对：矩阵搬动一定保持原点不动，而平移把原点也移走了",
+                    "ok": true,
+                    "why": "教材里线性变换必须满足 T(0) = 0。平移会把原点 (0,0) 搬到 (1,0)，所以它写不成矩阵——这也是为什么这一节的图里原点那个空心圆永远不动。"
+                  },
+                  {
+                    "text": "对：平移不改变形状，当然能写成矩阵",
+                    "misread": "不改变形状不是判据。矩阵搬动要求保持原点不动、直线仍是直线；平移虽然保持直线，却让原点动了。"
+                  },
+                  {
+                    "text": "对：用 `[[1,1],[0,1]]` 就行",
+                    "misread": "`[[1,1],[0,1]]` 是切变：它把 (1,0) 留在原地、把 (0,1) 推到 (1,1)，原点也不动。平移要让每个点都右移 1 格，包括原点。"
                   }
                 ],
                 "pass": 1
@@ -646,7 +710,7 @@
           ],
           "drills": {
             "title": "随堂练习",
-            "intro": "三道题。第一题会推翻一个容易过度概括的结论。",
+            "intro": "五道题，第一题会推翻一个容易过度概括的结论；后面看顺序什么时候要紧、乘积的顺序怎么写。",
             "items": [
               {
                 "id": "c1",
@@ -739,6 +803,70 @@
                   {
                     "text": "要看第二次是什么矩阵",
                     "misread": "不用看。任何搬动都只能把手上已有的东西搬走，不能凭空造出被压没的那一维。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "c4",
+                "kind": "choice",
+                "stem": "先把平面向右「切变」`S = [[1,1],[0,1]]`，再旋转 90° `R = [[0,−1],[1,0]]`；和先旋转、再切变。结果一样吗？",
+                "varies": "和第一题对照：均匀放大与旋转可以交换，切变与旋转不行。",
+                "hint": "可以各取一个点，比如 (0,1)，看两种顺序下它落在哪里。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Matrix multiplication · 例 Matrix multiplication is not commutative",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Matrices-Multiplication-Multiplication.tex",
+                    "note": "教材用一对具体矩阵说明 AB ≠ BA；这里换成几何上有意义的一对（切变与旋转），两个乘积已验算：RS = [[0,−1],[1,1]]，SR = [[1,−1],[1,0]]"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "不一样",
+                    "ok": true,
+                    "why": "先切变再旋转的矩阵是 RS = [[0,−1],[1,1]]，先旋转再切变是 SR = [[1,−1],[1,0]]，两个不同。矩阵乘法不满足交换律。"
+                  },
+                  {
+                    "text": "一样，反正都做了这两件事",
+                    "misread": "做的事一样，顺序不同，结果可以不同：先穿袜子再穿鞋，和先穿鞋再穿袜子不是一回事。"
+                  },
+                  {
+                    "text": "一样，因为旋转不改变形状",
+                    "misread": "旋转不改变形状，可它改变了方向；切变是沿横向推，转之前转之后，被推的方向不同，效果不同。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "c5",
+                "kind": "choice",
+                "stem": "搬动 S 的矩阵是 `A`，搬动 T 的矩阵是 `B`。先做 S、再做 T，合起来这一次搬动的矩阵写作？",
+                "varies": "从「顺序会不会影响」转到「顺序怎么写」。",
+                "hint": "矩阵乘在向量上，哪一个离向量最近？",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Linear transformations · 定理 Matrix of a composite transformation",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/LinearTransformationsRn-Properties.tex",
+                    "note": "取教材定理：S 的矩阵是 A、T 的矩阵是 B 时，先 S 后 T 的复合 T∘S 的矩阵是 BA"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "`BA`",
+                    "ok": true,
+                    "why": "教材规定 T∘S 是先做 S、再做 T，矩阵是 BA。矩阵乘在向量上是 B(Av)：离向量最近的 A 先起作用，所以先做的写在右边。"
+                  },
+                  {
+                    "text": "`AB`",
+                    "misread": "按读的顺序写成 AB，意思就变成先做 B 再做 A。矩阵作用在向量上，离向量最近的那个先起作用。"
+                  },
+                  {
+                    "text": "`A + B`",
+                    "misread": "两次搬动接起来是矩阵相乘，不是相加。"
                   }
                 ],
                 "pass": 1
@@ -1573,7 +1701,7 @@
           ],
           "drills": {
             "title": "随堂练习",
-            "intro": "三道题，判断能不能撤销。",
+            "intro": "五道题，判断能不能撤销、撤销要用哪个矩阵、两次搬动接起来怎么撤销。",
             "items": [
               {
                 "id": "i1",
@@ -1666,6 +1794,70 @@
                   {
                     "text": "能，但要先算出逆矩阵",
                     "misread": "算不出来的。这个矩阵的面积倍数是 0，逆矩阵根本不存在。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "i4",
+                "kind": "choice",
+                "stem": "切变 `[[1,1],[0,1]]` 把每个点向右推，推的距离等于它的高度。要把它撤销，应该用哪个矩阵？",
+                "varies": "从「判断能不能撤销」转到「撤销用哪个矩阵」。",
+                "hint": "撤销一次向右的推，该怎么推？再用 BA = I 验一下。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Matrix inverses · 定义 The inverse of a matrix（BA = I 且 AB = I）与例 Verifying the inverse of a matrix",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Matrices-Inverses-Definition.tex",
+                    "note": "按教材的定义验证一个具体矩阵的逆：切变的逆是往回推同样的距离；三个候选与它的乘积已验算"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "`[[1,−1],[0,1]]`：往回推同样的距离",
+                    "ok": true,
+                    "why": "撤销就是往回推：高度为 y 的点向左推 y。验证：`[[1,1],[0,1]]·[[1,−1],[0,1]] = I`，两个接起来什么也没做。"
+                  },
+                  {
+                    "text": "`[[1,1],[0,1]]` 自己，再推一次",
+                    "misread": "再推一次是继续向右推，距离翻倍，不是撤销。`[[1,1],[0,1]]` 的平方是 `[[1,2],[0,1]]`。"
+                  },
+                  {
+                    "text": "`[[−1,−1],[0,−1]]`：每个数取负",
+                    "misread": "每个数取负得到的是另一个搬动，它与原矩阵相乘得 `[[−1,−2],[0,−1]]`，不是单位矩阵。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "i5",
+                "kind": "choice",
+                "stem": "先做搬动 A，再做搬动 B。要把这整件事撤销，应该先撤销哪一个？",
+                "varies": "从「怎么撤销一次」转到「撤销两次接起来的顺序」。",
+                "hint": "想想穿袜子和穿鞋。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Matrix inverses · 命题 Properties of the inverse：(AB)⁻¹ = B⁻¹A⁻¹",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Matrices-Inverses-Properties.tex",
+                    "note": "取教材的性质，用「撤销顺序与做的顺序相反」来读它"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "先撤销 B，再撤销 A",
+                    "ok": true,
+                    "why": "撤销的顺序和做的顺序相反，就像先穿袜子再穿鞋，脱的时候要先脱鞋。这就是教材里 (AB)⁻¹ = B⁻¹A⁻¹ 的意思。"
+                  },
+                  {
+                    "text": "先撤销 A，再撤销 B",
+                    "misread": "那样撤销的顺序和做的顺序一样：A 的效果被 B 盖在了下面，没法直接撤销到它。"
+                  },
+                  {
+                    "text": "顺序无所谓",
+                    "misread": "顺序有所谓，因为矩阵乘法不满足交换律：B⁻¹A⁻¹ 与 A⁻¹B⁻¹ 一般不相等。"
                   }
                 ],
                 "pass": 1
@@ -2572,7 +2764,7 @@
           ],
           "drills": {
             "title": "随堂练习",
-            "intro": "三道题，判断两根箭头共不共线。**看方向，不看长短。**",
+            "intro": "五道题，判断两根箭头共不共线；再看三根箭头里谁是多余的、多余带来什么后果。**看方向，不看长短。**",
             "items": [
               {
                 "id": "p1",
@@ -2665,6 +2857,70 @@
                   {
                     "text": "2 倍",
                     "misread": "可能算的是 6 ÷ 3。要拿对应的坐标相除：横对横、纵对纵。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "p4",
+                "kind": "choice",
+                "stem": "平面上三根箭头 (1,0)、(0,1)、(1,1)（按这个顺序），有几根是「多余」的？多余指：它能用前面的箭头拼出来。",
+                "varies": "从「共不共线」转到「多出来的箭头」。",
+                "hint": "(1,1) 能不能用 (1,0) 和 (0,1) 拼出来？",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Linear independence · 定义 Redundant vectors, linear dependence, and linear independence",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/SpanIndependenceBasis-LinearIndependence.tex",
+                    "note": "教材定义：能写成前面向量的线性组合的向量是多余的；本题取一组具体的三根箭头"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "一根：(1,1) = (1,0) + (0,1)",
+                    "ok": true,
+                    "why": "(1,1) 能用前两根拼出来，是多余的。(0,1) 不能用 (1,0) 拼出来，所以不多余。平面里最多只有两个独立方向，第三根必然多余。"
+                  },
+                  {
+                    "text": "没有多余的，三根的方向都不同",
+                    "misread": "方向不同不等于不多余。平面只有两个独立方向，第三根一定能用前两根拼出来。"
+                  },
+                  {
+                    "text": "两根",
+                    "misread": "(0,1) 不能用 (1,0) 拼出来（方向不同），它不多余。多余的只有第三根。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "p5",
+                "kind": "choice",
+                "stem": "还是这三根箭头 (1,0)、(0,1)、(1,1)。要拼出点 (3,5)，有几种拼法？",
+                "varies": "从「多余」转到「多余带来的后果：拼法不唯一」。",
+                "hint": "设三根分别用 a、b、c 份，写出横、纵两个方程。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Linear independence · 定理 Unique linear combination",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/SpanIndependenceBasis-LinearIndependence.tex",
+                    "note": "教材定理：箭头线性无关时拼法唯一；本题反过来看，有多余箭头时拼法不唯一。a + c = 3、b + c = 5，c 任取，已验算"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "无穷多种",
+                    "ok": true,
+                    "why": "设用 a、b、c 份：a + c = 3，b + c = 5。c 取任何数，a = 3 − c、b = 5 − c 都成立。多出来的那根 (1,1) 带来了无穷多种选择。"
+                  },
+                  {
+                    "text": "只有一种",
+                    "misread": "只有箭头线性无关时，拼法才唯一（教材的定理）。这里第三根是多余的，所以不唯一。"
+                  },
+                  {
+                    "text": "拼不出来",
+                    "misread": "(1,0) 与 (0,1) 已经能拼出平面里所有点，(3,5) 就是 3 份加 5 份。"
                   }
                 ],
                 "pass": 1
@@ -2843,7 +3099,7 @@
           ],
           "drills": {
             "title": "随堂练习",
-            "intro": "三道题。第三道要自己验算一次。",
+            "intro": "五道题，哪些点被搬到原点、有几维、怎么验算、三维里怎么数、它对方程的解有什么影响。",
             "items": [
               {
                 "id": "k1",
@@ -2936,6 +3192,70 @@
                   {
                     "text": "横坐标 2",
                     "misread": "像是只算了 3 − 1。要按行乘：第一行是 1 和 3，分别乘 3 和 −1 再相加。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "k4",
+                "kind": "choice",
+                "stem": "一个 3 阶矩阵 `[[1,0,1],[0,1,1],[1,1,2]]` 的秩是 2。被它搬到原点的那些点，构成几维的东西？",
+                "varies": "从平面推到三维：压到几维 + 压没几维 = 总维数。",
+                "hint": "压到 2 维，三维空间里压没了几维？",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Column space, row space, and null space · 命题 Dimension of column space, row space, and null space（dim null = n − rank）",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/SpanIndependenceBasis-ColumnRowNullSpace.tex",
+                    "note": "取教材的维数公式，用一个 3 阶矩阵验证：3 − 2 = 1；被压没的方向 (1,1,−1) 已验算（第三列恰好是前两列之和）"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "1 维（一条线）",
+                    "ok": true,
+                    "why": "教材：零空间的维数 = n − 秩 = 3 − 2 = 1。它是一条线，方向是 (1,1,−1)——这个矩阵的第三列正好是前两列之和。"
+                  },
+                  {
+                    "text": "2 维",
+                    "misread": "2 是秩（搬完剩下的维数），不是被压没的那部分。两者加起来等于 3：压到几维 + 压没几维 = 总维数。"
+                  },
+                  {
+                    "text": "0 维",
+                    "misread": "秩小于 3，说明有方向被压没了，零空间不只有原点。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "k5",
+                "kind": "choice",
+                "stem": "已知 `x₀` 是方程 `Ax = b` 的一个解，`n` 是 A 压没的一个方向（`An = 0`）。`x₀ + 2n` 还是 `Ax = b` 的解吗？",
+                "varies": "从「压没的方向是什么」转到「它对解的影响」。",
+                "hint": "算 A(x₀ + 2n)，用到 An = 0。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Column space, row space, and null space · 定义 Null space（An = 0）",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/SpanIndependenceBasis-ColumnRowNullSpace.tex",
+                    "note": "由零空间的定义直接得到：A(x₀ + 2n) = Ax₀ + 2An = b + 0 = b；「特解加零空间里的向量」这一说法是本应用据此写的"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "是：A(x₀ + 2n) = b + 0 = b",
+                    "ok": true,
+                    "why": "沿被压没的方向挪多远，A 作用的结果都不变。这就是「一个特解加上零空间里的任意向量」是全部解的原因。"
+                  },
+                  {
+                    "text": "不是：加了 2n，x₀ 就变了",
+                    "misread": "x₀ 确实变了，但 A 作用的结果没变，因为 n 这个方向被压没了。方程只关心结果，不关心你站在哪一点。"
+                  },
+                  {
+                    "text": "要看 2 是不是整数",
+                    "misread": "倍数没有限制：An = 0 的任意倍数仍然被搬到 0。"
                   }
                 ],
                 "pass": 1
@@ -3097,7 +3417,7 @@
           ],
           "drills": {
             "title": "随堂练习",
-            "intro": "三道题，数一数有几条方向不被转走。",
+            "intro": "五道题，数一数有几条方向不被转走、怎么验证一个具体的向量、定义里的边界（零向量与特征值 0）。",
             "items": [
               {
                 "id": "e1",
@@ -3190,6 +3510,70 @@
                   {
                     "text": "1 条",
                     "misread": "这里没有哪个方向比别的方向特殊——所有方向都被同等对待，所以要么都是，要么都不是，答案是都是。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "e4",
+                "kind": "choice",
+                "stem": "`A = [[2,1],[1,2]]`，向量 `v = (1,1)`。`v` 是 A 的特征向量吗？",
+                "varies": "从「数有几条」转到「验证一个具体向量」。",
+                "hint": "先算 A 乘 (1,1)，看结果是不是 (1,1) 的倍数。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Eigenvalues · 定义 Eigenvalue and eigenvector（Av = λv，v 非零）",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Eigenvalues-Definition.tex",
+                    "note": "按教材的定义验证一个具体向量：A(1,1) = (3,3) = 3·(1,1)；矩阵取本应用里反复用到的 [[2,1],[1,2]]"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "是，特征值 3：A(1,1) = (3,3) = 3·(1,1)",
+                    "ok": true,
+                    "why": "A 作用在 v 上得到 (3,3)，是 v 的 3 倍，方向没变，所以 v 是特征向量，特征值是 3。"
+                  },
+                  {
+                    "text": "是，特征值 2",
+                    "misread": "2 是矩阵对角线上的数，不是特征值。要看 A 把 v 变成了几倍：(3,3) 是 (1,1) 的 3 倍。"
+                  },
+                  {
+                    "text": "不是，因为 A 作用之后 v 变长了",
+                    "misread": "变长不妨碍：特征向量要求方向不变（只被拉长或缩短），不是长度不变。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "e5",
+                "kind": "choice",
+                "stem": "特征向量可以是零向量吗？特征值可以是 0 吗？",
+                "varies": "从「具体验证」转到「定义里的边界」，并接上零空间。",
+                "hint": "Av = λv 里，v 取零向量会怎样？λ = 0 时，Av 等于什么？",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Eigenvalues · 定义 Eigenvalue and eigenvector（要求 v 非零）",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Eigenvalues-Definition.tex",
+                    "note": "取教材定义里「v 是非零向量」这一条；特征值为 0 对应被压没的方向是本应用把上一节（零空间）接过来的说法"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "零向量不算特征向量；特征值 0 可以，它说明那个方向被压没了",
+                    "ok": true,
+                    "why": "教材要求特征向量非零：零向量对任何 λ 都满足 A0 = λ0，没有信息。特征值 0 完全可以：Av = 0·v = 0，那个方向被搬到原点——正是上一节的「白走的方向」。"
+                  },
+                  {
+                    "text": "零向量算特征向量，特征值 0 不行",
+                    "misread": "反了。零向量对任何 λ 都满足 A0 = λ0，没有信息，所以不算；特征值 0 则意味着有方向被压没。"
+                  },
+                  {
+                    "text": "两个都不行",
+                    "misread": "特征值 0 是可以的：它对应的特征向量，正是被搬到原点的那些方向。"
                   }
                 ],
                 "pass": 1
@@ -3324,7 +3708,7 @@
           ],
           "drills": {
             "title": "随堂练习",
-            "intro": "两道题，都在刚才那道例题上改一个条件。**不用算到底**，判断趋势就行。",
+            "intro": "四道题，都在刚才那道例题上换角度：趋势、特征值的大小、高次幂怎么真的算出来。**不用算到底**，判断趋势就行。",
             "items": [
               {
                 "id": "it1",
@@ -3388,6 +3772,70 @@
                   {
                     "text": "会一路变大",
                     "misread": "方向反了。列和小于 1 是每次漏掉一点，总量往下走；要往上涨得列和大于 1。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "it3",
+                "kind": "choice",
+                "stem": "一个矩阵的两个特征值是 0.5 和 0.3，都小于 1。任何起点反复搬下去，最后会怎样？",
+                "varies": "从「趋向哪个方向」转到「特征值大小决定变大还是变小」。",
+                "hint": "每搬一次，沿特征方向的长度乘几？搬很多次呢？",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Eigenvalues · 应用 Raising a matrix to a high power（Aⁿ = PDⁿP⁻¹）",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Eigenvalues-Application-Power.tex",
+                    "note": "教材：Aⁿ 的对角部分是 λⁿ；|λ| < 1 时 λⁿ 趋于 0 是本应用补的一步（0.5¹⁰ 与 0.3¹⁰ 均小于 0.001，已验算）"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "越来越小，趋向原点",
+                    "ok": true,
+                    "why": "沿每个特征方向，每搬一次长度分别乘 0.5 和 0.3，搬 n 次就是 0.5ⁿ 和 0.3ⁿ，都趋向 0。起点是这两个方向上成分的和，所以整体趋向原点。"
+                  },
+                  {
+                    "text": "趋向特征值 0.5 的方向，长度保持不变",
+                    "misread": "方向会趋近 0.5 的那一条，但长度每搬一次也乘 0.5，不会保持不变。"
+                  },
+                  {
+                    "text": "越来越大",
+                    "misread": "要有特征值的绝对值大于 1，才会越来越大。这里都小于 1。"
+                  }
+                ],
+                "pass": 1
+              },
+              {
+                "id": "it4",
+                "kind": "choice",
+                "stem": "`A = PDP⁻¹`（D 是对角阵）。A¹⁰⁰ 等于？",
+                "varies": "从「看趋势」转到「怎么真的算出高次幂」。",
+                "hint": "把 (PDP⁻¹)² 写开，看看中间有什么能抵消。",
+                "source_refs": [
+                  {
+                    "relation": "adapted",
+                    "site": "Selinger《Linear Algebra》（CC BY 4.0 开源教材）",
+                    "locator": "Eigenvalues · 应用 Raising a matrix to a high power：Aⁿ = (PDP⁻¹)ⁿ = PDⁿP⁻¹",
+                    "url": "https://github.com/selinger/linear-algebra/blob/master/baseText/content/Eigenvalues-Application-Power.tex",
+                    "note": "取教材的推导，问一百次方的化简结果"
+                  }
+                ],
+                "options": [
+                  {
+                    "text": "`P D¹⁰⁰ P⁻¹`",
+                    "ok": true,
+                    "why": "(PDP⁻¹)(PDP⁻¹)⋯ 里相邻的 P⁻¹P 抵消成 I，只剩一头一尾的 P 和 P⁻¹，中间是 D 乘一百次。对角阵的一百次方，就是每个对角元各自取一百次方。"
+                  },
+                  {
+                    "text": "`P¹⁰⁰ D¹⁰⁰ (P⁻¹)¹⁰⁰`",
+                    "misread": "不能把每个因子各自取一百次方：矩阵乘法不可交换，只有相邻的 P⁻¹P 会抵消。"
+                  },
+                  {
+                    "text": "`100·PDP⁻¹`",
+                    "misread": "一百次方是连乘一百次，不是乘以 100。"
                   }
                 ],
                 "pass": 1
