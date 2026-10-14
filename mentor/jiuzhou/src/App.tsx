@@ -88,6 +88,29 @@ const capitalTrail = mainCapitalTrail(allCapitals);
 
 const CHINA_VIEW = { longitude: 105.5, latitude: 35.5, zoom: 3.45 };
 
+/** T-020：精度三档（前端推出，不改 content） */
+type PrecisionTier = "academic" | "snapshot" | "schematic";
+const PRECISION_META: Record<
+  PrecisionTier,
+  { label: string; tip: string; border: string }
+> = {
+  academic: {
+    label: "学术",
+    tip: "来自学术政区层（CHGIS / Hartwell）。Hartwell 切片为县域拼接近似，边界勿当考据。",
+    border: "solid",
+  },
+  snapshot: {
+    label: "快照示意",
+    tip: "多势力手绘快照：大体方位可信，边界不是考据线。",
+    border: "solid",
+  },
+  schematic: {
+    label: "阶段示意",
+    tip: "阶段框示意：虚线边 +「示意」水印，仅标范围。",
+    border: "dashed",
+  },
+};
+
 /** GeoJSON 外包矩形 [west, south, east, north]；无坐标则 null */
 function bboxOfFeatures(
   features: Array<{ geometry?: object | null }>,
@@ -249,6 +272,17 @@ export default function App() {
   const [paperAmbience, setPaperAmbience] = useState(true);
   /** 势力名标签随缩放淡出 */
   const [mapZoom, setMapZoom] = useState(CHINA_VIEW.zoom);
+  /** T-020：点击疆域 / 学术面卡片 */
+  const [precisionPick, setPrecisionPick] = useState<{
+    title: string;
+    tier: PrecisionTier;
+    note?: string;
+  } | null>(null);
+  /** T-020：悬停角落提示 */
+  const [precisionHover, setPrecisionHover] = useState<{
+    tier: PrecisionTier;
+    title: string;
+  } | null>(null);
   const yearRef = useRef(year);
   const holdUntilRef = useRef(0);
   const territoryModeRef = useRef<string | null>(null);
@@ -1713,7 +1747,7 @@ export default function App() {
                 </span>
               )}
             </label>
-            <label className="mb-3 flex cursor-pointer items-center gap-2 px-2 text-xs">
+            <label className="mb-2 flex cursor-pointer items-center gap-2 px-2 text-xs">
               <input
                 type="checkbox"
                 checked={paperAmbience}
@@ -1722,6 +1756,43 @@ export default function App() {
               />
               纸本质感
             </label>
+            <p className="mb-1 px-2 text-[10px] tracking-widest text-muted">
+              精度（数据可靠度）
+            </p>
+            <ul className="mb-3 space-y-1 px-2 text-[11px] text-ink/85">
+              {(
+                [
+                  ["academic", "bg-[#7c6a4a]/40", "border-[#5c4a32]"],
+                  ["snapshot", "bg-[#e08a3c]/45", "border-[#b5483a]"],
+                  ["schematic", "bg-[#9a3412]/15", "border-[#9a3412]"],
+                ] as const
+              ).map(([tier, fill, border]) => (
+                <li key={tier} className="flex items-start gap-2">
+                  <span
+                    className={cn(
+                      "mt-0.5 h-3 w-4 shrink-0 rounded-[2px]",
+                      fill,
+                      PRECISION_META[tier].border === "dashed"
+                        ? "border border-dashed"
+                        : "border",
+                      border,
+                    )}
+                  />
+                  <span>
+                    <span className="font-medium">
+                      {PRECISION_META[tier].label}
+                    </span>
+                    <span className="block text-[10px] leading-snug text-muted">
+                      {tier === "academic"
+                        ? "学术层；Hartwell 标近似"
+                        : tier === "snapshot"
+                          ? "手绘多势力快照"
+                          : "虚线阶段框"}
+                    </span>
+                  </span>
+                </li>
+              ))}
+            </ul>
             <p className="mb-1 px-2 text-xs tracking-widest text-muted">
               主题叙事
             </p>
@@ -1788,6 +1859,8 @@ export default function App() {
               "places-circle",
               "leads-arc-line",
               "academic-fill",
+              "territory-fill",
+              "territory-schematic-fill",
             ]}
             cursor="pointer"
             onLoad={() => {
@@ -1796,6 +1869,39 @@ export default function App() {
               if (m) setMapZoom(m.getZoom());
             }}
             onMove={(e) => setMapZoom(e.viewState.zoom)}
+            onMouseMove={(e) => {
+              const acad = e.features?.find(
+                (x) => x.layer?.id === "academic-fill",
+              );
+              if (acad?.properties) {
+                const p = acad.properties as AcademicProps;
+                const approx =
+                  Boolean(p.approximate) || String(p.source) === "hartwell-v5";
+                setPrecisionHover({
+                  tier: "academic",
+                  title: approx
+                    ? `${p.name ?? "学术政区"} · 近似`
+                    : String(p.name ?? "学术政区"),
+                });
+                return;
+              }
+              const terr = e.features?.find(
+                (x) =>
+                  x.layer?.id === "territory-fill" ||
+                  x.layer?.id === "territory-schematic-fill",
+              );
+              if (terr?.properties) {
+                const power = String(terr.properties.power ?? "疆域");
+                const schem = terr.layer?.id === "territory-schematic-fill";
+                setPrecisionHover({
+                  tier: schem ? "schematic" : "snapshot",
+                  title: power,
+                });
+                return;
+              }
+              setPrecisionHover(null);
+            }}
+            onMouseLeave={() => setPrecisionHover(null)}
             onClick={(e) => {
               const arc = e.features?.find(
                 (x) => x.layer?.id === "leads-arc-line",
@@ -1804,6 +1910,7 @@ export default function App() {
               if (nextId) {
                 setPlaying(false);
                 setAcademicPick(null);
+                setPrecisionPick(null);
                 goToEvent(nextId);
                 return;
               }
@@ -1814,6 +1921,7 @@ export default function App() {
                 const id = placeHit.properties?.id as string | undefined;
                 if (!id) return;
                 setAcademicPick(null);
+                setPrecisionPick(null);
                 const place = placeById(id);
                 if (place) flyPlace(place);
                 return;
@@ -1823,6 +1931,9 @@ export default function App() {
               );
               if (acad?.properties) {
                 const p = acad.properties as AcademicProps;
+                const approximate =
+                  Boolean(p.approximate) ||
+                  String(p.source) === "hartwell-v5";
                 setAcademicPick({
                   name: String(p.name ?? ""),
                   name_py: p.name_py ? String(p.name_py) : undefined,
@@ -1832,13 +1943,34 @@ export default function App() {
                   source: String(p.source ?? ""),
                   sliceId: String(p.sliceId ?? ""),
                   sliceTitle: String(p.sliceTitle ?? ""),
-                  approximate:
-                    Boolean(p.approximate) ||
-                    String(p.source) === "hartwell-v5",
+                  approximate,
+                });
+                setPrecisionPick({
+                  title: String(p.name ?? "学术政区"),
+                  tier: "academic",
+                  note: approximate
+                    ? "Hartwell 县域拼接近似，西部/关中等可能有空白。"
+                    : undefined,
+                });
+                return;
+              }
+              const terr = e.features?.find(
+                (x) =>
+                  x.layer?.id === "territory-fill" ||
+                  x.layer?.id === "territory-schematic-fill",
+              );
+              if (terr?.properties) {
+                const power = String(terr.properties.power ?? "疆域");
+                const schem = terr.layer?.id === "territory-schematic-fill";
+                setAcademicPick(null);
+                setPrecisionPick({
+                  title: power,
+                  tier: schem ? "schematic" : "snapshot",
                 });
                 return;
               }
               setAcademicPick(null);
+              setPrecisionPick(null);
             }}
           >
             <NavigationControl position="top-right" showCompass={false} />
@@ -2550,38 +2682,78 @@ export default function App() {
               />
             </>
           )}
-          {academicPick && (
+          {precisionHover && !precisionPick && (
+            <div className="pointer-events-none absolute right-3 top-3 z-10 rounded border border-line/70 bg-page/90 px-2 py-1 text-[11px] shadow-sm">
+              <span className="font-medium text-ink">
+                {PRECISION_META[precisionHover.tier].label}
+              </span>
+              <span className="text-muted"> · {precisionHover.title}</span>
+            </div>
+          )}
+          {(precisionPick || academicPick) && (
             <div className="absolute bottom-28 left-4 z-10 max-w-xs rounded-md border border-line bg-surface/95 px-3 py-2 shadow-md">
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <p className="text-sm font-semibold text-ink">
-                    {academicPick.name}
-                    {academicPick.type_ch ? (
+                    {precisionPick?.title ?? academicPick?.name}
+                    {academicPick?.type_ch ? (
                       <span className="ml-1 text-xs font-normal text-muted">
                         {academicPick.type_ch}
                       </span>
                     ) : null}
                   </p>
-                  {academicPick.name_py ? (
-                    <p className="text-xs text-muted">{academicPick.name_py}</p>
+                  {precisionPick && (
+                    <p className="mt-0.5 text-xs">
+                      <span
+                        className={cn(
+                          "inline-block rounded px-1 py-0.5 font-medium",
+                          precisionPick.tier === "academic" &&
+                            "bg-[#7c6a4a]/25 text-[#5c4a32]",
+                          precisionPick.tier === "snapshot" &&
+                            "bg-accent-soft text-accent",
+                          precisionPick.tier === "schematic" &&
+                            "bg-line/80 text-muted",
+                        )}
+                      >
+                        {PRECISION_META[precisionPick.tier].label}
+                      </span>
+                    </p>
+                  )}
+                  <p className="mt-1 text-[11px] leading-snug text-muted">
+                    {precisionPick
+                      ? precisionPick.note ??
+                        PRECISION_META[precisionPick.tier].tip
+                      : null}
+                  </p>
+                  {academicPick ? (
+                    <>
+                      {academicPick.name_py ? (
+                        <p className="text-xs text-muted">
+                          {academicPick.name_py}
+                        </p>
+                      ) : null}
+                      <p className="mt-1 text-xs text-ink/80">
+                        {formatYear(academicPick.fromYear)} –{" "}
+                        {formatYear(academicPick.toYear)}
+                        <span className="text-muted">
+                          {" "}
+                          · {academicPick.sliceTitle}
+                        </span>
+                      </p>
+                      <p className="text-[11px] text-muted">
+                        来源 {academicPick.source}
+                        {academicPick.approximate ? " · 近似（Hartwell）" : ""}
+                      </p>
+                    </>
                   ) : null}
-                  <p className="mt-1 text-xs text-ink/80">
-                    {formatYear(academicPick.fromYear)} –{" "}
-                    {formatYear(academicPick.toYear)}
-                    <span className="text-muted">
-                      {" "}
-                      · {academicPick.sliceTitle}
-                    </span>
-                  </p>
-                  <p className="text-[11px] text-muted">
-                    来源 {academicPick.source}
-                    {academicPick.approximate ? " · 近似（Hartwell）" : ""}
-                  </p>
                 </div>
                 <button
                   type="button"
                   className="text-xs text-muted hover:text-ink"
-                  onClick={() => setAcademicPick(null)}
+                  onClick={() => {
+                    setAcademicPick(null);
+                    setPrecisionPick(null);
+                  }}
                 >
                   关闭
                 </button>
