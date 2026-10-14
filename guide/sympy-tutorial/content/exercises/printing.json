@@ -1,0 +1,155 @@
+[
+  {
+    "id": "ex1",
+    "stem": "`srepr` 展示表达式在内部的真实结构。先预测，再运行：\n\n```python\nfrom sympy import *\nx = symbols('x')\nprint(srepr(x - 1))\n```\n\n输出是哪一个？",
+    "check": {
+      "kind": "choice",
+      "options": [
+        {
+          "text": "`Add(Symbol('x'), Integer(-1))`",
+          "ok": true,
+          "why": "对。SymPy 里没有减法节点，$x-1$ 在内部是 $x+(-1)$ 的加法。"
+        },
+        {
+          "text": "`Sub(Symbol('x'), Integer(1))`",
+          "ok": false,
+          "why": "SymPy 没有 `Sub` 这个类，减法一律存成加上相反数。"
+        },
+        {
+          "text": "`x - 1`",
+          "ok": false,
+          "why": "这是 `str` 的输出。`srepr` 给的是可重建对象的构造式。"
+        },
+        {
+          "text": "`Add(Symbol('x'), Integer(1))`",
+          "ok": false,
+          "why": "符号丢了：内部存的是 `Integer(-1)`，不是 `Integer(1)`。"
+        }
+      ]
+    },
+    "sol": "`srepr` 输出的是能重建对象的构造式。减法在内部是加上 $-1$，除法在内部是乘以有理数（`x/2` 是 `Mul(Rational(1, 2), Symbol('x'))`）。\n\n```\n>>> print(srepr(x - 1))\nAdd(Symbol('x'), Integer(-1))\n>>> print(srepr(x/2))\nMul(Rational(1, 2), Symbol('x'))\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "printing · srepr",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex2",
+    "stem": "先预测，再运行，数一数 `srepr` 字符串里 `Integer` 出现了几次：\n\n```python\nfrom sympy import *\nx = symbols('x')\nexpr = 2*x**3 + 5\ns = srepr(expr)\nprint(s)\ns.count('Integer')\n```\n\n`s.count('Integer')` 的结果是多少？",
+    "check": {
+      "kind": "numbers",
+      "ask": "写出一个整数。",
+      "answer": [
+        3.0
+      ],
+      "hint": "回到 `srepr` 一节：每个整数常数在构造式里都写成 `Integer(…)`。先找出 $2x^3+5$ 里一共有几个整数常数，包括指数。"
+    },
+    "verify": "result = srepr(2*x**3 + 5).count('Integer')",
+    "sol": "$2x^3+5$ 里的整数有系数 2、指数 3、常数 5，各对应一个 `Integer(...)`，共 3 次。\n\n```\n>>> srepr(2*x**3 + 5)\n\"Add(Mul(Integer(2), Pow(Symbol('x'), Integer(3))), Integer(5))\"\n>>> srepr(2*x**3 + 5).count('Integer')\n3\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "printing · srepr",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex3",
+    "stem": "先预测，再运行：\n\n```python\nfrom sympy import *\nx = symbols('x')\nprint(latex(exp(x)))\n```\n\n输出的字符串是哪一个？",
+    "check": {
+      "kind": "choice",
+      "options": [
+        {
+          "text": "`e^{x}`",
+          "ok": true,
+          "why": "对。`latex` 把 `exp(x)` 排成 $e^{x}$，上标一律用花括号包起来。"
+        },
+        {
+          "text": "`exp(x)`",
+          "ok": false,
+          "why": "这是 `str` 的输出，不是 LaTeX。"
+        },
+        {
+          "text": "`e^x`",
+          "ok": false,
+          "why": "手写 LaTeX 常省花括号，但 `latex()` 总是写成 `e^{x}`。"
+        },
+        {
+          "text": "`\\exp{x}`",
+          "ok": false,
+          "why": "LaTeX 的 `\\exp` 命令对应指数函数记号，但 SymPy 对 `exp(x)` 默认输出 `e^{x}`。"
+        }
+      ]
+    },
+    "sol": "`latex(exp(x))` 默认输出 `e^{x}`；同样 `latex(x**2)` 是 `x^{2}`，`latex(sqrt(x))` 是 `\\sqrt{x}`。\n\n```\n>>> print(latex(exp(x)))\ne^{x}\n>>> print(latex(x**2))\nx^{2}\n>>> print(latex(sqrt(x)))\n\\sqrt{x}\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "printing · LaTeX",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex4",
+    "stem": "数一数 `latex` 输出里反斜杠 `\\` 的个数。先预测，再运行：\n\n```python\nfrom sympy import *\nx = symbols('x')\nI = Integral(sin(x)**2, (x, 0, pi))\ns = latex(I)\nprint(s)\ns.count('\\\\')\n```\n\n`s.count('\\\\')` 的结果是多少？（代码里 `'\\\\'` 表示一个反斜杠字符。）",
+    "check": {
+      "kind": "numbers",
+      "ask": "写出一个整数。",
+      "answer": [
+        7.0
+      ],
+      "hint": "回到 LaTeX 一节的例子：`\\int`、`\\sqrt`、`\\frac` 之类的命令各算一个反斜杠；逗号间距 `\\,` 也算一个。先把定积分带上下限、$\\sin^2$、自适应括号会用到哪些命令列出来。"
+    },
+    "verify": "result = latex(Integral(sin(x)**2, (x, 0, pi))).count('\\\\')",
+    "sol": "输出是 `\\int\\limits_{0}^{\\pi} \\sin^{2}{\\left(x \\right)}\\, dx`，其中的命令是 `\\int`、`\\limits`、`\\pi`、`\\sin`、`\\left`、`\\right` 和间距 `\\,`，共 7 个反斜杠。\n\n```\n>>> s = latex(Integral(sin(x)**2, (x, 0, pi)))\n>>> print(s)\n\\int\\limits_{0}^{\\pi} \\sin^{2}{\\left(x \\right)}\\, dx\n>>> s.count('\\\\')\n7\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "printing · LaTeX",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex5",
+    "stem": "`pprint()` 把结果打印到屏幕上，`pretty()` 返回字符串。先预测，再运行：\n\n```python\nfrom sympy import *\nx = symbols('x')\nr = pprint(x + 1, use_unicode=False)\nprint(r)\n```\n\n先打印出一行 `x + 1`。那么最后一行 `print(r)` 打印什么？",
+    "check": {
+      "kind": "choice",
+      "options": [
+        {
+          "text": "`None`",
+          "ok": true,
+          "why": "对。`pprint` 只负责打印，没有返回值，所以 `r` 是 `None`。"
+        },
+        {
+          "text": "`x + 1`",
+          "ok": false,
+          "why": "屏幕上的 `x + 1` 是 `pprint` 在调用时打印的，不是它的返回值。要拿到字符串，用 `pretty()`。"
+        },
+        {
+          "text": "`'x + 1'`（一个字符串）",
+          "ok": false,
+          "why": "返回字符串的是 `pretty()`，不是 `pprint()`。"
+        },
+        {
+          "text": "报错，`pprint` 不能赋值给变量",
+          "ok": false,
+          "why": "赋值本身合法，只是赋进去的是 `None`。"
+        }
+      ]
+    },
+    "sol": "`pprint` 打印后返回 `None`；`pretty` 返回字符串。\n\n```\n>>> r = pprint(x + 1, use_unicode=False)\nx + 1\n>>> print(r)\nNone\n>>> type(pretty(x + 1))\n<class 'str'>\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "printing · ASCII 漂亮打印器",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  }
+]

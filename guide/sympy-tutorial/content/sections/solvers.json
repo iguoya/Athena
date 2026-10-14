@@ -1,0 +1,511 @@
+{
+ "id": "solvers",
+ "title_en": "Solvers",
+ "blocks": [
+  {
+   "k": "box",
+   "env": "note",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "For a beginner-friendly guide focused on solving common types of equations, refer to solving guide.",
+      "sha": "e42b36e4a521",
+      "zh": "如果你想要一份面向初学者、专讲常见类型方程求解的指南，请参阅求解指南（solving guide）。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "code",
+   "text": ">>> from sympy import *\n>>> x, y, z = symbols('x y z')\n>>> init_printing(use_unicode=True)"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "A Note about Equations",
+    "sha": "fd3599ec215e",
+    "zh": "关于方程的一点说明"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Recall from the gotchas section of this tutorial that symbolic equations in SymPy are not represented by `=` or `==`, but by `Eq`.",
+    "sha": "8fad0413b3b3",
+    "zh": "还记得本教程“容易踩的坑”那一节吗？SymPy 里的符号方程不是用 `=` 或 `==` 表示的，而是用 `Eq`。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> Eq(x, y)\nx = y"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "However, there is an even easier way. In SymPy, any expression not in an `Eq` is automatically assumed to equal 0 by the solving functions. Since $a = b$ if and only if $a - b = 0$, this means that instead of using `x == y`, you can just use `x - y`. For example",
+    "sha": "4fe340baba97",
+    "zh": "不过还有一种更省事的办法。在 SymPy 中，凡是没有放进 `Eq` 的表达式，求解函数都会自动认为它等于 0。因为 $a = b$ 当且仅当 $a - b = 0$，所以你不必写 `x == y`，直接写 `x - y` 就行。例如"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> solveset(Eq(x**2, 1), x)\n{-1, 1}\n>>> solveset(Eq(x**2 - 1, 0), x)\n{-1, 1}\n>>> solveset(x**2 - 1, x)\n{-1, 1}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This is particularly useful if the equation you wish to solve is already equal to 0. Instead of typing `solveset(Eq(expr, 0), x)`, you can just use `solveset(expr, x)`.",
+    "sha": "5409444d421b",
+    "zh": "如果你要解的方程本来就是“某式等于 0”的形式，这一招尤其好用。不用输入 `solveset(Eq(expr, 0), x)`，直接输入 `solveset(expr, x)` 即可。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Solving Equations Algebraically",
+    "sha": "60a575e190e7",
+    "zh": "用代数方法解方程"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The main function for solving algebraic equations is `solveset`. The syntax for `solveset` is `solveset(equation, variable=None, domain=S.Complexes)` Where `equations` may be in the form of `Eq` instances or expressions that are assumed to be equal to zero.",
+    "sha": "d9a3085ede7c",
+    "zh": "解代数方程的主力函数是 `solveset`。`solveset` 的语法是 `solveset(equation, variable=None, domain=S.Complexes)`，其中 `equations` 可以是 `Eq` 的实例，也可以是被默认等于零的表达式。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Please note that there is another function called `solve` which can also be used to solve equations. The syntax is `solve(equations, variables)` However, it is recommended to use `solveset` instead.",
+    "sha": "87f8381f6eb7",
+    "zh": "请注意，还有另一个函数叫 `solve`，同样可以用来解方程，语法是 `solve(equations, variables)`。不过，我们推荐改用 `solveset`。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "When solving a single equation, the output of `solveset` is a `FiniteSet` or an `Interval` or `ImageSet` of the solutions.",
+    "sha": "916dd04eb65f",
+    "zh": "求解单个方程时，`solveset` 的输出是由解组成的 `FiniteSet`、`Interval` 或 `ImageSet`。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> solveset(x**2 - x, x)\n{0, 1}\n>>> solveset(x - x, x, domain=S.Reals)\nℝ\n>>> solveset(sin(x) - 1, x, domain=S.Reals)\n⎧        π │      ⎫\n⎨2⋅n⋅π + ─ │ n ∊ ℤ⎬\n⎩        2 │      ⎭"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If there are no solutions, an `EmptySet` is returned and if it is not able to find solutions then a `ConditionSet` is returned.",
+    "sha": "4cf7edd89c4e",
+    "zh": "如果没有解，返回 `EmptySet`；如果它找不到解，则返回 `ConditionSet`。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> solveset(exp(x), x)     # No solution exists\n∅\n>>> solveset(cos(x) - x, x)  # Not able to find solution\n{x │ x ∊ ℂ ∧ (-x + cos(x) = 0)}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In the `solveset` module, the linear system of equations is solved using `linsolve`. In future we would be able to use linsolve directly from `solveset`. Following is an example of the syntax of `linsolve`.",
+    "sha": "2b7293c5da12",
+    "zh": "在 `solveset` 模块中，线性方程组用 `linsolve` 求解。将来我们可以直接通过 `solveset` 来使用 linsolve。下面是 `linsolve` 的语法示例。"
+   }
+  },
+  {
+   "k": "list",
+   "ordered": false,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "List of Equations Form:",
+       "sha": "4a47797e5e02",
+       "zh": "方程列表形式："
+      }
+     },
+     {
+      "k": "code",
+      "text": ">>> linsolve([x + y + z - 1, x + y + 2*z - 3 ], (x, y, z))\n{(-y - 1, y, 2)}"
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Augmented Matrix Form:",
+       "sha": "2c3cca75dd3e",
+       "zh": "增广矩阵形式："
+      }
+     },
+     {
+      "k": "code",
+      "text": ">>> linsolve(Matrix(([1, 1, 1, 1], [1, 1, 2, 3])), (x, y, z))\n{(-y - 1, y, 2)}"
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "A*x = b Form",
+       "sha": "901ebb873826",
+       "zh": "A*x = b 形式"
+      }
+     },
+     {
+      "k": "code",
+      "text": ">>> M = Matrix(((1, 1, 1, 1), (1, 1, 2, 3)))\n>>> system = A, b = M[:, :-1], M[:, -1]\n>>> linsolve(system, x, y, z)\n{(-y - 1, y, 2)}"
+     }
+    ]
+   ]
+  },
+  {
+   "k": "box",
+   "env": "note",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The order of solution corresponds the order of given symbols.",
+      "sha": "ecbc0ef0e411",
+      "zh": "解的顺序与所给符号的顺序一一对应。"
+     }
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In the `solveset` module, the non linear system of equations is solved using `nonlinsolve`. Following are examples of `nonlinsolve`.",
+    "sha": "7dd270c72620",
+    "zh": "在 `solveset` 模块中，非线性方程组用 `nonlinsolve` 求解。下面是 `nonlinsolve` 的几个示例。"
+   }
+  },
+  {
+   "k": "list",
+   "ordered": true,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "When only real solution is present:",
+       "sha": "3cde16081052",
+       "zh": "只有实数解时："
+      }
+     },
+     {
+      "k": "code",
+      "text": ">>> a, b, c, d = symbols('a, b, c, d', real=True)\n>>> nonlinsolve([a**2 + a, a - b], [a, b])\n{(-1, -1), (0, 0)}\n>>> nonlinsolve([x*y - 1, x - 2], x, y)\n{(2, 1/2)}"
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "When only complex solution is present:",
+       "sha": "cb87a7671dcc",
+       "zh": "只有复数解时："
+      }
+     },
+     {
+      "k": "code",
+      "text": ">>> nonlinsolve([x**2 + 1, y**2 + 1], [x, y])\n{(-ⅈ, -ⅈ), (-ⅈ, ⅈ), (ⅈ, -ⅈ), (ⅈ, ⅈ)}"
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "When both real and complex solution are present:",
+       "sha": "a26ee4dd6544",
+       "zh": "实数解与复数解并存时："
+      }
+     },
+     {
+      "k": "code",
+      "text": ">>> from sympy import sqrt\n>>> system = [x**2 - 2*y**2 -2, x*y - 2]\n>>> vars = [x, y]\n>>> nonlinsolve(system, vars)\n{(-2, -1), (2, 1), (-√2⋅ⅈ, √2⋅ⅈ), (√2⋅ⅈ, -√2⋅ⅈ)}"
+     },
+     {
+      "k": "code",
+      "text": ">>> system = [exp(x) - sin(y), 1/y - 3]\n>>> nonlinsolve(system, vars)\n{({2⋅n⋅ⅈ⋅π + log(sin(1/3)) │ n ∊ ℤ}, 1/3)}"
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "When the system is positive-dimensional system (has infinitely many solutions):",
+       "sha": "9d54ac66f7ca",
+       "zh": "当方程组是正维数方程组（有无穷多个解）时："
+      }
+     },
+     {
+      "k": "code",
+      "text": ">>> nonlinsolve([x*y, x*y - x], [x, y])\n{(0, y)}"
+     },
+     {
+      "k": "code",
+      "text": ">>> system = [a**2 + a*c, a - b]\n>>> nonlinsolve(system, [a, b])\n{(0, 0), (-c, -c)}"
+     }
+    ]
+   ]
+  },
+  {
+   "k": "box",
+   "env": "note",
+   "title": null,
+   "blocks": [
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The order of solution corresponds the order of given symbols.",
+         "sha": "ecbc0ef0e411",
+         "zh": "解的顺序与所给符号的顺序一一对应。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Currently `nonlinsolve` doesn't return solution in form of `LambertW` (if there",
+         "sha": "7309f07f261e",
+         "zh": "目前 `nonlinsolve` 不会返回 `LambertW` 形式的解（如果"
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "is solution present in the form of `LambertW`).",
+      "sha": "d0655428dcbc",
+      "zh": "存在 `LambertW` 形式的解的话）。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`solve` can be used for such cases:",
+      "sha": "3e18dfc93c30",
+      "zh": "这类情形可以用 `solve`："
+     }
+    },
+    {
+     "k": "code",
+     "text": ">>> solve([x**2 - y**2/exp(x)], [x, y], dict=True)\n⎡⎧         ____⎫  ⎧        ____⎫⎤\n⎢⎨        ╱  x ⎬  ⎨       ╱  x ⎬⎥\n⎣⎩y: -x⋅╲╱  ℯ  ⎭, ⎩y: x⋅╲╱  ℯ  ⎭⎦\n>>> solve(x**2 - y**2/exp(x), x, dict=True)\n⎡⎧      ⎛-y ⎞⎫  ⎧      ⎛y⎞⎫⎤\n⎢⎨x: 2⋅W⎜───⎟⎬, ⎨x: 2⋅W⎜─⎟⎬⎥\n⎣⎩      ⎝ 2 ⎠⎭  ⎩      ⎝2⎠⎭⎦"
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Currently `nonlinsolve` is not properly capable of solving the system of equations",
+         "sha": "1dee40c3431f",
+         "zh": "目前 `nonlinsolve` 还不能很好地求解含有三角函数的"
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "having trigonometric functions.",
+      "sha": "0b477f2c6114",
+      "zh": "方程组。"
+     }
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`solve` can be used for such cases (but does not give all solution):",
+      "sha": "d5ea1ca82f88",
+      "zh": "这类情形可以用 `solve`（但它给不出全部的解）："
+     }
+    },
+    {
+     "k": "code",
+     "text": ">>> solve([sin(x + y), cos(x - y)], [x, y])\n⎡⎛-3⋅π   3⋅π⎞  ⎛-π   π⎞  ⎛π  3⋅π⎞  ⎛3⋅π  π⎞⎤\n⎢⎜─────, ───⎟, ⎜───, ─⎟, ⎜─, ───⎟, ⎜───, ─⎟⎥\n⎣⎝  4     4 ⎠  ⎝ 4   4⎠  ⎝4   4 ⎠  ⎝ 4   4⎠⎦"
+    }
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "`solveset` reports each solution only once. To get the solutions of a polynomial including multiplicity use `roots`.",
+    "sha": "84217ba1cfb3",
+    "zh": "`solveset` 对每个解只报告一次。如果想求多项式的解并带上重数，请用 `roots`。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> solveset(x**3 - 6*x**2 + 9*x, x)\n{0, 3}\n>>> roots(x**3 - 6*x**2 + 9*x, x)\n{0: 1, 3: 2}"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The output `{0: 1, 3: 2}` of `roots` means that `0` is a root of multiplicity 1 and `3` is a root of multiplicity 2.",
+    "sha": "60fa33c2db3d",
+    "zh": "`roots` 的输出 `{0: 1, 3: 2}` 表示 `0` 是重数为 1 的根，`3` 是重数为 2 的根。"
+   }
+  },
+  {
+   "k": "box",
+   "env": "note",
+   "title": null,
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Currently `solveset` is not capable of solving the following types of equations:",
+      "sha": "6f940e160e4f",
+      "zh": "目前 `solveset` 还不能求解下面这几类方程："
+     }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Equations solvable by LambertW (Transcendental equation solver).",
+         "sha": "cd8fbcaf057d",
+         "zh": "可用 LambertW 求解的方程（超越方程求解器）。"
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "`solve` can be used for such cases:",
+      "sha": "3e18dfc93c30",
+      "zh": "这类情形可以用 `solve`："
+     }
+    },
+    {
+     "k": "code",
+     "text": ">>> solve(x*exp(x) - 1, x )\n[W(1)]"
+    }
+   ]
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Solving Differential Equations",
+    "sha": "ed301fc4c682",
+    "zh": "解微分方程"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To solve differential equations, use `dsolve`. First, create an undefined function by passing `cls=Function` to the `symbols` function.",
+    "sha": "b8f90d99e80a",
+    "zh": "解微分方程要用 `dsolve`。首先，把 `cls=Function` 传给 `symbols` 函数，创建未定义函数。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> f, g = symbols('f g', cls=Function)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "`f` and `g` are now undefined functions. We can call `f(x)`, and it will represent an unknown function.",
+    "sha": "7017e0a55219",
+    "zh": "现在 `f` 和 `g` 是未定义函数。我们可以调用 `f(x)`，它代表一个未知函数。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> f(x)\nf(x)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Derivatives of `f(x)` are unevaluated.",
+    "sha": "ae739db77273",
+    "zh": "`f(x)` 的导数不会被求值。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> f(x).diff(x)\nd\n──(f(x))\ndx"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "(see the Derivatives section for more on derivatives).",
+    "sha": "0d00e88930c3",
+    "zh": "（关于导数的更多内容，见“导数”一节。）"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To represent the differential equation $f''(x) - 2f'(x) + f(x) = \\sin(x)$, we would thus use",
+    "sha": "0763efdb12ec",
+    "zh": "要表示微分方程 $f''(x) - 2f'(x) + f(x) = \\sin(x)$，我们就这样写"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> diffeq = Eq(f(x).diff(x, x) - 2*f(x).diff(x) + f(x), sin(x))\n>>> diffeq\n                      2\n         d           d\nf(x) - 2⋅──(f(x)) + ───(f(x)) = sin(x)\n         dx           2\n                    dx"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To solve the ODE, pass it and the function to solve for to `dsolve`.",
+    "sha": "f2a67090657c",
+    "zh": "要解这个常微分方程（ODE），把方程和待求的函数一起传给 `dsolve`。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> dsolve(diffeq, f(x))\n                    x   cos(x)\nf(x) = (C₁ + C₂⋅x)⋅ℯ  + ──────\n                          2"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "`dsolve` returns an instance of `Eq`. This is because, in general, solutions to differential equations cannot be solved explicitly for the function.",
+    "sha": "cbfd0ebdbe84",
+    "zh": "`dsolve` 返回的是 `Eq` 的实例。这是因为微分方程的解一般无法把函数显式地解出来。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> dsolve(f(x).diff(x)*(1 - sin(f(x))) - 1, f(x))\nx - f(x) - cos(f(x)) = C₁"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The arbitrary constants in the solutions from dsolve are symbols of the form `C1`, `C2`, `C3`, and so on.",
+    "sha": "90162dd89421",
+    "zh": "dsolve 所给解中的任意常数是形如 `C1`、`C2`、`C3` 等的符号。"
+   }
+  }
+ ],
+ "title_zh": "解方程"
+}

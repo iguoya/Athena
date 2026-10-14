@@ -1,0 +1,339 @@
+{
+ "id": "intro",
+ "title_en": "Introduction",
+ "blocks": [
+  {
+   "k": "heading",
+   "t": {
+    "en": "What is Symbolic Computation?",
+    "sha": "744640a3cc0e",
+    "zh": "什么是符号计算？"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Symbolic computation deals with the computation of mathematical objects symbolically. This means that the mathematical objects are represented exactly, not approximately, and mathematical expressions with unevaluated variables are left in symbolic form.",
+    "sha": "2d305ab835e1",
+    "zh": "符号计算（symbolic computation）是用符号的方式处理数学对象的计算。这意味着数学对象是被精确表示的，而不是近似的；含有未求值变量的数学表达式，也会保持符号形式不变。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let's take an example. Say we wanted to use the built-in Python functions to compute square roots. We might do something like this",
+    "sha": "13679b90aed8",
+    "zh": "我们来看个例子。假设我们想用 Python 内置的函数来计算平方根，可能会这样做"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> import math\n>>> math.sqrt(9)\n3.0"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "9 is a perfect square, so we got the exact answer, 3. But suppose we computed the square root of a number that isn't a perfect square",
+    "sha": "2cbf5539f394",
+    "zh": "9 是完全平方数，所以我们得到了精确的答案 3。但如果我们去算一个不是完全平方数的数的平方根呢"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> math.sqrt(8)\n2.82842712475"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Here we got an approximate result. 2.82842712475 is not the exact square root of 8 (indeed, the actual square root of 8 cannot be represented by a finite decimal, since it is an irrational number). If all we cared about was the decimal form of the square root of 8, we would be done.",
+    "sha": "95541fbbb638",
+    "zh": "这次得到的是近似结果。2.82842712475 并不是 8 的精确平方根（事实上，8 的平方根是无理数，没法用有限小数表示）。如果我们只关心 8 的平方根的小数形式，那到这里就够了。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "But suppose we want to go further. Recall that $\\sqrt{8} = \\sqrt{4\\cdot 2} = 2\\sqrt{2}$. We would have a hard time deducing this from the above result. This is where symbolic computation comes in. With a symbolic computation system like SymPy, square roots of numbers that are not perfect squares are left unevaluated by default",
+    "sha": "8ec44d5e93a4",
+    "zh": "但假如我们想再往前走一步呢。回忆一下 $\\sqrt{8} = \\sqrt{4\\cdot 2} = 2\\sqrt{2}$。光看上面的结果，我们很难推出这一点。这就轮到符号计算出场了。有了 SymPy 这样的符号计算系统，不是完全平方数的数的平方根默认保持不求值的状态"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> import sympy\n>>> sympy.sqrt(3)\nsqrt(3)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Furthermore---and this is where we start to see the real power of symbolic computation---symbolic results can be symbolically simplified.",
+    "sha": "282ef56c9c43",
+    "zh": "不仅如此——这也是我们开始领略符号计算真正威力的地方——符号结果还可以继续用符号的方式化简。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> sympy.sqrt(8)\n2*sqrt(2)"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "A More Interesting Example",
+    "sha": "4dbbbd3d9329",
+    "zh": "一个更有意思的例子"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The above example starts to show how we can manipulate irrational numbers exactly using SymPy. But it is much more powerful than that. Symbolic computation systems (which by the way, are also often called computer algebra systems, or just CASs) such as SymPy are capable of computing symbolic expressions with variables.",
+    "sha": "acd43fd9d7a4",
+    "zh": "上面的例子已经开始展示我们如何用 SymPy 精确地处理无理数。不过它的能力远不止于此。像 SymPy 这样的符号计算系统（顺便说一句，它们也常被叫作计算机代数系统（computer algebra system），或简称 CAS）能够对含有变量的符号表达式进行计算。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "As we will see later, in SymPy, variables are defined using `symbols`. Unlike many symbolic manipulation systems, variables in SymPy must be defined before they are used (the reason for this will be discussed in the next section).",
+    "sha": "2a5a435cb05b",
+    "zh": "我们之后会看到，在 SymPy 里，变量用 `symbols` 来定义。和许多符号运算系统不同，SymPy 中的变量必须先定义再使用（原因会在下一节讨论）。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Let us define a symbolic expression, representing the mathematical expression $x + 2y$.",
+    "sha": "d6cf8d25a766",
+    "zh": "我们来定义一个符号表达式，它表示数学表达式 $x + 2y$。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> from sympy import symbols\n>>> x, y = symbols('x y')\n>>> expr = x + 2*y\n>>> expr\nx + 2*y"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Note that we wrote `x + 2*y` just as we would if `x` and `y` were ordinary Python variables. But in this case, instead of evaluating to something, the expression remains as just `x + 2*y`. Now let us play around with it:",
+    "sha": "c77fc366db28",
+    "zh": "注意，我们写的 `x + 2*y`，和 `x`、`y` 是普通 Python 变量时的写法一模一样。但这里，表达式并没有被求值成别的什么东西，而是保持为 `x + 2*y`。接下来我们来摆弄一下它："
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> expr + 1\nx + 2*y + 1\n>>> expr - x\n2*y"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Notice something in the above example. When we typed `expr - x`, we did not get `x + 2*y - x`, but rather just `2*y`. The `x` and the `-x` automatically canceled one another. This is similar to how `sqrt(8)` automatically turned into `2*sqrt(2)` above. This isn't always the case in SymPy, however:",
+    "sha": "002c4736414b",
+    "zh": "注意上面的例子中有件事。当我们输入 `expr - x` 时，得到的不是 `x + 2*y - x`，而是 `2*y`。`x` 和 `-x` 自动抵消了。这和前面 `sqrt(8)` 自动变成 `2*sqrt(2)` 是类似的。不过，SymPy 里并不总是这样："
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> x*expr\nx*(x + 2*y)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Here, we might have expected $x(x + 2y)$ to transform into $x^2 + 2xy$, but instead we see that the expression was left alone. This is a common theme in SymPy. Aside from obvious simplifications like $x - x = 0$ and $\\sqrt{8} = 2\\sqrt{2}$, most simplifications are not performed automatically. This is because we might prefer the factored form $x(x + 2y)$, or we might prefer the expanded form $x^2 + 2xy$. Both forms are useful in different circumstances. In SymPy, there are functions to go from one form to the other",
+    "sha": "9462e8456b58",
+    "zh": "这里，我们可能以为 $x(x + 2y)$ 会变成 $x^2 + 2xy$，但表达式却原封不动。这是 SymPy 里常见的主题：除了 $x - x = 0$、$\\sqrt{8} = 2\\sqrt{2}$ 这类一目了然的化简，大多数化简都不会自动进行。这是因为，我们可能更喜欢因式分解后的形式 $x(x + 2y)$，也可能更喜欢展开后的形式 $x^2 + 2xy$，两种形式在不同的场合下各有用处。SymPy 里有函数可以在两种形式之间转换"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> from sympy import expand, factor\n>>> expanded_expr = expand(x*expr)\n>>> expanded_expr\nx**2 + 2*x*y\n>>> factor(expanded_expr)\nx*(x + 2*y)"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "The Power of Symbolic Computation",
+    "sha": "1e9d480c3097",
+    "zh": "符号计算的威力"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The real power of a symbolic computation system such as SymPy is the ability to do all sorts of computations symbolically. SymPy can simplify expressions, compute derivatives, integrals, and limits, solve equations, work with matrices, and much, much more, and do it all symbolically. It includes modules for plotting, printing (like 2D pretty printed output of math formulas, or $\\mathrm{\\LaTeX}$), code generation, physics, statistics, combinatorics, number theory, geometry, logic, and more. Here is a small sampling of the sort of symbolic power SymPy is capable of, to whet your appetite.",
+    "sha": "dbe1aa4bcd1d",
+    "zh": "像 SymPy 这样的符号计算系统，真正的威力在于能够以符号的方式完成各种各样的计算。SymPy 可以化简表达式、计算导数、积分和极限、求解方程、处理矩阵，还有很多很多别的功能，而且全都是符号式的。它包含绘图、打印（比如数学公式的二维漂亮打印输出，或者 $\\mathrm{\\LaTeX}$）、代码生成、物理、统计、组合数学、数论、几何、逻辑等模块。下面是 SymPy 符号能力的一个小小样品，先让你开开胃。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> from sympy import *\n>>> x, t, z, nu = symbols('x t z nu')"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "This will make all further examples pretty print with unicode characters.",
+    "sha": "4b1325f9af57",
+    "zh": "这会让后面所有示例都用 unicode 字符漂亮打印。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> init_printing(use_unicode=True)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Take the derivative of $\\sin{(x)}e^x$.",
+    "sha": "52787e51633b",
+    "zh": "求 $\\sin{(x)}e^x$ 的导数。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> diff(sin(x)*exp(x), x)\n x           x\nℯ ⋅sin(x) + ℯ ⋅cos(x)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Compute $\\int(e^x\\sin{(x)} + e^x\\cos{(x)})\\,dx$.",
+    "sha": "ae34f5cab4ce",
+    "zh": "计算 $\\int(e^x\\sin{(x)} + e^x\\cos{(x)})\\,dx$。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> integrate(exp(x)*sin(x) + exp(x)*cos(x), x)\n x\nℯ ⋅sin(x)"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Compute $\\int_{-\\infty}^\\infty \\sin{(x^2)}\\,dx$.",
+    "sha": "07f2beaaf331",
+    "zh": "计算 $\\int_{-\\infty}^\\infty \\sin{(x^2)}\\,dx$。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> integrate(sin(x**2), (x, -oo, oo))\n√2⋅√π\n─────\n  2"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Find $\\lim_{x\\to 0}\\frac{\\sin{(x)}}{x}$.",
+    "sha": "e40ab1c07ad3",
+    "zh": "求 $\\lim_{x\\to 0}\\frac{\\sin{(x)}}{x}$。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> limit(sin(x)/x, x, 0)\n1"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Solve $x^2 - 2 = 0$.",
+    "sha": "ac9e30c01a45",
+    "zh": "解 $x^2 - 2 = 0$。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> solve(x**2 - 2, x)\n[-√2, √2]"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Solve the differential equation $y'' - y = e^t$.",
+    "sha": "7079fb6746a3",
+    "zh": "求解微分方程 $y'' - y = e^t$。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> y = Function('y')\n>>> dsolve(Eq(y(t).diff(t, t) - y(t), exp(t)), y(t))\n           -t   ⎛     t⎞  t\ny(t) = C₂⋅ℯ   + ⎜C₁ + ─⎟⋅ℯ\n                ⎝     2⎠"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Find the eigenvalues of $\\left[\\begin{smallmatrix}1 & 2\\\\2 & 2\\end{smallmatrix}\\right]$.",
+    "sha": "cb6799f8c7ba",
+    "zh": "求 $\\left[\\begin{smallmatrix}1 & 2\\\\2 & 2\\end{smallmatrix}\\right]$ 的特征值。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> Matrix([[1, 2], [2, 2]]).eigenvals()\n⎧3   √17     3   √17   ⎫\n⎨─ - ───: 1, ─ + ───: 1⎬\n⎩2    2      2    2    ⎭"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Rewrite the Bessel function $J_{\\nu}\\left(z\\right)$ in terms of the spherical Bessel function $j_\\nu(z)$.",
+    "sha": "b913e0c89e63",
+    "zh": "把贝塞尔函数 $J_{\\nu}\\left(z\\right)$ 改写成球贝塞尔函数 $j_\\nu(z)$ 的形式。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> besselj(nu, z).rewrite(jn)\n√2⋅√z⋅jn(ν - 1/2, z)\n────────────────────\n         √π"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Print $\\int_{0}^{\\pi} \\cos^{2}{\\left (x \\right )}\\, dx$ using $\\mathrm{\\LaTeX}$.",
+    "sha": "6572c3b56d8c",
+    "zh": "用 $\\mathrm{\\LaTeX}$ 打印 $\\int_{0}^{\\pi} \\cos^{2}{\\left (x \\right )}\\, dx$。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> latex(Integral(cos(x)**2, (x, 0, pi)))\n\\int\\limits_{0}^{\\pi} \\cos^{2}{\\left(x \\right)}\\, dx"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Why SymPy?",
+    "sha": "eb89415698e2",
+    "zh": "为什么选 SymPy？"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There are many computer algebra systems out there. This（https://en.wikipedia.org/wiki/List_of_computer_algebra_systems） Wikipedia article lists many of them. What makes SymPy a better choice than the alternatives?",
+    "sha": "c2f3bad89c8f",
+    "zh": "计算机代数系统有很多，这篇（https://en.wikipedia.org/wiki/List_of_computer_algebra_systems）维基百科文章列出了其中不少。SymPy 凭什么比其他选择更好？"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "First off, SymPy is completely free. It is open source, and licensed under the liberal BSD license, so you can modify the source code and even sell it if you want to. This contrasts with popular commercial systems like Maple or Mathematica that cost hundreds of dollars in licenses.",
+    "sha": "b554a64b5397",
+    "zh": "首先，SymPy 完全免费。它是开源的，采用宽松的 BSD 许可证，所以你可以修改源代码，甚至想卖也可以。这和 Maple、Mathematica 这类流行的商业系统形成对比，后者的许可证要花上几百美元。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Second, SymPy uses Python. Most computer algebra systems invent their own language. Not SymPy. SymPy is written entirely in Python, and is executed entirely in Python. This means that if you already know Python, it is much easier to get started with SymPy, because you already know the syntax (and if you don't know Python, it is really easy to learn). We already know that Python is a well-designed, battle-tested language. The SymPy developers are confident in their abilities in writing mathematical software, but programming language design is a completely different thing. By reusing an existing language, we are able to focus on those things that matter: the mathematics.",
+    "sha": "8acdc2251674",
+    "zh": "其次，SymPy 使用 Python。大多数计算机代数系统都会发明自己的语言，SymPy 不这样。SymPy 完全用 Python 编写，也完全在 Python 中执行。这意味着，如果你已经会 Python，上手 SymPy 就容易得多，因为语法你早就会了（而如果你不会 Python，它学起来也真的很容易）。我们早就知道，Python 是一门设计良好、久经考验的语言。SymPy 的开发者对自己编写数学软件的能力有信心，但编程语言设计完全是另一回事。借用现成的语言，我们就能专注于真正重要的事情：数学本身。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Another computer algebra system, Sage also uses Python as its language. But Sage is large, with a download of over a gigabyte. An advantage of SymPy is that it is lightweight. In addition to being relatively small, it has no dependencies other than Python, so it can be used almost anywhere easily. Furthermore, the goals of Sage and the goals of SymPy are different. Sage aims to be a full featured system for mathematics, and aims to do so by compiling all the major open source mathematical systems together into one. When you call some function in Sage, such as `integrate`, it calls out to one of the open source packages that it includes. In fact, SymPy is included in Sage. SymPy on the other hand aims to be an independent system, with all the features implemented in SymPy itself.",
+    "sha": "18ea2fa38a53",
+    "zh": "另一个计算机代数系统 Sage 也用 Python 作为它的语言。但 Sage 很庞大，下载量超过一个 GB。SymPy 的一个优势是轻量：除了体积相对较小，它除 Python 之外没有任何依赖，所以几乎在哪儿都能轻松使用。再者，Sage 与 SymPy 的目标并不相同。Sage 的目标是成为功能齐全的数学系统，做法是把所有主要的开源数学系统编译整合到一起。当你在 Sage 里调用 `integrate` 之类的函数时，它会去调用自身所含的某个开源软件包。事实上，SymPy 就包含在 Sage 里。而 SymPy 的目标是成为一个独立的系统，所有功能都在 SymPy 自身中实现。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "A final important feature of SymPy is that it can be used as a library. Many computer algebra systems focus on being usable in interactive environments, but if you wish to automate or extend them, it is difficult to do. With SymPy, you can just as easily use it in an interactive Python environment or import it in your own Python application. SymPy also provides APIs to make it easy to extend it with your own custom functions.",
+    "sha": "19b79a3f6d5e",
+    "zh": "SymPy 还有一个重要的特点：它可以作为库来使用。许多计算机代数系统侧重于在交互环境中使用，但如果你想对它们做自动化或扩展，就很困难。用 SymPy 的话，你既可以轻松地在交互式 Python 环境中使用它，也可以在自己的 Python 应用里直接导入它。SymPy 还提供了 API，方便你用自定义的函数来扩展它。"
+   }
+  }
+ ],
+ "title_zh": "什么是符号计算"
+}

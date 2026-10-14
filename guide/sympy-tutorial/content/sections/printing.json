@@ -1,0 +1,441 @@
+{
+ "id": "printing",
+ "title_en": "Printing",
+ "blocks": [
+  {
+   "k": "p",
+   "t": {
+    "en": "As we have already seen, SymPy can pretty print its output using Unicode characters. This is a short introduction to the most common printing options available in SymPy.",
+    "sha": "05eb769e39d6",
+    "zh": "前面我们已经看到，SymPy 可以用 Unicode 字符把输出漂亮打印（pretty print）出来。这一页简要介绍 SymPy 里最常用的几种打印选项。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Printers",
+    "sha": "eb6e4c3f155a",
+    "zh": "打印器"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There are several printers available in SymPy. The most common ones are",
+    "sha": "aa49cc95c30a",
+    "zh": "SymPy 里有好几种打印器，最常用的有"
+   }
+  },
+  {
+   "k": "list",
+   "ordered": false,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "str",
+       "sha": "3442496b96dd",
+       "zh": "str"
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "srepr",
+       "sha": "131d4c18682f",
+       "zh": "srepr"
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "ASCII pretty printer",
+       "sha": "5a7528b5dafb",
+       "zh": "ASCII 漂亮打印器"
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Unicode pretty printer",
+       "sha": "75b35e2019b5",
+       "zh": "Unicode 漂亮打印器"
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "LaTeX",
+       "sha": "f7a9de65b78a",
+       "zh": "LaTeX"
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "MathML",
+       "sha": "1f7cee102b27",
+       "zh": "MathML"
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "Dot",
+       "sha": "46856bf70223",
+       "zh": "Dot"
+      }
+     }
+    ]
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In addition to these, there are also \"printers\" that can output SymPy objects to code, such as C, Fortran, Javascript, Theano, and Python. These are not discussed in this tutorial.",
+    "sha": "ba9fdb4d6210",
+    "zh": "除此之外，还有一些“打印器”可以把 SymPy 对象输出成代码，比如 C、Fortran、Javascript、Theano 和 Python。本教程不讨论这些。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Setting up Pretty Printing",
+    "sha": "7ee67a5bd2b5",
+    "zh": "设置漂亮打印"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If all you want is the best pretty printing, use the `init_printing()` function. This will automatically enable the best printer available in your environment.",
+    "sha": "4ee0e3c6f6d9",
+    "zh": "如果你只想要最好的漂亮打印效果，用 `init_printing()` 函数就行。它会自动启用你的环境里可用的最佳打印器。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> from sympy import init_printing\n>>> init_printing() # doctest: +SKIP"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "If you plan to work in an interactive calculator-type session, the `init_session()` function will automatically import everything in SymPy, create some common Symbols, setup plotting, and run `init_printing()`.",
+    "sha": "ec6c060aa4c4",
+    "zh": "如果你打算在交互式的计算器式会话里工作，`init_session()` 函数会自动导入 SymPy 里的所有东西，创建一些常用的符号，设置好绘图，并运行 `init_printing()`。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> from sympy import init_session\n>>> init_session() # doctest: +SKIP"
+  },
+  {
+   "k": "code",
+   "text": "Python console for SymPy 1.13.0 (Python 3.12.4-64-bit) (ground types: gmpy)\n\nThese commands were executed:\n>>> from sympy import *\n>>> x, y, z, t = symbols('x y z t')\n>>> k, m, n = symbols('k m n', integer=True)\n>>> f, g, h = symbols('f g h', cls=Function)\n>>> init_printing() # doctest: +SKIP\n\nDocumentation can be found at https://docs.sympy.org/1.13.0/"
+  },
+  {
+   "k": "code",
+   "text": ">>>"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In any case, this is what will happen:",
+    "sha": "fb8274c7a309",
+    "zh": "无论哪种情况，都会发生下面这些事："
+   }
+  },
+  {
+   "k": "list",
+   "ordered": false,
+   "items": [
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "In the IPython QTConsole, if $\\mathrm{\\LaTeX}$ is installed, it will enable a printer that uses $\\mathrm{\\LaTeX}$.",
+       "sha": "e5656a647af7",
+       "zh": "在 IPython QTConsole 里，如果装了 $\\mathrm{\\LaTeX}$，它会启用一个使用 $\\mathrm{\\LaTeX}$ 的打印器。"
+      }
+     },
+     {
+      "k": "p",
+      "t": {
+       "en": "If $\\mathrm{\\LaTeX}$ is not installed, but Matplotlib is installed, it will use the Matplotlib rendering engine. If Matplotlib is not installed, it uses the Unicode pretty printer.",
+       "sha": "f3e9aa40e5b6",
+       "zh": "如果没装 $\\mathrm{\\LaTeX}$ 但装了 Matplotlib，它会使用 Matplotlib 的渲染引擎。如果 Matplotlib 也没装，就使用 Unicode 漂亮打印器。"
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "In the IPython notebook, it will use MathJax to render $\\mathrm{\\LaTeX}$.",
+       "sha": "e27ee0ef1b04",
+       "zh": "在 IPython notebook 里，它会用 MathJax 来渲染 $\\mathrm{\\LaTeX}$。"
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "In an IPython console session, or a regular Python session, it will use the Unicode pretty printer if the terminal supports Unicode.",
+       "sha": "dd91d155c601",
+       "zh": "在 IPython 控制台会话或普通的 Python 会话里，如果终端支持 Unicode，就使用 Unicode 漂亮打印器。"
+      }
+     }
+    ],
+    [
+     {
+      "k": "p",
+      "t": {
+       "en": "In a terminal that does not support Unicode, the ASCII pretty printer is used.",
+       "sha": "04c97fc78715",
+       "zh": "在不支持 Unicode 的终端里，使用 ASCII 漂亮打印器。"
+      }
+     }
+    ]
+   ]
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To explicitly not use $\\mathrm{\\LaTeX}$, pass `use_latex=False` to `init_printing()` or `init_session()`. To explicitly not use Unicode, pass `use_unicode=False`.",
+    "sha": "bef99c315013",
+    "zh": "要明确地不使用 $\\mathrm{\\LaTeX}$，就给 `init_printing()` 或 `init_session()` 传入 `use_latex=False`。要明确地不使用 Unicode，就传入 `use_unicode=False`。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Printing Functions",
+    "sha": "78c20ed70f59",
+    "zh": "打印函数"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "In addition to automatic printing, you can explicitly use any one of the printers by calling the appropriate function.",
+    "sha": "4ce7f8c6108e",
+    "zh": "除了自动打印之外，你也可以调用相应的函数，明确地使用其中任意一种打印器。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "str",
+    "sha": "3442496b96dd",
+    "zh": "str"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To get a string form of an expression, use `str(expr)`. This is also the form that is produced by `print(expr)`. String forms are designed to be easy to read, but in a form that is correct Python syntax so that it can be copied and pasted. The `str()` form of an expression will usually look exactly the same as the expression as you would enter it.",
+    "sha": "761fbc3be539",
+    "zh": "要得到表达式的字符串形式，用 `str(expr)`。`print(expr)` 产生的也是这种形式。字符串形式的设计目标是便于阅读，同时又是正确的 Python 语法，因此可以直接复制粘贴。表达式的 `str()` 形式，通常和你自己输入这个表达式时写的样子一模一样。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> from sympy import *\n>>> x, y, z = symbols('x y z')\n>>> str(Integral(sqrt(1/x), x))\n'Integral(sqrt(1/x), x)'\n>>> print(Integral(sqrt(1/x), x))\nIntegral(sqrt(1/x), x)"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "srepr",
+    "sha": "131d4c18682f",
+    "zh": "srepr"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The srepr form of an expression is designed to show the exact form of an expression. It will be discussed more in the Advanced Expression Manipulation section. To get it, use `srepr()` [1].",
+    "sha": "308e9d637ed9",
+    "zh": "表达式的 srepr 形式是为了精确展示表达式的真实结构而设计的，在「高级表达式操作」一节里会更详细地讨论。要得到它，请使用 `srepr()` [1]。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> srepr(Integral(sqrt(1/x), x))\n\"Integral(Pow(Pow(Symbol('x'), Integer(-1)), Rational(1, 2)), Tuple(Symbol('x')))\""
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The srepr form is mostly useful for understanding how an expression is built internally.",
+    "sha": "e501e9d8c10e",
+    "zh": "srepr 形式主要用来理解一个表达式在内部是怎么构建出来的。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "ASCII Pretty Printer",
+    "sha": "f35722dac1d3",
+    "zh": "ASCII 漂亮打印器"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The ASCII pretty printer is accessed from `pprint()`. If the terminal does not support Unicode, the ASCII printer is used by default. Otherwise, you must pass `use_unicode=False`.",
+    "sha": "f2db170db2e5",
+    "zh": "ASCII 漂亮打印器通过 `pprint()` 使用。如果终端不支持 Unicode，默认就使用 ASCII 打印器；否则，你必须传入 `use_unicode=False`。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> pprint(Integral(sqrt(1/x), x), use_unicode=False)\n  /\n |\n |     ___\n |    / 1\n |   /  -  dx\n | \\/   x\n |\n/"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "`pprint()` prints the output to the screen. If you want the string form, use `pretty()`.",
+    "sha": "c4b2c399f214",
+    "zh": "`pprint()` 会把输出打印到屏幕上。如果你想要字符串形式，用 `pretty()`。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> pretty(Integral(sqrt(1/x), x), use_unicode=False)\n'  /          \\n |           \\n |     ___   \\n |    / 1    \\n |   /  -  dx\\n | \\\\/   x    \\n |           \\n/            '\n>>> print(pretty(Integral(sqrt(1/x), x), use_unicode=False))\n  /\n |\n |     ___\n |    / 1\n |   /  -  dx\n | \\/   x\n |\n/"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Unicode Pretty Printer",
+    "sha": "ea041b826915",
+    "zh": "Unicode 漂亮打印器"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The Unicode pretty printer is also accessed from `pprint()` and `pretty()`. If the terminal supports Unicode, it is used automatically. If `pprint()` is not able to detect that the terminal supports unicode, you can pass `use_unicode=True` to force it to use Unicode.",
+    "sha": "d4c44344650b",
+    "zh": "Unicode 漂亮打印器同样通过 `pprint()` 和 `pretty()` 使用。如果终端支持 Unicode，就会自动使用它。如果 `pprint()` 检测不出终端支持 Unicode，你可以传入 `use_unicode=True`，强制它使用 Unicode。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> pprint(Integral(sqrt(1/x), x), use_unicode=True)\n⌠\n⎮     ___\n⎮    ╱ 1\n⎮   ╱  ─  dx\n⎮ ╲╱   x\n⌡"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "$\\mathrm{\\LaTeX}$",
+    "sha": "caf35aa3df6c",
+    "zh": "$\\mathrm{\\LaTeX}$"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "To get the $\\mathrm{\\LaTeX}$ form of an expression, use `latex()`.",
+    "sha": "4be395d7157d",
+    "zh": "要得到表达式的 $\\mathrm{\\LaTeX}$ 形式，用 `latex()`。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> print(latex(Integral(sqrt(1/x), x)))\n\\int \\sqrt{\\frac{1}{x}}\\, dx"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The `latex()` function has many options to change the formatting of different things. See its documentation for more details.",
+    "sha": "1ad5a6a1fe17",
+    "zh": "`latex()` 函数有许多选项，可以改变不同部分的排版格式，详情请见它的文档。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "MathML",
+    "sha": "1f7cee102b27",
+    "zh": "MathML"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "There is also a printer to MathML, called `print_mathml()`. It must be imported from `sympy.printing.mathml`.",
+    "sha": "e02cbda5abe2",
+    "zh": "还有一个输出 MathML 的打印器，叫 `print_mathml()`。它必须从 `sympy.printing.mathml` 导入。"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> from sympy.printing.mathml import print_mathml\n>>> print_mathml(Integral(sqrt(1/x), x))\n<apply>\n    <int/>\n    <bvar>\n        <ci>x</ci>\n    </bvar>\n    <apply>\n        <root/>\n        <apply>\n            <power/>\n            <ci>x</ci>\n            <cn>-1</cn>\n        </apply>\n    </apply>\n</apply>"
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "`print_mathml()` prints the output. If you want the string, use the function `mathml()`.",
+    "sha": "4b1398c618c8",
+    "zh": "`print_mathml()` 会把输出打印出来。如果你想要字符串，用 `mathml()` 函数。"
+   }
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Dot",
+    "sha": "46856bf70223",
+    "zh": "Dot"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "The `dotprint()` function in `sympy.printing.dot` prints output to dot format, which can be rendered with Graphviz. See the Advanced Expression Manipulation section for some examples of the output of this printer.",
+    "sha": "0a7bcb38f527",
+    "zh": "`sympy.printing.dot` 里的 `dotprint()` 函数，会把输出打印成 dot 格式，这种格式可以用 Graphviz 渲染。这个打印器的输出示例，见“高级表达式操作”一节。"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Here is an example of the raw output of the `dotprint()` function",
+    "sha": "a3a6b366216e",
+    "zh": "下面是 `dotprint()` 函数原始输出的一个例子"
+   }
+  },
+  {
+   "k": "code",
+   "text": ">>> from sympy.printing.dot import dotprint\n>>> from sympy.abc import x\n>>> print(dotprint(x+2))\ndigraph{\n<BLANKLINE>\n# Graph style\n\"ordering\"=\"out\"\n\"rankdir\"=\"TD\"\n<BLANKLINE>\n#########\n# Nodes #\n#########\n<BLANKLINE>\n\"Add(Integer(2), Symbol('x'))_()\" [\"color\"=\"black\", \"label\"=\"Add\", \"shape\"=\"ellipse\"];\n\"Integer(2)_(0,)\" [\"color\"=\"black\", \"label\"=\"2\", \"shape\"=\"ellipse\"];\n\"Symbol('x')_(1,)\" [\"color\"=\"black\", \"label\"=\"x\", \"shape\"=\"ellipse\"];\n<BLANKLINE>\n#########\n# Edges #\n#########\n<BLANKLINE>\n\"Add(Integer(2), Symbol('x'))_()\" -> \"Integer(2)_(0,)\";\n\"Add(Integer(2), Symbol('x'))_()\" -> \"Symbol('x')_(1,)\";\n}"
+  },
+  {
+   "k": "heading",
+   "t": {
+    "en": "Footnotes",
+    "sha": "ec0c3b76630f",
+    "zh": "脚注"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "[1] SymPy does not use the Python builtin `repr()` function for repr printing, because in Python `str(list)` calls `repr()` on the elements of the list, and some SymPy functions return lists (such as `solve()`). Since `srepr()` is so verbose, it is unlikely that anyone would want it called by default on the output of `solve()`.",
+    "sha": "957d5931c380",
+    "zh": "[1] SymPy 不用 Python 内置的 `repr()` 函数来做 repr 打印，因为在 Python 里 `str(list)` 会对列表中的每个元素调用 `repr()`，而一些 SymPy 函数（例如 `solve()`）会返回列表。`srepr()` 的输出非常冗长，大概没有人希望它默认就作用在 `solve()` 的结果上。"
+   }
+  }
+ ],
+ "title_zh": "打印与显示"
+}

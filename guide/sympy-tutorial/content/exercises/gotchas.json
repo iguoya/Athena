@@ -1,0 +1,143 @@
+[
+  {
+    "id": "ex1",
+    "stem": "教程说 Symbol 的名字和 Python 变量名可以毫无关系。先读懂下面的代码，再运行：\n\n```python\nfrom sympy import *\na, b = symbols('b a')\nexpr = a**2 + 2*b\nprint(expr)\nprint(expr.subs({Symbol('a'): 10, Symbol('b'): 3}))\n```\n\n最后一行输出是多少？（注意 `subs` 里的 `Symbol('a')` 指的是**名字**叫 a 的 Symbol。）",
+    "check": {
+      "kind": "numbers",
+      "ask": "写出一个数。",
+      "answer": [
+        29
+      ],
+      "hint": "先看 `print(expr)` 打印出来的表达式里，名字叫 `a` 的 Symbol 出现在哪一项；Python 变量 `a` 指向的是名字叫 `b` 的 Symbol。"
+    },
+    "verify": "a, b = symbols('b a'); expr = a**2 + 2*b; result = expr.subs({Symbol('a'): 10, Symbol('b'): 3})",
+    "sol": "Python 变量 `a` 指向名字为 `b` 的 Symbol，所以 `expr` 实际是 $b^2+2a$（按 Symbol 名字）。代入名字 a=10、名字 b=3 得 $9+20=29$。若误以为 `a` 就是名字 a，会算出 $100+6=106$。\n\n```python\n>>> a, b = symbols('b a')\n>>> expr = a**2 + 2*b\n>>> expr\n2*a + b**2\n>>> expr.subs({Symbol('a'): 10, Symbol('b'): 3})\n29\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "gotchas · Symbols",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex2",
+    "stem": "要判断 $(x+1)^2$ 与 $x^2+2x+1$ 在数学上是否相等，先预测，再逐个运行下面四种写法：\n\n```python\nfrom sympy import *\nx = symbols('x')\na = (x + 1)**2\nb = x**2 + 2*x + 1\nprint(a == b)\nprint(a is b)\nprint(a.equals(b))\ntry:\n    print(bool(Eq(a, b)))\nexcept TypeError as e:\n    print('TypeError')\n```\n\n哪一种写法**输出 `True`**？",
+    "check": {
+      "kind": "choice",
+      "options": [
+        {
+          "text": "`a == b`",
+          "ok": false,
+          "why": "`==` 是精确的结构比较；一个是乘方，一个是三项之和，结构不同，得到 `False`。"
+        },
+        {
+          "text": "`a is b`",
+          "ok": false,
+          "why": "`is` 比较的是 Python 对象身份，两个对象不同，当然 `False`，更与数学相等无关。"
+        },
+        {
+          "text": "`a.equals(b)`",
+          "ok": true,
+          "why": "`equals` 在随机点做数值检验，判断数学上是否恒等，这里返回 `True`。"
+        },
+        {
+          "text": "`bool(Eq(a, b))`",
+          "ok": false,
+          "why": "`Eq` 构造的是符号等式而不是判断；SymPy 无法判定真假时，对它取 `bool` 会抛出 `TypeError`。"
+        }
+      ],
+      "hint": "回头看「Equals signs」：`==`、`Eq`、`simplify(a - b)`、`equals` 各自回答什么问题？"
+    },
+    "sol": "`==` 问「结构是否完全一样」，`Eq` 是等式对象，`equals`（或 `simplify(a - b) == 0`）才在问数学上是否相等。\n\n```python\n>>> x = symbols('x')\n>>> a = (x + 1)**2\n>>> b = x**2 + 2*x + 1\n>>> a == b\nFalse\n>>> a is b\nFalse\n>>> a.equals(b)\nTrue\n>>> simplify(a - b)\n0\n>>> Eq(a, b)\nEq((x + 1)**2, x**2 + 2*x + 1)\n>>> bool(Eq(a, b))\nTypeError: cannot determine truth value of Relational: Eq((x + 1)**2, x**2 + 2*x + 1)\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "gotchas · Equals signs",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex3",
+    "stem": "在 Python 里 `^` 不是乘方。先预测，再运行：\n\n```python\nprint(5 ^ 3)\nprint(5 ** 3)\n```\n\n依次写出这两行的输出（两个数）。",
+    "check": {
+      "kind": "numbers",
+      "ask": "写两个数：先 `5 ^ 3`，再 `5 ** 3`。",
+      "answer": [
+        6,
+        125
+      ],
+      "hint": "`^` 是按位异或：把 5 和 3 写成二进制逐位比较；乘方要用 `**`。"
+    },
+    "verify": "result = [5 ^ 3, 5 ** 3]",
+    "sol": "$5=101_2$、$3=011_2$，按位异或得 $110_2=6$；`**` 才是乘方，$5^3=125$。SymPy 遵循 Python 约定：对 Symbol，`x ^ y` 得到逻辑异或 `Xor(x, y)`，`x ^ 2` 则直接报 `TypeError`。\n\n```python\n>>> 5 ^ 3\n6\n>>> 5 ** 3\n125\n>>> x, y = symbols('x y')\n>>> x ^ y\nx ^ y\n>>> x ^ 2\nTypeError: unsupported operand type(s) for ^: 'Symbol' and 'int'\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "gotchas · Two Final Notes: ^ and /",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex4",
+    "stem": "想表示 $x+\\tfrac12$。先预测，再运行：\n\n```python\nfrom sympy import *\nx = symbols('x')\nprint(x + 1/2)\nprint(x + Rational(1, 2))\n```\n\n哪一项描述的是实际输出（依次为第一行、第二行）？",
+    "check": {
+      "kind": "choice",
+      "options": [
+        {
+          "text": "`x + 0.5`、`x + 1/2`",
+          "ok": true,
+          "why": "Python 先把 `1/2` 算成浮点数 0.5，再与 `x` 相加；`Rational(1, 2)` 是精确有理数。"
+        },
+        {
+          "text": "`x + 1/2`、`x + 1/2`",
+          "ok": false,
+          "why": "这是以为 SymPy 能「看见」`1/2` 并保持精确。其实 `1/2` 在 SymPy 介入之前就已经被 Python 算成 0.5。"
+        },
+        {
+          "text": "`x`、`x + 1/2`",
+          "ok": false,
+          "why": "这是 Python 2 的整数除法（`1/2` 得 0）。Python 3 中 `/` 是浮点除法，得 0.5。"
+        },
+        {
+          "text": "`x + 0.5`、`x + 0.5`",
+          "ok": false,
+          "why": "`Rational(1, 2)` 正是用来避免浮点化的，它保持精确的 `1/2`。"
+        }
+      ],
+      "hint": "回头看「`^` 与 `/`」一节：两个 Python 对象相运算时，SymPy 有机会介入吗？"
+    },
+    "sol": "`1/2` 是两个 Python int 相除，SymPy 不介入，结果是 float。要得到精确分数，用 `Rational(1, 2)`，或 `Integer(1)/2`。\n\n```python\n>>> x = symbols('x')\n>>> x + 1/2\nx + 0.5\n>>> x + Rational(1, 2)\nx + 1/2\n>>> Integer(1)/2\n1/2\n>>> type(1/2)\n<class 'float'>\n>>> type(Integer(1)/2)\n<class 'sympy.core.numbers.Half'>\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "gotchas · Two Final Notes: ^ and /（整数除法）",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex5",
+    "stem": "解方程 $x+1=4$，下面两种写法行为不同。先预测，再运行：\n\n```python\nfrom sympy import *\nx = symbols('x')\nr1 = solve(x + 1 == 4, x)\nr2 = solve(Eq(x + 1, 4), x)\nprint(r1)\nprint(r2)\n```\n\n写出两个数：`len(r1)`，以及 `r2` 中唯一那个解的值。",
+    "check": {
+      "kind": "numbers",
+      "ask": "写两个数：先 `len(r1)`，再 `r2[0]`。",
+      "answer": [
+        0,
+        3
+      ],
+      "hint": "`x + 1 == 4` 在 `solve` 看到之前就已经被 Python 求值成了一个 `bool`；对一个 `bool` 解方程能解出什么？"
+    },
+    "verify": "r1 = solve(x + 1 == 4, x); r2 = solve(Eq(x + 1, 4), x); result = [len(r1), r2[0]]",
+    "sol": "`x + 1 == 4` 是结构比较，先被求值成 `False`，`solve(False, x)` 得到空列表；符号等式要用 `Eq`。\n\n```python\n>>> x = symbols('x')\n>>> x + 1 == 4\nFalse\n>>> solve(x + 1 == 4, x)\n[]\n>>> solve(Eq(x + 1, 4), x)\n[3]\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "gotchas · Equals signs",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  }
+]

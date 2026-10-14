@@ -1,0 +1,168 @@
+[
+  {
+    "id": "ex1",
+    "stem": "先预测，再运行：\n\n```python\nfrom sympy import *\nx = symbols('x')\nA = solveset(x**2 - 4, x)\nB = solve(x**2 - 4, x)\nprint(type(A).__name__, type(B).__name__)\nprint(B[0])\nprint(A[0])\n```\n\n最后一行 `A[0]` 会怎样？下面哪一项对两个函数返回值的描述是对的？",
+    "check": {
+      "kind": "choice",
+      "options": [
+        {
+          "text": "两者都返回列表，`A[0]` 与 `B[0]` 都取出第一个解。",
+          "ok": false,
+          "why": "只有 `solve` 返回列表。`solveset` 返回的是集合对象（这里是 `FiniteSet`），集合没有「第一个」。"
+        },
+        {
+          "text": "`solveset` 返回 `FiniteSet`，`solve` 返回列表；`B[0]` 能取到 `-2`，`A[0]` 抛出 `TypeError`。",
+          "ok": true,
+          "why": "集合不支持下标。要逐个取元素，先转成列表或元组，例如 `list(A)`；排序用 `sorted(A)`。"
+        },
+        {
+          "text": "`solveset` 返回列表，`solve` 返回 `FiniteSet`；`A[0]` 能运行，`B[0]` 报错。",
+          "ok": false,
+          "why": "把两者弄反了。教程说明 `solveset` 的输出是 `FiniteSet`、`Interval` 或 `ImageSet` 这类集合。"
+        },
+        {
+          "text": "`solveset(x**2 - 4, x)` 必须写成 `solveset(Eq(x**2, 4), x)`，否则会报错。",
+          "ok": false,
+          "why": "不放进 `Eq` 的表达式会被当作等于 0 处理，`solveset(x**2 - 4, x)` 与 `solveset(Eq(x**2, 4), x)` 结果相同。"
+        }
+      ],
+      "hint": "回头看教程里 `solveset` 输出的类型说明，再想想集合与列表在「按位置取元素」上的区别。"
+    },
+    "sol": "`solveset` 的输出是集合，`solve` 的输出是列表。集合无序、不能按下标取值，所以 `A[0]` 抛 `TypeError`。\n\n```python\n>>> A = solveset(x**2 - 4, x)\n>>> B = solve(x**2 - 4, x)\n>>> print(type(A).__name__, type(B).__name__)\nFiniteSet list\n>>> print(B[0])\n-2\n>>> print(A[0])\nTypeError: 'FiniteSet' object is not subscriptable\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "solvers · 用代数方法解方程",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex2",
+    "stem": "多项式 $p(x)=x^5-3x^4+3x^3-x^2$。先预测，再运行：\n\n```python\nfrom sympy import *\nx = symbols('x')\np = x**5 - 3*x**4 + 3*x**3 - x**2\nprint(solveset(p, x))\nprint(roots(p, x))\n```\n\n依次写出三个数：`solveset` 返回的解集里有几个元素；根 $0$ 的重数；根 $1$ 的重数。",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写出三个数：解集元素个数、根 0 的重数、根 1 的重数。",
+      "answer": [
+        2.0,
+        2.0,
+        3.0
+      ],
+      "hint": "回头看教程里 `solveset` 与 `roots` 的区别：哪一个对每个解只报告一次，哪一个带重数？`roots` 输出 `{根: 重数}`。"
+    },
+    "verify": "p = x**5 - 3*x**4 + 3*x**3 - x**2\nr = roots(p, x)\nresult = [len(solveset(p, x)), r[0], r[1]]",
+    "sol": "`solveset` 每个根只报一次，所以只有 $0$ 和 $1$ 两个元素；`roots` 返回 `{根: 重数}` 字典。因式分解 $p=x^2(x-1)^3$，与重数一致，重数之和等于次数 5。\n\n```python\n>>> print(solveset(p, x))\n{0, 1}\n>>> print(roots(p, x))\n{1: 3, 0: 2}\n>>> print(factor(p))\nx**2*(x - 1)**3\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "solvers · 用代数方法解方程（重数与 roots）",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex3",
+    "stem": "方程 $x^4+x^2-2=0$。先预测，再运行：\n\n```python\nfrom sympy import *\nx = symbols('x')\nq = x**4 + x**2 - 2\nC = solveset(q, x)\nR = solveset(q, x, domain=S.Reals)\nprint(C)\nprint(R)\n```\n\n依次写出三个数：`C` 的元素个数；`R` 的元素个数；`C` 里全部复数解的乘积。（乘积可以用 `Mul(*C)` 得到。）",
+    "check": {
+      "kind": "numbers",
+      "ask": "依次写出三个数：复数域解的个数、实数域解的个数、全部复数解之积。",
+      "answer": [
+        4.0,
+        2.0,
+        -2.0
+      ],
+      "hint": "`solveset` 的 `domain` 默认是 `S.Complexes`。把 $q$ 因式分解成 $(x^2+2)(x^2-1)$，看每个因子在实数范围内还有没有根；乘积可以和首一多项式的常数项对照。"
+    },
+    "verify": "q = x**4 + x**2 - 2\nC = solveset(q, x)\nR = solveset(q, x, domain=S.Reals)\nresult = [len(C), len(R), Mul(*C)]",
+    "sol": "$q=(x^2+2)(x^2-1)$。$x^2=1$ 给出实根 $\\pm1$；$x^2=-2$ 给出一对共轭虚根 $\\pm\\sqrt2\\,i$。限定 `domain=S.Reals` 后虚根被丢掉。四个根之积是 $1\\cdot(-1)\\cdot(\\sqrt2 i)(-\\sqrt2 i)=-1\\cdot 2=-2$，等于首一四次多项式的常数项。\n\n```python\n>>> print(solveset(q, x))\n{-1, 1, -sqrt(2)*I, sqrt(2)*I}\n>>> print(solveset(q, x, domain=S.Reals))\n{-1, 1}\n>>> Mul(*solveset(q, x))\n-2\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "solvers · 用代数方法解方程（domain 参数）",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex4",
+    "stem": "线性方程组\n\n$$\\begin{cases}x+y+z=6\\\\ 2y+5z=-4\\\\ 2x+5y-z=27\\end{cases}$$\n\n先预测，再运行：\n\n```python\nfrom sympy import *\nx, y, z = symbols('x y z')\nprint(linsolve([x + y + z - 6, 2*y + 5*z + 4, 2*x + 5*y - z - 27], (x, y, z)))\n```\n\n按 $x,y,z$ 的顺序写出三个未知数的值。注意 `linsolve` 的解按你给出的符号顺序排列。",
+    "check": {
+      "kind": "numbers",
+      "ask": "按 x、y、z 的顺序写出三个数。",
+      "answer": [
+        5.0,
+        3.0,
+        -2.0
+      ],
+      "hint": "回头看教程 `linsolve` 的三种输入形式，以及「解的顺序与所给符号的顺序一一对应」。写出答案后把它代回三个方程检查。"
+    },
+    "verify": "sol = linsolve([x + y + z - 6, 2*y + 5*z + 4, 2*x + 5*y - z - 27], (x, y, z))\nresult = list(list(sol)[0])",
+    "sol": "`linsolve` 返回由元组组成的集合，每个元组对应一组解，元组内按所给符号 $(x,y,z)$ 的顺序排列。代回检查：$5+3-2=6$，$2\\cdot3+5\\cdot(-2)=-4$，$2\\cdot5+5\\cdot3-(-2)=27$。\n\n```python\n>>> linsolve([x + y + z - 6, 2*y + 5*z + 4, 2*x + 5*y - z - 27], (x, y, z))\n{(5, 3, -2)}\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "solvers · 用代数方法解方程（linsolve）",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex5",
+    "stem": "初值问题 $f''-2f'+f=\\sin x$，$f(0)=1$，$f'(0)=0$。教程里这个方程的通解含 $C_1,C_2$。先预测 $f(2)$ 的大致符号和大小，再运行：\n\n```python\nfrom sympy import *\nx = symbols('x')\nf = symbols('f', cls=Function)\nsol = dsolve(Eq(f(x).diff(x, 2) - 2*f(x).diff(x) + f(x), sin(x)), f(x))\nprint(sol)\nC1, C2 = symbols('C1 C2')\ncs = solve([sol.rhs.subs(x, 0) - 1, sol.rhs.diff(x).subs(x, 0)], [C1, C2])\nprint(cs)\nv = sol.rhs.subs(cs).subs(x, 2)\nprint(v, float(v))\n```\n\n写出 $f(2)$ 的数值（保留全精度）。",
+    "check": {
+      "kind": "numbers",
+      "ask": "写出一个数：f(2) 的浮点值。",
+      "answer": [
+        -3.9026014677388963
+      ],
+      "hint": "`dsolve` 返回的是 `Eq`，函数表达式在 `.rhs` 里。两个初值给出关于 $C_1,C_2$ 的两个方程；解出常数再代入 $x=2$。"
+    },
+    "verify": "f = symbols('f', cls=Function)\nsol = dsolve(Eq(f(x).diff(x, 2) - 2*f(x).diff(x) + f(x), sin(x)), f(x))\nC1, C2 = symbols('C1 C2')\ncs = solve([sol.rhs.subs(x, 0) - 1, sol.rhs.diff(x).subs(x, 0)], [C1, C2])\nresult = float(sol.rhs.subs(cs).subs(x, 2))",
+    "sol": "通解 $f=(C_1+C_2x)e^x+\\tfrac12\\cos x$。$f(0)=C_1+\\tfrac12=1$ 得 $C_1=\\tfrac12$；$f'(0)=C_1+C_2=0$ 得 $C_2=-\\tfrac12$。于是 $f(2)=\\tfrac12\\cos2-\\tfrac12e^2\\approx-3.9026$。\n\n```python\n>>> print(sol)\nEq(f(x), (C1 + C2*x)*exp(x) + cos(x)/2)\n>>> print(cs)\n{C1: 1/2, C2: -1/2}\n>>> print(v, float(v))\n-exp(2)/2 + cos(2)/2 -3.9026014677388963\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "solvers · 解微分方程",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  },
+  {
+    "id": "ex6",
+    "stem": "先预测，再运行：\n\n```python\nfrom sympy import *\nx = symbols('x')\nprint(solveset(exp(x), x))\nprint(solveset(cos(x) - x, x))\nprint(nsolve(cos(x) - x, 0.7))\n```\n\n前两行输出一个是 `EmptySet`，一个是 `ConditionSet`。下面哪一项对它们的解读是对的？",
+    "check": {
+      "kind": "choice",
+      "options": [
+        {
+          "text": "两个结果都表示方程无解，只是写法不同。",
+          "ok": false,
+          "why": "`EmptySet` 才表示无解。`ConditionSet` 表示 SymPy 没能求出解集，只把方程原样包成「满足条件的 $x$ 的集合」。"
+        },
+        {
+          "text": "`EmptySet` 表示 $e^x=0$ 没有解；`ConditionSet` 表示 SymPy 没能求出显式解，并不说明无解，`nsolve` 就数值找到了 $x\\approx0.739$。",
+          "ok": true,
+          "why": "这正对应教程那句：没有解返回 `EmptySet`，找不到解则返回 `ConditionSet`。"
+        },
+        {
+          "text": "`ConditionSet` 表示方程有无穷多个解。",
+          "ok": false,
+          "why": "无穷多个解通常以 `ImageSet` 之类的形式给出，例如 $\\sin x=1$ 的 $2n\\pi+\\pi/2$。`ConditionSet` 只说明没求出来。"
+        },
+        {
+          "text": "$\\cos x$ 的值域是 $[-1,1]$，所以 $\\cos x-x=0$ 无解，`ConditionSet` 是 SymPy 对此的表达。",
+          "ok": false,
+          "why": "$\\cos x=x$ 只要求 $x\\in[-1,1]$，并不矛盾；`nsolve` 找到的 $0.739\\ldots$ 就满足它，方程有解。"
+        }
+      ],
+      "hint": "回头看教程关于 `EmptySet` 与 `ConditionSet` 各自含义的那一句，再用 `nsolve` 的结果验证。"
+    },
+    "sol": "`solveset(exp(x), x)` 得 `EmptySet`：$e^x$ 对任何复数 $x$ 都不为 0。`solveset(cos(x) - x, x)` 得 `ConditionSet`：SymPy 没求出解，`nsolve` 以 0.7 为初值找到数值解。\n\n```python\n>>> print(solveset(exp(x), x))\nEmptySet\n>>> print(solveset(cos(x) - x, x))\nConditionSet(x, Eq(-x + cos(x), 0), Complexes)\n>>> print(nsolve(cos(x) - x, 0.7))\n0.739085133215161\n```",
+    "source_refs": [
+      {
+        "relation": "authored",
+        "locator": "solvers · 用代数方法解方程（EmptySet 与 ConditionSet）",
+        "note": "自编，答案由 SymPy 1.14 复算"
+      }
+    ]
+  }
+]
