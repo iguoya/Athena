@@ -2331,7 +2331,7 @@
    "t": {
     "en": "The axis function may be used to change the axis limits of an existing plot and various other axis properties, such as the aspect ratio and the appearance of tic marks. By default, high level plotting functions such as `plot` reset axes properties. Any customization of properties, for example by calling `axis`, `xlim`, etc., should happen after the plot is done or, alternatively, after calling the `hold`.",
     "sha": "4b88bd5016f9",
-    "zh": ""
+    "zh": "axis 函数可以修改已有图形的坐标轴范围以及其他各种坐标轴属性，例如纵横比和刻度线的外观。默认情况下，`plot` 这样的高层绘图函数会重置坐标轴属性。对属性的任何定制（例如调用 `axis`、`xlim` 等）都应该在绘图完成之后进行，或者在调用 `hold` 之后进行。"
    }
   },
   {
@@ -2756,7 +2756,7 @@
      "t": {
       "en": "If the first argument *hax* is an axes handle, then operate on this axes rather than the current axes returned by `gca`.",
       "sha": "aa8a8c64962d",
-      "zh": ""
+      "zh": "如果第一个参数 *hax* 是坐标轴句柄，则作用于这个坐标轴，而不是 `gca` 返回的当前坐标轴。"
      }
     },
     {
@@ -2764,7 +2764,7 @@
      "t": {
       "en": "Example 1: set X/Y limits and force a square aspect ratio",
       "sha": "f128fce1b5ff",
-      "zh": ""
+      "zh": "例 1：设置 X/Y 范围，并强制纵横比为正方形"
      }
     },
     {
@@ -2776,7 +2776,7 @@
      "t": {
       "en": "Example 2: enable tick marks on all axes, enable tick mark labels only on the y-axis",
       "sha": "9b40984a8e83",
-      "zh": ""
+      "zh": "例 2：在所有坐标轴上打开刻度线，只在 y 轴上打开刻度标签"
      }
     },
     {
@@ -2788,7 +2788,7 @@
      "t": {
       "en": "See also: `xlim`, `ylim`, `zlim`, `caxis`, `daspect`, `pbaspect`, `box`, `grid`.",
       "sha": "2006eedbf696",
-      "zh": ""
+      "zh": "另见：`xlim`、`ylim`、`zlim`、`caxis`、`daspect`、`pbaspect`、`box`、`grid`。"
      }
     }
    ]
@@ -2798,7 +2798,7 @@
    "t": {
     "en": "Similarly the axis limits of the colormap can be changed with the caxis function.",
     "sha": "a996eca989dc",
-    "zh": ""
+    "zh": "类似地，色图的坐标轴范围可以用 caxis 函数修改。"
    }
   },
   {
@@ -2806,7 +2806,7 @@
    "t": {
     "en": "The `xlim`, `ylim`, and `zlim` functions may be used to get or set individual axis limits. Each has the same form.",
     "sha": "f831f9d1c723",
-    "zh": ""
+    "zh": "`xlim`、`ylim` 和 `zlim` 函数可用来获取或设置单个坐标轴的范围，三者形式相同。"
    }
   },
   {
@@ -2826,7 +2826,7 @@
      "t": {
       "en": "Query or set the limits of the x-axis for the current plot.",
       "sha": "dec3c4cdf340",
-      "zh": ""
+      "zh": "查询或设置当前图形 x 轴的范围。"
      }
     },
     {
@@ -2834,7 +2834,7 @@
      "t": {
       "en": "Called without arguments `xlim` returns the x-axis limits of the current plot.",
       "sha": "86fb9aa9f134",
-      "zh": ""
+      "zh": "不带参数调用时，`xlim` 返回当前图形 x 轴的范围。"
      }
     },
     {
@@ -2842,7 +2842,7 @@
      "t": {
       "en": "With the input query `\"mode\"`, return the current x-limit calculation mode which is either `\"auto\"` or `\"manual\"`.",
       "sha": "04cf52687949",
-      "zh": ""
+      "zh": "以查询字符串 `\"mode\"` 为输入时，返回当前 x 轴范围的计算模式，为 `\"auto\"` 或 `\"manual\"`。"
      }
     },
     {
@@ -2850,7 +2850,7 @@
      "t": {
       "en": "If passed a 2-element vector [*x_lo* *x_hi*], the limits of the x-axis are set to these values and the mode is set to `\"manual\"`. The special values -Inf and Inf can be used to indicate that either the lower axis limit or upper axis limit should be automatically calculated.",
       "sha": "c18598d35c85",
-      "zh": ""
+      "zh": "如果传入 2 元素向量 [*x_lo* *x_hi*]，则 x 轴的范围被设为这两个值，并且模式被设为 `\"manual\"`。特殊值 -Inf 和 Inf 可用来表示坐标轴的下限或上限应由程序自动计算。"
      }
     },
     {
@@ -2858,7 +2858,7 @@
      "t": {
       "en": "The current plotting mode can be changed by using either `\"auto\"` or `\"manual\"` as the argument.",
       "sha": "86c3bb18932f",
-      "zh": ""
+      "zh": "也可以用 `\"auto\"` 或 `\"manual\"` 作为参数来改变当前的绘图模式。"
      }
     },
     {
@@ -2866,7 +2866,7 @@
      "t": {
       "en": "If the first argument *hax* is an axes handle, then operate on this axes rather than the current axes returned by `gca`.",
       "sha": "aa8a8c64962d",
-      "zh": ""
+      "zh": "如果第一个参数 *hax* 是坐标轴句柄，则作用于这个坐标轴，而不是 `gca` 返回的当前坐标轴。"
      }
     },
     {
@@ -2874,7 +2874,7 @@
      "t": {
       "en": "Programming Note: The `xlim` function operates by modifying the `\"xlim\"` and `\"xlimmode\"` properties of an axes object. These properties can be directly inspected and altered with `get`/`set`. See also: `ylim`, `zlim`, `axis`, `set`, `get`, `gca`.",
       "sha": "8ba7d29289c4",
-      "zh": ""
+      "zh": "编程注记：`xlim` 函数的工作方式是修改坐标轴对象的 `\"xlim\"` 和 `\"xlimmode\"` 属性。这些属性可以直接用 `get`/`set` 查看和修改。另见：`ylim`、`zlim`、`axis`、`set`、`get`、`gca`。"
      }
     }
    ]
@@ -2884,7 +2884,7 @@
    "t": {
     "en": "The `xticks`, `yticks`, `zticks`, `rticks`, and `thetaticks` functions may be used to get or set the tick mark locations and modes on the respective axis. Each has the same form, although mode options are not currently available for `rticks`, and `thetaticks`.",
     "sha": "9c7063cfaab5",
-    "zh": ""
+    "zh": "`xticks`、`yticks`、`zticks`、`rticks` 和 `thetaticks` 函数可用来获取或设置相应坐标轴上的刻度位置及其模式。它们的形式相同，不过 `rticks` 和 `thetaticks` 目前没有模式选项。"
    }
   },
   {
@@ -2892,7 +2892,7 @@
    "t": {
     "en": "The `xticklabels`, `yticklabels`, and `zticklabels` functions may be used to get or set the label assigned to each tick location and the labeling mode on the respective axis. Each has the same form.",
     "sha": "a640f9fb4585",
-    "zh": ""
+    "zh": "`xticklabels`、`yticklabels` 和 `zticklabels` 函数可用来获取或设置相应坐标轴上各刻度位置所对应的标签以及标签的模式，三者形式相同。"
    }
   },
   {
@@ -2900,7 +2900,7 @@
    "t": {
     "en": "The `xtickangle`, `ytickangle`, and `ztickangle` functions may be used to get or set the rotation angle of labels for the respective axis. Each has the same form.",
     "sha": "909df373cfff",
-    "zh": ""
+    "zh": "`xtickangle`、`ytickangle` 和 `ztickangle` 函数可用来获取或设置相应坐标轴上标签的旋转角度，三者形式相同。"
    }
   },
   {
@@ -2909,7 +2909,7 @@
    "t": {
     "en": "Two-dimensional Function Plotting",
     "sha": "f4bb9b2a28a8",
-    "zh": ""
+    "zh": "二维函数绘图"
    }
   },
   {
@@ -2917,7 +2917,7 @@
    "t": {
     "en": "Octave can plot a function from a function handle or string defining the function without the user needing to explicitly create the data to be plotted. The function `fplot` also generates two-dimensional plots with linear axes using a function name and limits for the range of the x-coordinate instead of the x and y data. For example,",
     "sha": "9d5b3a9cc8e5",
-    "zh": ""
+    "zh": "Octave 可以根据函数句柄或定义函数的字符串直接绘制函数，不需要用户显式地生成要绘制的数据。`fplot` 函数同样生成坐标轴为线性刻度的二维图，只是它使用函数名和 x 坐标的范围，而不是 x 和 y 数据。例如，"
    }
   },
   {
@@ -2929,7 +2929,7 @@
    "t": {
     "en": "produces a plot that is equivalent to the one above, but also includes a legend displaying the name of the plotted function.",
     "sha": "bb6bac51590c",
-    "zh": ""
+    "zh": "生成的图与上面那张等价，但还多了一个图例，显示所绘函数的名称。"
    }
   },
   {
@@ -2951,7 +2951,7 @@
      "t": {
       "en": "Plot a function *fcn* within the range defined by *limits*.",
       "sha": "a7795ba1b5b9",
-      "zh": ""
+      "zh": "在 *limits* 所定义的范围内绘制函数 *fcn*。"
      }
     },
     {
@@ -2959,7 +2959,7 @@
      "t": {
       "en": "*fcn* is a function handle, inline function, or string containing the name of the function to evaluate.",
       "sha": "aa58618f34cb",
-      "zh": ""
+      "zh": "*fcn* 是函数句柄、内联函数，或包含待求值函数名称的字符串。"
      }
     },
     {
@@ -2967,7 +2967,7 @@
      "t": {
       "en": "The limits of the plot are of the form `[xlo, xhi]` or `[xlo, xhi, ylo, yhi]`. If no limits are specified the default is `[-5, 5]`.",
       "sha": "db67b806c0d6",
-      "zh": ""
+      "zh": "绘图范围的形式为 `[xlo, xhi]` 或 `[xlo, xhi, ylo, yhi]`。如果没有指定范围，默认为 `[-5, 5]`。"
      }
     },
     {
@@ -2975,7 +2975,7 @@
      "t": {
       "en": "The next three arguments are all optional and any number of them may be given in any order.",
       "sha": "20505fc5fde7",
-      "zh": ""
+      "zh": "接下来的三个参数都是可选的，可以按任意顺序给出其中任意几个。"
      }
     },
     {
@@ -2983,7 +2983,7 @@
      "t": {
       "en": "*tol* is the relative tolerance to use for the plot and defaults to 2e-3 (.2%).",
       "sha": "3dd49995532e",
-      "zh": ""
+      "zh": "*tol* 是绘图使用的相对容差，默认为 2e-3（0.2%）。"
      }
     },
     {
@@ -2991,7 +2991,7 @@
      "t": {
       "en": "*n* is the minimum number of points to use. When *n* is specified, the maximum stepsize will be `(xhi - xlo) / n`. More than *n* points may still be used in order to meet the relative tolerance requirement.",
       "sha": "d2727c38d6fe",
-      "zh": ""
+      "zh": "*n* 是至少要使用的点数。指定 *n* 时，最大步长为 `(xhi - xlo) / n`。为了满足相对容差的要求，实际使用的点数仍可能多于 *n*。"
      }
     },
     {
@@ -2999,7 +2999,7 @@
      "t": {
       "en": "The *fmt* argument specifies the linestyle to be used by the plot command.",
       "sha": "431147f55045",
-      "zh": ""
+      "zh": "*fmt* 参数指定 plot 命令使用的线型。"
      }
     },
     {
@@ -3007,7 +3007,7 @@
      "t": {
       "en": "Multiple property-value pairs may also be specified, but they must appear in pairs. These arguments are applied to the line objects drawn by `plot`.",
       "sha": "99b4bf3743ae",
-      "zh": ""
+      "zh": "也可以指定多组属性–值对，但它们必须成对出现。这些参数作用于 `plot` 所画出的线对象。"
      }
     },
     {
@@ -3015,7 +3015,7 @@
      "t": {
       "en": "The full list of line properties is documented at Line Properties.",
       "sha": "a044f2ca42fd",
-      "zh": ""
+      "zh": "线对象属性的完整列表见 Line Properties 一节。"
      }
     },
     {
@@ -3031,7 +3031,7 @@
      "t": {
       "en": "With no output arguments, the results are immediately plotted. With two output arguments, the 2-D plot data is returned. The data can subsequently be plotted manually with `plot (x, y)`.",
       "sha": "f9102124df69",
-      "zh": ""
+      "zh": "没有输出参数时，结果立即被绘制出来。有两个输出参数时，返回二维绘图数据，之后可以手动用 `plot (x, y)` 绘出。"
      }
     },
     {
@@ -3051,7 +3051,7 @@
      "t": {
       "en": "Programming Notes:",
       "sha": "edd71db6c3a8",
-      "zh": ""
+      "zh": "编程注记："
      }
     },
     {
@@ -3059,7 +3059,7 @@
      "t": {
       "en": "`fplot` works best with continuous functions. Functions with discontinuities are unlikely to plot well. This restriction may be removed in the future.",
       "sha": "198e3abf935b",
-      "zh": ""
+      "zh": "`fplot` 最适合连续函数。有间断点的函数很可能画不好。这一限制以后可能会取消。"
      }
     },
     {
@@ -3067,7 +3067,7 @@
      "t": {
       "en": "`fplot` performance is better when the function accepts and returns a vector argument. Consider this when writing user-defined functions and use element-by-element operators such as `.*`, `./`, etc.",
       "sha": "79e93974615f",
-      "zh": ""
+      "zh": "当函数接受并返回向量参数时，`fplot` 的性能更好。编写自定义函数时请考虑这一点，并使用 `.*`、`./` 等逐元素运算符。"
      }
     },
     {
@@ -3075,7 +3075,7 @@
      "t": {
       "en": "See also: `ezplot`, `plot`.",
       "sha": "70973ca260e0",
-      "zh": ""
+      "zh": "另见：`ezplot`、`plot`。"
      }
     }
    ]
@@ -3085,7 +3085,7 @@
    "t": {
     "en": "Other functions that can create two-dimensional plots directly from a function include `ezplot`, `ezcontour`, `ezcontourf` and `ezpolar`.",
     "sha": "a8374f8e987b",
-    "zh": ""
+    "zh": "其他可以直接根据函数创建二维图的函数有 `ezplot`、`ezcontour`、`ezcontourf` 和 `ezpolar`。"
    }
   },
   {
@@ -3106,7 +3106,7 @@
      "t": {
       "en": "Plot the 2-D curve defined by the function *f*.",
       "sha": "ee89fa300b1a",
-      "zh": ""
+      "zh": "绘制函数 *f* 所定义的二维曲线。"
      }
     },
     {
@@ -3114,7 +3114,7 @@
      "t": {
       "en": "The function *f* may be a string, inline function, or function handle and can have either one or two variables. If *f* has one variable, then the function is plotted over the domain `-2*pi < x < 2*pi` with 500 points.",
       "sha": "fd66f4e4d6eb",
-      "zh": ""
+      "zh": "函数 *f* 可以是字符串、内联函数或函数句柄，可以有一个或两个变量。如果 *f* 只有一个变量，则在定义域 `-2*pi < x < 2*pi` 上取 500 个点绘制。"
      }
     },
     {
@@ -3122,7 +3122,7 @@
      "t": {
       "en": "If *f2v* is a function of two variables then the implicit function `f(x,y) = 0` is calculated over the meshed domain `-2*pi <= x | y <= 2*pi` with 60 points in each dimension.",
       "sha": "c1c357aaae5c",
-      "zh": ""
+      "zh": "如果 *f2v* 是二元函数，则在网格化的定义域 `-2*pi <= x | y <= 2*pi` 上、每个维度取 60 个点，计算隐函数 `f(x,y) = 0`。"
      }
     },
     {
@@ -3130,7 +3130,7 @@
      "t": {
       "en": "For example:",
       "sha": "059c3e8cce26",
-      "zh": ""
+      "zh": "例如："
      }
     },
     {
@@ -3142,7 +3142,7 @@
      "t": {
       "en": "If two functions are passed as inputs then the parametric function",
       "sha": "80e0838cdde5",
-      "zh": ""
+      "zh": "如果传入两个函数作为输入，则参数方程"
      }
     },
     {
@@ -3154,7 +3154,7 @@
      "t": {
       "en": "is plotted over the domain `-2*pi <= t <= 2*pi` with 500 points.",
       "sha": "d83e1bbfff13",
-      "zh": ""
+      "zh": "在定义域 `-2*pi <= t <= 2*pi` 上取 500 个点绘制。"
      }
     },
     {
@@ -3162,7 +3162,7 @@
      "t": {
       "en": "If *dom* is a two element vector, it represents the minimum and maximum values of both *x* and *y*, or *t* for a parametric plot. If *dom* is a four element vector, then the minimum and maximum values are `[xmin xmax ymin ymax]`.",
       "sha": "6b1c1ec5f4ab",
-      "zh": ""
+      "zh": "如果 *dom* 是两元素向量，它表示 *x* 和 *y*（参数方程图则是 *t*）的最小值和最大值。如果 *dom* 是四元素向量，则最小值和最大值为 `[xmin xmax ymin ymax]`。"
      }
     },
     {
@@ -3170,7 +3170,7 @@
      "t": {
       "en": "*n* is a scalar defining the number of points to use in plotting the function.",
       "sha": "0ec3c6154192",
-      "zh": ""
+      "zh": "*n* 是标量，定义绘制函数时使用的点数。"
      }
     },
     {
@@ -3194,7 +3194,7 @@
      "t": {
       "en": "See also: `plot`, `ezplot3`, `ezpolar`, `ezcontour`, `ezcontourf`, `ezmesh`, `ezmeshc`, `ezsurf`, `ezsurfc`.",
       "sha": "68da66ce4b8a",
-      "zh": ""
+      "zh": "另见：`plot`、`ezplot3`、`ezpolar`、`ezcontour`、`ezcontourf`、`ezmesh`、`ezmeshc`、`ezsurf`、`ezsurfc`。"
      }
     }
    ]
@@ -3205,7 +3205,7 @@
    "t": {
     "en": "Three-Dimensional Plots",
     "sha": "8e74c3c69d45",
-    "zh": ""
+    "zh": "三维图形"
    }
   },
   {
@@ -3213,7 +3213,7 @@
    "t": {
     "en": "The function `mesh` produces mesh surface plots. For example,",
     "sha": "97a4b242b211",
-    "zh": ""
+    "zh": "`mesh` 函数生成网格曲面图。例如，"
    }
   },
   {
@@ -3225,7 +3225,7 @@
    "t": {
     "en": "produces the familiar “sombrero” plot shown in fig:mesh. Note the use of the function `meshgrid` to create matrices of X and Y coordinates to use for plotting the Z data. The `ndgrid` function is similar to `meshgrid`, but works for N-dimensional matrices.",
     "sha": "7a1413c733e7",
-    "zh": ""
+    "zh": "生成我们熟悉的“墨西哥草帽”图，如图 fig:mesh 所示。注意这里用 `meshgrid` 函数生成了 X 和 Y 坐标的矩阵，用来绘制 Z 数据。`ndgrid` 函数与 `meshgrid` 类似，但适用于 N 维矩阵。"
    }
   },
   {
@@ -3233,7 +3233,7 @@
    "t": {
     "en": "The `meshc` function is similar to `mesh`, but also produces a plot of contours for the surface.",
     "sha": "a03407d71ac3",
-    "zh": ""
+    "zh": "`meshc` 函数与 `mesh` 类似，但同时还绘出曲面的等高线。"
    }
   },
   {
@@ -3241,7 +3241,7 @@
    "t": {
     "en": "The `plot3` function displays arbitrary three-dimensional data, without requiring it to form a surface. For example,",
     "sha": "301255117e7f",
-    "zh": ""
+    "zh": "`plot3` 函数显示任意的三维数据，数据不必构成一个曲面。例如，"
    }
   },
   {
@@ -3253,7 +3253,7 @@
    "t": {
     "en": "displays the spiral in three dimensions shown in fig:plot3.",
     "sha": "7e388260ce1a",
-    "zh": ""
+    "zh": "显示如图 fig:plot3 所示的三维螺旋线。"
    }
   },
   {
@@ -3261,7 +3261,7 @@
    "t": {
     "en": "Finally, the `view` function changes the viewpoint for three-dimensional plots.",
     "sha": "e48a312880c9",
-    "zh": ""
+    "zh": "最后，`view` 函数改变三维图形的观察视角。"
    }
   },
   {
@@ -3281,7 +3281,7 @@
      "t": {
       "en": "Plot a 3-D wireframe mesh.",
       "sha": "3343a1c5bbc3",
-      "zh": ""
+      "zh": "绘制三维线框网格图。"
      }
     },
     {
@@ -3289,7 +3289,7 @@
      "t": {
       "en": "The wireframe mesh is plotted using rectangles. The vertices of the rectangles [*x*, *y*] are typically the output of `meshgrid`. over a 2-D rectangular region in the x-y plane. *z* determines the height above the plane of each vertex. If only a single *z* matrix is given, then it is plotted over the meshgrid `x = 1:columns (z), y = 1:rows (z)`. Thus, columns of *z* correspond to different *x* values and rows of *z* correspond to different *y* values.",
       "sha": "7b0fbb34e2a1",
-      "zh": ""
+      "zh": "线框网格由若干矩形绘制而成。矩形的顶点 [*x*, *y*] 通常是 `meshgrid` 的输出，分布在 x-y 平面上的二维矩形区域内。*z* 决定每个顶点高出该平面的高度。如果只给出一个 *z* 矩阵，则在网格 `x = 1:columns (z), y = 1:rows (z)` 上绘制。因此，*z* 的各列对应不同的 *x* 值，各行对应不同的 *y* 值。"
      }
     },
     {
@@ -3297,7 +3297,7 @@
      "t": {
       "en": "The color of the mesh is computed by linearly scaling the *z* values to fit the range of the current colormap. Use `caxis` and/or change the colormap to control the appearance.",
       "sha": "8563f3c7952d",
-      "zh": ""
+      "zh": "网格的颜色通过把 *z* 值线性缩放到当前色图的范围内得到。可以使用 `caxis` 和/或更换色图来控制外观。"
      }
     },
     {
@@ -3305,7 +3305,7 @@
      "t": {
       "en": "Optionally, the color of the mesh can be specified independently of *z* by supplying a color matrix, *c*.",
       "sha": "5e94c3461937",
-      "zh": ""
+      "zh": "也可以通过提供颜色矩阵 *c*，让网格的颜色独立于 *z* 来指定。"
      }
     },
     {
@@ -3313,7 +3313,7 @@
      "t": {
       "en": "Any property/value pairs are passed directly to the underlying surface object. The full list of properties is documented at Surface Properties.",
       "sha": "9d355b4badf6",
-      "zh": ""
+      "zh": "任何属性/值对都会直接传给底层的曲面对象。完整的属性列表见 Surface Properties 一节。"
      }
     },
     {
@@ -3329,7 +3329,7 @@
      "t": {
       "en": "The optional return value *h* is a graphics handle to the created surface object.",
       "sha": "7a0f724a05e7",
-      "zh": ""
+      "zh": "可选的返回值 *h* 是所创建曲面对象的图形句柄。"
      }
     },
     {
@@ -3337,7 +3337,7 @@
      "t": {
       "en": "See also: `ezmesh`, `meshc`, `meshz`, `trimesh`, `contour`, `surf`, `surface`, `meshgrid`, `hidden`, `shading`, `colormap`, `caxis`.",
       "sha": "a444bbda8b71",
-      "zh": ""
+      "zh": "另见：`ezmesh`、`meshc`、`meshz`、`trimesh`、`contour`、`surf`、`surface`、`meshgrid`、`hidden`、`shading`、`colormap`、`caxis`。"
      }
     }
    ]
@@ -3359,7 +3359,7 @@
      "t": {
       "en": "Plot a 3-D wireframe mesh with underlying contour lines.",
       "sha": "65d5762daffc",
-      "zh": ""
+      "zh": "绘制带有底部等高线的三维线框网格图。"
      }
     },
     {
@@ -3367,7 +3367,7 @@
      "t": {
       "en": "The wireframe mesh is plotted using rectangles. The vertices of the rectangles [*x*, *y*] are typically the output of `meshgrid`. over a 2-D rectangular region in the x-y plane. *z* determines the height above the plane of each vertex. If only a single *z* matrix is given, then it is plotted over the meshgrid `x = 1:columns (z), y = 1:rows (z)`. Thus, columns of *z* correspond to different *x* values and rows of *z* correspond to different *y* values.",
       "sha": "7b0fbb34e2a1",
-      "zh": ""
+      "zh": "线框网格由若干矩形绘制而成。矩形的顶点 [*x*, *y*] 通常是 `meshgrid` 的输出，分布在 x-y 平面上的二维矩形区域内。*z* 决定每个顶点高出该平面的高度。如果只给出一个 *z* 矩阵，则在网格 `x = 1:columns (z), y = 1:rows (z)` 上绘制。因此，*z* 的各列对应不同的 *x* 值，各行对应不同的 *y* 值。"
      }
     },
     {
@@ -3375,7 +3375,7 @@
      "t": {
       "en": "The color of the mesh is computed by linearly scaling the *z* values to fit the range of the current colormap. Use `caxis` and/or change the colormap to control the appearance.",
       "sha": "8563f3c7952d",
-      "zh": ""
+      "zh": "网格的颜色通过把 *z* 值线性缩放到当前色图的范围内得到。可以使用 `caxis` 和/或更换色图来控制外观。"
      }
     },
     {
@@ -3383,7 +3383,7 @@
      "t": {
       "en": "Optionally the color of the mesh can be specified independently of *z* by supplying a color matrix, *c*.",
       "sha": "11b148c43522",
-      "zh": ""
+      "zh": "也可以通过提供颜色矩阵 *c*，让网格的颜色独立于 *z* 来指定。"
      }
     },
     {
@@ -3391,7 +3391,7 @@
      "t": {
       "en": "Any property/value pairs are passed directly to the underlying surface object. The full list of properties is documented at Surface Properties.",
       "sha": "9d355b4badf6",
-      "zh": ""
+      "zh": "任何属性/值对都会直接传给底层的曲面对象。完整的属性列表见 Surface Properties 一节。"
      }
     },
     {
@@ -3407,7 +3407,7 @@
      "t": {
       "en": "The optional return value *h* is a 2-element vector with a graphics handle to the created surface object and to the created contour plot.",
       "sha": "11ac52e92b66",
-      "zh": ""
+      "zh": "可选的返回值 *h* 是一个 2 元素向量，分别是所创建曲面对象和所创建等高线图的图形句柄。"
      }
     },
     {
@@ -3415,7 +3415,7 @@
      "t": {
       "en": "See also: `ezmeshc`, `mesh`, `meshz`, `contour`, `surfc`, `surface`, `meshgrid`, `hidden`, `shading`, `colormap`, `caxis`.",
       "sha": "557a77e955b6",
-      "zh": ""
+      "zh": "另见：`ezmeshc`、`mesh`、`meshz`、`contour`、`surfc`、`surface`、`meshgrid`、`hidden`、`shading`、`colormap`、`caxis`。"
      }
     }
    ]
@@ -3437,7 +3437,7 @@
      "t": {
       "en": "Plot a 3-D surface mesh.",
       "sha": "b4dd9d8e0e59",
-      "zh": ""
+      "zh": "绘制三维曲面网格图。"
      }
     },
     {
@@ -3445,7 +3445,7 @@
      "t": {
       "en": "The surface mesh is plotted using shaded rectangles. The vertices of the rectangles [*x*, *y*] are typically the output of `meshgrid`. over a 2-D rectangular region in the x-y plane. *z* determines the height above the plane of each vertex. If only a single *z* matrix is given, then it is plotted over the meshgrid `x = 1:columns (z), y = 1:rows (z)`. Thus, columns of *z* correspond to different *x* values and rows of *z* correspond to different *y* values.",
       "sha": "3083b7f70ac4",
-      "zh": ""
+      "zh": "曲面网格由带阴影的矩形绘制而成。矩形的顶点 [*x*, *y*] 通常是 `meshgrid` 的输出，分布在 x-y 平面上的二维矩形区域内。*z* 决定每个顶点高出该平面的高度。如果只给出一个 *z* 矩阵，则在网格 `x = 1:columns (z), y = 1:rows (z)` 上绘制。因此，*z* 的各列对应不同的 *x* 值，各行对应不同的 *y* 值。"
      }
     },
     {
@@ -3453,7 +3453,7 @@
      "t": {
       "en": "The color of the surface is computed by linearly scaling the *z* values to fit the range of the current colormap. Use `caxis` and/or change the colormap to control the appearance.",
       "sha": "e18e91d8ec82",
-      "zh": ""
+      "zh": "曲面的颜色通过把 *z* 值线性缩放到当前色图的范围内得到。可以使用 `caxis` 和/或更换色图来控制外观。"
      }
     },
     {
@@ -3461,7 +3461,7 @@
      "t": {
       "en": "Optionally, the color of the surface can be specified independently of *z* by supplying a color matrix, *c*.",
       "sha": "0ddfc62d9194",
-      "zh": ""
+      "zh": "也可以通过提供颜色矩阵 *c*，让曲面的颜色独立于 *z* 来指定。"
      }
     },
     {
@@ -3469,7 +3469,7 @@
      "t": {
       "en": "Any property/value pairs are passed directly to the underlying surface object. The full list of properties is documented at Surface Properties.",
       "sha": "9d355b4badf6",
-      "zh": ""
+      "zh": "任何属性/值对都会直接传给底层的曲面对象。完整的属性列表见 Surface Properties 一节。"
      }
     },
     {
@@ -3485,7 +3485,7 @@
      "t": {
       "en": "The optional return value *h* is a graphics handle to the created surface object.",
       "sha": "7a0f724a05e7",
-      "zh": ""
+      "zh": "可选的返回值 *h* 是所创建曲面对象的图形句柄。"
      }
     },
     {
@@ -3493,7 +3493,7 @@
      "t": {
       "en": "Note: The exact appearance of the surface can be controlled with the `shading` command or by using `set` to control surface object properties. See also: `ezsurf`, `surfc`, `surfl`, `surfnorm`, `trisurf`, `contour`, `mesh`, `surface`, `meshgrid`, `hidden`, `shading`, `colormap`, `caxis`.",
       "sha": "1c658c4c0cb4",
-      "zh": ""
+      "zh": "注：曲面的具体外观可以用 `shading` 命令控制，也可以用 `set` 设置曲面对象的属性来控制。另见：`ezsurf`、`surfc`、`surfl`、`surfnorm`、`trisurf`、`contour`、`mesh`、`surface`、`meshgrid`、`hidden`、`shading`、`colormap`、`caxis`。"
      }
     }
    ]
@@ -3515,7 +3515,7 @@
      "t": {
       "en": "Plot a 3-D surface mesh with underlying contour lines.",
       "sha": "eef16a1d0a0b",
-      "zh": ""
+      "zh": "绘制带有底部等高线的三维曲面网格图。"
      }
     },
     {
@@ -3523,7 +3523,7 @@
      "t": {
       "en": "The surface mesh is plotted using shaded rectangles. The vertices of the rectangles [*x*, *y*] are typically the output of `meshgrid`. over a 2-D rectangular region in the x-y plane. *z* determines the height above the plane of each vertex. If only a single *z* matrix is given, then it is plotted over the meshgrid `x = 1:columns (z), y = 1:rows (z)`. Thus, columns of *z* correspond to different *x* values and rows of *z* correspond to different *y* values.",
       "sha": "3083b7f70ac4",
-      "zh": ""
+      "zh": "曲面网格由带阴影的矩形绘制而成。矩形的顶点 [*x*, *y*] 通常是 `meshgrid` 的输出，分布在 x-y 平面上的二维矩形区域内。*z* 决定每个顶点高出该平面的高度。如果只给出一个 *z* 矩阵，则在网格 `x = 1:columns (z), y = 1:rows (z)` 上绘制。因此，*z* 的各列对应不同的 *x* 值，各行对应不同的 *y* 值。"
      }
     },
     {
@@ -3531,7 +3531,7 @@
      "t": {
       "en": "The color of the surface is computed by linearly scaling the *z* values to fit the range of the current colormap. Use `caxis` and/or change the colormap to control the appearance.",
       "sha": "e18e91d8ec82",
-      "zh": ""
+      "zh": "曲面的颜色通过把 *z* 值线性缩放到当前色图的范围内得到。可以使用 `caxis` 和/或更换色图来控制外观。"
      }
     },
     {
@@ -3539,7 +3539,7 @@
      "t": {
       "en": "Optionally, the color of the surface can be specified independently of *z* by supplying a color matrix, *c*.",
       "sha": "0ddfc62d9194",
-      "zh": ""
+      "zh": "也可以通过提供颜色矩阵 *c*，让曲面的颜色独立于 *z* 来指定。"
      }
     },
     {
@@ -3547,7 +3547,7 @@
      "t": {
       "en": "Any property/value pairs are passed directly to the underlying surface object. The full list of properties is documented at Surface Properties.",
       "sha": "9d355b4badf6",
-      "zh": ""
+      "zh": "任何属性/值对都会直接传给底层的曲面对象。完整的属性列表见 Surface Properties 一节。"
      }
     },
     {
@@ -3563,7 +3563,7 @@
      "t": {
       "en": "The optional return value *h* is a graphics handle to the created surface object.",
       "sha": "7a0f724a05e7",
-      "zh": ""
+      "zh": "可选的返回值 *h* 是所创建曲面对象的图形句柄。"
      }
     },
     {
@@ -3571,7 +3571,7 @@
      "t": {
       "en": "Note: The exact appearance of the surface can be controlled with the `shading` command or by using `set` to control surface object properties. See also: `ezsurfc`, `surf`, `surfl`, `surfnorm`, `trisurf`, `contour`, `mesh`, `surface`, `meshgrid`, `hidden`, `shading`, `colormap`, `caxis`.",
       "sha": "d2e7abafa66f",
-      "zh": ""
+      "zh": "注：曲面的具体外观可以用 `shading` 命令控制，也可以用 `set` 设置曲面对象的属性来控制。另见：`ezsurfc`、`surf`、`surfl`、`surfnorm`、`trisurf`、`contour`、`mesh`、`surface`、`meshgrid`、`hidden`、`shading`、`colormap`、`caxis`。"
      }
     }
    ]
@@ -3591,7 +3591,7 @@
      "t": {
       "en": "Given vectors of *x* and *y* coordinates, return matrices *xx* and *yy* corresponding to a full 2-D grid.",
       "sha": "621be8301a63",
-      "zh": ""
+      "zh": "给定 *x* 和 *y* 坐标的向量，返回对应于完整二维网格的矩阵 *xx* 和 *yy*。"
      }
     },
     {
@@ -3599,7 +3599,7 @@
      "t": {
       "en": "The rows of *xx* are copies of *x*, and the columns of *yy* are copies of *y*. If *y* is omitted, then it is assumed to be the same as *x*.",
       "sha": "a7768d5458ca",
-      "zh": ""
+      "zh": "*xx* 的每一行都是 *x* 的拷贝，*yy* 的每一列都是 *y* 的拷贝。如果省略 *y*，则假定它与 *x* 相同。"
      }
     },
     {
@@ -3607,7 +3607,7 @@
      "t": {
       "en": "If the optional *z* input is given, or *zz* is requested, then the output will be a full 3-D grid. If *z* is omitted and *zz* is requested, it is assumed to be the same as *y*.",
       "sha": "42a754b1f903",
-      "zh": ""
+      "zh": "如果给出可选的 *z* 输入，或者要求输出 *zz*，则输出是完整的三维网格。如果省略 *z* 而要求输出 *zz*，则假定 *z* 与 *y* 相同。"
      }
     },
     {
@@ -3615,7 +3615,7 @@
      "t": {
       "en": "`meshgrid` is most frequently used to produce input for a 2-D or 3-D function that will be plotted. The following example creates a surface plot of the “sombrero” function.",
       "sha": "12046c60c1e4",
-      "zh": ""
+      "zh": "`meshgrid` 最常用来为将要绘制的二维或三维函数生成输入。下面的例子创建“墨西哥草帽”函数的曲面图。"
      }
     },
     {
@@ -3627,7 +3627,7 @@
      "t": {
       "en": "Programming Note: `meshgrid` is restricted to 2-D or 3-D grid generation. The `ndgrid` function will generate 1-D through N-D grids. However, the functions are not completely equivalent. If *x* is a vector of length M and *y* is a vector of length N, then `meshgrid` will produce an output grid which is NxM. `ndgrid` will produce an output which is MxN (transpose) for the same input. Some core functions expect `meshgrid` input and others expect `ndgrid` input. Check the documentation for the function in question to determine the proper input format. See also: `ndgrid`, `mesh`, `contour`, `surf`.",
       "sha": "632bc20c92e0",
-      "zh": ""
+      "zh": "编程注记：`meshgrid` 只能生成二维或三维网格，而 `ndgrid` 函数可以生成一维到 N 维的网格。但这两个函数并不完全等价。如果 *x* 是长度为 M 的向量，*y* 是长度为 N 的向量，则 `meshgrid` 输出的网格是 NxM 的，而对同样的输入，`ndgrid` 输出的是 MxN 的（即转置）。一些核心函数期望 `meshgrid` 形式的输入，另一些则期望 `ndgrid` 形式的输入，请查阅相关函数的文档，确定正确的输入格式。另见：`ndgrid`、`mesh`、`contour`、`surf`。"
      }
     }
    ]
@@ -3650,7 +3650,7 @@
      "t": {
       "en": "Produce 3-D plots.",
       "sha": "06ff2d49cacf",
-      "zh": ""
+      "zh": "绘制三维图。"
      }
     },
     {
@@ -3670,7 +3670,7 @@
      "t": {
       "en": "in which the arguments are taken to be the vertices of the points to be plotted in three dimensions. If all arguments are vectors of the same length, then a single continuous line is drawn. If all arguments are matrices, then each column of is treated as a separate line. No attempt is made to transpose the arguments to make the number of rows match.",
       "sha": "431a0f240629",
-      "zh": ""
+      "zh": "其中的参数被当作要在三维空间中绘制的点的坐标。如果所有参数都是等长的向量，则画出一条连续的线。如果所有参数都是矩阵，则每一列被当作一条单独的线。Octave 不会为了让行数匹配而去转置参数。"
      }
     },
     {
@@ -3678,7 +3678,7 @@
      "t": {
       "en": "If only two arguments are given, as",
       "sha": "ddbee24e6f03",
-      "zh": ""
+      "zh": "如果只给出两个参数，形如"
      }
     },
     {
@@ -3690,7 +3690,7 @@
      "t": {
       "en": "the real and imaginary parts of the second argument are used as the *y* and *z* coordinates, respectively.",
       "sha": "a1e0154a60b2",
-      "zh": ""
+      "zh": "则第二个参数的实部和虚部分别用作 *y* 坐标和 *z* 坐标。"
      }
     },
     {
@@ -3698,7 +3698,7 @@
      "t": {
       "en": "If only one argument is given, as",
       "sha": "e0fedf41c8b4",
-      "zh": ""
+      "zh": "如果只给出一个参数，形如"
      }
     },
     {
@@ -3710,7 +3710,7 @@
      "t": {
       "en": "the real and imaginary parts of the argument are used as the *y* and *z* values, and they are plotted versus their index.",
       "sha": "ce7c7e307fdb",
-      "zh": ""
+      "zh": "则该参数的实部和虚部分别用作 *y* 值和 *z* 值，并以它们的下标为横坐标进行绘制。"
      }
     },
     {
@@ -3718,7 +3718,7 @@
      "t": {
       "en": "Arguments may also be given in groups of three as",
       "sha": "f61143896c17",
-      "zh": ""
+      "zh": "参数也可以三个一组地给出，形如"
      }
     },
     {
@@ -3730,7 +3730,7 @@
      "t": {
       "en": "in which each set of three arguments is treated as a separate line or set of lines in three dimensions.",
       "sha": "5117d7e14fdc",
-      "zh": ""
+      "zh": "其中每一组三个参数被当作三维空间中单独的一条线或一组线。"
      }
     },
     {
@@ -3738,7 +3738,7 @@
      "t": {
       "en": "To plot multiple one- or two-argument groups, separate each group with an empty format string, as",
       "sha": "69e67b694a9e",
-      "zh": ""
+      "zh": "要绘制多组单参数或双参数的组合，用空的格式字符串分隔每一组，形如"
      }
     },
     {
@@ -3750,7 +3750,7 @@
      "t": {
       "en": "Multiple property-value pairs may be specified which will affect the line objects drawn by `plot3`. If the *fmt* argument is supplied it will format the line objects in the same manner as `plot`. The full list of properties is documented at Line Properties.",
       "sha": "a6d60d90ccc5",
-      "zh": ""
+      "zh": "可以指定多组属性–值对，它们会影响 `plot3` 所画出的线对象。如果提供了 *fmt* 参数，它会像在 `plot` 中一样设置线对象的格式。完整的属性列表见 Line Properties 一节。"
      }
     },
     {
@@ -3786,7 +3786,7 @@
      "t": {
       "en": "See also: `ezplot3`, `plot`.",
       "sha": "ff47ed4ffb4f",
-      "zh": ""
+      "zh": "另见：`ezplot3`、`plot`。"
      }
     }
    ]
@@ -3809,7 +3809,7 @@
      "t": {
       "en": "Query or set the viewpoint for the current axes.",
       "sha": "2a91e73cbcfa",
-      "zh": ""
+      "zh": "查询或设置当前坐标轴的观察视角。"
      }
     },
     {
@@ -3817,7 +3817,7 @@
      "t": {
       "en": "The parameters *azimuth* and *elevation* can be given as two arguments or as 2-element vector. The viewpoint can also be specified with Cartesian coordinates *x*, *y*, and *z*.",
       "sha": "897adb40c91d",
-      "zh": ""
+      "zh": "参数 *azimuth*（方位角）和 *elevation*（仰角）可以作为两个参数给出，也可以作为一个 2 元素向量给出。观察视角也可以用笛卡儿坐标 *x*、*y* 和 *z* 指定。"
      }
     },
     {
@@ -3825,7 +3825,7 @@
      "t": {
       "en": "The call `view (2)` sets the viewpoint to *azimuth* = 0 and *elevation* = 90, which is the default for 2-D graphs.",
       "sha": "30282b72228a",
-      "zh": ""
+      "zh": "调用 `view (2)` 把视角设为 *azimuth* = 0、*elevation* = 90，这是二维图的默认值。"
      }
     },
     {
@@ -3833,7 +3833,7 @@
      "t": {
       "en": "The call `view (3)` sets the viewpoint to *azimuth* = -37.5 and *elevation* = 30, which is the default for 3-D graphs.",
       "sha": "48ad15eeae45",
-      "zh": ""
+      "zh": "调用 `view (3)` 把视角设为 *azimuth* = -37.5、*elevation* = 30，这是三维图的默认值。"
      }
     },
     {
@@ -3841,7 +3841,7 @@
      "t": {
       "en": "If the first argument *hax* is an axes handle, then operate on this axes rather than the current axes returned by `gca`.",
       "sha": "aa8a8c64962d",
-      "zh": ""
+      "zh": "如果第一个参数 *hax* 是坐标轴句柄，则作用于这个坐标轴，而不是 `gca` 返回的当前坐标轴。"
      }
     },
     {
@@ -3849,7 +3849,7 @@
      "t": {
       "en": "If no inputs are given, return the current *azimuth* and *elevation*.",
       "sha": "a89dd7ee71af",
-      "zh": ""
+      "zh": "如果没有给出输入，则返回当前的 *azimuth* 和 *elevation*。"
      }
     }
    ]
@@ -3873,7 +3873,7 @@
      "t": {
       "en": "Draw a 3-D scatter plot.",
       "sha": "5e3dd364aeeb",
-      "zh": ""
+      "zh": "绘制三维散点图。"
      }
     },
     {
@@ -3881,7 +3881,7 @@
      "t": {
       "en": "A marker is plotted at each point defined by the coordinates in the vectors *x*, *y*, and *z*.",
       "sha": "50c3e7424734",
-      "zh": ""
+      "zh": "在向量 *x*、*y* 和 *z* 的坐标所确定的每个点处绘制一个标记。"
      }
     },
     {
@@ -3889,7 +3889,7 @@
      "t": {
       "en": "The size of the markers is determined by *s*, which can be a scalar or a vector of the same length as *x*, *y*, and *z*. If *s* is not given, or is an empty matrix, then a default value of 8 points is used.",
       "sha": "9c9ac034367e",
-      "zh": ""
+      "zh": "标记的大小由 *s* 决定，它可以是标量，也可以是与 *x*、*y*、*z* 等长的向量。如果没有给出 *s*，或 *s* 是空矩阵，则使用默认值 8 点。"
      }
     },
     {
@@ -3905,7 +3905,7 @@
      "t": {
       "en": "The marker to use can be changed with the *style* argument, that is a string defining a marker in the same manner as the `plot` command. If no marker is specified it defaults to `\"o\"` or circles. If the argument `\"filled\"` is given then the markers are filled.",
       "sha": "3de06e7eb0bc",
-      "zh": ""
+      "zh": "使用的标记可以通过 *style* 参数修改，它是定义标记的字符串，写法与 `plot` 命令相同。如果没有指定标记，默认为 `\"o\"`，即圆圈。如果给出 `\"filled\"` 参数，则标记会被填充。"
      }
     },
     {
@@ -3921,7 +3921,7 @@
      "t": {
       "en": "The optional return value *h* is a graphics handle to the scatter object representing the points.",
       "sha": "8772360bd746",
-      "zh": ""
+      "zh": "可选的返回值 *h* 是表示这些点的散点对象的图形句柄。"
      }
     },
     {
@@ -3933,7 +3933,7 @@
      "t": {
       "en": "Programming Note: The full list of properties is documented at Scatter Properties. See also: `scatter`, `patch`, `plot`.",
       "sha": "2231d63bbb00",
-      "zh": ""
+      "zh": "编程注记：完整的属性列表见 Scatter Properties 一节。另见：`scatter`、`patch`、`plot`。"
      }
     }
    ]
@@ -3955,7 +3955,7 @@
      "t": {
       "en": "Plot a 3-D waterfall plot.",
       "sha": "7cc0160a9937",
-      "zh": ""
+      "zh": "绘制三维瀑布图。"
      }
     },
     {
@@ -3963,7 +3963,7 @@
      "t": {
       "en": "A waterfall plot is similar to a `meshz` plot except only mesh lines for the rows of *z* (x-values) are shown.",
       "sha": "cd38eea8b9b7",
-      "zh": ""
+      "zh": "瀑布图与 `meshz` 图类似，只是只显示 *z* 的行（x 值方向）对应的网格线。"
      }
     },
     {
@@ -3971,7 +3971,7 @@
      "t": {
       "en": "The wireframe mesh is plotted using rectangles. The vertices of the rectangles [*x*, *y*] are typically the output of `meshgrid`. over a 2-D rectangular region in the x-y plane. *z* determines the height above the plane of each vertex. If only a single *z* matrix is given, then it is plotted over the meshgrid `x = 1:columns (z), y = 1:rows (z)`. Thus, columns of *z* correspond to different *x* values and rows of *z* correspond to different *y* values.",
       "sha": "7b0fbb34e2a1",
-      "zh": ""
+      "zh": "线框网格由若干矩形绘制而成。矩形的顶点 [*x*, *y*] 通常是 `meshgrid` 的输出，分布在 x-y 平面上的二维矩形区域内。*z* 决定每个顶点高出该平面的高度。如果只给出一个 *z* 矩阵，则在网格 `x = 1:columns (z), y = 1:rows (z)` 上绘制。因此，*z* 的各列对应不同的 *x* 值，各行对应不同的 *y* 值。"
      }
     },
     {
@@ -3979,7 +3979,7 @@
      "t": {
       "en": "The color of the mesh is computed by linearly scaling the *z* values to fit the range of the current colormap. Use `caxis` and/or change the colormap to control the appearance.",
       "sha": "8563f3c7952d",
-      "zh": ""
+      "zh": "网格的颜色通过把 *z* 值线性缩放到当前色图的范围内得到。可以使用 `caxis` 和/或更换色图来控制外观。"
      }
     },
     {
@@ -3987,7 +3987,7 @@
      "t": {
       "en": "Optionally the color of the mesh can be specified independently of *z* by supplying a color matrix, *c*.",
       "sha": "11b148c43522",
-      "zh": ""
+      "zh": "也可以通过提供颜色矩阵 *c*，让网格的颜色独立于 *z* 来指定。"
      }
     },
     {
@@ -3995,7 +3995,7 @@
      "t": {
       "en": "Any property/value pairs are passed directly to the underlying surface object. The full list of properties is documented at Surface Properties.",
       "sha": "9d355b4badf6",
-      "zh": ""
+      "zh": "任何属性/值对都会直接传给底层的曲面对象。完整的属性列表见 Surface Properties 一节。"
      }
     },
     {
@@ -4011,7 +4011,7 @@
      "t": {
       "en": "The optional return value *h* is a graphics handle to the created surface object.",
       "sha": "7a0f724a05e7",
-      "zh": ""
+      "zh": "可选的返回值 *h* 是所创建曲面对象的图形句柄。"
      }
     },
     {
@@ -4019,7 +4019,7 @@
      "t": {
       "en": "See also: `meshz`, `mesh`, `meshc`, `contour`, `surf`, `surface`, `ribbon`, `meshgrid`, `hidden`, `shading`, `colormap`, `caxis`.",
       "sha": "12dcd06a6f34",
-      "zh": ""
+      "zh": "另见：`meshz`、`mesh`、`meshc`、`contour`、`surf`、`surface`、`ribbon`、`meshgrid`、`hidden`、`shading`、`colormap`、`caxis`。"
      }
     }
    ]
@@ -4030,7 +4030,7 @@
    "t": {
     "en": "Aspect Ratio",
     "sha": "531353464a67",
-    "zh": ""
+    "zh": "纵横比"
    }
   },
   {
@@ -4038,7 +4038,7 @@
    "t": {
     "en": "For three-dimensional plots the aspect ratio can be set for data with `daspect` and for the plot box with `pbaspect`. See Axis Configuration, for controlling the x-, y-, and z-limits for plotting.",
     "sha": "2d66fe63d5a8",
-    "zh": ""
+    "zh": "对于三维图形，数据的纵横比可以用 `daspect` 设置，绘图框的纵横比可以用 `pbaspect` 设置。如何控制绘图时 x、y、z 的范围，见 Axis Configuration 一节。"
    }
   },
   {
@@ -4047,7 +4047,7 @@
    "t": {
     "en": "Plot Annotations",
     "sha": "f193b2242b67",
-    "zh": ""
+    "zh": "图形标注"
    }
   },
   {
@@ -4055,7 +4055,7 @@
    "t": {
     "en": "You can add titles, axis labels, legends, and arbitrary text to an existing plot. For example:",
     "sha": "dcf315fc6234",
-    "zh": ""
+    "zh": "你可以给已有的图形添加标题、坐标轴标签、图例和任意文字。例如："
    }
   },
   {
@@ -4067,7 +4067,7 @@
    "t": {
     "en": "The functions `grid` and `box` may also be used to add grid and border lines to the plot. By default, the grid is off and the border lines are on.",
     "sha": "81d5a25cbd7b",
-    "zh": ""
+    "zh": "`grid` 和 `box` 函数也可用来给图形添加网格线和边框线。默认情况下，网格线关闭，边框线打开。"
    }
   },
   {
@@ -4075,7 +4075,7 @@
    "t": {
     "en": "Finally, arrows, text and rectangular or elliptic boxes can be added to highlight parts of a plot using the `annotation` function. Those objects are drawn in an invisible axes, on top of every other axes.",
     "sha": "4484e183648e",
-    "zh": ""
+    "zh": "最后，可以用 `annotation` 函数添加箭头、文字以及矩形或椭圆形的框，用来突出图形的某些部分。这些对象画在一个不可见的坐标轴中，位于所有其他坐标轴之上。"
    }
   },
   {
@@ -4093,7 +4093,7 @@
      "t": {
       "en": "Specify the string used as a title for the current axis.",
       "sha": "949bdf5bfc16",
-      "zh": ""
+      "zh": "指定用作当前坐标轴标题的字符串。"
      }
     },
     {
@@ -4101,7 +4101,7 @@
      "t": {
       "en": "An optional list of *property*/*value* pairs can be used to change the appearance of the created title text object.",
       "sha": "a978cdd4ed3d",
-      "zh": ""
+      "zh": "可以用一个可选的 *property*/*value* 属性–值对列表来修改所创建标题文本对象的外观。"
      }
     },
     {
@@ -4109,7 +4109,7 @@
      "t": {
       "en": "If the first argument *hax* is an axes or legend handle, then add a title to this object, rather than the current axes returned by `gca`.",
       "sha": "769d2e955e0c",
-      "zh": ""
+      "zh": "如果第一个参数 *hax* 是坐标轴句柄或图例句柄，则为该对象添加标题，而不是为 `gca` 返回的当前坐标轴添加。"
      }
     },
     {
@@ -4117,7 +4117,7 @@
      "t": {
       "en": "The optional return value *h* is a graphics handle to the created text object. See also: `xlabel`, `ylabel`, `zlabel`, `text`.",
       "sha": "2387d9c7d4ef",
-      "zh": ""
+      "zh": "可选的返回值 *h* 是所创建文本对象的图形句柄。另见：`xlabel`、`ylabel`、`zlabel`、`text`。"
      }
     }
    ]
@@ -4144,7 +4144,7 @@
      "t": {
       "en": "Display a legend for the current axes using the specified strings as labels.",
       "sha": "c82c902fab6e",
-      "zh": ""
+      "zh": "用指定的字符串作为标签，为当前坐标轴显示图例。"
      }
     },
     {
@@ -4152,7 +4152,7 @@
      "t": {
       "en": "Legend entries may be specified as individual character string arguments, a character array, or a cell array of character strings. When label names might be confused with legend properties, or *command* arguments, the labels should be protected by specifying them as a cell array of strings.",
       "sha": "b85621929364",
-      "zh": ""
+      "zh": "图例条目可以指定为单独的字符串参数、字符数组或字符串元胞数组。当标签名可能与图例属性或 *command* 参数混淆时，应把标签写成字符串元胞数组来加以保护。"
      }
     },
     {
@@ -4160,7 +4160,7 @@
      "t": {
       "en": "If the first argument *hax* is an axes handle, then add a legend to this axes, rather than the current axes returned by `gca`.",
       "sha": "b2a786f54f1a",
-      "zh": ""
+      "zh": "如果第一个参数 *hax* 是坐标轴句柄，则为该坐标轴添加图例，而不是为 `gca` 返回的当前坐标轴添加。"
      }
     },
     {
@@ -4168,7 +4168,7 @@
      "t": {
       "en": "If the first argument *hleg* is a legend handle, then operate on this legend rather than the legend of the current axes.",
       "sha": "c6e45f17919c",
-      "zh": ""
+      "zh": "如果第一个参数 *hleg* 是图例句柄，则作用于这个图例，而不是当前坐标轴的图例。"
      }
     },
     {
@@ -4176,7 +4176,7 @@
      "t": {
       "en": "Legend labels are associated with the axes' children; The first label is assigned to the first object that was plotted in the axes, the second label to the next object plotted, etc. To label specific data objects, without labeling all objects, provide their graphic handles in the input *hobjs*.",
       "sha": "53680af2f905",
-      "zh": ""
+      "zh": "图例标签与坐标轴的子对象相对应：第一个标签分配给坐标轴中最先绘制的对象，第二个标签分配给接着绘制的对象，依此类推。如果只想给特定的数据对象加标签而不是所有对象，可在输入 *hobjs* 中给出它们的图形句柄。"
      }
     },
     {
@@ -4184,7 +4184,7 @@
      "t": {
       "en": "The following customizations are available using *command*:",
       "sha": "d99e05d3b1a6",
-      "zh": ""
+      "zh": "*command* 可以使用以下自定义选项："
      }
     },
     {
@@ -4194,7 +4194,7 @@
        "term": {
         "en": "`\"show\"`",
         "sha": "b8bc45a760ec",
-        "zh": ""
+        "zh": "`\"show\"`"
        },
        "blocks": [
         {
@@ -4202,7 +4202,7 @@
          "t": {
           "en": "Show legend on the plot",
           "sha": "92fe0f8337fd",
-          "zh": ""
+          "zh": "在图上显示图例"
          }
         }
        ]
@@ -4211,7 +4211,7 @@
        "term": {
         "en": "`\"hide\"`",
         "sha": "868daddf7610",
-        "zh": ""
+        "zh": "`\"hide\"`"
        },
        "blocks": [
         {
@@ -4219,7 +4219,7 @@
          "t": {
           "en": "Hide legend on the plot",
           "sha": "069726a914c8",
-          "zh": ""
+          "zh": "在图上隐藏图例"
          }
         }
        ]
@@ -4228,7 +4228,7 @@
        "term": {
         "en": "`\"toggle\"`",
         "sha": "34ab6ad171b8",
-        "zh": ""
+        "zh": "`\"toggle\"`"
        },
        "blocks": [
         {
@@ -4236,7 +4236,7 @@
          "t": {
           "en": "Toggle between `\"hide\"` and `\"show\"`",
           "sha": "1e512a388f79",
-          "zh": ""
+          "zh": "在 `\"hide\"` 与 `\"show\"` 之间切换"
          }
         }
        ]
@@ -4245,7 +4245,7 @@
        "term": {
         "en": "`\"boxon\"`",
         "sha": "b3395868794b",
-        "zh": ""
+        "zh": "`\"boxon\"`"
        },
        "blocks": [
         {
@@ -4253,7 +4253,7 @@
          "t": {
           "en": "Show a box around legend (default)",
           "sha": "e8aee5699bf4",
-          "zh": ""
+          "zh": "在图例周围显示边框（默认）"
          }
         }
        ]
@@ -4262,7 +4262,7 @@
        "term": {
         "en": "`\"boxoff\"`",
         "sha": "4d77e460e812",
-        "zh": ""
+        "zh": "`\"boxoff\"`"
        },
        "blocks": [
         {
@@ -4270,7 +4270,7 @@
          "t": {
           "en": "Hide the box around legend",
           "sha": "32c2c3628ea3",
-          "zh": ""
+          "zh": "隐藏图例周围的边框"
          }
         }
        ]
@@ -4279,7 +4279,7 @@
        "term": {
         "en": "`\"right\"`",
         "sha": "23c5c5c0ea85",
-        "zh": ""
+        "zh": "`\"right\"`"
        },
        "blocks": [
         {
@@ -4287,7 +4287,7 @@
          "t": {
           "en": "Place label text to the right of the keys (default)",
           "sha": "ee83118fd3fd",
-          "zh": ""
+          "zh": "把标签文字放在图例符号的右边（默认）"
          }
         }
        ]
@@ -4296,7 +4296,7 @@
        "term": {
         "en": "`\"left\"`",
         "sha": "c2145ea51bd0",
-        "zh": ""
+        "zh": "`\"left\"`"
        },
        "blocks": [
         {
@@ -4304,7 +4304,7 @@
          "t": {
           "en": "Place label text to the left of the keys",
           "sha": "c0cf541e51b3",
-          "zh": ""
+          "zh": "把标签文字放在图例符号的左边"
          }
         }
        ]
@@ -4321,7 +4321,7 @@
          "t": {
           "en": "Delete the legend object",
           "sha": "db84203631d3",
-          "zh": ""
+          "zh": "删除图例对象"
          }
         }
        ]
@@ -4333,7 +4333,7 @@
      "t": {
       "en": "The `legend` function creates a graphics object which has various properties that can be manipulated with `get`/`set`. Alternatively, properties can be set directly when calling `legend` by including *property*/*value* pairs. If using this calling form, the labels must be specified as a cell array of strings. Graphics object properties are documented in detail at Graphics Object Properties.",
       "sha": "499506af3bde",
-      "zh": ""
+      "zh": "`legend` 函数创建一个图形对象，它有多种可以用 `get`/`set` 操作的属性。另一种做法是在调用 `legend` 时直接包含 *property*/*value* 属性–值对来设置属性。如果采用这种调用形式，标签必须指定为字符串元胞数组。图形对象的属性详见 Graphics Object Properties 一节。"
      }
     },
     {
@@ -4341,7 +4341,7 @@
      "t": {
       "en": "Following is a subset of supported legend properties:",
       "sha": "6f907fe5ea19",
-      "zh": ""
+      "zh": "下面是所支持的图例属性的一个子集："
      }
     },
     {
@@ -4674,7 +4674,7 @@
      "t": {
       "en": "If the first argument *hax* is an axes handle, then operate on this axes rather than the current axes returned by `gca`.",
       "sha": "aa8a8c64962d",
-      "zh": ""
+      "zh": "如果第一个参数 *hax* 是坐标轴句柄，则作用于这个坐标轴，而不是 `gca` 返回的当前坐标轴。"
      }
     },
     {
@@ -4811,7 +4811,7 @@
      "t": {
       "en": "If the first argument *hax* is an axes handle, then operate on this axes rather than the current axes returned by `gca`.",
       "sha": "aa8a8c64962d",
-      "zh": ""
+      "zh": "如果第一个参数 *hax* 是坐标轴句柄，则作用于这个坐标轴，而不是 `gca` 返回的当前坐标轴。"
      }
     },
     {

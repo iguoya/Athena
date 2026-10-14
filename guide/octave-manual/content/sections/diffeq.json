@@ -7,7 +7,7 @@
    "t": {
     "en": "Octave has built-in functions for solving ordinary differential equations (ODEs), and differential-algebraic equations (DAEs).",
     "sha": "909e5ed3f4bf",
-    "zh": ""
+    "zh": "Octave 内置了求解常微分方程（ODE）和微分代数方程（DAE）的函数。"
    }
   },
   {
@@ -16,7 +16,7 @@
    "t": {
     "en": "Ordinary Differential Equations",
     "sha": "65f83ada4b52",
-    "zh": ""
+    "zh": "常微分方程"
    }
   },
   {
@@ -24,7 +24,7 @@
    "t": {
     "en": "The function `lsode` can be used to solve ODEs of the form",
     "sha": "2b9128c670a1",
-    "zh": ""
+    "zh": "函数 `lsode` 可以用来求解如下形式的常微分方程组"
    }
   },
   {
@@ -36,7 +36,7 @@
    "t": {
     "en": "using Hindmarsh's ODE solver LSODE.",
     "sha": "0e1df71a799a",
-    "zh": ""
+    "zh": "它使用 Hindmarsh 的常微分方程求解器 LSODE。"
    }
   },
   {
@@ -52,7 +52,7 @@
      "t": {
       "en": "Ordinary Differential Equation (ODE) solver.",
       "sha": "281ec1156c6c",
-      "zh": ""
+      "zh": "常微分方程（ODE）求解器。"
      }
     },
     {
@@ -60,7 +60,7 @@
      "t": {
       "en": "The set of differential equations to solve is",
       "sha": "215bdf8ec42e",
-      "zh": ""
+      "zh": "要求解的微分方程组是"
      }
     },
     {
@@ -76,7 +76,7 @@
      "t": {
       "en": "The solution is returned in the matrix *x*, with each row corresponding to an element of the vector *t*. The first element of *t* should be $t_0$ and should correspond to the initial state of the system *x_0*, so that the first row of the output is *x_0*.",
       "sha": "e1d9155bcc47",
-      "zh": ""
+      "zh": "解以矩阵 *x* 的形式返回，其每一行对应向量 *t* 的一个元素。*t* 的第一个元素应为 $t_0$，并对应系统的初始状态 *x_0*，这样输出的第一行就是 *x_0*。"
      }
     },
     {
@@ -84,7 +84,7 @@
      "t": {
       "en": "The first argument, *fcn*, is a string, inline, or function handle that names the function $f$ to call to compute the vector of right hand sides for the set of equations. The function must have the form",
       "sha": "e69da8690cbc",
-      "zh": ""
+      "zh": "第一个参数 *fcn* 是字符串、内联函数或函数句柄，它给出函数 $f$ 的名字，用来计算方程组右端项构成的向量。该函数必须具有如下形式"
      }
     },
     {
@@ -96,7 +96,7 @@
      "t": {
       "en": "in which *xdot* and *x* are vectors and *t* is a scalar.",
       "sha": "f5a62b9fc3e5",
-      "zh": ""
+      "zh": "其中 *xdot* 和 *x* 是向量，*t* 是标量。"
      }
     },
     {
@@ -104,7 +104,7 @@
      "t": {
       "en": "If *fcn* is a two-element string array or a two-element cell array of strings, inline functions, or function handles, the first element names the function $f$ described above, and the second element names a function to compute the Jacobian of $f$. The Jacobian function must have the form",
       "sha": "1f737cc51865",
-      "zh": ""
+      "zh": "如果 *fcn* 是含两个元素的字符串数组，或含两个元素的、由字符串、内联函数或函数句柄组成的元胞数组，则第一个元素给出上面所说的函数 $f$ 的名字，第二个元素给出用来计算 $f$ 的雅可比矩阵（Jacobian）的函数的名字。雅可比函数必须具有如下形式"
      }
     },
     {
@@ -116,7 +116,7 @@
      "t": {
       "en": "in which *jac* is the matrix of partial derivatives",
       "sha": "8e2fe4237d52",
-      "zh": ""
+      "zh": "其中 *jac* 是偏导数矩阵"
      }
     },
     {
@@ -128,7 +128,7 @@
      "t": {
       "en": "The second argument specifies the initial state of the system $x_0$. The third argument is a vector, *t*, specifying the time values for which a solution is sought.",
       "sha": "21fceeec4f58",
-      "zh": ""
+      "zh": "第二个参数指定系统的初始状态 $x_0$。第三个参数是向量 *t*，指定要求解的时间点。"
      }
     },
     {
@@ -136,7 +136,7 @@
      "t": {
       "en": "The fourth argument is optional, and may be used to specify a set of times that the ODE solver should not integrate past. It is useful for avoiding difficulties with singularities and points where there is a discontinuity in the derivative.",
       "sha": "4227de2d1e07",
-      "zh": ""
+      "zh": "第四个参数是可选的，可以用来指定一组时间点，常微分方程求解器积分时不应越过这些点。这样做有助于避开奇点以及导数不连续的点所带来的困难。"
      }
     },
     {
@@ -144,7 +144,7 @@
      "t": {
       "en": "After a successful computation, the value of *istate* will be 2 (consistent with the Fortran version of LSODE).",
       "sha": "1eafb986504a",
-      "zh": ""
+      "zh": "计算成功后，*istate* 的值为 2（与 LSODE 的 Fortran 版本一致）。"
      }
     },
     {
@@ -152,7 +152,7 @@
      "t": {
       "en": "If the computation is not successful, *istate* will be something other than 2 and *msg* will contain additional information.",
       "sha": "f72c8b0c201f",
-      "zh": ""
+      "zh": "如果计算不成功，*istate* 将是 2 以外的值，*msg* 中会包含更多信息。"
      }
     },
     {
@@ -160,7 +160,7 @@
      "t": {
       "en": "You can use the function `lsode_options` to set optional parameters for `lsode`.",
       "sha": "3ad5d6dcd54b",
-      "zh": ""
+      "zh": "你可以用函数 `lsode_options` 为 `lsode` 设置可选参数。"
      }
     },
     {
@@ -168,7 +168,7 @@
      "t": {
       "en": "See Alan C. Hindmarsh, *ODEPACK, A Systematized Collection of ODE Solvers*, in Scientific Computing, R. S. Stepleman, editor, (1983) or https://computing.llnl.gov/projects/odepack for more information about the inner workings of `lsode`.",
       "sha": "8d44363018ed",
-      "zh": ""
+      "zh": "关于 `lsode` 内部工作原理的更多信息，参见 Alan C. Hindmarsh，*ODEPACK, A Systematized Collection of ODE Solvers*，载于 Scientific Computing，R. S. Stepleman 主编（1983 年），或访问 https://computing.llnl.gov/projects/odepack。"
      }
     },
     {
@@ -176,7 +176,7 @@
      "t": {
       "en": "Example: Solve the Van der Pol equation",
       "sha": "3c4efae6b827",
-      "zh": ""
+      "zh": "例：求解 Van der Pol 方程"
      }
     },
     {
@@ -188,7 +188,7 @@
      "t": {
       "en": "See also: `daspk`, `dassl`, `dasrt`.",
       "sha": "6f8854c75197",
-      "zh": ""
+      "zh": "另见：`daspk`、`dassl`、`dasrt`。"
      }
     }
    ]
@@ -198,7 +198,7 @@
    "t": {
     "en": "Here is an example of solving a set of three differential equations using `lsode`. Given the function",
     "sha": "a53961891dba",
-    "zh": ""
+    "zh": "下面是用 `lsode` 求解一个含三个方程的微分方程组的例子。给定函数"
    }
   },
   {
@@ -210,7 +210,7 @@
    "t": {
     "en": "and the initial condition `x0 = [ 4; 1.1; 4 ]`, the set of equations can be integrated using the command",
     "sha": "48aec2f06ca0",
-    "zh": ""
+    "zh": "以及初始条件 `x0 = [ 4; 1.1; 4 ]`，可以用如下命令对这个方程组进行积分"
    }
   },
   {
@@ -222,7 +222,7 @@
    "t": {
     "en": "If you try this, you will see that the value of the result changes dramatically between *t* = 0 and 5, and again around *t* = 305. A more efficient set of output points might be",
     "sha": "256e6414f9b8",
-    "zh": ""
+    "zh": "如果你试着运行，会看到结果在 *t* = 0 到 5 之间变化剧烈，在 *t* = 305 附近又变化剧烈。更有效的输出点的取法可以是"
    }
   },
   {
@@ -234,7 +234,7 @@
    "t": {
     "en": "An m-file for the differential equation used above is included with the Octave distribution in the examples directory under the name `oregonator.m`.",
     "sha": "7ce366868d34",
-    "zh": ""
+    "zh": "上面所用的微分方程对应的 m 文件随 Octave 发行版一起提供，放在 examples 目录下，名为 `oregonator.m`。"
    }
   },
   {
@@ -243,7 +243,7 @@
    "t": {
     "en": "Matlab-compatible solvers",
     "sha": "78cbd3e265e7",
-    "zh": ""
+    "zh": "与 MATLAB 兼容的求解器"
    }
   },
   {
@@ -251,7 +251,7 @@
    "t": {
     "en": "Octave also provides a set of solvers for initial value problems for ordinary differential equations (ODEs) that have a MATLAB-compatible interface. The options for this class of methods are set using the functions.",
     "sha": "8ca5444c9518",
-    "zh": ""
+    "zh": "Octave 还提供了一组求解常微分方程初值问题的求解器，其接口与 MATLAB 兼容。这类方法的选项用下列函数来设置。"
    }
   },
   {
@@ -264,7 +264,7 @@
       "t": {
        "en": "`odeset`",
        "sha": "ef10fb8a61a5",
-       "zh": ""
+       "zh": "`odeset`"
       }
      }
     ],
@@ -274,7 +274,7 @@
       "t": {
        "en": "`odeget`",
        "sha": "4f7315f9d591",
-       "zh": ""
+       "zh": "`odeget`"
       }
      }
     ]
@@ -285,7 +285,7 @@
    "t": {
     "en": "Currently implemented solvers are:",
     "sha": "d93740326d63",
-    "zh": ""
+    "zh": "目前已实现的求解器有："
    }
   },
   {
@@ -303,7 +303,7 @@
          "t": {
           "en": "`ode45` integrates a system of non-stiff ODEs or index-1 differential-algebraic equations (DAEs) using the high-order, variable-step Dormand-Prince method. It requires six function evaluations per integration step, but may take larger steps on smooth problems than `ode23`: potentially offering improved efficiency at smaller tolerances.",
           "sha": "04b83cec8d6c",
-          "zh": ""
+          "zh": "`ode45` 使用高阶、变步长的 Dormand-Prince 方法，对非刚性常微分方程组或指标为 1 的微分代数方程（DAE）组进行积分。它每个积分步需要计算六次函数值，但在光滑的问题上可以取比 `ode23` 更大的步长，因此在容差较小时可能效率更高。"
          }
         }
        ],
@@ -313,7 +313,7 @@
          "t": {
           "en": "`ode23` integrates a system of non-stiff ODEs or (or index-1 DAEs). It uses the third-order Bogacki-Shampine method and adapts the local step size in order to satisfy a user-specified tolerance. The solver requires three function evaluations per integration step.",
           "sha": "56a0730ff3e4",
-          "zh": ""
+          "zh": "`ode23` 对非刚性常微分方程组（或指标为 1 的微分代数方程组）进行积分。它使用三阶的 Bogacki-Shampine 方法，并自适应地调整局部步长，以满足用户指定的容差。该求解器每个积分步需要计算三次函数值。"
          }
         }
        ],
@@ -323,7 +323,7 @@
          "t": {
           "en": "`ode23s` integrates a system of stiff ODEs (or index-1 DAEs) using a modified second-order Rosenbrock method.",
           "sha": "cf1bbec6fe0f",
-          "zh": ""
+          "zh": "`ode23s` 使用改进的二阶 Rosenbrock 方法，对刚性常微分方程组（或指标为 1 的微分代数方程组）进行积分。"
          }
         }
        ]
@@ -336,7 +336,7 @@
       "t": {
        "en": "Linear multistep methods",
        "sha": "38edbd502022",
-       "zh": ""
+       "zh": "线性多步法"
       }
      },
      {
@@ -349,7 +349,7 @@
          "t": {
           "en": "`ode15s` integrates a system of stiff ODEs (or index-1 DAEs) using a variable step, variable order method based on Backward Difference Formulas (BDF).",
           "sha": "5c912a883dbf",
-          "zh": ""
+          "zh": "`ode15s` 使用基于向后差分公式（BDF）的变步长、变阶方法，对刚性常微分方程组（或指标为 1 的微分代数方程组）进行积分。"
          }
         }
        ],
@@ -359,7 +359,7 @@
          "t": {
           "en": "`ode15i` integrates a system of fully-implicit ODEs (or index-1 DAEs) using the same variable step, variable order method as `ode15s`. `decic` can be used to compute consistent initial conditions for `ode15i`.",
           "sha": "7db7f182d845",
-          "zh": ""
+          "zh": "`ode15i` 使用与 `ode15s` 相同的变步长、变阶方法，对全隐式的常微分方程组（或指标为 1 的微分代数方程组）进行积分。`decic` 可以用来为 `ode15i` 计算相容的初始条件。"
          }
         }
        ]
@@ -373,7 +373,7 @@
    "t": {
     "en": "Detailed information on the solvers are given in L. F. Shampine and Scientific Computing, Vol. 18, 1997, pp. 1–22,",
     "sha": "5e0f9169e9ce",
-    "zh": ""
+    "zh": "这些求解器的详细信息见 L. F. Shampine 和 Scientific Computing，第 18 卷，1997 年，第 1–22 页，"
    }
   },
   {
@@ -392,7 +392,7 @@
      "t": {
       "en": "Solve a set of non-stiff Ordinary Differential Equations (non-stiff ODEs) with the well known explicit Dormand-Prince method of order 4.",
       "sha": "efbb3467eaea",
-      "zh": ""
+      "zh": "用著名的 4 阶显式 Dormand-Prince 方法求解一组非刚性常微分方程。"
      }
     },
     {
@@ -400,7 +400,7 @@
      "t": {
       "en": "*fcn* is a function handle, inline function, or string containing the name of the function that defines the ODE: `y' = f(t,y)`. The function must accept two inputs where the first is time *t* and the second is a column vector of unknowns *y*.",
       "sha": "699c03f9f9f3",
-      "zh": ""
+      "zh": "*fcn* 是函数句柄、内联函数或字符串，它给出定义该常微分方程的函数的名字：`y' = f(t,y)`。该函数必须接受两个输入，第一个是时间 *t*，第二个是未知量构成的列向量 *y*。"
      }
     },
     {
@@ -408,7 +408,7 @@
      "t": {
       "en": "*trange* specifies the time interval over which the ODE will be evaluated. Typically, it is a two-element vector specifying the initial and final times (`[tinit, tfinal]`). If there are more than two elements then the solution will also be evaluated at these intermediate time instances.",
       "sha": "d3649bb367ca",
-      "zh": ""
+      "zh": "*trange* 指定求解常微分方程的时间区间。通常它是含两个元素的向量，给出起始时间和终止时间（`[tinit, tfinal]`）。如果元素多于两个，则解还会在这些中间时刻处计算。"
      }
     },
     {
@@ -416,7 +416,7 @@
      "t": {
       "en": "By default, `ode45` uses an adaptive timestep with the `integrate_adaptive` algorithm. The tolerance for the timestep computation may be changed by using the options `\"RelTol\"` and `\"AbsTol\"`.",
       "sha": "e2ac72a61124",
-      "zh": ""
+      "zh": "默认情况下，`ode45` 用 `integrate_adaptive` 算法采用自适应时间步长。计算时间步长所用的容差可以通过选项 `\"RelTol\"` 和 `\"AbsTol\"` 修改。"
      }
     },
     {
@@ -424,7 +424,7 @@
      "t": {
       "en": "*init* contains the initial value for the unknowns. If it is a row vector then the solution *y* will be a matrix in which each column is the solution for the corresponding initial value in *init*.",
       "sha": "f5a4f4b56ab2",
-      "zh": ""
+      "zh": "*init* 包含未知量的初始值。如果它是行向量，则解 *y* 是一个矩阵，其每一列是 *init* 中对应初始值的解。"
      }
     },
     {
@@ -432,7 +432,7 @@
      "t": {
       "en": "The optional fourth argument *ode_opt* specifies non-default options to the ODE solver. It is a structure generated by `odeset`.",
       "sha": "4fb61cc90431",
-      "zh": ""
+      "zh": "可选的第四个参数 *ode_opt* 为常微分方程求解器指定非默认的选项。它是由 `odeset` 生成的结构体。"
      }
     },
     {
@@ -440,7 +440,7 @@
      "t": {
       "en": "The function typically returns two outputs. Variable *t* is a column vector and contains the times where the solution was found. The output *y* is a matrix in which each column refers to a different unknown of the problem and each row corresponds to a time in *t*.",
       "sha": "a45aa28264ac",
-      "zh": ""
+      "zh": "该函数通常返回两个输出。变量 *t* 是列向量，包含求得解的各个时刻。输出 *y* 是一个矩阵，其每一列对应问题的一个未知量，每一行对应 *t* 中的一个时刻。"
      }
     },
     {
@@ -448,7 +448,7 @@
      "t": {
       "en": "The output can also be returned as a structure *solution* which has a field *x* containing a row vector of times where the solution was evaluated and a field *y* containing the solution matrix such that each column corresponds to a time in *x*. Use `fieldnames (solution)` to see the other fields and additional information returned.",
       "sha": "f5752e4ffba5",
-      "zh": ""
+      "zh": "输出也可以作为结构体 *solution* 返回，其中字段 *x* 是行向量，包含计算解的各个时刻，字段 *y* 是解矩阵，其每一列对应 *x* 中的一个时刻。用 `fieldnames (solution)` 可以查看返回的其他字段和附加信息。"
      }
     },
     {
@@ -456,7 +456,7 @@
      "t": {
       "en": "If no output arguments are requested, and no `\"OutputFcn\"` is specified in *ode_opt*, then the `\"OutputFcn\"` is set to `odeplot` and the results of the solver are plotted immediately.",
       "sha": "e767f668cb60",
-      "zh": ""
+      "zh": "如果没有要求输出参数，并且 *ode_opt* 中没有指定 `\"OutputFcn\"`，则 `\"OutputFcn\"` 被设为 `odeplot`，求解器的结果会立即绘制出来。"
      }
     },
     {
@@ -464,7 +464,7 @@
      "t": {
       "en": "If using the `\"Events\"` option then three additional outputs may be returned. *te* holds the time when an Event function returned a zero. *ye* holds the value of the solution at time *te*. *ie* contains an index indicating which Event function was triggered in the case of multiple Event functions.",
       "sha": "9b9d945c2781",
-      "zh": ""
+      "zh": "如果使用 `\"Events\"` 选项，还可以返回另外三个输出。*te* 保存事件函数返回零的时刻。*ye* 保存解在时刻 *te* 的值。如果有多个事件函数，*ie* 是一个下标，表示触发的是哪个事件函数。"
      }
     },
     {
@@ -472,7 +472,7 @@
      "t": {
       "en": "Example: Solve the Van der Pol equation",
       "sha": "3c4efae6b827",
-      "zh": ""
+      "zh": "例：求解 Van der Pol 方程"
      }
     },
     {
@@ -484,7 +484,7 @@
      "t": {
       "en": "See also: `odeset`, `odeget`, `ode23`, `ode15s`.",
       "sha": "10bed9f183c1",
-      "zh": ""
+      "zh": "另见：`odeset`、`odeget`、`ode23`、`ode15s`。"
      }
     }
    ]
@@ -505,7 +505,7 @@
      "t": {
       "en": "Solve a set of non-stiff Ordinary Differential Equations (non-stiff ODEs) with the well known explicit Bogacki-Shampine method of order 3.",
       "sha": "5669aa06148b",
-      "zh": ""
+      "zh": "用著名的 3 阶显式 Bogacki-Shampine 方法求解一组非刚性常微分方程。"
      }
     },
     {
@@ -513,7 +513,7 @@
      "t": {
       "en": "*fcn* is a function handle, inline function, or string containing the name of the function that defines the ODE: `y' = f(t,y)`. The function must accept two inputs where the first is time *t* and the second is a column vector of unknowns *y*.",
       "sha": "699c03f9f9f3",
-      "zh": ""
+      "zh": "*fcn* 是函数句柄、内联函数或字符串，它给出定义该常微分方程的函数的名字：`y' = f(t,y)`。该函数必须接受两个输入，第一个是时间 *t*，第二个是未知量构成的列向量 *y*。"
      }
     },
     {
@@ -521,7 +521,7 @@
      "t": {
       "en": "*trange* specifies the time interval over which the ODE will be evaluated. Typically, it is a two-element vector specifying the initial and final times (`[tinit, tfinal]`). If there are more than two elements then the solution will also be evaluated at these intermediate time instances.",
       "sha": "d3649bb367ca",
-      "zh": ""
+      "zh": "*trange* 指定求解常微分方程的时间区间。通常它是含两个元素的向量，给出起始时间和终止时间（`[tinit, tfinal]`）。如果元素多于两个，则解还会在这些中间时刻处计算。"
      }
     },
     {
@@ -529,7 +529,7 @@
      "t": {
       "en": "By default, `ode23` uses an adaptive timestep with the `integrate_adaptive` algorithm. The tolerance for the timestep computation may be changed by using the options `\"RelTol\"` and `\"AbsTol\"`.",
       "sha": "def94b292975",
-      "zh": ""
+      "zh": "默认情况下，`ode23` 用 `integrate_adaptive` 算法采用自适应时间步长。计算时间步长所用的容差可以通过选项 `\"RelTol\"` 和 `\"AbsTol\"` 修改。"
      }
     },
     {
@@ -537,7 +537,7 @@
      "t": {
       "en": "*init* contains the initial value for the unknowns. If it is a row vector then the solution *y* will be a matrix in which each column is the solution for the corresponding initial value in *init*.",
       "sha": "f5a4f4b56ab2",
-      "zh": ""
+      "zh": "*init* 包含未知量的初始值。如果它是行向量，则解 *y* 是一个矩阵，其每一列是 *init* 中对应初始值的解。"
      }
     },
     {
@@ -545,7 +545,7 @@
      "t": {
       "en": "The optional fourth argument *ode_opt* specifies non-default options to the ODE solver. It is a structure generated by `odeset`.",
       "sha": "4fb61cc90431",
-      "zh": ""
+      "zh": "可选的第四个参数 *ode_opt* 为常微分方程求解器指定非默认的选项。它是由 `odeset` 生成的结构体。"
      }
     },
     {
@@ -553,7 +553,7 @@
      "t": {
       "en": "The function typically returns two outputs. Variable *t* is a column vector and contains the times where the solution was found. The output *y* is a matrix in which each column refers to a different unknown of the problem and each row corresponds to a time in *t*.",
       "sha": "a45aa28264ac",
-      "zh": ""
+      "zh": "该函数通常返回两个输出。变量 *t* 是列向量，包含求得解的各个时刻。输出 *y* 是一个矩阵，其每一列对应问题的一个未知量，每一行对应 *t* 中的一个时刻。"
      }
     },
     {
@@ -561,7 +561,7 @@
      "t": {
       "en": "The output can also be returned as a structure *solution* which has a field *x* containing a row vector of times where the solution was evaluated and a field *y* containing the solution matrix such that each column corresponds to a time in *x*. Use `fieldnames (solution)` to see the other fields and additional information returned.",
       "sha": "f5752e4ffba5",
-      "zh": ""
+      "zh": "输出也可以作为结构体 *solution* 返回，其中字段 *x* 是行向量，包含计算解的各个时刻，字段 *y* 是解矩阵，其每一列对应 *x* 中的一个时刻。用 `fieldnames (solution)` 可以查看返回的其他字段和附加信息。"
      }
     },
     {
@@ -569,7 +569,7 @@
      "t": {
       "en": "If no output arguments are requested, and no `\"OutputFcn\"` is specified in *ode_opt*, then the `\"OutputFcn\"` is set to `odeplot` and the results of the solver are plotted immediately.",
       "sha": "e767f668cb60",
-      "zh": ""
+      "zh": "如果没有要求输出参数，并且 *ode_opt* 中没有指定 `\"OutputFcn\"`，则 `\"OutputFcn\"` 被设为 `odeplot`，求解器的结果会立即绘制出来。"
      }
     },
     {
@@ -577,7 +577,7 @@
      "t": {
       "en": "If using the `\"Events\"` option then three additional outputs may be returned. *te* holds the time when an Event function returned a zero. *ye* holds the value of the solution at time *te*. *ie* contains an index indicating which Event function was triggered in the case of multiple Event functions.",
       "sha": "9b9d945c2781",
-      "zh": ""
+      "zh": "如果使用 `\"Events\"` 选项，还可以返回另外三个输出。*te* 保存事件函数返回零的时刻。*ye* 保存解在时刻 *te* 的值。如果有多个事件函数，*ie* 是一个下标，表示触发的是哪个事件函数。"
      }
     },
     {
@@ -585,7 +585,7 @@
      "t": {
       "en": "Example: Solve the Van der Pol equation",
       "sha": "3c4efae6b827",
-      "zh": ""
+      "zh": "例：求解 Van der Pol 方程"
      }
     },
     {
@@ -597,7 +597,7 @@
      "t": {
       "en": "Reference: For the definition of this method see https://en.wikipedia.org/wiki/List_of_Runge%E2%80%93Kutta_methods. See also: `odeset`, `odeget`, `ode45`, `ode15s`.",
       "sha": "4fb61f2e23c0",
-      "zh": ""
+      "zh": "参考：该方法的定义见 https://en.wikipedia.org/wiki/List_of_Runge%E2%80%93Kutta_methods。另见：`odeset`、`odeget`、`ode45`、`ode15s`。"
      }
     }
    ]
@@ -618,7 +618,7 @@
      "t": {
       "en": "Create or modify an ODE options structure.",
       "sha": "be81321856cf",
-      "zh": ""
+      "zh": "创建或修改常微分方程的选项结构体。"
      }
     },
     {
@@ -626,7 +626,7 @@
      "t": {
       "en": "When called with no input argument and one output argument, return a new ODE options structure that contains all possible fields initialized to their default values. If no output argument is requested, display a list of the common ODE solver options along with their default value.",
       "sha": "1046ed4c0ab7",
-      "zh": ""
+      "zh": "不带输入参数、带一个输出参数调用时，返回一个新的常微分方程选项结构体，其中包含所有可能的字段，并初始化为默认值。如果没有要求输出参数，则显示常用的常微分方程求解器选项及其默认值的列表。"
      }
     },
     {
@@ -634,7 +634,7 @@
      "t": {
       "en": "If called with name-value input argument pairs *\"field1\"*, *\"value1\"*, *\"field2\"*, *\"value2\"*, … return a new ODE options structure with all the most common option fields initialized, **and** set the values of the fields *\"field1\"*, *\"field2\"*, … to the values *value1*, *value2*, ….",
       "sha": "4b49120d3fb4",
-      "zh": ""
+      "zh": "如果以“名称–值”输入参数对 *\"field1\"*、*\"value1\"*、*\"field2\"*、*\"value2\"*、… 调用，则返回一个新的常微分方程选项结构体，其中所有最常用的选项字段都已初始化，**并且**字段 *\"field1\"*、*\"field2\"*、… 的值被设为 *value1*、*value2*、…。"
      }
     },
     {
@@ -642,7 +642,7 @@
      "t": {
       "en": "If called with an input structure *oldstruct* then overwrite the values of the options *\"field1\"*, *\"field2\"*, … with new values *value1*, *value2*, … and return the modified structure.",
       "sha": "c75590fd4552",
-      "zh": ""
+      "zh": "如果以输入结构体 *oldstruct* 调用，则用新值 *value1*、*value2*、… 覆盖其中选项 *\"field1\"*、*\"field2\"*、… 的值，并返回修改后的结构体。"
      }
     },
     {
@@ -650,7 +650,7 @@
      "t": {
       "en": "When called with two input ODE options structures *oldstruct* and *newstruct* overwrite all values from the structure *oldstruct* with new values from the structure *newstruct*. Empty values in *newstruct* will not overwrite values in *oldstruct*.",
       "sha": "490367e2541a",
-      "zh": ""
+      "zh": "以两个常微分方程选项结构体 *oldstruct* 和 *newstruct* 作为输入调用时，用结构体 *newstruct* 中的新值覆盖结构体 *oldstruct* 中的所有值。*newstruct* 中的空值不会覆盖 *oldstruct* 中的值。"
      }
     },
     {
@@ -658,7 +658,7 @@
      "t": {
       "en": "The most commonly used ODE options, which are always assigned a value by `odeset`, are the following:",
       "sha": "aa9800efd55d",
-      "zh": ""
+      "zh": "最常用的常微分方程选项如下，`odeset` 总会给它们赋值："
      }
     },
     {
@@ -668,7 +668,7 @@
        "term": {
         "en": "`AbsTol`: positive scalar | vector, def. `1e-6`",
         "sha": "b8bd6e2ed115",
-        "zh": ""
+        "zh": "`AbsTol`：正标量 | 向量，默认 `1e-6`"
        },
        "blocks": [
         {
@@ -676,7 +676,7 @@
          "t": {
           "en": "Absolute error tolerance.",
           "sha": "cc6f394660f8",
-          "zh": ""
+          "zh": "绝对误差容差。"
          }
         }
        ]
@@ -685,7 +685,7 @@
        "term": {
         "en": "`BDF`: {`\"off\"`} | `\"on\"`",
         "sha": "67c6d8a87498",
-        "zh": ""
+        "zh": "`BDF`: {`\"off\"`} | `\"on\"`"
        },
        "blocks": [
         {
@@ -693,7 +693,7 @@
          "t": {
           "en": "Use BDF formulas in implicit multistep methods. *Note*: This option is not yet implemented.",
           "sha": "1ed1e7352a62",
-          "zh": ""
+          "zh": "在隐式多步法中使用 BDF 公式。*注*：这个选项尚未实现。"
          }
         }
        ]
@@ -702,7 +702,7 @@
        "term": {
         "en": "`Events`: function_handle",
         "sha": "85be12935d26",
-        "zh": ""
+        "zh": "`Events`: function_handle"
        },
        "blocks": [
         {
@@ -710,7 +710,7 @@
          "t": {
           "en": "Event function. An event function must have the form `[value, isterminal, direction] = my_events_f (t, y)`",
           "sha": "70de66ce2b98",
-          "zh": ""
+          "zh": "事件函数。事件函数必须具有如下形式 `[value, isterminal, direction] = my_events_f (t, y)`"
          }
         }
        ]
@@ -719,7 +719,7 @@
        "term": {
         "en": "`InitialSlope`: vector",
         "sha": "7af2c4a817f2",
-        "zh": ""
+        "zh": "`InitialSlope`: 向量"
        },
        "blocks": [
         {
@@ -727,7 +727,7 @@
          "t": {
           "en": "Consistent initial slope vector for DAE solvers.",
           "sha": "ac5d891ae096",
-          "zh": ""
+          "zh": "微分代数方程求解器所用的相容初始斜率向量。"
          }
         }
        ]
@@ -736,7 +736,7 @@
        "term": {
         "en": "`InitialStep`: positive scalar",
         "sha": "e291b37bd3a5",
-        "zh": ""
+        "zh": "`InitialStep`: 正标量"
        },
        "blocks": [
         {
@@ -744,7 +744,7 @@
          "t": {
           "en": "Initial time step size.",
           "sha": "eef8931850e3",
-          "zh": ""
+          "zh": "初始时间步长。"
          }
         }
        ]
@@ -753,7 +753,7 @@
        "term": {
         "en": "`Jacobian`: matrix | function_handle",
         "sha": "06c1fe6e76d2",
-        "zh": ""
+        "zh": "`Jacobian`: 矩阵 | function_handle"
        },
        "blocks": [
         {
@@ -761,7 +761,7 @@
          "t": {
           "en": "Jacobian matrix, specified as a constant matrix or a function of time and state.",
           "sha": "b71df2ac5652",
-          "zh": ""
+          "zh": "雅可比矩阵，可以指定为常数矩阵，或时间与状态的函数。"
          }
         }
        ]
@@ -770,7 +770,7 @@
        "term": {
         "en": "`JConstant`: {`\"off\"`} | `\"on\"`",
         "sha": "3d64218023d0",
-        "zh": ""
+        "zh": "`JConstant`: {`\"off\"`} | `\"on\"`"
        },
        "blocks": [
         {
@@ -778,7 +778,7 @@
          "t": {
           "en": "Specify whether the Jacobian is a constant matrix or depends on the state.",
           "sha": "565bd677b5aa",
-          "zh": ""
+          "zh": "指定雅可比矩阵是常数矩阵，还是依赖于状态。"
          }
         }
        ]
@@ -787,7 +787,7 @@
        "term": {
         "en": "`JPattern`: sparse matrix",
         "sha": "fe504a1d6f23",
-        "zh": ""
+        "zh": "`JPattern`: 稀疏矩阵"
        },
        "blocks": [
         {
@@ -795,7 +795,7 @@
          "t": {
           "en": "If the Jacobian matrix is sparse and non-constant but maintains a constant sparsity pattern, specify the sparsity pattern.",
           "sha": "8e24f4e0063a",
-          "zh": ""
+          "zh": "如果雅可比矩阵是稀疏的、不是常数，但稀疏模式保持不变，则在此指定稀疏模式。"
          }
         }
        ]
@@ -804,7 +804,7 @@
        "term": {
         "en": "`Mass`: matrix | function_handle",
         "sha": "8a9cb9d28077",
-        "zh": ""
+        "zh": "`Mass`: 矩阵 | function_handle"
        },
        "blocks": [
         {
@@ -812,7 +812,7 @@
          "t": {
           "en": "Mass matrix, specified as a constant matrix or a function of time and state.",
           "sha": "0e811bd456b0",
-          "zh": ""
+          "zh": "质量矩阵，可以指定为常数矩阵，或时间与状态的函数。"
          }
         }
        ]
@@ -821,7 +821,7 @@
        "term": {
         "en": "`MassSingular`: {`\"maybe\"`} | `\"yes\"` | `\"on\"`",
         "sha": "548951d6b8aa",
-        "zh": ""
+        "zh": "`MassSingular`: {`\"maybe\"`} | `\"yes\"` | `\"on\"`"
        },
        "blocks": [
         {
@@ -829,7 +829,7 @@
          "t": {
           "en": "Specify whether the mass matrix is singular.",
           "sha": "d4c2147a103d",
-          "zh": ""
+          "zh": "指定质量矩阵是否奇异。"
          }
         }
        ]
@@ -838,7 +838,7 @@
        "term": {
         "en": "`MaxOrder`: {`5`} | `4` | `3` | `2` | `1`",
         "sha": "c3da1fffdef1",
-        "zh": ""
+        "zh": "`MaxOrder`: {`5`} | `4` | `3` | `2` | `1`"
        },
        "blocks": [
         {
@@ -846,7 +846,7 @@
          "t": {
           "en": "Maximum order of formula.",
           "sha": "a5845e6e7cda",
-          "zh": ""
+          "zh": "公式的最高阶数。"
          }
         }
        ]
@@ -855,7 +855,7 @@
        "term": {
         "en": "`MaxStep`: positive scalar",
         "sha": "bf26f1901e7b",
-        "zh": ""
+        "zh": "`MaxStep`: 正标量"
        },
        "blocks": [
         {
@@ -863,7 +863,7 @@
          "t": {
           "en": "Maximum time step value.",
           "sha": "a3039e679faa",
-          "zh": ""
+          "zh": "最大时间步长。"
          }
         }
        ]
@@ -872,7 +872,7 @@
        "term": {
         "en": "`MStateDependence`: {`\"weak\"`} | `\"none\"` | `\"strong\"`",
         "sha": "ee1d622baf94",
-        "zh": ""
+        "zh": "`MStateDependence`: {`\"weak\"`} | `\"none\"` | `\"strong\"`"
        },
        "blocks": [
         {
@@ -880,7 +880,7 @@
          "t": {
           "en": "Specify whether the mass matrix depends on the state or only on time.",
           "sha": "37c351ad215b",
-          "zh": ""
+          "zh": "指定质量矩阵是依赖于状态，还是只依赖于时间。"
          }
         }
        ]
@@ -889,7 +889,7 @@
        "term": {
         "en": "`MvPattern`: sparse matrix",
         "sha": "87333ab70cfb",
-        "zh": ""
+        "zh": "`MvPattern`: 稀疏矩阵"
        },
        "blocks": [
         {
@@ -897,7 +897,7 @@
          "t": {
           "en": "If the mass matrix is sparse and non-constant but maintains a constant sparsity pattern, specify the sparsity pattern. *Note*: This option is not yet implemented.",
           "sha": "9005a1be683f",
-          "zh": ""
+          "zh": "如果质量矩阵是稀疏的、不是常数，但稀疏模式保持不变，则在此指定稀疏模式。*注*：这个选项尚未实现。"
          }
         }
        ]
@@ -906,7 +906,7 @@
        "term": {
         "en": "`NonNegative`: scalar | vector",
         "sha": "3fd30613c601",
-        "zh": ""
+        "zh": "`NonNegative`: 标量 | 向量"
        },
        "blocks": [
         {
@@ -914,7 +914,7 @@
          "t": {
           "en": "Specify elements of the state vector that are expected to remain non-negative during the simulation.",
           "sha": "90928add3add",
-          "zh": ""
+          "zh": "指定状态向量中哪些元素在模拟过程中应保持非负。"
          }
         }
        ]
@@ -923,7 +923,7 @@
        "term": {
         "en": "`NormControl`: {`\"off\"`} | `\"on\"`",
         "sha": "85aede400d4a",
-        "zh": ""
+        "zh": "`NormControl`: {`\"off\"`} | `\"on\"`"
        },
        "blocks": [
         {
@@ -931,7 +931,7 @@
          "t": {
           "en": "Control error relative to the 2-norm of the solution, rather than its absolute value.",
           "sha": "59c4ea0f073a",
-          "zh": ""
+          "zh": "按解的 2 范数来控制相对误差，而不是按绝对值控制。"
          }
         }
        ]
@@ -940,7 +940,7 @@
        "term": {
         "en": "`OutputFcn`: function_handle",
         "sha": "793ce6f13361",
-        "zh": ""
+        "zh": "`OutputFcn`: function_handle"
        },
        "blocks": [
         {
@@ -948,7 +948,7 @@
          "t": {
           "en": "Function to monitor the state during the simulation. For the form of the function to use `odeplot`.",
           "sha": "430abff37319",
-          "zh": ""
+          "zh": "在模拟过程中监视状态的函数。关于该函数应取的形式，请使用 `odeplot`。"
          }
         }
        ]
@@ -957,7 +957,7 @@
        "term": {
         "en": "`OutputSel`: scalar | vector",
         "sha": "4ed531dbb764",
-        "zh": ""
+        "zh": "`OutputSel`: 标量 | 向量"
        },
        "blocks": [
         {
@@ -965,7 +965,7 @@
          "t": {
           "en": "Indices of elements of the state vector to be passed to the output monitoring function.",
           "sha": "cb5992485776",
-          "zh": ""
+          "zh": "状态向量中要传给输出监视函数的那些元素的下标。"
          }
         }
        ]
@@ -974,7 +974,7 @@
        "term": {
         "en": "`Refine`: positive scalar",
         "sha": "497105ca1d9a",
-        "zh": ""
+        "zh": "`Refine`: 正标量"
        },
        "blocks": [
         {
@@ -982,7 +982,7 @@
          "t": {
           "en": "Specify whether output should be returned only at the end of each time step or also at intermediate time instances. The value should be a scalar indicating the number of equally spaced time points to use within each timestep at which to return output.",
           "sha": "86d334892a22",
-          "zh": ""
+          "zh": "指定输出是只在每个时间步结束时返回，还是也在步内的中间时刻返回。其值应为标量，表示每个时间步内用来返回输出的等间距时间点的个数。"
          }
         }
        ]
@@ -991,7 +991,7 @@
        "term": {
         "en": "`RelTol`: positive scalar",
         "sha": "08f0f8a1b15d",
-        "zh": ""
+        "zh": "`RelTol`: 正标量"
        },
        "blocks": [
         {
@@ -999,7 +999,7 @@
          "t": {
           "en": "Relative error tolerance.",
           "sha": "d84636381955",
-          "zh": ""
+          "zh": "相对误差容差。"
          }
         }
        ]
@@ -1008,7 +1008,7 @@
        "term": {
         "en": "`Stats`: {`\"off\"`} | `\"on\"`",
         "sha": "f1c0e94205ab",
-        "zh": ""
+        "zh": "`Stats`: {`\"off\"`} | `\"on\"`"
        },
        "blocks": [
         {
@@ -1016,7 +1016,7 @@
          "t": {
           "en": "Print solver statistics after simulation.",
           "sha": "bebfa3744ab8",
-          "zh": ""
+          "zh": "模拟结束后打印求解器的统计信息。"
          }
         }
        ]
@@ -1025,7 +1025,7 @@
        "term": {
         "en": "`Vectorized`: {`\"off\"`} | `\"on\"`",
         "sha": "47943e6f563f",
-        "zh": ""
+        "zh": "`Vectorized`: {`\"off\"`} | `\"on\"`"
        },
        "blocks": [
         {
@@ -1033,7 +1033,7 @@
          "t": {
           "en": "Specify whether `odefcn` can be passed multiple values of the state at once.",
           "sha": "d00eba7ea36f",
-          "zh": ""
+          "zh": "指定能否一次向 `odefcn` 传入多个状态值。"
          }
         }
        ]
@@ -1045,7 +1045,7 @@
      "t": {
       "en": "Field names that are not in the above list are also accepted and added to the result structure.",
       "sha": "4e545404ef8d",
-      "zh": ""
+      "zh": "不在上面列表中的字段名也会被接受，并加入结果结构体。"
      }
     },
     {
@@ -1053,7 +1053,7 @@
      "t": {
       "en": "See also: `odeget`.",
       "sha": "550b480eb0f6",
-      "zh": ""
+      "zh": "另见：`odeget`。"
      }
     }
    ]
@@ -1071,7 +1071,7 @@
      "t": {
       "en": "Query the value of the property *field* in the ODE options structure *ode_opt*.",
       "sha": "32c672a676e8",
-      "zh": ""
+      "zh": "查询常微分方程选项结构体 *ode_opt* 中属性 *field* 的值。"
      }
     },
     {
@@ -1079,7 +1079,7 @@
      "t": {
       "en": "If called with two input arguments and the first input argument *ode_opt* is an ODE option structure and the second input argument *field* is a string specifying an option name, then return the option value *val* corresponding to *field* from *ode_opt*.",
       "sha": "db2693898ff6",
-      "zh": ""
+      "zh": "如果用两个输入参数调用，并且第一个输入参数 *ode_opt* 是常微分方程选项结构体，第二个输入参数 *field* 是指定选项名的字符串，则返回 *ode_opt* 中与 *field* 对应的选项值 *val*。"
      }
     },
     {
@@ -1087,7 +1087,7 @@
      "t": {
       "en": "If called with an optional third input argument, and *field* is not set in the structure *ode_opt*, then return the default value *default* instead. See also: `odeset`.",
       "sha": "893b5a19ac12",
-      "zh": ""
+      "zh": "如果用了可选的第三个输入参数，并且 *field* 没有在结构体 *ode_opt* 中设置，则返回默认值 *default*。另见：`odeset`。"
      }
     }
    ]

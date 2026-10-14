@@ -1352,7 +1352,7 @@
      "term": {
       "en": "`x > y`",
       "sha": "394481dcb240",
-      "zh": ""
+      "zh": "`x > y`"
      },
      "blocks": [
       {
@@ -1360,7 +1360,7 @@
        "t": {
         "en": "True if *x* is greater than *y*.",
         "sha": "365007333169",
-        "zh": ""
+        "zh": "当 *x* 大于 *y* 时为真。"
        }
       }
      ]
@@ -1369,7 +1369,7 @@
      "term": {
       "en": "`x != y`, `x ~= y`",
       "sha": "c089342252ae",
-      "zh": ""
+      "zh": "`x != y`, `x ~= y`"
      },
      "blocks": [
       {
@@ -1377,7 +1377,7 @@
        "t": {
         "en": "True if *x* is not equal to *y*.",
         "sha": "98791ac5cf0c",
-        "zh": ""
+        "zh": "当 *x* 不等于 *y* 时为真。"
        }
       }
      ]
@@ -1389,7 +1389,7 @@
    "t": {
     "en": "For complex numbers, the following ordering is defined: *z1* < *z2* if and only if",
     "sha": "26255f178cf9",
-    "zh": ""
+    "zh": "对复数，定义如下的排序：*z1* < *z2* 当且仅当"
    }
   },
   {
@@ -1401,7 +1401,7 @@
    "t": {
     "en": "This is consistent with the ordering used by *max*, *min* and *sort*, but is not consistent with MATLAB, which only compares the real parts.",
     "sha": "a24b31e859f2",
-    "zh": ""
+    "zh": "这与 *max*、*min* 和 *sort* 所用的排序一致，但与 MATLAB 不一致，MATLAB 只比较实部。"
    }
   },
   {
@@ -1409,7 +1409,7 @@
    "t": {
     "en": "String comparisons may also be performed with the `strcmp` function, not with the comparison operators listed above. See Strings.",
     "sha": "22731f7a16a8",
-    "zh": ""
+    "zh": "字符串的比较也可以用 `strcmp` 函数来进行，而不能用上面列出的比较运算符。参见 Strings。"
    }
   },
   {
@@ -1424,7 +1424,7 @@
      "t": {
       "en": "Return true if all of *x1*, *x2*, … are equal. See also: `isequaln`.",
       "sha": "93d8d608ea89",
-      "zh": ""
+      "zh": "如果 *x1*、*x2*、… 全部相等，则返回 true。另见：`isequaln`。"
      }
     }
    ]
@@ -1435,7 +1435,7 @@
    "t": {
     "en": "Boolean Expressions",
     "sha": "c9ac379f8377",
-    "zh": ""
+    "zh": "布尔表达式"
    }
   },
   {
@@ -1444,7 +1444,7 @@
    "t": {
     "en": "Element-by-element Boolean Operators",
     "sha": "9e4360bae4f3",
-    "zh": ""
+    "zh": "逐元素布尔运算符"
    }
   },
   {
@@ -1452,7 +1452,7 @@
    "t": {
     "en": "An *element-by-element boolean expression* is a combination of comparison expressions using the boolean operators “or” (`|`), “and” (`&`), and “not” (`!`), along with parentheses to control nesting. The truth of the boolean expression is computed by combining the truth values of the corresponding elements of the component expressions. A value is considered to be false if it is zero, and true otherwise.",
     "sha": "4d7f79a4a2e1",
-    "zh": ""
+    "zh": "**逐元素布尔表达式**（element-by-element boolean expression）是由比较表达式用布尔运算符“或”（`|`）、“与”（`&`）和“非”（`!`）组合而成的，并可用括号控制嵌套。布尔表达式的真假，由各组成表达式中对应元素的真值组合而得。值为零就算假，否则算真。"
    }
   },
   {
@@ -1460,7 +1460,7 @@
    "t": {
     "en": "Element-by-element boolean expressions can be used wherever comparison expressions can be used. They can be used in `if` and `while` statements. However, a matrix value used as the condition in an `if` or `while` statement is only true if *all* of its elements are nonzero.",
     "sha": "03eae23d94ff",
-    "zh": ""
+    "zh": "凡是可以使用比较表达式的地方，都可以使用逐元素布尔表达式。它们可以用在 `if` 和 `while` 语句中。不过，在 `if` 或 `while` 语句中用作条件的矩阵值，只有当它的*所有*元素都非零时才为真。"
    }
   },
   {
@@ -1468,7 +1468,7 @@
    "t": {
     "en": "Like comparison operations, each element of an element-by-element boolean expression also has a numeric value (1 if true, 0 if false) that comes into play if the result of the boolean expression is stored in a variable, or used in arithmetic.",
     "sha": "07f03b2420a3",
-    "zh": ""
+    "zh": "与比较运算一样，逐元素布尔表达式的每个元素也有一个数值（真为 1，假为 0）；当布尔表达式的结果被存入变量或用于算术运算时，就会用到这个数值。"
    }
   },
   {
@@ -1476,7 +1476,7 @@
    "t": {
     "en": "Here are descriptions of the three element-by-element boolean operators.",
     "sha": "c5da2c1f2165",
-    "zh": ""
+    "zh": "下面介绍三种逐元素布尔运算符。"
    }
   },
   {
@@ -1486,7 +1486,7 @@
      "term": {
       "en": "`boolean1 & boolean2`",
       "sha": "4632b972b257",
-      "zh": ""
+      "zh": "`boolean1 & boolean2`"
      },
      "blocks": [
       {
@@ -1494,7 +1494,7 @@
        "t": {
         "en": "Elements of the result are true if both corresponding elements of *boolean1* and *boolean2* are true.",
         "sha": "f1461351b862",
-        "zh": ""
+        "zh": "当 *boolean1* 与 *boolean2* 的对应元素都为真时，结果的相应元素为真。"
        }
       }
      ]
@@ -1503,7 +1503,7 @@
      "term": {
       "en": "`boolean1 | boolean2`",
       "sha": "2abb170778a2",
-      "zh": ""
+      "zh": "`boolean1 | boolean2`"
      },
      "blocks": [
       {
@@ -1511,7 +1511,7 @@
        "t": {
         "en": "Elements of the result are true if either of the corresponding elements of *boolean1* or *boolean2* is true.",
         "sha": "2769dc1e0ac4",
-        "zh": ""
+        "zh": "当 *boolean1* 与 *boolean2* 的对应元素中至少有一个为真时，结果的相应元素为真。"
        }
       }
      ]
@@ -1520,7 +1520,7 @@
      "term": {
       "en": "`! boolean`, `~ boolean`",
       "sha": "3a122b902d65",
-      "zh": ""
+      "zh": "`! boolean`, `~ boolean`"
      },
      "blocks": [
       {
@@ -1528,7 +1528,7 @@
        "t": {
         "en": "Each element of the result is true if the corresponding element of *boolean* is false.",
         "sha": "24923e57f5f3",
-        "zh": ""
+        "zh": "当 *boolean* 的对应元素为假时，结果的相应元素为真。"
        }
       }
      ]
@@ -1540,7 +1540,7 @@
    "t": {
     "en": "These operators work on an element-by-element basis. For example, the expression",
     "sha": "a854e78a3e0d",
-    "zh": ""
+    "zh": "这些运算符逐元素进行。例如，表达式"
    }
   },
   {
@@ -1552,7 +1552,7 @@
    "t": {
     "en": "returns a two by two identity matrix.",
     "sha": "a2f994bb57b0",
-    "zh": ""
+    "zh": "返回一个二阶单位矩阵。"
    }
   },
   {
@@ -1560,7 +1560,7 @@
    "t": {
     "en": "For the binary operators, broadcasting rules apply. See Broadcasting. In particular, if one of the operands is a scalar and the other a matrix, the operator is applied to the scalar and each element of the matrix.",
     "sha": "5e5a7ccd4472",
-    "zh": ""
+    "zh": "对二元运算符，适用广播规则，参见 Broadcasting。特别地，如果一个操作数是标量而另一个是矩阵，则运算符作用于这个标量与矩阵的每个元素。"
    }
   },
   {
@@ -1568,7 +1568,7 @@
    "t": {
     "en": "For the binary element-by-element boolean operators, both subexpressions *boolean1* and *boolean2* are evaluated before computing the result. This can make a difference when the expressions have side effects. For example, in the expression",
     "sha": "fdd12f1d4c0a",
-    "zh": ""
+    "zh": "对于二元逐元素布尔运算符，在计算结果之前，两个子表达式 *boolean1* 和 *boolean2* 都会被求值。当这些表达式有副作用时，这会造成差别。例如，在表达式"
    }
   },
   {
@@ -1580,7 +1580,7 @@
    "t": {
     "en": "the value of the variable *b* is incremented even if the variable *a* is zero.",
     "sha": "5f3593a55524",
-    "zh": ""
+    "zh": "中，即使变量 *a* 为零，变量 *b* 的值也会加 1。"
    }
   },
   {
@@ -1588,7 +1588,7 @@
    "t": {
     "en": "This behavior is necessary for the boolean operators to work as described for matrix-valued operands.",
     "sha": "a3e74c97a50c",
-    "zh": ""
+    "zh": "布尔运算符要对矩阵值的操作数按上述方式工作，就必须这样做。"
    }
   },
   {
@@ -1604,7 +1604,7 @@
      "t": {
       "en": "Return the logical AND of *x* and *y*.",
       "sha": "66ac4b02fb7e",
-      "zh": ""
+      "zh": "返回 *x* 与 *y* 的逻辑与。"
      }
     },
     {
@@ -1612,7 +1612,7 @@
      "t": {
       "en": "This function is equivalent to the operator syntax `x & y`. If more than two arguments are given, the logical AND is applied cumulatively from left to right:",
       "sha": "f2364cd54f04",
-      "zh": ""
+      "zh": "这个函数等价于运算符写法 `x & y`。如果给出了两个以上的参数，则从左到右依次累计应用逻辑与："
      }
     },
     {
@@ -1624,7 +1624,7 @@
      "t": {
       "en": "See also: `or`, `not`, `xor`.",
       "sha": "2e66b876f3b9",
-      "zh": ""
+      "zh": "另见：`or`、`not`、`xor`。"
      }
     }
    ]
@@ -1641,7 +1641,7 @@
      "t": {
       "en": "Return the logical NOT of *x*.",
       "sha": "d4f9cd844dcb",
-      "zh": ""
+      "zh": "返回 *x* 的逻辑非。"
      }
     },
     {
@@ -1649,7 +1649,7 @@
      "t": {
       "en": "This function is equivalent to the operator syntax `! x`. See also: `and`, `or`, `xor`.",
       "sha": "d3f559f9793f",
-      "zh": ""
+      "zh": "这个函数等价于运算符写法 `! x`。另见：`and`、`or`、`xor`。"
      }
     }
    ]
@@ -1667,7 +1667,7 @@
      "t": {
       "en": "Return the logical OR of *x* and *y*.",
       "sha": "08be90ab1746",
-      "zh": ""
+      "zh": "返回 *x* 与 *y* 的逻辑或。"
      }
     },
     {
@@ -1675,7 +1675,7 @@
      "t": {
       "en": "This function is equivalent to the operator syntax `x | y`. If more than two arguments are given, the logical OR is applied cumulatively from left to right:",
       "sha": "dfd404d797a6",
-      "zh": ""
+      "zh": "这个函数等价于运算符写法 `x | y`。如果给出了两个以上的参数，则从左到右依次累计应用逻辑或："
      }
     },
     {
@@ -1687,7 +1687,7 @@
      "t": {
       "en": "See also: `and`, `not`, `xor`.",
       "sha": "e623bc53d9a1",
-      "zh": ""
+      "zh": "另见：`and`、`not`、`xor`。"
      }
     }
    ]
@@ -1698,7 +1698,7 @@
    "t": {
     "en": "Short-circuit Boolean Operators",
     "sha": "c71c91d2b9b6",
-    "zh": ""
+    "zh": "短路布尔运算符"
    }
   },
   {
@@ -1706,7 +1706,7 @@
    "t": {
     "en": "Combined with the implicit conversion to scalar values in `if` and `while` conditions, Octave's element-by-element boolean operators are often sufficient for performing most logical operations. However, it is sometimes desirable to stop evaluating a boolean expression as soon as the overall truth value can be determined. Octave's *short-circuit* boolean operators work this way.",
     "sha": "48c45bc34238",
-    "zh": ""
+    "zh": "再加上 `if` 和 `while` 条件中向标量值的隐式转换，Octave 的逐元素布尔运算符通常足以完成大多数逻辑运算。不过，有时我们希望一旦能确定整个表达式的真值，就立即停止对布尔表达式的求值。Octave 的**短路**（short-circuit）布尔运算符就是这样工作的。"
    }
   },
   {
@@ -1716,7 +1716,7 @@
      "term": {
       "en": "`boolean1 && boolean2`",
       "sha": "89d2193bff1e",
-      "zh": ""
+      "zh": "`boolean1 && boolean2`"
      },
      "blocks": [
       {
@@ -1724,7 +1724,7 @@
        "t": {
         "en": "The expression *boolean1* is evaluated and converted to a scalar using the equivalent of the operation `all (boolean1(:))`. If *boolean1* is not a logical value, it is considered true if its value is nonzero, and false if its value is zero. If *boolean1* is an array, it is considered true only if it is non-empty and all elements are non-zero. If *boolean1* evaluates to false, the result of the overall expression is false. If it is true, the expression *boolean2* is evaluated in the same way as *boolean1*. If it is true, the result of the overall expression is true. Otherwise the result of the overall expression is false.",
         "sha": "3f0ae07f8610",
-        "zh": ""
+        "zh": "先对表达式 *boolean1* 求值，并用相当于运算 `all (boolean1(:))` 的办法把它转换为标量。如果 *boolean1* 不是逻辑值，那么它的值非零就算真，为零就算假。如果 *boolean1* 是数组，则只有当它非空且所有元素都非零时才算真。如果 *boolean1* 的值为假，整个表达式的结果为假。如果为真，则用与 *boolean1* 相同的方式对表达式 *boolean2* 求值。如果它为真，整个表达式的结果为真；否则整个表达式的结果为假。"
        }
       },
       {
@@ -1732,7 +1732,7 @@
        "t": {
         "en": "**Warning:** the one exception to the equivalence with evaluating `all (boolean1(:))` is when `boolean1` an the empty array. For MATLAB compatibility, the truth value of an empty array is always `false` so `[] && true` evaluates to `false` even though `all ([])` is `true`.",
         "sha": "ff60d631b327",
-        "zh": ""
+        "zh": "**警告：**与计算 `all (boolean1(:))` 等价这一说法，唯一的例外是 `boolean1` 为空数组的情形。为了与 MATLAB 兼容，空数组的真值始终是 `false`，所以 `[] && true` 的值是 `false`，尽管 `all ([])` 是 `true`。"
        }
       }
      ]
@@ -1741,7 +1741,7 @@
      "term": {
       "en": "`boolean1 || boolean2`",
       "sha": "ab9e85df5d4e",
-      "zh": ""
+      "zh": "`boolean1 || boolean2`"
      },
      "blocks": [
       {
@@ -1749,7 +1749,7 @@
        "t": {
         "en": "The expression *boolean1* is evaluated and converted to a scalar using the equivalent of the operation `all (boolean1(:))`. If *boolean1* is not a logical value, it is considered true if its value is nonzero, and false if its value is zero. If *boolean1* is an array, it is considered true only if it is non-empty and all elements are non-zero. If *boolean1* evaluates to true, the result of the overall expression is true. If it is false, the expression *boolean2* is evaluated in the same way as *boolean1*. If it is true, the result of the overall expression is true. Otherwise the result of the overall expression is false.",
         "sha": "5eec127c39b0",
-        "zh": ""
+        "zh": "先对表达式 *boolean1* 求值，并用相当于运算 `all (boolean1(:))` 的办法把它转换为标量。如果 *boolean1* 不是逻辑值，那么它的值非零就算真，为零就算假。如果 *boolean1* 是数组，则只有当它非空且所有元素都非零时才算真。如果 *boolean1* 的值为真，整个表达式的结果为真。如果为假，则用与 *boolean1* 相同的方式对表达式 *boolean2* 求值。如果它为真，整个表达式的结果为真；否则整个表达式的结果为假。"
        }
       },
       {
@@ -1757,7 +1757,7 @@
        "t": {
         "en": "**Warning:** the truth value of an empty matrix is always `false`, see the previous list item for details.",
         "sha": "ad3f05d35c9a",
-        "zh": ""
+        "zh": "**警告：**空矩阵的真值始终是 `false`，详见上一个列表项。"
        }
       }
      ]
@@ -1769,7 +1769,7 @@
    "t": {
     "en": "The fact that both operands may not be evaluated before determining the overall truth value of the expression can be important. For example, in the expression",
     "sha": "290f64bd26e0",
-    "zh": ""
+    "zh": "在确定整个表达式的真值之前，两个操作数不一定都会被求值，这一点可能很重要。例如，在表达式"
    }
   },
   {
@@ -1781,7 +1781,7 @@
    "t": {
     "en": "the value of the variable *b* is only incremented if the variable *a* is nonzero.",
     "sha": "7c7cc16be7e1",
-    "zh": ""
+    "zh": "中，只有当变量 *a* 非零时，变量 *b* 的值才会加 1。"
    }
   },
   {
@@ -1789,7 +1789,7 @@
    "t": {
     "en": "This can be used to write somewhat more concise code. For example, it is possible write",
     "sha": "885fee0ae890",
-    "zh": ""
+    "zh": "利用这一点可以写出更简洁的代码。例如，可以写"
    }
   },
   {
@@ -1801,7 +1801,7 @@
    "t": {
     "en": "instead of having to use two `if` statements to avoid attempting to evaluate an argument that doesn't exist. For example, without the short-circuit feature, it would be necessary to write",
     "sha": "7568f0420468",
-    "zh": ""
+    "zh": "而不必用两条 `if` 语句来避免去求值一个并不存在的参数。比如，如果没有短路特性，就必须写成"
    }
   },
   {
@@ -1813,7 +1813,7 @@
    "t": {
     "en": "Writing",
     "sha": "2dabb8334b6c",
-    "zh": ""
+    "zh": "如果写成"
    }
   },
   {
@@ -1825,7 +1825,7 @@
    "t": {
     "en": "would result in an error if `f` were called with one or two arguments because Octave would be forced to try to evaluate both of the operands for the operator `&`.",
     "sha": "8236975f232e",
-    "zh": ""
+    "zh": "那么当用一个或两个参数调用 `f` 时就会出错，因为 Octave 会被迫尝试对运算符 `&` 的两个操作数都求值。"
    }
   },
   {
@@ -1833,7 +1833,7 @@
    "t": {
     "en": "MATLAB has special behavior that allows the operators `&` and `|` to short-circuit when used in the truth expression for `if` and `while` statements. Octave behaves the same way for compatibility, however, the use of the `&` and `|` operators in this way is strongly discouraged and a warning will be issued. Instead, you should use the `&&` and `||` operators that always have short-circuit behavior.",
     "sha": "93dd6d5dddba",
-    "zh": ""
+    "zh": "MATLAB 有一种特殊行为：在 `if` 和 `while` 语句的判断表达式中使用运算符 `&` 和 `|` 时，它们可以短路。为了兼容，Octave 的行为与之相同；但是强烈不建议以这种方式使用 `&` 和 `|` 运算符，Octave 会发出警告。你应当改用始终具有短路行为的 `&&` 和 `||` 运算符。"
    }
   },
   {
@@ -1841,7 +1841,7 @@
    "t": {
     "en": "Finally, the ternary operator (?:) is not supported in Octave. If short-circuiting is not important, it can be replaced by the `ifelse` function.",
     "sha": "5a85eb05629a",
-    "zh": ""
+    "zh": "最后，Octave 不支持三元运算符（?:）。如果短路并不重要，可以用 `ifelse` 函数代替。"
    }
   },
   {
@@ -1850,7 +1850,7 @@
    "t": {
     "en": "Assignment Expressions",
     "sha": "6cd6e2e234bf",
-    "zh": ""
+    "zh": "赋值表达式"
    }
   },
   {
@@ -1858,7 +1858,7 @@
    "t": {
     "en": "An *assignment* is an expression that stores a new value into a variable. For example, the following expression assigns the value 1 to the variable `z`:",
     "sha": "26cb099c21bd",
-    "zh": ""
+    "zh": "**赋值**（assignment）是把新值存入变量的表达式。例如，下面的表达式把值 1 赋给变量 `z`："
    }
   },
   {
@@ -1870,7 +1870,7 @@
    "t": {
     "en": "After this expression is executed, the variable `z` has the value 1. Whatever old value `z` had before the assignment is forgotten. The `=` sign is called an *assignment operator*.",
     "sha": "52eebc0e5755",
-    "zh": ""
+    "zh": "这个表达式执行之后，变量 `z` 的值为 1。`z` 在赋值之前原有的值，不论是什么，都被丢弃。`=` 号称为**赋值运算符**（assignment operator）。"
    }
   },
   {
@@ -1878,7 +1878,7 @@
    "t": {
     "en": "Assignments can store string values also. For example, the following expression would store the value `\"this food is good\"` in the variable `message`:",
     "sha": "daf97d8c4c2f",
-    "zh": ""
+    "zh": "赋值也可以存储字符串值。例如，下面的表达式会把值 `\"this food is good\"` 存入变量 `message`："
    }
   },
   {
@@ -1890,7 +1890,7 @@
    "t": {
     "en": "(This also illustrates concatenation of strings.)",
     "sha": "cc33e2d53491",
-    "zh": ""
+    "zh": "（这也说明了字符串的连接。）"
    }
   },
   {
@@ -1898,7 +1898,7 @@
    "t": {
     "en": "Most operators (addition, concatenation, and so on) have no effect except to compute a value. If you ignore the value, you might as well not use the operator. An assignment operator is different. It does produce a value, but even if you ignore the value, the assignment still makes itself felt through the alteration of the variable. We call this a *side effect*.",
     "sha": "dffc6af3af6a",
-    "zh": ""
+    "zh": "大多数运算符（加法、连接等）除了计算出一个值以外没有别的作用。如果你不用这个值，那还不如不用这个运算符。赋值运算符则不同。它确实也产生一个值，但即使你忽略这个值，赋值仍然会通过改变变量让自己产生影响。我们把这称为**副作用**（side effect）。"
    }
   },
   {
@@ -1906,7 +1906,7 @@
    "t": {
     "en": "The left-hand operand of an assignment need not be a variable (see Variables). It can also be an element of a matrix (see Index Expressions) or a list of return values (see Calling Functions). These are all called *lvalues*, which means they can appear on the left-hand side of an assignment operator. The right-hand operand may be any expression. It produces the new value which the assignment stores in the specified variable, matrix element, or list of return values.",
     "sha": "542c064669c0",
-    "zh": ""
+    "zh": "赋值的左操作数不必是变量（见 Variables）。它也可以是矩阵的一个元素（见 Index Expressions），或者是返回值的列表（见 Calling Functions）。这些统称为**左值**（lvalue），意思是它们可以出现在赋值运算符的左边。右操作数可以是任意表达式，它产生新的值，赋值运算把这个值存入指定的变量、矩阵元素或返回值列表中。"
    }
   },
   {
@@ -1914,7 +1914,7 @@
    "t": {
     "en": "It is important to note that variables do *not* have permanent types. The type of a variable is simply the type of whatever value it happens to hold at the moment. In the following program fragment, the variable `foo` has a numeric value at first, and a string value later on:",
     "sha": "24f28cbba6c3",
-    "zh": ""
+    "zh": "需要注意，变量*没有*永久的类型。变量的类型，就是它此刻碰巧保存的那个值的类型。在下面的程序片段中，变量 `foo` 起初是数值，后来变成了字符串值："
    }
   },
   {
@@ -1926,7 +1926,7 @@
    "t": {
     "en": "When the second assignment gives `foo` a string value, the fact that it previously had a numeric value is forgotten.",
     "sha": "64391172fd09",
-    "zh": ""
+    "zh": "当第二个赋值给 `foo` 一个字符串值时，它先前是数值这一事实就被丢弃了。"
    }
   },
   {
@@ -1934,7 +1934,7 @@
    "t": {
     "en": "Assignment of a scalar to an indexed matrix sets all of the elements that are referenced by the indices to the scalar value. For example, if `a` is a matrix with at least two columns,",
     "sha": "d9bd5f1aa841",
-    "zh": ""
+    "zh": "把一个标量赋给带索引的矩阵，会把索引所引用的全部元素都设为该标量值。例如，如果 `a` 是至少有两列的矩阵，"
    }
   },
   {
@@ -1946,7 +1946,7 @@
    "t": {
     "en": "sets all the elements in the second column of `a` to 5.",
     "sha": "c3d45d1f63b5",
-    "zh": ""
+    "zh": "会把 `a` 第二列的所有元素都设为 5。"
    }
   },
   {
@@ -1954,7 +1954,7 @@
    "t": {
     "en": "Assigning an empty matrix `[]` works in most cases to allow you to delete rows or columns of matrices and vectors. See Empty Matrices. For example, given a 4 by 5 matrix *A*, the assignment",
     "sha": "4e17646defc0",
-    "zh": ""
+    "zh": "在大多数情况下，把空矩阵 `[]` 赋给某个部分，可以用来删除矩阵和向量的行或列。参见 Empty Matrices。例如，给定一个 4 行 5 列的矩阵 *A*，赋值"
    }
   },
   {
@@ -1966,7 +1966,7 @@
    "t": {
     "en": "deletes the third row of *A*, and the assignment",
     "sha": "afab076666ca",
-    "zh": ""
+    "zh": "会删除 *A* 的第三行，而赋值"
    }
   },
   {
@@ -1978,7 +1978,7 @@
    "t": {
     "en": "deletes the first, third, and fifth columns.",
     "sha": "936fcf478949",
-    "zh": ""
+    "zh": "会删除第一、第三和第五列。"
    }
   },
   {
@@ -1986,7 +1986,7 @@
    "t": {
     "en": "An assignment is an expression, so it has a value. Thus, `z = 1` as an expression has the value 1. One consequence of this is that you can write multiple assignments together:",
     "sha": "278cb66c7220",
-    "zh": ""
+    "zh": "赋值是一个表达式，所以它有值。因此，作为表达式的 `z = 1` 的值为 1。这样做的一个结果是，你可以把多个赋值写在一起："
    }
   },
   {
@@ -1998,7 +1998,7 @@
    "t": {
     "en": "stores the value 0 in all three variables. It does this because the value of `z = 0`, which is 0, is stored into `y`, and then the value of `y = z = 0`, which is 0, is stored into `x`.",
     "sha": "424a6308e432",
-    "zh": ""
+    "zh": "会把值 0 存入这三个变量。原因是：`z = 0` 的值 0 被存入 `y`，然后 `y = z = 0` 的值 0 被存入 `x`。"
    }
   },
   {
@@ -2006,7 +2006,7 @@
    "t": {
     "en": "This is also true of assignments to lists of values, so the following is a valid expression",
     "sha": "77f06266a102",
-    "zh": ""
+    "zh": "对值列表的赋值也是如此，所以下面是一个合法的表达式"
    }
   },
   {
@@ -2018,7 +2018,7 @@
    "t": {
     "en": "that is exactly equivalent to",
     "sha": "1210016fe1e6",
-    "zh": ""
+    "zh": "它与下面的写法完全等价"
    }
   },
   {
@@ -2030,7 +2030,7 @@
    "t": {
     "en": "In expressions like this, the number of values in each part of the expression need not match. For example, the expression",
     "sha": "8f4b3bcabb6f",
-    "zh": ""
+    "zh": "在这样的表达式中，表达式各部分的值的个数不必匹配。例如，表达式"
    }
   },
   {
@@ -2042,7 +2042,7 @@
    "t": {
     "en": "is equivalent to",
     "sha": "1ec285792f84",
-    "zh": ""
+    "zh": "等价于"
    }
   },
   {
@@ -2054,7 +2054,7 @@
    "t": {
     "en": "The number of values on the left side of the expression can, however, not exceed the number of values on the right side. For example, the following will produce an error.",
     "sha": "a847ac422ab7",
-    "zh": ""
+    "zh": "不过，表达式左边的值的个数不能超过右边的值的个数。例如，下面的写法会产生错误。"
    }
   },
   {
@@ -2066,7 +2066,7 @@
    "t": {
     "en": "The symbol `~` may be used as a placeholder in the list of lvalues, indicating that the corresponding return value should be ignored and not stored anywhere:",
     "sha": "2d5914b5e127",
-    "zh": ""
+    "zh": "符号 `~` 可以在左值列表中用作占位符，表示对应的返回值应当被忽略，不存储到任何地方："
    }
   },
   {
@@ -2078,7 +2078,7 @@
    "t": {
     "en": "This is cleaner and more memory efficient than using a dummy variable. The `nargout` value for the right-hand side expression is not affected. If the assignment is used as an expression, the return value is a comma-separated list with the ignored values dropped.",
     "sha": "9bd4e8ba85ab",
-    "zh": ""
+    "zh": "这比使用一个哑变量更简洁，也更节省内存。右侧表达式的 `nargout` 值不受影响。如果这个赋值被当作表达式使用，其返回值是丢掉了被忽略的值之后、以逗号分隔的列表。"
    }
   },
   {
@@ -2086,7 +2086,7 @@
    "t": {
     "en": "A very common programming pattern is to increment an existing variable with a given value, like this",
     "sha": "d64b123d4fc1",
-    "zh": ""
+    "zh": "一种非常常见的编程模式，是把一个已有的变量增加某个给定的值，像这样"
    }
   },
   {
@@ -2098,7 +2098,7 @@
    "t": {
     "en": "This can be written in a clearer and more condensed form using the `+=` operator",
     "sha": "fe7e921c9936",
-    "zh": ""
+    "zh": "用 `+=` 运算符可以写得更清楚、更简练"
    }
   },
   {
@@ -2110,7 +2110,7 @@
    "t": {
     "en": "Similar operators also exist for subtraction (`-=`), multiplication (`*=`), and division (`/=`). An expression of the form",
     "sha": "44c7e33046b5",
-    "zh": ""
+    "zh": "减法（`-=`）、乘法（`*=`）和除法（`/=`）也有类似的运算符。形如"
    }
   },
   {
@@ -2122,7 +2122,7 @@
    "t": {
     "en": "is evaluated as",
     "sha": "cce64d12b85d",
-    "zh": ""
+    "zh": "的表达式按如下方式求值"
    }
   },
   {
@@ -2134,7 +2134,7 @@
    "t": {
     "en": "where *op* can be either `+`, `-`, `*`, or `/`, as long as *expr2* is a simple expression with no side effects. If *expr2* also contains an assignment operator, then this expression is evaluated as",
     "sha": "22ecec0600b9",
-    "zh": ""
+    "zh": "其中 *op* 可以是 `+`、`-`、`*` 或 `/`，条件是 *expr2* 是没有副作用的简单表达式。如果 *expr2* 中也含有赋值运算符，则该表达式按如下方式求值"
    }
   },
   {
@@ -2146,7 +2146,7 @@
    "t": {
     "en": "where *temp* is a placeholder temporary value storing the computed result of evaluating *expr2*. So, the expression",
     "sha": "026b1951abdc",
-    "zh": ""
+    "zh": "其中 *temp* 是一个占位的临时值，用来存放对 *expr2* 求值所得的结果。所以，表达式"
    }
   },
   {
@@ -2158,7 +2158,7 @@
    "t": {
     "en": "is evaluated as",
     "sha": "cce64d12b85d",
-    "zh": ""
+    "zh": "的表达式按如下方式求值"
    }
   },
   {
@@ -2170,7 +2170,7 @@
    "t": {
     "en": "and *not*",
     "sha": "bcae617f4c2b",
-    "zh": ""
+    "zh": "而*不是*"
    }
   },
   {
@@ -2182,7 +2182,7 @@
    "t": {
     "en": "You can use an assignment anywhere an expression is called for. For example, it is valid to write `x != (y = 1)` to set `y` to 1 and then test whether `x` equals 1. But this style tends to make programs hard to read. Except in a one-shot program, you should rewrite it to get rid of such nesting of assignments. This is never very hard.",
     "sha": "781ae5cd5deb",
-    "zh": ""
+    "zh": "凡是需要表达式的地方，你都可以使用赋值。例如，写 `x != (y = 1)` 是合法的，它把 `y` 设为 1，然后检验 `x` 是否等于 1。但这种风格往往让程序难以阅读。除非是一次性的程序，否则你应当改写它，去掉这种赋值的嵌套。这从来都不难。"
    }
   },
   {
@@ -2191,7 +2191,7 @@
    "t": {
     "en": "Operator Precedence",
     "sha": "5ab53f8310f5",
-    "zh": ""
+    "zh": "运算符优先级"
    }
   },
   {
@@ -2199,7 +2199,7 @@
    "t": {
     "en": "*Operator precedence* determines how operators are grouped, when different operators appear close by in one expression. For example, `*` has higher precedence than `+`. Thus, the expression `a + b * c` means to multiply `b` and `c`, and then add `a` to the product (i.e., `a + (b * c)`).",
     "sha": "40b28dd84ce8",
-    "zh": ""
+    "zh": "**运算符优先级**（operator precedence）决定了同一个表达式中出现相邻的不同运算符时，它们如何分组。例如，`*` 的优先级高于 `+`。因此，表达式 `a + b * c` 的意思是先把 `b` 和 `c` 相乘，再把乘积加到 `a` 上（即 `a + (b * c)`）。"
    }
   },
   {
@@ -2207,7 +2207,7 @@
    "t": {
     "en": "You can overrule the precedence of the operators by using parentheses. You can think of the precedence rules as saying where the parentheses are assumed if you do not write parentheses yourself. In fact, it is wise to use parentheses whenever you have an unusual combination of operators, because other people who read the program may not remember what the precedence is in this case. You might forget as well, and then you too could make a mistake. Explicit parentheses will help prevent any such mistake.",
     "sha": "372a4dc8747b",
-    "zh": ""
+    "zh": "你可以用括号改变运算符的优先级。可以把优先级规则理解为：在你自己不写括号时，规定括号加在哪里。事实上，只要遇到不常见的运算符组合，使用括号是明智的，因为读程序的人可能不记得这种情形下的优先级是怎样的，你自己也可能忘记，从而犯错。显式写出括号有助于防止这类错误。"
    }
   },
   {
@@ -2215,7 +2215,7 @@
    "t": {
     "en": "When operators of equal precedence are used together, the leftmost operator groups first, except for the assignment operators, which group in the opposite order. Thus, the expression `a - b + c` groups as `(a - b) + c`, but the expression `a = b = c` groups as `a = (b = c)`.",
     "sha": "7cda32e0988e",
-    "zh": ""
+    "zh": "优先级相同的运算符连用时，最左边的运算符先分组，赋值运算符例外，它们的分组顺序相反。因此，表达式 `a - b + c` 分组为 `(a - b) + c`，而表达式 `a = b = c` 分组为 `a = (b = c)`。"
    }
   },
   {
@@ -2223,7 +2223,7 @@
    "t": {
     "en": "The precedence of prefix unary operators is important when another operator follows the operand. For example, `-x^2` means `-(x^2)`, because `-` has lower precedence than `^`.",
     "sha": "af29fb7771ee",
-    "zh": ""
+    "zh": "当操作数后面还跟着另一个运算符时，前缀一元运算符的优先级就很重要。例如，`-x^2` 的意思是 `-(x^2)`，因为 `-` 的优先级低于 `^`。"
    }
   },
   {
@@ -2231,7 +2231,7 @@
    "t": {
     "en": "Here is a table of the operators in Octave, in order of decreasing precedence. Unless noted, all operators group left to right.",
     "sha": "81607290078a",
-    "zh": ""
+    "zh": "下面是 Octave 中运算符的表，按优先级从高到低排列。除非另有说明，所有运算符都从左到右分组。"
    }
   },
   {
@@ -2241,7 +2241,7 @@
      "term": {
       "en": "`function call and array indexing, cell array indexing, and structure element indexing`",
       "sha": "82881448ad08",
-      "zh": ""
+      "zh": "`function call and array indexing, cell array indexing, and structure element indexing`"
      },
      "blocks": [
       {
@@ -2249,7 +2249,7 @@
        "t": {
         "en": "`()` `{}` `.`",
         "sha": "0fcd5337b8db",
-        "zh": ""
+        "zh": "`()` `{}` `.`"
        }
       }
      ]
@@ -2258,7 +2258,7 @@
      "term": {
       "en": "`postfix increment, and postfix decrement`",
       "sha": "158737cbc15f",
-      "zh": ""
+      "zh": "`postfix increment, and postfix decrement`"
      },
      "blocks": [
       {
@@ -2266,7 +2266,7 @@
        "t": {
         "en": "`++` `--`",
         "sha": "156b444a1f12",
-        "zh": ""
+        "zh": "`++` `--`"
        }
       },
       {
@@ -2274,7 +2274,7 @@
        "t": {
         "en": "These operators group right to left.",
         "sha": "89d5f1b227db",
-        "zh": ""
+        "zh": "这些运算符从右到左分组。"
        }
       }
      ]
@@ -2283,7 +2283,7 @@
      "term": {
       "en": "`transpose and exponentiation`",
       "sha": "ba703db392e0",
-      "zh": ""
+      "zh": "`transpose and exponentiation`"
      },
      "blocks": [
       {
@@ -2291,7 +2291,7 @@
        "t": {
         "en": "`'` `.'` `^` `.^`",
         "sha": "598313c80428",
-        "zh": ""
+        "zh": "`'` `.'` `^` `.^`"
        }
       }
      ]
@@ -2300,7 +2300,7 @@
      "term": {
       "en": "`unary plus, unary minus, prefix increment, prefix decrement, and logical \"not\"`",
       "sha": "bfc4c77fbd91",
-      "zh": ""
+      "zh": "`unary plus, unary minus, prefix increment, prefix decrement, and logical \"not\"`"
      },
      "blocks": [
       {
@@ -2308,7 +2308,7 @@
        "t": {
         "en": "`+` `-` `++` `--` `~` `!`",
         "sha": "fb5043115de6",
-        "zh": ""
+        "zh": "`+` `-` `++` `--` `~` `!`"
        }
       }
      ]
@@ -2317,7 +2317,7 @@
      "term": {
       "en": "`multiply and divide`",
       "sha": "e1d99f8d5137",
-      "zh": ""
+      "zh": "`multiply and divide`"
      },
      "blocks": [
       {
@@ -2325,7 +2325,7 @@
        "t": {
         "en": "`*` `/` `\\` `.\\` `.*` `./`",
         "sha": "c4d1419b746b",
-        "zh": ""
+        "zh": "`*` `/` `\\` `.\\` `.*` `./`"
        }
       }
      ]
@@ -2334,7 +2334,7 @@
      "term": {
       "en": "`add, subtract`",
       "sha": "3bce4a0498fb",
-      "zh": ""
+      "zh": "`add, subtract`"
      },
      "blocks": [
       {
@@ -2342,7 +2342,7 @@
        "t": {
         "en": "`+` `-`",
         "sha": "2011bc2618e2",
-        "zh": ""
+        "zh": "`+` `-`"
        }
       }
      ]
@@ -2351,7 +2351,7 @@
      "term": {
       "en": "`colon`",
       "sha": "a7a18e8e8e52",
-      "zh": ""
+      "zh": "`colon`"
      },
      "blocks": [
       {
@@ -2359,7 +2359,7 @@
        "t": {
         "en": "`:`",
         "sha": "aeb60244e7e1",
-        "zh": ""
+        "zh": "`:`"
        }
       }
      ]
@@ -2368,7 +2368,7 @@
      "term": {
       "en": "`relational`",
       "sha": "b14a781b00ff",
-      "zh": ""
+      "zh": "`relational`"
      },
      "blocks": [
       {
@@ -2376,7 +2376,7 @@
        "t": {
         "en": "`<` `<=` `==` `>=` `>` `!=` `~=`",
         "sha": "d85f28a2cabb",
-        "zh": ""
+        "zh": "`<` `<=` `==` `>=` `>` `!=` `~=`"
        }
       }
      ]
@@ -2385,7 +2385,7 @@
      "term": {
       "en": "`element-wise \"and\"`",
       "sha": "8211723e3ec8",
-      "zh": ""
+      "zh": "`element-wise \"and\"`"
      },
      "blocks": [
       {
@@ -2393,7 +2393,7 @@
        "t": {
         "en": "`&`",
         "sha": "bcfbbda91528",
-        "zh": ""
+        "zh": "`&`"
        }
       }
      ]
@@ -2402,7 +2402,7 @@
      "term": {
       "en": "`element-wise \"or\"`",
       "sha": "d05817e60694",
-      "zh": ""
+      "zh": "`element-wise \"or\"`"
      },
      "blocks": [
       {
@@ -2410,7 +2410,7 @@
        "t": {
         "en": "`|`",
         "sha": "e0153b711d8c",
-        "zh": ""
+        "zh": "`|`"
        }
       }
      ]
@@ -2419,7 +2419,7 @@
      "term": {
       "en": "`logical \"and\"`",
       "sha": "44c34b5490be",
-      "zh": ""
+      "zh": "`logical \"and\"`"
      },
      "blocks": [
       {
@@ -2427,7 +2427,7 @@
        "t": {
         "en": "`&&`",
         "sha": "16bd182e53d2",
-        "zh": ""
+        "zh": "`&&`"
        }
       }
      ]
@@ -2436,7 +2436,7 @@
      "term": {
       "en": "`logical \"or\"`",
       "sha": "b1ee6e965fbb",
-      "zh": ""
+      "zh": "`logical \"or\"`"
      },
      "blocks": [
       {
@@ -2444,7 +2444,7 @@
        "t": {
         "en": "`||`",
         "sha": "03fa53dbd46d",
-        "zh": ""
+        "zh": "`||`"
        }
       }
      ]
@@ -2453,7 +2453,7 @@
      "term": {
       "en": "`assignment`",
       "sha": "7e2f06ce4096",
-      "zh": ""
+      "zh": "`assignment`"
      },
      "blocks": [
       {
@@ -2461,7 +2461,7 @@
        "t": {
         "en": "`=` `+=` `-=` `*=` `/=` `\\=` `^=` `.*=` `./=` `.\\=` `.^=` `|=` `&=`",
         "sha": "735940ced353",
-        "zh": ""
+        "zh": "`=` `+=` `-=` `*=` `/=` `\\=` `^=` `.*=` `./=` `.\\=` `.^=` `|=` `&=`"
        }
       },
       {
@@ -2469,7 +2469,7 @@
        "t": {
         "en": "These operators group right to left.",
         "sha": "89d5f1b227db",
-        "zh": ""
+        "zh": "这些运算符从右到左分组。"
        }
       }
      ]
