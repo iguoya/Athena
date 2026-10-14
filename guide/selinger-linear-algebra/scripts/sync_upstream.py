@@ -273,6 +273,7 @@ def text_to_md(t: str) -> str:
     t = t.replace("``", "“").replace("''", "”").replace("---", "—").replace("--", "–")
     t = t.replace("\\&", "&").replace("\\%", "%").replace("\\#", "#").replace("\\$", "＄")
     t = t.replace("\\ldots", "…").replace("\\dots", "…").replace("\\\\", " ")
+    t = re.sub(r"\\q?quad\b", " ", t)
     t = re.sub(r"\\[,;:! ]", " ", t)
     t = t.replace("~", " ")
     t = re.sub(r"[{}]", "", t)
@@ -381,6 +382,42 @@ def split_items(body: str) -> list[str]:
     return [x for x in items if x.strip()]
 
 
+FIG_DIR = ROOT / "content" / "figures"
+TIKZ_RE = re.compile(r"\\begin\{(tikzpicture|circuitikz)\}")
+
+
+def tikz_sources(body: str) -> list[str]:
+    """body 里全部 tikzpicture / circuitikz 的完整源码（含 \\begin…\\end，已去注释）。"""
+    out = []
+    pos = 0
+    while True:
+        m = TIKZ_RE.search(body, pos)
+        if not m:
+            return out
+        end_start, end_after = find_end(body, m.group(1), m.end())
+        out.append(body[m.start():end_after])
+        pos = end_after
+
+
+def figure_block(env: str, body: str) -> dict:
+    """图块：每幅 TikZ 以源码指纹命名，源码存 content/figures/src/<sha>.tex，svg 由 render_figures.py 生成。"""
+    figs = []
+    for src in tikz_sources(body):
+        norm = re.sub(r"\s+", " ", src).strip()
+        f = hashlib.sha1(norm.encode("utf-8")).hexdigest()[:12]
+        figs.append(f)
+        PENDING_FIGS[f] = src
+    cap = re.search(r"\\caption\{", body)
+    note = ""
+    if cap:
+        a, _ = read_args(body, cap.end() - 1, 1)
+        note = inline(a[0])
+    return {"k": "figure", "env": env, "figs": figs, "caption": unit(note) if note else None}
+
+
+PENDING_FIGS: dict[str, str] = {}
+
+
 def parse_blocks(t: str) -> list[dict]:
     blocks: list[dict] = []
     pos = 0
@@ -411,7 +448,7 @@ def parse_blocks(t: str) -> list[dict]:
             blocks.append({"k": "list", "ordered": env != "itemize",
                            "items": [parse_blocks(it) for it in split_items(body)]})
         elif env in MATH_ENVS and "\\begin{tikzpicture}" in body:
-            blocks.append({"k": "figure", "env": "tikzpicture", "caption": None})
+            blocks.append(figure_block("tikzpicture", body))
         elif env in MATH_ENVS:
             tex = clean_math(body)
             if env.startswith("eqnarray"):
@@ -420,12 +457,7 @@ def parse_blocks(t: str) -> list[dict]:
                 tex = "\\begin{aligned}" + tex + "\\end{aligned}"
             blocks.append({"k": "math", "tex": tex})
         elif env in FIGURE_ENVS:
-            cap = re.search(r"\\caption\{", body)
-            note = ""
-            if cap:
-                a, _ = read_args(body, cap.end() - 1, 1)
-                note = inline(a[0])
-            blocks.append({"k": "figure", "env": env, "caption": unit(note) if note else None})
+            blocks.append(figure_block(env, f"\\begin{{{env}}}{body}\\end{{{env}}}" if env != "figure" else body))
         elif env in TABLE_ENVS:
             args, j = read_args(body, 0, 1)
             blocks.append(parse_table(args[0] if args else "", body[j:]))
@@ -630,6 +662,9 @@ def main() -> int:
             entry["items"].append(item)
         curriculum["chapters"].append(entry)
     if not check:
+        (FIG_DIR / "src").mkdir(parents=True, exist_ok=True)
+        for f, src in PENDING_FIGS.items():
+            (FIG_DIR / "src" / f"{f}.tex").write_text(src.strip() + "\n", encoding="utf-8")
         (ROOT / "content" / "curriculum.json").write_text(
             json.dumps(curriculum, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
         n = sum(1 for c in curriculum["chapters"] for i in c["items"] if i["page"])

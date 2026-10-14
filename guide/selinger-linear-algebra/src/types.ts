@@ -14,7 +14,7 @@ export type Block =
   | { k: "box"; env: string; title: Unit | null; blocks: Block[] }
   | { k: "solution" | "proof" | "proofof" | "outcome"; title: Unit | null; blocks: Block[] }
   | { k: "list"; ordered: boolean; items: Block[][] }
-  | { k: "figure"; env: string; caption: Unit | null }
+  | { k: "figure"; env: string; figs: string[]; caption: Unit | null }
   | { k: "table"; spec: string; rows: Array<Array<Unit | string>> };
 
 export interface Exercise {

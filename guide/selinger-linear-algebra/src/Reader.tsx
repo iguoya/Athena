@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { invoke } from "@tauri-apps/api/core";
+import { useEffect, useState } from "react";
 import { Inline, renderMath } from "./Inline";
 import type { AttemptRow, Block, Check, Exercise, SectionData, Unit } from "./types";
 
@@ -30,6 +31,19 @@ function U({ u, mode }: { u: Unit; mode: ViewMode }) {
     );
   }
   return <Inline text={has ? u.zh : u.en} />;
+}
+
+/** 一幅 TikZ 图：svg 由 render_figures.py 预先编译进 content/figures/；没编好的显示占位。 */
+function Fig({ id }: { id: string }) {
+  const [svg, setSvg] = useState<string | null | undefined>(undefined);
+  useEffect(() => {
+    let alive = true;
+    invoke<string | null>("get_figure", { figId: id }).then((v) => alive && setSvg(v)).catch(() => alive && setSvg(null));
+    return () => { alive = false; };
+  }, [id]);
+  if (svg === undefined) return null;
+  if (!svg) return <div className="figure-note">原书此处有一幅图，尚未移植。</div>;
+  return <div className="figure-svg" dangerouslySetInnerHTML={{ __html: svg }} />;
 }
 
 function Blocks({ blocks, mode }: { blocks: Block[]; mode: ViewMode }) {
@@ -92,10 +106,11 @@ function BlockView({ b, mode }: { b: Block; mode: ViewMode }) {
     }
     case "figure":
       return (
-        <div className="figure-note">
-          原书此处有一幅图（用 TikZ 绘制，尚未移植）。
-          {b.caption && <> 图注：<U u={b.caption} mode={mode} /></>}
-        </div>
+        <figure className="figure">
+          {b.figs.length === 0 && <div className="figure-note">原书此处有一幅图，尚未移植。</div>}
+          {b.figs.map((f) => <Fig key={f} id={f} />)}
+          {b.caption && <figcaption><U u={b.caption} mode={mode} /></figcaption>}
+        </figure>
       );
     case "table":
       return (

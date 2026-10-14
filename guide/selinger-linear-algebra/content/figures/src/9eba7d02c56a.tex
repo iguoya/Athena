@@ -1,0 +1,18 @@
+\begin{tikzpicture}
+    \draw[thick, <->](0,2)--(0,0)--(2,0);
+    \draw[thick, green!60!black](0,1.5)--(1.5,0);
+    \draw[thick, blue](0,0)--(1.5,1.5);
+    \draw[thick, red](0.5,0)--(0.5,1.5);
+    \node[below right] at (2,0){$x$};
+    \node[left] at (0,2){$y$};
+    \node[below] at (1,-0.5){No solution};
+
+    \draw[thick, <->](5,2)--(5,0)--(7,0);
+    \draw[thick, green!60!black](5,1.5)--(6.5,0);
+    \draw[thick, blue](5,0)--(6.5,1.5);
+    \draw[thick, red](5.75,0)--(5.75,1.5);
+    \draw[fill](5.75,0.75) circle [radius=2pt];
+    \node[below right] at (7,0){$x$};
+    \node[left] at (5,2){$y$};
+    \node[below] at (6,-0.5){One solution};
+  \end{tikzpicture}

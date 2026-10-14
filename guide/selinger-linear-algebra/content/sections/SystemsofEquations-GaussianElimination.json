@@ -15,7 +15,7 @@
         "t": {
          "en": "Find the echelon form of a matrix.",
          "sha": "39e495a17c45",
-         "zh": ""
+         "zh": "求矩阵的行阶梯形。"
         }
        }
       ],
@@ -25,7 +25,7 @@
         "t": {
          "en": "Determine whether a system of linear equations has no solution, a unique solution or an infinite number of solutions from its echelon form.",
          "sha": "9a7b6badb246",
-         "zh": ""
+         "zh": "根据行阶梯形，判断线性方程组是无解、有唯一解还是有无穷多个解。"
         }
        }
       ],
@@ -35,7 +35,7 @@
         "t": {
          "en": "Solve a system of linear equations using Gaussian elimination and back substitution.",
          "sha": "cd38de7d4f7d",
-         "zh": ""
+         "zh": "用高斯消元法（Gaussian elimination）和回代（back substitution）解线性方程组。"
         }
        }
       ],
@@ -45,7 +45,7 @@
         "t": {
          "en": "Find the rank of a matrix.",
          "sha": "d609be344742",
-         "zh": ""
+         "zh": "求矩阵的秩。"
         }
        }
       ],
@@ -55,7 +55,7 @@
         "t": {
          "en": "Determine whether a consistent system of linear equations has a unique solution or an infinite number of solutions from its rank.",
          "sha": "8af3b79b1d83",
-         "zh": ""
+         "zh": "根据秩，判断一个相容的线性方程组是有唯一解还是有无穷多个解。"
         }
        }
       ]
@@ -68,7 +68,7 @@
    "t": {
     "en": "In the previous section, we saw examples of how to solve a system of equations using elementary row operations (and sometimes back substitution). But it is not clear whether every system of equations can be solved this way. How do we know which elementary row operation to apply next? In this section, you will learn a procedure called *Gaussian elimination* by which every system of linear equations can be solved systematically.",
     "sha": "84528b7e4d38",
-    "zh": ""
+    "zh": "在上一节中，我们看到了如何用初等行变换（有时还要加上回代）来解方程组的例子。但是，并不清楚是不是每个方程组都能这样解出来，也不清楚下一步该用哪一个初等行变换。这一节要学的是一套叫作*高斯消元法*的步骤，用它可以系统地解出每一个线性方程组。"
    }
   },
   {
@@ -76,7 +76,7 @@
    "t": {
     "en": "Before we start, let's figure out what it means to be “done”. At what point should we stop performing row operations? The answer is that we will stop performing row operations when the system of equations is in a special form called *echelon form *, which we now define.",
     "sha": "c028c0f21c1d",
-    "zh": ""
+    "zh": "开始之前，先弄清楚什么叫「做完了」：行变换做到什么时候可以停？答案是，当方程组化成一种叫作*行阶梯形*（echelon form）的特殊形状时就停下来。下面给出它的定义。"
    }
   },
   {
@@ -85,7 +85,7 @@
    "title": {
     "en": "Echelon form",
     "sha": "c8e73070b0a5",
-    "zh": ""
+    "zh": "行阶梯形"
    },
    "blocks": [
     {
@@ -93,7 +93,7 @@
      "t": {
       "en": "An entry of an augmented matrix is called a **leading entry** or **pivot entry** if it is the leftmost non-zero entry of a row. An augmented matrix is in **echelon form ** (also called **row echelon form** ) if",
       "sha": "f60c6cfe4c82",
-      "zh": ""
+      "zh": "增广矩阵中，某一行最左边的非零元素叫作这一行的**首元**（leading entry），也叫**主元**（pivot entry）。增广矩阵称为**行阶梯形**（echelon form，也叫 row echelon form），当且仅当它满足："
      }
     },
     {
@@ -106,7 +106,7 @@
         "t": {
          "en": "All rows of zeros are below all non-zero rows.",
          "sha": "f543be03e683",
-         "zh": ""
+         "zh": "全为零的行都在所有非零行的下面。"
         }
        }
       ],
@@ -116,7 +116,7 @@
         "t": {
          "en": "Each leading entry of a row is in a column to the right of the leading entry of any row above it.",
          "sha": "fdd24f696495",
-         "zh": ""
+         "zh": "每一行的首元所在的列，都在它上面任何一行的首元所在列的右边。"
         }
        }
       ]
@@ -127,7 +127,7 @@
      "t": {
       "en": "A column containing a pivot entry is also called a **pivot column**.",
       "sha": "67952b4b4140",
-      "zh": ""
+      "zh": "含有主元的列也叫**主元列**（pivot column）。"
      }
     }
    ]
@@ -137,7 +137,7 @@
    "t": {
     "en": "The word *echelon* comes from French *\\'echelle*, which means ladder. This is because an echelon form looks a bit like a ladder or staircase. Here are some examples of echelon form s.",
     "sha": "83bdbee705aa",
-    "zh": ""
+    "zh": "*echelon* 这个词来自法语 *\\'echelle*，意思是梯子。这是因为行阶梯形看起来有点像梯子或楼梯。下面是一些行阶梯形的例子。"
    }
   },
   {
@@ -146,7 +146,7 @@
    "title": {
     "en": "Matrices in echelon form",
     "sha": "27b5e3fbe4e3",
-    "zh": ""
+    "zh": "行阶梯形矩阵"
    },
    "blocks": [
     {
@@ -154,7 +154,7 @@
      "t": {
       "en": "The following augmented matrices are in echelon form. We have circled the pivot entries for clarity.",
       "sha": "7da5e1fe354f",
-      "zh": ""
+      "zh": "下面的增广矩阵都是行阶梯形。为了看得清楚，我们把主元圈了出来。"
      }
     },
     {
@@ -169,7 +169,7 @@
    "title": {
     "en": "Not in echelon form",
     "sha": "797d45f0a9e7",
-    "zh": ""
+    "zh": "不是行阶梯形"
    },
    "blocks": [
     {
@@ -177,7 +177,7 @@
      "t": {
       "en": "The following augmented matrices are not in echelon form.",
       "sha": "024654fada7f",
-      "zh": ""
+      "zh": "下面的增广矩阵都不是行阶梯形。"
      }
     },
     {
@@ -189,7 +189,7 @@
      "t": {
       "en": "In the first matrix, a row of zeros is above a non-zero row. In the second and third matrix, the leading entries of some rows are not to the right of the leading entries of previous rows.",
       "sha": "a8597f0ba50a",
-      "zh": ""
+      "zh": "第一个矩阵中，一行全为零的行在一个非零行的上面。第二个和第三个矩阵中，某些行的首元并不在前面各行首元的右边。"
      }
     }
    ]
@@ -199,7 +199,7 @@
    "t": {
     "en": "An augmented matrix can always be converted to echelon form by using elementary row operations. The following algorithm shows how to do this.",
     "sha": "9921732f43cb",
-    "zh": ""
+    "zh": "增广矩阵总可以通过初等行变换化成行阶梯形。下面的算法说明了怎么做。"
    }
   },
   {
@@ -208,7 +208,7 @@
    "title": {
     "en": "Gaussian elimination",
     "sha": "7c602289cd78",
-    "zh": ""
+    "zh": "高斯消元法"
    },
    "blocks": [
     {
@@ -216,7 +216,7 @@
      "t": {
       "en": "This algorithm provides a method for using row operations to take a matrix to its echelon form. We begin with the matrix in its original form.",
       "sha": "484e272c0f07",
-      "zh": ""
+      "zh": "这个算法给出了用行变换把矩阵化成行阶梯形的方法。我们从原始形式的矩阵开始。"
      }
     },
     {
@@ -229,7 +229,7 @@
         "t": {
          "en": "Starting from the left, find the first non-zero column. This is the first pivot column, and the position at the top of this column will be the position of the first pivot entry. Switch rows if necessary to place a non-zero number in the first pivot position.",
          "sha": "e19bdcfa4457",
-         "zh": ""
+         "zh": "从左往右，找到第一个非零列。这一列就是第一个主元列，这一列最上面的位置就是第一个主元的位置。必要时交换两行，使第一个主元位置上是一个非零的数。"
         }
        }
       ],
@@ -239,7 +239,7 @@
         "t": {
          "en": "Use row operations to make the entries below the first pivot entry (in the first pivot column) equal to zero.",
          "sha": "f9c4c74a1fa4",
-         "zh": ""
+         "zh": "用行变换把（第一个主元列中）第一个主元下面的各个元素都变成零。"
         }
        }
       ],
@@ -249,7 +249,7 @@
         "t": {
          "en": "Ignoring the row containing the first pivot entry, repeat steps 1 and 2 with the remaining rows. Repeat the process until there are no more non-zero rows left.",
          "sha": "2597e023d92f",
-         "zh": ""
+         "zh": "不看含有第一个主元的那一行，对剩下的各行重复第 1 步和第 2 步。如此反复，直到没有非零行为止。"
         }
        }
       ]
@@ -262,7 +262,7 @@
    "t": {
     "en": "Most often we will apply this algorithm in order to solve a system of linear equations. This works by first converting the system to echelon form, then using back substitution to find the solutions. The next few examples show how to do this.",
     "sha": "485e6872ff87",
-    "zh": ""
+    "zh": "这个算法最常见的用途是解线性方程组：先把方程组化成行阶梯形，再用回代求出解。接下来的几个例子演示具体做法。"
    }
   },
   {
@@ -271,7 +271,7 @@
    "title": {
     "en": "Solving a system of equations: one solution",
     "sha": "b2d868be308f",
-    "zh": ""
+    "zh": "解方程组：唯一解"
    },
    "blocks": [
     {
@@ -279,7 +279,7 @@
      "t": {
       "en": "Solve the following system of equations:",
       "sha": "f2a2f329dfa6",
-      "zh": ""
+      "zh": "解下面的方程组："
      }
     },
     {
@@ -297,7 +297,7 @@
      "t": {
       "en": "The augmented matrix for this system is",
       "sha": "55ac99b4cba3",
-      "zh": ""
+      "zh": "这个方程组的增广矩阵是"
      }
     },
     {
@@ -309,7 +309,7 @@
      "t": {
       "en": "In order to find the solution(s) to this system, we first use Algorithm “Gaussian elimination” to carry the augmented matrix to echelon form. Notice that the first column is non-zero, so this is our first pivot column. The first entry in the first row, $1$, is the first pivot entry. We will use row operations to create zeros in the entries below the $1$.",
       "sha": "57e1cf9b720e",
-      "zh": ""
+      "zh": "为了求这个方程组的解，我们先用算法「高斯消元法」把增广矩阵化成行阶梯形。注意到第一列不全为零，所以它是第一个主元列，第一行的第一个元素 $1$ 是第一个主元。我们用行变换把这个 $1$ 下面的元素变成零。"
      }
     },
     {
@@ -321,7 +321,7 @@
      "t": {
       "en": "Now the entries in the first column below the pivot position are zeros. We now look for the second pivot column, which in this case is column two. Here, the $2$ in the second row and second column is in the pivot entry. We could create a zero below the $2$ with a single row operation by adding $\\frac{3}{2}$ times the second row from the third row. But it is sometimes more convenient not to work with fractions, and therefore we start instead by multiplying the third row by $2$.",
       "sha": "0b2acb623dd3",
-      "zh": ""
+      "zh": "现在第一列中主元位置下面的元素都是零了。接着找第二个主元列，这里是第二列。第二行第二列的 $2$ 是主元。只做一次行变换就可以把这个 $2$ 下面变成零：把第二行的 $\\frac{3}{2}$ 倍加到第三行上。但有时不用分数计算会更方便，所以我们改为先把第三行乘以 $2$。"
      }
     },
     {
@@ -333,7 +333,7 @@
      "t": {
       "en": "The final matrix is our desired echelon form.",
       "sha": "a3c54216770c",
-      "zh": ""
+      "zh": "最后得到的矩阵就是我们想要的行阶梯形。"
      }
     },
     {
@@ -345,7 +345,7 @@
      "t": {
       "en": "Now we do back substitution to solve for $z$, $y$, and then $x$. The last equation of the echelon form gives us $z=3$. Substituting this into the second equation, we get $2y+3=5$, which we can solve for $y$ to get $y=1$. Finally, substituting $y=1$ and $z=3$ into the first equation, we have $x+4(1)+3(3)=11$, which we can solve to get $x=-2$. Therefore we have the solution $(x,y,z)=(-2,1,3)$.",
       "sha": "1401cde2d370",
-      "zh": ""
+      "zh": "现在用回代依次求 $z$、$y$、$x$。行阶梯形的最后一个方程给出 $z=3$。把它代入第二个方程，得到 $2y+3=5$，由此可以解出 $y$，得 $y=1$。最后把 $y=1$ 和 $z=3$ 代入第一个方程，得到 $x+4(1)+3(3)=11$，解得 $x=-2$。所以方程组的解是 $(x,y,z)=(-2,1,3)$。"
      }
     },
     {
@@ -353,7 +353,7 @@
      "t": {
       "en": "At this point, it is a good idea to double-check this solution using the original equations",
       "sha": "3150188ebef9",
-      "zh": ""
+      "zh": "到这一步，最好用原方程组再检验一下这个解。"
      }
     },
     {
@@ -365,7 +365,7 @@
      "t": {
       "en": "For example, we can double-check that $(-2)+4(1)+3(3)$ is indeed equal to $11$, and similarly for the other two equations. Double-checking the solution against the original equations is an excellent way to guard against any errors that might have happened during the row operations or back substitution.",
       "sha": "cea43eec8ac2",
-      "zh": ""
+      "zh": "例如，我们可以检验 $(-2)+4(1)+3(3)$ 确实等于 $11$，其余两个方程同理。用原方程检验解，是防止行变换或回代过程中出错的好办法。"
      }
     },
     {
@@ -373,7 +373,7 @@
      "t": {
       "en": "Finally, we note that $(x,y,z)=(-2,1,3)$ is the *only* solution to this system of equations. There cannot be any other solutions, because by Theorem “Elementary operations and solutions”, any solution of the original system of equations would also have to be a solution of (1), and the back substitution leaves us no choice except $z=3$, $y=1$, and $x=-2$.",
       "sha": "89f033ed5478",
-      "zh": ""
+      "zh": "最后要说明，$(x,y,z)=(-2,1,3)$ 是这个方程组的*唯一*解。不可能有别的解：根据定理「初等运算与解」，原方程组的任何一个解也一定是 (1) 的解，而回代时我们只能得到 $z=3$、$y=1$、$x=-2$，没有别的选择。"
      }
     }
    ]
@@ -384,7 +384,7 @@
    "title": {
     "en": "Solving a system of equations: no solution",
     "sha": "7110465ee3ce",
-    "zh": ""
+    "zh": "解方程组：无解"
    },
    "blocks": [
     {
@@ -392,7 +392,7 @@
      "t": {
       "en": "Solve the following system of equations:",
       "sha": "f2a2f329dfa6",
-      "zh": ""
+      "zh": "解下面的方程组："
      }
     },
     {
@@ -410,7 +410,7 @@
      "t": {
       "en": "The augmented matrix for this system is",
       "sha": "55ac99b4cba3",
-      "zh": ""
+      "zh": "这个方程组的增广矩阵是"
      }
     },
     {
@@ -422,7 +422,7 @@
      "t": {
       "en": "We use Algorithm “Gaussian elimination” to carry the augmented matrix to echelon form. The first column is non-zero and will be the first pivot column. We switch the first two rows to move a non-zero number into the pivot position:",
       "sha": "4aae5ade5e7c",
-      "zh": ""
+      "zh": "我们用算法「高斯消元法」把增广矩阵化成行阶梯形。第一列不全为零，它是第一个主元列。我们交换前两行，把一个非零的数换到主元位置上："
      }
     },
     {
@@ -434,7 +434,7 @@
      "t": {
       "en": "To create zeros below the pivot entry, we subtract $2$ times the first row from the third row:",
       "sha": "6a42bf184d50",
-      "zh": ""
+      "zh": "为了把主元下面变成零，用第三行减去第一行的 $2$ 倍："
      }
     },
     {
@@ -446,7 +446,7 @@
      "t": {
       "en": "This finishes the first column. The second pivot column will be column two, with the $1$ in the second row and column as the pivot entry. We add $3$ times the second row to the third row to create a zero below the pivot:",
       "sha": "c771e079f355",
-      "zh": ""
+      "zh": "这样第一列就处理完了。第二个主元列是第二列，主元是第二行第二列的 $1$。把第二行的 $3$ 倍加到第三行上，使主元下面变成零："
      }
     },
     {
@@ -458,7 +458,7 @@
      "t": {
       "en": "This matrix is in echelon form. Note that the final pivot entry is on the right-hand side. The last row corresponds to the equation",
       "sha": "15647475c24b",
-      "zh": ""
+      "zh": "这个矩阵已经是行阶梯形。注意，最后一个主元在最右边（常数项那一列）。最后一行对应的方程是"
      }
     },
     {
@@ -470,7 +470,7 @@
      "t": {
       "en": "This equation has no solution, because for all $x,y,z$, the left-hand side will equal $0$ and not $4$. Therefore, there is no solution to the given system of equations. In other words, the system is inconsistent.",
       "sha": "0bb251d2311c",
-      "zh": ""
+      "zh": "这个方程无解，因为无论 $x,y,z$ 取什么值，左边都等于 $0$，不可能等于 $4$。所以给定的方程组无解。换句话说，这个方程组是不相容的。"
      }
     }
    ]
@@ -481,7 +481,7 @@
    "title": {
     "en": "Solving a system of equations: an infinite set of solutions",
     "sha": "14af9cec6013",
-    "zh": ""
+    "zh": "解方程组：有无穷多个解"
    },
    "blocks": [
     {
@@ -489,7 +489,7 @@
      "t": {
       "en": "Solve the following system of equations:",
       "sha": "f2a2f329dfa6",
-      "zh": ""
+      "zh": "解下面的方程组："
      }
     },
     {
@@ -507,7 +507,7 @@
      "t": {
       "en": "The augmented matrix of this system is",
       "sha": "803a550d274e",
-      "zh": ""
+      "zh": "这个方程组的增广矩阵是"
      }
     },
     {
@@ -519,7 +519,7 @@
      "t": {
       "en": "We use Gaussian elimination to carry the augmented matrix to echelon form. The first column is the first pivot column, and $3$ is the pivot entry. We use row operating to create zeros beneath the pivot entry. We subtract $2$ times the first row from the third row and get:",
       "sha": "d1779f29ec07",
-      "zh": ""
+      "zh": "我们用高斯消元法把增广矩阵化成行阶梯形。第一列是第一个主元列，主元是 $3$。用行变换把主元下面变成零：用第三行减去第一行的 $2$ 倍，得到："
      }
     },
     {
@@ -531,7 +531,7 @@
      "t": {
       "en": "Now, we have created zeros beneath the pivot entry in the first column, so we move on to the second pivot column (which is the second column) and repeat the procedure. Subtracting the second row from the third row, we get:",
       "sha": "727c53590179",
-      "zh": ""
+      "zh": "现在第一列主元下面已经全是零了，所以转到第二个主元列（也就是第二列），重复同样的步骤。用第三行减去第二行，得到："
      }
     },
     {
@@ -543,7 +543,7 @@
      "t": {
       "en": "This matrix is now in echelon form. Observe that the first two columns are pivot columns, and the third column is not. We call the corresponding variables $x$ and $y$ **pivot variables**, and the variable $z$ is a **free variable**. The equations corresponding to this echelon form are",
       "sha": "dcfc009b3d3f",
-      "zh": ""
+      "zh": "这个矩阵现在是行阶梯形。请观察：前两列是主元列，第三列不是。对应的变量 $x$ 和 $y$ 叫作**主元变量**（pivot variables，即基本变量），变量 $z$ 叫作**自由变量**（free variable）。这个行阶梯形对应的方程是"
      }
     },
     {
@@ -555,7 +555,7 @@
      "t": {
       "en": "Observe that the free variable $z$ is not constrained by any equation. In fact, $z$ can equal any number. We choose $t$ to be any number and let $z = t$. In this context $t$ is called a **parameter**. We then use back substitution to solve for the pivot variables $y$ and $x$. From the second equation, we have $y = 1+10z = 1+10t$. From the first equation, we have $3x = 8+y-5z = 8+(1+10t)-5t = 9+5t$, and therefore $x=3+\\frac{5}{3}t$. Therefore, the general solution of this system is",
       "sha": "32529f809dad",
-      "zh": ""
+      "zh": "请观察，自由变量 $z$ 没有受到任何方程的约束。事实上，$z$ 可以取任意数。我们取 $t$ 为任意数，令 $z = t$。在这里 $t$ 叫作**参数**（parameter）。然后用回代求主元变量 $y$ 和 $x$。由第二个方程，有 $y = 1+10z = 1+10t$。由第一个方程，有 $3x = 8+y-5z = 8+(1+10t)-5t = 9+5t$，因此 $x=3+\\frac{5}{3}t$。所以这个方程组的通解是"
      }
     },
     {
@@ -567,7 +567,7 @@
      "t": {
       "en": "where $t$ is arbitrary. The system has an infinite set of solutions which are given by these equations. For any value of the parameter $t$ we select, $x$, $y$, and $z$ will be given by the above equations. For example, if we choose $t=4$ then the corresponding solution would be",
       "sha": "f28ca116f834",
-      "zh": ""
+      "zh": "其中 $t$ 是任意数。这个方程组有无穷多个解，都由这些式子给出：参数 $t$ 取任何一个值，$x$、$y$、$z$ 就由上面的式子确定。例如，取 $t=4$，对应的解就是"
      }
     },
     {
@@ -581,7 +581,7 @@
    "t": {
     "en": "In Example “Solving a system of equations: an infinite set of solutions” the solution involved a parameter. It may happen that the solution to a system involves more than one parameter, as shown in the following example.",
     "sha": "fb17457b8054",
-    "zh": ""
+    "zh": "在例「解方程组：有无穷多个解」中，解里只有一个参数。方程组的解也可能含有不止一个参数，见下面的例子。"
    }
   },
   {
@@ -590,7 +590,7 @@
    "title": {
     "en": "Solving a system of equations: a two-parameter set of solutions",
     "sha": "ba3bfc975e37",
-    "zh": ""
+    "zh": "解方程组：含两个参数的解集"
    },
    "blocks": [
     {
@@ -598,7 +598,7 @@
      "t": {
       "en": "Solve the following system of equations:",
       "sha": "f2a2f329dfa6",
-      "zh": ""
+      "zh": "解下面的方程组："
      }
     },
     {
@@ -616,7 +616,7 @@
      "t": {
       "en": "The augmented matrix is",
       "sha": "a1dfecf3c785",
-      "zh": ""
+      "zh": "增广矩阵是"
      }
     },
     {
@@ -628,7 +628,7 @@
      "t": {
       "en": "We carry this matrix to echelon form using row operations.",
       "sha": "4406e4ce3eb7",
-      "zh": ""
+      "zh": "我们用行变换把这个矩阵化成行阶梯形。"
      }
     },
     {
@@ -640,7 +640,7 @@
      "t": {
       "en": "This matrix is in echelon form and we can see that the first and third columns are pivot columns, whereas the second and fourth columns are not. Therefore, $x$ and $z$ are pivot variables and $y$ and $w$ are free variables. We assign parameters $y=s$ and $w=t$ to the free variables. Then we do back substitution to solve for $z$ and $x$. From the second equation, we have $z=2-w=2-t$. From the first equation, we have $x=3-2y+2z-2w = 3-2s+2(2-t)-2t = 7-2s-4t$. Therefore, the general solution is given by",
       "sha": "22058670c33f",
-      "zh": ""
+      "zh": "这个矩阵是行阶梯形，可以看出第一列和第三列是主元列，而第二列和第四列不是。因此，$x$ 和 $z$ 是主元变量，$y$ 和 $w$ 是自由变量。我们给自由变量赋予参数 $y=s$ 和 $w=t$。然后用回代求 $z$ 和 $x$。由第二个方程，有 $z=2-w=2-t$。由第一个方程，有 $x=3-2y+2z-2w = 3-2s+2(2-t)-2t = 7-2s-4t$。因此，通解为"
      }
     },
     {
@@ -652,7 +652,7 @@
      "t": {
       "en": "It is customary to write this solution in the form",
       "sha": "b27bd30c3c74",
-      "zh": ""
+      "zh": "习惯上，这个解写成如下形式"
      }
     },
     {
@@ -666,7 +666,7 @@
    "t": {
     "en": "In Examples “Solving a system of equations: one solution”–“Solving a system of equations: a two-parameter set of solutions”, we have seem systems of equations with one solution, no solution, and infinitely many solutions with one parameter as well as two parameters. Moreover, in each case, we have been able to determine the number of solutions by looking at the echelon form of the augmented matrix. To summarize, we have the following possibilities for a system of equations:",
     "sha": "2eb87fb7380d",
-    "zh": ""
+    "zh": "在例「解方程组：唯一解」到例「解方程组：含两个参数的解集」中，我们见到了有唯一解、无解、有无穷多个解（含一个参数以及含两个参数）的方程组。而且在每种情形下，只要看增广矩阵的行阶梯形，就能确定解的个数。总结起来，方程组有以下几种可能："
    }
   },
   {
@@ -679,7 +679,7 @@
       "t": {
        "en": "*No solution:* If the echelon form has a row of the form",
        "sha": "08eef3e9eca2",
-       "zh": ""
+       "zh": "*无解：*如果行阶梯形中有形如下面的一行"
       }
      },
      {
@@ -691,7 +691,7 @@
       "t": {
        "en": "where $b\\neq 0$, then the system is inconsistent and has no solution.",
        "sha": "a69782db55a5",
-       "zh": ""
+       "zh": "其中 $b\\neq 0$，那么方程组不相容，无解。"
       }
      }
     ],
@@ -701,7 +701,7 @@
       "t": {
        "en": "*One solution:* For a consistent system of equations: If every column of the coefficient matrix of the echelon form is a pivot column, the system has exactly one solution. The following is an example of an augmented matrix in echelon form for a system of equations with one solution.",
        "sha": "b63747f70bf6",
-       "zh": ""
+       "zh": "*唯一解：*对于相容的方程组：如果行阶梯形的系数矩阵的每一列都是主元列，那么方程组恰有一个解。下面是一个有唯一解的方程组的增广矩阵（行阶梯形）的例子。"
       }
      },
      {
@@ -715,7 +715,7 @@
       "t": {
        "en": "*Infinitely many solutions:* For a consistent system of equations: If not all columns of the coefficient matrix of the echelon form are pivot columns, then the system has infinitely many solutions. In this case, each variable corresponding to a non-pivot column is a *free variable* and can be assigned a *parameter*. The remaining variables are *pivot variables* and can be expressed in terms of the parameters. Therefore, the number of parameters in the general solution is equal to the number of non-pivot columns. The following are examples of echelon form s for systems of equations with infinitely many solutions.",
        "sha": "bdebdf25e5bd",
-       "zh": ""
+       "zh": "*无穷多个解：*对于相容的方程组：如果行阶梯形的系数矩阵并非每一列都是主元列，那么方程组有无穷多个解。这时，非主元列所对应的每个变量都是*自由变量*，可以赋予一个*参数*；其余的变量是*主元变量*，可以用这些参数表示出来。因此，通解中参数的个数等于非主元列的个数。下面是一些有无穷多个解的方程组的行阶梯形的例子。"
       }
      },
      {
@@ -727,7 +727,7 @@
       "t": {
        "en": "or",
        "sha": "1758356db217",
-       "zh": ""
+       "zh": "或"
       }
      },
      {
@@ -742,7 +742,7 @@
    "t": {
     "en": "There is a special name for the number of pivot variables in a system of equations. It is called the *rank* of the system.",
     "sha": "eda12c9f2958",
-    "zh": ""
+    "zh": "方程组中主元变量的个数有一个专门的名称，叫作方程组的*秩*。"
    }
   },
   {
@@ -751,7 +751,7 @@
    "title": {
     "en": "Rank of a matrix",
     "sha": "dc4e9c2f850e",
-    "zh": ""
+    "zh": "矩阵的秩"
    },
    "blocks": [
     {
@@ -759,7 +759,7 @@
      "t": {
       "en": "Let $A$ be a matrix and consider any echelon form of $A$. Then, the number $r$ of pivot entries of $A$ does not depend on the echelon form we choose, and is called the **rank** of $A$. We denote it by $\\rank(A)$.",
       "sha": "d725f92ac7d7",
-      "zh": ""
+      "zh": "设 $A$ 是一个矩阵，考虑 $A$ 的任意一个行阶梯形。那么 $A$ 的主元个数 $r$ 与所选的行阶梯形无关，称为 $A$ 的**秩**（rank），记作 $\\rank(A)$。"
      }
     },
     {
@@ -767,7 +767,7 @@
      "t": {
       "en": "The rank of a system of linear equations is the rank of its coefficient matrix (i.e., the matrix on the left-hand side). It is equal to the number of pivot variables.",
       "sha": "a4b62bb96e10",
-      "zh": ""
+      "zh": "线性方程组的秩就是它的系数矩阵（即左边那部分矩阵）的秩，它等于主元变量的个数。"
      }
     }
    ]
@@ -778,7 +778,7 @@
    "title": {
     "en": "Finding the rank of a matrix",
     "sha": "ee64b11f648c",
-    "zh": ""
+    "zh": "求矩阵的秩"
    },
    "blocks": [
     {
@@ -786,7 +786,7 @@
      "t": {
       "en": "Consider the matrix",
       "sha": "c5c7ab8caadb",
-      "zh": ""
+      "zh": "考虑矩阵"
      }
     },
     {
@@ -798,7 +798,7 @@
      "t": {
       "en": "What is its rank?",
       "sha": "ef8bb3c0d198",
-      "zh": ""
+      "zh": "它的秩是多少？"
      }
     }
    ]
@@ -812,7 +812,7 @@
      "t": {
       "en": "First, we need to find an echelon form of $A$. Through the usual algorithm, we find that this is",
       "sha": "60494b1e4d53",
-      "zh": ""
+      "zh": "首先要求出 $A$ 的一个行阶梯形。按通常的算法，得到"
      }
     },
     {
@@ -824,7 +824,7 @@
      "t": {
       "en": "Here we have two pivot entries, and therefore the rank of $A$ is $r=2$.",
       "sha": "bda1bd4b9f44",
-      "zh": ""
+      "zh": "这里有两个主元，所以 $A$ 的秩是 $r=2$。"
      }
     }
    ]
@@ -834,7 +834,7 @@
    "t": {
     "en": "Suppose we have a system of $m$ equations in $n$ variables, and suppose that $n>m$. Further assume that the system is consistent. From our above discussion, we know that this system will have infinitely many solutions. This is because there can be at most one pivot entry per row, and therefore at most $m$ variables can be pivot variables. It follows that there are at least $n-m$ free variables. Therefore, the general solution of this system has at least $n-m$ parameters.",
     "sha": "1bc0a57a4988",
-    "zh": ""
+    "zh": "设有一个含 $m$ 个方程、$n$ 个变量的方程组，其中 $n>m$，并且设这个方程组相容。由上面的讨论，我们知道这个方程组有无穷多个解。原因是：每一行至多有一个主元，所以至多有 $m$ 个变量是主元变量。由此可知至少有 $n-m$ 个自由变量。因此，这个方程组的通解至少含有 $n-m$ 个参数。"
    }
   },
   {
@@ -842,7 +842,7 @@
    "t": {
     "en": "Notice that if $n=m$ or $n<m$, it is possible for the system to have a unique solution or infinitely many solutions. In all cases ($n>m$, $n=m$, or $n<m$), it is also possible for the system to be inconsistent (have no solutions).",
     "sha": "54b03c1648d6",
-    "zh": ""
+    "zh": "注意，如果 $n=m$ 或 $n<m$，方程组既可能有唯一解，也可能有无穷多个解。在所有情形下（$n>m$、$n=m$ 或 $n<m$），方程组也都有可能不相容（无解）。"
    }
   },
   {
@@ -850,7 +850,7 @@
    "t": {
     "en": "By refining the above argument, we get the following theorem:",
     "sha": "636e643e5fc1",
-    "zh": ""
+    "zh": "把上面的论证再精细一些，就得到下面的定理："
    }
   },
   {
@@ -859,7 +859,7 @@
    "title": {
     "en": "Rank and solutions of consistent system of equations",
     "sha": "7fee6e50ca1f",
-    "zh": ""
+    "zh": "相容方程组的秩与解"
    },
    "blocks": [
     {
@@ -867,7 +867,7 @@
      "t": {
       "en": "Consider a system of $m$ equations in $n$ variables, and assume that the coefficient matrix has rank $r$. Assume further that the system is consistent.",
       "sha": "1464b22951c0",
-      "zh": ""
+      "zh": "考虑一个含 $m$ 个方程、$n$ 个变量的方程组，设系数矩阵的秩为 $r$，并进一步设方程组相容。"
      }
     },
     {
@@ -880,7 +880,7 @@
         "t": {
          "en": "If $r=n$, then the system has a unique solution.",
          "sha": "673b7ce384d8",
-         "zh": ""
+         "zh": "若 $r=n$，则方程组有唯一解。"
         }
        }
       ],
@@ -890,7 +890,7 @@
         "t": {
          "en": "If $r<n$, then the system has infinitely many solutions, with $n-r$ parameters.",
          "sha": "9d57c423b2a7",
-         "zh": ""
+         "zh": "若 $r<n$，则方程组有无穷多个解，含 $n-r$ 个参数。"
         }
        }
       ]
@@ -903,7 +903,7 @@
    "t": {
     "en": "Here is a final summary of how the rank affects the number of solutions:",
     "sha": "3751befece3e",
-    "zh": ""
+    "zh": "最后总结一下，秩是怎样影响解的个数的："
    }
   },
   {
@@ -916,7 +916,7 @@
       "t": {
        "en": "*No solution.* If the system of equations is inconsistent, then it has no solution, regardless of the rank.",
        "sha": "4cbde2a04f9d",
-       "zh": ""
+       "zh": "*无解。*如果方程组不相容，那么无论秩是多少，它都无解。"
       }
      }
     ],
@@ -926,7 +926,7 @@
       "t": {
        "en": "*Unique solution.* For a consistent system, suppose $r=n$. Then there is a pivot position in every column of the coefficient matrix of $A$. Hence, there is a unique solution.",
        "sha": "5e64af883011",
-       "zh": ""
+       "zh": "*唯一解。*对于相容的方程组，设 $r=n$。那么 $A$ 的系数矩阵的每一列都有主元位置，所以有唯一解。"
       }
      }
     ],
@@ -936,7 +936,7 @@
       "t": {
        "en": "*Infinitely many solutions.* For a consistent system, suppose $r<n$. Then there are less pivot positions than columns in the coefficient matrix, meaning that not every column is a pivot column. The columns which are *not* pivot columns correspond to parameters. In fact, in this case we have $n-r$ parameters. The system has infinitely many solutions.",
        "sha": "f837f021f674",
-       "zh": ""
+       "zh": "*无穷多个解。*对于相容的方程组，设 $r<n$。那么主元位置比系数矩阵的列数少，也就是说并非每一列都是主元列。*不是*主元列的那些列对应参数。事实上，这时共有 $n-r$ 个参数。方程组有无穷多个解。"
       }
      }
     ]
@@ -952,7 +952,7 @@
      "t": {
       "en": "Consider the following augmented matrix in which $\\ast$ denotes an arbitrary number and $\\blacksquare$ denotes a non-zero number. Determine whether the given augmented matrix is consistent. If consistent, is the solution unique?",
       "sha": "c2e235bf6e6c",
-      "zh": ""
+      "zh": "考虑下面的增广矩阵，其中 $\\ast$ 表示任意数，$\\blacksquare$ 表示非零的数。判断这个增广矩阵所对应的方程组是否相容。如果相容，解是否唯一？"
      }
     },
     {
@@ -966,7 +966,7 @@
      "t": {
       "en": "The solution exists but is not unique.",
       "sha": "7db672f0f713",
-      "zh": ""
+      "zh": "解存在，但不唯一。"
      }
     }
    ],
@@ -987,7 +987,7 @@
      "t": {
       "en": "Consider the following augmented matrix in which $\\ast$ denotes an arbitrary number and $\\blacksquare$ denotes a non-zero number. Determine whether the given augmented matrix is consistent. If consistent, is the solution unique?",
       "sha": "c2e235bf6e6c",
-      "zh": ""
+      "zh": "考虑下面的增广矩阵，其中 $\\ast$ 表示任意数，$\\blacksquare$ 表示非零的数。判断这个增广矩阵所对应的方程组是否相容。如果相容，解是否唯一？"
      }
     },
     {
@@ -1001,7 +1001,7 @@
      "t": {
       "en": "A solution exists and is unique.",
       "sha": "e1084908532b",
-      "zh": ""
+      "zh": "解存在，并且唯一。"
      }
     }
    ],
@@ -1022,7 +1022,7 @@
      "t": {
       "en": "Consider the following augmented matrix in which $\\ast$ denotes an arbitrary number and $\\blacksquare$ denotes a non-zero number. Determine whether the given augmented matrix is consistent. If consistent, is the solution unique?",
       "sha": "c2e235bf6e6c",
-      "zh": ""
+      "zh": "考虑下面的增广矩阵，其中 $\\ast$ 表示任意数，$\\blacksquare$ 表示非零的数。判断这个增广矩阵所对应的方程组是否相容。如果相容，解是否唯一？"
      }
     },
     {
@@ -1048,7 +1048,7 @@
      "t": {
       "en": "Consider the following augmented matrix in which $\\ast$ denotes an arbitrary number and $\\blacksquare$ denotes a non-zero number. Determine whether the given augmented matrix is consistent. If consistent, is the solution unique?",
       "sha": "c2e235bf6e6c",
-      "zh": ""
+      "zh": "考虑下面的增广矩阵，其中 $\\ast$ 表示任意数，$\\blacksquare$ 表示非零的数。判断这个增广矩阵所对应的方程组是否相容。如果相容，解是否唯一？"
      }
     },
     {
@@ -1062,7 +1062,7 @@
      "t": {
       "en": "There might be a solution. If so, there are infinitely many.",
       "sha": "5321c6928c5b",
-      "zh": ""
+      "zh": "可能有解；如果有解，则有无穷多个解。"
      }
     }
    ],
@@ -1083,7 +1083,7 @@
      "t": {
       "en": "Suppose a system of equations has fewer equations than variables. Will such a system necessarily be consistent? If so, explain why and if not, give an example which is not consistent.",
       "sha": "caa87eeb8366",
-      "zh": ""
+      "zh": "设一个方程组的方程个数少于变量个数。这样的方程组一定相容吗？如果是，请说明理由；如果不是，请举一个不相容的例子。"
      }
     }
    ],
@@ -1093,7 +1093,7 @@
      "t": {
       "en": "No. Consider $x+y+z=2$ and $x+y+z=1$.",
       "sha": "430356147b95",
-      "zh": ""
+      "zh": "不一定。考虑 $x+y+z=2$ 与 $x+y+z=1$。"
      }
     }
    ],
@@ -1114,7 +1114,7 @@
      "t": {
       "en": "If a system of equations has more equations than variables, can it have a solution? If so, give an example and if not, explain why not.",
       "sha": "fac94478bc7c",
-      "zh": ""
+      "zh": "如果一个方程组的方程个数多于变量个数，它可以有解吗？如果可以，请举一个例子；如果不可以，请说明原因。"
      }
     }
    ],
@@ -1124,7 +1124,7 @@
      "t": {
       "en": "These can have a solution. For example, $x+y=1$, $2x+2y=2$, $3x+3y=3$ even has an infinite set of solutions.",
       "sha": "530aa4fb9fa1",
-      "zh": ""
+      "zh": "可以有解。例如，$x+y=1$、$2x+2y=2$、$3x+3y=3$ 甚至有无穷多个解。"
      }
     }
    ],
@@ -1145,7 +1145,7 @@
      "t": {
       "en": "Find $h$ such that",
       "sha": "c543c1de0681",
-      "zh": ""
+      "zh": "求 $h$，使得"
      }
     },
     {
@@ -1157,7 +1157,7 @@
      "t": {
       "en": "is the augmented matrix of an *inconsistent* system.",
       "sha": "e4cedd24d56c",
-      "zh": ""
+      "zh": "是一个*不相容*方程组的增广矩阵。"
      }
     }
    ],
@@ -1167,7 +1167,7 @@
      "t": {
       "en": "$h=4$.",
       "sha": "7fb89d942753",
-      "zh": ""
+      "zh": "$h=4$。"
      }
     }
    ],
@@ -1188,7 +1188,7 @@
      "t": {
       "en": "Find $h$ such that",
       "sha": "c543c1de0681",
-      "zh": ""
+      "zh": "求 $h$，使得"
      }
     },
     {
@@ -1200,7 +1200,7 @@
      "t": {
       "en": "is the augmented matrix of a *consistent* system.",
       "sha": "899cc5cc78b4",
-      "zh": ""
+      "zh": "是一个*相容*方程组的增广矩阵。"
      }
     }
    ],
@@ -1210,7 +1210,7 @@
      "t": {
       "en": "Any $h$ will work.",
       "sha": "0b6f0b0b79f1",
-      "zh": ""
+      "zh": "任何 $h$ 都可以。"
      }
     }
    ],
@@ -1231,7 +1231,7 @@
      "t": {
       "en": "Find $h$ such that",
       "sha": "c543c1de0681",
-      "zh": ""
+      "zh": "求 $h$，使得"
      }
     },
     {
@@ -1243,7 +1243,7 @@
      "t": {
       "en": "is the augmented matrix of a *consistent* system.",
       "sha": "899cc5cc78b4",
-      "zh": ""
+      "zh": "是一个*相容*方程组的增广矩阵。"
      }
     }
    ],
@@ -1253,7 +1253,7 @@
      "t": {
       "en": "Any $h$ will work.",
       "sha": "0b6f0b0b79f1",
-      "zh": ""
+      "zh": "任何 $h$ 都可以。"
      }
     }
    ],
@@ -1274,7 +1274,7 @@
      "t": {
       "en": "Choose $h$ and $k$ such that the augmented matrix shown has each of the following:",
       "sha": "986e581d085b",
-      "zh": ""
+      "zh": "选取 $h$ 和 $k$，使下面的增广矩阵分别满足以下各条件："
      }
     },
     {
@@ -1287,7 +1287,7 @@
         "t": {
          "en": "one solution",
          "sha": "55f09e5f38b7",
-         "zh": ""
+         "zh": "有唯一解"
         }
        }
       ],
@@ -1297,7 +1297,7 @@
         "t": {
          "en": "no solution",
          "sha": "431e8670169c",
-         "zh": ""
+         "zh": "无解"
         }
        }
       ],
@@ -1307,7 +1307,7 @@
         "t": {
          "en": "infinitely many solutions",
          "sha": "9fe3a861a2c3",
-         "zh": ""
+         "zh": "有无穷多个解"
         }
        }
       ]
@@ -1324,7 +1324,7 @@
      "t": {
       "en": "If $h\\neq 2$ there will be a unique solution for any $k$. If $h=2$ and $k\\neq 4$, there are no solutions. If $h=2$ and $k=4$, then there are infinitely many solutions.",
       "sha": "1b4c32d93161",
-      "zh": ""
+      "zh": "如果 $h\\neq 2$，则对任意的 $k$ 都有唯一解。如果 $h=2$ 且 $k\\neq 4$，则无解。如果 $h=2$ 且 $k=4$，则有无穷多个解。"
      }
     }
    ],
@@ -1345,7 +1345,7 @@
      "t": {
       "en": "Choose $h$ and $k$ such that the augmented matrix shown has each of the following:",
       "sha": "986e581d085b",
-      "zh": ""
+      "zh": "选取 $h$ 和 $k$，使下面的增广矩阵分别满足以下各条件："
      }
     },
     {
@@ -1358,7 +1358,7 @@
         "t": {
          "en": "one solution",
          "sha": "55f09e5f38b7",
-         "zh": ""
+         "zh": "有唯一解"
         }
        }
       ],
@@ -1368,7 +1368,7 @@
         "t": {
          "en": "no solution",
          "sha": "431e8670169c",
-         "zh": ""
+         "zh": "无解"
         }
        }
       ],
@@ -1378,7 +1378,7 @@
         "t": {
          "en": "infinitely many solutions",
          "sha": "9fe3a861a2c3",
-         "zh": ""
+         "zh": "有无穷多个解"
         }
        }
       ]
@@ -1395,7 +1395,7 @@
      "t": {
       "en": "If $h\\neq 4$, then there is exactly one solution. If $h=4$ and $k\\neq 4$, then there are no solutions. If $h=4$ and $k=4$, then there are infinitely many solutions.",
       "sha": "1d20de467ffa",
-      "zh": ""
+      "zh": "如果 $h\\neq 4$，则恰有一个解。如果 $h=4$ 且 $k\\neq 4$，则无解。如果 $h=4$ 且 $k=4$，则有无穷多个解。"
      }
     }
    ],
@@ -1416,7 +1416,7 @@
      "t": {
       "en": "Determine if the system is consistent. If so, is the solution unique?",
       "sha": "34e7de695512",
-      "zh": ""
+      "zh": "判断方程组是否相容。如果相容，解是否唯一？"
      }
     },
     {
@@ -1430,7 +1430,7 @@
      "t": {
       "en": "There is no solution. The system is inconsistent. You can see this from the augmented matrix. $\\left[\\begin{array}{rrrr|r} 1 & 2 & 1 & -1 & 2 \\\\ 1 & -1 & 1 & 1 & 1 \\\\ 2 & 1 & -1 & 0 & 1 \\\\ 4 & 2 & 1 & 0 & 5 \\end{array}\\right]$, echelon form: $\\left[\\begin{array}{rrrr|r} 1 & 2 & 1 & -1 & 2 \\\\ 0 & -3 & 0 & 2 & -1 \\\\ 0 & 0 & -3 & 0 & -2 \\\\ 0 & 0 & 0 & 0 & 1 \\end{array}\\right]$.",
       "sha": "8c7f6ec2a03d",
-      "zh": ""
+      "zh": "无解，方程组不相容。从增广矩阵可以看出这一点。$\\left[\\begin{array}{rrrr|r} 1 & 2 & 1 & -1 & 2 \\\\ 1 & -1 & 1 & 1 & 1 \\\\ 2 & 1 & -1 & 0 & 1 \\\\ 4 & 2 & 1 & 0 & 5 \\end{array}\\right]$，行阶梯形：$\\left[\\begin{array}{rrrr|r} 1 & 2 & 1 & -1 & 2 \\\\ 0 & -3 & 0 & 2 & -1 \\\\ 0 & 0 & -3 & 0 & -2 \\\\ 0 & 0 & 0 & 0 & 1 \\end{array}\\right]$。"
      }
     }
    ],
@@ -1451,7 +1451,7 @@
      "t": {
       "en": "Determine if the system is consistent. If so, is the solution unique?",
       "sha": "34e7de695512",
-      "zh": ""
+      "zh": "判断方程组是否相容。如果相容，解是否唯一？"
      }
     },
     {
@@ -1465,7 +1465,7 @@
      "t": {
       "en": "The solution is: $x=\\frac{1}{3}-\\frac{1}{3}t$, $y=\\frac{2}{3} + \\frac{2}{3}t$, $z=\\frac{1}{3}$, $w=t$.",
       "sha": "67134272310a",
-      "zh": ""
+      "zh": "解为：$x=\\frac{1}{3}-\\frac{1}{3}t$，$y=\\frac{2}{3} + \\frac{2}{3}t$，$z=\\frac{1}{3}$，$w=t$。"
      }
     }
    ],
@@ -1486,7 +1486,7 @@
      "t": {
       "en": "Determine which matrices are in echelon form.",
       "sha": "bca3a622a30a",
-      "zh": ""
+      "zh": "判断下列矩阵中哪些是行阶梯形。"
      }
     },
     {
@@ -1500,7 +1500,7 @@
      "t": {
       "en": "(a) Yes. (b) No. (c) Yes.",
       "sha": "16aac7c6af5f",
-      "zh": ""
+      "zh": "（a）是。（b）不是。（c）是。"
      }
     }
    ],
@@ -1521,7 +1521,7 @@
      "t": {
       "en": "Row reduce each of the following matrices to echelon form.",
       "sha": "d32591b66317",
-      "zh": ""
+      "zh": "用行变换把下列各矩阵化成行阶梯形。"
      }
     },
     {
@@ -1555,7 +1555,7 @@
      "t": {
       "en": "Find the general solution of the system whose augmented matrix is",
       "sha": "f8d579edfa43",
-      "zh": ""
+      "zh": "求以下面的矩阵为增广矩阵的方程组的通解"
      }
     },
     {
@@ -1573,7 +1573,7 @@
      "t": {
       "en": "(b) The echelon form is $\\def\\arraystretch{1.3} \\left[\\begin{array}{rrr|r} 1 & 0 & \\frac{1}{2} & \\frac{1}{2} \\\\ 0 & 1 & -\\frac{1}{4} & \\frac{3}{4} \\\\ 0 & 0 & 0 & 0 \\end{array}\\right]$. Therefore, the solution is of the form $z=t$, $y=\\frac{3}{4}+t\\paren{\\frac{1}{4}}$, $x=\\frac{1}{2}-\\frac{1}{2}t$, where $t\\in \\R$.",
       "sha": "ddf76bd45655",
-      "zh": ""
+      "zh": "（b）行阶梯形是 $\\def\\arraystretch{1.3} \\left[\\begin{array}{rrr|r} 1 & 0 & \\frac{1}{2} & \\frac{1}{2} \\\\ 0 & 1 & -\\frac{1}{4} & \\frac{3}{4} \\\\ 0 & 0 & 0 & 0 \\end{array}\\right]$。因此，解的形式为 $z=t$，$y=\\frac{3}{4}+t\\paren{\\frac{1}{4}}$，$x=\\frac{1}{2}-\\frac{1}{2}t$，其中 $t\\in \\R$。"
      }
     },
     {
@@ -1581,7 +1581,7 @@
      "t": {
       "en": "(c) The echelon form is $\\left[\\begin{array}{rrr|r} 1 & 0 & 4 & 2 \\\\ 0 & 1 & -4 & -1 \\end{array}\\right]$ and so the solution is $z=t$, $y=-1+4t$, $x=2-4t$.",
       "sha": "ccf515ebea62",
-      "zh": ""
+      "zh": "（c）行阶梯形是 $\\left[\\begin{array}{rrr|r} 1 & 0 & 4 & 2 \\\\ 0 & 1 & -4 & -1 \\end{array}\\right]$，所以解为 $z=t$，$y=-1+4t$，$x=2-4t$。"
      }
     },
     {
@@ -1589,7 +1589,7 @@
      "t": {
       "en": "(d) The echelon form is $\\left[\\begin{array}{rrrrr|r} 1 & 0 & 0 & 0 & 9 & 3 \\\\ 0 & 1 & 0 & 0 & -4 & 0 \\\\ 0 & 0 & 1 & 0 & -7 & -1 \\\\ 0 & 0 & 0 & 1 & 6 & 1 \\end{array}\\right]$ and so $x_5=t$, $x_4=1-6t$, $x_3=-1+7t$, $x_2=4t$, $x_1=3-9t$.",
       "sha": "0ba63393db27",
-      "zh": ""
+      "zh": "（d）行阶梯形是 $\\left[\\begin{array}{rrrrr|r} 1 & 0 & 0 & 0 & 9 & 3 \\\\ 0 & 1 & 0 & 0 & -4 & 0 \\\\ 0 & 0 & 1 & 0 & -7 & -1 \\\\ 0 & 0 & 0 & 1 & 6 & 1 \\end{array}\\right]$，所以 $x_5=t$，$x_4=1-6t$，$x_3=-1+7t$，$x_2=4t$，$x_1=3-9t$。"
      }
     },
     {
@@ -1597,7 +1597,7 @@
      "t": {
       "en": "(e) The echelon form is $\\def\\arraystretch{1.3} \\left[\\begin{array}{rrrrr|r} 1 & 0 & 2 & 0 & -\\frac{1}{2} & \\frac{5}{2} \\\\ 0 & 1 & 0 & 0 & \\frac{1}{2} & \\frac{3}{2} \\\\ 0 & 0 & 0 & 1 & \\frac{3}{2} & -\\frac{1}{2} \\\\ 0 & 0 & 0 & 0 & 0 & 0 \\end{array}\\right]$. Therefore, let $x_5=t$, $x_3=s$. Then the other variables are given by $x_4=-\\frac{1}{2}-\\frac{3}{2}t$, $x_2=\\frac{3}{2}-t\\frac{1}{2}$, $x_1=\\frac{5}{2}+\\frac{1}{2}t-2s$.",
       "sha": "f404f3674038",
-      "zh": ""
+      "zh": "（e）行阶梯形是 $\\def\\arraystretch{1.3} \\left[\\begin{array}{rrrrr|r} 1 & 0 & 2 & 0 & -\\frac{1}{2} & \\frac{5}{2} \\\\ 0 & 1 & 0 & 0 & \\frac{1}{2} & \\frac{3}{2} \\\\ 0 & 0 & 0 & 1 & \\frac{3}{2} & -\\frac{1}{2} \\\\ 0 & 0 & 0 & 0 & 0 & 0 \\end{array}\\right]$。因此，令 $x_5=t$，$x_3=s$。其余变量由 $x_4=-\\frac{1}{2}-\\frac{3}{2}t$，$x_2=\\frac{3}{2}-t\\frac{1}{2}$，$x_1=\\frac{5}{2}+\\frac{1}{2}t-2s$ 给出。"
      }
     }
    ],
@@ -1618,7 +1618,7 @@
      "t": {
       "en": "Solve the system of equations $7x+14y+15z=22$, $2x+4y+3z=5$, and $3x+6y+10z=13$.",
       "sha": "74733956c26f",
-      "zh": ""
+      "zh": "解方程组 $7x+14y+15z=22$，$2x+4y+3z=5$，$3x+6y+10z=13$。"
      }
     }
    ],
@@ -1628,7 +1628,7 @@
      "t": {
       "en": "Solution is: $\\mat{x=1-2t,z=1,y=t}$.",
       "sha": "44b9057f7359",
-      "zh": ""
+      "zh": "解为：$\\mat{x=1-2t,z=1,y=t}$。"
      }
     }
    ],
@@ -1649,7 +1649,7 @@
      "t": {
       "en": "Solve the system of equations $3x-y+4z=6$, $y+8z=0$, and $-2x+y=-4$.",
       "sha": "95fc4d728a2f",
-      "zh": ""
+      "zh": "解方程组 $3x-y+4z=6$，$y+8z=0$，$-2x+y=-4$。"
      }
     }
    ],
@@ -1659,7 +1659,7 @@
      "t": {
       "en": "Solution is: $\\mat{x=2-4t,y=-8t,z=t}$.",
       "sha": "4ffdfb044249",
-      "zh": ""
+      "zh": "解为：$\\mat{x=2-4t,y=-8t,z=t}$。"
      }
     }
    ],
@@ -1680,7 +1680,7 @@
      "t": {
       "en": "Solve the system of equations $9x-2y+4z=-17$, $13x-3y+6z=-25$, and $-2x-z=3$.",
       "sha": "5a667e4d1d21",
-      "zh": ""
+      "zh": "解方程组 $9x-2y+4z=-17$，$13x-3y+6z=-25$，$-2x-z=3$。"
      }
     }
    ],
@@ -1690,7 +1690,7 @@
      "t": {
       "en": "Solution is: $\\mat{x=-1,y=2,z=-1}$.",
       "sha": "d92f67f832b9",
-      "zh": ""
+      "zh": "解为：$\\mat{x=-1,y=2,z=-1}$。"
      }
     }
    ],
@@ -1711,7 +1711,7 @@
      "t": {
       "en": "Solve the system of equations $65x+84y+16z=546$, $81x+105y+20z=682$, and $84x+110y+21z=713$.",
       "sha": "f8675c05d55b",
-      "zh": ""
+      "zh": "解方程组 $65x+84y+16z=546$，$81x+105y+20z=682$，$84x+110y+21z=713$。"
      }
     }
    ],
@@ -1721,7 +1721,7 @@
      "t": {
       "en": "Solution is: $\\mat{x=2,y=4,z=5}$.",
       "sha": "0a0dace12b9a",
-      "zh": ""
+      "zh": "解为：$\\mat{x=2,y=4,z=5}$。"
      }
     }
    ],
@@ -1742,7 +1742,7 @@
      "t": {
       "en": "Solve the system of equations $8x+2y+3z=-3$, $8x+3y+3z=-1$, and $4x+y+3z=-9$.",
       "sha": "55be29e5a6ba",
-      "zh": ""
+      "zh": "解方程组 $8x+2y+3z=-3$，$8x+3y+3z=-1$，$4x+y+3z=-9$。"
      }
     }
    ],
@@ -1752,7 +1752,7 @@
      "t": {
       "en": "Solution is: $\\mat{x=1,y=2,z=-5}$.",
       "sha": "dcff2f524c95",
-      "zh": ""
+      "zh": "解为：$\\mat{x=1,y=2,z=-5}$。"
      }
     }
    ],
@@ -1773,7 +1773,7 @@
      "t": {
       "en": "Suppose a system of equations has fewer equations than variables and you have found a solution to this system of equations. Is it possible that your solution is the only one? Explain.",
       "sha": "cce92e3760a9",
-      "zh": ""
+      "zh": "设一个方程组的方程个数少于变量个数，并且你已经求出了它的一个解。这个解有可能是唯一的解吗？请说明理由。"
      }
     }
    ],
@@ -1783,7 +1783,7 @@
      "t": {
       "en": "No. Consider $x+y+z=2$ and $x+y+z=1$.",
       "sha": "430356147b95",
-      "zh": ""
+      "zh": "不一定。考虑 $x+y+z=2$ 与 $x+y+z=1$。"
      }
     }
    ],
@@ -1804,7 +1804,7 @@
      "t": {
       "en": "Suppose a system of linear equations has an augmented matrix with 2 rows and 4 columns and the last column is a pivot column. Could the system of linear equations be consistent? Explain.",
       "sha": "56afe038d35f",
-      "zh": ""
+      "zh": "设一个线性方程组的增广矩阵有 2 行 4 列，并且最后一列是主元列。这个线性方程组有可能相容吗？请说明理由。"
      }
     }
    ],
@@ -1814,7 +1814,7 @@
      "t": {
       "en": "No. This would lead to $0=1$.",
       "sha": "446a8679200a",
-      "zh": ""
+      "zh": "不可能。这会导出 $0=1$。"
      }
     }
    ],
@@ -1835,7 +1835,7 @@
      "t": {
       "en": "Suppose the coefficient matrix of a system of $n$ equations with $n$ variables has the property that every column is a pivot column. Does it follow that the system of equations must have a solution? If so, must the solution be unique? Explain.",
       "sha": "2167a78246f3",
-      "zh": ""
+      "zh": "设由 $n$ 个方程、$n$ 个变量组成的方程组，其系数矩阵的每一列都是主元列。由此是否必然推出方程组有解？如果有解，解是否必然唯一？请说明理由。"
      }
     }
    ],
@@ -1845,7 +1845,7 @@
      "t": {
       "en": "Yes. It has a unique solution.",
       "sha": "d66cb05aec38",
-      "zh": ""
+      "zh": "是的，有唯一解。"
      }
     }
    ],
@@ -1866,7 +1866,7 @@
      "t": {
       "en": "Suppose there is a unique solution to a system of linear equations. What must be true of the pivot columns in the augmented matrix?",
       "sha": "bcab0f81d582",
-      "zh": ""
+      "zh": "设一个线性方程组有唯一解。增广矩阵中的主元列必须满足什么条件？"
      }
     }
    ],
@@ -1876,7 +1876,7 @@
      "t": {
       "en": "The last column must not be a pivot column. The remaining columns must each be pivot columns.",
       "sha": "a0031ec94238",
-      "zh": ""
+      "zh": "最后一列不能是主元列，其余各列都必须是主元列。"
      }
     }
    ],
@@ -1897,12 +1897,15 @@
      "t": {
       "en": "The steady state temperature, $u$, of a plate solves Laplace's equation, $\\Delta u=0$. One way to approximate the solution is to divide the plate into a square mesh and require the temperature at each node to equal the average of the temperature at the four adjacent nodes. In the following picture, the numbers represent the observed temperature at the indicated nodes. Find the temperature at the interior nodes, indicated by $x$, $y$, $z$, and $w$. One of the equations is $z=\\frac{1}{4}(10+0+w+x)$.",
       "sha": "09bb0fd3f171",
-      "zh": ""
+      "zh": "一块板的稳态温度 $u$ 满足拉普拉斯方程 $\\Delta u=0$。求近似解的一种办法是：把板划分成正方形网格，并要求每个结点的温度等于相邻四个结点温度的平均值。在下图中，数字表示在相应结点处观测到的温度。求内部结点（用 $x$、$y$、$z$、$w$ 表示）处的温度。其中一个方程是 $z=\\frac{1}{4}(10+0+w+x)$。"
      }
     },
     {
      "k": "figure",
      "env": "tikzpicture",
+     "figs": [
+      "819b87acac36"
+     ],
      "caption": null
     }
    ],
@@ -1912,7 +1915,7 @@
      "t": {
       "en": "You need $\\def\\arraystretch{1.2} \\begin{array}{r} \\frac{1}{4}(20+30+w+x) -y=0 \\\\ \\frac{1}{4}(y+30+0+z) -w=0 \\\\ \\frac{1}{4}(20+y+z+10) -x=0 \\\\ \\frac{1}{4}(x+w+0+10) -z=0 \\end{array}$. Solution is: $\\mat{x=15,y=20,z=10,w=15}$.",
       "sha": "fc3f982774af",
-      "zh": ""
+      "zh": "需要列出 $\\def\\arraystretch{1.2} \\begin{array}{r} \\frac{1}{4}(20+30+w+x) -y=0 \\\\ \\frac{1}{4}(y+30+0+z) -w=0 \\\\ \\frac{1}{4}(20+y+z+10) -x=0 \\\\ \\frac{1}{4}(x+w+0+10) -z=0 \\end{array}$。解为：$\\mat{x=15,y=20,z=10,w=15}$。"
      }
     }
    ],
@@ -1933,7 +1936,7 @@
      "t": {
       "en": "Find the rank of the following matrices.",
       "sha": "4dba2da792f1",
-      "zh": ""
+      "zh": "求下列各矩阵的秩。"
      }
     },
     {
@@ -1963,7 +1966,7 @@
      "t": {
       "en": "Suppose $A$ is an $m\\times n$-matrix. Explain why the rank of $A$ is always no larger than $\\min (m,n)$.",
       "sha": "19eef4ef3ce8",
-      "zh": ""
+      "zh": "设 $A$ 是 $m\\times n$ 矩阵。请解释为什么 $A$ 的秩总是不大于 $\\min (m,n)$。"
      }
     }
    ],
@@ -1973,7 +1976,7 @@
      "t": {
       "en": "The rank is the number of pivot entries in the echelon form. There is at most one pivot entry in each row and column. Therefore, the rank cannot be larger than the number of rows or the number of columns; in other words, the rank is at most $\\min(m,n)$.",
       "sha": "73a0cfecc898",
-      "zh": ""
+      "zh": "秩就是行阶梯形中主元的个数。每一行、每一列中至多有一个主元。因此，秩不可能大于行数，也不可能大于列数；换句话说，秩至多是 $\\min(m,n)$。"
      }
     }
    ],
@@ -1994,7 +1997,7 @@
      "t": {
       "en": "State whether each of the following sets of data is possible for a system of equations. If possible, describe the solution set. That is, indicate whether there exists a unique solution, no solution or infinitely many solutions. Here, $A$ is the coefficient matrix, and $\\mat{A\\mid B}$ denotes the augmented matrix of the system.",
       "sha": "6a31acb17424",
-      "zh": ""
+      "zh": "判断下列各组数据对于一个方程组是否可能出现。如果可能，请描述解集，即说明是有唯一解、无解还是有无穷多个解。这里 $A$ 是系数矩阵，$\\mat{A\\mid B}$ 表示方程组的增广矩阵。"
      }
     },
     {
@@ -2007,7 +2010,7 @@
         "t": {
          "en": "$A$ is a $5\\times 6$-matrix, $\\rank(A) =4$ and $\\rank\\mat{A\\mid B} =4$.",
          "sha": "1bd5e1e22586",
-         "zh": ""
+         "zh": "$A$ 是 $5\\times 6$ 矩阵，$\\rank(A) =4$，$\\rank\\mat{A\\mid B} =4$。"
         }
        }
       ],
@@ -2017,7 +2020,7 @@
         "t": {
          "en": "$A$ is a $3\\times 4$-matrix, $\\rank(A) =3$ and $\\rank\\mat{A\\mid B} =2$.",
          "sha": "7b281e3d3fdc",
-         "zh": ""
+         "zh": "$A$ 是 $3\\times 4$ 矩阵，$\\rank(A) =3$，$\\rank\\mat{A\\mid B} =2$。"
         }
        }
       ],
@@ -2027,7 +2030,7 @@
         "t": {
          "en": "$A$ is a $4\\times 2$-matrix, $\\rank(A) =4$ and $\\rank\\mat{A\\mid B} =4$.",
          "sha": "cedb4f180d18",
-         "zh": ""
+         "zh": "$A$ 是 $4\\times 2$ 矩阵，$\\rank(A) =4$，$\\rank\\mat{A\\mid B} =4$。"
         }
        }
       ],
@@ -2037,7 +2040,7 @@
         "t": {
          "en": "$A$ is a $5\\times 5$-matrix, $\\rank(A) =4$ and $\\rank\\mat{A\\mid B} =5$.",
          "sha": "ae8027d5a9c6",
-         "zh": ""
+         "zh": "$A$ 是 $5\\times 5$ 矩阵，$\\rank(A) =4$，$\\rank\\mat{A\\mid B} =5$。"
         }
        }
       ],
@@ -2047,7 +2050,7 @@
         "t": {
          "en": "$A$ is a $4\\times 2$-matrix, $\\rank(A) =2$ and $\\rank\\mat{A\\mid B} =2$.",
          "sha": "489c0c9248e6",
-         "zh": ""
+         "zh": "$A$ 是 $4\\times 2$ 矩阵，$\\rank(A) =2$，$\\rank\\mat{A\\mid B} =2$。"
         }
        }
       ]
@@ -2065,7 +2068,7 @@
         "t": {
          "en": "The echelon form has 4 non-zero rows and 6 columns, so there are 2 free variables, and the system has infinitely many solutions.",
          "sha": "2fd996b0c46e",
-         "zh": ""
+         "zh": "行阶梯形有 4 个非零行、6 列，所以有 2 个自由变量，方程组有无穷多个解。"
         }
        }
       ],
@@ -2075,7 +2078,7 @@
         "t": {
          "en": "Such a system of equations of equations does not exist. If you add in another column, the rank does not get smaller.",
          "sha": "6a719822c009",
-         "zh": ""
+         "zh": "这样的方程组不存在。增广矩阵多加一列之后，秩不会变小。"
         }
        }
       ],
@@ -2085,7 +2088,7 @@
         "t": {
          "en": "Such a system of equations does not exist, because the rank cannot equal 4 if there are only two columns.",
          "sha": "e2a5bf45c57f",
-         "zh": ""
+         "zh": "这样的方程组不存在，因为只有两列时，秩不可能等于 4。"
         }
        }
       ],
@@ -2095,7 +2098,7 @@
         "t": {
          "en": "The echelon form has 4 non-zero rows on the left-hand side, but 5 non-zero rows if we also include the right-hand side. Therefore the system is inconsistent, i.e., it has no solutions.",
          "sha": "a063581749be",
-         "zh": ""
+         "zh": "行阶梯形的左边部分有 4 个非零行，但如果把右边（常数项）也算进去，则有 5 个非零行。因此方程组不相容，即无解。"
         }
        }
       ],
@@ -2105,7 +2108,7 @@
         "t": {
          "en": "The echelon form has 2 non-zero rows, so there are 2 pivot variables and no free variables. Therefore, the system has a unique solution.",
          "sha": "cee27f708959",
-         "zh": ""
+         "zh": "行阶梯形有 2 个非零行，所以有 2 个主元变量，没有自由变量。因此方程组有唯一解。"
         }
        }
       ]
@@ -2129,7 +2132,7 @@
      "t": {
       "en": "Consider the system $-5x+2y-z=0$ and $-5x-2y-z=0$. Both equations equal zero and so $-5x+2y-z=-5x-2y-z$ which is equivalent to $y=0$. Does it follow that $x$ and $z$ can equal anything? Notice that when $x=1$, $z=-4$, and $y=0$ are plugged in to the equations, the equations do not equal $0$. Why?",
       "sha": "d9a21ad58fa8",
-      "zh": ""
+      "zh": "考虑方程组 $-5x+2y-z=0$ 和 $-5x-2y-z=0$。两个方程的右边都等于零，所以 $-5x+2y-z=-5x-2y-z$，这等价于 $y=0$。由此是否可以推出 $x$ 和 $z$ 可以取任意值？注意，把 $x=1$，$z=-4$，$y=0$ 代入方程时，方程的左边并不等于 $0$。这是为什么？"
      }
     }
    ],
@@ -2139,7 +2142,7 @@
      "t": {
       "en": "These are not legitimate row operations. They do not preserve the solution set of the system.",
       "sha": "81d3813e7134",
-      "zh": ""
+      "zh": "这些都不是合法的行变换，它们不能保持方程组的解集不变。"
      }
     }
    ],

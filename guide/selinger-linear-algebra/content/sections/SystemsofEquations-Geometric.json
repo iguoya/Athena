@@ -15,7 +15,7 @@
         "t": {
          "en": "Relate the types of solution sets of a system of two (three) variables to the intersections of lines in a plane (the intersection of planes in $3$-dimensional space)",
          "sha": "6c95b4caefec",
-         "zh": ""
+         "zh": "把含两个（三个）未知数的方程组的解集类型，与平面上直线的交点（$3$ 维空间中平面的交集）联系起来"
         }
        }
       ]
@@ -28,7 +28,7 @@
    "t": {
     "en": "As you may remember, linear equations like $2x+3y=6$ can be graphed as straight lines in the coordinate plane. We say that this equation is in two variables, in this case $x$ and $y$. Suppose you have two such equations, each of which can be graphed as a straight line, and consider the resulting graph of two lines. What would it mean if there exists a point of intersection between the two lines? This point, which lies on *both* graphs, gives $x$ and $y$ values for which both equations are true. In other words, this point gives the ordered pair ($x,y$) that satisfies both equations. If the point $(x, y )$ is a point of intersection, we say that $(x, y)$ is a **solution** to the two equations. In linear algebra, we often are concerned with finding the solution(s) to a system of equations, if such solutions exist. First, we consider graphical representations of solutions and later we will consider the algebraic methods for finding solutions.",
     "sha": "06ee14385ae1",
-    "zh": ""
+    "zh": "你可能还记得，像 $2x+3y=6$ 这样的线性方程可以在坐标平面上画成一条直线。我们说这个方程含有两个未知数，这里就是 $x$ 和 $y$。现在设想有两个这样的方程，各画成一条直线，看看得到的图：如果两条直线有一个交点，意味着什么？这个点同时在*两条*直线上，它给出的 $x$、$y$ 的值使两个方程同时成立。换句话说，这个点就是同时满足两个方程的有序数对 ($x,y$)。如果点 $(x, y )$ 是交点，我们就说 $(x, y)$ 是这两个方程的一个**解**。在线性代数里，我们常常需要求方程组的解（如果有解的话）。我们先从图形的角度看解是什么，之后再学习用代数方法求解。"
    }
   },
   {
@@ -36,12 +36,15 @@
    "t": {
     "en": "When looking for the intersection of two lines in the plane, several situations may arise. The following picture demonstrates the possible situations when considering two equations (two lines in the plane) involving two variables.",
     "sha": "36c799bd1204",
-    "zh": ""
+    "zh": "在平面上找两条直线的交点时，会出现几种不同的情形。下图列出了两个含两个未知数的方程（平面上的两条直线）可能出现的各种情形。"
    }
   },
   {
    "k": "figure",
    "env": "tikzpicture",
+   "figs": [
+    "81f9925d9333"
+   ],
    "caption": null
   },
   {
@@ -49,7 +52,7 @@
    "t": {
     "en": "In the first diagram, there is a unique point of intersection, which means that there is only one (unique) solution to the two equations. In the second, there are no points of intersection and no solution. There is no solution because the two lines are parallel and they never intersect. The third situation that can occur, as demonstrated in diagram three, is that the two lines are really the same line. For example, $x+y=1$ and $2x+2y=2$ are two equations that yield the same line when graphed. In this case there are infinitely many points that are solutions of these two equations, as every ordered pair which is on the graph of the line satisfies both equations.",
     "sha": "04e647854c04",
-    "zh": ""
+    "zh": "在第一幅图中，两条直线有唯一的交点，这表示两个方程只有一个（唯一的）解。在第二幅图中，没有交点，也就没有解：因为两条直线平行，永远不会相交。第三幅图表示的是第三种情形：两条直线其实是同一条直线。例如 $x+y=1$ 与 $2x+2y=2$ 画出来是同一条直线。这时有无穷多个点是这两个方程的解，因为这条直线上的每一个有序数对都同时满足两个方程。"
    }
   },
   {
@@ -57,7 +60,7 @@
    "t": {
     "en": "When considering linear systems of equations, there are always three possibilities for the number of solutions: there is exactly one solution, there are infinitely many solutions, or there is no solution. When we speak of *solving* a system of equations, we usually mean finding *all* of its solutions. This can mean finding one solution (if the solution is unique), finding infinitely many solutions, or finding that there is no solution.",
     "sha": "5fa8b4a3cd4c",
-    "zh": ""
+    "zh": "对线性方程组来说，解的个数永远只有三种可能：恰好有一个解，有无穷多个解，或者无解。我们说*解*一个方程组，通常是指求出它的*全部*解。这可能是求出一个解（解唯一时），也可能是求出无穷多个解，或者判断出它无解。"
    }
   },
   {
@@ -66,7 +69,7 @@
    "title": {
     "en": "A graphical solution",
     "sha": "c64896b43fd1",
-    "zh": ""
+    "zh": "图解法"
    },
    "blocks": [
     {
@@ -74,7 +77,7 @@
      "t": {
       "en": "Use a graph to solve the following system of equations:",
       "sha": "86dce2e5cb02",
-      "zh": ""
+      "zh": "用图解法求解下面的方程组："
      }
     },
     {
@@ -92,12 +95,15 @@
      "t": {
       "en": "Through graphing the above equations and identifying the point of intersection, we can find the solution(s). Remember that we must have either one solution, infinitely many, or no solutions at all. The following graph shows the two equations, as well as the intersection. Remember, the point of intersection represents the solution of the two equations, or the $(x,y)$ which satisfy both equations. In this case, there is one point of intersection at $(-1, 4)$ which means we have one unique solution, $x = -1$, $y = 4$.",
       "sha": "6fb873b0b62a",
-      "zh": ""
+      "zh": "把上面的方程画成图，找出交点，就能求出解。记住：解只有三种可能——唯一解、无穷多个解、无解。下图画出了这两个方程以及它们的交点。再提醒一次：交点代表方程组的解，即同时满足两个方程的 $(x,y)$。这里只有一个交点 $(-1, 4)$，所以方程组有唯一解 $x = -1$，$y = 4$。"
      }
     },
     {
      "k": "figure",
      "env": "tikzpicture",
+     "figs": [
+      "42ca94bc2ddd"
+     ],
      "caption": null
     }
    ]
@@ -107,7 +113,7 @@
    "t": {
     "en": "In the above example, we investigated the intersection point of two equations in two variables, $x$ and $y$. Now we will consider the graphical solutions of three equations in two variables.",
     "sha": "5d6244184f91",
-    "zh": ""
+    "zh": "上面的例子里，我们研究了含两个未知数 $x$、$y$ 的两个方程的交点。下面来看含两个未知数的三个方程的图解。"
    }
   },
   {
@@ -115,12 +121,15 @@
    "t": {
     "en": "Consider a system of three equations in two variables. Again, these equations can be graphed as straight lines in the plane, so that the resulting graph contains three straight lines. Recall the three possibilities for the number of solutions: no solution, one solution, and infinitely many solutions. With three lines, there are more complex ways of achieving these situations. For example, you can imagine the case of three intersecting lines having no common point of intersection. Perhaps you can also imagine three intersecting lines which do intersect at a single point. These two situations are illustrated below.",
     "sha": "6f442c7a75c0",
-    "zh": ""
+    "zh": "考虑含两个未知数的三个方程。这些方程同样可以画成平面上的直线，所以图上有三条直线。回想解的个数的三种可能：无解、唯一解、无穷多个解。有三条直线时，出现这些情形的方式更复杂。例如，你可以想象三条直线两两相交，却没有一个公共交点；也可以想象三条直线恰好交于同一点。下面画出了这两种情形。"
    }
   },
   {
    "k": "figure",
    "env": "tikzpicture",
+   "figs": [
+    "9eba7d02c56a"
+   ],
    "caption": null
   },
   {
@@ -128,7 +137,7 @@
    "t": {
     "en": "Consider the first picture above. While all three lines intersect with one another, there is no common point of intersection where all three lines meet at one point. Hence, there is no solution to the three equations. Remember, a solution is a point $(x, y)$ which satisfies **all** three equations. In the case of the second picture, the lines intersect at a common point. This means that there is one solution to the three equations whose graphs are the given lines. You should take a moment now to draw the graph of a system which results in three parallel lines. Next, try the graph of three identical lines. Which type of solution is represented in each of these graphs?",
     "sha": "66de51f5d6fa",
-    "zh": ""
+    "zh": "看上面第一幅图。三条直线两两相交，但没有一个点同时在三条直线上，所以这三个方程无解。记住，解是同时满足**所有**三个方程的点 $(x, y)$。在第二幅图里，三条直线交于同一点，这说明这三个方程有一个解。现在请你停下来想一想：画出三条平行直线的情形，再画出三条重合直线的情形。这两幅图各表示哪种解的情况？"
    }
   },
   {
@@ -136,7 +145,7 @@
    "t": {
     "en": "We have now considered the graphical solutions of systems of two equations in two variables, as well as three equations in two variables. However, there is no reason to limit our investigation to equations in two variables. We will now consider equations in three variables.",
     "sha": "bdbdc0b95d8e",
-    "zh": ""
+    "zh": "我们已经看过含两个未知数的两个方程、三个方程的图解。不过没有理由只限于两个未知数，下面来看含三个未知数的方程。"
    }
   },
   {
@@ -144,12 +153,15 @@
    "t": {
     "en": "You may recall that equations in three variables, such as $2x+4y-5z=8$, form a plane. Above, we were looking for intersections of lines in order to identify any possible solutions. When graphically solving systems of equations in three variables, we look for intersections of planes. These points of intersection give the $(x, y, z)$ that satisfy all the equations in the system. What types of solutions are possible when working with three variables? Consider the following picture involving two planes, which are given by two equations in three variables.",
     "sha": "d71731897ec4",
-    "zh": ""
+    "zh": "你可能记得，像 $2x+4y-5z=8$ 这样含三个未知数的方程表示一个平面。前面我们是找直线的交点来确定可能的解；求含三个未知数的方程组的图解时，则是找平面的交集。这些交集中的点就给出了满足方程组中所有方程的 $(x, y, z)$。含三个未知数时，可能有哪几类解？看下图：两个平面，由含三个未知数的两个方程给出。"
    }
   },
   {
    "k": "figure",
    "env": "tikzpicture",
+   "figs": [
+    "05ec811ada03"
+   ],
    "caption": null
   },
   {
@@ -157,7 +169,7 @@
    "t": {
     "en": "Notice how these two planes intersect in a line. This means that the points $(x,y,z)$ on this line satisfy both equations in the system. Since the line contains infinitely many points, this system has infinitely many solutions.",
     "sha": "d989227c2e81",
-    "zh": ""
+    "zh": "注意这两个平面交于一条直线。这表示这条直线上的点 $(x,y,z)$ 都同时满足方程组里的两个方程。直线上有无穷多个点，所以这个方程组有无穷多个解。"
    }
   },
   {
@@ -165,7 +177,7 @@
    "t": {
     "en": "It could also happen that the two planes fail to intersect. However, is it possible to have two planes intersect at a single point? Take a moment to attempt drawing this situation, and convince yourself that it is not possible! This means that when we have only two equations in three variables, there is no way to have a unique solution! Hence, the only possibilities for the number of solutions of two equations in three variables are no solution or infinitely many solutions.",
     "sha": "62a51d711159",
-    "zh": ""
+    "zh": "两个平面也可能不相交。那么，两个平面能不能交于一个点呢？请你花点时间试着画一画，说服自己这是不可能的！这意味着：只有两个方程、三个未知数时，不可能有唯一解。因此，含三个未知数的两个方程，解的个数只有两种可能：无解，或者有无穷多个解。"
    }
   },
   {
@@ -173,12 +185,15 @@
    "t": {
     "en": "Now imagine adding a third plane. In other words, consider three equations in three variables. What types of solutions are now possible? Consider the following diagram.",
     "sha": "64ded89044b8",
-    "zh": ""
+    "zh": "现在想象再加上第三个平面，也就是考虑含三个未知数的三个方程。这时可能出现哪些解？看下图。"
    }
   },
   {
    "k": "figure",
    "env": "tikzpicture",
+   "figs": [
+    "bd6ee583ecc6"
+   ],
    "caption": null
   },
   {
@@ -186,7 +201,7 @@
    "t": {
     "en": "In this diagram, there is no point which lies in all three planes. There is no intersection between **all** three planes so there is no solution. The picture illustrates the situation in which the line of intersection of the new plane with one of the original planes forms a line parallel to the line of intersection of the first two planes. However, in three dimensions, it is possible for two lines to fail to intersect even though they are not parallel. Such lines are called **skew lines**.",
     "sha": "e7c5cfb37585",
-    "zh": ""
+    "zh": "这幅图中，没有哪个点同时在三个平面上。**三个**平面没有公共点，所以无解。图中的情形是：新平面与原来某个平面的交线，和前两个平面的交线平行。不过在三维空间里，两条直线即使不平行也可能不相交，这样的直线叫作**异面直线**。"
    }
   },
   {
@@ -194,12 +209,15 @@
    "t": {
     "en": "Recall that when working with two equations in three variables, it was not possible to have a unique solution. Is it possible when considering three equations in three variables? In fact, it is possible, and we demonstrate this situation in the following picture.",
     "sha": "dafdaf101873",
-    "zh": ""
+    "zh": "回想一下，两个方程、三个未知数时不可能有唯一解。那么三个方程、三个未知数时呢？其实是可能的，下图就是一个例子。"
    }
   },
   {
    "k": "figure",
    "env": "tikzpicture",
+   "figs": [
+    "1c7ab1e58b15"
+   ],
    "caption": null
   },
   {
@@ -207,12 +225,15 @@
    "t": {
     "en": "In this case, the three planes have a single point of intersection. Can you think of other possibilities? Another is that the three planes could intersect in a line, resulting in infinitely many solutions, as in the following diagram.",
     "sha": "e14bb6ca91d9",
-    "zh": ""
+    "zh": "这里三个平面只交于一个点。你还能想到别的情形吗？另一种是三个平面交于一条直线，于是有无穷多个解，如下图。"
    }
   },
   {
    "k": "figure",
    "env": "tikzpicture",
+   "figs": [
+    "b5544caede06"
+   ],
    "caption": null
   },
   {
@@ -220,7 +241,7 @@
    "t": {
     "en": "We have now seen how three equations in three variables can have no solution, a unique solution, or intersect in a line resulting in infinitely many solutions. It is also possible that all three equations describe the same plane, which also leads to infinitely many solutions.",
     "sha": "60629bc86c1c",
-    "zh": ""
+    "zh": "我们已经看到，含三个未知数的三个方程可以无解，可以有唯一解，也可以交于一条直线而有无穷多个解。还有一种可能：三个方程描述的是同一个平面，这也会有无穷多个解。"
    }
   },
   {
@@ -228,7 +249,7 @@
    "t": {
     "en": "You can see that when working with equations in three variables, there are many more possibilities for achieving solutions (or no solutions) than when working with two variables. It may prove enlightening to spend time imagining (and drawing) many possible scenarios, and you should take some time to try a few.",
     "sha": "6c7bdb40842c",
-    "zh": ""
+    "zh": "可见，含三个未知数的方程组，得到解（或无解）的方式比含两个未知数时多得多。花些时间想象（并画出）各种可能的情形会很有收获，你不妨亲自试几种。"
    }
   },
   {
@@ -236,7 +257,7 @@
    "t": {
     "en": "You should also take some time to imagine (and draw) graphs of systems in more than three variables. Equations like $x+y-2z+4w=8$ with more than three variables are often called **hyperplanes**. You may soon realize that it is tricky to draw the graphs of hyperplanes! In fact, most people cannot visualize more than three dimensions. Fortunately, through the tools of linear algebra, we can examine systems of equations in four variables, five variables, or even hundreds or thousands of variables, without ever needing to graph them. Instead we will use *algebra* to manipulate and solve these systems of equations. We will introduce these algebraic tools in the following sections.",
     "sha": "56cf5f10f68d",
-    "zh": ""
+    "zh": "你也可以试着想象（并画出）含三个以上未知数的方程组的图。像 $x+y-2z+4w=8$ 这样含三个以上未知数的方程，常称为**超平面**。你很快会发现，超平面的图很难画！事实上，大多数人无法想象三维以上的空间。好在借助线性代数的工具，我们不用画图，也能研究含四个、五个，甚至成百上千个未知数的方程组：我们将用*代数*的办法来变形和求解这些方程组。这些代数工具会在后面几节介绍。"
    }
   }
  ],
@@ -249,7 +270,7 @@
      "t": {
       "en": "Graphically, find the point $(x,y)$ which lies on both of the lines $x+3y=1$ and $4x-y=3$. That is, graph each line and see where they intersect.",
       "sha": "66835490dd7e",
-      "zh": ""
+      "zh": "用图解法求出同时在直线 $x+3y=1$ 和 $4x-y=3$ 上的点 $(x,y)$。也就是说，把两条直线都画出来，看它们在哪里相交。"
      }
     }
    ],
@@ -259,7 +280,7 @@
      "t": {
       "en": "$\\begin{array}{c} x+3y=1 \\\\ 4x-y=3 \\end{array}$, Solution is: $\\mat{x=\\frac{10}{13},y=\\frac{1}{13}}$.",
       "sha": "22a8e89b6d3a",
-      "zh": ""
+      "zh": "$\\begin{array}{c} x+3y=1 \\\\ 4x-y=3 \\end{array}$，解为：$\\mat{x=\\frac{10}{13},y=\\frac{1}{13}}$。"
      }
     }
    ],
@@ -280,7 +301,7 @@
      "t": {
       "en": "Graphically, find the point of intersection of the two lines $3x+y=3$ and $x+2y=1$. That is, graph each line and see where they intersect.",
       "sha": "a1709e295a44",
-      "zh": ""
+      "zh": "用图解法求直线 $3x+y=3$ 与 $x+2y=1$ 的交点。也就是说，把两条直线都画出来，看它们在哪里相交。"
      }
     }
    ],
@@ -290,7 +311,7 @@
      "t": {
       "en": "$\\begin{array}{c} 3x+y=3 \\\\ x+2y=1 \\end{array}$, Solution is: $\\mat{x=1,y=0}$",
       "sha": "d7288fb5be0d",
-      "zh": ""
+      "zh": "$\\begin{array}{c} 3x+y=3 \\\\ x+2y=1 \\end{array}$，解为：$\\mat{x=1,y=0}$"
      }
     }
    ],
@@ -311,7 +332,7 @@
      "t": {
       "en": "You have a system of $k$ equations in two variables, $k\\geq 2$. Explain the geometric significance of",
       "sha": "35b14abf12c3",
-      "zh": ""
+      "zh": "你有一个含两个未知数的 $k$ 个方程的方程组，$k\\geq 2$。请说明下列情形的几何意义："
      }
     },
     {
@@ -324,7 +345,7 @@
         "t": {
          "en": "No solution.",
          "sha": "7db93a1b86f7",
-         "zh": ""
+         "zh": "无解。"
         }
        }
       ],
@@ -334,7 +355,7 @@
         "t": {
          "en": "A unique solution.",
          "sha": "1f4d045c1a3a",
-         "zh": ""
+         "zh": "有唯一解。"
         }
        }
       ],
@@ -344,7 +365,7 @@
         "t": {
          "en": "An infinite number of solutions.",
          "sha": "7f90a2cebe73",
-         "zh": ""
+         "zh": "有无穷多个解。"
         }
        }
       ]
@@ -369,22 +390,17 @@
      "t": {
       "en": "Draw a picture of three planes such that no two of the planes are parallel, but the three planes have no common intersection.",
       "sha": "5d95469db326",
-      "zh": ""
+      "zh": "画一幅三个平面的图，使其中任意两个平面都不平行，但三个平面没有公共点。"
      }
     }
    ],
    "sol": [
     {
-     "k": "p",
-     "t": {
-      "en": "\\quad",
-      "sha": "d4c9cc7a55ec",
-      "zh": ""
-     }
-    },
-    {
      "k": "figure",
      "env": "tikzpicture",
+     "figs": [
+      "557547e33309"
+     ],
      "caption": null
     }
    ],

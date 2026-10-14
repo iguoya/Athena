@@ -81,3 +81,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .pager { max-width: 760px; margin: 40px auto 0; display: flex; justify-content: space-between; }
 .pager button { padding: 8px 18px; border: 1px solid var(--line); background: var(--panel); border-radius: 8px; }
 .pager button:disabled { opacity: .4; cursor: default; }
+
+.figure { margin: 16px 0; text-align: center; }
+.figure-svg { display: inline-block; max-width: 100%; padding: 10px; background: #fff; border-radius: 8px; border: 1px solid var(--line); overflow-x: auto; }
+.figure-svg svg { max-width: 100%; height: auto; }
+.figure figcaption { margin-top: 6px; font-size: 14px; color: var(--muted); }

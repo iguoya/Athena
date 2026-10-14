@@ -103,6 +103,10 @@ def check_structure() -> dict:
     return {pid: load(CONTENT / "sections" / f"{pid}.json") for pid in pages if (CONTENT / "sections" / f"{pid}.json").is_file()}
 
 
+# 把「难」归因于读者的措辞（主仓库 ADR 0013）：原书没有这类说法，译文也不许添
+WRITING_BAN = ["显然", "容易看出", "不难证明", "只需注意到", "简单的计算", "众所周知", "读者自证", "易知", "不难发现"]
+
+
 def check_translations(sections: dict) -> None:
     total = done = 0
     for pid, data in sections.items():
@@ -114,6 +118,9 @@ def check_translations(sections: dict) -> None:
             if not u.get("zh"):
                 continue
             done += 1
+            for w in WRITING_BAN:
+                if w in u["zh"]:
+                    fail(f"{pid}: 译文含禁用词「{w}」：{u['zh'][:60]}")
             # 译文只许改公式外的文字：公式集合必须与原文一致
             if sorted(inline_math(u["zh"])) != sorted(inline_math(u["en"])):
                 fail(f"{pid}: 译文公式与原文不一致\n    en: {u['en'][:90]}\n    zh: {u['zh'][:90]}")

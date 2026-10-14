@@ -4,7 +4,7 @@ import { cpSync, existsSync, mkdirSync, readdirSync, writeFileSync } from "node:
 const js = readdirSync("dist/assets").find((f) => f.endsWith(".js"));
 const css = readdirSync("dist/assets").find((f) => f.endsWith(".css"));
 mkdirSync("dist/content", { recursive: true });
-for (const d of ["sections", "checks"]) if (existsSync(`content/${d}`)) cpSync(`content/${d}`, `dist/content/${d}`, { recursive: true });
+for (const d of ["sections", "checks", "figures"]) if (existsSync(`content/${d}`)) cpSync(`content/${d}`, `dist/content/${d}`, { recursive: true });
 cpSync("content/curriculum.json", "dist/content/curriculum.json");
 writeFileSync(
   "dist/preview.html",
@@ -24,6 +24,10 @@ writeFileSync(
           if (cmd === "get_checks") {
             const r = await fetch("./content/checks/" + args.sectionId + ".json");
             return r.ok ? r.json() : null;
+          }
+          if (cmd === "get_figure") {
+            const r = await fetch("./content/figures/" + args.figId + ".svg");
+            return r.ok ? r.text() : null;
           }
           if (cmd === "get_attempts") return attempts;
           if (cmd === "record_attempt") { attempts.push({ knowledge_id: args.knowledgeId, item_id: args.itemId, correct: args.correct, answered_at: Math.floor(Date.now() / 1000) }); return null; }
