@@ -54,3 +54,7 @@ python packages/maps/scripts/prepare_relief.py
 
 应用侧用 MapLibre `image` + `raster`（opacity ≈0.35）叠在陆面色块上。更高精度 DEM
 瓦片另议。
+
+## 坐标与投影的两条铁律
+1. **一律 WGS84 经纬度。** 若坐标来自国内地图服务（高德、腾讯为 GCJ-02，百度为 BD-09，带故意偏移，约 0.3–0.7 km 至更大），入库前必须先换算回 WGS84；公开学术数据（CHGIS、CBDB、Natural Earth）本身是 WGS84，无需处理。2026-10-14 用 CBDB 地址表核对了我们的 165 个地点：中位偏差约 2 km，无系统性偏移。
+2. **栅格必须先按 Web 墨卡托行重采样，再交给 MapLibre 的 `image` source。** Natural Earth 栅格是 Plate Carrée（行与纬度线性），MapLibre 只收四个角点并在墨卡托空间里线性拉伸，两者不一致会让栅格整体偏移——35°N 附近约 2.6°（≈290 km），表现为「地图本身没问题、城市相对位置也没问题，叠在一起却整体错位」。`prepare_relief.py` 已处理，`check.py` 会校验 `relief-east-asia.json` 的 `projection`。

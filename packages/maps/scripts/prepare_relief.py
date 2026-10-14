@@ -16,6 +16,9 @@ import zipfile
 from pathlib import Path
 from urllib.request import urlretrieve
 
+import math
+
+import numpy as np
 from PIL import Image
 
 REPO = Path(__file__).resolve().parents[3]
@@ -33,6 +36,36 @@ def lonlat_to_px(lon: float, lat: float, w: int, h: int) -> tuple[float, float]:
     x = (lon + 180.0) / 360.0 * w
     y = (90.0 - lat) / 180.0 * h
     return x, y
+
+
+def mercator_y(lat: float) -> float:
+    return math.log(math.tan(math.pi / 4 + math.radians(lat) / 2))
+
+
+def equirect_to_mercator_rows(img: Image.Image, north: float, south: float) -> Image.Image:
+    """把「纬度均匀」的栅格重采样成「Web 墨卡托 y 均匀」的栅格（经度方向不变）。
+
+    为什么必须做：NE 栅格是 Plate Carrée（行与纬度成线性），而 MapLibre 的 image source 只给四个角点，
+    会把图像在**墨卡托空间里线性拉伸**。两者不一致，晕渲会整体向北偏移，纬度 35° 附近偏约 2.6°（约 290 km），
+    于是城市点（矢量，位置是对的）和底图山河海岸对不上。预先按墨卡托行重采样，四角点拉伸才是正确的。
+    """
+    w, h = img.size
+    arr = np.asarray(img, dtype=np.float32)
+    y_n, y_s = mercator_y(north), mercator_y(south)
+    # 保持像素近似正方：墨卡托范围宽 = 经度跨度（弧度），高 = y 差
+    lon_span = math.radians(EAST - WEST)
+    out_h = max(2, int(round(w * (y_n - y_s) / lon_span)))
+    out = np.empty((out_h, w), dtype=np.float32)
+    for j in range(out_h):
+        yy = y_n - (y_n - y_s) * (j + 0.5) / out_h
+        lat = math.degrees(2 * math.atan(math.exp(yy)) - math.pi / 2)
+        r = (north - lat) / (north - south) * h - 0.5
+        r = min(max(r, 0.0), h - 1.0)
+        r0 = int(math.floor(r))
+        r1 = min(r0 + 1, h - 1)
+        f = r - r0
+        out[j] = arr[r0] * (1 - f) + arr[r1] * f
+    return Image.fromarray(np.clip(out + 0.5, 0, 255).astype(np.uint8), mode="L")
 
 
 def main() -> int:
@@ -64,6 +97,8 @@ def main() -> int:
     box = (int(x0), int(y0), int(x1), int(y1))
     crop = img.crop(box).convert("L")
     print(f"裁切 {box} → {crop.size}")
+    crop = equirect_to_mercator_rows(crop, NORTH, SOUTH)
+    print(f"按墨卡托行重采样 → {crop.size}")
 
     # 控制边长，优先清晰山脉
     max_side = 2400
@@ -93,6 +128,7 @@ def main() -> int:
         "source": "Natural Earth GRAY_50M_SR_OB",
         "file": "relief-east-asia.webp",
         "opacity": 0.35,
+        "projection": "web-mercator-rows",
         "blend": "multiply",
     }
     META.write_text(

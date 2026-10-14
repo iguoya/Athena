@@ -231,11 +231,25 @@ def check_derived_geo() -> None:
             "re-run: python packages/maps/scripts/build_base_layers.py"
         )
 
+    # 晕渲栅格必须是「按墨卡托行重采样」的：NE 原图是 Plate Carrée，直接交给 MapLibre 的 image source 会被
+    # 当成墨卡托线性拉伸，整体向北偏移（35°N 处约 290 km），城市点与山河海岸对不上。见 prepare_relief.py。
+    relief_meta = repo / "packages" / "maps" / "geo" / "relief-east-asia.json"
+    if relief_meta.is_file():
+        try:
+            meta = json.loads(relief_meta.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            meta = {}
+        if meta.get("projection") != "web-mercator-rows":
+            problems.append(
+                "relief-east-asia 不是按墨卡托行重采样的（缺 projection=web-mercator-rows）——会与矢量层错位；"
+                "run: python packages/maps/scripts/prepare_relief.py"
+            )
+
     if problems:
         for p in problems:
             print(f"  {p}")
         raise SystemExit(f"derived geo: {len(problems)} problems")
-    print("territories-clipped / land.json OK", flush=True)
+    print("territories-clipped / land.json / relief projection OK", flush=True)
 
 
 def ensure_dependencies() -> None:
