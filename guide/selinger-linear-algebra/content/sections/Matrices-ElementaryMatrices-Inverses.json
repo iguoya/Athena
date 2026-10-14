@@ -7,7 +7,7 @@
    "t": {
     "en": "Suppose we have applied a row operation to a matrix $A$. Consider the row operation required to return $A$ to its original form, i.e., to undo the row operation. It turns out that this action is described by the inverse of an elementary matrix. The following theorem ensures that the inverse of each elementary matrix is itself an elementary matrix.",
     "sha": "1042e8fa6e32",
-    "zh": ""
+    "zh": "设我们对矩阵 $A$ 做了一次行变换。考虑把 $A$ 变回原来形状所需的行变换，也就是把这次行变换撤销。结果表明，这个动作可以用某个初等矩阵的逆来描述。下面的定理保证：每个初等矩阵的逆本身也是初等矩阵。"
    }
   },
   {
@@ -16,7 +16,7 @@
    "title": {
     "en": "Inverses of elementary matrices",
     "sha": "ac48bdae7504",
-    "zh": ""
+    "zh": "初等矩阵的逆"
    },
    "blocks": [
     {
@@ -24,7 +24,7 @@
      "t": {
       "en": "Every elementary matrix is invertible and its inverse is also an elementary matrix.",
       "sha": "52ae302d4a7a",
-      "zh": ""
+      "zh": "每个初等矩阵都可逆，并且它的逆也是初等矩阵。"
      }
     }
    ]
@@ -34,7 +34,7 @@
    "t": {
     "en": "In fact, the inverse of an elementary matrix is constructed by doing the *reverse* row operation on $I$. $E^{-1}$ is obtained by performing the row operation which would carry $E$ back to $I$.",
     "sha": "f737ab9e82b2",
-    "zh": ""
+    "zh": "事实上，初等矩阵的逆是对 $I$ 做*相反的*行变换得到的。$E^{-1}$ 就是做那个能把 $E$ 变回 $I$ 的行变换所得到的矩阵。"
    }
   },
   {
@@ -47,7 +47,7 @@
       "t": {
        "en": "If $E$ is obtained by switching rows $i$ and $j$, then $E^{-1}$ is also obtained by switching rows $i$ and $j$.",
        "sha": "7afde0fe9dae",
-       "zh": ""
+       "zh": "如果 $E$ 是交换第 $i$ 行与第 $j$ 行得到的，那么 $E^{-1}$ 也是交换第 $i$ 行与第 $j$ 行得到的。"
       }
      }
     ],
@@ -57,7 +57,7 @@
       "t": {
        "en": "If $E$ is obtained by multiplying row $i$ by the scalar $k$, then $E^{-1}$ is obtained by multiplying row $i$ by the scalar $\\frac{1}{k}$.",
        "sha": "f0146a87c514",
-       "zh": ""
+       "zh": "如果 $E$ 是把第 $i$ 行乘以标量 $k$ 得到的，那么 $E^{-1}$ 是把第 $i$ 行乘以标量 $\\frac{1}{k}$ 得到的。"
       }
      }
     ],
@@ -67,7 +67,7 @@
       "t": {
        "en": "If $E$ is obtained by adding $k$ times row $i$ to row $j$, then $E^{-1}$ is obtained by subtracting $k$ times row $i$ from row $j$.",
        "sha": "5cf2c7acbad0",
-       "zh": ""
+       "zh": "如果 $E$ 是把第 $i$ 行的 $k$ 倍加到第 $j$ 行得到的，那么 $E^{-1}$ 是从第 $j$ 行减去第 $i$ 行的 $k$ 倍得到的。"
       }
      }
     ]
@@ -79,7 +79,7 @@
    "title": {
     "en": "Inverse of an elementary matrix",
     "sha": "6ba3ecc4c461",
-    "zh": ""
+    "zh": "初等矩阵的逆"
    },
    "blocks": [
     {
@@ -87,7 +87,7 @@
      "t": {
       "en": "Find $E^{-1}$, where $E$ is the elementary matrix",
       "sha": "2a2e7b2e9fb0",
-      "zh": ""
+      "zh": "求 $E^{-1}$，其中 $E$ 是初等矩阵"
      }
     },
     {
@@ -105,7 +105,7 @@
      "t": {
       "en": "$E$ is obtained from the $2\\times 2$ identity matrix by multiplying the second row by $2$. In order to carry $E$ back to the identity, we need to multiply the second row of $E$ by $\\frac{1}{2}$. Hence, $E^{-1}$ is given by",
       "sha": "ccae05616db9",
-      "zh": ""
+      "zh": "$E$ 是把 $2\\times 2$ 单位矩阵的第二行乘以 $2$ 得到的。要把 $E$ 变回单位矩阵，需要把 $E$ 的第二行乘以 $\\frac{1}{2}$。因此，$E^{-1}$ 为"
      }
     },
     {

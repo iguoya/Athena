@@ -7,7 +7,7 @@
    "t": {
     "en": "One of the most important uses of a matrix is to multiply a matrix by a vector. In fact, this is one of the reasons matrices were invented. Let us start by considering an alternative way of writing a system of linear equations.",
     "sha": "983d35d97197",
-    "zh": ""
+    "zh": "矩阵最重要的用途之一，是让矩阵去乘一个向量。事实上，这正是矩阵被发明出来的原因之一。我们先来看线性方程组的另一种写法。"
    }
   },
   {
@@ -16,7 +16,7 @@
    "title": {
     "en": "The vector form of a system of linear equations",
     "sha": "75309c056906",
-    "zh": ""
+    "zh": "线性方程组的向量形式"
    },
    "blocks": [
     {
@@ -24,7 +24,7 @@
      "t": {
       "en": "Suppose we have a system of equations given by",
       "sha": "d9fd99d8ee07",
-      "zh": ""
+      "zh": "设有方程组"
      }
     },
     {
@@ -36,7 +36,7 @@
      "t": {
       "en": "We can express this system in **vector form**, which is as follows:",
       "sha": "a1a693a8ea17",
-      "zh": ""
+      "zh": "我们可以把这个方程组写成**向量形式**，如下："
      }
     },
     {
@@ -50,7 +50,7 @@
    "t": {
     "en": "Notice that each vector used here is one column from the corresponding augmented matrix. There is one vector for each variable in the system, along with the constant vector. The left-hand side is a linear combination of column vectors. Linear combinations of column vectors are so important that we introduce a special notation for them.",
     "sha": "0bee96a0f587",
-    "zh": ""
+    "zh": "注意这里用到的每个向量，都是对应增广矩阵中的一列。方程组里每个变量对应一个向量，另外还有常数向量。左边是列向量的线性组合。列向量的线性组合非常重要，所以我们为它引入一种专门的记号。"
    }
   },
   {
@@ -59,7 +59,7 @@
    "title": {
     "en": "The product of a matrix and a vector, by columns",
     "sha": "351cc3ca2817",
-    "zh": ""
+    "zh": "矩阵与向量的乘积（按列）"
    },
    "blocks": [
     {
@@ -67,7 +67,7 @@
      "t": {
       "en": "The product of an $m\\times n$-matrix $A$ and an $n$-dimensional column vector $\\vect{x}$ is an $m$-dimensional column vector, defined as a linear combination of the columns of $A$ as follows:",
       "sha": "ea6ba5679cde",
-      "zh": ""
+      "zh": "$m\\times n$ 矩阵 $A$ 与 $n$ 维列向量 $\\vect{x}$ 的乘积是一个 $m$ 维列向量，它定义为 $A$ 的各列的线性组合，如下："
      }
     },
     {
@@ -81,7 +81,7 @@
    "t": {
     "en": "In other words, we can think of the vector $\\vect{x}$ as encoding instructions for how to take a linear combination of the columns of $A$. The product $A\\vect{x}$ is computed by taking $x_1$ times the first column of $A$, plus $x_2$ times the second column of $A$, and so on. For this to work, $A$ must have the same number of columns as $\\vect{x}$ has components.",
     "sha": "715d526e74ff",
-    "zh": ""
+    "zh": "换句话说，可以把向量 $\\vect{x}$ 看作一组指令，规定如何取 $A$ 的各列的线性组合。乘积 $A\\vect{x}$ 的算法是：取 $x_1$ 倍的 $A$ 的第一列，加上 $x_2$ 倍的 $A$ 的第二列，依此类推。要做到这一点，$A$ 的列数必须等于 $\\vect{x}$ 的分量个数。"
    }
   },
   {
@@ -90,7 +90,7 @@
    "title": {
     "en": "Multiplying a matrix and a vector, by columns",
     "sha": "30b63c1d458a",
-    "zh": ""
+    "zh": "矩阵乘以向量（按列）"
    },
    "blocks": [
     {
@@ -98,7 +98,7 @@
      "t": {
       "en": "Compute the product",
       "sha": "9262a3251c47",
-      "zh": ""
+      "zh": "计算乘积"
      }
     },
     {
@@ -116,7 +116,7 @@
      "t": {
       "en": "We have",
       "sha": "a2214cd5b1a4",
-      "zh": ""
+      "zh": "有"
      }
     },
     {
@@ -130,7 +130,7 @@
    "t": {
     "en": "There is another way of looking at the product of a matrix and a vector. Instead of looking at the columns of $A$, we can look at the rows.",
     "sha": "5e9500deb667",
-    "zh": ""
+    "zh": "看矩阵与向量的乘积，还有另一种角度：不看 $A$ 的各列，而是看各行。"
    }
   },
   {
@@ -139,7 +139,7 @@
    "title": {
     "en": "The product of a matrix and a vector, by rows",
     "sha": "b943b5645ee3",
-    "zh": ""
+    "zh": "矩阵与向量的乘积（按行）"
    },
    "blocks": [
     {
@@ -147,7 +147,7 @@
      "t": {
       "en": "Let $A$ be an $m\\times n$-matrix and let $\\vect{x}$ be an $n$-dimensional column vector. The product $A\\vect{x}$ can also be written like this:",
       "sha": "0a20aa0bd98b",
-      "zh": ""
+      "zh": "设 $A$ 是 $m\\times n$ 矩阵，$\\vect{x}$ 是 $n$ 维列向量。乘积 $A\\vect{x}$ 也可以这样写："
      }
     },
     {
@@ -162,7 +162,7 @@
    "title": {
     "en": "Multiplying a matrix and a vector, by rows",
     "sha": "7ed14fd24dfa",
-    "zh": ""
+    "zh": "矩阵乘以向量（按行）"
    },
    "blocks": [
     {
@@ -170,7 +170,7 @@
      "t": {
       "en": "Compute the product",
       "sha": "9262a3251c47",
-      "zh": ""
+      "zh": "计算乘积"
      }
     },
     {
@@ -182,7 +182,7 @@
      "t": {
       "en": "by rows.",
       "sha": "58eacaeab8a7",
-      "zh": ""
+      "zh": "按行计算。"
      }
     }
    ]
@@ -196,7 +196,7 @@
      "t": {
       "en": "We have",
       "sha": "a2214cd5b1a4",
-      "zh": ""
+      "zh": "有"
      }
     },
     {
@@ -208,7 +208,7 @@
      "t": {
       "en": "Note that the is exactly the same answer as before.",
       "sha": "ad52c271f8d5",
-      "zh": ""
+      "zh": "注意，这与前面的答案完全相同。"
      }
     }
    ]
@@ -218,7 +218,7 @@
    "t": {
     "en": "When we use Definition “Multiplying a matrix and a vector, by columns”, we calculate the product by looking at one column of $A$ at a time. When we use Proposition “Multiplying a matrix and a vector, by rows”, we calculate the product by looking at one row of $A$ at a time. As the above examples show, both methods give exactly the same answer. Please convince yourself that this is true in general. This ability to switch back and forth between a column-based viewpoint and a row-based viewpoint is one of the central tools of linear algebra.",
     "sha": "64ba55f1bba2",
-    "zh": ""
+    "zh": "用定义“矩阵乘以向量（按列）”时，我们每次看 $A$ 的一列来计算乘积。用命题“矩阵乘以向量（按行）”时，我们每次看 $A$ 的一行来计算乘积。正如上面的例子所示，两种方法得到的答案完全相同。请你自己想一想，为什么一般情况下这也成立。能在按列的观点与按行的观点之间来回切换，是线性代数的核心工具之一。"
    }
   },
   {
@@ -226,7 +226,7 @@
    "t": {
     "en": "Using the above operation, we can also write a system of linear equations in **matrix form**. In this form, we express the system as a matrix multiplied by a vector.",
     "sha": "b467f8ce0e42",
-    "zh": ""
+    "zh": "利用上面的运算，我们还可以把线性方程组写成**矩阵形式**。这种形式把方程组表示为一个矩阵乘以一个向量。"
    }
   },
   {
@@ -235,7 +235,7 @@
    "title": {
     "en": "The matrix form of a system of linear equations",
     "sha": "36648d43acdf",
-    "zh": ""
+    "zh": "线性方程组的矩阵形式"
    },
    "blocks": [
     {
@@ -243,7 +243,7 @@
      "t": {
       "en": "Suppose we have a system of equations given by",
       "sha": "d9fd99d8ee07",
-      "zh": ""
+      "zh": "设有方程组"
      }
     },
     {
@@ -255,7 +255,7 @@
      "t": {
       "en": "Then we can express this system in **matrix form**, which is as follows:",
       "sha": "250a5ff170e0",
-      "zh": ""
+      "zh": "于是我们可以把这个方程组写成**矩阵形式**，如下："
      }
     },
     {
@@ -269,7 +269,7 @@
    "t": {
     "en": "The matrix form of a system of equations is therefore written as $A\\vect{x}=\\vect{b}$, where $A$ is the coefficient matrix of the system, $\\vect{x}$ is an $n$-dimensional column vector constructed from the variables of the system, and $\\vect{b}$ is an $m$-dimensional column vector constructed from the constant terms of the system. Any system of linear equations can be written in this form.",
     "sha": "8f0001edaa59",
-    "zh": ""
+    "zh": "所以方程组的矩阵形式写作 $A\\vect{x}=\\vect{b}$，其中 $A$ 是方程组的系数矩阵，$\\vect{x}$ 是由方程组的变量构成的 $n$ 维列向量，$\\vect{b}$ 是由方程组的常数项构成的 $m$ 维列向量。任何线性方程组都可以写成这种形式。"
    }
   }
  ],

@@ -15,7 +15,7 @@
         "t": {
          "en": "Compute sums, products, and powers of diagonal matrices.",
          "sha": "c9bba2fa2347",
-         "zh": ""
+         "zh": "计算对角矩阵的和、积与幂。"
         }
        }
       ],
@@ -25,7 +25,7 @@
         "t": {
          "en": "Determine whether a square matrix is diagonalizable, and diagonalize it if possible.",
          "sha": "0d4a37a49df4",
-         "zh": ""
+         "zh": "判断一个方阵是否可对角化，并在可以时把它对角化。"
         }
        }
       ]
@@ -38,7 +38,7 @@
    "t": {
     "en": "A square matrix $D$ is called a **diagonal matrix** if all entries except those on the main diagonal are zero. Such matrices look like the following:",
     "sha": "dc54cff48d19",
-    "zh": ""
+    "zh": "如果方阵 $D$ 中除主对角线上的元素外全为零，这个方阵就叫作**对角矩阵**（diagonal matrix）。这样的矩阵形如："
    }
   },
   {
@@ -50,7 +50,7 @@
    "t": {
     "en": "Diagonal matrices are particularly easy to work with. For example, the sum of two diagonal matrices is diagonal. Also, the product of two diagonal matrices is diagonal, and is computed by taking the product of corresponding diagonal entries.",
     "sha": "75a1d75b5a38",
-    "zh": ""
+    "zh": "对角矩阵特别好处理。例如，两个对角矩阵的和仍是对角矩阵；两个对角矩阵的积也是对角矩阵，只要把对应的对角元素相乘就得到了。"
    }
   },
   {
@@ -59,7 +59,7 @@
    "title": {
     "en": "Sums, products, and powers of diagonal matrices",
     "sha": "73f61910af82",
-    "zh": ""
+    "zh": "对角矩阵的和、积与幂"
    },
    "blocks": [
     {
@@ -67,7 +67,7 @@
      "t": {
       "en": "Compute $A+B$, $AB$, and $A^4$, where",
       "sha": "d9200efe08ec",
-      "zh": ""
+      "zh": "计算 $A+B$、$AB$ 和 $A^4$，其中"
      }
     },
     {
@@ -85,7 +85,7 @@
      "t": {
       "en": "We have",
       "sha": "a2214cd5b1a4",
-      "zh": ""
+      "zh": "我们有"
      }
     },
     {
@@ -101,7 +101,7 @@
      "t": {
       "en": "and",
       "sha": "cffa50a32cb1",
-      "zh": ""
+      "zh": "以及"
      }
     },
     {
@@ -113,7 +113,7 @@
      "t": {
       "en": "Notice that all operations are computed componentwise on the diagonal. Therefore, multiplication of diagonal matrices is much simpler than multiplication of general matrices.",
       "sha": "ecedb3eabe4c",
-      "zh": ""
+      "zh": "请注意，所有运算都是在对角线上逐个元素进行的。因此，对角矩阵的乘法比一般矩阵的乘法简单得多。"
      }
     }
    ]
@@ -123,7 +123,7 @@
    "t": {
     "en": "One of the most important problem solving techniques in linear algebra is **diagonalization**. In a nutshell, the point of diagonalization is to simplify a problem by replacing an arbitrary matrix by a diagonal matrix. We say that two square matrices $A$ and $B$ are **similar** if there exists an invertible matrix $P$ such that $P^{-1}AP = B$. A matrix is **diagonalizable** if it is similar to a diagonal matrix. This is summarized in the following definition.",
     "sha": "17488cf9b038",
-    "zh": ""
+    "zh": "线性代数中最重要的解题技巧之一是**对角化**（diagonalization）。简单地说，对角化的要点是：把任意矩阵换成对角矩阵，从而简化问题。如果存在可逆矩阵 $P$ 使得 $P^{-1}AP = B$，我们就说两个方阵 $A$ 和 $B$ **相似**（similar）。如果一个矩阵与某个对角矩阵相似，就说它**可对角化**（diagonalizable）。下面的定义对此做了总结。"
    }
   },
   {
@@ -132,7 +132,7 @@
    "title": {
     "en": "Diagonalizable matrix",
     "sha": "04f91e820889",
-    "zh": ""
+    "zh": "可对角化矩阵"
    },
    "blocks": [
     {
@@ -140,7 +140,7 @@
      "t": {
       "en": "Let $A$ be an $n\\times n$-matrix. Then $A$ is said to be **diagonalizable** if there exists an invertible matrix $P$ and a diagonal matrix $D$ such that",
       "sha": "cc8f845c5b69",
-      "zh": ""
+      "zh": "设 $A$ 是 $n\\times n$ 矩阵。如果存在可逆矩阵 $P$ 和对角矩阵 $D$，使得下式成立，就称 $A$ **可对角化**："
      }
     },
     {
@@ -154,7 +154,7 @@
    "t": {
     "en": "The key connection between diagonalizability, eigenvectors, and eigenvalues is the following theorem.",
     "sha": "350435b79a60",
-    "zh": ""
+    "zh": "可对角化、特征向量与特征值之间的关键联系由下面的定理给出。"
    }
   },
   {
@@ -163,7 +163,7 @@
    "title": {
     "en": "Diagonalization and eigenvectors",
     "sha": "5101afa34506",
-    "zh": ""
+    "zh": "对角化与特征向量"
    },
    "blocks": [
     {
@@ -171,7 +171,7 @@
      "t": {
       "en": "An $n\\times n$-matrix $A$ is diagonalizable if and only if $A$ has $n$ linearly independent eigenvectors.",
       "sha": "160b39105afd",
-      "zh": ""
+      "zh": "$n\\times n$ 矩阵 $A$ 可对角化，当且仅当 $A$ 有 $n$ 个线性无关的特征向量。"
      }
     },
     {
@@ -179,7 +179,7 @@
      "t": {
       "en": "Moreover, in this case, let $P$ be the invertible matrix whose columns are $n$ linearly independent eigenvectors of $A$, and let $D$ be the diagonal matrix whose diagonal entries are the corresponding eigenvalues. Then $P^{-1}AP=D$.",
       "sha": "c73aeb96db57",
-      "zh": ""
+      "zh": "此外，在这种情况下，设 $P$ 是以 $A$ 的 $n$ 个线性无关的特征向量为列的可逆矩阵，设 $D$ 是以对应的特征值为对角元素的对角矩阵，那么 $P^{-1}AP=D$。"
      }
     }
    ]
@@ -193,7 +193,7 @@
      "t": {
       "en": "Assume that $A$ has $n$ linearly independent eigenvectors $\\vect{v}_1,\\ldots,\\vect{v}_n$. Let $\\eigenvar_1,\\ldots,\\eigenvar_n$ be the corresponding eigenvalues, so that",
       "sha": "02cb78f7526d",
-      "zh": ""
+      "zh": "假设 $A$ 有 $n$ 个线性无关的特征向量 $\\vect{v}_1,\\ldots,\\vect{v}_n$。设 $\\eigenvar_1,\\ldots,\\eigenvar_n$ 是对应的特征值，即"
      }
     },
     {
@@ -205,7 +205,7 @@
      "t": {
       "en": "for all $i=1,\\ldots,n$. Let $P$ be the matrix that has $\\vect{v}_1,\\ldots,\\vect{v}_n$ as its columns. Then $P$ is invertible because $\\vect{v}_1,\\ldots,\\vect{v}_n$ are linearly independent. Let $D$ be the diagonal matrix that has $\\eigenvar_1,\\ldots,\\eigenvar_n$ as its diagonal entries. By the column method of matrix multiplication, the $i\\th$ column of $AP$ is $A\\vect{v}_i$. Also by the column method of matrix multiplication, the $i\\th$ column of $PD$ is $\\eigenvar_i\\vect{v}_i$. Therefore, by (1), the matrices $AP$ and $PD$ have the same columns, i.e.,",
       "sha": "41861f3efc76",
-      "zh": ""
+      "zh": "对所有 $i=1,\\ldots,n$ 成立。设 $P$ 是以 $\\vect{v}_1,\\ldots,\\vect{v}_n$ 为各列的矩阵。因为 $\\vect{v}_1,\\ldots,\\vect{v}_n$ 线性无关，所以 $P$ 可逆。设 $D$ 是以 $\\eigenvar_1,\\ldots,\\eigenvar_n$ 为对角元素的对角矩阵。由矩阵乘法的列方法，$AP$ 的第 $i\\th$ 列是 $A\\vect{v}_i$。同样由矩阵乘法的列方法，$PD$ 的第 $i\\th$ 列是 $\\eigenvar_i\\vect{v}_i$。因此，由 (1)，矩阵 $AP$ 与 $PD$ 的各列相同，即"
      }
     },
     {
@@ -217,7 +217,7 @@
      "t": {
       "en": "It follows that $P^{-1}AP = D$, as desired.",
       "sha": "85487459e363",
-      "zh": ""
+      "zh": "由此得 $P^{-1}AP = D$，这正是所要证明的。"
      }
     },
     {
@@ -225,7 +225,7 @@
      "t": {
       "en": "Conversely, assume that $A$ is diagonalizable. Then there exists an invertible matrix $P$ and a diagonal matrix $D$ such that $P^{-1}AP=D$, or equivalently, $AP=PD$. Let $\\vect{v}_1,\\ldots,\\vect{v}_n$ be the columns of $P$ and let $\\eigenvar_1,\\ldots,\\eigenvar_n$ be the diagonal entries of $D$. Again we find that the $i\\th$ column of $AP$ is $A\\vect{v}_i$ and the $i\\th$ column of $PD$ is $\\eigenvar_i\\vect{v}_i$, and therefore $A\\vect{v}_i = \\eigenvar_i\\vect{v}_i$ holds for all $i$. It follows that $\\vect{v}_1,\\ldots,\\vect{v}_n$ are eigenvectors of $A$. Since $P$ is invertible, $\\vect{v}_1,\\ldots,\\vect{v}_n$ are linearly independent, so $A$ has $n$ linearly independent eigenvectors.",
       "sha": "1f273ab16e6c",
-      "zh": ""
+      "zh": "反过来，假设 $A$ 可对角化。那么存在可逆矩阵 $P$ 和对角矩阵 $D$ 使得 $P^{-1}AP=D$，或者等价地，$AP=PD$。设 $\\vect{v}_1,\\ldots,\\vect{v}_n$ 是 $P$ 的各列，$\\eigenvar_1,\\ldots,\\eigenvar_n$ 是 $D$ 的对角元素。仍然可得 $AP$ 的第 $i\\th$ 列是 $A\\vect{v}_i$，$PD$ 的第 $i\\th$ 列是 $\\eigenvar_i\\vect{v}_i$，因此对所有 $i$ 都有 $A\\vect{v}_i = \\eigenvar_i\\vect{v}_i$。由此知 $\\vect{v}_1,\\ldots,\\vect{v}_n$ 是 $A$ 的特征向量。因为 $P$ 可逆，所以 $\\vect{v}_1,\\ldots,\\vect{v}_n$ 线性无关，于是 $A$ 有 $n$ 个线性无关的特征向量。"
      }
     }
    ]
@@ -236,7 +236,7 @@
    "title": {
     "en": "Diagonalizing a matrix",
     "sha": "29696dba1022",
-    "zh": ""
+    "zh": "把矩阵对角化"
    },
    "blocks": [
     {
@@ -244,7 +244,7 @@
      "t": {
       "en": "Diagonalize the matrix",
       "sha": "bedff2e3c840",
-      "zh": ""
+      "zh": "把矩阵"
      }
     },
     {
@@ -256,7 +256,7 @@
      "t": {
       "en": "In other words, find an invertible matrix $P$ and a diagonal matrix $D$ such that $P^{-1}AP=D$.",
       "sha": "8912a502df9c",
-      "zh": ""
+      "zh": "对角化。换句话说，求可逆矩阵 $P$ 和对角矩阵 $D$，使得 $P^{-1}AP=D$。"
      }
     }
    ]
@@ -270,7 +270,7 @@
      "t": {
       "en": "By Theorem “Diagonalization and eigenvectors”, we use the eigenvectors of $A$ as the columns of $P$ and the corresponding eigenvalues as the diagonal entries of $D$. We already found the eigenvectors and -values of $A$ in Example “Finding eigenvalues and eigenvectors”. They were",
       "sha": "ff09867d09f2",
-      "zh": ""
+      "zh": "由定理“对角化与特征向量”，我们把 $A$ 的特征向量作为 $P$ 的各列，把对应的特征值作为 $D$ 的对角元素。$A$ 的特征向量和特征值我们已经在例“求特征值和特征向量”中求出来了，它们是"
      }
     },
     {
@@ -282,7 +282,7 @@
      "t": {
       "en": "with corresponding eigenvalues $\\eigenvar_1=1$, $\\eigenvar_2=-1$, and $\\eigenvar_3=4$. Therefore we can use",
       "sha": "94db22e01514",
-      "zh": ""
+      "zh": "对应的特征值为 $\\eigenvar_1=1$、$\\eigenvar_2=-1$、$\\eigenvar_3=4$。因此可以取"
      }
     },
     {
@@ -294,7 +294,7 @@
      "t": {
       "en": "To double-check that $P^{-1}AP$ is indeed equal to $D$, we first compute the inverse of $P$:",
       "sha": "a2f214703628",
-      "zh": ""
+      "zh": "为了再核对 $P^{-1}AP$ 确实等于 $D$，我们先求 $P$ 的逆："
      }
     },
     {
@@ -306,7 +306,7 @@
      "t": {
       "en": "Then",
       "sha": "b7d93209feaa",
-      "zh": ""
+      "zh": "然后"
      }
     },
     {
@@ -318,7 +318,7 @@
      "t": {
       "en": "Alternatively, we could have checked that $AP=PD$, which would not have required computing $P^{-1}$.",
       "sha": "3ab693c38be5",
-      "zh": ""
+      "zh": "另一种办法是检查 $AP=PD$，这样就不必计算 $P^{-1}$。"
      }
     }
    ]
@@ -329,7 +329,7 @@
    "title": {
     "en": "Diagonalizing a matrix",
     "sha": "29696dba1022",
-    "zh": ""
+    "zh": "把矩阵对角化"
    },
    "blocks": [
     {
@@ -337,7 +337,7 @@
      "t": {
       "en": "Diagonalize the matrix",
       "sha": "bedff2e3c840",
-      "zh": ""
+      "zh": "把矩阵"
      }
     },
     {
@@ -355,7 +355,7 @@
      "t": {
       "en": "First, we will find the characteristic polynomial of $A$:",
       "sha": "3c970359926c",
-      "zh": ""
+      "zh": "首先，求 $A$ 的特征多项式："
      }
     },
     {
@@ -367,7 +367,7 @@
      "t": {
       "en": "Therefore, the eigenvalues are $\\eigenvar=2$ and $\\eigenvar=6$. Next, we need to find the eigenvectors. We first find the eigenvectors for $\\eigenvar = 2$. We solve $(A-2I)\\vect{v} = \\vect{0}$:",
       "sha": "40c0a8f1f9a8",
-      "zh": ""
+      "zh": "所以，特征值为 $\\eigenvar=2$ 和 $\\eigenvar=6$。接下来求特征向量。先求 $\\eigenvar = 2$ 的特征向量。解 $(A-2I)\\vect{v} = \\vect{0}$："
      }
     },
     {
@@ -379,7 +379,7 @@
      "t": {
       "en": "The general solution is",
       "sha": "4729807d8eef",
-      "zh": ""
+      "zh": "通解为"
      }
     },
     {
@@ -391,7 +391,7 @@
      "t": {
       "en": "where $t,s$ are parameters. Thus, the basic eigenvectors for $\\eigenvar=2$ are",
       "sha": "ae3a0b79911a",
-      "zh": ""
+      "zh": "其中 $t,s$ 是参数。因此，$\\eigenvar=2$ 的基础特征向量为"
      }
     },
     {
@@ -403,7 +403,7 @@
      "t": {
       "en": "Doing a similar calculation, we find that the basic eigenvector for $\\eigenvar=6$ is",
       "sha": "44f1fac729ef",
-      "zh": ""
+      "zh": "做类似的计算，求得 $\\eigenvar=6$ 的基础特征向量为"
      }
     },
     {
@@ -415,7 +415,7 @@
      "t": {
       "en": "By Theorem “Diagonalization and eigenvectors”, we use the eigenvectors of $A$ as the columns of $P$ and the corresponding eigenvalues as the diagonal entries of $D$. Therefore,",
       "sha": "9a060ffb7d2c",
-      "zh": ""
+      "zh": "由定理“对角化与特征向量”，我们把 $A$ 的特征向量作为 $P$ 的各列，把对应的特征值作为 $D$ 的对角元素。因此，"
      }
     },
     {
@@ -427,7 +427,7 @@
      "t": {
       "en": "We can double-check this answer by computing",
       "sha": "d27ec5ce8c01",
-      "zh": ""
+      "zh": "我们可以通过计算下式来再次核对这个答案："
      }
     },
     {
@@ -439,7 +439,7 @@
      "t": {
       "en": "Notice that the eigenvalues on the main diagonal of $D$ *must* be in the same order as the corresponding eigenvectors in $P$. Since the eigenvectors $\\vect{v}_1$ and $\\vect{v}_2$ are both for the eigenvalue $\\eigenvar=2$, the entry $2$ appears twice in the matrix $D$.",
       "sha": "54df72d7dca3",
-      "zh": ""
+      "zh": "请注意，$D$ 的主对角线上的特征值*必须*与 $P$ 中对应的特征向量的顺序一致。因为特征向量 $\\vect{v}_1$ 和 $\\vect{v}_2$ 都属于特征值 $\\eigenvar=2$，所以数 $2$ 在矩阵 $D$ 中出现了两次。"
      }
     }
    ]
@@ -449,7 +449,7 @@
    "t": {
     "en": "The following example shows that not all matrices are diagonalizable.",
     "sha": "66c0578712dc",
-    "zh": ""
+    "zh": "下面的例子说明，并不是所有矩阵都可对角化。"
    }
   },
   {
@@ -458,7 +458,7 @@
    "title": {
     "en": "A matrix that cannot be diagonalized",
     "sha": "94b8d9a4f77e",
-    "zh": ""
+    "zh": "不能对角化的矩阵"
    },
    "blocks": [
     {
@@ -466,7 +466,7 @@
      "t": {
       "en": "Show that the matrix $A = \\left[\\begin{array}{rr} 1 & 1 \\\\ 0 & 1 \\end{array}\\right]$ cannot be diagonalized.",
       "sha": "81326359b841",
-      "zh": ""
+      "zh": "证明矩阵 $A = \\left[\\begin{array}{rr} 1 & 1 \\\\ 0 & 1 \\end{array}\\right]$ 不能对角化。"
      }
     }
    ]
@@ -480,7 +480,7 @@
      "t": {
       "en": "Through the usual procedure, we find that the characteristic polynomial is $(1-\\eigenvar)^2$, and therefore the only eigenvalue is $\\eigenvar=1$. To find the eigenvectors, we solve the equation $(A-I)\\vect{v} = \\vect{0}$:",
       "sha": "2461ee5f2693",
-      "zh": ""
+      "zh": "按通常的步骤，求得特征多项式为 $(1-\\eigenvar)^2$，所以唯一的特征值是 $\\eigenvar=1$。为了求特征向量，我们解方程 $(A-I)\\vect{v} = \\vect{0}$："
      }
     },
     {
@@ -492,7 +492,7 @@
      "t": {
       "en": "The general solution is",
       "sha": "4729807d8eef",
-      "zh": ""
+      "zh": "通解为"
      }
     },
     {
@@ -504,7 +504,7 @@
      "t": {
       "en": "Because the solution space is $1$-dimensional, there is only one basic eigenvector:",
       "sha": "ca3a83069451",
-      "zh": ""
+      "zh": "因为解空间是 $1$ 维的，所以只有一个基础特征向量："
      }
     },
     {
@@ -516,7 +516,7 @@
      "t": {
       "en": "Since the matrix $A$ has only one basic eigenvector, we cannot find two linearly independent eigenvectors. Therefore, by Theorem “Diagonalization and eigenvectors”, $A$ cannot be diagonalized.",
       "sha": "6a800193f64a",
-      "zh": ""
+      "zh": "由于矩阵 $A$ 只有一个基础特征向量，我们找不到两个线性无关的特征向量。因此，由定理“对角化与特征向量”，$A$ 不能对角化。"
      }
     }
    ]
@@ -531,7 +531,7 @@
      "t": {
       "en": "Let $D=\\left[\\begin{array}{rrr} -2 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 2 \\\\ \\end{array}\\right]$ and $E=\\left[\\begin{array}{rrr} 1 & 0 & 0 \\\\ 0 & -1 & 0 \\\\ 0 & 0 & 3 \\\\ \\end{array}\\right]$. Find $D+E$, $DE$, and $D^7$.",
       "sha": "5bddf16cc5f4",
-      "zh": ""
+      "zh": "设 $D=\\left[\\begin{array}{rrr} -2 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 2 \\\\ \\end{array}\\right]$，$E=\\left[\\begin{array}{rrr} 1 & 0 & 0 \\\\ 0 & -1 & 0 \\\\ 0 & 0 & 3 \\\\ \\end{array}\\right]$。求 $D+E$、$DE$ 和 $D^7$。"
      }
     }
    ],
@@ -553,7 +553,7 @@
      "t": {
       "en": "Find the eigenvalues and eigenvectors of the matrix",
       "sha": "95c965d190fc",
-      "zh": ""
+      "zh": "求矩阵"
      }
     },
     {
@@ -565,7 +565,7 @@
      "t": {
       "en": "One eigenvalue is $3$. Diagonalize if possible.",
       "sha": "7ee1aa97df11",
-      "zh": ""
+      "zh": "的特征值和特征向量。其中一个特征值是 $3$。如果可以，把它对角化。"
      }
     }
    ],
@@ -575,7 +575,7 @@
      "t": {
       "en": "The eigenvectors and eigenvalues are:",
       "sha": "53e1f61f3559",
-      "zh": ""
+      "zh": "特征向量和特征值为："
      }
     },
     {
@@ -587,7 +587,7 @@
      "t": {
       "en": "The matrix $P$ needed to diagonalize the above matrix is",
       "sha": "f273aca99cc9",
-      "zh": ""
+      "zh": "把上面的矩阵对角化所需的矩阵 $P$ 是"
      }
     },
     {
@@ -599,7 +599,7 @@
      "t": {
       "en": "and the diagonal matrix $D$ is",
       "sha": "f112fe4a16b7",
-      "zh": ""
+      "zh": "对角矩阵 $D$ 是"
      }
     },
     {
@@ -624,7 +624,7 @@
      "t": {
       "en": "Find the eigenvalues and eigenvectors of the matrix",
       "sha": "95c965d190fc",
-      "zh": ""
+      "zh": "求矩阵"
      }
     },
     {
@@ -636,7 +636,7 @@
      "t": {
       "en": "One eigenvalue is $1$. Diagonalize if possible.",
       "sha": "4b735d9bd434",
-      "zh": ""
+      "zh": "其中一个特征值是 $1$。如果可以，把它对角化。"
      }
     }
    ],
@@ -646,7 +646,7 @@
      "t": {
       "en": "The eigenvalues are $-1$ and $1$. The eigenvectors corresponding to the eigenvalues are:",
       "sha": "bb108dad9f67",
-      "zh": ""
+      "zh": "特征值为 $-1$ 和 $1$。各特征值对应的特征向量为："
      }
     },
     {
@@ -658,7 +658,7 @@
      "t": {
       "en": "Since there are only 2 linearly independent eigenvectors, this matrix is not diagonalizable.",
       "sha": "145c10aacd6e",
-      "zh": ""
+      "zh": "由于只有 2 个线性无关的特征向量，这个矩阵不可对角化。"
      }
     }
    ],
@@ -679,7 +679,7 @@
      "t": {
       "en": "Find the eigenvalues and eigenvectors of the matrix",
       "sha": "95c965d190fc",
-      "zh": ""
+      "zh": "求矩阵"
      }
     },
     {
@@ -691,7 +691,7 @@
      "t": {
       "en": "One eigenvalue is $-3$. Diagonalize if possible.",
       "sha": "75d442ac0b01",
-      "zh": ""
+      "zh": "其中一个特征值是 $-3$。如果可以，把它对角化。"
      }
     }
    ],
@@ -701,7 +701,7 @@
      "t": {
       "en": "The eigenvectors and eigenvalues are:",
       "sha": "53e1f61f3559",
-      "zh": ""
+      "zh": "特征向量和特征值为："
      }
     },
     {
@@ -713,7 +713,7 @@
      "t": {
       "en": "The matrix $P$ needed to diagonalize the above matrix is",
       "sha": "f273aca99cc9",
-      "zh": ""
+      "zh": "把上面的矩阵对角化所需的矩阵 $P$ 是"
      }
     },
     {
@@ -725,7 +725,7 @@
      "t": {
       "en": "and the diagonal matrix $D$ is",
       "sha": "f112fe4a16b7",
-      "zh": ""
+      "zh": "对角矩阵 $D$ 是"
      }
     },
     {
@@ -750,7 +750,7 @@
      "t": {
       "en": "Find the eigenvalues and eigenvectors of the matrix",
       "sha": "95c965d190fc",
-      "zh": ""
+      "zh": "求矩阵"
      }
     },
     {
@@ -762,7 +762,7 @@
      "t": {
       "en": "One eigenvalue is $1$. Diagonalize if possible.",
       "sha": "4b735d9bd434",
-      "zh": ""
+      "zh": "其中一个特征值是 $1$。如果可以，把它对角化。"
      }
     }
    ],
@@ -784,7 +784,7 @@
      "t": {
       "en": "Find the eigenvalues and eigenvectors of the matrix",
       "sha": "95c965d190fc",
-      "zh": ""
+      "zh": "求矩阵"
      }
     },
     {
@@ -796,7 +796,7 @@
      "t": {
       "en": "One eigenvalue is $0$. Diagonalize if possible.",
       "sha": "ce317a5e94a8",
-      "zh": ""
+      "zh": "其中一个特征值是 $0$。如果可以，把它对角化。"
      }
     }
    ],
@@ -818,7 +818,7 @@
      "t": {
       "en": "Find the eigenvalues and eigenvectors of the matrix",
       "sha": "95c965d190fc",
-      "zh": ""
+      "zh": "求矩阵"
      }
     },
     {
@@ -830,7 +830,7 @@
      "t": {
       "en": "One eigenvalue is $3$. Diagonalize if possible.",
       "sha": "7ee1aa97df11",
-      "zh": ""
+      "zh": "的特征值和特征向量。其中一个特征值是 $3$。如果可以，把它对角化。"
      }
     }
    ],

@@ -15,7 +15,7 @@
         "t": {
          "en": "Find a basis for the column space, row space, and null space of a matrix.",
          "sha": "6e08104e765b",
-         "zh": ""
+         "zh": "求矩阵的列空间、行空间和零空间的基。"
         }
        }
       ],
@@ -25,7 +25,7 @@
         "t": {
          "en": "Find the rank and nullity of a matrix.",
          "sha": "60e741ea9c78",
-         "zh": ""
+         "zh": "求矩阵的秩和零度。"
         }
        }
       ]
@@ -38,7 +38,7 @@
    "t": {
     "en": "There are three important spaces we can associate to a matrix. They are called the column space, row space, and null space, and are defined as follows.",
     "sha": "1b28e361c4b7",
-    "zh": ""
+    "zh": "与一个矩阵相联系的重要空间有三个，分别叫作列空间、行空间和零空间，定义如下。"
    }
   },
   {
@@ -47,7 +47,7 @@
    "title": {
     "en": "Column space, row space, null space",
     "sha": "2be9a82e1b10",
-    "zh": ""
+    "zh": "列空间、行空间、零空间"
    },
    "blocks": [
     {
@@ -55,7 +55,7 @@
      "t": {
       "en": "Let $A$ be an $m\\times n$-matrix. The **column space** of $A$, written $\\col(A)$, is the span of the columns. The **row space** of $A$, written $\\row(A)$, is the span of the rows. The **null space** of $A$, written $\\nullspace(A)$, is the set",
       "sha": "2801ebb4d7bf",
-      "zh": ""
+      "zh": "设 $A$ 是一个 $m\\times n$ 矩阵。$A$ 的**列空间**记作 $\\col(A)$，是各列张成的空间；$A$ 的**行空间**记作 $\\row(A)$，是各行张成的空间；$A$ 的**零空间**记作 $\\nullspace(A)$，是集合"
      }
     },
     {
@@ -69,7 +69,7 @@
    "t": {
     "en": "Note that the column space is a subspace of $\\R^m$ and the null space is a subspace of $\\R^n$. The row space, on the other hand, is a set of row vectors. It can be regarded as a subspace of $\\R^n$, but only if we regard $\\R^n$ as the set of $n$-dimensional row vectors (and not column vectors, as usual).",
     "sha": "2b51b4e0dcac",
-    "zh": ""
+    "zh": "注意，列空间是 $\\R^m$ 的子空间，零空间是 $\\R^n$ 的子空间。而行空间是由行向量组成的集合。只有把 $\\R^n$ 看成 $n$ 维行向量的集合（而不是通常的列向量的集合）时，才能把行空间看作 $\\R^n$ 的子空间。"
    }
   },
   {
@@ -77,7 +77,7 @@
    "t": {
     "en": "Before we give an example, recall that two matrices are called **row equivalent** if one can be obtained from the other by performing a sequence of elementary row operations. The point of elementary row operations is that they do not affect the row space or the null space of the matrix. (They do, however, affect the column space). The following proposition makes this more precise.",
     "sha": "5fad786dc2eb",
-    "zh": ""
+    "zh": "在举例之前，先回想一下：如果一个矩阵可以经过一系列初等行变换变成另一个矩阵，这两个矩阵就称为**行等价**的。初等行变换的要点在于，它们不改变矩阵的行空间和零空间（但会改变列空间）。下面的命题把这一点说得更准确。"
    }
   },
   {
@@ -86,7 +86,7 @@
    "title": {
     "en": "Effect of row operations",
     "sha": "f716b48fbfcb",
-    "zh": ""
+    "zh": "行变换的影响"
    },
    "blocks": [
     {
@@ -94,7 +94,7 @@
      "t": {
       "en": "Let $A$ and $B$ be row equivalent matrices. Then $\\row(A)=\\row(B)$ and $\\nullspace(A)=\\nullspace(B)$.",
       "sha": "f1cb4199d39e",
-      "zh": ""
+      "zh": "设 $A$ 和 $B$ 是行等价的矩阵，则 $\\row(A)=\\row(B)$，且 $\\nullspace(A)=\\nullspace(B)$。"
      }
     }
    ]
@@ -108,7 +108,7 @@
      "t": {
       "en": "The fact that elementary row operations do not change the null space is a special case of Theorem “Elementary operations and solutions”, applied to a homogeneous system. To prove that they do not change the row space is also easy; we just need to look at each kind of elementary row operation. For example, adding a multiple of one row to another clearly does not change the span of the rows.",
       "sha": "163cdfe01cb9",
-      "zh": ""
+      "zh": "初等行变换不改变零空间，这是定理“初等运算与解”用于齐次方程组的特殊情形。要证明它们不改变行空间也不难，只需逐一检查每一种初等行变换。例如，把某一行的若干倍加到另一行上，各行张成的空间是不变的。"
      }
     }
    ]
@@ -119,7 +119,7 @@
    "title": {
     "en": "Basis of column space, row space, and null space",
     "sha": "59140b319b5f",
-    "zh": ""
+    "zh": "列空间、行空间与零空间的基"
    },
    "blocks": [
     {
@@ -127,7 +127,7 @@
      "t": {
       "en": "Find a basis for the column space, row space, and null space of the matrix",
       "sha": "da85fe04fffe",
-      "zh": ""
+      "zh": "求下面这个矩阵的列空间、行空间和零空间的基："
      }
     },
     {
@@ -145,7 +145,7 @@
      "t": {
       "en": "The column space of $A$ is the span of the columns of $A$, i.e.,",
       "sha": "dbcf31c3fe7f",
-      "zh": ""
+      "zh": "$A$ 的列空间是 $A$ 的各列张成的空间，即"
      }
     },
     {
@@ -157,7 +157,7 @@
      "t": {
       "en": "To find a basis for the column space, we use the casting-out algorithm. The reduced echelon form of $A$ is",
       "sha": "afc5487e78c7",
-      "zh": ""
+      "zh": "要求列空间的基，我们用剔除算法。$A$ 的简化行阶梯形是"
      }
     },
     {
@@ -169,7 +169,7 @@
      "t": {
       "en": "Note that the first two columns of the reduced echelon form are pivot columns. Therefore, by the casting-out algorithm, the first two columns of $A$ form a basis for the column space. Thus, the following is a basis for the column space:",
       "sha": "62b8729b9427",
-      "zh": ""
+      "zh": "注意，简化行阶梯形的前两列是主元列。因此，由剔除算法，$A$ 的前两列构成列空间的一组基。于是，下面就是列空间的一组基："
      }
     },
     {
@@ -181,7 +181,7 @@
      "t": {
       "en": "The rows space of $A$ is the span of the rows of $A$, i.e.,",
       "sha": "7a0a3d12a439",
-      "zh": ""
+      "zh": "$A$ 的行空间是 $A$ 的各行张成的空间，即"
      }
     },
     {
@@ -193,7 +193,7 @@
      "t": {
       "en": "We could find a basis of the row space by writing all three rows as column vectors and using the casting-out algorithm. However, there is an easier way. By Proposition “Effect of row operations”, the row space of $A$ is equal to the row space of the reduced echelon form (1). Moreover, the non-zero rows of the reduced echelon form are clearly linearly independent (no non-zero row can be a linear combination of other rows below it, because each non-zero row has a pivot entry). Therefore, the non-zero rows of the reduced echelon form form a basis of the row space.",
       "sha": "b4cf0247228f",
-      "zh": ""
+      "zh": "我们可以把三行都写成列向量，再用剔除算法来求行空间的基。不过，还有更简便的办法。由命题“行变换的影响”，$A$ 的行空间等于简化行阶梯形 (1) 的行空间。此外，简化行阶梯形的非零行是线性无关的（任何一个非零行都不可能是它下面其他各行的线性组合，因为每个非零行都有一个主元）。因此，简化行阶梯形的非零行构成行空间的一组基。"
      }
     },
     {
@@ -205,7 +205,7 @@
      "t": {
       "en": "Finally, the null space of $A$ is just the solution space of the homogeneous system $A\\vect{x}=\\vect{0}$. Thus, finding a basis of the null space is the same as finding a set of basic solutions. From the reduced echelon form, we can easily find the general solution of $A\\vect{x}=\\vect{0}$, using three parameters $r$, $s$, $t$ corresponding to the three non-pivot columns of (1). The general solution is:",
       "sha": "d352d01e8a78",
-      "zh": ""
+      "zh": "最后，$A$ 的零空间就是齐次方程组 $A\\vect{x}=\\vect{0}$ 的解空间。所以，求零空间的基，就是求一组基础解。由简化行阶梯形，很容易写出 $A\\vect{x}=\\vect{0}$ 的通解：(1) 中有三个非主元列，对应地用三个参数 $r$、$s$、$t$。通解是："
      }
     },
     {
@@ -217,7 +217,7 @@
      "t": {
       "en": "Therefore, the following is a basis of the null space:",
       "sha": "fd9abf62ddc7",
-      "zh": ""
+      "zh": "因此，下面是零空间的一组基："
      }
     },
     {
@@ -231,7 +231,7 @@
    "t": {
     "en": "As the example shows, all three bases, for the column space, the row space, and the null space of $A$, can be easily determined from the reduced echelon form. In the next proposition, we use this information to determine the dimensions of these three spaces. Recall from Definition “Rank of a matrix” that the **rank** of a matrix is equal to the number of pivot entries of its reduced echelon form.",
     "sha": "2d80d71cf862",
-    "zh": ""
+    "zh": "这个例子表明，$A$ 的列空间、行空间和零空间这三者的基，都可以很容易地由简化行阶梯形确定。在下一个命题中，我们利用这些信息来确定这三个空间的维数。回想定义“矩阵的秩”：矩阵的**秩**等于它的简化行阶梯形中主元的个数。"
    }
   },
   {
@@ -240,7 +240,7 @@
    "title": {
     "en": "Dimension of column space, row space, and null space",
     "sha": "66ff690dd54d",
-    "zh": ""
+    "zh": "列空间、行空间与零空间的维数"
    },
    "blocks": [
     {
@@ -248,7 +248,7 @@
      "t": {
       "en": "Let $A$ be an $m\\times n$-matrix. Then the dimensions of the column space, row space, and null space of $A$ are as follows:",
       "sha": "0108d3fb3593",
-      "zh": ""
+      "zh": "设 $A$ 是一个 $m\\times n$ 矩阵，则 $A$ 的列空间、行空间和零空间的维数如下："
      }
     },
     {
@@ -266,7 +266,7 @@
      "t": {
       "en": "Let $r=\\rank(A)$. Following the same method as in Example “Basis of column space, row space, and null space”, we can use the casting-out algorithm to find a basis for the column space. Since the reduced echelon form of $A$ has $r$ pivot columns, the basis has $r$ elements, and therefore $\\dim(\\col(A))=r$. Also, the reduced echelon form has $r$ non-zero rows (since each non-zero row contains exactly one pivot entry). These form a basis of the row space, and therefore $\\dim(\\row(A))=r$. Finally, the dimension of the null space is equal to the number of parameters in the general solution of the system of equations $A\\vect{x}=\\vect{0}$. There is one parameter for each non-pivot column, and since $A$ has $n$ columns and $r$ pivot columns, it follows that $\\dim(\\nullspace(A)) = n-r$.",
       "sha": "ec77267e2542",
-      "zh": ""
+      "zh": "设 $r=\\rank(A)$。仿照例“列空间、行空间与零空间的基”的方法，我们可以用剔除算法求出列空间的基。因为 $A$ 的简化行阶梯形有 $r$ 个主元列，所以这组基有 $r$ 个元素，因此 $\\dim(\\col(A))=r$。另外，简化行阶梯形有 $r$ 个非零行（因为每个非零行恰好含一个主元）。这些非零行构成行空间的一组基，因此 $\\dim(\\row(A))=r$。最后，零空间的维数等于方程组 $A\\vect{x}=\\vect{0}$ 的通解中参数的个数。每个非主元列对应一个参数，而 $A$ 有 $n$ 列、其中 $r$ 列是主元列，所以 $\\dim(\\nullspace(A)) = n-r$。"
      }
     }
    ]
@@ -276,7 +276,7 @@
    "t": {
     "en": "Among other things, the proposition states that the “row rank” of a matrix (the dimension of its row space) is always equal to the “column rank” (the dimension of the column space). This fact is not at all obvious when one first considers the definition of a matrix. It is often called the **rank theorem** and is one of the deep and mysterious facts of linear algebra. It means, for example, that if we do elementary column operations instead of elementary row operations, we end up with exactly the same number of pivots. Since the “row rank” and “column rank” are always equal, we are justified in simply calling this quantity the “rank” of the matrix.",
     "sha": "aee96974630e",
-    "zh": ""
+    "zh": "这个命题说明了很多事，其中之一是：矩阵的“行秩”（行空间的维数）总是等于“列秩”（列空间的维数）。初次看到矩阵的定义时，这个事实一点也不直观。它常被称为**秩定理**，是线性代数中深刻而神秘的事实之一。比如，它意味着：如果我们做初等列变换而不是初等行变换，最后得到的主元个数恰好相同。既然“行秩”和“列秩”总是相等，我们就可以放心地把这个量直接叫作矩阵的“秩”。"
    }
   },
   {
@@ -284,7 +284,7 @@
    "t": {
     "en": "There is also a name for the dimension of the null space. It is called the **nullity** of the matrix, and is written $\\nullity(A)$. The last part of Proposition “Dimension of column space, row space, and null space” is also called the **rank-nullity theorem**, and is often written in the form",
     "sha": "9094e4454184",
-    "zh": ""
+    "zh": "零空间的维数也有专门的名称，叫作矩阵的**零度**，记作 $\\nullity(A)$。命题“列空间、行空间与零空间的维数”的最后一部分也称为**秩—零度定理**，常写成下面的形式"
    }
   },
   {
@@ -297,7 +297,7 @@
    "title": {
     "en": "Rank and nullity",
     "sha": "56357ebb82c6",
-    "zh": ""
+    "zh": "秩与零度"
    },
    "blocks": [
     {
@@ -305,7 +305,7 @@
      "t": {
       "en": "Find the rank and nullity of the matrix",
       "sha": "9e005e219acf",
-      "zh": ""
+      "zh": "求下面这个矩阵的秩和零度："
      }
     },
     {
@@ -323,7 +323,7 @@
      "t": {
       "en": "The reduced echelon form of $A$ is",
       "sha": "87240f05acf6",
-      "zh": ""
+      "zh": "$A$ 的简化行阶梯形是"
      }
     },
     {
@@ -335,7 +335,7 @@
      "t": {
       "en": "and so $\\rank(A)=3$ and $\\nullity(A) = 5-3 = 2$.",
       "sha": "164c45c95a17",
-      "zh": ""
+      "zh": "所以 $\\rank(A)=3$，$\\nullity(A) = 5-3 = 2$。"
      }
     }
    ]
@@ -345,7 +345,7 @@
    "t": {
     "en": "We conclude this section with two useful theorems about matrices.",
     "sha": "da1953426046",
-    "zh": ""
+    "zh": "本节最后，我们给出关于矩阵的两个有用的定理。"
    }
   },
   {
@@ -358,7 +358,7 @@
      "t": {
       "en": "The following are equivalent for an $m\\times n$-matrix $A$.",
       "sha": "863b49cf880b",
-      "zh": ""
+      "zh": "对于 $m\\times n$ 矩阵 $A$，下列各条等价。"
      }
     },
     {
@@ -371,7 +371,7 @@
         "t": {
          "en": "$\\rank(A)=n$.",
          "sha": "8448d1eedcb1",
-         "zh": ""
+         "zh": "$\\rank(A)=n$。"
         }
        }
       ],
@@ -381,7 +381,7 @@
         "t": {
          "en": "$\\row(A)=\\R^n$, i.e., the rows of $A$ span $\\R^n$.",
          "sha": "3d7db60cc285",
-         "zh": ""
+         "zh": "$\\row(A)=\\R^n$，即 $A$ 的各行张成 $\\R^n$。"
         }
        }
       ],
@@ -391,7 +391,7 @@
         "t": {
          "en": "The columns of $A$ are linearly independent in $\\R^m$.",
          "sha": "381cf1bc9901",
-         "zh": ""
+         "zh": "$A$ 的各列在 $\\R^m$ 中线性无关。"
         }
        }
       ],
@@ -401,7 +401,7 @@
         "t": {
          "en": "The $n\\times n$-matrix $A^TA$ is invertible.",
          "sha": "a8acac4385da",
-         "zh": ""
+         "zh": "$n\\times n$ 矩阵 $A^TA$ 可逆。"
         }
        }
       ],
@@ -411,7 +411,7 @@
         "t": {
          "en": "$A$ is left invertible, i.e., there exists an $n\\times m$-matrix $B$ such that $BA=I$.",
          "sha": "5c3d5f495f48",
-         "zh": ""
+         "zh": "$A$ 左可逆，即存在 $n\\times m$ 矩阵 $B$，使得 $BA=I$。"
         }
        }
       ],
@@ -421,7 +421,7 @@
         "t": {
          "en": "The system $A\\vect{x}=\\vect{0}$ has only the trivial solution.",
          "sha": "1562deaccd56",
-         "zh": ""
+         "zh": "方程组 $A\\vect{x}=\\vect{0}$ 只有零解。"
         }
        }
       ]
@@ -439,7 +439,7 @@
      "t": {
       "en": "The following are equivalent for an $m\\times n$-matrix $A$.",
       "sha": "863b49cf880b",
-      "zh": ""
+      "zh": "对于 $m\\times n$ 矩阵 $A$，下列各条等价。"
      }
     },
     {
@@ -452,7 +452,7 @@
         "t": {
          "en": "$\\rank(A)=m$.",
          "sha": "18ee42f5a948",
-         "zh": ""
+         "zh": "$\\rank(A)=m$。"
         }
        }
       ],
@@ -462,7 +462,7 @@
         "t": {
          "en": "$\\col(A)=\\R^m$, i.e., the columns of $A$ span $\\R^m$.",
          "sha": "337ad6b6b60e",
-         "zh": ""
+         "zh": "$\\col(A)=\\R^m$，即 $A$ 的各列张成 $\\R^m$。"
         }
        }
       ],
@@ -472,7 +472,7 @@
         "t": {
          "en": "The rows of $A$ are linearly independent in $\\R^n$.",
          "sha": "a95d593e9502",
-         "zh": ""
+         "zh": "$A$ 的各行在 $\\R^n$ 中线性无关。"
         }
        }
       ],
@@ -482,7 +482,7 @@
         "t": {
          "en": "The $m\\times m$-matrix $AA^T$ is invertible.",
          "sha": "539a86591fee",
-         "zh": ""
+         "zh": "$m\\times m$ 矩阵 $AA^T$ 可逆。"
         }
        }
       ],
@@ -492,7 +492,7 @@
         "t": {
          "en": "$A$ is right invertible, i.e., there exists an $n\\times m$-matrix $B$ such that $AB=I$.",
          "sha": "7bd45ef73e5f",
-         "zh": ""
+         "zh": "$A$ 右可逆，即存在 $n\\times m$ 矩阵 $B$，使得 $AB=I$。"
         }
        }
       ],
@@ -502,7 +502,7 @@
         "t": {
          "en": "The system $A\\vect{x}=\\vect{b}$ is consistent for every $\\vect{b}\\in\\R^m$.",
          "sha": "2f6abdfbb0ee",
-         "zh": ""
+         "zh": "对每个 $\\vect{b}\\in\\R^m$，方程组 $A\\vect{x}=\\vect{b}$ 都相容。"
         }
        }
       ]
@@ -520,7 +520,7 @@
      "t": {
       "en": "Determine the rank and nullity and find a basis of the column space, row space, and null space of each of the following matrices.",
       "sha": "f793c4586922",
-      "zh": ""
+      "zh": "求下列每个矩阵的秩和零度，并求其列空间、行空间和零空间的基。"
      }
     },
     {
@@ -578,7 +578,7 @@
      "t": {
       "en": "Find $\\nullspace(A)$ for the following matrices.",
       "sha": "9bc893f0c493",
-      "zh": ""
+      "zh": "求下列矩阵的 $\\nullspace(A)$。"
      }
     },
     {
@@ -630,7 +630,7 @@
      "t": {
       "en": "In this exercise, we use scalars from the field $\\Z_5$ of integers modulo $5$ instead of real numbers (see Section 〔引用〕, “Fields”). Determine the rank and nullity and find a basis of the column space, row space, and null space of the following matrix over $\\Z_5$.",
       "sha": "a98005a6e08d",
-      "zh": ""
+      "zh": "在本题中，我们用模 $5$ 的整数构成的域 $\\Z_5$ 中的数作标量，而不用实数（见第〔引用〕节“域”）。求下列 $\\Z_5$ 上矩阵的秩和零度，并求其列空间、行空间和零空间的基。"
      }
     },
     {
@@ -644,7 +644,7 @@
      "t": {
       "en": "Rank 2, nullity 1, basis of column space $\\set{\\left[\\begin{array}{r}2\\\\1\\\\3\\end{array}\\right], \\left[\\begin{array}{r}1\\\\3\\\\2\\end{array}\\right]}$, basis of row space $\\set{\\mat{1,2,0}, \\mat{0,0,1}}$, basis of null space $\\set{\\left[\\begin{array}{r}3\\\\1\\\\0\\end{array}\\right]}$.",
       "sha": "e0bbce3cef97",
-      "zh": ""
+      "zh": "秩为 2，零度为 1，列空间的基为 $\\set{\\left[\\begin{array}{r}2\\\\1\\\\3\\end{array}\\right], \\left[\\begin{array}{r}1\\\\3\\\\2\\end{array}\\right]}$，行空间的基为 $\\set{\\mat{1,2,0}, \\mat{0,0,1}}$，零空间的基为 $\\set{\\left[\\begin{array}{r}3\\\\1\\\\0\\end{array}\\right]}$。"
      }
     }
    ],
@@ -665,7 +665,7 @@
      "t": {
       "en": "Show that if $A$ is an $m\\times n$-matrix, then $\\nullspace(A)$ is a subspace of $\\R^n$.",
       "sha": "1862ff735b1e",
-      "zh": ""
+      "zh": "证明：若 $A$ 是 $m\\times n$ 矩阵，则 $\\nullspace(A)$ 是 $\\R^n$ 的子空间。"
      }
     }
    ],
@@ -675,7 +675,7 @@
      "t": {
       "en": "Clearly $\\vect{0}\\in\\nullspace(A)$, since $A\\vect{0}=\\vect{0}$. If $\\vect{x},\\vect{y}\\in\\nullspace(A)$, then $A(\\vect{x}+\\vect{y}) = A\\vect{x}+A\\vect{y} = \\vect{0}+\\vect{0} = \\vect{0}$, and therefore $\\vect{x}+\\vect{y}\\in\\nullspace(A)$. Similarly, if $\\vect{x}\\in\\nullspace(A)$ and $k$ is a scalar, then $A(k\\vect{x})=k(A\\vect{x})=k\\vect{0}=\\vect{0}$, so $k\\vect{x}\\in\\nullspace(A)$. So $\\nullspace(A)$ contains $\\vect{0}$, and is closed under addition and scalar multiplication. It is therefore a subspace of $\\R^n$.",
       "sha": "c69f79cdb1f3",
-      "zh": ""
+      "zh": "因为 $A\\vect{0}=\\vect{0}$，所以 $\\vect{0}\\in\\nullspace(A)$ 成立。若 $\\vect{x},\\vect{y}\\in\\nullspace(A)$，则 $A(\\vect{x}+\\vect{y}) = A\\vect{x}+A\\vect{y} = \\vect{0}+\\vect{0} = \\vect{0}$，因此 $\\vect{x}+\\vect{y}\\in\\nullspace(A)$。同样地，若 $\\vect{x}\\in\\nullspace(A)$，$k$ 是标量，则 $A(k\\vect{x})=k(A\\vect{x})=k\\vect{0}=\\vect{0}$，所以 $k\\vect{x}\\in\\nullspace(A)$。于是 $\\nullspace(A)$ 含有 $\\vect{0}$，并且对加法和数乘封闭，因此它是 $\\R^n$ 的子空间。"
      }
     }
    ],
@@ -696,7 +696,7 @@
      "t": {
       "en": "Let $A$ be an $m\\times n$-matrix. Show that $\\col(A) = \\set{A\\vect{u} \\mid \\vect{u}\\in\\R^n}$.",
       "sha": "e2c7f8b2a690",
-      "zh": ""
+      "zh": "设 $A$ 是 $m\\times n$ 矩阵。证明：$\\col(A) = \\set{A\\vect{u} \\mid \\vect{u}\\in\\R^n}$。"
      }
     }
    ],
@@ -706,7 +706,7 @@
      "t": {
       "en": "Let",
       "sha": "ef5fe1edf379",
-      "zh": ""
+      "zh": "设"
      }
     },
     {
@@ -718,7 +718,7 @@
      "t": {
       "en": "Since $\\col(A)$ is the span of the columns of $A$, we have $\\vect{v}\\in\\col(A)$ if and only if there exists scalars $u_1,\\ldots,u_n$ such that",
       "sha": "35737f7dec85",
-      "zh": ""
+      "zh": "因为 $\\col(A)$ 是 $A$ 的各列张成的空间，所以 $\\vect{v}\\in\\col(A)$ 当且仅当存在标量 $u_1,\\ldots,u_n$，使得"
      }
     },
     {
@@ -730,7 +730,7 @@
      "t": {
       "en": "But this equation is equivalent to",
       "sha": "91786962708c",
-      "zh": ""
+      "zh": "而这个等式等价于"
      }
     },
     {
@@ -742,7 +742,7 @@
      "t": {
       "en": "Therefore, $\\vect{v}\\in\\col(A)$ if and only if $\\vect{v}$ is of the form $A\\vect{u}$, for some $\\vect{u}\\in\\R^n$. In other words, $\\col(A) = \\set{A\\vect{u}\\mid\\vect{u}\\in\\R^n}$.",
       "sha": "c48643156b01",
-      "zh": ""
+      "zh": "因此，$\\vect{v}\\in\\col(A)$ 当且仅当 $\\vect{v}$ 具有 $A\\vect{u}$ 的形式，其中 $\\vect{u}\\in\\R^n$。换句话说，$\\col(A) = \\set{A\\vect{u}\\mid\\vect{u}\\in\\R^n}$。"
      }
     }
    ],
@@ -763,7 +763,7 @@
      "t": {
       "en": "Show that $\\rank(A)=\\rank(A^T)$.",
       "sha": "caa9e93d7515",
-      "zh": ""
+      "zh": "证明：$\\rank(A)=\\rank(A^T)$。"
      }
     }
    ],
@@ -773,7 +773,7 @@
      "t": {
       "en": "The row space of $A$ is the same as the column space of $A^T$ (except that it uses row vectors instead of column vectors). Therefore, $\\rank(A) = \\dim(\\row(A)) = \\dim(\\col(A^T)) = \\rank(A^T)$.",
       "sha": "74e1f5813cd4",
-      "zh": ""
+      "zh": "$A$ 的行空间与 $A^T$ 的列空间是一回事（只不过前者用的是行向量，而不是列向量）。因此 $\\rank(A) = \\dim(\\row(A)) = \\dim(\\col(A^T)) = \\rank(A^T)$。"
      }
     }
    ],
@@ -794,7 +794,7 @@
      "t": {
       "en": "For invertible matrices $B$ and $C$ of appropriate size, show that $\\rank(A) = \\rank(BA) = \\rank(AC)$.",
       "sha": "3163f7398126",
-      "zh": ""
+      "zh": "设 $B$ 和 $C$ 是大小合适的可逆矩阵，证明：$\\rank(A) = \\rank(BA) = \\rank(AC)$。"
      }
     }
    ],
@@ -804,7 +804,7 @@
      "t": {
       "en": "From the theory of elementary matrices, we know that $B$ can be written as a product of elementary matrices $B=E_1\\cdots E_k$. It follows that $BA = E_1\\cdots E_kA$. Since each elementary matrix corresponds to an elementary row operation, it follows that $BA$ and $A$ are row equivalent. Therefore, $BA$ and $A$ have the same row space. It follows that $\\rank(BA) = \\dim(\\row(BA)) = \\dim(\\row(A)) = \\rank(A)$. This proves the first claim. To show the claim about $AC$, first note that by the above argument, $\\rank(C^TA^T) = \\rank(A^T)$, because $C^T$ is invertible. Then $\\rank(AC)=\\rank(A)$ follows by taking the transpose.",
       "sha": "89cf46cea6c7",
-      "zh": ""
+      "zh": "由初等矩阵的理论可知，$B$ 可以写成初等矩阵的乘积 $B=E_1\\cdots E_k$，于是 $BA = E_1\\cdots E_kA$。因为每个初等矩阵对应一个初等行变换，所以 $BA$ 与 $A$ 行等价，因此 $BA$ 与 $A$ 有相同的行空间。由此得 $\\rank(BA) = \\dim(\\row(BA)) = \\dim(\\row(A)) = \\rank(A)$，这就证明了第一个等式。要证明关于 $AC$ 的等式，先注意，由上面的论证，因为 $C^T$ 可逆，所以 $\\rank(C^TA^T) = \\rank(A^T)$。再取转置，就得到 $\\rank(AC)=\\rank(A)$。"
      }
     }
    ],
@@ -825,7 +825,7 @@
      "t": {
       "en": "Suppose $A$ is an $m\\times n$-matrix and $B$ is an $n\\times p$-matrix. Show that",
       "sha": "c607f9289be2",
-      "zh": ""
+      "zh": "设 $A$ 是 $m\\times n$ 矩阵，$B$ 是 $n\\times p$ 矩阵。证明："
      }
     },
     {
@@ -837,7 +837,7 @@
      "t": {
       "en": "**Hint:** Consider the subspace $\\col(B)\\cap\\nullspace(A)$ and suppose a basis for this subspace is $\\set{\\vect{w}_1,\\ldots,\\vect{w}_k}$. Let $\\set{\\vect{z}_1,\\ldots,\\vect{z}_k}$ be such that $B\\vect{z}_i=\\vect{w}_i$. Now suppose $\\set{\\vect{u}_1,\\ldots,\\vect{u}_r}$ is a basis for $\\nullspace(B)$, and argue that $\\nullspace(AB) \\subseteq \\sspan\\set{\\vect{u}_1,\\ldots, \\vect{u}_r,\\vect{z}_1,\\ldots,\\vect{z}_k}$.",
       "sha": "955cb563e6d9",
-      "zh": ""
+      "zh": "**提示：**考虑子空间 $\\col(B)\\cap\\nullspace(A)$，设它的一组基是 $\\set{\\vect{w}_1,\\ldots,\\vect{w}_k}$。取 $\\set{\\vect{z}_1,\\ldots,\\vect{z}_k}$，使得 $B\\vect{z}_i=\\vect{w}_i$。再设 $\\set{\\vect{u}_1,\\ldots,\\vect{u}_r}$ 是 $\\nullspace(B)$ 的一组基，然后论证 $\\nullspace(AB) \\subseteq \\sspan\\set{\\vect{u}_1,\\ldots, \\vect{u}_r,\\vect{z}_1,\\ldots,\\vect{z}_k}$。"
      }
     }
    ],
@@ -847,7 +847,7 @@
      "t": {
       "en": "Let $\\set{\\vect{w}_1,\\ldots,\\vect{w}_k}$ be a basis of $\\col(B)\\cap\\nullspace(A)$. Then for each $i$, we have $\\vect{w}_i\\in\\col(B)$, and therefore by Exercise 〔引用〕, we can find $\\vect{z}_i$ such that $\\vect{w}_i = B\\vect{z}_i$. Also let $\\set{\\vect{u}_1,\\ldots,\\vect{u}_r}$ be a basis for $\\nullspace(B)$. Now assume $\\vect{x}\\in\\nullspace(AB)$. Then $AB\\vect{x}=\\vect{0}$, and therefore $B\\vect{x} \\in \\nullspace(A)\\cap \\col(B)$. We therefore have",
       "sha": "8a9c05c7edc9",
-      "zh": ""
+      "zh": "设 $\\set{\\vect{w}_1,\\ldots,\\vect{w}_k}$ 是 $\\col(B)\\cap\\nullspace(A)$ 的一组基。则对每个 $i$，都有 $\\vect{w}_i\\in\\col(B)$，因此由习题〔引用〕，可以找到 $\\vect{z}_i$ 使得 $\\vect{w}_i = B\\vect{z}_i$。再设 $\\set{\\vect{u}_1,\\ldots,\\vect{u}_r}$ 是 $\\nullspace(B)$ 的一组基。现在假设 $\\vect{x}\\in\\nullspace(AB)$，则 $AB\\vect{x}=\\vect{0}$，因此 $B\\vect{x} \\in \\nullspace(A)\\cap \\col(B)$。于是我们有"
      }
     },
     {
@@ -859,7 +859,7 @@
      "t": {
       "en": "This implies",
       "sha": "1d477480ef57",
-      "zh": ""
+      "zh": "这说明"
      }
     },
     {
@@ -871,7 +871,7 @@
      "t": {
       "en": "and so it is of the form",
       "sha": "4c50d36abfc3",
-      "zh": ""
+      "zh": "因此它具有如下形式"
      }
     },
     {
@@ -883,7 +883,7 @@
      "t": {
       "en": "It follows that",
       "sha": "a463c1a9d932",
-      "zh": ""
+      "zh": "由此得"
      }
     },
     {
@@ -895,7 +895,7 @@
      "t": {
       "en": "Since we have shown that every element of $\\nullspace(AB)$ is in the span of these $k+r$ vectors, it follows that",
       "sha": "e111d40a01b5",
-      "zh": ""
+      "zh": "我们已经证明了 $\\nullspace(AB)$ 中的每个元素都在这 $k+r$ 个向量张成的空间里，因此"
      }
     },
     {
@@ -907,7 +907,7 @@
      "t": {
       "en": "and therefore $\\nullity(AB) \\leq \\nullity(A) + \\nullity(B)$.",
       "sha": "291e9d477008",
-      "zh": ""
+      "zh": "所以 $\\nullity(AB) \\leq \\nullity(A) + \\nullity(B)$。"
      }
     }
    ],

@@ -15,7 +15,7 @@
         "t": {
          "en": "Find the cofactor matrix and the adjugate of a matrix.",
          "sha": "2d26db81c2ef",
-         "zh": ""
+         "zh": "求矩阵的代数余子式矩阵和伴随矩阵。"
         }
        }
       ],
@@ -25,7 +25,7 @@
         "t": {
          "en": "Find the inverse of a matrix using the adjugate formula.",
          "sha": "d5f3a2ecee71",
-         "zh": ""
+         "zh": "用伴随矩阵公式求矩阵的逆。"
         }
        }
       ]
@@ -38,7 +38,7 @@
    "t": {
     "en": "The determinant of a matrix also provides a way to find the inverse of a matrix. Recall the definition of the inverse of a matrix from Definition “The inverse of a matrix”. If $A$ is an $n\\times n$-matrix, we say that $A^{-1}$ is the inverse of $A$ if $AA^{-1} = I$ and $A^{-1}A=I$.",
     "sha": "7cef1536abc9",
-    "zh": ""
+    "zh": "行列式也提供了一种求逆矩阵的方法。回忆定义“矩阵的逆”中逆矩阵的定义：若 $A$ 是 $n\\times n$ 矩阵，当 $AA^{-1} = I$ 且 $A^{-1}A=I$ 时，我们称 $A^{-1}$ 是 $A$ 的逆。"
    }
   },
   {
@@ -46,7 +46,7 @@
    "t": {
     "en": "We now define a new matrix called the **cofactor matrix** of $A$. The cofactor matrix of $A$ is the matrix whose $\\ijth$ entry is the $\\ijth$ cofactor of $A$.",
     "sha": "a42a43c788ad",
-    "zh": ""
+    "zh": "现在定义一个新的矩阵，称为 $A$ 的**代数余子式矩阵**（cofactor matrix）。$A$ 的代数余子式矩阵，是以 $A$ 的第 $\\ijth$ 个代数余子式作为第 $\\ijth$ 个元素的矩阵。"
    }
   },
   {
@@ -55,7 +55,7 @@
    "title": {
     "en": "The cofactor matrix",
     "sha": "11399636f78d",
-    "zh": ""
+    "zh": "代数余子式矩阵"
    },
    "blocks": [
     {
@@ -63,7 +63,7 @@
      "t": {
       "en": "Let $A$ be an $n\\times n$-matrix. Then the \\textbfcofactor matrix of $A$, denoted $\\cof(A)$, is defined by",
       "sha": "79ee7199ba65",
-      "zh": ""
+      "zh": "设 $A$ 是 $n\\times n$ 矩阵。则 $A$ 的**代数余子式矩阵**记作 $\\cof(A)$，定义为"
      }
     },
     {
@@ -75,7 +75,7 @@
      "t": {
       "en": "where $C_{ij}$ is the $\\ijth$ cofactor of $A$.",
       "sha": "b3b909ebc8a7",
-      "zh": ""
+      "zh": "其中 $C_{ij}$ 是 $A$ 的第 $\\ijth$ 个代数余子式。"
      }
     }
    ]
@@ -85,7 +85,7 @@
    "t": {
     "en": "We will use the cofactor matrix to create a formula for the inverse of $A$. First, we define the **adjugate** of $A$, denoted $\\adj(A)$, to be the transpose of the cofactor matrix:",
     "sha": "9e58cb6034ae",
-    "zh": ""
+    "zh": "我们将用代数余子式矩阵给出 $A$ 的逆的公式。首先，定义 $A$ 的**伴随矩阵**（adjugate），记作 $\\adj(A)$，它是代数余子式矩阵的转置："
    }
   },
   {
@@ -97,7 +97,7 @@
    "t": {
     "en": "The adjugate is also sometimes called the **classical adjoint** of $A$.",
     "sha": "1da69d3074c0",
-    "zh": ""
+    "zh": "伴随矩阵有时也称为 $A$ 的**经典伴随矩阵**（classical adjoint）。"
    }
   },
   {
@@ -106,7 +106,7 @@
    "title": {
     "en": "Cofactor matrix and adjugate",
     "sha": "ea00c5b5436b",
-    "zh": ""
+    "zh": "代数余子式矩阵与伴随矩阵"
    },
    "blocks": [
     {
@@ -114,7 +114,7 @@
      "t": {
       "en": "Find the cofactor matrix and the adjugate of $A$, where",
       "sha": "8fcb79ece10d",
-      "zh": ""
+      "zh": "求 $A$ 的代数余子式矩阵和伴随矩阵，其中"
      }
     },
     {
@@ -132,7 +132,7 @@
      "t": {
       "en": "We first find $\\cof(A)$. To do so, we need to compute the cofactors of $A$. We have:",
       "sha": "17624d150691",
-      "zh": ""
+      "zh": "我们先求 $\\cof(A)$。为此，需要计算 $A$ 的各个代数余子式。我们有："
      }
     },
     {
@@ -144,7 +144,7 @@
      "t": {
       "en": "and so on. Continuing in this way, we find the cofactor matrix",
       "sha": "5622db936460",
-      "zh": ""
+      "zh": "依此类推，我们得到代数余子式矩阵"
      }
     },
     {
@@ -156,7 +156,7 @@
      "t": {
       "en": "Finally, the adjugate is the transpose of the cofactor matrix:",
       "sha": "e18be9c145cc",
-      "zh": ""
+      "zh": "最后，伴随矩阵是代数余子式矩阵的转置："
      }
     },
     {
@@ -170,7 +170,7 @@
    "t": {
     "en": "The following theorem provides a formula for $A^{-1}$ using the determinant and the adjugate of $A$.",
     "sha": "d360522c7ccd",
-    "zh": ""
+    "zh": "下面的定理用 $A$ 的行列式和伴随矩阵给出了 $A^{-1}$ 的公式。"
    }
   },
   {
@@ -179,7 +179,7 @@
    "title": {
     "en": "Formula for the inverse",
     "sha": "3c617b266fb1",
-    "zh": ""
+    "zh": "逆矩阵公式"
    },
    "blocks": [
     {
@@ -187,7 +187,7 @@
      "t": {
       "en": "Let $A$ be an $n\\times n$-matrix. Then",
       "sha": "a5d64f27e763",
-      "zh": ""
+      "zh": "设 $A$ 是 $n\\times n$ 矩阵。则"
      }
     },
     {
@@ -199,7 +199,7 @@
      "t": {
       "en": "Moreover, $A$ is invertible if and only if $\\det(A) \\neq 0$. In this case, we have:",
       "sha": "c1bc408f4fcf",
-      "zh": ""
+      "zh": "此外，$A$ 可逆当且仅当 $\\det(A) \\neq 0$。此时有："
      }
     },
     {
@@ -211,7 +211,7 @@
      "t": {
       "en": "We call this the **adjugate formula** for the matrix inverse.",
       "sha": "0920717c125d",
-      "zh": ""
+      "zh": "我们把它称为矩阵求逆的**伴随矩阵公式**。"
      }
     }
    ]
@@ -225,7 +225,7 @@
      "t": {
       "en": "Recall that the $(i,j)$-entry of $\\adj(A)$ is equal to $C_{ji}$. Thus the $(i,j)$-entry of $B=A\\,\\adj(A)$ is:",
       "sha": "f294f486ce0a",
-      "zh": ""
+      "zh": "回忆一下，$\\adj(A)$ 的第 $(i,j)$ 个元素等于 $C_{ji}$。因此 $B=A\\,\\adj(A)$ 的第 $(i,j)$ 个元素为："
      }
     },
     {
@@ -237,7 +237,7 @@
      "t": {
       "en": "By the cofactor expansion theorem, we see that this expression for $B_{ij}$ is equal to the determinant of the matrix obtained from $A$ by replacing its $j$th row by $\\mat{a_{i1}, a_{i2}, \\dots a_{in}}$, i.e., by its $i$th row.",
       "sha": "c6edc1ec7648",
-      "zh": ""
+      "zh": "由代数余子式展开定理可知，这个 $B_{ij}$ 的表达式等于这样一个矩阵的行列式：把 $A$ 的第 $j$ 行换成 $\\mat{a_{i1}, a_{i2}, \\dots a_{in}}$，也就是换成它自己的第 $i$ 行，所得的矩阵。"
      }
     },
     {
@@ -245,7 +245,7 @@
      "t": {
       "en": "If $i=j$ then this matrix is $A$ itself and therefore $B_{ii}=\\det(A)$. If on the other hand $i\\neq j$, then this matrix has its $i$th row equal to its $j$th row, and therefore $B_{ij}=0$ in this case. Thus we obtain:",
       "sha": "11e91b0dce38",
-      "zh": ""
+      "zh": "如果 $i=j$，这个矩阵就是 $A$ 本身，因此 $B_{ii}=\\det(A)$。如果 $i\\neq j$，这个矩阵的第 $i$ 行等于它的第 $j$ 行，因此此时 $B_{ij}=0$。于是我们得到："
      }
     },
     {
@@ -257,7 +257,7 @@
      "t": {
       "en": "By a similar argument (using columns instead of rows), we can verify that:",
       "sha": "50b16336ff48",
-      "zh": ""
+      "zh": "用类似的论证（把行换成列），可以验证："
      }
     },
     {
@@ -269,7 +269,7 @@
      "t": {
       "en": "This proves the first part of the theorem. For the second part, assume that $A$ is invertible. Then by Theorem “Determinants and invertible matrices”, $\\det(A)\\neq 0$. Dividing the formula from the first part of the theorem by $\\det(A)$, we obtain",
       "sha": "c80ee1774218",
-      "zh": ""
+      "zh": "这就证明了定理的第一部分。对于第二部分，假设 $A$ 可逆。则由定理“行列式与可逆矩阵”，有 $\\det(A)\\neq 0$。把定理第一部分中的公式两边除以 $\\det(A)$，得到"
      }
     },
     {
@@ -281,7 +281,7 @@
      "t": {
       "en": "and therefore",
       "sha": "6cc521113306",
-      "zh": ""
+      "zh": "因此"
      }
     },
     {
@@ -293,7 +293,7 @@
      "t": {
       "en": "This completes the proof.",
       "sha": "f0759f66940d",
-      "zh": ""
+      "zh": "证明完毕。"
      }
     }
    ]
@@ -304,7 +304,7 @@
    "title": {
     "en": "Finding the inverse using a formula",
     "sha": "e6c4ab88e99d",
-    "zh": ""
+    "zh": "用公式求逆矩阵"
    },
    "blocks": [
     {
@@ -312,7 +312,7 @@
      "t": {
       "en": "Use the adjugate formula to find the inverse of the matrix",
       "sha": "b60c2a1e9d6d",
-      "zh": ""
+      "zh": "用伴随矩阵公式求下面矩阵的逆"
      }
     },
     {
@@ -330,7 +330,7 @@
      "t": {
       "en": "We must compute",
       "sha": "a0e2f2ba62f3",
-      "zh": ""
+      "zh": "我们需要计算"
      }
     },
     {
@@ -342,7 +342,7 @@
      "t": {
       "en": "We will start by computing the determinant. We expand along the second row:",
       "sha": "5c85f74aaf0e",
-      "zh": ""
+      "zh": "先计算行列式。沿第二行展开："
      }
     },
     {
@@ -354,7 +354,7 @@
      "t": {
       "en": "We have already calculated the adjugate $\\adj(A)$ in Example “Cofactor matrix and adjugate”:",
       "sha": "915f8d264e1f",
-      "zh": ""
+      "zh": "伴随矩阵 $\\adj(A)$ 已经在例“代数余子式矩阵与伴随矩阵”中算过："
      }
     },
     {
@@ -366,7 +366,7 @@
      "t": {
       "en": "Therefore, the inverse of $A$ is given by",
       "sha": "2f0a505e6577",
-      "zh": ""
+      "zh": "因此，$A$ 的逆为"
      }
     },
     {
@@ -378,7 +378,7 @@
      "t": {
       "en": "Since it is very easy to make a mistake in this calculation, we double-check our answer by computing $A^{-1}A$:",
       "sha": "c61025c0ffed",
-      "zh": ""
+      "zh": "这个计算很容易出错，所以我们通过计算 $A^{-1}A$ 来检验答案："
      }
     },
     {
@@ -393,7 +393,7 @@
    "title": {
     "en": "Finding the inverse using a formula",
     "sha": "e6c4ab88e99d",
-    "zh": ""
+    "zh": "用公式求逆矩阵"
    },
    "blocks": [
     {
@@ -401,7 +401,7 @@
      "t": {
       "en": "Use the adjugate formula to find the inverse of the matrix",
       "sha": "b60c2a1e9d6d",
-      "zh": ""
+      "zh": "用伴随矩阵公式求下面矩阵的逆"
      }
     },
     {
@@ -419,7 +419,7 @@
      "t": {
       "en": "We start by calculating the determinant:",
       "sha": "e6e5a13419b5",
-      "zh": ""
+      "zh": "先计算行列式："
      }
     },
     {
@@ -431,7 +431,7 @@
      "t": {
       "en": "Next, we compute the cofactor matrix:",
       "sha": "c5a4b9093fbe",
-      "zh": ""
+      "zh": "接着计算代数余子式矩阵："
      }
     },
     {
@@ -443,7 +443,7 @@
      "t": {
       "en": "The adjugate is the transpose of the cofactor matrix:",
       "sha": "da19ce2ce7be",
-      "zh": ""
+      "zh": "伴随矩阵是代数余子式矩阵的转置："
      }
     },
     {
@@ -455,7 +455,7 @@
      "t": {
       "en": "We therefore have",
       "sha": "4382e190c10d",
-      "zh": ""
+      "zh": "因此我们有"
      }
     },
     {
@@ -467,7 +467,7 @@
      "t": {
       "en": "Once again, we double-check our work by computing $A^{-1}A$:",
       "sha": "1e213516c458",
-      "zh": ""
+      "zh": "我们再次通过计算 $A^{-1}A$ 来检验结果："
      }
     },
     {
@@ -481,7 +481,7 @@
    "t": {
     "en": "It is always a good idea to double-check your work. At the end of the calculation, it is very easy to compute $A^{-1}A$ and check whether it is equal to $I$. If they are not equal, be sure to go back and double-check each step. One common mistake is to forget to take the transpose of the cofactor matrix, so be sure not to forget this step.",
     "sha": "004fcb1bf652",
-    "zh": ""
+    "zh": "检验自己的计算结果总是个好习惯。计算做完之后，算出 $A^{-1}A$ 并看它是否等于 $I$ 是很容易的。如果不相等，一定要回头逐步检查。一个常见的错误是忘记对代数余子式矩阵取转置，所以千万不要漏掉这一步。"
    }
   },
   {
@@ -489,7 +489,7 @@
    "t": {
     "en": "In practice, it is usually much faster to compute the inverse by the method of Section 〔引用〕, because this only requires solving a single system of equations, rather than computing a large number of cofactors. However, there are some situations where the adjugate formula is useful. One such situation is when the matrix has complicated entries that are functions rather than numbers. The following example illustrates this.",
     "sha": "1d482250ac43",
-    "zh": ""
+    "zh": "在实际计算中，用〔引用〕节的方法求逆通常要快得多，因为那只需要解一个方程组，而不必计算大量的代数余子式。不过，在有些情形下伴随矩阵公式是有用的。其中一种情形是矩阵的元素比较复杂，是函数而不是数。下面的例子说明了这一点。"
    }
   },
   {
@@ -498,7 +498,7 @@
    "title": {
     "en": "Inverse for non-constant matrix",
     "sha": "a58bb8bac8f6",
-    "zh": ""
+    "zh": "非常数矩阵的逆"
    },
    "blocks": [
     {
@@ -506,7 +506,7 @@
      "t": {
       "en": "Let",
       "sha": "ef5fe1edf379",
-      "zh": ""
+      "zh": "设"
      }
     },
     {
@@ -518,7 +518,7 @@
      "t": {
       "en": "Show that $A(t)^{-1}$ exists and find it.",
       "sha": "e43852b8c1a9",
-      "zh": ""
+      "zh": "证明 $A(t)^{-1}$ 存在，并求出它。"
      }
     }
    ]
@@ -532,7 +532,7 @@
      "t": {
       "en": "First note that",
       "sha": "92ec7b73d583",
-      "zh": ""
+      "zh": "首先注意到"
      }
     },
     {
@@ -544,7 +544,7 @@
      "t": {
       "en": "Therefore $A(t)^{-1}$ exists for all values of the variable $t$. The cofactor matrix is",
       "sha": "39572ac985f2",
-      "zh": ""
+      "zh": "因此对变量 $t$ 的所有取值，$A(t)^{-1}$ 都存在。代数余子式矩阵为"
      }
     },
     {
@@ -556,7 +556,7 @@
      "t": {
       "en": "The adjugate is the transpose of the cofactor matrix, and therefore the inverse is",
       "sha": "a74ec15e6003",
-      "zh": ""
+      "zh": "伴随矩阵是代数余子式矩阵的转置，因此逆矩阵为"
      }
     },
     {
@@ -570,7 +570,7 @@
    "t": {
     "en": "Another situation where the adjugate formula is useful is the case of a $2\\times 2$-matrix. In this case both the determinant and the adjugate are especially easy to compute. For a $2\\times 2$-matrix",
     "sha": "e002a651af37",
-    "zh": ""
+    "zh": "伴随矩阵公式有用的另一种情形是 $2\\times 2$ 矩阵。此时行列式和伴随矩阵都特别容易计算。对于 $2\\times 2$ 矩阵"
    }
   },
   {
@@ -582,7 +582,7 @@
    "t": {
     "en": "we have",
     "sha": "8419df2ab51f",
-    "zh": ""
+    "zh": "我们有"
    }
   },
   {
@@ -594,7 +594,7 @@
    "t": {
     "en": "Therefore, $A$ is invertible if and only if $ad-bc\\neq 0$, and in that case, the inverse is given by",
     "sha": "e615b13be5d8",
-    "zh": ""
+    "zh": "因此，$A$ 可逆当且仅当 $ad-bc\\neq 0$，此时逆矩阵为"
    }
   },
   {
@@ -607,7 +607,7 @@
    "title": {
     "en": "Inverse of a $2\\times 2$-matrix",
     "sha": "09b77040c87d",
-    "zh": ""
+    "zh": "$2\\times 2$ 矩阵的逆"
    },
    "blocks": [
     {
@@ -615,7 +615,7 @@
      "t": {
       "en": "Find the inverse of",
       "sha": "f1203726627d",
-      "zh": ""
+      "zh": "求下面矩阵的逆"
      }
     },
     {
@@ -633,7 +633,7 @@
      "t": {
       "en": "We use formula (1) to compute the inverse:",
       "sha": "917b55d441bf",
-      "zh": ""
+      "zh": "我们用公式 (1) 来计算逆矩阵："
      }
     },
     {
@@ -652,7 +652,7 @@
      "t": {
       "en": "Find the cofactor matrix and the adjugate of each of the following matrices.",
       "sha": "6ec1e6852ffe",
-      "zh": ""
+      "zh": "求下列各矩阵的代数余子式矩阵和伴随矩阵。"
      }
     },
     {
@@ -678,7 +678,7 @@
      "t": {
       "en": "For each of the following matrices, determine whether it is invertible by checking whether the determinant is non-zero. If the determinant is non-zero, use the adjugate formula to find the inverse.",
       "sha": "ed7f69b314fb",
-      "zh": ""
+      "zh": "对下列每个矩阵，通过检查行列式是否非零来判断它是否可逆。如果行列式非零，用伴随矩阵公式求它的逆。"
      }
     },
     {
@@ -697,7 +697,7 @@
         "t": {
          "en": "$\\det(A) = -13$ and so $A$ is invertible. This inverse is",
          "sha": "9b89ee3519f3",
-         "zh": ""
+         "zh": "$\\det(A) = -13$，所以 $A$ 可逆。其逆为"
         }
        },
        {
@@ -711,7 +711,7 @@
         "t": {
          "en": "$\\det(B) = 7$, so $B$ is invertible. The inverse is $\\displaystyle \\def\\arraystretch{1.3} \\frac{1}{7} \\left[\\begin{array}{rrr} 1 & 3 & -6 \\\\ -2 & 1 & 5 \\\\ 2 & -1 & 2 \\\\ \\end{array}\\right]^T = \\left[\\begin{array}{rrr} \\frac{1}{7} & -\\frac{2}{7} & \\frac{2}{7} \\\\ \\frac{3}{7} & \\frac{1}{7} & -\\frac{1}{7} \\\\ -\\frac{6}{7} & \\frac{5}{7} & \\frac{2}{7} \\\\ \\end{array}\\right].$",
          "sha": "404e24804339",
-         "zh": ""
+         "zh": "$\\det(B) = 7$，所以 $B$ 可逆。其逆为 $\\displaystyle \\def\\arraystretch{1.3} \\frac{1}{7} \\left[\\begin{array}{rrr} 1 & 3 & -6 \\\\ -2 & 1 & 5 \\\\ 2 & -1 & 2 \\\\ \\end{array}\\right]^T = \\left[\\begin{array}{rrr} \\frac{1}{7} & -\\frac{2}{7} & \\frac{2}{7} \\\\ \\frac{3}{7} & \\frac{1}{7} & -\\frac{1}{7} \\\\ -\\frac{6}{7} & \\frac{5}{7} & \\frac{2}{7} \\\\ \\end{array}\\right].$"
         }
        }
       ],
@@ -721,7 +721,7 @@
         "t": {
          "en": "$\\det(C) = 3$, so $C$ is invertible. The inverse is $\\def\\arraystretch{1.3} \\left[\\begin{array}{rrr} 1 & 0 & -3 \\\\ -\\frac{2}{3} & \\frac{1}{3} & \\frac{5}{3} \\\\ \\frac{2}{3} & -\\frac{1}{3} & -\\frac{2}{3} \\\\ \\end{array}\\right]$.",
          "sha": "43dfe73eadaa",
-         "zh": ""
+         "zh": "$\\det(C) = 3$，所以 $C$ 可逆。其逆为 $\\def\\arraystretch{1.3} \\left[\\begin{array}{rrr} 1 & 0 & -3 \\\\ -\\frac{2}{3} & \\frac{1}{3} & \\frac{5}{3} \\\\ \\frac{2}{3} & -\\frac{1}{3} & -\\frac{2}{3} \\\\ \\end{array}\\right]$。"
         }
        }
       ],
@@ -731,7 +731,7 @@
         "t": {
          "en": "$\\det(D) = 0$, so $D$ is not invertible.",
          "sha": "845554b07df4",
-         "zh": ""
+         "zh": "$\\det(D) = 0$，所以 $D$ 不可逆。"
         }
        }
       ],
@@ -741,7 +741,7 @@
         "t": {
          "en": "$\\det(E) = 2$, and so $E$ is invertible. The inverse is $\\def\\arraystretch{1.3} \\left[\\begin{array}{rrr} -\\frac{1}{2} & \\frac{3}{2} & 0 \\\\ \\frac{3}{2} & -\\frac{9}{2} & 1 \\\\ \\frac{1}{2} & -\\frac{1}{2} & 0 \\\\ \\end{array}\\right]$.",
          "sha": "c1188dd61d5c",
-         "zh": ""
+         "zh": "$\\det(E) = 2$，所以 $E$ 可逆。其逆为 $\\def\\arraystretch{1.3} \\left[\\begin{array}{rrr} -\\frac{1}{2} & \\frac{3}{2} & 0 \\\\ \\frac{3}{2} & -\\frac{9}{2} & 1 \\\\ \\frac{1}{2} & -\\frac{1}{2} & 0 \\\\ \\end{array}\\right]$。"
         }
        }
       ]
@@ -765,7 +765,7 @@
      "t": {
       "en": "Determine whether each of the following matrices is invertible. If so, use the adjugate formula to find the inverse. If the inverse does not exist, explain why.",
       "sha": "48237b9f0cea",
-      "zh": ""
+      "zh": "判断下列各矩阵是否可逆。如果可逆，用伴随矩阵公式求其逆；如果逆不存在，说明原因。"
      }
     },
     {
@@ -784,7 +784,7 @@
         "t": {
          "en": "$\\det(A) = 1$, so $A$ is invertible. The inverse is $A^{-1} = \\left[\\begin{array}{rr} 2 & -1 \\\\ -1 & 1 \\\\ \\end{array}\\right]$.",
          "sha": "7a8e7d5db98d",
-         "zh": ""
+         "zh": "$\\det(A) = 1$，所以 $A$ 可逆。其逆为 $A^{-1} = \\left[\\begin{array}{rr} 2 & -1 \\\\ -1 & 1 \\\\ \\end{array}\\right]$。"
         }
        }
       ],
@@ -794,7 +794,7 @@
         "t": {
          "en": "$\\det(B) = -15$, so $B$ is invertible. The inverse is $\\displaystyle B^{-1} = \\frac{1}{15}\\left[\\begin{array}{rrr} -1 & -1 & 4 \\\\ -4 & 11 & 1 \\\\ 8 & -7 & -2 \\\\ \\end{array}\\right]$.",
          "sha": "0c4136d4800e",
-         "zh": ""
+         "zh": "$\\det(B) = -15$，所以 $B$ 可逆。其逆为 $\\displaystyle B^{-1} = \\frac{1}{15}\\left[\\begin{array}{rrr} -1 & -1 & 4 \\\\ -4 & 11 & 1 \\\\ 8 & -7 & -2 \\\\ \\end{array}\\right]$。"
         }
        }
       ],
@@ -804,7 +804,7 @@
         "t": {
          "en": "$\\det(C) = 0$, so $C$ is not invertible.",
          "sha": "4acaf0701008",
-         "zh": ""
+         "zh": "$\\det(C) = 0$，所以 $C$ 不可逆。"
         }
        }
       ]
@@ -828,7 +828,7 @@
      "t": {
       "en": "Use the adjugate formula to find the inverse of the matrix",
       "sha": "b60c2a1e9d6d",
-      "zh": ""
+      "zh": "用伴随矩阵公式求下面矩阵的逆"
      }
     },
     {
@@ -842,7 +842,7 @@
      "t": {
       "en": "We have",
       "sha": "a2214cd5b1a4",
-      "zh": ""
+      "zh": "我们有"
      }
     },
     {
@@ -854,7 +854,7 @@
      "t": {
       "en": "and therefore",
       "sha": "6cc521113306",
-      "zh": ""
+      "zh": "因此"
      }
     },
     {
@@ -879,7 +879,7 @@
      "t": {
       "en": "Use the adjugate formula to find the inverse of the matrix",
       "sha": "b60c2a1e9d6d",
-      "zh": ""
+      "zh": "用伴随矩阵公式求下面矩阵的逆"
      }
     },
     {
@@ -893,7 +893,7 @@
      "t": {
       "en": "We have",
       "sha": "a2214cd5b1a4",
-      "zh": ""
+      "zh": "我们有"
      }
     },
     {
@@ -905,7 +905,7 @@
      "t": {
       "en": "and therefore",
       "sha": "6cc521113306",
-      "zh": ""
+      "zh": "因此"
      }
     },
     {
@@ -930,7 +930,7 @@
      "t": {
       "en": "Consider the matrix",
       "sha": "c5c7ab8caadb",
-      "zh": ""
+      "zh": "考虑矩阵"
      }
     },
     {
@@ -942,7 +942,7 @@
      "t": {
       "en": "Does there exist a value of $t$ for which this matrix fails to be invertible? Explain.",
       "sha": "cf7527c750bb",
-      "zh": ""
+      "zh": "是否存在 $t$ 的某个值，使这个矩阵不可逆？请说明理由。"
      }
     }
    ],
@@ -952,7 +952,7 @@
      "t": {
       "en": "No. It has non-zero determinant $\\det(A)=\\cos^2 t+\\sin^2 t = 1$ for all $t$, so it is invertible for all $t$.",
       "sha": "43deb6195e43",
-      "zh": ""
+      "zh": "不存在。对所有 $t$，它的行列式 $\\det(A)=\\cos^2 t+\\sin^2 t = 1$ 都非零，所以对所有 $t$ 它都可逆。"
      }
     }
    ],
@@ -973,7 +973,7 @@
      "t": {
       "en": "Consider the matrix",
       "sha": "c5c7ab8caadb",
-      "zh": ""
+      "zh": "考虑矩阵"
      }
     },
     {
@@ -985,7 +985,7 @@
      "t": {
       "en": "Does there exist a value of $t$ for which this matrix fails to be invertible? Explain.",
       "sha": "cf7527c750bb",
-      "zh": ""
+      "zh": "是否存在 $t$ 的某个值，使这个矩阵不可逆？请说明理由。"
      }
     }
    ],
@@ -995,7 +995,7 @@
      "t": {
       "en": "$\\det(A) = \\left|\\begin{array}{ccc} 1 & t & t^2 \\\\ 0 & 1 & 2t \\\\ t & 0 & 2 \\end{array}\\right| = t^3+2$, and so $A$ has no inverse when $t=-\\sqrt[3]{2}$.",
       "sha": "ed8fff5127a9",
-      "zh": ""
+      "zh": "$\\det(A) = \\left|\\begin{array}{ccc} 1 & t & t^2 \\\\ 0 & 1 & 2t \\\\ t & 0 & 2 \\end{array}\\right| = t^3+2$，所以当 $t=-\\sqrt[3]{2}$ 时 $A$ 没有逆。"
      }
     }
    ],
@@ -1016,7 +1016,7 @@
      "t": {
       "en": "Consider the matrix",
       "sha": "c5c7ab8caadb",
-      "zh": ""
+      "zh": "考虑矩阵"
      }
     },
     {
@@ -1028,7 +1028,7 @@
      "t": {
       "en": "Does there exist a value of $t$ for which this matrix fails to be invertible? Explain.",
       "sha": "cf7527c750bb",
-      "zh": ""
+      "zh": "是否存在 $t$ 的某个值，使这个矩阵不可逆？请说明理由。"
      }
     }
    ],
@@ -1038,7 +1038,7 @@
      "t": {
       "en": "Since the matrix $A$ has two identical rows, we have $\\det(A)=0$ for all $t$. So this matrix is non-invertible for all $t$.",
       "sha": "ecb56b526c96",
-      "zh": ""
+      "zh": "由于矩阵 $A$ 有两行相同，对所有 $t$ 都有 $\\det(A)=0$。所以这个矩阵对所有 $t$ 都不可逆。"
      }
     }
    ],
@@ -1059,7 +1059,7 @@
      "t": {
       "en": "Consider the matrix",
       "sha": "c5c7ab8caadb",
-      "zh": ""
+      "zh": "考虑矩阵"
      }
     },
     {
@@ -1071,7 +1071,7 @@
      "t": {
       "en": "Does there exist a value of $t$ for which this matrix fails to be invertible? Explain.",
       "sha": "cf7527c750bb",
-      "zh": ""
+      "zh": "是否存在 $t$ 的某个值，使这个矩阵不可逆？请说明理由。"
      }
     }
    ],
@@ -1085,7 +1085,7 @@
      "t": {
       "en": "and so this matrix is always invertible.",
       "sha": "3dce44af0829",
-      "zh": ""
+      "zh": "所以这个矩阵总是可逆的。"
      }
     }
    ],
@@ -1106,7 +1106,7 @@
      "t": {
       "en": "Use the adjugate formula to find the inverse of the matrix",
       "sha": "b60c2a1e9d6d",
-      "zh": ""
+      "zh": "用伴随矩阵公式求下面矩阵的逆"
      }
     },
     {
@@ -1124,7 +1124,7 @@
      "t": {
       "en": "Hence the inverse is",
       "sha": "fa3f55bdec42",
-      "zh": ""
+      "zh": "因此逆矩阵为"
      }
     },
     {
@@ -1149,7 +1149,7 @@
      "t": {
       "en": "Find the inverse, if it exists, of the matrix",
       "sha": "e98e57e3ec76",
-      "zh": ""
+      "zh": "求矩阵的逆（如果存在）"
      }
     },
     {

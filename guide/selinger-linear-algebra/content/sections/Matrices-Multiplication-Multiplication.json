@@ -7,7 +7,7 @@
    "t": {
     "en": "The multiplication of a matrix and a vector from the previous section is a special case of the operation of multiplying two matrices, which we now define.",
     "sha": "c13e329f86aa",
-    "zh": ""
+    "zh": "上一节讲的矩阵与向量的乘法，是两个矩阵相乘这一运算的特例，现在我们来定义矩阵与矩阵的乘法。"
    }
   },
   {
@@ -16,7 +16,7 @@
    "title": {
     "en": "Matrix multiplication",
     "sha": "f236c7e88a9b",
-    "zh": ""
+    "zh": "矩阵乘法"
    },
    "blocks": [
     {
@@ -24,7 +24,7 @@
      "t": {
       "en": "Let $A=\\mat{a_{ij}}$ be an $m\\times n$-matrix, and let $B=\\mat{b_{jk}}$ be an $n\\times p$-matrix. Then their product is the $m\\times p$-matrix $AB=\\mat{c_{ik}}$ whose $(i,k)$-entry is defined by",
       "sha": "fe1fed2b961c",
-      "zh": ""
+      "zh": "设 $A=\\mat{a_{ij}}$ 是 $m\\times n$ 矩阵，$B=\\mat{b_{jk}}$ 是 $n\\times p$ 矩阵。则它们的乘积是 $m\\times p$ 矩阵 $AB=\\mat{c_{ik}}$，其 $(i,k)$ 元素由下式定义"
      }
     },
     {
@@ -38,7 +38,7 @@
    "t": {
     "en": "For matrices $A$ and $B$, in order to form the product $AB$, the number of columns of $A$ must equal the number of rows of $B$. Consider a product $AB$ where $A$ has dimensions $m\\times n$ and $B$ has dimensions $n \\times p$. Then the dimensions of the product are given by",
     "sha": "d0e1af735226",
-    "zh": ""
+    "zh": "对矩阵 $A$ 与 $B$，要作出乘积 $AB$，$A$ 的列数必须等于 $B$ 的行数。考虑乘积 $AB$，其中 $A$ 的维数是 $m\\times n$，$B$ 的维数是 $n \\times p$。则乘积的维数由下式给出"
    }
   },
   {
@@ -50,7 +50,7 @@
    "t": {
     "en": "Note that the two outside numbers give the dimensions of the product. If the two middle numbers do not match, we cannot multiply the matrices.",
     "sha": "6807bd248a3b",
-    "zh": ""
+    "zh": "注意，外侧的两个数给出乘积的维数。如果中间的两个数不相等，这两个矩阵就不能相乘。"
    }
   },
   {
@@ -58,7 +58,7 @@
    "t": {
     "en": "To better visualize the rule of matrix multiplication, suppose",
     "sha": "b4b20dc8d1eb",
-    "zh": ""
+    "zh": "为了更清楚地看出矩阵乘法的规则，设"
    }
   },
   {
@@ -70,7 +70,7 @@
    "t": {
     "en": "Then their product",
     "sha": "755724f25176",
-    "zh": ""
+    "zh": "则它们的乘积"
    }
   },
   {
@@ -82,7 +82,7 @@
    "t": {
     "en": "is an $m\\times p$-matrix whose $(i,k)$-entry is defined by",
     "sha": "8fc5f41e91ed",
-    "zh": ""
+    "zh": "是一个 $m\\times p$ 矩阵，其 $(i,k)$ 元素由下式定义"
    }
   },
   {
@@ -94,7 +94,7 @@
    "t": {
     "en": "Note that we can also write this as",
     "sha": "f25f47a5af10",
-    "zh": ""
+    "zh": "注意，我们也可以把它写成"
    }
   },
   {
@@ -106,7 +106,7 @@
    "t": {
     "en": "In other words, the $(i,k)$-entry of the matrix product $AB$ is a kind of dot product of the $i\\th$ row of $A$ with the $k\\th$ column of $B$.",
     "sha": "4ee584642eb2",
-    "zh": ""
+    "zh": "换句话说，矩阵乘积 $AB$ 的 $(i,k)$ 元素，是 $A$ 的第 $i\\th$ 行与 $B$ 的第 $k\\th$ 列的一种点积。"
    }
   },
   {
@@ -115,7 +115,7 @@
    "title": {
     "en": "Matrix multiplication",
     "sha": "f236c7e88a9b",
-    "zh": ""
+    "zh": "矩阵乘法"
    },
    "blocks": [
     {
@@ -123,7 +123,7 @@
      "t": {
       "en": "Find $AB$, where",
       "sha": "931acad82221",
-      "zh": ""
+      "zh": "求 $AB$，其中"
      }
     },
     {
@@ -141,7 +141,7 @@
      "t": {
       "en": "First, let us note that since $A$ has size $2\\times 3$ and $B$ has size $3\\times 3$, the product $AB$ is well-defined and has size $2\\times 3$. Let $C=AB$. We compute each of the six entries of $C$:",
       "sha": "f85f3091a8ce",
-      "zh": ""
+      "zh": "首先注意，因为 $A$ 的大小是 $2\\times 3$，$B$ 的大小是 $3\\times 3$，所以乘积 $AB$ 有定义，且大小为 $2\\times 3$。设 $C=AB$。我们来计算 $C$ 的六个元素："
      }
     },
     {
@@ -154,7 +154,7 @@
         "t": {
          "en": "The $(1,1)$-entry is the first row of $A$ times the first column of $B$: $c_{11} = 1\\cdot 1+2\\cdot 0+1\\cdot(-2) = -1$.",
          "sha": "b3b72fb1d45c",
-         "zh": ""
+         "zh": "$(1,1)$ 元素是 $A$ 的第一行乘以 $B$ 的第一列：$c_{11} = 1\\cdot 1+2\\cdot 0+1\\cdot(-2) = -1$。"
         }
        }
       ],
@@ -164,7 +164,7 @@
         "t": {
          "en": "The $(1,2)$-entry is the first row of $A$ times the second column of $B$: $c_{12} = 1\\cdot 2+2\\cdot 3+1\\cdot 1 = 9$.",
          "sha": "303de8859b4b",
-         "zh": ""
+         "zh": "$(1,2)$ 元素是 $A$ 的第一行乘以 $B$ 的第二列：$c_{12} = 1\\cdot 2+2\\cdot 3+1\\cdot 1 = 9$。"
         }
        }
       ],
@@ -174,7 +174,7 @@
         "t": {
          "en": "The $(1,3)$-entry is the first row of $A$ times the third column of $B$: $c_{13} = 1\\cdot 0+2\\cdot 1+1\\cdot 1 = 3$.",
          "sha": "43f037be06e1",
-         "zh": ""
+         "zh": "$(1,3)$ 元素是 $A$ 的第一行乘以 $B$ 的第三列：$c_{13} = 1\\cdot 0+2\\cdot 1+1\\cdot 1 = 3$。"
         }
        }
       ],
@@ -184,7 +184,7 @@
         "t": {
          "en": "The $(2,1)$-entry is the second row of $A$ times the first column of $B$: $c_{21} = 0\\cdot 1+2\\cdot 0+1\\cdot(-2) = -2$.",
          "sha": "c1ee310ab979",
-         "zh": ""
+         "zh": "$(2,1)$ 元素是 $A$ 的第二行乘以 $B$ 的第一列：$c_{21} = 0\\cdot 1+2\\cdot 0+1\\cdot(-2) = -2$。"
         }
        }
       ],
@@ -194,7 +194,7 @@
         "t": {
          "en": "The $(2,2)$-entry is the second row of $A$ times the second column of $B$: $c_{22} = 0\\cdot 2+2\\cdot 3+1\\cdot 1 = 7$.",
          "sha": "fc769c0722e7",
-         "zh": ""
+         "zh": "$(2,2)$ 元素是 $A$ 的第二行乘以 $B$ 的第二列：$c_{22} = 0\\cdot 2+2\\cdot 3+1\\cdot 1 = 7$。"
         }
        }
       ],
@@ -204,7 +204,7 @@
         "t": {
          "en": "The $(2,3)$-entry is the second row of $A$ times the third column of $B$: $c_{23} = 0\\cdot 0+2\\cdot 1+1\\cdot 1 = 3$.",
          "sha": "d594d720c9a8",
-         "zh": ""
+         "zh": "$(2,3)$ 元素是 $A$ 的第二行乘以 $B$ 的第三列：$c_{23} = 0\\cdot 0+2\\cdot 1+1\\cdot 1 = 3$。"
         }
        }
       ]
@@ -215,7 +215,7 @@
      "t": {
       "en": "Therefore, we have",
       "sha": "a51f95f5d499",
-      "zh": ""
+      "zh": "因此，有"
      }
     },
     {
@@ -229,7 +229,7 @@
    "t": {
     "en": "As this example shows, calculating matrix products one component at a time can be an extremely repetitive and tedious process. Fortunately, we can speed this up by considering whole columns at once.",
     "sha": "1db88309aa86",
-    "zh": ""
+    "zh": "从这个例子可以看出，一个元素一个元素地计算矩阵乘积，可能非常重复、非常繁琐。幸运的是，我们可以一次处理整列来加快速度。"
    }
   },
   {
@@ -238,7 +238,7 @@
    "title": {
     "en": "Matrix multiplication, column method",
     "sha": "65311751d8ad",
-    "zh": ""
+    "zh": "矩阵乘法（列方法）"
    },
    "blocks": [
     {
@@ -246,7 +246,7 @@
      "t": {
       "en": "Let $A$ be an $m\\times n$-matrix, and let $B$ be an $n\\times p$-matrix. Suppose that the columns of $B$ are $\\vect{b}_1,\\vect{b}_2,\\ldots,\\vect{b}_p$. Then the columns of $AB$ are",
       "sha": "90c5f9637845",
-      "zh": ""
+      "zh": "设 $A$ 是 $m\\times n$ 矩阵，$B$ 是 $n\\times p$ 矩阵。设 $B$ 的各列为 $\\vect{b}_1,\\vect{b}_2,\\ldots,\\vect{b}_p$。则 $AB$ 的各列为"
      }
     },
     {
@@ -258,7 +258,7 @@
      "t": {
       "en": "In other words, the $k\\th$ column of the matrix product $AB$ is equal to $A$ times the $k\\th$ column of $B$.",
       "sha": "f6eb9cb8e372",
-      "zh": ""
+      "zh": "换句话说，矩阵乘积 $AB$ 的第 $k\\th$ 列，等于 $A$ 乘以 $B$ 的第 $k\\th$ 列。"
      }
     }
    ]
@@ -269,7 +269,7 @@
    "title": {
     "en": "Matrix multiplication by the column method",
     "sha": "06c94a1b926f",
-    "zh": ""
+    "zh": "用列方法做矩阵乘法"
    },
    "blocks": [
     {
@@ -277,7 +277,7 @@
      "t": {
       "en": "Find the matrix product $AB$ by the column method, where",
       "sha": "77b6aaaf7d6c",
-      "zh": ""
+      "zh": "用列方法求矩阵乘积 $AB$，其中"
      }
     },
     {
@@ -295,7 +295,7 @@
      "t": {
       "en": "We multiply $A$ by each of the columns of $B$:",
       "sha": "d90e41aee08e",
-      "zh": ""
+      "zh": "我们用 $A$ 去乘 $B$ 的每一列："
      }
     },
     {
@@ -315,7 +315,7 @@
      "t": {
       "en": "The resulting three column vectors form the columns of $AB$. Thus,",
       "sha": "2a34aed72478",
-      "zh": ""
+      "zh": "所得的三个列向量就是 $AB$ 的各列。因此，"
      }
     },
     {
@@ -329,7 +329,7 @@
    "t": {
     "en": "Of course, the answer in Example “Matrix multiplication by the column method” is the same as that in Example “Matrix multiplication”. Please convince yourself that both methods of matrix multiplication give the same answer, since they each ultimately calculate the same thing. Nevertheless, with a bit of practice, the column method is much faster, and you can even learn to multiply matrices in your head! The key to understanding the column method is that each column of $B$ provides instructions for taking a linear combination of the columns of $A$. The method works especially well if $B$ contains many zeros and ones.",
     "sha": "ec4efde903e2",
-    "zh": ""
+    "zh": "当然，例“用列方法做矩阵乘法”的答案与例“矩阵乘法”的答案相同。请你自己想一想：这两种矩阵乘法为什么给出同样的答案，因为它们最终计算的是同一个东西。不过，稍加练习之后，列方法要快得多，你甚至可以学会心算矩阵乘法！理解列方法的关键在于：$B$ 的每一列，都给出了如何取 $A$ 的各列的线性组合的指令。当 $B$ 里有很多零和一时，这个方法尤其好用。"
    }
   },
   {
@@ -337,7 +337,7 @@
    "t": {
     "en": "Since column vectors are simply $n\\times 1$-matrices, and row vectors are $1\\times m$-matrices, we can also multiply a column vector by a row vector or vice versa.",
     "sha": "170e07d8be82",
-    "zh": ""
+    "zh": "因为列向量就是 $n\\times 1$ 矩阵，行向量就是 $1\\times m$ 矩阵，所以我们也可以用列向量乘行向量，或者反过来，用行向量乘列向量。"
    }
   },
   {
@@ -346,7 +346,7 @@
    "title": {
     "en": "Column vector times row vector",
     "sha": "10ef0ecf3d4c",
-    "zh": ""
+    "zh": "列向量乘行向量"
    },
    "blocks": [
     {
@@ -354,7 +354,7 @@
      "t": {
       "en": "Multiply $\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 1 \\end{array}\\right] \\left[\\begin{array}{rrrr} 1 & 2 & 1 & 0 \\end{array}\\right]$.",
       "sha": "a16a7cde4fae",
-      "zh": ""
+      "zh": "计算 $\\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 1 \\end{array}\\right] \\left[\\begin{array}{rrrr} 1 & 2 & 1 & 0 \\end{array}\\right]$。"
      }
     }
    ]
@@ -368,7 +368,7 @@
      "t": {
       "en": "Here we are multiplying a $3\\times 1$-matrix by a $1\\times 4$-matrix, so the result will be a $3\\times 4$-matrix. Using the column method, we can compute this product as follows:",
       "sha": "0a905a5f73b8",
-      "zh": ""
+      "zh": "这里是 $3\\times 1$ 矩阵乘以 $1\\times 4$ 矩阵，所以结果是 $3\\times 4$ 矩阵。用列方法，可以这样计算这个乘积："
      }
     },
     {
@@ -383,7 +383,7 @@
    "title": {
     "en": "Row vector times column vector",
     "sha": "894a7e0a4d04",
-    "zh": ""
+    "zh": "行向量乘列向量"
    },
    "blocks": [
     {
@@ -391,7 +391,7 @@
      "t": {
       "en": "Multiply $\\left[\\begin{array}{rrrr} 1 & 2 & 3 \\end{array}\\right] \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ -1 \\end{array}\\right]$.",
       "sha": "bb569a4c48ee",
-      "zh": ""
+      "zh": "计算 $\\left[\\begin{array}{rrrr} 1 & 2 & 3 \\end{array}\\right] \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ -1 \\end{array}\\right]$。"
      }
     }
    ]
@@ -405,7 +405,7 @@
      "t": {
       "en": "Here we are multiplying a $1\\times 3$-matrix by a $3\\times 1$-matrix, so the result will be a $1\\times 1$-matrix, or in other words, a scalar. (We regard a scalar and a $1\\times 1$-matrix as the same thing). We have:",
       "sha": "c4fb3f776702",
-      "zh": ""
+      "zh": "这里是 $1\\times 3$ 矩阵乘以 $3\\times 1$ 矩阵，所以结果是 $1\\times 1$ 矩阵，也就是一个标量。（我们把标量和 $1\\times 1$ 矩阵看作同一个东西。）有："
      }
     },
     {
@@ -417,7 +417,7 @@
      "t": {
       "en": "Therefore, multiplying a row vector by a column vector works very similarly to an ordinary dot product (except that the dot product is defined between two column vectors, not a row vector and a column vector).",
       "sha": "0ae4ca21247d",
-      "zh": ""
+      "zh": "因此，行向量乘列向量的做法，与普通的点积非常相似（只是点积是在两个列向量之间定义的，而不是在一个行向量和一个列向量之间）。"
      }
     }
    ]
@@ -428,7 +428,7 @@
    "title": {
     "en": "A multiplication that is not defined",
     "sha": "7a3f384b92d7",
-    "zh": ""
+    "zh": "没有定义的乘法"
    },
    "blocks": [
     {
@@ -436,7 +436,7 @@
      "t": {
       "en": "Find $BA$, where",
       "sha": "621ef889307a",
-      "zh": ""
+      "zh": "求 $BA$，其中"
      }
     },
     {
@@ -454,7 +454,7 @@
      "t": {
       "en": "The product $BA$ is not defined, since $B$ is a $3\\times 3$-matrix and $A$ is a $2\\times 3$-matrix. Since the number of columns of $B$ does not match the number of rows of $A$, the product is not defined.",
       "sha": "bf44ab9acb66",
-      "zh": ""
+      "zh": "乘积 $BA$ 没有定义，因为 $B$ 是 $3\\times 3$ 矩阵，$A$ 是 $2\\times 3$ 矩阵。$B$ 的列数与 $A$ 的行数不相等，所以乘积没有定义。"
      }
     }
    ]
@@ -464,7 +464,7 @@
    "t": {
     "en": "Notice that the matrices in Example “A multiplication that is not defined” are the same as those in Example “Matrix multiplication”. This demonstrates an important property of matrix multiplication: it is possible that $AB$ is defined by $BA$ is undefined. Even if $AB$ and $BA$ are both defined, they may not be equal, as the following example shows. Therefore, matrix multiplication is not commutative.",
     "sha": "868d29e8e314",
-    "zh": ""
+    "zh": "注意，例“没有定义的乘法”中的矩阵与例“矩阵乘法”中的相同。这说明了矩阵乘法的一条重要性质：可能 $AB$ 有定义，而 $BA$ 没有定义。即使 $AB$ 与 $BA$ 都有定义，它们也可能不相等，如下例所示。因此，矩阵乘法不满足交换律。"
    }
   },
   {
@@ -473,7 +473,7 @@
    "title": {
     "en": "Matrix multiplication is not commutative",
     "sha": "016104860dd1",
-    "zh": ""
+    "zh": "矩阵乘法不满足交换律"
    },
    "blocks": [
     {
@@ -481,7 +481,7 @@
      "t": {
       "en": "Compute $AB$ and $BA$, where",
       "sha": "2d1cee0cb000",
-      "zh": ""
+      "zh": "计算 $AB$ 与 $BA$，其中"
      }
     },
     {
@@ -493,7 +493,7 @@
      "t": {
       "en": "Are they equal?",
       "sha": "f43b3d1394f3",
-      "zh": ""
+      "zh": "它们相等吗？"
      }
     }
    ]
@@ -507,7 +507,7 @@
      "t": {
       "en": "We have",
       "sha": "a2214cd5b1a4",
-      "zh": ""
+      "zh": "有"
      }
     },
     {
@@ -519,7 +519,7 @@
      "t": {
       "en": "and",
       "sha": "cffa50a32cb1",
-      "zh": ""
+      "zh": "以及"
      }
     },
     {
@@ -531,7 +531,7 @@
      "t": {
       "en": "Therefore, $AB$ and $BA$ are not equal. Matrix multiplication is not commutative.",
       "sha": "96b67afe1c55",
-      "zh": ""
+      "zh": "因此，$AB$ 与 $BA$ 不相等。矩阵乘法不满足交换律。"
      }
     }
    ]
@@ -541,7 +541,7 @@
    "t": {
     "en": "We have seen two methods for matrix multiplication: one component at a time, and by the column method. There is also a third method, called the row method. It is exactly symmetric to the column method.",
     "sha": "e2dd987296c0",
-    "zh": ""
+    "zh": "我们已经见过矩阵乘法的两种方法：一个元素一个元素地算，以及列方法。还有第三种方法，叫作行方法，它与列方法完全对称。"
    }
   },
   {
@@ -550,7 +550,7 @@
    "title": {
     "en": "Matrix multiplication, row method",
     "sha": "f0c4afd70509",
-    "zh": ""
+    "zh": "矩阵乘法（行方法）"
    },
    "blocks": [
     {
@@ -558,7 +558,7 @@
      "t": {
       "en": "Let $A$ be an $m\\times n$-matrix, and let $B$ be an $n\\times p$-matrix. Suppose that the rows of $A$ are $\\vect{a}_1,\\vect{a}_2,\\ldots,\\vect{a}_m$. Then the rows of $AB$ are",
       "sha": "159b36e88719",
-      "zh": ""
+      "zh": "设 $A$ 是 $m\\times n$ 矩阵，$B$ 是 $n\\times p$ 矩阵。设 $A$ 的各行为 $\\vect{a}_1,\\vect{a}_2,\\ldots,\\vect{a}_m$。则 $AB$ 的各行为"
      }
     },
     {
@@ -570,7 +570,7 @@
      "t": {
       "en": "In other words, the $i\\th$ column of the matrix product $AB$ is equal to the $i\\th$ column of $A$ times $B$.",
       "sha": "536e28cd0238",
-      "zh": ""
+      "zh": "换句话说，矩阵乘积 $AB$ 的第 $i\\th$ 行，等于 $A$ 的第 $i\\th$ 行乘以 $B$。"
      }
     }
    ]
@@ -581,7 +581,7 @@
    "title": {
     "en": "Matrix multiplication by the row method",
     "sha": "fed639109cc2",
-    "zh": ""
+    "zh": "用行方法做矩阵乘法"
    },
    "blocks": [
     {
@@ -589,7 +589,7 @@
      "t": {
       "en": "Find the matrix product $AB$ by the row method, where",
       "sha": "5e8345ce99b2",
-      "zh": ""
+      "zh": "用行方法求矩阵乘积 $AB$，其中"
      }
     },
     {
@@ -607,7 +607,7 @@
      "t": {
       "en": "We multiply each of the rows of $A$ by $B$:",
       "sha": "b2789b36262d",
-      "zh": ""
+      "zh": "我们用 $A$ 的每一行去乘 $B$："
      }
     },
     {
@@ -623,7 +623,7 @@
      "t": {
       "en": "The resulting two row vectors form the rows of $AB$. Thus,",
       "sha": "a56e30039333",
-      "zh": ""
+      "zh": "所得的两个行向量就是 $AB$ 的各行。因此，"
      }
     },
     {
@@ -635,7 +635,7 @@
      "t": {
       "en": "Once again this is the same answer as in Examples “Matrix multiplication by the column method” and “Matrix multiplication”. All three methods give the same result. But notice how in the row method, each row of $A$ provides instructions for taking a linear combinations of the rows of $B$.",
       "sha": "20c6be21adf0",
-      "zh": ""
+      "zh": "这又是与例“用列方法做矩阵乘法”和例“矩阵乘法”相同的答案。三种方法给出同样的结果。不过请注意，在行方法中，$A$ 的每一行都给出了如何取 $B$ 的各行的线性组合的指令。"
      }
     }
    ]
@@ -645,7 +645,7 @@
    "t": {
     "en": "We finish this section by introducing an important square matrix called the identity matrix.",
     "sha": "f92bcc6af2ab",
-    "zh": ""
+    "zh": "本节的最后，我们介绍一个重要的方阵，叫作单位矩阵。"
    }
   },
   {
@@ -654,7 +654,7 @@
    "title": {
     "en": "Identity matrix",
     "sha": "ae06a90fc963",
-    "zh": ""
+    "zh": "单位矩阵"
    },
    "blocks": [
     {
@@ -662,7 +662,7 @@
      "t": {
       "en": "The **identity matrix** of size $n\\times n$ has ones along the diagonal, and zeros everywhere else. In other words, it is the matrix $\\mat{\\delta_{ij}}$ where $\\delta_{ij}=1$ if $i=j$ and $\\delta_{ij}=0$ otherwise. The identity matrix is always a square matrix. Here are some identity matrices of various sizes.",
       "sha": "1d4bb4612718",
-      "zh": ""
+      "zh": "大小为 $n\\times n$ 的**单位矩阵**，对角线上全是一，其余位置全是零。换句话说，它就是矩阵 $\\mat{\\delta_{ij}}$，其中当 $i=j$ 时 $\\delta_{ij}=1$，否则 $\\delta_{ij}=0$。单位矩阵一定是方阵。下面是各种大小的一些单位矩阵。"
      }
     },
     {
@@ -674,7 +674,7 @@
      "t": {
       "en": "When it is necessary to distinguish which size of identity matrix is being discussed, we will use the notation $I_n$ for the $n\\times n$ identity matrix.",
       "sha": "c3771a39075f",
-      "zh": ""
+      "zh": "需要说明讨论的是哪种大小的单位矩阵时，我们用记号 $I_n$ 表示 $n\\times n$ 单位矩阵。"
      }
     }
    ]
@@ -685,7 +685,7 @@
    "title": {
     "en": "Multiplying by the identity matrix",
     "sha": "1c4cf71f8c9d",
-    "zh": ""
+    "zh": "乘以单位矩阵"
    },
    "blocks": [
     {
@@ -693,7 +693,7 @@
      "t": {
       "en": "Calculate $AI$, where $I$ is the $2\\times 2$ identity matrix and",
       "sha": "8f78d22b1d9e",
-      "zh": ""
+      "zh": "计算 $AI$，其中 $I$ 是 $2\\times 2$ 单位矩阵，"
      }
     },
     {
@@ -711,7 +711,7 @@
      "t": {
       "en": "We need to calculate",
       "sha": "6b8f38792ed8",
-      "zh": ""
+      "zh": "我们需要计算"
      }
     },
     {
@@ -723,7 +723,7 @@
      "t": {
       "en": "Using the column method, we find that the first column of $AI$ is",
       "sha": "2dec187d9138",
-      "zh": ""
+      "zh": "用列方法，得到 $AI$ 的第一列是"
      }
     },
     {
@@ -735,7 +735,7 @@
      "t": {
       "en": "which is exactly the same as the first column of $A$. Similarly, the second column of $AI$ is",
       "sha": "d2479047d1d7",
-      "zh": ""
+      "zh": "它恰好与 $A$ 的第一列相同。同样，$AI$ 的第二列是"
      }
     },
     {
@@ -747,7 +747,7 @@
      "t": {
       "en": "which is exactly the same as the second column of $A$. Therefore",
       "sha": "dfb0b44f5cd1",
-      "zh": ""
+      "zh": "它恰好与 $A$ 的第二列相同。因此"
      }
     },
     {
@@ -761,7 +761,7 @@
    "t": {
     "en": "The calculation of the last example generalizes to matrices of all sizes, and is summarized in the following proposition.",
     "sha": "5f3e32ae1be2",
-    "zh": ""
+    "zh": "上一个例子的计算可以推广到所有大小的矩阵，总结成下面的命题。"
    }
   },
   {
@@ -770,7 +770,7 @@
    "title": {
     "en": "Multiplying by the identity matrix",
     "sha": "1c4cf71f8c9d",
-    "zh": ""
+    "zh": "乘以单位矩阵"
    },
    "blocks": [
     {
@@ -778,7 +778,7 @@
      "t": {
       "en": "Let $A$ be any $m\\times n$-matrix. Then",
       "sha": "5999d0b1e855",
-      "zh": ""
+      "zh": "设 $A$ 是任意 $m\\times n$ 矩阵。则"
      }
     },
     {
@@ -792,7 +792,7 @@
    "t": {
     "en": "We can also raise a square matrix to a power. For example, $A^5$ means $A\\cdot A\\cdot A\\cdot A\\cdot A$.",
     "sha": "40f550f22418",
-    "zh": ""
+    "zh": "我们也可以对方阵求幂。例如，$A^5$ 表示 $A\\cdot A\\cdot A\\cdot A\\cdot A$。"
    }
   },
   {
@@ -801,7 +801,7 @@
    "title": {
     "en": "Raising a matrix to a power",
     "sha": "396c100fc7a9",
-    "zh": ""
+    "zh": "矩阵求幂"
    },
    "blocks": [
     {
@@ -809,7 +809,7 @@
      "t": {
       "en": "Compute $A^3$, where",
       "sha": "288f7c53e8fb",
-      "zh": ""
+      "zh": "计算 $A^3$，其中"
      }
     },
     {
@@ -827,7 +827,7 @@
      "t": {
       "en": "We have",
       "sha": "a2214cd5b1a4",
-      "zh": ""
+      "zh": "有"
      }
     },
     {

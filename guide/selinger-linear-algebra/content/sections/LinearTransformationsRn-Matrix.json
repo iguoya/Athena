@@ -15,7 +15,7 @@
         "t": {
          "en": "Find the matrix corresponding to a linear transformation $T:\\R^n\\to\\R^m$.",
          "sha": "8ad7abe9c3b7",
-         "zh": ""
+         "zh": "求线性变换 $T:\\R^n\\to\\R^m$ 所对应的矩阵。"
         }
        }
       ]
@@ -28,7 +28,7 @@
    "t": {
     "en": "An important example of linear transformations are the so-called **matrix transformations**.",
     "sha": "301a0c573328",
-    "zh": ""
+    "zh": "线性变换的一类重要例子，是所谓的**矩阵变换**。"
    }
   },
   {
@@ -37,7 +37,7 @@
    "title": {
     "en": "Matrix transformations are linear transformations",
     "sha": "ec7a3862ad6f",
-    "zh": ""
+    "zh": "矩阵变换是线性变换"
    },
    "blocks": [
     {
@@ -45,7 +45,7 @@
      "t": {
       "en": "Let $A$ be an $m\\times n$-matrix, and consider the vector function $T:\\R^n\\to \\R^m$ defined by $T(\\vect{v}) = A\\vect{v}$. Then $T$ is a linear transformation.",
       "sha": "7da610fc7131",
-      "zh": ""
+      "zh": "设 $A$ 是 $m\\times n$ 矩阵，考虑由 $T(\\vect{v}) = A\\vect{v}$ 定义的向量函数 $T:\\R^n\\to \\R^m$，则 $T$ 是线性变换。"
      }
     }
    ]
@@ -59,7 +59,7 @@
      "t": {
       "en": "This follows from the laws of matrix multiplication. Namely, by the distributive law, we have $A(\\vect{v}+\\vect{w}) = A\\vect{v} + A\\vect{w}$, showing that $T$ preserves addition. And by the compatibility of matrix multiplication and scalar multiplication, we have $A(k\\vect{v}) = k(A\\vect{v})$, showing that $T$ preserves scalar multiplication.",
       "sha": "f2ff450852b0",
-      "zh": ""
+      "zh": "这可由矩阵乘法的运算律得到。具体地说，由分配律，$A(\\vect{v}+\\vect{w}) = A\\vect{v} + A\\vect{w}$，这说明 $T$ 保持加法；又由矩阵乘法与数乘的相容性，$A(k\\vect{v}) = k(A\\vect{v})$，这说明 $T$ 保持数乘。"
      }
     }
    ]
@@ -69,7 +69,7 @@
    "t": {
     "en": "In fact, matrix transformations are not just an example of linear transformations, but they are essentially the *only* example. One of the central theorems in linear algebra is that all linear transformations $T:\\R^n\\to\\R^m$ are in fact matrix transformations. Therefore, a matrix can be regarded as a notation for a linear transformation, and vice versa. This is the subject of the following theorem.",
     "sha": "f24f750eae9e",
-    "zh": ""
+    "zh": "事实上，矩阵变换不只是线性变换的一类例子，而且本质上是*仅有*的例子。线性代数的核心定理之一就是：所有线性变换 $T:\\R^n\\to\\R^m$ 其实都是矩阵变换。因此，矩阵可以看作线性变换的一种记法，反过来也一样。这就是下面这个定理的内容。"
    }
   },
   {
@@ -78,7 +78,7 @@
    "title": {
     "en": "Linear transformations are matrix transformations",
     "sha": "2fd05b02ca2b",
-    "zh": ""
+    "zh": "线性变换都是矩阵变换"
    },
    "blocks": [
     {
@@ -86,7 +86,7 @@
      "t": {
       "en": "Let $T:\\R^n\\to\\R^m$ be any linear transformation. Then there exists an $m\\times n$-matrix $A$ linear transformation!matrix of!in Rn@in $\\R^n$ matrix!of a linear transformation!in Rn@in $\\R^n$ such that for all $\\vect{v}\\in\\R^n$,",
       "sha": "9bd8973e1841",
-      "zh": ""
+      "zh": "设 $T:\\R^n\\to\\R^m$ 是任意一个线性变换，则存在一个 $m\\times n$ 矩阵 $A$（即这个线性变换在 $\\R^n$ 上的矩阵，也就是 $\\R^n$ 中线性变换的矩阵），使得对所有 $\\vect{v}\\in\\R^n$，"
      }
     },
     {
@@ -98,7 +98,7 @@
      "t": {
       "en": "In other words, $T$ is a matrix transformation.",
       "sha": "a9d7629a68f7",
-      "zh": ""
+      "zh": "换句话说，$T$ 是一个矩阵变换。"
      }
     }
    ]
@@ -112,7 +112,7 @@
      "t": {
       "en": "Suppose $T:\\R^n\\to \\R^m$ is a linear transformation and consider the standard basis $\\set{\\vect{e}_1,\\ldots,\\vect{e}_n}$ of $\\R^n$. For all $i$, define $\\vect{u}_i = T(\\vect{e}_i)$, and let $A$ be the matrix that has $\\vect{u}_1,\\ldots,\\vect{u}_n$ as its columns. We claim that $A$ is the desired matrix, i.e., that $T(\\vect{v}) = A\\vect{v}$ holds for all $\\vect{v}\\in\\R^n$.",
       "sha": "d1dc04d8e397",
-      "zh": ""
+      "zh": "设 $T:\\R^n\\to \\R^m$ 是线性变换，并考虑 $\\R^n$ 的标准基 $\\set{\\vect{e}_1,\\ldots,\\vect{e}_n}$。对所有 $i$，令 $\\vect{u}_i = T(\\vect{e}_i)$，并令 $A$ 是以 $\\vect{u}_1,\\ldots,\\vect{u}_n$ 为各列的矩阵。我们断言 $A$ 就是所要的矩阵，也就是说，对所有 $\\vect{v}\\in\\R^n$，$T(\\vect{v}) = A\\vect{v}$ 都成立。"
      }
     },
     {
@@ -120,7 +120,7 @@
      "t": {
       "en": "To see this, let",
       "sha": "36ea5df70e19",
-      "zh": ""
+      "zh": "为此，设"
      }
     },
     {
@@ -132,7 +132,7 @@
      "t": {
       "en": "be some arbitrary element of $\\R^n$. Then $\\vect{v} = x_1\\vect{e}_1 + \\ldots + x_n\\vect{e}_n$, and we have:",
       "sha": "6ba7ff0e8b77",
-      "zh": ""
+      "zh": "是 $\\R^n$ 中任意一个元素。那么 $\\vect{v} = x_1\\vect{e}_1 + \\ldots + x_n\\vect{e}_n$，于是有："
      }
     },
     {
@@ -146,7 +146,7 @@
    "t": {
     "en": "In summary, the matrix corresponding to the linear transformation $T$ has as its columns the vectors $T(\\vect{e}_1),\\ldots,T(\\vect{e}_n)$, i.e., the images of the standard basis vectors. We can visualize this matrix as follows:",
     "sha": "5d79a11c63da",
-    "zh": ""
+    "zh": "总之，线性变换 $T$ 所对应的矩阵，其各列就是向量 $T(\\vect{e}_1),\\ldots,T(\\vect{e}_n)$，即标准基向量的像。这个矩阵可以直观地表示为："
    }
   },
   {
@@ -159,7 +159,7 @@
    "title": {
     "en": "The matrix of a linear transformation",
     "sha": "0dd052569401",
-    "zh": ""
+    "zh": "线性变换的矩阵"
    },
    "blocks": [
     {
@@ -167,7 +167,7 @@
      "t": {
       "en": "Suppose $T:\\R^3\\rightarrow \\R^2$ is a linear transformation where",
       "sha": "6f8269f7a5ec",
-      "zh": ""
+      "zh": "设 $T:\\R^3\\rightarrow \\R^2$ 是线性变换，其中"
      }
     },
     {
@@ -179,7 +179,7 @@
      "t": {
       "en": "Find the matrix $A$ such that $T(\\vect{v})=A\\vect{v}$ for all $\\vect{v}$.",
       "sha": "4ada8dc47e46",
-      "zh": ""
+      "zh": "求矩阵 $A$，使得对所有 $\\vect{v}$ 都有 $T(\\vect{v})=A\\vect{v}$。"
      }
     }
    ]
@@ -193,7 +193,7 @@
      "t": {
       "en": "By Theorem “The matrix of a linear transformation”, the columns of $A$ are $T(\\vect{e}_1)$, $T(\\vect{e}_2)$, and $T(\\vect{e}_3)$. Therefore,",
       "sha": "8798a48279aa",
-      "zh": ""
+      "zh": "由定理“线性变换的矩阵”，$A$ 的各列是 $T(\\vect{e}_1)$、$T(\\vect{e}_2)$ 和 $T(\\vect{e}_3)$。因此，"
      }
     },
     {
@@ -208,7 +208,7 @@
    "title": {
     "en": "The matrix of a linear transformation",
     "sha": "0dd052569401",
-    "zh": ""
+    "zh": "线性变换的矩阵"
    },
    "blocks": [
     {
@@ -216,7 +216,7 @@
      "t": {
       "en": "Let $T:\\R^3\\to\\R^2$ be the linear transformation defined by",
       "sha": "836a2c500b7f",
-      "zh": ""
+      "zh": "设 $T:\\R^3\\to\\R^2$ 是由下式定义的线性变换"
      }
     },
     {
@@ -228,7 +228,7 @@
      "t": {
       "en": "for all $x,y,z\\in\\R$. Find the matrix of this linear transformation.",
       "sha": "9d0c3c54c09b",
-      "zh": ""
+      "zh": "其中 $x,y,z\\in\\R$ 任意。求这个线性变换的矩阵。"
      }
     }
    ]
@@ -242,7 +242,7 @@
      "t": {
       "en": "We compute the images of the standard basis vectors:",
       "sha": "9c999a23d851",
-      "zh": ""
+      "zh": "我们来计算标准基向量的像："
      }
     },
     {
@@ -254,7 +254,7 @@
      "t": {
       "en": "The matrix $A$ has $T(\\vect{e}_1)$, $T(\\vect{e}_2)$, and $T(\\vect{e}_3)$ as its columns. Therefore,",
       "sha": "a8a3c2033f55",
-      "zh": ""
+      "zh": "矩阵 $A$ 以 $T(\\vect{e}_1)$、$T(\\vect{e}_2)$ 和 $T(\\vect{e}_3)$ 为各列。因此，"
      }
     },
     {
@@ -269,7 +269,7 @@
    "title": {
     "en": "Matrix of a projection map",
     "sha": "f5b66a665749",
-    "zh": ""
+    "zh": "投影映射的矩阵"
    },
    "blocks": [
     {
@@ -277,7 +277,7 @@
      "t": {
       "en": "Let $\\vect{u} = \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\end{array}\\right]$ and let $T: \\R^3 \\to \\R^3$ be the projection map defined by",
       "sha": "4bfb89268ee1",
-      "zh": ""
+      "zh": "设 $\\vect{u} = \\left[\\begin{array}{r} 1 \\\\ 2 \\\\ 3 \\end{array}\\right]$，$T: \\R^3 \\to \\R^3$ 是由下式定义的投影映射"
      }
     },
     {
@@ -289,7 +289,7 @@
      "t": {
       "en": "for all $\\vect{v} \\in \\R^3$.",
       "sha": "8703fb94087c",
-      "zh": ""
+      "zh": "其中 $\\vect{v} \\in \\R^3$ 任意。"
      }
     },
     {
@@ -302,7 +302,7 @@
         "t": {
          "en": "Is $T$ a linear transformation?",
          "sha": "0466dde561f6",
-         "zh": ""
+         "zh": "$T$ 是线性变换吗？"
         }
        }
       ],
@@ -312,7 +312,7 @@
         "t": {
          "en": "If yes, find the matrix of $T$.",
          "sha": "7c5886ad6b94",
-         "zh": ""
+         "zh": "如果是，求 $T$ 的矩阵。"
         }
        }
       ]
@@ -334,7 +334,7 @@
         "t": {
          "en": "Recall the formula for the projection of $\\vect{v}$ onto $\\vect{u}$:",
          "sha": "dc4d1cab507c",
-         "zh": ""
+         "zh": "回想 $\\vect{v}$ 在 $\\vect{u}$ 上的投影公式："
         }
        },
        {
@@ -346,7 +346,7 @@
         "t": {
          "en": "In the situation we are interested in, $\\vect{u}$ is a fixed vector, and $\\vect{v}$ is the input to the function $T$. Given any two vectors $\\vect{v},\\vect{w}$, and using the distributive laws of the dot product and scalar multiplication, we have:",
          "sha": "e4c9fbb88229",
-         "zh": ""
+         "zh": "在我们关心的情形里，$\\vect{u}$ 是固定的向量，$\\vect{v}$ 是函数 $T$ 的输入。对任意两个向量 $\\vect{v},\\vect{w}$，利用点积和数乘的分配律，有："
         }
        },
        {
@@ -358,7 +358,7 @@
         "t": {
          "en": "Therefore, the function $T(\\vect{v}) = \\proj_{\\vect{u}}(\\vect{v})$ preserves addition. Also, given any scalar $k$, we have",
          "sha": "c257fc10fc7d",
-         "zh": ""
+         "zh": "因此，函数 $T(\\vect{v}) = \\proj_{\\vect{u}}(\\vect{v})$ 保持加法。另外，对任意标量 $k$，有"
         }
        },
        {
@@ -370,7 +370,7 @@
         "t": {
          "en": "Therefore, the function $T$ preserves scalar multiplication. It follows that $T$ is a linear transformation.",
          "sha": "a18a36181fd4",
-         "zh": ""
+         "zh": "因此，函数 $T$ 保持数乘。由此可知 $T$ 是线性变换。"
         }
        }
       ],
@@ -380,7 +380,7 @@
         "t": {
          "en": "To find the matrix of $T$, we must compute the images of the standard basis vectors $T(\\vect{e}_1),\\ldots,T(\\vect{e}_3)$. We compute",
          "sha": "2f8eda14e20f",
-         "zh": ""
+         "zh": "要求 $T$ 的矩阵，必须计算标准基向量的像 $T(\\vect{e}_1),\\ldots,T(\\vect{e}_3)$。计算得"
         }
        },
        {
@@ -392,7 +392,7 @@
         "t": {
          "en": "Hence the matrix of $T$ is",
          "sha": "6a94b8d0432e",
-         "zh": ""
+         "zh": "所以 $T$ 的矩阵是"
         }
        },
        {
@@ -414,7 +414,7 @@
      "t": {
       "en": "For each of the following vector functions $T:\\R^n\\to\\R^n$, show that $T$ is a linear transformation and find the corresponding matrix $A$ such that $T(\\vect{x}) = A\\vect{x}$.",
       "sha": "5e9d040faef4",
-      "zh": ""
+      "zh": "对下列每个向量函数 $T:\\R^n\\to\\R^n$，证明 $T$ 是线性变换，并求相应的矩阵 $A$，使得 $T(\\vect{x}) = A\\vect{x}$。"
      }
     },
     {
@@ -427,7 +427,7 @@
         "t": {
          "en": "$T$ multiplies the $j\\th$ component of $\\vect{v}$ by a non-zero number $b$.",
          "sha": "d84af2b8f6c8",
-         "zh": ""
+         "zh": "$T$ 把 $\\vect{v}$ 的第 $j\\th$ 个分量乘以一个非零的数 $b$。"
         }
        }
       ],
@@ -437,7 +437,7 @@
         "t": {
          "en": "$T$ adds $b$ times the $j\\th$ component of $\\vect{v}$ to the $i\\th$ component.",
          "sha": "e808527fc0ff",
-         "zh": ""
+         "zh": "$T$ 把 $\\vect{v}$ 的第 $j\\th$ 个分量的 $b$ 倍加到第 $i\\th$ 个分量上。"
         }
        }
       ],
@@ -447,7 +447,7 @@
         "t": {
          "en": "$T$ switches the $i\\th$ and $j\\th$ components.",
          "sha": "4f780f10332f",
-         "zh": ""
+         "zh": "$T$ 交换第 $i\\th$ 个和第 $j\\th$ 个分量。"
         }
        }
       ]
@@ -465,7 +465,7 @@
         "t": {
          "en": "The matrix of $T$ is the elementary matrix that is like the identity matrix, except that the $(j,j)$-entry is $b$.",
          "sha": "28045002ccb5",
-         "zh": ""
+         "zh": "$T$ 的矩阵是这样的初等矩阵：它与单位矩阵相比，只有 $(j,j)$ 元素是 $b$。"
         }
        }
       ],
@@ -475,7 +475,7 @@
         "t": {
          "en": "The matrix of $T$ is the elementary matrix that is like the identity matrix, except that the $(i,j)$-entry is $b$.",
          "sha": "9fcb8f2dfde8",
-         "zh": ""
+         "zh": "$T$ 的矩阵是这样的初等矩阵：它与单位矩阵相比，只有 $(i,j)$ 元素是 $b$。"
         }
        }
       ],
@@ -485,7 +485,7 @@
         "t": {
          "en": "The matrix of $T$ is the elementary matrix that switches the $i\\th$ and the $j\\th$ rows.",
          "sha": "dc0dd2d8fa23",
-         "zh": ""
+         "zh": "$T$ 的矩阵是交换第 $i\\th$ 行和第 $j\\th$ 行的初等矩阵。"
         }
        }
       ]
@@ -509,7 +509,7 @@
      "t": {
       "en": "Assume that $T:\\R^n\\rightarrow \\R^m$ is a linear transformation, and that $\\vect{u}_1,\\ldots,\\vect{u}_n$ is a basis of $\\R^n$. For all $i=1,\\ldots,n$, let $\\vect{v}_i = T(\\vect{u}_i)$. Let $A$ be the matrix that has $\\vect{u}_1,\\ldots,\\vect{u}_n$ as its columns, and let $B$ be the matrix that has $\\vect{v}_1,\\ldots,\\vect{v}_n$ as its columns. Show that $A$ is invertible and the matrix of $T$ is $BA^{-1}$.",
       "sha": "595ee4f002bf",
-      "zh": ""
+      "zh": "设 $T:\\R^n\\rightarrow \\R^m$ 是线性变换，$\\vect{u}_1,\\ldots,\\vect{u}_n$ 是 $\\R^n$ 的一组基。对所有 $i=1,\\ldots,n$，令 $\\vect{v}_i = T(\\vect{u}_i)$。设 $A$ 是以 $\\vect{u}_1,\\ldots,\\vect{u}_n$ 为各列的矩阵，$B$ 是以 $\\vect{v}_1,\\ldots,\\vect{v}_n$ 为各列的矩阵。证明：$A$ 可逆，且 $T$ 的矩阵是 $BA^{-1}$。"
      }
     }
    ],
@@ -519,7 +519,7 @@
      "t": {
       "en": "Since $\\vect{u}_1,\\ldots,\\vect{u}_n$ is a basis of $\\R^n$, we know that $A$ is invertible by Proposition “Invertible matrices and bases of\\/ $\\R^n$”. For each $i=1,\\ldots,n$, since $A\\vect{e}_i = \\vect{u}_i$, we have $A^{-1}\\vect{u}_i=\\vect{e}_i$, and therefore",
       "sha": "a0432fbb703e",
-      "zh": ""
+      "zh": "因为 $\\vect{u}_1,\\ldots,\\vect{u}_n$ 是 $\\R^n$ 的一组基，所以由命题“可逆矩阵与 $\\R^n$ 的基”，$A$ 可逆。对每个 $i=1,\\ldots,n$，由 $A\\vect{e}_i = \\vect{u}_i$ 得 $A^{-1}\\vect{u}_i=\\vect{e}_i$，因此"
      }
     },
     {
@@ -531,7 +531,7 @@
      "t": {
       "en": "Now let $\\vect{w}$ be some arbitrary vector in $\\R^n$. Since $\\vect{u}_1,\\ldots,\\vect{u}_n$ is a basis, there exists $a_1,\\ldots,a_n$ such that $\\vect{w} = a_1\\vect{u}_1+\\ldots+a_n\\vect{u}_n$. Then",
       "sha": "f0ca80f28867",
-      "zh": ""
+      "zh": "现在设 $\\vect{w}$ 是 $\\R^n$ 中任意一个向量。因为 $\\vect{u}_1,\\ldots,\\vect{u}_n$ 是一组基，所以存在 $a_1,\\ldots,a_n$，使得 $\\vect{w} = a_1\\vect{u}_1+\\ldots+a_n\\vect{u}_n$。于是"
      }
     },
     {
@@ -543,7 +543,7 @@
      "t": {
       "en": "Therefore, $BA^{-1}$ is the matrix of $T$.",
       "sha": "9a70e15e571d",
-      "zh": ""
+      "zh": "因此，$BA^{-1}$ 是 $T$ 的矩阵。"
      }
     }
    ],
@@ -564,7 +564,7 @@
      "t": {
       "en": "Suppose $T$ is a linear transformation such that",
       "sha": "43d0b8345880",
-      "zh": ""
+      "zh": "设 $T$ 是满足下列条件的线性变换"
      }
     },
     {
@@ -576,7 +576,7 @@
      "t": {
       "en": "Find the matrix of $T$. Hint: use Exercise 〔引用〕.",
       "sha": "9fac358349e9",
-      "zh": ""
+      "zh": "求 $T$ 的矩阵。提示：用习题〔引用〕。"
      }
     }
    ],
@@ -603,7 +603,7 @@
      "t": {
       "en": "Suppose $T$ is a linear transformation such that",
       "sha": "43d0b8345880",
-      "zh": ""
+      "zh": "设 $T$ 是满足下列条件的线性变换"
      }
     },
     {
@@ -615,7 +615,7 @@
      "t": {
       "en": "Find the matrix of $T$. Hint: use Exercise 〔引用〕.",
       "sha": "9fac358349e9",
-      "zh": ""
+      "zh": "求 $T$ 的矩阵。提示：用习题〔引用〕。"
      }
     }
    ],
@@ -642,7 +642,7 @@
      "t": {
       "en": "Consider the following linear transformations $T:\\R^3\\rightarrow \\R^2$. For each, determine the matrix $A$ such that $T(\\vect{x})=A\\vect{x}$.",
       "sha": "848e900f7c72",
-      "zh": ""
+      "zh": "考虑下列线性变换 $T:\\R^3\\rightarrow \\R^2$。对每一个，求矩阵 $A$，使得 $T(\\vect{x})=A\\vect{x}$。"
      }
     },
     {
@@ -655,7 +655,7 @@
         "t": {
          "en": "$T\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] =\\left[\\begin{array}{c} x+2y+3z \\\\ 2y-3x+z \\end{array}\\right]$",
          "sha": "631817b1d11f",
-         "zh": ""
+         "zh": "$T\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] =\\left[\\begin{array}{c} x+2y+3z \\\\ 2y-3x+z \\end{array}\\right]$"
         }
        }
       ],
@@ -665,7 +665,7 @@
         "t": {
          "en": "$T\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] =\\left[\\begin{array}{c} 7x+2y+z \\\\ 3x-11y+2z \\end{array}\\right]$",
          "sha": "0e316eca560c",
-         "zh": ""
+         "zh": "$T\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] =\\left[\\begin{array}{c} 7x+2y+z \\\\ 3x-11y+2z \\end{array}\\right]$"
         }
        }
       ],
@@ -675,7 +675,7 @@
         "t": {
          "en": "$T\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] =\\left[\\begin{array}{c} 3x+2y+z \\\\ x+2y+6z \\end{array}\\right]$",
          "sha": "0783ebe6b689",
-         "zh": ""
+         "zh": "$T\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] =\\left[\\begin{array}{c} 3x+2y+z \\\\ x+2y+6z \\end{array}\\right]$"
         }
        }
       ],
@@ -685,7 +685,7 @@
         "t": {
          "en": "$T\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] =\\left[\\begin{array}{c} 2y-5x+z \\\\ x+y+z \\end{array}\\right]$",
          "sha": "19bf3bf8721c",
-         "zh": ""
+         "zh": "$T\\left[\\begin{array}{c} x \\\\ y \\\\ z \\end{array}\\right] =\\left[\\begin{array}{c} 2y-5x+z \\\\ x+y+z \\end{array}\\right]$"
         }
        }
       ]
@@ -710,7 +710,7 @@
      "t": {
       "en": "Find the matrix for $T(\\vect{w}) = \\proj_{\\vect{v}}(\\vect{w})$, where $\\vect{v}=\\mat{1, -2, 3}^T$.",
       "sha": "12c61ec2ced1",
-      "zh": ""
+      "zh": "求 $T(\\vect{w}) = \\proj_{\\vect{v}}(\\vect{w})$ 的矩阵，其中 $\\vect{v}=\\mat{1, -2, 3}^T$。"
      }
     }
    ],
@@ -720,7 +720,7 @@
      "t": {
       "en": "Recall that the desired matrix has $i\\th$ column equal to $\\displaystyle\\proj_{\\vect{u}}(\\vect{e}_i) = \\frac{\\vect{u}\\dotprod\\vect{e}_i}{\\norm{\\vect{u}}^2}\\vect{u}$. Therefore, the matrix is",
       "sha": "e2d27cd5bded",
-      "zh": ""
+      "zh": "回想所求矩阵的第 $i\\th$ 列等于 $\\displaystyle\\proj_{\\vect{u}}(\\vect{e}_i) = \\frac{\\vect{u}\\dotprod\\vect{e}_i}{\\norm{\\vect{u}}^2}\\vect{u}$。因此，该矩阵为"
      }
     },
     {
@@ -745,7 +745,7 @@
      "t": {
       "en": "Find the matrix for $T(\\vect{w}) = \\proj_{\\vect{v}}(\\vect{w})$, where $\\vect{v}=\\mat{1,5,3}^T$.",
       "sha": "91a44c5730a8",
-      "zh": ""
+      "zh": "求 $T(\\vect{w}) = \\proj_{\\vect{v}}(\\vect{w})$ 的矩阵，其中 $\\vect{v}=\\mat{1,5,3}^T$。"
      }
     }
    ],

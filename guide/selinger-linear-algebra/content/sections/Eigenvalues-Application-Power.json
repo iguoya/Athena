@@ -15,7 +15,7 @@
         "t": {
          "en": "Use diagonalization to raise a matrix to a high power.",
          "sha": "83470aa3bd59",
-         "zh": ""
+         "zh": "会用对角化计算矩阵的高次幂。"
         }
        }
       ],
@@ -25,7 +25,7 @@
         "t": {
          "en": "Use diagonalization to compute a square root of a matrix.",
          "sha": "5af7dce06a61",
-         "zh": ""
+         "zh": "会用对角化计算矩阵的平方根。"
         }
        }
       ]
@@ -38,7 +38,7 @@
    "t": {
     "en": "Suppose we have a matrix $A$ and we want to find $A^{50}$. One could try to multiply $A$ with itself 50 times, but this is a lot of work (try it!). However, diagonalization allows us to compute high powers of a matrix relatively easily. Suppose $A$ is diagonalizable, so that $P^{-1}AP=D$. We can rearrange this equation to write $A=PDP^{-1}$. Now, consider $A^2$. Since $A=PDP^{-1}$, it follows that",
     "sha": "96a94930c504",
-    "zh": ""
+    "zh": "设有矩阵 $A$，要求 $A^{50}$。可以把 $A$ 与自身连乘 50 次，但工作量很大（不妨试试！）。不过，借助对角化，可以比较轻松地算出矩阵的高次幂。设 $A$ 可对角化，即 $P^{-1}AP=D$。把这个等式变形，得 $A=PDP^{-1}$。现在来看 $A^2$。因为 $A=PDP^{-1}$，所以"
    }
   },
   {
@@ -50,7 +50,7 @@
    "t": {
     "en": "Similarly,",
     "sha": "cc4fb6a72656",
-    "zh": ""
+    "zh": "类似地，"
    }
   },
   {
@@ -62,7 +62,7 @@
    "t": {
     "en": "In general,",
     "sha": "570c87e36b0a",
-    "zh": ""
+    "zh": "一般地，"
    }
   },
   {
@@ -74,7 +74,7 @@
    "t": {
     "en": "Therefore, we have reduced the problem to finding $D^n$. But as we saw in Example “Sums, products, and powers of diagonal matrices”, computing a power of a diagonal matrix is easy. To compute $D^n$, we only need to raise every entry on the diagonal to the power of $n$. Through this method, we can compute large powers of matrices.",
     "sha": "273bb93321d4",
-    "zh": ""
+    "zh": "这样，问题就化为求 $D^n$。而正如例“对角矩阵的和、积与幂”中所见，求对角矩阵的幂很容易：要算 $D^n$，只需把对角线上的每个元素各自取 $n$ 次幂。用这个方法，就能计算矩阵的高次幂。"
    }
   },
   {
@@ -83,7 +83,7 @@
    "title": {
     "en": "Raising a matrix to a high power",
     "sha": "2b0d73e7635d",
-    "zh": ""
+    "zh": "求矩阵的高次幂"
    },
    "blocks": [
     {
@@ -91,7 +91,7 @@
      "t": {
       "en": "Let $A=\\left[\\begin{array}{rrr} 2 & 1 & 0 \\\\ 0 & 1 & 0 \\\\ -1 & -1 & 1 \\end{array}\\right]$. Find $A^{50}$.",
       "sha": "fe71edd9eb88",
-      "zh": ""
+      "zh": "设 $A=\\left[\\begin{array}{rrr} 2 & 1 & 0 \\\\ 0 & 1 & 0 \\\\ -1 & -1 & 1 \\end{array}\\right]$。求 $A^{50}$。"
      }
     }
    ]
@@ -105,7 +105,7 @@
      "t": {
       "en": "First, we will diagonalize $A$. Following the usual steps, we find that the eigenvalues are $\\eigenvar=1$ and $\\eigenvar=2$. The basic eigenvectors corresponding to $\\eigenvar=1$ are",
       "sha": "7bd33c9dc1b3",
-      "zh": ""
+      "zh": "首先对 $A$ 对角化。按通常的步骤，求得特征值为 $\\eigenvar=1$ 和 $\\eigenvar=2$。对应于 $\\eigenvar=1$ 的基础特征向量为"
      }
     },
     {
@@ -117,7 +117,7 @@
      "t": {
       "en": "and the basic eigenvector corresponding to $\\eigenvar = 2$ is",
       "sha": "329038ae2eea",
-      "zh": ""
+      "zh": "对应于 $\\eigenvar = 2$ 的基础特征向量为"
      }
     },
     {
@@ -129,7 +129,7 @@
      "t": {
       "en": "Now we construct $P$ by using the basic eigenvectors of $A$ as the columns of $P$. Thus",
       "sha": "fb2e91b4f55e",
-      "zh": ""
+      "zh": "现在构造 $P$：以 $A$ 的基础特征向量作为 $P$ 的列。于是"
      }
     },
     {
@@ -141,7 +141,7 @@
      "t": {
       "en": "The inverse of $P$ is",
       "sha": "474d6ae549df",
-      "zh": ""
+      "zh": "$P$ 的逆为"
      }
     },
     {
@@ -153,7 +153,7 @@
      "t": {
       "en": "Then",
       "sha": "b7d93209feaa",
-      "zh": ""
+      "zh": "于是"
      }
     },
     {
@@ -165,7 +165,7 @@
      "t": {
       "en": "Now it follows by rearranging the equation that $A=PDP^{-1}$, and therefore, as noted above,",
       "sha": "98fbec991521",
-      "zh": ""
+      "zh": "把等式变形，得 $A=PDP^{-1}$，因此，如前所述，"
      }
     },
     {
@@ -179,7 +179,7 @@
    "t": {
     "en": "Thus, through diagonalization, we have efficiently computed a high power of $A$. The following example shows that we can also use the same technique for finding a square root of a matrix.",
     "sha": "1452d2d78482",
-    "zh": ""
+    "zh": "这样，借助对角化，我们高效地算出了 $A$ 的高次幂。下面的例子表明，同样的方法也可以用来求矩阵的平方根。"
    }
   },
   {
@@ -188,7 +188,7 @@
    "title": {
     "en": "Square root of a matrix",
     "sha": "7edb535e8938",
-    "zh": ""
+    "zh": "矩阵的平方根"
    },
    "blocks": [
     {
@@ -196,7 +196,7 @@
      "t": {
       "en": "Let $A=\\left[\\begin{array}{rrr} 1 & 3 & 3 \\\\ -1 & 5 & 3 \\\\ 1 & -1 & 1 \\\\ \\end{array}\\right]$. Find a square root of $A$, i.e., find a matrix $B$ such that $A=B^2$.",
       "sha": "c7aa36f4948e",
-      "zh": ""
+      "zh": "设 $A=\\left[\\begin{array}{rrr} 1 & 3 & 3 \\\\ -1 & 5 & 3 \\\\ 1 & -1 & 1 \\\\ \\end{array}\\right]$。求 $A$ 的一个平方根，即求矩阵 $B$，使得 $A=B^2$。"
      }
     }
    ]
@@ -210,7 +210,7 @@
      "t": {
       "en": "We first diagonalize $A$. The characteristic polynomial is",
       "sha": "6d1f1e7b858d",
-      "zh": ""
+      "zh": "先对 $A$ 对角化。特征多项式为"
      }
     },
     {
@@ -222,7 +222,7 @@
      "t": {
       "en": "with roots $\\eigenvar=1$, $\\eigenvar=2$, and $\\eigenvar=4$. The corresponding eigenvectors are",
       "sha": "34a0b2fa0fdc",
-      "zh": ""
+      "zh": "其根为 $\\eigenvar=1$、$\\eigenvar=2$ 和 $\\eigenvar=4$。对应的特征向量为"
      }
     },
     {
@@ -234,7 +234,7 @@
      "t": {
       "en": "respectively. Therefore we have $P^{-1}AP = D$, where",
       "sha": "7436627a931d",
-      "zh": ""
+      "zh": "于是有 $P^{-1}AP = D$，其中"
      }
     },
     {
@@ -246,7 +246,7 @@
      "t": {
       "en": "We can equivalently write $A = PDP^{-1}$. Finding a square root of a diagonal matrix is easy:",
       "sha": "87dedc7aefdb",
-      "zh": ""
+      "zh": "也可以等价地写成 $A = PDP^{-1}$。求对角矩阵的平方根很容易："
      }
     },
     {
@@ -258,7 +258,7 @@
      "t": {
       "en": "If we now define $B=PD^{\\frac{1}{2}}P^{-1}$, we clearly have $B^2 = PD^{\\frac{1}{2}}P^{-1}PD^{\\frac{1}{2}}P^{-1} = PDP^{-1} = A$. So the desired square root of $A$ is",
       "sha": "140cbf168f03",
-      "zh": ""
+      "zh": "现在定义 $B=PD^{\\frac{1}{2}}P^{-1}$，则 $B^2 = PD^{\\frac{1}{2}}P^{-1}PD^{\\frac{1}{2}}P^{-1} = PDP^{-1} = A$。所以 $A$ 所求的平方根为"
      }
     },
     {
@@ -270,7 +270,7 @@
      "t": {
       "en": "Finally, we verify that we have computed $B$ correctly by squaring it and double-checking that we really get $A$.",
       "sha": "5baa3ba94618",
-      "zh": ""
+      "zh": "最后，检验 $B$ 是否算对：把它平方，再核对结果确实是 $A$。"
      }
     },
     {
@@ -282,7 +282,7 @@
      "t": {
       "en": "We note that the square root of a matrix is not unique. In fact, $D$ has 8 different square roots, all of the form",
       "sha": "298b46fed21f",
-      "zh": ""
+      "zh": "注意，矩阵的平方根不唯一。事实上，$D$ 有 8 个不同的平方根，形式都是"
      }
     },
     {
@@ -294,7 +294,7 @@
      "t": {
       "en": "It follows that $A$ has 8 different square roots as well. We leave it as an exercise to compute them all.",
       "sha": "bfca2d65d885",
-      "zh": ""
+      "zh": "由此可知，$A$ 也有 8 个不同的平方根。把它们全部算出来，留作练习。"
      }
     }
    ]
@@ -304,7 +304,7 @@
    "t": {
     "en": "The same method can also be used to compute other powers of a matrix, for example a cube root.",
     "sha": "20ae5b226130",
-    "zh": ""
+    "zh": "同样的方法也可以用来计算矩阵的其他幂，例如立方根。"
    }
   }
  ],
@@ -317,7 +317,7 @@
      "t": {
       "en": "Let $A = \\left[\\begin{array}{rr} 1 & 2 \\\\ 2 & 1 \\end{array}\\right]$. Find $A^{10}$ by diagonalization.",
       "sha": "5ce6f4aac356",
-      "zh": ""
+      "zh": "设 $A = \\left[\\begin{array}{rr} 1 & 2 \\\\ 2 & 1 \\end{array}\\right]$。用对角化求 $A^{10}$。"
      }
     }
    ],
@@ -327,7 +327,7 @@
      "t": {
       "en": "First we write $A = PDP^{-1}$.",
       "sha": "969cd6bb8daa",
-      "zh": ""
+      "zh": "首先把矩阵写成 $A = PDP^{-1}$ 的形式。"
      }
     },
     {
@@ -339,7 +339,7 @@
      "t": {
       "en": "Therefore $A^{10} = PD^{10}P^{-1}$.",
       "sha": "b5e1efff5609",
-      "zh": ""
+      "zh": "因此 $A^{10} = PD^{10}P^{-1}$。"
      }
     },
     {
@@ -364,7 +364,7 @@
      "t": {
       "en": "Let $A = \\left[\\begin{array}{rrr} 1 & 4 & 1 \\\\ 0 & 2 & 5 \\\\ 0 & 0 & 5 \\end{array}\\right]$. Find $A^{50}$ by diagonalization.",
       "sha": "60767ffb4128",
-      "zh": ""
+      "zh": "设 $A = \\left[\\begin{array}{rrr} 1 & 4 & 1 \\\\ 0 & 2 & 5 \\\\ 0 & 0 & 5 \\end{array}\\right]$。用对角化求 $A^{50}$。"
      }
     }
    ],
@@ -386,7 +386,7 @@
      "t": {
       "en": "Let $A = \\left[\\begin{array}{rrr} 1 & -2 & -1 \\\\ 2 & -1 & 1 \\\\ -2 & 3 & 1 \\end{array}\\right]$. Find $A^{100}$ by diagonalization.",
       "sha": "6a468fa53d96",
-      "zh": ""
+      "zh": "设 $A = \\left[\\begin{array}{rrr} 1 & -2 & -1 \\\\ 2 & -1 & 1 \\\\ -2 & 3 & 1 \\end{array}\\right]$。用对角化求 $A^{100}$。"
      }
     }
    ],
@@ -408,7 +408,7 @@
      "t": {
       "en": "Let $A = \\left[\\begin{array}{rr} -5 & -6 \\\\ 9 & 10 \\\\ \\end{array}\\right]$. Find a square root of $A$, i.e., find a matrix $B$ such that $B^2=A$.",
       "sha": "a9c41f94c0e2",
-      "zh": ""
+      "zh": "设 $A = \\left[\\begin{array}{rr} -5 & -6 \\\\ 9 & 10 \\\\ \\end{array}\\right]$。求 $A$ 的一个平方根，即求矩阵 $B$，使得 $B^2=A$。"
      }
     }
    ],
@@ -418,7 +418,7 @@
      "t": {
       "en": "$B=\\left[\\begin{array}{rr} -1 & -2 \\\\ 3 & 4 \\\\ \\end{array}\\right]$.",
       "sha": "873c38b0abe4",
-      "zh": ""
+      "zh": "$B=\\left[\\begin{array}{rr} -1 & -2 \\\\ 3 & 4 \\\\ \\end{array}\\right]$。"
      }
     }
    ],
@@ -439,7 +439,7 @@
      "t": {
       "en": "Let $A = \\left[\\begin{array}{rrr} -2 & 0 & 6 \\\\ -3 & 1 & 6 \\\\ -3 & 0 & 7 \\\\ \\end{array}\\right]$. Find a square root of $A$.",
       "sha": "460b469c343d",
-      "zh": ""
+      "zh": "设 $A = \\left[\\begin{array}{rrr} -2 & 0 & 6 \\\\ -3 & 1 & 6 \\\\ -3 & 0 & 7 \\\\ \\end{array}\\right]$。求 $A$ 的一个平方根。"
      }
     }
    ],
@@ -449,7 +449,7 @@
      "t": {
       "en": "$A = \\left[\\begin{array}{rrr} 0 & 0 & 2 \\\\ -1 & 1 & 2 \\\\ -1 & 0 & 3 \\\\ \\end{array}\\right]$.",
       "sha": "f2c0ab3af41d",
-      "zh": ""
+      "zh": "$A = \\left[\\begin{array}{rrr} 0 & 0 & 2 \\\\ -1 & 1 & 2 \\\\ -1 & 0 & 3 \\\\ \\end{array}\\right]$。"
      }
     }
    ],

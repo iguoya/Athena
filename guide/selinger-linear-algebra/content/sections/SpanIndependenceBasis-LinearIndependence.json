@@ -15,7 +15,7 @@
         "t": {
          "en": "Find the redundant vectors in a set of vectors.",
          "sha": "369d2bc52806",
-         "zh": ""
+         "zh": "找出一组向量中的多余向量。"
         }
        }
       ],
@@ -25,7 +25,7 @@
         "t": {
          "en": "Determine whether a set of vectors is linearly independent.",
          "sha": "5773291f67bf",
-         "zh": ""
+         "zh": "判断一组向量是否线性无关。"
         }
        }
       ],
@@ -35,7 +35,7 @@
         "t": {
          "en": "Find a linearly independent subset of a set of spanning vectors.",
          "sha": "ceb781be733f",
-         "zh": ""
+         "zh": "从一组张成向量中找出一个线性无关的子集。"
         }
        }
       ],
@@ -45,7 +45,7 @@
         "t": {
          "en": "Write a vector as a unique linear combination of a set of linearly independent vectors.",
          "sha": "256a868a9e7a",
-         "zh": ""
+         "zh": "把一个向量写成一组线性无关向量的唯一线性组合。"
         }
        }
       ]
@@ -58,7 +58,7 @@
    "t": {
     "en": "Redundant vectors and linear independence",
     "sha": "9bdb6882a73b",
-    "zh": ""
+    "zh": "多余向量与线性无关"
    }
   },
   {
@@ -66,7 +66,7 @@
    "t": {
     "en": "In Example “Span of redundant vectors”, we encountered three vectors $\\vect{u}$, $\\vect{v}$, and $\\vect{w}$ such that $\\sspan\\set{\\vect{u},\\vect{v},\\vect{w}} = \\sspan\\set{\\vect{u},\\vect{v}}$. If this happens, then the vector $\\vect{w}$ does not contribute anything to the span of $\\set{\\vect{u},\\vect{v},\\vect{w}}$, and we say that $\\vect{w}$ is **redundant**. The following definition generalizes this notion.",
     "sha": "ae874f6eb04b",
-    "zh": ""
+    "zh": "在例“多余向量的张成”中，我们遇到过三个向量 $\\vect{u}$、$\\vect{v}$、$\\vect{w}$，满足 $\\sspan\\set{\\vect{u},\\vect{v},\\vect{w}} = \\sspan\\set{\\vect{u},\\vect{v}}$。出现这种情况时，向量 $\\vect{w}$ 对 $\\set{\\vect{u},\\vect{v},\\vect{w}}$ 的张成没有任何贡献，我们就说 $\\vect{w}$ 是**多余的**（redundant）。下面的定义把这个想法推广开来。"
    }
   },
   {
@@ -75,7 +75,7 @@
    "title": {
     "en": "Redundant vectors, linear dependence, and linear independence",
     "sha": "1d2a8c1ff3d5",
-    "zh": ""
+    "zh": "多余向量、线性相关与线性无关"
    },
    "blocks": [
     {
@@ -83,7 +83,7 @@
      "t": {
       "en": "Consider a sequence of $k$ vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$. We say that the vector $\\vect{u}_j$ is **redundant** if it can be written as a linear combination of earlier vectors in the sequence, i.e., if",
       "sha": "ff7f397d9141",
-      "zh": ""
+      "zh": "考虑由 $k$ 个向量组成的向量序列 $\\vect{u}_1,\\ldots,\\vect{u}_k$。如果向量 $\\vect{u}_j$ 能写成序列中它前面那些向量的线性组合，即"
      }
     },
     {
@@ -95,7 +95,7 @@
      "t": {
       "en": "for some scalars $a_1,\\ldots,a_{j-1}$. We say that the sequence of vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$ is **linearly dependent** if it contains one or more redundant vectors. Otherwise, we say that the vectors are **linearly independent**.",
       "sha": "ea58b48f9702",
-      "zh": ""
+      "zh": "对某些标量 $a_1,\\ldots,a_{j-1}$ 成立，我们就说这个向量是**多余的**。如果向量序列 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 中含有一个或多个多余向量，我们就说这个序列是**线性相关**（linearly dependent）的；否则，我们说这些向量是**线性无关**（linearly independent）的。"
      }
     }
    ]
@@ -106,7 +106,7 @@
    "title": {
     "en": "Redundant vectors",
     "sha": "f22e0bee1e9a",
-    "zh": ""
+    "zh": "多余向量"
    },
    "blocks": [
     {
@@ -114,7 +114,7 @@
      "t": {
       "en": "Find the redundant vectors in the following sequence of vectors. Are the vectors linearly independent?",
       "sha": "f8ca8d32511d",
-      "zh": ""
+      "zh": "找出下面这个向量序列中的多余向量。这些向量线性无关吗？"
      }
     },
     {
@@ -137,7 +137,7 @@
         "t": {
          "en": "The vector $\\vect{u}_1$ is redundant, because it is a linear combination of earlier vectors. (Although there are no earlier vectors, recall from Example “Span of the empty set” that the empty sum of vectors is equal to the zero vector $\\vect{0}$. Therefore, $\\vect{u}_1$ is indeed an (empty) linear combination of earlier vectors.)",
          "sha": "ed8eba2a9894",
-         "zh": ""
+         "zh": "向量 $\\vect{u}_1$ 是多余的，因为它是前面那些向量的线性组合。（虽然它前面没有任何向量，但回忆例“空集的张成”：空的向量和等于零向量 $\\vect{0}$。所以 $\\vect{u}_1$ 确实是前面那些向量的（空）线性组合。）"
         }
        }
       ],
@@ -147,7 +147,7 @@
         "t": {
          "en": "The vector $\\vect{u}_2$ is not redundant, because it cannot be written as a linear combination of $\\vect{u}_1$. This is because the system of equations",
          "sha": "a881e7e7619f",
-         "zh": ""
+         "zh": "向量 $\\vect{u}_2$ 不是多余的，因为它不能写成 $\\vect{u}_1$ 的线性组合。这是因为方程组"
         }
        },
        {
@@ -159,7 +159,7 @@
         "t": {
          "en": "has no solution.",
          "sha": "9113246045a7",
-         "zh": ""
+         "zh": "无解。"
         }
        }
       ],
@@ -169,7 +169,7 @@
         "t": {
          "en": "The vector $\\vect{u}_3$ is not redundant, because it cannot be written as a linear combination of $\\vect{u}_1$ and $\\vect{u}_2$. This is because the system of equations",
          "sha": "7030e6ea28a0",
-         "zh": ""
+         "zh": "向量 $\\vect{u}_3$ 不是多余的，因为它不能写成 $\\vect{u}_1$ 与 $\\vect{u}_2$ 的线性组合。这是因为方程组"
         }
        },
        {
@@ -181,7 +181,7 @@
         "t": {
          "en": "has no solution.",
          "sha": "9113246045a7",
-         "zh": ""
+         "zh": "无解。"
         }
        }
       ],
@@ -191,7 +191,7 @@
         "t": {
          "en": "The vector $\\vect{u}_4$ is redundant, because $\\vect{u}_4 = \\vect{u}_2 + \\vect{u}_3$.",
          "sha": "544cfcd96116",
-         "zh": ""
+         "zh": "向量 $\\vect{u}_4$ 是多余的，因为 $\\vect{u}_4 = \\vect{u}_2 + \\vect{u}_3$。"
         }
        }
       ],
@@ -201,7 +201,7 @@
         "t": {
          "en": "The vector $\\vect{u}_5$ is not redundant, because it cannot be written as a linear combination of $\\vect{u}_1$, $\\vect{u}_2$, $\\vect{u}_3$, and $\\vect{u}_4$. This is because the system of equations",
          "sha": "74be21ca5be7",
-         "zh": ""
+         "zh": "向量 $\\vect{u}_5$ 不是多余的，因为它不能写成 $\\vect{u}_1$、$\\vect{u}_2$、$\\vect{u}_3$ 与 $\\vect{u}_4$ 的线性组合。这是因为方程组"
         }
        },
        {
@@ -213,7 +213,7 @@
         "t": {
          "en": "has no solution.",
          "sha": "9113246045a7",
-         "zh": ""
+         "zh": "无解。"
         }
        }
       ],
@@ -223,7 +223,7 @@
         "t": {
          "en": "The vector $\\vect{u}_6$ is redundant, because $\\vect{u}_6 = \\vect{u}_2 + 2\\vect{u}_3-\\vect{u}_5$.",
          "sha": "5ad0f3296281",
-         "zh": ""
+         "zh": "向量 $\\vect{u}_6$ 是多余的，因为 $\\vect{u}_6 = \\vect{u}_2 + 2\\vect{u}_3-\\vect{u}_5$。"
         }
        }
       ]
@@ -234,7 +234,7 @@
      "t": {
       "en": "In summary, the vectors $\\vect{u}_1$, $\\vect{u}_4$, and $\\vect{u}_6$ are redundant, and the vectors $\\vect{u}_2$, $\\vect{u}_3$, and $\\vect{u}_5$ are not. It follows that the vectors $\\vect{u}_1,\\ldots,\\vect{u}_6$ are linearly dependent.",
       "sha": "a8d3079717ff",
-      "zh": ""
+      "zh": "总结一下：向量 $\\vect{u}_1$、$\\vect{u}_4$、$\\vect{u}_6$ 是多余的，向量 $\\vect{u}_2$、$\\vect{u}_3$、$\\vect{u}_5$ 不是。由此可知，向量 $\\vect{u}_1,\\ldots,\\vect{u}_6$ 线性相关。"
      }
     }
    ]
@@ -244,7 +244,7 @@
    "t": {
     "en": "The casting-out algorithm",
     "sha": "1e14c3c93631",
-    "zh": ""
+    "zh": "剔除算法"
    }
   },
   {
@@ -252,7 +252,7 @@
    "t": {
     "en": "The last example shows that it can be a lot of work to find the redundant vectors in a sequence of $k$ vectors. Doing so in the naive way require us to solve up to $k$ systems of linear equations! Fortunately, there is a much faster and easier method, the so-called *casting-out algorithm*.",
     "sha": "ab75367b99b6",
-    "zh": ""
+    "zh": "上一个例子说明，要找出 $k$ 个向量组成的序列中的多余向量，可能要做很多计算。按朴素的做法，最多要解 $k$ 个线性方程组！好在有一种快得多、也简单得多的方法，叫作*剔除算法*（casting-out algorithm）。"
    }
   },
   {
@@ -261,7 +261,7 @@
    "title": {
     "en": "Casting-out algorithm",
     "sha": "e6072df530f2",
-    "zh": ""
+    "zh": "剔除算法"
    },
    "blocks": [
     {
@@ -269,7 +269,7 @@
      "t": {
       "en": "**Input:** a list of $k$ vectors $\\vect{u}_1,\\ldots,\\vect{u}_k\\in\\R^n$.",
       "sha": "3d352706cad8",
-      "zh": ""
+      "zh": "**输入：**由 $k$ 个向量 $\\vect{u}_1,\\ldots,\\vect{u}_k\\in\\R^n$ 组成的列表。"
      }
     },
     {
@@ -277,7 +277,7 @@
      "t": {
       "en": "**Output:** the set of indices $j$ such that $\\vect{u}_j$ is redundant.",
       "sha": "7cd0eafde487",
-      "zh": ""
+      "zh": "**输出：**使 $\\vect{u}_j$ 为多余向量的下标 $j$ 的集合。"
      }
     },
     {
@@ -285,7 +285,7 @@
      "t": {
       "en": "**Algorithm:** Write the vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$ as the columns of an $n\\times k$-matrix, and reduce to echelon form. Every *non-pivot* column, if any, corresponds to a redundant vector.",
       "sha": "37dee6449571",
-      "zh": ""
+      "zh": "**算法：**把向量 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 写成一个 $n\\times k$ 矩阵的各列，并化为行阶梯形。每一个*非主元*列（如果有的话）都对应一个多余向量。"
      }
     }
    ]
@@ -296,7 +296,7 @@
    "title": {
     "en": "Casting-out algorithm",
     "sha": "e6072df530f2",
-    "zh": ""
+    "zh": "剔除算法"
    },
    "blocks": [
     {
@@ -304,7 +304,7 @@
      "t": {
       "en": "Use the casting-out algorithm to find the redundant vectors among the vectors from Example “Redundant vectors”.",
       "sha": "289c6b5bfec2",
-      "zh": ""
+      "zh": "用剔除算法找出例“多余向量”中那些向量里的多余向量。"
      }
     }
    ]
@@ -318,7 +318,7 @@
      "t": {
       "en": "Following the casting-out algorithm, we write the vectors $\\vect{u}_1,\\ldots,\\vect{u}_6$ as the columns of a matrix and reduce to echelon form.",
       "sha": "b3eb979cbca3",
-      "zh": ""
+      "zh": "按照剔除算法，我们把向量 $\\vect{u}_1,\\ldots,\\vect{u}_6$ 写成矩阵的各列，并化为行阶梯形。"
      }
     },
     {
@@ -330,7 +330,7 @@
      "t": {
       "en": "The pivot columns are columns $2$, $3$, and $5$. The non-pivot columns are columns $1$, $4$, and $6$. Therefore, the vectors $\\vect{u}_1$, $\\vect{u}_4$, and $\\vect{u}_6$ are redundant. Note that this is the same answer we got in Example “Redundant vectors”.",
       "sha": "389285ca7f84",
-      "zh": ""
+      "zh": "主元列是第 $2$、$3$、$5$ 列，非主元列是第 $1$、$4$、$6$ 列。所以向量 $\\vect{u}_1$、$\\vect{u}_4$、$\\vect{u}_6$ 是多余的。注意，这和我们在例“多余向量”中得到的答案相同。"
      }
     }
    ]
@@ -340,7 +340,7 @@
    "t": {
     "en": "The above version of the casting-out algorithm only tells us which of the vectors (if any) are redundant, but it does not give us a specific way to write the redundant vectors as linear combinations of previous vectors. However, we can easily get this additional information if we reduce the matrix all the way to reduced echelon form. We call this version of the algorithm the *extended casting-out algorithm*.",
     "sha": "1c65ec2f19f4",
-    "zh": ""
+    "zh": "上面这个版本的剔除算法只告诉我们哪些向量（如果有的话）是多余的，却没有给出把多余向量写成前面向量的线性组合的具体办法。不过，只要把矩阵一直化到简化行阶梯形，就能轻松得到这些额外的信息。这个版本的算法叫作*扩展剔除算法*（extended casting-out algorithm）。"
    }
   },
   {
@@ -349,7 +349,7 @@
    "title": {
     "en": "Extended casting-out algorithm",
     "sha": "02d9fd1e699a",
-    "zh": ""
+    "zh": "扩展剔除算法"
    },
    "blocks": [
     {
@@ -357,7 +357,7 @@
      "t": {
       "en": "**Input:** a list of $k$ vectors $\\vect{u}_1,\\ldots,\\vect{u}_k\\in\\R^n$.",
       "sha": "3d352706cad8",
-      "zh": ""
+      "zh": "**输入：**由 $k$ 个向量 $\\vect{u}_1,\\ldots,\\vect{u}_k\\in\\R^n$ 组成的列表。"
      }
     },
     {
@@ -365,7 +365,7 @@
      "t": {
       "en": "**Output:** the set of indices $j$ such that $\\vect{u}_j$ is redundant, and a set of coefficients for writing each redundant vector as a linear combination of previous vectors.",
       "sha": "5eb6fa8bbb58",
-      "zh": ""
+      "zh": "**输出：**使 $\\vect{u}_j$ 为多余向量的下标 $j$ 的集合，以及把每个多余向量写成前面向量的线性组合所用的一组系数。"
      }
     },
     {
@@ -373,7 +373,7 @@
      "t": {
       "en": "**Algorithm:** Write the vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$ as the columns of an $n\\times k$-matrix, and reduce to reduced echelon form. Every *non-pivot* column, if any, corresponds to a redundant vector. If $\\vect{u}_j$ is a redundant vector, then the entries in the $j\\th$ column of the reduced echelon form are coefficients for writing $\\vect{u}_j$ as a linear combination of previous non-redundant vectors.",
       "sha": "dbaa200d0088",
-      "zh": ""
+      "zh": "**算法：**把向量 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 写成一个 $n\\times k$ 矩阵的各列，并化为简化行阶梯形。每一个*非主元*列（如果有的话）都对应一个多余向量。如果 $\\vect{u}_j$ 是多余向量，那么简化行阶梯形的第 $j\\th$ 列中的各元素，就是把 $\\vect{u}_j$ 写成前面那些非多余向量的线性组合时所用的系数。"
      }
     }
    ]
@@ -384,7 +384,7 @@
    "title": {
     "en": "Extended casting-out algorithm",
     "sha": "02d9fd1e699a",
-    "zh": ""
+    "zh": "扩展剔除算法"
    },
    "blocks": [
     {
@@ -392,7 +392,7 @@
      "t": {
       "en": "Use the casting-out algorithm to find the redundant vectors among the vectors from Example “Redundant vectors”, and write each redundant vector as a linear combination of previous non-redundant vectors.",
       "sha": "fbb0a77df939",
-      "zh": ""
+      "zh": "用剔除算法找出例“多余向量”中那些向量里的多余向量，并把每个多余向量写成前面非多余向量的线性组合。"
      }
     }
    ]
@@ -406,7 +406,7 @@
      "t": {
       "en": "Once again, we write the vectors $\\vect{u}_1,\\ldots,\\vect{u}_6$ as the columns of a matrix. This time we use the extended casting-out algorithm, which means we reduce the matrix to reduced echelon form instead of echelon form.",
       "sha": "eb09b2d37e20",
-      "zh": ""
+      "zh": "我们再一次把向量 $\\vect{u}_1,\\ldots,\\vect{u}_6$ 写成矩阵的各列。这一次用扩展剔除算法，也就是把矩阵化到简化行阶梯形，而不是行阶梯形。"
      }
     },
     {
@@ -418,7 +418,7 @@
      "t": {
       "en": "As before, the non-pivot columns are columns $1$, $4$, and $6$, and therefore, the vectors $\\vect{u}_1$, $\\vect{u}_4$, and $\\vect{u}_6$ are redundant. The non-redundant vectors are $\\vect{u}_2$, $\\vect{u}_3$, and $\\vect{u}_5$. Moreover, the entries in the sixth column are $1$, $2$, and $-1$. Note that this means that the sixth column can be written as $1$ times the second column plus $2$ times the third column plus $(-1)$ times the fourth column. The same coefficients can be used to write $\\vect{u}_6$ as a linear combination of previous *non-redundant* columns, namely:",
       "sha": "d4c88d306ffc",
-      "zh": ""
+      "zh": "和之前一样，非主元列是第 $1$、$4$、$6$ 列，所以向量 $\\vect{u}_1$、$\\vect{u}_4$、$\\vect{u}_6$ 是多余的，非多余的向量是 $\\vect{u}_2$、$\\vect{u}_3$、$\\vect{u}_5$。此外，第六列中的元素是 $1$、$2$、$-1$。这表示第六列可以写成：$1$ 乘第二列，加 $2$ 乘第三列，加 $(-1)$ 乘第四列。同样的系数可以用来把 $\\vect{u}_6$ 写成前面*非多余*列的线性组合，即："
      }
     },
     {
@@ -430,7 +430,7 @@
      "t": {
       "en": "Also, the entries in the fourth column are $1$ and $1$, which are the coefficients for writing $\\vect{u}_4$ as a linear combination of previous non-redundant columns, namely:",
       "sha": "09cbe3e6ee59",
-      "zh": ""
+      "zh": "同样，第四列中的元素是 $1$ 和 $1$，它们就是把 $\\vect{u}_4$ 写成前面非多余列的线性组合时所用的系数，即："
      }
     },
     {
@@ -442,7 +442,7 @@
      "t": {
       "en": "Finally, there are no non-zero entries in the first column. This means that $\\vect{u}_1$ is the empty linear combination",
       "sha": "b61b76dd5e86",
-      "zh": ""
+      "zh": "最后，第一列中没有非零元素。这表示 $\\vect{u}_1$ 是空线性组合"
      }
     },
     {
@@ -456,7 +456,7 @@
    "t": {
     "en": "Alternative characterization of linear independence",
     "sha": "eb728792cd7e",
-    "zh": ""
+    "zh": "线性无关的另一种刻画"
    }
   },
   {
@@ -464,7 +464,7 @@
    "t": {
     "en": "Our definition of redundant vectors depends on the order in which the vectors are written. This is because each redundant vector must be a linear combination of *earlier* vectors in the sequence. For example, in the sequence of vectors",
     "sha": "f82f44a5b2ce",
-    "zh": ""
+    "zh": "我们对多余向量的定义依赖于向量的书写顺序，因为每个多余向量都必须是序列中*前面*向量的线性组合。例如，在向量序列"
    }
   },
   {
@@ -476,7 +476,7 @@
    "t": {
     "en": "the vector $\\vect{w}$ is redundant, because it is a linear combination of earlier vectors $\\vect{w} = 2\\,\\vect{u}+3\\,\\vect{v}$. Neither $\\vect{u}$ nor $\\vect{v}$ are redundant. On the other hand, in the sequence of vectors",
     "sha": "b3b0a4d02e68",
-    "zh": ""
+    "zh": "中，向量 $\\vect{w}$ 是多余的，因为它是前面向量的线性组合：$\\vect{w} = 2\\,\\vect{u}+3\\,\\vect{v}$。$\\vect{u}$ 和 $\\vect{v}$ 都不是多余的。另一方面，在向量序列"
    }
   },
   {
@@ -488,7 +488,7 @@
    "t": {
     "en": "$\\vect{v}$ is redundant because $\\vect{v} = \\frac{1}{3}\\vect{w} - \\frac{2}{3}\\vect{u}$, but neither $\\vect{u}$ nor $\\vect{w}$ are redundant. Note that none of the vectors have changed; only the order in which they are written is different. Yet $\\vect{w}$ is the redundant vector in the first sequence, and $\\vect{v}$ is the redundant vector in the second sequence.",
     "sha": "4a2f2818b75a",
-    "zh": ""
+    "zh": "中，$\\vect{v}$ 是多余的，因为 $\\vect{v} = \\frac{1}{3}\\vect{w} - \\frac{2}{3}\\vect{u}$，而 $\\vect{u}$ 和 $\\vect{w}$ 都不是多余的。注意，这些向量本身一个也没有变，变的只是书写顺序。然而，在第一个序列里多余的是 $\\vect{w}$，在第二个序列里多余的却是 $\\vect{v}$。"
    }
   },
   {
@@ -496,7 +496,7 @@
    "t": {
     "en": "Because we defined linear independence in terms of the absence of redundant vectors, you may suspect that the concept of linear independence also depends on the order in which the vectors are written. However, this is not the case. The following theorem gives an alternative characterization of linear independence that is more symmetric (it does not depend on the order of the vectors).",
     "sha": "58415207615d",
-    "zh": ""
+    "zh": "既然我们是用“没有多余向量”来定义线性无关的，你可能会怀疑线性无关这个概念也依赖于向量的书写顺序。其实不然。下面的定理给出线性无关的另一种刻画，它更对称（不依赖于向量的顺序）。"
    }
   },
   {
@@ -505,7 +505,7 @@
    "title": {
     "en": "Characterization of linear independence",
     "sha": "e3d4390e20bf",
-    "zh": ""
+    "zh": "线性无关的刻画"
    },
    "blocks": [
     {
@@ -513,7 +513,7 @@
      "t": {
       "en": "Let $\\vect{u}_1,\\ldots,\\vect{u}_k$ be vectors. Then $\\vect{u}_1,\\ldots,\\vect{u}_k$ are linearly independent if and only if the homogeneous equation",
       "sha": "6f79d0ee7bdf",
-      "zh": ""
+      "zh": "设 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 是一些向量。那么 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 线性无关，当且仅当齐次方程"
      }
     },
     {
@@ -525,7 +525,7 @@
      "t": {
       "en": "has only the trivial solution.",
       "sha": "76dc5ff6227d",
-      "zh": ""
+      "zh": "只有零解。"
      }
     }
    ]
@@ -539,7 +539,7 @@
      "t": {
       "en": "Let $A$ be the $n\\times k$-matrix whose columns are $\\vect{u}_1,\\ldots,\\vect{u}_k$. We know from the theory of homogeneous systems that the system $a_1\\,\\vect{u}_1 + \\ldots + a_k\\,\\vect{u}_k = \\vect{0}$ has no non-trivial solution if and only if every column of the echelon form of $A$ is a pivot column. By the casting-out algorithm, this is the case if and only if none of the vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$ are redundant, i.e., if and only if the vectors are linearly independent.",
       "sha": "c9c0c714cfff",
-      "zh": ""
+      "zh": "设 $A$ 是以 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 为各列的 $n\\times k$ 矩阵。由齐次方程组的理论可知，方程组 $a_1\\,\\vect{u}_1 + \\ldots + a_k\\,\\vect{u}_k = \\vect{0}$ 没有非零解，当且仅当 $A$ 的行阶梯形的每一列都是主元列。由剔除算法，这当且仅当 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 中没有多余向量，也就是当且仅当这些向量线性无关。"
      }
     }
    ]
@@ -550,7 +550,7 @@
    "title": {
     "en": "Characterization of linear independence",
     "sha": "e3d4390e20bf",
-    "zh": ""
+    "zh": "线性无关的刻画"
    },
    "blocks": [
     {
@@ -558,7 +558,7 @@
      "t": {
       "en": "Use the method of Theorem “Characterization of linear independence” to determine whether the following vectors are linearly independent in $\\R^4$.",
       "sha": "b8dc522cfaa8",
-      "zh": ""
+      "zh": "用定理“线性无关的刻画”的方法，判断下列 $\\R^4$ 中的向量是否线性无关。"
      }
     },
     {
@@ -576,7 +576,7 @@
      "t": {
       "en": "We must check whether the equation",
       "sha": "97056224655e",
-      "zh": ""
+      "zh": "我们必须检查方程"
      }
     },
     {
@@ -588,7 +588,7 @@
      "t": {
       "en": "has a non-trivial solution. If it does, the vectors are linearly dependent. On the other hand, if there is only the trivial solution, the vectors are linearly independent. We write the augmented matrix and solve:",
       "sha": "883c9d992260",
-      "zh": ""
+      "zh": "是否有非零解。如果有，这些向量线性相关；反之，如果只有零解，这些向量线性无关。我们写出增广矩阵并求解："
      }
     },
     {
@@ -600,7 +600,7 @@
      "t": {
       "en": "Since every column is a pivot column, there are no free variables; the system of equations has a unique solution, which is $a_1=a_2=a_3=a_4=0$, i.e., the trivial solution. Therefore, the vectors $\\vect{u}_1,\\ldots,\\vect{u}_4$ are linearly independent.",
       "sha": "2ad717890de6",
-      "zh": ""
+      "zh": "因为每一列都是主元列，所以没有自由变量；方程组有唯一解，即 $a_1=a_2=a_3=a_4=0$，也就是零解。因此向量 $\\vect{u}_1,\\ldots,\\vect{u}_4$ 线性无关。"
      }
     }
    ]
@@ -611,7 +611,7 @@
    "title": {
     "en": "Characterization of linear independence",
     "sha": "e3d4390e20bf",
-    "zh": ""
+    "zh": "线性无关的刻画"
    },
    "blocks": [
     {
@@ -619,7 +619,7 @@
      "t": {
       "en": "Use the method of Theorem “Characterization of linear independence” to determine whether the following vectors are linearly independent in $\\R^3$.",
       "sha": "7df1d02c12bf",
-      "zh": ""
+      "zh": "用定理“线性无关的刻画”的方法，判断下列 $\\R^3$ 中的向量是否线性无关。"
      }
     },
     {
@@ -637,7 +637,7 @@
      "t": {
       "en": "As in the previous example, we must check whether the equation $a_1\\,\\vect{u}_1 + a_2\\,\\vect{u}_2 + a_3\\,\\vect{u}_3 = \\vect{0}$ has a non-trivial solution. Once again, we write the augmented matrix and solve:",
       "sha": "d0f53b83e954",
-      "zh": ""
+      "zh": "和上一个例子一样，我们必须检查方程 $a_1\\,\\vect{u}_1 + a_2\\,\\vect{u}_2 + a_3\\,\\vect{u}_3 = \\vect{0}$ 是否有非零解。同样地，我们写出增广矩阵并求解："
      }
     },
     {
@@ -649,7 +649,7 @@
      "t": {
       "en": "Since column $3$ is not a pivot column, $a_3$ is a free variable. Therefore, the system has a non-trivial solution, and the vectors are linearly dependent.",
       "sha": "bbfe0323cc06",
-      "zh": ""
+      "zh": "因为第 $3$ 列不是主元列，所以 $a_3$ 是自由变量。因此方程组有非零解，这些向量线性相关。"
      }
     },
     {
@@ -657,7 +657,7 @@
      "t": {
       "en": "With a small amount of extra work, we can find an actual non-trivial solution of $a_1\\,\\vect{u}_1 + a_2\\,\\vect{u}_2 + a_3\\,\\vect{u}_3 = \\vect{0}$. All we have to do is set $a_3=1$ and do a back substitution. We find that $(a_1,a_2,a_3)=(2,-2,1)$ is a solution. In other words,",
       "sha": "36bdf7924409",
-      "zh": ""
+      "zh": "多做一点点工作，我们就能求出 $a_1\\,\\vect{u}_1 + a_2\\,\\vect{u}_2 + a_3\\,\\vect{u}_3 = \\vect{0}$ 的一个具体的非零解。只需令 $a_3=1$，再回代即可。我们得到 $(a_1,a_2,a_3)=(2,-2,1)$ 是一个解。换句话说，"
      }
     },
     {
@@ -669,7 +669,7 @@
      "t": {
       "en": "We can also use this information to write $\\vect{u}_3$ as a linear combination of previous vectors, namely, $\\vect{u}_3 = -2\\vect{u}_1 + 2\\vect{u}_2$.",
       "sha": "ceae25adfddd",
-      "zh": ""
+      "zh": "我们还可以利用这个结果，把 $\\vect{u}_3$ 写成前面向量的线性组合，即 $\\vect{u}_3 = -2\\vect{u}_1 + 2\\vect{u}_2$。"
      }
     }
    ]
@@ -679,7 +679,7 @@
    "t": {
     "en": "The characterization of linear independence in Theorem “Characterization of linear independence” is mostly useful for theoretical reasons. However, it can also help in solving problems such as the following.",
     "sha": "3212d8092930",
-    "zh": ""
+    "zh": "定理“线性无关的刻画”给出的刻画主要在理论上有用，不过它也能帮助解决下面这类问题。"
    }
   },
   {
@@ -688,7 +688,7 @@
    "title": {
     "en": "Related sets of vectors",
     "sha": "d188966473b7",
-    "zh": ""
+    "zh": "相关联的向量组"
    },
    "blocks": [
     {
@@ -696,7 +696,7 @@
      "t": {
       "en": "Let $\\vect{u},\\vect{v},\\vect{w}$ be linearly independent vectors in $\\R^n$. Are the vectors $\\vect{u}+\\vect{v}$, $2\\vect{u}+\\vect{w}$, and $\\vect{v}-5\\vect{w}$ linearly independent?",
       "sha": "8c2e1efd677b",
-      "zh": ""
+      "zh": "设 $\\vect{u},\\vect{v},\\vect{w}$ 是 $\\R^n$ 中的线性无关向量。向量 $\\vect{u}+\\vect{v}$、$2\\vect{u}+\\vect{w}$、$\\vect{v}-5\\vect{w}$ 线性无关吗？"
      }
     }
    ]
@@ -710,7 +710,7 @@
      "t": {
       "en": "By Theorem “Characterization of linear independence”, to check whether the vectors are linearly independent, we must check whether the equation",
       "sha": "9f107d43a8c6",
-      "zh": ""
+      "zh": "由定理“线性无关的刻画”，要检查这些向量是否线性无关，就必须检查方程"
      }
     },
     {
@@ -722,7 +722,7 @@
      "t": {
       "en": "has non-trivial solutions. If it does, the vectors are linearly dependent, if it does not, they are linearly independent. We can simplify the equation as follows:",
       "sha": "6a27d6d18c3c",
-      "zh": ""
+      "zh": "是否有非零解。如果有，这些向量线性相关；如果没有，它们线性无关。我们可以把方程化简如下："
      }
     },
     {
@@ -734,7 +734,7 @@
      "t": {
       "en": "Since $\\vect{u}$, $\\vect{v}$, and $\\vect{w}$ are linearly independent, we know, again by Theorem “Characterization of linear independence”, that equation (2) only has the trivial solution. Therefore,",
       "sha": "a4dc0f007236",
-      "zh": ""
+      "zh": "因为 $\\vect{u}$、$\\vect{v}$、$\\vect{w}$ 线性无关，再由定理“线性无关的刻画”可知，方程 (2) 只有零解。因此，"
      }
     },
     {
@@ -746,7 +746,7 @@
      "t": {
       "en": "We can solve this system of three equations in three variables, and we find that it has the unique solution $a=b=c=0$. Therefore, $a=b=c=0$ is the only solution to equation (1), which means that the vectors $\\vect{u}+\\vect{v}$, $2\\vect{u}+\\vect{w}$, and $\\vect{v}-5\\vect{w}$ are linearly independent.",
       "sha": "f4aaa61bde5f",
-      "zh": ""
+      "zh": "这是一个三个方程、三个变量的方程组，解得它有唯一解 $a=b=c=0$。所以 $a=b=c=0$ 是方程 (1) 的唯一解，这说明向量 $\\vect{u}+\\vect{v}$、$2\\vect{u}+\\vect{w}$、$\\vect{v}-5\\vect{w}$ 线性无关。"
      }
     }
    ]
@@ -756,7 +756,7 @@
    "t": {
     "en": "Properties of linear independence",
     "sha": "2092508829df",
-    "zh": ""
+    "zh": "线性无关的性质"
    }
   },
   {
@@ -764,7 +764,7 @@
    "t": {
     "en": "The following are some properties of linearly independent sets.",
     "sha": "2d1a164e3ec7",
-    "zh": ""
+    "zh": "线性无关的向量组有下面这些性质。"
    }
   },
   {
@@ -773,7 +773,7 @@
    "title": {
     "en": "Properties of linear independence",
     "sha": "2092508829df",
-    "zh": ""
+    "zh": "线性无关的性质"
    },
    "blocks": [
     {
@@ -786,7 +786,7 @@
         "t": {
          "en": "**Linear independence and reordering.** If a sequence $\\vect{u}_1,\\ldots,\\vect{u}_k$ of $k$ vectors is linearly independent, then so is any reordering of the sequence (i.e., whether or not the vectors are linearly independent does not depend on the order in which the vectors are written down).",
          "sha": "a685719aa87b",
-         "zh": ""
+         "zh": "**线性无关与重新排序。**如果由 $k$ 个向量组成的序列 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 线性无关，那么它的任意重新排序也线性无关（也就是说，这些向量是否线性无关，与它们的书写顺序无关）。"
         }
        }
       ],
@@ -796,7 +796,7 @@
         "t": {
          "en": "**Linear independence of a subset.** If $\\vect{u}_1,\\ldots,\\vect{u}_k$ are linearly independent, then so are $\\vect{u}_1,\\ldots,\\vect{u}_j$ for any $j<k$.",
          "sha": "8861e5f48383",
-         "zh": ""
+         "zh": "**线性无关的子集。**如果 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 线性无关，那么对任意 $j<k$，$\\vect{u}_1,\\ldots,\\vect{u}_j$ 也线性无关。"
         }
        }
       ],
@@ -806,7 +806,7 @@
         "t": {
          "en": "**Linear independence and dimension.** Let $\\vect{u}_1,\\ldots,\\vect{u}_k$ be a sequence of $k$ vectors in $\\R^n$. If $k>n$, then the vectors are linearly dependent (i.e., not linearly independent).",
          "sha": "82c802618ca1",
-         "zh": ""
+         "zh": "**线性无关与维数。**设 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 是 $\\R^n$ 中由 $k$ 个向量组成的序列。如果 $k>n$，那么这些向量线性相关（即不是线性无关）。"
         }
        }
       ]
@@ -828,7 +828,7 @@
         "t": {
          "en": "This follows from Theorem “Characterization of linear independence”, because whether or not the equation $a_1\\vect{u}_1 + \\ldots + a_k\\vect{u}_k = \\vect{0}$ has a non-trivial solution does not depend on the order in which the vectors are written.",
          "sha": "ddc4f8b9854d",
-         "zh": ""
+         "zh": "这可由定理“线性无关的刻画”得出，因为方程 $a_1\\vect{u}_1 + \\ldots + a_k\\vect{u}_k = \\vect{0}$ 是否有非零解，与向量的书写顺序无关。"
         }
        }
       ],
@@ -838,7 +838,7 @@
         "t": {
          "en": "If one of the vectors in the sequence $\\vect{u}_1,\\ldots,\\vect{u}_j$ were redundant, then it would be redundant in the longer sequence $\\vect{u}_1,\\ldots,\\vect{u}_k$ as well.",
          "sha": "b5458f868b67",
-         "zh": ""
+         "zh": "如果序列 $\\vect{u}_1,\\ldots,\\vect{u}_j$ 中有某个向量是多余的，那么它在更长的序列 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 中同样是多余的。"
         }
        }
       ],
@@ -848,7 +848,7 @@
         "t": {
          "en": "Let $A$ be the $n\\times k$-matrix that has the vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$ as its columns and suppose that $k>n$. Then the rank of $A$ is at most $n$, so the echelon form of $A$ has some non-pivot columns. Therefore, the system $a_1\\vect{u}_1 + \\ldots + a_k\\vect{u}_k = \\vect{0}$ has non-trivial solutions, and the vectors are linearly dependent by Theorem “Characterization of linear independence”.",
          "sha": "8338e6ae67f6",
-         "zh": ""
+         "zh": "设 $A$ 是以向量 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 为各列的 $n\\times k$ 矩阵，并设 $k>n$。那么 $A$ 的秩至多为 $n$，所以 $A$ 的行阶梯形中有非主元列。因此方程组 $a_1\\vect{u}_1 + \\ldots + a_k\\vect{u}_k = \\vect{0}$ 有非零解，再由定理“线性无关的刻画”，这些向量线性相关。"
         }
        }
       ]
@@ -862,7 +862,7 @@
    "title": {
     "en": "Linear dependence",
     "sha": "345b019de937",
-    "zh": ""
+    "zh": "线性相关"
    },
    "blocks": [
     {
@@ -870,7 +870,7 @@
      "t": {
       "en": "Are the following vectors linearly independent?",
       "sha": "d6c23f6d7784",
-      "zh": ""
+      "zh": "下列向量线性无关吗？"
      }
     },
     {
@@ -888,7 +888,7 @@
      "t": {
       "en": "Since these are $3$ vectors in $\\R^2$, they are linearly dependent by Proposition “Properties of linear independence”. No calculation is necessary.",
       "sha": "0a355b8c421e",
-      "zh": ""
+      "zh": "这是 $\\R^2$ 中的 $3$ 个向量，由命题“线性无关的性质”，它们线性相关。不需要任何计算。"
      }
     }
    ]
@@ -898,7 +898,7 @@
    "t": {
     "en": "Linear independence and linear combinations",
     "sha": "1d89e9f769f7",
-    "zh": ""
+    "zh": "线性无关与线性组合"
    }
   },
   {
@@ -906,7 +906,7 @@
    "t": {
     "en": "In general, there is more than one way of writing a given vector as a linear combination of some spanning vectors. For example, consider",
     "sha": "3d86b110a92f",
-    "zh": ""
+    "zh": "一般来说，把一个给定的向量写成某些张成向量的线性组合，写法不止一种。例如，考虑"
    }
   },
   {
@@ -918,7 +918,7 @@
    "t": {
     "en": "We can write $\\vect{v}$ in many different ways as a linear combination of $\\vect{u}_1,\\ldots,\\vect{u}_3$, for example",
     "sha": "d18735663230",
-    "zh": ""
+    "zh": "我们可以用许多不同的方式把 $\\vect{v}$ 写成 $\\vect{u}_1,\\ldots,\\vect{u}_3$ 的线性组合，例如"
    }
   },
   {
@@ -930,7 +930,7 @@
    "t": {
     "en": "However, when the vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$ are linearly independent, this does not happen. In this case, the linear combination is always unique, as the following theorem shows.",
     "sha": "2f2d253254b1",
-    "zh": ""
+    "zh": "然而，当向量 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 线性无关时，这种情况就不会出现。此时，线性组合的写法总是唯一的，下面的定理说明了这一点。"
    }
   },
   {
@@ -939,7 +939,7 @@
    "title": {
     "en": "Unique linear combination",
     "sha": "989632e3ba54",
-    "zh": ""
+    "zh": "唯一的线性组合"
    },
    "blocks": [
     {
@@ -947,7 +947,7 @@
      "t": {
       "en": "Assume $\\vect{u}_1,\\ldots,\\vect{u}_k$ are linearly independent. Then every vector $\\vect{v}\\in\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ can be written as a linear combination of $\\vect{u}_1,\\ldots,\\vect{u}_k$ in a unique way.",
       "sha": "43b8431cb7ea",
-      "zh": ""
+      "zh": "假设 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 线性无关。那么每个向量 $\\vect{v}\\in\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ 都能以唯一的方式写成 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 的线性组合。"
      }
     }
    ]
@@ -961,7 +961,7 @@
      "t": {
       "en": "We already know that every vector $\\vect{v}\\in\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ can be written as a linear combination of $\\vect{u}_1,\\ldots,\\vect{u}_k$, because that is the definition of span. So what must be proved is the uniqueness. Suppose, therefore, that there are two ways of writing $\\vect{v}$ as such a linear combination, i.e., that",
       "sha": "617a7a5ac5a7",
-      "zh": ""
+      "zh": "我们已经知道，每个向量 $\\vect{v}\\in\\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ 都能写成 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 的线性组合，因为这正是张成的定义。所以需要证明的是唯一性。因此，假设 $\\vect{v}$ 有两种这样的线性组合写法，即"
      }
     },
     {
@@ -973,7 +973,7 @@
      "t": {
       "en": "Subtracting one equation from the other, we get",
       "sha": "f245d8019025",
-      "zh": ""
+      "zh": "把一个等式减去另一个等式，得到"
      }
     },
     {
@@ -985,7 +985,7 @@
      "t": {
       "en": "Since $\\vect{u}_1,\\ldots,\\vect{u}_k$ are linearly independent, we know by Theorem “Characterization of linear independence” that the last equation only has the trivial solution, i.e., $a_1-b_1=0$, $a_2-b_2=0$, …, $a_k-b_k=0$. It follows that $a_1=b_1$, $a_2=b_2$, …, $a_k=b_k$. We have shown that any two ways of writing $\\vect{v}$ as a linear combination of $\\vect{u}_1,\\ldots,\\vect{u}_k$ are equal. Therefore, there is only one way of doing so.",
       "sha": "8c5f39206f7f",
-      "zh": ""
+      "zh": "因为 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 线性无关，由定理“线性无关的刻画”可知，最后这个方程只有零解，即 $a_1-b_1=0$，$a_2-b_2=0$，…，$a_k-b_k=0$。于是 $a_1=b_1$，$a_2=b_2$，…，$a_k=b_k$。我们证明了，把 $\\vect{v}$ 写成 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 的线性组合的任意两种写法都相同。所以这样的写法只有一种。"
      }
     }
    ]
@@ -995,7 +995,7 @@
    "t": {
     "en": "Removing redundant vectors",
     "sha": "37bea116bfb0",
-    "zh": ""
+    "zh": "去掉多余向量"
    }
   },
   {
@@ -1003,7 +1003,7 @@
    "t": {
     "en": "Consider the span of some vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$. As we just saw in the previous subsection, the span is especially nice when the vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$ are linearly independent, because in that case, every element $\\vect{v}$ of the span can be *uniquely* written in the form $\\vect{v} = a_1\\,\\vect{u}_1 + \\ldots + a_k\\,\\vect{u}_k$.",
     "sha": "6bb5e71e9b4b",
-    "zh": ""
+    "zh": "考虑一些向量 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 的张成。正如我们在上一小节中看到的，当 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 线性无关时，这个张成特别好用，因为此时张成中的每个元素 $\\vect{v}$ 都能*唯一地*写成 $\\vect{v} = a_1\\,\\vect{u}_1 + \\ldots + a_k\\,\\vect{u}_k$ 的形式。"
    }
   },
   {
@@ -1011,7 +1011,7 @@
    "t": {
     "en": "But what if we have a span of some vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$ that are not linearly independent? It turns out that we can always find some linearly independent vectors that span the same set. In fact, this can be done by simply removing the redundant vectors from $\\vect{u}_1,\\ldots,\\vect{u}_k$. This is the subject of the following theorem.",
     "sha": "7f77543c3030",
-    "zh": ""
+    "zh": "但如果某些向量 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 的张成，而这些向量并不线性无关，又该怎么办呢？事实表明，我们总能找到一些线性无关的向量，张成同一个集合。实际上，只需把 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 中的多余向量去掉就行。下面的定理说的就是这件事。"
    }
   },
   {
@@ -1020,7 +1020,7 @@
    "title": {
     "en": "Removing redundant vectors",
     "sha": "37bea116bfb0",
-    "zh": ""
+    "zh": "去掉多余向量"
    },
    "blocks": [
     {
@@ -1028,7 +1028,7 @@
      "t": {
       "en": "Let $\\vect{u}_1,\\ldots,\\vect{u}_k$ be a sequence of vectors, and suppose that $\\vect{u}_{j_1},\\ldots,\\vect{u}_{j_\\ell}$ is the subsequence of vectors that is obtained by removing all of the redundant vectors. Then $\\vect{u}_{j_1},\\ldots,\\vect{u}_{j_\\ell}$ are linearly independent and",
       "sha": "8faa6b02aff0",
-      "zh": ""
+      "zh": "设 $\\vect{u}_1,\\ldots,\\vect{u}_k$ 是一个向量序列，并设 $\\vect{u}_{j_1},\\ldots,\\vect{u}_{j_\\ell}$ 是去掉所有多余向量之后得到的子序列。那么 $\\vect{u}_{j_1},\\ldots,\\vect{u}_{j_\\ell}$ 线性无关，并且"
      }
     },
     {
@@ -1046,7 +1046,7 @@
      "t": {
       "en": "Remove the redundant vectors one by one, from right to left. Each time a redundant vector is removed, the span does not change; the proof of this is similar to Example “Span of redundant vectors”. Moreover, the resulting sequence of vectors $\\sspan\\set{\\vect{u}_{j_1},\\ldots,\\vect{u}_{j_\\ell}}$ is linearly independent, because if any of these vectors were a linear combination of earlier ones, then it would have been redundant in the original sequence of vectors, and would have therefore been removed.",
       "sha": "e2da77d0c9be",
-      "zh": ""
+      "zh": "从右到左，逐个去掉多余向量。每去掉一个多余向量，张成都不变；证明与例“多余向量的张成”类似。此外，得到的向量序列 $\\sspan\\set{\\vect{u}_{j_1},\\ldots,\\vect{u}_{j_\\ell}}$ 是线性无关的，因为如果其中某个向量是前面向量的线性组合，那么它在原来的向量序列中就是多余的，早已被去掉了。"
      }
     }
    ]
@@ -1057,7 +1057,7 @@
    "title": {
     "en": "Finding a linearly independent set of spanning vectors",
     "sha": "d1b5eb33ed5e",
-    "zh": ""
+    "zh": "找出一个线性无关的张成向量组"
    },
    "blocks": [
     {
@@ -1065,7 +1065,7 @@
      "t": {
       "en": "Find a subset of $\\set{\\vect{u}_1,\\ldots,\\vect{u}_4}$ that is linearly independent and has the same span as $\\set{\\vect{u}_1,\\ldots,\\vect{u}_4}$.",
       "sha": "e43fda0f3614",
-      "zh": ""
+      "zh": "找出 $\\set{\\vect{u}_1,\\ldots,\\vect{u}_4}$ 的一个子集，使它线性无关，并且与 $\\set{\\vect{u}_1,\\ldots,\\vect{u}_4}$ 有相同的张成。"
      }
     },
     {
@@ -1083,7 +1083,7 @@
      "t": {
       "en": "We use the casting-out algorithm to find the redundant vectors:",
       "sha": "a3fc6071d415",
-      "zh": ""
+      "zh": "我们用剔除算法找出多余向量："
      }
     },
     {
@@ -1095,7 +1095,7 @@
      "t": {
       "en": "Therefore, the redundant vectors are $\\vect{u}_2$ and $\\vect{u}_4$. We remove them (“cast them out”) and are left with $\\vect{u}_1$ and $\\vect{u}_3$. Therefore, by Theorem “Finding a linearly independent set of spanning vectors”, $\\set{\\vect{u}_1,\\vect{u}_3}$ is linearly independent and $\\sspan\\set{\\vect{u}_1,\\vect{u}_3} = \\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_4}$.",
       "sha": "3f9efad95f96",
-      "zh": ""
+      "zh": "所以多余向量是 $\\vect{u}_2$ 和 $\\vect{u}_4$。把它们去掉（“剔除”），剩下 $\\vect{u}_1$ 和 $\\vect{u}_3$。因此，由定理“找出一个线性无关的张成向量组”，$\\set{\\vect{u}_1,\\vect{u}_3}$ 线性无关，并且 $\\sspan\\set{\\vect{u}_1,\\vect{u}_3} = \\sspan\\set{\\vect{u}_1,\\ldots,\\vect{u}_4}$。"
      }
     }
    ]
@@ -1110,7 +1110,7 @@
      "t": {
       "en": "Which of the following vectors are redundant? If there are redundant vectors, write each of them as a linear combination of previous vectors.",
       "sha": "8d6253e2a063",
-      "zh": ""
+      "zh": "下列向量中哪些是多余的？如果有多余向量，把每一个都写成前面向量的线性组合。"
      }
     },
     {
@@ -1124,7 +1124,7 @@
      "t": {
       "en": "$\\vect{u}_2$ and $\\vect{u}_4$ are redundant. We have $\\vect{u}_2=2\\vect{u}_1$ and $\\vect{u}_4=3\\vect{u}_3-2\\vect{u}_1$.",
       "sha": "a7baccd6e77d",
-      "zh": ""
+      "zh": "$\\vect{u}_2$ 和 $\\vect{u}_4$ 是多余的。有 $\\vect{u}_2=2\\vect{u}_1$ 和 $\\vect{u}_4=3\\vect{u}_3-2\\vect{u}_1$。"
      }
     }
    ],
@@ -1145,7 +1145,7 @@
      "t": {
       "en": "Which of the following vectors are redundant? If there are redundant vectors, write each of them as a linear combination of previous vectors.",
       "sha": "8d6253e2a063",
-      "zh": ""
+      "zh": "下列向量中哪些是多余的？如果有多余向量，把每一个都写成前面向量的线性组合。"
      }
     },
     {
@@ -1171,7 +1171,7 @@
      "t": {
       "en": "Use the method of Theorem “Characterization of linear independence” to determine whether the following vectors are linearly independent. If they are linearly dependent, find a non-trivial linear combination of the vectors that is equal to $\\vect{0}$.",
       "sha": "6bfb18056841",
-      "zh": ""
+      "zh": "用定理“线性无关的刻画”的方法，判断下列向量是否线性无关。如果线性相关，求出这些向量的一个等于 $\\vect{0}$ 的非零线性组合。"
      }
     },
     {
@@ -1185,7 +1185,7 @@
      "t": {
       "en": "The vectors are linearly dependent. We have $\\vect{u}_2+3\\vect{u}_3+2\\vect{u}_4=\\vect{0}$.",
       "sha": "582cb33a0dfd",
-      "zh": ""
+      "zh": "这些向量线性相关。有 $\\vect{u}_2+3\\vect{u}_3+2\\vect{u}_4=\\vect{0}$。"
      }
     }
    ],
@@ -1206,7 +1206,7 @@
      "t": {
       "en": "Use the method of Theorem “Characterization of linear independence” to determine whether the following vectors are linearly independent. If they are linearly dependent, find a non-trivial linear combination of the vectors that is equal to $\\vect{0}$.",
       "sha": "6bfb18056841",
-      "zh": ""
+      "zh": "用定理“线性无关的刻画”的方法，判断下列向量是否线性无关。如果线性相关，求出这些向量的一个等于 $\\vect{0}$ 的非零线性组合。"
      }
     },
     {
@@ -1232,7 +1232,7 @@
      "t": {
       "en": "Are the following vectors linearly independent? If not, write one of them as a linear combination of the others.",
       "sha": "db9f563f2700",
-      "zh": ""
+      "zh": "下列向量线性无关吗？如果不是，把其中一个写成其余向量的线性组合。"
      }
     },
     {
@@ -1246,7 +1246,7 @@
      "t": {
       "en": "The vectors are linearly dependent. We have $\\vect{w} = 3\\vect{u}-2\\vect{v}$.",
       "sha": "d623facf6ce0",
-      "zh": ""
+      "zh": "这些向量线性相关。有 $\\vect{w} = 3\\vect{u}-2\\vect{v}$。"
      }
     }
    ],
@@ -1267,7 +1267,7 @@
      "t": {
       "en": "Find a linearly independent set of vectors that has the same span as the given vectors.",
       "sha": "9f2ba7685888",
-      "zh": ""
+      "zh": "找出一个线性无关的向量组，使它与给定的向量有相同的张成。"
      }
     },
     {
@@ -1281,7 +1281,7 @@
      "t": {
       "en": "$\\left[\\begin{array}{rrrr} 2 & 1 & 3 & 3 \\\\ 0 & 3 & 3 & -3 \\\\ 3 & 5 & 8 & 1 \\\\ \\end{array}\\right] \\roweq \\left[\\begin{array}{rrrr} 1 & 4 & 5 & -2 \\\\ 0 & 1 & 1 & -1 \\\\ 0 & 0 & 0 & 0 \\\\ \\end{array}\\right]$. Linearly independent subset: $\\set{\\vect{u}_1,\\vect{u}_2}$.",
       "sha": "4d0570238921",
-      "zh": ""
+      "zh": "$\\left[\\begin{array}{rrrr} 2 & 1 & 3 & 3 \\\\ 0 & 3 & 3 & -3 \\\\ 3 & 5 & 8 & 1 \\\\ \\end{array}\\right] \\roweq \\left[\\begin{array}{rrrr} 1 & 4 & 5 & -2 \\\\ 0 & 1 & 1 & -1 \\\\ 0 & 0 & 0 & 0 \\\\ \\end{array}\\right]$。线性无关的子集：$\\set{\\vect{u}_1,\\vect{u}_2}$。"
      }
     }
    ],
@@ -1302,7 +1302,7 @@
      "t": {
       "en": "Find a linearly independent set of vectors that has the same span as the given vectors.",
       "sha": "9f2ba7685888",
-      "zh": ""
+      "zh": "找出一个线性无关的向量组，使它与给定的向量有相同的张成。"
      }
     },
     {
@@ -1328,7 +1328,7 @@
      "t": {
       "en": "Here are some vectors in $\\R^4$.",
       "sha": "8358aac99e20",
-      "zh": ""
+      "zh": "下面是 $\\R^4$ 中的一些向量。"
      }
     },
     {
@@ -1340,7 +1340,7 @@
      "t": {
       "en": "Explain why these vectors cannot possibly be linearly independent. Then obtain a linearly independent subset of these vectors that has the same span as these vectors.",
       "sha": "7ed90b45e0e4",
-      "zh": ""
+      "zh": "解释为什么这些向量不可能线性无关。然后求出这些向量的一个线性无关子集，使它与这些向量有相同的张成。"
      }
     }
    ],
@@ -1362,7 +1362,7 @@
      "t": {
       "en": "Here are some vectors in $\\R^4$.",
       "sha": "8358aac99e20",
-      "zh": ""
+      "zh": "下面是 $\\R^4$ 中的一些向量。"
      }
     },
     {
@@ -1374,7 +1374,7 @@
      "t": {
       "en": "Explain why these vectors cannot possibly be linearly independent. Then find a non-trivial linear combination of these vectors that equals $\\vect{0}$.",
       "sha": "133912486ab9",
-      "zh": ""
+      "zh": "解释为什么这些向量不可能线性无关。然后求出这些向量的一个等于 $\\vect{0}$ 的非零线性组合。"
      }
     }
    ],
@@ -1396,7 +1396,7 @@
      "t": {
       "en": "Here are some vectors.",
       "sha": "caf1c2356548",
-      "zh": ""
+      "zh": "下面是一些向量。"
      }
     },
     {
@@ -1408,7 +1408,7 @@
      "t": {
       "en": "Describe the span of these vectors as the span of as few vectors as possible.",
       "sha": "e929b583a57d",
-      "zh": ""
+      "zh": "把这些向量的张成，描述为尽可能少的向量的张成。"
      }
     }
    ],
@@ -1422,7 +1422,7 @@
      "t": {
       "en": "Linearly independent subset: $\\set{\\vect{u}_1,\\vect{u}_3}$. Since the rank is $2$, this is the smallest possible.",
       "sha": "0e3f048871f2",
-      "zh": ""
+      "zh": "线性无关的子集：$\\set{\\vect{u}_1,\\vect{u}_3}$。因为秩是 $2$，所以这是最小的可能。"
      }
     }
    ],
@@ -1443,7 +1443,7 @@
      "t": {
       "en": "Here are some vectors.",
       "sha": "caf1c2356548",
-      "zh": ""
+      "zh": "下面是一些向量。"
      }
     },
     {
@@ -1455,7 +1455,7 @@
      "t": {
       "en": "Describe the span of these vectors as the span of as few vectors as possible.",
       "sha": "e929b583a57d",
-      "zh": ""
+      "zh": "把这些向量的张成，描述为尽可能少的向量的张成。"
      }
     }
    ],
@@ -1477,7 +1477,7 @@
      "t": {
       "en": "In this exercise, we use scalars from the field $\\Z_3$ of integers modulo $3$ instead of real numbers (see Section 〔引用〕, “Fields”). Use the extended casting-out algorithm to determine which of the following vectors are redundant. If there are redundant vectors, write each of them as a linear combination of previous vectors.",
       "sha": "d32e43f87fcd",
-      "zh": ""
+      "zh": "在本题中，我们用模 $3$ 的整数所构成的域 $\\Z_3$ 中的标量，代替实数（见第〔引用〕节“域”）。用扩展剔除算法判断下列向量中哪些是多余的。如果有多余向量，把每一个都写成前面向量的线性组合。"
      }
     },
     {
@@ -1491,7 +1491,7 @@
      "t": {
       "en": "We write the vectors as the columns of a matrix and reduce to reduced echelon form over $\\Z_3$:",
       "sha": "e3e5975fa988",
-      "zh": ""
+      "zh": "我们把这些向量写成矩阵的各列，并在 $\\Z_3$ 上化为简化行阶梯形："
      }
     },
     {
@@ -1503,7 +1503,7 @@
      "t": {
       "en": "$\\vect{u}_3$ and $\\vect{u}_4$ are redundant. We have $\\vect{u}_3=2\\vect{u}_1+1\\vect{u}_2$ and $\\vect{u}_4=2\\vect{u}_1+2\\vect{u}_2$.",
       "sha": "122ff6bd4cf9",
-      "zh": ""
+      "zh": "$\\vect{u}_3$ 和 $\\vect{u}_4$ 是多余的。有 $\\vect{u}_3=2\\vect{u}_1+1\\vect{u}_2$ 和 $\\vect{u}_4=2\\vect{u}_1+2\\vect{u}_2$。"
      }
     }
    ],
@@ -1524,7 +1524,7 @@
      "t": {
       "en": "Let $\\vect{u},\\vect{v},\\vect{w}$ be linearly independent vectors in $\\R^n$. Are the vectors $\\vect{u}+\\vect{v}$, $2\\vect{u}+\\vect{w}$, and $\\vect{w}-2\\vect{v}$ linearly independent?",
       "sha": "6cffb17685bb",
-      "zh": ""
+      "zh": "设 $\\vect{u},\\vect{v},\\vect{w}$ 是 $\\R^n$ 中的线性无关向量。向量 $\\vect{u}+\\vect{v}$、$2\\vect{u}+\\vect{w}$、$\\vect{w}-2\\vect{v}$ 线性无关吗？"
      }
     }
    ],
@@ -1534,7 +1534,7 @@
      "t": {
       "en": "From $a(\\vect{u}+\\vect{v}) + b(2\\vect{u}+\\vect{w}) + c(\\vect{w}-2\\vect{v})=\\vect{0}$ we get $(a+2b)\\vect{u} + (a-2c)\\vect{v} + (b+c)\\vect{w}=\\vect{0}$. Since $\\vect{u},\\vect{v},\\vect{w}$ are linearly independent, this last system has only the trivial solution, so $a+2b=0$, $a-2c=0$, and $b+c=0$. However, these three equations have non-trivial solutions, for example $(a,b,c)=(2,-1,1)$. So the vectors $\\vect{u}+\\vect{v}$, $2\\vect{u}+\\vect{w}$, and $\\vect{w}-2\\vect{v}$ are linearly dependent.",
       "sha": "cb89da2eb7e3",
-      "zh": ""
+      "zh": "由 $a(\\vect{u}+\\vect{v}) + b(2\\vect{u}+\\vect{w}) + c(\\vect{w}-2\\vect{v})=\\vect{0}$ 得 $(a+2b)\\vect{u} + (a-2c)\\vect{v} + (b+c)\\vect{w}=\\vect{0}$。因为 $\\vect{u},\\vect{v},\\vect{w}$ 线性无关，所以最后这个方程只有零解，于是 $a+2b=0$，$a-2c=0$，$b+c=0$。然而，这三个方程有非零解，例如 $(a,b,c)=(2,-1,1)$。所以向量 $\\vect{u}+\\vect{v}$、$2\\vect{u}+\\vect{w}$、$\\vect{w}-2\\vect{v}$ 线性相关。"
      }
     }
    ],
@@ -1555,7 +1555,7 @@
      "t": {
       "en": "Let $\\vect{u},\\vect{v},\\vect{w}$ be linearly independent vectors in $\\R^n$. Are the vectors $\\vect{u}+\\vect{v}$, $\\vect{u}+\\vect{w}$, and $\\vect{w}+\\vect{v}$ linearly independent?",
       "sha": "237d9759c0de",
-      "zh": ""
+      "zh": "设 $\\vect{u},\\vect{v},\\vect{w}$ 是 $\\R^n$ 中的线性无关向量。向量 $\\vect{u}+\\vect{v}$、$\\vect{u}+\\vect{w}$、$\\vect{w}+\\vect{v}$ 线性无关吗？"
      }
     }
    ],
@@ -1565,7 +1565,7 @@
      "t": {
       "en": "From $a(\\vect{u}+\\vect{v}) + b(\\vect{u}+\\vect{w}) + c(\\vect{w}+\\vect{v})=\\vect{0}$ we get $(a+b)\\vect{u} + (a+c)\\vect{v} + (b+c)\\vect{w}=\\vect{0}$. Since $\\vect{u},\\vect{v},\\vect{w}$ are linearly independent, this last system has only the trivial solution, so $a+b=0$, $a+c=0$, and $b+c=0$. Solving, we find the unique solution $(a,b,c)=(0,0,0)$. So the vectors $\\vect{u}+\\vect{v}$, $\\vect{u}+\\vect{w}$, and $\\vect{w}+\\vect{v}$ are linearly independent.",
       "sha": "4f7f38436cd7",
-      "zh": ""
+      "zh": "由 $a(\\vect{u}+\\vect{v}) + b(\\vect{u}+\\vect{w}) + c(\\vect{w}+\\vect{v})=\\vect{0}$ 得 $(a+b)\\vect{u} + (a+c)\\vect{v} + (b+c)\\vect{w}=\\vect{0}$。因为 $\\vect{u},\\vect{v},\\vect{w}$ 线性无关，所以最后这个方程只有零解，于是 $a+b=0$，$a+c=0$，$b+c=0$。解得唯一解 $(a,b,c)=(0,0,0)$。所以向量 $\\vect{u}+\\vect{v}$、$\\vect{u}+\\vect{w}$、$\\vect{w}+\\vect{v}$ 线性无关。"
      }
     }
    ],
@@ -1586,7 +1586,7 @@
      "t": {
       "en": "Suppose $A$ is an $m\\times n$-matrix and $\\set{\\vect{w}_1,\\ldots,\\vect{w}_k}$ is a linearly independent set of vectors in $\\R^m$. Now suppose $A\\vect{z}_i=\\vect{w}_i$. Show $\\set{\\vect{z}_1,\\ldots,\\vect{z}_k}$ is also linearly independent.",
       "sha": "b52521784541",
-      "zh": ""
+      "zh": "设 $A$ 是 $m\\times n$ 矩阵，$\\set{\\vect{w}_1,\\ldots,\\vect{w}_k}$ 是 $\\R^m$ 中的线性无关向量组。再设 $A\\vect{z}_i=\\vect{w}_i$。证明 $\\set{\\vect{z}_1,\\ldots,\\vect{z}_k}$ 也线性无关。"
      }
     }
    ],
@@ -1596,7 +1596,7 @@
      "t": {
       "en": "Assume $a_1\\vect{z}_1+\\ldots+a_k\\vect{z}_k=\\vect{0}$. Multiplying both sides of the equation by $A$, we get",
       "sha": "894f00e861e8",
-      "zh": ""
+      "zh": "假设 $a_1\\vect{z}_1+\\ldots+a_k\\vect{z}_k=\\vect{0}$。在等式两边同时左乘 $A$，得到"
      }
     },
     {
@@ -1608,7 +1608,7 @@
      "t": {
       "en": "Since the $\\vect{w}_i$ are linearly independent, it follows that each $a_i=0$. Therefore the $\\vect{z}_i$ are linearly independent as well.",
       "sha": "e673dc57dd4f",
-      "zh": ""
+      "zh": "因为 $\\vect{w}_i$ 线性无关，所以每个 $a_i=0$。因此 $\\vect{z}_i$ 也线性无关。"
      }
     }
    ],

@@ -15,7 +15,7 @@
         "t": {
          "en": "Compute the eigenvalues of a real symmetric matrix.",
          "sha": "c9a3bfeecce4",
-         "zh": ""
+         "zh": "计算实对称矩阵的特征值。"
         }
        }
       ],
@@ -25,7 +25,7 @@
         "t": {
          "en": "Compute an orthogonal basis of eigenvectors for a real symmetric matrix.",
          "sha": "0f2cbb1230af",
-         "zh": ""
+         "zh": "求实对称矩阵的由特征向量构成的正交基。"
         }
        }
       ],
@@ -35,7 +35,7 @@
         "t": {
          "en": "Orthogonally diagonalize a real symmetric matrix.",
          "sha": "c9fe0029d4a1",
-         "zh": ""
+         "zh": "把实对称矩阵正交对角化。"
         }
        }
       ]
@@ -48,7 +48,7 @@
    "t": {
     "en": "In Chapter “Eigenvalues”, we saw that some matrices are diagonalizable, and others are not. In this section, we will see that the theory of diagonalization is much nicer when the matrix to be diagonalized is symmetric. Recall that a matrix $A$ is **symmetric** if $A=A^T$. We begin with some observations about the eigenvalues and eigenvectors of a real symmetric matrix.",
     "sha": "b50777664833",
-    "zh": ""
+    "zh": "在“特征值”一章中，我们看到有些矩阵可对角化，另一些则不能。这一节我们将看到，当待对角化的矩阵是对称矩阵时，对角化的理论要漂亮得多。回想一下，如果 $A=A^T$，矩阵 $A$ 就称为**对称的**（symmetric）。我们先来观察实对称矩阵的特征值和特征向量。"
    }
   },
   {
@@ -57,7 +57,7 @@
    "title": {
     "en": "Eigenvalues and eigenvectors of real symmetric matrices",
     "sha": "1a8e89e308f0",
-    "zh": ""
+    "zh": "实对称矩阵的特征值与特征向量"
    },
    "blocks": [
     {
@@ -65,7 +65,7 @@
      "t": {
       "en": "Let $A$ be a symmetric matrix with real entries. Then",
       "sha": "e95cd496b2a1",
-      "zh": ""
+      "zh": "设 $A$ 是元素均为实数的对称矩阵。则"
      }
     },
     {
@@ -83,7 +83,7 @@
            "t": {
             "en": "All eigenvalues of $A$ are real (i.e., not complex).",
             "sha": "a5779a8329a5",
-            "zh": ""
+            "zh": "$A$ 的所有特征值都是实数（即不是复数）。"
            }
           }
          ],
@@ -93,7 +93,7 @@
            "t": {
             "en": "Eigenvectors for distinct eigenvalues of $A$ are orthogonal.",
             "sha": "169ef259e425",
-            "zh": ""
+            "zh": "$A$ 的属于不同特征值的特征向量是正交的。"
            }
           }
          ]
@@ -113,7 +113,7 @@
      "t": {
       "en": "(a) Suppose $\\eigenvar$ is a (possibly complex) eigenvalue of $A$, with (possibly complex) eigenvector $\\vect{v}$. We will show that $\\eigenvar$ is in fact real. Let $\\conjugate{\\eigenvar}$ be the complex conjugate of $\\eigenvar$, and let $\\conjugate{\\vect{v}}$ be the complex conjugate of $\\vect{v}$, i.e., the vector obtained from $\\vect{v}$ by taking the complex conjugate of each of its entries. Since $\\vect{v}$ is an eigenvector for eigenvalue $\\eigenvar$ of $A$, we have",
       "sha": "feef9a733bad",
-      "zh": ""
+      "zh": "(a) 设 $\\eigenvar$ 是 $A$ 的一个（可能是复数的）特征值，$\\vect{v}$ 是对应的（可能是复向量的）特征向量。我们要证明 $\\eigenvar$ 其实是实数。设 $\\conjugate{\\eigenvar}$ 是 $\\eigenvar$ 的共轭复数，$\\conjugate{\\vect{v}}$ 是 $\\vect{v}$ 的共轭复向量，也就是对 $\\vect{v}$ 的每个元素取共轭复数所得的向量。因为 $\\vect{v}$ 是 $A$ 的属于特征值 $\\eigenvar$ 的特征向量，所以有"
      }
     },
     {
@@ -125,7 +125,7 @@
      "t": {
       "en": "Taking the complex conjugate of both sides of the equation, and using the fact that $\\conjugate{A}=A$ (since $A$ is real), we get",
       "sha": "888ac5655f67",
-      "zh": ""
+      "zh": "对等式两边取共轭复数，并利用 $\\conjugate{A}=A$（因为 $A$ 是实矩阵），得到"
      }
     },
     {
@@ -137,7 +137,7 @@
      "t": {
       "en": "Then, taking the transpose of both sides of the equation, and using the fact that $A^T=A$ (since $A$ is symmetric), we have",
       "sha": "e783ee0fbb5e",
-      "zh": ""
+      "zh": "再对等式两边取转置，并利用 $A^T=A$（因为 $A$ 是对称矩阵），得到"
      }
     },
     {
@@ -149,7 +149,7 @@
      "t": {
       "en": "Comparing equations (1) and (2), we find that $\\eigenvar \\conjugate{\\vect{v}}^T\\vect{v} = \\conjugate{\\eigenvar} \\conjugate{\\vect{v}}^T\\vect{v}$. Since $\\conjugate{\\vect{v}}^T\\vect{v}$ is a non-zero scalar, it follows that $\\eigenvar = \\conjugate{\\eigenvar}$, i.e., $\\eigenvar$ is real.",
       "sha": "1aa4c40a42a7",
-      "zh": ""
+      "zh": "比较等式 (1) 和 (2)，可得 $\\eigenvar \\conjugate{\\vect{v}}^T\\vect{v} = \\conjugate{\\eigenvar} \\conjugate{\\vect{v}}^T\\vect{v}$。因为 $\\conjugate{\\vect{v}}^T\\vect{v}$ 是非零的数，所以 $\\eigenvar = \\conjugate{\\eigenvar}$，也就是说 $\\eigenvar$ 是实数。"
      }
     },
     {
@@ -157,7 +157,7 @@
      "t": {
       "en": "(b) Suppose $\\vect{v}$ is an eigenvector for eigenvalue $\\eigenvarA$, $\\vect{w}$ is an eigenvector for eigenvalue $\\eigenvarB$, and $\\eigenvarA\\neq\\eigenvarB$. We evaluate $\\vect{v}^TA\\vect{w}$ in two different ways. On the on hand, we have",
       "sha": "2a7e73b260b4",
-      "zh": ""
+      "zh": "(b) 设 $\\vect{v}$ 是属于特征值 $\\eigenvarA$ 的特征向量，$\\vect{w}$ 是属于特征值 $\\eigenvarB$ 的特征向量，且 $\\eigenvarA\\neq\\eigenvarB$。我们用两种方式计算 $\\vect{v}^TA\\vect{w}$。一方面，我们有"
      }
     },
     {
@@ -169,7 +169,7 @@
      "t": {
       "en": "On the other hand, we have",
       "sha": "b6e3a5e2353a",
-      "zh": ""
+      "zh": "另一方面，我们有"
      }
     },
     {
@@ -181,7 +181,7 @@
      "t": {
       "en": "Therefore, $\\eigenvarB\\vect{v}^T\\vect{w} = \\eigenvarA\\vect{v}^T\\vect{w}$, or equivalently $(\\eigenvarA - \\eigenvarB)\\vect{v}^T\\vect{w} = 0$. Since by assumption, $\\eigenvarA - \\eigenvarB\\neq 0$, we must have $\\vect{v}^T\\vect{w} = 0$, i.e., $\\vect{v}\\orth\\vect{w}$.",
       "sha": "bc9100ce4955",
-      "zh": ""
+      "zh": "因此 $\\eigenvarB\\vect{v}^T\\vect{w} = \\eigenvarA\\vect{v}^T\\vect{w}$，或者等价地写成 $(\\eigenvarA - \\eigenvarB)\\vect{v}^T\\vect{w} = 0$。因为按假设 $\\eigenvarA - \\eigenvarB\\neq 0$，所以必有 $\\vect{v}^T\\vect{w} = 0$，即 $\\vect{v}\\orth\\vect{w}$。"
      }
     }
    ]
@@ -191,7 +191,7 @@
    "t": {
     "en": "Recall that an $n\\times n$-matrix $A$ is **diagonalizable** if there exists an invertible matrix $P$ and a diagonal matrix $D$ such that $D = P^{-1}AP$. We say that $A$ is **orthogonally diagonalizable** if $P$ can, moreover, be chosen to be orthogonal. Orthogonal diagonalizability is a convenient property, because when $P$ is orthogonal, then $P^{-1}=P^T$, and we can interchangeably write $D = P^{-1}AP$ or $D = P^TAP$. The following is the main theorem about the diagonalization of real symmetric matrices.",
     "sha": "8b5264ac5441",
-    "zh": ""
+    "zh": "回想一下，如果存在可逆矩阵 $P$ 和对角矩阵 $D$ 使得 $D = P^{-1}AP$，则称 $n\\times n$ 矩阵 $A$ **可对角化**（diagonalizable）。如果 $P$ 还可以取成正交矩阵，就说 $A$ **可正交对角化**（orthogonally diagonalizable）。可正交对角化是一个很方便的性质：当 $P$ 是正交矩阵时，$P^{-1}=P^T$，于是 $D = P^{-1}AP$ 与 $D = P^TAP$ 可以互换着写。下面是关于实对称矩阵对角化的主要定理。"
    }
   },
   {
@@ -200,7 +200,7 @@
    "title": {
     "en": "Diagonalization of real symmetric matrices",
     "sha": "06468755b5fa",
-    "zh": ""
+    "zh": "实对称矩阵的对角化"
    },
    "blocks": [
     {
@@ -208,7 +208,7 @@
      "t": {
       "en": "Every real symmetric matrix $A$ is orthogonally diagonalizable.",
       "sha": "b49f1cd469b2",
-      "zh": ""
+      "zh": "每个实对称矩阵 $A$ 都可正交对角化。"
      }
     }
    ]
@@ -222,7 +222,7 @@
      "t": {
       "en": "By induction on the size of the matrix. For a $1\\times 1$-matrix, there is nothing to show, as it is already diagonal. Now consider a real symmetric $n\\times n$-matrix $A$ with $n\\geq 2$. By the fundamental theorem of algebra, the characteristic polynomial has at least one root, so that $A$ has at least one (possibly complex) eigenvalue $\\eigenvar$. By Proposition “Eigenvalues and eigenvectors of real symmetric matrices”(a), $\\eigenvar$ is real. Since we can solve the system of equations $(A-\\eigenvar I)\\vect{v}=\\vect{0}$ over the real numbers, there exists a real eigenvector $\\vect{v}$ for the eigenvalue $\\eigenvar$. We can assume without loss of generality that $\\vect{v}$ is normalized, because else we could replace $\\vect{v}$ by $\\frac{1}{\\norm{\\vect{v}}}\\vect{v}$. By the Gram-Schmidt method, we can find an orthonormal basis $\\set{\\vect{u}_1,\\ldots,\\vect{u}_n}$ of $\\R^n$ such that $\\vect{u}_1=\\vect{v}$. Let $Q$ be the orthogonal matrix that has $\\vect{u}_1,\\ldots,\\vect{u}_n$ as its columns, and consider $B=Q^{-1}AQ$. Since $B\\vect{e}_1 = Q^{-1}AQ\\vect{e}_1 = Q^{-1}A\\vect{u}_1 = \\eigenvar Q^{-1}\\vect{u}_1 = \\eigenvar\\vect{e}_1$, the matrix $B$ is of the form",
       "sha": "94314d6809ee",
-      "zh": ""
+      "zh": "对矩阵的阶数用归纳法。对于 $1\\times 1$ 矩阵，没有什么需要证明的，因为它本身已经是对角矩阵。现在考虑 $n\\geq 2$ 的实对称 $n\\times n$ 矩阵 $A$。由代数基本定理，特征多项式至少有一个根，所以 $A$ 至少有一个（可能是复数的）特征值 $\\eigenvar$。由命题“实对称矩阵的特征值与特征向量”(a)，$\\eigenvar$ 是实数。因为我们可以在实数范围内解方程组 $(A-\\eigenvar I)\\vect{v}=\\vect{0}$，所以存在属于特征值 $\\eigenvar$ 的实特征向量 $\\vect{v}$。我们可以不妨设 $\\vect{v}$ 是单位向量，因为否则可以把 $\\vect{v}$ 换成 $\\frac{1}{\\norm{\\vect{v}}}\\vect{v}$。由施密特正交化方法，可以找到 $\\R^n$ 的一个标准正交基 $\\set{\\vect{u}_1,\\ldots,\\vect{u}_n}$，使得 $\\vect{u}_1=\\vect{v}$。设 $Q$ 是以 $\\vect{u}_1,\\ldots,\\vect{u}_n$ 为各列的正交矩阵，并考虑 $B=Q^{-1}AQ$。因为 $B\\vect{e}_1 = Q^{-1}AQ\\vect{e}_1 = Q^{-1}A\\vect{u}_1 = \\eigenvar Q^{-1}\\vect{u}_1 = \\eigenvar\\vect{e}_1$，所以矩阵 $B$ 具有如下形式"
      }
     },
     {
@@ -234,7 +234,7 @@
      "t": {
       "en": "Moreover, since $B=Q^{-1}AQ = Q^TAQ$, the matrix $B$ is symmetric. Therefore $b_{12},\\ldots,b_{1n} = 0$, and $B$ is of the form",
       "sha": "041ffb9e0095",
-      "zh": ""
+      "zh": "而且，因为 $B=Q^{-1}AQ = Q^TAQ$，矩阵 $B$ 是对称的。因此 $b_{12},\\ldots,b_{1n} = 0$，$B$ 具有如下形式"
      }
     },
     {
@@ -246,7 +246,7 @@
      "t": {
       "en": "where $C$ is a symmetric matrix of dimension $n-1$. By induction hypothesis, $C$ is orthogonally diagonalizable, i.e., there exists an orthogonal matrix $R$ such that $R^{-1}CR=D$ is diagonal. Let",
       "sha": "f6a3bfea3995",
-      "zh": ""
+      "zh": "其中 $C$ 是 $n-1$ 阶对称矩阵。由归纳假设，$C$ 可正交对角化，也就是说，存在正交矩阵 $R$，使得 $R^{-1}CR=D$ 是对角矩阵。令"
      }
     },
     {
@@ -258,7 +258,7 @@
      "t": {
       "en": "Then $S$ is orthogonal by Proposition “Properties of orthogonal matrices”(〔引用〕). Let $E = S^{-1}BS$. Then",
       "sha": "90e25a3360e9",
-      "zh": ""
+      "zh": "那么由命题“正交矩阵的性质”(〔引用〕)，$S$ 是正交的。令 $E = S^{-1}BS$。则"
      }
     },
     {
@@ -270,7 +270,7 @@
      "t": {
       "en": "Therefore, $E$ is diagonal. Let $P=QS$. Then $P$ is orthogonal by Proposition “Properties of orthogonal matrices”(〔引用〕). Moreover, we have",
       "sha": "928882a1f11e",
-      "zh": ""
+      "zh": "因此 $E$ 是对角矩阵。令 $P=QS$。那么由命题“正交矩阵的性质”(〔引用〕)，$P$ 是正交的。而且我们有"
      }
     },
     {
@@ -282,7 +282,7 @@
      "t": {
       "en": "Therefore, $A$ is orthogonally diagonalizable.",
       "sha": "355f006bbb0f",
-      "zh": ""
+      "zh": "因此 $A$ 可正交对角化。"
      }
     }
    ]
@@ -293,7 +293,7 @@
    "title": {
     "en": "Diagonalization of real symmetric matrices",
     "sha": "06468755b5fa",
-    "zh": ""
+    "zh": "实对称矩阵的对角化"
    },
    "blocks": [
     {
@@ -301,7 +301,7 @@
      "t": {
       "en": "Orthogonally diagonalize the matrix",
       "sha": "f0b4d6e03526",
-      "zh": ""
+      "zh": "把矩阵"
      }
     },
     {
@@ -313,7 +313,7 @@
      "t": {
       "en": "i.e., find an orthogonal matrix $P$ and a diagonal matrix $D$ such that $D = P^{-1}AP$.",
       "sha": "899e4c6d6e36",
-      "zh": ""
+      "zh": "正交对角化，也就是找出正交矩阵 $P$ 和对角矩阵 $D$，使得 $D = P^{-1}AP$。"
      }
     }
    ]
@@ -327,7 +327,7 @@
      "t": {
       "en": "We proceed in much the same way as in Chapter “Eigenvalues”, except that at a crucial moment, we ensure that $P$ is orthogonal. We start by calculating the characteristic polynomial of $A$:",
       "sha": "92fa2f85282d",
-      "zh": ""
+      "zh": "我们的做法与“特征值”一章中基本相同，只是在关键的一步要保证 $P$ 是正交的。先计算 $A$ 的特征多项式："
      }
     },
     {
@@ -339,7 +339,7 @@
      "t": {
       "en": "We find the roots using the quadratic formula. The roots of the characteristic polynomial, and therefore the eigenvalues of $A$, are $\\eigenvar=7$ and $\\eigenvar=2$. For the eigenvalue $\\eigenvar=7$, we find the eigenvector",
       "sha": "3082d5135abf",
-      "zh": ""
+      "zh": "用求根公式求出根。特征多项式的根，也就是 $A$ 的特征值，是 $\\eigenvar=7$ 和 $\\eigenvar=2$。对于特征值 $\\eigenvar=7$，我们求得特征向量"
      }
     },
     {
@@ -351,7 +351,7 @@
      "t": {
       "en": "and for the eigenvalue $\\eigenvar=2$, we find the eigenvector",
       "sha": "fdc20557f78d",
-      "zh": ""
+      "zh": "对于特征值 $\\eigenvar=2$，我们求得特征向量"
      }
     },
     {
@@ -363,7 +363,7 @@
      "t": {
       "en": "We note that these two eigenvectors are orthogonal to each other, exactly as predicted by Proposition “Eigenvalues and eigenvectors of real symmetric matrices”. So the vectors $\\set{\\vect{v},\\vect{w}}$ form an orthogonal set. We turn this into an orthonormal set by normalizing each eigenvector, i.e., the normalized eigenvectors are",
       "sha": "1adf1f83cec7",
-      "zh": ""
+      "zh": "我们注意到这两个特征向量互相正交，这正是命题“实对称矩阵的特征值与特征向量”所预言的。所以向量组 $\\set{\\vect{v},\\vect{w}}$ 是正交向量组。把每个特征向量单位化，就把它变成标准正交向量组，即单位化后的特征向量是"
      }
     },
     {
@@ -375,7 +375,7 @@
      "t": {
       "en": "We let $P$ be the matrix that has columns $\\vect{u}_1$ and $\\vect{u}_2$, i.e.,",
       "sha": "075ba8c7657a",
-      "zh": ""
+      "zh": "令 $P$ 是以 $\\vect{u}_1$ 和 $\\vect{u}_2$ 为各列的矩阵，即"
      }
     },
     {
@@ -387,7 +387,7 @@
      "t": {
       "en": "Note that since $\\vect{u}_1$ and $\\vect{u}_2$ are orthonormal, $P$ is automatically orthogonal by Proposition “Orthogonal matrices”. Moreover, we have",
       "sha": "13f55fa6edc3",
-      "zh": ""
+      "zh": "请注意，因为 $\\vect{u}_1$ 和 $\\vect{u}_2$ 是标准正交的，由命题“正交矩阵的判断”，$P$ 自动是正交的。而且我们有"
      }
     },
     {
@@ -399,7 +399,7 @@
      "t": {
       "en": "Finally,",
       "sha": "b793b4c70371",
-      "zh": ""
+      "zh": "最后，"
      }
     },
     {
@@ -414,7 +414,7 @@
    "title": {
     "en": "Diagonalization of real symmetric matrices",
     "sha": "06468755b5fa",
-    "zh": ""
+    "zh": "实对称矩阵的对角化"
    },
    "blocks": [
     {
@@ -422,7 +422,7 @@
      "t": {
       "en": "Find an orthogonal matrix $P$ and a diagonal matrix $D$ such $D = P^{-1}AP$, where",
       "sha": "fa39499c66bd",
-      "zh": ""
+      "zh": "求正交矩阵 $P$ 和对角矩阵 $D$，使得 $D = P^{-1}AP$，其中"
      }
     },
     {
@@ -440,7 +440,7 @@
      "t": {
       "en": "Again, we start by calculating the characteristic polynomial and its roots:",
       "sha": "927ac0b277d7",
-      "zh": ""
+      "zh": "我们仍然先计算特征多项式并求它的根："
      }
     },
     {
@@ -452,7 +452,7 @@
      "t": {
       "en": "The roots are $\\eigenvar=4$ and $\\eigenvar=-2$. To find the eigenvectors for $\\eigenvar=4$, we solve the system of equations",
       "sha": "36c7097af502",
-      "zh": ""
+      "zh": "根为 $\\eigenvar=4$ 和 $\\eigenvar=-2$。为了求属于 $\\eigenvar=4$ 的特征向量，我们解方程组"
      }
     },
     {
@@ -464,7 +464,7 @@
      "t": {
       "en": "The solution space is 2-dimensional, with basis",
       "sha": "7610da53c550",
-      "zh": ""
+      "zh": "解空间是 2 维的，其一个基为"
      }
     },
     {
@@ -476,7 +476,7 @@
      "t": {
       "en": "To find the eigenvectors for $\\eigenvar=-2$, we solve the system of equations",
       "sha": "aa311f256ae6",
-      "zh": ""
+      "zh": "为了求属于 $\\eigenvar=-2$ 的特征向量，我们解方程组"
      }
     },
     {
@@ -488,7 +488,7 @@
      "t": {
       "en": "The solution space is 1-dimensional, with basis",
       "sha": "271bdab05d1f",
-      "zh": ""
+      "zh": "解空间是 1 维的，其一个基为"
      }
     },
     {
@@ -500,7 +500,7 @@
      "t": {
       "en": "As predicted by Proposition “Eigenvalues and eigenvectors of real symmetric matrices”, $\\vect{v}_3$ is orthogonal to $\\vect{v}_1$ and $\\vect{v}_2$. However, there is a slight complication: $\\vect{v}_1$ and $\\vect{v}_2$ are not orthogonal to each other. This is because they are eigenvectors for the *same* eigenvalue ($\\eigenvar=4$), not for *distinct* eigenvalues. We found basis $\\set{\\vect{v}_1,\\vect{v}_2}$ for the eigenspace for $\\eigenvar=4$, but it doesn't happen to be an orthogonal basis. However, we can fix this by applying the Gram-Schmidt method to $\\set{\\vect{v}_1,\\vect{v}_2}$. This yields the orthogonal basis $\\set{\\vect{u}_1,\\vect{u}_2}$ for the eigenspace for $\\eigenvar=4$, where",
       "sha": "5a8aabf31281",
-      "zh": ""
+      "zh": "正如命题“实对称矩阵的特征值与特征向量”所预言的，$\\vect{v}_3$ 与 $\\vect{v}_1$ 和 $\\vect{v}_2$ 都正交。不过这里有一个小麻烦：$\\vect{v}_1$ 和 $\\vect{v}_2$ 彼此并不正交。这是因为它们是属于*同一个*特征值（$\\eigenvar=4$）的特征向量，而不是属于*不同*特征值的特征向量。我们求出的是属于 $\\eigenvar=4$ 的特征空间的基 $\\set{\\vect{v}_1,\\vect{v}_2}$，但它恰好不是正交基。不过，对 $\\set{\\vect{v}_1,\\vect{v}_2}$ 应用施密特正交化方法就可以解决这个问题。这样就得到属于 $\\eigenvar=4$ 的特征空间的正交基 $\\set{\\vect{u}_1,\\vect{u}_2}$，其中"
      }
     },
     {
@@ -512,7 +512,7 @@
      "t": {
       "en": "We now have an orthogonal basis $\\set{\\vect{u}_1,\\vect{u}_2,\\vect{v}_3}$ of eigenvectors of the matrix $A$. We normalize the three vectors and use them as the columns of $P$:",
       "sha": "cfe13df1617e",
-      "zh": ""
+      "zh": "现在我们得到了矩阵 $A$ 的由特征向量构成的正交基 $\\set{\\vect{u}_1,\\vect{u}_2,\\vect{v}_3}$。把这三个向量单位化，并把它们作为 $P$ 的各列："
      }
     },
     {
@@ -524,7 +524,7 @@
      "t": {
       "en": "It seems that inverting $P$ will not be all that easy, but in fact, since $P$ is orthogonal, the inverse is just the transpose:",
       "sha": "a54d9ed63474",
-      "zh": ""
+      "zh": "看起来求 $P$ 的逆矩阵并不容易，但实际上，因为 $P$ 是正交矩阵，它的逆就是它的转置："
      }
     },
     {
@@ -536,7 +536,7 @@
      "t": {
       "en": "We have",
       "sha": "a2214cd5b1a4",
-      "zh": ""
+      "zh": "我们有"
      }
     },
     {
@@ -555,7 +555,7 @@
      "t": {
       "en": "For each of the following symmetric matrices, find the eigenvalues, an orthonormal basis for each eigenspace, and then orthogonally diagonalize the matrix.",
       "sha": "a7c4a6b32f5e",
-      "zh": ""
+      "zh": "对下列每个对称矩阵，求出特征值、每个特征空间的一个标准正交基，然后把矩阵正交对角化。"
      }
     },
     {
@@ -574,7 +574,7 @@
         "t": {
          "en": "$A=PDP^{-1}$ where $D=\\left[\\begin{array}{rr} -2 & 0 \\\\ 0 & 3 \\\\ \\end{array}\\right]$, $P=\\frac{1}{\\sqrt{5}}\\left[\\begin{array}{rr} 2 & 1 \\\\ -1 & 2 \\\\ \\end{array}\\right]$.",
          "sha": "066c6d59aa0a",
-         "zh": ""
+         "zh": "$A=PDP^{-1}$，其中 $D=\\left[\\begin{array}{rr} -2 & 0 \\\\ 0 & 3 \\\\ \\end{array}\\right]$，$P=\\frac{1}{\\sqrt{5}}\\left[\\begin{array}{rr} 2 & 1 \\\\ -1 & 2 \\\\ \\end{array}\\right]$。"
         }
        }
       ],
@@ -584,7 +584,7 @@
         "t": {
          "en": "$A=PDP^{-1}$ where $D=\\left[\\begin{array}{rr} 2 & 0 \\\\ 0 & 4 \\\\ \\end{array}\\right]$, $P=\\frac{1}{\\sqrt{2}}\\left[\\begin{array}{rr} 1 & 1 \\\\ -1 & 1 \\\\ \\end{array}\\right]$.",
          "sha": "684737949a0a",
-         "zh": ""
+         "zh": "$A=PDP^{-1}$，其中 $D=\\left[\\begin{array}{rr} 2 & 0 \\\\ 0 & 4 \\\\ \\end{array}\\right]$，$P=\\frac{1}{\\sqrt{2}}\\left[\\begin{array}{rr} 1 & 1 \\\\ -1 & 1 \\\\ \\end{array}\\right]$。"
         }
        }
       ],
@@ -594,7 +594,7 @@
         "t": {
          "en": "$A=PDP^{-1}$ where $D=\\left[\\begin{array}{rrr} 0 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 3 \\\\ \\end{array}\\right]$, $\\def\\arraystretch{1.3} P=\\left[\\begin{array}{rrr} \\frac{1}{\\sqrt{3}} & \\frac{1}{\\sqrt{2}} & \\frac{1}{\\sqrt{6}} \\\\ -\\frac{1}{\\sqrt{3}} & 0 & \\frac{2}{\\sqrt{6}} \\\\ \\frac{1}{\\sqrt{3}} & -\\frac{1}{\\sqrt{2}} & \\frac{1}{\\sqrt{6}} \\\\ \\end{array}\\right]$.",
          "sha": "2bd29d71830a",
-         "zh": ""
+         "zh": "$A=PDP^{-1}$，其中 $D=\\left[\\begin{array}{rrr} 0 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 3 \\\\ \\end{array}\\right]$，$\\def\\arraystretch{1.3} P=\\left[\\begin{array}{rrr} \\frac{1}{\\sqrt{3}} & \\frac{1}{\\sqrt{2}} & \\frac{1}{\\sqrt{6}} \\\\ -\\frac{1}{\\sqrt{3}} & 0 & \\frac{2}{\\sqrt{6}} \\\\ \\frac{1}{\\sqrt{3}} & -\\frac{1}{\\sqrt{2}} & \\frac{1}{\\sqrt{6}} \\\\ \\end{array}\\right]$。"
         }
        }
       ],
@@ -604,7 +604,7 @@
         "t": {
          "en": "$A=PDP^{-1}$ where $D=\\left[\\begin{array}{rrr} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 7 \\\\ \\end{array}\\right]$, $\\def\\arraystretch{1.3} P=\\left[\\begin{array}{rrr} \\frac{1}{\\sqrt{2}} & \\frac{1}{\\sqrt{3}} & \\frac{1}{\\sqrt{6}} \\\\ -\\frac{1}{\\sqrt{2}} & \\frac{1}{\\sqrt{3}} & \\frac{1}{\\sqrt{6}} \\\\ 0 & -\\frac{1}{\\sqrt{3}} & \\frac{2}{\\sqrt{6}} \\\\ \\end{array}\\right]$.",
          "sha": "75d609a7b28d",
-         "zh": ""
+         "zh": "$A=PDP^{-1}$，其中 $D=\\left[\\begin{array}{rrr} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 7 \\\\ \\end{array}\\right]$，$\\def\\arraystretch{1.3} P=\\left[\\begin{array}{rrr} \\frac{1}{\\sqrt{2}} & \\frac{1}{\\sqrt{3}} & \\frac{1}{\\sqrt{6}} \\\\ -\\frac{1}{\\sqrt{2}} & \\frac{1}{\\sqrt{3}} & \\frac{1}{\\sqrt{6}} \\\\ 0 & -\\frac{1}{\\sqrt{3}} & \\frac{2}{\\sqrt{6}} \\\\ \\end{array}\\right]$。"
         }
        }
       ]
@@ -628,7 +628,7 @@
      "t": {
       "en": "Prove the converse of Theorem “Diagonalization of real symmetric matrices”: if a matrix $A$ is orthogonally diagonalizable, then $A$ is symmetric.",
       "sha": "7f59bd667cfb",
-      "zh": ""
+      "zh": "证明定理“实对称矩阵的对角化”的逆命题：如果矩阵 $A$ 可正交对角化，则 $A$ 是对称的。"
      }
     }
    ],
@@ -638,7 +638,7 @@
      "t": {
       "en": "Suppose $A$ is orthogonally diagonalizable. Then $A=PDP^{-1}$, where $D$ is diagonal and $P$ is orthogonal. Since $P$ is orthogonal, we have $P^{-1}=P^T$, and therefore $A=PDP^T$. Moreover, since $D$ is diagonal, we have $D=D^T$. It follows that $A^T = (PDP^T)^T = (P^T)^T D^T P^T = PDP^T = A$, so $A$ is symmetric.",
       "sha": "58cc840d4ba1",
-      "zh": ""
+      "zh": "设 $A$ 可正交对角化。则 $A=PDP^{-1}$，其中 $D$ 是对角矩阵，$P$ 是正交矩阵。因为 $P$ 是正交矩阵，所以 $P^{-1}=P^T$，从而 $A=PDP^T$。又因为 $D$ 是对角矩阵，所以 $D=D^T$。由此得 $A^T = (PDP^T)^T = (P^T)^T D^T P^T = PDP^T = A$，所以 $A$ 是对称的。"
      }
     }
    ],

@@ -15,7 +15,7 @@
         "t": {
          "en": "Use the Gram-Schmidt procedure to find an orthogonal basis of a subspace of an inner product space.",
          "sha": "c1da50e1ab2f",
-         "zh": ""
+         "zh": "用施密特正交化（Gram-Schmidt procedure）求内积空间某个子空间的正交基。"
         }
        }
       ],
@@ -25,7 +25,7 @@
         "t": {
          "en": "Find an orthonormal basis of a subspace.",
          "sha": "d84a298f2b3c",
-         "zh": ""
+         "zh": "求子空间的标准正交基。"
         }
        }
       ]
@@ -38,7 +38,7 @@
    "t": {
     "en": "Although we have already seen some potential uses for orthogonal bases, we have not yet seen very many examples of such bases. In this section, we will look at the Gram-Schmidt orthogonalization procedure, a method for turning any basis into an orthogonal one.",
     "sha": "6795ffe14f2f",
-    "zh": ""
+    "zh": "前面我们已经看到正交基的一些潜在用处，但还没有见到多少这样的基的例子。这一节来学习施密特正交化（Gram-Schmidt orthogonalization procedure），这是一种把任意一个基变成正交基的方法。"
    }
   },
   {
@@ -46,7 +46,7 @@
    "t": {
     "en": "The basic idea is very simple: if two vectors $\\vect{v}_1,\\vect{v}_2$ are not orthogonal, then we can make them orthogonal by replacing $\\vect{v}_2$ by a vector of the form $\\vect{u}_2 = \\vect{v}_2 - t\\vect{v}_1$, for a suitable parameter $t$.",
     "sha": "a6b1b0a0e76b",
-    "zh": ""
+    "zh": "基本想法非常简单：如果两个向量 $\\vect{v}_1,\\vect{v}_2$ 不正交，那么可以把 $\\vect{v}_2$ 换成形如 $\\vect{u}_2 = \\vect{v}_2 - t\\vect{v}_1$ 的向量，其中 $t$ 是一个合适的参数，这样就能使它们正交。"
    }
   },
   {
@@ -62,7 +62,7 @@
    "t": {
     "en": "But what is the correct value of $t$? It turns out that this value is uniquely determined by the requirement that $\\vect{v}_1$ and $\\vect{u}_2$ must be orthogonal. We calculate",
     "sha": "fd76ab22728d",
-    "zh": ""
+    "zh": "那么 $t$ 的正确取值是多少呢？事实上，要求 $\\vect{v}_1$ 与 $\\vect{u}_2$ 正交，就唯一地确定了这个值。我们计算"
    }
   },
   {
@@ -74,7 +74,7 @@
    "t": {
     "en": "Setting this equal to $0$ yields the unique solution",
     "sha": "d0725a391ad9",
-    "zh": ""
+    "zh": "令它等于 $0$，得到唯一的解"
    }
   },
   {
@@ -86,7 +86,7 @@
    "t": {
     "en": "Note that this is exactly the same thing as the Fourier coefficient of $\\vect{v}_2$ in the direction of $\\vect{v}_1$. The following proposition summarizes what we have found so far. For consistency with our later notation, we also rename the first basis vector $\\vect{v}_1$ to $\\vect{u}_1$.",
     "sha": "3bff26a3d73a",
-    "zh": ""
+    "zh": "注意，这恰好就是 $\\vect{v}_2$ 在 $\\vect{v}_1$ 方向上的傅里叶系数。下面的命题总结了到目前为止的发现。为了与后面的记号一致，我们还把第一个基向量 $\\vect{v}_1$ 改记为 $\\vect{u}_1$。"
    }
   },
   {
@@ -95,7 +95,7 @@
    "title": {
     "en": "Gram-Schmidt orthogonalization procedure for 2 vectors",
     "sha": "8ed8eaaa144f",
-    "zh": ""
+    "zh": "两个向量的施密特正交化"
    },
    "blocks": [
     {
@@ -103,7 +103,7 @@
      "t": {
       "en": "Let $\\set{\\vect{v}_1,\\vect{v}_2}$ be a basis for some subspace $W$ of an inner product space $V$. Define vectors $\\vect{u}_1,\\vect{u}_2$ as follows:",
       "sha": "35f24c5e7359",
-      "zh": ""
+      "zh": "设 $\\set{\\vect{v}_1,\\vect{v}_2}$ 是内积空间 $V$ 的某个子空间 $W$ 的一个基。按如下方式定义向量 $\\vect{u}_1,\\vect{u}_2$："
      }
     },
     {
@@ -115,7 +115,7 @@
      "t": {
       "en": "Then $\\set{\\vect{u}_1,\\vect{u}_2}$ is an orthogonal basis of $W$.",
       "sha": "62c2414dc596",
-      "zh": ""
+      "zh": "则 $\\set{\\vect{u}_1,\\vect{u}_2}$ 是 $W$ 的一个正交基。"
      }
     }
    ]
@@ -126,7 +126,7 @@
    "title": {
     "en": "Gram-Schmidt orthogonalization procedure for 2 vectors",
     "sha": "8ed8eaaa144f",
-    "zh": ""
+    "zh": "两个向量的施密特正交化"
    },
    "blocks": [
     {
@@ -134,7 +134,7 @@
      "t": {
       "en": "In $\\R^3$ with the usual dot product, find an orthogonal basis for",
       "sha": "9b9b8805df37",
-      "zh": ""
+      "zh": "在带有通常点积的 $\\R^3$ 中，求下面这个子空间的一个正交基："
      }
     },
     {
@@ -152,7 +152,7 @@
      "t": {
       "en": "Let $\\vect{v}_1 = \\left[\\begin{array}{c} 1 \\\\ 1 \\\\ 0 \\end{array}\\right]$ and $\\vect{v}_2 = \\left[\\begin{array}{c} 0 \\\\ 1 \\\\ 1 \\end{array}\\right]$. We calculate",
       "sha": "f2fb582e8a5c",
-      "zh": ""
+      "zh": "设 $\\vect{v}_1 = \\left[\\begin{array}{c} 1 \\\\ 1 \\\\ 0 \\end{array}\\right]$，$\\vect{v}_2 = \\left[\\begin{array}{c} 0 \\\\ 1 \\\\ 1 \\end{array}\\right]$。我们计算"
      }
     },
     {
@@ -164,7 +164,7 @@
      "t": {
       "en": "Therefore the desired orthogonal basis is $\\set{\\left[\\begin{array}{c} 1 \\\\ 1 \\\\ 0 \\end{array}\\right], \\left[\\begin{array}{c} -1/2 \\\\ 1/2 \\\\ 1 \\end{array}\\right]}$.",
       "sha": "284c0ef9560d",
-      "zh": ""
+      "zh": "因此所求的正交基是 $\\set{\\left[\\begin{array}{c} 1 \\\\ 1 \\\\ 0 \\end{array}\\right], \\left[\\begin{array}{c} -1/2 \\\\ 1/2 \\\\ 1 \\end{array}\\right]}$。"
      }
     }
    ]
@@ -174,7 +174,7 @@
    "t": {
     "en": "The procedure for finding an orthogonal basis of a $k$-dimensional space is very similar. We adjust each basis vector $\\vect{v}_i$ by subtracting a suitable linear combination of previous orthogonal basis vectors.",
     "sha": "8cb721c68445",
-    "zh": ""
+    "zh": "求 $k$ 维空间的正交基，步骤非常类似：对每个基向量 $\\vect{v}_i$，减去前面已得到的正交基向量的一个合适的线性组合，对它进行调整。"
    }
   },
   {
@@ -183,7 +183,7 @@
    "title": {
     "en": "Gram-Schmidt orthogonalization procedure for $k$ vectors",
     "sha": "ab816a01c5e9",
-    "zh": ""
+    "zh": "$k$ 个向量的施密特正交化"
    },
    "blocks": [
     {
@@ -191,7 +191,7 @@
      "t": {
       "en": "Let $\\set{\\vect{v}_1,\\ldots,\\vect{v}_k}$ be a basis for some subspace $W$ of an inner product space $V$. Define vectors $\\vect{u}_1,\\ldots,\\vect{u}_k$ as follows:",
       "sha": "30fe0f8dda51",
-      "zh": ""
+      "zh": "设 $\\set{\\vect{v}_1,\\ldots,\\vect{v}_k}$ 是内积空间 $V$ 的某个子空间 $W$ 的一个基。按如下方式定义向量 $\\vect{u}_1,\\ldots,\\vect{u}_k$："
      }
     },
     {
@@ -203,7 +203,7 @@
      "t": {
       "en": "Then $\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ is an orthogonal basis of $W$.",
       "sha": "c43efa7fe0b5",
-      "zh": ""
+      "zh": "则 $\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ 是 $W$ 的一个正交基。"
      }
     }
    ]
@@ -217,7 +217,7 @@
      "t": {
       "en": "First, it is clear that $\\set{\\vect{v}_1,\\ldots,\\vect{v}_k}$ and $\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ span the same subspace, as each $\\vect{v}_i$ is a linear combination of $\\vect{u}_1,\\ldots,\\vect{u}_i$ and conversely, each $\\vect{u}_i$ is a linear combination of $\\vect{v}_1,\\ldots,\\vect{v}_i$. So the only thing we must check is that $\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ is an orthogonal set. In other words, we must show that $\\iprod{\\vect{u}_j,\\vect{u}_i}=0$ for all $j<i$. We prove this by induction on $i$, i.e., we assume it is already true for all pairs of indices smaller than $i$. To show $\\iprod{\\vect{u}_j,\\vect{u}_i}=0$, we calculate:",
       "sha": "dcb51b851555",
-      "zh": ""
+      "zh": "首先，$\\set{\\vect{v}_1,\\ldots,\\vect{v}_k}$ 与 $\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ 张成同一个子空间，这是因为每个 $\\vect{v}_i$ 都是 $\\vect{u}_1,\\ldots,\\vect{u}_i$ 的线性组合，反过来，每个 $\\vect{u}_i$ 也都是 $\\vect{v}_1,\\ldots,\\vect{v}_i$ 的线性组合。所以只需再检验 $\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ 是正交向量组。换句话说，我们要证明：对所有 $j<i$ 都有 $\\iprod{\\vect{u}_j,\\vect{u}_i}=0$。我们对 $i$ 用归纳法来证明，也就是假设对所有小于 $i$ 的下标对，结论已经成立。为了证明 $\\iprod{\\vect{u}_j,\\vect{u}_i}=0$，我们计算："
      }
     },
     {
@@ -229,7 +229,7 @@
      "t": {
       "en": "It follows that the set $\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ is orthogonal, as desired.",
       "sha": "a282b1dc07cf",
-      "zh": ""
+      "zh": "由此得出向量组 $\\set{\\vect{u}_1,\\ldots,\\vect{u}_k}$ 是正交的，这正是所要证明的。"
      }
     }
    ]
@@ -240,7 +240,7 @@
    "title": {
     "en": "Gram-Schmidt orthogonalization procedure",
     "sha": "9ec97b5702f9",
-    "zh": ""
+    "zh": "施密特正交化"
    },
    "blocks": [
     {
@@ -248,7 +248,7 @@
      "t": {
       "en": "In $\\R^4$, find an orthogonal basis for",
       "sha": "590cff540473",
-      "zh": ""
+      "zh": "在 $\\R^4$ 中，求下面这个子空间的一个正交基："
      }
     },
     {
@@ -266,7 +266,7 @@
      "t": {
       "en": "Let",
       "sha": "ef5fe1edf379",
-      "zh": ""
+      "zh": "设"
      }
     },
     {
@@ -278,7 +278,7 @@
      "t": {
       "en": "We calculate",
       "sha": "dbb8325d482f",
-      "zh": ""
+      "zh": "我们计算"
      }
     },
     {
@@ -290,7 +290,7 @@
      "t": {
       "en": "Therefore the orthogonal basis is $\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3} = \\set{ \\left[\\begin{array}{c} 1 \\\\ 1 \\\\ 1 \\\\ 1 \\end{array}\\right],~ \\left[\\begin{array}{c} 1/4 \\\\ 1/4 \\\\ 1/4 \\\\ -3/4 \\end{array}\\right],~ \\left[\\begin{array}{c} 1/3 \\\\ 1/3 \\\\ -2/3 \\\\ 0 \\end{array}\\right] }$.",
       "sha": "193d077b5649",
-      "zh": ""
+      "zh": "因此所求的正交基是 $\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3} = \\set{ \\left[\\begin{array}{c} 1 \\\\ 1 \\\\ 1 \\\\ 1 \\end{array}\\right],~ \\left[\\begin{array}{c} 1/4 \\\\ 1/4 \\\\ 1/4 \\\\ -3/4 \\end{array}\\right],~ \\left[\\begin{array}{c} 1/3 \\\\ 1/3 \\\\ -2/3 \\\\ 0 \\end{array}\\right] }$。"
      }
     }
    ]
@@ -300,7 +300,7 @@
    "t": {
     "en": "The Gram-Schmidt procedure is sensitive to reordering the vectors. For example, if we order the original basis vectors in Example “Gram-Schmidt orthogonalization procedure” in the opposite order, we end up with a different orthogonal basis at the end. Sometimes this can simplify the calculations, as the following example shows.",
     "sha": "2528021c68f0",
-    "zh": ""
+    "zh": "施密特正交化对向量的排列顺序很敏感。例如，如果把例“施密特正交化”中原来的基向量按相反的顺序排列，最后得到的正交基就不同。有时这样做可以简化计算，下面的例子就是如此。"
    }
   },
   {
@@ -309,7 +309,7 @@
    "title": {
     "en": "Gram-Schmidt orthogonalization procedure: reordering the vectors",
     "sha": "2d70117e6418",
-    "zh": ""
+    "zh": "施密特正交化：调换向量顺序"
    },
    "blocks": [
     {
@@ -317,7 +317,7 @@
      "t": {
       "en": "In $\\R^4$, find an orthogonal basis for",
       "sha": "590cff540473",
-      "zh": ""
+      "zh": "在 $\\R^4$ 中，求下面这个子空间的一个正交基："
      }
     },
     {
@@ -335,7 +335,7 @@
      "t": {
       "en": "Note that these are the same basis vectors as in Example “Gram-Schmidt orthogonalization procedure”, but listed in a different order. Let",
       "sha": "91bb61a5f8f0",
-      "zh": ""
+      "zh": "注意，这里的基向量与例“施密特正交化”中的相同，只是排列顺序不同。设"
      }
     },
     {
@@ -347,7 +347,7 @@
      "t": {
       "en": "We calculate",
       "sha": "dbb8325d482f",
-      "zh": ""
+      "zh": "我们计算"
      }
     },
     {
@@ -359,7 +359,7 @@
      "t": {
       "en": "This time, we end up with the orthogonal basis $\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3} = \\set{ \\left[\\begin{array}{c} 1 \\\\ 1 \\\\ 0 \\\\ 0 \\end{array}\\right],~ \\left[\\begin{array}{c} 0 \\\\ 0 \\\\ 1 \\\\ 0 \\end{array}\\right],~ \\left[\\begin{array}{c} 0 \\\\ 0 \\\\ 0 \\\\ 1 \\end{array}\\right] }$.",
       "sha": "c45e0cad445e",
-      "zh": ""
+      "zh": "这一次，我们最后得到的正交基是 $\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3} = \\set{ \\left[\\begin{array}{c} 1 \\\\ 1 \\\\ 0 \\\\ 0 \\end{array}\\right],~ \\left[\\begin{array}{c} 0 \\\\ 0 \\\\ 1 \\\\ 0 \\end{array}\\right],~ \\left[\\begin{array}{c} 0 \\\\ 0 \\\\ 0 \\\\ 1 \\end{array}\\right] }$。"
      }
     }
    ]
@@ -369,7 +369,7 @@
    "t": {
     "en": "In the next example, we will consider $\\R^n$, but with a non-standard inner product.",
     "sha": "49335c4fde8c",
-    "zh": ""
+    "zh": "在下一个例子中，我们仍然考虑 $\\R^n$，不过取的是非标准的内积。"
    }
   },
   {
@@ -378,7 +378,7 @@
    "title": {
     "en": "Gram-Schmidt orthogonalization procedure, non-standard inner product",
     "sha": "6b6f72a423b0",
-    "zh": ""
+    "zh": "施密特正交化：非标准内积"
    },
    "blocks": [
     {
@@ -386,7 +386,7 @@
      "t": {
       "en": "Let",
       "sha": "ef5fe1edf379",
-      "zh": ""
+      "zh": "设"
      }
     },
     {
@@ -398,7 +398,7 @@
      "t": {
       "en": "and consider the vector space $\\R^3$ with the inner product given by $\\iprod{\\vect{v},\\vect{w}} = \\vect{v}^T A\\vect{w}$. Let",
       "sha": "e97c8b5dd41a",
-      "zh": ""
+      "zh": "并考虑向量空间 $\\R^3$ 上由 $\\iprod{\\vect{v},\\vect{w}} = \\vect{v}^T A\\vect{w}$ 给出的内积。设"
      }
     },
     {
@@ -410,7 +410,7 @@
      "t": {
       "en": "Apply the Gram-Schmidt procedure to $\\vect{v}_1,\\vect{v}_2,\\vect{v}_3$ to find an orthogonal basis $\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3}$ for $\\R^3$ with respect to the above inner product.",
       "sha": "954943fc3aed",
-      "zh": ""
+      "zh": "对 $\\vect{v}_1,\\vect{v}_2,\\vect{v}_3$ 用施密特正交化，求 $\\R^3$ 关于上述内积的一个正交基 $\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3}$。"
      }
     }
    ]
@@ -424,7 +424,7 @@
      "t": {
       "en": "As usual, we start with",
       "sha": "778dcd21e5c3",
-      "zh": ""
+      "zh": "和往常一样，我们从"
      }
     },
     {
@@ -436,7 +436,7 @@
      "t": {
       "en": "Next, we calculate",
       "sha": "3ab6a61b5a9d",
-      "zh": ""
+      "zh": "开始。接着计算"
      }
     },
     {
@@ -448,7 +448,7 @@
      "t": {
       "en": "Therefore,",
       "sha": "236a32def63c",
-      "zh": ""
+      "zh": "因此，"
      }
     },
     {
@@ -460,7 +460,7 @@
      "t": {
       "en": "Finally, we calculate",
       "sha": "126a3543b202",
-      "zh": ""
+      "zh": "最后，我们计算"
      }
     },
     {
@@ -472,7 +472,7 @@
      "t": {
       "en": "Therefore,",
       "sha": "236a32def63c",
-      "zh": ""
+      "zh": "因此，"
      }
     },
     {
@@ -484,7 +484,7 @@
      "t": {
       "en": "So the desired orthogonal basis is",
       "sha": "8e9da0f61689",
-      "zh": ""
+      "zh": "所以所求的正交基是"
      }
     },
     {
@@ -496,7 +496,7 @@
      "t": {
       "en": "Note that it is not orthogonal with respect to the dot product, but with respect to the inner product defined above.",
       "sha": "4ebdd26b9acc",
-      "zh": ""
+      "zh": "注意，它关于点积并不正交，而是关于上面定义的内积正交。"
      }
     }
    ]
@@ -507,7 +507,7 @@
    "title": {
     "en": "Legendre polynomials",
     "sha": "5d59dd3a73ef",
-    "zh": ""
+    "zh": "勒让德多项式"
    },
    "blocks": [
     {
@@ -515,7 +515,7 @@
      "t": {
       "en": "Consider the vector space $\\Poly$ of polynomials, with the inner product",
       "sha": "e948fe949321",
-      "zh": ""
+      "zh": "考虑由多项式构成的向量空间 $\\Poly$，其内积为"
      }
     },
     {
@@ -527,7 +527,7 @@
      "t": {
       "en": "Use the Gram-Schmidt procedure to find an orthogonal basis for $\\sspan\\set{1,x,x^2,x^3}$.",
       "sha": "e4f7df247089",
-      "zh": ""
+      "zh": "用施密特正交化求 $\\sspan\\set{1,x,x^2,x^3}$ 的一个正交基。"
      }
     }
    ]
@@ -541,7 +541,7 @@
      "t": {
       "en": "Let $\\vect{v}_1=1$, $\\vect{v}_2=x$, $\\vect{v}_3=x^2$, and $\\vect{v}_4=x^3$. We follow the Gram-Schmidt procedure:",
       "sha": "b81142cc8203",
-      "zh": ""
+      "zh": "设 $\\vect{v}_1=1$，$\\vect{v}_2=x$，$\\vect{v}_3=x^2$，$\\vect{v}_4=x^3$。我们按施密特正交化的步骤来做："
      }
     },
     {
@@ -553,7 +553,7 @@
      "t": {
       "en": "Before we calculate $\\vect{u}_2$, we have to evaluate two integrals:",
       "sha": "518c1177ab65",
-      "zh": ""
+      "zh": "在计算 $\\vect{u}_2$ 之前，要先算出两个积分："
      }
     },
     {
@@ -565,7 +565,7 @@
      "t": {
       "en": "Then",
       "sha": "b7d93209feaa",
-      "zh": ""
+      "zh": "于是"
      }
     },
     {
@@ -577,7 +577,7 @@
      "t": {
       "en": "To calculate $\\vect{u}_3$, we first evaluate three integrals:",
       "sha": "ee98d7664939",
-      "zh": ""
+      "zh": "为了计算 $\\vect{u}_3$，我们先算出三个积分："
      }
     },
     {
@@ -589,7 +589,7 @@
      "t": {
       "en": "Then",
       "sha": "b7d93209feaa",
-      "zh": ""
+      "zh": "于是"
      }
     },
     {
@@ -601,7 +601,7 @@
      "t": {
       "en": "To calculate $\\vect{u}_4$, we first evaluate four integrals:",
       "sha": "e4041e8f5860",
-      "zh": ""
+      "zh": "为了计算 $\\vect{u}_4$，我们先算出四个积分："
      }
     },
     {
@@ -613,7 +613,7 @@
      "t": {
       "en": "Then",
       "sha": "b7d93209feaa",
-      "zh": ""
+      "zh": "于是"
      }
     },
     {
@@ -625,7 +625,7 @@
      "t": {
       "en": "Thus, we obtain the orthogonal basis $\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3,\\vect{u}_4} = \\set{1,~ x,~ x^2-\\frac{1}{3},~ x^3 - \\frac{3}{5}x}$.",
       "sha": "83b1dedc00f3",
-      "zh": ""
+      "zh": "这样，我们得到正交基 $\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3,\\vect{u}_4} = \\set{1,~ x,~ x^2-\\frac{1}{3},~ x^3 - \\frac{3}{5}x}$。"
      }
     }
    ]
@@ -635,7 +635,7 @@
    "t": {
     "en": "The orthogonal polynomials from Example “Legendre polynomials” are known (up to scalar multiples) as **Legendre polynomials**. We can continue in the same fashion applying the Gram-Schmidt procedure to the polynomials $1, x, x^2, x^3, x^4, x^5, x^6, \\ldots$ to get an infinite sequence of orthogonal polynomials. The first few elements of this sequence are:",
     "sha": "05d8512c32e4",
-    "zh": ""
+    "zh": "例“勒让德多项式”中的正交多项式（在相差一个标量倍数的意义下）称为**勒让德多项式**（Legendre polynomials）。我们可以用同样的方式，对多项式 $1, x, x^2, x^3, x^4, x^5, x^6, \\ldots$ 继续施行施密特正交化，得到一个无穷的正交多项式序列。这个序列的前几项是："
    }
   },
   {
@@ -655,7 +655,7 @@
    "t": {
     "en": "The Gram-Schmidt procedure yields an *orthogonal* basis. If we want to compute an *orthonormal* basis, we also have to normalize each basis vector. Since normalization usually involves dividing by a square root, it is best to do this at the end, i.e., after the entire Gram-Schmidt procedure is complete, rather than normalizing each $\\vect{u}_i$ immediately after it is found. Note that the Gram-Schmidt procedure itself does not involve computing any square roots.",
     "sha": "3ec22a44228e",
-    "zh": ""
+    "zh": "施密特正交化得到的是*正交*基。如果想要得到*标准正交*基，还需要把每个基向量单位化。单位化通常要除以一个平方根，所以最好放在最后做，也就是等整个施密特正交化过程结束之后再做，而不是每求出一个 $\\vect{u}_i$ 就立刻单位化。请注意，施密特正交化本身并不需要计算任何平方根。"
    }
   },
   {
@@ -664,7 +664,7 @@
    "title": {
     "en": "Finding an orthonormal basis",
     "sha": "36e06eae8dfe",
-    "zh": ""
+    "zh": "求标准正交基"
    },
    "blocks": [
     {
@@ -672,7 +672,7 @@
      "t": {
       "en": "In $\\R^4$, find an orthogonal basis for",
       "sha": "590cff540473",
-      "zh": ""
+      "zh": "在 $\\R^4$ 中，求下面这个子空间的一个正交基："
      }
     },
     {
@@ -690,7 +690,7 @@
      "t": {
       "en": "In Example “Gram-Schmidt orthogonalization procedure”, we already found an orthogonal basis",
       "sha": "56a615999ecd",
-      "zh": ""
+      "zh": "在例“施密特正交化”中，我们已经为这个空间求出了正交基"
      }
     },
     {
@@ -702,7 +702,7 @@
      "t": {
       "en": "for this space. So all that is left to do is to normalize each vector. The orthonormal basis is",
       "sha": "9cb7b7ca21ec",
-      "zh": ""
+      "zh": "所以剩下要做的只是把每个向量单位化。标准正交基为"
      }
     },
     {
@@ -714,7 +714,7 @@
      "t": {
       "en": "Alternatively, we could have also normalized the orthogonal basis we found in Example “Gram-Schmidt orthogonalization procedure: reordering the vectors”. In that case, we obtain the orthonormal basis",
       "sha": "9046ce1fd7ee",
-      "zh": ""
+      "zh": "另外，我们也可以把例“施密特正交化：调换向量顺序”中求得的正交基单位化。这样得到的标准正交基是"
      }
     },
     {
@@ -729,7 +729,7 @@
    "title": {
     "en": "Orthonormal basis of polynomials",
     "sha": "3a98ed00a400",
-    "zh": ""
+    "zh": "多项式的标准正交基"
    },
    "blocks": [
     {
@@ -737,7 +737,7 @@
      "t": {
       "en": "Find an orthonormal basis for the space of Example “Legendre polynomials”.",
       "sha": "afcfd077dfde",
-      "zh": ""
+      "zh": "求例“勒让德多项式”中那个空间的一个标准正交基。"
      }
     }
    ]
@@ -751,7 +751,7 @@
      "t": {
       "en": "In Example “Legendre polynomials”, we found the orthogonal basis $\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3,\\vect{u}_4} = \\set{1,~ x,~ x^2-\\frac{1}{3},~ x^3 - \\frac{3}{5}x}$. We also computed",
       "sha": "2798848c3e84",
-      "zh": ""
+      "zh": "在例“勒让德多项式”中，我们求得了正交基 $\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3,\\vect{u}_4} = \\set{1,~ x,~ x^2-\\frac{1}{3},~ x^3 - \\frac{3}{5}x}$。我们还算出了"
      }
     },
     {
@@ -763,7 +763,7 @@
      "t": {
       "en": "We also need to compute $\\iprod{\\vect{u}_4,\\vect{u}_4}$:",
       "sha": "8cea56234df8",
-      "zh": ""
+      "zh": "我们还需要计算 $\\iprod{\\vect{u}_4,\\vect{u}_4}$："
      }
     },
     {
@@ -775,7 +775,7 @@
      "t": {
       "en": "Therefore, the orthonormal basis is:",
       "sha": "995ebabdeed6",
-      "zh": ""
+      "zh": "因此，标准正交基为："
      }
     },
     {
@@ -789,7 +789,7 @@
    "t": {
     "en": "We finish this section by remarking that the formula",
     "sha": "709902cc333b",
-    "zh": ""
+    "zh": "本节最后指出，公式"
    }
   },
   {
@@ -801,7 +801,7 @@
    "t": {
     "en": "is exactly what we called the \\textbfprojection of $\\vect{v}$ onto $\\vect{u}$ in Section 〔引用〕, except that we have generalized this concept from $\\R^n$ to an arbitrary inner product space. We can define",
     "sha": "640494781490",
-    "zh": ""
+    "zh": "正是我们在第 〔引用〕 节中所说的 $\\vect{v}$ 在 $\\vect{u}$ 上的**投影**（projection），只不过这里把这个概念从 $\\R^n$ 推广到了任意内积空间。我们可以定义"
    }
   },
   {
@@ -813,7 +813,7 @@
    "t": {
     "en": "With this definition, the Gram-Schmidt procedure can also be expressed more succinctly as follows.",
     "sha": "c595925aacf4",
-    "zh": ""
+    "zh": "有了这个定义，施密特正交化也可以更简洁地表述如下。"
    }
   },
   {
@@ -830,7 +830,7 @@
      "t": {
       "en": "In $\\R^3$ with the usual dot product, find an orthogonal basis for",
       "sha": "9b9b8805df37",
-      "zh": ""
+      "zh": "在带有通常点积的 $\\R^3$ 中，求下面这个子空间的一个正交基："
      }
     },
     {
@@ -844,7 +844,7 @@
      "t": {
       "en": "$\\vect{u}_1 = \\left[\\begin{array}{c} 1 \\\\ 2 \\\\ 3 \\end{array}\\right]$, $\\vect{u}_2 = \\left[\\begin{array}{c} 1 \\\\ 4 \\\\ -3 \\end{array}\\right]$.",
       "sha": "a9bd987361c4",
-      "zh": ""
+      "zh": "$\\vect{u}_1 = \\left[\\begin{array}{c} 1 \\\\ 2 \\\\ 3 \\end{array}\\right]$，$\\vect{u}_2 = \\left[\\begin{array}{c} 1 \\\\ 4 \\\\ -3 \\end{array}\\right]$。"
      }
     }
    ],
@@ -865,7 +865,7 @@
      "t": {
       "en": "In $\\R^4$ with the usual dot product, find an orthogonal basis for",
       "sha": "e63e5e3cefbb",
-      "zh": ""
+      "zh": "在带有通常点积的 $\\R^4$ 中，求下面这个子空间的一个正交基："
      }
     },
     {
@@ -879,7 +879,7 @@
      "t": {
       "en": "$\\vect{u}_1 = \\left[\\begin{array}{c} 0 \\\\ 1 \\\\ 1 \\\\ 0 \\end{array}\\right]$, $\\vect{u}_2 = \\left[\\begin{array}{c} 3 \\\\ -1 \\\\ 1 \\\\ -1 \\end{array}\\right]$.",
       "sha": "ba6415516ee8",
-      "zh": ""
+      "zh": "$\\vect{u}_1 = \\left[\\begin{array}{c} 0 \\\\ 1 \\\\ 1 \\\\ 0 \\end{array}\\right]$，$\\vect{u}_2 = \\left[\\begin{array}{c} 3 \\\\ -1 \\\\ 1 \\\\ -1 \\end{array}\\right]$。"
      }
     }
    ],
@@ -900,7 +900,7 @@
      "t": {
       "en": "In $\\R^4$ with the usual dot product, find an orthogonal basis for",
       "sha": "e63e5e3cefbb",
-      "zh": ""
+      "zh": "在带有通常点积的 $\\R^4$ 中，求下面这个子空间的一个正交基："
      }
     },
     {
@@ -914,7 +914,7 @@
      "t": {
       "en": "$\\vect{u}_1 = \\left[\\begin{array}{c} 1 \\\\ 0 \\\\ 1 \\\\ 0 \\end{array}\\right]$, $\\vect{u}_2 = \\left[\\begin{array}{c} 0 \\\\ 3 \\\\ 0 \\\\ -1 \\end{array}\\right]$, $\\vect{u}_3 = \\left[\\begin{array}{c} 0 \\\\ 1 \\\\ 0 \\\\ 3 \\end{array}\\right]$.",
       "sha": "9cfb7d0660cb",
-      "zh": ""
+      "zh": "$\\vect{u}_1 = \\left[\\begin{array}{c} 1 \\\\ 0 \\\\ 1 \\\\ 0 \\end{array}\\right]$，$\\vect{u}_2 = \\left[\\begin{array}{c} 0 \\\\ 3 \\\\ 0 \\\\ -1 \\end{array}\\right]$，$\\vect{u}_3 = \\left[\\begin{array}{c} 0 \\\\ 1 \\\\ 0 \\\\ 3 \\end{array}\\right]$。"
      }
     }
    ],
@@ -935,7 +935,7 @@
      "t": {
       "en": "Let",
       "sha": "ef5fe1edf379",
-      "zh": ""
+      "zh": "设"
      }
     },
     {
@@ -947,7 +947,7 @@
      "t": {
       "en": "and consider the vector space $\\R^3$ with the inner product given by $\\iprod{\\vect{v},\\vect{w}} = \\vect{v}^T A\\vect{w}$. Let",
       "sha": "e97c8b5dd41a",
-      "zh": ""
+      "zh": "并考虑向量空间 $\\R^3$ 上由 $\\iprod{\\vect{v},\\vect{w}} = \\vect{v}^T A\\vect{w}$ 给出的内积。设"
      }
     },
     {
@@ -959,7 +959,7 @@
      "t": {
       "en": "Apply the Gram-Schmidt procedure to $\\vect{v}_1,\\vect{v}_2,\\vect{v}_3$ to find an orthogonal basis $\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3}$ for $\\R^3$ with respect to the above inner product.",
       "sha": "954943fc3aed",
-      "zh": ""
+      "zh": "对 $\\vect{v}_1,\\vect{v}_2,\\vect{v}_3$ 用施密特正交化，求 $\\R^3$ 关于上述内积的一个正交基 $\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3}$。"
      }
     }
    ],
@@ -969,7 +969,7 @@
      "t": {
       "en": "$\\vect{u}_1 = \\left[\\begin{array}{c} 1 \\\\ 0 \\\\ 2 \\end{array}\\right]$, $\\vect{u}_2 = \\left[\\begin{array}{c} 1 \\\\ 1 \\\\ -1 \\end{array}\\right]$, $\\vect{u}_3 = \\left[\\begin{array}{c} -1 \\\\ 1 \\\\ 0 \\end{array}\\right]$.",
       "sha": "9f8ac0ecd780",
-      "zh": ""
+      "zh": "$\\vect{u}_1 = \\left[\\begin{array}{c} 1 \\\\ 0 \\\\ 2 \\end{array}\\right]$，$\\vect{u}_2 = \\left[\\begin{array}{c} 1 \\\\ 1 \\\\ -1 \\end{array}\\right]$，$\\vect{u}_3 = \\left[\\begin{array}{c} -1 \\\\ 1 \\\\ 0 \\end{array}\\right]$。"
      }
     }
    ],
@@ -990,7 +990,7 @@
      "t": {
       "en": "Let",
       "sha": "ef5fe1edf379",
-      "zh": ""
+      "zh": "设"
      }
     },
     {
@@ -1002,7 +1002,7 @@
      "t": {
       "en": "and consider the vector space $\\R^4$ with the inner product given by $\\iprod{\\vect{v},\\vect{w}} = \\vect{v}^T A\\vect{w}$. Let",
       "sha": "59b004577ce6",
-      "zh": ""
+      "zh": "并考虑向量空间 $\\R^4$ 上由 $\\iprod{\\vect{v},\\vect{w}} = \\vect{v}^T A\\vect{w}$ 给出的内积。设"
      }
     },
     {
@@ -1014,7 +1014,7 @@
      "t": {
       "en": "and let $W=\\sspan\\set{\\vect{v}_1,\\vect{v}_2,\\vect{v}_3}$. Apply the Gram-Schmidt procedure to $\\vect{v}_1,\\vect{v}_2,\\vect{v}_3$ to find an orthogonal basis $\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3}$ for $W$ with respect to the above inner product.",
       "sha": "7408770e2c88",
-      "zh": ""
+      "zh": "并设 $W=\\sspan\\set{\\vect{v}_1,\\vect{v}_2,\\vect{v}_3}$。对 $\\vect{v}_1,\\vect{v}_2,\\vect{v}_3$ 用施密特正交化，求 $W$ 关于上述内积的一个正交基 $\\set{\\vect{u}_1,\\vect{u}_2,\\vect{u}_3}$。"
      }
     }
    ],
@@ -1024,7 +1024,7 @@
      "t": {
       "en": "$\\vect{u}_1 = \\left[\\begin{array}{c} 1 \\\\ -1 \\\\ 1 \\\\ 1 \\end{array}\\right]$, $\\vect{u}_2 = \\left[\\begin{array}{c} 1 \\\\ 1 \\\\ -1 \\\\ 1 \\end{array}\\right]$, $\\vect{u}_3 = \\left[\\begin{array}{c} -1 \\\\ 1 \\\\ 1 \\\\ 0 \\end{array}\\right]$.",
       "sha": "d20a81ee37fd",
-      "zh": ""
+      "zh": "$\\vect{u}_1 = \\left[\\begin{array}{c} 1 \\\\ -1 \\\\ 1 \\\\ 1 \\end{array}\\right]$，$\\vect{u}_2 = \\left[\\begin{array}{c} 1 \\\\ 1 \\\\ -1 \\\\ 1 \\end{array}\\right]$，$\\vect{u}_3 = \\left[\\begin{array}{c} -1 \\\\ 1 \\\\ 1 \\\\ 0 \\end{array}\\right]$。"
      }
     }
    ],
@@ -1045,7 +1045,7 @@
      "t": {
       "en": "Consider the inner product space $C[0,2]$, with the inner product given by",
       "sha": "2df729c744dc",
-      "zh": ""
+      "zh": "考虑内积空间 $C[0,2]$，其内积为"
      }
     },
     {
@@ -1057,7 +1057,7 @@
      "t": {
       "en": "Use the Gram-Schmidt procedure to find an orthogonal basis for $\\sspan\\set{1,x,x^2}$.",
       "sha": "c29279356e6b",
-      "zh": ""
+      "zh": "用施密特正交化求 $\\sspan\\set{1,x,x^2}$ 的一个正交基。"
      }
     }
    ],
@@ -1067,7 +1067,7 @@
      "t": {
       "en": "$\\vect{u}_1 = 1$, $\\vect{u}_2 = x-1$, $x^2 - 2x + \\frac{2}{3}$.",
       "sha": "f22fbe9cf809",
-      "zh": ""
+      "zh": "$\\vect{u}_1 = 1$，$\\vect{u}_2 = x-1$，$x^2 - 2x + \\frac{2}{3}$。"
      }
     }
    ],
@@ -1088,7 +1088,7 @@
      "t": {
       "en": "Find an orthonormal basis for the subspace of $\\R^3$ from Exercise 〔引用〕.",
       "sha": "cc28a8c2798d",
-      "zh": ""
+      "zh": "求习题 〔引用〕 中 $\\R^3$ 的那个子空间的一个标准正交基。"
      }
     }
    ],
@@ -1098,7 +1098,7 @@
      "t": {
       "en": "The orthonormal basis is $\\displaystyle\\set{ \\frac{\\vect{u}_1}{\\norm{\\vect{u}_1}}, \\frac{\\vect{u}_2}{\\norm{\\vect{u}_2}} } = \\set{ \\frac{1}{\\sqrt{14}} \\left[\\begin{array}{c} 1 \\\\ 2 \\\\ 3 \\end{array}\\right], \\frac{1}{\\sqrt{26}} \\left[\\begin{array}{c} 1 \\\\ 4 \\\\ -3 \\end{array}\\right] }$.",
       "sha": "4423a94f88a7",
-      "zh": ""
+      "zh": "标准正交基为 $\\displaystyle\\set{ \\frac{\\vect{u}_1}{\\norm{\\vect{u}_1}}, \\frac{\\vect{u}_2}{\\norm{\\vect{u}_2}} } = \\set{ \\frac{1}{\\sqrt{14}} \\left[\\begin{array}{c} 1 \\\\ 2 \\\\ 3 \\end{array}\\right], \\frac{1}{\\sqrt{26}} \\left[\\begin{array}{c} 1 \\\\ 4 \\\\ -3 \\end{array}\\right] }$。"
      }
     }
    ],

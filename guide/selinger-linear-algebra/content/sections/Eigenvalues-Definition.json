@@ -15,7 +15,7 @@
         "t": {
          "en": "Determine whether a vector is an eigenvector of a matrix.",
          "sha": "26f86e0cf603",
-         "zh": ""
+         "zh": "判断一个向量是不是某个矩阵的特征向量。"
         }
        }
       ],
@@ -25,7 +25,7 @@
         "t": {
          "en": "Given an eigenvector, find the corresponding eigenvalue.",
          "sha": "473501e1d9b9",
-         "zh": ""
+         "zh": "已知一个特征向量，求对应的特征值。"
         }
        }
       ],
@@ -35,7 +35,7 @@
         "t": {
          "en": "Given an eigenvalue, find the corresponding eigenvectors.",
          "sha": "986f72315c96",
-         "zh": ""
+         "zh": "已知一个特征值，求对应的特征向量。"
         }
        }
       ],
@@ -45,7 +45,7 @@
         "t": {
          "en": "Find a basis for the eigenspace of a given eigenvalue.",
          "sha": "deab7e37191b",
-         "zh": ""
+         "zh": "求给定特征值所对应特征空间的一组基。"
         }
        }
       ]
@@ -58,7 +58,7 @@
    "t": {
     "en": "When we multiply a square matrix $A$ by a non-zero vector $\\vect{v}$, we obtain another vector $A\\vect{v}$. Most of the time, the vectors $A\\vect{v}$ and $\\vect{v}$ are unrelated; they could point in completely different directions. However, sometimes it can happen that $A\\vect{v}$ is a scalar multiple of $\\vect{v}$. In that case, $\\vect{v}$ is called an **eigenvector** of $A$. We will see later in this chapter that we can learn a lot about the matrix $A$ by considering its eigenvectors.",
     "sha": "264f947c8036",
-    "zh": ""
+    "zh": "用一个方阵 $A$ 去乘一个非零向量 $\\vect{v}$，会得到另一个向量 $A\\vect{v}$。多数情况下，向量 $A\\vect{v}$ 与 $\\vect{v}$ 之间没有什么联系，它们的方向可能完全不同。然而，有时会出现 $A\\vect{v}$ 恰好是 $\\vect{v}$ 的标量倍的情形。这时，$\\vect{v}$ 就叫作 $A$ 的**特征向量**（eigenvector）。我们在本章后面会看到，考察矩阵 $A$ 的特征向量，可以了解到关于这个矩阵的很多信息。"
    }
   },
   {
@@ -67,7 +67,7 @@
    "title": {
     "en": "Eigenvalues and eigenvectors",
     "sha": "cfd568aff367",
-    "zh": ""
+    "zh": "特征值与特征向量"
    },
    "blocks": [
     {
@@ -75,7 +75,7 @@
      "t": {
       "en": "Let $A$ be an $n\\times n$-matrix. Suppose that $\\vect{v}\\in\\R^n$ is a non-zero vector such that $A\\vect{v}$ is a scalar multiple of $\\vect{v}$. In other words, suppose that there exists a scalar $\\eigenvar$ such that",
       "sha": "10ae381b375a",
-      "zh": ""
+      "zh": "设 $A$ 是 $n\\times n$ 矩阵。设 $\\vect{v}\\in\\R^n$ 是一个非零向量，并且 $A\\vect{v}$ 是 $\\vect{v}$ 的标量倍。换句话说，设存在标量 $\\eigenvar$ 使得"
      }
     },
     {
@@ -87,7 +87,7 @@
      "t": {
       "en": "Then $\\vect{v}$ is called an **eigenvector** of $A$, and $\\eigenvar$ is called the corresponding **eigenvalue**.",
       "sha": "6b071cf7ab5f",
-      "zh": ""
+      "zh": "那么，$\\vect{v}$ 叫作 $A$ 的**特征向量**，$\\eigenvar$ 叫作对应的**特征值**（eigenvalue）。"
      }
     }
    ]
@@ -98,7 +98,7 @@
    "title": {
     "en": "Eigenvalues and eigenvectors",
     "sha": "cfd568aff367",
-    "zh": ""
+    "zh": "特征值与特征向量"
    },
    "blocks": [
     {
@@ -106,7 +106,7 @@
      "t": {
       "en": "Consider the matrix",
       "sha": "c5c7ab8caadb",
-      "zh": ""
+      "zh": "考虑矩阵"
      }
     },
     {
@@ -118,7 +118,7 @@
      "t": {
       "en": "Which of the following vectors are eigenvectors of $A$? Find the corresponding eigenvalues.",
       "sha": "b090f4cb027d",
-      "zh": ""
+      "zh": "下面的向量中，哪些是 $A$ 的特征向量？求出对应的特征值。"
      }
     },
     {
@@ -136,7 +136,7 @@
      "t": {
       "en": "We compute",
       "sha": "1cf66dc13d5a",
-      "zh": ""
+      "zh": "我们来计算"
      }
     },
     {
@@ -153,7 +153,7 @@
         "t": {
          "en": "We see that $A\\vect{v}_1$ is a scalar multiple of $\\vect{v}_1$, namely $A\\vect{v}_1=2\\vect{v}_1$. Therefore, $\\vect{v}_1$ is an eigenvector of $A$ with corresponding eigenvalue $\\eigenvar=2$.",
          "sha": "ac31ae26a12c",
-         "zh": ""
+         "zh": "可以看到，$A\\vect{v}_1$ 是 $\\vect{v}_1$ 的标量倍，即 $A\\vect{v}_1=2\\vect{v}_1$。因此，$\\vect{v}_1$ 是 $A$ 的特征向量，对应的特征值为 $\\eigenvar=2$。"
         }
        }
       ],
@@ -163,7 +163,7 @@
         "t": {
          "en": "Similarly, $A\\vect{v}_2=3\\vect{v}_2$, so $\\vect{v}_2$ is an eigenvector of $A$ with corresponding eigenvalue $\\eigenvar=3$.",
          "sha": "1e177531c4ce",
-         "zh": ""
+         "zh": "同理，$A\\vect{v}_2=3\\vect{v}_2$，所以 $\\vect{v}_2$ 是 $A$ 的特征向量，对应的特征值为 $\\eigenvar=3$。"
         }
        }
       ],
@@ -173,7 +173,7 @@
         "t": {
          "en": "On the other hand, $A\\vect{v}_3$ is not a scalar multiple of $\\vect{v}_3$. Hence, $\\vect{v}_3$ is not an eigenvector of $A$.",
          "sha": "e1b900b09d2d",
-         "zh": ""
+         "zh": "另一方面，$A\\vect{v}_3$ 不是 $\\vect{v}_3$ 的标量倍。因此，$\\vect{v}_3$ 不是 $A$ 的特征向量。"
         }
        }
       ],
@@ -183,7 +183,7 @@
         "t": {
          "en": "Finally, although $A\\vect{v}_4$ is a scalar multiple of $\\vect{v}_4$, the zero vector is not considered an eigenvector.",
          "sha": "1e7f8ac85f36",
-         "zh": ""
+         "zh": "最后，虽然 $A\\vect{v}_4$ 是 $\\vect{v}_4$ 的标量倍，但零向量不算特征向量。"
         }
        }
       ]
@@ -197,7 +197,7 @@
    "title": {
     "en": "Find eigenvectors for the given eigenvalue",
     "sha": "2c35f544f673",
-    "zh": ""
+    "zh": "求给定特征值对应的特征向量"
    },
    "blocks": [
     {
@@ -205,7 +205,7 @@
      "t": {
       "en": "Let",
       "sha": "ef5fe1edf379",
-      "zh": ""
+      "zh": "设"
      }
     },
     {
@@ -217,7 +217,7 @@
      "t": {
       "en": "Find the eigenvectors corresponding to the eigenvalue $\\eigenvar=2$.",
       "sha": "e8c9e1e0c7c5",
-      "zh": ""
+      "zh": "求特征值 $\\eigenvar=2$ 对应的特征向量。"
      }
     }
    ]
@@ -231,7 +231,7 @@
      "t": {
       "en": "We have to solve the equation $A\\vect{v}=2\\vect{v}$. We can use algebra to rewrite this as",
       "sha": "2433b5352bfa",
-      "zh": ""
+      "zh": "我们要解方程 $A\\vect{v}=2\\vect{v}$。用代数方法可以把它改写成"
      }
     },
     {
@@ -243,7 +243,7 @@
      "t": {
       "en": "This is a homogeneous system of equations with general solution",
       "sha": "ee465e0ed232",
-      "zh": ""
+      "zh": "这是一个齐次方程组，其通解为"
      }
     },
     {
@@ -255,7 +255,7 @@
      "t": {
       "en": "where $s$ and $t$ are parameters. These (except the zero vector) are exactly the eigenvectors corresponding to the eigenvalue $\\eigenvar = 2$.",
       "sha": "7b6a032b2cda",
-      "zh": ""
+      "zh": "其中 $s$ 和 $t$ 是参数。这些向量（零向量除外）恰好就是特征值 $\\eigenvar = 2$ 对应的全部特征向量。"
      }
     }
    ]
@@ -265,7 +265,7 @@
    "t": {
     "en": "As the last example shows, the eigenvectors for a given eigenvalue $\\eigenvar$, plus the zero vector, form a subspace of $\\R^n$. This is called the **eigenspace** of $\\eigenvar$.",
     "sha": "6813be2d2f53",
-    "zh": ""
+    "zh": "正如上一个例子所示，属于同一个特征值 $\\eigenvar$ 的所有特征向量，再加上零向量，构成 $\\R^n$ 的一个子空间。这个子空间叫作 $\\eigenvar$ 的**特征空间**（eigenspace）。"
    }
   },
   {
@@ -274,7 +274,7 @@
    "title": {
     "en": "Eigenspace",
     "sha": "dc656e083c6c",
-    "zh": ""
+    "zh": "特征空间"
    },
    "blocks": [
     {
@@ -282,7 +282,7 @@
      "t": {
       "en": "Let $A$ be an $n\\times n$-matrix, and let $\\eigenvar$ be an eigenvalue of $A$. The **eigenspace** of $\\eigenvar$ is the set",
       "sha": "04782b693a44",
-      "zh": ""
+      "zh": "设 $A$ 是 $n\\times n$ 矩阵，$\\eigenvar$ 是 $A$ 的一个特征值。$\\eigenvar$ 的**特征空间**是集合"
      }
     },
     {
@@ -294,7 +294,7 @@
      "t": {
       "en": "It is a subspace of $\\R^n$.",
       "sha": "e77177e08e06",
-      "zh": ""
+      "zh": "它是 $\\R^n$ 的子空间。"
      }
     }
    ]
@@ -304,7 +304,7 @@
    "t": {
     "en": "Instead of finding *all* eigenvectors for a given eigenvalue, it is often sufficient to find a basis for the eigenspace. We also sometimes call the basis vectors of the eigenspace **basic eigenvectors**.",
     "sha": "a5cfccb31d8c",
-    "zh": ""
+    "zh": "与其把某个特征值对应的*所有*特征向量都求出来，通常只需求出特征空间的一组基就够了。特征空间的基向量有时也叫作**基础特征向量**。"
    }
   },
   {
@@ -313,7 +313,7 @@
    "title": {
     "en": "Basis of eigenspace",
     "sha": "b677e8ccc4e6",
-    "zh": ""
+    "zh": "特征空间的基"
    },
    "blocks": [
     {
@@ -321,7 +321,7 @@
      "t": {
       "en": "Let",
       "sha": "ef5fe1edf379",
-      "zh": ""
+      "zh": "设"
      }
     },
     {
@@ -333,7 +333,7 @@
      "t": {
       "en": "The matrix $A$ has eigenvalues $\\eigenvar=1$ and $\\eigenvar=2$. Find a basis for each eigenspace.",
       "sha": "b112f3fafa2a",
-      "zh": ""
+      "zh": "矩阵 $A$ 有特征值 $\\eigenvar=1$ 和 $\\eigenvar=2$。求每个特征空间的一组基。"
      }
     }
    ]
@@ -347,7 +347,7 @@
      "t": {
       "en": "We already found a basis for the eigenspace $E_2$ in Example “Find eigenvectors for the given eigenvalue”.",
       "sha": "5e40de880390",
-      "zh": ""
+      "zh": "特征空间 $E_2$ 的一组基，我们已经在例“求给定特征值对应的特征向量”中求出来了。"
      }
     },
     {
@@ -359,7 +359,7 @@
      "t": {
       "en": "To find a basis for the eigenspace $E_1$, we proceed analogously. We must solve the equation $A\\vect{v}=1\\vect{v}$. We have:",
       "sha": "952db0df408d",
-      "zh": ""
+      "zh": "要求特征空间 $E_1$ 的一组基，做法类似。我们必须解方程 $A\\vect{v}=1\\vect{v}$。有："
      }
     },
     {
@@ -371,7 +371,7 @@
      "t": {
       "en": "This is a homogeneous system of rank 2, with general solution",
       "sha": "9572f52bbfc5",
-      "zh": ""
+      "zh": "这是一个秩为 2 的齐次方程组，其通解为"
      }
     },
     {
@@ -383,7 +383,7 @@
      "t": {
       "en": "Thus, the following is a basis for the eigenspace $E_1$:",
       "sha": "43b6af565ab5",
-      "zh": ""
+      "zh": "因此，下面这组向量是特征空间 $E_1$ 的一组基："
      }
     },
     {
@@ -402,7 +402,7 @@
      "t": {
       "en": "Consider the matrix",
       "sha": "c5c7ab8caadb",
-      "zh": ""
+      "zh": "考虑矩阵"
      }
     },
     {
@@ -414,7 +414,7 @@
      "t": {
       "en": "Which of the following vectors are eigenvectors of $A$? Find the corresponding eigenvalues.",
       "sha": "b090f4cb027d",
-      "zh": ""
+      "zh": "下面的向量中，哪些是 $A$ 的特征向量？求出对应的特征值。"
      }
     },
     {
@@ -440,7 +440,7 @@
      "t": {
       "en": "Let",
       "sha": "ef5fe1edf379",
-      "zh": ""
+      "zh": "设"
      }
     },
     {
@@ -452,7 +452,7 @@
      "t": {
       "en": "Find the eigenvectors corresponding to the eigenvalue $\\eigenvar=4$.",
       "sha": "afc1a9258bc7",
-      "zh": ""
+      "zh": "求特征值 $\\eigenvar=4$ 对应的特征向量。"
      }
     }
    ],
@@ -474,7 +474,7 @@
      "t": {
       "en": "Let",
       "sha": "ef5fe1edf379",
-      "zh": ""
+      "zh": "设"
      }
     },
     {
@@ -486,7 +486,7 @@
      "t": {
       "en": "Find the eigenvectors corresponding to the eigenvalue $\\eigenvar=3$.",
       "sha": "a925505842ca",
-      "zh": ""
+      "zh": "求特征值 $\\eigenvar=3$ 对应的特征向量。"
      }
     }
    ],
@@ -508,7 +508,7 @@
      "t": {
       "en": "Let",
       "sha": "ef5fe1edf379",
-      "zh": ""
+      "zh": "设"
      }
     },
     {
@@ -520,7 +520,7 @@
      "t": {
       "en": "This matrix has eigenvalues $\\eigenvar=1$ and $\\eigenvar=4$. Find a basis for each eigenspace.",
       "sha": "bc1db2b666a1",
-      "zh": ""
+      "zh": "这个矩阵有特征值 $\\eigenvar=1$ 和 $\\eigenvar=4$。求每个特征空间的一组基。"
      }
     }
    ],
@@ -542,7 +542,7 @@
      "t": {
       "en": "Let",
       "sha": "ef5fe1edf379",
-      "zh": ""
+      "zh": "设"
      }
     },
     {
@@ -554,7 +554,7 @@
      "t": {
       "en": "This matrix has eigenvalues $\\eigenvar=-3$ and $\\eigenvar=4$. Find a basis for each eigenspace.",
       "sha": "d7093414e2e1",
-      "zh": ""
+      "zh": "这个矩阵有特征值 $\\eigenvar=-3$ 和 $\\eigenvar=4$。求每个特征空间的一组基。"
      }
     }
    ],
@@ -576,7 +576,7 @@
      "t": {
       "en": "Suppose $A$ is a $3\\times 3$-matrix with eigenvalues $\\eigenvar_1=1$, $\\eigenvar_2=0$, and $\\eigenvar_3=2$ and corresponding eigenvectors",
       "sha": "929481909ed4",
-      "zh": ""
+      "zh": "设 $A$ 是 $3\\times 3$ 矩阵，它的特征值为 $\\eigenvar_1=1$、$\\eigenvar_2=0$、$\\eigenvar_3=2$，对应的特征向量为"
      }
     },
     {
@@ -588,7 +588,7 @@
      "t": {
       "en": "(By “corresponding”, we mean that $\\vect{v}_1$ corresponds to $\\eigenvar_1$, $\\vect{v}_2$ corresponds to $\\eigenvar_2$, and so on). Find",
       "sha": "18a2e1ffd742",
-      "zh": ""
+      "zh": "（所谓“对应”，是指 $\\vect{v}_1$ 对应于 $\\eigenvar_1$，$\\vect{v}_2$ 对应于 $\\eigenvar_2$，依此类推）。求"
      }
     },
     {
@@ -614,7 +614,7 @@
      "t": {
       "en": "Let $A$ be an $n\\times n$-matrix, and assume $\\eigenvar$ is an eigenvalue of $A$. Show that $\\eigenvar^2$ is an eigenvalue of $A^2$.",
       "sha": "3461e261ab9a",
-      "zh": ""
+      "zh": "设 $A$ 是 $n\\times n$ 矩阵，并设 $\\eigenvar$ 是 $A$ 的特征值。证明 $\\eigenvar^2$ 是 $A^2$ 的特征值。"
      }
     }
    ],
@@ -624,7 +624,7 @@
      "t": {
       "en": "If $\\vect{v}$ is an eigenvector corresponding to the eigenvalue $\\eigenvar$, then $A^2\\vect{v}=A(A\\vect{v}) = A(\\eigenvar\\vect{v}) = \\eigenvar(A\\vect{v}) = \\eigenvar^2\\vect{v}$. Therefore, $\\vect{v}$ is an eigenvector of $A^2$ with eigenvalue $\\eigenvar^2$.",
       "sha": "cd993fe2e611",
-      "zh": ""
+      "zh": "如果 $\\vect{v}$ 是特征值 $\\eigenvar$ 对应的特征向量，那么 $A^2\\vect{v}=A(A\\vect{v}) = A(\\eigenvar\\vect{v}) = \\eigenvar(A\\vect{v}) = \\eigenvar^2\\vect{v}$。因此，$\\vect{v}$ 是 $A^2$ 的特征向量，对应的特征值为 $\\eigenvar^2$。"
      }
     }
    ],
@@ -645,7 +645,7 @@
      "t": {
       "en": "Let $A$ be an invertible $n\\times n$-matrix, and assume $\\eigenvar$ is an eigenvalue of $A$. Show that $\\eigenvar\\neq 0$ and that $\\eigenvar^{-1}$ is an eigenvalue of $A^{-1}$.",
       "sha": "ac02ff10090c",
-      "zh": ""
+      "zh": "设 $A$ 是可逆的 $n\\times n$ 矩阵，并设 $\\eigenvar$ 是 $A$ 的特征值。证明 $\\eigenvar\\neq 0$，并且 $\\eigenvar^{-1}$ 是 $A^{-1}$ 的特征值。"
      }
     }
    ],
@@ -655,7 +655,7 @@
      "t": {
       "en": "We have $\\eigenvar A^{-1}\\vect{v} = A^{-1}\\eigenvar\\vect{v} = A^{-1}A\\vect{v} = \\vect{v}$. Since $\\vect{v}\\neq 0$, this implies $\\eigenvar\\neq 0$. Moreover, it implies $A^{-1}\\vect{v} = \\eigenvar^{-1}\\vect{v}$. Thus, $\\eigenvar^{-1}$ is an eigenvalue of $A^{-1}$.",
       "sha": "34f16e95ec4f",
-      "zh": ""
+      "zh": "我们有 $\\eigenvar A^{-1}\\vect{v} = A^{-1}\\eigenvar\\vect{v} = A^{-1}A\\vect{v} = \\vect{v}$。由于 $\\vect{v}\\neq 0$，这说明 $\\eigenvar\\neq 0$。此外，它还说明 $A^{-1}\\vect{v} = \\eigenvar^{-1}\\vect{v}$。于是，$\\eigenvar^{-1}$ 是 $A^{-1}$ 的特征值。"
      }
     }
    ],
@@ -676,7 +676,7 @@
      "t": {
       "en": "If $A$ is an $n\\times n$-matrix and $c$ is a non-zero constant, compare the eigenvalues of $A$ and $cA$.",
       "sha": "53aebc1f18fa",
-      "zh": ""
+      "zh": "设 $A$ 是 $n\\times n$ 矩阵，$c$ 是非零常数，比较 $A$ 与 $cA$ 的特征值。"
      }
     }
    ],
@@ -686,7 +686,7 @@
      "t": {
       "en": "Say $A\\vect{v}=\\eigenvar \\vect{v}$. Then $cA\\vect{v}=c\\eigenvar \\vect{v}$ and so the eigenvalues of $cA$ are just $c\\eigenvar$ where $\\eigenvar$ is an eigenvalue of $A$.",
       "sha": "586d927ed9ba",
-      "zh": ""
+      "zh": "设 $A\\vect{v}=\\eigenvar \\vect{v}$。那么 $cA\\vect{v}=c\\eigenvar \\vect{v}$，所以 $cA$ 的特征值恰好就是 $c\\eigenvar$，其中 $\\eigenvar$ 是 $A$ 的特征值。"
      }
     }
    ],
@@ -707,7 +707,7 @@
      "t": {
       "en": "Let $A,B$ be invertible $n\\times n$-matrices which commute. That is, $AB=BA$. Suppose $\\vect{v}$ is an eigenvector of $B$. Show that then $A\\vect{v}$ must also be an eigenvector for $B$.",
       "sha": "cbfe60123fb4",
-      "zh": ""
+      "zh": "设 $A,B$ 是可逆的 $n\\times n$ 矩阵，并且二者可交换，即 $AB=BA$。设 $\\vect{v}$ 是 $B$ 的特征向量。证明此时 $A\\vect{v}$ 也一定是 $B$ 的特征向量。"
      }
     }
    ],
@@ -717,7 +717,7 @@
      "t": {
       "en": "Suppose $\\vect{v}$ is an eigenvector of $B$, i.e., $B\\vect{v}=\\eigenvar \\vect{v}$. Then $BA\\vect{v}=AB\\vect{v} =A\\eigenvar \\vect{v}=\\eigenvar A\\vect{v}$, and therefore $A\\vect{v}$ is an eigenvector of $B$.",
       "sha": "978105bc2bd1",
-      "zh": ""
+      "zh": "设 $\\vect{v}$ 是 $B$ 的特征向量，即 $B\\vect{v}=\\eigenvar \\vect{v}$。那么 $BA\\vect{v}=AB\\vect{v} =A\\eigenvar \\vect{v}=\\eigenvar A\\vect{v}$，因此 $A\\vect{v}$ 是 $B$ 的特征向量。"
      }
     }
    ],
@@ -738,7 +738,7 @@
      "t": {
       "en": "Suppose $A$ is an $n\\times n$-matrix and it satisfies $A^m=A$ for some $m$ a positive integer larger than 1. Show that if $\\eigenvar$ is an eigenvalue of $A$ then $\\eigenvar$ equals either $0$, $1$, or $-1$.",
       "sha": "4e57c4c5ede8",
-      "zh": ""
+      "zh": "设 $A$ 是 $n\\times n$ 矩阵，并且对某个大于 1 的正整数 $m$ 满足 $A^m=A$。证明：如果 $\\eigenvar$ 是 $A$ 的特征值，那么 $\\eigenvar$ 等于 $0$、$1$ 或 $-1$。"
      }
     }
    ],
@@ -748,7 +748,7 @@
      "t": {
       "en": "Let $\\vect{v}$ be the eigenvector. Then $A^m\\vect{v}=\\eigenvar^m\\vect{v}$ and $A^m\\vect{v}=A\\vect{v}=\\eigenvar\\vect{v}$. Therefore $\\eigenvar^m=\\eigenvar$. Hence if $\\eigenvar \\neq 0$, we must have $\\eigenvar^{m-1}=1$, which implies that $\\eigenvar=\\pm 1$.",
       "sha": "8723cd9a424c",
-      "zh": ""
+      "zh": "设 $\\vect{v}$ 是特征向量。那么 $A^m\\vect{v}=\\eigenvar^m\\vect{v}$，且 $A^m\\vect{v}=A\\vect{v}=\\eigenvar\\vect{v}$。因此 $\\eigenvar^m=\\eigenvar$。于是，若 $\\eigenvar \\neq 0$，必有 $\\eigenvar^{m-1}=1$，这推出 $\\eigenvar=\\pm 1$。"
      }
     }
    ],
@@ -769,7 +769,7 @@
      "t": {
       "en": "Show that if $A\\vect{v}=\\eigenvar \\vect{v}$ and $A\\vect{w}=\\eigenvar \\vect{w}$, then whenever $k,p$ are scalars,",
       "sha": "01eef41c81bc",
-      "zh": ""
+      "zh": "证明：如果 $A\\vect{v}=\\eigenvar \\vect{v}$ 且 $A\\vect{w}=\\eigenvar \\vect{w}$，那么对任意标量 $k,p$，"
      }
     },
     {
@@ -781,7 +781,7 @@
      "t": {
       "en": "Does this imply that $k\\vect{v}+p\\vect{w}$ is an eigenvector? Explain.",
       "sha": "4bb249a0982d",
-      "zh": ""
+      "zh": "这是否说明 $k\\vect{v}+p\\vect{w}$ 是特征向量？请说明理由。"
      }
     }
    ],
@@ -791,7 +791,7 @@
      "t": {
       "en": "The formula follows from properties of matrix multiplication. However, this vector might not be an eigenvector because it might equal $0$ and eigenvectors cannot equal $0$.",
       "sha": "602fc23785ba",
-      "zh": ""
+      "zh": "这个公式可由矩阵乘法的性质得到。但是，这个向量不一定是特征向量，因为它可能等于 $0$，而特征向量不能为 $0$。"
      }
     }
    ],

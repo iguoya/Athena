@@ -7,7 +7,7 @@
    "t": {
     "en": "Recall from Algorithm “Finding the inverse of a matrix” that an $n\\times n$-matrix $A$ is invertible if and only if $A$ can be carried to the $n\\times n$ identity matrix using elementary row operations. Combining this with our discussion of elementary matrices we see that $A$ is invertible if and only if it can be written as a product of elementary matrices. This is the content of the following theorem.",
     "sha": "4688baf35031",
-    "zh": ""
+    "zh": "回顾算法“求矩阵的逆”：$n\\times n$ 矩阵 $A$ 可逆，当且仅当 $A$ 可以通过初等行变换化为 $n\\times n$ 单位矩阵。把这一点与我们对初等矩阵的讨论结合起来，就得到：$A$ 可逆当且仅当它可以写成若干初等矩阵的乘积。这正是下面定理的内容。"
    }
   },
   {
@@ -16,7 +16,7 @@
    "title": {
     "en": "Product of elementary matrices",
     "sha": "93f10577e6ac",
-    "zh": ""
+    "zh": "初等矩阵的乘积"
    },
    "blocks": [
     {
@@ -24,7 +24,7 @@
      "t": {
       "en": "Let $A$ be an $n \\times n$-matrix. Then $A$ is invertible if and only if it can be written as a product of elementary matrices.",
       "sha": "b26b9797926c",
-      "zh": ""
+      "zh": "设 $A$ 是 $n \\times n$ 矩阵。那么 $A$ 可逆，当且仅当它可以写成若干初等矩阵的乘积。"
      }
     }
    ]
@@ -38,7 +38,7 @@
      "t": {
       "en": "If $A$ is an invertible $n\\times n$-matrix, then its reduced echelon form is the $n\\times n$ identity matrix $I$. By Theorem “The form $R=UA$”, we can write $I=UA$, where $U = E_k\\cdots E_2E_1$ is a product of elementary matrices. Then",
       "sha": "a5c17ad09c21",
-      "zh": ""
+      "zh": "如果 $A$ 是可逆的 $n\\times n$ 矩阵，那么它的简化行阶梯形是 $n\\times n$ 单位矩阵 $I$。由定理“$R=UA$ 的形式”，可以写出 $I=UA$，其中 $U = E_k\\cdots E_2E_1$ 是若干初等矩阵的乘积。于是"
      }
     },
     {
@@ -50,7 +50,7 @@
      "t": {
       "en": "By Theorem “Inverse of an elementary matrix”, if $E_i$ is an elementary matrix, then so is $E_i^{-1}$. Therefore, $A$ has been written as a product of elementary matrices. Conversely, if $A$ can be written as a product of elementary matrices, then $A$ is clearly invertible, because each elementary matrix is invertible.",
       "sha": "28722dde54f5",
-      "zh": ""
+      "zh": "由定理“初等矩阵的逆”，如果 $E_i$ 是初等矩阵，那么 $E_i^{-1}$ 也是初等矩阵。因此，$A$ 已经被写成了若干初等矩阵的乘积。反过来，如果 $A$ 可以写成若干初等矩阵的乘积，那么 $A$ 当然可逆，因为每个初等矩阵都可逆。"
      }
     }
    ]
@@ -61,7 +61,7 @@
    "title": {
     "en": "Product of elementary matrices",
     "sha": "93f10577e6ac",
-    "zh": ""
+    "zh": "初等矩阵的乘积"
    },
    "blocks": [
     {
@@ -69,7 +69,7 @@
      "t": {
       "en": "Let $A = \\left[\\begin{array}{rrr} 0 & 1 & 0 \\\\ 1 & 1 & 0 \\\\ 0 & -2 & 1 \\end{array}\\right]$. Write $A$ as a product of elementary matrices.",
       "sha": "8ac0ddea7c1a",
-      "zh": ""
+      "zh": "设 $A = \\left[\\begin{array}{rrr} 0 & 1 & 0 \\\\ 1 & 1 & 0 \\\\ 0 & -2 & 1 \\end{array}\\right]$。把 $A$ 写成若干初等矩阵的乘积。"
      }
     }
    ]
@@ -83,7 +83,7 @@
      "t": {
       "en": "Following the process of Theorem “Product of elementary matrices”, we first row-reduce $A$ to its reduced echelon form, recording each row operation as an elementary matrix.",
       "sha": "9e08df98f5a8",
-      "zh": ""
+      "zh": "按照定理“初等矩阵的乘积”的做法，我们先把 $A$ 行化简为它的简化行阶梯形，并把每一步行变换记为一个初等矩阵。"
      }
     },
     {
@@ -103,7 +103,7 @@
      "t": {
       "en": "Notice that the reduced echelon form of $A$ is $I$. Hence $I = UA$ where $U=E_3E_2E_1$. It follows that $A = U^{-1} = E_1^{-1}E_2^{-1}E_3^{-1}$, and so we have succeeded in writing $A$ as a product of elementary matrices",
       "sha": "fb6b5abc2570",
-      "zh": ""
+      "zh": "注意，$A$ 的简化行阶梯形是 $I$。因此 $I = UA$，其中 $U=E_3E_2E_1$。由此得到 $A = U^{-1} = E_1^{-1}E_2^{-1}E_3^{-1}$，这样我们就成功地把 $A$ 写成了初等矩阵的乘积"
      }
     },
     {
@@ -115,7 +115,7 @@
      "t": {
       "en": "In particular, it follows that $A$ is invertible.",
       "sha": "742cd8ebbcf0",
-      "zh": ""
+      "zh": "特别地，由此可知 $A$ 是可逆的。"
      }
     }
    ]

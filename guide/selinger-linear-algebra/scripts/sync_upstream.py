@@ -105,7 +105,7 @@ def drop_cmd(t: str, name: str) -> str:
     """删掉 \\name{...}（含内容），如 \\index。"""
     out = []
     i = 0
-    pat = re.compile(r"\\" + name + r"\*?\s*(?=\{)")
+    pat = re.compile(r"\\" + name + r"\*?(?:\[[^\]]*\])?\s*(?=\{)")
     while True:
         m = pat.search(t, i)
         if not m:
@@ -282,6 +282,8 @@ def text_to_md(t: str) -> str:
 
 def inline(t: str) -> str:
     """行内文字 → 轻量标记：**粗体** *斜体* $公式$。空白折叠成单个空格。"""
+    t = drop_cmd(drop_cmd(t, "index"), "eindex")
+    t = re.sub(r"\\textbf(?=[A-Za-z])([A-Za-z]+)", r"\\textbf{\1}", t)  # 上游笔误 \textbfword
     out = []
     for kind, s in split_math(t):
         if kind == "m":

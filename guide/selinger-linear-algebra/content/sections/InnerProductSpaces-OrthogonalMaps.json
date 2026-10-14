@@ -15,7 +15,7 @@
         "t": {
          "en": "Determine whether a linear transformation is an isometry and/or orthogonal.",
          "sha": "5e70926eb838",
-         "zh": ""
+         "zh": "判断一个线性变换是否是等距映射和/或正交变换。"
         }
        }
       ],
@@ -25,7 +25,7 @@
         "t": {
          "en": "Determine whether a matrix is orthogonal.",
          "sha": "b12bdf5b7d6f",
-         "zh": ""
+         "zh": "判断一个矩阵是否是正交矩阵。"
         }
        }
       ]
@@ -39,7 +39,7 @@
    "title": {
     "en": "Isometries and orthogonal maps",
     "sha": "01c2845bb8a1",
-    "zh": ""
+    "zh": "等距映射与正交映射"
    },
    "blocks": [
     {
@@ -47,7 +47,7 @@
      "t": {
       "en": "Let $V,W$ be real inner product spaces, and let $T:V\\to W$ be a linear transformation. We say that $T$ is an **isometry** if for all $\\vect{u},\\vect{v}\\in V$,",
       "sha": "4e1292927e20",
-      "zh": ""
+      "zh": "设 $V,W$ 是实内积空间，$T:V\\to W$ 是线性变换。如果对所有 $\\vect{u},\\vect{v}\\in V$ 都有下式成立，我们就说 $T$ 是**等距映射**（isometry）："
      }
     },
     {
@@ -59,7 +59,7 @@
      "t": {
       "en": "Moreover, $T$ is called an **orthogonal transformation**, or simply **orthogonal**, if it is an isometry and invertible.",
       "sha": "eb4593105eae",
-      "zh": ""
+      "zh": "进一步，如果 $T$ 既是等距映射又可逆，就称它为**正交变换**（orthogonal transformation），简称**正交**的。"
      }
     }
    ]
@@ -69,7 +69,7 @@
    "t": {
     "en": "In particular, if $T$ is an isometry, we have $\\norm{T\\vect{v}} = \\sqrt{\\iprod{T\\vect{v},T\\vect{v}}} = \\sqrt{\\iprod{\\vect{v},\\vect{v}}} = \\norm{\\vect{v}}$, so isometries preserve the norm. (This is fact where the name “isometry” comes from: from Greek “isos”, meaning “equal”, and “metron”, meaning “measure”). Conversely, any norm-preserving linear function is an isometry, as the following proposition shows.",
     "sha": "d7e67e733aec",
-    "zh": ""
+    "zh": "特别地，如果 $T$ 是等距映射，则有 $\\norm{T\\vect{v}} = \\sqrt{\\iprod{T\\vect{v},T\\vect{v}}} = \\sqrt{\\iprod{\\vect{v},\\vect{v}}} = \\norm{\\vect{v}}$，所以等距映射保持范数。（“isometry”这个名字就是由此而来：它源自希腊语的“isos”，意为“相等”，和“metron”，意为“度量”。）反过来，任何保持范数的线性函数都是等距映射，下面的命题说明了这一点。"
    }
   },
   {
@@ -78,7 +78,7 @@
    "title": {
     "en": "Norm-preserving linear maps are isometries",
     "sha": "66656aef79a6",
-    "zh": ""
+    "zh": "保持范数的线性映射是等距映射"
    },
    "blocks": [
     {
@@ -86,7 +86,7 @@
      "t": {
       "en": "Let $T:V\\to W$ be a linear function such that for all $\\vect{v}\\in V$, $\\norm{T\\vect{v}} = \\norm{\\vect{v}}$. Then $T$ is an isometry.",
       "sha": "378c55e4bd9b",
-      "zh": ""
+      "zh": "设 $T:V\\to W$ 是线性函数，且对所有 $\\vect{v}\\in V$ 都有 $\\norm{T\\vect{v}} = \\norm{\\vect{v}}$。则 $T$ 是等距映射。"
      }
     }
    ]
@@ -100,7 +100,7 @@
      "t": {
       "en": "We first note that for all $\\vect{u},\\vect{v}\\in V$,",
       "sha": "9d3dbe7a294b",
-      "zh": ""
+      "zh": "我们先注意到，对所有 $\\vect{u},\\vect{v}\\in V$，"
      }
     },
     {
@@ -112,7 +112,7 @@
      "t": {
       "en": "Now suppose $T$ is norm-preserving and linear. Then for all $\\vect{u},\\vect{v}\\in V$,",
       "sha": "ef1aa544d108",
-      "zh": ""
+      "zh": "现在设 $T$ 保持范数且是线性的。则对所有 $\\vect{u},\\vect{v}\\in V$，"
      }
     },
     {
@@ -124,7 +124,7 @@
      "t": {
       "en": "Therefore, $T$ is an isometry.",
       "sha": "34c7a7b054c6",
-      "zh": ""
+      "zh": "因此，$T$ 是等距映射。"
      }
     }
    ]
@@ -134,7 +134,7 @@
    "t": {
     "en": "We also note that if $T$ is an isometry and $\\vect{u}\\orth\\vect{v}$, then $T(\\vect{u})\\orth T(\\vect{v})$, because $\\iprod{T(\\vect{u}),T(\\vect{v})} = \\iprod{\\vect{u},\\vect{v}} = 0$. So isometries preserve right angles. In fact, isometries also preserve arbitrary angles, due to the formula $\\cos\\theta = \\frac{\\iprod{\\vect{u},\\vect{v}}}{\\norm{\\vect{u}}\\,\\norm{\\vect{v}}} = \\frac{\\iprod{T(\\vect{u}),T(\\vect{v})}} {\\norm{T(\\vect{u})}\\,\\norm{T(\\vect{v})}}$.",
     "sha": "3ae874283e4f",
-    "zh": ""
+    "zh": "我们还注意到，如果 $T$ 是等距映射且 $\\vect{u}\\orth\\vect{v}$，那么 $T(\\vect{u})\\orth T(\\vect{v})$，因为 $\\iprod{T(\\vect{u}),T(\\vect{v})} = \\iprod{\\vect{u},\\vect{v}} = 0$。所以等距映射保持直角。事实上，等距映射也保持任意角度，这是由公式 $\\cos\\theta = \\frac{\\iprod{\\vect{u},\\vect{v}}}{\\norm{\\vect{u}}\\,\\norm{\\vect{v}}} = \\frac{\\iprod{T(\\vect{u}),T(\\vect{v})}} {\\norm{T(\\vect{u})}\\,\\norm{T(\\vect{v})}}$ 得到的。"
    }
   },
   {
@@ -143,7 +143,7 @@
    "title": {
     "en": "Orthogonal transformations on $R^n$",
     "sha": "8c6bac67c9ba",
-    "zh": ""
+    "zh": "$R^n$ 上的正交变换"
    },
    "blocks": [
     {
@@ -151,7 +151,7 @@
      "t": {
       "en": "Let $T_1,T_2,T_3:\\R^2\\to\\R^2$ be the linear transformations with matrices",
       "sha": "39fe5304fe35",
-      "zh": ""
+      "zh": "设 $T_1,T_2,T_3:\\R^2\\to\\R^2$ 是线性变换，它们的矩阵分别为"
      }
     },
     {
@@ -163,7 +163,7 @@
      "t": {
       "en": "respectively. $T_1$ is a counterclockwise rotation by $90^{\\circ}$, $T_2$ is a scaling by a factor of $2$, and $T_3$ is a shearing. Then $T_1$ is orthogonal, but $T_2$ and $T_3$ are not. Note that $T_1$, being a rotation, preserves lengths and angles. $T_2$ preserves angles but not lengths. $T_3$ preserves neither lengths nor angles.",
       "sha": "18a83acf935e",
-      "zh": ""
+      "zh": "（依次对应上面的三个矩阵）。$T_1$ 是逆时针旋转 $90^{\\circ}$，$T_2$ 是放大为 $2$ 倍的伸缩，$T_3$ 是剪切。那么 $T_1$ 是正交的，而 $T_2$ 和 $T_3$ 不是。请注意，$T_1$ 是旋转，所以保持长度和角度；$T_2$ 保持角度但不保持长度；$T_3$ 既不保持长度，也不保持角度。"
      }
     },
     {
@@ -182,7 +182,7 @@
    "title": {
     "en": "The matrix of an orthogonal transformation",
     "sha": "210b8f009c0c",
-    "zh": ""
+    "zh": "正交变换的矩阵"
    },
    "blocks": [
     {
@@ -190,7 +190,7 @@
      "t": {
       "en": "Let $V,W$ be finite-dimensional real inner product spaces and let $T:V\\to W$ be a linear transformation. Let $B$ and $C$ be orthonormal bases of $V$ and $W$, respectively, and let $P=\\coord{T}_{C,B}$ be the matrix of $T$ with respect to the bases $B$ and $C$. Then",
       "sha": "6b2d9d766b41",
-      "zh": ""
+      "zh": "设 $V,W$ 是有限维实内积空间，$T:V\\to W$ 是线性变换。设 $B$ 和 $C$ 分别是 $V$ 和 $W$ 的标准正交基，$P=\\coord{T}_{C,B}$ 是 $T$ 关于基 $B$ 和 $C$ 的矩阵。则"
      }
     },
     {
@@ -208,7 +208,7 @@
            "t": {
             "en": "$T$ is an isometry if and only if $P^TP = I$.",
             "sha": "8222c4eea55e",
-            "zh": ""
+            "zh": "$T$ 是等距映射，当且仅当 $P^TP = I$。"
            }
           }
          ],
@@ -218,7 +218,7 @@
            "t": {
             "en": "$T$ is orthogonal if and only if $P^TP = I$ and $\\dim V=\\dim W$.",
             "sha": "ab580c5689f4",
-            "zh": ""
+            "zh": "$T$ 是正交变换，当且仅当 $P^TP = I$ 且 $\\dim V=\\dim W$。"
            }
           }
          ]
@@ -238,7 +238,7 @@
      "t": {
       "en": "(a) Recall from Proposition “Inner product and dot product” that for all $\\vect{u},\\vect{v}\\in V$, we have $\\iprod{\\vect{u},\\vect{v}} = \\coord{\\vect{u}}_B\\dotprod \\coord{\\vect{v}}_B$. Consider two vectors $\\vect{u},\\vect{v}\\in V$ and let $\\vect{t}=\\coord{u}_B$ and $\\vect{s}=\\coord{v}_B$. We have:",
       "sha": "cc82b6d61cf0",
-      "zh": ""
+      "zh": "(a) 回想命题“内积与点积”：对所有 $\\vect{u},\\vect{v}\\in V$，有 $\\iprod{\\vect{u},\\vect{v}} = \\coord{\\vect{u}}_B\\dotprod \\coord{\\vect{v}}_B$。任取两个向量 $\\vect{u},\\vect{v}\\in V$，令 $\\vect{t}=\\coord{u}_B$，$\\vect{s}=\\coord{v}_B$。我们有："
      }
     },
     {
@@ -250,7 +250,7 @@
      "t": {
       "en": "Therefore, $T$ is an isometry if and only if $\\vect{t}^T P^T P\\vect{s} = \\vect{t}^T I \\vect{s}$ holds for all $\\vect{t},\\vect{s}\\in\\R^m$. If $P^TP=I$, then this is clearly true. Conversely, assume $\\vect{t}^T P^T P\\vect{s} = \\vect{t}^T I \\vect{s}$ holds for all $\\vect{t},\\vect{s}\\in\\R^m$. Then by taking $\\vect{t}$ and $\\vect{s}$ to be the $i\\th$ and $j\\th$ standard basis vector, it follows that the $(i,j)$-entry of $P^TP$ is equal to the $(i,j)$-entry of $I$, for all $i$ and $j$. Therefore, $P^TP=I$.",
       "sha": "2412c83f2c25",
-      "zh": ""
+      "zh": "因此，$T$ 是等距映射，当且仅当对所有 $\\vect{t},\\vect{s}\\in\\R^m$ 都有 $\\vect{t}^T P^T P\\vect{s} = \\vect{t}^T I \\vect{s}$。如果 $P^TP=I$，这个等式当然成立。反过来，假设对所有 $\\vect{t},\\vect{s}\\in\\R^m$ 都有 $\\vect{t}^T P^T P\\vect{s} = \\vect{t}^T I \\vect{s}$。取 $\\vect{t}$ 和 $\\vect{s}$ 分别为第 $i\\th$ 个和第 $j\\th$ 个标准基向量，就得到 $P^TP$ 的 $(i,j)$ 元素等于 $I$ 的 $(i,j)$ 元素，这对所有 $i$ 和 $j$ 都成立。所以 $P^TP=I$。"
      }
     },
     {
@@ -258,7 +258,7 @@
      "t": {
       "en": "(b) By definition, $T$ is orthogonal if and only if it is an isometry and invertible. Therefore, if $T$ is orthogonal, then $P^TP=I$ by part (a) and $\\dim V=\\dim W$ because every invertible matrix is square (see Theorem “Invertible matrices are square”). Conversely, assume that $P^TP=I$ and $\\dim V=\\dim W$. Then $T$ is an isometry by part (a). Also, by Theorem “Right invertible square matrices are invertible”, since $P$ is square and $P^T$ is a left inverse of $P$, the matrix $P$, and therefore the linear transformation $T$, is invertible. Therefore, $T$ is orthogonal.",
       "sha": "174b44056566",
-      "zh": ""
+      "zh": "(b) 由定义，$T$ 是正交变换，当且仅当它是等距映射且可逆。因此，如果 $T$ 是正交变换，那么由 (a) 部分得 $P^TP=I$，并且因为可逆矩阵都是方阵（见定理“可逆矩阵是方阵”），所以 $\\dim V=\\dim W$。反过来，假设 $P^TP=I$ 且 $\\dim V=\\dim W$。则由 (a) 部分，$T$ 是等距映射。又由定理“右可逆的方阵是可逆的”，因为 $P$ 是方阵且 $P^T$ 是 $P$ 的左逆，所以矩阵 $P$ 可逆，从而线性变换 $T$ 也可逆。因此，$T$ 是正交变换。"
      }
     }
    ]
@@ -269,7 +269,7 @@
    "title": {
     "en": "Orthogonal transformations",
     "sha": "e7dc04a41e98",
-    "zh": ""
+    "zh": "正交变换"
    },
    "blocks": [
     {
@@ -277,7 +277,7 @@
      "t": {
       "en": "Which of the following matrices define orthogonal transformations? Which ones define isometries?",
       "sha": "0ada6cf8d3a6",
-      "zh": ""
+      "zh": "下列矩阵中，哪些定义的是正交变换？哪些定义的是等距映射？"
      }
     },
     {
@@ -295,7 +295,7 @@
      "t": {
       "en": "We have",
       "sha": "a2214cd5b1a4",
-      "zh": ""
+      "zh": "我们有"
      }
     },
     {
@@ -307,7 +307,7 @@
      "t": {
       "en": "and therefore $A$ defines an isometry and (since it is also a square matrix) an orthogonal transformation. We have",
       "sha": "31f10cb89ba5",
-      "zh": ""
+      "zh": "因此 $A$ 定义的是等距映射，并且（因为它还是方阵）也是正交变换。我们有"
      }
     },
     {
@@ -319,7 +319,7 @@
      "t": {
       "en": "so the linear transformation defined by $B$ is neither an isometry nor orthogonal. A similar pair of calculations shows that $C^TC=I$ and $D^TD=I$, so both $C$ and $D$ are isometries. Since $C$ is a square matrix, it is also orthogonal. $D$ is not a square matrix, and therefore not orthogonal.",
       "sha": "e02efa192462",
-      "zh": ""
+      "zh": "所以 $B$ 定义的线性变换既不是等距映射，也不是正交变换。类似地计算可得 $C^TC=I$ 且 $D^TD=I$，所以 $C$ 和 $D$ 都是等距映射。因为 $C$ 是方阵，所以它也是正交变换。$D$ 不是方阵，因此不是正交变换。"
      }
     }
    ]
@@ -329,7 +329,7 @@
    "t": {
     "en": "In light of Proposition “The matrix of an orthogonal transformation”, we say that an $n\\times n$-matrix $P$ is orthogonal if $P^TP=I$.",
     "sha": "0472ebaeada0",
-    "zh": ""
+    "zh": "根据命题“正交变换的矩阵”，我们说一个 $n\\times n$ 矩阵 $P$ 是正交的，当 $P^TP=I$。"
    }
   },
   {
@@ -338,7 +338,7 @@
    "title": {
     "en": "Orthogonal matrix",
     "sha": "1134c0bab38a",
-    "zh": ""
+    "zh": "正交矩阵"
    },
    "blocks": [
     {
@@ -346,7 +346,7 @@
      "t": {
       "en": "An $n\\times n$-matrix $P$ is called **orthogonal** if $P^TP=I$.",
       "sha": "8eb44e7424c3",
-      "zh": ""
+      "zh": "一个 $n\\times n$ 矩阵 $P$ 称为**正交的**（orthogonal），如果 $P^TP=I$。"
      }
     }
    ]
@@ -356,7 +356,7 @@
    "t": {
     "en": "The following proposition gives several equivalent ways of checking whether an $n\\times n$-matrix $P$ is orthogonal.",
     "sha": "24783bf9170b",
-    "zh": ""
+    "zh": "下面的命题给出了几种等价的方法，用来检验一个 $n\\times n$ 矩阵 $P$ 是否是正交的。"
    }
   },
   {
@@ -365,7 +365,7 @@
    "title": {
     "en": "Conditions for orthogonal matrices",
     "sha": "553e4769164c",
-    "zh": ""
+    "zh": "正交矩阵的判定条件"
    },
    "blocks": [
     {
@@ -373,7 +373,7 @@
      "t": {
       "en": "The following are equivalent for an $n\\times n$-matrix $P$:",
       "sha": "efd5b328602b",
-      "zh": ""
+      "zh": "对 $n\\times n$ 矩阵 $P$，下列各条等价："
      }
     },
     {
@@ -391,7 +391,7 @@
            "t": {
             "en": "$P$ is orthogonal.",
             "sha": "b5dfd93ae754",
-            "zh": ""
+            "zh": "$P$ 是正交的。"
            }
           }
          ],
@@ -401,7 +401,7 @@
            "t": {
             "en": "$P^TP=I$.",
             "sha": "b9c301157ed8",
-            "zh": ""
+            "zh": "$P^TP=I$。"
            }
           }
          ],
@@ -411,7 +411,7 @@
            "t": {
             "en": "$P$ is invertible and $P^{-1}=P^T$.",
             "sha": "fe9a530ff755",
-            "zh": ""
+            "zh": "$P$ 可逆，且 $P^{-1}=P^T$。"
            }
           }
          ],
@@ -421,7 +421,7 @@
            "t": {
             "en": "$PP^T=I$.",
             "sha": "984cc5563acc",
-            "zh": ""
+            "zh": "$PP^T=I$。"
            }
           }
          ],
@@ -431,7 +431,7 @@
            "t": {
             "en": "$P^T$ is orthogonal.",
             "sha": "dc3158cda4bd",
-            "zh": ""
+            "zh": "$P^T$ 是正交的。"
            }
           }
          ],
@@ -441,7 +441,7 @@
            "t": {
             "en": "The columns of $P$ form an orthonormal set of vectors.",
             "sha": "5e4bba8b6286",
-            "zh": ""
+            "zh": "$P$ 的各列构成一个标准正交向量组。"
            }
           }
          ],
@@ -451,7 +451,7 @@
            "t": {
             "en": "The rows of $P$ form an orthonormal set of vectors.",
             "sha": "b84e170d5001",
-            "zh": ""
+            "zh": "$P$ 的各行构成一个标准正交向量组。"
            }
           }
          ]
@@ -471,7 +471,7 @@
      "t": {
       "en": "The equivalence (a) \\textiff (b) is just the definition of orthogonality, bearing in mind that $P$ is assumed to be a square matrix. The equivalences (b) \\textiff (c) \\textiff (d) follow from Theorem “Right invertible square matrices are invertible”, since a square matrix is invertible if and only if it is left invertible if and only if it is right invertible. The equivalence (d) \\textiff (e) is again just the definition of orthogonality, this time applied to $P^T$. To show (b) \\textiff (f), let $\\vect{a}_1,\\ldots,\\vect{a}_n$ be the columns of $P$, and let $\\vect{e}_1,\\ldots,\\vect{e}_n$ be the standard basis vectors of $\\R^n$. Then we have $P^TP = I$ if and only if for all $i,j$, the $(i,j)$-entry of $P^TP$ is equal to the $(i,j)$-entry of $I$. But the $(i,j)$-entry of $P^TP$ is $\\vect{e}_i^TP^TP\\vect{e}_j = \\vect{a}_i^T\\vect{a}_j = \\vect{a}_i\\dotprod\\vect{a}_j$. On the other hand, the $(i,j)$-entry of $I$ is $1$ if $i=j$ and $0$ if $i\\neq j$. It follows that $P^TP=I$ if and only if for all $i,j$,",
       "sha": "cf01349b23e2",
-      "zh": ""
+      "zh": "(a) 与 (b) 的等价性就是正交性的定义，只需记住 $P$ 被假定为方阵。(b)、(c)、(d) 三者的等价性由定理“右可逆的方阵是可逆的”得出，因为方阵可逆，当且仅当它左可逆，当且仅当它右可逆。(d) 与 (e) 的等价性同样就是正交性的定义，只不过这次用在 $P^T$ 上。为了证明 (b) 与 (f) 等价，设 $\\vect{a}_1,\\ldots,\\vect{a}_n$ 是 $P$ 的各列，$\\vect{e}_1,\\ldots,\\vect{e}_n$ 是 $\\R^n$ 的标准基向量。那么 $P^TP = I$，当且仅当对所有 $i,j$，$P^TP$ 的 $(i,j)$ 元素等于 $I$ 的 $(i,j)$ 元素。而 $P^TP$ 的 $(i,j)$ 元素是 $\\vect{e}_i^TP^TP\\vect{e}_j = \\vect{a}_i^T\\vect{a}_j = \\vect{a}_i\\dotprod\\vect{a}_j$。另一方面，$I$ 的 $(i,j)$ 元素在 $i=j$ 时为 $1$，在 $i\\neq j$ 时为 $0$。由此可知，$P^TP=I$，当且仅当对所有 $i,j$，"
      }
     },
     {
@@ -483,7 +483,7 @@
      "t": {
       "en": "But this is exactly what it means for $\\vect{a}_1,\\ldots,\\vect{a}_n$ to form an orthonormal set. The proof of (d) \\textiff (g) is completely analogous, using rows instead of columns.",
       "sha": "f50d24b84c2a",
-      "zh": ""
+      "zh": "而这恰好就是 $\\vect{a}_1,\\ldots,\\vect{a}_n$ 构成标准正交向量组的含义。(d) 与 (g) 等价的证明完全类似，只需把列换成行。"
      }
     }
    ]
@@ -494,7 +494,7 @@
    "title": {
     "en": "Orthogonal matrices",
     "sha": "b8e2ef2bcd41",
-    "zh": ""
+    "zh": "正交矩阵的判断"
    },
    "blocks": [
     {
@@ -502,7 +502,7 @@
      "t": {
       "en": "Determine which of the following matrices are orthogonal by checking whether the columns form an orthonormal set.",
       "sha": "74d03d88d439",
-      "zh": ""
+      "zh": "通过检查各列是否构成标准正交向量组，判断下列哪些矩阵是正交的。"
      }
     },
     {
@@ -520,7 +520,7 @@
      "t": {
       "en": "By Proposition “Orthogonal matrices”, it suffices to check whether the columns of each matrix are orthonormal. This is the case for $A$ and $B$. For example, the columns of $B$ are",
       "sha": "6b5710950e74",
-      "zh": ""
+      "zh": "由命题“正交矩阵的判断”，只需检查每个矩阵的各列是否标准正交。$A$ 和 $B$ 满足这一点。例如，$B$ 的各列为"
      }
     },
     {
@@ -532,7 +532,7 @@
      "t": {
       "en": "and we have",
       "sha": "38670b8d131b",
-      "zh": ""
+      "zh": "并且我们有"
      }
     },
     {
@@ -552,7 +552,7 @@
      "t": {
       "en": "So the columns of $B$ are orthonormal. The columns of $C$ are orthogonal, but not normalized, so $C$ is not an orthogonal matrix. The columns of $D$ are normalized, but not orthogonal, so $D$ is not an orthogonal matrix either.",
       "sha": "3da35528b0b4",
-      "zh": ""
+      "zh": "所以 $B$ 的各列是标准正交的。$C$ 的各列是正交的，但没有单位化，所以 $C$ 不是正交矩阵。$D$ 的各列是单位向量，但不正交，所以 $D$ 也不是正交矩阵。"
      }
     }
    ]
@@ -563,7 +563,7 @@
    "title": {
     "en": "Properties of orthogonal matrices",
     "sha": "5ac2ebfb99c1",
-    "zh": ""
+    "zh": "正交矩阵的性质"
    },
    "blocks": [
     {
@@ -581,7 +581,7 @@
            "t": {
             "en": "If $P,Q$ are orthogonal $n\\times n$-matrices, then $PQ$ is orthogonal.",
             "sha": "1c4612e3177c",
-            "zh": ""
+            "zh": "如果 $P,Q$ 是正交的 $n\\times n$ 矩阵，则 $PQ$ 是正交的。"
            }
           }
          ],
@@ -591,7 +591,7 @@
            "t": {
             "en": "The identity matrix is orthogonal.",
             "sha": "daab41cb94f0",
-            "zh": ""
+            "zh": "单位矩阵是正交的。"
            }
           }
          ],
@@ -601,7 +601,7 @@
            "t": {
             "en": "If $P$ is orthogonal, then so is $P^{-1}$.",
             "sha": "49560d69d421",
-            "zh": ""
+            "zh": "如果 $P$ 是正交的，则 $P^{-1}$ 也是正交的。"
            }
           }
          ],
@@ -611,7 +611,7 @@
            "t": {
             "en": "If $P$ is an orthogonal $n\\times n$-matrix and $Q$ is an orthogonal $m\\times m$-matrix, then the $(n+m)\\times(n+m)$-matrix",
             "sha": "cdb823219e38",
-            "zh": ""
+            "zh": "如果 $P$ 是正交的 $n\\times n$ 矩阵，$Q$ 是正交的 $m\\times m$ 矩阵，则 $(n+m)\\times(n+m)$ 矩阵"
            }
           },
           {
@@ -623,7 +623,7 @@
            "t": {
             "en": "is orthogonal.",
             "sha": "4d64ba8517a6",
-            "zh": ""
+            "zh": "是正交的。"
            }
           }
          ]
@@ -644,7 +644,7 @@
      "t": {
       "en": "Which of the following linear transformations $T:\\R^3\\to\\R^3$ are orthogonal?",
       "sha": "c288bc35b05f",
-      "zh": ""
+      "zh": "下列线性变换 $T:\\R^3\\to\\R^3$ 中，哪些是正交的？"
      }
     },
     {
@@ -657,7 +657,7 @@
         "t": {
          "en": "A rotation by 30 degrees about the $z$-axis.",
          "sha": "6896d96ab0b6",
-         "zh": ""
+         "zh": "绕 $z$ 轴旋转 30 度。"
         }
        }
       ],
@@ -667,7 +667,7 @@
         "t": {
          "en": "A reflection about the plane $x=y$.",
          "sha": "7798194a94df",
-         "zh": ""
+         "zh": "关于平面 $x=y$ 的反射。"
         }
        }
       ],
@@ -677,7 +677,7 @@
         "t": {
          "en": "A scaling by a factor of $2$.",
          "sha": "b5c94974e5b0",
-         "zh": ""
+         "zh": "放大为 $2$ 倍的伸缩。"
         }
        }
       ],
@@ -687,7 +687,7 @@
         "t": {
          "en": "A scaling by a factor of $-1$.",
          "sha": "bb118e61f6ea",
-         "zh": ""
+         "zh": "伸缩因子为 $-1$ 的伸缩。"
         }
        }
       ]
@@ -700,7 +700,7 @@
      "t": {
       "en": "(a) Yes. (b) Yes. (c) No. (d) Yes.",
       "sha": "c0e9c01cac65",
-      "zh": ""
+      "zh": "(a) 是。(b) 是。(c) 不是。(d) 是。"
      }
     }
    ],
@@ -721,7 +721,7 @@
      "t": {
       "en": "Which of the following matrices define orthogonal transformations? Which ones define isometries?",
       "sha": "0ada6cf8d3a6",
-      "zh": ""
+      "zh": "下列矩阵中，哪些定义的是正交变换？哪些定义的是等距映射？"
      }
     },
     {
@@ -735,7 +735,7 @@
      "t": {
       "en": "$A$ and $C$ are orthogonal (and therefore isometries). $D$ is an isometry but not orthogonal. $B$ is neither orthogonal nor an isometry.",
       "sha": "90a7a419f955",
-      "zh": ""
+      "zh": "$A$ 和 $C$ 是正交的（因此也是等距映射）。$D$ 是等距映射但不是正交的。$B$ 既不是正交的，也不是等距映射。"
      }
     }
    ],
@@ -756,7 +756,7 @@
      "t": {
       "en": "Determine which of the following matrices are orthogonal by checking whether the columns form an orthonormal set.",
       "sha": "74d03d88d439",
-      "zh": ""
+      "zh": "通过检查各列是否构成标准正交向量组，判断下列哪些矩阵是正交的。"
      }
     },
     {
@@ -770,7 +770,7 @@
      "t": {
       "en": "$A$ and $D$ are orthogonal, but $B$ and $C$ are not.",
       "sha": "87948b453ff0",
-      "zh": ""
+      "zh": "$A$ 和 $D$ 是正交的，但 $B$ 和 $C$ 不是。"
      }
     }
    ],
