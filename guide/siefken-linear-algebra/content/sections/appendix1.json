@@ -81,9 +81,9 @@
   {
    "k": "p",
    "t": {
-    "en": "Every vector equation, by way of coordinates, corresponds to a system of equations. And, fortunately for us, there is an *algorithm* to find all solutions to these systems\\footnote Saying there is an *algorithm* for “$X$” means that there is a specific set of (non-random) rules that *always* accomplishes “$X$”. As a consequence, doing “$X$” never requires special insight. For example, there *is* an algorithm for multiplying numbers, but there *is not* an algorithm for factoring polynomials of degree 5 or greater..",
-    "sha": "e28cf7f36f41",
-    "zh": "每个向量方程通过坐标都对应一个方程组。而且幸运的是，有一种*算法*可以找出这类方程组的所有解\\footnote 说“存在求解‘$X$’的*算法*”，是指有一套明确的（非随机的）规则，*总能*完成“$X$”。因此，做“$X$”从来不需要特别的灵感。例如，乘法*有*算法，而对于次数不小于 5 的多项式，因式分解*没有*算法。"
+    "en": "Every vector equation, by way of coordinates, corresponds to a system of equations. And, fortunately for us, there is an *algorithm* to find all solutions to these systems 〔注： Saying there is an *algorithm* for “$X$” means that there is a specific set of (non-random) rules that *always* accomplishes “$X$”. As a consequence, doing “$X$” never requires special insight. For example, there *is* an algorithm for multiplying numbers, but there *is not* an algorithm for factoring polynomials of degree 5 or greater.〕.",
+    "sha": "69fa917fbaed",
+    "zh": "每个向量方程，通过坐标，都对应一个方程组。而且我们很幸运：求这类方程组的全部解有一套*算法*〔注：说存在求解“$X$”的*算法*，意思是有一套明确的（非随机的）规则，*总能*完成“$X$”。因此，做“$X$”这件事从不需要特别的灵感。例如，乘法运算*有*算法，但 5 次及以上多项式的因式分解*没有*算法。〕。"
    }
   },
   {
@@ -97,30 +97,41 @@
   {
    "k": "p",
    "t": {
-    "en": "There's no guarantee that a general equation, like $x^4-e^x+7=0$, has a solution, and it might be impossible to decide if an arbitrary equation has a solution, let alone what the solutions are!\\footnote Fermat's Last Theorem famously claimed that $a^n+b^n=c^n$ has no positive integer solutions for $n\\geq 3$. However, it took 350 years of human ingenuity before anyone was able rigorously back up the claim. However, for *linear* equations and systems of linear equations we can *always* tell whether there is a solution and what the solution(s) are.",
-    "sha": "1d8710635289",
-    "zh": "一般的方程，比如 $x^4-e^x+7=0$，不能保证有解，而且对任意给定的方程，可能根本无法判定它有没有解，更不用说解是什么了！\\footnote 费马大定理有一句著名的论断：当 $n\\geq 3$ 时，$a^n+b^n=c^n$ 没有正整数解。然而，人类花了 350 年的智慧，才有人严格地证实了这个论断。不过，对于*线性*方程和线性方程组，我们*总能*判断是否有解，以及解是什么。"
+    "en": "There's no guarantee that a general equation, like $x^4-e^x+7=0$, has a solution, and it might be impossible to decide if an arbitrary equation has a solution, let alone what the solutions are! 〔注： Fermat's Last Theorem famously claimed that $a^n+b^n=c^n$ has no positive integer solutions for $n\\geq 3$. However, it took 350 years of human ingenuity before anyone was able rigorously back up the claim.〕 However, for *linear* equations and systems of linear equations we can *always* tell whether there is a solution and what the solution(s) are.",
+    "sha": "6efd889efad2",
+    "zh": "一般的方程，比如 $x^4-e^x+7=0$，并不保证有解，而且对任意给定的方程，我们甚至可能无法判定它有没有解，更别说解是什么了！〔注：费马大定理有一个著名的论断：当 $n\\geq 3$ 时，$a^n+b^n=c^n$ 没有正整数解。然而，人类花了 350 年的智慧，才有人严格证明了这个论断。〕不过，对于*线性*方程和线性方程组，我们*总能*判断有没有解，以及解是什么。"
    }
   },
   {
-   "k": "p",
-   "t": {
-    "en": "\\begindefinition[Linear Equation] A *linear equation* in the variables $x_1,\\ldots,x_n$ is one that can be expressed as",
-    "sha": "7c74027d9c07",
-    "zh": "\\begindefinition[线性方程] 变量 $x_1,\\ldots,x_n$ 的*线性方程*（linear equation）是指可以表示成"
-   }
-  },
-  {
-   "k": "math",
-   "tex": "a_1x_1+a_2x_2+\\cdots+a_nx_n=c"
-  },
-  {
-   "k": "p",
-   "t": {
-    "en": "for constants $a_1,\\ldots, a_n$ and $c$. A *system of linear equations* is a system of equations consisting of one or more linear equations. \\enddefinition",
-    "sha": "95ee4928b48b",
-    "zh": "的方程，其中 $a_1,\\ldots, a_n$ 与 $c$ 是常数。*线性方程组*（system of linear equations）是由一个或多个线性方程组成的方程组。\\enddefinition"
-   }
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Linear Equation",
+    "sha": "b2001adaf00a",
+    "zh": "线性方程"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A *linear equation* in the variables $x_1,\\ldots,x_n$ is one that can be expressed as",
+      "sha": "a0692952887b",
+      "zh": "关于变量 $x_1,\\ldots,x_n$ 的*线性方程*，是指可以写成如下形式的方程"
+     }
+    },
+    {
+     "k": "math",
+     "tex": "a_1x_1+a_2x_2+\\cdots+a_nx_n=c"
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "for constants $a_1,\\ldots, a_n$ and $c$. A *system of linear equations* is a system of equations consisting of one or more linear equations.",
+      "sha": "788e75468247",
+      "zh": "其中 $a_1,\\ldots, a_n$ 和 $c$ 为常数。*线性方程组*是由一个或多个线性方程组成的方程组。"
+     }
+    }
+   ]
   },
   {
    "k": "p",
@@ -293,12 +304,23 @@
    }
   },
   {
-   "k": "p",
-   "t": {
-    "en": "\\begindefinition[Consistent & Inconsistent] An equation or system of equations is called *consistent* if it has at least one solution. That is, its solution set is non-empty. Otherwise, an equation or system of equations is called *inconsistent*. \\enddefinition",
-    "sha": "90ada30f5ea1",
-    "zh": "\\begindefinition[相容与不相容] 一个方程或方程组，如果至少有一个解，也就是它的解集非空，就称为*相容*的；否则称为*不相容*的。\\enddefinition"
-   }
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Consistent & Inconsistent",
+    "sha": "9e1c3d6993a1",
+    "zh": "相容与不相容"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "An equation or system of equations is called *consistent* if it has at least one solution. That is, its solution set is non-empty. Otherwise, an equation or system of equations is called *inconsistent*.",
+      "sha": "720c7dfc03f9",
+      "zh": "如果一个方程或方程组至少有一个解（也就是说，它的解集非空），就称它是*相容*的；否则称它是*不相容*的。"
+     }
+    }
+   ]
   },
   {
    "k": "p",
@@ -345,12 +367,23 @@
    }
   },
   {
-   "k": "p",
-   "t": {
-    "en": "\\begindefinition[Equivalent Systems] Two equations or systems of equations are called *equivalent* if they have the same solution sets. \\enddefinition",
-    "sha": "67255292e1bd",
-    "zh": "\\begindefinition[同解方程组] 如果两个方程或方程组有相同的解集，就称它们是*等价*的。\\enddefinition"
-   }
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Equivalent Systems",
+    "sha": "d0e46118bf2c",
+    "zh": "同解方程组"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Two equations or systems of equations are called *equivalent* if they have the same solution sets.",
+      "sha": "321e84d7f1b8",
+      "zh": "如果两个方程或方程组有相同的解集，就称它们是*同解*（等价）的。"
+     }
+    }
+   ]
   },
   {
    "k": "p",
@@ -363,9 +396,9 @@
   {
    "k": "p",
    "t": {
-    "en": "Philosophical note: the process of “doing algebra” can be viewed as the process of *manipulating equations/systems into easier to understand equivalent equations/systems*. When you're asked to algebraically solve $x^2-4=0$. You might first factor to get the equivalent equation $(x-2)(x+2)=0$. Then, since non-zero numbers cannot multiply to give zero, we know $x-2=0$ or $x+2=0$, which in turn is equivalent to $x=\\pm2$. It's always been about equivalent systems!\\footnote Technically, up to this point we've been talking about *conjunctive* systems, which means that a solution must hold for all equations of a system. The system $x=\\pm 2$ is a *disjunctive* system, which means a solution only needs to hold for *one* of the equations ($x=2$ or $x=-2$), but the idea is the same.",
-    "sha": "bec9332c26a2",
-    "zh": "一点哲学上的说明：“做代数”的过程可以看作是*把方程（组）变形为更容易理解的等价方程（组）*的过程。比如要求你用代数方法解 $x^2-4=0$。你可能先因式分解，得到等价的方程 $(x-2)(x+2)=0$。然后，因为两个非零的数相乘不会等于零，所以 $x-2=0$ 或 $x+2=0$，这又等价于 $x=\\pm2$。这一直都是在围绕等价方程组打转！\\footnote 严格地说，到目前为止我们谈的都是*合取*方程组，意思是解必须满足方程组中的所有方程。方程组 $x=\\pm 2$ 是*析取*方程组，意思是解只需要满足*其中一个*方程（$x=2$ 或 $x=-2$），但想法是一样的。"
+    "en": "Philosophical note: the process of “doing algebra” can be viewed as the process of *manipulating equations/systems into easier to understand equivalent equations/systems*. When you're asked to algebraically solve $x^2-4=0$. You might first factor to get the equivalent equation $(x-2)(x+2)=0$. Then, since non-zero numbers cannot multiply to give zero, we know $x-2=0$ or $x+2=0$, which in turn is equivalent to $x=\\pm2$. It's always been about equivalent systems! 〔注： Technically, up to this point we've been talking about *conjunctive* systems, which means that a solution must hold for all equations of a system. The system $x=\\pm 2$ is a *disjunctive* system, which means a solution only needs to hold for *one* of the equations ($x=2$ or $x=-2$), but the idea is the same.〕",
+    "sha": "9ea415f44282",
+    "zh": "一点哲学上的说明：“做代数”的过程可以看成*把方程（组）变形成更容易理解的同解方程（组）*的过程。当你被要求用代数方法解 $x^2-4=0$ 时，可能会先因式分解，得到同解方程 $(x-2)(x+2)=0$。然后，因为两个非零数的乘积不会是零，所以 $x-2=0$ 或 $x+2=0$，这又与 $x=\\pm2$ 同解。一直以来，说的都是同解方程组！〔注：严格说来，到目前为止我们谈的都是*合取*方程组，意思是解必须同时满足方程组中的所有方程。而方程组 $x=\\pm 2$ 是*析取*方程组，意思是解只需要满足*其中一个*方程即可（$x=2$ 或 $x=-2$），但思想是一样的。〕"
    }
   },
   {
@@ -510,54 +543,65 @@
   {
    "k": "p",
    "t": {
-    "en": "So far, we've been able to row reduce systems by adding a multiple of one row to another 〔注： Technically, we subtracted, but that's just adding a negative.〕, but to fully solve *any* system, we need additional operations 〔注： If you're clever, you can think up alternatives to the elementary row operations that work just as well, but there's good reason to favor the three elementary row operations. We'll see them when discussing matrix decompositions.〕. \\begindefinition[Elementary Row Operations] The three *elementary row operations*, which can be performed on a matrix or system of equations, are",
-    "sha": "595b2ae67c60",
-    "zh": "到目前为止，我们都是通过把某一行的倍数加到另一行上来化简方程组〔注：严格地说，我们做的是减法，但减去一个数就是加上它的相反数。〕，但要彻底解出*任何*方程组，还需要另外的操作〔注：只要你足够聪明，可以想出别的、效果同样好的操作来代替初等行变换，但偏爱这三种初等行变换是有充分理由的。我们在讲矩阵分解时会看到它们。〕。\\begindefinition[初等行变换] 可以对矩阵或方程组进行的三种*初等行变换*（elementary row operations）是"
+    "en": "So far, we've been able to row reduce systems by adding a multiple of one row to another 〔注： Technically, we subtracted, but that's just adding a negative.〕, but to fully solve *any* system, we need additional operations 〔注： If you're clever, you can think up alternatives to the elementary row operations that work just as well, but there's good reason to favor the three elementary row operations. We'll see them when discussing matrix decompositions.〕.",
+    "sha": "f30801b858bb",
+    "zh": "到目前为止，我们都是把一行的若干倍加到另一行上来化简方程组〔注：严格说来，我们做的是减法，不过减法就是加上一个负数。〕，但要彻底解出*任意*方程组，我们还需要别的运算〔注：如果你足够聪明，可以想出初等行变换的其他替代方案，它们同样有效，但我们有充分的理由偏爱这三种初等行变换。在讨论矩阵分解时，我们会看到这些理由。〕。"
    }
   },
   {
-   "k": "list",
-   "ordered": false,
-   "items": [
-    [
-     {
-      "k": "p",
-      "t": {
-       "en": "swapping two rows (written $\\text{row}_i\\leftrightarrow \\text{row}_j$),",
-       "sha": "91d88a233c42",
-       "zh": "交换两行（记作 $\\text{row}_i\\leftrightarrow \\text{row}_j$），"
-      }
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Elementary Row Operations",
+    "sha": "e0490747c0ac",
+    "zh": "初等行变换"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "The three *elementary row operations*, which can be performed on a matrix or system of equations, are",
+      "sha": "0736048efa75",
+      "zh": "可以对矩阵或方程组进行的三种*初等行变换*是"
      }
-    ],
-    [
-     {
-      "k": "p",
-      "t": {
-       "en": "multiplying a row by a non-zero scalar (written $\\text{row}_i\\mapsto k\\,\\text{row}_i$), and",
-       "sha": "dbac246278fb",
-       "zh": "用一个非零的标量乘某一行（记作 $\\text{row}_i\\mapsto k\\,\\text{row}_i$），以及"
-      }
-     }
-    ],
-    [
-     {
-      "k": "p",
-      "t": {
-       "en": "adding a multiple of one row to another (written $\\text{row}_i\\mapsto \\text{row}_i+ k\\,\\text{row}_j$).",
-       "sha": "bc866e50cb5c",
-       "zh": "把某一行的倍数加到另一行上（记作 $\\text{row}_i\\mapsto \\text{row}_i+ k\\,\\text{row}_j$）。"
-      }
-     }
-    ]
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "swapping two rows (written $\\text{row}_i\\leftrightarrow \\text{row}_j$),",
+         "sha": "91d88a233c42",
+         "zh": "交换两行（记作 $\\text{row}_i\\leftrightarrow \\text{row}_j$），"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "multiplying a row by a non-zero scalar (written $\\text{row}_i\\mapsto k\\,\\text{row}_i$), and",
+         "sha": "dbac246278fb",
+         "zh": "用一个非零的标量乘某一行（记作 $\\text{row}_i\\mapsto k\\,\\text{row}_i$），以及"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "adding a multiple of one row to another (written $\\text{row}_i\\mapsto \\text{row}_i+ k\\,\\text{row}_j$).",
+         "sha": "bc866e50cb5c",
+         "zh": "把某一行的倍数加到另一行上（记作 $\\text{row}_i\\mapsto \\text{row}_i+ k\\,\\text{row}_j$）。"
+        }
+       }
+      ]
+     ]
+    }
    ]
-  },
-  {
-   "k": "p",
-   "t": {
-    "en": "\\enddefinition",
-    "sha": "27e0168125a8",
-    "zh": "\\enddefinition"
-   }
   },
   {
    "k": "p",

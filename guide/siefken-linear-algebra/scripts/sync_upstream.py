@@ -23,11 +23,11 @@ UP = ROOT / "upstream" / "IBLLinearAlgebra" / "book"
 OUT = ROOT / "content" / "sections"
 FIG_DIR = ROOT / "content" / "figures"
 
-BOX_ENVS = {"example", "theorem", "emphbox"}
+BOX_ENVS = {"example", "theorem", "emphbox", "definition"}
 PLAIN_ENVS = {"proof", "solution"}
 LIST_ENVS = {"enumerate", "enumerate*", "itemize"}
 MATH_ENVS = {"align*", "align", "equation", "equation*", "alignat*", "gather*", "split", "aligned"}
-TRANSPARENT_ENVS = {"center", "samepage", "minipage", "wrapfigure", "scope", "figure", "pgfinterruptboundingbox"}
+TRANSPARENT_ENVS = {"center", "quote", "samepage", "minipage", "wrapfigure", "scope", "figure", "pgfinterruptboundingbox"}
 TABLE_ENVS = {"tabular"}
 FIGURE_ENVS = {"tikzpicture"}
 ALL_ENVS = BOX_ENVS | PLAIN_ENVS | LIST_ENVS | MATH_ENVS | TRANSPARENT_ENVS | TABLE_ENVS | FIGURE_ENVS
@@ -351,11 +351,30 @@ def text_to_md(t: str) -> str:
 
 
 def inline(t: str) -> str:
-    t = drop_cmd(drop_cmd(t, "index"), "eindex")
-    t = re.sub(r"\\(textbf|emph|textit)(?=[A-Za-z])([A-Za-z]+)", r"\\\1{\2}", t)  # 上游笔误 \textbfword、\emphword
+    """行内文字 → 轻量标记：**粗体** *斜体* $公式$。
+
+    先把 $…$ 换成占位符，再在整段文字上展开 \\emph / \\textbf / \\footnote 等（花括号里可能含公式，
+    不能等切分之后再展开，否则括号配不上、命令残留在文字里）；公式本身不被这些展开碰到。"""
+    math: list[str] = []
+    masked = []
+    for kind, seg in split_math(t):
+        if kind == "m":
+            math.append(seg)
+            masked.append(f"\u27e6{len(math) - 1}\u27e7")
+        else:
+            masked.append(seg)
+    m = "".join(masked)
+    m = drop_cmd(drop_cmd(m, "index"), "eindex")
+    m = re.sub(r"\\(textbf|emph|textit)(?=[A-Za-z])([A-Za-z]+)", r"\\\1{\2}", m)  # 上游笔误 \\emphword
+    for name, l, r in (("emph", "*", "*"), ("textbf", "**", "**"), ("textit", "*", "*"), ("footnote", " 〔注：", "〕"), ("texttt", "`", "`")):
+        m = unwrap_cmd(m, name, l, r)
     out = []
-    for kind, s in split_math(t):
-        out.append("$" + clean_math(s) + "$" if kind == "m" else text_to_md(s))
+    pos = 0
+    for mm in re.finditer(r"\u27e6(\d+)\u27e7", m):
+        out.append(text_to_md(m[pos:mm.start()]))
+        out.append("$" + clean_math(math[int(mm.group(1))]) + "$")
+        pos = mm.end()
+    out.append(text_to_md(m[pos:]))
     r = "".join(out)
     r = re.sub(r"[ \t\r\n]+", " ", r).strip()
     return re.sub(r"\s+([,.;:!?])", r"\1", r)
@@ -402,6 +421,21 @@ def opt_arg(body: str) -> tuple[str | None, str]:
             return body[m.end():j], body[j + 1:]
         j += 1
     return None, body
+
+
+def normalize_source(t: str) -> str:
+    """上游有些环境是用 \\beginXXX / \\endXXX 宏拼的（\\begindefinition[标题]、\\begindmath* 等），
+    还有未加花括号的 \\subsubsection*标题。统一成标准写法再解析。"""
+    t = re.sub(r"\\begindefinition\b", r"\\begin{definition}", t)
+    t = t.replace("\\enddefinition", "\\end{definition}")
+    t = re.sub(r"\\begindmath\*?", r"\\begin{equation*}", t)
+    t = re.sub(r"\\enddmath\*?", r"\\end{equation*}", t)
+    t = t.replace("\\beginquote", "\\begin{quote}").replace("\\endquote", "\\end{quote}")
+    t = re.sub(r"\\subsubsection\*?\s*(?:\{([^{}]*)\}|([^\n{][^\n]*))", lambda m: "\\Heading{" + (m.group(1) or m.group(2)).strip() + "}", t)
+    t = re.sub(r"\\includegraphics(\[[^\]]*\])?\s*\S+", "", t)  # 位图（本应用不收）
+    t = re.sub(r"\\(HeadingTrue|bfseries|itshape|allowbreak)\b", "", t)
+    t = re.sub(r"\\color(mypink|myred|mygreen|myorange|myblue)", "", t)  # 上游把 \\color{x} 写成了 \\colorx
+    return t
 
 
 def paragraphs(text: str) -> list[dict]:
@@ -467,6 +501,7 @@ def parse_blocks(t: str) -> list[dict]:
             _, body = opt_arg(body)
             blocks.append({"k": env, "title": None, "blocks": parse_blocks(body)})
         elif env in LIST_ENVS:
+            _, body = opt_arg(body)
             blocks.append({"k": "list", "ordered": env != "itemize",
                            "items": [parse_blocks(it) for it in split_items(body)]})
         elif env in MATH_ENVS and "\\begin{tikzpicture}" in body:
@@ -510,7 +545,7 @@ def parse_table(spec: str, body: str) -> dict:
 
 def parse_exercises(t: str) -> list[dict]:
     """moduleN-exercises.tex：exercises > problist > \\prob …（可带 solution 环境）。"""
-    t = strip_comments(t)
+    t = normalize_source(strip_comments(t))
     m = re.search(r"\\begin\{problist\}", t)
     if not m:
         return []
@@ -553,7 +588,7 @@ def module_info() -> dict[str, dict]:
 
 
 def section_data(pid: str, info: dict[str, dict]) -> dict:
-    src = strip_comments((UP / "modules" / f"{pid}.tex").read_text(encoding="utf-8", errors="ignore"))
+    src = normalize_source(strip_comments((UP / "modules" / f"{pid}.tex").read_text(encoding="utf-8", errors="ignore")))
     blocks: list[dict] = []
     meta = info.get(pid, {})
     if meta.get("learn"):
@@ -596,15 +631,30 @@ def units(blocks: list[dict]):
 
 
 def carry_over(old: dict | None, new: dict) -> None:
+    """把旧快照的译文带到新快照：先按指纹；指纹变了（上游改了原文，或解析器改进）的按位置对齐，
+    旧译文放进 stale_zh（zh 留空），由人确认后写回——不会把对不上的译文悄悄当成最新的。"""
     if not old:
         return
-    by_sha = {}
-    for u in list(units(old.get("blocks", []))) + [u for ex in old.get("exercises", []) for u in units(ex["stem"] + ex["sol"])]:
-        if u.get("zh"):
-            by_sha[u["sha"]] = u["zh"]
-    for u in list(units(new.get("blocks", []))) + [u for ex in new.get("exercises", []) for u in units(ex["stem"] + ex["sol"])]:
+
+    def flat(d: dict) -> list[dict]:
+        return list(units(d.get("blocks", []))) + [u for ex in d.get("exercises", []) for u in units(ex["stem"] + ex["sol"])]
+
+    old_us, new_us = flat(old), flat(new)
+    by_sha = {u["sha"]: u["zh"] for u in old_us if u.get("zh")}
+    for u in new_us:
         if u["sha"] in by_sha:
             u["zh"] = by_sha[u["sha"]]
+    import difflib
+
+    sm = difflib.SequenceMatcher(a=[u["sha"] for u in old_us], b=[u["sha"] for u in new_us], autojunk=False)
+    for tag, i1, i2, j1, j2 in sm.get_opcodes():
+        if tag == "replace" and (i2 - i1) == (j2 - j1):
+            for k in range(i2 - i1):
+                o, n = old_us[i1 + k], new_us[j1 + k]
+                if not n.get("zh") and (o.get("zh") or o.get("stale_zh")):
+                    n["stale_zh"] = o.get("zh") or o["stale_zh"]
+    if old.get("title_zh"):
+        new["title_zh"] = old["title_zh"]
 
 
 def zh_progress(data: dict) -> tuple[int, int]:

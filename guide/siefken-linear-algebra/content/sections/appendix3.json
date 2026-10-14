@@ -53,9 +53,9 @@
   {
    "k": "p",
    "t": {
-    "en": "We call $A$ an “\\emph$m$ by $n$ matrix”, or in notation, an “$m\\times n$ matrix”\\footnote In this context, “$\\,\\times\\,$” is read as “by”. The entries of $A$ are indexed by their $(\\text{\\emph{row}},\\text{\\emph{column}})$ coordinates. So, the $(1,1)$ entry of $A$ is $a_{11}$, the $(2,1)$ entry of $A$ is $a_{21}$, etc.. When subscripting a matrix entry, it is tradition to omit a separator between the row and column index. That is, we write $a_{ij}$ instead of $a_{i,j}$ or $a_{(i,j)}$ 〔注： There's nothing wrong with including a separator. It's just not common practice.〕.",
-    "sha": "892a9fd6a63e",
-    "zh": "我们称 $A$ 为“\\emph$m$ by $n$ matrix”，用记号写作“$m\\times n$ 矩阵”\\footnote 这里的“$\\,\\times\\,$”读作“乘”（by）。$A$ 的元素由它们的 $(\\text{\\emph{row}},\\text{\\emph{column}})$ 坐标（行号，列号）来标定。所以，$A$ 的 $(1,1)$ 元素是 $a_{11}$，$A$ 的 $(2,1)$ 元素是 $a_{21}$，等等。给矩阵元素加下标时，习惯上行下标与列下标之间不加分隔符。也就是说，我们写 $a_{ij}$，而不写 $a_{i,j}$ 或 $a_{(i,j)}$〔注：加上分隔符也没有错，只是不常见而已。〕。"
+    "en": "We call $A$ an “*$m$ by $n$* matrix”, or in notation, an “$m\\times n$ matrix” 〔注： In this context, “$\\,\\times\\,$” is read as “by”〕. The entries of $A$ are indexed by their $(\\text{\\emph{row}},\\text{\\emph{column}})$ coordinates. So, the $(1,1)$ entry of $A$ is $a_{11}$, the $(2,1)$ entry of $A$ is $a_{21}$, etc.. When subscripting a matrix entry, it is tradition to omit a separator between the row and column index. That is, we write $a_{ij}$ instead of $a_{i,j}$ or $a_{(i,j)}$ 〔注： There's nothing wrong with including a separator. It's just not common practice.〕.",
+    "sha": "8c44bc402a4d",
+    "zh": "我们称 $A$ 为“*$m$ 乘 $n$* 矩阵”，记作“$m\\times n$ 矩阵”〔注：这里“$\\,\\times\\,$”读作“乘”（by）。〕。$A$ 的元素按 $(\\text{\\emph{row}},\\text{\\emph{column}})$（即（行，列））坐标编号，所以 $(1,1)$ 位置上 $A$ 的元素是 $a_{11}$，$(2,1)$ 位置上 $A$ 的元素是 $a_{21}$，等等。给矩阵元素加下标时，习惯上行指标与列指标之间不加分隔符。也就是说，我们写 $a_{ij}$，而不写 $a_{i,j}$ 或 $a_{(i,j)}$〔注：加分隔符并没有错，只是不常见。〕。"
    }
   },
   {
@@ -426,11 +426,11 @@
    }
   },
   {
-   "k": "p",
+   "k": "heading",
    "t": {
-    "en": "\\subsubsection*Basic Operations",
-    "sha": "a1c85c04600d",
-    "zh": "\\subsubsection*基本运算"
+    "en": "Basic Operations",
+    "sha": "9a85f6e8c6de",
+    "zh": "基本运算"
    }
   },
   {
@@ -528,11 +528,19 @@
    }
   },
   {
+   "k": "heading",
+   "t": {
+    "en": "Column Picture",
+    "sha": "d7be5706d088",
+    "zh": "列的观点"
+   }
+  },
+  {
    "k": "p",
    "t": {
-    "en": "\\subsubsection*Column Picture Let",
-    "sha": "99fc735b7371",
-    "zh": "\\subsubsection*列视角 设"
+    "en": "Let",
+    "sha": "ef5fe1edf379",
+    "zh": "设"
    }
   },
   {
@@ -607,11 +615,11 @@
    }
   },
   {
-   "k": "p",
+   "k": "heading",
    "t": {
-    "en": "\\subsubsection*Row Picture",
-    "sha": "bcd97312c693",
-    "zh": "\\subsubsection*行视角"
+    "en": "Row Picture",
+    "sha": "461a37411767",
+    "zh": "行的观点"
    }
   },
   {
@@ -641,9 +649,9 @@
   {
    "k": "p",
    "t": {
-    "en": "be vectors corresponding to the rows of $A$. Note that we are writing the \\emphrow vectors of $A$ in column vector form. Further, let $\\vec x=\\matc{x_1\\\\x_2\\\\\\vdots\\\\x_n}$ be a vector.",
-    "sha": "a17e9188a2cd",
-    "zh": "为 $A$ 的各行对应的向量。注意，我们是把 $A$ 的\\emphrow vectors 写成列向量的形式。再设 $\\vec x=\\matc{x_1\\\\x_2\\\\\\vdots\\\\x_n}$ 为一个向量。"
+    "en": "be vectors corresponding to the rows of $A$. Note that we are writing the *row vectors of $A$ in column vector form*. Further, let $\\vec x=\\matc{x_1\\\\x_2\\\\\\vdots\\\\x_n}$ be a vector.",
+    "sha": "7cad4f9d268c",
+    "zh": "为对应于 $A$ 的各行的向量。注意，我们是把 *$A$ 的行向量写成了列向量的形式*。此外，设 $\\vec x=\\matc{x_1\\\\x_2\\\\\\vdots\\\\x_n}$ 是一个向量。"
    }
   },
   {
@@ -702,11 +710,11 @@
    }
   },
   {
-   "k": "p",
+   "k": "heading",
    "t": {
-    "en": "\\subsubsection*Compatibility",
-    "sha": "cea5ce22ceee",
-    "zh": "\\subsubsection*相容性"
+    "en": "Compatibility",
+    "sha": "5d60c7dd62fd",
+    "zh": "可乘条件"
    }
   },
   {
@@ -818,9 +826,9 @@
   {
    "k": "p",
    "t": {
-    "en": "From the previous example, we see that multiplying matrices in different orders can produce different results. Formally we say that matrix multiplication is not *commutative* (in contrast, scalars can be multiplied in any order). This non-commutativity holds even for square matrices\\footnote Of course, it is *possible* that $AB=BA$ for matrices $A$ and $B$. It just doesn't happen very often.. For example,",
-    "sha": "578284e41cf4",
-    "zh": "从上一个例子看到，以不同的顺序把矩阵相乘，结果可能不同。严格地说，我们称矩阵乘法不满足*交换律*（相比之下，标量可以按任意顺序相乘）。即使对方阵，这种不可交换性也依然存在\\footnote 当然，对矩阵 $A$ 和 $B$，$AB=BA$ 是*有可能*成立的，只是不常发生。。例如，"
+    "en": "From the previous example, we see that multiplying matrices in different orders can produce different results. Formally we say that matrix multiplication is not *commutative* (in contrast, scalars can be multiplied in any order). This non-commutativity holds even for square matrices 〔注： Of course, it is *possible* that $AB=BA$ for matrices $A$ and $B$. It just doesn't happen very often.〕. For example,",
+    "sha": "8d8bd77843dd",
+    "zh": "从前面的例子可以看到，按不同的顺序相乘，矩阵乘积可能不同。正式的说法是：矩阵乘法不满足*交换律*（相比之下，数相乘可以按任意顺序）。即使对方阵，这种不可交换性也成立〔注：当然，对某些矩阵 $A$ 和 $B$，*有可能*出现 $AB=BA$，只是不常发生。〕。例如，"
    }
   },
   {
@@ -953,9 +961,25 @@
   {
    "k": "p",
    "t": {
-    "en": "To kick it up a level, when working with square matrices, we can define *polynomials* of matrices. Using familiar exponent notation, $A^2=AA$, we can formulate questions like \\beginquote Does the equation $A^2=-I$ have a $2\\times 2$ matrix solution? \\endquote Famously, the equation $x^2=-1$ has no real solutions, but $A^2=-I$ actually does have real $2\\times 2$ matrix solutions (see if you can find one)! In this text we will only scratch the surface of what can be done with matrix algebra, but it's powerful stuff 〔注： Galois theory and representation theory both heavily rely on matrix algebra.〕.",
-    "sha": "bb89213807bf",
-    "zh": "再进一步，对方阵我们可以定义矩阵的*多项式*。用熟悉的指数记号 $A^2=AA$，我们就能提出这样的问题：\\beginquote 方程 $A^2=-I$ 有 $2\\times 2$ 矩阵解吗？ \\endquote 众所周知，方程 $x^2=-1$ 没有实数解，但 $A^2=-I$ 其实确实有实的 $2\\times 2$ 矩阵解（看看你能不能找出一个）！本书只触及矩阵代数能做的事情的皮毛，不过它的威力很大〔注：伽罗瓦理论和表示论都在很大程度上依赖矩阵代数。〕。"
+    "en": "To kick it up a level, when working with square matrices, we can define *polynomials* of matrices. Using familiar exponent notation, $A^2=AA$, we can formulate questions like",
+    "sha": "7be36c736b9d",
+    "zh": "再进一步，处理方阵时，我们可以定义矩阵的*多项式*。用熟悉的指数记号 $A^2=AA$，就能提出这样的问题："
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Does the equation $A^2=-I$ have a $2\\times 2$ matrix solution?",
+    "sha": "fe70d303efba",
+    "zh": "方程 $A^2=-I$ 有 $2\\times 2$ 矩阵解吗？"
+   }
+  },
+  {
+   "k": "p",
+   "t": {
+    "en": "Famously, the equation $x^2=-1$ has no real solutions, but $A^2=-I$ actually does have real $2\\times 2$ matrix solutions (see if you can find one)! In this text we will only scratch the surface of what can be done with matrix algebra, but it's powerful stuff 〔注： Galois theory and representation theory both heavily rely on matrix algebra.〕.",
+    "sha": "4b326e015474",
+    "zh": "大家熟悉的是，方程 $x^2=-1$ 没有实数解，但 $A^2=-I$ 其实有 $2\\times 2$ 的实矩阵解（看看你能不能找到一个）！在本书中，我们只触及矩阵代数的皮毛，但它的威力很大〔注：伽罗瓦理论和表示论都严重依赖矩阵代数。〕。"
    }
   },
   {

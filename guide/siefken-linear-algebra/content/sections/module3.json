@@ -119,8 +119,8 @@
   {
    "k": "p",
    "t": {
-    "en": "After initial success, we might ask the following: \\emphwhat are all the locations in $\\R^2$ that can be obtained as a linear combination of $\\vec u$ and $\\vec v$? Geometrically, it appears any location can be reached. To verify this algebraically, consider the vector equation",
-    "sha": "44e3df2427ec",
+    "en": "After initial success, we might ask the following: *what are all the locations in $\\R^2$ that can be obtained as a linear combination of $\\vec u$ and $\\vec v$?* Geometrically, it appears any location can be reached. To verify this algebraically, consider the vector equation",
+    "sha": "03fe38c5bf99",
     "zh": "初战告捷之后，我们不妨再问：*$\\R^2$ 中哪些位置都可以表示成 $\\vec u$ 与 $\\vec v$ 的线性组合？*从几何上看，似乎任何位置都能到达。为了用代数的办法验证这一点，考虑向量方程"
    }
   },
@@ -529,9 +529,9 @@
   {
    "k": "p",
    "t": {
-    "en": "Set sums are very different than regular sums despite using the same symbol, “$+$”\\footnote For example, $A+\\Set{}=\\Set{}$, which might seem counterintuitive for an “addition” operation.. However, they are very useful. Let $C=\\Set{\\vec x\\in\\R^2\\given \\norm{\\vec x}=1}$ be the unit circle centered at the origin, and consider the sets",
-    "sha": "6491cfae0ca3",
-    "zh": "集合和与普通的和很不一样，尽管用的是同一个符号“$+$”\\footnote 例如 $A+\\Set{}=\\Set{}$，对一种“加法”运算来说，这可能有点反直觉。。不过，集合和非常有用。设 $C=\\Set{\\vec x\\in\\R^2\\given \\norm{\\vec x}=1}$ 是以原点为圆心的单位圆，考虑集合"
+    "en": "Set sums are very different than regular sums despite using the same symbol, “$+$” 〔注： For example, $A+\\Set{}=\\Set{}$, which might seem counterintuitive for an “addition” operation. 〕. However, they are very useful. Let $C=\\Set{\\vec x\\in\\R^2\\given \\norm{\\vec x}=1}$ be the unit circle centered at the origin, and consider the sets",
+    "sha": "db23e617b269",
+    "zh": "集合的和与普通的和很不一样，尽管用的是同一个符号“$+$”〔注：例如 $A+\\Set{}=\\Set{}$，对一个“加法”运算来说，这可能有违直觉。〕。不过，集合的和非常有用。设 $C=\\Set{\\vec x\\in\\R^2\\given \\norm{\\vec x}=1}$ 是以原点为圆心的单位圆，并考虑集合"
    }
   },
   {
@@ -541,9 +541,9 @@
   {
    "k": "p",
    "t": {
-    "en": "Rewriting, we see $X=\\Set{\\vec x+\\yhat\\given \\norm{\\vec x}=1}$ is just $C$ translated by $\\yhat$. Similarly, $Y=\\Set{\\vec x+\\vec v\\given \\norm{\\vec x}=1\\text{ and }\\vec v=3\\xhat\\text{ or }\\vec v=\\yhat}=(C+\\Set{3\\xhat})\\cup (C+\\Set{\\yhat})$, and so $Y$ is the union of two translated copies of $C$\\footnote If you want to stretch your mind, consider what $C+C$ is as a set.. Finally, $Z$ is the union of three translated copies of $C$.",
-    "sha": "da0f99e0f28b",
-    "zh": "改写一下可以看出，$X=\\Set{\\vec x+\\yhat\\given \\norm{\\vec x}=1}$ 就是把 $C$ 沿 $\\yhat$ 平移得到的集合。类似地，$Y=\\Set{\\vec x+\\vec v\\given \\norm{\\vec x}=1\\text{ and }\\vec v=3\\xhat\\text{ or }\\vec v=\\yhat}=(C+\\Set{3\\xhat})\\cup (C+\\Set{\\yhat})$，所以 $Y$ 是 $C$ 的两个平移副本的并集\\footnote 如果你想拓展一下思路，不妨想想 $C+C$ 作为集合是什么。。最后，$Z$ 是 $C$ 的三个平移副本的并集。"
+    "en": "Rewriting, we see $X=\\Set{\\vec x+\\yhat\\given \\norm{\\vec x}=1}$ is just $C$ translated by $\\yhat$. Similarly, $Y=\\Set{\\vec x+\\vec v\\given \\norm{\\vec x}=1\\text{ and }\\vec v=3\\xhat\\text{ or }\\vec v=\\yhat}=(C+\\Set{3\\xhat})\\cup (C+\\Set{\\yhat})$, and so $Y$ is the union of two translated copies of $C$ 〔注： If you want to stretch your mind, consider what $C+C$ is as a set.〕. Finally, $Z$ is the union of three translated copies of $C$.",
+    "sha": "33f05811c38d",
+    "zh": "改写一下，可以看出 $X=\\Set{\\vec x+\\yhat\\given \\norm{\\vec x}=1}$ 就是把 $C$ 平移 $\\yhat$。类似地，$Y=\\Set{\\vec x+\\vec v\\given \\norm{\\vec x}=1\\text{ and }\\vec v=3\\xhat\\text{ or }\\vec v=\\yhat}=(C+\\Set{3\\xhat})\\cup (C+\\Set{\\yhat})$，所以 $Y$ 是 $C$ 的两个平移副本的并集〔注：如果想拓展一下思路，不妨想想 $C+C$ 作为集合是什么。〕。最后，$Z$ 是 $C$ 的三个平移副本的并集。"
    }
   },
   {
@@ -818,9 +818,9 @@
   {
    "k": "p",
    "t": {
-    "en": "We will also refer to sets of vectors (for example $\\Set{\\vec v_1,\\ldots,\\vec v_n}$) as being linearly independent or linearly dependent. For technical reasons, we didn't state the definition in terms of sets\\footnote The issue is, every element of a set is unique. Clearly, the vectors $\\vec v$ and $\\vec v$ are linearly dependent, but $\\Set{\\vec v,\\vec v}=\\Set{\\vec v}$, and so $\\Set{\\vec v,\\vec v}$ is technically a linearly independent set. This issue would be resolved by talking about *multisets* instead of sets, but it isn't worth the hassle..",
-    "sha": "36f404471270",
-    "zh": "我们也会说向量的集合（例如 $\\Set{\\vec v_1,\\ldots,\\vec v_n}$）线性无关或线性相关。出于技术原因，我们没有用集合来叙述这个定义\\footnote 问题在于，集合里的每个元素都是唯一的。向量 $\\vec v$ 与 $\\vec v$ 显然线性相关，但 $\\Set{\\vec v,\\vec v}=\\Set{\\vec v}$，所以严格来说 $\\Set{\\vec v,\\vec v}$ 是线性无关的集合。改用*多重集*来谈就能解决这个问题，但不值得这么麻烦。。"
+    "en": "We will also refer to sets of vectors (for example $\\Set{\\vec v_1,\\ldots,\\vec v_n}$) as being linearly independent or linearly dependent. For technical reasons, we didn't state the definition in terms of sets 〔注： The issue is, every element of a set is unique. Clearly, the vectors $\\vec v$ and $\\vec v$ are linearly dependent, but $\\Set{\\vec v,\\vec v}=\\Set{\\vec v}$, and so $\\Set{\\vec v,\\vec v}$ is technically a linearly independent set. This issue would be resolved by talking about *multisets* instead of sets, but it isn't worth the hassle.〕.",
+    "sha": "d763b42ab906",
+    "zh": "我们也会说向量的集合（例如 $\\Set{\\vec v_1,\\ldots,\\vec v_n}$）线性无关或线性相关。出于技术上的原因，我们在给出定义时没有用集合来表述〔注：问题在于，集合中的每个元素都是唯一的。注意，向量 $\\vec v$ 和 $\\vec v$ 线性相关，但 $\\Set{\\vec v,\\vec v}=\\Set{\\vec v}$，所以严格说来 $\\Set{\\vec v,\\vec v}$ 是一个线性无关的集合。改谈*多重集*而不是集合，就能解决这个问题，但不值得这么麻烦。〕。"
    }
   },
   {

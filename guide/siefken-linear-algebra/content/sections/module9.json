@@ -164,9 +164,9 @@
     {
      "k": "p",
      "t": {
-      "en": "Let $L:\\R^n\\to \\R^m$ be a transformation and let $X\\subseteq \\R^n$ be a set. The \\emphimage of the set $X$ under $L$, denoted $L(X)$, is the set",
-      "sha": "38669a41380a",
-      "zh": "设 $L:\\R^n\\to \\R^m$ 是一个变换，$X\\subseteq \\R^n$ 是一个集合。集合 $X$ 在 $L$ 下的\\emph像（image），记作 $L(X)$，是集合"
+      "en": "Let $L:\\R^n\\to \\R^m$ be a transformation and let $X\\subseteq \\R^n$ be a set. The *image of the set $X$ under $L$*, denoted $L(X)$, is the set",
+      "sha": "b8f40448adce",
+      "zh": "设 $L:\\R^n\\to \\R^m$ 是一个变换，$X\\subseteq \\R^n$ 是一个集合。集合 $X$ 在 $L$ 下的*像*，记作 $L(X)$，是集合"
      }
     },
     {
@@ -819,9 +819,9 @@
     {
      "k": "p",
      "t": {
-      "en": "Starting a linearity proof with “\\emphlet $\\vec x,\\vec y\\in \\R^n$ and let $\\alpha$ be a scalar” allows you to argue about all vectors and scalars simultaneously.",
-      "sha": "827c89968359",
-      "zh": "用“\\emphlet $\\vec x,\\vec y\\in \\R^n$ and let $\\alpha$ be a scalar”开始线性性的证明，可以让你同时讨论所有的向量和标量。"
+      "en": "Starting a linearity proof with “*let $\\vec x,\\vec y\\in \\R^n$ and let $\\alpha$ be a scalar*” allows you to argue about all vectors and scalars simultaneously.",
+      "sha": "e98b65f18f0b",
+      "zh": "用“*设 $\\vec x,\\vec y\\in \\R^n$，$\\alpha$ 为标量*”开始线性性的证明，你就可以同时对所有向量和标量进行论证。"
      }
     }
    ]
@@ -891,9 +891,9 @@
   {
    "k": "p",
    "t": {
-    "en": "When proving a transformation is not linear, we can pick one of the properties of linearity (distribution over vector addition or distribution over scalar multiplication) and a *single example* where that property fails\\footnote It's often tempting to argue that the properties of linearity fail for all inputs, but this is a dangerous path! For instance, if $T(\\vec 0)=\\vec 0$, then $T(\\vec a)=T(\\vec a+\\vec 0)=T(\\vec a)+T(\\vec 0)=T(\\vec a)$ *regardless* of whether $T$ is linear or not..",
-    "sha": "dbd1d227ae60",
-    "zh": "证明一个变换不是线性的时候，我们可以选取线性的某一条性质（对向量加法的分配律或对数乘的分配律），再给出这条性质不成立的*一个例子*\\footnote It's often tempting to argue that the properties of linearity fail for all inputs, but this is a dangerous path! For instance, if $T(\\vec 0)=\\vec 0$, then $T(\\vec a)=T(\\vec a+\\vec 0)=T(\\vec a)+T(\\vec 0)=T(\\vec a)$ *regardless* of whether $T$ is linear or not.。"
+    "en": "When proving a transformation is not linear, we can pick one of the properties of linearity (distribution over vector addition or distribution over scalar multiplication) and a *single example* where that property fails 〔注： It's often tempting to argue that the properties of linearity fail for all inputs, but this is a dangerous path! For instance, if $T(\\vec 0)=\\vec 0$, then $T(\\vec a)=T(\\vec a+\\vec 0)=T(\\vec a)+T(\\vec 0)=T(\\vec a)$ *regardless* of whether $T$ is linear or not.〕.",
+    "sha": "d91e446430f2",
+    "zh": "证明一个变换不是线性的时候，我们可以任选线性的一条性质（对向量加法的分配性或对标量乘法的分配性），再给出这条性质不成立的*一个例子*即可〔注：人们常常很想论证线性的性质对所有输入都不成立，但这是一条危险的路！例如，若 $T(\\vec 0)=\\vec 0$，则 $T(\\vec a)=T(\\vec a+\\vec 0)=T(\\vec a)+T(\\vec 0)=T(\\vec a)$，*无论* $T$ 是否线性都成立。〕。"
    }
   },
   {
@@ -992,9 +992,9 @@
   {
    "k": "p",
    "t": {
-    "en": "When talking about matrices and linear transformations, we must keep in mind that they are not the same thing. A matrix is a box of numbers and has no meaning until we give it meaning. A linear transformation is a function that inputs vectors and outputs vectors. We can *specify* a linear transformation using a matrix, but a matrix by itself is *not* a linear transformation\\footnote Consider the function defined by $f(x)=2x$. You would never say that the function $f$ is $2$!.",
-    "sha": "e17dc9c681e4",
-    "zh": "谈论矩阵和线性变换时，我们必须记住它们不是一回事。矩阵是一个数字方框，在我们赋予它意义之前没有任何含义。线性变换是一个输入向量、输出向量的函数。我们可以用矩阵来*描述*一个线性变换，但矩阵本身*不是*线性变换\\footnote Consider the function defined by $f(x)=2x$. You would never say that the function $f$ is $2$!。"
+    "en": "When talking about matrices and linear transformations, we must keep in mind that they are not the same thing. A matrix is a box of numbers and has no meaning until we give it meaning. A linear transformation is a function that inputs vectors and outputs vectors. We can *specify* a linear transformation using a matrix, but a matrix by itself is *not* a linear transformation 〔注： Consider the function defined by $f(x)=2x$. You would never say that the function $f$ is $2$!〕.",
+    "sha": "557ea7154da1",
+    "zh": "谈到矩阵和线性变换时，我们要记住它们不是一回事。矩阵是一张数表，在我们赋予它意义之前，它没有任何含义。线性变换是输入向量、输出向量的函数。我们可以用矩阵来*给定*一个线性变换，但矩阵本身*不是*线性变换〔注：想想由 $f(x)=2x$ 定义的函数，你绝不会说函数 $f$ 就是 $2$！〕。"
    }
   },
   {

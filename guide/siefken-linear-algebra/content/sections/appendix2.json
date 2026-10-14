@@ -111,66 +111,77 @@
    }
   },
   {
-   "k": "p",
-   "t": {
-    "en": "\\begindefinition[Reduced Row Echelon Form (RREF)] A matrix $X$ is in *reduced row echelon form* if the following conditions hold:",
-    "sha": "713188377187",
-    "zh": "\\begindefinition[简化行阶梯形（RREF）] 矩阵 $X$ 称为*简化行阶梯形*，如果满足以下条件："
-   }
-  },
-  {
-   "k": "list",
-   "ordered": false,
-   "items": [
-    [
-     {
-      "k": "p",
-      "t": {
-       "en": "The first non-zero entry in every row is a $1$; these entries are called *pivots* or *leading ones*.",
-       "sha": "9b18a02a1235",
-       "zh": "每一行的第一个非零元素是 $1$；这些元素称为*主元*或*首一*（leading one）。"
-      }
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Reduced Row Echelon Form (RREF)",
+    "sha": "5a109784ddbe",
+    "zh": "简化行阶梯形（RREF）"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "A matrix $X$ is in *reduced row echelon form* if the following conditions hold:",
+      "sha": "8c898b742562",
+      "zh": "如果矩阵 $X$ 满足下列条件，就称它是*简化行阶梯形*："
      }
-    ],
-    [
-     {
-      "k": "p",
-      "t": {
-       "en": "Above and below each leading one are zeros.",
-       "sha": "88c4a4dc4526",
-       "zh": "每个首一的上方和下方都是零。"
-      }
+    },
+    {
+     "k": "list",
+     "ordered": false,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The first non-zero entry in every row is a $1$; these entries are called *pivots* or *leading ones*.",
+         "sha": "9b18a02a1235",
+         "zh": "每一行的第一个非零元素是 $1$；这些元素称为*主元*或*首一*（leading one）。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Above and below each leading one are zeros.",
+         "sha": "88c4a4dc4526",
+         "zh": "每个首一的上方和下方都是零。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "The leading ones form an echelon (staircase) pattern. That is, if row $i$ has a leading one, every leading one appearing in row $j>i$ also appears to the \\it right of the leading one in row $i$.",
+         "sha": "f7f1bdcd3b77",
+         "zh": "首一呈阶梯（台阶）状排列。也就是说，如果第 $i$ 行有首一，那么出现在第 $j>i$ 行的每个首一，都位于第 $i$ 行首一的\\it 右侧。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "All rows of zeros occur at the bottom of $X$.",
+         "sha": "7a398b53d60d",
+         "zh": "全为零的行都出现在 $X$ 的最下方。"
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "Columns of a reduced row echelon form matrix that contain pivots are called *pivot columns* 〔注： If a matrix is augmented, we usually do not refer to the augmented column as a pivot column, even if it contains a pivot. 〕.",
+      "sha": "46d8fa98c46d",
+      "zh": "简化行阶梯形矩阵中含有主元的列称为*主元列*〔注：如果矩阵是增广矩阵，我们通常不把增广的那一列称为主元列，即使它含有主元。〕。"
      }
-    ],
-    [
-     {
-      "k": "p",
-      "t": {
-       "en": "The leading ones form an echelon (staircase) pattern. That is, if row $i$ has a leading one, every leading one appearing in row $j>i$ also appears to the \\it right of the leading one in row $i$.",
-       "sha": "f7f1bdcd3b77",
-       "zh": "首一呈阶梯（台阶）状排列。也就是说，如果第 $i$ 行有首一，那么出现在第 $j>i$ 行的每个首一，都位于第 $i$ 行首一的\\it 右侧。"
-      }
-     }
-    ],
-    [
-     {
-      "k": "p",
-      "t": {
-       "en": "All rows of zeros occur at the bottom of $X$.",
-       "sha": "7a398b53d60d",
-       "zh": "全为零的行都出现在 $X$ 的最下方。"
-      }
-     }
-    ]
+    }
    ]
-  },
-  {
-   "k": "p",
-   "t": {
-    "en": "Columns of a reduced row echelon form matrix that contain pivots are called *pivot columns* 〔注： If a matrix is augmented, we usually do not refer to the augmented column as a pivot column, even if it contains a pivot. 〕. \\enddefinition",
-    "sha": "6efb5a0ef20b",
-    "zh": "简化行阶梯形矩阵中含有主元的列称为*主元列*〔注： 如果矩阵是增广矩阵，通常不把增广的那一列称为主元列，即使它含有主元。 〕。\\enddefinition"
-   }
   },
   {
    "k": "box",
@@ -292,112 +303,115 @@
    }
   },
   {
-   "k": "p",
-   "t": {
-    "en": "\\begindefinition[Row Reduction Algorithm] Let $M$ be a matrix.",
-    "sha": "2fe52061d14d",
-    "zh": "\\begindefinition[行化简算法] 设 $M$ 是一个矩阵。"
-   }
-  },
-  {
-   "k": "list",
-   "ordered": true,
-   "items": [
-    [
-     {
-      "k": "p",
-      "t": {
-       "en": "If $M$ takes the form $M=[\\vec 0|M']$ (that is, its first column is all zeros), apply the algorithm to $M'$.",
-       "sha": "0098e8cf37ad",
-       "zh": "如果 $M$ 形如 $M=[\\vec 0|M']$（即它的第一列全为零），就对 $M'$ 应用本算法。"
-      }
+   "k": "box",
+   "env": "definition",
+   "title": {
+    "en": "Row Reduction Algorithm",
+    "sha": "04c43a36be97",
+    "zh": "行化简算法"
+   },
+   "blocks": [
+    {
+     "k": "p",
+     "t": {
+      "en": "Let $M$ be a matrix.",
+      "sha": "0f5066066c83",
+      "zh": "设 $M$ 是一个矩阵。"
      }
-    ],
-    [
-     {
-      "k": "p",
-      "t": {
-       "en": "If not, perform a row-swap (if needed) so the upper-left entry of $M$ is non-zero.",
-       "sha": "d0cb1085f6e9",
-       "zh": "否则，（如有需要）做一次行交换，使 $M$ 左上角的元素非零。"
-      }
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If $M$ takes the form $M=[\\vec 0|M']$ (that is, its first column is all zeros), apply the algorithm to $M'$.",
+         "sha": "0098e8cf37ad",
+         "zh": "如果 $M$ 形如 $M=[\\vec 0|M']$（即它的第一列全为零），就对 $M'$ 应用本算法。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "If not, perform a row-swap (if needed) so the upper-left entry of $M$ is non-zero.",
+         "sha": "d0cb1085f6e9",
+         "zh": "否则，（如有需要）做一次行交换，使 $M$ 左上角的元素非零。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Let $\\alpha$ be the upper-left entry of $M$. Perform the row operation $\\text{row}_1\\mapsto \\tfrac{1}{\\alpha}\\text{row}_1$. The upper-left entry of $M$ is now $1$ and is called a *pivot*.",
+         "sha": "b18311ee380c",
+         "zh": "设 $\\alpha$ 是 $M$ 左上角的元素。做行变换 $\\text{row}_1\\mapsto \\tfrac{1}{\\alpha}\\text{row}_1$。此时 $M$ 左上角的元素是 $1$，称为*主元*。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Use row operations of the form $\\text{row}_i\\mapsto \\text{row}_i+\\beta\\,\\text{row}_1$ to zero every entry below the pivot.",
+         "sha": "becac89c6dcd",
+         "zh": "用形如 $\\text{row}_i\\mapsto \\text{row}_i+\\beta\\,\\text{row}_1$ 的行变换，把主元下方的每个元素都化为零。"
+        }
+       }
+      ],
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Now, $M$ has the form",
+         "sha": "a9cafa79a3ab",
+         "zh": "现在 $M$ 具有如下形式"
+        }
+       },
+       {
+        "k": "math",
+        "tex": "M=\\begin{bmatrix}[c|c]\n\t\t\t\t\t1 & ??\\\\\n\t\t\t\t\t\\hline\n\t\t\t\t\t\\bigmathstrut \\vec 0 & M'\n\t\t\t\t\\end{bmatrix},"
+       },
+       {
+        "k": "p",
+        "t": {
+         "en": "where $M'$ is a \\it submatrix of $M$. Apply the algorithm to $M'$.",
+         "sha": "79fa2fcdcde6",
+         "zh": "其中 $M'$ 是 $M$ 的一个\\it 子矩阵。对 $M'$ 应用本算法。"
+        }
+       }
+      ]
+     ]
+    },
+    {
+     "k": "p",
+     "t": {
+      "en": "The resulting matrix is in *pre-reduced row echelon form*. To put the matrix in *reduced row echelon form*, additionally apply step 6.",
+      "sha": "558c86858530",
+      "zh": "得到的矩阵是*预简化行阶梯形*。要把它化成*简化行阶梯形*，还需要再做第 6 步。"
      }
-    ],
-    [
-     {
-      "k": "p",
-      "t": {
-       "en": "Let $\\alpha$ be the upper-left entry of $M$. Perform the row operation $\\text{row}_1\\mapsto \\tfrac{1}{\\alpha}\\text{row}_1$. The upper-left entry of $M$ is now $1$ and is called a *pivot*.",
-       "sha": "b18311ee380c",
-       "zh": "设 $\\alpha$ 是 $M$ 左上角的元素。做行变换 $\\text{row}_1\\mapsto \\tfrac{1}{\\alpha}\\text{row}_1$。此时 $M$ 左上角的元素是 $1$，称为*主元*。"
-      }
-     }
-    ],
-    [
-     {
-      "k": "p",
-      "t": {
-       "en": "Use row operations of the form $\\text{row}_i\\mapsto \\text{row}_i+\\beta\\,\\text{row}_1$ to zero every entry below the pivot.",
-       "sha": "becac89c6dcd",
-       "zh": "用形如 $\\text{row}_i\\mapsto \\text{row}_i+\\beta\\,\\text{row}_1$ 的行变换，把主元下方的每个元素都化为零。"
-      }
-     }
-    ],
-    [
-     {
-      "k": "p",
-      "t": {
-       "en": "Now, $M$ has the form",
-       "sha": "a9cafa79a3ab",
-       "zh": "现在 $M$ 具有如下形式"
-      }
-     },
-     {
-      "k": "math",
-      "tex": "M=\\begin{bmatrix}[c|c]\n\t\t\t\t\t1 & ??\\\\\n\t\t\t\t\t\\hline\n\t\t\t\t\t\\bigmathstrut \\vec 0 & M'\n\t\t\t\t\\end{bmatrix},"
-     },
-     {
-      "k": "p",
-      "t": {
-       "en": "where $M'$ is a \\it submatrix of $M$. Apply the algorithm to $M'$.",
-       "sha": "79fa2fcdcde6",
-       "zh": "其中 $M'$ 是 $M$ 的一个\\it 子矩阵。对 $M'$ 应用本算法。"
-      }
-     }
-    ]
+    },
+    {
+     "k": "list",
+     "ordered": true,
+     "items": [
+      [
+       {
+        "k": "p",
+        "t": {
+         "en": "Use the row operations of the form $\\text{row}_i\\mapsto \\text{row}_i+\\beta\\,\\text{row}_j$ to zero above each pivot.",
+         "sha": "949d42481a83",
+         "zh": "用形如 $\\text{row}_i\\mapsto \\text{row}_i+\\beta\\,\\text{row}_j$ 的行变换，把每个主元上方的元素化为零。"
+        }
+       }
+      ]
+     ]
+    }
    ]
-  },
-  {
-   "k": "p",
-   "t": {
-    "en": "The resulting matrix is in *pre-reduced row echelon form*. To put the matrix in *reduced row echelon form*, additionally apply step 6.",
-    "sha": "558c86858530",
-    "zh": "得到的矩阵是*预简化行阶梯形*。要把它化成*简化行阶梯形*，还需要再做第 6 步。"
-   }
-  },
-  {
-   "k": "list",
-   "ordered": true,
-   "items": [
-    [
-     {
-      "k": "p",
-      "t": {
-       "en": "Use the row operations of the form $\\text{row}_i\\mapsto \\text{row}_i+\\beta\\,\\text{row}_j$ to zero above each pivot.",
-       "sha": "949d42481a83",
-       "zh": "用形如 $\\text{row}_i\\mapsto \\text{row}_i+\\beta\\,\\text{row}_j$ 的行变换，把每个主元上方的元素化为零。"
-      }
-     }
-    ]
-   ]
-  },
-  {
-   "k": "p",
-   "t": {
-    "en": "\\enddefinition",
-    "sha": "27e0168125a8",
-    "zh": "\\enddefinition"
-   }
   },
   {
    "k": "p",
@@ -597,9 +611,9 @@
   {
    "k": "p",
    "t": {
-    "en": "From the reduced row echelon form, we're left with the equation $x+3y=2$, which isn't exactly a *solution*. Effectively, the original system had only one equation's worth of information, so we cannot solve for both $x$ and $y$ based on the original system. To get ourselves out of this pickle, we will use a notational trick: introduce the arbitrary equation $y=t$\\footnote This equation is called *arbitrary* because it introduces no new information about the original variables. The restrictions on $x$ and $y$ aren't changed by introducing the fact $y=t$.. Now, because we've already done row-reduction, we see",
-    "sha": "45dd1aa27140",
-    "zh": "从简化行阶梯形中，我们剩下方程 $x+3y=2$，它并不完全是一个*解*。实际上，原方程组只含有一个方程的信息量，所以无法仅凭原方程组同时解出 $x$ 和 $y$。为了摆脱这个窘境，我们用一个记号上的小技巧：引入任意方程 $y=t$\\footnote 这个方程称为*任意*方程，因为它没有给出关于原变量的任何新信息。引入 $y=t$ 这个事实，并不会改变对 $x$ 和 $y$ 的限制。。因为我们已经做过行化简，所以得到"
+    "en": "From the reduced row echelon form, we're left with the equation $x+3y=2$, which isn't exactly a *solution*. Effectively, the original system had only one equation's worth of information, so we cannot solve for both $x$ and $y$ based on the original system. To get ourselves out of this pickle, we will use a notational trick: introduce the arbitrary equation $y=t$ 〔注： This equation is called *arbitrary* because it introduces no new information about the original variables. The restrictions on $x$ and $y$ aren't changed by introducing the fact $y=t$.〕. Now, because we've already done row-reduction, we see",
+    "sha": "d6729c4a73d1",
+    "zh": "从简化行阶梯形中，我们只剩下方程 $x+3y=2$，它还算不上*解*。实际上，原方程组只含有一个方程的信息量，所以仅凭原方程组，我们无法同时解出 $x$ 和 $y$。为了摆脱这个困境，我们用一个记号上的小技巧：引入任意方程 $y=t$〔注：这个方程称为*任意*方程，是因为它没有带来关于原变量的任何新信息。引入 $y=t$ 这个事实，并不会改变对 $x$ 和 $y$ 的限制。〕。现在，因为我们已经做过行化简，可以看到"
    }
   },
   {
@@ -621,9 +635,9 @@
   {
    "k": "p",
    "t": {
-    "en": "Notice that $t$ here stands for an arbitrary real number. Any choice of $t$ produces a valid solution to the original system (go ahead, pick some values for $t$ and see what happens). We call $t$ a *parameter* and $y$ a *free variable*\\footnote We call $y$ *free* because we may pick it to be anything we want and still produce a solution to the system.. Notice further that",
-    "sha": "7d03d67a0380",
-    "zh": "注意，这里的 $t$ 代表任意实数。$t$ 取任何值，都能得到原方程组的一个有效解（不妨试着取几个 $t$ 的值，看看会发生什么）。我们称 $t$ 为*参数*，称 $y$ 为*自由变量*\\footnote 我们称 $y$ *自由*，是因为可以任意选取它的值，仍然得到方程组的解。。还要注意"
+    "en": "Notice that $t$ here stands for an arbitrary real number. Any choice of $t$ produces a valid solution to the original system (go ahead, pick some values for $t$ and see what happens). We call $t$ a *parameter* and $y$ a *free variable* 〔注： We call $y$ *free* because we may pick it to be anything we want and still produce a solution to the system.〕. Notice further that",
+    "sha": "12cd7a9881bd",
+    "zh": "注意，这里的 $t$ 代表任意实数。$t$ 取任何值，都会得到原方程组的一个有效解（不妨自己取几个 $t$ 的值试试看）。我们称 $t$ 为*参数*，称 $y$ 为*自由变量*〔注：我们称 $y$ 是*自由*的，是因为可以任意选取它的值，仍然得到方程组的解。〕。再注意到"
    }
   },
   {
@@ -1131,9 +1145,9 @@
   {
    "k": "p",
    "t": {
-    "en": "In general, a single equation in $n$ variables requires $n-1$ free variables to describe its complete solution. The only exception is the trivial equation, $0x_1+\\cdots +0x_n=0$, which requires $n$ free variables. For the sake of brevity, from now on we will assume that \\empha linear equation in $n$ variables means \\empha non-trivial linear equation in $n$ variables.",
-    "sha": "cb3c484e83ae",
-    "zh": "一般地，$n$ 个变量的单个方程，需要 $n-1$ 个自由变量来描述它的完整解。唯一的例外是平凡方程 $0x_1+\\cdots +0x_n=0$，它需要 $n$ 个自由变量。为了简洁，从现在起我们约定：\\empha $n$ 个变量的线性方程指的是\\empha $n$ 个变量的非平凡线性方程。"
+    "en": "In general, a single equation in $n$ variables requires $n-1$ free variables to describe its complete solution. The only exception is the trivial equation, $0x_1+\\cdots +0x_n=0$, which requires $n$ free variables. For the sake of brevity, from now on we will assume that *a linear equation in $n$ variables* means *a non-trivial linear equation in $n$ variables*.",
+    "sha": "9711f5d156df",
+    "zh": "一般地，含 $n$ 个变量的单个方程，要描述它的全部解，需要 $n-1$ 个自由变量。唯一的例外是平凡方程 $0x_1+\\cdots +0x_n=0$，它需要 $n$ 个自由变量。为了简洁，从现在起，我们说*含 $n$ 个变量的线性方程*，指的就是*含 $n$ 个变量的非平凡线性方程*。"
    }
   },
   {

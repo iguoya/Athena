@@ -142,9 +142,9 @@
     {
      "k": "p",
      "t": {
-      "en": "The set $B$ is a *subset* of the set $A$, written $B\\subseteq A$, if for all $b\\in B$ we also have $b\\in A$. In this case, $A$ is called a *superset* of $B$.\\footnote Some mathematicians use the symbol $\\subset$ instead of $\\subseteq$.",
-      "sha": "e980a8c9092b",
-      "zh": "如果对每个 $b\\in B$ 都有 $b\\in A$，就称集合 $B$ 是集合 $A$ 的*子集*，记作 $B\\subseteq A$。此时，称 $A$ 是 $B$ 的*超集*。\\footnote 有些数学家用符号 $\\subset$ 代替 $\\subseteq$。"
+      "en": "The set $B$ is a *subset* of the set $A$, written $B\\subseteq A$, if for all $b\\in B$ we also have $b\\in A$. In this case, $A$ is called a *superset* of $B$. 〔注： Some mathematicians use the symbol $\\subset$ instead of $\\subseteq$.〕",
+      "sha": "389ed8574276",
+      "zh": "如果对所有 $b\\in B$ 都有 $b\\in A$，就称集合 $B$ 是集合 $A$ 的*子集*，记作 $B\\subseteq A$。此时称 $A$ 是 $B$ 的*超集*（上位集）。〔注：有些数学家用符号 $\\subset$ 代替 $\\subseteq$。〕"
      }
     }
    ]
@@ -262,9 +262,9 @@
   {
    "k": "p",
    "t": {
-    "en": "which is read “$Y$ is the set of $a$ in $X$ *such that* some rule involving $a$ is true.” If $X$ is intuitive, we may omit it and simply write $Y=\\Set{a\\given\\text{some rule involving }a}$\\footnote If you want to get technical, to make this notation unambiguous, you define a *universe of discourse*. That is, a set $\\mathcal U$ containing every object you might want to talk about. Then $\\Set{a\\given\\text{some rule involving }a}$ is short for $\\Set{a\\in\\mathcal U\\given\\text{some rule involving }a}$.. You may equivalently use “$|$” instead of “$:$”, writing $Y=\\{a\\,|\\,\\text{some rule involving }a\\}$.",
-    "sha": "5bfc1edc3b89",
-    "zh": "它读作“$Y$ 是 $X$ 中满足某个与 $a$ 有关的规则的那些 $a$ 组成的集合”。如果 $X$ 是什么一目了然，也可以省略它，直接写成 $Y=\\Set{a\\given\\text{some rule involving }a}$\\footnote 如果要说得严格一些，为了让这个记号没有歧义，需要先定义一个*论域*，也就是一个包含所有你想谈论的对象的集合 $\\mathcal U$。这样，$\\Set{a\\given\\text{some rule involving }a}$ 就是 $\\Set{a\\in\\mathcal U\\given\\text{some rule involving }a}$ 的简写。。你也可以等价地用“$|$”代替“$:$”，写成 $Y=\\{a\\,|\\,\\text{some rule involving }a\\}$。"
+    "en": "which is read “$Y$ is the set of $a$ in $X$ *such that* some rule involving $a$ is true.” If $X$ is intuitive, we may omit it and simply write $Y=\\Set{a\\given\\text{some rule involving }a}$ 〔注： If you want to get technical, to make this notation unambiguous, you define a *universe of discourse*. That is, a set $\\mathcal U$ containing every object you might want to talk about. Then $\\Set{a\\given\\text{some rule involving }a}$ is short for $\\Set{a\\in\\mathcal U\\given\\text{some rule involving }a}$.〕. You may equivalently use “$|$” instead of “$:$”, writing $Y=\\{a\\,|\\,\\text{some rule involving }a\\}$.",
+    "sha": "10f941d89110",
+    "zh": "读作“$Y$ 是 $X$ 中满足某个与 $a$ 有关的规则的那些元素 $a$ 组成的集合”（*such that*，即“使得”）。如果 $X$ 一目了然，也可以省略它，直接写 $Y=\\Set{a\\given\\text{some rule involving }a}$〔注：如果要讲究严格，为了让这种记号没有歧义，需要先定义一个*论域*，也就是包含你可能谈到的所有对象的集合 $\\mathcal U$。这样 $\\Set{a\\given\\text{some rule involving }a}$ 就是 $\\Set{a\\in\\mathcal U\\given\\text{some rule involving }a}$ 的简写。〕。你也可以等价地用“$|$”代替“$:$”，写成 $Y=\\{a\\,|\\,\\text{some rule involving }a\\}$。"
    }
   },
   {
@@ -383,9 +383,9 @@
   {
    "k": "p",
    "t": {
-    "en": "There are many ways to represent vector quantities in writing. If we have two points, $P$ and $Q$, we write $\\overrightarrow{PQ}$ to represent the vector from $P$ to $Q$. Absent points, a bold-faced letter (like \\bfseries a) or an arrow over a letter (like $\\vec a$) are the most common vector notations. In this text, we will use $\\vec a$ to represent a vector. The notation $\\norm{\\vec a}$ represents the magnitude of the vector $\\vec a$, which is sometimes called the *norm* or *length* of $\\vec a$.",
-    "sha": "835375116def",
-    "zh": "书写时表示向量的方式有很多种。如果有两个点 $P$ 和 $Q$，我们用 $\\overrightarrow{PQ}$ 表示从 $P$ 到 $Q$ 的向量。没有给出点的时候，最常见的向量记号是粗体字母（如 \\bfseries a）或字母上方加箭头（如 $\\vec a$）。本书用 $\\vec a$ 表示向量。记号 $\\norm{\\vec a}$ 表示向量 $\\vec a$ 的大小，有时也称为 $\\vec a$ 的*范数*或*长度*。"
+    "en": "There are many ways to represent vector quantities in writing. If we have two points, $P$ and $Q$, we write $\\overrightarrow{PQ}$ to represent the vector from $P$ to $Q$. Absent points, a bold-faced letter (like a) or an arrow over a letter (like $\\vec a$) are the most common vector notations. In this text, we will use $\\vec a$ to represent a vector. The notation $\\norm{\\vec a}$ represents the magnitude of the vector $\\vec a$, which is sometimes called the *norm* or *length* of $\\vec a$.",
+    "sha": "2efbe2c5cda2",
+    "zh": "书面表示向量有很多种方式。如果有两个点 $P$ 和 $Q$，我们用 $\\overrightarrow{PQ}$ 表示从 $P$ 到 $Q$ 的向量。不涉及具体的点时，最常见的向量记号是粗体字母（如 a）或字母上方加箭头（如 $\\vec a$）。本书用 $\\vec a$ 表示向量。记号 $\\norm{\\vec a}$ 表示向量 $\\vec a$ 的大小，有时也称为 $\\vec a$ 的*范数*或*长度*。"
    }
   },
   {
@@ -415,9 +415,9 @@
   {
    "k": "p",
    "t": {
-    "en": "Are these the same or different vectors? As directed line segments, they are different because they are at different locations in space. However, both $\\vec a$ and $\\vec x$ have the same magnitude and direction. Thus, $\\vec a=\\vec x$ despite the fact that $A\\neq X$\\footnote Some theories use *rooted vectors* instead of vectors as the fundamental object of study. A rooted vector represents a magnitude, direction, *and* a starting point. And, as rooted vectors, $\\vec a\\neq \\vec x$ (from the example above). But for us, vectors will always be unrooted, even though our graphical representations of vectors might appear rooted..",
-    "sha": "bd58d8b81b16",
-    "zh": "这两个向量是相同的还是不同的？作为有向线段，它们不同，因为它们在空间中的位置不同。但是，$\\vec a$ 和 $\\vec x$ 的大小与方向都相同。因此，尽管 $A\\neq X$，仍有 $\\vec a=\\vec x$\\footnote 有些理论把*有根向量*而不是向量作为基本的研究对象。有根向量表示一个大小、一个方向，*以及*一个起点。按有根向量来看，（上例中的）$\\vec a\\neq \\vec x$。但在本书里，向量始终是无根的，尽管我们画出来的向量看上去可能是有根的。。"
+    "en": "Are these the same or different vectors? As directed line segments, they are different because they are at different locations in space. However, both $\\vec a$ and $\\vec x$ have the same magnitude and direction. Thus, $\\vec a=\\vec x$ despite the fact that $A\\neq X$ 〔注： Some theories use *rooted vectors* instead of vectors as the fundamental object of study. A rooted vector represents a magnitude, direction, *and* a starting point. And, as rooted vectors, $\\vec a\\neq \\vec x$ (from the example above). But for us, vectors will always be unrooted, even though our graphical representations of vectors might appear rooted. 〕.",
+    "sha": "a7814d2a12b5",
+    "zh": "这两个向量是相同还是不同？作为有向线段，它们位置不同，所以是不同的。但是 $\\vec a$ 和 $\\vec x$ 的大小和方向都相同，因此 $\\vec a=\\vec x$，尽管 $A\\neq X$〔注：有些理论以*有根向量*而不是向量作为基本研究对象。有根向量表示大小、方向，*以及*起点。作为有根向量，（就上面的例子而言）$\\vec a\\neq \\vec x$。但对我们来说，向量永远是无根的，尽管我们画出的向量图形看上去可能带有起点。〕。"
    }
   },
   {
