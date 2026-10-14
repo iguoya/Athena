@@ -168,12 +168,21 @@ def main() -> int:
         fid = props.get("id", "?")
         if "fromYear" in props and "toYear" in props and props["toYear"] < props["fromYear"]:
             problems.append(f"territories[{fid}]: toYear < fromYear")
-        ring = f["geometry"]["coordinates"][0]
-        if ring[0] != ring[-1]:
-            problems.append(f"territories[{fid}]: 外环未闭合")
-        for lon, lat in ring:
-            if not in_range(lon, lat):
-                problems.append(f"territories[{fid}]: 坐标越界 {lon},{lat}")
+        geom = f["geometry"]
+        if geom["type"] == "Polygon":
+            rings = [geom["coordinates"]]
+        elif geom["type"] == "MultiPolygon":
+            rings = geom["coordinates"]
+        else:
+            problems.append(f"territories[{fid}]: 不支持的几何 {geom['type']!r}")
+            continue
+        for poly in rings:
+            ring = poly[0]
+            if ring[0] != ring[-1]:
+                problems.append(f"territories[{fid}]: 外环未闭合")
+            for lon, lat in ring:
+                if not in_range(lon, lat):
+                    problems.append(f"territories[{fid}]: 坐标越界 {lon},{lat}")
         if props.get("kind") == "snapshot":
             snapshots.setdefault(props.get("snapshot", "?"), []).append(props)
     for snap, members in snapshots.items():
