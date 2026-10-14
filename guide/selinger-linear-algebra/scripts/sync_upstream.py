@@ -558,21 +558,28 @@ def units(blocks: list[dict]):
 
 
 def carry_over(old: dict | None, new: dict) -> None:
-    """把旧快照的译文按指纹带到新快照；原文变了的位置标 stale。"""
+    """把旧快照的译文带到新快照：先按指纹；指纹变了（上游改了原文，或解析器改进）的按位置对齐，
+    旧译文放进 stale_zh（zh 留空），由人确认后写回——不会把对不上的译文悄悄当成最新的。"""
     if not old:
         return
-    by_sha = {}
-    for u in units(old.get("blocks", [])):
-        if u.get("zh"):
-            by_sha[u["sha"]] = u["zh"]
-    for ex in old.get("exercises", []):
-        for u in units(ex["stem"] + ex["sol"]):
-            if u.get("zh"):
-                by_sha[u["sha"]] = u["zh"]
-    for u in list(units(new.get("blocks", []))) + [u for ex in new.get("exercises", []) for u in units(ex["stem"] + ex["sol"])]:
+
+    def flat(d: dict) -> list[dict]:
+        return list(units(d.get("blocks", []))) + [u for ex in d.get("exercises", []) for u in units(ex["stem"] + ex["sol"])]
+
+    old_us, new_us = flat(old), flat(new)
+    by_sha = {u["sha"]: u["zh"] for u in old_us if u.get("zh")}
+    for u in new_us:
         if u["sha"] in by_sha:
             u["zh"] = by_sha[u["sha"]]
-    # 题目标题（title_zh）沿用
+    import difflib
+
+    sm = difflib.SequenceMatcher(a=[u["sha"] for u in old_us], b=[u["sha"] for u in new_us], autojunk=False)
+    for tag, i1, i2, j1, j2 in sm.get_opcodes():
+        if tag == "replace" and (i2 - i1) == (j2 - j1):
+            for k in range(i2 - i1):
+                o, n = old_us[i1 + k], new_us[j1 + k]
+                if not n.get("zh") and (o.get("zh") or o.get("stale_zh")):
+                    n["stale_zh"] = o.get("zh") or o["stale_zh"]
     if old.get("title_zh"):
         new["title_zh"] = old["title_zh"]
 
