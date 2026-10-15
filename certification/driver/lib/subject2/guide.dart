@@ -150,6 +150,41 @@ class RunScore {
   String get label => failed ? "不合格" : "$score 分";
 }
 
+/// 项目手册顶部的「C2 怎么开科目二」：操作原理集中讲一次，经验要点，不写点位。
+class C2Block {
+  const C2Block({required this.title, required this.body, required this.locators});
+
+  final String title;
+  final String body;
+  final List<String> locators;
+
+  factory C2Block.fromJson(Map<String, dynamic> json) => C2Block(
+        title: json["title"] as String,
+        body: json["body"] as String,
+        locators: [for (final l in json["locators"] as List<dynamic>) l as String],
+      );
+}
+
+class C2Guide {
+  const C2Guide({required this.title, required this.note, required this.order, required this.blocks});
+
+  final String title;
+  final String note;
+
+  /// 学习顺序的项目 id：先易后难。考试顺序仍是 [Subject2Guide.items]。
+  final List<String> order;
+  final List<C2Block> blocks;
+
+  static const empty = C2Guide(title: "", note: "", order: [], blocks: []);
+
+  factory C2Guide.fromJson(Map<String, dynamic> json) => C2Guide(
+        title: json["title"] as String,
+        note: json["note"] as String,
+        order: [for (final id in json["order"] as List<dynamic>) id as String],
+        blocks: [for (final b in json["blocks"] as List<dynamic>) C2Block.fromJson(b as Map<String, dynamic>)],
+      );
+}
+
 class Subject2Guide {
   const Subject2Guide({
     required this.fullScore,
@@ -158,6 +193,7 @@ class Subject2Guide {
     required this.tipsNote,
     required this.generalRules,
     required this.generalMistakes,
+    required this.c2,
     required this.items,
   });
 
@@ -167,6 +203,9 @@ class Subject2Guide {
   final String tipsNote;
   final List<GuideRule> generalRules;
   final List<Mistake> generalMistakes;
+  final C2Guide c2;
+
+  /// 考试顺序：倒车入库、侧方停车、曲线行驶、直角转弯。
   final List<GuideItem> items;
 
   static const empty = Subject2Guide(
@@ -176,6 +215,7 @@ class Subject2Guide {
     tipsNote: "",
     generalRules: [],
     generalMistakes: [],
+    c2: C2Guide.empty,
     items: [],
   );
 
@@ -188,8 +228,15 @@ class Subject2Guide {
       tipsNote: json["tips_note"] as String,
       generalRules: [for (final r in general["rules"] as List<dynamic>) GuideRule.fromJson(r as Map<String, dynamic>)],
       generalMistakes: [for (final m in general["mistakes"] as List<dynamic>) Mistake.fromJson(m as Map<String, dynamic>)],
+      c2: C2Guide.fromJson(json["c2"] as Map<String, dynamic>),
       items: [for (final i in json["items"] as List<dynamic>) GuideItem.fromJson(i as Map<String, dynamic>)],
     );
+  }
+
+  /// 手册上的四项：按 [c2] 的学习顺序，先易后难。
+  List<GuideItem> get learnItems {
+    final byId = {for (final item in items) item.id: item};
+    return [for (final id in c2.order) byId[id]!];
   }
 
   GuideItem? item(String id) {

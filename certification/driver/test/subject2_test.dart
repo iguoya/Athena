@@ -94,6 +94,24 @@ void main() {
     await store.close();
   });
 
+  test("C2 卡片五条都指到摘录里的条款，手册按先易后难：直角、曲线、侧方、倒库", () {
+    final guide = bank.guide;
+    final c2 = guide.c2;
+    expect(c2.blocks, hasLength(5));
+    expect(c2.note, "经验要点，以教练和考场车型为准");
+    expect(c2.order, ["corner", "curve", "parallel", "reverse"]);
+    expect(guide.learnItems.map((i) => i.id), ["corner", "curve", "parallel", "reverse"]);
+    expect(guide.items.map((i) => i.id), ["reverse", "parallel", "curve", "corner"]);
+    for (final block in c2.blocks) {
+      expect(block.body, isNot(contains("后视镜")));
+      expect(block.body, isNot(contains("厘米")));
+      expect(block.locators, isNotEmpty, reason: block.title);
+      for (final l in block.locators) {
+        expect(excerpts, contains("- ${l.substring("GA 1026—2022 ".length)}："), reason: "${block.title} $l");
+      }
+    }
+  });
+
   test("每一步都有注意事项，条款号能在摘录里找到；讲解稿带上注意事项（ADR 0040）", () {
     for (final item in bank.guide.items) {
       for (var i = 0; i < item.steps.length; i++) {

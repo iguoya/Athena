@@ -295,13 +295,17 @@ class _Subject2PageState extends State<Subject2Page> {
           style: theme.textTheme.bodyLarge,
         ),
         const SizedBox(height: 16),
+        C2HandbookCard(c2: _guide.c2),
+        const SizedBox(height: 16),
         Wrap(
           spacing: 16,
           runSpacing: 16,
           children: [
-            for (final item in _guide.items)
+            for (final (index, item) in _guide.learnItems.indexed)
               _ItemCard(
+                key: ValueKey("handbook-item-${item.id}"),
                 item: item,
+                sequence: index + 1,
                 questions: widget.bank.forTopic(item.topicId),
                 mastered: widget.mastered,
                 runs: [
@@ -898,17 +902,57 @@ class _PreDrillState extends State<_PreDrill> {
   }
 }
 
+/// 项目手册顶部的操作原理。数据在 [C2Guide]，考试顺序的列表不使用它。
+class C2HandbookCard extends StatelessWidget {
+  const C2HandbookCard({super.key, required this.c2});
+
+  final C2Guide c2;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return BsCard(
+      padding: const EdgeInsets.all(18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(c2.title, style: theme.textTheme.titleLarge),
+          const SizedBox(height: 4),
+          Text(c2.note, style: theme.textTheme.bodyMedium?.copyWith(color: Bs.secondary)),
+          const SizedBox(height: 12),
+          for (final block in c2.blocks) ...[
+            Text(block.title, style: theme.textTheme.titleMedium),
+            const SizedBox(height: 2),
+            Text(block.body, style: theme.textTheme.bodyLarge),
+            const SizedBox(height: 2),
+            Text(
+              block.locators.map((l) => l.substring("GA 1026—2022 ".length)).join(" · "),
+              style: theme.textTheme.bodyMedium?.copyWith(color: Bs.secondary),
+            ),
+            const SizedBox(height: 10),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
 class _ItemCard extends StatelessWidget {
   const _ItemCard({
+    super.key,
     required this.item,
     required this.questions,
     required this.mastered,
     required this.runs,
     required this.guide,
     required this.onTap,
+    this.sequence,
   });
 
   final GuideItem item;
+
+  /// 学习顺序里的第几项。考试顺序的列表不传。
+  final int? sequence;
   final List<Question> questions;
   final Set<String> mastered;
   final List<DrillRun> runs;
@@ -934,6 +978,10 @@ class _ItemCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
+                    if (sequence != null) ...[
+                      BsBadge(text: "第 $sequence 项", color: Bs.paper),
+                      const SizedBox(width: 8),
+                    ],
                     Expanded(child: Text(item.title, style: theme.textTheme.titleLarge)),
                     Icon(Glyph.animation, color: Bs.paper),
                   ],

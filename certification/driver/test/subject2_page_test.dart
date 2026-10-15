@@ -39,8 +39,16 @@ void main() {
     await tester.pump();
     await tester.tap(find.text("项目手册"));
     await tester.pump();
+    expect(find.text("C2 怎么开科目二"), findsOneWidget);
+    expect(find.text("先学哪一项"), findsOneWidget);
     for (final title in ["倒车入库", "侧方停车", "曲线行驶", "直角转弯"]) {
       expect(find.text(title), findsWidgets);
+    }
+    Offset at(String id) => tester.getTopLeft(find.byKey(ValueKey("handbook-item-$id")));
+    int reading(Offset a, Offset b) => (a.dy - b.dy).abs() > 40 ? a.dy.compareTo(b.dy) : a.dx.compareTo(b.dx);
+    final learn = ["corner", "curve", "parallel", "reverse"];
+    for (var i = 0; i < learn.length - 1; i++) {
+      expect(reading(at(learn[i]), at(learn[i + 1])), lessThan(0), reason: "${learn[i]} 应排在 ${learn[i + 1]} 前面");
     }
 
     // 打开倒车入库：动画、步骤、评判、要点都在。
