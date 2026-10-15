@@ -160,3 +160,4 @@
 | [0164](0164-cloud-limits-handoff-and-content-thickness.md) | 云会话做不到的事统一记进 docs/HANDOFF.md（现状、原因、接手步骤、验收）；新应用内容前期要薄（基础/进阶两层，默认折叠进阶）；数学工具多本好书就一本一个应用；阶段性成果及时合并主分支 | 已接受（补充 0162、0163） |
 | [0165](0165-agent-comms-service.md) | 多代理协作通讯抽取为仓库公共服务 comms/（按舱协作：一个主题一个舱、config.json 声明 leader/worker；leader 拆任务与验收、worker 交 review 附证据；正式任务沟通与即时消息双通道）；九州舱暂不迁移照旧运行 | 已接受 |
 | [0166](0166-comms-console-and-projection.md) | 协作观察台 comms-console（tools/，Tauri 2 + React，端口 1521）：文件是唯一权威、PG 是投影、观察台只读；看任务泳道、任务流转与裁决时间线、统一对话流；comms.py 加固原子写与 status 乐观锁 | 已接受 |
+| [0167](0167-multi-session-task-routing.md) | 多会话并行按任务分箱：任务是路由单位（doing 即绑定声明）、inbox/ack/notify 支持 --mine 与 --task、已读游标按箱分文件、认领冲突防护、可选 --as 会话标记 | 已接受；实现派 comms-console 舱 T-102 |

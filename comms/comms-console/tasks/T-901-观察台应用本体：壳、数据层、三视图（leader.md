@@ -2,11 +2,11 @@
 id: T-901
 title: 观察台应用本体：壳、数据层、三视图（leader 自领）
 owner: zcode
-status: todo
+status: done
 priority: P0
 depends: 
 created: 2026-10-15 18:46
-updated: 2026-10-15 18:46
+updated: 2026-10-15 19:17
 ---
 ## 目标
 
@@ -26,3 +26,5 @@ leader 自领（ADR 0166 决策 5）：观察台应用本体。
 - 打开应用能看到 comms/driver 与 comms/comms-console 两个真实舱的数据。
 
 ## 进展记录
+- [2026-10-15 19:12] zcode：todo → doing · 本体已提交 f4fc4629，实机启动验证中
+- [2026-10-15 19:17] zcode：doing → done · leader 自验：check 全绿（tsc/vite/cargo check+test）；launcher open 实机启动，截图确认看板泳道（driver 舱 4 任务、依赖等待标记）与对话流（线程折叠、leader 徽标、即时消息混排）渲染正确；修一个真 bug：CRLF 行尾让 front matter 解析整批失败
