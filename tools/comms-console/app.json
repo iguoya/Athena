@@ -1,0 +1,45 @@
+{
+  "id": "comms-console",
+  "title": "协作观察台",
+  "description": "多智能体协作通讯的观察台：看各舱任务泳道、任务流转与裁决时间线、统一对话流（Tauri + React，只读，数据投影到中心 PostgreSQL，ADR 0165/0166）。",
+  "icon": {
+    "type": "theme",
+    "name": "user-avatar-symbolic",
+    "symbol": "bubble.left.and.text.bubble.right",
+    "letter": "协",
+    "accent": "#0F7B6C",
+    "file": "icon.svg",
+    "renders": {
+      "src-tauri/icons/32x32.png": 32,
+      "src-tauri/icons/128x128.png": 128,
+      "src-tauri/icons/128x128@2x.png": 256,
+      "src-tauri/icons/icon.png": 512,
+      "src-tauri/icons/icon.ico": "ico"
+    }
+  },
+  "dev": {
+    "prepare": [
+      {
+        "when_missing": "node_modules",
+        "run": [
+          "pnpm",
+          "install"
+        ],
+        "label": "安装前端依赖"
+      }
+    ],
+    "run": [
+      "pnpm",
+      "run",
+      "tauri:dev"
+    ],
+    "ready": {
+      "http": "http://localhost:1521"
+    },
+    "match": "src-tauri/target",
+    "binary": "athena-comms-console",
+    "env": {
+      "ATHENA_COMMS_CONSOLE_ROOT": "../.."
+    }
+  }
+}

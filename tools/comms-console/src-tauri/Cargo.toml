@@ -1,0 +1,22 @@
+[package]
+name = "athena-comms-console"
+version = "0.1.0"
+description = "Athena 多智能体协作观察台（只读，文件权威 + PG 投影，ADR 0166）"
+authors = ["Athena"]
+edition = "2021"
+
+[lib]
+name = "athena_comms_console_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { workspace = true }
+
+[dependencies]
+tauri = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+# 同步 PG 驱动：投影与查询都是短批量操作，同步模型足够，省掉 async 生态的重量。
+postgres = "0.19"
+sha2 = "0.10"
+dirs-next = "2"

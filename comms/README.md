@@ -26,6 +26,7 @@ python comms/comms.py check --project <舱>                # 校验通讯结构
 | 舱 | 主题 | leader | worker |
 |---|---|---|---|
 | `driver/` | 驾考应用（certification/driver） | zcode | cursor |
+| `comms-console/` | 协作观察台（ADR 0166，`tools/comms-console`） | zcode | cursor |
 | `jiuzhou/` | （暂未迁移，仍用 `mentor/jiuzhou/scripts/comms.py`） | claude-code | cursor、zcode |
 
 新开一个舱：建 `comms/<舱>/config.json`（`leader`、`agents`、`bands`、`owned` 四个键，

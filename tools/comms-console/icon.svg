@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  comms-console 的应用图标：两个交叠的对话气泡 + 一个状态点，示意「多智能体协作通讯的观察」。
+  简洁几何自绘，与驱动图标同一路数（ADR 0065）；这份 SVG 就是图标本身：
+  透明底、自带颜色，启动器图块、窗口 / 任务栏 / 标题栏、应用界面三处同源。
+  改完跑 `launcher icons` 重新生成 app.json 里 icon.renders 声明的位图。
+-->
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="5" y="7" width="26" height="20" rx="6" fill="#0F7B6C"/>
+  <path d="M13 27 L13 34 L21 27 Z" fill="#0F7B6C"/>
+  <circle cx="13" cy="17" r="2.4" fill="#D2F2E9"/>
+  <circle cx="19" cy="17" r="2.4" fill="#D2F2E9"/>
+  <circle cx="25" cy="17" r="2.4" fill="#D2F2E9"/>
+  <rect x="23" y="19" width="20" height="15" rx="5" fill="#35B39A" stroke="#F7FAF9" stroke-width="2"/>
+  <path d="M37 34 L37 39.5 L31 34 Z" fill="#35B39A"/>
+  <circle cx="29.5" cy="26.5" r="1.9" fill="#ECFAF6"/>
+  <circle cx="34" cy="26.5" r="1.9" fill="#ECFAF6"/>
+</svg>
