@@ -111,4 +111,42 @@ void main() {
       await dir.delete(recursive: true);
     });
   });
+
+  // 考前分区（ADR 0039）：就绪度之外，考试日的流程与兜底规则（当场补考、终止）要在场。
+  testWidgets("科目二：考前分区显示考试日流程与当场补考规则", (tester) async {
+    late Directory dir;
+    late ProgressStore store;
+    late Bank bank;
+    await tester.runAsync(() async {
+      bank = await ContentLoader.load();
+      dir = await Directory.systemTemp.createTemp("athena-driver-s2-exam-");
+      store = await ProgressStore.open(suite: "subject2_page_exam");
+      await unlockSubject2(store);
+    });
+    await tester.binding.setSurfaceSize(const Size(1600, 2600));
+    final ready = Completer<void>();
+    await tester.pumpWidget(
+      MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)),
+    );
+    for (var i = 0; i < 2000 && !ready.isCompleted; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
+      await tester.pump();
+    }
+    expect(ready.isCompleted, isTrue);
+
+    await tester.tap(find.text("科目二（C2）"));
+    await tester.pump();
+    await tester.tap(find.text("考前"));
+    await tester.pump();
+    expect(find.text("考试日怎么走"), findsOneWidget);
+    expect(find.textContaining("当场补考一次"), findsOneWidget);
+    expect(find.textContaining("本次考试终止"), findsOneWidget);
+    expect(find.textContaining("不系安全带"), findsOneWidget);
+
+    await tester.pumpWidget(const SizedBox());
+    await tester.runAsync(() async {
+      await store.close();
+      await dir.delete(recursive: true);
+    });
+  });
 }

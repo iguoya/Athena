@@ -378,6 +378,47 @@ class _Subject2PageState extends State<Subject2Page> {
       children: [
         _ReadinessCard(readiness: readiness, lastAt: _brief.lastAt),
         const SizedBox(height: 16),
+        if (_guide.examDay.steps.isNotEmpty) ...[
+          _Section(
+            icon: Glyph.examReady,
+            title: _guide.examDay.title,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (var i = 0; i < _guide.examDay.steps.length; i++)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${i + 1}. ${_guide.examDay.steps[i].title}",
+                          style: theme.textTheme.titleSmall,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(_guide.examDay.steps[i].body, style: theme.textTheme.bodyLarge),
+                        if (_guide.examDay.steps[i].locators.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: Wrap(
+                              spacing: 6,
+                              runSpacing: 4,
+                              children: [
+                                for (final l in _guide.examDay.steps[i].locators)
+                                  BsBadge(text: l, color: levelColor(Level.parse("fail"))),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                const SizedBox(height: 4),
+                Text(_guide.examDay.note, style: theme.textTheme.bodyMedium?.copyWith(color: Bs.secondary)),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+        ],
         _Section(
           icon: Glyph.formTable,
           title: "每一项最近的表现（最近 $readinessWindow 把）",

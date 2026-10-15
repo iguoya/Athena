@@ -185,6 +185,38 @@ class C2Guide {
       );
 }
 
+/// 考前区的「考试日怎么走」：流程性知识，流程与顺序以考场现场为准（ADR 0036：
+/// 判分边界之外的通用流程，挂条款的只有国标里有的那几句）。
+class ExamDayStep {
+  const ExamDayStep({required this.title, required this.body, required this.locators});
+
+  final String title;
+  final String body;
+  final List<String> locators;
+
+  factory ExamDayStep.fromJson(Map<String, dynamic> json) => ExamDayStep(
+        title: json["title"] as String,
+        body: json["body"] as String,
+        locators: [for (final l in (json["locators"] ?? []) as List<dynamic>) l as String],
+      );
+}
+
+class ExamDayGuide {
+  const ExamDayGuide({required this.title, required this.note, required this.steps});
+
+  final String title;
+  final String note;
+  final List<ExamDayStep> steps;
+
+  static const empty = ExamDayGuide(title: "", note: "", steps: []);
+
+  factory ExamDayGuide.fromJson(Map<String, dynamic> json) => ExamDayGuide(
+        title: json["title"] as String,
+        note: json["note"] as String,
+        steps: [for (final s in json["steps"] as List<dynamic>) ExamDayStep.fromJson(s as Map<String, dynamic>)],
+      );
+}
+
 class Subject2Guide {
   const Subject2Guide({
     required this.fullScore,
@@ -194,6 +226,7 @@ class Subject2Guide {
     required this.generalRules,
     required this.generalMistakes,
     required this.c2,
+    required this.examDay,
     required this.items,
   });
 
@@ -204,6 +237,9 @@ class Subject2Guide {
   final List<GuideRule> generalRules;
   final List<Mistake> generalMistakes;
   final C2Guide c2;
+
+  /// 考试日的流程与兜底规则（当场补考、终止、签字）。
+  final ExamDayGuide examDay;
 
   /// 考试顺序：倒车入库、侧方停车、曲线行驶、直角转弯。
   final List<GuideItem> items;
@@ -216,6 +252,7 @@ class Subject2Guide {
     generalRules: [],
     generalMistakes: [],
     c2: C2Guide.empty,
+    examDay: ExamDayGuide.empty,
     items: [],
   );
 
@@ -229,6 +266,9 @@ class Subject2Guide {
       generalRules: [for (final r in general["rules"] as List<dynamic>) GuideRule.fromJson(r as Map<String, dynamic>)],
       generalMistakes: [for (final m in general["mistakes"] as List<dynamic>) Mistake.fromJson(m as Map<String, dynamic>)],
       c2: C2Guide.fromJson(json["c2"] as Map<String, dynamic>),
+      examDay: json["exam_day"] == null
+          ? ExamDayGuide.empty
+          : ExamDayGuide.fromJson(json["exam_day"] as Map<String, dynamic>),
       items: [for (final i in json["items"] as List<dynamic>) GuideItem.fromJson(i as Map<String, dynamic>)],
     );
   }
