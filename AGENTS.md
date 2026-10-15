@@ -54,7 +54,7 @@ practice/<id>/  项目应用：pocket_cube nas_admin c-gui-lab（ADR 0060）、e
                 地球分层 3D 可视化，自 subjects/ 迁入，ADR 0128）、cpp（旧 gtkmm 窗口，ADR 0141）
 certification/  考证应用：driver（驾考，ADR 0142）、software（软件设计师）、
                 embedded（嵌入式系统设计师，ADR 0147）。id 不动
-tools/          配套工具：math-tools（数学工具，ADR 0146）。id 仍是 math-tools
+tools/          配套工具：math-tools（数学工具，ADR 0146）、comms-console（协作观察台，ADR 0166）
 launcher/       启动器：core/ gui/ macos/
 docs/           跨应用 ADR（decisions/）与本文件各节的完整阐述
 scripts/        统一验证入口 check.py、跨应用检查

@@ -159,3 +159,4 @@
 | [0163](0163-math-tool-tutorials-in-guide.md) | 数学工具教程：一本书或一门课对应一个 `guide/` 应用；只做 GitHub 上能逐字入库的源，首批 Octave 官方手册（裁剪）与 SymPy 官方教程；示例用真工具复跑、练习自编并经工具核对；GeoGebra 与 Lachniet 小册拿不到，如实写明 | 已接受（沿用 0143、0162） |
 | [0164](0164-cloud-limits-handoff-and-content-thickness.md) | 云会话做不到的事统一记进 docs/HANDOFF.md（现状、原因、接手步骤、验收）；新应用内容前期要薄（基础/进阶两层，默认折叠进阶）；数学工具多本好书就一本一个应用；阶段性成果及时合并主分支 | 已接受（补充 0162、0163） |
 | [0165](0165-agent-comms-service.md) | 多代理协作通讯抽取为仓库公共服务 comms/（按舱协作：一个主题一个舱、config.json 声明 leader/worker；leader 拆任务与验收、worker 交 review 附证据；正式任务沟通与即时消息双通道）；九州舱暂不迁移照旧运行 | 已接受 |
+| [0166](0166-comms-console-and-projection.md) | 协作观察台 comms-console（tools/，Tauri 2 + React，端口 1521）：文件是唯一权威、PG 是投影、观察台只读；看任务泳道、任务流转与裁决时间线、统一对话流；comms.py 加固原子写与 status 乐观锁 | 已接受 |

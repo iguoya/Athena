@@ -72,6 +72,8 @@ guide/<id>/    手册类教程：跟随一本外部手册/官方教程精读，�
   sympy-tutorial/           SymPy 官方入门教程精读：符号计算做微积分与矩阵运算（Tauri 2 + React，「数学」圈，ADR 0163）
 tools/         配套工具：做出能用的工具，不建进度库（ADR 0146）
   math-tools/  数学工具（Tauri 2 + React）——数学学习的配套工具（ADR 0084、0146）
+  comms-console/ 协作观察台（Tauri 2 + React，只读）——多智能体协作的任务、决策与
+               对话观察，数据投影到中心 PostgreSQL（ADR 0165、0166）
 launcher/      启动器：macos/（Swift 菜单栏常驻）、core/、gui/
 docs/decisions/  跨应用的架构决策记录（ADR）
 scripts/       仓库级脚本：统一验证入口 check.py、跨应用内容出处检查

@@ -19,6 +19,7 @@
 | [`postgraduate/ascent`](postgraduate/ascent) | 拾阶（四六级 / 专四专八） | Tauri + Vite |
 | [`postgraduate/mathematics`](postgraduate/mathematics) | 数学学习 | Tauri + Vite（Python sidecar） |
 | [`tools/math-tools`](tools/math-tools) | 数学工具 | Tauri 2 + React |
+| [`tools/comms-console`](tools/comms-console) | 协作观察台 | Tauri 2 + React |
 | [`certification/driver`](certification/driver) | 驾考学习 | Flutter 桌面 |
 | [`certification/software`](certification/software) | 软件设计师（软考中级备考） | Tauri 2 + React |
 | [`certification/embedded`](certification/embedded) | 嵌入式系统设计师（软考中级备考，ADR 0090） | Tauri 2 + React |
