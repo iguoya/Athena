@@ -419,7 +419,7 @@ _ROOT_ALLOW = {
     ".cargo", "Cargo.toml", "Cargo.lock",
     "package.json", "pnpm-lock.yaml", "pnpm-workspace.yaml",
     *APP_ROOTS, "launcher", "docs", "scripts", "archive",
-    "packages",
+    "packages", "comms",
 }
 
 # 本机构建产物：存在就必须被 .gitignore 覆盖。一个新 Tauri 应用的 target 是

@@ -1,0 +1,29 @@
+---
+description: Athena driver 舱协作通讯（zcode 指挥、cursor 执行）
+alwaysApply: true
+---
+
+# driver 舱：驾考应用协作（ADR 0165）
+
+改 `certification/driver` 时，同时遵守本舱通讯规则：
+
+## 每轮开工第一件事
+
+```sh
+python comms/comms.py inbox cursor --project driver
+```
+
+有未读就读完并 `ack`；有任务书（`comms/driver/tasks/`）就按任务书做。
+`--project` 放子命令前或后都可以。
+
+## 角色与规矩（全文见 [comms/README.md](../../comms/README.md) 与 [舱 README](../../comms/driver/README.md)）
+
+- **zcode 是 leader**（指挥、写任务书、验收 done、裁决）；**cursor 是 worker**
+  （执行、交 review 附验证证据、卡住转 blocked、建议走消息不改方向）。
+- 开工 `status T-xxx doing --by cursor --project driver`；做完
+  `status T-xxx review --by cursor --note "验证输出摘要+证据路径" --project driver`，
+  停在 review 等 zcode 验收，`done` 只有 zcode 能标。
+- 只改舱 README 归属表里你的路径；撞到别人的未提交改动先停、发消息。
+- 钩子注入「Athena 协作通讯·未读提醒」时：手头告一段落再处理；标题带「紧急」才打断。
+- 九州舱（`mentor/jiuzhou/docs/comms` + `mentor/jiuzhou/scripts/comms.py`）照旧独立运行，
+  两个舱按当前工作对象选，互不替代。

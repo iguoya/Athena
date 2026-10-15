@@ -75,6 +75,8 @@ tools/         配套工具：做出能用的工具，不建进度库（ADR 0146
 launcher/      启动器：macos/（Swift 菜单栏常驻）、core/、gui/
 docs/decisions/  跨应用的架构决策记录（ADR）
 scripts/       仓库级脚本：统一验证入口 check.py、跨应用内容出处检查
+comms/         多代理协作通讯：一个协作主题一个舱（config.json 声明 leader/worker），
+               工具与协议共用（ADR 0165）；不是应用，不参与构建
 archive/       历史归档，不参与构建
 ```
 

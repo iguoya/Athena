@@ -59,6 +59,7 @@ launcher/       启动器：core/ gui/ macos/
 docs/           跨应用 ADR（decisions/）与本文件各节的完整阐述
 scripts/        统一验证入口 check.py、跨应用检查
 packages/       课程应用共用件：@athena/viz（纯呈现，ADR 0137）、athena-course-shell（课程壳 Rust crate，ADR 0161）；不是应用
+comms/          多代理协作通讯（按舱，ADR 0165）；不是应用，不参与构建
 archive/        历史归档，不参与构建
 ```
 
@@ -165,6 +166,11 @@ archive/        历史归档，不参与构建
 同一个工作区里可能同时有 Claude Code、ZCode、Codex 等代理在干活，彼此没有消息通道，
 约定只能写在这里。分工由使用者在各自的对话里指派。
 
+- **要通讯走 `comms/`**（ADR 0165）：多代理协作的即时通讯与任务沟通用仓库公共服务
+  [comms/](comms/)——一个协作主题一个舱（`comms/<主题>/`，`config.json` 声明 leader 与
+  worker），每轮开工先 `python comms/comms.py inbox <你的名字> --project <舱>`；
+  leader 拆任务、写任务书、验收 done、裁决，worker 执行、交 review 附证据、建议走
+  消息不改方向。规则全文见 [comms/README.md](comms/README.md)。下面几条是跨舱底线。
 - **只提交自己的改动**：`git add` 写明确路径，不整目录添加；工作区里不是自己改的未提交
   改动，不修改、不回退、不顺带提交。
 - **撞到别人的改动先停**：要动的文件里有别人的未提交改动，先停下，在对话里说明，由
