@@ -15,9 +15,10 @@
   时间/主题入口并列。
 - 内容版权由自用场景自负；出处鼓励在条目里注明并核对原文，不做门禁。
 - **多代理并行：** 三方协作——`claude-code` 指挥/规划/验收，`cursor` 前端/地图，`zcode` 内容。
-  通讯机制（收件箱 / 任务 / 消息 / 看板）见 [`docs/comms/README.md`](docs/comms/README.md)，
-  分工与路径归属见 [`docs/PARALLEL.md`](docs/PARALLEL.md)。每轮开工先跑
-  `python mentor/jiuzhou/scripts/comms.py inbox <你的名字>`；旧 `docs/HANDOFF-*.md` 已作废，仅作指路牌。
+  通讯走仓库公共服务 `comms/` 舱 `jiuzhou`（收件箱 / 任务 / 消息 / 看板），规则见
+  [`../../comms/jiuzhou/README.md`](../../comms/jiuzhou/README.md)，分工与路径归属见
+  [`docs/PARALLEL.md`](docs/PARALLEL.md)。每轮开工先跑
+  `python comms/comms.py inbox <你的名字> --project jiuzhou`；旧 `docs/HANDOFF-*.md` 已作废，仅作指路牌。
 
 ## 技术栈与选型理由
 
