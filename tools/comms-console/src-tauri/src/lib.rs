@@ -115,6 +115,9 @@ fn pg_dsn() -> Option<String> {
 
 /// `---\nk: v\n---\n` front matter。
 fn parse_front_matter(raw: &str) -> (BTreeMap<String, String>, String) {
+    // Windows 上这些文件多半是 CRLF（git 在本机 checkout 即如此），先归一化，
+    // 否则 `---\r\n` 让 front matter 匹配失败，任务与消息会被整批跳过。
+    let raw = raw.replace("\r\n", "\n");
     if let Some(rest) = raw.strip_prefix("---\n") {
         if let Some(end) = rest.find("\n---\n") {
             let mut meta = BTreeMap::new();

@@ -1,29 +1,29 @@
 # comms-console 协作看板
 
-> 由 `comms/comms.py board` 生成于 2026-10-15 18:57，**不要手改**。任务详情见各任务文件，通讯规则见 [../README.md](../README.md)。
+> 由 `comms/comms.py board` 生成于 2026-10-15 19:17，**不要手改**。任务详情见各任务文件，通讯规则见 [../README.md](../README.md)。
 
 ## 未读消息
 
 | 角色 | 未读 |
 |---|---|
-| zcode | 2 |
+| zcode | 1 |
 | cursor | 0 |
 
 ## 在线状态
 
 | 对方 | 状态 | 最近痕迹 | 距今 |
 |---|---|---|---|
-| cursor | online | 发消息 | 8 分钟前 |
+| cursor | online | 发消息 | 4 分钟前 |
 
 ## 概览
 
-todo 4 · doing 0 · review 0 · blocked 0 · done 0
+todo 3 · doing 0 · review 0 · blocked 0 · done 1
 
 ## zcode
 
 | 任务 | 优先级 | 状态 | 标题 | 依赖 | 更新 |
 |---|---|---|---|---|---|
-| [T-901](tasks/T-901-观察台应用本体：壳、数据层、三视图（leader.md) | P0 | todo | 观察台应用本体：壳、数据层、三视图（leader 自领） |  | 2026-10-15 18:46 |
+| [T-901](tasks/T-901-观察台应用本体：壳、数据层、三视图（leader.md) | P0 | done | 观察台应用本体：壳、数据层、三视图（leader 自领） |  | 2026-10-15 19:17 |
 
 ## cursor
 
