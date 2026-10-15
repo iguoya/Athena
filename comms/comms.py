@@ -117,6 +117,28 @@ def dump(meta: dict[str, str], body: str) -> str:
     return f"---\n{head}\n---\n{body}"
 
 
+def atomic_write(path: Path, text: str) -> None:
+    """整文件替换：先写临时文件，再 os.replace。读方不会看到半截内容。"""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    try:
+        tmp.write_text(text, encoding="utf-8")
+        os.replace(tmp, path)
+    except Exception:
+        tmp.unlink(missing_ok=True)
+        raise
+
+
+def append_lines(path: Path, lines: list[str]) -> None:
+    """追加写：把完整的行拼好，一次 write。不把半截行留在文件里。"""
+    if not lines:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = "".join(line if line.endswith("\n") else line + "\n" for line in lines)
+    with path.open("a", encoding="utf-8", newline="\n") as fh:
+        fh.write(payload)
+
+
 def tasks() -> list[tuple[Path, dict[str, str], str]]:
     out = []
     for p in sorted(TASKS.glob("T-*.md")):
@@ -202,7 +224,7 @@ def cmd_send(a):
     if a.task:
         find_task(a.task)
         meta["task"] = a.task
-    (MSGS / name).write_text(dump(meta, "\n" + body.strip() + "\n"), encoding="utf-8")
+    atomic_write(MSGS / name, dump(meta, "\n" + body.strip() + "\n"))
     print("已发送：", name)
 
 
@@ -332,7 +354,7 @@ def mark_chat_read(name: str) -> None:
     lines = chat_lines()
     if lines:
         READ.mkdir(parents=True, exist_ok=True)
-        (READ / f"{name}.chat").write_text(lines[-1][0], encoding="utf-8")
+        atomic_write(READ / f"{name}.chat", lines[-1][0])
 
 
 def cmd_say(a):
@@ -343,10 +365,8 @@ def cmd_say(a):
     text = " / ".join(x.strip() for x in a.text.splitlines() if x.strip())
     if not text:
         raise SystemExit("内容为空")
-    CHAT.mkdir(parents=True, exist_ok=True)
     ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    with _chat_path(me).open("a", encoding="utf-8", newline="") as f:
-        f.write(f"{ts}|{a.to}|{text}" + chr(10))
+    append_lines(_chat_path(me), [f"{ts}|{a.to}|{text}"])
     print(f"[{ts}] {me} → {a.to}: {text}")
 
 
@@ -372,10 +392,7 @@ def cmd_ack(a):
     f = READ / f"{a.name}.txt"
     seen = read_set(a.name)
     add = [n for n in names if n not in seen]
-    if add:
-        with f.open("a", encoding="utf-8", newline="\n") as fh:
-            for n in add:
-                fh.write(n + "\n")
+    append_lines(f, add)
     print(f"已标记 {len(add)} 条为已读")
 
 
@@ -398,11 +415,15 @@ def cmd_status(a):
     if a.status in ("review", "blocked") and not a.note:
         raise SystemExit(f"改成 {a.status} 必须写 --note（review 附验证命令输出摘要；blocked 写卡在哪、要谁帮忙）")
     old = m.get("status")
+    # 读过之后、写下之前，别人可能已经改过这个任务（验收和交 review 撞在一起）。
+    fresh, _ = parse(p)
+    if fresh.get("status") != old:
+        raise SystemExit(f"{a.task} 刚被 {old} → {fresh.get('status')} 更新，请重跑一次 status")
     m["status"] = a.status
     m["updated"] = now()
     line = f"- [{now()}] {a.by}：{old} → {a.status}" + (f" · {a.note}" if a.note else "")
     b = b.rstrip() + "\n" + line + "\n"
-    p.write_text(dump(m, b), encoding="utf-8")
+    atomic_write(p, dump(m, b))
     print(f"{a.task}: {old} → {a.status}")
     cmd_board(None)
 
@@ -425,7 +446,7 @@ def cmd_task_new(a):
             "depends": a.depends or "", "created": now(), "updated": now()}
     TASKS.mkdir(parents=True, exist_ok=True)
     path = TASKS / f"{tid}-{slug(a.title)}.md"
-    path.write_text(dump(meta, body.rstrip() + "\n\n## 进展记录\n"), encoding="utf-8")
+    atomic_write(path, dump(meta, body.rstrip() + "\n\n## 进展记录\n"))
     print("已创建：", path.relative_to(ATHENA).as_posix())
     cmd_board(None)
 
@@ -453,7 +474,7 @@ def cmd_board(_a):
             link = f"[{m.get('id')}](tasks/{p.name})"
             lines.append(f"| {link} | {m.get('priority')} | {m.get('status')} | {m.get('title')} | {m.get('depends','')} | {m.get('updated','')} |")
         lines.append("")
-    (COMMS / "BOARD.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    atomic_write(COMMS / "BOARD.md", "\n".join(lines) + "\n")
     if _a is not None:
         print("已生成", (COMMS / "BOARD.md").relative_to(ATHENA).as_posix())
 
