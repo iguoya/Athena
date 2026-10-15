@@ -660,6 +660,9 @@ final _underTest = Platform.environment.containsKey("FLUTTER_TEST");
 
 final drillScenes = {for (final s in [reverseScene, parallelScene, curveScene, cornerScene]) s.id: s};
 
+/// 车内参照和车外几何共用的颜色。两格不是两张无关的画。
+const drillLinkColor = Color(0xFF00E5FF);
+
 // ---------------------------------------------------------------------------
 // 播放器
 // ---------------------------------------------------------------------------
@@ -670,10 +673,14 @@ class DrillPlayer extends StatefulWidget {
     required this.scene,
     required this.stepTitles,
     this.onStep,
+    this.onFrame,
     this.hideCue = false,
     this.narration,
     this.cautions,
     this.narrator,
+    this.companion,
+    this.links = const [],
+    this.risks = const [],
   });
 
   final DrillScene scene;
@@ -681,6 +688,18 @@ class DrillPlayer extends StatefulWidget {
   /// 步骤标题（来自 content/subject2.json，条数与场景步骤一致）。
   final List<String> stepTitles;
   final ValueChanged<int>? onStep;
+
+  /// 进度变了就交一帧。父级用它让车内格停在同一步，不必每帧重画。
+  final ValueChanged<Frame>? onFrame;
+
+  /// 画在动画右侧的车内格。和场地图共用这一帧的进度。
+  final Widget? companion;
+
+  /// 与车内参照同色的短标签，按步骤对齐。空串不画。
+  final List<String> links;
+
+  /// 车外可见的扣分结果，按步骤对齐。有内容时取代画布上的长注意事项。
+  final List<String> risks;
 
   /// 默演时先藏起画面上的步骤标题和要点，免得替人把答案说了（ADR 0037）。藏着的时候也不念。
   final bool hideCue;
@@ -700,6 +719,7 @@ class DrillPlayer extends StatefulWidget {
 
 class DrillPlayerState extends State<DrillPlayer> with TickerProviderStateMixin {
   late Timeline _timeline = Timeline(widget.scene);
+  late List<Offset> _ideal = _timeline.frame(_timeline.total).trail;
   late final Ticker _ticker = createTicker(_tick);
 
   /// 标注闪烁用：暂停时画面也要一明一暗，不然停在某一步看不出哪里在强调。
@@ -734,6 +754,9 @@ class DrillPlayerState extends State<DrillPlayer> with TickerProviderStateMixin 
     super.initState();
     // 测试里常驻 ticker 会让 pumpAndSettle 永远等不到安定，只在真机上跑闪烁。
     if (!_underTest) _pulseTicker.start();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _seek(_t);
+    });
     widget.narrator?.prepare().then((_) {
       if (mounted) setState(() {});
     });
@@ -764,6 +787,7 @@ class DrillPlayerState extends State<DrillPlayer> with TickerProviderStateMixin 
     super.didUpdateWidget(oldWidget);
     if (oldWidget.scene != widget.scene) {
       _timeline = Timeline(widget.scene);
+      _ideal = _timeline.frame(_timeline.total).trail;
       _seek(0);
     }
   }
@@ -800,13 +824,24 @@ class DrillPlayerState extends State<DrillPlayer> with TickerProviderStateMixin 
   }
 
   void _seek(double t) {
-    setState(() => _t = t.clamp(0, _timeline.total));
-    final step = _timeline.frame(_t).step;
-    if (step != _step) {
-      _step = step;
-      widget.onStep?.call(step);
+    final clamped = t.clamp(0.0, _timeline.total);
+    final frame = _timeline.frame(clamped);
+    setState(() => _t = clamped);
+    if (frame.step != _step) {
+      _step = frame.step;
+      widget.onStep?.call(frame.step);
+    }
+    final previous = _reported;
+    if (previous == null ||
+        previous.step != frame.step ||
+        previous.gear != frame.gear ||
+        previous.signal != frame.signal) {
+      _reported = frame;
+      widget.onFrame?.call(frame);
     }
   }
+
+  Frame? _reported;
 
   void play() {
     if (_t >= _timeline.total) _seek(0);
@@ -847,22 +882,37 @@ class DrillPlayerState extends State<DrillPlayer> with TickerProviderStateMixin 
       children: [
         AspectRatio(
           aspectRatio: 16 / 10,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: CustomPaint(
-              painter: DrillPainter(
-                scene: widget.scene,
-                frame: frame,
-                caption: widget.hideCue ? "第 ${frame.step + 1} 步" : "第 ${frame.step + 1} 步 · $title",
-                cue: widget.hideCue ? null : steps[frame.step].cue,
-                caution: widget.hideCue || widget.cautions == null || frame.step >= widget.cautions!.length
-                    ? null
-                    : widget.cautions![frame.step],
-                marks: widget.hideCue ? const [] : steps[frame.step].marks,
-                pulse: (_pulse.elapsed.inMilliseconds % 1200) / 1200,
-                blinkOn: (_t * 2.5).floor().isEven,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                flex: 3,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: CustomPaint(
+                    painter: DrillPainter(
+                      scene: widget.scene,
+                      frame: frame,
+                      ideal: _ideal,
+                      caption: widget.hideCue ? "第 ${frame.step + 1} 步" : "第 ${frame.step + 1} 步 · $title",
+                      cue: widget.hideCue ? null : steps[frame.step].cue,
+                      caution: widget.hideCue || widget.cautions == null || frame.step >= widget.cautions!.length
+                          ? null
+                          : widget.cautions![frame.step],
+                      risk: widget.hideCue || frame.step >= widget.risks.length ? "" : widget.risks[frame.step],
+                      link: widget.hideCue || frame.step >= widget.links.length ? "" : widget.links[frame.step],
+                      marks: widget.hideCue ? const [] : steps[frame.step].marks,
+                      pulse: (_pulse.elapsed.inMilliseconds % 1200) / 1200,
+                      blinkOn: (_t * 2.5).floor().isEven,
+                    ),
+                  ),
+                ),
               ),
-            ),
+              if (widget.companion != null) ...[
+                const SizedBox(width: 8),
+                Expanded(flex: 2, child: widget.companion!),
+              ],
+            ],
           ),
         ),
         const SizedBox(height: 8),
@@ -944,16 +994,28 @@ class DrillPainter extends CustomPainter {
     required this.caption,
     required this.cue,
     required this.blinkOn,
+    this.ideal = const [],
     this.caution,
+    this.risk = "",
+    this.link = "",
     this.marks = const [],
     this.pulse = 0,
   });
 
   final DrillScene scene;
   final Frame frame;
+
+  /// 走完全程的后轴轨迹，灰线一直在。实走余迹是它到当前时刻的一段。
+  final List<Offset> ideal;
   final String caption;
   final String? cue;
   final bool blinkOn;
+
+  /// 这一步车外可见的扣分结果。非空时不再画长注意事项。
+  final String risk;
+
+  /// 与车内参照同色的短标签。
+  final String link;
 
   /// 注意事项（ADR 0040）。
   final String? caution;
@@ -1004,16 +1066,20 @@ class DrillPainter extends CustomPainter {
       _text(canvas, text, map(at), 13, _lineWhite.withValues(alpha: 0.75), center: true);
     }
 
-    // 已走过的轨迹（后轴中心）
-    if (frame.trail.length > 1) {
-      canvas.drawPath(
-        Path()..addPolygon([for (final p in frame.trail) map(p)], false),
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2
-          ..color = _amber.withValues(alpha: 0.7),
-      );
+    // 理想走线：全程都在，灰虚线。实走余迹叠在上面，走到哪、偏没偏，一眼能对上。
+    final idealPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5
+      ..color = const Color(0xFFB0B6BE);
+    _dashedPolyline(canvas, [for (final p in ideal) map(p)], idealPaint);
+    if (ideal.length > 1) {
+      _text(canvas, "理想走线", map(ideal.first) + const Offset(8, -16), 12, const Color(0xFFB0B6BE));
     }
+    final trailPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.5
+      ..color = _amber.withValues(alpha: 0.9);
+    _dashedPolyline(canvas, [for (final p in frame.trail) map(p)], trailPaint);
 
     // 车
     final pose = frame.pose;
@@ -1058,6 +1124,10 @@ class DrillPainter extends CustomPainter {
       for (final a in [car.wheelbase + car.frontOverhang - 0.1, -car.rearOverhang + 0.1]) {
         canvas.drawCircle(map(pose.local(a, side * (car.width / 2 - 0.1))), max(3, 0.22 * scale), lampPaint);
       }
+    }
+    if (link.isNotEmpty) {
+      final anchor = map(pose.local(car.wheelbase * 0.7, 0));
+      _text(canvas, link, anchor + const Offset(14, -18), 13, drillLinkColor, bold: true, maxWidth: size.width * 0.42);
     }
     // 挡位
     final gear = switch (frame.gear) {
@@ -1135,14 +1205,24 @@ class DrillPainter extends CustomPainter {
     // 说明条
     _text(canvas, caption, const Offset(14, 12), 16, Colors.white, bold: true);
     if (cue != null) _text(canvas, cue!, const Offset(14, 38), 14, _amber);
-    if (caution != null && caution!.isNotEmpty) {
+    if (risk.isNotEmpty) {
+      _text(canvas, "扣分：$risk", const Offset(14, 60), 13, const Color(0xFFFF8A80), maxWidth: size.width - 28);
+    } else if (caution != null && caution!.isNotEmpty) {
       _text(canvas, "注意：${caution!}", const Offset(14, 60), 13, const Color(0xFFFF8A80), maxWidth: size.width - 28);
     }
     _text(canvas, "示意图，不按比例；尺寸以考场为准", Offset(14, size.height - 24), 11, _lineWhite.withValues(alpha: 0.6));
   }
 
+  void _dashedPolyline(Canvas canvas, List<Offset> pts, Paint paint) {
+    for (var i = 1; i < pts.length; i++) {
+      if ((pts[i] - pts[i - 1]).distance < 1) continue;
+      _dashed(canvas, pts[i - 1], pts[i], paint);
+    }
+  }
+
   void _dashed(Canvas canvas, Offset a, Offset b, Paint paint) {
     final total = (b - a).distance;
+    if (total < 1) return;
     const dash = 8.0, gap = 6.0;
     final dir = (b - a) / total;
     for (var d = 0.0; d < total; d += dash + gap) {
@@ -1186,6 +1266,9 @@ class DrillPainter extends CustomPainter {
       old.blinkOn != blinkOn ||
       old.caption != caption ||
       old.caution != caution ||
+      old.risk != risk ||
+      old.link != link ||
+      old.ideal.length != ideal.length ||
       old.pulse != pulse ||
       old.marks != marks;
 }

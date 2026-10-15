@@ -5,6 +5,8 @@ import "package:athena_driver/subject2/drill.dart";
 import "package:athena_driver/subject2/guide.dart";
 import "package:athena_driver/core/models.dart";
 import "package:athena_driver/core/progress.dart";
+import "package:athena_driver/subject2/subject2.dart";
+import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
 void main() {
@@ -110,6 +112,53 @@ void main() {
         expect(excerpts, contains("- ${l.substring("GA 1026—2022 ".length)}："), reason: "${block.title} $l");
       }
     }
+  });
+
+  test("四项每一步都有同屏的车内参照和车外焦点", () {
+    for (final id in ["corner", "curve", "parallel", "reverse"]) {
+      final item = bank.guide.item(id)!;
+      for (var i = 0; i < item.steps.length; i++) {
+        final step = item.steps[i];
+        final inside = step.inside;
+        final outside = step.outside;
+        expect(inside, isNotNull, reason: "${step.title} 缺车内");
+        expect(outside, isNotNull, reason: "${step.title} 缺车外");
+        expect(inside!.look, isNotEmpty);
+        expect(inside.action, isNotEmpty);
+        expect(outside!.focus, isNotEmpty);
+        expect(outside.risk, isNotEmpty);
+        expect(step.done, isNotEmpty);
+        expect(inside.look, isNot(contains("厘米")));
+        expect(inside.look, isNot(contains("门把手")));
+        expect(inside.look, isNot(contains("转向灯开关")));
+        final spoken = step.narration(i);
+        expect(spoken.indexOf("车外："), lessThan(spoken.indexOf("车内看：")));
+      }
+    }
+    expect(bank.guide.item("corner")!.steps[1].inside!.look, "视线保持在车道上，手摸开关");
+    expect(bank.guide.item("parallel")!.steps[4].inside!.wrong, "低头找开关");
+    expect(bank.guide.item("reverse")!.steps[5].inside!.look, "和第一次同一对关系，从另一侧");
+  });
+
+  test("理想走线是全程轨迹，实走余迹是走到一半的前缀", () {
+    final timeline = Timeline(curveScene);
+    final full = timeline.frame(timeline.total).trail;
+    final mid = timeline.frame(timeline.total / 2).trail;
+    expect(full.length, greaterThan(mid.length));
+    expect(mid.first.dx, closeTo(full.first.dx, 1e-6));
+    expect(mid.last.dx, isNot(closeTo(full.last.dx, 0.05)));
+  });
+
+  testWidgets("车内格画出参照，并把错参照划掉", (tester) async {
+    final step = bank.guide.item("curve")!.steps[1];
+    await tester.pumpWidget(MaterialApp(
+      home: Scaffold(
+        body: SizedBox(width: 360, height: 480, child: CabinPanel(step: step, gear: Gear.drive, signal: Signal.none)),
+      ),
+    ));
+    expect(find.text(step.inside!.look), findsOneWidget);
+    expect(find.textContaining("别按这个：${step.inside!.wrong}"), findsOneWidget);
+    expect(find.textContaining("做完：${step.done}"), findsOneWidget);
   });
 
   test("每一步都有注意事项，条款号能在摘录里找到；讲解稿带上注意事项（ADR 0040）", () {

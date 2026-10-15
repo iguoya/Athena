@@ -1111,6 +1111,8 @@ class _ItemPageState extends State<_ItemPage> {
   final _player = GlobalKey<DrillPlayerState>();
   final _narrator = defaultNarrator();
   var _step = 0;
+  var _gear = Gear.drive;
+  var _signal = Signal.none;
 
   @override
   Widget build(BuildContext context) {
@@ -1121,13 +1123,22 @@ class _ItemPageState extends State<_ItemPage> {
       for (final q in widget.questions)
         if (!widget.mastered.contains(q.id)) q,
     ];
+    final current = item.steps[_step];
     final player = DrillPlayer(
       key: _player,
       scene: scene,
       stepTitles: [for (final s in item.steps) s.title],
       onStep: (step) => setState(() => _step = step),
+      onFrame: (frame) => setState(() {
+        _step = frame.step;
+        _gear = frame.gear;
+        _signal = frame.signal;
+      }),
       narration: [for (var i = 0; i < item.steps.length; i++) item.steps[i].narration(i)],
       cautions: [for (final s in item.steps) s.caution],
+      links: [for (final s in item.steps) s.inside?.look ?? ""],
+      risks: [for (final s in item.steps) s.outside?.risk ?? ""],
+      companion: current.inside == null ? null : CabinPanel(step: current, gear: _gear, signal: _signal),
       narrator: _narrator,
     );
     final steps = _StepList(
@@ -1433,6 +1444,82 @@ class _ItemBriefCard extends StatelessWidget {
   }
 }
 
+/// 驾驶座这一眼。参照句和场地图上的同色标签是同一句话。
+class CabinPanel extends StatelessWidget {
+  const CabinPanel({super.key, required this.step, required this.gear, required this.signal});
+
+  final GuideStep step;
+  final Gear gear;
+  final Signal signal;
+
+  @override
+  Widget build(BuildContext context) {
+    final inside = step.inside!;
+    final theme = Theme.of(context);
+    final gearLabel = switch (gear) {
+      Gear.park => "P",
+      Gear.drive => "D",
+      Gear.reverse => "R",
+    };
+    final signalLabel = switch (signal) {
+      Signal.none => "灯灭",
+      Signal.left => "左灯",
+      Signal.right => "右灯",
+    };
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: const Color(0xFF2C3138),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text("车内", style: theme.textTheme.labelLarge?.copyWith(color: Colors.white70)),
+            const SizedBox(height: 8),
+            Expanded(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1E2430),
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: drillLinkColor, width: 2),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Text(
+                    inside.look,
+                    style: theme.textTheme.titleMedium?.copyWith(color: drillLinkColor, fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
+            ),
+            if (inside.wrong.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text(
+                "别按这个：${inside.wrong}",
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: const Color(0xFFFF8A80),
+                  decoration: TextDecoration.lineThrough,
+                  decorationColor: const Color(0xFFFF8A80),
+                ),
+              ),
+            ],
+            const SizedBox(height: 8),
+            Text("$gearLabel · $signalLabel · ${inside.action}", style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white)),
+            if (step.caution.isNotEmpty) ...[
+              const SizedBox(height: 6),
+              Text(step.caution, maxLines: 3, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodySmall?.copyWith(color: const Color(0xFFFF8A80))),
+            ],
+            if (step.done.isNotEmpty)
+              Text("做完：${step.done}", style: theme.textTheme.bodySmall?.copyWith(color: Colors.white70)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _StepList extends StatelessWidget {
   const _StepList({
     required this.steps,
@@ -1486,10 +1573,21 @@ class _StepList extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(steps[i].title, style: theme.textTheme.titleMedium),
+                            Tooltip(
+                              message: steps[i].body,
+                              child: Text(steps[i].title, style: theme.textTheme.titleMedium),
+                            ),
                             if (i == current) ...[
                               const SizedBox(height: 4),
-                              Text(steps[i].body, style: theme.textTheme.bodyMedium),
+                              if (steps[i].inside != null) ...[
+                                Text(
+                                  steps[i].inside!.look,
+                                  style: theme.textTheme.bodyMedium?.copyWith(color: drillLinkColor),
+                                ),
+                                if (steps[i].done.isNotEmpty)
+                                  Text("做完：${steps[i].done}", style: theme.textTheme.bodyMedium),
+                              ] else
+                                Text(steps[i].body, style: theme.textTheme.bodyMedium),
                               if (steps[i].caution.isNotEmpty) ...[
                                 const SizedBox(height: 6),
                                 Tooltip(

@@ -61,8 +61,49 @@ class Mistake {
       );
 }
 
+/// 车内这一眼：盯哪一对关系、新手会盯错的那一对、手脚做什么。
+class StepInside {
+  const StepInside({required this.look, required this.wrong, required this.action});
+
+  /// 这一步该盯的参照。和 [StepOutside.focus] 用同一种颜色画，是两格之间的关联。
+  final String look;
+
+  /// 新手本能会盯的错参照。空串表示这一步没有要画出来的错参照。
+  final String wrong;
+
+  /// 脚、挡、方向这一下做什么。
+  final String action;
+
+  factory StepInside.fromJson(Map<String, dynamic> json) => StepInside(
+        look: json["look"] as String,
+        wrong: json["wrong"] as String? ?? "",
+        action: json["do"] as String,
+      );
+}
+
+/// 车外这一眼：车身相对线在哪、这一下容易被判的结果。
+class StepOutside {
+  const StepOutside({required this.focus, required this.risk});
+
+  final String focus;
+  final String risk;
+
+  factory StepOutside.fromJson(Map<String, dynamic> json) => StepOutside(
+        focus: json["focus"] as String,
+        risk: json["risk"] as String? ?? "",
+      );
+}
+
 class GuideStep {
-  const GuideStep({required this.title, required this.body, this.caution = "", this.cautionLocators = const []});
+  const GuideStep({
+    required this.title,
+    required this.body,
+    this.caution = "",
+    this.cautionLocators = const [],
+    this.inside,
+    this.outside,
+    this.done = "",
+  });
 
   final String title;
   final String body;
@@ -71,20 +112,45 @@ class GuideStep {
   final String caution;
   final List<String> cautionLocators;
 
-  /// 语音讲解的稿子：第几步、做什么、注意什么（ADR 0040）。
-  String narration(int index) => [
-        "第${index + 1}步，$title。",
-        body,
-        if (caution.isNotEmpty) "注意：$caution",
-      ].join("");
+  /// 双视角。缺字段时界面仍只播原来的动画。
+  final StepInside? inside;
+  final StepOutside? outside;
+
+  /// 怎样算这一步做完。念出来的完成口令。
+  final String done;
+
+  /// 语音讲解的稿子。有双视角时先念车外全局，再念车内参照（T-003）。
+  String narration(int index) {
+    final head = "第${index + 1}步，$title。";
+    final inside = this.inside;
+    final outside = this.outside;
+    if (inside == null || outside == null) {
+      return [head, body, if (caution.isNotEmpty) "注意：$caution"].join("");
+    }
+    return [
+      head,
+      "车外：${outside.focus}",
+      if (outside.risk.isNotEmpty) "扣分点：${outside.risk}",
+      "车内看：${inside.look}",
+      if (inside.wrong.isNotEmpty) "别按这个来：${inside.wrong}",
+      "手脚：${inside.action}",
+      if (done.isNotEmpty) "做完：$done",
+      if (caution.isNotEmpty) "注意：$caution",
+    ].join("");
+  }
 
   factory GuideStep.fromJson(Map<String, dynamic> json) {
     final caution = json["caution"] as Map<String, dynamic>?;
+    final inside = json["inside"] as Map<String, dynamic>?;
+    final outside = json["outside"] as Map<String, dynamic>?;
     return GuideStep(
       title: json["title"] as String,
       body: json["body"] as String,
       caution: caution?["text"] as String? ?? "",
       cautionLocators: [for (final l in caution?["locators"] as List<dynamic>? ?? const []) l as String],
+      inside: inside == null ? null : StepInside.fromJson(inside),
+      outside: outside == null ? null : StepOutside.fromJson(outside),
+      done: json["done"] as String? ?? "",
     );
   }
 }

@@ -51,6 +51,17 @@ void main() {
       expect(reading(at(learn[i]), at(learn[i + 1])), lessThan(0), reason: "${learn[i]} 应排在 ${learn[i + 1]} 前面");
     }
 
+    // 曲线行驶：车内参照和场地图同屏，当前步的参照写在车内格上。
+    await tester.tap(find.text("曲线行驶").first);
+    await tester.pump();
+    expect(find.text("车内"), findsOneWidget);
+    expect(find.text("入口在挡风玻璃里偏外侧"), findsWidgets);
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.widgetWithText(TextButton, "科目二"));
+    await tester.pump();
+    await tester.tap(find.text("项目手册"));
+    await tester.pump();
+
     // 打开倒车入库：动画、步骤、评判、要点都在。
     await tester.tap(find.text("倒车入库").first);
     await tester.pump();
@@ -61,18 +72,18 @@ void main() {
     expect(find.text("车身出线"), findsOneWidget);
     await tester.drag(itemPage, const Offset(0, 5000));
     await tester.pumpAndSettle();
-    expect(find.textContaining("系好安全带"), findsOneWidget);
-    expect(find.textContaining("系好安全带"), findsOneWidget); // 第 1 步展开着
+    expect(find.text("两个前轮已经在控制线外侧"), findsWidgets);
+    expect(find.text("车内"), findsWidgets);
 
     // 单步播第 2 步：播完停在第 2 步末尾，步骤列表跟着高亮到第 2 步。
     await tester.tap(find.byTooltip("播这一步").at(1));
     for (var i = 0; i < 80; i++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
-    expect(find.textContaining("松手刹、挂 R 挡"), findsOneWidget);
+    expect(find.text("后视镜里车尾接近库口，车身还是直的"), findsWidgets);
     await tester.tap(find.byTooltip("下一步"));
     await tester.pump();
-    expect(find.textContaining("向库的一侧打满方向"), findsOneWidget);
+    expect(find.text("后视镜里库角和库边线"), findsWidgets);
 
     // 记一把：中途停车两次 → 90 分，能过。
     await tester.ensureVisible(find.text("记一把练车"));
