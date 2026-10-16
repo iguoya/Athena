@@ -11,7 +11,7 @@ import "package:flutter_test/flutter_test.dart";
 
 /// 科目二侧栏按实操排（T-004）：默认落点是科目二，展开后不是笔试目录。
 void main() {
-  testWidgets("打开即科目二，展开后是练车日、四项、考前、日志、评判常识", (tester) async {
+  testWidgets("打开即科目二，展开后是练车日、四项、考前、日志、注意事项", (tester) async {
     late Directory dir;
     late ProgressStore store;
     late Bank bank;
@@ -62,7 +62,7 @@ void main() {
       "④ 倒车入库",
       "考前",
       "练车日志",
-      "评判常识 · 54 题",
+      "注意事项 · 54 题",
     ];
     var previous = tester.getCenter(inSidebar(find.text("科目二（C2）"))).dy;
     for (final label in labels) {

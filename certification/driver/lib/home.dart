@@ -622,7 +622,8 @@ class _HomePageState extends State<HomePage> {
     })[topic.id]!;
   }
 
-  /// 科目二侧栏按实操排：练车日、四项手册、考前、日志，评判常识垫底。不走笔试模板。
+  /// 科目二侧栏按实操排：练车日、四项手册、考前、日志，注意事项（科目二出题的
+  /// 归口章节，T-007）垫底。不走笔试模板。
   List<Widget> _subject2Branch() {
     const id = "subject2";
     const marks = ["①", "②", "③", "④"];
@@ -705,11 +706,12 @@ class _HomePageState extends State<HomePage> {
           selected:
               session != null &&
               session.subjectId == id &&
-              session.title.endsWith("评判常识"),
-          label: "评判常识 · ${questions.length} 题",
+              (session.title.endsWith("注意事项") ||
+                  session.title.endsWith("评判常识")),
+          label: "注意事项 · ${questions.length} 题",
           indent: true,
           onTap: () =>
-              _startPractice(subject, questions, "评判常识", includeMastered: true),
+              _startPractice(subject, questions, "注意事项", includeMastered: true),
         ),
         const SizedBox(height: 6),
       ],
@@ -1983,7 +1985,10 @@ class _HomePageState extends State<HomePage> {
       return;
     }
     if (!mounted) return;
-    if (!await _confirmStartTest("${subject.code} 模拟考试", subject.exam!.minutes)) {
+    if (!await _confirmStartTest(
+      "${subject.code} 模拟考试",
+      subject.exam!.minutes,
+    )) {
       return;
     }
     if (!mounted) return;
