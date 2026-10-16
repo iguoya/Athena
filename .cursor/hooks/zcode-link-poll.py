@@ -2,14 +2,18 @@
 # -*- coding: utf-8 -*-
 """常驻监听 comms 舱的文件事件，有变动才查未读。进程掉了由 zcode-link.py 在下次会话拉起。
 
+依赖 watchdog（换机器先 `pip install watchdog`）；缺失时后台自动安装，期间降级低频
+轮询，装好即切回事件监听，无需重启。
+
 未读只由 <舱>/msgs、<舱>/chat、<舱>/read 三处的文件变动决定，watchdog 监听舱根目录、
 按路径第一段过滤；事件只当「该查了」的信号，检查永远是全量的，丢事件无害。
-watchdog 不可用则退回低频轮询；监听模式另留兜底轮询，兜住内核缓冲溢出等丢事件的情况。
+监听模式另留兜底轮询，兜住内核缓冲溢出等丢事件的情况。
 只追加「摘要发生变化」的行，避免同一条未读刷屏。不标记已读。
 """
 
 from __future__ import annotations
 
+import importlib
 import os
 import subprocess
 import sys
@@ -110,12 +114,35 @@ def run_watchdog(last: dict[str, str]) -> None:
         check_all(last)
 
 
-def run_polling(last: dict[str, str]) -> None:
-    emit(f"—— poller 启动：无 watchdog，降级 {POLL_FALLBACK:.0f}s 轮询（pid={os.getpid()}）；"
-         f"安装：{sys.executable} -m pip install watchdog——")
-    while True:
-        time.sleep(POLL_FALLBACK)
+def install_watchdog_bg() -> threading.Event:
+    """后台安装 watchdog，装好且可导入后置位返回的 Event。
+
+    离线或安装失败就留在低频轮询，不重试——下次进程被拉起时再试。
+    """
+    ok = threading.Event()
+
+    def work():
+        try:
+            subprocess.run(
+                [sys.executable, "-m", "pip", "install", "--quiet", "watchdog"],
+                capture_output=True, timeout=300, creationflags=NO_WINDOW,
+            )
+            importlib.invalidate_caches()
+            import watchdog  # noqa: F401
+            ok.set()
+        except Exception:
+            pass
+
+    threading.Thread(target=work, daemon=True).start()
+    return ok
+
+
+def run_polling(last: dict[str, str], upgraded: threading.Event) -> None:
+    emit(f"—— poller 启动：无 watchdog，先降级 {POLL_FALLBACK:.0f}s 轮询，"
+         f"后台安装后自动切换（pid={os.getpid()}）——")
+    while not upgraded.wait(POLL_FALLBACK):
         check_all(last)
+    emit("—— watchdog 就绪，切换事件监听——")
 
 
 def main() -> int:
@@ -126,8 +153,11 @@ def main() -> int:
         import watchdog  # noqa: F401
 
         run_watchdog(last)
+        return 0
     except ImportError:
-        run_polling(last)
+        pass
+    run_polling(last, install_watchdog_bg())
+    run_watchdog(last)
     return 0
 
 

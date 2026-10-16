@@ -27,6 +27,7 @@ if hasattr(sys.stdout, "reconfigure"):
 
 TOOL = Path(__file__).resolve().parents[1] / "comms.py"
 COMMS_ROOT = TOOL.parents[1] / "comms"
+NO_WINDOW = 0x08000000 if os.name == "nt" else 0  # CREATE_NO_WINDOW，comms.py 子进程不闪控制台窗
 
 
 def notify_for(project: str, agent: str) -> str:
@@ -35,6 +36,7 @@ def notify_for(project: str, agent: str) -> str:
             [sys.executable, str(TOOL), "--project", project, "notify", agent],
             cwd=str(TOOL.parents[1]),
             capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=8,
+            creationflags=NO_WINDOW,
         )
     except (OSError, __import__("subprocess").TimeoutExpired):
         return ""
