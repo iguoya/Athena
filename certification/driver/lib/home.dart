@@ -640,7 +640,9 @@ class _HomePageState extends State<HomePage> {
         label: "科目二（C2）",
         onTap: () {
           _expanded.add(id);
-          _go("subject2/day");
+          // 一级章节不绑定实操内容（使用者定调）：点击落到本章节的概要
+          // （项目手册顶部的「C2 怎么开科目二」），练车日等细节在子级。
+          _go("subject2/handbook");
         },
         trailing: InkWell(
           borderRadius: BorderRadius.circular(Bs.radius),

@@ -95,6 +95,11 @@ void main() {
     await tester.pump(const Duration(milliseconds: 400));
     expect(find.text("考试日怎么走"), findsOneWidget);
 
+    // 一级章节不绑定实操内容：点「科目二（C2）」落到本章节概要，不是练车日。
+    await tester.tap(inSidebar(find.text("科目二（C2）")));
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text("C2 怎么开科目二"), findsOneWidget);
+
     await tester.tap(inSidebar(find.text("① 直角转弯")));
     await tester.pump(const Duration(milliseconds: 400));
     expect(find.text("直角转弯"), findsWidgets);
