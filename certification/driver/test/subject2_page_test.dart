@@ -37,7 +37,7 @@ void main() {
 
     await tester.tap(find.text("科目二（C2）"));
     await tester.pump();
-    await tester.tap(find.text("项目手册"));
+    await tester.tap(find.text("项目手册").last);
     await tester.pump();
     expect(find.text("C2 怎么开科目二"), findsOneWidget);
     expect(find.text("先学哪一项"), findsOneWidget);
@@ -59,7 +59,7 @@ void main() {
     expect(tester.takeException(), isNull);
     await tester.tap(find.widgetWithText(TextButton, "科目二"));
     await tester.pump();
-    await tester.tap(find.text("项目手册"));
+    await tester.tap(find.text("项目手册").last);
     await tester.pump();
 
     // 打开倒车入库：动画、步骤、评判、要点都在。
@@ -147,7 +147,7 @@ void main() {
 
     await tester.tap(find.text("科目二（C2）"));
     await tester.pump();
-    await tester.tap(find.text("考前"));
+    await tester.tap(find.text("考前").last);
     await tester.pump();
     expect(find.text("考试日怎么走"), findsOneWidget);
     expect(find.textContaining("当场补考一次"), findsOneWidget);

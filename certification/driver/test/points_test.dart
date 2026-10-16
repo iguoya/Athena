@@ -93,7 +93,7 @@ void main() {
     }
     await tester.tap(find.text("科目二（C2）"));
     await tester.pump();
-    await tester.tap(find.text("项目手册"));
+    await tester.tap(find.text("项目手册").last);
     await tester.pump();
     await tester.tap(find.text("直角转弯").first);
     for (var i = 0; i < 50; i++) {
@@ -120,8 +120,8 @@ void main() {
     expect(find.text("车身离右边线一拳"), findsOneWidget);
     // 滚回顶部：当前是第 1 步，步骤列表里展开显示自己的点位；简报提示写了几步。
     final page = find.descendant(of: find.byKey(const ValueKey("subject2-item")), matching: find.byType(Scrollable)).first;
-    await tester.scrollUntilVisible(find.textContaining("点位卡写了 1/4 步"), -300, scrollable: page);
-    expect(find.textContaining("点位卡写了 1/4 步"), findsOneWidget);
+    await tester.scrollUntilVisible(find.textContaining("点位卡写了 1/5 步"), -300, scrollable: page);
+    expect(find.textContaining("点位卡写了 1/5 步"), findsOneWidget);
     expect(find.textContaining("我的点位：车身离右边线一拳"), findsOneWidget);
     expect(tester.takeException(), isNull);
 

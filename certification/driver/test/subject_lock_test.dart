@@ -49,8 +49,8 @@ void main() {
     expect(find.textContaining("未解锁"), findsNothing);
     await tester.tap(find.text("科目二（C2）"));
     await tester.pump();
-    expect(find.text("练车日"), findsOneWidget);
-    expect(find.text("项目手册"), findsOneWidget);
+    expect(find.text("练车日"), findsWidgets);
+    expect(find.text("项目手册"), findsWidgets);
 
     await tester.tap(find.text("科目四"));
     await tester.pump();

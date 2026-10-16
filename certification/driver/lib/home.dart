@@ -29,10 +29,17 @@ import "speed/signs_page.dart";
 import "ui/skin.dart";
 import "subject2/subject2.dart";
 import "core/sync.dart";
+
 /// 通过概率放到后台 isolate 里算。必须是顶层函数：在 State 的异步方法里写闭包，
 /// 闭包会连带捕获 `this`，界面对象送不进 isolate（ArgumentError: unsendable）。
-Future<PassEstimate> _estimateInBackground(List<Question> bank, ExamRules rules, HistorySet histories) {
-  return Isolate.run(() => estimatePass(bank: bank, rules: rules, histories: histories));
+Future<PassEstimate> _estimateInBackground(
+  List<Question> bank,
+  ExamRules rules,
+  HistorySet histories,
+) {
+  return Isolate.run(
+    () => estimatePass(bank: bank, rules: rules, histories: histories),
+  );
 }
 
 /// 考点簇放到后台 isolate 里算（ADR 0079）。同样要是顶层函数，原因同上。
@@ -41,7 +48,9 @@ Future<ClusterIndex> _buildClustersInBackground(List<Question> questions) {
 }
 
 /// 算考点簇的办法。默认在后台线程里现算；测试可以换成立即返回，免得拖慢、也免得改变选题。
-typedef ClusterBuilder = Future<ClusterIndex> Function(List<Question> questions);
+typedef ClusterBuilder = Future<ClusterIndex> Function(
+  List<Question> questions,
+);
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -83,12 +92,11 @@ class _HomePageState extends State<HomePage> {
       if (isRecallQuestionId(q.id)) q.id: q,
   };
 
-
   static const _wrongId = "wrong";
   static const _reviewId = "review";
   static const _reinforceId = "reinforce";
 
-  String _place = "subject1";
+  String _place = "subject2";
   SessionLaunch? _session;
   Set<String> _mastered = {};
   Map<String, int> _attempts = {};
@@ -124,7 +132,9 @@ class _HomePageState extends State<HomePage> {
   DiagnosisData? _diagnosis;
 
   /// 按题号取题：学习诊断要把作答记录对回题库（题干、选项、全国错误率）。
-  late final Map<String, Question> _questionIndex = {for (final q in widget.bank.questions) q.id: q};
+  late final Map<String, Question> _questionIndex = {
+    for (final q in widget.bank.questions) q.id: q,
+  };
   List<ChapterPriority> _priorities = const [];
   final Map<String, PassEstimate> _pass = {};
   final Set<String> _passComputing = {};
@@ -132,7 +142,7 @@ class _HomePageState extends State<HomePage> {
   /// 数据刷新一次加一：后台算通过概率期间数据变了，旧结果作废。
   int _passGeneration = 0;
 
-  /// 侧栏里展开着的科目。默认展开科目一；点科目名进去顺手展开，点右侧箭头只展开/收起、不换页。
+  /// 侧栏里展开着的科目。默认展开科目一（现有侧栏测试守着这个）；点科目名进去顺手展开，点右侧箭头只展开/收起、不换页。
   final Set<String> _expanded = {"subject1"};
 
   /// 侧栏里展开着的专题分组（ADR 0109），键是「科目/分组」；默认全部折叠，点进某个专题时它所在的组自动展开。
@@ -142,11 +152,9 @@ class _HomePageState extends State<HomePage> {
   Map<String, List<List<String>>>? _topicEntries;
   Map<String, List<List<String>>>? _topicGroups;
 
-
   Set<String> get _wrongIds => {for (final q in _wrongQuestions) q.id};
 
   List<Question> get _subject1All => widget.bank.forSubject("subject1");
-
 
   bool get _s1Done => allMastered(_subject1All, _mastered);
 
@@ -202,7 +210,9 @@ class _HomePageState extends State<HomePage> {
   /// 不重读界面会一直是空的）。做题中不动：正在做的题单不该被换掉，关掉做题台时本来就会重读。
   void _onSyncChanged() {
     final status = widget.syncStatus?.value;
-    if (status == null || status.running || status.pulled == _seenPulled) return;
+    if (status == null || status.running || status.pulled == _seenPulled) {
+      return;
+    }
     _seenPulled = status.pulled;
     if (_session == null && mounted) unawaited(_reload());
   }
@@ -226,7 +236,9 @@ class _HomePageState extends State<HomePage> {
     // 下一帧之后：本地库是同步的，setState 与就绪会在同一拍微任务里完成，
     // 提早报就绪的话，等就绪的测试直接断言会拿到还没重建的旧帧。
     _reload().then((_) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => widget.onReady?.call());
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => widget.onReady?.call(),
+      );
     });
   }
 
@@ -235,8 +247,6 @@ class _HomePageState extends State<HomePage> {
     widget.syncStatus?.removeListener(_onSyncChanged);
     super.dispose();
   }
-
-
 
   Future<void> _reload() async {
     final mastered = await widget.store.masteredQuestionIds();
@@ -270,7 +280,10 @@ class _HomePageState extends State<HomePage> {
     final allAttempts = await widget.store.allAttempts();
     final histories = HistorySet.build(allAttempts);
     final recallHistories = selfTestHistories(allAttempts);
-    final diagnosis = DiagnosisData.build(allAttempts, (id) => _questionIndex[id]);
+    final diagnosis = DiagnosisData.build(
+      allAttempts,
+      (id) => _questionIndex[id],
+    );
     final theoryPool = [
       for (final q in widget.bank.questions)
         if (!q.isRare &&
@@ -323,8 +336,14 @@ class _HomePageState extends State<HomePage> {
     if (_place == _reinforceId) unawaited(_ensurePass());
   }
 
+  bool get _inSubject2 =>
+      _place == "subject2" || _place.startsWith("subject2/");
+
   Subject? get _subject {
-    if (_place == _wrongId || _place == _reviewId || speedTopicById(_place) != null) {
+    if (_inSubject2 ||
+        _place == _wrongId ||
+        _place == _reviewId ||
+        speedTopicById(_place) != null) {
       return null;
     }
     return widget.bank.curriculum.subject(_place);
@@ -340,7 +359,9 @@ class _HomePageState extends State<HomePage> {
           Expanded(
             // 换页淡入（ADR 0060）：会话与各页之间 300ms 淡入，做题台内部无感。
             child: PageFadeIn(
-              pageKey: _session == null ? _place : "session",
+              pageKey: _session == null
+                  ? (_inSubject2 ? "subject2" : _place)
+                  : "session",
               child: _session == null ? _overview(context) : _sessionPane(),
             ),
           ),
@@ -377,7 +398,9 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(height: 12),
                 BsBadge(
-                  text: _s1Done ? "科目一已全部掌握" : "科目一 已掌握 $s1Mastered/${s1Daily.length}",
+                  text: _s1Done
+                      ? "科目一已全部掌握"
+                      : "科目一 已掌握 $s1Mastered/${s1Daily.length}",
                   color: _s1Done ? Bs.success : Bs.warning,
                   icon: Glyph.goal,
                 ),
@@ -388,11 +411,7 @@ class _HomePageState extends State<HomePage> {
                   icon: Glyph.subject1,
                   label: "科目一",
                 ),
-                ..._subjectBranch(
-                  "subject2",
-                  icon: Glyph.subject2,
-                  label: "科目二（C2）",
-                ),
+                ..._subject2Branch(),
                 ..._subjectBranch(
                   "subject4",
                   icon: Glyph.subject4,
@@ -417,7 +436,9 @@ class _HomePageState extends State<HomePage> {
                 _navLine(
                   icon: Glyph.review,
                   selected: _place == _reviewId && _session == null,
-                  label: _reviewQuestions.isEmpty ? "考前复习" : "考前复习 ${_reviewQuestions.length}",
+                  label: _reviewQuestions.isEmpty
+                      ? "考前复习"
+                      : "考前复习 ${_reviewQuestions.length}",
                   onTap: () => _go(_reviewId),
                 ),
                 _navLine(
@@ -449,7 +470,10 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.only(top: 8),
       child: Row(
         children: [
-          Text("皮肤", style: TextStyle(color: Skins.current.navText, fontSize: 14)),
+          Text(
+            "皮肤",
+            style: TextStyle(color: Skins.current.navText, fontSize: 14),
+          ),
           const Spacer(),
           for (final skin in Skins.all)
             Padding(
@@ -464,9 +488,13 @@ class _HomePageState extends State<HomePage> {
                     height: 22,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      gradient: LinearGradient(colors: [skin.primary, skin.ambient.first]),
+                      gradient: LinearGradient(
+                        colors: [skin.primary, skin.ambient.first],
+                      ),
                       border: Border.all(
-                        color: skin.id == Skins.current.id ? Skins.current.scheme.onSurface : Colors.transparent,
+                        color: skin.id == Skins.current.id
+                            ? Skins.current.scheme.onSurface
+                            : Colors.transparent,
                         width: 2,
                       ),
                     ),
@@ -491,7 +519,11 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.fromLTRB(28, 10, 0, 2),
         child: Text(
           "专题",
-          style: TextStyle(color: Skins.current.navText.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w600),
+          style: TextStyle(
+            color: Skins.current.navText.withValues(alpha: 0.7),
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
       for (final group in groups) ...[
@@ -503,9 +535,15 @@ class _HomePageState extends State<HomePage> {
             selected: false,
             label: "${group.title} · ${group.topics.length}",
             indent: true,
-            leading: _topicDot([for (final t in group.topics) ..._entriesOf(t)], size: 18, scope: "这一组专题"),
+            leading: _topicDot(
+              [for (final t in group.topics) ..._entriesOf(t)],
+              size: 18,
+              scope: "这一组专题",
+            ),
             onTap: () => setState(() {
-              if (!_expandedTopicGroups.remove(key)) _expandedTopicGroups.add(key);
+              if (!_expandedTopicGroups.remove(key)) {
+                _expandedTopicGroups.add(key);
+              }
             }),
           );
         }(),
@@ -526,17 +564,25 @@ class _HomePageState extends State<HomePage> {
 
   /// 专题（或一组专题）的状态圆：把范围内**所有**自测卡当一整组判（ADR 0113）——有答错未移出
   /// 的取红，整组每张都答对过才绿，其余（含只测了其中一个专题）灰。悬停说明带「掌握 a/b」，按条目数计（ADR 0119）。
-  Widget _topicDot(List<List<String>> entries, {required double size, required String scope}) {
-    final status = statusOfIds(ids: [for (final e in entries) ...e], histories: _recallHistories);
+  Widget _topicDot(
+    List<List<String>> entries, {
+    required double size,
+    required String scope,
+  }) {
+    final status = statusOfIds(
+      ids: [for (final e in entries) ...e],
+      histories: _recallHistories,
+    );
     final m = masteryOf(entries: entries, histories: _recallHistories);
     return TopicDot(
       status: status,
       size: size,
-      tooltip: "$scope掌握 ${m.done}/${m.total} · ${switch (status) {
-        SymbolStatus.wrong => "有自测题答错过，还没掌握",
-        SymbolStatus.mastered => "自测题全部答对过",
-        SymbolStatus.fresh => "还没测完",
-      }}",
+      tooltip:
+          "$scope掌握 ${m.done}/${m.total} · ${switch (status) {
+            SymbolStatus.wrong => "有自测题答错过，还没掌握",
+            SymbolStatus.mastered => "自测题全部答对过",
+            SymbolStatus.fresh => "还没测完",
+          }}",
     );
   }
 
@@ -545,7 +591,13 @@ class _HomePageState extends State<HomePage> {
     final groups = (_topicGroups ??= {
       for (final t in speedTopics) t.id: recallGroupsOfTopic(t, widget.bank),
     })[topic.id]!;
-    final passed = groups.where((ids) => statusOfIds(ids: ids, histories: _recallHistories) == SymbolStatus.mastered).length;
+    final passed = groups
+        .where(
+          (ids) =>
+              statusOfIds(ids: ids, histories: _recallHistories) ==
+              SymbolStatus.mastered,
+        )
+        .length;
     final done = passed == groups.length && groups.isNotEmpty;
     return Tooltip(
       message: "这个专题 ${groups.length} 个大类，自测全部通过 $passed 个",
@@ -554,7 +606,9 @@ class _HomePageState extends State<HomePage> {
         style: TextStyle(
           fontSize: 15,
           fontWeight: FontWeight.w600,
-          color: done ? const Color(0xFF2ECC71) : Skins.current.navText.withValues(alpha: 0.7),
+          color: done
+              ? const Color(0xFF2ECC71)
+              : Skins.current.navText.withValues(alpha: 0.7),
         ),
       ),
     );
@@ -568,11 +622,110 @@ class _HomePageState extends State<HomePage> {
     })[topic.id]!;
   }
 
-  List<Widget> _subjectBranch(String id, {required IconData icon, required String label}) {
+  /// 科目二侧栏按实操排：练车日、四项手册、考前、日志，评判常识垫底。不走笔试模板。
+  List<Widget> _subject2Branch() {
+    const id = "subject2";
+    const marks = ["①", "②", "③", "④"];
+    final expanded = _expanded.contains(id);
+    final session = _session;
+    final subject = widget.bank.curriculum.subject(id);
+    final questions = widget.bank.forSubject(id);
+    final items = widget.bank.guide.learnItems;
+    final here = _inSubject2 && session == null;
+    return [
+      _navLine(
+        icon: Glyph.subject2,
+        selected: here,
+        label: "科目二（C2）",
+        onTap: () {
+          _expanded.add(id);
+          _go("subject2/day");
+        },
+        trailing: InkWell(
+          borderRadius: BorderRadius.circular(Bs.radius),
+          onTap: () => setState(() {
+            if (!_expanded.remove(id)) _expanded.add(id);
+          }),
+          child: Tooltip(
+            message: expanded ? "收起" : "展开",
+            child: Icon(
+              expanded ? Glyph.collapse : Glyph.expand,
+              size: Bs.bodySize,
+              color: Skins.current.navText,
+            ),
+          ),
+        ),
+      ),
+      // 不用 AnimatedSize：它会把子级高度锁在动画中途，菜单画到科目四上面。
+      if (expanded) ...[
+        _navLine(
+          icon: Glyph.practiceDay,
+          selected: here && (_place == "subject2" || _place == "subject2/day"),
+          label: "练车日",
+          indent: true,
+          onTap: () => _go("subject2/day"),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(36, 8, 12, 2),
+          child: Text(
+            "项目手册",
+            style: TextStyle(
+              color: Skins.current.navTextMuted,
+              fontSize: Bs.bodySize,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        for (final (index, item) in items.indexed)
+          _navLine(
+            icon: Glyph.topic,
+            selected: here && _place == "subject2/item/${item.id}",
+            label:
+                "${index < marks.length ? marks[index] : "${index + 1}."} ${item.title}",
+            indent: true,
+            indent2: true,
+            onTap: () => _go("subject2/item/${item.id}"),
+          ),
+        _navLine(
+          icon: Glyph.examReady,
+          selected: here && _place == "subject2/exam",
+          label: "考前",
+          indent: true,
+          onTap: () => _go("subject2/exam"),
+        ),
+        _navLine(
+          icon: Glyph.log,
+          selected: here && _place == "subject2/log",
+          label: "练车日志",
+          indent: true,
+          onTap: () => _go("subject2/log"),
+        ),
+        _navLine(
+          icon: Glyph.practice,
+          selected:
+              session != null &&
+              session.subjectId == id &&
+              session.title.endsWith("评判常识"),
+          label: "评判常识 · ${questions.length} 题",
+          indent: true,
+          onTap: () =>
+              _startPractice(subject, questions, "评判常识", includeMastered: true),
+        ),
+        const SizedBox(height: 6),
+      ],
+    ];
+  }
+
+  List<Widget> _subjectBranch(
+    String id, {
+    required IconData icon,
+    required String label,
+  }) {
     final subject = widget.bank.curriculum.subject(id);
     final expanded = _expanded.contains(id);
     final session = _session;
-    bool inSession(String title) => session != null && session.subjectId == id && session.title == title;
+    bool inSession(String title) =>
+        session != null && session.subjectId == id && session.title == title;
     return [
       _navLine(
         icon: icon,
@@ -611,7 +764,8 @@ class _HomePageState extends State<HomePage> {
                   if (subject.exam != null)
                     _navLine(
                       icon: Glyph.mockExam,
-                      selected: session != null && session.draftKey == "$id.exam",
+                      selected:
+                          session != null && session.draftKey == "$id.exam",
                       label: "模拟考试",
                       indent: true,
                       onTap: () => _startExam(subject),
@@ -627,7 +781,12 @@ class _HomePageState extends State<HomePage> {
                         selected: inSession("${subject.code} · 全部"),
                         label: "练习全部 ${pool.length} 题",
                         indent: true,
-                        onTap: () => _startPractice(subject, pool, "全部", includeMastered: true),
+                        onTap: () => _startPractice(
+                          subject,
+                          pool,
+                          "全部",
+                          includeMastered: true,
+                        ),
                       );
                     }
                     return _navLine(
@@ -647,7 +806,9 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           _navLine(
                             icon: Glyph.topic,
-                            selected: inSession("${subject.code} · ${topic.title}"),
+                            selected: inSession(
+                              "${subject.code} · ${topic.title}",
+                            ),
                             label: pending.isEmpty
                                 ? topic.title
                                 : "${topic.title}  ${pending.length}",
@@ -664,11 +825,17 @@ class _HomePageState extends State<HomePage> {
                           if (fresh.isNotEmpty)
                             _navLine(
                               icon: Glyph.untried,
-                              selected: inSession("${subject.code} · ${topic.title} · 新题"),
+                              selected: inSession(
+                                "${subject.code} · ${topic.title} · 新题",
+                              ),
                               label: "练新题 ${fresh.length}",
                               indent: true,
                               indent2: true,
-                              onTap: () => _startPractice(subject, fresh, "${topic.title} · 新题"),
+                              onTap: () => _startPractice(
+                                subject,
+                                fresh,
+                                "${topic.title} · 新题",
+                              ),
                             ),
                         ],
                       );
@@ -697,7 +864,9 @@ class _HomePageState extends State<HomePage> {
     // Material 3 导航抽屉：默认 onSurfaceVariant，选中行是主色低透明度的药丸底配主色字
     // （Skin.navSelected），禁用 38% 透明度。
     final skin = Skins.current;
-    final color = muted ? skin.navTextMuted : (selected ? skin.navTextSelected : skin.navText);
+    final color = muted
+        ? skin.navTextMuted
+        : (selected ? skin.navTextSelected : skin.navText);
     // 子项往右缩一个图标宽，一眼看出挂在哪个科目底下。行距收紧、侧栏放宽到章节名不折行：
     // 底部钉住跨科目入口后，科目一展开 13 行，科目二、科目四仍要留在一屏里（ADR 0051）。
     return InkWell(
@@ -738,14 +907,17 @@ class _HomePageState extends State<HomePage> {
     if (_place == _reinforceId) return _reinforceOverview(context);
     final topic = speedTopicById(_place);
     if (topic != null) return _speedTopicPage(context, topic);
-    if (_place == "subject2") {
+    if (_inSubject2) {
       final subject2 = widget.bank.curriculum.subject("subject2");
       return Subject2Page(
         bank: widget.bank,
         store: widget.store,
         mastered: _mastered,
         runs: _drillRuns,
-        onPractice: (questions, title) => _startPractice(subject2, questions, title),
+        place: _place == "subject2" ? "subject2/day" : _place,
+        onPlace: (place) => setState(() => _place = place),
+        onPractice: (questions, title) =>
+            _startPractice(subject2, questions, title),
         onChanged: _reload,
       );
     }
@@ -777,11 +949,7 @@ class _HomePageState extends State<HomePage> {
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             if (_s1Done)
-              BsBadge(
-                text: "已全部掌握",
-                color: Bs.success,
-                icon: Glyph.correct,
-              ),
+              BsBadge(text: "已全部掌握", color: Bs.success, icon: Glyph.correct),
           ],
         ),
         const SizedBox(height: 8),
@@ -791,9 +959,7 @@ class _HomePageState extends State<HomePage> {
           color: Bs.paper,
           icon: Glyph.info,
           child: Text(
-            _s1Done
-                ? "科目一日常题都掌握了。想再过一遍，点下面的「练习全部题」。模拟考随时可以考。"
-                : "四个阶段按内容分组，全部开放，想练哪组点哪组；「练习待练题」从错题、高频、常考、常规依次出。偏难怪默认不出。三个科目的练习和模拟考都在左侧目录里。",
+            _s1Done ? "科目一日常题都掌握了。想再过一遍，点下面的「练习全部题」。模拟考随时可以考。" : "四个阶段按内容分组，全部开放，想练哪组点哪组；「练习待练题」从错题、高频、常考、常规依次出。偏难怪默认不出。三个科目的练习和模拟考都在左侧目录里。",
           ),
         ),
         const SizedBox(height: 16),
@@ -856,7 +1022,12 @@ class _HomePageState extends State<HomePage> {
         const SizedBox(height: 16),
         _topicHead(context, _topicTitleWidth(context, subject)),
         for (final topic in subject.topics)
-          _topicRow(context, subject, topic, _topicTitleWidth(context, subject)),
+          _topicRow(
+            context,
+            subject,
+            topic,
+            _topicTitleWidth(context, subject),
+          ),
       ],
     );
   }
@@ -892,7 +1063,12 @@ class _HomePageState extends State<HomePage> {
     return width;
   }
 
-  Widget _phaseRow(BuildContext context, Subject subject, StudyPhase phase, double titleWidth) {
+  Widget _phaseRow(
+    BuildContext context,
+    Subject subject,
+    StudyPhase phase,
+    double titleWidth,
+  ) {
     final questions = widget.bank.forPhase(subject.id, phase.id);
     // 偏难题默认不练、不挡掌握，也就不进分母，否则明明练完了，进度条却永远差那几道。
     final daily = dailyQuestions(questions);
@@ -957,10 +1133,7 @@ class _HomePageState extends State<HomePage> {
   Widget _percent(double ratio) {
     return SizedBox(
       width: 44,
-      child: Text(
-        "${(ratio * 100).floor()}%",
-        textAlign: TextAlign.right,
-      ),
+      child: Text("${(ratio * 100).floor()}%", textAlign: TextAlign.right),
     );
   }
 
@@ -988,11 +1161,7 @@ class _HomePageState extends State<HomePage> {
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             if (_s1Done)
-              BsBadge(
-                text: "科目一已全部掌握",
-                color: Bs.success,
-                icon: Glyph.correct,
-              ),
+              BsBadge(text: "科目一已全部掌握", color: Bs.success, icon: Glyph.correct),
           ],
         ),
         const SizedBox(height: 8),
@@ -1063,7 +1232,12 @@ class _HomePageState extends State<HomePage> {
         const SizedBox(height: 20),
         _topicHead(context, _topicTitleWidth(context, subject)),
         for (final topic in subject.topics)
-          _topicRow(context, subject, topic, _topicTitleWidth(context, subject)),
+          _topicRow(
+            context,
+            subject,
+            topic,
+            _topicTitleWidth(context, subject),
+          ),
       ],
     );
   }
@@ -1078,7 +1252,10 @@ class _HomePageState extends State<HomePage> {
           // 数据行标题前面还有个图标（18 + 间距 8），表头得让出同样的宽度，
           // 不然「待练/已掌握/进度」会跟下面的数字、进度条对不上。
           const SizedBox(width: 26),
-          SizedBox(width: titleWidth, child: Text("章节", style: style)),
+          SizedBox(
+            width: titleWidth,
+            child: Text("章节", style: style),
+          ),
           const SizedBox(width: 12),
           SizedBox(width: 90, child: Text("待练", style: style)),
           const SizedBox(width: 12),
@@ -1090,7 +1267,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _topicRow(BuildContext context, Subject subject, Topic topic, double titleWidth) {
+  Widget _topicRow(
+    BuildContext context,
+    Subject subject,
+    Topic topic,
+    double titleWidth,
+  ) {
     final questions = _openTopic(subject, topic);
     final pending = _pending(questions);
     final mastered = questions.where((q) => _mastered.contains(q.id)).length;
@@ -1100,16 +1282,17 @@ class _HomePageState extends State<HomePage> {
       // 全部掌握的章节点开就整章再过一遍，直接开练、不弹确认（ADR 0129）。
       onTap: questions.isEmpty
           ? null
-          : () => _startPractice(subject, questions, topic.title, includeMastered: pending.isEmpty),
+          : () => _startPractice(
+              subject,
+              questions,
+              topic.title,
+              includeMastered: pending.isEmpty,
+            ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           children: [
-            Icon(
-              Glyph.topic,
-              size: 18,
-              color: enabled ? Bs.paper : Bs.success,
-            ),
+            Icon(Glyph.topic, size: 18, color: enabled ? Bs.paper : Bs.success),
             const SizedBox(width: 8),
             SizedBox(
               width: titleWidth,
@@ -1121,15 +1304,9 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const SizedBox(width: 12),
-            SizedBox(
-              width: 90,
-              child: Text("${pending.length}"),
-            ),
+            SizedBox(width: 90, child: Text("${pending.length}")),
             const SizedBox(width: 12),
-            SizedBox(
-              width: 90,
-              child: Text("$mastered/${questions.length}"),
-            ),
+            SizedBox(width: 90, child: Text("$mastered/${questions.length}")),
             const SizedBox(width: 12),
             _percent(ratio),
             const SizedBox(width: 12),
@@ -1268,11 +1445,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Row(
                   children: [
-                    Icon(
-                      Glyph.recentDays,
-                      size: 20,
-                      color: Bs.paper,
-                    ),
+                    Icon(Glyph.recentDays, size: 20, color: Bs.paper),
                     const SizedBox(width: 8),
                     Text(
                       "最近 14 天",
@@ -1300,7 +1473,10 @@ class _HomePageState extends State<HomePage> {
   Widget _topicAccuracyCard(BuildContext context, Subject subject) {
     final ranked = [
       for (final topic in subject.topics)
-        (topic, _topicStats[topic.id] ?? const TopicStats(attempts: 0, correct: 0)),
+        (
+          topic,
+          _topicStats[topic.id] ?? const TopicStats(attempts: 0, correct: 0),
+        ),
     ]..sort((a, b) => a.$2.rate.compareTo(b.$2.rate));
     if (ranked.isEmpty) return const SizedBox.shrink();
     return BsCard(
@@ -1414,24 +1590,31 @@ class _HomePageState extends State<HomePage> {
     final subjects = <ReinforceSubjectView>[];
     for (final id in const ["subject1", "subject4"]) {
       final subject = widget.bank.curriculum.subject(id);
-      subjects.add(ReinforceSubjectView(
-        id: id,
-        title: subject.title,
-        funnel: masteryFunnel(dailyQuestions(widget.bank.forSubject(id)), _histories),
-        exams: [for (final e in _exams) if (e.subjectId == id) e],
-        passScore: subject.exam?.passScore ?? 90,
-        pass: _pass[id],
-        passComputing: _passComputing.contains(id),
-      ));
+      subjects.add(
+        ReinforceSubjectView(
+          id: id,
+          title: subject.title,
+          funnel: masteryFunnel(
+            dailyQuestions(widget.bank.forSubject(id)),
+            _histories,
+          ),
+          exams: [
+            for (final e in _exams)
+              if (e.subjectId == id) e,
+          ],
+          passScore: subject.exam?.passScore ?? 90,
+          pass: _pass[id],
+          passComputing: _passComputing.contains(id),
+        ),
+      );
     }
     return ReinforcePage(
       plan: _reinforcePlan,
       roundSize: _reinforceRoundSize,
       onRoundSizeChanged: _setReinforceRoundSize,
-      stubborn: stubbornQuestions(
-        _histories,
-        {for (final q in widget.bank.questions) q.id: q},
-      ),
+      stubborn: stubbornQuestions(_histories, {
+        for (final q in widget.bank.questions) q.id: q,
+      }),
       onReshuffle: _reshuffleReinforce,
       onNewPractice: () {
         final s1 = widget.bank.curriculum.subject("subject1");
@@ -1456,7 +1639,10 @@ class _HomePageState extends State<HomePage> {
           revealImmediately: true,
           attemptKind: "reinforce",
           // 每题为什么被选中，随作答一起记下，事后才能评估这套选题办法有没有用。
-          reasons: {for (final pick in _reinforcePlan.picks) pick.question.id: pick.reason},
+          reasons: {
+            for (final pick in _reinforcePlan.picks)
+              pick.question.id: pick.reason,
+          },
         ),
       ),
     );
@@ -1468,21 +1654,24 @@ class _HomePageState extends State<HomePage> {
   /// 再错又回来（ADR 0128）。
   Widget _reviewOverview(BuildContext context) {
     final items = _reviewQuestions;
-    final open = [for (final q in items) if (_wrongIds.contains(q.id)) q];
+    final open = [
+      for (final q in items)
+        if (_wrongIds.contains(q.id)) q,
+    ];
     final fixing = items.length - open.length;
     final s1 = items.where((q) => q.topicId.startsWith("drive.s1.")).length;
     final s4 = items.length - s1;
     final body = Theme.of(context).textTheme.bodyLarge;
 
     void start(String title, List<Question> questions) => _openSession(
-          SessionLaunch(
-            title: title,
-            subjectId: _reviewId,
-            questions: questions,
-            timed: false,
-            revealImmediately: true,
-          ),
-        );
+      SessionLaunch(
+        title: title,
+        subjectId: _reviewId,
+        questions: questions,
+        timed: false,
+        revealImmediately: true,
+      ),
+    );
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(36, 28, 36, 32),
@@ -1503,8 +1692,8 @@ class _HomePageState extends State<HomePage> {
           Text(
             items.isEmpty
                 ? (_reviewGraduated == 0
-                    ? "还没有累计答错 $reviewMinWrong 次以上的题。"
-                    : "反复错过的 $_reviewGraduated 道都已连对够次数移出了；再错会自动回来。")
+                      ? "还没有累计答错 $reviewMinWrong 次以上的题。"
+                      : "反复错过的 $_reviewGraduated 道都已连对够次数移出了；再错会自动回来。")
                 : "累计答错 $reviewMinWrong 次以上的题进这里。累计答对要达到答错的 $repairRatio 倍（错 2 次要对 4 次，错 3 次要对 6 次）、且最近一次答对才移出；移出后再错会自动回来。",
             style: body,
           ),
@@ -1514,12 +1703,33 @@ class _HomePageState extends State<HomePage> {
               spacing: 10,
               runSpacing: 8,
               children: [
-                BsBadge(text: "共 ${items.length} 道", icon: Glyph.review, color: Bs.paper),
-                BsBadge(text: "还错着 ${open.length} 道", icon: Glyph.wrong, color: Bs.danger),
-                BsBadge(text: "订正中 $fixing 道", icon: Glyph.improving, color: Bs.warning),
+                BsBadge(
+                  text: "共 ${items.length} 道",
+                  icon: Glyph.review,
+                  color: Bs.paper,
+                ),
+                BsBadge(
+                  text: "还错着 ${open.length} 道",
+                  icon: Glyph.wrong,
+                  color: Bs.danger,
+                ),
+                BsBadge(
+                  text: "订正中 $fixing 道",
+                  icon: Glyph.improving,
+                  color: Bs.warning,
+                ),
                 if (_reviewGraduated > 0)
-                  BsBadge(text: "已移出 $_reviewGraduated 道", icon: Glyph.graduated, color: Bs.success),
-                if (s4 > 0) BsBadge(text: "科目一 $s1 · 科目四 $s4", icon: Glyph.bySubject, color: Bs.secondary),
+                  BsBadge(
+                    text: "已移出 $_reviewGraduated 道",
+                    icon: Glyph.graduated,
+                    color: Bs.success,
+                  ),
+                if (s4 > 0)
+                  BsBadge(
+                    text: "科目一 $s1 · 科目四 $s4",
+                    icon: Glyph.bySubject,
+                    color: Bs.secondary,
+                  ),
               ],
             ),
             const SizedBox(height: 20),
@@ -1532,7 +1742,9 @@ class _HomePageState extends State<HomePage> {
                   child: Text("全部复习 ${items.length}"),
                 ),
                 FilledButton.tonal(
-                  onPressed: open.isEmpty ? null : () => start("考前复习 · 还错着的", open),
+                  onPressed: open.isEmpty
+                      ? null
+                      : () => start("考前复习 · 还错着的", open),
                   child: Text("只练还错着的 ${open.length}"),
                 ),
               ],
@@ -1563,7 +1775,9 @@ class _HomePageState extends State<HomePage> {
                       SizedBox(
                         width: 150,
                         child: BsBadge(
-                          text: streak == 0 ? "还错着 · 对 $correct/$need" : "对 $correct/$need",
+                          text: streak == 0
+                              ? "还错着 · 对 $correct/$need"
+                              : "对 $correct/$need",
                           icon: streak == 0 ? Glyph.wrong : Glyph.improving,
                           color: streak == 0 ? Bs.danger : Bs.warning,
                         ),
@@ -1594,7 +1808,8 @@ class _HomePageState extends State<HomePage> {
   /// 把这一组的速记题交给 [practice]，用错题本那套做题界面考（ADR 0118）。
   Widget _speedTopicPage(BuildContext context, SpeedTopic topic) {
     final subject = widget.bank.curriculum.subject(topic.subjectId);
-    void recall(List<String> ids, String title) => _startRecall(subject, topic, ids, title);
+    void recall(List<String> ids, String title) =>
+        _startRecall(subject, topic, ids, title);
     return switch (topic.kind) {
       SpeedKind.numbers => NumbersPage(
         bank: widget.bank,
@@ -1658,7 +1873,9 @@ class _HomePageState extends State<HomePage> {
 
   void _go(String place) {
     final topic = speedTopicById(place);
-    if (topic != null) _expandedTopicGroups.add("${topic.subjectId}/${speedGroupIdOf(topic)}");
+    if (topic != null) {
+      _expandedTopicGroups.add("${topic.subjectId}/${speedGroupIdOf(topic)}");
+    }
     // 在做题台里直接点侧栏离开，不会走 onClose；可作答早就一题题写进库了，题单、错题数和掌握度
     // 还是进做题台之前的旧数据——强化练习的题单跟错题直接挂钩，刚答错的题就进不了「复测」。
     // 所以离开做题台时补一次重读，跟 onClose 里做的一样。
@@ -1693,7 +1910,10 @@ class _HomePageState extends State<HomePage> {
     if (_clustersStarted) return;
     _clustersStarted = true;
     // 速记题的题干是「这是什么标志？」这类模板句，同考点变式是给真题配的，不带它们。
-    final index = await widget.clusterBuilder([for (final q in widget.bank.questions) if (!isRecallQuestionId(q.id)) q]);
+    final index = await widget.clusterBuilder([
+      for (final q in widget.bank.questions)
+        if (!isRecallQuestionId(q.id)) q,
+    ]);
     if (!mounted) return;
     setState(() {
       _clusters = index;
@@ -1741,8 +1961,14 @@ class _HomePageState extends State<HomePage> {
           style: const TextStyle(fontSize: Bs.bodySize, height: 1.45),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: const Text("再看看")),
-          FilledButton(onPressed: () => Navigator.of(dialogContext).pop(true), child: const Text("开始")),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text("再看看"),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text("开始"),
+          ),
         ],
       ),
     );
@@ -1757,7 +1983,9 @@ class _HomePageState extends State<HomePage> {
       return;
     }
     if (!mounted) return;
-    if (!await _confirmStartTest("${subject.code} 模拟考试", subject.exam!.minutes)) return;
+    if (!await _confirmStartTest("${subject.code} 模拟考试", subject.exam!.minutes)) {
+      return;
+    }
     if (!mounted) return;
     // 不经 dailyQuestions：偏难怪由组卷按上限少量放进来（ADR 0032）。
     final all = widget.bank.forSubject(subject.id);
@@ -1836,7 +2064,10 @@ class _HomePageState extends State<HomePage> {
     if (shuffleQueue) {
       queue = _speedGroupQueue(questions);
     } else {
-      queue = practiceQueue(includeMastered ? questions : _pending(questions), _wrongIds);
+      queue = practiceQueue(
+        includeMastered ? questions : _pending(questions),
+        _wrongIds,
+      );
     }
     if (queue.isEmpty) return;
     _openSession(
@@ -1854,7 +2085,12 @@ class _HomePageState extends State<HomePage> {
   /// 速记组的「自测」（ADR 0118）：按这一组条目的内容**现场出题**（[freshRecallQuestionOf]），不依赖练习题库——
   /// 正确项从条目要点里随机抽、干扰项从同页别的条目随机取，每次都重新出；用错题本那套做题界面考，
   /// 出题顺序见 [_speedGroupQueue]。题号沿用卡的，作答照旧进错题库、决定掌握状态；选项每次不同，不记所选选项。
-  void _startRecall(Subject subject, SpeedTopic topic, List<String> ids, String title) {
+  void _startRecall(
+    Subject subject,
+    SpeedTopic topic,
+    List<String> ids,
+    String title,
+  ) {
     final pool = recallCardsOfTopic(topic, widget.bank);
     final wanted = ids.toSet();
     final random = Random();
@@ -1865,10 +2101,17 @@ class _HomePageState extends State<HomePage> {
             card,
             pool,
             random,
-            sourceUrl: _recallById[card.questionId]?.sourceRefs.firstOrNull?.url ?? "",
+            sourceUrl:
+                _recallById[card.questionId]?.sourceRefs.firstOrNull?.url ?? "",
           ),
     ];
-    _startPractice(subject, questions, title, shuffleQueue: true, recordChosen: false);
+    _startPractice(
+      subject,
+      questions,
+      title,
+      shuffleQueue: true,
+      recordChosen: false,
+    );
   }
 
   /// 速记组「自测」的出题（ADR 0118）：这一组的速记题里，答错还在错题库里的先出、没测过的其次，各自洗牌
@@ -1876,8 +2119,14 @@ class _HomePageState extends State<HomePage> {
   List<Question> _speedGroupQueue(List<Question> questions) {
     final pending = speedPending(questions, _recallHistories);
     if (pending.isEmpty) return [...questions]..shuffle();
-    final wrong = [for (final q in pending) if (classifyOwn(q.id, _recallHistories) == RecallBucket.wrong) q]..shuffle();
-    final fresh = [for (final q in pending) if (classifyOwn(q.id, _recallHistories) != RecallBucket.wrong) q]..shuffle();
+    final wrong = [
+      for (final q in pending)
+        if (classifyOwn(q.id, _recallHistories) == RecallBucket.wrong) q,
+    ]..shuffle();
+    final fresh = [
+      for (final q in pending)
+        if (classifyOwn(q.id, _recallHistories) != RecallBucket.wrong) q,
+    ]..shuffle();
     return [...wrong, ...fresh];
   }
 

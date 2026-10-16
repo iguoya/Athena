@@ -34,7 +34,7 @@ void main() {
     }
     await tester.tap(find.text("科目二（C2）"));
     await tester.pump();
-    await tester.tap(find.text("项目手册"));
+    await tester.tap(find.text("项目手册").last);
     await tester.pump();
     await tester.tap(find.text("曲线行驶").first);
     await tester.pump();

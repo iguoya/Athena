@@ -6,6 +6,7 @@ import "package:flutter/scheduler.dart";
 
 import "../ui/glyphs.dart";
 import "../core/narration.dart";
+
 /// 科目二四项的动画示意（ADR 0036）。
 ///
 /// 车按后轴中心走「直线 + 满舵圆弧」，是自行车模型在转向瞬时到位时的轨迹——
@@ -61,7 +62,12 @@ class Pose {
     final front = spec.wheelbase + spec.frontOverhang;
     final back = -spec.rearOverhang;
     final half = spec.width / 2;
-    return [local(front, half), local(front, -half), local(back, -half), local(back, half)];
+    return [
+      local(front, half),
+      local(front, -half),
+      local(back, -half),
+      local(back, half),
+    ];
   }
 
   /// 车身轮廓上均匀取点（每边 [perEdge] 段），用来判断「车身出线」。
@@ -69,7 +75,8 @@ class Pose {
     final c = corners(spec);
     return [
       for (var i = 0; i < 4; i++)
-        for (var k = 0; k < perEdge; k++) Offset.lerp(c[i], c[(i + 1) % 4], k / perEdge)!,
+        for (var k = 0; k < perEdge; k++)
+          Offset.lerp(c[i], c[(i + 1) % 4], k / perEdge)!,
     ];
   }
 
@@ -86,9 +93,9 @@ class Pose {
 
   /// 两个前轮的接地点（判断「前轮越过控制线」）。
   List<Offset> frontWheels([CarSpec spec = car]) => [
-        local(spec.wheelbase, spec.track / 2),
-        local(spec.wheelbase, -spec.track / 2),
-      ];
+    local(spec.wheelbase, spec.track / 2),
+    local(spec.wheelbase, -spec.track / 2),
+  ];
 }
 
 enum Gear { park, drive, reverse }
@@ -135,7 +142,12 @@ class Straight extends Move {
 /// 满舵（或指定半径）圆弧：[degrees] 是车身转过的角度，[leftTurn] 是方向盘往左打，
 /// [reverse] 为倒车。
 class Arc extends Move {
-  const Arc(this.degrees, {required this.leftTurn, this.reverse = false, this.radius = 0});
+  const Arc(
+    this.degrees, {
+    required this.leftTurn,
+    this.reverse = false,
+    this.radius = 0,
+  });
 
   final double degrees;
   final bool leftTurn;
@@ -209,7 +221,14 @@ class SpotMark extends Mark {
 }
 
 /// 车上的部位，跟着车走。
-enum CarPart { frontWheels, rearBumper, rearLeftWheel, rearRightWheel, leftLamp, body }
+enum CarPart {
+  frontWheels,
+  rearBumper,
+  rearLeftWheel,
+  rearRightWheel,
+  leftLamp,
+  body,
+}
 
 class CarMark extends Mark {
   const CarMark(this.part, super.label);
@@ -218,17 +237,25 @@ class CarMark extends Mark {
 
   /// 这一部位在当前姿态下的位置（场地坐标）。
   List<Offset> points(Pose pose) => switch (part) {
-        CarPart.frontWheels => pose.frontWheels(),
-        CarPart.rearBumper => [pose.local(-car.rearOverhang, 0)],
-        CarPart.rearLeftWheel => [pose.local(0, car.track / 2)],
-        CarPart.rearRightWheel => [pose.local(0, -car.track / 2)],
-        CarPart.leftLamp => [pose.local(car.wheelbase + car.frontOverhang - 0.1, car.width / 2 - 0.1)],
-        CarPart.body => [pose.local(car.wheelbase / 2, 0)],
-      };
+    CarPart.frontWheels => pose.frontWheels(),
+    CarPart.rearBumper => [pose.local(-car.rearOverhang, 0)],
+    CarPart.rearLeftWheel => [pose.local(0, car.track / 2)],
+    CarPart.rearRightWheel => [pose.local(0, -car.track / 2)],
+    CarPart.leftLamp => [
+      pose.local(car.wheelbase + car.frontOverhang - 0.1, car.width / 2 - 0.1),
+    ],
+    CarPart.body => [pose.local(car.wheelbase / 2, 0)],
+  };
 }
 
 class DrillStep {
-  const DrillStep(this.moves, {this.signal = Signal.none, this.gear, this.cue, this.marks = const []});
+  const DrillStep(
+    this.moves, {
+    this.signal = Signal.none,
+    this.gear,
+    this.cue,
+    this.marks = const [],
+  });
 
   final List<Move> moves;
   final Signal signal;
@@ -286,14 +313,19 @@ class DrillScene {
 
   /// 场地坐标 → 绘制坐标（按 [quarterTurns] 旋转）。
   Offset view(Offset p) => switch (quarterTurns % 4) {
-        1 => Offset(-p.dy, p.dx),
-        2 => Offset(-p.dx, -p.dy),
-        3 => Offset(p.dy, -p.dx),
-        _ => p,
-      };
+    1 => Offset(-p.dy, p.dx),
+    2 => Offset(-p.dx, -p.dy),
+    3 => Offset(p.dy, -p.dx),
+    _ => p,
+  };
 
   Rect get viewBounds {
-    final pts = [bounds.topLeft, bounds.topRight, bounds.bottomLeft, bounds.bottomRight].map(view).toList();
+    final pts = [
+      bounds.topLeft,
+      bounds.topRight,
+      bounds.bottomLeft,
+      bounds.bottomRight,
+    ].map(view).toList();
     return Rect.fromLTRB(
       pts.map((p) => p.dx).reduce(min),
       pts.map((p) => p.dy).reduce(min),
@@ -351,7 +383,8 @@ class Timeline {
   late final double total;
   late final Pose end;
 
-  double stepEnd(int step) => step + 1 < stepStarts.length ? stepStarts[step + 1] : total;
+  double stepEnd(int step) =>
+      step + 1 < stepStarts.length ? stepStarts[step + 1] : total;
 
   Frame frame(double t) {
     t = t.clamp(0, total);
@@ -365,7 +398,9 @@ class Timeline {
       step = index;
       final stepGear = scene.steps[index].gear;
       if (stepGear != null && begin == stepStarts[index]) gear = stepGear;
-      final fraction = duration == 0 ? 1.0 : ((t - begin) / duration).clamp(0.0, 1.0);
+      final fraction = duration == 0
+          ? 1.0
+          : ((t - begin) / duration).clamp(0.0, 1.0);
       final moving = move is! Hold;
       if (moving) {
         final samples = max(2, (duration * 8).ceil());
@@ -400,12 +435,24 @@ class Timeline {
   }
 }
 
-bool _inRect(Offset p, Rect r) => p.dx >= r.left && p.dx <= r.right && p.dy >= r.top && p.dy <= r.bottom;
+bool _inRect(Offset p, Rect r) =>
+    p.dx >= r.left && p.dx <= r.right && p.dy >= r.top && p.dy <= r.bottom;
 
-List<Offset> _arcPoints(Offset c, double radius, double from, double to, [int n = 48]) => [
-      for (var i = 0; i <= n; i++)
-        c + Offset(cos(from + (to - from) * i / n), sin(from + (to - from) * i / n)) * radius,
-    ];
+List<Offset> _arcPoints(
+  Offset c,
+  double radius,
+  double from,
+  double to, [
+  int n = 48,
+]) => [
+  for (var i = 0; i <= n; i++)
+    c +
+        Offset(
+              cos(from + (to - from) * i / n),
+              sin(from + (to - from) * i / n),
+            ) *
+            radius,
+];
 
 // ---------------------------------------------------------------------------
 // 倒车入库：道路在上，库在下方正中；两端各一条控制线。先从右端倒入，出库开到左端
@@ -413,7 +460,12 @@ List<Offset> _arcPoints(Offset c, double radius, double from, double to, [int n 
 // ---------------------------------------------------------------------------
 
 const _reverseRoad = Rect.fromLTRB(-16, 0, 16, 7);
-const _reverseBay = Rect.fromLTRB(-1.2, 7, 1.2, 12.1); // 宽 = 车宽 + 0.6，长 = 车长 + 0.7
+const _reverseBay = Rect.fromLTRB(
+  -1.2,
+  7,
+  1.2,
+  12.1,
+); // 宽 = 车宽 + 0.6，长 = 车长 + 0.7
 const reverseControlX = 10.0;
 
 final reverseScene = DrillScene(
@@ -424,9 +476,22 @@ final reverseScene = DrillScene(
   inside: (p) => _inRect(p, _reverseRoad) || _inRect(p, _reverseBay),
   lines: [
     const SceneLine([Offset(-16, 0), Offset(16, 0)], LineKind.edge),
-    const SceneLine([Offset(-16, 7), Offset(-1.2, 7), Offset(-1.2, 12.1), Offset(1.2, 12.1), Offset(1.2, 7), Offset(16, 7)], LineKind.bay),
-    const SceneLine([Offset(-reverseControlX, 0), Offset(-reverseControlX, 7)], LineKind.control),
-    const SceneLine([Offset(reverseControlX, 0), Offset(reverseControlX, 7)], LineKind.control),
+    const SceneLine([
+      Offset(-16, 7),
+      Offset(-1.2, 7),
+      Offset(-1.2, 12.1),
+      Offset(1.2, 12.1),
+      Offset(1.2, 7),
+      Offset(16, 7),
+    ], LineKind.bay),
+    const SceneLine([
+      Offset(-reverseControlX, 0),
+      Offset(-reverseControlX, 7),
+    ], LineKind.control),
+    const SceneLine([
+      Offset(reverseControlX, 0),
+      Offset(reverseControlX, 7),
+    ], LineKind.control),
   ],
   labels: const [
     (Offset(0, 9.6), "车库"),
@@ -440,41 +505,77 @@ final reverseScene = DrillScene(
       cue: "安全带、车门、P 挡启动",
       marks: [
         CarMark(CarPart.frontWheels, "两个前轮在控制线外"),
-        LineMark([Offset(reverseControlX, 0), Offset(reverseControlX, 7)], "控制线"),
+        LineMark([
+          Offset(reverseControlX, 0),
+          Offset(reverseControlX, 7),
+        ], "控制线"),
       ],
     ),
     DrillStep(
       [Hold(0.6), Straight(-2.6)],
       cue: "R 挡，刹车控速慢慢倒",
-      marks: [CarMark(CarPart.rearBumper, "车尾"), SpotMark(Offset(1.2, 7), "库角")],
+      marks: [
+        CarMark(CarPart.rearBumper, "车尾"),
+        SpotMark(Offset(1.2, 7), "库角"),
+      ],
     ),
     DrillStep(
       [Arc(90, leftTurn: false, reverse: true)],
       cue: "打满方向，看两侧后视镜",
-      marks: [SpotMark(Offset(1.2, 7), "看库角"), SpotMark(Offset(-1.2, 7), "看另一侧库角")],
+      marks: [
+        SpotMark(Offset(1.2, 7), "看库角"),
+        SpotMark(Offset(-1.2, 7), "看另一侧库角"),
+      ],
     ),
     DrillStep(
       [Straight(-2.8), Hold(0.8)],
       cue: "车身摆正再回正，倒到位停",
-      marks: [LineMark([Offset(-1.2, 7), Offset(-1.2, 12.1), Offset(1.2, 12.1), Offset(1.2, 7)], "库边线：车身不能出线")],
+      marks: [
+        LineMark([
+          Offset(-1.2, 7),
+          Offset(-1.2, 12.1),
+          Offset(1.2, 12.1),
+          Offset(1.2, 7),
+        ], "库边线：车身不能出线"),
+      ],
     ),
     DrillStep(
       [Straight(2.8), Arc(90, leftTurn: true), Straight(2.6), Hold(0.8)],
       cue: "两个前轮都要越过控制线",
       marks: [
-        LineMark([Offset(-reverseControlX, 0), Offset(-reverseControlX, 7)], "两个前轮都要过这条线"),
+        LineMark([
+          Offset(-reverseControlX, 0),
+          Offset(-reverseControlX, 7),
+        ], "两个前轮都要过这条线"),
         CarMark(CarPart.frontWheels, "前轮"),
       ],
     ),
     DrillStep(
-      [Straight(-2.6), Arc(90, leftTurn: true, reverse: true), Straight(-2.8), Hold(0.8)],
+      [
+        Straight(-2.6),
+        Arc(90, leftTurn: true, reverse: true),
+        Straight(-2.8),
+        Hold(0.8),
+      ],
       cue: "第二次入库，方法相同",
-      marks: [LineMark([Offset(-1.2, 7), Offset(-1.2, 12.1), Offset(1.2, 12.1), Offset(1.2, 7)], "不停车、不出线")],
+      marks: [
+        LineMark([
+          Offset(-1.2, 7),
+          Offset(-1.2, 12.1),
+          Offset(1.2, 12.1),
+          Offset(1.2, 7),
+        ], "不停车、不出线"),
+      ],
     ),
     DrillStep(
       [Straight(2.8), Arc(90, leftTurn: false), Straight(2.6)],
       cue: "前进出库回起点",
-      marks: [LineMark([Offset(reverseControlX, 0), Offset(reverseControlX, 7)], "回到起点")],
+      marks: [
+        LineMark([
+          Offset(reverseControlX, 0),
+          Offset(reverseControlX, 7),
+        ], "回到起点"),
+      ],
     ),
   ],
 );
@@ -485,12 +586,19 @@ final reverseScene = DrillScene(
 // ---------------------------------------------------------------------------
 
 const _parallelRoad = Rect.fromLTRB(0, -16, 3.4, 16);
-const _parallelBay = Rect.fromLTRB(3.4, 0, 6.0, 7.6); // 宽 = 车宽 + 0.8，长 = 1.5 倍车长 + 1
+const _parallelBay = Rect.fromLTRB(
+  3.4,
+  0,
+  6.0,
+  7.6,
+); // 宽 = 车宽 + 0.8，长 = 1.5 倍车长 + 1
 const _parallelLane = 2.2; // 车道里后轴中心离左边线的距离
 const _parallelBayX = 4.7; // 入库后后轴中心（库位中线）
 // 两段等角反向满舵弧把车横移 Δx：Δx = 2R(1 - cos α)。
-final _parallelAngle = acos(1 - (_parallelBayX - _parallelLane) / (2 * car.minRadius)) * 180 / pi;
-final _parallelStartY = 6.4 - 2 * car.minRadius * sin(_parallelAngle * pi / 180);
+final _parallelAngle =
+    acos(1 - (_parallelBayX - _parallelLane) / (2 * car.minRadius)) * 180 / pi;
+final _parallelStartY =
+    6.4 - 2 * car.minRadius * sin(_parallelAngle * pi / 180);
 
 final parallelScene = DrillScene(
   id: "parallel",
@@ -501,7 +609,14 @@ final parallelScene = DrillScene(
   inside: (p) => _inRect(p, _parallelRoad) || _inRect(p, _parallelBay),
   lines: const [
     SceneLine([Offset(0, -16), Offset(0, 16)], LineKind.edge),
-    SceneLine([Offset(3.4, -16), Offset(3.4, 0), Offset(6.0, 0), Offset(6.0, 7.6), Offset(3.4, 7.6), Offset(3.4, 16)], LineKind.bay),
+    SceneLine([
+      Offset(3.4, -16),
+      Offset(3.4, 0),
+      Offset(6.0, 0),
+      Offset(6.0, 7.6),
+      Offset(3.4, 7.6),
+      Offset(3.4, 16),
+    ], LineKind.bay),
   ],
   labels: const [(Offset(4.7, 3.8), "库位")],
   steps: [
@@ -509,17 +624,25 @@ final parallelScene = DrillScene(
       [Hold(1.2)],
       gear: Gear.park,
       cue: "靠右行驶，和右边线保持距离",
-      marks: [LineMark([Offset(3.4, 10.5), Offset(3.4, 7.6)], "右边线：车轮别压")],
+      marks: [
+        LineMark([Offset(3.4, 10.5), Offset(3.4, 7.6)], "右边线：车轮别压"),
+      ],
     ),
     const DrillStep(
       [Straight(8), Hold(0.8)],
       cue: "停在库的左前方，挂 R 挡",
-      marks: [CarMark(CarPart.rearBumper, "车尾"), SpotMark(Offset(3.4, 0), "库前角")],
+      marks: [
+        CarMark(CarPart.rearBumper, "车尾"),
+        SpotMark(Offset(3.4, 0), "库前角"),
+      ],
     ),
     DrillStep(
       [Arc(_parallelAngle, leftTurn: false, reverse: true)],
       cue: "向右打满，车尾斜进库",
-      marks: const [LineMark([Offset(3.4, 0), Offset(6.0, 0)], "库前边线：车身别碰"), CarMark(CarPart.rearBumper, "车尾进库")],
+      marks: const [
+        LineMark([Offset(3.4, 0), Offset(6.0, 0)], "库前边线：车身别碰"),
+        CarMark(CarPart.rearBumper, "车尾进库"),
+      ],
     ),
     DrillStep(
       [Arc(_parallelAngle, leftTurn: true, reverse: true), const Hold(0.8)],
@@ -536,12 +659,21 @@ final parallelScene = DrillScene(
       marks: [CarMark(CarPart.leftLamp, "左转向灯")],
     ),
     DrillStep(
-      [Arc(_parallelAngle, leftTurn: true), Arc(_parallelAngle, leftTurn: false)],
+      [
+        Arc(_parallelAngle, leftTurn: true),
+        Arc(_parallelAngle, leftTurn: false),
+      ],
       signal: Signal.left,
       cue: "向左前方出库，再回方向摆正",
-      marks: const [LineMark([Offset(3.4, 0), Offset(6.0, 0)], "出库别压库前边线")],
+      marks: const [
+        LineMark([Offset(3.4, 0), Offset(6.0, 0)], "出库别压库前边线"),
+      ],
     ),
-    const DrillStep([Straight(5)], cue: "出库后关闭转向灯", marks: [CarMark(CarPart.leftLamp, "关转向灯")]),
+    const DrillStep(
+      [Straight(5)],
+      cue: "出库后关闭转向灯",
+      marks: [CarMark(CarPart.leftLamp, "关转向灯")],
+    ),
   ],
 );
 
@@ -557,12 +689,27 @@ const _curveOuter1 = 8.3; // 左弯：后轴中心走外侧
 const _curveOuter2 = 7.7; // 右弯：同一条后轴轨迹对第二个圆心而言在内侧 → 车身相对第二个弯走外侧
 
 bool _curveInside(Offset p) {
-  if (_inRect(p, const Rect.fromLTRB(-_curveHalfWidth, 0, _curveHalfWidth, 12))) return true;
-  if (_inRect(p, const Rect.fromLTRB(-32 - _curveHalfWidth, -12, -32 + _curveHalfWidth, 0))) return true;
+  if (_inRect(p, const Rect.fromLTRB(-_curveHalfWidth, 0, _curveHalfWidth, 12))) {
+    return true;
+  }
+  if (_inRect(
+    p,
+    const Rect.fromLTRB(-32 - _curveHalfWidth, -12, -32 + _curveHalfWidth, 0),
+  )) {
+    return true;
+  }
   final d1 = (p - _curveCenter1).distance;
-  if (p.dy <= 0 && d1 >= _curveRadius - _curveHalfWidth && d1 <= _curveRadius + _curveHalfWidth) return true;
+  if (p.dy <= 0 &&
+      d1 >= _curveRadius - _curveHalfWidth &&
+      d1 <= _curveRadius + _curveHalfWidth) {
+    return true;
+  }
   final d2 = (p - _curveCenter2).distance;
-  if (p.dy >= 0 && d2 >= _curveRadius - _curveHalfWidth && d2 <= _curveRadius + _curveHalfWidth) return true;
+  if (p.dy >= 0 &&
+      d2 >= _curveRadius - _curveHalfWidth &&
+      d2 <= _curveRadius + _curveHalfWidth) {
+    return true;
+  }
   return false;
 }
 
@@ -573,12 +720,20 @@ final curveScene = DrillScene(
   bounds: const Rect.fromLTRB(-36, -12, 4, 12),
   inside: _curveInside,
   lines: [
-    for (final dx in [-_curveHalfWidth, _curveHalfWidth]) SceneLine([Offset(dx, 12), Offset(dx, 0)], LineKind.edge),
-    for (final r in [_curveRadius - _curveHalfWidth, _curveRadius + _curveHalfWidth])
+    for (final dx in [-_curveHalfWidth, _curveHalfWidth])
+      SceneLine([Offset(dx, 12), Offset(dx, 0)], LineKind.edge),
+    for (final r in [
+      _curveRadius - _curveHalfWidth,
+      _curveRadius + _curveHalfWidth,
+    ])
       SceneLine(_arcPoints(_curveCenter1, r, 0, -pi), LineKind.edge),
-    for (final r in [_curveRadius - _curveHalfWidth, _curveRadius + _curveHalfWidth])
+    for (final r in [
+      _curveRadius - _curveHalfWidth,
+      _curveRadius + _curveHalfWidth,
+    ])
       SceneLine(_arcPoints(_curveCenter2, r, 0, pi), LineKind.edge),
-    for (final dx in [-32 - _curveHalfWidth, -32 + _curveHalfWidth]) SceneLine([Offset(dx, 0), Offset(dx, -12)], LineKind.edge),
+    for (final dx in [-32 - _curveHalfWidth, -32 + _curveHalfWidth])
+      SceneLine([Offset(dx, 0), Offset(dx, -12)], LineKind.edge),
     SceneLine(_arcPoints(_curveCenter1, _curveRadius, 0, -pi), LineKind.lane),
     SceneLine(_arcPoints(_curveCenter2, _curveRadius, 0, pi), LineKind.lane),
   ],
@@ -588,13 +743,21 @@ final curveScene = DrillScene(
       [Hold(0.8), Straight(11)],
       gear: Gear.park,
       cue: "D 挡怠速，匀速进入",
-      marks: [LineMark([Offset(-_curveHalfWidth, 12), Offset(-_curveHalfWidth, 0)], "边缘线：车轮不能压")],
+      marks: [
+        LineMark([
+          Offset(-_curveHalfWidth, 12),
+          Offset(-_curveHalfWidth, 0),
+        ], "边缘线：车轮不能压"),
+      ],
     ),
     DrillStep(
       [const Arc(180, leftTurn: true, radius: _curveOuter1)],
       cue: "左弯走外侧，方向慢打慢回",
       marks: [
-        LineMark(_arcPoints(_curveCenter1, _curveRadius - _curveHalfWidth, 0, -pi), "内侧边缘线"),
+        LineMark(
+          _arcPoints(_curveCenter1, _curveRadius - _curveHalfWidth, 0, -pi),
+          "内侧边缘线",
+        ),
         const CarMark(CarPart.rearLeftWheel, "内侧后轮"),
       ],
     ),
@@ -602,11 +765,18 @@ final curveScene = DrillScene(
       [const Arc(180, leftTurn: false, radius: _curveOuter2)],
       cue: "换向，右弯走外侧",
       marks: [
-        LineMark(_arcPoints(_curveCenter2, _curveRadius - _curveHalfWidth, 0, pi), "内侧边缘线"),
+        LineMark(
+          _arcPoints(_curveCenter2, _curveRadius - _curveHalfWidth, 0, pi),
+          "内侧边缘线",
+        ),
         const CarMark(CarPart.rearRightWheel, "内侧后轮"),
       ],
     ),
-    const DrillStep([Straight(8)], cue: "驶出，全程不停车", marks: [CarMark(CarPart.body, "不停车")]),
+    const DrillStep(
+      [Straight(8)],
+      cue: "驶出，全程不停车",
+      marks: [CarMark(CarPart.body, "不停车")],
+    ),
   ],
 );
 
@@ -630,7 +800,11 @@ final cornerScene = DrillScene(
   inside: _cornerInside,
   lines: const [
     SceneLine([Offset(0, 14), Offset(0, 0), Offset(-14, 0)], LineKind.edge),
-    SceneLine([Offset(cornerLane, 14), Offset(cornerLane, -cornerLane), Offset(-14, -cornerLane)], LineKind.edge),
+    SceneLine([
+      Offset(cornerLane, 14),
+      Offset(cornerLane, -cornerLane),
+      Offset(-14, -cornerLane),
+    ], LineKind.edge),
   ],
   labels: const [(Offset(-0.9, 0.9), "内角")],
   steps: const [
@@ -638,27 +812,46 @@ final cornerScene = DrillScene(
       [Hold(0.8), Straight(4)],
       gear: Gear.park,
       cue: "靠外侧（右侧）行驶",
-      marks: [LineMark([Offset(cornerLane, 14), Offset(cornerLane, 0)], "外侧边线：靠这边走")],
+      marks: [
+        LineMark([Offset(cornerLane, 14), Offset(cornerLane, 0)], "外侧边线：靠这边走"),
+      ],
     ),
     DrillStep(
-      [Straight(13 - 4 - _cornerTurnY)],
+      [Straight(2)],
       signal: Signal.left,
-      cue: "转弯前开左转向灯",
-      marks: [CarMark(CarPart.leftLamp, "左转向灯"), SpotMark(Offset(0, 0), "内角")],
+      cue: "转弯前打开左转向灯",
+      marks: [CarMark(CarPart.leftLamp, "左转向灯")],
+    ),
+    // 和上一步合起来仍是原来那段直道，只把「开灯」和「找时机」拆开讲。
+    DrillStep(
+      [Straight(13 - 4 - _cornerTurnY - 2)],
+      signal: Signal.left,
+      cue: "内角到位，一把打满",
+      marks: [SpotMark(Offset(0, 0), "内角")],
     ),
     DrillStep(
       [Arc(90, leftTurn: true)],
       signal: Signal.left,
-      cue: "车头过了内角再打满方向",
-      marks: [SpotMark(Offset(0, 0), "内角：后轮别压"), CarMark(CarPart.rearLeftWheel, "左后轮")],
+      cue: "打满后看内侧后轮",
+      marks: [
+        SpotMark(Offset(0, 0), "内角：后轮别压"),
+        CarMark(CarPart.rearLeftWheel, "左后轮"),
+      ],
     ),
-    DrillStep([Straight(7)], cue: "回正驶出，关闭转向灯", marks: [CarMark(CarPart.leftLamp, "关转向灯")]),
+    DrillStep(
+      [Straight(7)],
+      cue: "平行就回正，出弯再关灯",
+      marks: [CarMark(CarPart.leftLamp, "关转向灯")],
+    ),
   ],
 );
 
 final _underTest = Platform.environment.containsKey("FLUTTER_TEST");
 
-final drillScenes = {for (final s in [reverseScene, parallelScene, curveScene, cornerScene]) s.id: s};
+final drillScenes = {
+  for (final s in [reverseScene, parallelScene, curveScene, cornerScene])
+    s.id: s,
+};
 
 /// 车内参照和车外几何共用的颜色。两格不是两张无关的画。
 const drillLinkColor = Color(0xFF00E5FF);
@@ -717,7 +910,8 @@ class DrillPlayer extends StatefulWidget {
   State<DrillPlayer> createState() => DrillPlayerState();
 }
 
-class DrillPlayerState extends State<DrillPlayer> with TickerProviderStateMixin {
+class DrillPlayerState extends State<DrillPlayer>
+    with TickerProviderStateMixin {
   late Timeline _timeline = Timeline(widget.scene);
   late List<Offset> _ideal = _timeline.frame(_timeline.total).trail;
   late final Ticker _ticker = createTicker(_tick);
@@ -725,7 +919,12 @@ class DrillPlayerState extends State<DrillPlayer> with TickerProviderStateMixin 
   /// 标注闪烁用：暂停时画面也要一明一暗，不然停在某一步看不出哪里在强调。
   final _pulse = Stopwatch()..start();
   late final Ticker _pulseTicker = createTicker((_) {
-    if (mounted && !_playing && widget.scene.steps[_step].marks.isNotEmpty && !widget.hideCue) setState(() {});
+    if (mounted &&
+        !_playing &&
+        widget.scene.steps[_step].marks.isNotEmpty &&
+        !widget.hideCue) {
+      setState(() {});
+    }
   });
   Duration _last = Duration.zero;
   double _t = 0;
@@ -746,7 +945,11 @@ class DrillPlayerState extends State<DrillPlayer> with TickerProviderStateMixin 
 
   bool get narrating {
     final narrator = widget.narrator;
-    return _voice && !widget.hideCue && widget.narration != null && narrator != null && narrator.available;
+    return _voice &&
+        !widget.hideCue &&
+        widget.narration != null &&
+        narrator != null &&
+        narrator.available;
   }
 
   @override
@@ -766,7 +969,9 @@ class DrillPlayerState extends State<DrillPlayer> with TickerProviderStateMixin 
   void _narrate(int step) {
     final narrator = widget.narrator;
     final lines = widget.narration;
-    if (!narrating || narrator == null || lines == null || step >= lines.length) return;
+    if (!narrating || narrator == null || lines == null || step >= lines.length) {
+      return;
+    }
     final token = ++_speechToken;
     _spokenStep = step;
     _speechDone = false;
@@ -876,7 +1081,9 @@ class DrillPlayerState extends State<DrillPlayer> with TickerProviderStateMixin 
   Widget build(BuildContext context) {
     final frame = _timeline.frame(_t);
     final steps = widget.scene.steps;
-    final title = frame.step < widget.stepTitles.length ? widget.stepTitles[frame.step] : "";
+    final title = frame.step < widget.stepTitles.length
+        ? widget.stepTitles[frame.step]
+        : "";
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -894,14 +1101,25 @@ class DrillPlayerState extends State<DrillPlayer> with TickerProviderStateMixin 
                       scene: widget.scene,
                       frame: frame,
                       ideal: _ideal,
-                      caption: widget.hideCue ? "第 ${frame.step + 1} 步" : "第 ${frame.step + 1} 步 · $title",
+                      caption: widget.hideCue
+                          ? "第 ${frame.step + 1} 步"
+                          : "第 ${frame.step + 1} 步 · $title",
                       cue: widget.hideCue ? null : steps[frame.step].cue,
-                      caution: widget.hideCue || widget.cautions == null || frame.step >= widget.cautions!.length
+                      caution:
+                          widget.hideCue ||
+                              widget.cautions == null ||
+                              frame.step >= widget.cautions!.length
                           ? null
                           : widget.cautions![frame.step],
-                      risk: widget.hideCue || frame.step >= widget.risks.length ? "" : widget.risks[frame.step],
-                      link: widget.hideCue || frame.step >= widget.links.length ? "" : widget.links[frame.step],
-                      marks: widget.hideCue ? const [] : steps[frame.step].marks,
+                      risk: widget.hideCue || frame.step >= widget.risks.length
+                          ? ""
+                          : widget.risks[frame.step],
+                      link: widget.hideCue || frame.step >= widget.links.length
+                          ? ""
+                          : widget.links[frame.step],
+                      marks: widget.hideCue
+                          ? const []
+                          : steps[frame.step].marks,
                       pulse: (_pulse.elapsed.inMilliseconds % 1200) / 1200,
                       blinkOn: (_t * 2.5).floor().isEven,
                     ),
@@ -920,7 +1138,8 @@ class DrillPlayerState extends State<DrillPlayer> with TickerProviderStateMixin 
           children: [
             IconButton(
               tooltip: "上一步",
-              onPressed: () => jumpTo(frame.step - (frame.stepProgress < 0.05 ? 1 : 0)),
+              onPressed: () =>
+                  jumpTo(frame.step - (frame.stepProgress < 0.05 ? 1 : 0)),
               icon: const Icon(Glyph.stepBack),
             ),
             IconButton.filled(
@@ -938,26 +1157,38 @@ class DrillPlayerState extends State<DrillPlayer> with TickerProviderStateMixin 
             ),
             IconButton(
               tooltip: "下一步",
-              onPressed: frame.step + 1 < steps.length ? () => jumpTo(frame.step + 1) : null,
+              onPressed: frame.step + 1 < steps.length
+                  ? () => jumpTo(frame.step + 1)
+                  : null,
               icon: const Icon(Glyph.stepNext),
             ),
-            IconButton(tooltip: "从头", onPressed: () => jumpTo(0), icon: const Icon(Glyph.restart)),
-            if (widget.narration != null && widget.narrator != null && !widget.hideCue)
+            IconButton(
+              tooltip: "从头",
+              onPressed: () => jumpTo(0),
+              icon: const Icon(Glyph.restart),
+            ),
+            if (widget.narration != null &&
+                widget.narrator != null &&
+                !widget.hideCue)
               IconButton(
                 tooltip: widget.narrator!.available
                     ? (_voice ? "关掉语音讲解" : "打开语音讲解")
                     : "这台机器没有中文语音，没法念",
                 onPressed: widget.narrator!.available
                     ? () => setState(() {
-                          _voice = !_voice;
-                          if (_voice) {
-                            if (_playing) _narrate(_step);
-                          } else {
-                            _hush();
-                          }
-                        })
+                        _voice = !_voice;
+                        if (_voice) {
+                          if (_playing) _narrate(_step);
+                        } else {
+                          _hush();
+                        }
+                      })
                     : null,
-                icon: Icon(_voice && widget.narrator!.available ? Glyph.readAloud : Glyph.readAloudOff),
+                icon: Icon(
+                  _voice && widget.narrator!.available
+                      ? Glyph.readAloud
+                      : Glyph.readAloudOff,
+                ),
               ),
             const SizedBox(width: 8),
             Expanded(
@@ -1063,7 +1294,14 @@ class DrillPainter extends CustomPainter {
       }
     }
     for (final (at, text) in scene.labels) {
-      _text(canvas, text, map(at), 13, _lineWhite.withValues(alpha: 0.75), center: true);
+      _text(
+        canvas,
+        text,
+        map(at),
+        13,
+        _lineWhite.withValues(alpha: 0.75),
+        center: true,
+      );
     }
 
     // 理想走线：全程都在，灰虚线。实走余迹叠在上面，走到哪、偏没偏，一眼能对上。
@@ -1073,7 +1311,13 @@ class DrillPainter extends CustomPainter {
       ..color = const Color(0xFFB0B6BE);
     _dashedPolyline(canvas, [for (final p in ideal) map(p)], idealPaint);
     if (ideal.length > 1) {
-      _text(canvas, "理想走线", map(ideal.first) + const Offset(8, -16), 12, const Color(0xFFB0B6BE));
+      _text(
+        canvas,
+        "理想走线",
+        map(ideal.first) + const Offset(8, -16),
+        12,
+        const Color(0xFFB0B6BE),
+      );
     }
     final trailPaint = Paint()
       ..style = PaintingStyle.stroke
@@ -1083,7 +1327,8 @@ class DrillPainter extends CustomPainter {
 
     // 车
     final pose = frame.pose;
-    final bodyPath = Path()..addPolygon([for (final c in pose.corners()) map(c)], true);
+    final bodyPath = Path()
+      ..addPolygon([for (final c in pose.corners()) map(c)], true);
     canvas.drawPath(bodyPath, Paint()..color = _body);
     canvas.drawPath(
       bodyPath,
@@ -1099,7 +1344,10 @@ class DrillPainter extends CustomPainter {
       pose.local(car.wheelbase - 0.5, -car.width / 2 + 0.25),
       pose.local(car.wheelbase - 0.5, car.width / 2 - 0.25),
     ];
-    canvas.drawPath(Path()..addPolygon([for (final g in glass) map(g)], true), Paint()..color = const Color(0xFFBFD7F5));
+    canvas.drawPath(
+      Path()..addPolygon([for (final g in glass) map(g)], true),
+      Paint()..color = const Color(0xFFBFD7F5),
+    );
     // 车轮：前轮随转向转动
     for (final (a, front) in [(car.wheelbase, true), (0.0, false)]) {
       for (final side in [1.0, -1.0]) {
@@ -1114,20 +1362,38 @@ class DrillPainter extends CustomPainter {
           center - dir * len - across * wid,
           center - dir * len + across * wid,
         ];
-        canvas.drawPath(Path()..addPolygon([for (final p in pts) map(p)], true), Paint()..color = const Color(0xFF111111));
+        canvas.drawPath(
+          Path()..addPolygon([for (final p in pts) map(p)], true),
+          Paint()..color = const Color(0xFF111111),
+        );
       }
     }
     // 转向灯
     if (frame.signal != Signal.none && blinkOn) {
       final side = frame.signal == Signal.left ? 1.0 : -1.0;
       final lampPaint = Paint()..color = _amber;
-      for (final a in [car.wheelbase + car.frontOverhang - 0.1, -car.rearOverhang + 0.1]) {
-        canvas.drawCircle(map(pose.local(a, side * (car.width / 2 - 0.1))), max(3, 0.22 * scale), lampPaint);
+      for (final a in [
+        car.wheelbase + car.frontOverhang - 0.1,
+        -car.rearOverhang + 0.1,
+      ]) {
+        canvas.drawCircle(
+          map(pose.local(a, side * (car.width / 2 - 0.1))),
+          max(3, 0.22 * scale),
+          lampPaint,
+        );
       }
     }
     if (link.isNotEmpty) {
       final anchor = map(pose.local(car.wheelbase * 0.7, 0));
-      _text(canvas, link, anchor + const Offset(14, -18), 13, drillLinkColor, bold: true, maxWidth: size.width * 0.42);
+      _text(
+        canvas,
+        link,
+        anchor + const Offset(14, -18),
+        13,
+        drillLinkColor,
+        bold: true,
+        maxWidth: size.width * 0.42,
+      );
     }
     // 挡位
     final gear = switch (frame.gear) {
@@ -1135,7 +1401,14 @@ class DrillPainter extends CustomPainter {
       Gear.drive => "D",
       Gear.reverse => "R",
     };
-    _badge(canvas, gear, map(pose.local(car.wheelbase / 2, 0)), frame.gear == Gear.reverse ? const Color(0xFFEB5757) : const Color(0xFF27AE60));
+    _badge(
+      canvas,
+      gear,
+      map(pose.local(car.wheelbase / 2, 0)),
+      frame.gear == Gear.reverse
+          ? const Color(0xFFEB5757)
+          : const Color(0xFF27AE60),
+    );
 
     // 标注（ADR 0040）：青色、随时间一明一暗，跟白黄场地线区分开。
     if (marks.isNotEmpty) {
@@ -1145,20 +1418,39 @@ class DrillPainter extends CustomPainter {
       void label(Offset anchor, String text) {
         var at = anchor + const Offset(12, -26);
         final painter = TextPainter(
-          text: TextSpan(text: text, style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w600)),
+          text: TextSpan(
+            text: text,
+            style: const TextStyle(
+              fontSize: 13,
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           textDirection: TextDirection.ltr,
         )..layout();
-        var box = Rect.fromLTWH(at.dx - 6, at.dy - 3, painter.width + 12, painter.height + 6);
+        var box = Rect.fromLTWH(
+          at.dx - 6,
+          at.dy - 3,
+          painter.width + 12,
+          painter.height + 6,
+        );
         // 两个标签撞在一起就往下挪，别叠成一团。
         while (used.any((u) => u.overlaps(box))) {
           at += Offset(0, box.height + 4);
           box = box.shift(Offset(0, box.height + 4));
         }
         used.add(box);
-        canvas.drawLine(anchor, Offset(box.left, box.bottom), Paint()
-          ..color = _mark
-          ..strokeWidth = 1.5);
-        canvas.drawRRect(RRect.fromRectAndRadius(box, const Radius.circular(4)), Paint()..color = const Color(0xDD0B2530));
+        canvas.drawLine(
+          anchor,
+          Offset(box.left, box.bottom),
+          Paint()
+            ..color = _mark
+            ..strokeWidth = 1.5,
+        );
+        canvas.drawRRect(
+          RRect.fromRectAndRadius(box, const Radius.circular(4)),
+          Paint()..color = const Color(0xDD0B2530),
+        );
         canvas.drawRRect(
           RRect.fromRectAndRadius(box, const Radius.circular(4)),
           Paint()
@@ -1184,18 +1476,26 @@ class DrillPainter extends CustomPainter {
             label(pts[pts.length ~/ 2], mark.label);
           case SpotMark(:final at):
             final c = map(at);
-            canvas.drawCircle(c, 9 + 5 * glow, Paint()
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = 3
-              ..color = hi);
+            canvas.drawCircle(
+              c,
+              9 + 5 * glow,
+              Paint()
+                ..style = PaintingStyle.stroke
+                ..strokeWidth = 3
+                ..color = hi,
+            );
             label(c, mark.label);
           case CarMark():
             final pts = [for (final p in mark.points(frame.pose)) map(p)];
             for (final c in pts) {
-              canvas.drawCircle(c, 7 + 4 * glow, Paint()
-                ..style = PaintingStyle.stroke
-                ..strokeWidth = 3
-                ..color = hi);
+              canvas.drawCircle(
+                c,
+                7 + 4 * glow,
+                Paint()
+                  ..style = PaintingStyle.stroke
+                  ..strokeWidth = 3
+                  ..color = hi,
+              );
             }
             label(pts.first, mark.label);
         }
@@ -1206,11 +1506,31 @@ class DrillPainter extends CustomPainter {
     _text(canvas, caption, const Offset(14, 12), 16, Colors.white, bold: true);
     if (cue != null) _text(canvas, cue!, const Offset(14, 38), 14, _amber);
     if (risk.isNotEmpty) {
-      _text(canvas, "扣分：$risk", const Offset(14, 60), 13, const Color(0xFFFF8A80), maxWidth: size.width - 28);
+      _text(
+        canvas,
+        "扣分：$risk",
+        const Offset(14, 60),
+        13,
+        const Color(0xFFFF8A80),
+        maxWidth: size.width - 28,
+      );
     } else if (caution != null && caution!.isNotEmpty) {
-      _text(canvas, "注意：${caution!}", const Offset(14, 60), 13, const Color(0xFFFF8A80), maxWidth: size.width - 28);
+      _text(
+        canvas,
+        "注意：${caution!}",
+        const Offset(14, 60),
+        13,
+        const Color(0xFFFF8A80),
+        maxWidth: size.width - 28,
+      );
     }
-    _text(canvas, "示意图，不按比例；尺寸以考场为准", Offset(14, size.height - 24), 11, _lineWhite.withValues(alpha: 0.6));
+    _text(
+      canvas,
+      "示意图，不按比例；尺寸以考场为准",
+      Offset(14, size.height - 24),
+      11,
+      _lineWhite.withValues(alpha: 0.6),
+    );
   }
 
   void _dashedPolyline(Canvas canvas, List<Offset> pts, Paint paint) {
@@ -1257,7 +1577,10 @@ class DrillPainter extends CustomPainter {
       ),
       textDirection: TextDirection.ltr,
     )..layout(maxWidth: maxWidth);
-    painter.paint(canvas, center ? at - Offset(painter.width / 2, painter.height / 2) : at);
+    painter.paint(
+      canvas,
+      center ? at - Offset(painter.width / 2, painter.height / 2) : at,
+    );
   }
 
   @override

@@ -85,12 +85,12 @@ void main() {
     expect(find.text("今天已记下"), findsOneWidget);
     expect(find.textContaining("4 把能过 3 把"), findsOneWidget);
 
-    await tester.tap(find.text("练车日志"));
+    await tester.tap(find.text("练车日志").last);
     await tester.pump();
     expect(find.text("按练车日看每一项能过的比例"), findsOneWidget);
     expect(find.textContaining("教练：车尾到库角再打"), findsOneWidget);
 
-    await tester.tap(find.text("考前"));
+    await tester.tap(find.text("考前").last);
     await tester.pump();
     expect(find.textContaining("每一项最近的表现"), findsOneWidget);
     expect(find.text("规则自测"), findsOneWidget);

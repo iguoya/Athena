@@ -15,6 +15,7 @@ import "readiness.dart";
 import "../core/progress.dart";
 import "rehearsal.dart";
 import "review.dart";
+
 /// 科目二（C2）：动画讲解、评判条目、评判题、练车错因记录（ADR 0036）。
 class Subject2Page extends StatefulWidget {
   const Subject2Page({
@@ -25,6 +26,8 @@ class Subject2Page extends StatefulWidget {
     required this.runs,
     required this.onPractice,
     required this.onChanged,
+    this.place = "subject2/day",
+    this.onPlace,
   });
 
   final Bank bank;
@@ -36,17 +39,46 @@ class Subject2Page extends StatefulWidget {
   final void Function(List<Question> questions, String title) onPractice;
   final Future<void> Function() onChanged;
 
+  /// 侧栏落点：`subject2/day|handbook|exam|log` 或 `subject2/item/<id>`。
+  final String place;
+  final ValueChanged<String>? onPlace;
+
   @override
   State<Subject2Page> createState() => _Subject2PageState();
 }
 
 class _Subject2PageState extends State<Subject2Page> {
-  String? _item;
   Map<(String, int), PointNote> _notes = const {};
   List<PointPhoto> _photos = const [];
   List<Rehearsal> _rehearsals = const [];
   List<DrillNote> _drillNotes = const [];
-  var _tab = _Tab.day;
+  late String _place = widget.place;
+
+  @override
+  void didUpdateWidget(Subject2Page oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.place != oldWidget.place) _place = widget.place;
+  }
+
+  void _move(String place) {
+    if (_place == place) return;
+    setState(() => _place = place);
+    widget.onPlace?.call(place);
+  }
+
+  _Tab get _tab => switch (_place) {
+    "subject2/handbook" => _Tab.handbook,
+    "subject2/exam" => _Tab.exam,
+    "subject2/log" => _Tab.log,
+    _ => _place.startsWith("subject2/item/") ? _Tab.handbook : _Tab.day,
+  };
+
+  String? get _item {
+    const prefix = "subject2/item/";
+    if (!_place.startsWith(prefix)) return null;
+    final id = _place.substring(prefix.length);
+    return _guide.item(id) == null ? null : id;
+  }
 
   Subject2Guide get _guide => widget.bank.guide;
 
@@ -80,12 +112,17 @@ class _Subject2PageState extends State<Subject2Page> {
     return out;
   }
 
-  Brief get _brief => buildBrief(_guide, widget.runs, missedSteps: _missedSteps);
+  Brief get _brief =>
+      buildBrief(_guide, widget.runs, missedSteps: _missedSteps);
 
   Readiness get _readiness => computeReadiness(_guide, widget.runs);
 
   Future<void> _record([String? itemId]) async {
-    final result = await showDrillRunDialog(context, _guide, itemId ?? _item ?? _guide.items.first.id);
+    final result = await showDrillRunDialog(
+      context,
+      _guide,
+      itemId ?? _item ?? _guide.items.first.id,
+    );
     if (result == null) return;
     await widget.store.recordDrillRun(result.$1, result.$2);
     await widget.onChanged();
@@ -93,7 +130,9 @@ class _Subject2PageState extends State<Subject2Page> {
     final score = _guide.score(result.$1, result.$2);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text("记下了：${_guide.item(result.$1)?.title} · 按考场规则 ${score.label}${score.passed ? "，能过" : "，过不了"}"),
+        content: Text(
+          "记下了：${_guide.item(result.$1)?.title} · 按考场规则 ${score.label}${score.passed ? "，能过" : "，过不了"}",
+        ),
       ),
     );
   }
@@ -126,7 +165,7 @@ class _Subject2PageState extends State<Subject2Page> {
           for (final n in _drillNotes)
             if (n.itemId == item.id) n,
         ],
-        onBack: () => setState(() => _item = null),
+        onBack: () => _move("subject2/handbook"),
         onPractice: widget.onPractice,
         onRecord: () => _record(item.id),
       );
@@ -151,18 +190,44 @@ class _Subject2PageState extends State<Subject2Page> {
                 child: Icon(Glyph.subject2, color: Bs.paper),
               ),
               Text("科目二", style: theme.textTheme.headlineMedium),
-              Text("场地驾驶技能 · 小型自动挡（C2）", style: theme.textTheme.titleMedium?.copyWith(color: Bs.secondary)),
+              Text(
+                "场地驾驶技能 · 小型自动挡（C2）",
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: Bs.secondary,
+                ),
+              ),
               const SizedBox(width: 12),
               SegmentedButton<_Tab>(
                 showSelectedIcon: false,
                 segments: const [
-                  ButtonSegment(value: _Tab.day, icon: Icon(Glyph.practiceDay), label: Text("练车日")),
-                  ButtonSegment(value: _Tab.handbook, icon: Icon(Glyph.handbook), label: Text("项目手册")),
-                  ButtonSegment(value: _Tab.log, icon: Icon(Glyph.log), label: Text("练车日志")),
-                  ButtonSegment(value: _Tab.exam, icon: Icon(Glyph.examReady), label: Text("考前")),
+                  ButtonSegment(
+                    value: _Tab.day,
+                    icon: Icon(Glyph.practiceDay),
+                    label: Text("练车日"),
+                  ),
+                  ButtonSegment(
+                    value: _Tab.handbook,
+                    icon: Icon(Glyph.handbook),
+                    label: Text("项目手册"),
+                  ),
+                  ButtonSegment(
+                    value: _Tab.exam,
+                    icon: Icon(Glyph.examReady),
+                    label: Text("考前"),
+                  ),
+                  ButtonSegment(
+                    value: _Tab.log,
+                    icon: Icon(Glyph.log),
+                    label: Text("练车日志"),
+                  ),
                 ],
                 selected: {_tab},
-                onSelectionChanged: (v) => setState(() => _tab = v.first),
+                onSelectionChanged: (v) => _move(switch (v.first) {
+                  _Tab.day => "subject2/day",
+                  _Tab.handbook => "subject2/handbook",
+                  _Tab.exam => "subject2/exam",
+                  _Tab.log => "subject2/log",
+                }),
               ),
             ],
           ),
@@ -181,7 +246,11 @@ class _Subject2PageState extends State<Subject2Page> {
   }
 
   Future<void> _reviewToday() async {
-    final saved = await showDayReview(context, guide: _guide, store: widget.store);
+    final saved = await showDayReview(
+      context,
+      guide: _guide,
+      store: widget.store,
+    );
     if (saved != true) return;
     await widget.onChanged();
     await _loadLocal();
@@ -189,7 +258,12 @@ class _Subject2PageState extends State<Subject2Page> {
 
   Future<void> _preDrill() async {
     final ids = <String>{for (final f in _brief.focus) f.itemId};
-    final items = ids.isEmpty ? _guide.items : [for (final i in _guide.items) if (ids.contains(i.id)) i];
+    final items = ids.isEmpty
+        ? _guide.items
+        : [
+            for (final i in _guide.items)
+              if (ids.contains(i.id)) i,
+          ];
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -228,12 +302,15 @@ class _Subject2PageState extends State<Subject2Page> {
   Widget _dayTab(BuildContext context) {
     final theme = Theme.of(context);
     final today = DateUtils.dateOnly(DateTime.now());
-    final todayRuns = [for (final r in widget.runs) if (DateUtils.isSameDay(r.at, today)) r];
+    final todayRuns = [
+      for (final r in widget.runs)
+        if (DateUtils.isSameDay(r.at, today)) r,
+    ];
     final before = _Panel(
       icon: Glyph.beforeDrill,
       title: "练车前",
       children: [
-        _BriefCard(brief: _brief, onOpen: (id) => setState(() => _item = id)),
+        _BriefCard(brief: _brief, onOpen: (id) => _move("subject2/item/$id")),
         const SizedBox(height: 12),
         FilledButton.icon(
           onPressed: _preDrill,
@@ -255,28 +332,55 @@ class _Subject2PageState extends State<Subject2Page> {
           spacing: 10,
           runSpacing: 10,
           children: [
-            FilledButton.icon(onPressed: _reviewToday, icon: const Icon(Glyph.review), label: const Text("复盘今天")),
-            TextButton.icon(onPressed: _record, icon: const Icon(Glyph.record), label: const Text("只补一把")),
+            FilledButton.icon(
+              onPressed: _reviewToday,
+              icon: const Icon(Glyph.review),
+              label: const Text("复盘今天"),
+            ),
+            TextButton.icon(
+              onPressed: _record,
+              icon: const Icon(Glyph.record),
+              label: const Text("只补一把"),
+            ),
           ],
         ),
         const SizedBox(height: 12),
         if (todayRuns.isEmpty)
-          Text("今天还没有记录。", style: theme.textTheme.bodyMedium?.copyWith(color: Bs.secondary))
+          Text(
+            "今天还没有记录。",
+            style: theme.textTheme.bodyMedium?.copyWith(color: Bs.secondary),
+          )
         else
-          _DaySummary(guide: _guide, runs: todayRuns, notes: const [], title: "今天已记下"),
+          _DaySummary(
+            guide: _guide,
+            runs: todayRuns,
+            notes: const [],
+            title: "今天已记下",
+          ),
       ],
     );
     return ListView(
       padding: const EdgeInsets.fromLTRB(28, 20, 28, 28),
       children: [
-        _ReadinessCard(readiness: _readiness, lastAt: _brief.lastAt, onDetail: () => setState(() => _tab = _Tab.exam)),
+        _ReadinessCard(
+          readiness: _readiness,
+          lastAt: _brief.lastAt,
+          onDetail: () => _move("subject2/exam"),
+        ),
         const SizedBox(height: 16),
         LayoutBuilder(
           builder: (context, c) => c.maxWidth < 1000
-              ? Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [before, const SizedBox(height: 16), after])
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [before, const SizedBox(height: 16), after],
+                )
               : Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [Expanded(child: before), const SizedBox(width: 16), Expanded(child: after)],
+                  children: [
+                    Expanded(child: before),
+                    const SizedBox(width: 16),
+                    Expanded(child: after),
+                  ],
                 ),
         ),
       ],
@@ -313,7 +417,7 @@ class _Subject2PageState extends State<Subject2Page> {
                     if (r.itemId == item.id) r,
                 ],
                 guide: _guide,
-                onTap: () => setState(() => _item = item.id),
+                onTap: () => _move("subject2/item/${item.id}"),
               ),
           ],
         ),
@@ -333,7 +437,8 @@ class _Subject2PageState extends State<Subject2Page> {
     for (final n in _drillNotes) {
       noteDays.putIfAbsent(DateUtils.dateOnly(n.at), () => []).add(n);
     }
-    final dates = {...days.keys, ...noteDays.keys}.toList()..sort((a, b) => b.compareTo(a));
+    final dates = {...days.keys, ...noteDays.keys}.toList()
+      ..sort((a, b) => b.compareTo(a));
     return ListView(
       padding: const EdgeInsets.fromLTRB(28, 20, 28, 28),
       children: [
@@ -342,13 +447,17 @@ class _Subject2PageState extends State<Subject2Page> {
           title: "按练车日看每一项能过的比例",
           child: Column(
             children: [
-              for (final item in _guide.items) _TrendRow(guide: _guide, item: item, runs: widget.runs),
+              for (final item in _guide.items)
+                _TrendRow(guide: _guide, item: item, runs: widget.runs),
             ],
           ),
         ),
         const SizedBox(height: 24),
         if (dates.isEmpty)
-          Text("还没有练车记录。练完在「练车日」里复盘今天。", style: theme.textTheme.bodyLarge?.copyWith(color: Bs.secondary))
+          Text(
+            "还没有练车记录。练完在「练车日」里复盘今天。",
+            style: theme.textTheme.bodyLarge?.copyWith(color: Bs.secondary),
+          )
         else
           for (final d in dates)
             Padding(
@@ -357,7 +466,8 @@ class _Subject2PageState extends State<Subject2Page> {
                 guide: _guide,
                 runs: days[d] ?? const [],
                 notes: noteDays[d] ?? const [],
-                title: "${d.year}-${d.month.toString().padLeft(2, "0")}-${d.day.toString().padLeft(2, "0")}（${_ago(d)}）",
+                title:
+                    "${d.year}-${d.month.toString().padLeft(2, "0")}-${d.day.toString().padLeft(2, "0")}（${_ago(d)}）",
               ),
             ),
         const SizedBox(height: 12),
@@ -396,7 +506,10 @@ class _Subject2PageState extends State<Subject2Page> {
                           style: theme.textTheme.titleSmall,
                         ),
                         const SizedBox(height: 2),
-                        Text(_guide.examDay.steps[i].body, style: theme.textTheme.bodyLarge),
+                        Text(
+                          _guide.examDay.steps[i].body,
+                          style: theme.textTheme.bodyLarge,
+                        ),
                         if (_guide.examDay.steps[i].locators.isNotEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 4),
@@ -404,8 +517,12 @@ class _Subject2PageState extends State<Subject2Page> {
                               spacing: 6,
                               runSpacing: 4,
                               children: [
-                                for (final l in _guide.examDay.steps[i].locators)
-                                  BsBadge(text: l, color: levelColor(Level.parse("fail"))),
+                                for (final l
+                                    in _guide.examDay.steps[i].locators)
+                                  BsBadge(
+                                    text: l,
+                                    color: levelColor(Level.parse("fail")),
+                                  ),
                               ],
                             ),
                           ),
@@ -413,7 +530,12 @@ class _Subject2PageState extends State<Subject2Page> {
                     ),
                   ),
                 const SizedBox(height: 4),
-                Text(_guide.examDay.note, style: theme.textTheme.bodyMedium?.copyWith(color: Bs.secondary)),
+                Text(
+                  _guide.examDay.note,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: Bs.secondary,
+                  ),
+                ),
               ],
             ),
           ),
@@ -437,7 +559,13 @@ class _Subject2PageState extends State<Subject2Page> {
                     padding: const EdgeInsets.symmetric(vertical: 4),
                     child: Row(
                       children: [
-                        SizedBox(width: 96, child: BsBadge(text: c.mistake.level.label, color: levelColor(c.mistake.level))),
+                        SizedBox(
+                          width: 96,
+                          child: BsBadge(
+                            text: c.mistake.level.label,
+                            color: levelColor(c.mistake.level),
+                          ),
+                        ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
@@ -447,7 +575,9 @@ class _Subject2PageState extends State<Subject2Page> {
                         ),
                         Text(
                           "出现在 ${(c.combos * 100 / (readiness.combos - readiness.passing)).round()}% 的过不了的组合里",
-                          style: theme.textTheme.bodyMedium?.copyWith(color: Bs.secondary),
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: Bs.secondary,
+                          ),
                         ),
                       ],
                     ),
@@ -464,9 +594,17 @@ class _Subject2PageState extends State<Subject2Page> {
             spacing: 12,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              FilledButton.icon(onPressed: _rehearseAll, icon: const Icon(Glyph.play), label: const Text("开始")),
-              Text("按考试的四项依次过：倒车入库 → 侧方停车 → 曲线行驶 → 直角转弯。考场的实际顺序以考场为准。",
-                  style: theme.textTheme.bodyMedium?.copyWith(color: Bs.secondary)),
+              FilledButton.icon(
+                onPressed: _rehearseAll,
+                icon: const Icon(Glyph.play),
+                label: const Text("开始"),
+              ),
+              Text(
+                "按考试的四项依次过：倒车入库 → 侧方停车 → 曲线行驶 → 直角转弯。考场的实际顺序以考场为准。",
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: Bs.secondary,
+                ),
+              ),
             ],
           ),
         ),
@@ -478,11 +616,18 @@ class _Subject2PageState extends State<Subject2Page> {
             spacing: 12,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              Text("评判题掌握 ${all.length - pending.length}/${all.length}", style: theme.textTheme.bodyLarge),
+              Text(
+                "评判题掌握 ${all.length - pending.length}/${all.length}",
+                style: theme.textTheme.bodyLarge,
+              ),
               FilledButton.tonalIcon(
-                onPressed: pending.isEmpty ? null : () => widget.onPractice(all, "规则自测"),
+                onPressed: pending.isEmpty
+                    ? null
+                    : () => widget.onPractice(all, "规则自测"),
                 icon: const Icon(Glyph.practice),
-                label: Text(pending.isEmpty ? "已全部掌握" : "自测 · 待练 ${pending.length}"),
+                label: Text(
+                  pending.isEmpty ? "已全部掌握" : "自测 · 待练 ${pending.length}",
+                ),
               ),
             ],
           ),
@@ -501,7 +646,11 @@ class _Subject2PageState extends State<Subject2Page> {
 enum _Tab { day, handbook, log, exam }
 
 class _Panel extends StatelessWidget {
-  const _Panel({required this.icon, required this.title, required this.children});
+  const _Panel({
+    required this.icon,
+    required this.title,
+    required this.children,
+  });
 
   final IconData icon;
   final String title;
@@ -531,7 +680,11 @@ class _Panel extends StatelessWidget {
 
 /// 整场就绪度（ADR 0039）：四项合算一个总分，按最近记录精确组合。
 class _ReadinessCard extends StatelessWidget {
-  const _ReadinessCard({required this.readiness, required this.lastAt, this.onDetail});
+  const _ReadinessCard({
+    required this.readiness,
+    required this.lastAt,
+    this.onDetail,
+  });
 
   final Readiness readiness;
   final DateTime? lastAt;
@@ -544,16 +697,25 @@ class _ReadinessCard extends StatelessWidget {
     final color = rate == null
         ? Bs.secondary
         : rate >= 0.8
-            ? Bs.success
-            : rate >= 0.5
-                ? Bs.orange
-                : Bs.danger;
+        ? Bs.success
+        : rate >= 0.5
+        ? Bs.orange
+        : Bs.danger;
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-      decoration: BoxDecoration(color: color.withValues(alpha: 0.08), border: Border.all(color: color), borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        border: Border.all(color: color),
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Row(
         children: [
-          RateRing(rate: rate ?? 0, caption: rate == null ? "—" : "${(rate * 100).round()}%", color: color, size: 84),
+          RateRing(
+            rate: rate ?? 0,
+            caption: rate == null ? "—" : "${(rate * 100).round()}%",
+            color: color,
+            size: 84,
+          ),
           const SizedBox(width: 20),
           Expanded(
             child: Column(
@@ -564,20 +726,26 @@ class _ReadinessCard extends StatelessWidget {
                 Text(
                   rate == null
                       ? "数据不够：${[for (final i in readiness.missing) "${i.item.title}（${i.recent.length}/$readinessMinRuns 把）"].join("、")}。"
-                          "每项至少记 $readinessMinRuns 把才算。"
+                            "每项至少记 $readinessMinRuns 把才算。"
                       : "四项合算一个总分：任何一项不合格整场结束，扣分四项累计，80 分合格。"
-                          "用每项最近 $readinessWindow 把的真实记录全组合算出：${readiness.combos} 种组合里 ${readiness.passing} 种能过。"
-                          "这是按练车表现的估计，不是考试预测；每把都记才准。",
+                            "用每项最近 $readinessWindow 把的真实记录全组合算出：${readiness.combos} 种组合里 ${readiness.passing} 种能过。"
+                            "这是按练车表现的估计，不是考试预测；每把都记才准。",
                   style: theme.textTheme.bodyMedium,
                 ),
                 if (lastAt != null) ...[
                   const SizedBox(height: 4),
-                  Text("上次练车：${_ago(lastAt!)}", style: theme.textTheme.bodyMedium?.copyWith(color: Bs.secondary)),
+                  Text(
+                    "上次练车：${_ago(lastAt!)}",
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: Bs.secondary,
+                    ),
+                  ),
                 ],
               ],
             ),
           ),
-          if (onDetail != null) TextButton(onPressed: onDetail, child: const Text("看拆解")),
+          if (onDetail != null)
+            TextButton(onPressed: onDetail, child: const Text("看拆解")),
         ],
       ),
     );
@@ -593,15 +761,20 @@ class _FormTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     TableRow row(List<String> cells, {bool head = false}) => TableRow(
-          decoration: head ? BoxDecoration(color: Bs.light) : null,
-          children: [
-            for (final c in cells)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                child: Text(c, style: head ? theme.textTheme.titleSmall : theme.textTheme.bodyLarge),
-              ),
-          ],
-        );
+      decoration: head ? BoxDecoration(color: Bs.light) : null,
+      children: [
+        for (final c in cells)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            child: Text(
+              c,
+              style: head
+                  ? theme.textTheme.titleSmall
+                  : theme.textTheme.bodyLarge,
+            ),
+          ),
+      ],
+    );
     return Table(
       border: TableBorder.all(color: Bs.border),
       columnWidths: const {0: FixedColumnWidth(140)},
@@ -611,7 +784,9 @@ class _FormTable extends StatelessWidget {
           row([
             f.item.title,
             "${f.recent.length}",
-            f.recent.isEmpty ? "—" : "${f.passes} 把（${(f.passRate * 100).round()}%）",
+            f.recent.isEmpty
+                ? "—"
+                : "${f.passes} 把（${(f.passRate * 100).round()}%）",
             "${f.fails} 把",
             f.recent.isEmpty ? "—" : "${f.avgDeduct.toStringAsFixed(1)} 分",
           ]),
@@ -622,7 +797,12 @@ class _FormTable extends StatelessWidget {
 
 /// 一天的练车：每项几把、能过几把、出过什么错，教练说了什么。
 class _DaySummary extends StatelessWidget {
-  const _DaySummary({required this.guide, required this.runs, required this.notes, required this.title});
+  const _DaySummary({
+    required this.guide,
+    required this.runs,
+    required this.notes,
+    required this.title,
+  });
 
   final Subject2Guide guide;
   final List<DrillRun> runs;
@@ -636,24 +816,34 @@ class _DaySummary extends StatelessWidget {
     // 套 BsCard 会跟外层面板叠出双层阴影（ADR 0058 决策 5 的收编）。
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: Bs.light, borderRadius: BorderRadius.circular(Bs.radius)),
+      decoration: BoxDecoration(
+        color: Bs.light,
+        borderRadius: BorderRadius.circular(Bs.radius),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: theme.textTheme.titleMedium),
           const SizedBox(height: 6),
           for (final item in guide.items)
-            if (runs.any((r) => r.itemId == item.id) || notes.any((n) => n.itemId == item.id))
+            if (runs.any((r) => r.itemId == item.id) ||
+                notes.any((n) => n.itemId == item.id))
               () {
-                final mine = [for (final r in runs) if (r.itemId == item.id) r];
-                final scores = [for (final r in mine) guide.score(item.id, r.mistakes)];
+                final mine = [
+                  for (final r in runs)
+                    if (r.itemId == item.id) r,
+                ];
+                final scores = [
+                  for (final r in mine) guide.score(item.id, r.mistakes),
+                ];
                 final counts = <String, int>{};
                 for (final r in mine) {
                   for (final id in r.mistakes.toSet()) {
                     counts[id] = (counts[id] ?? 0) + 1;
                   }
                 }
-                final top = counts.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
+                final top = counts.entries.toList()
+                  ..sort((a, b) => b.value.compareTo(a.value));
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Column(
@@ -664,25 +854,46 @@ class _DaySummary extends StatelessWidget {
                         runSpacing: 4,
                         crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
-                          SizedBox(width: 90, child: Text(item.title, style: theme.textTheme.bodyLarge)),
+                          SizedBox(
+                            width: 90,
+                            child: Text(
+                              item.title,
+                              style: theme.textTheme.bodyLarge,
+                            ),
+                          ),
                           if (mine.isNotEmpty) ...[
-                            Text("${mine.length} 把能过 ${scores.where((s) => s.passed).length} 把"),
+                            Text(
+                              "${mine.length} 把能过 ${scores.where((s) => s.passed).length} 把",
+                            ),
                             for (final s in scores.reversed)
                               Container(
                                 width: 14,
                                 height: 14,
-                                decoration: BoxDecoration(color: s.passed ? Bs.success : Bs.danger, borderRadius: BorderRadius.circular(3)),
+                                decoration: BoxDecoration(
+                                  color: s.passed ? Bs.success : Bs.danger,
+                                  borderRadius: BorderRadius.circular(3),
+                                ),
                               ),
                             for (final e in top.take(3))
                               if (guide.mistake(item.id, e.key) case final m?)
-                                Text("· ${m.label} ${e.value} 把", style: theme.textTheme.bodyMedium?.copyWith(color: Bs.secondary)),
+                                Text(
+                                  "· ${m.label} ${e.value} 把",
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: Bs.secondary,
+                                  ),
+                                ),
                           ],
                         ],
                       ),
                       for (final n in notes.where((n) => n.itemId == item.id))
                         Padding(
                           padding: const EdgeInsets.only(left: 98, top: 2),
-                          child: Text("教练：${n.text}", style: theme.textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic)),
+                          child: Text(
+                            "教练：${n.text}",
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
                         ),
                     ],
                   ),
@@ -696,7 +907,11 @@ class _DaySummary extends StatelessWidget {
 
 /// 一项按练车日的能过比例折线：看是不是在进步。
 class _TrendRow extends StatelessWidget {
-  const _TrendRow({required this.guide, required this.item, required this.runs});
+  const _TrendRow({
+    required this.guide,
+    required this.item,
+    required this.runs,
+  });
 
   final Subject2Guide guide;
   final GuideItem item;
@@ -706,26 +921,41 @@ class _TrendRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final byDay = <DateTime, List<bool>>{};
     for (final r in runs.where((r) => r.itemId == item.id)) {
-      byDay.putIfAbsent(DateUtils.dateOnly(r.at), () => []).add(guide.score(item.id, r.mistakes).passed);
+      byDay
+          .putIfAbsent(DateUtils.dateOnly(r.at), () => [])
+          .add(guide.score(item.id, r.mistakes).passed);
     }
     final days = byDay.keys.toList()..sort();
     final recent = days.length > 12 ? days.sublist(days.length - 12) : days;
-    final rates = [for (final d in recent) byDay[d]!.where((p) => p).length / byDay[d]!.length];
+    final rates = [
+      for (final d in recent)
+        byDay[d]!.where((p) => p).length / byDay[d]!.length,
+    ];
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         children: [
-          SizedBox(width: 100, child: Text(item.title, style: theme.textTheme.bodyLarge)),
+          SizedBox(
+            width: 100,
+            child: Text(item.title, style: theme.textTheme.bodyLarge),
+          ),
           Expanded(
             child: rates.isEmpty
-                ? Text("还没有记录", style: theme.textTheme.bodyMedium?.copyWith(color: Bs.secondary))
+                ? Text(
+                    "还没有记录",
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: Bs.secondary,
+                    ),
+                  )
                 : _RateLine(rates),
           ),
           SizedBox(
             width: 150,
             child: Text(
-              rates.isEmpty ? "" : "最近一天 ${(rates.last * 100).round()}% · ${rates.length} 个练车日",
+              rates.isEmpty
+                  ? ""
+                  : "最近一天 ${(rates.last * 100).round()}% · ${rates.length} 个练车日",
               textAlign: TextAlign.right,
               style: theme.textTheme.bodyMedium,
             ),
@@ -749,12 +979,20 @@ class _TrendPainter extends CustomPainter {
     final grid = Paint()
       ..color = Bs.border
       ..strokeWidth = 1;
-    canvas.drawLine(Offset(0, size.height * 0.2), Offset(size.width, size.height * 0.2), grid);
-    canvas.drawLine(Offset(0, size.height - 2), Offset(size.width, size.height - 2), grid);
+    canvas.drawLine(
+      Offset(0, size.height * 0.2),
+      Offset(size.width, size.height * 0.2),
+      grid,
+    );
+    canvas.drawLine(
+      Offset(0, size.height - 2),
+      Offset(size.width, size.height - 2),
+      grid,
+    );
     Offset at(int i) => Offset(
-          rates.length == 1 ? size.width / 2 : i * size.width / (rates.length - 1),
-          (size.height - 4) * (1 - rates[i]) + 2,
-        );
+      rates.length == 1 ? size.width / 2 : i * size.width / (rates.length - 1),
+      (size.height - 4) * (1 - rates[i]) + 2,
+    );
     final line = Paint()
       ..color = Bs.paper
       ..strokeWidth = 2
@@ -765,7 +1003,14 @@ class _TrendPainter extends CustomPainter {
     }
     canvas.drawPath(path, line);
     for (var i = 0; i < rates.length; i++) {
-      canvas.drawCircle(at(i), 4, Paint()..color = rates[i] >= 0.8 ? Bs.success : (rates[i] >= 0.5 ? Bs.orange : Bs.danger));
+      canvas.drawCircle(
+        at(i),
+        4,
+        Paint()
+          ..color = rates[i] >= 0.8
+              ? Bs.success
+              : (rates[i] >= 0.5 ? Bs.orange : Bs.danger),
+      );
     }
     if (hover != null && hover! < rates.length) {
       final point = at(hover!);
@@ -785,16 +1030,29 @@ class _TrendPainter extends CustomPainter {
   /// 取值小字贴着悬停点画：点在下半就写上方，反之下方；水平方向不出画布。
   void _text(Canvas canvas, Offset at, String text, Size size) {
     final painter = TextPainter(
-      text: TextSpan(text: text, style: TextStyle(color: Bs.dark, fontSize: 11, fontWeight: FontWeight.w600)),
+      text: TextSpan(
+        text: text,
+        style: TextStyle(
+          color: Bs.dark,
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
       textDirection: TextDirection.ltr,
     )..layout();
-    final dx = (at.dx - painter.width / 2).clamp(0.0, max(0.0, size.width - painter.width)).toDouble();
+    final dx = (at.dx - painter.width / 2)
+        .clamp(0.0, max(0.0, size.width - painter.width))
+        .toDouble();
     final dy = at.dy > size.height / 2 ? at.dy - painter.height - 8 : at.dy + 8;
-    painter.paint(canvas, Offset(dx, dy.clamp(0.0, size.height - painter.height).toDouble()));
+    painter.paint(
+      canvas,
+      Offset(dx, dy.clamp(0.0, size.height - painter.height).toDouble()),
+    );
   }
 
   @override
-  bool shouldRepaint(_TrendPainter old) => old.rates != rates || old.hover != hover;
+  bool shouldRepaint(_TrendPainter old) =>
+      old.rates != rates || old.hover != hover;
 }
 
 /// 单项能过率折线：悬停高亮最近的一个练车日并给取值（ADR 0061）。
@@ -823,7 +1081,9 @@ class _RateLineState extends State<_RateLine> {
             _hover = t.round().clamp(0, n - 1);
           }),
           onExit: (_) => setState(() => _hover = null),
-          child: CustomPaint(painter: _TrendPainter(widget.rates, hover: _hover)),
+          child: CustomPaint(
+            painter: _TrendPainter(widget.rates, hover: _hover),
+          ),
         ),
       ),
     );
@@ -863,13 +1123,21 @@ class _PreDrillState extends State<_PreDrill> {
     final item = widget.items[_index];
     final last = _index + 1 == widget.items.length;
     final itemBrief = widget.brief.item(item.id)!;
-    final coach = [for (final n in widget.coachNotes) if (n.itemId == item.id) n].take(3).toList();
+    final coach = [
+      for (final n in widget.coachNotes)
+        if (n.itemId == item.id) n,
+    ].take(3).toList();
     return Scaffold(
       appBar: AppBar(
-        title: Text("练车前 · ${item.title}（${_index + 1}/${widget.items.length}）"),
+        title: Text(
+          "练车前 · ${item.title}（${_index + 1}/${widget.items.length}）",
+        ),
         automaticallyImplyLeading: false,
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("结束")),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text("结束"),
+          ),
           const SizedBox(width: 12),
         ],
       ),
@@ -888,7 +1156,10 @@ class _PreDrillState extends State<_PreDrill> {
                   for (final n in coach)
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 3),
-                      child: Text("${_ago(n.at)}：${n.text}", style: theme.textTheme.bodyLarge),
+                      child: Text(
+                        "${_ago(n.at)}：${n.text}",
+                        style: theme.textTheme.bodyLarge,
+                      ),
                     ),
                 ],
               ),
@@ -907,7 +1178,10 @@ class _PreDrillState extends State<_PreDrill> {
                     step: i,
                     store: widget.store,
                     note: widget.notes[(item.id, i)],
-                    photos: [for (final ph in widget.photos) if (ph.itemId == item.id && ph.step == i) ph],
+                    photos: [
+                      for (final ph in widget.photos)
+                        if (ph.itemId == item.id && ph.step == i) ph,
+                    ],
                     onChanged: widget.onChanged,
                     compact: true,
                   ),
@@ -931,7 +1205,9 @@ class _PreDrillState extends State<_PreDrill> {
                 label: const Text("默演这一项"),
               ),
               FilledButton.icon(
-                onPressed: last ? () => Navigator.of(context).pop() : () => setState(() => _index++),
+                onPressed: last
+                    ? () => Navigator.of(context).pop()
+                    : () => setState(() => _index++),
                 icon: Icon(last ? Glyph.finish : Glyph.next),
                 label: Text(last ? "准备好了，去练车" : "下一项"),
               ),
@@ -959,7 +1235,10 @@ class C2HandbookCard extends StatelessWidget {
         children: [
           Text(c2.title, style: theme.textTheme.titleLarge),
           const SizedBox(height: 4),
-          Text(c2.note, style: theme.textTheme.bodyMedium?.copyWith(color: Bs.secondary)),
+          Text(
+            c2.note,
+            style: theme.textTheme.bodyMedium?.copyWith(color: Bs.secondary),
+          ),
           const SizedBox(height: 12),
           for (final block in c2.blocks) ...[
             Text(block.title, style: theme.textTheme.titleMedium),
@@ -967,7 +1246,9 @@ class C2HandbookCard extends StatelessWidget {
             Text(block.body, style: theme.textTheme.bodyLarge),
             const SizedBox(height: 2),
             Text(
-              block.locators.map((l) => l.substring("GA 1026—2022 ".length)).join(" · "),
+              block.locators
+                  .map((l) => l.substring("GA 1026—2022 ".length))
+                  .join(" · "),
               style: theme.textTheme.bodyMedium?.copyWith(color: Bs.secondary),
             ),
             const SizedBox(height: 10),
@@ -1005,7 +1286,9 @@ class _ItemCard extends StatelessWidget {
     final theme = Theme.of(context);
     final done = questions.where((q) => mastered.contains(q.id)).length;
     final fails = item.rules.where((r) => r.level.fails).length;
-    final passes = runs.where((r) => guide.score(item.id, r.mistakes).passed).length;
+    final passes = runs
+        .where((r) => guide.score(item.id, r.mistakes).passed)
+        .length;
     return SizedBox(
       width: 380,
       child: Card(
@@ -1023,7 +1306,12 @@ class _ItemCard extends StatelessWidget {
                       BsBadge(text: "第 $sequence 项", color: Bs.paper),
                       const SizedBox(width: 8),
                     ],
-                    Expanded(child: Text(item.title, style: theme.textTheme.titleLarge)),
+                    Expanded(
+                      child: Text(
+                        item.title,
+                        style: theme.textTheme.titleLarge,
+                      ),
+                    ),
                     Icon(Glyph.animation, color: Bs.paper),
                   ],
                 ),
@@ -1032,18 +1320,28 @@ class _ItemCard extends StatelessWidget {
                   spacing: 8,
                   runSpacing: 6,
                   children: [
-                    BsBadge(text: "限时 ${item.limitText}", color: Bs.secondary, icon: Glyph.duration),
+                    BsBadge(
+                      text: "限时 ${item.limitText}",
+                      color: Bs.secondary,
+                      icon: Glyph.duration,
+                    ),
                     BsBadge(text: "出线看${item.judgedBy}", color: Bs.secondary),
                   ],
                 ),
                 const SizedBox(height: 10),
-                Text("不合格 $fails 条 · 扣分 ${item.rules.length - fails} 条", style: theme.textTheme.bodyMedium),
+                Text(
+                  "不合格 $fails 条 · 扣分 ${item.rules.length - fails} 条",
+                  style: theme.textTheme.bodyMedium,
+                ),
                 const SizedBox(height: 10),
                 Row(
                   children: [
                     SizedBox(
                       width: 110,
-                      child: Text("评判题 $done/${questions.length}", style: theme.textTheme.bodyMedium),
+                      child: Text(
+                        "评判题 $done/${questions.length}",
+                        style: theme.textTheme.bodyMedium,
+                      ),
                     ),
                     Expanded(
                       child: BsProgress(
@@ -1058,7 +1356,9 @@ class _ItemCard extends StatelessWidget {
                   runs.isEmpty
                       ? "还没有练车记录"
                       : "练车 ${runs.length} 把 · 按考场规则能过 $passes 把（${(passes * 100 / runs.length).round()}%）",
-                  style: theme.textTheme.bodyMedium?.copyWith(color: runs.isEmpty ? Bs.secondary : null),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: runs.isEmpty ? Bs.secondary : null,
+                  ),
                 ),
               ],
             ),
@@ -1134,16 +1434,23 @@ class _ItemPageState extends State<_ItemPage> {
         _gear = frame.gear;
         _signal = frame.signal;
       }),
-      narration: [for (var i = 0; i < item.steps.length; i++) item.steps[i].narration(i)],
+      narration: [
+        for (var i = 0; i < item.steps.length; i++) item.steps[i].narration(i),
+      ],
       cautions: [for (final s in item.steps) s.caution],
       links: [for (final s in item.steps) s.inside?.look ?? ""],
       risks: [for (final s in item.steps) s.outside?.risk ?? ""],
-      companion: current.inside == null ? null : CabinPanel(step: current, gear: _gear, signal: _signal),
+      companion: current.inside == null
+          ? null
+          : CabinPanel(step: current, gear: _gear, signal: _signal),
       narrator: _narrator,
     );
     final steps = _StepList(
       steps: item.steps,
-      notes: [for (var i = 0; i < item.steps.length; i++) widget.notes[(item.id, i)]?.text.trim() ?? ""],
+      notes: [
+        for (var i = 0; i < item.steps.length; i++)
+          widget.notes[(item.id, i)]?.text.trim() ?? "",
+      ],
       current: _step,
       onTap: (i) {
         _player.currentState?.jumpTo(i);
@@ -1160,9 +1467,17 @@ class _ItemPageState extends State<_ItemPage> {
           spacing: 12,
           runSpacing: 8,
           children: [
-            TextButton.icon(onPressed: widget.onBack, icon: const Icon(Glyph.back), label: const Text("科目二")),
+            TextButton.icon(
+              onPressed: widget.onBack,
+              icon: const Icon(Glyph.back),
+              label: const Text("科目二"),
+            ),
             Text(item.title, style: theme.textTheme.headlineMedium),
-            BsBadge(text: "限时 ${item.limitText}", color: Bs.secondary, icon: Glyph.duration),
+            BsBadge(
+              text: "限时 ${item.limitText}",
+              color: Bs.secondary,
+              icon: Glyph.duration,
+            ),
             BsBadge(text: "出线看${item.judgedBy}", color: Bs.secondary),
           ],
         ),
@@ -1171,8 +1486,11 @@ class _ItemPageState extends State<_ItemPage> {
           brief: widget.brief,
           pointsWritten: [
             for (var i = 0; i < item.steps.length; i++)
-              if ((widget.notes[(item.id, i)]?.text.trim().isNotEmpty ?? false) ||
-                  widget.photos.any((ph) => ph.itemId == item.id && ph.step == i))
+              if ((widget.notes[(item.id, i)]?.text.trim().isNotEmpty ??
+                      false) ||
+                  widget.photos.any(
+                    (ph) => ph.itemId == item.id && ph.step == i,
+                  ))
                 i,
           ].length,
         ),
@@ -1201,9 +1519,15 @@ class _ItemPageState extends State<_ItemPage> {
           runSpacing: 10,
           children: [
             FilledButton.icon(
-              onPressed: pending.isEmpty ? null : () => widget.onPractice(widget.questions, item.title),
+              onPressed: pending.isEmpty
+                  ? null
+                  : () => widget.onPractice(widget.questions, item.title),
               icon: const Icon(Glyph.practice),
-              label: Text(pending.isEmpty ? "评判题（已掌握）" : "练这一项的评判题 · 待练 ${pending.length}"),
+              label: Text(
+                pending.isEmpty
+                    ? "评判题（已掌握）"
+                    : "练这一项的评判题 · 待练 ${pending.length}",
+              ),
             ),
             FilledButton.tonalIcon(
               onPressed: widget.onRecord,
@@ -1245,14 +1569,20 @@ class _ItemPageState extends State<_ItemPage> {
           _Section(
             icon: Glyph.coach,
             title: "教练说过",
-            trailing: Text("原话，按时间倒序；整理过的放进点位卡", style: theme.textTheme.bodySmall?.copyWith(color: Bs.secondary)),
+            trailing: Text(
+              "原话，按时间倒序；整理过的放进点位卡",
+              style: theme.textTheme.bodySmall?.copyWith(color: Bs.secondary),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 for (final n in widget.coachNotes.take(8))
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 3),
-                    child: Text("${_ago(n.at)}：${n.text}", style: theme.textTheme.bodyLarge),
+                    child: Text(
+                      "${_ago(n.at)}：${n.text}",
+                      style: theme.textTheme.bodyLarge,
+                    ),
                   ),
               ],
             ),
@@ -1262,7 +1592,10 @@ class _ItemPageState extends State<_ItemPage> {
         _Section(
           icon: Glyph.source,
           title: "操作要求（标准原文）",
-          child: _Quote(text: item.requirementQuote, locator: item.requirementLocator),
+          child: _Quote(
+            text: item.requirementQuote,
+            locator: item.requirementLocator,
+          ),
         ),
         const SizedBox(height: 20),
         _Section(
@@ -1274,7 +1607,10 @@ class _ItemPageState extends State<_ItemPage> {
         _Section(
           icon: Glyph.tips,
           title: "经验要点",
-          trailing: Text(widget.guide.tipsNote, style: theme.textTheme.bodySmall?.copyWith(color: Bs.secondary)),
+          trailing: Text(
+            widget.guide.tipsNote,
+            style: theme.textTheme.bodySmall?.copyWith(color: Bs.secondary),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -1289,7 +1625,9 @@ class _ItemPageState extends State<_ItemPage> {
                         child: Icon(Glyph.bullet, size: 8, color: Bs.paper),
                       ),
                       const SizedBox(width: 10),
-                      Expanded(child: Text(tip, style: theme.textTheme.bodyLarge)),
+                      Expanded(
+                        child: Text(tip, style: theme.textTheme.bodyLarge),
+                      ),
                     ],
                   ),
                 ),
@@ -1306,7 +1644,9 @@ class _ItemPageState extends State<_ItemPage> {
 }
 
 String _ago(DateTime at) {
-  final days = DateUtils.dateOnly(DateTime.now()).difference(DateUtils.dateOnly(at)).inDays;
+  final days = DateUtils.dateOnly(DateTime.now())
+      .difference(DateUtils.dateOnly(at))
+      .inDays;
   return switch (days) {
     0 => "今天",
     1 => "昨天",
@@ -1342,8 +1682,12 @@ class _BriefCard extends StatelessWidget {
               Icon(Glyph.brief, color: Bs.orange),
               Text("今天练车的重点", style: theme.textTheme.titleMedium),
               Text(
-                lastAt == null ? "还没有练车记录，先记几把，这里才有东西可说" : "上次练车：${_ago(lastAt)}",
-                style: theme.textTheme.bodyMedium?.copyWith(color: Bs.secondary),
+                lastAt == null
+                    ? "还没有练车记录，先记几把，这里才有东西可说"
+                    : "上次练车：${_ago(lastAt)}",
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: Bs.secondary,
+                ),
               ),
             ],
           ),
@@ -1363,10 +1707,14 @@ class _BriefCard extends StatelessWidget {
                         FocusKind.untried => Glyph.untried,
                       },
                       size: 20,
-                      color: f.kind == FocusKind.mistake ? Bs.danger : Bs.secondary,
+                      color: f.kind == FocusKind.mistake
+                          ? Bs.danger
+                          : Bs.secondary,
                     ),
                     const SizedBox(width: 8),
-                    Expanded(child: Text(f.text, style: theme.textTheme.bodyLarge)),
+                    Expanded(
+                      child: Text(f.text, style: theme.textTheme.bodyLarge),
+                    ),
                     Icon(Glyph.goTo, color: Bs.secondary),
                   ],
                 ),
@@ -1405,18 +1753,21 @@ class _ItemBriefCard extends StatelessWidget {
           children: [
             Text("反复出现：", style: theme.textTheme.bodyMedium),
             for (final r in brief.recurring)
-              BsBadge(text: "${r.mistake.label} · ${r.runs} 把", color: levelColor(r.mistake.level)),
+              BsBadge(
+                text: "${r.mistake.label} · ${r.runs} 把",
+                color: levelColor(r.mistake.level),
+              ),
           ],
         ),
       ],
       if (pointsWritten >= 0) const SizedBox(height: 8),
       if (pointsWritten >= 0)
-      Text(
-        pointsWritten == 0
-            ? "点位卡还空着：练车时把教练说的点位记下来，下次练车前在这里过一遍。"
-            : "点位卡写了 $pointsWritten/${brief.item.steps.length} 步，练车前过一遍。",
-        style: theme.textTheme.bodyMedium,
-      ),
+        Text(
+          pointsWritten == 0
+              ? "点位卡还空着：练车时把教练说的点位记下来，下次练车前在这里过一遍。"
+              : "点位卡写了 $pointsWritten/${brief.item.steps.length} 步，练车前过一遍。",
+          style: theme.textTheme.bodyMedium,
+        ),
       if (brief.missedSteps.isNotEmpty) ...[
         const SizedBox(height: 8),
         Text(
@@ -1429,7 +1780,8 @@ class _ItemBriefCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
       decoration: BoxDecoration(
-        color: (brief.recurring.isNotEmpty || brief.weak ? Bs.warning : Bs.info).withValues(alpha: 0.10),
+        color: (brief.recurring.isNotEmpty || brief.weak ? Bs.warning : Bs.info)
+            .withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -1437,7 +1789,12 @@ class _ItemBriefCard extends StatelessWidget {
         children: [
           Icon(Glyph.brief, color: Bs.orange),
           const SizedBox(width: 10),
-          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: lines)),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: lines,
+            ),
+          ),
         ],
       ),
     );
@@ -1446,7 +1803,12 @@ class _ItemBriefCard extends StatelessWidget {
 
 /// 驾驶座这一眼。参照句和场地图上的同色标签是同一句话。
 class CabinPanel extends StatelessWidget {
-  const CabinPanel({super.key, required this.step, required this.gear, required this.signal});
+  const CabinPanel({
+    super.key,
+    required this.step,
+    required this.gear,
+    required this.signal,
+  });
 
   final GuideStep step;
   final Gear gear;
@@ -1476,7 +1838,12 @@ class CabinPanel extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text("车内", style: theme.textTheme.labelLarge?.copyWith(color: Colors.white70)),
+            Text(
+              "车内",
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: Colors.white70,
+              ),
+            ),
             const SizedBox(height: 8),
             Expanded(
               child: DecoratedBox(
@@ -1489,7 +1856,10 @@ class CabinPanel extends StatelessWidget {
                   padding: const EdgeInsets.all(10),
                   child: Text(
                     inside.look,
-                    style: theme.textTheme.titleMedium?.copyWith(color: drillLinkColor, fontWeight: FontWeight.w700),
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: drillLinkColor,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ),
@@ -1506,13 +1876,28 @@ class CabinPanel extends StatelessWidget {
               ),
             ],
             const SizedBox(height: 8),
-            Text("$gearLabel · $signalLabel · ${inside.action}", style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white)),
+            Text(
+              "$gearLabel · $signalLabel · ${inside.action}",
+              style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white),
+            ),
             if (step.caution.isNotEmpty) ...[
               const SizedBox(height: 6),
-              Text(step.caution, maxLines: 3, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodySmall?.copyWith(color: const Color(0xFFFF8A80))),
+              Text(
+                step.caution,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: const Color(0xFFFF8A80),
+                ),
+              ),
             ],
             if (step.done.isNotEmpty)
-              Text("做完：${step.done}", style: theme.textTheme.bodySmall?.copyWith(color: Colors.white70)),
+              Text(
+                "做完：${step.done}",
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: Colors.white70,
+                ),
+              ),
           ],
         ),
       ),
@@ -1547,7 +1932,9 @@ class _StepList extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: Material(
-              color: i == current ? Bs.paper.withValues(alpha: 0.08) : Colors.transparent,
+              color: i == current
+                  ? Bs.paper.withValues(alpha: 0.08)
+                  : Colors.transparent,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(6),
                 side: BorderSide(color: i == current ? Bs.paper : Bs.border),
@@ -1565,7 +1952,10 @@ class _StepList extends StatelessWidget {
                         backgroundColor: i == current ? Bs.paper : Bs.border,
                         child: Text(
                           "${i + 1}",
-                          style: TextStyle(fontSize: 14, color: i == current ? Colors.white : Bs.dark),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: i == current ? Colors.white : Bs.dark,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -1575,32 +1965,49 @@ class _StepList extends StatelessWidget {
                           children: [
                             Tooltip(
                               message: steps[i].body,
-                              child: Text(steps[i].title, style: theme.textTheme.titleMedium),
+                              child: Text(
+                                steps[i].title,
+                                style: theme.textTheme.titleMedium,
+                              ),
                             ),
                             if (i == current) ...[
                               const SizedBox(height: 4),
                               if (steps[i].inside != null) ...[
                                 Text(
                                   steps[i].inside!.look,
-                                  style: theme.textTheme.bodyMedium?.copyWith(color: drillLinkColor),
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: drillLinkColor,
+                                  ),
                                 ),
                                 if (steps[i].done.isNotEmpty)
-                                  Text("做完：${steps[i].done}", style: theme.textTheme.bodyMedium),
+                                  Text(
+                                    "做完：${steps[i].done}",
+                                    style: theme.textTheme.bodyMedium,
+                                  ),
                               ] else
-                                Text(steps[i].body, style: theme.textTheme.bodyMedium),
+                                Text(
+                                  steps[i].body,
+                                  style: theme.textTheme.bodyMedium,
+                                ),
                               if (steps[i].caution.isNotEmpty) ...[
                                 const SizedBox(height: 6),
                                 Tooltip(
                                   message: steps[i].cautionLocators.join("；"),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Icon(Glyph.caution, size: 18, color: Bs.danger),
+                                      Icon(
+                                        Glyph.caution,
+                                        size: 18,
+                                        color: Bs.danger,
+                                      ),
                                       const SizedBox(width: 6),
                                       Expanded(
                                         child: Text(
                                           steps[i].caution,
-                                          style: theme.textTheme.bodyMedium?.copyWith(color: Bs.danger),
+                                          style: theme.textTheme.bodyMedium
+                                              ?.copyWith(color: Bs.danger),
                                         ),
                                       ),
                                     ],
@@ -1616,7 +2023,10 @@ class _StepList extends StatelessWidget {
                                     color: Bs.warning.withValues(alpha: 0.12),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
-                                  child: Text("我的点位：${notes[i]}", style: theme.textTheme.bodyMedium),
+                                  child: Text(
+                                    "我的点位：${notes[i]}",
+                                    style: theme.textTheme.bodyMedium,
+                                  ),
                                 ),
                               ],
                             ],
@@ -1640,7 +2050,12 @@ class _StepList extends StatelessWidget {
 }
 
 class _Section extends StatelessWidget {
-  const _Section({required this.icon, required this.title, required this.child, this.trailing});
+  const _Section({
+    required this.icon,
+    required this.title,
+    required this.child,
+    this.trailing,
+  });
 
   final IconData icon;
   final String title;
@@ -1689,7 +2104,11 @@ class _Quote extends StatelessWidget {
         children: [
           Text(text, style: Theme.of(context).textTheme.bodyLarge),
           const SizedBox(height: 6),
-          Text(locator, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Bs.secondary)),
+          Text(
+            locator,
+            style: Theme.of(context).textTheme.bodySmall
+                ?.copyWith(color: Bs.secondary),
+          ),
         ],
       ),
     );
@@ -1718,14 +2137,21 @@ class _RuleTable extends StatelessWidget {
                     width: 110,
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: BsBadge(text: r.level.label, color: levelColor(r.level)),
+                      child: BsBadge(
+                        text: r.level.label,
+                        color: levelColor(r.level),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Expanded(child: Text(r.text, style: theme.textTheme.bodyLarge)),
+                  Expanded(
+                    child: Text(r.text, style: theme.textTheme.bodyLarge),
+                  ),
                   Text(
                     r.locator.replaceFirst("GA 1026—2022 ", ""),
-                    style: theme.textTheme.bodySmall?.copyWith(color: Bs.secondary),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: Bs.secondary,
+                    ),
                   ),
                 ],
               ),
@@ -1766,7 +2192,8 @@ class _DrillStats extends StatelessWidget {
         counts[(r.itemId, id)] = (counts[(r.itemId, id)] ?? 0) + 1;
       }
     }
-    final top = counts.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
+    final top = counts.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
     final today = DateUtils.dateOnly(DateTime.now());
     final days = [
       for (var i = 13; i >= 0; i--)
@@ -1776,7 +2203,11 @@ class _DrillStats extends StatelessWidget {
             for (var k = 0; k < runs.length; k++)
               if (DateUtils.isSameDay(runs[k].at, day)) k,
           ];
-          return DailyCount(day: day, attempts: those.length, correct: those.where((k) => scores[k].passed).length);
+          return DailyCount(
+            day: day,
+            attempts: those.length,
+            correct: those.where((k) => scores[k].passed).length,
+          );
         }(),
     ];
     final maxCount = top.isEmpty ? 1 : top.first.value;
@@ -1790,7 +2221,11 @@ class _DrillStats extends StatelessWidget {
             spacing: 12,
             runSpacing: 12,
             children: [
-              StatTile(icon: Glyph.runCount, label: "练了", value: "${runs.length} 把"),
+              StatTile(
+                icon: Glyph.runCount,
+                label: "练了",
+                value: "${runs.length} 把",
+              ),
               StatTile(
                 icon: Glyph.passable,
                 label: "按考场规则能过",
@@ -1800,13 +2235,17 @@ class _DrillStats extends StatelessWidget {
               StatTile(
                 icon: Glyph.recentDays,
                 label: "最近 7 天",
-                value: "${runs.where((r) => r.at.isAfter(today.subtract(const Duration(days: 7)))).length} 把",
+                value:
+                    "${runs.where((r) => r.at.isAfter(today.subtract(const Duration(days: 7)))).length} 把",
                 color: Bs.purple,
               ),
             ],
           ),
           const SizedBox(height: 16),
-          Text("最近两周（深色是按考场规则能过的）", style: theme.textTheme.bodyMedium?.copyWith(color: Bs.secondary)),
+          Text(
+            "最近两周（深色是按考场规则能过的）",
+            style: theme.textTheme.bodyMedium?.copyWith(color: Bs.secondary),
+          ),
           const SizedBox(height: 6),
           DailyActivityChart(days: days),
           if (top.isNotEmpty) ...[
@@ -1823,13 +2262,18 @@ class _DrillStats extends StatelessWidget {
                     children: [
                       SizedBox(
                         width: 96,
-                        child: BsBadge(text: m.level.label, color: levelColor(m.level)),
+                        child: BsBadge(
+                          text: m.level.label,
+                          color: levelColor(m.level),
+                        ),
                       ),
                       const SizedBox(width: 8),
                       SizedBox(
                         width: 300,
                         child: Text(
-                          itemId == null ? "${guide.item(e.key.$1)?.title ?? ""} · ${m.label}" : m.label,
+                          itemId == null
+                              ? "${guide.item(e.key.$1)?.title ?? ""} · ${m.label}"
+                              : m.label,
                           style: theme.textTheme.bodyLarge,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -1850,7 +2294,10 @@ class _DrillStats extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(width: 60, child: Text("${e.value} 把", textAlign: TextAlign.right)),
+                      SizedBox(
+                        width: 60,
+                        child: Text("${e.value} 把", textAlign: TextAlign.right),
+                      ),
                     ],
                   ),
                 );
@@ -1869,19 +2316,31 @@ class _DrillStats extends StatelessWidget {
                     width: 130,
                     child: Text(
                       "${runs[k].at.month}-${runs[k].at.day} ${runs[k].at.hour.toString().padLeft(2, "0")}:${runs[k].at.minute.toString().padLeft(2, "0")}",
-                      style: theme.textTheme.bodyMedium?.copyWith(color: Bs.secondary),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: Bs.secondary,
+                      ),
                     ),
                   ),
                   if (itemId == null)
-                    SizedBox(width: 110, child: Text(guide.item(runs[k].itemId)?.title ?? runs[k].itemId)),
+                    SizedBox(
+                      width: 110,
+                      child: Text(
+                        guide.item(runs[k].itemId)?.title ?? runs[k].itemId,
+                      ),
+                    ),
                   SizedBox(
                     width: 96,
-                    child: BsBadge(text: scores[k].label, color: scores[k].passed ? Bs.success : Bs.danger),
+                    child: BsBadge(
+                      text: scores[k].label,
+                      color: scores[k].passed ? Bs.success : Bs.danger,
+                    ),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      runs[k].mistakes.isEmpty ? "没毛病" : _mistakeSummary(guide, runs[k]),
+                      runs[k].mistakes.isEmpty
+                          ? "没毛病"
+                          : _mistakeSummary(guide, runs[k]),
                       style: theme.textTheme.bodyMedium,
                     ),
                   ),
@@ -1906,10 +2365,15 @@ String _mistakeSummary(Subject2Guide guide, DrillRun run) {
 }
 
 /// 记一把练车：选项目、勾错因，实时按考场规则算分。返回（项目 id, 错因 id 列表）。
-Future<(String, List<String>)?> showDrillRunDialog(BuildContext context, Subject2Guide guide, String initialItem) {
+Future<(String, List<String>)?> showDrillRunDialog(
+  BuildContext context,
+  Subject2Guide guide,
+  String initialItem,
+) {
   return showDialog<(String, List<String>)>(
     context: context,
-    builder: (context) => _DrillRunDialog(guide: guide, initialItem: initialItem),
+    builder: (context) =>
+        _DrillRunDialog(guide: guide, initialItem: initialItem),
   );
 }
 
@@ -1944,7 +2408,9 @@ class _DrillRunDialogState extends State<_DrillRunDialog> {
         selected: n > 0,
         showCheckmark: !m.repeat,
         avatar: CircleAvatar(backgroundColor: levelColor(m.level), radius: 6),
-        label: Text("${m.label}${m.repeat && n > 0 ? " ×$n" : ""}  ${m.level.label}${m.repeat ? "/次" : ""}"),
+        label: Text(
+          "${m.label}${m.repeat && n > 0 ? " ×$n" : ""}  ${m.level.label}${m.repeat ? "/次" : ""}",
+        ),
         tooltip: m.locator,
         onPressed: () => setState(() {
           if (m.repeat) {
@@ -1956,7 +2422,9 @@ class _DrillRunDialogState extends State<_DrillRunDialog> {
           }
         }),
         onDeleted: m.repeat && n > 0
-            ? () => setState(() => n == 1 ? _counts.remove(m.id) : _counts[m.id] = n - 1)
+            ? () => setState(
+                () => n == 1 ? _counts.remove(m.id) : _counts[m.id] = n - 1,
+              )
             : null,
         deleteIcon: const Icon(Glyph.less, size: 18),
       );
@@ -1973,7 +2441,10 @@ class _DrillRunDialogState extends State<_DrillRunDialog> {
             children: [
               SegmentedButton<String>(
                 showSelectedIcon: false,
-                segments: [for (final i in guide.items) ButtonSegment(value: i.id, label: Text(i.title))],
+                segments: [
+                  for (final i in guide.items)
+                    ButtonSegment(value: i.id, label: Text(i.title)),
+                ],
                 selected: {_item},
                 onSelectionChanged: (v) => setState(() {
                   _item = v.first;
@@ -1981,18 +2452,32 @@ class _DrillRunDialogState extends State<_DrillRunDialog> {
                 }),
               ),
               const SizedBox(height: 16),
-              Text("${item.title}专项（按次计的错可以点多次）", style: theme.textTheme.titleSmall),
+              Text(
+                "${item.title}专项（按次计的错可以点多次）",
+                style: theme.textTheme.titleSmall,
+              ),
               const SizedBox(height: 8),
-              Wrap(spacing: 8, runSpacing: 8, children: [for (final m in item.mistakes) chip(m)]),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [for (final m in item.mistakes) chip(m)],
+              ),
               const SizedBox(height: 16),
               Text("通用", style: theme.textTheme.titleSmall),
               const SizedBox(height: 8),
-              Wrap(spacing: 8, runSpacing: 8, children: [for (final m in guide.generalMistakes) chip(m)]),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [for (final m in guide.generalMistakes) chip(m)],
+              ),
               const SizedBox(height: 20),
               Row(
                 children: [
                   Text("按考场规则：", style: theme.textTheme.titleMedium),
-                  BsBadge(text: score.label, color: score.passed ? Bs.success : Bs.danger),
+                  BsBadge(
+                    text: score.label,
+                    color: score.passed ? Bs.success : Bs.danger,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -2011,7 +2496,10 @@ class _DrillRunDialogState extends State<_DrillRunDialog> {
         ),
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("取消")),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text("取消"),
+        ),
         FilledButton(
           onPressed: () => Navigator.of(context).pop((_item, _mistakes)),
           child: Text(_counts.isEmpty ? "这把没毛病，记下" : "记下这一把"),

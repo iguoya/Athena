@@ -20,13 +20,30 @@ void main() {
 
   test("科目二四项都有动画，讲解步骤数和动画步骤数一致（ADR 0036）", () {
     final guide = bank.guide;
-    expect(guide.items.map((i) => i.id), ["reverse", "parallel", "curve", "corner"]);
+    expect(guide.items.map((i) => i.id), [
+      "reverse",
+      "parallel",
+      "curve",
+      "corner",
+    ]);
     for (final item in guide.items) {
       final scene = drillScenes[item.id];
       expect(scene, isNotNull, reason: item.id);
-      expect(item.steps.length, scene!.steps.length, reason: "${item.id} 的讲解步骤和动画步骤对不上");
-      expect(bank.curriculum.topic(item.topicId), isNotNull, reason: item.topicId);
-      expect(bank.forTopic(item.topicId), isNotEmpty, reason: "${item.id} 没有评判题");
+      expect(
+        item.steps.length,
+        scene!.steps.length,
+        reason: "${item.id} 的讲解步骤和动画步骤对不上",
+      );
+      expect(
+        bank.curriculum.topic(item.topicId),
+        isNotNull,
+        reason: item.topicId,
+      );
+      expect(
+        bank.forTopic(item.topicId),
+        isNotEmpty,
+        reason: "${item.id} 没有评判题",
+      );
     }
   });
 
@@ -38,16 +55,26 @@ void main() {
         expect(ref.sourceId, "ga-1026", reason: q.id);
         expect(ref.locator, startsWith("GA 1026—2022 "), reason: q.id);
         final clause = ref.locator.substring("GA 1026—2022 ".length);
-        expect(excerpts, contains("- $clause：${ref.note}"), reason: "${q.id} 的 $clause 原句和摘录不一致");
+        expect(
+          excerpts,
+          contains("- $clause：${ref.note}"),
+          reason: "${q.id} 的 $clause 原句和摘录不一致",
+        );
       }
     }
     final guide = bank.guide;
-    final rules = [...guide.generalRules, for (final i in guide.items) ...i.rules];
+    final rules = [
+      ...guide.generalRules,
+      for (final i in guide.items) ...i.rules,
+    ];
     for (final r in rules) {
       final clause = r.locator.substring("GA 1026—2022 ".length);
       expect(excerpts, contains("- $clause：${r.quote}"), reason: r.text);
     }
-    final mistakes = [...guide.generalMistakes, for (final i in guide.items) ...i.mistakes];
+    final mistakes = [
+      ...guide.generalMistakes,
+      for (final i in guide.items) ...i.mistakes,
+    ];
     for (final m in mistakes) {
       final clause = m.locator.substring("GA 1026—2022 ".length);
       expect(excerpts, contains("- $clause："), reason: m.label);
@@ -59,7 +86,10 @@ void main() {
     expect(guide.passScore, 80);
     expect(guide.item("reverse")!.limitText, "3.5 分钟");
     expect(guide.item("parallel")!.limitText, "1.5 分钟");
-    final curveStop = guide.item("curve")!.mistakes.firstWhere((m) => m.id == "stop");
+    final curveStop = guide
+        .item("curve")!
+        .mistakes
+        .firstWhere((m) => m.id == "stop");
     expect(curveStop.level.fails, isFalse);
     expect(curveStop.level.deduct, 5);
   });
@@ -71,7 +101,11 @@ void main() {
     // 中途停车两次：100 - 5 - 5。
     expect(guide.score("reverse", const ["stop", "stop"]).score, 90);
     // 侧方停车：车轮压线两次 + 出库没开灯 = 扣 30，70 分不及格。
-    final parallel = guide.score("parallel", const ["wheel_line", "wheel_line", "signal"]);
+    final parallel = guide.score("parallel", const [
+      "wheel_line",
+      "wheel_line",
+      "signal",
+    ]);
     expect(parallel.score, 70);
     expect(parallel.failed, isFalse);
     expect(parallel.passed, isFalse);
@@ -88,7 +122,11 @@ void main() {
     final store = await ProgressStore.open(suite: "subject2_test");
     final at = DateTime(2026, 9, 28, 20, 0);
     await store.recordDrillRun("reverse", const ["stop", "stop"], at: at);
-    await store.recordDrillRun("curve", const [], at: at.add(const Duration(minutes: 5)));
+    await store.recordDrillRun(
+      "curve",
+      const [],
+      at: at.add(const Duration(minutes: 5)),
+    );
     final mine = await store.drillRuns();
     expect(mine.first.itemId, "curve");
     expect(mine.first.mistakes, isEmpty);
@@ -102,14 +140,28 @@ void main() {
     expect(c2.blocks, hasLength(5));
     expect(c2.note, "经验要点，以教练和考场车型为准");
     expect(c2.order, ["corner", "curve", "parallel", "reverse"]);
-    expect(guide.learnItems.map((i) => i.id), ["corner", "curve", "parallel", "reverse"]);
-    expect(guide.items.map((i) => i.id), ["reverse", "parallel", "curve", "corner"]);
+    expect(guide.learnItems.map((i) => i.id), [
+      "corner",
+      "curve",
+      "parallel",
+      "reverse",
+    ]);
+    expect(guide.items.map((i) => i.id), [
+      "reverse",
+      "parallel",
+      "curve",
+      "corner",
+    ]);
     for (final block in c2.blocks) {
       expect(block.body, isNot(contains("后视镜")));
       expect(block.body, isNot(contains("厘米")));
       expect(block.locators, isNotEmpty, reason: block.title);
       for (final l in block.locators) {
-        expect(excerpts, contains("- ${l.substring("GA 1026—2022 ".length)}："), reason: "${block.title} $l");
+        expect(
+          excerpts,
+          contains("- ${l.substring("GA 1026—2022 ".length)}："),
+          reason: "${block.title} $l",
+        );
       }
     }
   });
@@ -149,13 +201,59 @@ void main() {
     expect(mid.last.dx, isNot(closeTo(full.last.dx, 0.05)));
   });
 
+  test("直角转弯五步都有方向盘和参照，注意事项不复述扣分", () {
+    final item = bank.guide.item("corner")!;
+    expect(item.steps, hasLength(5));
+    expect(item.requirementLocator, "GA 1026—2022 5.2.7");
+    expect(item.requirementQuote, startsWith("驾驶车辆按车道边线"));
+    expect(item.rules.map((r) => r.locator), [
+      "GA 1026—2022 6.2.3.6 a)",
+      "GA 1026—2022 6.2.3.6 b)",
+      "GA 1026—2022 6.2.3.6 c)",
+      "GA 1026—2022 6.2.3.6 d)",
+    ]);
+    for (final step in item.steps) {
+      expect(step.steer, isNotEmpty, reason: step.title);
+      expect(step.reference, isNotEmpty, reason: step.title);
+      final texts = [
+        step.caution,
+        step.steer,
+        step.reference,
+        step.skill,
+        step.outside!.risk,
+        for (final fix in step.fix) ...[fix.sign, fix.action],
+      ];
+      for (final text in texts) {
+        expect(text, isNot(contains("扣")), reason: "${step.title}：$text");
+        expect(text, isNot(contains("不合格")), reason: "${step.title}：$text");
+      }
+    }
+    for (final tip in item.tips) {
+      expect(tip, isNot(contains("扣")));
+      expect(tip, isNot(contains("不合格")));
+    }
+    expect(item.steps[3].fix, hasLength(2));
+    expect(item.steps[2].reference, contains("门把手"));
+    expect(item.steps[2].inside!.look, isNot(contains("门把手")));
+  });
+
   testWidgets("车内格画出参照，并把错参照划掉", (tester) async {
     final step = bank.guide.item("curve")!.steps[1];
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        body: SizedBox(width: 360, height: 480, child: CabinPanel(step: step, gear: Gear.drive, signal: Signal.none)),
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SizedBox(
+            width: 360,
+            height: 480,
+            child: CabinPanel(
+              step: step,
+              gear: Gear.drive,
+              signal: Signal.none,
+            ),
+          ),
+        ),
       ),
-    ));
+    );
     expect(find.text(step.inside!.look), findsOneWidget);
     expect(find.textContaining("别按这个：${step.inside!.wrong}"), findsOneWidget);
     expect(find.textContaining("做完：${step.done}"), findsOneWidget);
@@ -165,12 +263,26 @@ void main() {
     for (final item in bank.guide.items) {
       for (var i = 0; i < item.steps.length; i++) {
         final step = item.steps[i];
-        expect(step.caution, isNotEmpty, reason: "${item.id} 第 ${i + 1} 步没有注意事项");
+        expect(
+          step.caution,
+          isNotEmpty,
+          reason: "${item.id} 第 ${i + 1} 步没有注意事项",
+        );
         expect(step.cautionLocators, isNotEmpty);
         for (final l in step.cautionLocators) {
-          expect(excerpts, contains("- ${l.substring("GA 1026—2022 ".length)}："), reason: "${item.id} 第 ${i + 1} 步 $l");
+          expect(
+            excerpts,
+            contains("- ${l.substring("GA 1026—2022 ".length)}："),
+            reason: "${item.id} 第 ${i + 1} 步 $l",
+          );
         }
-        expect(step.narration(i), allOf(startsWith("第${i + 1}步，${step.title}。"), contains("注意：${step.caution}")));
+        expect(
+          step.narration(i),
+          allOf(
+            startsWith("第${i + 1}步，${step.title}。"),
+            contains("注意：${step.caution}"),
+          ),
+        );
       }
     }
   });
