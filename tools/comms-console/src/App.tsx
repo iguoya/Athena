@@ -19,6 +19,7 @@ export default function App() {
   const [snap, setSnap] = useState<Snapshot | null>(null);
   const [bay, setBay] = useState<string>("");
   const [view, setView] = useState<View>("board");
+  const [selectedTid, setSelectedTid] = useState<string>("");
   const [error, setError] = useState<string>("");
 
   if (snap === null && error === "") {
@@ -76,7 +77,10 @@ export default function App() {
           {snap.bays.map((b) => (
             <button
               key={b.name}
-              onClick={() => setBay(b.name)}
+              onClick={() => {
+                setBay(b.name);
+                setSelectedTid("");
+              }}
               className={
                 "mb-1 w-full rounded-lg px-3 py-2 text-left " +
                 (b.name === bay ? "bg-brand-50 text-brand-700" : "text-ink-700 hover:bg-paper")
@@ -122,9 +126,21 @@ export default function App() {
           {bay === "" ? (
             <div className="flex h-full items-center justify-center text-ink-500">选一个舱</div>
           ) : view === "board" ? (
-            <BoardView snap={snap} bay={bay} onOpenTask={() => setView("tasks")} />
+            <BoardView
+              snap={snap}
+              bay={bay}
+              onOpenTask={(tid) => {
+                setSelectedTid(tid);
+                setView("tasks");
+              }}
+            />
           ) : view === "tasks" ? (
-            <TaskView snap={snap} bay={bay} />
+            <TaskView
+              snap={snap}
+              bay={bay}
+              selectedTid={selectedTid}
+              onSelect={setSelectedTid}
+            />
           ) : view === "chat" ? (
             <ChatView snap={snap} bay={bay} bayInfo={bayInfo} />
           ) : (

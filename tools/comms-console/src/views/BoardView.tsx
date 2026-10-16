@@ -9,7 +9,7 @@ export default function BoardView({
 }: {
   snap: Snapshot;
   bay: string;
-  onOpenTask: () => void;
+  onOpenTask: (tid: string) => void;
 }) {
   const tasks = snap.tasks.filter((t) => t.bay === bay);
   const doneIds = new Set(tasks.filter((t) => t.status === "done").map((t) => t.tid));
@@ -39,7 +39,7 @@ export default function BoardView({
               return (
                 <button
                   key={t.tid}
-                  onClick={onOpenTask}
+                  onClick={() => onOpenTask(t.tid)}
                   className="rounded-xl border border-line bg-white p-3 text-left shadow-sm transition hover:border-brand-300"
                 >
                   <div className="flex items-center gap-2">
