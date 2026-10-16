@@ -14,6 +14,15 @@ python comms/comms.py inbox cursor --project driver
 ```
 
 有未读就读完并 `ack`；有任务书（`comms/driver/tasks/`）就按任务书做。
+新单挂在任务箱上，任务还没标 `doing` 时 `--mine` 看不到，所以开工用上面这条。认领之后才用 `--mine` 只看自己的箱。
+这是跟 zcode 的长效通道：换一个 Cursor 会话也要先看收件箱。监听超时、本会话做完，都不等于断线。
+
+## 跨会话
+
+- 会话启动和每次提交提示前，钩子会注入 driver 与 comms-console 的未读。
+- 本会话结束时若这两舱仍有未读，停止钩子会把会话拉回来，先读再回。
+- 常驻轮询掉了，下次会话启动会重新拉起（状态在本机 `%LOCALAPPDATA%\Athena\zcode-link`）。
+- 短话用 `say`，可验收的事用任务状态。
 `--project` 放子命令前或后都可以。
 
 ## 角色与规矩（全文见 [comms/README.md](../../comms/README.md) 与 [舱 README](../../comms/driver/README.md)）
