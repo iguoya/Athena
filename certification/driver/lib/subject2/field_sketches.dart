@@ -22,7 +22,7 @@ const sideParkingSketch = <FieldMapStep>[
     lines: _sideLines,
     marks: [FieldMark(Offset(3.4, 7))],
   ),
-  // 2 挂倒挡向右打满：库前角刚过肩就打。
+  // 2 挂倒挡向右打满：库前角刚过肩就打；打晚了车头甩向外侧路缘。
   FieldMapStep(
     x: 3.5,
     y: 5.9,
@@ -30,6 +30,9 @@ const sideParkingSketch = <FieldMapStep>[
     steerDegrees: 45,
     lines: _sideLines,
     marks: [FieldMark(Offset(3.4, 7))],
+    risks: [
+      FieldRisk([Offset(4.3, 5.4), Offset(4.7, 6.3), Offset(4.9, 7)]),
+    ],
   ),
   // 3 中段回正：车尾已甩进库口，左后轮沿库左线走。
   FieldMapStep(
@@ -40,7 +43,7 @@ const sideParkingSketch = <FieldMapStep>[
     lines: _sideLines,
     marks: [FieldMark(Offset(-2, 7))],
   ),
-  // 4 再向左打满入库：盯左后轮即将贴库左线。
+  // 4 再向左打满入库：盯左后轮即将贴库左线；打早了右后轮逼库前角。
   FieldMapStep(
     x: -3.2,
     y: 7.4,
@@ -48,6 +51,9 @@ const sideParkingSketch = <FieldMapStep>[
     steerDegrees: -45,
     lines: _sideLines,
     marks: [FieldMark(Offset(-2, 9.4))],
+    risks: [
+      FieldRisk([Offset(0.8, 7.5), Offset(2.2, 7.15), Offset(3.4, 7.05)]),
+    ],
   ),
   // 5 停：车身与库平行即停、回正。
   FieldMapStep(
@@ -103,7 +109,7 @@ final curveSketch = <FieldMapStep>[
     bounds: _curveBounds,
     marks: [FieldMark(Offset(-9, -3.4))],
   ),
-  // 2 第一弯向左：左车角「追」右边线。
+  // 2 第一弯向左：左车角「追」右边线；打少了线往车角中间跑。
   FieldMapStep(
     x: -6.5,
     y: -1.9,
@@ -112,6 +118,9 @@ final curveSketch = <FieldMapStep>[
     lines: _curveLines,
     bounds: _curveBounds,
     marks: [FieldMark(Offset(-5.9, -4.5))],
+    risks: [
+      FieldRisk([Offset(-4.6, -3.4), Offset(-3.4, -3.6), Offset(-2.2, -3.3)]),
+    ],
   ),
   // 3 换向：先回正再向右打，换右车角追左边线。
   FieldMapStep(
@@ -187,7 +196,7 @@ const rightAngleTurnSketch = <FieldMapStep>[
     bounds: _turnBounds,
     marks: [FieldMark(Offset(10, 11))],
   ),
-  // 3 找打方向时机：内角与门把手/后视镜平齐，一把匀速打满。
+  // 3 找打方向时机：内角与门把手/后视镜平齐，一把匀速打满；打早了内后轮扫内角。
   FieldMapStep(
     x: 6.5,
     y: 10.2,
@@ -196,6 +205,9 @@ const rightAngleTurnSketch = <FieldMapStep>[
     lines: _turnLines,
     bounds: _turnBounds,
     marks: [FieldMark(Offset(10, 7))],
+    risks: [
+      FieldRisk([Offset(8.1, 7.9), Offset(9.2, 7.2), Offset(10.05, 7.05)]),
+    ],
   ),
   // 4 打满后：盯内侧后轮与内角的距离。
   FieldMapStep(
