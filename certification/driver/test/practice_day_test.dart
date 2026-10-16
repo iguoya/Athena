@@ -43,7 +43,9 @@ void main() {
 
     await tester.tap(find.text("科目二（C2）"));
     await tester.pump();
-    // 默认就是练车日。
+    // 一级章节只落概要（不绑实操内容）；练车日走子菜单进。
+    await tester.tap(find.text("练车日").first);
+    await tester.pumpAndSettle();
     expect(find.text("按最近的练车，整场能过的把握"), findsOneWidget);
     expect(find.text("今天练车的重点"), findsOneWidget);
 
