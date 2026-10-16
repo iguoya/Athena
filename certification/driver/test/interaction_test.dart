@@ -7,6 +7,7 @@ import "package:athena_driver/home.dart";
 import "package:athena_driver/core/models.dart";
 import "package:athena_driver/core/progress.dart";
 import "package:athena_driver/study/session.dart";
+import "package:athena_driver/ui/skin.dart";
 import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
@@ -114,7 +115,7 @@ void main() {
     });
   });
 
-  testWidgets("专题全部掌握后仍可重练：入口不再点不了，确认后整章再练一遍（ADR 0125）", (tester) async {
+  testWidgets("专题全部掌握后入口照常：不灰显、不弹确认，点了直接练整章（ADR 0129）", (tester) async {
     late Directory dir;
     late ProgressStore store;
     late Bank bank;
@@ -143,27 +144,20 @@ void main() {
     final topic = bank.curriculum.subject("subject1").topics.first;
     final daily = bank.forTopic(topic.id).where((q) => !q.isRare).toList();
 
-    // 入口活着：标签变成「（重练）」，点了先问，不直接起会话。
-    await tester.tap(inSidebar(find.textContaining("（重练）").first));
-    await tester.pump();
-    expect(find.text("全部掌握，重新练习？"), findsOneWidget);
-    expect(find.byType(SessionStage), findsNothing);
+    // 入口不灰显：没有「（重练）」字样，章节名按正常色显示。
+    expect(inSidebar(find.textContaining("（重练）")), findsNothing);
+    final entryText = tester.widget<Text>(inSidebar(find.text(topic.title)).first);
+    expect(entryText.style?.color, isNot(Skins.current.navTextMuted));
 
-    // 取消：什么都不发生。
-    await tester.tap(find.text("先不用"));
-    await tester.pump();
-    expect(find.byType(SessionStage), findsNothing);
-
-    // 确认：起一轮，题单正好是这一章的全部日常题。
-    await tester.tap(inSidebar(find.textContaining("（重练）").first));
-    await tester.pump();
-    await tester.tap(find.text("重新练习"));
+    // 点击直接起一轮，不弹确认对话框，题单正好是这一章的全部日常题。
+    await tester.tap(inSidebar(find.text(topic.title)).first);
     await tester.pump(const Duration(seconds: 1));
+    expect(find.text("全部掌握，重新练习？"), findsNothing);
     final stage = tester.widget<SessionStage>(find.byType(SessionStage));
     expect(
       {for (final q in stage.launch.questions) q.id},
       {for (final q in daily) q.id},
-      reason: "重练不过滤待练：已掌握的整章题全在题单里",
+      reason: "不过滤待练：已掌握的整章题全在题单里",
     );
     expect(stage.launch.timed, isFalse);
 
@@ -176,7 +170,7 @@ void main() {
     });
   });
 
-  testWidgets("科目一全部掌握后：侧栏入口变「重新练习（全部 n 题）」，概览按钮变「重新练习全部题」（ADR 0125）", (tester) async {
+  testWidgets("科目一全部掌握后：侧栏「练习全部 n 题」、概览按钮「练习全部题」，点击直接开练（ADR 0129）", (tester) async {
     late Directory dir;
     late ProgressStore store;
     late Bank bank;
@@ -202,24 +196,24 @@ void main() {
 
     final daily = bank.forSubject("subject1").where((q) => !q.isRare).toList();
 
-    // 侧栏入口不再是灰死的「全部练习（已掌握）」。
+    // 侧栏入口正常可点、颜色正常，没有「重新练习」字样。
     Finder inSidebar(Finder f) => find.descendant(of: find.byType(ListView).first, matching: f);
-    final entry = inSidebar(find.textContaining("重新练习（全部 ${daily.length} 题）"));
+    final entry = inSidebar(find.textContaining("练习全部 ${daily.length} 题"));
     expect(entry, findsOneWidget);
+    expect(find.textContaining("重新练习"), findsNothing);
+    final entryText = tester.widget<Text>(entry);
+    expect(entryText.style?.color, isNot(Skins.current.navTextMuted));
 
-    // 概览页按钮也能重练。
+    // 概览页按钮也是直接开练：无确认对话框，全部日常题都在。
     await tester.tap(inSidebar(find.text("科目一")).first);
     await tester.pump();
-    expect(find.text("重新练习全部题"), findsOneWidget);
-
-    // 确认后起一轮，全部日常题都在。
-    await tester.tap(find.text("重新练习全部题"));
-    await tester.pump();
-    await tester.tap(find.text("重新练习"));
+    expect(find.text("练习全部题"), findsOneWidget);
+    await tester.tap(find.text("练习全部题"));
     await tester.pump(const Duration(seconds: 1));
+    expect(find.text("全部掌握，重新练习？"), findsNothing);
     final stage = tester.widget<SessionStage>(find.byType(SessionStage));
     expect(stage.launch.questions.length, daily.length);
-    // 重练不改侧栏：科目四照常在。
+    // 练全部不改侧栏：科目四照常在。
     expect(find.textContaining("科目四"), findsWidgets);
 
     await tester.runAsync(() => Future<void>.delayed(const Duration(seconds: 6)));

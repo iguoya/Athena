@@ -620,13 +620,14 @@ class _HomePageState extends State<HomePage> {
                     final pool = _openPool(subject);
                     final n = _pending(pool).length;
                     if (n == 0) {
-                      // 待练清零后不再是死路（ADR 0125）：给「重新练习」的选择，点了先确认。
+                      // 待练清零后入口照常可点（ADR 0125 原则、0129 呈现）：
+                      // 点开就是全部题再过一遍，不弹确认、不变灰。
                       return _navLine(
                         icon: Glyph.practice,
-                        selected: inSession("${subject.code} · 重新练习"),
-                        label: "重新练习（全部 ${pool.length} 题）",
+                        selected: inSession("${subject.code} · 全部"),
+                        label: "练习全部 ${pool.length} 题",
                         indent: true,
-                        onTap: () => _confirmRepractice(subject, pool, "重新练习"),
+                        onTap: () => _startPractice(subject, pool, "全部", includeMastered: true),
                       );
                     }
                     return _navLine(
@@ -648,13 +649,17 @@ class _HomePageState extends State<HomePage> {
                             icon: Glyph.topic,
                             selected: inSession("${subject.code} · ${topic.title}"),
                             label: pending.isEmpty
-                                ? "${topic.title}（重练）"
+                                ? topic.title
                                 : "${topic.title}  ${pending.length}",
-                            muted: pending.isEmpty,
                             indent: true,
-                            onTap: pending.isEmpty
-                                ? () => _confirmRepractice(subject, questions, topic.title)
-                                : () => _startPractice(subject, questions, topic.title),
+                            // 入口永不灰显（ADR 0126）：待练清零就直接练整章全部题，
+                            // 不用「重练」术语、不弹确认（ADR 0129）。
+                            onTap: () => _startPractice(
+                              subject,
+                              questions,
+                              topic.title,
+                              includeMastered: pending.isEmpty,
+                            ),
                           ),
                           if (fresh.isNotEmpty)
                             _navLine(
@@ -787,7 +792,7 @@ class _HomePageState extends State<HomePage> {
           icon: Glyph.info,
           child: Text(
             _s1Done
-                ? "科目一日常题都掌握了。想再从头练一遍，点下面的「重新练习全部题」。模拟考随时可以考。"
+                ? "科目一日常题都掌握了。想再过一遍，点下面的「练习全部题」。模拟考随时可以考。"
                 : "四个阶段按内容分组，全部开放，想练哪组点哪组；「练习待练题」从错题、高频、常考、常规依次出。偏难怪默认不出。三个科目的练习和模拟考都在左侧目录里。",
           ),
         ),
@@ -831,10 +836,13 @@ class _HomePageState extends State<HomePage> {
           runSpacing: 10,
           children: [
             FilledButton(
-              onPressed: pending.isEmpty
-                  ? () => _confirmRepractice(subject, visible, "重新练习")
-                  : () => _startPractice(subject, visible, "待练"),
-              child: Text(pending.isEmpty ? "重新练习全部题" : "练习待练题"),
+              onPressed: () => _startPractice(
+                subject,
+                visible,
+                pending.isEmpty ? "全部" : "待练",
+                includeMastered: pending.isEmpty,
+              ),
+              child: Text(pending.isEmpty ? "练习全部题" : "练习待练题"),
             ),
             FilledButton.tonal(
               onPressed: () => _startExam(subject),
@@ -892,10 +900,16 @@ class _HomePageState extends State<HomePage> {
     final mastered = daily.where((q) => _mastered.contains(q.id)).length;
     final ratio = daily.isEmpty ? 0.0 : mastered / daily.length;
     return InkWell(
-      // 全部掌握后点阶段行也不再是无声无息（ADR 0125）：确认后整组重练。
-      onTap: daily.isEmpty || _pending(questions).isEmpty
-          ? () => _confirmRepractice(subject, daily, "第${phase.id}阶段")
-          : () => _startPractice(subject, questions, "第${phase.id}阶段"),
+      // 待练清零就整组全部题再过一遍，直接开练、不弹确认（ADR 0129）；
+      // 偏难题默认不练，全部掌握时也只练日常题。没有日常题的阶段没有入口。
+      onTap: daily.isEmpty
+          ? null
+          : () => _startPractice(
+              subject,
+              _pending(questions).isEmpty ? daily : questions,
+              "第${phase.id}阶段",
+              includeMastered: _pending(questions).isEmpty,
+            ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
@@ -1083,12 +1097,10 @@ class _HomePageState extends State<HomePage> {
     final ratio = questions.isEmpty ? 0.0 : mastered / questions.length;
     final enabled = pending.isNotEmpty;
     return InkWell(
-      // 全部掌握的章节点开不再是死路（ADR 0125）：确认后这一章整章重练。
-      onTap: enabled
-          ? () => _startPractice(subject, questions, topic.title)
-          : questions.isEmpty
-              ? null
-              : () => _confirmRepractice(subject, questions, topic.title),
+      // 全部掌握的章节点开就整章再过一遍，直接开练、不弹确认（ADR 0129）。
+      onTap: questions.isEmpty
+          ? null
+          : () => _startPractice(subject, questions, topic.title, includeMastered: pending.isEmpty),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
@@ -1424,12 +1436,9 @@ class _HomePageState extends State<HomePage> {
       onNewPractice: () {
         final s1 = widget.bank.curriculum.subject("subject1");
         final pool = _openPool(s1);
-        // 待练清零时同样给「重新练习」的选择（ADR 0125），不无声无息。
-        if (_pending(pool).isEmpty) {
-          unawaited(_confirmRepractice(s1, pool, "重新练习"));
-        } else {
-          _startPractice(s1, pool, "待练");
-        }
+        // 待练清零就直接练全部题，不弹确认（ADR 0129）。
+        final clear = _pending(pool).isEmpty;
+        _startPractice(s1, pool, clear ? "全部" : "待练", includeMastered: clear);
       },
       subjects: subjects,
       priorities: _priorities,
@@ -1812,8 +1821,9 @@ class _HomePageState extends State<HomePage> {
   /// 起一轮练习。[shuffleQueue] 给速记组的「自测」用（ADR 0118），出题见 [_speedGroupQueue]：
   /// 洗牌出题——速记卡全是常规档、没有全国错误率，走 [practiceQueue] 的分档排序会退化成
   /// 内容顺序（12→9→6→3→1），规律性毁掉考试价值。
-  /// [includeMastered] 给全部掌握后的「重新练习」用（ADR 0125）：不过滤待练，整组再练一遍；
-  /// 答题记录保留，这一轮里答错的题自然回到待练。
+  /// [includeMastered] 在待练清零时给整组全部题（待练空了过滤就只剩空队列，ADR 0129）：
+  /// 入口永远可点，点开就是这一组的全部日常题再过一遍；答题记录保留，这一轮里
+  /// 答错的题按现有规则自然回到待练。
   void _startPractice(
     Subject subject,
     List<Question> questions,
@@ -1839,35 +1849,6 @@ class _HomePageState extends State<HomePage> {
         recordChosen: recordChosen,
       ),
     );
-  }
-
-  /// 全部掌握后的「重新练习」（ADR 0125）：练习入口在待练清零后不再是死路，点开先问
-  /// 一次「要不要重新练习」，确认才把这一组的全部日常题再练一遍。要不要练由使用者
-  /// 决定，不自动开始；答题记录一律保留——错题本、强化练习、统计趋势和科目解锁都不动。
-  Future<void> _confirmRepractice(Subject subject, List<Question> questions, String title) async {
-    if (questions.isEmpty) return;
-    final go = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("全部掌握，重新练习？"),
-        content: SizedBox(
-          width: 460,
-          child: Text(
-            "「${subject.code} · $title」的 ${questions.length} 道日常题都已掌握。要重新练习一遍吗？\n\n"
-            "答题记录保留：错题本、强化练习和统计不受影响，科目四也不会重新锁上；"
-            "这一轮里答错的题会重新回到待练。",
-            style: const TextStyle(height: 1.5),
-          ),
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text("先不用")),
-          FilledButton(onPressed: () => Navigator.of(context).pop(true), child: const Text("重新练习")),
-        ],
-      ),
-    );
-    if (go == true) {
-      _startPractice(subject, questions, title, includeMastered: true);
-    }
   }
 
   /// 速记组的「自测」（ADR 0118）：按这一组条目的内容**现场出题**（[freshRecallQuestionOf]），不依赖练习题库——
