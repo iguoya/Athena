@@ -6,7 +6,9 @@ import "../ui/charts.dart";
 import "../ui/glyphs.dart";
 import "brief.dart";
 import "drill.dart";
+import "field_map.dart";
 import "guide.dart";
+import "step_flow.dart";
 import "../ui/look.dart";
 import "../core/narration.dart";
 import "../core/models.dart";
@@ -1494,6 +1496,25 @@ class _ItemPageState extends State<_ItemPage> {
                 i,
           ].length,
         ),
+        if (item.id == "reverse") ...[
+          const SizedBox(height: 8),
+          SizedBox(
+            height: 280,
+            child: FieldMap(
+              steps: reverseParkSketch,
+              index: _step.clamp(0, reverseParkSketch.length - 1),
+            ),
+          ),
+          const SizedBox(height: 16),
+          StepFlow(
+            steps: item.steps,
+            current: _step.clamp(0, item.steps.length - 1),
+            onStepChanged: (i) {
+              _player.currentState?.jumpTo(i);
+              setState(() => _step = i);
+            },
+          ),
+        ],
         const SizedBox(height: 16),
         LayoutBuilder(
           builder: (context, constraints) {
@@ -1518,17 +1539,18 @@ class _ItemPageState extends State<_ItemPage> {
           spacing: 10,
           runSpacing: 10,
           children: [
-            FilledButton.icon(
-              onPressed: pending.isEmpty
-                  ? null
-                  : () => widget.onPractice(widget.questions, item.title),
-              icon: const Icon(Glyph.practice),
-              label: Text(
-                pending.isEmpty
-                    ? "评判题（已掌握）"
-                    : "练这一项的评判题 · 待练 ${pending.length}",
+            if (item.id != "reverse")
+              FilledButton.icon(
+                onPressed: pending.isEmpty
+                    ? null
+                    : () => widget.onPractice(widget.questions, item.title),
+                icon: const Icon(Glyph.practice),
+                label: Text(
+                  pending.isEmpty
+                      ? "评判题（已掌握）"
+                      : "练这一项的评判题 · 待练 ${pending.length}",
+                ),
               ),
-            ),
             FilledButton.tonalIcon(
               onPressed: widget.onRecord,
               icon: const Icon(Glyph.record),

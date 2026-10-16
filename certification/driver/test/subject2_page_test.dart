@@ -3,6 +3,7 @@ import "dart:io";
 
 import "package:athena_driver/core/content.dart";
 import "package:athena_driver/home.dart";
+import "package:athena_driver/subject2/field_map.dart";
 import "package:athena_driver/core/models.dart";
 import "package:athena_driver/core/progress.dart";
 import "package:flutter/material.dart";
@@ -27,10 +28,14 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(1600, 2600));
     final ready = Completer<void>();
     await tester.pumpWidget(
-      MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)),
+      MaterialApp(
+        home: HomePage(bank: bank, store: store, onReady: ready.complete),
+      ),
     );
     for (var i = 0; i < 2000 && !ready.isCompleted; i++) {
-      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 10)),
+      );
       await tester.pump();
     }
     expect(ready.isCompleted, isTrue);
@@ -44,11 +49,17 @@ void main() {
     for (final title in ["倒车入库", "侧方停车", "曲线行驶", "直角转弯"]) {
       expect(find.text(title), findsWidgets);
     }
-    Offset at(String id) => tester.getTopLeft(find.byKey(ValueKey("handbook-item-$id")));
-    int reading(Offset a, Offset b) => (a.dy - b.dy).abs() > 40 ? a.dy.compareTo(b.dy) : a.dx.compareTo(b.dx);
+    Offset at(String id) =>
+        tester.getTopLeft(find.byKey(ValueKey("handbook-item-$id")));
+    int reading(Offset a, Offset b) =>
+        (a.dy - b.dy).abs() > 40 ? a.dy.compareTo(b.dy) : a.dx.compareTo(b.dx);
     final learn = ["corner", "curve", "parallel", "reverse"];
     for (var i = 0; i < learn.length - 1; i++) {
-      expect(reading(at(learn[i]), at(learn[i + 1])), lessThan(0), reason: "${learn[i]} 应排在 ${learn[i + 1]} 前面");
+      expect(
+        reading(at(learn[i]), at(learn[i + 1])),
+        lessThan(0),
+        reason: "${learn[i]} 应排在 ${learn[i + 1]} 前面",
+      );
     }
 
     // 曲线行驶：车内参照和场地图同屏，当前步的参照写在车内格上。
@@ -65,9 +76,20 @@ void main() {
     // 打开倒车入库：动画、步骤、评判、要点都在。
     await tester.tap(find.text("倒车入库").first);
     await tester.pump();
+    expect(find.byType(FieldMap), findsOneWidget);
+    expect(find.textContaining("练这一项的评判题"), findsNothing);
     expect(find.text("我的点位卡"), findsOneWidget);
-    final itemPage = find.descendant(of: find.byKey(const ValueKey("subject2-item")), matching: find.byType(Scrollable)).first;
-    await tester.scrollUntilVisible(find.text("车身出线"), 300, scrollable: itemPage);
+    final itemPage = find
+        .descendant(
+          of: find.byKey(const ValueKey("subject2-item")),
+          matching: find.byType(Scrollable),
+        )
+        .first;
+    await tester.scrollUntilVisible(
+      find.text("车身出线"),
+      300,
+      scrollable: itemPage,
+    );
     expect(find.text("操作要求（标准原文）"), findsOneWidget);
     expect(find.text("车身出线"), findsOneWidget);
     await tester.drag(itemPage, const Offset(0, 5000));
@@ -90,22 +112,37 @@ void main() {
     await tester.pump();
     await tester.tap(find.text("记一把练车"));
     await tester.pumpAndSettle();
-    Finder inDialog(Finder f) => find.descendant(of: find.byType(AlertDialog), matching: f);
+    Finder inDialog(Finder f) =>
+        find.descendant(of: find.byType(AlertDialog), matching: f);
     await tester.tap(inDialog(find.textContaining("中途停车")).first);
     await tester.pump();
     await tester.tap(inDialog(find.textContaining("中途停车 ×1")).first);
     await tester.pump();
     expect(inDialog(find.text("90 分")), findsOneWidget);
     await tester.tap(find.text("记下这一把"));
-    for (var i = 0; i < 200 && find.textContaining("上次练：今天").evaluate().isEmpty; i++) {
-      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
+    for (
+      var i = 0;
+      i < 200 && find.textContaining("上次练：今天").evaluate().isEmpty;
+      i++
+    ) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 10)),
+      );
       await tester.pump();
     }
-    await tester.scrollUntilVisible(find.text("这一项的练车记录"), 300, scrollable: itemPage);
+    await tester.scrollUntilVisible(
+      find.text("这一项的练车记录"),
+      300,
+      scrollable: itemPage,
+    );
     expect(find.text("这一项的练车记录"), findsOneWidget);
     expect(find.textContaining("中途停车 ×2"), findsWidgets);
     // 简报跟着记录走（ADR 0037）。
-    await tester.scrollUntilVisible(find.textContaining("上次练：今天"), -300, scrollable: itemPage);
+    await tester.scrollUntilVisible(
+      find.textContaining("上次练：今天"),
+      -300,
+      scrollable: itemPage,
+    );
     expect(find.textContaining("上次练：今天"), findsOneWidget);
     expect(tester.takeException(), isNull);
 
@@ -137,10 +174,14 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(1600, 2600));
     final ready = Completer<void>();
     await tester.pumpWidget(
-      MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)),
+      MaterialApp(
+        home: HomePage(bank: bank, store: store, onReady: ready.complete),
+      ),
     );
     for (var i = 0; i < 2000 && !ready.isCompleted; i++) {
-      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 10)),
+      );
       await tester.pump();
     }
     expect(ready.isCompleted, isTrue);
