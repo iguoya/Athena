@@ -8,19 +8,19 @@ rust-version.workspace = true
 [dependencies]
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-sysinfo = { version = "0.33", default-features = false, features = ["system"] }
+sysinfo = { version = "0.39", default-features = false, features = ["system"] }
 which = "8.0.6"
 # `launcher icons`：把各应用的彩色 icon.svg 渲染成平台图标位要的位图（ADR 0065）。
 # resvg 与 GUI 同版本；Fluent Emoji 的滤镜只有它画得对。
-resvg = "0.45"
+resvg = "0.48"
 ico = "0.5"
-icns = "0.3"
+icns = "0.5"
 # 进度同步代理（ADR 0155）：读写各应用的本地 SQLite 进度库，经 HTTP 与路由器上的
 # nas_admin 互推。rusqlite 与各应用同版本，同一份编译缓存。
-rusqlite = { version = "0.32", features = ["bundled"] }
+rusqlite = { version = "0.40", features = ["bundled"] }
 dirs-next = "2"
 # 同步走内网 http 与外网 https（Cloudflare），阻塞式客户端足够：同步在后台线程里跑。
-ureq = { version = "2", features = ["json"] }
+ureq = { version = "3", features = ["json"] }
 
 [dev-dependencies]
 tempfile = "3"
