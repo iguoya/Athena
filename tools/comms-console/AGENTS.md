@@ -42,7 +42,7 @@
 
 | 路径 | 职责 |
 |---|---|
-| `src/` | React 界面：App（舱选择 + 视图切换）、`views/` 四视图（看板 / 任务与决策 / 对话流 / 活动统计）、`types.ts`（与 Rust 结构镜像） |
+| `src/` | React 界面：App（舱选择 + 视图切换）、`views/` 五视图（看板按成员分泳道 / 成员行为分组 / 任务与决策 / 对话流 / 活动统计）、`activity.ts`（行为分类与成员配色）、`types.ts`（与 Rust 结构镜像） |
 | `src-tauri/` | Rust：文件解析（front matter、任务进展记录行、chat 行）、PG ingest 与查询、降级 |
 | `app.json` | 怎么构建、怎么启动、怎么算就绪 |
 | `docs/decisions/` | 本应用 ADR（如有） |
