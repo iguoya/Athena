@@ -526,6 +526,14 @@ def check_po_gnu() -> None:
             print(f"{name}: GNU msgfmt 校验通过（{stats}）")
 
 
+def check_glossary() -> None:
+    """翻译术语约定（应用 ADR 0010）：禁用写法不得出现在译文与手写文字里。"""
+    import glossary  # noqa: PLC0415 同目录脚本
+
+    for line in glossary.violations():
+        fail(f"术语约定：{line}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="验证 gtkmm 学习应用")
     parser.add_argument("--skip-rust", action="store_true", help="跳过 cargo check")
@@ -551,6 +559,7 @@ def main() -> int:
     check_po_units()
     check_po_gnu()
     check_license_pages()
+    check_glossary()
 
     contract = PROJECT_ROOT / "content-contract.json"
     if not contract.is_file():

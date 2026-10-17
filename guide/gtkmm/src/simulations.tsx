@@ -34,7 +34,7 @@ function MachineButton({
 }
 
 /**
- * 信号流模拟：页面上点按钮，依次点亮「控件 → clicked 信号 → 处理器」，
+ * 信号流模拟：页面上点按钮，依次点亮「部件 → clicked 信号 → 处理函数」，
  * 把 GTK 事件 dispatch 的因果顺序画出来。这是模型不是真实现——
  * 简化处由 note 标明，真相锚定在 demo_ref 指向的真机演示上（ADR 0001 决策 3）。
  */
@@ -51,13 +51,13 @@ function SignalFlowSim({ demoRef, note, onLaunch }: SimulationProps) {
         交互模拟 · CLICKED 信号的旅程
       </figcaption>
       <div className="flex flex-wrap items-center gap-2.5">
-        <Node label="Gtk::Button" sub="控件" active={stage !== "idle"} />
+        <Node label="Gtk::Button" sub="部件" active={stage !== "idle"} />
         <Arrow active={stage === "emit" || stage === "dispatch"} />
         <Node label="clicked" sub="信号发出" active={stage === "emit" || stage === "dispatch"} />
         <Arrow active={stage === "dispatch"} />
         <Node
           label="on_button_clicked()"
-          sub="处理器"
+          sub="处理函数"
           active={stage === "handled"}
           detail={count > 0 ? `已调用 ${count} 次` : undefined}
         />
@@ -137,7 +137,7 @@ function ToggleStateSim({ demoRef, note, onLaunch }: SimulationProps) {
         )}
       </div>
       <p className="mt-4 text-[20px] leading-relaxed text-muted">
-        {note ?? "模型简化：真实切换由按下/释放完成，状态存于控件内部，get_active()/set_active() 读写它。"}
+        {note ?? "模型简化：真实切换由按下/释放完成，状态存于部件内部，get_active()/set_active() 读写它。"}
       </p>
     </figure>
   );

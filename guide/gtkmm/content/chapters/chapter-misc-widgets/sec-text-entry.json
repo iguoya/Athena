@@ -32,13 +32,13 @@
    "type": "para",
    "text": "You might want to be notified whenever the user types in a text entry widget.\n`Gtk::Entry` provides two signals,\n`activate` (since gtkmm 4.8) and `changed`, for this purpose.\n`activate` is emitted when the user presses the Enter key in\na text-entry widget; `changed` is emitted when the text in\nthe widget changes. You can use these, for instance, to validate or filter\nthe text the user types. Moving the keyboard focus to another widget may also\nsignal that the user has finished entering text. The `leave`\nsignal in a `Gtk::EventControllerFocus` can notify you when\nthat happens. The [ComboBox with an Entry](#sec-comboboxentry)\nsection contains example programs that use these signals.",
    "sha": "44433cefaf995201",
-   "zh": "你可能希望在用户于文本输入控件中键入时得到通知。`Gtk::Entry` 为此提供两个信号：`activate`（自 gtkmm 4.8 起）和 `changed`。用户在控件中按下回车键时发出 `activate`；控件中的文字变化时发出 `changed`。例如，可以用它们校验或过滤用户键入的文字。把键盘焦点移到别的控件，也可能表示用户已经输入完毕；此时 `Gtk::EventControllerFocus` 的 `leave` 信号可以通知你。[带 Entry 的 ComboBox](#sec-comboboxentry) 一节包含使用这些信号的示例程序。"
+   "zh": "你可能希望在用户于文本输入部件中键入时得到通知。`Gtk::Entry` 为此提供两个信号：`activate`（自 gtkmm 4.8 起）和 `changed`。用户在部件中按下回车键时发出 `activate`；部件中的文字变化时发出 `changed`。例如，可以用它们校验或过滤用户键入的文字。把键盘焦点移到别的部件，也可能表示用户已经输入完毕；此时 `Gtk::EventControllerFocus` 的 `leave` 信号可以通知你。[带 Entry 的 ComboBox](#sec-comboboxentry) 一节包含使用这些信号的示例程序。"
   },
   {
    "type": "para",
    "text": "If you pass `true` to the set_activates_default()\nmethod, pressing Enter in the `Gtk::Entry` will activate\nthe default widget for the window containing the `Gtk::Entry`.\nThis is especially useful in dialog boxes. The default widget is usually one of\nthe dialog buttons, which e.g. will close the dialog box. To set a widget as the\ndefault widget, use Gtk::Window::set_default_widget().",
    "sha": "b8ad01687b6e65c5",
-   "zh": "若给 set_activates_default() 传入 `true`，在 `Gtk::Entry` 中按下回车将激活所在窗口的默认控件。这在对话框里尤其有用——默认控件通常是对话按钮之一，比如关闭对话框的那个。把某个控件设为默认控件用 Gtk::Window::set_default_widget()。"
+   "zh": "若给 set_activates_default() 传入 `true`，在 `Gtk::Entry` 中按下回车将激活所在窗口的默认部件。这在对话框里尤其有用——默认部件通常是对话按钮之一，比如关闭对话框的那个。把某个部件设为默认部件用 Gtk::Window::set_default_widget()。"
   },
   {
    "type": "para",
@@ -104,7 +104,7 @@
    "type": "para",
    "text": "An `Entry` widget can offer a drop-down list of\npre-existing choices based on the first few characters typed by the user. For\ninstance, a search dialog could suggest text from previous searches.",
    "sha": "e84b62514bbbf650",
-   "zh": "Entry条目组件可以通过用户输入的前几个字符提供预先准备好选项的下拉列表。例如，在搜索对话框中提供以前输入过的文本作为建议。"
+   "zh": "Entry条目部件可以通过用户输入的前几个字符提供预先准备好选项的下拉列表。例如，在搜索对话框中提供以前输入过的文本作为建议。"
   },
   {
    "type": "para",
@@ -181,7 +181,7 @@
    "type": "para",
    "text": "An `Entry` widget can show an icon at the start or\nend of the text area. The icon can be specified by methods such as\nset_icon_from_paintable() or\nset_icon_from_icon_name(). An application can respond to the\nuser pressing the icon by handling the\nsignal_icon_press signal.",
    "sha": "cda4f6a69d62e79e",
-   "zh": "`Entry` 控件可以在文本区开头或末尾显示一个图标。图标可用 set_icon_from_paintable()、set_icon_from_icon_name() 等方法指定。应用要响应用户点击图标，可处理 signal_icon_press 信号。"
+   "zh": "`Entry` 部件可以在文本区开头或末尾显示一个图标。图标可用 set_icon_from_paintable()、set_icon_from_icon_name() 等方法指定。应用要响应用户点击图标，可处理 signal_icon_press 信号。"
   },
   {
    "type": "heading",

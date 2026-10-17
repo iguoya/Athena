@@ -20,7 +20,7 @@
    "type": "para",
    "text": "This causes gtkmm to call the specified method whenever nothing else is\nhappening. You can add a priority (lower numbers are higher priorities). There are two ways to remove the signal handler: calling\ndisconnect() on the\n`sigc::connection` object, or returning\n`false` in the signal handler, which should be declared\nas follows:",
    "sha": "1ad554d2c70028cc",
-   "zh": "这会导致gtkmm在无事发生时调用指定的方法。你可以为其添加优先级（数字越小优先级越高）。删除该信号处理程序的方法有两个：在sigc::connection对象上调用disconnect()、在信号处理程序中返回false，信号处理程序的声明应如下所示："
+   "zh": "这会导致gtkmm在无事发生时调用指定的方法。你可以为其添加优先级（数字越小优先级越高）。删除该信号处理函数的方法有两个：在sigc::connection对象上调用disconnect()、在信号处理函数中返回false，信号处理函数的声明应如下所示："
   },
   {
    "type": "code",

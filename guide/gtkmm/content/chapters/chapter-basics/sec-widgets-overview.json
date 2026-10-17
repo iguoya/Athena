@@ -8,13 +8,13 @@
    "type": "para",
    "text": "gtkmm applications consist of windows containing widgets, such as buttons and text boxes. In some other systems, widgets are called \"controls\". For each widget in your application's windows, there is a C++ object in your application's code. So you just need to call a method of the widget's class to affect the visible widget.",
    "sha": "29d99cf8a6a87293",
-   "zh": "gtkmm 应用由窗口组成，窗口里放着控件（widget），比如按钮和文本框。在某些别的系统里，控件被叫作「control」。应用窗口里的每个控件，都对应应用代码里的一个 C++ 对象——想改变屏幕上看到的控件，只需调用该控件类的方法。"
+   "zh": "gtkmm 应用由窗口组成，窗口里放着部件（widget），比如按钮和文本框。在某些别的系统里，部件被叫作「control」。应用窗口里的每个部件，都对应应用代码里的一个 C++ 对象——想改变屏幕上看到的部件，只需调用该部件类的方法。"
   },
   {
    "type": "para",
    "text": "Widgets are arranged inside container widgets such as frames and notebooks, in a hierarchy of widgets within widgets. Some of these container widgets, such as `Gtk::Grid`, are not visible - they exist only to arrange other widgets. Here is some example code that adds 2 `Gtk::Button` widgets to a `Gtk::Box` container widget:",
    "sha": "637de6ddbf01c477",
-   "zh": "控件放在容器控件里（比如 frame 和 notebook），形成「控件套控件」的层次结构。有些容器控件（比如 Gtk::Grid）本身不可见——它们存在的意义就是排列其他控件。下面的示例代码把 2 个 Gtk::Button 控件加进 Gtk::Box 容器控件："
+   "zh": "部件放在容器部件里（比如 frame 和 notebook），形成「部件套部件」的层次结构。有些容器部件（比如 Gtk::Grid）本身不可见——它们存在的意义就是排列其他部件。下面的示例代码把 2 个 Gtk::Button 部件加进 Gtk::Box 容器部件："
   },
   {
    "type": "code",
@@ -44,7 +44,7 @@
    "type": "para",
    "text": "Although you can specify the layout and appearance of windows and widgets with C++ code,\nyou will probably find it more convenient to design your user interfaces with\n`.ui` XML files and load them at runtime with\n`Gtk::Builder`. See the [Gtk::Builder](#chapter-builder) chapter.",
    "sha": "4a79ba7dc444fb5c",
-   "zh": "虽然可以用 C++ 代码指定窗口和控件的布局与外观，但用 .ui XML 文件设计界面、运行时经 Gtk::Builder 加载，通常更方便。参见 Gtk::Builder 一章。"
+   "zh": "虽然可以用 C++ 代码指定窗口和部件的布局与外观，但用 .ui XML 文件设计界面、运行时经 Gtk::Builder 加载，通常更方便。参见 Gtk::Builder 一章。"
   },
   {
    "type": "para",

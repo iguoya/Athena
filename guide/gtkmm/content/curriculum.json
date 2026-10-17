@@ -117,7 +117,7 @@
               "options": [
                 "同样修改了语言",
                 "用标准 C++（libsigc++）实现，不改语言",
-                "用 C 预处理器宏生成",
+                "用 C 预处理函数宏生成",
                 "靠编译器扩展"
               ],
               "answer": 1,
@@ -388,7 +388,7 @@
         },
         {
           "id": "sec-widgets-overview",
-          "title": "控件",
+          "title": "部件",
           "status": "translated",
           "title_en": "Widgets"
         },
@@ -555,11 +555,11 @@
               "type": "quiz",
               "id": "basic-w-1",
               "page_ref": "sec-widgets-overview",
-              "stem": "关于控件与容器，正确的说法是？",
+              "stem": "关于部件与容器，正确的说法是？",
               "options": [
                 "所有容器都可见",
-                "Gtk::Grid 等容器不可见，只为排列其他控件而存在",
-                "控件不能嵌套",
+                "Gtk::Grid 等容器不可见，只为排列其他部件而存在",
+                "部件不能嵌套",
                 "窗口不是容器"
               ],
               "answer": 1,
@@ -576,7 +576,7 @@
               "type": "quiz",
               "id": "basic-w-2",
               "page_ref": "sec-widgets-overview",
-              "stem": "把控件加进 Gtk::Box 容器用哪个方法？",
+              "stem": "把部件加进 Gtk::Box 容器用哪个方法？",
               "options": [
                 "set_child()",
                 "append()",
@@ -599,8 +599,8 @@
               "page_ref": "sec-widgets-overview",
               "stem": "Gtk::make_managed() 的便利在于？",
               "options": [
-                "控件创建更快",
-                "控件归容器所有，容器销毁时自动删除，无需手动 delete",
+                "部件创建更快",
+                "部件归容器所有，容器销毁时自动删除，无需手动 delete",
                 "自动布局",
                 "自动连接信号"
               ],
@@ -746,7 +746,7 @@
               "page_ref": "sec-helloworld",
               "stem": "sigc::mem_fun(*this, &HelloWorld::on_button_clicked) 的作用是？",
               "options": [
-                "把成员函数绑定为该实例的信号处理器",
+                "把成员函数绑定为该实例的信号处理函数",
                 "动态注册新信号",
                 "断开信号",
                 "发出信号"
@@ -769,7 +769,7 @@
           "id": "basics-cp-1",
           "stem": "（综合) 一个最小 gtkmm 程序的必要骨架是？",
           "options": [
-            "创建 Gtk::Application → make_window_and_run<窗口类>() → 窗口类构造中布置控件与信号",
+            "创建 Gtk::Application → make_window_and_run<窗口类>() → 窗口类构造中布置部件与信号",
             "先写 main 循环轮询键盘",
             "必须用 Gtk::Builder 加载 XML",
             "继承 Gtk::Main 并重写 run()"
@@ -869,7 +869,7 @@
         },
         {
           "id": "sec-checkbuttons",
-          "title": "勾选按钮（CheckButton）",
+          "title": "复选按钮（CheckButton）",
           "status": "translated",
           "title_en": "CheckButton"
         },
@@ -891,13 +891,13 @@
           "blocks": [
             {
               "type": "text",
-              "text": "Gtk::Button 是最常用的交互控件：显示一个标签或图标，用户按下并释放后发出 clicked 信号，连接到该信号的处理器随即被调用。"
+              "text": "Gtk::Button 是最常用的交互部件：显示一个标签或图标，用户按下并释放后发出 clicked 信号，连接到该信号的处理函数随即被调用。"
             },
             {
               "type": "code",
               "lang": "cpp",
               "caption": "Gtk::Button 常用设置与信号连接（语义基准：docs.gtk.org/gtk4/class.Button.html）",
-              "source": "auto button = Gtk::Button();\nbutton.set_label(\"点击我（_C）\");      // 下划线助记符：Alt+C 触发\nbutton.set_use_underline(true);\nbutton.set_icon_name(\"document-save\"); // 或只显示图标\nbutton.signal_clicked().connect([] {\n  // 处理器：点击后执行\n});"
+              "source": "auto button = Gtk::Button();\nbutton.set_label(\"点击我（_C）\");      // 下划线助记符：Alt+C 触发\nbutton.set_use_underline(true);\nbutton.set_icon_name(\"document-save\"); // 或只显示图标\nbutton.signal_clicked().connect([] {\n  // 处理函数：点击后执行\n});"
             },
             {
               "type": "callout",
@@ -1004,7 +1004,7 @@
               "type": "simulation",
               "sim": "toggle-state",
               "demo_ref": "demo.buttons",
-              "note": "模型简化：真实切换由按下/释放完成，状态存于控件内部。",
+              "note": "模型简化：真实切换由按下/释放完成，状态存于部件内部。",
               "page_ref": "sec-toggle-buttons"
             },
             {
@@ -1258,7 +1258,7 @@
       "knowledge_points": [
         {
           "id": "gtkmm.range.quizset",
-          "title": "范围控件测验集",
+          "title": "范围部件测验集",
           "type": "concept",
           "difficulty": 2,
           "mastery_goal": "required",
@@ -1271,7 +1271,7 @@
               "stem": "标准 Scrollbar 的设计用途是？",
               "options": [
                 "独立显示数值",
-                "只用于滚动另一个控件（如 Gtk::Entry 或 Gtk::Viewport）",
+                "只用于滚动另一个部件（如 Gtk::Entry 或 Gtk::Viewport）",
                 "调节音量",
                 "显示进度"
               ],
@@ -1289,12 +1289,12 @@
               "type": "quiz",
               "id": "rng-sc-1",
               "page_ref": "sec-scale-widgets",
-              "stem": "Gtk::Scale 控件（滑块）的核心作用是？",
+              "stem": "Gtk::Scale 部件（滑块）的核心作用是？",
               "options": [
                 "让用户可视化地在范围内选取和调整数值",
                 "显示文本",
                 "触发动作",
-                "布局其他控件"
+                "布局其他部件"
               ],
               "answer": 0,
               "source_refs": [
@@ -1354,7 +1354,7 @@
       "checkpoint": [
         {
           "id": "rng-cp",
-          "stem": "（综合) Range Widgets 示例中三个控件能同步变化的原因是？",
+          "stem": "（综合) Range Widgets 示例中三个部件能同步变化的原因是？",
           "options": [
             "它们共享同一个 Adjustment",
             "彼此连接了信号互相更新",
@@ -1367,7 +1367,7 @@
               "relation": "adapted",
               "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
               "locator": "官方节页 sec-range-example",
-              "note": "三控件连接同一 Adjustment 的联动示例"
+              "note": "三部件连接同一 Adjustment 的联动示例"
             }
           ]
         }
@@ -1423,7 +1423,7 @@
       "knowledge_points": [
         {
           "id": "gtkmm.misc.quizset",
-          "title": "杂项控件测验集",
+          "title": "杂项部件测验集",
           "type": "concept",
           "difficulty": 2,
           "mastery_goal": "required",
@@ -1499,7 +1499,7 @@
               "stem": "set_activates_default(true) 的效果是？",
               "options": [
                 "回车时清空输入框",
-                "回车时激活所在窗口的默认控件（如对话框的确认按钮）",
+                "回车时激活所在窗口的默认部件（如对话框的确认按钮）",
                 "回车时发出 changed",
                 "禁止回车"
               ],
@@ -1509,7 +1509,7 @@
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-text-entry",
-                  "note": "出处：默认控件激活段"
+                  "note": "出处：默认部件激活段"
                 }
               ]
             },
@@ -1580,7 +1580,7 @@
               "type": "quiz",
               "id": "misc-ib-1",
               "page_ref": "sec-infobar",
-              "stem": "InfoBar 控件自 gtkmm 4.10 起的状态是？",
+              "stem": "InfoBar 部件自 gtkmm 4.10 起的状态是？",
               "options": [
                 "推荐使用",
                 "已弃用",
@@ -1634,13 +1634,13 @@
       "pages": [
         {
           "id": "sec-single-item-containers",
-          "title": "单子控件容器",
+          "title": "单子部件容器",
           "status": "translated",
           "title_en": "Single-item Containers"
         },
         {
           "id": "sec-multi-item-containers",
-          "title": "多子控件容器",
+          "title": "多子部件容器",
           "status": "translated",
           "title_en": "Multiple-item Containers"
         }
@@ -1648,7 +1648,7 @@
       "knowledge_points": [
         {
           "id": "gtkmm.container.quizset",
-          "title": "容器控件测验集",
+          "title": "容器部件测验集",
           "type": "concept",
           "difficulty": 2,
           "mastery_goal": "required",
@@ -1660,8 +1660,8 @@
               "page_ref": "sec-single-item-containers",
               "stem": "Gtk::Window 属于哪类容器？",
               "options": [
-                "多子控件容器",
-                "单子控件容器",
+                "多子部件容器",
+                "单子部件容器",
                 "不是容器",
                 "固定四格容器"
               ],
@@ -1681,8 +1681,8 @@
               "page_ref": "sec-single-item-containers",
               "stem": "Gtk::Paned 的特点是？",
               "options": [
-                "无限子控件",
-                "固定包含两个子控件，把窗口分成两个窗格",
+                "无限子部件",
+                "固定包含两个子部件，把窗口分成两个窗格",
                 "只能竖直分",
                 "不是容器"
               ],
@@ -1703,7 +1703,7 @@
               "stem": "gtkmm 窗口「有弹性」可拉伸的原因是？",
               "options": [
                 "窗口不是固定像素",
-                "控件打包（widget packing）系统",
+                "部件装填（widget packing）系统",
                 "GPU 加速",
                 "CSS 弹性布局"
               ],
@@ -1723,8 +1723,8 @@
               "page_ref": "sec-multi-item-containers",
               "stem": "给 set_homogeneous(true) 的效果是？",
               "options": [
-                "子控件颜色一致",
-                "Box 内所有子控件尺寸相同",
+                "子部件颜色一致",
+                "Box 内所有子部件尺寸相同",
                 "间距归零",
                 "禁用拉伸"
               ],
@@ -1734,7 +1734,7 @@
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-multi-item-containers",
-                  "note": "出处：Box 打包选项段"
+                  "note": "出处：Box 装填选项段"
                 }
               ]
             },
@@ -1745,7 +1745,7 @@
               "stem": "Box 的 `spacing` 参数含义是？",
               "options": [
                 "精确像素数",
-                "控件之间保留的（最小）像素数",
+                "部件之间保留的（最小）像素数",
                 "百分比",
                 "行数"
               ],
@@ -1755,7 +1755,7 @@
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-multi-item-containers",
-                  "note": "出处：Box 打包选项段"
+                  "note": "出处：Box 装填选项段"
                 }
               ]
             },
@@ -1799,7 +1799,7 @@
               "relation": "adapted",
               "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
               "locator": "官方节页 sec-multi-item-containers",
-              "note": "打包排障建议段"
+              "note": "装填排障建议段"
             }
           ]
         }
@@ -1997,7 +1997,7 @@
               "type": "quiz",
               "id": "lm-7",
               "page_ref": "sec-listmodel-view",
-              "stem": "视图期望被直接放进哪种控件以支持滚动回收？",
+              "stem": "视图期望被直接放进哪种部件以支持滚动回收？",
               "options": [
                 "Gtk::Box",
                 "Gtk::ScrolledWindow",
@@ -2218,7 +2218,7 @@
               "page_ref": "sec-treeview",
               "stem": "默认 CellRenderer 不够用时怎么办？",
               "options": [
-                "换控件",
+                "换部件",
                 "追加特定 CellRenderer 并指示它从模型列渲染到外观各方面",
                 "只能放弃",
                 "手绘"
@@ -2261,7 +2261,7 @@
               "stem": "一列里有多个 CellRenderer 时如何取得目标 renderer？",
               "options": [
                 "get_column() 后调 get_cells()",
-                "遍历控件树",
+                "遍历部件树",
                 "重新添加",
                 "无法取得"
               ],
@@ -2444,7 +2444,7 @@
               "type": "quiz",
               "id": "dd-3",
               "page_ref": "sec-dropdown-model",
-              "stem": "下拉菜单条目要与控件上显示的外观不同，需要？",
+              "stem": "下拉菜单条目要与部件上显示的外观不同，需要？",
               "options": [
                 "set_list_factory() 另设工厂",
                 "改 CSS",
@@ -2630,7 +2630,7 @@
               "type": "quiz",
               "id": "cb-1",
               "page_ref": "sec-combobox-model",
-              "stem": "ComboBox 的模型定义方式与哪个控件一致？",
+              "stem": "ComboBox 的模型定义方式与哪个部件一致？",
               "options": [
                 "ListView / ColumnView 体系",
                 "Entry",
@@ -2753,7 +2753,7 @@
         },
         {
           "id": "sec-widgets-and-childanchors",
-          "title": "控件与 ChildAnchor",
+          "title": "部件与 ChildAnchor",
           "status": "translated",
           "title_en": "Widgets and ChildAnchors"
         },
@@ -2779,7 +2779,7 @@
               "page_ref": "sec-textview-buffer",
               "stem": "TextView 显示与编辑的文字数据存放在哪里？",
               "options": [
-                "控件自身",
+                "部件自身",
                 "关联的 Gtk::TextBuffer 中",
                 "外部文件",
                 "Gio::Settings"
@@ -2798,7 +2798,7 @@
               "type": "quiz",
               "id": "tvw-2",
               "page_ref": "sec-textview-buffer",
-              "stem": "要在 TextView 的文字中嵌入图片或其他控件，用什么机制？",
+              "stem": "要在 TextView 的文字中嵌入图片或其他部件，用什么机制？",
               "options": [
                 "ChildAnchor",
                 "直接 set_child",
@@ -3047,7 +3047,7 @@
           "options": [
             "创建动作 → 写 ui 字符串（引用动作名）交给 Builder → get_object/get_widget 取出菜单栏与工具栏加入容器",
             "先画界面再写动作且两者无关联",
-            "每个菜单项单独创建控件不与动作关联",
+            "每个菜单项单独创建部件不与动作关联",
             "菜单必须用代码逐项手写"
           ],
           "answer": 0,
@@ -3125,7 +3125,7 @@
               "type": "quiz",
               "id": "adj-2",
               "page_ref": "sec-adjustments-easy",
-              "stem": "哪些控件属于「把值当普通数字」直接被用户调整的一组？",
+              "stem": "哪些部件属于「把值当普通数字」直接被用户调整的一组？",
               "options": [
                 "Scrollbar、Scale、SpinButton 等",
                 "只有 Scale",
@@ -3146,7 +3146,7 @@
               "type": "quiz",
               "id": "adj-3",
               "page_ref": "sec-adjustment-internals",
-              "stem": "多个范围控件共享同一个 Adjustment 时会发生什么？",
+              "stem": "多个范围部件共享同一个 Adjustment 时会发生什么？",
               "options": [
                 "一个变化全部同步变化",
                 "互不影响",
@@ -3539,7 +3539,7 @@
       "pages": [
         {
           "id": "sec-memory-widgets",
-          "title": "控件",
+          "title": "部件",
           "status": "pending",
           "title_en": "Widgets"
         },
@@ -3571,13 +3571,13 @@
         },
         {
           "id": "sec-builder-accessing-widgets",
-          "title": "访问控件",
+          "title": "访问部件",
           "status": "pending",
           "title_en": "Accessing widgets"
         },
         {
           "id": "sec-builder-using-derived-widgets",
-          "title": "使用派生控件",
+          "title": "使用派生部件",
           "status": "pending",
           "title_en": "Using derived widgets"
         }

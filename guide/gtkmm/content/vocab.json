@@ -44,7 +44,7 @@
       "note": "",
       "domain": true,
       "example": "Polymorphism lets one interface drive many widget implementations.",
-      "example_cn": "多态让一个接口驱动多种控件实现。"
+      "example_cn": "多态让一个接口驱动多种部件实现。"
     },
     {
       "term": "type-safe",
@@ -61,7 +61,7 @@
       "cn": "已弃用的",
       "note": "官方术语：不建议再用的旧 API",
       "example": "This widget is deprecated since 4.10.",
-      "example_cn": "该控件自 4.10 起已弃用。"
+      "example_cn": "该部件自 4.10 起已弃用。"
     },
     {
       "term": "deprecation",
@@ -77,7 +77,7 @@
       "cn": "传播；传导",
       "note": "事件传播 event propagation",
       "example": "The event propagates to the parent widget.",
-      "example_cn": "事件向父控件传播。",
+      "example_cn": "事件向父部件传播。",
       "domain": true
     },
     {
@@ -105,7 +105,7 @@
       "note": "内存/空间分配",
       "domain": true,
       "example": "Every widget allocation must be paired with proper disposal.",
-      "example_cn": "每次控件分配都必须配对妥善的释放。"
+      "example_cn": "每次部件分配都必须配对妥善的释放。"
     },
     {
       "term": "allocate",
@@ -113,7 +113,7 @@
       "cn": "分配",
       "note": "",
       "example": "The container allocates space for each child.",
-      "example_cn": "容器为每个子控件分配空间。",
+      "example_cn": "容器为每个子部件分配空间。",
       "domain": true
     },
     {
@@ -155,7 +155,7 @@
       "cn": "简洁的",
       "note": "",
       "example": "The connect() call is a succinct way to attach a handler.",
-      "example_cn": "connect() 调用是挂接处理器的简洁写法。"
+      "example_cn": "connect() 调用是挂接处理函数的简洁写法。"
     },
     {
       "term": "caveat",
@@ -163,7 +163,7 @@
       "cn": "注意事项；警告",
       "note": "",
       "example": "One caveat: never delete a widget while it is on screen.",
-      "example_cn": "注意一点：绝不要删除还在屏幕上的控件。"
+      "example_cn": "注意一点：绝不要删除还在屏幕上的部件。"
     },
     {
       "term": "mandatory",
@@ -195,7 +195,7 @@
       "cn": "繁琐的",
       "note": "",
       "example": "Writing signal handlers for every widget by hand is tedious.",
-      "example_cn": "为每个控件手写信号处理器很繁琐。"
+      "example_cn": "为每个部件手写信号处理函数很繁琐。"
     },
     {
       "term": "cumbersome",
@@ -239,7 +239,7 @@
       "note": "",
       "domain": true,
       "example": "Dereference the RefPtr to call methods on the widget.",
-      "example_cn": "解引用 RefPtr 才能在控件上调用方法。"
+      "example_cn": "解引用 RefPtr 才能在部件上调用方法。"
     },
     {
       "term": "overflow",
@@ -253,29 +253,29 @@
     {
       "term": "widget",
       "pos": "n.",
-      "cn": "控件；部件",
+      "cn": "部件",
       "note": "GTK 核心概念，也叫 control",
       "domain": true,
       "example": "A button is the simplest interactive widget.",
-      "example_cn": "按钮是最简单的交互控件。"
+      "example_cn": "按钮是最简单的交互部件。"
     },
     {
       "term": "packing",
       "pos": "n.",
-      "cn": "打包；排布",
-      "note": "widget packing = 控件排布系统",
+      "cn": "装填；排布",
+      "note": "widget packing = 部件排布系统",
       "domain": true,
       "example": "Packing decides how children fill a box container.",
-      "example_cn": "打包决定子控件如何填充盒容器。"
+      "example_cn": "装填决定子部件如何填充盒容器。"
     },
     {
       "term": "container",
       "pos": "n.",
       "cn": "容器",
-      "note": "容纳其他控件的控件",
+      "note": "容纳其他部件的部件",
       "domain": true,
       "example": "A window is a container that holds one child widget.",
-      "example_cn": "窗口是容纳单个子控件的容器。"
+      "example_cn": "窗口是容纳单个子部件的容器。"
     },
     {
       "term": "adjustment",
@@ -319,7 +319,7 @@
       "note": "可见区域",
       "domain": true,
       "example": "The viewport clips widgets larger than the visible area.",
-      "example_cn": "视口会裁掉超出可视区域的控件。"
+      "example_cn": "视口会裁掉超出可视区域的部件。"
     },
     {
       "term": "lifetime",
@@ -346,7 +346,7 @@
       "note": "",
       "domain": true,
       "example": "Widgets are created on the heap and managed by smart pointers.",
-      "example_cn": "控件创建在堆上，由智能指针管理。"
+      "example_cn": "部件创建在堆上，由智能指针管理。"
     },
     {
       "term": "stack",
@@ -382,7 +382,7 @@
       "note": "",
       "domain": true,
       "example": "The widget hierarchy mirrors the window layout.",
-      "example_cn": "控件层次结构对应窗口布局。"
+      "example_cn": "部件层次结构对应窗口布局。"
     },
     {
       "term": "hierarchical",
@@ -391,7 +391,7 @@
       "note": "",
       "domain": true,
       "example": "The tree view displays hierarchical data.",
-      "example_cn": "树视图展示分层数据。"
+      "example_cn": "树形视图展示分层数据。"
     },
     {
       "term": "orientation",
@@ -407,7 +407,7 @@
       "cn": "水平的",
       "note": "",
       "example": "The box packs its children horizontally.",
-      "example_cn": "该盒容器水平排布子控件。"
+      "example_cn": "该盒容器水平排布子部件。"
     },
     {
       "term": "vertical",
@@ -451,7 +451,7 @@
       "note": "",
       "domain": true,
       "example": "Each column of the tree view has its own renderer.",
-      "example_cn": "树视图的每一列都有自己的渲染器。"
+      "example_cn": "树形视图的每一列都有自己的渲染器。"
     },
     {
       "term": "row",
@@ -533,7 +533,7 @@
       "cn": "调用",
       "note": "",
       "example": "The signal invokes every connected handler.",
-      "example_cn": "信号会调用每一个已连接的处理器。"
+      "example_cn": "信号会调用每一个已连接的处理函数。"
     },
     {
       "term": "cast",
@@ -712,7 +712,7 @@
       "cn": "优先级",
       "note": "",
       "example": "Signal handlers run in connection order, not in precedence.",
-      "example_cn": "信号处理器按连接顺序运行，不分优先级。"
+      "example_cn": "信号处理函数按连接顺序运行，不分优先级。"
     },
     {
       "term": "roughly",
@@ -728,7 +728,7 @@
       "cn": "然而；反之",
       "note": "对比连词",
       "example": "Box stacks children in one direction, whereas Grid places them in cells.",
-      "example_cn": "Box 沿一个方向堆叠子控件，而 Grid 把它们放进单元格。"
+      "example_cn": "Box 沿一个方向堆叠子部件，而 Grid 把它们放进单元格。"
     },
     {
       "term": "nonetheless",
@@ -768,7 +768,7 @@
       "cn": "方面；外观维度",
       "note": "",
       "example": "The tutorial covers all aspects of widget lifetime.",
-      "example_cn": "教程涵盖了控件生命周期的方方面面。"
+      "example_cn": "教程涵盖了部件生命周期的方方面面。"
     },
     {
       "term": "instruct",
@@ -953,11 +953,11 @@
     {
       "term": "preprocessor",
       "pos": "n.",
-      "cn": "预处理器",
+      "cn": "预处理函数",
       "note": "",
       "domain": true,
       "example": "The preprocessor expands the include directives.",
-      "example_cn": "预处理器展开 include 指令。"
+      "example_cn": "预处理函数展开 include 指令。"
     },
     {
       "term": "compiler",
@@ -991,7 +991,7 @@
       "cn": "限制",
       "note": "",
       "example": "Restrict access to the widget with a RefPtr.",
-      "example_cn": "用 RefPtr 限制对控件的访问。"
+      "example_cn": "用 RefPtr 限制对部件的访问。"
     },
     {
       "term": "guarantee",
@@ -999,15 +999,15 @@
       "cn": "保证",
       "note": "",
       "example": "The library guarantees that handlers run in order.",
-      "example_cn": "库保证处理器按顺序运行。"
+      "example_cn": "库保证处理函数按顺序运行。"
     },
     {
       "term": "ownership",
       "pos": "n.",
       "cn": "所有权",
-      "note": "容器拥有子控件的所有权",
+      "note": "容器拥有子部件的所有权",
       "example": "The container takes ownership of its children.",
-      "example_cn": "容器取得子控件的所有权。"
+      "example_cn": "容器取得子部件的所有权。"
     },
     {
       "term": "floating reference",
@@ -1016,7 +1016,7 @@
       "note": "GObject 术语",
       "domain": true,
       "example": "A floating reference lets a parent adopt the widget later.",
-      "example_cn": "浮动引用让父容器可以稍后收养控件。"
+      "example_cn": "浮动引用让父容器可以稍后收养部件。"
     },
     {
       "term": "reference counting",
@@ -1025,7 +1025,7 @@
       "note": "",
       "domain": true,
       "example": "Reference counting frees the widget when the last ref drops.",
-      "example_cn": "引用计数在最后一个引用消失时释放控件。"
+      "example_cn": "引用计数在最后一个引用消失时释放部件。"
     },
     {
       "term": "smart pointer",
@@ -1087,7 +1087,7 @@
       "note": "",
       "domain": true,
       "example": "Concurrent access to a widget is not allowed.",
-      "example_cn": "不允许对控件的并发访问。"
+      "example_cn": "不允许对部件的并发访问。"
     },
     {
       "term": "deadline",
@@ -1281,7 +1281,7 @@
       "note": "",
       "domain": true,
       "example": "The overlay stacks widgets on top of each other.",
-      "example_cn": "覆盖层把控件叠放在一起。"
+      "example_cn": "覆盖层把部件叠放在一起。"
     },
     {
       "term": "pane",
@@ -1299,7 +1299,7 @@
       "note": "",
       "domain": true,
       "example": "Each tab holds one child widget.",
-      "example_cn": "每个标签页容纳一个子控件。"
+      "example_cn": "每个标签页容纳一个子部件。"
     },
     {
       "term": "modal",
@@ -1406,7 +1406,7 @@
       "note": "",
       "domain": true,
       "example": "Smartpointers keep widget memory management safe.",
-      "example_cn": "智能指针让控件内存管理安全。"
+      "example_cn": "智能指针让部件内存管理安全。"
     }
   ],
   "patterns": [

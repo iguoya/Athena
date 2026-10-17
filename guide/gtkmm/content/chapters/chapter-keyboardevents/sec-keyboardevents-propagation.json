@@ -65,7 +65,7 @@
    "type": "para",
    "text": "When you write in the label, a key press event will be emitted,\n        which will go first, in the capture phase, to the toplevel window\n        (`Gtk::Window`), then down to its child, the\n        box, then to the box's child, the label with the keyboard focus.\n        In the target phase the event goes only to the widget with the keyboard\n        focus (the label). In the bubble phase the event goes first to the widget\n        with the keyboard focus (the label), then to its parent (the box), then\n        to the box's parent (the window). If the event propagates all the way\n        down to the label and then up to the window without being stopped,\n        the text you're writing will appear in the `Label`\n        above the `Label` you're writing in.",
    "sha": "16e870fbd04fde97",
-   "zh": "当你在条目中写入的时候，将发出一个按键放开事件，该事件将先进入顶层窗口（Gtk::Window），因为我们之前设置了一个事件处理程序，所以windowKeyReleaseBefore()将先被调用。然后调用已被覆盖的默认信号处理程序，然后将事件传播到具有焦点的部件，也就是示例中的Entry，根据事件处理程序的返回值，该事件可以被传播到Grid和Window。如果该事件被传播，你写入的文本将出现在Entry上方的Label中。"
+   "zh": "当你在条目中写入的时候，将发出一个按键放开事件，该事件将先进入顶级窗口（Gtk::Window），因为我们之前设置了一个事件处理程序，所以windowKeyReleaseBefore()将先被调用。然后调用已被覆盖的默认信号处理函数，然后将事件传播到具有焦点的部件，也就是示例中的Entry，根据事件处理程序的返回值，该事件可以被传播到Grid和Window。如果该事件被传播，你写入的文本将出现在Entry上方的Label中。"
   },
   {
    "type": "figure",

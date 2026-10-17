@@ -20,7 +20,7 @@
    "type": "para",
    "text": "You've probably noticed that gtkmm windows seem \"elastic\" - they can usually be stretched in many  different ways. This is due to the *widget packing*\nsystem.",
    "sha": "dc23a528e1b07884",
-   "zh": "你可能已经注意到，gtkmm 的窗口看起来是「有弹性」的——通常可以沿多种方式拉伸。这要归功于 *控件打包*（widget packing）系统。"
+   "zh": "你可能已经注意到，gtkmm 的窗口看起来是「有弹性」的——通常可以沿多种方式拉伸。这要归功于 *部件装填*（widget packing）系统。"
   },
   {
    "type": "para",
@@ -44,7 +44,7 @@
    "type": "listitem",
    "text": "Changing the layout of a window \"on the fly\", to make some extra widgets appear, for instance, is complex. It  requires tedious recalculation of every widget's position.",
    "sha": "be38512b35f9fe01",
-   "zh": "「动态」改变窗口布局（比如让一些额外的控件临时出现）很复杂，需要对每个控件的位置做繁琐的重新计算。"
+   "zh": "「动态」改变窗口布局（比如让一些额外的部件临时出现）很复杂，需要对每个部件的位置做繁琐的重新计算。"
   },
   {
    "type": "para",
@@ -56,7 +56,7 @@
    "type": "para",
    "text": "gtkmm arranges widgets hierarchically, using *containers*.\nA container widget contains other widgets. Most gtkmm widgets are\ncontainers. Windows, Notebook tabs, and Buttons are all container widgets.\nThere are two flavors of containers: single-child containers and multiple-child\ncontainers. Most container widgets in gtkmm are single-child containers,\nincluding `Gtk::Window`.",
    "sha": "0c0383c41e5df9f7",
-   "zh": "gtkmm 用 *容器*（container）按层次组织控件：容器控件包含其他控件，而大多数 gtkmm 控件都是容器——窗口、笔记本标签页、按钮都是容器控件。容器分两类：单子控件容器与多子控件容器。gtkmm 的大多数容器是单子控件容器，包括 `Gtk::Window`。"
+   "zh": "gtkmm 用 *容器*（container）按层次组织部件：容器部件包含其他部件，而大多数 gtkmm 部件都是容器——窗口、笔记本标签页、按钮都是容器部件。容器分两类：单子部件容器与多子部件容器。gtkmm 的大多数容器是单子部件容器，包括 `Gtk::Window`。"
   },
   {
    "type": "para",
@@ -86,7 +86,7 @@
    "type": "para",
    "text": "If you've never used a packing toolkit before, it can take some\ngetting used to. You'll probably find, however, that you don't\nneed to rely on visual form editors quite as much as you might with\nother toolkits.",
    "sha": "f1e2a535bdb940b0",
-   "zh": "如果你之前从未使用组装工具包，那可能需要一段时间来适应它。然后你会发现你不需要和使用其他工具包一样依赖可视化编辑工具。"
+   "zh": "如果你之前从未使用装填工具包，那可能需要一段时间来适应它。然后你会发现你不需要和使用其他工具包一样依赖可视化编辑工具。"
   },
   {
    "type": "heading",
@@ -169,7 +169,7 @@
    "type": "para",
    "text": "There are several options governing how widgets are to be packed, and this can\nbe confusing at first. You can modify the packing by using set_expand(),\nset_hexpand(), set_vexpand(),\nset_halign(), set_valign()\nand/or set_margin() on the child widgets. If you have\ndifficulties, then it is sometimes a good idea to play with the\n`Cambalache` GUI designer to see what is possible.\nYou can then use the `Gtk::Builder` API to load your GUI at runtime.",
    "sha": "f911bfc0d5c63ad4",
-   "zh": "控制打包的选项不少，初学时容易混淆。可以在子控件上用 set_expand()、set_hexpand()、set_vexpand()、set_halign()、set_valign() 与 set_margin() 调整打包行为。遇到困难时，不妨用 `Cambalache` 界面设计器把玩一下，看看有哪些可能。"
+   "zh": "控制装填的选项不少，初学时容易混淆。可以在子部件上用 set_expand()、set_hexpand()、set_vexpand()、set_halign()、set_valign() 与 set_margin() 调整装填行为。遇到困难时，不妨用 `Cambalache` 界面设计器把玩一下，看看有哪些可能。"
   },
   {
    "type": "para",
@@ -206,7 +206,7 @@
    "type": "para",
    "text": "Here's the constructor for the `Box` widget,\nand methods that set per-container packing options:",
    "sha": "a048e12ae83f090f",
-   "zh": "下面是 `Box` 控件的构造函数，以及设置各容器打包选项的方法："
+   "zh": "下面是 `Box` 部件的构造函数，以及设置各容器装填选项的方法："
   },
   {
    "type": "code",
@@ -218,7 +218,7 @@
    "type": "para",
    "text": "Passing `true` to set_homogeneous() will\ncause all of the contained widgets to be the same size.\n`spacing` is a (minimum) number of pixels to leave between\neach widget.",
    "sha": "b8d8e02b25d29ed9",
-   "zh": "给 set_homogeneous() 传 `true` 会让所有子控件尺寸相同；`spacing` 是每个控件之间保留的（最小）像素数。"
+   "zh": "给 set_homogeneous() 传 `true` 会让所有子部件尺寸相同；`spacing` 是每个部件之间保留的（最小）像素数。"
   },
   {
    "type": "para",
@@ -255,7 +255,7 @@
    "type": "listitem",
    "text": "Give all command-line options to Gtk::Application::run()\nand add the flag `Gio::Application::Flags::HANDLES_COMMAND_LINE`\nto Gtk::Application::create().\nConnect a signal handler to the `command_line` signal, and\nhandle the command-line options in the signal handler.",
    "sha": "d1950f69a7d2399e",
-   "zh": "将所有的命令行选项传递给Gtk::Application::run()并为Gtk::Application::create()方法设置标志Gio::Application::Flags::HANDLES_COMMAND_LINE；再为 command_line 信号连接一个信号处理器，并在该处理器中处理命令行选项。"
+   "zh": "将所有的命令行选项传递给Gtk::Application::run()并为Gtk::Application::create()方法设置标志Gio::Application::Flags::HANDLES_COMMAND_LINE；再为 command_line 信号连接一个信号处理函数，并在该处理函数中处理命令行选项。"
   },
   {
    "type": "heading",

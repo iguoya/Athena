@@ -100,6 +100,8 @@
 - 课表页的 `translated` 状态要求该节快照里全部文字段都有 `zh`（check 校验一致性
   与 pinned_commit 版本）；语义争议以官方 DocBook 当前内容为准，官方 zh_CN.po
   可作术语参照（覆盖率不完全）。
+- **译文术语按 `content/glossary.json` 走**（应用 ADR 0010）：写新译文、改译文前先对照；
+  禁用写法由 `scripts/check.py` 阻断，批量统一用 `python scripts/glossary.py --apply`。
 
 ## 架构原则
 
