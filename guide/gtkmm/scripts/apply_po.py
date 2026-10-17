@@ -18,6 +18,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from extract_source import expand_entities  # noqa: E402
+from inline_md import restore_angles  # noqa: E402
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 PO = (PROJECT_ROOT / "upstream" / "gtkmm-documentation" / "docs" / "tutorial"
@@ -60,7 +61,8 @@ def parse_po(text: str) -> dict[str, str]:
 
 def po_to_plain(raw: str) -> str:
     """po 的 msgid（含 DocBook 标签）→ 与快照指纹同口径的纯文本。"""
-    text = expand_entities(raw)
+    # &lt; &gt; 是正文字符不是标签：先占位，剥完标签再还原（与快照 md_inline 同口径）
+    text = expand_entities(raw, keep_angle=True)
     # po 字符串里的 \" 是转义引号（parse_po 不解转义）；不还原则标签属性
     # 匹配不上，剥标签后与快照口径漂移
     text = text.replace('\\"', '"')
@@ -68,7 +70,7 @@ def po_to_plain(raw: str) -> str:
     # 否则 po 侧剥标签后丢 URL，与快照的 markdown 文本对不齐
     text = re.sub(r'<link\s+xlink:href="([^"]+)"\s*/>', r"\1", text)
     text = re.sub(r"<[^>]+>", "", text)
-    return re.sub(r"\s+", " ", text).strip()
+    return re.sub(r"\s+", " ", restore_angles(text)).strip()
 
 
 def snapshot_plain(text: str) -> str:

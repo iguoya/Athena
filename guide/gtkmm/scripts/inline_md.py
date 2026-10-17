@@ -20,13 +20,29 @@ _ENTITIES = {
 }
 
 
-def expand_entities(text: str, custom: dict[str, str] | None = None) -> str:
-    """只展开实体（含值内含标签的 DocBook 自定义实体），保留其余标签。"""
+# 实体展开出来的 < 与 > 是正文字符（如 sigc::slot&lt;R(Args...)&gt;），不是标签。
+# inline_md 末尾的「剥未知标签」正则分不清二者，所以展开时先换成私有区占位符，
+# 序列化完再用 restore_angles 还原；否则模板参数、Pango 标记等会被当标签吞掉。
+_LT, _GT = "", ""
+
+
+def expand_entities(text: str, custom: dict[str, str] | None = None, keep_angle: bool = False) -> str:
+    """只展开实体（含值内含标签的 DocBook 自定义实体），保留其余标签。
+
+    keep_angle=True 时 &lt; &gt; 展开成占位符而非 < >，调用方在剥完标签后
+    用 restore_angles 还原。
+    """
     for name, value in sorted((custom or {}).items(), key=lambda kv: -len(kv[0])):
         text = text.replace(f"&{name};", value)
     for entity, char in _ENTITIES.items():
+        if keep_angle and entity in ("&lt;", "&gt;"):
+            char = _LT if entity == "&lt;" else _GT
         text = text.replace(entity, char)
     return text
+
+
+def restore_angles(text: str) -> str:
+    return text.replace(_LT, "<").replace(_GT, ">")
 
 
 def _innermost(tag: str, source: str):

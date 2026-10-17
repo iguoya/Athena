@@ -27,6 +27,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from inline_md import restore_angles  # noqa: E402
 from extract_source import (  # noqa: E402
     DOCBOOK,
     PROJECT_ROOT,
@@ -119,8 +120,15 @@ def strip_comments(source: str) -> str:
 
 
 def expand_md(raw: str) -> str:
-    # 标准实体 + DocBook 自定义实体（gtkmm、cpp 等）一起展开
-    return expand_entities(raw, _CUSTOM)
+    # 标准实体 + DocBook 自定义实体（gtkmm、cpp 等）一起展开；
+    # &lt; &gt; 留成占位符，等 inline_md 剥完标签再还原（见 inline_md.expand_entities）
+    return expand_entities(raw, _CUSTOM, keep_angle=True)
+
+
+def md_inline(raw: str) -> str:
+    """原文片段 → 受限 markdown，实体展开出来的尖括号不会被当标签剥掉。"""
+    return restore_angles(inline_md(expand_md(raw)))
+
 
 CONTENT_CHAPTERS = PROJECT_ROOT / "content" / "chapters"
 
@@ -305,7 +313,7 @@ def extract_blocks(fragment: str) -> list[dict]:
                     # 正文保留内联格式（粗/斜/行内代码/链接）；指纹严格沿用旧口径
                     # （strip_tags 纯文本）——已有翻译不因格式升级而失效（ADR 0002）
                     key = sha(strip_tags(text).strip())
-                    clean = inline_md(expand_md(text)).strip()
+                    clean = md_inline(text).strip()
                 else:
                     # 代码块逐字保留缩进与空白，尊重原文（应用 ADR 0002）
                     clean = code_text(text)
@@ -327,7 +335,7 @@ def extract_blocks(fragment: str) -> list[dict]:
                     # 列表项同样保留内联格式（链接/粗斜体/行内代码）；
                     # 无序列表项沿用列表项指纹口径；有序列表项沿用段落口径——
                     # 这批段此前被当作 para 提取，口径一致才不丢已有翻译
-                    clean = inline_md(expand_md(raw)).strip()
+                    clean = md_inline(raw).strip()
                     if not clean:
                         continue
                     block = {"type": "listitem", "text": clean}
@@ -350,7 +358,7 @@ def extract_blocks(fragment: str) -> list[dict]:
                     if not desc:
                         desc, _ = element_text("simpara", li_frag, 0)
                     raw = desc if desc else li_frag
-                    clean = inline_md(expand_md(raw)).strip()
+                    clean = md_inline(raw).strip()
                     if not clean:
                         continue
                     blocks.append({"type": "listitem", "text": clean,
@@ -360,7 +368,7 @@ def extract_blocks(fragment: str) -> list[dict]:
                 # 官网渲染为两列表格（segtitle 为表头）：受限块模型下每行一块；
                 # seg 的内容是代码标识符，inline_md 已序列化为行内代码，直接拼接
                 list_text, _ = element_text("segmentedlist", source, m.start())
-                titles = [inline_md(expand_md(strip_tags(t)))
+                titles = [md_inline(strip_tags(t))
                           for t in re.findall(r"<segtitle(?:\s[^>]*)?>(.*?)</segtitle>",
                                               list_text, re.S)]
                 header = " → ".join(titles)
@@ -368,7 +376,7 @@ def extract_blocks(fragment: str) -> list[dict]:
                     blocks.append({"type": "listitem", "text": header,
                                    "sha": sha(normalize(header))})
                 for _, item_frag in direct_children("seglistitem", list_text):
-                    segs = [inline_md(expand_md(strip_tags(s))) for s in
+                    segs = [md_inline(strip_tags(s)) for s in
                             re.findall(r"<seg(?:\s[^>]*)?>(.*?)</seg>", item_frag, re.S)]
                     clean = " → ".join(s for s in segs if s)
                     if clean:
