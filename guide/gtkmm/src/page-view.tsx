@@ -264,6 +264,7 @@ function SelfTranslation({
   onSave,
   hasOfficial = false,
   actionLabel = "✍️ 自己译",
+  seed,
 }: {
   sha: string;
   text?: string;
@@ -272,11 +273,13 @@ function SelfTranslation({
   hasOfficial?: boolean;
   /** 入口按钮文案：待译段「✍️ 自己译」，官方译文段「✎ 我的译法」 */
   actionLabel?: string;
+  /** 尚无自译时预填的官方译文，便于在原译文上微调 */
+  seed?: string;
 }) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState("");
   const start = () => {
-    setDraft(text ?? "");
+    setDraft(text || seed || "");
     setEditing(true);
   };
   if (editing) {
@@ -537,6 +540,7 @@ function ReadUnit({
             onSave={onSaveMyTranslation}
             hasOfficial
             actionLabel="✎ 我的译法"
+            seed={block.zh || undefined}
           />
         </>
       );
@@ -651,6 +655,7 @@ function ReadUnit({
             onSave={onSaveMyTranslation}
             hasOfficial={!!unit.zh}
             actionLabel={unit.zh ? "✎ 我的译法" : "✍️ 自己译"}
+            seed={unit.zh || undefined}
           />
         </div>
       )}
