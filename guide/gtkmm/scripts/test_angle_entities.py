@@ -30,6 +30,9 @@ class AngleEntities(unittest.TestCase):
         self.assertEqual(po_to_plain(raw), snapshot_plain(md(raw)))
         self.assertIn("<R(Args...)>", po_to_plain(raw))
 
+    def test_numeric_character_references(self):
+        self.assertEqual(expand_entities("copyright &#169; and Gr&#252;&#223;, &#xA9;"), "copyright © and Grüß, ©")
+
     def test_default_expansion_unchanged(self):
         self.assertEqual(expand_entities("a &lt; b &amp; c"), "a < b & c")
 

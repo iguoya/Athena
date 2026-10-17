@@ -38,6 +38,9 @@ def expand_entities(text: str, custom: dict[str, str] | None = None, keep_angle:
         if keep_angle and entity in ("&lt;", "&gt;"):
             char = _LT if entity == "&lt;" else _GT
         text = text.replace(entity, char)
+    # 数字字符引用（&#169; &#xA9;）：DocBook 里用来写 © ü ß 等，不展开会把「&#169;」原样留在正文里
+    text = re.sub(r"&#(\d+);", lambda m: chr(int(m.group(1))), text)
+    text = re.sub(r"&#[xX]([0-9a-fA-F]+);", lambda m: chr(int(m.group(1), 16)), text)
     return text
 
 
