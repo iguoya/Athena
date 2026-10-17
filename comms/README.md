@@ -86,6 +86,25 @@ todo ──> doing ──> review ──> done
    `scripts/check.py`）必须绿。
 4. 质量底线按各应用的规范走（如教学内容按该应用 `AGENTS.md` 与相关 ADR）。
 
+## 单开会话（`spawn.py`）
+
+`comms.py` 只管说话，对方下一轮才看得到；要「叫人开工」用 `spawn.py`：为某个代理
+**另起一个全新的会话**（不碰它正在跑的旧会话），首句就是「先 inbox、认领 T-xxx、
+做完转 review」。只给 `owner` 是该代理、状态为 `todo` 的任务开会话，避免和已认领的重复。
+
+```sh
+python comms/spawn.py zcode  --project driver --task T-104 [--note "补充说明"] [--dry-run]
+```
+
+| 代理 | 怎么开 | 前提 |
+|---|---|---|
+| zcode | `zcode.cjs -p` 无头后台（经 `~/.zcode/spawn-cli/` 垫片，自动生成） | 命令行需登录一次：`node "C:\Program Files\ZCode\resources\glm\zcode.cjs" login bigmodel` |
+| cursor | 装了独立 CLI（`cursor-agent` / `agent`）就无头；否则降级为深链预填新对话，使用者按回车 | 无头需先安装 Cursor CLI |
+| claude-code | `claude -p` 无头 | 无 |
+
+无头输出在 `comms/<舱>/runs/*.log`（已 gitignore）。无头会话没人实时回答，提示词已要求它
+遇事发消息给 leader 并转 `blocked`。文件层面的撞车仍靠任务书里的 owned 路径约束。
+
 ## 多标签页工作法（一个代理开多个会话并行）
 
 使用者会开同一代理的多个标签页各做各的任务。机制上的完整方案见 ADR 0167
