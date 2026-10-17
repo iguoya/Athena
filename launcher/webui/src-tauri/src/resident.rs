@@ -10,7 +10,7 @@
 //! Linux 是 XDG autostart。登录拉起时带 `--autostart`，窗口不弹出。
 
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 
 use launcher_core::{discover_all, runner};
 use tauri::menu::{CheckMenuItem, Menu, MenuItem, PredefinedMenuItem, Submenu};
@@ -25,21 +25,26 @@ pub fn launched_hidden() -> bool {
     std::env::args().any(|arg| arg == AUTOSTART_ARG)
 }
 
-/// 建托盘并拦住关窗。失败时调用方继续显示窗口，关窗即退出。
-pub fn install(
-    app: &AppHandle,
-    window: &WebviewWindow,
-    quitting: Arc<AtomicBool>,
-) -> Result<(), String> {
-    let repo = app.state::<crate::Repo>().0.clone();
-    let autostart_on = app.autolaunch().is_enabled().unwrap_or(false);
+/// 主窗口是否正显示着。状态探测靠它决定要不要扫进程表。
+pub struct Shown(pub Arc<AtomicBool>);
 
+/// 托盘图标句柄。清单变化时整份菜单换上，不重建图标。
+pub struct TraySlot(pub Mutex<Option<tauri::tray::TrayIcon>>);
+
+/// 窗口可见性翻转：记下标志，并叫醒状态探测线程。
+pub fn note_visibility(app: &AppHandle, on: bool) {
+    if let Some(shown) = app.try_state::<Shown>() {
+        shown.0.store(on, Ordering::SeqCst);
+    }
+    crate::watch::poke();
+}
+
+/// 按当前清单做一份托盘菜单。应用条目的 id 是契约（`open:` / `stop:`），
+/// 换菜单时点击处理不用跟着换。
+fn build_menu(app: &AppHandle, repo: &std::path::Path) -> Result<Menu<tauri::Wry>, String> {
+    let autostart_on = app.autolaunch().is_enabled().unwrap_or(false);
     let menu = Menu::new(app).map_err(|e| e.to_string())?;
-    // 清单变化后的菜单重建仍要重启启动器才生效。窗口里的列表是另一条轮询。
-    for entry in discover_all(&repo)
-        .iter()
-        .filter(|entry| !entry.hidden)
-    {
+    for entry in discover_all(repo).iter().filter(|entry| !entry.hidden) {
         let sub = Submenu::with_id(app, format!("app:{}", entry.id), &entry.title, true)
             .map_err(|e| e.to_string())?;
         let open = MenuItem::with_id(
@@ -65,6 +70,10 @@ pub fn install(
     menu.append(&PredefinedMenuItem::separator(app).map_err(|e| e.to_string())?)
         .map_err(|e| e.to_string())?;
 
+    let rescan = MenuItem::with_id(app, "rescan", "扫描应用目录", true, None::<&str>)
+        .map_err(|e| e.to_string())?;
+    menu.append(&rescan).map_err(|e| e.to_string())?;
+
     let autostart = CheckMenuItem::with_id(
         app,
         "autostart",
@@ -82,25 +91,44 @@ pub fn install(
     let quit = MenuItem::with_id(app, "quit", "退出启动器", true, None::<&str>)
         .map_err(|e| e.to_string())?;
     menu.append(&quit).map_err(|e| e.to_string())?;
+    Ok(menu)
+}
 
-    let autostart_item = autostart.clone();
+/// 清单或开机自启勾选变了，整份菜单换上。从后台线程调用：`set_menu` 会
+/// 把活派回主线程再等它完成，调用方若已在主线程上就会自己等自己。
+pub fn refresh_menu(app: &AppHandle) -> Result<(), String> {
+    let Some(slot) = app.try_state::<TraySlot>() else {
+        return Ok(());
+    };
+    let guard = slot.0.lock().unwrap_or_else(|p| p.into_inner());
+    let Some(icon) = guard.as_ref() else {
+        return Ok(());
+    };
+    let repo = app.state::<crate::Repo>().0.clone();
+    let menu = build_menu(app, &repo)?;
+    icon.set_menu(Some(menu)).map_err(|e| e.to_string())
+}
+
+/// 建托盘并拦住关窗。失败时调用方继续显示窗口，关窗即退出。
+pub fn install(
+    app: &AppHandle,
+    window: &WebviewWindow,
+    quitting: Arc<AtomicBool>,
+) -> Result<tauri::tray::TrayIcon, String> {
+    let repo = app.state::<crate::Repo>().0.clone();
+    let menu = build_menu(app, &repo)?;
     let quitting_for_menu = Arc::clone(&quitting);
-    let icon = tauri::image::Image::from_bytes(include_bytes!("../icons/32x32.png"))
+    let image = tauri::image::Image::from_bytes(include_bytes!("../icons/32x32.png"))
         .map_err(|e| format!("托盘图标读不出来：{e}"))?;
 
-    // build 会把图标登记进应用的资源表，句柄在这里丢掉也不会把托盘卸掉。
-    TrayIconBuilder::with_id("main-tray")
-        .icon(icon)
+    // 句柄留给 refresh_menu 换菜单。丢掉最后一份 TrayIcon 会把托盘卸掉。
+    let tray = TrayIconBuilder::with_id("main-tray")
+        .icon(image)
         .tooltip("Athena 启动器")
         .menu(&menu)
         .show_menu_on_left_click(false)
         .on_menu_event(move |app, event| {
-            handle_menu(
-                app,
-                event.id().as_ref(),
-                &autostart_item,
-                &quitting_for_menu,
-            );
+            handle_menu(app, event.id().as_ref(), &quitting_for_menu);
         })
         .on_tray_icon_event(|tray, event| {
             if let TrayIconEvent::Click {
@@ -123,12 +151,12 @@ pub fn install(
             }
             api.prevent_close();
             let _ = window_for_event.hide();
-            // 前端靠这个事件整体挂起（停轮询、停 3D 帧循环），托盘里零损耗。
-            // 广播走 app 级 emit，与前端 @tauri-apps/api/event 的全局 listen 同一通道。
+            // 前端靠这个事件停 3D 帧循环；状态探测同时停掉，托盘里不再扫进程表。
+            note_visibility(window_for_event.app_handle(), false);
             let _ = window_for_event.app_handle().emit("launcher://visibility", false);
         }
     });
-    Ok(())
+    Ok(tray)
 }
 
 pub fn show_main(app: &AppHandle) {
@@ -137,17 +165,30 @@ pub fn show_main(app: &AppHandle) {
         let _ = window.unminimize();
         let _ = window.set_focus();
     }
+    note_visibility(app, true);
     let _ = app.emit("launcher://visibility", true);
 }
 
-fn handle_menu(
-    app: &AppHandle,
-    id: &str,
-    autostart: &CheckMenuItem<tauri::Wry>,
-    quitting: &AtomicBool,
-) {
+fn handle_menu(app: &AppHandle, id: &str, quitting: &AtomicBool) {
     if id == "autostart" {
-        toggle_autostart(app, autostart);
+        toggle_autostart(app);
+        // 菜单回调多半在主线程。refresh_menu 要等主线程把新菜单装上，
+        // 不能在这里同步等，否则自己等自己。
+        let app = app.clone();
+        std::thread::spawn(move || {
+            if let Err(error) = refresh_menu(&app) {
+                eprintln!("托盘菜单没能按开机自启状态重建：{error}");
+            }
+        });
+        return;
+    }
+    if id == "rescan" {
+        let app = app.clone();
+        std::thread::spawn(move || {
+            if let Err(error) = crate::watch::rescan(&app) {
+                eprintln!("扫描应用目录失败：{error}");
+            }
+        });
         return;
     }
     if id == "show" {
@@ -183,17 +224,11 @@ fn handle_menu(
     });
 }
 
-fn toggle_autostart(app: &AppHandle, item: &CheckMenuItem<tauri::Wry>) {
+fn toggle_autostart(app: &AppHandle) {
     let auto = app.autolaunch();
     let currently = auto.is_enabled().unwrap_or(false);
-    let result = if currently {
-        auto.disable()
-    } else {
-        auto.enable()
-    };
+    let result = if currently { auto.disable() } else { auto.enable() };
     if let Err(error) = result {
         eprintln!("开机自启切换失败：{error}");
     }
-    let now = auto.is_enabled().unwrap_or(currently);
-    let _ = item.set_checked(now);
 }

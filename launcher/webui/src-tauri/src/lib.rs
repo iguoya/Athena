@@ -10,6 +10,7 @@ use tauri::Manager;
 mod app_icon;
 mod cache;
 mod resident;
+mod watch;
 
 /// 仓库定位一次、整个进程共享：locate_repo 每次都走盘上探测，没必要。
 pub struct Repo(pub std::path::PathBuf);
@@ -67,6 +68,7 @@ pub mod commands {
     #[tauri::command]
     pub fn catalog(repo: State<Repo>) -> Result<CatalogDto, String> {
         let apps = discover_all(&repo.0);
+        crate::watch::remember(&apps);
         // 归档（ADR 0139）与隐藏（ADR 0093）都不进 3D 视图；归档在思维导图可开关查看。
         let visible: Vec<&manifest::App> = apps
             .iter()
@@ -274,8 +276,14 @@ pub mod commands {
     }
 
     #[tauri::command]
+    pub fn rescan_apps(app: tauri::AppHandle) -> Result<crate::watch::Rescan, String> {
+        crate::watch::rescan(&app)
+    }
+
+    #[tauri::command]
     pub fn mindmap(repo: State<Repo>, include_archived: Option<bool>) -> Result<MindmapDto, String> {
         let apps = discover_all(&repo.0);
+        crate::watch::remember(&apps);
         // 归档默认不呈现（ADR 0139）；「显示归档」开关打开时以淡显节点进来。
         let include_archived = include_archived.unwrap_or(false);
         let visible: Vec<manifest::App> = apps
@@ -407,6 +415,10 @@ pub fn run() {
         }))
         .plugin(autostart_plugin())
         .manage(Repo(repo))
+        .manage(resident::Shown(Arc::new(AtomicBool::new(
+            !resident::launched_hidden(),
+        ))))
+        .manage(resident::TraySlot(std::sync::Mutex::new(None)))
         .setup(move |app| {
             let window = app.get_webview_window("main").expect("主窗口缺失");
             app_icon::install(&window);
@@ -415,13 +427,22 @@ pub fn run() {
                 let _ = window.show();
                 let _ = window.set_focus();
             }
-            if let Err(error) = resident::install(app.handle(), &window, quitting) {
-                eprintln!("托盘没能建起来，窗口照常能用：{error}");
-                if hidden {
-                    let _ = window.show();
-                    let _ = window.set_focus();
+            match resident::install(app.handle(), &window, quitting) {
+                Ok(icon) => {
+                    *app.state::<resident::TraySlot>().0.lock().unwrap_or_else(|p| p.into_inner()) =
+                        Some(icon);
+                }
+                Err(error) => {
+                    eprintln!("托盘没能建起来，窗口照常能用：{error}");
+                    if hidden {
+                        let _ = window.show();
+                        let _ = window.set_focus();
+                        resident::note_visibility(app.handle(), true);
+                    }
                 }
             }
+            // 应用目录不自动侦察。这里只起运行状态探测；扫新目录走 rescan_apps。
+            watch::start(app.handle().clone());
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -429,7 +450,8 @@ pub fn run() {
             commands::mindmap,
             commands::main_window_visible,
             commands::open_app,
-            commands::stop_app
+            commands::stop_app,
+            commands::rescan_apps
         ])
         .build(tauri::generate_context!())
         .expect("启动器窗口启动失败")

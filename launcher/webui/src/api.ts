@@ -37,8 +37,40 @@ export interface CatalogDto {
 
 import { invoke } from "@tauri-apps/api/core";
 
+export interface StateRow {
+  id: string;
+  state: RunState;
+}
+
+/** 状态点变了才换新数组；没变返回 null，调用方保持原引用，避免空渲染。 */
+export function patchStates<T extends { id: string; state: RunState }>(
+  items: T[],
+  rows: StateRow[],
+): T[] | null {
+  const byId = new Map(rows.map((row) => [row.id, row.state]));
+  let changed = false;
+  const next = items.map((item) => {
+    const state = byId.get(item.id);
+    if (!state || state === item.state) return item;
+    changed = true;
+    return { ...item, state };
+  });
+  return changed ? next : null;
+}
+
+export interface RescanResult {
+  added: string[];
+  removed: string[];
+  total: number;
+  changed: boolean;
+}
+
 export function fetchCatalog(): Promise<CatalogDto> {
   return invoke<CatalogDto>("catalog");
+}
+
+export function rescanApps(): Promise<RescanResult> {
+  return invoke<RescanResult>("rescan_apps");
 }
 
 export function openApp(id: string): Promise<void> {

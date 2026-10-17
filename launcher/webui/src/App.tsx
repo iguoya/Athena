@@ -1,8 +1,24 @@
 import { useEffect, useState } from "react";
-import { fetchCatalog, type CatalogDto } from "./api";
+import { listen } from "@tauri-apps/api/event";
+import {
+  fetchCatalog,
+  patchStates,
+  rescanApps,
+  type CatalogDto,
+  type RescanResult,
+  type StateRow,
+} from "./api";
 import { useWindowVisible } from "./visibility";
 import MindmapView from "./mindmap/MindmapView";
 import OrbitScene from "./scene/OrbitScene";
+
+function formatRescan(result: RescanResult): string {
+  if (!result.changed) return `没有变化，共 ${result.total} 个`;
+  const parts: string[] = [];
+  if (result.added.length > 0) parts.push(`新增 ${result.added.join("、")}`);
+  if (result.removed.length > 0) parts.push(`移除 ${result.removed.join("、")}`);
+  return parts.join("；") || `已更新，共 ${result.total} 个`;
+}
 
 export default function App() {
   const [catalog, setCatalog] = useState<CatalogDto | null>(null);
@@ -10,41 +26,48 @@ export default function App() {
   // 归档默认不呈现（ADR 0139）；思维导图视图可开关查看，3D 视图不做开关。
   const [showArchived, setShowArchived] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [scanning, setScanning] = useState(false);
+  const [scanNote, setScanNote] = useState<string | null>(null);
   const visible = useWindowVisible();
 
+  const onScan = () => {
+    setScanning(true);
+    setScanNote(null);
+    rescanApps()
+      .then((result) => setScanNote(formatRescan(result)))
+      .catch((e) => setScanNote(String(e)))
+      .finally(() => setScanning(false));
+  };
+
   useEffect(() => {
-    // 托盘常驻时挂起：不拉清单也不排下一轮，回来时立即拉一次。
+    // 托盘常驻时挂起。回来时读一次当前清单；新目录要等「扫描应用」。
+    // 状态点由后端在变了的时候推过来。
     if (!visible) return;
     let alive = true;
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    let lastSig = "";
-    let pulls = 0;
     const pull = () =>
       fetchCatalog()
         .then((c) => {
           if (!alive) return;
-          // 后端每轮重建 DTO，状态没变就不进 React：稳态轮询零重渲染。
-          // 图标文件内容的变化签名上看不见，每 10 轮（约 30 秒）强制刷一次兜底。
-          const sig = c.apps
-            .map((a) => `${a.id}:${a.state}:${a.lifecycle}:${a.orbit}:${a.pos.join()}`)
-            .join(",");
-          pulls += 1;
-          if (sig !== lastSig || pulls % 10 === 0) {
-            lastSig = sig;
-            setCatalog(c);
-            setError(null);
-          }
+          setCatalog(c);
+          setError(null);
         })
-        .catch((e) => alive && setError(String(e)))
-        .finally(() => {
-          // 上一轮回来才排下一轮：命令慢于间隔时排队而不是叠加。
-          if (alive) timer = setTimeout(pull, 3000);
-        });
+        .catch((e) => alive && setError(String(e)));
     pull();
-    // 状态从系统实况读（ADR 0046）：骨架阶段轮询，事件推送留给下一轮。
+    const catalogSub = listen("launcher://catalog-changed", () => {
+      if (alive) pull();
+    });
+    const stateSub = listen<StateRow[]>("launcher://states", (event) => {
+      if (!alive) return;
+      setCatalog((prev) => {
+        if (!prev) return prev;
+        const apps = patchStates(prev.apps, event.payload);
+        return apps ? { ...prev, apps } : prev;
+      });
+    });
     return () => {
       alive = false;
-      clearTimeout(timer);
+      catalogSub.then((unlisten) => unlisten());
+      stateSub.then((unlisten) => unlisten());
     };
   }, [visible]);
 
@@ -58,6 +81,10 @@ export default function App() {
         <button onClick={() => setView(view === "orbit" ? "mindmap" : "orbit")}>
           {view === "orbit" ? "椭圆视图" : "轨道视图"}
         </button>
+        <button onClick={onScan} disabled={scanning}>
+          {scanning ? "扫描中…" : "扫描应用"}
+        </button>
+        {scanNote && <span className="hint">{scanNote}</span>}
         {view === "mindmap" && (
           <label style={{ display: "inline-flex", alignItems: "center", gap: 5, cursor: "pointer" }}>
             <input

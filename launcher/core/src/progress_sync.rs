@@ -806,7 +806,7 @@ pub fn before_launch(app: &App) {
 static LAST_TICK: Mutex<Option<HashMap<String, Instant>>> = Mutex::new(None);
 const TICK_INTERVAL: Duration = Duration::from_secs(120);
 
-/// 启动器常驻时周期性调用（前端轮询状态时顺带）：对没在跑、且距上次同步够久的应用，
+/// 启动器窗口开着、状态探测跑起来时顺带调用：对没在跑、且距上次同步够久的应用，
 /// 在后台线程里做一轮同步，调用本身立即返回。路由器不可达时同样受间隔限制，
 /// 不会每次轮询都去撞超时。`states` 与 `apps` 一一对应。
 pub fn tick(apps: &[App], states: &[RunState]) {

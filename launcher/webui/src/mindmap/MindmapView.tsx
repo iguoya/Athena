@@ -2,7 +2,8 @@
 // 布局坐标全部来自 launcher-core 的 mindmap::layout，这里只渲染与转发交互。
 
 import { useEffect, useState } from "react";
-import { openApp, stopApp, type Lifecycle, type RunState } from "../api";
+import { listen } from "@tauri-apps/api/event";
+import { openApp, patchStates, stopApp, type Lifecycle, type RunState, type StateRow } from "../api";
 import { invoke } from "@tauri-apps/api/core";
 
 export interface MindNodeDto {
@@ -131,35 +132,34 @@ export default function MindmapView({ paused, showArchived }: { paused: boolean;
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // 托盘常驻时挂起：不拉导图也不排下一轮，回来时立即拉一次。
+    // 托盘常驻时挂起。回来或切换「显示归档」时拉一次；新目录靠「扫描应用」。
+    // 状态点变化只打补丁。
     if (paused) return;
     let alive = true;
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    let lastSig = "";
-    let pulls = 0;
     const pull = () =>
       fetchMindmap(showArchived)
         .then((m) => {
           if (!alive) return;
-          // 稳态轮询零重渲染：只有节点状态或生命周期变了才进 React；布局类的
-          // 离线变化签名看不见，每 10 轮（约 30 秒）强制刷一次兜底。
-          const sig = m.nodes.map((n) => `${n.state}:${n.lifecycle}`).join(",");
-          pulls += 1;
-          if (sig !== lastSig || pulls % 10 === 0) {
-            lastSig = sig;
-            setMap(m);
-            setError(null);
-          }
+          setMap(m);
+          setError(null);
         })
-        .catch((e) => alive && setError(String(e)))
-        .finally(() => {
-          // 上一轮回来才排下一轮：命令慢于间隔时排队而不是叠加。
-          if (alive) timer = setTimeout(pull, 3000);
-        });
+        .catch((e) => alive && setError(String(e)));
     pull();
+    const catalogSub = listen("launcher://catalog-changed", () => {
+      if (alive) pull();
+    });
+    const stateSub = listen<StateRow[]>("launcher://states", (event) => {
+      if (!alive) return;
+      setMap((prev) => {
+        if (!prev) return prev;
+        const nodes = patchStates(prev.nodes, event.payload);
+        return nodes ? { ...prev, nodes } : prev;
+      });
+    });
     return () => {
       alive = false;
-      clearTimeout(timer);
+      catalogSub.then((unlisten) => unlisten());
+      stateSub.then((unlisten) => unlisten());
     };
   }, [paused, showArchived]);
 
