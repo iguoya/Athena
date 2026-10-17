@@ -1,4 +1,3 @@
-import "package:athena_driver/subject2/field_map.dart";
 import "package:athena_driver/subject2/field_sketches.dart";
 import "package:flutter_test/flutter_test.dart";
 

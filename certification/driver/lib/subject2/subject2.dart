@@ -7,6 +7,7 @@ import "../ui/glyphs.dart";
 import "brief.dart";
 import "drill.dart";
 import "field_map.dart";
+import "field_sketches.dart";
 import "guide.dart";
 import "step_flow.dart";
 import "../ui/look.dart";
@@ -17,6 +18,15 @@ import "readiness.dart";
 import "../core/progress.dart";
 import "rehearsal.dart";
 import "review.dart";
+
+/// 四项俯视草表。曲线的 bounds 在草表里单独配过，这里整表传入，不用默认框。
+List<FieldMapStep>? _sketchFor(String id) => switch (id) {
+  "reverse" => reverseParkSketch,
+  "parallel" => sideParkingSketch,
+  "curve" => curveSketch,
+  "corner" => rightAngleTurnSketch,
+  _ => null,
+};
 
 /// 科目二（C2）：动画讲解、评判条目、评判题、练车错因记录（ADR 0036）。
 class Subject2Page extends StatefulWidget {
@@ -1421,10 +1431,6 @@ class _ItemPageState extends State<_ItemPage> {
     final theme = Theme.of(context);
     final item = widget.item;
     final scene = drillScenes[item.id]!;
-    final pending = [
-      for (final q in widget.questions)
-        if (!widget.mastered.contains(q.id)) q,
-    ];
     final current = item.steps[_step];
     final player = DrillPlayer(
       key: _player,
@@ -1496,13 +1502,20 @@ class _ItemPageState extends State<_ItemPage> {
                 i,
           ].length,
         ),
-        if (item.id == "reverse") ...[
+        if (_sketchFor(item.id) case final sketch?) ...[
+          const SizedBox(height: 8),
+          FilledButton.icon(
+            onPressed: () => _player.currentState?.playStep(_step),
+            icon: const Icon(Glyph.animation),
+            label: const Text("播这一步"),
+          ),
           const SizedBox(height: 8),
           SizedBox(
             height: 280,
-            child: FieldMap(
-              steps: reverseParkSketch,
-              index: _step.clamp(0, reverseParkSketch.length - 1),
+            child: FieldMapAnimated(
+              steps: sketch,
+              index: _step.clamp(0, sketch.length - 1),
+              autoPlay: true,
             ),
           ),
           const SizedBox(height: 16),
@@ -1539,18 +1552,6 @@ class _ItemPageState extends State<_ItemPage> {
           spacing: 10,
           runSpacing: 10,
           children: [
-            if (item.id != "reverse")
-              FilledButton.icon(
-                onPressed: pending.isEmpty
-                    ? null
-                    : () => widget.onPractice(widget.questions, item.title),
-                icon: const Icon(Glyph.practice),
-                label: Text(
-                  pending.isEmpty
-                      ? "评判题（已掌握）"
-                      : "练这一项的评判题 · 待练 ${pending.length}",
-                ),
-              ),
             FilledButton.tonalIcon(
               onPressed: widget.onRecord,
               icon: const Icon(Glyph.record),

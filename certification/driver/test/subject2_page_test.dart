@@ -76,7 +76,8 @@ void main() {
     // 打开倒车入库：动画、步骤、评判、要点都在。
     await tester.tap(find.text("倒车入库").first);
     await tester.pump();
-    expect(find.byType(FieldMap), findsOneWidget);
+    expect(find.byType(FieldMapAnimated), findsOneWidget);
+    expect(find.text("播这一步"), findsWidgets);
     expect(find.textContaining("练这一项的评判题"), findsNothing);
     expect(find.text("我的点位卡"), findsOneWidget);
     final itemPage = find
