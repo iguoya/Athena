@@ -102,6 +102,8 @@
   可作术语参照（覆盖率不完全）。
 - **译文术语按 `content/glossary.json` 走**（应用 ADR 0010）：写新译文、改译文前先对照；
   禁用写法由 `scripts/check.py` 阻断，批量统一用 `python scripts/glossary.py --apply`。
+- **测验按标准版写**（应用 ADR 0011）：新增或重写测验题带 `explanation`、读代码题与均衡的答案位；
+  课表章标 `quiz_standard: 2` 后由 `scripts/check.py` 强制。掌握度只认每题首次作答。
 
 ## 架构原则
 

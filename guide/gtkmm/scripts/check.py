@@ -534,6 +534,61 @@ def check_glossary() -> None:
         fail(f"术语约定：{line}")
 
 
+def check_quiz_standard(course: dict) -> None:
+    """quiz_standard: 2 的章必须按测验标准版（应用 ADR 0011）：不靠选项位置或长度就能猜对。
+
+    规则：①每题有 explanation；②每题至少 3 个选项；③任一答案位置的题数 ≤ ceil(40%·n)；
+    ④「正确项是唯一最长项」的题数 ≤ ceil(40%·n)；⑤带 code 的题 ≥ ceil(n/3)；⑥题 id 唯一。
+    只对带标记的章生效，其余章逐章推进、不拦现状。
+    """
+    import math  # noqa: PLC0415
+
+    for section in (course or {}).get("sections", []):
+        if section.get("quiz_standard") != 2:
+            continue
+        sid = section.get("id", "?")
+        items = [b for kp in section.get("knowledge_points", []) for b in kp.get("blocks", [])
+                 if b.get("type") in ("quiz", "observation_quiz")]
+        items += list(section.get("checkpoint", []))
+        n = len(items)
+        if n == 0:
+            fail(f"{sid}: quiz_standard=2 但没有题")
+            continue
+        where = f"{sid}[quiz_standard=2]"
+        limit = math.ceil(0.4 * n)
+        positions: dict[int, int] = {}
+        longest = coded = 0
+        seen: set[str] = set()
+        for item in items:
+            label = item.get("id") or item.get("stem", "")[:20]
+            if not str(item.get("explanation", "")).strip():
+                fail(f"{where}: 题 {label} 缺 explanation（解析）")
+            options = item.get("options", [])
+            if len(options) < 3:
+                fail(f"{where}: 题 {label} 选项少于 3 个")
+                continue
+            ans = item.get("answer")
+            if isinstance(ans, int) and 0 <= ans < len(options):
+                positions[ans] = positions.get(ans, 0) + 1
+                lens = [len(o) for o in options]
+                if lens[ans] == max(lens) and lens.count(max(lens)) == 1:
+                    longest += 1
+            if item.get("code"):
+                coded += 1
+            if item.get("id") in seen:
+                fail(f"{where}: 题 id 重复 {item.get('id')!r}")
+            seen.add(item.get("id"))
+        for pos, count in sorted(positions.items()):
+            if count > limit:
+                fail(f"{where}: 答案都挤在位置 {'ABCDEFGH'[pos]}（{count}/{n} 题，上限 {limit}）——"
+                     "不读也能猜；请把正确项均匀分到各位置")
+        if longest > limit:
+            fail(f"{where}: 正确项恰为最长项的有 {longest}/{n} 题（上限 {limit}）——请让选项等长")
+        need = math.ceil(n / 3)
+        if coded < need:
+            fail(f"{where}: 带代码的预测/找错题只有 {coded}/{n}，至少 {need} 题")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="验证 gtkmm 学习应用")
     parser.add_argument("--skip-rust", action="store_true", help="跳过 cargo check")
@@ -551,6 +606,7 @@ def main() -> int:
     official = {c["id"]: {s["id"]: s for s in c["sections"]} for c in load_structure()}
     course = load_json(CONTENT_DIR / "curriculum.json")
     kp_ids, course_refs, lab_refs = check_curriculum(course or {}, official)
+    check_quiz_standard(course or {})
     page_ids = {p["id"] for s in (course or {}).get("sections", [])
                 for p in s.get("pages", []) if p.get("id")}
     manifest = load_json(CONTENT_DIR / "demos.json")

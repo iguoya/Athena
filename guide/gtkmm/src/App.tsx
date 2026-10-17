@@ -173,11 +173,25 @@ export default function App() {
     ]);
   };
 
-  // 激励状态全部由作答记录派生（主仓库 ADR 0052）：每题答对过一次即计通过
+  // 激励状态全部由作答记录派生（主仓库 ADR 0052）。掌握度只认每题的「首次作答」
+  // （应用 ADR 0011）：答错后的重试用于学习，不计入——否则 4 选 1 逐个排除必过。
+  // attempts 按写入先后排列（库按 id 序，界面新答追加在尾），第一条即首次。
+  const firstTry = useMemo(() => {
+    const first = new Map<string, boolean>();
+    for (const a of attempts)
+      if (a.item_id.startsWith("quiz:") && !first.has(a.item_id)) first.set(a.item_id, a.correct);
+    return first;
+  }, [attempts]);
   const correctItems = useMemo(
-    () => new Set(attempts.filter((a) => a.correct).map((a) => a.item_id)),
-    [attempts],
+    () => new Set([...firstTry].filter(([, ok]) => ok).map(([id]) => id)),
+    [firstTry],
   );
+  // 点亮门槛：全部答过，且首次正确率 ≥ 80%
+  const PASS_RATE = 0.8;
+  const passesRate = (ids: string[]) =>
+    ids.length > 0 &&
+    ids.every((id) => firstTry.has(id)) &&
+    ids.filter((id) => correctItems.has(id)).length / ids.length >= PASS_RATE;
   const quizIndex = useMemo(() => {
     const map = new Map<
       string,
@@ -271,14 +285,14 @@ export default function App() {
 
   const pagePassed = (sectionId: string, pageId: string) => {
     const ids = quizIndex.get(sectionId)?.byPage.get(pageId) ?? [];
-    return ids.length > 0 && ids.every((id) => correctItems.has(id));
+    return passesRate(ids);
   };
   // 「通过章末考核」按字面语义：本章考核题全对（考核覆盖全部节页，通过即整章
   // 点亮——pageLit 的承诺）。不要求页内随堂题也答对；页内题点亮各自节页。
   const chapterPassed = (sectionId: string) => {
     const entry = quizIndex.get(sectionId);
     return (
-      !!entry && entry.checkpoint.length > 0 && entry.checkpoint.every((id) => correctItems.has(id))
+      !!entry && passesRate(entry.checkpoint)
     );
   };
   const quizSections = (curriculum?.sections ?? []).filter(
@@ -1061,7 +1075,7 @@ function CheckpointPage({
       <h2 className="mt-1 font-display text-[42px] font-semibold">章末考核</h2>
       <p className="mt-3 text-[22px] leading-relaxed text-fg/80">
         本考核覆盖本章全部官方节页的内容。答错没有惩罚——错题会进入复习回路。
-        每题答对一次即计通过（当前 {correctCount}/{total}）。
+        只记每题第一次作答：全部答完且首次正确率达到 80% 即点亮本章（当前首次答对 {correctCount}/{total}）。
       </p>
       {passed && (
         <motion.div

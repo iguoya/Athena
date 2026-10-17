@@ -8,3 +8,4 @@
 | [0001](0001-tauri-shell-with-native-demo-track.md) | Tauri 文档壳 + 原生演示/实验双轨架构；清单与 JSON-RPC 协议是不变量，进程形态可演进 | 已接受 |
 | [0002](0002-translation-baseline-and-source-layers.md) | 官方教程全量翻译为编排基准，GFDL 合规；语义基准与参考层三层认定 | 已接受 |
 | [0010](0010-translation-glossary.md) | 翻译术语约定：以社区 PO 多数为基线定主译法，glossary.json 为事实源，禁用写法由 check 阻断 | 已接受 |
+| [0011](0011-quiz-standard.md) | 测验标准版：均衡答案位、等长选项、答后解析、读代码题；掌握度只认首次作答 | 已接受（试点） |

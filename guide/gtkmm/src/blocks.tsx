@@ -48,6 +48,14 @@ function QuizView({
       className="my-5 rounded-card bg-surface p-5 shadow-card ring-1 ring-line"
     >
       <p className="mb-4 font-medium text-fg">{item.stem}</p>
+      {item.code && (
+        <pre className="mb-4 overflow-x-auto rounded-xl bg-[#F6F6F6] p-4 font-mono text-[22px] leading-relaxed text-[#555555] ring-1 ring-line">
+          <code
+            className="hljs"
+            dangerouslySetInnerHTML={{ __html: highlightCode(item.code, item.lang ?? "cpp") }}
+          />
+        </pre>
+      )}
       <div className="flex flex-col gap-2.5">
         {item.options.map((option, index) => {
           const isAnswer = index === item.answer;
@@ -98,6 +106,21 @@ function QuizView({
           );
         })}
       </div>
+      {reveal && item.explanation && (
+        <motion.div
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-4 rounded-xl bg-accent-soft/60 px-4 py-3 ring-1 ring-accent/20"
+        >
+          <span className="text-[20px] font-medium text-accent-deep">解析</span>
+          <p className="mt-1 text-[22px] leading-relaxed text-fg/90">{item.explanation}</p>
+        </motion.div>
+      )}
+      {wrong && (
+        <p className="mt-3 text-[20px] text-muted">
+          首次作答已记录；再试一次只用于学习，不计入掌握度。
+        </p>
+      )}
       {wrong && (
         <motion.button
           initial={{ opacity: 0 }}

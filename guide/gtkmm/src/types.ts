@@ -21,6 +21,11 @@ export interface QuizItem {
   options: string[];
   answer: number;
   source_refs: SourceRef[];
+  /** 题干附带的代码（读代码预测/找错题），按 lang 高亮；缺省 cpp */
+  code?: string;
+  lang?: string;
+  /** 答后显示的解析：为什么对、为什么另几项不对，并指向原文节（应用 ADR 0011） */
+  explanation?: string;
 }
 
 export interface ExperimentEntity extends ManifestEntity {
@@ -81,6 +86,8 @@ export interface Section {
   pages: SectionPage[];
   knowledge_points: KnowledgePoint[];
   checkpoint: QuizItem[];
+  /** 测验标准版本；2 = 已按 ADR 0011 重做（check 强制解析、答案位与代码题配比） */
+  quiz_standard?: number;
 }
 
 export interface ReferenceEntry {
