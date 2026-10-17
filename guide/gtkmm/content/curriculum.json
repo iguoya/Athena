@@ -3989,64 +3989,117 @@
           "blocks": [
             {
               "type": "quiz",
-              "id": "adj-1",
+              "id": "ad16-cr-1",
               "page_ref": "sec-creating-adjustment",
-              "stem": "创建 Adjustment 需要指定的核心参数不包括？",
+              "stem": "只给三个参数创建 Adjustment，没写出的 step_increment、page_increment、page_size 各取多少？",
+              "code": "auto adj = Gtk::Adjustment::create(50, 0, 100);\n// 声明：create(double value, double lower, double upper,\n//              double step_increment = 1, double page_increment = 10,\n//              double page_size = 0)",
+              "lang": "cpp",
               "options": [
-                "value 当前值",
-                "lower/upper 范围",
-                "step_increment",
-                "字体颜色"
+                "分别取默认值 1、10 和 0",
+                "三个都取 0，没写的参数一律按 0 处理",
+                "分别取 1、1 和 1，增量取最小单位，页大小取 1",
+                "分别取 0.1、1 和 10，随取值范围的大小自动推算"
               ],
-              "answer": 3,
+              "answer": 0,
+              "explanation": "函数声明里 step_increment、page_increment、page_size 带默认值：1、10 和 0。只给 value、lower、upper 时，其余三个就是这些默认值。",
               "source_refs": [
                 {
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-creating-adjustment",
-                  "note": "出处：sec-creating-adjustment"
+                  "note": "Adjustment 创建：create() 的参数与默认值（step_increment = 1，page_increment = 10，page_size = 0）"
                 }
               ]
             },
             {
               "type": "quiz",
-              "id": "adj-2",
+              "id": "ad16-ea-1",
               "page_ref": "sec-adjustments-easy",
-              "stem": "哪些部件属于「把值当普通数字」直接被用户调整的一组？",
+              "stem": "下面的代码里，用户拖动 vscrollbar 的滑块时，TextView 会怎样？",
+              "code": "// creates its own adjustments\nGtk::TextView textview;\n// uses the newly-created adjustment for the scrollbar as well\nGtk::Scrollbar vscrollbar(textview.get_vadjustment(), Gtk::Orientation::VERTICAL);",
+              "lang": "cpp",
               "options": [
-                "Scrollbar、Scale、SpinButton 等",
-                "只有 Scale",
-                "Label 和 Button",
-                "TextView"
+                "不会动：必须连接 value_changed，再手动调用 TextView 的滚动方法",
+                "TextView 跟着滚动：两者共享同一个 Adjustment，不用再写代码",
+                "不会动：两个部件各有自己的 Adjustment，只是外观上同步",
+                "会动，但前提是把滚动条放进 ScrolledWindow，否则无效"
               ],
-              "answer": 0,
+              "answer": 1,
+              "explanation": "文档说明：把一个 Adjustment 在滚动条与 TextView 之间共享，操作滚动条就会自动调整 TextView。这里滚动条用的就是 TextView 自己创建的垂直 Adjustment。",
               "source_refs": [
                 {
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-adjustments-easy",
-                  "note": "出处：sec-adjustments-easy 第 1 段"
+                  "note": "Adjustment 的简单用法：在 Scrollbar 与 TextView 之间共享 Adjustment"
                 }
               ]
             },
             {
               "type": "quiz",
-              "id": "adj-3",
-              "page_ref": "sec-adjustment-internals",
-              "stem": "多个范围部件共享同一个 Adjustment 时会发生什么？",
+              "id": "ad16-ea-2",
+              "page_ref": "sec-adjustments-easy",
+              "stem": "下面两个部件，哪个建议让它自己创建 Adjustment，而不是自己提供？为什么？",
               "options": [
-                "一个变化全部同步变化",
-                "互不影响",
-                "只有第一个生效",
-                "随机"
+                "SpinButton：它的 Adjustment 用像素值，范围必须由系统决定",
+                "SpinButton：它把值当任意数字，Adjustment 不能由程序提供",
+                "ScrolledWindow：它的 Adjustment 用像素值，通常由滚动条间接调整",
+                "ScrolledWindow：它的 Adjustment 用任意数字，必须自己计算范围"
               ],
-              "answer": 0,
+              "answer": 2,
+              "explanation": "可调部件分两类：一类把值当任意数字（Range 部件、ScaleButton、SpinButton），由用户直接用鼠标或键盘调整；另一类（Viewport、ScrolledWindow）用像素值，通常通过滚动条间接调整，文档建议让这一类部件自己创建 Adjustment。两类部件都可以自己创建或使用你提供的 Adjustment。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-adjustments-easy",
+                  "note": "Adjustment 的简单用法：两类可调部件，Viewport 与 ScrolledWindow 用像素值"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "ad16-in-1",
+              "page_ref": "sec-adjustment-internals",
+              "stem": "要在用户拖动 Scale 时旋转图片，下面这行连接是接在谁身上的？它为什么能响应拖动？",
+              "code": "adj->signal_value_changed().connect(sigc::bind<MyPicture*>(\n    sigc::mem_fun(*this, &cb_rotate_picture), picture));",
+              "lang": "cpp",
+              "options": [
+                "接在 Scale 部件上；Scale 每次重绘时都发出 value_changed",
+                "接在图片对象上；Adjustment 发出 changed 通知图片刷新",
+                "接在窗口上；所有可调部件的变化都由窗口统一转发",
+                "接在 Scale 的 Adjustment 上；拖动改 value 时发 value_changed"
+              ],
+              "answer": 3,
+              "explanation": "可调部件靠 Adjustment 的 value_changed 信号同步：用户拖动改变 Adjustment 的 value，它就发出该信号；你的程序同样可以连接它。处理函数里用 get_value() 读新值，再设置图片的旋转。",
               "source_refs": [
                 {
                   "relation": "adapted",
                   "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
                   "locator": "官方节页 sec-adjustment-internals",
-                  "note": "出处：Adjustment Internals（信号联动）"
+                  "note": "Adjustment 内部：value_changed 信号，所有可调部件都连接它，程序也可以"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "ad16-in-2",
+              "page_ref": "sec-adjustment-internals",
+              "stem": "用户往 TextView 里不断添加文字，导致 Adjustment 的 upper 变大。这时 Adjustment 发出哪个信号？",
+              "options": [
+                "value_changed，只要 Adjustment 的任何字段变化都会发出它",
+                "changed，范围（upper 或 lower）被重新配置时发出",
+                "page_changed，专门用来通知页大小或范围变化的信号",
+                "不发出信号，Range 部件靠定时轮询发现范围变了"
+              ],
+              "answer": 1,
+              "explanation": "value 变了发 value_changed；而部件重新配置 upper 或 lower（比如文本变多）时发出 changed。Range 部件通常连接它来调整外观，例如滚动条滑块的大小随范围变化反比缩放。除非写新的范围部件，一般不需要自己连接它。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-adjustment-internals",
+                  "note": "Adjustment 内部：changed 信号在 upper/lower 被重新配置时发出"
                 }
               ]
             }
@@ -4055,25 +4108,51 @@
       ],
       "checkpoint": [
         {
-          "id": "adj-cp",
-          "stem": "（综合) SpinButton 的 step_increment/page_increment 分别对应什么操作？",
+          "id": "ad16-cp-1",
+          "stem": "想在用户滚动 TextView 时更新页码标签，update_label() 里怎样得到当前的滚动位置？",
+          "code": "auto adj = textview.get_vadjustment();\nadj->signal_value_changed().connect(\n    sigc::mem_fun(*this, &ExampleWindow::update_label));",
+          "lang": "cpp",
           "options": [
-            "单击步长 / Page Up·Page Down 步长",
-            "水平/垂直间距",
-            "最小/最大值",
-            "没有区别"
+            "用 textview.get_value()，TextView 自己保存了滚动位置",
+            "用信号参数，value_changed 会把新值作为参数传进来",
+            "用 adj->get_value() 读取 Adjustment 当前的值",
+            "用 adj->get_upper()，它总是等于当前所在的位置"
           ],
-          "answer": 0,
+          "answer": 2,
+          "explanation": "value_changed 信号不带参数；处理函数里用 get_value() 读 Adjustment 的值。upper 是范围上限（滚动内容底端的坐标），不是当前位置。滚动位置保存在 Adjustment 里，而不是 TextView 上。",
           "source_refs": [
             {
               "relation": "adapted",
               "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
-              "locator": "官方节页 sec-spinbutton 与 sec-adjustments-easy",
-              "note": "综合 Adjustment 属性与微调按钮"
+              "locator": "官方节页 sec-adjustments-easy 与 sec-adjustment-internals",
+              "note": "综合 Adjustment：value_changed 信号与 get_value() 读值"
+            }
+          ]
+        },
+        {
+          "id": "ad16-cp-2",
+          "stem": "对一个内容高 500 像素、可见区域约 100 像素、刚打开在最顶部的滚动视图，下面这个 Adjustment 的各参数含义是？",
+          "code": "auto adj = Gtk::Adjustment::create(0, 0, 500, 1, 10, 100);",
+          "lang": "cpp",
+          "options": [
+            "value 是当前位置，upper 是内容底端坐标，page_size 约为可见区域",
+            "value 是内容总高度，upper 是当前位置，page_size 是步长",
+            "value 是可见区域大小，upper 是步长，page_size 是内容总高度",
+            "value 是步长，upper 是页增量，page_size 是内容底端坐标"
+          ],
+          "answer": 0,
+          "explanation": "value 是初始值，通常对应可调部件最上方或最左边的位置；upper 表示滚动部件子部件最下方或最右边的坐标；page_size 大致对应可见区域。step_increment 与 page_increment 是用户改变 value 时较小与较大的两个增量。",
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-creating-adjustment",
+              "note": "综合 Adjustment 创建：value、lower、upper、page_size 的含义"
             }
           ]
         }
-      ]
+      ],
+      "quiz_standard": 2
     },
     {
       "id": "chapter-dialogs",
