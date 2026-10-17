@@ -8,7 +8,7 @@
    "type": "para",
    "text": "gtkmm-4.0 is a new version of the gtkmm API that installs in parallel with the\nolder gtkmm-2.4 and gtkmm-3.0 APIs. The last version of the gtkmm-3.0 API\nis gtkmm 3.24. gtkmm 4 has no major fundamental differences to gtkmm 3 but\ndoes make several changes (both small and large ones) that were not possible while\nmaintaining binary compatibility. If you never used the gtkmm-3.0 API then you\ncan safely ignore this chapter.",
    "sha": "38ad1b214927b967",
-   "zh": "gtkmm-4.0是gtkmm API的新版本。它可以与较早发行的gtkmm-2.4和gtkmm-3.0并行安装。gtkmm-3.0 API的最新版本是gtkmm 3.24。gtkmm 4与gtkmm 3没有根本性的区别，虽然有些变更但是保持了二进制兼容。如果你从未使用过gtkmm-3.0 API则你可以放心的忽略本章。"
+   "zh": "gtkmm-4.0是gtkmm API的新版本。它可以与较早发行的gtkmm-2.4和gtkmm-3.0并行安装。gtkmm-3.0 API的最新版本是gtkmm 3.24。gtkmm 4与gtkmm 3没有根本性的区别，但确实做了若干大大小小的改动，这些改动在保持二进制兼容的前提下是无法完成的。如果你从未使用过gtkmm-3.0 API则你可以放心的忽略本章。"
   },
   {
    "type": "para",
@@ -20,7 +20,7 @@
    "type": "para",
    "text": "gtkmm-4.0 is used in combination with `glibmm-2.68`,\nwhich sets the global locale for your program. The older `glibmm-2.4`\ndoes not do that, and gtkmm-3.0 does it only to some extent. What this means is\nbriefly that if your gtkmm-3.0 program contains a call to\n`std::locale::global(std::locale(\"\"))`, you can probably remove it.\nIf you don't want `glibmm` or gtkmm\nto set the global locale for you, you should add a call to\n`Glib::set_init_to_users_preferred_locale(false)` before any call to\n`Glib::init()` or Gtk::Application::create().\nSee the `glibmm` [\nreference](https://gnome.pages.gitlab.gnome.org/glibmm/namespaceGlib.html).",
    "sha": "98e03a06004326df",
-   "zh": "gtkmm-4.0与glibmm-2.68结合使用，将设置程序的全局语言环境。较旧的glibmm-2.4不会这样做，而gtkmm-3.0只在一定程度上做到了。简而言之，如果你的gtkmm-3.0应用包含了对std::locale::global(std::locale(\"\"))的调用，则你大概率可以直接将其删除。如果你不希望glibmm或者gtkmm为你设置程序的全局语言环境，则应该在调用任何Glib::init()函数或Gtk::Application::create()方法之前添加对Glib::set_init_to_users_preferred_locale(false)的调用。"
+   "zh": "gtkmm-4.0与glibmm-2.68结合使用，将设置程序的全局语言环境。较旧的glibmm-2.4不会这样做，而gtkmm-3.0只在一定程度上做到了。简而言之，如果你的gtkmm-3.0应用包含了对std::locale::global(std::locale(\"\"))的调用，则你大概率可以直接将其删除。如果你不希望glibmm或者gtkmm为你设置程序的全局语言环境，则应该在调用任何Glib::init()函数或Gtk::Application::create()方法之前添加对Glib::set_init_to_users_preferred_locale(false)的调用。参见 glibmm 的[参考文档](https://gnome.pages.gitlab.gnome.org/glibmm/namespaceGlib.html)。"
   },
   {
    "type": "para",
@@ -209,13 +209,13 @@
    "type": "para",
    "text": "As a first step to porting your source code to gtkmm-4.0 you should probably ensure\nthat your application builds with the deprecated gtkmm-3.0 and `glibmm-2.4`\nAPI disabled, by defining the macros GTKMM_DISABLE_DEPRECATED, GDKMM_DISABLE_DEPRECATED,\nGLIBMM_DISABLE_DEPRECATED and GIOMM_DISABLE_DEPRECATED. There are some autotools macros\nthat can help with this by defining them optionally at build time. See the\n[Porting from\ngtkmm-2.4 to gtkmm-3.0](https://wiki.gnome.org/Projects/gtkmm/PortingToGtkmm3) wiki page for more details.",
    "sha": "37550758aaa7f264",
-   "zh": "将源代码移植到gtkmm-4.0的第一步，通过定义GTKMM_DISABLE_DEPRECATED，GDKMM_DISABLE_DEPRECATED，GLIBMM_DISABLE_DEPRECATED和GIOMM_DISABLE_DEPRECATED宏禁用所有在gtkmm-3.0和glibmm-2.4中弃用的API，有一些autotools宏可以帮助你在编译时定义他们。更多有关详情请参见从gtkmm-2.4迁移到gtkmm-3.0Wiki页面。"
+   "zh": "将源代码移植到gtkmm-4.0的第一步，通过定义GTKMM_DISABLE_DEPRECATED，GDKMM_DISABLE_DEPRECATED，GLIBMM_DISABLE_DEPRECATED和GIOMM_DISABLE_DEPRECATED宏禁用所有在gtkmm-3.0和glibmm-2.4中弃用的API，有一些autotools宏可以帮助你在编译时定义他们。更多详情请参见 [从 gtkmm-2.4 迁移到 gtkmm-3.0](https://wiki.gnome.org/Projects/gtkmm/PortingToGtkmm3) Wiki 页面。"
   },
   {
    "type": "para",
    "text": "See also [\nMigrating from GTK 3.x to GTK 4](https://docs.gtk.org/gtk4/migrating-3to4.html).",
    "sha": "b20d6cfd6417554d",
-   "zh": "另请参见从GTK3.X迁移到GTK 4。"
+   "zh": "另请参见[从 GTK 3.x 迁移到 GTK 4](https://docs.gtk.org/gtk4/migrating-3to4.html)。"
   },
   {
    "type": "para",

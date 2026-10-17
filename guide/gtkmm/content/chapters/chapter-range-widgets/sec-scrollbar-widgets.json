@@ -8,7 +8,7 @@
    "type": "para",
    "text": "`Gtk::Scale` inherits from `Gtk::Range`.\n`Gtk::Scrollbar` does not inherit from `Gtk::Range`,\nbut it shares much functionality with `Gtk::Scale`.\nThey both contain a \"trough\" and a \"slider\" (sometimes called a\n\"thumbwheel\" in other GUI environments). Dragging the slider with the pointer\nmoves it within the trough, while clicking in the trough advances the slider\ntowards the location of the click, either completely, or by a designated\namount, depending on which mouse button is used. This should be familiar\nscrollbar behavior.",
    "sha": "cce7dc7c618da330",
-   "zh": "`Gtk::Scale` 继承自 `Gtk::Range`；`Gtk::Scrollbar` 虽不继承自 `Gtk::Range`，但与 `Gtk::Scale` 共享大量功能——两者都把控件的「调整」委托给一个 `Adjustment`，并都会响应 `adjust_bounds`、`change_value` 与 `move_slider` 信号。"
+   "zh": "`Gtk::Scale` 继承自 `Gtk::Range`。`Gtk::Scrollbar` 不继承自 `Gtk::Range`，但与 `Gtk::Scale` 共享许多功能。两者都包含一条「滑轨」（trough）和一个「滑块」（slider）（在其他 GUI 环境中有时称为「拇指轮」thumbwheel）。用指针拖动滑块，它会在滑轨内移动；在滑轨内点击，滑块则会朝点击位置前进——是一步到位，还是按指定的步长前进，取决于所用的鼠标键。这应该是你熟悉的滚动条行为。"
   },
   {
    "type": "para",

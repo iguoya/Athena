@@ -8,7 +8,7 @@
    "type": "para",
    "text": "gtkmm-3.0 is an old version of the gtkmm API that installs in parallel with the still older gtkmm-2.4 API and the new gtkmm-4.0 API. The last version of the gtkmm-2.4 API was gtkmm 2.24. gtkmm 3 has no major fundamental differences to gtkmm 2 but does make several small changes that were not possible while maintaining binary compatibility. If you never used the gtkmm-2.4 API then you can safely ignore this chapter.",
    "sha": "df2d6748a0dd9fa7",
-   "zh": "gtkmm-3.0是gtkmm API的旧版本它依旧能与gtkmm-2.4和新的gtkmm-4.0 API并行安装。gtkmm-2.4 API的最新版本是gtkmm 2.24。gtkmm3于gtkmm2之间并没有重大的改变，但确实存在一些微小的变动，这些变动导致无法做到令他们保持二进制兼容。如果你从未用过gtkmm-2.4 API 则你可以放心的忽略本章。"
+   "zh": "gtkmm-3.0是gtkmm API的旧版本，它依旧能与gtkmm-2.4和新的gtkmm-4.0 API并行安装。gtkmm-2.4 API的最新版本是gtkmm 2.24。gtkmm3与gtkmm2之间并没有重大的改变，但确实做了一些微小的改动，这些改动在保持二进制兼容的前提下是无法完成的。如果你从未用过gtkmm-2.4 API 则你可以放心的忽略本章。"
   },
   {
    "type": "para",
@@ -136,7 +136,7 @@
    "type": "para",
    "text": "As a first step to porting your source code to gtkmm-3.0 you should probably ensure that your application builds with the deprecated gtkmm-2.4 API disabled, by defining macro such as GTKMM_DISABLE_DEPRECATED. There are some autotools macros that can help with this by defining them optionally at build time. See the [gtkmm 3 porting wiki page](https://wiki.gnome.org/Projects/gtkmm/PortingToGtkmm3) for more details.",
    "sha": "499562c945642376",
-   "zh": "将源代码迁移到gtkmm-3.0的第一步，你应该通过定义GTKMM_DISABLE_DEPRECATED宏以检查你是否使用了在gtkmm-2.4中被弃用的API,然后删除他们。有一些autotools宏可以在编译时帮助你通过构建。访问gtkmm3移植Wiki了解更多详情。"
+   "zh": "将源代码迁移到gtkmm-3.0的第一步，你应该确保应用在禁用已弃用的gtkmm-2.4 API的情况下仍能构建通过，做法是定义GTKMM_DISABLE_DEPRECATED之类的宏。有一些autotools宏可以帮助你在构建时按需定义它们。更多详情请参阅 [gtkmm 3 移植 Wiki 页面](https://wiki.gnome.org/Projects/gtkmm/PortingToGtkmm3)。"
   }
  ]
 }
