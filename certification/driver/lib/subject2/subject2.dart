@@ -9,6 +9,7 @@ import "drill.dart";
 import "field_map.dart";
 import "field_sketches.dart";
 import "guide.dart";
+import "step_media.dart";
 import "step_flow.dart";
 import "../ui/look.dart";
 import "../core/narration.dart";
@@ -1426,8 +1427,6 @@ class _ItemPageState extends State<_ItemPage> {
     for (var i = 0; i < widget.item.steps.length; i++) GlobalKey(),
   ];
   var _step = 0;
-  var _gear = Gear.drive;
-  var _signal = Signal.none;
 
   @override
   Widget build(BuildContext context) {
@@ -1440,28 +1439,15 @@ class _ItemPageState extends State<_ItemPage> {
       scene: scene,
       stepTitles: [for (final s in item.steps) s.title],
       onStep: (step) => setState(() => _step = step),
-      onFrame: (frame) => setState(() {
-        _step = frame.step;
-        _gear = frame.gear;
-        _signal = frame.signal;
-      }),
+      onFrame: (frame) => setState(() => _step = frame.step),
+      showCanvas: false,
       narration: [
         for (var i = 0; i < item.steps.length; i++) item.steps[i].narration(i),
       ],
-      cautions: [for (final s in item.steps) s.caution],
-      links: [for (final s in item.steps) s.inside?.look ?? ""],
-      risks: [for (final s in item.steps) s.outside?.risk ?? ""],
-      companion: current.inside == null
-          ? null
-          : CabinPanel(step: current, gear: _gear, signal: _signal),
       narrator: _narrator,
     );
     final steps = _StepList(
       steps: item.steps,
-      notes: [
-        for (var i = 0; i < item.steps.length; i++)
-          widget.notes[(item.id, i)]?.text.trim() ?? "",
-      ],
       current: _step,
       onTap: (i) {
         _player.currentState?.jumpTo(i);
@@ -1494,26 +1480,11 @@ class _ItemPageState extends State<_ItemPage> {
               BsBadge(text: "出线看${item.judgedBy}", color: Bs.secondary),
             ],
           ),
-          const SizedBox(height: 12),
-          _ItemBriefCard(
-            brief: widget.brief,
-            pointsWritten: [
-              for (var i = 0; i < item.steps.length; i++)
-                if ((widget.notes[(item.id, i)]?.text.trim().isNotEmpty ??
-                        false) ||
-                    widget.photos.any(
-                      (ph) => ph.itemId == item.id && ph.step == i,
-                    ))
-                  i,
-            ].length,
-          ),
-          if (_sketchFor(item.id) case final sketch?) ...[
+          if (current.media.isNotEmpty) ...[
             const SizedBox(height: 8),
-            FilledButton.icon(
-              onPressed: () => _player.currentState?.playStep(_step),
-              icon: const Icon(Glyph.animation),
-              label: const Text("播这一步"),
-            ),
+            StepMedia(shots: current.media),
+          ],
+          if (_sketchFor(item.id) case final sketch?) ...[
             const SizedBox(height: 8),
             SizedBox(
               height: 280,
@@ -1523,8 +1494,11 @@ class _ItemPageState extends State<_ItemPage> {
                 autoPlay: true,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
+            player,
+            const SizedBox(height: 12),
             StepFlow(
+              compact: true,
               steps: item.steps,
               current: _step.clamp(0, item.steps.length - 1),
               onStepChanged: (i) {
@@ -1540,23 +1514,16 @@ class _ItemPageState extends State<_ItemPage> {
                 onCalibrate: () => _goCalibrate(_step),
               ),
             ),
+          ] else ...[
+            const SizedBox(height: 8),
+            player,
           ],
-          const SizedBox(height: 16),
           LayoutBuilder(
             builder: (context, constraints) {
-              if (constraints.maxWidth < 1000) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [player, const SizedBox(height: 16), steps],
-                );
-              }
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(flex: 3, child: player),
-                  const SizedBox(width: 20),
-                  Expanded(flex: 2, child: steps),
-                ],
+              if (constraints.maxWidth >= 1000) return const SizedBox.shrink();
+              return Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: steps,
               );
             },
           ),
@@ -1585,6 +1552,19 @@ class _ItemPageState extends State<_ItemPage> {
             ],
           ),
           const SizedBox(height: 24),
+          _ItemBriefCard(
+            brief: widget.brief,
+            pointsWritten: [
+              for (var i = 0; i < item.steps.length; i++)
+                if ((widget.notes[(item.id, i)]?.text.trim().isNotEmpty ??
+                        false) ||
+                    widget.photos.any(
+                      (ph) => ph.itemId == item.id && ph.step == i,
+                    ))
+                  i,
+            ].length,
+          ),
+          const SizedBox(height: 20),
           _Section(
             icon: Glyph.pointCard,
             title: "我的点位卡",
@@ -1972,7 +1952,6 @@ class CabinPanel extends StatelessWidget {
 class _StepList extends StatelessWidget {
   const _StepList({
     required this.steps,
-    required this.notes,
     required this.current,
     required this.onTap,
     required this.onPlay,
@@ -1980,8 +1959,6 @@ class _StepList extends StatelessWidget {
 
   final List<GuideStep> steps;
 
-  /// 每一步自己写的点位，空串表示没写。
-  final List<String> notes;
   final int current;
   final ValueChanged<int> onTap;
   final ValueChanged<int> onPlay;
@@ -2027,73 +2004,10 @@ class _StepList extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Tooltip(
-                              message: steps[i].body,
-                              child: Text(
-                                steps[i].title,
-                                style: theme.textTheme.titleMedium,
-                              ),
+                            Text(
+                              steps[i].title,
+                              style: theme.textTheme.titleMedium,
                             ),
-                            if (i == current) ...[
-                              const SizedBox(height: 4),
-                              if (steps[i].inside != null) ...[
-                                Text(
-                                  steps[i].inside!.look,
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    color: drillLinkColor,
-                                  ),
-                                ),
-                                if (steps[i].done.isNotEmpty)
-                                  Text(
-                                    "做完：${steps[i].done}",
-                                    style: theme.textTheme.bodyMedium,
-                                  ),
-                              ] else
-                                Text(
-                                  steps[i].body,
-                                  style: theme.textTheme.bodyMedium,
-                                ),
-                              if (steps[i].caution.isNotEmpty) ...[
-                                const SizedBox(height: 6),
-                                Tooltip(
-                                  message: steps[i].cautionLocators.join("；"),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Icon(
-                                        Glyph.caution,
-                                        size: 18,
-                                        color: Bs.danger,
-                                      ),
-                                      const SizedBox(width: 6),
-                                      Expanded(
-                                        child: Text(
-                                          steps[i].caution,
-                                          style: theme.textTheme.bodyMedium
-                                              ?.copyWith(color: Bs.danger),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                              if (notes[i].isNotEmpty) ...[
-                                const SizedBox(height: 6),
-                                Container(
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: Bs.warning.withValues(alpha: 0.12),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Text(
-                                    "我的点位：${notes[i]}",
-                                    style: theme.textTheme.bodyMedium,
-                                  ),
-                                ),
-                              ],
-                            ],
                           ],
                         ),
                       ),

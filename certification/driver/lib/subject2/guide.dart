@@ -3,6 +3,9 @@
 /// 评判条目和错因都带条款号，逐条对应 GA 1026—2022；错因能按考场规则给一把练车打分。
 library;
 
+import "dart:math" as math;
+import "dart:ui";
+
 /// 评判档位：不合格、扣 10 分、扣 5 分。
 class Level {
   const Level._(this.raw);
@@ -120,6 +123,98 @@ class StepFix {
       StepFix(sign: json["sign"] as String, action: json["action"] as String);
 }
 
+/// 一步上的一张真实图或动图，标记用 0～1 的归一化坐标，不烧进图片。
+class StepShot {
+  const StepShot({
+    required this.file,
+    required this.kind,
+    required this.view,
+    required this.caption,
+    required this.note,
+    required this.marks,
+  });
+
+  final String file;
+  final String kind;
+  final String view;
+  final String caption;
+  final String note;
+  final List<StepMark> marks;
+
+  factory StepShot.fromJson(Map<String, dynamic> json) {
+    return StepShot(
+      file: json["file"] as String? ?? "",
+      kind: json["kind"] as String? ?? "image",
+      view: json["view"] as String? ?? "",
+      caption: json["caption"] as String? ?? "",
+      note: json["note"] as String? ?? "",
+      marks: [
+        for (final raw in json["marks"] as List<dynamic>? ?? const [])
+          StepMark.fromJson(raw as Map<String, dynamic>),
+      ],
+    );
+  }
+}
+
+class StepMark {
+  const StepMark({
+    required this.type,
+    required this.label,
+    this.x = 0,
+    this.y = 0,
+    this.x1 = 0,
+    this.y1 = 0,
+    this.x2 = 0,
+    this.y2 = 0,
+  });
+
+  final String type;
+  final String label;
+  final double x;
+  final double y;
+  final double x1;
+  final double y1;
+  final double x2;
+  final double y2;
+
+  factory StepMark.fromJson(Map<String, dynamic> json) {
+    double n(String key) => (json[key] as num?)?.toDouble() ?? 0;
+    return StepMark(
+      type: json["type"] as String? ?? "point",
+      label: json["label"] as String? ?? "",
+      x: n("x"),
+      y: n("y"),
+      x1: n("x1"),
+      y1: n("y1"),
+      x2: n("x2"),
+      y2: n("y2"),
+    );
+  }
+
+  Offset at(Rect image) =>
+      Offset(image.left + image.width * x, image.top + image.height * y);
+
+  Offset from(Rect image) =>
+      Offset(image.left + image.width * x1, image.top + image.height * y1);
+
+  Offset to(Rect image) =>
+      Offset(image.left + image.width * x2, image.top + image.height * y2);
+}
+
+/// 图在框里按 contain 放下之后的矩形。标记打在这张矩形上，才跟画面重合。
+Rect fittedImageRect(Size box, Size image) {
+  if (box.isEmpty || image.isEmpty) return Offset.zero & box;
+  final scale = math.min(box.width / image.width, box.height / image.height);
+  final width = image.width * scale;
+  final height = image.height * scale;
+  return Rect.fromLTWH(
+    (box.width - width) / 2,
+    (box.height - height) / 2,
+    width,
+    height,
+  );
+}
+
 class GuideStep {
   const GuideStep({
     required this.title,
@@ -133,6 +228,7 @@ class GuideStep {
     this.inside,
     this.outside,
     this.done = "",
+    this.media = const [],
   });
 
   final String title;
@@ -160,6 +256,24 @@ class GuideStep {
 
   /// 怎样算这一步做完。念出来的完成口令。
   final String done;
+
+  /// 真实图或动图。没有就是空，页面不占位。
+  final List<StepShot> media;
+
+  GuideStep withMedia(List<StepShot> media) => GuideStep(
+    title: title,
+    body: body,
+    steer: steer,
+    reference: reference,
+    skill: skill,
+    fix: fix,
+    caution: caution,
+    cautionLocators: cautionLocators,
+    inside: inside,
+    outside: outside,
+    done: done,
+    media: media,
+  );
 
   /// 语音讲解的稿子。有双视角时先念车外全局，再念车内参照（T-003）。
   /// 方向盘、参照、修正留在数据里，页面由 T-007 承接，这里不改念稿。
@@ -236,6 +350,20 @@ class GuideItem {
   final List<GuideStep> steps;
   final List<String> tips;
   final List<Mistake> mistakes;
+
+  GuideItem withSteps(List<GuideStep> steps) => GuideItem(
+    id: id,
+    topicId: topicId,
+    title: title,
+    limitText: limitText,
+    judgedBy: judgedBy,
+    requirementLocator: requirementLocator,
+    requirementQuote: requirementQuote,
+    rules: rules,
+    steps: steps,
+    tips: tips,
+    mistakes: mistakes,
+  );
 
   factory GuideItem.fromJson(Map<String, dynamic> json) {
     final requirement = json["requirement"] as Map<String, dynamic>;
@@ -375,6 +503,16 @@ class ExamDayGuide {
   );
 }
 
+List<StepShot> _shotsOf(Object? itemRaw, int stepNumber) {
+  if (itemRaw is! Map) return const [];
+  final shots = itemRaw["$stepNumber"];
+  if (shots is! List) return const [];
+  return [
+    for (final raw in shots)
+      if (raw is Map) StepShot.fromJson(Map<String, dynamic>.from(raw)),
+  ];
+}
+
 class Subject2Guide {
   const Subject2Guide({
     required this.fullScore,
@@ -436,6 +574,27 @@ class Subject2Guide {
       items: [
         for (final i in json["items"] as List<dynamic>)
           GuideItem.fromJson(i as Map<String, dynamic>),
+      ],
+    );
+  }
+
+  /// [raw] 是 subject2_media.json。缺项、缺步都当没有，不抛错。步骤号从 1 起。
+  Subject2Guide withMedia(Map<String, dynamic> raw) {
+    return Subject2Guide(
+      fullScore: fullScore,
+      passScore: passScore,
+      passLocator: passLocator,
+      tipsNote: tipsNote,
+      generalRules: generalRules,
+      generalMistakes: generalMistakes,
+      c2: c2,
+      examDay: examDay,
+      items: [
+        for (final item in items)
+          item.withSteps([
+            for (var i = 0; i < item.steps.length; i++)
+              item.steps[i].withMedia(_shotsOf(raw[item.id], i + 1)),
+          ]),
       ],
     );
   }

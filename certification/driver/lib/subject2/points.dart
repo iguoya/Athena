@@ -46,8 +46,9 @@ Future<String> importPointPhoto(
     } catch (_) {
       decoded = null;
     }
-    if (decoded == null)
+    if (decoded == null) {
       throw const FormatException("认不出这张图片的格式（支持 JPG、PNG、WebP、BMP、GIF）");
+    }
     final upright = img.bakeOrientation(decoded);
     final longest = max(upright.width, upright.height);
     final resized = longest <= pointPhotoEdge

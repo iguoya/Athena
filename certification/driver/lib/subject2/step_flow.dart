@@ -21,6 +21,7 @@ class StepFlow extends StatelessWidget {
     required this.current,
     required this.onStepChanged,
     this.belowReference,
+    this.compact = false,
   });
 
   final List<GuideStep> steps;
@@ -31,6 +32,9 @@ class StepFlow extends StatelessWidget {
 
   /// 参照下面的个人点位，或「去标定」。页面传入，没写就不占位。
   final Widget? belowReference;
+
+  /// 项目页（ADR 0130）：只留方向盘、参照、注意。双视角卡和正文留给非紧凑调用。
+  final bool compact;
 
   GuideStep get _step => steps[current];
 
@@ -50,17 +54,22 @@ class StepFlow extends StatelessWidget {
           "第 ${current + 1} 步 · ${_step.title}",
           style: theme.textTheme.titleMedium,
         ),
-        if (_step.body.isNotEmpty)
+        if (!compact && _step.body.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 4),
             child: Text(_step.body),
           ),
         const SizedBox(height: 12),
-        _DualView(step: _step),
+        if (!compact) _DualView(step: _step),
         _Primary(label: "方向盘", text: _step.steer, emphasis: true),
-        _Primary(label: "参照", text: _step.reference),
-        if (belowReference != null) belowReference!,
-        if (_step.skill.isNotEmpty)
+        _Primary(
+          label: "参照",
+          text: _step.reference.isNotEmpty
+              ? _step.reference
+              : (compact ? _step.inside?.look ?? "" : ""),
+        ),
+        ?belowReference,
+        if (!compact && _step.skill.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 8),
             child: Text(
@@ -70,8 +79,8 @@ class StepFlow extends StatelessWidget {
               ),
             ),
           ),
-        _FixBlock(fixes: _step.fix),
-        if (_step.done.isNotEmpty)
+        if (!compact) _FixBlock(fixes: _step.fix),
+        if (!compact && _step.done.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 8),
             child: Text("做完：${_step.done}"),

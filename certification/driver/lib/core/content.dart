@@ -10,6 +10,7 @@ import "../subject2/guide.dart";
 import "models.dart";
 import "../speed/recall_cards.dart";
 import "../speed/speed_topics.dart";
+
 class ContentLoader {
   /// 读到内容的那个根目录；开发时是工作树，发行包里为空（走 assets）。
   static String? contentRoot;
@@ -17,7 +18,9 @@ class ContentLoader {
   /// 题图要么在磁盘上（开发），要么打进 assets（发行）——两条路径都从这里给出。
   static String imagePath(String relative) {
     final root = contentRoot;
-    return root == null ? "content/$relative" : p.join(root, "content", relative);
+    return root == null
+        ? "content/$relative"
+        : p.join(root, "content", relative);
   }
 
   static bool get imagesOnDisk => contentRoot != null;
@@ -35,24 +38,39 @@ class ContentLoader {
     );
     final signs = _signsOf(await _read("signs.json"));
     final markings = [
-      for (final raw in (jsonDecode(await _read("markings.json")) as Map<String, dynamic>)["markings"] as List<dynamic>)
+      for (final raw
+          in (jsonDecode(await _read("markings.json"))
+                  as Map<String, dynamic>)["markings"]
+              as List<dynamic>)
         Marking.fromJson(raw as Map<String, dynamic>),
     ];
     final gauges = [
-      for (final raw in (jsonDecode(await _read("gauges.json")) as Map<String, dynamic>)["gauges"] as List<dynamic>)
+      for (final raw
+          in (jsonDecode(await _read("gauges.json"))
+                  as Map<String, dynamic>)["gauges"]
+              as List<dynamic>)
         Gauge.fromJson(raw as Map<String, dynamic>),
     ];
     final gestureList = [
-      for (final raw in (jsonDecode(await _read("gestures.json")) as Map<String, dynamic>)["gestures"] as List<dynamic>)
+      for (final raw
+          in (jsonDecode(await _read("gestures.json"))
+                  as Map<String, dynamic>)["gestures"]
+              as List<dynamic>)
         TrafficGesture.fromJson(raw as Map<String, dynamic>),
     ];
     GestureIndex.load(gestureList);
     final henanGroups = [
-      for (final raw in (jsonDecode(await _read("henan.json")) as Map<String, dynamic>)["groups"] as List<dynamic>)
+      for (final raw
+          in (jsonDecode(await _read("henan.json"))
+                  as Map<String, dynamic>)["groups"]
+              as List<dynamic>)
         NoteGroup.fromJson(raw as Map<String, dynamic>),
     ];
     final licenseGroups = [
-      for (final raw in (jsonDecode(await _read("license_notes.json")) as Map<String, dynamic>)["groups"] as List<dynamic>)
+      for (final raw
+          in (jsonDecode(await _read("license_notes.json"))
+                  as Map<String, dynamic>)["groups"]
+              as List<dynamic>)
         NoteGroup.fromJson(raw as Map<String, dynamic>),
     ];
     final seen = <String>{};
@@ -65,11 +83,17 @@ class ContentLoader {
         if (seen.add(question.id)) question,
     ];
     final cheatsheet = [
-      for (final raw in (jsonDecode(await _read("cheatsheet.json")) as Map<String, dynamic>)["groups"] as List<dynamic>)
+      for (final raw
+          in (jsonDecode(await _read("cheatsheet.json"))
+                  as Map<String, dynamic>)["groups"]
+              as List<dynamic>)
         CheatGroup.fromJson(raw as Map<String, dynamic>),
     ];
     final notes = [
-      for (final raw in (jsonDecode(await _read("notes.json")) as Map<String, dynamic>)["groups"] as List<dynamic>)
+      for (final raw
+          in (jsonDecode(await _read("notes.json"))
+                  as Map<String, dynamic>)["groups"]
+              as List<dynamic>)
         NoteGroup.fromJson(raw as Map<String, dynamic>),
     ];
     // 新专题各自一份内容文件（ADR 0103）：`topics/<专题 id>.json`，结构同考点速记。
@@ -77,18 +101,30 @@ class ContentLoader {
       for (final topic in speedTopics)
         if (topic.kind == SpeedKind.notes && topic.source == null)
           topic.id: [
-            for (final raw in (jsonDecode(await _read("topics/${topic.id}.json")) as Map<String, dynamic>)["groups"]
-                as List<dynamic>)
+            for (final raw
+                in (jsonDecode(await _read("topics/${topic.id}.json"))
+                        as Map<String, dynamic>)["groups"]
+                    as List<dynamic>)
               NoteGroup.fromJson(raw as Map<String, dynamic>),
           ],
     };
-    final guide = Subject2Guide.fromJson(jsonDecode(await _read("subject2.json")) as Map<String, dynamic>);
+    final guideJson =
+        jsonDecode(await _read("subject2.json")) as Map<String, dynamic>;
+    var guide = Subject2Guide.fromJson(guideJson);
+    try {
+      final mediaRaw = await _read("subject2_media.json");
+      guide = guide.withMedia(jsonDecode(mediaRaw) as Map<String, dynamic>);
+    } catch (_) {
+      // 素材文件还没到，或发行包里还没打进去：当没有。
+    }
     // 速记题（ADR 0094）：每张速记卡一道有稳定编号的题，自测作答写成作答记录后，错题本、考前复习、强化练习
     // 按同一份记录带出。知识点号不在课表里，日常题、章节练习、模拟考、解锁判断都不会带上它。
-    final catalog = jsonDecode(await _read("sources/catalog.json")) as Map<String, dynamic>;
+    final catalog =
+        jsonDecode(await _read("sources/catalog.json")) as Map<String, dynamic>;
     final sourceUrls = {
       for (final raw in catalog["sources"] as List<dynamic>)
-        (raw as Map<String, dynamic>)["id"] as String: raw["url"] as String? ?? "",
+        (raw as Map<String, dynamic>)["id"] as String:
+            raw["url"] as String? ?? "",
     };
     final base = Bank(
       curriculum: curriculum,

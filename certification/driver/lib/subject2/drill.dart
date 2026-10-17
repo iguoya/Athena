@@ -689,7 +689,10 @@ const _curveOuter1 = 8.3; // 左弯：后轴中心走外侧
 const _curveOuter2 = 7.7; // 右弯：同一条后轴轨迹对第二个圆心而言在内侧 → 车身相对第二个弯走外侧
 
 bool _curveInside(Offset p) {
-  if (_inRect(p, const Rect.fromLTRB(-_curveHalfWidth, 0, _curveHalfWidth, 12))) {
+  if (_inRect(
+    p,
+    const Rect.fromLTRB(-_curveHalfWidth, 0, _curveHalfWidth, 12),
+  )) {
     return true;
   }
   if (_inRect(
@@ -874,6 +877,7 @@ class DrillPlayer extends StatefulWidget {
     this.companion,
     this.links = const [],
     this.risks = const [],
+    this.showCanvas = true,
   });
 
   final DrillScene scene;
@@ -905,6 +909,9 @@ class DrillPlayer extends StatefulWidget {
 
   /// 朗读器；为空就没有语音讲解。
   final Narrator? narrator;
+
+  /// 项目页已经有一张俯视图，这里只留播放键，不再画第二张场地。
+  final bool showCanvas;
 
   @override
   State<DrillPlayer> createState() => DrillPlayerState();
@@ -969,7 +976,10 @@ class DrillPlayerState extends State<DrillPlayer>
   void _narrate(int step) {
     final narrator = widget.narrator;
     final lines = widget.narration;
-    if (!narrating || narrator == null || lines == null || step >= lines.length) {
+    if (!narrating ||
+        narrator == null ||
+        lines == null ||
+        step >= lines.length) {
       return;
     }
     final token = ++_speechToken;
@@ -1087,53 +1097,57 @@ class DrillPlayerState extends State<DrillPlayer>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AspectRatio(
-          aspectRatio: 16 / 10,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                flex: 3,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: CustomPaint(
-                    painter: DrillPainter(
-                      scene: widget.scene,
-                      frame: frame,
-                      ideal: _ideal,
-                      caption: widget.hideCue
-                          ? "第 ${frame.step + 1} 步"
-                          : "第 ${frame.step + 1} 步 · $title",
-                      cue: widget.hideCue ? null : steps[frame.step].cue,
-                      caution:
-                          widget.hideCue ||
-                              widget.cautions == null ||
-                              frame.step >= widget.cautions!.length
-                          ? null
-                          : widget.cautions![frame.step],
-                      risk: widget.hideCue || frame.step >= widget.risks.length
-                          ? ""
-                          : widget.risks[frame.step],
-                      link: widget.hideCue || frame.step >= widget.links.length
-                          ? ""
-                          : widget.links[frame.step],
-                      marks: widget.hideCue
-                          ? const []
-                          : steps[frame.step].marks,
-                      pulse: (_pulse.elapsed.inMilliseconds % 1200) / 1200,
-                      blinkOn: (_t * 2.5).floor().isEven,
+        if (widget.showCanvas) ...[
+          AspectRatio(
+            aspectRatio: 16 / 10,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: CustomPaint(
+                      painter: DrillPainter(
+                        scene: widget.scene,
+                        frame: frame,
+                        ideal: _ideal,
+                        caption: widget.hideCue
+                            ? "第 ${frame.step + 1} 步"
+                            : "第 ${frame.step + 1} 步 · $title",
+                        cue: widget.hideCue ? null : steps[frame.step].cue,
+                        caution:
+                            widget.hideCue ||
+                                widget.cautions == null ||
+                                frame.step >= widget.cautions!.length
+                            ? null
+                            : widget.cautions![frame.step],
+                        risk:
+                            widget.hideCue || frame.step >= widget.risks.length
+                            ? ""
+                            : widget.risks[frame.step],
+                        link:
+                            widget.hideCue || frame.step >= widget.links.length
+                            ? ""
+                            : widget.links[frame.step],
+                        marks: widget.hideCue
+                            ? const []
+                            : steps[frame.step].marks,
+                        pulse: (_pulse.elapsed.inMilliseconds % 1200) / 1200,
+                        blinkOn: (_t * 2.5).floor().isEven,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              if (widget.companion != null) ...[
-                const SizedBox(width: 8),
-                Expanded(flex: 2, child: widget.companion!),
+                if (widget.companion != null) ...[
+                  const SizedBox(width: 8),
+                  Expanded(flex: 2, child: widget.companion!),
+                ],
               ],
-            ],
+            ),
           ),
-        ),
-        const SizedBox(height: 8),
+          const SizedBox(height: 8),
+        ],
         Row(
           children: [
             IconButton(

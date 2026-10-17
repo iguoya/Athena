@@ -62,10 +62,12 @@ void main() {
       );
     }
 
-    // 曲线行驶：车内参照和场地图同屏，当前步的参照写在车内格上。
+    // 曲线行驶：一张俯视图，参照写成一句，不再另开「车内」卡。
     await tester.tap(find.text("曲线行驶").first);
     await tester.pump();
-    expect(find.text("车内"), findsOneWidget);
+    expect(find.byType(FieldMapAnimated), findsOneWidget);
+    expect(find.text("车内"), findsNothing);
+    expect(find.text("车外 · 盯哪"), findsNothing);
     expect(find.text("入口在挡风玻璃里偏外侧"), findsWidgets);
     expect(tester.takeException(), isNull);
     await tester.tap(find.widgetWithText(TextButton, "科目二"));
@@ -77,7 +79,9 @@ void main() {
     await tester.tap(find.text("倒车入库").first);
     await tester.pump();
     expect(find.byType(FieldMapAnimated), findsOneWidget);
-    expect(find.text("播这一步"), findsWidgets);
+    expect(find.text("车内"), findsNothing);
+    expect(find.text("车外 · 盯哪"), findsNothing);
+    expect(find.byTooltip("只播这一步"), findsOneWidget);
     expect(find.textContaining("练这一项的评判题"), findsNothing);
     expect(find.text("我的点位卡"), findsOneWidget);
     final itemPage = find
@@ -96,17 +100,23 @@ void main() {
     await tester.drag(itemPage, const Offset(0, 5000));
     await tester.pumpAndSettle();
     expect(find.text("两个前轮已经在控制线外侧"), findsWidgets);
-    expect(find.text("车内"), findsWidgets);
 
-    // 单步播第 2 步：播完停在第 2 步末尾，步骤列表跟着高亮到第 2 步。
-    await tester.tap(find.byTooltip("播这一步").at(1));
+    // 单步播第 2 步：步骤条选中后只播这一步，停在第 2 步末尾。
+    await tester.tap(
+      find.descendant(
+        of: find.byType(SegmentedButton<int>),
+        matching: find.text("2"),
+      ),
+    );
+    await tester.pump();
+    await tester.tap(find.byTooltip("只播这一步"));
     for (var i = 0; i < 80; i++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
     expect(find.text("后视镜里车尾接近库口，车身还是直的"), findsWidgets);
     await tester.tap(find.byTooltip("下一步"));
     await tester.pump();
-    expect(find.text("后视镜里库角和库边线"), findsWidgets);
+    expect(find.textContaining("同时能看到库角"), findsWidgets);
 
     // 记一把：中途停车两次 → 90 分，能过。
     await tester.ensureVisible(find.text("记一把练车"));
