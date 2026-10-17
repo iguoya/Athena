@@ -100,6 +100,10 @@
 - 课表页的 `translated` 状态要求该节快照里全部文字段都有 `zh`（check 校验一致性
   与 pinned_commit 版本）；语义争议以官方 DocBook 当前内容为准，官方 zh_CN.po
   可作术语参照（覆盖率不完全）。
+- **「已译」的口径**：文字段 = `para` 与 `listitem`；页 `translated` 要求本页全部文字段都有
+  `zh`；`heading` 与 `figure` 的 `zh` 不要求（前端的标题与图注恒显示英文原文，从不读它们的
+  `zh`）。章 `status` 为 `translated` 当且仅当本章所有页都是 `translated`（check 校验）。
+  「已译」只证明译全，不证明译对：译文的忠实度靠独立审查（`comms/gtkmm-review/`）。
 - **译文术语按 `content/glossary.json` 走**（应用 ADR 0010）：写新译文、改译文前先对照；
   禁用写法由 `scripts/check.py` 阻断，批量统一用 `python scripts/glossary.py --apply`。
 - **测验按标准版写**（应用 ADR 0011）：新增或重写测验题带 `explanation`、读代码题与均衡的答案位；

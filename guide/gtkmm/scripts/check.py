@@ -215,6 +215,13 @@ def check_curriculum(course: dict, official: dict) -> tuple[set[str], set[str], 
                 if pending:
                     fail(f"{pwhere}: 还有 {len(pending)} 个文字段没有中文翻译，不该标 translated")
 
+            # 章状态口径（AGENTS.md「已译的口径」）：章 translated 当且仅当本章所有页都是 translated
+            all_pages = bool(section.get("pages")) and all(
+                p.get("status") == "translated" for p in section.get("pages", []))
+            if all_pages != (section.get("status") == "translated"):
+                fail(f"{where}/{section_id}: 章 status={section.get('status')!r}，但"
+                     f"{'所有' if all_pages else '并非所有'}页都是 translated——章状态须与页状态一致")
+
             for kp in section.get("knowledge_points", []):
                 kp_id = kp.get("id", "")
                 if kp_id in kp_ids:
