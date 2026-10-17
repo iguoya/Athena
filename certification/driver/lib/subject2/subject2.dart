@@ -1422,6 +1422,9 @@ class _ItemPage extends StatefulWidget {
 class _ItemPageState extends State<_ItemPage> {
   final _player = GlobalKey<DrillPlayerState>();
   final _narrator = defaultNarrator();
+  late final List<GlobalKey> _pointKeys = [
+    for (var i = 0; i < widget.item.steps.length; i++) GlobalKey(),
+  ];
   var _step = 0;
   var _gear = Gear.drive;
   var _signal = Signal.none;
@@ -1466,202 +1469,240 @@ class _ItemPageState extends State<_ItemPage> {
       },
       onPlay: (i) => _player.currentState?.playStep(i),
     );
-    return ListView(
+    return SingleChildScrollView(
       key: const ValueKey("subject2-item"),
       padding: const EdgeInsets.fromLTRB(28, 16, 28, 28),
-      children: [
-        Wrap(
-          crossAxisAlignment: WrapCrossAlignment.center,
-          spacing: 12,
-          runSpacing: 8,
-          children: [
-            TextButton.icon(
-              onPressed: widget.onBack,
-              icon: const Icon(Glyph.back),
-              label: const Text("科目二"),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 12,
+            runSpacing: 8,
+            children: [
+              TextButton.icon(
+                onPressed: widget.onBack,
+                icon: const Icon(Glyph.back),
+                label: const Text("科目二"),
+              ),
+              Text(item.title, style: theme.textTheme.headlineMedium),
+              BsBadge(
+                text: "限时 ${item.limitText}",
+                color: Bs.secondary,
+                icon: Glyph.duration,
+              ),
+              BsBadge(text: "出线看${item.judgedBy}", color: Bs.secondary),
+            ],
+          ),
+          const SizedBox(height: 12),
+          _ItemBriefCard(
+            brief: widget.brief,
+            pointsWritten: [
+              for (var i = 0; i < item.steps.length; i++)
+                if ((widget.notes[(item.id, i)]?.text.trim().isNotEmpty ??
+                        false) ||
+                    widget.photos.any(
+                      (ph) => ph.itemId == item.id && ph.step == i,
+                    ))
+                  i,
+            ].length,
+          ),
+          if (_sketchFor(item.id) case final sketch?) ...[
+            const SizedBox(height: 8),
+            FilledButton.icon(
+              onPressed: () => _player.currentState?.playStep(_step),
+              icon: const Icon(Glyph.animation),
+              label: const Text("播这一步"),
             ),
-            Text(item.title, style: theme.textTheme.headlineMedium),
-            BsBadge(
-              text: "限时 ${item.limitText}",
-              color: Bs.secondary,
-              icon: Glyph.duration,
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 280,
+              child: FieldMapAnimated(
+                steps: sketch,
+                index: _step.clamp(0, sketch.length - 1),
+                autoPlay: true,
+              ),
             ),
-            BsBadge(text: "出线看${item.judgedBy}", color: Bs.secondary),
+            const SizedBox(height: 16),
+            StepFlow(
+              steps: item.steps,
+              current: _step.clamp(0, item.steps.length - 1),
+              onStepChanged: (i) {
+                _player.currentState?.jumpTo(i);
+                setState(() => _step = i);
+              },
+              belowReference: InlinePoint(
+                note: widget.notes[(item.id, _step)],
+                photos: [
+                  for (final ph in widget.photos)
+                    if (ph.itemId == item.id && ph.step == _step) ph,
+                ],
+                onCalibrate: () => _goCalibrate(_step),
+              ),
+            ),
           ],
-        ),
-        const SizedBox(height: 12),
-        _ItemBriefCard(
-          brief: widget.brief,
-          pointsWritten: [
-            for (var i = 0; i < item.steps.length; i++)
-              if ((widget.notes[(item.id, i)]?.text.trim().isNotEmpty ??
-                      false) ||
-                  widget.photos.any(
-                    (ph) => ph.itemId == item.id && ph.step == i,
-                  ))
-                i,
-          ].length,
-        ),
-        if (_sketchFor(item.id) case final sketch?) ...[
-          const SizedBox(height: 8),
-          FilledButton.icon(
-            onPressed: () => _player.currentState?.playStep(_step),
-            icon: const Icon(Glyph.animation),
-            label: const Text("播这一步"),
-          ),
-          const SizedBox(height: 8),
-          SizedBox(
-            height: 280,
-            child: FieldMapAnimated(
-              steps: sketch,
-              index: _step.clamp(0, sketch.length - 1),
-              autoPlay: true,
-            ),
-          ),
           const SizedBox(height: 16),
-          StepFlow(
-            steps: item.steps,
-            current: _step.clamp(0, item.steps.length - 1),
-            onStepChanged: (i) {
-              _player.currentState?.jumpTo(i);
-              setState(() => _step = i);
+          LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth < 1000) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [player, const SizedBox(height: 16), steps],
+                );
+              }
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(flex: 3, child: player),
+                  const SizedBox(width: 20),
+                  Expanded(flex: 2, child: steps),
+                ],
+              );
             },
           ),
-        ],
-        const SizedBox(height: 16),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth < 1000) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [player, const SizedBox(height: 16), steps],
-              );
-            }
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(flex: 3, child: player),
-                const SizedBox(width: 20),
-                Expanded(flex: 2, child: steps),
-              ],
-            );
-          },
-        ),
-        const SizedBox(height: 20),
-        Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children: [
-            FilledButton.tonalIcon(
-              onPressed: widget.onRecord,
-              icon: const Icon(Glyph.record),
-              label: const Text("记一把练车"),
-            ),
-            FilledButton.tonalIcon(
-              onPressed: () => showRehearsal(
-                context,
-                item: item,
-                store: widget.store,
-                notes: widget.notes,
-                photos: widget.photos,
-                onChanged: widget.onPointsChanged,
+          const SizedBox(height: 20),
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: [
+              FilledButton.tonalIcon(
+                onPressed: widget.onRecord,
+                icon: const Icon(Glyph.record),
+                label: const Text("记一把练车"),
               ),
-              icon: const Icon(Glyph.rehearse),
-              label: const Text("默演一遍"),
+              FilledButton.tonalIcon(
+                onPressed: () => showRehearsal(
+                  context,
+                  item: item,
+                  store: widget.store,
+                  notes: widget.notes,
+                  photos: widget.photos,
+                  onChanged: widget.onPointsChanged,
+                ),
+                icon: const Icon(Glyph.rehearse),
+                label: const Text("默演一遍"),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          _Section(
+            icon: Glyph.pointCard,
+            title: "我的点位卡",
+            trailing: Text(
+              "只写你自己验证过的：教练怎么说、你在车里实测怎样",
+              style: theme.textTheme.bodySmall?.copyWith(color: Bs.secondary),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  calibrationGuide(item.id),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: Bs.secondary,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                PointCards(
+                  item: item,
+                  store: widget.store,
+                  notes: widget.notes,
+                  photos: widget.photos,
+                  onChanged: widget.onPointsChanged,
+                  stepKeys: _pointKeys,
+                ),
+              ],
+            ),
+          ),
+          if (widget.coachNotes.isNotEmpty) ...[
+            const SizedBox(height: 20),
+            _Section(
+              icon: Glyph.coach,
+              title: "教练说过",
+              trailing: Text(
+                "原话，按时间倒序；整理过的放进点位卡",
+                style: theme.textTheme.bodySmall?.copyWith(color: Bs.secondary),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (final n in widget.coachNotes.take(8))
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 3),
+                      child: Text(
+                        "${_ago(n.at)}：${n.text}",
+                        style: theme.textTheme.bodyLarge,
+                      ),
+                    ),
+                ],
+              ),
             ),
           ],
-        ),
-        const SizedBox(height: 24),
-        _Section(
-          icon: Glyph.pointCard,
-          title: "我的点位卡",
-          trailing: Text(
-            "只写你自己验证过的：教练怎么说、你在车里实测怎样",
-            style: theme.textTheme.bodySmall?.copyWith(color: Bs.secondary),
-          ),
-          child: PointCards(
-            item: item,
-            store: widget.store,
-            notes: widget.notes,
-            photos: widget.photos,
-            onChanged: widget.onPointsChanged,
-          ),
-        ),
-        if (widget.coachNotes.isNotEmpty) ...[
           const SizedBox(height: 20),
           _Section(
-            icon: Glyph.coach,
-            title: "教练说过",
+            icon: Glyph.source,
+            title: "操作要求（标准原文）",
+            child: _Quote(
+              text: item.requirementQuote,
+              locator: item.requirementLocator,
+            ),
+          ),
+          const SizedBox(height: 20),
+          _Section(
+            icon: Glyph.rules,
+            title: "评判",
+            child: _RuleTable(rules: item.rules),
+          ),
+          const SizedBox(height: 20),
+          _Section(
+            icon: Glyph.tips,
+            title: "经验要点",
             trailing: Text(
-              "原话，按时间倒序；整理过的放进点位卡",
+              widget.guide.tipsNote,
               style: theme.textTheme.bodySmall?.copyWith(color: Bs.secondary),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                for (final n in widget.coachNotes.take(8))
+                for (final tip in item.tips)
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 3),
-                    child: Text(
-                      "${_ago(n.at)}：${n.text}",
-                      style: theme.textTheme.bodyLarge,
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 6),
+                          child: Icon(Glyph.bullet, size: 8, color: Bs.paper),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(tip, style: theme.textTheme.bodyLarge),
+                        ),
+                      ],
                     ),
                   ),
               ],
             ),
           ),
+          if (widget.runs.isNotEmpty) ...[
+            const SizedBox(height: 20),
+            _DrillStats(
+              guide: widget.guide,
+              runs: widget.runs,
+              itemId: item.id,
+            ),
+          ],
         ],
-        const SizedBox(height: 20),
-        _Section(
-          icon: Glyph.source,
-          title: "操作要求（标准原文）",
-          child: _Quote(
-            text: item.requirementQuote,
-            locator: item.requirementLocator,
-          ),
-        ),
-        const SizedBox(height: 20),
-        _Section(
-          icon: Glyph.rules,
-          title: "评判",
-          child: _RuleTable(rules: item.rules),
-        ),
-        const SizedBox(height: 20),
-        _Section(
-          icon: Glyph.tips,
-          title: "经验要点",
-          trailing: Text(
-            widget.guide.tipsNote,
-            style: theme.textTheme.bodySmall?.copyWith(color: Bs.secondary),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              for (final tip in item.tips)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 6),
-                        child: Icon(Glyph.bullet, size: 8, color: Bs.paper),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(tip, style: theme.textTheme.bodyLarge),
-                      ),
-                    ],
-                  ),
-                ),
-            ],
-          ),
-        ),
-        if (widget.runs.isNotEmpty) ...[
-          const SizedBox(height: 20),
-          _DrillStats(guide: widget.guide, runs: widget.runs, itemId: item.id),
-        ],
-      ],
+      ),
+    );
+  }
+
+  void _goCalibrate(int step) {
+    final ctx = _pointKeys[step].currentContext;
+    if (ctx == null) return;
+    Scrollable.ensureVisible(
+      ctx,
+      alignment: 0.15,
+      duration: const Duration(milliseconds: 250),
     );
   }
 }

@@ -20,6 +20,7 @@ class StepFlow extends StatelessWidget {
     required this.steps,
     required this.current,
     required this.onStepChanged,
+    this.belowReference,
   });
 
   final List<GuideStep> steps;
@@ -27,6 +28,9 @@ class StepFlow extends StatelessWidget {
   /// 当前步下标，由页面持有（俯视图共用）。
   final int current;
   final ValueChanged<int> onStepChanged;
+
+  /// 参照下面的个人点位，或「去标定」。页面传入，没写就不占位。
+  final Widget? belowReference;
 
   GuideStep get _step => steps[current];
 
@@ -55,6 +59,7 @@ class StepFlow extends StatelessWidget {
         _DualView(step: _step),
         _Primary(label: "方向盘", text: _step.steer, emphasis: true),
         _Primary(label: "参照", text: _step.reference),
+        if (belowReference != null) belowReference!,
         if (_step.skill.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 8),

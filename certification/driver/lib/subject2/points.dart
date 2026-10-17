@@ -11,16 +11,32 @@ import "../ui/glyphs.dart";
 import "guide.dart";
 import "../ui/look.dart";
 import "../core/progress.dart";
+
 /// 个人点位卡（ADR 0037）：每一项的每一步，只写使用者自己验证过的点位——
 /// 教练怎么说、自己在车里实测怎样。应用只给骨架，不给通用点位（ADR 0036）。
 
 const pointTemplate = "看哪里：\n看到什么时：\n做什么：";
 
+/// 一项一条标定引导：停在哪、看哪里、拍什么、写什么。不给通用点位（ADR 0036）。
+String calibrationGuide(String itemId) => switch (itemId) {
+  "reverse" => "停在起点，座椅固定。看后视镜里库口和车尾，拍下这一眼。按三行骨架写下你自己的点。",
+  "parallel" => "停在库的左前方。看右后视镜里车身和库线的缝，拍下这一眼。只写这辆车、这个座位下成立的关系。",
+  "curve" => "进弯前把车停稳。看挡风玻璃里车头角和边线，拍下这一眼。只写你实测过的。",
+  "corner" => "转弯前停住。看后视镜或车头和内角，拍下这一眼。按「看哪里 / 看到什么时 / 做什么」写下你自己的点。",
+  _ => "停稳，看这一步的参照，拍下这一眼，按三行骨架写下你验证过的点。",
+};
+
 /// 照片长边缩到这么多像素，JPEG 质量 80：每张两三百 KB，随仓库走不至于太重。
 const pointPhotoEdge = 1280;
 
 /// 把一张照片缩图后存进 [dir]/<项目>/，返回相对 [dir] 的路径。解码和缩放在后台 isolate 里做。
-Future<String> importPointPhoto(String source, String dir, String itemId, int step, {DateTime? now}) async {
+Future<String> importPointPhoto(
+  String source,
+  String dir,
+  String itemId,
+  int step, {
+  DateTime? now,
+}) async {
   final bytes = await File(source).readAsBytes();
   final jpg = await Isolate.run(() {
     // 扩展名对、内容坏的文件，解码器会抛 RangeError 之类的底层错误，统一换成一句人话。
@@ -30,7 +46,8 @@ Future<String> importPointPhoto(String source, String dir, String itemId, int st
     } catch (_) {
       decoded = null;
     }
-    if (decoded == null) throw const FormatException("认不出这张图片的格式（支持 JPG、PNG、WebP、BMP、GIF）");
+    if (decoded == null)
+      throw const FormatException("认不出这张图片的格式（支持 JPG、PNG、WebP、BMP、GIF）");
     final upright = img.bakeOrientation(decoded);
     final longest = max(upright.width, upright.height);
     final resized = longest <= pointPhotoEdge
@@ -44,7 +61,8 @@ Future<String> importPointPhoto(String source, String dir, String itemId, int st
     return img.encodeJpg(resized, quality: 80);
   });
   final t = now ?? DateTime.now();
-  final stamp = "${t.year}${_two(t.month)}${_two(t.day)}-${_two(t.hour)}${_two(t.minute)}${_two(t.second)}${t.millisecond.toString().padLeft(3, "0")}";
+  final stamp =
+      "${t.year}${_two(t.month)}${_two(t.day)}-${_two(t.hour)}${_two(t.minute)}${_two(t.second)}${t.millisecond.toString().padLeft(3, "0")}";
   final relative = "$itemId/${step + 1}-$stamp.jpg";
   final file = File(p.join(dir, relative));
   await file.parent.create(recursive: true);
@@ -63,6 +81,7 @@ class PointCards extends StatelessWidget {
     required this.notes,
     required this.photos,
     required this.onChanged,
+    this.stepKeys,
   });
 
   final GuideItem item;
@@ -71,6 +90,9 @@ class PointCards extends StatelessWidget {
   final List<PointPhoto> photos;
   final Future<void> Function() onChanged;
 
+  /// 每一步一张卡的键，供「去标定」滚到这一步。
+  final List<GlobalKey>? stepKeys;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -78,11 +100,15 @@ class PointCards extends StatelessWidget {
       children: [
         for (var i = 0; i < item.steps.length; i++)
           PointCard(
+            key: stepKeys != null && i < stepKeys!.length ? stepKeys![i] : null,
             item: item,
             step: i,
             store: store,
             note: notes[(item.id, i)],
-            photos: [for (final ph in photos) if (ph.itemId == item.id && ph.step == i) ph],
+            photos: [
+              for (final ph in photos)
+                if (ph.itemId == item.id && ph.step == i) ph,
+            ],
             onChanged: onChanged,
           ),
       ],
@@ -115,7 +141,11 @@ class PointCard extends StatelessWidget {
   bool get empty => (note?.text.trim().isEmpty ?? true) && photos.isEmpty;
 
   Future<void> _edit(BuildContext context) async {
-    final controller = TextEditingController(text: note == null || note!.text.trim().isEmpty ? pointTemplate : note!.text);
+    final controller = TextEditingController(
+      text: note == null || note!.text.trim().isEmpty
+          ? pointTemplate
+          : note!.text,
+    );
     final saved = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
@@ -135,8 +165,14 @@ class PointCard extends StatelessWidget {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("取消")),
-          FilledButton(onPressed: () => Navigator.of(context).pop(controller.text), child: const Text("保存")),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text("取消"),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(controller.text),
+            child: const Text("保存"),
+          ),
         ],
       ),
     );
@@ -148,7 +184,10 @@ class PointCard extends StatelessWidget {
   }
 
   Future<void> _addPhoto(BuildContext context) async {
-    const images = XTypeGroup(label: "图片", extensions: ["jpg", "jpeg", "png", "webp", "bmp", "gif"]);
+    const images = XTypeGroup(
+      label: "图片",
+      extensions: ["jpg", "jpeg", "png", "webp", "bmp", "gif"],
+    );
     final picked = await openFile(acceptedTypeGroups: const [images]);
     if (picked == null || !context.mounted) return;
     final controller = TextEditingController();
@@ -166,14 +205,25 @@ class PointCard extends StatelessWidget {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("取消")),
-          FilledButton(onPressed: () => Navigator.of(context).pop(controller.text), child: const Text("加进点位卡")),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text("取消"),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(controller.text),
+            child: const Text("加进点位卡"),
+          ),
         ],
       ),
     );
     if (caption == null) return;
     try {
-      final file = await importPointPhoto(picked.path, ProgressStore.pointsDir, item.id, step);
+      final file = await importPointPhoto(
+        picked.path,
+        ProgressStore.pointsDir,
+        item.id,
+        step,
+      );
       await store.addPointPhoto(item.id, step, file, caption.trim());
       await onChanged();
     } on Exception catch (error) {
@@ -183,7 +233,12 @@ class PointCard extends StatelessWidget {
         builder: (context) => AlertDialog(
           title: const Text("照片没加上"),
           content: Text("$error"),
-          actions: [FilledButton(onPressed: () => Navigator.of(context).pop(), child: const Text("知道了"))],
+          actions: [
+            FilledButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("知道了"),
+            ),
+          ],
         ),
       );
     }
@@ -200,11 +255,21 @@ class PointCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1000, maxHeight: 640),
-                child: Image.file(File(p.join(ProgressStore.pointsDir, photo.file)), errorBuilder: _missing),
+                constraints: const BoxConstraints(
+                  maxWidth: 1000,
+                  maxHeight: 640,
+                ),
+                child: Image.file(
+                  File(p.join(ProgressStore.pointsDir, photo.file)),
+                  errorBuilder: _missing,
+                ),
               ),
               const SizedBox(height: 10),
-              if (photo.caption.isNotEmpty) Text(photo.caption, style: Theme.of(context).textTheme.bodyLarge),
+              if (photo.caption.isNotEmpty)
+                Text(
+                  photo.caption,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -216,7 +281,10 @@ class PointCard extends StatelessWidget {
                       label: Text("删掉这张", style: TextStyle(color: Bs.danger)),
                     ),
                   const SizedBox(width: 8),
-                  FilledButton(onPressed: () => Navigator.of(context).pop(false), child: const Text("关闭")),
+                  FilledButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text("关闭"),
+                  ),
                 ],
               ),
             ],
@@ -229,14 +297,22 @@ class PointCard extends StatelessWidget {
     await onChanged();
   }
 
-  static Widget _missing(BuildContext context, Object error, StackTrace? stack) => Container(
-        width: 160,
-        height: 100,
-        color: Bs.light,
-        alignment: Alignment.center,
-        padding: const EdgeInsets.all(8),
-        child: const Text("照片文件不在这台机器上\n（用 launcher sync 同步仓库）", textAlign: TextAlign.center, style: TextStyle(fontSize: 12)),
-      );
+  static Widget _missing(
+    BuildContext context,
+    Object error,
+    StackTrace? stack,
+  ) => Container(
+    width: 160,
+    height: 100,
+    color: Bs.light,
+    alignment: Alignment.center,
+    padding: const EdgeInsets.all(8),
+    child: const Text(
+      "照片文件不在这台机器上\n（用 launcher sync 同步仓库）",
+      textAlign: TextAlign.center,
+      style: TextStyle(fontSize: 12),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -251,7 +327,10 @@ class PointCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text("第 ${step + 1} 步 · ${item.steps[step].title}", style: theme.textTheme.titleSmall),
+                child: Text(
+                  "第 ${step + 1} 步 · ${item.steps[step].title}",
+                  style: theme.textTheme.titleSmall,
+                ),
               ),
               if (!compact) ...[
                 TextButton.icon(
@@ -269,7 +348,9 @@ class PointCard extends StatelessWidget {
           ),
           Text(
             text.isEmpty ? "还没写。看哪里？看到什么时？做什么？" : text,
-            style: theme.textTheme.bodyLarge?.copyWith(color: text.isEmpty ? Bs.secondary : null),
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: text.isEmpty ? Bs.secondary : null,
+            ),
           ),
           if (photos.isNotEmpty) ...[
             const SizedBox(height: 8),
@@ -297,12 +378,83 @@ class PointCard extends StatelessWidget {
                             ),
                           ),
                           if (photo.caption.isNotEmpty)
-                            Text(photo.caption, maxLines: 2, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodySmall),
+                            Text(
+                              photo.caption,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: theme.textTheme.bodySmall,
+                            ),
                         ],
                       ),
                     ),
                   ),
               ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// 参照下面的个人点位。没写就给「去标定」，不弹窗。
+class InlinePoint extends StatelessWidget {
+  const InlinePoint({
+    super.key,
+    required this.note,
+    required this.photos,
+    required this.onCalibrate,
+  });
+
+  final PointNote? note;
+  final List<PointPhoto> photos;
+  final VoidCallback onCalibrate;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final text = note?.text.trim() ?? "";
+    if (text.isEmpty && photos.isEmpty) {
+      return Align(
+        alignment: Alignment.centerLeft,
+        child: TextButton.icon(
+          onPressed: onCalibrate,
+          icon: const Icon(Glyph.pointCard),
+          label: const Text("去标定"),
+        ),
+      );
+    }
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (text.isNotEmpty)
+            Text("我的点位：$text", style: theme.textTheme.bodyMedium),
+          if (photos.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 72,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  for (final photo in photos)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: Image.file(
+                          File(p.join(ProgressStore.pointsDir, photo.file)),
+                          height: 72,
+                          width: 96,
+                          fit: BoxFit.cover,
+                          cacheWidth: 192,
+                          errorBuilder: PointCard._missing,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
           ],
         ],

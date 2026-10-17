@@ -10,6 +10,7 @@ import "package:flutter/material.dart";
 import "package:flutter_test/flutter_test.dart";
 
 import "unlock_support.dart";
+
 import "package:image/image.dart" as img;
 import "package:path/path.dart" as p;
 
@@ -35,17 +36,29 @@ void main() {
     test("文字每次保存追加一行，读最新的；点位与默演随事件同步，重复导入不重写", () async {
       final t = DateTime(2026, 9, 28, 20);
       await store.savePointNote("reverse", 2, "旧说法", at: t);
-      await store.savePointNote("reverse", 2, "右后视镜下沿碰到库角打满", at: t.add(const Duration(minutes: 1)));
+      await store.savePointNote(
+        "reverse",
+        2,
+        "右后视镜下沿碰到库角打满",
+        at: t.add(const Duration(minutes: 1)),
+      );
       await store.recordRehearsal("reverse", const [2, 3], 7, at: t);
       final notes = await store.pointNotes();
       expect(notes[("reverse", 2)]!.text, "右后视镜下沿碰到库角打满");
-
     });
 
     test("照片缩到长边 1280 存成 JPEG，放在进度库旁边的 points/；删照片连文件一起删", () async {
       final source = File(p.join(dir.path, "big.png"));
-      await source.writeAsBytes(img.encodePng(img.Image(width: 3000, height: 2000)));
-      final relative = await importPointPhoto(source.path, ProgressStore.pointsDir, "parallel", 1, now: DateTime(2026, 9, 28, 20));
+      await source.writeAsBytes(
+        img.encodePng(img.Image(width: 3000, height: 2000)),
+      );
+      final relative = await importPointPhoto(
+        source.path,
+        ProgressStore.pointsDir,
+        "parallel",
+        1,
+        now: DateTime(2026, 9, 28, 20),
+      );
       expect(relative, startsWith("parallel/2-20260928-"));
       final file = File(p.join(ProgressStore.pointsDir, relative));
       expect(p.dirname(ProgressStore.pointsDir), dir.path);
@@ -66,7 +79,13 @@ void main() {
       await bogus.writeAsString("hello");
       expect(
         () => importPointPhoto(bogus.path, ProgressStore.pointsDir, "curve", 0),
-        throwsA(isA<FormatException>().having((e) => e.message, "message", contains("认不出"))),
+        throwsA(
+          isA<FormatException>().having(
+            (e) => e.message,
+            "message",
+            contains("认不出"),
+          ),
+        ),
       );
     });
   });
@@ -85,10 +104,14 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(1600, 2600));
     final ready = Completer<void>();
     await tester.pumpWidget(
-      MaterialApp(home: HomePage(bank: bank, store: store, onReady: ready.complete)),
+      MaterialApp(
+        home: HomePage(bank: bank, store: store, onReady: ready.complete),
+      ),
     );
     for (var i = 0; i < 2000 && !ready.isCompleted; i++) {
-      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 10)),
+      );
       await tester.pump();
     }
     await tester.tap(find.text("科目二（C2）"));
@@ -97,10 +120,14 @@ void main() {
     await tester.pump();
     await tester.tap(find.text("直角转弯").first);
     for (var i = 0; i < 50; i++) {
-      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 10)),
+      );
       await tester.pump();
     }
     expect(find.text("我的点位卡"), findsOneWidget);
+    expect(find.text("去标定"), findsOneWidget);
+    expect(find.textContaining("转弯前停住"), findsOneWidget);
 
     final writeFirst = find.text("写点位").first;
     await tester.ensureVisible(writeFirst);
@@ -111,18 +138,31 @@ void main() {
     await tester.enterText(find.byType(TextField), "车身离右边线一拳");
     await tester.tap(find.text("保存"));
     // 对话框里的输入框也匹配这段文字，要等它关掉、点位卡里出现才算存上了。
-    bool saved() => find.byType(AlertDialog).evaluate().isEmpty && find.text("车身离右边线一拳").evaluate().isNotEmpty;
+    bool saved() =>
+        find.byType(AlertDialog).evaluate().isEmpty &&
+        find.text("车身离右边线一拳").evaluate().isNotEmpty;
     for (var i = 0; i < 300 && !saved(); i++) {
-      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 10)),
+      );
       await tester.pump();
     }
     await tester.pumpAndSettle();
     expect(find.text("车身离右边线一拳"), findsOneWidget);
     // 滚回顶部：当前是第 1 步，步骤列表里展开显示自己的点位；简报提示写了几步。
-    final page = find.descendant(of: find.byKey(const ValueKey("subject2-item")), matching: find.byType(Scrollable)).first;
-    await tester.scrollUntilVisible(find.textContaining("点位卡写了 1/5 步"), -300, scrollable: page);
+    final page = find
+        .descendant(
+          of: find.byKey(const ValueKey("subject2-item")),
+          matching: find.byType(Scrollable),
+        )
+        .first;
+    await tester.scrollUntilVisible(
+      find.textContaining("点位卡写了 1/5 步"),
+      -300,
+      scrollable: page,
+    );
     expect(find.textContaining("点位卡写了 1/5 步"), findsOneWidget);
-    expect(find.textContaining("我的点位：车身离右边线一拳"), findsOneWidget);
+    expect(find.textContaining("我的点位：车身离右边线一拳"), findsWidgets);
     expect(tester.takeException(), isNull);
 
     await tester.runAsync(() async {
