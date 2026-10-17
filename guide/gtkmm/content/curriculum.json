@@ -4807,8 +4807,201 @@
           "title_en": "Example"
         }
       ],
-      "knowledge_points": [],
-      "checkpoint": []
+      "knowledge_points": [
+        {
+          "id": "gtkmm.draganddrop.quizset",
+          "title": "拖放测验集",
+          "type": "concept",
+          "difficulty": 4,
+          "mastery_goal": "required",
+          "requires": [],
+          "blocks": [
+            {
+              "type": "quiz",
+              "id": "dn19-st-1",
+              "page_ref": "sec-dnd-sources-targets",
+              "stem": "放置目标何时才会接受一次拖入？关键判据是什么？",
+              "options": [
+                "只要两侧都挂了事件控制器，格式是否兼容都无所谓",
+                "双方 ContentFormats 有兼容格式",
+                "只要按住 Shift，系统会忽略格式直接允许本次放置",
+                "源只要发出 drag_begin，目标就必须无条件接受拖入"
+              ],
+              "answer": 1,
+              "explanation": "原文：源与目标各自用 Gdk::ContentFormats 声明可发送/接收的格式；只有双方有兼容格式时，放置目标才会接受拖入，并据此发出后续信号。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-dnd-sources-targets",
+                  "note": "Drag sources and drop targets：ContentFormats 兼容才接受"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "dn19-me-1",
+              "page_ref": "sec-dnd-methods",
+              "stem": "下面两行执行完后，m_source_widget 在拖放里扮演什么角色？",
+              "code": "auto source = Gtk::DragSource::create();\nm_source_widget.add_controller(source);",
+              "lang": "cpp",
+              "options": [
+                "成为拖放源：挂上了 DragSource 控制器",
+                "成为放置目标：create() 默认就是 DropTarget",
+                "什么都不是：还得先 set_content 才能挂控制器",
+                "两边都是：一个控制器同时兼任源与目标"
+              ],
+              "answer": 0,
+              "explanation": "原文：用 Gtk::DragSource / Gtk::DropTarget 事件控制器把部件标成源或目标；示例先 create() 再 add_controller()。DropTarget 是另一类控制器，不是 DragSource::create() 的别名。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-dnd-methods",
+                  "note": "Methods：DragSource::create + add_controller"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "dn19-me-2",
+              "page_ref": "sec-dnd-methods",
+              "stem": "读完拖放数据后才决定拒收，应当调用 DropTarget 的哪个方法？",
+              "options": [
+                "set_actions(0)：把动作清零就会自动拒收",
+                "set_gtypes({})：清空类型列表就能挡掉本次拖入",
+                "reject()：推迟决定后可显式拒收",
+                "get_value() 返回空 Value，系统会替你拒收"
+              ],
+              "answer": 2,
+              "explanation": "原文：reject() 用于「先读数据再决定是否接受」这种推迟判断的场景。set_actions / set_gtypes 是配置目标能力，不是拒收当前这次操作。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-dnd-methods",
+                  "note": "Methods：DropTarget::reject()"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "dn19-sig-1",
+              "page_ref": "sec-dnd-signals",
+              "stem": "DragSource 的 prepare 槽应当返回什么？",
+              "code": "source->signal_prepare().connect(\n  sigc::mem_fun(*this, &Win::on_prepare), false);",
+              "lang": "cpp",
+              "options": [
+                "bool：true 表示允许开始拖，false 表示取消本次",
+                "Gdk::DragAction：告诉系统本次只允许 COPY 动作",
+                "void：prepare 只是通知，约定上不携带任何返回值",
+                "ContentProvider（拖出数据）"
+              ],
+              "answer": 3,
+              "explanation": "原文：prepare 必须返回 Gdk::ContentProvider，内含即将开始的拖拽要用的数据。bool / DragAction 是 enter、motion、drop 等其它信号的返回约定。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-dnd-signals",
+                  "note": "Signals：DragSource::prepare 返回 ContentProvider"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "dn19-sig-2",
+              "page_ref": "sec-dnd-signals",
+              "stem": "drag_end 带来的那个 bool 参数表示什么？",
+              "options": [
+                "拖是否成功落到目标上；失败时恒为 false",
+                "是否为 move，源侧是否应删掉原数据",
+                "用户是否按住了 Ctrl；与动作类型无关",
+                "目标是否调用了 reject()；与 move/copy 无关"
+              ],
+              "answer": 1,
+              "explanation": "原文：drag_end 提供 Gdk::Drag，以及一个 bool，说明这次是否在做 move、数据是否应当删除。它不是「是否落到目标」的总成功标志。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-dnd-signals",
+                  "note": "Signals：drag_end 的 delete-data / move 含义"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "dn19-ex-1",
+              "page_ref": "sec-dnd-example",
+              "stem": "官方简易示例的 prepare 槽实际放入拖出数据的关键步骤是？",
+              "code": "Glib::Value<Glib::ustring> ustring_value;\nustring_value.init(ustring_value.value_type());\nustring_value.set(\"I'm Data!\");\nreturn Gdk::ContentProvider::create(ustring_value);",
+              "lang": "cpp",
+              "options": [
+                "set_actions(COPY) 本身就会带上这段要拖出的字符串数据",
+                "DropTarget::create 的第一个 GType 就是要发送的文本内容",
+                "set 后再 create(ContentProvider)",
+                "标签上的可见文字会自动当作拖出数据，因此无需写 prepare"
+              ],
+              "answer": 2,
+              "explanation": "示例注释写明：数据量小时也可把 ContentProvider 存在 DragSource 上，那时甚至不必写 prepare；本例在 prepare 里构造 Value 并 create。set_actions 只声明动作；DropTarget::create 的 GType 是接收侧类型。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-dnd-example",
+                  "note": "Example：on_label_drag_prepare_data 返回 ContentProvider"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "checkpoint": [
+        {
+          "id": "dn19-cp-1",
+          "stem": "drop 槽收到非 ustring 的 Value 时，示例会怎样？",
+          "code": "bool DnDWindow::on_button_drop_drop_data(\n    const Glib::ValueBase& value, double, double)\n{\n  if (G_VALUE_HOLDS(value.gobj(),\n        Glib::Value<Glib::ustring>::value_type()))\n  {\n    // ... get + cout ...\n    return true;\n  }\n  else\n  {\n    std::cout << \"Received unexpected data type ...\" << std::endl;\n    return false;\n  }\n}",
+          "lang": "cpp",
+          "options": [
+            "return false",
+            "仍 return true，只是跳过字符串打印步骤",
+            "抛异常，由主循环捕获后直接结束整个程序",
+            "自动改成 COPY 再重试放置，直到类型终于匹配"
+          ],
+          "answer": 0,
+          "explanation": "原文：drop 必须返回 bool 表示是否接受本次放置。示例在类型不符时打印 unexpected 并 return false；相符则取出 ustring、打印 Received、return true。",
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-dnd-example",
+              "note": "综合 Example：drop 返回 bool；类型不符则拒收"
+            }
+          ]
+        },
+        {
+          "id": "dn19-cp-2",
+          "stem": "示例源与目标都只 set_actions(COPY)。用户按住 Shift 想 move，结果？",
+          "options": [
+            "系统会强制改成 MOVE，并在 drag_end 要求删源数据",
+            "目标会自动升级动作，因为 Shift 优先于 set_actions",
+            "prepare 会失败，因为 ContentProvider 与 MOVE 不兼容",
+            "用户选不了 move：只允许你声明过的动作"
+          ],
+          "answer": 3,
+          "explanation": "原文：用户只能选择你在 DragSource::set_actions 与 DropTarget::set_actions 里声明过的动作；按 Shift 想要 move 也无效，若两侧都只开了 COPY。",
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-dnd-signals 与 sec-dnd-example",
+              "note": "综合 Signals + Example：动作集合由 set_actions 限定"
+            }
+          ]
+        }
+      ],
+      "quiz_standard": 2
     },
     {
       "id": "chapter-clipboard",
@@ -4845,8 +5038,177 @@
           "title_en": "Examples"
         }
       ],
-      "knowledge_points": [],
-      "checkpoint": []
+      "knowledge_points": [
+        {
+          "id": "gtkmm.clipboard.quizset",
+          "title": "剪贴板测验集",
+          "type": "concept",
+          "difficulty": 3,
+          "mastery_goal": "required",
+          "requires": [],
+          "blocks": [
+            {
+              "type": "quiz",
+              "id": "cl20-fm-1",
+              "page_ref": "sec-clipboard-formats",
+              "stem": "应用里要拿到剪贴板实例，原文推荐的入口是？",
+              "options": [
+                "只能自己 new Gdk::Clipboard，再手动挂到顶级窗口上使用",
+                "get_clipboard()",
+                "必须先创建 DragSource，因为剪贴板只是拖放 API 的别名",
+                "只能从 Gtk::Application::create 返回的 RefPtr 里间接取用"
+              ],
+              "answer": 1,
+              "explanation": "原文：用 Gtk::Widget::get_clipboard() 或 Gdk::Display::get_clipboard() 取得剪贴板实例。拖放与剪贴板共用格式机制，但不是同一套对象创建路径。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-clipboard-formats",
+                  "note": "Formats：get_clipboard() 两个入口"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "cl20-fm-2",
+              "page_ref": "sec-clipboard-formats",
+              "stem": "Copy 与 Paste 之间往往隔很久。Gdk::Clipboard 如何避免阻塞等待？",
+              "options": [
+                "多数方法吃 sigc::slot，就绪后再回调",
+                "调用方必须自旋轮询，直到数据准备好才返回",
+                "只能在同一个 clicked 槽里同步读写，否则会丢数据",
+                "必须开第二个线程阻塞读，主循环里禁止碰剪贴板"
+              ],
+              "answer": 0,
+              "explanation": "原文：应用不必在 Copy 与 Paste 之间空等；许多 Gdk::Clipboard 方法接受 sigc::slot，就绪时再回调并提供数据。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-clipboard-formats",
+                  "note": "Formats：异步回调（slot）"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "cl20-co-1",
+              "page_ref": "sec-clipboard-copy",
+              "stem": "用户点 Copy 时，下面这行实际做了什么？",
+              "code": "void ExampleWindow::on_button_copy()\n{\n  get_clipboard()->set_text(\"example_custom_target\");\n}",
+              "lang": "cpp",
+              "options": [
+                "只登记 MIME 名，真正数据要等 Paste 才去读文件",
+                "启动拖放会话，因为 set_text 属于 DragSource API",
+                "把这段文本写入剪贴板",
+                "清空剪贴板：参数只是调试标签，不会被粘贴"
+              ],
+              "answer": 2,
+              "explanation": "原文 Copy 节：用户要求复制时，把数据写到 Clipboard；示例正是 get_clipboard()->set_text(...)。这不是拖放 API，参数就是要放入的文本。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-clipboard-copy",
+                  "note": "Copy：set_text 写入剪贴板"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "cl20-pa-1",
+              "page_ref": "sec-clipboard-paste",
+              "stem": "Paste 按钮这样写，数据实际在哪一步到手？",
+              "code": "void ExampleWindow::on_button_paste()\n{\n  get_clipboard()->read_text_async(sigc::mem_fun(*this,\n              &ExampleWindow::on_clipboard_received));\n}\nvoid ExampleWindow::on_clipboard_received(\n    Glib::RefPtr<Gio::AsyncResult>& result)\n{\n  auto text = get_clipboard()->read_text_finish(result);\n}",
+              "lang": "cpp",
+              "options": [
+                "read_text_async 一返回，text 就已经在局部变量里了",
+                "必须先 get_formats()，否则 finish 会永远失败",
+                "finish 只能在另一线程调用，主线程调用会断言",
+                "finish 时拿到"
+              ],
+              "answer": 3,
+              "explanation": "原文：Paste 时请求特定格式并提供回调；回调里用 read_text_finish(result) 取文本。async 只是发起请求；get_formats 用于探测可用格式，不是 finish 的前提。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-clipboard-paste",
+                  "note": "Paste：read_text_async + read_text_finish"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "cl20-ex-1",
+              "page_ref": "sec-clipboard-examples",
+              "stem": "Ideal 示例相对 Simple，多做了哪件与粘贴按钮相关的事？",
+              "options": [
+                "改用同步 read_text，并去掉全部 AsyncResult 回调路径",
+                "听 changed，不可用则禁 Paste",
+                "不再支持 text/plain，只保留自定义二进制图像格式",
+                "禁止多实例：Application 去掉 NON_UNIQUE 标志位"
+              ],
+              "answer": 1,
+              "explanation": "原文 Ideal：定义自定义 clipboard target（格式仍是文本）；并用 Gdk::ContentFormats::signal_changed()，在剪贴板没有可用格式时禁用 Paste。Simple 的问题正是未标识特定类型。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-clipboard-examples",
+                  "note": "Examples Ideal：signal_changed 与禁用 Paste"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "checkpoint": [
+        {
+          "id": "cl20-cp-1",
+          "stem": "Simple 示例的 main 为何给 Application 加上 NON_UNIQUE？",
+          "code": "auto app = Gtk::Application::create(\n  \"org.gtkmm.example\", Gio::Application::Flags::NON_UNIQUE);",
+          "lang": "cpp",
+          "options": [
+            "NON_UNIQUE 会关闭剪贴板，避免与系统剪贴板冲突",
+            "没有该标志就无法调用 get_clipboard()",
+            "允许同时开多个实例，方便跨窗口粘贴自测",
+            "该标志专门打开 Drag and Drop，与剪贴板无关"
+          ],
+          "answer": 2,
+          "explanation": "示例注释：用 NON_UNIQUE 是因为应该能同时运行本应用的多个实例。它不关闭剪贴板，也不是 get_clipboard 的前提。",
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-clipboard-examples",
+              "note": "综合 Examples：NON_UNIQUE 多实例自测"
+            }
+          ]
+        },
+        {
+          "id": "cl20-cp-2",
+          "stem": "本章说拖放与剪贴板应共用什么？Simple 示例在格式上的缺点是？",
+          "options": [
+            "共用同一套数据格式；Simple 未标识特定类型",
+            "必须各用各的 MIME；Simple 错在用了 text/plain",
+            "剪贴板只能走 XML，拖放只能走二进制，Simple 混用了",
+            "两者 API 完全独立，Simple 却错误地复用了 ContentFormats"
+          ],
+          "answer": 0,
+          "explanation": "Formats 节：拖放与剪贴板用同一机制，建议两边用同一数据格式。Simple 示例说明：用标准文本虽简单，但不理想，因为没有把 Clipboard 数据标识成特定类型；Ideal 才定义自定义 target。",
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-clipboard-formats 与 sec-clipboard-examples",
+              "note": "综合 Formats + Examples：格式共用；Simple 缺类型标识"
+            }
+          ]
+        }
+      ],
+      "quiz_standard": 2
     },
     {
       "id": "chapter-printing",
@@ -4913,8 +5275,227 @@
           "title_en": "Examples"
         }
       ],
-      "knowledge_points": [],
-      "checkpoint": []
+      "knowledge_points": [
+        {
+          "id": "gtkmm.printing.quizset",
+          "title": "打印测验集",
+          "type": "concept",
+          "difficulty": 4,
+          "mastery_goal": "required",
+          "requires": [],
+          "blocks": [
+            {
+              "type": "quiz",
+              "id": "pr21-po-1",
+              "page_ref": "sec-printoperation",
+              "stem": "PrintOperation::run() 进入打印循环后，哪两个信号是你必须处理的？",
+              "options": [
+                "paginate 与 status_changed（其余都可选）",
+                "begin_print 与 draw_page",
+                "done 与 end_print（用来创建 Pango::Layout）",
+                "request_page_setup 与 create_custom_widget"
+              ],
+              "answer": 1,
+              "explanation": "原文：begin_print 必须处理——在此用 PrintContext 创建并设置 Pango::Layout、分页；draw_page 也必须处理——按页号绘制。paginate、status_changed、request_page_setup 等按需。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-printoperation",
+                  "note": "PrintOperation Signals：begin_print / draw_page 必处理"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "pr21-ps-1",
+              "page_ref": "sec-page-setup",
+              "stem": "应用里弹出页面设置对话框，原文给出的做法是？",
+              "code": "auto new_page_setup = Gtk::run_page_setup_dialog(\n    *this, m_refPageSetup, m_refSettings);\nm_refPageSetup = new_page_setup;",
+              "lang": "cpp",
+              "options": [
+                "run_page_setup_dialog 并保存 PageSetup",
+                "只调 PrintOperation::run(PREVIEW)，设置会自动写回成员",
+                "new Gtk::PageSetup 即可，对话框由 Display 全局弹出",
+                "只能改 PrintSettings，PageSetup 不允许应用侧再保存"
+              ],
+              "answer": 0,
+              "explanation": "原文：用 Gtk::run_page_setup_dialog() 得到 PageSetup；应保存所选设置，以便对话框再次打开时沿用，并用来更新 PrintOperation。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-page-setup",
+                  "note": "Page Setup：run_page_setup_dialog 与保存"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "pr21-rt-1",
+              "page_ref": "sec-printing-rendering-text",
+              "stem": "打印用的 Pango::Layout 应当怎样创建？",
+              "options": [
+                "Pango::Layout::create() 后手动绑到任意 Cairo::Context",
+                "Gtk::Label::get_layout()，把界面标签的布局直接拿去印",
+                "PrintContext::create_pango_layout()",
+                "new Pango::Layout，再 set_font_description 即可开印"
+              ],
+              "answer": 2,
+              "explanation": "原文：打印用的 Pango::Layout 应通过 PrintContext::create_pango_layout() 创建；页指标用 get_width()/get_height()；draw_page 里再取 Cairo::Context 画 LayoutLine。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-printing-rendering-text",
+                  "note": "Rendering text：create_pango_layout()"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "pr21-as-1",
+              "page_ref": "sec-async-printing-ops",
+              "stem": "调用 set_allow_async() 之后，run() 可能立刻返回什么？接下来靠什么收尾？",
+              "code": "op->set_allow_async();\nauto res = op->run(/* ... */);\n// res 可能是 IN_PROGRESS",
+              "lang": "cpp",
+              "options": [
+                "ERROR；异步模式下 run() 失败是唯一可能结果",
+                "APPLY；表示已经打印完，不必再连接任何信号",
+                "CANCEL；异步只用于用户点取消时的快捷路径",
+                "IN_PROGRESS；听 done 等信号"
+              ],
+              "answer": 3,
+              "explanation": "原文：默认 run() 完成才返回；set_allow_async() 后可能返回 IN_PROGRESS，需实现 done 与 status_changed。并非所有平台支持 allow_async，但 done 仍会发出。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-async-printing-ops",
+                  "note": "Asynchronous operations：IN_PROGRESS 与 done/status_changed"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "pr21-pdf-1",
+              "page_ref": "sec-printing-export-to-pdf",
+              "stem": "不经过「打印到文件」对话框、直接从代码导出 PDF，应怎样写？",
+              "code": "auto op = Gtk::PrintOperation::create();\n// ...set up op...\nop->set_export_filename(\"test.pdf\");\nauto res = op->run(Gtk::PrintOperation::Action::EXPORT);",
+              "lang": "cpp",
+              "options": [
+                "只 set_export_filename，不必 run，文件会立刻写出磁盘",
+                "set_export_filename 再 run(EXPORT)",
+                "run(Action::PRINT) 即可，导出文件名参数会被忽略掉",
+                "必须先 run(PREVIEW)，预览窗口关闭后才会生成 PDF"
+              ],
+              "answer": 1,
+              "explanation": "原文：对话框里的 Print to file 无需额外实现；若要从代码直接生成 PDF，set_export_filename 再 run(Action::EXPORT)。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-printing-export-to-pdf",
+                  "note": "Export to PDF：set_export_filename + EXPORT"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "pr21-pv-1",
+              "page_ref": "sec-printing-preview",
+              "stem": "应用想直接进入预览（不先走打印对话框），应调用？",
+              "code": "op->run(Gtk::PrintOperation::Action::PREVIEW, *this);",
+              "lang": "cpp",
+              "options": [
+                "run(Action::EXPORT)，系统会自动改成预览",
+                "只能点原生对话框上的预览按钮，API 无法直接开预览",
+                "run(Action::PREVIEW, 父窗口)",
+                "set_allow_async() 一次，下次 run(PRINT) 就会变预览"
+              ],
+              "answer": 2,
+              "explanation": "原文：原生对话框有预览按钮，也可从应用直接 run(Action::PREVIEW, *this)。Unix 默认用外部查看器，Windows 用原生预览；必要时可覆盖为自定义预览。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-printing-preview",
+                  "note": "Preview：Action::PREVIEW"
+                }
+              ]
+            },
+            {
+              "type": "quiz",
+              "id": "pr21-pd-1",
+              "page_ref": "sec-printing-printdialog",
+              "stem": "Gtk::PrintDialog 从哪个 gtkmm 版本起可作为 PrintOperation 的替代？",
+              "options": [
+                "gtkmm 4.14 起",
+                "gtkmm 3.0 起就有，只是本章放在最后介绍",
+                "gtkmm 4.0 起强制取代 PrintOperation",
+                "尚未进入稳定版，示例里的宏永远为假"
+              ],
+              "answer": 0,
+              "explanation": "原文：Since gtkmm 4.14，Gtk::PrintDialog 可作为 Gtk::PrintOperation 的替代；仍用同一套 PageSetup / PrintSettings，Cairo 与 Pango 渲染方式也相似。示例用 GTKMM_CHECK_VERSION(4,13,1) 门控。",
+              "source_refs": [
+                {
+                  "relation": "adapted",
+                  "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+                  "locator": "官方节页 sec-printing-printdialog",
+                  "note": "PrintDialog：自 gtkmm 4.14 起"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "checkpoint": [
+        {
+          "id": "pr21-cp-1",
+          "stem": "Simple 示例把创建 Pango::Layout、分页放在哪？draw_page 做什么？",
+          "code": "void PrintFormOperation::on_begin_print(\n    const Glib::RefPtr<Gtk::PrintContext>& print_context)\n{\n  m_refLayout = print_context->create_pango_layout();\n  // set font, width, text; compute m_PageBreaks; set_n_pages(...)\n}\nvoid PrintFormOperation::on_draw_page(\n    const Glib::RefPtr<Gtk::PrintContext>& context, int page_nr)\n{\n  // get_cairo_context(); show LayoutLine for this page\n}",
+          "lang": "cpp",
+          "options": [
+            "两者都在 draw_page 里每次重建 Layout，begin_print 留空",
+            "Layout 在构造函数里创建，begin_print 只许调用 set_n_pages",
+            "draw_page 负责分页，begin_print 只负责弹出打印对话框",
+            "begin_print 建 Layout；draw_page 画"
+          ],
+          "answer": 3,
+          "explanation": "原文强调：Pango::Layout 在 begin_print 里创建与分页；draw_page 用 PrintContext 取 Cairo::Context，迭代 begin_print 里建好的 Layout 画当前页。Simple 示例正是如此分工。",
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-printoperation 与 sec-printing-rendering-text",
+              "note": "综合 PrintOperation + Rendering + Examples Simple"
+            }
+          ]
+        },
+        {
+          "id": "pr21-cp-2",
+          "stem": "给打印对话框加自定义页，create_custom_widget 与 custom_widget_apply 各做什么？",
+          "code": "Gtk::Widget* CustomPrintOperation::on_create_custom_widget()\n{\n  set_custom_tab_label(\"My custom tab\");\n  auto hbox = new Gtk::Box(Gtk::Orientation::HORIZONTAL, 8);\n  // append label + m_Entry ...\n  return hbox;\n}\nvoid CustomPrintOperation::on_custom_widget_apply(Gtk::Widget*)\n{\n  auto user_input = m_Entry.get_text();\n}",
+          "lang": "cpp",
+          "options": [
+            "前者读取输入；后者必须再 new 一套部件替换对话框",
+            "前者交回页内部件；后者读取用户输入",
+            "两个信号都只改标题，真正的页内容由 PageSetup 提供",
+            "只需 create_custom_widget，apply 在 gtkmm4 已删除"
+          ],
+          "answer": 1,
+          "explanation": "原文两步：set_custom_tab_label + 在 create_custom_widget 返回容器部件；在 custom_widget_apply 里取数据。可把输入部件做成类成员以简化 apply。",
+          "source_refs": [
+            {
+              "relation": "adapted",
+              "url": "https://gnome.pages.gitlab.gnome.org/gtkmm-documentation/",
+              "locator": "官方节页 sec-extending-print-dialog",
+              "note": "综合 Extending the print dialog：两信号分工"
+            }
+          ]
+        }
+      ],
+      "quiz_standard": 2
     },
     {
       "id": "chapter-recent-documents",
