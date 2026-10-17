@@ -1,0 +1,126 @@
+### 页 sec-combobox-model  (page status=translated)
+[0] para
+  EN: `Gtk::ComboBox` and `Gtk::ComboBoxText`
+are deprecated since gtkmm 4.10. Use `Gtk::DropDown` in new code.
+  ZH: `Gtk::ComboBox` 与 `Gtk::ComboBoxText` 自 gtkmm 4.10 起已弃用：新代码请使用 `Gtk::DropDown`。
+
+[1] para
+  EN: The `ComboBox` widget offers a list (or tree) of choices in a dropdown menu. If appropriate, it can show extra information about each item, such as text, a picture, a check button, or a progress bar. The `ComboBox` widget usually restricts the user to the available choices, but it can optionally have an `Entry`, allowing the user to enter arbitrary text if none of the available choices are suitable.
+  ZH: ComboBox部件在下拉菜单中提供了选项列表（或树）。如果需要它可以为每个项目显示额外的信息，例如文本、图片、复选按钮或是进度条。ComboBox部件通常将显示用户的可选项，但是它可以有一个Entry以允许用户在没有合适的选项的时候输入任意文本。
+
+[2] para
+  EN: The list is provided via a `TreeModel`, and columns from this model are added to the ComboBox's view with the ComboBox::pack_start() method. This provides flexibility and compile-time type-safety, but the `ComboBoxText` class provides a simpler text-based specialization in case that flexibility is not required.
+  ZH: 这个列表通过TreeModel提供，这个模型的列通过ComboBox::pack_start()方法添加到组合框的视图中。这提供了灵活性和编译时的类型安全，在不需要灵活性的情况下，ComboBoxText类提供了更简单的基于文本的特化支持。
+
+[3] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1ComboBox.html)
+  ZH: 参考
+
+[4] para
+  EN: The model for a ComboBox can be defined and filled exactly as for a `TreeView`. For instance, you might derive a ComboBox class with one integer and one text column, like so:
+  ZH: 可以像TreeView一样定义和填充组合框的模型。你可以与如下所示的一样派生具有一个整数行和一个文本行的组合框类：
+
+[5] CODE file= 238 chars
+[6] para
+  EN: After appending rows to this model, you should provide the model to the `ComboBox` with the set_model() method. Then use the pack_start() or pack_end() methods to specify what columns will be displayed in the ComboBox. As with the TreeView you may either use the default cell renderer by passing the `TreeModelColumn` to the pack methods, or you may instantiate a specific `CellRenderer` and specify a particular mapping with either add_attribute() or set_cell_data_func(). Note that these methods are in the `CellLayout` base class.
+  ZH: 将行追加到此模型中后，你应该使用set_model()方法将模型提供给ComboBox。然后使用pack_start()或pack_end()方法指定哪个行将要被组合框显示。和树形视图一样，你可以通过将TreeModelColumn传递给pack方法来使用默认的单元格渲染器，也可以实例化一个特定的CellRenderer并使用add_attribute()或set_cell_data_func()指定具体映射到哪行。请注意这些方法在CellLayout基类中。
+
+### 页 sec-combobox-get  (page status=translated)
+[0] para
+  EN: To discover what item, if any, the user has chosen from the ComboBox, call ComboBox::get_active(). This returns a `TreeModel::iterator` that you can dereference to a `Row` in order to read the values in your columns. For instance, you might read an integer ID value from the model, even though you have chosen only to show the human-readable description in the ComboBox. For instance:
+  ZH: 要了解用户从组合框中选择了哪一项可以调用ComboBox::get_active()。这将返回一个TreeModel::iterator，你可以解引用它得到一个Row，然后从其中读取该列的值。例如，你可以在组合框中只显示人类可读的描述，然后你可以读取模型中储存于该行的整数ID值（于并未被显示的列）。例如：
+
+[1] CODE file= 308 chars
+### 页 sec-combobox-changes  (page status=translated)
+[0] para
+  EN: You might need to react to every change of selection in the ComboBox, for instance to update other widgets. To do so, you should handle the `changed` signal. For instance:
+  ZH: 你可能需要对组合框中每个选择的变更进行响应，例如更新其他的部件。为此你应该处理changed。例如：
+
+[1] CODE file= 97 chars
+### 页 combobox-example-full  (page status=translated)
+[0] figure  <<<ZH缺失>>>
+  EN: ComboBox
+  ZH: (无)
+
+[1] CODE file=examplewindow.h 891 chars
+[2] CODE file=examplewindow.cc 3007 chars
+[3] CODE file=main.cc 270 chars
+### 页 combobox-example-simple  (page status=translated)
+[0] figure  <<<ZH缺失>>>
+  EN: ComboBoxText
+  ZH: (无)
+
+[1] CODE file=examplewindow.h 361 chars
+[2] CODE file=examplewindow.cc 641 chars
+[3] CODE file=main.cc 270 chars
+### 页 sec-comboboxentry  (page status=translated)
+[0] para
+  EN: A `ComboBox` may contain an `Entry` widget for entering of arbitrary text, by specifying `true` for the constructor's `has_entry` parameter.
+  ZH: 通过指定ComboBox构造函数的has_entry参数为true，可以令其包含一个Entry部件用以输入任意文本。
+
+[1] heading  <<<ZH缺失>>>
+  EN: The text column
+  ZH: (无)
+
+[2] para
+  EN: So that the `Entry` can interact with the drop-down list of choices, you must specify which of your model columns is the text column, with set_entry_text_column(). For instance:
+  ZH: 为了使Entry可以与下拉列表的选项进行交互，你必须使用set_entry_text_column()指定哪些模型列是文本列。例如：
+
+[3] CODE file= 52 chars
+[4] para
+  EN: When you select a choice from the drop-down menu, the value from this column will be placed in the `Entry`.
+  ZH: 当你从下拉菜单中选择一个选项的时候，该列的值将被放于Entry中。
+
+[5] heading  <<<ZH缺失>>>
+  EN: The entry
+  ZH: (无)
+
+[6] para
+  EN: Because the user may enter arbitrary text, an active model row isn't enough to tell us what text the user has entered. Therefore, you should retrieve the `Entry` widget with the ComboBox::get_entry() method and call get_text() on that.
+  ZH: 由于用户可以输入任意文本，被使用中的模型行可能不足以告诉我们用户输入了什么，因此，你应该使用ComboBox::get_entry()方法检索组合框中的Entry部件并在其上调用get_text()。
+
+[7] heading  <<<ZH缺失>>>
+  EN: Responding to changes
+  ZH: (无)
+
+[8] para
+  EN: When the user enters arbitrary text, it may not be enough to connect to the
+`changed` signal, which is emitted for every typed character.
+It is not emitted when the user presses the Enter key.
+Pressing the Enter key or moving the keyboard focus to another
+widget may signal that the user has finished entering text. To be notified of
+these events, connect to the `Entry`'s `activate`
+signal (available since gtkmm 4.8), and add a `Gtk::EventControllerFocus`
+and connect to its `leave` signal, like so
+  ZH: 用户输入任意文字时，只连接 `changed` 信号可能不够——它每敲一个字符就发出一次，用户按下回车时却不会发出。按下回车、或把键盘焦点移到别的部件，往往才意味着用户已经输入完毕。
+
+[9] CODE file= 575 chars
+[10] para
+  EN: The `changed` signals of `ComboBox` and
+`Entry` are both emitted for every change. It doesn't matter
+which one you connect to. But the `EventControllerFocus`
+must be added to the `Entry`.
+  ZH: `ComboBox` 和 `Entry` 的 `changed` 信号对每次变化都会发出，连接哪一个都可以；但 `EventControllerFocus` 必须添加到 `Entry` 上。
+
+[11] heading  <<<ZH缺失>>>
+  EN: Full Example
+  ZH: (无)
+
+[12] figure  <<<ZH缺失>>>
+  EN: ComboBox with Entry
+  ZH: (无)
+
+[13] CODE file=examplewindow.h 1005 chars
+[14] CODE file=examplewindow.cc 3374 chars
+[15] CODE file=main.cc 270 chars
+[16] heading  <<<ZH缺失>>>
+  EN: Simple Text Example
+  ZH: (无)
+
+[17] figure  <<<ZH缺失>>>
+  EN: ComboBoxText with Entry
+  ZH: (无)
+
+[18] CODE file=examplewindow.h 602 chars
+[19] CODE file=examplewindow.cc 1977 chars
+[20] CODE file=main.cc 270 chars

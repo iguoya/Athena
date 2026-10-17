@@ -1,0 +1,125 @@
+### 页 sec-clipboard-formats  (page status=pending)
+[0] para
+  EN: Simple text copy-paste functionality is provided for free by widgets such as
+`Gtk::Entry` and `Gtk::TextView`,
+but you might need special code to deal with your own data formats. For instance,
+a drawing program would need special code to allow copy and paste within a view,
+or between documents.
+  ZH: Gtk::Entry和Gtk::TextView之类的部件提供了简单的文本复制粘贴功能，但如果你有自己的数据格式需要处理则需要为此编写特定的代码。例如，绘图程序需要编写特定的代码以支持在视图内或文档之间进行复制粘贴。
+
+[1] para
+  EN: You can get a clipboard instance with Gtk::Widget::get_clipboard()
+or Gdk::Display::get_clipboard().
+  ZH: 你可以使用Gtk::Widget::get_clipboard()或Gdk::Display::get_clipboard()获取剪切板实例。
+
+[2] para
+  EN: Your application doesn't need to wait for clipboard operations, particularly
+between the time when the user chooses Copy and then later chooses Paste. Many
+`Gdk::Clipboard` methods take `sigc::slot`s
+which specify callback methods. When `Gdk::Clipboard` is ready,
+it will call these methods, providing the requested data.
+  ZH: 你的应用程序不需要等待剪切板操作，特别是用户选择复制然后选择粘贴的期间。Gdk::Clipboard的多数方法使用sigc::slot，它们指定了回调函数。当Gdk::Clipboard准备就绪时，它将会调用这些回调函数，并向其提供所请求的数据。
+
+[3] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGdk_1_1Clipboard.html)
+  ZH: 参考
+
+[4] para
+  EN: Different applications contain different types of data, and they might make that data available in
+a variety of formats. gtkmm calls these data types `format`s.
+  ZH: 不同的应用程序包含不同类型的数据，并且它们可能使用多种可用格式提供数据。gtkmm称这些数据类型为format。
+
+[5] para
+  EN: For instance, `gedit` can supply and receive the `text/plain` mime type,
+so you can paste data into `gedit` from any application that supplies that format.
+Or two different image editing applications might supply and receive a variety of image formats.
+As long as one application can receive one of the formats that the other supplies
+then you will be able to copy data from one to the other.
+  ZH: 例如，gedit可以提供和接收text/plainMIME类型，所以你可以从任何提供该格式的应用程序中将复制粘贴给gedit。或者两个不同的图像编辑程序可能会提供和接收各种图像格式。只要其中一个应用程序可以接收其他应用程序提供的一种格式，那么你就可以将数据从一个复制到另一个。
+
+[6] para
+  EN: Clipboard data can be in a variety of binary formats. This chapter, and the examples,
+assume that the data is 8-bit text. This would allow us to use an XML format
+for the clipboard data. However this would probably not be appropriate for
+binary data such as images.
+  ZH: 剪切板数据可以使用多种二进制格式。本章和示例程序假定数据是8位文本。这将使我们可以对剪切板数据使用XML格式。但这可能不适合二进制数据（例如图像）。
+
+[7] para
+  EN: The [Drag and Drop](#chapter-draganddrop) API uses the same mechanism.
+You should probably use the same data formats for both Clipboard and Drag and Drop operations.
+  ZH: 拖放API使用一样的机制。剪切板和拖放操作都应该使用一样的数据格式。
+
+### 页 sec-clipboard-copy  (page status=pending)
+[0] para
+  EN: When the user asks to copy some data, you should copy the data to the
+`Clipboard`. For instance,
+  ZH: 当用户要复制某些数据的时候，你应该将数据复制到Clipboard。例如：
+
+[1] CODE file= 94 chars
+### 页 sec-clipboard-paste  (page status=pending)
+[0] para
+  EN: When the user asks to paste data from the `Clipboard`, you
+should request a specific format and provide a callback method which will be
+called with the actual data. For instance:
+  ZH: 当用户要从Clipboard中粘贴数据时，你应该请求一种特定的格式并提供一个回调函数，该回调函数将与实际数据一并被调用。例如：
+
+[1] CODE file= 152 chars
+[2] para
+  EN: Here is an example callback method:
+  ZH: 这是一个回调函数的示例：
+
+[3] CODE file= 181 chars
+[4] heading  <<<ZH缺失>>>
+  EN: Discovering the available formats
+  ZH: (无)
+
+[5] para
+  EN: To find out what formats are currently available on the `Clipboard`
+for pasting, call the get_formats() method. Then call a
+`Gdk::ContentFormats` method to find out if a format that
+your application supports is available.
+  ZH: 要找出当前Clipboard可以用于粘贴的格式，请调用get_formats()方法。然后调用Gdk::ContentFormats方法来确定你的应用程序所支持的格式是否可用。
+
+### 页 sec-clipboard-examples  (page status=pending)
+[0] heading  <<<ZH缺失>>>
+  EN: Simple
+  ZH: (无)
+
+[1] para
+  EN: This example allows copy and pasting of application-specific data, using the
+standard text format. Although this is simple, it's not ideal because it does
+not identify the `Clipboard` data as being of a particular
+type.
+  ZH: 这个示例允许使用标准文本格式复制粘贴应用程序指定的数据。尽管着很简单，但是它并不够理想，因为他不能将Clipboard的数据标识为特定的类型。
+
+[2] figure  <<<ZH缺失>>>
+  EN: Clipboard - Simple
+  ZH: (无)
+
+[3] CODE file=examplewindow.h 622 chars
+[4] CODE file=examplewindow.cc 2863 chars
+[5] CODE file=main.cc 448 chars
+[6] heading  <<<ZH缺失>>>
+  EN: Ideal
+  ZH: (无)
+
+[7] para
+  EN: This is like the simple example, but it
+  ZH: 这个与简单示例类型，但是它
+
+[8] listitem
+  EN: Defines a custom clipboard target, though the format is still text.
+  ZH: 定义了一个自定义剪切板目标，尽管格式依旧是文本。
+
+[9] listitem
+  EN: It uses the Gdk::ContentFormats::signal_changed()
+  signal and disables the Paste button if it can't use anything on the clipboard.
+  ZH: 它使用Gdk::ContentFormats::signal_changed()信号并在剪切板不可用的时候禁用粘贴按钮。
+
+[10] figure  <<<ZH缺失>>>
+  EN: Clipboard - Ideal
+  ZH: (无)
+
+[11] CODE file=examplewindow.h 822 chars
+[12] CODE file=examplewindow.cc 4283 chars
+[13] CODE file=main.cc 448 chars

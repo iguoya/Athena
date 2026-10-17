@@ -1,0 +1,81 @@
+### 页 sec-application-lifetime  (page status=pending)
+[0] para
+  EN: This section is simply a gathering of wisdom, general style guidelines
+and hints for creating gtkmm applications.
+  ZH: 本小节将向你展示一些创建gtkmm应用程序的智慧、风格指南和提示。
+
+[1] para
+  EN: Use `Meson`! It is your friend :)
+    It examines C and C++ files, determines how they depend on each other,
+    and generates `build.ninja` or an equivalent file so the
+    files can be compiled in the correct order. `Meson`
+    permits automatic configuration of software installation, handling a large
+    number of system quirks to increase portability.
+  ZH: 使用GNU autoconf和automake。Automake检查C文件，确定它们之间的依赖关系，并生成Makefile，从而以正确的顺序编译文件。Autoconf允许自动配置软件的安装，处理大量来自系统本身的差异以增强可移植性。
+
+[2] para
+  EN: Subclass Widgets to better organize your code. You should probably
+    subclass your main `Window` at least. Then you can
+    make your child Widgets and signal handlers members of that class.
+  ZH: 子类部件可以更好的组织你的代码。至少你的主窗口类应该继承Window。这样你可以使主窗口的子部件和信号处理函数成为该类的成员。
+
+[3] para
+  EN: Create your own signals instead of passing pointers around. Objects can
+    communicate with each other via signals and signal handlers. This is much
+    simpler than objects holding pointers to each other and calling each
+    other's methods. gtkmm's classes use special versions of
+    `sigc::signal`, but you should use normal
+    `sigc::signal`s, as described in the
+    `libsigc++` documentation.
+  ZH: 创建你自己的信号而不是传递指针。对象可以通过信号和信号处理函数相互通信。这比持有指向彼此的指针并以此调用彼此的成员函数要简单明了的多。gtkmm类使用特殊版本的sigc::signal，但你应该使用libsigc++所述的正常sigc::signal。
+
+[4] para  <<<缺失>>>
+  EN: Most applications will have only one `Window`, or
+    only one main window. These applications can use
+    Gtk::Application::make_window_and_run(int argc, char** argv, T_Args&&... args).
+    It creates and shows a window. When the window is closed, make_window_and_run()
+    deletes the window and returns to the caller.
+    This might happen when the user closes the window, or when your code decides to
+    close the window with Gtk::Window::close(). You can prevent
+    the user from closing the window (for instance, if there are unsaved changes) by
+    overriding Gtk::Window::on_close_request().
+  ZH: (无)
+
+[5] para
+  EN: Most of our examples use this technique.
+  ZH: 我们的大多数示例都是用这种技术。
+
+### 页 sec-using-a-gtkmm-widget  (page status=pending)
+[0] para
+  EN: Our examples all tend to have the same structure. They follow these steps
+    for using a `Widget`:
+  ZH: 我们的示例都倾向于使用相同的结构。它们按以下步骤使用Widget：
+
+[1] listitem
+  EN: Declare a variable of the type of `Widget` you wish to
+use, generally as member variable of a derived container class. You could also
+declare a pointer to the widget type, and then create it with
+`new` or `Gtk::make_managed()` in your code.
+  ZH: 声明一个你想要使用的Widget类型变量，通常是作为容器派生类的成员变量。你还可以声明一个指向部件类型的指针，然后在你的代码中使用new创建它。即使通过指针使用部件，也应该使该指针成为容器类的成员变量，以便你后续访问它。
+
+[2] listitem
+  EN: Set the attributes of the widget. If the widget has no default constructor,
+ then you will need to initialize the widget in the initializer list of your
+ container class's constructor.
+  ZH: 设置部件的属性。如果部件没有默认构造函数，则你需要在容器类的构造函数的初始化列表中初始化部件。
+
+[3] listitem
+  EN: Connect any signals you wish to use to the appropriate handlers.
+  ZH: 为所以你需要使用的信号连接合适的信号处理函数。
+
+[4] listitem
+  EN: Pack the widget into a container using the appropriate call,
+e.g. Gtk::Box::append().
+  ZH: 调用适当的函数将部件装入容器中，例如：Gtk::Box::append()。
+
+[5] para
+  EN: If you don't want all widgets to be shown, call Gtk::Widget::set_visible(false)
+on the widgets that you don't want to show. If a container widget is hidden, all
+of its child widgets are also hidden, even if set_visible(false) is
+not called on the child widgets.
+  ZH: 如果你不希望显示部件，请对不想要显示的部件调用Gtk::Widget::hide()可以将其隐藏，当一个容器部件被隐藏，它的所有子部件将一并被隐藏，即便你没有在那些子部件上调用hide()。

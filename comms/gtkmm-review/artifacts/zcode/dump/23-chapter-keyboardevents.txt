@@ -1,0 +1,174 @@
+### 页 sec-keyboardevents-overview  (page status=pending)
+[0] para
+  EN: Event signals differ in some ways from other signals. These differences are described
+    in the [Event signals](#sec-eventsignals) section in
+    the appendix. Here we will use keyboard events and mouse events to show how
+    events can be used in a program.
+  ZH: X事件与其他信号在某些方面有所不同。这些差异在附录的X事件信号小节中说明。在这，我们将使用键盘事件说明如何在程序中使用X事件。
+
+[1] para
+  EN: Whenever you press or release a key, an event is emitted. You can add an
+      event controller and connect a signal handler to handle such events.
+  ZH: 每当你按下或放开一个按键，就会发出一个事件。你可以连接到信号处理函数来处理此类事件。
+
+[2] para
+  EN: The event signal handler will receive arguments that depend on the type of event.
+      For key press events the arguments are (`guint` `keyval`,
+      `guint` `keycode`, `Gdk::ModifierType` `state`).
+      As described in the [appendix](#sec-eventsignals),
+      the key press event signal handler returns a `bool` value, to indicate that
+      the signal is fully handled (`true`) or allow event propagation
+      (`false`).
+  ZH: 事件处理函数接受的参数取决于事件的类型。对于键盘事件，它接受一个GdkEventKey*参数。如附录中所述，事件处理函数返回一个bool值，以表示信号已经被完全处理（返回true）或允许事件传播（false）。
+
+[3] para
+  EN: To determine which key was pressed or released, you read the value of
+      the `keyval` argument and compare it with a constant in the
+      [
+      `<gdk/gdkkeysyms.h>`](https://gitlab.gnome.org/GNOME/gtk/tree/main/gdk/gdkkeysyms.h) header file. The states of
+      modifier keys (shift, ctrl, etc.) are available as bit-flags in
+      `state`.
+  ZH: 要确定哪个键被按下或放开，你需要读取GdkEventKey::keyval的值并将其与头文件<gdk/gdkkeysyms.h>中的常量进行比较。GdkEventKey::state的位标志可以用作表示修饰键（shift、ctrl等）的状态。
+
+[4] para
+  EN: Here's a simple example:
+  ZH: 这是一个简单的例子：
+
+[5] CODE file=
+[6] heading  <<<缺失>>>
+  EN: Example
+  ZH: (无)
+
+[7] para
+  EN: In this example there are three keyboard shortcuts:
+        Alt+1 selects the first radio button,
+        Alt+2 selects the second one, and the
+        Esc key closes the window.
+  ZH: 在此示例中，有三个键盘快捷键：Alt+1选择第一个单选按钮、Alt+2选择第二个单选按钮、Esc隐藏（关闭）窗口。默认信号处理函数被覆盖如附录中覆盖默认信号处理函数小节所述。
+
+[8] figure  <<<缺失>>>
+  EN: Keyboard Events - Simple
+  ZH: (无)
+
+[9] CODE file=examplewindow.h
+[10] CODE file=examplewindow.cc
+[11] CODE file=main.cc
+### 页 sec-keyboardevents-propagation  (page status=pending)
+[0] para  <<<缺失>>>
+  EN: As described in the [appendix](#signal-handler-sequence)
+      event signals are propagated in 3 phases:
+  ZH: (无)
+
+[1] listitem  <<<缺失>>>
+  EN: Capture phase - runs from the toplevel down to the event widget.
+  ZH: (无)
+
+[2] listitem  <<<缺失>>>
+  EN: Target phase - runs only on the event widget.
+  ZH: (无)
+
+[3] listitem  <<<缺失>>>
+  EN: Bubble phase - runs from the event widget up to the toplevel.
+  ZH: (无)
+
+[4] para
+  EN: A keyboard event is first sent to the toplevel window
+      (`Gtk::Window`), where it will be checked
+      for any keyboard shortcuts that may be set (accelerator keys and mnemonics,
+      used for selecting menu items from the keyboard). After this (and assuming
+      the event wasn't handled), it is propagated down until it reaches the widget
+      which has keyboard focus. The event will then propagate up until it reaches
+      the top-level widget, or until you stop the propagation by returning
+      `true` from an event handler.
+  ZH: 与其他事件相反，键盘事件首先被发送到顶级窗口（Gtk::Window），在此检查任何可能被设置的键盘快捷键（用于从键盘选择菜单项的快捷键、助记符）。然后（假设事件没有被处理）将其发送到焦点部件，然后从此部件开始传播。
+
+[5] para
+  EN: Notice, that after canceling an event, no other function will be called
+      (even if it is from the same widget).
+  ZH: 请注意，取消事件之后，不再会调用其他函数（哪怕它来自同一个部件）。
+
+[6] heading  <<<缺失>>>
+  EN: Example
+  ZH: (无)
+
+[7] para
+  EN: In this example there are 9 `EventControllerKey`s,
+        3 in each of a `Gtk::Window`, a `Gtk::Box`
+        and a `Gtk::Label`. In each of the widgets there is
+        one event controller for each propagation phase.
+  ZH: 在此示例中，Gtk::Window在默认事件处理程序之后调用了三个事件处理程序，一个在Gtk::Entry中、一个在Gtk::Grid中、一个在Gtk::Window中。
+
+[8] para
+  EN: The purpose of this example is to show the steps the event takes when it is emitted.
+  ZH: 本示例的目的是显示事件发出时进行的步骤。
+
+[9] para
+  EN: When you write in the label, a key press event will be emitted,
+        which will go first, in the capture phase, to the toplevel window
+        (`Gtk::Window`), then down to its child, the
+        box, then to the box's child, the label with the keyboard focus.
+        In the target phase the event goes only to the widget with the keyboard
+        focus (the label). In the bubble phase the event goes first to the widget
+        with the keyboard focus (the label), then to its parent (the box), then
+        to the box's parent (the window). If the event propagates all the way
+        down to the label and then up to the window without being stopped,
+        the text you're writing will appear in the `Label`
+        above the `Label` you're writing in.
+  ZH: 当你在条目中写入的时候，将发出一个按键放开事件，该事件将先进入顶级窗口（Gtk::Window），因为我们之前设置了一个事件处理程序，所以windowKeyReleaseBefore()将先被调用。然后调用已被覆盖的默认信号处理函数，然后将事件传播到具有焦点的部件，也就是示例中的Entry，根据事件处理程序的返回值，该事件可以被传播到Grid和Window。如果该事件被传播，你写入的文本将出现在Entry上方的Label中。
+
+[10] figure  <<<缺失>>>
+  EN: Keyboard Events - Event Propagation
+  ZH: (无)
+
+[11] CODE file=examplewindow.h
+[12] CODE file=examplewindow.cc
+[13] CODE file=main.cc
+### 页 sec-keyboardevents-mouse  (page status=pending)
+[0] para  <<<缺失>>>
+  EN: Mouse events are similar to keyboard events. There are some differences, though.
+  ZH: (无)
+
+[1] listitem
+  EN: You use `Gtk::GestureClick` instead of
+        `Gtk::EventControllerKey`.
+  ZH: Gtk::FontButton实现了Gtk::FontChooser接口。
+
+[2] listitem
+  EN: There are other event classes that can be used for handling
+        mouse events, for instance `Gtk::EventControllerMotion` and
+        `Gtk::EventControllerScroll`.
+  ZH: Gtk::EventControllerKey, Gtk::EventControllerMotion, Gtk::EventControllerScroll和Gtk::GestureStylus
+
+[3] listitem  <<<缺失>>>
+  EN: Many signal handlers don't return a `bool`.
+        You can't stop those events from propagating.
+  ZH: (无)
+
+[4] para  <<<缺失>>>
+  EN: The event classes that handle mouse events are also useful for handling
+    events from touchscreens. There are also many subclasses of
+    `Gtk::EventController` which are only (or mainly) useful
+    for touchscreens. Examples: `Gtk::GestureRotate`,
+    `Gtk::GestureZoom`, `Gtk::GestureSwipe`,
+    `Gtk::GestureLongPress`.
+  ZH: (无)
+
+[5] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1EventController.html)
+  ZH: 参考
+
+[6] heading  <<<缺失>>>
+  EN: Example
+  ZH: (无)
+
+[7] para  <<<缺失>>>
+  EN: This is an expanded version of the simple keyboard events example.
+  ZH: (无)
+
+[8] figure  <<<缺失>>>
+  EN: Keyboard and Mouse Events
+  ZH: (无)
+
+[9] CODE file=examplewindow.h
+[10] CODE file=examplewindow.cc
+[11] CODE file=main.cc

@@ -1,0 +1,627 @@
+### 页 sec-treeview-model  (page status=translated)
+[0] para
+  EN: `Gtk::TreeView` is deprecated since gtkmm 4.10.
+In new code, use `Gtk::ListView` for lists and
+`Gtk::ColumnView` for tabular lists.
+  ZH: `Gtk::TreeView` 自 gtkmm 4.10 起已弃用：新代码里，列表用 `Gtk::ListView`，表格式列表用 `Gtk::ColumnView`。
+
+[1] para
+  EN: The `Gtk::TreeView` widget can contain lists or trees of
+data, in columns.
+  ZH: Gtk::TreeView部件的每一行都可以包含数据列表或数据树。
+
+[2] para
+  EN: Each `Gtk::TreeView` has an associated
+`Gtk::TreeModel`, which contains the data displayed by the
+`TreeView`. Each `Gtk::TreeModel` can
+be used by more than one `Gtk::TreeView`. For instance,
+this allows the same underlying data to be displayed and edited in 2 different
+ways at the same time. Or the 2 Views might display different columns from the
+same Model data, in the same way that 2 SQL queries (or "views") might
+show different fields from the same database table.
+  ZH: 每个 `Gtk::TreeView` 都有一个关联的 `Gtk::TreeModel`，存放 `TreeView` 显示的数据。同一个 `Gtk::TreeModel` 可以被多个 `Gtk::TreeView` 使用：同一份数据可同时以两种不同方式显示与编辑，或两个视图显示同一 Model 数据的不同列——就像两条 SQL 查询访问同一个数据库。
+
+[3] para
+  EN: Although you can theoretically implement your own Model, you will normally use
+either the `ListStore` or `TreeStore`
+model classes.
+  ZH: 理论上你可以实现自己的模型，但通常情况直接使用ListStore或TreeStore可以省略很多麻烦。
+
+[4] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1TreeModel.html)
+  ZH: 参考
+
+[5] heading  <<<ZH缺失>>>
+  EN: ListStore, for rows
+  ZH: (无)
+
+[6] para
+  EN: The `ListStore` contains simple rows of data, and each row
+has no children.
+  ZH: ListStore包含简单的数据行，每个行都没有孩子。
+
+[7] figure  <<<ZH缺失>>>
+  EN: TreeView - ListStore
+  ZH: (无)
+
+[8] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1ListStore.html)
+  ZH: 参考
+
+[9] heading  <<<ZH缺失>>>
+  EN: TreeStore, for a hierarchy
+  ZH: (无)
+
+[10] para
+  EN: The `TreeStore` contains rows of data, and each row may
+have child rows.
+  ZH: TreeStore包含数据行，并且每一行都可能有子行。
+
+[11] figure  <<<ZH缺失>>>
+  EN: TreeView - TreeStore
+  ZH: (无)
+
+[12] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1TreeStore.html)
+  ZH: 参考
+
+[13] heading  <<<ZH缺失>>>
+  EN: Model Columns
+  ZH: (无)
+
+[14] para
+  EN: The `TreeModelColumnRecord` class is used to keep track
+of the columns and their data types. You add
+`TreeModelColumn` instances to the
+`ColumnRecord` and then use those
+`TreeModelColumn`s when getting and setting the data in
+model rows. You will probably find it convenient to derive a new
+`TreeModelColumnRecord` which has your
+`TreeModelColumn` instances as member data.
+  ZH: TreeModelColumnRecord用于跟踪列和它们的数据类型。你TreeModelColumn实例添加到ColumnRecord，然后使用那些TreeModelColumns获取和设置模型列中的数据。你可能会发现，派生一个你自己的包含有TreeModelColumn数据成员的TreeModelColumnRecord会更方便。
+
+[15] CODE file= 247 chars
+[16] para
+  EN: You specify the `ColumnRecord` when creating the Model,
+like so:
+  ZH: 你可以在创建模型的时候指定ColumnRecord，如下所示：
+
+[17] CODE file= 82 chars
+[18] para
+  EN: As a `TreeModelColumnRecord` describes structure, not data,
+it can be shared among multiple models, and this is preferable for efficiency.
+However, the instance (such as `m_Columns` here) should usually
+not be static, because it often needs to be instantiated after
+`glibmm` has been initialized. The best solution is
+to make it a lazily instantiated singleton, so that it will be constructed
+on-demand, whenever the first model accesses it.
+  ZH: TreeModelColumnRecord描述的是结构而不是数据，它可以在多个模型之间共享，这样效率更高。但是实例（例如此处的m_Columns）通常不是静态的，因为通常需要在glibmm初始化后示例化它。最好的解决方案是使他成为惰性初始化的单例，以便在第一个模型访问他的时候按需构造。
+
+[19] heading  <<<ZH缺失>>>
+  EN: Adding Rows
+  ZH: (无)
+
+[20] para
+  EN: Add rows to the model with the append(),
+prepend(), or insert() methods.
+  ZH: 使用append()、prepend()或insert()方法可以向模型添加行。
+
+[21] CODE file= 37 chars
+[22] para
+  EN: You can dereference the iterator to get the Row:
+  ZH: 你可以通过解引用迭代器获得行：
+
+[23] CODE file= 17 chars
+[24] heading  <<<ZH缺失>>>
+  EN: Adding child rows
+  ZH: (无)
+
+[25] para
+  EN: `Gtk::TreeStore` models can have child items. Add them
+with the append(), prepend(), or
+insert() methods, like so:
+  ZH: Gtk::TreeStore模型可以存在子物件。可以通过append()、prepend()或insert()方法添加，如下所示：
+
+[26] CODE file= 61 chars
+[27] heading  <<<ZH缺失>>>
+  EN: Setting values
+  ZH: (无)
+
+[28] para
+  EN: You can use the operator[] overload to set the data for a
+particular column in the row, specifying the
+`TreeModelColumn` used to create the model.
+  ZH: 你可以使用operator[]重载设置行中的特定列的数据，你需要使用创建模型时的TreeModelColumn指定列。
+
+[29] CODE file= 39 chars
+[30] heading  <<<ZH缺失>>>
+  EN: Getting values
+  ZH: (无)
+
+[31] para
+  EN: You can use the operator[] overload to get the data in a
+particular column in a row, specifying the
+`TreeModelColumn` used to create the model.
+  ZH: 你可以使用operator[]重载获取行中特定列的数据，你需要使用创建模型时的TreeModelColumn指定列。
+
+[32] CODE file= 84 chars
+[33] para
+  EN: The compiler will complain if you use an inappropriate type. For
+instance, this would generate a compiler error:
+  ZH: 如果你使用了不合适的类型，编译器会报错。例如，编译器将生成一个编译错误：
+
+[34] CODE file= 93 chars
+[35] heading  <<<ZH缺失>>>
+  EN: "Hidden" Columns
+  ZH: (无)
+
+[36] para
+  EN: You might want to associate extra data with each row. If so, just add
+it as a Model column, but don't add it to the View.
+  ZH: 你可能想要将额外的数据和每一行关联。如果是这样，你只需要将其添加到模型的一个行中而不将其添加到视图中即可。
+
+### 页 sec-treeview  (page status=translated)
+[0] para
+  EN: The View is the actual widget (`Gtk::TreeView`) that
+displays the model (`Gtk::TreeModel`) data and allows the
+user to interact with it. The View can show all of the model's columns, or just
+some, and it can show them in various ways.
+  ZH: 视图实际上是一个用于显示模型(Gtk::TreeModel)数据并允许用户与其交互的部件(Gtk::TreeView)。视图可以显示模型的所有列也可以只显示一部分列还可以以不同的方式显示列。
+
+[1] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1TreeView.html)
+  ZH: 参考
+
+[2] heading  <<<ZH缺失>>>
+  EN: Using a Model
+  ZH: (无)
+
+[3] para
+  EN: You can specify a `Gtk::TreeModel` when constructing the
+`Gtk::TreeView`, or you can use the
+set_model() method, like so:
+  ZH: 你可以在构造Gtk::TreeView的时候为其指定一个Gtk::TreeModel，也可以构筑完成后使用set_model()方法指定，如下所示：
+
+[4] CODE file= 37 chars
+[5] heading  <<<ZH缺失>>>
+  EN: Adding View Columns
+  ZH: (无)
+
+[6] para
+  EN: You can use the append_column() method to  tell the View
+that it should display certain Model columns, in a certain order, with a
+certain column title.
+  ZH: 你可以使用append_column()方法告知视图以一定的顺序于某个列标题下显示模型的某个列。
+
+[7] CODE file= 59 chars
+[8] para
+  EN: When using this simple append_column() overload, the
+`TreeView` will display the model data with an appropriate
+`CellRenderer`. For instance, strings and numbers are
+shown in a simple `Gtk::Entry` widget, and booleans are
+shown in a `Gtk::CheckButton`. This is usually what you
+need. For other column types you must either connect a callback that converts
+your type into a string representation, with
+TreeViewColumn::set_cell_data_func(), or derive a custom
+`CellRenderer`. Note that (unsigned) short is not
+supported by default - You could use (unsigned) int or (unsigned) long as the
+column type instead.
+  ZH: 当使用这种简单的append_column()重载的时候，TreeView将会使用适当的CellRenderer显示模型数据。例如将字符串和数字显示在简单的Gtk::Entry部件中，布尔量使用Gtk::CheckButton显示。这通常是你所希望的行为。对于其他类型的行，你必须使用TreeViewColumn::set_cell_data_func()连接一个将你的类型转换为字符串表示形式的回调，或者是从CellRenderer派生一个合适的类。请注意，默认情况下(unsigned) short不被支持 - 作为替代你可以使用(unsigned) int或者(unsigned) long作为行类型。
+
+[9] heading  <<<ZH缺失>>>
+  EN: More than one Model Column per View Column
+  ZH: (无)
+
+[10] para
+  EN: To render more than one model column in a view column, you need to create the
+`TreeView::Column` widget manually, and use
+pack_start() to add the model columns to it.
+  ZH: 要在一个视图列中呈现多个模型列，你需要手动创建TreeView::Column部件，并使用pack_start()方法向其添加模型列。
+
+[11] para
+  EN: Then use append_column() to add the view Column to the
+View. Notice that Gtk::TreeView::append_column() is overloaded
+to accept either a prebuilt `Gtk::TreeView::Column` widget, or
+just the `TreeModelColumn` from which it generates an
+appropriate `Gtk::TreeView::Column` widget.
+  ZH: 然后使用append_column()将视图列添加到视图中。请注意，Gtk::TreeView::append_column()被重载为接受预建的Gtk::TreeView::Column部件，或者只接受由TreeModelColumn生成的合适的Gtk::TreeView::Column部件。
+
+[12] para
+  EN: Here is some example code, which has a pixbuf icon and a text name in the same column:
+  ZH: 这是一些示例代码，在同一列中有一个像素缓冲区(pixbuf)图标和一个文本名：
+
+[13] CODE file= 315 chars
+[14] heading  <<<ZH缺失>>>
+  EN: Specifying CellRenderer details
+  ZH: (无)
+
+[15] para
+  EN: The default `CellRenderer`s and their default behavior
+will normally suffice, but you might occasionally need finer control. For
+instance, this example code from
+`gtkmm/demos/gtk-demo/example_treeview_treestore.cc`, appends a
+`Gtk::CellRenderer` widget and instructs it to render the
+data from various model columns through various aspects of its appearance.
+  ZH: 默认的 `CellRenderer` 及其默认行为通常够用，但偶尔需要更细的控制。例如下面这段来自 `gtkmm/demos/gtk-demo/example_treeview_treestore.cc` 的示例代码，追加了一个 `Gtk::CellRenderer`，并指示它把来自多个模型列的数据渲染到外观的多个方面上。
+
+[16] CODE file= 381 chars
+[17] para
+  EN: You can also connect to `CellRenderer` signals to detect user
+actions. For instance:
+  ZH: 你还可以通过连接到CellRenderer的信号以检测用户的操作。例如：
+
+[18] CODE file= 210 chars
+[19] heading  <<<ZH缺失>>>
+  EN: Editable Cells
+  ZH: (无)
+
+[20] heading  <<<ZH缺失>>>
+  EN: Automatically-stored editable cells
+  ZH: (无)
+
+[21] para
+  EN: Cells in a `TreeView` can be edited in-place by the user.
+To allow this, use the `Gtk::TreeView`
+insert_column_editable() and
+append_column_editable() methods instead of
+insert_column() and append_column().
+When these cells are edited the new values will be stored immediately in the
+Model. Note that these methods are templates which can only be instantiated for
+simple column types such as `Glib::ustring`, int, and
+long.
+  ZH: 用户可以就地编辑TreeView中的单元格。若要如此，请使用Gtk::TreeView的insert_column_editable()和append_column_editable()方法而不是insert_column()和append_column()方法。编辑单元格后新的值将立刻储存在模型中。请注意，这些方法是模版，只能为简单的列类型实例化（例如，Glib::ustring、int和long）。
+
+[22] heading  <<<ZH缺失>>>
+  EN: Implementing custom logic for editable cells
+  ZH: (无)
+
+[23] para
+  EN: However, you might not want the new values to be stored
+immediately. For instance, maybe you want to restrict the input to
+certain characters or ranges of values.
+  ZH: 但是你可能不希望立刻储存新的值。例如你可能希望对输入进行检测，符合预期的范围才储存。
+
+[24] para
+  EN: To achieve this, you should use the normal `Gtk::TreeView`
+insert_column() and append_column()
+methods, then use get_column_cell_renderer() to get the
+`Gtk::CellRenderer` used by that column.
+  ZH: 为此，你应该使用常规的Gtk::TreeView::insert_column()和Gtk::TreeView::append_column()方法，然后使用get_column_cell_renderer()方法获取该列使用的Gtk::CellRenderer。
+
+[25] para
+  EN: You should then cast that `Gtk::CellRenderer*` to the
+specific `CellRenderer` that you expect, so you can use specific API.
+  ZH: 随后应把这个 `Gtk::CellRenderer*` 向下转型为你预期的具体 CellRenderer 类型，以便使用其专属 API。
+
+[26] para
+  EN: For instance, for a CellRendererText, you would set the cell's *editable* property to true, like
+so:
+  ZH: 例如，对于CellRendererText，你应该将单元格的editable属性设置为true，如下所示：
+
+[27] CODE file= 33 chars
+[28] para
+  EN: For a CellRendererToggle, you would set the *activatable*
+property instead.
+  ZH: 对于CellRendererToggle，你应该改为设置activatable属性。
+
+[29] para
+  EN: You can then connect
+to the appropriate "edited" signal. For instance, connect to
+Gtk::CellRendererText::signal_edited(), or
+Gtk::CellRendererToggle::signal_toggled(). If the column
+contains more than one `CellRenderer` then you will need
+to use Gtk::TreeView::get_column() and then call
+get_cells() on that view Column.
+  ZH: 接着连接相应的「edited」信号，例如 Gtk::CellRendererText::signal_edited() 或 Gtk::CellRendererToggle::signal_toggled()。如果一列里有不止一个 `CellRenderer`，需要先用 Gtk::TreeView::get_column() 取得视图列，再对其调用 get_cells()。
+
+[30] para
+  EN: In your signal handler, you should examine the new value and then
+store it in the Model if that is appropriate for your application.
+  ZH: 在你的信号处理函数中，你应该检查新值如果其对于你的应用程序而言是合适的则将其储存到你的模型中。
+
+### 页 sec-iterating-over-model-rows  (page status=translated)
+[0] para
+  EN: `Gtk::TreeModel` provides a C++ Standard Library-style container of its
+children, via the children() method. You can use the
+familiar begin() and end() methods
+iterator incrementing, like so:
+  ZH: Gtk::TreeModel通过children()方法提供了标准C++容器库风格的子代迭代器。你可以使用熟悉的begin()和end()方法递增迭代器，如下所示：
+
+[1] CODE file= 194 chars
+[2] para
+  EN: If you always want to iterate across the entire range, much more succinct syntax
+is possible using C++'s range-based `for` loop:
+  ZH: 如果你总是想迭代整个范围，则可以使用C++基于范围的更简洁的for循环语法：
+
+[3] CODE file= 95 chars
+[4] heading  <<<ZH缺失>>>
+  EN: Row children
+  ZH: (无)
+
+[5] para
+  EN: When using a `Gtk::TreeStore`, the rows can have child
+rows, which can have their own children in turn. Use
+Gtk::TreeModel::Row::children() to get the container of child `Row`s:
+  ZH: 在使用Gtk::TreeStore的时候，其行可以存在子行，子行也可以存在子行。使用Gtk::TreeModel::Row::children()方法可以获取Row的子行：
+
+[6] CODE file= 51 chars
+### 页 sec-treeview-selection  (page status=translated)
+[0] para
+  EN: To find out what rows the user has selected, get the
+`Gtk::TreeView::Selection` object from the
+`TreeView`, like so:
+  ZH: 要找出用户选择了那些行，请从TreeView的Gtk::TreeView::Selection对象获取。
+
+[1] CODE file= 51 chars
+[2] heading  <<<ZH缺失>>>
+  EN: Single or multiple selection
+  ZH: (无)
+
+[3] para
+  EN: By default, only single rows can be selected, but you can allow
+multiple selection by setting the mode, like so:
+  ZH: 默认情况下，只能选定一行，但是你可以通过设置选择模式选择多行，如下所示：
+
+[4] CODE file= 57 chars
+[5] heading  <<<ZH缺失>>>
+  EN: The selected rows
+  ZH: (无)
+
+[6] para
+  EN: For single-selection, you can just call get_selected(),
+like so:
+  ZH: 对于单选模式，你可以如下所示调用get_selected()：
+
+[7] CODE file= 135 chars
+[8] para
+  EN: For multiple-selection, you need to call get_selected_rows()
+or define a callback, and give it to
+selected_foreach(),
+selected_foreach_path(), or
+selected_foreach_iter(), like so:
+  ZH: 对于多选模式，你需要调用get_selected_rows()或者定义一个回调然后将其传递给selected_foreach()、selected_foreach_path()或selected_foreach_iter()，如下所示：
+
+[9] CODE file= 244 chars
+[10] heading  <<<ZH缺失>>>
+  EN: The "changed" signal
+  ZH: (无)
+
+[11] para
+  EN: To respond to the user clicking on a row or range of rows, connect to the
+signal like so:
+  ZH: 要响应用户单击某行或者某个范围的行，请按以下方式连接信号：
+
+[12] CODE file= 113 chars
+[13] heading  <<<ZH缺失>>>
+  EN: Preventing row selection
+  ZH: (无)
+
+[14] para
+  EN: Maybe the user should not be able to select every item in your list or tree.
+For instance, in the gtk-demo, you can select a demo to see the source code,
+but it doesn't make any sense to select a demo category.
+  ZH: 或许用户不应该能选择列表或树中的每个项目。例如在gtk-demo中，你可以选择一个演示来查看他的源代码，但是你选一个演示类别没有意义。
+
+[15] para
+  EN: To control which rows can be selected, use the
+set_select_function() method, providing a
+`sigc::slot` callback. For instance:
+  ZH: 要控制一个行是否能被选择，请使用set_select_function()方法为其提供一个sigc::slot回调。例如：
+
+[16] CODE file= 98 chars
+[17] para
+  EN: and then
+  ZH: 接着
+
+[18] CODE file= 246 chars
+[19] heading  <<<ZH缺失>>>
+  EN: Changing the selection
+  ZH: (无)
+
+[20] para
+  EN: To change the selection, specify a
+`Gtk::TreeModel::iterator` or
+`Gtk::TreeModel::Row`, like so:
+  ZH: 要更改选择，请指定Gtk::TreeModel::iterator或Gtk::TreeModel::Row，然后如下所示：
+
+[21] CODE file= 106 chars
+[22] para
+  EN: or
+  ZH: 或者
+
+[23] CODE file= 85 chars
+### 页 sec-treeview-sort  (page status=translated)
+[0] para
+  EN: The standard tree models (`TreeStore` and `ListStore`) derive from `TreeSortable`, so they offer sorting functionality. For instance, call set_sort_column(), to sort the model by the specified column. Or supply a callback function to set_sort_func() to implement a more complicated sorting algorithm.
+  ZH: 标准树模型（TreeStore和ListStore）派生自TreeSortable，因此它们提供了排序功能。例如，调用set_sort_column()按指定的列对模型进行排序。或者向set_sort_func()提供一个回调函数以实现更复杂的排序算法。
+
+[1] para
+  EN: [TreeSortable Reference](&url_refdocs_base_gtk_html;classGtk_1_1TreeSortable.html)
+  ZH: 可排序树参考
+
+[2] heading  <<<ZH缺失>>>
+  EN: Sorting by clicking on columns
+  ZH: (无)
+
+[3] para
+  EN: So that a user can click on a `TreeView`'s column header to sort the `TreeView`'s contents, call Gtk::TreeView::Column::set_sort_column(), supplying the model column on which model should be sorted when the header is clicked. For instance:
+  ZH: 为了使用户可以点击TreeView的列标题以对TreeView内容进行排序，请在需要此功能的列上调用Gtk::TreeView::Column::set_sort_column()，以提供此功能。如下所示：
+
+[4] CODE file= 98 chars
+[5] heading  <<<ZH缺失>>>
+  EN: Independently sorted views of the same model
+  ZH: (无)
+
+[6] para
+  EN: The `TreeView` already allows you to show the same `TreeModel`
+in two `TreeView` widgets. If you need one of these TreeViews to sort the model
+differently than the other then you should use a `TreeModelSort` instead of just,
+for instance, Gtk::TreeViewColumn::set_sort_column().
+`TreeModelSort` is a model that contains another model, presenting a sorted version
+of that model. For instance, you might add a sorted version of a model to a `TreeView` like so:
+  ZH: TreeView可以让你用两个TreeView部件显示同一个TreeModel。如果你需要让这这些树形视图对模型进行不同的排序，则你应该使用TreeModelSort而不仅仅是使用Gtk::TreeViewColumn::set_sort_column()。TreeModelSort是一个包含其他模型的模型，其提供了该模型的将已排序版本。你可以如下所示的将已排序版本模型添加到TreeView：
+
+[7] CODE file= 165 chars
+[8] para
+  EN: Note, however, that the TreeView will provide iterators to the sorted model. You must convert them to iterators to the underlying child model in order to perform actions on that model. For instance:
+  ZH: 请注意，这样做树形视图将会提供已排序模型的迭代器。你必须将其转换为基础的子模型迭代器以便对这个模型进行操作。例如：
+
+[9] CODE file= 324 chars
+[10] para
+  EN: [TreeModelSort Reference](&url_refdocs_base_gtk_html;classGtk_1_1TreeModelSort.html)
+  ZH: 树模型排序参考
+
+### 页 sec-treeview-draganddrop  (page status=translated)
+[0] para
+  EN: `Gtk::TreeView` already implements simple drag-and-drop
+when used with the `Gtk::ListStore` or
+`Gtk::TreeStore` models (since gtk 4.8). If necessary, it also allows you
+to implement more complex behavior when items are dragged and dropped, using
+the normal [Drag and Drop](#chapter-draganddrop) API.
+  ZH: `Gtk::TreeView` 与 `Gtk::ListStore` 或 `Gtk::TreeStore` 模型配合时（自 gtk 4.8 起）已内建简单的拖放；必要时也可以用常规的拖放 API 实现更复杂的条目拖放行为。
+
+[1] heading  <<<ZH缺失>>>
+  EN: Reorderable rows
+  ZH: (无)
+
+[2] para
+  EN: If you call Gtk::TreeView::set_reorderable() then your
+TreeView's items can be moved within the treeview itself. This is demonstrated
+in the `TreeStore` example.
+  ZH: 如果调用Gtk::TreeView::set_reorderable()则你可以在树形视图中移动其本身的项目。TreeStore的示例对此进行了演示。
+
+[3] para
+  EN: However, this does not allow you any control of which items can be dragged, and where they can be dropped.
+If you need that extra control then you might create a derived `Gtk::TreeModel` from
+`Gtk::TreeStore` or `Gtk::ListStore` and override the
+`Gtk::TreeDragSource::row_draggable_vfunc()` and
+`Gtk::TreeDragDest::row_drop_possible_vfunc()` virtual methods.
+You can examine the `Gtk::TreeModel::Path`s provided and allow or disallow dragging
+or dropping by returning `true` or `false`.
+  ZH: 但是，这不允许你控制哪些项目可以拖动以及可以将他们拖动到哪里。如果你想做到这些，你需要从Gtk::TreeStore或Gtk::ListStore创建派生的Gtk::TreeModel，然后覆盖Gtk::TreeDragSource::row_draggable_vfunc()和Gtk::TreeDragDest::row_drop_possible_vfunc()虚方法。你可以检查提供的Gtk::TreeModel::Path并返回true或false来允许或禁止拖放。
+
+[4] para
+  EN: This is demonstrated in the drag_and_drop example.
+  ZH: 在drag_and_drop示例中对此进行了演示。
+
+### 页 sec-treeview-contextmenu  (page status=translated)
+[0] para
+  EN: Lots of people need to implement right-click context menus for
+`TreeView`s so we will explain how to do that here to
+save you some time. It's much the same as a normal context menu, as described
+in the [menus chapter](#sec-menus-popup). You use a
+`Gtk::GestureClick` to detect the mouse click.
+  ZH: 很多人需要为 `TreeView` 实现右键上下文菜单，这里专门讲一下，帮你省点时间。做法与菜单章描述的普通上下文菜单基本相同：用一个 `Gtk::GestureClick` 检测鼠标点击。
+
+[1] para
+  EN: This is demonstrated in the Popup Context Menu example. In that example
+a derived `TreeView` is used, but that's not necessary.
+  ZH: Popup Context Menu 示例演示了这一做法。该示例用了派生的 `TreeView`，但这并非必需。
+
+### 页 sec-treeview-examples  (page status=translated)
+[0] para
+  EN: Some `TreeView` examples are shown here. There are
+more examples in the [treeview directory](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/treeview/)
+in `gtkmm-documentation`'s examples.
+  ZH: 这里显示了一些TreeView的示例。gtkmm文档示例中的树形视图文件夹还有更多的示例。
+
+[1] para
+  EN: If neither `ListStore` nor `TreeStore`
+is suitable for your application, look at the
+[custom TreeModel](https://gitlab.gnome.org/GNOME/gtkmm-documentation/tree/&url_examples_branch;/examples/book/treeview/custom_treemodel)
+example. It shows how you can make your own implementation of the `TreeModel`
+interface.
+  ZH: 如果ListStore和TreeStore都不适合你的应用程序，请查看自定义树模型示例。它向你展示了如何实现自己的TreeModel接口
+
+[2] heading  <<<ZH缺失>>>
+  EN: ListStore
+  ZH: (无)
+
+[3] para
+  EN: This example has a `Gtk::TreeView` widget, with a
+`Gtk::ListStore` model.
+  ZH: 这个例子有一个使用Gtk::ListStore模型的Gtk::TreeView部件。
+
+[4] figure  <<<ZH缺失>>>
+  EN: TreeView - ListStore
+  ZH: (无)
+
+[5] CODE file=examplewindow.h 907 chars
+[6] CODE file=examplewindow.cc 2724 chars
+[7] CODE file=main.cc 270 chars
+[8] heading  <<<ZH缺失>>>
+  EN: TreeStore
+  ZH: (无)
+
+[9] para
+  EN: This example is very similar to the `ListStore` example,
+but uses a `Gtk::TreeStore` model instead, and adds
+children to the rows.
+  ZH: 这个示例和ListStore示例非常的相似，但是使用的是Gtk::TreeStore模型并且添加了子行。
+
+[10] figure  <<<ZH缺失>>>
+  EN: TreeView - TreeStore
+  ZH: (无)
+
+[11] CODE file=examplewindow.h 860 chars
+[12] CODE file=examplewindow.cc 2657 chars
+[13] CODE file=main.cc 270 chars
+[14] heading  <<<ZH缺失>>>
+  EN: Editable Cells
+  ZH: (无)
+
+[15] para
+  EN: This example is identical to the `ListStore` example, but
+it uses TreeView::append_column_editable() instead of
+TreeView::append_column().
+  ZH: 这个示例与ListStore示例相同，但是使用TreeView::append_column_editable()代替TreeView::append_column()。
+
+[16] figure  <<<ZH缺失>>>
+  EN: TreeView - Editable Cells
+  ZH: (无)
+
+[17] CODE file=examplewindow.h 1655 chars
+[18] CODE file=examplewindow.cc 6400 chars
+[19] CODE file=main.cc 270 chars
+[20] heading  <<<ZH缺失>>>
+  EN: Drag and Drop
+  ZH: (无)
+
+[21] para
+  EN: This example is much like the `TreeStore` example, but has
+2 extra columns to indicate whether the row can be dragged, and whether it can
+receive drag-and-dropped rows. It uses a derived
+`Gtk::TreeStore` which overrides the virtual functions as
+described in the [TreeView Drag and
+    Drop](#sec-treeview-draganddrop) section.
+  ZH: 这个示例和TreeStore示例十分相似，但是额外有两个用于指示行是否可以进行拖放和接受拖放的列。它通过从Gtk::TreeStore来覆盖虚函数，如拖放树形视图小节所述。
+
+[22] figure  <<<ZH缺失>>>
+  EN: TreeView - Drag And Drop
+  ZH: (无)
+
+[23] CODE file=examplewindow.h 508 chars
+[24] CODE file=treemodel_dnd.h 937 chars
+[25] CODE file=examplewindow.cc 3596 chars
+[26] CODE file=main.cc 270 chars
+[27] CODE file=treemodel_dnd.cc 2316 chars
+[28] heading  <<<ZH缺失>>>
+  EN: Popup Context Menu
+  ZH: (无)
+
+[29] para
+  EN: This example is much like the `ListStore` example, but
+derives a custom `TreeView` to encapsulate the tree model
+code and popup menu code in our derived class. See the
+[TreeView Popup Context Menu](#sec-treeview-contextmenu) section.
+  ZH: 这个例子与 `ListStore` 示例很相似，但派生了一个自定义 `TreeView`，把树模型代码与弹出菜单代码封装进派生类。参见 TreeView Popup Context Menu 一节。
+
+[30] figure  <<<ZH缺失>>>
+  EN: TreeView - Popup Context Menu
+  ZH: (无)
+
+[31] CODE file=examplewindow.h 472 chars
+[32] CODE file=treeview_withpopup.h 863 chars
+[33] CODE file=examplewindow.cc 978 chars
+[34] CODE file=main.cc 270 chars
+[35] CODE file=treeview_withpopup.cc 2382 chars

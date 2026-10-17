@@ -1,0 +1,139 @@
+### 页 sec-timeouts  (page status=pending)
+[0] para
+  EN: You may be wondering how to make gtkmm do useful work while it's idling along. Happily,
+you have several options. Using the following methods you can create a timeout
+method that will be called every few milliseconds.
+  ZH: 你可能想知道如何使gtkmm在空闲的时候做一些有用的工作。幸运的是你有几种选择。你可以创建一个每几毫秒就调用的超时方法。
+
+[1] CODE file=
+[2] para
+  EN: The first argument is a `slot` you wish to have called
+when the timeout occurs. The second argument is the number of milliseconds
+between calls to that method. You receive a
+`sigc::connection` object that can be used to deactivate
+the connection using its disconnect() method:
+  ZH: 第一个参数是超时时你希望被调用的slot。第二个参数是调用该方法的时间间隔（多少毫秒）。你将收到一个sigc::connection对象，可以在该对象上调用disconnect()方法断开连接。
+
+[3] CODE file=
+[4] para
+  EN: Another way of destroying the connection is your signal handler.
+It has to be of the type `sigc::slot<bool()>`.
+As you see from the definition your signal handler has to return a value of
+the type `bool`. A definition of a sample method might
+look like this:
+  ZH: 破坏连接的另一种方法是通过你的信号处理函数的返回值。其类型必须是sigc::slot<bool()>。从定义可以看出信号处理函数必须返回一个bool类型的值。示例方法的定义可能如下所示：
+
+[5] CODE file=
+[6] para
+  EN: You can stop the timeout method by returning `false` from
+your signal handler. Therefore, if you want your
+method to be called repeatedly, it should return `true`.
+  ZH: 你可以通过让你的信号处理函数返回false以停止此超时方法。因此，如果你还想重复调用此方法，则你需要让信号处理函数返回true。
+
+[7] para
+  EN: Here's an example of this technique:
+  ZH: 这是此技术的示例：
+
+[8] CODE file=timerexample.h
+[9] CODE file=main.cc
+[10] CODE file=timerexample.cc
+### 页 sec-monitoring-io  (page status=pending)
+[0] para
+  EN: A nifty feature of Glib (one of the libraries underlying
+gtkmm) is the ability to have it check for data on a file descriptor
+for you. This is especially useful for networking applications. The
+following method is used to do this:
+  ZH: Glib（gtkmm的底层库之一）有一个很好的特性是它具有帮你检查文件描述符中的数据的能力。这对于需要联网的应用程序十分的有用。使用以下方法来执行此操作：
+
+[1] CODE file=
+[2] para
+  EN: The first argument is a slot you wish to have called when
+the specified event (see argument 3) occurs on the file descriptor you specify
+using argument two. Argument three may be one or more (using
+`|`) of:
+  ZH: 第一个参数是你希望在第二个参数指定的文件描述符上发生指定事件（见第三个参数的描述）时被调用的槽。第三个参数可能是一下的一项或多项（若想是多项则对以下多个使用|，例如：Glib::IO_IN | Glib::IO_OUT | Glib::IO_PRI）：
+
+[3] listitem
+  EN: Glib::IOCondition::IO_IN - Call your method when there is data ready for
+reading on your file descriptor.
+  ZH: Glib::IO_IN - 当你提供的文件描述符有数据准备好被读取时调用你的方法。
+
+[4] listitem
+  EN: Glib::IOCondition::IO_OUT - Call your method when the file descriptor is
+ready for writing.
+  ZH: Glib::IO_OUT - 当提供的文件描述符准备好被写入时调用你的方法。
+
+[5] listitem
+  EN: Glib::IOCondition::IO_PRI - Call your method when the file descriptor has urgent data to be read.
+  ZH: Glib::IO_PRI - 当提供的文件描述符有紧急数据要读取时调用你的方法。
+
+[6] listitem
+  EN: Glib::IOCondition::IO_ERR - Call your method when an error has occurred on the file descriptor.
+  ZH: Glib::IO_ERR - 当提供的文件描述符上发生错误的时候调用你的方法。
+
+[7] listitem
+  EN: Glib::IOCondition::IO_HUP - Call your method when hung up (the connection has been broken usually for pipes and sockets).
+  ZH: Glib::IO_HUP - 挂起时（常见于管道和套接字的连接被断开）调用你的方法。
+
+[8] para
+  EN: The return value is a `sigc::connection` that may be used to stop monitoring
+this file descriptor using its disconnect() method. The
+`slot` signal handler should be declared as follows:
+  ZH: 返回值是一个sigc::connection对象，你可以在其上调用disconnect()方法以停止对该文件描述符的监视。信号处理函数slot应声明如下：
+
+[9] CODE file=
+[10] para
+  EN: where `condition` is as
+specified above. As usual the slot is created with
+`sigc::mem_fun()` (for a member method of an object), or
+`sigc::ptr_fun()` (for a function). A lambda expression can
+be used, if you don't need the automatic disconnection that `sigc::mem_fun()`
+provides when the object goes out of scope.
+  ZH: 参数condition如上所述。通常使用sigc::mem_fun()（通过一个对象的成员函数创建）或sigc::ptr_fun()（通过一个普通函数创建）函数创建槽。
+
+[11] para
+  EN: A little example follows. To use the example just execute it from a terminal;
+it doesn't create a window. It will create a pipe named
+`testfifo` in the current directory. Then start another shell
+and execute `echo "Hello" > testfifo`. The example will
+print each line you enter until you execute `echo "Q" >
+testfifo`.
+  ZH: 下面是个示例。要使用该示例，只需要在终端上执行它即可；它不会创建一个窗口。它将在当前目录创建一个名为testfifo的具名管道。然后启动另一个shell并执行echo "Hello" > testfifo。该示例将打印你输入的每一行直到你执行echo "Q" > testfifo
+
+[12] CODE file=main.cc
+### 页 sec-idle-functions  (page status=pending)
+[0] para
+  EN: If you want to specify a method that gets called when nothing else is happening, use the following:
+  ZH: 如果你想要指定一个在无事发生时调用的方法，请使用以下函数：
+
+[1] CODE file=
+[2] para
+  EN: This causes gtkmm to call the specified method whenever nothing else is
+happening. You can add a priority (lower numbers are higher priorities). There are two ways to remove the signal handler: calling
+disconnect() on the
+`sigc::connection` object, or returning
+`false` in the signal handler, which should be declared
+as follows:
+  ZH: 这会导致gtkmm在无事发生时调用指定的方法。你可以为其添加优先级（数字越小优先级越高）。删除该信号处理函数的方法有两个：在sigc::connection对象上调用disconnect()、在信号处理函数中返回false，信号处理函数的声明应如下所示：
+
+[3] CODE file=
+[4] para
+  EN: Since this is very similar to the methods above this explanation should
+be sufficient to understand what's going on. However, here's a little example:
+  ZH: 这与前一小节的方法极其类似，所以在此不再进行过多的解释。以下是个小例子：
+
+[5] CODE file=idleexample.h
+[6] CODE file=idleexample.cc
+[7] CODE file=main.cc
+[8] para
+  EN: This example points out the difference of idle and timeout methods a
+little. If you need methods that are called periodically, and speed
+is not very important, then you want timeout methods. If
+you want methods that are called as often as possible (like
+calculating a fractal in background), then use idle methods.
+  ZH: 这个例子指出了空闲与超时方法的微小区别。如果你需要定期调用，并且速度并不重要则你应该使用超时方法。如果你需要尽可能多的调用方法（例如在后台计算分形）那你应该使用空闲方法。
+
+[9] para
+  EN: Try executing the example and increasing the system load. The upper
+progress bar will increase steadily; the lower one will slow down.
+  ZH: 尝试执行此示例并逐渐增加系统的负载。上方的进度条将稳定的逐渐增加；下方的则会增加的越来越慢。

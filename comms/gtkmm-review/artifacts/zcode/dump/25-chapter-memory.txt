@@ -1,0 +1,208 @@
+### 页 sec-memory-widgets  (page status=pending)
+[0] heading  <<<缺失>>>
+  EN: Normal C++ memory management
+  ZH: (无)
+
+[1] para
+  EN: gtkmm allows the programmer to control the lifetime (that is, the construction
+and destruction) of any widget in the same manner as any other C++ object.
+This flexibility allows you to use `new` and
+`delete` to create and destroy objects dynamically
+or to use regular class members (that are destroyed automatically when the
+class is destroyed) or to use local instances (that are destroyed when the
+instance goes out of scope). This flexibility is not present in some C++ GUI
+toolkits, which restrict the programmer to only a subset of C++'s memory
+management features.
+  ZH: gtkmm允许程序员像管理任意其他C++对象一样对任意部件的生命周期（即构造和析构）进行控制。这种灵活性使你可以用new和delete动态创建和销毁对象，或使用常规的类成员（销毁类时部件将被自动销毁），或使用局部实例（当实例超出其作用域时被销毁）。这种灵活性在某些C++ GUI工具包中不存在，这些工具包限制程序员只能使用C++内存管理特性中的一部分。
+
+[2] para  <<<缺失>>>
+  EN: An important difference in gtkmm-4.0 vs. older versions is that a C++ widgetʼs
+destruction no longer causes the widget to be destroyed if itʼs within a parent;
+in that case the C GtkWidget stays alive. If you had relied on that behavior in
+an older version, in gtkmm-4.0 you must now remove the widget from its parent
+first. See [Changes in gtkmm-4.0](#changes-gtkmm4).
+  ZH: (无)
+
+[3] para
+  EN: Here are some examples of normal C++ memory management:
+  ZH: 以下是一些使用标准C++进行内存管理的示例：
+
+[4] heading  <<<缺失>>>
+  EN: Class Scope widgets
+  ZH: (无)
+
+[5] para
+  EN: If a programmer does not need dynamic memory allocation, automatic widgets in class
+scope may be used. One advantage of automatic widgets in class scope is that
+memory management is grouped in one place. The programmer does not
+risk memory leaks from failing to `delete` a widget.
+  ZH: 如果程序员不需要动态分配内存，则可以在类作用域中使用具有自动储存期的部件。在类作用域中使用自动储存期的部件的优点之一是内存管理被集中在一个地方。程序员不需要承担因delete部件出现差错而导致内存泄漏的风险。
+
+[6] para
+  EN: The primary disadvantage of using class scope widgets is revealing
+the class implementation rather than the class interface in the class header.
+  ZH: 使用类作用域部件的主要缺点是在包含类声明的头文件中展示了类的实现而不只是类的接口。
+
+[7] CODE file=
+[8] heading  <<<缺失>>>
+  EN: Function scope widgets
+  ZH: (无)
+
+[9] para
+  EN: If a programmer does not need a class scope widget, a function scope widget
+may also be used. The advantages to function scope over class scope are the
+increased data hiding and reduced dependencies.
+  ZH: 如果程序员不需要类作用域部件，那么也可以使用函数作用域部件。函数作用域相比于类作用域的优点是增加了数据的隐蔽性和隐藏了依赖。
+
+[10] CODE file=
+[11] para  <<<缺失>>>
+  EN: However, this technique is rarely useful. Most widgets can't safely be created
+before the application has been registered or activated. They can't safely be
+deleted after Gtk::Application::run() or
+Gtk::Application::make_window_and_run() returns.
+  ZH: (无)
+
+[12] heading  <<<缺失>>>
+  EN: Dynamic allocation with new and delete
+  ZH: (无)
+
+[13] para
+  EN: Usually, the programmer will prefer to allow containers to automatically destroy
+their children by creating them using `Gtk::make_managed()`
+(see below). This is not strictly required, as the `new` and
+`delete` operators may also be used, but modern C++ style
+discourages those in favor of safer models of memory management, so it is
+better to create widgets using `Gtk::make_managed()` and
+let their parent destroy them, than to manually perform dynamic allocation.
+  ZH: 通常，程序员更喜欢使用Gtk::make_managed()（参见下文）创建允许容器自动销毁的子部件。这并非强制性的要求，你也可以使用new和delete操作符，但是现代C++风格鼓励使用更安全的内存管理模型，因此最好使用Gtk::make_managed()创建部件，并让他们的父部件销毁它们，而不是手动执行动态内存分配。 在这，程序员删除pButton以防止内存泄漏。
+
+[14] CODE file=
+[15] para  <<<缺失>>>
+  EN: Here, the programmer deletes `pButton` to prevent a memory leak.
+  ZH: (无)
+
+[16] heading  <<<缺失>>>
+  EN: Managed Widgets
+  ZH: (无)
+
+[17] para
+  EN: Alternatively, you can let a widget's container control when the widget is
+destroyed. In most cases, you want a widget to last only as long as the
+container it is in. To delegate the management of a widget's lifetime to its
+container, create it with `Gtk::make_managed()` and then
+pack it into its container with Gtk::Box::append() or
+a similar method. Now the widget will be destroyed whenever its container is destroyed.
+  ZH: 另外，你可以让部件的容器控制部件被销毁的时机。多数情况下你会希望部件的生存周期与包含它的容器的生命周期一样长。要将部件的生命周期管理委托给其容器，请使用Gtk::make_managed()创建部件，然后使用诸如Gtk::Box::append()这类的方法将其装入容器中。这样部件就会随着容器一并销毁。
+
+[18] heading  <<<缺失>>>
+  EN: Dynamic allocation with make_managed() and append()
+  ZH: (无)
+
+[19] para
+  EN: gtkmm provides ways including the `make_managed()` function
+and Gtk::Box::append() method to simplify creation
+and destruction of widgets whose lifetime can be managed by a parent.
+  ZH: gtkmm提供了包括make_managed()函数和Gtk::Box::append()方法在内的用于简化创建和销毁部件的很多方法。这些部件的生命周期可以由其父部件进行管理。
+
+[20] para
+  EN: Every widget except a top-level window must be added to a parent container in
+order to be displayed. The `manage()` function marks a widget
+so that when that widget is added to a parent container, said container becomes
+responsible for deleting the widget, meaning the user no longer needs to do so.
+The original way to create widgets whose lifetime is managed by their parent in
+this way was to call `manage()`, passing in the result of a
+`new` expression that created a dynamically allocated widget.
+  ZH: 除了顶级窗口以外的任何部件都需要添加到一个父容器中才能够被显示。manage()函数对部件进行标记，以便将该部件添加到父容器时，由其父容器负责删除该部件，这意味着用户不需要如此做。创建生命周期由其父部件进行管理的部件的原始方法是调用manage()，并将向其传入使用new表达式创建的动态分配的部件。
+
+[21] para
+  EN: However, usually, when you create such a widget, you will already know that its
+parent container should be responsible for destroying it. In addition, modern
+C++ style discourages use of the `new` operator, which was
+required when passing a newly created widget to `manage()`.
+Therefore, gtkmm has added `make_managed()`, which combines
+creation and marking with `manage()` into a single step. This
+avoids you having to write `new`, which is discouraged in
+modern C++ style, and more clearly expresses intent to create a managed widget.
+  ZH: 但是通常当你创建这样的部件时，你已经知道其父部件应该负责销毁它。此外现代C++风格不推荐使用new操作符，而将新创建的部件传递给manage()时需要使用new。因此，gtkmm添加了make_managed()函数，这个函数将两个步骤合并到了一起。这避免了让你编写现代C++风格不建议的带有new的代码，并更清楚的表达了创建托管部件的意图。
+
+[22] CODE file=
+[23] para
+  EN: Now, when objects of type `MyContainer` are destroyed, the
+button will also be deleted. It is no longer necessary to delete `pButton`
+to free the button's memory; its deletion has been delegated to the
+`MyContainer` object.
+  ZH: 现在，当你销毁MyContainer类型对象时，该按钮也被销毁。不再需要主动deletepButton以释放其内存；对其的删除操作委托给了MyContainer对象。
+
+[24] para  <<<缺失>>>
+  EN: If you never added the widget to any parent container, it's your responsibility
+to delete it. If you add it to a container widget, and later
+remove it (for instance with Gtk::Box::remove()),
+it's deleted by the container.
+  ZH: (无)
+
+[25] para
+  EN: Of course, a top-level container will not be added to another container. The
+programmer is responsible for destroying the top-level container using one of
+the traditional C++ techniques. Or you can let Gtk::Application::make_window_and_run()
+create a top-level window and delete it when it's closed.
+  ZH: 当然，顶级容器不会被添加到另一个容器中。程序员负责使用一种传统的C++技术销毁顶级容器。例如，你的顶级窗口可能只是main()函数中的一个实例。
+
+### 页 sec-memory-shared-resources  (page status=pending)
+[0] para
+  EN: Some objects, such as `Gdk::Pixbuf`s and
+`Pango::Font`s, are obtained from a shared store.
+Therefore you cannot instantiate your own instances. These classes typically
+inherit from `Glib::Object`. Rather than requiring you to
+reference and unreference these objects, gtkmm uses the
+`Glib::RefPtr<>` smartpointer. Cairomm has its own
+smartpointer, `Cairo::RefPtr<>`.
+  ZH: 一些对象是从共享储存中获取的，例如Gdk::Pixbuf和Pango::Font。因此你无法实例化自己的实例。这些类通常继承自Glib::Object。gtkmm使用智能指针Glib::RefPtr<>而不是要求你引用和解引用这些对象。开罗有自己的智能指针：Cairo::RefPtr<>。
+
+[1] para
+  EN: Objects such as `Gdk::Pixbuf` can only be instantiated
+with a create() function. For instance,
+  ZH: 诸如Gdk::Pixbuf之类的对象只能通过create()函数进行实例化。例如：
+
+[2] CODE file=
+[3] para
+  EN: You have no way of getting a bare `Gdk::Pixbuf`. In the
+example, `pixbuf` is a smart pointer, so you can do this, much
+like a normal pointer:
+  ZH: 你无法暴露Gdk::Pixbuf对象。在示例中，pixbuf是一个智能指针，因此可以像正常指针一样执行此操作：
+
+[4] CODE file=
+[5] para
+  EN: When `pixbuf` goes out of scope an
+unref() will happen in the background and you don't need
+to worry about it anymore. There's no `new` so there's no
+`delete`.
+  ZH: 当pixbuf超出作用域时，将在后台调用unref()，你无需为它担心。没有进行new因此也不需要进行delete。
+
+[6] para
+  EN: If you copy a `RefPtr`, for instance
+  ZH: 你可以像对正常指针进行类型转换一样，将RefPtr转换到基础类型。
+
+[7] CODE file=
+[8] para
+  EN: or if you pass it as a method argument or a return type, then
+`RefPtr` will do any necessary referencing to ensure that
+the instance will not be destroyed until the last `RefPtr`
+has gone out of scope.
+  ZH: 如果你复制一个RefPtr，例如：，或者你将其作为一个方法的参数或返回类型进行传递，RefPtr将做必要的引用以确保在最后一个RefPtr超出作用域之前该实例不会被销毁。
+
+[9] para
+  EN: See the [appendix](#chapter-refptr) for detailed information about RefPtr.
+  ZH: 更多与RefPtr有关的信息，请参见附录。
+
+[10] para
+  EN: If you wish to learn more about smartpointers, you might look in these
+books:
+  ZH: 如果你想了解与智能指针更多的有关信息，请阅读以下书籍：
+
+[11] listitem
+  EN: Bjarne Stroustrup, "The C++ Programming Language" Fourth Edition - section 34.3
+  ZH: Bjarne Stroustrup,《C++编程语言》第四版 第34章第3小节
+
+[12] listitem
+  EN: Nicolai M. Josuttis, "The C++ Standard Library" - section 4.2
+  ZH: Nicolai M. Josuttis,《C++标准库》第4章第2节

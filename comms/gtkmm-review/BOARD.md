@@ -1,6 +1,6 @@
 # gtkmm-review 协作看板
 
-> 由 `comms/comms.py board` 生成于 2026-10-17 18:11，**不要手改**。任务详情见各任务文件，通讯规则见 [../README.md](../README.md)。
+> 由 `comms/comms.py board` 生成于 2026-10-17 19:46，**不要手改**。任务详情见各任务文件，通讯规则见 [../README.md](../README.md)。
 
 ## 未读消息
 
@@ -14,18 +14,20 @@
 
 | 对方 | 状态 | 最近痕迹 | 距今 |
 |---|---|---|---|
-| zcode | online | 更新任务 | 3 分钟前 |
-| cursor | online | 发消息 | 6 分钟前 |
+| zcode | online | 更新任务 | 0 分钟前 |
+| cursor | quiet | 提交代码/内容 | 94 分钟前 |
 
 ## 概览
 
-todo 0 · doing 0 · review 0 · blocked 0 · done 2
+todo 0 · doing 0 · review 0 · blocked 0 · done 4
 
 ## zcode
 
 | 任务 | 优先级 | 状态 | 标题 | 依赖 | 更新 |
 |---|---|---|---|---|---|
 | [T-101](tasks/T-101-gtkmm-前十章审查：译文忠实度与术语.md) | P1 | done | gtkmm 前十章审查：译文忠实度与术语 |  | 2026-10-17 18:11 |
+| [T-102](tasks/T-102-译文忠实度审查：第-11–21-章.md) | P1 | done | 译文忠实度审查：第 11–21 章 |  | 2026-10-17 19:46 |
+| [T-103](tasks/T-103-译文忠实度审查：第-22–31-章.md) | P1 | done | 译文忠实度审查：第 22–31 章 |  | 2026-10-17 19:46 |
 
 ## cursor
 

@@ -1,0 +1,240 @@
+### 页 sec-textview-buffer  (page status=translated)
+[0] para
+  EN: The `TextView` widget can be used to display and edit
+large amounts of formatted text. Like the `TreeView`, it
+has a model/view design. In this case the `TextBuffer` is
+the model.
+  ZH: TextView部件可以用于显示和编辑大量的格式化文本。与TreeView一样，它具有模型/视图设计。TextBuffer是它预期的模型。
+
+[1] para
+  EN: `Gtk::TextBuffer` is a model containing the data for the
+`Gtk::TextView`, like the
+`Gtk::TreeModel` used by `Gtk::TreeView`.
+This allows two or more `Gtk::TextView`s to share the same
+`TextBuffer`, and allows those TextBuffers to be displayed
+slightly differently. Or you could maintain several
+`Gtk::TextBuffer`s and choose to display each one at different
+times in the same `Gtk::TextView` widget.
+  ZH: Gtk::TextBuffer是一个包含Gtk::TextView数据的模型，和Gtk::TreeView所使用的Gtk::TreeModel类似。这允许复数个Gtk::TextView共享同一个TextBuffer，并允许以不同方式显示文本缓冲区。你也可以维护多个Gtk::TextBuffer并让同一个Gtk::TextView部件于不同时候分别显示它们。
+
+[2] para
+  EN: The `TextView` creates its own default
+`TextBuffer`, which you can access via the
+get_buffer() method.
+  ZH: TextView会创建一个由它拥有的默认TextBuffer，你可以通过get_buffer()方法访问这个缓冲区。
+
+[3] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1TextBuffer.html)
+  ZH: 参考
+
+[4] heading  <<<ZH缺失>>>
+  EN: Iterators
+  ZH: (无)
+
+[5] para
+  EN: A `Gtk::TextBuffer::iterator` and a `Gtk::TextBuffer::const_iterator`
+represent a position between two characters in the text buffer. Whenever the buffer
+is modified in a way that affects the number of characters in the buffer, all outstanding
+iterators become invalid. Because of this, iterators can't be used to preserve positions
+across buffer modifications. To preserve a position, use `Gtk::TextBuffer::Mark`.
+  ZH: Gtk::TextBuffer::iterator和Gtk::TextBuffer::const_iterator表示文本缓冲区中两个字符之间的位置。只要以影响缓冲区中字符数量的方式修改了缓冲区，所有越过修改范围的迭代器都将失效。因此，迭代器不能用于保存越过缓冲区被修改部分的位置。如果想保存位置，请使用Gtk::TextBuffer::Mark。
+
+[6] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1TextIter.html)
+  ZH: 参考
+
+[7] heading  <<<ZH缺失>>>
+  EN: Tags and Formatting
+  ZH: (无)
+
+[8] heading  <<<ZH缺失>>>
+  EN: Tags
+  ZH: (无)
+
+[9] para
+  EN: To specify that some text in the buffer should have specific formatting, you must define a tag to hold that formatting information, and then apply that tag to the region of text. For instance, to define the tag and its properties:
+  ZH: 要指定缓冲区中的一些文本具有特定的格式，你需要定义一个标签来保存格式信息，并将该标签应用于文本区域。例如，定义标签及其属性：
+
+[10] CODE file= 97 chars
+[11] para
+  EN: You can specify a name for the `Tag` when using the
+create() method, but it is not necessary.
+  ZH: 你可以在使用Tag的create()方法时为其指定一个名称，但这不是必须的。
+
+[12] para
+  EN: The `Tag` class has many other properties.
+  ZH: Tag类还有许多其他的特性。
+
+[13] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1TextTag.html)
+  ZH: 参考
+
+[14] heading  <<<ZH缺失>>>
+  EN: TagTable
+  ZH: (无)
+
+[15] para
+  EN: Each `Gtk::TextBuffer` uses a
+`Gtk::TextBuffer::TagTable`, which contains the
+`Tag`s for that buffer. 2 or more
+`TextBuffer`s may share the same
+`TagTable`. When you create `Tag`s
+you should add them to the `TagTable`. For instance:
+  ZH: 每个Gtk::TextBuffer使用一个Gtk::TextBuffer::TagTable，其中包含了该缓冲区的Tag。复数个TextBuffer可以共享一个TagTable。当你创建Tag的时候，你应该将其加入TagTable。例如：
+
+[16] CODE file= 255 chars
+[17] para
+  EN: You can also use get_tag_table() to get, and maybe modify,
+the `TextBuffer`'s default `TagTable`
+instead of creating one explicitly.
+  ZH: 你也可以使用get_tag_table()获取并修改TextBuffer的默认TagTable，而不是显示创建一个。
+
+[18] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1TextTagTable.html)
+  ZH: 参考
+
+[19] heading  <<<ZH缺失>>>
+  EN: Applying Tags
+  ZH: (无)
+
+[20] para
+  EN: If you have created a `Tag` and added it to the
+`TagTable`, you may apply that tag to part of the
+`TextBuffer` so that some of the text is displayed with that
+formatting. You define the start and end of the range of text by specifying
+`Gtk::TextBuffer::iterator`s. For instance:
+  ZH: 如果你创建了一个Tag并将其加入到TagTable，则可以将其应用于TextBuffer的一部分，以便使用该格式显示某些文本。你可以通过使用Gtk::TextBuffer::iterator指示文本的开始和结束范围。例如：
+
+[21] CODE file= 65 chars
+[22] para
+  EN: Or you could specify the tag when first inserting the text:
+  ZH: 或者你可以在首次插入文本的时候指定标签：
+
+[23] CODE file= 59 chars
+[24] para
+  EN: You can apply more than one `Tag` to the same text, by
+using apply_tag() more than once, or by using
+insert_with_tags(). The `Tag`s might
+specify different values for the same properties, but you can resolve these
+conflicts by using Tag::set_priority().
+  ZH: 你可以多次使用apply_tag()或insert_with_tags()将不同的Tag应用于同一文本。Tag可能会为同一属性指定不同的值，但你可以使用Tag::set_priority()解决这些冲突。
+
+[25] heading  <<<ZH缺失>>>
+  EN: Marks
+  ZH: (无)
+
+[26] para
+  EN: `TextBuffer` iterators are generally invalidated when the
+text changes, but you can use a `Gtk::TextBuffer::Mark` to
+remember a position in these situations. For instance,
+  ZH: 当文本发生更改的时候TextBuffer迭代器通常会失效，但是你可以使用Gtk::TextBuffer::Mark记住位置，例如：
+
+[27] CODE file= 44 chars
+[28] para
+  EN: You can then use the get_iter() method later to create an
+iterator for the `Mark`'s new position.
+  ZH: 你可以在之后使用get_iter()方法为Mark的新位置创建迭代器。
+
+[29] para
+  EN: There are two built-in `Mark`s - `insert`
+and `selection_bound`, which you can access with
+`TextBuffer`'s get_insert() and
+get_selection_bound() methods.
+  ZH: 有两个内置的Mark - insert和selection_bound，你可以使用TextBuffer的get_insert()和get_selection_bound()方法访问它们。
+
+[30] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1TextMark.html)
+  ZH: 参考
+
+[31] heading  <<<ZH缺失>>>
+  EN: The View
+  ZH: (无)
+
+[32] para
+  EN: As mentioned above, each `TextView` has a
+`TextBuffer`, and one or more
+`TextView`s can share the same
+`TextBuffer`.
+  ZH: 如上所述，每个TextView都有一个TextBuffer，并且多个TextView可以共享同一个TextBuffer。
+
+[33] para
+  EN: Like the `TreeView`, you should probably put your
+`TextView` inside a `ScrolledWindow`
+to allow the user to see and move around the whole text area with
+scrollbars.
+  ZH: 和TreeView一样，你可以将TextView放入ScrolledWindow中以允许用户使用滚动条查看并在整个文本区域中移动。
+
+[34] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1TextView.html)
+  ZH: 参考
+
+[35] heading  <<<ZH缺失>>>
+  EN: Default formatting
+  ZH: (无)
+
+[36] para
+  EN: `TextView` has various methods which allow you to change
+the presentation of the buffer for this particular view. Some of these may be
+overridden by the `Gtk::TextTag`s in the buffer, if they
+specify the same things. For instance, set_left_margin(),
+set_right_margin(), set_indent(),
+etc.
+  ZH: TextView具有多种可以让你修改特定视图中缓冲区的显示方式的方法。如果它们指定同一区域，则其中一些可能会覆写缓冲区中的Gtk::TextTag。例如：set_left_margin()、set_right_margin()、set_indent()等。
+
+[37] heading  <<<ZH缺失>>>
+  EN: Scrolling
+  ZH: (无)
+
+[38] para
+  EN: `Gtk::TextView` has various
+scroll_to() methods. These allow you to ensure that a
+particular part of the text buffer is visible. For instance, your application's
+Find feature might use Gtk::TextView::scroll_to() to
+show the found text.
+  ZH: Gtk::TextView有多种scroll_to()方法。这些可以确保你能看到缓冲区中的特定部分。例如你的应用程序可能会使用Gtk::TextView::scroll_to()方法显示找到的文本。
+
+### 页 sec-widgets-and-childanchors  (page status=translated)
+[0] para
+  EN: You can embed widgets, such as `Gtk::Button`s, in the
+text. Each such child widget needs a `ChildAnchor`.
+ChildAnchors are associated with `iterator`s. For
+instance, to create a child anchor at a particular position, use
+Gtk::TextBuffer::create_child_anchor():
+  ZH: 你可以在文本中嵌入部件，例如Gtk::Button。每一个这样的子部件都需要一个ChildAnchor。子锚与迭代器相关联。例如，使用Gtk::TextBuffer::create_child_anchor()于特定位置创建子锚：
+
+[1] CODE file= 54 chars
+[2] para
+  EN: Then, to add a widget at that position, use
+Gtk::TextView::add_child_at_anchor():
+  ZH: 然后使用Gtk::TextView::add_child_at_anchor()将部件添加到该位置：
+
+[3] CODE file= 52 chars
+[4] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1TextChildAnchor.html)
+  ZH: 参考
+
+### 页 sec-textview-examples  (page status=translated)
+[0] heading  <<<ZH缺失>>>
+  EN: Simple Example
+  ZH: (无)
+
+[1] figure  <<<ZH缺失>>>
+  EN: TextView
+  ZH: (无)
+
+[2] CODE file=examplewindow.h 619 chars
+[3] CODE file=examplewindow.cc 1938 chars
+[4] CODE file=main.cc 270 chars
+[5] heading  <<<ZH缺失>>>
+  EN: Other Examples
+  ZH: (无)
+
+[6] para
+  EN: The example in the [
+Internationalization and Localization](#sec-i18n-example) chapter uses `TextView`.
+  ZH: 「国际化与本地化」一章的示例用到了 `TextView`。
+
+[7] para
+  EN: There is a more complicated example among
+[gtkmm's demo programs](https://gitlab.gnome.org/GNOME/gtkmm/tree/&url_examples_branch;/demos/gtk-demo/example_textview.cc).
+  ZH: 在 gtkmm 的演示程序里还有一个更复杂的例子（example_textview.cc）。

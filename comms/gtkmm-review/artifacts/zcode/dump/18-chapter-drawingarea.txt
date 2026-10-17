@@ -1,0 +1,595 @@
+### 页 sec-cairo-drawing-model  (page status=pending)
+[0] para
+  EN: The `DrawingArea` widget is a blank window that gives
+    you the freedom to create any graphic you desire. Along with that freedom
+    comes the responsibility to draw on the widget. When a
+    widget is first shown, or when it is covered and then uncovered again it
+    needs to redraw itself. Most widgets have code to do this, but the
+    `DrawingArea` does not, allowing you to write your own
+    draw function to determine how the contents of the widget will be drawn.
+    This is done by setting a draw function with a call to the
+    set_draw_func() member function.
+  ZH: DrawingArea部件是一个空白的窗口，让你可以自由的创造任何你想要的图形。伴随着这种自由而来的是绘制这个部件的责任。在部件第一次显示或者部件被覆盖后又露出的时候它需要重绘自己。大多数部件都包含执行此操作的代码，但是DrawingArea并没有。因此你可以编写自己的绘图函数来确定如何绘制绘部件的内容。你可以调用set_draw_func()成员函数来设置绘图函数。
+
+[1] para
+  EN: GTK uses the [Cairo](http://cairographics.org) drawing API.
+      With gtkmm, you may use the [cairomm](http://www.cairographics.org/cairomm/) C++ API for cairo.
+  ZH: GTK使用开罗绘图API。而在gtkmm中你可以使用由cairomm提供的开罗C++ API。
+
+[2] para
+  EN: You can draw very sophisticated shapes using Cairo, but the methods to do
+      so are quite basic. Cairo provides methods for drawing straight lines,
+      curved lines, and arcs (including circles). These basic shapes can be
+      combined to create more complex shapes and paths which can be filled with
+      solid colors, gradients, patterns, and other things. In addition, Cairo
+      can perform complex transformations, do compositing of images, and render
+      antialiased text.
+  ZH: 你可以使用开罗绘制非常复杂的形状，但你只有一些很基本的方法可用。开罗提供了绘制直线、曲线、圆弧（包括圆）的方法。你可以通过对这些图形进行组合从而创建更为复杂的形状和路径，然后用纯色、渐变、模式等进行填充。除此之外，开罗还可以进行复杂的转换、合成图像和渲染抗锯齿文本等。
+
+[3] para
+  EN: Although Cairo can render text, it's not meant to be a replacement for
+      Pango. Pango is a better choice if you need to perform more advanced
+      text rendering such as wrapping or ellipsizing text. Drawing text with
+      Cairo should only be done if the text is part of a graphic.
+  ZH: 虽然开罗可以用于渲染文本，但不意味着它能替代Pango。如果你需要进行更高级的文本渲染（例如环绕和省略文本）则Pango会是更好的选择。只有当文本是图形的一部分的时候才应该使用开罗绘制文本。
+
+[4] para
+  EN: In this section of the tutorial, we'll cover the basic Cairo drawing
+      model, describe each of the basic drawing elements in some detail (with
+      examples), and then present a simple application that uses Cairo to draw
+      a custom clock widget.
+  ZH: 在本教程的这一部分中，我们将介绍开罗的基本绘图模型，详细描述每个基本绘制元素（包括示例），然后介绍一个使用开罗绘制自定义时钟部件的简单应用程序。
+
+[5] para
+  EN: The basic concept of drawing in Cairo involves defining 'invisible'
+        paths and then stroking or filling them to make them visible.
+  ZH: 开罗的基本概念包括定义'不可见'路径然后描绘(stroking)或者填充(filling)它们使其可见。
+
+[6] para
+  EN: To do any drawing in gtkmm with Cairo, you must first get a
+        `Cairo::Context` object. This class holds all of the graphics state parameters that
+        describe how drawing is to be done. This includes information such as
+        line width, color, the surface to draw to, and many other things. This
+        allows the actual drawing functions to take fewer arguments to simplify
+        the interface. Usually, you use the `Cairo::Context`
+        that you get as input data to the draw function that you set with the call to
+        set_draw_func(). It's also possible to create
+        a `Cairo::Context` by calling the
+        Gdk::Surface::create_cairo_context() and
+        Gdk::CairoContext::cairo_create() functions.
+        Since Cairo contexts are reference-counted objects, cairo_create()
+        returns a `Cairo::RefPtr<Cairo::Context>` object.
+        (Note the difference between `Gdk::CairoContext`
+        and `Cairo::Context`.)
+  ZH: 要在gtkmm中使用开罗进行绘制，必须先获取Cairo::Context对象。这个类保存了所有描述如何进行绘制的图形状态参数。状态参数包含了诸如线宽、颜色、要绘制的表面和许多其他内容的信息。这允许实际上的绘图函数只需要使用较少的参数从而简化接口。通常你使用set_draw_func()设置的绘图函数将Cairo::Context作为输入数据。也可以通过调用Gdk::Surface::create_cairo_context()和Gdk::CairoContext::cairo_create()函数创建一个Cairo::Context。由于Cairo::Context是一个使用引用计数的对象，因此cairo_create()返回Cairo::RefPtr<Cairo::Context>对象（请注意区分Gdk::CairoContext与Cairo::Context。）。
+
+[7] para
+  EN: The following example shows  how to set up a Cairo context with a
+        foreground color of red and a width of 2. Any drawing functions that
+        use this context will use these settings.
+  ZH: 以下示例显示如何设置一个开罗上下文(Cairo Context)的前景色为红色且宽度为2。任何使用该上下文的绘图函数都将使用这些设置。
+
+[8] CODE file= 222 chars
+[9] para
+  EN: Each `Cairo::Context` is associated with a
+        particular `Gdk::Surface`, so the first line of the
+        above example creates a `Gtk::DrawingArea` widget
+        and the next two lines use its associated `Gdk::Surface`
+        to create a `Cairo::Context` object. The final
+        two lines change the graphics state of the context.
+  ZH: 每一个Cairo::Context都有一个特定的Gdk::Surface与之相关联，因此上面示例的第一行创建了一个Gtk::DrawingArea部件，接下来两行使用与其相关联的Gdk::Surface创建一个Cairo::Context对象。最后两行更改上下文的图形状态。
+
+[10] para
+  EN: There are a number of graphics state variables that can be set for a
+        Cairo context. The most common context attributes are color (using
+        set_source_rgb() or
+        set_source_rgba() for translucent colors), line
+        width (using set_line_width()), line dash pattern
+        (using set_dash()), line cap style (using
+        set_line_cap()), and line join style (using
+        set_line_join()), and font styles (using
+        set_font_size(),
+        set_font_face() and others).
+        There are many other settings as well, such as transformation matrices,
+        fill rules, whether to perform antialiasing, and others. For further
+        information, see the [cairomm](http://www.cairographics.org/cairomm/) API documentation.
+  ZH: 可以为开罗上下文设置许多的图形状态。最常见的上下文属性是颜色（使用set_source_rgb()或需要半透明颜色的时候用set_source_rgba()）、线宽（使用set_line_width()）、虚线模式（使用set_dash()）、线帽样式（使用set_line_cap()）、线条连接样式（使用set_line_join()）以及字体样式（使用set_font_size()）。还有许多其他设置，例如变换矩阵、填充规则、是否执行抗锯齿规则等。更多详情请参阅cairommAPI文档。
+
+[11] para
+  EN: The current state of a `Cairo::Context` can be
+        saved to an internal stack of saved states and later be restored to the
+        state it was in when you saved it. To do this, use the
+        save()
+        method and the restore() method. This can be
+        useful if you need to temporarily change the line width and color (or
+        any other graphics setting) in order to draw something and then return
+        to the previous settings. In this situation, you could call
+        Cairo::Context::save(), change the graphics
+        settings, draw the lines, and then call
+        Cairo::Context::restore() to restore the original
+        graphics state. Multiple calls to save() and
+        restore() can be nested; each call to
+        restore() restores the state from the
+        matching paired save().
+  ZH: 可以将Cairo::Context当前的状态保存到其内部用于保存状态的栈中，并在之后将状态还原为保存时的状态。要做到这个请调用save()和restore()方法。当你需要临时更改某些图形设置（例如线宽和颜色）以绘制某些内容然后又退回到之前的状态时这将很有用。在这种情况下，你可以先调用Cairo::Context::save()，然后修改图形设置并绘制图形，再调用Cairo::Context::restore()恢复之前的图形状态。你可以多次嵌套调用save()和restore()；每次restore()调用都会将恢复状态到与之相对应的save()所保存的状态。
+
+[12] para
+  EN: It is good practice to put all modifications to the graphics state
+            between save()/restore()
+            function calls. For example, if you have a function that takes a
+            `Cairo::Context` reference as an argument, you
+            might implement it as follows:
+  ZH: 好的做法是在一组save()/restore()调用之间进行所有对图形状态的更改。例如，如果你有一个将Cairo::Context的引用作为参数的函数，你可以这样实现它：
+
+[13] CODE file= 181 chars
+[14] para
+  EN: The draw function that you set with a call to set_draw_func()
+        is called with a Cairo context that you shall use for drawing in the
+        `Gtk::DrawingArea` widget. It is not necessary to
+        save and restore this Cairo context in the draw function.
+  ZH: 你通过调用set_draw_func()所设置的绘图函数是由你要绘制的Gtk::DrawingArea部件用开罗上下文调用的。所以你不需要在绘图函数中对此开罗上下文进行保存和恢复（部件会在调用绘图函数时做保存与恢复）。
+
+### 页 sec-cairo-drawing-lines  (page status=pending)
+[0] para
+  EN: Now that we understand the basics of the Cairo graphics library, we're
+        almost ready to start drawing. We'll start with the simplest of
+        drawing elements: the straight line. But first you need to know a
+        little bit about Cairo's coordinate system. The origin of the Cairo
+        coordinate system is located in the upper-left corner of the window
+        with positive x values to the right and positive y values going down.
+  ZH: 现在我们已经了解了开罗图形库的基本知识，是时候开始画图了。我们将从画最简单的元素：直线 开始。但是在此之前你需要对开罗的坐标系有所了解。开罗的坐标系原点在窗口的左上角，从左向右X的值逐渐增大，从上往下Y的值逐渐增大。
+
+[1] para
+  EN: Since the Cairo graphics library was written with support for
+            multiple output targets (the X window system, PNG images, OpenGL,
+            etc), there is a distinction between user-space and device-space
+            coordinates. The mapping between these two coordinate systems
+            defaults to one-to-one so that integer values map roughly to pixels
+            on the screen, but this setting can be adjusted if desired.
+            Sometimes it may be useful to scale the coordinates so that the
+            full width and height of a window both range from 0 to 1 (the 'unit
+            square') or some other mapping that works for your application.
+            This can be done with the
+            Cairo::Context::scale() function.
+  ZH: 由于开罗图形库是为了支持多个输出目标（X window系统、PNG图片、OpenGL等）编写的，因此用户空间坐标和设备空间坐标存在一些区别。默认情况下这两个坐标系是一对一的，这样可以将整数值大致映射为屏幕上的像素值，不过有需要时可以通过Cairo::Context::scale()函数对此行为进行调整。例如：你可能会需要使一个窗口的宽和高在调整比例后的坐标系中取值范围均处于0到1之间（单位正方形）。
+
+[2] heading  <<<ZH缺失>>>
+  EN: Example
+  ZH: (无)
+
+[3] para
+  EN: In this example, we'll construct a small but fully functional gtkmm
+        program and draw some lines into the window. The lines are drawn by
+        creating a path and then stroking it. A path is created using the
+        functions Cairo::Context::move_to() and
+        Cairo::Context::line_to(). The function
+        move_to() is similar to the act of lifting your
+        pen off of the paper and placing it somewhere else -- no line is drawn
+        between the point you were at and the point you moved to. To draw a
+        line between two points, use the line_to()
+        function.
+  ZH: 在这个示例中，我们将构建一个很小但功能齐全的gtkmm程序，并将一些线绘制到窗口中。使用函数Cairo::Context::move_to()和Cairo::Context::line_to()创建一个路径。move_to()函数的行为类似于将笔从纸上抬起并放到其他地方 -- 在你移动到的点和你之前所在的点直接不会画出一条线。使用line_to()函数可以在两点之间画线。
+
+[4] para
+  EN: After you've finished creating your path, you still haven't
+        drawn anything visible yet. To make the path visible, you must use the
+        function stroke() which will stroke the current
+        path with the line width and style specified in your
+        `Cairo::Context` object. After stroking, the
+        current path will be cleared so that you can start on your next path.
+  ZH: 创建完你的路径以后。你依旧没有画任何看得见的东西。要想让路径可见，你需要使用stroke()函数，该函数将使用你的Cairo::Context对象中保存的线宽与样式绘制当前的路径。描绘完成后，当前路径将被清除，以便你可以从下一个路径开始。
+
+[5] para
+  EN: Many Cairo drawing functions have a _preserve()
+            variant. Normally drawing functions such as
+            clip(), fill(), or
+            stroke() will clear the current path. If you
+            use the _preserve() variant, the current path
+            will be retained so that you can use the same path with the next
+            drawing function.
+  ZH: 多数的开罗绘图函数都拥有一个_preserve()变体。通常情况下clip()、fill()、stroke()函数会清除当前的路径。如果你使用他们的_preserve()变体，则当前路径会被保留，以便下一个绘图函数能继续在一样的路径上绘制。
+
+[6] figure  <<<ZH缺失>>>
+  EN: Drawing Area - Lines
+  ZH: (无)
+
+[7] CODE file=myarea.h 305 chars
+[8] CODE file=main.cc 424 chars
+[9] CODE file=myarea.cc 593 chars
+[10] para
+  EN: This program contains a single class, `MyArea`,
+        which is a subclass of `Gtk::DrawingArea` and
+        contains an on_draw() member function.
+        This function becomes the draw function by a call to set_draw_func()
+        in `MyArea`'s constructor. on_draw()
+        is then called whenever the image in the drawing area needs to
+        be redrawn. It is passed a `Cairo::RefPtr`
+        pointer to a `Cairo::Context` that we use
+        for the drawing.
+        The actual drawing code sets the color we want to use for drawing by
+        using set_source_rgb() which takes arguments
+        defining the Red, Green, and Blue components of the desired color
+        (valid values are between 0 and 1). After setting the color, we
+        created a new path using the functions move_to()
+        and line_to(), and then stroked this path with
+        stroke().
+  ZH: 这个程序包含一个MyArea类，它是Gtk::DrawingArea的子类，并且包含on_draw()成员函数。通过在MyArea的构造函数中调用set_draw_func()使其变成绘制函数。每当需要重绘绘图区域的图像的时候，on_draw()就会被调用。这将会向我们的绘制函数传递一个指向Cairo::Context的Cairo::RefPtr指针。实际进行绘图的代码使用set_source_rgb()设置我们将用于绘图的颜色，这个函数接受定义颜色所需的红色、绿色、蓝色分量作为参数（参数的有效值介于0到1之间）。设置完颜色后，我们使用move_to()和line_to()函数创建一个新的路径，然后使用stroke()绘制了这个路径。
+
+[11] para
+  EN: In the example above we drew everything using absolute coordinates. You can also draw using
+        relative coordinates. For a straight line, this is done with the
+        function Cairo::Context::rel_line_to().
+  ZH: 在上面的例子中，我们使用绝对坐标进行绘图。你也可以使用相对坐标进行绘图。对于直线而言，你可以通过Cairo::Context::rel_line_to()完成用相对坐标绘图。
+
+[12] heading  <<<ZH缺失>>>
+  EN: Line styles
+  ZH: (无)
+
+[13] para
+  EN: In addition to drawing basic straight lines, there are a number of
+            things that you can customize about a line. You've already seen
+            examples of setting a line's color and width, but there are others
+            as well.
+  ZH: 除了绘制基本直线以外，你还可以对线条进行很多自定义。你已经看到了对线条颜色和线条宽度的示例，但还有其他示例。
+
+[14] para
+  EN: If you've drawn a series of lines that form a path, you may
+            want them to join together in a certain way. Cairo offers
+            three different ways to join lines together: Miter, Bevel, and
+            Round. These are show below:
+  ZH: 如果你于一个路径绘制了一系列的线条，你可能希望它们以某种方式被连接起来。开罗提供了三种不同的连接线条的方式：斜接(Miter)、斜切(Bevel)、圆(Round)。这些连接方式的示意图如下：
+
+[15] figure  <<<ZH缺失>>>
+  EN: Different join types in Cairo
+  ZH: (无)
+
+[16] para
+  EN: The line join style is set using the function
+            Cairo::Context::set_line_join().
+  ZH: 线条连接样式由Cairo::Context::set_line_join()函数进行设置。
+
+[17] para
+  EN: Line ends can have different styles as well. The default style
+            is for the line to start and stop exactly at the destination
+            points of the line. This is called a Butt cap. The other
+            options are Round (uses a round ending, with the center of the
+            circle at the end point) or Square (uses a squared ending, with
+            the center of the square at the end point). This setting is set
+            using the function
+            Cairo::Context::set_line_cap().
+  ZH: 线尾也有不同的样式。默认样式是从线条的开始到结尾准确的停止。这被叫做平端。其他的可选性有圆（使用圆形结束，以终点为圆心）和方（使用正方形结束，以终点为正方形的中心）。这可以使用Cairo::Context::set_line_cap()函数使用。
+
+[18] para
+  EN: There are other things you can customize as well, including
+            creating dashed lines and other things. For more information, see
+            the Cairo API documentation. Dashed lines are shown in the example
+            in the [Drawing Curved Lines](#cairo-example-curves)
+            section.
+  ZH: 你还可以自定义其他内容，比如创建虚线等。更多有关信息请参阅开罗API文档。
+
+[19] heading  <<<ZH缺失>>>
+  EN: Drawing thin lines
+  ZH: (无)
+
+[20] para
+  EN: If you try to draw one pixel wide lines, you may notice that the line
+        sometimes comes up blurred and wider than it ought to be.
+        This happens because Cairo will try to draw from the selected position,
+        to both sides (half to each), so if you're positioned right on the
+        intersection of the pixels, and want a one pixel wide line, Cairo will try
+        to use half of each adjacent pixel, which isn't possible (a pixel is the
+        smallest unit possible). This happens when the width of the line is an
+        odd number of pixels (not just one pixel).
+  ZH: 如果你尝试画一条宽度为一个像素的线条，你可能会注意到这条线有时会变得模糊并且比应有的宽度更宽。发生这种情况的原因是开若尝试在所选位置向两边绘制（一边一半），因此如果你如果正好位于像素交点上，还想绘制一个像素宽度的线条，那是不可能做到的（像素是最小的单位）。所以当像素的宽度是奇数的时候就会出现这种情况（不只是一个像素的时候）。
+
+[21] para
+  EN: The trick is to position in the middle of the pixel where you want the
+        line to be drawn, and thus guaranteeing you get the desired results.
+        See [Cairo FAQ](http://cairographics.org/FAQ/#sharp_lines).
+  ZH: 解决问题的诀窍是将像素放于要绘制的线条的中间，从而确保获得所需的结果。请参阅开罗常见问题。
+
+[22] figure  <<<ZH缺失>>>
+  EN: Drawing Area - Thin Lines
+  ZH: (无)
+
+[23] CODE file=examplewindow.h 445 chars
+[24] CODE file=myarea.h 367 chars
+[25] CODE file=examplewindow.cc 614 chars
+[26] CODE file=main.cc 270 chars
+[27] CODE file=myarea.cc 821 chars
+### 页 sec-cairo-curved-lines  (page status=pending)
+[0] para
+  EN: In addition to drawing straight lines Cairo allows you to easily
+            draw curved lines (technically a cubic Bézier spline) using the
+            Cairo::Context::curve_to() and
+            Cairo::Context::rel_curve_to() functions.
+            These functions take coordinates for a destination point as well as
+            coordinates for two 'control' points. This is best explained using
+            an example, so let's dive in.
+  ZH: 除了绘制直线以外，开罗还允许你用Cairo::Context::curve_to()和Cairo::Context::rel_curve_to()函数轻松的绘制曲线（从技术上而言是三次贝塞尔曲线）。这些函数需要一个目标点的坐标和两个'控制'点的坐标。这最好用一个示例来解释，所以让我们开始吧。
+
+[1] heading  <<<ZH缺失>>>
+  EN: Example
+  ZH: (无)
+
+[2] para
+  EN: This simple application draws a curve with Cairo and displays
+                the control points for each end of the curve.
+  ZH: 这个简单的示例程序使用开罗绘制了一条曲线并显示了曲线两端的控制点。
+
+[3] figure  <<<ZH缺失>>>
+  EN: Drawing Area - Curve
+  ZH: (无)
+
+[4] CODE file=myarea.h 305 chars
+[5] CODE file=main.cc 424 chars
+[6] CODE file=myarea.cc 1154 chars
+[7] para
+  EN: The only difference between this example and the straight line
+            example is in the on_draw() function,
+            but there are a few new concepts and functions introduced here, so
+            let's examine them briefly.
+  ZH: 这个示例与绘制直线示例的唯一区别在它们的on_draw()函数，不过这里引入了一些新的概念和函数，所以让我们简要的介绍一下它们。
+
+[8] para
+  EN: We make a call to
+            Cairo::Context::scale(), passing in the width
+            and height of the drawing area. This scales the user-space
+            coordinate system such that the width and height of the widget
+            are both equal to 1.0 'units'. There's no particular reason to
+            scale the coordinate system in this case, but sometimes it can make
+            drawing operations easier.
+  ZH: 我们调用Cairo::Context::scale()并传入绘图区域的宽和高，这将使用户空间坐标系被缩放为\"1个单位\"（宽高的范围变成[0.0,1.0]）。在这其实并没有什么特别的要对坐标系进行缩放的理由，只是为了使绘图操作有时候更易用。
+
+[9] para
+  EN: The call to Cairo::Context::curve_to() should
+            be fairly self-explanatory. The first pair of coordinates define
+            the control point for the beginning of the curve. The second set
+            of coordinates define the control point for the end of the curve,
+            and the last set of coordinates define the destination point. To
+            make the concept of control points a bit easier to visualize, a
+            line has been drawn from each control point to the end-point on the
+            curve that it is associated with. Note that these control point
+            lines are both translucent. This is achieved with a variant of
+            set_source_rgb() called
+            set_source_rgba(). This function takes a
+            fourth argument specifying the alpha value of the color (valid
+            values are between 0 and 1).
+  ZH: 对Cairo::Context::curve_to()的调用应该是不言自明的。第一组坐标定义了曲线起点的控制点。第二组坐标定义了曲线终点的控制点，而最后一组坐标定义了目标点。为了使控制点的概念更容易被看清，从每个控制点到与之关联的曲线上的端点上都画了一条线。请注意，这些控制点线都是半透明的。这是通过调用set_source_rgb()的变体函数set_source_rgba()实现的。这个函数使用第四个参数来接受指定颜色的alpha值（值的有效区间为0到1）。
+
+[10] para  <<<ZH缺失>>>
+  EN: The control point lines are dashed lines. These are just two possible
+            variations. Dashed lines can be more complicated. For instance the
+            dashes can have different lengths like in dash-dotted lines.
+  ZH: (无)
+
+### 页 sec-cairo-drawing-arcs  (page status=pending)
+[0] para  <<<ZH缺失>>>
+  EN: With Cairo, the same function is used to draw arcs, circles, or
+          ellipses: Cairo::Context::arc(). This function
+          takes five arguments. The first two are the coordinates of the
+          center point of the arc, the third argument is the radius of the arc,
+          and the final two arguments define the start and end angle of the
+          arc. All angles are defined in radians, so drawing a circle is the
+          same as drawing an arc from 0 to 2 * M_PI radians.
+          An angle of 0 is in the direction of the positive X axis (in user-space). An
+          angle of M_PI/2 radians (90 degrees) is in the direction of the positive Y axis
+          (in user-space). Angles increase in the direction from the positive X axis
+          toward the positive Y axis. So with the default transformation matrix, angles
+          increase in a clockwise direction. (Remember that the positive Y axis
+          points downwards.)
+  ZH: (无)
+
+[1] para
+  EN: To draw an ellipse, you can scale the current transformation matrix
+          by different amounts in the X and Y directions. For example, to draw
+          an ellipse with center at `x`, `y`
+          and size `width`, `height`:
+  ZH: 想要绘制椭圆的话，你可以在X和Y方向用不同的量缩放当前的变换矩阵。例如，如果你想要绘制一个以x，y为中心，大小为width，height的椭圆：
+
+[2] CODE file= 149 chars
+[3] heading  <<<ZH缺失>>>
+  EN: Example
+  ZH: (无)
+
+[4] para
+  EN: Here's an example of a simple program that draws an arc, a circle
+              and an ellipse into a drawing area.
+  ZH: 这是一个简单的示例程序，它在绘图区域绘制了一个圆弧、一个圆和一个椭圆。
+
+[5] figure  <<<ZH缺失>>>
+  EN: Drawing Area - Arcs
+  ZH: (无)
+
+[6] CODE file=myarea.h 305 chars
+[7] CODE file=main.cc 424 chars
+[8] CODE file=myarea.cc 1747 chars
+[9] para
+  EN: There are a couple of things to note about this example code.
+              Again, the only real difference between this example and the
+              previous ones is the on_draw()
+              function, so we'll limit our focus to that function. In
+              addition, the first part of the function is nearly identical to
+              the previous examples, so we'll skip that portion.
+  ZH: 关于这个示例代码有几件事需要注意。首先这个示例与之前的示例的区别也只在on_draw()函数中，因此我们重点接受这个函数。另外，函数的第一部分与之前的也几乎一样，所以我们将会跳过该部分。
+
+[10] para
+  EN: Note that in this case, we've expressed nearly everything in
+              terms of the height and width of the window, including the width
+              of the lines. Because of this, when you resize the window,
+              everything scales with the window. Also note that there are
+              three drawing sections in the function and each is wrapped with a
+              save()/restore() pair
+              so that we're back at a known state after each drawing.
+  ZH: 请注意，在这个情况下我们几乎使用窗口的宽和高表示了包括线条宽度在内的所有的内容（通过缩放用户坐标系）。所以当我们调整窗口大小的时候，所有的内容都会随着窗口一同缩放。还请注意，函数中有三个进行绘图的部分都用一组save()/restore()包裹，以便我们在每次绘完图都能返回已知状态。
+
+[11] para
+  EN: The section for drawing an arc introduces one new function,
+              close_path(). This function will in effect
+              draw a straight line from the current point back to the first
+              point in the path. There is a significant difference between
+              calling close_path() and manually drawing a
+              line back to the starting point, however. If you use
+              close_path(), the lines will be nicely
+              joined together. If you use line_to()
+              instead, the lines will end at the same point, but Cairo won't do
+              any special joining.
+  ZH: 在绘制圆弧的部分介绍了一个新的函数：close_path()。这个函数的效果实际上就是在当前点和路径的第一个点之间画一条直线。但调用close_path()所绘制的线条和使用line_to()手工绘制一条回到起点的线条会有很大的不同。如果你使用close_path()，则这些线将会很好的连接到一起。如果你改用line_to()，那么这些线将在同一个点结束但是开罗不会对此做任何特殊的连接。
+
+[12] para
+  EN: The function
+                  Cairo::Context::arc_negative() is
+                  exactly the same as
+                  Cairo::Context::arc() but the angles go
+                  the opposite direction.
+  ZH: 函数Cairo::Context::arc_negative()的功能与Cairo::Context::arc()函数完全一致，但是他们的绘制方向是相反的。
+
+### 页 sec-drawing-text  (page status=pending)
+[0] heading  <<<ZH缺失>>>
+  EN: Drawing Text with Pango
+  ZH: (无)
+
+[1] para
+  EN: Text is drawn via Pango Layouts. The easiest way to create a
+              `Pango::Layout` is to use
+              Gtk::Widget::create_pango_layout().
+              Once created, the layout can be manipulated in various ways,
+              including changing the text, font, etc. Finally, the layout can
+              be rendered using the
+              Pango::Layout::show_in_cairo_context() method.
+  ZH: 通过Pango布局绘制文本。创建一个Pango::Layout最简单的方法是使用Gtk::Widget::create_pango_layout()。创建布局以后，可以通过各种方式操纵布局，包括更改文本、字体等。然后可以使用Pango::Layout::show_in_cairo_context()方法渲染布局。
+
+[2] heading  <<<ZH缺失>>>
+  EN: Example
+  ZH: (无)
+
+[3] para
+  EN: Here is an example of a program that draws some text, some of it
+           upside-down. The Printing chapter contains another
+           [example](#sec-printing-examples) of drawing text.
+  ZH: 这是一个绘制一些文本的示例程序，其中的一些文本上下颠倒。打印一章包含了另一个绘制文本的示例。
+
+[4] figure  <<<ZH缺失>>>
+  EN: Drawing Area - Text
+  ZH: (无)
+
+[5] CODE file=myarea.h 505 chars
+[6] CODE file=main.cc 434 chars
+[7] CODE file=myarea.cc 2279 chars
+### 页 sec-draw-images  (page status=pending)
+[0] para
+  EN: There is a method for drawing from a
+              `Gdk::Pixbuf` to a `Cairo::Context`.
+              A `Gdk::Pixbuf` buffer is a useful wrapper
+              around a collection of pixels, which can be read from files, and
+              manipulated in various ways.
+  ZH: 有一个方法可以将Gdk::Pixbuf绘制到Cairo::Context。Gdk::Pixbuf缓冲区是对像素集合的有效封装，它提供了从文件读取以及各种操纵像素的方式。
+
+[1] para
+  EN: Probably the most common way of creating
+              `Gdk::Pixbuf`s is to use
+              Gdk::Pixbuf::create_from_file() or
+              Gdk::Pixbuf::create_from_resource(),
+              which can read an image file, such as a png file into a pixbuf
+              ready for rendering.
+  ZH: 最常见的Gdk::Pixbuf创建方法是用Gdk::Pixbuf::create_from_file()或Gdk::Pixbuf::create_from_resource()，它们可以将图像文件（例如png文件）读取到pixbuf中用于渲染。
+
+[2] para
+  EN: The `Gdk::Pixbuf` can be rendered by setting
+              it as the source pattern of the Cairo context with
+              Gdk::Cairo::set_source_pixbuf().
+              Then draw the image with either Cairo::Context::paint()
+              (to draw the whole image), or Cairo::Context::rectangle()
+              and Cairo::Context::fill() (to fill the
+              specified rectangle). set_source_pixbuf()
+              is not a member of `Cairo::Context`. It takes
+              a `Cairo::Context` as its first parameter.
+  ZH: 通过使用Gdk::Cairo::set_source_pixbuf()将Gdk::Pixbuf设置为开罗上下文的源模式使其可以被渲染。然后使用Cairo::Context::paint()（画整个图像），或者使用Cairo::Context::rectangle()和Cairo::Context::fill()（用图像填充整个矩形）。set_source_pixbuf()不是Cairo::Context的成员函数。Cairo::Context是它的第一个参数。
+
+[3] para
+  EN: Here is a small bit of code to tie it all together: (Note that
+              usually you wouldn't load the image every time in the draw
+              signal handler! It's just shown here to keep it all together.)
+  ZH: 这是一小段将他们结合在一起的代码（请注意，通常你不应该在每次调用绘制信号处理函数的时候都加载一次图片）：
+
+[4] CODE file= 357 chars
+[5] heading  <<<ZH缺失>>>
+  EN: Example
+  ZH: (无)
+
+[6] para
+  EN: Here is an example of a simple program that draws an image.
+                The program loads the image from a resource file. See the [Gio::Resource and glib-compile-resources](#sec-gio-resource)
+                section. Use `glib-compile-resources` to compile
+                the resources into a C source file that can be compiled and
+                linked with the C++ code. E.g.
+  ZH: 这是一个绘制图像的简单示例程序。该程序从资源文件加载图像。请参阅Gio::Resource和glib-compile-resources小节。使用glib-compile-resources将资源文件编译为C源文件，然后将该源文件与C++代码一起编译链接。例如：
+
+[7] CODE file= 83 chars
+[8] figure  <<<ZH缺失>>>
+  EN: Drawing Area - Image
+  ZH: (无)
+
+[9] CODE file=myarea.h 369 chars
+[10] CODE file=main.cc 454 chars
+[11] CODE file=myarea.cc 1270 chars
+[12] CODE file=image.gresource.xml 145 chars
+### 页 sec-drawing-clock-example  (page status=pending)
+[0] para
+  EN: Now that we've covered the basics of drawing with Cairo, let's try to
+          put it all together and create a simple application that actually
+          does something. The following example uses Cairo to create a custom
+          `Clock` widget. The clock has a second hand, a
+          minute hand, and an hour hand, and updates itself every second.
+  ZH: 既然我们已经将使用开罗画图的基础知识介绍完了，那么现在让我们尝试将所有的内容放在一起，创建一个可以执行某些操作的简单应用程序。以下示例使用开罗创建一个自定义的Clock部件。这个时钟有秒针、分针、时针，并且每一秒更新一次。
+
+[1] figure  <<<ZH缺失>>>
+  EN: 
+  ZH: (无)
+
+[2] CODE file=clock.h 364 chars
+[3] CODE file=clock.cc 2749 chars
+[4] CODE file=main.cc 426 chars
+[5] para
+  EN: As before, almost all of the interesting stuff is done in the draw
+          function on_draw(). Before we dig
+          into the draw function, notice that the constructor for the
+          `Clock` widget connects a handler function
+          on_timeout() to a timer with a timeout
+          period of 1000 milliseconds (1 second). This means that
+          on_timeout() will get called once per
+          second. The sole responsibility of this function is to invalidate
+          the window so that gtkmm will be forced to redraw it.
+  ZH: 和之前一样，所有有趣的东西都在绘图函数on_draw()中完成。在深入研究绘图函数之前，请注意在Clock部件的构造函数中将处理函数on_timeout()连接到了用计时器上，该计时器的超时时间为1000毫秒（1秒）。这意味着on_timeout()将每秒被调用一次。这个函数的唯一任务就是使窗口无效，以便gtkmm强制重绘它。
+
+[6] para
+  EN: Now let's take a look at the code that performs the actual drawing.
+          The first section of on_draw() should be
+          pretty familiar by now. This example again scales the coordinate system
+          to be a unit square so that it's easier to draw the clock as a
+          percentage of window size so that it will automatically scale when
+          the window size is adjusted. Furthermore, the coordinate system is
+          scaled over and down so that the (0, 0) coordinate is in the very
+          center of the window.
+  ZH: 现在让我们研究实际执行绘图的函数。到现在on_draw()函数的第一部分你应该很熟悉了。此示例再次将坐标系缩放为单位正方形，以便更轻松的按窗口大小的百分比绘制时钟。此外坐标系是按比例缩放的，所以(0,0)坐标位于窗口的正中央。
+
+[7] para
+  EN: The function Cairo::Context::paint() is used here
+          to set the background color of the window. This function takes no
+          arguments and fills the current surface (or the clipped portion of
+          the surface) with the source color currently active. After setting
+          the background color of the window, we draw a circle for the clock
+          outline, fill it with white, and then stroke the outline in black.
+          Notice that both of these actions use the
+          _preserve variant to preserve the current path,
+          and then this same path is clipped to make sure that our next lines
+          don't go outside the outline of the clock.
+  ZH: Cairo::Context::paint()方法用于设置窗口的背景色。这个函数不接受任何参数，并使用处于活跃状态的源颜色填充当前表面（或表面裁剪的一部分）。设置背景色以后，我们画一个圆作为时钟的轮廓，用白色填充它然后用黑色进行描边。请注意，这两个操作都用_preserve变体以保留当前路径，然后对相同的路径进行剪辑以确保我们下一行不会超过时钟的轮廓。
+
+[8] para
+  EN: After drawing the outline, we go around the clock and draw ticks for
+          every hour, with a larger tick at 12, 3, 6, and 9. Now we're finally
+          ready to implement the time-keeping functionality of the clock, which
+          simply involves getting the current values for hours, minutes and
+          seconds, and drawing the hands at the correct angles.
+  ZH: 绘制轮廓后，我们围绕时钟为每个小时绘制可读线并为12、3、6、9绘制相对更大的刻度线。接着我们就可以实现时钟的计时功能了 -- 获取当前时间的时、分、秒然后以正确的角度将指针绘制出来。

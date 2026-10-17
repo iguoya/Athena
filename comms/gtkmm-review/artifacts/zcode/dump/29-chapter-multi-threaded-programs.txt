@@ -1,0 +1,203 @@
+### 页 sec-the-constraints  (page status=pending)
+[0] para
+  EN: Care is required when writing programs based on gtkmm using
+multiple threads of execution, arising from the fact that
+`libsigc++`, and in particular
+`sigc::trackable`, are not thread-safe. That's
+because none of the complex interactions that occur behind the scenes
+when using `libsigc++` are protected by a
+mutex or other means of synchronization.
+  ZH: 由于libsigc++（尤其是sigc::trackable）不是线程安全的，所以在编写基于gtkmm的多线程程序时需要格外小心。这是因为使用libsigc++时在幕后发生的复杂交互不受互斥量或其他同步方式的保护。
+
+[1] para
+  EN: These interactions arise from the fact that, amongst other things, a
+class inheriting from `sigc::trackable` will, via
+that inheritance, have a `std::list` object
+keeping track of slots created by calls to
+`sigc::mem_fun()` representing any of its
+non-static methods (more particularly it keeps a list of callbacks
+which will null the connected slots on its destruction). Each
+`sigc::slot` object also keeps, via
+`sigc::slot_rep`, its own
+`sigc::trackable` object to track any
+`sigc::connection` objects which it needs to
+inform about its demise, and also has a function to deregister itself
+from any `sigc::trackable` on disconnection or
+destruction. `sigc::signal` objects also keep
+lists of slots, which will be updated by a call to their
+connect() method or calls to any
+`sigc::connection` object relating to such a
+connection.
+  ZH: 这些交互产生了以下事实：从sigc::trackable继承的类将从该继承获得一个std::list对象，该对象用于对调用sigc::mem_fun()所创建的槽（它表示任意非静态成员函数）进行跟踪（更特别的是它还保留了一个回调列表，在其被销毁时将已连接的槽置空）。每个sigc::slot通过sigc::slot_rep保留其自己的sigc::trackable对象，用以跟踪任何它需要通知其已消亡的sigc::connection对象，并且具有在任何sigc::trackable断开连接或销毁时注销自身的能力。sigc::signal对象还保留了槽列表，这个列表将通过调用它的connect()方法或任何与该连接有关的sigc::connection对象进行更新。
+
+[2] heading  <<<缺失>>>
+  EN: The rules
+  ZH: (无)
+
+[3] para
+  EN: This requires a number of rules to be observed when writing
+multi-threaded programs using gtkmm. These are set out below, but
+one point to note is that extra care is required when deriving classes
+from `sigc::trackable`, because the effects are
+unintuitive (see particularly points 4 and 5 below).
+  ZH: 在使用gtkmm编写多线程程序时需要遵守许多规则。这些规则下下面列出，但要注意的一点是从sigc::trackable派生类时需要格外小心，因为效果很不直观（特别是下述4、5条）。
+
+[4] listitem
+  EN: Use `Glib::Dispatcher` to invoke gtkmm functions
+from worker threads (this is dealt with in more detail in the next
+section).
+  ZH: 使用Glib::Dispatcher在工作线程中调用gtkmm函数（这点将在下一节详细介绍）
+
+[5] listitem
+  EN: A `sigc::signal` object should be regarded as
+owned by the thread which created it. Only that thread should connect
+a `sigc::slot` object to the signal object, and
+only that thread should emit() or call
+operator()() on the signal, or null any
+connected `sigc::slot` object. It follows
+(amongst other things) that any signal object provided by a gtkmm
+widget should only be operated on in the main GUI thread and any
+object deriving from `sigc::trackable` having its
+non-static methods referenced by slots connected to the signal object
+should only be destroyed in that thread.
+  ZH: sigc::signal对象被创建其的线程所拥有。只有该线程应该将sigc::slot对象连接到信号对象，并且只有该线程应该在emit()信号或在信号上调用operator()()或是将已连接的sigc::slot对象置空。因此任何由gtkmm部件提供的信号对象都只应该在主GUI线程进行操作，以及任何从sigc::trackable派生的对象（其非静态方法由连接到信号对象的槽引用）都应该在该线程中销毁。
+
+[6] listitem
+  EN: Any `sigc::connection` object should be regarded
+as owned by the thread in which the method returning the
+`sigc::connection` object was called. Only that
+thread should call `sigc::connection` methods on
+the object.
+  ZH: 任何sigc::connection对象都应视线程的拥有者在此线程调用了返回sigc::connection对象的方法。只有该线程才应在此对象上调用sigc::connection方法。
+
+[7] listitem
+  EN: A `sigc::slot` object created by a call to
+`sigc::mem_fun()` which references a method of a
+class deriving from `sigc::trackable` should
+never be copied to another thread, nor destroyed by a different thread
+than the one which created it.
+  ZH: 通过调用sigc::mem_fun()函数创建的sigc::slot对象具有由sigc::trackable所派生类的成员函数的引用，请勿将其复制到另一个线程中，也不要让除创建线程以外的线程销毁它。
+
+[8] listitem
+  EN: If a particular class object derives from
+`sigc::trackable`, only one thread should create
+`sigc::slot` objects representing any of the
+class's non-static methods by calling
+`sigc::mem_fun()`. The first thread to create such
+a slot should be regarded as owning the relevant object for the
+purpose of creating further slots referencing *any*
+of its non-static methods using that function, or nulling those slots
+by disconnecting them or destroying the trackable object.
+  ZH: 如果从sigc::trackable派生一个特定的类对象，只应有一个线程通过调用sigc::mem_fun()创建代表该类任意非静态成员函数的sigc::slot对象。第一个创建这样的槽的线程被视为拥有相关对象的线程。这个线程可以对该类的任意非静态成员函数使用该函数以创建槽，或者在sigc::trackable对象断开连接和被销毁时将那些槽无效化。
+
+[9] listitem
+  EN: Although `glib` is itself thread-safe, any
+`glibmm` wrappers which use
+`libsigc++` will not be. So for example, only
+the thread in which a main loop runs should call
+Glib::SignalIdle::connect(),
+Glib::SignalIO::connect(),
+Glib::SignalTimeout::connect(),
+Glib::SignalTimeout::connect_seconds
+for that main loop, or manipulate any
+`sigc::connection` object returned by them.
+  ZH: 尽管glib自身是线程安全的，但是任何使用了libsigc++的glibmm封装都不会是线程安全的。因此只有在运行主循环的线程的主循环中才能调用Glib::SignalIdle::connect()、Glib::SignalIO::connect()、Glib::SignalTimeout::connect()、Glib::SignalTimeout::connect_seconds或是处理由它们返回的sigc::connection对象。
+
+### 页 sec-using-glib-dispatcher  (page status=pending)
+[0] para
+  EN: The slots connected to `sigc::signal` objects
+execute in the thread which calls emit() or
+operator()() on the signal.
+`Glib::Dispatcher` does not behave this way:
+instead its connected slots execute in the thread in which the
+`Glib::Dispatcher` object was constructed (which
+must have a glib main loop). If a
+`Glib::Dispatcher` object is constructed in the
+main GUI thread (which will therefore be the receiver thread), any
+worker thread can emit on it and have the connected slots safely
+execute gtkmm functions.
+  ZH: 连接到sigc::signal对象的槽将会在调用信号emit()、operator()()方法的线程被调用。而Glib::Dispatcher的行为与此相反：与其连接的槽将在构造Glib::Dispatcher对象的线程执行（该线程必须正在运行Glib主循环）。如果在GUI主线程上构造了Glib::Dispatcher，任何工作线程都可以在其上调用emit()并让槽安全的执行连接的gtkmm函数。
+
+[1] para
+  EN: Some thread safety rules on the use of
+`Glib::Dispatcher` still apply. As mentioned, a
+`Glib::Dispatcher` object must be constructed in
+the receiver thread (the thread in whose main loop it will execute its
+connected slots). By default this is the main program thread, although
+there is a `Glib::Dispatcher` constructor which
+can take the `Glib::MainContext` object of any
+thread which has a main loop. Only the receiver thread should call
+connect() on the
+`Glib::Dispatcher` object, or manipulate any
+related `sigc::connection` object, unless
+additional synchronization is employed. However, any worker thread can
+safely emit on the `Glib::Dispatcher` object
+without any locking once the receiver thread has connected the slots,
+provided that it is constructed before the worker thread is started
+(if it is constructed after the thread has started, additional
+synchronization will normally be required to ensure visibility).
+  ZH: 一些线程安全规则对于Glib::Dispatcher依旧适用。如前所述，必须在接收器线程（将在该线程的主循环中执行连接的槽）构造Glib::Dispatcher对象。默认情况下接收器线程应该是程序的主进程，尽管Glib::Dispatcher有一个可以接受Glib::MainContext对象为参数并且可以在任何运行Glib主循环的线程中调用的构造函数。只有接受者线程才应该在Glib::Dispatcher对象上调用connect()或操纵相关的sigc::connection对象，除非你为此提供了额外的同步措施。一旦接收器线程连接了槽，任何工作现场都可以不加锁直接在Glib::Dispatcher对象上调用emit()，但前提是该对象是在工作线程启动前构造的，如果不是则需要进行额外的同步以确保可见性。
+
+[2] para
+  EN: Aside from the fact that connected slots always execute in the
+receiver thread, `Glib::Dispatcher` objects are
+similar to `sigc::signal<void()>` objects.
+They therefore cannot pass unbound arguments nor return a value. The
+best way to pass unbound arguments is with a thread-safe
+(asynchronous) queue. At the time of writing
+`glibmm` does not have one, although most
+people writing multi-threaded code will have one available to them
+(they are relatively easy to write although there are subtleties in
+combining thread safety with strong exception safety).
+  ZH: 除了连接的槽在接收者线程执行以外，Glib::Dispatcher对象的行为与sigc::signal<void()>对象十分相似。因此它们不能传递未绑定的参数，也不能返回值。要传递未绑定参数最好的方法是使用线程安全的（同步）队列。尽管大多数编写多线程代码的人都会有一个可用的多线程代码，但是编写glibmm时没有（尽管线程安全与强异常安全结合有些微妙，但编写它们相对容易）。
+
+[3] para
+  EN: A `Glib::Dispatcher` object can be emitted on by
+the receiver thread as well as by a worker thread, although this
+should be done within reasonable bounds. On unix-like systems
+`Glib::Dispatcher` objects share a single common
+pipe, which could in theory at least fill up on a very heavily loaded
+system running a program with a very large number of
+`Dispatcher` objects in use. Were the pipe to
+fill up before the receiver thread's main loop has had an opportunity
+to read from it to empty it, and the receiver thread attempt to emit
+and so write to it when it is in that condition, the receiver thread
+would block on the write, so deadlocking. Where the receiver thread is
+to emit, a normal `sigc::signal<void()>`
+object could of course be used instead.
+  ZH: 接收者线程和工作线程都可以调用Glib::Dispatcher的emit()方法，虽然此操作需要在合理的范围内进行。在类Unix系统上Glib::Dispatcher共享同一个公共管道，从理论上讲在一个负载很大的系统上运行使用很大数量Dispatcher对象的程序至少可以填满系统。如果在接收者线程的主循环有机会读取并清空管道之前，管道已填满且接收器线程在此时尝试对Dispatcher调用emit()并因此对管道进行写入，这样会导致死锁。当然在接收者线程想要发出信号可以使用普通的sigc::signal<void()>对象。
+
+### 页 sec-multithread-example  (page status=pending)
+[0] para
+  EN: This is an example program with two threads, one GUI thread, like in all
+gtkmm programs, and one worker thread. The worker thread is created when you
+press the `Start work` button. It is deleted when the work is
+finished, when you press the `Stop work` button, or when you
+press the `Quit` button.
+  ZH: 这是一个具有两个线程的示例程序，一个与所有gtkmm程序一样的GUI线程，和一个工作线程。当你按下Start work按钮时将创建工作线程，当工作完成或你按下Stop work按钮或是你按下Quit按钮时该线程将被删除。
+
+[1] para
+  EN: A `Glib::Dispatcher` is used for sending notifications
+from the worker thread to the GUI thread. The `ExampleWorker`
+class contains data which is accessed by both threads. This data is protected
+by a `std::mutex`.
+Only the GUI thread updates the GUI.
+  ZH: Glib::Dispatcher被用于工作线程向GUI线程发送通知。ExampleWorker包含两个线程都可以访问的数据。该数据被一个std::mutex保护。只有GUI线程对GUI进行更新。
+
+[2] para
+  EN: Compiling and linking a multi-threaded program can require special compiler and
+linker options. If you use the `g++` compiler, add the
+`-pthread` option. Other compilers may require other options.
+If you build with `meson`, it handles the multi-threading
+complications for you, if you add `dependency('threads')`.
+  ZH: 编译和链接多线程程序可能需要特殊的编译和链接参数。如果你使用g++编译器你需要添加-pthread选项。其他编译器可能会要求使用其他选项。如果你使用meson构建程序，如果你在构建脚本中添加了dependency('threads')，它会帮你处理多线程的复杂性。
+
+[3] figure  <<<缺失>>>
+  EN: Multi-Threaded Program
+  ZH: (无)
+
+[4] CODE file=examplewindow.h
+[5] CODE file=exampleworker.h
+[6] CODE file=examplewindow.cc
+[7] CODE file=exampleworker.cc
+[8] CODE file=main.cc

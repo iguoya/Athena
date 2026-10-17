@@ -1,0 +1,515 @@
+### 页 sec-internationalization-intro  (page status=pending)
+[0] para
+  EN: gtkmm applications can easily support multiple languages, including
+    non-European languages such as Chinese and right-to-left languages such as
+    Arabic. An appropriately-written and translated gtkmm application will use
+    the appropriate language at runtime based on the user's environment.
+  ZH: gtkmm应用程序可以很轻松的支持包括非欧洲语言（如中文）和从右向左语言（如阿拉伯语）在内的多种语言。正确编写且进行翻译的gtkmm应用程序可以在运行时根据用户环境使用合适的语言。
+
+[1] para
+  EN: You might not anticipate the need to support additional languages, but
+    you can never rule it out. And it's easier to develop the application
+    properly in the first place rather than retrofitting later.
+  ZH: 你可能没有预料到需要支持其他语言，但你永远不能排除这种可能性。而且事先准备好支持多语言比后来改进要容易的多。
+
+[2] para
+  EN: The process of writing source code that allows for translation is called
+    `internationalization`, often abbreviated to
+    `i18n`. The `Localization` process,
+    sometimes abbreviated as `l10n`, provides translated text
+    for other languages, based on that source code.
+  ZH: 编写允许进行翻译的源代码的过程被称为internationalization，通常被缩写为i18n。而根据该源代码提供其他语言的翻译文本的过程Localization通常被简写为l10n。
+
+[3] para
+  EN: The main activity in the internationalization process is finding strings
+    seen by users and marking them for translation. You do not need to do it all
+    at once - if you set up the necessary project infrastructure correctly then
+    your application will work normally regardless of how many strings you've
+    covered.
+  ZH: 国际化过程中的主要活动是查找用户能看到的字符串并将其标记为需要可翻译。你不需要一次性完成所有的操作 - 只要你的项目准备好了进行国际化无论你有多少个字符串被标记为可翻译都不会影响程序的正常运行。
+
+[4] para
+  EN: String literals should be typed in the source code in English, but
+    surrounded by a macro. The `gettext` (or intltool)
+    utility can then extract the marked strings for translation, and substitute
+    the translated text at runtime.
+  ZH: 源代码中的字符串字面量应该以英文键入，但要使用宏包围。gettext（或intltool）实用程序可以提取被标记的字符串进行翻译，并在运行时将其替换为翻译后的文本。
+
+[5] para
+  EN: In the instructions below we will assume that you will not be using
+        `gettext` directly, but
+        `intltool`, which was written specifically for
+        `GNOME`. `intltool` uses
+        `gettext()`, which extracts strings from source code,
+        but `intltool` can also combine strings from
+        other files, for example from desktop menu details, and GUI resource
+        files such as `.ui` files, into standard
+        `gettext` `.pot/.po` files.
+  ZH: 在下面的说明中我们假定你不直接使用gettext，而是使用专门为GNOME编写的intltool。intltool使用gettext()从源代码中提取字符串，但是intltool也从其他文件（例如桌面菜单详情、glade的GUI资源文件）中提取字符串写入到标准的gettext.pot/.po文件中。
+
+[6] para
+  EN: We also assume that you are using autotools (`automake`
+        and `autoconf`) to build your project (although
+        autotools is not recommended for new applications), and
+        that you are using [
+          `./autogen.sh` from `gnome-common`](https://gitlab.gnome.org/Archive/gnome-common/-/blob/master/autogen.sh)
+        or a similar `autogen.sh` file, which, among other
+        things, takes care of some `intltool`
+        initialization.
+  ZH: 我们还假设你正在使用自动构建工具（例如：automake和autoconf）构建你的项目，并且你正在使用来自gnome-common的./autogen.sh或与之类似的autogen.sh文件，在这里它负责初始化intltool。
+
+[7] para  <<<缺失>>>
+  EN: If you are using `meson` (recommended), see the
+        [Localisation](https://mesonbuild.com/Localisation.html)
+        chapter in Meson's manual. You can then skip this section.
+  ZH: (无)
+
+[8] para
+  EN: An alternative to `gnome-common`'s
+      `autogen.sh` may look like this:
+  ZH: gnome-common的autogen.sh的替代方案可能如下所示：
+
+[9] CODE file=
+[10] para
+  EN: Create a sub-directory named `po` in your project's root
+      directory. This directory will eventually contain all of your
+      translations. Within it, create a file named `LINGUAS`
+      and a file named `POTFILES.in`.
+  ZH: 在你项目的根目录下创建一个名称为po的子文件夹。该目录将包含你的所有翻译。在其中创建一个名为LINGUAS和一个名为POTFILES.in的文件。通常做法是在po文件夹再创建一个ChangeLog文件以便翻译人员跟踪翻译更改。
+
+[11] para
+  EN: `LINGUAS` contains an alphabetically sorted list of codes
+      identifying the languages for which your program is translated (comment
+      lines starting with a `#` are ignored). Each language
+      code listed in the `LINGUAS` file must have a
+      corresponding `.po` file. So, if your program has German
+      and Japanese translations, your `LINGUAS` file would
+      look like this:
+  ZH: LINGUAS包含按字母顺序排列的代码列表，这些代码标识程序已翻译的语言（以#开头的行是注释将被忽略）。LINGUAS文件中每个位于代码列表中语言都需要有与之对应的.po文件。因此如果你的程序有德语和日语翻译，你的LINGUAS应如下所示：
+
+[12] CODE file=
+[13] para
+  EN: (In addition, you'd have the files `de.po` and
+      `ja.po` in your
+      `po` directory which contain the German and Japanese
+      translations, respectively.)
+  ZH: （此外，你的po文件夹必须有包含德语和日语翻译的ja.po和de.po文件）
+
+[14] para
+  EN: `POTFILES.in` is a list of paths to all files which
+      contain strings marked up for translation, starting from the project root
+      directory. So for example, if your project sources were located in a
+      subdirectory named `src`, and you had two files that
+      contained strings that should be translated, your
+      `POTFILES.in` file might look like this:
+  ZH: POTFILES.in是一个开始于项目根目录，包含所有被标记为需要翻译字符串的文件路径列表。例如你的项目源代码位于src子目录中，其中有两个文件包含有需要被翻译的字符串，则你的POTFILES.in可能如下所示：
+
+[15] CODE file=
+[16] para
+  EN: If you are using `gettext` directly, you can only
+      mark strings for translation if they are in source code file. However, if
+      you use `intltool`, you can mark strings for
+      translation in a variety of other file formats, including
+      `.ui` files, xml,
+      [.desktop files](http://standards.freedesktop.org/desktop-entry-spec/latest/)
+      and several more. So, if you have designed some of the
+      application UI in xml files then also add your
+      `.ui` files to the list in
+      `POTFILES.in`.
+  ZH: 如果你直接使用gettext，则你只能标记源代码文件中的字符串为需要被翻译。如果你使用intltool，则可以对多种格式的文件中的字符串进行标记，如GladeUI文件、XML、.desktop文件等。因此如果你使用Glade设计了应用程序UI，则你还需要将.glade添加到你的POTFILES.in列表中。
+
+[17] para
+  EN: Now that there is a place to put your translations, you need to initialize
+      `intltool` and `gettext`.
+      Add the following code to your `configure.ac`,
+      substituting 'programname' with the name of your program:
+  ZH: 现在已经有了放置翻译的地方，你需要初始化intltool和gettext。将一下代码添加到你的configure.ac，将\"programname\"替换为你的程序的名称：
+
+[18] CODE file=
+[19] para
+  EN: This `PROGRAMNAME_LOCALEDIR` variable will be used later
+      in the `Makefile.am` file, to define a macro that will be
+      used when you initialize `gettext` in your source
+      code.
+  ZH: PROGRAMNAME_LOCALEDIR将在稍后被Makefile.am文件使用。以定义在源代码中初始化gettext时将用到的宏。
+
+[20] para
+  EN: `AM_GLIB_GNU_GETTEXT` has been an alternative to
+      `AM_GNU_GETTEXT` and `AM_GNU_GETTEXT_VERSION`,
+      but `AM_GLIB_GNU_GETTEXT` is now deprecated, and shall
+      not be used in new code.
+  ZH: AM_GLIB_GNU_GETTEXT已由AM_GNU_GETTEXT和AM_GNU_GETTEXT_VERSION替代，且AM_GLIB_GNU_GETTEXT已被弃用，不应在任何新代码中使用。
+
+[21] para
+  EN: In the top-level Makefile.am:
+  ZH: 在顶层Makefile.am中：
+
+[22] listitem
+  EN: Add `po` to the `SUBDIRS`
+            variable. Without this, your translations won't get built and
+            installed when you build the program
+  ZH: 将po添加到SUBDIRS变量中。如果没有这个，在构建程序时不会生成和安装翻译。
+
+[23] listitem
+  EN: Define `INTLTOOL_FILES` as:
+  ZH: 定义INTLTOOL_FILES为：
+
+[24] listitem
+  EN: Add `INTLTOOL_FILES` to the
+            `EXTRA_DIST` list of files. This ensures that when
+            you do a `make dist`, these files will be
+            included in the source tarball.
+  ZH: 将INTLTOOL_FILES添加到EXTRA_DIST文件列表。这样可以确保执行make dist时这些文件包含在源压缩包中。
+
+[25] listitem
+  EN: Update your `DISTCLEANFILES`:
+  ZH: 更新你的DISTCLEANFILES：
+
+[26] listitem
+  EN: Depending on the types of files that contain translatable strings,
+            add code such as
+  ZH: 根据包含可翻译字符串的文件类型，添加以下代码：
+
+[27] CODE file=
+[28] CODE file=
+[29] CODE file=
+[30] para
+  EN: In your `src/Makefile.am`, update your
+      `AM_CPPFLAGS` to add the following preprocessor macro
+      definition:
+  ZH: 在你的src/Makefile.am中，更新你的AM_CPPFLAGS以添加以下预处理宏定义：
+
+[31] CODE file=
+[32] para
+  EN: This macro will be used when you initialize `gettext` in
+      your source code.
+  ZH: 在你的源代码中初始化gettext时将使用这个宏。
+
+### 页 sec-i18n-marking-strings  (page status=pending)
+[0] para
+  EN: String literals should be typed in the source code in English, but
+    they should be surrounded by a call to the `gettext()`
+    function. These strings will be extracted for translation and the
+    translations may be used at runtime instead of the original English
+    strings.
+  ZH: 源代码中的字符串字面量应该以英文键入，但应将其包含在对gettext()函数的调用中。这些字符串将被提取以进行翻译，并且在运行时翻译可以替代原始的英文字符串。
+
+[1] para
+  EN: The `GNU gettext` package allows you to mark
+    strings in source code, extract those strings for translation, and use
+    the translated strings in your application.
+  ZH: GNU gettext允许你标记源代码中的字符串，提取这些字符串进行翻译，并在你的应用程序中使用翻译好的字符串。
+
+[2] para
+  EN: However, `Glib` defines
+    `gettext()`
+    support macros which are shorter wrappers in an easy-to-use form.
+    To use these macros, include `<glibmm/i18n.h>`,
+    and then, for example, substitute:
+  ZH: Glib定义了gettext()支持宏，这些宏更为简单易用，要使用这些宏请#include <glibmm/i18n.h>然后将：替换为：
+
+[3] CODE file=
+[4] para  <<<缺失>>>
+  EN: with:
+  ZH: (无)
+
+[5] CODE file=
+[6] para
+  EN: For reference, it is possible to generate a file which contains all
+    strings which appear in your code, even if they are not marked for translation,
+    together with file name and line
+    number references. To generate such a file named
+    `my-strings`, execute the following command,
+    within the source code directory:
+  ZH: 可以生成一个包含代码中出现的所有字符串（即使没有被标记为需要翻译）以及其文件名与行号引用的文件作为参考。要生成名为my-strings的文件，请在源代码目录执行以下命令：
+
+[7] CODE file=
+[8] para
+  EN: Finally, to let your program use the translation for the current locale,
+    add this code to the beginning of your `main.cc` file, to initialize gettext.
+  ZH: 最后，要让你的程序使用当前环境的翻译，请将以下代码添加到你的main.cc文件的开头，以初始化gettext()。
+
+[9] CODE file=
+[10] heading  <<<缺失>>>
+  EN: How gettext works
+  ZH: (无)
+
+[11] para
+  EN: The `intltool-update` or
+      `xgettext` script extracts the strings
+      and puts them in a `mypackage.pot` file.
+      The translators of your application create their translations by
+      first copying this `.pot` file to a
+      `localename.po` file. A locale identifies a
+      language and an encoding for that language, including date and numerical
+      formats. Later, when the text in your source code has changed, the
+      `msgmerge` or `intltool-update`
+      script is used to update the `localename.po` files from
+      the regenerated `.pot` file.
+  ZH: intltool-update或xgettext脚本提取字符串并将其放入mypackage.pot文件中。应用程序的翻译人员首先将此.pot文件复制到localename.po中以创建翻译。语言环境标识一种语言和该语言使用的编码，包括日期和数字使用的格式。在之后，当源代码中的文本更改时，使用msgmerge或intltool-update脚本重新生成的.pot文件更新localename.po文件。
+
+[12] para
+  EN: At install time, the `.po` files are converted to
+      a binary format (with the extension `.mo`) and
+      placed in a system-wide directory for locale files, for example
+      `/usr/share/locale/`.
+  ZH: 在安装时，.po将被转换为二进制格式（扩展名为.mo），并将其放置于系统所有的区域设置文件夹中，例如/usr/share/locale/。
+
+[13] para
+  EN: When the application runs, the `gettext`
+      library checks the system-wide directory to see if there is a
+      `.mo` file for the user's locale environment
+      (you can set the locale with, for instance, "export LANG=de_DE.UTF-8"
+      from a bash console). Later, when the program reaches a
+      `gettext` call, it looks for a translation of a
+      particular string. If none is found, the original string is used.
+  ZH: 当应用程序运行时，gettext将检查系统目录是否存在与用户语言环境对应的.mo文件（你可以使用以下命令指定语言环境，例如：在bash控制台上输入export LANG=de_DE.UTF-8）。稍后在程序到达gettext调用时，它将从中寻找特定字符串的翻译，如果未找到则使用原始字符串。
+
+[14] heading  <<<缺失>>>
+  EN: Testing and adding translations
+  ZH: (无)
+
+[15] para
+  EN: To convince yourself that you've done well, you may wish to add a
+      translation for a new locale. In order to do that, go to the
+      `po` subdirectory of your project and
+      execute the following command:
+  ZH: 为了说服自己做得很好，你可能希望为新的语言环境添加翻译。为此请转到项目的po子文件夹并执行以下命令：
+
+[16] CODE file=
+[17] para
+  EN: That will create a file named `programname.pot`.
+      Now copy that file to `languagecode.po`, such as
+      `de.po` or `hu.po`. Also add
+      that language code to `LINGUAS`. The
+      `.po` file contains a header and a list of English strings,
+      with space for the translated strings to be entered. Make sure you set the
+      encoding of the `.po` file to `UTF-8`.
+  ZH: 这将创建一个名为programname.pot的文件。现在将该文件复制到languagecode.po，例如de.po或hu.po。接着将该语言代码添加到LINGUAS文件中。.po文件包含标头和英语字符串列表，并为翻译文本预留了空间。请确保将.po文件的编码设置（在标头中指定，但也指定其内容的编码）为了UTF-8。
+
+[18] CODE file=
+[19] para
+  EN: It's possible that certain strings will be marked as
+      `fuzzy` in the `.po` file.
+      These translations will not substitute the original string. To make
+      them appear, simply remove the `fuzzy` tag.
+      A `fuzzy` tag appears if a string content changed,
+      but the location is still the same.
+  ZH: .po文件中有些字符串可能被标记为fuzzy。这些翻译将不会替代原始字符串。如果要使其显示，只需要将fuzzy标记删除即可（通常该标记意味着翻译需要更新，不检查翻译直接删除标记是不对的）。
+
+[20] heading  <<<缺失>>>
+  EN: Resources
+  ZH: (无)
+
+[21] para
+  EN: More information about what lies behind the internationalization and localization process
+      is presented and demonstrated in:
+  ZH: 更多与国际化与本地化有关的信息，请参阅以下内容：
+
+[22] listitem
+  EN: [
+              L10N Guidelines for Developers](https://wiki.gnome.org/TranslationProject/DevGuidelines)
+  ZH: 本地化开发人员指南
+
+[23] listitem
+  EN: [Intltool README](http://bazaar.launchpad.net/~intltool/intltool/trunk/view/head:/README)
+  ZH: Intltool自述文件
+
+[24] listitem
+  EN: [How to use Git for GNOME translators](https://wiki.gnome.org/TranslationProject/GitHowTo)
+  ZH: GNOME译者如何使用Git
+
+[25] listitem
+  EN: [gettext manual](http://www.gnu.org/software/gettext/manual/gettext.html)
+  ZH: gettext手册
+
+### 页 sec-i18n-expecting-utf8  (page status=pending)
+[0] para
+  EN: A properly internationalized application will not make assumptions about the
+number of bytes in a character. That means that you shouldn't use pointer
+arithmetic to step through the characters in a string, and it means you
+shouldn't use `std::string` or standard C functions such
+as `strlen()` because they make the same assumption.
+  ZH: 好的国际化应用程序不会假设字符中的字节数。这意味着你不应该使用指针算数遍历字符串中的字符，也意味着你不应该使用std::string以及像strlen()这样的与字符串有关的标准C函数，因为他们都对字符的字节数做了假设。
+
+[1] para  <<<缺失>>>
+  EN: However, you probably already avoid bare char* arrays and pointer arithmetic by
+using `std::string`, so you just need to start using
+`Glib::ustring` instead. See the [Basics](#sec-basics-ustring) chapter about
+`Glib::ustring`.
+  ZH: (无)
+
+[2] heading  <<<缺失>>>
+  EN: Glib::ustring and std::iostreams
+  ZH: (无)
+
+[3] para  <<<缺失>>>
+  EN: Unfortunately, the integration with the standard iostreams is not completely
+foolproof. gtkmm converts `Glib::ustring`s to a
+locale-specific encoding (which usually is not UTF-8) if you output them to an
+`ostream` with `operator<<`.
+Likewise, retrieving `Glib::ustring`s from
+`istream` with `operator>>`
+causes a conversion in the opposite direction. But this scheme breaks down if
+you go through a `std::string`, e.g. by inputting text
+from a stream to a `std::string` and then implicitly
+converting it to a `Glib::ustring`. If the string
+contained non-ASCII characters and the current locale is not UTF-8 encoded, the
+result is a corrupted `Glib::ustring`. You can work around
+this with a manual conversion. For instance, to retrieve the
+`std::string` from a `ostringstream`:
+  ZH: (无)
+
+[4] CODE file=
+### 页 sec-i18n-pitfalls  (page status=pending)
+[0] para
+  EN: There are a few common mistakes that you would discover eventually yourself. But this section might help you to avoid them.
+  ZH: 有几个你最终会自己发现的错误。但本小节可能能帮助你避免它们。
+
+[1] heading  <<<缺失>>>
+  EN: Same strings, different semantics
+  ZH: (无)
+
+[2] para
+  EN: Sometimes two English strings are identical but have different meanings in
+different contexts, so they would probably not be identical when translated. Since the English strings are
+          used as look-up keys, this causes problems.
+  ZH: 有时，两个英文字符串是相同的但是在不同的上下文中有不同的含义，因此他们的译文不一定相同。此时用英文字符串作为查找键会引起问题。
+
+[3] para
+  EN: In these cases, you should add extra characters to the strings. For instance,
+use `"jumps[noun]"` and `"jumps[verb]"`
+instead of just `"jumps"` and strip them again outside the
+`gettext` call. If you add extra characters you should also
+add a comment for the translators before the `gettext` call.
+Such comments will be shown in the `.po` files. For
+instance:
+  ZH: 在这个情况下，你应该在字符串中添加额外的字符。例如，使用"jumps[noun]"和"jumps[verb]"而不是用"jumps"并在调用gettext后将它们剥离。如果你添加了额外的字符，你还应该在调用gettext之前为译者添加注释。这样的注释将被显示于.po中。例如：
+
+[4] CODE file=
+[5] para
+  EN: If you use `Glib`'s support macros, it's easier. Use
+`C_()` instead of `_()`. For instance:
+  ZH: 如果你使用Glib宏，将会更为方便。你只需要使用C_()替换_()。例如：
+
+[6] CODE file=
+[7] heading  <<<缺失>>>
+  EN: Composition of strings
+  ZH: (无)
+
+[8] para
+  EN: C programmers use `sprintf()` to compose and concatenate
+strings. C++ favors streams, but unfortunately, this approach makes
+translation difficult, because each fragment of text is translated separately,
+without allowing the translators to rearrange them according to the grammar of
+the language.
+  ZH: C程序员使用sprintf()合成和拼接字符串。而C++支持流，不幸的是，使用这种方法生成的字符串将给翻译带来困难，因为文本被分成了多个片段，译者必须分开翻译多个片段而不能进行重新排列，这会导致很多字符串无法被正确翻译。
+
+[9] para
+  EN: For instance, this code would be problematic:
+  ZH: 例如，此代码将会出现问题：
+
+[10] CODE file=
+[11] para
+  EN: So you should either avoid this situation or use
+[`Glib::ustring::compose()`](&url_refdocs_base_glib_html;classGlib_1_1ustring.html)
+which supports syntax such as:
+  ZH: 因此你应该避免这种情况的出现或者使用Glib::ustring::compose()以支持如下所示的语法：
+
+[12] CODE file=
+[13] heading  <<<缺失>>>
+  EN: Assuming the displayed size of strings
+  ZH: (无)
+
+[14] para
+  EN: You never know how much space a string will take on screen when translated. It might very possibly be twice the size of the original English string. Luckily, most gtkmm widgets will expand at runtime to the required size.
+  ZH: 你永远不知道一个字符串被翻译后要在屏幕上显示它需要消耗多少空间。它可能是原始英文字符串的两倍甚至更多。幸运的是 gtkmm的多数部件都能在运行时自动扩展到需要的尺寸。
+
+[15] heading  <<<缺失>>>
+  EN: Unusual words
+  ZH: (无)
+
+[16] para
+  EN: You should avoid cryptic abbreviations, slang, or jargon.
+          They are usually difficult to translate, and are often difficult
+          for even native speakers to understand.
+  ZH: 你应该避免使用不常见的用于例如缩写、俚语、行话。通常它们对于译者来说很难翻译，甚至将该语言作为母语的译者也无法理解。例如，最好使用\"application\"而不是\"app\"
+
+[17] heading  <<<缺失>>>
+  EN: Using non-ASCII characters in strings
+  ZH: (无)
+
+[18] para  <<<缺失>>>
+  EN: Currently, `gettext` does not support non-ASCII
+characters (i.e. any characters with a code above 127) in source code. For
+instance, you cannot use the copyright sign (&#169;).
+  ZH: (无)
+
+[19] para
+  EN: To work around this, you could write a comment in the
+          source code just before the string, telling the translators to
+          use the special character if it is available in their languages. For English, you could then make an American English
+          `en_US.po` translation which used that special character.
+  ZH: 要解决这个问题你可以使用注释提醒译者可以使用他们语言中可用的特殊字符。对于英语用户你可以在美国英语en_US.po翻译中使用特殊字符。
+
+### 页 sec-i18n-getting-help-with-translations  (page status=pending)
+[0] para
+  EN: If your program is free software, there is a whole `GNOME`
+        subproject devoted to helping you make translations, the
+        [`GNOME`
+        Translation Project](https://wiki.gnome.org/TranslationProject/).
+  ZH: 如果你的程序是免费软件，有一个致力于帮助你制作翻译的GNOME子项目：GNOME翻译项目。
+
+[1] para
+  EN: The way it works is that you upload your source code to a git
+        repository where translators can access it, then file an
+        [
+        issue to the damned-lies project](https://gitlab.gnome.org/Infrastructure/damned-lies/-/issues) and ask to have your program added to the
+        [list of modules to translate](http://l10n.gnome.org/module/).
+  ZH: 它的工作方式是将你的源代码上传到git储存库，以便翻译人员可以访问它，然后联系gnome-i18n请求将你的程序添加到待翻译模块列表中。
+
+[2] para
+  EN: Then you make sure you update the file
+        `POTFILES.in` in the
+        `po/` subdirectory
+        (`intltool-update -m` can help with this) so
+        that the translators always access updated
+        `myprogram.pot` files, and simply freeze
+        the strings at least a couple of days before you make a new
+        release. Depending on the number
+        of strings your program contains and how popular it is, the
+        translations will then start to tick in as
+        `.po` files.
+  ZH: 然后请确保更新po/子目录下的POTFILES.in（intltool-update -m可以提供帮助），以便译者始终可以访问更新好的myprogram.pot文件，并在发布新版本之前的两三天在gnome-i18n邮件列表上宣布冻结字符串更改。根据程序所包含的字符串数数量以及程序的受欢迎程度，译者将逐渐向你提交languagename.po文件。
+
+[3] para
+  EN: Note that most language teams only consist of 1-3 persons,
+        so if your program contains a lot of strings, it might last a
+        while before anyone has the time to look at it. Also, most
+        translators do not want to waste their time (translating is
+        a very time-consuming task) so if they do not assess your
+        project as being really serious (in the sense that it is
+        polished and being maintained) they may decide to spend their
+        time on some other project.
+  ZH: 请注意，大多数语言的翻译团队仅有1-3位成员，所以如果你的程序包含了很多的字符串，则可能需要很长时间才有译者查看它。此外，大多数译者都不想浪费时间，因此如果他们认为你的项目质量很低，他们可能不会想为你提供翻译。
+
+### 页 sec-i18n-example  (page status=pending)
+[0] para  <<<缺失>>>
+  EN: Here is a simple example with translatable strings in C++ code. It shows what
+you can do if you don't use autotools or `meson`.
+It is also an example of using the `Gtk::TextView` widget.
+  ZH: (无)
+
+[1] para  <<<缺失>>>
+  EN: This program can set the locale, if it's specified in a configuration file.
+This is not normal behavior. Most programs accept the locale that the user
+has selected, for instance with an environment variable.
+  ZH: (无)
+
+[2] figure  <<<缺失>>>
+  EN: Translatable Strings
+  ZH: (无)
+
+[3] CODE file=examplewindow.h
+[4] CODE file=examplewindow.cc
+[5] CODE file=main.cc

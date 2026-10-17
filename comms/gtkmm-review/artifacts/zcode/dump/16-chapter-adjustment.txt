@@ -1,0 +1,126 @@
+### 页 sec-creating-adjustment  (page status=translated)
+[0] para
+  EN: gtkmm has various widgets that can be visually adjusted using the mouse or
+the keyboard, such as the `Range` widgets (described in
+the [Range Widgets](#chapter-range-widgets) section). There are
+also a few widgets that display some adjustable part of a larger area, such as
+the `Viewport` widget. These widgets have
+`Gtk::Adjustment` objects that express this common part of
+their API.
+  ZH: gtkmm有各种可以使用鼠标和键盘进行视觉上的调整的部件，例如Range部件（在范围部件小节介绍）。还有些部件显示较大区域的可调整部分，例如Viewport部件。这些部件的Gtk::Adjustment对象表达了它的共有部分的API。
+
+[1] para
+  EN: So that applications can react to changes, for instance when a user moves a
+scrollbar, `Gtk::Adjustment` has a
+`value_changed` signal. You can then use the
+get_value() method to discover the new value.
+  ZH: 如此一来，应用程序可以对更改做出反应。例如当用户移动滚动条的时候Gtk::Adjustment发出value_changed信号。你可以在信号处理函数中使用get_value()方法获取新的值。
+
+[2] para
+  EN: The `Gtk::Adjustment` is created by its
+create() method which is as follows:
+  ZH: Gtk::Adjustment由它的create()方法创建，该方法的声明如下：
+
+[3] CODE file= 186 chars
+[4] para
+  EN: The `value` argument is the initial value of the
+adjustment, usually corresponding to the topmost or leftmost position of an
+adjustable widget. The `lower` and
+`upper` arguments specify the possible range of values
+which the adjustment can hold. The
+`step_increment` argument specifies the smaller of
+the two increments by which the user can change the value, while the
+`page_increment` is the larger one. The
+`page_size` argument usually corresponds somehow to
+the visible area of a panning widget. The `upper` argument
+is used to represent the bottommost or rightmost coordinate in a panning
+widget's child.
+  ZH: 其中value参数是调整的初始值，通常对应于可调整部件的最上边或者最左边。lower和upper参数指定调整可以容纳的值的范围。step_increment和page_increment指定了一小一大两个增量，增量控制用户在更改调整值的时候一次可以改变的量。page_size参数通常以某种方式与平移部件能见到的区域大小。upper参数被用于表示平移子部件最底端或最右端的坐标。
+
+### 页 sec-adjustments-easy  (page status=translated)
+[0] para
+  EN: The adjustable widgets can be roughly divided into those which use and
+require specific units for these values, and those which treat them as
+arbitrary numbers.
+  ZH: 可调整部件大致可以分为使用并要求这些值使用特定单位的和将它们视作任意数字的。
+
+[1] para
+  EN: The group which treats the values as arbitrary numbers includes the
+`Range` widgets (`Scrollbar` and
+`Scale`), the `ScaleButton` widget,
+and the `SpinButton` widget. These widgets  are typically
+"adjusted" directly by the user with the mouse or keyboard. They will treat the
+`lower` and `upper` values of an
+adjustment as a range within which the user can manipulate the adjustment's
+`value`. By default, they will only modify the
+`value` of an adjustment.
+  ZH: 把值当作普通数字来用的一组部件包括 `Range` 系（`Scrollbar` 和 `Scale`）、`ScaleButton` 和 `SpinButton`。这些部件通常由用户用鼠标或键盘直接「调整」。它们会把 `lower` 与 `upper` 值当作范围的上下限，把 `step_increment` 作为单击步长。
+
+[2] para
+  EN: The other group includes the `Viewport` widget and the
+`ScrolledWindow` widget. All of these widgets use pixel
+values for their adjustments. These are also typically adjusted indirectly
+using scrollbars. While all widgets which use adjustments can either create
+their own adjustments or use ones you supply, you'll generally want to let this
+particular category of widgets create its own adjustments.
+  ZH: 另一组部件包括Viewport和ScrolledWindow。所有的这些部件都将调整的值视作像素值。通常你也可以使用滚动条间接的修改调整的值。虽然所有使用调整的部件都可以创建自己的调整也可以使用你提供的调整，但是通常情况下你都会希望使用这些部件自行创建的调整。
+
+[3] para
+  EN: If you share an adjustment object between a Scrollbar and a TextView
+widget, manipulating the scrollbar will automagically adjust the TextView
+widget. You can set it up like this:
+  ZH: 如果你使滚动条和文本视图部件共享一个调整对象，则你操纵滚动条的时候文本视图将被自动调整。你可以这样设置：
+
+[4] CODE file= 200 chars
+### 页 sec-adjustment-internals  (page status=translated)
+[0] para
+  EN: OK, you say, that's nice, but what if I want to create my own handlers to
+respond when the user adjusts a `Range` widget or a
+`SpinButton`. To access the value of a
+`Gtk::Adjustment`, you can use the
+get_value() and set_value() methods:
+  ZH: 如果你想要创建一个自己的处理函数以响应用户对Range或SpinButton部件的调整。你可以使用Gtk::Adjustment的get_value()和set_value()方法访问其值：
+
+[1] para
+  EN: As mentioned earlier, `Gtk::Adjustment` can emit signals.
+This is, of course, how updates happen automatically when you share an
+`Adjustment` object between a
+`Scrollbar` and another adjustable widget; all adjustable
+widgets connect signal handlers to their adjustment's
+`value_changed` signal, as can your program.
+  ZH: 如前所述，Gtk::Adjustment可以发射信号。而所有可调整部件都会将信号处理函数连接到其调整对象的value_changed信号你的程序也可以如此。这使得当Scrollbar和其他可调整部件共享一个Adjustment对象时，如果你操纵滚动条与其共享调整对象的其他可调整部件将会自动更新。
+
+[2] para
+  EN: So, for example, if you have a `Scale` widget, and you
+want to change the rotation of a picture whenever its value changes, you would
+create a signal handler like this:
+  ZH: 因此，例如，如果你有一个Scale部件并且你想要当调整值变更以后更改图片的旋转角度，你可以创建一个如下所示的信号处理函数：
+
+[3] CODE file= 91 chars
+[4] para
+  EN: and connect it to the scale widget's adjustment like this:
+  ZH: 并且将其连接到比例部件的调整对象上，如下所示：
+
+[5] CODE file= 115 chars
+[6] para
+  EN: What if a widget reconfigures the `upper` or
+`lower` fields of its `Adjustment`,
+such as when a user adds more text to a text widget?  In this case, it emits
+the `changed` signal.
+  ZH: 如果一个部件重新配置其Adjustment的upper和lower字段（例如：用户向文本部件添加了更多的文本），那么它将发出changed信号。
+
+[7] para
+  EN: `Range` widgets typically connect a handler to this
+signal, which changes their appearance to reflect the change - for example, the
+size of the slider in a scrollbar will grow or shrink in inverse proportion to
+the difference between the `lower` and
+`upper` values of its
+`Adjustment`.
+  ZH: Range部件通常会将处理程序连接到此信号，并更改其外观响应变更 - 例如：滚动条中的滑块将随着Adjustment中lower与upper的差值的增大逐渐变小，反之则逐渐增大。
+
+[8] para
+  EN: You probably won't ever need to attach a handler to this signal, unless you're
+writing a new type of range widget.
+  ZH: 除非你正在编写新的范围部件，否则你可能永远不需要将处理程序连接到这个信号。
+
+[9] CODE file= 29 chars

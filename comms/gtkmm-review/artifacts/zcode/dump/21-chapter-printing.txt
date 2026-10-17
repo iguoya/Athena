@@ -1,0 +1,318 @@
+### 页 sec-printoperation  (page status=pending)
+[0] para
+  EN: At the application development level, gtkmm's printing API
+provides dialogs that are consistent across applications and allows use of Cairo's common drawing API, with Pango-driven text rendering. In the implementation of this common API, platform-specific backends and printer-specific drivers are used.
+  ZH: 在应用程序级开发，gtkmm的打印API提供了跨应用程序兼容的对话框，并允许使用开罗通用绘制API和Pango驱动的文本渲染。在此通用API实现中，使用了特定平台的后端和特定打印机的驱动。
+
+[1] para
+  EN: The primary object is `Gtk::PrintOperation`, allocated
+for each print operation. To handle page drawing connect to its signals,
+or inherit from it and override the default virtual signal handlers.
+`PrintOperation` automatically handles all the settings
+affecting the print loop.
+  ZH: 主要对象是分配给每个打印操作的Gtk::PrintOperation。要处理绘制页请连接到它的信号，或从其继承并覆盖默认的虚信号处理函数。PrintOperation将自动处理所有影响打印循环的设置。
+
+[2] heading  <<<ZH缺失>>>
+  EN: Signals
+  ZH: (无)
+
+[3] para
+  EN: The PrintOperation::run() method starts the print loop,
+during which various signals are emitted:
+  ZH: PrintOperation::run()方法启动打印循环，在此期间会发出以下信号：
+
+[4] listitem
+  EN: `begin_print`:
+      You must handle this signal, because this is where you
+      create and set up a `Pango::Layout` using the
+      provided `Gtk::PrintContext`, and break up your
+      printing output into pages.
+  ZH: begin_print：你必须处理该信号，因为这是你使用提供的Gtk::PrintContext创建和设置Pango::Layout的地方，以及对你的打印输出进行分页的地方。
+
+[5] listitem
+  EN: `paginate`: Pagination is potentially slow so if you
+      need to monitor it you can call the
+      PrintOperation::set_show_progress() method and
+      handle this signal.
+  ZH: paginate：分页可能很慢，所以如果需要监视它，你可以调用PrintOperation::set_show_progress()方法并处理此信号。
+
+[6] listitem  <<<ZH缺失>>>
+  EN: For each page that needs to be rendered, the following signals
+      are emitted:
+      
+        
+          
+            `request_page_setup`: Provides a
+            `PrintContext`, page number and
+            `Gtk::PageSetup`. Handle this signal if you
+            need to modify page setup on a per-page basis.
+          
+        
+
+        
+          
+            `draw_page`: You must handle this signal, which provides a
+            `PrintContext` and a page number.
+            The `PrintContext` should be used
+            to create a `Cairo::Context` into which
+            the provided page should be drawn. To render text, iterate over
+            the `Pango::Layout` you created in the
+            `begin_print` handler.
+  ZH: (无)
+
+[7] listitem
+  EN: `end_print`: A handler for it is a safe place to free
+      any resources related to a `PrintOperation`.
+      If you have your custom class that inherits from
+      `PrintOperation`, it is naturally simpler to do it
+      in the destructor.
+  ZH: end_print：它的处理程序是用于释放与PrintOperation相关的所有资源的安全场所。如果你通过继承PrintOperation创建了自定义类，则直接在自定义类的析构函数中进行此操作会更简单。
+
+[8] listitem
+  EN: `done`: This signal is emitted when printing is finished, meaning when the
+      print data is spooled. Note that the provided
+      `Gtk::PrintOperation::Result` may indicate that
+      an error occurred. In any case you probably want to notify the user
+      about the final status.
+  ZH: done：该信号于打印完成时（当打印数据假脱机）被发出。请注意，所提供的Gtk::PrintOperationResult可能表明发生了错误。无论如何你都应该让用户知道最终的状态。
+
+[9] listitem
+  EN: `status_changed`: Emitted whenever a print job's
+      status changes, until it is finished. Call the
+      PrintOperation::set_track_print_status() method to
+      monitor the job status after spooling. To see the status, use
+      get_status() or
+      get_status_string().
+  ZH: status_changed: 直到打印作业完成，只要打印作业状态发生了更改就会发出此信号。假脱机后可以调用PrintOperation::set_track_print_status()监视作业状态。要查看状态请调用get_status()或get_status_string()。
+
+[10] listitem
+  EN: `request_page_setup`: Provides a
+            `PrintContext`, page number and
+            `Gtk::PageSetup`. Handle this signal if you
+            need to modify page setup on a per-page basis.
+  ZH: request_page_setup：提供一个PrintContext、页码和Gtk::PageSetup。如果你需要逐页的修改页面设置，请处理此信号。
+
+[11] listitem
+  EN: `draw_page`: You must handle this signal, which provides a
+            `PrintContext` and a page number.
+            The `PrintContext` should be used
+            to create a `Cairo::Context` into which
+            the provided page should be drawn. To render text, iterate over
+            the `Pango::Layout` you created in the
+            `begin_print` handler.
+  ZH: draw_page：你必须处理此信号，该信号提供一个PrintContext和页码。你应该使用PrintContext创建一个Cairo::Context，并将提供的页面绘制到其中。要渲染文本，请遍历你在begin_print处理程序中创建的Pango::Layout。
+
+[12] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1PrintOperation.html)
+  ZH: 参考
+
+### 页 sec-page-setup  (page status=pending)
+[0] para
+  EN: The `PrintOperation` class has a method called
+set_default_page_setup() which selects the default
+paper size, orientation and margins. To show a page setup dialog from your
+application, use the Gtk::run_page_setup_dialog() method,
+which returns a `Gtk::PageSetup` object with the chosen
+settings. Use this object to update a `PrintOperation`
+and to access the selected `Gtk::PaperSize`,
+`Gtk::PageOrientation` and printer-specific margins.
+  ZH: PrintOperation类有一个叫做set_default_page_setup()的方法，其用于选择默认的纸张尺寸、方向和页边距。要在你的应用程序中显示页面设置对话框，请使用Gtk::run_page_setup_dialog()方法，该方法返回一个Gtk::PageSetup对象，这个对象保存了所选的设置。使用这个对象更新PrintOperation并访问所选的Gtk::PaperSize、Gtk::PageOrientation和特定打印机的边距。
+
+[1] para
+  EN: You should save the chosen `Gtk::PageSetup`
+so you can use it again if the page setup dialog is shown again.
+  ZH: 你应该保存所选的Gtk::PageSetup以便在下次打开页面设置对话框的时候使用。
+
+[2] para
+  EN: For instance,
+  ZH: 例如：
+
+[3] CODE file= 229 chars
+[4] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1PageSetup.html)
+  ZH: 参考
+
+[5] para
+  EN: The Cairo coordinate system, in the `draw_page` handler,
+is automatically rotated to the current page orientation. It is normally
+within the printer margins, but you can change that via the
+PrintOperation::set_use_full_page()
+method. The default measurement unit is device pixels. To select other units,
+use the PrintOperation::set_unit() method.
+  ZH: 在draw_page处理程序中，开罗坐标系会自动旋转到当前页的方向。它通常在打印机的页边距之内，不过你可以使用PrintOperation::set_use_full_page()方法来更改它。默认的度量单位是设备像素。要选择其他单位请使用PrintOperation::set_unit()方法。
+
+### 页 sec-printing-rendering-text  (page status=pending)
+[0] para
+  EN: Text rendering is done using Pango.
+The `Pango::Layout` object for printing should be created by calling
+the PrintContext::create_pango_layout() method.
+The `PrintContext` object also provides the page metrics,
+via get_width() and get_height().
+The number of pages can be set with
+PrintOperation::set_n_pages(). To actually render the
+ Pango text in `on_draw_page`, get a
+`Cairo::Context` with
+PrintContext::get_cairo_context() and show the
+`Pango::LayoutLine`s that appear within the requested
+page number.
+  ZH: 文本渲染是使用Pango完成的。Pango::Layout对象应通过调用PrintContext::create_pango_layout()方法来创建。PrintContext对象还通过get_width()和get_height()方法提供了页面范围。页数可以通过调用PrintOperation::set_n_pages()进行设置。要在on_draw_page中渲染文本，请使用PrintContext::get_cairo_context()获取Cairo::Context并显示在请求的页码中出现的Pango::LayoutLine。
+
+[1] para
+  EN: See [an example](#sec-printing-examples-simple)
+of exactly how this can be done.
+  ZH: 请看具体示例如何做到这点。
+
+### 页 sec-async-printing-ops  (page status=pending)
+[0] para
+  EN: By default, PrintOperation::run() returns when a print
+operation is completed. If you need to run a non-blocking print operation,
+call PrintOperation::set_allow_async(). Note that set_allow_async() is not supported
+on all platforms, however the `done` signal will still be emitted.
+  ZH: 在默认情况下，PrintOperation::run()在打印操作完成时返回。如果你需要运行非阻塞的打印操作，请调用PrintOperation::set_allow_async()。请注意，并非所有平台都支持set_allow_async()，但done信号仍然会被发出。
+
+[1] para
+  EN: run() may return
+`PrintOperation::Result::IN_PROGRESS`. To track status
+and handle the result or error you need to implement signal handlers for
+the `done` and `status_changed` signals:
+  ZH: run()可能会返回PrintOperation::Result::IN_PROGRESS。要跟踪状态并处理结果或错误，你需要实现done和status_changed信号的信号处理函数。
+
+[2] para
+  EN: For instance,
+  ZH: 例如：
+
+[3] CODE file= 214 chars
+[4] para
+  EN: Second, check for an error and connect to the `status_changed` signal. For instance:
+  ZH: 然后，检查错误并连接到status_changed信号，例如：
+
+[5] CODE file= 484 chars
+[6] para
+  EN: Finally, check the status. For instance,
+  ZH: 最后检查状态。例如：
+
+[7] CODE file= 237 chars
+### 页 sec-printing-export-to-pdf  (page status=pending)
+[0] para
+  EN: The 'Print to file' option is available in the print dialog, without the need for extra implementation. However, it is sometimes useful to generate a pdf file directly from code. For instance,
+  ZH: \"打印到文件\"选项在打印对话框可用，不需要额外实现。但是有时候从代码直接生成PDF文件会很有用。例如：
+
+[1] CODE file= 153 chars
+### 页 sec-extending-print-dialog  (page status=pending)
+[0] para
+  EN: You may add a custom tab to the print dialog:
+  ZH: 你可以在打印对话框中添加自定义标签：
+
+[1] listitem
+  EN: Set the title of the tab via
+      PrintOperation::set_custom_tab_label(),
+      create a new widget and return it from the
+      `create_custom_widget` signal handler. You'll probably
+      want this to be a container widget, packed with some others.
+  ZH: 通过PrintOperation::set_custom_tab_label()设置标签的标题，创建一个新的部件然后从create_custom_widget的信号处理函数中返回它。你可能希望它是一个容器部件，在其中包含一些其他部件。
+
+[2] listitem
+  EN: Get the data from the widgets in the
+      `custom_widget_apply` signal handler.
+  ZH: 从部件的custom_widget_apply的信号处理函数中获取数据。
+
+[3] para
+  EN: Although the `custom_widget_apply` signal provides the widget you
+previously created, to simplify things you can keep the widgets you expect
+to contain some user input as class members. For example, let's say you have
+a `Gtk::Entry` called `m_Entry` as
+a member of your `CustomPrintOperation` class:
+  ZH: 尽管custom_widget_apply信号提供了你之前创建的部件，但是为了简化操作，你可以保存一些用户输入作为部件类的成员。例如，你可能希望你有一个叫做m_Entry的Gtk::Entry拥有CustomPrintOperation作为类成员：
+
+[4] CODE file= 454 chars
+[5] para
+  EN: The example in examples/book/printing/advanced demonstrates this.
+  ZH: examples/book/printing/advanced示例对此进行了演示。
+
+### 页 sec-printing-preview  (page status=pending)
+[0] para
+  EN: The native GTK print dialog has a preview button, but you may also start
+a preview directly from an application:
+  ZH: 原生的GTK打印对话框有一个预览按钮，但是你也可以自己从应用程序开始预览：
+
+[1] CODE file= 156 chars
+[2] para
+  EN: On Unix, the default preview handler uses an external viewer program.
+On Windows, the native preview dialog will be shown. If necessary you may
+override this behavior and provide a custom preview dialog. See the example
+located in /examples/book/printing/advanced.
+  ZH: 在Unix上，默认的预览处理程序将使用外部查看器程序。在Windows上将显示原生预览对话框。如果有必要，你可以覆盖此默认行为并为此提供一个自定义的预览对话框。请参阅位于/examples/book/printing/advanced的示例。
+
+### 页 sec-printing-printdialog  (page status=pending)
+[0] para  <<<ZH缺失>>>
+  EN: Since gtkmm 4.14 `Gtk::PrintDialog` is an alternative
+to `Gtk::PrintOperation`. `PrintDialog`
+uses the same `PageSetup` and `PrintSettings`
+classes as `PrintOperation`. The rendering with Cairo and
+Pango is also similar.
+  ZH: (无)
+
+### 页 sec-printing-examples  (page status=pending)
+[0] heading  <<<ZH缺失>>>
+  EN: Simple
+  ZH: (无)
+
+[1] para
+  EN: The following example demonstrates how to print some input from a user interface
+using `PrintOperation`. It shows how to implement
+`on_begin_print` and `on_draw_page`,
+as well as how to track print status and update the print settings.
+  ZH: 以下示例演示了如何从用户界面打印一些输出。它显示了如何实现on_begin_print和on_draw_page，以及如何跟踪打印状态和更新打印设置。
+
+[2] figure  <<<ZH缺失>>>
+  EN: Printing - Simple
+  ZH: (无)
+
+[3] CODE file=examplewindow.h 1633 chars
+[4] CODE file=printformoperation.h 1001 chars
+[5] CODE file=examplewindow.cc 2821 chars
+[6] heading  <<<ZH缺失>>>
+  EN: 
+  ZH: (无)
+
+[7] heading  <<<ZH缺失>>>
+  EN: 
+  ZH: (无)
+
+[8] heading  <<<ZH缺失>>>
+  EN: 
+  ZH: (无)
+
+[9] CODE file=main.cc 276 chars
+[10] CODE file=printformoperation.cc 3261 chars
+[11] heading  <<<ZH缺失>>>
+  EN: PrintDialog
+  ZH: (无)
+
+[12] para
+  EN: The following example demonstrates how to print some input from a user
+interface using `PrintDialog`. The user interface is
+similar to the previous example.
+  ZH: 以下示例演示了如何从用户界面打印一些输出。它显示了如何实现on_begin_print和on_draw_page，以及如何跟踪打印状态和更新打印设置。
+
+[13] figure  <<<ZH缺失>>>
+  EN: Printing - PrintDialog
+  ZH: (无)
+
+[14] CODE file=examplewindow.h 957 chars
+[15] CODE file=printformdialog.h 1269 chars
+[16] CODE file=examplewindow.cc 2721 chars
+[17] heading  <<<ZH缺失>>>
+  EN: 
+  ZH: (无)
+
+[18] heading  <<<ZH缺失>>>
+  EN: 
+  ZH: (无)
+
+[19] heading  <<<ZH缺失>>>
+  EN: 
+  ZH: (无)
+
+[20] CODE file=main.cc 276 chars
+[21] CODE file=printformdialog.cc 5034 chars

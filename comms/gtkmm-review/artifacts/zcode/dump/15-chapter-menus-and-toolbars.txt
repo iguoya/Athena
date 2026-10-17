@@ -1,0 +1,259 @@
+### 页 sec-actions  (page status=translated)
+[0] para
+  EN: There are specific APIs for menus and toolbars, but you should usually deal
+with them together, creating `Gio::SimpleAction`s that
+you can refer to in both menus and toolbars. In this way you can handle
+activation of the action instead of responding to the menu and toolbar items
+separately. And you can enable or disable both the menu and toolbar item via
+the action. `Gtk::Builder` can create menus and toolbars.
+  ZH: 菜单和工具栏都有特有的API，但是通常你应该创建在菜单和工具栏都可以引用的Gio::SimpleAction以便一并处理它们。这样你可以响应动作被激活而不需要分别响应菜单和工具栏。你可以通过动作启用或者禁用菜单和工具栏项。Gtk::Builder可以创建菜单和工具栏。
+
+[1] para
+  EN: This involves the use of the `Gio::SimpleActionGroup`,
+`Gio::SimpleAction` and `Gtk::Builder`
+classes, all of which should be instantiated via their create()
+methods, which return `RefPtr`s.
+  ZH: 这涉及到了Gio::SimpleActionGroup、Gio::SimpleAction和Gtk::Builder类的使用，所有的这些类都需要通过返回RefPtr的create()方法进行实例化。
+
+[2] para
+  EN: First create the `Gio::SimpleAction`s and add them to a
+`Gio::SimpleActionGroup`, with
+Gio::ActionMap::add_action().
+(`Gio::ActionMap` is a base class of
+`Gio::SimpleActionGroup`.) Then add the action group to
+your window with Gtk::Widget::insert_action_group().
+  ZH: 首先创建Gio::SimpleAction并使用Gio::ActionMap::add_action()方法将其加入Gio::SimpleActionGroup中（Gio::ActionMap是Gio::SimpleActionGroup的基类。）。然后将动作组使用Gtk::Widget::insert_action_group()加入到你的窗口中。
+
+[3] para
+  EN: The arguments to add_action() specify the action's
+name, which is used in the menu items and toolbar buttons. You can also specify
+a signal handler when calling add_action(). This signal
+handler will be called when the action is activated via either a menu item or
+a toolbar button.
+  ZH: add_action()的参数用于指定动作名，该名称由菜单项和工具栏按钮使用。你还可以在调用add_action()时指定信号处理函数。在菜单项或工具栏按钮被激活的时候此信号处理函数被调用。
+
+[4] para
+  EN: For instance:
+  ZH: 例如：
+
+[5] CODE file= 393 chars
+[6] para
+  EN: If you use an `Gtk::ApplicationWindow`, you don't have to
+create your own action group. `Gio::ActionGroup` and
+`Gio::ActionMap` are base classes of
+`Gtk::ApplicationWindow`.
+  ZH: 如果你使用Gtk::ApplicationWindow，则你不需要自己创建动作组。因为Gio::ActionGroup和Gio::ActionMap是Gtk::ApplicationWindow的基类。
+
+### 页 sec-menubar-and-toolbar  (page status=translated)
+[0] para
+  EN: Next you should create a `Gtk::Builder`. At this point is
+also a good idea to tell the application to respond to keyboard shortcuts,
+by using Gtk::Application::set_accel_for_action().
+  ZH: 接下来你应该创建一个Gtk::Builder。此时使用Gtk::Application::set_accel_for_action()告诉应用程序响应键盘快捷键也是一个好主意。
+
+[1] para
+  EN: For instance,
+  ZH: 例如：
+
+[2] CODE file= 267 chars
+[3] para
+  EN: Then, you can define the actual visible layout of the menus and toolbars, and
+add the UI layout to the `Builder`. This "ui
+string" uses an XML format, in which you should mention the names of the
+actions that you have already created. For instance:
+  ZH: 接下来定义菜单与工具栏实际可见的布局，并把这份 UI 布局加进 `Builder`。这段「ui 字符串」采用 XML 格式，其中要写明你已经创建的动作（action）的名称。例如：
+
+[4] CODE file= 1188 chars
+[5] para
+  EN: This is where we specify the names of the menu items as they will be seen
+by users in the menu. Therefore, this is where you should make strings
+translatable, by adding `translatable='yes'`.
+  ZH: 这里我们指定菜单项的名称，因为用户可以在菜单中看到它们。因此你应该添加translatable='yes'使这些的字符串可以被翻译。
+
+[6] para
+  EN: To instantiate a `Gtk::PopoverMenuBar` and toolbar (a horizontal
+`Gtk::Box`) which you can actually show, you should use
+the Builder::get_object() and
+Builder::get_widget() methods, and then add the widgets
+to a container. For instance:
+  ZH: 要实例化真正可显示的 `Gtk::PopoverMenuBar` 与工具栏（一个水平 `Gtk::Box`），应使用 Builder::get_object() 与 Builder::get_widget() 方法取得部件，再把它们加进容器。例如：
+
+[7] CODE file= 235 chars
+### 页 sec-menus-popup  (page status=translated)
+[0] para
+  EN: `Menu`s are normally just added to a window, but they can
+also be displayed temporarily as the result of a mouse button click. For
+instance, a context menu might be displayed when the user clicks their right
+mouse button.
+  ZH: Menus通常将直接被加入到窗口中，但也可以通过鼠标单击来临时显示他们。例如当用户单击鼠标右键的时候，可能需要显示上下文菜单。
+
+[1] para
+  EN: For instance:
+  ZH: 例如：
+
+[2] CODE file= 824 chars
+[3] para
+  EN: To show the popup menu, use  a `Gtk::GestureClick`
+and connect to its `pressed` signal. In the signal handler,
+use `Gtk::PopoverMenu`'s
+popup() method. For instance:
+  ZH: 显示弹出菜单：用一个 `Gtk::GestureClick` 并连接它的 `pressed` 信号；在信号处理函数里调用 `Gtk::PopoverMenu` 的 popup() 方法。例如：
+
+[4] CODE file= 180 chars
+### 页 sec-gio-resource  (page status=translated)
+[0] para
+  EN: Applications and libraries often contain binary or textual data that is
+really part of the application, rather than user data. For instance
+`Gtk::Builder` `.ui` files,
+splashscreen images, `Gio::Menu` markup xml, CSS files,
+icons, etc. These are often shipped as files in `$datadir/appname`,
+or manually included as literal strings in the code.
+  ZH: 应用和库常常包含一些其实属于程序本身（而非用户数据）的二进制或文本数据，比如 `Gtk::Builder` 的 .ui 文件、启动画面图片、`Gio::Menu` 的标记 XML、CSS 文件、图标等。它们通常以文件形式放在 $datadir/appname 下，或者手动打包进程序。
+
+[1] para
+  EN: The `Gio::Resource` API and the `glib-compile-resources`
+program provide a convenient and efficient alternative to this, which has some nice properties. You
+maintain the files as normal files, so it's easy to edit them, but during the build the files
+are combined into a binary bundle that is linked into the executable. This means that loading
+the resource files is efficient (as they are already in memory, shared with other instances) and
+simple (no need to check for things like I/O errors or locate the files in the filesystem). It
+also makes it easier to create relocatable applications.
+  ZH: Gio::ResourceAPI和glib-compile-resources程序提供了一个方便且有效的替代方案，这个方案有一些良好的性质。你可以将这些文件作为普通文件进行维护，因此你可以轻松的编辑它们，在构建过程中，这些文件将会被组合成一个二进制捆绑包，并将其链接到可执行文件中。这意味着加载资源文件会很高效（因为他们在启动时已经被加载到了内存中，并与其他实例共享）且很简单（无需对IO错误进行检查和在文件系统中查找文件）。这也使得创建可重定位应用程序变得更为简单。
+
+[2] para
+  EN: Resource bundles are created by the `glib-compile-resources`
+program which takes an xml file that describes the bundle, and a set of files that the xml references.
+These are combined into a binary resource bundle.
+  ZH: 资源包是由glib-compile-resources程序创建的，该程序使用一个XML文件描述资源包并由该XML文件指示资源包引用了那些文件。被引用的文件和XML文件将被组合为一个二进制的资源包。
+
+[3] para
+  EN: [Gio::Resource Reference](&url_refdocs_base_glib_html;classGio_1_1Resource.html)
+  ZH: Gio::Resource参考
+
+[4] para
+  EN: An example:
+  ZH: 示例：
+
+[5] CODE file= 195 chars
+[6] para
+  EN: This will create a resource bundle with the files
+  ZH: 一个示例： 这将创建一个包含以下文件的资源包:
+
+[7] listitem
+  EN: `/toolbar/toolbar.ui`
+  ZH: /toolbar/toolbar.ui
+
+[8] listitem
+  EN: `/toolbar/rain.png`
+  ZH: /toolbar/rain.png
+
+[9] CODE file= 85 chars
+[10] para
+  EN: Once a `Gio::Resource` has been created and registered all the data
+in it can be accessed globally in the process by using API calls like
+Gio::Resource::open_stream_from_global_resources()
+to stream the data or Gio::Resource::lookup_data_in_global_resources()
+to get a direct pointer to the data. You can also use URIs like resource:///toolbar/rain.png
+with `Gio::File` to access the resource data.
+  ZH: 一旦创建并注册了Gio::Resource，就可以使用API调用（例如：Gio::Resource::open_stream_from_global_resources()流式获取数据或是Gio::Resource::lookup_data_in_global_resources()直接获取指向数据的指针）在进程的全局访问数据。你还可以使用类似于resource:///toolbar/rain.png的URI通过Gio::File访问资源数据。
+
+[11] para
+  EN: Often you don't need a `Gio::Resource` instance,
+because resource data can be loaded with methods such as
+Gdk::Pixbuf::create_from_resource(),
+Gtk::Builder::add_from_resource() and
+Gtk::Image::set_from_resource().
+  ZH: 通常你不需要Gio::Resource实例，因为可以使用Gdk::Pixbuf::create_from_resource()、Gtk::Builder::add_from_resource()和Gtk::Image::set_from_resource()直接加载资源数据。
+
+### 页 sec-menus-examples  (page status=translated)
+[0] heading  <<<ZH缺失>>>
+  EN: Application Menu and Main Menu example
+  ZH: (无)
+
+[1] para
+  EN: This program contains an application menu, a menubar and a toolbar.
+Classes are derived from `Gtk::Application` and
+`Gtk::ApplicationWindow`.
+  ZH: 该程序拥有一个应用程序菜单，一个菜单栏和一个工具栏。这个类是自Gtk::Application和Gtk::ApplicationWindow派生而来的。
+
+[2] figure  <<<ZH缺失>>>
+  EN: App and Main Menu
+  ZH: (无)
+
+[3] CODE file=exampleapplication.h 569 chars
+[4] CODE file=examplewindow.h 664 chars
+[5] CODE file=exampleapplication.cc 1680 chars
+[6] heading  <<<ZH缺失>>>
+  EN: 
+  ZH: (无)
+
+[7] heading  <<<ZH缺失>>>
+  EN: 
+  ZH: (无)
+
+[8] heading  <<<ZH缺失>>>
+  EN: 
+  ZH: (无)
+
+[9] heading  <<<ZH缺失>>>
+  EN: 
+  ZH: (无)
+
+[10] heading  <<<ZH缺失>>>
+  EN: 
+  ZH: (无)
+
+[11] heading  <<<ZH缺失>>>
+  EN: 
+  ZH: (无)
+
+[12] heading  <<<ZH缺失>>>
+  EN: 
+  ZH: (无)
+
+[13] CODE file=examplewindow.cc 4329 chars
+[14] CODE file=main.cc 436 chars
+[15] heading  <<<ZH缺失>>>
+  EN: Main Menu example
+  ZH: (无)
+
+[16] para
+  EN: This program contains a menubar and a toolbar.
+A class is derived from `Gtk::Window`.
+  ZH: 该程序包含一个菜单栏和一个工具栏。一个从Gtk::Window派生的类。
+
+[17] figure  <<<ZH缺失>>>
+  EN: Main Menu
+  ZH: (无)
+
+[18] CODE file=examplewindow.h 590 chars
+[19] CODE file=examplewindow.cc 2341 chars
+[20] heading  <<<ZH缺失>>>
+  EN: 
+  ZH: (无)
+
+[21] heading  <<<ZH缺失>>>
+  EN: 
+  ZH: (无)
+
+[22] heading  <<<ZH缺失>>>
+  EN: 
+  ZH: (无)
+
+[23] CODE file=main.cc 263 chars
+[24] CODE file=toolbar.gresource.xml 195 chars
+[25] heading  <<<ZH缺失>>>
+  EN: Popup Menu example
+  ZH: (无)
+
+[26] figure  <<<ZH缺失>>>
+  EN: Popup Menu
+  ZH: (无)
+
+[27] CODE file=examplewindow.h 586 chars
+[28] CODE file=examplewindow.cc 1691 chars
+[29] heading  <<<ZH缺失>>>
+  EN: 
+  ZH: (无)
+
+[30] CODE file=main.cc 275 chars

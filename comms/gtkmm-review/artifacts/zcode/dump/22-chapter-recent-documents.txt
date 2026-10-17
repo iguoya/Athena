@@ -1,0 +1,237 @@
+### 页 sec-recentmanager  (page status=pending)
+[0] para
+  EN: gtkmm provides an easy way to manage recently used documents. This functionality
+    is implemented in the `Gtk::RecentManager` class.
+  ZH: gtkmm提供了一种管理最近使用文件的简便方法。该功能在Gtk::RecentManager类中实现。
+
+[1] para
+  EN: Each item in the list of recently used files is identified by its URI, and
+    can have associated metadata. The metadata can be used to specify how the
+    file should be displayed, a description of the file, its mime type, which
+    application registered it, whether it's private to the registering
+    application, and several other things.
+  ZH: 最近使用文件列表中的每一项都由其URI进行标识，并可以具有相关的元数据。元数据可以用于指定如何显示文件、如何描述文件、及其它的MIME类型、哪个应用程序注册了它、对于注册的应用程序是不是私有的等。
+
+[2] para
+  EN: `RecentManager` acts as a database of
+      recently used files. You use this class to register new files, remove
+      files from the list, or look up recently used files. There is one list
+      of recently used files per user.
+  ZH: RecentManager充当最近使用文件的数据库。你可以使用此类注册新文件、从列表中删除文件、查找最近使用文件。每个用户都拥有一个最近使用的文件列表。
+
+[3] para
+  EN: You can create a new `RecentManager`, but you'll most
+      likely just want to use the default one. You can get a reference to the
+      default `RecentManager` with
+      get_default().
+  ZH: 你可以创建一个新的RecentManager，但你可能只想用默认的那个。你可以通过get_default()获取默认RecentManager的引用。
+
+[4] heading  <<<缺失>>>
+  EN: Adding Items to the List of Recent Files
+  ZH: (无)
+
+[5] para
+  EN: To add a new file to the list of recent documents, in the simplest case,
+        you only need to provide the URI. For example:
+  ZH: 在最简单的情况下，要添加项目到最近文件列表只需要提供一个URI即可。例如：
+
+[6] CODE file=
+[7] para
+  EN: If you want to register a file with metadata, you can pass a
+        `RecentManager::Data` parameter to
+        add_item(). The metadata that can be set on a
+        particular file item is as follows:
+  ZH: 如果你想要使用元数据注册一个文件，你可以将RecentManager::Data参数传递给add_item()。可以在特定的文件项上设置的元数据如下所示：
+
+[8] listitem
+  EN: `app_exec`: The command line to be used to launch
+            this resource. This string may contain the "f" and "u" escape
+            characters which will be expanded to the resource file path and URI
+            respectively
+  ZH: app_exec：用于启动此资源的命令行。此字符串可以包含"f"和"u"转义字符，它们将分别扩展为资源文件路径和URI
+
+[9] listitem
+  EN: `app_name`: The name of the application that
+            registered the resource
+  ZH: app_name：此资源注册的应用程序名
+
+[10] listitem
+  EN: `description`: A short description of the
+            resource as a UTF-8 encoded string
+  ZH: description：资源的简单描述（UTF-8编码字符串）
+
+[11] listitem
+  EN: `display_name`: The name of the resource to be
+            used for display as a UTF-8 encoded string
+  ZH: display_name：用于显示的资源名（UTF-8编码字符串）
+
+[12] listitem
+  EN: `groups`: A list of groups associated with this
+            item. Groups are essentially arbitrary strings associated with a
+            particular resource. They can be thought of as 'categories' (such
+            as "email", "graphics", etc) or tags for the resource.
+  ZH: groups：与该项相关联的组列表。组本质上是与特定资源相关联的任意字符串。可以将它们视为资源的类别（例如：电子邮件、图形等）或标签
+
+[13] listitem
+  EN: `is_private`: Whether this resource should be
+            visible only to applications that have registered it or not
+  ZH: is_private：此资源是否仅对已注册该资源的应用程序可见
+
+[14] listitem
+  EN: `mime_type`: The MIME type of the resource
+  ZH: mime_type：此资源的MIME类型
+
+[15] para
+  EN: In addition to adding items to the list, you can also look up items from
+        the list and modify or remove items.
+  ZH: 除了向列表中添加项目以外，你还可以从列表项中删除、修改、查找项目。
+
+[16] heading  <<<缺失>>>
+  EN: Looking up Items in the List of Recent Files
+  ZH: (无)
+
+[17] para
+  EN: To look up recently used files, `RecentManager`
+        provides several functions. To look up a specific item by its URI, you
+        can use the lookup_item() function, which will
+        return a `RecentInfo` class. If the specified URI
+        did not exist in the list of recent files,
+        lookup_item() throws a
+        `RecentManagerError` exception. For example:
+  ZH: RecentManager提供了几个函数用以查找最近使用过的文件。你可以使用lookup_item()函数通过URI来查找特定项目，该函数将返回一个RecentInfo类对象。如果指定的URI于最近文件列表中不存在，则lookup_item()将抛出一个RecentManagerError异常。例如：
+
+[18] CODE file=
+[19] para
+  EN: A `RecentInfo` object is essentially an object
+        containing all of the metadata about a single recently-used file. You
+        can use this object to look up any of the properties listed
+        [above](#list-file-metadata).
+  ZH: 本质上，RecentInfo是个包含了一个最近使用文件的所有元数据的对象。你可以使用该对象查找这里所列出的任何属性。
+
+[20] para
+  EN: If you don't want to look for a specific URI, but instead want to get a
+        list of all recently used items, `RecentManager`
+        provides the get_items() function. The return
+        value of this function is a `std::vector` of all
+        recently used files. The following code demonstrates how you might get a
+        list of recently used files:
+  ZH: 如果你不想要查找一个特定的URI，而是想获取整个最近使用的项目列表，RecentManager为此提供了get_items()函数。这个函数返回值是一个std::vector，其包含了所有最近使用的文件。以下代码演示了你该如何获取最近使用文件列表：
+
+[21] CODE file=
+[22] para
+  EN: The maximum age of items in the recently used files list can be set with
+        Gtk::Settings::property_gtk_recent_files_max_age().
+        Default value: 30 days.
+  ZH: 可以使用Gtk::Settings::property_gtk_recent_files_max_age()设置最近使用文件列表中项目的最长使用期限。默认时长是：30天。
+
+[23] heading  <<<缺失>>>
+  EN: Modifying the List of Recent Files
+  ZH: (无)
+
+[24] para
+  EN: There may be times when you need to modify the list of recent files.
+        For instance, if a file is moved or renamed, you may need to update the
+        file's location in the recent files list so that it doesn't point to an
+        incorrect location. You can update an item's location by using
+        move_item().
+  ZH: 有时候你会需要修改最近使用文件列表。例如，当一个文件被移动或重命名，你需要更新该文件在最近使用文件列表中的位置，以使其不会指向错误的位置。你可以使用move_item()来更新项目的位置。
+
+[25] para
+  EN: In addition to changing a file's URI, you can also remove items from the
+        list, either one at a time or by clearing them all at once. The former
+        is accomplished with remove_item(), the latter with
+        purge_items().
+  ZH: 除了更改文件的URI以外，你还可以从列表中删除项目或是一次性清除所有项目。前者使用remove_item()，后者使用purge_items()。
+
+[26] para
+  EN: The functions move_item(),
+        remove_item() and
+        purge_items() have no effect on the actual files
+        that are referred to by the URIs, they only modify the list of recent
+        files.
+  ZH: move_item()、remove_item()和purge_items()并不影响URI所引用的真实文件，它们只是对最近文件列表进行修改。
+
+### 页 sec-filechooser-filedialog  (page status=pending)
+[0] para
+  EN: `FileChooser` is an interface that can be
+      implemented by widgets displaying a list of files.
+      gtkmm provides three built-in implementations for choosing recent files
+      or other files:
+      `FileChooserWidget`,
+      `FileChooserDialog`, and
+      `FileChooserNative`.
+  ZH: FileChooser是一个可以由用于显示文件列表的部件实现的接口。gtkmm提供了三种用于选择最近文件或其他文件的内置实现：FileChooserWidget、FileChooserDialog、FileChooserNative。
+
+[1] para
+  EN: `FileChooserWidget` is a simple widget for
+      displaying a list of recently used files or other files.
+      `FileChooserWidget` is the basic building block for
+      `FileChooserDialog`, but you can embed it into your
+      user interface if you want to.
+  ZH: FileChooserWidget是一个用于显示最近使用文件列表或其他文件的简单部件。FileChooserWidget是FileChooserDialog的基本构建块，但是你根据需要可以将其嵌入到用户界面中。
+
+[2] para  <<<缺失>>>
+  EN: `FileChooser` and the classes that
+      implement it are deprecated since gtkmm 4.10. They have been replaced
+      by `FileDialog`, which is available since gtkmm 4.10.
+  ZH: (无)
+
+[3] heading  <<<缺失>>>
+  EN: Simple FileDialog example
+  ZH: (无)
+
+[4] para
+  EN: Shown below is a simple example of how to use the
+        `FileDialog` class in a program.
+        This simple program has a menubar with a
+        `File Dialog` menu item.
+        When you select this menu item, a dialog pops up showing a list of files.
+        If you select `Recent` in the sidebar,
+        the list of recently used files is shown.
+  ZH: 下面显示的是一个如何在程序中使用FileChooserDialog类的简单示例。这个简单示例程序有一个带有File Chooser Dialog菜单项的菜单栏。选择此菜单项时，将弹出一个显示文件列表的对话框。如果你选中侧边栏的Recent，则对话框将显示最近使用文件列表。
+
+[5] para
+  EN: If this is the first time you're using a program that uses the Recent
+          Files framework, the dialog may be empty at first. Otherwise it
+          should show the list of recently used documents registered by other
+          applications.
+  ZH: 如果这是你第一次使用使用了最近文件框架的应用程序，那么对话框最初可能是空的。否则它应该显示其他应用程序注册的最近使用文件列表。
+
+[6] para
+  EN: After selecting the `File Dialog` menu
+        item and the `Recent` sidebar item, you should
+        see something similar to the following window.
+  ZH: 选择File Chooser Dialog菜单项和Recent侧边项后，你将看到与下方窗口类似的内容。
+
+[7] figure  <<<缺失>>>
+  EN: 
+  ZH: (无)
+
+[8] CODE file=examplewindow.h
+[9] CODE file=examplewindow.cc
+[10] CODE file=main.cc
+[11] para  <<<缺失>>>
+  EN: The constructor for `ExampleWindow` creates the
+        menu and the toolbar using `Builder` (see [Menus and Toolbars](#chapter-menus-and-toolbars) for more information). It then adds
+        the menu and the toolbar to the window.
+  ZH: (无)
+
+[12] heading  <<<缺失>>>
+  EN: Filtering Files
+  ZH: (无)
+
+[13] para
+  EN: For any of the `FileChooser` classes, if you
+        don't wish to display all of the items in the list of files, you
+        can filter the list to show only those that you want. You can filter
+        the list with the help of the `FileFilter` class.
+        This class allows you to filter files by their name
+        (add_pattern()), or their mime type
+        (add_mime_type()).
+  ZH: 对于任意FileChooser类，如果你不想显示文件列表中的所有项目，你可以筛选列表以仅显示所需的项目。你可以使用FileFilter帮助你对列表进行筛选。这个类允许你按文件名（add_pattern()）或MIME类型（add_mime_type()）筛选文件。
+
+[14] para
+  EN: After you've created and set up the filter to match only the items you
+        want, you can apply a filter to a chooser widget with the
+        FileChooser::add_filter() function.
+  ZH: 创建并设置筛选器以使其只匹配你所需项目之后，你可以使用FileChooser::add_filter()函数将筛选器应用于你所选的部件。

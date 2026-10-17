@@ -1,0 +1,124 @@
+### 页 sec-dropdown-model  (page status=translated)
+[0] para
+  EN: The `DropDown` widget is an alternative to the deprecated
+`ComboBox`. It uses list models instead of tree models,
+and the content is displayed using widgets instead of cell renderers.
+  ZH: `DropDown` 部件是已弃用的 `ComboBox` 的替代者：它使用列表模型而非树模型，内容用 listitem 内的部件展示，可以是任意内容——文字、图片，乃至更复杂的复合部件。
+
+[1] para
+  EN: The `DropDown` widget offers a list of choices in a
+dropdown menu. If appropriate, it can show extra information about each item,
+such as text, a picture, or a check button. The `DropDown` widget
+can optionally have an `Entry` in the dropdown menu, allowing
+the user to search in a long list.
+  ZH: `DropDown` 在下拉菜单中提供一组选项；合适的话，还能为每个条目显示额外信息，如文字、图片或更复杂的复合部件。
+
+[2] para
+  EN: The list is provided via a `Gio::ListModel`, and data
+from this model is added to the `DropDown`'s view with
+signal handlers connected to a `SignalListItemFactory`.
+This provides flexibility, but the `StringList` class provides
+a simpler text-based specialization in case that flexibility is not required.
+  ZH: 列表由一个 `Gio::ListModel` 提供，模型数据通过连接到 `SignalListItemFactory` 的信号处理函数添加到 `DropDown` 的视图。
+
+[3] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1DropDown.html)
+  ZH: 参考
+
+[4] para
+  EN: The model for a `DropDown` can be defined and filled
+exactly as for a `ListView` or a `ColumnView`.
+It must be a subclass of `Glib::Object`.
+For instance, you might have a `DropDown` with one integer
+and one text column, like so:
+  ZH: `DropDown` 的模型可以按与 `ListView` 或 `ColumnView` 完全相同的方式定义和填充。它必须是 `Glib::Object` 的子类。比如你可以有一个 `DropDown`，其中包含一列整数和一列文本，如下所示：
+
+[5] CODE file= 472 chars
+[6] para
+  EN: After appending rows to this model, you should provide the model to the
+`DropDown` with the set_model() method.
+Unless you use the `StringList` model, you also need to set
+a `ListItemFactory` with set_factory().
+If you want the items in the dropdown menu to look different from the item
+in the `DropDown` widget, you also need to set a separate
+`ListItemFactory` with set_list_factory().
+  ZH: 向模型追加行之后，用 set_model() 方法把模型交给 `DropDown`。除非你用的是 `StringList` 模型，否则还需要用 set_factory() 设置一个 `ListItemFactory`。如果想让下拉菜单条目的外观与 `DropDown` 部件上显示的不同，还要用 set_list_factory() 另设一个 `ListItemFactory`。
+
+### 页 sec-dropdown-get  (page status=translated)
+[0] para
+  EN: To discover what item, if any, the user has selected from the `DropDown`,
+call DropDown::get_selected(). This returns an
+`unsigned int` that you can use to get the selected data from the model.
+For instance, you might read an integer ID value from the model, even though you
+have chosen only to show the human-readable description in the
+`DropDown`. For instance:
+  ZH: 要知道用户在 `DropDown` 中选中了哪个条目（如果有的话），调用 DropDown::get_selected()。它返回一个 `unsigned int`，可用它从模型中取出所选数据。比如模型里可以存一个整数 ID 值，而你在 `DropDown` 中只选择展示人类可读的描述文字。例如：
+
+[1] CODE file= 314 chars
+### 页 sec-dropdown-changes  (page status=translated)
+[0] para
+  EN: You might need to react to every change of selection in the `DropDown`,
+for instance to update other widgets. To do so, you should connect to
+property_selected().signal_changed(). For instance:
+  ZH: 你可能需要对 `DropDown` 中每次选择变化作出反应，比如更新其他部件。为此应连接 property_selected().signal_changed()。例如：
+
+[1] CODE file= 118 chars
+### 页 sec-dropdown-simple  (page status=translated)
+[0] figure  <<<ZH缺失>>>
+  EN: Simple DropDown
+  ZH: (无)
+
+[1] CODE file=examplewindow.h 437 chars
+[2] CODE file=examplewindow.cc 800 chars
+[3] CODE file=main.cc 271 chars
+### 页 sec-dropdown-search  (page status=translated)
+[0] para
+  EN: The dropdown menu may contain an `Entry` that allows
+to search for items in the list. Call set_enable_search()
+and set_expression(). For instance:
+  ZH: 下拉菜单里可以放一个用于搜索列表条目的 `Entry`：调用 set_enable_search() 与 set_expression()。例如：
+
+[1] CODE file= 398 chars
+[2] heading  <<<ZH缺失>>>
+  EN: String Example
+  ZH: (无)
+
+[3] figure  <<<ZH缺失>>>
+  EN: Search String
+  ZH: (无)
+
+[4] CODE file=examplewindow.h 439 chars
+[5] CODE file=examplewindow.cc 1593 chars
+[6] CODE file=main.cc 271 chars
+[7] heading  <<<ZH缺失>>>
+  EN: Font Example
+  ZH: (无)
+
+[8] para
+  EN: This example uses a `Pango::FontMap` as its model.
+This is possible because `Pango::FontMap` implements
+the `Gio::ListModel` interface. Of course you can use a
+`FontDialogButton` instead.
+  ZH: 该示例用 `Pango::FontMap` 作为模型——这可行，因为 `Pango::FontMap` 实现了 `Gio::ListModel` 接口。当然，你也可以改用 `FontDialogButton`。
+
+[9] figure  <<<ZH缺失>>>
+  EN: Search Font
+  ZH: (无)
+
+[10] CODE file=examplewindow.h 403 chars
+[11] CODE file=examplewindow.cc 1713 chars
+[12] CODE file=main.cc 271 chars
+### 页 sec-dropdown-complex  (page status=translated)
+[0] para
+  EN: This is a more complex example with two `SignalListItemFactory`
+objects and their signal handlers. This example would be simpler without the
+checkmark in the dropdown menu.
+  ZH: 这是一个更复杂的示例，带两个 `SignalListItemFactory` 及其信号处理函数。如果去掉下拉菜单中的对勾标记，这个例子会简单一些。
+
+[1] figure  <<<ZH缺失>>>
+  EN: Search Font
+  ZH: (无)
+
+[2] CODE file=examplewindow.h 1634 chars
+[3] CODE file=examplewindow.cc 5545 chars
+[4] CODE file=main.cc 271 chars

@@ -1,0 +1,170 @@
+### 页 sec-dnd-sources-targets  (page status=pending)
+[0] para
+  EN: The `Gtk::DragSource` and `Gtk::DropTarget`
+event controllers have methods and signals which are used for Drag and Drop.
+  ZH: Gtk::Widget提供了几个带有\"drag_\"前缀的方法和信号用以支持拖放。
+
+[1] para
+  EN: Things are dragged from `sources` to be dropped on
+`targets`. Each source and target has information
+about the data formats that it can send or receive, provided by
+`Gdk::ContentFormats`. A drop target will only
+accept a dragged item if they both share a compatible format. Appropriate
+signals will then be emitted, telling the signal handlers which format was used.
+  ZH: 物件从sources被拖放到destinations。每个源与目的地都拥有由Gdk::ContentFormats提供的它们所能发送或接受的数据格式的相关信息。放置目的地只会在拖动项与其具有共同的兼容类型时才会接受它们。然后将会发出适当的信号，告诉信号处理函数使用了那种格式。
+
+[2] para
+  EN: `Gdk::ContentFormats` objects contain information about
+available `GType`s and mime types (media types).
+  ZH: Gdk::ContentFormats对象包含了可用的GType和MIME类型（媒体类型）的相关信息。
+
+### 页 sec-dnd-methods  (page status=pending)
+[0] para
+  EN: `Widget`s can be identified as sources or targets using
+`Gtk::DragSource` and `Gtk::DropTarget`
+event controllers.
+  ZH: Gtk::Widget的以下方法可以将Widget作为源或者目标：
+
+[1] CODE file= 80 chars
+[2] para
+  EN: Some `DragSource` methods:
+  ZH: 示例来自Pango::Coverage：
+
+[3] listitem  <<<ZH缺失>>>
+  EN: `void set_content(const Glib::RefPtr<Gdk::ContentProvider>& content)`:
+        Sets a content provider on the drag source.
+  ZH: (无)
+
+[4] listitem  <<<ZH缺失>>>
+  EN: `void set_actions(Gdk::DragAction actions)`:
+        Sets the actions on the drag source. For instance `Gdk::DragAction::COPY
+        | Gdk::DragAction::MOVE`.
+  ZH: (无)
+
+[5] listitem  <<<ZH缺失>>>
+  EN: `void set_icon(const Glib::RefPtr<const Gdk::Paintable>& paintable, int hot_x, int hot_y)`:
+        Sets a paintable to use as icon during DND operations.
+  ZH: (无)
+
+[6] CODE file= 94 chars
+[7] para
+  EN: Some `DropTarget` methods:
+  ZH: 示例来自Pango::Coverage：
+
+[8] listitem  <<<ZH缺失>>>
+  EN: `void set_gtypes(const std::vector<GType>& types)`:
+        Sets the supported types for this drop target.
+  ZH: (无)
+
+[9] listitem  <<<ZH缺失>>>
+  EN: `void set_actions(Gdk::DragAction actions)`:
+        Sets the actions that this drop target supports.
+  ZH: (无)
+
+[10] listitem
+  EN: `Glib::ValueBase get_value() const`:
+        Gets the current drop data, as a `Glib::Value`.
+  ZH: drag_end：提供一个Gdk::Drag。
+
+[11] listitem  <<<ZH缺失>>>
+  EN: `void reject()`:
+        Rejects the ongoing drop operation. This function should be used when
+        delaying the decision on whether to accept a drag or not until after
+        reading the data.
+  ZH: (无)
+
+### 页 sec-dnd-signals  (page status=pending)
+[0] para
+  EN: When a drop target has accepted a dragged item, certain signals will be
+emitted, depending on what action has been selected. For instance, the user
+might have held down the Shift key to specify a
+`move` rather than a `copy`. Remember that
+the user can only select the actions which you have specified in your calls to
+Gtk::DragSource::set_actions() and
+Gtk::DropTarget::set_actions().
+  ZH: 当一个放置目的地接受了拖动项，根据被选择的动作，将发出响应的信号。例如，用户可能按住Shift键指定进行move而不是copy。请注意，用户只能选择你在调用drag_dest_set()和drag_source_set()时所指定的动作。
+
+[1] para
+  EN: The source widget will emit these `DragSource` signals:
+  ZH: 源部件将按以下顺序发出这些信号：
+
+[2] listitem
+  EN: `drag_begin`: Provides a `Gdk::Drag`.
+  ZH: drag_begin：提供一个Gdk::Drag。
+
+[3] listitem  <<<ZH缺失>>>
+  EN: `prepare`: Shall return a `Gdk::ContentProvider`,
+  with the data to use for the drag that is about to start.
+  ZH: (无)
+
+[4] listitem
+  EN: `drag_end`: Provides a `Gdk::Drag`,
+  and a `bool` that tells if the drag was performing a `move`
+  and the data should be deleted.
+  ZH: drag_data_get：提供一个Gdk::Drag和一个Gtk::SelectionData对象，你应该在其中放入所请求的数据。
+
+[5] listitem  <<<ZH缺失>>>
+  EN: `drag_cancel`: Emitted on the drag source when a drag has failed.
+  ZH: (无)
+
+[6] listitem  <<<ZH缺失>>>
+  EN: `enter`: Provides coordinates.
+  Shall return the preferred `Gdk::DragAction`.
+  ZH: (无)
+
+[7] listitem  <<<ZH缺失>>>
+  EN: `motion`: Provides coordinates.
+  Shall return the preferred `Gdk::DragAction`.
+  ZH: (无)
+
+[8] listitem  <<<ZH缺失>>>
+  EN: `leave`: Emitted on the drop site when the pointer
+  leaves the widget.
+  ZH: (无)
+
+[9] listitem
+  EN: `accept`: Provides a `Gdk::Drop`.
+  You can call the status() method of the
+  `Gdk::Drop` to indicate which actions will be accepted.
+  ZH: drag_motion：提供一个Gdk::Drop以及坐标。你可以调用Gdk::Drop的status()方法来指示要接受的动作。
+
+[10] listitem  <<<ZH缺失>>>
+  EN: `drop`: Provides the data being dropped and coordinates.
+  Shall return a `bool` indicating whether the drop was accepted.
+  ZH: (无)
+
+[11] listitem
+  EN: Gtk::DragSource::signal_prepare()
+  ZH: drag_source_add_text_targets()
+
+[12] listitem
+  EN: Gtk::DropTarget::signal_enter()
+  ZH: drag_dest_add_text_targets()
+
+[13] listitem
+  EN: Gtk::DropTarget::signal_motion()
+  ZH: drag_dest_add_image_targets()
+
+[14] listitem
+  EN: Gtk::DropTarget::signal_accept()
+  ZH: drag_dest_add_image_targets()
+
+[15] listitem
+  EN: Gtk::DropTarget::signal_drop()
+  ZH: drag_dest_add_image_targets()
+
+### 页 sec-dnd-example  (page status=pending)
+[0] para
+  EN: Here is a very simple example, demonstrating a drag and drop `Copy` operation:
+  ZH: 这是一个非常简单的示例，演示了拖放的Copy操作：
+
+[1] figure  <<<ZH缺失>>>
+  EN: Drag and Drop
+  ZH: (无)
+
+[2] CODE file=dndwindow.h 617 chars
+[3] CODE file=dndwindow.cc 2192 chars
+[4] CODE file=main.cc 262 chars
+[5] para
+  EN: There is a more complex example in examples/others/dnd.
+  ZH: 在examples/others/dnd中有一个更复杂的示例。

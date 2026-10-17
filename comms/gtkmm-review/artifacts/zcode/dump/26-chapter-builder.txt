@@ -1,0 +1,197 @@
+### 页 sec-builder-loading-ui-file  (page status=pending)
+[0] para
+  EN: Although you can use C++ code to instantiate and arrange widgets, this can soon
+become tedious and repetitive. And it requires a recompilation to show changes.
+The [Cambalache](https://gitlab.gnome.org/jpu/cambalache)
+application allows you to layout widgets on screen and then save an XML description
+of the arrangement. Your application can then use the `Gtk::Builder`
+API to load that XML file at runtime and obtain a pointer to specifically named
+widget instances.
+  ZH: 尽管你可以使用C++代码对部件进行实例化和排列，但是这很快就会变得枯燥且重复。并且需要重新编译才能显示更改。Glade应用程序允许你在屏幕上布局部件并然后将布局保存为XML描述。你的应用程序可以在之后使用Gtk::BuilderAPI在运行时加载该XML文件，并获取特定名称部件实例的指针。
+
+[1] para
+  EN: This has the following advantages:
+  ZH: 这具有以下优点：
+
+[2] listitem
+  EN: Less C++ code is required.
+  ZH: 需要的C++代码更少。
+
+[3] listitem
+  EN: UI changes can be seen more quickly, so UIs are able to improve.
+  ZH: 可以更快的看到UI的更改，更便于改进UI。
+
+[4] listitem
+  EN: Designers without programming skills can create and edit UIs.
+  ZH: 没有编程技能的设计人员可以创建和编辑UI。
+
+[5] para
+  EN: You still need C++ code to deal with User Interface changes triggered by user
+actions, but using `Gtk::Builder` for the widget
+layout allows you to focus on implementing that functionality.
+  ZH: 你仍然需要编写C++代码以处理由用户操作触发的UI更改，但是将Gtk::Builder用于部件布局允许你更专注的实现该功能。
+
+[6] para  <<<缺失>>>
+  EN: `Cambalache` replaces the `Glade`
+application. `Glade` can generate XML files to be used
+with gtk3/gtkmm3, but it does not support gtk4/gtkmm4.
+  ZH: (无)
+
+[7] para
+  EN: `Gtk::Builder` must be used via a
+`Glib::RefPtr`. Like all such classes, you need to use a
+create() method to instantiate it. For instance,
+  ZH: Gtk::Builder必须通过Glib::RefPtr来使用。与所有此类类一样，你需要通过使用create()方法实例化它。例如：这将实例化.glade文件中定义的窗口。
+
+[8] CODE file=
+[9] para  <<<缺失>>>
+  EN: This will instantiate the windows defined in the `.ui` file.
+  ZH: (无)
+
+[10] para
+  EN: To instantiate just one window, or just one of the child widgets, you can specify the name of a widget as the second parameter. For instance,
+  ZH: 如果只想实例化一个窗口或实例化一个子部件，你可以将部件的名称指定为第二个参数。例如：
+
+[11] CODE file=
+### 页 sec-builder-accessing-widgets  (page status=pending)
+[0] para
+  EN: To access a widget, for instance to show a dialog, use
+the get_widget() method, providing the widget's name.
+This name should be specified in the `Cambalache`
+window. If the widget could not be found, or is of the wrong type, then the
+pointer will be set to `nullptr`.
+  ZH: 要访问部件，例如show()一个对话框，请使用get_widget()方法，并向其提供一个部件名。这个名称应该在Glade的窗口属性中指定。如果找不到该部件或是部件的类型不对，则指针将被设为nullptr。
+
+[1] para
+  EN: The dialogs in this chapter are derived from `Gtk::Window`
+because `Gtk::Dialog` is deprecated since gtkmm 4.10.
+  ZH: 再次步骤中，我们使用Gtk::Builder实例将Gtk::Builder UI文件和我们的应用程序窗口类相关联。
+
+[2] CODE file=
+[3] para
+  EN: `Gtk::Builder` checks for a null pointer, and checks
+that the widget is of the expected type, and will show warnings on the command
+line about these.
+  ZH: Gtk::Builder会进行空指针和部件类型检查，并在命令行上显示相关的警告。
+
+[4] para
+  EN: Remember that you are not instantiating a widget with
+get_widget(), you are just obtaining a pointer to one that
+already exists. You will always receive a pointer to the same instance when you
+call get_widget() on the same
+`Gtk::Builder`, with the same widget name. The
+widgets are instantiated during Gtk::Builder::create_from_file().
+  ZH: 请注意，你并没有使用get_widget()实例化部件，你只是获得了指向已经存在的部件的指针。当你在同一个Gtk::Builder上用同一个名称调用get_widget()你总是会得到指向同一实例的指针。部件在函数Gtk::Builder::create_from_file()执行期间被实例化。
+
+[5] para
+  EN: get_widget() returns child widgets that are
+`manage()`ed (see the [Memory
+Management](#chapter-memory) chapter), so they will be deleted when their parent
+container is deleted. `Window`s (such as `Dialog`s)
+cannot be managed because they have no parent container, so you must delete them at
+some point. The documentation of `Gtk::Builder` has more to say
+about the memory management of different kinds of objects.
+  ZH: get_widget()返回一个经manage()处理的子部件（参阅内存管理章节），因此在删除其父部件时它们将被一并删除。无法管理Windows（例如Dialogs）因为它们没有父容器，所以你必须在某个时候删除它们。Gtk::Builder的文档中有更多关于对不同类型的对象如何进行内存管理的介绍。
+
+[6] para
+  EN: [Reference](&url_refdocs_base_gtk_html;classGtk_1_1Builder.html)
+  ZH: 参考
+
+[7] heading  <<<缺失>>>
+  EN: Example
+  ZH: (无)
+
+[8] para
+  EN: This simple example shows how to load a `.ui`
+file at runtime and access the widgets with `Gtk::Builder`.
+  ZH: 这个简单示例展示了如何在运行时加载Glade文件并使用Gtk::Builder访问部件。
+
+[9] CODE file=main.cc
+### 页 sec-builder-using-derived-widgets  (page status=pending)
+[0] para
+  EN: You can use `Cambalache` and
+`Gtk::Builder` to layout your own custom widgets
+derived from gtkmm widget classes. This keeps your code organized and
+encapsulated, separating declarative presentation from business logic, avoiding
+having most of your source just be setting properties and packing in containers.
+  ZH: 你可以使用Gtk::Builder和Glade布局你从gtkmm部件类派生的自定义部件。这使得你的代码保持有序和封装性，将声明式表述与业务逻辑分离开来，避免你的大多数源代码都是在设置属性和装填容器。
+
+[1] para
+  EN: Use Gtk::Builder::get_widget_derived() like so:
+  ZH: 像这样用Gtk::Builder::get_widget_derived()：
+
+[2] CODE file=
+[3] para
+  EN: Your derived class must have a constructor that takes a pointer to the
+underlying C type, and the `Gtk::Builder` instance.
+All relevant classes of gtkmm typedef their underlying C type as
+`BaseObjectType` (`Gtk::Window`
+typedefs `BaseObjectType` as `GtkWindow`, for instance).
+  ZH: 你的派生类必须有一个将指向底层C类型的指针和Gtk::Builder实例作为参数的构造函数。所有与gtkmm相关的类的都将其的底层C类型别名(typedef)为BaseObjectType（例如：Gtk::Dialog将GtkDialog别名为BaseObjectType）。
+
+[4] para
+  EN: You must call the base class's constructor in the initialization list, providing the C pointer. For
+instance,
+  ZH: 你必须在初始化列表中调用基类的构造函数，并提供C指针。例如：
+
+[5] CODE file=
+[6] para
+  EN: You could then encapsulate the manipulation of the child widgets in the
+constructor of the derived class, maybe using get_widget()
+or get_widget_derived() again. For instance,
+  ZH: 然后你可以将对子部件的操作封装于派生类的构造函数中，可以在构造函数中再次使用get_widget()或get_widget_derived()。例如：
+
+[7] CODE file=
+[8] para
+  EN: It's possible to pass additional arguments from
+get_widget_derived() to the constructor of the derived
+widget. For instance, this call to get_widget_derived()
+  ZH: 可以传递额外的参数给get_widget_derived()，他们将被转发给派生部件的构造函数。例如这样调用get_widget_derived()：可以调用此构造函数：
+
+[9] CODE file=
+[10] para
+  EN: can invoke this constructor
+  ZH: 手工编码构造函数
+
+[11] CODE file=
+[12] heading  <<<缺失>>>
+  EN: Gtk::Builder and Glib::Property
+  ZH: (无)
+
+[13] para  <<<缺失>>>
+  EN: If your derived widget uses `Glib::Property`, it becomes slightly
+more complicated. A derived widget that contains `Glib::Property`
+members must be registered with its own name in the `GType` system.
+It must be registered before any of the create_from_*() or
+add_from_*() methods are called, meaning that you may have
+to create an instance of your derived widget just to have its class registered.
+Your derived widget must have a constructor that has the parameters required by
+get_widget_derived() and calls the `Glib::ObjectBase`
+constructor to register the `GType`.
+  ZH: (无)
+
+[14] CODE file=
+[15] para
+  EN: It is possible also to specify properties of derived widgets, declared in C++
+using gtkmm, within `.ui` files and load/set
+these using `Gtk::Builder`. See the documentation of
+`Gtk::Builder` for more details on how to achieve this.
+`Cambalache` won’t recognize such properties as-is,
+but you should be able to add a few lines of hand-coded XML to the XML code
+generated by `Cambalache`.
+  ZH: 如果将gtkmm与glibmm2.62以上的版本一起使用，则还可以在.glade文件中指定使用gtkmm在C++代码中声明的派生部件的属性，并使用Gtk::Builder加载/设置这些属性。更多实现此功能的详细信息请参阅Gtk::Builder的文档。Glade不会按原样识别这些属性，但这应该能通过使用属性类定义和声明一个新属性目录来实现。
+
+[16] heading  <<<缺失>>>
+  EN: Example
+  ZH: (无)
+
+[17] para
+  EN: This example shows how to load a `.ui` file
+at runtime and access the widgets via derived classes.
+  ZH: 本示例展示了如何在运行时加载Glade文件以及如何通过派生类访问部件。
+
+[18] CODE file=derivedbutton.h
+[19] CODE file=deriveddialog.h
+[20] CODE file=derivedbutton.cc
+[21] CODE file=deriveddialog.cc
+[22] CODE file=main.cc
