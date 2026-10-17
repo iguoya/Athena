@@ -20,7 +20,7 @@
    "type": "para",
    "text": "Before we can make use of this schema in our application, we need to compile it into\nthe binary form that `Gio::Settings` expects. GIO provides macros\nto do this in autotools-based projects. See the description of\n[GSettings](https://docs.gtk.org/gio/class.Settings.html).\nMeson provides the `compile_schemas()` function in the\n[GNOME module](https://mesonbuild.com/Gnome-module.html).",
    "sha": "8e8b2586ce4c1e29",
-   "zh": "在我们应用程序使用模式之前，我们需要将其编译为Gio::Settings能期望的二进制格式。GUI为此提供了基于autotools项目的宏来执行此操作。具体信息请参阅GSettings。而Meson在GNOME模块中提供了compile_schemas()执行此操作。"
+   "zh": "在我们应用程序使用模式之前，我们需要将其编译为Gio::Settings能期望的二进制格式。GIO为此提供了基于autotools项目的宏来执行此操作。具体信息请参阅GSettings。而Meson在GNOME模块中提供了compile_schemas()执行此操作。"
   },
   {
    "type": "para",
@@ -50,7 +50,7 @@
    "type": "para",
    "text": "At this point, the application will already react if you change one of the settings,\ne.g. using the `gsettings` commandline tool. Of course, we expect\nthe application to provide a preference dialog for these. So lets do that now.\nOur preference dialog will be a subclass of `Gtk::Window`, and\nwe'll use the same techniques that we've already seen in `ExampleAppWindow`:\na `Gtk::Builder` ui file and settings bindings.\nIn this case the bindings are more involved, though. We use\n`Gtk::FontDialogButton` and `Gtk::DropDown`\nin the preference dialog. The types of the properties in these classes can't be\nautomatically converted to the string type that `Gio::Settings` requires.",
    "sha": "056a7615e75105bf",
-   "zh": "此时，如果你更改其中一项设置（例如：使用gsettings命令行工具。），则应用程序会做出反应。当然，我们会希望应用程序为这些首选项提供一个对话框。所以我们现在就如此做。我们的首选项对话框将是Gtk::Dialog的子类，并且使用我们之前已经在ExampleAppWindow中看到的技术：Gtk::Builder UI文件和设置绑定。"
+   "zh": "此时，如果你更改其中一项设置（例如使用 `gsettings` 命令行工具），应用程序就会做出反应。当然，我们希望应用程序为这些设置提供一个首选项对话框，所以现在就来做。我们的首选项对话框将是 `Gtk::Window` 的子类，并使用我们在 `ExampleAppWindow` 中已经见过的技术：`Gtk::Builder` ui 文件和设置绑定。不过这次的绑定要复杂一些：首选项对话框里用到了 `Gtk::FontDialogButton` 和 `Gtk::DropDown`，这些类中属性的类型无法自动转换成 `Gio::Settings` 要求的字符串类型。"
   },
   {
    "type": "para",

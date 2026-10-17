@@ -8,13 +8,13 @@
    "type": "para",
    "text": "The `Gtk::DragSource` and `Gtk::DropTarget`\nevent controllers have methods and signals which are used for Drag and Drop.",
    "sha": "464dc55c87a2b038",
-   "zh": "Gtk::Widget提供了几个带有\\\"drag_\\\"前缀的方法和信号用以支持拖放。"
+   "zh": "`Gtk::DragSource` 和 `Gtk::DropTarget` 事件控制器提供了用于拖放的方法和信号。"
   },
   {
    "type": "para",
    "text": "Things are dragged from `sources` to be dropped on\n`targets`. Each source and target has information\nabout the data formats that it can send or receive, provided by\n`Gdk::ContentFormats`. A drop target will only\naccept a dragged item if they both share a compatible format. Appropriate\nsignals will then be emitted, telling the signal handlers which format was used.",
    "sha": "9c68b91fbe7159ba",
-   "zh": "物件从sources被拖放到destinations。每个源与目的地都拥有由Gdk::ContentFormats提供的它们所能发送或接受的数据格式的相关信息。放置目的地只会在拖动项与其具有共同的兼容类型时才会接受它们。然后将会发出适当的信号，告诉信号处理函数使用了那种格式。"
+   "zh": "东西从 *源（source）* 被拖到 *目标（target）* 上放下。每个源和目标都带有它能发送或接收的数据格式的信息，由 `Gdk::ContentFormats` 提供。只有当被拖动的项与放置目标有共同的兼容格式时，放置目标才会接受它。然后会发出相应的信号，告诉信号处理函数用的是哪种格式。"
   },
   {
    "type": "para",
