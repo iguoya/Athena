@@ -26,7 +26,7 @@
    "type": "para",
    "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TextBuffer.html)",
    "sha": "71bf90935fc231d2",
-   "zh": "参考"
+   "zh": "[参考](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TextBuffer.html)"
   },
   {
    "type": "heading",
@@ -38,13 +38,13 @@
    "type": "para",
    "text": "A `Gtk::TextBuffer::iterator` and a `Gtk::TextBuffer::const_iterator`\nrepresent a position between two characters in the text buffer. Whenever the buffer\nis modified in a way that affects the number of characters in the buffer, all outstanding\niterators become invalid. Because of this, iterators can't be used to preserve positions\nacross buffer modifications. To preserve a position, use `Gtk::TextBuffer::Mark`.",
    "sha": "666c9158adce240f",
-   "zh": "Gtk::TextBuffer::iterator和Gtk::TextBuffer::const_iterator表示文本缓冲区中两个字符之间的位置。只要以影响缓冲区中字符数量的方式修改了缓冲区，所有越过修改范围的迭代器都将失效。因此，迭代器不能用于保存越过缓冲区被修改部分的位置。如果想保存位置，请使用Gtk::TextBuffer::Mark。"
+   "zh": "Gtk::TextBuffer::iterator和Gtk::TextBuffer::const_iterator表示文本缓冲区中两个字符之间的位置。只要以影响缓冲区字符数量的方式修改了缓冲区，所有现存的迭代器都将失效。因此，迭代器不能用来跨缓冲区修改保存位置。如果想保存位置，请使用Gtk::TextBuffer::Mark。"
   },
   {
    "type": "para",
    "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TextIter.html)",
    "sha": "71bf90935fc231d2-1",
-   "zh": "参考"
+   "zh": "[参考](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TextIter.html)"
   },
   {
    "type": "heading",
@@ -86,7 +86,7 @@
    "type": "para",
    "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TextTag.html)",
    "sha": "71bf90935fc231d2-2",
-   "zh": "参考"
+   "zh": "[参考](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TextTag.html)"
   },
   {
    "type": "heading",
@@ -110,13 +110,13 @@
    "type": "para",
    "text": "You can also use get_tag_table() to get, and maybe modify,\nthe `TextBuffer`'s default `TagTable`\ninstead of creating one explicitly.",
    "sha": "67124e322098f2be",
-   "zh": "你也可以使用get_tag_table()获取并修改TextBuffer的默认TagTable，而不是显示创建一个。"
+   "zh": "你也可以使用get_tag_table()获取并修改TextBuffer的默认TagTable，而不是显式创建一个。"
   },
   {
    "type": "para",
    "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TextTagTable.html)",
    "sha": "71bf90935fc231d2-3",
-   "zh": "参考"
+   "zh": "[参考](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TextTagTable.html)"
   },
   {
    "type": "heading",
@@ -188,7 +188,7 @@
    "type": "para",
    "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TextMark.html)",
    "sha": "71bf90935fc231d2-4",
-   "zh": "参考"
+   "zh": "[参考](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TextMark.html)"
   },
   {
    "type": "heading",
@@ -212,7 +212,7 @@
    "type": "para",
    "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TextView.html)",
    "sha": "71bf90935fc231d2-5",
-   "zh": "参考"
+   "zh": "[参考](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TextView.html)"
   },
   {
    "type": "heading",
@@ -224,7 +224,7 @@
    "type": "para",
    "text": "`TextView` has various methods which allow you to change\nthe presentation of the buffer for this particular view. Some of these may be\noverridden by the `Gtk::TextTag`s in the buffer, if they\nspecify the same things. For instance, set_left_margin(),\nset_right_margin(), set_indent(),\netc.",
    "sha": "840ee839be13e397",
-   "zh": "TextView具有多种可以让你修改特定视图中缓冲区的显示方式的方法。如果它们指定同一区域，则其中一些可能会覆写缓冲区中的Gtk::TextTag。例如：set_left_margin()、set_right_margin()、set_indent()等。"
+   "zh": "TextView具有多种方法，可以让你修改这个特定视图中缓冲区的显示方式。其中一些设置可能会被缓冲区中指定了同样属性的Gtk::TextTag覆盖。例如：set_left_margin()、set_right_margin()、set_indent()等。"
   },
   {
    "type": "heading",

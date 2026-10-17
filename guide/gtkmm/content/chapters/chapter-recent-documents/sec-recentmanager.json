@@ -14,7 +14,7 @@
    "type": "para",
    "text": "Each item in the list of recently used files is identified by its URI, and\n    can have associated metadata. The metadata can be used to specify how the\n    file should be displayed, a description of the file, its mime type, which\n    application registered it, whether it's private to the registering\n    application, and several other things.",
    "sha": "fdf2fbc4f02c862c",
-   "zh": "最近使用文件列表中的每一项都由其URI进行标识，并可以具有相关的元数据。元数据可以用于指定如何显示文件、如何描述文件、及其它的MIME类型、哪个应用程序注册了它、对于注册的应用程序是不是私有的等。"
+   "zh": "最近使用文件列表中的每一项都由其URI标识，并可以带有相关的元数据。元数据可以用来指定文件应如何显示、对文件的描述、它的MIME类型、哪个应用程序注册了它、对于注册它的应用程序是否私有，以及其他一些信息。"
   },
   {
    "type": "para",
@@ -98,7 +98,7 @@
    "type": "para",
    "text": "In addition to adding items to the list, you can also look up items from\n        the list and modify or remove items.",
    "sha": "aa82d50472272a33",
-   "zh": "除了向列表中添加项目以外，你还可以从列表项中删除、修改、查找项目。"
+   "zh": "除了向列表中添加项目，你还可以从列表中查找项目，以及修改或删除项目。"
   },
   {
    "type": "heading",
@@ -110,7 +110,7 @@
    "type": "para",
    "text": "To look up recently used files, `RecentManager`\n        provides several functions. To look up a specific item by its URI, you\n        can use the lookup_item() function, which will\n        return a `RecentInfo` class. If the specified URI\n        did not exist in the list of recent files,\n        lookup_item() throws a\n        `RecentManagerError` exception. For example:",
    "sha": "8f1d2b46073eba14",
-   "zh": "RecentManager提供了几个函数用以查找最近使用过的文件。你可以使用lookup_item()函数通过URI来查找特定项目，该函数将返回一个RecentInfo类对象。如果指定的URI于最近文件列表中不存在，则lookup_item()将抛出一个RecentManagerError异常。例如："
+   "zh": "RecentManager提供了几个函数用以查找最近使用过的文件。你可以使用lookup_item()函数通过URI来查找特定项目，该函数将返回一个RecentInfo类对象。如果指定的URI在最近文件列表中不存在，则lookup_item()将抛出一个RecentManagerError异常。例如："
   },
   {
    "type": "code",
@@ -122,7 +122,7 @@
    "type": "para",
    "text": "A `RecentInfo` object is essentially an object\n        containing all of the metadata about a single recently-used file. You\n        can use this object to look up any of the properties listed\n        [above](#list-file-metadata).",
    "sha": "554d83e123db5a04",
-   "zh": "本质上，RecentInfo是个包含了一个最近使用文件的所有元数据的对象。你可以使用该对象查找这里所列出的任何属性。"
+   "zh": "本质上，RecentInfo对象就是包含单个最近使用文件全部元数据的对象。你可以用它查找[上文](#list-file-metadata)列出的任何属性。"
   },
   {
    "type": "para",

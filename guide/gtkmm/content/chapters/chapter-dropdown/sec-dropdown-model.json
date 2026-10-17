@@ -8,25 +8,25 @@
    "type": "para",
    "text": "The `DropDown` widget is an alternative to the deprecated\n`ComboBox`. It uses list models instead of tree models,\nand the content is displayed using widgets instead of cell renderers.",
    "sha": "ec573a1125528520",
-   "zh": "`DropDown` 部件是已弃用的 `ComboBox` 的替代者：它使用列表模型而非树模型，内容用 listitem 内的部件展示，可以是任意内容——文字、图片，乃至更复杂的复合部件。"
+   "zh": "`DropDown` 部件是已弃用的 `ComboBox` 的替代者：它使用列表模型而非树模型，内容用部件而不是单元格渲染器来显示。"
   },
   {
    "type": "para",
    "text": "The `DropDown` widget offers a list of choices in a\ndropdown menu. If appropriate, it can show extra information about each item,\nsuch as text, a picture, or a check button. The `DropDown` widget\ncan optionally have an `Entry` in the dropdown menu, allowing\nthe user to search in a long list.",
    "sha": "5fdfa01b2bae82f9",
-   "zh": "`DropDown` 在下拉菜单中提供一组选项；合适的话，还能为每个条目显示额外信息，如文字、图片或更复杂的复合部件。"
+   "zh": "`DropDown` 部件在下拉菜单中提供一组选项；合适的话，还能为每个条目显示额外信息，如文字、图片或复选按钮。`DropDown` 还可以选择在下拉菜单中带一个 `Entry`，让用户能在长列表中搜索。"
   },
   {
    "type": "para",
    "text": "The list is provided via a `Gio::ListModel`, and data\nfrom this model is added to the `DropDown`'s view with\nsignal handlers connected to a `SignalListItemFactory`.\nThis provides flexibility, but the `StringList` class provides\na simpler text-based specialization in case that flexibility is not required.",
    "sha": "be925735c93cddc7",
-   "zh": "列表由一个 `Gio::ListModel` 提供，模型数据通过连接到 `SignalListItemFactory` 的信号处理函数添加到 `DropDown` 的视图。"
+   "zh": "列表由一个 `Gio::ListModel` 提供，模型数据通过连接到 `SignalListItemFactory` 的信号处理函数添加到 `DropDown` 的视图。这提供了灵活性；如果用不着这种灵活性，`StringList` 类提供了更简单的纯文本特化。"
   },
   {
    "type": "para",
    "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1DropDown.html)",
    "sha": "71bf90935fc231d2",
-   "zh": "参考"
+   "zh": "[参考](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1DropDown.html)"
   },
   {
    "type": "para",

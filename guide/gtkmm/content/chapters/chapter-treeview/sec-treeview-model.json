@@ -15,7 +15,7 @@
    "type": "para",
    "text": "The `Gtk::TreeView` widget can contain lists or trees of\ndata, in columns.",
    "sha": "224383b984311350",
-   "zh": "Gtk::TreeView部件的每一行都可以包含数据列表或数据树。"
+   "zh": "Gtk::TreeView部件可以包含按列组织的数据列表或数据树。"
   },
   {
    "type": "para",
@@ -33,7 +33,7 @@
    "type": "para",
    "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TreeModel.html)",
    "sha": "71bf90935fc231d2",
-   "zh": "参考"
+   "zh": "[参考](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TreeModel.html)"
   },
   {
    "type": "heading",
@@ -58,7 +58,7 @@
    "type": "para",
    "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1ListStore.html)",
    "sha": "71bf90935fc231d2-1",
-   "zh": "参考"
+   "zh": "[参考](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1ListStore.html)"
   },
   {
    "type": "heading",
@@ -83,7 +83,7 @@
    "type": "para",
    "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TreeStore.html)",
    "sha": "71bf90935fc231d2-2",
-   "zh": "参考"
+   "zh": "[参考](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1TreeStore.html)"
   },
   {
    "type": "heading",
@@ -95,7 +95,7 @@
    "type": "para",
    "text": "The `TreeModelColumnRecord` class is used to keep track\nof the columns and their data types. You add\n`TreeModelColumn` instances to the\n`ColumnRecord` and then use those\n`TreeModelColumn`s when getting and setting the data in\nmodel rows. You will probably find it convenient to derive a new\n`TreeModelColumnRecord` which has your\n`TreeModelColumn` instances as member data.",
    "sha": "5cb2b5ed37f582ea",
-   "zh": "TreeModelColumnRecord用于跟踪列和它们的数据类型。你TreeModelColumn实例添加到ColumnRecord，然后使用那些TreeModelColumns获取和设置模型列中的数据。你可能会发现，派生一个你自己的包含有TreeModelColumn数据成员的TreeModelColumnRecord会更方便。"
+   "zh": "TreeModelColumnRecord用于跟踪列和它们的数据类型。你把TreeModelColumn实例添加到ColumnRecord，然后在获取和设置模型行中的数据时使用这些TreeModelColumn。你可能会发现，派生一个把TreeModelColumn实例作为数据成员的TreeModelColumnRecord会更方便。"
   },
   {
    "type": "code",
@@ -119,7 +119,7 @@
    "type": "para",
    "text": "As a `TreeModelColumnRecord` describes structure, not data,\nit can be shared among multiple models, and this is preferable for efficiency.\nHowever, the instance (such as `m_Columns` here) should usually\nnot be static, because it often needs to be instantiated after\n`glibmm` has been initialized. The best solution is\nto make it a lazily instantiated singleton, so that it will be constructed\non-demand, whenever the first model accesses it.",
    "sha": "613f7dbd3cd8427c",
-   "zh": "TreeModelColumnRecord描述的是结构而不是数据，它可以在多个模型之间共享，这样效率更高。但是实例（例如此处的m_Columns）通常不是静态的，因为通常需要在glibmm初始化后示例化它。最好的解决方案是使他成为惰性初始化的单例，以便在第一个模型访问他的时候按需构造。"
+   "zh": "TreeModelColumnRecord描述的是结构而不是数据，它可以在多个模型之间共享，这样效率更高。但是实例（例如此处的m_Columns）通常不是静态的，因为通常需要在glibmm初始化后实例化它。最好的解决方案是使它成为惰性初始化的单例，以便在第一个模型访问它的时候按需构造。"
   },
   {
    "type": "heading",
@@ -161,7 +161,7 @@
    "type": "para",
    "text": "`Gtk::TreeStore` models can have child items. Add them\nwith the append(), prepend(), or\ninsert() methods, like so:",
    "sha": "3fb27d661f4db37e",
-   "zh": "Gtk::TreeStore模型可以存在子物件。可以通过append()、prepend()或insert()方法添加，如下所示："
+   "zh": "Gtk::TreeStore模型可以存在子行。可以通过append()、prepend()或insert()方法添加，如下所示："
   },
   {
    "type": "code",
@@ -227,7 +227,7 @@
    "type": "para",
    "text": "You might want to associate extra data with each row. If so, just add\nit as a Model column, but don't add it to the View.",
    "sha": "f137a192543608fc",
-   "zh": "你可能想要将额外的数据和每一行关联。如果是这样，你只需要将其添加到模型的一个行中而不将其添加到视图中即可。"
+   "zh": "你可能想要将额外的数据和每一行关联。如果是这样，只需要把它作为模型的一列添加，而不把它添加到视图中即可。"
   }
  ]
 }

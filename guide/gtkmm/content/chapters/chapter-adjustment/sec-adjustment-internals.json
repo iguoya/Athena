@@ -8,13 +8,13 @@
    "type": "para",
    "text": "OK, you say, that's nice, but what if I want to create my own handlers to\nrespond when the user adjusts a `Range` widget or a\n`SpinButton`. To access the value of a\n`Gtk::Adjustment`, you can use the\nget_value() and set_value() methods:",
    "sha": "da35a3e8e9ce477f",
-   "zh": "如果你想要创建一个自己的处理函数以响应用户对Range或SpinButton部件的调整。你可以使用Gtk::Adjustment的get_value()和set_value()方法访问其值："
+   "zh": "好，你可能会说，这很好，但如果我想自己创建处理函数，在用户调整Range或SpinButton部件时作出响应呢？要访问Gtk::Adjustment的值，可以使用get_value()和set_value()方法："
   },
   {
    "type": "para",
    "text": "As mentioned earlier, `Gtk::Adjustment` can emit signals.\nThis is, of course, how updates happen automatically when you share an\n`Adjustment` object between a\n`Scrollbar` and another adjustable widget; all adjustable\nwidgets connect signal handlers to their adjustment's\n`value_changed` signal, as can your program.",
    "sha": "11c247dbb6e3598c",
-   "zh": "如前所述，Gtk::Adjustment可以发射信号。而所有可调整部件都会将信号处理函数连接到其调整对象的value_changed信号你的程序也可以如此。这使得当Scrollbar和其他可调整部件共享一个Adjustment对象时，如果你操纵滚动条与其共享调整对象的其他可调整部件将会自动更新。"
+   "zh": "如前所述，Gtk::Adjustment可以发出信号。当你在Scrollbar和另一个可调整部件之间共享同一个Adjustment对象时，更新之所以会自动发生，正是这个原因：所有可调整部件都把信号处理函数连接到它们的adjustment的value_changed信号，你的程序也可以这样做。"
   },
   {
    "type": "para",
@@ -32,7 +32,7 @@
    "type": "para",
    "text": "and connect it to the scale widget's adjustment like this:",
    "sha": "cea98161c766dab7",
-   "zh": "并且将其连接到比例部件的调整对象上，如下所示："
+   "zh": "并像这样把它连接到Scale部件的adjustment上："
   },
   {
    "type": "code",

@@ -79,7 +79,7 @@
    "type": "para",
    "text": "The section for drawing an arc introduces one new function,\n              close_path(). This function will in effect\n              draw a straight line from the current point back to the first\n              point in the path. There is a significant difference between\n              calling close_path() and manually drawing a\n              line back to the starting point, however. If you use\n              close_path(), the lines will be nicely\n              joined together. If you use line_to()\n              instead, the lines will end at the same point, but Cairo won't do\n              any special joining.",
    "sha": "611914e344bf3e7c",
-   "zh": "在绘制圆弧的部分介绍了一个新的函数：close_path()。这个函数的效果实际上就是在当前点和路径的第一个点之间画一条直线。但调用close_path()所绘制的线条和使用line_to()手工绘制一条回到起点的线条会有很大的不同。如果你使用close_path()，则这些线将会很好的连接到一起。如果你改用line_to()，那么这些线将在同一个点结束但是开罗不会对此做任何特殊的连接。"
+   "zh": "在绘制圆弧的部分介绍了一个新的函数：close_path()。这个函数的效果实际上就是在当前点和路径的第一个点之间画一条直线。但调用close_path()所绘制的线条和使用line_to()手工绘制一条回到起点的线条会有很大的不同。如果你使用close_path()，则这些线将会很好的连接到一起。如果你改用line_to()，那么这些线将在同一个点结束但是Cairo不会对此做任何特殊的连接。"
   },
   {
    "type": "para",

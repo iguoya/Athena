@@ -8,14 +8,14 @@
    "type": "para",
    "text": "Now that we understand the basics of the Cairo graphics library, we're\n        almost ready to start drawing. We'll start with the simplest of\n        drawing elements: the straight line. But first you need to know a\n        little bit about Cairo's coordinate system. The origin of the Cairo\n        coordinate system is located in the upper-left corner of the window\n        with positive x values to the right and positive y values going down.",
    "sha": "e88141fd9535484d",
-   "zh": "现在我们已经了解了开罗图形库的基本知识，是时候开始画图了。我们将从画最简单的元素：直线 开始。但是在此之前你需要对开罗的坐标系有所了解。开罗的坐标系原点在窗口的左上角，从左向右X的值逐渐增大，从上往下Y的值逐渐增大。"
+   "zh": "现在我们已经了解了Cairo图形库的基本知识，是时候开始画图了。我们将从画最简单的元素：直线 开始。但是在此之前你需要对Cairo的坐标系有所了解。Cairo的坐标系原点在窗口的左上角，从左向右X的值逐渐增大，从上往下Y的值逐渐增大。"
   },
   {
    "type": "para",
    "text": "Since the Cairo graphics library was written with support for\n            multiple output targets (the X window system, PNG images, OpenGL,\n            etc), there is a distinction between user-space and device-space\n            coordinates. The mapping between these two coordinate systems\n            defaults to one-to-one so that integer values map roughly to pixels\n            on the screen, but this setting can be adjusted if desired.\n            Sometimes it may be useful to scale the coordinates so that the\n            full width and height of a window both range from 0 to 1 (the 'unit\n            square') or some other mapping that works for your application.\n            This can be done with the\n            Cairo::Context::scale() function.",
    "sha": "cc4d88616411e4b7",
    "admonition": "tip",
-   "zh": "由于开罗图形库是为了支持多个输出目标（X window系统、PNG图片、OpenGL等）编写的，因此用户空间坐标和设备空间坐标存在一些区别。默认情况下这两个坐标系是一对一的，这样可以将整数值大致映射为屏幕上的像素值，不过有需要时可以通过Cairo::Context::scale()函数对此行为进行调整。例如：你可能会需要使一个窗口的宽和高在调整比例后的坐标系中取值范围均处于0到1之间（单位正方形）。"
+   "zh": "由于Cairo图形库是为了支持多个输出目标（X window系统、PNG图片、OpenGL等）编写的，因此用户空间坐标和设备空间坐标存在一些区别。默认情况下这两个坐标系是一对一的，这样可以将整数值大致映射为屏幕上的像素值，不过有需要时可以通过Cairo::Context::scale()函数对此行为进行调整。例如：你可能会需要使一个窗口的宽和高在调整比例后的坐标系中取值范围均处于0到1之间（单位正方形）。"
   },
   {
    "type": "heading",
@@ -40,7 +40,7 @@
    "text": "Many Cairo drawing functions have a _preserve()\n            variant. Normally drawing functions such as\n            clip(), fill(), or\n            stroke() will clear the current path. If you\n            use the _preserve() variant, the current path\n            will be retained so that you can use the same path with the next\n            drawing function.",
    "sha": "5e6d2762858596dc",
    "admonition": "tip",
-   "zh": "多数的开罗绘图函数都拥有一个_preserve()变体。通常情况下clip()、fill()、stroke()函数会清除当前的路径。如果你使用他们的_preserve()变体，则当前路径会被保留，以便下一个绘图函数能继续在一样的路径上绘制。"
+   "zh": "多数的Cairo绘图函数都拥有一个_preserve()变体。通常情况下clip()、fill()、stroke()函数会清除当前的路径。如果你使用他们的_preserve()变体，则当前路径会被保留，以便下一个绘图函数能继续在一样的路径上绘制。"
   },
   {
    "type": "figure",
@@ -100,7 +100,7 @@
    "type": "para",
    "text": "If you've drawn a series of lines that form a path, you may\n            want them to join together in a certain way. Cairo offers\n            three different ways to join lines together: Miter, Bevel, and\n            Round. These are show below:",
    "sha": "84b5a0b5fe385ac7",
-   "zh": "如果你于一个路径绘制了一系列的线条，你可能希望它们以某种方式被连接起来。开罗提供了三种不同的连接线条的方式：斜接(Miter)、斜切(Bevel)、圆(Round)。这些连接方式的示意图如下："
+   "zh": "如果你于一个路径绘制了一系列的线条，你可能希望它们以某种方式被连接起来。Cairo提供了三种不同的连接线条的方式：斜接(Miter)、斜切(Bevel)、圆(Round)。这些连接方式的示意图如下："
   },
   {
    "type": "figure",
@@ -125,7 +125,7 @@
    "type": "para",
    "text": "There are other things you can customize as well, including\n            creating dashed lines and other things. For more information, see\n            the Cairo API documentation. Dashed lines are shown in the example\n            in the [Drawing Curved Lines](#cairo-example-curves)\n            section.",
    "sha": "1fdbc10498f6f6dd",
-   "zh": "你还可以自定义其他内容，比如创建虚线等。更多有关信息请参阅开罗API文档。"
+   "zh": "你还可以自定义其他内容，比如创建虚线等。更多有关信息请参阅CairoAPI文档。"
   },
   {
    "type": "heading",
@@ -137,13 +137,13 @@
    "type": "para",
    "text": "If you try to draw one pixel wide lines, you may notice that the line\n        sometimes comes up blurred and wider than it ought to be.\n        This happens because Cairo will try to draw from the selected position,\n        to both sides (half to each), so if you're positioned right on the\n        intersection of the pixels, and want a one pixel wide line, Cairo will try\n        to use half of each adjacent pixel, which isn't possible (a pixel is the\n        smallest unit possible). This happens when the width of the line is an\n        odd number of pixels (not just one pixel).",
    "sha": "15eb32b9c3ce6662",
-   "zh": "如果你尝试画一条宽度为一个像素的线条，你可能会注意到这条线有时会变得模糊并且比应有的宽度更宽。发生这种情况的原因是开若尝试在所选位置向两边绘制（一边一半），因此如果你如果正好位于像素交点上，还想绘制一个像素宽度的线条，那是不可能做到的（像素是最小的单位）。所以当像素的宽度是奇数的时候就会出现这种情况（不只是一个像素的时候）。"
+   "zh": "如果你尝试画宽度为一个像素的线条，可能会注意到这条线有时会变得模糊，并且比应有的宽度更宽。出现这种情况是因为Cairo会尝试从所选位置向两边绘制（各一半），所以如果你的位置正好在像素的交界处，又想画一条一个像素宽的线，Cairo就要使用相邻两个像素各一半，而这是不可能的（像素是最小的单位）。当线的宽度是奇数个像素时（不只是一个像素）就会出现这种情况。"
   },
   {
    "type": "para",
    "text": "The trick is to position in the middle of the pixel where you want the\n        line to be drawn, and thus guaranteeing you get the desired results.\n        See [Cairo FAQ](http://cairographics.org/FAQ/#sharp_lines).",
    "sha": "f8d6ffd114d9ff56",
-   "zh": "解决问题的诀窍是将像素放于要绘制的线条的中间，从而确保获得所需的结果。请参阅开罗常见问题。"
+   "zh": "诀窍是把位置定在你想要画线的那个像素的中间，这样就能保证得到想要的结果。参见 [Cairo 常见问题](http://cairographics.org/FAQ/#sharp_lines)。"
   },
   {
    "type": "figure",

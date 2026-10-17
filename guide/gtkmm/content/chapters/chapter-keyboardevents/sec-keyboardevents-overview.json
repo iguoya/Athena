@@ -8,25 +8,25 @@
    "type": "para",
    "text": "Event signals differ in some ways from other signals. These differences are described\n    in the [Event signals](#sec-eventsignals) section in\n    the appendix. Here we will use keyboard events and mouse events to show how\n    events can be used in a program.",
    "sha": "9cf5a9099416156a",
-   "zh": "X事件与其他信号在某些方面有所不同。这些差异在附录的X事件信号小节中说明。在这，我们将使用键盘事件说明如何在程序中使用X事件。"
+   "zh": "事件信号与其他信号在某些方面有所不同。这些差异在附录的[事件信号](#sec-eventsignals)一节中说明。这里我们将用键盘事件和鼠标事件来说明如何在程序中使用事件。"
   },
   {
    "type": "para",
    "text": "Whenever you press or release a key, an event is emitted. You can add an\n      event controller and connect a signal handler to handle such events.",
    "sha": "c130d507b322a8f0",
-   "zh": "每当你按下或放开一个按键，就会发出一个事件。你可以连接到信号处理函数来处理此类事件。"
+   "zh": "每当你按下或放开一个按键，就会发出一个事件。你可以添加一个事件控制器，并连接信号处理函数来处理此类事件。"
   },
   {
    "type": "para",
    "text": "The event signal handler will receive arguments that depend on the type of event.\n      For key press events the arguments are (`guint` `keyval`,\n      `guint` `keycode`, `Gdk::ModifierType` `state`).\n      As described in the [appendix](#sec-eventsignals),\n      the key press event signal handler returns a `bool` value, to indicate that\n      the signal is fully handled (`true`) or allow event propagation\n      (`false`).",
    "sha": "1043aa73a65e766c",
-   "zh": "事件处理函数接受的参数取决于事件的类型。对于键盘事件，它接受一个GdkEventKey*参数。如附录中所述，事件处理函数返回一个bool值，以表示信号已经被完全处理（返回true）或允许事件传播（false）。"
+   "zh": "事件信号处理函数接收的参数取决于事件的类型。对于按键按下事件，参数是（`guint` `keyval`、`guint` `keycode`、`Gdk::ModifierType` `state`）。如[附录](#sec-eventsignals)所述，按键按下事件的信号处理函数返回一个 `bool` 值，表示信号已被完全处理（`true`），或允许事件继续传播（`false`）。"
   },
   {
    "type": "para",
    "text": "To determine which key was pressed or released, you read the value of\n      the `keyval` argument and compare it with a constant in the\n      [\n      `<gdk/gdkkeysyms.h>`](https://gitlab.gnome.org/GNOME/gtk/tree/main/gdk/gdkkeysyms.h) header file. The states of\n      modifier keys (shift, ctrl, etc.) are available as bit-flags in\n      `state`.",
    "sha": "852883a0183bc4aa",
-   "zh": "要确定哪个键被按下或放开，你需要读取GdkEventKey::keyval的值并将其与头文件<gdk/gdkkeysyms.h>中的常量进行比较。GdkEventKey::state的位标志可以用作表示修饰键（shift、ctrl等）的状态。"
+   "zh": "要确定哪个键被按下或放开，请读取 `keyval` 参数的值，并把它与头文件 [`<gdk/gdkkeysyms.h>`](https://gitlab.gnome.org/GNOME/gtk/tree/main/gdk/gdkkeysyms.h) 中的常量比较。修饰键（shift、ctrl 等）的状态以位标志的形式出现在 `state` 中。"
   },
   {
    "type": "para",
@@ -50,7 +50,7 @@
    "type": "para",
    "text": "In this example there are three keyboard shortcuts:\n        Alt+1 selects the first radio button,\n        Alt+2 selects the second one, and the\n        Esc key closes the window.",
    "sha": "351c3a8995fa1674",
-   "zh": "在此示例中，有三个键盘快捷键：Alt+1选择第一个单选按钮、Alt+2选择第二个单选按钮、Esc隐藏（关闭）窗口。默认信号处理函数被覆盖如附录中覆盖默认信号处理函数小节所述。"
+   "zh": "在此示例中有三个键盘快捷键：Alt+1 选择第一个单选按钮，Alt+2 选择第二个，Esc 键关闭窗口。"
   },
   {
    "type": "figure",

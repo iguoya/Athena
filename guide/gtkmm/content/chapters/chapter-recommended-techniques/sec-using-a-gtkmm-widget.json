@@ -15,7 +15,7 @@
    "text": "Declare a variable of the type of `Widget` you wish to\nuse, generally as member variable of a derived container class. You could also\ndeclare a pointer to the widget type, and then create it with\n`new` or `Gtk::make_managed()` in your code.",
    "sha": "f4931bf982762f19",
    "marker": "1.",
-   "zh": "声明一个你想要使用的Widget类型变量，通常是作为容器派生类的成员变量。你还可以声明一个指向部件类型的指针，然后在你的代码中使用new创建它。即使通过指针使用部件，也应该使该指针成为容器类的成员变量，以便你后续访问它。"
+   "zh": "声明一个你想使用的 `Widget` 类型的变量，通常作为派生容器类的成员变量。你也可以声明一个指向该部件类型的指针，然后在你的代码里用 `new` 或 `Gtk::make_managed()` 创建它。"
   },
   {
    "type": "listitem",
@@ -29,7 +29,7 @@
    "text": "Connect any signals you wish to use to the appropriate handlers.",
    "sha": "fd2789e29b2b528d",
    "marker": "3.",
-   "zh": "为所以你需要使用的信号连接合适的信号处理函数。"
+   "zh": "为所有你需要使用的信号连接合适的信号处理函数。"
   },
   {
    "type": "listitem",

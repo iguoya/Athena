@@ -20,7 +20,7 @@
    "type": "para",
    "text": "The first argument is a slot you wish to have called when\nthe specified event (see argument 3) occurs on the file descriptor you specify\nusing argument two. Argument three may be one or more (using\n`|`) of:",
    "sha": "f8e46df2a9cc3da2",
-   "zh": "第一个参数是你希望在第二个参数指定的文件描述符上发生指定事件（见第三个参数的描述）时被调用的槽。第三个参数可能是一下的一项或多项（若想是多项则对以下多个使用|，例如：Glib::IO_IN | Glib::IO_OUT | Glib::IO_PRI）："
+   "zh": "第一个参数是你希望在第二个参数指定的文件描述符上发生指定事件（见第三个参数的描述）时被调用的槽。第三个参数可以是以下的一项或多项（若想是多项则对以下多个使用|，例如：Glib::IO_IN | Glib::IO_OUT | Glib::IO_PRI）："
   },
   {
    "type": "listitem",
@@ -68,7 +68,7 @@
    "type": "para",
    "text": "where `condition` is as\nspecified above. As usual the slot is created with\n`sigc::mem_fun()` (for a member method of an object), or\n`sigc::ptr_fun()` (for a function). A lambda expression can\nbe used, if you don't need the automatic disconnection that `sigc::mem_fun()`\nprovides when the object goes out of scope.",
    "sha": "fee6c109e8e668df",
-   "zh": "参数condition如上所述。通常使用sigc::mem_fun()（通过一个对象的成员函数创建）或sigc::ptr_fun()（通过一个普通函数创建）函数创建槽。"
+   "zh": "参数condition如上所述。通常使用sigc::mem_fun()（通过一个对象的成员函数创建）或sigc::ptr_fun()（通过一个普通函数创建）函数创建槽。如果不需要 sigc::mem_fun() 在对象超出作用域时提供的自动断开连接，可以使用 lambda 表达式。"
   },
   {
    "type": "para",

@@ -26,7 +26,7 @@
    "type": "para",
    "text": "This requires a number of rules to be observed when writing\nmulti-threaded programs using gtkmm. These are set out below, but\none point to note is that extra care is required when deriving classes\nfrom `sigc::trackable`, because the effects are\nunintuitive (see particularly points 4 and 5 below).",
    "sha": "6b3700e78fdd5fc7",
-   "zh": "在使用gtkmm编写多线程程序时需要遵守许多规则。这些规则下下面列出，但要注意的一点是从sigc::trackable派生类时需要格外小心，因为效果很不直观（特别是下述4、5条）。"
+   "zh": "在使用gtkmm编写多线程程序时需要遵守许多规则。这些规则在下面列出，但要注意的一点是从sigc::trackable派生类时需要格外小心，因为效果很不直观（特别是下述4、5条）。"
   },
   {
    "type": "listitem",
@@ -47,7 +47,7 @@
    "text": "Any `sigc::connection` object should be regarded\nas owned by the thread in which the method returning the\n`sigc::connection` object was called. Only that\nthread should call `sigc::connection` methods on\nthe object.",
    "sha": "38b974ca7607d159",
    "marker": "3.",
-   "zh": "任何sigc::connection对象都应视线程的拥有者在此线程调用了返回sigc::connection对象的方法。只有该线程才应在此对象上调用sigc::connection方法。"
+   "zh": "任何 `sigc::connection` 对象都应视为由调用返回该 `sigc::connection` 对象的方法时所在的线程所拥有。只有该线程才应在此对象上调用 `sigc::connection` 的方法。"
   },
   {
    "type": "listitem",

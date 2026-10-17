@@ -22,13 +22,13 @@
    "type": "para",
    "text": "Dialogs are used as secondary windows, to provide specific information or to\nask questions. `Gtk::Dialog` windows contain a few pre-packed\nwidgets to ensure consistency, and a `response` signal which\nis emitted when the user dismisses the dialog.",
    "sha": "dbd6062a5e80042f",
-   "zh": "对话框被用作辅助窗口，以提供特定的信息或者提出问题。Gtk::Dialog窗口包含了一些预装部件以确保一致性，且有一个run()方法可以阻塞到用户关闭对话框。"
+   "zh": "对话框被用作辅助窗口，以提供特定的信息或者提出问题。Gtk::Dialog窗口包含了一些预装部件以确保一致性，还有一个在用户关闭对话框时发出的 `response` 信号。"
   },
   {
    "type": "para",
    "text": "There are several derived `Dialog` classes which you might\nfind useful. `Gtk::MessageDialog` is used for most simple\nnotifications. But at other times you might need to derive your own dialog\nclass to provide more complex functionality.",
    "sha": "87bcb1d727ae5859",
-   "zh": "有几个派生自Dialog的类可能对你而言很有用。Gtk::MessageDialog多被用于简单的通知。但有时候你也需要派生自己的对话框类以提供更为复杂的功能。"
+   "zh": "有几个派生自Dialog的类可能对你而言很有用。Gtk::MessageDialog用于大多数简单的通知。但有时候你也需要派生自己的对话框类以提供更为复杂的功能。"
   },
   {
    "type": "para",
@@ -40,7 +40,7 @@
    "type": "para",
    "text": "The `response` signal handler receives an `int`. This\nmay be a value from the `Gtk::ResponseType` if the user\nclosed the dialog by clicking a standard button, or it could be the custom\nresponse value that you specified when using add_button().",
    "sha": "24459c42bc99fe1d",
-   "zh": "run()方法返回一个int。如果用户是通过单击标准按钮关闭的对话框，则该值可能是Gtk::ResponseType中的一个也可能是使用add_button()时你所指定的值。"
+   "zh": "`response` 信号的处理函数接收一个 `int`。如果用户是通过单击标准按钮关闭的对话框，则该值可能是Gtk::ResponseType中的一个，也可能是使用add_button()时你所指定的自定义响应值。"
   },
   {
    "type": "para",
@@ -52,7 +52,7 @@
    "type": "para",
    "text": "[Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Dialog.html)",
    "sha": "71bf90935fc231d2",
-   "zh": "参考"
+   "zh": "[参考](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1Dialog.html)"
   },
   {
    "type": "para",
@@ -64,13 +64,13 @@
    "type": "para",
    "text": "[AlertDialog Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1AlertDialog.html)",
    "sha": "1c302b08f375d676",
-   "zh": "参考"
+   "zh": "[参考](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1AlertDialog.html)"
   },
   {
    "type": "para",
    "text": "[MessageDialog Reference](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1MessageDialog.html)",
    "sha": "69788f0abccb048d",
-   "zh": "参考"
+   "zh": "[参考](https://gnome.pages.gitlab.gnome.org/gtkmm/classGtk_1_1MessageDialog.html)"
   },
   {
    "type": "heading",

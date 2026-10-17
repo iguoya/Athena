@@ -20,7 +20,7 @@
    "type": "para",
    "text": "So that the `Entry` can interact with the drop-down list of choices, you must specify which of your model columns is the text column, with set_entry_text_column(). For instance:",
    "sha": "5711594846ba16b2",
-   "zh": "为了使Entry可以与下拉列表的选项进行交互，你必须使用set_entry_text_column()指定哪些模型列是文本列。例如："
+   "zh": "为了使Entry可以与下拉列表的选项交互，你必须用set_entry_text_column()指定哪一个模型列是文本列。例如："
   },
   {
    "type": "code",
@@ -56,7 +56,7 @@
    "type": "para",
    "text": "When the user enters arbitrary text, it may not be enough to connect to the\n`changed` signal, which is emitted for every typed character.\nIt is not emitted when the user presses the Enter key.\nPressing the Enter key or moving the keyboard focus to another\nwidget may signal that the user has finished entering text. To be notified of\nthese events, connect to the `Entry`'s `activate`\nsignal (available since gtkmm 4.8), and add a `Gtk::EventControllerFocus`\nand connect to its `leave` signal, like so",
    "sha": "82f12a671d69d71a",
-   "zh": "用户输入任意文字时，只连接 `changed` 信号可能不够——它每敲一个字符就发出一次，用户按下回车时却不会发出。按下回车、或把键盘焦点移到别的部件，往往才意味着用户已经输入完毕。"
+   "zh": "用户输入任意文字时，只连接 `changed` 信号可能不够——它每敲一个字符就发出一次，用户按下回车时却不会发出。按下回车、或把键盘焦点移到别的部件，往往才意味着用户已经输入完毕。要收到这些事件的通知，请连接 `Entry` 的 `activate` 信号（自 gtkmm 4.8 起可用），并添加一个 `Gtk::EventControllerFocus`，连接它的 `leave` 信号，如下所示："
   },
   {
    "type": "code",

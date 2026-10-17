@@ -62,7 +62,7 @@
    "type": "para",
    "text": "If a programmer does not need a class scope widget, a function scope widget\nmay also be used. The advantages to function scope over class scope are the\nincreased data hiding and reduced dependencies.",
    "sha": "67d417b79e247839",
-   "zh": "如果程序员不需要类作用域部件，那么也可以使用函数作用域部件。函数作用域相比于类作用域的优点是增加了数据的隐蔽性和隐藏了依赖。"
+   "zh": "如果程序员不需要类作用域部件，那么也可以使用函数作用域部件。函数作用域相比于类作用域的优点是增加了数据的隐蔽性和减少了依赖。"
   },
   {
    "type": "code",
@@ -86,7 +86,7 @@
    "type": "para",
    "text": "Usually, the programmer will prefer to allow containers to automatically destroy\ntheir children by creating them using `Gtk::make_managed()`\n(see below). This is not strictly required, as the `new` and\n`delete` operators may also be used, but modern C++ style\ndiscourages those in favor of safer models of memory management, so it is\nbetter to create widgets using `Gtk::make_managed()` and\nlet their parent destroy them, than to manually perform dynamic allocation.",
    "sha": "555d794c74fb65dc",
-   "zh": "通常，程序员更喜欢使用Gtk::make_managed()（参见下文）创建允许容器自动销毁的子部件。这并非强制性的要求，你也可以使用new和delete操作符，但是现代C++风格鼓励使用更安全的内存管理模型，因此最好使用Gtk::make_managed()创建部件，并让他们的父部件销毁它们，而不是手动执行动态内存分配。 在这，程序员删除pButton以防止内存泄漏。"
+   "zh": "通常，程序员更喜欢使用Gtk::make_managed()（参见下文）创建允许容器自动销毁的子部件。这并非强制性的要求，你也可以使用new和delete操作符，但是现代C++风格鼓励使用更安全的内存管理模型，因此最好使用Gtk::make_managed()创建部件，并让他们的父部件销毁它们，而不是手动执行动态内存分配。"
   },
   {
    "type": "code",
@@ -146,7 +146,7 @@
    "type": "para",
    "text": "Now, when objects of type `MyContainer` are destroyed, the\nbutton will also be deleted. It is no longer necessary to delete `pButton`\nto free the button's memory; its deletion has been delegated to the\n`MyContainer` object.",
    "sha": "ee743b0ec03022eb",
-   "zh": "现在，当你销毁MyContainer类型对象时，该按钮也被销毁。不再需要主动deletepButton以释放其内存；对其的删除操作委托给了MyContainer对象。"
+   "zh": "现在，当你销毁MyContainer类型对象时，该按钮也被销毁。不再需要主动delete pButton以释放其内存；对其的删除操作委托给了MyContainer对象。"
   },
   {
    "type": "para",
@@ -158,7 +158,7 @@
    "type": "para",
    "text": "Of course, a top-level container will not be added to another container. The\nprogrammer is responsible for destroying the top-level container using one of\nthe traditional C++ techniques. Or you can let Gtk::Application::make_window_and_run()\ncreate a top-level window and delete it when it's closed.",
    "sha": "09451afa1d613a5c",
-   "zh": "当然，顶级容器不会被添加到另一个容器中。程序员负责使用一种传统的C++技术销毁顶级容器。例如，你的顶级窗口可能只是main()函数中的一个实例。"
+   "zh": "当然，顶级容器不会被添加到另一个容器中。程序员负责使用一种传统的C++技术销毁顶级容器。或者你可以让Gtk::Application::make_window_and_run()创建一个顶级窗口，并在它关闭时删除它。"
   }
  ]
 }

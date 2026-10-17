@@ -14,7 +14,7 @@
    "type": "para",
    "text": "You might not anticipate the need to support additional languages, but\n    you can never rule it out. And it's easier to develop the application\n    properly in the first place rather than retrofitting later.",
    "sha": "63f5ec09fd98a624",
-   "zh": "你可能没有预料到需要支持其他语言，但你永远不能排除这种可能性。而且事先准备好支持多语言比后来改进要容易的多。"
+   "zh": "你可能没有预料到需要支持其他语言，但你永远不能排除这种可能性。而且事先准备好支持多语言比后来改进要容易得多。"
   },
   {
    "type": "para",
@@ -39,7 +39,7 @@
    "text": "In the instructions below we will assume that you will not be using\n        `gettext` directly, but\n        `intltool`, which was written specifically for\n        `GNOME`. `intltool` uses\n        `gettext()`, which extracts strings from source code,\n        but `intltool` can also combine strings from\n        other files, for example from desktop menu details, and GUI resource\n        files such as `.ui` files, into standard\n        `gettext` `.pot/.po` files.",
    "sha": "44802ef0194a52d6",
    "admonition": "note",
-   "zh": "在下面的说明中我们假定你不直接使用gettext，而是使用专门为GNOME编写的intltool。intltool使用gettext()从源代码中提取字符串，但是intltool也从其他文件（例如桌面菜单详情、glade的GUI资源文件）中提取字符串写入到标准的gettext.pot/.po文件中。"
+   "zh": "在下面的说明中，我们假定你不直接使用 `gettext`，而是使用专门为 `GNOME` 编写的 `intltool`。`intltool` 使用 `gettext()` 从源代码中提取字符串，但 `intltool` 也能把其他文件中的字符串（例如桌面菜单详情，以及 `.ui` 文件这样的 GUI 资源文件）合并到标准的 `gettext` `.pot/.po` 文件中。"
   },
   {
    "type": "para",
@@ -107,13 +107,13 @@
    "type": "para",
    "text": "If you are using `gettext` directly, you can only\n      mark strings for translation if they are in source code file. However, if\n      you use `intltool`, you can mark strings for\n      translation in a variety of other file formats, including\n      `.ui` files, xml,\n      [.desktop files](http://standards.freedesktop.org/desktop-entry-spec/latest/)\n      and several more. So, if you have designed some of the\n      application UI in xml files then also add your\n      `.ui` files to the list in\n      `POTFILES.in`.",
    "sha": "328e9d8bb2aa5364",
-   "zh": "如果你直接使用gettext，则你只能标记源代码文件中的字符串为需要被翻译。如果你使用intltool，则可以对多种格式的文件中的字符串进行标记，如GladeUI文件、XML、.desktop文件等。因此如果你使用Glade设计了应用程序UI，则你还需要将.glade添加到你的POTFILES.in列表中。"
+   "zh": "如果你直接使用 `gettext`，就只能标记源代码文件里的字符串供翻译。但如果你使用 `intltool`，就可以在多种其他格式的文件里标记要翻译的字符串，包括 `.ui` 文件、xml、[.desktop 文件](http://standards.freedesktop.org/desktop-entry-spec/latest/)等。因此，如果你用 xml 文件设计了部分应用程序界面，还要把你的 `.ui` 文件也加到 `POTFILES.in` 的列表里。"
   },
   {
    "type": "para",
    "text": "Now that there is a place to put your translations, you need to initialize\n      `intltool` and `gettext`.\n      Add the following code to your `configure.ac`,\n      substituting 'programname' with the name of your program:",
    "sha": "802ef2efcd337d93",
-   "zh": "现在已经有了放置翻译的地方，你需要初始化intltool和gettext。将一下代码添加到你的configure.ac，将\\\"programname\\\"替换为你的程序的名称："
+   "zh": "现在已经有了放置翻译的地方，你需要初始化intltool和gettext。将以下代码添加到你的configure.ac，将\\\"programname\\\"替换为你的程序的名称："
   },
   {
    "type": "code",

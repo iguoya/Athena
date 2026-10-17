@@ -20,7 +20,7 @@
    "type": "para",
    "text": "Aside from the fact that connected slots always execute in the\nreceiver thread, `Glib::Dispatcher` objects are\nsimilar to `sigc::signal<void()>` objects.\nThey therefore cannot pass unbound arguments nor return a value. The\nbest way to pass unbound arguments is with a thread-safe\n(asynchronous) queue. At the time of writing\n`glibmm` does not have one, although most\npeople writing multi-threaded code will have one available to them\n(they are relatively easy to write although there are subtleties in\ncombining thread safety with strong exception safety).",
    "sha": "3287e91a64880dbb",
-   "zh": "除了连接的槽在接收者线程执行以外，Glib::Dispatcher对象的行为与sigc::signal<void()>对象十分相似。因此它们不能传递未绑定的参数，也不能返回值。要传递未绑定参数最好的方法是使用线程安全的（同步）队列。尽管大多数编写多线程代码的人都会有一个可用的多线程代码，但是编写glibmm时没有（尽管线程安全与强异常安全结合有些微妙，但编写它们相对容易）。"
+   "zh": "除了连接的槽总是在接收者线程中执行以外，`Glib::Dispatcher` 对象与 `sigc::signal<void()>` 对象类似。因此它们不能传递未绑定的参数，也不能返回值。传递未绑定参数的最佳方式是使用线程安全的（异步）队列。撰写本文时 `glibmm` 没有提供这样的队列，不过大多数编写多线程代码的人手头都有一个（它们相对容易编写，虽然把线程安全与强异常安全结合起来有些微妙）。"
   },
   {
    "type": "para",

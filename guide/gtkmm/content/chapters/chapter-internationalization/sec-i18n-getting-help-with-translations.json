@@ -8,19 +8,19 @@
    "type": "para",
    "text": "If your program is free software, there is a whole `GNOME`\n        subproject devoted to helping you make translations, the\n        [`GNOME`\n        Translation Project](https://wiki.gnome.org/TranslationProject/).",
    "sha": "a746b3313d65d0c1",
-   "zh": "如果你的程序是免费软件，有一个致力于帮助你制作翻译的GNOME子项目：GNOME翻译项目。"
+   "zh": "如果你的程序是自由软件，有一个专门帮助你制作翻译的 `GNOME` 子项目：[`GNOME` 翻译项目](https://wiki.gnome.org/TranslationProject/)。"
   },
   {
    "type": "para",
    "text": "The way it works is that you upload your source code to a git\n        repository where translators can access it, then file an\n        [\n        issue to the damned-lies project](https://gitlab.gnome.org/Infrastructure/damned-lies/-/issues) and ask to have your program added to the\n        [list of modules to translate](http://l10n.gnome.org/module/).",
    "sha": "65bd0ff63c2d9ecd",
-   "zh": "它的工作方式是将你的源代码上传到git储存库，以便翻译人员可以访问它，然后联系gnome-i18n请求将你的程序添加到待翻译模块列表中。"
+   "zh": "它的工作方式是：你把源代码上传到翻译人员可以访问的 git 仓库，然后向 [damned-lies 项目提交一个 issue](https://gitlab.gnome.org/Infrastructure/damned-lies/-/issues)，请求把你的程序添加到[待翻译模块列表](http://l10n.gnome.org/module/)中。"
   },
   {
    "type": "para",
    "text": "Then you make sure you update the file\n        `POTFILES.in` in the\n        `po/` subdirectory\n        (`intltool-update -m` can help with this) so\n        that the translators always access updated\n        `myprogram.pot` files, and simply freeze\n        the strings at least a couple of days before you make a new\n        release. Depending on the number\n        of strings your program contains and how popular it is, the\n        translations will then start to tick in as\n        `.po` files.",
    "sha": "419563e1ec083192",
-   "zh": "然后请确保更新po/子目录下的POTFILES.in（intltool-update -m可以提供帮助），以便译者始终可以访问更新好的myprogram.pot文件，并在发布新版本之前的两三天在gnome-i18n邮件列表上宣布冻结字符串更改。根据程序所包含的字符串数数量以及程序的受欢迎程度，译者将逐渐向你提交languagename.po文件。"
+   "zh": "然后请确保更新 `po/` 子目录下的 `POTFILES.in`（`intltool-update -m` 可以帮忙），以便译者始终可以访问更新过的 `myprogram.pot` 文件，并在发布新版本之前至少几天冻结字符串。根据程序所包含的字符串数量以及程序的受欢迎程度，译文会陆续以 `.po` 文件的形式提交过来。"
   },
   {
    "type": "para",
