@@ -32,13 +32,13 @@
    "type": "para",
    "text": "There are some important behavioural changes, to which you must adapt when migrating:",
    "sha": "44dd6189a58c92ab",
-   "zh": null
+   "zh": "有一些重要的行为变化，迁移时你必须适应："
   },
   {
    "type": "listitem",
    "text": "Whereas in gtkmm-3.0, destruction of a non-managed C++ widget wrapper caused the wrapped GtkWidget\nto be destroyed, changes in GTK4 mean that in gtkmm-4.0 this canʼt always be the case. GTK4 has no\nuniform way to remove a widget from a parent, as GTK3 did with Gtk::Container::remove(),\nso gtkmm-4.0 canʼt do the removal for you as gtkmm-3.0 did. Hence, if a non-managed C++ widget\ninstance is destructed while the widget is a child of another, gtkmm-4.0 wonʼt remove it from the\nparent, the parent retains a ref that stops the child being disposed, and the GtkWidget stays alive.\nThe end result is that to destroy a non-managed widget with its C++ wrapper you must first remove it\nfrom its parent (however that parent allows) so the C++ wrapperʼs dtor can drop the final reference.",
    "sha": "39469c16e96430be",
-   "zh": null
+   "zh": "在 gtkmm-3.0 中，销毁一个非托管的 C++ 部件包装对象，会导致被包装的 GtkWidget 也被销毁；GTK4 的变化意味着在 gtkmm-4.0 中这不再总是成立。GTK4 没有像 GTK3 的 Gtk::Container::remove() 那样统一的、从父部件中移除部件的方式，所以 gtkmm-4.0 无法像 gtkmm-3.0 那样替你执行移除。因此，如果一个非托管的 C++ 部件实例在它还是另一个部件的子部件时被析构，gtkmm-4.0 不会把它从父部件中移除，父部件保留着一个引用，使子部件无法被释放，GtkWidget 依然存活。最终结果是：要销毁一个非托管部件及其 C++ 包装对象，你必须先把它从父部件中移除（具体怎么移除取决于该父部件），这样 C++ 包装对象的析构函数才能释放最后一个引用。"
   },
   {
    "type": "para",
@@ -127,7 +127,7 @@
    "text": "`Gtk::Widget`: The get_preferred_*_vfunc()s\n  have been replaced by measure_vfunc(). This change only affects\n  custom widgets.",
    "sha": "a7bed7cd9aed3021",
    "marker": "4.",
-   "zh": null
+   "zh": "`Gtk::Widget`：get_preferred_*_vfunc() 已被 measure_vfunc() 取代。这一变化只影响自定义部件。"
   },
   {
    "type": "listitem",
@@ -221,25 +221,25 @@
    "type": "para",
    "text": "Many classes are deprecated since gtkmm 4.10. They can still be used in\ngtkmm4 applications, provided GTKMM_DISABLE_DEPRECATED and GDKMM_DISABLE_DEPRECATED\nare not defined. There are also many new classes in gtkmm 4.10, which replace\nsome of the deprecated classes. Some example programs in this tutorial use classes\ndeprecated since gtkmm 4.10. Some other programs use classes available since gtkmm 4.10.",
    "sha": "4a6e1792b1f50f38",
-   "zh": null
+   "zh": "许多类自 gtkmm 4.10 起已弃用。只要没有定义 GTKMM_DISABLE_DEPRECATED 和 GDKMM_DISABLE_DEPRECATED，它们仍可用在 gtkmm4 应用程序中。gtkmm 4.10 也新增了许多类，用来取代一部分已弃用的类。本教程中的一些示例程序使用了自 gtkmm 4.10 起已弃用的类，另一些则使用自 gtkmm 4.10 起可用的类。"
   },
   {
    "type": "para",
    "text": "Deprecated classes:\n  AppChooser, AppChooserButton, AppChooserDialog,\n  AppChooserWidget, CellArea, CellAreaBox, CellAreaContext,\n  CellLayout, CellRenderer, CellRendererAccel, CellRendererCombo,\n  CellRendererPixbuf, CellRendererProgress, CellRendererSpin,\n  CellRendererSpinner, CellRendererText, CellRendererToggle, CellView,\n  ComboBox, ComboBoxText, EntryCompletion, IconView, ListStore,\n  ListViewText, StyleContext, TreeDragDest, TreeDragSource,\n  TreeIter and other classes in treeiter.h,\n  TreeModel, TreeModelFilter, TreeModelSort, TreePath, TreeRowReference,\n  TreeSelection, TreeSortable, TreeStore, TreeView, TreeViewColumn,\n  namespace CellRenderer_Generation, namespace TreeView_Private,\n  ColorButton, ColorChooser, ColorChooserDialog,\n  FileChooser, FileChooserDialog, FileChooserNative, FileChooserWidget,\n  FontButton, FontChooser, FontChooserDialog, FontChooserWidget,\n  MessageDialog, TreeModelColumn, TreeModelColumnRecord, InfoBar,\n  Assistant, AssistantPage, LockButton, Statusbar, VolumeButton.",
    "sha": "85a29aaef49be299",
-   "zh": null
+   "zh": "已弃用的类：AppChooser, AppChooserButton, AppChooserDialog, AppChooserWidget, CellArea, CellAreaBox, CellAreaContext, CellLayout, CellRenderer, CellRendererAccel, CellRendererCombo, CellRendererPixbuf, CellRendererProgress, CellRendererSpin, CellRendererSpinner, CellRendererText, CellRendererToggle, CellView, ComboBox, ComboBoxText, EntryCompletion, IconView, ListStore, ListViewText, StyleContext, TreeDragDest, TreeDragSource, TreeIter 以及 treeiter.h 中的其他类, TreeModel, TreeModelFilter, TreeModelSort, TreePath, TreeRowReference, TreeSelection, TreeSortable, TreeStore, TreeView, TreeViewColumn, 命名空间 CellRenderer_Generation, 命名空间 TreeView_Private, ColorButton, ColorChooser, ColorChooserDialog, FileChooser, FileChooserDialog, FileChooserNative, FileChooserWidget, FontButton, FontChooser, FontChooserDialog, FontChooserWidget, MessageDialog, TreeModelColumn, TreeModelColumnRecord, InfoBar, Assistant, AssistantPage, LockButton, Statusbar, VolumeButton。"
   },
   {
    "type": "para",
    "text": "New classes and enums:\n  AlertDialog, ColorDialog, ColorDialogButton, ColumnViewSorter, FileDialog,\n  FontDialog, FontDialogButton, FileLauncher, UriLauncher, ATContext,\n  enums DialogError, FontLevel, Collation.",
    "sha": "04d2b3b90bf9f7d6",
-   "zh": null
+   "zh": "新增的类与枚举：AlertDialog, ColorDialog, ColorDialogButton, ColumnViewSorter, FileDialog, FontDialog, FontDialogButton, FileLauncher, UriLauncher, ATContext，以及枚举 DialogError, FontLevel, Collation。"
   },
   {
    "type": "para",
    "text": "In most cases there are replacements for the deprecated classes.\nSee the reference documentation.",
    "sha": "2e1a06f01680979b",
-   "zh": null
+   "zh": "大多数情况下，已弃用的类都有替代品。参见参考文档。"
   }
  ]
 }
