@@ -71,3 +71,21 @@ def apply(section_id, kp_index, inpage, checkpoint, standard=2):
     sec["quiz_standard"] = standard
     out = json.dumps(data, indent=2, ensure_ascii=False) + "\n"
     CUR.write_bytes(out.replace("\n", nl).encode("utf-8"))
+
+
+def apply_new(section_id, kp_meta, inpage, checkpoint, standard=2):
+    """给还没有知识点的章新建一个 quizset 知识点（kp_meta: id/title/difficulty/mastery_goal）。"""
+    raw = CUR.read_bytes().decode("utf-8")
+    nl = "\r\n" if "\r\n" in raw else "\n"
+    data = json.loads(raw.replace("\r\n", "\n"))
+    sec = next(s for s in data["sections"] if s["id"] == section_id)
+    assert not sec["knowledge_points"], f"{section_id} 已有知识点，用 apply()"
+    sec["knowledge_points"] = [{
+        "id": kp_meta["id"], "title": kp_meta["title"], "type": "concept",
+        "difficulty": kp_meta["difficulty"], "mastery_goal": kp_meta.get("mastery_goal", "required"),
+        "requires": [], "blocks": inpage,
+    }]
+    sec["checkpoint"] = checkpoint
+    sec["quiz_standard"] = standard
+    out = json.dumps(data, indent=2, ensure_ascii=False) + "\n"
+    CUR.write_bytes(out.replace("\n", nl).encode("utf-8"))
