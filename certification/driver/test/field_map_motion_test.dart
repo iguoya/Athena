@@ -9,6 +9,7 @@ FieldMapStep _step(
   double y,
   double heading, {
   List<FieldRisk> risks = const [],
+  List<FieldLabel> labels = const [],
 }) => FieldMapStep(
   x: x,
   y: y,
@@ -19,6 +20,7 @@ FieldMapStep _step(
   ],
   marks: const [],
   risks: risks,
+  labels: labels,
 );
 
 void main() {
@@ -88,5 +90,20 @@ void main() {
     );
     await tester.pump(const Duration(milliseconds: 700));
     await tester.pump(const Duration(milliseconds: 100));
+  });
+
+  test("插值保留目标步的文字标注（T-103 回归：lerp 曾漏 labels）", () {
+    final a = _step(0, 0, 0);
+    final b = _step(
+      4,
+      2,
+      0.5,
+      risks: [
+        FieldRisk([const Offset(1, 1), const Offset(2, 2)]),
+      ],
+      labels: const [FieldLabel(Offset(8, 1), "控制线")],
+    );
+    final mid = lerpFieldStep(a, b, 0.5);
+    expect(mid.labels, same(b.labels), reason: "lerp 曾漏 labels，插值结果必须保留目标步标注");
   });
 }

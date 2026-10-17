@@ -347,6 +347,7 @@ FieldMapStep lerpFieldStep(FieldMapStep a, FieldMapStep b, double t) {
     lines: b.lines,
     marks: b.marks,
     risks: b.risks,
+    labels: b.labels,
     bounds: b.bounds,
   );
 }
