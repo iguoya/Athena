@@ -237,6 +237,43 @@ void main() {
     expect(item.steps[2].inside!.look, isNot(contains("门把手")));
   });
 
+  test("倒库、侧方、曲线每步都有方向盘和参照，四项修正合计不少于 8 条", () {
+    var fixes = 0;
+    for (final id in ["reverse", "parallel", "curve", "corner"]) {
+      final item = bank.guide.item(id)!;
+      var itemFixes = 0;
+      for (final step in item.steps) {
+        expect(step.steer, isNotEmpty, reason: "$id ${step.title}");
+        expect(step.reference, isNotEmpty, reason: "$id ${step.title}");
+        final texts = [
+          step.caution,
+          step.steer,
+          step.reference,
+          step.skill,
+          step.outside!.risk,
+          for (final fix in step.fix) ...[fix.sign, fix.action],
+        ];
+        for (final text in texts) {
+          expect(text, isNot(contains("扣")), reason: "$id ${step.title}：$text");
+          expect(
+            text,
+            isNot(contains("不合格")),
+            reason: "$id ${step.title}：$text",
+          );
+        }
+        itemFixes += step.fix.length;
+      }
+      for (final tip in item.tips) {
+        expect(tip, isNot(contains("扣")), reason: id);
+        expect(tip, isNot(contains("不合格")), reason: id);
+      }
+      expect(itemFixes, greaterThan(0), reason: id);
+      fixes += itemFixes;
+    }
+    expect(fixes, greaterThanOrEqualTo(8));
+    expect(bank.guide.item("curve")!.steps[1].title, "第一个弯：左弯");
+  });
+
   testWidgets("车内格画出参照，并把错参照划掉", (tester) async {
     final step = bank.guide.item("curve")!.steps[1];
     await tester.pumpWidget(
